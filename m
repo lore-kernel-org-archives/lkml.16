@@ -1,56 +1,35 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB064201016;
-	Mon,  3 Feb 2025 10:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B42202C4E;
+	Mon,  3 Feb 2025 10:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738578003; cv=none; b=Ghkyg4k00gF9AC5pI9YPWji0378jzwS//aIp4jL+WNaLVsI1bxJcRvNDK70/qdsPvkqcjdzUmC3mi2LJrO2sBr1IJ3NTlUXpQTzsY62GJ0UmeWDWrkZfglcE3TS+SzgdSKSmrIzMHXjkoYI5P9Nh2bVgSSayPSgf6MFXbc4fPw0=
+	t=1738578004; cv=none; b=AMBo8ZyB+LvJ1iYghm/jtI2qiEaxepVDsdpgfcWeIAVC9GzPCUwMlZRruCKdGuRMCKpWQurtQKCFPf9co36lAm60XgCamIqsBxEyUzcwSuYVbHgk5zwsvDWVTxjJbKZQBRyHMuaZub1yfgGVc36Knd4HKDiJpeS6VJ2fih0iRMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738578003; c=relaxed/simple;
-	bh=ADi3c0PRpU2JemlHu/u0oUZ4vDQkss9aFXz31FTjnBw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NVRrht3dkJQx+J9s/1CQjfNtUX6RC4dayQn7rrlu/sV9ZaecBrOFaLVKeRNOyTwu3OM3MAM1Qi7agmPa8qwtaYva0B8rF/0oXc4gebROqBs6HaaF5mLD7koMczFK7maS8z117lGuSntB1GHqAQIj3Apwh7EHxao28uTwBL2Rm2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92D9D1476;
-	Mon,  3 Feb 2025 02:20:25 -0800 (PST)
-Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A14E23F63F;
-	Mon,  3 Feb 2025 02:19:57 -0800 (PST)
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-To: linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Jann Horn <jannh@google.com>,
-	Jeff Xu <jeffxu@chromium.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Kees Cook <kees@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	Quentin Perret <qperret@google.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	x86@kernel.org
-Subject: [RFC PATCH v3 05/15] arm64: Implement asm/kpkeys.h using POE
-Date: Mon,  3 Feb 2025 10:18:29 +0000
-Message-ID: <20250203101839.1223008-6-kevin.brodsky@arm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250203101839.1223008-1-kevin.brodsky@arm.com>
-References: <20250203101839.1223008-1-kevin.brodsky@arm.com>
+	s=arc-20240116; t=1738578004; c=relaxed/simple;
+	bh=swGdISvDcFg/fvJ8yNHlLKqrsreLfTHP2s0De6F5f90=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=nbDgIvHClPF3Ynze2QXj2yRlavEyRgDmOEVuvfINaDkruta9iPJJZ3dmfDTOO5q1hEAXMaGdcHe2C2DCiLNNheCPOC1mFNGSj4qC3Beu0ZLLCpmJMJKMOvuNljCOPMUXXZrBznTMBzvofMDrO+IoMqzE1x+ZtuSs/C0Oaga8+y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xt7tOQCN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xt7tOQCN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBA46C4CEE4;
+	Mon,  3 Feb 2025 10:20:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738578004;
+	bh=swGdISvDcFg/fvJ8yNHlLKqrsreLfTHP2s0De6F5f90=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Xt7tOQCN4Vo4GyNlIq7mkU1m026VPNbHNCqZMs9Pvs6aYm6eNYuNDiUH8Cz6wsOl7
+	 s8cmAB+pWOOW6PmMy8sa8iDo5rEG03GlN2os4IwNFHavIbz/nQQrNdu0GkUa6VA6mN
+	 Fqrt4Jzc+kPdLeHI9vGnlE3iqMVMN5hz2WMAFp3oU6kHl7WtWSNhGHNXB20silwck5
+	 NBrH31BpeahcKC1OhDbqrWm/55hQE3hPkjJ0WoQyvZXmIlftaOL+1FWBwGuDYB7cId
+	 r17Gle/9Zgyoon3i7fLdkAovz9fKchKNjClmGaiJFewFFdXFtGgF63c9TxOaSA5yUq
+	 It0ExoLEeqG5Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34387380AA76;
+	Mon,  3 Feb 2025 10:20:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,66 +37,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 net] udp: gso: do not drop small packets when PMTU reduces
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173857803108.3097404.4630945302894168269.git-patchwork-notify@kernel.org>
+Date: Mon, 03 Feb 2025 10:20:31 +0000
+References: <Z5yKa7gz72+JEOXr@debian.debian>
+In-Reply-To: <Z5yKa7gz72+JEOXr@debian.debian>
+To: Yan Zhai <yan@cloudflare.com>
+Cc: netdev@vger.kernel.org, willemdebruijn.kernel@gmail.com,
+ davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, shuah@kernel.org,
+ johunt@akamai.com, alexander.h.duyck@linux.intel.com,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kernel-team@cloudflare.com
 
-Implement the kpkeys interface if CONFIG_ARM64_POE is enabled.
-The permissions for KPKEYS_PKEY_DEFAULT (pkey 0) are set to RWX as
-this pkey is also used for code mappings.
+Hello:
 
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
----
- arch/arm64/include/asm/kpkeys.h | 43 +++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 arch/arm64/include/asm/kpkeys.h
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-diff --git a/arch/arm64/include/asm/kpkeys.h b/arch/arm64/include/asm/kpkeys.h
-new file mode 100644
-index 000000000000..e17f6df41873
---- /dev/null
-+++ b/arch/arm64/include/asm/kpkeys.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __ASM_KPKEYS_H
-+#define __ASM_KPKEYS_H
-+
-+#include <asm/barrier.h>
-+#include <asm/cpufeature.h>
-+#include <asm/por.h>
-+
-+#include <asm-generic/kpkeys.h>
-+
-+static inline bool arch_kpkeys_enabled(void)
-+{
-+	return system_supports_poe();
-+}
-+
-+#ifdef CONFIG_ARM64_POE
-+
-+static inline u64 por_set_kpkeys_level(u64 por, int level)
-+{
-+	por = por_set_pkey_perms(por, KPKEYS_PKEY_DEFAULT, POE_RXW);
-+
-+	return por;
-+}
-+
-+static inline int arch_kpkeys_set_level(int level)
-+{
-+	u64 prev_por = read_sysreg_s(SYS_POR_EL1);
-+
-+	write_sysreg_s(por_set_kpkeys_level(prev_por, level), SYS_POR_EL1);
-+	isb();
-+
-+	return prev_por;
-+}
-+
-+static inline void arch_kpkeys_restore_pkey_reg(u64 pkey_reg)
-+{
-+	write_sysreg_s(pkey_reg, SYS_POR_EL1);
-+	isb();
-+}
-+
-+#endif /* CONFIG_ARM64_POE */
-+
-+#endif	/* __ASM_KPKEYS_H */
+On Fri, 31 Jan 2025 00:31:39 -0800 you wrote:
+> Commit 4094871db1d6 ("udp: only do GSO if # of segs > 1") avoided GSO
+> for small packets. But the kernel currently dismisses GSO requests only
+> after checking MTU/PMTU on gso_size. This means any packets, regardless
+> of their payload sizes, could be dropped when PMTU becomes smaller than
+> requested gso_size. We encountered this issue in production and it
+> caused a reliability problem that new QUIC connection cannot be
+> established before PMTU cache expired, while non GSO sockets still
+> worked fine at the same time.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v3,net] udp: gso: do not drop small packets when PMTU reduces
+    https://git.kernel.org/netdev/net/c/235174b2bed8
+
+You are awesome, thank you!
 -- 
-2.47.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
