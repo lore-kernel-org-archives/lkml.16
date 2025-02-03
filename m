@@ -1,132 +1,157 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8832205E36
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA342054EE
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738591500; cv=none; b=Zo9fudNQ5yylztRhZCngQh2BwFUFU5unjU995IGCC1JbDxVQnOihHJPn55sFeQt2iATXlHXO2n8ew1q0CZqFBozGTeYCN6ZaDb0F/TNR/zBfVGj1k5v9dgdWNYZIP+eyHufL/7rqQ4HY5DZnBXfl/+Jxvn5nHBa2U9jkbd9684Y=
+	t=1738591525; cv=none; b=XuaGm+ULHl/PEJby8KGVS1P1d2zjwtmjslI1+uF/+d+qyvx4/SMe4KWypxFIRTXs4NgIVsm08TE3wbRkLZAmWPLFjPOeWOSQy6uAiqiiO/bmTc/Y9vJF3fT/w73B+siOk0ApEUvPOoLV4mlhwqflbcFGceEYH0qov2f2gLwa2Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738591500; c=relaxed/simple;
-	bh=h6CWMX42b1q0GMAh+1qfTza+9TeJXgXvTvyYsur+MFA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZmyGgUjKw3GAUcJkIl9UvYma2mNf2H1JVFgHKGG9PQgNLfqjMpmffHlpl8SJkGQOXg6U1k+TT1EvIHaY8qU4DmMMOd9Pz/WdSW7n0WWoH0s6031C782I6TEfH9x02gNKOIMbZFhsz/WoqfeR8UZ3PZIN8idVUw6tOKZ6wEGZMAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xgH9fUT8; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738591525; c=relaxed/simple;
+	bh=RPAiOgWMmu3yPq1VH0P4VD+K44/uVY2H7oc+gcv1Vt0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BbtOyLgxLQ/UZ+QOttwlhDxJpV3cDFgTVTfnfa3/YyK0jcQ11RnvkoP/NdYzgVYZ9YicA0kpGEIy1kG8akB5RPwk+uwkpEqViAwNfIxZLUJwtn+//DHTfDU28R6cef63sNn56khJNzMAxLsFr9oAuNwSjfXqsXc4s8+rsTsnVMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LKQEsPpM; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xgH9fUT8"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e549b0f8d57so4246472276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:04:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738591498; x=1739196298; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Am0X09ccYm4uqIChn1Tko10AiRMYHlGQ0TVf8PEtNTc=;
-        b=xgH9fUT8Fhyqs33rXJPnM7kQtTG8sD0cOoKdXbMEmMeAXCVnJkk/G0Pu4Tjqm24PJs
-         Hbf/gj4SU+g/aSoIZlkcgXj23LqnkOvhwJNfCsGIfEH9dF5PqcS/Ko7uWm4VZRPxHBqr
-         vE0u29JPcAu5ShbD8HGclA2DK81aM89pOHrFOQALnevWYVW/7j48mjpB/HyKmR2rZ98H
-         ED55JipYAnNpTuzcnmHAezlirgctBqxLPfOvWMPEApdbw1WVADIcQn/ogkVq1OamjSLr
-         CJ78KqyE8XPKUrJZmhp3w/F0EM3BGMa3jT8d+Cu1jeYt24ASBbNFTbt/rvw0j1BLU7Kw
-         7FLQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LKQEsPpM"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513BUOpB003800
+	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 14:05:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SAVn8olU3KNdR11Q8xavIGnX0m9TWIy2i+F3+DqAvuc=; b=LKQEsPpMCvWTpCkn
+	C5MMQqEU2PPLyPGS7lV/7Q3GtokmRMzhE5/sLuBTXhY/ggerBlTPFJsDkXmYjgq6
+	vo/YUy8/YtkXzLEWhQDiSOqE90rbku/ga5a+oX8VJmM7otILx/hUTOJuBgAohFY8
+	4IvvKYOpEkvgBm3Lo6sIILrXyM6kBkJi0KcGe7URfGQUBsShGtl2otJ0LuGFikcy
+	pX1R4slNaSTWnUMsYI8bDEIgB8mOdDc0a4xYy3Pwg9UHIqHyGXmkZy9rk/O9/6jI
+	qvu6WAqOycQzjelFgAkNEBcQ7wU4BS+NyfheOwjiPRBWOIW2oXm/LnaA+ZuzQPgq
+	LnFhKA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jw03ghha-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:05:21 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7b6e43ed084so89633885a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:05:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738591498; x=1739196298;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Am0X09ccYm4uqIChn1Tko10AiRMYHlGQ0TVf8PEtNTc=;
-        b=Iz6r4l5v72fMO017tNAkkUaV4ZilvQqGNjR1MCr1YnNAiGmPjoWl2YnIeYjjVcJ9d9
-         S5F3VJKCr759zNgW+c5TKhD5JdIqYNpIGUDk15JzvjrQTvo77FKKHkSV1iI24fTbOU4/
-         O9vFeiHtPyFMbJ5qwwIfJDU5zUFj7EtttQtlz372ZkW/rVkI4GD4kILMN5mlwJ9kFfNW
-         ZC2q8w1Jq0KVeQSqNbinIIVOZmgr/Sv6L+9fQNLtLqs7I5eZKwVMsJ/LlIwQVcK6PWdZ
-         vaB5cGDOXNo55UFGvZrP5uDDDOOjK/5gQ4aG3gcY6G7I7fk/zIiKhRhYed/oszKdIKCi
-         Pi+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVft/9tL8uNHzFJs4qk/Ju1mQJTeMh3sXATVuwP9VT8S8JsAJ2E0xskTMBsjlFC9CgHLSQlPnOQIe4GAtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRIJG4Yg7+0TOY9in8xuM6Np7P0nwn6g78+GvbWDpRXb4wmXZs
-	My2CSfrTpZ7TTr1RtSxDtndkolRMT31xCdhNSsY/ofk9Od5VuSgqEXoxiXrak6GXiGxfSvZmHXn
-	VMVh6PWbs5qJyQSPCwmNdfmEA+hxEZFtGW694lP9EiBbnVbgj
-X-Gm-Gg: ASbGncvkdRGzEgZiy5ASRoo+Vb4o0q1YDMds7LBIMq8Eb96j291Gavfp0XcsG2KOFxD
-	Qg5kMZRkx8k/qlMohL/VTfYkIGlA4pyPtfk5Mki89KFjRnZ0KBz8LkstBk9FW/hmx+afwZlBByQ
-	==
-X-Google-Smtp-Source: AGHT+IFwnbzyrxEukfl9ktPOhFtVST3/FONPbZt9n/IsJ/BCI9rREcADlK7HneW2NrgAPdGw7ypRtb7SFs72hQbzEUU=
-X-Received: by 2002:a05:6902:2006:b0:e5b:111b:a8d7 with SMTP id
- 3f1490d57ef6-e5b111ba9abmr284291276.41.1738591497654; Mon, 03 Feb 2025
- 06:04:57 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738591520; x=1739196320;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SAVn8olU3KNdR11Q8xavIGnX0m9TWIy2i+F3+DqAvuc=;
+        b=LlZnCPDVZq3yaMN8o3eycyqJ+yoZvCHLIIhoSyQ7Iso6s8nnYgAkAVmOg9tF6tMhyY
+         utH9Ykse1DrAtsa6Ok1ir5aEMZYsDRKsKLF503gfiAZOm4MjwgDxWzABdzRUvr8yDnSv
+         40k8O/sywcynkOczjIkd8f+wvONu8jHsQs6Yv4CnrrnKtbwRr5tc3QoeRSa7oC4ypH7K
+         UhgtEdA8KqmpfrQUI5yN9GwhLRHi90m5zRZ75NRa/2TYQkyJkrjkwsoypIwUK0zy1CxL
+         sILP75PM6siNl5jYd4faLyFvDU6/a4VAPgxU5HyPudazrJH1QFPHKpKCfNL60wwJPNa/
+         Idqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXbnht3XjaKfwIe6C54TT52xTr5sPz9/PL/kUUqcAdFQBFQhzIrFNSb3Wet1PYq1VyWis0qWhzc3EMj0Oo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4Zy1YAnwCv8hmQm/miq3aEnQ+4TL9g4weG+4+IOXGcMqFHLxq
+	id1P8sX0BuCjHiBoW4l6hJxqQ4bzzneHneGUgroWpj0uGMHjRFIytJptI+nP38ovSPp2w2U/o4w
+	KWp0rXEUHHPhKAYjLAMXNGafb0eX9FqJU7WchcY8m0Tl7HRDxDHsNHYSEM+F2sEQ=
+X-Gm-Gg: ASbGncufzlYBeA9V05Fln4c09Exnamr1yB+CBNmQai3Qp9gONw9oY7hJ+0Ud5ykahLP
+	QujW45N4F9iHfrmCqC07QHqH3jDz1pzb2ZHvXAtbSWPOYwohH8hGZGxOk2d2QOrYMTnUbWsOyHO
+	mpUnMPcoDVlkCiEqPfrfi7Aps2HT1u3dvRt/Uk/pu/mmEQDQzeX1V4sb7MpPHFw8JqE/ZTd1zg1
+	uIHv11kTarQlRr8Jjn6tTo0TQjYR9UyiszIStTsUlFtpG+9YBLjNLJWtAw5OFwr86ZhNvLa5pVa
+	qLoixjOoIdaAOSlhC6cfiXF5a1COpsLdXY5tIAq3r+z9qCC4sE7tavfBV0A=
+X-Received: by 2002:a05:620a:40ce:b0:7b6:d2ca:15b6 with SMTP id af79cd13be357-7bffcc352a0mr1170512885a.0.1738591520419;
+        Mon, 03 Feb 2025 06:05:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHcEhI9vXikoPJbicfHzVgVexvWitCJUXqJTFDjSt+WZfBiMjT0/ZAvjU0/DTx1rj1mX1GJHA==
+X-Received: by 2002:a05:620a:40ce:b0:7b6:d2ca:15b6 with SMTP id af79cd13be357-7bffcc352a0mr1170511085a.0.1738591519966;
+        Mon, 03 Feb 2025 06:05:19 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc723e9fe4sm7781445a12.26.2025.02.03.06.05.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 06:05:19 -0800 (PST)
+Message-ID: <e037cad2-1462-4be7-81bb-5c41c346f765@oss.qualcomm.com>
+Date: Mon, 3 Feb 2025 15:05:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129214335.125292-1-linux@treblig.org>
-In-Reply-To: <20250129214335.125292-1-linux@treblig.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 3 Feb 2025 15:04:21 +0100
-X-Gm-Features: AWEUYZmZikQz2CrmOrzRKi5yrRTvk_iJYC_EFEjQ29bDOeCh_i1eh4bHMrvn-Yc
-Message-ID: <CAPDyKFobzCJTaHV6rXwTr-hhzKgN7fAuiUQXjG20pRmBq5wsgg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: slot-gpio: Remove unused mmc_gpio_set_cd_isr
-To: linux@treblig.org
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-mmc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: dts: qcom: add wifi node for IPQ5332 based
+ RDP441
+To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-wireless@vger.kernel.org
+References: <20250130045900.1903927-1-quic_rajkbhag@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250130045900.1903927-1-quic_rajkbhag@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: nUOIq1J6ventLM4FPxI7kmCRx2KN6y6h
+X-Proofpoint-ORIG-GUID: nUOIq1J6ventLM4FPxI7kmCRx2KN6y6h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ phishscore=0 mlxlogscore=942 impostorscore=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1015 spamscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502030104
 
-On Wed, 29 Jan 2025 at 22:43, <linux@treblig.org> wrote:
->
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->
-> mmc_gpio_set_cd_isr() last use was removed in 2018 by
-> commit 7838a8ddc80b ("mmc: omap_hsmmc: Kill off cover detection")
->
-> Remove it.
->
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-
-Applied for next, thanks!
-
-Kind regards
-Uffe
-
-
+On 30.01.2025 5:59 AM, Raj Kumar Bhagat wrote:
+> RDP441 is based on IPQ5332. It has inbuilt AHB bus based IPQ5332 WiFi
+> device.
+> 
+> Describe and add WiFi node for RDP441. Also, reserve the memory
+> required by IPQ5332 firmware.
+> 
+> Depends-On: [PATCH V2 0/2] mailbox: tmel-qmp: Introduce QCOM TMEL QMP mailbox driver
+> Depends-On: [PATCH V3 0/8] Add new driver for WCSS secure PIL loading
+> Link: https://lore.kernel.org/lkml/20241231054900.2144961-1-quic_srichara@quicinc.com/
+> Link: https://lore.kernel.org/lkml/20250107101647.2087358-1-quic_gokulsri@quicinc.com/
+> 
+> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
 > ---
->  drivers/mmc/core/slot-gpio.c  | 12 ------------
->  include/linux/mmc/slot-gpio.h |  1 -
->  2 files changed, 13 deletions(-)
->
-> diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
-> index 12247219e1c2..5fd455816393 100644
-> --- a/drivers/mmc/core/slot-gpio.c
-> +++ b/drivers/mmc/core/slot-gpio.c
-> @@ -159,18 +159,6 @@ int mmc_gpio_set_cd_wake(struct mmc_host *host, bool on)
->  }
->  EXPORT_SYMBOL(mmc_gpio_set_cd_wake);
->
-> -/* Register an alternate interrupt service routine for
-> - * the card-detect GPIO.
-> - */
-> -void mmc_gpio_set_cd_isr(struct mmc_host *host, irq_handler_t isr)
-> -{
-> -       struct mmc_gpio *ctx = host->slot.handler_priv;
-> -
-> -       WARN_ON(ctx->cd_gpio_isr);
-> -       ctx->cd_gpio_isr = isr;
-> -}
-> -EXPORT_SYMBOL(mmc_gpio_set_cd_isr);
-> -
->  /**
->   * mmc_gpiod_request_cd - request a gpio descriptor for card-detection
->   * @host: mmc host
-> diff --git a/include/linux/mmc/slot-gpio.h b/include/linux/mmc/slot-gpio.h
-> index 274a2767ea49..1ed7b0d1e4f9 100644
-> --- a/include/linux/mmc/slot-gpio.h
-> +++ b/include/linux/mmc/slot-gpio.h
-> @@ -22,7 +22,6 @@ int mmc_gpiod_request_cd(struct mmc_host *host, const char *con_id,
->  int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
->                          unsigned int idx, unsigned int debounce);
->  int mmc_gpiod_set_cd_config(struct mmc_host *host, unsigned long config);
-> -void mmc_gpio_set_cd_isr(struct mmc_host *host, irq_handler_t isr);
->  int mmc_gpio_set_cd_wake(struct mmc_host *host, bool on);
->  void mmc_gpiod_request_cd_irq(struct mmc_host *host);
->  bool mmc_can_gpio_cd(struct mmc_host *host);
-> --
-> 2.48.1
->
+
+[...]
+
+>  / {
+>  	model = "Qualcomm Technologies, Inc. IPQ5332 MI01.2";
+>  	compatible = "qcom,ipq5332-ap-mi01.2", "qcom,ipq5332";
+> +
+> +	/*                 Default Profile
+> +	 * +============+==============+=====================+
+> +	 * |            |              |                     |
+> +	 * | Region     | Start Offset |       Size          |
+> +	 * |            |              |                     |
+> +	 * +------------+--------------+---------------------+
+> +	 * |            |              |                     |
+> +	 * |            |              |                     |
+> +	 * |            |              |                     |
+> +	 * | WLAN Q6    |  0x4A900000  |       43MB          |
+> +	 * |            |              |                     |
+> +	 * |            |              |                     |
+> +	 * +------------+--------------+---------------------+
+> +	 * | M3 Dump    |  0x4D400000  |       1MB           |
+> +	 * +------------+--------------+---------------------+
+> +	 * | Q6 caldb   |  0x4D500000  |       5MB           |
+> +	 * +------------+--------------+---------------------+
+> +	 * | MLO        |  0x4DB00000  |       18MB          |
+> +	 * +============+==============+=====================+
+> +	 * |                                                 |
+> +	 * |                                                 |
+> +	 * |                                                 |
+> +	 * |            Rest of memory for Linux             |
+> +	 * |                                                 |
+> +	 * |                                                 |
+> +	 * |                                                 |
+> +	 * +=================================================+
+> +	 */
+
+I'm still not super on board with this graph, since this is a very predictable
+layout where there's [something for firmware, contiguous] and [free]
+
+Konrad
