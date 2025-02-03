@@ -1,120 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BEA204595;
-	Mon,  3 Feb 2025 12:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F7C6204C11;
+	Mon,  3 Feb 2025 12:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738587563; cv=none; b=mwQR6O9SlUcNkJlYqMx1ZaTbB48UcEJK4dmi86syLlrKo585ohUg8A00wpP2ujPjE5BrKEFVAazs5m+QqIsZSJFWw/ZMxXAM9hgwmjUGndOFbDq4r+SDnTkZFX4Hj4Qxawib+GVjwFzdXMVIlpIZU8p7uFEz0FTQujgLEzKFrg4=
+	t=1738587586; cv=none; b=OLCcaAYRBoj1FV1sm0H31huNmawph9ygjZjDZ7kKfQY7prvEOmdPpanQyhCmly+loEQo7o89SnV0nHiYuqY5NVuy/f5Ys/pI447hY2GB6KxZYVXzGH8RHBff5BXUa7A67Dg15Rq3jVw3ACblAUGa96DWcpfcwtayKOPYtcUmp6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738587563; c=relaxed/simple;
-	bh=MhEkliF53H57DR5syUwKIR4P8l84NgWwj5+fCyr7K9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tfYGSOpFkV5JKHMjUf7MPXh7DH4gbNczCwf91j7VfZvOSg9mKUOX5p1hAcOOFBzVCQVdQ5u1Fx5OK1vGaIFEu63ZIaicKHc/Jr7DMsNJ9C/DLO0ZdWwMFhDYIas9OQJJHfANKXzgWTmLo94eZi49FDgAxdacS8Ob+Lq9vS9IKUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RIpsboO9; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RIpsboO9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738587562; x=1770123562;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=MhEkliF53H57DR5syUwKIR4P8l84NgWwj5+fCyr7K9A=;
-  b=RIpsboO9hKrG7e5UaRY8npXN7/ZFUzum5xLvf44UjdUKo8rJrtLQNZbK
-   B9i9fMK/6ZemkPq5ffSzbMSnvdz2aFvBNiEnYFGI79uep0v69SyOj/Buy
-   dCq4uqNPev+ccM9Ee+KSJyJt3IGtKO5Sn7nDFeFpDdE6WiynDJgRAm3nB
-   Zr7taxj90E9puoPRbquj/ZyrPRe5kjCQ8FioERPaWo93e+dCjjMF0UTNW
-   jgNZwH+Hmtx0r0VdAX7hf1NObjaYSjkHLWfoIGdzm9HfnQrb9JXYQw6kx
-   kf0KfYGMbUPxrIsp1fbxIrB6UCRX020snQkvwLcj5q2P5xJUlt9aVRvQ9
-   A==;
-X-CSE-ConnectionGUID: Yu5Nr7WbTEiFctJBsVhyTw==
-X-CSE-MsgGUID: 7fXQCkl6TMKwRD6zdczaaA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="50465549"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="50465549"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:59:10 -0800
-X-CSE-ConnectionGUID: a17op1NAQZWFGtfRvkonbA==
-X-CSE-MsgGUID: /NqSXB9dSNa1JJ4zLRUsAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="110041490"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa009.jf.intel.com with ESMTP; 03 Feb 2025 04:59:08 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 2249A23F; Mon, 03 Feb 2025 14:59:07 +0200 (EET)
-Date: Mon, 3 Feb 2025 14:59:06 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
-Cc: andreas.noever@gmail.com, michael.jamet@intel.com,
-	YehezkelShB@gmail.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] thunderbolt: Disable Gen 4 Recovery on Asymmetric
- Transitions
-Message-ID: <20250203125906.GK3713119@black.fi.intel.com>
-References: <20250131014406.28645-1-rahimi.mhmmd@gmail.com>
- <20250131014406.28645-4-rahimi.mhmmd@gmail.com>
- <20250203084224.GE3713119@black.fi.intel.com>
- <wxgsteiuto6qivnfttzuyw6jijs6ypcq4oyepqr6zbjgeez3ac@flvlpzswuyco>
- <20250203123944.GJ3713119@black.fi.intel.com>
- <gdojzsdm6kmg6kdoubhg3h6ebedyjswwzofdzxhfcbbdl3gsy2@wqpqcdukpn4h>
+	s=arc-20240116; t=1738587586; c=relaxed/simple;
+	bh=/y/y+yMPC+kxSkrXxO3Guy9FZRh/OM4w1hP6Ch7QS1Y=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=OUyX8aAf/02//BMdJmiiLrlM0xG2dggGhRRBT+Mtd1tNHJpwYvDjUNLF0rYx7dWlfUmsJNy8wk+l/TPXaeDrwYpSDhZKRP+Lxz/T7Uu1/fHSHVBLQBl9Q09q1Ir+p7rEFEu9nQ8dpZ/R8TOhti3Jj3RHLIS3RG5wWqJZ6lu09Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3c9ff7000001d7ae-5c-67a0ba2e234c
+Message-ID: <a2b428ed-212a-4e39-bcf7-5ab67249132d@sk.com>
+Date: Mon, 3 Feb 2025 21:44:29 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <gdojzsdm6kmg6kdoubhg3h6ebedyjswwzofdzxhfcbbdl3gsy2@wqpqcdukpn4h>
+User-Agent: Mozilla Thunderbird
+Cc: kernel_team@skhynix.com, Gregory Price <gourry@gourry.net>,
+ ying.huang@linux.alibaba.com, rafael@kernel.org, lenb@kernel.org,
+ gregkh@linuxfoundation.org, akpm@linux-foundation.org, rakie.kim@sk.com,
+ dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
+ horen.chuang@linux.dev, hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com,
+ 42.hyeyoo@gmail.com, Honggyu Kim <honggyu.km@gmail.com>
+Subject: Re: [PATCH v4] Weighted Interleave Auto-tuning
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+References: <20250202141247.2219681-1-joshua.hahnjy@gmail.com>
+Content-Language: ko
+From: Honggyu Kim <honggyu.kim@sk.com>
+In-Reply-To: <20250202141247.2219681-1-joshua.hahnjy@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsXC9ZZnka7ergXpBmtWKVpM7DGwmLN+DZvF
+	9KkXGC1O3Gxks/h59zi7RfPi9WwWqzf5WszZeYfZ4nb/OVaLVQuvsVkc3zqP3WLfRaCGnQ/f
+	slks39fPaHF51xw2i3tr/rNazP0yldli9ZoMByGPw2/eM3vsnHWX3aO77TK7R8uRt6wei/e8
+	ZPLYtKqTzWPTp0nsHidm/Gbx2PnQ0mNhw1Rmj/1z17B7nLtY4fF5k1wAbxSXTUpqTmZZapG+
+	XQJXxue9uxgL/olUzL01gbGB8bZAFyMnh4SAiUTv4ndMMPabuTvYQGxeAUuJSysfsoPYLAIq
+	Er/ndLFDxAUlTs58wgJiiwrIS9y/NQMozsXBLPCaWeLV1HVADgeHsIC5xNflKiA1IgKaEida
+	JzGD2EICdhKHLjWD2cwCIhKzO9vAbDYBNYkrLyeB3cApYC/R3X+fHaLGTKJraxcjhC0vsf3t
+	HGaQXRIC59gl2tfsZYU4WlLi4IobLBMYBWchuW8Wkh2zkMyahWTWAkaWVYxCmXlluYmZOSZ6
+	GZV5mRV6yfm5mxiBMbys9k/0DsZPF4IPMQpwMCrx8J7YtiBdiDWxrLgy9xCjBAezkgjv6e1A
+	Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxG38pThATSE0tSs1NTC1KLYLJMHJxSDYxh62/ofC3x
+	OhKu4eGjWhntvqL0Z+La+fsCPQ6++C8UsFrJMHdWhJfVqi83DNiLg6IrP1RpKa5Ys/KuNIuv
+	XvEzDWFuOW8fZ29LzveHNt5ynN1zSq5v6YL9mscljvKdvXLTb713zmyTaJ2NaxzyvNzKHp8+
+	9OLwn3hhyYqzsat2sL4MnyRn2qfEUpyRaKjFXFScCAAp8lm43QIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsXCNUNLT1dv14J0g/YVQhYTewws5qxfw2Yx
+	feoFRosTNxvZLH7ePc5u0bx4PZvF6k2+FnN23mG2uN1/jtVi1cJrbBbHt85jt9h3Eajh8NyT
+	rBY7H75ls1i+r5/R4vKuOWwW99b8Z7WY+2Uqs8Wha89ZLVavyXAQ8Tj85j2zx85Zd9k9utsu
+	s3u0HHnL6rF4z0smj02rOtk8Nn2axO5xYsZvFo+dDy09FjZMZfbYP3cNu8e5ixUe3257eCx+
+	8YHJ4/MmuQD+KC6blNSczLLUIn27BK6Mz3t3MRb8E6mYe2sCYwPjbYEuRk4OCQETiTdzd7CB
+	2LwClhKXVj5kB7FZBFQkfs/pYoeIC0qcnPmEBcQWFZCXuH9rBlCci4NZ4DWzxKup64AcDg5h
+	AXOJr8tVQGpEBDQlTrROYgaxhQTsJA5dagazmQVEJGZ3toHZbAJqEldeTmICsTkF7CW6+++z
+	Q9SYSXRt7WKEsOUltr+dwzyBkW8WkjNmIRk1C0nLLCQtCxhZVjGKZOaV5SZm5pjqFWdnVOZl
+	Vugl5+duYgTG6LLaPxN3MH657H6IUYCDUYmH98S2BelCrIllxZW5hxglOJiVRHhPbwcK8aYk
+	VlalFuXHF5XmpBYfYpTmYFES5/UKT00QEkhPLEnNTk0tSC2CyTJxcEo1MK59pb/yn+q0J7H/
+	r2Rc6/uXkuC4a/nsnpxJRVyH/26SVo4sFeP8qrVotmCH7q8oz+uad+6o3154bKFSdmnNQjcL
+	zbLOgq/Bdz/xmKy3mj2Bj2OZYVznvVkLHkzy3Xz8V+aJ57nqR5bfrrjc5rq9LrdISPC/UZjT
+	b47pjC9PmvsZlh75rb/sxiQlluKMREMt5qLiRACl6TpzzQIAAA==
+X-CFilter-Loop: Reflected
 
-On Mon, Feb 03, 2025 at 12:43:04PM +0000, Mohammad Rahimi wrote:
-> Hello again.
-> 
-> On Mon, Feb 03, 2025 at 02:39:44PM GMT, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > On Mon, Feb 03, 2025 at 12:25:21PM +0000, Mohammad Rahimi wrote:
-> > > Hello.
-> > > 
-> > > On Mon, Feb 03, 2025 at 10:42:24AM GMT, Mika Westerberg wrote:
-> > > > Hi,
-> > > > 
-> > > > On Fri, Jan 31, 2025 at 01:41:27AM +0000, Mohammad Rahimi wrote:
-> > > > > Updates the Connection Manager to disable the Gen 4 Link Recovery
-> > > > > flow before transitioning from a Symmetric Link to an Asymmetric
-> > > > > Link, as specified in recent changes to the USB4 v2 specification.
-> > > > > 
-> > > > > According to the "USB4 2.0 ENGINEERING CHANGE NOTICE FORM"
-> > > > > published in September 2024, the rationale for this change is:
-> > > > > 
-> > > > >   "Since the default value of the Target Asymmetric Link might be
-> > > > >   different than Symmetric Link and Gen 4 Link Recovery flow checks
-> > > > >   this field to make sure it matched the actual Negotiated Link Width,
-> > > > >   we’re removing the condition for a Disconnect in the Gen 4 Link
-> > > > >   Recovery flow when Target Asymmetric Link doesn’t match the actual
-> > > > >   Link width and adding a Connection Manager note to Disable Gen 4 Link
-> > > > >   Recovery flow before doing Asymmetric Transitions."
-> > > > > 
-> > > > > Signed-off-by: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
-> > > > 
-> > > > I did some minor modifications and applied to thunderbolt.git/next. Please
-> > > > let me know if I missed something.
-> > > > 
-> > > 
-> > > Looks great. Just one question:
-> > > 
-> > > In tb_configure_asym(), if tb_switch_set_link_width() fails, we won’t restore
-> > > the link recovery status. Is that okay?
-> > 
-> > Good question :) Looking at the ECR, does it actually say anywhere that the
-> > CM should needs to re-enable it? I'm thinking that we could just disable it
-> > and be done with it?
-> 
-> Right. Thanks for clearing that up.
+Hi Joshua,
 
-I'll check with the HW/FW folks still if they have any suggestions. I'll
-keep you updated.
+On 2/2/2025 11:12 PM, Joshua Hahn wrote:
+> Hi Honggyu,
+> 
+> On Sun, 2 Feb 2025 22:51:34 +0900 Honggyu Kim <honggyu.km@gmail.com> wrote:
+> 
+>> On 2/2/25 01:53, Gregory Price wrote:
+>>> On Sat, Feb 01, 2025 at 11:49:31AM -0500, Gregory Price wrote:
+>>>>>     1. the auto mode set the weights as 10:5:1 for node{0-2}.
+>>>>>     2. node2 is offlined, then recalculation makes it as 2:1 for node{0,1}.
+>>>
+>>> Point of clarification here:  a hot-unplug event won't cause
+>>> recalculation.
+>>>
+>>> What actually causes re-weight is hot-plug reporting new capacity.
+>>
+>> So do you mean re-weight is done only when a new node is onlined while
+>> offline doesn't trigger re-weight?
+>>
+>> I see node_set_perf_attrs() does recalculation by calling
+>> mempolicy_set_node_perf(), then reduce_interleave_weights().
+>>
+>> But I'm not sure if the re-weight is done via node_set_perf_attrs() only
+>> when a new node is onlined.
+>>
+>> Could you please explain where I can find it?
+> 
+> Just chiming in to add some clarification:
+> Your analysis above is correct; reduce_interleave_weights() is only
+> called in 2 spots: once when the mode is switched from manual --> auto,
+> and the other when new bandwidth data is available, which calls
+> node_set_perf_attrs() and so on. In all other scenarios, iw_table is
+> preserved, and all values inside remain the same without manual changes.
+
+Yeah, this part is clear.
+
+> A node offlining (or even onlining with no new bandwidth information)
+> will just mean that the node inherits whatever value is stored in
+> iw_table at that moment, whether that contains the default values
+> created on init or the last values that it had taken.
+
+It looks the call sequence is as follows.
+
+   cxl_region_perf_attrs_callback()
+   -> cxl_region_update_coordinates()
+   -> node_set_perf_attrs()
+   -> mempolicy_set_node_perf()
+   -> reduce_interleave_weights()
+
+I haven't searched all the paths of cxl_region_perf_attrs_callback() via
+cxlr->memory_notifier.notifier_call callback pointer, but maybe this
+function is not called when a node is offlined, then I get node
+offlining doesn't trigger re-weight calculation.
+
+By the way, do you test it using CXL hardware or using qemu?
+
+> 
+>>> So in this scenario, the weight will remain the same for node2.
+>>
+>> If it's true, my scenario is wrong.
+>>
+>> Thanks,
+>> Honggyu
+>>
+>>>
+>>>>>     3. the auto sysfs interface is set to 0 to make it manual mode.
+> 
+> Please let me know if this makes sense. Thank you for your review
+> as always, and have a great day!
+> Joshua
+
+Thanks for your response.  Have a great day you too!
+
+Regards,
+Honggyu
