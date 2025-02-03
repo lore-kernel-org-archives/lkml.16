@@ -1,136 +1,146 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D602040B5
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 12:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9CF2040A6;
+	Mon,  3 Feb 2025 12:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738587175; cv=none; b=JNKJi+A7kBUJhtNck65THFuSDipP8ZR1JpVRw/AbLxOixmPXCcJglFK3oAEHoFfHBOFuERzJ9BILg+RUD6WJYfHsGNycqfBKdRmdnhqUDKpSo2m09aZUDHLWkIIqKVmg5W63XrdX0vCWNaINqFyfWOH8w74j224cjMLUJDPFhTs=
+	t=1738587311; cv=none; b=I+EKyCOkgGI9AI4B57ctrm2jtX6SD/3aaWL6IY1MCQ+8mGI8i8fxYfpLCjoj2u328DRUODbHyDgWygJ7tQpcVHqLlAFiB91dFznIABn79A2qJ0OTJLRVLmbU294W/DJGa8YrKz3YfOHChOCSMWBTedYwQiogPaDGiSh+AnnAV5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738587175; c=relaxed/simple;
-	bh=M3Kt5wuTT2F1a9ykRD0aslud2PJzB/uiZovD9dlqnhs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6RsgJuSKKU3+nH3qmEK6rAR7tEDkrP6J+UyL5GbqWUWyr/49gp2YQN/vOzXOFMn2/0/rTZavVe8RpfCWeQQHaC91KRciFxxNU6C4H7snVG3E9IlDf93TqfvS8JUZsyHDBc52TZJapQYG26yW9zQqOOftSXY6MYqSozKzqGb+E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=ZCfH9huD; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1738587311; c=relaxed/simple;
+	bh=MeY6uH2ARoh7Cb7jsYc6ETd6g0tfr5Job862/poiLYI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JBkPeBNHnjgtU6IRgPO3kS20M5vJ04rqI+LnYsYEwAZfzDe0iV57IEWQsAJk6Xhaxg7dLSM+zYzCBX4ezfOeXm20H8HJlLwW/1SInjbiE3jr1eDTLMgPNPxZTan8jEfKZNgk2IKFW2Kt3Qm1VyphMFrJBdjX6WOoCfNlH6isiR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PcyhG7PM; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="ZCfH9huD"
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 9291C3F220
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 12:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738587170;
-	bh=VhF9k3IAhHoTNkD1u2+baAbQZJeo4gcwGS+UKXk5kHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=ZCfH9huD+6YOlrjzCinen471C1gSZLg0RZYDBToVk3dvuLZEDCYX5Yconbbip8Mr/
-	 RG7JgCMPvdi9z8oKoeEPTC9ZA8a0tAqutj35Z7pzksiH5dfxZSDV6761YEoCnQuZfJ
-	 IdOArzUJX76205+oo0ib1+UnbG9JF0rXqpWBL0v+FciPAkQVqSuOqT2GIe/lFFHHEY
-	 i4FetNd++ZdWD77ABkzXD42M9DeY+jvNB9WxJoM8pxioF9RkNxOLUAtT24fMcErHAH
-	 lVtHlYwswn2f7NegTCDOaqBm6Aup2BfXV2Xb7WSpIoYh3oU23aQlV5pwR7dXyjsxD7
-	 4RimdHsZ+cv3Q==
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-21648ddd461so94603655ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 04:52:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738587169; x=1739191969;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VhF9k3IAhHoTNkD1u2+baAbQZJeo4gcwGS+UKXk5kHE=;
-        b=W2lE54C6bRZCXhgqqEGH8avng/7eyHNXzi/84k/mI0kQiXffCQF7Gp3wBWLURtUBXZ
-         0WbAoo8Chqq4pwxhX0ok58JqOzx5u82t9gppcHOWJ5JmhspyN7LdjSjX08NtzmWR2UZS
-         N1WL1+isCD25r55751Dyu5QfUToCM27aSNOyF29Ha9ahaPunQNj1krv89bt3S4qknABk
-         RO3huD3/+HQ3/QSnUMYrgOfgg1lN7yJL+vclDrfy/5WoilKR2A+NiK5iTVwOaTCdvrVq
-         LM52kkpKvsRCxD2B35Lu5Cg7bPVKwZrrf6YQbxBbz4Hk0U2vLOt7uqOYvtEDWC4pcM5C
-         Eulw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGbgEH3QfIq3zD2yjNLTKvyDopn2AURxY26osxSIetdrD2kB0zQGhesoYKkE/t2Be+Uj2FxMKnmXAOGxE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwALno8Yam0tQKQwfrPikJYTDoxuV6I7jOJKwPpZGDntfrKYb/V
-	e1qNqP2sXT9B+kfaB47BBIpWDD9nfltDiGMrzQLqf+nVDc9FwKIIVyIFjrtDLh01gWk+gtHWi9I
-	j84UgQvIChxnrixTcHJDe8SqfeCn7Ok8oTpJRe3vVxM1rCEyOS0RQrqQlPSj3utwwSB/WEALzLL
-	Ht9ycJPO0vXQ==
-X-Gm-Gg: ASbGncu7Tvkk5R5KCERjT/rdESPNo1l5YaE3x/kHTM5gAkw78vV7rI1EeSblPklzGVg
-	lRsfjvhCRp3PUrPE5LZ0d3yxKc/Yoz4k6XuD4thTc+xRkpiF6XSIzQNs+uYMjNhlWc9F+D1EjIH
-	E+yKMUCxfLJ4/26EEWWrqPHuL6YM14FvSC+PGgdgqTecY8WvwJoSAzYiykYRStn7/qAizJ65PDV
-	0EMWBtvgSBRa/jgsCaYxc/U6jmZOnSyM9OFT5lAEb4tPTXDZEtAkg+c7QrmM3/WvB8kPdBLlb7I
-	1Hl7mA==
-X-Received: by 2002:a17:903:94e:b0:216:3732:ade3 with SMTP id d9443c01a7336-21dd7dccd43mr372461825ad.35.1738587169141;
-        Mon, 03 Feb 2025 04:52:49 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHq1JilL8IMgEMb6RFyRt1fZ/pZTJMiA95sSjtcqZY7jRlr/1d8Bt+XG9+yC5UbiPiWCNJwfw==
-X-Received: by 2002:a17:903:94e:b0:216:3732:ade3 with SMTP id d9443c01a7336-21dd7dccd43mr372461495ad.35.1738587168698;
-        Mon, 03 Feb 2025 04:52:48 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:33e1:5e62:5b35:92b])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acebddbb1a4sm7873824a12.7.2025.02.03.04.52.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 04:52:48 -0800 (PST)
-Date: Mon, 3 Feb 2025 21:52:46 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpio: sim: lock hog configfs items if present
-Message-ID: <ve5d4rxl7z3fcn7iowf4u6oeq6656ivdjxknrnnx7fshj44574@f23vcqbu6vhc>
-References: <20250203110123.87701-1-brgl@bgdev.pl>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PcyhG7PM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738587310; x=1770123310;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=MeY6uH2ARoh7Cb7jsYc6ETd6g0tfr5Job862/poiLYI=;
+  b=PcyhG7PMKVrV4kYQOkdz3aMRIlFeztoO05WFYO4br+WlZtmYS/J2YXBp
+   OsvEOL5s7ui6D8fObK61p79XJGIOKeQMffKRgZEx2yKXwklInl91m5/BU
+   0dURiNrGhY48WkmyexLFW4rLo2hEdPs3d62EH3iRzvfRashGnNgi60nt8
+   XtvDBuRhOCPCT0fKC0xqJxPMAoUXUl9sgiIEjgscb/2J0LWEle8ObBeEt
+   gdiC2o/cVhGYwGcJLOCIV/oEic9FhWBITagoumDaRoE5viFXdX56svLN9
+   frNF6fLgF5IXXtnheoLNSu5N7Qn9GjC2q6GodAod1LPRk0xlLJEAR7nE2
+   A==;
+X-CSE-ConnectionGUID: lRy9hj/1QNy7hSV45iWfTQ==
+X-CSE-MsgGUID: MgtwiW5nSHmfPCj3uBD0qg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="50464718"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="50464718"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:55:09 -0800
+X-CSE-ConnectionGUID: 32slTYCNQtWkGmmYbBhi9w==
+X-CSE-MsgGUID: PenPCx9VQliCTweMwDacUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="110039927"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.194])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:55:07 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 3 Feb 2025 14:55:03 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 00/14] platform/x86: alienware-wmi driver rework
+In-Reply-To: <D7ISQ5PQLOLR.2P6D3M7W54PA3@gmail.com>
+Message-ID: <30f4bdff-caf7-45ce-5997-70c1c36a71ae@linux.intel.com>
+References: <20250203062055.2915-1-kuurtb@gmail.com> <c6e10cdd-6fba-6e8b-0913-66766cb9248e@linux.intel.com> <D7ISQ5PQLOLR.2P6D3M7W54PA3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203110123.87701-1-brgl@bgdev.pl>
+Content-Type: multipart/mixed; boundary="8323328-1128701905-1738587303=:934"
 
-On Mon, Feb 03, 2025 at 12:01:23PM GMT, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Depending on the user config, the leaf entry may be the hog directory,
-> not line. Check it and lock the correct item.
-> 
-> Fixes: 8bd76b3d3f3a ("gpio: sim: lock up configfs that an instantiated device depends on")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/gpio/gpio-sim.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index a086087ada17..b843682b47e9 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -1028,6 +1028,7 @@ gpio_sim_device_lockup_configfs(struct gpio_sim_device *dev, bool lock)
->  	struct configfs_subsystem *subsys = dev->group.cg_subsys;
->  	struct gpio_sim_bank *bank;
->  	struct gpio_sim_line *line;
-> +	struct config_item *item;
->  
->  	/*
->  	 * The device only needs to depend on leaf line entries. This is
-> @@ -1036,12 +1037,14 @@ gpio_sim_device_lockup_configfs(struct gpio_sim_device *dev, bool lock)
->  	 */
->  	list_for_each_entry(bank, &dev->bank_list, siblings) {
->  		list_for_each_entry(line, &bank->line_list, siblings) {
-> +			item = line->hog ? &line->hog->item
-> +					 : &line->group.cg_item;
-> +
->  			if (lock)
-> -				WARN_ON(configfs_depend_item_unlocked(
-> -						subsys, &line->group.cg_item));
-> +				WARN_ON(configfs_depend_item_unlocked(subsys,
-> +								      item));
->  			else
-> -				configfs_undepend_item_unlocked(
-> -						&line->group.cg_item);
-> +				configfs_undepend_item_unlocked(item);
->  		}
->  	}
->  }
-> -- 
-> 2.45.2
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks for spotting this and the fix.
+--8323328-1128701905-1738587303=:934
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Tested-by: Koichiro Den <koichiro.den@canonical.com>
+On Mon, 3 Feb 2025, Kurt Borja wrote:
+
+> On Mon Feb 3, 2025 at 4:20 AM -05, Ilpo J=C3=A4rvinen wrote:
+> > On Mon, 3 Feb 2025, Kurt Borja wrote:
+> >
+> >> Hi!
+> >>
+> >> I bring some last minute modifications.
+> >>=20
+> >> I found commit
+> >>=20
+> >> =098d8fc146dd7a ("nvmem: core: switch to use device_add_groups()")
+> >>=20
+> >> which states that it's unnecesary to call device_remove_groups() when
+> >> the device is removed, so I dropped it to simplify things.
+> >
+> > Hi Kurt,
+>=20
+> Hi Ilpo,
+>=20
+> >
+> >> I also found commit
+> >>=20
+> >> =09957961b6dcc8 ("hwmon: (oxp-sensors) Move tt_toggle attribute to dev=
+_groups")
+> >>=20
+> >> which states that no driver should add sysfs groups while probing the
+> >> device as it races with userspace, so I re-added PROBE_FORCE_SYNCHRONO=
+US
+> >> to the platform driver, so groups are added only after the device has
+> >> finished probing.
+> >>
+> >> I'm not 100% sure that the second commit message applies here, but it =
+is
+> >> revd-by Greg K-H so I added it just in case.
+> >
+> > Which is why .dev_groups should be used as it is able to avoid those=20
+> > races on driver core level.
+>=20
+> In previous discussions with Armin we agreed it made more sense to move
+> WMAX-only groups from alienware-wmi-base.c to alienware-wmi-wmax.c when
+> splitting.
+>=20
+> I have no problem in moving them back to .dev_groups though.
+>=20
+> >
+> > Why you call device_add_groups() at all? Can't you just insert it into=
+=20
+> > .dev_groups member in alienware_wmax_wmi_driver?
+>=20
+> I'd love to do this as it would simplify things a LOT, but some
+> user-space tools might expect this attributes to be exposed by the
+> "fake" platform device located at
+>=20
+> /sys/devices/platform/alienware-wmi
+>=20
+> If it were not for this, I would expose every attribute in the WMI
+> device.
+
+Ah, sorry, I didn't pay attention where they were added to. I vaguely=20
+recall that discussion.
+
+But still, you could make the groups available through .h and just add=20
+them directly into alienfx_groups (with an #ifdef/#else in .h), or is=20
+there again something I don't see?
+
+Obviously, .is_visible functions need to be extended slightly to filter=20
+out by interface but that should be relatively easy too. Also, the group=20
+variable names should be properly prefixed when making them cross file=20
+boundary like that.
+
+--=20
+ i.
+
+--8323328-1128701905-1738587303=:934--
