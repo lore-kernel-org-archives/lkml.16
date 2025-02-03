@@ -1,105 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B22A20012A;
-	Mon,  3 Feb 2025 13:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F043204598
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588802; cv=none; b=TlNbfH2P1aKckcPdFA/6r4RarrTBz7KMg9Ea66i5bl4nGNGMBWRPd9qHjQa8Q5slaeBli5iuZWMSOV5iz6pvWxDofgTkGcByZlntnVDV7gqB0X7JKiecRyPgyIse8WhEfCy+zBAMEt3uVp2Sa/Dq+fJiy/bOlJSmWHGqBdYVdlM=
+	t=1738588875; cv=none; b=Crz6b6o7914wdheHaxIrPIbP6gAnDRChVTzyQvk7RaLNDj1R1UMMtNwpLilaC/3HSjV8mWC5M4e2fMZx1LIJbbtZslENkpspoaa2n+KWJppUCD0LQe9bpXdBlDY1B25/KwHRPV/iJc5loMWxNuB1ROfcmtsZLwSldkV/VvSo9PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588802; c=relaxed/simple;
-	bh=ESQrnKqHCQzgAyhKMYNeFli9rDbnwZV44iLYlscj9QQ=;
+	s=arc-20240116; t=1738588875; c=relaxed/simple;
+	bh=43aqwoFqEadmaiaEL1evHdDHKrDHYllGJKxj2XFQdv8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nWXBqnXKI0euDbPEskTZZdAuJx42jo90TitvETa8cidDIgNhM2NDx4xG/5MGq/4x8tNPj9eqzKLgm4ERQ+JH4bnX/xQXv1C/iShr9eNMe0Wfw2u8iBYc1l+KUVe6BUyPIZtfNQ0QC7bgyMDW9pqOiTp/fSXRLOWImlSo/rso72k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aG69+6X/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AE3fNAhnEravuEOS4TghA9lgQSPXQ2gvcckmFd0DiVh/TRJfIRRa7S5WA4CffzK2Iy74LUE5dgYOewGkRf06zDqDQXV0nmPrU8y7FO+sJ2Jl9cBIa40Dd42lFO4m0AGAIru6DTLCe8gup6iZz+BI2QgrECB0FpKPrNs1wTce9Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=drkIDBbh; arc=none smtp.client-ip=95.215.58.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aG69+6X/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22EA7C4CED2;
-	Mon,  3 Feb 2025 13:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738588801;
-	bh=ESQrnKqHCQzgAyhKMYNeFli9rDbnwZV44iLYlscj9QQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aG69+6X/iEWfwB1ZAmjOn5g6+ZW3GIXxLdzSQ/v2ZtnXRUS5DHZiv2P9MsLslVpuN
-	 /+jpmpPJurfWoAkiKlwBL8qzXGBHNFaEjj3pza4wJqjAMN80/DHCndh5Su/7Jggbnm
-	 3Adpw9EZi26Ub0P7/+XgzLZLQTrA92zDMdNcNo8Io/sE24fq0egXRBxd2urZAy1qi5
-	 r96cQKzJEMtmNBkXNnkupJBr92o2i5fRsPu8+3ZGErVJjvsuBJK9nPexb8TTl5DXP7
-	 qt0soNIr0/+80SL4YTM3GkBJ+clzDuas0Z996PS0MKKOw+wVtpZ2Wx0z8rfHffmseA
-	 U7RuQVRuywrkQ==
-Date: Mon, 3 Feb 2025 13:19:55 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Sanyog Kale <sanyog.r.kale@intel.com>,
-	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	quic_pkumpatl@quicinc.com, kernel@quicinc.com
-Subject: Re: [RESEND v5 3/4] soundwire: qcom: Add set_channel_map api support
-Message-ID: <a82a33a8-d27c-45c8-a39a-58e6357e0d99@sirena.org.uk>
-References: <20250123042823.2067740-1-quic_mohs@quicinc.com>
- <20250123042823.2067740-4-quic_mohs@quicinc.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="drkIDBbh"
+Date: Mon, 3 Feb 2025 14:21:07 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738588869;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oSl7lrm4KEuJioP7eaV2gboPggwLzfzD3mDrXk5z0bM=;
+	b=drkIDBbhAYcULTSuQt9kmDX+HKaZKBJYl4rCH25JaGU11sjRAjthhDUf4/LdJE9CQdIltj
+	MXJrthEEKYyaJqBhPoiFsJuGP+9HOaRVSG/xR5fs29z8Xi3xH4ghibGxABvDo/JuS+EMwT
+	G9JX4xg56u5s+kEGgBqi6gfkP2kaJss=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Richard Leitner <richard.leitner@linux.dev>
+To: Dominique Martinet <dominique.martinet@atmark-techno.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: usb251xb: silence EPROBE_DEFER error on boot
+Message-ID: <i2qbsl5vhi7ltwxabmnbeiixcb4kmliezuokmv7sknkfgzwgns@g4jhh4ldugcz>
+References: <20250203-defer_usb1-v2-1-eba405ebee2c@atmark-techno.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Eq8RTpKzgOkqoEb1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250123042823.2067740-4-quic_mohs@quicinc.com>
-X-Cookie: This is now.  Later is later.
+In-Reply-To: <20250203-defer_usb1-v2-1-eba405ebee2c@atmark-techno.com>
+X-Migadu-Flow: FLOW_OUT
 
+On Mon, Feb 03, 2025 at 03:33:49PM +0900, Dominique Martinet wrote:
+> Use dev_err_probe to silence EPROBE_DEFER error on boot:
+> [    0.757677] usb251xb 1-002c: failed to get ofdata: -517
+> 
+> Signed-off-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
+> ---
+> Changes in v2:
+> - removed redundant error code in message and brace
+> - Link to v1: https://lore.kernel.org/r/20250203-defer_usb1-v1-1-f6bba254215d@atmark-techno.com
+> ---
+>  drivers/usb/misc/usb251xb.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+> index e24cdb667307802b9eee856e20744ebf694395e8..4fb453ca545013f8b89c43d3bb5cc6d1c53b39c9 100644
+> --- a/drivers/usb/misc/usb251xb.c
+> +++ b/drivers/usb/misc/usb251xb.c
+> @@ -636,10 +636,8 @@ static int usb251xb_probe(struct usb251xb *hub)
+>  
+>  	if (np && usb_data) {
+>  		err = usb251xb_get_ofdata(hub, usb_data);
+> -		if (err) {
+> -			dev_err(dev, "failed to get ofdata: %d\n", err);
+> -			return err;
+> -		}
+> +		if (err)
+> +			return dev_err_probe(dev, err, "failed to get ofdata\n");
+>  	}
+>  
+>  	/*
+> 
+> ---
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> change-id: 20250203-defer_usb1-254070d18cc9
 
---Eq8RTpKzgOkqoEb1
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jan 23, 2025 at 09:58:22AM +0530, Mohammad Rafi Shaik wrote:
-> Added qcom_swrm_set_channel_map api to set the master channel mask for
-> TX and RX paths based on the provided slots.
-
-This breaks an allmodconfig build, and arm64 defconfig:
-
-/build/stage/linux/drivers/soundwire/qcom.c: In function =E2=80=98qcom_swrm=
-_set_channel_map=E2=80=99:
-/build/stage/linux/drivers/soundwire/qcom.c:1283:36: warning: unused variab=
-le =E2=80=98sruntime=E2=80=99 [-Wunused-variable]
- 1283 |         struct sdw_stream_runtime *sruntime =3D ctrl->sruntime[dai-=
->id];
-      |                                    ^~~~~~~~
-/build/stage/linux/drivers/soundwire/qcom.c: At top level:
-/build/stage/linux/drivers/soundwire/qcom.c:1335:28: error: initialization =
-of =E2=80=98int (*)(struct snd_soc_dai *, unsigned int,  const unsigned int=
- *, unsigned int,  const unsigned int *)=E2=80=99 from incompatible pointer=
- type =E2=80=98int (*)(struct snd_soc_dai *, unsigned int,  unsigned int *,=
- unsigned int,  unsigned int *)=E2=80=99 [-Werror=3Dincompatible-pointer-ty=
-pes]
- 1335 |         .set_channel_map =3D qcom_swrm_set_channel_map,
-      |                            ^~~~~~~~~~~~~~~~~~~~~~~~~
-/build/stage/linux/drivers/soundwire/qcom.c:1335:28: note: (near initializa=
-tion for =E2=80=98qcom_swrm_pdm_dai_ops.set_channel_map=E2=80=99)
-
---Eq8RTpKzgOkqoEb1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmegwnoACgkQJNaLcl1U
-h9CZ5gf/RKq0pJYT4jqUxq0eZmJYxqCGtZA8Svl2jSDjDuGfFj9MOEaa3U0QpWgF
-ztCgzcHRI9+z1LlH/1oxJiepGEoaFBia7iydAg+cI24aj/hxcHDaoLsY25FYUFmb
-iRM+kDYUvS+pxIfay5++L10hh8bPtXCEN4XWTCdrN8pblz75Rz02307QhIEBNe06
-GrWKzBMY6ZBDYYyDaFxP8lAzwkcdVIEnDzNuwwZxyb1Ahfg7PCIkvWj8sQSUNjCm
-nhgzadft8nhHbCZBlLt5tEwW0RTgggiQdC1qWxthEPoVlko8h7GXtuFwf3zp8b4q
-dexHux0LVG3hMuK6ES10mkA5gjBNSw==
-=OOHD
------END PGP SIGNATURE-----
-
---Eq8RTpKzgOkqoEb1--
+Acked-by: Richard Leitner <richard.leitner@linux.dev>
