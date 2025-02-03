@@ -1,186 +1,129 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 160D820127E;
-	Mon,  3 Feb 2025 10:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738578041; cv=none; b=H4bESaa4ghPIoKsqLF7EUp4bhg4sRYaACWxryvVza1+UCF/OeqmBhKxJqAgCk19gpkuaHkchZrXXSPCsUnS6M8M8la2lxMhaPRw1T4Ci1jJjMUDgz0JnoWVEwUXGn4YRk0D/yDons+V4Bq7MdJU8wl4g5yE9NJCEMAMCQiok/18=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738578041; c=relaxed/simple;
-	bh=R2OITuWs4Mkl+wMNPzMdlUJVmHUXXatoMZG9rVG7iDc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iASlmZ5Nmd5EUyjaZPjhwIY416bqwInuQJADEEaeJKWFeyZt3qPvrMo8bRP2uHmi4oa2czw6pXp93XRP9u9ho/dbxYxARBiMOslzDnjOD+/0k58oW2f8EZNu941/2VpMTvytAXHHSmtpWP+CaXvAURGqZBBXP47tWuaR1InjEi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C21571476;
-	Mon,  3 Feb 2025 02:21:03 -0800 (PST)
-Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D01593F63F;
-	Mon,  3 Feb 2025 02:20:35 -0800 (PST)
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-To: linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Jann Horn <jannh@google.com>,
-	Jeff Xu <jeffxu@chromium.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Kees Cook <kees@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	Quentin Perret <qperret@google.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	x86@kernel.org
-Subject: [RFC PATCH v3 15/15] mm: Add basic tests for kpkeys_hardened_pgtables
-Date: Mon,  3 Feb 2025 10:18:39 +0000
-Message-ID: <20250203101839.1223008-16-kevin.brodsky@arm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250203101839.1223008-1-kevin.brodsky@arm.com>
-References: <20250203101839.1223008-1-kevin.brodsky@arm.com>
+Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [81.169.146.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D20200BB8;
+	Mon,  3 Feb 2025 10:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.217
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738578076; cv=pass; b=EO0Nq5xMEk4le+PDn1mVRnDvRvETr2FLJbxHh6evSr39Ye50uA9eaulP1Fo+Ntltrhib/GvxfipEr75W3etsZ6ihxEJeuXdO8Cgj7Y6y+5omKWPgTZVp/W84SPu9MUg1px0doti795RF5oyYUZVnb7QKQMHEPHrYXF0XvVQCtdM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738578076; c=relaxed/simple;
+	bh=yg4hGb4USFIVGjISOl0It9wOi2kLBPjvbP4IijuWXfs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CqxNUW8epjpmhrWzaW/V2wIk1Wzg0t0Wy6Pap1FmLHoJ7V3rW0+YKPelgwz4x1HChfOhlMi0LfMNYoNiJPe5maS5NNxUixVaDR/uiKJBRtk0R/TSvTwgYi7SEeHZ8oWTx5aViJemNuHj/NFxrgOKR6npfwthuK+vLoDm0NbNCtE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=KwmAmA+y; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=iA0q8raf; arc=pass smtp.client-ip=81.169.146.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="KwmAmA+y";
+	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="iA0q8raf"
+ARC-Seal: i=1; a=rsa-sha256; t=1738578070; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=rZNx1sY4z5DhGdQos6sRC5MdQ0amLoI+pPc+NkYhfiTTfRpvlMClcXB29N6Uyhp5EB
+    e/VdYxm8NCHDJPbkQazxicCgdab3W81XAImd4imzuYI+Akq2qx7+EOYj3SyA174KfpZ6
+    FPfLxlnvBMBPJfm/5taxgzhZW5YsGL4X+5SJ1NwH1MjMRufDVgVLqgkFlncW5diYS9ja
+    WGQV0X9SPI2Xz7/7ANzF1mbLSoyrO5ZHKki0Bx5RKvJY1UXHYyg7xJNFO7qRKQd1ebMz
+    1KCqdmKgV/K+E4hDgIGJtJiJ11LPtKEMMwHB+QmQMKr3p/7J1reNmbyp/YQvk33uk0wY
+    J+5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1738578070;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=e3sRkAJ3HR+ur2h1b9Hze+8hMs3GEmu6JmR5unu3DiQ=;
+    b=opHtSaLX/5vqR+oglgynm48kHB5EgoC8WS9P3ucZLOYtMl+Nho6c5hpM6eb3HOGu1T
+    qkV3CSia2FR2i3UDJk7uolpLgZD1Oi4ouA4XFQ1+6uigX6lWoQ8D/WvgpV8jiyT7ABvM
+    fFclpCbRgZrD1tVILrgBWiiHR9rk/ruMvwWc8fdgR0trR5qP7taw0G0P3fJl/RkB4QL8
+    FXR8hsWDBrHmB5dEm6iQzv2DRZ2i3wPS09UJ6CgFEDbViVtNtBFCr8XjUNR2ce6cBx05
+    PYmCf7XCFvVI+eoIfaoAkMZt2LPEEhRbuEQAlAqMFYBuLm3kyU6/b1zTDPjJ4k7sJGpZ
+    Lc7w==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1738578070;
+    s=strato-dkim-0002; d=outer-limits.org;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=e3sRkAJ3HR+ur2h1b9Hze+8hMs3GEmu6JmR5unu3DiQ=;
+    b=KwmAmA+yTQgxLIRw+uNJdG0Azb6b1P/YlUgZaa2v5RtNXMod1vfbPr91cGmFbBuzUm
+    nRSCUctprloq4leVQrKg79rM4kM/V6yh0nZiCvtbOil8m4tXgQcZZB6L6vQ0rVc0SuAp
+    0+DDNLxfZ37SQqqwTL8xUjiVFj11Jh59SgZh2daBD1krAkjZkv64w2kw8CUdCqbx8OoZ
+    R7ddjKKlhvhckTChA6IAzJjE6hYgBwCT5vAOQy0l80rX5JradpCWvB6KV8NwYSxqk/AG
+    uYtxystOsn3V9inF+l+UcPFeoSPSMOuubcW/WilYEJRrcMAtdEmTjSi3X16fp7B2WUE5
+    mV1Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1738578070;
+    s=strato-dkim-0003; d=outer-limits.org;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=e3sRkAJ3HR+ur2h1b9Hze+8hMs3GEmu6JmR5unu3DiQ=;
+    b=iA0q8rafFNn+nHEluf+L2pi9M9I319RRPkV7bMjwRvvZ2NK2/BgvtJdaVYP4cJ3UNl
+    hHs+z1lIso3ldVO4UHAw==
+X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
+Received: from [192.168.37.162]
+    by smtp.strato.de (RZmta 51.2.17 AUTH)
+    with ESMTPSA id J1a251113ALABS7
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 3 Feb 2025 11:21:10 +0100 (CET)
+Message-ID: <65e57211-7983-477a-af94-1bdab57574b4@outer-limits.org>
+Date: Mon, 3 Feb 2025 11:21:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] parisc: Remove memcpy_fromio
+To: Arnd Bergmann <arnd@arndb.de>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>
+Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250130134825.2646380-1-julian@outer-limits.org>
+ <543bd0f6-b25d-48b4-8039-496b8ddd10ce@app.fastmail.com>
+Content-Language: en-US
+From: Julian Vetter <julian@outer-limits.org>
+In-Reply-To: <543bd0f6-b25d-48b4-8039-496b8ddd10ce@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add basic tests for the kpkeys_hardened_pgtables feature: try to
-perform a direct write to some kernel and user page table entry and
-ensure it fails.
+On 1/31/25 08:28, Arnd Bergmann wrote:
+> On Thu, Jan 30, 2025, at 14:48, Julian Vetter wrote:
+>> Fully migrate parisc to the IO functions from lib/iomem_copy.c. In a
+>> recent patch the functions memset_io and memcpy_toio were removed, but
+>> the memcpy_fromio was kept, because for very short sequences it does
+>> half word accesses, whereas the functions in lib/iomem_copy.c do byte
+>> accesses until the memory is naturally aligned and then do machine word
+>> accesses. But I don't think the single half-word access merits keeping
+>> the arch specific implementation, so, remove it as well.
+>>
+>> Signed-off-by: Julian Vetter <julian@outer-limits.org>
+> 
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> This one looks fairly obvious. It might be nice to also
+> clean up the {in,out}s{b,w,l} helper functions in the same
+> file, but I don't understand why those are special
+> in the first place.
+> 
+Not sure, either. But some comments contain: "just using the inlined 
+version of the inw() breaks things". This is clear, and what you point 
+out below already, these parisc specific functions deal with unaligned 
+buffers, so using, e.g., the generic "inw()" will surely break things.
 
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
----
- mm/Makefile                        |  1 +
- mm/kpkeys_hardened_pgtables_test.c | 72 ++++++++++++++++++++++++++++++
- security/Kconfig.hardening         | 12 +++++
- 3 files changed, 85 insertions(+)
- create mode 100644 mm/kpkeys_hardened_pgtables_test.c
+> Those functions have been unchanged since before the git
+> history and there are some comments that I don't find helpful.
+> One thing they do is to deal with unaligned memory buffers,
+> which the generic ones don't, but that could be easily added
+> using get_unaligned/put_unaligned, expecting the compiler
+> to optimize the memory side of the transfer.
 
-diff --git a/mm/Makefile b/mm/Makefile
-index 130691364172..f7263b7f45b8 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -148,3 +148,4 @@ obj-$(CONFIG_EXECMEM) += execmem.o
- obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
- obj-$(CONFIG_PT_RECLAIM) += pt_reclaim.o
- obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES) += kpkeys_hardened_pgtables.o
-+obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES_TEST) += kpkeys_hardened_pgtables_test.o
-diff --git a/mm/kpkeys_hardened_pgtables_test.c b/mm/kpkeys_hardened_pgtables_test.c
-new file mode 100644
-index 000000000000..86d862d43bea
---- /dev/null
-+++ b/mm/kpkeys_hardened_pgtables_test.c
-@@ -0,0 +1,72 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <kunit/test.h>
-+#include <linux/pgtable.h>
-+#include <linux/mman.h>
-+
-+static void write_kernel_pte(struct kunit *test)
-+{
-+	pte_t *ptep;
-+	pte_t pte;
-+	int ret;
-+
-+	/*
-+	 * The choice of address is mostly arbitrary - we just need a page
-+	 * that is definitely mapped, such as the current function.
-+	 */
-+	ptep = virt_to_kpte((unsigned long)&write_kernel_pte);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, ptep, "Failed to get PTE");
-+
-+	pte = ptep_get(ptep);
-+	pte = set_pte_bit(pte, __pgprot(PTE_WRITE));
-+	ret = copy_to_kernel_nofault(ptep, &pte, sizeof(pte));
-+	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-+			    "Direct PTE write wasn't prevented");
-+}
-+
-+static void write_user_pmd(struct kunit *test)
-+{
-+	pmd_t *pmdp;
-+	pmd_t pmd;
-+	unsigned long uaddr;
-+	int ret;
-+
-+	uaddr = kunit_vm_mmap(test, NULL, 0, PAGE_SIZE, PROT_READ,
-+			      MAP_ANONYMOUS | MAP_PRIVATE | MAP_POPULATE, 0);
-+	KUNIT_ASSERT_NE_MSG(test, uaddr, 0, "Could not create userspace mm");
-+
-+	/* We passed MAP_POPULATE so a PMD should already be allocated */
-+	pmdp = pmd_off(current->mm, uaddr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pmdp, "Failed to get PMD");
-+
-+	pmd = pmdp_get(pmdp);
-+	pmd = set_pmd_bit(pmd, __pgprot(PROT_SECT_NORMAL));
-+	ret = copy_to_kernel_nofault(pmdp, &pmd, sizeof(pmd));
-+	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-+			    "Direct PMD write wasn't prevented");
-+}
-+
-+static int kpkeys_hardened_pgtables_suite_init(struct kunit_suite *suite)
-+{
-+	if (!arch_kpkeys_enabled()) {
-+		pr_err("Cannot run kpkeys_hardened_pgtables tests: kpkeys are not supported\n");
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct kunit_case kpkeys_hardened_pgtables_test_cases[] = {
-+	KUNIT_CASE(write_kernel_pte),
-+	KUNIT_CASE(write_user_pmd),
-+	{}
-+};
-+
-+static struct kunit_suite kpkeys_hardened_pgtables_test_suite = {
-+	.name = "Hardened pgtables using kpkeys",
-+	.test_cases = kpkeys_hardened_pgtables_test_cases,
-+	.suite_init = kpkeys_hardened_pgtables_suite_init,
-+};
-+kunit_test_suite(kpkeys_hardened_pgtables_test_suite);
-+
-+MODULE_DESCRIPTION("Tests for the kpkeys_hardened_pgtables feature");
-+MODULE_LICENSE("GPL");
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index f729488eac56..649847535fc3 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -313,6 +313,18 @@ config KPKEYS_HARDENED_PGTABLES
- 	  This option has no effect if the system does not support
- 	  kernel pkeys.
- 
-+config KPKEYS_HARDENED_PGTABLES_TEST
-+	tristate "KUnit tests for kpkeys_hardened_pgtables" if !KUNIT_ALL_TESTS
-+	depends on KPKEYS_HARDENED_PGTABLES
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable this option to check that the kpkeys_hardened_pgtables feature
-+	  functions as intended, i.e. prevents arbitrary writes to user and
-+	  kernel page tables.
-+
-+	  If unsure, say N.
-+
- endmenu
- 
- config CC_HAS_RANDSTRUCT
--- 
-2.47.0
+I'm not sure what you suggest. Do you mean adding 
+get_unaligned/put_unaligned in the generic include/asm-generic/io.h 
+functions, or just adding get_unaligned/put_unaligned to the body of the 
+parisc specific functions? Instead of all the "switch... case 0x2..." code?
 
+Julian
+
+> 
+>       Arnd
