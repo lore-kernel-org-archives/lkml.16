@@ -1,83 +1,99 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BD4202C30;
-	Mon,  3 Feb 2025 11:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD73E1DB124
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738581304; cv=none; b=H1jls9p7ug6kZFTI8wKMF23eoQrmkQPRIv98dn6ozFSxgmKK0vW2goXW4Tuu0YqhlU73VodzuimAj3VuDdku+GpV+c2uTqXqtWOfmRX5iNP/WiVbL4Wb2PcpeY1Rl1DUZ0b0lTMMEKgl+kPxg+7k8EKheg+rwPhOngEZAINAgYE=
+	t=1738581312; cv=none; b=Ka6m4hHGhprz+8wUBghNxuKd1ucFc4ROgHoIgXQ/bp2vbLJL7TpOe425lee3/W9HMAwoW7Q1+dKX4VjsYPdjviyq67to8mvm3ZiSIplNU8U4DF4Wr+KWMBIj9hvPaiyx8jCf//tPCTiTp/IfG47d5rdnYRVSd7gKL3dqYrKngmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738581304; c=relaxed/simple;
-	bh=Sh62TUgO9nu9uV2ysqDVSkHBdGr8aWWz1Gt2+gIoWWc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u6jTtP/M9ptAC8yS9ISMQN5xdeSHhahOYLeoe4DSv5wQ6vPtYoHaoDTSfU4UnK6BV53UsgldSdKvpprSlyICCRprUIZGKf0FVxKMfHZ1aUZv8afPWaG+BLl57MJE8F3kF3p6Kho94mHKEpqIH0c/Rg8dl0AcDl0o3zb4KHAys0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YmkNr2CjGz6L4tr;
-	Mon,  3 Feb 2025 19:12:28 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 11D70140155;
-	Mon,  3 Feb 2025 19:15:00 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 3 Feb
- 2025 12:14:59 +0100
-Date: Mon, 3 Feb 2025 11:14:58 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Raag Jadav <raag.jadav@intel.com>
-CC: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	<gregkh@linuxfoundation.org>, <rafael@kernel.org>,
-	<linus.walleij@linaro.org>, <mika.westerberg@linux.intel.com>,
-	<dmitry.torokhov@gmail.com>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-	<sre@kernel.org>, <jic23@kernel.org>, <przemyslaw.kitszel@intel.com>,
-	<linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-input@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v3 14/20] iio: adc: xilinx-xadc-core: use
- devm_kmemdup_array()
-Message-ID: <20250203111458.00002a5d@huawei.com>
-In-Reply-To: <Z6CdnPryJkBHO9PK@black.fi.intel.com>
-References: <20250203080902.1864382-1-raag.jadav@intel.com>
-	<20250203080902.1864382-15-raag.jadav@intel.com>
-	<Z6CSYn7ZDVNELIIv@smile.fi.intel.com>
-	<Z6CdnPryJkBHO9PK@black.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738581312; c=relaxed/simple;
+	bh=XVC1ndxrZaLe+d05VFLtvNnU3D6DLPiWOoCaBqgVZk8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VxnV1Ty0H+uK+4Pfj7qZ9WXR2Oqoq99fYeu/Y5p8LExLlSuAeo+QG0eT7mkwj8369w9hYIO7BSGFeS2wzKnrhmJu/ON54UZECKdodcqmSDkmf1pABB3b1cBidaHyeDGazLdyg7AuUyAEOk9fTq2cualE3W+7E7vqsEV06FXCfAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z2Bl6RE1; arc=none smtp.client-ip=209.85.217.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z2Bl6RE1"
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4aff5b3845eso1723387137.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:15:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738581309; x=1739186109; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XVC1ndxrZaLe+d05VFLtvNnU3D6DLPiWOoCaBqgVZk8=;
+        b=Z2Bl6RE1KtvROhkeEGCm65oW8bOJLk4WHhBeTCCsywaLwua2cxOpq6Ec3HLkMNWutL
+         QvM4LXp7pp4CBft2pT7NhreMTME8u5bc6IVdgQw/GYHhDd8e1nJlTYq2QmMx0yxo+a58
+         xxpDirjX+XH6XwDNSE5HBMcCCg6nfAAMkTHkLwUuhHSBakAlAFl75Mwji3BeN/TW1/wi
+         pTqcunXiF6TKs0vf83QWlU/F1LZ2HXKyTLQ/orqLuhyAsKm0KUAm4zRamPwO6IWjZ4PR
+         fdAZ6Gnqo9j4wFyatqBXROFgcZri8FznPVwBDfEz947WbE+KbP62fiPnuABavm0d/ZB7
+         MgMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738581309; x=1739186109;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XVC1ndxrZaLe+d05VFLtvNnU3D6DLPiWOoCaBqgVZk8=;
+        b=adbbBmXq6jMKR/ORzCee08qwBgnAz1O+OubXSEuuhKe0KMZINEwc9nlkt3SE5wcwiL
+         Udrh5SmYZpB/xMIu7rlwUaS5WStNymhPMzEJ2A7tjGaP77lw2CBt2Y73CFwk7AR+0CMJ
+         3ngbSvdF/uL06THbeeM06DGj4q6JP46LpekpaXyo2aMBdBuinf0SCdSM8nSTMjgT3dfT
+         F6lY4qTKimXngYPs770HAa1pEBcZ7jGTqQldZGdUzeJ6kt7iaggIpAEJcJJjBNCIXHRX
+         TQYH5asV6WI5JuxaYoiizKGQFqfv7TPp7KiTLHT14RtIYadiLzw6g9Z4OPZwYXFErG28
+         pUVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzrTwlMfKCLgYbrGz9UkVfAk4lfVYUJoRKnCQRmUbf9J1KjtlI0V4VQ3sXBpu5VMRyOHHmk7cq3HtUJRM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1fzI+xzwNsvlEM/kN9ruutX2B1vyzjtYPJnZ4/T7OLW7xVyi2
+	nqnD8J6PY6ozO8Yp4gm6grM1LFLQRq6QgoOjf7ZyOqofSzRdNWh7PI6lfz5nzsaZxhx6AcRw5eL
+	TFl7eH8qBMywkhTrKttRPYkgPbz7oRygad1Tx0Q==
+X-Gm-Gg: ASbGncsJpswkIofWttRX2lErpljpsFwsAFrH0oa+D/fMnU2WPgI0Eq7l95X0tinNXf/
+	KnhKIPDiQGk68asarYMhg1Bxo/+Wm9wHpLoaUyZ83Ovt0/kp1IikmETF57+3Yfiy4vT5lTjExYP
+	M=
+X-Google-Smtp-Source: AGHT+IEZJ4ht/4JUca00rjKHmLI0x0Tdnx3LsSJdqx/Ig8hvd7BRVwnatUEMpzWzbQ0C4BBpkq6dQgnAG6j4jIidAXE=
+X-Received: by 2002:a05:6102:3706:b0:4b1:14f3:5d6d with SMTP id
+ ada2fe7eead31-4b9a4f10c27mr14207280137.6.1738581309555; Mon, 03 Feb 2025
+ 03:15:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250203080030.384929-1-sumit.garg@linaro.org>
+ <CAHUa44FXzL-MZ5y7x6qrsn3GJR=1oR8bbRVCv6ZTvDRoQmENEg@mail.gmail.com> <65aedfdf-0a13-445d-956c-6945f1b49681@app.fastmail.com>
+In-Reply-To: <65aedfdf-0a13-445d-956c-6945f1b49681@app.fastmail.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Mon, 3 Feb 2025 16:44:58 +0530
+X-Gm-Features: AWEUYZlSri3MYlCywfp3d6_FlDHi6H482QnGSZIllNXjxdK5HOntcqkUnai1PoM
+Message-ID: <CAFA6WYPt+DkOXd_0Sj5axH+kMx+NtEc+7rsrn93Mk9aDW2Sqbg@mail.gmail.com>
+Subject: Re: [PATCH v2] tee: optee: Fix supplicant wait loop
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, op-tee@lists.trustedfirmware.org, 
+	Jerome Forissier <jerome.forissier@linaro.org>, dannenberg@ti.com, javier@javigon.com, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 3 Feb 2025 12:42:36 +0200
-Raag Jadav <raag.jadav@intel.com> wrote:
+On Mon, 3 Feb 2025 at 16:23, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Mon, Feb 3, 2025, at 10:31, Jens Wiklander wrote:
+> > On Mon, Feb 3, 2025 at 9:00=E2=80=AFAM Sumit Garg <sumit.garg@linaro.or=
+g> wrote:
+>
+> > Why not mutex_lock()? If we fail to acquire the mutex here, we will
+> > quite likely free the req list item below at the end of this function
+> > while it remains in the list.
+>
+> Right, I had mentioned mutex_lock_killable in an earlier reply,
+> as I didn't know exactly where it hang. If we know that the
+> wait_event_interruptible() was causing the hang, then the
+> normal mutex_lock should be fine.
+>
 
-> On Mon, Feb 03, 2025 at 11:54:42AM +0200, Andy Shevchenko wrote:
-> > On Mon, Feb 03, 2025 at 01:38:56PM +0530, Raag Jadav wrote:  
-> > > Convert to use devm_kmemdup_array() which is more robust.  
-> > 
-> > ...
-> >   
-> > > -	channels = devm_kmemdup(dev, channel_templates,
-> > > -				sizeof(channels[0]) * max_channels, GFP_KERNEL);
-> > > +	channels = devm_kmemdup_array(dev, channel_templates, max_channels,
-> > > +				      sizeof(channels[0]), GFP_KERNEL);  
-> > 
-> > I would use more regular sizeof(*channels)  
-> 
-> This might get confusing since we're assigning it back to channels.
-> 
-It looks like standard pattern.  Assign X * the thing to the thing.
+Yeah for my current test scenario mutex_lock() works fine too but I
+added mutex_lock_killable() just in another theoretical corner case
+being stuck acquiring mutex while someone is trying to kill the
+process. But let's avoid over complexity for the time being with a
+simpler mutex_lock() approach.
 
-So I'd prefer sizeof(*channels) here as well.
-
-> Raag
-> 
-> 
-
+-Sumit
