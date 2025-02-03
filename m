@@ -1,105 +1,82 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F12B2AE99
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 07:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F081DED47;
+	Mon,  3 Feb 2025 07:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738568033; cv=none; b=X/4lMcM+mmVnMAafHST1RU5J7ZE3ANTUJFf9hR2Qrghoha16w7bbNn0zJLKDmMqWf9PVePdRhh8H2uQJ+B9PeECzb9RMrx8BdbvrknzsymYihB/oyLMeRZMFhnOPBwX0Of7yxcS8Ri47z875sknK2TYW1DG97NP39JszsSAnlu0=
+	t=1738568033; cv=none; b=WhzrLfMgoJv7qPlaFxiL6NQ9LODL/8tvRZFRqHVI4rGKDPzBEVv4u/pWSIM8baA2t4uMIYysKozgV3WG00FIOeFmWkx46kQezQHJnflyanYVU7USIGXFPFkjXwN2lbKxz02SLAn5Iem+JOgSzfzSV3FFInehStmAmUj0qTCbt2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738568033; c=relaxed/simple;
-	bh=Jj/hRMDmDXnXrhZS3NssGeD6wphlksWNKFrgYRQaXNg=;
+	bh=yOy3zcmE0HZGLG2DLjwjOiQ1ZDVv6x3eU+/3hLDWIUo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ld36GZIAN2QHZjAiURQHbaNs+OrlND/5O1Y327G6YFBnRZd49VGdSQVW5/eTUjNGfGnJTPHrIn62BCp79DjB8ob7R49hBr/KtE6vQcBmxAbzfXKZDdNFaATNAC0VoTn9Gs1lOJBFrjhTTGG29rIUPQ92HSjIuWSyiRCXSAtvz4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bc6jQnZB; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=UBYnXXDcNPQpVOd3PjGsgAz1uyANb8Pv/nBxNX/GS+27VKlTrMfoniPOtsPJ4Ztsy+I6ivDwwIVjl11turwmRQzf3PM3MCepfuBbmbq2TPWEsZyii0n5/Pnmthwdmdciugkp9NGCFm6D0jIRgS95zO3uXN9XhS6PnFvGkbCVGZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UsRIoKni; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bc6jQnZB"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21619108a6bso66015095ad.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 23:33:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738568031; x=1739172831; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cJfkA+01mQ6EVVESyvoLKvqknr3twqf0+1+MEvzJ+2M=;
-        b=bc6jQnZBVZujO3KZSj70raHI4zxeALqrh72xihHCjp/C43uUj5geLgjyAIuO0RZxyg
-         fDwBq4bMyylkyt9E7LLG/O4oMt/+EJLI1RQE30A0rn64ZspiWqhQsbO+r9voUYvbYKLS
-         TLG+rUb1BOZdjhgNC9TqoVhA9I1ZF9/MlDyAI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738568031; x=1739172831;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cJfkA+01mQ6EVVESyvoLKvqknr3twqf0+1+MEvzJ+2M=;
-        b=LOZ0g6kIEv8hzWjm3LbrcYJbxVbKTDew+Y9KoY07I92Bjff1ATJ2127hvXTJIYCl4N
-         64uCRMSjVD9i6NltpsFNDyrdikmJYxBrUvsjheAel2FNF4+4r5akakK2U3+EAmeJPB9g
-         u135uGHz/Ju9csud+40jbMRw1azlZFmRvG1LsAA1pAcD9UAwYnhyTcvye/jK2yazWtnA
-         6AjTw7TX6xWcYHZbKsoNNC/NxwnSujzJ687NlCoADsoaOvGBOhPLaydh53h73qnQorz8
-         i0k8LuuQIjaIl9ocw0zjLku1LCBxGHAt5saxjilSZbY+IwtDSRfvX6++3sBbg2PoafXf
-         DW9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUwOfJzlQqDETSWCLrMkuDAHe/OxqKq3NhzHyoOnjjGE5Rt3YSJNkDUL8NrTF5HFeU7YUkgLgItg0F7c8g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZwhHSQfIM8fMyJh2S7GevZMJtuGkm262fmzRiJ2P2fPkMnfaN
-	T63P+rg8Yj3mkmK1KnB7bic7fHMlNK+qt26AZE34j3oZUHbXPiFSbZUU02nc+g5V2EDbpePPupQ
-	=
-X-Gm-Gg: ASbGnctglZ5Dt9/mSeRjhLnokIWdRc0cQimOP8vl4n8n/rdKP29B0GixYpZvPtCNGX7
-	0NEABkkpHlWoIn29PHYCKVyDP7/VITvtqczHip/bhUdJgaEAaiKsHfl8bwQzzXjgYEnJeiUHLjE
-	XO8LmqNeGZ8e/6bXfX+h48nLsUVMv9NrThmMtgx/umXRxkjFn+iJ5KCLDcmB/3exQn3eE3ZXMdE
-	AgXD/tX6cnasdzVFM3f93YU49wUFwWFfWQy9qSiQUCGETReahsRW1mjMSOY6RdtmPGb4t3T5L9S
-	bJh1YLwGj8YKrcbJKX8=
-X-Google-Smtp-Source: AGHT+IF3ekMna+p43DL8JMvqxAKOopd+67L5PUwuL5LwL3lP27QGKT4BD1U9e/tlYlmGrzbURr1MsQ==
-X-Received: by 2002:a17:902:f610:b0:216:4348:149d with SMTP id d9443c01a7336-21dd7dfb835mr371643895ad.53.1738568030902;
-        Sun, 02 Feb 2025 23:33:50 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:b77f:f2de:f99c:2d0e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f832esm69006695ad.83.2025.02.02.23.33.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 23:33:50 -0800 (PST)
-Date: Mon, 3 Feb 2025 16:33:45 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 01/17] zram: switch to non-atomic entry locking
-Message-ID: <aytjrf5gxj24aharhcseknz65sivyhzsjcbutqbmco4wqpu36v@htnkuyarkora>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-2-senozhatsky@chromium.org>
- <20250131145536.d7a0483331b0ebfde80a5754@linux-foundation.org>
- <dj2k36obadhbxlvecsdhdyf7edkmtgocf55jkbiq5gbnpvkygt@mcwolkrhicvq>
- <cr3ekbanqyzmeqeohwwlfqyced2fvtqh6kzermiahm4blonhd2@fod2itisib5f>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UsRIoKni"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A02DC4CEE3;
+	Mon,  3 Feb 2025 07:33:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738568033;
+	bh=yOy3zcmE0HZGLG2DLjwjOiQ1ZDVv6x3eU+/3hLDWIUo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UsRIoKni7Yk20ziOyb9DL2vZl2jzq/MwPWN+xK2gZTS83mbNFh8SGEex3IeSW9gFa
+	 l0VJnjLmBFx+br2iCRIfeUV6p7vW7VA6QdmT0PQDTZndAIyERaQ9ctja43M8MhcudW
+	 gpR66BkU8AP5Ulor5AvYroUKfA4hU765tB2RRHEzDuDS+KO7mVB3bVhTvoJ0bnBcUA
+	 eJ4pqfAkqxVYXf7tTiwZ8jNG5hTCfNUOZ2aQhMfYQiYf09lqbOL509wEGM23ITnfqx
+	 ezSyiq1//TPd5K1suv51fYYrClr5BCC4Sy6jWG3ntNdKYy3S+sJhgvLWY4hZNXAy39
+	 GXdyUBoLlFczQ==
+Date: Mon, 3 Feb 2025 08:33:49 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Pratyush Brahma <quic_pbrahma@quicinc.com>
+Cc: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] Add support for GPU SMMU on QCS8300
+Message-ID: <20250203-lean-delightful-ermine-f5b902@krzk-bin>
+References: <20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cr3ekbanqyzmeqeohwwlfqyced2fvtqh6kzermiahm4blonhd2@fod2itisib5f>
+In-Reply-To: <20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com>
 
-On (25/02/03 16:11), Sergey Senozhatsky wrote:
-> I guess where we actually need zram entry lock is writeback and
-> recompression.  Writeback moves object from zsmalloc pool to actual
-> physical storage, freeing zsmalloc memory after that and setting
-> zram entry[index] handle to the backikng device's block idx, which
-> needs synchronization.  Recompression does a similar thing, it frees
-> the old zsmalloc handle and stores recompressed objects under new
-> zsmalloc handle, it thus updates zram entry[index] handle to point
-> to the new location, which needs to be synchronized.
+On Mon, Feb 03, 2025 at 11:17:00AM +0530, Pratyush Brahma wrote:
+> Enable GPU SMMU function on QCS8300 platform. GPU SMMU is required
+> for address translation in GPU device.
+> 
+> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+> --
+> Changes since v3:
+> - Modified the order of clock voting and properties as suggested by Konrad
+> - Removed dependency on clocks in commit text as change is merged in
+>   linux-next before current base commit
+> 
+> Link to v3:
+> https://lore.kernel.org/all/20241227105818.28516-1-quic_pbrahma@quicinc.com/
+> 
 
-... Luckily there is a trivial solution
+How are you sending these?
 
+b4 diff 20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com
+Grabbing thread from lore.kernel.org/all/20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com/t.mbox.gz
+Checking for older revisions
+Grabbing search results from lore.kernel.org
+  Added from v3: 2 patches
 ---
+Analyzing 7 messages in the thread
+Preparing fake-am for v3: dt-bindings: arm-smmu: Document QCS8300 GPU SMMU
+ERROR: v3 series incomplete; unable to create a fake-am range
+---
+Could not create fake-am range for lower series v3
 
-diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
-index 402b7b175863..dd7c5ae91cc0 100644
---- a/drivers/block/zram/Kconfig
-+++ b/drivers/block/zram/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- config ZRAM
-        tristate "Compressed RAM block device support"
--       depends on BLOCK && SYSFS && MMU
-+       depends on BLOCK && SYSFS && MMU && !PREEMPT
-        select ZSMALLOC
-        help
-          Creates virtual block devices called /dev/zramX (X = 0, 1, ...).
+Best regards,
+Krzysztof
+
