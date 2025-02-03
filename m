@@ -1,136 +1,253 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A461D5176
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C69205AB8;
+	Mon,  3 Feb 2025 13:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738590616; cv=none; b=gAq1vf8PYZNmbOytz8y3N36qR3vOLN9N5rkK8wdCti9WZlsDaRwz9ZGP7JZDOWUD6wT+vzBKXKBvSAzUgUvAjDzDJ7O1wC/ee/5aYHwU1UwG5TDWboGvEEIPs58RGD2hjJR5+rbDvoE8AL0X4wLb9TiwJgfwqmEkANOhda132MI=
+	t=1738590622; cv=none; b=XGR4B6LLzYjGKYABLIdlr8P2WPSY0g2rHG1/tT56xFJTXXIIa9LIrFl0X3CeJ1Qto8ES5J+32JQa7YRi/hj38t7TAPZe6rpFNANNTaxm9mEcxZGSyUz24usBh4pv38JhxadkokjwVhzyn19ds+UeB8s2maccvf3LCNd9mTfricE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738590616; c=relaxed/simple;
-	bh=Tt9vBDTFmYZuSOqXACKt/0t7ZIw9rhZJNXLHRo6BQ0A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VWlFTddK8oy7PtwmkwmHvoi0ryk+1pX5lkkMA8L3sVm5DnCJz6ZB3jo07cTw0vKyOtm0eRHn8v8ve11CRlbRgEu7kzYlfn6HyJkh5/BezuRTOH89LS29vTcSINDbC2NdroUW/xLY1H+PSNylPHuFFPu5Iz/shX69CHqiflU+qDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gzG7lLqO; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738590622; c=relaxed/simple;
+	bh=Nsul2RHko3wUFZHRd+DzcKbvxURzXAXeCgS95BA2UqQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pm5VMupXEbP9rkFUg5e/Flj41wEQ18nLvVMYKWPV2ZfLtKarjCcSzJT0c3ORGt0UWNtBjKQwOvS/tlQfgJkIahv74O5IL2zToI2vlrBxB6STkmVz8snMhz7qybVK1mKawIooGTEzkTKzWKKh/dx9yhv/8oeUvc28PKyMAwbvi4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YPpXSpjZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zpOBiFzq; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gzG7lLqO"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5135LQsw014166
-	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 13:50:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	nqxiWCIT/Tin2k7dnyFvGCB27cd0ePrjkyaWPJDOOK8=; b=gzG7lLqOW/iDn/Tp
-	LSm0/gU06ruPg3G1dOPopwi/0hClR66txX0RGSYlLYMe4Un4QTYLO49YUb0QDF5E
-	qkNEIEEcIZnULW7QfJkLNwqB5yN1FFP4KCG8kmi6BUMGKnzv+2gH61AE1+fgNOfU
-	7u8EAsMb9IlIhH6x04G7S2IiaG2H6LPH6SoGLgvi5IFJtsZv5lFe+xua+hkmPEX/
-	DSdtwu7esh7g8v7xIRbrmnjRzUNahHzo0PEGW2K6WENujxEJKKtDARZlvmF89NG2
-	MT/Y5+IRcWhrTlJQ36kdYee/5roEAQP2jn23Xja3HgB3PGFPRVZ9QUxAR2cW0onL
-	cUzo4w==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jqk4s9kw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 13:50:13 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7b700506e64so23590885a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 05:50:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738590613; x=1739195413;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nqxiWCIT/Tin2k7dnyFvGCB27cd0ePrjkyaWPJDOOK8=;
-        b=PKLlPxv5eh43t5bYqHLhHMc2qfysd8Qwv7iOnSWDEKibauRBqd6mksZFT73oF4vz25
-         VLA26w4+Fq2F63TXTMRjCZDgg/j1RmjwXepbzEZdXCWqJeUslFBOC/6TDBI0FrB1HAlb
-         OQTU9K74WBrahjyoATWUh7Wo1weHoX4Rp+d3P84qGKhel4gaM2aHODlxjrmimAPUcBsk
-         1o6nbUjZdTl9eBjK7nXyUE+ETTKFhTKv7+k34vCteDCOKdQUI6r4nRsm2LMU++Yz8h2V
-         YXpaNV1BtTu3sEqWBixtBgzmw0mXhnWSubOnbZGVb6ZtBdfZ894v8M7G5A92sepn30nW
-         8AfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkz+DsiDF7mSQpNNfWeZOmiVMT6fEL0GslILoYKN4tKv4HEH8nR6wDQP0zOdJ8nXg337fOXNcEOM9s9Zk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSj6LWMbrno6xCdCSHaAVE5/waPGAfX/Vm9iZWAZhLqQQ8KrRJ
-	E/wEeJllU5GEDgSXhg990AS0uEAt87vsxg5AK1RbKq4+BRV7ooMw7OmGKOnWboi9scm1X+M0LP2
-	gKJ06BcfzFXK0h2a5vspzxY7ltljyb4fOirVH6c8gUWWwohTVcV3lCD7WhPpcK74=
-X-Gm-Gg: ASbGncv576+pADq8fUm1gBwEH3Ntyp0jH9zNbjvWOl33Eoly3txhHge3LTOhWE3zFOr
-	STHMSWpHq+YT/oSSDzUW5iFaPHXSTR7Q66hrbZZ6842Kb45yYJTWYu7a1qoitJaawJM4kYIRwYF
-	09mUpAX+yzP37+8E9W0A7RQP95VRb+AY3k2bMZ4NUOsC6OaitdmKcB85yWf16wLlDmThR+ZEb9j
-	Gfu416+4Vc8RkziNhIZRgNRjJLq7SICfh8EvL3uqYPb6PSL6MGhfLJeh131jQ9DHHBaMeqEvNlv
-	sGjKRP2qi8RDTUKtsZhvZKBjZDXVse+KpHp9qMO8PfTmay142zBvkZc1L7w=
-X-Received: by 2002:a05:620a:40ce:b0:7a9:a632:48ad with SMTP id af79cd13be357-7bffcd8f975mr937810685a.11.1738590612874;
-        Mon, 03 Feb 2025 05:50:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFojunUVhTwHgzodyssJiBoApke2JKM/2E3BIMLMBQGie53Ao5Kal4SPfr3pBEYVHL6tCtiYA==
-X-Received: by 2002:a05:620a:40ce:b0:7a9:a632:48ad with SMTP id af79cd13be357-7bffcd8f975mr937809085a.11.1738590612564;
-        Mon, 03 Feb 2025 05:50:12 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a7ffasm755714966b.7.2025.02.03.05.50.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 05:50:12 -0800 (PST)
-Message-ID: <d5e1e6ae-b773-4ec8-a66b-2e1830827164@oss.qualcomm.com>
-Date: Mon, 3 Feb 2025 14:50:10 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YPpXSpjZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zpOBiFzq"
+Date: Mon, 3 Feb 2025 14:50:16 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738590618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZQrfcOY2FHWEyibchfnDOta6mFsV+KBdbtmBdSk0oiU=;
+	b=YPpXSpjZ0wzBy4i8ZEGZe/u1qrkNxIslNFF/UDtZTHdW0VLlZT5yRwiaAXsn/twnpPhfSp
+	ZGnL5wODQkps5Jjcja0NMEDmdPrr8M2E6S1bkQ/i/YbxQ0AkIdTIUK2jnucFNUUg1eArsU
+	Bk8j13Vusd2XQHjUG6DaahEBrQ/RdklJuQlVfb1Jz8jlSg6N8kzk7ovAHBfrZSm871ejTs
+	z7+PnSuYLQNsKdEcyJXSinH2tZ/lylpVUkI0M8kZVPZZe57W9UlPml9zY4pW5l5N/1l199
+	iWeimxH0IFa0nl6Ds3kBhPShEcYqFdpHUmqpzEuCrJ+pwUjuNFTX4FiJ3hiX2w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738590618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZQrfcOY2FHWEyibchfnDOta6mFsV+KBdbtmBdSk0oiU=;
+	b=zpOBiFzqOW/f8piH0OJQXhdrOuRqtzwchGmFzVAfGVF4jCmrbXF//XpS3g+xALDkpSvFsV
+	HS3pxrQy5AuuvFBA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>, 
+	Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	llvm@lists.linux.dev
+Subject: Re: [PATCH 00/16] selftests: vDSO: parse_vdso: Make compatible with
+ nolibc
+Message-ID: <20250203143640-70c59c53-af45-40cb-9a52-6395b3fdd263@linutronix.de>
+References: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
+ <cd1147a8-25ba-47d2-a59a-0a686469a808@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/6] arm64: dts: qcom: qcm2290: fix (some) of QUP
- interconnects
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Rob Herring
- <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
-        Rocky Liao <quic_rjliao@quicinc.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20250202-rb1-bt-v3-0-6797a4467ced@linaro.org>
- <20250202-rb1-bt-v3-4-6797a4467ced@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250202-rb1-bt-v3-4-6797a4467ced@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: t19abNI4HwNsfR4wMi3ADRoVqur2GJkx
-X-Proofpoint-ORIG-GUID: t19abNI4HwNsfR4wMi3ADRoVqur2GJkx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- mlxlogscore=999 lowpriorityscore=0 adultscore=0 priorityscore=1501
- impostorscore=0 malwarescore=0 spamscore=0 suspectscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502030102
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cd1147a8-25ba-47d2-a59a-0a686469a808@csgroup.eu>
 
-On 2.02.2025 1:16 PM, Dmitry Baryshkov wrote:
-> While adding interconnect support for the QCM2290 platform some of them
-> got the c&p error, rogue MASTER_APPSS_PROC for the config_noc
-> interconnect. Turn that into SLAVE_QUP_0 as expected.
+On Mon, Feb 03, 2025 at 12:23:29PM +0100, Christophe Leroy wrote:
+> Le 03/02/2025 ‡ 10:05, Thomas Weiﬂschuh a Ècrit†:
+> > For testing the functionality of the vDSO, it is necessary to build
+> > userspace programs for multiple different architectures.
+> > It is additional work to acquire matching userspace cross-compilers with
+> > full C libraries and then building root images out of those.
+> > The kernel tree already contains nolibc, a small, header-only C library.
+> > By using it, it is possible to build userspace programs without any
+> > additional dependencies.
+> > For example the kernel.org crosstools or multi-target clang can be used
+> > to build test programs for a multitude of architectures.
+> > While nolibc is very limited, it is enough for many selftests.
+> > With some minor adjustments it is possible to make parse_vdso.c
+> > compatible with nolibc.
+> > As an example, vdso_standalone_test_x86 is now built from the same C
+> > code as the regular vdso_test_gettimeofday, while still being completely
+> > standalone.
+> > 
+> > This should probably go through the kselftest tree.
 > 
-> Fixes: 5b970ff0193d ("arm64: dts: qcom: qcm2290: Hook up interconnects")
-> Reported-by: Konrad Dybcio <konradybcio@kernel.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/qcm2290.dtsi | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+> Not sure what are the expectations with this series.
+
+In general it should also work for PPC,
+thanks for testing it.
+
+> I gave it a try with vdso_test_gettimeofday and get the following:
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> index f0746123e594d5ce5cc314c956eaca11556a9211..6e3e57dd02612f3568f07f1e198028413f463c69 100644
-> --- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> @@ -1073,7 +1073,7 @@ spi0: spi@4a80000 {
->  				interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
->  						 &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
->  						<&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
-> -						 &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
-> +						 &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
+> $ powerpc64-linux-gcc -nostdlib -nostdinc -ffreestanding
+> -fno-asynchronous-unwind-tables -fno-stack-protector -include /home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/nolibc/nolibc.h -I/home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/nolibc/
+> -isystem
+> /home/chleroy/linux-powerpc/tools/testing/selftests/../../../usr/include
+> -std=gnu99 -O2 -D_GNU_SOURCE= -isystem /home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/uapi
+> vdso_test_gettimeofday.c parse_vdso.c  -o /home/chleroy/linux-powerpc/tools/testing/selftests/vDSO/vdso_test_gettimeofday
+> 
+> make: Entering directory
+> '/home/chleroy/linux-powerpc/tools/testing/selftests/vDSO'
+> powerpc64-linux-gcc -nostdlib -nostdinc -ffreestanding
+> -fno-asynchronous-unwind-tables -fno-stack-protector -include /home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/nolibc/nolibc.h -I/home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/nolibc/
+> -isystem
+> /home/chleroy/linux-powerpc/tools/testing/selftests/../../../usr/include
+> -std=gnu99 -O2 -D_GNU_SOURCE= -isystem /home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/uapi
+> vdso_test_gettimeofday.c parse_vdso.c  -o /home/chleroy/linux-powerpc/tools/testing/selftests/vDSO/vdso_test_gettimeofday
 
-Still incorrect, this should be &qup_virt SLAVE_QUP_CORE_0
+This log is confusing. It contains traces of "make" output but no "make"
+invocation. I'm also not sure if there were two different compilations
+or only one. Can you give the full commandline?
+For your testing it should be enough to enable
+"vdso_test_standalone_x86" in the Makefile for PPC.
 
-Konrad
+> parse_vdso.c:38:34: error: unknown type name 'Elf64_Versym'
+>    38 | #define ELF_BITS_XFORM2(bits, x) Elf##bits##_##x
+>       |                                  ^~~
+> parse_vdso.c:39:33: note: in expansion of macro 'ELF_BITS_XFORM2'
+>    39 | #define ELF_BITS_XFORM(bits, x) ELF_BITS_XFORM2(bits, x)
+>       |                                 ^~~~~~~~~~~~~~~
+> parse_vdso.c:40:16: note: in expansion of macro 'ELF_BITS_XFORM'
+>    40 | #define ELF(x) ELF_BITS_XFORM(ELF_BITS, x)
+>       |                ^~~~~~~~~~~~~~
+> parse_vdso.c:63:9: note: in expansion of macro 'ELF'
+>    63 |         ELF(Versym) *versym;
+>       |         ^~~
+> parse_vdso.c:38:34: error: unknown type name 'Elf64_Verdef'
+>    38 | #define ELF_BITS_XFORM2(bits, x) Elf##bits##_##x
+>       |                                  ^~~
+> parse_vdso.c:39:33: note: in expansion of macro 'ELF_BITS_XFORM2'
+>    39 | #define ELF_BITS_XFORM(bits, x) ELF_BITS_XFORM2(bits, x)
+>       |                                 ^~~~~~~~~~~~~~~
+> parse_vdso.c:40:16: note: in expansion of macro 'ELF_BITS_XFORM'
+>    40 | #define ELF(x) ELF_BITS_XFORM(ELF_BITS, x)
+>       |                ^~~~~~~~~~~~~~
+> parse_vdso.c:64:9: note: in expansion of macro 'ELF'
+>    64 |         ELF(Verdef) *verdef;
+>       |         ^~~
+> parse_vdso.c: In function 'vdso_init_from_sysinfo_ehdr':
+> parse_vdso.c:38:34: error: 'Elf64_Versym' undeclared (first use in this
+> function); did you mean 'Elf64_Sym'?
+>    38 | #define ELF_BITS_XFORM2(bits, x) Elf##bits##_##x
+>       |                                  ^~~
+> parse_vdso.c:39:33: note: in expansion of macro 'ELF_BITS_XFORM2'
+>    39 | #define ELF_BITS_XFORM(bits, x) ELF_BITS_XFORM2(bits, x)
+>       |                                 ^~~~~~~~~~~~~~~
+> parse_vdso.c:40:16: note: in expansion of macro 'ELF_BITS_XFORM'
+>    40 | #define ELF(x) ELF_BITS_XFORM(ELF_BITS, x)
+>       |                ^~~~~~~~~~~~~~
+> parse_vdso.c:150:45: note: in expansion of macro 'ELF'
+>   150 |                         vdso_info.versym = (ELF(Versym) *)
+>       |                                             ^~~
+> parse_vdso.c:38:34: note: each undeclared identifier is reported only once
+> for each function it appears in
+>    38 | #define ELF_BITS_XFORM2(bits, x) Elf##bits##_##x
+>       |                                  ^~~
+> parse_vdso.c:39:33: note: in expansion of macro 'ELF_BITS_XFORM2'
+>    39 | #define ELF_BITS_XFORM(bits, x) ELF_BITS_XFORM2(bits, x)
+>       |                                 ^~~~~~~~~~~~~~~
+> parse_vdso.c:40:16: note: in expansion of macro 'ELF_BITS_XFORM'
+>    40 | #define ELF(x) ELF_BITS_XFORM(ELF_BITS, x)
+>       |                ^~~~~~~~~~~~~~
+> parse_vdso.c:150:45: note: in expansion of macro 'ELF'
+>   150 |                         vdso_info.versym = (ELF(Versym) *)
+>       |                                             ^~~
+> parse_vdso.c:150:58: error: expected expression before ')' token
+>   150 |                         vdso_info.versym = (ELF(Versym) *)
+>       |                                                          ^
+> parse_vdso.c:38:34: error: 'Elf64_Verdef' undeclared (first use in this
+> function); did you mean 'Elf64_Word'?
+>    38 | #define ELF_BITS_XFORM2(bits, x) Elf##bits##_##x
+>       |                                  ^~~
+> parse_vdso.c:39:33: note: in expansion of macro 'ELF_BITS_XFORM2'
+>    39 | #define ELF_BITS_XFORM(bits, x) ELF_BITS_XFORM2(bits, x)
+>       |                                 ^~~~~~~~~~~~~~~
+> parse_vdso.c:40:16: note: in expansion of macro 'ELF_BITS_XFORM'
+>    40 | #define ELF(x) ELF_BITS_XFORM(ELF_BITS, x)
+>       |                ^~~~~~~~~~~~~~
+> parse_vdso.c:155:45: note: in expansion of macro 'ELF'
+>   155 |                         vdso_info.verdef = (ELF(Verdef) *)
+>       |                                             ^~~
+> parse_vdso.c:155:58: error: expected expression before ')' token
+>   155 |                         vdso_info.verdef = (ELF(Verdef) *)
+>       |                                                          ^
+> parse_vdso.c: At top level:
+> parse_vdso.c:38:34: error: unknown type name 'Elf64_Versym'; did you mean
+> 'Elf64_Sym'?
+>    38 | #define ELF_BITS_XFORM2(bits, x) Elf##bits##_##x
+>       |                                  ^~~
+> parse_vdso.c:39:33: note: in expansion of macro 'ELF_BITS_XFORM2'
+>    39 | #define ELF_BITS_XFORM(bits, x) ELF_BITS_XFORM2(bits, x)
+>       |                                 ^~~~~~~~~~~~~~~
+> parse_vdso.c:40:16: note: in expansion of macro 'ELF_BITS_XFORM'
+>    40 | #define ELF(x) ELF_BITS_XFORM(ELF_BITS, x)
+>       |                ^~~~~~~~~~~~~~
+> parse_vdso.c:177:32: note: in expansion of macro 'ELF'
+>   177 | static bool vdso_match_version(ELF(Versym) ver,
+>       |                                ^~~
+> parse_vdso.c: In function 'vdso_sym':
+> parse_vdso.c:224:25: error: 'STN_UNDEF' undeclared (first use in this
+> function); did you mean 'SHN_UNDEF'?
+>   224 |         for (; chain != STN_UNDEF; chain = vdso_info.chain[chain]) {
+>       |                         ^~~~~~~~~
+>       |                         SHN_UNDEF
+> parse_vdso.c:240:25: warning: implicit declaration of function
+> 'vdso_match_version' [-Wimplicit-function-declaration]
+>   240 |                     && !vdso_match_version(vdso_info.versym[chain],
+>       |                         ^~~~~~~~~~~~~~~~~~
+> make: *** [../lib.mk:222: /home/chleroy/linux-powerpc/tools/testing/selftests/vDSO/vdso_test_gettimeofday]
+> Error 1
+> make: Leaving directory
+> '/home/chleroy/linux-powerpc/tools/testing/selftests/vDSO'
+> 
+> Christophe
+> 
+> > 
+> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > ---
+> > Thomas Weiﬂschuh (16):
+> >        MAINTAINERS: Add vDSO selftests
+> >        elf, uapi: Add definition for STN_UNDEF
+> >        elf, uapi: Add definition for DT_GNU_HASH
+> >        elf, uapi: Add definitions for VER_FLG_BASE and VER_FLG_WEAK
+> >        elf, uapi: Add type ElfXX_Versym
+> >        elf, uapi: Add types ElfXX_Verdef and ElfXX_Veraux
+> >        tools/include: Add uapi/linux/elf.h
+> >        selftests: Add headers target
+> >        selftests: vDSO: vdso_standalone_test_x86: Use vdso_init_form_sysinfo_ehdr
+> >        selftests: vDSO: parse_vdso: Drop vdso_init_from_auxv()
+> >        selftests: vDSO: parse_vdso: Use UAPI headers instead of libc headers
+> >        selftests: vDSO: parse_vdso: Test __SIZEOF_LONG__ instead of ULONG_MAX
+> >        selftests: vDSO: parse_vdso: Make compatible with nolibc
+> >        selftests: vDSO: vdso_test_gettimeofday: Clean up includes
+> >        selftests: vDSO: vdso_test_gettimeofday: Make compatible with nolibc
+> >        selftests: vDSO: vdso_standalone_test_x86: Switch to nolibc
+> > 
+> >   MAINTAINERS                                        |   1 +
+> >   include/uapi/linux/elf.h                           |  38 ++
+> >   tools/include/uapi/linux/elf.h                     | 524 +++++++++++++++++++++
+> >   tools/testing/selftests/lib.mk                     |   5 +-
+> >   tools/testing/selftests/vDSO/Makefile              |  11 +-
+> >   tools/testing/selftests/vDSO/parse_vdso.c          |  21 +-
+> >   tools/testing/selftests/vDSO/parse_vdso.h          |   1 -
+> >   .../selftests/vDSO/vdso_standalone_test_x86.c      | 143 +-----
+> >   .../selftests/vDSO/vdso_test_gettimeofday.c        |   4 +-
+> >   9 files changed, 584 insertions(+), 164 deletions(-)
+> > ---
+> > base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> > change-id: 20241017-parse_vdso-nolibc-e069baa7ff48
+> > 
+> > Best regards,
+> 
