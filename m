@@ -1,135 +1,76 @@
-Received: from mail.tipi-net.de (mail.tipi-net.de [194.13.80.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7481F9AAB;
-	Mon,  3 Feb 2025 13:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.13.80.246
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96F3FC139
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738587668; cv=none; b=AgCPz+fPJqBd/CKf4mZ4FqGcz98GUnjPs1YgbRPgqaAQhts7rwQbtWwV1PmJf2+7RyTwS8LFjRIyqH3Yj9In57gyrrHtzVPszNsvHRXPEseriErW2FzYttVspW9Wc1dgkZGttIIrzmV4UUJaWwPt+zIDUFy7TlHB3gY0EYD1hNI=
+	t=1738587716; cv=none; b=KP+RGIuIoJ/87TqrLjin/jY8DgVH7DSQhT927t0VjMcAn8NEktnykFLfYHuM7bxl27H6vvUppJ9e1o+Bp/biGhoP20gSlZoeqdANPKvRidwJO0u0F04O1V6p7eWebePrFRxhRmBaWBrq3ZoPp9pzMBqNRtCLTjBlHbG155moQ0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738587668; c=relaxed/simple;
-	bh=jqWh2EWngA3RWMJaLWB+Q14fWJr8ao4+yiPwbt29/mI=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=VRCUIxQukP5uuiNVCFzuuSAmUtkIZsiUUE3JOm9LniJvbZpI4gndu53JBtQolF8+dbmv1v5nCwRnNnFEVqrAy9Txm07h23VDzApf6wq9X/Mn3D6DkqTS5Np8jW+GNoIIwIgIyK347+9KnHz7Dg2gLOhnR3g8uq6hFReKqcv6/JQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tipi-net.de; spf=pass smtp.mailfrom=tipi-net.de; dkim=pass (2048-bit key) header.d=tipi-net.de header.i=@tipi-net.de header.b=Pfqhfd+F; arc=none smtp.client-ip=194.13.80.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tipi-net.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tipi-net.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tipi-net.de header.i=@tipi-net.de header.b="Pfqhfd+F"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2C13CA1C21;
-	Mon,  3 Feb 2025 14:00:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tipi-net.de; s=dkim;
-	t=1738587657;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AJI4ZqNVFm8MO3lNKhEvrmia+9Yie1nZYMnxjuADB6Q=;
-	b=Pfqhfd+Fx2Ou84vbEc65IiPsI9tlVoBDiZRZfOd/3VJroBWmRfky7590/YXV+CC660M1HV
-	wC0iuc3d2oYa6tZDzudpWgFIHUh6LWGjuCeWxFYL5S4cxMHWMHYywyLSRmaZqY7o62iZvG
-	tT6FhRUmXTNurmmjgyy2fTn83GFxIWDyadqee7idhTDbBHSv2JbUZnCfGwqw6YxUFJ2193
-	V0PPZ+67PKEQiGGl8gZ7qdG4XqU0o7zu6dZ7cfucoJnun7EYFXXCJsKcpQOi+qXFrQXEIf
-	n7Tb3pyOqyfCM7usg7ICbQr8leGSCS8m0TglaZ4YsLizqz6KzjkZeu0hfgNU2g==
+	s=arc-20240116; t=1738587716; c=relaxed/simple;
+	bh=7U3L4yXUTJhjGPwyS5Q2iEGQ0qdZzVQZBVRxTXwRq1k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rmpt8P0U1bgiO/UfOmzuiHfu5AHx99VYwipyi9FH8hYHZ5AYcPESWM2VHfWQDlaJXvvaTuooUv31yhqN4vrLkgQS6aQqkN7L5r4SZF6T+oAzMveTo9cnJA8glMoiN9P+GpZ8mmve3bRDFZUZPdSKb1s3driQ98w6ch/7OeXeL+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DDB511FB;
+	Mon,  3 Feb 2025 05:02:18 -0800 (PST)
+Received: from [10.57.37.14] (unknown [10.57.37.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C7203F58B;
+	Mon,  3 Feb 2025 05:01:52 -0800 (PST)
+Message-ID: <42a8ca6f-a881-4b4c-9ddb-bf3f2bc6f539@arm.com>
+Date: Mon, 3 Feb 2025 13:01:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 03 Feb 2025 14:00:55 +0100
-From: nb@tipi-net.de
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Ben Hutchings
- <ben@decadent.org.uk>, n.buchwitz@kunbus.com, l.sanfilippo@kunbus.com,
- stable@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: xhci: Restore Renesas uPD72020x support in xhci-pci
-In-Reply-To: <2025020307-charity-snowfield-c975@gregkh>
-References: <20250203120026.2010567-1-nb@tipi-net.de>
- <2025020307-charity-snowfield-c975@gregkh>
-Message-ID: <5965e4219781df26f733a2e93bed9f37@tipi-net.de>
-X-Sender: nb@tipi-net.de
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: iommu: flood of ahci 0000:e6:00.0: AMD-Vi: Event logged
+ [IO_PAGE_FAULT domain=0x0055 address=0xa14a4000 flags=0x0070]
+To: Corentin Labbe <clabbe.montjoie@gmail.com>, joro@8bytes.org,
+ suravee.suthikulpanit@amd.com, will@kernel.org, iommu@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org
+References: <Z6CGzUSV7llweytQ@Red>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <Z6CGzUSV7llweytQ@Red>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 3.2.2025 13:46, Greg Kroah-Hartman wrote:
-> On Mon, Feb 03, 2025 at 01:00:26PM +0100, nb@tipi-net.de wrote:
->> From: Nicolai Buchwitz <nb@tipi-net.de>
->> 
->> Before commit 25f51b76f90f1 ("xhci-pci: Make xhci-pci-renesas a proper
->> modular driver"), the xhci-pci driver handled the Renesas uPD72020x 
->> USB3
->> PHY and only utilized features of xhci-pci-renesas when no external
->> firmware EEPROM was attached. This allowed devices with a valid 
->> firmware
->> stored in EEPROM to function without requiring xhci-pci-renesas.
->> 
->> That commit changed the behavior, making xhci-pci-renesas responsible 
->> for
->> handling these devices entirely, even when firmware was already 
->> present
->> in EEPROM. As a result, unnecessary warnings about missing firmware 
->> files
->> appeared, and more critically, USB functionality broke whens
->> CONFIG_USB_XHCI_PCI_RENESAS was not enabled—despite previously 
->> workings
->> without it.
->> 
->> Fix this by ensuring that devices are only handed over to 
->> xhci-pci-renesas
->> if the config option is enabled. Otherwise, restore the original 
->> behavior
->> and handle them as standard xhci-pci devices.
->> 
->> Signed-off-by: Nicolai Buchwitz <nb@tipi-net.de>
->> Fixes: 25f51b76f90f ("xhci-pci: Make xhci-pci-renesas a proper modular 
->> driver")
->> ---
->>  drivers/usb/host/xhci-pci.c | 2 ++
->>  1 file changed, 2 insertions(+)
->> 
->> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
->> index 2d1e205c14c60..4ce80d8ac603e 100644
->> --- a/drivers/usb/host/xhci-pci.c
->> +++ b/drivers/usb/host/xhci-pci.c
->> @@ -654,9 +654,11 @@ int xhci_pci_common_probe(struct pci_dev *dev, 
->> const struct pci_device_id *id)
->>  EXPORT_SYMBOL_NS_GPL(xhci_pci_common_probe, "xhci");
->> 
->>  static const struct pci_device_id pci_ids_reject[] = {
->> +#if IS_ENABLED(CONFIG_USB_XHCI_PCI_RENESAS)
->>  	/* handled by xhci-pci-renesas */
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, 0x0014) },
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, 0x0015) },
->> +#endif
->>  	{ /* end: all zeroes */ }
->>  };
+On 2025-02-03 9:05 am, Corentin Labbe wrote:
+> Hello
 > 
-> Have you seen:
-> 	https://lore.kernel.org/r/20250128104529.58a79bfc@foxbook
-> ?
-Hi Greg.
-
-Thanks, I must have overlooked Michal's patch when I initially stumbled 
-over the issue.
+> I have a supermicro server which is flooded of kernel message:
+> ahci 0000:e6:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0055 address=0xa14a4000 flags=0x0070]
 > 
-> Which one is correct?
-
-I guess both, as Michal is implementing the same slightly different.
-
-My approach was to to keep the changes less invasive as possible and 
-thus make it possible to use pci_ids_reject[] for further exceptions in 
-the xhci-pci driver. In Michael's patch the list is specifically used 
-for blacklisting the Renesas devices and cannot easily be expanded for 
-other controllers. Either approach is fine with me, so lets move the 
-discussion to the patch which came first.
-
+> The server works perfectly anyway.
+> It happens with official ubuntu kernel vmlinuz-6.8.0-51-generic.
+> I tried also a custom 6.12.6, same problem.
 > 
-> thanks,
+> I tried to update bios, no change.
+> I tried iommu=soft, no change.
 > 
-> greg k-h
+> I dont know what to do next.
+> 
+> Regards
+> 
 
-best,
-Nicolai
+> IOMMU group 83 e6:00.0 SATA controller [0106]: Marvell Technology Group Ltd. 88SE9230 PCIe 2.0 x2 4-port SATA 6 Gb/s RAID Controller [1b4b:9230] (rev 11)
+
+Wow, a Marvell SATA controller doing something other than the usual 
+phantom function quirk, that's a nice change :D
+
+I'd guess that firmware has left it running for something like legacy 
+IDE emulation (if that's still a thing?) or its own soft-RAID driver, 
+but neglected to declare an IVMD entry to described the reserved memory 
+region(s) it's using for that. A smoking gun would be if 0xa14a4000 
+matches some firmware-reserved PA in the system memory map. In that 
+case, if you're lucky you might have some firmware/BIOS option to 
+disable fancy behaviour and leave it in plain AHCI mode. Otherwise, 
+booting with "iommu.passthrough=1" (or the even bigger hammer of 
+"amd_iommu=off") should at least allow you to ignore the issue.
+
+Thanks,
+Robin.
