@@ -1,82 +1,69 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8388F18EAB;
-	Mon,  3 Feb 2025 07:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FD21BEF81
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 07:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738566297; cv=none; b=ZL1PEtv+Ic1BBGlIe1KYnP+hZXNUmkoCsLjx3LXhrymI7FIj1NBFt9HnThO2IHQ67eUrZSBJvorMtI3xiIvTYq1M7G59wlDmgYv1sjjf/cHL3QE01Mhkc66ErGLMxt9QXeiDD0gFSjbB9f4mz3gnzj6KZyKb4g2AmbH+LlHNMes=
+	t=1738566728; cv=none; b=YIY8rurBV4RokbT3Y4VUChLHZJVtCg8j5gODdstmXRtizNQXiiGJo9crc8v+uWK/P+O71zhIOGFqL+xnrPYsj9UPN/IBZNEDforQtNFft0ekVqn/ADRKT4/7Iva7WrE1/DUuGf7c2zHxaUuZG1Ei9kgksFoPPKekd3NwbYXoFIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738566297; c=relaxed/simple;
-	bh=cdlxG3DUWpb2N9e84QeaBxU8D/erEiti6DSYyuQkVZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=dFVD/ivASsAMpXqWjLlggDgq8eQKNqB5eqnFenonFuakNxmNWDj7C6RSCvgGq6Ihi/dpigxvjVggAQw8J+cwcMHhNhgAMXmkuiAlUXRo87CwDChqKy9+BTOVt/Z1JukF4n3RyESfABExcLsjK2fh36/S9hAxPRZVOttL7kXofIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 86CA172C8F5;
-	Mon,  3 Feb 2025 09:58:49 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-	id 590A67CCB3B; Mon,  3 Feb 2025 08:58:49 +0200 (IST)
-Date: Mon, 3 Feb 2025 08:58:49 +0200
-From: "Dmitry V. Levin" <ldv@strace.io>
+	s=arc-20240116; t=1738566728; c=relaxed/simple;
+	bh=EOPXAYXuXV6V4CIhi2Vvb3rrrgQM0nAF22Yro39e2O0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g10665s5ed2bAxtrkij9OMWF/7D88GK1dvaN5eCUzaM/RCZqMAd9MUoLQWV8fpe72GeCsuZoxR1tEtvQbCjeY/HS9HwLFgg7Ykhi0Hr62ubQxI19Lgoh28rDjo7sprWUwZPDxjUiGNqkpr1JehdL/QorTyyA6OOZsO2ycye+2vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=n9KB1dIr; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n9KB1dIr"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-216395e151bso47311915ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 23:12:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738566726; x=1739171526; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jovPlsXMD8ercV5vJxs/GxduF9oWwr/XATh+6VZzu5o=;
+        b=n9KB1dIr9kOT7mWZU+rfOp72jpww390vMPxh30gjIy647qNeneiCVW0a9QTwxGc+zS
+         GsHktkHkGLgCUi42f61VVnb5xREUkFwfL45jrvepWHkYfarltwDE4y8h/3D+WS+G8Nxn
+         LL2Hx9yPH1GaKgHeOulx/B+bTA+z81OQ20Ftg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738566726; x=1739171526;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jovPlsXMD8ercV5vJxs/GxduF9oWwr/XATh+6VZzu5o=;
+        b=KgwB/APb6VxyOBzD3xNDCF0KemUOc1S5dCQ4s99hp+o9FXBr+rK/wg+wkC80LNZJwC
+         PvMWiq1DoP1AoLIWBE9EmI68h5V40SXkFYvkBDEOgLC28igV6/FCdI0hxFoHmSgkn41o
+         YgRpeldbQTeqgqG6QFmhkz0aMj4rv83HiDSu+XWcW9bjike7O+Aro/cF5GAZhUPW4iVp
+         5R7vLA8pd6zMuU5F0DBdqE5sKdGkCuNxSalwaNC5f3ROSBmZVHvUxfTpWeblw+qgnM8v
+         zis+TeAU2rlAyHIt+i/YTYu3aIfbwmunWIEGPusH71sxeFOkrXy16sTjgXnobbVRO+FB
+         doYw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/SCZiIvlHneXp9BwVL1kPu2mgO+neOisflKc666L37dAyavN37cYOFnRDsiWSVN1OW1sdK8wM+/tSQXQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywyx69PzGyzyB5of2geE4bMM14RZjdg+DQluchnIHH8DKLsBCGS
+	p9oz+8lds3gLMqRwu0MHVFmyCQn+QqjsUZHFxQsbNxiM1BoXJZDgDupnuRxZZg==
+X-Gm-Gg: ASbGncuwmagmdcY5wtLjq3Y8OBTE2M3KL/8Hw9F7ddoMp2wLDDbB5VfS03buMdwDWbE
+	qBXb0mLDW09mqqeTHAspg68NPAsY4BXcqIGK4kUBMC8JDwB6rGmuzq/NU3p8pmawl0aQtY+tcGH
+	iDuuWJyNWgzNsQ6FCUsP/zRhPblHJwp2r6gGKNuyBZGYp6hFBc9blK2cYI8eYzXtOGuk7Mkg6Qu
+	btvyMmuf++2Ve9uXZ7YdhTg+z6BggHcOFGZNrX+1Y3bHsr/7zD3e4vzSNmN+M/qEAfhBe+sipNV
+	dIvEYpaIYHl9WWk7kdQ=
+X-Google-Smtp-Source: AGHT+IGqQ0PsxVAoOO+ElcY+N0qt1g48OM/XXdS8cTwo49Ct8aebIUudjNCCzURajXn8/tcTIjIyig==
+X-Received: by 2002:a17:902:e342:b0:216:4fad:35d0 with SMTP id d9443c01a7336-21edd7ed325mr141655805ad.9.1738566726025;
+        Sun, 02 Feb 2025 23:12:06 -0800 (PST)
+Received: from google.com ([2401:fa00:8f:203:b77f:f2de:f99c:2d0e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31ee1efsm69263255ad.28.2025.02.02.23.12.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 23:12:05 -0800 (PST)
+Date: Mon, 3 Feb 2025 16:11:59 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
 To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Alexey Gladkov <legion@kernel.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Eugene Syromyatnikov <evgsyr@gmail.com>,
-	Mike Frysinger <vapier@gentoo.org>,
-	Renzo Davoli <renzo@cs.unibo.it>,
-	Davide Berardi <berardi.dav@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
-	Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-	Shuah Khan <shuah@kernel.org>, strace-devel@lists.strace.io,
-	linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-api@vger.kernel.org
-Subject: [PATCH v4 0/7] ptrace: introduce PTRACE_SET_SYSCALL_INFO API
-Message-ID: <20250203065849.GA14120@strace.io>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 01/17] zram: switch to non-atomic entry locking
+Message-ID: <cr3ekbanqyzmeqeohwwlfqyced2fvtqh6kzermiahm4blonhd2@fod2itisib5f>
+References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+ <20250131090658.3386285-2-senozhatsky@chromium.org>
+ <20250131145536.d7a0483331b0ebfde80a5754@linux-foundation.org>
+ <dj2k36obadhbxlvecsdhdyf7edkmtgocf55jkbiq5gbnpvkygt@mcwolkrhicvq>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,129 +72,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <dj2k36obadhbxlvecsdhdyf7edkmtgocf55jkbiq5gbnpvkygt@mcwolkrhicvq>
 
-PTRACE_SET_SYSCALL_INFO is a generic ptrace API that complements
-PTRACE_GET_SYSCALL_INFO by letting the ptracer modify details of
-system calls the tracee is blocked in.
+On (25/02/03 12:26), Sergey Senozhatsky wrote:
+> On (25/01/31 14:55), Andrew Morton wrote:
+> > > +static void zram_slot_write_lock(struct zram *zram, u32 index)
+> > > +{
+> > > +	atomic_t *lock = &zram->table[index].lock;
+> > > +	int old = atomic_read(lock);
+> > > +
+> > > +	do {
+> > > +		if (old != ZRAM_ENTRY_UNLOCKED) {
+> > > +			cond_resched();
+> > > +			old = atomic_read(lock);
+> > > +			continue;
+> > > +		}
+> > > +	} while (!atomic_try_cmpxchg(lock, &old, ZRAM_ENTRY_WRLOCKED));
+> > > +}
+> > 
+> > I expect that if the calling userspace process has realtime policy (eg
+> > SCHED_FIFO) then the cond_resched() won't schedule SCHED_NORMAL tasks
+> > and this becomes a busy loop.  And if the machine is single-CPU, the
+> > loop is infinite.
+> 
+> So for that scenario to happen zram needs to see two writes() to the same
+> index (page) simultaneously?  Or read() and write() on the same index (page)
+> concurrently?
 
-This API allows ptracers to obtain and modify system call details
-in a straightforward and architecture-agnostic way.
+Just to put more details:
 
-Current implementation supports changing only those bits of system call
-information that are used by strace, namely, syscall number, syscall
-arguments, and syscall return value.
+1) zram always works with only one particular zram entry index, which
+   is provided by an upper layer (e.g. bi_sector)
 
-Support of changing additional details returned by PTRACE_GET_SYSCALL_INFO,
-such as instruction pointer and stack pointer, could be added later if
-needed, by using struct ptrace_syscall_info.flags to specify the additional
-details that should be set.  Currently, "flags" and "reserved" fields of
-struct ptrace_syscall_info must be initialized with zeroes; "arch",
-"instruction_pointer", and "stack_pointer" fields are ignored.
+2) for read
 
-PTRACE_SET_SYSCALL_INFO currently supports only PTRACE_SYSCALL_INFO_ENTRY,
-PTRACE_SYSCALL_INFO_EXIT, and PTRACE_SYSCALL_INFO_SECCOMP operations.
-Other operations could be added later if needed.
+ read()
+  zram_read(page, index)
+   rlock entry[index]
+   decompress entry zshandle page
+   runlock entry[index]
 
-Ideally, PTRACE_SET_SYSCALL_INFO should have been introduced along with
-PTRACE_GET_SYSCALL_INFO, but it didn't happen.  The last straw that
-convinced me to implement PTRACE_SET_SYSCALL_INFO was apparent failure
-to provide an API of changing the first system call argument on riscv
-architecture [1].
+   for write
 
-ptrace(2) man page:
+ write()
+  zram_write(page, index)
+   len = compress page obj
+   handle = zsmalloc len
+   wlock entry[index]
+   entry.handle = handle
+   entry.len = len
+   wunlock entry[index]
 
-long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);
-...
-PTRACE_SET_SYSCALL_INFO
-       Modify information about the system call that caused the stop.
-       The "data" argument is a pointer to struct ptrace_syscall_info
-       that specifies the system call information to be set.
-       The "addr" argument should be set to sizeof(struct ptrace_syscall_info)).
+3) at no point zram locks more than entry index
+  a) there is no entry cross-locking (entries are not hierarchical)
+  b) there is no entry lock nesting (including recursion)
 
-[1] https://lore.kernel.org/all/59505464-c84a-403d-972f-d4b2055eeaac@gmail.com/
 
-Notes:
-    v4:
-    * Split out syscall_set_return_value() for hexagon into a separate patch
-    * s390: Change the style of syscall_set_arguments() implementation as
-      requested
-    * Add more Reviewed-by
-    * v3: https://lore.kernel.org/all/20250128091445.GA8257@strace.io/
-
-    v3:
-    * powerpc: Submit syscall_set_return_value() fix for "sc" case separately
-    * mips: Do not introduce erroneous argument truncation on mips n32,
-      add a detailed description to the commit message of the
-      mips_get_syscall_arg() change
-    * ptrace: Add explicit padding to the end of struct ptrace_syscall_info,
-      simplify obtaining of user ptrace_syscall_info,
-      do not introduce PTRACE_SYSCALL_INFO_SIZE_VER0
-    * ptrace: Change the return type of ptrace_set_syscall_info_* functions
-      from "unsigned long" to "int"
-    * ptrace: Add -ERANGE check to ptrace_set_syscall_info_exit(),
-      add comments to -ERANGE checks
-    * ptrace: Update comments about supported syscall stops
-    * selftests: Extend set_syscall_info test, fix for mips n32
-    * Add Tested-by and Reviewed-by
-
-    v2:
-    * Add patch to fix syscall_set_return_value() on powerpc
-    * Add patch to fix mips_get_syscall_arg() on mips
-    * Add syscall_set_return_value() implementation on hexagon
-    * Add syscall_set_return_value() invocation to syscall_set_nr()
-      on arm and arm64.
-    * Fix syscall_set_nr() and mips_set_syscall_arg() on mips
-    * Add a comment to syscall_set_nr() on arc, powerpc, s390, sh,
-      and sparc
-    * Remove redundant ptrace_syscall_info.op assignments in
-      ptrace_get_syscall_info_*
-    * Minor style tweaks in ptrace_get_syscall_info_op()
-    * Remove syscall_set_return_value() invocation from
-      ptrace_set_syscall_info_entry()
-    * Skip syscall_set_arguments() invocation in case of syscall number -1
-      in ptrace_set_syscall_info_entry() 
-    * Split ptrace_syscall_info.reserved into ptrace_syscall_info.reserved
-      and ptrace_syscall_info.flags
-    * Use __kernel_ulong_t instead of unsigned long in set_syscall_info test
-
-    v1:
-
-Dmitry V. Levin (7):
-  mips: fix mips_get_syscall_arg() for o32
-  hexagon: add syscall_set_return_value()
-  syscall.h: add syscall_set_arguments()
-  syscall.h: introduce syscall_set_nr()
-  ptrace_get_syscall_info: factor out ptrace_get_syscall_info_op
-  ptrace: introduce PTRACE_SET_SYSCALL_INFO request
-  selftests/ptrace: add a test case for PTRACE_SET_SYSCALL_INFO
-
- arch/arc/include/asm/syscall.h                |  25 +
- arch/arm/include/asm/syscall.h                |  37 ++
- arch/arm64/include/asm/syscall.h              |  29 +
- arch/csky/include/asm/syscall.h               |  13 +
- arch/hexagon/include/asm/syscall.h            |  21 +
- arch/loongarch/include/asm/syscall.h          |  15 +
- arch/m68k/include/asm/syscall.h               |   7 +
- arch/microblaze/include/asm/syscall.h         |   7 +
- arch/mips/include/asm/syscall.h               |  70 ++-
- arch/nios2/include/asm/syscall.h              |  16 +
- arch/openrisc/include/asm/syscall.h           |  13 +
- arch/parisc/include/asm/syscall.h             |  19 +
- arch/powerpc/include/asm/syscall.h            |  20 +
- arch/riscv/include/asm/syscall.h              |  16 +
- arch/s390/include/asm/syscall.h               |  21 +
- arch/sh/include/asm/syscall_32.h              |  24 +
- arch/sparc/include/asm/syscall.h              |  22 +
- arch/um/include/asm/syscall-generic.h         |  19 +
- arch/x86/include/asm/syscall.h                |  43 ++
- arch/xtensa/include/asm/syscall.h             |  18 +
- include/asm-generic/syscall.h                 |  30 +
- include/uapi/linux/ptrace.h                   |   7 +-
- kernel/ptrace.c                               | 179 +++++-
- tools/testing/selftests/ptrace/Makefile       |   2 +-
- .../selftests/ptrace/set_syscall_info.c       | 514 ++++++++++++++++++
- 25 files changed, 1140 insertions(+), 47 deletions(-)
- create mode 100644 tools/testing/selftests/ptrace/set_syscall_info.c
-
--- 
-ldv
+I guess where we actually need zram entry lock is writeback and
+recompression.  Writeback moves object from zsmalloc pool to actual
+physical storage, freeing zsmalloc memory after that and setting
+zram entry[index] handle to the backikng device's block idx, which
+needs synchronization.  Recompression does a similar thing, it frees
+the old zsmalloc handle and stores recompressed objects under new
+zsmalloc handle, it thus updates zram entry[index] handle to point
+to the new location, which needs to be synchronized.
