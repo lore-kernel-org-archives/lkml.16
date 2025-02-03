@@ -1,117 +1,82 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B35E2116F7
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 23:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D06BE209F57;
+	Mon,  3 Feb 2025 23:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738626412; cv=none; b=Pxh3DALBlIJUvd9C2cm8tW5JaK/zUBtQW+KudohnyAqhDx+UScvQG8D5jp0tSh1aNRSvpX4zoEMazMlXwwQUKpsnkwhg1YLG3XYYD3Nte3Kt4FtgcRldlD/SDwJbId+96rgf/LqMsiYbaH0y8WPcHVPlFMgGSYKRya46JbiMDQ4=
+	t=1738626625; cv=none; b=hy5AmEF2cw4hys/qtBbMxV1RfUSApuEqh+zpe9PCq1ISlC/9ZaEanSIk5PJUkB4/MBwKyfAnw9R2JrJ6gDzQjr6TgeMt4Y8heqXDLO5N7OCqdNQv9tZUJNuFw72nQTDcCOqZSlb20EKXpoO/Wf6XqdbY2Rx6OrH7OhJZ4t+vqDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738626412; c=relaxed/simple;
-	bh=8L1MKKLJRKA9fwjgy6wanwQsDI5QUdniP9phDu8pHk4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CzJjbx2KbNhLNAoPVsMMFdeEnp8CpU3fGQyBpUy/s4S1qzboEE3/NkA5ei2kAx0ppqYKGbQLKsqksjPrIvkm18rinlD29Fblo5hwwghdR88b+OZUWFQwxx4Cxuos0da9JDHNVuaYecUO87RkYEhSgikk+kHBaw38l77CWBPUv5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pYM7IE6e; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1738626625; c=relaxed/simple;
+	bh=KhNEyo7WFu+pfBKWpwr7dBCkfYqG9oS0AfyoC6gzP2I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ivVt71X8r46Jpal5Fro4mFCD2JBJDR02MVi/cMmJeJHAS+E2+EF4YApR4nSHaNhrVsXVikVzA50j+ID4I0k7GcphWPqFyQwYlqjBj4NUlh0fmFDgTeL18qBDu40AfUkhSb5KYdEkDQn4aYMqRNb/SUsyY7hbZmNhhu9hyAhr9VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oEhdTh0Q; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pYM7IE6e"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f129f7717fso9568884a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 15:46:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738626410; x=1739231210; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nSuGosaK5hHCEp+e5MR1KOURrACh1Uth6m86fvoF8Fs=;
-        b=pYM7IE6eaX/EjjUKSWBXFnlN5uhP8JjxSbfLxqXg5nTPLSgRSYESCqvgkAqF2pLT2o
-         e5l81p8SY4OSYjG8bU9gKmmeRPr3H0cktNzIkgwCgU5tKZ6Dx/+nW5c7NEJCQEOZQDdU
-         wIjrCFD07jkdzAbzsdHZpdzz0n0hzXpTWGBZGLCpQteJwhnshJVJkavt2e2WpgIVMNmi
-         yVHoLsZL6PlBn/mLPUjbsKw/aEQIg19AZ5i6wmWF0ZU78fT8inTj4Opeljmc++10vT0K
-         MvKleclR/efBbRQ1XUKFW3510/wEv94InIDSUagDqe1Z+Ww7ZoyTyDrbA5bpub+quiZh
-         S/xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738626410; x=1739231210;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nSuGosaK5hHCEp+e5MR1KOURrACh1Uth6m86fvoF8Fs=;
-        b=B22qKE/9KI4Xft9LKd2LuuNna7TBETv4SRTMhcKpFfYDO0XWdisMnFob6rwlJTs6jq
-         s1XHDnucN44M6H0ePV97j6F1biJiYgLh84HKOwxvsilIAdstwQwspW+E5Pr1SRqKqq6m
-         jIqAhB5S2LoyZMAmWM0NmXP2H1BnXkYCDep5jcMc7+LMR8Aow/CX82VOQFA5NthoFN7B
-         Su/PMF9lKzTorgJJ1dE5W7DACO6ZLj2mpvjKRCAEFXDCIHek8P9CAwM69rVHzGKqn4Ym
-         4mBBj/WrcxfD0k/fGlRluHIGlvoR/8OFTgtwa77wfkBfw1VtfkQLS4Hs/NLdkCo2ucgY
-         SJDw==
-X-Forwarded-Encrypted: i=1; AJvYcCXtEFaCd07sxRpJKiJIxJgJy4xzVebW9TErYQo0kBibd+eE1yU1e5ZJ+y5IXaxFuTFkcQ314deH0gqWWkU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuF7nP+okMILpYb+VsoryKaWuczEKNoZorTdv+v3BNr0HFbWcD
-	qxI7vXHMeErakWuRX3+XrNGoMkFl++qgCOWnwr0IlMkvIK6tNt77GPuSoh0G2H3SJHHPRuISb7U
-	aGw==
-X-Google-Smtp-Source: AGHT+IFVIhjhmzB9sg2VIMO96ePNC8Z1cE9aDKvshJUFp6DXLPZUlLZI1uXZjpV1zos3/By+HkWoUMPzU6E=
-X-Received: from pjbqi16.prod.google.com ([2002:a17:90b:2750:b0:2ef:786a:1835])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:56c4:b0:2ee:e18b:c1fa
- with SMTP id 98e67ed59e1d1-2f83ac70df4mr33349372a91.28.1738626409829; Mon, 03
- Feb 2025 15:46:49 -0800 (PST)
-Date: Mon, 3 Feb 2025 15:46:48 -0800
-In-Reply-To: <60cef3e4-8e94-4cf1-92ae-34089e78a82d@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oEhdTh0Q"
+Received: from eahariha-devbox.internal.cloudapp.net (unknown [40.91.112.99])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 50B64205493C;
+	Mon,  3 Feb 2025 15:50:23 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 50B64205493C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738626623;
+	bh=iYMbK5A793RDdkoEPga+PoRyWET+ntXiAELhCjFiDKo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=oEhdTh0QOjAvgDcCvjUZsTTf0lTUPwUPP4F7dTpmwoMR8Uf43qW2ThQjODVfBeW0b
+	 0A6YDdlPjF9Czqd/5/jjq41qeq/60xuBa1N/Q6LH7mm4uy7SMYZgwshRZgXGrP3Sf2
+	 WEnpJG8ujT5WK9I6pJnS/o5zRDHyBdC0zkVrN8s8=
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Date: Mon, 03 Feb 2025 23:50:22 +0000
+Subject: [PATCH v2 1/3] coccinelle: misc: secs_to_jiffies: Patch
+ expressions too
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1738595289.git.naveen@kernel.org> <405a98c2f21b9fe73eddbc35c80b60d6523db70c.1738595289.git.naveen@kernel.org>
- <Z6EOxxZA9XLdXvrA@google.com> <60cef3e4-8e94-4cf1-92ae-34089e78a82d@redhat.com>
-Message-ID: <Z6FVaLOsPqmAPNWu@google.com>
-Subject: Re: [PATCH 3/3] KVM: x86: Decouple APICv activation state from apicv_inhibit_reasons
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: "Naveen N Rao (AMD)" <naveen@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250203-converge-secs-to-jiffies-part-two-v2-1-d7058a01fd0e@linux.microsoft.com>
+References: <20250203-converge-secs-to-jiffies-part-two-v2-0-d7058a01fd0e@linux.microsoft.com>
+In-Reply-To: <20250203-converge-secs-to-jiffies-part-two-v2-0-d7058a01fd0e@linux.microsoft.com>
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, 
+ Ilya Dryomov <idryomov@gmail.com>, 
+ Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>, 
+ Xiubo Li <xiubli@redhat.com>
+Cc: cocci@inria.fr, linux-kernel@vger.kernel.org, 
+ ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
+ Easwar Hariharan <eahariha@linux.microsoft.com>
+X-Mailer: b4 0.14.2
 
-On Mon, Feb 03, 2025, Paolo Bonzini wrote:
-> On 2/3/25 19:45, Sean Christopherson wrote:
-> > Unless there's a very, very good reason to support a use case that generates
-> > ExtInts during boot, but _only_ during boot, and otherwise doesn't have any APICv
-> > ihibits, I'm leaning towards making SVM's IRQ window inhibit sticky, i.e. never
-> > clear it.
-> 
-> BIOS tends to use PIT, so that may be too much.  With respect to Naveen's report
-> of contention on apicv_update_lock, I would go with the sticky-bit idea but apply
-> it to APICV_INHIBIT_REASON_PIT_REINJ.
+Teach the script to suggest conversions for timeout patterns where the
+arguments to msecs_to_jiffies() are expressions as well.
 
-That won't work, at least not with yet more changes, because KVM creates the
-in-kernel PIT with reinjection enabled by default.  The stick-bit idea is that
-if a bit is set and can never be cleared, then there's no need to track new
-updates.  Since userspace needs to explicitly disable reinjection, the inhibit
-can't be sticky.
+Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+---
+ scripts/coccinelle/misc/secs_to_jiffies.cocci | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-I assume We could fudge around that easily enough by deferring the inhibit until
-a vCPU is created (or run?), but piggybacking PIT_REINJ won't help the userspace
-I/O APIC case.
+diff --git a/scripts/coccinelle/misc/secs_to_jiffies.cocci b/scripts/coccinelle/misc/secs_to_jiffies.cocci
+index 8bbb2884ea5db939c63fd4513cf5ca8c977aa8cb..416f348174ca659b544441f5f68f04a41d1ad4a3 100644
+--- a/scripts/coccinelle/misc/secs_to_jiffies.cocci
++++ b/scripts/coccinelle/misc/secs_to_jiffies.cocci
+@@ -20,3 +20,13 @@ virtual patch
+ 
+ - msecs_to_jiffies(C * MSEC_PER_SEC)
+ + secs_to_jiffies(C)
++
++@depends on patch@ expression E; @@
++
++- msecs_to_jiffies(E * 1000)
+++ secs_to_jiffies(E)
++
++@depends on patch@ expression E; @@
++
++- msecs_to_jiffies(E * MSEC_PER_SEC)
+++ secs_to_jiffies(E)
 
-> I don't love adding another inhibit reason but, together, these two should
-> remove the contention on apicv_update_lock.  Another idea could be to move
-> IRQWIN to per-vCPU reason but Maxim tells me that it's not so easy.
+-- 
+2.43.0
 
-Oh, yeah, that reminds me of the other reason I would vote for a sticky flag:
-if inhibition really is toggling rapidly, performance is going to be quite bad
-because inhibiting APICv requires (a) zapping APIC SPTEs and (b) serializing
-writers if multiple vCPUs trigger the 0=>1 transition.
-
-And there's some amount of serialization even if there's only a single writer,
-as KVM kicks all vCPUs to toggle APICv (and again to flush TLBs, if necessary).
-
-Hmm, something doesn't add up.  Naveen's changelog says:
-
-  KVM additionally inhibits AVIC for requesting a IRQ window every time it has
-  to inject external interrupts resulting in a barrage of inhibits being set and
-  cleared. This shows significant performance degradation compared to AVIC being
-  disabled, due to high contention on apicv_update_lock.
-
-But if this is a "real world" use case where the only source of ExtInt is the
-PIT, and kernels typically only wire up the PIT to the BSP, why is there
-contention on apicv_update_lock?  APICv isn't actually being toggled, so readers
-blocking writers to handle KVM_REQ_APICV_UPDATE shouldn't be a problem.
-
-Naveen, do you know why there's a contention on apicv_update_lock?  Are multiple
-vCPUs actually trying to inject ExtInt?
