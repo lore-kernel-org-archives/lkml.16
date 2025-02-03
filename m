@@ -1,124 +1,98 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E472045A2;
-	Mon,  3 Feb 2025 11:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41D220370C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738583559; cv=none; b=SNKhZEwzkcI8nJ4zRm1XIQRI0ZyUCtvNxa8Ow3RDOw4r7H+qjUN2LfefVeTW1bSGUlEJ4HwpnGZ4k8922p4GA812RXGQAw0k1TPaKiyCadZbaLOmUX8SfCpKHFWf4xASWBmdJtbt2EIhbrR9C1jFkcj0lcARKQTxJPCxZksanvI=
+	t=1738583637; cv=none; b=HM06LykTIvvw6jfXfHF/IjxMB7epJZgnhPQd6hVE/65Yh63zXEy2Fspcs9+OPw0sxjNUublEqWsi9DKbQ1Rp5J0NKlYR2zx+GkwZiRxJbne3xMmTTcl7VJZUG0IYrAww2lFjbIGKwvZGL830OE3u/x2MbVoiwXFVr+eS/vAaMco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738583559; c=relaxed/simple;
-	bh=mtPz4s+4egQ0jOh3GQAGAPwNPBPu0BZnd8qj+UMcZso=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X8xj1O1d5JkEzlDoiDvM2uFDLCTydrGcwYwmcktf/5g3BoYYo/fXog1QwaFUHpdqVsumcPdaC9zrRoWwIpSbtn+jVEe35M3WHg9xQso5vylX7tXGxhdLhiptrBVI4pEv6gmRM36j0fmRkGOy2ryZIpagH3he3Vv8V/UIjuRMEQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zr6GL1mC; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738583637; c=relaxed/simple;
+	bh=meh/lrf3lQBId3u3rudz9MSEfCO2RYxB5NClOQzPRCY=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=RJCXHUfuxnI9NXHmrPEgUBHNCNNsxzWn2AITajdv8vNt7A/2lVGzWl4I/HVg18N1byv7yNkWX/GCvmbE8lmjvon9Zqp5HO1G2x6me4XPJw0nKQld99ApNQOMwaNcHOwmJqs7Iksv2Jg9BDq+Vk47F+eeM1BRovIdpkGYI63AKs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zxUSxLvz; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zr6GL1mC"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2161eb94cceso49914835ad.2;
-        Mon, 03 Feb 2025 03:52:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zxUSxLvz"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5dbf65c0c4fso853527a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:53:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738583557; x=1739188357; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1738583634; x=1739188434; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Uc4uCqsleGcCsKVC2kCtafnEyIcpxj+3QblkARK4r2c=;
-        b=Zr6GL1mCVD35zEQCcBoyuLXtiuDYsnmfSGU/iwcnbuWjCS0ZDe7P8EAIJIq/mKXjrL
-         E/lmKMRZKClU/YGa5ukT0H5QM24PI65D/TXT2mtjLt3WJkY1UusXTzOcWRWc/tethChZ
-         JTrDGI/iOay6k74seXvzboEG74idEwEzTc9OjJbJekzK0cNCsJMHA5xMkmJA5CfI+QH+
-         t7dbk/hHX4DHxpX93dzNQq5If1fiDOSfmIRxXaV6L0QPX2WPF/hrCV583wGVez3+1VqH
-         sf9rNdkfPCNazRfge9HLIfThioxN3gcUIiWd085hdeYy0yJavBoTaZ2q+RpG4nq5yrgD
-         OjKA==
+        bh=d9tM7OqjYQPC/oIGbMDoNHBcwCYZBpgt07HcYPZRjQ8=;
+        b=zxUSxLvzFi55qo/3ZY2ZY+L7uy+KOguK0ymUIQTtI3OOgjfgRWnMdfXaeCUeYCZZAc
+         avEvbkVz/QkjwsXh5heMLPEmXRYnopxPUQD71P453hDFeRs/md3WTQXQrjDtHrbe6MA7
+         hA1pDqOQtTZkA6nZ7rhbFNoPpshASzcnt3UmVkPc6oYMutMaMS0ZxLaWBjaASpcxCDAP
+         ymSP5pM6Zm+EZCNlF+1LGsrvrEWvc675GwW/cc6rdYj0N9nJTLvEtHtXUIybfX6vB4ZY
+         zA77DTg02tG8OJyFGkObijATmMyH0X9qk6qyXL4blqAW5H3k4b1evgGGR3jAw8q0nHpd
+         numQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738583557; x=1739188357;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1738583634; x=1739188434;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Uc4uCqsleGcCsKVC2kCtafnEyIcpxj+3QblkARK4r2c=;
-        b=gDETCQgnAFpAyz+SBawRoz0p4paZOTcQWYG4H9M/JSHHnVYVjSZaq6oR41hfUUWiG5
-         yLVZNQNkuZWnFhSUg8bE1ztAznAhXKv6nzIsR+LYeRVWWk1s5yTPwDnGoej1XDFO/XHE
-         hRJW/vRyO4pv4O8n5HKF1YB5DcDV5j26c3hbbnYzy1I+SuBWBAjoc3RqSY5PcNWM9Qdd
-         XCLAr69W8QeNIhVLJg61HvHczKzvwuF/irOCI8mhjjikNX/7499ysOVlpC45cxzhQmZM
-         ahLV4Y0W/XJTlQ/yuo4u0FIiK7cE1CR7oT7BbPYhwS1PkkkI788XMxuvtJXBvQ5xq3pc
-         KuiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUSSYrxSIeR1oG4RbpcRJPl0ub/9f4owINj7EDixv88rEbqoSJtHytZJWsUgmm8pZWkA/GxmwVkvoVZSw==@vger.kernel.org, AJvYcCUvnomiKUBzg9d2E19hYBvmV0U0lutsQr33oMKoYtIMclXKV04D/w25QeQmKxdGWYTn5CgUbCLgIS1EPTEH@vger.kernel.org, AJvYcCVILihiV700WSJbUrE5Lx9GS+I4VY2BNZScGMRdzzch62onZSU9b8YRRGP/wuXp89CV7am5Tea+RCEQ@vger.kernel.org, AJvYcCVzhcbHHzwdLDRybGeWgGf/xikHPAt2NW+F5qiQ4nYoYCxF2O6otNwMq0amFjqXHVlDiV6wroswilHrzZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoEGQwG9t7SVxkimi+pq3ZzYua7qKjtWpsNwMft88A9RAj35gl
-	Vq9+E+WHi2Usm1fG9UjyJiyc0SMP8oRW9IPTidScFHcihyts7BGO
-X-Gm-Gg: ASbGncuyDBCpUB5DV9JPqCsqr7Hn2/mmg6I/TTW9HPlUmlzCL17NPBADShwaUxaA7L/
-	5COEcEh7hHo0PEmcqZ549jVYplgqUjC3mJJPpBAE6saRs8hUtwHr4bHKmoRvQBX64WaxhcAV8rB
-	9yLzQ8nyyWe7TOHJwpSTl6sgeE7RcONtvIy2RA1XMjINzJOrtEd4QCvFnwIeC/d9D8AdSh9EtN5
-	V2CGWJs/MbvOYSeKngxenVT7UxrJRRE3Qu+7wgWSgdWYKpNogRf+g4NR6C4FYfoY4RDVXddBPz2
-	0wSo9eK1eFHF+50K
-X-Google-Smtp-Source: AGHT+IG9OzjbgkvCS8tq7nwliRQ7D0GE7eIK1YFb7OgjbU/H0UhSsEr4jVXSBegVQdOpNlym0wtPBw==
-X-Received: by 2002:a05:6a00:4642:b0:725:f1b1:cbc5 with SMTP id d2e1a72fcca58-72fd0bc26c1mr38178820b3a.3.1738583557299;
-        Mon, 03 Feb 2025 03:52:37 -0800 (PST)
-Received: from nick-mbp.. ([59.188.211.160])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-72fe631c039sm8262408b3a.25.2025.02.03.03.52.33
+        bh=d9tM7OqjYQPC/oIGbMDoNHBcwCYZBpgt07HcYPZRjQ8=;
+        b=nAfUjkk+BFp224ug69xj+S2zx0P/4Y7K5EQgrQFJP+GK8py7iGuvm+TIodvs2zgHuu
+         OtQL2bK7Uh/bz3ScjrOeUA+vgOphK8PdKVv+xYdMfWOEAaaEDv2EGcpFVB0KGpL+fkBZ
+         PtzmY4gwt2eda2Jn2PsFNKjrq1Q7/+6d7IcYikn6H+Tf8RfMKELpvSwKkATIkL9vZtPO
+         tN1naXd2pzXXbjudqOfcOprY1R81X800eUAbR99OQ0VxGH+FEM8KX2StBnQpyfegKq4o
+         9sqlsPOzBkT2dbunw1J3+5c+/LvrBjXrq/HAOgWyruIN55/lvL2SO9rD5rjRTihYygGp
+         3lxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlpm9Df0WxZ3f93lM1JtBnPbLAOpLAX3CciExtuu2hHVdmj2mxnLPnozU9R2uSS04gtOB+2sfp6lm0DQs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJNM7N2jSJimfX37M63dbHa2ntQq2MQ6rcxRB0iEbLICE/aBQY
+	BeSwnTgcLj+xVjZOFo6Rac1OkyE0Vq474UEmbFrVPtI5/dTy6JoXrq/U5MyfpRE=
+X-Gm-Gg: ASbGncvRmzFIfytGHtIT5uMmO6lO5HhWGPLp/SEQFc6Vqc4Vdn6GW8o0sIsXOOSIk0y
+	8te7+/6IOhGQYk3tz4TDypLjsaePeDABJB0vZQ/6aTBPK1QuwnCH2OkywosYHdKbB6cKeaR6knA
+	FDvCaSOcv62CG7RKrxw5p22vwwhZTSiDcflqhLb6b9Mg0w2A/kZGh+A0VQXvy/8tvuQnn3UDLJp
+	DgbVe2Xm0ndzYKstmrtub8uQW6kGjTsCCYN2kvyqxF0j2gUNRszVZrDwYHSNgoi+ovCF6SmkwV+
+	cb6lpapioz8kDtGDkfynpEHvh8eDb1g=
+X-Google-Smtp-Source: AGHT+IEwxGompX0RDX7IgATosUk/dQdYe878OcQcDjQG1dWZ5fVvuhozBCD2DX2UUP85oceDFhvY1w==
+X-Received: by 2002:a05:6402:4287:b0:5d0:bf79:e925 with SMTP id 4fb4d7f45d1cf-5dc5efec149mr9404962a12.6.1738583633919;
+        Mon, 03 Feb 2025 03:53:53 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.218.144])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc724c9cffsm7586519a12.74.2025.02.03.03.53.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 03:52:36 -0800 (PST)
-From: Nick Chan <towinchenmi@gmail.com>
-To: Hector Martin <marcan@marcan.st>,
-	Sven Peter <sven@svenpeter.dev>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Lee Jones <lee@kernel.org>,
-	Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Pavel Machek <pavel@ucw.cz>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	Nick Chan <towinchenmi@gmail.com>,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Subject: [PATCH v5 RESEND 3/3] MAINTAINERS: Add entries for Apple DWI backlight controller
-Date: Mon,  3 Feb 2025 19:50:34 +0800
-Message-ID: <20250203115156.28174-4-towinchenmi@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250203115156.28174-1-towinchenmi@gmail.com>
-References: <20250203115156.28174-1-towinchenmi@gmail.com>
+        Mon, 03 Feb 2025 03:53:53 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250104141430.115031-1-krzysztof.kozlowski@linaro.org>
+References: <20250104141430.115031-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] memory: tegra20-emc: Drop redundant platform_get_irq()
+ error printk
+Message-Id: <173858363265.129675.12403410768215721898.b4-ty@linaro.org>
+Date: Mon, 03 Feb 2025 12:53:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-Add MAINTAINERS entries for the driver.
 
-Reviewed-by: Daniel Thompson (RISCstar) <danielt@kernel.org>
-Signed-off-by: Nick Chan <towinchenmi@gmail.com>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+On Sat, 04 Jan 2025 15:14:30 +0100, Krzysztof Kozlowski wrote:
+> platform_get_irq() already prints error message, so duplicating it is
+> redundant.  The message about "need of updating DT" makes no sense,
+> because this code was there since beginning.
+> 
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa065..a576324807f5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2228,6 +2228,7 @@ F:	Documentation/devicetree/bindings/i2c/apple,i2c.yaml
- F:	Documentation/devicetree/bindings/interrupt-controller/apple,*
- F:	Documentation/devicetree/bindings/iommu/apple,dart.yaml
- F:	Documentation/devicetree/bindings/iommu/apple,sart.yaml
-+F:	Documentation/devicetree/bindings/leds/backlight/apple,dwi-bl.yaml
- F:	Documentation/devicetree/bindings/mailbox/apple,mailbox.yaml
- F:	Documentation/devicetree/bindings/net/bluetooth/brcm,bcm4377-bluetooth.yaml
- F:	Documentation/devicetree/bindings/nvme/apple,nvme-ans.yaml
-@@ -2253,6 +2254,7 @@ F:	drivers/nvmem/apple-efuses.c
- F:	drivers/pinctrl/pinctrl-apple-gpio.c
- F:	drivers/pwm/pwm-apple.c
- F:	drivers/soc/apple/*
-+F:	drivers/video/backlight/apple_dwi_bl.c
- F:	drivers/watchdog/apple_wdt.c
- F:	include/dt-bindings/interrupt-controller/apple-aic.h
- F:	include/dt-bindings/pinctrl/apple.h
+Applied, thanks!
+
+[1/1] memory: tegra20-emc: Drop redundant platform_get_irq() error printk
+      https://git.kernel.org/krzk/linux-mem-ctrl/c/2f76a890fd2c636c640af1387b333aeb0cf69c75
+
+Best regards,
 -- 
-2.48.1
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
