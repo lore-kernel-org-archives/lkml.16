@@ -1,58 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF592201024;
-	Mon,  3 Feb 2025 10:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842A820011F;
+	Mon,  3 Feb 2025 10:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738578514; cv=none; b=YjzUiiOm5RnY/RGff5nhbAnXwW43eOtXdCCC7C8WuGVr1oFQYKffPWxuMOz4zewL/0h3wPRd5q+VG8SuGG+LK8skoETLgwixL07UcVX6xFwUVs04C64DuOPBYA/jDBHLztDzTLff1b4Y9BqoAOE2P8ck2nUk58amr/oxtglNbms=
+	t=1738578515; cv=none; b=WhpuTjEjj3m06Jb8KRmAV7WCG7TbXyCJeK5i+Ofob/o2+NaMa6tliq+cZ9s51JBZgJ3mw3JLQwA1jgFF3M36Uh0M5+9n/ljd8lfR1suP+SAMDFeWMfHxVrS31333+raSivq1IoxKZnp7bCtMtDRpAQ/ou4Upo5Il0Y2o+oIBDtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738578514; c=relaxed/simple;
-	bh=4qOVW/KcFCaGXByrUL1WyX+YL0wrt///CtDCqoENtaY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LLVHu7SG32pI3hfMpJgB6i/M6k3/zMIASBTrwPqGMJRJRJbgyXuZqpgeLNGdMWBYtBAfoBMQdMZBqS7nXRUGA2BMaXRQTLDiz8hWj9zk1dE0y+A9i5dIItGWKIeZwU1T22PVD4+dyFVLuKZSoXb9d33UTps2tJbephAV3YMdnKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA49E1476;
-	Mon,  3 Feb 2025 02:28:55 -0800 (PST)
-Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B5A13F63F;
-	Mon,  3 Feb 2025 02:28:27 -0800 (PST)
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-To: linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Howells <dhowells@redhat.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Jann Horn <jannh@google.com>,
-	Jeff Xu <jeffxu@chromium.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Kees Cook <kees@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	Quentin Perret <qperret@google.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	x86@kernel.org
-Subject: [RFC PATCH 1/8] arm64: kpkeys: Avoid unnecessary writes to POR_EL1
-Date: Mon,  3 Feb 2025 10:28:02 +0000
-Message-ID: <20250203102809.1223255-2-kevin.brodsky@arm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250203102809.1223255-1-kevin.brodsky@arm.com>
-References: <20250203102809.1223255-1-kevin.brodsky@arm.com>
+	s=arc-20240116; t=1738578515; c=relaxed/simple;
+	bh=Y9l6sqcG29o265hhC5jEILeo6TbOctqjNsVCEZ3i84o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=te37FVvEZnbvnF6Ggb9YwkXAvNokXh9majMBhF2LQNJQ94ks4Y6Il2uXw2ixh7Zgx1EQSGCasamjrxeduyZifUjcgbShGgCoyfSwLLnv7TyUnjvGKZKtA14/RC9ISrD3CfehOJiS3xzCSa701BRu4ZTsoB7GaRgs1RO+ySBI5Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0BPqwhRe; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wAJdm17y; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KLkKU5Ea; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=EWzRnuZB; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0BPqwhRe";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wAJdm17y";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KLkKU5Ea";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="EWzRnuZB"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 610D72115F;
+	Mon,  3 Feb 2025 10:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738578507; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=IlAMf3ARU8tF/BLlDqHKclMei8bgjGPPqVfDVtV7W/k=;
+	b=0BPqwhReali1Kgk7afvprXocp6uKtXGAQkkNI1/z8YmSYQ35wCmTZt3HR1PYS6vKwsyexa
+	R+c7ILz5W2lUey79wvlICZWkzhJu2QmldUsExeHjFVdbHCGRS7Iw+cGThkG6dzrvsbfqHs
+	2C1bdH3XmIbpBOJyGrLEz3+KwFwdTuc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738578507;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=IlAMf3ARU8tF/BLlDqHKclMei8bgjGPPqVfDVtV7W/k=;
+	b=wAJdm17yhyvmcwtOZrS8YS3iUlSSp2l0LNgy9HpwoYgJp+SP3Kdiy3uYDrRkHrY+bSQCZi
+	AT6hyF3IZXg8CLAQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738578503; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=IlAMf3ARU8tF/BLlDqHKclMei8bgjGPPqVfDVtV7W/k=;
+	b=KLkKU5Ea/cSCNQW9X7kyEccU2O7llJyKJFia/W8NxVjKDyApnmWvZ+30MNuoUXLonTKq2q
+	q4awUEPEBFG+XBxhmzIBTBE9hVaYV8tGYp/w1GqhDdUw11PP70kCz2HOOTnPDZZfF08dt5
+	L4NJCfi+ity91EWMTxSD2XsNrZY1oyY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738578503;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=IlAMf3ARU8tF/BLlDqHKclMei8bgjGPPqVfDVtV7W/k=;
+	b=EWzRnuZByfyd4DujPbuL7CxpPZZ4Sw4AkoF/qIW4cv8HmZTcigz/kAZeEWaN8Q1GlHUsDd
+	qRKNRGNknVaEIbCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 094ED13A96;
+	Mon,  3 Feb 2025 10:28:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id NOSxAEeaoGfwcwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 03 Feb 2025 10:28:23 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: daniel@zonque.org,
+	haojian.zhuang@gmail.com,
+	robert.jarzmik@free.fr,
+	linux@armlinux.org.uk,
+	krzk@kernel.org,
+	alim.akhtar@samsung.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH 0/2] arm: Do not include <linux/fb.h>
+Date: Mon,  3 Feb 2025 11:26:34 +0100
+Message-ID: <20250203102818.56747-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,38 +86,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spam-Score: -1.30
+X-Spamd-Result: default: False [-1.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_TO(0.00)[zonque.org,gmail.com,free.fr,armlinux.org.uk,kernel.org,samsung.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[free.fr,gmail.com]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Nested uses of kpkeys guards are about to be introduced, which means
-that kpkeys_set_level() may not actually need to change the value of
-POR_EL1. Since updating POR_EL1 requires an expensive ISB, let's
-skip the write if the value is unchanged, by returning
-KPKEYS_PKEY_REG_INVAL. This will cause the matching
-kpkeys_restore_pkey_reg() call to bail out without calling
-arch_kpkeys_restore_pkey_reg().
+Several source files for ARM do not require <linux/fb.h>. Remove the
+include statements.
 
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
----
- arch/arm64/include/asm/kpkeys.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Thomas Zimmermann (2):
+  ARM: spitz: Do not include <linux/fb.h>
+  ARM: s3c: Do not include <linux/fb.h>
 
-diff --git a/arch/arm64/include/asm/kpkeys.h b/arch/arm64/include/asm/kpkeys.h
-index 4854e1f3babd..3f16584d495a 100644
---- a/arch/arm64/include/asm/kpkeys.h
-+++ b/arch/arm64/include/asm/kpkeys.h
-@@ -27,8 +27,12 @@ static inline u64 por_set_kpkeys_level(u64 por, int level)
- static inline int arch_kpkeys_set_level(int level)
- {
- 	u64 prev_por = read_sysreg_s(SYS_POR_EL1);
-+	u64 new_por = por_set_kpkeys_level(prev_por, level);
- 
--	write_sysreg_s(por_set_kpkeys_level(prev_por, level), SYS_POR_EL1);
-+	if (new_por == prev_por)
-+		return KPKEYS_PKEY_REG_INVAL;
-+
-+	write_sysreg_s(new_por, SYS_POR_EL1);
- 	isb();
- 
- 	return prev_por;
+ arch/arm/mach-pxa/spitz.h                  | 1 -
+ arch/arm/mach-s3c/devs.c                   | 1 -
+ arch/arm/mach-s3c/setup-fb-24bpp-s3c64xx.c | 1 -
+ 3 files changed, 3 deletions(-)
+
 -- 
-2.47.0
+2.48.1
 
