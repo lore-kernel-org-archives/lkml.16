@@ -1,128 +1,223 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADDA1E7C0E;
-	Mon,  3 Feb 2025 10:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECCE620011F;
+	Mon,  3 Feb 2025 10:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738578488; cv=none; b=d0+ipS+HvpcmLIpQdYt2F8G19DnW83eDuJAkEIT1YvcyB4NlZkbW9UqIsi9PtqpV7rmVWetmVtVRHDYn6x0P0rmkmk8SAKG8hpCiRV+IXMO53EWIGwJSrTI4XTyYtWwOnMsmTf3Krz2WBpxSabJM4kG/4BBNBp3//KSseihmTCw=
+	t=1738578510; cv=none; b=DYjyx/9Pkj/mcNEnwTz4gvyeBfTyAE8HZQ+2BlFaf2POPQ4K6sRKWvget1/oT53vgY8N1aFBPruUMTVz87zPddu06ULTEQVDOlgP53Sp+AjW/zkUI6yrIF8EhXLH4TLTtnDGtzw5smpPA+2nHQz3uLr+GmaDje6U+uJS98st+A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738578488; c=relaxed/simple;
-	bh=HM9co9bHk3fz6yhzYqHJ2p5kWjd1y6fPfQIMblAplFk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JCzoElCCjZCfN5czE25NbiWusFLDwg4Bf2JKVmtHv/EhiiSOK9BOJ1UpEdEWzooLqLAatENU0ztqUxkZvIhUDcaFidCawrVC2FSbU36hGsmrSF4xr/8eUKWTISwNvuABZNNb9K0Fh9TtRnJ2Qvk1HFsr5Ntk0PfPVuWXHgzAblo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Z0P5jlAp; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Z0P5jlAp"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 512MxSs3005964;
-	Mon, 3 Feb 2025 10:28:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6x8BAunRvsjNsAkzeigQzLsRnDaLSX8GrXI9PQGXuhg=; b=Z0P5jlApR87jwpR/
-	JvpCtZD7NT2qguc941qD803+UVnSrfXctufSmGm8x13X7zgaI/rZ8cWzP8O4mxbA
-	uKOxqHFKxkr4HpkYQUiFreeky8l5CUPn/zArMikRVdFKHRlEjJ7FpFbSicJ7GbGO
-	hPgUjgsCwXy/nx407+1IbFM4Vp4LA+VenmnR2WyqqnWWAWsWmMbEzxg+fAWLoplT
-	/PGymaWRqQkY1AIFSEbzO9zJJd1DlezglgW4wv/Z/qsdEGwUwmQ8pi9epp++SKxx
-	rl/R81q8P0mjCNVtOm+FaKUXAJShHeidqHAhtiPbcP15SAo3W6y/IiC80m4hYgdD
-	0o5qow==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jd429bh1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 10:27:59 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 513ARwNC024654
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Feb 2025 10:27:58 GMT
-Received: from [10.216.42.141] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Feb 2025
- 02:27:55 -0800
-Message-ID: <b4276ac3-42a5-4a9f-83b1-875721d483d9@quicinc.com>
-Date: Mon, 3 Feb 2025 15:57:52 +0530
+	s=arc-20240116; t=1738578510; c=relaxed/simple;
+	bh=nndbetBnx656EtX9iQmko8tW9FJvoGALvcKDMFN5czM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IDXXLoAPVx7KKRIvsrFFxNIuZjtS9z76JiR15psFvRjJqUXbUiE/w1GvPQ5doUzT0vThfLBWP3VjVTLGwbM0ngCheVsuIEyuh0ghdcWbdi2WjSUugpAHBMyuwaJwuYp7qE7im19xDyeymsedt7hicfDB9iUiJlP4GKjRhOhF9dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9997611FB;
+	Mon,  3 Feb 2025 02:28:51 -0800 (PST)
+Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6890F3F63F;
+	Mon,  3 Feb 2025 02:28:23 -0800 (PST)
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+To: linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Howells <dhowells@redhat.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@chromium.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Kees Cook <kees@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	Quentin Perret <qperret@google.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org,
+	x86@kernel.org
+Subject: [RFC PATCH 0/8] pkeys-based cred hardening
+Date: Mon,  3 Feb 2025 10:28:01 +0000
+Message-ID: <20250203102809.1223255-1-kevin.brodsky@arm.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/13] dt-bindings: net: wireless: describe the ath12k
- AHB module
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <ath12k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        Kalle Valo
-	<kvalo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Jeff Johnson
-	<jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
- <20250130043508.1885026-2-quic_rajkbhag@quicinc.com>
- <20250130-cunning-quail-of-opportunity-76d0ad@krzk-bin>
- <104e6b6f-3c1e-4a00-8822-aa6fb4562411@kernel.org>
- <a3c7b0e6-a440-4452-83a2-eb95de0de9bc@quicinc.com>
- <7b57f8c8-7d0b-46f8-8364-a13860ab530e@kernel.org>
-Content-Language: en-US
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-In-Reply-To: <7b57f8c8-7d0b-46f8-8364-a13860ab530e@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: yJcKrWY2_aG_p9Gq0oZ-j5LSCDEeeCKR
-X-Proofpoint-ORIG-GUID: yJcKrWY2_aG_p9Gq0oZ-j5LSCDEeeCKR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_04,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=999 malwarescore=0
- spamscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
- adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502030080
+Content-Transfer-Encoding: 8bit
 
-On 2/3/2025 3:35 PM, Krzysztof Kozlowski wrote:
-> On 03/02/2025 09:43, Raj Kumar Bhagat wrote:
->> On 1/30/2025 2:10 PM, Krzysztof Kozlowski wrote:
->>> On 30/01/2025 09:28, Krzysztof Kozlowski wrote:
->>>> On Thu, Jan 30, 2025 at 10:04:56AM +0530, Raj Kumar Bhagat wrote:
->>>>> Add device-tree bindings for the ATH12K module found in the IPQ5332
->>>>> device.
->>>>>
->>>>> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
->>>>> ---
->>>>>  .../net/wireless/qcom,ath12k-ahb.yaml         | 319 ++++++++++++++++++
->>>>>  1 file changed, 319 insertions(+)
->>>>>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..bd953a028dc3
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
->>>>
->>>> Filename should match compatible. This binding does not look like
->>>> supporting more devices, so there is no much benefit calling it by generic name.
->>>
->>>
->>> I saw now your other patchset, so you have here two devices, but I still
->>> do not understand why this cannot follow standard naming practice like
->>> most bindings supporting one or more devices. Like every review we give.
->>>
->>
->> Sure, we can rename the filename to match the compatibles - "qcom,ipq5x-wifi.yaml".
-> 
-> No:
-> 
->>>> Filename should match compatible.
-> 
-> 
+This series aims at hardening struct cred using the kpkeys
+infrastructure proposed in [1]. The idea is to enforce the immutability
+of live credentials (task->{creds,read_creds}) by allocating them in
+"protected" memory, which cannot be written to in the default pkey
+configuration (kpkeys level). Code that genuinely requires writing to
+live credentials, such as get_cred(), explicitly switches to a
+privileged kpkeys level, enabling write access to the protected mapping.
 
-Ok, will rename to - "qcom,ipq5332-wifi.yaml"
+The main challenge with this approach is to minimise the disruption to
+existing code. Directly allocating credentials in protected memory would
+force any code setting up credentials to switch kpkeys level. Instead,
+we use the fact that commit_creds() "eats" the caller's reference,
+meaning that the caller cannot use that reference after calling
+commit_creds(). This allows us to move the credentials to a new location
+in commit_creds(): prepare_creds() still allocates them in regular
+memory, and commit_creds() moves them to protected memory (that is
+memory mapped with a non-default pkey). This ensures that *live*
+credentials are protected, without affecting users of commit_creds().
+
+The situation isn't as simple with override_creds(), as the caller may
+(and often does) keep using the reference it passed. In this case, the
+caller should explicitly call a new helper, protect_creds(), to move
+the credentials to protected memory. This seems to be the most robust
+approach, and the number of call sites to amend looks reasonable (patch
+7 covers the most important ones). No failure should occur if a call
+site is missed; the credentials will simply be unprotected.
+
+In order to allocate credentials in protected memory, this series
+introduces support for mapping slabs with a non-default pkey, using the
+SLAB_SET_PKEY kmem_cache_create() flag (patch 3). The complexity is kept
+minimal by setting the pkey at the slab level; it should also be
+possible to do this at the page level, but it isn't immediately obvious
+where the pkey value could be stored in struct page - especially since
+we've almost run out of GFP flags.
+
+Most of the cover letter for the original kpkeys series [1] is relevant
+to this series as well. In particular, the threat model is unchanged:
+the aim is to mitigate data-only attacks, such as use-after-free. It is
+therefore assumed that control flow is not corrupted, and that the
+attacker does not achieve arbitrary code execution.
+
+The most significant caveat in this RFC is RCU handling. Storing struct
+cred in memory that is read-only by default would break RCU without
+special handling, as it needs to write to cred->rcu (to zero out the
+callback field, for instance). There is currently no efficient way for
+RCU to know whether the object to be freed is protected or not, and
+executing the whole of RCU at a higher kpkeys level would imply running
+RCU callbacks at that level too, which isn't ideal (a callback could be
+exploited to write to protected locations). The current approach (patch
+4) therefore switches kpkeys level whenever any struct rcu_head is
+written to. This is safe, but the overhead is likely to be unacceptably
+large. Ideally, RCU would be able to tell if a struct rcu_head resides
+in protected memory, maybe using a flag - it isn't clear where that flag
+could be stored though.
+
+Other performance-related caveats:
+
+* In many cases, the use of guard objects to obtain write access to
+  protected data is nested: a function holding a guard calls another
+  that will also create a guard object. This seems difficult to avoid
+  without heavy refactoring. With the assumption that writing to the
+  pkey register is expensive (which is the case at least on arm64/POE),
+  patch 1 mitigates the cost by skipping the setting/restoring of the
+  register if the new value is equal to the current one, as is the case
+  when guards are nested.
+
+* Because a struct cred may be freed before being ever installed,
+  put_cred_rcu() may be operating on an object that is located either
+  in regular or protected memory. This is handled by looking up the slab
+  containing the object and checking if its flags include SLAB_SET_PKEY.
+  The overhead is hopefully acceptable on that path, but the approach is
+  not particularly elegant.
+
+* Similarly, put_cred(), get_cred() and other helpers may be called on
+  unprotected objects. Those helpers however create a guard object
+  unconditionally if they need to write to the credentials. It is
+  unclear whether skipping the guard for unprotected objects would give
+  a performance uplift, as this depends on the cost of checking if an
+  object is protected or not.
+
+* It is assumed that calling arch_kpkeys_enabled() is cheap, as multiple
+  guards are conditional on that function. (This boils down to a static
+  branch on arm64, which should indeed be cheap.)
+
+This series applies on top of v6.14-rc1 + the kpkeys RFC v3 [1] + a
+cleanup patch for SLAB flags [2]. A next step will be to estimate the
+performance impact of the kpkeys-based features (page table and struct
+cred hardening); no benchmarking has been performed at this stage.
+
+Any comment or feedback will be highly appreciated, be it on the
+high-level approach or implementation choices!
+
+- Kevin
+
+[1] https://lore.kernel.org/linux-hardening/20250203101839.1223008-1-kevin.brodsky@arm.com/
+[2] https://lore.kernel.org/lkml/20250124164858.756425-1-kevin.brodsky@arm.com/
+---
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jeff Xu <jeffxu@chromium.org>
+Cc: Joey Gouly <joey.gouly@arm.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pierre Langlois <pierre.langlois@arm.com>
+Cc: Quentin Perret <qperret@google.com>
+Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mm@kvack.org
+Cc: x86@kernel.org
+
+Kevin Brodsky (8):
+  arm64: kpkeys: Avoid unnecessary writes to POR_EL1
+  mm: kpkeys: Introduce unrestricted level
+  slab: Introduce SLAB_SET_PKEY
+  rcu: Allow processing kpkeys-protected data
+  mm: kpkeys: Introduce cred pkey/level
+  cred: Protect live struct cred with kpkeys
+  fs: Protect creds installed by override_creds()
+  mm: Add basic tests for kpkeys_hardened_cred
+
+ arch/arm64/include/asm/kpkeys.h |  14 ++-
+ fs/aio.c                        |   2 +-
+ fs/fuse/passthrough.c           |   2 +-
+ fs/nfs/nfs4idmap.c              |   2 +-
+ fs/nfsd/auth.c                  |   2 +-
+ fs/nfsd/nfs4recover.c           |   2 +-
+ fs/nfsd/nfsfh.c                 |   2 +-
+ fs/open.c                       |   2 +-
+ fs/overlayfs/dir.c              |   2 +-
+ fs/overlayfs/super.c            |   2 +-
+ include/asm-generic/kpkeys.h    |   4 +
+ include/linux/cred.h            |   6 ++
+ include/linux/kpkeys.h          |  16 ++-
+ include/linux/slab.h            |  21 ++++
+ kernel/cred.c                   | 178 +++++++++++++++++++++++++++-----
+ kernel/rcu/rcu_segcblist.c      |  10 +-
+ kernel/rcu/tree.c               |   4 +-
+ mm/Kconfig                      |   2 +
+ mm/Makefile                     |   1 +
+ mm/kpkeys_hardened_cred_test.c  |  42 ++++++++
+ mm/slab.h                       |   7 +-
+ mm/slab_common.c                |   2 +-
+ mm/slub.c                       |  58 ++++++++++-
+ security/Kconfig.hardening      |  24 +++++
+ 24 files changed, 361 insertions(+), 46 deletions(-)
+ create mode 100644 mm/kpkeys_hardened_cred_test.c
+
+-- 
+2.47.0
+
