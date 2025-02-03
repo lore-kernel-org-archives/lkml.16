@@ -1,64 +1,64 @@
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F29C211295;
-	Mon,  3 Feb 2025 14:45:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71367211296;
+	Mon,  3 Feb 2025 14:45:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593917; cv=none; b=ifCfjxGDNoaxDfNSQio+ZltsziN3FTQ/bkGrWl0BA/bJ2jLkbLM289uc1ddGSRIvBTwDYQT3FjxSZL1+XgEfkI5MNtwji2VyaoqqBRJf0WKi8BsJJ5IOix2GcAbA15aUBWpdoPb8/VjRov7diRKQ2gLU7/IYCNiReMdsXNp4+KQ=
+	t=1738593917; cv=none; b=DXnA6V2SsMqj6dNCzrX9ikwbNCZOE6SLFhm30rpGqdb6iArgM7vWeqlmYBkR3O9Zaa8eD3RuxtCTHbzvPoQBecvG4bxU019W2xhyXj+EByignnIQlbaibwAAXJAodhPLZL7lqha2G+W99tgXIR2yIn1/j3iC4krUrercM3y+Qvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738593917; c=relaxed/simple;
-	bh=dw2tagafwYPmCPHnvayl3frhMoF5mszbZc6Q0inSJGo=;
+	bh=TfgXBU5a5di5M2rMLxLxgsKaq9dJ7ErJ9ZjC0oxNAKA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mA3++sgoitHMZY+zK4re3YtmRTvoi5PUlKldfLr0eFfV22B4z0Xsy7Fa7ZOnFpyVBwbO8ewNHuUir3l3ADZlRawlm+fzaZAaateV1BJZLwlvtuCHJfrT+v3RTIQ6lnZioa2hFBzSaghcOO5hytJpMSfCZ09qFd/Su51WcUoSQ+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cVwjvfZN; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=ZBLOHqCL6irmhD1hUc+GJ/GdS08jRjOpjvN94fQ6wNTVQrFzENyeO0W1XVX3ToU2RaLvd6xwkvudH76iKZ6rEd/1e++qSqPMPGDJETMkQSwDaK4Rt283aFTCf6av8M63ZFRzcnRugY9BqNTf0KWPlTbqfbxmMXYYLWxU+uaLj0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lVtJ0Ffu; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cVwjvfZN"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513BTiui005121;
-	Mon, 3 Feb 2025 14:44:31 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lVtJ0Ffu"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513EUbJ6006209;
+	Mon, 3 Feb 2025 14:44:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=M2Jh7wxBPDIMXjM/I
-	X68myxQ1J5TffG1POfQiRFYLQc=; b=cVwjvfZNoAhV6J5q1ZqcqgbmiiIEP2AbJ
-	/uX9iZ0Q91zdoQhUeXxfflXJpZrt+cyaJfVCdZrckhIYijIFN9TBFDDVqqR5a6+N
-	MI+TLxQrxq7zOF/POw1xNoFdlWF8AH8sLQhvr5RDjEV6nCalHXhut0ovM12cCs1Z
-	Jup2+FzX3nsWikLG8oceuokLFI1ivM6vAu9EeezwG2P5zyR5y2+r1mYDr3yi0LKP
-	3GcBqAoHlEtBsBE58eJ//WJY7p3yCTuWNGiLM0lqHNaN24GXDiR0SPh6Xw7ocUlo
-	kDXPmhPMIAdOCw7kOP5H7J/7akdIwn4eW87icF6Dwok5Ezr6qTUGQ==
+	:mime-version:references:subject:to; s=pp1; bh=zJ3XITMWT7pMwbApr
+	F2XAaRfRk4pBMPEr9iYYHQbiEo=; b=lVtJ0FfuBt/K2mCEu28GjtA3P7lcGJUBy
+	LuVp9uvR6JU1WXrjRlbl2pP56xo6+emB6qPfmpT8b9uwwwuZJvo7o+uqPrOdu1OX
+	my82hTa7nk7ayV9Uc4w6QCdSoxJrlfqBn5M3nz+GYRzyCJPCtOYKolgwo+AZriKe
+	iEqqlPfMLy/DnL0t1YWq+ptZDzEkrdD9e7hzlofEVw7lzRkoUVzjiiMJaMN8vj10
+	iDMA8z8+JfGcMqnT5nUAuWvVseLurv/Q8pzOly55gwiYmZm5xCKmi3zYobidRsp+
+	dH8wThDfc3ky5wQlShPNBKr50eUB31mR98BPccoh9V1w2xTzaha2A==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jbht4kmp-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jmmyb1jq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 14:44:30 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 513ER4oN014109;
-	Mon, 3 Feb 2025 14:44:30 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jbht4kmh-1
+	Mon, 03 Feb 2025 14:44:36 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 513Eh0Qg019844;
+	Mon, 3 Feb 2025 14:44:35 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jmmyb1jm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 14:44:30 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 513BKB9U007133;
-	Mon, 3 Feb 2025 14:44:29 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxayewn3-1
+	Mon, 03 Feb 2025 14:44:35 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 513Be50q024635;
+	Mon, 3 Feb 2025 14:44:35 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxmxtc7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 14:44:29 +0000
+	Mon, 03 Feb 2025 14:44:35 +0000
 Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 513EiS8i32375478
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 513EiXkN31130044
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 14:44:28 GMT
+	Mon, 3 Feb 2025 14:44:34 GMT
 Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4CFEB58043;
-	Mon,  3 Feb 2025 14:44:28 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id AE6D958053;
+	Mon,  3 Feb 2025 14:44:33 +0000 (GMT)
 Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4BB4558059;
-	Mon,  3 Feb 2025 14:44:27 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id B91385805D;
+	Mon,  3 Feb 2025 14:44:32 +0000 (GMT)
 Received: from gfwa153.aus.stglabs.ibm.com (unknown [9.3.84.127])
 	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  3 Feb 2025 14:44:27 +0000 (GMT)
+	Mon,  3 Feb 2025 14:44:32 +0000 (GMT)
 From: Ninad Palsule <ninad@linux.ibm.com>
 To: brgl@bgdev.pl, linus.walleij@linaro.org, minyard@acm.org, robh@kernel.org,
         krzk+dt@kernel.org, conor+dt@kernel.org, andrew+netdev@lunn.ch,
@@ -69,9 +69,9 @@ To: brgl@bgdev.pl, linus.walleij@linaro.org, minyard@acm.org, robh@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
 Cc: Ninad Palsule <ninad@linux.ibm.com>
-Subject: [PATCH v7 2/9] dt-bindings: gpio: ast2400-gpio: Add hogs parsing
-Date: Mon,  3 Feb 2025 08:44:12 -0600
-Message-ID: <20250203144422.269948-3-ninad@linux.ibm.com>
+Subject: [PATCH v7 7/9] ARM: dts: aspeed: system1: Remove VRs max8952
+Date: Mon,  3 Feb 2025 08:44:17 -0600
+Message-ID: <20250203144422.269948-8-ninad@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250203144422.269948-1-ninad@linux.ibm.com>
 References: <20250203144422.269948-1-ninad@linux.ibm.com>
@@ -83,42 +83,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: B5T2TYz3z5qXcMOMhRJn2OKoCV8aJwHj
-X-Proofpoint-GUID: VAqdRPferty-yjJ2VS_wGn6j9OmBQkrD
+X-Proofpoint-GUID: dmZMpAawKVjPM55RZByxEXpf77i3K4Hj
+X-Proofpoint-ORIG-GUID: RHbi3Y9ysDFMtD5-Zpxu8IeWog23RLTq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 impostorscore=0 phishscore=0 spamscore=0 mlxscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 lowpriorityscore=0
- malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502030106
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ phishscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502030106
 
-Allow parsing GPIO controller children nodes with GPIO hogs.
+Removing voltage regulators max8952 from device tree. Those are fully
+controlled by hardware and firmware should not touch them.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
 ---
- .../devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml       | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../dts/aspeed/aspeed-bmc-ibm-system1.dts     | 34 -------------------
+ 1 file changed, 34 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-index b9afd07a9d24..b16273e69dfe 100644
---- a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-@@ -46,6 +46,12 @@ properties:
-     minimum: 12
-     maximum: 232
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
+index 1e0b1111ea9a..089a8315753a 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
+@@ -486,23 +486,6 @@ eeprom@50 {
+ 		compatible = "atmel,24c64";
+ 		reg = <0x50>;
+ 	};
+-
+-	regulator@60 {
+-		compatible = "maxim,max8952";
+-		reg = <0x60>;
+-
+-		max8952,default-mode = <0>;
+-		max8952,dvs-mode-microvolt = <1250000>, <1200000>,
+-						<1050000>, <950000>;
+-		max8952,sync-freq = <0>;
+-		max8952,ramp-speed = <0>;
+-
+-		regulator-name = "VR_v77_1v4";
+-		regulator-min-microvolt = <770000>;
+-		regulator-max-microvolt = <1400000>;
+-		regulator-always-on;
+-		regulator-boot-on;
+-	};
+ };
  
-+patternProperties:
-+  "-hog(-[0-9]+)?$":
-+    type: object
-+    required:
-+      - gpio-hog
-+
- required:
-   - compatible
-   - reg
+ &i2c1 {
+@@ -1198,23 +1181,6 @@ eeprom@50 {
+ 		compatible = "atmel,24c64";
+ 		reg = <0x50>;
+ 	};
+-
+-	regulator@60 {
+-		compatible = "maxim,max8952";
+-		reg = <0x60>;
+-
+-		max8952,default-mode = <0>;
+-		max8952,dvs-mode-microvolt = <1250000>, <1200000>,
+-						<1050000>, <950000>;
+-		max8952,sync-freq = <0>;
+-		max8952,ramp-speed = <0>;
+-
+-		regulator-name = "VR_v77_1v4";
+-		regulator-min-microvolt = <770000>;
+-		regulator-max-microvolt = <1400000>;
+-		regulator-always-on;
+-		regulator-boot-on;
+-	};
+ };
+ 
+ &i2c11 {
 -- 
 2.43.0
 
