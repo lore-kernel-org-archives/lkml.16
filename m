@@ -1,80 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31885214A65;
-	Mon,  3 Feb 2025 08:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5476F205E18;
+	Mon,  3 Feb 2025 08:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738570231; cv=none; b=OIdcircSE21fRJaIgwFymmdl4u7o/CIemIbZJIEy3Lkanxp/n9Zk9TwZyJu+ytbGpRacMzRfEiQTie/ztVPF7monD2GzRZgyTM/CbDwjRV948lu1CDMyEO4UlG31T8r1b1ZtxpYaUkIlpdvwJR785EqaYBxvtCp/H25Wef2DxYU=
+	t=1738570233; cv=none; b=aPpK4NGmYLno3X0Jhcj/qbVlzhxz1HMcX6K5CQgp15vXjzCIXiz69gsu3XxYPUZOXdKEXPE7m9tL6TVtg1GifTytNeth/QrbmixUjYeC7k++4AT7OElGgJtv6Kcx9Lpnbis4YwH3AFFhMBmzEjMJMMeN1o+ueBMYZD+a7k0f5Vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738570231; c=relaxed/simple;
-	bh=H1CB2E56WKQIFvUzXhKB0YMNUM1bkWdcIUeiE9iPlKM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OR8NK2sdpOJcqZb0sR7mJSP5/TvSQOki2JvSXEivbByBAY4+RGx+dYCNeFXHhvwbZrITQbda7j4P+sAzU63OdRfOgngdiNbvK4hSweetFp8m4gofzRj66B5nzj692kCUV2cnFop9ZrvyPeKylpHpaFwxVntGT/mJ3tk9PykL0Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF97A1476;
-	Mon,  3 Feb 2025 00:10:52 -0800 (PST)
-Received: from [10.162.16.79] (unknown [10.162.16.79])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2E1A3F63F;
-	Mon,  3 Feb 2025 00:10:23 -0800 (PST)
-Message-ID: <e63478e7-de74-4228-9b75-a26a9a3dd294@arm.com>
-Date: Mon, 3 Feb 2025 13:40:20 +0530
+	s=arc-20240116; t=1738570233; c=relaxed/simple;
+	bh=J0ziDvMh8G35/PpGvJj7y7kCMccoXafPWLEoDTV7LnY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZV4JtVHBkzvsluWdwk++UCRKoyLBDWZbHuhVIm7rxzAmu4LJfZ/TTHH4J9JlTF5z6bLQpZlWb4AaGszXo2rYXwXlRVU93ed0D1siZgAsuQ8/qnsgdFycBMmTNA/m9KGPlidyn3CQ6N6L+h2er84BosAjiumi2TP0YJ5b1LPhw00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E3NyMnFd; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E3NyMnFd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738570231; x=1770106231;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=J0ziDvMh8G35/PpGvJj7y7kCMccoXafPWLEoDTV7LnY=;
+  b=E3NyMnFdFnXf+3O7oQ7+cZOPfWs3+thE3mA+SjB3KSSOox+4WogcMst5
+   AYj75nsZkS+swaE7r432JsZKAt+YAxJALmgSPPdOSp/oBJEoMjwmd1pEK
+   37vElsLcWBF9YfS3z8dVCgpZD6acRcsbvQZrO6yoPVwrBW7PTBmHi89hE
+   iGb0Epo2v/8Ow3B6zOMHZ1rtfg0br8cvCA1QNzPZdBpTUdLXT4ktyoWmi
+   yBueeeCB8XgYASpQOQVGax4qDfjGIeVRQChoUM37H6oOkM0vcwbHMl6Pu
+   b4kl6UNMZXvykVLjtc5Djj6b5OgvTy1D9sTgXTtljyhgcKk7+karrASRJ
+   g==;
+X-CSE-ConnectionGUID: OPBaVI0mRZC0QamzogCslQ==
+X-CSE-MsgGUID: fw9bMswfQomypwiNP7lZ0Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="49654251"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="49654251"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 00:10:31 -0800
+X-CSE-ConnectionGUID: lXjAMuoGSfap3E0SEPMs7g==
+X-CSE-MsgGUID: auL9gx7cQ6yzXYzgO6hMMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="110788863"
+Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
+  by fmviesa009.fm.intel.com with ESMTP; 03 Feb 2025 00:10:27 -0800
+From: Raag Jadav <raag.jadav@intel.com>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	linus.walleij@linaro.org,
+	mika.westerberg@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	dmitry.torokhov@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	sre@kernel.org,
+	jic23@kernel.org,
+	przemyslaw.kitszel@intel.com
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v3 16/20] ASoC: hdac_hdmi: use devm_kmemdup_array()
+Date: Mon,  3 Feb 2025 13:38:58 +0530
+Message-Id: <20250203080902.1864382-17-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250203080902.1864382-1-raag.jadav@intel.com>
+References: <20250203080902.1864382-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 06/11] perf: apple_m1: Don't disable counter in
- m1_pmu_enable_event()
-To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvmarm@lists.linux.dev
-References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
- <20250202-arm-brbe-v19-v19-6-1c1300802385@kernel.org>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250202-arm-brbe-v19-v19-6-1c1300802385@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Convert to use devm_kmemdup_array() which is more robust.
 
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+---
+ sound/soc/codecs/hdac_hdmi.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-On 2/3/25 06:13, Rob Herring (Arm) wrote:
-> Currently m1_pmu_enable_event() starts by disabling the event counter
-> it has been asked to enable. This should not be necessary as the
-> counter (and the PMU as a whole) should not be active when
-> m1_pmu_enable_event() is called.
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  drivers/perf/apple_m1_cpu_pmu.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
-> index 06fd317529fc..39349ecec3c1 100644
-> --- a/drivers/perf/apple_m1_cpu_pmu.c
-> +++ b/drivers/perf/apple_m1_cpu_pmu.c
-> @@ -396,10 +396,6 @@ static void m1_pmu_enable_event(struct perf_event *event)
->  	user = event->hw.config_base & M1_PMU_CFG_COUNT_USER;
->  	kernel = event->hw.config_base & M1_PMU_CFG_COUNT_KERNEL;
->  
-> -	m1_pmu_disable_counter_interrupt(event->hw.idx);
-> -	m1_pmu_disable_counter(event->hw.idx);
-> -	isb();
-> -
->  	m1_pmu_configure_counter(event->hw.idx, evt, user, kernel);
->  	m1_pmu_enable_counter(event->hw.idx);
->  	m1_pmu_enable_counter_interrupt(event->hw.idx);
-> 
+diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
+index e1a7f0b0c0f3..a0f305a8fbf9 100644
+--- a/sound/soc/codecs/hdac_hdmi.c
++++ b/sound/soc/codecs/hdac_hdmi.c
+@@ -1017,8 +1017,7 @@ static int hdac_hdmi_create_pin_port_muxs(struct hdac_device *hdev,
+ 			return -ENOMEM;
+ 	}
+ 
+-	se->texts = devm_kmemdup(&hdev->dev, items,
+-			(num_items  * sizeof(char *)), GFP_KERNEL);
++	se->texts = devm_kmemdup_array(&hdev->dev, items, num_items, sizeof(char *), GFP_KERNEL);
+ 	if (!se->texts)
+ 		return -ENOMEM;
+ 
+-- 
+2.34.1
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
