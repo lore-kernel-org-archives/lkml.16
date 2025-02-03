@@ -1,126 +1,126 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3742046A6
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 12:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9869320550E;
+	Mon,  3 Feb 2025 12:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738586993; cv=none; b=K4gQixrV+Rx+UbcmW2HagDf10gxwznpTec20RgnWuRBf/6EKrUFJmsOYl0cN0HV1LjHAMnwSzSICStVJ1BIPt3tC4Co9Sy55Qbt8JPo2cM9CMOUO+/JJ2z+Kb0oM7Imh4yRM4PY/RPKElCfvVGCCBwdQSacWEnW2YATs0TJvTEc=
+	t=1738587006; cv=none; b=kVOhyJTGS6u9gcY8sVs29ARlVovasULLToSJlgtiWrzJIhhYfjK/Mzb9iiuMgJ42BusSyatPVOR+Bg01zxHY/NokR6rSUbxWoEnNA7Ag0/y5pzRTEq4cPCc8qENNtU1Sid3T//19ba6RX20ejxQOZuynitMEFFP45/GDyZgFeLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738586993; c=relaxed/simple;
-	bh=nUkpU5HdizpxTWr8YxBaJkQkZC9L5Iy1O5dsyOZHQtY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ecs3zZxyD4ZMZ0HdpejrlBhisauUR3PNLaSpq6rBQZ/fY/n/IuARyYpR+ZAoZkBr8qghI/T8FnySWmjQ4oTrD97pb4CTXNJLPHyezvkqG/8PlGTKekGlKNkd2KL2Il1Dql0nLeB3ekPDJaKKNEQOgYPdAf0/ke502EWgpfgWUPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dI9+6Oxo; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738587006; c=relaxed/simple;
+	bh=T52D8yVqjNMexPh/PaPVha4hQOnbwST3/9mFXWACe1s=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=XT5mrkfTNtmhGABu5v7vkDyQENMNtSqSqctkg/D/1Y1VYcEHhxIiwLgdh++7SRFsMy/92QZ7aTVKTIyE/MJSqU3dVj+NmfjOnoC6/F8rbRJfJdyJVYOjsrwD286bXZ7cdiJ3lyfhfsd661uFtDS9Zu45dQDdNWdyBnsoC07//Os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T890XfEe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=98PLDYX8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dI9+6Oxo"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3862d161947so2185253f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 04:49:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738586989; x=1739191789; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ywGUrOp/w8H6RCppdbR3Agfd+wqSLlU6tOUovBhQqng=;
-        b=dI9+6OxokdsnoihcAOg5SVnwAgJdhRbr4yoY2vKt1NmMyHrloRebNjBS7z/4wG2e6y
-         KwDneDXWijRuWnYy+MUgYtJ2TSV2GjgG1xvBiOqr1Th/9bP3STpj+Hy/hIDc1txIffFW
-         aObscZVLtL7P7gXtppoDUkY0hNtxTwP0nkLaluQ8BitU0h7X52c+mUnpXKxJc3Bt5PLP
-         OLaWuVUYCUzv7IEvDD1Udjp3hYy2gYjCrVXHogEXPVXlpAKQ/lCi+bIm4LDFFrHLdHbs
-         NJxP7mOKjkwa3WeoSMQueYVetWzBzZ5XBJGKZ8jiaJIy+xLzw0Oa5fxKdf8P6ULm0Ll/
-         V7Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738586989; x=1739191789;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ywGUrOp/w8H6RCppdbR3Agfd+wqSLlU6tOUovBhQqng=;
-        b=uUyIGGzzPSb/ElNjz5fGLEx0vsBxMiHXwBWd91xfnAyCLXxMFBviL4pPl+++atBb77
-         ITBuKdGT3H0WdPpT0KKRlOs3FaAiaqQZ2lIaAfkhTr4n8Dz5ExX2wnJMlhwcIZ3jRnev
-         VgiO0gOy9baDCSoSdZ9vsZTeaBUFfFWUzz5G3wNY1qoV9wtJRDb4LUyZ5UyG3xQiKgBt
-         m3B2DJI9mJCXwZ8P9Pz6oDmmFRGoRPiFNt71AbDzLbk9KDw90c7OZwpDiC84kLD3s/zK
-         /LswXP2mwe46zW/QENtuYpZIfoB0s73yw7u3g2jCtoiusmYB/EkDctLGiayONU8ascU9
-         AK1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVH0pNVb/2xIf6tX5oy402jlAjs3PMQovDJdQjydPMHlUapYA9M4Dv/82ugEYtnazlyOjopSlelBl/xam4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhSt+XyY7VnbjXrtu5n9/HzzPnln5QM2cMGGPnncExECPby4Yl
-	wYOe6CrvHvPH0EnjKyJ4Km7oWoIwv4z/XIe0pvA/FE3jQeao6bkaWgYayjpkNgQ=
-X-Gm-Gg: ASbGnctIeofSOmWSt1vxbo5wzb5UgMbmNrfvB6G2ulHOE5Kr0jJEQ+2HxUUpzefOP5c
-	IW/EiZbBgA5l8vRfAKVkiXVaGldpOF6pVP2vARj5XszCmYC6qRGI8XTJOzRzk7aUyE9y+lQfncS
-	W0kEmcxd8BLyaAMyOIuy7A40x0GQOzDDbc09lp8D/JjjiZI50+yPeifCuWvOQrAreKkngFvobjv
-	3woLsU/+QjJChGJhw0xiN2gi4bvyOyOvZmMdyf+QWqdL2IxYbdkOW1vx0BtWUz9d7tb3i1d9pM3
-	/4G7ahOEziqhT4BGa+J3cKmxWkucV1xfadFVcflu
-X-Google-Smtp-Source: AGHT+IFcRPGPDmD48EIK6elAaZu2Zk8DxQERIr9dnmWyB0Uuf10XrVS2TvtkTaG7Mc0/1xomxVn61g==
-X-Received: by 2002:adf:f504:0:b0:38b:e109:1e0d with SMTP id ffacd0b85a97d-38c520b6629mr14361510f8f.49.1738586989345;
-        Mon, 03 Feb 2025 04:49:49 -0800 (PST)
-Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2f17dsm189411645e9.23.2025.02.03.04.49.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 04:49:48 -0800 (PST)
-From: srinivas.kandagatla@linaro.org
-To: broonie@kernel.org
-Cc: lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	krzysztof.kozlowski@linaro.org,
-	pierre-louis.bossart@linux.dev,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dmitry.baryshkov@linaro.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] ASoC: q6apm-dai: schedule all the periods before we start streaming
-Date: Mon,  3 Feb 2025 12:49:45 +0000
-Message-Id: <20250203124945.11406-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T890XfEe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="98PLDYX8"
+Date: Mon, 03 Feb 2025 12:50:02 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738587002;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k8eaQHekOjZfHpNgYXDkBrHaxw5CaOq8W6esUq9rEv8=;
+	b=T890XfEejZW3SXnnyWuUxGInRsMx51Sw+GYOlUYD4A254uDI+d3f/LB9g59eNvgAgbFOP0
+	G4SbmCnHfyGQbcFVLLZv4FtuY6ZokoDvuleooiX9mzF2EHOo7Z+sfGzqh9roHi+v8p7oel
+	oHAreksjs3BHpMXphq1nAxomjjC8XgKvicsOAYuBho+AzVwOd9T148PnFBUaj6r98arm4Q
+	BsPKprZczPTJ3TzLByLq7woVV7k5Ok1JLkdaynxDWoObDiByxa4kP6Rl6P5PLAVbxIppWO
+	SozOZdJkwh5lZ5EbDUJhGf8ZCo2iiLd6ZBZxPX3TWti4Hb76oSJflxGimYxAoQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738587002;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k8eaQHekOjZfHpNgYXDkBrHaxw5CaOq8W6esUq9rEv8=;
+	b=98PLDYX8QXz9mM3mV19uY73KVrywl98AMtIUWVNhhgfxFmJxqRiAwsQY4+yygNC5LWZarn
+	lDJnBnu8aFHLmIAw==
+From: "tip-bot2 for Jann Horn" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/mm] x86/mm: Fix flush_tlb_range() when used for zapping normal PMDs
+Cc: Jann Horn <jannh@google.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250103-x86-collapse-flush-fix-v1-1-3c521856cfa6@google.com>
+References: <20250103-x86-collapse-flush-fix-v1-1-3c521856cfa6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <173858700223.10177.5958477749533350297.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+The following commit has been merged into the x86/mm branch of tip:
 
-With the existing code, we are only setting up one period at a time, in a
-ping-pong buffer style. This tiggers lot of underruns in the dsp
-leading to jitter noise during audio playback.
+Commit-ID:     3ef938c3503563bfc2ac15083557f880d29c2e64
+Gitweb:        https://git.kernel.org/tip/3ef938c3503563bfc2ac15083557f880d29c2e64
+Author:        Jann Horn <jannh@google.com>
+AuthorDate:    Fri, 03 Jan 2025 19:39:38 +01:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Mon, 03 Feb 2025 11:46:03 +01:00
 
-Fix this by scheduling all the periods, this will ensure that the dsp
-has enough buffer feed and ultimatley fixing the underruns and audio
-distortion.
+x86/mm: Fix flush_tlb_range() when used for zapping normal PMDs
 
-Fixes: 9b4fe0f1cd79 ("ASoC: qdsp6: audioreach: add q6apm-dai support")
-Reported-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On the following path, flush_tlb_range() can be used for zapping normal
+PMD entries (PMD entries that point to page tables) together with the PTE
+entries in the pointed-to page table:
+
+    collapse_pte_mapped_thp
+      pmdp_collapse_flush
+        flush_tlb_range
+
+The arm64 version of flush_tlb_range() has a comment describing that it can
+be used for page table removal, and does not use any last-level
+invalidation optimizations. Fix the X86 version by making it behave the
+same way.
+
+Currently, X86 only uses this information for the following two purposes,
+which I think means the issue doesn't have much impact:
+
+ - In native_flush_tlb_multi() for checking if lazy TLB CPUs need to be
+   IPI'd to avoid issues with speculative page table walks.
+ - In Hyper-V TLB paravirtualization, again for lazy TLB stuff.
+
+The patch "x86/mm: only invalidate final translations with INVLPGB" which
+is currently under review (see
+<https://lore.kernel.org/all/20241230175550.4046587-13-riel@surriel.com/>)
+would probably be making the impact of this a lot worse.
+
+Fixes: 016c4d92cd16 ("x86/mm/tlb: Add freed_tables argument to flush_tlb_mm_range")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20250103-x86-collapse-flush-fix-v1-1-3c521856cfa6@google.com
 ---
- sound/soc/qcom/qdsp6/q6apm-dai.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/tlbflush.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6apm-dai.c b/sound/soc/qcom/qdsp6/q6apm-dai.c
-index c9404b5934c7..148c3fb77168 100644
---- a/sound/soc/qcom/qdsp6/q6apm-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6apm-dai.c
-@@ -299,15 +299,17 @@ static int q6apm_dai_trigger(struct snd_soc_component *component,
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct q6apm_dai_rtd *prtd = runtime->private_data;
--	int ret = 0;
-+	int ret = 0, i;
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index 02fc2aa..3da6451 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -242,7 +242,7 @@ void flush_tlb_multi(const struct cpumask *cpumask,
+ 	flush_tlb_mm_range((vma)->vm_mm, start, end,			\
+ 			   ((vma)->vm_flags & VM_HUGETLB)		\
+ 				? huge_page_shift(hstate_vma(vma))	\
+-				: PAGE_SHIFT, false)
++				: PAGE_SHIFT, true)
  
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
- 		 /* start writing buffers for playback only as we already queued capture buffers */
--		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
--			ret = q6apm_write_async(prtd->graph, prtd->pcm_count, 0, 0, 0);
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-+			for (i = 0; i < runtime->periods; i++)
-+				ret = q6apm_write_async(prtd->graph, prtd->pcm_count, 0, 0, 0);
-+		}
- 		break;
- 	case SNDRV_PCM_TRIGGER_STOP:
- 		/* TODO support be handled via SoftPause Module */
--- 
-2.39.5
-
+ extern void flush_tlb_all(void);
+ extern void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
