@@ -1,96 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC481FAC3D;
-	Mon,  3 Feb 2025 09:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B330200127
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738576637; cv=none; b=PwP2vsSJJkmnfg2BVPWxEx2W+yJtvrvqP5mPk8/3wQZnb4Va84kPmXLoI9AGtJ7ncUp8Nak/XsWNapg2Ap+FIuqGm2p2mOrPwb9cera4VCjIZ3z8tKzFwAoIHdFR+IipLiqepMvcWQ4ZA+GVPBZ40lMRowWgIHyQwWJRJrZetLs=
+	t=1738576643; cv=none; b=fio7/uV54FZSnkqy6BOjj/utvziJLuooZM1Mf9ehlU/QB/cdJ+qWDFEgpIqXU9woGiMeFNbAM8Z6DOof8oyYEXFaLr+5Hx4qdY+4vBW9K72eP23oq/MIwGfohOrjRUtidXM1yQR8cpkVaRzKF/qSMt3sQkNsupOoiLxbfkZtsDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738576637; c=relaxed/simple;
-	bh=urrBZ/6GVCXqZdOoAIyHoDL2Fcu2h++C/73D15sq3tk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dEnf/duq7irRQifpoc60xpD6MQAHqwHcxh7lhAR8YZsn0KzBXnejwABg2pIVF8YVM1hFy9VqPqn7LZMY6J8DA8quLFf6HrTy9yQ3O6/rTarZn+r0k6zWAqS44a8Br4zcxZqcQtPYuZpQRioUn6PI2OcjZBDju8idrOhKHL8vRlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P3KzzirN; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P3KzzirN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738576635; x=1770112635;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=urrBZ/6GVCXqZdOoAIyHoDL2Fcu2h++C/73D15sq3tk=;
-  b=P3KzzirNUClWBYhJ6eFsfTbdSOPpJqEnLLjYI40WO597oS25k9xeKCQg
-   FakRiqzPoUZDIpqD6LpNqqtB4oReaQJEEE7ZF9dVx0lGo7AXZvirpcO2q
-   sf5lqgk1JPTgsRCMC7Ko/lSgpyLCTyHc0N7lUT00dQudA279BekprIatO
-   ydDXe3/S5GEc3F6SBSLEjVgLt67aMHf/aMs5P4JBhhuOSmhBlIz1XHDO3
-   iwapU9qVPN4snYoUR9FCD2jy19hRjjz/gDdqCNy9CIR5X34aR5eSTQ4nn
-   luqWmk4ytJuaPhEcM5045XA1iiMwW/uuVJt5PeTqNufj60Z3PAJsvmeDy
-   Q==;
-X-CSE-ConnectionGUID: RWc/S+SETYWe8tTMvh3gyg==
-X-CSE-MsgGUID: eMi2AGwjQ+OPVjw2jYnxig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="50053605"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="50053605"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:57:14 -0800
-X-CSE-ConnectionGUID: dttPdoLBRj6ws3opxLAL7g==
-X-CSE-MsgGUID: XaZxNjHLRBGGAqutSMq2pQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147443589"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:57:11 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tetCV-00000007n5f-3FpQ;
-	Mon, 03 Feb 2025 11:57:07 +0200
-Date: Mon, 3 Feb 2025 11:57:07 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
-	lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-	jic23@kernel.org, przemyslaw.kitszel@intel.com,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 18/20] ASoC: uda1380: use devm_kmemdup_array()
-Message-ID: <Z6CS88kG3dssSaIk@smile.fi.intel.com>
-References: <20250203080902.1864382-1-raag.jadav@intel.com>
- <20250203080902.1864382-19-raag.jadav@intel.com>
+	s=arc-20240116; t=1738576643; c=relaxed/simple;
+	bh=7QPCZVm8uZsigVkzr7sQwFV5eYHQpG7HcOxYgpl/Db0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tRP+kH/M2s8lT3fJv20E8uZAbtKE3UVXP3jYjOnlsbTA0Y7dpcOVb6LVa6aPBQcAwiHGBU0lglp8CyY+018iAbhDnVyX/972ZJDPwL8d8ZrLWKYS8fy+FQjiBpv5CkQMNKZxbkFg3Hd7cADVkFbcoh8Bx64lhxIqSItm/UQ0FeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3cfc08132adso69809525ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:57:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738576640; x=1739181440;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pohBAsk+VfWTs0qwofD5+fE+WCyA8aDvg+C1Zl4hi/g=;
+        b=g0coPU1Rl4v6uatqkELB1A5fW9bp52hwXgX1GNiUPiLmihXKm28qYw7IEQR5fBuy6g
+         YfPqhqW5NTbCF6yM1Ugb2EsRJUltgI/YqaY0IJr0S4wySbN/9vtwQD5tG84EBbZTEhDH
+         HB350AP/fPnZjl3frJsYCp0MKgr8/s0VBn1uxMuu0+gb9PR9PysdwmagaGMpC7bJ3Ddl
+         RSrxavTM5F254Gue5XVWXlkc2FNLvPNTcK6z80zcF6BDNFikiscfXb344BC1D330H1/y
+         nTUISLer6xLe3XzGYvnoETpKc0hQ7FoQ35u3OSuIGeH3zYiZVcCCE0WFDyWttjpTipyI
+         r7pw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnq4jgxSiPjt6nTTo5TNDNnhiJSmrfKzNTVp7QIv/ky2XCmyV4uAZmrjgBDsNsdRuwZv3lNqOzE/+vFGk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAcvsg45RdKkFem2qpEZTxWbHobLF67BVyvIFMqBrYArO1LD29
+	2+HMMM3yBCO8lh6KzFOBOwquld4zRwV3YpEz9PaphbOOF7n18kVwUySRZ88MlfWZlF3GsA5KE+G
+	lqgxYpIVBc/Ru/AZEZLBI/8fb+DMYXhSKQyiOfJqVdafiRAPMYWxemCY=
+X-Google-Smtp-Source: AGHT+IFGjYu0PzVJbiJYn3l/HayCoiP6DVH3R1koA8FiVlkJ2t+WwOWB1EI1T6J/gLhOprq9VymUxq1o7Y8s1FMo+cPDcqtpgtyg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203080902.1864382-19-raag.jadav@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Received: by 2002:a05:6e02:2483:b0:3cf:c8bf:3b8a with SMTP id
+ e9e14a558f8ab-3cffe3e5c91mr205309775ab.7.1738576640656; Mon, 03 Feb 2025
+ 01:57:20 -0800 (PST)
+Date: Mon, 03 Feb 2025 01:57:20 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a09300.050a0220.d7c5a.008b.GAE@google.com>
+Subject: [syzbot] [net?] general protection fault in add_wait_queue
+From: syzbot <syzbot+9d55b199192a4be7d02c@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, eperezma@redhat.com, 
+	horms@kernel.org, jasowang@redhat.com, kuba@kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mhal@rbox.co, mst@redhat.com, 
+	netdev@vger.kernel.org, pabeni@redhat.com, sgarzare@redhat.com, 
+	stefanha@redhat.com, syzkaller-bugs@googlegroups.com, 
+	virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 03, 2025 at 01:39:00PM +0530, Raag Jadav wrote:
-> Convert to use devm_kmemdup_array() which is more robust.
+Hello,
 
-...
+syzbot found the following issue on:
 
-> -	uda1380->reg_cache = devm_kmemdup(&i2c->dev,
-> -					uda1380_reg,
-> -					ARRAY_SIZE(uda1380_reg) * sizeof(u16),
-> -					GFP_KERNEL);
-> +	uda1380->reg_cache = devm_kmemdup_array(&i2c->dev, uda1380_reg, ARRAY_SIZE(uda1380_reg),
-> +						sizeof(u16), GFP_KERNEL);
+HEAD commit:    c2933b2befe2 Merge tag 'net-6.14-rc1' of git://git.kernel...
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16f676b0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
+dashboard link: https://syzkaller.appspot.com/bug?extid=9d55b199192a4be7d02c
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13300b24580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12418518580000
 
-sizeof(*uda1380->reg_cache) ?
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c7667ae12603/disk-c2933b2b.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/944ca63002c1/vmlinux-c2933b2b.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/30748115bf0b/bzImage-c2933b2b.xz
 
->  	if (!uda1380->reg_cache)
->  		return -ENOMEM;
+The issue was bisected to:
 
--- 
-With Best Regards,
-Andy Shevchenko
+commit fcdd2242c0231032fc84e1404315c245ae56322a
+Author: Michal Luczaj <mhal@rbox.co>
+Date:   Tue Jan 28 13:15:27 2025 +0000
+
+    vsock: Keep the binding until socket destruction
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=148f5ddf980000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=168f5ddf980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=128f5ddf980000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9d55b199192a4be7d02c@syzkaller.appspotmail.com
+Fixes: fcdd2242c023 ("vsock: Keep the binding until socket destruction")
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000003: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000018-0x000000000000001f]
+CPU: 1 UID: 0 PID: 5845 Comm: syz-executor865 Not tainted 6.13.0-syzkaller-09685-gc2933b2befe2 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+RIP: 0010:__lock_acquire+0x6a/0x2100 kernel/locking/lockdep.c:5091
+Code: b6 04 30 84 c0 0f 85 f8 16 00 00 45 31 f6 83 3d 2b 98 80 0e 00 0f 84 c8 13 00 00 89 54 24 60 89 5c 24 38 4c 89 f8 48 c1 e8 03 <80> 3c 30 00 74 12 4c 89 ff e8 88 26 8b 00 48 be 00 00 00 00 00 fc
+RSP: 0018:ffffc9000407f870 EFLAGS: 00010006
+RAX: 0000000000000003 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: dffffc0000000000 RDI: 0000000000000018
+RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000001
+R10: dffffc0000000000 R11: fffffbfff203680f R12: ffff888035760000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000018
+FS:  000055555c9b3380(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000002000044c CR3: 00000000352c0000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
+ add_wait_queue+0x46/0x180 kernel/sched/wait.c:22
+ virtio_transport_wait_close net/vmw_vsock/virtio_transport_common.c:1200 [inline]
+ virtio_transport_close net/vmw_vsock/virtio_transport_common.c:1282 [inline]
+ virtio_transport_release+0x4c4/0xce0 net/vmw_vsock/virtio_transport_common.c:1302
+ __vsock_release+0xf1/0x4f0 net/vmw_vsock/af_vsock.c:830
+ vsock_release+0x97/0x100 net/vmw_vsock/af_vsock.c:941
+ __sock_release net/socket.c:642 [inline]
+ sock_close+0xbc/0x240 net/socket.c:1393
+ __fput+0x3e9/0x9f0 fs/file_table.c:450
+ __do_sys_close fs/open.c:1579 [inline]
+ __se_sys_close fs/open.c:1564 [inline]
+ __x64_sys_close+0x7f/0x110 fs/open.c:1564
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f2406c95400
+Code: ff f7 d8 64 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 80 3d 81 8c 07 00 00 74 17 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 48 c3 0f 1f 80 00 00 00 00 48 83 ec 18 89 7c
+RSP: 002b:00007ffe044a2b28 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007f2406c95400
+RDX: 000000000000000d RSI: 0000000000000001 RDI: 0000000000000004
+RBP: 00000000000f4240 R08: 0000000000000008 R09: 000000005c9b4610
+R10: 0000000020000180 R11: 0000000000000202 R12: 000000000000e3ae
+R13: 00007ffe044a2b34 R14: 00007ffe044a2b50 R15: 00007ffe044a2b40
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__lock_acquire+0x6a/0x2100 kernel/locking/lockdep.c:5091
+Code: b6 04 30 84 c0 0f 85 f8 16 00 00 45 31 f6 83 3d 2b 98 80 0e 00 0f 84 c8 13 00 00 89 54 24 60 89 5c 24 38 4c 89 f8 48 c1 e8 03 <80> 3c 30 00 74 12 4c 89 ff e8 88 26 8b 00 48 be 00 00 00 00 00 fc
+RSP: 0018:ffffc9000407f870 EFLAGS: 00010006
+RAX: 0000000000000003 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: dffffc0000000000 RDI: 0000000000000018
+RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000001
+R10: dffffc0000000000 R11: fffffbfff203680f R12: ffff888035760000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000018
+FS:  000055555c9b3380(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000002000044c CR3: 00000000352c0000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	b6 04                	mov    $0x4,%dh
+   2:	30 84 c0 0f 85 f8 16 	xor    %al,0x16f8850f(%rax,%rax,8)
+   9:	00 00                	add    %al,(%rax)
+   b:	45 31 f6             	xor    %r14d,%r14d
+   e:	83 3d 2b 98 80 0e 00 	cmpl   $0x0,0xe80982b(%rip)        # 0xe809840
+  15:	0f 84 c8 13 00 00    	je     0x13e3
+  1b:	89 54 24 60          	mov    %edx,0x60(%rsp)
+  1f:	89 5c 24 38          	mov    %ebx,0x38(%rsp)
+  23:	4c 89 f8             	mov    %r15,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	80 3c 30 00          	cmpb   $0x0,(%rax,%rsi,1) <-- trapping instruction
+  2e:	74 12                	je     0x42
+  30:	4c 89 ff             	mov    %r15,%rdi
+  33:	e8 88 26 8b 00       	call   0x8b26c0
+  38:	48                   	rex.W
+  39:	be 00 00 00 00       	mov    $0x0,%esi
+  3e:	00 fc                	add    %bh,%ah
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
