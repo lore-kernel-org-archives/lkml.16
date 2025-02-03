@@ -1,101 +1,160 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2230A1E7C06;
-	Mon,  3 Feb 2025 11:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4025C202F65;
+	Mon,  3 Feb 2025 11:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738581409; cv=none; b=PaGg4+5qW8F9J6AC9wf43mOaRImH6oNpt8ePZb4pRFjtwNAbo14MuR1We7nGiD5JUwN0mHTWxFwXYf0TnfEc68+TmlT8yeKzO0QVQ7K4Ay9UFGc0QAgxtHIztQ5d9hGFzSOO/CqYYp+dOAkBzpAAn/8Z7dcLrv6DN3OASt1izOk=
+	t=1738581413; cv=none; b=dUGeC1kAs9GxUKVYuIXPcN4hDUwKdngjEBI+3S5b+Gfn3hY+5yTDFQ9pSr6jBTpHTQ5Gd47VznsSzp+fr9VcIaweDvMf58rZtp3JGqH27c+iIADbWpDg1NjOxShOz1KLmulrBA351K2RP7SWjC9RH+kz3+0dw6psoRmO+kMbq60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738581409; c=relaxed/simple;
-	bh=4cLuk3/bBdkXe1iD03O4EWVeNfknvWN9sou4S9TbD/4=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=DxdrC4yO2waymU+GvA4eA5SdAGG3ufH2iN53ACjkHCEqHJuhflU1KwzVa9SnVEITgioSE4LgwXfVRN6Jeh9NiYnU1h5zCJ5JPr99Kr2M0jWxVwE0mYHNdMVYUbU7cB8+fVsporvSJzWEcU/1HS96iS4r+XS2iv6uF3BTtnTde/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=bFUhXZUd; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1738581413; c=relaxed/simple;
+	bh=LtKUSzsM94RsNtQt3FSM52WxZx1hj1kt305TJoOS+iY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WBey7FVDjj84Q7p2qFi4L7K87m2DCjS+jftosnJ7XYQ5FbhATT9czBeH1FKuOBG/+rdJQuhhn2FzVcBqE8Qsz2tuYV3wyylv/lv32SGWz6JHEL5xm+wsuPkMkodxPuRW7PhRc7lih3ZBIPeAGkgpJ5ByG7pcNrWzYtPX9lDgyGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=AfI813dt; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="bFUhXZUd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1738581099; bh=JfvSvU+QwvlwjdxMt/E53LlcaB/6fR5rxo1LzD329WA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bFUhXZUdqKNb0PhEvtCS26Lu9lXpgVB5p0d8bVCrSJVgg6Rqq5CtLJOE31c9kl67/
-	 fpy5O8p3W+b4kKr/Ek8xBZ4R9pwbZunt3Hf6QtVNbl3himQZZvNm+NcwgffnBXz/Y+
-	 kSOu9NYUIVelek7EAt9/tDNo0MD5ymDGyfFPwm8M=
-Received: from pek-lxu-l1.wrs.com ([2408:8435:9930:1dde:8cb3:3b5b:faa2:1ccb])
-	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
-	id 16128AAC; Mon, 03 Feb 2025 19:05:33 +0800
-X-QQ-mid: xmsmtpt1738580733t17ya3rep
-Message-ID: <tencent_B0364B121B102524BA72BB5E33CB9E531B08@qq.com>
-X-QQ-XMAILINFO: New1l5u9k9F/qxJOJolCbWg6+03aUQgy+QWjABnxnr4xBRWkUWZIV4FQapm1uC
-	 oYzfpjpl9O8T/a4S8S1IhESX6otrAMeaq5pPKAo5cESIc/WIxFND14Ci5Dnx7x24X9BMnFh4h7/j
-	 0ygcEotz1xYawmyoPNv8ktB1DixaG8cyYxlZXq/13wpegTZJMJJ9yrvfx6dWAlUO9oCiXzqRUnXV
-	 nRUygEDkR95lRbufW7MEoyDyaLCOfYlGr7IHyrszBzTwdy9kCYDNyhBkmR+UoxaoYBQx7gVf3FBx
-	 DH7h6jCbTQaG1NPzigLAkYiVsrFcC1VnvhgPrlEeeg9DAdgxky6RMQ67OkvBaSwShjsO3ZjlXRIM
-	 CUuJWTWXEa32Fq3v7TAHqOB9NdJEV0xmyRMU1UscYOEkKLhGF/JxAf873ElXnVhNbLaTPou+UGF3
-	 rX1JZ9iuZ2i7uJJ0Fpuf6mhp8i1eeMSO3alPdqB9CWoN3xBAi6Xbxcxz+q1EPZsTl3JjTbOVc/dc
-	 I/Mj/0IWmegj3rAAzBqp3iT6ZLWyrvhfL16GcomQ2DyEQPuvsfR5STsdG860mRvhxrisWjE9vov8
-	 gHjb8qBZJqPtE/pKpVjJMbBW7URHH2QCCDqnXSP6IzpxlHemW4K8cziyWeyaFimO9dfePWYiNkvW
-	 13bbtDnocLw0k632it9MCWq8N+Mg+bfT3wPqsywUzXUDlADbXRXqxOdUC1BvgU1TDR3akoP/zyuO
-	 Wz+ppYT2dh31Cz0RpiTy3AvR6Gk1fq5Ms4SheMQDDe0ejEj9VgGogiJztLg/3ebbZH78cdpQzf5G
-	 WorGOLqiRB3MlNZJEHQwgnq5Cs94xphzTe5v+UK2buoXvgBIalqJDpLsVX3v2rswFLsJp8/epVY4
-	 qvNdRMpYSP9qRrpd2mXEAmoOXrEPrmkD3aSdTvh5UbI7Aoa1EhU7wjWf8PE69p/7rvOxrkUK7r
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Edward Adam Davis <eadavis@qq.com>
-To: gregkh@linuxfoundation.org
-Cc: dakr@kernel.org,
-	eadavis@qq.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rafael@kernel.org,
-	syzbot+8928e473a91452caca2f@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] debugfs: add fsd's methods initialization
-Date: Mon,  3 Feb 2025 19:05:32 +0800
-X-OQ-MSGID: <20250203110532.1515323-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <2025020345-breath-comma-4097@gregkh>
-References: <2025020345-breath-comma-4097@gregkh>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="AfI813dt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7LuywntJh/PQcJEXxacusK5UZs3P6Qb5WkOs/kb1NpI=; b=AfI813dtjuXWBnrTAo6rfz8u6O
+	yl4jZrZRwGditu3POnJqKCkjwx4WCcQ1WP4n3MbtwqePmBWODYOxJDPR0GfFAR4D4JIHg4a6RnEJY
+	Sje/15EqxwilmuOAmSkleR2OZ7IP99zlO5rzpyqfHJt3aiCMHlC3TkhwmJTxp+5QfOeNqW0KcH/yj
+	7NrSMjBI2AiglJp0lJvVikNHI7+SyRlzncyzIM5fNJy0Pg4vS1F+sRI82HZoT+TgaxUOjAJUzjmKk
+	i5Do782/duyChkCxM+TnzOQmLKkXKRZJo1j16ndXQyYcL3OiCac+9KVrDicgtdc3CTZFMpAILs2Yd
+	uNTn/zeQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60612)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1teuRS-0008NT-19;
+	Mon, 03 Feb 2025 11:16:38 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1teuRO-0000Ke-0V;
+	Mon, 03 Feb 2025 11:16:34 +0000
+Date: Mon, 3 Feb 2025 11:16:34 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Steven Price <steven.price@arm.com>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Jose Abreu <joabreu@synopsys.com>, Paolo Abeni <pabeni@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com, netdev@vger.kernel.org,
+	Furong Xu <0x1207@gmail.com>, Petr Tesarik <petr@tesarici.cz>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Yanteng Si <si.yanteng@linux.dev>, Xi Ruoyao <xry111@xry111.site>
+Subject: Re: [PATCH] net: stmmac: Allow zero for [tr]x_fifo_size
+Message-ID: <Z6Clkh44QgdNJu_O@shell.armlinux.org.uk>
+References: <20250203093419.25804-1-steven.price@arm.com>
+ <Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
+ <811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, 3 Feb 2025 09:14:51 +0100, Greg KH wrote:
-> On Mon, Feb 03, 2025 at 11:27:56AM +0800, Edward Adam Davis wrote:
-> > syzbot reported a uninit-value in full_proxy_unlocked_ioctl. [1]
-> >
-> > The newly created fsd does not initialize methods, and increases the
-> > initialization of methods for fsd.
-> >
-> > [1]
-> > BUG: KMSAN: uninit-value in full_proxy_unlocked_ioctl+0xed/0x3a0 fs/debugfs/file.c:399
-> >  full_proxy_unlocked_ioctl+0xed/0x3a0 fs/debugfs/file.c:399
-> >  vfs_ioctl fs/ioctl.c:51 [inline]
-> >  __do_sys_ioctl fs/ioctl.c:906 [inline]
-> >  __se_sys_ioctl+0x246/0x440 fs/ioctl.c:892
-> >  __x64_sys_ioctl+0x96/0xe0 fs/ioctl.c:892
-> >  x64_sys_call+0x19f0/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:17
-> >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-> >  do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
-> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> >
-> > Fixes: 41a0ecc0997c ("debugfs: get rid of dynamically allocation proxy_ops")
-> > Reported-by: syzbot+8928e473a91452caca2f@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=8928e473a91452caca2f
-> > Tested-by: syzbot+8928e473a91452caca2f@syzkaller.appspotmail.com
-> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> > ---
-> >  fs/debugfs/file.c | 1 +
-> >  1 file changed, 1 insertion(+)
+On Mon, Feb 03, 2025 at 11:01:28AM +0000, Steven Price wrote:
+> [Moved Kunihiko to the To: line]
 > 
-> Is this still an issue on 6.14-rc1, specifically after commit
-> 57b314752ec0 ("debugfs: Fix the missing initializations in
-> __debugfs_file_get()")?
-No.
+> On 03/02/2025 10:38, Russell King (Oracle) wrote:
+> > On Mon, Feb 03, 2025 at 09:34:18AM +0000, Steven Price wrote:
+> >> Commit 8865d22656b4 ("net: stmmac: Specify hardware capability value
+> >> when FIFO size isn't specified") modified the behaviour to bail out if
+> >> both the FIFO size and the hardware capability were both set to zero.
+> >> However devices where has_gmac4 and has_xgmac are both false don't use
+> >> the fifo size and that commit breaks platforms for which these values
+> >> were zero.
+> >>
+> >> Only warn and error out when (has_gmac4 || has_xgmac) where the values
+> >> are used and zero would cause problems, otherwise continue with the zero
+> >> values.
+> >>
+> >> Fixes: 8865d22656b4 ("net: stmmac: Specify hardware capability value when FIFO size isn't specified")
+> >> Tested-by: Xi Ruoyao <xry111@xry111.site>
+> >> Signed-off-by: Steven Price <steven.price@arm.com>
+> > 
+> > I'm still of the opinion that the original patch set was wrong, and
+> > I was thinking at the time that it should _not_ have been submitted
+> > for the "net" tree (it wasn't fixing a bug afaics, and was a risky
+> > change.)
+> > 
+> > Yes, we had multiple places where we have code like:
+> > 
+> >         int rxfifosz = priv->plat->rx_fifo_size;
+> >         int txfifosz = priv->plat->tx_fifo_size;
+> > 
+> >         if (rxfifosz == 0)
+> >                 rxfifosz = priv->dma_cap.rx_fifo_size;
+> >         if (txfifosz == 0)
+> >                 txfifosz = priv->dma_cap.tx_fifo_size;
+> > 
+> >         /* Split up the shared Tx/Rx FIFO memory on DW QoS Eth and DW XGMAC */
+> >         if (priv->plat->has_gmac4 || priv->plat->has_xgmac) {
+> >                 rxfifosz /= rx_channels_count;
+> >                 txfifosz /= tx_channels_count;
+> >         }
+> > 
+> > and this is passed to stmmac_dma_rx_mode() and stmmac_dma_tx_mode().
+> > 
+> > We also have it in the stmmac_change_mtu() path for the transmit side,
+> > which ensures that the MTU value is not larger than the transmit FIFO
+> > size (which is going to fail as it's always done before or after the
+> > original patch set, and whether or not your patch is applied.)
+> > 
+> > Now, as for the stmmac_dma_[tr]x_mode(), these are method functions
+> > calling into the DMA code. dwmac4, dwmac1000, dwxgmac2, dwmac100 and
+> > sun8i implement methods for this.
+> > 
+> > Of these, dwmac4, dwxgmac2 makes use of the value passed into
+> > stmmac_dma_[tr]x_mode() - both of which initialise dma.[tr]x_fifo_size.
+> > dwmac1000, dwmac100 and sun8i do not make use of it.
+> > 
+> > So, going back to the original patch series, I still question the value
+> > of the changes there - and with your patch, it makes their value even
+> > less because the justification seemed to be to ensure that
+> > priv->plat->[tr]x_fifo_size contained a sensible value. With your patch
+> > we're going back to a situation where we allow these to effectively be
+> > "unset" or zero.
+> > 
+> > I'll ask the question straight out - with your patch applied, what is
+> > the value of the original four patch series that caused the breakage?
+> > 
+> 
+> I've no opinion whether the original series "had value" - I'm just 
+> trying to fix the breakage that entailed. My first attempt at a patch 
+> was indeed a (partial) revert, but Andrew was keen to find a better 
+> solution[1].
 
-Edward
+There are two ways to fix the breakage - either revert the original
+patches (which if they have little value now would be the sensible
+approach IMHO) or try to fix them up, which may entail several patches
+if further breakage is found.
 
+Does the flow control test behave the same before and after the patch
+series? Please can you test that?
+
+See
+drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c::stmmac_test_flowctrl()
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
