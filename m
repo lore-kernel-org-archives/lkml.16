@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB07720E30A;
-	Mon,  3 Feb 2025 19:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28BC20E305;
+	Mon,  3 Feb 2025 19:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738610114; cv=none; b=ADsadY9YvyHns0VSn0WD8xLV/QHRWJKeSdnLYnh74q3x+XJeiSSSapsq/NWdnHdS3l3Iysa4JHwm5Batocr/uV+DByEg4+FF0ZJ9X72so5hnpzdqdVK6+Xwwx8vjUyVd7ZCPXhEwziY5li696zY2nFd9MaKH6Bzd8zPjFmQkPZM=
+	t=1738610114; cv=none; b=ES0Ts0KrFI+6QR3+Wx24XrsdTM6f8YlvgZwR42WEsy3EpL6KDdEgAEWx3bw9mSJJXsclzFjSRCY5kG94pHYcxyLIGNK+6bBMy7cYet3vIL+BygUYUlUmltvhN/IE6TU0UvQ99yxTCiZ96Y8fEf9yVk2QEJZfiegNjlZk4y+2BvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738610114; c=relaxed/simple;
-	bh=LsOe7ZzlPhqEAOvTiMeWa8iiWUe9V2RCk8jcWcixhvI=;
+	bh=8HQ4a1E4SDVOQ5YBvLQgJdIjKRquxOBX3OP+awOzn44=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=VawTZoKICWQqvx3qHfF+GI1VVcPluIFSHvzykGtZPMRmW6yzr+azAbv4Bwve6cQg7xPiEI7V0UQC5TU93Q9FT1mdAz/E9az4HbH3qKf+F7pbdwejkQdoK9UW+Q3UADiNpAt5psFTmYP/IboQHqEeyFpejrWtima+n02VpJs44W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G7l6g2ZI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=WsFsL3C4+W3OHwxXbQkIsNPUC89IvlaqzicRCZvNYDaZ7PVnCoQ5zUHJpv501qhR2GWAA37Fl489pPcMJj+BtBpuGnXYbVw/sXYICmRTSXjMrAn0gOANuvv31GUhRf5iP/Ub+jP1zhPOqDZBNELKsXyxu+QbhuG1+RxN8AxvYa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qEtWCcTq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G7l6g2ZI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68442C4CED2;
-	Mon,  3 Feb 2025 19:15:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qEtWCcTq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3405DC4CEE8;
+	Mon,  3 Feb 2025 19:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738610113;
-	bh=LsOe7ZzlPhqEAOvTiMeWa8iiWUe9V2RCk8jcWcixhvI=;
+	s=k20201202; t=1738610112;
+	bh=8HQ4a1E4SDVOQ5YBvLQgJdIjKRquxOBX3OP+awOzn44=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=G7l6g2ZIizTNYrxkBbzlrHOv4+1Ln/d/XodEN9IIjNpde3v5XMCTHWxOixZzN9q8S
-	 rN949faoH1AmsOIYguVjeAET/42q9AfHISAy4DRFQbEgHWCmSBiO+usYkZKWGdjuEc
-	 aMQcBIql2D2qg7gA+RBA9RSmdWEwkbG4N1MdJNl2d9Oi/XsgVsIqSxEPtd0MwyVq7S
-	 Ri2Te1NlEdebGxFUQQ9BBxdOCgHNEZMN3+9wi/ffVR0/mr+a7tjOtFCkp3Ji/v/6sF
-	 AnmSnhQNv9bBphD2MWs1sV6pTXMH9eZXUNtFKd4EDmS8MTdZO0pDDD7PU5plQAIbCr
-	 GFDVqeo3/KTzQ==
+	b=qEtWCcTqxtSD1UgKWJSa3crMG4kGSavYOQGcCcI4V2cyH4DOILJiyITwiSJtgrhHJ
+	 leMpKr+OZgSpraWb0RiKFAKjm2zqvuhyymj1LfT8j1LOjp2fCtL0lg6qoyRWBlojQI
+	 ZiaJmTEaG54Lo9sr/U8i6GeSmTgxwh0kIBhsKt5unGdN62jNr4PwFCDw08fmRqfzFL
+	 BX4XCHouDDkARe7MVneI8SuivabGbQ0ef19DQGBgsurLFrWhryNqMG+dh8YZhkYfEY
+	 oasu2bD4iIR5M3wZq53wObBELHA9T5YPUy+0+nOm85VEduVf6KsFBTNEF9j2Fb88zz
+	 VG58pi8j5CwdQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE0DC380AA67;
-	Mon,  3 Feb 2025 19:15:41 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71824380AA67;
+	Mon,  3 Feb 2025 19:15:40 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,47 +37,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/4] RISC-V: KVM: Allow Svvptc/Zabha/Ziccrse exts for
- guests
+Subject: Re: [PATCH v2 0/6] Account page tables at all levels
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <173861014052.3409359.2500361473907016635.git-patchwork-notify@kernel.org>
-Date: Mon, 03 Feb 2025 19:15:40 +0000
-References: <cover.1732854096.git.zhouquan@iscas.ac.cn>
-In-Reply-To: <cover.1732854096.git.zhouquan@iscas.ac.cn>
-To: Quan Zhou <zhouquan@iscas.ac.cn>
-Cc: linux-riscv@lists.infradead.org, anup@brainfault.org,
- ajones@ventanamicro.com, atishp@atishpatra.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org
+ <173861013901.3409359.14741114405031556153.git-patchwork-notify@kernel.org>
+Date: Mon, 03 Feb 2025 19:15:39 +0000
+References: <20250103184415.2744423-1-kevin.brodsky@arm.com>
+In-Reply-To: <20250103184415.2744423-1-kevin.brodsky@arm.com>
+To: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-riscv@lists.infradead.org, linux-mm@kvack.org,
+ akpm@linux-foundation.org, catalin.marinas@arm.com,
+ dave.hansen@linux.intel.com, linus.walleij@linaro.org, luto@kernel.org,
+ peterz@infradead.org, rppt@kernel.org, ryan.roberts@arm.com,
+ tglx@linutronix.de, will@kernel.org, willy@infradead.org,
+ zhengqi.arch@bytedance.com, linux-alpha@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
+ loongarch@lists.linux.dev, x86@kernel.org
 
 Hello:
 
 This series was applied to riscv/linux.git (fixes)
-by Anup Patel <anup@brainfault.org>:
+by Andrew Morton <akpm@linux-foundation.org>:
 
-On Mon,  2 Dec 2024 11:21:26 +0800 you wrote:
-> From: Quan Zhou <zhouquan@iscas.ac.cn>
+On Fri,  3 Jan 2025 18:44:09 +0000 you wrote:
+> v1: https://lore.kernel.org/linux-mm/20241219164425.2277022-1-kevin.brodsky@arm.com/
 > 
-> Advertise Svvptc/Zabha/Ziccrse extensions to KVM guest
-> when underlying host supports it.
-> 
-> ---
-> Change since v1:
-> - Arrange Svvptc in alphabetical order (Andrew)
-> - Add Reviewed-by tags
+> This series should be considered in conjunction with Qi's series [1].
+> Together, they ensure that page table ctor/dtor are called at all levels
+> (PTE to PGD) and all architectures, where page tables are regular pages.
+> Besides the improvement in accounting and general cleanup, this also
+> create a single place where construction/destruction hooks can be called
+> for all page tables, namely the now-generic pagetable_dtor() introduced
+> by Qi, and __pagetable_ctor() introduced in this series.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2,1/4] RISC-V: KVM: Allow Svvptc extension for Guest/VM
-    https://git.kernel.org/riscv/c/0f8915859716
-  - [v2,2/4] RISC-V: KVM: Allow Zabha extension for Guest/VM
-    https://git.kernel.org/riscv/c/679e132c0ae2
-  - [v2,3/4] RISC-V: KVM: Allow Ziccrse extension for Guest/VM
-    https://git.kernel.org/riscv/c/79be257b579e
-  - [v2,4/4] KVM: riscv: selftests: Add Svvptc/Zabha/Ziccrse exts to get-reg-list test
-    https://git.kernel.org/riscv/c/144dfe4017bf
+  - [v2,1/6] mm: Move common part of pagetable_*_ctor to helper
+    https://git.kernel.org/riscv/c/11e2400b21a3
+  - [v2,2/6] parisc: mm: Ensure pagetable_pmd_[cd]tor are called
+    https://git.kernel.org/riscv/c/3565522e15eb
+  - [v2,3/6] m68k: mm: Add calls to pagetable_pmd_[cd]tor
+    https://git.kernel.org/riscv/c/1879688e5c42
+  - [v2,4/6] ARM: mm: Rename PGD helpers
+    https://git.kernel.org/riscv/c/94771023712a
+  - [v2,5/6] asm-generic: pgalloc: Provide generic __pgd_{alloc,free}
+    https://git.kernel.org/riscv/c/a9b3c355c2e6
+  - [v2,6/6] mm: Introduce ctor/dtor at PGD level
+    https://git.kernel.org/riscv/c/d95936a2267c
 
 You are awesome, thank you!
 -- 
