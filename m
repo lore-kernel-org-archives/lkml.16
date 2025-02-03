@@ -1,150 +1,92 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10655111A8
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38A61FCFDC;
+	Mon,  3 Feb 2025 14:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738591419; cv=none; b=VekXwFXBHgrU62T6QiFFa5O+CHEdbwa87X4CKF/2zIA2w5H87mui+X6OBe+ot87B6tZOqpvxuv+42SYQr31BXdN+5CKGihordzzDBMU44KR+b60iFqoV2sBD3PBTEjoQbr2jpbIlRDZhnUJj3u/mXh48sjr+dVABF6qY7czWUKo=
+	t=1738591464; cv=none; b=CDISQxYzKeinro6TPEZqbQLbavcvoUNx2GvVJf6sRkld8lkxT9jKqJsRY3B5UxELGiqT9/w4e6LaIXsqAWjk0Bqa7r1pbdkvmwYpk866kLI9Stl0ccova0K/o0KUbl6/ohSMVBOHHnTbhA6psFe2Dwr6zVH8tZaeTTn8wRVMSsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738591419; c=relaxed/simple;
-	bh=dnnLSb++p2YFGzcVrLe7pEE0s+usY7hFu7uZhP246Uk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qw+icBmieuzd6Kq/9o5y//Or7Qq8Q0yRkKl3qr5Afg+jJ1txnGn5oGt71B+qi8/rdrC6ZGFl4kNL2AH5wp4hYoolU005hS7tcHB4bP/cbJkhliX8Y/cIGR+J4WeYLcF9eAXz8a2KBBFSNX0F6SHja3E4V8h61hPbJkV8W/aTXzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=crCbTKGe; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738591464; c=relaxed/simple;
+	bh=HZL337EBIbjzUeN5s//5Tri9Plnc/gZ5wQbTCTf3xHA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kE1nsZcQhmRyiq9H/UcEXHaaQuUntc3tcWt8KM6rLVu8fCbsFuMuQwmebiTQcD+7nE4WVhqySosvjImWDhbVrCTWNoALKNV9cSc049D8hVL+94+PA3FkMXHThbjw26+pYZv9VBGsxv7ghNAdy0zr7kiLsqLLLoNbg/mzAt1utRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HK292aNI; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="crCbTKGe"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5137FwLn003657
-	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 14:03:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	J+3+UEinH9HlKOOW1lKmNQkdlLJQcZh9QqivHjlVeGI=; b=crCbTKGeSiXWUV8A
-	eEMkHTdbA296G+Qe36MAbeerchdhi/IxCegBKF/zW3F6UCQwQM/azcyVir/LD0na
-	sI66fPipmwpyMGivDDlWPJ7bcGWDBXODr2A56R6uwk8lMDa1HuNq79RYq3i0SKFg
-	7C/xJTYRj8l8/zw7tYMwip7KNEaztcQQSSviObOfns9crUOotMbIGW9mxBIPC6Db
-	ElSwzylpg8cLZlxER/HMVWgcgegqCK14e8rBqqAtMpvlZTKNH7xi5kn3kX0IUscv
-	lTiE3ozezA93Y+OfUl7V6cN6ujh4noHKJ4Cyjr4Dh0qXqWKxnTFSDviLVoYuY4pr
-	93NqcQ==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44js8ts1qm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:03:36 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7b6faf8b78aso52553885a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:03:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738591416; x=1739196216;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J+3+UEinH9HlKOOW1lKmNQkdlLJQcZh9QqivHjlVeGI=;
-        b=itkYR350NKs4ucMKdg9xJpCcWFFggWN8MvLHHvfY7etEgPcPFwCOosu/Xi8XeQCifJ
-         X+dlZntCcRRoyEbooBNfzN82d1Jg7Qx3XyD2EG0TVwMQY8zuHtyCj9ExXWyYX9XqgmCD
-         zqSMUvjvIWqA2kP15dhrH4DuXpsa8VWBNn6ZXiHU1NY7Gy73LB2TxO7xeD9LhWoMVin3
-         1eplGM73xWAeE8MXgrOGEJwpWppM5zs59Gjzdy7TqdzSqO1cPNoyIaMD/Rzuaz7H8OO6
-         5sc3MJEA+NOQsePs829FBQRb4WGZ5iBSvwd1pJX0pcbikYikyc2rJ33fzaYuZEYCOocB
-         a4cg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3EYapmXUfRSNYY4Fgx2INd3mg5gAus/q3GzXp2XKgRGNNFyNbjIVDKSbX9kKadx2FRdmbdFSsYFUoA9c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdWVk3l46GaC6QR1/yqw/UuiFj61Tfd0GFTnhE+HVXPzhWe+i2
-	esF4/R/NZK0ZVmN4P9w/pPC3dEm+hV6qmxeDP3gn/YT/WnsgedTM0fcbogmtkdD5kJwx8VSijac
-	pVl6CCzfbUUrSvN5IyV3jiWVojM3SEsxpuEaYLOukjLYlF9mqUR/wHZGZD4FCyDQ=
-X-Gm-Gg: ASbGnctoiTskPbvUIqiIeByhC22BmW9eLeynMNnuTqCGpR5DnVFqhcdtr+1Z6uYZc5A
-	ibzfTlCMowfcCtTekfPE/YdbqWOmYJ2dO6af28OgsFXgtJDTfwBRVcYaXuapIZMkIgEqEVIioqx
-	m0Qp70Riylk/uuMtiJuJROzc103APYHC1csjixuTD01INaYD/mScUyeR61tmrh1nRnPnD3gXwtW
-	wdc1vagMdWoBlxpOSNQbTTqP537oS5KvFrnCaX2DDezLx7nOpsduCylK4WYszDwrkag7oPKlSEz
-	WyY77lLG6GEQw16WJFIw3Ll5ZQUGFwA1QMbxjqfv/ERtHJghyMaIP+Xmk6o=
-X-Received: by 2002:a05:620a:2686:b0:7b6:d65f:cb6a with SMTP id af79cd13be357-7bffcd8b180mr1178988685a.12.1738591415954;
-        Mon, 03 Feb 2025 06:03:35 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFuccZd+8SqpIVkFwAnkdbqSvt96BeRFug5Xkne0FmFHcRaIvwsaqXDKDQ1GEvc7j02F7/j/A==
-X-Received: by 2002:a05:620a:2686:b0:7b6:d65f:cb6a with SMTP id af79cd13be357-7bffcd8b180mr1178980085a.12.1738591413895;
-        Mon, 03 Feb 2025 06:03:33 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a5621bsm774180866b.172.2025.02.03.06.03.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 06:03:33 -0800 (PST)
-Message-ID: <636c4822-34c2-42d8-a434-ecec589a117e@oss.qualcomm.com>
-Date: Mon, 3 Feb 2025 15:03:30 +0100
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HK292aNI"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 513E3PRh3026657
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Feb 2025 08:03:25 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738591405;
+	bh=risQ65T55Tm6eYa1TdwpJHzLazGd9IsglOpUNuMRuXA=;
+	h=From:To:CC:Subject:Date;
+	b=HK292aNIVDqDJmRQaMufd725Kbw0S55a7MXRShiHfGnrv23bO6IRnEfDVGs7euDQ5
+	 XdF8K3Xo7aFZeKg8LGTJXPsUehm/ztaH+2nnhX9I5+e9c/MY997SKSx/G5YQs0PCL3
+	 yQRBkcQWu+XF3vLzNT8es5MZu7KDp7mhIdRnIRdQ=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 513E3Pvh078914
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 3 Feb 2025 08:03:25 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
+ Feb 2025 08:03:25 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 3 Feb 2025 08:03:25 -0600
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 513E3Ox3036019;
+	Mon, 3 Feb 2025 08:03:24 -0600
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
+        <airlied@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>,
+        <dri-devel@lists.freedesktop.org>, <simona@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
+        <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
+        <h-shenoy@ti.com>, <devarsht@ti.com>
+Subject: [PATCH] dt-bindings: display: ti: Fix compatible for am62a7 dss
+Date: Mon, 3 Feb 2025 19:33:23 +0530
+Message-ID: <20250203140323.1992920-1-devarsht@ti.com>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/6] arm64: dts: qcom: qcm2290: fix (some) of QUP
- interconnects
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Rob Herring
- <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
-        Rocky Liao <quic_rjliao@quicinc.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20250202-rb1-bt-v3-0-6797a4467ced@linaro.org>
- <20250202-rb1-bt-v3-4-6797a4467ced@linaro.org>
- <d5e1e6ae-b773-4ec8-a66b-2e1830827164@oss.qualcomm.com>
- <CAA8EJppMVzuRLLakNJd4M9MRbW5P-0x=rTf1p9kj0zj88SOOGA@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <CAA8EJppMVzuRLLakNJd4M9MRbW5P-0x=rTf1p9kj0zj88SOOGA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: ryvNnTl_wu-7LcQzf37QouTfF2Uz1TpS
-X-Proofpoint-ORIG-GUID: ryvNnTl_wu-7LcQzf37QouTfF2Uz1TpS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
- bulkscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0
- mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502030103
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 3.02.2025 3:00 PM, Dmitry Baryshkov wrote:
-> On Mon, 3 Feb 2025 at 15:50, Konrad Dybcio
-> <konrad.dybcio@oss.qualcomm.com> wrote:
->>
->> On 2.02.2025 1:16 PM, Dmitry Baryshkov wrote:
->>> While adding interconnect support for the QCM2290 platform some of them
->>> got the c&p error, rogue MASTER_APPSS_PROC for the config_noc
->>> interconnect. Turn that into SLAVE_QUP_0 as expected.
->>>
->>> Fixes: 5b970ff0193d ("arm64: dts: qcom: qcm2290: Hook up interconnects")
->>> Reported-by: Konrad Dybcio <konradybcio@kernel.org>
->>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>> ---
->>>  arch/arm64/boot/dts/qcom/qcm2290.dtsi | 16 ++++++++--------
->>>  1 file changed, 8 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
->>> index f0746123e594d5ce5cc314c956eaca11556a9211..6e3e57dd02612f3568f07f1e198028413f463c69 100644
->>> --- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
->>> @@ -1073,7 +1073,7 @@ spi0: spi@4a80000 {
->>>                               interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
->>>                                                &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
->>>                                               <&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
->>> -                                              &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
->>> +                                              &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
->>
->> Still incorrect, this should be &qup_virt SLAVE_QUP_CORE_0
-> 
-> Hmm, why? qup_virt has its own path. I think this one (using CNOC)
-> matches the usage on other platforms.
+Fix compatible string for AM62A7 DSS.
+s/ti,am62a7,dss/ti,am62a7-dss
 
-Oh hmm.. you're right.. very confusingly named..
+Fixes: 7959ceb767e4 ("dt-bindings: display: ti: Add support for am62a7 dss")
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+---
+ Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+index 55e3e490d0e6..31c4ffcb599c 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
++++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+@@ -23,7 +23,7 @@ properties:
+   compatible:
+     enum:
+       - ti,am625-dss
+-      - ti,am62a7,dss
++      - ti,am62a7-dss
+       - ti,am65x-dss
+ 
+   reg:
+-- 
+2.39.1
 
-Konrad
