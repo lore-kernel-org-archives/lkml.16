@@ -1,65 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168932045B9;
-	Mon,  3 Feb 2025 15:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF468208A7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738595308; cv=none; b=adQTvWcjb8nF+IHf2SCsAHgulTiBZ0Az12sx9w/Ef9RaWcv8j7ipH6PKhZ2csXT4g4x8npf+mr1mIVUHVZPJN3aaSpmGE7QCDxriYVHoYGQSi7vk6IH9KfW1AuV6EGx59FLth0qASX4UpN2zc5IXmc7DyBLGYlS5qSWnXAkY5TI=
+	t=1738595325; cv=none; b=G8FeZ0B8GbPEp9gIMBJCHSsAqfKQdz64MgsIbcQc2Cli53Aq0r4S3hgfuk6GM1MNeDpEVKmGVS+LWvHWMDq1cxkB8+uEnAinlWtEzb2ORoJrVP6qlwJInl9Luwo9e7YSrjaxT+YSdC2jprLf01X8h26vWWVMc582pd66V7QW6wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738595308; c=relaxed/simple;
-	bh=hlSMwfXy7A2+SPz1/wooREjB1oNT+yXRln1lGbCW/g8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=G/rmxYitSLe62gKoPcg8+rZhv++UZpnHCSXU51yqp9JQFVDdr0cpOiG5/Yt9nmJwykQWI9rB7SGOZaMKrINw755BVOy2wO32+V7dslQHn7gdoz+TmmOs++Cj9RfxADV6m0kwxj1Zk0to18Up2b56FefcVR8GP0PXc4xSTDjs+UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4872FC4CED2;
-	Mon,  3 Feb 2025 15:08:27 +0000 (UTC)
-Received: by venus (Postfix, from userid 1000)
-	id 3C2211807D3; Mon, 03 Feb 2025 16:08:24 +0100 (CET)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Support Opensource <support.opensource@diasemi.com>, 
- =?utf-8?q?=D0=92=D0=B0=D1=82=D0=BE=D1=80=D0=BE=D0=BF=D0=B8=D0=BD_=D0=90=D0=BD=D0=B4=D1=80=D0=B5=D0=B9?= <a.vatoropin@crpt.ru>
-Cc: Sebastian Reichel <sre@kernel.org>, 
- Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, 
- Lee Jones <lee@kernel.org>, linux-pm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-In-Reply-To: <20250130090030.53422-1-a.vatoropin@crpt.ru>
-References: <20250130090030.53422-1-a.vatoropin@crpt.ru>
-Subject: Re: [PATCH] power: supply: da9150-fg: fix potential overflow
-Message-Id: <173859530421.32012.2111021401031509145.b4-ty@collabora.com>
-Date: Mon, 03 Feb 2025 16:08:24 +0100
+	s=arc-20240116; t=1738595325; c=relaxed/simple;
+	bh=aEeebPTGI6rZxoOmCPnb27JtxTWh0SwSxBRZJWXg3aA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Pg9luh54D9D+FwKzYrvkqMysYR2Oj3ZvEeE+FZisOJvjRclrO/5M+344Aj29wGjxMkAMax/JONi6tRGVQ5fTKYnBV0HGLBg+Bnypm4Y2NCFllVU2YjhkfUPdE6/jpsGjcqmYjicHXcIdjq7cU8W2BMCLq64YAleIA8bYXqJzn0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fdwggEnY; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fdwggEnY"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 513F87PG2214454
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Feb 2025 09:08:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738595288;
+	bh=HqEE3YRbTbE7T+1H+FMsBDpAKDlGN4RiEhakRYvsKYs=;
+	h=From:To:CC:Subject:Date;
+	b=fdwggEnYMuGDpLyX25DdN2X2/f4rp1PO6ToRqREfCBCR0PJsNDNp7d8iFSftz2yMN
+	 3qCWIrqFfz1V3F+mmHl7r0LjkIP4LZdZh8a5fPuO7cVU5r2dVx/zevLPQvXMvHQZ7N
+	 59b3VaOsTM+c0/bDRNLBANgWjLQaIr06fPGqafXU=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 513F87DH050204
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 3 Feb 2025 09:08:07 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
+ Feb 2025 09:08:07 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 3 Feb 2025 09:08:07 -0600
+Received: from uda0490681.. ([10.24.69.142])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 513F81hC112820;
+	Mon, 3 Feb 2025 09:08:02 -0600
+From: Vaishnav Achath <vaishnav.a@ti.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <quic_bjorande@quicinc.com>,
+        <geert+renesas@glider.be>, <krzysztof.kozlowski@linaro.org>,
+        <dmitry.baryshkov@linaro.org>, <arnd@arndb.de>,
+        <nfraprado@collabora.com>, <ebiggers@google.com>, <ardb@kernel.org>,
+        <nm@ti.com>, <vigneshr@ti.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <nfrayer@baylibre.com>, <glaroque@baylibre.com>, <tglx@linutronix.de>,
+        <u-kumar1@ti.com>, <vaishnav.a@ti.com>
+Subject: [PATCH v2] arm64: defconfig: Enable TISCI Interrupt Router and Aggregator
+Date: Mon, 3 Feb 2025 20:38:01 +0530
+Message-ID: <20250203150801.2399555-1-vaishnav.a@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Enable TISCI Interrupt Router and Interrupt Aggregator drivers.
+These IPs are found in all TI K3 SoCs like J721E, AM62X and is required
+for core functionality like DMA, GPIO Interrupts which is necessary
+during boot, thus make them built-in.
 
-On Thu, 30 Jan 2025 09:00:34 +0000, Ваторопин Андрей wrote:
-> Size of variable sd_gain equals four bytes - DA9150_QIF_SD_GAIN_SIZE.
-> Size of variable shunt_val equals two bytes - DA9150_QIF_SHUNT_VAL_SIZE.
-> 
-> The expression sd_gain * shunt_val is currently being evaluated using
-> 32-bit arithmetic. So during the multiplication an overflow may occur.
-> 
-> As the value of type 'u64' is used as storage for the eventual result, put
-> ULL variable at the first position of each expression in order to give the
-> compiler complete information about the proper arithmetic to use. According
-> to C99 the guaranteed width for a variable of type 'unsigned long long' >=
-> 64 bits.
-> 
-> [...]
+bloat-o-meter summary on vmlinux:
+	add/remove: 460/1 grow/shrink: 4/0 up/down: 162483/-8 (162475)
+	...
+	Total: Before=31615984, After=31778459, chg +0.51%
 
-Applied, thanks!
+Fixes: 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
+Fixes: b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
 
-[1/1] power: supply: da9150-fg: fix potential overflow
-      commit: 3fb3cb4350befc4f901c54e0cb4a2a47b1302e08
+Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+---
 
-Best regards,
+V1 : https://lore.kernel.org/all/20250119182121.3956546-1-vaishnav.a@ti.com/
+
+V1->V2:
+	* Add Fixes tag.
+	* Add bloat-o-meter summary to commit message.
+
+Previously both of these configs were selected for ARCH_K3 in respective
+Kconfigs, but commit b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
+and commit 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
+in dropped this recently without adding those back in arm64
+defconfig, this causes boot failure in all TI K3 platforms.
+
+Passing bootlog with configs enabled:
+https://gist.github.com/vaishnavachath/03d8d3ce0f22219643c2f4d1dd243fd1
+
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index cb7da4415599..1f25423de383 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1551,6 +1551,8 @@ CONFIG_PWM_VISCONTI=m
+ CONFIG_SL28CPLD_INTC=y
+ CONFIG_QCOM_PDC=y
+ CONFIG_QCOM_MPM=y
++CONFIG_TI_SCI_INTR_IRQCHIP=y
++CONFIG_TI_SCI_INTA_IRQCHIP=y
+ CONFIG_RESET_GPIO=m
+ CONFIG_RESET_IMX7=y
+ CONFIG_RESET_QCOM_AOSS=y
 -- 
-Sebastian Reichel <sebastian.reichel@collabora.com>
+2.34.1
 
