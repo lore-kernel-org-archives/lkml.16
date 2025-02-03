@@ -1,131 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81D620DD5C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CB8150980;
 	Mon,  3 Feb 2025 19:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738610711; cv=none; b=JYTGRJhsgPT1ldnbUk2sbVp6AQRpbgLXaUvpW4fCE92ZzGHNu8S20zheoLGglcCMb4N2vWLKh+c+S7UJ/qDUaPt+xJ/Vt35azL4ap5EmEX5K5yotYs1M3M9YXAxexxzPVFyHErfIvtfCcZZPSdNY1Xxff7aAVB98w1fUPeUzjCA=
+	t=1738610713; cv=none; b=SUxd3fcjzHk99v5Aalrufzc1AFW/v/9pkLY5i6ZukirJ3q2/ItaXnWJUPg7/F8igHP0D3lQrP0KM7pwokBWSPmoYuKEj3euW9XF/88ISzqNmnFS4CRltz0trVWbmQIf9hqTACBTJO0QIz6AkXdLd+afItTQVOBARfX/VBUiG2Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738610711; c=relaxed/simple;
-	bh=0qC34cH+uetK9hFY0GwPJRDWU8GDP3YxGpAkwzbpygY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f0tWwuZzuBhFbd0kuD7AWYuFQkb1r8pgRjQ6JhVKqdgkSPA9m8zrs3QyWhkjsfc5LLWX9AWuuxW8I2SWr0qvIAJ5VhNTBstLTSL2u2ArC9EU4Sc9/iJzbURpAut+atnvdI7GMloePKhX6j3JiCTFmwUkg/aYflLuQlEu9c8d29U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YOTkN2da; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738610713; c=relaxed/simple;
+	bh=Ye8hvQtlRq26TykPMkUVL9FMBPEnZV9ekPk9hamWmKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bN8QGoCXjqM1Crz9xfxiZLKhclJLXd3M2xii5w1QvTsuyAGixeLQJ2/fl9OYHUZl1i32k5osZN/HwpBaZxmooN584SrWIc3xWDt5rzdIne8Ammq7GNQcKEitN3hUzmgSQDWWkOyjBR7tPK7EqrXDuyujh9Hs1LP8i92uvaekAeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me; spf=pass smtp.mailfrom=beims.me; dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b=l6kFFaRb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tCo9GEwf; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beims.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YOTkN2da"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B02EC4CED2;
-	Mon,  3 Feb 2025 19:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738610710;
-	bh=0qC34cH+uetK9hFY0GwPJRDWU8GDP3YxGpAkwzbpygY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YOTkN2daJAqDFgIByGpH81Dbhpbtka1+WAYqYeAH+bP27YQjIfgMa2GjDeGTqSMLz
-	 Mdp9dlP4dTwzvHR5brDt4XPG4FnVy3SM7ZuRQlA7qNxQ1UloaLLCRyRTVxJBnvwsfL
-	 pfHjS/TMiL6sGvBkByXqYWseCEKEAwyjFObvFO2M=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-perf-users@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b="l6kFFaRb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tCo9GEwf"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.stl.internal (Postfix) with ESMTP id E33B9114011A;
+	Mon,  3 Feb 2025 14:25:08 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Mon, 03 Feb 2025 14:25:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=beims.me; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm2; t=1738610708; x=1738697108; bh=5R
+	cEvpqfY5WECtoKoKIUpeLQNDExBxkuSQ7CCSdlIJo=; b=l6kFFaRbF6WxWkQJYd
+	cYD4du66egC9Grd6/1RymNfmoJdVuEqNUXYoSX5q0VjeXziwGZ0uyWvq61Epa/1v
+	vWgGsTqneTG/jmi2C3n95pkpWI6QzbxC7Z6GfsT777lqEacIyhS4Erhopi8nQFVG
+	BWINLBwPISYtIdbiHQbMeAZhrYvRGDyWSraGXS7bHWdrdGcYSPWZhjS8HlGFzepr
+	fYDpciC6xlVqhC/B9TSihKcgZS6+DQ0sa5LASFs/WPNxIwUe1As/w8gkd2xJl9U+
+	h4FAFaHT6X3PEkR5qYphP8nRNX+CBvs4VnEdxYmnUNeHGVg5AD+lufCWzEroM9hT
+	l9uQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1738610708; x=1738697108; bh=5RcEvpqfY5WECtoKoKIUpeLQNDEx
+	BxkuSQ7CCSdlIJo=; b=tCo9GEwflfRqjxRWXUoyJ65+U3c2SZb+qINg24nvXFen
+	G+EPC1TvakViK4Zah49rfTZpVXHv9yvhZebir45F88rJVXOhBViDXiRgRAwbz2Vz
+	BI0oCOwDPqLiAR/UQjS0x8s5XKUgCNz6h9n56k/XKnvCS4Ya8dwUH3Z8kX3HOugJ
+	KEgqUzTWfCaoSTRGOcYkK+lW5Rq/VBRmCBFEh1nD/2xFKJoLozZnTxML5T6ogcvv
+	RaqqY4NpeBesPUqszt1HxTZbbwU8DOBEuODrtH4zz6a1k9pRjlMCHDkYHWIWjUuq
+	UG3dlm0WsVlYct77ZW2GIdboA0cDOKbMPNlqhFBPfg==
+X-ME-Sender: <xms:FBihZxAVvywbiIzElrlrICZoInsXtbQi12sXK-44urIKVm_7NKT13g>
+    <xme:FBihZ_hz_kxZIlGibDLalYDtO9epZSVhpiJAMN44_LdMZ3bOc4Gs1zsMLVrBVIbob
+    YRuEy0et-ZZ2ZeqWcQ>
+X-ME-Received: <xmr:FBihZ8mIiFTXy_vCSLabw2nyIwYJjODVzrHiUahNGGMPIVTnhVXewt7QyF7rcX9apg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeeggecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffogggtgfesthekredtredtjeen
+    ucfhrhhomheprhgrfhgrvghlsegsvghimhhsrdhmvgenucggtffrrghtthgvrhhnpeevje
+    ejleelheeigeetfeejgefgheeiieeltdeiueeggeduhfeiveektdejkeevgeenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghfrggvlhessg
+    gvihhmshdrmhgvpdhnsggprhgtphhtthhopedvtddpmhhouggvpehsmhhtphhouhhtpdhr
+    tghpthhtoheprggurhhivghnrdhgrhgrshhsvghinhesghhmrghilhdrtghomhdprhgtph
+    htthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohep
+    nhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfh
+    hoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlrghurhgvnhhtrdhpihhntghh
+    rghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhhonhgrsheskh
+    ifihgsohhordhsvgdprhgtphhtthhopehjvghrnhgvjhdrshhkrhgrsggvtgesghhmrghi
+    lhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuh
+    igrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdho
+    rhhg
+X-ME-Proxy: <xmx:FBihZ7w_NlV9DpC1KPjnaL02POSbZ-WjEtAjfLf-VddcqWxs0d9iWQ>
+    <xmx:FBihZ2TP7wqz52IuNOCV2nT8w4wzGopQwD7k7YplzFhjlWCz27UKdw>
+    <xmx:FBihZ-bBhYXVpX6Jqh0bynMRuJtiWnO3HsUKzCBMA3-Jj1NtLwDuKw>
+    <xmx:FBihZ3TEzaxKakcX7nImqM17lQzlIYIdXZ0AG2dkfWX9U-42Mgbjjg>
+    <xmx:FBihZ_QEaVNeU47Go7bcfCEsNEEBWycBp_88UFEpmvwqu1GkCIfA7Z60>
+Feedback-ID: idc214666:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 3 Feb 2025 14:25:03 -0500 (EST)
+From: rafael@beims.me
+To: Adrien Grassein <adrien.grassein@gmail.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joao Paulo Goncalves <joao.goncalves@toradex.com>
+Cc: Rafael Beims <rafael.beims@toradex.com>,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH] perf/core: move all of the pmu devices into their own location
-Date: Mon,  3 Feb 2025 20:25:05 +0100
-Message-ID: <2025020304-chip-trench-4e56@gregkh>
-X-Mailer: git-send-email 2.48.1
+Subject: [PATCH 0/2] Add HDMI audio support to the LT8912B bridge
+Date: Mon,  3 Feb 2025 16:23:54 -0300
+Message-ID: <20250203192401.244651-1-rafael@beims.me>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-In sysfs, for some reason, all pmu devices seem to show up in the "root"
-of /sys/devices/ making for a confusing mess as these devices are not
-really at the root of the system at all.
+From: Rafael Beims <rafael.beims@toradex.com>
 
-Create a fake root devices, "pmu_bus" and place them all under there if
-they do not already have a parent device set, cleaning up sysfs to look
-more sane.
+This patch series adds HDMI audio support to the Lontium LT8912B bridge driver using the I2S input. The audio output was tested using a Verdin iMX8MM + DSI to HDMI adapter connected to different monitors.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
+Rafael Beims (2):
+  dt-bindings: display: bridge: lt8912b: Add I2S audio input port
+  drm/bridge: lt8912b: Add support for audio
 
-Note, if you all don't like "pmu_bus" for the name, that's fine, please
-let me know and I can rename it to something else, but it should be
-something to get these objects out of the root sysfs directory.
+ .../display/bridge/lontium,lt8912b.yaml       |   8 ++
+ drivers/gpu/drm/bridge/Kconfig                |   1 +
+ drivers/gpu/drm/bridge/lontium-lt8912b.c      | 107 +++++++++++++++++-
+ 3 files changed, 115 insertions(+), 1 deletion(-)
 
- kernel/events/core.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index bcb09e011e9e..786537faed2c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11767,6 +11767,11 @@ static const struct attribute_group *pmu_dev_groups[] = {
- };
- 
- static int pmu_bus_running;
-+
-+static struct device pmu_bus_root = {
-+	.init_name	= "pmu_bus",
-+};
-+
- static struct bus_type pmu_bus = {
- 	.name		= "event_source",
- 	.dev_groups	= pmu_dev_groups,
-@@ -11790,7 +11795,10 @@ static int pmu_dev_alloc(struct pmu *pmu)
- 
- 	dev_set_drvdata(pmu->dev, pmu);
- 	pmu->dev->bus = &pmu_bus;
--	pmu->dev->parent = pmu->parent;
-+	if (pmu->parent)
-+		pmu->dev->parent = pmu->parent;
-+	else
-+		pmu->dev->parent = &pmu_bus_root;
- 	pmu->dev->release = pmu_dev_release;
- 
- 	ret = dev_set_name(pmu->dev, "%s", pmu->name);
-@@ -14232,9 +14240,17 @@ static int __init perf_event_sysfs_init(void)
- 
- 	mutex_lock(&pmus_lock);
- 
--	ret = bus_register(&pmu_bus);
--	if (ret)
-+	ret = device_register(&pmu_bus_root);
-+	if (ret) {
-+		put_device(&pmu_bus_root);
- 		goto unlock;
-+	}
-+
-+	ret = bus_register(&pmu_bus);
-+	if (ret) {
-+		device_unregister(&pmu_bus_root);
-+		goto unlock;
-+	}
- 
- 	list_for_each_entry(pmu, &pmus, entry) {
- 		if (pmu->dev)
 -- 
-2.48.1
+2.47.2
 
