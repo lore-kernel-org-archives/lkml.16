@@ -1,86 +1,50 @@
-Received: from gw2.atmark-techno.com (gw2.atmark-techno.com [35.74.137.57])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8C22AD2A
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 06:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.74.137.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE60AD5A;
+	Mon,  3 Feb 2025 06:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738563372; cv=none; b=QEPuToqk0xCXwd0pVdcZaCWC9QTRnqPJrjypjD3eR3tIpYyrF7Ft17qngLFEqJhho6/MTMhBsFScm0GnIkPQhPzl1A7hnQBLuEbOrmFaw8HDlJzGl5pBCJrLlrOI5NxbGV95j+Ku+gORbxRL3j0nTvsx2NKyxX9GZtAmxBWg1qs=
+	t=1738563617; cv=none; b=iPu35aLtlz37GuUJ5rQQ0GYrRZ0FrHsSttZw8cDICbIJ5C/Mu2XqhNksyK2bVCQtvcwQBQ26XRK4E5SlJx6cC7xUZ23qjR6dGBS9DnTvyGA3j3QM4j9ZwLCiWhzMFR7N+HV3osDdbHYT1mR7TJGOsvoy/ASjLx2/R9yW9cwfFpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738563372; c=relaxed/simple;
-	bh=Hbp7zWspzCKuXVFl7HNIOCJxjMDVtE0jggLbem+g76I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nn8j9Rof7MCT6rTPVVQTzbtDN397oOJ7ZL3mbv45mt3BhKOeb+gJBry2PuE0wzE42dSehZVhVB4SihN0iLWIJwEssVTFAMAU0Lo37kbtzhmV9n/qH06GGl7W8+L/UzDwTv3RdW/E2PYvlxEohjoWLRP09OR/2dGceHJwXr8RZlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com; spf=pass smtp.mailfrom=atmark-techno.com; dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b=rN9kJrvs; dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b=jC/enKkJ; arc=none smtp.client-ip=35.74.137.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atmark-techno.com
+	s=arc-20240116; t=1738563617; c=relaxed/simple;
+	bh=huPreexBSUGD+4tZwz+FrnsTGlTYrbETUuXB8TElD30=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=IjzBEAtB5Z4UgOfzyGlTxkzr2AIdlIi976zc4ZxAZlLw3s5MDpcFH+HCcO5l15xGeJDDaKXN6ZGerCtj5JS7EpO4VtTH6QIjveHDO4EH+LWGev8jUiLwhoK7Orcczkbya2bGd5z9OGsEjAlPy7M0AfaPxA3t1PGUKymDXL5U5hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=EvcmNstJ; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b="rN9kJrvs";
-	dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b="jC/enKkJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=atmark-techno.com;
-	s=gw2_bookworm; t=1738562894;
-	bh=Hbp7zWspzCKuXVFl7HNIOCJxjMDVtE0jggLbem+g76I=;
-	h=From:Date:Subject:To:Cc:From;
-	b=rN9kJrvsjzyvuqmii49K4Kxylc5U0EvdeykVsjybXIxr3wUpW9f/tB0gJjDWh+7hH
-	 iY8423dEYFJAKeAjdsQE3aC6Pn8Vjn8WGkMPGD6BUvEDuLwTCMVKmpwonYrsILdLk1
-	 UWAPFKLSlhNcC3slBsczc4uoD6BOzPDDcvnBM1MYO1v2LrahewPJm5zF+vzvjq8B57
-	 viogy+Un0qDWtPleSQYyoinxen308DB9lYim7/B88XS60JM7IzH1UPYsxtOJMASuXq
-	 qfBcbzKLOasBWrz7BdNSS4FMLpZkTgrWLyfjT7LqtIJJU9jVZMYhDFbwFwvJim7ow8
-	 mRTWng7NCY/xQ==
-Received: from gw2.atmark-techno.com (localhost [127.0.0.1])
-	by gw2.atmark-techno.com (Postfix) with ESMTP id 1AF23232
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:08:14 +0900 (JST)
-Authentication-Results: gw2.atmark-techno.com;
-	dkim=pass (2048-bit key; unprotected) header.d=atmark-techno.com header.i=@atmark-techno.com header.a=rsa-sha256 header.s=google header.b=jC/enKkJ;
-	dkim-atps=neutral
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by gw2.atmark-techno.com (Postfix) with ESMTPS id 887A0232
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:08:13 +0900 (JST)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2163a2a1ec2so143959635ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 22:08:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atmark-techno.com; s=google; t=1738562892; x=1739167692; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BPjlXqDXJYS9S67PicXD9qYY3rsZ4ZHn2gobV70W1h0=;
-        b=jC/enKkJw6bvRw+EYbB+hAWtywRwIEWNzkIbTHwADIk2Ybj4C/BTbkDHuk/FiMyoGx
-         PYYx9eOeW5HljLMm0rILNW1+38Xcug+bCH1/+6J7FqV7ueSVr1vt8g7NKyLBb68UtSTc
-         Y2f93NcG2/HAleCzwWejRf/fBgI0dy9VZOpWab7x9TAXBzUfG3AqhZIa8JB3HMjBZbjr
-         b7WmqpPkrizearIaeV26jzWia5lUOFLJyKDypfz3tN5v0dIJLwDig4Q4oaPT+sCbWQqO
-         IER6MH5e5x9GrT3LwksZFggXFkbaVHlBO3s7uKxQUo6roT98dfZejJNj50fugsGMx6Ne
-         RR+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738562892; x=1739167692;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BPjlXqDXJYS9S67PicXD9qYY3rsZ4ZHn2gobV70W1h0=;
-        b=McowV9woNwpky//68C7fkiebyj87GuefMY0zP4wjbm37yGAjzDsEvqcb7M6GQCizjM
-         sMUOZlAK/xgNKmc0374/wcOczV4vTqiiV6L7SY9jfN2BxdRKHFGsZDtGDdcvxVyIORYz
-         MqRLYVKaI/iaoapHNL5hmJPTpTO6Qiekmlc++gdLX/aSpyWLRO111mWzZ2XGCqNz86m2
-         +EhMKMVCM6HuS4JAViAUzmGtpc68qRp9RfE6E5oyAdCeKo2MCsgoxbtNbf1jvTKaMbdH
-         4pRB+rLEzL/+rNlFiDZS9p0Ytibf64E3PMcKjRQBBM1y4SPM7+xWJGCPM8JbBgv8+SxX
-         5V+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXCrwqZZsb4xGPihCLPNKV0mmLe0tqIazbzfiJPpp+X480T/vSj0ZVewZKjmaY1LllASmkwt6i/AmWFst4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaM5GaFp/CG9r79sbczMPvhb+m8IMZrp8hIz4iEgFeQtPZaH8n
-	+qvecR9NJwCK9KyciChlGcXuxP79tlloEKjRBtMoZyjqcWELQ95dOSpf4cVju6ZkAZ1R0H+81IR
-	GqRmOp2jw/OFO/OOg+Ofx5tiza6xUOF1cqv3TnvYS0G99MGiUvOdPpjfKwZdeo6oa8tBLQ1c=
-X-Gm-Gg: ASbGncsEdRZZkULxmqvH3XcFMPxIe4TlSfBwmuIRId9Y5e4GQjug3mPoiF7xmnavLek
-	1s9/zC2n4rNGIPqGGz4CKd4FW237wZVnL+h/skLdl5Tml8a9yLJYM7LdDly3AaXdLCH/uhWBJqU
-	1iT3PXsaP+s4aLyx2fWKsZPO7D1XU1M4v/15YT1+TJghuBfQKBT9U78A40f5K7aFNxsVNMlfaL9
-	eXJaHH/X+qGSapa5dnkkHmtLFvF5lhggbbPQb9+EAIbXJiCHVBs+RuckJ4qr60cjrDK9CnVlrja
-	ZKJxardDg8BRJ/MZKpNJKJn6rDmiZw0z2GwVa8Wc8BEWtuh9sHAF4gCmaWfxGI1y
-X-Received: by 2002:a17:902:d48b:b0:215:385e:921c with SMTP id d9443c01a7336-21dd7e39d0emr303715955ad.51.1738562892619;
-        Sun, 02 Feb 2025 22:08:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG+cPnrgkleSm2QJ1Sq9fDzZ07THWFl6Q867OpAQ96/sH7m45eEsTed+5MmfPxFcIW11kQeiQ==
-X-Received: by 2002:a17:902:d48b:b0:215:385e:921c with SMTP id d9443c01a7336-21dd7e39d0emr303715775ad.51.1738562892362;
-        Sun, 02 Feb 2025 22:08:12 -0800 (PST)
-Received: from localhost (117.209.187.35.bc.googleusercontent.com. [35.187.209.117])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32ecad9sm68004605ad.157.2025.02.02.22.08.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Feb 2025 22:08:11 -0800 (PST)
-From: Dominique Martinet <dominique.martinet@atmark-techno.com>
-Date: Mon, 03 Feb 2025 15:08:08 +0900
-Subject: [PATCH] usb: usb251xb: silence EPROBE_DEFER error on boot
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="EvcmNstJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1738563616; x=1770099616;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=huPreexBSUGD+4tZwz+FrnsTGlTYrbETUuXB8TElD30=;
+  b=EvcmNstJ5UNE6KTUFb5A61t5jyZIoCaGrofCvMxe6Dh4+9Q3p00quVsT
+   mT/Yn4lam93+/wq1DFKgogAzUAAmFnDFO86sxd/VU+k9YJ7WTlqRyHvnb
+   JYePsV8VgU2aPe7rSVfP89hWjt7JkFKNoWi4gI2xcht/NTiqLv2h+EjQb
+   bTMos2x3JWCIKDi/VgbQ20Qwf7PNsaR+FEY3at7h1IyhnDOlbS5or7cZA
+   w5j1XIC1DPYTzxVDwWuf10hU+cbmJ+MvWaYuBhpPZgv7ysfonYFt9Qgxm
+   eXxcmvotmk6ZmI7afy18T2wK50cKf2de+FknIWFFebonCxBVkZQx9XDil
+   Q==;
+X-CSE-ConnectionGUID: KYWEIIOuTcullLvzTva6Jw==
+X-CSE-MsgGUID: ygDK2KZnTECqJan3jb1yLw==
+X-IronPort-AV: E=Sophos;i="6.13,255,1732604400"; 
+   d="scan'208";a="37194062"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 02 Feb 2025 23:20:09 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 2 Feb 2025 23:20:06 -0700
+Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Sun, 2 Feb 2025 23:20:01 -0700
+From: Charan Pedumuru <charan.pedumuru@microchip.com>
+Date: Mon, 3 Feb 2025 11:48:09 +0530
+Subject: [PATCH v4] dt-bindings: dma: convert atmel-dma.txt to YAML
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,63 +53,214 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-defer_usb1-v1-1-f6bba254215d@atmark-techno.com>
-X-B4-Tracking: v=1; b=H4sIAEddoGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwNj3ZTUtNSi+NLiJENdI1MTA3ODFEOL5GRLJaCGgqLUtMwKsGHRsbW
- 1APBPlLZcAAAA
-X-Change-ID: 20250203-defer_usb1-254070d18cc9
-To: Richard Leitner <richard.leitner@linux.dev>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dominique Martinet <dominique.martinet@atmark-techno.com>
-X-Mailer: b4 0.15-dev-7be4f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1027;
- i=dominique.martinet@atmark-techno.com; h=from:subject:message-id;
- bh=Hbp7zWspzCKuXVFl7HNIOCJxjMDVtE0jggLbem+g76I=;
- b=owEBbQKS/ZANAwAKAfKKYH/WjHEHAcsmYgBnoF1JKapt3VwTIEkuJSNxQ3fPo0exlV2DocZJd
- 0hMxwZ35MyJAjMEAAEKAB0WIQQoFSiLMD+txr0veJbyimB/1oxxBwUCZ6BdSQAKCRDyimB/1oxx
- B7z/EACkTE80fFyeSSrkflh58Bt0JuZOQv8YmJ/YdL5A0799C2sbRoH2hNV7W2rBbhFIrVO/cIq
- qXZilkdOgUYTHHpvd79QYGtW7mAbQqD8WovTeCT9IyDoWW/yB+zalRf2JjsLdWtNYkPFvBF7BRq
- u0s7jpWGhDxLJ1xJy3BGjTawb3i+VNbMLm71ikNN/SQNneXKwFM+fwHh/FRj6AV+D/P7HYIB87I
- K6hCS+sVtpSOaX09/QYN4+EQxct6R8Ly7peE+oqyelExX/MQVYg/emyXjvLGPDn9mnNkSPk5bXo
- c7KJOKOwxuiEylbDWLXPHRBm2cXFB1PvitRsHap3sRwQNVpYnrKheYr7S7JGi7PivVy3qjOTH6p
- Ll6lYQ7K7d7z87IAI5v9udqYH2fPO+0pmeHQ4xD2uCrFxLBKZtGduVy/TN7mzQNSicLVMHgxL76
- KPHxnZ0YIkHItTm1+Oxurd+v2RL/gMZS517K3UJAcpPWdlA9KGqKGouFk5saoPGZofCFed6gg1X
- kWMeD6J1zUPDTW/TPiRPQQi+ktvcUbZAUcKNyvg7c1bvyAyx3vSdchX8/pgPuhACnh+oHcD7MqE
- T4+YMveTOO2uwEVy1K+vRcGWVsC9IBfIsTnRQ49gmmvP5e2LNgzwCsMbuvrlbYiEtJZrWTF2LVV
- ZWXUylVaPlEZzAw==
-X-Developer-Key: i=dominique.martinet@atmark-techno.com; a=openpgp;
- fpr=2815288B303FADC6BD2F7896F28A607FD68C7107
+Message-ID: <20250203-test-v4-1-a9ec3eded1c7@microchip.com>
+X-B4-Tracking: v=1; b=H4sIAKBfoGcC/13OwQ7CIAyA4VcxnK2BAbJ48j3MDowV4cBYgBDNs
+ neX7WR2/JP2a1eSMXnM5HFZScLqs49zC3G9EOP0/EbwU2vS0U5S1ikomAv0FKURvbFKKNJGl4T
+ Wfw7mNbS2KQYoLqH+X+YwBQ2VAQMqhWVaKVScP4M3KRrnl5uJYeeczyWm7/FU5Tt6ul95M9gor
+ Ry5vQtrTsawbdsPXjxSWNsAAAA=
+To: Ludovic Desroches <ludovic.desroches@microchip.com>, Vinod Koul
+	<vkoul@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nicolas Ferre
+	<nicolas.ferre@microchip.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Andrei Simion <andrei.simion@microchip.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <dmaengine@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Durai Manickam
+ KR" <durai.manickamkr@microchip.com>, Charan Pedumuru
+	<charan.pedumuru@microchip.com>
+X-Mailer: b4 0.14.1
 
-Use dev_err_probe to silence EPROBE_DEFER error on boot:
-[    0.757677] usb251xb 1-002c: failed to get ofdata: -517
+From: Durai Manickam KR <durai.manickamkr@microchip.com>
 
-Signed-off-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
+Add a description, required properties, appropriate compatibles and
+missing properties like clocks and clock-names which are not defined in
+the text binding for all the SoCs that are supported by microchip.
+Update the text binding name `atmel-dma.txt` to
+`atmel,at91sam9g45-dma.yaml` for the files which reference to
+`atmel-dma.txt`. Drop Tudor name from maintainers.
+
+Signed-off-by: Durai Manickam KR <durai.manickamkr@microchip.com>
+Signed-off-by: Charan Pedumuru <charan.pedumuru@microchip.com>
 ---
- drivers/usb/misc/usb251xb.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Changes in v4:
+- Modified the description for #dma-cells property.
+- Link to v3: https://lore.kernel.org/r/20250127-test-v3-1-1b5f5b3f64fc@microchip.com
 
-diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index e24cdb667307802b9eee856e20744ebf694395e8..ed7c99621fc9af57c988b2298a576248b329ba3d 100644
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -637,8 +637,7 @@ static int usb251xb_probe(struct usb251xb *hub)
- 	if (np && usb_data) {
- 		err = usb251xb_get_ofdata(hub, usb_data);
- 		if (err) {
--			dev_err(dev, "failed to get ofdata: %d\n", err);
--			return err;
-+			return dev_err_probe(dev, err, "failed to get ofdata: %d\n", err);
- 		}
- 	}
+Changes in v3:
+- Renamed the text binding name `atmel-dma.txt` to
+  `atmel,at91sam9g45-dma.yaml` for the files which reference to
+  `atmel-dma.txt`.
+- Removed `oneOf` and add a blank line in properties.
+- Dropped Tudor name from maintainers.
+- Link to v2: https://lore.kernel.org/r/20250123-dma-v1-1-054f1a77e733@microchip.com
+
+Changes in v2:
+- Renamed the yaml file to a compatible.
+- Removed `|` and description for common properties.
+- Modified the commit message.
+- Dropped the label for the node in examples.
+- Link to v1: https://lore.kernel.org/all/20240215-dmac-v1-1-8f1c6f031c98@microchip.com
+---
+ .../bindings/dma/atmel,at91sam9g45-dma.yaml        | 68 ++++++++++++++++++++++
+ .../devicetree/bindings/dma/atmel-dma.txt          | 42 -------------
+ .../devicetree/bindings/misc/atmel-ssc.txt         |  2 +-
+ MAINTAINERS                                        |  2 +-
+ 4 files changed, 70 insertions(+), 44 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/atmel,at91sam9g45-dma.yaml b/Documentation/devicetree/bindings/dma/atmel,at91sam9g45-dma.yaml
+new file mode 100644
+index 000000000000..a58dc407311b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/atmel,at91sam9g45-dma.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/atmel,at91sam9g45-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Atmel Direct Memory Access Controller (DMA)
++
++maintainers:
++  - Ludovic Desroches <ludovic.desroches@microchip.com>
++
++description:
++  The Atmel Direct Memory Access Controller (DMAC) transfers data from a source
++  peripheral to a destination peripheral over one or more AMBA buses. One channel
++  is required for each source/destination pair. In the most basic configuration,
++  the DMAC has one master interface and one channel. The master interface reads
++  the data from a source and writes it to a destination. Two AMBA transfers are
++  required for each DMAC data transfer. This is also known as a dual-access transfer.
++  The DMAC is programmed via the APB interface.
++
++properties:
++  compatible:
++    enum:
++      - atmel,at91sam9g45-dma
++      - atmel,at91sam9rl-dma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  "#dma-cells":
++    description:
++      Must be <2>, used to represent the number of integer cells in the dma
++      property of client devices. The two cells in order are
++      1. The first cell represents the channel number.
++      2. The second cell is 0 for RX and 1 for TX transfers.
++    const: 2
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: dma_clk
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#dma-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    dma-controller@ffffec00 {
++        compatible = "atmel,at91sam9g45-dma";
++        reg = <0xffffec00 0x200>;
++        interrupts = <21>;
++        #dma-cells = <2>;
++        clocks = <&pmc 2 20>;
++        clock-names = "dma_clk";
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/dma/atmel-dma.txt b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+deleted file mode 100644
+index f69bcf5a6343..000000000000
+--- a/Documentation/devicetree/bindings/dma/atmel-dma.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-* Atmel Direct Memory Access Controller (DMA)
+-
+-Required properties:
+-- compatible: Should be "atmel,<chip>-dma".
+-- reg: Should contain DMA registers location and length.
+-- interrupts: Should contain DMA interrupt.
+-- #dma-cells: Must be <2>, used to represent the number of integer cells in
+-the dmas property of client devices.
+-
+-Example:
+-
+-dma0: dma@ffffec00 {
+-	compatible = "atmel,at91sam9g45-dma";
+-	reg = <0xffffec00 0x200>;
+-	interrupts = <21>;
+-	#dma-cells = <2>;
+-};
+-
+-DMA clients connected to the Atmel DMA controller must use the format
+-described in the dma.txt file, using a three-cell specifier for each channel:
+-a phandle plus two integer cells.
+-The three cells in order are:
+-
+-1. A phandle pointing to the DMA controller.
+-2. The memory interface (16 most significant bits), the peripheral interface
+-(16 less significant bits).
+-3. Parameters for the at91 DMA configuration register which are device
+-dependent:
+-  - bit 7-0: peripheral identifier for the hardware handshaking interface. The
+-  identifier can be different for tx and rx.
+-  - bit 11-8: FIFO configuration. 0 for half FIFO, 1 for ALAP, 2 for ASAP.
+-
+-Example:
+-
+-i2c0@i2c@f8010000 {
+-	compatible = "atmel,at91sam9x5-i2c";
+-	reg = <0xf8010000 0x100>;
+-	interrupts = <9 4 6>;
+-	dmas = <&dma0 1 7>,
+-	       <&dma0 1 8>;
+-	dma-names = "tx", "rx";
+-};
+diff --git a/Documentation/devicetree/bindings/misc/atmel-ssc.txt b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+index f9fb412642fe..b159dc2298b6 100644
+--- a/Documentation/devicetree/bindings/misc/atmel-ssc.txt
++++ b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+@@ -14,7 +14,7 @@ Required properties:
+ Required properties for devices compatible with "atmel,at91sam9g45-ssc":
+ - dmas: DMA specifier, consisting of a phandle to DMA controller node,
+   the memory interface and SSC DMA channel ID (for tx and rx).
+-  See Documentation/devicetree/bindings/dma/atmel-dma.txt for details.
++  See Documentation/devicetree/bindings/dma/atmel,at91sam9g45-dma.yaml for details.
+ - dma-names: Must be "tx", "rx".
  
+ Optional properties:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 962eab2ce359..f1f4e3956f45 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15348,7 +15348,7 @@ M:	Ludovic Desroches <ludovic.desroches@microchip.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	dmaengine@vger.kernel.org
+ S:	Supported
+-F:	Documentation/devicetree/bindings/dma/atmel-dma.txt
++F:	Documentation/devicetree/bindings/dma/atmel,at91sam9g45-dma.yaml
+ F:	drivers/dma/at_hdmac.c
+ F:	drivers/dma/at_xdmac.c
+ F:	include/dt-bindings/dma/at91.h
 
 ---
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250203-defer_usb1-254070d18cc9
+base-commit: 232f121837ad8b1c21cc80f2c8842a4090c5a2a0
+change-id: 20250127-test-80e5c48cf747
 
 Best regards,
 -- 
-Dominique Martinet <dominique.martinet@atmark-techno.com>
-
+Charan Pedumuru <charan.pedumuru@microchip.com>
 
