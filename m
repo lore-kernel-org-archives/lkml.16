@@ -1,304 +1,132 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CD620ADCB;
-	Mon,  3 Feb 2025 16:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1105C20A5F8
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738599380; cv=none; b=YpJ+wlbBfjeWv8f11cMXME7o+DAVNqdXQ7T4+UXm7aIj/beAOIVH4LgIyOATjaLDPb+twFcJz2F1Z3Hmi6NyPACRB8Nj16o7Gw4ahN5P2Hzjpb35X0Nd6YHiA44ks+FOP4gXjssSa3UwD8ddgVjX2j3C7wauK2CHFWlDfoolk1A=
+	t=1738599412; cv=none; b=SUQQgtoajktxIkRZmvkM0JXnQdnejOsafzv5uBZlxRmE3A2yllLIwZ85XeQfqLksG1+E0iOG0hlrUHfcoT+fkWHOtKa355gECjL6cueCQ9BXp8LYkdTunkf7plfUfLuSUIWJbksObGCE4KoDlamiMrnSZnx526+a2QOBVNnXdBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738599380; c=relaxed/simple;
-	bh=KEP9JHOaQaC7WMar0N1Qoiwz++EeWdHjCPRociZouoM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i4fXrFIWRCwQ8f3mgQXU+O8IaonE/I0TLYf15zr89a0xUvzP8X/E1L8pJ+ZojkjFBEAFYvxGpPBWBoZMbie0iTlHIZcxgrCOo1loBXBIxsdb1+t00GawlrPpJ4MLXtwOXveiNlNIXp1pnS9jTalXO2GnfAuAFYORTHK27piSgZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hXQf0yDx; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1738599412; c=relaxed/simple;
+	bh=erhTwVPsLXivFVXTanoN6EQD7Qcx9B1QNR5p4w1Yt44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e20L5mqM/rhCwoK1lRZ2KKkAcGPmPBT4Pj4ZIOiQyNlzdzNRlXukJkdNxFbSyl3KKSsCtDB09E8BboNhNtTraRuyAyfGUW3+hdvA3lfE97Z8oZSGacP/ePhy5usnRx31fE2P0ZpXh6HpTlSZhl5b3iY7R5R5c4tU6m9a9yNJckw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BoHQLHD8; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hXQf0yDx"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 87615442A4;
-	Mon,  3 Feb 2025 16:16:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738599377;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B35Kx103WOLl6yU6T8SxtTaWfDrXbRxl8yGjTq/oP7o=;
-	b=hXQf0yDx0LAnCMGH7zKihRNxLnYcxV1j8qo2jeU5FhlHd9EwidyJwpm7ScSJ9pbRDcE0cK
-	9SmjXgmEgthcmYIeI2KZGAIobzI2zkIXIOLXl6/LT7BgM7rNj5lz5EWSijvVyXaNBOuNcN
-	bN4KTx2+BvVi7LI1S+B4YeY+SIacSrPt66rACg4p9ZSwExwodeLhc8/fRo+Bj+PzcRBrzV
-	YJXRGcBRiRAiOiXtCSCCeoRpb23Y5ybNhxELkgF2cFyYpFuHxbql3YT9ktoO8WDz3KOfQ+
-	MnL+zkWkotmdwKUf+b1sy1x6U4K8ctoV7+EYZZXEGONs0Kt3dPiTDJSr0M+pUw==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-	Marek Vasut <marex@denx.de>
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Louis Chauvet <louis.chauvet@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v5 4/4] drm: bridge: ti-sn65dsi83: Add error recovery mechanism
-Date: Mon,  3 Feb 2025 17:16:06 +0100
-Message-ID: <20250203161607.223731-5-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250203161607.223731-1-herve.codina@bootlin.com>
-References: <20250203161607.223731-1-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BoHQLHD8"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21c2f1b610dso106077955ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 08:16:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738599410; x=1739204210; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6flYFTaf2FZxbVF3ZCOxc2I7HjIzsuP1MXEjy7hroyk=;
+        b=BoHQLHD83QOQu+7YB5jQPWX/hL19er1lQJt0rbfOdPzGLItwYAu1qUrk9ay8H0EfmL
+         q0m7xMGH80Za4m8M5zgZlE4BA8vHUHfLF2q6QKoL/SAYmK/uextByv5PIeIMakUrLM/f
+         x6SgxzTW3Bw4ovSTctyz+a4/tkoNBAlpKLEBiPNpZhfu2FNU24oePZFXKjYf1sUUkVZ3
+         lL6Grj30pm/oxPxA5VGoo68IC08OAkiw3MxV4OCXinSidMeQpb/sosBMPPx1l/+hrruc
+         8h1E1+nlUwq0NcEKobuWCm7s7te4KfM7Q+ZnB2uvoIq5FGS+2DH0NlTQtLpZly2OY+JI
+         Ivhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738599410; x=1739204210;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6flYFTaf2FZxbVF3ZCOxc2I7HjIzsuP1MXEjy7hroyk=;
+        b=QBwhcVClm0nmz2dZ88EBq/HQtAhUh3tOr6mATxMwqK60ErmUOJQgHodsIE10rZZe+C
+         YBDiwicqOe9OJceD02NHm45hp/bHvywrFyMTbfyQHRsNQyH8pWeiSDHysGgbczkBhK+y
+         oLv4Eo/1y6uckZXYLBVnPNeYGA9OaQmYxecNNr3+1V+ZJNlY3MYyIe2DZnLIydMNWQR0
+         LHcwQ0BE8PgkFjnNiDk1OwWPpNKg3zQlhAx8Wc8uyc85Fb5RB/L2OyH0FEP05BH8s2Gg
+         nMwkMivdJdITkfFMKrenBHuq7/eMIUDkONfgYnC7808o9imf223oVgzFcmFzk8+Ag1rw
+         1W9A==
+X-Forwarded-Encrypted: i=1; AJvYcCU/BCSEsY/qNprizNu+15cHNZueO6TJLYFZSF7c30Xadd9aFXnEm5JfBrvcmMqUuGuWBcsIF2HgECmVdcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8yWQwzfR0470JfzreJw8ySSKVnSmTop2BIgqrJmHHjP/xzAA7
+	b05FZsaok5kZRSOk2Ji3SM4taKC8M2qopugyPXvnhnwvtxdZB5YFRq3ghOHawQ==
+X-Gm-Gg: ASbGncsQMjzAFN0q3TpxfN2oy4PIdlAYFyNxvv4l4R7J9Ef6YveVv/KE7kvNwEU8eTw
+	+gaMDui0TtG/2QknKqjBn+3DTXYA2t/6NWDaO3dpA/ONsiPsPJCiXg5xTWd34OJFCJicTDDxIrP
+	slVZXTiH7hWMJBgTfIL1vehLc6Gv3hc2AA0vXsRAz5oFjwK2Bt0l3/Fu6N0OFvVSUzeUsjCRSmu
+	C3CujNOhQCQhJJB6AJzrVAdOKoA5Q3f8TZckHP/0Ae5Q58cmhVfLSqru2oKEtNAF9p2Eo2PlbYO
+	NvFNBgIlICxRqMQ8mHa3h/+pdQ==
+X-Google-Smtp-Source: AGHT+IFVZMlh6cYlSlFoHEwxzXAOuYn28wRS6kTbfChhspc03x0TeQyb4e1aNIvAKSJnT3jHJ38A8A==
+X-Received: by 2002:a17:902:d48a:b0:216:4064:53ad with SMTP id d9443c01a7336-21dd7de20f8mr385506735ad.48.1738599410161;
+        Mon, 03 Feb 2025 08:16:50 -0800 (PST)
+Received: from thinkpad ([120.60.129.34])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acec0479887sm8145679a12.52.2025.02.03.08.16.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 08:16:49 -0800 (PST)
+Date: Mon, 3 Feb 2025 21:46:43 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org,
+	konradybcio@kernel.org, p.zabel@pengutronix.de,
+	dmitry.baryshkov@linaro.org, quic_nsekar@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org
+Subject: Re: [PATCH v7 3/7] dt-bindings: PCI: qcom: Use sdx55 reg description
+ for ipq9574
+Message-ID: <20250203161643.n2dmu6yg6rb5lp6u@thinkpad>
+References: <20250122063411.3503097-1-quic_varada@quicinc.com>
+ <20250122063411.3503097-4-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehffeigfejueelueeuffelueefgfelhfejhfehieegudekteeiledttdfhffekffenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpeefnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdeipdhrtghpthhtoheprghlvgigrghnuggvrhdrshhtvghinhesvgifrdhtqhdqghhrohhuphdrtghomhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopefnrghurhgvnhhtr
- dhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvgdprhgtphhtthhopehjvghrnhgvjhdrshhkrhgrsggvtgesghhmrghilhdrtghomhdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
+In-Reply-To: <20250122063411.3503097-4-quic_varada@quicinc.com>
 
-In some cases observed during ESD tests, the TI SN65DSI83 cannot recover
-from errors by itself. A full restart of the bridge is needed in those
-cases to have the bridge output LVDS signals again.
+On Wed, Jan 22, 2025 at 12:04:07PM +0530, Varadarajan Narayanan wrote:
+> All DT entries except "reg" is similar between ipq5332 and
+> ipq9574. ipq9574 has 5 registers while ipq5332 has 6. MHI is the
+> additional (i.e. sixth entry). Since this matches with the
+> sdx55's "reg" definition which allows for 5 or 6 registers,
+> combine ipq9574 with sdx55.
+> 
+> This change is to prepare ipq9574 to be used as ipq5332's
+> fallback compatible.
+> 
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
 
-Also, during tests, cases were observed where reading the status of the
-bridge was not even possible. Indeed, in those cases, the bridge stops
-to acknowledge I2C transactions. Only a full reset of the bridge (power
-off/on) brings back the bridge to a functional state.
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-The TI SN65DSI83 has some error detection capabilities. Introduce an
-error recovery mechanism based on this detection.
+- Mani
 
-The errors detected are signaled through an interrupt. On system where
-this interrupt is not available, the driver uses a polling monitoring
-fallback to check for errors. When an error is present or when reading
-the bridge status leads to an I2C failure, the recovery process is
-launched.
+> ---
+>  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> index bd87f6b49d68..413c6b76c26c 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -165,7 +165,6 @@ allOf:
+>              enum:
+>                - qcom,pcie-ipq6018
+>                - qcom,pcie-ipq8074-gen3
+> -              - qcom,pcie-ipq9574
+>      then:
+>        properties:
+>          reg:
+> @@ -206,6 +205,7 @@ allOf:
+>          compatible:
+>            contains:
+>              enum:
+> +              - qcom,pcie-ipq9574
+>                - qcom,pcie-sdx55
+>      then:
+>        properties:
+> -- 
+> 2.34.1
+> 
 
-Restarting the bridge needs to redo the initialization sequence. This
-initialization sequence has to be done with the DSI data lanes driven in
-LP11 state. In order to do that, the recovery process resets the whole
-output path (i.e the path from the encoder to the connector) where the
-bridge is located.
-
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/gpu/drm/bridge/ti-sn65dsi83.c | 131 ++++++++++++++++++++++++++
- 1 file changed, 131 insertions(+)
-
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-index 336380114eea..26a050b13997 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-@@ -35,9 +35,12 @@
- #include <linux/of_graph.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/timer.h>
-+#include <linux/workqueue.h>
- 
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge.h>
-+#include <drm/drm_drv.h> /* DRM_MODESET_LOCK_ALL_BEGIN() needs drm_drv_uses_atomic_modeset() */
- #include <drm/drm_mipi_dsi.h>
- #include <drm/drm_of.h>
- #include <drm/drm_panel.h>
-@@ -159,6 +162,9 @@ struct sn65dsi83 {
- 	bool				lvds_dual_link_even_odd_swap;
- 	int				lvds_vod_swing_conf[2];
- 	int				lvds_term_conf[2];
-+	int				irq;
-+	struct delayed_work		monitor_work;
-+	struct work_struct		reset_work;
- };
- 
- static const struct regmap_range sn65dsi83_readable_ranges[] = {
-@@ -363,6 +369,95 @@ static u8 sn65dsi83_get_dsi_div(struct sn65dsi83 *ctx)
- 	return dsi_div - 1;
- }
- 
-+static int sn65dsi83_reset_pipe(struct sn65dsi83 *sn65dsi83)
-+{
-+	struct drm_device *dev = sn65dsi83->bridge.dev;
-+	struct drm_modeset_acquire_ctx ctx;
-+	int err;
-+
-+	/*
-+	 * Reset active outputs of the related CRTC.
-+	 *
-+	 * This way, drm core will reconfigure each components in the CRTC
-+	 * outputs path. In our case, this will force the previous component to
-+	 * go back in LP11 mode and so allow the reconfiguration of SN64DSI83
-+	 * bridge.
-+	 *
-+	 * Keep the lock during the whole operation to be atomic.
-+	 */
-+
-+	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, err);
-+
-+	err = drm_atomic_helper_reset_crtc(sn65dsi83->bridge.encoder->crtc, &ctx);
-+
-+	DRM_MODESET_LOCK_ALL_END(dev, ctx, err);
-+
-+	return err;
-+}
-+
-+static void sn65dsi83_reset_work(struct work_struct *ws)
-+{
-+	struct sn65dsi83 *ctx = container_of(ws, struct sn65dsi83, reset_work);
-+	int ret;
-+
-+	dev_warn(ctx->dev, "reset the pipe\n");
-+
-+	/* Reset the pipe */
-+	ret = sn65dsi83_reset_pipe(ctx);
-+	if (ret) {
-+		dev_err(ctx->dev, "reset pipe failed %pe\n", ERR_PTR(ret));
-+		return;
-+	}
-+	if (ctx->irq)
-+		enable_irq(ctx->irq);
-+}
-+
-+static void sn65dsi83_handle_errors(struct sn65dsi83 *ctx)
-+{
-+	unsigned int irq_stat;
-+	int ret;
-+
-+	/*
-+	 * Schedule a reset in case of:
-+	 *  - the bridge doesn't answer
-+	 *  - the bridge signals an error
-+	 */
-+
-+	ret = regmap_read(ctx->regmap, REG_IRQ_STAT, &irq_stat);
-+	if (ret || irq_stat) {
-+		/*
-+		 * IRQ acknowledged is not always possible (the bridge can be in
-+		 * a state where it doesn't answer anymore). To prevent an
-+		 * interrupt storm, disable interrupt. The interrupt will be
-+		 * after the reset.
-+		 */
-+		if (ctx->irq)
-+			disable_irq_nosync(ctx->irq);
-+
-+		schedule_work(&ctx->reset_work);
-+	}
-+}
-+
-+static void sn65dsi83_monitor_work(struct work_struct *work)
-+{
-+	struct sn65dsi83 *ctx = container_of(to_delayed_work(work),
-+					     struct sn65dsi83, monitor_work);
-+
-+	sn65dsi83_handle_errors(ctx);
-+
-+	schedule_delayed_work(&ctx->monitor_work, msecs_to_jiffies(1000));
-+}
-+
-+static void sn65dsi83_monitor_start(struct sn65dsi83 *ctx)
-+{
-+	schedule_delayed_work(&ctx->monitor_work, msecs_to_jiffies(1000));
-+}
-+
-+static void sn65dsi83_monitor_stop(struct sn65dsi83 *ctx)
-+{
-+	cancel_delayed_work_sync(&ctx->monitor_work);
-+}
-+
- static void sn65dsi83_atomic_pre_enable(struct drm_bridge *bridge,
- 					struct drm_bridge_state *old_bridge_state)
- {
-@@ -549,6 +644,15 @@ static void sn65dsi83_atomic_enable(struct drm_bridge *bridge,
- 	regmap_read(ctx->regmap, REG_IRQ_STAT, &pval);
- 	if (pval)
- 		dev_err(ctx->dev, "Unexpected link status 0x%02x\n", pval);
-+
-+	if (ctx->irq) {
-+		/* Enable irq to detect errors */
-+		regmap_write(ctx->regmap, REG_IRQ_GLOBAL, REG_IRQ_GLOBAL_IRQ_EN);
-+		regmap_write(ctx->regmap, REG_IRQ_EN, 0xff);
-+	} else {
-+		/* Use the polling task */
-+		sn65dsi83_monitor_start(ctx);
-+	}
- }
- 
- static void sn65dsi83_atomic_disable(struct drm_bridge *bridge,
-@@ -557,6 +661,15 @@ static void sn65dsi83_atomic_disable(struct drm_bridge *bridge,
- 	struct sn65dsi83 *ctx = bridge_to_sn65dsi83(bridge);
- 	int ret;
- 
-+	if (ctx->irq) {
-+		/* Disable irq */
-+		regmap_write(ctx->regmap, REG_IRQ_EN, 0x0);
-+		regmap_write(ctx->regmap, REG_IRQ_GLOBAL, 0x0);
-+	} else {
-+		/* Stop the polling task */
-+		sn65dsi83_monitor_stop(ctx);
-+	}
-+
- 	/* Put the chip in reset, pull EN line low, and assure 10ms reset low timing. */
- 	gpiod_set_value_cansleep(ctx->enable_gpio, 0);
- 	usleep_range(10000, 11000);
-@@ -806,6 +919,14 @@ static int sn65dsi83_host_attach(struct sn65dsi83 *ctx)
- 	return 0;
- }
- 
-+static irqreturn_t sn65dsi83_irq(int irq, void *data)
-+{
-+	struct sn65dsi83 *ctx = data;
-+
-+	sn65dsi83_handle_errors(ctx);
-+	return IRQ_HANDLED;
-+}
-+
- static int sn65dsi83_probe(struct i2c_client *client)
- {
- 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
-@@ -819,6 +940,8 @@ static int sn65dsi83_probe(struct i2c_client *client)
- 		return -ENOMEM;
- 
- 	ctx->dev = dev;
-+	INIT_WORK(&ctx->reset_work, sn65dsi83_reset_work);
-+	INIT_DELAYED_WORK(&ctx->monitor_work, sn65dsi83_monitor_work);
- 
- 	if (dev->of_node) {
- 		model = (enum sn65dsi83_model)(uintptr_t)
-@@ -843,6 +966,14 @@ static int sn65dsi83_probe(struct i2c_client *client)
- 	if (IS_ERR(ctx->regmap))
- 		return dev_err_probe(dev, PTR_ERR(ctx->regmap), "failed to get regmap\n");
- 
-+	if (client->irq) {
-+		ctx->irq = client->irq;
-+		ret = devm_request_threaded_irq(ctx->dev, ctx->irq, NULL, sn65dsi83_irq,
-+						IRQF_ONESHOT, dev_name(ctx->dev), ctx);
-+		if (ret)
-+			return dev_err_probe(dev, ret, "failed to request irq\n");
-+	}
-+
- 	dev_set_drvdata(dev, ctx);
- 	i2c_set_clientdata(client, ctx);
- 
 -- 
-2.47.1
-
+மணிவண்ணன் சதாசிவம்
