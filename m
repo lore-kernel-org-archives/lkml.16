@@ -1,136 +1,106 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869D520B7F8
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6ABA35956;
+	Mon,  3 Feb 2025 17:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738602118; cv=none; b=mZxh54k4U1ttyIIAcLwN35+o0Kkh19IfqUMXJCU2IGMYjaFEwmFgRvVJWOkCpxJyom/g1IVxHTl64fRsTb0yxV7Y7IW4Tzjc/HnVBuM9chSsPHoSK+KiTCZiBuhNcqGCCh75gKvWiMbzF0Tt06fSy2jYyXleMs+u1AfIuTdY/3o=
+	t=1738602152; cv=none; b=rWxsBpv0N4G58aeLGNjJdvEGOIcVuMDF3pJTLR42o60fZ7nG2tnhPGCB8lLVkUoEFPRhNZ/l8dMcBjdtOlR75msoiCFDZxIUPnwYzV6yydNOfsZa0LipNvRMva39h6H/mSpn/kdrcvuZDrBAPOVKWUvlF0wV/HyL+OPibyjGJ64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738602118; c=relaxed/simple;
-	bh=zjXH5kws7+knI9DbmzEjGDquVdWrIc8UIpcNiHa4Cuk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jOQF1rkSD34CsF7L7z9OAsCntOkx7/YArkrAC5S4crxmWAsFWDbcuXnBwzKim1TSg1IDoS4YmyzuDjB6dSj9GG5H8FR1zqX7Q8SSO1RHNKs0R43h52dguqSsccRlH4xTsyRx/1YtI8ZNmXTqJNq6hwQsCX7pcg+aIKC0tx9bbbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t1wh9Oo/; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738602152; c=relaxed/simple;
+	bh=n9mHnyQBpGX2PaXbfmTEexmi6lJrevaHr9yjIEWDFnQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nRa6oCinwnYXmFlHdr2732syc+G9C+o+zvHH2F9pX2sJeNOgpuphDUeCFSb4raIphRSI54JcydK3R4iEbK1cl9neT8mj6EVatyLkOEPE5T75BYonLbJzfaB8qv2P8jJdWcdFT58YeD3egxJEGjusOSzAnJMF9j7UZo/2bXns2Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=pgDvH1Tu; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t1wh9Oo/"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5401af8544bso9201e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 09:01:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738602113; x=1739206913; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qb2BWOjM2AxjI76h/fY+Q764chvs+1zrd6CSA4WoxvA=;
-        b=t1wh9Oo/wJM/NN0AkF00PPNx55xN0ddUy56xgPrZy94mOKU2k1w04PEv7S4WhPGb25
-         zCKIg5+12ILkvLgIBFv9EHnCxjOWMcOqOySk6qIdg0z+EAHMlIU9u6QOO/B/3pV9wihf
-         RdI5y2nyTqz0Rb/LwVbV7ykuOrVy+ijVQFlP7O053XSc7nUzpm582h/xJOPEk97Zh7Uv
-         nWanz2VaAh7RNHxKqYwl1r/Ju31JytWtfS2aFqNJyhmswBXWP0G55sPXRAekZmcVJQIs
-         yxlZxWFkJRDCPOIhSJfRL6METjSTpDHebPlFiKvebWxXpffyFCIzyWHuSzYOTNuglV8b
-         Np+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738602113; x=1739206913;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qb2BWOjM2AxjI76h/fY+Q764chvs+1zrd6CSA4WoxvA=;
-        b=Wahb/PJ5PTF9b/DKwNNNoOtWnMJ9SmQj7CJv3yVRQOcyoC5sQXCtKNUrwYjkr47oWX
-         H3HBz3H8wbl6sYTSz/uEQKHaUvKhxAZOJKrhPansAwYTIT36FhKiTmtgeMcuq4Im2wLr
-         Laxlij1i4pGqJEgf3lItnpL0h3TwIkaRdAM1RCwrGcxSLT6+SwWz0bXsEx1YN2P5ri7x
-         khv5ar74J3i+v4RHa2JfHWPpchOJT5MtFi8lADtnJBQZnyqbG1hAkBLk3QxehaZLtITj
-         CncYQcz7jaQLuK8TWcdPOfBrkeRyDpouVWAySR/3JNKD+AAXv5XAoBQORs7lS2i0lE+p
-         GuJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMl8ZViS/IXnxc1lGDlN8sX3oIMkPgBuUvCHpqRTGuP+6X2vfjALNJbf8PyVdxm7yi7KYAJMFHufgqPGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx69/7HQESACCHhkn11ZptPEINQKimkM3RNlcvvTolOu2SdnKFA
-	w6eG11M+Yq1fo97FsYJXJXehW+QGEL4EOhpQ0oxM0VvPFja+6Rh0FbodVOA0AFIJPc6XTpk2ZP/
-	LpkkGD/vJIMhkJdMHmWGfeJPSNhHFgYblLDBf
-X-Gm-Gg: ASbGncvFJfPWwr/XEdUnGkD548MIEXhcE+I0AZdZElzG84jtEaHvk+/QmaHm8/EkmZI
-	IkSkBjjqvkNnFqnmYBCu8BQIu8I+lbFp1OlWkX9Xv1Vh/BIxxqGvnVLxYIuKqThf4y1s1G/aXQN
-	6JeWVu6Ij+Ap4C2bclzvkdmn0gh2AYDQ==
-X-Google-Smtp-Source: AGHT+IERgbXu4cZMbowmhVW8KSIRv9nsWeHKT5DJAWPkiUFMWjoeG2P3EHYpBuBLck0a8kHsQSZGuCEMrY5xfJ73NYU=
-X-Received: by 2002:a05:6512:aca:b0:542:7130:badc with SMTP id
- 2adb3069b0e04-543ffa52a17mr4941e87.5.1738602113129; Mon, 03 Feb 2025 09:01:53
- -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="pgDvH1Tu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1738602148; x=1739206948; i=ps.report@gmx.net;
+	bh=n9mHnyQBpGX2PaXbfmTEexmi6lJrevaHr9yjIEWDFnQ=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=pgDvH1TuUxllvsKVdkXZTdaKPqZRFRa9XC5iiGld+0vJSN727IsNUX3bA9wzBm35
+	 i+1Wj0bUJFOuv5KplpBxPPlanV/C46f//JbPtDtopmaDw97BexFB26H2+BaLI6o/j
+	 vWS8vGc6OuPQxfj4a30mlLLrtf3HzZCggzSE7H6SxuM5BUfQriWJeZLpCkX7ffYoz
+	 DgBzJgIu1OOb6sWf1Jkn/ijxSXTkCZoV67N+jx9ntYgp/378KmyZZ7fWOpT82dMCE
+	 8DuZc7Kngen2n4tOjv3kzL9g69/6uOGKiredlUaJpG6ML9SZXMdGaVM3LbKAMmBwY
+	 2LDkuogDs+PeKNVIJw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.fritz.box ([82.135.81.54]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MUosN-1tny8T2yZ7-00N4O9; Mon, 03
+ Feb 2025 18:02:28 +0100
+From: Peter Seiderer <ps.report@gmx.net>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Nam Cao <namcao@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Artem Chernyshev <artem.chernyshev@red-soft.ru>,
+	Peter Seiderer <ps.report@gmx.net>
+Subject: [PATCH net-next v3 02/10] net: pktgen: enable 'param=value' parsing
+Date: Mon,  3 Feb 2025 18:01:53 +0100
+Message-ID: <20250203170201.1661703-3-ps.report@gmx.net>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250203170201.1661703-1-ps.report@gmx.net>
+References: <20250203170201.1661703-1-ps.report@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129232525.3519586-1-vannapurve@google.com>
- <p6sbwtdmvwcbr55a4fmiirabkvp3f542nawdgxoyq22cdhnu33@ffbmyh2zuj2z>
- <CAGtprH8pJ3Zj_umygzxp8=4sJTdwY5v2bFDhoBdX=-3KQaDnCw@mail.gmail.com>
- <wmdg54v56uizuifhaufllnjtecmvhllv35jyrvdilf4ty4pfs5@y4zppjm2sthr>
- <CAGtprH82OjizyORJ91d6f6VAn_E9LY7WptN-DsoxwLT4VwOccg@mail.gmail.com>
- <2wooixyr7ekw3ebi4oytuolk5wtyi2gqhsiveshfcfixlz3kuq@d5h6gniewqzk>
- <CAGtprH-n=cfH_BJAmiNMoRbqq0XdGCf3RE67TYW8z7RARnsCiQ@mail.gmail.com> <baiv6tl2lkr25i2ry2q2jaylu5y6hhioqfwhc4yafk2uwqbgf5@sqxlpg2r6kcc>
-In-Reply-To: <baiv6tl2lkr25i2ry2q2jaylu5y6hhioqfwhc4yafk2uwqbgf5@sqxlpg2r6kcc>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Mon, 3 Feb 2025 09:01:41 -0800
-X-Gm-Features: AWEUYZm1pUNVQSKvKstcecqYl2-3LVWaTH9LroDV3vXolYlnD_tCGouWLYwnW2U
-Message-ID: <CAGtprH-5bL44c7ZQHKsDuOQNNd4dsBd-uR8GT9OyqffEXW963Q@mail.gmail.com>
-Subject: Re: [PATCH V2 1/1] x86/tdx: Route safe halt execution via tdx_safe_halt()
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
-	seanjc@google.com, erdemaktas@google.com, ackerleytng@google.com, 
-	jxgao@google.com, sagis@google.com, oupton@google.com, pgonda@google.com, 
-	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
-	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:hnOIbvEvZwfC4iEQwmqOb+GBzBpX1aSLGc3bBjMTaPMVmqEC5EF
+ Amr0j3WMkFWM4KcYo7b4aJ6FqDLW4kbL+oWrkYYP/wb0yncOhpzZHO/Kxft9bTsKi1qf3/f
+ gK0PDaNe7k5+/ZWp/Q82iC4/FY+G9Ry33LsAmm1oZ2U+CYq8MPRkL+WGEsrceLIS60dfFW5
+ i1t3qzocxo1YiGODaFgFg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ZDaTkaW5IDE=;mmWaM3WnQ+io3fxvUf9tt1Pb35e
+ RosCDt9wDZ/RX36lrhYte9ZX7+Y1pPN/E1BM86BoQpo4AEEYG93bZPBV31E6gJ+kTzLnE9AYn
+ symL5S6K2EtDLHuTKfQ5efVkS0fB7mI/kCDQjam+qOYef5PexTnBSyJg1OoAipYGUzqE+GsPa
+ tLf5KBwNkfubwMCTT+yXDU2YXLEXC80f6RQtsT8zFkvQy3EfNfJdFKxj93InctVoVj9US1ZZc
+ iAHpDsLH05kvKaETcgvpOUf2NH/n8VbU7f7S/zcy8kBYD454y4vMAcLphiVn6uz1kTNua+G3C
+ HGwU6oqrzCVCTmDaYaAXDa+H623hqWgXi+GbOf60n9NAHwcxihbx9Nbeg6pWXDkYWEDYkOxJ1
+ qUIzvdrN9WlqB8VSYZNOYPJ2Wp+VpW1Krw9FnLwd+ht7CT6qx9Mtm0u28XYI4OU3/Q+Ur10ZF
+ L7AqcM97KDUTuT5whK+lVwGKaxgr8r8evK2s4eFs7TOecOO4HOaqF1SRp6aUSCEnQOA8XPZlk
+ SJeUg9x5EAqDwkK2weL3U2c+e+x7VJKRnh53Hd93BjJYdJ9bWYFHTkHoDouMie0iVan7sxheK
+ YX+/FrMlUf48fGqXL9bPs1Q6FH4J7T+UD42warPl965pog3RrW7zotgsotQQvK79ulTUD1ORK
+ cDOnQiy+mldub76ZTDBmbeUFUBhubWC1Ryg1ChvraO+AFUyJzlssvLdPjthUIfdvYvVDsrbvn
+ 7uf2SsqFbs6C2Hr2v2DCNc0PyJe59dlmVOCuGfM98i/fi72e0lrhIk2mpVQT7QclWaj9wRhHR
+ 9R+N1ddfW5Nfm+HHUUuFGeCzzJ3ntbGaUKOzgVPTnZ3TASeI+4tTszHcpqI5ZItULVFlbHHao
+ hZAF25kvt4YQi4fI++F1Uo+p2AKWKsgQWopTfA8F3/HVr25NVlOz6r4r0LD19am5Fg0PATwdG
+ G+ByfrQa+eiBXaurO4vePwX+KSXjRgJh1OCeXBhe65JHgeRlkWeqJcWAwgOUcE1+/kP20iEjP
+ arFWXBh+bxWFBgtIPQFzfNOYZIH4LQ3LNZCoEWr58m3u6YH8lH+VdMtkZVSDFNsOG3+hSpcH9
+ k4tb/InStxWIFkH0m1bYsx33ojPHPX8Ik59EJEmFI+P0DowsIb9We1Axls/7OuC7vZjkZI8Kb
+ bWlUzQ93NFFhGgVRP2t7icwKH4ypChcvTLSR6TGljeVNyQaOleRDm/ZmMmpS/e3mWTxOqyeey
+ ++b7i/c0wQ9XJU4auotwsZHcVci1xLAtzZotuSBhu+9hp4G3AT7cMW4QtEY+jhibTtrNASxi6
+ Wy4Qzt7GwbQGiyy9rp5UJ2aN0oGpd8OeWmQkmcEzmVpC0Y=
 
-On Mon, Feb 3, 2025 at 8:00=E2=80=AFAM Kirill A. Shutemov <kirill@shutemov.=
-name> wrote:
->
-> ...
-> >
-> > Are you hinting towards a model where TDX guest prohibits such call
-> > sites from being configured? I am not sure if it's a sustainable model
-> > if we just rely on the host not advertising these features as the
-> > guest kernel can still add new paths that are not controlled by the
-> > host that lead to *_safe_halt().
->
-> I've asked TDX module folks to provide additional information in ve_info
-> to help handle STI shadow correctly. They will implement it, but it will
-> take some time.
-
-What will the final solution look like?
-
->
-> So we need some kind of stopgap until we have it.
-
-Does it make sense to carry the patch suggested by Sean [1] as a
-stopgap for now?
-
-[1] https://lore.kernel.org/lkml/Z5l6L3Hen9_Y3SGC@google.com/
-
->
-> I am reluctant to commit to paravirt calls for this workaround. They will
-> likely stick forever. It is possible, I would like to avoid them. If not,
-> oh well.
->
-> > > > 2) acpi_safe_halt() -> safe_halt() -> raw_safe_halt() -> arch_safe_=
-halt()
-> > >
-> > > Have you checked why you get there? I don't see a reason for TDX gues=
-t to
-> > > get into ACPI idle stuff. We don't have C-states to manage.
-> >
-> > Apparently userspace VMM is advertising pblock_address through SSDT
-> > tables in my configuration which causes guests to enable ACPI cpuidle
-> > drivers. Do you know if future generations of TDX hardware will not
-> > support different c-states for TDX VMs?
->
-> I have very limited understanding of power management, but I don't see ho=
-w
-> C-states can be meaningfully supported by any virtualized environment.
-> To me, C-states only make sense for baremetal.
-
-One possibility is that host can convey guests about using "mwait" as
-cstate entry mechanism as an alternative to halt if supported.
-
->
-> --
->   Kiryl Shutsemau / Kirill A. Shutemov
+RW5hYmxlIGFkZGl0aW9uYWwgdG8gJ3Bhcm0gdmFsdWUnIHRoZSAncGFyYW09dmFsdWUnIHBhcnNp
+bmcgKG90aGVyd2lzZQpza2lwcGluZyAnPScgaW4gY291bnRfdHJhaWxfY2hhcnMoKSBpcyB1c2Vs
+ZXNzKS4KClRlc3RlZCB3aXRoOgoKCSQgZWNobyAibWluX3BrdF9zaXplIDk5OSIgPiAvcHJvYy9u
+ZXQvcGt0Z2VuL2xvXEAwCgkkIGVjaG8gIm1pbl9wa3Rfc2l6ZT05OTkiID4gL3Byb2MvbmV0L3Br
+dGdlbi9sb1xAMAoJJCBlY2hvICJtaW5fcGt0X3NpemUgPTk5OSIgPiAvcHJvYy9uZXQvcGt0Z2Vu
+L2xvXEAwCgkkIGVjaG8gIm1pbl9wa3Rfc2l6ZT0gOTk5IiA+IC9wcm9jL25ldC9wa3RnZW4vbG9c
+QDAKCSQgZWNobyAibWluX3BrdF9zaXplID0gOTk5IiA+IC9wcm9jL25ldC9wa3RnZW4vbG9cQDAK
+ClNpZ25lZC1vZmYtYnk6IFBldGVyIFNlaWRlcmVyIDxwcy5yZXBvcnRAZ214Lm5ldD4KLS0tCkNo
+YW5nZXMgdjIgLT4gdjM6CiAgLSBubyBjaGFuZ2VzCgpDaGFuZ2VzIHYxIC0+IHYyOgogIC0gbm8g
+Y2hhbmdlcwotLS0KIG5ldC9jb3JlL3BrdGdlbi5jIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBp
+bnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9uZXQvY29yZS9wa3RnZW4uYyBiL25ldC9jb3JlL3Br
+dGdlbi5jCmluZGV4IDQ5NmFhMTY3NzNlNy4uNGY4ZWM2YzliZWQ0IDEwMDY0NAotLS0gYS9uZXQv
+Y29yZS9wa3RnZW4uYworKysgYi9uZXQvY29yZS9wa3RnZW4uYwpAQCAtODIzLDYgKzgyMyw3IEBA
+IHN0YXRpYyBpbnQgc3Rybl9sZW4oY29uc3QgY2hhciBfX3VzZXIgKiB1c2VyX2J1ZmZlciwgdW5z
+aWduZWQgaW50IG1heGxlbikKIAkJY2FzZSAnXHInOgogCQljYXNlICdcdCc6CiAJCWNhc2UgJyAn
+OgorCQljYXNlICc9JzoKIAkJCWdvdG8gZG9uZV9zdHI7CiAJCWRlZmF1bHQ6CiAJCQlicmVhazsK
+LS0gCjIuNDguMQoK
