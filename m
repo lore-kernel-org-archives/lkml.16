@@ -1,43 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A867218651;
-	Mon,  3 Feb 2025 10:02:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B7A1FBE89;
+	Mon,  3 Feb 2025 10:03:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738576962; cv=none; b=RnJw18TBgA7S+CpmhnX360KiTizoMtNv334ZNobjGf7sO5TDEeechYM35RqcG4LlFK730kUJmzzXwB3JCsZuSpetG/NO0J8p49cak7wxqWtMussk7rjszpLye2t7Yz0RiyJbYsZoJ7RGRukYQBbvAW6AMdz3Lbu2tGPfpKRAyVY=
+	t=1738577009; cv=none; b=RL6e9LSEImJPmzbIahGBXU4Gl7WfRAoad3RpktQsda12aJJ1g4Kk4CTSacJPLbqfwbPD1O6A/UjtEPHwTekDBwPdpSZXu5VUfIf9vYL6gVJYBMoWs5VLc4pMX4h5aN+6VGgC/xiZC3kfEMehWLkqLE9qEVtztmcx64GKOaafMYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738576962; c=relaxed/simple;
-	bh=j64qVmWci3xBNkGE0mS2OOj0BR2pEsdKu6w5rANbRP4=;
+	s=arc-20240116; t=1738577009; c=relaxed/simple;
+	bh=CjPh2b574jLnmXszurDp0YgE4EJWVAhoILKnIPH1zkQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u50LuZgY8MsxniNRY42DhxaKEeQwC5YHuM8ka0HBu5OVM9ilt5/y8Przb+9TbSl/ijnK2FnbbyMdp+N76qS/YCU+HTHi0KFzLB7oIWN46Loo5cdXzDT5hS0wI1Mpm6G1kpfw1liaudfoBjsxyrAGDJROpBP09FMIW2zx5bBtPGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rE100XoE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=is9Zvfb61U34jMgWQFRDhVgSVnMhVdHsTv8J4/LFrr5+Y25im3SetbOMkfAIscNKly5ZMFzff9QZ/bAVqHHi0ks9gBr5vSSwDm09VdKUVMen04b3Z8Alqp7B9ycMex43cPje4rD3i3L4SEuwjRcQZlDdylV2jeJAqJehxTpmhxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iuAD+Ulf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rE100XoE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A8BC4CED2;
-	Mon,  3 Feb 2025 10:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738576961;
-	bh=j64qVmWci3xBNkGE0mS2OOj0BR2pEsdKu6w5rANbRP4=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iuAD+Ulf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61102C4CED2;
+	Mon,  3 Feb 2025 10:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738577009;
+	bh=CjPh2b574jLnmXszurDp0YgE4EJWVAhoILKnIPH1zkQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rE100XoEQCDq/GAsA/kFJsCV1lURPiPFtj6MKbrKUU5SNDELwgYo3zmqtzFhOmi9Y
-	 xNgN4y0dRzaxjWTc5bvZD1fZYk0nhWkam/HxMmGz6MTsC7r8uJZZUz37pr79OXvAFX
-	 84gFWn4bWVo7iQ2nXiX9FfL9zEYY4Qd6PFTlEWA+ueXhrz7687HjBmAYJM4l+fxoeT
-	 ZVucXR5qfZT0yZmYjCApK3pwM43twtCrKiH/Kqmo6YAV6qSCQhmNtOFgUwImewlCqK
-	 oQN3um9/oF1nhPTSFbbA5DwmuWMzSmZhJV8pHn5MisZNDP9Lv1WyM+GT+ceZ+ksT1N
-	 iNf4litnb2bcA==
-Date: Mon, 3 Feb 2025 10:02:36 +0000
-From: Simon Horman <horms@kernel.org>
-To: Jacob Moroni <mail@jakemoroni.com>
-Cc: Igor Russkikh <irusskikh@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: atlantic: fix warning during hot unplug
-Message-ID: <20250203100236.GB234677@kernel.org>
-References: <20250202220921.13384-2-mail@jakemoroni.com>
+	b=iuAD+Ulfl6eBo2dTljn37N5oMIvNHPqLOExo+P+XWkNy+Zy7ttUPmKgTIp1pQMw0Y
+	 0VGVHJOFv8c0lzzJeJ21KTyCXImt76+OXUlUk3YBGo1QthCfAqtgstI0DoOggUWBHD
+	 tBR0VsGfIkFtBX8vcl6eL+FQ0xjuWTqbU5+7kj7s=
+Date: Mon, 3 Feb 2025 11:02:27 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [RFC] driver core: add a virtual bus for use when a simple
+ device/bus is needed
+Message-ID: <2025020311-elderly-struck-1d26@gregkh>
+References: <Z5Nw8kaieLueWyUu@pollux>
+ <20250130212843.659437-1-lyude@redhat.com>
+ <2025013159-shabby-professor-515b@gregkh>
+ <2025013140-propeller-dirtiness-6cb4@gregkh>
+ <Z50ZuzrDn-GQWOuP@cassiopeiae>
+ <2025020106-avert-senorita-4181@gregkh>
+ <2025020306-overhang-glider-7d42@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,106 +54,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250202220921.13384-2-mail@jakemoroni.com>
+In-Reply-To: <2025020306-overhang-glider-7d42@gregkh>
 
-On Sun, Feb 02, 2025 at 05:09:21PM -0500, Jacob Moroni wrote:
-> Firmware deinitialization performs MMIO accesses which are not
-> necessary if the device has already been removed. In some cases,
-> these accesses happen via readx_poll_timeout_atomic which ends up
-> timing out, resulting in a warning at hw_atl2_utils_fw.c:112:
-> 
-> [  104.595913] Call Trace:
-> [  104.595915]  <TASK>
-> [  104.595918]  ? show_regs+0x6c/0x80
-> [  104.595923]  ? __warn+0x8d/0x150
-> [  104.595925]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-> [  104.595934]  ? report_bug+0x182/0x1b0
-> [  104.595938]  ? handle_bug+0x6e/0xb0
-> [  104.595940]  ? exc_invalid_op+0x18/0x80
-> [  104.595942]  ? asm_exc_invalid_op+0x1b/0x20
-> [  104.595944]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-> [  104.595952]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-> [  104.595959]  aq_nic_deinit.part.0+0xbd/0xf0 [atlantic]
-> [  104.595964]  aq_nic_deinit+0x17/0x30 [atlantic]
-> [  104.595970]  aq_ndev_close+0x2b/0x40 [atlantic]
-> [  104.595975]  __dev_close_many+0xad/0x160
-> [  104.595978]  dev_close_many+0x99/0x170
-> [  104.595979]  unregister_netdevice_many_notify+0x18b/0xb20
-> [  104.595981]  ? __call_rcu_common+0xcd/0x700
-> [  104.595984]  unregister_netdevice_queue+0xc6/0x110
-> [  104.595986]  unregister_netdev+0x1c/0x30
-> [  104.595988]  aq_pci_remove+0xb1/0xc0 [atlantic]
-> 
-> Fix this by skipping firmware deinitialization altogether if the
-> PCI device is no longer present.
-> 
-> Tested with an AQC113 attached via Thunderbolt by performing
-> repeated unplug cycles while traffic was running via iperf.
-> 
-
-Hi Jacob,
-
-As a fix for net a Fixes tag should go here
-(immediately before your signed-off-by line, no blank line in between).
-
-I'm wondering if this one is appropriate: the problem seems
-to go all the way back to here.
-
-Fixes: 97bde5c4f909 ("net: ethernet: aquantia: Support for NIC-specific code")
-
-> Signed-off-by: Jacob Moroni <mail@jakemoroni.com>
-> ---
->  drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-> index fe0e3e2a8117..e2ae95a01947 100644
-> --- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-> +++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-> @@ -1428,7 +1428,7 @@ void aq_nic_deinit(struct aq_nic_s *self, bool link_down)
->  	unsigned int i = 0U;
+On Mon, Feb 03, 2025 at 10:39:58AM +0100, Greg Kroah-Hartman wrote:
+> --- a/drivers/regulator/dummy.c
+> +++ b/drivers/regulator/dummy.c
+> @@ -13,7 +13,7 @@
 >  
->  	if (!self)
-> -		goto err_exit;
-> +		return;
+>  #include <linux/err.h>
+>  #include <linux/export.h>
+> -#include <linux/platform_device.h>
+> +#include <linux/device/virtual.h>
+>  #include <linux/regulator/driver.h>
+>  #include <linux/regulator/machine.h>
 >  
->  	for (i = 0U; i < self->aq_vecs; i++) {
->  		aq_vec = self->aq_vec[i];
-
-This hunk, and the removal of the err_exit label, seem to be more
-clean-up than addressing the bug described in the patch description.
-I don't think they belong in this patch. But could be candidates for
-a follow-up patch targeted at net-next.
-
-> @@ -1441,13 +1441,14 @@ void aq_nic_deinit(struct aq_nic_s *self, bool link_down)
->  	aq_ptp_ring_free(self);
->  	aq_ptp_free(self);
+> @@ -37,15 +37,15 @@ static const struct regulator_desc dummy_desc = {
+>  	.ops = &dummy_ops,
+>  };
 >  
-> -	if (likely(self->aq_fw_ops->deinit) && link_down) {
-> -		mutex_lock(&self->fwreq_mutex);
-> -		self->aq_fw_ops->deinit(self->aq_hw);
-> -		mutex_unlock(&self->fwreq_mutex);
-> +	/* May be invoked during hot unplug. */
-> +	if (pci_device_is_present(self->pdev)) {
-> +		if (likely(self->aq_fw_ops->deinit) && link_down) {
-
-Maybe not important, but I would have written this as a single if
-condition rather than two.
-
-Also, not really appropriate to change in this patch as it's not part
-of the bug, but I'm not sure that likely() is appropriate here:
-is this a fast path?
-
-> +			mutex_lock(&self->fwreq_mutex);
-> +			self->aq_fw_ops->deinit(self->aq_hw);
-> +			mutex_unlock(&self->fwreq_mutex);
-> +		}
->  	}
-> -
-> -err_exit:;
+> -static int dummy_regulator_probe(struct platform_device *pdev)
+> +static int dummy_regulator_probe(struct virtual_device *vdev)
+>  {
+>  	struct regulator_config config = { };
+>  	int ret;
+>  
+> -	config.dev = &pdev->dev;
+> +	config.dev = &vdev->dev;
+>  	config.init_data = &dummy_initdata;
+>  
+> -	dummy_regulator_rdev = devm_regulator_register(&pdev->dev, &dummy_desc,
+> +	dummy_regulator_rdev = devm_regulator_register(&vdev->dev, &dummy_desc,
+>  						       &config);
+>  	if (IS_ERR(dummy_regulator_rdev)) {
+>  		ret = PTR_ERR(dummy_regulator_rdev);
+> @@ -56,36 +56,17 @@ static int dummy_regulator_probe(struct platform_device *pdev)
+>  	return 0;
 >  }
 >  
->  void aq_nic_free_vectors(struct aq_nic_s *self)
+> -static struct platform_driver dummy_regulator_driver = {
+> +struct virtual_driver_ops dummy_regulator_driver = {
+>  	.probe		= dummy_regulator_probe,
+> -	.driver		= {
+> -		.name		= "reg-dummy",
+> -		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+> -	},
+>  };
+>  
+> -static struct platform_device *dummy_pdev;
+> +static struct virtual_device *dummy_vdev;
+>  
+>  void __init regulator_dummy_init(void)
+>  {
+> -	int ret;
+> -
+> -	dummy_pdev = platform_device_alloc("reg-dummy", -1);
+> -	if (!dummy_pdev) {
+> +	dummy_vdev = virtual_device_create(&dummy_regulator_driver, "reg-dummy");
+> +	if (!dummy_vdev) {
 
--- 
-pw-bot: changes-requested
+I originally was thinking that many platform_device_alloc() calls could
+be replaced with this, but in looking further, I think we can get rid of
+almost all calls to platform_device_register_simple() with this api
+instead, including most of the use of that in the drm tree where all
+that is being used is the device structure and not the platform one at
+all.
+
+I'll dig into that later today...
+
+thanks,
+
+greg k-h
