@@ -1,40 +1,72 @@
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B29320F098;
-	Mon,  3 Feb 2025 19:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C38150980
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738610266; cv=none; b=W9n4O5n4QOrQvfPcVrU0fx4JVxHGA56YE4fwWLYJkMRVtVGfjv2TEDAURXbfSG1Cr558yu+Sirej2llUwDhvi1DowUsEcB/mcjBpmBTphlBSWxRs/7I6PJk6j7rZLxAjv4sVQqTeyPISXUErzNoPyBp97ZzIZiz34dN1R2l/oZo=
+	t=1738610551; cv=none; b=utYduEoWxEcpYOpAe+OGeZrv1UaMYJ85BHlhdui5uh4Oz9UmI0fMZJkPZ1p8E9XaJWWMqGzxtGDF9/OV6QMMs1Znchf2mCUxp4IVFOLwJBca1YqBf5c+R1hWXpXo6JeNrRKaSZagOA5rRCL2elhaJk83ii6vw4VPPEa2JbYUqYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738610266; c=relaxed/simple;
-	bh=LT2/Yf1z+TNQiO+U9g+rhfC5zMEZaRWAdxzwNtxlZUo=;
+	s=arc-20240116; t=1738610551; c=relaxed/simple;
+	bh=47I4W/OdFRdOnxyJFooCrp1d9zqBf6rBozHIs8h9RnU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lmTVJt5z2Jw4ARA16HLWJV7rlKT1KBvmt3z1h5yANuIVw1QLDsiKimMz/1dMYXLl0h7CuIY+BZib/zKqzDrKiqFSLehcmA8Dwccvy/sf2oSXa0VzoP3nFLx8EpXHxZFfm2bGsxGlJSfv4xfYhAryH7mA/s/SY3+mkKd9SIKpJko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=uOa6ofKd; arc=none smtp.client-ip=212.63.210.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
+	 In-Reply-To:Content-Type; b=YKd0UJ4APQnPYMeVk9+79TcAXaJDk3Jwf7Y+91QlQGzf9TaI/XdHDHmNSKnKb+nDUoTbTwycSdFqWQfJ76iHGYS3AhjHjNFeMe263Y+sYdrZIaxhLtqDj2R7eP8hoPp91Rnn2HUjMpHzWbIxcDJetvVE05/6QuoA6Pqjl2lupH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W77PcaA4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="uOa6ofKd"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: lina@asahilina.net)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id EC6FC41F5F;
-	Mon,  3 Feb 2025 19:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
-	s=default; t=1738610260;
-	bh=LT2/Yf1z+TNQiO+U9g+rhfC5zMEZaRWAdxzwNtxlZUo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=uOa6ofKd9OXGhMAmfr+cL5LXLbYuCNtr7M/fb0HciWv+6du9svov8+Q/4q0PxH1FA
-	 732VjRIbeyWXzD3oNEY32AbpHvgG3NlIZtARoJ/ZB23cV05717kBH4UDAVnYokFPnm
-	 gHbjsFhX9nlPpESZdzz3uGuTNcT08YHTkioU0Ew7h14FyJQ5ovjAQKoQK9+9LygWBO
-	 G0JEhSH930JJYiaMbSHtxiiY6uJIuqY954KQ/+XRw3AeHGVcjZaUsfX62VoDYYU8ga
-	 im1iw7VBD3GrzQPXJ+5HjM2k216I6JLtbWLxEveCAeIEAC5WXWXAbUVQaR05QqJ7UW
-	 4DxHyV1RE63pA==
-Message-ID: <585deb4e-3d05-488b-80dd-df64a6983d85@asahilina.net>
-Date: Tue, 4 Feb 2025 04:17:38 +0900
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W77PcaA4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738610548;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=8JzCvz88snSnAVNQMXnklYQMU/jabK+PbGj82gu/vrw=;
+	b=W77PcaA4Sbmu8RgdcXgiZXZxlPa9l5qBm70EG3YdFyMNHhJ+DEqThKQTkOVLHYoV1M3Yme
+	UQJbfv3HI1W3aXUn/h448WthGZ0cbRNV99AZotYBbmz4UWBitOjPRpIvV4djuzYAUWrMlN
+	Wd1k4oJkAwo8N0bxeMsQ8WRhXowS97A=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-453-4MQylsArN4iELPmWQKz5zg-1; Mon, 03 Feb 2025 14:22:26 -0500
+X-MC-Unique: 4MQylsArN4iELPmWQKz5zg-1
+X-Mimecast-MFC-AGG-ID: 4MQylsArN4iELPmWQKz5zg
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4361eb83f46so38363165e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:22:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738610545; x=1739215345;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8JzCvz88snSnAVNQMXnklYQMU/jabK+PbGj82gu/vrw=;
+        b=QG3HLTJ6BKC0mcaSogTbWeLsnhFwGnWgiKlDOwonaMPSPJGU16CiArxXPZye5u8kv0
+         b1CRQ8sJNVZ7rgnINFQ/1z8BtIRNHgihGPBeN1WszrGvATuH6Jm/+FgwaxfJaNgTYTsX
+         qWnPqJWSdrir9tnPnglRFn8LXqgEnuvLF3eaj/ffxPb8aINBQfLDMLAi8+5hkHyDOJA1
+         fSQ/tXffyq3CCDaob/SINeFBbsZ0jl8SeOLUpsy5bmRiolFQRPXkhcbFqb7w7QAF6x4U
+         U4cDec/UGjfqjBCA/PpqdIkeyMhfEdxBebExH3DrBb9bZlVA7gK7uAF6gBrhtEaerDK9
+         pzHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdPTdDxVhiO6gGoKGZZelF6FBgBTZGkfKJkJaG1Y+2nodg5BtPnGezQEPHrORohfgV2pCoV2GIQUKdpvU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZFuBSY0Z8zGtkPMQNtbfaY5Wr+C/fMzkfaLaeCG/tyF7bYA+d
+	oxE6SctoHaWrUotk/3ighwnXvJfCDC0308nK4qsFNlgQm7i0jz7rOrGgwLz593S7qRawngPU0P5
+	LVJyyUUcLUiqp9QPCFV2VM/xA4OYOC1EB1QlMKt31QRHSw2uD/yvllxnHOLG1Yg==
+X-Gm-Gg: ASbGncujLiDFX0obEtrLNZjDJEbtfqOyZvoc0ulIcHjmA6bTshHH7w8mkC95bR8Y5DW
+	czkj+t5nPmciGh7kiM85ofjYLyUw/eSeTGHHBWbNEaRTCyAU3UwbErwDmWOa+93NCoGpgGodQyf
+	jv+xPtezbJCONEaEqK3tqXxP7k3Cl3K6b4P0L6Sim+AIrN6rM/TZDzAyMLYFoyxjgap+oCwhbhp
+	zoYeHPx1IszUDvF+Skr5jUKmMs/7gB7Gs2anIHbvr+qW02+uauPp77I/1xZf+iFb7KWupvri0bM
+	8adQuQ==
+X-Received: by 2002:a05:600c:6c44:b0:436:fb02:e90 with SMTP id 5b1f17b1804b1-438dc48aa14mr222541365e9.10.1738610545571;
+        Mon, 03 Feb 2025 11:22:25 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEBlGAFDIU1GLvsSC3pDPLeHERpJ5yoHpiUEpzS4SGlu1H0ypOa5OhIad8hucJaADA6QYw8AQ==
+X-Received: by 2002:a05:600c:6c44:b0:436:fb02:e90 with SMTP id 5b1f17b1804b1-438dc48aa14mr222541065e9.10.1738610545216;
+        Mon, 03 Feb 2025 11:22:25 -0800 (PST)
+Received: from [192.168.10.3] ([151.62.97.55])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-438dcc26d6fsm197969255e9.14.2025.02.03.11.22.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 11:22:24 -0800 (PST)
+Message-ID: <5d5a6640-2f14-4d80-bc5e-4d8274251793@redhat.com>
+Date: Mon, 3 Feb 2025 20:22:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,63 +74,113 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] rust: types: Add Ownable/Owned types
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
+To: Hector Martin <marcan@marcan.st>, Jason Gunthorpe <jgg@nvidia.com>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: phasta@kernel.org, Christoph Hellwig <hch@lst.de>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com,
+ aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
  Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
  =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
  Benno Lossin <benno.lossin@proton.me>,
  Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Jann Horn <jannh@google.com>, Matthew Wilcox <willy@infradead.org>,
- Paolo Bonzini <pbonzini@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
- Wedson Almeida Filho <wedsonaf@gmail.com>,
  Valentin Obst <kernel@valentinobst.de>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- asahi@lists.linux.dev
-References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
- <20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net>
- <CAH5fLggscATtCgQwCYSms77oSFOMkjTscRDqAOZsSgoHsOoPQw@mail.gmail.com>
- <def0ac4e-6ec3-4f91-a3e6-02ce931c46f3@asahilina.net>
- <CAH5fLggcT0_e3EsBppxsGfxaqvs6rTkbbRvrFEHthEff5s1x0g@mail.gmail.com>
+ open list <linux-kernel@vger.kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+References: <Z3-NqwAG_96yq8VD@pollux> <20250110083955.GA5395@lst.de>
+ <Z4D5a5NYrAbNxUL6@pollux> <Z4kG5AcVeQKegLnb@pollux>
+ <20250128092334.GA28548@lst.de>
+ <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
+ <20250130154646.GA2298732@nvidia.com> <2025013030-gummy-cosmic-7927@gregkh>
+ <20250130172437.GN5556@nvidia.com>
+ <2025013148-reversal-pessimism-1515@gregkh>
+ <20250131135421.GO5556@nvidia.com>
+ <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
+From: Paolo Bonzini <pbonzini@redhat.com>
 Content-Language: en-US
-From: Asahi Lina <lina@asahilina.net>
-In-Reply-To: <CAH5fLggcT0_e3EsBppxsGfxaqvs6rTkbbRvrFEHthEff5s1x0g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-
-On 2/4/25 3:17 AM, Alice Ryhl wrote:
-> On Mon, Feb 3, 2025 at 3:17 PM Asahi Lina <lina@asahilina.net> wrote:
->>
->>
->>
->> On 2/3/25 6:13 PM, Alice Ryhl wrote:
->>> On Sun, Feb 2, 2025 at 2:06 PM Asahi Lina <lina@asahilina.net> wrote:
->>>> +    /// Consumes the `Owned`, returning a raw pointer.
->>>> +    ///
->>>> +    /// This function does not actually relinquish ownership of the object.
->>>> +    /// After calling this function, the caller is responsible for ownership previously managed
->>>> +    /// by the `Owned`.
->>>> +    #[allow(dead_code)]
->>>> +    pub(crate) fn into_raw(me: Self) -> NonNull<T> {
->>>
->>> I would just make these methods public, like the ARef ones. Then you
->>> can drop the #[allow(dead_code)] annotation.
->>
->> Does it make sense to ever have drivers doing this? I feel like these
->> methods should be limited to the kernel crate.
+On 2/3/25 19:46, Hector Martin wrote:
+> Adding Linus
 > 
-> Not having drivers use this is the ideal, but I don't think we should
-> always expect it to be possible. The Binder driver has a C component
-> for the binderfs component, and it also has some code that's
-> essentially an abstraction inside the driver that I was asked to move
-> into Binder because it's so specific to Binder that it's not useful
-> for anyone else.
+> My 2c: If Linus doesn't pipe up with an authoritative answer to this
+> thread, Miguel and the other Rust folks should just merge this series
+> once it is reviewed and ready, ignoring Christoph's overt attempt at
+> sabotaging the project.
 
-That's fair, I'll make it pub.
+Hold your horses...  I agree that they should just merge the series in 
+the unlikely event that Linus doesn't chime in over the next two months, 
+but I would very strongly suggest that it's sent to Linus (assuming he 
+doesn't jump in now) as a separate pull request.
 
-~~ Lina
+This is almost always a good thing to do when you have commits that 
+merit specific attention (example: 
+https://www.uwsg.indiana.edu/hypermail/linux/kernel/2109.2/10311.html).
+
+My 2 cents as someone that is certainly not any kind of VIP, but has 
+been in MAINTAINERS for quite a while.
+
+> Rust folks: Please don't waste your time and mental cycles on drama like
+> this. It's not worth your time. Either Linus likes it, or he doesn't.
+> Everything else is distractions orchestrated by a subset of saboteur
+> maintainers who are trying to demoralize you until you give up, because
+> they know they're going to be on the losing side of history sooner or
+> later. No amount of sabotage from old entrenched maintainers is going to
+> stop the world from moving forward towards memory-safe languages.
+
+I have a question, which is unrelated to my opinion of Rust for Linux: 
+in what way do you think this tirade is actually helping?
+
+> FWIW, in my opinion, the "cancer" comment from Christoph would be enough
+> to qualify for Code-of-Conduct action, but I doubt anything of the sort
+> will happen.
+
+FWIW I agree that it was borderline and probably on the wrong side of 
+the edge.  But I am happy for one that Christoph has since expanded 
+beyond the "cancer" comment, because that's at least a technical 
+argument, unlike yours above.
+
+Paolo
 
