@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6779320551B;
-	Mon,  3 Feb 2025 13:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BD8205503;
+	Mon,  3 Feb 2025 13:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588517; cv=none; b=aNt47ljswjqiKZq5VrxxSpjCx3XfTrc/tDlpf5IyV/AztSsYmdFhrLyYptnO7rexkJDRTXhSLQCVq21N2hW/LwwcOBhW82GANI50GO/VijLnhCSIRVY7OVK4sdPEJuufsWPmitPR/D39milYtnEYiEYQ+6YhGSXUnQCKCKL4z5s=
+	t=1738588516; cv=none; b=qbyf8GqJTmpjnOCSkQTUyP/U8pptuN0/E1WYl7xhV0WZF2tbL6nV2kRnH/rzVQRQZNOmyq+uLSNBWhOeyHs0YlzT137Ih8TYSyQf4EswbxInUk9RGT7mLVkKiskUeUSoaekxcnS1z6xup6yQ1TXz96f1UNDZjt8g0VbcKpSnQjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588517; c=relaxed/simple;
-	bh=xe1zv0tzk/GSTJsUigGdLZtpoCH8O3sHDtIzPXb+VL4=;
+	s=arc-20240116; t=1738588516; c=relaxed/simple;
+	bh=2hAKTMMqjEXGla9aasq+OrZMKP1a3APtYe0wzu7JSCM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hY8Jf1DgEK2r8C7V5Oqnx9VOvsimVaUhwE1gInXf6Eia2YlxCiWcHHADaZ3tmVGTZny5U5+FBhdcnygLeGYBbTgjub9sQKmC944joXd7a9K8MHqxf+H84xR/k4ko1DmLRVRdkqEDUJdX7ai9Gm1GkwA2o5MS0AVUzNE5xKE9wmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PwpWbNHv; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=XRGGBp/fOLPNdYN/nb/yVk67VS6dOuEK6TQwapyQNGJOmDR2LLwhRe1cmA1mz4ieMcKMgpAZj0ACcux6xdfTfbC2++sQ5Lq/Xg6PLl5lDhCvVecFAcjo8UjLldOW0QXufImpy6+Kvyv4fo7telEZqnSiPi3FRq/T2b3EbiLUekg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I3Vt8VUC; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PwpWbNHv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I3Vt8VUC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1738588515; x=1770124515;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xe1zv0tzk/GSTJsUigGdLZtpoCH8O3sHDtIzPXb+VL4=;
-  b=PwpWbNHvGnxNuzQmSGcK0FsNOAR1h5YuxoVSeIttYfrM4vW5vd7bWtyY
-   /SX6EuFp9PHKZGylMPiB2rnK6RMr4S3g+yj/sdP+a2WiG4KUkVcXjoa9x
-   EPtivkeTPGpCPFfZY/7Wcu/TBMk3uTrt9XpOsB3ckfpTcsH0sYpvGaqIA
-   WlRVi13xVGBPN9koIPoTwosoQM3XgNnTHQSL3zdHJHSDPsWRa9I3fE5Ie
-   eHbSJ3sW78hesfBlPgrUul75LD+T4t8pv+iJ5knF+Cngc+GE7CEhz674W
-   tFeMfjbR9J+YczP2dVgABPsU1mHcdiLhZyInlCD2O/6cqof1lKQDsmKlt
-   g==;
-X-CSE-ConnectionGUID: c4LAdA3kQqK5X/J1IE4c0w==
-X-CSE-MsgGUID: kDxkuxfwSC6f8wbhhxocuw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39217693"
+  bh=2hAKTMMqjEXGla9aasq+OrZMKP1a3APtYe0wzu7JSCM=;
+  b=I3Vt8VUCC/lbv4H4Ry6lGiLzPobC8fmcOZceqSeb/c0+B7soj0TwyV4V
+   LDmuSjItYg0ww/TSGl69U9twQgmVMth9Hv8/LdIuVRV1ln+np0CLhRL2w
+   6tGBGrPnKzoXz0A9afDQOdVe2+h/yQUTvv3ZF3G3okxAXrVCl3nyOhDeS
+   UdYufV2zDdnLQ1MySTJkzKGvmavEj6eGKaF4RuqC0ljQry51qo8X05eed
+   em0IroYfgka5ibzZBsIOW7m5w0osXWo2MEBYZ8wq7TGMbdYnrp9CL8oKN
+   x+y9oZcNqnJUkGeawU8m+kx0p8C/hp62WvlQgbjORdYqHfLYrQf3+9vxm
+   A==;
+X-CSE-ConnectionGUID: 7CXEF6XnTsilYw+vrE4tFg==
+X-CSE-MsgGUID: DGnCjxbBQGSv5GDMOlzBNw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="56615951"
 X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="39217693"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:15:12 -0800
-X-CSE-ConnectionGUID: pBfBV4VBQTaqf0soQX8MTA==
-X-CSE-MsgGUID: j6rSZ+yaTAWu7m0sY7i1aA==
+   d="scan'208";a="56615951"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:15:11 -0800
+X-CSE-ConnectionGUID: qC1FDvEnSzmuaPDebLCUpA==
+X-CSE-MsgGUID: duZsFJkEQqaRwuqOWXxBqQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="115287401"
+   d="scan'208";a="110854192"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 03 Feb 2025 05:15:12 -0800
+  by fmviesa009.fm.intel.com with ESMTP; 03 Feb 2025 05:15:09 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 0F4FD5E3; Mon, 03 Feb 2025 15:15:08 +0200 (EET)
+	id CD92F3B1; Mon, 03 Feb 2025 15:15:07 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Patrick Rudolph <patrick.rudolph@9elements.com>,
 	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v2 09/14] pinctrl: cy8c95x0: Replace 'return ret' by 'return 0' in some cases
-Date: Mon,  3 Feb 2025 15:10:35 +0200
-Message-ID: <20250203131506.3318201-10-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 04/14] pinctrl: cy8c95x0: Rename PWMSEL to SELPWM
+Date: Mon,  3 Feb 2025 15:10:30 +0200
+Message-ID: <20250203131506.3318201-5-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20250203131506.3318201-1-andriy.shevchenko@linux.intel.com>
 References: <20250203131506.3318201-1-andriy.shevchenko@linux.intel.com>
@@ -65,45 +65,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When it's known that the returned value can't be non-zero,
-use 'return 0' explicitly.
+There are two registers in the hardware, one, "Select PWM",
+is per-port configuration enabling PWM function instead of GPIO.
+The other one is "PWM Select" is per-PWM selector to configure
+PWM itself. Original code uses abbreviation of the latter
+to describe the former. Rename it to follow the datasheet.
 
+Fixes: e6cbbe42944d ("pinctrl: Add Cypress cy8c95x0 support")
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/pinctrl-cy8c95x0.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pinctrl/pinctrl-cy8c95x0.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
-index cd191cb1101e..e02cab05cbfc 100644
+index 0bcecebb1c0c..d73004b4a45e 100644
 --- a/drivers/pinctrl/pinctrl-cy8c95x0.c
 +++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
-@@ -517,7 +517,7 @@ static int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip,
- 		regcache_cache_only(chip->regmap, false);
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- /**
-@@ -1286,7 +1286,7 @@ static int cy8c95x0_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 				unsigned long *configs, unsigned int num_configs)
+@@ -42,7 +42,7 @@
+ #define CY8C95X0_PORTSEL	0x18
+ /* Port settings, write PORTSEL first */
+ #define CY8C95X0_INTMASK	0x19
+-#define CY8C95X0_PWMSEL		0x1A
++#define CY8C95X0_SELPWM		0x1A
+ #define CY8C95X0_INVERT		0x1B
+ #define CY8C95X0_DIRECTION	0x1C
+ /* Drive mode register change state on writing '1' */
+@@ -369,8 +369,8 @@ static bool cy8c95x0_volatile_register(struct device *dev, unsigned int reg)
+ 	case CY8C95X0_INPUT_(0) ... CY8C95X0_INPUT_(7):
+ 	case CY8C95X0_INTSTATUS_(0) ... CY8C95X0_INTSTATUS_(7):
+ 	case CY8C95X0_INTMASK:
++	case CY8C95X0_SELPWM:
+ 	case CY8C95X0_INVERT:
+-	case CY8C95X0_PWMSEL:
+ 	case CY8C95X0_DIRECTION:
+ 	case CY8C95X0_DRV_PU:
+ 	case CY8C95X0_DRV_PD:
+@@ -399,7 +399,7 @@ static bool cy8c95x0_muxed_register(unsigned int reg)
  {
- 	struct cy8c95x0_pinctrl *chip = pinctrl_dev_get_drvdata(pctldev);
--	int ret = 0;
-+	int ret;
- 	int i;
+ 	switch (reg) {
+ 	case CY8C95X0_INTMASK:
+-	case CY8C95X0_PWMSEL:
++	case CY8C95X0_SELPWM:
+ 	case CY8C95X0_INVERT:
+ 	case CY8C95X0_DIRECTION:
+ 	case CY8C95X0_DRV_PU:
+@@ -797,7 +797,7 @@ static int cy8c95x0_gpio_get_pincfg(struct cy8c95x0_pinctrl *chip,
+ 		reg = CY8C95X0_DIRECTION;
+ 		break;
+ 	case PIN_CONFIG_MODE_PWM:
+-		reg = CY8C95X0_PWMSEL;
++		reg = CY8C95X0_SELPWM;
+ 		break;
+ 	case PIN_CONFIG_OUTPUT:
+ 		reg = CY8C95X0_OUTPUT;
+@@ -876,7 +876,7 @@ static int cy8c95x0_gpio_set_pincfg(struct cy8c95x0_pinctrl *chip,
+ 		reg = CY8C95X0_DRV_PP_FAST;
+ 		break;
+ 	case PIN_CONFIG_MODE_PWM:
+-		reg = CY8C95X0_PWMSEL;
++		reg = CY8C95X0_SELPWM;
+ 		break;
+ 	case PIN_CONFIG_OUTPUT_ENABLE:
+ 		return cy8c95x0_pinmux_direction(chip, off, !arg);
+@@ -1161,7 +1161,7 @@ static void cy8c95x0_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *
+ 	bitmap_zero(mask, MAX_LINE);
+ 	__set_bit(pin, mask);
  
- 	for (i = 0; i < num_configs; i++) {
-@@ -1295,7 +1295,7 @@ static int cy8c95x0_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 			return ret;
+-	if (cy8c95x0_read_regs_mask(chip, CY8C95X0_PWMSEL, pwm, mask)) {
++	if (cy8c95x0_read_regs_mask(chip, CY8C95X0_SELPWM, pwm, mask)) {
+ 		seq_puts(s, "not available");
+ 		return;
  	}
+@@ -1206,7 +1206,7 @@ static int cy8c95x0_set_mode(struct cy8c95x0_pinctrl *chip, unsigned int off, bo
+ 	u8 port = cypress_get_port(chip, off);
+ 	u8 bit = cypress_get_pin_mask(chip, off);
  
--	return ret;
-+	return 0;
+-	return cy8c95x0_regmap_write_bits(chip, CY8C95X0_PWMSEL, port, bit, mode ? bit : 0);
++	return cy8c95x0_regmap_write_bits(chip, CY8C95X0_SELPWM, port, bit, mode ? bit : 0);
  }
  
- static const struct pinconf_ops cy8c95x0_pinconf_ops = {
+ static int cy8c95x0_pinmux_mode(struct cy8c95x0_pinctrl *chip,
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
