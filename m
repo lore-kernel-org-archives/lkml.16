@@ -1,222 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BD1205E08;
-	Mon,  3 Feb 2025 13:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC0A1FF7AA
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588518; cv=none; b=WSeQXFci2/74rz77H+GAxPPe3+UtI2DnBzTOQ3VVzVxF7bL4e5AUnZ0AjjvkGvyZVBXHdcADZxIAdd/BVlUr6/1K/LjFNaDI2Gp+FIpBan5pTucTckOq3sC9f4JaXOJiWfQX4O9ULCrAx88gTNKptieEHEX4zlMPY9i1f7RPmSU=
+	t=1738588566; cv=none; b=XhCj9sPq3Fy7uLZ17egXJlXQ7ubVZcjZlbHOmyVQaoGoG86CsjTJuZZX+Hpwfq/WIFpgbIribHQYFQnxqL5DOUxWHgy3QNH4msIvjVXhkqmcMq7iAAXGfgTQgBziPtYXDxU4x7jgr/XHWZCDMptTX2evJf6IpiNqH1ugPmqFbWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588518; c=relaxed/simple;
-	bh=R3tuh3o+ogpwJ1yU6owaZ8dSatQzlrhIeZMaQdQly+s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gg9RzhDlxfoG1Bl54FroRvMyWGd6IGSmRD23X0Posh9A/pKHykOui4LLBsaspUwERr1rgNKbV8fHUwh9U7781fMN02YZ4fzVjRQyL9mp96gfzJAx40FZpeKEmMgJYsogXvug+p5a5lLBKHNE1KdA05vmB6XJyu8NEbMk+exhnxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lUKqwGOC; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738588566; c=relaxed/simple;
+	bh=08borddFSrwZKYtlZQqsd1um7tW/nbxO68XIvkWawaE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=vCyUZSxCou65pGjKnEonPzEikWH8DgxsW2GjA2cSD6+qVoEFjH8BO0k/DLMrPT5n9m0rAkb7Ri2OcWUBXuAuxfIRpDN7SBLicOSV5whXXU0pSp1vVXKIVBL6kGo8T7KKcFW1ydLGrq9Liq2eYadVcJu4tKg059q07CZiwt7QB6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=Y0A0kDBn; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lUKqwGOC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738588517; x=1770124517;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=R3tuh3o+ogpwJ1yU6owaZ8dSatQzlrhIeZMaQdQly+s=;
-  b=lUKqwGOCnRsIQ/LT/zIUvcoBZW9mGugw9MFnxhRSdR58juR8rJp5FV9g
-   N3VS2PHp1G+d2DqnSHrpuYtJxRDPTdf76Je/hd+vcwY4w1kxVBax8xcxG
-   9QTicbsUYdlVG5n8iFBlA9SdFVha2z/FumypLcOqZgYWNJg+xkTF265pg
-   yUJ/qsvkG6q7PhLfW5XaNYd57Sun93Iv44x6eOLLXuo97tSD8+UeCN0TM
-   gtimJa5UQZzqPJxQ0mtC6lQ6ru4d/1npArsWuXC2PRxHJmF3vZXYAQVNB
-   mZyE3M9H8bUqaWUzNXMWBkzQrAL/4ljvQoWQ6kxgjkIVk+62CMMo8Zsk1
-   g==;
-X-CSE-ConnectionGUID: BtWNVZ90S+2QaFcd41SIWA==
-X-CSE-MsgGUID: KQLkzEYYRISeSxqxUgDuKw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="56615968"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="56615968"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:15:12 -0800
-X-CSE-ConnectionGUID: lbHDoc/DQo2xHmELEWT+2A==
-X-CSE-MsgGUID: ULsuVyVVTIyySXphfkNVgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="110854205"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 03 Feb 2025 05:15:11 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id EB9C34F0; Mon, 03 Feb 2025 15:15:07 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v2 07/14] pinctrl: cy8c95x0: Transform to cy8c95x0_regmap_read_bits()
-Date: Mon,  3 Feb 2025 15:10:33 +0200
-Message-ID: <20250203131506.3318201-8-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20250203131506.3318201-1-andriy.shevchenko@linux.intel.com>
-References: <20250203131506.3318201-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Y0A0kDBn"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53e3778bffdso4377050e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 05:16:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google; t=1738588560; x=1739193360; darn=vger.kernel.org;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pfckFzvItk0hNmIizP+/PTE1LXnLDuRGcRyVhadSZO8=;
+        b=Y0A0kDBn4PNxjIjCGBTpYjCrft5lAIkMLAxzuUV+bl7X+vMqm4mVjmBgT8MADGOHlS
+         HoQ2+YlxChuZSA1hqGnoZVa8NRxIM/ZNe/e2XRECRzbQFVCPy0F4vJgkiSLIyMohpqTC
+         lEZOxCE5PptIYf2J13qV5fhk5w/LB1IK2N0RE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738588560; x=1739193360;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pfckFzvItk0hNmIizP+/PTE1LXnLDuRGcRyVhadSZO8=;
+        b=h07/W0rpiyh7ECJdMTi2lwQRFbRGKay5Mgo7D/rVDcKoQblzaaKLb+vfDrgPefypVn
+         ZCOHYKSyyDAhMmYM11RzL1HHKKqwwKhclZSho0UXpEeOeKeN26d9JABDEZy23DsPXv6l
+         vQM4VBn0FV6NuvaVnvl+mQ7dsaok0FDFYxOM2d4MpqAY2ElnxknOem5HtN81rs9AAhRD
+         WLhxh83h5xz2dIRJp7zOGCft7bX4+QTtHd5WQIp3mYIvY2593sJE7g8kKOU/UJl9q1+y
+         2ks9bW7FHaFnS5m+4ndbFWrR9YRbZHmBZ9c6lXfTFgajLZwqu8fTI4TyKIEJ9yi0gLdk
+         51IQ==
+X-Gm-Message-State: AOJu0YycH69XWPZiMUKzi6unjBiByR4Jf3dKCIQjslRdkghSl3RKw/GI
+	NunZiqwmO+a0t/UaK/ozi/DBfQ7N00UdC4oZX72lS71Z0ElqMSRFnmnX5buG5gzUZT/NqFNIwEt
+	oczOiHg==
+X-Gm-Gg: ASbGnctxx/NKoRnN9LDNzLWmCKF1UaBphKipGWthxiqR0lTbHKmms0XeVHa1EBtdYGz
+	NIYXc15sMMnwV7g0VKmtebIrhhJq3Ylu6SZFofVofcZaD9QD7QEG4UIh66c2CAxTGBbD5vtyG48
+	lHnM8DUgejO7HUiKz4f8woArq/ldgtPg6Q3ZjzJmsWGc9mJCYbXunzXsqJrqQKbyOfaxG+MjurK
+	HmtdFwsVRYsrx/Z41cfoYlNtRfoKreIIOAt3zJUvsU6ygJ2C2NpG5dZMW044Cmd4D/6kVZLYxOA
+	hyjoZ5JkX8aDaxcr
+X-Google-Smtp-Source: AGHT+IHE5dQM69yaUnIuxzrJ4MuV2Q8OYWDzXeY5HJI5qWjG5k8o3Dqc3VpN1UdLsO40bEp7uGAA4w==
+X-Received: by 2002:a05:6512:138b:b0:542:2990:6e9b with SMTP id 2adb3069b0e04-543e4be9726mr6735826e87.14.1738588559588;
+        Mon, 03 Feb 2025 05:15:59 -0800 (PST)
+Received: from localhost ([81.216.59.226])
+        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-543ebe0f7b1sm1289580e87.57.2025.02.03.05.15.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 05:15:59 -0800 (PST)
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To: Shyam Saini <shyamsaini@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org,  mcgrof@kernel.org,  code@tyhicks.com,
+  okaya@linux.microsoft.com,  vijayb@linux.microsoft.com, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC] Revert "kernel/params.c: defer most of param_sysfs_init()
+ to late_initcall time"
+In-Reply-To: <20250130225803.321004-1-shyamsaini@linux.microsoft.com> (Shyam
+	Saini's message of "Thu, 30 Jan 2025 14:58:03 -0800")
+References: <20250130225803.321004-1-shyamsaini@linux.microsoft.com>
+Date: Mon, 03 Feb 2025 14:15:58 +0100
+Message-ID: <87tt9btbht.fsf@prevas.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The returned value of cy8c95x0_regmap_read() is used always with
-a bitmask being applied. Move that bitmasking code into the function.
-At the same time transform it to cy8c95x0_regmap_read_bits() which
-will be in align with the write and update counterparts.
+On Thu, Jan 30 2025, Shyam Saini <shyamsaini@linux.microsoft.com> wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/pinctrl-cy8c95x0.c | 45 +++++++++++++++++-------------
- 1 file changed, 25 insertions(+), 20 deletions(-)
+> This reverts commit 96a1a2412acba8c057c041833641d9b7dbf52170,
+> as it breaks the creation of /sys/module/<built-in-module>/drivers.
+>
+> The reverted commit changed the initcall order for
+> param_sysfs_builtin() from subsys_initcall() to late_initcall(),
+> which impacts the module_kset list and its population.
+>
+> Drivers which are initialized from subsys_initcall() or any other
+> higher precedence initcall couldn't find the related kobject entry
+> in the module_kset list because module_kset is not fully populated
+> at this point due to the reverted change. As a consequence,
+> module_add_driver() returns early without calling make_driver_name().
+> Therefore, /sys/module/<built-in-module>/drivers is never created.
+>
+> This breaks user-space applications for eg: DPDK, which expect
+> /sys/module/vfio_pci/drivers/pci:vfio-pci/new_id to be present.
+>
 
-diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
-index 93fb8afab643..02b692118cb2 100644
---- a/drivers/pinctrl/pinctrl-cy8c95x0.c
-+++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
-@@ -575,12 +575,13 @@ static int cy8c95x0_regmap_update_bits(struct cy8c95x0_pinctrl *chip, unsigned i
- }
- 
- /**
-- * cy8c95x0_regmap_read() - reads a register using the regmap cache
-+ * cy8c95x0_regmap_read_bits() - reads a register using the regmap cache
-  * @chip: The pinctrl to work on
-  * @reg: The register to read from. Can be direct access or muxed register.
-  * @port: The port to be used for muxed registers or quick path direct access
-  *        registers. Otherwise unused.
-- * @read_val: Value read from hardware or cache
-+ * @mask: Bitmask to apply
-+ * @val: Value read from hardware or cache
-  *
-  * This function handles the register reads from the direct access registers and
-  * the muxed registers while caching all register accesses, internally handling
-@@ -590,10 +591,12 @@ static int cy8c95x0_regmap_update_bits(struct cy8c95x0_pinctrl *chip, unsigned i
-  *
-  * Return: 0 for successful request, else a corresponding error value
-  */
--static int cy8c95x0_regmap_read(struct cy8c95x0_pinctrl *chip, unsigned int reg,
--				unsigned int port, unsigned int *read_val)
-+static int cy8c95x0_regmap_read_bits(struct cy8c95x0_pinctrl *chip, unsigned int reg,
-+				     unsigned int port, unsigned int mask, unsigned int *val)
- {
--	int off, ret;
-+	unsigned int off;
-+	unsigned int tmp;
-+	int ret;
- 
- 	/* Registers behind the PORTSEL mux have their own range in regmap */
- 	if (cy8c95x0_muxed_register(reg)) {
-@@ -605,11 +608,14 @@ static int cy8c95x0_regmap_read(struct cy8c95x0_pinctrl *chip, unsigned int reg,
- 		else
- 			off = reg;
- 	}
--	guard(mutex)(&chip->i2c_lock);
- 
--	ret = regmap_read(chip->regmap, off, read_val);
-+	scoped_guard(mutex, &chip->i2c_lock)
-+		ret = regmap_read(chip->regmap, off, &tmp);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	*val = tmp & mask;
-+	return 0;
- }
- 
- static int cy8c95x0_write_regs_mask(struct cy8c95x0_pinctrl *chip, int reg,
-@@ -646,7 +652,7 @@ static int cy8c95x0_read_regs_mask(struct cy8c95x0_pinctrl *chip, int reg,
- 	DECLARE_BITMAP(tmask, MAX_LINE);
- 	DECLARE_BITMAP(tval, MAX_LINE);
- 	unsigned long bits, offset;
--	int read_val;
-+	unsigned int read_val;
- 	int ret;
- 
- 	/* Add the 4 bit gap of Gport2 */
-@@ -656,13 +662,12 @@ static int cy8c95x0_read_regs_mask(struct cy8c95x0_pinctrl *chip, int reg,
- 	for_each_set_clump8(offset, bits, tmask, chip->tpin) {
- 		unsigned int i = offset / 8;
- 
--		ret = cy8c95x0_regmap_read(chip, reg, i, &read_val);
-+		ret = cy8c95x0_regmap_read_bits(chip, reg, i, bits, &read_val);
- 		if (ret < 0) {
- 			dev_err(chip->dev, "failed reading register %d, port %u: err %d\n", reg, i, ret);
- 			return ret;
+:(
+
+Unfortunately, the init time saved by the mentioned commit is important
+for some boards, and reverting that commit now will mean that some of
+those boards may spuriously fail to boot due to random timing and the
+external watchdog firing.
+
+I wonder why this has taken 2+ years to be noticed?
+
+Since the problem is that /sys/module/vfio_pci is not (yet) created as a side
+effect of version_sysfs_builtin() and/or param_sysfs_builtin(), both of
+which use locate_module_kobject() to lookup-or-create that, maybe the
+code in module_add_driver() could be reworked to use that.
+
+It's of course not entirely trivial, as locate_module_kobject() is
+currently __init and static, but that should be fixable if we want to go
+that route. Maybe it should be refactored a little to be callable from
+the builtin-module branch of module_add_driver(), but ignoring that,
+something like
+
+diff --git a/drivers/base/module.c b/drivers/base/module.c
+index 5bc71bea883a..6b32c5fec283 100644
+--- a/drivers/base/module.c
++++ b/drivers/base/module.c
+@@ -42,16 +42,13 @@ int module_add_driver(struct module *mod, const struct device_driver *drv)
+ 	if (mod)
+ 		mk = &mod->mkobj;
+ 	else if (drv->mod_name) {
+-		struct kobject *mkobj;
+-
+ 		/* Lookup built-in module entry in /sys/modules */
+-		mkobj = kset_find_obj(module_kset, drv->mod_name);
+-		if (mkobj) {
+-			mk = container_of(mkobj, struct module_kobject, kobj);
++		mk = locate_module_kobject(drv->mod_name);
++		if (mk) {
+ 			/* remember our module structure */
+ 			drv->p->mkobj = mk;
+-			/* kset_find_obj took a reference */
+-			kobject_put(mkobj);
++			/* locate_module_kobject took a reference */
++			kobject_put(&mk->mkobj);
  		}
- 
--		read_val &= bits;
- 		read_val |= bitmap_get_value8(tval, offset) & ~bits;
- 		bitmap_set_value8(tval, read_val, offset);
- 	}
-@@ -699,10 +704,10 @@ static int cy8c95x0_gpio_get_value(struct gpio_chip *gc, unsigned int off)
- 	struct cy8c95x0_pinctrl *chip = gpiochip_get_data(gc);
- 	u8 port = cypress_get_port(chip, off);
- 	u8 bit = cypress_get_pin_mask(chip, off);
--	u32 reg_val;
-+	unsigned int reg_val;
- 	int ret;
- 
--	ret = cy8c95x0_regmap_read(chip, CY8C95X0_INPUT, port, &reg_val);
-+	ret = cy8c95x0_regmap_read_bits(chip, CY8C95X0_INPUT, port, bit, &reg_val);
- 	if (ret < 0) {
- 		/*
- 		 * NOTE:
-@@ -713,7 +718,7 @@ static int cy8c95x0_gpio_get_value(struct gpio_chip *gc, unsigned int off)
- 		return 0;
  	}
  
--	return !!(reg_val & bit);
-+	return reg_val ? 1 : 0;
- }
- 
- static void cy8c95x0_gpio_set_value(struct gpio_chip *gc, unsigned int off,
-@@ -731,14 +736,14 @@ static int cy8c95x0_gpio_get_direction(struct gpio_chip *gc, unsigned int off)
- 	struct cy8c95x0_pinctrl *chip = gpiochip_get_data(gc);
- 	u8 port = cypress_get_port(chip, off);
- 	u8 bit = cypress_get_pin_mask(chip, off);
--	u32 reg_val;
-+	unsigned int reg_val;
- 	int ret;
- 
--	ret = cy8c95x0_regmap_read(chip, CY8C95X0_DIRECTION, port, &reg_val);
-+	ret = cy8c95x0_regmap_read_bits(chip, CY8C95X0_DIRECTION, port, bit, &reg_val);
- 	if (ret < 0)
- 		return ret;
- 
--	if (reg_val & bit)
-+	if (reg_val)
- 		return GPIO_LINE_DIRECTION_IN;
- 
- 	return GPIO_LINE_DIRECTION_OUT;
-@@ -751,8 +756,8 @@ static int cy8c95x0_gpio_get_pincfg(struct cy8c95x0_pinctrl *chip,
- 	enum pin_config_param param = pinconf_to_config_param(*config);
- 	u8 port = cypress_get_port(chip, off);
- 	u8 bit = cypress_get_pin_mask(chip, off);
-+	unsigned int reg_val;
- 	unsigned int reg;
--	u32 reg_val;
- 	u16 arg = 0;
- 	int ret;
- 
-@@ -809,11 +814,11 @@ static int cy8c95x0_gpio_get_pincfg(struct cy8c95x0_pinctrl *chip,
- 	 * Writing 1 to one of the drive mode registers will automatically
- 	 * clear conflicting set bits in the other drive mode registers.
- 	 */
--	ret = cy8c95x0_regmap_read(chip, reg, port, &reg_val);
-+	ret = cy8c95x0_regmap_read_bits(chip, reg, port, bit, &reg_val);
- 	if (ret < 0)
- 		return ret;
- 
--	if (reg_val & bit)
-+	if (reg_val)
- 		arg = 1;
- 	if (param == PIN_CONFIG_OUTPUT_ENABLE)
- 		arg = !arg;
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+It also seems to me that if a module has neither a MODULE_VERSION nor
+any module parameters, /sys/module/<modname> wouldn't be created as part
+of that param_sysfs_builtin(), regardless of commit 96a1a2412acb. So
+relying on that sysfs directory existing seems to be a little fragile;
+IOW I do think that module_add_driver() should itself ensure that the
+module_kobject exists.
 
+Rasmus
