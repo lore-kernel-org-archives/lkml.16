@@ -1,73 +1,102 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453591E9905
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8051D7E50;
+	Mon,  3 Feb 2025 08:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738571764; cv=none; b=fMbBfo3GckQNMc3gsUvLd3LEIDqBCnXrJgRoZisDZZZMt5aSFOmcAzBExrlYNdBBSCVjaEBur4jvklvf52LArs6dDSDhSdevx8C9QyA7cv6RTKbw0k2y3+Rc/PXn8yV+cfhCEb38sx4fzKygANBi76F/1j5wI/NeKhEMqhaVH08=
+	t=1738571826; cv=none; b=DwPGFvazALyCFAvrRWpXm/d3NHfW2QPgwcgmz6fro4vErJGYAaxMeqXyv+gy30CNLYLNRnH4Qp+73HTniBF4MfUwFoLVjBHVrR6Cpnut+F8cB/PJKLt2h3kFaQCcea2cv/w3pT76/QJWPWR+giszGQbYW5Wm404wNSDeGg3Jxjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738571764; c=relaxed/simple;
-	bh=nLMQUiJrSymcoOK6tOhS/3Kpg+i2oTL/2JaG2kvtitA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=aKh8C5qkFNQ2GF3H32nLb9c1oZd+yQwu91SWFPgnfAu5mcpIJnnanp67+RRK6plwgU+b6L5GH/qStgnnSBWKq08ql/C68Pq4HacK1QvVa9wUcoXskL94Bqwxa7UCVAAXa172CQ41EhDTsFrtXqZtFCIoewAozXngINHZsr0hs1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3a7e0d5899bso78552645ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:36:03 -0800 (PST)
+	s=arc-20240116; t=1738571826; c=relaxed/simple;
+	bh=gWOFAt2rybSaMtiQKrZAONssTjaaeIu2CUJS662ZrX0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aBFG20qMydPolNkN7Lnhu5VmsEapcjhQp7jxjHZdwob7O9G4NKZ/o4cZsicNx7fqAeeKObFsImfCTtlgvr8BSAuRODeKw2WSNiqEK837MC/MUoCUPtFeq7zov/nR1e6QGJJvnKzTJNYmFMXgTj+1eRtc5WNhBJRsorSBIyQMe9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H5ZXp7zp; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5ZXp7zp"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54021daa6cbso4374714e87.0;
+        Mon, 03 Feb 2025 00:37:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738571823; x=1739176623; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=j30JImXL8j/mQY7XDaNDiKvNWf91T15iq6ow2JICGdU=;
+        b=H5ZXp7zpFt5/riOpzI2EtMGjrbyiUIUVVNvn/jXuoVEGhC5ggOUUjBG4++vZoI0x4R
+         e24CGy5zkMySy1LsOHi9FrKvR1mYoOJFtu3sTcowxuFSjvYzDhpSZjfUcaXa8Axyaf/o
+         q/BWtD9ffnQDWQMW5zQkfTOF4fW6N6WoWUZ7/NjVZDszGfrdVzG9/PqWhnHH5aNNgbNp
+         OnaymSjQT6oe1vltCAsSanPJ94fGDVutJQ1MnnWJxugqzfwx67h2ed/fdS7uxHdx/2zo
+         tEHPW1eOcbozbK255lwGwvcl3EweMBWKFntGiBdLEj4fzVQDdoxIkotJpChfdB+kQu+S
+         e8zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738571762; x=1739176562;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1738571823; x=1739176623;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VqGhZb9IpC/7mhlJOWcHHHeqT/g/+3pVvwtNgr1D9Lg=;
-        b=j9V+XKnNh5BxLWRPZYKXCAQPpZk84RRsPzCkHayZuaoz8EglfnED6+DwKsD97rlnkq
-         m6afyyHu5z+PMXb8WG43nm9pO1+hoT0hbQ4S//i2XU3M+Uvk6IHKc9Sz7fYrw82MaJTn
-         JXPg2t9dEu4B8vd91cMcGlromcoO29FFKizCCCXnWayf0Nz74ZjjuN+KhnxCUJkMRtUL
-         XgtViYLmZGm7pPFnYqTdpRjXHPWh7OM7my3DNSmYns7losoi8kCyhhsIWgkvVhB5clxN
-         S5JcZ+/r4aHuc4T8f5aC8HkhjUsh/wD5hz66Ie2v1iNpBNTI9iuaEryiVYEVB6AQehZJ
-         qibQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ+EGOVEgK/TusQQBKvX4MXvvxl0TjYdVd2oW8kww63kBm/S73VDq2p1IFOBgj6TBbDtPoC1W7AJtJN+A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSBTqSnJrZG9O1iF0vtGE5he4/1AcRd1L2uu24R0O24qYCOs/y
-	7RVZcK/jMoGUtntkPBj99qLEtBsJzkeKMPn7u5e30E4/yXo6+iZiAx96RdozEmRrmmF7ef39kO9
-	QCDJYuFoGVTzSwV9D3sJGegIVXoffrqaNIXzJIVL0YMf3mrNROOPvJhg=
-X-Google-Smtp-Source: AGHT+IHVErUDQLWNOHaR37ANcNaoG/nlsP5RgLvFdM1LGhzcflOEYIdHUQHEcK99wqFvTNv3b9z7bPqxsb+/N3EpKVcoBFy4h1Df
+        bh=j30JImXL8j/mQY7XDaNDiKvNWf91T15iq6ow2JICGdU=;
+        b=gq8AXUR1UKNoZvU5iXWYELsuIs3RwHCQ1/hpmJ8e6tpQ62a6WJsffOTzKxTUjCAVjo
+         nSlx3aZ2xhrWBHDGGU7gjlO7rnQ0smVJrwlStfdIWaQva6zhfTkC9bG3O4XrHzby9mAx
+         WbvMrVJaReFuadHM8s3wavgtSB4JMb+ZtGNtmXph5y64HofCCbqk0VbohaeISygZhiGO
+         y3qd9H2EQDFTLsT/iFhWiO/C3GrvbfTyIs4b3ee4qRldvEYQsU8/doO2QJ+cB0qiY8J6
+         hemXRqY1hLF0QPQ3JEZ58XNHYPwE9cFKxqwhMvAYIu+LtYOGJXynyax4NgYk0WqSd/3h
+         9vFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjeIWKE/5lqJAXYa5tXgObzMbutdUvNL0Buy/q96u5d8SDuYgHUIUs5xR1PUXAL+/wbxjpdQPoUJHRHIY=@vger.kernel.org, AJvYcCWMTOzkkvfKuNgyo9PXX8aYWyIzsWx1D37vWKtZVvNvSxbB9ChQemU9SUO8ytI0UYW+ixHXTBODAsAL10uBV0Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCUvrNENkONVImHnESwWXRrxne29r4uDP7Zah2degJK83WVYi+
+	UYo0d37YTQaCqUMxTmVk6zVBJVL6TccUpgHH4T/fWBEukCvIk1Zb
+X-Gm-Gg: ASbGnctVuJhfAu7fA1jE70tgmXELzD7I1OttzJD8Ya1lMIa/yidG6yQq1lDbVtV3lh0
+	o3flDaCieWTA+A2FUjrQSXScg4Cw8iDMifz3zWpCDk8jR1xLEZPaJZEVGnQkweGu9CYKVDXh83Y
+	vmon1fjBSEwFQmVFNrVASSYgfOUII7K6JlJRJSrlq+e41KxR/fbebLrb74SEvGdSmOjvUveHDrs
+	N1UEzhG2zW/0eJqanSWAOBymRcCPYcugXGN5QUVCK5Rf7B6JdEKbjVDudQFAoWgwMmp2QtrE/vp
+	zHMrYGzUSHKGmihUJQx3x9MH0H7ChQ6zuZsLEOwk/GV52+1HinNOa5i8jXY3eQ==
+X-Google-Smtp-Source: AGHT+IF2J0IfkNwwMwXACa9nZcYDX3ga+w/KRzEdi7zlalBoWSm0GuqBJLQ+dPRSCXr9qDRpU/nP3A==
+X-Received: by 2002:ac2:430a:0:b0:540:1b2d:8ef3 with SMTP id 2adb3069b0e04-543e4c3ca2cmr5198254e87.52.1738571822740;
+        Mon, 03 Feb 2025 00:37:02 -0800 (PST)
+Received: from [192.168.1.146] (87-94-132-183.rev.dnainternet.fi. [87.94.132.183])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebebe6a3sm1197056e87.219.2025.02.03.00.37.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 00:37:02 -0800 (PST)
+Message-ID: <b8ea4215-f4f9-44ba-8976-7d60afd7c8d7@gmail.com>
+Date: Mon, 3 Feb 2025 10:37:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:490c:b0:3d0:28fe:2008 with SMTP id
- e9e14a558f8ab-3d028fe23b3mr43149425ab.19.1738571762665; Mon, 03 Feb 2025
- 00:36:02 -0800 (PST)
-Date: Mon, 03 Feb 2025 00:36:02 -0800
-In-Reply-To: <20250203080720.GA18459@lst.de>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a07ff2.050a0220.163cdc.003e.GAE@google.com>
-Subject: Re: [syzbot] [xfs?] possible deadlock in xfs_buf_find_insert
-From: syzbot <syzbot+acb56162aef712929d3f@syzkaller.appspotmail.com>
-To: cem@kernel.org, chandan.babu@oracle.com, djwong@kernel.org, hch@lst.de, 
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 3/3] MAINTAINERS: add entry for Rust dma mapping
+ helpers device driver API
+To: Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
+ daniel.almeida@collabora.com, dakr@kernel.org, aliceryhl@google.com
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
+ Valentin Obst <kernel@valentinobst.de>,
+ open list <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+References: <20250123104333.1340512-1-abdiel.janulgue@gmail.com>
+ <20250123104333.1340512-4-abdiel.janulgue@gmail.com>
+ <4956d01e-2d06-4edd-813b-9da94b482069@arm.com>
+Content-Language: en-US
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+In-Reply-To: <4956d01e-2d06-4edd-813b-9da94b482069@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Reported-by: syzbot+acb56162aef712929d3f@syzkaller.appspotmail.com
-Tested-by: syzbot+acb56162aef712929d3f@syzkaller.appspotmail.com
+On 30/01/2025 13:49, Robin Murphy wrote:
+> On 2025-01-23 10:42 am, Abdiel Janulgue wrote:
+>> Add an entry for the Rust dma mapping helpers abstractions.
+> 
+> Can't really speak for the Rust side of things, but I could be an 
+> additional reviewer to keep an eye on the DMA API angle if that would help.
+> 
 
-Tested on:
-
-commit:         2014c95a Linux 6.14-rc1
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=10fa43df980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=793f583a4388e6da
-dashboard link: https://syzkaller.appspot.com/bug?extid=acb56162aef712929d3f
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12b3b5f8580000
-
-Note: testing is done by a robot and is best-effort only.
+Yes, would really appreciate your help! Thanks!
+Abdiel
