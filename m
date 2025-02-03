@@ -1,71 +1,71 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09826199236
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 03:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2192B4AEE2
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 03:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738552370; cv=none; b=eYd/K4ac065yzcNl5V4kJfHDig/T9Zo7SVNO4i0l4ul8G7vQHD/QOjG5U0z7POfQ2t7LGqgSBx5ZAPSlSHnET4yJsHrynKDCQgBLmr8U42YDL7JT27ebEfV/YJ8L3g94JCndSwk72zX+ZnjTDaeJ/rpsa+cERDOhHvOyQL8JHMc=
+	t=1738552372; cv=none; b=fuCQc/rHAhlUwtjVRs7/rGeCVEpWXV4oE3nJ8Sv/6y294bsxPqM2IpY5JeC7rA7QJgWt6mNt4YGUQajyIjxHxrlcZRzMPpeajBPIuzyBcMVpOEdFaMl3/xQC7bHPbP/e62WTZ370zZjIhb1geTol61OpBhTFbQtwhvVAB/VK9ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738552370; c=relaxed/simple;
-	bh=xUaAXI8fxS5jnD6rs8+ieKbRO/Ilyx8EwwFvd0xi7HQ=;
+	s=arc-20240116; t=1738552372; c=relaxed/simple;
+	bh=jV+jwZ3dWM5g4zw7mjTrTOxRCXIjes+onPJQRvv+msw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PFw3FboXPcn2LcI5tfJJZIOxtIb7Ch6MXDtb0lBNdx/SZed/v9oMWpWQv2cqpuwaodyjOX9a2wxAOZbkO0qX85cpDwBisjS2XFyn7gs1Xzn5hIfiodHFBW8A/1MIk1xOHziucGGhsSCq94gIJCDHQD5zkCVG8XnSJXI29oCUuNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=FTwHTZBu; arc=none smtp.client-ip=185.125.188.122
+	 MIME-Version; b=qrcqsyXH5+8Nhj3IfHsJA51uD3NzNAT25Rmqx3xsIuIa1q5wU6Sc9mex5sVtVZh15uVi5vn+clZQShtjTti7QiJNLTljN6TOfdEHei2+CX85SzDCN1iaMFMout22UWZM1QDYqiycjjgRZIuRbwmpkPnWt3aB+K9iYbRgJwp80SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=e5Uls2tD; arc=none smtp.client-ip=185.125.188.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="FTwHTZBu"
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="e5Uls2tD"
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 911413FA50
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 03:12:46 +0000 (UTC)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 89E733F171
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 03:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738552366;
-	bh=LIuVEkc8rnRPhn+h/+NDwPhAevSLWZ5xYAHN11UW6Cw=;
+	s=20210705; t=1738552369;
+	bh=6DyFq6mV+BC29vN7qARZVdw28cmkBRh6T6+ETTGMoGQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
 	 MIME-Version;
-	b=FTwHTZBuhp0Me9o+b17Fn+pE86cJ62H5v5TNAen6uIhTWs2TLsjXa0sPQNuib+nPN
-	 jljtvNU2DI7EloyeYws7cAup/A5IXBILQzFKHm9l8Q/VDxZU1oeEwfDnqQxWHXgHLL
-	 cYnPkMONeGC0OAvoqYWI7tSDAYyinEistnjLz3aqwgDs/Uer6I12UgmExI48x8X9or
-	 PN/GQVRNuZo1jCu/jxk4ztQlw594KmC+LobgVSb1BQ2XOHaBfKMANX9dI7LF5Bxoyh
-	 kwNXQn/i8ktmPa4vsGDOPaPsQ6qWNHkC0YxejFkkES4WyguCysB29Gzc1AzYv/S/v5
-	 Df6BHELd51J1w==
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-216717543b7so32354305ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 19:12:46 -0800 (PST)
+	b=e5Uls2tDkV5lQf1oGGuG4+ntIRW3qyI5x7Z6zGD9WW4Mbppu7O8AOJlOOUmC83ZZi
+	 NQXmhW+vSo0P73PjgBhKeD0WyU/tq4JsQju/IbDOfBb1gP1zgy5l0jZlZbDfjC8K1z
+	 LHkjmNdJE+psjxgh54ejM5wRdohVQj11x0LaW+tbBX0Z9lBPskbTAc6ZB3bi78IUxn
+	 P8dpj13+WBlSq8Jdn9eDoUtjOLaDL1Glvxeq9TzqIMnkCEcmCUwOnqpHuTH/SCOZ9v
+	 OF4VaIfSnFLtSePns2oYnplCzDLFGBv38+cHSqHISDcehtiKsZHKbBJ6NFdW30SZDA
+	 5mvpBc3cxEO1w==
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ee5616e986so11147291a91.2
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 19:12:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738552365; x=1739157165;
+        d=1e100.net; s=20230601; t=1738552368; x=1739157168;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LIuVEkc8rnRPhn+h/+NDwPhAevSLWZ5xYAHN11UW6Cw=;
-        b=i+EjfemjRPRP8Ocjf6Edk6nRCQ0OsOI3lXFr1ONrvwKqgGlidUE2x8b7qJB/ucf6u4
-         7LEfqsqywBQNh4tfgtwsWflGc2zuqN54ap7BXlY9S339niVri00mfiwMbLWab04eKBxH
-         PkXTgSE6xq4VLN1af15fPyAFc4IuD9HN8Ji50Z8ybLTAugdDXFDb7bFOS5RQx25GrgCR
-         3K8SDJA2ahpX2CJnXPIaacYSDcL5v/i2PJYJvHWtyVwUMhm/tgoh5a3u0RcwASJHrU5C
-         zi0Qe96IC29EoT68crShn6H2vkuJGifMufvizvaqTlJfJpjdYTt6EgTPdLj+2R56WuKI
-         jddw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuJdDkI3MBhf4Nm5iaD5HQ9zCqxfyxppA8Sng+Bt837FvYC0QYZoDtX/aH095TvwcXpSG+KDpWA4DwRPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGRhHSU/XNfhcW+zxbwt+buN57ERd/yFHsmaSblHnLF05qfwnq
-	DRAwnUDM2kpadHydCM98xuvhfWZkjjJbwqf6SVyYNYqWE4QiXJdhoj+cvnYJB6MlyZEUSM+M2dF
-	nXDj7Pd4ap0BrsgJXlNVdQJA2JP2bAtYhGKyJR3lN+zrB1iFomputZMHKhW28oYzIbrGV5qUscy
-	H2KA==
-X-Gm-Gg: ASbGnct2h9eaaPhCc29+VkF6lAJDZpC1bqYLoBwR4IkO4K8A9J/6ZzYguPhZeh0JeQT
-	ofwg4c7sLG0nGX4dAgdTgTQm6utwWFHjF7CDEwiveD8czYgGTRInonF0d7TG+EL3nrJC9ttedw7
-	aa3t9Yiofg4EReqn3sPjsDXErFf0Q4Y/nIYLiciP3dBo0Cgpbe4mI738of44Ccu1d8zILkW98Hw
-	W8KKd368mK6MQzknswIUwL6tQuvsxTrGc7qN+raiw3QsOPD9M/ePja1QPghqnAs0EwNeMQT9kv+
-	xtx7
-X-Received: by 2002:a17:902:d504:b0:216:4e9f:4ec9 with SMTP id d9443c01a7336-21dd7dcb178mr370336775ad.38.1738552365210;
-        Sun, 02 Feb 2025 19:12:45 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGJZzJYjztg3YXA5nCzi8TiQrALpMwbavZ1V1gbQ1oxOD5vRmSN40RhAZTUtR00mhvxtHxEpw==
-X-Received: by 2002:a17:902:d504:b0:216:4e9f:4ec9 with SMTP id d9443c01a7336-21dd7dcb178mr370336465ad.38.1738552364906;
-        Sun, 02 Feb 2025 19:12:44 -0800 (PST)
+        bh=6DyFq6mV+BC29vN7qARZVdw28cmkBRh6T6+ETTGMoGQ=;
+        b=gEMllU5l1eIC+UrXviKTVau6DyCEvdYKWnPmxB6ipCXYKNRlGHGh5d6EuB0b9ZEtJu
+         5gl9qqgRjIrJPqeHHTd+fWowaApeILpmeD9hz/oVc6l6OIjo3++Go1aUmUkAMYneSY1m
+         L3qYxrmF9SYQXKraBaez8WndBNbXDgITP9I9sWaO5LlVLEtRt57tgri9qm1EjPHbUS3A
+         JhbBP+B/VmQH8lWkV21QsUOUwFYyjvNuddXXrvy/B+xHZFlM0cAH1mlb5GwarUkrmFzX
+         j9Dx4TnqllR5ySoe3muW/RfIy39BVrGKLjkGKxM78T998FtAXS9VHP/xzQyVA6ufrDHh
+         Ndlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVS85gMDHw5WrrxjGFN+JvQxsIcbqjJVXmxSemnbziy54Vca0vlV7pnJsYTfj749IUqlceTljHeGIxBLBo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzjF7TVZa2RqCKpekWL24/MG8kygAjSU91txGmktKdUl4Lhy/T
+	3KxorDRJecxycIQr90c9Jm/LKYnD2vcCThWDUHZ2Pxbq7JRTAxrLfzYxxzeNtzNr4R7UQpQri2w
+	Ei1MapuC8MV6aWCLTIejdjcIqVupAgZ9e/EOUjZrulOxOarFH0E5sYJnR392m0NTph1OkDnGNgc
+	YwLg==
+X-Gm-Gg: ASbGncs1Ha60V9j91j87CCnrMiMhSQy0a9cYRKxhDobhEgAeuhzt0QuwRYujacUsdo6
+	5Q1Y+4T+ZZWOf8yZvrtFgnZrtm8C31XbYl1KtD0xPQLPHdkriXs3HmqG9RUbjxk0vsY+IO8qhp/
+	5CefudqNLUtxCOAhnfXmLPWbqoml6VSMXyMv1HvjflS5nPiQc9ARRTf9JKruM93/NKSgrd/kuhE
+	alXhjGI+JATFt4tFk/85n5jK6UufD9Ou91wqYaFjf0mOZKjCS1o8fpS5S8iy0UGYoov/N0RQHS2
+	NVaw
+X-Received: by 2002:a17:90a:c88e:b0:2ee:ad18:b309 with SMTP id 98e67ed59e1d1-2f83aba9d18mr28008913a91.3.1738552367978;
+        Sun, 02 Feb 2025 19:12:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEzG+WvmWiYepWaFCOO88/K5IDS+0Hn9mfJmyS1XrTAE8a8vQnuxwP07j83XMT180bDYT7duA==
+X-Received: by 2002:a17:90a:c88e:b0:2ee:ad18:b309 with SMTP id 98e67ed59e1d1-2f83aba9d18mr28008897a91.3.1738552367679;
+        Sun, 02 Feb 2025 19:12:47 -0800 (PST)
 Received: from z790sl.. ([240f:74:7be:1:33e1:5e62:5b35:92b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3300253sm65809075ad.162.2025.02.02.19.12.42
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3300253sm65809075ad.162.2025.02.02.19.12.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 19:12:44 -0800 (PST)
+        Sun, 02 Feb 2025 19:12:47 -0800 (PST)
 From: Koichiro Den <koichiro.den@canonical.com>
 To: linux-gpio@vger.kernel.org
 Cc: brgl@bgdev.pl,
@@ -73,9 +73,9 @@ Cc: brgl@bgdev.pl,
 	linus.walleij@linaro.org,
 	maciej.borzecki@canonical.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 06/10] gpio: aggregator: rename 'name' to 'key' in aggr_parse()
-Date: Mon,  3 Feb 2025 12:12:09 +0900
-Message-ID: <20250203031213.399914-7-koichiro.den@canonical.com>
+Subject: [PATCH v2 07/10] gpio: aggregator: clean up gpio_aggregator_free()
+Date: Mon,  3 Feb 2025 12:12:10 +0900
+Message-ID: <20250203031213.399914-8-koichiro.den@canonical.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250203031213.399914-1-koichiro.den@canonical.com>
 References: <20250203031213.399914-1-koichiro.den@canonical.com>
@@ -87,68 +87,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename the local variable 'name' in aggr_parse() to 'key' because struct
-gpio_aggregator_line now uses the 'name' field for the custom line name
-and the local variable actually represents a 'key'. This change prepares
-for the next but one commit.
+- Rename gpio_aggregator_free() to use the "aggr_" prefix for
+  consistency with other functions that modify struct gpio_aggregator
+  internals.
+- Replace four lines within the function to invoke aggr_deactivate()
+- Move it to a more natural location.
+
+This is a preparatory change for the next commit.
 
 No functional change.
 
 Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 ---
- drivers/gpio/gpio-aggregator.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpio/gpio-aggregator.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index 268b9b580ada..123906c821b1 100644
+index 123906c821b1..d5fd9fe58164 100644
 --- a/drivers/gpio/gpio-aggregator.c
 +++ b/drivers/gpio/gpio-aggregator.c
-@@ -1044,7 +1044,7 @@ static struct configfs_subsystem gpio_aggr_subsys = {
- static int aggr_parse(struct gpio_aggregator *aggr)
+@@ -1092,6 +1092,12 @@ static int aggr_parse(struct gpio_aggregator *aggr)
+ 	return 0;
+ }
+ 
++static void aggr_free(struct gpio_aggregator *aggr)
++{
++	aggr_deactivate(aggr);
++	kfree(aggr);
++}
++
+ static ssize_t new_device_store(struct device_driver *driver, const char *buf,
+ 				size_t count)
  {
- 	char *args = skip_spaces(aggr->args);
--	char *name, *offsets, *p;
-+	char *key, *offsets, *p;
- 	unsigned int i, n = 0;
- 	int error = 0;
+@@ -1160,15 +1166,6 @@ static ssize_t new_device_store(struct device_driver *driver, const char *buf,
  
-@@ -1053,18 +1053,18 @@ static int aggr_parse(struct gpio_aggregator *aggr)
- 	if (!bitmap)
- 		return -ENOMEM;
+ static DRIVER_ATTR_WO(new_device);
  
--	args = next_arg(args, &name, &p);
-+	args = next_arg(args, &key, &p);
- 	while (*args) {
- 		args = next_arg(args, &offsets, &p);
+-static void gpio_aggregator_free(struct gpio_aggregator *aggr)
+-{
+-	platform_device_unregister(aggr->pdev);
+-	gpiod_remove_lookup_table(aggr->lookups);
+-	kfree(aggr->lookups->dev_id);
+-	kfree(aggr->lookups);
+-	kfree(aggr);
+-}
+-
+ static ssize_t delete_device_store(struct device_driver *driver,
+ 				   const char *buf, size_t count)
+ {
+@@ -1189,7 +1186,7 @@ static ssize_t delete_device_store(struct device_driver *driver,
+ 	if (!aggr)
+ 		return -ENOENT;
  
- 		p = get_options(offsets, 0, &error);
- 		if (error == 0 || *p) {
- 			/* Named GPIO line */
--			error = aggr_add_gpio(aggr, name, U16_MAX, &n);
-+			error = aggr_add_gpio(aggr, key, U16_MAX, &n);
- 			if (error)
- 				return error;
+-	gpio_aggregator_free(aggr);
++	aggr_free(aggr);
+ 	return count;
+ }
+ static DRIVER_ATTR_WO(delete_device);
+@@ -1261,7 +1258,7 @@ static struct platform_driver gpio_aggregator_driver = {
  
--			name = offsets;
-+			key = offsets;
- 			continue;
- 		}
+ static int __exit gpio_aggregator_idr_remove(int id, void *p, void *data)
+ {
+-	gpio_aggregator_free(p);
++	aggr_free(p);
+ 	return 0;
+ }
  
-@@ -1076,12 +1076,12 @@ static int aggr_parse(struct gpio_aggregator *aggr)
- 		}
- 
- 		for_each_set_bit(i, bitmap, AGGREGATOR_MAX_GPIOS) {
--			error = aggr_add_gpio(aggr, name, i, &n);
-+			error = aggr_add_gpio(aggr, key, i, &n);
- 			if (error)
- 				return error;
- 		}
- 
--		args = next_arg(args, &name, &p);
-+		args = next_arg(args, &key, &p);
- 	}
- 
- 	if (!n) {
 -- 
 2.45.2
 
