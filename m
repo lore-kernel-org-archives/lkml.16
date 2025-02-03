@@ -1,115 +1,82 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D9F20AF9D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E855A20AF9C
 	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738592970; cv=none; b=Lm+LmEhwouYW77iJieoW/zoO5SQbZE6l8Q1EwfPgsB2JGY4Pvo/F/dkoXuf+DDHoH838/+ziQccPiEJpfKV1LYUmvaoavusm1deLnD4gA7GyYeGCD3nD1aPjCXj5fZgOHQGqkh0spOcu2rPY9czdihyj5XSgK3aqc0ErpDEmRNU=
+	t=1738592970; cv=none; b=I2ji8H6qeQSEAjplVI1zZ1syzCySVGt9z80glIhDDa+6FgMzgJL+vzLYi3PQiew2Yp/7T+KgAV75xDIu7ygL2aXfUiiSx69SHX6VeSC0zl8EMSoJE+aPn7VrD8aObfgc/s/VSnnHtAMqrq/TLgsLXB7kPFM3oi6J0hgwpAXfweA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738592970; c=relaxed/simple;
-	bh=9m8yHZ/xq5yo0/XbH7/aqq4u9pNGQdOz65IFgXD4ngc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oWS8flCFJ3qpFc0j/cXBJTs3behTy/xXIBNKQqYxPv5RaMN51yXRaeup9tuBfqrF2rGkHetpre09k3TfFTtsIe8xMPRCaohu9mNJ78+Y3msv8Khhya/sDspl4TGXcalx/+DaXosrY+UUThSTsbGhYaPScfqmAzjQu9SBqUzeREE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hujdu8R1; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	bh=09m973yEc3VJ4Dr8LCpfizi+F0ljsaa/SxrXZ+pPDA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qyqtT8OO+b7LGgH2lRMmjPmD92a7EsbWI5GFvhssqjNjcNHNitW5lltQmTzblIAWbQ1LAVVEm/mIyJruDOatXVvA6c+BLRzSlTdCAxXslW6HDlVwwWYBNCfDNE/xQd/OVDqCnaWv+ZXNR5Cq24UFuJ+KlcOlnbL9OxyUiUBsEhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RFGPsOgC; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hujdu8R1"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2ef714374c0so6556521a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:29:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738592967; x=1739197767; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7TXQsubBdw/wAjD+eExfN+6DFOSabStRe5P1g6XNmoc=;
-        b=hujdu8R1O9qNpsdzrOwHRxOLXPMH8DJ2d56btPrYgLT4SXT9tq0Hxh+lusm+N3tj+f
-         Wk0xieV8S0ZMAVNfq7gBnIP3NiOmJBLPhA8WGS5CG0geKQbgXDqaF/ajB2gqK5Mb6pOp
-         +dD9edusYeci/0WMQcGINbocDf+Vih26X/wCS44BVJTGTHR59QxBIWrWmaGEbCSWqZ+1
-         TAU80zW/o7Ro9ELvVNKTk1Ft0rfRfi24AA1RFhbYLF9rIEMLo0Q01RLt1djmBgFktunz
-         WeChDkNI8pdKNVxUwvojnAPnrzx2wzPOeXE0DeLMUrq1909YDBvvE4DwaRYBk4Bq9nnC
-         uhVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738592967; x=1739197767;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7TXQsubBdw/wAjD+eExfN+6DFOSabStRe5P1g6XNmoc=;
-        b=lZA/hBW3TQ2RPUK+YerETs3KzK7vdi/HZt64+aim6Ol7u2nhxjiaf5C9gDr/uzhXRt
-         I+zBggB5q8nzSXSUmBT+wpBjD+F2DoaVCX58kdFzf25cCsPxJ51mSVNwM0DXNvXadNqo
-         5YlXJCjSfzrGH8BDbT3k6Ej70hTrwl4Tl5L84C+hYzVAL8bwcW+BUbBOi9ct8IyEpQdh
-         a7wvOIAWJkwlHqv/eZkenfSWvvnl2s4DeGZk/pLGKGijahOcRyloApt8Iy+H6pgHTnWC
-         PnMrDBNMR3KVCFvN7fejjE8MkSdnnv1LgqFolNhq3Bhts3t59qAPcdUszXXIViQ4rcec
-         nMIA==
-X-Forwarded-Encrypted: i=1; AJvYcCW4S/7IZubluPduZljl6kE4DOmqzDxsOowhOCFDJJW4NnAd6LSE2sBeRoLD+UoYmcG9z/hu9e7TUocmlDA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxysKwsAPzqUI46RU8786FZ9xvDrAE80wytq2p/zloGb6SZR9Hn
-	Zcm4LrlcVq6qnw/JGYModT3Hdi4hHr3dFs2YmrfsWURfGdb4tmYgLgD6qZ1HD0SFjTgHu9I/wNF
-	XzPZr0MHzk3ZQY13ZgSIXO57nTBYtWjHcku7n
-X-Gm-Gg: ASbGncvUTijxDAaylBrmAkhl3LpV4Rb1op9lxJ6xRm1a86Ubiz3z6k2g7+pizTkt+tr
-	clof1gFisJ2Grai1g1TJyCJIc48Uq8HVjxvyOjX9QXUSKhGMGmtnTjewco+ofZVg57rC8OmwfsS
-	WNMclEs2Bw0tMUvyYJsl8KOGLQaFw=
-X-Google-Smtp-Source: AGHT+IHTruQTFbormYFeQIcy728mYS1bfRzzv7IZB7Q85ek/7/F4gYieXONEtPMPRoQtGfxVcz+ogIq1MUlcUYn+3Jo=
-X-Received: by 2002:a17:90b:2dc9:b0:2ef:2980:4411 with SMTP id
- 98e67ed59e1d1-2f994e6d108mr20498323a91.9.1738592967383; Mon, 03 Feb 2025
- 06:29:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RFGPsOgC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=tEnVkrUjPb0A6ehJ3DypdYLDyUCfsbMf/ZEGqCu26Hc=; b=RFGPsOgCNkROSs8Q661UstNQxx
+	W9kUmwvBjXkr/FCOIyFZchOX1ibrulYzHPqWwmuRchdxyq521+TrTJWrFq73jaqJhnZy64dK3QNMW
+	IajYrj7Mg7vmvEb7y+dQbjhzY7LrZw3ENUE6CWK2mn9sl7vKfEs28AHl0pNhSPvUfpgYyCpffMqKT
+	CVoyqVTWx1pD5GOwV3iUNIqgnMECNo5l+BQ9I6j/V4e9AaVVG5/+LG+PvPzceePzQhq8Pbw6afl0y
+	i+yQnv1WOEJ30s5poX3Bl3M7CuPJ2/ZI5ahC3NsLBxdXkM1nFo6qKYk6jZmsxuHEk6AdPo2Yk93BN
+	qRddGgFA==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1texS0-00000001BXb-1jcm;
+	Mon, 03 Feb 2025 14:29:24 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8A13B30035F; Mon,  3 Feb 2025 15:29:23 +0100 (CET)
+Date: Mon, 3 Feb 2025 15:29:23 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v8 03/15] futex: Add basic infrastructure for local task
+ local hash.
+Message-ID: <20250203142923.GJ7145@noisy.programming.kicks-ass.net>
+References: <20250203135935.440018-1-bigeasy@linutronix.de>
+ <20250203135935.440018-4-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <679b7c95.050a0220.d7c5a.0014.GAE@google.com> <CABCJKufpND1qvBhUMwpJ4OE7Umo9EuaNTLOi-GmAXFdXRqhoFQ@mail.gmail.com>
-In-Reply-To: <CABCJKufpND1qvBhUMwpJ4OE7Umo9EuaNTLOi-GmAXFdXRqhoFQ@mail.gmail.com>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Mon, 3 Feb 2025 15:29:15 +0100
-X-Gm-Features: AWEUYZkbZyGsg2KJCSYTFl4vhroH4GwPRZp3afld8aOLFnVjuqncctYVhB0Hf8s
-Message-ID: <CANp29Y4OWo1ebuP=1B6O_Qhhg+YprW899s4PpEs4HVpvKs4+jg@mail.gmail.com>
-Subject: Re: [syzbot] linux-next build error (19)
-To: Sami Tolvanen <samitolvanen@google.com>
-Cc: syzbot <syzbot+62ba359e1dfec1473c57@syzkaller.appspotmail.com>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-next@vger.kernel.org, 
-	sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203135935.440018-4-bigeasy@linutronix.de>
 
-On Thu, Jan 30, 2025 at 5:28=E2=80=AFPM 'Sami Tolvanen' via syzkaller-bugs
-<syzkaller-bugs@googlegroups.com> wrote:
->
-> On Thu, Jan 30, 2025 at 5:20=E2=80=AFAM syzbot
-> <syzbot+62ba359e1dfec1473c57@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following issue on:
-> >
-> > HEAD commit:    a13f6e0f405e Add linux-next specific files for 20250130
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D10221ddf980=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D3445081dab6=
-3716c
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D62ba359e1dfec=
-1473c57
-> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for D=
-ebian) 2.40
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the co=
-mmit:
-> > Reported-by: syzbot+62ba359e1dfec1473c57@syzkaller.appspotmail.com
-> >
-> > scripts/gendwarfksyms/gendwarfksyms.h:6:10: fatal error: dwarf.h: No su=
-ch file or directory
->
-> gendwarfksyms depends on libdw, so on a Debian system, I assume
-> libdw-dev would be required to build with CONFIG_GENDWARFKSYMS.
+On Mon, Feb 03, 2025 at 02:59:23PM +0100, Sebastian Andrzej Siewior wrote:
+> +static int futex_hash_allocate(unsigned int hash_slots)
+> +{
+> +	struct futex_hash_bucket *fhb;
+> +	int i;
+> +
+> +	if (current->mm->futex_hash_bucket)
+> +		return -EALREADY;
+> +
+> +	if (!thread_group_leader(current))
+> +		return -EINVAL;
+> +
+> +	if (hash_slots == 0)
+> +		hash_slots = 16;
+> +	if (hash_slots < 2)
+> +		hash_slots = 2;
+> +	if (hash_slots > 131072)
+> +		hash_slots = 131072;
+> +	if (!is_power_of_2(hash_slots))
+> +		hash_slots = rounddown_pow_of_two(hash_slots);
 
-Thanks!
-Adding libdw-dev has indeed fixed the build error.
-
-#syz invalid
-
->
-> Sami
->
+Why not require the argument is 2^n and fail otherwise?
