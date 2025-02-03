@@ -1,48 +1,64 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0AB2AF10;
-	Mon,  3 Feb 2025 19:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A985F25A656
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738610914; cv=none; b=il2QLsTIXCYab9kIz2G7/A1CFCVFYiRL87kOEcF3YVxdn4L6Lc6XXHHUMkxsByRS/mzzjfs5V6G/S6Uy8zqravgEoYXGjclfwhp9TKbwNGBJnOHXtYUf/kvCR6y4dFyfWhc3GYynvS+21PNyXUR1GMPmQyRsCDUMfqhgctTJkCE=
+	t=1738611054; cv=none; b=ppo8I0gFb/o6q+vOml8TsynHDg7nlAEF2Hnn3v7SBZ0q+SFS1l63cRRIvDOd50kwl2Fr1oSLe4EwgnVmdcIeBAep6bEUrmHgRz6lZr17nRLPXDk9J8Uy2PBEvO4SQeZKORbMdDR7SVDPgU51/56+UjjArQqNJzvuBx+VVI0BHEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738610914; c=relaxed/simple;
-	bh=oijApHXXVYwpLxcEH6bptuirH3kIVpa683QkgZ9dEoE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=vFfZ15nLTnsKVAIg8dRHoFbZr/QSDL8VBgu0i0novqwdEJB7QFiOdt9MhF5r1Z5p0exE7p0OcyRZwL0YA4vldauWUDG5+ubGE6jeXM7gf7bS6ETLmf/rsjTVZI2bQDs+Iuwf4W8iocL0z9KgvBpsVruzvcDuH8LgyykJC1K0eY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MGR5paI7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738611054; c=relaxed/simple;
+	bh=iH/DywYf7bv1qq5TRClN03em8mKs90BYicsgX7IqNl4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t6inFvq81o3B/womDSdMU/UL1sKJOZM29u+Ox/lYU1Uf7uZ3w9FCry7YQzhiI8oI7bSG8epkCChIAu7DASdAPR/cTElJCG5B/sBivDYgUxGIe3Z5fPtVwU2uPx6hTCvxan5t/WeI99q3WkcmwNqHfVsgCJTkhTH0vdGT/AiE2rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=RzKPxGuY; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MGR5paI7"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513E6wtg005738;
-	Mon, 3 Feb 2025 19:28:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fUZ3qpjdH8VxFJdAKetwNy2C9ZImZ5JTVEfFi+umL6M=; b=MGR5paI7PLjnBZIh
-	58U4MeRVKNuv94ye6/SoIgvf91JWM2S1K69CLVSjuZlavtVIRHryHumIUcuJkxfv
-	OjSTOPMgobu9lgCTjo5Z9YiAjf9TXuFuLojnl0Fu90owv1yRjwhDPrU+JbqEr9wR
-	iIMiTnTP9kVx0Cdia44PV06mnXtpM0aGiQ0fvLkLeXpCZ9qFvYs0J1fNN9hCrUTU
-	CT093KxqSLWKMs8SjQl0MSTpEdGDZf6Uoaj7h2dMwyhb6XLy6uZyZasraoX59Lqi
-	f+Bvqe4eazwpehgp5Vfo+aP1HTwSRfjLD8TLSokdivsD3U+yjen+rDzIIfIYxZDR
-	wZDVQA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jy9g0s43-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 19:28:29 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 513JSTWR016942
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Feb 2025 19:28:29 GMT
-Received: from [10.110.24.255] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Feb 2025
- 11:28:28 -0800
-Message-ID: <1200f51b-2ee3-446d-9098-df946ef3a359@quicinc.com>
-Date: Mon, 3 Feb 2025 11:28:27 -0800
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="RzKPxGuY"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3cfc8772469so16528445ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:30:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1738611052; x=1739215852; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=668K+R2E5Th67DzQSufp3lAZyns5vzsbC/BEn5KLY64=;
+        b=RzKPxGuYJR/ft4oHjWcs67GCt2OrWX5vJTsEELiCBjZENkCK34uBHK0+c5wjy/4zAT
+         ZLRorrencq9YvtHBp9JiVpI/DjDs/9ErR24ay4AhOv6e4FreSn8vOWeQHm83eywneTYu
+         hk8dtESc3v6Ne2R3B5pBAX7eQlO/5VhCRMCr0Bgan0VziIQBwEooHsM+/vilsIlBIA3P
+         gN42hZEZZ5vNAEc/xoozt1rbbsKTaZcxef00PfeMUPXoTNTAn6RmnaZ82OZ291/5BZSL
+         SMzhYa/Osm3csm7VS6vFFezpGkwxl4A1u5vByJ+T3EvQ1IgH1ziKDJJg7VWgqNAGSHLQ
+         Lalw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738611052; x=1739215852;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=668K+R2E5Th67DzQSufp3lAZyns5vzsbC/BEn5KLY64=;
+        b=WEjM2nyKBm5GRmJxBdkZTw6qSWXLpkE8fONadGK6GsBrxyxDqzxyKqHHVXj0DwrBTL
+         pqK9uV6rpEH6XuF3GbpfsWAw0JaVbwC5Dw+vDizxknTZ6L0ku5cSPSLPKf6nwFHGZZG1
+         FIoLrE5jnp1FEtROtdPguWPyAyW1tAxO/lL6IfXk/1p81T1DmboZvqsJiD6+r+ZvSwac
+         p5LGq+lfaxiXKvzrwYFL0rOfIL2oyQb2Jw4aCqvEHY84fM9p4ClZP/R+eXwAWMxeHDJZ
+         4d2LRkHZK2cVaDIvFaVfmNADxyA2AH3t3L9CL0mmMk/xweitmpxj8WA650tmF6j27PDf
+         p62A==
+X-Forwarded-Encrypted: i=1; AJvYcCUbqa2EDG7qwwoJHN7xe8hd0vGGfNV8g0cclkTUlZHEBfQo4kXN6QFE10CDCcM4gJnSS4NNDdzYt9DEA00=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwELrKHeriwKjtovYGMEl8cfOXy7heL84UNKMfoeiUSIYjcNR9i
+	NJIQ5l3+3LE0wPkyOdgvz3kjAKQfD9Y021IkMTNaJRmUa7maudvZw2Yms72hwQI=
+X-Gm-Gg: ASbGncsfcX0Tz7IEOU3Lig2Fzz035jzRTD+VTEKdBXgw+SqGicf3sEleqvC3S2X3OSf
+	RBxmGW53YDx++YQk3Uk0PqThyhKZi4M+85s7ezciW3fgFMoAY3lo8E4bC1lagMMpcwpI2i7piAf
+	I+ybzAyY/8gRgmiHl4LcrSy5KSIo10UuzbGZzCwwiRDKywsZQtZWk5h89/6AJDbHR2LkUqm5eJR
+	y/zmSxXGcWC8bh+aS1XT7NjH5SuKR+5iA8yhPI23UokMoiyWqw0EtA5kj6QOErGGM+mXogMPTD+
+	GLpWUkKcd++GifeUj7ffUEY6XnqyQu6ANw==
+X-Google-Smtp-Source: AGHT+IFbABpV8Uj9LIoKwwHpxBqQtyfAOfzmrEnef+d6XFjuyKUbHUDqoK4KXRXN7WCIv6jozSOc2g==
+X-Received: by 2002:a92:c266:0:b0:3d0:1101:9d07 with SMTP id e9e14a558f8ab-3d011019f3cmr133245175ab.10.1738611051717;
+        Mon, 03 Feb 2025 11:30:51 -0800 (PST)
+Received: from [100.64.0.1] ([165.188.116.9])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d00c83afb9sm23354015ab.55.2025.02.03.11.30.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 11:30:50 -0800 (PST)
+Message-ID: <6cac61f1-cf6d-4a43-836c-e83a0b0da096@sifive.com>
+Date: Mon, 3 Feb 2025 13:30:48 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,291 +66,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] soc: qcom: llcc-qcom: Add support for LLCC V6
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Conor Dooley
-	<conor@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Satya Durga
- Srinivasu Prabhala" <quic_satyap@quicinc.com>,
-        Trilok Soni
-	<quic_tsoni@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250113-sm8750_llcc_master-v1-0-5389b92e2d7a@quicinc.com>
- <20250113-sm8750_llcc_master-v1-2-5389b92e2d7a@quicinc.com>
- <0b574941-30f3-41ec-ad6a-094371ef4d95@oss.qualcomm.com>
+Subject: Re: [PATCH v2] riscv: Use Zalrsc extension to implement atomic
+ functions
+To: Charlie Jenkins <charlie@rivosinc.com>, Conor Dooley <conor@kernel.org>
+Cc: Aleksandar Rikalo <arikalo@gmail.com>, linux-riscv@lists.infradead.org,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
+ Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Andrea Parri <parri.andrea@gmail.com>, Leonardo Bras <leobras@redhat.com>,
+ Guo Ren <guoren@kernel.org>, Eric Chan <ericchancf@google.com>,
+ linux-kernel@vger.kernel.org,
+ Djordje Todorovic <djordje.todorovic@htecgroup.com>
+References: <20241225082412.36727-1-arikalo@gmail.com>
+ <Z4CSpE9UKkJNM_g5@ghost>
+ <CAGQJe6oA8oiZmg0HGW7KrjdOJ7nXNK9hQFm4jdQ6n0WTG6i-vA@mail.gmail.com>
+ <20250202-clammy-skewed-eb0a0fce18f1@spud> <Z6EVIPc_t6zMU9qb@ghost>
+From: Samuel Holland <samuel.holland@sifive.com>
 Content-Language: en-US
-From: Melody Olvera <quic_molvera@quicinc.com>
-In-Reply-To: <0b574941-30f3-41ec-ad6a-094371ef4d95@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: pQAagOz-bXQzEhnyYApEKU3CBc-LjLDQ
-X-Proofpoint-ORIG-GUID: pQAagOz-bXQzEhnyYApEKU3CBc-LjLDQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_08,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- phishscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0 mlxlogscore=999
- spamscore=0 impostorscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502030141
+In-Reply-To: <Z6EVIPc_t6zMU9qb@ghost>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Hi Charlie,
 
-
-On 1/28/2025 6:01 AM, Konrad Dybcio wrote:
-> On 13.01.2025 10:26 PM, Melody Olvera wrote:
->> Add support for LLCC V6. V6 adds several additional usecase IDs,
->> rearrages several registers and offsets, and supports slice IDs
->> over 31, so add a new function for programming LLCC V6.
+On 2025-02-03 1:12 PM, Charlie Jenkins wrote:
+> On Sun, Feb 02, 2025 at 08:08:50PM +0000, Conor Dooley wrote:
+>> On Sat, Feb 01, 2025 at 01:04:25PM +0100, Aleksandar Rikalo wrote:
+>>> On Fri, Jan 10, 2025 at 4:23 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+>>>
+>>>>> From: Chao-ying Fu <cfu@mips.com>
+>>>>>
+>>>>> Use only LR/SC instructions to implement atomic functions.
+>>>>
+>>>> In the previous patch you mention that this is to support MIPS P8700. Can
+>>>> you expand on why this change is required? The datasheet at [1] says:
+>>>>
+>>>> "The P8700 core is configured to support the RV64GCZba_Zbb (G = IMAFD)
+>>>> Standard ISA. It includes the RV64I base ISA, Multiply (M), Atomic (A),
+>>>> Single-Precision Floating Point (F), Double (D), Compressed (C) RISC-V
+>>>> extensions, as well as the as well as the bit-manipulation extensions
+>>>> (Zba) and (Zbb)"
+>>>>
+>>>> The "A" extension is a part of "G" which is mostly assumed to exist in
+>>>> the kernel. Additionally, having this be a compilation flag will cause
+>>>> traps on generic kernels. We generally try to push everything we can
+>>>> into runtime feature detection since there are so many possible variants
+>>>> of riscv.
+>>>>
+>>>> Expressing not being able to perform a feature like this is normally
+>>>> better expressed as an errata. Then generic kernels will be able to
+>>>> include this, and anybody who doesn't want to have the extra nops
+>>>> introduced can disable the errata. A similar approach to what I pointed
+>>>> out last time should work here too (but with more places to replace)
+>>>> [2].
+>>>>
+>>>> [1] https://mips.com/wp-content/uploads/2024/11/P8700_Data_Sheet.pdf
+>>>> [2] https://lore.kernel.org/lkml/Z2-UNfwcAQYZqVBU@ghost/T/
+>>>
+>>> So far we haven't found a way to do this using errata.
 >>
->> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
->> ---
->>   drivers/soc/qcom/llcc-qcom.c       | 212 ++++++++++++++++++++++++++++++++++++-
->>   include/linux/soc/qcom/llcc-qcom.h |   8 ++
->>   2 files changed, 216 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
->> index 56823b6a2facc4345265e29b60da24a391e3707d..4379b5baa011aa850a2b65ec20b32519d9331be4 100644
->> --- a/drivers/soc/qcom/llcc-qcom.c
->> +++ b/drivers/soc/qcom/llcc-qcom.c
->> @@ -35,6 +35,9 @@
->>   #define ATTR0_RES_WAYS_MASK           GENMASK(15, 0)
->>   #define ATTR0_BONUS_WAYS_MASK         GENMASK(31, 16)
->>   #define ATTR0_BONUS_WAYS_SHIFT        16
->> +#define ATTR2_PROBE_TARGET_WAYS_SHIFT 4
->> +#define ATTR2_FIXED_SIZE_SHIFT        8
->> +#define ATTR2_PRIORITY_SHIFT          12
-> I'd be a great fan of defining these as fields with GENMASK, which you
-> would later fill with FIELD_PREP, so as to avoid potential leakage into
-> neighbouring bitfields
+>> You mean using alternatives? Not implementing A, but instead
+>> implementing Zalrsc, is not an erratum. It's a design decision.
+> 
+> We could do the same thing we do with misaligned access detection and
+> run some instructions to determine if these instructions are being
+> emulated.  If they are being emulated, patch all of the places to use
+> zalrsc.
 
-Ack.
+Is the implication here that the riscv,isa-extensions list passed to the kernel
+will contain "a", even though the hardware does not support it, because AMOs are
+emulated in M-mode?
 
->
->>   #define LLCC_STATUS_READ_DELAY        100
->>   
->>   #define CACHE_LINE_SIZE_SHIFT         6
->> @@ -49,6 +52,10 @@
->>   #define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
->>   #define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
->>   #define LLCC_TRP_ATTR2_CFGn(n)        (0x21100 + SZ_4 * n)
->> +#define LLCC_V6_TRP_ATTR0_CFGn(n)     (0x41000 + SZ_64 * n)
->> +#define LLCC_V6_TRP_ATTR1_CFGn(n)     (0x41008 + SZ_64 * n)
->> +#define LLCC_V6_TRP_ATTR2_CFGn(n)     (0x41010 + SZ_64 * n)
->> +#define LLCC_V6_TRP_ATTR3_CFGn(n)     (0x41014 + SZ_64 * n)
->>   
->>   #define LLCC_TRP_SCID_DIS_CAP_ALLOC   0x21f00
->>   #define LLCC_TRP_PCB_ACT              0x21f04
->> @@ -62,10 +69,22 @@
->>   #define LLCC_TRP_ALGO_CFG7	      0x21f28
->>   #define LLCC_TRP_WRSC_CACHEABLE_EN    0x21f2c
->>   #define LLCC_TRP_ALGO_CFG8	      0x21f30
->> +#define LLCC_V6_TRP_SCID_DIS_CAP_ALLOC	0x42000
->> +#define LLCC_V6_TRP_ALGO_CFG1		0x42008
->> +#define LLCC_V6_TRP_ALGO_CFG2		0x42010
->> +#define LLCC_V6_TRP_ALGO_CFG3		0x42018
->> +#define LLCC_V6_TRP_ALGO_CFG4		0x42020
->> +#define LLCC_V6_TRP_ALGO_CFG5		0x42028
->> +#define LLCC_V6_TRP_ALGO_CFG6		0x42030
->> +#define LLCC_V6_TRP_ALGO_CFG7		0x42038
->> +#define LLCC_V6_TRP_ALGO_CFG8		0x42040
->> +#define LLCC_V6_TRP_WRSC_EN		0x42080
->> +#define LLCC_V6_TRP_WRSC_CACHEABLE_EN	0x42088
->>   
->>   #define LLCC_VERSION_2_0_0_0          0x02000000
->>   #define LLCC_VERSION_2_1_0_0          0x02010000
->>   #define LLCC_VERSION_4_1_0_0          0x04010000
->> +#define LLCC_VERSION_6_0_0_0          0X06000000
->>   
->>   /**
->>    * struct llcc_slice_config - Data associated with the llcc slice
->> @@ -3161,6 +3180,33 @@ static const struct llcc_edac_reg_offset llcc_v2_1_edac_reg_offset = {
->>   	.drp_ecc_db_err_syn0 = 0x52120,
->>   };
->>   
->> +static const struct llcc_edac_reg_offset llcc_v6_edac_reg_offset = {
->> +	.trp_ecc_error_status0 = 0x47448,
->> +	.trp_ecc_error_status1 = 0x47450,
->> +	.trp_ecc_sb_err_syn0 = 0x47490,
->> +	.trp_ecc_db_err_syn0 = 0x474d0,
->> +	.trp_ecc_error_cntr_clear = 0x47444,
->> +	.trp_interrupt_0_status = 0x47600,
->> +	.trp_interrupt_0_clear = 0x47604,
->> +	.trp_interrupt_0_enable = 0x47608,
->> +
->> +	/* LLCC Common registers */
->> +	.cmn_status0 = 0x6400c,
->> +	.cmn_interrupt_0_enable = 0x6401c,
->> +	.cmn_interrupt_2_enable = 0x6403c,
->> +
->> +	/* LLCC DRP registers */
->> +	.drp_ecc_error_cfg = 0x80000,
->> +	.drp_ecc_error_cntr_clear = 0x80004,
->> +	.drp_interrupt_status = 0x80020,
->> +	.drp_interrupt_clear = 0x80028,
->> +	.drp_interrupt_enable = 0x8002c,
->> +	.drp_ecc_error_status0 = 0x820f4,
->> +	.drp_ecc_error_status1 = 0x820f8,
->> +	.drp_ecc_sb_err_syn0 = 0x820fc,
->> +	.drp_ecc_db_err_syn0 = 0x82120,
->> +};
->> +
->>   /* LLCC register offset starting from v1.0.0 */
->>   static const u32 llcc_v1_reg_offset[] = {
->>   	[LLCC_COMMON_HW_INFO]	= 0x00030000,
->> @@ -3173,6 +3219,13 @@ static const u32 llcc_v2_1_reg_offset[] = {
->>   	[LLCC_COMMON_STATUS0]	= 0x0003400c,
->>   };
->>   
->> +/* LLCC register offset starting from v6.0.0 */
->> +static const u32 llcc_v6_reg_offset[] = {
-> It's sort of weird to have some registers be version-define with a common
-> name and keep others with a version-in-the-macro-name
+If that is not the case, there is no need for runtime detection. The alternative
+entry can check RISCV_ISA_EXT_ZAAMO (which would be implied by RISCV_ISA_EXT_a)
+in the ISA bitmap like normal.
 
-I agree. There exists a version of this change which moves the offset
-macros to these structs if that's preferred; I wanted some feedback
-on what folks would prefer here.
-
->
->> +	[LLCC_COMMON_HW_INFO]	= 0x00064000,
->> +	[LLCC_COMMON_STATUS0]	= 0x0006400c,
->> +
-> Stray newline
-
-Ack.
-
->
->> +};
->> +
->>   static const struct qcom_llcc_config qcs615_cfg[] = {
->>   	{
->>   		.sct_data	= qcs615_data,
->> @@ -3869,6 +3922,149 @@ static int _qcom_llcc_cfg_program(const struct llcc_slice_config *config,
->>   	return ret;
->>   }
->>   
->> +static int _qcom_llcc_cfg_program_v6(const struct llcc_slice_config *config,
->> +				  const struct qcom_llcc_config *cfg)
->> +{
->> +	int ret;
->> +	u32 attr0_cfg, attr1_cfg, attr2_cfg, attr3_cfg;
->> +	u32 attr0_val, attr1_val, attr2_val, attr3_val;
->> +	u32 disable_cap_alloc, wren, wr_cache_en;
->> +	u32 stale_en, stale_cap_en, mru_uncap_en, mru_rollover;
->> +	u32 alloc_oneway_en, ovcap_en, ovcap_prio, vict_prio;
->> +	u32 slice_offset, reg_offset;
->> +	struct llcc_slice_desc *desc;
->> +	const struct llcc_slice_config *slice_cfg;
->> +	u32 sz = 0;
-> Reverse-Christmas-tree, please
-
-Ack.
-
->
->> +
->> +	slice_cfg = cfg->sct_data;
-> This one it would make sense to initialize at declaration time
-
-Sure thing.
-
->
->> +	sz = cfg->size;
-> This one seems unused?
-
-Lemme double-check; will remove if so.
-
->
->> +
->> +	attr0_cfg = LLCC_V6_TRP_ATTR0_CFGn(config->slice_id);
->> +	attr1_cfg = LLCC_V6_TRP_ATTR1_CFGn(config->slice_id);
->> +	attr2_cfg = LLCC_V6_TRP_ATTR2_CFGn(config->slice_id);
->> +	attr3_cfg = LLCC_V6_TRP_ATTR3_CFGn(config->slice_id);
->> +
->> +	attr0_val = config->res_ways;
->> +	attr1_val = config->bonus_ways;
->> +	attr2_val = config->cache_mode;
->> +	attr2_val |= config->probe_target_ways << ATTR2_PROBE_TARGET_WAYS_SHIFT;
->> +	attr2_val |= config->fixed_size << ATTR2_FIXED_SIZE_SHIFT;
->> +	attr2_val |= config->priority << ATTR2_PRIORITY_SHIFT;
->> +
->> +	attr3_val = MAX_CAP_TO_BYTES(config->max_cap);
->> +	attr3_val /= drv_data->num_banks;
->> +	attr3_val >>= CACHE_LINE_SIZE_SHIFT;
->> +
->> +	ret = regmap_write(drv_data->bcast_regmap, attr0_cfg, attr0_val);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = regmap_write(drv_data->bcast_regmap, attr1_cfg, attr1_val);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = regmap_write(drv_data->bcast_regmap, attr2_cfg, attr2_val);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = regmap_write(drv_data->bcast_regmap, attr3_cfg, attr3_val);
->> +	if (ret)
->> +		return ret;
->> +
->> +	slice_offset = config->slice_id % 32;
->> +	reg_offset = (config->slice_id / 32) * 4;
->> +
->> +	if (!cfg->skip_llcc_cfg) {
-> Do we have about this case on any v6 platform?
-
-AFAICT no; I can remove it.
-
->
->> +		disable_cap_alloc = config->dis_cap_alloc << slice_offset;
->> +		ret = regmap_write(drv_data->bcast_regmap,
->> +			LLCC_V6_TRP_SCID_DIS_CAP_ALLOC + reg_offset,
->> +			disable_cap_alloc);
->> +
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	wren = config->write_scid_en << slice_offset;
->> +	ret = regmap_update_bits(drv_data->bcast_regmap,
->> +			LLCC_V6_TRP_WRSC_EN + reg_offset,
->> +			BIT(slice_offset), wren);
->> +	if (ret)
->> +		return ret;
->> +
->> +	wr_cache_en = config->write_scid_cacheable_en << slice_offset;
->> +	ret = regmap_update_bits(drv_data->bcast_regmap,
->> +			LLCC_V6_TRP_WRSC_CACHEABLE_EN + reg_offset,
->> +			BIT(slice_offset), wr_cache_en);
->> +	if (ret)
->> +		return ret;
-> So the initial ATTRn configs are different for v6, but this part and later
-> are identical, bar the register offset difference. Let's try to abstract
-> that through cfg->reg_offset
-
-Agreed.
-
->
->> +	stale_en = config->stale_en << slice_offset;
->> +	ret = regmap_update_bits(drv_data->bcast_regmap,
->> +			LLCC_V6_TRP_ALGO_CFG1 + reg_offset,
->> +			BIT(slice_offset), stale_en);
-> Updating these calls to use bitfields instead of opencoded shifting would
-> be a welcome addition as well, but perhaps that could be stuck at the end
-> of the series as a general/housekeeping improvement
-
-Ok; will do.
-
-Thanks,
-Melody
+Regards,
+Samuel
 
