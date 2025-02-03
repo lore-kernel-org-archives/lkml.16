@@ -1,129 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 255A4202C2A;
-	Mon,  3 Feb 2025 11:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA51C202C55;
+	Mon,  3 Feb 2025 11:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738580497; cv=none; b=oXoWf35a9QvPx/kO/v8Gg1kP3nFsBiPVDzAylZWgnNCvnPnXwosHJD6Uvdk9F4FBF/NtNWYzDo/E3O5KRAs9VRrnuYlhTJLLhHYsasYqupmvgXLAGD4IaIONneyU0bgO9NigGt8A2RhN/R5kx58egAlwmsBIl1Bq2a7bRmgg4WU=
+	t=1738580507; cv=none; b=Kjk1lQWYgKUaO04W+OhcLiir3ObTpnldDmrl6KaQRDIp+lZbxAkPf/I3igUGihoWK0LF3Q/w0yN+S3DXy4fHp9tTFbTHULizqhM4ALPm0ommvkvBx4g6MX8eX3Q8MSAT/QnFdCcKZBH6nrEt5EYtqi7bZGmpVRS5XWI0nglZDWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738580497; c=relaxed/simple;
-	bh=i8TuiKp63KwQmYHvZeyeU2ehTe/euGjJ+1y3V/bFTqk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i8uHZNGerYHGzZYbwYvHa2WJumls8cCkmtQGsSFOSUGCX0EQk4GTm1yUF/Pwcxgc20TDN0VLmSYqFmPoOSNBYGz9YHkLmsWLEljPpeOzx+OpkvciImEJ/EDpkZCDrlfzQg8PtkPW3f2M53pDTtB9e/+fzqWk++7FDaudIRXwSB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B88211FB;
-	Mon,  3 Feb 2025 03:01:58 -0800 (PST)
-Received: from [10.1.34.25] (e122027.cambridge.arm.com [10.1.34.25])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 973B43F5A1;
-	Mon,  3 Feb 2025 03:01:30 -0800 (PST)
-Message-ID: <811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
-Date: Mon, 3 Feb 2025 11:01:28 +0000
+	s=arc-20240116; t=1738580507; c=relaxed/simple;
+	bh=/yMVkhOVLx00butLsrD/fGyXoeNUr23Wx8NgtZbk7hQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kNRVIZJDDzyyIIZ1X4vtdLoVl/ZP+Qf555aM+467Lv/058G/9GF9kWaLsgjiBICkRXH7sMcFX4ARiMbWTHjGKSHGjxTcSUupH3v4hPKHZiOBLHSYQD8VWafPvJHxHpT6Dw8H2Elj1c3juDu8li4igb0Iwss4MigTJidOGolgLSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ff0+01DY; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ff0+01DY"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 77AFB44311;
+	Mon,  3 Feb 2025 11:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738580503;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=I81caOaJIOC8WXu1z91vKs/zochmvwTppB2hNy4SkNI=;
+	b=Ff0+01DYiXrl9BTpidz0rwXhObO9HOzDPAu2eIIchGN97HgE9EwVU7gbQwit8taGgskco1
+	J8laBmTQHLax9yR9m6NcbdP7NwvFepoO67XKm2IEwg+8zwbEArRfMaXClzW43WXwzLV+5J
+	Ai/d+bpBx/BgzOu+MPbE7E1MsvExLGsb5MbsYeCacAranrIeE3NO/64CWd5IoY+xjT7J07
+	arb3mHogmcEtisehngC7ghmFFohMJ0MCap/NRAawfQe08hfP9gQFCZQ8W0xDRT1oKdS803
+	ZFzPLoIa/jmVvcO0oAV/yccEW9nYP2LeettIraYhVUbEfkqGdumX1rjTuW421A==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v4 0/2] Enable sensors support for the Congatec Board
+ Controller
+Date: Mon, 03 Feb 2025 12:01:04 +0100
+Message-Id: <20250203-congatec-board-controller-hwmon-v4-0-ff6c76a4662c@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: stmmac: Allow zero for [tr]x_fifo_size
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Jose Abreu <joabreu@synopsys.com>,
- Paolo Abeni <pabeni@redhat.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- netdev@vger.kernel.org, Furong Xu <0x1207@gmail.com>,
- Petr Tesarik <petr@tesarici.cz>, Serge Semin <fancer.lancer@gmail.com>,
- Yanteng Si <si.yanteng@linux.dev>, Xi Ruoyao <xry111@xry111.site>
-References: <20250203093419.25804-1-steven.price@arm.com>
- <Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPChoGcC/4XOO27DMBAE0KsIrEOD/4+r3CNwIZEbi4AkJiTNJ
+ DB091By4yCFylks3swdZUgBMjp3d5Sghhzi0oJ46ZAb++UKOPiWESNMEEMsdnG59gUcHmKf/BZ
+ LitMECY9fc1wwWFDcW6k956gpHwnew/fe8HZ55ASft1ZUHkc09BmaM8+hnLuqTlTg5CjanseQS
+ 0w/+7pK9+9tCKVEHA6pFBNsNAXhvLTewOsQY5nCcmpdu17Zs2iORdZEqoBzza2RTP8X+ZNI5bH
+ IN9EJqbh2hin1V1zX9ReDRKIVoQEAAA==
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Lee Jones <lee@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, blake.vermeer@keysight.com, 
+ linux-doc@vger.kernel.org, Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.14.1
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeegvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeetieejudffledvveeuvdeiuedvuefgkeegheejudefgfektdeuuddvfffhgffgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheplhhinhhugiesrhhovggtkhdquhhsrdhnvghtpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhli
+ hhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhifmhhonhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepjhguvghlvhgrrhgvsehsuhhsvgdrtghomh
+X-GND-Sasl: thomas.richard@bootlin.com
 
-[Moved Kunihiko to the To: line]
+This is the fourth iteration of this series which enables sensors support
+for the Congatec Board Controller.
 
-On 03/02/2025 10:38, Russell King (Oracle) wrote:
-> On Mon, Feb 03, 2025 at 09:34:18AM +0000, Steven Price wrote:
->> Commit 8865d22656b4 ("net: stmmac: Specify hardware capability value
->> when FIFO size isn't specified") modified the behaviour to bail out if
->> both the FIFO size and the hardware capability were both set to zero.
->> However devices where has_gmac4 and has_xgmac are both false don't use
->> the fifo size and that commit breaks platforms for which these values
->> were zero.
->>
->> Only warn and error out when (has_gmac4 || has_xgmac) where the values
->> are used and zero would cause problems, otherwise continue with the zero
->> values.
->>
->> Fixes: 8865d22656b4 ("net: stmmac: Specify hardware capability value when FIFO size isn't specified")
->> Tested-by: Xi Ruoyao <xry111@xry111.site>
->> Signed-off-by: Steven Price <steven.price@arm.com>
-> 
-> I'm still of the opinion that the original patch set was wrong, and
-> I was thinking at the time that it should _not_ have been submitted
-> for the "net" tree (it wasn't fixing a bug afaics, and was a risky
-> change.)
-> 
-> Yes, we had multiple places where we have code like:
-> 
->         int rxfifosz = priv->plat->rx_fifo_size;
->         int txfifosz = priv->plat->tx_fifo_size;
-> 
->         if (rxfifosz == 0)
->                 rxfifosz = priv->dma_cap.rx_fifo_size;
->         if (txfifosz == 0)
->                 txfifosz = priv->dma_cap.tx_fifo_size;
-> 
->         /* Split up the shared Tx/Rx FIFO memory on DW QoS Eth and DW XGMAC */
->         if (priv->plat->has_gmac4 || priv->plat->has_xgmac) {
->                 rxfifosz /= rx_channels_count;
->                 txfifosz /= tx_channels_count;
->         }
-> 
-> and this is passed to stmmac_dma_rx_mode() and stmmac_dma_tx_mode().
-> 
-> We also have it in the stmmac_change_mtu() path for the transmit side,
-> which ensures that the MTU value is not larger than the transmit FIFO
-> size (which is going to fail as it's always done before or after the
-> original patch set, and whether or not your patch is applied.)
-> 
-> Now, as for the stmmac_dma_[tr]x_mode(), these are method functions
-> calling into the DMA code. dwmac4, dwmac1000, dwxgmac2, dwmac100 and
-> sun8i implement methods for this.
-> 
-> Of these, dwmac4, dwxgmac2 makes use of the value passed into
-> stmmac_dma_[tr]x_mode() - both of which initialise dma.[tr]x_fifo_size.
-> dwmac1000, dwmac100 and sun8i do not make use of it.
-> 
-> So, going back to the original patch series, I still question the value
-> of the changes there - and with your patch, it makes their value even
-> less because the justification seemed to be to ensure that
-> priv->plat->[tr]x_fifo_size contained a sensible value. With your patch
-> we're going back to a situation where we allow these to effectively be
-> "unset" or zero.
-> 
-> I'll ask the question straight out - with your patch applied, what is
-> the value of the original four patch series that caused the breakage?
-> 
+The series was rebased on v6.14-rc1.
+A typo was fixed in the Kconfig, and the description improved.
+The documentation file Documentation/hwmon/cgbc-hwmon.rst was added.
 
-I've no opinion whether the original series "had value" - I'm just 
-trying to fix the breakage that entailed. My first attempt at a patch 
-was indeed a (partial) revert, but Andrew was keen to find a better 
-solution[1].
+Regards,
 
-I'd prefer we don't delay getting a fix merged arguing about the finer 
-details on this. Obviously once a fix is merged the code can be
-improved at leisure. If you want to propose a straight revert then
-by all means send the patch and I'll post a Tested-By.
+Thomas
 
-Steve
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Changes in v4:
+- Rebased on v6.14-rc1.
+- Add the documentation for this driver.
+- In Kconfig, fix a typo and improve the description
+- Link to v3: https://lore.kernel.org/r/20241115-congatec-board-controller-hwmon-v3-0-1c45637c8266@bootlin.com
 
-[1] https://lore.kernel.org/all/fc08926d-b9af-428f-8811-4bfe08acc5b7@lunn.ch/
+Changes in v3:
+- remove the cgbc_hwmon_compute_curr_channel() macro.
+- Link to v2: https://lore.kernel.org/r/20241108-congatec-board-controller-hwmon-v2-0-16e337398527@bootlin.com
+
+Changes in v2:
+- hwmon: use unsigned int type instead of u8 in struct cgbc_hwmon_sensor
+  and struct cgbc_hwmon_data.
+- hwmon: in cgbc_hwmon_probe_sensors() no need to request data for the
+  first sensor as the Board Controller returns data of the first sensors
+  with the number of sensors.
+- hwmon: fix typos in comments and improve them.
+- hwmon: remove dead code in cgbc_hwmon_read() and in
+  cgbc_hwmon_read_string() (deadcode was the 'return -ENODEV').
+- hwmon: remove useless platform_set_drvdata().
+- hwmon: channel id always refers to the same sensor.
+- hwmon: add a enum cgbc_sensor_types.
+- Link to v1: https://lore.kernel.org/r/20241104-congatec-board-controller-hwmon-v1-0-871e4cd59d8e@bootlin.com
+
+---
+Thomas Richard (2):
+      hwmon: Add Congatec Board Controller monitoring driver
+      mfd: cgbc: add a hwmon cell
+
+ Documentation/hwmon/cgbc-hwmon.rst |  63 ++++++++
+ Documentation/hwmon/index.rst      |   1 +
+ MAINTAINERS                        |   1 +
+ drivers/hwmon/Kconfig              |  10 ++
+ drivers/hwmon/Makefile             |   1 +
+ drivers/hwmon/cgbc-hwmon.c         | 304 +++++++++++++++++++++++++++++++++++++
+ drivers/mfd/cgbc-core.c            |   1 +
+ 7 files changed, 381 insertions(+)
+---
+base-commit: 379487e17ca406b47392e7ab6cf35d1c3bacb371
+change-id: 20240809-congatec-board-controller-hwmon-e9e63d957d33
+
+Best regards,
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
+
