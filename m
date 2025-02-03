@@ -1,212 +1,125 @@
-Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14501FFC67;
-	Mon,  3 Feb 2025 09:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BA0200127
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738576438; cv=none; b=ExWLuFC+JDnthi9KlZ+d0X3B2c9GZTmunlAuVibskqS+MxOvlpRjCJWjky5B7HG3YcFWhUBme4fKYijgOUT2wx5MR11cwtiCuF0tMuZPfFuIOfjgoXwaVWmOB+EGAvGVVVyzVQ9rbIu1NgH/l/0Vtw4hpcrPreyA7Kts8I0zI3E=
+	t=1738576441; cv=none; b=PQ4mvIfv2jCuuHHp2n0CZPswcbSMJm6MhQqk9C/2WUgCQueokUj7FSYmRZLg9hFYWGSGpE+f5MwLrt7zHhl5voKWPLk+v5wz6mN9lZmTwT7bCkfbUOtkMACg5DhKtJLzeFyhX6P1t9DgrwUrTstcUMKnfk7dXtLDjeHjr4JBSdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738576438; c=relaxed/simple;
-	bh=tesu0A/tv1Xw8FBbgxAAWn5a6B9SHzPZC8XK7xjtnTQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=H2e0fOfPhjY268V+OBejfuCyUeaoBzQtb8AQwjZtpbzDylKaOm5wOXCg63SClbnSBb/JgyOOcC3TfxNWDJvRII/vhl/OYiK+idcFGYkYpljPshKcmEyfin6wTYHcu2uohFcVW4lPi/qxlJE/KS2f6aO2U9JGmoXSvnQyhjQMvfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=ZTFtFUx1; arc=none smtp.client-ip=49.12.72.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
+	s=arc-20240116; t=1738576441; c=relaxed/simple;
+	bh=ozCbctTngO50lZWfr7m8Wu4UXC9YqYbG/0hWz6Iy5mA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=F39m1E5JbRbYCC8g5p8+zggCSUc4GImBUtNEiL4tIf5UMGcuCrbrBauIH9onfzVI8tUjIEvd+F6xLvBhiiookFY7uvUbKvPDw+Ze+FxDa/43laeYo2rIx2u2NcH92UJiiy0A5bf4nk6trL1AvAAux3E4S+9BxFhGx7B0B2F1pq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g5gJzon+; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="ZTFtFUx1"
-From: Fiona Behrens <me@kloenk.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
-	t=1738576432; bh=3H5iq9A3tQ3hrA+8GYMBIQFWr4KutMcbtiEaeICkxs4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=ZTFtFUx139H7TvSqA0wxnR5/OWqcwS1fhiwWGACck4Y0ARngUwg7UL7wQ0y9nM2xl
-	 J3MqKp4Aaof7+tBR19wvBuFZK3BCa4AhliLjjrvVLqSc9EvTNJKOFtASjc8rmICQXI
-	 rcyLTrzvVlJx5NDc5g5oqu/oD2PFpKHpN4SR+m4U=
-To: Asahi Lina <lina@asahilina.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,
-  Boqun Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?=
- Roy Baron <bjorn3_gh@protonmail.com>,  Benno Lossin
- <benno.lossin@proton.me>,  Andreas Hindborg <a.hindborg@kernel.org>,
-  Alice Ryhl <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>,
-  Jann Horn <jannh@google.com>,  Matthew Wilcox <willy@infradead.org>,
-  Paolo Bonzini <pbonzini@redhat.com>,  Danilo Krummrich <dakr@kernel.org>,
-  Wedson Almeida Filho <wedsonaf@gmail.com>,  Valentin Obst
- <kernel@valentinobst.de>,  Andrew Morton <akpm@linux-foundation.org>,
-  linux-mm@kvack.org,  airlied@redhat.com,  Abdiel Janulgue
- <abdiel.janulgue@gmail.com>,  rust-for-linux@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  asahi@lists.linux.dev
-Subject: Re: [PATCH 5/6] rust: page: Add physical address conversion functions
-In-Reply-To: <20250202-rust-page-v1-5-e3170d7fe55e@asahilina.net> (Asahi
-	Lina's message of "Sun, 02 Feb 2025 22:05:47 +0900")
-References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
-	<20250202-rust-page-v1-5-e3170d7fe55e@asahilina.net>
-Date: Mon, 03 Feb 2025 10:53:51 +0100
-Message-ID: <87jza74amo.fsf@kloenk.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g5gJzon+"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-219f8263ae0so74290915ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:53:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738576439; x=1739181239; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oGm/bq6SKySYHYDc9Teum4UAC1vMAmPVFWHcwcmi784=;
+        b=g5gJzon+dFqn8XdsSQRGi5Wacr6DHanGZ2jgs0PrqnA55ckVn3A2/46tTdey4p4KG/
+         de3q+UkL51exKTHa7TXILHcF2N8732o8iQd3abFt6LmOC9wYrtfEk7qfdY1B1Fm3NBNw
+         o0zVt7AVpyzXEooCq36NcBTRlPXHkqJAKbzr9bdov0s7aNddi6ybzv/Ht2siPxZhYKJd
+         GdvEhXnuGsMWaAh/Ohg3sfXmQ/BOoH4J7NA+0hwK2k8zmksCi/AQg4G53/jNDgPQRNB6
+         e3IFkoovfjfIDxdvLN78y87xMEfS+8sm2w3VdUmkdet6GkWdH+OCNXOyep7XUhODIxct
+         munw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738576439; x=1739181239;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oGm/bq6SKySYHYDc9Teum4UAC1vMAmPVFWHcwcmi784=;
+        b=qqOQWu4dyW2ktZoecWbgQQcBrl2JsPH2GzCWTjzYM38THRvjdG3X4F+0gd7cQgp3+c
+         UBGhOekDYtc/sIKVzwc76oOdCZvo10OFLU0oPsh8RlHdRZ8iwX2lXxp2rIIJoZW6UXfM
+         ZLDlE0wK8WplPpEmx/UMk4Vn/POaU7n75X67ozfVG0Cjzg3PqlF/r6lkB9Z2/e/BFvf+
+         gtd+quTGfYCsJ/6vL4NyrijIODfdaosP0zp11RbuQ8LRSF/GEX681x08GuF4AQdXcWvd
+         /ZvOh4NgdO7zG9ZukJBxM38shFhox/Xnju7spXoa3zxF95BFh7sWdXp908VzBY1hbMgw
+         guig==
+X-Forwarded-Encrypted: i=1; AJvYcCXbIugdOv0h+I/DRkqVttjK/kf9gD18stJdTbnS0BuxZq/evD7M2t/HzsilmRSqkXhLeiv55Wcmh83wmMA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZOisM64yKBVXC9Dee3x93dpSk9mxtzq/qy4lQAXnUl8AYhB3S
+	agNSleBfturtprRacpuQ25h5uuOPoIW7TvO8XJTsp3g7gZV/aQmEwc692aUDtac=
+X-Gm-Gg: ASbGncvnwxWZjMGh33kQQqrc2RybFFCLtCS63pQa6PeOyXMFVB2HuDXrAveNpjsU+E/
+	LzGgcsK0UWfRuDHc30x8bLoMIBrW0X5BnUgDmM1F1GJtm9SpVsz3qc3GqmaLC6HtjbjPP7HrfK0
+	sfycgu/KTSCN/3JvRgh8vOztN9NVabuczriZFiKUPiLnmHEKQylOCgCxGlcmRY2PV1QRctzFpIt
+	KV7DPhmjesnHlRM7xeT9RSBT0Ji4mUi9xbtoWbKTzroMpMjnXMJQB9ucXKSSd77lJgNcz5wfEQz
+	nUCMRAKu9tY4LPXnVg==
+X-Google-Smtp-Source: AGHT+IFwo05BiIt05ICb4MDKGKrGGWOHvgZo0+KY9Q0VF4jPxeMFSPJcZ0MPvxF/KghXhf5T9qIi1A==
+X-Received: by 2002:a17:903:947:b0:212:4c82:e3d4 with SMTP id d9443c01a7336-21dd7df2d2cmr345490545ad.46.1738576438710;
+        Mon, 03 Feb 2025 01:53:58 -0800 (PST)
+Received: from localhost ([122.172.84.139])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de33206besm71659285ad.241.2025.02.03.01.53.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 01:53:58 -0800 (PST)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>
+Cc: linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V1.1 20/33] cpufreq: powernv: Stop setting common freq attributes
+Date: Mon,  3 Feb 2025 15:23:32 +0530
+Message-Id: <fa304da30d5f10e7ff069d72fb3aff2741630ca4.1738576306.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+In-Reply-To: <1f5393d54b2c04206afefd521ebdf3fc03004a11.1737631669.git.viresh.kumar@linaro.org>
+References: <1f5393d54b2c04206afefd521ebdf3fc03004a11.1737631669.git.viresh.kumar@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Asahi Lina <lina@asahilina.net> writes:
+The cpufreq core handles this now, the driver can skip setting it.
 
-> Add methods to allow code using the Page type to obtain the physical
-> address of a page, convert to and from an (owned) physical address, and
-> borrow a Page from a physical address. Most of these operations are, as
-> you might expect, unsafe.
->
-> These primitives are useful to implement page table structures in Rust,
-> and to implement arbitrary physical memory access (as needed to walk
-> arbitrary page tables and dereference through them). These mechanisms
-> are, of course, fraught with danger, and are only expected to be used
-> for core memory management code (in e.g. drivers with their own device
-> page table implementations) and for debug features such as crash dumps
-> of device memory.
->
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
-> ---
->  rust/helpers/page.c | 26 +++++++++++++++++++++
->  rust/kernel/page.rs | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 91 insertions(+)
->
-> diff --git a/rust/helpers/page.c b/rust/helpers/page.c
-> index b3f2b8fbf87fc9aa89cb1636736c52be16411301..1c3bd68818d77f7ce7806329b8f040a7d4205bb3 100644
-> --- a/rust/helpers/page.c
-> +++ b/rust/helpers/page.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  
-> +#include <linux/io.h>
->  #include <linux/gfp.h>
->  #include <linux/highmem.h>
->  
-> @@ -17,3 +18,28 @@ void rust_helper_kunmap_local(const void *addr)
->  {
->  	kunmap_local(addr);
->  }
-> +
-> +struct page *rust_helper_phys_to_page(phys_addr_t phys)
-> +{
-> +	return phys_to_page(phys);
-> +}
-> +
-> +phys_addr_t rust_helper_page_to_phys(struct page *page)
-> +{
-> +	return page_to_phys(page);
-> +}
-> +
-> +unsigned long rust_helper_phys_to_pfn(phys_addr_t phys)
-> +{
-> +	return __phys_to_pfn(phys);
-> +}
-> +
-> +struct page *rust_helper_pfn_to_page(unsigned long pfn)
-> +{
-> +	return pfn_to_page(pfn);
-> +}
-> +
-> +bool rust_helper_pfn_valid(unsigned long pfn)
-> +{
-> +	return pfn_valid(pfn);
-> +}
-> diff --git a/rust/kernel/page.rs b/rust/kernel/page.rs
-> index fe5f879f9d1a86083fd55c682fad9d52466f79a2..67cd7006fa63ab5aed4c4de2be639ed8e1fbc2ba 100644
-> --- a/rust/kernel/page.rs
-> +++ b/rust/kernel/page.rs
-> @@ -3,6 +3,7 @@
->  //! Kernel page allocation and management.
->  
->  use crate::{
-> +    addr::*,
->      alloc::{AllocError, Flags},
->      bindings,
->      error::code::*,
-> @@ -10,6 +11,7 @@
->      types::{Opaque, Ownable, Owned},
->      uaccess::UserSliceReader,
->  };
-> +use core::mem::ManuallyDrop;
->  use core::ptr::{self, NonNull};
->  
->  /// A bitwise shift for the page size.
-> @@ -249,6 +251,69 @@ pub unsafe fn copy_from_user_slice_raw(
->              reader.read_raw(unsafe { core::slice::from_raw_parts_mut(dst.cast(), len) })
->          })
->      }
-> +
-> +    /// Returns the physical address of this page.
-> +    pub fn phys(&self) -> PhysicalAddr {
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+---
+V1.1:
+- Drop runtime updates to freq attr.
 
-Rust  uses for similar references `as_*` so `as_phys`, would it make
-sense to use the same naming format here?
+ drivers/cpufreq/powernv-cpufreq.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Thanks,
-Fiona
+diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
+index ae79d909943b..0631284c4cfb 100644
+--- a/drivers/cpufreq/powernv-cpufreq.c
++++ b/drivers/cpufreq/powernv-cpufreq.c
+@@ -386,12 +386,8 @@ static ssize_t cpuinfo_nominal_freq_show(struct cpufreq_policy *policy,
+ static struct freq_attr cpufreq_freq_attr_cpuinfo_nominal_freq =
+ 	__ATTR_RO(cpuinfo_nominal_freq);
+ 
+-#define SCALING_BOOST_FREQS_ATTR_INDEX		2
+-
+ static struct freq_attr *powernv_cpu_freq_attr[] = {
+-	&cpufreq_freq_attr_scaling_available_freqs,
+ 	&cpufreq_freq_attr_cpuinfo_nominal_freq,
+-	&cpufreq_freq_attr_scaling_boost_freqs,
+ 	NULL,
+ };
+ 
+@@ -1129,8 +1125,6 @@ static int __init powernv_cpufreq_init(void)
+ 
+ 	if (powernv_pstate_info.wof_enabled)
+ 		powernv_cpufreq_driver.boost_enabled = true;
+-	else
+-		powernv_cpu_freq_attr[SCALING_BOOST_FREQS_ATTR_INDEX] = NULL;
+ 
+ 	rc = cpufreq_register_driver(&powernv_cpufreq_driver);
+ 	if (rc) {
+-- 
+2.31.1.272.g89b43f80a514
 
-> +        // SAFETY: `page` is valid due to the type invariants on `Page`.
-> +        unsafe { bindings::page_to_phys(self.as_ptr()) }
-> +    }
-> +
-> +    /// Converts a Rust-owned Page into its physical address.
-> +    ///
-> +    /// The caller is responsible for calling [`Page::from_phys()`] to avoid leaking memory.
-> +    pub fn into_phys(this: Owned<Self>) -> PhysicalAddr {
-> +        ManuallyDrop::new(this).phys()
-> +    }
-> +
-> +    /// Converts a physical address to a Rust-owned Page.
-> +    ///
-> +    /// # Safety
-> +    /// The caller must ensure that the physical address was previously returned by a call to
-> +    /// [`Page::into_phys()`], and that the physical address is no longer used after this call,
-> +    /// nor is [`Page::from_phys()`] called again on it.
-> +    pub unsafe fn from_phys(phys: PhysicalAddr) -> Owned<Self> {
-> +        // SAFETY: By the safety requirements, the physical address must be valid and
-> +        // have come from `into_phys()`, so phys_to_page() cannot fail and
-> +        // must return the original struct page pointer.
-> +        unsafe { Owned::from_raw(NonNull::new_unchecked(bindings::phys_to_page(phys)).cast()) }
-> +    }
-> +
-> +    /// Borrows a Page from a physical address, without taking over ownership.
-> +    ///
-> +    /// If the physical address does not have a `struct page` entry or is not
-> +    /// part of a System RAM region, returns None.
-> +    ///
-> +    /// # Safety
-> +    /// The caller must ensure that the physical address, if it is backed by a `struct page`,
-> +    /// remains available for the duration of the borrowed lifetime.
-> +    pub unsafe fn borrow_phys(phys: &PhysicalAddr) -> Option<&Self> {
-> +        // SAFETY: This is always safe, as it is just arithmetic
-> +        let pfn = unsafe { bindings::phys_to_pfn(*phys) };
-> +        // SAFETY: This function is safe to call with any pfn
-> +        if !unsafe { bindings::pfn_valid(pfn) && bindings::page_is_ram(pfn) != 0 } {
-> +            None
-> +        } else {
-> +            // SAFETY: We have just checked that the pfn is valid above, so it must
-> +            // have a corresponding struct page. By the safety requirements, we can
-> +            // return a borrowed reference to it.
-> +            Some(unsafe { &*(bindings::pfn_to_page(pfn) as *mut Self as *const Self) })
-> +        }
-> +    }
-> +
-> +    /// Borrows a Page from a physical address, without taking over ownership
-> +    /// nor checking for validity.
-> +    ///
-> +    /// # Safety
-> +    /// The caller must ensure that the physical address is backed by a `struct page` and
-> +    /// corresponds to System RAM. This is true when the address was returned by
-> +    /// [`Page::into_phys()`].
-> +    pub unsafe fn borrow_phys_unchecked(phys: &PhysicalAddr) -> &Self {
-> +        // SAFETY: This is always safe, as it is just arithmetic
-> +        let pfn = unsafe { bindings::phys_to_pfn(*phys) };
-> +        // SAFETY: The caller guarantees that the pfn is valid. By the safety
-> +        // requirements, we can return a borrowed reference to it.
-> +        unsafe { &*(bindings::pfn_to_page(pfn) as *mut Self as *const Self) }
-> +    }
->  }
->  
->  // SAFETY: `Owned<Page>` objects returned by Page::alloc_page() follow the requirements of
