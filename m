@@ -1,136 +1,98 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9870D25A65C;
-	Mon,  3 Feb 2025 17:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B3D25A65C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738605269; cv=none; b=LaNHsnVd+jknl5OAgXhTIhlvfY00B2qTY4PDPgYm+beKQvFo0mAzw7YHhqBENMc3kjkV8R4HC8jIPb1PKFITqppfyJs2Gw58M0bUpkruhBK8cjDfKOkdX7TOmLtolX8Vii79cLTHCFNM8qaAlfI0VO0spA+NqTSMgOeGDKCPabw=
+	t=1738605356; cv=none; b=bKYvHTXTQsDuQ2Im7iNiRYilWERlbDPdOI49Vs1qyEhCZg8h1nlKRAC+n7WtcLFB83Ldi8+CHQFw4ZvVtjQZfUSIoswS3hzZqhfcp7fG7Py/6JplRRo4leTQ9sRTrL8ETAXu0V1XUeLe2GLOwgoF4Tu9vOs8ZOKTsw4xiv+ElxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738605269; c=relaxed/simple;
-	bh=RskFGxgMXUxm/Kgxe7P4T6ZU5xeVlWHE0HPOMkYPP60=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G/7mwnf7ikBD3ZmAud5EqB3zlUlQuyI4h1XSIxKaw4Dt6fbRrUMnjAd3dqXBn7HxJ3AsEXbj2K1krgWePSzxD5/p/R3LFEFN3JGf/2KotiZAMSTG62oAEZ37wj9SoGD6lrKhb2tuex5mdor+gjEPElbbmwSXoyGabHAzMW3yI70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iY0Dbt7P; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1738605356; c=relaxed/simple;
+	bh=8e8RzsOJJ/IPXEk6jFz3YCAiTioi4qy++c8Lk+elKrI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PxR1d91LhZWM6SjfN/N83FfZIminQORc5F2igZHp38SP15ToZ/srahp1KgXuLo7Ivy62I3UVoPpGJxME4x8AGXuhCr+WnUWF4cfv6CFt4ae7M3MeoGMS3P2VTrKeSGhZ8qIT5u1/9jL69dDkJ2JeQL4TrQdYZHAc17PTSPxfBNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z2Ww4YH4; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iY0Dbt7P"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3863c36a731so3636200f8f.1;
-        Mon, 03 Feb 2025 09:54:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2Ww4YH4"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ab68a4ab074so579507066b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 09:55:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738605266; x=1739210066; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YhHyUXmTx8Kjx+aIGTwDpZ5Q8Lg7Z71ESxIET7h6X74=;
-        b=iY0Dbt7PzfoUbBGpMK4X5KJ5DGkMICiuf/qAmeBBccyA5uuN+sXKQgq3e6DCeN5kam
-         lkoAEX7EjYAvjw5MDTqcleglGCqFW3xkhDvrOagmMCd9ADQehHe7ac94BrJzhWVkaPsz
-         CqEgaUX6j9IH0pTEqkVlzLh9VXm96B1slKhtjbNr1ahgsXWvBrdLilTl+FcQUQ5poxv2
-         Tmk+Msb4Nef6Mua6JmH87ryNhB+S5dDaWtDC8z51AVwnrUBkrGAb85+5VEOCAFBFzh7y
-         6N/VtOgvyJRisjxzlEKDDuENVWSSGjkeSbxfUJ+R538WXZ5KINjQOGi8D1Iw1Uv+8vAj
-         Mmlg==
+        d=gmail.com; s=20230601; t=1738605353; x=1739210153; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SAQHvdvrqS5BkvseXrC++pTbIaALiULGra7PwXB+XpQ=;
+        b=Z2Ww4YH4ClAP6U2JoX8CRsCoWNTtmW6v6C7G0BXMglFjZONRJ48v1yctNWv2wEnvvv
+         v8CAIg+0SNbKUOGv8POcnKOSi/Rbzmmblz22OU1f6xTmKozjrO+1SbA9qz0/3rvVNGjT
+         TtgmjFsQMqrr1oiQc9RahgUoJjrf71xuIZwzI3Yd+AFzGnbAAgDsU4LhfTa/UC8x8Ger
+         kHIT4Yx9959kWpdjZSy7VAsGR65kFJEXkXqs8HC3Q8mG3oK/KtFq0DokHYd0sTnh9e03
+         vsWnHoYklhyCg8jqRIvab+5/hSfplf8qILy0zvqqiH8IKl3zR0P+FTzAJKDw9oRpdZlL
+         6ymw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738605266; x=1739210066;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YhHyUXmTx8Kjx+aIGTwDpZ5Q8Lg7Z71ESxIET7h6X74=;
-        b=JiXnw1qfpnfC2vt+NHGkdQzQQ3pYl7W/Q/g68a/pqQECtTXKRT541WCDuKoMMUA+QN
-         x91Ts62kosOmVdY6f1DGCw44Ffu1fIzOMR/Y6P0dmFPsKVJ9TS8hfrTrHZLZq7i1c2N4
-         Z7Xp3rPk2VfbGGpHOgebi9Zf0Q/jOgcSogiQhk9g+D8+ueS9+CaNp4QcOviMcdrsxyLI
-         KpvNm0BGxs38SawDHyJfXog/UegaEq5y7Ik5SjbAoWO218gZ75qJAqgxDOHhs12ychhE
-         82kvMob9OtoiAzJyS0ZdNyku3rcYz+l/JuDjaP9C8oK5A1M4Vi0LZ8GV5Zh+2JQBn7rd
-         qGng==
-X-Forwarded-Encrypted: i=1; AJvYcCUGpuJF+xDaTYfdnchABU4JsaQUcX/gF2ICtePG8r38GtjXpY6fxIsaFNbOdvMHopz8swjv0J+eUWIs/y7Ok+4=@vger.kernel.org, AJvYcCUzFAWqo1YAuRNd8hTDRyFarM0zqqb170RGAUb3UjG481nA0J8ezrwazG14T+v809k/Un8m1zmVeBMkWbEV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxls7VyvONGEl/HjW/5U+38LLvagmqns8UBAQLe259CiBgh2Pyf
-	1KGZF941yoVslzX2sIFZskispLkAFWcAuTjZw6myycl2eYPPysmL
-X-Gm-Gg: ASbGncsxkgYFc5fivEAUWVZ0ZYCFz5A+3XdPY4L8P2m2u2nqLplMUFufdAGt+K/yldG
-	TV3zDvZoYK4SIXVvlEoVlc2eYSpDJUiSLyvuhOedFOuiUi+gs5rzi6KoY++7FL0B5QyYuYfWqCV
-	r3S/+Lbq3rj8HgEB/rOwHxvWSGUrPQY8H9fPHQKlwXy/uVzUsUtttHMnfomin8am3N0wJGV50Ge
-	TTGKtW+EdUAgFgg2SeAFrymyRMfxposNUlmf69+ETTRZG5kkErpiKixfa/NcbyJt68ZeFrE+y/A
-	mpnTFiVq+KnZV3cP
-X-Google-Smtp-Source: AGHT+IHdoed3XjN9J007P9D62DnvwBtD2Wey8LqfcdYMmsEr0qJT1fYybz7yCG3/8xH1JQo22zpcDg==
-X-Received: by 2002:a05:6000:2ac:b0:38c:5cd0:ece8 with SMTP id ffacd0b85a97d-38c5cd0f132mr13260317f8f.12.1738605265430;
-        Mon, 03 Feb 2025 09:54:25 -0800 (PST)
-Received: from void.cudy.net ([46.210.194.238])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38da59470b2sm12276f8f.40.2025.02.03.09.54.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 09:54:25 -0800 (PST)
-From: Andrew Kreimer <algonell@gmail.com>
-To: Manish Chopra <manishc@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Andrew Kreimer <algonell@gmail.com>
-Subject: [PATCH net-next] net: qed: fix typos
-Date: Mon,  3 Feb 2025 19:53:24 +0200
-Message-ID: <20250203175419.4146-1-algonell@gmail.com>
-X-Mailer: git-send-email 2.48.1.91.g5f8f7081f7
+        d=1e100.net; s=20230601; t=1738605353; x=1739210153;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SAQHvdvrqS5BkvseXrC++pTbIaALiULGra7PwXB+XpQ=;
+        b=Ugz+R2Ad7FpEJfBdFB1bYEnSr2CIa6HGNjk62pydvlWNrb6Bgml/xPICKfmYuQVX3v
+         OlmOt/DTsseuUpeQZFX+1M1iGmh2uEEqb/96ysE2eqF1Pl+f/9wQssiS7fRbftEFFfB3
+         mDjvKIXKrEeSJ7E3+VkWgpEsx5aK0GDbnsGDRWayHvwhp0t5+YmSAuUNnImHS/vf09VS
+         zlvtzB/pY/TdQJjeyj4qD1tfpSzAfyPC3quvHUMHQO3qr3NZz3gjAeuGnKjTwXbNfXp+
+         3I+RUF46R2r5BLxGTJgBmeURxuqimlccrzmoYO+XvcMQ+6/b7vQCM+TgkYieFIt6XNzD
+         AkaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUp5jG4vMWm9Gg5Bf16VETOEFKZu2Zo35CUy8mzFyZZJFaDTS66KHqh4oi+M2bVuF+RBInKrT1gzLWNnkU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztrcwjddRAgTuTyP65Dyfb7yJBCYERsTnRf7S+meq6egWq43dp
+	Dm3lP+nX85m10Vd/n/rvhmgFkM6Q5aOBu0eDcnrSQ4YpaTJtWOyfGfYd4LOEnxYaa6KtWt0dron
+	33xTZ0++8uAPSOJGIMMVKVLVvx/Q=
+X-Gm-Gg: ASbGncuiQwN2Xgi7Tg94SC2cSLdnpaCHg9dIK9a4/4aF1NDj4ZAxznzs46d3HEu02LS
+	pUcBRMUW8HC/YnPV1X+h2GnUDXYGqhXPWyQRB25IC9QoP+eKjGCsdR+n2f28gKecxZMO+STE=
+X-Google-Smtp-Source: AGHT+IEtm/SX1sQBNwg57zqZoD5XtCJMb4nE0ceLKF1Zpom0tPPv1Q3okJvhClprHDPRLznwwtLCyvMBTlNODCOQnPk=
+X-Received: by 2002:a05:6402:a001:b0:5dc:7374:261d with SMTP id
+ 4fb4d7f45d1cf-5dc737427bfmr34603992a12.7.1738605353193; Mon, 03 Feb 2025
+ 09:55:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250201163106.28912-1-mjguzik@gmail.com> <20250201163106.28912-2-mjguzik@gmail.com>
+ <20250203175123.GB1003@redhat.com>
+In-Reply-To: <20250203175123.GB1003@redhat.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Mon, 3 Feb 2025 18:55:41 +0100
+X-Gm-Features: AWEUYZlbvHvPufmBaHPz_csfz_c4fuvAVdfpLeRzOEKCPVQGg4LsT_Gr6u3hzVE
+Message-ID: <CAGudoHHauoo9nhUHF2R-UqMbyT5O8TcRxmGy-+QCRNk-CAO3pA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] exit: perform add_device_randomness() without tasklist_lock
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: ebiederm@xmission.com, brauner@kernel.org, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There are some typos in comments/messages:
- - Valiate -> Validate
- - acceptible -> acceptable
- - acces -> access
- - relased -> released
+On Mon, Feb 3, 2025 at 6:51=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wrot=
+e:
+>
+> On 02/01, Mateusz Guzik wrote:
+> >
+> > +     add_device_randomness((const void*) &p->se.sum_exec_runtime,
+> > +                           sizeof(unsigned long long));
+>
+> I won't insist, but do we really need to keep this ugly "(const void*)"
+> typecast? and perhaps sizeof(p->se.sum_exec_runtime) will look a bit
+> better?
+>
 
-Fix them via codespell.
+Thanks for the review, I'm going to wait for Eric to chime in before
+doing anything here.
 
-Signed-off-by: Andrew Kreimer <algonell@gmail.com>
----
- drivers/net/ethernet/qlogic/qed/qed_sriov.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+As for the thing at hand, I tried avoid messing with it in order to
+reduce discussion. :->
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sriov.c b/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-index fa167b1aa019..5222a035fd19 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-@@ -3033,7 +3033,7 @@ static void qed_iov_vf_mbx_vport_update(struct qed_hwfn *p_hwfn,
- 	u16 length;
- 	int rc;
- 
--	/* Valiate PF can send such a request */
-+	/* Validate PF can send such a request */
- 	if (!vf->vport_instance) {
- 		DP_VERBOSE(p_hwfn,
- 			   QED_MSG_IOV,
-@@ -3312,7 +3312,7 @@ static void qed_iov_vf_mbx_ucast_filter(struct qed_hwfn *p_hwfn,
- 		goto out;
- 	}
- 
--	/* Determine if the unicast filtering is acceptible by PF */
-+	/* Determine if the unicast filtering is acceptable by PF */
- 	if ((p_bulletin->valid_bitmap & BIT(VLAN_ADDR_FORCED)) &&
- 	    (params.type == QED_FILTER_VLAN ||
- 	     params.type == QED_FILTER_MAC_VLAN)) {
-@@ -3729,7 +3729,7 @@ qed_iov_execute_vf_flr_cleanup(struct qed_hwfn *p_hwfn,
- 
- 		rc = qed_iov_enable_vf_access(p_hwfn, p_ptt, p_vf);
- 		if (rc) {
--			DP_ERR(p_hwfn, "Failed to re-enable VF[%d] acces\n",
-+			DP_ERR(p_hwfn, "Failed to re-enable VF[%d] access\n",
- 			       vfid);
- 			return rc;
- 		}
-@@ -4480,7 +4480,7 @@ int qed_sriov_disable(struct qed_dev *cdev, bool pci_enabled)
- 		struct qed_ptt *ptt = qed_ptt_acquire(hwfn);
- 
- 		/* Failure to acquire the ptt in 100g creates an odd error
--		 * where the first engine has already relased IOV.
-+		 * where the first engine has already released IOV.
- 		 */
- 		if (!ptt) {
- 			DP_ERR(hwfn, "Failed to acquire ptt\n");
--- 
-2.48.1.91.g5f8f7081f7
+However, we seem to be in agreement this should be augmented, so I'm
+going to do it in v4.
 
+--=20
+Mateusz Guzik <mjguzik gmail.com>
