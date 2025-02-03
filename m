@@ -1,92 +1,184 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38A61FCFDC;
-	Mon,  3 Feb 2025 14:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716E41EEF9
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738591464; cv=none; b=CDISQxYzKeinro6TPEZqbQLbavcvoUNx2GvVJf6sRkld8lkxT9jKqJsRY3B5UxELGiqT9/w4e6LaIXsqAWjk0Bqa7r1pbdkvmwYpk866kLI9Stl0ccova0K/o0KUbl6/ohSMVBOHHnTbhA6psFe2Dwr6zVH8tZaeTTn8wRVMSsY=
+	t=1738591478; cv=none; b=i7k02ud+y7o0FUzF8Sp6S16ufSYuPo0tvCUwle19nnNQw8dqme3flRuOrjPXEdI/S5brnLUhRC1d4H96agHdRiS7Nte4iVKye800rX7kUofevx3Ni4InonJRSlA5nN0ZKwv9ZLRWWwFDDGawZf0ctOjcAjDejyijs1Vc8hj8oG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738591464; c=relaxed/simple;
-	bh=HZL337EBIbjzUeN5s//5Tri9Plnc/gZ5wQbTCTf3xHA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kE1nsZcQhmRyiq9H/UcEXHaaQuUntc3tcWt8KM6rLVu8fCbsFuMuQwmebiTQcD+7nE4WVhqySosvjImWDhbVrCTWNoALKNV9cSc049D8hVL+94+PA3FkMXHThbjw26+pYZv9VBGsxv7ghNAdy0zr7kiLsqLLLoNbg/mzAt1utRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HK292aNI; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738591478; c=relaxed/simple;
+	bh=2OIa1ZIrEwhXL5MsvNbrU11CTYqkfYM0Ww6BzG16qY8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y3tS3RnmRBcg/BPDTeQpCoEME8PxcEZjUnKRjbFKIFSXCH5uEgpznzH5G8NZ+uBk49i4O6hpvZ1SsV20blGmzcAz1lUICuxzJn/ydpL+yPTOGsOUv7F659yDrAo/1+O6tqje5ttqD4XYqTJeeSn99c5rF2yDhDfUvED75DqSuVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j90kcpty; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HK292aNI"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 513E3PRh3026657
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 08:03:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738591405;
-	bh=risQ65T55Tm6eYa1TdwpJHzLazGd9IsglOpUNuMRuXA=;
-	h=From:To:CC:Subject:Date;
-	b=HK292aNIVDqDJmRQaMufd725Kbw0S55a7MXRShiHfGnrv23bO6IRnEfDVGs7euDQ5
-	 XdF8K3Xo7aFZeKg8LGTJXPsUehm/ztaH+2nnhX9I5+e9c/MY997SKSx/G5YQs0PCL3
-	 yQRBkcQWu+XF3vLzNT8es5MZu7KDp7mhIdRnIRdQ=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 513E3Pvh078914
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 3 Feb 2025 08:03:25 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
- Feb 2025 08:03:25 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 3 Feb 2025 08:03:25 -0600
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 513E3Ox3036019;
-	Mon, 3 Feb 2025 08:03:24 -0600
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
-        <airlied@gmail.com>, <maarten.lankhorst@linux.intel.com>,
-        <mripard@kernel.org>, <tzimmermann@suse.de>,
-        <dri-devel@lists.freedesktop.org>, <simona@ffwll.ch>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
-        <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
-        <h-shenoy@ti.com>, <devarsht@ti.com>
-Subject: [PATCH] dt-bindings: display: ti: Fix compatible for am62a7 dss
-Date: Mon, 3 Feb 2025 19:33:23 +0530
-Message-ID: <20250203140323.1992920-1-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j90kcpty"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6f4bc408e49so22169927b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:04:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738591475; x=1739196275; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3MiG8ILt8Yn9LtSo8zrEP73wfD//i7MORC/NBtgshl4=;
+        b=j90kcpty5ptvm7j5BK78SVi4pUcc3yTLzxSFQnNTRW8h6yd1kiLhJQ/PDC1A26hBFQ
+         v2UZeUKpQEeV2miSwkgl6fk4tHbc53WR9U+HMAwpFzIRJZsU+4NK3xMsgJ+UkxqHwcS8
+         0aDGFRurY61KDmaxSJwWHah6YktFQYo47bfzLqFb+9m0j9FqDbBpOrKre8PnJpuYMDvR
+         bAH8TP8mAIVrnaA+ZF67W3eW92mI2a3nvjDIwxMe4kikYGJMz6Y2I3WT8EUZDfz26oga
+         RjSUyHuA59F/oG9ReTf/cQ9/VSA2vSbQNWi5LDmqWRCTUQxCTpIllfVov6DppSmkkveJ
+         lEWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738591475; x=1739196275;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3MiG8ILt8Yn9LtSo8zrEP73wfD//i7MORC/NBtgshl4=;
+        b=dXNpvFbTvd7P6LRKkkpviqg6YGzFtVbM1Pq0xF8tmrgxyYKMG9WfcKCiu40Epmo5aM
+         FlK47iX0K28U2w14omHEiQAXVn+wJqVKCFSOcDdRIIsxfcYW2XhhqtN59nzW1Es1cxy8
+         hT1F2kEwIidLNjUYYgtUcNEgnjl9yhByn4apZYKEoe2Uorl+bOyCqs2Tew6m7io7RFTq
+         XbP96E3W5oe18ILRIiSZEiRfgdqQtJeEHGJKyB4etiHpoKuCI+GSUQJFjqzmY3RG7q7R
+         511B2Kzbtth/C4uO8tnY7klI2wgHpWiUYM9NyMFJyq/lDItRJGfaUejPSix7Op2lF2+0
+         z+bg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUsKK1MOkXqJmGOMp9stdX4NenOjxrmnlw/yrtQGnRnVL5oFoDcZr228yNzL3n/rrAFFmVUHutCjVWFO4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVYgIXAkjg7UhUgsEDp+l3KTzPmveYyqdYUgEEn4iEqm23lkMA
+	Y33jqpxavFSWiu9xtm5jNAgCO8FK69eY/D92Aw/vKPtbVqvEBHDLZu6ETmx4xy5LHpxkjV6KC9Y
+	fHiYF9V1BBP0RhdOYd6/bWM35cRBbRzaRhLvOQA==
+X-Gm-Gg: ASbGncuu3WPDm5E6DsejLoRTHzOvTBZLVTjRYEAL3A37xRvVU5nI/D7eoz4C8FaDTzd
+	6OIhkblHYknV8VPS8DEhXIzAb94mNiD8eHcyrHtZdJCsBPDgcO2nkzhwGX2jWfTbk2DaMDKQJaA
+	==
+X-Google-Smtp-Source: AGHT+IHLs3FLituH22CBJTCC44v20E2zGZEme1CuUalIEcbSHa4S1LzyVXjnSZYtsdh38rN7Sycwz9vIj9EtGuifSjM=
+X-Received: by 2002:a05:690c:994:b0:6f0:237e:fc67 with SMTP id
+ 00721157ae682-6f7a83fcefamr125534307b3.23.1738591475324; Mon, 03 Feb 2025
+ 06:04:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250123092644.7359-1-andy-ld.lu@mediatek.com>
+In-Reply-To: <20250123092644.7359-1-andy-ld.lu@mediatek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 3 Feb 2025 15:03:59 +0100
+X-Gm-Features: AWEUYZnk_P6e6WT5mTt4ApkOyTMWhna0dJzCdBChCmPPxEjQ9bm-vcA95IzI1VE
+Message-ID: <CAPDyKFpXGoM+iYyMBtrnctPX_cJQv=tN52NunBRcfJecQzGy5A@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: mtk-sd: Fix register settings for hs400(es) mode
+To: Andy-ld Lu <andy-ld.lu@mediatek.com>
+Cc: matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, 
+	wenbin.mei@mediatek.com, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-Fix compatible string for AM62A7 DSS.
-s/ti,am62a7,dss/ti,am62a7-dss
+On Thu, 23 Jan 2025 at 10:26, Andy-ld Lu <andy-ld.lu@mediatek.com> wrote:
+>
+> For hs400(es) mode, the 'hs400-ds-delay' is typically configured in the
+> dts. However, some projects may only define 'mediatek,hs400-ds-dly3',
+> which can lead to initialization failures in hs400es mode. CMD13 reported
+> response crc error in the mmc_switch_status() just after switching to
+> hs400es mode.
+>
+> [    1.914038][   T82] mmc0: mmc_select_hs400es failed, error -84
+> [    1.914954][   T82] mmc0: error -84 whilst initialising MMC card
+>
+> Currently, the hs400_ds_dly3 value is set within the tuning function. This
+> means that the PAD_DS_DLY3 field is not configured before tuning process,
+> which is the reason for the above-mentioned CMD13 response crc error.
+>
+> Move the PAD_DS_DLY3 field configuration into msdc_prepare_hs400_tuning(),
+> and add a value check of hs400_ds_delay to prevent overwriting by zero when
+> the 'hs400-ds-delay' is not set in the dts. In addition, since hs400(es)
+> only tune the PAD_DS_DLY1, the PAD_DS_DLY2_SEL bit should be cleared to
+> bypass it.
+>
+> Fixes: c4ac38c6539b ("mmc: mtk-sd: Add HS400 online tuning support")
+> Signed-off-by: Andy-ld Lu <andy-ld.lu@mediatek.com>
 
-Fixes: 7959ceb767e4 ("dt-bindings: display: ti: Add support for am62a7 dss")
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
----
- Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied for fixes and by adding a stable-tags, thanks!
 
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-index 55e3e490d0e6..31c4ffcb599c 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-@@ -23,7 +23,7 @@ properties:
-   compatible:
-     enum:
-       - ti,am625-dss
--      - ti,am62a7,dss
-+      - ti,am62a7-dss
-       - ti,am65x-dss
- 
-   reg:
--- 
-2.39.1
+Kind regards
+Uffe
 
+
+> ---
+> Changes in v2:
+> - Change commit title from 'optimize' to 'Fix'
+> - Add a Fixes tag
+> - Change spaces back to tabs
+>
+> ---
+>  drivers/mmc/host/mtk-sd.c | 31 ++++++++++++++++++++-----------
+>  1 file changed, 20 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> index 4b6e91372526..345ea91629e0 100644
+> --- a/drivers/mmc/host/mtk-sd.c
+> +++ b/drivers/mmc/host/mtk-sd.c
+> @@ -273,6 +273,7 @@
+>  #define MSDC_PAD_TUNE_CMD2_SEL   BIT(21)   /* RW */
+>
+>  #define PAD_DS_TUNE_DLY_SEL       BIT(0)         /* RW */
+> +#define PAD_DS_TUNE_DLY2_SEL      BIT(1)         /* RW */
+>  #define PAD_DS_TUNE_DLY1         GENMASK(6, 2)   /* RW */
+>  #define PAD_DS_TUNE_DLY2         GENMASK(11, 7)  /* RW */
+>  #define PAD_DS_TUNE_DLY3         GENMASK(16, 12) /* RW */
+> @@ -318,6 +319,7 @@
+>
+>  /* EMMC50_PAD_DS_TUNE mask */
+>  #define PAD_DS_DLY_SEL         BIT(16) /* RW */
+> +#define PAD_DS_DLY2_SEL                BIT(15) /* RW */
+>  #define PAD_DS_DLY1            GENMASK(14, 10) /* RW */
+>  #define PAD_DS_DLY3            GENMASK(4, 0)   /* RW */
+>
+> @@ -2504,13 +2506,23 @@ static int msdc_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>  static int msdc_prepare_hs400_tuning(struct mmc_host *mmc, struct mmc_ios *ios)
+>  {
+>         struct msdc_host *host = mmc_priv(mmc);
+> +
+>         host->hs400_mode = true;
+>
+> -       if (host->top_base)
+> -               writel(host->hs400_ds_delay,
+> -                      host->top_base + EMMC50_PAD_DS_TUNE);
+> -       else
+> -               writel(host->hs400_ds_delay, host->base + PAD_DS_TUNE);
+> +       if (host->top_base) {
+> +               if (host->hs400_ds_dly3)
+> +                       sdr_set_field(host->top_base + EMMC50_PAD_DS_TUNE,
+> +                                     PAD_DS_DLY3, host->hs400_ds_dly3);
+> +               if (host->hs400_ds_delay)
+> +                       writel(host->hs400_ds_delay,
+> +                              host->top_base + EMMC50_PAD_DS_TUNE);
+> +       } else {
+> +               if (host->hs400_ds_dly3)
+> +                       sdr_set_field(host->base + PAD_DS_TUNE,
+> +                                     PAD_DS_TUNE_DLY3, host->hs400_ds_dly3);
+> +               if (host->hs400_ds_delay)
+> +                       writel(host->hs400_ds_delay, host->base + PAD_DS_TUNE);
+> +       }
+>         /* hs400 mode must set it to 0 */
+>         sdr_clr_bits(host->base + MSDC_PATCH_BIT2, MSDC_PATCH_BIT2_CFGCRCSTS);
+>         /* to improve read performance, set outstanding to 2 */
+> @@ -2530,14 +2542,11 @@ static int msdc_execute_hs400_tuning(struct mmc_host *mmc, struct mmc_card *card
+>         if (host->top_base) {
+>                 sdr_set_bits(host->top_base + EMMC50_PAD_DS_TUNE,
+>                              PAD_DS_DLY_SEL);
+> -               if (host->hs400_ds_dly3)
+> -                       sdr_set_field(host->top_base + EMMC50_PAD_DS_TUNE,
+> -                                     PAD_DS_DLY3, host->hs400_ds_dly3);
+> +               sdr_clr_bits(host->top_base + EMMC50_PAD_DS_TUNE,
+> +                            PAD_DS_DLY2_SEL);
+>         } else {
+>                 sdr_set_bits(host->base + PAD_DS_TUNE, PAD_DS_TUNE_DLY_SEL);
+> -               if (host->hs400_ds_dly3)
+> -                       sdr_set_field(host->base + PAD_DS_TUNE,
+> -                                     PAD_DS_TUNE_DLY3, host->hs400_ds_dly3);
+> +               sdr_clr_bits(host->base + PAD_DS_TUNE, PAD_DS_TUNE_DLY2_SEL);
+>         }
+>
+>         host->hs400_tuning = true;
+> --
+> 2.46.0
+>
