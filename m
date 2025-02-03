@@ -1,147 +1,138 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A380426AE4
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6317A1F94D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738571163; cv=none; b=qHZa7Rua0pETLZeRzBN4KhJd2OJ6fBTCPxDq1Cph9/vP5ao3eJUpsGaFV0GR6EZmMUU3oa5Lxvob/ANjCY9txedoqfDjAN5LfUE0uKEBzr7Whx7Ts1++nbq3t+pcSjJwT6JsiMrl4wUio3PHX+lyy5AfJvYb6NpLguqrIEjmr+w=
+	t=1738571467; cv=none; b=aKzi8zTKmkIt8KeZ6k0KnvFsCxugVMBmTqq0EbQkCfRx7cayEsJG2GgNyPS+82YgGUzsM5WqcgPBtrvSNV22J/LhoqxtDv8jIEGdEQ1XmmKNlEVLOsUZmYZqY831h9NFg/Xglesjnz/u+s9ucR+xOKr9g3hGqN+6u1BkLL6AnCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738571163; c=relaxed/simple;
-	bh=/Tr5JUZYV3LVg3vQ13XaGg/DMNKQjaE9ux4fHBb1RTM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AIFQ9PYMA+0GDyAAltvSElYrNmCDURGwlNYzjclmtu024eHlQp4gZwN74KQuOhWxUonCQMxpjgSihCx3V8FvsN1ozJ09y+uLxFL40Mh6+jZWaj13cobM76oarcJJP9Vg8bA9n54q4p9cw/PbAiav3D2BwWGtlyrspsJWiymHxdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=O06h9U5e; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="O06h9U5e"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2167141dfa1so69783695ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:26:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1738571161; x=1739175961; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t7lQIQ5MioRS7p56iXT3+pmVZjZaMiEEtNeyBXs9W1Y=;
-        b=O06h9U5esX3zbGrtCVR1ZBmJ16mFKT0U+sS6FEp0aO05BKIQPokXaeiGQDPLDwWOns
-         lo/6xwpJ+2akgIGVj6K1KG3RPubEVXJuhag+H4MO8Gr73Z1XepPhmAfLqPAFfBPbceTv
-         a8DmlZGtof9GK+F7fEAW3aRvgtjtJkjl7tcSjpp2cUy+Nm2gB5wVxfG2/Po6bcJxdQta
-         Mi00a/bMlymk8ZoiMRjHb5DHZvlntR1rBrZppuZSu6x3YkqUmcYM+UD7axg4YpcuMlVu
-         MuVniBVyCOxFBhNAkL8fqiUvLVdIojEf3W/jcqcSnhIkBYQOi8f0Q3wchztCzcpbVwFt
-         Dicw==
+	s=arc-20240116; t=1738571467; c=relaxed/simple;
+	bh=ZMEZssbSRxYyiNQmI8fY3mVdZizQXr/9pFOem9fRWvU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=A+/u2yeMBwR3xFhGc9gUSrCTknesRQH/AtmUijXXkKsSjeZGCVC/F68GOTtn2GEvtySQpdmygSW9XfBqh5cyNLogGMMApTTUwJabZDdAJC0ZDOBAM0dpuRVaarfJ6n6gE11oHOzvLv7JzyDslSacoD3uKmnHec67ZPogviuIQu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3cfba354f79so96784105ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:31:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738571161; x=1739175961;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1738571464; x=1739176264;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t7lQIQ5MioRS7p56iXT3+pmVZjZaMiEEtNeyBXs9W1Y=;
-        b=WSFZZWIfAbcRnP+d26Amyozp549wPZSEOhVJuQgYo7CGsQxvvuYDx6cEbOWrtg+khq
-         G86JUOgwmMsvToro/v1J1/gGpzBAa4WnfzJFV7ev9azDfuJfyfj627OntpKH+86YkfeR
-         uGbOQpPHPFFBeZUV2DLsjRzU773s23ffCScY2IxOlCji29G1GfW8fS0n+wwetOcKzkok
-         qrmJZFsDvgjPTMJ0vZP3BmBHJyqsLAnBQd7MFZqutSHA1N08D3/xTofyS8/vLce3a+BE
-         Ah+y04ts/qZ6WaBk4HIcf+fM1r/wrcSFxsxose3uswMQ27vwZ0QUX57pT2n0DCFrmnRc
-         WIbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVs66JukWVSgqWguBoU096qlA0pawHWRYoxIEX3mxXPDjJj7OZ7GsztcvvKnjjJ3DL4D7nue1mMKCjbchA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1tlHa+/x4ekp4bXSIEBI6nc70bkv4kcTf1RrmRSKu3xVzXyqI
-	Y/zBfzb/eFyel4ASohBxt9Fch9UbwEtkNjgbUG8owmx5XL+iZHrORgmg/77S2Iw=
-X-Gm-Gg: ASbGncs2OX3YthDv6bwoMj46OK7a855jZ3eS9cp4GcsRbRlXNEJsiiln58PyXpVqddF
-	DBkPxdt4To28RPTML5U7n7EGAprE43k0KxpQWZdD7OWTVL1Qvv9fUOEcjCN7WFdCk9fFZjqYFlr
-	U10dzHToCxRTEHdXDgvcEMFkTW7KCQx+/oDpJqJeB70rV/ZHMOiPeMR4bHZaoZsk7dLYKY51Ppx
-	IjK9kPaaK1FKTN309gWLkWetjR2MQzvZs6v7Ei5MpgzFV9UoyfYGBj/5QarQhjfrQeHEaPdMIpT
-	C7q6MvJNWhhj1aI3Kn/eUlC2VPM4
-X-Google-Smtp-Source: AGHT+IHX7wiqWkH9ZcI1oVnOppZdCHPlnSWOncf4WEz8oSiauUBCNlHSvTET6Iebk8Cezdu9r3h0Aw==
-X-Received: by 2002:a05:6a21:9004:b0:1e1:e2d8:fd4a with SMTP id adf61e73a8af0-1ed872fe623mr26733156637.5.1738571159383;
-        Mon, 03 Feb 2025 00:25:59 -0800 (PST)
-Received: from [157.82.207.107] ([157.82.207.107])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6424facsm7848454b3a.39.2025.02.03.00.25.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 00:25:58 -0800 (PST)
-Message-ID: <a8bf6c8b-5ee5-4150-a9a2-75345fd07432@daynix.com>
-Date: Mon, 3 Feb 2025 17:25:53 +0900
+        bh=aJi/4D3kncdnmHdMy5b9QFb5vCyijtWKZEKOQbh/JP8=;
+        b=vdkA/ASXwI1mnWMtPdxW9vp7uQd4LMPLwtkzqV2YJMsvRaqbZ7Z83CWIxxWP3KjGAd
+         8Wtnn1uO9vEdUqYHBAdJh1bySQYBGXsYg2lKZl0v8nv7TsDzyuNOjxeYV4Z9VPEbmEpm
+         NHaPbw7pcklysCVRbxuHndbu3asE9iVPFkL5B1dyqrae5q2GCeAYOrO2zVIrOPkhnD8n
+         TsskeLc/cfmnZss4dEXf2Do4plIaCbE8IuHXPcq4Blt8b+NDkqDiLJifja7LIkIHczOH
+         2QigGMjY+BDbo3BhkqQFuZYi3NsKJ8LuknB7goXT/NzVoqUkTKjKqsKC2IK7rnoTrqlg
+         XcDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVHhYhhaijjR3vvdt1WKZWw4oVDD7nqs+DeEBJy4X1523ArpuBPGkmk47y5JkDAQrgRX2yD103vv/ydkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCFDRmKGJy/pOBdVP5zzFWIzCRPDsPlf9Fmf4I1ymqkz/QEZkx
+	lryIbrmqG/DkfgfkwQ2Xu5Uimh2IehZ7fDbv9zzDBei6CrxUop17X3aSFIU6DZOQBTEAaB3b542
+	zHz1sioOxlobDMR1mNZsYPRIfUoq3slQjRvATFoaT8lrpH4DM3oBL+mg=
+X-Google-Smtp-Source: AGHT+IEVnQm7i657aBNthABxVrEFNpUGJkk8IqQ1mmRPdFKXccaXZ/RtbnEawC8tG1m5hrm/Lc4HKl0lfuYPKWU0dzwtt0745sm6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/3] virtio-gpu api: add blob userptr resource
-To: Honglei Huang <honglei1.huang@amd.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>,
- Antonio Caggiano <quic_acaggian@quicinc.com>
-Cc: Lingshan Zhu <Lingshan.Zhu@amd.com>,
- Demi Marie Obenour <demiobenour@gmail.com>, Huang Rui <ray.huang@amd.com>,
- virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- dri-devel@lists.freedesktop.org, David Airlie <airlied@redhat.com>,
- Gerd Hoffmann <kraxel@redhat.com>, Chia-I Wu <olvaffe@gmail.com>,
- Daniel Vetter <daniel.vetter@ffwll.ch>
-References: <20241220100409.4007346-1-honglei1.huang@amd.com>
-Content-Language: en-US
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-In-Reply-To: <20241220100409.4007346-1-honglei1.huang@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:b4c:b0:3cf:ce7c:b8b1 with SMTP id
+ e9e14a558f8ab-3cffe447945mr229359905ab.18.1738571464567; Mon, 03 Feb 2025
+ 00:31:04 -0800 (PST)
+Date: Mon, 03 Feb 2025 00:31:04 -0800
+In-Reply-To: <20250203080449.1988-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a07ec8.050a0220.d7c5a.0084.GAE@google.com>
+Subject: Re: [syzbot] [net?] possible deadlock in do_ipv6_setsockopt (4)
+From: syzbot <syzbot+3433b5cb8b2b70933f8d@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024/12/20 19:04, Honglei Huang wrote:
-> From: Honglei Huang <Honglei1.Huang@amd.com>
-> 
-> Add a new resource for blob resource, called userptr, used for let
-> host access guest user space memory, to acquire a simple SVM features
-> in virtio GPU.
-> 
-> - The capset VIRTIO_GPU_CAPSET_HSAKMT used for context init,
-> in this series patches only HSAKMT context can use the userptr
-> feature. HSAKMT is a GPU compute library in HSA stack, like
-> the role libdrm in mesa stack.
-> - New flag VIRTIO_GPU_BLOB_FLAG_USE_USERPTR used in blob create
-> to indicate the blob create ioctl is used for create a userptr
-> blob resource.
-> 
-> Signed-off-by: Honglei Huang <Honglei1.Huang@amd.com>
-> ---
->   include/uapi/linux/virtio_gpu.h | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/uapi/linux/virtio_gpu.h b/include/uapi/linux/virtio_gpu.h
-> index b9a9783f0b14..0a6b56acbc13 100644
-> --- a/include/uapi/linux/virtio_gpu.h
-> +++ b/include/uapi/linux/virtio_gpu.h
-> @@ -323,6 +323,7 @@ struct virtio_gpu_cmd_submit {
->   
->   #define VIRTIO_GPU_CAPSET_VIRGL 1
->   #define VIRTIO_GPU_CAPSET_VIRGL2 2
-> +#define VIRTIO_GPU_CAPSET_HSAKMT 7
+Hello,
 
-The changes to add VIRTIO_GPU_CAPSET_VENUS and VIRTIO_GPU_CAPSET_DRM are 
-already merged so this should be rebased for clean apply.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+possible deadlock in smc_pnet_find_ism_resource
 
-Number 7 is also occupied since 2023:
-https://chromium.googlesource.com/crosvm/crosvm/+/e4c1878733937042111fca58899a3a94002bfef0%5E%21/rutabaga_gfx/src/rutabaga_utils.rs
+============================================
+WARNING: possible recursive locking detected
+6.13.0-syzkaller-09685-gc2933b2befe2-dirty #0 Not tainted
+--------------------------------------------
+syz.0.16/6653 is trying to acquire lock:
+ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: pnet_find_base_ndev net/smc/smc_pnet.c:945 [inline]
+ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: smc_pnet_find_ism_by_pnetid net/smc/smc_pnet.c:1101 [inline]
+ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: smc_pnet_find_ism_resource+0xe1/0x510 net/smc/smc_pnet.c:1152
 
-VCL, a proposed VirtIO-GPU OpenCL driver, is also going to use that number:
-https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/31634/diffs?commit_id=55a1a8a32057e83819b046f2de03aca333b052b4
+but task is already holding lock:
+ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: smc_connect+0xb2/0xde0 net/smc/af_smc.c:1646
 
-I think you should talk with Antonio Caggiano, who picked the number for 
-VCL, to allocate a number without a conflict with VCL.
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-Gurchetan (the author of Rutabaga change allocating the number), I think 
-you should notify the number usage by sending a patch for Linux or 
-virtio-spec.
+       CPU0
+       ----
+  lock(rtnl_mutex);
+  lock(rtnl_mutex);
 
-Regards,
-Akihiko Odaki
+ *** DEADLOCK ***
 
->   
->   /* VIRTIO_GPU_CMD_GET_CAPSET_INFO */
->   struct virtio_gpu_get_capset_info {
-> @@ -415,6 +416,7 @@ struct virtio_gpu_resource_create_blob {
->   #define VIRTIO_GPU_BLOB_FLAG_USE_MAPPABLE     0x0001
->   #define VIRTIO_GPU_BLOB_FLAG_USE_SHAREABLE    0x0002
->   #define VIRTIO_GPU_BLOB_FLAG_USE_CROSS_DEVICE 0x0004
-> +#define VIRTIO_GPU_BLOB_FLAG_USE_USERPTR      0x0008
->   	/* zero is invalid blob mem */
->   	__le32 blob_mem;
->   	__le32 blob_flags;
+ May be due to missing lock nesting notation
+
+2 locks held by syz.0.16/6653:
+ #0: ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: smc_connect+0xb2/0xde0 net/smc/af_smc.c:1646
+ #1: ffff88806d868258 (sk_lock-AF_INET6){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1624 [inline]
+ #1: ffff88806d868258 (sk_lock-AF_INET6){+.+.}-{0:0}, at: smc_connect+0xbc/0xde0 net/smc/af_smc.c:1647
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 6653 Comm: syz.0.16 Not tainted 6.13.0-syzkaller-09685-gc2933b2befe2-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_deadlock_bug+0x483/0x620 kernel/locking/lockdep.c:3039
+ check_deadlock kernel/locking/lockdep.c:3091 [inline]
+ validate_chain+0x15e2/0x5920 kernel/locking/lockdep.c:3893
+ __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+ __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+ pnet_find_base_ndev net/smc/smc_pnet.c:945 [inline]
+ smc_pnet_find_ism_by_pnetid net/smc/smc_pnet.c:1101 [inline]
+ smc_pnet_find_ism_resource+0xe1/0x510 net/smc/smc_pnet.c:1152
+ smc_find_ism_device net/smc/af_smc.c:1011 [inline]
+ smc_find_proposal_devices net/smc/af_smc.c:1096 [inline]
+ __smc_connect+0x391/0x1910 net/smc/af_smc.c:1526
+ smc_connect+0x872/0xde0 net/smc/af_smc.c:1699
+ __sys_connect_file net/socket.c:2040 [inline]
+ __sys_connect+0x288/0x2d0 net/socket.c:2059
+ __do_sys_connect net/socket.c:2065 [inline]
+ __se_sys_connect net/socket.c:2062 [inline]
+ __x64_sys_connect+0x7a/0x90 net/socket.c:2062
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbdb618cda9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fbdb7056038 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 00007fbdb63a5fa0 RCX: 00007fbdb618cda9
+RDX: 000000000000001c RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 00007fbdb620e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fbdb63a5fa0 R15: 00007fff45686908
+ </TASK>
+
+
+Tested on:
+
+commit:         c2933b2b Merge tag 'net-6.14-rc1' of git://git.kernel...
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17c65724580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
+dashboard link: https://syzkaller.appspot.com/bug?extid=3433b5cb8b2b70933f8d
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=13691764580000
 
