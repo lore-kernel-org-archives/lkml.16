@@ -1,232 +1,107 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E0D20E012
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7110720408E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738603783; cv=none; b=Z15oLFeC9nG+5TxmSPJmVzRLvkeiuZyupOoeul6pnSWZaPwLbjkLb9lh26PZKClzjDUk0igsvx966QKevXdKVlIc5pU1chmUzMQ06F8DQDyAHTQu3k1XR1kEdEaNYDdiyqAL1VHrKIwv3mNmYJBtpI/GNBApR5Zn8cxS5TuhCfE=
+	t=1738603895; cv=none; b=hd/DMpJCJND6Wjt7fEGH0ck+nNRFI/gwTFFRiof21TDl28a97GU0giLIJ12ENcOVF73/gQq3hhvyduJwZbAIsY/oNBbSGVGuuqNKJb0gOlBJCF57Wd0PbKgEX8jI/GANmf77R7e7RehnehsU/QeKnhr/FaMGDzuJUdIWLIisHnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738603783; c=relaxed/simple;
-	bh=8J9yPH7vzWSfYWlIvW/7lONVx1z/scQLxZ+Dr1iePJY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WQeTErgN999DotZcy3ksdYvJKTz1Y/ELFkPADTdH87y6W5GQ1SGOXVR/U1jQ3p2B0pSEkfUl+CMWHZZm0DnvSWNFEA5xYXNdBnVdlGk3PpxO2zX8feHPeYYepojlQX7JMjneqw2NiSY4atjmRuPul0JS+zOGXOtvYf3Ttw/uZtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F3mt4tQt; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1738603895; c=relaxed/simple;
+	bh=YDhUgtlTAwS0RUw95kPd9JoxS0ZWO9dvD7Jku166Tt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hkshwikwbh9ru1PyxmtI5B4TbEPwvLkeDInz1cq31bsIp+yyrDhcD8jhu+xwrlzCRnGtRzMYFD2kiSxhLMlxeYYgWYe0kxwu3IHGOJou8YAwMlHPcaX7PyITyTDj5+/I4moAcTmxZZIiB9hWKnqIs1QoAAd9JjgUmCbvGnw4meU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t24P9316; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F3mt4tQt"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-436230de7a3so5888815e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 09:29:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t24P9316"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-543e47e93a3so4982143e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 09:31:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738603779; x=1739208579; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GFEJkSWV8EqlxS4ccHV0qsfBF5Y8l25q3xX6ZVEbfhk=;
-        b=F3mt4tQt/MN5QvY1Lh10RffPjKoJ2cOK1ifyIWffmDtzEueKUdLqnXMBFRKBkUDUzt
-         uv0dUIJpRB27IdfOFpdnf8/6SWS65AIZK3h2FysK2Q8OWoMZT7k10vp3nnCZw6F7oF3k
-         bKobfptzVHiz8Fbo5AJeN5bIV5fmUqDVvzZmCZ4F9laFW6rKM+kNYr13A887va5kB/cK
-         dM3n3e2bBlLrU3SXNxM3QP0MYIszzZyWvGOk9OR7pdkPK4Bv4qe7hEE/XGR8RfHs/YOQ
-         7Cf5FzbMuwvIn1/k/hQ18QHljVULK1+IpuygdQf2UnZ82cIEUILN8addTiMhuh7+8hzo
-         F8hA==
+        d=linaro.org; s=google; t=1738603891; x=1739208691; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6J5C2NglTFNy0YpzDKyoh02/sMog3Gz9jf3ZxrSeYfw=;
+        b=t24P931678LDgB+s2sBHZpIsNlMNDP0oCo2SCHo46E5E79nI4B4V39HDZNVPslfErR
+         jNZGNXhJmVbW/lYv9BnmB/haYl/swEXYaTjaZyvr2CQEODZD6/4Z3vuRxkdKfGlfdGIS
+         vtebGYVoJuU0gFeY7VlIRT3hLxDrlSExCo5hNcwM1RrNrikigRUSaXc39RH7pHFkheyL
+         2v94bgdpHH53Cu0ZGRzHnXUwB7F0CCdYaj6AnLbLNlLSgMRC/q+YP9boN+QAc80zayAy
+         b0G9nLn99/HxtEnlBkk7Bh6iEpCuIRfM0CRTjyK/RveuwOtJz4GY1w9uXXQOn6ULJc3V
+         VotQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738603779; x=1739208579;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GFEJkSWV8EqlxS4ccHV0qsfBF5Y8l25q3xX6ZVEbfhk=;
-        b=gITEjpVipbqCP5mtOqrkFFtPRCPLPq+KJL3xZF1YtVIPqORwjFefdFwFSB7n6c1C6S
-         Kt9Dqf/ogPgOHY0eo649eMaCjglNizr3lqzxTqy3b6SzT+dI1DZCDuWPmrdGMRaJl+3q
-         9yqLtBNIfvIDIiiWa2p1gFF4ORxI+kJdWzjFRyK0P84sCIFRyRrrQUcPnTzy6h69a1Bm
-         0+AllVOZOQjaBi3k1+eOhR9rqywTdxon+5byEQFTJzQ4tOWh2+lwouQwIEuH3VoHk3ns
-         FurpaS43Xl8CQMs+kT8aBV/C+6Mkp6tFvWWqBPdxZSK71AtdQRq13SKHbWyogZqAB7i9
-         Kuog==
-X-Forwarded-Encrypted: i=1; AJvYcCXSYyryI16AG73ZeLyg5h2mwXpntJW/N1dlc579qE4z/Usb+/ZE6U7tovM3kUhtHtOssK0xqeWqbICemKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSn5i9psHFuQDa9o2t3rjqw5XnYKaD1Uv3O46r9dATmL7xhLT4
-	FWhATrVKZED7Mr7smmOr2H2hs5EJNy4M+ThQYzzyovGlz3ZuMGCrz8wFCFBEKD2WUZ0YKjIlI5k
-	s
-X-Gm-Gg: ASbGncvRZjj7yIHFP4OFzUhUVzzVF2gkiA6VgIvR3H2fgMqbzjriocO9lLiFX+OIwFr
-	wwDNF9Fgg6acaPRcrL0gMLduoKX7Pjkj9zr3n/SqD26xSO2V2fRqmX3bX3Vi/pFWbKuMWmvlHRZ
-	9RS2VkfTT4Ty0fNiBdwaVO162s4+fa/1tiBnz95GblsUVc83cMiVV8yY+QfC/tw1437eOoSxgRF
-	sOuvvydKFjVFFiuRH1qB8MABYMWaIUvnhF+i5FxCXmwbDgv9oj45oPYeMrfN/ldS+Zdec+HRjNw
-	QOQ0XSSJ80bi2quqEiuWlnFHJjxVKbs=
-X-Google-Smtp-Source: AGHT+IHAZR31jk7cgQImdAXKbLZVi3PgQDQvGTzkJyq/KIHOb1BAE4Ed3PCPRMwsFm7IFfCJtLB63Q==
-X-Received: by 2002:a05:600c:548b:b0:436:17f4:9b3d with SMTP id 5b1f17b1804b1-43905ac4913mr1728715e9.4.1738603779408;
-        Mon, 03 Feb 2025 09:29:39 -0800 (PST)
-Received: from [127.0.1.1] ([178.197.218.144])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c122e59sm13528122f8f.55.2025.02.03.09.29.38
+        d=1e100.net; s=20230601; t=1738603891; x=1739208691;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6J5C2NglTFNy0YpzDKyoh02/sMog3Gz9jf3ZxrSeYfw=;
+        b=U1OyrBQMWaJQwuUGOvXRpKFN0YFO+zhD/3KFbTUb8uztk+f7RuMLoILLU0mppWmsaC
+         eK1L8m6GZgVxmBRcGkEJVkkc48eYEe6X47ZNtbVVVXEQnvctOSyT86hpQlpc58gNETOM
+         FK6tJCH1K++EWXmyESEP1SOfv1A3AcXiyMXMVf4dwynQOQtqIIVUj9MMGQpYNAgnGlPt
+         f1AxvdmTij1ATw/oMv3ghaXHuURFi+6UJ+Xfiu/IU0GXXMgzeAzW0lZKb6aA8MCth+4X
+         BxOuF7yvHyl1RMxm0SWS5KorW3tLIw1g+qgEaJTYtILuVfRD+zSbqJKG6x93tq34ahF8
+         Dn1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWMzf8MSLRh3zwZ5mAxKk1wr/UXVWrahMozDxuUPI4eFHIwA0iDHgYv0VO15jC2HG5Fcf3zp0EQXyo8sF8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsW3sKVYJd0WLo09lTO/Xd/Q0qeHyai2oJW7AHyzu7Y1HvFLT+
+	zpqqHjsipbUKkCbHEj8XTv4tokbNahtl13xvHVtNndqLAey6W/8SEajWDQbTJks=
+X-Gm-Gg: ASbGnctC8EpBE0DWLa3hNSfXkA3Yiry2vUOmHw/5Mxoto8zF9IrJIS9uDsilD8+gezu
+	kzjpWdhuEo4oune/iMn1RRkCfCI6CECaDAYN42Qrkd1DI5ZT7YV55fRHVF/lRVlLnv/IpRi24qJ
+	ZOcjhYnkrtV3/1sKNeAFPeU5fGw1cJpmsQxkO+JRx5AjZ19i7l4YLo2su7Wxr8wOH//JxPawXgv
+	mhr+eXy/bisrVVZkFpmOy5ATGQmi/xzg4hHpvlY1IzezBgsCmulMIL/mEQD/d0l/CN+uZfSpbVD
+	aluUfrZZfP3oeX4jV6LLFhsmRTFiK+/V9J7z2hc68ddnaM98/qH3+F6B1bbM2LzUEY1vHIQ=
+X-Google-Smtp-Source: AGHT+IFkNKZpMLqmFDZoDeQKhVlcO9/NhY+aFDQECzKLKClwYk71/Jrbal9oPP0TJgwbGI19n1UGFg==
+X-Received: by 2002:a05:6512:3183:b0:542:8cb0:88a8 with SMTP id 2adb3069b0e04-543e4c3fffamr7547584e87.52.1738603891401;
+        Mon, 03 Feb 2025 09:31:31 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebeb06bbsm1347935e87.146.2025.02.03.09.31.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 09:29:38 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Mon, 03 Feb 2025 18:29:21 +0100
-Subject: [PATCH v2 4/4] drm/msm/dsi/phy: Define PHY_CMN_CLK_CFG[01]
- bitfields and simplify saving
+        Mon, 03 Feb 2025 09:31:30 -0800 (PST)
+Date: Mon, 3 Feb 2025 19:31:28 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Dave Stevenson <dave.stevenson@raspberrypi.com>, =?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, 
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Marek Vasut <marex@denx.de>, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Louis Chauvet <louis.chauvet@bootlin.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 2/4] drm/atomic-helper: Introduce
+ drm_atomic_helper_reset_crtc()
+Message-ID: <tk7ygprxgujdok4eo4iipmqs2bnsecxngltz2mk7kyqwl3ufpl@23rygh6g5iam>
+References: <20250203161607.223731-1-herve.codina@bootlin.com>
+ <20250203161607.223731-3-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-drm-msm-phy-pll-cfg-reg-v2-4-862b136c5d22@linaro.org>
-References: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
-In-Reply-To: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5553;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=8J9yPH7vzWSfYWlIvW/7lONVx1z/scQLxZ+Dr1iePJY=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBnoPz8U+LiZC73yFpJFPRfF2xbFXgicoUahB2Wt
- 8PLA7CrdsaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ6D8/AAKCRDBN2bmhouD
- 100GD/9lVGCRE731lWWUz4GdQLNxSdZ55RES0L+uItHvLkzhV5GSP7VvyA3mfDGylnkqGHDD3dE
- d1doKuC6a0ZsMD54rshnuwWEi7Q2QGydWWHqaMyOLGMGvfLERnswhH2uOvu4e/PLM+ubSweZUQg
- ppNlnxj//QI+gGnc3D3DONFaPLhdJHRTYZQn4lBxf+uF4d/OCoxCg22kF/qpheOarxa725F0xpm
- LxXHDj6Fzz+unuesi7vODErgjXGyn0t0vfXLu+pt/kUkfOBahieHmj+KVMAoHKONySwBqFhd+Nz
- ApC3UHAdquEuLon8PO6mI2LFt4T71/e+IOi6uhUiOBD45so48KtJ1o5S84s3thYA30Ll8gstYjZ
- n/XBlAG3942Em02ovnGIPcsVtXiE3oTlcM7wW8bLlnxOX9Qn0JCC9k3FsUigTEvy95FSJ6q8l1n
- VXeuyLATS6ie1PdJzyZKoug/RYJC1SxWkNuRCgpreBHL8/8k2Sk67O5FEQWzWycFaIN+QyFwkiB
- ThwGRH2H7EtoZ8/p8dwmjLIgZjpR/c3hRTM9a6Jh9d31cPSukSN1ksHL9eHGSZB/JihmQuEzwPh
- KCkRO84+WuLGbvRaU7WOTgaVLaXA8yNV1qCebEOUGxpEkqd3XY4KOzBtLNu6H21a7QBb9BP1X8j
- 4Ozsnn3H3c3YqIw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203161607.223731-3-herve.codina@bootlin.com>
 
-Add bitfields for PHY_CMN_CLK_CFG0 and PHY_CMN_CLK_CFG1 registers to
-avoid hard-coding bit masks and shifts and make the code a bit more
-readable.  While touching the lines in dsi_7nm_pll_save_state()
-resulting cached->pix_clk_div assignment would be too big, so just
-combine pix_clk_div and bit_clk_div into one cached state to make
-everything simpler.
+On Mon, Feb 03, 2025 at 05:16:04PM +0100, Herve Codina wrote:
+> drm_atomic_helper_reset_crtc() allows to reset the CRTC active outputs.
+> 
+> This resets all active components available between the CRTC and
+> connectors.
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  drivers/gpu/drm/drm_atomic_helper.c | 41 +++++++++++++++++++++++++++++
+>  include/drm/drm_atomic_helper.h     |  2 ++
+>  2 files changed, 43 insertions(+)
+> 
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
----
-
-Changes in v2:
-1. New patch
----
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c          | 31 ++++++++++++----------
- .../gpu/drm/msm/registers/display/dsi_phy_7nm.xml  | 12 +++++++--
- 2 files changed, 27 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-index 926fd8e3330b2cdfc69d1e0e5d3930abae77b7d8..b61e75a01e1b69f33548ff0adefc5c92980a15d7 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-@@ -67,8 +67,7 @@ struct dsi_pll_config {
- 
- struct pll_7nm_cached_state {
- 	unsigned long vco_rate;
--	u8 bit_clk_div;
--	u8 pix_clk_div;
-+	u8 clk_div;
- 	u8 pll_out_div;
- 	u8 pll_mux;
- };
-@@ -401,12 +400,12 @@ static void dsi_pll_cmn_clk_cfg1_update(struct dsi_pll_7nm *pll, u32 mask,
- 
- static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
- {
--	dsi_pll_cmn_clk_cfg1_update(pll, BIT(5), 0);
-+	dsi_pll_cmn_clk_cfg1_update(pll, DSI_7nm_PHY_CMN_CLK_CFG1_CLK_EN, 0);
- }
- 
- static void dsi_pll_enable_global_clk(struct dsi_pll_7nm *pll)
- {
--	u32 cfg_1 = BIT(5) | BIT(4);
-+	u32 cfg_1 = DSI_7nm_PHY_CMN_CLK_CFG1_CLK_EN | DSI_7nm_PHY_CMN_CLK_CFG1_CLK_EN_SEL;
- 
- 	writel(0x04, pll->phy->base + REG_DSI_7nm_PHY_CMN_CTRL_3);
- 	dsi_pll_cmn_clk_cfg1_update(pll, cfg_1, cfg_1);
-@@ -572,15 +571,17 @@ static void dsi_7nm_pll_save_state(struct msm_dsi_phy *phy)
- 	cached->pll_out_div &= 0x3;
- 
- 	cmn_clk_cfg0 = readl(phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG0);
--	cached->bit_clk_div = cmn_clk_cfg0 & 0xf;
--	cached->pix_clk_div = (cmn_clk_cfg0 & 0xf0) >> 4;
-+	cached->clk_div = cmn_clk_cfg0 & (DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_3_0__MASK |
-+					  DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_7_4__MASK);
- 
- 	cmn_clk_cfg1 = readl(phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
--	cached->pll_mux = cmn_clk_cfg1 & 0x3;
-+	cached->pll_mux = cmn_clk_cfg1 & DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL__MASK;
- 
- 	DBG("DSI PLL%d outdiv %x bit_clk_div %x pix_clk_div %x pll_mux %x",
--	    pll_7nm->phy->id, cached->pll_out_div, cached->bit_clk_div,
--	    cached->pix_clk_div, cached->pll_mux);
-+	    pll_7nm->phy->id, cached->pll_out_div,
-+	    cached->clk_div & DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_3_0__MASK,
-+	    cached->clk_div >> DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_7_4__SHIFT,
-+	    cached->pll_mux);
- }
- 
- static int dsi_7nm_pll_restore_state(struct msm_dsi_phy *phy)
-@@ -595,9 +596,9 @@ static int dsi_7nm_pll_restore_state(struct msm_dsi_phy *phy)
- 	val |= cached->pll_out_div;
- 	writel(val, pll_7nm->phy->pll_base + REG_DSI_7nm_PHY_PLL_PLL_OUTDIV_RATE);
- 
--	dsi_pll_cmn_clk_cfg0_write(pll_7nm,
--				   cached->bit_clk_div | (cached->pix_clk_div << 4));
--	dsi_pll_cmn_clk_cfg1_update(pll_7nm, 0x3, cached->pll_mux);
-+	dsi_pll_cmn_clk_cfg0_write(pll_7nm, cached->clk_div);
-+	dsi_pll_cmn_clk_cfg1_update(pll_7nm, DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL__MASK,
-+				    cached->pll_mux);
- 
- 	ret = dsi_pll_7nm_vco_set_rate(phy->vco_hw,
- 			pll_7nm->vco_current_rate,
-@@ -634,7 +635,8 @@ static int dsi_7nm_set_usecase(struct msm_dsi_phy *phy)
- 	}
- 
- 	/* set PLL src */
--	dsi_pll_cmn_clk_cfg1_update(pll_7nm, GENMASK(3, 2), data << 2);
-+	dsi_pll_cmn_clk_cfg1_update(pll_7nm, DSI_7nm_PHY_CMN_CLK_CFG1_BITCLK_SEL__MASK,
-+				    data << DSI_7nm_PHY_CMN_CLK_CFG1_BITCLK_SEL__SHIFT);
- 
- 	return 0;
- }
-@@ -737,7 +739,8 @@ static int pll_7nm_register(struct dsi_pll_7nm *pll_7nm, struct clk_hw **provide
- 		u32 data;
- 
- 		data = readl(pll_7nm->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
--		writel(data | 3, pll_7nm->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
-+		writel(data | DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL__MASK,
-+		       pll_7nm->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
- 
- 		phy_pll_out_dsi_parent = pll_post_out_div;
- 	} else {
-diff --git a/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml b/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
-index d54b72f924493b4bf0925c287366f7b1e18eb46b..d2c8c46bb04159da6e539bfe80a4b5dc9ffdf367 100644
---- a/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
-+++ b/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
-@@ -9,8 +9,16 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
- 	<reg32 offset="0x00004" name="REVISION_ID1"/>
- 	<reg32 offset="0x00008" name="REVISION_ID2"/>
- 	<reg32 offset="0x0000c" name="REVISION_ID3"/>
--	<reg32 offset="0x00010" name="CLK_CFG0"/>
--	<reg32 offset="0x00014" name="CLK_CFG1"/>
-+	<reg32 offset="0x00010" name="CLK_CFG0">
-+		<bitfield name="DIV_CTRL_3_0" low="0" high="3" type="uint"/>
-+		<bitfield name="DIV_CTRL_7_4" low="4" high="7" type="uint"/>
-+	</reg32>
-+	<reg32 offset="0x00014" name="CLK_CFG1">
-+		<bitfield name="CLK_EN" pos="5" type="boolean"/>
-+		<bitfield name="CLK_EN_SEL" pos="4" type="boolean"/>
-+		<bitfield name="BITCLK_SEL" low="2" high="3" type="uint"/>
-+		<bitfield name="DSICLK_SEL" low="0" high="1" type="uint"/>
-+	</reg32>
- 	<reg32 offset="0x00018" name="GLBL_CTRL"/>
- 	<reg32 offset="0x0001c" name="RBUF_CTRL"/>
- 	<reg32 offset="0x00020" name="VREG_CTRL_0"/>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 -- 
-2.43.0
-
+With best wishes
+Dmitry
