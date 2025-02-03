@@ -1,253 +1,247 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C49204C0D;
-	Mon,  3 Feb 2025 11:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98F9205AB5
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738583758; cv=none; b=HDx7sZGeTfsPHmU8taJ0hy3ZkNVuqLQ8F1ecyEbvk6997tReEZ2h4EWlonVw/6KqYmRaO5SE+T5i1Nl9MyrE/B0CS8fTSTv4LrGEqolrfzlFnzKj7i8Ha/LJAZP4MpKy1RIMT3UmT86xeBO+Sh9+EC02mdbKfbzSEKgAGs6u8l4=
+	t=1738583763; cv=none; b=PmDSo95+JKo3zquoQUetqcHVzXmuTjyBSf6dAfPC84+gX9IjJ4pm5B2gmqWvZ6rI5tiUjDrlmjucnzTGe/CvaE+VFfmPZeUjwXaJYrg1OaxDXQlb5BmBnaVrBgGSTbVlJlkvDJxU23WB1f5cNto6qxujrAgglJ1qmVW9204H+BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738583758; c=relaxed/simple;
-	bh=vUDUAA2Mwdbp1/Er12nWiPLs910s5YY8Kv4CQwNzd9o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AmtmZZHNYsbNqaU+V+SkQUBSUq56XC8Q46O9PARPmeDU7AypXjcKFTpICifpzXSbMbO2rfQJ+We9wfsa2X6t05CeQbsiQP6GQ+btelAGiFoe8yLdeCVKzjxYURNdKSEoGCk//NoHCD3zYwYQWrsBECJTQK/I8V42bzRIK8vRx5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=l4QysHYf; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1738583763; c=relaxed/simple;
+	bh=3aebO2Y6pQInuoUCgyshgsDh6HxXVCLmgcGLzFZAZA0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DhQwi5RIUPJRR1WLWKYHseNmWIPlPSxBRBP4MJCcDtf6O9Goka2loQVXZi6dh/FskCoD849eu9Veu542FTi+l1G69nPzYJESaxR5QeX90aeYu7DxqSmdLXaCrVSndJsvNykXcP2GptOoF62BSv0G/AMNskbQ5fNMlE9tK4k4ZO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RkoG/Rci; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="l4QysHYf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WuSovR9QdAIaryYdW+A1g1o31MDAJLE+4vMtcjJlDmY=; t=1738583755; x=1739188555; 
-	b=l4QysHYfInJ5lc4c+anDe87jmyOuknNbBpJ+IrCjAowpK7bVG653YlDCfwvWTEdqY3PibFqcFYc
-	gaMOodkJRJ0DtZrvCc1++zdbVNLqLbgUG5pNofE95VpIJxeSVzaIHm5F3zYO+nekU525HxYnyN3h8
-	cbqCuoa1pXa4zntJsgAjXdPV81fYgafExMKURzUT9zOEQ8ZgBSYQNrcxrxvXrZVw2VwqKRgRyQA4D
-	S3C8kAROTVAoVjBF9HuleS5ZBNi2BZLIHiLt6jVuXr/prlZ2EhjDI3QfPoD5DvGOtNoq/PfWb3lw0
-	Dt8IMoYewk9xgLcrXwSUPosLYLca0oL0f6zQ==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1tev3M-00000003S4r-39wC; Mon, 03 Feb 2025 12:55:48 +0100
-Received: from p5dc55198.dip0.t-ipconnect.de ([93.197.81.152] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1tev3M-00000003WUE-1xuf; Mon, 03 Feb 2025 12:55:48 +0100
-Message-ID: <950a85c8651b193f95fa839fceaec68d40356555.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v2] alpha/elf: Fix misc/setarch test of util-linux by
- removing 32bit support
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Arnd Bergmann <arnd@arndb.de>, 
- Richard Henderson <richard.henderson@linaro.org>, Matt Turner
- <mattst88@gmail.com>, Kees Cook <kees@kernel.org>,  "Paul E. McKenney"	
- <paulmck@kernel.org>, linux-alpha@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Michael Cree <mcree@orcon.net.nz>, Sam James	
- <sam@gentoo.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Michael
- Karcher	 <kernel@mkarcher.dialup.fu-berlin.de>, Chris Hofstaedtler
- <zeha@debian.org>, 	util-linux@vger.kernel.org, linux-mips@vger.kernel.org,
- 	loongarch@lists.linux.dev
-Date: Mon, 03 Feb 2025 12:55:47 +0100
-In-Reply-To: <87y0zfs26i.fsf_-_@email.froward.int.ebiederm.org>
-References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de>
-		<24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com>
-		<678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com>
-		<bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de>
-		<82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com>
-		<cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de>
-		<87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org>
-		<2758fa70d237ff972b0c8d7114777dc4a20c8f3b.camel@physik.fu-berlin.de>
-		<alpine.DEB.2.21.2501120146480.18889@angie.orcam.me.uk>
-		<78f3ae1f68842a9d1af62caaac3929834ce6ecfa.camel@physik.fu-berlin.de>
-	 <87y0zfs26i.fsf_-_@email.froward.int.ebiederm.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RkoG/Rci"
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-85c662ebbc3so887302241.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:56:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738583761; x=1739188561; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WCmmBQ4JBjHuyjlM+6/xjTKGJo8TUzW14yyn8KiIGJg=;
+        b=RkoG/RcidKSF1u1wxZem9BTg0RHR5W4cLTtUqHVPU2AmraxFq8jgchOjxWXmJeOHiH
+         xnMYKrWNBI8hkCIro9+/cyMewVirdaFdkN4rDg9n+Rx6Z6OWxPLq8CfC3PhGab9mjtGe
+         5yTZ+aBisdN9wtDKWekDStJRpBth/9nTIxKXw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738583761; x=1739188561;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WCmmBQ4JBjHuyjlM+6/xjTKGJo8TUzW14yyn8KiIGJg=;
+        b=YxP275LsD/y1aUcjFzKbTwOhTz972X1VpLjYv9dAmLbcn63QbWHrGlC8+fM0NXQZiV
+         10eK0i1P6j5449SAXHnu+nz0q2gHlC3CbFGjVqajdmSctCpJDafb5Loa7VmMa2P0Ol7T
+         eBTh8R5/MYVHLPxv4I2L4R0tB6GP9B8vuMsXClt+OEuqF4X39k8gfGp/umBkBYJRhYQU
+         XSw0+kiT8RGDYHnl70IngN5xADaxwRnkDyqhUnLWG3Quidafhnj+39PQtilwVbcjsNcc
+         u7pR90fQ5BC/1f68uPeh1QW2gmoaJSz3WR0QEaXnsJ1HJ80PcGrxGeCxTG2bSYkhHisF
+         dXhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuORHNEW1gjGjVgKAm/L8P3xXP+Vc1JesfvBaWiMaCxqLYdxY4DstQU/duOGFfvfJRdXi/m9+kFa1X2xA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm1/shIexkcp0tz6S4jtPKDYkwxMLXbOJxbsnEA0mOi4zcRJpU
+	Ha1hD010Fb1RHUVKRILp4+BpGC1bvhBdopLcpdDaNhK67lUYgKBBRHTz1Ih8VaS0GK7NyA0obOa
+	bTg==
+X-Gm-Gg: ASbGncupntJ7VFGpIwEn4Znxq0vIHJVVHNEx1FjNmgY3I92H1tW57HScai8C3+dZhCD
+	Vk90h7E9GvTSU9JURD48DYuemLCQGljjOPmvFPlQ07wibWX7P6vpT9Gl/2LwWvjsm0dFjdCyC1N
+	6C2exXMveRCiuZECwgtOvDDYJY3ZGCtc1jQ+gM2JaOSeUIAYoI4DOsQh+/sNSvatJo7V2pSkH8B
+	AzvpdsQDwEtIrE77h5wd4Rlf1m8ReBvutO4QdvarUPFPskWPKvSmwdl8tE8WI/DIMg2tQsWXIv6
+	XN4/Hn0msnCT0dbyXN8L6ug/xQxdd+EUOnmmenFCDwQ+bHafOo/QwfRHmC5kMfKjnQ==
+X-Google-Smtp-Source: AGHT+IFYM7tol6Vv9OAXobztpdGoP/V/bsu+SLitBGak8MLulw5+yWYEEZB5P8IiJmqPtrF+3elORw==
+X-Received: by 2002:a67:e711:0:b0:4b2:5d3e:7554 with SMTP id ada2fe7eead31-4b9a526901dmr17457397137.23.1738583760862;
+        Mon, 03 Feb 2025 03:56:00 -0800 (PST)
+Received: from denia.c.googlers.com (5.236.236.35.bc.googleusercontent.com. [35.236.236.5])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baa9aefcsm1592770137.12.2025.02.03.03.55.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 03:55:59 -0800 (PST)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 03 Feb 2025 11:55:45 +0000
+Subject: [PATCH v17 09/17] media: uvcvideo: Factor out clamping from
+ uvc_ctrl_set
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250203-uvc-roi-v17-9-5900a9fed613@chromium.org>
+References: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
+In-Reply-To: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Yunke Cao <yunkec@chromium.org>, linux-media@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>, 
+ Yunke Cao <yunkec@google.com>
+X-Mailer: b4 0.13.0
 
-Hi,
+Move the logic to a separated function. Do not expect any change.
+This is a preparation for supporting compound controls.
 
-On Sun, 2025-01-12 at 23:39 -0600, Eric W. Biederman wrote:
-> Richard Henderson <richard.henderson@linaro.org> writes[1]:
->=20
-> > There was a Spec benchmark (I forget which) which was memory bound and =
-ran
-> > twice as fast with 32-bit pointers.
-> >=20
-> > I copied the idea from DEC to the ELF abi, but never did all the other =
-work
-> > to allow the toolchain to take advantage.
-> >=20
-> > Amusingly, a later Spec changed the benchmark data sets to not fit into=
- a
-> > 32-bit address space, specifically because of this.
-> >=20
-> > I expect one could delete the ELF bit and personality and no one would
-> > notice. Not even the 10 remaining Alpha users.
->=20
-> In [2] it was pointed out that parts of setarch weren't working
-> properly on alpha because it has it's own SET_PERSONALITY
-> implementation.  In the discussion that followed Richard Henderson
-> pointed out that the 32bit pointer support for alpha was never
-> completed.
->=20
-> Fix this by removing alpha's 32bit pointer support.
->=20
-> As a bit of paranoia refuse to execute any alpha binaries that have
-> the EF_ALPHA_32BIT flag set.  Just in case someone somewhere has
-> binaries that try to use alpha's 32bit pointer support.
->=20
-> [1] https://lkml.kernel.org/r/CAFXwXrkgu=3D4Qn-v1PjnOR4SG0oUb9LSa0g6QXpBq=
-4ttm52pJOQ@mail.gmail.com
-> [2] https://lkml.kernel.org/r/20250103140148.370368-1-glaubitz@physik.fu-=
-berlin.de
-> v1: https://lkml.kernel.org/r/87jzb2tdb7.fsf_-_@email.froward.int.ebieder=
-m.org
-> Reviewed-by: Richard Henderson <richard.henderson@linaro.org>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
->=20
-> Kees can you pick this one up?
->=20
->  arch/alpha/include/asm/elf.h       |  6 +-----
->  arch/alpha/include/asm/pgtable.h   |  2 +-
->  arch/alpha/include/asm/processor.h |  8 ++------
->  arch/alpha/kernel/osf_sys.c        | 11 ++---------
->  4 files changed, 6 insertions(+), 21 deletions(-)
->=20
-> diff --git a/arch/alpha/include/asm/elf.h b/arch/alpha/include/asm/elf.h
-> index 4d7c46f50382..50c82187e60e 100644
-> --- a/arch/alpha/include/asm/elf.h
-> +++ b/arch/alpha/include/asm/elf.h
-> @@ -74,7 +74,7 @@ typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
->  /*
->   * This is used to ensure we don't load something for the wrong architec=
-ture.
->   */
-> -#define elf_check_arch(x) ((x)->e_machine =3D=3D EM_ALPHA)
-> +#define elf_check_arch(x) (((x)->e_machine =3D=3D EM_ALPHA) && !((x)->e_=
-flags & EF_ALPHA_32BIT))
-> =20
->  /*
->   * These are used to set parameters in the core dumps.
-> @@ -137,10 +137,6 @@ extern int dump_elf_task(elf_greg_t *dest, struct ta=
-sk_struct *task);
->  	: amask (AMASK_CIX) ? "ev6" : "ev67");	\
->  })
-> =20
-> -#define SET_PERSONALITY(EX)					\
-> -	set_personality(((EX).e_flags & EF_ALPHA_32BIT)		\
-> -	   ? PER_LINUX_32BIT : PER_LINUX)
-> -
->  extern int alpha_l1i_cacheshape;
->  extern int alpha_l1d_cacheshape;
->  extern int alpha_l2_cacheshape;
-> diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pg=
-table.h
-> index 635f0a5f5bbd..02e8817a8921 100644
-> --- a/arch/alpha/include/asm/pgtable.h
-> +++ b/arch/alpha/include/asm/pgtable.h
-> @@ -360,7 +360,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte=
-)
-> =20
->  extern void paging_init(void);
-> =20
-> -/* We have our own get_unmapped_area to cope with ADDR_LIMIT_32BIT.  */
-> +/* We have our own get_unmapped_area */
->  #define HAVE_ARCH_UNMAPPED_AREA
-> =20
->  #endif /* _ALPHA_PGTABLE_H */
-> diff --git a/arch/alpha/include/asm/processor.h b/arch/alpha/include/asm/=
-processor.h
-> index 55bb1c09fd39..5dce5518a211 100644
-> --- a/arch/alpha/include/asm/processor.h
-> +++ b/arch/alpha/include/asm/processor.h
-> @@ -8,23 +8,19 @@
->  #ifndef __ASM_ALPHA_PROCESSOR_H
->  #define __ASM_ALPHA_PROCESSOR_H
-> =20
-> -#include <linux/personality.h>	/* for ADDR_LIMIT_32BIT */
-> -
->  /*
->   * We have a 42-bit user address space: 4TB user VM...
->   */
->  #define TASK_SIZE (0x40000000000UL)
-> =20
-> -#define STACK_TOP \
-> -  (current->personality & ADDR_LIMIT_32BIT ? 0x80000000 : 0x00120000000U=
-L)
-> +#define STACK_TOP (0x00120000000UL)
-> =20
->  #define STACK_TOP_MAX	0x00120000000UL
-> =20
->  /* This decides where the kernel will search for a free chunk of vm
->   * space during mmap's.
->   */
-> -#define TASK_UNMAPPED_BASE \
-> -  ((current->personality & ADDR_LIMIT_32BIT) ? 0x40000000 : TASK_SIZE / =
-2)
-> +#define TASK_UNMAPPED_BASE (TASK_SIZE / 2)
-> =20
->  /* This is dead.  Everything has been moved to thread_info.  */
->  struct thread_struct { };
-> diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
-> index 86185021f75a..a08e8edef1a4 100644
-> --- a/arch/alpha/kernel/osf_sys.c
-> +++ b/arch/alpha/kernel/osf_sys.c
-> @@ -1210,8 +1210,7 @@ SYSCALL_DEFINE1(old_adjtimex, struct timex32 __user=
- *, txc_p)
->  	return ret;
->  }
-> =20
-> -/* Get an address range which is currently unmapped.  Similar to the
-> -   generic version except that we know how to honor ADDR_LIMIT_32BIT.  *=
-/
-> +/* Get an address range which is currently unmapped. */
-> =20
->  static unsigned long
->  arch_get_unmapped_area_1(unsigned long addr, unsigned long len,
-> @@ -1230,13 +1229,7 @@ arch_get_unmapped_area(struct file *filp, unsigned=
- long addr,
->  		       unsigned long len, unsigned long pgoff,
->  		       unsigned long flags, vm_flags_t vm_flags)
->  {
-> -	unsigned long limit;
-> -
-> -	/* "32 bit" actually means 31 bit, since pointers sign extend.  */
-> -	if (current->personality & ADDR_LIMIT_32BIT)
-> -		limit =3D 0x80000000;
-> -	else
-> -		limit =3D TASK_SIZE;
-> +	unsigned long limit =3D TASK_SIZE;
-> =20
->  	if (len > limit)
->  		return -ENOMEM;
+Reviewed-by: Yunke Cao <yunkec@google.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Yunke Cao <yunkec@google.com>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+ drivers/media/usb/uvc/uvc_ctrl.c | 86 +++++++++++++++++++++-------------------
+ 1 file changed, 46 insertions(+), 40 deletions(-)
 
-Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+index a0156b79ab48..b6fd06bd1006 100644
+--- a/drivers/media/usb/uvc/uvc_ctrl.c
++++ b/drivers/media/usb/uvc/uvc_ctrl.c
+@@ -2053,30 +2053,17 @@ int uvc_ctrl_get(struct uvc_video_chain *chain, u32 which,
+ 	return -EINVAL;
+ }
+ 
+-int uvc_ctrl_set(struct uvc_fh *handle,
+-	struct v4l2_ext_control *xctrl)
++static int uvc_ctrl_clamp(struct uvc_video_chain *chain,
++			  struct uvc_control *ctrl,
++			  struct uvc_control_mapping *mapping,
++			  s32 *value_in_out)
+ {
+-	struct uvc_video_chain *chain = handle->chain;
+-	struct uvc_control *ctrl;
+-	struct uvc_control_mapping *mapping;
+-	s32 value;
++	s32 value = *value_in_out;
+ 	u32 step;
+ 	s32 min;
+ 	s32 max;
+ 	int ret;
+ 
+-	lockdep_assert_held(&chain->ctrl_mutex);
+-
+-	if (__uvc_query_v4l2_class(chain, xctrl->id, 0) >= 0)
+-		return -EACCES;
+-
+-	ctrl = uvc_find_control(chain, xctrl->id, &mapping);
+-	if (ctrl == NULL)
+-		return -EINVAL;
+-	if (!(ctrl->info.flags & UVC_CTRL_FLAG_SET_CUR))
+-		return -EACCES;
+-
+-	/* Clamp out of range values. */
+ 	switch (mapping->v4l2_type) {
+ 	case V4L2_CTRL_TYPE_INTEGER:
+ 		if (!ctrl->cached) {
+@@ -2094,14 +2081,13 @@ int uvc_ctrl_set(struct uvc_fh *handle,
+ 		if (step == 0)
+ 			step = 1;
+ 
+-		xctrl->value = min + DIV_ROUND_CLOSEST((u32)(xctrl->value - min),
+-							step) * step;
++		value = min + DIV_ROUND_CLOSEST((u32)(value - min), step) * step;
+ 		if (mapping->data_type == UVC_CTRL_DATA_TYPE_SIGNED)
+-			xctrl->value = clamp(xctrl->value, min, max);
++			value = clamp(value, min, max);
+ 		else
+-			xctrl->value = clamp_t(u32, xctrl->value, min, max);
+-		value = xctrl->value;
+-		break;
++			value = clamp_t(u32, value, min, max);
++		*value_in_out = value;
++		return 0;
+ 
+ 	case V4L2_CTRL_TYPE_BITMASK:
+ 		if (!ctrl->cached) {
+@@ -2110,21 +2096,20 @@ int uvc_ctrl_set(struct uvc_fh *handle,
+ 				return ret;
+ 		}
+ 
+-		xctrl->value &= uvc_get_ctrl_bitmap(ctrl, mapping);
+-		value = xctrl->value;
+-		break;
++		value &= uvc_get_ctrl_bitmap(ctrl, mapping);
++		*value_in_out = value;
++		return 0;
+ 
+ 	case V4L2_CTRL_TYPE_BOOLEAN:
+-		xctrl->value = clamp(xctrl->value, 0, 1);
+-		value = xctrl->value;
+-		break;
++		*value_in_out = clamp(value, 0, 1);
++		return 0;
+ 
+ 	case V4L2_CTRL_TYPE_MENU:
+-		if (xctrl->value < (ffs(mapping->menu_mask) - 1) ||
+-		    xctrl->value > (fls(mapping->menu_mask) - 1))
++		if (value < (ffs(mapping->menu_mask) - 1) ||
++		    value > (fls(mapping->menu_mask) - 1))
+ 			return -ERANGE;
+ 
+-		if (!test_bit(xctrl->value, &mapping->menu_mask))
++		if (!test_bit(value, &mapping->menu_mask))
+ 			return -EINVAL;
+ 
+ 		/*
+@@ -2132,8 +2117,7 @@ int uvc_ctrl_set(struct uvc_fh *handle,
+ 		 * UVC controls that support it.
+ 		 */
+ 		if (mapping->data_type == UVC_CTRL_DATA_TYPE_BITMASK) {
+-			int val = uvc_mapping_get_menu_value(mapping,
+-							     xctrl->value);
++			int val = uvc_mapping_get_menu_value(mapping, value);
+ 			if (!ctrl->cached) {
+ 				ret = uvc_ctrl_populate_cache(chain, ctrl);
+ 				if (ret < 0)
+@@ -2143,14 +2127,36 @@ int uvc_ctrl_set(struct uvc_fh *handle,
+ 			if (!(uvc_get_ctrl_bitmap(ctrl, mapping) & val))
+ 				return -EINVAL;
+ 		}
+-		value = xctrl->value;
+-		break;
++		return 0;
+ 
+ 	default:
+-		value = xctrl->value;
+-		break;
++		return 0;
+ 	}
+ 
++	return 0;
++}
++
++int uvc_ctrl_set(struct uvc_fh *handle, struct v4l2_ext_control *xctrl)
++{
++	struct uvc_video_chain *chain = handle->chain;
++	struct uvc_control_mapping *mapping;
++	struct uvc_control *ctrl;
++	int ret;
++
++	lockdep_assert_held(&chain->ctrl_mutex);
++
++	if (__uvc_query_v4l2_class(chain, xctrl->id, 0) >= 0)
++		return -EACCES;
++
++	ctrl = uvc_find_control(chain, xctrl->id, &mapping);
++	if (!ctrl)
++		return -EINVAL;
++	if (!(ctrl->info.flags & UVC_CTRL_FLAG_SET_CUR))
++		return -EACCES;
++
++	ret = uvc_ctrl_clamp(chain, ctrl, mapping, &xctrl->value);
++	if (ret)
++		return ret;
+ 	/*
+ 	 * If the mapping doesn't span the whole UVC control, the current value
+ 	 * needs to be loaded from the device to perform the read-modify-write
+@@ -2169,7 +2175,7 @@ int uvc_ctrl_set(struct uvc_fh *handle,
+ 		       ctrl->info.size);
+ 	}
+ 
+-	uvc_mapping_set_s32(mapping, value,
++	uvc_mapping_set_s32(mapping, xctrl->value,
+ 			    uvc_ctrl_data(ctrl, UVC_CTRL_DATA_CURRENT));
+ 
+ 	ctrl->dirty = 1;
 
-Can someone pick up this patch for v6.14?
+-- 
+2.48.1.362.g079036d154-goog
 
-Adrian
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
