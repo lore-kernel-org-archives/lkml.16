@@ -1,105 +1,151 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A771F9AAB;
-	Mon,  3 Feb 2025 12:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0121FFC69;
+	Mon,  3 Feb 2025 12:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738586060; cv=none; b=EMtXjU60FvfC9H3zytdmo3Uf89o1yLb3QPb0fvNh6Rv7yHD/41AhAKmqWkc6SLHE/N4bhDD1vDsmipPmEelCN51B7tf7qIaB9joJai3exFLUxcrziw4TlvVBjIU1QkWGVhdpCDroPKhXfyPtP5NhIsQ12lEPDtmMa9YEqrVcuTo=
+	t=1738586128; cv=none; b=DAxNEJRvXLAZLlgspC45RlyCOOSj2E181fqqRn7ETbriIUfoa+Cr/pPxKMIw5Z3n1WAQ6cWD1gH6vwyUfRQuS7qObPMqrS5Su/+qM1caawpQcCxLiG472L/4R/fPJ+n/1Zks1PvzZgT4olvwZO96wJ5+1gPPx2atymWF59vPnMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738586060; c=relaxed/simple;
-	bh=SxdrcH2VhP60EQ4RYlkXGF/1B52K3+MyKQOH8suB+Mg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=VJoaMTMs1hRwRhmT2TIsdXY+XDvvmbtfWQZRPlWV0eVmikJ2XRFIuTcJO5ZzXUZyN8u3hC+06I9GUgi6zXSvy5mKD3iZ1XcmMgwx21vx94VAyWsXwwmVoP5I3GCLYOBN8kVzPy25im9VtcSCKk0mj4wOaRLJEusRRCl8l6MxcpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=FJ0JFiV3; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1738586128; c=relaxed/simple;
+	bh=CxfZW7dBnO3GBXmccZ9Y/mBeu6zRLvvGYqVPWtDM8rI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mNr5kxnDTzocd9kv4p9wttEOC2sEnAwTtqqePwqpfyon0uwSmoMDQKSq28YZQqD1pDhgjFIIYh3+U4Uta5XTFPitoPn0brGlqb51amalU+jDjwg9+YK9J6GKiBlm0XFROmRa5nhd59geUD7xkq2vY/FA9SFAE/GkYVuXuKA6WoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=dcFHh2th; arc=none smtp.client-ip=217.92.40.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="FJ0JFiV3"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1teveO-001beI-Mh; Mon, 03 Feb 2025 13:34:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:To:Subject:MIME-Version:Date:Message-ID;
-	bh=/2fG8qYY+waR9wlagpy2bZ0EgN+0Gjg7TSFbowo5UZc=; b=FJ0JFiV3sL6VAzqH1lYao2M3DE
-	CI3XeNnJ9ZjOgkBr8g+5xfAYJyUoIpmlB+V6kvibVYW9Za3WzWIvPoBq/x0XiFQw7QzmefshfbPR0
-	xrrSjPsupp9A0oChd0Las/N1zHkUX4U1QhDU/F2A5eXFsfVI5yvCw2KlCBHMEfe8M/kSBrNXLKBcI
-	t8GrK3tqLZ8IIotJrOC90dUI0rMnZelWIxqxNUHPkl4PYDO7snjuDh2LFXZuJBZji8voShQCWlqi1
-	s2sZ+B5GSE+0FKw+WHMcEyua+B9Exo/nzXQw0GveXDxVlZbH3YliQwOHIdWvBxSh/mB6PPmGJOAFq
-	VngcpZ1Q==;
-Received: from [10.9.9.74] (helo=submission03.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1teveN-0001A8-Ep; Mon, 03 Feb 2025 13:34:03 +0100
-Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1teveF-000eKd-HR; Mon, 03 Feb 2025 13:33:55 +0100
-Message-ID: <d2b9f0c0-33d8-43b6-85b1-0cc45e38a60b@rbox.co>
-Date: Mon, 3 Feb 2025 13:33:53 +0100
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="dcFHh2th"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7F6CF14830BD;
+	Mon,  3 Feb 2025 13:27:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
+	t=1738585624;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YKnI1H6bH4Cdf0+aRcBE2xV6xY9vSuXcbUzXoEYfRuc=;
+	b=dcFHh2thNZzdlG/h8AL7zj5T96WsL+ZwTrkv5rpW0fA/Kbb4iKWfX1iy4NXnl+IExfYHop
+	OM2xWT4w4gmASbcQBsWPh5kUdKj34Oe3rPrXk3ylNGsjiWjeVDagfe3x8y4tQpyr3i1Qs3
+	z61tW7ik4TKnPj7QLFWnn/A9T6xJ+vX/LY4j8RGwXTXs5R60oK9Oyt05jvFYV4MQ7Cgq0B
+	+T1VU0dr5xPXc/7tRVI7CYFm5tcrP7pi7DGNXeSlJdY4e6kLkddZv/ucgIso/5dGdkCWff
+	aXLMZjF3FNIwnkApjt/Q9ykr97zmzLKwRjPYP7JXmdTtTrWuE2j2K3k7BAySwQ==
+Date: Mon, 3 Feb 2025 13:27:02 +0100
+From: Alexander Dahl <ada@thorsis.com>
+To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dma: Add devm_dma_request_chan()
+Message-ID: <20250203-chalice-ninth-8235590e29d2@thorsis.com>
+Mail-Followup-To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+References: <20250124085221.766303-4-csokas.bence@prolan.hu>
+ <20250124085221.766303-8-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [net?] general protection fault in add_wait_queue
-To: syzbot <syzbot+9d55b199192a4be7d02c@syzkaller.appspotmail.com>,
- davem@davemloft.net, edumazet@google.com, eperezma@redhat.com,
- horms@kernel.org, jasowang@redhat.com, kuba@kernel.org, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, mst@redhat.com, netdev@vger.kernel.org,
- pabeni@redhat.com, sgarzare@redhat.com, stefanha@redhat.com,
- syzkaller-bugs@googlegroups.com, virtualization@lists.linux.dev,
- xuanzhuo@linux.alibaba.com
-References: <67a09300.050a0220.d7c5a.008b.GAE@google.com>
-Content-Language: pl-PL, en-GB
-From: Michal Luczaj <mhal@rbox.co>
-In-Reply-To: <67a09300.050a0220.d7c5a.008b.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250124085221.766303-8-csokas.bence@prolan.hu>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 2/3/25 10:57, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    c2933b2befe2 Merge tag 'net-6.14-rc1' of git://git.kernel...
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16f676b0580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9d55b199192a4be7d02c
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13300b24580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12418518580000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/c7667ae12603/disk-c2933b2b.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/944ca63002c1/vmlinux-c2933b2b.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/30748115bf0b/bzImage-c2933b2b.xz
-> 
-> The issue was bisected to:
-> 
-> commit fcdd2242c0231032fc84e1404315c245ae56322a
-> Author: Michal Luczaj <mhal@rbox.co>
-> Date:   Tue Jan 28 13:15:27 2025 +0000
-> 
->     vsock: Keep the binding until socket destruction
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=148f5ddf980000
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=168f5ddf980000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=128f5ddf980000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+9d55b199192a4be7d02c@syzkaller.appspotmail.com
-> Fixes: fcdd2242c023 ("vsock: Keep the binding until socket destruction")
-> 
-> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000003: 0000 [#1] PREEMPT SMP KASAN PTI
-> ...
+Hello,
 
-Let me take a look.
+Am Fri, Jan 24, 2025 at 09:52:20AM +0100 schrieb Bence Csókás:
+> Expand the arsenal of devm functions for DMA
+> devices, this time for requesting channels.
+> 
+> Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+> ---
+>  drivers/dma/dmaengine.c   | 30 ++++++++++++++++++++++++++++++
+>  include/linux/dmaengine.h |  7 +++++++
+>  2 files changed, 37 insertions(+)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index c1357d7f3dc6..02c29d26ac85 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -926,6 +926,36 @@ void dma_release_channel(struct dma_chan *chan)
+>  }
+>  EXPORT_SYMBOL_GPL(dma_release_channel);
+>  
+> +static void dmaenginem_release_channel(void *chan)
+> +{
+> +	dma_release_channel(chan);
+> +}
+> +
+> +/**
+> + * devm_dma_request_chan - try to allocate an exclusive slave channel
+> + * @dev:	pointer to client device structure
+> + * @name:	slave channel name
+> + *
+> + * Returns pointer to appropriate DMA channel on success or an error pointer.
+> + *
+> + * The operation is managed and will be undone on driver detach.
+> + */
+> +
+> +struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
+> +{
+> +	struct dma_chan *chan = dma_request_chan(dev, name);
+> +	int ret = 0;
+> +
+> +	if (!IS_ERR(chan))
+> +		ret = devm_add_action_or_reset(dev, dmaenginem_release_channel, chan);
 
-Michal
+Why not using dma_release_channel() directly here?  What's the point
+of introducing dmaenginem_release_channel() further above?
 
+Greets
+Alex
+
+> +
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	return chan;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_dma_request_chan);
+> +
+>  /**
+>   * dmaengine_get - register interest in dma_channels
+>   */
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 346251bf1026..ffb54b52ef0c 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -1528,6 +1528,7 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+>  
+>  struct dma_chan *dma_request_chan(struct device *dev, const char *name);
+>  struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
+> +struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name);
+>  
+>  void dma_release_channel(struct dma_chan *chan);
+>  int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
+> @@ -1564,6 +1565,12 @@ static inline struct dma_chan *dma_request_chan_by_mask(
+>  {
+>  	return ERR_PTR(-ENODEV);
+>  }
+> +
+> +static inline struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +
+>  static inline void dma_release_channel(struct dma_chan *chan)
+>  {
+>  }
+> -- 
+> 2.48.1
+> 
+> 
+> 
