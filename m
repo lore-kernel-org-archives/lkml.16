@@ -1,194 +1,132 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D64EEB3
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 01:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0E610FD;
+	Mon,  3 Feb 2025 01:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738545268; cv=none; b=iTzaJJTt4gU9WOZW5LFKOyKMaOXcZhTifjKyYSHQXQfpLN86O1jVqn1J3L2oZGP8ZAjXQFAU6dH04/lBugyTHJ3RblSxmdmJtV3FBti1qDZFopRMIyerj1sk5udzmXlgC7AEvdXIU39MYwRhqO1VpvCfghFGDgIwtgZqv/rB4FE=
+	t=1738545582; cv=none; b=Ynr9VGuZLmp6g+Uz5r9pwrooXRtN2jL1xb0ivEZ74QBlcK8BWtSV0U+S6A2SD4Vyv2bL207maX5JeawHdZNgCwOGxl4SH1WO//zB5CTzU2HyLwmzUKWhkdG6O5BnRjRJKHWP/LCmJRGkpkBDa2EQDr9TNLE+nB0RGE3FmQcERdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738545268; c=relaxed/simple;
-	bh=7C6aZiOjkJMNbWW86XPFHFzkm5BO3AM9qJCo7hC1kF8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=towt+Uy0Zc6NmebXQxo2WqITIOK1YeCIRCZqRRHEeenVDklVDC6/yrCJ5r6ZxTu5wPKR9OGAK2bivAdMJdrg7ii3XZV9y3XPe68t6umFksRDrHB6tuI5q1HovdtwcY9YyGFKX9YHD75f9bL3q0kCKwlc+uL/vY6D6MLaDzPAL38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-845dee0425cso274107039f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 17:14:26 -0800 (PST)
+	s=arc-20240116; t=1738545582; c=relaxed/simple;
+	bh=bYcoU0mwJ+CXhT4fhT/dxf1ul9bd0TV8O1ada/Gvuhs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tZ1S58rY315YRWcBx1Yr84Md7RS4JG4A2w7+EYCXXa0+nyh5wREk7cy5AeC68O2hwzMmzG8KydXuShYP2hnyIn4sRryeqbQ2c0Bj9Z82lowz0bKMiK6eEhqYRT0K6xpEcK52AbO7PX8nLuJxAKZNjer2ocDRGHK8cDehHmDhFH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gc1hKcxp; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gc1hKcxp"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2efb17478adso6382390a91.1;
+        Sun, 02 Feb 2025 17:19:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738545579; x=1739150379; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NTy4qS01FLMytEtpMeOug8rr1n5yyzrMe+Tl/rJy/8g=;
+        b=Gc1hKcxpfdOE2yo90+7F+Sm/aLos92U8FrUjHnDIYeuRAo45qTrTBcmHeR8zUQVTFB
+         88dsULLXWK7yiWEtnwV+CdXjtnWq9gO/MKY2h96GjrDML0g4rcTWPz6H9wFJL1OBVqGC
+         HDBUB8TvGbEZFqz9g9N2BkN2DazN21gdAa4d7NCzKMuWtwuAcQthmi86JtHOnvavVGPe
+         CauovCHgleQJUVUhsdyS0nUZpPZY+yU1Dz+JZflkUGDxM+aPiSMuGCmvTaxFEYyojl4O
+         OlP7jsFMVeArMA/NCYTHCZ5PFJOqeFYVt3wWxkiKfJh2wvsibIuC3gU8YHwsD7MHjn0V
+         kcMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738545266; x=1739150066;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i3U/vo0rAmOJFD7fReCHJuGGTPXG4g3RIEc673RAyRs=;
-        b=YqU7x9Jk/f+qDJFKwrSSk+jvqd7Vn5OOg5kI3TsisVWSkMPAFM4JXoBKbWiaX9AabQ
-         8rX+j8kUmdBxeu8acE+ezqnWJkpL+wOppydjlPCioWTfLSUdlxVE1A2Weq5XJv5dxyCj
-         qOZqq5OFt1tSs2eOhMrLhGwdUi+Cm4/2Kg1bZJnfDVbpeAHbAAO6/Dmk4RxzqHO//oav
-         LsNtUuOLDJxp89VyDZf3jsi/3BBJy70BYxCAWmHrjmhTbFlIS4MwJHY0q8b9mHAjf4B6
-         4IIe7fiDp9Ua16LIvkzR1775NxIjQowDP398ZPLqV9jgZriWVpDfoemPdcEiWAX88BVi
-         M2fw==
-X-Forwarded-Encrypted: i=1; AJvYcCXX7nhk3hqPx0NNOSupat1IHDiRw1hsRUGd8BDi8NtVVbVGX6+tY77VBs6OgpvRRHSEpMNSJ7r6yZuYK2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNAf4Cx1PJUMPLK3BvnUnZVjbuoQyr7pXOrHbgkdj7GscTTCo7
-	TzRkcKn5FwWGv9s5bw1G7TLtbadL05cRQXarSSXOiqW2lF1DjJvFfUAyvSjsmtdpOzcCPW3Gli2
-	YGdNtiAKB+mqPIm5c9z84/gK33OqxGJyeKvca2nWRpOejIkSWsyrjkNg=
-X-Google-Smtp-Source: AGHT+IHf4wRVucgy2K1rID2uMUXSz432zb8Dm1TszfL2Dyu7/iRKgxbm6N7YeYcfQk71c+gt/JbRit8DJMi5EZH8gUGEPuAeNs42
+        d=1e100.net; s=20230601; t=1738545579; x=1739150379;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NTy4qS01FLMytEtpMeOug8rr1n5yyzrMe+Tl/rJy/8g=;
+        b=flJxxa6zUAgvjjSeN3OdZnMMZcsNyjIK9vFQZGODP/d0OmbsIrOTgNJKWKFMdWASE6
+         psuqnIuprvr4Mo/kq4TxQSbFu+4Z1OwUiPObhgyocoPIuSEf36fj/b0U4RN1zbW9cE5b
+         g9MjSd9HNohFL8CG4WxjZ6hDvqmvl1cDy7uT0cV5EP/61NY/WyhCsj+5g/y21yNUVHIj
+         q8PhpuMO+GTsakERLukHjWw8RYrxuXA0cmumeAgtGjpqr6DbLJUmsapcKv24Tv46zqPI
+         5S/01rcml8/WSSLWdSH2eO2fSepMzd/cannUXLSyxUSCpf2OMSVhaDTpufjEhVKf1Of8
+         zY5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVLBzndNVz4CikWGgNy7suKwS+mO+xIncT6NBIUGcVCnz6MkFLFiAOvu1FOUHGWuCNIIPJUTILUkBfr@vger.kernel.org, AJvYcCVqcjQsH8QjPA1Ar5eqHfu3ykDWlYMw6qG7R9laNrlDFAFF8WyfsTfVvGACtNoPh2TRWY65h3EaeY3ePSc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYnhcnw8LuE/MPqU035TeVfHRIPxRqWNg/l9BRMlrnK8wJqRHJ
+	/wyW4k/EKaQyMTCyPMcY2jbmW9IJHjc/yczG+untAeqg9exi29av
+X-Gm-Gg: ASbGncuYHmeRUB3h8Lrq704OmpYVrtbfxK8ESCEyfpa2QJ477yOa0l200B4KJ5xqXZI
+	OJYKrE76aQv05uQSA9q0538ChEJrnCgiMLx/jdYOSmWMd0FpT4ePNzFoJ3aMjbD6l3yEChhaVml
+	PAaVy57KUbi5IMdeoydK063886J8IUtJbhRea2YVkl3qGGOtY+BxPkESFNAC+lYEtI0nkVkC7Ti
+	UP4iT1UqYdi0SlGlu2VR9rVVeoUiFHTi/HNyeVeX0ZwVbq9bm1NJ1OKVFZhkSYGEhwCsQeFgdXJ
+	tN1tDwSRh1RcTsBc
+X-Google-Smtp-Source: AGHT+IFJrVG/Isbfklx6SiV4JhJSrBkvBKw2E0MI7P8JC3NLIvtNmNc8vFHEIdAi8pEBlrngLxzR2A==
+X-Received: by 2002:a05:6a00:a801:b0:725:d64c:f113 with SMTP id d2e1a72fcca58-72fd0bdae06mr35239126b3a.3.1738545579166;
+        Sun, 02 Feb 2025 17:19:39 -0800 (PST)
+Received: from ubuntu.. ([175.141.178.229])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acec04794b1sm6758939a12.53.2025.02.02.17.19.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 17:19:37 -0800 (PST)
+From: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
+To: mika.westerberg@linux.intel.com
+Cc: andreas.noever@gmail.com,
+	michael.jamet@intel.com,
+	YehezkelShB@gmail.com,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mohammad Rahimi <rahimi.mhmmd@gmail.com>
+Subject: [PATCH] thunderbolt: Remove the TBT3 Not Supported bit
+Date: Mon,  3 Feb 2025 01:17:47 +0000
+Message-ID: <20250203011842.13305-1-rahimi.mhmmd@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:20e2:b0:3cf:b3ab:584d with SMTP id
- e9e14a558f8ab-3cffe3f6221mr149843195ab.13.1738545265901; Sun, 02 Feb 2025
- 17:14:25 -0800 (PST)
-Date: Sun, 02 Feb 2025 17:14:25 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a01871.050a0220.d7c5a.007b.GAE@google.com>
-Subject: [syzbot] [fs?] KMSAN: uninit-value in full_proxy_poll
-From: syzbot <syzbot+a84ce0b8e1f3da037bf7@syzkaller.appspotmail.com>
-To: dakr@kernel.org, gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rafael@kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Since USB4 v2 specification has removed the mandatory requirement to
+support TBT3 on a USB4 Dock UFP, the TBT3 Not Supported bit is not
+usable, as when it needs to be read there is no USB4 Link.
 
-syzbot found the following issue on:
+This change was introduced in a "USB4 2.0 ENGINEERING CHANGE NOTICE
+FORM" published in September 2024, titled "TBT3 Support on USB4 Dock
+UFP".
 
-HEAD commit:    b4b0881156fb Merge tag 'docs-6.14-2' of git://git.lwn.net/..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=146c5ddf980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7d0bb5e08cf54aa2
-dashboard link: https://syzkaller.appspot.com/bug?extid=a84ce0b8e1f3da037bf7
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10cb8518580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=122a0b24580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/4dbe3cd3dcb8/disk-b4b08811.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/592d90859f86/vmlinux-b4b08811.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4cfde2b63c7f/bzImage-b4b08811.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a84ce0b8e1f3da037bf7@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in full_proxy_poll+0xdf/0x3b0 fs/debugfs/file.c:411
- full_proxy_poll+0xdf/0x3b0 fs/debugfs/file.c:411
- vfs_poll include/linux/poll.h:82 [inline]
- ep_item_poll fs/eventpoll.c:1060 [inline]
- ep_insert+0x19c7/0x2740 fs/eventpoll.c:1736
- do_epoll_ctl+0xd83/0x17f0 fs/eventpoll.c:2394
- __do_sys_epoll_ctl fs/eventpoll.c:2445 [inline]
- __se_sys_epoll_ctl fs/eventpoll.c:2436 [inline]
- __x64_sys_epoll_ctl+0x1b5/0x210 fs/eventpoll.c:2436
- x64_sys_call+0x1658/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:234
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was stored to memory at:
- __debugfs_file_get+0xe86/0xef0 fs/debugfs/file.c:122
- full_proxy_open_regular+0x67/0xa00 fs/debugfs/file.c:447
- do_dentry_open+0x1bdd/0x26b0 fs/open.c:955
- vfs_open+0x53/0x5b0 fs/open.c:1085
- do_open fs/namei.c:3830 [inline]
- path_openat+0x56a1/0x6250 fs/namei.c:3989
- do_filp_open+0x268/0x600 fs/namei.c:4016
- do_sys_openat2+0x1bf/0x2f0 fs/open.c:1427
- do_sys_open fs/open.c:1442 [inline]
- __do_sys_openat fs/open.c:1458 [inline]
- __se_sys_openat fs/open.c:1453 [inline]
- __x64_sys_openat+0x2a1/0x310 fs/open.c:1453
- x64_sys_call+0x36f5/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was stored to memory at:
- __debugfs_file_get+0xe59/0xef0 fs/debugfs/file.c:120
- full_proxy_open_regular+0x67/0xa00 fs/debugfs/file.c:447
- do_dentry_open+0x1bdd/0x26b0 fs/open.c:955
- vfs_open+0x53/0x5b0 fs/open.c:1085
- do_open fs/namei.c:3830 [inline]
- path_openat+0x56a1/0x6250 fs/namei.c:3989
- do_filp_open+0x268/0x600 fs/namei.c:4016
- do_sys_openat2+0x1bf/0x2f0 fs/open.c:1427
- do_sys_open fs/open.c:1442 [inline]
- __do_sys_openat fs/open.c:1458 [inline]
- __se_sys_openat fs/open.c:1453 [inline]
- __x64_sys_openat+0x2a1/0x310 fs/open.c:1453
- x64_sys_call+0x36f5/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was stored to memory at:
- __debugfs_file_get+0xdff/0xef0 fs/debugfs/file.c:118
- full_proxy_open_regular+0x67/0xa00 fs/debugfs/file.c:447
- do_dentry_open+0x1bdd/0x26b0 fs/open.c:955
- vfs_open+0x53/0x5b0 fs/open.c:1085
- do_open fs/namei.c:3830 [inline]
- path_openat+0x56a1/0x6250 fs/namei.c:3989
- do_filp_open+0x268/0x600 fs/namei.c:4016
- do_sys_openat2+0x1bf/0x2f0 fs/open.c:1427
- do_sys_open fs/open.c:1442 [inline]
- __do_sys_openat fs/open.c:1458 [inline]
- __se_sys_openat fs/open.c:1453 [inline]
- __x64_sys_openat+0x2a1/0x310 fs/open.c:1453
- x64_sys_call+0x36f5/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:4121 [inline]
- slab_alloc_node mm/slub.c:4164 [inline]
- __kmalloc_cache_noprof+0x8e3/0xdf0 mm/slub.c:4320
- kmalloc_noprof include/linux/slab.h:901 [inline]
- __debugfs_file_get+0x31d/0xef0 fs/debugfs/file.c:101
- full_proxy_open_regular+0x67/0xa00 fs/debugfs/file.c:447
- do_dentry_open+0x1bdd/0x26b0 fs/open.c:955
- vfs_open+0x53/0x5b0 fs/open.c:1085
- do_open fs/namei.c:3830 [inline]
- path_openat+0x56a1/0x6250 fs/namei.c:3989
- do_filp_open+0x268/0x600 fs/namei.c:4016
- do_sys_openat2+0x1bf/0x2f0 fs/open.c:1427
- do_sys_open fs/open.c:1442 [inline]
- __do_sys_openat fs/open.c:1458 [inline]
- __se_sys_openat fs/open.c:1453 [inline]
- __x64_sys_openat+0x2a1/0x310 fs/open.c:1453
- x64_sys_call+0x36f5/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-CPU: 0 UID: 0 PID: 5778 Comm: syz-executor303 Not tainted 6.13.0-syzkaller-09585-gb4b0881156fb #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-=====================================================
-
-
+Signed-off-by: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/thunderbolt/tb_regs.h | 1 -
+ drivers/thunderbolt/usb4.c    | 7 ++-----
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+index 4e43b47f9f11..7c5d27571b66 100644
+--- a/drivers/thunderbolt/tb_regs.h
++++ b/drivers/thunderbolt/tb_regs.h
+@@ -212,7 +212,6 @@ struct tb_regs_switch_header {
+ #define ROUTER_CS_5_CV				BIT(31)
+ #define ROUTER_CS_6				0x06
+ #define ROUTER_CS_6_SLPR			BIT(0)
+-#define ROUTER_CS_6_TNS				BIT(1)
+ #define ROUTER_CS_6_WOPS			BIT(2)
+ #define ROUTER_CS_6_WOUS			BIT(3)
+ #define ROUTER_CS_6_HCI				BIT(18)
+diff --git a/drivers/thunderbolt/usb4.c b/drivers/thunderbolt/usb4.c
+index e51d01671d8e..e25a594649b2 100644
+--- a/drivers/thunderbolt/usb4.c
++++ b/drivers/thunderbolt/usb4.c
+@@ -241,8 +241,8 @@ int usb4_switch_setup(struct tb_switch *sw)
+ {
+ 	struct tb_switch *parent = tb_switch_parent(sw);
+ 	struct tb_port *down;
+-	bool tbt3, xhci;
+ 	u32 val = 0;
++	bool xhci;
+ 	int ret;
+ 
+ 	if (!tb_route(sw))
+@@ -257,10 +257,7 @@ int usb4_switch_setup(struct tb_switch *sw)
+ 	tb_sw_dbg(sw, "link: %s\n", sw->link_usb4 ? "USB4" : "TBT");
+ 
+ 	xhci = val & ROUTER_CS_6_HCI;
+-	tbt3 = !(val & ROUTER_CS_6_TNS);
+-
+-	tb_sw_dbg(sw, "TBT3 support: %s, xHCI: %s\n",
+-		  tbt3 ? "yes" : "no", xhci ? "yes" : "no");
++	tb_sw_dbg(sw, "xHCI support: %s\n", xhci ? "yes" : "no");
+ 
+ 	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH, ROUTER_CS_5, 1);
+ 	if (ret)
+-- 
+2.45.2
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
