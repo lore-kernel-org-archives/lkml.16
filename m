@@ -1,135 +1,193 @@
-Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A529E2080F9
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF432080FD;
+	Mon,  3 Feb 2025 15:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738595044; cv=none; b=VAV/qWdQEKvQZZOjiNRC9v8hPRoPMZCyYFbzX9eKDq8GDFkMSDEH5hbmje8VbWb3ESHP5V8PT6JPsDhl5gaLpym3m7b/DLS4kyAIO1DAEaBEQwsITyaMjZ0jyKZYbOMKT4CSuohS+Yf/7nqUjA/erdKDNkn11hDeW+rpGiWNsZY=
+	t=1738595047; cv=none; b=F/E6P3k//h5YnKFfGpvaXR/KqR/5iSbFujugCQjdBNZKQIIdYjuuSrHUY304Y7VvGW+KwpHfgOgc11eDgRyXRgo1o8mVYHQCCUXRQOu2Gu5XA5wZcfONzynSgokxcGWW7sne1C8+ShaflRIKOWzWeqJHSlO4h5mOESc9Uqb0pTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738595044; c=relaxed/simple;
-	bh=RQjGAj1IWyaNTRzxKQHHBrEelrAVESw3rl3VydV04Js=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cx4VIeLt9cHqa+SZpxrRodP33osmid8vWKhvfiNf/35mXU3qycKOvq8I7yzTqS8HEJXwevqEeFgg7u/6uFdzS+Ux6SJZXjqLNCLWrNEM/XO8g0FiD0cmqYx5+vmKztxU3H3YseSCNaB5Yx/L3Xy35DqZQJ6X9jUmq0nFzcsbnqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=Im7x7fAh; arc=none smtp.client-ip=195.133.245.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
+	s=arc-20240116; t=1738595047; c=relaxed/simple;
+	bh=I0hGYVr+iXwhCvfG2kaXgx9DaPhR3rGJTXJPlr0Jpwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IRoVqyXExbM3PcQhjaaRQ+SsYO1I+82JwLEUE+cLENBYPA7uhr7PuB6M2EuRygbJt5TVhx3S26oQV+vmPJ0qTiGFVoTG4aqpzOkCeZg70+MUqq0Xx6MnJKWbUvcMmTakVwnn2904uDNbMfDywtNtxDJv2loeMh6nJcLFYW13YZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bp0VNtBk; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="Im7x7fAh"
-Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id B762D1C2423
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 18:03:45 +0300 (MSK)
-Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
-	reason="pass (just generated, assumed good)" header.d=nppct.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:to:from:from; s=dkim; t=1738595024; x=
-	1739459025; bh=RQjGAj1IWyaNTRzxKQHHBrEelrAVESw3rl3VydV04Js=; b=I
-	m7x7fAhrG1fuLBZUihpWl2IfKvk9lAZyxCPK0r+XNiYPdvX7UYZFi2I0PcMjD9v7
-	rxDJylmJNcOPa9u6rE/vNvx7iHCwBYzAff0b4wVlW5QGKbtc4eNlrF1xkfNP4PK0
-	NrXkpdO8m1407Y4sv31RgT9hefJXGeIXypi30qaTr4=
-X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
-Received: from mail.nppct.ru ([127.0.0.1])
-	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id F9kCVosuLJsN for <linux-kernel@vger.kernel.org>;
-	Mon,  3 Feb 2025 18:03:44 +0300 (MSK)
-Received: from localhost.localdomain (unknown [87.249.24.51])
-	by mail.nppct.ru (Postfix) with ESMTPSA id 19AE21C0E7A;
-	Mon,  3 Feb 2025 18:03:43 +0300 (MSK)
-From: Alexey Nepomnyashih <sdl@nppct.ru>
-To: Jeremy Kerr <jk@ozlabs.org>
-Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH 6.1] efivars: Fix "BUG: corrupted list in efivar_entry_remove"
-Date: Mon,  3 Feb 2025 15:03:26 +0000
-Message-ID: <20250203150336.2694569-1-sdl@nppct.ru>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bp0VNtBk"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7b6f95d2eafso466018385a.3;
+        Mon, 03 Feb 2025 07:04:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738595044; x=1739199844; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mfs45TBGa9cOMjq+1YHkVGnJDn3Ark/UOv4RQa6undA=;
+        b=Bp0VNtBkS4gDeTBSQmg3l5k8u7lNots74W47be/0uSB6qcvfho4kRK1W3L3z4LmQif
+         Z79ZB//H11EqOmLJOil9W62/pzaI0L3CMVwMIxVtfpvgDX+cTxxWkvu/A+UCRRMr6A51
+         hCdKXUBk25VSmWFQk03jR3ryiqK7/UpF0S8hnv03CMEHhJTJ6pL6zriBHvqY37h5MtEo
+         GUZ/czUdXJmUTnIhUOPNG/zaTMQARjZapXFmW0L/nAyBYCilnw+nTB9eTjVOO+rVKVVy
+         ie2KtdYhIe0JDCtUI2nuQoG/m7nFO0M3KiKNIAlgWy7v+JMpJKHJ+hoJOt+F8KkGNqq7
+         cKKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738595044; x=1739199844;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mfs45TBGa9cOMjq+1YHkVGnJDn3Ark/UOv4RQa6undA=;
+        b=HyRH5b+9rk1SPJeKzcWqa3YocVxWlROy+c0KZOhtLyt/iG5dcnY6kjtTU/gLMknB2r
+         yOPkPJvyunBaF09ubddth3O+WQO+e8QTWBFCM6VpnkNQsjINNVQXLeuJDG5i2fSgOXpj
+         WTj3CAMz75t+PtmK+tPTch+Rl3qopju3sCiYuMPZceKKbgG5sjjUmUGT1z+kDpMgl4H0
+         nNWDmhEAVN9Z+t7wCYG00a4/Q+W7bF+VnTPdhu66ebrXNdPHJEre9lNiabnCu8LSDyuA
+         ReV/V/CS74YVqgrRG/EmCUJc5aVP/S8YNZB0aaP89Fnev10Z2KUm3Wc3028RGDrFWZoV
+         lp8w==
+X-Forwarded-Encrypted: i=1; AJvYcCWH/YVXMZ+JxQMcUVJNGn8NISEOuH9RiGE0L8RtzHwx6WsL7daq1VDTdNFtCbCOT1XLZwcR1Qd+M28oTf4=@vger.kernel.org, AJvYcCWgKWhQ5C7hHaQ/QabX22C1lnU0jSyLJtHVWZn4BOUzF/A7DS4e2sn/27bGjLpBVSsKGSK4jY0olgKnCTaDJgM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOJoUpT6ZrmM4fmv85kXfhhWjW+N1+wwQ4bk11PJg8C9wmlv6a
+	HlKKQy/rkWU/cqlMXg3teV/QASuXBA9d1SKQiyRFH5tDv3bKHNle
+X-Gm-Gg: ASbGncsr/5Kc0jw5wZv86q7feHjUtQoapr3tEoQSa3GwUaTBx2qS+OWSEf3z6SuRjec
+	EuTgTcPNVEXjHn77HFsh8oWTNy8x7E2RU8JSSrR3/zdOE34m3NnXcITkOjZH4R1Aw7LNAypgkLO
+	vQTJllSQhb/de+1XQQ2aC+k9D3dcAjy+uhHMlUvdcDYtb3Yypv7oALub62cp0wqkjBIod4z6ltF
+	kwdmY83nlutBviLSd8S6H+LA2U/LW0F9bMgbt8CcEwZmUjrSo28H9eLX9hc3lain6LMbJ1b875t
+	invE/c1zqfC/iVs30avtTf5lvVJ+6n3iqlmTiRZ5nKxXeYqII5jfEbBRbCnbWOoB5NP00bUx9bt
+	eiSPULg==
+X-Google-Smtp-Source: AGHT+IEcSkEvwfTpeA1pv4/nxSgMr4TNNL/PIqYjwCQvL7oYKhCCodXASw4imJoTjH5+ZyEo67Tebw==
+X-Received: by 2002:a05:620a:4486:b0:7b6:d241:d4ae with SMTP id af79cd13be357-7bffcda58e5mr3118721285a.42.1738595044348;
+        Mon, 03 Feb 2025 07:04:04 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8bba3csm537156985a.3.2025.02.03.07.04.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 07:04:03 -0800 (PST)
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 347401200068;
+	Mon,  3 Feb 2025 10:04:03 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Mon, 03 Feb 2025 10:04:03 -0500
+X-ME-Sender: <xms:4tqgZw27RDo2DWSwkX8QQvipsS3jSSOO1nu_VR6kY02nNDGS1ixaNA>
+    <xme:4tqgZ7FuQ41RqdFUlEdoPcjew5tC543mpJ_pOjIRdcdeRotGiJE0DqIa7cDs1gSJk
+    5KF8_PiLzu4LAq2cA>
+X-ME-Received: <xmr:4tqgZ45_tTvMXR1mis-JOzslWC_koh8jA2iIJYwrWjCBV8SBeN0LH06xFA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeelvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
+    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
+    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
+    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedvfedpmhho
+    uggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhgrsegrshgrhhhilhhinhgrrdhnvg
+    htpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghl
+    vgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrh
+    ihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghi
+    lhdrtghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvg
+    dprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhroh
+    hsshesuhhmihgthhdrvgguuh
+X-ME-Proxy: <xmx:49qgZ51PrHy9Iz19D4BiOKGbl3PHy-_rPSVfFMTwTCB-ly4nd1TceA>
+    <xmx:49qgZzG45Kvf0Jm23diF2rjaraoGHQEAob2V6acNif13MrHxIWU8Ow>
+    <xmx:49qgZy8P8Xla66m6Gy-Nr0d-V45U0zx9T2jl-pVBzucvl1Qxb7wdnw>
+    <xmx:49qgZ4lCObMElZPJmnfP6dQ0bCT6EMyF-PRZ6JcyaI8CkT6uAyf-Wg>
+    <xmx:49qgZzE3Je794DxDTsNjZ7QPG62SFAyZD7ePuOfIVwajry1U_aSHXOvP>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 3 Feb 2025 10:04:02 -0500 (EST)
+Date: Mon, 3 Feb 2025 07:04:01 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Asahi Lina <lina@asahilina.net>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Jann Horn <jannh@google.com>, Matthew Wilcox <willy@infradead.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Valentin Obst <kernel@valentinobst.de>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev
+Subject: Re: [PATCH 4/6] rust: addr: Add a module to declare core address
+ types
+Message-ID: <Z6Da4XV5hcTfBiNH@tardis.local>
+References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
+ <20250202-rust-page-v1-4-e3170d7fe55e@asahilina.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250202-rust-page-v1-4-e3170d7fe55e@asahilina.net>
 
-Prevent list corruption in efivar_entry_remove() and efivar_entry_list_del_unlock() 
-by verifying that an entry is still in the list (list_empty() == false) before calling 
-list_del(). Also reset the list pointers with INIT_LIST_HEAD() to avoid potential double-removal issues. 
-Ensure robust handling of entries and prevent the kernel BUG observed when list_del() was called on an 
-already-removed entry.
-Fix https://syzkaller.appspot.com/bug?extid=246ea4feed277471958a
+On Sun, Feb 02, 2025 at 10:05:46PM +0900, Asahi Lina wrote:
+> Encapsulates the core physical/DMA address types, so they can be used by
+> Rust abstractions.
+> 
+> Signed-off-by: Asahi Lina <lina@asahilina.net>
+> ---
+>  rust/kernel/addr.rs | 15 +++++++++++++++
+>  rust/kernel/lib.rs  |  1 +
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/rust/kernel/addr.rs b/rust/kernel/addr.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..06aff10a0332355597060c5518d7fd6e114cf630
+> --- /dev/null
+> +++ b/rust/kernel/addr.rs
+> @@ -0,0 +1,15 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Kernel core address types.
+> +
+> +use bindings;
+> +use core::ffi;
 
-Syzkaller report:
-list_del corruption. prev->next should be ffff0000d86d6828, but was ffff800016216e60. (prev=ffff800016216e60)
-------------[ cut here ]------------
-kernel BUG at lib/list_debug.c:61!
-Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 PID: 4299 Comm: syz-executor237 Not tainted 6.1.119-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : __list_del_entry_valid+0x13c/0x158 lib/list_debug.c:59
-lr : __list_del_entry_valid+0x13c/0x158 lib/list_debug.c:59
-Call trace:
- __list_del_entry_valid+0x13c/0x158 lib/list_debug.c:59
- __list_del_entry include/linux/list.h:134 [inline]
- list_del include/linux/list.h:148 [inline]
- efivar_entry_remove+0x38/0x110 fs/efivarfs/vars.c:493
- efivarfs_destroy+0x20/0x3c fs/efivarfs/super.c:184
- efivar_entry_iter+0x94/0xdc fs/efivarfs/vars.c:720
- efivarfs_kill_sb+0x58/0x70 fs/efivarfs/super.c:258
- deactivate_locked_super+0xac/0x124 fs/super.c:332
- deactivate_super+0xf0/0x110 fs/super.c:363
- cleanup_mnt+0x394/0x41c fs/namespace.c:1186
- __cleanup_mnt+0x20/0x30 fs/namespace.c:1193
- task_work_run+0x240/0x2f0 kernel/task_work.c:203
- resume_user_mode_work include/linux/resume_user_mode.h:49 [inline]
- do_notify_resume+0x2080/0x2cb8 arch/arm64/kernel/signal.c:1132
- prepare_exit_to_user_mode arch/arm64/kernel/entry-common.c:137 [inline]
- exit_to_user_mode arch/arm64/kernel/entry-common.c:142 [inline]
- el0_svc+0x9c/0x168 arch/arm64/kernel/entry-common.c:638
- el0t_64_sync_handler+0x84/0xf0 arch/arm64/kernel/entry-common.c:655
- el0t_64_sync+0x18c/0x190 arch/arm64/kernel/entry.S:585
+I think we should use crate::ffi here. See:
 
-Reported-by: syzbot+75dc11...@syzkaller.appspotmail.com
-Fixes: 2d82e6227ea1 ("efi: vars: Move efivar caching layer into efivarfs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
----
- fs/efivarfs/vars.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+	d072acda4862 "rust: use custom FFI integer types"
 
-diff --git a/fs/efivarfs/vars.c b/fs/efivarfs/vars.c
-index 13bc60698955..42977138e30b 100644
---- a/fs/efivarfs/vars.c
-+++ b/fs/efivarfs/vars.c
-@@ -490,7 +490,10 @@ void __efivar_entry_add(struct efivar_entry *entry, struct list_head *head)
-  */
- void efivar_entry_remove(struct efivar_entry *entry)
- {
--	list_del(&entry->list);
-+	if (!list_empty(&entry->list)) {
-+        list_del(&entry->list);
-+        INIT_LIST_HEAD(&entry->list);
-+	}
- }
- 
- /*
-@@ -506,7 +509,10 @@ void efivar_entry_remove(struct efivar_entry *entry)
-  */
- static void efivar_entry_list_del_unlock(struct efivar_entry *entry)
- {
--	list_del(&entry->list);
-+	if (!list_empty(&entry->list)) {
-+        list_del(&entry->list);
-+        INIT_LIST_HEAD(&entry->list);
-+    }
- 	efivar_unlock();
- }
- 
--- 
-2.43.0
+> +
+> +/// A physical memory address (which may be wider than the CPU pointer size)
+> +pub type PhysicalAddr = bindings::phys_addr_t;
+> +/// A DMA memory address (which may be narrower than `PhysicalAddr` on some systems)
+> +pub type DmaAddr = bindings::dma_addr_t;
+> +/// A physical resource size, typically the same width as `PhysicalAddr`
+> +pub type ResourceSize = bindings::resource_size_t;
+> +/// A raw page frame number, not to be confused with the C `pfn_t` which also encodes flags.
+> +pub type Pfn = ffi::c_ulong;
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index e1065a7551a39e68d6379031d80d4be336e652a3..eb1a80ba8ff83ab2d1b3b1d11fed4fb704c7a4f5 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -29,6 +29,7 @@
+>  
+>  pub use ffi;
+>  
+> +pub mod addr;
 
+I want to share my worry on this `pub mod` list in kernel/lib.rs may get
+too long ;-)
+
+I was about to suggest putting `addr` and `page` into `mm` after Alice's
+patchset merged, however, seems that `mm` mod only cover userspace
+memory management (which is not my impression of what "mm" in kernel
+development), thoughts? Alice, do you think we should extend `mm` mod to
+contain all memory management mods?
+
+Regards,
+Boqun
+
+>  pub mod alloc;
+>  #[cfg(CONFIG_BLOCK)]
+>  pub mod block;
+> 
+> -- 
+> 2.47.1
+> 
