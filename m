@@ -1,39 +1,39 @@
 Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD341209686
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A09920A5C3;
+	Mon,  3 Feb 2025 15:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738597806; cv=none; b=QNx0xzkA2znhtCvyO/fyORp8SEizNSDjOoY8Xgwn93fcOdAICm/PotcE+buZV2gygylcYspNlKeCy03DlEof5Du2Jk2JV0gB/pXUtNKnmJpOWBH0IsLSdSwu7eDNIhoUUg2EztE7xLk9QV/hJzbATDdTtg+A/HSi9X3rmW6SEoo=
+	t=1738597810; cv=none; b=azNZtpkc3Xb/WKJ7QF9TLMCwIMkZXaWZ0SQ3qcbkzqxEGdUSts9i8q36HYLRn0Uobjsxkh6CMCcMJ0AvxIg5KjgJLQkP7E66xL5skaduYO66HuwO93uUVWV4RMHYsluoDdvEwwS73hAPwq07jKcXdMAblcWyQcmrh77HQosMiHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738597806; c=relaxed/simple;
-	bh=HYnhoMCdU+H5ksYaoTm0uU6K8WbCMMiHu9aeLOihI5c=;
+	s=arc-20240116; t=1738597810; c=relaxed/simple;
+	bh=JTdeXaWqQUg5XXeh7UfMKu8pBBGAsuiPlLDWkM5u90Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RSZxyJlZNHmJJuWPflnlXwJbalJ/8k5TXEsF8Z3m/mJRCbMddUgK9kezsj9+zrugDZwsQYONETTgx3dIX2I1ZLeim+STlH/s3Bbne3mljseUviVt5/yP96L0RQQKvCBCQfhZhHJtllveIj0Y/Ed7NkNVLZSr3TX8R7wt8n4eHq8=
+	 In-Reply-To:Content-Type; b=G1yCfvvYEERWwxBgCqnCEOkT9WQcQ77rqv5O5+oqXbJDHBORnevg+ptAz9oBuUauLWhsMBdAm59VzH/3tTgR0/XJDWIjsDi3sjIXMUcd3t2NJ1l9PpLhSMZrlHTXCp3pmURd5onyE+/K7lhBVxJOdJiRpP9kyKVvg8LfdFDqlt4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4YmqtK1JZpz9sbH;
-	Mon,  3 Feb 2025 16:19:53 +0100 (CET)
+	by localhost (Postfix) with ESMTP id 4YmrPS5s5Zz9sS8;
+	Mon,  3 Feb 2025 16:43:24 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase2.c-s.fr ([172.26.127.65])
 	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id QTVaJFM0J-7X; Mon,  3 Feb 2025 16:19:53 +0100 (CET)
+	with ESMTP id WsSVNvLwdVO2; Mon,  3 Feb 2025 16:43:24 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4YmqsS6kTlz9sYM;
-	Mon,  3 Feb 2025 16:19:08 +0100 (CET)
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4YmrPS4WCsz9sRy;
+	Mon,  3 Feb 2025 16:43:24 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id D6C4F8B764;
-	Mon,  3 Feb 2025 16:19:08 +0100 (CET)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 87FEF8B764;
+	Mon,  3 Feb 2025 16:43:24 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
 	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id XPURUaR18hxz; Mon,  3 Feb 2025 16:19:08 +0100 (CET)
+	with ESMTP id bjVNeM0DjxQi; Mon,  3 Feb 2025 16:43:24 +0100 (CET)
 Received: from [192.168.202.221] (unknown [192.168.202.221])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id CFD938B763;
-	Mon,  3 Feb 2025 16:19:06 +0100 (CET)
-Message-ID: <65c6f60d-bb52-48bd-a02c-87ffd2a915d4@csgroup.eu>
-Date: Mon, 3 Feb 2025 16:19:06 +0100
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 1321C8B763;
+	Mon,  3 Feb 2025 16:43:22 +0100 (CET)
+Message-ID: <937c99b3-3837-4510-be65-4eca3b280ce2@csgroup.eu>
+Date: Mon, 3 Feb 2025 16:43:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,67 +41,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/9] powerpc: Use preempt_model_str().
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
-Cc: Ben Segall <bsegall@google.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
- Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
- Shrikanth Hegde <sshegde@linux.ibm.com>, Steven Rostedt
- <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
- Valentin Schneider <vschneid@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Will Deacon <will@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org
-References: <20250203141632.440554-1-bigeasy@linutronix.de>
- <20250203141632.440554-6-bigeasy@linutronix.de>
+Subject: Re: [PATCH 00/16] selftests: vDSO: parse_vdso: Make compatible with
+ nolibc
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
+ Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
+ <cd1147a8-25ba-47d2-a59a-0a686469a808@csgroup.eu>
+ <20250203143640-70c59c53-af45-40cb-9a52-6395b3fdd263@linutronix.de>
 Content-Language: fr-FR
 From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250203141632.440554-6-bigeasy@linutronix.de>
+In-Reply-To: <20250203143640-70c59c53-af45-40cb-9a52-6395b3fdd263@linutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-Le 03/02/2025 à 15:16, Sebastian Andrzej Siewior a écrit :
-> Use preempt_model_str() instead of manually conducting the preemption
-> model. Use pr_emerg() instead of printk() to pass a loglevel.
-
-Why use pr_emerg() for that line and not all other ones ?
-
-The purpose of using printk() is to get it at the level defined by 
-CONFIG_MESSAGE_LOGLEVEL_DEFAULT and I think it is important to have the 
-full Oops block at the same level.
-
+Le 03/02/2025 à 14:50, Thomas Weißschuh a écrit :
+> On Mon, Feb 03, 2025 at 12:23:29PM +0100, Christophe Leroy wrote:
+>> Le 03/02/2025 à 10:05, Thomas Weißschuh a écrit :
+>>> For testing the functionality of the vDSO, it is necessary to build
+>>> userspace programs for multiple different architectures.
+>>> It is additional work to acquire matching userspace cross-compilers with
+>>> full C libraries and then building root images out of those.
+>>> The kernel tree already contains nolibc, a small, header-only C library.
+>>> By using it, it is possible to build userspace programs without any
+>>> additional dependencies.
+>>> For example the kernel.org crosstools or multi-target clang can be used
+>>> to build test programs for a multitude of architectures.
+>>> While nolibc is very limited, it is enough for many selftests.
+>>> With some minor adjustments it is possible to make parse_vdso.c
+>>> compatible with nolibc.
+>>> As an example, vdso_standalone_test_x86 is now built from the same C
+>>> code as the regular vdso_test_gettimeofday, while still being completely
+>>> standalone.
+>>>
+>>> This should probably go through the kselftest tree.
+>>
+>> Not sure what are the expectations with this series.
 > 
-> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: Naveen N Rao <naveen@kernel.org>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->   arch/powerpc/kernel/traps.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+> In general it should also work for PPC,
+> thanks for testing it.
 > 
-> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-> index edf5cabe5dfdb..9eb383189cfb2 100644
-> --- a/arch/powerpc/kernel/traps.c
-> +++ b/arch/powerpc/kernel/traps.c
-> @@ -263,10 +263,10 @@ static int __die(const char *str, struct pt_regs *regs, long err)
->   {
->   	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
->   
-> -	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
-> +	pr_emerg("%s PAGE_SIZE=%luK%s %s %s%s%s%s %s\n",
->   	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
->   	       PAGE_SIZE / 1024, get_mmu_str(),
-> -	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
-> +	       preempt_model_str(),
->   	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
->   	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
->   	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
+>> I gave it a try with vdso_test_gettimeofday and get the following:
+>>
+>> $ powerpc64-linux-gcc -nostdlib -nostdinc -ffreestanding
+>> -fno-asynchronous-unwind-tables -fno-stack-protector -include /home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/nolibc/nolibc.h -I/home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/nolibc/
+>> -isystem
+>> /home/chleroy/linux-powerpc/tools/testing/selftests/../../../usr/include
+>> -std=gnu99 -O2 -D_GNU_SOURCE= -isystem /home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/uapi
+>> vdso_test_gettimeofday.c parse_vdso.c  -o /home/chleroy/linux-powerpc/tools/testing/selftests/vDSO/vdso_test_gettimeofday
+>>
+>> make: Entering directory
+>> '/home/chleroy/linux-powerpc/tools/testing/selftests/vDSO'
+>> powerpc64-linux-gcc -nostdlib -nostdinc -ffreestanding
+>> -fno-asynchronous-unwind-tables -fno-stack-protector -include /home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/nolibc/nolibc.h -I/home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/nolibc/
+>> -isystem
+>> /home/chleroy/linux-powerpc/tools/testing/selftests/../../../usr/include
+>> -std=gnu99 -O2 -D_GNU_SOURCE= -isystem /home/chleroy/linux-powerpc/tools/testing/selftests/../../../tools/include/uapi
+>> vdso_test_gettimeofday.c parse_vdso.c  -o /home/chleroy/linux-powerpc/tools/testing/selftests/vDSO/vdso_test_gettimeofday
+> 
+> This log is confusing. It contains traces of "make" output but no "make"
+> invocation. I'm also not sure if there were two different compilations
+> or only one. Can you give the full commandline?
+> For your testing it should be enough to enable
+> "vdso_test_standalone_x86" in the Makefile for PPC.
 
+Well, yes I copied/pasted too much.
+
+I made some hacky modifications to the Makefile but I forgot the '| 
+header' pattern. With it added it works as expected.
+
+Do you have any plan to get it work with nolibc for all test programs in 
+selftests/vDSO, not only the standalone x86 test ?
+
+Christophe
