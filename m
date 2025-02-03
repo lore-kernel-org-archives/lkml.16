@@ -1,175 +1,106 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E9F20C464;
-	Mon,  3 Feb 2025 14:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A96020E00E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593010; cv=none; b=mcsDW3YR1VuujqSlNdbZhReQGd3RVxNl6RBgOStZkLSZa4YnfBzR9WO9ki9rVSv4v8vRoBdDSTwk3hEZhrc/V/MriuONmJkNTBBLKxba9dnAlkmVId6cBvWM2w3jwOJq/dkZCFnsNXsRa5ZTZNiHljzt80GCjMTYjdYc+0ukCnQ=
+	t=1738593031; cv=none; b=SHN5767QVmtK/jcmP23Px/LZexWQL7ZfxuUNqC3+iaLpgekzmK3O8op7h40/LDyyPa8Htv6gZ/8qdu8H4AlwAeMbk5aUG996+u4gVchdJLSscI/7T8nPBwFtfNzee+ezxtNpAsZfRUhrpviRLW3PJti5Y5G2+XrrvzqrvrvgEs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593010; c=relaxed/simple;
-	bh=8XzsPEpsyRGi4YWX6B3V+OvrOKb/YV2WMYuZ6HuSEmc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=heJ9W8YCJaOyaDjx9lehgY19XGq42/R5Mci4tJ63oe7Blj+aod0Xe9sEk39bIwJPkY+3x3KOT3Xq/5nO546ENGCNb7yR3QybKBLqgBHIQhc9x0jfNcNv9smAFcAtXE3yTVAjoT7kSBETItbPKGAoSGwbNViCxEL9JOlc5vGQ+pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hisHXZ2p; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738593031; c=relaxed/simple;
+	bh=IWZd5hlmNpgXQZ0243k8J0hL5ndXbwMghQLT8bz/dl0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kD+o9HreYHfaO+abduQFLnOz3v+i9YGPKo9MWQHc56zwD7jX7EMiYDBH1RsGu654ZhPP20cxLHMq7A4bGYWnbR4mVuzNBtbq3GYbxUGHgzQZyhJ39cXj/qShvBnCfNyPfzeNqXsaCz60ts2VGP3qGL/Aay9B05NXU5m2bVRxHpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g6t8XjBT; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hisHXZ2p"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7bcf32a6582so396491985a.1;
-        Mon, 03 Feb 2025 06:30:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g6t8XjBT"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4361f796586so52349595e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:30:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738593008; x=1739197808; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=KrGivRpKLfJH6uYF5e+fC19rCHtdF/k+KlI9NRXVfRc=;
-        b=hisHXZ2pQV6TeDu58UGVqblM2Kx/JBJOURnEwk7ppgLuN6dfAXic63ldtoe/oDzxMX
-         oc2xJSVazNyYlOwuvoqGb1YyKO9ovDmqIW3ipDyQucKeohVCQP0Rvd1bBJ0l38tBc64V
-         vmxkXWReUYxBybJFLnlPsnU2UfibRh/mua8M70usjwagWghbs1jT5ruoPS/RVjhlNxP3
-         JNyv+9kJXUWqtnCQLG6aGqm7s6lxTDH1IJCOi44Jq7CUASMTmRl8ePI8wtGtSGSsJnei
-         lhwy9Fs+vGXJ/nKJ8mVKsArYM1nM7Gw0w8VZ7Vqjci+8tjrk3HXv9bXeC5klpyazUAKo
-         /bsQ==
+        d=linaro.org; s=google; t=1738593028; x=1739197828; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9vWFSQn7DgiKs/FycuACWL8FOOG/NvIUTBk5O9mP/jE=;
+        b=g6t8XjBTUXglndFfVqzVdljDbO83j/VyLnqhmpi2yiCIcd+B/JjEO1VX+PSEzhpfB1
+         2mm2m3TcpfTFrd9fzqgIcDrHAMEL7FBLxATUFPpDwt68cLnjpvYdGkZSZoNruIsyTNvI
+         WEAwBOwKtLarvSMuj9HyVdYnovY6n72IiDUi8//PujcqXANVlmK/NPcL0Ua88hqWv/m9
+         N2DQ1WP58EL268ay/gp/QA/MYVysFpwFRtnpUlYlT8XDB0SfP0f84FmgVxkFjv424M2S
+         +quj9z1OpbGV2gUERzN2sBjpbAod91jRgKlaTiD7KmUordG9dUCpnYb+0bgQ85X4zEcL
+         6OoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738593008; x=1739197808;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KrGivRpKLfJH6uYF5e+fC19rCHtdF/k+KlI9NRXVfRc=;
-        b=Pd7xznBsZNkARMzaZ9nFNFYYQhH3GpfrPckVK3o65vHEE5aGcdwt2oiOmHuXjKLJz4
-         jCb+hmF9Do4vyiZEh/IZzmg1ZtL4vxP8XhayL67DiGUjv+STycCUxpGWZilXgD3U/Jaj
-         EpDcfrMCQcsTGkLPAQfIQTaWF4B4cLV46LFFkjBV88GGz7DsI1/KqDJ8gDf9YBErCs2+
-         H2dyi8Rpkbge+UEpc1u6AcRXFTQyoIbjzAjaYS3SezaLRT7KRuY2O1TDsGZzaSPUuZ14
-         510V7CAqYiLoGBqGotqK6kBITOOCZFgDWaem8o+I9C2R+TULAs0oUVq7h0ahVhOUbb4j
-         vRLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVAJCvwB0NOL4z3iAipsJ+Ynv48bcmzFGkWEcssUdgiRm25Xdn7P6DzqW2w25Wr1qn0kxEwr8tNWL6JrfU=@vger.kernel.org, AJvYcCWDribTl1wvQkW3kOFanMiUsB6rgzVqGy+nsJUL3ZMgsot26JznTqTpYlcBwCtgc57ixbUWlvyH6roEGzJ3h+c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybKZK6ev4gy3MNvbwUa7kdGA/dSCwxE/gngUCnvNJxmJt6KFaW
-	RLORXxIVWjwEHFAtFqopby9KPnVtT4tfYenmIrB6eKGJa2cc1aTA
-X-Gm-Gg: ASbGnctko1gpcIFk5aaTepce3sHZ4bk+dZwO8yXSf2PG7Pm5G6H3kaseBGjDQZxP0Z4
-	XWrpQ8sNKdsshQ9cm2XXcH3FwllErt6e6z6m1IWrjsWbAda0CxcTIv0jVrcrwWKR02YGLcVQuXK
-	TtKU96A94MIkgnfpn89I+9OO4T4EvMUvyt/zkm1M2OLCvY1OeYxf7f8iQQeHJQYGPLhMOjZX0MK
-	Up5LtwfwP5jJaf5xHqOvrzpmsFDaROQVSnf0bEd+qGMMv8d3wtSBBws5dwnOdGRa7aZl7afHts7
-	XbVEYb7bujSlY6VofpAeB/0ekWlYPBb8xs4ret6NCUWcXDUXtCBwoPuW5CEhNsVW7LYEhIv8jrl
-	r8HzAxA==
-X-Google-Smtp-Source: AGHT+IGoqnIySCW4xcBXN10HHnpeNElNjJD/qjRMVinK12TP0Vgh/xKOOiAEjTPNu+EtEwRQ/J98Cw==
-X-Received: by 2002:a05:6214:5004:b0:6d8:7ed4:336a with SMTP id 6a1803df08f44-6e243ca746amr373030486d6.31.1738593005127;
-        Mon, 03 Feb 2025 06:30:05 -0800 (PST)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254819959sm50933796d6.31.2025.02.03.06.30.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 06:30:04 -0800 (PST)
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id EC9151200072;
-	Mon,  3 Feb 2025 09:30:03 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Mon, 03 Feb 2025 09:30:03 -0500
-X-ME-Sender: <xms:69KgZ7nFnMAsEsWuIm2I9rwkmSUbqGRGsJr68znH7oyKZxDtLg019A>
-    <xme:69KgZ-2B5tiwPPHpdyREC72NW5rENTImzLVpMZqf4WvgPFsAISP98Zace3vON3J_5
-    TeG0HmUTdN-MieHlA>
-X-ME-Received: <xmr:69KgZxqYvLYkAPpBf4W5LR1mBKixJYWNIvcByvwQfhbAdGVhiRUvkJvQbQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeekhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
-    jeenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeejhfeikeekffejgeegueevffdtgeefudet
-    leegjeelvdffteeihfelfeehvdegkeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
-    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
-    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
-    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
-    nhgrmhgvpdhnsggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgvthgv
-    rhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthht
-    ohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsg
-    gvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhinhgu
-    sghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtmhhgrhhoshhssehumhhitg
-    hhrdgvughupdhrtghpthhtohepmhhinhhgohesrhgvughhrghtrdgtohhm
-X-ME-Proxy: <xmx:69KgZzmLz0ege_ZgYn8QXvKbMsill1rATvXLo65m_F24I4elyBLHRg>
-    <xmx:69KgZ51BQw03SVPM3GKvXUHv77qoJmymLWlZS5suNFGU-D-mNb81zw>
-    <xmx:69KgZyuaODamm1u_mEYNxYO_qTeb6wF-yLxGQ0uV4FdyI4M-kRYi0A>
-    <xmx:69KgZ9XX3cy5ayCH_vVXCpEUAjj7WyMzyneJTHgoqV5raULNua5ebg>
-    <xmx:69KgZ40Qa0GYgF6yxoerwKdfhVsWM_PCPtC83RL270qUeKrFrmKluwcx>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 3 Feb 2025 09:30:03 -0500 (EST)
-Date: Mon, 3 Feb 2025 06:30:01 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>, Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: sync: add wait_interruptible_freezable
-Message-ID: <Z6DS6cIWgGsX7FXL@tardis.local>
-References: <20250130-condvar-freeze-v1-1-a91d5661d505@google.com>
- <20250203115418.GB14028@noisy.programming.kicks-ass.net>
- <CAH5fLggyyP1A=uNxr2iYNKOj0V5rxZRU83TRgs6Ah1uJ=Ee2uA@mail.gmail.com>
- <20250203133843.GG7145@noisy.programming.kicks-ass.net>
- <CAH5fLgjVyCSTyZqS7uSzWMTKvrxPL55PKUyM-H0RrnuZiU9VEg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1738593028; x=1739197828;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9vWFSQn7DgiKs/FycuACWL8FOOG/NvIUTBk5O9mP/jE=;
+        b=UClsJsvdW68lt43ksweQrKMxARUh2lZCyDBWI4Vgneetvv8JqgJsSzwaPT2tK0B7nR
+         CABR5yJ+WgPlpNLV4rtnKyu1kraSXucbyjVEtBD19PkbnP0TLHIOAX/v+4yHfE1rAS+h
+         pg6PaGZ3N12/2083AjyLkgIu71NgimtxbKshW7bSp06ocTt6L10M3cejUiJSD6lojFUz
+         JEDsnHSGIRLhaip4ALi1Gd8k+zSzr1bx7POe55UtnS5/a0GU0Tfc/h/jc1lfEpbT0guu
+         gsFxckszOPYG1TzshH78Os4+wAKo/1Nfy8W2R65rZDXdFju/p8SScXKuQS/YBqU0nVky
+         Vpqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFoqZxXwy7IgWx2gO5C4JBHl4s7NNNM87+hADOgu4jukU/SSustvc3uSZqU7Ol4G6sGcNd6MpdThCR9Qc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyILhrAxS3A831f+YfI25SHOHuZ+xuioyuhdjPfgSnr/+wAbobg
+	zWUvDDFddy/RGtYeSkcnTjA3vxsEjkNcEb7ecRkE5aRIAsrJ9TeCL20z804+MeQ=
+X-Gm-Gg: ASbGnctCMuP0qfgbuOUJr/FhjqUPPNyuGXBqUbpJKSt3xbZvZ5ztNX5++Mri2LmG8Si
+	+xg0+NvKRfJmRXKcf/vaC4SxrZ1B1bJGtVY1HcUM7hIfyKWBxt8J4GElF1Wpp5syG2eJRMFwLXr
+	BS+JoxjmLNFB1E19J9I0z3vz3vYBoRk1n8zR4CetcgT/fwdBANi1TyODNy6+IhbHkksf9SGw5Ha
+	VO+YeK3fqjoDmZmTvo0PjlkGaaW5rPrla4HeaCRC9CnbW6j14NbkT8bS5TlhF/Zd1FPsSuhqExH
+	10slIV7t2tNfgSQ/IwYUryxLhWaYXiNMUQ==
+X-Google-Smtp-Source: AGHT+IHinY+xh0nJesZnDupVI2Wp4r4N0MF/Fkn9c+8reC2w8xLtTGDIrtM8PVUM9uRToGo6QBxJ7A==
+X-Received: by 2002:a05:600c:4fc1:b0:436:1ac2:1acf with SMTP id 5b1f17b1804b1-438dc40d55emr204148275e9.20.1738593027971;
+        Mon, 03 Feb 2025 06:30:27 -0800 (PST)
+Received: from [192.168.68.112] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-438dcc81589sm191206255e9.33.2025.02.03.06.30.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 06:30:27 -0800 (PST)
+Message-ID: <35cf66a2-05ef-4e49-a146-ca96ab19fcf8@linaro.org>
+Date: Mon, 3 Feb 2025 14:30:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLgjVyCSTyZqS7uSzWMTKvrxPL55PKUyM-H0RrnuZiU9VEg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: q6apm-dai: schedule all the periods before we start
+ streaming
+To: Mark Brown <broonie@kernel.org>
+Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+ krzysztof.kozlowski@linaro.org, pierre-louis.bossart@linux.dev,
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org
+References: <20250203124945.11406-1-srinivas.kandagatla@linaro.org>
+ <357e28eb-f245-4647-8e10-79805b53731e@sirena.org.uk>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <357e28eb-f245-4647-8e10-79805b53731e@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 02:41:37PM +0100, Alice Ryhl wrote:
-> On Mon, Feb 3, 2025 at 2:38 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Mon, Feb 03, 2025 at 12:56:05PM +0100, Alice Ryhl wrote:
-> > > On Mon, Feb 3, 2025 at 12:54 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >
-> > > > On Thu, Jan 30, 2025 at 11:30:44AM +0000, Alice Ryhl wrote:
-> > > > > Binder allows you to freeze a process where some of its threads are
-> > > > > blocked on the Binder driver. To make this work, we need to pass
-> > > > > TASK_FREEZABLE when going to sleep in the appropriate places. Thus, add
-> > > > > a new method wait_interruptible_freezable for the condition variable so
-> > > > > that sleeps where this is supported can be marked as such.
-> > > >
-> > > > The constraint on freezable is that you must not hold locks. There is a
-> > > > lockdep check for this in the code, but it would probably make sense to
-> > > > teach Rust about this constraint as well, hmm?
-> > >
-> > > Unfortunately, I don't think there's any way to enforce this at
-> > > compile time, but I'm definitely happy to add this in the
-> > > documentation.
-> >
-> > Ah, ISTR people talking about teaching Rust about the whole raw_spinlock
-> > vs spinlock vs mutex nesting order and figured if it can do that, then
 
-Peter, are you talking about the POC idea I proposed on tracking irqsave
-status:
 
-	https://lore.kernel.org/rust-for-linux/20241018055125.2784186-1-boqun.feng@gmail.com/
-
-? I'm working on this right now, however, I don't think this would help
-spinlock or mutex nesting? Because there's no global(percpu) status of
-acquiring these locks. Am I missing something here?
-
-Regards,
-Boqun
-
-> > this should be doable too.
-> >
-> > But perhaps that never quite happened.
+On 03/02/2025 14:17, Mark Brown wrote:
+> On Mon, Feb 03, 2025 at 12:49:45PM +0000, srinivas.kandagatla@linaro.org wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>
+>> With the existing code, we are only setting up one period at a time, in a
+>> ping-pong buffer style. This tiggers lot of underruns in the dsp
+>> leading to jitter noise during audio playback.
+>>
+>> Fix this by scheduling all the periods, this will ensure that the dsp
+>> has enough buffer feed and ultimatley fixing the underruns and audio
+>> distortion.
 > 
-> There isn't too much progress on that front lately, but you are right
-> that this work could be extended to support this case too.
-> 
-> > Yes, documentation would be good. Just in case it isn't obviuos,
-> > freezing a task that holds a lock can trivially deadlock vs another task
-> > that needs that lock to complete before it too can hit freezable.
-> 
-> I'll include those details, thanks!
-> 
-> Alice
+> Should we be writing all periods or just the minimum number of periods
+> that's configured?  Userspace might not have filled the whole buffer
+> yet.
+Just minimum number of periods or 1 period. We are queuing up all the 
+periods to the DSP, so that we do not have to wait for period interrupt 
+to queue the next one. This significantly reduces the latency in queuing 
+the periods to dsp.
+
+--srini
