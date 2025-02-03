@@ -1,145 +1,114 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996FC205ADA
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8451FF1CE
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738592085; cv=none; b=tydmw1orQ2bhqAJMoO91vekfOBj/4Qpdd6Y49i4P1NVpjCuDUlvILJa4r7sf2ca5ijCofXhJ6k4Ibs9DvboJPQjYAh16f/h1Z6+faFL3f56TDDXUy+Vb/IBaWqAuu4CTrKGYwqUwFedgnzvHE005pVeZ+uS3Sg94VWu5OP/5J7w=
+	t=1738592207; cv=none; b=NrvimI8Jiu00NeQ94AqKGREkkCtAOuJcWZxiVELiVszE4YvCyCa0rvm59/q1GI5hWLEjs6e5IS2zpVWgcavKDXj1PcexZp1KTWwT3Od71tYHFHWqx7EBgtp9kJ5rrS6cVQj8CbRoO9HLOvAUjoum0JDq0Gf1Op5GkIDuZPlErWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738592085; c=relaxed/simple;
-	bh=GLS47vtT3nuOUmU+wF1U4f2z06P/ZzFU5ppHdYrIRl8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FGU5ROFdGAYRCDVJIEy594AKcB8pNTC6D/kqcyNRnuJamzw6qzOdjT0XKVnEu3Mx+BPZS+qA9/nuWp194ltOyCTpIoxuadUMrbiuXdxsekFFwnGG/J0DvODUJx1RoDwrl60mqz1XO1J3FNIImo5eRqmzJNaE3GG06o6AtKGtxio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oUPDIv0o; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738592207; c=relaxed/simple;
+	bh=0GS4tNkkuf9vqpDi2bSkhhgFUZfoBbN3HJcoaeptZ2U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=thMsmJ2SS8Wb0TshlA76KXjwoABtHF7M/ljviX7gGrpllf2Xl1KGe11/a7uKeXiB4NSWCO/AwyqidKX4VWjuDg3+wphWL/WtHEExcrXZtK3TBPxyOyEK082EB6xWiXyi0870R5sODZrJO1JtmLXNqOx/Bgi3Ai4W3esa/dYHwl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f23Z3Pe5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VJN1wLsI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oUPDIv0o"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513BUUdE003900
-	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 14:14:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9ed5FD2P7X9YaTZMReMsjptBhvML/e4p1WW07sHSBxs=; b=oUPDIv0oh0BYT43o
-	UuO+W6eMj3rOly1MESJtG+RA4e4gOETUhWvJ5luYP/69cHcjCmkvaz9RPb7ziOFl
-	yMDOGS7/yuVrTCp8pdzYLatfsSnZ4gJbB7M5ddXXrF88EeWk3jMkSO/sxOM1hwU9
-	SP93oBaAPQ/v38IF0k58iOCgBdU9B32gB6Ni76RJ/TZ4i5MgBmR/KgGJqvIw4frn
-	3IiRWTKP6/US4VK+A848MfXMB8ipn9Bp2Ep3RR28beNNlJjvChnoBQa3F4SUV1h2
-	5nhIciqCL1cMlzuaVYvQKuu4raquZpU9zWL8ex/oKku8R323xzo6fMRUpjuYXcbk
-	szGnrA==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jw03gjjr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:14:43 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7b6f85325c3so58809685a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:14:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738592082; x=1739196882;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ed5FD2P7X9YaTZMReMsjptBhvML/e4p1WW07sHSBxs=;
-        b=BLnfAnVE4P0/ofBcBmTbysY4Cu4uGmdjqstWgXYR6HSsDA78WnDJhtDW+rAOcr3V+L
-         0OHT/L7ccr4DuMZWuJIZAunCLeYhKCo9JqhkDzbgJg1Kgio9zoKksGwysDKWp8KGJ+c6
-         U59kbjsob28FOSSVnejBAkWOEjNHtn2bOmNlH2lAyNecs0IcwenovFY2Z54Mgy3G6i30
-         Wr/kHHo9W3R2YBfUAK6u53mZYCWk7z90TME9IlF58yz3x05zjKdCfmvrnCuhjpkBCDra
-         yVHtqSn3ZrfxvvMLia86uk13Rl9YhwjSknzUGxc4AlWHVXhB8BfxCBbM5Z7kgfL99DMp
-         3wAA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7LORvFiJ65pntBRxOfABTKGy0wPojbWX7eiN8y1WROPkOe6aMXuSwrF2GE+7//HdU+QSLMKqrg1gK3pw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGPibBCMQOt8oOTw8agCsZFZZQn23dFB0xoaSNdHHvzU/uAaIK
-	6s9l4f4v9kdysCJnrfeRMVJnOdUKyNPSEPPmd2UY8kMkZkwMdgTPD8+TaTe3Qtrhe7uT+QELX4m
-	gsTPvBj3PCSIRBQby/ysZSclzH161ncjmBex+UukomrjNfES5jWQOKmjzGky0W1Y=
-X-Gm-Gg: ASbGncsTNzfzZHj0piRm8Ro5VwTbmcZsgZK46YcI0yc7Jgl3Y8rsWn6oyOXH/b1CkXo
-	DTT7A/sMlomQ7Moi64h3LREskPm4+H3bnYvNojoKPGVx4GamGiTFOz7iMCqhQZ72WS3XXiElsey
-	luVcrskL5z6gEL6MkXLIGIqFCqARmm1pg+ZsdBwn+SG84lnBk5wPSq9MhZKetJCYVCCr3BEOflN
-	UG7Hky71Yb82pKpvJhC5ihVJ8TEUqORlhZfyopDl16Sr6F3S4tikYYlSIe89y4NRZsEVE18y2TH
-	VYeb1KTlbRZb0c9X/ZkJ6BixAjGNfAKS/vbWMRK1uaFOqiRwnZnND+tnu4E=
-X-Received: by 2002:a05:620a:2686:b0:7b6:d65f:cb6a with SMTP id af79cd13be357-7bffcd8b180mr1181508985a.12.1738592082312;
-        Mon, 03 Feb 2025 06:14:42 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGH1738FSuy+pc3rDZ0plUoVJ+oWo3QVzECxej0AWdMRUeWLLFwJpYf/Ff6igbrOhSMl69Frg==
-X-Received: by 2002:a05:620a:2686:b0:7b6:d65f:cb6a with SMTP id af79cd13be357-7bffcd8b180mr1181507085a.12.1738592081987;
-        Mon, 03 Feb 2025 06:14:41 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47cf899sm761968566b.44.2025.02.03.06.14.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 06:14:41 -0800 (PST)
-Message-ID: <19a83d67-7e1a-495b-8dff-e1d2ba05b878@oss.qualcomm.com>
-Date: Mon, 3 Feb 2025 15:14:39 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f23Z3Pe5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VJN1wLsI"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738592204;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nZefVyW1J+rhfeQZZFAPrMeN6Sk+norNJSsEYrrvtGc=;
+	b=f23Z3Pe56VOCo7y12XgaKmVaTtC3uTe2QVWIzRs6qk7WfesolpBlnRexVgPhokNIOkNUnE
+	DqBLhR1eZn1JHxdMTPloS1GrDXE1plk+FYYSL809BGMFe2zvWY7VulfbkTMKYQZUiTOMU/
+	PpiaEyrcjcIGsJUT/QbWLIgEvVDA/2dCbG2pBe8lCEBH/EyEB8XkdI0VPLdSsk97m/kBAk
+	7CAbgUpkt7kL+3hmyUsNUGbdlYbmtKU8TP5iSvjxhIEIqBFzr57LM7cgGFPqyxLQ6/l0Sw
+	Zbr3SfqSUKII4yFeCh7R4Plk0dBLZ1quCjqkFstOsmygRukwRt2Q2jHWXuHc5Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738592204;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nZefVyW1J+rhfeQZZFAPrMeN6Sk+norNJSsEYrrvtGc=;
+	b=VJN1wLsIMRvsUQg+Hmbonc72buD2PpPYDxuG475mqgBPfLQe3GJjzu9kPbR3+2YPbMsDzb
+	HJ1mb6PtNKPEJxCA==
+To: linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Cc: Ben Segall <bsegall@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Will Deacon <will@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v2 0/9] preempt: Add a generic function to return the preemption string.
+Date: Mon,  3 Feb 2025 15:16:23 +0100
+Message-ID: <20250203141632.440554-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] arm64: dts: qcom: qcs615: Add clock nodes for
- multimedia clock
-To: Taniya Das <quic_tdas@quicinc.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250119-qcs615-mm-v2-dt-nodes-v2-0-c46ab4080989@quicinc.com>
- <20250119-qcs615-mm-v2-dt-nodes-v2-1-c46ab4080989@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250119-qcs615-mm-v2-dt-nodes-v2-1-c46ab4080989@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: vmfFYxaH34hl0XznYc8-Is3Ij22SiyCe
-X-Proofpoint-ORIG-GUID: vmfFYxaH34hl0XznYc8-Is3Ij22SiyCe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- phishscore=0 mlxlogscore=999 impostorscore=0 bulkscore=0 malwarescore=0
- priorityscore=1501 clxscore=1015 spamscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502030104
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 19.01.2025 1:00 PM, Taniya Das wrote:
-> Add support for video, camera, display and gpu clock controller nodes
-> for QCS615 platform.
-> 
-> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs615.dtsi | 51 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> index f4abfad474ea62dea13d05eb874530947e1e8d3e..9d537019437c5202c4d398eecd0ce2a991083175 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> @@ -3,7 +3,11 @@
->   * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
->   */
->  
-> +#include <dt-bindings/clock/qcom,qcs615-camcc.h>
-> +#include <dt-bindings/clock/qcom,qcs615-dispcc.h>
->  #include <dt-bindings/clock/qcom,qcs615-gcc.h>
-> +#include <dt-bindings/clock/qcom,qcs615-gpucc.h>
-> +#include <dt-bindings/clock/qcom,qcs615-videocc.h>
->  #include <dt-bindings/clock/qcom,rpmh.h>
->  #include <dt-bindings/dma/qcom-gpi.h>
->  #include <dt-bindings/interconnect/qcom,icc.h>
-> @@ -1418,6 +1422,18 @@ data-pins {
->  			};
->  		};
->  
-> +		gpucc: clock-controller@5090000 {
-> +			compatible = "qcom,qcs615-gpucc";
-> +			reg = <0 0x05090000 0 0x9000>;
-> +
-> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
-> +				 <&gcc GPLL0>;
+The individual architectures often add the preemption model to the begin
+of the backtrace. This is the case on X86 or ARM64 for the "die" case
+but not for regular warning. With the addition of DYNAMIC_PREEMPT for
+PREEMPT_RT we end up with CONFIG_PREEMPT and CONFIG_PREEMPT_RT set
+simultaneously. That means that everyone who tried to add that piece of
+information gets it wrong for PREEMPT_RT because PREEMPT is checked
+first.
 
-This would normally be GCC_GPU_GPLL0_(DIV_)CLK_SRC, is this intentional?
+This series adds a generic helper which is used by
+dump_stack_print_info() and other architectures which don't use the
+function and provide this information on their own.
 
-Konrad
+RFC=E2=80=A6v2 https://lore.kernel.org/all/20241206113431.Q-VXMlru@linutron=
+ix.de/
+  - Split into individual patches.
+  - Implement preempt_model_str() based on feedback by Peter Zijlstra
+    and Steven Rostedt.
+
+Sebastian
+
+Sebastian Andrzej Siewior (9):
+  sched: Add a generic function to return the preemption string.
+  lib/dump_stack: Use preempt_model_str().
+  arm: Rely on generic printing of preemption model.
+  arm64: Rely on generic printing of preemption model.
+  powerpc: Use preempt_model_str().
+  s390: Rely on generic printing of preemption model.
+  x86: Rely on generic printing of preemption model.
+  xtensa: Use preempt_model_str().
+  tracing: Use preempt_model_str().
+
+ arch/arm/kernel/traps.c      | 11 ++-------
+ arch/arm64/kernel/traps.c    | 10 +-------
+ arch/powerpc/kernel/traps.c  |  4 +--
+ arch/s390/kernel/dumpstack.c |  9 ++-----
+ arch/x86/kernel/dumpstack.c  |  9 ++-----
+ arch/xtensa/kernel/traps.c   |  6 +----
+ include/linux/preempt.h      |  2 ++
+ kernel/sched/core.c          | 47 ++++++++++++++++++++++++++++++++++++
+ kernel/sched/debug.c         | 10 +++++---
+ kernel/sched/sched.h         |  1 +
+ kernel/trace/trace.c         |  7 +-----
+ lib/dump_stack.c             |  4 +--
+ 12 files changed, 69 insertions(+), 51 deletions(-)
+
+--=20
+2.47.2
+
