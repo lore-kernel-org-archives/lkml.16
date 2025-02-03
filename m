@@ -1,251 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2069.outbound.protection.outlook.com [40.107.243.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D0E18B46E;
-	Mon,  3 Feb 2025 22:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738621822; cv=none; b=lNXb6m1PZZSOWAHD+fLNVgsmCGaWqL3HRxdWWNY8hRroJzC5cQuiptncPQCi4PPYoTM6jZck/2J+SqMth/56TZKu2e8TJIJ9FB+Su2I/pq1sIq6Nm5Vrjr1TGifdSnrsbzvEgukpG6rFzd0AShhwP5FJbCrn3B02P195LRGovWU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738621822; c=relaxed/simple;
-	bh=nQVY1dDboaeGX4s/kBcCQBGi1C5MiXmG7BkFyi87hcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lhHI4MerArmT4d4KjHktef337UHa/81RBqB4q2VQbARBSZTVXwu42WqWsZIeXc2CnamqabJHrjCfS6C/pOcBapykuPGTlR+IM5reE/Q4eYFPJjBAeo3SEydtpPS0dFMXN4/j70SgtXzAxYo9mXx5Z3qvwB1r+s1C99kQiEm59eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gg38RWDy; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8E520FA96;
+	Mon,  3 Feb 2025 22:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738621940; cv=fail; b=FoDsGwMJAf8fNylouyognScO6AI/IkPzn7Aieh046DEeFZIKULMjqaUqUo9yfhCtFb3UU8GTu+f/lcxcsGUaEXMIoGhcBKwy9WEtgDgG8Q26Pnf9tTuy9h8M5fZk5J87OJmfellk3FjJQtArRIJjJvDSVY8hR7LBP7Hv9IFmGcE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738621940; c=relaxed/simple;
+	bh=2ss985WV2tdPPssmP7oeLYFe95ulGCPT4yORPgj1WWg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jyfABWGf6TKFvHwhIa3+BOtB8ISvSI3WsSyQYtUJx/+LdOf1yaj7RL6el6Hjc7ZaoTnJK+xnq1R8EXDUkOdhfG95I6IsgjhDYShHZBP+ITkK9LD8wSquQJvHf8QWiC1jtFXNEE0tiP71uewdnYZPeRkb+XoIxr3+0AxK+CCMktM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ObD50ky4; arc=fail smtp.client-ip=40.107.243.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gg38RWDy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F2DC4CED2;
-	Mon,  3 Feb 2025 22:30:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738621821;
-	bh=nQVY1dDboaeGX4s/kBcCQBGi1C5MiXmG7BkFyi87hcI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gg38RWDyo4/DO/c18+GqHN9+P5Wj0kKkr03sEttx6ObUNrE30x4KSUURwsJdmro44
-	 r1LafdcOekf3nL3YGCvs+3+yW00QdBSEe+8OyaWQLKifKsJ4fMJf4LDHz20+Moa8OQ
-	 qvQKnaUDlTbuVIOTIsmOunydTlpH74XO4lmUqJc++rYDB2hvFYjn6RwK8RFSwel9w/
-	 wHL56G7hOk8/eBS+lDJcg4XvbVAf2PVXLYqMeVh60gmDqF4mudpvg1YGdHMIAYUz+w
-	 1v3HZICV3H8pjbLZHYHudE11xTWGwErGoW/5juK8WYRrXbFSA/61sXhQcB4IpEG5iK
-	 XgapaV/Jv7wvg==
-Date: Mon, 3 Feb 2025 16:30:20 -0600
-From: Rob Herring <robh@kernel.org>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 02/17] dt-bindings: mailbox: Add bindings for RPMI
- shared memory transport
-Message-ID: <20250203223020.GA277987-robh@kernel.org>
-References: <20250203084906.681418-1-apatel@ventanamicro.com>
- <20250203084906.681418-3-apatel@ventanamicro.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ObD50ky4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ybPn7Ynv0bPrNyZEOtrRbVPnRVmJmSUZ11orxkzZpCUrLml40POJbTdReqWK7EePMhs/VTXq68aQPNjAhZwJR4AInPttPTp8sFSCGt4sT7VPAO26xOdtF1zHSoeLaSQ8VBjfAHtv9jz7F7D5YY34x8OGBZkxGHKYJl5zxZQ6eSte+M0p8NmagTRIBAV86ye+Jy+FQq4fDz80DAnG+FsSQ8NdCyUv9ckY3CytzG9MF5stKESmPJYU5zPvuHCMevX/Rap3F3GazbMraUaCRI3T6JYX449NXHL+DipaVwHZVaNStp1nuBK61anU8/Q6FXHUNdNXHGc2zhQFsRw5b8/T6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wPNTuMvGqNsWF5TGFrn8OnVpsDB9TM3KCO/BFeexGBo=;
+ b=n0HXSv/2S8A4KlemNGYNeBNGIoI4vRQGlz+QkSt7QdnshQRzMu/HPPV2Dmlxe3tmPSJxb1wd2nJ6aMVMgW48G/QPx1iAkeMH8DcoLIP6GrG9LcEdwHqMNTafXXPCyn598pR7i1uSEFaxt36uaj2J0CN+zSmHWNxA368PcbAn401UGlLusKbcVtULsnsdF94Oxm+zEQQH2+AwaB8sY5CDfDPD8rZEtYtuCKtHCxlfqncar8i58BMP3adbEacGtL5M8p3bcaVPqV2HzKJ+RL78bvJRUeC1xkn9AS+T0BoWGX3g7BFRhiTHgpUXxwhVUaS7/osRrJ1UkWLa0p5eZoD38w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wPNTuMvGqNsWF5TGFrn8OnVpsDB9TM3KCO/BFeexGBo=;
+ b=ObD50ky4ZCo7vv72MeV6qcU+QTgC5Bz9WXvDo8+ATHvw0YJDnnGfbOa700fVj7KE6Cqrr5CXBs8hGZwDB5rs1w4T5/zkqB4g1Eq7zIWQOOVyPun+rIXx3XYYiKIb1MGBfMuly2fEyVABl86ilB9se2KBkSxltJveNsg/J38OFgA=
+Received: from PH0PR07CA0002.namprd07.prod.outlook.com (2603:10b6:510:5::7) by
+ PH7PR12MB5928.namprd12.prod.outlook.com (2603:10b6:510:1db::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Mon, 3 Feb
+ 2025 22:32:13 +0000
+Received: from SN1PEPF0002BA50.namprd03.prod.outlook.com
+ (2603:10b6:510:5:cafe::9f) by PH0PR07CA0002.outlook.office365.com
+ (2603:10b6:510:5::7) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.25 via Frontend Transport; Mon,
+ 3 Feb 2025 22:32:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002BA50.mail.protection.outlook.com (10.167.242.73) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8398.14 via Frontend Transport; Mon, 3 Feb 2025 22:32:12 +0000
+Received: from sampat-dell.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 3 Feb
+ 2025 16:32:11 -0600
+From: "Pratik R. Sampat" <prsampat@amd.com>
+To: <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <kvm@vger.kernel.org>,
+	<linux-crypto@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+CC: <seanjc@google.com>, <pbonzini@redhat.com>, <thomas.lendacky@amd.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <shuah@kernel.org>, <pgonda@google.com>,
+	<ashish.kalra@amd.com>, <nikunj@amd.com>, <pankaj.gupta@amd.com>,
+	<michael.roth@amd.com>, <sraithal@amd.com>, <prsampat@amd.com>
+Subject: [PATCH v6 0/9] Basic SEV-SNP Selftests
+Date: Mon, 3 Feb 2025 16:31:56 -0600
+Message-ID: <20250203223205.36121-1-prsampat@amd.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203084906.681418-3-apatel@ventanamicro.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA50:EE_|PH7PR12MB5928:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0f6e55c4-d2b2-4062-bc56-08dd44a29adb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|7416014|82310400026|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?lH2kUOnV2SD4DLvsy0xngebUO3XsacrgUxxIi9J3XW37fP8BSD9tO7eSLmR+?=
+ =?us-ascii?Q?R3QAuE19p5YKIgTXN7y2nnW+hlGElMcZJvLp56rItb2v17Brb/mgNeHb5OW9?=
+ =?us-ascii?Q?gfOBLD8Mn2XhhxSsftJrciT384JjN3qhf2xzkaPqadxrcqzPvdT3q1vvN5O1?=
+ =?us-ascii?Q?xZuYfNFPN3udVM81UDAB9NSg2DiCOH/P1MoAGc1ccZO4StKPWXrnrW72Vwdv?=
+ =?us-ascii?Q?iCON3iPxiN1v+w3aME/XsahYAq5JLbFAMbRq/YlLHbBW+RN7v6PMUrVse+Zg?=
+ =?us-ascii?Q?6P8F4ZWYybse5RZaEKRP7HLWOSaANzjaZBxnIlnwPKGJqJpq2YdvGc3UjBtU?=
+ =?us-ascii?Q?N6VVXh9alsEwsq9VIZyciZ7yayOE7BEjZLb2VxfttpTIRF0AQfk7xuiAOxgo?=
+ =?us-ascii?Q?o486eONAlmZHvgXFm4wHSKlCaZLgn43fX3rB7by9wrllOZqGTN6felMOiuY6?=
+ =?us-ascii?Q?VBCbv/+IWRdp81PzzEl/7VoVSoh24Gi5X6e2Z+0oVJuf6XDlcTkuX6PKzORS?=
+ =?us-ascii?Q?WkHgC0RxupVlmlpGIDeZtUy34teRBQooRtEnbnGdqT/bl9mifpGmz6uw+QV3?=
+ =?us-ascii?Q?5kBG4I2S6b3/JTBjYYM9x772pU7Adht/AU97oEoPXoILk4oJaEGFNlGe5P94?=
+ =?us-ascii?Q?FvgWUK+LKmctXtQDKKOYyEglifeM26rTd8uMzv+aLxef7SI0R+Q+7OTYzy8s?=
+ =?us-ascii?Q?dRTjfy5yc+CghGb7nmAhlFKj0hz8TwUX0hPPIfALSv5fn2AOuB2zBcABa3OC?=
+ =?us-ascii?Q?xKkH3I4imjp0ZhjbAb79crsLJLBg84ApfMLakK/x2cjuXmNCNHraYpmP69sF?=
+ =?us-ascii?Q?H/Yz8mvdmZLRp3XThKMIneCT//1iRaDRrEnPde/VvM1c39EYpSe3RpbMYlyr?=
+ =?us-ascii?Q?gyqdGNGayT+hh1o7tQMkLoXlWoJRE1yWqx+n+qTzkjJnzg8BaKFxaIVqkAD/?=
+ =?us-ascii?Q?n8o/daatnRYBhXXJjIPsG105GwWC7MK71EPs/3HWEKX+PWhB2iVQznTOyunc?=
+ =?us-ascii?Q?qh8+YlUL52JJerrP61+YUPsgF36kqm60XXaijNowhWPIC4zsyGzcbVMVsk5Q?=
+ =?us-ascii?Q?g0bACxrXj9ZeC2k1NT0Ey1bMYE2B229bF/Qu450UuIxtKApnjVyyjus0RJaX?=
+ =?us-ascii?Q?ASc6weFPFmyBd8qu5U2dtm5YOcQQhHSv8gYOdyhHKBe5M8SQ9eTvf5tYE2sH?=
+ =?us-ascii?Q?j0p46U0CrKH63mlciUi+v14igt/C2ghd037vNN6HaqMcwef05kcsdUTeGDuH?=
+ =?us-ascii?Q?fzw5zXQAUbWK6hFBRZHIgrQQJ1oArpqK4U1AI3+cbvMNDK60Mjm/6schaUrM?=
+ =?us-ascii?Q?J9/Q4bgJN2HanAjDh3ck888ICZP88qiClpW1yCta69uCPH0bV6xgclO52796?=
+ =?us-ascii?Q?GtgkkYojzhcjae9aGwa7DXKgm7cZR63rVm4AHsVbyAbiguPcfFYlC7/+V7Q7?=
+ =?us-ascii?Q?4Dk4tqZCjbXlyVskQIVm+AXoYF/ZnPHU?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(82310400026)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 22:32:12.9023
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f6e55c4-d2b2-4062-bc56-08dd44a29adb
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA50.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5928
 
-On Mon, Feb 03, 2025 at 02:18:51PM +0530, Anup Patel wrote:
-> Add device tree bindings for the common RISC-V Platform Management
-> Interface (RPMI) shared memory transport as a mailbox controller.
-> 
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->  .../mailbox/riscv,rpmi-shmem-mbox.yaml        | 150 ++++++++++++++++++
->  1 file changed, 150 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/riscv,rpmi-shmem-mbox.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/riscv,rpmi-shmem-mbox.yaml b/Documentation/devicetree/bindings/mailbox/riscv,rpmi-shmem-mbox.yaml
-> new file mode 100644
-> index 000000000000..c339df5d9e24
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/riscv,rpmi-shmem-mbox.yaml
-> @@ -0,0 +1,150 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/riscv,rpmi-shmem-mbox.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: RISC-V Platform Management Interface (RPMI) shared memory mailbox
-> +
-> +maintainers:
-> +  - Anup Patel <anup@brainfault.org>
-> +
-> +description: |
-> +  The RISC-V Platform Management Interface (RPMI) [1] defines a common shared
-> +  memory based RPMI transport. This RPMI shared memory transport integrates as
-> +  mailbox controller in the SBI implementation or supervisor software whereas
-> +  each RPMI service group is mailbox client in the SBI implementation and
-> +  supervisor software.
-> +
-> +  ===========================================
-> +  References
-> +  ===========================================
-> +
-> +  [1] RISC-V Platform Management Interface (RPMI)
-> +      https://github.com/riscv-non-isa/riscv-rpmi/releases
-> +
-> +properties:
-> +  compatible:
-> +    const: riscv,rpmi-shmem-mbox
-> +
-> +  reg:
-> +    oneOf:
-> +      - items:
-> +          - description: A2P request queue base address
-> +          - description: P2A acknowledgment queue base address
-> +          - description: P2A request queue base address
-> +          - description: A2P acknowledgment queue base address
-> +          - description: A2P doorbell address
-> +      - items:
-> +          - description: A2P request queue base address
-> +          - description: P2A acknowledgment queue base address
-> +          - description: P2A request queue base address
-> +          - description: A2P acknowledgment queue base address
-> +      - items:
-> +          - description: A2P request queue base address
-> +          - description: P2A acknowledgment queue base address
-> +          - description: A2P doorbell address
-> +      - items:
-> +          - description: A2P request queue base address
-> +          - description: P2A acknowledgment queue base address
-> +
-> +  reg-names:
-> +    oneOf:
-> +      - items:
-> +          - const: a2p-req
-> +          - const: p2a-ack
-> +          - const: p2a-req
-> +          - const: a2p-ack
-> +          - const: doorbell
-> +      - items:
-> +          - const: a2p-req
-> +          - const: p2a-ack
-> +          - const: p2a-req
-> +          - const: a2p-ack
+This patch series extends the sev_init2 and the sev_smoke test to
+exercise the SEV-SNP VM launch workflow.
 
-These first 2 items lists can be combined with the addition of 
-'minItems: 4'
+Primarily, it introduces the architectural defines, its support in the SEV
+library and extends the tests to interact with the SEV-SNP ioctl()
+wrappers.
 
-> +      - items:
-> +          - const: a2p-req
-> +          - const: p2a-ack
-> +          - const: doorbell
-> +      - items:
-> +          - const: a2p-req
-> +          - const: p2a-ack
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description:
-> +      The RPMI shared memory transport supports wired interrupt specified by
-> +      this property as the P2A doorbell.
-> +
-> +  msi-parent:
-> +    description:
-> +      The RPMI shared memory transport supports MSI as P2A doorbell and this
-> +      property specifies the target MSI controller.
-> +
-> +  riscv,slot-size:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 64
-> +    description:
-> +      Power-of-2 RPMI slot size of the RPMI shared memory transport.
-> +
-> +  riscv,doorbell-mask:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 0xffffffff
-> +    description:
-> +      Update only the register bits of doorbell defined by the mask (32 bit).
-> +
-> +  riscv,doorbell-value:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 0x1
-> +    description:
-> +      Value written to the doorbell register bits (32-bit access) specified
-> +      by the riscv,db-mask property.
+Patch 1 - Do not advertize SNP on incompatible firmware
+Patch 2 - Remove SEV support on platform init failure
+Patch 3 - SNP test for KVM_SEV_INIT2
+Patch 4 - Add VMGEXIT helper
+Patch 5 - Introduce SEV+ VM type check
+Patch 6 - SNP iotcl() plumbing for the SEV library
+Patch 7 - Force set GUEST_MEMFD for SNP
+Patch 8 - Cleanups of smoke test - Decouple policy from type
+Patch 9 - SNP smoke test
 
-You mean riscv,doorbell-mask?
+The series is based on
+	git.kernel.org/pub/scm/virt/kvm/kvm.git next
 
-I'm confused why you would need both? If the value to write is fixed 
-here, then why do you need a mask? You could just mask the value here.
+v5..v6
+* Rename is_sev_platform_init to sev_fw_initialized (Nikunj)
+* Rename KVM CPU feature X86_FEATURE_SNP to X86_FEATURE_SEV_SNP (Nikunj)
+* Collected Tags from Nikunj, Pankaj, Srikanth.
 
-I assume there's some dependency between these 2 properties. That needs 
-to be captured with 'dependencies'.
+v4..v5:
+https://lore.kernel.org/kvm/8e7d8172-879e-4a28-8438-343b1c386ec9@amd.com/
+* Introduced a check to disable advertising support for SEV, SEV-ES
+  and SNP when platform initialization fails (Nikunj)
+* Remove the redundant SNP check within is_sev_vm() (Nikunj)
+* Cleanup of the encrypt_region flow for better readability (Nikunj)
+* Refactor paths to use the canonical $(ARCH) to rebase for kvm/next
 
-> +
-> +  "#mbox-cells":
-> +    const: 1
-> +    description:
-> +      The first cell specifies RPMI service group ID.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - riscv,slot-size
-> +  - "#mbox-cells"
-> +
-> +anyOf:
-> +  - required:
-> +      - interrupts
-> +  - required:
-> +      - msi-parent
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    // Example 1 (RPMI shared memory with only 2 queues):
-> +    mailbox@10080000 {
-> +        compatible = "riscv,rpmi-shmem-mbox";
-> +        reg = <0x10080000 0x10000>,
-> +              <0x10090000 0x10000>,
-> +              <0x100a0000 0x4>;
-> +        reg-names = "a2p-req", "p2a-ack", "doorbell";
-> +        msi-parent = <&imsic_mlevel>;
-> +        riscv,slot-size = <64>;
-> +        #mbox-cells = <1>;
-> +    };
-> +  - |
-> +    // Example 2 (RPMI shared memory with only 4 queues):
-> +    mailbox@10001000 {
-> +        compatible = "riscv,rpmi-shmem-mbox";
-> +        reg = <0x10001000 0x800>,
-> +              <0x10001800 0x800>,
-> +              <0x10002000 0x800>,
-> +              <0x10002800 0x800>,
-> +              <0x10003000 0x4>;
-> +        reg-names = "a2p-req", "p2a-ack", "p2a-req", "a2p-ack", "doorbell";
-> +        msi-parent = <&imsic_mlevel>;
-> +        riscv,slot-size = <64>;
-> +        riscv,doorbell-mask = <0x00008000>;
-> +        riscv,doorbell-value = <0x00008000>;
-> +        #mbox-cells = <1>;
-> +    };
-> -- 
-> 2.43.0
-> 
+v3..v4:
+https://lore.kernel.org/kvm/20241114234104.128532-1-pratikrajesh.sampat@amd.com/
+* Remove SNP FW API version check in the test and ensure the KVM
+  capability advertizes the presence of the feature. Retain the minimum
+  version definitions to exercise these API versions in the smoke test
+* Retained only the SNP smoke test and SNP_INIT2 test
+* The SNP architectural defined merged with SNP_INIT2 test patch
+* SNP shutdown merged with SNP smoke test patch
+* Add SEV VM type check to abstract comparisons and reduce clutter
+* Define a SNP default policy which sets bits based on the presence of
+  SMT
+* Decouple privatization and encryption for it to be SNP agnostic
+* Assert for only positive tests using vm_ioctl()
+* Dropped tested-by tags
+
+In summary - based on comments from Sean, I have primarily reduced the
+scope of this patch series to focus on breaking down the SNP smoke test
+patch (v3 - patch2) to first introduce SEV-SNP support and use this
+interface to extend the sev_init2 and the sev_smoke test.
+
+The rest of the v3 patchset that introduces ioctl, pre fault, fallocate
+and negative tests, will be re-worked and re-introduced subsequently in
+future patch series post addressing the issues discussed.
+
+v2..v3:
+https://lore.kernel.org/kvm/20240905124107.6954-1-pratikrajesh.sampat@amd.com/
+* Remove the assignments for the prefault and fallocate test type
+  enums.
+* Fix error message for sev launch measure and finish.
+* Collect tested-by tags [Peter, Srikanth]
+
+Pratik R. Sampat (9):
+  KVM: SEV: Disable SEV-SNP on FW validation failure
+  KVM: SEV: Disable SEV on platform init failure
+  KVM: selftests: SEV-SNP test for KVM_SEV_INIT2
+  KVM: selftests: Add VMGEXIT helper
+  KVM: selftests: Introduce SEV VM type check
+  KVM: selftests: Add library support for interacting with SNP
+  KVM: selftests: Force GUEST_MEMFD flag for SNP VM type
+  KVM: selftests: Abstractions for SEV to decouple policy from type
+  KVM: selftests: Add a basic SEV-SNP smoke test
+
+ arch/x86/kvm/svm/sev.c                        |  6 +-
+ drivers/crypto/ccp/sev-dev.c                  | 16 +++
+ include/linux/psp-sev.h                       |  6 ++
+ .../selftests/kvm/include/x86/processor.h     |  1 +
+ tools/testing/selftests/kvm/include/x86/sev.h | 55 ++++++++++-
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  7 +-
+ .../testing/selftests/kvm/lib/x86/processor.c |  4 +-
+ tools/testing/selftests/kvm/lib/x86/sev.c     | 99 ++++++++++++++++++-
+ .../selftests/kvm/x86/sev_init2_tests.c       | 13 +++
+ .../selftests/kvm/x86/sev_smoke_test.c        | 96 ++++++++++++++----
+ 10 files changed, 272 insertions(+), 31 deletions(-)
+
+-- 
+2.43.0
+
