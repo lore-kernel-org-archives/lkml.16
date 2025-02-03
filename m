@@ -1,144 +1,119 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5F4202C2E;
-	Mon,  3 Feb 2025 10:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613402A1CF;
+	Mon,  3 Feb 2025 11:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738580332; cv=none; b=ZZk01VeH23mGnADeeO1frUjMfcoErdPnKoKSZijBKNdyTXTXKuP99FKCpMt4eTrozNfrh5PlcNp5AzqANxthRV3NVaGwxrszriD+mOr8c23vWA/78FW5f2dq4wz78qPF7XlzwXbrN1c7NOnLIVcVcqWcCTg6zp2orteT7FhAw9w=
+	t=1738580448; cv=none; b=u1tpYb94WUr6xLZdIemq3ZKm3ZnHWgKwyKTRq6BSl4B8oesoH5yiG3k9OwdG135V4gL4sBr8b15ZVE9Mwi1c3AOoeqMjPGV2tvjKkISKVHoydPNkZHUWyHQ7K/sp9yh8K3/Qvt1eiXbqgy6idZ4F9fbD2pSNF1jUWGfv/ziPDbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738580332; c=relaxed/simple;
-	bh=GSEqv2VM3beR1KFDw1ZyypOdmCRst+DG5m5uYBLuPec=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iO3WQfJ301BzwGTPOVJ8nFPZM+ZY9HPlB0zTuH50mqh+GaomP/fipujDA7mY+2ykMJGh7Mo1bFatWOjiomQUQuaVk3nXwTm7LZ1rP7Gx0lOd6QWxhpU80+TCnzppJwYYHX7saD0HHTsqmOknLsjZ2Js2Ij729gCyQin2OSEGpds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UB4lJjN8; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1738580448; c=relaxed/simple;
+	bh=RmBgRBXMjX74yrIGL98/IAnnRAeq6fYyIMWIK1KWRdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ls84VDTn8h0pATX8JwyGSvW5ng9HyAkjS19bth1BeXKXXsJ6yey8qPKgGrKsQP/8rCiHspAYySDXa27xUcT2TTjtx92pQ1tnF8qfFSDXVJLfqbohW8Jee6DVKJ30A507VlsHrrK/4GxuMfIw3pUSzB8qDHHzEXFR2UKVO+2363E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UB4lJjN8"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so2131246f8f.0;
-        Mon, 03 Feb 2025 02:58:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738580329; x=1739185129; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nt7pBd/IQYh6LuC7dRxy6T+qPjBb3Up7HQ9RyedmO0Q=;
-        b=UB4lJjN8rW8xnG5Ue3LT/BF6LaIe0pNyKZX6kbPOv/Hv570jijt7aHeMO0EqRovStP
-         Ci8Tpyg7AqoLOfTLUOzjom9m6ILRkWPVBv9DPq/VOOaV0zGRilggNpICz5BtJxoAxR9B
-         umBwReW/CJ9WErGmw05dGi1ez9NsTr54yVa1XMI621GQKghMS6AK7igcJsc+K9NAGgqy
-         pH1tLsefYvVinE28w1caWE/KdZtSzadCDgz9Xbur6NXP4GsmYLyUFoWZnaR9zqSV4MEk
-         WWnOuYF91gfjmLDJqB9M9FRYdkHvxg9Z95IDVtgyD1liL+i2XGep7+aa84nz5PZn3wp8
-         G36g==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab70043cd05so607560366b.0;
+        Mon, 03 Feb 2025 03:00:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738580329; x=1739185129;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Nt7pBd/IQYh6LuC7dRxy6T+qPjBb3Up7HQ9RyedmO0Q=;
-        b=gf+CLmsALxpgrS6BF06dpPYgpVbEzcLCKDkYNhHhOC+h/O30ZQlwTlhVuByvPaKQqw
-         t72CSH39oNvHNrK/2MbxthV6Z47+fBx2FMAmuC2oLW+S3rauD0m9TOucCae6UinbMnF4
-         7pkrLw/58w5jItecSNZUSBxllbRzALM3FH5srdRX8j/Hv2E9ao1YK1uRfeSIZWxRxFUl
-         CsNtu76/SLaImv8SKNxVbHXlpwVprfJ1KePtoovDdAEC0KrB9p5tkxwPqemWy2gkOtDD
-         qyWg4noCEnu7sKwiLFyt+3i8QaleD8KDVdQlGWKBm4igQAx5YAWrxFKeIYMtpTusO5+n
-         Eq4A==
-X-Forwarded-Encrypted: i=1; AJvYcCX2G7OrasoXxEvr/x5omyexEGqTGp1sBei5o/khx57KcbLQX6JYxIKOVr/6UEPPlHtbspwmcEoV@vger.kernel.org, AJvYcCXGVpAahJrMposgOJ/v9JjDkMvNiVv6UvbbHhA6QQvY47dgNGzkcGe0vbswe4aI0jzrxMhg9WPYuTwzZ4w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZlr4RU12sg/LsVRQfgKjrUNvPujcRhPcswxjzH9xfpw4LqNHO
-	2QSBxJc93lLNzFGxBlKVaqJcpx20tQYU9aSQxyRu4hDbOhh6wGpt
-X-Gm-Gg: ASbGncsimMWbefwUUtO4MYBX+s1ON9hmWNr0YYQ6o506OnBHXuRUYiPZCLqcpE+oYjQ
-	Av8YgDrRnL6NceoiGXMrs4xr/MBC9qySxmm+ppWoCreM7PfxTOntfIRVlSnWSABK1eQBKDqrOT1
-	UzilM/Ef9cInFTHzhZCnmCm5iN0gev4JCgLRvo7gLVdnjrmzweAXzByaASvL1GeoG1OXkqBQwos
-	oljCk43DBU79clccTzyn9EXvDKWhcYeW1CYFqaNv7gPhIRHvnO8IvvXCMCYK7UR+GjKUnq3Bm5q
-	kBljnBpcS5MvYKFEEg9xh0wzHlSTuw==
-X-Google-Smtp-Source: AGHT+IFk08vrhipS4NZ4Hf3SF8z/wRFOBO+8+J3IjDCgenbINK4dMliqwM7oio3uJEYhAzuT3oYSyA==
-X-Received: by 2002:a5d:6d02:0:b0:385:f092:e1a with SMTP id ffacd0b85a97d-38c5194c3b6mr16966733f8f.11.1738580328746;
-        Mon, 03 Feb 2025 02:58:48 -0800 (PST)
-Received: from eichest-laptop.toradex.int ([2a02:168:af72:0:5eb2:36d4:b5a0:d5a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23e6a4dsm149627595e9.21.2025.02.03.02.58.48
+        d=1e100.net; s=20230601; t=1738580444; x=1739185244;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VdjeNRG0qxmgOEy8hRguLgI2muoVRHpqj6bs+IISjqk=;
+        b=E9Ec1SK5sJXlYe+V4UKymeUIM7xFXk/RF9PpypgPMXXAVV/1CI7GQTEirvTzifS7zO
+         uzeTOiFYPHY4TXc9eDJTiyPo5vOgPCQukWS5l0dWPxig1xn576hOiYf8vVKUrJ/QtOFy
+         POjzXh5qxgKOZ+7/dTqL9FNP3qWTjzFulLd8zOFbpsniENwZLSm46Tj4UghTrohdGHCd
+         CnCr90vdUflsyjFwyuY8SpstyYyztkIcTy/dsUuGzEx1Rnvbv76TaY6sIJeS04fhMLFk
+         qkDuMGlg7X6lweEbXFnD375HYFhZl+w28602a8xKNH/Nv9fQa1Qit63Tn8HSy88Z9DyA
+         7lzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWD371lmSqSlATQm5RKKzKsw9jc1HFCipwr526Bwa1KWSgrMTwIDKj8XlrZez/LJjDtRGaxK0NONJ+KCWRpC1be@vger.kernel.org, AJvYcCX5DjJx122efyN3J1oiH134ml5htno9aYCnljHQByrP2MUde7aSG7vklD9ZxnvJyENxj7OuC98p@vger.kernel.org, AJvYcCXzp9Ei3E8HrzRldsvnOef+8LFXVOghhowreI2fX0MfodIY1JaRyTqsd+VkppzQzVSiL4AbGVMZMnXX0fA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJN6iP7XKayzMOwr7d1rlam1HnKsb9sAKR6gx8PyYdSCN68L98
+	s+4ZouO3OnaIBckoquQS0CfQclaF8EbamwdXJ1sRJZxEUgC1aos4TSo2Jg==
+X-Gm-Gg: ASbGncuAEuygTf/IMYTABIB5hTqN4Xedbf7D8Wjo685EipBvq/WeUdpQcBmM0pgew/4
+	xCs01yFVCL+yAnTz+OpX9EqhT45doKe+6nujfcp1m/yDiuZ+WHwGn9lWBreCzqoEkUYdh9ANNkn
+	N+k1psmb4htGFFnjJKkXC3uoqgCPbJDM8vAOVLwoFOAGpZ3OMQO1M71JLPgQnwBRBPcOGefTT5V
+	30zG/ylSkK44pBxzYQULEEJxskIvQXTP9v2E8iq8FXTvqSn2pHAWfYX+4OTowm3p5bSY356cUZB
+	TcvqZps=
+X-Google-Smtp-Source: AGHT+IH32u0asjJRwd4Z2w5Z3r7JtXTZHW1NsOXgWp/H/IYZ0MXVJW2OR/xMU9wV8Aig9/WDROm4hA==
+X-Received: by 2002:a17:907:6d22:b0:aae:8841:2bba with SMTP id a640c23a62f3a-ab6cfceb427mr2299995066b.22.1738580442795;
+        Mon, 03 Feb 2025 03:00:42 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:73::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a83e3sm733074766b.29.2025.02.03.03.00.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 02:58:48 -0800 (PST)
-From: Stefan Eichenberger <eichest@gmail.com>
-To: gregkh@linuxfoundation.org,
-	stern@rowland.harvard.edu,
-	francesco.dolcini@toradex.com
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v1] usb: core: fix pipe creation for get_bMaxPacketSize0
-Date: Mon,  3 Feb 2025 11:58:24 +0100
-Message-ID: <20250203105840.17539-1-eichest@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        Mon, 03 Feb 2025 03:00:42 -0800 (PST)
+Date: Mon, 3 Feb 2025 03:00:37 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Simon Horman <horms@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	matttbe@kernel.org
+Subject: Re: [PATCH RFC net-next] netconsole: selftest: Add test for
+ fragmented messages
+Message-ID: <20250203-subtle-taipan-of-realization-1c3a3f@leitao>
+References: <20250131-netcons_frag_msgs-v1-1-0de83bf2a7e6@debian.org>
+ <20250203104855.GC234677@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250203104855.GC234677@kernel.org>
 
-From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+Hello Simon,
 
-When usb_control_msg is used in the get_bMaxPacketSize0 function, the
-USB pipe does not include the endpoint device number. This can cause
-failures when a usb hub port is reinitialized after encountering a bad
-cable connection. As a result, the system logs the following error
-messages:
-usb usb2-port1: cannot reset (err = -32)
-usb usb2-port1: Cannot enable. Maybe the USB cable is bad?
-usb usb2-port1: attempt power cycle
-usb 2-1: new high-speed USB device number 5 using ci_hdrc
-usb 2-1: device descriptor read/8, error -71
+On Mon, Feb 03, 2025 at 10:48:55AM +0000, Simon Horman wrote:
+> On Fri, Jan 31, 2025 at 04:39:38AM -0800, Breno Leitao wrote:
 
-The problem began after commit 85d07c556216 ("USB: core: Unite old
-scheme and new scheme descriptor reads"). There
-usb_get_device_descriptor was replaced with get_bMaxPacketSize0. Unlike
-usb_get_device_descriptor, the get_bMaxPacketSize0 function uses the
-macro usb_rcvaddr0pipe, which does not include the endpoint device
-number. usb_get_device_descriptor, on the other hand, used the macro
-usb_rcvctrlpipe, which includes the endpoint device number.
+> > +# Validate the message, which has two messages glued together.
+> > +# unwrap them to make sure all the characters were transmitted.
+> > +# File will look like the following:
+> > +#   13,468,514729715,-,ncfrag=3D0/1135;MSG1=3DMSG2=3DMSG3=3DMSG4=3DMSG=
+5=3DMSG6=3DMSG7=3DMSG8=3DMSG9=3DMSG10=3DMSG11=3DMSG12=3DMSG13=3DMSG14=3DMSG=
+15=3DMSG16=3DMSG17=3DMSG18=3DMSG19=3DMSG20=3DMSG21=3DMSG22=3DMSG23=3DMSG24=
+=3DMSG25=3DMSG26=3DMSG27=3DMSG28=3DMSG29=3DMSG30=3DMSG31=3DMSG32=3DMSG33=3D=
+MSG34=3DMSG35=3DMSG36=3DMSG37=3DMSG38=3DMSG39=3DMSG40=3DMSG41=3DMSG42=3DMSG=
+43=3DMSG44=3DMSG45=3DMSG46=3DMSG47=3DMSG48=3DMSG49=3DMSG50=3DMSG51=3DMSG52=
+=3DMSG53=3DMSG54=3DMSG55=3DMSG56=3DMSG57=3DMSG58=3DMSG59=3DMSG60=3DMSG61=3D=
+MSG62=3DMSG63=3DMSG64=3DMSG65=3DMSG66=3DMSG67=3DMSG68=3DMSG69=3DMSG70=3DMSG=
+71=3DMSG72=3DMSG73=3DMSG74=3DMSG75=3DMSG76=3DMSG77=3DMSG78=3DMSG79=3DMSG80=
+=3DMSG81=3DMSG82=3DMSG83=3DMSG84=3DMSG85=3DMSG86=3DMSG87=3DMSG88=3DMSG89=3D=
+MSG90=3DMSG91=3DMSG92=3DMSG93=3DMSG94=3DMSG95=3DMSG96=3DMSG97=3DMSG98=3DMSG=
+99=3DMSG100=3DMSG101=3DMSG102=3DMSG103=3DMSG104=3DMSG105=3DMSG106=3DMSG107=
+=3DMSG108=3DMSG109=3DMSG110=3DMSG111=3DMSG112=3DMSG113=3DMSG114=3DMSG115=3D=
+MSG116=3DMSG117=3DMSG118=3DMSG119=3DMSG120=3DMSG121=3DMSG122=3DMSG123=3DMSG=
+124=3DMSG125=3DMSG126=3DMSG127=3DMSG128=3DMSG129=3DMSG130=3DMSG131=3DMSG132=
+=3DMSG133=3DMSG134=3DMSG135=3DMSG136=3DMSG137=3DMSG138=3DMSG139=3DMSG140=3D=
+MSG141=3DMSG142=3DMSG143=3DMSG144=3DMSG145=3DMSG146=3DMSG147=3DMSG148=3DMSG=
+149=3DMSG150=3D: netcons_nzmJQ
+> > +#    key=3D1-2-13,468,514729715,-,ncfrag=3D967/1135;3-4-5-6-7-8-9-10-1=
+1-12-13-14-15-16-17-18-19-20-21-22-23-24-25-26-27-28-29-30-31-32-33-34-35-3=
+6-37-38-39-40-41-42-43-44-45-46-47-48-49-50-51-52-53-54-55-56-57-58-59-60-
 
-By modifying the get_bMaxPacketSize0 function to use usb_rcvctrlpipe
-instead of usb_rcvaddr0pipe, the issue can be resolved. This change will
-ensure that the endpoint device number is included in the USB pipe,
-preventing reinitialization failures. If the endpoint has not set the
-device number yet, it will still work because the device number is 0 in
-udev.
+> I appreciate there is a value in providing the literal data.
+> But as the data is based mostly of arithmetic sequences
+> perhaps it would be nicer to express this in a more succinct way.
 
-Cc: stable@vger.kernel.org
-Fixes: 85d07c556216 ("USB: core: Unite old scheme and new scheme descriptor reads")
-Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
----
-Before commit  85d07c556216 ("USB: core: Unite old scheme and new scheme
-descriptor reads") usb_rcvaddr0pipe was used in hub_port_init. With this
-proposed change, usb_rcvctrlpipe will be used which includes devnum for
-the pipe. I'm not sure if this might have some side effects. However, my
-understanding is that devnum is set to the right value (might also be 0
-if not initialised) before get_bMaxPacketSize0 is called. Therefore,
-this should work but please let me know if I'm wrong on this.
----
- drivers/usb/core/hub.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+First of all, thanks for the review.
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index c3f839637cb5..59e38780f76d 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -4698,7 +4698,6 @@ void usb_ep0_reinit(struct usb_device *udev)
- EXPORT_SYMBOL_GPL(usb_ep0_reinit);
- 
- #define usb_sndaddr0pipe()	(PIPE_CONTROL << 30)
--#define usb_rcvaddr0pipe()	((PIPE_CONTROL << 30) | USB_DIR_IN)
- 
- static int hub_set_address(struct usb_device *udev, int devnum)
- {
-@@ -4804,7 +4803,7 @@ static int get_bMaxPacketSize0(struct usb_device *udev,
- 	for (i = 0; i < GET_MAXPACKET0_TRIES; ++i) {
- 		/* Start with invalid values in case the transfer fails */
- 		buf->bDescriptorType = buf->bMaxPacketSize0 = 0;
--		rc = usb_control_msg(udev, usb_rcvaddr0pipe(),
-+		rc = usb_control_msg(udev, usb_rcvctrlpipe(udev, 0),
- 				USB_REQ_GET_DESCRIPTOR, USB_DIR_IN,
- 				USB_DT_DEVICE << 8, 0,
- 				buf, size,
--- 
-2.45.2
+Do you mean I should simplify this comment above, to avoid the literal
+data, right?
 
+> Regardless, this patch looks good to me.
+
+Thanks, I was a bit surprised with the tests failing on our CI, but,
+after some investigation, it doesn't seem to be caused by this change.
+
+https://patchwork.kernel.org/project/netdevbpf/patch/20250131-netcons_frag_=
+msgs-v1-1-0de83bf2a7e6@debian.org/
+
+--breno
