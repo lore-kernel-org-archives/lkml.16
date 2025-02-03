@@ -1,72 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2A6209F45;
-	Mon,  3 Feb 2025 15:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE082AF1B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738597709; cv=none; b=cqhZ0X+ktx65uvfS+2djJb/kN9+a4qfvRDhtFjXqK7tDpobQptr0kVgNAsCLO+V0GKz1wgZeZ+etgYhOCnyi8Byptd0F+3JA9woZqwfoumJJdY4pZZQ/+Wbb+WNrngliZqsdyQnU4LArpa/cm3PEgvEN55ELGunFSVBnC3d56OU=
+	t=1738597733; cv=none; b=pt/Y9GES/qyzBarSsTr1QJdep1WGsHcSz7N5ORIAgWsVbRtVOXzlRM/2s6xxl4vXYNhOA0rPyq7cxnJJIY8YQzAsXTWQcFChLciDY8yB1w0RFHXRxOB5EU/dsoPMmSdIF7kAvkg+8gMkt2Jyh3jRrfnIrslllnbVpPTwYH5aEQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738597709; c=relaxed/simple;
-	bh=1OgMuxc7gKEROef+ogVknMkjRlEH06LnKp3/YyHOBbY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=f/xDVVzrAVDytGYe831qctmioGf5G9lNaV0Byvzalxc52/VH8ggX30Xq6qsuE97LebrkVY134pY5QsMwCveXZtMO7f/HK5EhaoRxK33gyECE/kwBwW1gYQ40hqWdbHE9n3glq796+mDdOluWDMPDU41IKoo4h0a8eeeOR4Je0Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSPnAqZP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738597733; c=relaxed/simple;
+	bh=Ey6LtAnUnFOkT66bl/ckxWnp2hP/kQtqfsUc/rV7ZN8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IfwabHJIJQmUbc8Tmki0SqKTbRnDZrUBsZqghzOgPDAo8Euv5B0dUFYd08AofCulbhx4IP18Hg6Mxgpj49zEpwZ0foLvOJp+c2bHYOjfQeQjohptbhWmpN6lW4BjIiGQo70wRXmoVkDvami8vlNTqKVIVKwu70imQHKU+JOQbPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=bJWKXrJg; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSPnAqZP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37FF4C4CED2;
-	Mon,  3 Feb 2025 15:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738597708;
-	bh=1OgMuxc7gKEROef+ogVknMkjRlEH06LnKp3/YyHOBbY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=lSPnAqZPYQLW4YqHUW4PmEsx4qGHGoUCu+FIjzjA/Gpsb0g2HDaOaznfbJqwVk7Mm
-	 +ROdVtzW0/mCSwfeAXKcv3PntTouCICb3vVLy0icNKM7qFygNZepTa1IvKZ9l/A9Q2
-	 wWEa1SINZ2O8Bl/co7cOldV7ecNISWNHC4ICy6gO//pdX6IOYVuorGsuQcEU6IHLS5
-	 D6LnETfpLuCbtlw1QjnpCkRIKxiAXXxGlN/SCePE6lgmXNkwV3WRcDDM8N7oOdnWkB
-	 h9BEJHAgj2LCqVFLU9g9qlrnKOZM2i3WOD51qU4lVonJJO/pLRPEFrvpmDaql895ro
-	 Oxb37GZTJcDkg==
-Date: Mon, 3 Feb 2025 09:48:26 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
-Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pci: cdns : Function to read controller architecture
-Message-ID: <20250203154826.GA785589@bhelgaas>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="bJWKXrJg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Q/sQaHjTwTU985s76XIbjZqvGq5WRDYJ+ivXd+Czv8I=; b=bJWKXrJgGwLT3ziuDBQuLxSaOG
+	oeCZVW/X4PDaCN/eLIcDJloNVvkmdKA/urQ3A+mKaL8k+6wM9gwy4YdgT2pM35V/vS2vRSCaFpwBH
+	VTRVSo93/7bCRuEzI7eqQah04ouVfqA66YbsUINq0Yp0TJQ9lpcpNhs18Pf+zTX0JKuO15C/zYiOv
+	x0Y+jsfIwmnTqXJlQE3ovmt6RBTmZiIfZha5FWW9MKLZ/HQrlMed/guk7rrp/Oz5rSBgEveYF9BJK
+	p3zecxqdRZYuH8hYxlMnqzszVB8Yh1d34UVgc15537vPcT5KS+dIYUWEvpECDxHxjrIhBslFNcpb+
+	OLm5ruAg==;
+Received: from [58.29.143.236] (helo=[192.168.1.6])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1teygh-0036CY-4H; Mon, 03 Feb 2025 16:48:45 +0100
+Message-ID: <64869952-0bd4-4ae6-b103-3f97830d2e4a@igalia.com>
+Date: Tue, 4 Feb 2025 00:48:40 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH2PPF4D26F8E1C25BF05614F8C8293EECDA2F52@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 08/11] sched_ext: Add an event, SCX_EV_BYPASS_DURATION
+To: Tejun Heo <tj@kernel.org>
+Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org
+References: <20250131070938.95551-1-changwoo@igalia.com>
+ <20250131070938.95551-9-changwoo@igalia.com>
+ <Z5-s8EdYd9Ad70EN@slm.duckdns.org>
+From: Changwoo Min <changwoo@igalia.com>
+Content-Language: en-US, ko-KR, en-US-large, ko
+In-Reply-To: <Z5-s8EdYd9Ad70EN@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 02:04:17PM +0000, Manikandan Karunakaran Pillai wrote:
-> Would like to change the design to get the architecture value from
-> dts, using a bool hpa And store this value in the is_hpa field in
-> the struct as given.
+Hello,
+
+On 25. 2. 3. 02:35, Tejun Heo wrote:
+> On Fri, Jan 31, 2025 at 04:09:35PM +0900, Changwoo Min wrote:
+>> +/*
+>> + * The last time the bypass mode started.
+>> + * This is used to measure SCX_EV_BYPASS_DURATION.
+>> + */
+>> +static unsigned long scx_bypass_timestamp;
 > 
-> There would be support for legacy and High performance architecture
-> in different files And the difference would be basically the
-> registers they write and the offsets of these registers. The
-> function names would almost be similar with the tag hpa, embedded in
-> the function name. 
-> 
-> Would this be an acceptable design for support of these new PCIe
-> cadence controllers ? 
+> Move it inside the function?
 
-Look around at other drivers that handle similar issues and use a
-similar solution.  drivers/pci/controller/dwc/pcie-qcom.c is one
-example, but most drivers support variants with minor differences.
+That will look cleaner. I will move it inside scx_ops_bypass().
 
-Usual Linux email style is for responses to include only relevant
-parts with replies interleaved:
-https://people.kernel.org/tglx/notes-about-netiquette
-
-Bjorn
+Regards,
+Changwoo Min
