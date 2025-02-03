@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF16205AD5;
-	Mon,  3 Feb 2025 12:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A19205E15;
+	Mon,  3 Feb 2025 12:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738587009; cv=none; b=Nk3kvQi7IHN7aHSakcOyFoxG79MSWwUurt1eiDd/fegdaV7iewtBsCnbjvDSJwOw1VQ0+fYi3bVNFad6+KLwdqMiFPvnqmseTtfsTsPz0EOqPwyo9oLrkh/o8A6UnJLfDd9oe6PoiG16/L38P3K9rvjUyQqiuQDGzkXTdFK/3kI=
+	t=1738587010; cv=none; b=T7036io3AJgCA3R8SVnREGp+i1pOWqc+tI/U8laXdhNTvFNbJ1QcKHhHCHNilNOzLiK4kXZ1aDam6A84+88oE/w+aM6PV2Opv4ttJX1VuBjKPYX6TSNzKJS1XEgt9+KymbDjkFY58tE3+/2xHJ7J3di0CSKqqKTh7zrVAXW4wwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738587009; c=relaxed/simple;
-	bh=sOhyOtBO0vxlukHp+nbn/k2lto7lBPMduZfNtFxLsPs=;
+	s=arc-20240116; t=1738587010; c=relaxed/simple;
+	bh=X6utmfdWMMjwMJE1wz/xBfcqCs746GeDQCRoKgMcUM8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ZMJ0M/Hi0eXqGCTUua/WbO9ujUAaYUc3Zk59VjOV6971IGgQjZ4BhetQU2EJJgKlmkwVIwfUQxnZzr5vOoTRYmwhx1r11YeBCPEn9ro9deK2qRueGS7WuVUOO+nJy6dV/uuVx1mkRiIGUT31yy5G/LFYnkpUN72p6/+2FhrSe6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MpYWEoxT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lR7oOknM; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=uy1APobiqR3pqSJ7xWkfuHHws5JixnJKn0VUINqLrnuUCC6euKJMoHqB8RV7UarlbFemNRJciCyni8V7+Dp9pbjuBxsBC7M9gT+RfusGyLy3n4gtr92t2C2RvagAC23SljkNtUa5nIR0BlsaezHU6xYgLumu8MrFbl6SH1WqSP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zux1s2FQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5wvbI0jJ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MpYWEoxT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lR7oOknM"
-Date: Mon, 03 Feb 2025 12:50:05 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zux1s2FQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5wvbI0jJ"
+Date: Mon, 03 Feb 2025 12:50:06 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738587005;
+	s=2020; t=1738587006;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7LSC/+fKCkLakTT6diq1mVUGNLQKegkylfZMEu3alGc=;
-	b=MpYWEoxT8JIYnyozXirW3yc17zlCtpRcNXbH5/F/fIdWBu9Z0+7Phar4fDfXfpgtOxx32m
-	7yjhzYFo9hesE3Vu5Ij6UJEn/ZyMwaD81SUBmJLCIceEC7IU7TvRiPGNl4FpMxpA/weWGX
-	1/DsELOREdCF8z/1Se4vGPJQmuVyIeeYDFPcj5eLqEqLLjk+w/gAnXNS1cezLWEDDJ8bsw
-	/z4/oEo2D/Gm5HA+oPSk6vydS6tu94t+074szGz5dIFO7y/BT6s6BCPDdaodyIjNNG3WTy
-	VCLakTEoq261AV7iN5xkGub/eiC9SLyeeKOu+XiD7/vfue1ujVj6gDNb3BR5Rg==
+	bh=ozS1XndEqcJWN8yfxpCC35Ti6MwBJAay8jw8eFkx9wA=;
+	b=Zux1s2FQqq8DN7MmlPYsL53mUKPYrJdOwS3KxEtNOzGoUW5pQsRsJZzprOAKRBefr+pJ+D
+	UACTVTU6ji4JXiMATPqbhurv0Zk80c4H0QsdB8AjeAdQDK464gfi4s+jS5wC42wA8XMsYN
+	jcuTdvem9JpElGcorl5WRpqsMwkpMmNCO0ilEatifBT2tT7EdQ+LiT8OyowM4y3mdKv4cE
+	R0I4dwIdgJfFGKsqJ9GKEztERLB7CAaMh7FmnhG+oW70i58jvlaYkjFnBzqmfmuY8QdE/k
+	WPVn8pYxdqsp96wtv0LYjHrJoWVOoZfnPwOCqkg7xTPhfMAEjxcd2BjEWcjd5g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738587005;
+	s=2020e; t=1738587006;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7LSC/+fKCkLakTT6diq1mVUGNLQKegkylfZMEu3alGc=;
-	b=lR7oOknMYFayX8rXDhbR/uOrCGPFXzZR1GMhvvWpGNE8ZY8z7oFHYgpFl/SHtYPa76tJwF
-	sGO+x2wg+uf1qACA==
+	bh=ozS1XndEqcJWN8yfxpCC35Ti6MwBJAay8jw8eFkx9wA=;
+	b=5wvbI0jJ6hC1mjrjkjYDtvJ2CRr/aBtQK9JOlZo2nTZsFjdWNLTvG/LFBBVl5SP+uR3nP5
+	qA46cG3C3WzDyoDA==
 From: "tip-bot2 for Mike Rapoport (Microsoft)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] execmem: don't remove ROX cache from the direct map
+Subject: [tip: x86/mm] x86/mm/pat: drop duplicate variable in cpa_flush()
 Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250126074733.1384926-5-rppt@kernel.org>
-References: <20250126074733.1384926-5-rppt@kernel.org>
+In-Reply-To: <20250126074733.1384926-3-rppt@kernel.org>
+References: <20250126074733.1384926-3-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173858700532.10177.16215864987528188939.tip-bot2@tip-bot2>
+Message-ID: <173858700637.10177.2674573814444308392.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,71 +67,40 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     925f426451182a9f3e0f7f0e7e928f32f81a966a
-Gitweb:        https://git.kernel.org/tip/925f426451182a9f3e0f7f0e7e928f32f81a966a
+Commit-ID:     4ee788eb0781ba082709c1ac1d5146ebcc40b967
+Gitweb:        https://git.kernel.org/tip/4ee788eb0781ba082709c1ac1d5146ebcc40b967
 Author:        Mike Rapoport (Microsoft) <rppt@kernel.org>
-AuthorDate:    Sun, 26 Jan 2025 09:47:28 +02:00
+AuthorDate:    Sun, 26 Jan 2025 09:47:26 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Mon, 03 Feb 2025 11:46:01 +01:00
 
-execmem: don't remove ROX cache from the direct map
+x86/mm/pat: drop duplicate variable in cpa_flush()
 
-The memory allocated for the ROX cache was removed from the direct map to
-reduce amount of direct map updates, however this cannot be tolerated by
-/proc/kcore that accesses module memory using vread_iter() and the latter
-does vmalloc_to_page() and copy_page_to_iter_nofault().
+There is a 'struct cpa_data *data' parameter in cpa_flush() that is
+assigned to a local 'struct cpa_data *cpa' variable.
 
-Instead of removing ROX cache memory from the direct map and mapping it as
-ROX in vmalloc space, simply call set_memory_rox() that will take care of
-proper permissions on both vmalloc and in the direct map.
+Rename the parameter from 'data' to 'cpa' and drop declaration of the
+local 'cpa' variable.
 
 Signed-off-by: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250126074733.1384926-5-rppt@kernel.org
+Link: https://lore.kernel.org/r/20250126074733.1384926-3-rppt@kernel.org
 ---
- mm/execmem.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+ arch/x86/mm/pat/set_memory.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/mm/execmem.c b/mm/execmem.c
-index 317b6a8..04b0bf1 100644
---- a/mm/execmem.c
-+++ b/mm/execmem.c
-@@ -257,7 +257,6 @@ out_unlock:
- static int execmem_cache_populate(struct execmem_range *range, size_t size)
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index ef4514d..1f7698c 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -394,9 +394,8 @@ static void __cpa_flush_tlb(void *data)
+ 		flush_tlb_one_kernel(fix_addr(__cpa_addr(cpa, i)));
+ }
+ 
+-static void cpa_flush(struct cpa_data *data, int cache)
++static void cpa_flush(struct cpa_data *cpa, int cache)
  {
- 	unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
--	unsigned long start, end;
- 	struct vm_struct *vm;
- 	size_t alloc_size;
- 	int err = -ENOMEM;
-@@ -275,26 +274,18 @@ static int execmem_cache_populate(struct execmem_range *range, size_t size)
- 	/* fill memory with instructions that will trap */
- 	execmem_fill_trapping_insns(p, alloc_size, /* writable = */ true);
+-	struct cpa_data *cpa = data;
+ 	unsigned int i;
  
--	start = (unsigned long)p;
--	end = start + alloc_size;
--
--	vunmap_range(start, end);
--
--	err = execmem_set_direct_map_valid(vm, false);
--	if (err)
--		goto err_free_mem;
--
--	err = vmap_pages_range_noflush(start, end, range->pgprot, vm->pages,
--				       PMD_SHIFT);
-+	err = set_memory_rox((unsigned long)p, vm->nr_pages);
- 	if (err)
- 		goto err_free_mem;
- 
- 	err = execmem_cache_add(p, alloc_size);
- 	if (err)
--		goto err_free_mem;
-+		goto err_reset_direct_map;
- 
- 	return 0;
- 
-+err_reset_direct_map:
-+	execmem_set_direct_map_valid(vm, true);
- err_free_mem:
- 	vfree(p);
- 	return err;
+ 	BUG_ON(irqs_disabled() && !early_boot_irqs_disabled);
