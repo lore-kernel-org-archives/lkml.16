@@ -1,73 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E923594B;
-	Mon,  3 Feb 2025 10:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F97201004;
+	Mon,  3 Feb 2025 10:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738577375; cv=none; b=UcBW+0LF7zmDzPzGECX6JimeBsQYT2cMWz8c4B3ui8c3avqY3JjyjgF8U0cHJ9BBK7VErB/oYl53/qoT5yc5ED1fIK92soDD+62PPktapHLt61Gdnd/O4IPvssyM1phEj4E+/JtM1mVwPXh2HeBBNxJ6IDDL6QFxixOB1RQw5yY=
+	t=1738577385; cv=none; b=H9nBOgIRlgzwu2anYtOaF+ACmmxOhRZ4C6W4V4l0vk4UWaSdScy7AIwvXvVVz/GAyxcAHBzgP1l4DMyYmvbiMRdBtEG/YyFZULm//GnzVrEim0JnXUGrBTH40nQgio1tCEBy1Cc9j+Y+FtRUOrdFt/NYi8pF9nH2yYjwApG5sOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738577375; c=relaxed/simple;
-	bh=K7rQae8QcWFmR02VR2cc/NnbWKKlcWy0NGP/Eu3OnVY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=R4bVCgl2NB1im26kDQ9+B8Q4UUw4OIYN5PGLWEaxlYweUx1fVYa7MJG/5K6JzmGl0ycVSjxLi1Y1ZJeDu00KHvE1mXww/5vBsNWvJ3Z2jdyrfnsE49k8NJbDcXu5mf0V3ytkXORyuga+HsdJjoXz2Cc5APNWZOE6F4zAj6jtuU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LbMeb5W8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738577385; c=relaxed/simple;
+	bh=Nd1Ay0Mlr85rYMZcME74NHXWLV9glYt1e9wDGHVrdtw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Sjl6HyWJbtswS7tEuqCZrTYyDZPuMiZVV+YDOBlSk7KBQlCEwevHBY/Bc/25cQ+477Fe2tVbNR//YE37NN0/svCLa2/MZG+Y19ikGZsyVtiH8VwA+ZWLykE12BnO/h+6G36qHuyFYbRk8bUZIo531P6QGXhOgC63t5TvB4uw7LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kv9lXAka; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LbMeb5W8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1225C4CEE0;
-	Mon,  3 Feb 2025 10:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738577374;
-	bh=K7rQae8QcWFmR02VR2cc/NnbWKKlcWy0NGP/Eu3OnVY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=LbMeb5W8rEG3V3vtsr9HPkZPIepcDp94LPsv4UvBqeOB9IvQW1Iplx3D3vgtPAkwc
-	 gZf/GiZGEz/8kFzI5dJUnsjCzH5gP+YIvY59ztzy/5xmFoVA/zk/fxNkFBHkiOTA0+
-	 97c0S8coHmUXvktMIZuENNqQpm3ql5bpIuA5pccxL6CPTbm0HYlXRyB9qWNrCySxlK
-	 g3jPoICRSA4D78/OiHzcdADfVwvW7Xvxlr9TwAKO/+VF3+QfMhn+tAdiTupEX66QoA
-	 zBD3SNfuYwn+ar6XrhHgOHSDd+O/HxlEGCFEboniDluvUd1TpMe+c1KItj7OY3RzmZ
-	 ghKCCSXcgu+Aw==
-Date: Mon, 3 Feb 2025 11:09:31 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Takashi Iwai <tiwai@suse.de>
-cc: Terry Junge <linuxhid@cosmicgizmosystems.com>, 
-    Takashi Iwai <tiwai@suse.com>, Wade Wang <wade.wang@hp.com>, 
-    Benjamin Tissoires <bentiss@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
-    linux-input@vger.kernel.org, linux-sound@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] Introduce Poly/Plantronics mute event support
-In-Reply-To: <87tt9wr13v.wl-tiwai@suse.de>
-Message-ID: <7r09s51n-po04-ps84-8n9q-89ppqs6o7qs0@xreary.bet>
-References: <20250113235212.78127-1-linuxhid@cosmicgizmosystems.com> <20250118005841.6618-1-linuxhid@cosmicgizmosystems.com> <87tt9wr13v.wl-tiwai@suse.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kv9lXAka"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso28451905e9.3;
+        Mon, 03 Feb 2025 02:09:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738577382; x=1739182182; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0wt7JSKDlV4+ZNNqkz8FD6wvQEU9AEy+YGNZJ8/Nc1Y=;
+        b=Kv9lXAka2+ZA8a6G6J529+AH8nbK0rFr/ReVexgFTUYhrerDJzcgBVcZTxEKsAwznm
+         3mFQ27RT0xCVohR/Z6tY/98kDLzb4GHnNT27GqtiF9kKGtGt/BdUWEqkEtkZzAcFMwQu
+         OAFZI3xp/SBUmFYiHpxzoQiZfbJ+VJAdWfVeyCbk+S3dsNVOAXZ0c+htVTUCH2H1GLKs
+         VIAvBBndrofstQdBo5XNNqv1F00hy5dhB7aKdgKXPLUsCk/dTnK5RUMYWhsEZSCrCtw2
+         EsSXMkGhPajKYuu3A/WV/pMUXboM60pAw2UFoR9S/pec1ls2WtuSQi0ili45yNe5G4S3
+         Acrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738577382; x=1739182182;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0wt7JSKDlV4+ZNNqkz8FD6wvQEU9AEy+YGNZJ8/Nc1Y=;
+        b=JQpN2qNuZgdsuZ7p2qtZt0iorbuMl1ZGHVyUFP5zvpI/Rz4xXXF/iQkSe17KNpfyCb
+         zJ+bvF2olPA9KoLKaGbfZ/RrgOIhgBFlzab83QxVZVjVjOiYo6DUe4viD86fKlXVIN8/
+         KRJv85YhTMlSN6AffDUbGRP1OKsGpyPRjl5ZUn3/c1OabnMLT87Oyg/Yy5D+07iOM8rQ
+         p5EJHSgd1tKlbYf2ghcHnWQHX2xxiqfhLf8a0GJoDH8IRQj3hh5252W6OkR3+HHyYikT
+         SDjKyDR5v22LchHu/UIa8IlD4YALSdL3Ny1Shp9WYcMWGk3hWctAyz9iH7A5iPMvEgxL
+         JkdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBA3b+TW7e9iVAmrS8i06L7Ph+hclQWy1b+Lj2ilG0uQz/fpwM/E+PZodJJDbFBAy+rlqcDlkupgoH1LA=@vger.kernel.org, AJvYcCXayr+LHJDSLGguzlqAo26fB1jHGqC8iuVD0mm3lsJDeLkihe2xcVKe2Q4APnSsobFiNuAuhzxQScu9sQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaMjK3CHnYq0629/HslbOWYWq3PtG0GUTq4SoFgqfONXmHqedB
+	dTxgvVMDVV7wkmi8CptueaYKzv0CF4fwNDrNX7XRsa2gfxrGxzQt
+X-Gm-Gg: ASbGncsG2DSlz1cgwYepTNIlXPaEy22zxc3lEs25bsxU7jWtses34GX2e208VXk5kNH
+	pAVkd+M+VS4T+la8OEKs9QNxRU3c6RDqzxeAO46BjMtfjHRITILlGbWtIhbp4JS3DWS5dCTmB3v
+	66mjCC3v/ps+UYUXiqL0z1qYWZiZ8JbJWJJ8A8yDrOkjGfcX4xbaSObncJjl+f6/O+lvHaG4+no
+	zMC+5kLE1oytA6COKDv24mJ/gHcgxnBYafPfk/L3vplghvQY2mSgZnZZ2j9Z/MgmzEo6pE1c3a+
+	likpXK8JPuMjYaCT5g==
+X-Google-Smtp-Source: AGHT+IHID4d3u5dDIsuLvGqBj4HlSCpSQbwPU0kn5uIl4ZpOsW2e0R9AvzhgOpWJnHKkJcGEqO+ong==
+X-Received: by 2002:a5d:47a8:0:b0:38b:f3f4:5801 with SMTP id ffacd0b85a97d-38c51932062mr14451528f8f.7.1738577382375;
+        Mon, 03 Feb 2025 02:09:42 -0800 (PST)
+Received: from [10.176.235.56] ([137.201.254.41])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cf555sm12471800f8f.97.2025.02.03.02.09.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 02:09:41 -0800 (PST)
+Message-ID: <1261f1eea417ea93a9abf4cc0bd8ad285eeebb36.camel@gmail.com>
+Subject: Re: [PATCH v3 2/8] scsi: ufs: qcom: Pass target_freq to clk scale
+ pre and post change
+From: Bean Huo <huobean@gmail.com>
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com, 
+ bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
+ avri.altman@wdc.com,  junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com,  quic_nitirawa@quicinc.com,
+ quic_rampraka@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Manivannan
+	Sadhasivam <manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
+	 <James.Bottomley@HansenPartnership.com>, open list
+	 <linux-kernel@vger.kernel.org>
+Date: Mon, 03 Feb 2025 11:09:39 +0100
+In-Reply-To: <20250203081109.1614395-3-quic_ziqichen@quicinc.com>
+References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
+	 <20250203081109.1614395-3-quic_ziqichen@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Sat, 18 Jan 2025, Takashi Iwai wrote:
+On Mon, 2025-02-03 at 16:11 +0800, Ziqi Chen wrote:
+> From: Can Guo <quic_cang@quicinc.com>
+>=20
+> Instead of only two frequencies, if OPP V2 is used, the UFS devfreq
+> clock
+> scaling may scale the clock among multiple frequencies. In the case
+> of
+> scaling up, the devfreq may decide to scale the clock to an
+> intermediate
+> freq base on load,=C2=A0
+=09
+       based on load
 
-> On Sat, 18 Jan 2025 01:58:37 +0100,
-> Terry Junge wrote:
-> > 
-> > Hi Jiri and Takashi,
-> > 
-> > If at all possible, it would be preferred if this patch set could be
-> > sent upstream and to stable together.
-> 
-> Note that, for picking up to stable, it's never guaranteed to take two
-> at the same time unless you explicitly request to the stable
-> maintainers.
-> 
-> In anyway, I don't mind to put the USB-audio change via HID tree.
-> In that case, feel free to take my ack:
-> 
-> Reviewed-by: Takashi Iwai <tiwai@suse.de>
 
-Thanks, I have now queued both patches in hid.git#for-6.15/plantronics
+> but the clock scale up pre change operation uses
+> settings for the max clock freq unconditionally. Fix it by passing
+> the
+> target_freq to clock scale up pre change so that the correct settings
+> for
+> the target_freq can be used.
+>=20
+> In the case of scaling down, the clock scale down post change
+> operation
+> is doing fine, because it reads the actual clock rate to tell freq,
+> but to
+> keep symmetry with clock scale up pre change operation, just use the
+> target_freq instead of reading clock rate.
+>=20
+> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
 
--- 
-Jiri Kosina
-SUSE Labs
 
+agaion, no logic change, add my review tag:
+
+Reviewed-by: Bean Huo <beanhuo@micron.com>
