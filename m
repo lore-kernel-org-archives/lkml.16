@@ -1,92 +1,100 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3AB1FBEB1
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A5F1FC7FF;
+	Mon,  3 Feb 2025 09:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738573793; cv=none; b=fUnSZSwGzLxh4U41B6RD8IjrINkrPZzUkHI41QK2QcD5MkBEjA9tIGR5wTFtIJLZrHMRzWWDL2nBt0qxpmtwX6fgJPAkM5Nl3JFmqA+qze62EykJRUFKTE1xSuZH2lv93NjV42YN9zfBpbWi3AfiUSrT1/LiP0YN7kOuSgWJQ+M=
+	t=1738573802; cv=none; b=QoQjIjZgnQ0x4h9BDDqaMvKAmxQfpklFcUprreg3ikOZBodKhfIJ4LmzG8QV+WZ71FQ43Y2G/rzzSAbJgGCD3E3b3x5DZ0SP2uZIFMhVo4Lt+OApVgAU1e5kxzuybzgpl9kDOLv6aknJeGtmMxwFm8iYnl3e2k72lN33JDMSynE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738573793; c=relaxed/simple;
-	bh=UTDN9Mplud83THmiGowq87k8MSyDKm3YgJpc64T4AGw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=plNPZzzxqqFoBW1KkTnXUTT1Mm3uDlCc23muasGpG2jajmmCtiXfL1V5EkZiNVK6Zsk+BFTZsucMHJavYiM8Twnl7Uj4i3YXp293lkcSDkvyLkI72dM0TQNVhMjl5b2w1OMQylDIgKvcQkbZhkz9IaIXJh+uNjNBLIBrhVTGeYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p4Wcqs0M; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738573802; c=relaxed/simple;
+	bh=HWPee587ujvEfUgQdiy5jklaVRSCUSN+J/F1ysoJPKM=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WqBFq61PqrXWSraM7kbomr9UsZWjl7ZIskl+P0YgJ0YlWjEfqDtVrJjPaRncvtW8X6JQeJy8xFEHvG1zUBWpL5E3oyjoSGkhYT2cZvYXswsKsB6bA5nNu5t51CM17WwgPaEomk6vbLq0bhPDEv5HM2AReu6ouwIb15nj47onTUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bs9c1le+; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p4Wcqs0M"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so2060955f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:09:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bs9c1le+"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5d3d14336f0so6434729a12.3;
+        Mon, 03 Feb 2025 01:10:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738573789; x=1739178589; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UTDN9Mplud83THmiGowq87k8MSyDKm3YgJpc64T4AGw=;
-        b=p4Wcqs0MGhjt11q5aHYxNc4GIwZCPWGy3yUl1e378mMYFFFD0SiEZIZ3E2Rdf55Ptq
-         qsJBoKpWtUOtzeYOl6RO9Xa7Hq6FmXJrtblfgvY5UFrLAQoviUl/XV0PUZn9wv/Mf3yk
-         eQI+bi+KIU41Lp6AYeTG6jG7lJaLFTo76i5HAjdmt5XYx91+OElIM0MU6e85dgOJprHJ
-         Ta55wdh0aAcqPqQWmXnxFi5clUv/vHeHqgw8nGSGcVhA3nPDoB3APNEtQIcISgDjiW2U
-         2dVEwfxkG7z2k4jiixvB0hyegXlcq3Vyd+bp+DX/EZexz0oKR1lvhN77d3bIcsl13Fbg
-         IQlg==
+        d=gmail.com; s=20230601; t=1738573799; x=1739178599; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YfUOM0B8I52BtFVglKEUvMQla7dCUbGJVgngj++BrAI=;
+        b=Bs9c1le+wmTwNl4zqkHeBYz02egFfoC5tQO9ha92Obn1BwdxcxA9r8cZScb4ZxO6Uo
+         vF0CUCQdgetV+4WLttCgiozMbJ9mQKx1a0upln0Escthp508qgj+RXbS/T1FFA5D3xRm
+         sKgMG8NaQui3314U/KTbI6PWrjcTKA9VIiidhDyeXwqIKha3qaohv0J2s5/dpzR/WNHr
+         9McY/zM448YRh8yt/7rgpYMhwrJDJCr/YM9yeF+wvocEdT+WD7n8ghdQR+2Xcclhb6NJ
+         nx/qtmlCUShl7yDIFJ926CyToTspMDlxokgdMYcdAgeXPZrqSjaFT8uWMkJayVJ43mNP
+         vWhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738573789; x=1739178589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UTDN9Mplud83THmiGowq87k8MSyDKm3YgJpc64T4AGw=;
-        b=FyDIobjpJKBhzvqT5eRgLcCF4EAWbAoA77hubS1yASQxqW6fhEoq5tnpbopGvE77ns
-         qC9iWVjia/q0d/7av7Joixw0Y5CSjRlD013bat8ufyoGtPIE014HB1ZoI747yxfwjaJp
-         4uwqzWL48tnQ9Pva2igrZcL3qCMXJdt6WUsmSbPRRkmxylo1B62m2/omNRuOJO7SZESa
-         Kobx7LITmw075OO7OkwlqduAhr/zXggy7a3kok1n/U+wh5f19MwVhBoJEG6NvcgOOuEV
-         M5c289tU5KTk1MJurnmuYrsWSK5NeNTe+OVqUtl/SOEURaRM9QKtKr9vv9PGoYHN6wWf
-         IJuA==
-X-Forwarded-Encrypted: i=1; AJvYcCXPw/pLtNDB+gFt0ftNJymLoZ/GD38/rl6yejDCldjLhs4UunUoo+a3bmoNTOI328YMNwH9yikT98YYCZE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwR0NcNTv3zhunJuQ5FGEVZVfvhBzE1k3hH6ZEQOhhB0XZgKjtL
-	oyY/mR4GulDUfDLN+/wnb2dw5b9nRupTNJdlXA4CkfyTvgJU6t3rIdXGDbiyNYWsrwIcSGG9/aK
-	U9oC91h2trzgQN3TfYik8e9azjjPTY+1cm/G5
-X-Gm-Gg: ASbGnct2s82jgiuT8Je/CWSA/WYPKhCk1kKkuCIFP6jZtsEHBQl8d+TADqtLQuTvmke
-	cJ1pyIrB621gaIIoEFSmOZAF3mcAnwzLCINFAIRSM8Ubn2dxwsApSgtxqyvw2mmuWchWS/t6YRL
-	ZZyiIwL7d6xYHEZJUZ3dKL30ua
-X-Google-Smtp-Source: AGHT+IFM9GLHlZ+BFxVNkIvlyblXVykvccxfE1y//nQwS7sYZaGnQmkNGwSODA3KxKIAr7oe/IbIRqDfpnehi+25lNA=
-X-Received: by 2002:a05:6000:1569:b0:38c:60c0:40d6 with SMTP id
- ffacd0b85a97d-38c60c041c4mr10325117f8f.51.1738573788916; Mon, 03 Feb 2025
- 01:09:48 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738573799; x=1739178599;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YfUOM0B8I52BtFVglKEUvMQla7dCUbGJVgngj++BrAI=;
+        b=TmA6Jd64rvUGTwTJ3PI0DIl1RG/c6EihtrZp62kJUiKyDPGrNBM6YoBARj7sfO6jhV
+         +V7Ew1R+Qep/0EgPVsxKGxxXmeVCgp6rY0fqS5/1y9yxYoPMPof59vDFlYfC3nCG+Sve
+         xbcZrlG8Hy0JBAw8UOPv8dtAoza9ws+HqMuiCvWTgeNxKY6bgtDAcds3aDOdsttN58ec
+         BSzQ09D6j7zVM3QE6c7IkP90bm1JjWE3IGXBvJpnsKoOckO+QedLlJC1CklsrDKSFI/O
+         6QztFOdM17mSam2a5LAVdI4OknDR2jYLHcfHlE+vHJ2pYPttt28tPnQOVVEhjuEVgzSP
+         sQUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWFABgnEoCxzxTGVxXM5u9NP5QG0zl9wYL2o29R72/a8pOhHp9rxUoDAkgRULAucLDrspuYhaWywuIUoes=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc4T4wTG2vj6DXKUS88eT104Ugz13BpRTEN2jSLH5vEQ/e4QeG
+	otV8LsViGTko4Tejrn8G6rKM/snG859xoyBZwnr5M8kWWa5ylJeu
+X-Gm-Gg: ASbGncuURuh95jz1sMbo/WGnubQiiyhshmT7WYYqRAhAoyFYefwyIqzbeSuPDsRNUQP
+	71uqVNWPCOuPGzUmd3GMuxDkexHs5NCQ1w0TSlTMFlguL9SmEL6yYDlhqRitS2p7qPvb5H0Xdt5
+	WVHA7MYi4A5cYcvSnm0uykyT4b7TerAF4hRkNI3S/hoclAPvYyeTD4phF0r18UQ0rbHt2gNSzpn
+	W/2bH0HMY6en8CQWC9TMsWH7Eb401ZITUBuaFFlQIOX91P0SFY9k5ij7+uAeDoqzSGZekiGdYaM
+	U3yZekLcporBKlC3/3dQIuKokox9y47BbUZ2auGlT+6UCtAc
+X-Google-Smtp-Source: AGHT+IFoKVWnfYTQiDzGoQxjSrU1BRcqvEVkgXqrU6nCe4H17y7PG7LSnZ9+iDtcdZrS8Gv4snEV1Q==
+X-Received: by 2002:a05:6402:51cf:b0:5d9:f042:dab with SMTP id 4fb4d7f45d1cf-5dc5efc4d4cmr26350221a12.18.1738573798539;
+        Mon, 03 Feb 2025 01:09:58 -0800 (PST)
+Received: from [192.168.14.180] (54-240-197-239.amazon.com. [54.240.197.239])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc723cff72sm7374897a12.15.2025.02.03.01.09.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 01:09:57 -0800 (PST)
+From: Paul Durrant <xadimgnik@gmail.com>
+X-Google-Original-From: Paul Durrant <paul@xen.org>
+Message-ID: <86c5647c-dbbe-4224-91d2-df2a7193d620@xen.org>
+Date: Mon, 3 Feb 2025 09:09:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net> <20250202-rust-page-v1-4-e3170d7fe55e@asahilina.net>
-In-Reply-To: <20250202-rust-page-v1-4-e3170d7fe55e@asahilina.net>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 3 Feb 2025 10:09:37 +0100
-X-Gm-Features: AWEUYZkjSqWe0d3JupRvmEZPFDwaoLn2z0gdviTtv2-Qd0BxBC4FdBGMXj4WLug
-Message-ID: <CAH5fLgj+5KZcNRZiNfj7wg_t+QU7ki_=Pw5-whBLx9K0BcBbCw@mail.gmail.com>
-Subject: Re: [PATCH 4/6] rust: addr: Add a module to declare core address types
-To: Asahi Lina <lina@asahilina.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Jann Horn <jannh@google.com>, 
-	Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Valentin Obst <kernel@valentinobst.de>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	asahi@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Reply-To: paul@xen.org
+Subject: Re: [PATCH 2/5] KVM: x86/xen: Add an #ifdef'd helper to detect writes
+ to Xen MSR
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzbot+cdeaeec70992eca2d920@syzkaller.appspotmail.com,
+ Joao Martins <joao.m.martins@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>
+References: <20250201011400.669483-1-seanjc@google.com>
+ <20250201011400.669483-3-seanjc@google.com>
+Content-Language: en-US
+Organization: Xen Project
+In-Reply-To: <20250201011400.669483-3-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 2, 2025 at 2:06=E2=80=AFPM Asahi Lina <lina@asahilina.net> wrot=
-e:
->
-> Encapsulates the core physical/DMA address types, so they can be used by
-> Rust abstractions.
->
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
+On 01/02/2025 01:13, Sean Christopherson wrote:
+> Add a helper to detect writes to the Xen hypercall page MSR, and provide a
+> stub for CONFIG_KVM_XEN=n to optimize out the check for kernels built
+> without Xen support.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/x86.c |  2 +-
+>   arch/x86/kvm/xen.h | 10 ++++++++++
+>   2 files changed, 11 insertions(+), 1 deletion(-)
+> 
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Paul Durrant <paul@xen.org>
