@@ -1,133 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261E8202C3E;
-	Mon,  3 Feb 2025 12:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EFB1FFC69;
+	Mon,  3 Feb 2025 12:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738586230; cv=none; b=W+GSZp3G3/Y/DxzjlfuIrZw7jaLohl7MRZdraJOwvDK3kC2GlECC/T3ZkGL1RV5xSDHMEpKqUl/Ya5PC2vvjNaMRUD6DNsZYuBwY1vXv41HOLkwmssyFsnxjd6dFj0pTL2xoyh/n1e1sKaaloC69M0mZh9COUEuZVV5KLp4B60g=
+	t=1738586290; cv=none; b=Brphu3a3SszbLzizWEV/HoXDsbgxAGUC9IImpZp6Re70StR0nGfhWspk79/C9QzdGRU1Ei6IgVgTSACIW/7rY9gi8tMzAMtG62IgdshgxGtrtY5+ssF0jRyk/Yhptkv0kRlhJr7BB7Z4WeHjvhLZeBL/LTBJVzDyUOgi17aZKN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738586230; c=relaxed/simple;
-	bh=+hfIDKazatu6zjWjzZX8NO2y9nDwJDIinki/gvRlLn8=;
+	s=arc-20240116; t=1738586290; c=relaxed/simple;
+	bh=95zSiarw+ZpYO1scZRyBbxW/PIdZCHPvWMK0AC2GRpg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g/+fmkdhNjnvoIhf2zCq6s0BmUGGfM97OQzker5oDG7DvQUyBlZJFWUoDQn2eSjA97hZ7PdDpQRjavTSHReIPL5oYdRu+Kwcy3gVDiMBsmxGNntGgOEA6aYkIhu0fM4V0xW2J50ga7nrF/kb5eA2KI9XFjKtjuLXfSMYj51lpok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJcpNOU7; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=prbJnwlqYdXaDCuLrnf9f10t9MeqnD2M2sW4ZoTYqBUKcaa1/5FepRC0NxFaNplTnSzTA5GDaX1lt4OJGRpHZ/h0awghZXcMVwxLj1fQwfUu7RNZFFwus8kcnpOa3YAXxvsUIk4z6mKTdejFUEnO2MjiXyxoKx6E0Pdhkdz2+js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O4ZmI1PT; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJcpNOU7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738586228; x=1770122228;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+hfIDKazatu6zjWjzZX8NO2y9nDwJDIinki/gvRlLn8=;
-  b=fJcpNOU7ZKV2xlhznqcAV/aIyk8Eoxp0nbHOoZksNsAOVgSmhXC/HdSj
-   inxNYmTFC6NPZv6h0u3E2kfw2kDEgFIipsrkixV6huMGToXTQ2z7SLdqp
-   TSH1ILLRRvFj1c5XqO3zu1dxb87Kv6S9gSv2HsLWoNA55+upHf7BIqu8l
-   HKhPf79IQJAijAkqwK4FvKixrp+dd47llGPRv1NUIKbTzw3sNXSklb70J
-   XFMS23Ug/NpoTIfszXailE2hcDohN+7qEoeOedtrSY7EgbtlkhJiwIbQS
-   /jgf3ati64zhaMcbU57pfUt5adT2yk+xghBO3/Tfm0o0Avxj7slSYQ+rc
-   g==;
-X-CSE-ConnectionGUID: S4aa9w0QQRuPSFw16i/LVw==
-X-CSE-MsgGUID: YgpF1PWUTZKwbLBj6BJqgg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="38954789"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="38954789"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:37:07 -0800
-X-CSE-ConnectionGUID: Qktvc/okRsyrMX4rQS+URA==
-X-CSE-MsgGUID: rVXpaxrpS82OVaBvVMjFhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="110451647"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 03 Feb 2025 04:37:00 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 71CCF23F; Mon, 03 Feb 2025 14:36:58 +0200 (EET)
-Date: Mon, 3 Feb 2025 14:36:58 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 12/17] ACPI: property: Add support for nargs_prop
- in acpi_fwnode_get_reference_args()
-Message-ID: <20250203123658.GI3713119@black.fi.intel.com>
-References: <20250203084906.681418-1-apatel@ventanamicro.com>
- <20250203084906.681418-13-apatel@ventanamicro.com>
- <Z6CPvteWv89Xo70j@smile.fi.intel.com>
- <20250203105840.GH3713119@black.fi.intel.com>
- <Z6C1cg3cqik8ZxvU@sunil-laptop>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O4ZmI1PT"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2161eb94cceso50597995ad.2;
+        Mon, 03 Feb 2025 04:38:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738586288; x=1739191088; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W2CdPK9mSmhYyTyI9jvKkDvdm2j/cCoWc+2tilMgaC4=;
+        b=O4ZmI1PTP62EyhLfQG/lfuERZUeGOVUvW/TdA23HiYp2B04Lo5mwS3NDqsPk3YbqPE
+         coMrYrwCixUEVL6n9n3yZH4ofLUe4fhxzwca4goYRGJLbPecTBcdluo+XDtQej417mgQ
+         kPQPvZKjfhlpwYUWZU4NUSImCaNbNFDsZWEteFG5hRUtoXVpCzJkfftIGWBpBKoY1pCy
+         H0IuYpm20Yp3ES9VtJT+29V9knEAXtZhW1H/Nvn3pJgzawYssjPhW06yIUGwDno+jlaJ
+         EabSpZU1FiyqH5ahBecX/e3O/IXxAFtBAtYyRzI0BFLXMQxPhfV4K8oqeHarCuIlLdWZ
+         zrnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738586288; x=1739191088;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W2CdPK9mSmhYyTyI9jvKkDvdm2j/cCoWc+2tilMgaC4=;
+        b=nWNa3lKxqHZrJdiK3g2AKiZCgUTn6C8Z+SaZgD7modp5hRN4ZlxeCRnhq3VKt9Q+07
+         nZGgGfIZVdxVpKKgj9DYFG220S646fAaRNpMqxOUFAUD+Hs87ENPU3NCwBvdTM2j2zkU
+         EOsmCQJ84RouxVXLdA2rl5Q4Y9+9Yp5Ffk7F4JwsmQ+fzQXc3BkZa4UyTWHohLrkx9Fv
+         nvrOQFU/WQw6yi9AFetLRwqQIqENgSFJM49XJodMac3772DRMM0AEAIR7MBHvBpn7fX6
+         3zMC9MCejfkfdyhZehtOs07G78Lj4aK5VraAEhhm8YWcwJaeyt3020kZxSTDmXJRVR3k
+         ZF2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUXL97rrGKZ80qO5g4IC30f3G8LZhagR6oq4fq0DVhWakLfHAWYHM1hIC7Eb/Cg4C9e7LAjXpG/RUcNfC/r@vger.kernel.org, AJvYcCVOJMirNNin3P5Y+pAjuZSTFtQoHwKKnJc1tTmzsDnE8cZw0tuvUxRjyUVGkcsTU9yMf7J57gFu@vger.kernel.org, AJvYcCXCJqF0O2/+4N99SrQ8EgKVQRyURZzJdN4yJyx3Swy5T0zN3Kzj6PHCRUwZJaqUBEvLC4h78UMge+Caqg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa/t9e5bsXSY4tRbnpbqE7insSOYvhnAfdUY9o/vQFAk5hURG6
+	RyJ8g481HidWyJZu6/4atLnItNyD2/VLFbehNDOrH5u1kD9UI8mY
+X-Gm-Gg: ASbGncvLvv6C4qyG1NZ4l9P74y/GNzOUL4WhIEX6+1Q8a0gAztUi1cUjWRWLFnwz28V
+	syHi08j2ZSu2uPIHczwCP96tNJT7luEYI0m9X6n2kmqoGsJEP1Id1kzxln4zBkIq4rqXAf4v38B
+	TogAhlWeb1ooJeyubGrM/USBD/bt+sHm3/R3EibqzoKCJHvOZKtMpJ5B+ro880sOYwKUKAR+ILc
+	qwyi+OxNTGzKKX6kWvqvCQFn94066y7C/TGmweEBc1G8p42wjLVimcLArwDRpakM8bzHwHmG0L3
+	hFWheKPsslQSuw1Z
+X-Google-Smtp-Source: AGHT+IHLB5k+NQf/3MApmiIEbts83y659X52J6eS68pgCXtvSGPMZVtiEi8Ef66VZtCo58VhfA8gag==
+X-Received: by 2002:a17:902:ced2:b0:216:554a:212c with SMTP id d9443c01a7336-21dd7dff3ecmr332857605ad.46.1738586287839;
+        Mon, 03 Feb 2025 04:38:07 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:9519:ce7e:a33c:85df])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31fcddbsm74929425ad.105.2025.02.03.04.38.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 04:38:07 -0800 (PST)
+Date: Mon, 3 Feb 2025 04:38:04 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Marek Vasut <marex@denx.de>, Linus Walleij <linus.walleij@linaro.org>,
+	Nathan Chancellor <nathan@kernel.org>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] Input: ads7846 - fix gpiod allocation
+Message-ID: <Z6C4rL4SMbUcAuh0@google.com>
+References: <6e9b143f19cdfda835711a8a7a3966e5a2494cff.1738410204.git.hns@goldelico.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6C1cg3cqik8ZxvU@sunil-laptop>
+In-Reply-To: <6e9b143f19cdfda835711a8a7a3966e5a2494cff.1738410204.git.hns@goldelico.com>
 
-On Mon, Feb 03, 2025 at 05:54:18PM +0530, Sunil V L wrote:
-> On Mon, Feb 03, 2025 at 12:58:40PM +0200, Mika Westerberg wrote:
-> > On Mon, Feb 03, 2025 at 11:43:26AM +0200, Andy Shevchenko wrote:
-> > > On Mon, Feb 03, 2025 at 02:19:01PM +0530, Anup Patel wrote:
-> > > > From: Sunil V L <sunilvl@ventanamicro.com>
-> > > > 
-> > > > fwnode_get_reference_args() which is common for both DT and ACPI passes
-> > > > a property name like #mbox-cells which needs to be fetched from the
-> > > > reference node to determine the number of arguments needed for the
-> > > > property. However, the ACPI version of this function doesn't support
-> > > > this and simply ignores the parameter passed from the wrapper function.
-> > > > Add support for dynamically finding number of arguments by reading the
-> > > > nargs property value. Update the callers to pass extra parameter.
-> > > 
-> > > I don't like this (implementation).
-> > 
-> > Agree.
-> > 
-> > > It seems that we basically have two parameters which values are duplicating
-> > > each other. This is error prone API and confusing in the cases when both are
-> > > defined. If you want property, add a new API that takes const char *nargs
-> > > and relies on the property be present.
-> > 
-> > Also this is not really needed for ACPI case because it has types so it can
-> > distinguish references from integer. Having separate property for this just
-> > makes things more complex than they need to be IMHO.
+On Sat, Feb 01, 2025 at 12:43:24PM +0100, H. Nikolaus Schaller wrote:
+> commit 767d83361aaa ("Input: ads7846 - Convert to use software nodes")
 > 
-> Thanks! Andy and Mika for your kind feedback. I agree that having both
-> property name and nargs is confusing and also ACPI would not need
-> nargs_prop. In fact, I think ACPI doesn't need even nargs integer value
-> as well from the caller since all integers after the reference are
-> counted as arguments.  However, the issue is acpi_get_ref_args() assumes
-> that caller passes valid num_args. But typically the common
-> fwnode_property_get_reference_args() doesn't usually pass both valid
-> values. So, should fwnode_property_get_reference_args() pass both
-> nargs_prop (for DT) and nargs (for ACPI). Or do you mean it is better to
-> remove the check for num_args in the loop inside acpi_get_ref_args()
-> function?
+> has simplified the code but accidentially converted a devm_gpiod_get()
+> to gpiod_get(). This leaves the gpio reserved on module remove and the
+> driver can no longer be loaded again.
+> 
+> Fixes: 767d83361aaa ("Input: ads7846 - Convert to use software nodes")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-Can you show an example of a case you are trying to solve with this? So far
-we have been able to go with the current implementation so why this is
-needed now?
+Applied, thank you.
+
+-- 
+Dmitry
