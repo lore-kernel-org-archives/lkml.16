@@ -1,169 +1,108 @@
-Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FF51E7C03;
-	Mon,  3 Feb 2025 20:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738613520; cv=pass; b=Vxy8S587vH5cOO+E2YsbryLWTFBuY+E5zgM9v+CLHYgwjbUW36ekiszhf5//Ia7YOjUTEYPMq+KmhWWK//zPjgqkxX+aTtvhR2KknPcNTW1zdRo7evtOFBFKlnTWUNx+3X3PrLSwaujtqNw1kBsqq2GjHgt15qUmG/eJAG7nfjM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738613520; c=relaxed/simple;
-	bh=k98bQzDI9RwM3220WwTRBw0NBLkW7u2Vfu4HJD6Ly7U=;
-	h=From:To:Cc:Subject:Message-ID:MIME-Version:Date; b=dIjPy2xxtwq2UhIAoJQX+0JDCaSP588Y41PYk5h+w3wEVbhE8lgMSsQBuzTRRMVX9ABdVwa1gnv/1JBeFonEdg4FACFllnGbcMHNwccTuGforZf9npx75N/8dGbDxZJWJTvlKA+yS14Zicc4EpKpzYWIkAD+ULaIUOD4EAgeEvM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai; spf=pass smtp.mailfrom=invicto.ai; dkim=fail (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b=AaXCNLBA reason="key not found in DNS"; arc=pass smtp.client-ip=23.83.218.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invicto.ai
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B0B522A;
+	Mon,  3 Feb 2025 20:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738613570; cv=none; b=jhn+igES6wkEXr0P7u5pl3M7Ez9pySzMw4IIkK/oH9dRgakFeGmZcLqya1ga4Rq3i6gU3u03dgl0JBVmUE8PfFxkvyhtOTcS35RHWeZfh1UKQ/BK50H/VkIqrIvNbyST5myhW5qswnKb6m2rGv2fRZSh0AxPj9w8huaq/biXXVQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738613570; c=relaxed/simple;
+	bh=eG2IPK5sPmlrFBWUFh+RLYKGrlmKlAjDRe5QcO5P5GI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=rz4bnVjvPh97yNKxM2mKiU1k0B1KbV12ZmCO77W5gjdqLOHRSLlJwOzVoG9w7Tk/CSYpG+xkIZ4fuKVaHbCZZK+oiRXaOQog9fNuaOyVlm5YGkJt1LpAZhD5uMvo5nbPc3S1T7oAdl/CezXy1B1+NPpD7k2EMkxhQplKjLruDT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUvrNH8v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b="AaXCNLBA"
-X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 61B1122C57;
-	Mon,  3 Feb 2025 20:11:56 +0000 (UTC)
-Received: from nl-srv-smtpout6.hostinger.io (trex-6.trex.outbound.svc.cluster.local [100.127.143.53])
-	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id EFC8B22F37;
-	Mon,  3 Feb 2025 20:11:54 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738613515; a=rsa-sha256;
-	cv=none;
-	b=jwnycTtzplSqmoVJ/SpKSBeeiisFrvXNUxns6RwY8UPPPLbyx74Z2rKQ5NkRoIODbsiua/
-	HPRd+Mvf9I9wW0uN5rGUKMNeF468/FdWYaLO4DY9EcM/u1WTNgFTL9EZ2j3B1x0b4DLyOo
-	OfK1MGF0sxl+yGTLwNR/3apUN2j+8NwrhljhA3rQh1n7xUT2AiJh1YT4JVymw4Evak6rye
-	dCyZ+AUMnBG+7XmQcaaNMxlDtWZKitvrTS3skYt2fz+YhTVNtSn6lBIjsjcTbvEDfQkJXW
-	+BsvB/dzbXPPpNVp2frYhoJ20iMt4dbD40lf6QkGwnlmkPAVtBY2xcAglfEi0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1738613515;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=Ab6R3x0iq4MlY/imzAVkZkBE2JedJ/qGVM3bp8PX4R0=;
-	b=4ihuR+WXOxh/wRH8M1GFHHd+fqpyhb7MNXy4acVTeCpo4iQW/CWnVqxpPiZEO04h7nHgta
-	NKGk3dFijNIeZRNJdI0+qa34iR5yqXflhHDDGJs5hYTZWtXRl3LPDZEW7R3dMjH58tB7IY
-	zSlBfsXVaTOwFS1CG59FmMqHXRMYXgf1JQShXVXn8k8BB+NgDVhQR1qkP+G1B3mHwzuZOQ
-	Anjx3/CVArAg8AtXS8Hhbndz9mQSneAm3Qur4ljfLdSIatdc0PQ37/bJq0o8SzVstge6ea
-	FOU6rPPlpAUDA6w+6Iusa29tX5EXAAFUrVpFFsqKXgcEyf8EWFGTqpI6yBPKFA==
-ARC-Authentication-Results: i=1;
-	rspamd-8586946c78-bl7zc;
-	auth=pass smtp.auth=hostingeremail smtp.mailfrom=kurti@invicto.ai
-X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostingeremail|x-authuser|kurti@invicto.ai
-X-MailChannels-Auth-Id: hostingeremail
-X-Harbor-Power: 2562e9661c947542_1738613516153_2978833233
-X-MC-Loop-Signature: 1738613516153:1895777589
-X-MC-Ingress-Time: 1738613516153
-Received: from nl-srv-smtpout6.hostinger.io (nl-srv-smtpout6.hostinger.io
- [45.87.82.130])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.127.143.53 (trex/7.0.2);
-	Mon, 03 Feb 2025 20:11:56 +0000
-From: albankurti <kurti@invicto.ai>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invicto.ai;
-	s=hostingermail-a; t=1738613513;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Ab6R3x0iq4MlY/imzAVkZkBE2JedJ/qGVM3bp8PX4R0=;
-	b=AaXCNLBAoBQsG0FrVrsIan6JtSNgNnk5bigaCgo2z+yHHLqb1poY9XmAhyEMhR6ab/4qlv
-	J0I7orOtsgrWc0RrChANovN9cOdErrE4tecAiykpZkRaK1RNS5HhKXwlGeiyjK+fuoJVXv
-	kczamorWzs4z/NDRKmpHMBLeFWpEwZP5XcZUJ00IdSi0je/0lb2HQcvaJymp0x9EKM6P94
-	k+s3yFbHob16/uhXnnlW6Fvy9Zidp1eUlZHk3QfYU/OaO55aX0fPO9aB98BDvLP/uwAWWb
-	3yvhI31cqEeuyUsfL7CZ+8IN+RPBtGyFtXJVr9cFbejMLp6Oih/Py3UFUiJuNw==
-To: Joe Perches <joe@perches.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alban Kurti <kurti@invicto.ai>,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH 1/1 RESEND] checkpatch: add warning for pr_* and dev_* macros without a trailing newline
-Message-ID: <20250203201149.330117-1-kurti@invicto.ai>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUvrNH8v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8726AC4CEE5;
+	Mon,  3 Feb 2025 20:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738613569;
+	bh=eG2IPK5sPmlrFBWUFh+RLYKGrlmKlAjDRe5QcO5P5GI=;
+	h=From:Date:Subject:To:Cc:From;
+	b=eUvrNH8vZx4QvXbGaLJSOP/oGTGtQzUzDuwspkYhOOOWhwVidxK92O4KNRyHK/91Q
+	 uRpJ7Sp8TDy+7RG6iUxQUBo7yROijvNTgxBwpS96YfJurmXnFNfF+n9+LaYleFHdSg
+	 YVQMYWLvlQfaN+wqKGFLKnneOMwHxddm6WOXrAy5nSu0C6xFMy66oco6O0SgDVPWD8
+	 /m7DAowV8RcRK4ZmRiiF79WR9Je1D2f1UmJZVTGibLsPelNBG0sFrIxrm+f/B7xRQ/
+	 dE2iId4QASVHZ9TwSQuBkP7RX6EnrJmLy7cRBfcP/clMW7EokbXaFS6dlYnyJ9Xkj+
+	 ltGD9nVD++MLg==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5f321876499so2535256eaf.1;
+        Mon, 03 Feb 2025 12:12:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU9WjvqfSJg9vXrc6evEFLXaRUUWRZUull+9+b3wUq4aJzmM0Ijd+ukbg0J2cDOZAmYorCw11Gw/NlEE2g=@vger.kernel.org, AJvYcCXq5RNMSlW2MhHrQBnhhYLhrvkkAXSnFvcimiM9RkibSYRjwLbUtKPWEFqXGloywoenG19dJf+Yd08=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfmWXDcsnFAGo2p9nWgY3onBVmOuuaLHoK2U+R8DGQN+BtzzOS
+	zdU0zv/xSMcGD8mQg/fWnNSkQsQB4TyTz0KbX16CzpAo5mWruYZOE2YntTasidpDc3XIoHr55Qm
+	JKI3yIqNZpCTD2E2Lanca6/vVg1U=
+X-Google-Smtp-Source: AGHT+IFvlcyI88YyxfQjmWaIJxi8/D3mhhw/h/Xarh0sXbPC6zgrTUKXc7dWN9ur49vtzFJmYvzJdmhEg0leG78Mr0o=
+X-Received: by 2002:a4a:d08b:0:b0:5f2:c0df:7ed5 with SMTP id
+ 006d021491bc7-5fc3bf5874fmr386760eaf.3.1738613568803; Mon, 03 Feb 2025
+ 12:12:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Date: Mon, 03 Feb 2025 20:11:51 +0000 (UTC)
-X-CM-Envelope: MS4xfG9gGM85xtaTTr7ofso7RCr3HVElrYIZhOSrBSVDkbfO7XLzxulvadJq7HQZf2Em7qdejlBIeIHwNEpkQZ87MmBl19aMlNAxZlM0s9xlJgLWv3hG1ZXo HtpB6rURIJDoY5LJPx3AjOfPq4SBFG78CUkpxmuJUUD3beXPxF65O97yfX5xaY98HzV9TC8+fa2LTayMBltlfCxEORhGbCvn4KaVz8cv9OGkRZ1Xl6IIXvbV IDePpooDuOFz3HVB8e0SHP0vdoypWUUvQEPnDl2a0nbYlrXryFKwfXujFZwunZNiaJ0AVKhBwCCcCPL4s00F3Ylcttmf6wVMLklAj/yInFUy2u8+mZkmxf5L cWeezpBh
-X-CM-Analysis: v=2.4 cv=Pr3BbBM3 c=1 sm=1 tr=0 ts=67a12309 a=6u68u+YV8u36k7dRtz0iGQ==:117 a=6u68u+YV8u36k7dRtz0iGQ==:17 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=cCfJtRbQlw7MZNJxVPUA:9
-X-AuthUser: kurti@invicto.ai
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 3 Feb 2025 21:12:37 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iKmynOQ5vKSQbg1J_FmavwZE-nRONovOZ0mpMVauheWg@mail.gmail.com>
+X-Gm-Features: AWEUYZlg0pfw8ANAD7dIS37BOlgitXSC9gnRxIBpuMXS1W0hQkz8dJAWXX3S_UY
+Message-ID: <CAJZ5v0iKmynOQ5vKSQbg1J_FmavwZE-nRONovOZ0mpMVauheWg@mail.gmail.com>
+Subject: [Regression in 6.14-rc1] System suspend/resume broken by PCI commit 1db806ec06b7c
+To: Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>
+Cc: Linux PCI <linux-pci@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a new check in scripts/checkpatch.pl to detect usage of pr_(level)
-and dev_(level) macros (for both C and Rust) when the string literal
-does not end with '\n'. Missing trailing newlines can lead to incomplete
-log lines that do not appear properly in dmesg or in console output.
-To show an example of this working after applying the patch we can run
-the script on the commit that likely motivated this need/issue:
-  ./scripts/checkpatch.pl --strict -g f431c5c581fa176f608ba3fdebb3c1051bad5774
+Hi,
 
-Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-Link: https://github.com/Rust-for-Linux/linux/issues/1140
-Signed-off-by: albankurti <kurti@invicto.ai>
----
- scripts/checkpatch.pl | 48 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+The following commit:
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 9eed3683ad76..86ff666f5017 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3888,6 +3888,54 @@ sub process {
- 			}
- 		}
- 
-+# check for pr_* and dev_* logs without a newline for C and Rust files to avoid missing log messages
-+    my $macro_pattern_c = qr{
-+        \b
-+        (
-+            pr_(?:emerg|alert|crit|err|warn|notice|info|debug)
-+          | dev_(?:emerg|alert|crit|err|warn|notice|info|dbg)
-+        )
-+        \(\s*
-+        "((?:\\.|[^"])*)"
-+        \s*
-+        (?:,|\))
-+    }x;
-+
-+    my $macro_pattern_rust = qr{
-+        \b
-+        (
-+            pr_(?:emerg|alert|crit|err|warn|notice|info|debug)
-+          | dev_(?:emerg|alert|crit|err|warn|notice|info|dbg)
-+        )
-+        !\s*
-+        \(\s*
-+        "((?:\\.|[^"])*)"
-+        \s*
-+        (?:,|\))
-+    }x;
-+
-+    if ($realfile =~ /\.(?:c|h|rs)$/) {
-+      my $is_rust = ($realfile =~ /\.rs$/);
-+      my $macro_pattern = $is_rust ? $macro_pattern_rust : $macro_pattern_c;
-+
-+      if ($line =~ /^\+/) {
-+        my $cleanline = $line;
-+        $cleanline =~ s/^[+\s]+//;
-+        $cleanline =~ s/\r?$//;
-+
-+        if ($cleanline =~ /$macro_pattern/) {
-+          my $macro_call = $1;
-+          my $string_arg = $2;
-+
-+          if ($string_arg !~ /\\n$/ && $string_arg !~ /\n$/) {
-+            my $lang = $is_rust ? "Rust" : "C";
-+            WARN("${lang}_LOG_NO_NEWLINE",
-+                 "Usage of $macro_call without a trailing newline. Consider adding '\\n'.\n" . $herecurr);
-+          }
-+        }
-+      }
-+    }
-+
- # check for .L prefix local symbols in .S files
- 		if ($realfile =~ /\.S$/ &&
- 		    $line =~ /^\+\s*(?:[A-Z]+_)?SYM_[A-Z]+_(?:START|END)(?:_[A-Z_]+)?\s*\(\s*\.L/) {
--- 
-2.48.1
+commit 1db806ec06b7c6e08e8af57088da067963ddf117
+Author: Jian-Hong Pan <jhp@endlessos.org>
+Date:   Fri Nov 15 15:22:02 2024 +0800
 
+   PCI/ASPM: Save parent L1SS config in pci_save_aspm_l1ss_state()
+
+   After 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
+   suspend/resume"), pci_save_aspm_l1ss_state(dev) saves the L1SS state for
+   "dev", and pci_restore_aspm_l1ss_state(dev) restores the state for both
+   "dev" and its parent.
+
+   The problem is that unless pci_save_state() has been used in some other
+   path and has already saved the parent L1SS state, we will restore junk t=
+o
+   the parent, which means the L1 Substates likely won't work correctly.
+
+   Save the L1SS config for both the device and its parent in
+   pci_save_aspm_l1ss_state().  When restoring, we need both because L1SS m=
+ust
+   be enabled at the parent (the Downstream Port) before being enabled at t=
+he
+   child (the Upstream Port).
+
+   Link: https://lore.kernel.org/r/20241115072200.37509-3-jhp@endlessos.org
+   Fixes: 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
+suspend/resume")
+   Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+   Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+   Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+   [bhelgaas: parallel save/restore structure, simplify commit log, patch a=
+t
+   https://lore.kernel.org/r/20241212230340.GA3267194@bhelgaas]
+   Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+   Tested-by: Jian-Hong Pan <jhp@endlessos.org> # Asus B1400CEAE
+
+broke system suspend/resume on my Dell XPS13 9360.  It doesn't even
+pass suspend/resume testing after "echo devices > /sys/power/pm_test".
+
+It looks like PCIe links are all down during resume after the above
+commit, but it is rather hard to collect any data in that state.
+
+Reverting the above commit on top of 6.14-rc1 makes things work again,
+no problem.
+
+I'm unsure what exactly the problem is ATM, but I'm going to check a
+couple of theories.
+
+Cheers, Rafael
