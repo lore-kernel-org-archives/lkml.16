@@ -1,104 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E5E20897F;
-	Mon,  3 Feb 2025 15:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04D820AF65;
+	Mon,  3 Feb 2025 15:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738595597; cv=none; b=Z9qnlosGUrn2floRhno1fYwq8EdzL1eZUxqSHtY9rKQVJRBApsuq5akRxNswsVltSYx1dQ+wawUpWjaJb9BJ4FrCzY/+U5AnPc5J1CA4sqtcIt4eJH766SAUR0Pftzj6ooZqfdbsqbhHjavqDpzjjj9AtHnrj7tzd1yNGw8z29s=
+	t=1738595601; cv=none; b=pz2okNsV+kP7MMlkL005qhmNSk+plBk6bpRTL768JW+fhkIpGjF050KPq6emRqAsHh0YAn9c00taKAIonU07cXXCYqTslH8UHRnLW+flJ44DVh5/jYjGP9iP1XzzkamwpcMb4wpZzMiMmbXfMR7MZ1HdMmFQolNoaVANJUHHdi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738595597; c=relaxed/simple;
-	bh=o4TKeGwyYGWwRMSOizbdGNnVjjPiXdFISziDxmcYmLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vx1HYXXhHmwDqqEJWIrawPvVFGdWspNGV/vFZNKs/fuueDlbrkTGv0IULaT/IAbZ+jMEXcoLyEBOscv+H+htlUaWkM8RhfYPfeHOMgxIzWOFJExDvgW38PjuHtCla3G2pyyOAPsNdYxQITRwJyGttwTyt/sWT5b0ToFcxvSEzyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i6e1UmoH; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738595601; c=relaxed/simple;
+	bh=S4iSdPY0u2qGzgIj6sz+1VT7L8s6eD4vS+xdZJk5T1Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JPdQKUXGE+9mIR/PK27Jq/7EP4AoMUnEGMeHexBe32EcEmBbsFkaOKjynAoFlDTFWYHx/+0EV65a9KuosPNAKS6oEjR7ee4iJvKNQV2O3h0mt3HIM7YK3zlxTnUHDTT7wK07FoIT03eMHui1tLokBkd2DmVKtSeos2GdyjOvlKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=ZkOGUhdE; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i6e1UmoH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738595596; x=1770131596;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o4TKeGwyYGWwRMSOizbdGNnVjjPiXdFISziDxmcYmLE=;
-  b=i6e1UmoHV0omftn9vgINvh+eKYDXkwAOgsaV1n6kqLCJsahAI2HLE4UA
-   C+gQF3AZoP7U7GT7dhCrFQTFSpV9nhZ6RK+dKZ0c/4LBsRrQ0C0SKiCyb
-   wnnORYtnTNT+TviaZRKjYdqEKnMbipBesAG4WrMx8dTcAA9ZtjsUNSLvW
-   CR09qMJ+nzE4/vBMc1D9FJyjlrHum2hQKsK6JovuJogZiYOSSD9DNFSju
-   GR6O5lFggxKCQj9wY3X1dquplXPCRAyXpTeZiJkv1IfgfFEQMp6/BL1CB
-   gWPWnDfkxK3/HEa12Aqjhy3FTUVreOLbNN4ieO6httx2RLxfzScDBR1fR
-   g==;
-X-CSE-ConnectionGUID: P9q9LcrcT7qk3jYk1KT4wQ==
-X-CSE-MsgGUID: zUcOPh0uQhanDcgRP2vXjQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="64447671"
-X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="64447671"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 07:13:15 -0800
-X-CSE-ConnectionGUID: 8mrLQktiSxafzYzdPn8Dpw==
-X-CSE-MsgGUID: VUllrVkMSva9wJGHo3ql+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="110480178"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 07:13:11 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tey8J-00000007rv9-3DiP;
-	Mon, 03 Feb 2025 17:13:07 +0200
-Date: Mon, 3 Feb 2025 17:13:07 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 1/3] driver core: add a faux bus for use when a simple
- device/bus is needed
-Message-ID: <Z6DdA_2w0QaRgPZo@smile.fi.intel.com>
-References: <2025020324-thermal-quilt-1bae@gregkh>
- <2025020326-backer-vendetta-7094@gregkh>
- <Z6DchyPieQKBJ0SN@smile.fi.intel.com>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="ZkOGUhdE"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id E560EA0E4F;
+	Mon,  3 Feb 2025 16:13:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=KsW8X9WKTUVjkLOMVLun4STQMn5HssaiU+p3WX0jzQw=; b=
+	ZkOGUhdEZdk7nZcdBpWIynCii/QLezGnYiubpZmIP1nbEsFPV/VrJIVF5IaJTpqo
+	gEgut8MklY1FQc38+jyXZMvY8iSMwvUu8b3dmlTU2nwZm9MQZ9SawibxDHCgXCFu
+	hz9epWJh5YtWkNHRY3uaUToFhOuyZ6dSRUWuBId4uqIfXqATAU3lxbV2xTEnzFk9
+	Q/8T3i4DVAFSfUrNQkheHUOu0Sf2Y7jvh+IpzuQb74CCMYCjHemWFctTXarz+f75
+	2t3Nmx1hAHSRNua1pk71sr7Fy7dM6YxjkgwbWGt7WSeBLo02Cjyzc8lqhhlGN9CD
+	Y+c+qbXBEQCs5h71oaXWm0qk0jd4KZqRVX/zqm20d8fOhwi9y21mR4G86V9sifxH
+	Yw/8tVr4gXcdrlXSn4KQN/Jd3s+P5BoAljXMkUuutV+Vdn5kGPk+cJPLvRwRrEAB
+	GXZ0kTJqgCfbAbzF7/I2DZfpYuu6+cP4ZHXDQCDtqoYFref5apShFiMGy2XvPUyx
+	bjWxjJ3r0FnMfzqHGTsdGvjK9Ql+e12nGZrBPNn3FjTKWzkzeSs6bLOKi44jwT7A
+	244J1GsxeZ//J+g+WT4qgGfuokPC+/hyJ08GdthvOUzBe+lpP/cPbDJ5AJaTfA5Z
+	3kqVPMLb0rYebPocaKcZaKetv4LYylaj2Q0PqdsThBE=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: Mark Brown <broonie@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Varshini Rajendran <varshini.rajendran@microchip.com>,
+	=?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>,
+	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: kernel test robot <lkp@intel.com>, Nicolas Ferre
+	<nicolas.ferre@microchip.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: [PATCH for-6.14] spi: atmel-quadspi: Fix warning in doc-comment
+Date: Mon, 3 Feb 2025 16:12:49 +0100
+Message-ID: <20250203151249.79876-2-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6DchyPieQKBJ0SN@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1738595593;VERSION=7984;MC=1580607873;ID=182239;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852667064
 
-On Mon, Feb 03, 2025 at 05:11:03PM +0200, Andy Shevchenko wrote:
-> On Mon, Feb 03, 2025 at 03:25:17PM +0100, Greg Kroah-Hartman wrote:
+The doc-comment for `struct atmel_qspi_pcal` had a typo in one of the
+struct members' name, causing a warning with the `W=1` option.
 
-...
+Fixes: 5af42209a4d2 ("spi: atmel-quadspi: Add support for sama7g5 QSPI")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202501311707.Ltj0qXse-lkp@intel.com/
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+---
+ drivers/spi/atmel-quadspi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> I don't remember by heart what it does include, I would go with IWYU principle
-> and list above all what we use.
-> 
-> container_of.h
-> device.h
-> export.h
-> printk.h
-
-> types.h
-
-Probably types.h is too much and stddef.h would suffice (as it provides NULL
-pointer definition).
-
+diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
+index abdc49d9d940..d8c9be64d006 100644
+--- a/drivers/spi/atmel-quadspi.c
++++ b/drivers/spi/atmel-quadspi.c
+@@ -235,8 +235,8 @@
+ /**
+  * struct atmel_qspi_pcal - Pad Calibration Clock Division
+  * @pclk_rate: peripheral clock rate.
+- * @pclkdiv: calibration clock division. The clock applied to the calibration
+- *           cell is divided by pclkdiv + 1.
++ * @pclk_div: calibration clock division. The clock applied to the calibration
++ *           cell is divided by pclk_div + 1.
+  */
+ struct atmel_qspi_pcal {
+ 	u32 pclk_rate;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.48.1
 
 
