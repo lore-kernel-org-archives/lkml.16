@@ -1,158 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC0C1D47AD;
-	Mon,  3 Feb 2025 19:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3F37081E;
+	Mon,  3 Feb 2025 19:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738612251; cv=none; b=aNlNoOOp2Nm48QV7Ng6qAH/pDc7u/2pjZr+3dESH+ALzba0DGsfbRF4uqK1Qs2pHFUhFwt96SrMKcrPvI50dnvQywbsxu6mumR6DVuCBD9Pu8aR4UEKgOSzwTrMg1miPkLbHF5+WetK0sIzUCmqBkayztTsCgPWX3JzjTCIVmyA=
+	t=1738612262; cv=none; b=p7WOXo1DebEr7WYNgI1xOkNarT1qDUyDmggF83d2FdNTbPj5Y3Py5wT1zRHdUQUwWLI4geI/F7sMk6rF2ulHGfonKgdsQLtqvdXbpPDg4T5++x2g3/5wb/D4+ifYSsq3WiCAIhfFtAK1TpdhILQDB0dzmiHBrKnJ7n+q+qT9N6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738612251; c=relaxed/simple;
-	bh=XGTTmaTbuMSIUnCt/V5Tc/8kvFz5nJOKfbKLcWa9s3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MAIAIGY62r5jijzJ1M0Ux/nV4V+fDsVgt/+Koa+kz2qDj00+RAhjDZHxcNuSRehmzCsN29Eyid0sYoykcK3eGxitQt2y2ZX+BrjzIzWNqxu/OqVw5DQURbhs8T+bRuIJAUo/7IkeNLFzMO/8shM8XASgSedcs1bTmaFojPhUtAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAXZqrDi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738612262; c=relaxed/simple;
+	bh=hp3kp06KNDlIfdhHyemJW+gaT7pV1t52585ZKC6oSJc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XuFQxGfx/44giEPum8gX3thG8rtVlXiKGHV3XLrpezzvrn5Qg+wt62dK4nHhYpSIsIe7nRaXViNp3K9+0ego9MbZGGqDx1oyHa5qKQb8S9johagcuqYVOWVbZTag9uI6zlgylTF1PuzyUUlhwEmSRAPomHfXvvjCdVAt5KgcC+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=gRITsGv7; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAXZqrDi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0FB8C4CED2;
-	Mon,  3 Feb 2025 19:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738612250;
-	bh=XGTTmaTbuMSIUnCt/V5Tc/8kvFz5nJOKfbKLcWa9s3Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bAXZqrDiQryC0tZT1Jvjwk0Hug2a/rdR9Nw+kTstb0+BCXLrUOuSQbo1lVNQ2vmSi
-	 K1tImNuPQdfBlAMkQL6jOnwINQ3bYRrRJT3pqTwxAwuS8kfwiNUXlcwlhNgNOLgj11
-	 +MWeuhHdpwvVW+kzNtlI3ZE1qn26hGWUmJzyiNyyUVcp63QMwW3b+S0jmYc/5g4Ay2
-	 tte+dvrLu3DOqnqk0g8fgdWQZpfjbS2KE7wNbHASFpK8NmqSwoCxbcwqIrK4IdMg+D
-	 n8yL1s/oeiWuWMr66w06GKok5qw1gS8x8m4DJgyReEPoMOMWeR2ydjXhSHWq0NwYTs
-	 D1QGf0cmG5mpg==
-Date: Mon, 3 Feb 2025 19:50:44 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Quentin Perret <qperret@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Fuad Tabba <tabba@google.com>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Sebastian Ene <sebastianene@google.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 09/18] KVM: arm64: Introduce __pkvm_vcpu_{load,put}()
-Message-ID: <5ca7588c-7bf2-4352-8661-e4a56a9cd9aa@sirena.org.uk>
-References: <20241218194059.3670226-1-qperret@google.com>
- <20241218194059.3670226-10-qperret@google.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="gRITsGv7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1738612254;
+	bh=hp3kp06KNDlIfdhHyemJW+gaT7pV1t52585ZKC6oSJc=;
+	h=From:Date:Subject:To:Cc:From;
+	b=gRITsGv7Z4uS4EaXFKusUSOMCI2J716Ij6lJ5HOJ/szNyDaihM7IPKOiTF5LEtlQr
+	 ASbIgHawhLFYQMufmtZG+YDhwYRbOUCM8/6zFBWhXeqxY3N1aSNaDEdgY5KQ+74M89
+	 QMbsAAyos62TdncKO1QjQP2azNJaM8uaDBZoY0WQ=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Mon, 03 Feb 2025 20:50:46 +0100
+Subject: [PATCH net] ptp: Add mock device
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ANfi4BZEZ3mG3n3g"
-Content-Disposition: inline
-In-Reply-To: <20241218194059.3670226-10-qperret@google.com>
-X-Cookie: Happiness is a positive cash flow.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250203-ptp-mock-dev-v1-1-f84c56fd9e45@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIABUeoWcC/x3MTQqAIBBA4avErBswI/q5SrQQZ6ohMtGQQLp70
+ vJbvJchchCOMFUZAieJcrmCpq7A7sZtjELFoJXuVKM1+tvjedkDiROawVJLbU8jj1ASH3iV59/
+ N4PiG5X0/6O2/VWMAAAA=
+X-Change-ID: 20250122-ptp-mock-dev-a8cd3d37d9e9
+To: Richard Cochran <richardcochran@gmail.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738612254; l=3096;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=hp3kp06KNDlIfdhHyemJW+gaT7pV1t52585ZKC6oSJc=;
+ b=3JBt5DetI2u4KUE5vSnBVYw61iiWTAk6HT3TrEC3soqGVYnt+yKu8MtR3nVEKYphRYjja4O6Z
+ hQFtxypsFDCCqad2lPRAMt8Ezz0jm66bt/9jtopSItpDAsc/23jc854
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
+While working on the PTP core or userspace components,
+a real PTP device is not always available.
+Introduce a tiny module which creates a mock PTP device.
 
---ANfi4BZEZ3mG3n3g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ drivers/ptp/Kconfig        | 10 ++++++++++
+ drivers/ptp/Makefile       |  1 +
+ drivers/ptp/ptp_mock_dev.c | 32 ++++++++++++++++++++++++++++++++
+ 3 files changed, 43 insertions(+)
 
-On Wed, Dec 18, 2024 at 07:40:50PM +0000, Quentin Perret wrote:
-> From: Marc Zyngier <maz@kernel.org>
->=20
-> Rather than look-up the hyp vCPU on every run hypercall at EL2,
-> introduce a per-CPU 'loaded_hyp_vcpu' tracking variable which is updated
-> by a pair of load/put hypercalls called directly from
-> kvm_arch_vcpu_{load,put}() when pKVM is enabled.
+diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
+index 07bf7f9aae019ca26aa6d39a3c19b9dd0420f9bb..f0bbf0cbf13fb89c8cbf8934f6f2f0b81e622466 100644
+--- a/drivers/ptp/Kconfig
++++ b/drivers/ptp/Kconfig
+@@ -195,6 +195,16 @@ config PTP_1588_CLOCK_MOCK
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called ptp_mock.
+ 
++config PTP_1588_CLOCK_MOCK_DEV
++	tristate "Mock-up PTP clock device"
++	depends on PTP_1588_CLOCK_MOCK
++	help
++	  Instantiante a dummy PTP clock device derived from the system
++	  monotonic time.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called ptp_mock_dev.
++
+ config PTP_1588_CLOCK_VMW
+ 	tristate "VMware virtual PTP clock"
+ 	depends on ACPI && HYPERVISOR_GUEST && X86
+diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
+index 25f846fe48c9f0406a02c75d83027a0e6cfa10bf..216065f68e152963b35c55594ec1fd0b33db097a 100644
+--- a/drivers/ptp/Makefile
++++ b/drivers/ptp/Makefile
+@@ -19,6 +19,7 @@ obj-$(CONFIG_PTP_1588_CLOCK_IDTCM)	+= ptp_clockmatrix.o
+ obj-$(CONFIG_PTP_1588_CLOCK_FC3W)	+= ptp_fc3.o
+ obj-$(CONFIG_PTP_1588_CLOCK_IDT82P33)	+= ptp_idt82p33.o
+ obj-$(CONFIG_PTP_1588_CLOCK_MOCK)	+= ptp_mock.o
++obj-$(CONFIG_PTP_1588_CLOCK_MOCK_DEV)	+= ptp_mock_dev.o
+ obj-$(CONFIG_PTP_1588_CLOCK_VMW)	+= ptp_vmw.o
+ obj-$(CONFIG_PTP_1588_CLOCK_OCP)	+= ptp_ocp.o
+ obj-$(CONFIG_PTP_DFL_TOD)		+= ptp_dfl_tod.o
+diff --git a/drivers/ptp/ptp_mock_dev.c b/drivers/ptp/ptp_mock_dev.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..3423e2f0c45a4082875c2e031883735388d27b64
+--- /dev/null
++++ b/drivers/ptp/ptp_mock_dev.c
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright 2025 Thomas Weißschuh <linux@weissschuh.net>
++ *
++ * Mock-up PTP Hardware Clock device
++ *
++ * Create a PTP device which offers PTP time manipulation operations
++ * using a timecounter/cyclecounter on top of CLOCK_MONOTONIC_RAW.
++ */
++
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/ptp_mock.h>
++
++static struct mock_phc *phc;
++
++static int __init ptp_mock_dev_init(void)
++{
++	phc = mock_phc_create(NULL);
++	return PTR_ERR_OR_ZERO(phc);
++}
++module_init(ptp_mock_dev_init);
++
++static void __exit ptp_mock_dev_exit(void)
++{
++	mock_phc_destroy(phc);
++}
++module_exit(ptp_mock_dev_exit);
++
++MODULE_DESCRIPTION("Mock-up PTP Hardware Clock device");
++MODULE_AUTHOR("Thomas Weißschuh <linux@weissschuh.net>");
++MODULE_LICENSE("GPL");
 
-Current mainline crashes when running the arch_timer_edge_cases selftest
-in pKVM mode on a LibreTech Le Potato board, with a bisection pointing
-at this change.  The system dies like this:
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250122-ptp-mock-dev-a8cd3d37d9e9
 
-# selftests: kvm: arch_timer_edge_cases
-[  130.599140] kvm [4518]: nVHE hyp panic at: [<ffff800081102b58>] __kvm_nv=
-he___vgic_v3_restore_vmcr_aprs+0x8/0x84!
-[  130.603685] kvm [4518]: Cannot dump pKVM nVHE stacktrace: !CONFIG_PROTEC=
-TED_NVHE_STACKTRACE
-[  130.611962] kvm [4518]: Hyp Offset: 0xfffeca95ed000000
-[  130.617053] Kernel panic - not syncing: HYP panic:
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
 
-Full log:
-
-   https://lava.sirena.org.uk/scheduler/job/1092083
-
-Bisection log:
-
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [2014c95afecee3e76ca4a56956a936e23283f05b] Linux 6.14-rc1
-git bisect bad 2014c95afecee3e76ca4a56956a936e23283f05b
-# status: waiting for good commit(s), bad commit known
-# good: [ffd294d346d185b70e28b1a28abe367bbfe53c04] Linux 6.13
-git bisect good ffd294d346d185b70e28b1a28abe367bbfe53c04
-# good: [6250ebe666e425e173df5e11e8a612d57921f48d] i2c: Fix core-managed pe=
-r-client debugfs handling
-git bisect good 6250ebe666e425e173df5e11e8a612d57921f48d
-# good: [647d69605c70368d54fc012fce8a43e8e5955b04] Merge tag 'pci-v6.14-cha=
-nges' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci
-git bisect good 647d69605c70368d54fc012fce8a43e8e5955b04
-# good: [13845bdc869f136f92ad3d40ea09b867bb4ce467] Merge tag 'char-misc-6.1=
-4-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
-git bisect good 13845bdc869f136f92ad3d40ea09b867bb4ce467
-# bad: [9f10e7fb6a06bce4f81de5fd0f2f0390f99e89e4] Merge tag 'phy-for-6.14' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy
-git bisect bad 9f10e7fb6a06bce4f81de5fd0f2f0390f99e89e4
-# bad: [58f504efcda54a9079a38203acc088c3354aaa60] Merge tag 'tty-6.14-rc1' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty
-git bisect bad 58f504efcda54a9079a38203acc088c3354aaa60
-# good: [a37eea94f775132866ecdd466fd88027d7125515] Merge tag 'sparc-for-6.1=
-4-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/alarsson/linux-spa=
-rc
-git bisect good a37eea94f775132866ecdd466fd88027d7125515
-# bad: [5e68d2eeac70978a06406c5b156815ceb00437f9] Merge branch kvm-arm64/pk=
-vm-memshare-declutter into kvmarm-master/next
-git bisect bad 5e68d2eeac70978a06406c5b156815ceb00437f9
-# bad: [d0670128d42fa170bf8ba878cd23504c5c5cccc7] Merge branch kvm-arm64/pk=
-vm-np-guest into kvmarm-master/next
-git bisect bad d0670128d42fa170bf8ba878cd23504c5c5cccc7
-# good: [c4a6ed85455979ef3fbadc2f1bdf18734b0ecea6] KVM: arm64: Promote gues=
-t ownership for DBGxVR/DBGxCR reads
-git bisect good c4a6ed85455979ef3fbadc2f1bdf18734b0ecea6
-# bad: [d0bd3e6570aee42766e7bd884734ae078667ea1e] KVM: arm64: Introduce __p=
-kvm_host_share_guest()
-git bisect bad d0bd3e6570aee42766e7bd884734ae078667ea1e
-# good: [5398ddc5c90bd418b90d859e9267aa39399021af] KVM: arm64: Pass walk fl=
-ags to kvm_pgtable_stage2_mkyoung
-git bisect good 5398ddc5c90bd418b90d859e9267aa39399021af
-# good: [c77e5181fed54b25d489eb7d2ccb5c1c72a1063c] KVM: arm64: Make kvm_pgt=
-able_stage2_init() a static inline function
-git bisect good c77e5181fed54b25d489eb7d2ccb5c1c72a1063c
-# bad: [f7d03fcbf1f482069e9afac55b17de3bd323b8f6] KVM: arm64: Introduce __p=
-kvm_vcpu_{load,put}()
-git bisect bad f7d03fcbf1f482069e9afac55b17de3bd323b8f6
-# good: [99996d575ee69d4327bad98a0148729b73dde23a] KVM: arm64: Add {get,put=
-}_pkvm_hyp_vm() helpers
-git bisect good 99996d575ee69d4327bad98a0148729b73dde23a
-# first bad commit: [f7d03fcbf1f482069e9afac55b17de3bd323b8f6] KVM: arm64: =
-Introduce __pkvm_vcpu_{load,put}()
-
---ANfi4BZEZ3mG3n3g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmehHhMACgkQJNaLcl1U
-h9DQ7Af+P8sebWSERdjUjYV29cH9b32wtbxJMRD1Dyu0ctLbCzNOmkbja6PAw6gg
-WWur9Ds0FBcbMpWutMe3tQIF6r9ZZYobChRBsdqLRjz+hIwngMxicmhhM2vvXc7t
-D4Z8ayasEqR7OjLfEHc+lnVsgYtaswDKQq0ABGSWJhEsBSnP45Z1qqslLxiqItUq
-L2+OjIgJ0R95hsceAWbBaTmOVfzFhVHkABPqDIVLE/lWTWN+I24DABPW8KdnpGE3
-L1D6Cdw2jz2Sbi1/wzs12TorVXKRUmfTPtQtcInQNSdW1RIXeFgtlEY8f2c9fexp
-1aJFPcx2HxUBLJGMrnO6kx1IwN0xdQ==
-=8hjS
------END PGP SIGNATURE-----
-
---ANfi4BZEZ3mG3n3g--
