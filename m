@@ -1,95 +1,58 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5062E200BB8;
-	Mon,  3 Feb 2025 10:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60E9B201004;
+	Mon,  3 Feb 2025 10:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738578516; cv=none; b=qNxywJ4g/Gk8q38tKtUKH300J2ah1vvQKCYorceRWT7meUmTylxnwADkGpvQyS+Rr3n5ZtZiQ9F5HwLY/IFQXD5DfDn8KPcJciudp93xYS0KP93DxEGs56vEKjfrldR0ja6DsKoOePZ/SScShdTNPqf5ApMk2hP7xyeGDH6GnFo=
+	t=1738578522; cv=none; b=iKlf956l74fiXfkrEEhz7vJH8XvCuMCIRjrtHnxlxEqhKXaVUKN5ptoa4ZYFor4YKX6ep/sXe0ccb24Cfc7R4l5dujxhFp3hA2QquzX0AzD+wKgW1X7YWYIZ9EgbUrrPKVzNotupFnlFlqKw275WvVpGwnTy3o01q1KS0kJlCzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738578516; c=relaxed/simple;
-	bh=MlNHsg/gxgAAeqVoARH0hmwihkHAT7u67iNVvdULCo0=;
+	s=arc-20240116; t=1738578522; c=relaxed/simple;
+	bh=SEecTV1bnkNXUlPaP/XgOOlWWEdD99QLzD/abt2KcWs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ulEDyUxT9KGKmuGa61Iu8/inR+15qZH/5isqB8WvE2YLzCW0KpUOlA7xZUgg2ono5E9w18iDh9Bdc1mteq1E/WjPh++jT3EpPcZQbUzN6h70fjCnUsekvyUYH+2sUWaDpmjJ/P3Cik8AqzDI4AEYJwib6RBqD4BjHJGSoo3Diks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=y2kiDFQh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=E7nPughJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RczhdfHq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+Z4iZ2UX; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="y2kiDFQh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="E7nPughJ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RczhdfHq";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+Z4iZ2UX"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 16B7A1F38F;
-	Mon,  3 Feb 2025 10:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738578508; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nLSzGwXdhOZPlEdl06Qid/R1NcEi8kZ3F3GMl7r9kco=;
-	b=y2kiDFQh8FS3sbgOBnGNwjNbNhvzHozDVPNByMSsLI5hhktN7HD3g3Rs78FdOHVqLUCabZ
-	WA2M50OvnJZRHfgkg+kpvoQ7f4la2J08ZFruuH8+6tHeLwdQAVFd3TZ0noD2sxqM6qVx1z
-	LuxR6TfoRRR6ptID0HLfH1QRbgYpf8Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738578508;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nLSzGwXdhOZPlEdl06Qid/R1NcEi8kZ3F3GMl7r9kco=;
-	b=E7nPughJi/dc4KRWyhWU6/OxAN6M77uRCJxXzxoh/538KKb0mbmg/bB4m1ZpDJtePB9fUQ
-	rd/AEKkpz1iRvNDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738578504; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nLSzGwXdhOZPlEdl06Qid/R1NcEi8kZ3F3GMl7r9kco=;
-	b=RczhdfHqsN2OXR8RcctDeOQQ82NtnYSEUoBvHRO2Qd5cM8p/W+p8EN0+ah+lgv3LUtYuyx
-	y68Aof83rkUtmUwYjIdp506ITcBQaZ0ge4t+vIWq9sYOgDUok4yjK+Cr5/sbiLyaoDcCvc
-	XuEMkk2lURlYwzl3Myy79Pcb2zBFMGY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738578504;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nLSzGwXdhOZPlEdl06Qid/R1NcEi8kZ3F3GMl7r9kco=;
-	b=+Z4iZ2UX4gDee8pSXAKTRqP9nttA0DS8kDHhHWfG1yTmeTXoEUYlc2RDKj8orPNBcAt9CC
-	WgemUkcuG4U5zyAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BD6A613AF1;
-	Mon,  3 Feb 2025 10:28:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id APrsLEeaoGfwcwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 03 Feb 2025 10:28:23 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: daniel@zonque.org,
-	haojian.zhuang@gmail.com,
-	robert.jarzmik@free.fr,
-	linux@armlinux.org.uk,
-	krzk@kernel.org,
-	alim.akhtar@samsung.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 2/2] ARM: s3c: Do not include <linux/fb.h>
-Date: Mon,  3 Feb 2025 11:26:36 +0100
-Message-ID: <20250203102818.56747-3-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250203102818.56747-1-tzimmermann@suse.de>
-References: <20250203102818.56747-1-tzimmermann@suse.de>
+	 MIME-Version; b=TVUGAK+yP1+OkbSxh4HI5eKCKiI7efWdS6u+LNzJZO7Yk9f+EY52LiYiQD7x+xN4E61BmS2VfIWAwTNKR9odrnhjTBQXGCgH6XBaRwJNfW2ptPQ0TL6+kUk5rkg9C/FZMP/6J3tWnaja3ygldpWxeKi78zT4V2wHs5uvoHoLgBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0159F1A32;
+	Mon,  3 Feb 2025 02:29:04 -0800 (PST)
+Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F1B53F63F;
+	Mon,  3 Feb 2025 02:28:35 -0800 (PST)
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+To: linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Howells <dhowells@redhat.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@chromium.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Kees Cook <kees@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	Quentin Perret <qperret@google.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org,
+	x86@kernel.org
+Subject: [RFC PATCH 3/8] slab: Introduce SLAB_SET_PKEY
+Date: Mon,  3 Feb 2025 10:28:04 +0000
+Message-ID: <20250203102809.1223255-4-kevin.brodsky@arm.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250203102809.1223255-1-kevin.brodsky@arm.com>
+References: <20250203102809.1223255-1-kevin.brodsky@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,67 +60,286 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-5.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_COUNT_TWO(0.00)[2];
-	FREEMAIL_TO(0.00)[zonque.org,gmail.com,free.fr,armlinux.org.uk,kernel.org,samsung.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[free.fr,gmail.com]
-X-Spam-Score: -5.30
-X-Spam-Flag: NO
 
-These ARM architecture's source files do not require <linux/fb.h>.
-Remove the include statements.
+Introduce the SLAB_SET_PKEY flag to request a kmem_cache whose slabs
+are mapped with a non-default pkey, if kernel pkeys (kpkeys) are
+supported. The pkey to be used is specified via a new pkey field in
+struct kmem_cache_args.
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+The setting/resetting of the pkey is done directly at the slab level
+(allocate_slab/__free_slab) to avoid having to propagate the pkey
+value down to the page level.
+
+Memory mapped with a non-default pkey cannot be written to at the
+default kpkeys level. This is handled by switching to the
+unrestricted kpkeys level (granting write access to all pkeys) when
+writing to a slab with SLAB_SET_PKEY.
+
+The merging of slabs with SLAB_SET_PKEY is conservatively prevented,
+though it should be possible to merge slabs with the same configured
+pkey.
+
+Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/arm/mach-s3c/devs.c                   | 1 -
- arch/arm/mach-s3c/setup-fb-24bpp-s3c64xx.c | 1 -
- 2 files changed, 2 deletions(-)
+ include/linux/slab.h | 21 ++++++++++++++++
+ mm/slab.h            |  7 +++++-
+ mm/slab_common.c     |  2 +-
+ mm/slub.c            | 58 +++++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 85 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-s3c/devs.c b/arch/arm/mach-s3c/devs.c
-index 8c26d592d2a3f..bab2abd8a34ae 100644
---- a/arch/arm/mach-s3c/devs.c
-+++ b/arch/arm/mach-s3c/devs.c
-@@ -19,7 +19,6 @@
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/dma-mapping.h>
--#include <linux/fb.h>
- #include <linux/gfp.h>
- #include <linux/mmc/host.h>
- #include <linux/ioport.h>
-diff --git a/arch/arm/mach-s3c/setup-fb-24bpp-s3c64xx.c b/arch/arm/mach-s3c/setup-fb-24bpp-s3c64xx.c
-index cfa34b55ca214..c3269cd6a8486 100644
---- a/arch/arm/mach-s3c/setup-fb-24bpp-s3c64xx.c
-+++ b/arch/arm/mach-s3c/setup-fb-24bpp-s3c64xx.c
-@@ -9,7 +9,6 @@
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 09eedaecf120..cc2e757b16ec 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -58,6 +58,9 @@ enum _slab_flag_bits {
+ 	_SLAB_CMPXCHG_DOUBLE,
+ #ifdef CONFIG_SLAB_OBJ_EXT
+ 	_SLAB_NO_OBJ_EXT,
++#endif
++#ifdef CONFIG_ARCH_HAS_KPKEYS
++	_SLAB_SET_PKEY,
+ #endif
+ 	_SLAB_FLAGS_LAST_BIT
+ };
+@@ -234,6 +237,12 @@ enum _slab_flag_bits {
+ #define SLAB_NO_OBJ_EXT		__SLAB_FLAG_UNUSED
+ #endif
  
- #include <linux/kernel.h>
- #include <linux/types.h>
--#include <linux/fb.h>
- #include <linux/gpio.h>
++#ifdef CONFIG_ARCH_HAS_KPKEYS
++#define SLAB_SET_PKEY		__SLAB_FLAG_BIT(_SLAB_SET_PKEY)
++#else
++#define SLAB_SET_PKEY		__SLAB_FLAG_UNUSED
++#endif
++
+ /*
+  * freeptr_t represents a SLUB freelist pointer, which might be encoded
+  * and not dereferenceable if CONFIG_SLAB_FREELIST_HARDENED is enabled.
+@@ -331,6 +340,18 @@ struct kmem_cache_args {
+ 	 * %NULL means no constructor.
+ 	 */
+ 	void (*ctor)(void *);
++	/**
++	 * @pkey: The pkey to map the allocated pages with.
++	 *
++	 * If the SLAB flags include SLAB_SET_PKEY, and if kernel pkeys are
++	 * supported, objects are allocated in pages mapped with the protection
++	 * key specified by @pkey. Otherwise, this field is ignored.
++	 *
++	 * Note that if @pkey is a non-default pkey, some overhead is incurred
++	 * when internal slab functions switch the pkey register to write to the
++	 * slab (e.g. setting a free pointer).
++	 */
++	int pkey;
+ };
  
- #include "fb.h"
+ struct kmem_cache *__kmem_cache_create_args(const char *name,
+diff --git a/mm/slab.h b/mm/slab.h
+index 1a081f50f947..d5cf5927634a 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -311,6 +311,10 @@ struct kmem_cache {
+ 	unsigned int usersize;		/* Usercopy region size */
+ #endif
+ 
++#ifdef CONFIG_ARCH_HAS_KPKEYS
++	int pkey;
++#endif
++
+ 	struct kmem_cache_node *node[MAX_NUMNODES];
+ };
+ 
+@@ -462,7 +466,8 @@ static inline bool is_kmalloc_normal(struct kmem_cache *s)
+ 			 SLAB_TYPESAFE_BY_RCU | SLAB_DEBUG_OBJECTS | \
+ 			 SLAB_NOLEAKTRACE | SLAB_RECLAIM_ACCOUNT | \
+ 			 SLAB_TEMPORARY | SLAB_ACCOUNT | \
+-			 SLAB_NO_USER_FLAGS | SLAB_KMALLOC | SLAB_NO_MERGE)
++			 SLAB_NO_USER_FLAGS | SLAB_KMALLOC | SLAB_NO_MERGE | \
++			 SLAB_SET_PKEY)
+ 
+ #define SLAB_DEBUG_FLAGS (SLAB_RED_ZONE | SLAB_POISON | SLAB_STORE_USER | \
+ 			  SLAB_TRACE | SLAB_CONSISTENCY_CHECKS)
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 69f9afd85f9f..21323d2a108e 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -47,7 +47,7 @@ struct kmem_cache *kmem_cache;
+  */
+ #define SLAB_NEVER_MERGE (SLAB_RED_ZONE | SLAB_POISON | SLAB_STORE_USER | \
+ 		SLAB_TRACE | SLAB_TYPESAFE_BY_RCU | SLAB_NOLEAKTRACE | \
+-		SLAB_FAILSLAB | SLAB_NO_MERGE)
++		SLAB_FAILSLAB | SLAB_NO_MERGE | SLAB_SET_PKEY)
+ 
+ #define SLAB_MERGE_SAME (SLAB_RECLAIM_ACCOUNT | SLAB_CACHE_DMA | \
+ 			 SLAB_CACHE_DMA32 | SLAB_ACCOUNT)
+diff --git a/mm/slub.c b/mm/slub.c
+index 1f50129dcfb3..75b543e255d9 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -42,6 +42,7 @@
+ #include <kunit/test.h>
+ #include <kunit/test-bug.h>
+ #include <linux/sort.h>
++#include <linux/set_memory.h>
+ 
+ #include <linux/debugfs.h>
+ #include <trace/events/kmem.h>
+@@ -459,6 +460,15 @@ static nodemask_t slab_nodes;
+ static struct workqueue_struct *flushwq;
+ #endif
+ 
++#ifdef CONFIG_ARCH_HAS_KPKEYS
++KPKEYS_GUARD_COND(kpkeys_slab_write,
++		    KPKEYS_LVL_UNRESTRICTED,
++		    unlikely(s->flags & SLAB_SET_PKEY),
++		    struct kmem_cache *s)
++#else
++KPKEYS_GUARD_NOOP(kpkeys_slab_write, struct kmem_cache *s)
++#endif
++
+ /********************************************************************
+  * 			Core slab cache functions
+  *******************************************************************/
+@@ -545,6 +555,8 @@ static inline void set_freepointer(struct kmem_cache *s, void *object, void *fp)
+ 	BUG_ON(object == fp); /* naive detection of double free or corruption */
+ #endif
+ 
++	guard(kpkeys_slab_write)(s);
++
+ 	freeptr_addr = (unsigned long)kasan_reset_tag((void *)freeptr_addr);
+ 	*(freeptr_t *)freeptr_addr = freelist_ptr_encode(s, fp, freeptr_addr);
+ }
+@@ -765,6 +777,8 @@ static inline void set_orig_size(struct kmem_cache *s,
+ 	p += get_info_end(s);
+ 	p += sizeof(struct track) * 2;
+ 
++	guard(kpkeys_slab_write)(s);
++
+ 	*(unsigned int *)p = orig_size;
+ }
+ 
+@@ -949,6 +963,8 @@ static void set_track_update(struct kmem_cache *s, void *object,
+ {
+ 	struct track *p = get_track(s, object, alloc);
+ 
++	guard(kpkeys_slab_write)(s);
++
+ #ifdef CONFIG_STACKDEPOT
+ 	p->handle = handle;
+ #endif
+@@ -973,6 +989,8 @@ static void init_tracking(struct kmem_cache *s, void *object)
+ 	if (!(s->flags & SLAB_STORE_USER))
+ 		return;
+ 
++	guard(kpkeys_slab_write)(s);
++
+ 	p = get_track(s, object, TRACK_ALLOC);
+ 	memset(p, 0, 2*sizeof(struct track));
+ }
+@@ -1137,6 +1155,8 @@ static void init_object(struct kmem_cache *s, void *object, u8 val)
+ 	u8 *p = kasan_reset_tag(object);
+ 	unsigned int poison_size = s->object_size;
+ 
++	guard(kpkeys_slab_write)(s);
++
+ 	if (s->flags & SLAB_RED_ZONE) {
+ 		/*
+ 		 * Here and below, avoid overwriting the KMSAN shadow. Keeping
+@@ -2335,6 +2355,8 @@ bool slab_free_hook(struct kmem_cache *s, void *x, bool init,
+ 		int rsize;
+ 		unsigned int inuse, orig_size;
+ 
++		guard(kpkeys_slab_write)(s);
++
+ 		inuse = get_info_end(s);
+ 		orig_size = get_orig_size(s, x);
+ 		if (!kasan_has_integrated_init())
+@@ -2563,6 +2585,8 @@ static __always_inline void unaccount_slab(struct slab *slab, int order,
+ 			    -(PAGE_SIZE << order));
+ }
+ 
++static void __free_slab(struct kmem_cache *s, struct slab *slab);
++
+ static struct slab *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
+ {
+ 	struct slab *slab;
+@@ -2612,6 +2636,18 @@ static struct slab *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
+ 
+ 	setup_slab_debug(s, slab, start);
+ 
++#ifdef CONFIG_ARCH_HAS_KPKEYS
++	if (unlikely(s->flags & SLAB_SET_PKEY)) {
++		int ret = set_memory_pkey((unsigned long)start,
++					  1 << oo_order(oo), s->pkey);
++
++		if (WARN_ON(ret)) {
++			__free_slab(s, slab);
++			return NULL;
++		}
++	}
++#endif
++
+ 	shuffle = shuffle_freelist(s, slab);
+ 
+ 	if (!shuffle) {
+@@ -2652,6 +2688,11 @@ static void __free_slab(struct kmem_cache *s, struct slab *slab)
+ 	__folio_clear_slab(folio);
+ 	mm_account_reclaimed_pages(pages);
+ 	unaccount_slab(slab, order, s);
++#ifdef CONFIG_ARCH_HAS_KPKEYS
++	if (unlikely(s->flags & SLAB_SET_PKEY))
++		WARN_ON(set_memory_pkey((unsigned long)folio_address(folio),
++					pages, 0));
++#endif
+ 	free_frozen_pages(&folio->page, order);
+ }
+ 
+@@ -4053,9 +4094,11 @@ static __always_inline void maybe_wipe_obj_freeptr(struct kmem_cache *s,
+ 						   void *obj)
+ {
+ 	if (unlikely(slab_want_init_on_free(s)) && obj &&
+-	    !freeptr_outside_object(s))
++	    !freeptr_outside_object(s)) {
++		guard(kpkeys_slab_write)(s);
+ 		memset((void *)((char *)kasan_reset_tag(obj) + s->offset),
+ 			0, sizeof(void *));
++	}
+ }
+ 
+ static __fastpath_inline
+@@ -4798,6 +4841,7 @@ __do_krealloc(const void *p, size_t new_size, gfp_t flags)
+ 	/* Zero out spare memory. */
+ 	if (want_init_on_alloc(flags)) {
+ 		kasan_disable_current();
++		guard(kpkeys_slab_write)(s);
+ 		if (orig_size && orig_size < new_size)
+ 			memset(kasan_reset_tag(p) + orig_size, 0, new_size - orig_size);
+ 		else
+@@ -4807,6 +4851,7 @@ __do_krealloc(const void *p, size_t new_size, gfp_t flags)
+ 
+ 	/* Setup kmalloc redzone when needed */
+ 	if (s && slub_debug_orig_size(s)) {
++		guard(kpkeys_slab_write)(s);
+ 		set_orig_size(s, (void *)p, new_size);
+ 		if (s->flags & SLAB_RED_ZONE && new_size < ks)
+ 			memset_no_sanitize_memory(kasan_reset_tag(p) + new_size,
+@@ -6162,6 +6207,17 @@ int do_kmem_cache_create(struct kmem_cache *s, const char *name,
+ 	s->useroffset = args->useroffset;
+ 	s->usersize = args->usersize;
+ #endif
++#ifdef CONFIG_ARCH_HAS_KPKEYS
++	s->pkey = args->pkey;
++
++	if (s->flags & SLAB_SET_PKEY) {
++		if (s->pkey >= arch_max_pkey())
++			goto out;
++
++		if (!arch_kpkeys_enabled() || s->pkey == KPKEYS_PKEY_DEFAULT)
++			s->flags &= ~SLAB_SET_PKEY;
++	}
++#endif
+ 
+ 	if (!calculate_sizes(args, s))
+ 		goto out;
 -- 
-2.48.1
+2.47.0
 
