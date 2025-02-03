@@ -1,143 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D659D1D7E50;
-	Mon,  3 Feb 2025 08:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB3D1D7E50;
+	Mon,  3 Feb 2025 08:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738571938; cv=none; b=oetnAs9NABpTjk5SPHi27TeHjWdnsDphqcM6jpzT63dESggPpC8XkcvgVtamMOPj2jZA5b3zuZVerDsYAVhlafVpJpz4UdRg1DHv5qvcCVouCx0Ri3cPibfn+VvA5ATfzOFDNbkvimOuok7M3qi2zBC96Sl7wSGx9567dEA6AH0=
+	t=1738572011; cv=none; b=cM5LpnVnOt7nyhOVUEkxA9eKix6HKCbXLwYYiQadZ/hNUNBe6GEN8Ven2qxzwpCeqDF7NhJ0CIf0nV8jzloFzFnPXQDrtvFrU7u6Q67VPKkqS5ID0LB6W/ZO2UJ86zxOwZoPxKZpPo774P2eD5+lhRIn8X7ApSvbP8PTnsEHH3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738571938; c=relaxed/simple;
-	bh=tn2D/VXU3gO/10cPKSVc8ExofoOyoDNBmyGrz4AHorQ=;
+	s=arc-20240116; t=1738572011; c=relaxed/simple;
+	bh=7nb8HRa0cFbzBFBnN4bI0GsAQD01kUzx8HOrS7jz88s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LgC9ALmLcfFouFN4Tbmhymdcw9ZhrW5GHzj90wyZuz2OZuQdsfsj4xdelz/ephU9auzFsCkJhiorVhBJNkWwCCINqVHhY3fQ/qissI9DywuPM19j9qKM0KXdt3v4KQsRGxYsHMgcwB8qlxcfo+AGzkslewWZMsKmUi62zSnO7aY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJD1AePS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QPYuRk6PoZJqZ9J/Mcv12c900tB8VCaX4S8WrwjydnOqPRH9LxRTCgCPGJuLLDoX8w+gRgMm9yTR4Zr7rhI0nuQkrBuz9AffO4jkG0TiRHVfoVyH81uJw/JJ+jpTtdwxOYKGnCFlHMyJSAzYCM3TzRzLTSAOdGoDlKh/jI1LCUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PTnlTc6W; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJD1AePS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D083C4CED2;
-	Mon,  3 Feb 2025 08:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738571937;
-	bh=tn2D/VXU3gO/10cPKSVc8ExofoOyoDNBmyGrz4AHorQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XJD1AePSGYwbioAb3WD4/DaRdqVJx86k9Bzfr76DIsjvOVKDl3UpC5Z8mWTjmylg1
-	 Bc8CUIz4LWEhU57kSly8ZnU3sD93k7vhpuLy6uhC+5wCl6r2/J1qDdCoBdXqlJ1+IM
-	 VvqBRJGwX3lj5UtIu1SbfbWbd+X7nMly6v/Y6k97/QtNO7ldRbmZIEzi+WCWAWGt4K
-	 UJAame1Rzn1JAA+OwZ60w93WeKw23eJPHitaf/F476ENkNSxKWQeR/Qdy9xG6KlEm/
-	 NKYiKx6QzF4osT3Q3fr1gBw0FK5yvI0EO5bQvsZVyDw45BTFsgSFOTQ089FiJxE5QG
-	 RQFXHiWUgAdzA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1teryu-000000006Yr-03dx;
-	Mon, 03 Feb 2025 09:39:00 +0100
-Date: Mon, 3 Feb 2025 09:39:00 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-	Vikash Garodia <quic_vgarodia@quicinc.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sebastian Fricke <sebastian.fricke@collabora.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Nicolas Dufresne <nicolas@ndufresne.ca>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Jianhua Lu <lujianhua000@gmail.com>,
-	Stefan Schmidt <stefan.schmidt@linaro.org>,
-	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH v9 27/28] media: iris: enable video driver probe of
- SM8250 SoC
-Message-ID: <Z6CApNuSlPGvVL2k@hovoldconsulting.com>
-References: <20241212-qcom-video-iris-v9-0-e8c2c6bd4041@quicinc.com>
- <20241212-qcom-video-iris-v9-27-e8c2c6bd4041@quicinc.com>
- <Z3_nCPk_g8znto4A@hovoldconsulting.com>
- <64f8bebd-35e1-c743-b212-e1a3292bade2@quicinc.com>
- <Z4EuiPEw8mvDQ2gv@hovoldconsulting.com>
- <24334fb8-4d83-eb06-aee3-dfe1f8e4937b@quicinc.com>
- <552972B8-1ACA-4243-A8E3-8F48DAF39C5C@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PTnlTc6W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738572009; x=1770108009;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=7nb8HRa0cFbzBFBnN4bI0GsAQD01kUzx8HOrS7jz88s=;
+  b=PTnlTc6WMsypsE1aCRyIwVH3LbvAzQESdXgB91gx+wQp/OhtD6WrcHKr
+   tf2u0D13J1kzFzg1mJbFlFXveOy/UTtlXZqWkEvC7mAEe/b7CHJz9sQw8
+   knLr7zHdkLtxPRd+kMXPoBaomMR+Z9jkMBZhcsELTMBrTVT5VvXT4/yxz
+   05URi/U0LzEiYpLNlEODEPsqYCV9i61gLqEES7nmu/KRXLRsVS531/KWA
+   oXAFYbrU2BUmgbII5qa67S5PyLeu3UP/+4wxrNbYwd/Pppr4o2bowLLrV
+   yDtXsCUFdvrCD2SGrQbZAJbkWhAQ+eVxIdz8vQFAF5T0SsuyorZuA+7PJ
+   Q==;
+X-CSE-ConnectionGUID: lgpPdlxPR6OimqkatQlqYw==
+X-CSE-MsgGUID: ZdN7GR0pT/G23mrNpPTXEQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="26657675"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="26657675"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 00:40:08 -0800
+X-CSE-ConnectionGUID: /pEpuut2SbaCB2xPbjWkbA==
+X-CSE-MsgGUID: th6k5N9TR0e9cGBt5VIk/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="141100533"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 03 Feb 2025 00:40:00 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id CF435214; Mon, 03 Feb 2025 10:39:58 +0200 (EET)
+Date: Mon, 3 Feb 2025 10:39:58 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 06/11] mm/vmscan: Use PG_dropbehind instead of
+ PG_reclaim
+Message-ID: <42h65xowqe36eymr6pcomo7wzpe26kzwvyzg44hftqqczc5n6y@w2z5wvdrvktm>
+References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
+ <20250130100050.1868208-7-kirill.shutemov@linux.intel.com>
+ <CAMgjq7AWZg0Y7+v3_Z8-YVUXrANB29mCDSyzF39dtAM_TQ0aKw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <552972B8-1ACA-4243-A8E3-8F48DAF39C5C@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMgjq7AWZg0Y7+v3_Z8-YVUXrANB29mCDSyzF39dtAM_TQ0aKw@mail.gmail.com>
 
-On Fri, Jan 10, 2025 at 08:01:21PM +0200, Dmitry Baryshkov wrote:
-> On 10 January 2025 19:30:30 EET, Dikshita Agarwal <quic_dikshita@quicinc.com> wrote:
+On Sat, Feb 01, 2025 at 04:01:43PM +0800, Kairui Song wrote:
+> On Thu, Jan 30, 2025 at 6:02 PM Kirill A. Shutemov
+> <kirill.shutemov@linux.intel.com> wrote:
 > >
+> > The recently introduced PG_dropbehind allows for freeing folios
+> > immediately after writeback. Unlike PG_reclaim, it does not need vmscan
+> > to be involved to get the folio freed.
 > >
-> >On 1/10/2025 7:58 PM, Johan Hovold wrote:
-> >> On Thu, Jan 09, 2025 at 11:18:29PM +0530, Vikash Garodia wrote:
-> >>> On 1/9/2025 8:41 PM, Johan Hovold wrote:
-> >>>> On Thu, Dec 12, 2024 at 05:21:49PM +0530, Dikshita Agarwal wrote:
-> >>>>> Initialize the platform data and enable video driver probe of SM8250
-> >>>>> SoC. Add a kernel param to select between venus and iris drivers for
-> >>>>> platforms supported by both drivers, for ex: SM8250.
-> >>>>
-> >>>> Why do you want to use a module parameter for this? What would be the
-> >>>> default configuration? (Module parameters should generally be avoided.)
-> >> 
-> >>> This was discussed during v4 [1] and implemented as per suggestion
-> >>>
-> >>> [1]
-> >>> https://lore.kernel.org/linux-media/eea14133-2152-37bb-e2ff-fcc7ed4c47f5@quicinc.com/
-> >> 
-> >> First, the background and motivation for this still needs to go in the
-> >> commit message (and be mentioned in the cover letter).
-> >> 
-> >> Second, what you implemented here is not even equivalent to what was
-> >> done in the mdm drm driver since that module parameter is honoured by
-> >> both drivers so that at most one driver tries to bind to the platform
-> >> device.
-> >> 
-> >> With this patch as it stands, which driver ends up binding depends on
-> >> things like link order and what driver has been built a module, etc. (as
-> >> I pointed out below).
-> >> 
-> >>>> Why not simply switch to the new driver (and make sure that the new
-> >>>> driver is selected if the old one was enabled in the kernel config)?
-> >> 
-> >>> Its about the platform in migration i.e sm8250. Since new driver is not yet
-> >>> feature parity with old driver, choice is provided to client if it wants to use
-> >>> the new driver (default being old driver for sm8250)
-> >> 
-> >> This should be described in the commit message, along with details on
-> >> what the delta is so that the reasoning can be evaluated.
-> >> 
-> >> And I'm still not sure using a module parameter for this is the right
-> >> thing to do as it is generally something that should be avoided.
-> >> 
-> >I understand your concern of using module params.
-> >I will modify it to rely on Kconfig to select the driver (suggested by
-> >Hans) instead of module param.
+> > Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
+> > pageout().
+> >
+> > It is safe to leave PG_dropbehind on the folio if, for some reason
+> > (bug?), the folio is not in a writeback state after ->writepage().
+> > In these cases, the kernel had to clear PG_reclaim as it shared a page
+> > flag bit with PG_readahead.
+> >
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > Acked-by: David Hildenbrand <david@redhat.com>
+> > ---
+> >  mm/vmscan.c | 9 +++------
+> >  1 file changed, 3 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index bc1826020159..c97adb0fdaa4 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -692,19 +692,16 @@ static pageout_t pageout(struct folio *folio, struct address_space *mapping,
+> >                 if (shmem_mapping(mapping) && folio_test_large(folio))
+> >                         wbc.list = folio_list;
+> >
+> > -               folio_set_reclaim(folio);
+> > +               folio_set_dropbehind(folio);
+> > +
+> >                 res = mapping->a_ops->writepage(&folio->page, &wbc);
+> >                 if (res < 0)
+> >                         handle_write_error(mapping, folio, res);
+> >                 if (res == AOP_WRITEPAGE_ACTIVATE) {
+> > -                       folio_clear_reclaim(folio);
+> > +                       folio_clear_dropbehind(folio);
+> >                         return PAGE_ACTIVATE;
+> >                 }
+> >
+> > -               if (!folio_test_writeback(folio)) {
+> > -                       /* synchronous write or broken a_ops? */
+> > -                       folio_clear_reclaim(folio);
+> > -               }
+> >                 trace_mm_vmscan_write_folio(folio);
+> >                 node_stat_add_folio(folio, NR_VMSCAN_WRITE);
+> >                 return PAGE_SUCCESS;
+> > --
+> > 2.47.2
+> >
 > 
-> Please don't. This makes it impossible to perform side-by-side
-> comparison.
+> Hi, I'm seeing following panic with SWAP after this commit:
+> 
+> [   29.672319] Oops: general protection fault, probably for
+> non-canonical address 0xffff88909a3be3: 0000 [#1] PREEMPT SMP NOPTI
+> [   29.675503] CPU: 82 UID: 0 PID: 5145 Comm: tar Kdump: loaded Not
+> tainted 6.13.0.ptch-g1fe9ea48ec98 #917
+> [   29.677508] Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
+> [   29.678886] RIP: 0010:__lock_acquire+0x20/0x15d0
 
-Why? You can have two kernel builds and run the same tests. And you
-obviously cannot run iris and venus on the same hardware at once anyway.
+Ouch.
 
-> Also as venus and iris drivers are not completely
-> equivalent wrt supported platforms, distributions will have to select
-> whether to disable support for older platforms or for new platforms:
-> Kconfig dependency will make it impossible to enable support for both
-> kinds.
+I failed to trigger it my setup. Could you share your reproducer?
 
-You shouldn't have both enabled. The only reason for keeping support
-for the same hardware in both drivers is that the iris support is
-incomplete and considered experimental. No one should enable that except
-for development and evaluation purposes until the driver is up to par.
-And then you drop support from the old driver along with the config
-option.
+> I'm testing with PROVE_LOCKING on. It seems folio_unmap_invalidate is
+> called for swapcache folio and it doesn't work well, following PATCH
+> on top of mm-unstable seems fix it well:
 
-Johan
+Right. I don't understand swapping good enough. I missed this.
+
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 4fe551037bf7..98493443d120 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -1605,8 +1605,9 @@ static void folio_end_reclaim_write(struct folio *folio)
+>          * invalidation in that case.
+>          */
+>         if (in_task() && folio_trylock(folio)) {
+> -               if (folio->mapping)
+> -                       folio_unmap_invalidate(folio->mapping, folio, 0);
+> +               struct address_space *mapping = folio_mapping(folio);
+> +               if (mapping)
+> +                       folio_unmap_invalidate(mapping, folio, 0);
+>                 folio_unlock(folio);
+>         }
+>  }
+
+Once you do this, folio_unmap_invalidate() will never succeed for
+swapcache as folio->mapping != mapping check will always be true and it
+will fail with -EBUSY.
+
+I guess we need to do something similar to what __remove_mapping() does
+for swapcache folios.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
