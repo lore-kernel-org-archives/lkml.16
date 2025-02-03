@@ -1,121 +1,195 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A96111A8
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78237205E0A;
+	Mon,  3 Feb 2025 14:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738591797; cv=none; b=B+0azHDhYrKc/K7RokKIT8h7Q91jS+DUF+fpA89gbHoTrWMYvP5QyLsMEPT1pSt0MWR3p2dRW1xrd2vmL3PHOwsYam8j2hOhrkhH1y3cHgvwiLDCGXUwwjdt8OczvgLBwQtLo8M7EFizKqS3kYXWKnCp1LKRBOebzPY08cIrXvc=
+	t=1738591806; cv=none; b=Y26IMEoFMMyDm5RmHzanVgykqhF6J0WZl5KWS9+Xcm99KMeG9p/Z1RqOwM+ZMBcDjdEABpGlgRCrp+kZo8m6LEs4h+yqCv5iNT6N9n5gcMwKnnN4LpnILV2NA0pzlvSeqmSoIIYljUp8RQMjNTvt1YTYuHDDQwKGcL2Mqgg4uXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738591797; c=relaxed/simple;
-	bh=x3CVHKQsrsBc35sYt/SLxzM7OsZW74laauClXu3SedQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=AC1MErKe7A1uAtR6uI+qhJ1uwY325PI1kn9r+wo5mY+eBaAmt9RiYF14EK6dWDaVpGaLy2FIAG8aMNegwRZ7inZqtAni893A6SJx1m5O2FHj15YvRoWZNihT3mfGRiTVnIzdo/6MzukLdaA+U3mhga49BCruRIlt17WUJyFodug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HweA8u0h; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738591806; c=relaxed/simple;
+	bh=7xm5H8o91nowEKmv66vJryMvUJUCjtxhGx1R+VkOLto=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Z72sK825bLfpQ/0XGl6JBNYUHwIEJKOmg6MdoxF8IIYrpMuBE6rkHocxMkHpyDHJ0ZtBpxHUIWs+zli6mNgTFMBP/cdHSz6jnyEWW47X4JA+NNQaAyT+zSlZDvo2CX/mlnJunENDwSVO+V/RzzJheCSUo6rAn+azP4BXE4QEujU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lEPTd/qh; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HweA8u0h"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513BUaVH003933
-	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 14:09:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PqnvQI074/SnPhRHaDZqDIU5f3FDzozpaHm90U+0054=; b=HweA8u0hbjNe0fJb
-	f5n6RWmKMDZ6iVaCxA1mUqv5GcjN2NpU9mrTa/S/UvONbp08eyv5fqnAsZ8JkKWL
-	CCLPL5+8HSLhEqdtO2KtPzGrkidpVYQrypPRHZV/j/ptmMKlZHPNKxsbSp7bSHAx
-	dFBGOqYAfhHeYiy2zrVY+ZE8CX0PqwRzo+AKY9tRdSgVin1kT5iwbvBbfnimmZVF
-	nVIQu269efng/uSfvDqUYIphJnPsSgzw7z3u3ZGIsEwyem5d1zC5ewOPizCAxPFN
-	jozxZBCjJqKaYbatIG+vvggrOMjv6D9dmmyzMJZa5Rf0CoqRjm6R+bakGAFRyYTc
-	WOIJFw==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jw03gj7r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:09:55 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7b700506e64so23877485a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:09:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738591794; x=1739196594;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PqnvQI074/SnPhRHaDZqDIU5f3FDzozpaHm90U+0054=;
-        b=DH6VgUrsNb2Xit7oOKgeqLfmeyY5ppJHKrEysJVpSQeYOdKVhpZl4LULzxRBlilE2w
-         IF/N9rMMypmx7ahCk9eRXSpCPwS8LDOnkogGM2kvSECFsELM9+mNZarbwb+xu0zxB+l/
-         4FzgWILS+ZTOUes6yLRln935UhoLbR/B4HuRS0JJRA0wPV8GZOp7tYO3Wj9NJ6e5kqqJ
-         JOQzI563N07RGZ62EXd7DeU/blVVBmHgk57OjM3VIAYLyQJUEoGdle8+yNaAK9Uw5WK4
-         Y8r+eGQMB+M3kzg8hKIhKu/hvkmC63kExlJeTTd8GwDPfrwfbFeYEm1Z1r5L5pwPOXmi
-         0eMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4jUtCQbUeebn2FOMTOJOFROt2E57BKyynVVRR6tZfKmlqEBPYa4ACuDkW1z0EhECUygoL92KO7/g1Jn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkSWOp8USVDZY/KPpFVvkrfo81d3ztIkSdZQp/+tIdUOLTN8iw
-	KmMpSW/oOibWueENzzk2I/guaVoKeFPh5T37+d4pa6lZzZVqM3rJe/Y/Cw7XDmHRMRiwa6NCajc
-	rdbm7j7J40NKgYeBEIrZ/WSyNsn5Gme9rVBhh0msUQSJiLi2BFfzh5QeemSVaf8E=
-X-Gm-Gg: ASbGnctXAu2D8+jXU0OGX0xlyfbFHgWqNSzfszqZYyTMHDjA/rsaX96OrN/tMFgj3hz
-	FMk4f3X3l6W0VZjx1K+oLRluatBQM2Tvf3/+9sgXyIevnNt5MSIkeydKhDT1o7pGUBOkwXh0HOq
-	SKWjmA+QBoRFnVP2o98L9wbyitYSMJgTtn27rTwJ7FJJuxklXE6gGFxmqPYrBr+o91qbf7hiS8M
-	4qhnoxmbRLnemX9+swhC2DE5MquXGq++TO5dPhszTuvHUyGTlpbliYacD6v8Yi0ih2z1gk+NTbo
-	rDYVSWT174If96ipLvPbOvlgcSW/Qm+TV7vvqdlH6sMX+UhC1/rI2Zu0zNc=
-X-Received: by 2002:a05:620a:390d:b0:7b6:d754:2076 with SMTP id af79cd13be357-7bffcd8fa55mr1031476085a.12.1738591793731;
-        Mon, 03 Feb 2025 06:09:53 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHEdwI+jcirq72tzg0fC8beLhnirVMEduC/S0WxjJZZWIFxTyTZtGZdO0egq+PfA0bGFTgCpw==
-X-Received: by 2002:a05:620a:390d:b0:7b6:d754:2076 with SMTP id af79cd13be357-7bffcd8fa55mr1031474085a.12.1738591793255;
-        Mon, 03 Feb 2025 06:09:53 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ffe2csm770673766b.97.2025.02.03.06.09.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 06:09:52 -0800 (PST)
-Message-ID: <2c306351-39d7-48da-8860-e8eb75e301e0@oss.qualcomm.com>
-Date: Mon, 3 Feb 2025 15:09:51 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lEPTd/qh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738591805; x=1770127805;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=7xm5H8o91nowEKmv66vJryMvUJUCjtxhGx1R+VkOLto=;
+  b=lEPTd/qhYC1Pt0jzrP8rSmxyTSOq+CDDmU3NZuM7HkIkk+Qcf48xGfpM
+   FLPKSa/br6fUErj18DySZCVOLFatGps0tQAdtyfO/08xGhiV8UKJevM4C
+   XWlqPvXtgxqvnNMnbKqd0VtA7jfAwSYyl1tyFlFaKYUB5LzmpIYB/YRYh
+   rxMLy20LJox2Hkpvmc8GGJ8T/KcdISejxOcaxYKeHpQeZ/L5hR9VRVUaq
+   6OT44ByLehIfJFAQlAfsYf1X5Axvy1kenPb9KK5NUsyELTHg5+UfeDwf0
+   hXTe0MUEdul7dpdwzJlode7g3ZuBkio7Zzmcgn5bpDDIvsfA46sOaFU/g
+   Q==;
+X-CSE-ConnectionGUID: RUmm6PnRRQaOOYIfSVIQcw==
+X-CSE-MsgGUID: 16bOS351Q36TFWWGtpmQvg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="26686347"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="26686347"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 06:10:04 -0800
+X-CSE-ConnectionGUID: /9aXfix4RC6U5XDaL5yNjg==
+X-CSE-MsgGUID: wu+yLf4XS6Gi7GVbAsN13Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="114330804"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.194])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 06:10:01 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 3 Feb 2025 16:09:59 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 00/14] platform/x86: alienware-wmi driver rework
+In-Reply-To: <D7IV1P2LAXRV.21V72EQZ7RMFZ@gmail.com>
+Message-ID: <a2086a6b-6e2a-faab-6dd1-d13d3bceccfa@linux.intel.com>
+References: <20250203062055.2915-1-kuurtb@gmail.com> <c6e10cdd-6fba-6e8b-0913-66766cb9248e@linux.intel.com> <D7ISQ5PQLOLR.2P6D3M7W54PA3@gmail.com> <30f4bdff-caf7-45ce-5997-70c1c36a71ae@linux.intel.com> <D7IV1P2LAXRV.21V72EQZ7RMFZ@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs8300: Partially revert "arm64:
- dts: qcom: qcs8300: add QCrypto nodes"
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250128115333.95021-1-krzysztof.kozlowski@linaro.org>
- <20250128115333.95021-2-krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250128115333.95021-2-krzysztof.kozlowski@linaro.org>
+Content-Type: multipart/mixed; boundary="8323328-1338144458-1738591799=:934"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1338144458-1738591799=:934
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: wrCExuaDTeys8RT1qzaeiiJ_Q8AqJssm
-X-Proofpoint-ORIG-GUID: wrCExuaDTeys8RT1qzaeiiJ_Q8AqJssm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- phishscore=0 mlxlogscore=999 impostorscore=0 bulkscore=0 malwarescore=0
- priorityscore=1501 clxscore=1015 spamscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502030104
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On 28.01.2025 12:53 PM, Krzysztof Kozlowski wrote:
-> Partially revert commit a86d84409947 ("arm64: dts: qcom: qcs8300: add
-> QCrypto nodes") by dropping the untested QCE device node.  Devicetree
-> bindings test failures were reported on mailing list on 16th of January
-> and after two weeks still no fixes:
-> 
->   qcs8300-ride.dtb: crypto@1dfa000: compatible: 'oneOf' conditional failed, one must be fixed:
->     ...
->     'qcom,qcs8300-qce' is not one of ['qcom,ipq4019-qce', 'qcom,sm8150-qce']
-> 
-> Reported-by: Rob Herring <robh@kernel.org>
-> Closes: https://lore.kernel.org/all/CAL_JsqL0HzzGXnCD+z4GASeXNsBxrdw8-qyfHj8S+C2ucK6EPQ@mail.gmail.com/
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
+On Mon, 3 Feb 2025, Kurt Borja wrote:
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> On Mon Feb 3, 2025 at 7:55 AM -05, Ilpo J=C3=A4rvinen wrote:
+> > On Mon, 3 Feb 2025, Kurt Borja wrote:
+> >
+> >> On Mon Feb 3, 2025 at 4:20 AM -05, Ilpo J=C3=A4rvinen wrote:
+> >> > On Mon, 3 Feb 2025, Kurt Borja wrote:
+> >> >
+> >> >> Hi!
+> >> >>
+> >> >> I bring some last minute modifications.
+> >> >>=20
+> >> >> I found commit
+> >> >>=20
+> >> >> =098d8fc146dd7a ("nvmem: core: switch to use device_add_groups()")
+> >> >>=20
+> >> >> which states that it's unnecesary to call device_remove_groups() wh=
+en
+> >> >> the device is removed, so I dropped it to simplify things.
+> >> >
+> >> > Hi Kurt,
+> >>=20
+> >> Hi Ilpo,
+> >>=20
+> >> >
+> >> >> I also found commit
+> >> >>=20
+> >> >> =09957961b6dcc8 ("hwmon: (oxp-sensors) Move tt_toggle attribute to =
+dev_groups")
+> >> >>=20
+> >> >> which states that no driver should add sysfs groups while probing t=
+he
+> >> >> device as it races with userspace, so I re-added PROBE_FORCE_SYNCHR=
+ONOUS
+> >> >> to the platform driver, so groups are added only after the device h=
+as
+> >> >> finished probing.
+> >> >>
+> >> >> I'm not 100% sure that the second commit message applies here, but =
+it is
+> >> >> revd-by Greg K-H so I added it just in case.
+> >> >
+> >> > Which is why .dev_groups should be used as it is able to avoid those=
+=20
+> >> > races on driver core level.
+> >>=20
+> >> In previous discussions with Armin we agreed it made more sense to mov=
+e
+> >> WMAX-only groups from alienware-wmi-base.c to alienware-wmi-wmax.c whe=
+n
+> >> splitting.
+> >>=20
+> >> I have no problem in moving them back to .dev_groups though.
+> >>=20
+> >> >
+> >> > Why you call device_add_groups() at all? Can't you just insert it in=
+to=20
+> >> > .dev_groups member in alienware_wmax_wmi_driver?
+> >>=20
+> >> I'd love to do this as it would simplify things a LOT, but some
+> >> user-space tools might expect this attributes to be exposed by the
+> >> "fake" platform device located at
+> >>=20
+> >> /sys/devices/platform/alienware-wmi
+> >>=20
+> >> If it were not for this, I would expose every attribute in the WMI
+> >> device.
+> >
+> > Ah, sorry, I didn't pay attention where they were added to. I vaguely=
+=20
+> > recall that discussion.
+> >
+> > But still, you could make the groups available through .h and just add=
+=20
+> > them directly into alienfx_groups (with an #ifdef/#else in .h), or is=
+=20
+> > there again something I don't see?
+>=20
+> What do you think about something like:
+>=20
+> alienware-wmi.h
+> ---------------
+>=20
+> #if IS_ENABLED(CONFIG_ALIENWARE_WMI_WMAX)
+> #define WMAX_ONLY_GROUP(name)=09=09(wmax_##name)
+>=20
+> extern const struct attribute_group wmax_hdmi_attribute_group;
+> ...
+> #else
+> #define WMAX_ONLY_GROUP(name)=09=09NULL
+> #endif
+>=20
+> alienware-wmi-base.c
+> --------------------
+> ...
+> static const struct attribute_group *alienfx_groups[] =3D {
+> =09&zone_attribute_group,
+> =09WMAX_ONLY_GROUP(hdmi_attribute_group),
+> =09WMAX_ONLY_GROUP(amplifier_attribute_group),
+> =09WMAX_ONLY_GROUP(deepsleep_attribute_group),
 
-Konrad
+IMHO, just define WMAX_GROUPS in the header and use it here.
+
+Similar to e.g. ARCH_PCI_DEV_GROUPS in drivers/pci/pci-sysfs.c.
+
+> =09NULL
+> ...
+>=20
+> };
+>=20
+> >
+> > Obviously, .is_visible functions need to be extended slightly to filter=
+=20
+> > out by interface but that should be relatively easy too. Also, the grou=
+p=20
+> > variable names should be properly prefixed when making them cross file=
+=20
+> > boundary like that.
+>=20
+
+--=20
+ i.
+
+--8323328-1338144458-1738591799=:934--
