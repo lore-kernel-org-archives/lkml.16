@@ -1,169 +1,212 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA503595E;
-	Mon,  3 Feb 2025 15:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D334A200B8C;
+	Mon,  3 Feb 2025 15:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738596475; cv=none; b=A/T0IrBplKnQXlXFUEp536qHWo/PaE5xeMyTfCBUIjYsf4l6jCFHrYAf783fAfZ0nbgpp+Gxj06mFZ1Z9yGZ8Z7uuLgfwph3JOQhmPp3uqp17etuj7+0mJUUYTqAtr5vI6TI6iNPNv9gpLBBj404z6H4wQJ6tS7S1G9PEdBz/TE=
+	t=1738596515; cv=none; b=qRaV8pX34FufgzCI8Po8/8dZIo4Jx1k+j0o4RV3k2O2lRxOpvvxjH12ibjsNkRUxHHGf5/nKdSYhR3dsxiAV6IOsCB4Uw8zKqJYK/o7/akqvS6QNquLkTGnxsWX1Ae5oB8krbjoYW5lCtxo4g8gp9SewLmYUTlR3gRRO743WEnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738596475; c=relaxed/simple;
-	bh=JTBxX0dat01a9U3ZHZbxuyA3ju8loUiSY7T5tw/yGMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VGeDqI33CLwsfyCjti516zqVg3zIMi5CsaFDpO5xAYAua34eMSieuyvcdFIJ80pQd9suIojcoCJwcocGIA/sgd9Ndih7aYikgyEsPwRF1heLVU5zbpsBBp4e/7ROkTzZgY28DiegwbcLWjiOVFJEerJTx6RBIJeah/U2/lHtFf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yah0lpYk; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1738596515; c=relaxed/simple;
+	bh=taTtsBr5Otz5EEF3tDTDTV5VOSbi/2UfRO8hESGOzgo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=E9PByQQA/x/S27lAPzrwIyT9hopA6cm97P/Leu8+lnWe7X8WQN1BGF/ftbbf2m358CTuv9Y1iuY5iu99J9NIVYEfag71smZCJuqjWS0gc4mSpT8+IfeOazkrPQqkxPDR304vfw1tCkP1q/siwWJIuK6q9uB0UbM49G6JOiUZYM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nCSxn80B; arc=none smtp.client-ip=209.85.166.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yah0lpYk"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2166f1e589cso11180275ad.3;
-        Mon, 03 Feb 2025 07:27:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nCSxn80B"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-844ce6d0716so318094639f.1;
+        Mon, 03 Feb 2025 07:28:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738596472; x=1739201272; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xInHEYQYfUJmgEgNS9xBAKboi++StzaQOj0FmuTE31c=;
-        b=Yah0lpYkVn5eEuKHg0T9IYBZyneaUiRezPJRp6XGlpRzM4TDhq9BsnIXSVs0h68ptr
-         u2lDI/4V/WuU1wazuPdv/bj69O14Ryuf2Oi8Da8TSo9NlRAuCNYUFRBcpWBNwjvfXiKe
-         maV4fJ05PJCEFM0JRIhA/Og0n926X5vgp3lv+FwzEcRXU1Lec34ty6oz+WrFdG47ZMa7
-         jVg12MdTWGwVBVfYvY14VgGejctOxlL1zSklrjZCPtqLnpxG4YKABRFi00AqnApQ/zy4
-         UiF6Tb91l10q2UF0CHmj7Vdj4GXL63PBMXVNfJ7WMl0cdH8GZoAFx36pD0rH0Yiq07dA
-         F/qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738596472; x=1739201272;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738596513; x=1739201313; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xInHEYQYfUJmgEgNS9xBAKboi++StzaQOj0FmuTE31c=;
-        b=qb/xGmB+VfIYA2gDQAUIyMwu6hw5hCvMF9/gBWAQAhiAwSfhIWbFEnPcUQsT0+aS1W
-         mFah5uNTQ2ep7aH+T6TiOjpdw2/KlpR3myvyV8Zz7QV1Zo6WJSiufsqOZgJ4K8bmtmlR
-         2lpQBYolqtu2Mb4LGiLB5wEZltLY03NBukyCek+QGQa3XikHN7he/WFyQD6x+UFgn7Q9
-         hJQ9UhyB5+4a4wvrwg+fDJZHTeBOXDfLJX8e1MmtdcEl+qqXhHWE/KPPVSPN6JN2iSzm
-         BMEF4SOOEBLjgYuB0LoPlHRI/OH2GGpI/AHozWSuN8I2JNuF9yKgAbUqOLj5D2Ii5IKz
-         Y15w==
-X-Forwarded-Encrypted: i=1; AJvYcCUO5x64rQOxweAKMmrWs8l+pPPVyh1VlEuK44DG5CSgWyMeXcPv0XafKlxehY1oBOYMt6VxCRgstQ9oePmp@vger.kernel.org, AJvYcCXJhjqPH4WLmrLUJ7H1jxVv8IRA35nqEQb5m6KV94Ei5tWDyQFd7TEhLHF0aP/Uzf9IupmynV25eT7p@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4SY5lKHGak4pXIkQaAITA/0a9IZoMF3IswhMvs35inDNPbv29
-	LhmLzTKG1CFJErGEf/nzXiIO3DuOAJu3OzQwaUF5Z7QeBwG+vGPR
-X-Gm-Gg: ASbGncuTfXVBoVZZ57QY6t5Tg5Odj+oUI7ijeTOEzmH6AYjKaym+iO/hWrfb98yj9iL
-	KMIWkZF4VMyv3gPSxDvKEok+8RcR34NR6wlpDI1CI+m7n7gWEW6OZcrd6jKegY4SqluzNG1VGSn
-	unFIhjKjLl2jjWKyMMa1+r5IrUpUBF/cu14lIzxleyv6q4JgHAu3kJ6vrSZ/Oarvew0lPzc8mLO
-	kT56fiWZYosk3zdbI3AfDMkVQV9jKWMCvQXyelrm6Xvw2egYbRxnWOWkKMdFBr+eK8kT1vVz82z
-	dmkKP/xHgAS448huwhwYODirXA==
-X-Google-Smtp-Source: AGHT+IGUIy1idLsF8BAdkcT/q2sd8Kglz05pHxayAigiBCh5rMM3MRINQg8z3+qnkVoVqpYjkxRhJA==
-X-Received: by 2002:a17:903:2f84:b0:216:3dc0:c8ab with SMTP id d9443c01a7336-21dd7c4976fmr354447405ad.9.1738596470171;
-        Mon, 03 Feb 2025 07:27:50 -0800 (PST)
-Received: from localhost ([2804:30c:273d:6d00:d9cf:ba3b:291b:37ce])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32ef9c2sm78089375ad.114.2025.02.03.07.27.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 07:27:49 -0800 (PST)
-Date: Mon, 3 Feb 2025 12:28:32 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, jonath4nns@gmail.com
-Subject: Re: [PATCH v2 14/16] iio: adc: ad7768-1: add support for
- Synchronization over SPI
-Message-ID: <Z6DgoPacpQoG38_k@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1737985435.git.Jonathan.Santos@analog.com>
- <2d3c69d92a9688f4a20bd6de70f694482501f61c.1737985435.git.Jonathan.Santos@analog.com>
+        bh=cwx/jJuVpXV8nrQOzPoCgA/xl5QSG0sKDpq8AoK3/hQ=;
+        b=nCSxn80BedsOkPvDxRbUa2q0bN01wWVFl/qOntU4NyVBDZ7dOBMqgx0PMq2oahHbF+
+         qv1oF8Byt4qGlGkt5O/KaROH1HhWONSzDDlNPSOGLpZQ6f5CgqkF2A2ZrS1UlfJhLpnJ
+         foD9iltGse7ud/mFcJxl/Pt/OibydRTHWrmKYVOVntuItoUc3K9BHOifQAQaz0/r6WcV
+         ZPtu6syRSFNPgZwZYaP3bRSNYd3Gzq5jItY2CT1kav5TaOKXT/dcksEm7hC1xpYmNJl8
+         l9Pm55XbkaRX55pVfFF/catS3RbEzi13n3MrQugq4eoQYl2AVhSI+60OIfjFnHcSL2jh
+         oUEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738596513; x=1739201313;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cwx/jJuVpXV8nrQOzPoCgA/xl5QSG0sKDpq8AoK3/hQ=;
+        b=ARC9o53/anknBFejvc9Du4+4gVftwMxPeP+eIZnDDlJoyQh29WF0D54J5ZgdiNcBa1
+         aZeQ0tsIgN8gZLRbE428G58YdtqDcVQWhzwYj6aG0UEwAhc5j5Y8TNwgh922IMPBPf5I
+         gLPXPdQAbfN9yqpiIo1Av1+AuZEIk6+r21eQc5vi9iznRFyeEa5kTailrg7elNFyfXbn
+         dss5Cyve29vZ7e5ggRd+0H7iRwGg9pvGVpgOK/LUylF0XosgJoeiqqpbI5oxIzlfegnY
+         oQkE4wSv6YuQDuih4sieLokCxTw+k6NjfO6TC1bnZ5Lq3K0eJL339Jv6eHJDc2+yCBq5
+         Zhvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEju2GpJ3ewGkrtE2ocuYrBNaFPfSl4YzbCtzESPtJ9wErstb41F2WKNObhnkZzD3giQjJJHYdJBQkLNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx92xwg3YCcaOJhCJXPpmPODQANNb84kZ5ISHTowfXiDYbIrRor
+	mpSr9HgAdjluwPSeCtlo8zf0nh8PX1Pf/ZbC8bCJfZ83enQnUvpAardDUA==
+X-Gm-Gg: ASbGncsG2ThQikMcPqGWRw42NSp7DyjTZEOENuKddKBvfw8x9IkxTcQKNHREgt+d0Gk
+	/ciXN0whBLoRyxLNiIYdX7n/3pCoAuLdGUbzJ+a8H20NBhT0peHofLKSRERQpP1enjNj0Sg0+JJ
+	SOcl9GmZq1YalveJvam4YkLo2X7EghJ4Q+wV0bi8/rSnF4iCnETC9MYgIi5c7/XBrrtWUmvRgId
+	4NqjYMgJgT9DC4tEno1C6oOC7TTHN+eq+fJ3Ld9W4tvyMRnQxGTcpdGLcsmsCglCjYdeG3dhvvH
+	4qSIjaM=
+X-Google-Smtp-Source: AGHT+IFyYrE6OkOtE9jg0ZaWEEiM5EY7Tvgr9Z5x4ZS/eWbFIvdLghA9xZFJwwT3nVllGCsjWWqOAA==
+X-Received: by 2002:a05:6122:da4:b0:516:1582:f72e with SMTP id 71dfb90a1353d-51e9e30993dmr18043878e0c.2.1738596502184;
+        Mon, 03 Feb 2025 07:28:22 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1be9729sm1244933e0c.7.2025.02.03.07.28.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 07:28:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d3c69d92a9688f4a20bd6de70f694482501f61c.1737985435.git.Jonathan.Santos@analog.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 03 Feb 2025 10:28:18 -0500
+Message-Id: <D7IX0TG9FN1I.2GU5APPCH2PG0@gmail.com>
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: <platform-driver-x86@vger.kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
+ "Mario Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
+ <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>, "LKML"
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 00/14] platform/x86: alienware-wmi driver rework
+From: "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250203062055.2915-1-kuurtb@gmail.com>
+ <c6e10cdd-6fba-6e8b-0913-66766cb9248e@linux.intel.com>
+ <D7ISQ5PQLOLR.2P6D3M7W54PA3@gmail.com>
+ <30f4bdff-caf7-45ce-5997-70c1c36a71ae@linux.intel.com>
+ <D7IV1P2LAXRV.21V72EQZ7RMFZ@gmail.com>
+ <a2086a6b-6e2a-faab-6dd1-d13d3bceccfa@linux.intel.com>
+In-Reply-To: <a2086a6b-6e2a-faab-6dd1-d13d3bceccfa@linux.intel.com>
 
-On 01/27, Jonathan Santos wrote:
-> The synchronization method using GPIO requires the generated pulse to be
-> truly synchronous with the base MCLK signal. When it is not possible to
-> do that in hardware, the datasheet recommends using synchronization over
-> SPI, where the generated pulse is already synchronous with MCLK. This
-> requires the SYNC_OUT pin to be connected to SYNC_IN pin. In
-> multidevices setup, the SYNC_OUT from other devices can be used as
-> synchronization source.
-> 
-> Use trigger-sources property to enable device synchronization over SPI
-> for single and multiple devices.
-> 
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> ---
-> v2 Changes:
-> * Synchronization via SPI is enabled when the Sync GPIO is not defined.
-> * now trigger-sources property indicates the synchronization provider or
->   main device. The main device will be used to drive the SYNC_IN when
->   requested (via GPIO or SPI).
-> ---
->  drivers/iio/adc/ad7768-1.c | 81 ++++++++++++++++++++++++++++++++++----
->  1 file changed, 73 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> index 7686556c7808..01ccbe0aa708 100644
-> --- a/drivers/iio/adc/ad7768-1.c
-> +++ b/drivers/iio/adc/ad7768-1.c
-> @@ -193,6 +193,7 @@ static const struct iio_chan_spec ad7768_channels[] = {
->  
->  struct ad7768_state {
->  	struct spi_device *spi;
-> +	struct spi_device *sync_source_spi;
->  	struct regmap *regmap;
->  	struct regulator *vref;
->  	struct mutex lock;
-> @@ -206,6 +207,7 @@ struct ad7768_state {
->  	struct iio_trigger *trig;
->  	struct gpio_desc *gpio_sync_in;
->  	struct gpio_desc *gpio_reset;
-> +	bool en_spi_sync;
->  	const char *labels[ARRAY_SIZE(ad7768_channels)];
->  	/*
->  	 * DMA (thus cache coherency maintenance) may require the
-> @@ -264,6 +266,21 @@ static int ad7768_spi_reg_write(void *context,
->  	return spi_write(st->spi, st->data.d8, 2);
->  }
->  
-> +static int ad7768_send_sync_pulse(struct ad7768_state *st)
-> +{
-> +	if (st->en_spi_sync) {
-> +		st->data.d8[0] = AD7768_WR_FLAG_MSK(AD7768_REG_SYNC_RESET);
-> +		st->data.d8[1] = 0x00;
-> +
-> +		return spi_write(st->sync_source_spi, st->data.d8, 2);
-Hmm, is it really OK to do something like that? I mean, is that safe?
-I wonder if that can lead to race conditions if, for example, sync_source_spi
-is already registered as an IIO device doing buffered capture.
-Or maybe sync_source_spi is in the middle of some read-modify-write cycle
-and we sneak in this transfer. I think we also don't know from here if
-sync_source_spi device is expecting to have it's AD7768_REG_SYNC_RESET changed.
+On Mon Feb 3, 2025 at 9:09 AM -05, Ilpo J=C3=A4rvinen wrote:
+> On Mon, 3 Feb 2025, Kurt Borja wrote:
+>
+>> On Mon Feb 3, 2025 at 7:55 AM -05, Ilpo J=C3=A4rvinen wrote:
+>> > On Mon, 3 Feb 2025, Kurt Borja wrote:
+>> >
+>> >> On Mon Feb 3, 2025 at 4:20 AM -05, Ilpo J=C3=A4rvinen wrote:
+>> >> > On Mon, 3 Feb 2025, Kurt Borja wrote:
+>> >> >
+>> >> >> Hi!
+>> >> >>
+>> >> >> I bring some last minute modifications.
+>> >> >>=20
+>> >> >> I found commit
+>> >> >>=20
+>> >> >> 	8d8fc146dd7a ("nvmem: core: switch to use device_add_groups()")
+>> >> >>=20
+>> >> >> which states that it's unnecesary to call device_remove_groups() w=
+hen
+>> >> >> the device is removed, so I dropped it to simplify things.
+>> >> >
+>> >> > Hi Kurt,
+>> >>=20
+>> >> Hi Ilpo,
+>> >>=20
+>> >> >
+>> >> >> I also found commit
+>> >> >>=20
+>> >> >> 	957961b6dcc8 ("hwmon: (oxp-sensors) Move tt_toggle attribute to d=
+ev_groups")
+>> >> >>=20
+>> >> >> which states that no driver should add sysfs groups while probing =
+the
+>> >> >> device as it races with userspace, so I re-added PROBE_FORCE_SYNCH=
+RONOUS
+>> >> >> to the platform driver, so groups are added only after the device =
+has
+>> >> >> finished probing.
+>> >> >>
+>> >> >> I'm not 100% sure that the second commit message applies here, but=
+ it is
+>> >> >> revd-by Greg K-H so I added it just in case.
+>> >> >
+>> >> > Which is why .dev_groups should be used as it is able to avoid thos=
+e=20
+>> >> > races on driver core level.
+>> >>=20
+>> >> In previous discussions with Armin we agreed it made more sense to mo=
+ve
+>> >> WMAX-only groups from alienware-wmi-base.c to alienware-wmi-wmax.c wh=
+en
+>> >> splitting.
+>> >>=20
+>> >> I have no problem in moving them back to .dev_groups though.
+>> >>=20
+>> >> >
+>> >> > Why you call device_add_groups() at all? Can't you just insert it i=
+nto=20
+>> >> > .dev_groups member in alienware_wmax_wmi_driver?
+>> >>=20
+>> >> I'd love to do this as it would simplify things a LOT, but some
+>> >> user-space tools might expect this attributes to be exposed by the
+>> >> "fake" platform device located at
+>> >>=20
+>> >> /sys/devices/platform/alienware-wmi
+>> >>=20
+>> >> If it were not for this, I would expose every attribute in the WMI
+>> >> device.
+>> >
+>> > Ah, sorry, I didn't pay attention where they were added to. I vaguely=
+=20
+>> > recall that discussion.
+>> >
+>> > But still, you could make the groups available through .h and just add=
+=20
+>> > them directly into alienfx_groups (with an #ifdef/#else in .h), or is=
+=20
+>> > there again something I don't see?
+>>=20
+>> What do you think about something like:
+>>=20
+>> alienware-wmi.h
+>> ---------------
+>>=20
+>> #if IS_ENABLED(CONFIG_ALIENWARE_WMI_WMAX)
+>> #define WMAX_ONLY_GROUP(name)		(wmax_##name)
+>>=20
+>> extern const struct attribute_group wmax_hdmi_attribute_group;
+>> ...
+>> #else
+>> #define WMAX_ONLY_GROUP(name)		NULL
+>> #endif
+>>=20
+>> alienware-wmi-base.c
+>> --------------------
+>> ...
+>> static const struct attribute_group *alienfx_groups[] =3D {
+>> 	&zone_attribute_group,
+>> 	WMAX_ONLY_GROUP(hdmi_attribute_group),
+>> 	WMAX_ONLY_GROUP(amplifier_attribute_group),
+>> 	WMAX_ONLY_GROUP(deepsleep_attribute_group),
+>
+> IMHO, just define WMAX_GROUPS in the header and use it here.
+>
+> Similar to e.g. ARCH_PCI_DEV_GROUPS in drivers/pci/pci-sysfs.c.
 
-For multi-device synchronization, I'm still biased towards something like we
-had for for quad-adaq7768-1 [1] with one device managing the others.
+Thanks for the example, I was overthinking it. I'll send a v8 with this
+approach!
 
-I would like to try something like that along with the component infrastructure 
-(include/linux/component.h, drivers/base/component.c), but I already have
-a bunch of pending stuff.
-Basic idea would be to treat multiple ADCs that are intended for synchronized
-read as a single aggregated device (that would have and manage all individual
-SPI devices) with component infrastructure.
-I suspect that might be useful for the AD7192 [2] case as well.
+~ Kurt
 
-[1]: https://github.com/analogdevicesinc/linux/tree/adaq7768-aggregate-dev
-[2]: https://lore.kernel.org/linux-iio/20241128125811.11913-4-alisa.roman@analog.com/
+>
+>> 	NULL
+>> ...
+>>=20
+>> };
+>>=20
+>> >
+>> > Obviously, .is_visible functions need to be extended slightly to filte=
+r=20
+>> > out by interface but that should be relatively easy too. Also, the gro=
+up=20
+>> > variable names should be properly prefixed when making them cross file=
+=20
+>> > boundary like that.
+>>=20
 
-Anyway, I guess better to just do what David suggested and check the
-trigger-source device is the same as this SPI device and then write to our own
-registers or error out otherwise.
-
-> +	} else if (st->gpio_sync_in) {
-> +		gpiod_set_value_cansleep(st->gpio_sync_in, 1);
-> +		gpiod_set_value_cansleep(st->gpio_sync_in, 0);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-...
