@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845481D618C;
-	Mon,  3 Feb 2025 11:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC3C1D618C;
+	Mon,  3 Feb 2025 11:37:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738582611; cv=none; b=QVWacGYVX+onnIxzK5M6WdSXBtdTDpjTvXlS3n9WeCadlrRYevoGxoSdyvpWhG1zrKw1LkwAkThWE3SdIc5ud4vXZiicJ5KUUSslLCOB06LTt6GiQ8i54REmpivIkTIPJnGqfkWeKC3zNhUpWhEC+OuUuqzn4h21S7JTmvZfk18=
+	t=1738582625; cv=none; b=pf8MkCayVrVVhy5dGfrxad1tB0qCXK2y9uEcOehDA//OuliXR6G7mwOaqrj0mmX+L32jlXWP9QBhi5iDlyIIR7ldvleGiwwIWBvxXyxdUZoF+Gw2T/9TTRFcu122wX43RibeF3SS7sP1PIDs0g/RMU+pSTcZltI/6oOq8FVh8VI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738582611; c=relaxed/simple;
-	bh=NhCjmqR1AMDBVHMLcVPUqp41ZS7rrh0UdVWlXinAe0g=;
+	s=arc-20240116; t=1738582625; c=relaxed/simple;
+	bh=T+/ksBsqsgzrU/GxsuaQSiGHetzXlkOCwN6tGYQwnmI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e2ao+McfytwtHt8Dmuq2o7KRKDm4Ne3OV1qvoEVshAD9JF6WNXiH1ty0K1MfAUapbSj/GuGAbGm07Puqd7hTo4tObp5FdyTyGGvzKhgTcd1uwJvQFuIR3FAJi8VlcIo9U7vsktiP6MZMpAhYqD11XpBmTWnniZpGPlZLvQL8wTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ib12liYm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=LHhgzk7QlV3IiTKJPyc5CqlhObEl+dWT4scYXv5FLJ0WGDNU1vsqOML934et2RyRC/lxB+F+VzMmaiSb0vwdbDvAMfQbD+DJmXjqXo4zRrKEQir6loYPOoOhlntG5tcI9VBseeIxMdsl92YflQDBUn/siTdoQrt3BIUFgFOutjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8suxZlN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ib12liYm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 437D9C4CED2;
-	Mon,  3 Feb 2025 11:36:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8suxZlN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26160C4CED2;
+	Mon,  3 Feb 2025 11:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738582611;
-	bh=NhCjmqR1AMDBVHMLcVPUqp41ZS7rrh0UdVWlXinAe0g=;
+	s=k20201202; t=1738582624;
+	bh=T+/ksBsqsgzrU/GxsuaQSiGHetzXlkOCwN6tGYQwnmI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ib12liYmhwp2Q4N6Hz6bVfhio8HNH4kU/n+q/ueVZJYPER3MI9W7ai+I1yFPlVj3T
-	 MRFYKmrJa7uTSwK4TQYUhQAwyUOZJqVxz2mOime9loFMFAFWjRljx/T9yx2To9cdkk
-	 M2f3ZNUHDd4dhZtPKF+HKi4vrA4+LWI0zW6k3mRLQ1zAUXoLv3tLdifibSIJOh3BvD
-	 ZaqVdFbGRxxSG2htZamYRsPVCQ6NdOpS6doh2zgPByrSmSJPK1L9xkXuzBwdwikhoU
-	 SuD0iyrmryVvzPiDPrJWUBHnZvf5kSQfE6BbbaqVuIg1BRwr2RyQnNnZuwFB9ulfzS
-	 +rnDktdpZdbWQ==
-Message-ID: <18a9f8f4-a534-4341-8061-918aea72e74f@kernel.org>
-Date: Mon, 3 Feb 2025 12:36:39 +0100
+	b=G8suxZlNI/ZOkEXFttH/TdfKIvi6IPBFI8Goz11V3/tdMyIGqLh/6fFCcG1QjEIdc
+	 mwuWQ6gPucLEFEV5zHO7YRfUx4kCUu03tiWNWkIyd2L81CvhHUwBi2+tSJ9vcZ2xCj
+	 ubp7FOZLvGaIy7A6uRCj4swA9q4Uj1YOqWO6cdRJtK1h4g1Y/eQUjuAGS9eet3OFe3
+	 uTaMPoFdR1E7CrZA389jher3KN08SgCUS5X/TOKrQirhUKb4iFJzw/JmRQBogIxnID
+	 bef+bY2NfmoFx1Gas/SstyZWBovGQo5pJD4fwqmPkx9eY7yuhbSRlLOkCddGsTDF1A
+	 A/cWH/YTW0WKg==
+Message-ID: <4a9d0dd1-fa8a-4437-b829-0de0f20f476a@kernel.org>
+Date: Mon, 3 Feb 2025 12:36:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,26 +35,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] media: ox05b1s: Add support for Omnivision OS08A20
- raw sensor
-To: Mirela Rabulea <mirela.rabulea@nxp.com>
-Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com,
- hverkuil-cisco@xs4all.nl, laurent.pinchart+renesas@ideasonboard.com,
- robh@kernel.org, krzk+dt@kernel.org, bryan.odonoghue@linaro.org,
- laurentiu.palcu@nxp.com, robert.chiras@nxp.com, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, LnxRevLi@nxp.com,
- kieran.bingham@ideasonboard.com, hdegoede@redhat.com,
- dave.stevenson@raspberrypi.com, mike.rudenko@gmail.com,
- alain.volmat@foss.st.com, devicetree@vger.kernel.org, conor+dt@kernel.org,
- alexander.stein@ew.tq-group.com, umang.jain@ideasonboard.com,
- zhi.mao@mediatek.com, festevam@denx.de, julien.vuillaumier@nxp.com,
- alice.yuan@nxp.com
-References: <20250124001243.446511-1-mirela.rabulea@nxp.com>
- <20250124001243.446511-5-mirela.rabulea@nxp.com>
- <20250124-bizarre-cherry-mayfly-9f2bce@krzk-bin>
- <56fe323f-ee09-4a60-ab57-be2baab3af30@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v4 0/2] Add support for GPU SMMU on QCS8300
+To: Pratyush Brahma <quic_pbrahma@quicinc.com>
+Cc: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Joerg Roedel <joro@8bytes.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+References: <20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com>
+ <20250203-lean-delightful-ermine-f5b902@krzk-bin>
+ <273df630-007d-4aaf-9432-2884a7e94d5e@quicinc.com>
 Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -98,50 +93,33 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <56fe323f-ee09-4a60-ab57-be2baab3af30@nxp.com>
+In-Reply-To: <273df630-007d-4aaf-9432-2884a7e94d5e@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 03/02/2025 09:43, Mirela Rabulea wrote:
-> Hi Krzysztof,
-> 
-> thanks again for feedback.
-> 
-> On 24.01.2025 10:09, Krzysztof Kozlowski wrote:
->> On Fri, Jan 24, 2025 at 02:12:43AM +0200, Mirela Rabulea wrote:
->>> @@ -758,6 +914,9 @@ static int ox05b1s_read_chip_id(struct ox05b1s *sensor)
->>>        }
->>>
->>>        switch (chip_id) {
->>> +     case 0x530841:
->>> +             camera_name = "os08a20";
->>> +             break;
->> Ah, so here I see missing second device support.
+On 03/02/2025 09:37, Pratyush Brahma wrote:
+>> How are you sending these?
 >>
->> It is still confusing to see that you use here some sort of
->> autodetection, but in the same time not.
+>> b4 diff 20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com
+>> Grabbing thread from lore.kernel.org/all/20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com/t.mbox.gz
+>> Checking for older revisions
+>> Grabbing search results from lore.kernel.org
+>>    Added from v3: 2 patches
+>> ---
+>> Analyzing 7 messages in the thread
+>> Preparing fake-am for v3: dt-bindings: arm-smmu: Document QCS8300 GPU SMMU
+>> ERROR: v3 series incomplete; unable to create a fake-am range
+>> ---
+>> Could not create fake-am range for lower series v3
+> I have sent this version of the patch series using b4 for the first 
+> time, as suggested earlier [1]. The issue might be due to the previous 
+> version being sent
+> incorrectly using git send-mail. Consequently, I had to manually apply 
+> the previous patches after creating the b4 branch,
+> since "b4 prep -F" was throwing an error when trying to apply the last 
+> patch.
 > 
-> The two sensors that I included in this driver have some similarities, 
-> but also differences, for which I used the platform data. I made 
-> separate patches for the two sensors, such that it is visible how much 
-> is common/different.  The chip_id reading is for validating that the 
-> sensor that is actually attached matches the device tree. It happens to 
-> me sometimes, that I switch the sensors, but forget to switch the dtb, 
-> and it helps to see which sensor is actually attached. Also, it helps a 
-> lot when the evaluation board is in some remote lab and I am unsure what 
-> sensor is attached to it.
-> 
-> I saw most sensor drivers have some kind of identification of the sensor 
-> module by the means of reading the chip_id register. Some examples with 
-> multiple compatibles supported and chip_id validation: imx296, ov9650, 
-> ov772x.
-> 
-> Please let me know what you suggest further.
-
-
-If devices are from the same family and support reliable autodetection,
-they should be made compatible. At least that's generic approach.
-
+OK, that explains.
 
 Best regards,
 Krzysztof
