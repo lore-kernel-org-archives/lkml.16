@@ -1,230 +1,199 @@
-Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11017200118
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738579000; cv=none; b=Eam+LG6lkw5TJBydct/OUQk8ZOPWgCr8Y4tv64+9NTY8khxRAgKhqHUMfTyVDiVRGWc4Vffm0jJExhn34pknwl1C/icvKVIvhAx5bFNz32ezGIeb6YTnE/3dQkU01VHhHcckldw6bWcBbredvS0Gvafa9PrV6aSmnOZTDXnL3mk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738579000; c=relaxed/simple;
-	bh=J+IqD8wGcr3KYl9NWlx672OUnwR0JtKdZY4R2ovLgFw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kI3fMTcSlwuJ/vGqi0gZ3WSXYbJ9RWyIC/kS6R1tt+m9CtmAl5KwsbPxHwewo4CUtdm2B89HarZAWAe+W9OTOHeXq2WEiIOsvnMVWRAxK3nEyri2jeVrLQH4x3xu233jEt3T086NDfAJ7D7HumAKFFG+Se8MGhQ5nUhY+zNqyEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=S1z294VJ; arc=none smtp.client-ip=217.70.178.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10077200118
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738579009; cv=fail; b=CXmNALngTvppCSi0PpcDJvDNlsqfktU83OCC4AWNM7cn3vqFmJno8mBloe25FJ7Gxp9gccnWhU0APRN1CmyFarpzurhvP6xXgT1cxqPEn2EbYiN29hj1WjgL6/xHdL+4/buOPrNZK5u2ZJu42FO4HiGrtxi6kiOBDwx9BsMPg6s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738579009; c=relaxed/simple;
+	bh=+tDlDcAxlJBdvFSR8aT6X2Z/7ZOaByMZozfHo8JsmNk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=QaWyw5XNURHxiseppFA/PCxxExMBuQ6Ti2vzF7FtvLyrkKHNr6vRe9PHESmtHjfKDUaPg9c7LalXZf3Cc5eaY+1vY4fTsS2Aii/1eZyi5naDrFBtEDtrxmscaPuruQTsqMAwgv9lUYullZitFSNYysi/hgR3DW/4s8GndidJ9I0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=niRrVzw7; arc=fail smtp.client-ip=40.107.94.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="S1z294VJ"
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	by mslow3.mail.gandi.net (Postfix) with ESMTP id 7432A5813CC
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:02:42 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D9649204B4;
-	Mon,  3 Feb 2025 10:02:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738576955;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uRTIQsw8UAJR1XUhs7lVczDTPfjRKd3VSFnNJ4gL4ew=;
-	b=S1z294VJfXmUGFyDaR11pIm6kAAOz2cKzR0FDPJbf6S0RQY7o7XK2dpNHQn29VTo+gU2vg
-	d2xAe2Uav9qfJZ4WOIo1/jny7jILEnNSx67qnpj3jXrz6bqzBX2W6jYGj3xYMuBs03CUzt
-	m7NghQ5HYbyY8wQD1Q1uWj65ZzfvT9wzhJhVR2/g8gGGjm/XDC2gh0j8HgeRULTXcliA3x
-	cwC6P+o8p58WDZgqnpdY1wIqSF6BtbKiUnNDXYQI4ANvzzLPuLOkDa2X424IKtcUDPh+7s
-	a7BTr/zbZPq0aYBK0veOow0qzC1cHg/NPveLjBcL+uhKrLaCPv/WT7AOUxAZLA==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Mon, 03 Feb 2025 11:02:28 +0100
-Subject: [PATCH v3] mux: mmio: Add suspend and resume support
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="niRrVzw7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=M81We2EOhWWNsb6jEMZpZhVQOoNKEXjmvz1gDADHD1X70oE1jsLmg+pd/6sExbUFPt+XnhnLKv4fmM0JCvw9NPAgbyZYeE8E0n3NuoWBCW/4nataHHDQ8W1KIKT0BOIDVM4sOaT4o3CbERS+JfjVU2+tVuDTE9Fr3RyrIK80ckPFj5SI5czb2otMl+n+qkcQpTDWU9pi6yo8LDioXz570K5D95MKYK0UBX9ClgqmqnNvInDe3TkSJy03OEQQCCQtK1u+zvnHhfYQYZrNjWdvoY/+EJIdNIsAjKRjpJy9bu0WhFfY/gQFyd1poO5CQv1VuwX3rYGG3VzoL5m/oUaABg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+tDlDcAxlJBdvFSR8aT6X2Z/7ZOaByMZozfHo8JsmNk=;
+ b=kowetmiWyXZzZJWDAYkVR1HP1NQ8J54o2TiaAmGPkBF20TMUHgs1oRCGB8+VpEc1eAxWURim5OfUqYMhlKcf2lyw7ktgKZWQoeoWfG45yc9WjdrE4O4UDVq/EKJhcfEMmjzMltS6C3J4JgZdauj61gR1zlfvrOu0NtW+hFcikZjvE2HWkU3brjmUNfjk67a2oFbxA1Sbsb/++RPGnGHy+MUto1kcmApLuJxYmT3NowweXYiLRw6jzJqagcMw0ilyaJdH67uMZZ+3YChWU2eGEjUNo8ak/R1noFSbpEYAcQZFriTcABbgZyQbXn61H5cg01JtLavJc9KUgWWfNK9kHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+tDlDcAxlJBdvFSR8aT6X2Z/7ZOaByMZozfHo8JsmNk=;
+ b=niRrVzw7SmBR8+dqVmmJFS62c3kwZWe9Y6HLvR3Pkk9ZKL9ryKWAkPr9whE/h+xj/Om4/bgtp8rsQKEDSTCeJpSti1xnyw6orMK3eWfcQneAl+FHbobwiv3frrr/ycMHsqeKTPtKcN3F0FkvUCNcxrsFLQMDhG2+y8Rll/BNDj1OCyIRt8jJNFSKYEDFw9K4UlxNAcgWQZH3OcR6sktfOVbmpvYmWR9cqWVh+/ILO4OUswt2xKNhUfTOdxeZntrfb62iBQDN95yKP0UMM5tMDYVoMkoM5qZ1ooXhAXzAm0WPC/eDdSZgLufrcS7+d5XeJ98kThsEdrGDqb+khn1dPQ==
+Received: from SA0PR11MB4719.namprd11.prod.outlook.com (2603:10b6:806:95::17)
+ by BY1PR11MB8005.namprd11.prod.outlook.com (2603:10b6:a03:523::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.20; Mon, 3 Feb
+ 2025 10:36:44 +0000
+Received: from SA0PR11MB4719.namprd11.prod.outlook.com
+ ([fe80::5303:b2dc:d84b:f3b2]) by SA0PR11MB4719.namprd11.prod.outlook.com
+ ([fe80::5303:b2dc:d84b:f3b2%7]) with mapi id 15.20.8398.025; Mon, 3 Feb 2025
+ 10:36:44 +0000
+From: <Varshini.Rajendran@microchip.com>
+To: <Dharma.B@microchip.com>, <Nicolas.Ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drivers: soc: atmel: fix the args passed to AT91_SOC
+Thread-Topic: [PATCH] drivers: soc: atmel: fix the args passed to AT91_SOC
+Thread-Index: AQHbZKw6UD51arkMRUWjb1Nu/zBLgbM1ha+A
+Date: Mon, 3 Feb 2025 10:36:44 +0000
+Message-ID: <c43fae08-6db1-4c72-b6f0-0c5d41325f6b@microchip.com>
+References: <20250112-atmel-soc-v1-1-822937f1dd5a@microchip.com>
+In-Reply-To: <20250112-atmel-soc-v1-1-822937f1dd5a@microchip.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA0PR11MB4719:EE_|BY1PR11MB8005:EE_
+x-ms-office365-filtering-correlation-id: c99b0962-5375-4d26-8cde-08dd443ea759
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR11MB4719.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?RVpaM1owaUFkSGs2WXF5Uzd2N2htcHFqbGJlKzUxUlcraTg1ZDZJMlIwcEhw?=
+ =?utf-8?B?cy9kUDVUalFHSHRGR0lzdDNnMy9mZWQvbW5Ka0xGMXNIYlZ1NUJIeUJPajFO?=
+ =?utf-8?B?cnBhcHpvcEo2SWYvWHQxMGdLSmZGSjNGZ0NhcEYveCtuK2NseFpJblBVM2RE?=
+ =?utf-8?B?ZDh1MHRVZWVydVhMclQ3dnBOUmhWREI0NFVwRGFSamxLT0taWjNqMlRYNjYw?=
+ =?utf-8?B?VWVzbEJMWnp2ZUlKU0JlL2U4Z3p3Q1k0Q0pHM3JOb2h3aVFpVlFqUFVFekFz?=
+ =?utf-8?B?b0xHdlNneGhTOGgzQlZqODFsaXo4SU81TUZ2ekkycGF5MGphRUkvRWhYT3BX?=
+ =?utf-8?B?eG8zZmNPR0ZwbVVZNE81cXpmaWQ2WWMyZ3RTWWlEUXRHU3F3bDFPQjY0YTAz?=
+ =?utf-8?B?eSs3Z3hQL05FNWZrVGR6MTRlSG5wS2FraThnK0dSY09leWwvbWNLWDhkdEpW?=
+ =?utf-8?B?RytVUUlvMk9uVmZYOTNmMlpBVENUbzZyQmZJNjdyY0NIWGxhZ3NMUC9vTmh2?=
+ =?utf-8?B?cmxjUzNua0xYdFduejZuVTVnTnNGbzVMNUlVbEZQQWdYVk5PNHpNSC9JUUdo?=
+ =?utf-8?B?eWlUYU9qQlY0T2FVMHdpUXcrbnpGa2YvaGIwN3hNcXdLdzRScDNVVlc2SmJJ?=
+ =?utf-8?B?QmZuZ2s3WTVYdGJZcEpkcGRGWk54V2NVeU1ZWmNkVkRDVDY1OVZ3a2lqQitU?=
+ =?utf-8?B?NE1WRjRIUUNEQlptZ1p6YXZoQzc5TUc1empwYWczOFJYUVdvUEtZTW5HNkVU?=
+ =?utf-8?B?V1h0MFRIUktxSjJQYXBIME1nTGJpTUN5QThwTkhIODR4Vlgwb0h4UEFkWXZy?=
+ =?utf-8?B?SGhvQ2VDSCtJRExMRVlKZC8xN3pISDYxaXIzeE1lNzBrWTFSVzhsNWFUZUNQ?=
+ =?utf-8?B?QWw5UkNVRnozQ3VjMkJIZXpxL2lCeHBQYVBMY1k5b3ZHN1pwY0VTcHFCeWVD?=
+ =?utf-8?B?bm0wam5NTm5sYWRKRHJ3UjNEV29oS0xtRyt4WHEwRWdCcUFFYjBrZTh5MmUx?=
+ =?utf-8?B?Lzd3cnB4YlV3UXVVdC90blloK1Q3K1ovcjRQT1RrdkFqWlJLNmdGYmdVN3kr?=
+ =?utf-8?B?anBWOHZwczdNZ3RlZC9tR0NrYjBESm9aUks5MDg3Sk1PTmFHKzhVK256MEtH?=
+ =?utf-8?B?cHA1bnRKakZINERLbTR1L1lqdHNtejVFZ2dKbFMwNC9YMzNtOTlkdDk5T0Nn?=
+ =?utf-8?B?V01DRXFUVTA5cXZXanVPQ3lBbE5kaTRuODdMR1JvY2VhSUJFMHV0SmNRYXd0?=
+ =?utf-8?B?WUcyWTJOM2xtZHgrcHloT2U5S3B3TjhLMXVYaDdQVEdHZTFwQS9yb3RLcGZk?=
+ =?utf-8?B?Mk5ES2NuUFRBUjdCdDBzc0huZW5zcGl1ZURGWFhVL0VheEJiV1VCN01sNmRT?=
+ =?utf-8?B?QzBIRUxUcUhHV3VPRi9wYzZYZngvekVKeFphdHZjSi8wU0NubXk3OFoyOFFI?=
+ =?utf-8?B?R3N1SjRZSlhnYmc3YWRBeTRHNU1MaHd4M2ZydG9wR2lPWng4VmxhZmpOL09r?=
+ =?utf-8?B?ak5qbUs0MHdjcVU0Z0p1ZWpCSTRtaGNiTnNaQzAzSko0OUVFbFJOTU9hUEJS?=
+ =?utf-8?B?MWFUb3NkSlJRSDZIUmVIcmVEbmZ4cFhBUFcrZzM3YlFhR3ZYWDNKNlZURzFm?=
+ =?utf-8?B?T1U2eEhWUVhETjA3RUVwTzhDQ3p0UXpyY0RuR2M2dGpQMDhGVm9XREYwTFF2?=
+ =?utf-8?B?bW1ZQWZHdXhKbDZlNllCL1poL2RuamtZOHFlRFczUnN0K29mMWZFUXlVVi9L?=
+ =?utf-8?B?K1BOQmF5aG9PbVc5Y1NjeXp5bjNlTklsdjJCSWFFSGtXMFN5Q2FvaWpXUk5V?=
+ =?utf-8?B?YXNqY2pmcTgxWXYxSXhJcW5KNmd1eFRGdUFObk10UHVjK2MvdkFkNWN4N2Zr?=
+ =?utf-8?B?WkhpYno4S09jYmtBSFc5QkN6eHdqYm45dlY1VVZXVmplLzF1TmZJRnlCWHZE?=
+ =?utf-8?Q?FlmDfCfvqilrLStIsU/j/wPHfl2DEa1w?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?WDc0NGFZVTdrZkpUYzZOejA3YUkzcEFocUMwSXRxeW5TdUQrbzl1OVh5M0FK?=
+ =?utf-8?B?K09UZm1xNHhBNXBKZnpocGNNUzBTam5JdGVrRU9qUC9QWnRyODJRSjVEbUJN?=
+ =?utf-8?B?MnNXaDhTRmo3S2Y2VnF3VldrM29yaHhFS3ZSbzV5bEhHMjRJNTdxL2oxRDBy?=
+ =?utf-8?B?T0VKWFJWa1Rla29KR2FuNHhzbmU2S3cycWpiTmV5NEhWZ01SUFNGU2hVSWFF?=
+ =?utf-8?B?R0dONEltc3N2ZTR1NThxMVJ1aFhVUzk4VFJCVWF5MnJnRnQzSWJQbmdjRE9J?=
+ =?utf-8?B?WERNYjBuNVZJejNpRGpSS1R2Vmh3bk51djFCZDhmOFlGT3JoQVBtUWxRQ1FB?=
+ =?utf-8?B?elNBelNnaDJJMkdFRURsRGhrMXc5THJ0Qi9uZkNWek56NW9XY1pZek9ISmY2?=
+ =?utf-8?B?NVA4Uk9YM2orbzcvNVRmKzlucVRUbDFjMjI5aFlnZmRKeGdYSFRuZ0xOTEJa?=
+ =?utf-8?B?cDRhTEZacGZzS2hhQ3VmaFAyUlJCRStZeWFxYnBtb2VWWCtUQkpOT1JrczJs?=
+ =?utf-8?B?NTZXSmNaczMyZ3ZXOWtOcUtBek04Q3JCWlRnNk12bEExK0FlWUlCbUVpMEVC?=
+ =?utf-8?B?QmNKcEt3NXo2bEpaeStHZTZONWVmZ2I3VTNsejdYTUJCOVZHTHJNaFFaK1Uw?=
+ =?utf-8?B?N2xNLzBMc2ZyTDF2NE80T0dsVGNTQlNkSUtJYThqUTlqaEdGS3plTUw2WW8x?=
+ =?utf-8?B?YUUrbk11Y0dBcnlpTW80ajJZTU9PY25RTytFZ1hsejJweCtMMEowbEJUNjNT?=
+ =?utf-8?B?MXcrd1E1TVJOc0JjdFJIQ3lQU0llRFNHaWlUWW9Qa2ZrWWZUQjh4bXhTZzIw?=
+ =?utf-8?B?aXluaml3K2dZdWhKZnRkbUt4MTQyWHBKU2U1UEVVbTlzVWNLTVJWT3ppeEw4?=
+ =?utf-8?B?OWtqQVBFa0p4VExJOHRiSldtempsQzVxT095aENBOHhJNDNwejhSQ1dxWk5W?=
+ =?utf-8?B?cEZQMTYySlBLQmtXZVNvQ05xRWpzYUdmOU5IRE9FcEc4eUNGL3MyMi9YbFho?=
+ =?utf-8?B?K0hvTE02cVRjT2N0K2x6czR4RldsNjYwdnZvMktKOFZhdm96UTVZYkpJczRH?=
+ =?utf-8?B?YzBnc2NVb2RpN0lYd1FXZ295VWR3Ty8zOTFyVFRrWWdZWEtWZ0Rxa0ZJL20r?=
+ =?utf-8?B?MDB1clA5WXZsWTlxL0RvRHpTOEt3MzRFVFh4azRranV2cmNMWmFGN0Z6ekF6?=
+ =?utf-8?B?NkFyT3dJRUF5QjFjMVE4dlY4eXAxRk9tNTd6YitTU3FEWDkvVllRVC9kelJL?=
+ =?utf-8?B?d0t0T3RwMU9NbHFnNWR2MHN6TU1LcjZkVjZwUVFqUFFZR3k1OXYxcVZCcExt?=
+ =?utf-8?B?NEo5N1hnRE11cVdOMUk5Mkc2a3gyR2hmZVZjdzdmSlZZWHRHd3U5bThhS2lH?=
+ =?utf-8?B?QjZHN2xiM3g3aTZodnZtNzVCMFlWak1jQktBdkFzZnZVUURGckIxbzlTdzYy?=
+ =?utf-8?B?N3Vmd1ZwZUkwUTNxc1VjNm5TMDdvOUFGZnhJeWpwWW5MaStOUCtzY1pRZFor?=
+ =?utf-8?B?RDdRSTJBOVlIN2dtUzBVVkh3UnY3S2JkTE5TeTRxQWl0S1A5YVpyWlIzVFFD?=
+ =?utf-8?B?a0xVbjVVQXBJcWVENzhxZlJkMVZzZEJ5bUR1cXNwL2lJdE9IT3YwOXpaNlVK?=
+ =?utf-8?B?d3J6clNaYnNHamk3a1Y2blA4cEhZSGhiMDFJeUUvTVFkeVRKRm9CcUVCdndu?=
+ =?utf-8?B?eWt3anZZYWdKUzMxN1NFc20rZkhTOENaaHUwbkVHOU9DcGN2dHN1RnVIZjJP?=
+ =?utf-8?B?dFFoL0FMU21QSUpEa2VFekNyNVRoaTdtUHFlZGVHd1VJVGN0empnRjVmNGds?=
+ =?utf-8?B?YlJSYjJhNFFRVXZCdWs4KzMzc1pld3RpTzBudkZ1T1pLVWJTNHlIK1BjYWRB?=
+ =?utf-8?B?SEgrYjhGVDIxUkN5eU5Iclk5NkxLVEFXdGVsQ21maHlVYVBUMVNHaDlmWmNl?=
+ =?utf-8?B?QmhxZ2FyRGNJeUNjK0hJbXBrd2hDNmJuVnlJaVkxWm92NXhqWnhHT2prV0dz?=
+ =?utf-8?B?WnF2UFYxKzZsb3B6dTJqMmdRaWtNQU1nTGNzdUtjNHJhcnR4NFRPdzAzZk1k?=
+ =?utf-8?B?QW5GZHVOaW8zRkFaa1crZ2xLYkZUUWlXOUVtZlUxV2tuS0NvT0MwTXNFaHhm?=
+ =?utf-8?B?YXIxcnZtZWJIUWJRdDF3MDNFa05yVmlhejRsVDg5RGtnNnQvRUJqUTArRU5y?=
+ =?utf-8?B?THc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B4C64F5D43D7F241A8CE658A1CAC1735@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-mux-mmio-resume-support-v3-1-a2f813c0d227@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIADOUoGcC/42OwQ7CIBBEf8Vwdg0F2lhP/ofxAHVrNxFooCU1T
- f9d6M2THmd2582sLGIgjOxyWFnARJG8y0IeD6wbtHsi0CNrJrhQvKkk2HkBa8lDwDhbhDiPow8
- TqF4aoaXSUmiW00ZHBBO064aSjyJAscppDNjTspfe7lkPFCcf3vuGVBX3d12qgIOqRW36usnP+
- mq8n17kTp23rFCT+JMkoAI8q7bhbWu4VN+kbds+bGSyayUBAAA=
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, gregory.clement@bootlin.com, 
- thomas.petazzoni@bootlin.coim, richard.genoud@bootlin.com, u-kumar1@ti.com, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Davis <afd@ti.com>, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.14.1
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeeftdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieevfeeuieevffevvdeftedvhfekuedufeekuefffefgkeduleehieffudevieeknecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhop
- ehuqdhkuhhmrghrudesthhirdgtohhmpdhrtghpthhtoheprghfugesthhirdgtohhmpdhrtghpthhtoheprhhitghhrghrugdrghgvnhhouhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehpvggurgesrgigvghnthhirgdrshgv
-X-GND-Sasl: thomas.richard@bootlin.com
+X-OriginatorOrg: microchip.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA0PR11MB4719.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c99b0962-5375-4d26-8cde-08dd443ea759
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2025 10:36:44.2263
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jS9anUXcTMHEH+Ex8F/MAyNXbXBMLBj5kUr2jWInpOFBR8zt2bWxSHZ0ZsOjwdnCy5N1NU7YJXPxnIuIFG6qFYLNwNfN8iatsnmlI+dggiACuYXStjKwP17NpM44PU7F
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR11MB8005
 
-The status of each mux is read during suspend and stored in the private
-memory of the mux_chip.
-Then the state is restored during the resume.
-
-Reviewed-by: Andrew Davis <afd@ti.com>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
-This is the third version, I just rebased the series on v6.14-rc1.
----
-Changes in v3:
-- rebased on v6.14-rc1.
-- Take Reviewed-by: Andrew Davis. 
-- Link to v2: https://lore.kernel.org/r/20240613-mux-mmio-resume-support-v2-1-e8496099b034@bootlin.com
-
-Changes in v2:
-- Remove all modifications done in the mux subsystem
-- Add a mux_mmio_set()
-- Read the status of muxes during suspend and store in the private memory
-  of the mux_chip.
-- Use this status to restore muxes during resume.
-- Link to v1: https://lore.kernel.org/r/20240613-mux-mmio-resume-support-v1-0-4525bf56024a@bootlin.com
----
- drivers/mux/mmio.c | 82 ++++++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 73 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/mux/mmio.c b/drivers/mux/mmio.c
-index 30a952c34365..30b84382637f 100644
---- a/drivers/mux/mmio.c
-+++ b/drivers/mux/mmio.c
-@@ -15,11 +15,25 @@
- #include <linux/property.h>
- #include <linux/regmap.h>
- 
-+struct mux_mmio {
-+	struct regmap_field **fields;
-+	unsigned int *hardware_states;
-+};
-+
-+static int mux_mmio_get(struct mux_control *mux, int *state)
-+{
-+	struct mux_mmio *mux_mmio = mux_chip_priv(mux->chip);
-+	unsigned int index = mux_control_get_index(mux);
-+
-+	return regmap_field_read(mux_mmio->fields[index], state);
-+}
-+
- static int mux_mmio_set(struct mux_control *mux, int state)
- {
--	struct regmap_field **fields = mux_chip_priv(mux->chip);
-+	struct mux_mmio *mux_mmio = mux_chip_priv(mux->chip);
-+	unsigned int index = mux_control_get_index(mux);
- 
--	return regmap_field_write(fields[mux_control_get_index(mux)], state);
-+	return regmap_field_write(mux_mmio->fields[index], state);
- }
- 
- static const struct mux_control_ops mux_mmio_ops = {
-@@ -37,8 +51,8 @@ static int mux_mmio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
--	struct regmap_field **fields;
- 	struct mux_chip *mux_chip;
-+	struct mux_mmio *mux_mmio;
- 	struct regmap *regmap;
- 	int num_fields;
- 	int ret;
-@@ -69,12 +83,20 @@ static int mux_mmio_probe(struct platform_device *pdev)
- 	}
- 	num_fields = ret / 2;
- 
--	mux_chip = devm_mux_chip_alloc(dev, num_fields, num_fields *
--				       sizeof(*fields));
-+	mux_chip = devm_mux_chip_alloc(dev, num_fields, sizeof(struct mux_mmio));
- 	if (IS_ERR(mux_chip))
- 		return PTR_ERR(mux_chip);
- 
--	fields = mux_chip_priv(mux_chip);
-+	mux_mmio = mux_chip_priv(mux_chip);
-+
-+	mux_mmio->fields = devm_kmalloc(dev, num_fields * sizeof(*mux_mmio->fields), GFP_KERNEL);
-+	if (IS_ERR(mux_mmio->fields))
-+		return PTR_ERR(mux_mmio->fields);
-+
-+	mux_mmio->hardware_states = devm_kmalloc(dev, num_fields *
-+						 sizeof(*mux_mmio->hardware_states), GFP_KERNEL);
-+	if (IS_ERR(mux_mmio->hardware_states))
-+		return PTR_ERR(mux_mmio->hardware_states);
- 
- 	for (i = 0; i < num_fields; i++) {
- 		struct mux_control *mux = &mux_chip->mux[i];
-@@ -104,9 +126,9 @@ static int mux_mmio_probe(struct platform_device *pdev)
- 			return -EINVAL;
- 		}
- 
--		fields[i] = devm_regmap_field_alloc(dev, regmap, field);
--		if (IS_ERR(fields[i])) {
--			ret = PTR_ERR(fields[i]);
-+		mux_mmio->fields[i] = devm_regmap_field_alloc(dev, regmap, field);
-+		if (IS_ERR(mux_mmio->fields[i])) {
-+			ret = PTR_ERR(mux_mmio->fields[i]);
- 			dev_err(dev, "bitfield %d: failed allocate: %d\n",
- 				i, ret);
- 			return ret;
-@@ -130,13 +152,55 @@ static int mux_mmio_probe(struct platform_device *pdev)
- 
- 	mux_chip->ops = &mux_mmio_ops;
- 
-+	dev_set_drvdata(dev, mux_chip);
-+
- 	return devm_mux_chip_register(dev, mux_chip);
- }
- 
-+static int mux_mmio_suspend_noirq(struct device *dev)
-+{
-+	struct mux_chip *mux_chip = dev_get_drvdata(dev);
-+	struct mux_mmio *mux_mmio = mux_chip_priv(mux_chip);
-+	unsigned int state;
-+	int ret, i;
-+
-+	for (i = 0; i < mux_chip->controllers; i++) {
-+		ret = mux_mmio_get(&mux_chip->mux[i], &state);
-+		if (ret) {
-+			dev_err(dev, "control %u: error saving mux: %d\n", i, ret);
-+			return ret;
-+		}
-+
-+		mux_mmio->hardware_states[i] = state;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mux_mmio_resume_noirq(struct device *dev)
-+{
-+	struct mux_chip *mux_chip = dev_get_drvdata(dev);
-+	struct mux_mmio *mux_mmio = mux_chip_priv(mux_chip);
-+	int ret, i;
-+
-+	for (i = 0; i < mux_chip->controllers; i++) {
-+		ret = mux_mmio_set(&mux_chip->mux[i], mux_mmio->hardware_states[i]);
-+		if (ret) {
-+			dev_err(dev, "control %u: error restoring mux: %d\n", i, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_NOIRQ_DEV_PM_OPS(mux_mmio_pm_ops, mux_mmio_suspend_noirq, mux_mmio_resume_noirq);
-+
- static struct platform_driver mux_mmio_driver = {
- 	.driver = {
- 		.name = "mmio-mux",
- 		.of_match_table	= mux_mmio_dt_ids,
-+		.pm = pm_sleep_ptr(&mux_mmio_pm_ops),
- 	},
- 	.probe = mux_mmio_probe,
- };
-
----
-base-commit: 36a4d29784f9cce58503ac22459740140ab76426
-change-id: 20240613-mux-mmio-resume-support-4f3b2a34a32a
-
-Best regards,
--- 
-Thomas Richard <thomas.richard@bootlin.com>
-
+SGkgRGhhcm1hLA0KDQpPbiAxMi8wMS8yNSAxMDoxMSBhbSwgRGhhcm1hIEJhbGFzdWJpcmFtYW5p
+IHdyb3RlOg0KPiBmaXggdGhlIGFyZ3VtZW50cyBwYXNzZWQgdG8gdGhlIEFUOTFfU09DIGZvciBT
+QU05WDc1IFNpUC4NCj4gDQo+IEZpeGVzOiA1ZWI2NGYyYjM2OGYgKCJBUk06IGF0OTE6IGFkZCBz
+dXBwb3J0IGluIFNvQyBkcml2ZXIgZm9yIG5ldyBzYW05eDciKQ0KPiBTaWduZWQtb2ZmLWJ5OiBE
+aGFybWEgQmFsYXN1YmlyYW1hbmkgPGRoYXJtYS5iQG1pY3JvY2hpcC5jb20+DQo+IC0tLQ0KDQpS
+ZXZpZXdlZC1ieTogVmFyc2hpbmkgUmFqZW5kcmFuIDx2YXJzaGluaS5yYWplbmRyYW5AbWljcm9j
+aGlwLmNvbT4NCg0KPiAgIGRyaXZlcnMvc29jL2F0bWVsL3NvYy5jIHwgMTYgKysrKysrKystLS0t
+LS0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0p
+DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvYXRtZWwvc29jLmMgYi9kcml2ZXJzL3Nv
+Yy9hdG1lbC9zb2MuYw0KPiBpbmRleCAyOThiNTQyZGQxYzAuLjI3M2MxNDIwZmQ0MCAxMDA2NDQN
+Cj4gLS0tIGEvZHJpdmVycy9zb2MvYXRtZWwvc29jLmMNCj4gKysrIGIvZHJpdmVycy9zb2MvYXRt
+ZWwvc29jLmMNCj4gQEAgLTExMSwxNyArMTExLDE3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgYXQ5
+MV9zb2Mgc29jc1tdIF9faW5pdGNvbnN0ID0gew0KPiAgIAlBVDkxX1NPQyhTQU05WDdfQ0lEUl9N
+QVRDSCwgQVQ5MV9DSURSX01BVENIX01BU0ssDQo+ICAgCQkgQVQ5MV9DSURSX1ZFUlNJT05fTUFT
+SywgU0FNOVg3NV9FWElEX01BVENILA0KPiAgIAkJICJzYW05eDc1IiwgInNhbTl4NyIpLA0KPiAt
+CUFUOTFfU09DKFNBTTlYN19DSURSX01BVENILCBTQU05WDc1X0QxTV9FWElEX01BVENILA0KPiAt
+CQkgQVQ5MV9DSURSX1ZFUlNJT05fTUFTSywgU0FNOVg3NV9FWElEX01BVENILA0KPiArCUFUOTFf
+U09DKFNBTTlYN19DSURSX01BVENILCBBVDkxX0NJRFJfTUFUQ0hfTUFTSywNCj4gKwkJIEFUOTFf
+Q0lEUl9WRVJTSU9OX01BU0ssIFNBTTlYNzVfRDFNX0VYSURfTUFUQ0gsDQo+ICAgCQkgInNhbTl4
+NzUgMTZNQiBERFIyIFNpUCIsICJzYW05eDciKSwNCj4gLQlBVDkxX1NPQyhTQU05WDdfQ0lEUl9N
+QVRDSCwgU0FNOVg3NV9ENU1fRVhJRF9NQVRDSCwNCj4gLQkJIEFUOTFfQ0lEUl9WRVJTSU9OX01B
+U0ssIFNBTTlYNzVfRVhJRF9NQVRDSCwNCj4gKwlBVDkxX1NPQyhTQU05WDdfQ0lEUl9NQVRDSCwg
+QVQ5MV9DSURSX01BVENIX01BU0ssDQo+ICsJCSBBVDkxX0NJRFJfVkVSU0lPTl9NQVNLLCBTQU05
+WDc1X0Q1TV9FWElEX01BVENILA0KPiAgIAkJICJzYW05eDc1IDY0TUIgRERSMiBTaVAiLCAic2Ft
+OXg3IiksDQo+IC0JQVQ5MV9TT0MoU0FNOVg3X0NJRFJfTUFUQ0gsIFNBTTlYNzVfRDFHX0VYSURf
+TUFUQ0gsDQo+IC0JCSBBVDkxX0NJRFJfVkVSU0lPTl9NQVNLLCBTQU05WDc1X0VYSURfTUFUQ0gs
+DQo+ICsJQVQ5MV9TT0MoU0FNOVg3X0NJRFJfTUFUQ0gsIEFUOTFfQ0lEUl9NQVRDSF9NQVNLLA0K
+PiArCQkgQVQ5MV9DSURSX1ZFUlNJT05fTUFTSywgU0FNOVg3NV9EMUdfRVhJRF9NQVRDSCwNCj4g
+ICAJCSAic2FtOXg3NSAxMjVNQiBERFIzTCBTaVAgIiwgInNhbTl4NyIpLA0KPiAtCUFUOTFfU09D
+KFNBTTlYN19DSURSX01BVENILCBTQU05WDc1X0QyR19FWElEX01BVENILA0KPiAtCQkgQVQ5MV9D
+SURSX1ZFUlNJT05fTUFTSywgU0FNOVg3NV9FWElEX01BVENILA0KPiArCUFUOTFfU09DKFNBTTlY
+N19DSURSX01BVENILCBBVDkxX0NJRFJfTUFUQ0hfTUFTSywNCj4gKwkJIEFUOTFfQ0lEUl9WRVJT
+SU9OX01BU0ssIFNBTTlYNzVfRDJHX0VYSURfTUFUQ0gsDQo+ICAgCQkgInNhbTl4NzUgMjUwTUIg
+RERSM0wgU2lQIiwgInNhbTl4NyIpLA0KPiAgICNlbmRpZg0KPiAgICNpZmRlZiBDT05GSUdfU09D
+X1NBTUE1DQo+IA0KPiAtLS0NCj4gYmFzZS1jb21taXQ6IDJiODg4NTFmNTgzZDNjNGU0MGJjZDQw
+Y2ZlMTk2NTI0MWVjMjI5ZGQNCj4gY2hhbmdlLWlkOiAyMDI1MDExMi1hdG1lbC1zb2MtNDBjNGI0
+MGM5YjY4DQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQoNCi0tIA0KVGhhbmtzIGFuZCBSZWdhcmRzLA0K
+VmFyc2hpbmkgUmFqZW5kcmFuLg0KDQo=
