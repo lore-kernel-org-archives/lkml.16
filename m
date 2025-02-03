@@ -1,175 +1,96 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97FA1FAC3D
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC481FAC3D;
+	Mon,  3 Feb 2025 09:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738576622; cv=none; b=lI7xlUw7F6AmUMTjDeHMG1c5Srn6AC7xitqPfMg+1gV9FKHXEttWlxN+vPr6xERQ/cL0lhOetKtmkDiIULPnNP5HbJ7nqlOJqxeKHQMMoZaOuows/q3jp8EN1hnUEMX6KY7OPvBSYiEe/PCVkJYDIYYUj9x+xJgZDsmfef3/RAw=
+	t=1738576637; cv=none; b=PwP2vsSJJkmnfg2BVPWxEx2W+yJtvrvqP5mPk8/3wQZnb4Va84kPmXLoI9AGtJ7ncUp8Nak/XsWNapg2Ap+FIuqGm2p2mOrPwb9cera4VCjIZ3z8tKzFwAoIHdFR+IipLiqepMvcWQ4ZA+GVPBZ40lMRowWgIHyQwWJRJrZetLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738576622; c=relaxed/simple;
-	bh=P6ZIjOcrVGSddzFqkeN9Se9GTO1nq5yLuU1kZ4p08iM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=I4vJVFASjXcywDyJ6ORsGZc9Px2ZxYeP7g+LM6Uf+IBKR0j4PABWaY74gjTPlFbA6msTXdx2o8H/N5Wt6OLuN38Mf/8uGa1ExoPrIBIjStpUxLv8abRR0wa2wH9a+q4uoStTx4XHhIHZ3VPraaa6qPnu+akv4uxCqkV6UKctKiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F+KMRBdI; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
+	s=arc-20240116; t=1738576637; c=relaxed/simple;
+	bh=urrBZ/6GVCXqZdOoAIyHoDL2Fcu2h++C/73D15sq3tk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dEnf/duq7irRQifpoc60xpD6MQAHqwHcxh7lhAR8YZsn0KzBXnejwABg2pIVF8YVM1hFy9VqPqn7LZMY6J8DA8quLFf6HrTy9yQ3O6/rTarZn+r0k6zWAqS44a8Br4zcxZqcQtPYuZpQRioUn6PI2OcjZBDju8idrOhKHL8vRlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P3KzzirN; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F+KMRBdI"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f27dd44f86so45186167b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:57:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738576620; x=1739181420; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2Dv5Ac6SPOdtGgS0tmgxnxoVXUMjLjqcjHEmAbg0F2U=;
-        b=F+KMRBdI48ZkM0Dy7obIzY0L73/vD/h9yeGChz3IX/QgNaMC8lIjba7R6t5uuvj5OB
-         ZYYTaMNOv90ghPTkeHuLp0503WGmMAsugmA/aI7xVIR1BG8TP2ZF5MUJkhrM9NbQqdGj
-         rhuZtXkw4382EHZAD3bmB7VNSawDHTwfmpc8j9lPOY+hxxCFHhl2q8OlYLq5W0cTgfdt
-         oz+h1MggL8QgDY0kmMlINiyA76PoF0iNfC4O2MTtbxU1zcOnL6QxZSRFwZ+Fm344j51k
-         IWQTs1WdcmVmW9Ir5jKRsg9ELYhstS+JHATXZR+LrVwem2UrDJaXi/d+Gmcmp6vkP/qn
-         EQEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738576620; x=1739181420;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2Dv5Ac6SPOdtGgS0tmgxnxoVXUMjLjqcjHEmAbg0F2U=;
-        b=CUp3pH6F9V8Bim7Lha3WanH81CQ/Z+Wm+U4Lv84bbOBSpdJxguNrxAv4j7BYOShJcd
-         PR6cFetpVmrQjpIYG37n2HLhiO027bPrPB2dlmJdo1fqo2pCQ9x+01Oww8cBe0xP/sbf
-         FKDTookXRm/aSB/w37y0FsCCHQ7dAWCDlJ06xXFaJqSGlV2a+7biEvtZCYVmLLpTMv4X
-         QgIXTdOAA4kmHSowyjj9t9J973QejoY3J49MCllVo37JNLBs8mLX3bIQlB4l3/0BsK90
-         MBA35jH04VCbdXZr3a9VhtIKXsoLMgTT9v9qTYyU6YJRMFclEOaa6/1TYfgjsydN6HE5
-         UHDA==
-X-Gm-Message-State: AOJu0YzQ4faNl5os3Tk7f0wix4pIhmRPNXIaDYVwnL+W0HsIKRv6QaQN
-	zpJyPyuADZhEq2FlU7Wr4rxPkQxZW7ddf1JsmPdUJBB8W/sJyHye/ipAPxO0n6Pm0xVEFHnLGDn
-	rf/QAXUSR/+4Rgijy1qciojEe79rR+/jhaR6y2W4LJmvLT0M15IPsN1UfFQl1NoIoY72g8HWkV9
-	0gYjRc43Wp50kEtUs9cUixYa/GPM1z1A==
-X-Google-Smtp-Source: AGHT+IECB4t9+nxA9LWLIFfRwRwZsyYuUUH4xiSxgCR5XbY+fu38QoXLmO5+/gf/KeL9xbqGeB9WRgfz
-X-Received: from ywbhl13.prod.google.com ([2002:a05:690c:620d:b0:6f5:278e:e957])
- (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:690c:74ca:b0:6ef:81c0:5b56
- with SMTP id 00721157ae682-6f7a8355a9amr168753257b3.14.1738576619752; Mon, 03
- Feb 2025 01:56:59 -0800 (PST)
-Date: Mon,  3 Feb 2025 17:56:53 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P3KzzirN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738576635; x=1770112635;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=urrBZ/6GVCXqZdOoAIyHoDL2Fcu2h++C/73D15sq3tk=;
+  b=P3KzzirNUClWBYhJ6eFsfTbdSOPpJqEnLLjYI40WO597oS25k9xeKCQg
+   FakRiqzPoUZDIpqD6LpNqqtB4oReaQJEEE7ZF9dVx0lGo7AXZvirpcO2q
+   sf5lqgk1JPTgsRCMC7Ko/lSgpyLCTyHc0N7lUT00dQudA279BekprIatO
+   ydDXe3/S5GEc3F6SBSLEjVgLt67aMHf/aMs5P4JBhhuOSmhBlIz1XHDO3
+   iwapU9qVPN4snYoUR9FCD2jy19hRjjz/gDdqCNy9CIR5X34aR5eSTQ4nn
+   luqWmk4ytJuaPhEcM5045XA1iiMwW/uuVJt5PeTqNufj60Z3PAJsvmeDy
+   Q==;
+X-CSE-ConnectionGUID: RWc/S+SETYWe8tTMvh3gyg==
+X-CSE-MsgGUID: eMi2AGwjQ+OPVjw2jYnxig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="50053605"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="50053605"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:57:14 -0800
+X-CSE-ConnectionGUID: dttPdoLBRj6ws3opxLAL7g==
+X-CSE-MsgGUID: XaZxNjHLRBGGAqutSMq2pQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="147443589"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:57:11 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tetCV-00000007n5f-3FpQ;
+	Mon, 03 Feb 2025 11:57:07 +0200
+Date: Mon, 3 Feb 2025 11:57:07 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, linus.walleij@linaro.org,
+	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
+	lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
+	jic23@kernel.org, przemyslaw.kitszel@intel.com,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 18/20] ASoC: uda1380: use devm_kmemdup_array()
+Message-ID: <Z6CS88kG3dssSaIk@smile.fi.intel.com>
+References: <20250203080902.1864382-1-raag.jadav@intel.com>
+ <20250203080902.1864382-19-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250203095653.4085118-1-keyz@google.com>
-Subject: [PATCH v5] cpuidle: psci: Add trace for PSCI domain idle
-From: Keita Morisaki <keyz@google.com>
-To: linux-kernel@vger.kernel.org, lpieralisi@kernel.org, sudeep.holla@arm.com, 
-	rafael@kernel.org, daniel.lezcano@linaro.org, linux-pm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org, aarontian@google.com, 
-	yimingtseng@google.com, Keita Morisaki <keyz@google.com>, Dhruva Gole <d-gole@ti.com>, 
-	Kevin Hilman <khilman@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203080902.1864382-19-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The trace event cpu_idle provides insufficient information for debugging
-PSCI requests due to lacking access to determined PSCI domain idle
-states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
-idle states the power domain has.
+On Mon, Feb 03, 2025 at 01:39:00PM +0530, Raag Jadav wrote:
+> Convert to use devm_kmemdup_array() which is more robust.
 
-Add new trace events namely psci_domain_idle_enter and
-psci_domain_idle_exit to trace enter and exit events with a determined
-idle state.
+...
 
-These new trace events will help developers debug CPUidle issues on ARM
-systems using PSCI by providing more detailed information about the
-requested idle states.
+> -	uda1380->reg_cache = devm_kmemdup(&i2c->dev,
+> -					uda1380_reg,
+> -					ARRAY_SIZE(uda1380_reg) * sizeof(u16),
+> -					GFP_KERNEL);
+> +	uda1380->reg_cache = devm_kmemdup_array(&i2c->dev, uda1380_reg, ARRAY_SIZE(uda1380_reg),
+> +						sizeof(u16), GFP_KERNEL);
 
-Signed-off-by: Keita Morisaki <keyz@google.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
----
-v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
-        and rephrase the commit message accordingly. Rebased onto the latest.
-v2->v3: Add "Reviewed-by: Steven Rostedt"
-v3->v4: Add the Tested-by label
-v4->v5: Add "Reviewed-by: Dhruva Gole"
+sizeof(*uda1380->reg_cache) ?
 
-Hopefully this patch gets attention from maintainers of
-drivers/cpuidle/cpuidle-psci.c too.
+>  	if (!uda1380->reg_cache)
+>  		return -ENOMEM;
 
- drivers/cpuidle/cpuidle-psci.c |  3 +++
- include/trace/events/power.h   | 37 ++++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-index 2562dc001fc1..dd8d776d6e39 100644
---- a/drivers/cpuidle/cpuidle-psci.c
-+++ b/drivers/cpuidle/cpuidle-psci.c
-@@ -25,6 +25,7 @@
- #include <linux/syscore_ops.h>
 
- #include <asm/cpuidle.h>
-+#include <trace/events/power.h>
-
- #include "cpuidle-psci.h"
- #include "dt_idle_states.h"
-@@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
- 	if (!state)
- 		state = states[idx];
-
-+	trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
- 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
-+	trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
-
- 	if (s2idle)
- 		dev_pm_genpd_resume(pd_dev);
-diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-index d2349b6b531a..9253e83b9bb4 100644
---- a/include/trace/events/power.h
-+++ b/include/trace/events/power.h
-@@ -62,6 +62,43 @@ TRACE_EVENT(cpu_idle_miss,
- 		(unsigned long)__entry->state, (__entry->below)?"below":"above")
- );
-
-+DECLARE_EVENT_CLASS(psci_domain_idle,
-+
-+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-+
-+	TP_ARGS(cpu_id, state, s2idle),
-+
-+	TP_STRUCT__entry(
-+		__field(u32,		cpu_id)
-+		__field(u32,		state)
-+		__field(bool,		s2idle)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cpu_id = cpu_id;
-+		__entry->state = state;
-+		__entry->s2idle = s2idle;
-+	),
-+
-+	TP_printk("cpu_id=%lu state=0x%lx is_s2idle=%s",
-+		  (unsigned long)__entry->cpu_id, (unsigned long)__entry->state,
-+		  (__entry->s2idle)?"yes":"no")
-+);
-+
-+DEFINE_EVENT(psci_domain_idle, psci_domain_idle_enter,
-+
-+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-+
-+	TP_ARGS(cpu_id, state, s2idle)
-+);
-+
-+DEFINE_EVENT(psci_domain_idle, psci_domain_idle_exit,
-+
-+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-+
-+	TP_ARGS(cpu_id, state, s2idle)
-+);
-+
- TRACE_EVENT(powernv_throttle,
-
- 	TP_PROTO(int chip_id, const char *reason, int pmax),
-
-base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
---
-2.48.1.362.g079036d154-goog
