@@ -1,115 +1,153 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B870205ADD
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982C3205E11;
+	Mon,  3 Feb 2025 14:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738591239; cv=none; b=tlcdD+p+dyxIXejafJeS2lTYCdqpDny+BBOOb9z/QdtlEL72klJ+aNRAvwCmefcoq+yXX5NfbEt+4GkGcChME5ciN1gK8+19Q3tK90v/k5/Y/kmiw2prVRudBiWJQN3VDhtsep4eHWkQqczak3buSH+JY4nBd4T8FtkeRgw0o6w=
+	t=1738591297; cv=none; b=Hzl/acI3eI1Nz3s5M1ClZ3h1UJ0tP/NCNhw/myoKJE+IP6+Agw2mQnEf1ANX7PXGfFg/Q9sOZG0URdbTGD6SKNNq308koDgoalfV5lmP0nJfr6/NL6xkXJcGLBbF5EtucraPJLwJs023wjp2Dmx4JwcnsDC0Zoys+QjWzP/3Sao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738591239; c=relaxed/simple;
-	bh=YEBc9w8PsnWAIH0OCO/5q9BJSPFXkTLscni1Aov5z9A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=stFEMskPr7+0aBFxenPOrXlWiZsoX1JOHYAfCa/uzoOq/Q7XDotYSEfipzOkYmTw0iY+5RH1hDI+FzukStqTWU7ZShH8RXYEau1eJ6VJ53UKeybvACu7u3Rkdof3horDbaHJRc/oACXyl2vzV1onCdgV4YGUM9NeIhVZ+vUS2cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V9V84eji; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738591297; c=relaxed/simple;
+	bh=FUGVfpQsBsQZDnW8/29ndy6ufToxH4fLIZhk0OSH+vk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PWJnpIQnCcw3Z4NRiEFoorB/w8iMP32SiN53w1b31k6F5Pw7JxrhgJsMXPOGjz26mB0yQg4luk8+sfI1aenKAjSWwNw9Jzw4k9Ip/wkMAg7F3K3rcY72wl2txrwAS1XJKqsfrocFLGv84RaC+Xzgt3ujFGzsazGp4WnvIAe7y0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dxJQFzlt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V9V84eji"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6f6ae4846c7so24630567b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:00:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738591236; x=1739196036; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y3ZAg9pl88KjIvs5mS1f1EZymy0dyDgkN4GT1M3eKZY=;
-        b=V9V84eji9P0HdcWV65pg2VDRgL/ECXM/J3o0xCoJb+98/pWGKI8rmPrjBzlqhwNVlV
-         m+IQRGRUBT2/BKK1IblkVojJGo3u2oLoucIEhnsY2uGRQBiR30eqHJwDLJDkO5H69TEc
-         RFWAn91/KBOM1pDeu0tFpS8lCIPKFkxM6oOnxVGWD79uKuRYi3xbXaDo6wHfB2eie/sE
-         v8EGbHywSl9nVjIBs5RLqX2HrRvhYjSKkkX6ziKpviwCf1QZnsDjKOOy2F3tvGyrUSxd
-         maGkyCQqhdqXRzP1uiyWUJSkuTB5GFbwxmw0aXIZ1u4uMRsSWIp1TrhVLsVZsqvf2Q5w
-         Pz2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738591236; x=1739196036;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y3ZAg9pl88KjIvs5mS1f1EZymy0dyDgkN4GT1M3eKZY=;
-        b=GZMONGkZ8EB3oP74JMA3uJVVff5++saAWZ/iij3SnvjjZVWw/5f7TOlX0tYfU8tJGi
-         MluaLbx/vVoDgtMAWS0djUUsy6FJVyLQD1RrgMT/m1xP3uJoaY8/CVFYYjia29dsiBZG
-         s/7Kf1SvrkbTRIl/SyOwQbxSShjuT0ZRkO8e7IZdNAie9A49kCX+pqwWUBQPK+NOAPYy
-         UURzuyC+mysoNjGuVtWPWzW1ilryfucZvpPKtSnH2EOhIBl50Pn2wTYVTmWRwEuQt06c
-         XeY4wm75xuhz9wgCGi6FD94FCeZkqbiApKSWgi1vMkvLvq/WOlg/s57KlaA1T9QGYN3N
-         zpAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXnYiuoEEXmNn1tNlRVkUe24oyx3U8N19VpTyd1mGUG3DrFMYMf/uF82HbuG208ekhm+Q8vJjf7O7vsCU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7/aUbqWPoKCoJ3p5oOTRR960XYAZVUj4/YrmVQHwT9Q6f1Ys4
-	xRUMQdX5MfG3BDMj9i8yifvUhW09bSJ2jvNDnc+TqfpaFHoGFe/N7WpjVHY9kePxQXL8fOrGtPQ
-	MpFh+awwMSB5NZuEywObkiF6r9yp6uBoctPd0lQ==
-X-Gm-Gg: ASbGnctadQPlcQM109GMtRIFdRZ/iWa6P2UDTk7purTNPPRfN7aGaicswIHVnV0HwwF
-	Oy60rgZt0S5mys36GejJS7KkjXt4RHpzE+U6OzPRf150A+eTd10PbIYoR/+VhQXpmGBTBRQ==
-X-Google-Smtp-Source: AGHT+IHuL252vql+MeLPa1il2bPxNj6ynbBWo3mzurFA8SbfqbWEn52CWFCkQZHR2nMMtJaAFqXqFRxN0N0x3eiX1YU=
-X-Received: by 2002:a05:690c:6486:b0:6f6:c8fc:61b1 with SMTP id
- 00721157ae682-6f7a83fe138mr161266737b3.28.1738591234763; Mon, 03 Feb 2025
- 06:00:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dxJQFzlt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664D6C4CED2;
+	Mon,  3 Feb 2025 14:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738591297;
+	bh=FUGVfpQsBsQZDnW8/29ndy6ufToxH4fLIZhk0OSH+vk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dxJQFzlt4BVNOgSQuojXmA9wuzm4juDMiaj0xfMOAE5qPk5Vzb1dY6VgLM/hLrYRI
+	 Zd9+pCEzYYVOR46Td4Mo1YEY21wDNc78e4E/NQu4MLG+yWelOi7uSJDHAR94Gq2Io2
+	 S/5g5li5Jhvv/wwVRI4ApfEeYqSP9+TuKxkXCOjaMGuMZGFoJXBSs7yJ/o4dYajCqM
+	 7sMqSFURdJ7oxQpQ7ZoOdRq4XLWiWKj1QXmNEhRzyyuYLgf26P1NSFzawTAN1FRBJ4
+	 ckEJtWX4+/sU6ftXPOVdiNouwo41UZKZrbT/T99jACiBEflDshR6f2c2lZ7XLI/b7z
+	 DPRk7DkWm7p3g==
+Message-ID: <9c8a9dee-92ba-47e4-b16b-ab47727d8057@kernel.org>
+Date: Mon, 3 Feb 2025 15:01:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202-rb1-bt-v3-0-6797a4467ced@linaro.org> <20250202-rb1-bt-v3-4-6797a4467ced@linaro.org>
- <d5e1e6ae-b773-4ec8-a66b-2e1830827164@oss.qualcomm.com>
-In-Reply-To: <d5e1e6ae-b773-4ec8-a66b-2e1830827164@oss.qualcomm.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 3 Feb 2025 16:00:26 +0200
-X-Gm-Features: AWEUYZmz1ECIXn-mrFsqggOTDVeuYLmbYaHev8MsZuEQbvNP_yfferj5PUkoYTw
-Message-ID: <CAA8EJppMVzuRLLakNJd4M9MRbW5P-0x=rTf1p9kj0zj88SOOGA@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] arm64: dts: qcom: qcm2290: fix (some) of QUP interconnects
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Rocky Liao <quic_rjliao@quicinc.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/33] dt-bindings: clock: add clock definitions for
+ exynos7870 CMU
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Lee Jones <lee@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Andi Shyti <andi.shyti@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Jaehoon Chung <jh80.chung@samsung.com>,
+ Vivek Gautam <gautam.vivek@samsung.com>,
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Kees Cook <kees@kernel.org>,
+ Tony Luck <tony.luck@intel.com>, "Guilherme G . Piccoli"
+ <gpiccoli@igalia.com>, Sergey Lisov <sleirsgoevy@gmail.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org>
+ <20250202190758.14986-1-kauschluss@disroot.org>
+ <20250203-enigmatic-remarkable-beagle-709955@krzk-bin>
+ <c1249f2f6ac8a2f5a1dcb3bbbba647f9@disroot.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <c1249f2f6ac8a2f5a1dcb3bbbba647f9@disroot.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 3 Feb 2025 at 15:50, Konrad Dybcio
-<konrad.dybcio@oss.qualcomm.com> wrote:
->
-> On 2.02.2025 1:16 PM, Dmitry Baryshkov wrote:
-> > While adding interconnect support for the QCM2290 platform some of them
-> > got the c&p error, rogue MASTER_APPSS_PROC for the config_noc
-> > interconnect. Turn that into SLAVE_QUP_0 as expected.
-> >
-> > Fixes: 5b970ff0193d ("arm64: dts: qcom: qcm2290: Hook up interconnects")
-> > Reported-by: Konrad Dybcio <konradybcio@kernel.org>
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/qcm2290.dtsi | 16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> > index f0746123e594d5ce5cc314c956eaca11556a9211..6e3e57dd02612f3568f07f1e198028413f463c69 100644
-> > --- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> > @@ -1073,7 +1073,7 @@ spi0: spi@4a80000 {
-> >                               interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
-> >                                                &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
-> >                                               <&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
-> > -                                              &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
-> > +                                              &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
->
-> Still incorrect, this should be &qup_virt SLAVE_QUP_CORE_0
+On 03/02/2025 13:40, Kaustabh Chakraborty wrote:
+> On 2025-02-03 07:54, Krzysztof Kozlowski wrote:
+>> On Mon, Feb 03, 2025 at 12:37:58AM +0530, Kaustabh Chakraborty wrote:
+>>> From: Sergey Lisov <sleirsgoevy@gmail.com>
+>>>
+>>> Add unique identifiers for exynos7870 clocks for every bank. It adds all
+>>> clocks of CMU_MIF, CMU_DISPAUD, CMU_G3D, CMU_ISP, CMU_MFCMSCL, and
+>>> CMU_PERI.
+>>>
+>>> Signed-off-by: Sergey Lisov <sleirsgoevy@gmail.com>
+>>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+>>> ---
+>>>  include/dt-bindings/clock/exynos7870.h | 324 +++++++++++++++++++++++++
+>>>  1 file changed, 324 insertions(+)
+>>
+>> Look at git log - that's never a separate commit.
+> 
+> Hmm, I see past examples which are mixed.
+> 
+> 2ae5c2c3f8d586b709cf67efe94488be397d7544
+> Exynos850 CMU (c. 2021). CMU definitions are in a separate commit.
+> 
+> 591020a516720e9eba1c4b1748cb73b6748e445f
+> Exynos7885 CMU (c. 2021). CMU definitions are in a separate commit.
+> 
+Huh, indeed, my mistake.
 
-Hmm, why? qup_virt has its own path. I think this one (using CNOC)
-matches the usage on other platforms.
+Let's avoid that pattern, so binding headers are always part of bindings
+commit.
 
->
-> Konrad
-
-
-
--- 
-With best wishes
-Dmitry
+Best regards,
+Krzysztof
