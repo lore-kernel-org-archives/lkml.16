@@ -1,54 +1,80 @@
-Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [195.16.41.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DAC205510;
-	Mon,  3 Feb 2025 13:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.16.41.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC46825A631;
+	Mon,  3 Feb 2025 13:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738589568; cv=none; b=YEcpB96LxFyc3/4W/JbGDQyeEKPf0Fn96k9hNpW8X3HyNPl6b/a2l+A3IHy4sXwJq1HBWaliBfmvQ+oAICA4Zan5msDMf/e+pd9bdrALb3n9Hd9xx3gkCxB0LV65ra6HWweb5MfKlQQc2OFv57z6lZ5+QmMoskvj9bSRbxCWVjs=
+	t=1738589601; cv=none; b=VZUF5RXLEle924FmnwDnpZbTG7MlSLnMis1Qq+jsB89o25gUbpdfuMG/6KCTkUyiEVkm40fr5EP9T6EvTSqEjfJ0kIcfWUfEWTNy82RRmmgCtPvyElNgNCzHtjjHz6yrT1ndOzuA7PSXgIt3252afaMcJUOPHRrV54qlbrMmUew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738589568; c=relaxed/simple;
-	bh=QEy6vuO6FEBx0hd5nhL3pORfbaXgXq6LhcDZM8PPClw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qc1NCqQXcCj+vLkqvA78xqddIDUi48imo/9LEE4R0MoZy23/dMrgdnLBkE+eKx9V1A0lLzg6znNzq8C2MSul+4mRZEMyMOTinzVXIX25upwo7+ndkNPg9lybF7GNwLLOIcgSDlUJEa8GBkwgzLdC0uogsAkrIG2ydFocTxhNOWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=195.16.41.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
-	by mail-gw02.astralinux.ru (Postfix) with ESMTP id 33F9F1F9E0;
-	Mon,  3 Feb 2025 16:26:11 +0300 (MSK)
-Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail03.astralinux.ru [10.177.185.108])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
-	Mon,  3 Feb 2025 16:26:06 +0300 (MSK)
-Received: from localhost.localdomain (unknown [10.198.57.103])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4YmnLt3yDBz1h04s;
-	Mon,  3 Feb 2025 16:25:58 +0300 (MSK)
-From: Anastasia Belova <abelova@astralinux.ru>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Anastasia Belova <abelova@astralinux.ru>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Roman Li <roman.li@amd.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Tim Huang <tim.huang@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
+	s=arc-20240116; t=1738589601; c=relaxed/simple;
+	bh=yGzpuivdNAxlgO4ZxzCgiv2/6xDGQ7/87DGkiRnqHNc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rwsvBsU2Qe26aYMquYelN29eMgSdanNNmMauBTbI64oOOj+SwnH3DYQjwnF9ePbByvl/Yu5FpZUEMtJLCsbenL5vSPrsFPx3tk+ajaBdj0qBANnBN2SfNTTdqfPbKk1phpQzhZgaMHVqIznKZN9o5ex4AsYTjcnTcUlDcZeKvXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UU/R/rX4; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UU/R/rX4"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-385f06d0c8eso2381955f8f.0;
+        Mon, 03 Feb 2025 05:33:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738589598; x=1739194398; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nkG3/+OUndAWrWvvhE2SzyN62KNYKgM2eZh+7o/jG6o=;
+        b=UU/R/rX47XVRR1HNBfXX3izdbfVpnJUgtzmCQ7PLmLm9H2cvrlk3CvvEEwPvTiwlrR
+         aMwtHIr5lSJUR4j3825B4qOSp75P7nI+ErUEPtD0NGJCqfbXWVKxJv4mxedwvXbYLpSH
+         V7wDb5hlN9c/vrBw9unYbGzb9jAcjuTn778/WBKSoMUl7Var2je15DDjzo7hFEOO8dgJ
+         k+wlMTdj0XKSpR88456rxSPTH8Y9s1crdWHH7xNy7Cs+HFG6cZp5JPeLc2Pwx+NrlHPz
+         oiXXoB9D7+dmiC2CVluXDb+7/erTCt8bAKvfCjH0/BbQlqPGUm8x0HjuzSv04l3VPJ7T
+         Fo9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738589598; x=1739194398;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nkG3/+OUndAWrWvvhE2SzyN62KNYKgM2eZh+7o/jG6o=;
+        b=HhnM9uxg3ZyLQ/fGF7L0mFPr/dkHOKCA/mpIQcmjzrORsFgqCaqeedVO7CXTJ8snwL
+         F6r/QFCGJDeGEbFABL0+F06sfhXG6CJyTwc5XzWfOwxGJX1FefFd89H1SIwnMwbgTZBq
+         gREa8BW2JRa9Rze8n37a2N2skO5EiRQflI0WPGbKYNpkRJYxc+XqCriYf2sH/shUfmVd
+         TwMgb9BJjslwORPezftzwMUwxHBqpci7b8S28z8nb1ZslUQE8jkrZ9eNsUXciUzOZylg
+         sA41A6Y7EpIpLbKbyfCcEuR9ZijaU+h9koAy/WuGg1sspCyGxKSBVnsCzIxvgevzaE6h
+         TNeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjX6dkQKkdMlzaq3JNbgkx5Sg7Luk2+X/G3U5ex/WFnczq7pd10yPyigHf+xjb76HKilkkbRF43e/2@vger.kernel.org, AJvYcCWBLt2DBagvLbMOdWXk5xEa7INYsksEJP1/wW3bIYAhxaBHPtfoySrfxG8TqwUhOHIZQBqhMVNKwnkaZJVH@vger.kernel.org, AJvYcCWEuSD5VSMBM5Tgsu8D5MO7RETFEza8SuhxDsjBAxzAor32zdLtdvvx4Pxt8NNpmeMQBC7hcNrgojgH@vger.kernel.org, AJvYcCXqMbRqMDPMwhGw05i7iakp6VkZBQ/ZH008PA6XDZAYvh68u2y7qktdXUaGbFN0vbeaI+GdpgaeyFF+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxieaPMgaxsOfmbpj/h6vqJF3qRv5vFtvoCjtR/uGiAaqbMtdve
+	8tAlX4L04cy0A0/9RVnQfxeWwJz4HL4Gln7rqfKb80w34MRgy7Uw
+X-Gm-Gg: ASbGnct2Pkb7UffswxUybEH3vZSQcNVzZIES/Cie4kdjZ7FgAHH9KVZWUW6mZB2VZag
+	6TOjQBwtJcjvPjLDAvR40TLd1I9zWTzLG9cWqpUcHYju8WJqZezjF3x2bX31TmBVZJO6pXJN+Ju
+	qVpTMuYD8Ink1y1zMORTZmr9ziEtpSo7RU+kH0+DuAHhaMPQRk8lVmwyIJwHwu02JoDZDQfbO0Z
+	vyiS6lvc6C79lC0oI11dPv/C8viq9IllJK4rkOk03XiRs5dFy7ymQERwFD7YbjHizNCk0r22tY7
+	wU8LcIerhoQ=
+X-Google-Smtp-Source: AGHT+IH0YefItBhMFGdcdUKVwSsb1KLZyPacHNakNOpSSl3JJ/1KKH2DaaP/SMD++DSu/bOwI2tIQQ==
+X-Received: by 2002:adf:fa8a:0:b0:385:e1eb:a7af with SMTP id ffacd0b85a97d-38c520be00dmr14584184f8f.48.1738589597918;
+        Mon, 03 Feb 2025 05:33:17 -0800 (PST)
+Received: from spiri.. ([82.77.155.91])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1d1d03sm12970190f8f.99.2025.02.03.05.33.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 05:33:17 -0800 (PST)
+From: Alisa-Dariana Roman <alisadariana@gmail.com>
+X-Google-Original-From: Alisa-Dariana Roman <alisa.roman@analog.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+	Alisa-Dariana Roman <alisa.roman@analog.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Ramona Gradinariu <ramona.bolboaca13@gmail.com>,
+	David Lechner <dlechner@baylibre.com>,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Rodrigo Siqueira <rodrigo.siqueira@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>
-Subject: [PATCH 6.1] drm/amd/display: fix double free issue during amdgpu module unload
-Date: Mon,  3 Feb 2025 16:25:47 +0300
-Message-ID: <20250203132549.11729-1-abelova@astralinux.ru>
+	linux-doc@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v4 0/3] Add support for AD7191
+Date: Mon,  3 Feb 2025 15:31:25 +0200
+Message-ID: <20250203133254.313106-1-alisa.roman@analog.com>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,98 +83,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
-X-KSMG-AntiSpam-Info: LuaCore: 50 0.3.50 df4aeb250ed63fd3baa80a493fa6caee5dd9e10f, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;astralinux.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;new-mail.astralinux.ru:7.1.1, FromAlignment: s
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 190752 [Feb 03 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.7
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/02/03 07:33:00 #27201296
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 1
 
-From: Tim Huang <tim.huang@amd.com>
 
-[ Upstream commit 20b5a8f9f4670a8503aa9fa95ca632e77c6bf55d ]
+Thank you all for your feedback! Here is the updated series of patches!
 
-Flexible endpoints use DIGs from available inflexible endpoints,
-so only the encoders of inflexible links need to be freed.
-Otherwise, a double free issue may occur when unloading the
-amdgpu module.
+Kind regards,
+Alisa-Dariana Roman.
 
-[  279.190523] RIP: 0010:__slab_free+0x152/0x2f0
-[  279.190577] Call Trace:
-[  279.190580]  <TASK>
-[  279.190582]  ? show_regs+0x69/0x80
-[  279.190590]  ? die+0x3b/0x90
-[  279.190595]  ? do_trap+0xc8/0xe0
-[  279.190601]  ? do_error_trap+0x73/0xa0
-[  279.190605]  ? __slab_free+0x152/0x2f0
-[  279.190609]  ? exc_invalid_op+0x56/0x70
-[  279.190616]  ? __slab_free+0x152/0x2f0
-[  279.190642]  ? asm_exc_invalid_op+0x1f/0x30
-[  279.190648]  ? dcn10_link_encoder_destroy+0x19/0x30 [amdgpu]
-[  279.191096]  ? __slab_free+0x152/0x2f0
-[  279.191102]  ? dcn10_link_encoder_destroy+0x19/0x30 [amdgpu]
-[  279.191469]  kfree+0x260/0x2b0
-[  279.191474]  dcn10_link_encoder_destroy+0x19/0x30 [amdgpu]
-[  279.191821]  link_destroy+0xd7/0x130 [amdgpu]
-[  279.192248]  dc_destruct+0x90/0x270 [amdgpu]
-[  279.192666]  dc_destroy+0x19/0x40 [amdgpu]
-[  279.193020]  amdgpu_dm_fini+0x16e/0x200 [amdgpu]
-[  279.193432]  dm_hw_fini+0x26/0x40 [amdgpu]
-[  279.193795]  amdgpu_device_fini_hw+0x24c/0x400 [amdgpu]
-[  279.194108]  amdgpu_driver_unload_kms+0x4f/0x70 [amdgpu]
-[  279.194436]  amdgpu_pci_remove+0x40/0x80 [amdgpu]
-[  279.194632]  pci_device_remove+0x3a/0xa0
-[  279.194638]  device_remove+0x40/0x70
-[  279.194642]  device_release_driver_internal+0x1ad/0x210
-[  279.194647]  driver_detach+0x4e/0xa0
-[  279.194650]  bus_remove_driver+0x6f/0xf0
-[  279.194653]  driver_unregister+0x33/0x60
-[  279.194657]  pci_unregister_driver+0x44/0x90
-[  279.194662]  amdgpu_exit+0x19/0x1f0 [amdgpu]
-[  279.194939]  __do_sys_delete_module.isra.0+0x198/0x2f0
-[  279.194946]  __x64_sys_delete_module+0x16/0x20
-[  279.194950]  do_syscall_64+0x58/0x120
-[  279.194954]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
-[  279.194980]  </TASK>
-
-Reviewed-by: Rodrigo Siqueira <rodrigo.siqueira@amd.com>
-Signed-off-by: Tim Huang <tim.huang@amd.com>
-Reviewed-by: Roman Li <roman.li@amd.com>
-Signed-off-by: Roman Li <roman.li@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-[ Anastasia: link_destruct in drivers/gpu/drm/amd/display/dc/link/link_factory.c
-  from upstream was dc_link_destruct in drivers/gpu/drm/amd/display/dc/core/dc_link.c
-  in 6.1 ]
-Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
 ---
-Backport fix for CVE-2024-49989
- drivers/gpu/drm/amd/display/dc/core/dc_link.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index bbaeb6c567d0..f0db2d58fd6b 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -83,7 +83,7 @@ static void dc_link_destruct(struct dc_link *link)
- 	if (link->panel_cntl)
- 		link->panel_cntl->funcs->destroy(&link->panel_cntl);
- 
--	if (link->link_enc) {
-+	if (link->link_enc && !link->is_dig_mapping_flexible) {
- 		/* Update link encoder resource tracking variables. These are used for
- 		 * the dynamic assignment of link encoders to streams. Virtual links
- 		 * are not assigned encoder resources on creation.
--- 
-2.43.0
+v3: https://lore.kernel.org/all/20250129143054.225322-1-alisa.roman@analog.com/
+
+v3 -> v4:
+	- addressed all replies for v3
+	- refactored the scale and sampling frequencies configurations to use 2
+different arrays for gpio case vs pinstrap case
+
+v2: https://lore.kernel.org/all/20250122132821.126600-1-alisa.roman@analog.com/
+
+v2 -> v3:
+	- correct binding title
+	- remove clksel_state and clksel_gpio, assume the clksel pin is always
+pinstrapped
+	- rephrase clocks description accordingly
+	- simplify binding constraints
+	- specify in binding description that PDOWN must be connected to SPI's
+controller's CS
+	- add minItems for gpios in bindings
+	- make scope explicit for mutex guard
+	- remove spi irq check
+	- add id_table to spi_driver struct
+	- changed comments as suggested
+	- use spi_message_init_with_transfers()
+	- default returns an error in ad7191_set_mode()
+	- replace hard-coded 2 with st->pga_gpios->ndescs
+	- use gpiod_set_array_value_cansleep()
+	- change .storagebits to 32
+	- check return value for ad_sd_init()
+	- change to adi,odr-value and adi,pga-value, which now accepts the value as
+suggested
+	- modify variables names and refactor the setup of odr and pga gpios,
+indexes and available arrays into ad7191_config_setup(), since they are all
+related
+	- add ad7191.rst
+
+v1: https://lore.kernel.org/all/20241221155926.81954-1-alisa.roman@analog.com/
+
+v1 -> v2:
+	- removed patch adding function in ad_sigma_delta.h/.c
+	- added a function set_cs() for asserting/deasserting the cs
+	- handle pinstrapping cases
+	- refactored all clock handling
+	- updated bindings: corrected and added new things
+	- -> address of the channels is used in set_channel()
+	- addressed all the other changes
 
