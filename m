@@ -1,125 +1,136 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE7020DD5E
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869D520B7F8
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738602102; cv=none; b=I0N9EwoF3Bdj9OUuHMOhH7W+QT4ws9p+E5QK16aMUSKbLDFkIwrmJsG0JcQBVetpa5H74JJknoIsYWtzQBa411tXHCNkm6XuLALqSSjDQNbwC4ObPzHPxov11uxJjkegvYJHrsusBabHBtqwCifL/6v7Yjzsi+qQthJ+4pc55Rk=
+	t=1738602118; cv=none; b=mZxh54k4U1ttyIIAcLwN35+o0Kkh19IfqUMXJCU2IGMYjaFEwmFgRvVJWOkCpxJyom/g1IVxHTl64fRsTb0yxV7Y7IW4Tzjc/HnVBuM9chSsPHoSK+KiTCZiBuhNcqGCCh75gKvWiMbzF0Tt06fSy2jYyXleMs+u1AfIuTdY/3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738602102; c=relaxed/simple;
-	bh=vslW75JcSijFBGVzY2fq7WsihvYzuoc1s1iY7mWXoGo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IRLsDcA1et7Bk2HPoSYZQlWuiSTdAKAv0vtv6rEVWdZcvK6WpWlhvSsxzs4P62AnfM3vm3OLjw3vsNtOsgMlwbuaQqVaiUGa94Wk9FKPnV1M5KGqApSh45oFro4MPhnpV87QNMpdfDdb5TExX/7PtH5N5s5ESZSDNevlap7uBg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jFwGcF19; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738602118; c=relaxed/simple;
+	bh=zjXH5kws7+knI9DbmzEjGDquVdWrIc8UIpcNiHa4Cuk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jOQF1rkSD34CsF7L7z9OAsCntOkx7/YArkrAC5S4crxmWAsFWDbcuXnBwzKim1TSg1IDoS4YmyzuDjB6dSj9GG5H8FR1zqX7Q8SSO1RHNKs0R43h52dguqSsccRlH4xTsyRx/1YtI8ZNmXTqJNq6hwQsCX7pcg+aIKC0tx9bbbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t1wh9Oo/; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFwGcF19"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21619108a6bso77981745ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 09:01:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t1wh9Oo/"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5401af8544bso9201e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 09:01:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738602100; x=1739206900; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Aiu/4gR5G7Wp81OQBB+vnHCLXNeDY5L1jC3+UYSY8EI=;
-        b=jFwGcF19FVyPwNrchEnU4gMMooKWnWyuFWh9dvCwkPXRZd1OtTIzYBBahBoP1wNncy
-         zTF+3fjR5WzP58rGnN62/qSR8pmQi468kpdkNgXdr635bRcudhRlYiYLFhVR1Ak1qZPg
-         k58suBoCMrso/KLxmvYiJfm90/RBV01dFSRplYU0ixpXgTne5nSRgeFCnfoO3GlkGaqP
-         d2cgc0/6vFj1e4B1owkGumsYSOwcz/F54mLshkm048p13tgAjUdV6rhZ60VwfL1zy0JW
-         LNODniA/88ehDl/jbEoAguTCk4QUFOaFFuldFKvNpwQwZJAKBT7Hev7bnnOiOWD73W7c
-         SnRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738602100; x=1739206900;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1738602113; x=1739206913; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Aiu/4gR5G7Wp81OQBB+vnHCLXNeDY5L1jC3+UYSY8EI=;
-        b=ktkpTH9wOhjlLuBbnD9qzM2SdCSWjvZTr/VOqX18jUjOEUFUY9rMmCP3zE9yPEVJvY
-         T83xzNPa68UT52E9+DeGLqzBQQl0Ylh1XegXhUkChTztU57WYUKOOzZlzFlOhk7fV20E
-         tGEmhB57I+KJ85iPbrHjiOaPSXDvUU3D1wwhWogus+esQkpIUkyWT/ETXX8M1JOuFOeW
-         2DM1AQrTSmq1ayEQU1xPqVHtfM8QO7/uZP6vYuYM+MN/70uU1OAuNvCVqRo4JeMQ4iGP
-         L4Slz6pHXhSIhk8DP8itEsCg1Di8QWBYRbuQskyxW0RLDHL7kYFeb/fUAttK0zAXsxFu
-         A1NA==
-X-Gm-Message-State: AOJu0YzcEoKw5xDwxaxkxoyh89QGhB0wvallaR29Fe+HHvIR/8cys0Fz
-	vFOacQ86i0rR+ShNqo1lNAu9PRU6Mn9sLg6pqUn/Y0Sbgq+6cwp/6HM8nKVG
-X-Gm-Gg: ASbGnctPGmgycGJV/5IEC7t5TrHo/+68mFJRdJoxa17l+anHzeW0fFq6NllkkvlqHS9
-	/UcohExAgoubrywTbyC6UFXmayqwA8geW6lK4SIAOAoXrhYt8v66yZb7wKr/r8Z0yz3VlPf8SAo
-	b8XW44TzJzFFQixdYxlf5P5CnRaF1VSF9e6IQiDniErXil7TTxQE0f7CKQIIJwBX1+s8Vg54skB
-	643ge01890QuAfEh7P6WL1Y2jc7iDI8GI4k19CyYkYJyTeZqs36w4IA5VhgBtoDQCamZRS3uRSh
-	RCrU9haZZuElbgzvKlj69NeMperAJ7+88kGr0nw=
-X-Google-Smtp-Source: AGHT+IGtbkcK6dfMD2SE1atFKl7M7fby6RjBflujy6DN9WgTKw0B7SW9RWb9AGe1smxjUEy3VGxMfg==
-X-Received: by 2002:a17:902:dacc:b0:215:b9a7:5282 with SMTP id d9443c01a7336-21dd7d7a783mr354586555ad.26.1738602099940;
-        Mon, 03 Feb 2025 09:01:39 -0800 (PST)
-Received: from localhost (maglev-oncall.nvidia.com. [216.228.125.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3325652sm78464735ad.256.2025.02.03.09.01.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 09:01:39 -0800 (PST)
-Date: Mon, 3 Feb 2025 12:01:37 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, g@thinkpad
-Cc: linux-kernel@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v1 1/1] bitmap: Align documentation between
- bitmap_gather() and bitmap_scatter()
-Message-ID: <Z6D2aLzVwNh-jhc6@thinkpad>
-References: <20250203121919.3184930-1-andriy.shevchenko@linux.intel.com>
+        bh=qb2BWOjM2AxjI76h/fY+Q764chvs+1zrd6CSA4WoxvA=;
+        b=t1wh9Oo/wJM/NN0AkF00PPNx55xN0ddUy56xgPrZy94mOKU2k1w04PEv7S4WhPGb25
+         zCKIg5+12ILkvLgIBFv9EHnCxjOWMcOqOySk6qIdg0z+EAHMlIU9u6QOO/B/3pV9wihf
+         RdI5y2nyTqz0Rb/LwVbV7ykuOrVy+ijVQFlP7O053XSc7nUzpm582h/xJOPEk97Zh7Uv
+         nWanz2VaAh7RNHxKqYwl1r/Ju31JytWtfS2aFqNJyhmswBXWP0G55sPXRAekZmcVJQIs
+         yxlZxWFkJRDCPOIhSJfRL6METjSTpDHebPlFiKvebWxXpffyFCIzyWHuSzYOTNuglV8b
+         Np+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738602113; x=1739206913;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qb2BWOjM2AxjI76h/fY+Q764chvs+1zrd6CSA4WoxvA=;
+        b=Wahb/PJ5PTF9b/DKwNNNoOtWnMJ9SmQj7CJv3yVRQOcyoC5sQXCtKNUrwYjkr47oWX
+         H3HBz3H8wbl6sYTSz/uEQKHaUvKhxAZOJKrhPansAwYTIT36FhKiTmtgeMcuq4Im2wLr
+         Laxlij1i4pGqJEgf3lItnpL0h3TwIkaRdAM1RCwrGcxSLT6+SwWz0bXsEx1YN2P5ri7x
+         khv5ar74J3i+v4RHa2JfHWPpchOJT5MtFi8lADtnJBQZnyqbG1hAkBLk3QxehaZLtITj
+         CncYQcz7jaQLuK8TWcdPOfBrkeRyDpouVWAySR/3JNKD+AAXv5XAoBQORs7lS2i0lE+p
+         GuJg==
+X-Forwarded-Encrypted: i=1; AJvYcCVMl8ZViS/IXnxc1lGDlN8sX3oIMkPgBuUvCHpqRTGuP+6X2vfjALNJbf8PyVdxm7yi7KYAJMFHufgqPGo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx69/7HQESACCHhkn11ZptPEINQKimkM3RNlcvvTolOu2SdnKFA
+	w6eG11M+Yq1fo97FsYJXJXehW+QGEL4EOhpQ0oxM0VvPFja+6Rh0FbodVOA0AFIJPc6XTpk2ZP/
+	LpkkGD/vJIMhkJdMHmWGfeJPSNhHFgYblLDBf
+X-Gm-Gg: ASbGncvFJfPWwr/XEdUnGkD548MIEXhcE+I0AZdZElzG84jtEaHvk+/QmaHm8/EkmZI
+	IkSkBjjqvkNnFqnmYBCu8BQIu8I+lbFp1OlWkX9Xv1Vh/BIxxqGvnVLxYIuKqThf4y1s1G/aXQN
+	6JeWVu6Ij+Ap4C2bclzvkdmn0gh2AYDQ==
+X-Google-Smtp-Source: AGHT+IERgbXu4cZMbowmhVW8KSIRv9nsWeHKT5DJAWPkiUFMWjoeG2P3EHYpBuBLck0a8kHsQSZGuCEMrY5xfJ73NYU=
+X-Received: by 2002:a05:6512:aca:b0:542:7130:badc with SMTP id
+ 2adb3069b0e04-543ffa52a17mr4941e87.5.1738602113129; Mon, 03 Feb 2025 09:01:53
+ -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203121919.3184930-1-andriy.shevchenko@linux.intel.com>
+References: <20250129232525.3519586-1-vannapurve@google.com>
+ <p6sbwtdmvwcbr55a4fmiirabkvp3f542nawdgxoyq22cdhnu33@ffbmyh2zuj2z>
+ <CAGtprH8pJ3Zj_umygzxp8=4sJTdwY5v2bFDhoBdX=-3KQaDnCw@mail.gmail.com>
+ <wmdg54v56uizuifhaufllnjtecmvhllv35jyrvdilf4ty4pfs5@y4zppjm2sthr>
+ <CAGtprH82OjizyORJ91d6f6VAn_E9LY7WptN-DsoxwLT4VwOccg@mail.gmail.com>
+ <2wooixyr7ekw3ebi4oytuolk5wtyi2gqhsiveshfcfixlz3kuq@d5h6gniewqzk>
+ <CAGtprH-n=cfH_BJAmiNMoRbqq0XdGCf3RE67TYW8z7RARnsCiQ@mail.gmail.com> <baiv6tl2lkr25i2ry2q2jaylu5y6hhioqfwhc4yafk2uwqbgf5@sqxlpg2r6kcc>
+In-Reply-To: <baiv6tl2lkr25i2ry2q2jaylu5y6hhioqfwhc4yafk2uwqbgf5@sqxlpg2r6kcc>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Mon, 3 Feb 2025 09:01:41 -0800
+X-Gm-Features: AWEUYZm1pUNVQSKvKstcecqYl2-3LVWaTH9LroDV3vXolYlnD_tCGouWLYwnW2U
+Message-ID: <CAGtprH-5bL44c7ZQHKsDuOQNNd4dsBd-uR8GT9OyqffEXW963Q@mail.gmail.com>
+Subject: Re: [PATCH V2 1/1] x86/tdx: Route safe halt execution via tdx_safe_halt()
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	seanjc@google.com, erdemaktas@google.com, ackerleytng@google.com, 
+	jxgao@google.com, sagis@google.com, oupton@google.com, pgonda@google.com, 
+	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
+	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+On Mon, Feb 3, 2025 at 8:00=E2=80=AFAM Kirill A. Shutemov <kirill@shutemov.=
+name> wrote:
+>
+> ...
+> >
+> > Are you hinting towards a model where TDX guest prohibits such call
+> > sites from being configured? I am not sure if it's a sustainable model
+> > if we just rely on the host not advertising these features as the
+> > guest kernel can still add new paths that are not controlled by the
+> > host that lead to *_safe_halt().
+>
+> I've asked TDX module folks to provide additional information in ve_info
+> to help handle STI shadow correctly. They will implement it, but it will
+> take some time.
 
-On Mon, Feb 03, 2025 at 02:19:19PM +0200, Andy Shevchenko wrote:
-> First of all, the bitmap_scatter() mistakenly refers to itself for
+What will the final solution look like?
 
-It seems there's no 2nd concern. So I removed the 'First of all' part
-and applied in bitmap-for-next.
+>
+> So we need some kind of stopgap until we have it.
 
-Thanks,
-Yury
+Does it make sense to carry the patch suggested by Sean [1] as a
+stopgap for now?
 
-> detailed explanation about the relationships of two. Instead of simply
-> fixing this, align text in both making a cross-reference.
-> 
-> Fixes: de5f84338970 ("lib/bitmap: Introduce bitmap_scatter() and bitmap_gather() helpers")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  include/linux/bitmap.h | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-> index 2026953e2c4e..595217b7a6e7 100644
-> --- a/include/linux/bitmap.h
-> +++ b/include/linux/bitmap.h
-> @@ -560,9 +560,9 @@ void bitmap_replace(unsigned long *dst,
->   *	      ...0..11...0..10
->   *	dst:  0000001100000010
->   *
-> - * A relationship exists between bitmap_scatter() and bitmap_gather().
-> + * A relationship exists between bitmap_scatter() and bitmap_gather(). See
-> + * bitmap_gather() for the bitmap gather detailed operations. TL;DR:
->   * bitmap_gather() can be seen as the 'reverse' bitmap_scatter() operation.
-> - * See bitmap_scatter() for details related to this relationship.
->   */
->  static __always_inline
->  void bitmap_scatter(unsigned long *dst, const unsigned long *src,
-> @@ -608,7 +608,9 @@ void bitmap_scatter(unsigned long *dst, const unsigned long *src,
->   *	dst:  0000000000011010
->   *
->   * A relationship exists between bitmap_gather() and bitmap_scatter(). See
-> - * bitmap_scatter() for the bitmap scatter detailed operations.
-> + * bitmap_scatter() for the bitmap scatter detailed operations. TL;DR:
-> + * bitmap_scatter() can be seen as the 'reverse' bitmap_gather() operation.
-> + *
->   * Suppose scattered computed using bitmap_scatter(scattered, src, mask, n).
->   * The operation bitmap_gather(result, scattered, mask, n) leads to a result
->   * equal or equivalent to src.
-> -- 
-> 2.43.0.rc1.1336.g36b5255a03ac
+[1] https://lore.kernel.org/lkml/Z5l6L3Hen9_Y3SGC@google.com/
+
+>
+> I am reluctant to commit to paravirt calls for this workaround. They will
+> likely stick forever. It is possible, I would like to avoid them. If not,
+> oh well.
+>
+> > > > 2) acpi_safe_halt() -> safe_halt() -> raw_safe_halt() -> arch_safe_=
+halt()
+> > >
+> > > Have you checked why you get there? I don't see a reason for TDX gues=
+t to
+> > > get into ACPI idle stuff. We don't have C-states to manage.
+> >
+> > Apparently userspace VMM is advertising pblock_address through SSDT
+> > tables in my configuration which causes guests to enable ACPI cpuidle
+> > drivers. Do you know if future generations of TDX hardware will not
+> > support different c-states for TDX VMs?
+>
+> I have very limited understanding of power management, but I don't see ho=
+w
+> C-states can be meaningfully supported by any virtualized environment.
+> To me, C-states only make sense for baremetal.
+
+One possibility is that host can convey guests about using "mwait" as
+cstate entry mechanism as an alternative to halt if supported.
+
+>
+> --
+>   Kiryl Shutsemau / Kirill A. Shutemov
