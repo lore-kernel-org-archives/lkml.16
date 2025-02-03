@@ -1,72 +1,338 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187C610FD
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CAA10FD
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738573387; cv=none; b=eDybPHswYDOfZA9LubjrClUcgpwQ7kOwHlhmRV82MGV18vjVa2M0ZykKKcK7VvEVgICQGTO9JANpLsaTvEiz3bsFmkE/P6Qxbk4p7v2eHFJPcxT23GRlgBXSVNa3extMJk+fVlkbquYbe/yKD5nZrtzk51JcvsPUWiT1FOXOFSY=
+	t=1738573478; cv=none; b=Q5b5FDlm4GjmrbncVkXhNtb0rd+EYxLkVxKF5Wx/IIREs/Rppdy2NB/tE6hmS8CUE3W3fPqG03cTKR/PBCYZzlqYMKG5WbINch3QwIO6Spt9HEy3o57lCmBip5WzmyM1YEXQJXwk9pv9qOo+66aLC68wwiDEN+mvjS28vlqxGeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738573387; c=relaxed/simple;
-	bh=z9QBI5TEZ6IhIN2sM5RjOZ7WuT1InrdoqHqw5jjogqo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=KNl//zrt0/OaEr0MK7qfhEzcte9fzYWJbrrhFGICjk0Zm71+AnqPF4nzFoe6srdP5eBrt/nSAG6F/8W/z1pRFsse0dgoGbedtXaXGckf06RsN8G0GJwDpuIQrkReoPnqffJE/YrhBpH04HXNPXRdq2XokY9L47vX4yK/5r0VISY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3a9d4ea9e0cso32943415ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:03:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738573385; x=1739178185;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FsXMnOcCOWOjPC7cqw8Pw5EidqAgx2MNplrPMdPHyFc=;
-        b=XiMaP5q14rd5a93at8pbisAfuJ5+/ZfYAzCQS2p1v52OxpC+Tux2nZ4630NgYosrq4
-         IZrq3c5Jtkyo5mVSkn5dl8+nEKyxDf6bbCZ4oCzbZqTGgGoVtKB5Ex3ieQTgxoo1w6yl
-         I4ttbuWi9dJGlGkCEpYQmiy7KV4uaFBc71/ZrO0r1zAkIqZP8jOV8dqO/NiaOwJWdxA7
-         MGXVOu5opOgZW13FEKdSQ5byr/wAKcdE+BZyySAHWn+6QO4NPhlfGhlFU6M7QjNzup5P
-         UrMVregZPnwPLpS0CEHNxmKxewHiSxfPs2XFIrolMYWnOP87EOdWEmwIog42NWCHBOAB
-         YBMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXdlnWypRhlL2DFYLZLlTwtjLVVO3sj9GCQiKz5+XhA6+ks5TknVXVV+aXjh10KAGWfKnMtMW5pQLKfTk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/PUq17jXzqZ8OgWYG26wGshpKaOr6Fcgin7+Pi80EXjrH35LP
-	5w3/qlG5YGWORv1aP9dpbj1ASL4VA1vQkA76CjGL6SOLOCSOBdm7OeQFnTl1t4Z/1RPIu8TjD6P
-	k8BiQYyc2KjCucLUj8zlLinuVXiSgfgG3Px6pebV+2WVfAjbwLzqHM8Y=
-X-Google-Smtp-Source: AGHT+IE3O6u3Gej6YXy58eCdWhkSO659wMvb7toH8lP8vUdUDpiOD5gjFNEh+TSV8PZ90QxiyEO2Hw1JLOmQvSaNuDc7aZZ9S3h6
+	s=arc-20240116; t=1738573478; c=relaxed/simple;
+	bh=evasHpoK8GBSpS63Eml5GqG6VjFkEbQp9b4oJySK4E4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bMpVDa/qIgSYzfqTMjdtAAQ5znbz/HnqOT0iLWnObqPx12w2cVO8HAz3O6G69C01UOxl+GK373a3TO8WmKI5+91fIr1asVWuavZfT2/PdYFxVWOp2S61rughXSfzTR9q7AT4HrQMMN+RbQKb24zFdY4FKHzOAVE5IH4ivKu77Os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J/Kv4kxA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J/Kv4kxA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738573475;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ZX2GQIgwuPrigcnnRF64y8AhMLcsKcgIvE1ZbOWxiS4=;
+	b=J/Kv4kxAuDxVQutL2P0KkXOjHtAIZYc908DTMbhQgM/FSGddzRVZBodihj5waVKdIiFJh3
+	5eHTl8FdY6UkyV/wIEfrg9GmTs/sQ+gh8GcpaPKXUEHgSqwGRcM9QNHjM2/Sf4JEN5dlA8
+	L5OcV2iNJvOvTIAm5Wz4HMsqD+yljUI=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-493-rXzdWLnVPSCRCbHdoym8BA-1; Mon,
+ 03 Feb 2025 04:04:31 -0500
+X-MC-Unique: rXzdWLnVPSCRCbHdoym8BA-1
+X-Mimecast-MFC-AGG-ID: rXzdWLnVPSCRCbHdoym8BA
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C57A219560BA;
+	Mon,  3 Feb 2025 09:04:30 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.225.48])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 076601800268;
+	Mon,  3 Feb 2025 09:04:27 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH v2] trace/osnoise: Add trace events for samples
+Date: Mon,  3 Feb 2025 10:04:18 +0100
+Message-ID: <20250203090418.1458923-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1aa7:b0:3cf:c1c8:6942 with SMTP id
- e9e14a558f8ab-3cffe3e5266mr206675285ab.7.1738573385171; Mon, 03 Feb 2025
- 01:03:05 -0800 (PST)
-Date: Mon, 03 Feb 2025 01:03:05 -0800
-In-Reply-To: <20250203083954.2020-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a08649.050a0220.d7c5a.0086.GAE@google.com>
-Subject: Re: [syzbot] [kernfs?] possible deadlock in walk_component (4)
-From: syzbot <syzbot+b4567a8b2d2ad5f9dd06@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Hello,
+Add trace events that fire at osnoise and timerlat sample generation, in
+addition to the already existing noise and threshold events.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+This allows processing the samples directly in the kernel, either with
+ftrace triggers or with BPF.
 
-Reported-by: syzbot+b4567a8b2d2ad5f9dd06@syzkaller.appspotmail.com
-Tested-by: syzbot+b4567a8b2d2ad5f9dd06@syzkaller.appspotmail.com
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+A proof-of-concept bpftrace script using this feature:
+https://gitlab.com/-/snippets/4801190
 
-Tested on:
+v2:
+- Move "#ifndef _OSNOISE_TRACE_H" before "#define _OSNOISE_TRACE_H"
+to fix build. (Sorry about that, it was Friday.)
 
-commit:         2014c95a Linux 6.14-rc1
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=148e5724580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ec9aa034f6454c35
-dashboard link: https://syzkaller.appspot.com/bug?extid=b4567a8b2d2ad5f9dd06
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=162ded18580000
+ include/trace/events/osnoise.h | 96 ++++++++++++++++++++++++++++++++++
+ kernel/trace/trace_osnoise.c   | 55 ++++++-------------
+ 2 files changed, 112 insertions(+), 39 deletions(-)
 
-Note: testing is done by a robot and is best-effort only.
+diff --git a/include/trace/events/osnoise.h b/include/trace/events/osnoise.h
+index a2379a4f0684..3f4273623801 100644
+--- a/include/trace/events/osnoise.h
++++ b/include/trace/events/osnoise.h
+@@ -3,9 +3,105 @@
+ #define TRACE_SYSTEM osnoise
+ 
+ #if !defined(_OSNOISE_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
++
++#ifndef _OSNOISE_TRACE_H
+ #define _OSNOISE_TRACE_H
++/*
++ * osnoise sample structure definition. Used to store the statistics of a
++ * sample run.
++ */
++struct osnoise_sample {
++	u64			runtime;	/* runtime */
++	u64			noise;		/* noise */
++	u64			max_sample;	/* max single noise sample */
++	int			hw_count;	/* # HW (incl. hypervisor) interference */
++	int			nmi_count;	/* # NMIs during this sample */
++	int			irq_count;	/* # IRQs during this sample */
++	int			softirq_count;	/* # softirqs during this sample */
++	int			thread_count;	/* # threads during this sample */
++};
++
++#ifdef CONFIG_TIMERLAT_TRACER
++/*
++ * timerlat sample structure definition. Used to store the statistics of
++ * a sample run.
++ */
++struct timerlat_sample {
++	u64			timer_latency;	/* timer_latency */
++	unsigned int		seqnum;		/* unique sequence */
++	int			context;	/* timer context */
++};
++#endif // CONFIG_TIMERLAT_TRACER
++#endif // _OSNOISE_TRACE_H
+ 
+ #include <linux/tracepoint.h>
++TRACE_EVENT(osnoise_sample,
++
++	TP_PROTO(struct osnoise_sample *s),
++
++	TP_ARGS(s),
++
++	TP_STRUCT__entry(
++		__field(	u64,		runtime	)
++		__field(	u64,		noise	)
++		__field(	u64,		max_sample	)
++		__field(	int,		hw_count	)
++		__field(	int,		irq_count	)
++		__field(	int,		nmi_count	)
++		__field(	int, 		softirq_count	)
++		__field(	int,		thread_count	)
++	),
++
++	TP_fast_assign(
++		__entry->runtime = s->runtime;
++		__entry->noise = s->noise;
++		__entry->max_sample = s->max_sample;
++		__entry->hw_count = s->hw_count;
++		__entry->irq_count = s->irq_count;
++		__entry->nmi_count = s->nmi_count;
++		__entry->softirq_count = s->softirq_count;
++		__entry->thread_count = s->thread_count;
++	),
++
++	TP_printk("runtime=%llu noise=%llu max_sample=%llu hw_count=%d"
++		  " irq_count=%d nmi_count=%d softirq_count=%d"
++		  " thread_count=%d",
++		  __entry->runtime,
++		  __entry->noise,
++		  __entry->max_sample,
++		  __entry->hw_count,
++		  __entry->irq_count,
++		  __entry->nmi_count,
++		  __entry->softirq_count,
++		  __entry->thread_count)
++);
++
++#ifdef CONFIG_TIMERLAT_TRACER
++TRACE_EVENT(timerlat_sample,
++
++	TP_PROTO(struct timerlat_sample *s),
++
++	TP_ARGS(s),
++
++	TP_STRUCT__entry(
++		__field(	u64,		timer_latency	)
++		__field(	unsigned int,	seqnum		)
++		__field(	int,		context		)
++	),
++
++	TP_fast_assign(
++		__entry->timer_latency = s->timer_latency;
++		__entry->seqnum = s->seqnum;
++		__entry->context = s->context;
++	),
++
++	TP_printk("timer_latency=%llu seqnum=%u context=%d",
++		  __entry->timer_latency,
++		  __entry->seqnum,
++		  __entry->context)
++);
++#endif // CONFIG_TIMERLAT_TRACER
++
+ TRACE_EVENT(thread_noise,
+ 
+ 	TP_PROTO(struct task_struct *t, u64 start, u64 duration),
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index f3a2722ee4c0..d7083526d922 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -315,33 +315,6 @@ static inline void osn_var_reset_all(void)
+  */
+ bool trace_osnoise_callback_enabled;
+ 
+-/*
+- * osnoise sample structure definition. Used to store the statistics of a
+- * sample run.
+- */
+-struct osnoise_sample {
+-	u64			runtime;	/* runtime */
+-	u64			noise;		/* noise */
+-	u64			max_sample;	/* max single noise sample */
+-	int			hw_count;	/* # HW (incl. hypervisor) interference */
+-	int			nmi_count;	/* # NMIs during this sample */
+-	int			irq_count;	/* # IRQs during this sample */
+-	int			softirq_count;	/* # softirqs during this sample */
+-	int			thread_count;	/* # threads during this sample */
+-};
+-
+-#ifdef CONFIG_TIMERLAT_TRACER
+-/*
+- * timerlat sample structure definition. Used to store the statistics of
+- * a sample run.
+- */
+-struct timerlat_sample {
+-	u64			timer_latency;	/* timer_latency */
+-	unsigned int		seqnum;		/* unique sequence */
+-	int			context;	/* timer context */
+-};
+-#endif
+-
+ /*
+  * Tracer data.
+  */
+@@ -497,7 +470,7 @@ static void print_osnoise_headers(struct seq_file *s)
+  * Record an osnoise_sample into the tracer buffer.
+  */
+ static void
+-__trace_osnoise_sample(struct osnoise_sample *sample, struct trace_buffer *buffer)
++__record_osnoise_sample(struct osnoise_sample *sample, struct trace_buffer *buffer)
+ {
+ 	struct ring_buffer_event *event;
+ 	struct osnoise_entry *entry;
+@@ -520,17 +493,19 @@ __trace_osnoise_sample(struct osnoise_sample *sample, struct trace_buffer *buffe
+ }
+ 
+ /*
+- * Record an osnoise_sample on all osnoise instances.
++ * Record an osnoise_sample on all osnoise instances and fire trace event.
+  */
+-static void trace_osnoise_sample(struct osnoise_sample *sample)
++static void record_osnoise_sample(struct osnoise_sample *sample)
+ {
+ 	struct osnoise_instance *inst;
+ 	struct trace_buffer *buffer;
+ 
++	trace_osnoise_sample(sample);
++
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(inst, &osnoise_instances, list) {
+ 		buffer = inst->tr->array_buffer.buffer;
+-		__trace_osnoise_sample(sample, buffer);
++		__record_osnoise_sample(sample, buffer);
+ 	}
+ 	rcu_read_unlock();
+ }
+@@ -574,7 +549,7 @@ static void print_timerlat_headers(struct seq_file *s)
+ #endif /* CONFIG_PREEMPT_RT */
+ 
+ static void
+-__trace_timerlat_sample(struct timerlat_sample *sample, struct trace_buffer *buffer)
++__record_timerlat_sample(struct timerlat_sample *sample, struct trace_buffer *buffer)
+ {
+ 	struct ring_buffer_event *event;
+ 	struct timerlat_entry *entry;
+@@ -594,15 +569,17 @@ __trace_timerlat_sample(struct timerlat_sample *sample, struct trace_buffer *buf
+ /*
+  * Record an timerlat_sample into the tracer buffer.
+  */
+-static void trace_timerlat_sample(struct timerlat_sample *sample)
++static void record_timerlat_sample(struct timerlat_sample *sample)
+ {
+ 	struct osnoise_instance *inst;
+ 	struct trace_buffer *buffer;
+ 
++	trace_timerlat_sample(sample);
++
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(inst, &osnoise_instances, list) {
+ 		buffer = inst->tr->array_buffer.buffer;
+-		__trace_timerlat_sample(sample, buffer);
++		__record_timerlat_sample(sample, buffer);
+ 	}
+ 	rcu_read_unlock();
+ }
+@@ -1608,7 +1585,7 @@ static int run_osnoise(void)
+ 	/* Save interference stats info */
+ 	diff_osn_sample_stats(osn_var, &s);
+ 
+-	trace_osnoise_sample(&s);
++	record_osnoise_sample(&s);
+ 
+ 	notify_new_max_latency(max_noise);
+ 
+@@ -1803,7 +1780,7 @@ static enum hrtimer_restart timerlat_irq(struct hrtimer *timer)
+ 	s.timer_latency = diff;
+ 	s.context = IRQ_CONTEXT;
+ 
+-	trace_timerlat_sample(&s);
++	record_timerlat_sample(&s);
+ 
+ 	if (osnoise_data.stop_tracing) {
+ 		if (time_to_us(diff) >= osnoise_data.stop_tracing) {
+@@ -1923,7 +1900,7 @@ static int timerlat_main(void *data)
+ 		s.timer_latency = diff;
+ 		s.context = THREAD_CONTEXT;
+ 
+-		trace_timerlat_sample(&s);
++		record_timerlat_sample(&s);
+ 
+ 		notify_new_max_latency(diff);
+ 
+@@ -2529,7 +2506,7 @@ timerlat_fd_read(struct file *file, char __user *ubuf, size_t count,
+ 		s.timer_latency = diff;
+ 		s.context = THREAD_URET;
+ 
+-		trace_timerlat_sample(&s);
++		record_timerlat_sample(&s);
+ 
+ 		notify_new_max_latency(diff);
+ 
+@@ -2564,7 +2541,7 @@ timerlat_fd_read(struct file *file, char __user *ubuf, size_t count,
+ 	s.timer_latency = diff;
+ 	s.context = THREAD_CONTEXT;
+ 
+-	trace_timerlat_sample(&s);
++	record_timerlat_sample(&s);
+ 
+ 	if (osnoise_data.stop_tracing_total) {
+ 		if (time_to_us(diff) >= osnoise_data.stop_tracing_total) {
+-- 
+2.48.1
+
