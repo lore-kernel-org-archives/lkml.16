@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F05205AB5
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:59:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95316205E06
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738591188; cv=none; b=hKptd2CMWolDjdRFt4uZmQKUvNiF47VBwyuVkPTehTyhJVyipsQRyNQsVUx8oL8y1uH4jg/I6agfStGGWnVoZtcE+JtmuQnSXds8WMm7IN67J3T2GKG+rkHNiuo/N7TNZejg/WauAFKQ01x17aSo274yIOzvNGyu8K8zRhBjMGk=
+	t=1738591189; cv=none; b=Fn3CZNtg2QF0oGk+msTmUNVj6VNErfZzYL9eDZ5YBfmUOO4iUE/aduEv3gQjBFFpuJTPNUFiNSalE99PvkAhA9Uo6d2sZgPd73HwYwiQ4MNC0oZ6WYXGcitquaJApODoSZnAG4ZicOPhqBGU2COjAULuaRJoYq3yOgO7N/BELcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738591188; c=relaxed/simple;
-	bh=0XXWylux21wmXCjjhIFOvVe9sS4zaU/MFgX+/8PLhvs=;
+	s=arc-20240116; t=1738591189; c=relaxed/simple;
+	bh=jx24DITxVlzSBY9t3sScv5dV3Uc64R3fHu3VkFAyLnY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nLMbTJYkq32GXFYHQvWzO3rMgUY4lS2oGG6YHb03goeHOdOzSJeUNg7hriOPRiW43Sq8w6sKsh1jwq9MR3Dq1uEOdmzw7Mkg+rB1MjYd0a1rYJazAIvUI5M0AMfcVaF6qLv9ui+kW1f7wEmSrHnzxY6+DuBheH1LupmUu7Pg6zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E4nICYjn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mZ+vOkIr; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=HLvHtgTtHxMrjtLC9P8j9hwaQHyM3+8p0ZK/1bzCLXDjbfsnCrtaAMUtEPtfjuMDX+VFe0xK9eDw3hSa6Qn/X9NQupAqK/kZ9bwq+18+6hnpphqqh3XQ0MC79EcTifOARrxV2XPBXe0n87HjoaNUb7qq4yzm90nhxz7q40y2UIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D76qvXYx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0SO/MN56; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E4nICYjn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mZ+vOkIr"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D76qvXYx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0SO/MN56"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738591184;
+	s=2020; t=1738591185;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=A7xCSCJQLcL9ZuyvcbAlBoIzs1uRrQYGWOhagszxr9E=;
-	b=E4nICYjnr19U+nUwGA1oShLP23NPjHkVeP8x8UA2intYCkNs/gGPgNa7+7p6x5tQad/bIp
-	RDQeoIpJCA3fCBsGAtSW8rYTemJMSdjAhsYPCqprYUWawuV+UMT0Wramx8GzYX6asHkpkA
-	X6/ba4P0leV9O/gIulsAasYhzRlehYeaLBPCub8bjbwmyILfbvMKi2MZQ48GeluclV85LD
-	VobrokdlIgkvLrQjU9bJCFvb86GJIuZwEKHSXYXMoXNQt9ktWJFPJP4jXWDrhTTWLkeLK6
-	yNhjOnUiNVbxrHf0p8E/7RIIdjquUYT1Nye3goXQybjrTy3Q3LYCgvoGedxc8g==
+	bh=3VkTRA93v/TYQ+iuRG7ZC9MwtD2MiDnMSmSFE4JgP+k=;
+	b=D76qvXYx56p9ojZyje4mApDuUcLwaObOfVX2A3kyauTPNdaQW+7tjReWK9hHcDf3gAoOxQ
+	IzrFZW123lB2MJBFv8VMgIavy0+3/9LhReyWaNwlmSgasXJKBEdRWal+8vTHrtNWdt/4lV
+	RGktU0Msph4+D9uMPY4A6aLNSz/j0ygln6rRlDb/P3MvKc7Xl+VgeVbatydVAPojFWNS/F
+	MSrTWTAzY2RWYtxJWKerkc0UM9+9oLhsDcDZrS5fVtRln/eETZYCSIB39n24+lYozeXzxz
+	3u0XD1sSRmaIXG95GmH1RZkzjJADyljxb3Ah/qDDKHL1f6+lW8HUzrhpX+tICA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738591184;
+	s=2020e; t=1738591185;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=A7xCSCJQLcL9ZuyvcbAlBoIzs1uRrQYGWOhagszxr9E=;
-	b=mZ+vOkIrHXaQ+FU/c/rN+YBtWmT1eE92CgkPN51vMuUodMeNQQRw3Qg6BsUPmg40ZmKaa1
-	7oKnVLxrhS/F7iDw==
+	bh=3VkTRA93v/TYQ+iuRG7ZC9MwtD2MiDnMSmSFE4JgP+k=;
+	b=0SO/MN56aksC1mFhnQgftu04wGhlKq0G5ad8ARewLh7eDfxmdJvTNh0ELQJBZZtCHVXt8G
+	xnO4j27VXfnouYAw==
 To: linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Darren Hart <dvhart@infradead.org>,
@@ -49,11 +49,10 @@ Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Waiman Long <longman@redhat.com>,
-	kernel test robot <oliver.sang@intel.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v8 01/15] rcuref: Avoid false positive "imbalanced put" report.
-Date: Mon,  3 Feb 2025 14:59:21 +0100
-Message-ID: <20250203135935.440018-2-bigeasy@linutronix.de>
+Subject: [PATCH v8 04/15] futex: Allow automatic allocation of process wide futex hash.
+Date: Mon,  3 Feb 2025 14:59:24 +0100
+Message-ID: <20250203135935.440018-5-bigeasy@linutronix.de>
 In-Reply-To: <20250203135935.440018-1-bigeasy@linutronix.de>
 References: <20250203135935.440018-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -64,125 +63,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Thomas Gleixner <tglx@linutronix.de>
+Allocate a default futex hash if a task forks its first thread.
 
-The kernel test robot reported an "imbalanced put" which turned out to
-be false positive. Consider the following race:
-
-            ref  =3D 0 (via rcuref_init(ref, 1))
- T1                                      T2
- rcuref_put(ref)
- -> atomic_add_negative_release(-1, ref)                                   =
-      # ref -> 0xffffffff
- -> rcuref_put_slowpath(ref)
-                                         rcuref_get(ref)
-                                         -> atomic_add_negative_relaxed(1, =
-&ref->refcnt)
-                                           -> return true;                 =
-      # ref -> 0
-
-                                         rcuref_put(ref)
-                                         -> atomic_add_negative_release(-1,=
- ref) # ref -> 0xffffffff
-                                         -> rcuref_put_slowpath()
-
-    -> cnt =3D atomic_read(&ref->refcnt);                                  =
-        # cnt -> 0xffffffff / RCUREF_NOREF
-    -> atomic_try_cmpxchg_release(&ref->refcnt, &cnt, RCUREF_DEAD))        =
-      # ref -> 0xe0000000 / RCUREF_DEAD
-       -> return true
-                                           -> cnt =3D atomic_read(&ref->ref=
-cnt);   # cnt -> 0xe0000000 / RCUREF_DEAD
-                                           -> if (cnt > RCUREF_RELEASED)   =
-      # 0xe0000000 > 0xc0000000
-                                             -> WARN_ONCE(cnt >=3D RCUREF_R=
-ELEASED, "rcuref - imbalanced put()")
-
-The problem is the additional read in the slow path (after it
-decremented to RCUREF_NOREF) which can happen after the counter has been
-marked RCUREF_DEAD.
-
-Avoid the false positive by reusing the returning value from the
-decrement. Now every "final" put uses RCUREF_NOREF in the slow path and
-attempts the final cmpxchg() to RCUREF_DEAD.
-
-Fixes: ee1ee6db07795 ("atomics: Provide rcuref - scalable reference countin=
-g")
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202412311453.9d7636a2-lkp@intel.com
-Debugged-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/rcuref.h | 9 ++++++---
- lib/rcuref.c           | 5 ++---
- 2 files changed, 8 insertions(+), 6 deletions(-)
+ include/linux/futex.h | 12 ++++++++++++
+ kernel/fork.c         | 24 ++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/include/linux/rcuref.h b/include/linux/rcuref.h
-index 2c8bfd0f1b6b3..6322d8c1c6b42 100644
---- a/include/linux/rcuref.h
-+++ b/include/linux/rcuref.h
-@@ -71,27 +71,30 @@ static inline __must_check bool rcuref_get(rcuref_t *re=
-f)
- 	return rcuref_get_slowpath(ref);
+diff --git a/include/linux/futex.h b/include/linux/futex.h
+index 943828db52234..bad377c30de5e 100644
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -86,6 +86,13 @@ static inline void futex_mm_init(struct mm_struct *mm)
+ 	mm->futex_hash_bucket =3D NULL;
  }
 =20
--extern __must_check bool rcuref_put_slowpath(rcuref_t *ref);
-+extern __must_check bool rcuref_put_slowpath(rcuref_t *ref, unsigned int c=
-nt);
-=20
- /*
-  * Internal helper. Do not invoke directly.
-  */
- static __always_inline __must_check bool __rcuref_put(rcuref_t *ref)
- {
-+	int cnt;
++static inline bool futex_hash_requires_allocation(void)
++{
++	if (current->mm->futex_hash_bucket)
++		return false;
++	return true;
++}
 +
- 	RCU_LOCKDEP_WARN(!rcu_read_lock_held() && preemptible(),
- 			 "suspicious rcuref_put_rcusafe() usage");
- 	/*
- 	 * Unconditionally decrease the reference count. The saturation and
- 	 * dead zones provide enough tolerance for this.
- 	 */
--	if (likely(!atomic_add_negative_release(-1, &ref->refcnt)))
-+	cnt =3D atomic_sub_return_release(1, &ref->refcnt);
-+	if (likely(cnt >=3D 0))
- 		return false;
+ #else
+ static inline void futex_init_task(struct task_struct *tsk) { }
+ static inline void futex_exit_recursive(struct task_struct *tsk) { }
+@@ -108,6 +115,11 @@ static inline int futex_hash_allocate_default(void)
+ static inline void futex_hash_free(struct mm_struct *mm) { }
+ static inline void futex_mm_init(struct mm_struct *mm) { }
 =20
- 	/*
- 	 * Handle the last reference drop and cases inside the saturation
- 	 * and dead zones.
- 	 */
--	return rcuref_put_slowpath(ref);
-+	return rcuref_put_slowpath(ref, cnt);
- }
++static inline bool futex_hash_requires_allocation(void)
++{
++	return false;
++}
++
+ #endif
 =20
- /**
-diff --git a/lib/rcuref.c b/lib/rcuref.c
-index 97f300eca927c..5bd726b71e393 100644
---- a/lib/rcuref.c
-+++ b/lib/rcuref.c
-@@ -220,6 +220,7 @@ EXPORT_SYMBOL_GPL(rcuref_get_slowpath);
- /**
-  * rcuref_put_slowpath - Slowpath of __rcuref_put()
-  * @ref:	Pointer to the reference count
-+ * @cnt:	The resulting value of the fastpath decrement
-  *
-  * Invoked when the reference count is outside of the valid zone.
-  *
-@@ -233,10 +234,8 @@ EXPORT_SYMBOL_GPL(rcuref_get_slowpath);
-  *	with a concurrent get()/put() pair. Caller is not allowed to
-  *	deconstruct the protected object.
-  */
--bool rcuref_put_slowpath(rcuref_t *ref)
-+bool rcuref_put_slowpath(rcuref_t *ref, unsigned int cnt)
- {
--	unsigned int cnt =3D atomic_read(&ref->refcnt);
--
- 	/* Did this drop the last reference? */
- 	if (likely(cnt =3D=3D RCUREF_NOREF)) {
- 		/*
+ #endif
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 80ac156adebbf..824cc55d32ece 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2138,6 +2138,15 @@ static void rv_task_fork(struct task_struct *p)
+ #define rv_task_fork(p) do {} while (0)
+ #endif
+=20
++static bool need_futex_hash_allocate_default(u64 clone_flags)
++{
++	if ((clone_flags & (CLONE_THREAD | CLONE_VM)) !=3D (CLONE_THREAD | CLONE_=
+VM))
++		return false;
++	if (!thread_group_empty(current))
++		return false;
++	return futex_hash_requires_allocation();
++}
++
+ /*
+  * This creates a new process as a copy of the old one,
+  * but does not actually start it yet.
+@@ -2515,6 +2524,21 @@ __latent_entropy struct task_struct *copy_process(
+ 	if (retval)
+ 		goto bad_fork_cancel_cgroup;
+=20
++	/*
++	 * Allocate a default futex hash for the user process once the first
++	 * thread spawns.
++	 */
++	if (need_futex_hash_allocate_default(clone_flags)) {
++		retval =3D futex_hash_allocate_default();
++		if (retval)
++			goto bad_fork_core_free;
++		/*
++		 * If we fail beyond this point we don't free the allocated
++		 * futex hash map. We assume that another thread will be created
++		 * and makes use of it. The hash map will be freed once the main
++		 * thread terminates.
++		 */
++	}
+ 	/*
+ 	 * From this point on we must avoid any synchronous user-space
+ 	 * communication until we take the tasklist-lock. In particular, we do
 --=20
 2.47.2
 
