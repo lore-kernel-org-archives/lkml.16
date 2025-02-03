@@ -1,109 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743E51FFC69;
-	Mon,  3 Feb 2025 12:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1304F20468D;
+	Mon,  3 Feb 2025 12:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738586390; cv=none; b=HF4A5ukelFSGZ54EjIcPej46cPLLJ5JlYMqOSi2WqjJ1FpiKENFuVAxvzpa489pyU4fuLb9hlBcL3cRBzgRs5LOstEHbw0ibI1acpkz0CzaL1ZqAg5ZNTtztEKkUYrvtMCBPtOqg9XYaHPAac62gTwZjKwO8J4oG9t+rG+AIkJM=
+	t=1738586423; cv=none; b=hEiBGCzunqjS3tpalGUO8RnIeje4+A3PJH1ZHtQqDb7XIlx/DNLeqRIQ6BB2RiuKzg9qyOACvPSBo3hZ2JB7K9/hgy9qa9zKrE+bde0u6jz0AMrBtqgUiId+W5Fgcwq6Dt671RjIhosbE74Pu3ANu9lxA1Wmh5AjBsm+Ntfnw7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738586390; c=relaxed/simple;
-	bh=VI/zRRPwWJGwjTfK1doMii0lZOHq4x4pk2UaCs7wC60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s+FXfcbRl5GQMflTmqAzdVmLAUkUcR2f+rxhy50fwzmGOlGXiJmgNIyUhENgYA7iPXHmYFL8ETnlmhliErZsZaeNwucjU1n9JIaKqfEulgnw//fq6M+EPewRX6fJijYOxCocVdnV2YcNYGwX6gpaYUDAvz2yGlx2050qR7Mxtyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Abe+fKH+; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738586423; c=relaxed/simple;
+	bh=AkDFsgM8ht/4xOTKn+YGxCP4v6cjlpjp8uRWn5voH7o=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=p+Jl7/QB4J7x5+L3u6xAPXXe+wUQE7B0L3Dr7akbvtjo6Uk2M83BtoP9Q6TZBP+UXOW4OH0VCoGlp/pRTGdEnQ2JbgsCHNZOBXGsyhk+JRLzSvzvL36zHlP2gOBY2TKYiYdO6mE71dyCMnCptjF0oLoaS/N/3gAlMN48t0Ma55g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=NiCsXrG7; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Abe+fKH+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738586388; x=1770122388;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=VI/zRRPwWJGwjTfK1doMii0lZOHq4x4pk2UaCs7wC60=;
-  b=Abe+fKH+2H0+ExppaSG2faQTjN3EjwdRuOb5fumreP4vPV6NuFUhEqfx
-   yD1NT9165dpF95S/njIuABFx/80P/ThWGeHkOlCUf1l9ewwcX/5qCQory
-   xkmPLIP4hBGlB9e+FPfMJXXU7oNObvZxhBxUns9ERpMxCSZ0LFXx+0TNI
-   pEWCLync4PyRO/2txmX76KngE+682fPGZKCwrqXv8x/aJ0DevOTDyOGdS
-   MEBfc01QLj/RK/xXjiR5KUyNMGNKwahjQ9DGf9Ml3RNTqTFo59PTxIM5H
-   rSqDR/1U2sAz7DLdF5vnxQdfI7UsOSC/iWgoKPak7B3abcyoopL1KlSRS
-   g==;
-X-CSE-ConnectionGUID: NKdA/Rl+T5Gm9rTX4iSujA==
-X-CSE-MsgGUID: Eyyx9yPkSyi6mWBJpPBSkA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="49331414"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="49331414"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:39:48 -0800
-X-CSE-ConnectionGUID: uWxTffBRSJS2xrBVV7PAdQ==
-X-CSE-MsgGUID: oCAW5Z/WQXu9xWAzc3ZTAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="110843030"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 03 Feb 2025 04:39:46 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id EC31823F; Mon, 03 Feb 2025 14:39:44 +0200 (EET)
-Date: Mon, 3 Feb 2025 14:39:44 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
-Cc: andreas.noever@gmail.com, michael.jamet@intel.com,
-	YehezkelShB@gmail.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] thunderbolt: Disable Gen 4 Recovery on Asymmetric
- Transitions
-Message-ID: <20250203123944.GJ3713119@black.fi.intel.com>
-References: <20250131014406.28645-1-rahimi.mhmmd@gmail.com>
- <20250131014406.28645-4-rahimi.mhmmd@gmail.com>
- <20250203084224.GE3713119@black.fi.intel.com>
- <wxgsteiuto6qivnfttzuyw6jijs6ypcq4oyepqr6zbjgeez3ac@flvlpzswuyco>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="NiCsXrG7"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id E576025CAA;
+	Mon,  3 Feb 2025 13:40:17 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id kOJee6X8J05I; Mon,  3 Feb 2025 13:40:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1738586417; bh=AkDFsgM8ht/4xOTKn+YGxCP4v6cjlpjp8uRWn5voH7o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=NiCsXrG7LpnG5w/NFwLl1Xf4k91ChodYcxZdyx5YPPOd49ovtD7MWdYY8MSqveHJL
+	 AjJK0tAADkF89VLXYecmauRE5Gbv5iijR/wWAk4bwUHJvvvhXCYprAkat0d0TGYHIf
+	 ykOg1aVULxEsuMRLAo+lnp61mnypYcYTcGh8agQvcbDbQ93GggzGqmU2WdUo/fnERe
+	 cf0a6u52bgH+nL3XJ9zgtBTU2ZwrsvKehCSZyQANT07sLZRkG2mrLpJPC599dAG4RR
+	 gPgmAg3QdVtp9K9GV7ZrzkCmvJgfX0tErHPHs9P/aQnPsTEdcVAPpr+zHZOgyA1afb
+	 2mgxyQClmL60Q==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <wxgsteiuto6qivnfttzuyw6jijs6ypcq4oyepqr6zbjgeez3ac@flvlpzswuyco>
+Date: Mon, 03 Feb 2025 12:40:16 +0000
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, Alim
+ Akhtar <alim.akhtar@samsung.com>, Sylwester Nawrocki
+ <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tomasz
+ Figa <tomasz.figa@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Lee Jones <lee@kernel.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Vinod Koul
+ <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Marek
+ Szyprowski <m.szyprowski@samsung.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Andi Shyti <andi.shyti@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung
+ <jh80.chung@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, Thinh
+ Nguyen <Thinh.Nguyen@synopsys.com>, Kees Cook <kees@kernel.org>, Tony Luck
+ <tony.luck@intel.com>, "Guilherme G . Piccoli" <gpiccoli@igalia.com>, Sergey
+ Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+ linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org, Kaustabh
+ Chakraborty <kauschluss@disroot.org>
+Subject: Re: [PATCH 02/33] dt-bindings: clock: add clock definitions for
+ exynos7870 CMU
+In-Reply-To: <20250203-enigmatic-remarkable-beagle-709955@krzk-bin>
+References: <20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org>
+ <20250202190758.14986-1-kauschluss@disroot.org>
+ <20250203-enigmatic-remarkable-beagle-709955@krzk-bin>
+Message-ID: <c1249f2f6ac8a2f5a1dcb3bbbba647f9@disroot.org>
+X-Sender: kauschluss@disroot.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 2025-02-03 07:54, Krzysztof Kozlowski wrote:
+> On Mon, Feb 03, 2025 at 12:37:58AM +0530, Kaustabh Chakraborty wrote:
+>> From: Sergey Lisov <sleirsgoevy@gmail.com>
+>> 
+>> Add unique identifiers for exynos7870 clocks for every bank. It adds all
+>> clocks of CMU_MIF, CMU_DISPAUD, CMU_G3D, CMU_ISP, CMU_MFCMSCL, and
+>> CMU_PERI.
+>> 
+>> Signed-off-by: Sergey Lisov <sleirsgoevy@gmail.com>
+>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+>> ---
+>>  include/dt-bindings/clock/exynos7870.h | 324 +++++++++++++++++++++++++
+>>  1 file changed, 324 insertions(+)
+> 
+> Look at git log - that's never a separate commit.
 
-On Mon, Feb 03, 2025 at 12:25:21PM +0000, Mohammad Rahimi wrote:
-> Hello.
-> 
-> On Mon, Feb 03, 2025 at 10:42:24AM GMT, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > On Fri, Jan 31, 2025 at 01:41:27AM +0000, Mohammad Rahimi wrote:
-> > > Updates the Connection Manager to disable the Gen 4 Link Recovery
-> > > flow before transitioning from a Symmetric Link to an Asymmetric
-> > > Link, as specified in recent changes to the USB4 v2 specification.
-> > > 
-> > > According to the "USB4 2.0 ENGINEERING CHANGE NOTICE FORM"
-> > > published in September 2024, the rationale for this change is:
-> > > 
-> > >   "Since the default value of the Target Asymmetric Link might be
-> > >   different than Symmetric Link and Gen 4 Link Recovery flow checks
-> > >   this field to make sure it matched the actual Negotiated Link Width,
-> > >   we’re removing the condition for a Disconnect in the Gen 4 Link
-> > >   Recovery flow when Target Asymmetric Link doesn’t match the actual
-> > >   Link width and adding a Connection Manager note to Disable Gen 4 Link
-> > >   Recovery flow before doing Asymmetric Transitions."
-> > > 
-> > > Signed-off-by: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
-> > 
-> > I did some minor modifications and applied to thunderbolt.git/next. Please
-> > let me know if I missed something.
-> > 
-> 
-> Looks great. Just one question:
-> 
-> In tb_configure_asym(), if tb_switch_set_link_width() fails, we won’t restore
-> the link recovery status. Is that okay?
+Hmm, I see past examples which are mixed.
 
-Good question :) Looking at the ECR, does it actually say anywhere that the
-CM should needs to re-enable it? I'm thinking that we could just disable it
-and be done with it?
+2ae5c2c3f8d586b709cf67efe94488be397d7544
+Exynos850 CMU (c. 2021). CMU definitions are in a separate commit.
+
+591020a516720e9eba1c4b1748cb73b6748e445f
+Exynos7885 CMU (c. 2021). CMU definitions are in a separate commit.
+
+while
+
+96bd6224f07b8bf73e0359f15a3d7678118494e6
+Exynos5433 CMU (c. 2015). CMU definitions and driver are in a single commit.
+
+Let me know if I should still continue with the approach you mentioned.
+
+> 
+> Best regards,
+> Krzysztof
