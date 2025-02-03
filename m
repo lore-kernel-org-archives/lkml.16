@@ -1,61 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0332D339A1
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 20:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B551339A1;
+	Mon,  3 Feb 2025 20:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738612992; cv=none; b=RwvWkqxxZnONhlRQB8BZC+h2oprUxB9YjsGfCvwZQ5IzkVydQTyEIxIxyb4cl5YlMIyQ9JNxtjHRWgLuirBAr5LBQQp7Z/V9tEXyJl0q30ZVtBGYjYdaHbcLKPTcNKslHwYNKOqtrUJkzbuuzx6+oH9nIZw1FeSIlFL5e+1bZp4=
+	t=1738613186; cv=none; b=LtmF/8A3gQuAjQx6ywCq2IhKSgGShl+uJg2o1MT+1PYndk5Crzh7MXHhNitpjC0eYVniHDrbNTXJRujM9az4DXey/O4powc6fHFoUReOKNFLGHi67ZsdmADTcJcUBUR5+SQSZLCOM4K6s3a02R9b+RH++guaJLI9YuKkcCHRK50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738612992; c=relaxed/simple;
-	bh=CK/MKv7rjvdIWFJRpj1ZzWC/UHYYkT90B5IHPvXpe6Q=;
+	s=arc-20240116; t=1738613186; c=relaxed/simple;
+	bh=SutM7TpXAtw9+sBUhKOyPpuiD0yU5oLKZvaFEhKhudM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gbxfqmvLt1tjUNlWFb0GAPIS2GB4AM1ZFrOYet9qC1zx2BoYyYGPnrBOsIycqi6pVwKPxmJky6Sic5Lhd2DIZu2Hc3QAv9K9ybLdL1SZdmDsBT6+UdMNoTGDdTw8FVJ6SfPtJR1r6U4oHSGO5VP44visYJ9cQ6UbEFrhUUMpy9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bCMeqSRo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=nTW1bRAqEBnm8W8AxMEPBSO4hM9JQjH+x66yidEWgOK0bNCfEdD4uv0fSpXYVQIewpelRjKVDJMSlaNlH0SMrkW/e5sggir1k0xrtRmjQnqClP8u2MET03yzZcyJRdFKu+G+Q5ZiaJpMdGdAr8x5JNGjT/zr9xwpHm9OyO/NxL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=KwX7SJGz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dJyjEfJ4; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bCMeqSRo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738612989;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DYdlEIiMuZGB2s7NaGPidtgM+7FBuJkKnef7C2LdTpU=;
-	b=bCMeqSRoZXIsLfuLdJ7ZlJrDaDnhwE1BW5/jXuggFaKXuTdpf+iduZDMA5PhyRpTGhp2Wb
-	1kDslKpC3XRJMHvSH32UzVjZlaOZJFd8cz4Aw1G9B7zJGaYzb2UCUIyUAK4ts64r4xBVqv
-	wu78XIU+Oe7a8jmNghiI+Wet6wUGE/E=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-147-tsUddE3HMUqiq6MKQfSz1w-1; Mon,
- 03 Feb 2025 15:03:06 -0500
-X-MC-Unique: tsUddE3HMUqiq6MKQfSz1w-1
-X-Mimecast-MFC-AGG-ID: tsUddE3HMUqiq6MKQfSz1w
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 603E0180035F;
-	Mon,  3 Feb 2025 20:03:04 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.72])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 61AD318008C0;
-	Mon,  3 Feb 2025 20:03:01 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  3 Feb 2025 21:02:38 +0100 (CET)
-Date: Mon, 3 Feb 2025 21:02:34 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: ebiederm@xmission.com, brauner@kernel.org, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] pid: perform free_pid() calls outside of
- tasklist_lock
-Message-ID: <20250203200233.GE1003@redhat.com>
-References: <20250201163106.28912-1-mjguzik@gmail.com>
- <20250201163106.28912-6-mjguzik@gmail.com>
- <20250203184908.GD1003@redhat.com>
- <CAGudoHF5zTjxsCsbVjAHjhtsyRgNWFfbRA4W7TYQY76dDOWSHQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="KwX7SJGz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dJyjEfJ4"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.phl.internal (Postfix) with ESMTP id 863A913801E6;
+	Mon,  3 Feb 2025 15:06:23 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-10.internal (MEProxy); Mon, 03 Feb 2025 15:06:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+	 t=1738613183; x=1738699583; bh=CfVg5HvIt5jV2onLmlvDPrpx5sF0Oynr
+	lrxmWaMF1zE=; b=KwX7SJGzVrwG6QVtgB4kRLvIQKqnqWh7By8UIzAuWJvuuDZq
+	FNM+ESvPfCkzg+ntfGk5B/7ir19bJ6gEoQHS4xElGRvi+Jg9bWbs/zA3J5C+jAVc
+	8TxGcYAwoWxJCacXyoJ78kXGDNBMBaT032F8V/7hiGCyZSjQQAusYkRsMpIxs95p
+	LM/jhzfJiNWUF7DtVwpHZ+dHsrWInjPdj8o17dr5URPhqlwVHX9Pd3FHPAMLRI3/
+	UBurESUBskfnmoNXpZ8n9RS/p6bs2rz3jLxn+b8/yrSwptesxgBNUvWdFHesj+oa
+	OZHXeoGO1xKwXloBdOcb2DdGAF/++bJLPPKWvA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738613183; x=
+	1738699583; bh=CfVg5HvIt5jV2onLmlvDPrpx5sF0OynrlrxmWaMF1zE=; b=d
+	JyjEfJ4U/2NSX+irXHtodFgZ2E4ELijoCwm0GtSaJtD2AAZaR/UN8FKcHtZlRWd+
+	kDqqU+LL/fFWh/k3pV8tUyDte3FfGZXa0sGpT4vtUzpH7lx+AurBeE1c1uxhx4ri
+	YDViBv33rCsxYcFz1UcOlD9yu+qaJqr+nzSIg19nrfftz+hJr5Gh3/WIPFWHs2yw
+	UrURqTmSmqVDFADJvQKY/yyQYs4A9jG1Fn38M5mDlnPOzv8FW5I3ozWJsWPI5IO7
+	MztDJt3vAEcUCipNjL0NA09cY0avR4ulZNK/tYYnMin9H2K5/O97LBqNlGBg/68s
+	sOKDzlzQIWGA0uASfyhrw==
+X-ME-Sender: <xms:viGhZ5AvMKQHVYeAXnFCOvol0aBR0u7apuWBxUjE_Ce0c9IFflMAhQ>
+    <xme:viGhZ3i89TNqzlOKA3hGXqudFMBzQfuS2FPL7RUS96tZxCjBt2xj9Gh9cJqnEq5s0
+    T7DTcfUzzsRU7zhjtQ>
+X-ME-Received: <xmr:viGhZ0ln9ayMuDgRYbCmBxMtAm1us9_8XsMlqXuz7vgD8AvEjQGSZDC5sRjmJKwxQ8HXBA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeehfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgestheksfdttddt
+    jeenucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilh
+    hlsehshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpedtvdefueetheei
+    gefgkedtheetjeduvddvtdfhteelgeektdevvedttddvhfdtfeenucffohhmrghinhepkh
+    gvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgvpdhnsggprhgtphhtth
+    hopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepvhgrnhhnrghpuhhrvhgv
+    sehgohhoghhlvgdrtghomhdprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehpsghonhiiihhnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepsh
+    gvrghnjhgtsehgohhoghhlvgdrtghomhdprhgtphhtthhopegvrhguvghmrghkthgrshes
+    ghhoohhglhgvrdgtohhmpdhrtghpthhtoheprggtkhgvrhhlvgihthhnghesghhoohhglh
+    gvrdgtohhmpdhrtghpthhtohepjhigghgrohesghhoohhglhgvrdgtohhmpdhrtghpthht
+    ohepshgrghhishesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:viGhZzz8d-kbqIvAkTfvnQmo5YaEJ52dJaH7onpuQ0pJxmMbaihzKQ>
+    <xmx:viGhZ-QRSAD7i9rza_AFtRXPBzXmWzDlegkOKDYjFGR37PR579VSnQ>
+    <xmx:viGhZ2YS2ZW3kr-ja63igcXbqzPYrCbbvjQE8dLFLbox8kA_P7I8bA>
+    <xmx:viGhZ_QKmrDxsIDIn3yxKSXOgY7lLGIW88wZirzPWlFnkTePWtOjOA>
+    <xmx:vyGhZ3Av6fx4jy055CM7y_ttBjui7Mr7ze0MQpiC04WLHUo3mwAB0Dgv>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 3 Feb 2025 15:06:17 -0500 (EST)
+Date: Mon, 3 Feb 2025 22:06:13 +0200
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Vishal Annapurve <vannapurve@google.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	seanjc@google.com, erdemaktas@google.com, ackerleytng@google.com, jxgao@google.com, 
+	sagis@google.com, oupton@google.com, pgonda@google.com, 
+	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, chao.p.peng@linux.intel.com, 
+	isaku.yamahata@gmail.com, stable@vger.kernel.org
+Subject: Re: [PATCH V2 1/1] x86/tdx: Route safe halt execution via
+ tdx_safe_halt()
+Message-ID: <4brtmv5h2ymvcqhvtiavzogm253t6du3pn6gtpfrga6ll7nvf2@wbcz7noqvutp>
+References: <20250129232525.3519586-1-vannapurve@google.com>
+ <p6sbwtdmvwcbr55a4fmiirabkvp3f542nawdgxoyq22cdhnu33@ffbmyh2zuj2z>
+ <CAGtprH8pJ3Zj_umygzxp8=4sJTdwY5v2bFDhoBdX=-3KQaDnCw@mail.gmail.com>
+ <wmdg54v56uizuifhaufllnjtecmvhllv35jyrvdilf4ty4pfs5@y4zppjm2sthr>
+ <CAGtprH82OjizyORJ91d6f6VAn_E9LY7WptN-DsoxwLT4VwOccg@mail.gmail.com>
+ <2wooixyr7ekw3ebi4oytuolk5wtyi2gqhsiveshfcfixlz3kuq@d5h6gniewqzk>
+ <CAGtprH-n=cfH_BJAmiNMoRbqq0XdGCf3RE67TYW8z7RARnsCiQ@mail.gmail.com>
+ <baiv6tl2lkr25i2ry2q2jaylu5y6hhioqfwhc4yafk2uwqbgf5@sqxlpg2r6kcc>
+ <CAGtprH-5bL44c7ZQHKsDuOQNNd4dsBd-uR8GT9OyqffEXW963Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,45 +104,67 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGudoHF5zTjxsCsbVjAHjhtsyRgNWFfbRA4W7TYQY76dDOWSHQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <CAGtprH-5bL44c7ZQHKsDuOQNNd4dsBd-uR8GT9OyqffEXW963Q@mail.gmail.com>
 
-On 02/03, Mateusz Guzik wrote:
->
-> On Mon, Feb 3, 2025 at 7:49 PM Oleg Nesterov <oleg@redhat.com> wrote:
+On Mon, Feb 03, 2025 at 09:01:41AM -0800, Vishal Annapurve wrote:
+> On Mon, Feb 3, 2025 at 8:00 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
 > >
-> > To avoid the confusion, my question and a note are absolutely offtopic.
-> >
-> > On 02/01, Mateusz Guzik wrote:
+> > ...
 > > >
-> > > @@ -1085,6 +1085,7 @@ SYSCALL_DEFINE2(setpgid, pid_t, pid, pid_t, pgid)
-> > >  {
-> > >       struct task_struct *p;
-> > >       struct task_struct *group_leader = current->group_leader;
-> > > +     struct pid *pids[PIDTYPE_MAX] = { 0 };
+> > > Are you hinting towards a model where TDX guest prohibits such call
+> > > sites from being configured? I am not sure if it's a sustainable model
+> > > if we just rely on the host not advertising these features as the
+> > > guest kernel can still add new paths that are not controlled by the
+> > > host that lead to *_safe_halt().
 > >
-> > Could you remind me why
-> >
-> >         struct pid *pids[PIDTYPE_MAX] = {};
-> >
-> > is not right? I seem to knew it some time before, but can't recall...
-> >
+> > I've asked TDX module folks to provide additional information in ve_info
+> > to help handle STI shadow correctly. They will implement it, but it will
+> > take some time.
 > 
-> as far as I know this is merely a matter of convention, fwiw a naive grep:
-> $ git grep '= { }' | wc -l
-> 1273
-> $ git grep '= { 0 }' | wc -l
-> 2031
-> $ git grep '= {}' | wc -l
-> 5626
+> What will the final solution look like?
 
-OK... but I still have a vague feeling that it was explained somewhere
-that '{ 0 }' should be preferred... Nevermind.
+VMX has GUEST_INTERRUPTIBILITY_INFO. This info is going to passed via
+ve_info. Details are TBD.
 
-> that said i can change it to whatever you see fit
+With the info at hands, we can check if we are in STI shadow (regardless
+of instruction) and skip interrupt enabling in that case.
+ 
+> >
+> > So we need some kind of stopgap until we have it.
+> 
+> Does it make sense to carry the patch suggested by Sean [1] as a
+> stopgap for now?
+> 
+> [1] https://lore.kernel.org/lkml/Z5l6L3Hen9_Y3SGC@google.com/
 
-No, please do whatever looks better to you.
+I like it more than paravirt calls. And in the future, HLT check can be
+replaced with STI shadow check if the info is available.
 
-Oleg.
+> >
+> > I am reluctant to commit to paravirt calls for this workaround. They will
+> > likely stick forever. It is possible, I would like to avoid them. If not,
+> > oh well.
+> >
+> > > > > 2) acpi_safe_halt() -> safe_halt() -> raw_safe_halt() -> arch_safe_halt()
+> > > >
+> > > > Have you checked why you get there? I don't see a reason for TDX guest to
+> > > > get into ACPI idle stuff. We don't have C-states to manage.
+> > >
+> > > Apparently userspace VMM is advertising pblock_address through SSDT
+> > > tables in my configuration which causes guests to enable ACPI cpuidle
+> > > drivers. Do you know if future generations of TDX hardware will not
+> > > support different c-states for TDX VMs?
+> >
+> > I have very limited understanding of power management, but I don't see how
+> > C-states can be meaningfully supported by any virtualized environment.
+> > To me, C-states only make sense for baremetal.
+> 
+> One possibility is that host can convey guests about using "mwait" as
+> cstate entry mechanism as an alternative to halt if supported.
 
+You don't need cpuidle for that. If MWAIT is supported, just enumerate
+MWAIT to the guest and select_idle_routine() will pick it over
+TDX-specific one.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
