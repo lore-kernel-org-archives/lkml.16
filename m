@@ -1,188 +1,83 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D0C1D7E50
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CD31FAC23
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738571717; cv=none; b=D87TNlVli3gj5KWmkDqOJH2cpa52BgaQzoGIJcVJCI6AHFcntaWV39KqcNaE62UrPQdLyL0dKplFrZ0IMfo35nX0cdJbLYEzKs3oc6owy/+wsNhPHXWVXtlYPE64+sPN/M7x6sMbPSqS9BZ2NZFdAUqp8ZN7NVwYFiTdQ+0/Bis=
+	t=1738571728; cv=none; b=d5+zhcyszoguXKfnXC85Yfi1shjiU6raBMmQVFAD80Qfn4wbfm8UsvweqiXCCm5fO/1YzGHCZndAqrloxWqsQTNn/MddTZOoZI2bBFZkSoBfaQGI5AZDpxkze6odJG9ApBSVI9OHUgkZ2u2eRvNXQGB+8Dy2kRSUZ/MGZ9PVHxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738571717; c=relaxed/simple;
-	bh=AjeBmdJxOhB8EePWx9LMdeDziY3O7eZmfuZLVM3LnCA=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=PsqGkonAheQwENAeoX3umYyMO5wKfq8iAvHuYfxofscmWBXP7ELOGdx0CRE4gki7zxnkn2/M4JU6QkxIexj1WtURGDkgHxTxoQAuRw70xbF8s+UvBlcC5R4lcX1jk8PhuTaOnpx8NVimkuCvHBBOiSEmnC17RSvhDwiJESN8t7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZQWJ8PfT; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZQWJ8PfT"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2f550d28f7dso7619807a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:35:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738571715; x=1739176515; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bCVGsPkdqv8VOcstVdRRWjGTGpKBIG2jSUrhWhisdPo=;
-        b=ZQWJ8PfTXWf9rjNMsrbTjBAJbETXlU/CjR5KASUzY0l/Ub2eookgHzsLD363AJRHx/
-         mrVTbegfVsjcApqwzcEBOSAtvHE50uT/nuV2S2k6sxkgf4hkW6YuBjk6jWffs2UPh354
-         ihB5+AMeb70RmDTt9egjCIo8tRjleB3Ym3AsBI7VjUNPVI16F6CbvoC5pYs7cpL5sTUt
-         7XQtWAC3Ky+siA/93SsIZaGLAJIdWEIP2gu86eQqppgOFLsLN2whPa6w3Yap5IB+pcDk
-         IYQmpY+9GJs8oEh6St7eW/fxTlyNVqOTysF2OfUwtxAmDNQZKFx5crqzxsY0zieWl2gz
-         P9TQ==
+	s=arc-20240116; t=1738571728; c=relaxed/simple;
+	bh=uKECRRl+vcMvkGiTzs8RadTWJIWycLn2uAJt759QzSQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lkN5nfLkqOtQ5Y623KDYIwnyYrui93DwaFpmkE9SvmtbCq4ucOcdv/75LYnPQqfHfdrIvlVGo3Kdx5qAcFmKpyKH6c/wljpaWt68VbP4GptVoZDi0DbbA0NVuuc2XbCLJNHMdeoM/ntYCT1RQVv/m/dVHQCCb4yGpMzNhSM4Xg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ce7a0ec1easo29497665ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:35:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738571715; x=1739176515;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bCVGsPkdqv8VOcstVdRRWjGTGpKBIG2jSUrhWhisdPo=;
-        b=sW30o0nAk+0fuRwSjuSQMX3nIKRMTIZ5JAFFbitCmZN41HDnZSwfXhbd+yOEHYC6kL
-         BGgiSI//ptAMV699WZpwSL08C+2xxJn/gi723hYzveezTQco1R5jFsYbwPozS+RbSP0p
-         TpjYcqzZQxAhQzrDHSGFlpb6DqthXcrSWJ2QnXM+A71hMFigmcBeTMu0WZoostz6027P
-         2UX1E6ZNjvrUhG/1F01T9TYYez7IQllKjPSvqQgsrZZhXWIZraCMHzCAVSgfmYxNaOOR
-         n3xVaFcEBzvc+ozxrCKAB2t5k+lXUAqwj3aOqX79p3NzoMwiaEzAb5IU84dHdv01fk9L
-         UaKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWuwVyRDXW0Zx/962Ax9CiNC8uwRYWcWv4Ow0Yg8s0QIN8kbaxWf+zQM2gA4vO05sda/lpAHBz/ikOpc8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpB+WE6n+qi9ZIjuGa4bnQ9huMsp3NX9m9VQokdd7NIs5U8N38
-	PgNzc/kVpAyqOkwz8N9QdMTmDwYO7/ZDbj8FvP+OitQgQm6A1D/lwHyrx+Cwdg2DJz7aHtHNSPG
-	ENmrug7vcJ6FPYqgy1YmHUw==
-X-Google-Smtp-Source: AGHT+IHj+Cug/2vDcc3qbw44IShUmb2Dal+tFzb8jNSGxbKWVsDIeVzNOQ+erfgJBUWM/FABAfOHIsgQxSoSDHqCzA==
-X-Received: from pjbnc13.prod.google.com ([2002:a17:90b:37cd:b0:2ea:46ed:5d3b])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:2748:b0:2f4:465d:5c94 with SMTP id 98e67ed59e1d1-2f83abd9978mr32152246a91.11.1738571714919;
- Mon, 03 Feb 2025 00:35:14 -0800 (PST)
-Date: Mon, 03 Feb 2025 08:35:12 +0000
-In-Reply-To: <83d44307f30ad8ce19de3edcdc00c179750e0e23.camel@infradead.org>
- (message from Amit Shah on Tue, 28 Jan 2025 10:42:57 +0100)
+        d=1e100.net; s=20230601; t=1738571725; x=1739176525;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uefJHPqwW/k0s53Um/WT0lNmLYvpG6tzG8f34dffdig=;
+        b=gsTpl0CZMLx7LOXbtb0TSHRwEcOLhQn3DXwD9zdPhTJRq7uzu0uUeRKCVKK9EAcKJ3
+         XZly8sOAqCCt+ecoqec9tbYNRXacPs89aWCnXPm+3Z1ReREW4MyxeTGNoB00c1BOoVpk
+         gMRK8E9ex3l5LeHRIebxehYYJoylVTnkfGW3aDoOT3PkuDNJl6j95zf2PgfLWzkJ6+id
+         LXuSoID6yOKzLAVl0nBj7rdtbg7UQ/muFp/XjY8G7nW7VEMUXsCibrh2NomcKLHlg0ap
+         Rqs2AgSE+nCtzLgywUr2/TiD3kTcrPb7yZUuIRpgGOZn1S9YyLHaKdSbNr/oWN6QVF/9
+         Cw/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUc5Vgdtpt92Vq6kBvC/+5sKpK+YcwiMFwEi6RuT6IdV6IC/BgmWE04YWnd+JBZk3AIZ64WioeGLHGXRQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVF/M87pN4fjOMaUq9fUR/h5QyKTic03bWsmQ+efjq2gkxSA2X
+	7uLD+aOSL6iOH4JtOANZIP4ZgPxpnKPUi8w9b3IGv0i5KcNxBigPffFpeHbDYk6y9/W1YUjPGIU
+	O/To9v3edakOWpVRpPQnqAXPhDtUuiV8Z/JFjQw/m8B5Me7/P4Cv5x7U=
+X-Google-Smtp-Source: AGHT+IEqNkNDXqar5hD8yvF68NwnmwNPXwb8h7lA97jt68wxcVkNpJGf2yKvIv1MGTZcuIKfXu2qTrBOwtRzQ2BnRbdjuhyW7R2o
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <diqzr04fpgsf.fsf@ackerleytng-ctop-specialist.c.googlers.com>
-Subject: Re: [RFC PATCH 00/39] 1G page support for guest_memfd
-From: Ackerley Tng <ackerleytng@google.com>
-To: Amit Shah <amit@infradead.org>
-Cc: tabba@google.com, quic_eberman@quicinc.com, roypat@amazon.co.uk, 
-	jgg@nvidia.com, peterx@redhat.com, david@redhat.com, rientjes@google.com, 
-	fvdl@google.com, jthoughton@google.com, seanjc@google.com, 
-	pbonzini@redhat.com, zhiquan1.li@intel.com, fan.du@intel.com, 
-	jun.miao@intel.com, isaku.yamahata@intel.com, muchun.song@linux.dev, 
-	mike.kravetz@oracle.com, erdemaktas@google.com, vannapurve@google.com, 
-	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
-	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
-	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
-	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
-	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
-	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-fsdevel@kvack.org
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1c0a:b0:3cf:c82f:586c with SMTP id
+ e9e14a558f8ab-3cffe3ff802mr180221205ab.4.1738571725719; Mon, 03 Feb 2025
+ 00:35:25 -0800 (PST)
+Date: Mon, 03 Feb 2025 00:35:25 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a07fcd.050a0220.163cdc.003d.GAE@google.com>
+Subject: [syzbot] Monthly v9fs report (Feb 2025)
+From: syzbot <syzbot+list0c3c74d5f9522e8a5463@syzkaller.appspotmail.com>
+To: asmadeus@codewreck.org, ericvh@kernel.org, linux-kernel@vger.kernel.org, 
+	lucho@ionkov.net, syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Amit Shah <amit@infradead.org> writes:
+Hello v9fs maintainers/developers,
 
-> Hey Ackerley,
+This is a 31-day syzbot report for the v9fs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/v9fs
 
-Hi Amit,
+During the period, 3 new issues were detected and 0 were fixed.
+In total, 11 issues are still open and 34 have already been fixed.
 
-> On Tue, 2024-09-10 at 23:43 +0000, Ackerley Tng wrote:
->> Hello,
->> 
->> This patchset is our exploration of how to support 1G pages in
->> guest_memfd, and
->> how the pages will be used in Confidential VMs.
->
-> We've discussed this patchset at LPC and in the guest-memfd calls.  Can
-> you please summarise the discussions here as a follow-up, so we can
-> also continue discussing on-list, and not repeat things that are
-> already discussed?
+Some of the still happening issues:
 
-Thanks for this question! Since LPC, Vishal and I have been tied up with
-some Google internal work, which slowed down progress on 1G page support
-for guest_memfd. We will have progress this quarter and the next few
-quarters on 1G page support for guest_memfd.
+Ref Crashes Repro Title
+<1> 4418    Yes   WARNING in v9fs_fid_get_acl
+                  https://syzkaller.appspot.com/bug?extid=a83dc51a78f0f4cf20da
+<2> 178     Yes   WARNING in __alloc_frozen_pages_noprof
+                  https://syzkaller.appspot.com/bug?extid=03fb58296859d8dbab4d
+<3> 62      Yes   WARNING in p9pdu_vwritef
+                  https://syzkaller.appspot.com/bug?extid=94b73a3e8ea625efcd05
 
-The related updates are
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-1. No objections on using hugetlb as the source of 1G pages.
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
-2. Prerequisite hugetlb changes.
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
 
-+ I've separated some of the prerequisite hugetlb changes into another
-  patch series hoping to have them merged ahead of and separately from
-  this patchset [1].
-+ Peter Xu contributed a better patchset, including a bugfix [2].
-+ I have an alternative [3].
-+ The next revision of this series (1G page support for guest_memfd)
-  will be based on alternative [3]. I think there should be no issues
-  there.
-+ I believe Peter is also waiting on the next revision before we make
-  further progress/decide on [2] or [3].
-
-3. No objections for allowing mmap()-ing of guest_memfd physical memory
-   when memory is marked shared to avoid double-allocation.
-
-4. No objections for splitting pages when marked shared.
-
-5. folio_put() callback for guest_memfd folio cleanup/merging.
-
-+ In Fuad's series [4], Fuad used the callback to reset the folio's
-  mappability status.
-+ The catch is that the callback is only invoked when folio->page_type
-  == PGTY_guest_memfd, and folio->page_type is a union with folio's
-  mapcount, so any folio with a non-zero mapcount cannot have a valid
-  page_type.
-+ I was concerned that we might not get a callback, and hence
-  unintentionally skip merging pages and not correctly restore hugetlb
-  pages
-+ This was discussed at the last guest_memfd upstream call (2025-01-23
-  07:58 PST), and the conclusion is that using folio->page_type works,
-  because
-    + We only merge folios in two cases: (1) when converting to private
-      (2) when truncating folios (removing from filemap).
-    + When converting to private, in (1), we can forcibly unmap all the
-      converted pages or check if the mapcount is 0, and once mapcount
-      is 0 we can install the callback by setting folio->page_type =
-      PGTY_guest_memfd
-    + When truncating, we will be unmapping the folios anyway, so
-      mapcount is also 0 and we can install the callback.
-
-Hope that covers the points that you're referring to. If there are other
-parts that you'd like to know the status on, please let me know which
-aspects those are!
-
-> Also - as mentioned in those meetings, we at AMD are interested in this
-> series along with SEV-SNP support - and I'm also interested in figuring
-> out how we collaborate on the evolution of this series.
-
-Thanks all your help and comments during the guest_memfd upstream calls,
-and thanks for the help from AMD.
-
-Extending mmap() support from Fuad with 1G page support introduces more
-states that made it more complicated (at least for me).
-
-I'm modeling the states in python so I can iterate more quickly. I also
-have usage flows (e.g. allocate, guest_use, host_use,
-transient_folio_get, close, transient_folio_put) as test cases.
-
-I'm almost done with the model and my next steps are to write up a state
-machine (like Fuad's [5]) and share that.
-
-I'd be happy to share the python model too but I have to work through
-some internal open-sourcing processes first, so if you think this will
-be useful, let me know!
-
-Then, I'll code it all up in a new revision of this series (target:
-March 2025), which will be accompanied by source code on GitHub.
-
-I'm happy to collaborate more closely, let me know if you have ideas for
-collaboration!
-
-> Thanks,
->
-> 		Amit
-
-[1] https://lore.kernel.org/all/cover.1728684491.git.ackerleytng@google.com/T/
-[2] https://lore.kernel.org/all/20250107204002.2683356-1-peterx@redhat.com/T/
-[3] https://lore.kernel.org/all/diqzjzayz5ho.fsf@ackerleytng-ctop.c.googlers.com/
-[4] https://lore.kernel.org/all/20250117163001.2326672-1-tabba@google.com/T/
-[5] https://lpc.events/event/18/contributions/1758/attachments/1457/3699/Guestmemfd%20folio%20state%20page_type.pdf
+You may send multiple commands in a single email message.
