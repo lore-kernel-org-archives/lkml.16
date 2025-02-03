@@ -1,224 +1,162 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300E920AF96
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914B320AF99
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738600396; cv=none; b=W9HVuUJSXrLqrKVjP3X54SD12rJho8I6ZPOdxwfggrHyFk7oSP9MF7wBpCx8ayNevTYGSE0kc9PJ9VkUcH3kJm/y93ESB+ZuzbvYLSP5sNWIPgwf13mY7O05rKHK0FoQAdlc9NuPpr8SmRFUU7N0nkk/weugNNXKj8XJOWbYpe0=
+	t=1738600412; cv=none; b=MjO9XhCVt7eknQVhhe+QPjutHkomFRAx2We4R8R7dReLb/WJSr45s0t4UX7DTjUrC3xGM6WDIxukfwtS39p+lOmjA7KBrN3erOfHdzMgw/i5NkCgWDPB/B302ElHPtbAJxvmpngzLZ1mxaYXMwyUUmyaAelPL3ma3I/edgU9e7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738600396; c=relaxed/simple;
-	bh=U+GrBy7CreIDx2WaSsCRH8V9c01JYi8AGBXlihMsrUk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=JvRFI8WiFpwWwWWDbx27GHmT6OLlPqDjIP/lYhYYBoRK4oO7M+1xLEYXT1sOjysZ7fkoy5neTTVr9m9WtooyQFP2sb5ZXxN0DpJUod+7eErDJzLJwUnMnMd4+q1wMl39kZYQ+TyKx9/9b6mHf7oWWhgQuz0ti1b0sF1QM7LLV04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ArvF0MjG; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1738600412; c=relaxed/simple;
+	bh=4FxZf6PO+HZtWwc5YXEjBWvdgHDvOD9yZAGRbpAR2J4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dbPYcPnYFzRy5sVD/t2NYo9nV6uafzJntjKtlmYDhPGMQ2uHD7m01DtS7XKxgdMGmUEjVv+kpY4KBszt6la4XT9SnxoXTbSPHvMYIX1HmNXcpIuPwHWGfCAPqZ+sv2nUiy7ZylPPwZGxw7E2G3Wx7Opw5Ra/huWCxZRAYwbTluU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=GBT17cpy; arc=none smtp.client-ip=188.165.51.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ArvF0MjG"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250203163312euoutp0110b2cce4446f240da15e03548a72109a~gv9hnjhQo0959209592euoutp01s
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:33:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250203163312euoutp0110b2cce4446f240da15e03548a72109a~gv9hnjhQo0959209592euoutp01s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1738600392;
-	bh=jgdfJb5XmANzNdoB6KpErLTImnQzyQ4B5YNgFymn8uo=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=ArvF0MjG65fVMg69mkVaEVQOM6koztY9TK3I68u4PfB9Btah+WikaNfHO5Oo/PTXM
-	 7TMg1K8w3oBy5zF124yeE403UwXtSsHwJCt8Y8Ivfpxrn6PZGs3Eu0KQOVK1+GeMry
-	 c5Wv4yZZu53nS6/sy2qyjNRjOBQnpmBS66hcz93k=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250203163311eucas1p2e70de128fc35f5c0eed7024ef5d4a289~gv9g78N882024920249eucas1p2r;
-	Mon,  3 Feb 2025 16:33:11 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 26.35.20397.7CFE0A76; Mon,  3
-	Feb 2025 16:33:11 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250203163311eucas1p17f75b2012c9341f93af43f586809a81e~gv9giSMB20911509115eucas1p1R;
-	Mon,  3 Feb 2025 16:33:11 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250203163311eusmtrp2f22113419fcf9cc31b947cee8f00f0da~gv9ggTqyx3261232612eusmtrp27;
-	Mon,  3 Feb 2025 16:33:11 +0000 (GMT)
-X-AuditID: cbfec7f5-ed1d670000004fad-37-67a0efc7874e
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id B5.E1.19654.7CFE0A76; Mon,  3
-	Feb 2025 16:33:11 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250203163309eusmtip2fde20ae086616fd76f79d37061338a0b~gv9fQ-z-u2728927289eusmtip2B;
-	Mon,  3 Feb 2025 16:33:09 +0000 (GMT)
-Message-ID: <6bdd711e-6515-43b9-aec1-4d90b87ff09f@samsung.com>
-Date: Mon, 3 Feb 2025 17:33:09 +0100
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="GBT17cpy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1738600399; x=1738859599;
+	bh=AJTsKlsqdY6CdLAM6+LsVciIKFmhX3Tnbrvy9w0xnSU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=GBT17cpyznJZMgFQBzpqcugIw62LUd7LF28OH6igsCmB2Xfd4QgmBnHEQ1VBztbc2
+	 IK7AtCTBrnno7V3BY94gCMadvAqtkm3ZYsUIswQA9bRm1iP8LOIW97PxMwe3y/8hPW
+	 G1r09qc7SREohzKQ9RIayfpNwC7zm+7g0sJfhPZNLj2wXcevOhnQPGp/0VtVBatttR
+	 zGnbIu5/Swk8yHsT8cFZ/IvYG/rlqubBTc6TWA1yenQsVffbudll51kgXsaCT7lwJx
+	 2smiOCVwGlpQTOCfuczV3QlsFJgIUV1OX3xtbkYT8N4AEMpjBhwr7LncM7Z2GzY0nR
+	 OrmkxQvp6SviQ==
+Date: Mon, 03 Feb 2025 16:33:15 +0000
+To: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Sybil Isabel Dorsett <sybdorsett@proton.me>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Hans de Goede <hdegoede@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] platform/x86: thinkpad_acpi: Fix invalid fan speed on ThinkPad X120e
+Message-ID: <20250203163255.5525-1-sybdorsett@proton.me>
+In-Reply-To: <cc7c8e94-4340-3d1e-03b4-2f738067d24f@linux.intel.com>
+References: <20250131203854.6608-1-sybdorsett@proton.me> <69e279a3-7fd5-9dc3-680d-7415022dc5e4@linux.intel.com> <20250203130232.3481-1-sybdorsett@proton.me> <d20f933c-8041-bc8d-13c2-98d89ccfa524@linux.intel.com> <cc7c8e94-4340-3d1e-03b4-2f738067d24f@linux.intel.com>
+Feedback-ID: 131381098:user:proton
+X-Pm-Message-ID: bce36cd16a7c78ee9a96a99d3f3ce52c7f07d628
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/18] Enable drm/imagination BXM-4-64 Support for
- LicheePi 4A
-To: Matt Coster <Matt.Coster@imgtec.com>, "mturquette@baylibre.com"
-	<mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"drew@pdp7.com" <drew@pdp7.com>, "guoren@kernel.org" <guoren@kernel.org>,
-	"wefu@redhat.com" <wefu@redhat.com>, "jassisinghbrar@gmail.com"
-	<jassisinghbrar@gmail.com>, "paul.walmsley@sifive.com"
-	<paul.walmsley@sifive.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, Frank Binns
-	<Frank.Binns@imgtec.com>, "maarten.lankhorst@linux.intel.com"
-	<maarten.lankhorst@linux.intel.com>, "mripard@kernel.org"
-	<mripard@kernel.org>, "tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
-	<simona@ffwll.ch>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-	"jszhang@kernel.org" <jszhang@kernel.org>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "m.szyprowski@samsung.com"
-	<m.szyprowski@samsung.com>
-Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <ed7a463e-9654-41c3-91f6-f3f877fd9a20@imgtec.com>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUxTZxTHfW5v771U6y4FwxN1MJvNbE4QqjEPG0Nwc7tx02z7MMxMNhu9
-	KUYorpVtkGUg5VWLuAG+XOxaGRNWpAItBToKWEkLoo3oBEd4S3SDMl6KwBYxo7Nc3Pj2O+f8
-	zzn/8+ShBBI7sZ46qjzBqpTyJCkhwq3OJ+5w17RBEdlVHYo6+8ox1PCUI9FVuxtD+g63EA3d
-	tWDo1/lpApl+v0OiMftJHPVW6UikcV4jkIcbItCMdkiI7tkuEWi2sAMg62w2gWo6Bkl0eaYB
-	RxVNNoByC64IUc/NPWhwqBNHnntaAcrlXkC+liYSLfbW4ahsqo1ElonvhMhVk4Cy20rwuBeZ
-	6Qc5JDPh8eDMjfw5krH/ZcCZZm6QZLTNtwBTbywgmIHeFoL5oesjZvi0C2PMFRlMdo0TY4r+
-	iWSmW+8TzBmLETB3NX3kh5JPRTFH2KSjX7KqbbGHRInltyax41mhX+eVXMYyQQs8BQIoSO+A
-	jTo9cQqIKAldBaCJMwv5YA5Am6kM8MEsgK1PTMLnLT1jJcuqSgDPjd7E+WASwLnrfhVFielY
-	qJlQ+Rtw+mVoKnbgfhbTgbDr4qMlXkeHweH+C6Sfg+gEmHW7aMlHMN1IwTPm4aWCgM4UwPyz
-	3/IcAvsf6TE/E7QMjlTqlxwFPNs1VTiK85owqGkoE/gHQbpHBO/UOpZtvwMLz3cDnoPguMtC
-	8rwR+pr5oZBOgSMNjwU8fwObta5lfhMOuBcI/2EC+jV4zbaNT8fDPGc77k9Dei18MBnIW1gL
-	v7eeF/BpMczPlfDqzbBUW/jfUneVFTsLpNyKV+FWHMmtOIb7f68B4EYQwqaqkxWseruS/SpC
-	LU9WpyoVEYdTkuvBsx/eveiabwJV4zMRDoBRwAEgJZAGi7sbDQqJ+Ig8LZ1VpXyuSk1i1Q6w
-	gcKlIeLythyFhFbIT7DHWPY4q3pexaiA9ZlY1sMuma7voMVX1/1Wd3Uc9zCx8/1g7+OMvezq
-	pHWriyT7UmLlitpN1e3EH7oDGfPRV3YVJxyK36pKn25UyVoy6vsURHXOwKUklzvhWMTCuc7J
-	Ovt9bd4Yycn2Xf0kcTJ6g3HsC+Fn3sDMk8SUd5Px9dOeqFW1UzEjrUGhO4NjNqZ/MF/5dqzn
-	lSjQ5BjPt635ZY2SzPJGrdqq+rh9Z6j0+hvh7xksu/dWbC4bcSuDrGE/qQ9rircjzVOvg2Z+
-	i/txzp1m3r+QpousuNGh18u2HAi/0D82suPVNNo5Gv1nqb7AFu/bb1809bzb5Dv4sxO+RICa
-	XTnK3ViBec/tUv3Fv6W4OlEetUWgUsv/BUg5I2RQBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPKsWRmVeSWpSXmKPExsVy+t/xe7rH3y9IN2juYLE4cX0Rk8XW37PY
-	LdbsPcdkMf/IOVaLe5e2MFlc+fqezWLd0wvsFi/2NrJYXFsxl92i+dh6NouXs+6xWXzsucdq
-	cXnXHDaLz71HGC22fW5hs1h75C67xcKPW1ksluzYxWjR1rmM1eLiKVeLu/dOsFi8vNzDbNE2
-	i9/i/54d7Bb/rm1ksZj9bj+7xZY3E1ktjq8Nt2jZP4XFQdbj/Y1Wdo83L1+yeBzu+MLusffb
-	AhaPnbPusnv07DzD6LFpVSebx51re9g85p0M9LjffZzJY/OSeo+WtceYPPr/Gni833eVzaNv
-	yypGj0vN19kDhKL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLL
-	Uov07RL0MhadectU0CRX0T5lIVMD4x6JLkZODgkBE4mLL6awdjFycQgJLGWUmD7tMgtEQkbi
-	WvdLKFtY4s+1LjYQW0jgNaPEjo/KXYwcHLwCdhLNb4pAwiwCKhLrJh8CK+cVEJQ4OfMJmC0q
-	IC9x/9YMdhBbWCBcoulsPxvILhGBvRwSu278ZAFxmAUamCVWzb7BDHHFcUaJpVNvgLUzC4hL
-	3HoynwnEZhMwkniwfD4riM0JtPld73MWkCuYBdQl1s8TgiiXl2jeOpt5AqPQLCSHzEIyaRZC
-	xywkHQsYWVYxiqSWFuem5xYb6RUn5haX5qXrJefnbmIEpqxtx35u2cG48tVHvUOMTByMhxgl
-	OJiVRHhPb1+QLsSbklhZlVqUH19UmpNafIjRFBgYE5mlRJPzgUkzryTe0MzA1NDEzNLA1NLM
-	WEmcl+3K+TQhgfTEktTs1NSC1CKYPiYOTqkGpkmT2wK0y0tzT+9dVDvl59kVnyQuebUsahCP
-	lfc9mZou9mz1PQd141UTT1SL/v7xVFR+2ZcLvRUFkecMlWacLF9Xw9VotezFllduDWH3jCtL
-	J2ys4ZvOd8FXV/dHkkHlhFMT+oNeatrecDu4e2bv+ygGGblPrtx/fA39WB5Ob+u9dDO2t3iG
-	cJSufZjTNnZNl1nsiTdOPT20qcQjec4Zzjli35SmzZVYdK97+9X0d42Lgu54LNCr8J2n9si+
-	eX5L+MlwJwmdnc8Tv+vlPc56cYuzdQ9TY9La7SXnl/ds0T34rmBexe4NjrdqNTz8WqU5j12Z
-	7iodsEohKVYiQ+oYuyZvaGjTyy1ty2Y/vv30vxJLcUaioRZzUXEiAECvIAbiAwAA
-X-CMS-MailID: 20250203163311eucas1p17f75b2012c9341f93af43f586809a81e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250128194825eucas1p14e2cb0a85c397dea297e9c4177cf1585
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250128194825eucas1p14e2cb0a85c397dea297e9c4177cf1585
-References: <CGME20250128194825eucas1p14e2cb0a85c397dea297e9c4177cf1585@eucas1p1.samsung.com>
-	<20250128194816.2185326-1-m.wilczynski@samsung.com>
-	<ed7a463e-9654-41c3-91f6-f3f877fd9a20@imgtec.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+On ThinkPad X120e, fan speed is reported in ticks per revolution
+rather than RPM.
+
+Recalculate the fan speed value reported for ThinkPad X120e
+to RPM based on a 22.5 kHz clock.
+
+Based on the information on
+https://www.thinkwiki.org/wiki/How_to_control_fan_speed,
+the same problem is highly likely to be relevant to at least Edge11,
+but Edge11 is not addressed in this patch.
+
+Signed-off-by: Sybil Isabel Dorsett <sybdorsett@proton.me>
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+---
+
+Notes:
+    v3: changed the commit message (no changes in the code) to address
+        further comments from Ilpo.
+    v2: addressed review comments from Ilpo
+        - name of the new variable is changed
+          from "fan_speed_requires_conversion" to "fan_speed_in_tpr";
+        - rephrased the commit message;
+        - "KHz" is respelled as "kHz".
+
+ drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/th=
+inkpad_acpi.c
+index 1fcb0f996..e7778ea41 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -7885,6 +7885,7 @@ static struct ibm_struct volume_driver_data =3D {
+=20
+ #define FAN_NS_CTRL_STATUS=09BIT(2)=09=09/* Bit which determines control i=
+s enabled or not */
+ #define FAN_NS_CTRL=09=09BIT(4)=09=09/* Bit which determines control is by=
+ host or EC */
++#define FAN_CLOCK_TPM=09=09(22500*60)=09/* Ticks per minute for a 22.5 kHz=
+ clock */
+=20
+ enum {=09=09=09=09=09/* Fan control constants */
+ =09fan_status_offset =3D 0x2f,=09/* EC register 0x2f */
+@@ -7940,6 +7941,7 @@ static int fan_watchdog_maxinterval;
+=20
+ static bool fan_with_ns_addr;
+ static bool ecfw_with_fan_dec_rpm;
++static bool fan_speed_in_tpr;
+=20
+ static struct mutex fan_mutex;
+=20
+@@ -8142,8 +8144,11 @@ static int fan_get_speed(unsigned int *speed)
+ =09=09=09     !acpi_ec_read(fan_rpm_offset + 1, &hi)))
+ =09=09=09return -EIO;
+=20
+-=09=09if (likely(speed))
++=09=09if (likely(speed)) {
+ =09=09=09*speed =3D (hi << 8) | lo;
++=09=09=09if (fan_speed_in_tpr && *speed !=3D 0)
++=09=09=09=09*speed =3D FAN_CLOCK_TPM / *speed;
++=09=09}
+ =09=09break;
+ =09case TPACPI_FAN_RD_TPEC_NS:
+ =09=09if (!acpi_ec_read(fan_rpm_status_ns, &lo))
+@@ -8176,8 +8181,11 @@ static int fan2_get_speed(unsigned int *speed)
+ =09=09if (rc)
+ =09=09=09return -EIO;
+=20
+-=09=09if (likely(speed))
++=09=09if (likely(speed)) {
+ =09=09=09*speed =3D (hi << 8) | lo;
++=09=09=09if (fan_speed_in_tpr && *speed !=3D 0)
++=09=09=09=09*speed =3D FAN_CLOCK_TPM / *speed;
++=09=09}
+ =09=09break;
+=20
+ =09case TPACPI_FAN_RD_TPEC_NS:
+@@ -8788,6 +8796,7 @@ static const struct attribute_group fan_driver_attr_g=
+roup =3D {
+ #define TPACPI_FAN_NOFAN=090x0008=09=09/* no fan available */
+ #define TPACPI_FAN_NS=09=090x0010=09=09/* For EC with non-Standard registe=
+r addresses */
+ #define TPACPI_FAN_DECRPM=090x0020=09=09/* For ECFW's with RPM in register=
+ as decimal */
++#define TPACPI_FAN_TPR=09=090x0040=09=09/* Fan speed is in Ticks Per Revol=
+ution */
+=20
+ static const struct tpacpi_quirk fan_quirk_table[] __initconst =3D {
+ =09TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+@@ -8817,6 +8826,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __=
+initconst =3D {
+ =09TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),=09/* 11e Gen5 KL-Y */
+ =09TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),=09/* X1 Tablet (2nd gen=
+) */
+ =09TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
++=09TPACPI_Q_LNV('8', 'F', TPACPI_FAN_TPR),=09=09/* ThinkPad x120e */
+ };
+=20
+ static int __init fan_init(struct ibm_init_struct *iibm)
+@@ -8887,6 +8897,8 @@ static int __init fan_init(struct ibm_init_struct *ii=
+bm)
+=20
+ =09=09=09if (quirks & TPACPI_FAN_Q1)
+ =09=09=09=09fan_quirk1_setup();
++=09=09=09if (quirks & TPACPI_FAN_TPR)
++=09=09=09=09fan_speed_in_tpr =3D true;
+ =09=09=09/* Try and probe the 2nd fan */
+ =09=09=09tp_features.second_fan =3D 1; /* needed for get_speed to work */
+ =09=09=09res =3D fan2_get_speed(&speed);
+--=20
+2.39.5
 
 
-
-On 1/31/25 16:39, Matt Coster wrote:
-> On 28/01/2025 19:47, Michal Wilczynski wrote:
->> The LicheePi 4A board, featuring the T-HEAD TH1520 SoC, includes an Imagination
->> Technologies BXM-4-64 GPU. Initial support for this GPU was provided through a
->> downstream driver [1]. Recently, efforts have been made to upstream support for
->> the Rogue family GPUs, which the BXM-4-64 is part of [2].
->>
->> While the initial upstream driver focused on the AXE-1-16 GPU, newer patches
->> have introduced support for the BXS-4-64 GPU [3]. The modern upstream
->> drm/imagination driver is expected to support the BXM-4-64 as well [4][5]. As
->> this support is being developed, it's crucial to upstream the necessary glue
->> code including clock and power-domain drivers so they're ready for integration
->> with the drm/imagination driver.
->>
->> Recent Progress:
->>
->> Firmware Improvements:
->> Since August, the vendor has provided updated firmware
->> [6][7] that correctly initiates the firmware for the BXM-4-64.
->>
->> Mesa Driver Testing:
->> The vendor-supplied Mesa driver [8] partially works with Vulkan examples, such
->> as rendering a triangle using Sascha Willems' Vulkan samples [9]. Although the
->> triangle isn't rendered correctly (only the blue background appears), shader
->> job submissions function properly, and IOCTL calls are correctly invoked.  For
->> testing, we used the following resources:
->>
->> Kernel Source: Custom kernel with necessary modifications [10].
->> Mesa Driver: Vendor-provided Mesa implementation [11].
->>
->> Dependencies:
->> Testing required a functional Display Processing Unit (DPU) and HDMI driver,
->> which are currently not upstreamed. Efforts are underway to upstream the DPU
->> DC8200 driver used in StarFive boards [12], which is the same DPU used on the
->> LicheePi 4A. Once the DPU and HDMI drivers are upstreamed, GPU support can be
->> fully upstream.
->>
->> Testing Status:
->> This series has been tested by performing a probe-only operation, confirming
->> that the firmware begins execution. The probe function initiates firmware
->> execution and waits for the firmware to flip a specific status bit.
->>
->> [   12.637880] powervr ffef400000.gpu: [drm] loaded firmware powervr/rogue_36.52.104.182_v1.fw
->> [   12.648979] powervr ffef400000.gpu: [drm] FW version v1.0 (build 6645434 OS)
->> [   12.678906] [drm] Initialized powervr 1.0.0 for ffef400000.gpu on minor 0
->>
->> Power Management:
->> Full power management capabilities require implementing the T-HEAD SoC AON
->> protocol messaging via the hardware mailbox. Support for the mailbox was merged
->> in kernel 6.13 [13], and the AON protocol implementation is part of this
->> series, since v2. Therefore this series support full power management
->> capabilities for the GPU driver.
->>
->> Thanks everyone for taking the time to review the last revision ! Your
->> guidance and the direction was very helpful.
-> 
-> Hi Michal,
-> 
-> This is awesome, thanks for contributing! I apologise for not responding
-> to earlier versions (things have been pretty busy here), but they have
-> very much been on my radar.
-> 
-> I see you're already aware of my other B-Series patchs[3]; would you
-> mind rebasing these changes on top of those? We're making some not
-> insignificant changes to the bindings which will conflict with any new
-> GPUs added in the meantime. I'll leave comments in this series where I
-> suspect the conflicts will appear.
-> 
-> Cheers,
-> Matt
-
-
-Hi Matt,
-
-Thanks for your review, and no worries about the delay it’s totally
-understandable. I appreciate the heads-up about the dt-bindings work in
-progress. I just wanted to share a working solution for now, but I’ll
-definitely rebase these patches once your changes are in place.
-
-Cheers, Michal
-
-> 
-
-> 
