@@ -1,93 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC031FECC7;
-	Mon,  3 Feb 2025 09:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7D12F509
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738576786; cv=none; b=cFDq36gxM+U5gx7qOguzuP2NNn3rA3nYBzNWwU7S+cggy4kFeZORYqGeZUnggN6WHFO7WX+w99Hv/BUUMw/ISAOwQ0pyqytyS7eM7hZYZVuF51ompfs0jwYFzGeNotXQ+cPplJvT24to9NIjChd3nmq/luximXlCqjzB8iP+JHw=
+	t=1738576828; cv=none; b=Zkedxik/NSGdUC9YEoSWm1QJF7YIQqE14meH/IZGCtXaex+nrPHKYGLc5Uf0KLG94gev4f+9fOt1/aONyXURq0KXGtqr8yG0ns2lT7sfEucx3QAMJkwwMgxUIUz8bTc39OZfH8YpyhXQ1StzaAXLXtb6Dwfpa+I0Qpsi31J8Cok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738576786; c=relaxed/simple;
-	bh=UTPLAEKXScseRBtEXKrj5Nggli2sCNdySDjyM++GK88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vEsCllynUK2DttPCKW4Vk1cPdXUGJ/3vPkioVjPR6SNn/PN381gbT3k8f2kXTIQipIx+WNJCWb+CNkzfySCF7TqF0X9hNPqg6OoJ5+ohggsrcOpvw084ThiS5hSIcTH2Td4daDqQJ1vNlbpli8gZ9uHCT19f4K+TGcOhLR47IrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzIv+Vdx; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738576828; c=relaxed/simple;
+	bh=FPrHohtJnR6Qg6FsIEIeD9g7Kg3lF9OuQnDh2df+xjc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UJG+SIyxMd10OyxEOPnNyd6kpnJc8UBl9js7B52ocYla+OHMjagpXQNZq6gkxQfExAOzCPOUfap0mG9hLnIs00m6iuUK7nXlzP9qwYEej7PfA87pw8/3hDVrNkGY1AQp0pTodboRIxLn34Uh/vDdaYNHrQMWYtJVxaYf8nhITkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9+h3vf8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzIv+Vdx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738576785; x=1770112785;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UTPLAEKXScseRBtEXKrj5Nggli2sCNdySDjyM++GK88=;
-  b=bzIv+VdxjlfUJTprKkxKUdAdxgS5MEHsBFvR7/biEvVVbAWiXnFH5KpY
-   03BHciRoaTjAesQk8Vg39hSOqDIABE64JbN2Yk2ctkT2q7DVyM2ylD30F
-   dvx0gNvlLSg2sFu7Hv/tByQj9/IL/BrpoMNNV8Jxxsbjw2rIOdZ74KA9w
-   g1bnbLj+Pq3nNel6uu9isKd4yEU25LWb64TVyc/h5KMJUmsrVpInUUBWq
-   CtPxWZWwBeeBf6iWIA0x3HgP6qy4cTik4GbdUJT4obolRYEX5DpOi/cvl
-   KH5MHMPIjgUkrc5Vzu+tbEiC/APEr44D3mvn5PagNUwbfp48mEYbpKq6o
-   g==;
-X-CSE-ConnectionGUID: 1bP9lNJOQo+EPaYjvSGiWA==
-X-CSE-MsgGUID: oCMhNdxNSH28rN2pj0lH+Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="38268655"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="38268655"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:59:44 -0800
-X-CSE-ConnectionGUID: 4CfyXycCRhiNlVGDA1PMww==
-X-CSE-MsgGUID: 2SL5EZe/RqCVPQYmnsc8tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111097864"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:59:43 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tetEy-00000007n8R-0SyS;
-	Mon, 03 Feb 2025 11:59:40 +0200
-Date: Mon, 3 Feb 2025 11:59:39 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 0/2] pinctrl: intel: Unify the way of handling chained
- IRQ
-Message-ID: <Z6CTi5WVBwqI-QQ1@smile.fi.intel.com>
-References: <20250129145155.1746876-1-andriy.shevchenko@linux.intel.com>
- <20250130124743.GX3713119@black.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9+h3vf8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351FDC4CED2
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738576828;
+	bh=FPrHohtJnR6Qg6FsIEIeD9g7Kg3lF9OuQnDh2df+xjc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=g9+h3vf8K9rOWPh+2qaIMalIRanvflZMZYJpMir5CZhSt4WMMjnOxfc9LIiceyZmd
+	 26QCHLouTGXji4paRHFSbjdN5uxvtkzDNHPvRLfDd1t7toritv+q344l0uIY/1ky5d
+	 j2Aohm4HMpuG3VPf1T2iLQoNSX2sKpTuCtYM9z7jjTiWo+OgUadJpw6LSAf5IiKR0u
+	 OO0JD+0uSIgcW+Iz18JDrj/vvye1/XKti3Ic/VzFsmXCPuIH1M9384Le2IfUjDe9Mw
+	 5aMYOadQuhM1tuddfLHPXAL0hMwHuWrk2HJCXhYd+e7yLnidGghSFZ6/xh0B1B08xn
+	 KiRUEd2q0t5ZQ==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30229d5b229so42440251fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 02:00:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU5khhnHnO4VYeAmwORWo+k94IlSX+auVFNrCha69E5dqHXxuNVfU5dpOMSBj390rLPABI5GPQ9gkTUrgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAXv+9UYVfJknNrrHJVT/iH8rn/EryfuYsIiQMAEHBwnUGPuZm
+	duc92fUR5X/q2Bt0j2waJA2I9SfVQzZHM23wAmPMma5CwspM80kPK5OibsnEIde0nWc1LYOVQim
+	+5waXU4J8IDN9/zOPo7SJmUf4n0M=
+X-Google-Smtp-Source: AGHT+IGgEy7Oq246cS1+VT0Mx0PMlfwpl68k9GaharbvrvOxjNfPt8dFzE7mT76XDDnBwNSsqx5VUYecVSEKs7cOjZ0=
+X-Received: by 2002:a05:6512:3e29:b0:540:3571:f51a with SMTP id
+ 2adb3069b0e04-543e4c03792mr5122850e87.26.1738576826534; Mon, 03 Feb 2025
+ 02:00:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130124743.GX3713119@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250127114334.1045857-4-ardb+git@google.com> <20250127114334.1045857-5-ardb+git@google.com>
+ <CAHk-=wgD1TGxZPC0yoiVJb3qDN9vDpzNkcW1z17+6mk_Rh+iFg@mail.gmail.com>
+ <CAMj1kXGfgxBM5DJ6vwwGvqPs9hH57h-G4w=-bF51+7cckayPGA@mail.gmail.com> <Z6CPFv_ye8aSf320@gmail.com>
+In-Reply-To: <Z6CPFv_ye8aSf320@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 3 Feb 2025 11:00:12 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHi63vHS7EuZE-frb-nf8P9RV=dPyFR+UU9=NaCHvP=MA@mail.gmail.com>
+X-Gm-Features: AWEUYZmGx3e9BIZqw9ZMFX784VDOBf6PpayuoUs4HWrNb27Bdv4f4xMY22q2Tis
+Message-ID: <CAMj1kXHi63vHS7EuZE-frb-nf8P9RV=dPyFR+UU9=NaCHvP=MA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] x86/relocs: Improve diagnostic for rejected
+ absolute references
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ard Biesheuvel <ardb+git@google.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Nathan Chancellor <nathan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jan 30, 2025 at 02:47:43PM +0200, Mika Westerberg wrote:
-> On Wed, Jan 29, 2025 at 04:49:38PM +0200, Andy Shevchenko wrote:
-> > Some of the drivers are using the dedicated helpers (chained_irq_enter(),
-> > chained_irq_exit() helpers) and some relies on the specific implementations
-> > of the parent IRQ chip and its configuration. Update the latter ones to
-> > use dedicated helpers that cover all possible scenarios.
-> > 
-> > Andy Shevchenko (2):
-> >   pinctrl: baytrail: Use dedicated helpers for chained IRQ handlers
-> >   pinctrl: lynxpoint: Use dedicated helpers for chained IRQ handlers
-> 
-> Both,
-> 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Mon, 3 Feb 2025 at 10:40, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> > On Mon, 27 Jan 2025 at 17:57, Linus Torvalds
+> > <torvalds@linux-foundation.org> wrote:
+> > >
+> > > On Mon, 27 Jan 2025 at 03:43, Ard Biesheuvel <ardb+git@google.com> wrote:
+> > > >
+> > > >   Absolute reference to symbol '.rodata+0x180' detected in .head.text (0xffffffff820cb4ba).
+> > >
+> > > Do we have any symbol name lookup logic anywhere?
+> > >
+> >
+> > I can look into that. In this particular case, though, there is no
+> > symbol to look up as it is a anonymous jump table generated by the
+> > compiler. And the function name would be inaccurate too, as
+> > snp_cpuid_postprocess() got inlined into its caller. But I guess with
+> > the right DWARF data, at least the call site could be narrowed down a
+> > bit better.
+>
+> So patch #2 is now upstream, but should I apply this diagnostic patch
+> as-is, or will there be a -v2?
+>
 
-Pushed to my review and testing queue, thanks!
+I'm looking into this. But give the points above, I'm reaching the
+conclusion that producing a better diagnostic based solely on vmlinux
+(which may be built without debug info) is intractable, and not even
+the DWARF metadata will describe a compiler generated jump table using
+a named ELF symbol.
 
--- 
-With Best Regards,
-Andy Shevchenko
+So I am also looking into isolating the startup code like I did for
+arm64 (and which has been adopted by RISC-V as well), but this is
+rather hairy on x86 so it will take some time. But once that lands,
+this diagnostic can be removed.
 
+So I will leave it up to you to decide whether to merge this
+improvement for now, or revert the diagnostic as you suggested before.
+This code has already identified some issues that were subsequently
+fixed, so it has already served its purpose.
 
+As for the related changes: .head.text can be removed in its entirety
+once this is all done, so no need to revert the linker script changes
+at this point. (The startup code that only executes at boot on the BSP
+can move into .init.text where it belongs)
