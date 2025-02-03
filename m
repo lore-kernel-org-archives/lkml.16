@@ -1,79 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6AA205AB5;
-	Mon,  3 Feb 2025 17:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC0220B7FB
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738602352; cv=none; b=LrrZOZm20nQwFM1I9+/UbIzlMsh8rkL/pZow9ttQ5UzxUfFavpK0YrfEhBj54eGAmlgTNFjGQD05HeGYrYbaAuwPP6jCqj3C5yFbatEnb7wQraecGbJO9ze09sFDWUsMSc3RyyTabvVMGTjZsZzdo0mxby2Po32T5iUtCNDBX/M=
+	t=1738602384; cv=none; b=E1zQTBhyEbu5mX8EFoo3oDlvzPMsq0AnURobLkbmPkSp9+HXOmzX7PQAhTwYOYCeoIO685iEgwp+1Yrbvm1D8GkBrhh2qsQf4Ncd6vjm4gOi2fFfCSOS8Xj/iQ+SQ1VitK1BFaoA3kCchYQfIuyWagbUUzzF5qu4Z70G4k48vxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738602352; c=relaxed/simple;
-	bh=RMfp5yZfxmyG4o70GVxiZ5KuZRXFftl6rIGl4/aOYI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kW8//+6Brb3PJyqJx3WUm8PIYQi30hOvYaAA9kQYh3Nmeo6miMkmObcMWWGCXTHZ7WXZHSvcMWUhbfZpLp/nTuKpdy8BwPoMAOHbLaWrzmlV3PaqY0uXcdLbLsM+lgZ/FSVqAXbJc3P7pQvqOPT/D1rqB5f+ZGgm4JnJ2vxfQrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+9/0oJp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+9/0oJp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B40ADC4CED2;
-	Mon,  3 Feb 2025 17:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738602351;
-	bh=RMfp5yZfxmyG4o70GVxiZ5KuZRXFftl6rIGl4/aOYI8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T+9/0oJpZZoVW1lMMiEnqfiYNuqH/aMcelr+OPyu/tH/W3a8NtOXlTI7H+k6Iw33Y
-	 FfJ8VIQu3yV0u6rWIz2ka7OEoA2ZE5yrNnrrD9A83xyGWV2vM9GSZO8dVaiWzuDsDf
-	 D7rj7CQGkhdi9RLvwus3Bk2zrEK8C6wdTWevwlghJQbhNgt035LyKd6T0Hoam0sEjL
-	 5xdVlvyDM2F10ntC1bwGQzBEaNu3117K/dZ+lj64WjlLUq8Nz/63o7KGE1122qXy0K
-	 hfBL/F0HuOQ0fCqeEMA0nB6pGSUak8bUoWxIhuMG0T9txgsrKt8r6pMO6Kh20WgX+Q
-	 BjFA/A6vD3yaQ==
-Date: Mon, 3 Feb 2025 17:05:46 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Nikola Jelic <nikola.jelic83@gmail.com>
-Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rwalton@cmlmicro.com
-Subject: Re: [PATCH 1/2] ASoC: dt-bindings: Add cmx655 codec
-Message-ID: <616eb3d5-3825-41b7-b7b7-89c166597f2d@sirena.org.uk>
-References: <20250203170117.12004-1-nikola.jelic83@gmail.com>
+	s=arc-20240116; t=1738602384; c=relaxed/simple;
+	bh=BrCxbpYcd+JnXrPkcfr6lCs/aTPwdnfGgVrzCmZxKnQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=m7Vk/vLb2RGpEGd6fnR+ye6Ky+JA8iWdEAzxaSErenfnlMF/Pkv7guHl8xhK+PIzSkMHL90xkEvdhA1cTumdKiwx5ZpC5OsCITkDVLQtQ4AV8/yMsHDGOde0XnKpen+n0zBgJYlQCRaHPu87zxWTfr0W6UXj8VZZAQd4XAwbCNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3a814bfb77bso37736865ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 09:06:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738602382; x=1739207182;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EvIJAMDztJTBQDqmwsIIAqNRRzmhnnKPFMl2MQnHWFs=;
+        b=KNip1E3Ni6/S3IhWpannK3J9aYhVDWKj4Jq3+PhlyVFNbmphtJ604EPepXsV5X/H9I
+         mYb74Jw0SMKNr7adtlY7IlEFEuIkHkEvVWM2NUYWTkchRQ5ctj1MCN9huL4aYTGDqJkw
+         yjcNGCo521yXO4b/EnK5Lc1+n3bykH23MNGstvJBqD5oTn9TU64yrVBOPvJ6rwmSIFcJ
+         u6nAfabifsNDIvX8O0WH8SXPZfbVgT2IS6qp3SY4KUpcDTufuPmM3P9nvwBerhZQ0zS5
+         t+k8HeyJOHP/Im7s+j7P1pMRrap9PNGGnt4xp5DmDO1CCe+qPIEyoPujs6gm1f2YudG+
+         O3Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUG/O8KGbiMabCL/3GPzaUew7lI6DN/3yIzDq8h6uOoFw+fNRrRLtwgztJ3+gQ5NqlHUSWFBwRMP+2jYw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+lK76e7T8mvVN+uNYPNCWtjLLewxfmnmSt8str/TmAF4gl+IO
+	VPqs4PuXalpKZwDxYGmd7UkXvImPnzRUXyb5T3xyuGcDITIhnGdU2BbwCWOauxWUXHrQRZWoHtP
+	g6nJRq9sclTKPSbEX+YkdEdcrnvsyHjkutBGvpys04LuOQRJSUQcBGjs=
+X-Google-Smtp-Source: AGHT+IFK9hAgpJhY7Jr0yXxf8XJkawng8GwmfeYpkqFFGFi7+/+QAD3e0sWxk3BAQvw4z/PjcMzqIARG48F19gP7ndd1WRd81iLh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vrvwv9ZRy1/12yjy"
-Content-Disposition: inline
-In-Reply-To: <20250203170117.12004-1-nikola.jelic83@gmail.com>
-X-Cookie: May your camel be as swift as the wind.
+X-Received: by 2002:a05:6e02:a0:b0:3cf:ba90:6ad9 with SMTP id
+ e9e14a558f8ab-3d03f4fc490mr222185ab.9.1738602381964; Mon, 03 Feb 2025
+ 09:06:21 -0800 (PST)
+Date: Mon, 03 Feb 2025 09:06:21 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a0f78d.050a0220.d7c5a.00a0.GAE@google.com>
+Subject: [syzbot] [hams?] BUG: soft lockup in rose_loopback_timer
+From: syzbot <syzbot+7ff41b5215f0c534534e@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	kuba@kernel.org, linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    573067a5a685 Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=1189ff30580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cd7202b56d469648
+dashboard link: https://syzkaller.appspot.com/bug?extid=7ff41b5215f0c534534e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f4ffe8580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1663aadf980000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/9d3b5c855aa0/disk-573067a5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0c06fc1ead83/vmlinux-573067a5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3390e59b9e4b/Image-573067a5.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7ff41b5215f0c534534e@syzkaller.appspotmail.com
+
+watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:0]
+Modules linked in:
+irq event stamp: 232963
+hardirqs last  enabled at (232962): [<ffff80008b69c960>] __el1_irq arch/arm64/kernel/entry-common.c:565 [inline]
+hardirqs last  enabled at (232962): [<ffff80008b69c960>] el1_interrupt+0x58/0x68 arch/arm64/kernel/entry-common.c:575
+hardirqs last disabled at (232963): [<ffff80008b69c92c>] __el1_irq arch/arm64/kernel/entry-common.c:557 [inline]
+hardirqs last disabled at (232963): [<ffff80008b69c92c>] el1_interrupt+0x24/0x68 arch/arm64/kernel/entry-common.c:575
+softirqs last  enabled at (228290): [<ffff80008030e7b4>] softirq_handle_end kernel/softirq.c:407 [inline]
+softirqs last  enabled at (228290): [<ffff80008030e7b4>] handle_softirqs+0xb44/0xd34 kernel/softirq.c:589
+softirqs last disabled at (228401): [<ffff800080020db4>] __do_softirq+0x14/0x20 kernel/softirq.c:595
+CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.13.0-rc3-syzkaller-g573067a5a685 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+pstate: 40400005 (nZcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : preempt_count arch/arm64/include/asm/preempt.h:13 [inline]
+pc : in_softirq_really kernel/kcov.c:171 [inline]
+pc : check_kcov_mode kernel/kcov.c:183 [inline]
+pc : write_comp_data kernel/kcov.c:246 [inline]
+pc : __sanitizer_cov_trace_cmp4+0x38/0xa0 kernel/kcov.c:288
+lr : rose_find_socket+0x7c/0x130 net/rose/af_rose.c:309
+sp : ffff800080007b60
+x29: ffff800080007b70 x28: 1ffff00012f27be0 x27: 0000000000000000
+x26: 00000000000003e7 x25: dfff800000000000 x24: 0000000000000033
+x23: dfff800000000000 x22: 0000000000000000 x21: ffff0000c2c8e000
+x20: 0000000000000033 x19: ffff0000d2670400 x18: ffff800080007840
+x17: 0000000000015d97 x16: ffff80008069d55c x15: ffff700010000f54
+x14: 1ffff00010000f54 x13: 0000000000000004 x12: ffffffffffffffff
+x11: ffff700010000f54 x10: 0000000000ff0100 x9 : 0000000000000302
+x8 : ffff80008f9c67c0 x7 : 0000000000000000 x6 : 0000000000000000
+x5 : ffff8000935a9f90 x4 : 0000000000000008 x3 : ffff80008047cdcc
+x2 : 0000000000000001 x1 : 0000000000000033 x0 : 0000000000000000
+Call trace:
+ in_softirq_really kernel/kcov.c:171 [inline] (P)
+ check_kcov_mode kernel/kcov.c:183 [inline] (P)
+ write_comp_data kernel/kcov.c:246 [inline] (P)
+ __sanitizer_cov_trace_cmp4+0x38/0xa0 kernel/kcov.c:288 (P)
+ rose_loopback_timer+0x1bc/0x4bc net/rose/rose_loopback.c:91
+ call_timer_fn+0x1b4/0x8b8 kernel/time/timer.c:1793
+ expire_timers kernel/time/timer.c:1844 [inline]
+ __run_timers kernel/time/timer.c:2418 [inline]
+ __run_timer_base+0x56c/0x7b4 kernel/time/timer.c:2430
+ run_timer_base kernel/time/timer.c:2439 [inline]
+ run_timer_softirq+0xcc/0x194 kernel/time/timer.c:2449
+ handle_softirqs+0x320/0xd34 kernel/softirq.c:561
+ __do_softirq+0x14/0x20 kernel/softirq.c:595
+ ____do_softirq+0x14/0x20 arch/arm64/kernel/irq.c:81
+ call_on_irq_stack+0x24/0x4c arch/arm64/kernel/entry.S:891
+ do_softirq_own_stack+0x20/0x2c arch/arm64/kernel/irq.c:86
+ invoke_softirq kernel/softirq.c:442 [inline]
+ __irq_exit_rcu+0x1d8/0x544 kernel/softirq.c:662
+ irq_exit_rcu+0x14/0x84 kernel/softirq.c:678
+ __el1_irq arch/arm64/kernel/entry-common.c:561 [inline]
+ el1_interrupt+0x38/0x68 arch/arm64/kernel/entry-common.c:575
+ el1h_64_irq_handler+0x18/0x24 arch/arm64/kernel/entry-common.c:580
+ el1h_64_irq+0x6c/0x70 arch/arm64/kernel/entry.S:596
+ __daif_local_irq_enable arch/arm64/include/asm/irqflags.h:26 [inline] (P)
+ arch_local_irq_enable+0x8/0xc arch/arm64/include/asm/irqflags.h:48 (P)
+ cpuidle_idle_call kernel/sched/idle.c:185 [inline]
+ do_idle+0x1ec/0x4e0 kernel/sched/idle.c:325
+ cpu_startup_entry+0x5c/0x74 kernel/sched/idle.c:423
+ rest_init+0x2dc/0x2f4 init/main.c:747
+ start_kernel+0x3f4/0x4f4 init/main.c:1102
+ __primary_switched+0x8c/0x94 arch/arm64/kernel/head.S:246
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 6586 Comm: syz-executor306 Not tainted 6.13.0-rc3-syzkaller-g573067a5a685 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+pstate: 00400005 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : queued_spin_lock_slowpath+0x15c/0xd04 kernel/locking/qspinlock.c:380
+lr : queued_spin_lock_slowpath+0x168/0xd04 kernel/locking/qspinlock.c:380
+sp : ffff8000a3887920
+x29: ffff8000a38879e0 x28: 1ffff00012545d44 x27: dfff800000000000
+x26: 1ffff00014710f50 x25: ffff8000a3887960 x24: dfff800000000000
+x23: ffff8000a38879a0 x22: ffff700014710f2c x21: 0000000000000001
+x20: 1ffff00014710f34 x19: ffff800092a2ea20 x18: 0000000000000000
+x17: 0000000000000000 x16: ffff800080bf1494 x15: 0000000000000001
+x14: 1ffff00012545d44 x13: 0000000000000000 x12: 0000000000000000
+x11: ffff700012545d45 x10: 1ffff00012545d44 x9 : 0000000000000000
+x8 : 0000000000000001 x7 : ffff80008a73b3a4 x6 : 0000000000000000
+x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff80008b6c1928
+x2 : 0000000000000000 x1 : 0000000000000001 x0 : 0000000000000001
+Call trace:
+ __cmpwait_case_8 arch/arm64/include/asm/cmpxchg.h:229 [inline] (P)
+ __cmpwait arch/arm64/include/asm/cmpxchg.h:257 [inline] (P)
+ queued_spin_lock_slowpath+0x15c/0xd04 kernel/locking/qspinlock.c:380 (P)
+ queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
+ do_raw_spin_lock+0x2ec/0x334 kernel/locking/spinlock_debug.c:116
+ __raw_spin_lock_bh include/linux/spinlock_api_smp.h:127 [inline]
+ _raw_spin_lock_bh+0x50/0x60 kernel/locking/spinlock.c:178
+ spin_lock_bh include/linux/spinlock.h:356 [inline]
+ rose_insert_socket+0x2c/0x15c net/rose/af_rose.c:261
+ rose_bind+0x490/0x640 net/rose/af_rose.c:753
+ __sys_bind_socket net/socket.c:1827 [inline]
+ __sys_bind+0x1ac/0x248 net/socket.c:1858
+ __do_sys_bind net/socket.c:1863 [inline]
+ __se_sys_bind net/socket.c:1861 [inline]
+ __arm64_sys_bind+0x7c/0x94 net/socket.c:1861
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
+ el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
 
 
---vrvwv9ZRy1/12yjy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-On Mon, Feb 03, 2025 at 06:01:16PM +0100, Nikola Jelic wrote:
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-> +  pinctr-0:
-> +    maxItems: 1
-> +
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Is this undescribed property supposed to be pinctrl-0?
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
---vrvwv9ZRy1/12yjy
-Content-Type: application/pgp-signature; name="signature.asc"
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
------BEGIN PGP SIGNATURE-----
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeg92oACgkQJNaLcl1U
-h9AWmwf/Z6lGja8/xoFymNkQKZamkIaGZnDYCGcHciZTqviy08z2qAtyLAOuOo/5
-ScOgD5Nt6Y+j7A6jtrmMEiM9WDQAFDqsIFKnhvyT+872m3AQngWDMQ1XfFEn8Izd
-GktC4thWiFQa3/D6o7VGvzxIHfURF8C31UUSN9xfxmjNRxC1rO2FxZhLLeg6XgIX
-O8IAefitD8Q+XqxemQSWpwCgcmmqWrRSStD7QKzWN8qFKpcTqnKTblH+2CqKX89W
-zirA4s+eu0RAnHKdoi7donP9fjCmA5us3nIbSuqZGHGI7jWUWSxy36bIK9P6CaOo
-zrbRq027GVLeKwSXn+hz3qXtmJ9c7A==
-=FBJq
------END PGP SIGNATURE-----
-
---vrvwv9ZRy1/12yjy--
+If you want to undo deduplication, reply with:
+#syz undup
