@@ -1,119 +1,134 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D7F1FBC9F;
-	Mon,  3 Feb 2025 08:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63F51FAC50;
+	Mon,  3 Feb 2025 08:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738570664; cv=none; b=btRSRmmekQOLK/l/g7YN0wYwAry6mzKf4rsFsNcM9T9No5ajUwsyhZT1liNBwbZrT5WIaPAo3q9ZQWdGWbKDA8c7hPH8SP6NBk2EflvEGhF7hcguI8LNHhueJf5VJZnV4EHatmAB54txqLExd6+vc+jQMAREgnfr4R21RRbKnLk=
+	t=1738570736; cv=none; b=mYyjCnypxBlC170IY/CWdjFN1WjnTrJ/cbaWVItMCWLDZRwGmcDV09ummf5Qh+6rtsmJPU6eqaLCqJ4+7kMvTK7Ra6zyKSJDtoX8W2GDTkT3UWGIG4xmakzgWhawFLx/mfKT7wAYp4gIXGodutH9zoj9BXfX+wQIHFmPO66pG9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738570664; c=relaxed/simple;
-	bh=8PXoE15wQ70wbPo2ZLqLkRjwLKtsDbG0KitAXePP6Us=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o34m2NhOHPLqQQXgHqITVOKxmPD2RjZG6sSqB3aKxnA+LIfqSNvaBGk2y36kpZ3Ck33H8B51r4JshoDOJFAI68DaPvuB5NeNMmnMySvBjmU8MCzs0sCCZOKoKMujW5zIpnEJv3u5KFRPX2maxsv1gywSX1gZFIsbtPuhxoHHk/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-85c5d4f3d58so732209241.3;
-        Mon, 03 Feb 2025 00:17:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738570659; x=1739175459;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MIvXo9RAM14dSFKA9Ie0SEL3egKUYJe1PQ0JpRzi4HI=;
-        b=QN7qvr61xJ0jZ52abrbIZsLkGab1NwtJQazlCpHZdWCAyF7h8aq8S3SoCNRJ7fHH8y
-         8v3d3p1uYc7tfbWRcfHlZOcKUF9WfACdLvyaG8dmWu4J206BYvWlnbb3QVsP8zNudbi1
-         IBd6okdOrz3l4R5B5mSVQgemE4jsfdtLkn1Ni04XcQPvuyOqWOZPPuECluZ/XU5iq4+P
-         hTne+0CYih2E5qmcPFqld5rxQLiia6NcJ4h8+CjqSpGlABUWQbnfa8+WIlMp2eL3DjFu
-         Gvu9oOOWYOiOdWTO6wHRTDVOPUyu8q5z6ED0xEJwRj19NX0XpbLcQmUX+eio3dfJ8Opu
-         RTuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUORxxg1WUppRETYpoxM38TDI3S3aPdzQ2kIvmgmHsgf24sJ1fdrjmARNME5slbCAEiIHbyqbnVXybL1Pip8Q0+@vger.kernel.org, AJvYcCWkv9GH0/YVviOysIFzLaCzeeoA8rq4cNXyUX53RdSlLLaQRbPmhtqflhQflndAOitEjU4qvaGsrvMPqGs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywax3GaMZOgixS/QPGAXLMStY/Yjxq5k7As8uMBbAHAP9NELPOt
-	wJenurtzIfBWLSasm2TcvWozzAmr59zynZ8lYmPF+6z8SOpHWnSgYMkCAgjK
-X-Gm-Gg: ASbGncufKFuMfueM5w5nrAE+vYtduBwRAqSraJL+LkGF8Uw0jZsZrJ6p8gmnhgfP94F
-	m7fl4YcBTGdc3ZKB3tiL9N6VX7c++aEu5k6QSIlwiELBNdKzGsftbqwPHUIveX452wMQQZuOaQl
-	i0JGcBb+/O5PkCFwCqZRXm64oH/Xt2CIJ6r6fK9bM3tJmOBwZi+9q3QZOV4hpPphfVsswd2qjdd
-	L2yaEaOxEi8nAqA5kOY+TfZiPy3NB8yjm0t7Xmfst2zVasZCBP3UhXhjk0ZJ8VswNwrxWh5iDHW
-	bvFImYskyCShUbcHmh4FoToZn0yAm/nmvI5xmN42a6AxjOjTgLK3XQ==
-X-Google-Smtp-Source: AGHT+IFy5L4tV+Q6aiRXIqFdPlBFZ7bV6UTPixBuxGs2sjVx3yj2sI06roNavA9g6ceYzgldQhBjfw==
-X-Received: by 2002:a05:6102:510f:b0:4af:d487:45f3 with SMTP id ada2fe7eead31-4b9a526cac2mr15277033137.23.1738570659122;
-        Mon, 03 Feb 2025 00:17:39 -0800 (PST)
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866941f309dsm1592235241.32.2025.02.03.00.17.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 00:17:38 -0800 (PST)
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4aff31b77e8so1612170137.1;
-        Mon, 03 Feb 2025 00:17:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUZ4mvLumRViwqWqTcI91mMaz9Pk7K02/qtcYjADeziEsyFjZKG7Cy2Bjcq/BL7ZRmGL4SeP/vT2LL+mRBpxGjm@vger.kernel.org, AJvYcCXrpM5ANJMcdyZLO+6tO2/dRFMj8KokTmLUC3+aOoG/t8jz+qqKa1YV9cKNso39n33qUfem1Bl2ZVzhcEk=@vger.kernel.org
-X-Received: by 2002:a05:6102:b0a:b0:4af:4902:153e with SMTP id
- ada2fe7eead31-4b9a4f50f7dmr14529837137.9.1738570658420; Mon, 03 Feb 2025
- 00:17:38 -0800 (PST)
+	s=arc-20240116; t=1738570736; c=relaxed/simple;
+	bh=50YAk0L0Q6yUtJ/22k5/0sx7XppJX7q/VbO4MlWl0kw=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=sWlHtqvOAps/wheCZtm1cyx2pJ+LaPjHUMMr5w/sfbovB7MtkgYo//Jkz1gCPOXDeURsypXzBH7TJU0OIy7uf7nwgt93ifUYdUYeWg1n6lshR0eVq1OsO5mKuEugq5odPyCVmyLyI87mBUW3ZKut1ZrWJwrzbgG9H0mvq/WoaxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=2ZD/gxDY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YgTrZQg2; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="2ZD/gxDY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YgTrZQg2"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id D5E2411400DB;
+	Mon,  3 Feb 2025 03:18:53 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Mon, 03 Feb 2025 03:18:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738570733;
+	 x=1738657133; bh=FKdwgdQes6gNQQrLDoRfBEkdAHgeHZ2aOkctxwHArZs=; b=
+	2ZD/gxDYIT1tOo64wcQeqhFxay/eEyLkb60iou8pSaO8v6ZqBxacwiYO+Ze24wyz
+	GvUpqNIAy5uCN3aRLlfyUZeYpteapdIAEgIrmxYSJFs8dYWO/5hoeueWXxGz1glh
+	lCx+91slc1W0C9nhpDxnNFKWzdK1vVqNRsCRlnNqEHjDrJLgD23u+WCs0PG87GrN
+	ptkl0nwEZn9dYjmtwhHjMUN3AFtRP3ZR4yk15txV3gDNhveBeVgQaTIVy98XCE1z
+	E0L3Vh///BTzpOpcHL3C3gkp800wAN5BnVkYjmNpAbHO1xQXXbbpvmSQjV8nC9c1
+	nz+YMrDlEpgubb21Ri/a/A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738570733; x=
+	1738657133; bh=FKdwgdQes6gNQQrLDoRfBEkdAHgeHZ2aOkctxwHArZs=; b=Y
+	gTrZQg2NZ8uFsNPmtM7f9YrEqkO/ldIoq8IivNkRGT0rxkyCUoeTo/hwPh31NWYG
+	Ko6tPFVjt9cVVHlXUY5sWSJ8jzE9U9sc5ejhThrvEO66sOzc1oySl1sA/GKSf94i
+	yRbYND+9jz0vRW9VEilRcQNioszYdESJuYrmcPqZvJ4/RlXrdKoAiRd887Nytuje
+	0edQ5OyF8NApGTZ6otRdQGcx7T2BcOYliv8O/JeIZ11zR6UxipGQv/zijwD4F1bd
+	yZmODpG4a67QWwBRWTfD3iiWHw2VhUFfkxGAfJHocqCWHl54YxomqpO8s56sqvTw
+	HDkWvFaw8a6oHv/EGzUGA==
+X-ME-Sender: <xms:7XugZ82DefEdJtQRO7iYN9QI_s1WEP8NO4qUxnkYx7-Wn8EyOcE2Bw>
+    <xme:7XugZ3FoGYwd6W3C-nEWFufyHO7wV0W-RXNSUiWzzKsQtNBQEf4YxOoVyNdGqGSIi
+    bwGucx23wQzxY0Zqxk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedtkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
+    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeei
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepthhhohhmrghsrdifvghishhsshgthhhuhheslhhinhhuthhrohhn
+    ihigrdguvgdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrd
+    horhhgpdhrtghpthhtohepphgrlhhmvghrsehrihhvohhsihhntgdrtghomhdprhgtphht
+    thhopehlihhnuhigqdgrrhgthhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:7XugZ05WM7heS1RCUCMQUV4HlkOe1HvCNEk_gx6MY9P9j2ICLP44yQ>
+    <xmx:7XugZ10_MQa89zXD94j5-O3odwolnKutwjgV3U12iVt_JDIoJswEDw>
+    <xmx:7XugZ_FM5S1hl7GfvN-cwqqrgpIrHtnywn55PbSQB56VcnnUoX9Iyw>
+    <xmx:7XugZ-_k1PqMf47wrfcfLEigYVJQ_bZvlzm1kz_rRbAQYT6ubnuprw>
+    <xmx:7XugZwMi2GBWG_DQlFaKJdKMeCX6MIaymEohi7jIqtOW9xXSFVTW9ZYO>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 6996A2220072; Mon,  3 Feb 2025 03:18:53 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131-scanf-kunit-convert-v1-1-0976524f0eba@gmail.com>
-In-Reply-To: <20250131-scanf-kunit-convert-v1-1-0976524f0eba@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 3 Feb 2025 09:17:26 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVvU6t2n_Cg4jsvRCLRpc10baeS4d-r83RGhYY5H-dypg@mail.gmail.com>
-X-Gm-Features: AWEUYZlyniTPHJYCinC1O_uOLuUwbBOovxdNN8IVz7nd1y817ol7_8Kk0p_HMkY
-Message-ID: <CAMuHMdVvU6t2n_Cg4jsvRCLRpc10baeS4d-r83RGhYY5H-dypg@mail.gmail.com>
-Subject: Re: [PATCH] scanf: convert self-test to KUnit
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Date: Mon, 03 Feb 2025 09:18:33 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ "Kees Cook" <kees@kernel.org>, "Palmer Dabbelt" <palmer@rivosinc.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>
+Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org
+Message-Id: <15b87c5f-92de-4201-9c67-a93d5dcefe68@app.fastmail.com>
+In-Reply-To: <20250203-um-io-v1-1-822af81bcdac@linutronix.de>
+References: <20250203-um-io-v1-1-822af81bcdac@linutronix.de>
+Subject: Re: [PATCH] iomap: Fix -Wmissing-prototypes on UM
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 31 Jan 2025 at 16:48, Tamir Duberstein <tamird@gmail.com> wrote:
-> Convert the scanf() self-test to a KUnit test.
->
-> In the interest of keeping the patch reasonably-sized this doesn't
-> rename the file in accordance with usual kunit conventions nor does it
-> refactor the tests into proper parameterized tests - it's all one big
-> test case.
->
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
-> This is one of just 3 remaining "Test Module" kselftests (the others
-> being bitmap and printf), the rest having been converted to KUnit. In
-> addition to the enclosed patch, please consider this an RFC on the
-> removal of the "Test Module" kselftest machinery.
->
-> I tested this using:
->
-> $ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 scanf
+On Mon, Feb 3, 2025, at 08:26, Thomas Wei=C3=9Fschuh wrote:
+> Building lib/iomap.o on UM triggers warnings about missing prototypes.
+> These prototypes should be defined by asm-generic/iomap.h, depending on
+> other symbols. For example "ioread64_lo_hi" is based on "readq".
+> However the generic variants of those tested symbols are defined in
+> asm-generic/io.h, only after asm-generic/iomap.h has already been
+> included, breaking the ifdef logic.
 
-Sounds way too complicated: "modprobe test_scanf" ;-)
+Sorry I never took the time to fix this so far.
 
->  arch/m68k/configs/amiga_defconfig    |   1 -
->  arch/m68k/configs/apollo_defconfig   |   1 -
->  arch/m68k/configs/atari_defconfig    |   1 -
->  arch/m68k/configs/bvme6000_defconfig |   1 -
->  arch/m68k/configs/hp300_defconfig    |   1 -
->  arch/m68k/configs/mac_defconfig      |   1 -
->  arch/m68k/configs/multi_defconfig    |   1 -
->  arch/m68k/configs/mvme147_defconfig  |   1 -
->  arch/m68k/configs/mvme16x_defconfig  |   1 -
->  arch/m68k/configs/q40_defconfig      |   1 -
->  arch/m68k/configs/sun3_defconfig     |   1 -
->  arch/m68k/configs/sun3x_defconfig    |   1 -
+> --- a/include/asm-generic/io.h
+> +++ b/include/asm-generic/io.h
+> @@ -13,10 +13,6 @@
+>  #include <linux/types.h>
+>  #include <linux/instruction_pointer.h>
+>=20
+> -#ifdef CONFIG_GENERIC_IOMAP
+> -#include <asm-generic/iomap.h>
+> -#endif
+> -
+>  #include <asm/mmiowb.h>
+>  #include <asm-generic/pci_iomap.h>
+>=20
+> @@ -1250,4 +1246,8 @@ extern int devmem_is_allowed(unsigned long pfn);
+>=20
+>  #endif /* __KERNEL__ */
+>=20
+> +#ifdef CONFIG_GENERIC_IOMAP
+> +#include <asm-generic/iomap.h>
+> +#endif
+> +
+>  #endif /* __ASM_GENERIC_IO_H */
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+I have not tried it yet, but I suspect this is not the correct
+fix here. Unfortunately the indirect header inclusions in this
+file are way too complicated with corner cases in various
+architectures. How much testing have you given your patch
+across other targets? I think the last time we tried to address
+it, we broke mips or parisc.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+    Arnd
