@@ -1,63 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A19205E15;
-	Mon,  3 Feb 2025 12:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE98205AD4;
+	Mon,  3 Feb 2025 12:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738587010; cv=none; b=T7036io3AJgCA3R8SVnREGp+i1pOWqc+tI/U8laXdhNTvFNbJ1QcKHhHCHNilNOzLiK4kXZ1aDam6A84+88oE/w+aM6PV2Opv4ttJX1VuBjKPYX6TSNzKJS1XEgt9+KymbDjkFY58tE3+/2xHJ7J3di0CSKqqKTh7zrVAXW4wwU=
+	t=1738587009; cv=none; b=S1i0Cn5S/fwRxr1WG07UvaA+vbvkbo0wFloKPv60YaSHA3MxWHq2X/xDdZ2hH45/zVfWaNKf7jQ/kIvWRGw0kQm483mkuqvIIYoDgNo48tEexEk3gUC4TUBKDx9EXbsEHs608NMNPbTXlPmLhVb2WUr0QlItX/utR4XqPVku46s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738587010; c=relaxed/simple;
-	bh=X6utmfdWMMjwMJE1wz/xBfcqCs746GeDQCRoKgMcUM8=;
+	s=arc-20240116; t=1738587009; c=relaxed/simple;
+	bh=5779M+oiSzEtstk63+9gymV+kfVl/7Jox9e56CMuB2Q=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=uy1APobiqR3pqSJ7xWkfuHHws5JixnJKn0VUINqLrnuUCC6euKJMoHqB8RV7UarlbFemNRJciCyni8V7+Dp9pbjuBxsBC7M9gT+RfusGyLy3n4gtr92t2C2RvagAC23SljkNtUa5nIR0BlsaezHU6xYgLumu8MrFbl6SH1WqSP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zux1s2FQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5wvbI0jJ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=kCnybjeohymeJmCoBjw24jHGhJNWAotkZZSzQoJ9UBZu0zt6HQDX8LKXD/5qpNrbZtdzVdnBUbKck6ld6aT2d3+jznIk0GKaWp6ztLQq97k5zSAdsJ1FlT8wrxBzwuCOFFGMt+wYVp8aYZ6z6Wgf/HfInFg6T2Bz5n55qNXrBts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OsByFSzs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/Lc0MwiH; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zux1s2FQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5wvbI0jJ"
-Date: Mon, 03 Feb 2025 12:50:06 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OsByFSzs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/Lc0MwiH"
+Date: Mon, 03 Feb 2025 12:50:04 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738587006;
+	s=2020; t=1738587005;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ozS1XndEqcJWN8yfxpCC35Ti6MwBJAay8jw8eFkx9wA=;
-	b=Zux1s2FQqq8DN7MmlPYsL53mUKPYrJdOwS3KxEtNOzGoUW5pQsRsJZzprOAKRBefr+pJ+D
-	UACTVTU6ji4JXiMATPqbhurv0Zk80c4H0QsdB8AjeAdQDK464gfi4s+jS5wC42wA8XMsYN
-	jcuTdvem9JpElGcorl5WRpqsMwkpMmNCO0ilEatifBT2tT7EdQ+LiT8OyowM4y3mdKv4cE
-	R0I4dwIdgJfFGKsqJ9GKEztERLB7CAaMh7FmnhG+oW70i58jvlaYkjFnBzqmfmuY8QdE/k
-	WPVn8pYxdqsp96wtv0LYjHrJoWVOoZfnPwOCqkg7xTPhfMAEjxcd2BjEWcjd5g==
+	bh=+MxU9d3FzzMkMKtZDUvxmJEIc13kyfuGmwhjQPvnUA8=;
+	b=OsByFSzs5WcIfJBhibTXOdNoIdifyl4Yz9aj+NSn8+36Rs4YNRB9XHP4pxGWv2IWHE73Te
+	82EPLkkl17Kj1H6fKal1pA/psqJWOcaDWgK6y5GFP/B8HC31yRv7RA8rT93dTyJn+MobEv
+	6GvfKH28jJwhlyLQ/td7jeGpkR+U4hrbwu+O9l0YJvMpzW4yqhYst89Ngpl5eHSHUn55Yx
+	HyysMxY691iewI0M0xGaHbmV3+pZ5rZpw7IbGQrOcUwkZhKXYXKFkhYNg/WT2Wnq8bvpYF
+	WXS45yO7hfIkDf3yPlBk7NnG7DtPNmHIk2TGWEkuLM1dJcvJjC9FFHEcaXdYRg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738587006;
+	s=2020e; t=1738587005;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ozS1XndEqcJWN8yfxpCC35Ti6MwBJAay8jw8eFkx9wA=;
-	b=5wvbI0jJ6hC1mjrjkjYDtvJ2CRr/aBtQK9JOlZo2nTZsFjdWNLTvG/LFBBVl5SP+uR3nP5
-	qA46cG3C3WzDyoDA==
+	bh=+MxU9d3FzzMkMKtZDUvxmJEIc13kyfuGmwhjQPvnUA8=;
+	b=/Lc0MwiHHDS3Fs+2NnR5vCGFyZItWVO3Xu5kSCMTHeC34AfJhmviKXIWG0xN4RhEvXvX81
+	CMQG31DF9kW2mOBQ==
 From: "tip-bot2 for Mike Rapoport (Microsoft)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm/pat: drop duplicate variable in cpa_flush()
+Subject: [tip: x86/mm] execmem: add API for temporal remapping as RW and
+ restoring ROX afterwards
 Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250126074733.1384926-3-rppt@kernel.org>
-References: <20250126074733.1384926-3-rppt@kernel.org>
+In-Reply-To: <20250126074733.1384926-6-rppt@kernel.org>
+References: <20250126074733.1384926-6-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173858700637.10177.2674573814444308392.tip-bot2@tip-bot2>
+Message-ID: <173858700485.10177.7627816750485444042.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,40 +68,106 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     4ee788eb0781ba082709c1ac1d5146ebcc40b967
-Gitweb:        https://git.kernel.org/tip/4ee788eb0781ba082709c1ac1d5146ebcc40b967
+Commit-ID:     05e555b817262b5df6aa3a73df8b3dc9d388a3b4
+Gitweb:        https://git.kernel.org/tip/05e555b817262b5df6aa3a73df8b3dc9d388a3b4
 Author:        Mike Rapoport (Microsoft) <rppt@kernel.org>
-AuthorDate:    Sun, 26 Jan 2025 09:47:26 +02:00
+AuthorDate:    Sun, 26 Jan 2025 09:47:29 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 03 Feb 2025 11:46:01 +01:00
+CommitterDate: Mon, 03 Feb 2025 11:46:02 +01:00
 
-x86/mm/pat: drop duplicate variable in cpa_flush()
+execmem: add API for temporal remapping as RW and restoring ROX afterwards
 
-There is a 'struct cpa_data *data' parameter in cpa_flush() that is
-assigned to a local 'struct cpa_data *cpa' variable.
+Using a writable copy for ROX memory is cumbersome and error prone.
 
-Rename the parameter from 'data' to 'cpa' and drop declaration of the
-local 'cpa' variable.
+Add API that allow temporarily remapping of ranges in the ROX cache as
+writable  and then restoring their read-only-execute permissions.
+
+This API will be later used in modules code and will allow removing nasty
+games with writable copy in alternatives patching on x86.
+
+The restoring of the ROX permissions relies on the ability of architecture
+to reconstruct large pages in its set_memory_rox() method.
 
 Signed-off-by: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250126074733.1384926-3-rppt@kernel.org
+Link: https://lore.kernel.org/r/20250126074733.1384926-6-rppt@kernel.org
 ---
- arch/x86/mm/pat/set_memory.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ include/linux/execmem.h | 31 +++++++++++++++++++++++++++++++
+ mm/execmem.c            | 22 ++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
 
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index ef4514d..1f7698c 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -394,9 +394,8 @@ static void __cpa_flush_tlb(void *data)
- 		flush_tlb_one_kernel(fix_addr(__cpa_addr(cpa, i)));
+diff --git a/include/linux/execmem.h b/include/linux/execmem.h
+index 64130ae..65655a5 100644
+--- a/include/linux/execmem.h
++++ b/include/linux/execmem.h
+@@ -65,6 +65,37 @@ enum execmem_range_flags {
+  * Architectures that use EXECMEM_ROX_CACHE must implement this.
+  */
+ void execmem_fill_trapping_insns(void *ptr, size_t size, bool writable);
++
++/**
++ * execmem_make_temp_rw - temporarily remap region with read-write
++ *			  permissions
++ * @ptr:	address of the region to remap
++ * @size:	size of the region to remap
++ *
++ * Remaps a part of the cached large page in the ROX cache in the range
++ * [@ptr, @ptr + @size) as writable and not executable. The caller must
++ * have exclusive ownership of this range and ensure nothing will try to
++ * execute code in this range.
++ *
++ * Return: 0 on success or negative error code on failure.
++ */
++int execmem_make_temp_rw(void *ptr, size_t size);
++
++/**
++ * execmem_restore_rox - restore read-only-execute permissions
++ * @ptr:	address of the region to remap
++ * @size:	size of the region to remap
++ *
++ * Restores read-only-execute permissions on a range [@ptr, @ptr + @size)
++ * after it was temporarily remapped as writable. Relies on architecture
++ * implementation of set_memory_rox() to restore mapping using large pages.
++ *
++ * Return: 0 on success or negative error code on failure.
++ */
++int execmem_restore_rox(void *ptr, size_t size);
++#else
++static inline int execmem_make_temp_rw(void *ptr, size_t size) { return 0; }
++static inline int execmem_restore_rox(void *ptr, size_t size) { return 0; }
+ #endif
+ 
+ /**
+diff --git a/mm/execmem.c b/mm/execmem.c
+index 04b0bf1..e6c4f50 100644
+--- a/mm/execmem.c
++++ b/mm/execmem.c
+@@ -335,6 +335,28 @@ static bool execmem_cache_free(void *ptr)
+ 
+ 	return true;
  }
- 
--static void cpa_flush(struct cpa_data *data, int cache)
-+static void cpa_flush(struct cpa_data *cpa, int cache)
++
++int execmem_make_temp_rw(void *ptr, size_t size)
++{
++	unsigned int nr = PAGE_ALIGN(size) >> PAGE_SHIFT;
++	unsigned long addr = (unsigned long)ptr;
++	int ret;
++
++	ret = set_memory_nx(addr, nr);
++	if (ret)
++		return ret;
++
++	return set_memory_rw(addr, nr);
++}
++
++int execmem_restore_rox(void *ptr, size_t size)
++{
++	unsigned int nr = PAGE_ALIGN(size) >> PAGE_SHIFT;
++	unsigned long addr = (unsigned long)ptr;
++
++	return set_memory_rox(addr, nr);
++}
++
+ #else /* CONFIG_ARCH_HAS_EXECMEM_ROX */
+ static void *execmem_cache_alloc(struct execmem_range *range, size_t size)
  {
--	struct cpa_data *cpa = data;
- 	unsigned int i;
- 
- 	BUG_ON(irqs_disabled() && !early_boot_irqs_disabled);
