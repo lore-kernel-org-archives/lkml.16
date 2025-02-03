@@ -1,110 +1,61 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD44D1D86F2
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763DB1E0DB3
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738579696; cv=none; b=VGtmLt5LmaTdRi63OK4zi5cKmno4KrbIXDbouH/DodB/hDrYNkPzPOQiwf9CgaEznXu6UEHLN7b2ZmqUsPTUmkLREYiSa74TEBJHQBn/kujv7h2YQ7PNFne9ICccMkw+i5FPa31leUtoN816VLjxRZQ1m0yZfaFgnG7KhlTh+Ic=
+	t=1738579698; cv=none; b=kzHOkZDuuAJ2mShgI8H8y1C4ct6AcUwqMetG8eAdk7kXJWGl9X1sHImEBWKgbAFxjJC0F7pJkHu390zQqoXxTLrEiGRhOqwDbWh9EVXhrDHOAuD5SePwlB1eUEMxNuTuRGm2wPeQgfpQgmxtGb3foJYqi8OyjDZNPS6sJWUHhdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738579696; c=relaxed/simple;
-	bh=YftWJvMEiCrtU5t0NNHpr/TqaN2EQ4xndBtIueES2+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y2bE/+9f9lhN6NHtA7puth4zwx0FZ89BdgVEVWEanmeY8t/ljWCqkPvnbPRnI06N+72xNsncSqc1qAv/zuq4GH+rvMAbe9q7+VlbQ2UsilUsb828cXpbupWQHbHDvbI/Kow31EycKpZq0HKIBbaS8ZlQTq5mzD4fAy7CoA98huU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QXMWhBNU; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QXMWhBNU"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21628b3fe7dso74297295ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 02:48:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738579694; x=1739184494; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gF2Dk3poPY+nrxVh06MJWOuCS3vPdRofLnME4nsAnhM=;
-        b=QXMWhBNUdyF5WG8oFyXRS9wizW4Xb/X3WMlBpz9NShI27ay70yuPhkEGA80Sc8LeDW
-         yEHuwB6C4qlLWpxfJ4YYxwrRRqFmVT0uMTAxfU2tXEhgZrg58aoO7EsTkS601VWlAvWV
-         5Wm/uLsDHjwFgilIbmG+sz4wK1HdWORxCxG01TcWA1zcvaGjhFx3qZBq2qxhwMDL9Ghp
-         orCDpSu1AQhsLPK/Xcqv0LdLVu6QHiD70zT+oyCbqlCa5XeSbimMQqBCVqmhB1Avn1Dk
-         79Nz/s1+EX5d2ZADDbZ4ckmC0j+w5CzKpqkKNR6Aj2+oGH6kC0g3NJw+3UZl18a8rOK7
-         bdtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738579694; x=1739184494;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gF2Dk3poPY+nrxVh06MJWOuCS3vPdRofLnME4nsAnhM=;
-        b=X8NGDv8OMkpviUx9hO5mDObML3dfO1aYgiZV5+UChzRp8K1dNtL1ndao1NLysBVxrI
-         i2o+54X/GBhiQ0SYnzDK9atet3jSc7R4MCCPwL7noSI56VzVEbX0fu/Z9OfZP5ZJn14u
-         WA9ieHPdjenSCfNIGcx1uqDRrriSOXKGvjyD5RCAY+PdCsqowuXpirGH/HzRjdi2+Z6L
-         cgHucmJ+Gts6UtutV3WE2Q3w6WXAgfbsycUpTEmcy07uR4H/YmGBxP+KVdku2in7nLcU
-         aMisfupiGYFub3DTLfyB86N0lxvKCnDLGoQn71z3WaGUSwPYCi6DtjCV9kg3+DqRzTvb
-         MMVA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Ekazm3b+8Egp2JQeMiSSL/HoO5GryCKV7z0sZhJWT5/bsBhHuhktUbOm7IwQHFSoIzPB5FO7gPaQ2Uo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWRxmiQFVExZOZGmXo/zNCBCLYgwmbK5F+XsgLSoR8Avo8HxfC
-	VY3Px2EC0sG0TCSwNc/z660/Ikzowpv0qnlKEUZ9R4GAaJrx2QKISE6iZb85r+g=
-X-Gm-Gg: ASbGnctQhSspZR0dB6+k6sMerYU1L35P90ea8hKDQrS58+u9jqZRC/Mz/7N+yU8klWU
-	x5RVW2cL0ruSKXAaS1E7uA5OyrlYYGbLH1Ss1Cc7ybYcLg5mU8Rti/OYmX9KhwEqk91g3Fw5CAe
-	keNn188VFUTA8jqWnpIpynR0RJj6QnY3Ig/QJ2lwEzimbFasmpgL5/cflVVLaxkxYtRH7+pn/Qf
-	WDgfwz1/DPEpv4ZzoIZuh2eXGR3pGWAbnsdwUamkmrjRbXn9kXyIBsTtyXUwu8B8KyJNt3MmkXp
-	SNJliFDJUmYjDzvbTA==
-X-Google-Smtp-Source: AGHT+IGvgmZj4iMs//4PywYkmHglzukdY/RJQs6+MV/dRwLE0yHlCexXqr6pZLgRoeNoE22HgiI4WA==
-X-Received: by 2002:a17:902:d483:b0:216:7d22:f69 with SMTP id d9443c01a7336-21dd7e04887mr334779115ad.50.1738579694119;
-        Mon, 03 Feb 2025 02:48:14 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3303f74sm72593165ad.201.2025.02.03.02.48.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 02:48:13 -0800 (PST)
-Date: Mon, 3 Feb 2025 16:18:11 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-Cc: gautham.shenoy@amd.com, mario.limonciello@amd.com, rafael@kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH] cpufreq/amd-pstate: Remove unnecessary driver_lock in
- set_boost
-Message-ID: <20250203104811.ccf3pj53cjlhwvti@vireshk-i7>
-References: <20250130085251.155146-1-dhananjay.ugwekar@amd.com>
+	s=arc-20240116; t=1738579698; c=relaxed/simple;
+	bh=rWhqo7cWXmDaDOxPmSGtMMFh1rZMXRwWbQYw7ySRD3o=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rJqmaanBwy/y2tSI9fEJeb9cHB18/XOLrKN7RVjXJ/o1PuHlKvfyhTJ+Nd0GICOMlJl6UHGnkguAcTLZgX7lzsK++HZdYJENlE9FZAXRPD19wjVL/ENR15BM/xZieRrkSmEJRKkCg5pKHF3gs6iPi7t9YkARlv8RK+wExyIcJOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ymjnx1zTjz6L4yY;
+	Mon,  3 Feb 2025 18:45:41 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id EEA59140C72;
+	Mon,  3 Feb 2025 18:48:12 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 3 Feb
+ 2025 11:48:12 +0100
+Date: Mon, 3 Feb 2025 10:48:10 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+CC: Igor Mammedov <imammedo@redhat.com>, "Michael S . Tsirkin"
+	<mst@redhat.com>, Shiju Jose <shiju.jose@huawei.com>, <qemu-arm@nongnu.org>,
+	<qemu-devel@nongnu.org>, Ani Sinha <anisinha@redhat.com>, Dongjiu Geng
+	<gengdongjiu1@gmail.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/14] acpi/ghes: only set hw_error_le or
+ hest_addr_le
+Message-ID: <20250203104810.00002200@huawei.com>
+In-Reply-To: <7fbe05cb97c50addb61920c68e1aa5027a64610c.1738345063.git.mchehab+huawei@kernel.org>
+References: <cover.1738345063.git.mchehab+huawei@kernel.org>
+	<7fbe05cb97c50addb61920c68e1aa5027a64610c.1738345063.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130085251.155146-1-dhananjay.ugwekar@amd.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 30-01-25, 08:52, Dhananjay Ugwekar wrote:
-> set_boost is a per-policy function call, hence a driver wide lock is
-> unnecessary. Also this mutex_acquire can collide with the mutex_acquire
-> from the mode-switch path in status_store(), which can lead to a
-> deadlock. So, remove it.
+On Fri, 31 Jan 2025 18:42:47 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+
+> The hw_error_le pointer is used for legacy support (virt-9.2).
+> Starting from virt-10.0, HEST table is accessed via hest_addr_le.
 > 
-> Signed-off-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-> ---
-> PS: This patch should ideally go before [1], as that patch uncovers this 
-> bug and actually leads to a deadlock when switching the amd_pstate driver 
-> mode.
-> [1] https://lore.kernel.org/linux-pm/e16c06d4b8ffdb20e802ffe648f14dc515e60426.1737707712.git.viresh.kumar@linaro.org/
-> ---
->  drivers/cpufreq/amd-pstate.c | 1 -
->  1 file changed, 1 deletion(-)
+> Remove fw_cfg logic for legacy support if virt is 10.0 or upper.
 > 
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index d5be51bf8692..93788bce7e6a 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -740,7 +740,6 @@ static int amd_pstate_set_boost(struct cpufreq_policy *policy, int state)
->  		pr_err("Boost mode is not supported by this processor or SBIOS\n");
->  		return -EOPNOTSUPP;
->  	}
-> -	guard(mutex)(&amd_pstate_driver_lock);
->  
->  	ret = amd_pstate_cpu_boost_update(policy, state);
->  	refresh_frequency_limits(policy);
-
-Applied. Thanks.
-
--- 
-viresh
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
