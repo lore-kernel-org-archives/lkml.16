@@ -1,237 +1,188 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9E11F94D;
-	Mon,  3 Feb 2025 08:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D0C1D7E50
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738571674; cv=none; b=ZaUpRyk9AUhbNisxbUokcpni9QQ5PxMeHHrZOOohgKjfW89flTS/Ul5FWBEpbbjxkCTrSJtoXqdceRtf8daTwrth3aveyA8Mv4r0pwYu1vBkaCKvAbMr/ZeOJoavKaN+QxRRJn2hFpFQPKsr00n/geoUpz2U3+OwBnM35m1kG0E=
+	t=1738571717; cv=none; b=D87TNlVli3gj5KWmkDqOJH2cpa52BgaQzoGIJcVJCI6AHFcntaWV39KqcNaE62UrPQdLyL0dKplFrZ0IMfo35nX0cdJbLYEzKs3oc6owy/+wsNhPHXWVXtlYPE64+sPN/M7x6sMbPSqS9BZ2NZFdAUqp8ZN7NVwYFiTdQ+0/Bis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738571674; c=relaxed/simple;
-	bh=4qY4vcY6DHqq+9qMn5ftmyfcHIiFFwJOM2wbeKPrN2c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qkfy8HzPyoIpImCeFIeWtbqxQz/KdqpZ0kDSw9ceAExn14G0pCU6A67Mlkkq7XmWvdgir5jY8I/X34TFPIVn1Y8k3bQFAjrgg7wM0E2mojtV+E96SYJAQ0wleNkbAUXjckn0C8UuONNReVbJ6VAB+DpnubsLwrNfBlRW3Qm5Z4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1RX2tKoU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x2FTq42a; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1RX2tKoU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x2FTq42a; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1738571717; c=relaxed/simple;
+	bh=AjeBmdJxOhB8EePWx9LMdeDziY3O7eZmfuZLVM3LnCA=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=PsqGkonAheQwENAeoX3umYyMO5wKfq8iAvHuYfxofscmWBXP7ELOGdx0CRE4gki7zxnkn2/M4JU6QkxIexj1WtURGDkgHxTxoQAuRw70xbF8s+UvBlcC5R4lcX1jk8PhuTaOnpx8NVimkuCvHBBOiSEmnC17RSvhDwiJESN8t7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZQWJ8PfT; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1RX2tKoU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x2FTq42a";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1RX2tKoU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x2FTq42a"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 049531F390;
-	Mon,  3 Feb 2025 08:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738571670; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=W5Eh3Za0HCZS0DVH2DFqtExGY67apd/ir99lJ0RvFTU=;
-	b=1RX2tKoU964xdWU8mW7pIJ16kmJg0/npqUOXea4CERNOogIaf3XSyA1qrD0Kz4aFZlrBMt
-	3IO/kJi5Uu93xMVnpBoUsfnrBVsrl5COE9fjFBvgNuLsiedHlJNLHwwaONJTKrrg9pxzUb
-	vA6rB4FNU61Nqi4Jr9O5jMchSpYKmZE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738571670;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=W5Eh3Za0HCZS0DVH2DFqtExGY67apd/ir99lJ0RvFTU=;
-	b=x2FTq42aHJ4xNBvorVZn/3KnMhdresn1PqkLxPnTek5ViACIbyY78kkJXBFwkzqXKe7Pt8
-	12X8vAxa4ODV3GAg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=1RX2tKoU;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=x2FTq42a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738571670; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=W5Eh3Za0HCZS0DVH2DFqtExGY67apd/ir99lJ0RvFTU=;
-	b=1RX2tKoU964xdWU8mW7pIJ16kmJg0/npqUOXea4CERNOogIaf3XSyA1qrD0Kz4aFZlrBMt
-	3IO/kJi5Uu93xMVnpBoUsfnrBVsrl5COE9fjFBvgNuLsiedHlJNLHwwaONJTKrrg9pxzUb
-	vA6rB4FNU61Nqi4Jr9O5jMchSpYKmZE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738571670;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=W5Eh3Za0HCZS0DVH2DFqtExGY67apd/ir99lJ0RvFTU=;
-	b=x2FTq42aHJ4xNBvorVZn/3KnMhdresn1PqkLxPnTek5ViACIbyY78kkJXBFwkzqXKe7Pt8
-	12X8vAxa4ODV3GAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CCFBF13795;
-	Mon,  3 Feb 2025 08:34:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nYKPMZV/oGeTTgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 03 Feb 2025 08:34:29 +0000
-Message-ID: <46e70b3c-6d96-4507-ba17-a52e8362873d@suse.cz>
-Date: Mon, 3 Feb 2025 09:34:29 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZQWJ8PfT"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2f550d28f7dso7619807a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:35:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738571715; x=1739176515; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bCVGsPkdqv8VOcstVdRRWjGTGpKBIG2jSUrhWhisdPo=;
+        b=ZQWJ8PfTXWf9rjNMsrbTjBAJbETXlU/CjR5KASUzY0l/Ub2eookgHzsLD363AJRHx/
+         mrVTbegfVsjcApqwzcEBOSAtvHE50uT/nuV2S2k6sxkgf4hkW6YuBjk6jWffs2UPh354
+         ihB5+AMeb70RmDTt9egjCIo8tRjleB3Ym3AsBI7VjUNPVI16F6CbvoC5pYs7cpL5sTUt
+         7XQtWAC3Ky+siA/93SsIZaGLAJIdWEIP2gu86eQqppgOFLsLN2whPa6w3Yap5IB+pcDk
+         IYQmpY+9GJs8oEh6St7eW/fxTlyNVqOTysF2OfUwtxAmDNQZKFx5crqzxsY0zieWl2gz
+         P9TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738571715; x=1739176515;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bCVGsPkdqv8VOcstVdRRWjGTGpKBIG2jSUrhWhisdPo=;
+        b=sW30o0nAk+0fuRwSjuSQMX3nIKRMTIZ5JAFFbitCmZN41HDnZSwfXhbd+yOEHYC6kL
+         BGgiSI//ptAMV699WZpwSL08C+2xxJn/gi723hYzveezTQco1R5jFsYbwPozS+RbSP0p
+         TpjYcqzZQxAhQzrDHSGFlpb6DqthXcrSWJ2QnXM+A71hMFigmcBeTMu0WZoostz6027P
+         2UX1E6ZNjvrUhG/1F01T9TYYez7IQllKjPSvqQgsrZZhXWIZraCMHzCAVSgfmYxNaOOR
+         n3xVaFcEBzvc+ozxrCKAB2t5k+lXUAqwj3aOqX79p3NzoMwiaEzAb5IU84dHdv01fk9L
+         UaKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVWuwVyRDXW0Zx/962Ax9CiNC8uwRYWcWv4Ow0Yg8s0QIN8kbaxWf+zQM2gA4vO05sda/lpAHBz/ikOpc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpB+WE6n+qi9ZIjuGa4bnQ9huMsp3NX9m9VQokdd7NIs5U8N38
+	PgNzc/kVpAyqOkwz8N9QdMTmDwYO7/ZDbj8FvP+OitQgQm6A1D/lwHyrx+Cwdg2DJz7aHtHNSPG
+	ENmrug7vcJ6FPYqgy1YmHUw==
+X-Google-Smtp-Source: AGHT+IHj+Cug/2vDcc3qbw44IShUmb2Dal+tFzb8jNSGxbKWVsDIeVzNOQ+erfgJBUWM/FABAfOHIsgQxSoSDHqCzA==
+X-Received: from pjbnc13.prod.google.com ([2002:a17:90b:37cd:b0:2ea:46ed:5d3b])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:2748:b0:2f4:465d:5c94 with SMTP id 98e67ed59e1d1-2f83abd9978mr32152246a91.11.1738571714919;
+ Mon, 03 Feb 2025 00:35:14 -0800 (PST)
+Date: Mon, 03 Feb 2025 08:35:12 +0000
+In-Reply-To: <83d44307f30ad8ce19de3edcdc00c179750e0e23.camel@infradead.org>
+ (message from Amit Shah on Tue, 28 Jan 2025 10:42:57 +0100)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kmem/tracing: Add kmem name to kmem_cache_alloc
- tracepoint
-Content-Language: en-US
-To: Wander Lairson Costa <wander@redhat.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Darrick J. Wong" <djwong@kernel.org>, Richard Chang
- <richardycc@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- "open list:TRACING" <linux-kernel@vger.kernel.org>,
- "open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
- David Rientjes <rientjes@google.com>, Christoph Lameter <cl@gentwo.org>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>
-References: <20250130181639.58280-1-wander@redhat.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <20250130181639.58280-1-wander@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 049531F390
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_DN_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[redhat.com,goodmis.org,kernel.org,efficios.com,linux-foundation.org,amd.com,google.com,cmpxchg.org,vger.kernel.org,gentwo.org,gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+Mime-Version: 1.0
+Message-ID: <diqzr04fpgsf.fsf@ackerleytng-ctop-specialist.c.googlers.com>
+Subject: Re: [RFC PATCH 00/39] 1G page support for guest_memfd
+From: Ackerley Tng <ackerleytng@google.com>
+To: Amit Shah <amit@infradead.org>
+Cc: tabba@google.com, quic_eberman@quicinc.com, roypat@amazon.co.uk, 
+	jgg@nvidia.com, peterx@redhat.com, david@redhat.com, rientjes@google.com, 
+	fvdl@google.com, jthoughton@google.com, seanjc@google.com, 
+	pbonzini@redhat.com, zhiquan1.li@intel.com, fan.du@intel.com, 
+	jun.miao@intel.com, isaku.yamahata@intel.com, muchun.song@linux.dev, 
+	mike.kravetz@oracle.com, erdemaktas@google.com, vannapurve@google.com, 
+	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
+	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
+	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
+	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
+	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
+	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-fsdevel@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 1/30/25 19:16, Wander Lairson Costa wrote:
-> The kmem_cache_free tracepoint includes a "name" field, which allows
-> for easy identification and filtering of specific kmem's. However, the
-> kmem_cache_alloc tracepoint lacks this field, making it difficult to
-> pair corresponding alloc and free events for analysis.
+Amit Shah <amit@infradead.org> writes:
 
-Hm yeah looks like the free one was added in commit 3544de8ee6e48 and their
-use case didn't need alloc too, but it makes sense.
+> Hey Ackerley,
 
-> Add the "name" field to kmem_cache_alloc to enable consistent tracking
-> and correlation of kmem alloc and free events.
-> 
-> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+Hi Amit,
 
-I will take this in the slab tree, unless Steven objects.
+> On Tue, 2024-09-10 at 23:43 +0000, Ackerley Tng wrote:
+>> Hello,
+>> 
+>> This patchset is our exploration of how to support 1G pages in
+>> guest_memfd, and
+>> how the pages will be used in Confidential VMs.
+>
+> We've discussed this patchset at LPC and in the guest-memfd calls.  Can
+> you please summarise the discussions here as a follow-up, so we can
+> also continue discussing on-list, and not repeat things that are
+> already discussed?
 
-Thanks,
-Vlastimil
+Thanks for this question! Since LPC, Vishal and I have been tied up with
+some Google internal work, which slowed down progress on 1G page support
+for guest_memfd. We will have progress this quarter and the next few
+quarters on 1G page support for guest_memfd.
 
-> ---
->  include/trace/events/kmem.h | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-> index b37eb0a7060f..8ffb022f024c 100644
-> --- a/include/trace/events/kmem.h
-> +++ b/include/trace/events/kmem.h
-> @@ -22,6 +22,7 @@ TRACE_EVENT(kmem_cache_alloc,
->  	TP_STRUCT__entry(
->  		__field(	unsigned long,	call_site	)
->  		__field(	const void *,	ptr		)
-> +		__string(	name,		s->name		)
->  		__field(	size_t,		bytes_req	)
->  		__field(	size_t,		bytes_alloc	)
->  		__field(	unsigned long,	gfp_flags	)
-> @@ -32,6 +33,7 @@ TRACE_EVENT(kmem_cache_alloc,
->  	TP_fast_assign(
->  		__entry->call_site	= call_site;
->  		__entry->ptr		= ptr;
-> +		__assign_str(name);
->  		__entry->bytes_req	= s->object_size;
->  		__entry->bytes_alloc	= s->size;
->  		__entry->gfp_flags	= (__force unsigned long)gfp_flags;
-> @@ -41,9 +43,10 @@ TRACE_EVENT(kmem_cache_alloc,
->  					  (s->flags & SLAB_ACCOUNT)) : false;
->  	),
->  
-> -	TP_printk("call_site=%pS ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d accounted=%s",
-> +	TP_printk("call_site=%pS ptr=%p name=%s bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d accounted=%s",
->  		(void *)__entry->call_site,
->  		__entry->ptr,
-> +		__get_str(name),
->  		__entry->bytes_req,
->  		__entry->bytes_alloc,
->  		show_gfp_flags(__entry->gfp_flags),
+The related updates are
 
+1. No objections on using hugetlb as the source of 1G pages.
+
+2. Prerequisite hugetlb changes.
+
++ I've separated some of the prerequisite hugetlb changes into another
+  patch series hoping to have them merged ahead of and separately from
+  this patchset [1].
++ Peter Xu contributed a better patchset, including a bugfix [2].
++ I have an alternative [3].
++ The next revision of this series (1G page support for guest_memfd)
+  will be based on alternative [3]. I think there should be no issues
+  there.
++ I believe Peter is also waiting on the next revision before we make
+  further progress/decide on [2] or [3].
+
+3. No objections for allowing mmap()-ing of guest_memfd physical memory
+   when memory is marked shared to avoid double-allocation.
+
+4. No objections for splitting pages when marked shared.
+
+5. folio_put() callback for guest_memfd folio cleanup/merging.
+
++ In Fuad's series [4], Fuad used the callback to reset the folio's
+  mappability status.
++ The catch is that the callback is only invoked when folio->page_type
+  == PGTY_guest_memfd, and folio->page_type is a union with folio's
+  mapcount, so any folio with a non-zero mapcount cannot have a valid
+  page_type.
++ I was concerned that we might not get a callback, and hence
+  unintentionally skip merging pages and not correctly restore hugetlb
+  pages
++ This was discussed at the last guest_memfd upstream call (2025-01-23
+  07:58 PST), and the conclusion is that using folio->page_type works,
+  because
+    + We only merge folios in two cases: (1) when converting to private
+      (2) when truncating folios (removing from filemap).
+    + When converting to private, in (1), we can forcibly unmap all the
+      converted pages or check if the mapcount is 0, and once mapcount
+      is 0 we can install the callback by setting folio->page_type =
+      PGTY_guest_memfd
+    + When truncating, we will be unmapping the folios anyway, so
+      mapcount is also 0 and we can install the callback.
+
+Hope that covers the points that you're referring to. If there are other
+parts that you'd like to know the status on, please let me know which
+aspects those are!
+
+> Also - as mentioned in those meetings, we at AMD are interested in this
+> series along with SEV-SNP support - and I'm also interested in figuring
+> out how we collaborate on the evolution of this series.
+
+Thanks all your help and comments during the guest_memfd upstream calls,
+and thanks for the help from AMD.
+
+Extending mmap() support from Fuad with 1G page support introduces more
+states that made it more complicated (at least for me).
+
+I'm modeling the states in python so I can iterate more quickly. I also
+have usage flows (e.g. allocate, guest_use, host_use,
+transient_folio_get, close, transient_folio_put) as test cases.
+
+I'm almost done with the model and my next steps are to write up a state
+machine (like Fuad's [5]) and share that.
+
+I'd be happy to share the python model too but I have to work through
+some internal open-sourcing processes first, so if you think this will
+be useful, let me know!
+
+Then, I'll code it all up in a new revision of this series (target:
+March 2025), which will be accompanied by source code on GitHub.
+
+I'm happy to collaborate more closely, let me know if you have ideas for
+collaboration!
+
+> Thanks,
+>
+> 		Amit
+
+[1] https://lore.kernel.org/all/cover.1728684491.git.ackerleytng@google.com/T/
+[2] https://lore.kernel.org/all/20250107204002.2683356-1-peterx@redhat.com/T/
+[3] https://lore.kernel.org/all/diqzjzayz5ho.fsf@ackerleytng-ctop.c.googlers.com/
+[4] https://lore.kernel.org/all/20250117163001.2326672-1-tabba@google.com/T/
+[5] https://lpc.events/event/18/contributions/1758/attachments/1457/3699/Guestmemfd%20folio%20state%20page_type.pdf
