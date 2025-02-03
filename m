@@ -1,206 +1,159 @@
-Received: from harvie.cz (harvie.cz [77.87.242.242])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50A26210F42;
-	Mon,  3 Feb 2025 17:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.87.242.242
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738603193; cv=none; b=T1EnXgYa8GpDScpj1kfYBRac6TrlXorpXWuhkrnCZV4f8gqnUnPfNCLftc3VOWTuWc+CNHIiDnlIRt5iubUdNbPtDsWP4qy4mwPDvZ+fmRmPGwFlsNn3zTk4KR67VgZGM1hEmxug1z+UokI6kzWLAKsVAkTImNzljCEqlQVUCzg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738603193; c=relaxed/simple;
-	bh=3BpnlSBrqhHcnGWbjZxLJyFXlnGgmw9MqJypPiTlmmA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M0OfjCADL+qQOO64zJV6NHZfY6HtEEbizRXER3WsOVimAakr4LA2jp+0cyWdNi3y+6d85iYzCsCglZGDzeG6zbHfecQGS70vsv0JkZBDsRVpWmQ4SE5o93egbffHQpzum2W7ZNkPkr0e6xWAFaZuGB+E1hc0Gv3+KVc6gDCd+hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=77.87.242.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from anemophobia.amit.cz (unknown [31.30.84.130])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by harvie.cz (Postfix) with ESMTPSA id 513F01800F1;
-	Mon,  3 Feb 2025 18:18:59 +0100 (CET)
-From: Tomas Mudrunka <tomas.mudrunka@gmail.com>
-To: mtkaczyk@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	song@kernel.org,
-	tomas.mudrunka@gmail.com,
-	yukuai3@huawei.com
-Subject: [PATCH v2] Export MDRAID bitmap on disk structure in UAPI header file
-Date: Mon,  3 Feb 2025 18:18:09 +0100
-Message-ID: <20250203171809.1280101-1-tomas.mudrunka@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250203124326.66217544@mtkaczyk-private-dev>
-References: <20250203124326.66217544@mtkaczyk-private-dev>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75E920CCDA
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738603244; cv=none; b=SQ04oQh7K4ueAM3xwS8XlRo4cHthkjy72hn997iyzO18cDfc+9vXMxTaEfmXJ7jeVXiYsrYKCmiv4+DW6e2w5GBIfdALEfvo+z+5jUSh0a1wA9sug08Je0YGEty5MmHp1PuLvPboKYJNl4DgF2edKtKuvPM+VtYUGUOJAkTre4k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738603244; c=relaxed/simple;
+	bh=3xP1IvjSWBYoWzpo8OmosTBSRyAsu4KF9MunuP19acw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KCy9h8Ims8hn2RHqz79B+hASKYRpX84M1awpltLh33jri5ytxevQxfyc4nj4STWwN+3KsbKANcxpuQLDFkw/0xJm/80AAR5VDf6OQMGW3TvKInxSbsZmfUGqc9UZwrE+ELKHeJNJ52ev8qXiW1GURypybfnYaHQoZZ5/+GkYs1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uy/7deBN; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uy/7deBN"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so374105ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 09:20:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738603242; x=1739208042; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GAo66MeJPG41OMCLB4xovTFK9mZU/N+qHwtpMW9VlfU=;
+        b=uy/7deBNIGH6xff6UtxXZxBMS0UZ2xaEQ4S/ARa3tCwm9IRy8s7E/FSHIUvZUzrIAw
+         DPHTyX3czsRzN7krV2FCwM0o3CRee0I1dE+E5kxwzisHDQsW3uMIxzEwWBqpXb5F+iAr
+         1o69YLJ7aadelbAj8dpfdYCMMDFGIh6TOqAdoyeEGo/ndK3V1FyKDrDXn2gKVeR6veOM
+         rp2tUtOv6GURaoXzsQKl1aqaRG3xUFxgUoyXBamJDN4S57OQdCWwSArPCxM1hyq4Vn6n
+         CtBGyZCenkZyJMM7wRgS9Hk0QoWN1UfeGSBW2zqiN7Pajves1T/+IPLP66qVFf/pcaqD
+         Y8zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738603242; x=1739208042;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GAo66MeJPG41OMCLB4xovTFK9mZU/N+qHwtpMW9VlfU=;
+        b=aOCZY1JaYUX2CWAWINpoIcG2ywdJqcDOaZM9vDsiXiUMIvUVFvHJ0jYPkrluy1qiDq
+         qonFmXZ/1QctcVIORNJksQfVLng9zA/ZpE6zu/igA6/wclMvBSMQ/FK8qbSLx5ALQuNO
+         qrxckJHCJKNwspJ8pi6hUF54RozGpSGwtvazIx2pycqohYcQ9ddbDDI/Mrn4esd/Q7o3
+         KzD4gJM6IKJa16jS/Opv8Wjv/ydo4n8HNTHL9JeOUgk7nX3cUKD/eo9bQLLLjb2HX7qk
+         4D7mqvhgm474+FfiLDi3fw93UWmpk1qS17ufHD/NicVug7QnfzsuxTVPlnr9jHQzJYA3
+         YuMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdt76lNmb7ILn9lYe858TeGiN7SyrJRbUuHnb58FzM9zQy84NB5Ge1wKi31MoIhCs93MCHjuVmu0XVXIU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yya0h+cZOMwyC0+QbevuXd8tsPPhjXUK4jY3bFsx+53i9kZ9eTi
+	IMZIJjRxpv9PDhBfyVgUrYThX0xKjE182hjz03mduK15cZhQ+HBluZMM4+cBj7l4W+aRppA5QgP
+	7B39RApeKL1plwOJlQrnWBG+RNp80t0llo5+q
+X-Gm-Gg: ASbGncsvzoKU5vQMkTpIE0yPMOE9uEF4sHBOe//BprEPRKVK8SZa18P8gdUy6ZTohnf
+	JXMjcj/BWHHE0kvMh1Y3zxGSEHjd6hq4qw5VMcpPpF4fw6NxYfDuRUDHBTJllukEnmViN7/JIZj
+	+0GzOxj+si1k1esH4vElxVkkA=
+X-Google-Smtp-Source: AGHT+IEDTaSTgDB3XaZzRvmDNVy0dyF+FRY4l/I0bO093GEzFS7ah5J9eJBNgklT1LHjNbeayephmHaJMb0xFAvkHZ0=
+X-Received: by 2002:a05:6e02:12e9:b0:3ce:471b:1ae4 with SMTP id
+ e9e14a558f8ab-3d03eea05d3mr390285ab.5.1738603241707; Mon, 03 Feb 2025
+ 09:20:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250129193037.573431-1-irogers@google.com> <f500ef21-5c87-4c60-8453-d98ee637a60c@app.fastmail.com>
+In-Reply-To: <f500ef21-5c87-4c60-8453-d98ee637a60c@app.fastmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 3 Feb 2025 09:20:30 -0800
+X-Gm-Features: AWEUYZnNKh34RX7hctk5o6IG1sjeytGUFhAy-xCa5ENY2IXz5w8NpUhwDPHndLw
+Message-ID: <CAP-5=fVJHV=JgR_FR91V6zcVnLXnakdoiNP4Y5j-+X72r2STmQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf symbol: Add rust v0 demangling support
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When working on software that manages MD RAID disks from
-userspace. Currently provided headers only contain MD superblock.
-That is not enough to fully populate MD RAID metadata.
-Therefore this patch adds bitmap superblock as well.
+On Thu, Jan 30, 2025 at 11:35=E2=80=AFAM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> Hi Ian,
+>
+> Thanks so much for working on this!
+>
+> Only did a quick skim. Seems like it'd be nice to reuse the official
+> demangler now that we know about it. Will be interesting to
+> see how that gets packaged for distros.
 
-Signed-off-by: Tomas Mudrunka <tomas.mudrunka@gmail.com>
----
-V1 -> V2: Also exported stuff needed by mdadm according to Mariusz Tkaczyk
+I think the best solution is to use the official demangler but in
+general we'd like fewer rather than more library dependencies. For
+example your initial comments were to work to make the coupling with
+capstone and LLVM disassemblers more loose via dlopen:
+https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com/
 
- drivers/md/md-bitmap.c         |  9 ------
- drivers/md/md-bitmap.h         | 42 +--------------------------
- include/uapi/linux/raid/md_p.h | 52 +++++++++++++++++++++++++++++++++-
- 3 files changed, 52 insertions(+), 51 deletions(-)
+Thinking through the options (note I'm not doing Rust things and so my
+level of skin in the game is minimal):
+1) stay as we are - well this is a mess as there is no v0 support and
+the legacy support comes from libbfd/libiberty.
+2) option (1) plus this change cleaned up - there's still the mess
+with the legacy support, which is probably more important given v0
+isn't widely adopted.
+3) wait for the official demangler to be packaged as a library and
+depend upon it, add testing from here - solves legacy and v0 issues,
+but brings in an extra library dependency to the build. Timeline not
+clear.
+4) "contribute"/copy-paste the official demangler into perf tree and
+do like (3). Perhaps remove the forked file when a dependable library
+exists (there's some precedent for this with how libtraceevent was in
+and then removed from the linux tree) - solves the timeline, not great
+to fork the official demangler, so far not heard from the author Ariel
+Ben-Yehuda and I would strongly prefer they contribute rather than I
+copy-paste it.
 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index ec4ecd96e..247610f9a 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -32,15 +32,6 @@
- #include "md.h"
- #include "md-bitmap.h"
- 
--#define BITMAP_MAJOR_LO 3
--/* version 4 insists the bitmap is in little-endian order
-- * with version 3, it is host-endian which is non-portable
-- * Version 5 is currently set only for clustered devices
-- */
--#define BITMAP_MAJOR_HI 4
--#define BITMAP_MAJOR_CLUSTERED 5
--#define	BITMAP_MAJOR_HOSTENDIAN 3
--
- /*
-  * in-memory bitmap:
-  *
-diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index 31c93019c..75bbe6b84 100644
---- a/drivers/md/md-bitmap.h
-+++ b/drivers/md/md-bitmap.h
-@@ -7,7 +7,7 @@
- #ifndef BITMAP_H
- #define BITMAP_H 1
- 
--#define BITMAP_MAGIC 0x6d746962
-+#include <linux/raid/md_p.h>
- 
- typedef __u16 bitmap_counter_t;
- #define COUNTER_BITS 16
-@@ -18,46 +18,6 @@ typedef __u16 bitmap_counter_t;
- #define RESYNC_MASK ((bitmap_counter_t) (1 << (COUNTER_BITS - 2)))
- #define COUNTER_MAX ((bitmap_counter_t) RESYNC_MASK - 1)
- 
--/* use these for bitmap->flags and bitmap->sb->state bit-fields */
--enum bitmap_state {
--	BITMAP_STALE	   = 1,  /* the bitmap file is out of date or had -EIO */
--	BITMAP_WRITE_ERROR = 2, /* A write error has occurred */
--	BITMAP_HOSTENDIAN  =15,
--};
--
--/* the superblock at the front of the bitmap file -- little endian */
--typedef struct bitmap_super_s {
--	__le32 magic;        /*  0  BITMAP_MAGIC */
--	__le32 version;      /*  4  the bitmap major for now, could change... */
--	__u8  uuid[16];      /*  8  128 bit uuid - must match md device uuid */
--	__le64 events;       /* 24  event counter for the bitmap (1)*/
--	__le64 events_cleared;/*32  event counter when last bit cleared (2) */
--	__le64 sync_size;    /* 40  the size of the md device's sync range(3) */
--	__le32 state;        /* 48  bitmap state information */
--	__le32 chunksize;    /* 52  the bitmap chunk size in bytes */
--	__le32 daemon_sleep; /* 56  seconds between disk flushes */
--	__le32 write_behind; /* 60  number of outstanding write-behind writes */
--	__le32 sectors_reserved; /* 64 number of 512-byte sectors that are
--				  * reserved for the bitmap. */
--	__le32 nodes;        /* 68 the maximum number of nodes in cluster. */
--	__u8 cluster_name[64]; /* 72 cluster name to which this md belongs */
--	__u8  pad[256 - 136]; /* set to zero */
--} bitmap_super_t;
--
--/* notes:
-- * (1) This event counter is updated before the eventcounter in the md superblock
-- *    When a bitmap is loaded, it is only accepted if this event counter is equal
-- *    to, or one greater than, the event counter in the superblock.
-- * (2) This event counter is updated when the other one is *if*and*only*if* the
-- *    array is not degraded.  As bits are not cleared when the array is degraded,
-- *    this represents the last time that any bits were cleared.
-- *    If a device is being added that has an event count with this value or
-- *    higher, it is accepted as conforming to the bitmap.
-- * (3)This is the number of sectors represented by the bitmap, and is the range that
-- *    resync happens across.  For raid1 and raid5/6 it is the size of individual
-- *    devices.  For raid10 it is the size of the array.
-- */
--
- struct md_bitmap_stats {
- 	u64		events_cleared;
- 	int		behind_writes;
-diff --git a/include/uapi/linux/raid/md_p.h b/include/uapi/linux/raid/md_p.h
-index ff47b6f0b..3684c0001 100644
---- a/include/uapi/linux/raid/md_p.h
-+++ b/include/uapi/linux/raid/md_p.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
- /*
-    md_p.h : physical layout of Linux RAID devices
--          Copyright (C) 1996-98 Ingo Molnar, Gadi Oxman
-+          Copyright (C) 1996-98 Ingo Molnar, Gadi Oxman, Peter T. Breuer
- 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-@@ -426,4 +426,54 @@ struct ppl_header {
- 	struct ppl_header_entry entries[PPL_HDR_MAX_ENTRIES];
- } __attribute__ ((__packed__));
- 
-+#define MD_BITMAP_SUBERBLOCK_EXPORTED 1	/* Notify that kernel provides it */
-+#define BITMAP_MAGIC 0x6d746962		/* This is actualy "bitm" in ASCII :-) */
-+#define BITMAP_MAJOR_LO 3
-+/* version 4 insists the bitmap is in little-endian order
-+ * with version 3, it is host-endian which is non-portable
-+ */
-+#define BITMAP_MAJOR_HI 4
-+#define BITMAP_MAJOR_CLUSTERED 5
-+#define BITMAP_MAJOR_HOSTENDIAN 3
-+
-+/* use these for bitmap->flags and bitmap->sb->state bit-fields */
-+enum bitmap_state {
-+	BITMAP_STALE	   = 1,  /* the bitmap file is out of date or had -EIO */
-+	BITMAP_WRITE_ERROR = 2, /* A write error has occurred */
-+	BITMAP_HOSTENDIAN  =15,
-+};
-+
-+/* the superblock at the front of the bitmap file -- little endian */
-+typedef struct bitmap_super_s {
-+	__le32 magic;        /*  0  BITMAP_MAGIC */
-+	__le32 version;      /*  4  the bitmap major for now, could change... */
-+	__u8  uuid[16];      /*  8  128 bit uuid - must match md device uuid */
-+	__le64 events;       /* 24  event counter for the bitmap (1)*/
-+	__le64 events_cleared;/*32  event counter when last bit cleared (2) */
-+	__le64 sync_size;    /* 40  the size of the md device's sync range(3) */
-+	__le32 state;        /* 48  bitmap state information */
-+	__le32 chunksize;    /* 52  the bitmap chunk size in bytes */
-+	__le32 daemon_sleep; /* 56  seconds between disk flushes */
-+	__le32 write_behind; /* 60  number of outstanding write-behind writes */
-+	__le32 sectors_reserved; /* 64 number of 512-byte sectors that are
-+				  * reserved for the bitmap. */
-+	__le32 nodes;        /* 68 the maximum number of nodes in cluster. */
-+	__u8 cluster_name[64]; /* 72 cluster name to which this md belongs */
-+	__u8  pad[256 - 136]; /* set to zero */
-+} bitmap_super_t;
-+
-+/* notes:
-+ * (1) This event counter is updated before the eventcounter in the md superblock
-+ *    When a bitmap is loaded, it is only accepted if this event counter is equal
-+ *    to, or one greater than, the event counter in the superblock.
-+ * (2) This event counter is updated when the other one is *if*and*only*if* the
-+ *    array is not degraded.  As bits are not cleared when the array is degraded,
-+ *    this represents the last time that any bits were cleared.
-+ *    If a device is being added that has an event count with this value or
-+ *    higher, it is accepted as conforming to the bitmap.
-+ * (3)This is the number of sectors represented by the bitmap, and is the range that
-+ *    resync happens across.  For raid1 and raid5/6 it is the size of individual
-+ *    devices.  For raid10 it is the size of the array.
-+ */
-+
- #endif
--- 
-2.48.1
+For (3) and (4) it is probably a good idea to engage the Rust folks in:
+https://github.com/rust-lang/rust/issues/60705
 
+Having broken Rust demangling seems like a high priority issue for the
+perf tool.
+
+[snip]
+> On Wed, Jan 29, 2025, at 11:30 AM, Ian Rogers wrote:
+> > +char *rust_v0_bdemangle_sym(const char *str)
+>
+> Typo? Extra `b`.
+
+Ack. Will fix it but let's figure out if this code is even a plan.
+
+[snip[
+> > +     if (demangled) {
+> > +             /* Legacy rust demangling input is already C++ demangled.=
+ */
+> > +             if (rust_is_mangled(demangled))
+> > +                     rust_demangle_sym(demangled);
+>
+> In util/demangle-rust.c, I see:
+>
+>      * INPUT:
+>      *     sym: symbol that has been through BFD-demangling
+>
+> Perhaps double check that cxxabi is sufficient and update the comment?
+
+I've not tested this change beyond making it pass the tests the change
+contains, that are based on the v0 specification's examples. I believe
+this/legacy may be working as most C++ implies libstdc++ which I
+believe uses libiberty in cxxabi, so BFD demangling. Given the
+popularity of libstdc++ I imagine things like LLVM's libcxx will try
+to be compatible. Perhaps if there are examples of legacy Rust symbols
+we can add a test?
+
+Thanks,
+Ian
