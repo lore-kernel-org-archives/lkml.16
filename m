@@ -1,80 +1,122 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36AB20AF86
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9E820AF86;
+	Mon,  3 Feb 2025 14:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593578; cv=none; b=Hd4E29IQThUKn88P0IHYc2McsT4bnUMssBaVvtqDSlDJ1raf1AhBZPJdyEw6RJVqujVMPFaBi+TRIjrWpY+IAOEt+BjqVWh5XwHUxYElY/s5btelKkR0R7jclkFe6Wtsyp3GE19kwf1rS881T0zCBjQmV6VyYLTUFafKFMME4eE=
+	t=1738593612; cv=none; b=NtQuEzYK7TKR8dutAm80HDI5Rk3uMuqQF9OWfO6ZbCPf1WZABbdSpf0wMcQ4B15yiSo6u1hZcWMEMXC1xDs7WrJoXx4jDcBT2BaMV11U4+4PVM9UxHLtVyFKHLB4FTpM2ruVpd1tuPI9iPV7fqBT/q0fgKXx5AA7YC+ZtQcYh/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593578; c=relaxed/simple;
-	bh=xPh2fAesUlGfAMD/r/2pwd0PWgmES4VNbLPCCRgkqS4=;
+	s=arc-20240116; t=1738593612; c=relaxed/simple;
+	bh=sKH1aXnuxEee7MJVvCT5D3JVKBFIsXQD/A+depRFcNQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tS9+UjY+SWNE7G2zibiGoHyur9kliwJ3IoquiIWaEo1H+KLq7DcUBvfUdmlzUYarZ+6QVV5cG+dKuWmBYAfqpSytnY6orrT465ILC23wsscEHeqUX8NsSsdW0Gy/k5UrN3XpeWqQI00p+L5xpspUqzAwDFk6jfKkQLW9hbF3lc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gNJgPO5c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AmX7LDsR; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=k3SpKxcX6Xb+wU8sAfc+6+rQX2wCpRKe/cDZb3xb4+fvWg7INxm1fOYuhcGxl5ESOyDE8rcIYVGCBs/TN9I+FFV+BTzsRLmPxSuQNMVlkwHTyiWiQIzmrtpiniIRADpPRy9FzbbDpEe9rnRYfrmJV8/YV0kbyNcsD2VdwEc1pSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c8UWC+OS; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gNJgPO5c";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AmX7LDsR"
-Date: Mon, 3 Feb 2025 15:39:33 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738593575;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xPh2fAesUlGfAMD/r/2pwd0PWgmES4VNbLPCCRgkqS4=;
-	b=gNJgPO5cQV5xOM1mv2RPF+wPqQKsnCNl5AhgfOxNC/SZ2ZsuwN2Mehfj1QP9prSTjQGRhL
-	dmOYJfe1bsUshDU1boPQGWJOZPmYbbkVaN85or9pA8+rBb4M2xJWK2LN9mymLArVlauGcF
-	FJf6SakVwCVeaNRHAGhSdb+CmHuUAxivgA7WnjtTMrtCkIRs1hMMMMnJPZa5KFF+lAUngG
-	IINVVPuMDmihks9gvtpWevWlfhjqywyfF03Y9f9qcF59VAtBybkVSb8wFoLWBUzVU5suXz
-	1jUQpSBR9VbC6zCmjbfLjiMzxBr2Zt3x5zO+Y5JZZE8meekTBpdQ502xfE/CxA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738593575;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xPh2fAesUlGfAMD/r/2pwd0PWgmES4VNbLPCCRgkqS4=;
-	b=AmX7LDsRpGAWY9F7iasB8l7HXXDSEafMd5n2CfisNy8HbnM6A1Cra8JBahlCkFQw+3JFwX
-	sakyCD9HylMtsuBw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	Ben Segall <bsegall@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v2 0/9] preempt: Add a generic function to return the
- preemption string.
-Message-ID: <20250203143933.VJphcnTv@linutronix.de>
-References: <20250203141632.440554-1-bigeasy@linutronix.de>
- <20250203142505.GH7145@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c8UWC+OS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738593611; x=1770129611;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sKH1aXnuxEee7MJVvCT5D3JVKBFIsXQD/A+depRFcNQ=;
+  b=c8UWC+OSSpMlmvxpbswY3PAGjBScSWR9m+tmUoIJEtWyiGz1KMh7BlgD
+   9Qxll5zkhsBXr4IGXEZAbucHHJhg1DTsivYeG7LRhjzNl5V5JV8A0a+3C
+   5nWigJb31KIFFnh63PQbQVnAUDRLUPHTK4rthzuJxKaOVYQ4bTFw+3L5f
+   JTXLLu00H8hv9Py/SwBtBVDTdns8LYD/FJ95TaPDbLHoCwMLStHL3okAI
+   T3R3XBE9tnXJO+HpGEXKeZ80+oPnkQOTIbl/dGiDAAmo3THtjKKFJUzCI
+   4IRPznCuFD2et3smuh1wiuB/NtoHO/hBXHgVY1wYST58oEG8BXYhOUV8J
+   Q==;
+X-CSE-ConnectionGUID: QxluUkdhS+6NN2LX1fdnzw==
+X-CSE-MsgGUID: RAVX1RunR1KYC/IM2fZFfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="38975367"
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="38975367"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 06:40:09 -0800
+X-CSE-ConnectionGUID: mg8IU7pXTkag/HqWfpmahw==
+X-CSE-MsgGUID: zSJ92AH8RA2NhIW4rUAh3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="133549091"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by fmviesa002.fm.intel.com with SMTP; 03 Feb 2025 06:40:06 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 03 Feb 2025 16:40:05 +0200
+Date: Mon, 3 Feb 2025 16:40:05 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Elson Roy Serrao <quic_eserrao@quicinc.com>
+Cc: gregkh@linuxfoundation.org, xu.yang_2@nxp.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] usb: roles: cache usb roles received during switch
+ registration
+Message-ID: <Z6DVRbmwB859RlCt@kuha.fi.intel.com>
+References: <20250127230715.6142-1-quic_eserrao@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250203142505.GH7145@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250127230715.6142-1-quic_eserrao@quicinc.com>
 
-On 2025-02-03 15:25:05 [+0100], Peter Zijlstra wrote:
-> Works for me; how do we want to go about merging this?
+On Mon, Jan 27, 2025 at 03:07:15PM -0800, Elson Roy Serrao wrote:
+> The role switch registration and set_role() can happen in parallel as they
+> are invoked independent of each other. There is a possibility that a driver
+> might spend significant amount of time in usb_role_switch_register() API
+> due to the presence of time intensive operations like component_add()
+> which operate under common mutex. This leads to a time window after
+> allocating the switch and before setting the registered flag where the set
+> role notifications are dropped. Below timeline summarizes this behavior
+> 
+> Thread1				|	Thread2
+> usb_role_switch_register()	|
+> 	|			|
+> 	---> allocate switch	|
+> 	|			|
+> 	---> component_add()	|	usb_role_switch_set_role()
+> 	|			|	|
+> 	|			|	--> Drop role notifications
+> 	|			|	    since sw->registered
+> 	|			|	    flag is not set.
+> 	|			|
+> 	--->Set registered flag.|
+> 
+> To avoid this, cache the last role received and set it once the switch
+> registration is complete. Since we are now caching the roles based on
+> registered flag, protect this flag with the switch mutex.
 
-Thank you.
+Instead, why not just mark the switch registered from the get-go?
 
-> I can take it through the sched tree I suppose, once the various arch
-> people have blessed it.
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index c58a12c147f4..cf38be82d397 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -387,6 +387,8 @@ usb_role_switch_register(struct device *parent,
+        dev_set_name(&sw->dev, "%s-role-switch",
+                     desc->name ? desc->name : dev_name(parent));
+ 
++       sw->registered = true;
++
+        ret = device_register(&sw->dev);
+        if (ret) {
+                put_device(&sw->dev);
+@@ -399,8 +401,6 @@ usb_role_switch_register(struct device *parent,
+                        dev_warn(&sw->dev, "failed to add component\n");
+        }
+ 
+-       sw->registered = true;
+-
+        /* TODO: Symlinks for the host port and the device controller. */
+ 
+        return sw;
 
-I guess this is the easiest part. I would ping those who did not ACK
-their bits next week.
 
-Sebastian
+thanks,
+
+-- 
+heikki
