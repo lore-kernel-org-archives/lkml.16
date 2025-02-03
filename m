@@ -1,171 +1,129 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB31199236;
-	Mon,  3 Feb 2025 18:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9A8194AEC;
+	Mon,  3 Feb 2025 18:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738608759; cv=none; b=acCwMswV0z150v97mPHKJmj0Hg+57TnIhWF/WiBlpMB7tlxc7KRXblpCH8CT8cUhIaYi6vJJRTV82Fz5axHJGI6by+emAp4/j6lWaMDGh0PcK8jPVTKTKAvq07g8wrN07Ax4GR/TPgdwC1yNXuZnvZZHsDSz7IhxHABuDlo6fkM=
+	t=1738608769; cv=none; b=Ehd01ywIF6P7QlG+xxVPWwbN48J4Wi/EZzuiaY9/A/ldJtM9+MePTVP63CkT/7QCaV99A/ZjWN2W6vdJvvejU0x++/4aEU3JCYjlBGbjrRNQ5BojR1+gQHp8TqcJOYwhUQgUVRSwdma6LJaxK8LkppqXbDmUAQ6ToSgUQ2MUZws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738608759; c=relaxed/simple;
-	bh=OgHx0zkCX1alf5bPqXKjWg83bR9h4Ptf5GXWQnGi8OA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cd/B84e19yOuS5AOnO67//KKnogQ1uSKU6eNBHRdjHu5wz+rG5fIcSt/y1kVzH7VFUZrq9fvTWFYhJ7Pv+jbohESjXDJTbDwZWvjSkv6EnNUYfPh2OAPAwo9+SCNw1OQ/3AC84lG9xm3yyNo5yrRnt7JAgyF8wM4l5ySDgUNumA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=UmwfYHPz; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1738608769; c=relaxed/simple;
+	bh=cp8ezIVsa4VCsFDICxF3SyrDQWm0vPmWgmthTsoKoqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=SIeuMQOhLrbgT8/8cGa9zAXJf3rfiPqWDVNrlGWlHgbNVLmiIkLHLVlKJVLON7Ba1YGbugO+vd+3EEIZwqvCb0Xf5AUZPHKiy6OTDLO/qZeClJcytaLXt7aYyoduXAqkNFy8WoR8ihVZ0hOyu4Hd8FnV3csf+ANETssi/Y1pPI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLhSkgfr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="UmwfYHPz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=ifwKiXeYOpXh/sYAVyBEyCy4Utga0cjaiv+2qLLScEs=; b=UmwfYHPzSGz4rgYf
-	PPvXF8CXv504IIO10DnquUIHkJifCQKKv/XlR94rzIhhLdPZpVGgjG7yxhq68lUdhK0ZDDgTNqCpX
-	FRt4WHMsasiXhU8c6m93TU6RcrRtcu2Bw3oInxRJr4E7AAKyWdrU3GtKTcgTteRXbPfHsC2zg4kHh
-	CWh3EcMYYhKCYj3z9xXWy9kmOaIx7IOU0eNaDRyr6pr0WmkX+BWulw5EIqBd6NL5Cjxau73MFuNqB
-	mV48zSkTo5AjYSebEj+wvzrh+L5b3/dSNDAP43HUfxmxfulNr50qnn01EmWPMqbdtv3ChPDT8whvI
-	1ZjnbRn4Nu5D/4MM/w==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1tf1Yc-00DLt2-1b;
-	Mon, 03 Feb 2025 18:52:30 +0000
-From: linux@treblig.org
-To: tariqt@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	yishaih@nvidia.com
-Cc: netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next] mlx4: Remove unused functions
-Date: Mon,  3 Feb 2025 18:52:29 +0000
-Message-ID: <20250203185229.204279-1-linux@treblig.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLhSkgfr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7286AC4CED2;
+	Mon,  3 Feb 2025 18:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738608768;
+	bh=cp8ezIVsa4VCsFDICxF3SyrDQWm0vPmWgmthTsoKoqY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=sLhSkgfrtiXM1d6scqupsldIN28bx0T9WxyPXfHVo8A0P9qumifaHA8ihb8wOmVW/
+	 1B9v11/JtaUgT+dJGbOGTr/1gn+6qbtl9NnxCBwzjSoWBh0Uh3xhgO6GUgHFHd9x6z
+	 9eAGB33aOGE2z2GmO4QOBh/YZhLxRQKa4R9q5fHpT1S/M5BZhwxFZjbrgnnUB5D1H+
+	 tyV/Dj5wFHfMY4zuEYR71SaN1vCa3bNp/LPdDqcd1fMxaJXjY1lNInCsO6jjwM1Ia9
+	 OgaFs8I2iicsAKZ2HsG8xcDp4G7eZBDYuMYUGEtIj06JlRFSWOpYhECw3427VyhAVP
+	 QWWr9nrS2c2qA==
+Date: Mon, 3 Feb 2025 12:52:46 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
+Cc: Jianjun Wang =?utf-8?B?KOeOi+W7uuWGmyk=?= <Jianjun.Wang@mediatek.com>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Ryder Lee <Ryder.Lee@mediatek.com>
+Subject: Re: [PATCH] PCI: mediatek: Remove the usage of virt_to_phys
+Message-ID: <20250203185246.GA794570@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250203175049.idxegqqsfwf4dmvq@thinkpad>
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Mon, Feb 03, 2025 at 11:20:49PM +0530, manivannan.sadhasivam@linaro.org wrote:
+> On Sat, Feb 01, 2025 at 11:07:40AM -0600, Bjorn Helgaas wrote:
+> > On Sat, Feb 01, 2025 at 09:54:16PM +0530, manivannan.sadhasivam@linaro.org wrote:
+> > > On Mon, Jan 27, 2025 at 06:41:50PM -0600, Bjorn Helgaas wrote:
+> > > > On Thu, Jan 23, 2025 at 08:11:19AM +0000, Jianjun Wang (王建军) wrote:
+> > > > > On Wed, 2025-01-15 at 23:01 +0530, Manivannan Sadhasivam wrote:
+> > > > > > On Tue, Jan 07, 2025 at 01:20:58PM +0800, Jianjun Wang wrote:
+> > > > > > > Remove the usage of virt_to_phys, as it will cause sparse warnings
+> > > > > > > when
+> > > > > > > building on some platforms.
+> > 
+> > > > > > >       snprintf(name, sizeof(name), "port%d", slot);
+> > > > > > > -     port->base = devm_platform_ioremap_resource_byname(pdev,
+> > > > > > > name);
+> > > > > > > +     regs = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > > > > > > name);
+> > > > > > > +     if (!regs)
+> > > > > > > +             return -EINVAL;
+> > > > > > > +
+> > > > > > > +     port->base = devm_ioremap_resource(dev, regs);
+> > > > > > >       if (IS_ERR(port->base)) {
+> > > > > > >               dev_err(dev, "failed to map port%d base\n", slot);
+> > > > > > >               return PTR_ERR(port->base);
+> > > > > > >       }
+> > > > > > > 
+> > > > > > > +     port->msg_addr = regs->start + PCIE_MSI_VECTOR;
+> > > > 
+> > > > I think this still assumes that a CPU physical address
+> > > > (regs->start) is the same as the PCI bus address used for MSI, so
+> > > > this doesn't seem like the right solution to me.
 
-The last use of mlx4_find_cached_mac() was removed in 2014 by
-commit 2f5bb473681b ("mlx4: Add ref counting to port MAC table for RoCE")
+Apart from the question of what type should be used, what do you think
+about this part?  I don't think we should assume that the address on
+PCI is identical to the CPU physical address.  IOMMUs and (I assume)
+iATUs can make them different, can't they?  If so, this looks like an
+implicit assumption that PCI bus==CPU physical, and I think we should
+make that a little more explicit somehow.
 
-mlx4_zone_free_entries() was added in 2014 by
-commit 7a89399ffad7 ("net/mlx4: Add mlx4_bitmap zone allocator")
-but hasn't been used. (The _unique version is used)
+> > > > Apparently they happen to be the same on this platform because (I
+> > > > assume) MSIs actually do work, but it's not a good pattern for
+> > > > drivers to copy.  I think what we really need is a dma_addr_t, and
+> > > > I think there are one or two PCI controller drivers that do that.
+> > > 
+> > > I don't see why we would need 'dma_addr_t' here. The MSI address is
+> > > a static physical address on this platform and that is not a DMA
+> > > address. Other drivers can *only* copy this pattern if they also
+> > > have the physical address allocated for MSI.
+> > 
+> > Isn't an MSI on PCI just a DMA write to a certain address?
+> 
+> That's from the endpoint prespective when it triggers MSI.
+> 
+> > My assumption is that if you put an analyzer on that link, an MSI
+> > from a device would be structurally indistinguishable from a DMA
+> > write from the device.  The MSI uses a different address, but
+> > doesn't it use the same size and kind of address, at least from
+> > the PCIe protocol perspective?
+> 
+> Yeah, but in this case the address allocated to MSI belongs to a
+> hardcoded region in the host memory (not allocated by the DMA APIs
+> which will have the region attributed as DMA capable). So it doesn't
+> belong to the DMA domain, and we cannot use 'dma_addr_t'.
 
-Remove them.
+Doesn't .irq_compose_msi_msg() build the Message Address/Data pair
+that is programmed into a device's MSI Capability or MSI-X Table?
+The device will eventually use that to initiate a DMA write to that
+address.
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
- drivers/net/ethernet/mellanox/mlx4/alloc.c | 22 ----------------------
- drivers/net/ethernet/mellanox/mlx4/mlx4.h  |  6 ------
- drivers/net/ethernet/mellanox/mlx4/port.c  | 20 --------------------
- include/linux/mlx4/device.h                |  1 -
- 4 files changed, 49 deletions(-)
+In that sense, I would argue that the Message Address does belong to
+the DMA domain.  I don't think the size of the address (32 vs 64 bits)
+is determined by the CPU physical address size (phys_addr_t); it's
+determined by the size of DMA addresses.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/alloc.c b/drivers/net/ethernet/mellanox/mlx4/alloc.c
-index b330020dc0d6..598df63518c5 100644
---- a/drivers/net/ethernet/mellanox/mlx4/alloc.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/alloc.c
-@@ -526,28 +526,6 @@ u32 mlx4_zone_alloc_entries(struct mlx4_zone_allocator *zones, u32 uid, int coun
- 	return res;
- }
- 
--u32 mlx4_zone_free_entries(struct mlx4_zone_allocator *zones, u32 uid, u32 obj, u32 count)
--{
--	struct mlx4_zone_entry *zone;
--	int res = 0;
--
--	spin_lock(&zones->lock);
--
--	zone = __mlx4_find_zone_by_uid(zones, uid);
--
--	if (NULL == zone) {
--		res = -1;
--		goto out;
--	}
--
--	__mlx4_free_from_zone(zone, obj, count);
--
--out:
--	spin_unlock(&zones->lock);
--
--	return res;
--}
--
- u32 mlx4_zone_free_entries_unique(struct mlx4_zone_allocator *zones, u32 obj, u32 count)
- {
- 	struct mlx4_zone_entry *zone;
-diff --git a/drivers/net/ethernet/mellanox/mlx4/mlx4.h b/drivers/net/ethernet/mellanox/mlx4/mlx4.h
-index d7d856d1758a..b213094ea30f 100644
---- a/drivers/net/ethernet/mellanox/mlx4/mlx4.h
-+++ b/drivers/net/ethernet/mellanox/mlx4/mlx4.h
-@@ -1478,12 +1478,6 @@ void mlx4_zone_allocator_destroy(struct mlx4_zone_allocator *zone_alloc);
- u32 mlx4_zone_alloc_entries(struct mlx4_zone_allocator *zones, u32 uid, int count,
- 			    int align, u32 skip_mask, u32 *puid);
- 
--/* Free <count> objects, start from <obj> of the uid <uid> from zone_allocator
-- * <zones>.
-- */
--u32 mlx4_zone_free_entries(struct mlx4_zone_allocator *zones,
--			   u32 uid, u32 obj, u32 count);
--
- /* If <zones> was allocated with MLX4_ZONE_ALLOC_FLAGS_NO_OVERLAP, instead of
-  * specifying the uid when freeing an object, zone allocator could figure it by
-  * itself. Other parameters are similar to mlx4_zone_free.
-diff --git a/drivers/net/ethernet/mellanox/mlx4/port.c b/drivers/net/ethernet/mellanox/mlx4/port.c
-index 4e43f4a7d246..e3d0b13c1610 100644
---- a/drivers/net/ethernet/mellanox/mlx4/port.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/port.c
-@@ -147,26 +147,6 @@ static int mlx4_set_port_mac_table(struct mlx4_dev *dev, u8 port,
- 	return err;
- }
- 
--int mlx4_find_cached_mac(struct mlx4_dev *dev, u8 port, u64 mac, int *idx)
--{
--	struct mlx4_port_info *info = &mlx4_priv(dev)->port[port];
--	struct mlx4_mac_table *table = &info->mac_table;
--	int i;
--
--	for (i = 0; i < MLX4_MAX_MAC_NUM; i++) {
--		if (!table->refs[i])
--			continue;
--
--		if (mac == (MLX4_MAC_MASK & be64_to_cpu(table->entries[i]))) {
--			*idx = i;
--			return 0;
--		}
--	}
--
--	return -ENOENT;
--}
--EXPORT_SYMBOL_GPL(mlx4_find_cached_mac);
--
- static bool mlx4_need_mf_bond(struct mlx4_dev *dev)
- {
- 	int i, num_eth_ports = 0;
-diff --git a/include/linux/mlx4/device.h b/include/linux/mlx4/device.h
-index 27f42f713c89..87edb7a8173b 100644
---- a/include/linux/mlx4/device.h
-+++ b/include/linux/mlx4/device.h
-@@ -1415,7 +1415,6 @@ int mlx4_get_is_vlan_offload_disabled(struct mlx4_dev *dev, u8 port,
- 				      bool *vlan_offload_disabled);
- void mlx4_handle_eth_header_mcast_prio(struct mlx4_net_trans_rule_hw_ctrl *ctrl,
- 				       struct _rule_hw *eth_header);
--int mlx4_find_cached_mac(struct mlx4_dev *dev, u8 port, u64 mac, int *idx);
- int mlx4_find_cached_vlan(struct mlx4_dev *dev, u8 port, u16 vid, int *idx);
- int mlx4_register_vlan(struct mlx4_dev *dev, u8 port, u16 vlan, int *index);
- void mlx4_unregister_vlan(struct mlx4_dev *dev, u8 port, u16 vlan);
--- 
-2.48.1
-
+Bjorn
