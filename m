@@ -1,608 +1,422 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0287A1DF27D;
-	Mon,  3 Feb 2025 11:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08B5202F9F;
+	Mon,  3 Feb 2025 11:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738583027; cv=none; b=o6uWMu0l5XTYhLSXAzY63SUjqvmEHVzQfIQq6e1rVZEk1QTBeG11cE7kQ7Cc5l0MKpVdU6DiW2RnDNEp0WNB/LwoimDI/+NJN7GagbzzAuFh3K3ITfoYLZtuIEDfpmXAUXw0jUGQHz7WIbBh9X6CFUNLnzzx72wnoz8IGx6AdBg=
+	t=1738583055; cv=none; b=Qo3eXbPFWbWLG0px0l//GeMvCoUgsy5b1WESwFtIYkpyV/9f6+54wq/xbjCErxK6ESlflKv0NmgkT/qjg+i85V6ObvLmmyyMiTUVSF9a+kmz/LTKV85oZO66xBSwvYRiT870rX0yir6k1Kb2+OhHabKi0vyTgtSMYBTqXqu4jO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738583027; c=relaxed/simple;
-	bh=KoR2qOJvTrWLWPSQe+xMHlxveCMgAyObFDSO11iVdag=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=XjiaytluHdzfcUS8fLxI43ABkTwqPdEiq4IOMNCQB/NW+txI+/jUbSvvuI6HnEN5DEIxxfF9eg8k7NmbchBXN/DPFZTSfAqrkMq08xKSiLiRaTtsU5EAFRJ+byr3PqOcX7pC1ziWVQo6cAQ8NZwvOy28yAZPk9lgaaFv0JItGls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Vg46NJjH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=yuRmUb4A; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1738583055; c=relaxed/simple;
+	bh=6tzJrD5mSzuNYxORYax8OVYGxYUSWLkSUsidhKKgbNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hKtbgsWIM+gH4dMJA1qDvpPZ1NMm3j3X6wz11jxvke6vdDtQIeu54s6McORmlnPE+pPATp3Nt1YkuGVkWATSgdk/NaSY1iNzn0QFgPrMrKZG9nwXiRINpyaJv9Cyo8cCMl9rigRQlyXvLd1vpHaW7f6K02gdZwbkNTaTmqMCe0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XAfUhuiF; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Vg46NJjH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yuRmUb4A"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id F1ADA11400B1;
-	Mon,  3 Feb 2025 06:43:43 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Mon, 03 Feb 2025 06:43:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738583023;
-	 x=1738669423; bh=xqhqW5gqTtDYnBOA3l3UAKIyXJXtbnGDKov4aqYJRdg=; b=
-	Vg46NJjHLHL+2uVwH2obvxIxiIoTJuwaVLqtGjOX+TnNdjaYqCYCBHTRKRVmdgDA
-	ASLNFGSfeP2vq/t53nGxFe1P2WPQwajYyD2l6UTOPYRNT3PWX/TBl+00YOK1+oee
-	x7OUU75RZlKVGbhgh8GTWuDGt3j+VB6gJfjacwRtwqi2PIu9TfnAWRf7wmBhM1BD
-	iho4emCg3YyBY7TiDomlVzwVX0C3vTJrdpRO4GbC/NuxZP8t0yzq0QNNWESX3P5l
-	TLaS+3cE7PByahDBHzj4eNO88lfd6YYgbnJgEhdfyQPHUbeu3djtqPkhQc0sx7Oi
-	+meqonqq1DKoEynpRdR1ng==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738583023; x=
-	1738669423; bh=xqhqW5gqTtDYnBOA3l3UAKIyXJXtbnGDKov4aqYJRdg=; b=y
-	uRmUb4AeDL0gA5Qic0C1n4mGEQu/TgvHlMiX0MtaDyPBylNjEptGDIjWKhgNTwle
-	RTBiKW1t1qnYUxMoyqc2AbkrmqSLi053SDIvXtadCoJw2lg/mWSJWCWRhqKu5Sez
-	lIo+oQEKNjFdhQ2GwTrozlp8SSzOF/h8L0Nb4nV3w73Urp5DoFBl7K21NhhItW3z
-	7yHwUrk87glvI5JVaeKKSdQ44HPTopcT2wSEQxmI6C+WVmYM2yOrXZ4wUq2GwLl2
-	v6I1gcTbrXo3OFbiROCHZmnc8amwds+idxfxJ6a1HYxOR/rpc9LWr78P7S9kf+5S
-	AP2Ydaxe+azrSLLncOriw==
-X-ME-Sender: <xms:76ugZy5erm3z9pmvUpFmmCG5ifrOHhHL6qe4wUFZ7yaiW5mUnzZvEw>
-    <xme:76ugZ76JOVp7eTZgTJkJblKK7MecOHiX52Tgy0pUJGafZiFxWiImlVnDBl3lJZTQd
-    EheCawOfcnDmIUs5IM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeehudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
-    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeej
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohepthhhohhmrghsrdifvghishhsshgthhhuhheslhhinhhuthhrohhn
-    ihigrdguvgdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrd
-    horhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidr
-    ihhnthgvlhdrtghomhdprhgtphhtthhopehprghlmhgvrhesrhhivhhoshhinhgtrdgtoh
-    hmpdhrtghpthhtoheplhhinhhugidqrghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hg
-X-ME-Proxy: <xmx:76ugZxeyyNIKoCDpKGMHpl3Uz6cCFDME61l8FPQPqm9qDXLKeo4PHQ>
-    <xmx:76ugZ_Lpi3O816d0T96KAl-Tf0vWwKiDFOUp3qS2V7liysxk0nX2gQ>
-    <xmx:76ugZ2LMHarauIloBEUU3Q2xA3BBT5L-VDtGy4lNqJrikZZQxC1ggA>
-    <xmx:76ugZwyujhvkcm-LxxFsWIKd0_EgmJlXoMx13AWjWC0N5olzqHxa1Q>
-    <xmx:76ugZ--qR8406x2GRTqcCBSFAppoch57mk_LS3rIWMIR3grzc0TjF0Cj>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 16FE82220072; Mon,  3 Feb 2025 06:43:43 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAfUhuiF"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e2460c6f05so5114016d6.3;
+        Mon, 03 Feb 2025 03:44:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738583053; x=1739187853; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QDcJOcAQ7/z4bSXnl3Bhpx8hTztOtzMmlwKWRyxLYnI=;
+        b=XAfUhuiFQ5YhgTx8DReo0WcacG9In1zJuKdwcFFOfu0MuJRm2rqx4n8ZtYkz82BcaO
+         jeda0Vjtc6sMXECrMKyTxntAbjgFC3Bpqv565JhqoHLsmEmysuZhtUaeW/mfTdmcKbLQ
+         Bkuou3dGn+PIoNMKORxbwLaT4PmAc/fL2hGR4ukVzCQvN9GNqMBjSipnqlzpHKy+tEpq
+         g2kJOtaIqk0C6huGHB3Jc6wBDBQHKPGYURVm9e0MmxlUc9bapWiB7hiV5I4B/PuWjgPD
+         3vv9WbnBDJLwAEjf4DRy6F3EmHrxBP2YjVPnAcY/lS+cbXuN5TwFOmAhksESzzIH5enx
+         qZcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738583053; x=1739187853;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QDcJOcAQ7/z4bSXnl3Bhpx8hTztOtzMmlwKWRyxLYnI=;
+        b=SuiLHjg4yppAHqraioau2QpfkxgkmPcTTuPvrnvhWsMiYY9IXBa6+oY0x9I9jS1FuG
+         PhYQAOBpqsEErWkCjpVEtPV+bhSc4O3SsPUD1zh1UDuPag1U3PhL945CZvI4M6Z+iNzA
+         mb12eUlhoAkvhHHLFG9u9Wh50Cu1jBy4wSKCg3GHbeCTDncsJQixQIXeaHI/QyrRXk3r
+         wSod/PLCjU8Qp41D1TJMtJyHAIv9KgLp+ggvDUcp0uTRgXa+FZCetDYUiY/EAA9qzkwR
+         kfNbzsUJaKJmbGEmbA/vw/KjMF0B5s5P1jMvN3YPXetDfYId2yQkyHcNJCkGUcPDIhKh
+         q6OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5UeR/7giwEbDZifhQZi+h3pwbDMNo7GC3vbUEytW2jhuG3dYrl/mB9AWP5aPgkaKwuCFLfBPh0mD5/lky@vger.kernel.org, AJvYcCVbd2Fcjv/xgdWf/wFqIbsXs0G3mq94scK1UOoEjNuaV2l7jpjvAma/GYxu96cfQpjSXWLvDPT4bbjT@vger.kernel.org, AJvYcCVlXM9m2YaQ63HlARFnuJnDQbuGmudVvwevrDZSpA6sPpqzO5jHIzDcoV/LkWcPaSzS2OCDF/8nU1L+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNSSBfApQZKpDtSch65qayXii/HMEywb8f4k/zl+l+sEIx/Vh2
+	TOmnRvy0/ZgVE9ZqG9upgaYqdKuxU904yjof/xj6UL1jvb2amFAd
+X-Gm-Gg: ASbGncsE1XGVKy+a5eGBZmRjzhbZQKQoDziXSHrmdqIK43gRS4TjYDVkhh5Mr2uflUA
+	R5bI1/N0WVRU7wJW3kSFjG+zuKOuzs5lOdttxWcZDEg9PxVxz/pwlwd938A8yZWT5h6Cpv8u2dh
+	uBy06+/sIfqQg2KuTBf+nUMJTXMGjOZEt8vfWv6vXN9oai4tGfj3fxXTqMlpE85NGZDW7nJtYpH
+	RXNZ74eSSzYAOglt+gND2xiQhMvEE0KE/mc8+SHF5P1P0TSEbUsww0U8yKbQ5QNivpxg7+7EkJv
+	0RbcjAbUjz5Vq6Sw8ur+0HvHeQlb5nsHarmb
+X-Google-Smtp-Source: AGHT+IFxYzzBLOUEW8haIBn/YXFKvo7N65xF7zaR9VokPcT1gQi18uX90fqrOTDQSGRchkB1YnWHIg==
+X-Received: by 2002:a05:620a:248e:b0:7be:3d23:c2f5 with SMTP id af79cd13be357-7bffccdfc5fmr1038653685a.4.1738583052449;
+        Mon, 03 Feb 2025 03:44:12 -0800 (PST)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a905581sm518924385a.77.2025.02.03.03.44.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 03:44:11 -0800 (PST)
+Date: Mon, 3 Feb 2025 08:44:06 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
+	648eedbee0e7702eda10034531de4611597cd9f2.camel@gmail.com,
+	David Lechner <dlechner@baylibre.com>,
+	Jonathan Santos <Jonathan.Santos@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v2 07/16] iio: adc: ad7768-1: convert driver to use regmap
+Message-ID: <Z6CsBsDLdiWCrQwk@JSANTO12-L01.ad.analog.com>
+Reply-To: 20250130163234.000021e9@huawei.com
+References: <cover.1737985435.git.Jonathan.Santos@analog.com>
+ <0968f9cfc55c5ac80492a88bbe95fc8ff7208fa5.1737985435.git.Jonathan.Santos@analog.com>
+ <9b8204f2-107a-477e-a822-c1649af12d02@baylibre.com>
+ <648eedbee0e7702eda10034531de4611597cd9f2.camel@gmail.com>
+ <Z5jtx6QaSMxBXoyk@JSANTO12-L01.ad.analog.com>
+ <80d444cbed3d30cf24b4d40e129caf6b1ebe358d.camel@gmail.com>
+ <20250130163234.000021e9@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 03 Feb 2025 12:43:01 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: "Kees Cook" <kees@kernel.org>, "Palmer Dabbelt" <palmer@rivosinc.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Message-Id: <4d4ac954-16c4-4c85-995d-c7bb1e15b0ce@app.fastmail.com>
-In-Reply-To: 
- <20250203092335-3cb21dd4-5276-4ac5-bd8d-7db6662f18f5@linutronix.de>
-References: <20250203-um-io-v1-1-822af81bcdac@linutronix.de>
- <15b87c5f-92de-4201-9c67-a93d5dcefe68@app.fastmail.com>
- <20250203092335-3cb21dd4-5276-4ac5-bd8d-7db6662f18f5@linutronix.de>
-Subject: Re: [PATCH] iomap: Fix -Wmissing-prototypes on UM
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250130163234.000021e9@huawei.com>
 
-On Mon, Feb 3, 2025, at 09:25, Thomas Wei=C3=9Fschuh wrote:
-> On Mon, Feb 03, 2025 at 09:18:33AM +0100, Arnd Bergmann wrote:
->> I have not tried it yet, but I suspect this is not the correct
->> fix here. Unfortunately the indirect header inclusions in this
->> file are way too complicated with corner cases in various
->> architectures. How much testing have you given your patch
->> across other targets? I think the last time we tried to address
->> it, we broke mips or parisc.
->
-> It was build-tested on 0day.
-> I also gave it some light boot testing on kunit/qemu.
-> (Neither on mips or parisc)
+On 01/30, Jonathan Cameron wrote:
+> On Tue, 28 Jan 2025 15:09:36 +0000
+> Nuno Sá <noname.nuno@gmail.com> wrote:
+> 
+> > On Tue, 2025-01-28 at 11:46 -0300, Jonathan Santos wrote:
+> > > On 01/28, Nuno Sá wrote:  
+> > > > On Mon, 2025-01-27 at 19:29 -0600, David Lechner wrote:  
+> > > > > On 1/27/25 9:12 AM, Jonathan Santos wrote:  
+> > > > > > Convert the AD7768-1 driver to use the regmap API for register
+> > > > > > access. This change simplifies and standardizes register interactions,
+> > > > > > reducing code duplication and improving maintainability.
+> > > > > > 
+> > > > > > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> > > > > > ---
+> > > > > > v2 Changes:
+> > > > > > * New patch in v2.
+> > > > > > ---
+> > > > > >  drivers/iio/adc/ad7768-1.c | 82 +++++++++++++++++++++++++++-----------
+> > > > > >  1 file changed, 58 insertions(+), 24 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+> > > > > > index 95ba89435652..fb8d6fae5f8a 100644
+> > > > > > --- a/drivers/iio/adc/ad7768-1.c
+> > > > > > +++ b/drivers/iio/adc/ad7768-1.c
+> > > > > > @@ -12,6 +12,7 @@
+> > > > > >  #include <linux/gpio/consumer.h>
+> > > > > >  #include <linux/kernel.h>
+> > > > > >  #include <linux/module.h>
+> > > > > > +#include <linux/regmap.h>
+> > > > > >  #include <linux/regulator/consumer.h>
+> > > > > >  #include <linux/sysfs.h>
+> > > > > >  #include <linux/spi/spi.h>
+> > > > > > @@ -153,6 +154,7 @@ static const struct iio_chan_spec ad7768_channels[]
+> > > > > > = {
+> > > > > >  
+> > > > > >  struct ad7768_state {
+> > > > > >  	struct spi_device *spi;
+> > > > > > +	struct regmap *regmap;
+> > > > > >  	struct regulator *vref;
+> > > > > >  	struct mutex lock;
+> > > > > >  	struct clk *mclk;
+> > > > > > @@ -176,12 +178,17 @@ struct ad7768_state {
+> > > > > >  	} data __aligned(IIO_DMA_MINALIGN);
+> > > > > >  };
+> > > > > >  
+> > > > > > -static int ad7768_spi_reg_read(struct ad7768_state *st, unsigned int
+> > > > > > addr,
+> > > > > > -			       unsigned int len)
+> > > > > > +static int ad7768_spi_reg_read(void *context, unsigned int addr,
+> > > > > > +			       unsigned int *val)
+> > > > > >  {
+> > > > > > -	unsigned int shift;
+> > > > > > +	struct iio_dev *dev = context;
+> > > > > > +	struct ad7768_state *st;
+> > > > > > +	unsigned int shift, len;
+> > > > > >  	int ret;
+> > > > > >  
+> > > > > > +	st = iio_priv(dev);  
+> > > > > 
+> > > > > This can be combined with the variable declaration.
+> > > > >   
+> > > > > > +	/* Regular value size is 1 Byte, but 3 Bytes for ADC data */  
+> > > > > 
+> > > > > Probably not currently needed but COEFF_DATA register is also 3 bytes.
+> > > > >   
+> > > > > > +	len = (addr == AD7768_REG_ADC_DATA) ? 3 : 1;
+> > > > > >  	shift = 32 - (8 * len);
+> > > > > >  	st->data.d8[0] = AD7768_RD_FLAG_MSK(addr);
+> > > > > >  
+> > > > > > @@ -190,13 +197,19 @@ static int ad7768_spi_reg_read(struct ad7768_state
+> > > > > > *st, unsigned int addr,
+> > > > > >  	if (ret < 0)
+> > > > > >  		return ret;
+> > > > > >  
+> > > > > > -	return (be32_to_cpu(st->data.d32) >> shift);
+> > > > > > +	*val = be32_to_cpu(st->data.d32) >> shift;
+> > > > > > +
+> > > > > > +	return 0;
+> > > > > >  }
+> > > > > >  
+> > > > > > -static int ad7768_spi_reg_write(struct ad7768_state *st,
+> > > > > > +static int ad7768_spi_reg_write(void *context,
+> > > > > >  				unsigned int addr,
+> > > > > >  				unsigned int val)
+> > > > > >  {
+> > > > > > +	struct iio_dev *dev = context;
+> > > > > > +	struct ad7768_state *st;
+> > > > > > +
+> > > > > > +	st = iio_priv(dev);
+> > > > > >  	st->data.d8[0] = AD7768_WR_FLAG_MSK(addr);
+> > > > > >  	st->data.d8[1] = val & 0xFF;
+> > > > > >  
+> > > > > > @@ -206,16 +219,16 @@ static int ad7768_spi_reg_write(struct
+> > > > > > ad7768_state
+> > > > > > *st,
+> > > > > >  static int ad7768_set_mode(struct ad7768_state *st,
+> > > > > >  			   enum ad7768_conv_mode mode)
+> > > > > >  {
+> > > > > > -	int regval;
+> > > > > > +	int regval, ret;
+> > > > > >  
+> > > > > > -	regval = ad7768_spi_reg_read(st, AD7768_REG_CONVERSION, 1);
+> > > > > > -	if (regval < 0)
+> > > > > > -		return regval;
+> > > > > > +	ret = regmap_read(st->regmap, AD7768_REG_CONVERSION, &regval);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > >  
+> > > > > >  	regval &= ~AD7768_CONV_MODE_MSK;
+> > > > > >  	regval |= AD7768_CONV_MODE(mode);
+> > > > > >  
+> > > > > > -	return ad7768_spi_reg_write(st, AD7768_REG_CONVERSION, regval);
+> > > > > > +	return regmap_write(st->regmap, AD7768_REG_CONVERSION, regval);
+> > > > > >  }
+> > > > > >  
+> > > > > >  static int ad7768_scan_direct(struct iio_dev *indio_dev)
+> > > > > > @@ -234,9 +247,10 @@ static int ad7768_scan_direct(struct iio_dev
+> > > > > > *indio_dev)
+> > > > > >  	if (!ret)
+> > > > > >  		return -ETIMEDOUT;
+> > > > > >  
+> > > > > > -	readval = ad7768_spi_reg_read(st, AD7768_REG_ADC_DATA, 3);
+> > > > > > -	if (readval < 0)
+> > > > > > -		return readval;
+> > > > > > +	ret = regmap_read(st->regmap, AD7768_REG_ADC_DATA, &readval);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > > >  	/*
+> > > > > >  	 * Any SPI configuration of the AD7768-1 can only be
+> > > > > >  	 * performed in continuous conversion mode.
+> > > > > > @@ -258,13 +272,11 @@ static int ad7768_reg_access(struct iio_dev
+> > > > > > *indio_dev,
+> > > > > >  
+> > > > > >  	mutex_lock(&st->lock);
+> > > > > >  	if (readval) {
+> > > > > > -		ret = ad7768_spi_reg_read(st, reg, 1);
+> > > > > > -		if (ret < 0)
+> > > > > > +		ret = regmap_read(st->regmap, reg, readval);
+> > > > > > +		if (ret)
+> > > > > >  			goto err_unlock;  
+> > > > > 
+> > > > > Can drop the if and goto.
+> > > > >   
+> > > > > > -		*readval = ret;
+> > > > > > -		ret = 0;
+> > > > > >  	} else {
+> > > > > > -		ret = ad7768_spi_reg_write(st, reg, writeval);
+> > > > > > +		ret = regmap_write(st->regmap, reg, writeval);
+> > > > > >  	}
+> > > > > >  err_unlock:
+> > > > > >  	mutex_unlock(&st->lock);
+> > > > > > @@ -283,7 +295,7 @@ static int ad7768_set_dig_fil(struct ad7768_state
+> > > > > > *st,
+> > > > > >  	else
+> > > > > >  		mode = AD7768_DIG_FIL_DEC_RATE(dec_rate);
+> > > > > >  
+> > > > > > -	ret = ad7768_spi_reg_write(st, AD7768_REG_DIGITAL_FILTER,
+> > > > > > mode);
+> > > > > > +	ret = regmap_write(st->regmap, AD7768_REG_DIGITAL_FILTER,
+> > > > > > mode);
+> > > > > >  	if (ret < 0)
+> > > > > >  		return ret;
+> > > > > >  
+> > > > > > @@ -320,7 +332,7 @@ static int ad7768_set_freq(struct ad7768_state *st,
+> > > > > >  	 */
+> > > > > >  	pwr_mode = AD7768_PWR_MCLK_DIV(ad7768_clk_config[idx].mclk_div)
+> > > > > > |
+> > > > > >  		   AD7768_PWR_PWRMODE(ad7768_clk_config[idx].pwrmode);
+> > > > > > -	ret = ad7768_spi_reg_write(st, AD7768_REG_POWER_CLOCK,
+> > > > > > pwr_mode);
+> > > > > > +	ret = regmap_write(st->regmap, AD7768_REG_POWER_CLOCK,
+> > > > > > pwr_mode);
+> > > > > >  	if (ret < 0)
+> > > > > >  		return ret;
+> > > > > >  
+> > > > > > @@ -447,11 +459,11 @@ static int ad7768_setup(struct ad7768_state *st)
+> > > > > >  	 * to 10. When the sequence is detected, the reset occurs.
+> > > > > >  	 * See the datasheet, page 70.
+> > > > > >  	 */
+> > > > > > -	ret = ad7768_spi_reg_write(st, AD7768_REG_SYNC_RESET, 0x3);
+> > > > > > +	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x3);
+> > > > > >  	if (ret)
+> > > > > >  		return ret;
+> > > > > >  
+> > > > > > -	ret = ad7768_spi_reg_write(st, AD7768_REG_SYNC_RESET, 0x2);
+> > > > > > +	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x2);
+> > > > > >  	if (ret)
+> > > > > >  		return ret;
+> > > > > >  
+> > > > > > @@ -509,18 +521,19 @@ static int ad7768_buffer_postenable(struct iio_dev
+> > > > > > *indio_dev)
+> > > > > >  	 * continuous read mode. Subsequent data reads do not require
+> > > > > > an
+> > > > > >  	 * initial 8-bit write to query the ADC_DATA register.
+> > > > > >  	 */
+> > > > > > -	return ad7768_spi_reg_write(st, AD7768_REG_INTERFACE_FORMAT,
+> > > > > > 0x01);
+> > > > > > +	return regmap_write(st->regmap, AD7768_REG_INTERFACE_FORMAT,
+> > > > > > 0x01);
+> > > > > >  }
+> > > > > >  
+> > > > > >  static int ad7768_buffer_predisable(struct iio_dev *indio_dev)
+> > > > > >  {
+> > > > > >  	struct ad7768_state *st = iio_priv(indio_dev);
+> > > > > > +	unsigned int regval;  
+> > > > > 
+> > > > > Intention could be more clear by calling this "unused". Otherwise, it can
+> > > > > look
+> > > > > like a bug if you don't fully understand what the comment below means.
+> > > > >   
+> > > > > >  
+> > > > > >  	/*
+> > > > > >  	 * To exit continuous read mode, perform a single read of the
+> > > > > > ADC_DATA
+> > > > > >  	 * reg (0x2C), which allows further configuration of the
+> > > > > > device.
+> > > > > >  	 */
+> > > > > > -	return ad7768_spi_reg_read(st, AD7768_REG_ADC_DATA, 3);
+> > > > > > +	return regmap_read(st->regmap, AD7768_REG_ADC_DATA, &regval);
+> > > > > >  }
+> > > > > >  
+> > > > > >  static const struct iio_buffer_setup_ops ad7768_buffer_ops = {
+> > > > > > @@ -563,6 +576,20 @@ static int ad7768_set_channel_label(struct iio_dev
+> > > > > > *indio_dev,
+> > > > > >  	return 0;
+> > > > > >  }
+> > > > > >  
+> > > > > > +static const struct regmap_bus ad7768_regmap_bus = {
+> > > > > > +	.reg_write = ad7768_spi_reg_write,
+> > > > > > +	.reg_read = ad7768_spi_reg_read,
+> > > > > > +	.reg_format_endian_default = REGMAP_ENDIAN_BIG,
+> > > > > > +	.val_format_endian_default = REGMAP_ENDIAN_BIG,  
+> > > > > 
+> > > > > The bus read function is calling be32_to_cpu(), so we probably want to
+> > > > > remove
+> > > > > that or change the default here.
+> > > > >   
+> > > > > > +};
+> > > > > > +
+> > > > > > +static const struct regmap_config ad7768_regmap_config = {
+> > > > > > +	.name = "ad7768-1",
+> > > > > > +	.reg_bits = 8,
+> > > > > > +	.val_bits = 8,  
+> > > > > 
+> > > > > Should this be 24 since the largest registers are 24-bit?
+> > > > > 
+> > > > > Another option could be to just use a regular spi_*() API for that
+> > > > > register
+> > > > > instead of regmap_*() and avoid trying to do something that regmap doesn't
+> > > > > really handle.
+> > > > > 
+> > > > > Or we could possibly use regmap_bulk_read(), but that feels a bit hacky
+> > > > > too
+> > > > > since it isn't actually how that function was intended to be used.
+> > > > >   
+> > > > 
+> > > > Hmm I might be missing something but looking at the register map, It seems
+> > > > we do
+> > > > have 8bit registers? We do have values that span multiple registers (3 for
+> > > > the
+> > > > 24bit values) and regmap_bulk_read() should actually fit right? I mean,
+> > > > looking
+> > > > at the docs:
+> > > > 
+> > > > "regmap_bulk_read() - Read multiple sequential registers from the device"
+> > > >   
+> > > 
+> > > Isn't regmap_bulk_*() for reading a value spread in sequential registers,
+> > > like the offset calibration (registers 0x22, 0x23 and 0x24, 8 bits value
+> > > for each reg)? For the ADC data (0x2C) we have a 24 bits value in only one
+> > > register, so I beleive this does not apply.
+> > >   
+> > 
+> > Ah got it. I failed to see that. Yeah, in that case you're right... it won't
+> > work out of the box.
+> > 
+> > > > But I do agree that what we have right now does not make much sense. If we
+> > > > need
+> > > > to do
+> > > > 
+> > > > len = (addr == AD7768_REG_ADC_DATA) ? 3 : 1;
+> > > > 
+> > > > for supporting regmap, then I have to question using it. Also note that we
+> > > > have
+> > > > things like gain and offset that are also 3 bytes which means that our
+> > > > custom
+> > > > read would need to become more questionable if we add support for it.
+> > > >   
+> > > 
+> > > For those cases the regmap_bulk_*() works.
+> > >   
+> > > > Jonathan, did you tried to use plain regmap (without the custom bus)?
+> > > > Assuming
+> > > > bulk reads work, I'm not seeing an apparent reason for the custom bus... I
+> > > > would
+> > > > also suspect that if bulk reads don't work out of the box, providing a
+> > > > regmap
+> > > > cache would make it work but relying on implementation details is not a very
+> > > > good practice.
+> > > >   
+> > > 
+> > > Yes, i tried and only works for the register with 8-bits value. David
+> > > suggested using regular spi_*() functions for the unsual registers with
+> > > 24-bits value, such as the ADC data (0x2C). That is the only way of
+> > > having the default spi bus interface using regmap. Otherwise we should
+> > > drop the regmap.   
+> > 
+> > Yeah, might be better to do plain spi for the unusual registers rather than the
+> > custom bus. But no strong feelings on my side...
+> I'm not keen on a mix or on a regmap that handles the size under the hood.
+> I think this quirk should be obvious.
+> 
+> Can we do two regmap, one for each of the register size?  We have other
+> drivers taking that approach and I'm not sure if it was ruled out for
+> this one.
+> 
+> Jonathan
+> 
 
-Ok, I see. I checked the usage of these functions again and
-now remembered the reason we didn't fix it last time, which is
-that the semantics are inconsistent across architectures
-and I think this should be addressed first, so we can untangle
-the definitions:
+Yes, it makes sense a regmap for each register size, if everyone agrees.
+I will try this here.
 
-There is one driver that is specific to ARM processors
-(drivers/firmware/arm_scmi) using  ioread64_hi_lo/iowrite64_hi_lo
-and this uses the documented semantics from
-Documentation/driver-api/device-io.rst, which says that the
-helpers always do separate 32-bit accesses (even on 64-bit
-machines), but that it's possible to just call
-ioread64()/iowrite64() after including linux/io-64-nonatomic-hi-lo.h
-in order to always get 64-bit accesses on 64-bit architectures
-but get 32-bit accesses on 32-bit architectures. There are
-another dozen or so drivers that do this.
-
-There are two other drivers that were written for x86 that
-use other semantics (drivers/net/wwan/t7xx/ and
-drivers/ptp/ptp_pch.c): Here, the definition from lib/iomap.c
-means that even on 64-bit architectures calling
-ioread64_hi_lo/iowrite64_hi_lo on an MMIO space always
-results in a 64-bit access, and only the PIO version is split
-up. On 32-bit architectures, this part is not provided, so
-it should fall back to split access (I think this is where
-we had bugs in the past).
-
-Another complication is that alpha, parisc and sh (not mips
-any more) explicitly include asm-generic/iomap.h but don't
-select CONFIG_GENERIC_IOMAP. At this time, GENERIC_IOMAP
-is selected at least in some configurations on m68k, mips,
-powerpc, sh, um and x86, but most of these should not do that
-(mips, m68k and sh have no PIO instructions, powerpc had
-a hack that I think was just removed but needs more cleanup).
-
-I'm testing with the patch below now, which separates the
-CONFIG_GENERIC_IOMAP implementation (with the 32-bit PIO
-access) from the normal version, and picks an appropriate
-one in linux/io-64-nonatomic-*.h based on the architecture
-to avoid some of the more confusing nested=20
-"#ifdef ioread64" etc checks.
-
-I checked that none of the three drivers ever actually uses
-PIO registers instead of MMIO, and since none of them use the
-big-endian accessors, this all turns into readq/writeq
-in practice anyway.
-
-The ptp_pch.c driver still needs more work as I noticed two
-issues there: the driver has a mix of lo_hi and hi_lo
-variants, but it is unclear whether is is actually required
-on 32-bit or if the hardware works the same either way.
-In addition, these seem to be timer registers that may overrun
-from the lo into the hi field between the two accesses, so
-technically a 32-bit host needs to do an extra read to
-check for overflow and possibly repeat the access.
-
-      Arnd
-
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_s=
-cmi/driver.c
-index 60050da54bf2..1c75a4c9c371 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -1997,17 +1997,7 @@ static void scmi_common_fastchannel_db_ring(struc=
-t scmi_fc_db_info *db)
- 	else if (db->width =3D=3D 4)
- 		SCMI_PROTO_FC_RING_DB(32);
- 	else /* db->width =3D=3D 8 */
--#ifdef CONFIG_64BIT
- 		SCMI_PROTO_FC_RING_DB(64);
--#else
--	{
--		u64 val =3D 0;
--
--		if (db->mask)
--			val =3D ioread64_hi_lo(db->addr) & db->mask;
--		iowrite64_hi_lo(db->set | val, db->addr);
--	}
--#endif
- }
-=20
- /**
-diff --git a/drivers/net/wwan/t7xx/t7xx_cldma.c b/drivers/net/wwan/t7xx/=
-t7xx_cldma.c
-index f0a4783baf1f..9f43f256db1d 100644
---- a/drivers/net/wwan/t7xx/t7xx_cldma.c
-+++ b/drivers/net/wwan/t7xx/t7xx_cldma.c
-@@ -106,7 +106,7 @@ bool t7xx_cldma_tx_addr_is_set(struct t7xx_cldma_hw =
-*hw_info, unsigned int qno)
- {
- 	u32 offset =3D REG_CLDMA_UL_START_ADDRL_0 + qno * ADDR_SIZE;
-=20
--	return ioread64_lo_hi(hw_info->ap_pdn_base + offset);
-+	return ioread64(hw_info->ap_pdn_base + offset);
- }
-=20
- void t7xx_cldma_hw_set_start_addr(struct t7xx_cldma_hw *hw_info, unsign=
-ed int qno, u64 address,
-@@ -117,7 +117,7 @@ void t7xx_cldma_hw_set_start_addr(struct t7xx_cldma_=
-hw *hw_info, unsigned int qn
-=20
- 	reg =3D tx_rx =3D=3D MTK_RX ? hw_info->ap_ao_base + REG_CLDMA_DL_START=
-_ADDRL_0 :
- 				hw_info->ap_pdn_base + REG_CLDMA_UL_START_ADDRL_0;
--	iowrite64_lo_hi(address, reg + offset);
-+	iowrite64(address, reg + offset);
- }
-=20
- void t7xx_cldma_hw_resume_queue(struct t7xx_cldma_hw *hw_info, unsigned=
- int qno,
-diff --git a/drivers/net/wwan/t7xx/t7xx_hif_cldma.c b/drivers/net/wwan/t=
-7xx/t7xx_hif_cldma.c
-index 97163e1e5783..13f5a2442d20 100644
---- a/drivers/net/wwan/t7xx/t7xx_hif_cldma.c
-+++ b/drivers/net/wwan/t7xx/t7xx_hif_cldma.c
-@@ -137,9 +137,9 @@ static int t7xx_cldma_gpd_rx_from_q(struct cldma_que=
-ue *queue, int budget, bool
- 				return -ENODEV;
- 			}
-=20
--			gpd_addr =3D ioread64_lo_hi(hw_info->ap_pdn_base +
--						  REG_CLDMA_DL_CURRENT_ADDRL_0 +
--						  queue->index * sizeof(u64));
-+			gpd_addr =3D ioread64(hw_info->ap_pdn_base +
-+					    REG_CLDMA_DL_CURRENT_ADDRL_0 +
-+					    queue->index * sizeof(u64));
- 			if (req->gpd_addr =3D=3D gpd_addr || hwo_polling_count++ >=3D 100)
- 				return 0;
-=20
-@@ -317,8 +317,8 @@ static void t7xx_cldma_txq_empty_hndl(struct cldma_q=
-ueue *queue)
- 		struct t7xx_cldma_hw *hw_info =3D &md_ctrl->hw_info;
-=20
- 		/* Check current processing TGPD, 64-bit address is in a table by Q i=
-ndex */
--		ul_curr_addr =3D ioread64_lo_hi(hw_info->ap_pdn_base + REG_CLDMA_UL_C=
-URRENT_ADDRL_0 +
--					      queue->index * sizeof(u64));
-+		ul_curr_addr =3D ioread64(hw_info->ap_pdn_base + REG_CLDMA_UL_CURRENT=
-_ADDRL_0 +
-+					queue->index * sizeof(u64));
- 		if (req->gpd_addr !=3D ul_curr_addr) {
- 			spin_unlock_irqrestore(&md_ctrl->cldma_lock, flags);
- 			dev_err(md_ctrl->dev, "CLDMA%d queue %d is not empty\n",
-diff --git a/drivers/net/wwan/t7xx/t7xx_pcie_mac.c b/drivers/net/wwan/t7=
-xx/t7xx_pcie_mac.c
-index f071ec7ff23d..76da4c15e3de 100644
---- a/drivers/net/wwan/t7xx/t7xx_pcie_mac.c
-+++ b/drivers/net/wwan/t7xx/t7xx_pcie_mac.c
-@@ -75,7 +75,7 @@ static void t7xx_pcie_mac_atr_tables_dis(void __iomem =
-*pbase, enum t7xx_atr_src_
- 	for (i =3D 0; i < ATR_TABLE_NUM_PER_ATR; i++) {
- 		offset =3D ATR_PORT_OFFSET * port + ATR_TABLE_OFFSET * i;
- 		reg =3D pbase + ATR_PCIE_WIN0_T0_ATR_PARAM_SRC_ADDR + offset;
--		iowrite64_lo_hi(0, reg);
-+		iowrite64(0, reg);
- 	}
- }
-=20
-@@ -112,17 +112,17 @@ static int t7xx_pcie_mac_atr_cfg(struct t7xx_pci_d=
-ev *t7xx_dev, struct t7xx_atr_
-=20
- 	reg =3D pbase + ATR_PCIE_WIN0_T0_TRSL_ADDR + offset;
- 	value =3D cfg->trsl_addr & ATR_PCIE_WIN0_ADDR_ALGMT;
--	iowrite64_lo_hi(value, reg);
-+	iowrite64(value, reg);
-=20
- 	reg =3D pbase + ATR_PCIE_WIN0_T0_TRSL_PARAM + offset;
- 	iowrite32(cfg->trsl_id, reg);
-=20
- 	reg =3D pbase + ATR_PCIE_WIN0_T0_ATR_PARAM_SRC_ADDR + offset;
- 	value =3D (cfg->src_addr & ATR_PCIE_WIN0_ADDR_ALGMT) | (atr_size << 1)=
- | BIT(0);
--	iowrite64_lo_hi(value, reg);
-+	iowrite64(value, reg);
-=20
- 	/* Ensure ATR is set */
--	ioread64_lo_hi(reg);
-+	ioread64(reg);
- 	return 0;
- }
-=20
-diff --git a/drivers/ptp/ptp_pch.c b/drivers/ptp/ptp_pch.c
-index b8a9a54a176c..1d3b1f83cda8 100644
---- a/drivers/ptp/ptp_pch.c
-+++ b/drivers/ptp/ptp_pch.c
-@@ -13,7 +13,6 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
--#include <linux/io-64-nonatomic-hi-lo.h>
- #include <linux/irq.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -147,14 +146,14 @@ static u64 pch_systime_read(struct pch_ts_regs __i=
-omem *regs)
- {
- 	u64 ns;
-=20
--	ns =3D ioread64_lo_hi(&regs->systime_lo);
-+	ns =3D ioread64(&regs->systime_lo);
-=20
- 	return ns << TICKS_NS_SHIFT;
- }
-=20
- static void pch_systime_write(struct pch_ts_regs __iomem *regs, u64 ns)
- {
--	iowrite64_lo_hi(ns >> TICKS_NS_SHIFT, &regs->systime_lo);
-+	iowrite64(ns >> TICKS_NS_SHIFT, &regs->systime_lo);
- }
-=20
- static inline void pch_block_reset(struct pch_dev *chip)
-@@ -221,7 +220,7 @@ u64 pch_rx_snap_read(struct pci_dev *pdev)
- 	struct pch_dev *chip =3D pci_get_drvdata(pdev);
- 	u64 ns;
-=20
--	ns =3D ioread64_lo_hi(&chip->regs->rx_snap_lo);
-+	ns =3D ioread64(&chip->regs->rx_snap_lo);
-=20
- 	return ns << TICKS_NS_SHIFT;
- }
-@@ -232,7 +231,7 @@ u64 pch_tx_snap_read(struct pci_dev *pdev)
- 	struct pch_dev *chip =3D pci_get_drvdata(pdev);
- 	u64 ns;
-=20
--	ns =3D ioread64_lo_hi(&chip->regs->tx_snap_lo);
-+	ns =3D ioread64(&chip->regs->tx_snap_lo);
-=20
- 	return ns << TICKS_NS_SHIFT;
- }
-@@ -283,7 +282,7 @@ int pch_set_station_address(u8 *addr, struct pci_dev=
- *pdev)
- 	}
-=20
- 	dev_dbg(&pdev->dev, "invoking pch_station_set\n");
--	iowrite64_lo_hi(mac, &chip->regs->ts_st);
-+	iowrite64(mac, &chip->regs->ts_st);
- 	return 0;
- }
- EXPORT_SYMBOL(pch_set_station_address);
-@@ -305,7 +304,7 @@ static irqreturn_t isr(int irq, void *priv)
- 		if (pch_dev->exts0_enabled) {
- 			event.type =3D PTP_CLOCK_EXTTS;
- 			event.index =3D 0;
--			event.timestamp =3D ioread64_hi_lo(&regs->asms_hi);
-+			event.timestamp =3D ioread64(&regs->asms_hi);
- 			event.timestamp <<=3D TICKS_NS_SHIFT;
- 			ptp_clock_event(pch_dev->ptp_clock, &event);
- 		}
-@@ -316,7 +315,7 @@ static irqreturn_t isr(int irq, void *priv)
- 		if (pch_dev->exts1_enabled) {
- 			event.type =3D PTP_CLOCK_EXTTS;
- 			event.index =3D 1;
--			event.timestamp =3D ioread64_hi_lo(&regs->asms_hi);
-+			event.timestamp =3D ioread64(&regs->asms_hi);
- 			event.timestamp <<=3D TICKS_NS_SHIFT;
- 			ptp_clock_event(pch_dev->ptp_clock, &event);
- 		}
-@@ -493,7 +492,7 @@ pch_probe(struct pci_dev *pdev, const struct pci_dev=
-ice_id *id)
- 	pch_reset(chip);
-=20
- 	iowrite32(DEFAULT_ADDEND, &chip->regs->addend);
--	iowrite64_lo_hi(1, &chip->regs->trgt_lo);
-+	iowrite64(1, &chip->regs->trgt_lo);
- 	iowrite32(PCH_TSE_TTIPEND, &chip->regs->event);
-=20
- 	pch_eth_enable_set(chip);
-diff --git a/include/asm-generic/iomap.h b/include/asm-generic/iomap.h
-index 196087a8126e..9f3f25d7fc58 100644
---- a/include/asm-generic/iomap.h
-+++ b/include/asm-generic/iomap.h
-@@ -31,42 +31,22 @@ extern unsigned int ioread16(const void __iomem *);
- extern unsigned int ioread16be(const void __iomem *);
- extern unsigned int ioread32(const void __iomem *);
- extern unsigned int ioread32be(const void __iomem *);
--#ifdef CONFIG_64BIT
--extern u64 ioread64(const void __iomem *);
--extern u64 ioread64be(const void __iomem *);
--#endif
-=20
--#ifdef readq
--#define ioread64_lo_hi ioread64_lo_hi
--#define ioread64_hi_lo ioread64_hi_lo
--#define ioread64be_lo_hi ioread64be_lo_hi
--#define ioread64be_hi_lo ioread64be_hi_lo
--extern u64 ioread64_lo_hi(const void __iomem *addr);
--extern u64 ioread64_hi_lo(const void __iomem *addr);
--extern u64 ioread64be_lo_hi(const void __iomem *addr);
--extern u64 ioread64be_hi_lo(const void __iomem *addr);
--#endif
-+extern u64 __ioread64_lo_hi(const void __iomem *addr);
-+extern u64 __ioread64_hi_lo(const void __iomem *addr);
-+extern u64 __ioread64be_lo_hi(const void __iomem *addr);
-+extern u64 __ioread64be_hi_lo(const void __iomem *addr);
-=20
- extern void iowrite8(u8, void __iomem *);
- extern void iowrite16(u16, void __iomem *);
- extern void iowrite16be(u16, void __iomem *);
- extern void iowrite32(u32, void __iomem *);
- extern void iowrite32be(u32, void __iomem *);
--#ifdef CONFIG_64BIT
--extern void iowrite64(u64, void __iomem *);
--extern void iowrite64be(u64, void __iomem *);
--#endif
-=20
--#ifdef writeq
--#define iowrite64_lo_hi iowrite64_lo_hi
--#define iowrite64_hi_lo iowrite64_hi_lo
--#define iowrite64be_lo_hi iowrite64be_lo_hi
--#define iowrite64be_hi_lo iowrite64be_hi_lo
--extern void iowrite64_lo_hi(u64 val, void __iomem *addr);
--extern void iowrite64_hi_lo(u64 val, void __iomem *addr);
--extern void iowrite64be_lo_hi(u64 val, void __iomem *addr);
--extern void iowrite64be_hi_lo(u64 val, void __iomem *addr);
--#endif
-+extern void __iowrite64_lo_hi(u64 val, void __iomem *addr);
-+extern void __iowrite64_hi_lo(u64 val, void __iomem *addr);
-+extern void __iowrite64be_lo_hi(u64 val, void __iomem *addr);
-+extern void __iowrite64be_hi_lo(u64 val, void __iomem *addr);
-=20
- /*
-  * "string" versions of the above. Note that they
-diff --git a/include/linux/io-64-nonatomic-lo-hi.h b/include/linux/io-64=
--nonatomic-lo-hi.h
-index 448a21435dba..70d091769baa 100644
---- a/include/linux/io-64-nonatomic-lo-hi.h
-+++ b/include/linux/io-64-nonatomic-lo-hi.h
-@@ -101,22 +101,38 @@ static inline void iowrite64be_lo_hi(u64 val, void=
- __iomem *addr)
-=20
- #ifndef ioread64
- #define ioread64_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define ioread64 __ioread64_lo_hi
-+#else
- #define ioread64 ioread64_lo_hi
- #endif
-+#endif
-=20
- #ifndef iowrite64
- #define iowrite64_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define ioread64 __iowrite64_lo_hi
-+#else
- #define iowrite64 iowrite64_lo_hi
- #endif
-+#endif
-=20
- #ifndef ioread64be
- #define ioread64be_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define ioread64 __ioread64be_lo_hi
-+#else
- #define ioread64be ioread64be_lo_hi
- #endif
-+#endif
-=20
- #ifndef iowrite64be
- #define iowrite64be_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define ioread64 __iowrite64be_lo_hi
-+#else
- #define iowrite64be iowrite64be_lo_hi
- #endif
-+#endif
-=20
- #endif	/* _LINUX_IO_64_NONATOMIC_LO_HI_H_ */
-diff --git a/lib/iomap.c b/lib/iomap.c
-index 4f8b31baa575..a65717cd86f7 100644
---- a/lib/iomap.c
-+++ b/lib/iomap.c
-@@ -111,7 +111,7 @@ EXPORT_SYMBOL(ioread16be);
- EXPORT_SYMBOL(ioread32);
- EXPORT_SYMBOL(ioread32be);
-=20
--#ifdef readq
-+#ifdef CONFIG_64BIT
- static u64 pio_read64_lo_hi(unsigned long port)
- {
- 	u64 lo, hi;
-@@ -153,21 +153,21 @@ static u64 pio_read64be_hi_lo(unsigned long port)
- }
-=20
- __no_kmsan_checks
--u64 ioread64_lo_hi(const void __iomem *addr)
-+u64 __ioread64_lo_hi(const void __iomem *addr)
- {
- 	IO_COND(addr, return pio_read64_lo_hi(port), return readq(addr));
- 	return 0xffffffffffffffffULL;
- }
-=20
- __no_kmsan_checks
--u64 ioread64_hi_lo(const void __iomem *addr)
-+u64 __ioread64_hi_lo(const void __iomem *addr)
- {
- 	IO_COND(addr, return pio_read64_hi_lo(port), return readq(addr));
- 	return 0xffffffffffffffffULL;
- }
-=20
- __no_kmsan_checks
--u64 ioread64be_lo_hi(const void __iomem *addr)
-+u64 __ioread64be_lo_hi(const void __iomem *addr)
- {
- 	IO_COND(addr, return pio_read64be_lo_hi(port),
- 		return mmio_read64be(addr));
-@@ -175,19 +175,19 @@ u64 ioread64be_lo_hi(const void __iomem *addr)
- }
-=20
- __no_kmsan_checks
--u64 ioread64be_hi_lo(const void __iomem *addr)
-+u64 __ioread64be_hi_lo(const void __iomem *addr)
- {
- 	IO_COND(addr, return pio_read64be_hi_lo(port),
- 		return mmio_read64be(addr));
- 	return 0xffffffffffffffffULL;
- }
-=20
--EXPORT_SYMBOL(ioread64_lo_hi);
--EXPORT_SYMBOL(ioread64_hi_lo);
--EXPORT_SYMBOL(ioread64be_lo_hi);
--EXPORT_SYMBOL(ioread64be_hi_lo);
-+EXPORT_SYMBOL(__ioread64_lo_hi);
-+EXPORT_SYMBOL(__ioread64_hi_lo);
-+EXPORT_SYMBOL(__ioread64be_lo_hi);
-+EXPORT_SYMBOL(__ioread64be_hi_lo);
-=20
--#endif /* readq */
-+#endif /* CONFIG_64BIT */
-=20
- #ifndef pio_write16be
- #define pio_write16be(val,port) outw(swab16(val),port)
-@@ -236,7 +236,7 @@ EXPORT_SYMBOL(iowrite16be);
- EXPORT_SYMBOL(iowrite32);
- EXPORT_SYMBOL(iowrite32be);
-=20
--#ifdef writeq
-+#ifdef CONFIG_64BIT
- static void pio_write64_lo_hi(u64 val, unsigned long port)
- {
- 	outl(val, port);
-@@ -261,7 +261,7 @@ static void pio_write64be_hi_lo(u64 val, unsigned lo=
-ng port)
- 	pio_write32be(val, port + sizeof(u32));
- }
-=20
--void iowrite64_lo_hi(u64 val, void __iomem *addr)
-+void __iowrite64_lo_hi(u64 val, void __iomem *addr)
- {
- 	/* Make sure uninitialized memory isn't copied to devices. */
- 	kmsan_check_memory(&val, sizeof(val));
-@@ -269,7 +269,7 @@ void iowrite64_lo_hi(u64 val, void __iomem *addr)
- 		writeq(val, addr));
- }
-=20
--void iowrite64_hi_lo(u64 val, void __iomem *addr)
-+void __iowrite64_hi_lo(u64 val, void __iomem *addr)
- {
- 	/* Make sure uninitialized memory isn't copied to devices. */
- 	kmsan_check_memory(&val, sizeof(val));
-@@ -277,7 +277,7 @@ void iowrite64_hi_lo(u64 val, void __iomem *addr)
- 		writeq(val, addr));
- }
-=20
--void iowrite64be_lo_hi(u64 val, void __iomem *addr)
-+void __iowrite64be_lo_hi(u64 val, void __iomem *addr)
- {
- 	/* Make sure uninitialized memory isn't copied to devices. */
- 	kmsan_check_memory(&val, sizeof(val));
-@@ -285,7 +285,7 @@ void iowrite64be_lo_hi(u64 val, void __iomem *addr)
- 		mmio_write64be(val, addr));
- }
-=20
--void iowrite64be_hi_lo(u64 val, void __iomem *addr)
-+void __iowrite64be_hi_lo(u64 val, void __iomem *addr)
- {
- 	/* Make sure uninitialized memory isn't copied to devices. */
- 	kmsan_check_memory(&val, sizeof(val));
-@@ -293,12 +293,12 @@ void iowrite64be_hi_lo(u64 val, void __iomem *addr)
- 		mmio_write64be(val, addr));
- }
-=20
--EXPORT_SYMBOL(iowrite64_lo_hi);
--EXPORT_SYMBOL(iowrite64_hi_lo);
--EXPORT_SYMBOL(iowrite64be_lo_hi);
--EXPORT_SYMBOL(iowrite64be_hi_lo);
-+EXPORT_SYMBOL(__iowrite64_lo_hi);
-+EXPORT_SYMBOL(__iowrite64_hi_lo);
-+EXPORT_SYMBOL(__iowrite64be_lo_hi);
-+EXPORT_SYMBOL(__iowrite64be_hi_lo);
-=20
--#endif /* readq */
-+#endif /* CONFIG_64BIT */
-=20
- /*
-  * These are the "repeat MMIO read/write" functions.
+> > 
+> > - Nuno Sá
+> > >   
+> > 
+> > 
+> > 
+> 
