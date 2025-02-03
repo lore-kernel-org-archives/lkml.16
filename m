@@ -1,221 +1,140 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAABE2A1A4
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAE02054FE;
+	Mon,  3 Feb 2025 13:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588309; cv=none; b=q5WNhZQ4EYG+wuEMPfhgMllGyMh6v87QmbQVpP8SG72fUoqMnK/vZ1XWad24+gBXST6b6KnLA4uDXui4oGS1dgnWAQReS2zcX+O7oqScmC2QrM1byqSb/O8e3AJwdCWpdS0mpgtsghGPCWhJPAf4pK7hdHjQNJIi3TZIMcTtZPo=
+	t=1738588312; cv=none; b=jN9PpfOk6EVVZRAwtOHgdxNRhcaAfjYNq2q+m7nIf30VA4irytw7Vsy4szvFVMRlDO44ME4OlgeYTgsqP9CdbFQ0/tKlcRWWxzTUot+gzYLNe2OqhtAj/cdA98JhrSr2GIdM2sjbCleIs74b80gNImcbApoCrCDcV6AWah5GdB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588309; c=relaxed/simple;
-	bh=PDfO2TqiHOQOswp1r7MD60aF2gzSJU3JaaoTdmxlwEw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kf6cWRR3Nj692Kku1Dy6C+2M/pWef+eh5h74QquVMDE8Qajq+hCCb5zhzSTitwzwpxy8ywYvYI6k4sTB0AkOSlBVdB97nDrA7gQo3Z2VZVDixujNXRguYsGhh/Y2FxK4JMeraPXTuRLpQexjnNfxWEV5UHdjhtqIjHnrSflIT40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=N90y90gQ; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
+	s=arc-20240116; t=1738588312; c=relaxed/simple;
+	bh=/kUKPWCuiO07PV8wX+eiL75OEyrHSx5RcfpFsjZDG/U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=MbmD7If0GBNlwMAJjuljXSN4cE8+Pqm6dec36O2p6TDJe9n2xOARQ7agINVBRhbcvRdroNM7rB8LZ7sbTsHHnBrVopwp95RiGB3OedoSzQjD79taScO/rfXNvXl+jz9sV41BtYCqUNLEGqUQPEH4ZNb84xJVcu09cAYQtKUtOZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R/Tu1xXv; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="N90y90gQ"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43621d27adeso29712655e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 05:11:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/Tu1xXv"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21661be2c2dso71411685ad.1;
+        Mon, 03 Feb 2025 05:11:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openvpn.net; s=google; t=1738588305; x=1739193105; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=W0RwX06YNoQDRCRmvfoCjGCfN9QTBGFckStparosZZg=;
-        b=N90y90gQnyZDbawzAUUwKAxucHfrEu5a9AXbCBVfIu7mSKWpVkOZDj1Ejd2JjCLpmK
-         LcAVowU/5XFa7TBVdHr4fNi/Pk3Fn/I3+zrtfeEPR2xb0660TU/UDpqqGyAjVS3CxVsg
-         yDww6964tbJa/JGjZ7q+9rkDtcpEJHXiwScwKHAm7ED0E1pQmIJUufV+YVelzGNDSF/y
-         bkp2Ji0wMec/YwJOAVTMaFzB96CCCwC/Ok8ttsTLVhM0WaQbZjMY/EByC13KsyykqsNq
-         0fv92vpmoJcfs1Jep0zZ2wu6vTL6IXMd1LWitpelrSyz/PClzyH6rt4tVygdg4WFODEF
-         OCQg==
+        d=gmail.com; s=20230601; t=1738588310; x=1739193110; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PDJizsvXaw9+teo3wUwPkWJCqORZkNmTQyuSkt5H4CY=;
+        b=R/Tu1xXviQ7NcPSxGHEdzVPunZZ0m6slMxzZimLBpQGtcuSS2+/UbH3MT0B4ktBqNk
+         oTBsN7D3mJlfHNsSappFQFl5oQbTBzh8ArTnclGGudV8ct6E771OlfB1SnCowjvQOrU2
+         OmZ7f7Pn2IBPqMq3hlHLpeOoiJ7VsjUQyrJ97XXYznN7pMmZ8rLHEFjRsbkp7oa3yqFR
+         Ys9K6oy4Lbyxhbf89JVvElTx3L/XzcBD15hGTsNkMx95qLYxATKTxVvd/52O5O0p18FY
+         XeHYWypTaQ75scY8S2gwaT053U0kX4J/tX6WNky5YhVyQ2Y6pwJ9aKvjgCFDMa74rLjT
+         DfOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738588305; x=1739193105;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W0RwX06YNoQDRCRmvfoCjGCfN9QTBGFckStparosZZg=;
-        b=hsDVSVpZxfZdDdvoE7K8ivxD43PEmSa/uKlojSfD2v0NwDBK/H6OKR2P8DpO/sNoMB
-         DTL2qg6U4ZQGmweA1pPXaMNctJqpH24+u/bK5fLkrGbsVFr7P7JF2tZKt+9P+vvIhEAP
-         4OGSQe9Mc/1ydeRuhqhe8MxxVGfEH7bAPzu9ak72wtiIqqYvQjHwAjjvchUDX24BL1tV
-         S9lZWcNREap/IIUXtrHXifkJv6Uqqkcpbt9QCtT7VTqyY97CsTszlLsxOYbYMqWBq3Kf
-         mpzxCw0CwAgiSx2cH6/Txs/zZDRVgOOkX/o0LlDPrTF3B9ooVH6GegKOHCMJyc3U9yjv
-         x/Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCWqyYoGzb8+K2TJsDor7NnI3joopgU+llTSgcd9JD4veD2Wk42hYgA68yJh6XY+I37Qevhxt3gVeoweC/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlQJ/nRkZsdqx/RVKBnHeCuw1uWcRrwtJ1EN2eXteH/aPTrK2b
-	o/hguaxvSXi6/EZ+/ooWSXMAV7tCC1MDNq7a5urNUifhDrxHselplQ+u0t4qArA=
-X-Gm-Gg: ASbGncsmJ5bUoCciEHziyLui/BVfeMPo5KOCxr6HDc/CydqeqQfVYkOYazDflItej1a
-	nZRKsLBhCLFeamU9CLp7Zp7OTI8cUDa1Ej8thkIrB8lqc195+ovKd7fIVuHM3pJNRI+v7CV4Rgm
-	f6hwX5JhyDCOcQ8OWoAxVyYhjdhxEEjYEpRYz4qik2vV6jCcv8dzOyCYqILQlYpnZIlhpPyxPxN
-	/oQwo7LJLAvojFytnJmIL6oJIn9WsgfwZP+WHebgjpECirxI0VqQofH2JXHtLlCshzdiphUgSIA
-	1fYXsu5yOaCX2Msrbm8nkkEOWjpTJgu4qmSPfIZCnZ2hu8YlOW4HHg==
-X-Google-Smtp-Source: AGHT+IGix2KKhAS1u/WXZkqDrxDELKSomSjX0SZ+43f7IZjAxUu2W/Ytm+kXaqZ0WXxeZUkc/HDk8w==
-X-Received: by 2002:a05:600c:3b94:b0:434:a923:9310 with SMTP id 5b1f17b1804b1-438dc3cc3b1mr197184575e9.15.1738588305116;
-        Mon, 03 Feb 2025 05:11:45 -0800 (PST)
-Received: from ?IPV6:2001:67c:2fbc:1:b4fe:e6fa:32a0:6a72? ([2001:67c:2fbc:1:b4fe:e6fa:32a0:6a72])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2e384sm194539245e9.19.2025.02.03.05.11.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 05:11:44 -0800 (PST)
-Message-ID: <78e59cd0-332e-4a97-8060-ccdf023e8a91@openvpn.net>
-Date: Mon, 3 Feb 2025 14:12:52 +0100
+        d=1e100.net; s=20230601; t=1738588310; x=1739193110;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PDJizsvXaw9+teo3wUwPkWJCqORZkNmTQyuSkt5H4CY=;
+        b=OcENpwby9BzxMPoDwCHaHMNZeoJBZTp9d2o78x6S8rr9W8atLBXpyqXj5gH0fsAmZ2
+         7Qo3DexvW4d4fAWneOZlkFCIpte1NJ3z5lDbDBD8GIITVqQchr7W9uqfYfa2gY/LnDYc
+         Uisp53wkpPcUrX8LKR1vz5ZmygqiG0HOrPI6kkfy8tf8hpDLeGMVdUkaFVKUWpX5X27R
+         llQyGjJAxWJeAAqm6+4344YLYQvpqxWd3CCzenyy0Asafr0VuLRjpwC242bgcykJOPAh
+         ejRQ+fKckwm8hDVH01y5Aa1XNjAUEIBSORKv1SK1wKi+JGFoJ6jSSkAPlYlFpPEEAvuZ
+         m1PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVtZOv+XPO0N9/hsQmEb60lg8fiaRawI3ngDgSPW0eZSXFpL9mU5Fn/8TTsaY9A64LSbW10eCxZ3G+b@vger.kernel.org, AJvYcCWqStASMFhENLP1Qcmkc0N5mckBW8MWEuG/gsT1mvA4eC3umW74EVnTQQV/mQAU61LadE5d0Vlq0YDAEu+V@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNA7dNkwxxbyslh7KBTGvbB1VIPsXmETrLp2cT87N/5wUFHYXA
+	PQ50Dvol1GKKkPFEEZtplu+7NDkaW6heWnTL7DdnpareXQncpvCi
+X-Gm-Gg: ASbGncs9cpD6WmXAsBzQ39cAtkwDi6uFbWMRucxkkAU5Sgg/hz99LdIu7E36x5PxhkE
+	2+7ZydXp2Nu2X3QTUd/Yu4e5j0UJWpP+JJgjEhbofGIcy5KaIhH9Bqza0k7WUmHxQxOKJ5VudUh
+	Ch8xpJUOZfE1s+01JDShzU7Ev5u1Cu+sDb1R357gV85uytJkkPY9nlsYslu31R1z9j4K/plnVeg
+	KFnxUmwDTyPwZVEWteRmSzbrdPUEWzu/Qp0xnlr3KE6wyOBrBZp75kBLP5+3Gr2eIYn7ByKwG8x
+	cxGdjY23VZOmi9/VsJ+6tyIhD0I3cj0VPN/Yu0dJ2p7PixXmrrCDWx/aTren+9mHZY5L
+X-Google-Smtp-Source: AGHT+IHvk6/UEgPuUarQoM3QIGf47jIEwUV97FOhse5NsNON8UUQENswlYanuyKROZD7+6+YsdUArQ==
+X-Received: by 2002:a05:6a00:244a:b0:725:f097:ed21 with SMTP id d2e1a72fcca58-72fd0c62288mr30218643b3a.15.1738588310373;
+        Mon, 03 Feb 2025 05:11:50 -0800 (PST)
+Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631be3csm8377629b3a.7.2025.02.03.05.11.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 05:11:50 -0800 (PST)
+From: Potin Lai <potin.lai.pt@gmail.com>
+Date: Mon, 03 Feb 2025 21:09:14 +0800
+Subject: [PATCH 2/2] ipmi: ssif_bmc: Add support for adjustable response
+ timeout
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v18 12/25] ovpn: implement TCP transport
-To: Sabrina Dubroca <sd@queasysnail.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Donald Hunter <donald.hunter@gmail.com>, Shuah Khan <shuah@kernel.org>,
- ryazanov.s.a@gmail.com, Andrew Lunn <andrew+netdev@lunn.ch>,
- Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
-References: <20250113-b4-ovpn-v18-0-1f00db9c2bd6@openvpn.net>
- <20250113-b4-ovpn-v18-12-1f00db9c2bd6@openvpn.net> <Z6CU2emFGy1L3MDT@hog>
-Content-Language: en-US
-From: Antonio Quartulli <antonio@openvpn.net>
-Autocrypt: addr=antonio@openvpn.net; keydata=
- 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
-Organization: OpenVPN Inc.
-In-Reply-To: <Z6CU2emFGy1L3MDT@hog>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250203-ssif-response-timeout-ms-v1-2-6fe279740181@gmail.com>
+References: <20250203-ssif-response-timeout-ms-v1-0-6fe279740181@gmail.com>
+In-Reply-To: <20250203-ssif-response-timeout-ms-v1-0-6fe279740181@gmail.com>
+To: Corey Minyard <corey@minyard.net>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Quan Nguyen <quan@os.amperecomputing.com>, 
+ Patrick Williams <patrick@stwcx.xyz>
+Cc: openipmi-developer@lists.sourceforge.net, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Cosmo Chou <cosmo.chou@quantatw.com>, 
+ Potin Lai <potin.lai@quantatw.com>, Potin Lai <potin.lai.pt@gmail.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738588302; l=1887;
+ i=potin.lai.pt@gmail.com; s=20240724; h=from:subject:message-id;
+ bh=/kUKPWCuiO07PV8wX+eiL75OEyrHSx5RcfpFsjZDG/U=;
+ b=6Osmui4mmnSoBdZ1gq0ddokpf1z0Xv5oKdw5ZwDKeeh07nb1EchIXM0IDY8TT+h+DkK/rim1B
+ L1S67E8or2BDDYV7xxZSB+Phz0qXdRGzMx2ulkUpkk+1OR2qQ8mhX57
+X-Developer-Key: i=potin.lai.pt@gmail.com; a=ed25519;
+ pk=6Z4H4V4fJwLteH/WzIXSsx6TkuY5FOcBBP+4OflJ5gM=
 
-On 03/02/2025 11:05, Sabrina Dubroca wrote:
-> 2025-01-13, 10:31:31 +0100, Antonio Quartulli wrote:
->> +static void ovpn_tcp_rcv(struct strparser *strp, struct sk_buff *skb)
->> +{
-> [...]
->> +	/* we need the first byte of data to be accessible
->> +	 * to extract the opcode and the key ID later on
->> +	 */
->> +	if (!pskb_may_pull(skb, 1)) {
-> 
-> make sure we have 1B...
-> 
->> +		net_warn_ratelimited("%s: packet too small to fetch opcode for peer %u\n",
->> +				     netdev_name(peer->ovpn->dev), peer->id);
->> +		goto err;
->> +	}
->> +
->> +	/* DATA_V2 packets are handled in kernel, the rest goes to user space */
->> +	opcode = ovpn_opcode_from_skb(skb, 0);
-> 
-> but this reads a u32 (4B) from skb->data
+Implement support for the `timeout-ms` device tree property, allowing
+platforms to adjust the userspace response timeout as needed.
 
-ACK, hand-in-hand with the comment not updated.
-Will fix this.
+If `timeout-ms` is not specified, the default response timeout remains
+500 ms. This ensures compatibility while providing flexibility for
+platforms that require longer timeouts due to BMC or application load.
 
-> 
-> [...]
->> +void ovpn_tcp_socket_detach(struct ovpn_socket *ovpn_sock)
->> +{
->> +	struct ovpn_peer *peer = ovpn_sock->peer;
->> +	struct socket *sock = ovpn_sock->sock;
->> +
->> +	strp_stop(&peer->tcp.strp);
->> +
->> +	skb_queue_purge(&peer->tcp.user_queue);
->>
->> +	/* restore CBs that were saved in ovpn_sock_set_tcp_cb() */
->> +	sock->sk->sk_data_ready = peer->tcp.sk_cb.sk_data_ready;
->> +	sock->sk->sk_write_space = peer->tcp.sk_cb.sk_write_space;
->> +	sock->sk->sk_prot = peer->tcp.sk_cb.prot;
->> +	sock->sk->sk_socket->ops = peer->tcp.sk_cb.ops;
->> +
->> +	/* drop reference to peer */
-> 
-> nit: not really :)
+Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
+---
+ drivers/char/ipmi/ssif_bmc.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-drop comment :)
-
-> 
->> +	rcu_assign_sk_user_data(sock->sk, NULL);
->> +
->> +	/* before canceling any ongoing work we must ensure that CBs
->> +	 * have been reset to prevent workers from being re-armed
->> +	 */
->> +	barrier();
->> +
->> +	cancel_work_sync(&peer->tcp.tx_work);
->> +	strp_done(&peer->tcp.strp);
->> +	skb_queue_purge(&peer->tcp.out_queue);
-> 
-> Also kfree_skb(peer->tcp.out_msg.skb)?
-
-hm yeah, it could be we allocated one but did not finish filling it.
-
-> 
->> +	ovpn_peer_put(peer);
->> +}
-> 
-> 
-> [...]
->> +static int ovpn_tcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
->> +{
-> [...]
->> +	ret = skb_copy_datagram_from_iter(skb, 0, &msg->msg_iter, size);
->> +	if (ret) {
->> +		kfree_skb(skb);
->> +		net_err_ratelimited("%s: skb copy from iter failed: %d\n",
->> +				    netdev_name(sock->peer->ovpn->dev), ret);
->> +		goto peer_free;
->> +	}
->> +
->> +	ovpn_tcp_send_sock_skb(sock->peer, skb);
-> 
-> This isn't propagating MSG_DONTWAIT down to ovpn_tcp_send_sock?
-> 
-
-patch 14/25 will add a new member to ovpn_cb which will be filled right 
-before calling ovpn_tcp_send_sock_skb() and that gets picked later.
-
-Cheers,
-
+diff --git a/drivers/char/ipmi/ssif_bmc.c b/drivers/char/ipmi/ssif_bmc.c
+index 310f17dd9511..8f0fbc941936 100644
+--- a/drivers/char/ipmi/ssif_bmc.c
++++ b/drivers/char/ipmi/ssif_bmc.c
+@@ -87,6 +87,7 @@ struct ssif_bmc_ctx {
+ 	/* Timeout waiting for response */
+ 	struct timer_list       response_timer;
+ 	bool                    response_timer_inited;
++	u32                     response_timeout;
+ 	/* Flag to identify a Multi-part Read Transaction */
+ 	bool                    is_singlepart_read;
+ 	u8                      nbytes_processed;
+@@ -331,7 +332,8 @@ static void handle_request(struct ssif_bmc_ctx *ssif_bmc)
+ 		timer_setup(&ssif_bmc->response_timer, response_timeout, 0);
+ 		ssif_bmc->response_timer_inited = true;
+ 	}
+-	mod_timer(&ssif_bmc->response_timer, jiffies + msecs_to_jiffies(RESPONSE_TIMEOUT));
++	mod_timer(&ssif_bmc->response_timer, jiffies +
++		  msecs_to_jiffies(ssif_bmc->response_timeout));
+ }
+ 
+ static void calculate_response_part_pec(struct ssif_part_buffer *part)
+@@ -809,6 +811,10 @@ static int ssif_bmc_probe(struct i2c_client *client)
+ 	if (!ssif_bmc)
+ 		return -ENOMEM;
+ 
++	if (of_property_read_u32(client->dev.of_node, "timeout-ms",
++				 &ssif_bmc->response_timeout))
++		ssif_bmc->response_timeout = RESPONSE_TIMEOUT;
++
+ 	spin_lock_init(&ssif_bmc->lock);
+ 
+ 	init_waitqueue_head(&ssif_bmc->wait_queue);
 
 -- 
-Antonio Quartulli
-OpenVPN Inc.
+2.31.1
 
