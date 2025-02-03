@@ -1,96 +1,92 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188CC288B1
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EDB1FBE9B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738574269; cv=none; b=pOmcW+/vmeoklaAs22lU+xoKUtPTHnLwmLK1DwltLJufZBzgFGP8NQQGYtPgMUptogQk4MOqnVdwwU4z27cUEYi8daCMKED/7lh5ZAe5ijgSvRuCyZOifn9lC+p2+Vl0zl2Ymrv+/IKuhr3dVCp5mZCZcqddjaV44zfJW884s5g=
+	t=1738574271; cv=none; b=hgNJ8yVuf4voby+KYLPBYl+plEOr2Nk+SvIIyFObsEwUQVj3nitejsP7k5xvBvwB8ScZ3z5uGm8cQzEn6BYVQA8W2v5iU1158erdAeB8DdFnPPXBqWr7qPXZIOgc+9TUZ818qjpWAx98kbXRZEP/aATsHhZxPao6axPzqod39iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738574269; c=relaxed/simple;
-	bh=Ns8NUVMpkVKDvWnM9BTZ07rVrluqhBkiCJ+nlI+819k=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:From:Cc:
-	 References:In-Reply-To; b=sqcBjvEUhCQSjjFXZMwbqndAoJm4qUMOKKDg1w+AtCmadoujsxil5B6X5F0vNzgrFxrFicyfv6kInxH6VOajNwbil86B1J1uNvMIVqOGk5ZSlFwLcxooRgdB/awK1kNEVdmE/jCippHkAg0rsPPmOjjYyZ59rm6fE1GPyc3pxzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=XekN5ZnQ; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
+	s=arc-20240116; t=1738574271; c=relaxed/simple;
+	bh=YZvdJoCzVjHsxT40ttPflNqCtnquMUzEPyDKK26T2pw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DRI+4MAorFy5JAGO31yWjz0Mgr/opGl4S7JmxaPGwqxZYo5pPF6Q86vASsEy6nAzZh/0nKm+x4rG6VCw13KLuqdLWmsWXHH115MlCnEcOQoKtjeUSRzcLcSqbc4NdGsOAR6vyvzvhG+5c6FUj/g3zX5lwLSxAaDKIylWXPEVAZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TWaOm3sA; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="XekN5ZnQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TWaOm3sA"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-438a3216fc2so41572545e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:17:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738574268; x=1739179068; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YZvdJoCzVjHsxT40ttPflNqCtnquMUzEPyDKK26T2pw=;
+        b=TWaOm3sADXTGfvzGFsMxr+eezFyQw1Q+mwViUSw1TI82eYl4lPM7CSa1LAR75Z3B6Y
+         yPzP9qQ7vjBszuEUnlCh+Uhc3fazv9xzSCVXjRvjXtA9FYxDyKrG7XUKS/m9Y3ZWPM+U
+         Zk/qmvd5Bjm8xRPFeTtkigT0oElAGTe+zK72THHKQrxaSCTRBxNJuDH8+bp9WBJTZIQj
+         jdbsbk2OVOijKoJz8GyausqItd7wT9TAOdVElD3XTsPNv25t4EX3RYH6fln2GxBhFaOK
+         /7bpO+VaBmpx8JT/uQxmA5DqUA9X/hnyNw95FHqlv0xsF4X0zcVnG2dSSAWHQATvzhoZ
+         wSeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738574268; x=1739179068;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YZvdJoCzVjHsxT40ttPflNqCtnquMUzEPyDKK26T2pw=;
+        b=OkkgZ7AHzHgU1AA6pvsahmQkikYAEI29fAcBwsC3pKQc6boqJcVTzcSSnG8ksSpcNC
+         kuI6m2QLhyjdKE26RLsasNQQ1ybwhDjsGxwuDF3fD8ZGSV7KtGcA2HhUK4gOqOYfup7z
+         03rcSQBho/TuHx2RqEy2ou2R8o2KpS2KhQUtK64G/ZyyGoCYyK13F2AfAl6eOcobzBmZ
+         8/8pHW1nDSuTb13dIxWnh3rrXPWwfNKPW7z94plgoFFaS6MGmID1Vt1nCnkXFoyOPOLu
+         3fe5/V9pywdsCp88nPrJXVD50eWMtFUY5DjW0LdEsyRVsnKz9Uc0fZdh8dht+cnl0hVC
+         CAKg==
+X-Forwarded-Encrypted: i=1; AJvYcCXfERhHbNaula9SqSqxYm1NVjsOVBG4DIaTXjAB7jMp/LUpXyb3UlyxZvZrDRE4H/SL6d/ZDityFtotQEw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUhSFV0aIt4F0cU8RzwA7uC//3GhYJ3YodkgHdN0zT7lpbCsQu
+	HQPjYOwrec5mO/tEAgzNP+E692uSwhppgWPUwuEIvhnZF85trq+N12otCkvMt5UBuUVOxT9grM1
+	ZfwFL8vIvJsOpY2MrNKsVTh9ZP3lIxL+UP447
+X-Gm-Gg: ASbGncsBYSvHN+eaNDXRZMCTOvkPNjAlO3mB2+0dqDynL3hfpPCB/wU5kAFnzISGu+Z
+	wNxNyDG6oZ/329Qp0uXa1xvuoGISnKidpwCfjA0CfugU9ePyFCfLb7YMECM4bF+wGe2AZxefFl+
+	UAzF+o19AKI2WLOb+8prlfRuhv
+X-Google-Smtp-Source: AGHT+IFc/1AuykTGw2Qq96Tvv03ntnD9n7SFRLhjQXSqvolNCxvTm+SCCbwciWNaqMmYnD3m8ACiqaA8EI8pP0CLNkY=
+X-Received: by 2002:a5d:6d86:0:b0:38a:873f:e31f with SMTP id
+ ffacd0b85a97d-38c5194d20fmr16306574f8f.1.1738574268194; Mon, 03 Feb 2025
+ 01:17:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1738574263;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HZ3MU5Alwy2jOdKOqGh+Wgi75fgSkITzfd+ri8LOY3o=;
-	b=XekN5ZnQzXVYdJE3CcYaapzKa2Kf+/Hikgg9TZHzdWkN0hdjEAbOTXyDB8ZJSOOLXXPyqU
-	o9d0PSXbNEHynQkYfxqKwsgDkKa3cadPWHcfQNGfIzDMBycbwSQ+gg246IdtGtMxmENoNC
-	DHaJhOL2JOkRsbjnCsENVNaosUXHeQhFOv5NC8nHc+HtANvdwjfj/LDbwpP05o7ftycr2/
-	s4FyCnOAhIzxcwV8AVUbvzb/FjI7SVmaImOnBm8m9edCAiYQcOVdoihx0A+9VRb2mgjTsz
-	SHy4DA5qMAvfRRE+aHQ/LL/GDzSHKVs/i8AsNacCXx4I3h61NO+50PyypzWIxQ==
+MIME-Version: 1.0
+References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net> <20250202-rust-page-v1-2-e3170d7fe55e@asahilina.net>
+In-Reply-To: <20250202-rust-page-v1-2-e3170d7fe55e@asahilina.net>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 3 Feb 2025 10:17:36 +0100
+X-Gm-Features: AWEUYZnHBKgHkqPgFSXj_rkUh31XGNKQXaliK-ukOAh1dOlV4j6E8lRPRejB3OE
+Message-ID: <CAH5fLgieTeYJ_prMX7K6eS63ctDwT+NBYrzmOakbNGBjuXA0kA@mail.gmail.com>
+Subject: Re: [PATCH 2/6] rust: page: Convert to Ownable
+To: Asahi Lina <lina@asahilina.net>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Jann Horn <jannh@google.com>, 
+	Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Valentin Obst <kernel@valentinobst.de>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	asahi@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 03 Feb 2025 09:16:50 +0000
-Message-Id: <D7IP4ECJ9XM5.3JSGHFAI75K9M@postmarketos.org>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: amlogic: add S805Y and Mi TV
- Stick
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Ferass El Hafidi" <funderscore@postmarketos.org>
-Cc: "Neil Armstrong" <neil.armstrong@linaro.org>, "Kevin Hilman"
- <khilman@baylibre.com>, "Jerome Brunet" <jbrunet@baylibre.com>, "Martin
- Blumenstingl" <martin.blumenstingl@googlemail.com>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, <linux-amlogic@lists.infradead.org>,
- <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <~postmarketos/upstreaming@lists.sr.ht>,
- "Artur Weber" <aweber.kernel@gmail.com>, "Karl Chan"
- <exxxxkc@getgoogleoff.me>, "Christian Hewitt" <christianshewitt@gmail.com>
-References: <20250201193044.28856-1-funderscore@postmarketos.org>
- <20250201193044.28856-2-funderscore@postmarketos.org>
- <20250202-wisteria-rook-of-intensity-6fecfa@krzk-bin>
- <D7I0F3OMXALB.1ZT1G03JTKSEZ@postmarketos.org>
- <56ec442d-54b3-404a-a10b-763a00e7099e@kernel.org>
-In-Reply-To: <56ec442d-54b3-404a-a10b-763a00e7099e@kernel.org>
-X-Migadu-Flow: FLOW_OUT
 
-Hi Krzysztof,
-
-On Sun Feb 2, 2025 at 2:07 PM UTC, Krzysztof Kozlowski wrote:
-> On 02/02/2025 14:55, Ferass El Hafidi wrote:
-> > Hi,
-> >=20
-> > On Sun Feb 2, 2025 at 1:54 PM UTC, Krzysztof Kozlowski wrote:
-> >> On Sat, Feb 01, 2025 at 07:30:43PM +0000, Ferass El Hafidi wrote:
-> >>> From: Ferass El=C2=A0Hafidi <funderscore@postmarketos.org>
-> >>>
-> >>> Add support for the Amlogic S805Y SoC and the Xiaomi Mi TV Stick (aka=
-.
-> >>> xiaomi-aquaman).  The S805Y is very similar to the S805X, with just a
-> >>> few minor differences.
-> >>>
-> >>> Signed-off-by: Ferass El=C2=A0Hafidi <funderscore@postmarketos.org>
-> >>
-> >> Please run checkpatch. You have from/SoB mismatch.
-> >=20
-> > I don't see any mismatch.  Maybe it complains because of a spurious
-> > non-breaking space?
-> >=20
-> Could be, no clue. I copied them to editor and it also sees mismatch -
-> both entries just do not match.
-
-The From/SoB mismatch should be fixed in the v3:
-https://lore.kernel.org/linux-amlogic/20250203091453.15751-1-funderscore@po=
-stmarketos.org/T/#u
-
-Thanks.
-
+On Sun, Feb 2, 2025 at 2:06=E2=80=AFPM Asahi Lina <lina@asahilina.net> wrot=
+e:
 >
-> Best regards,
-> Krzysztof
+> This allows Page references to be returned as borrowed references,
+> without necessarily owning the struct page.
+>
+> Signed-off-by: Asahi Lina <lina@asahilina.net>
+
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
