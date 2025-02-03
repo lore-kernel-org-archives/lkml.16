@@ -1,38 +1,38 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6454520E70B;
-	Mon,  3 Feb 2025 18:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B888820E038;
+	Mon,  3 Feb 2025 18:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738607066; cv=none; b=lHZ+sYDOD4Arx9rghaz3L4v76KqV1GcnrpZGRXjFwz80hHXrnkQH9G1MVFXZwhlarBjjT3T/ke+pMNQsVOyxjQ8caXiJzN9qQbWjW+ENu2bbMiizfJHRye4Lnhycx56V5Y+yXC6xhEmTGFeuQDUA18weFVB8nrZjEKm641Y9knM=
+	t=1738607071; cv=none; b=GyAYXBRn2PGkHY/gU+2M5rPqtwvAaIOejedGcKV4zN5Wm4zmJ6zHNPbEU+HErsiu/h/oEhpdZjCwixUN5gdd/8izhp4sPLDUln1J2bUYYG73y41LeOC75vCjgXuRlO5WKFrpbCoSeNZSUnyEHNbcHzt8mgXMyMmL1yDTeNksEfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738607066; c=relaxed/simple;
-	bh=FHQiOMPxOLduL6ZunVtc+K2sCrie2H89WPZ6vjPpGKw=;
+	s=arc-20240116; t=1738607071; c=relaxed/simple;
+	bh=ID+lTHjLVqPJ/7xdhI9bJLFn9teO4+JhdZK9zVjbwuc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HZMWhQQzku67CN+6Ys5l9RY0Z/FlTQ0XrDHUjOaCFtS4g3akfrfUqOjYPgLrgQzHQTX+V2sS19xJ/C7i9eNLcc8ItoRLFQnz4usHupzwrlUXkbaQb2+Lykh8nyc+0b4Irkn2eAC5A0uGhNC/cAtW3knf5mw2EjkkYJc5C3C9e2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pXt0Tb2C; arc=none smtp.client-ip=212.227.15.18
+	 MIME-Version; b=g+IpM6UDBaxELt6dSREMQqVWzBr6uxL5mAV23c5lD6pKlC7Z0a9aCeKfOhaG61zNBFMdIDpdKN6RAuFL6Cj3kjPlHL6SbMIyck+7ykmfFCAb03FGI3z9XfC725W49Dui4focqCcunj6Zkq7oCOufHcU3R2KvsBVqaLI4v99Dwhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=aWhPhmlR; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pXt0Tb2C"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="aWhPhmlR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1738607034; x=1739211834; i=w_armin@gmx.de;
-	bh=180guT/AdsT0ltiSLZcaeOIERCtnGAqQQGRtYmLBchM=;
+	s=s31663417; t=1738607039; x=1739211839; i=w_armin@gmx.de;
+	bh=RuoP/0xYYt9z3bJOrdWbm40zFLkGkpfWsyjNl2p49Lk=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=pXt0Tb2CcZKPjiGHc3LtR0qwoLd8Gn0m935eFRFf00nqIvnT+/k5BJQV69mF7bZG
-	 Na083tE7FtVKJ7LF4MzFGDohvMy27uKgQtCFLwPWldmtOKOloYPnDOJnVLqcWSU3q
-	 E8XwG3cAqS0p5Od/3d5Iz7GFXgG7YWTh6KfmhRLJ40FGboE+wMrHHEgDh2dDxCUuu
-	 j1M+0a/6e7PxizR2GmHtPDDMDuHWID0YwonhT1WrCUaItOzjfM3aeNO+rsrl0zuVx
-	 55DScnMqWFaz9w1S6clG8DOglj6XG/QOyK+Jt15XoE5duTbYSfKJApmqGibNqPMx8
-	 PWAVfBM/COfW5vQXug==
+	b=aWhPhmlRArsn+pDgJ2w/O1mTO55kfaAAZn58tcZ+hb2T/3SNnY7FghUnQx4ZaDHI
+	 6aQ2VvbDUNusgIJorWP9rBDNlIvzLjvBjG8tL5/+NLu+j2MromQvTN4p+zx684FjM
+	 0B/iK7Usdp6gX4v4pYatzKA7aXInMEpKiZaIbI9jV8OBrD16sqalIxqID2XESWPaG
+	 Gc5/XCsQpZgqRri7wix1JPchGYmsm2q+mT+HAnGZXoM8Z4DMOiUvWjJM/993J55V6
+	 qgK5b5jpYxbkqEkE1//ZUNvhSL0JkLp3bcCcgnYa3/Fr4InePKvr0ofCeih/J1IBg
+	 Uz6qFEXEUE+dqQ9bqA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([91.14.238.232]) by mail.gmx.net
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MeCtZ-1t7Kv83JHr-00jMXS; Mon, 03 Feb 2025 19:23:54 +0100
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N4zAy-1tFxlr1lkC-0106gf; Mon, 03 Feb 2025 19:23:59 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: james@equiv.tech,
 	markpearson@lenovo.com,
@@ -46,9 +46,9 @@ Cc: jdelvare@suse.com,
 	platform-driver-x86@vger.kernel.org,
 	corbet@lwn.net,
 	linux-doc@vger.kernel.org
-Subject: [PATCH 5/7] platform/x86: wmi: Rework WCxx/WExx ACPI method handling
-Date: Mon,  3 Feb 2025 19:23:20 +0100
-Message-Id: <20250203182322.384883-6-W_Armin@gmx.de>
+Subject: [PATCH 7/7] platform/x86: wmi: Update documentation regarding the GUID-based API
+Date: Mon,  3 Feb 2025 19:23:22 +0100
+Message-Id: <20250203182322.384883-8-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250203182322.384883-1-W_Armin@gmx.de>
 References: <20250203182322.384883-1-W_Armin@gmx.de>
@@ -59,280 +59,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Nzx1rTtRVfc3GgoenYE84g0O3YzlMeSyfiYJ24Tnm1vVsyQriqP
- MkiKLJZQHZGt9mlodDJNeFXB1cRyxmmkF+SG2az56xxx9fM4KIBP5kCmEP9x9Rh0tfVh709
- uh2zGu98y8/ro+0jLCRYWNt39xEAPkAuFqeiCBfX3JzmZXV0aUJcHaxsRHKsXLguzcee1MQ
- KyH88QKnul/m7hMDwUuow==
+X-Provags-ID: V03:K1:6wNh6ZLBhn/RTk1uI75rS1eo+d5PKvpI3IUTypVYdaxgUADGLyB
+ agytg809oy6KvZRjQsDGpuJIZGos0r92nQZiAeCHicdZvD45ZewgETSrltkawq/BR/DG+kX
+ pk7uINd1aSzUocKO13d3sH+DEW55aonnzupH/qTr2lsT02YPDiQZmuDVHJhzyA4Ay4URbvo
+ 7XFix0eHzgYs+YE8+IE2Q==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:KMWT4GcImFE=;l5gLwauUu2OjG8zmjmGz9QvY466
- U2EwfkpWkDPktjPPqwFbI8Wv/2/yV72U5CVStnwYm00whL9rFcBOPuy8hdcfyzhCyFoxwVnaW
- YVEh75Hm68qUiPEV/YLx3dQeYOf0Q9/QInrddAJ4XxPd7Wy4Fwwwdce7W7fHz3gtYhCbtODnt
- WoKNKrd1LXLYzNgZuLxcfZVdNnK9NqTT7OZ1hKRFouL4DzU8SjZ+lhgr8SbQN+ZU8P+qcj/J/
- y0MKM9ReX2qtpFlIdmwOv39l72KOIt1ZrNybA008COMv5OjdW1WbZfpw9XNv1KbdkvNsXN/A0
- arbtl1A7FmwpwcrBkUeClUQy2WszxtUvTYYYzNtTlagIOQoXYh/qkKUcG9cOMTmj4QzS3UeLZ
- NJQS15oHKNIZUgIY/RbgXr+Gh1lmRIDmh6ZdWnM/ifhyCT1A1QXRAIzOGM2myLWeatlKCIywB
- cixGYZ4IhayZzBPL4tqd9W/gD0iagO3to7kveJCBRBP/Adwym0hEbAqLoqUMeFbdoLozmgwyt
- 7tQEaKSwXSoVSPbTKkdfLA6pfO+0fjE4cRdOxwmtFp00zoU+NOWGKi/gXpN8EPRlpbJjI3rjD
- KmgxqYnS6EEfmPVpSedZjbbJYh31ctt3vgWY3fpsPy1pQgbfMK421++flJ8AVGIlxsNX/PVHa
- ik/QpBwaJ1Bji3IqL0/JSOyngJhekM12uFfkTQivSu2Brzm45xuzwVjUCQIOG399ysnWnTQFj
- sbh6BmO5gwFe0uNxSCgRytOcS0zfnz6O8mk4GDpIKOA4StTpRQEvdUNXccWPHlaAnBYW3EhTp
- 7jTuJFir+dKF5T6oJGQ+eLNCYBHa7j+nPAPtaj+o5HRUSX8C3dvwJ4IG8sEOObSz015ahNh6o
- Mg9Dyrx4iVp1+cb71au3lYCvxT3E3taqdiP6yJANeR7gdOmSMaDYdrMUfwPxbIL4cq+pL9JnD
- V559OxiA13cU0fDnseRsT5EQKYuw2TnzKJvmIdD048F4ezqod6eLm6wyQ7j1qtYeeX0YejGYC
- us5TZNKoMDZJtDq1nQfBoWlbOLsRJTc0CjbqlBMBKCmY9sKc0uvN7wA0KJPaK3aUKYXp7Jrv1
- 149qORJxvdBmAoyZ0XHA2KLa4tawZXn45TJ3FXFtOEhc069JCvvFYLt4lvAmdpyAmVTExcYz5
- o7oJTB2vwlca/+oBmYsymQyfPtOSBfxzzXJ6J8aTihHItjzwjKtzPgFcvci+vogEMH1FcVpGb
- JZHyvy0k9xCH0diR1BPXimJawnlXXnq94cWSu+9CFF0pPGACvaOD8g9PuLqT2AlEpx2M4onIM
- WSsdR/Ynokbz5M0mzOI/2r0Wmwro9I+hsQjhrr/XFpjE9g=
+UI-OutboundReport: notjunk:1;M01:P0:9wiWRpfj7xw=;LWzqhLjD36c8j2gTfbmciDyXoWM
+ OIZz1QSBdDMriNr/kZMaAdiE0rIIC3xw/qwJDo6Ejm/LKvJLiVV3yNqx7Or2LKHswMBubkLA/
+ 3jS8uC1sLk2Ca9lAhAy0gY52OFMoeCUYA4jodICWzNJHv08vI0rMyEPIN6sruLwcvQpwqkLzV
+ djJ1mqnwRDV6W1QKA581rAkLuNPQu02RRtHArPnKJPDEqayk41dR2+vbEPit5CSxnaTITOxny
+ tiJugjKXIQzi2/A7gcxvbt/UXXK9teD9kOGHYp5JZ+TzGAmWyTT2OnFPOhehKWdxiSFdgm/zt
+ 7zMJt3RlbJnBNpwwBXviprf7E1q1Rsh3oq6gh3iRGOgnBr8qasPwL5Z5cj2DtyhnUmpq+u/dQ
+ BwqZukMRki+A3NuenpSlGMNP/lFR9XAzzwYCOFDwTuzOm8sOBIlZfHKqleSyMVQaP9ihxVaxl
+ 9VbZw+d/Uo68vBMUjXzNr7tXdf4K9bipBQ0vypWTu+Kv+2p/Pq0/9UlpDyodiHpMdhixm2iJe
+ I+fnzs1nbQHFeKRInHI7jldHZvxTmsXromwTf56gqajE7w5rh0SvIH1Vv+YU/A6abO6m18thb
+ reFWPsdeXsDP+Dj6B9wcWVpXBVDhiQ6lD6LhYJCmu7oW9sFz4xFKaPxGqnwg+mDqAA6i8kNBx
+ LWu6oG3LvtH2cJr3xMEyJ041nDzzefswavSQzXPmobPxsMn5hs7v3cGAFcU4Y8kS2Z4B5fEm1
+ MDbwekjN5PsFMEkEq2F6M3n3/B5JIgbi8MrxvsrCJauO2HelHITumQZpakqBhkivWP8T0H6na
+ 7CWFF+4r76b1HndoSz/EN3Z53uZ66hFFHX+WldBkcNFL3GQoScDYXG5aCJ8lAYxv5eVbJZ8y/
+ EFYSPVdYStBV5+VaN9Av6EIOPGDjQnMtNGku0aDn0qRjRzuQdP23vd6K8sKxec5woSwiwF7n8
+ XBPgKVrWiemorU29olBzIQlOKRoWNPDiEcmoRiBp8lp2rG8ECYtAwdpmLYmw0SFkQCoMAvODh
+ CGm6N26miQ2PBKoJT+EhiMmUefpvDKNlRWtD4tJublZTiS7ydszhzCi3UgpeAt3C7yRqY+csP
+ tj5Yh7lo8X8OLDF+pwehWPJqWawztz4ncPFdLSp38t+7MY254rqXQlcWptx5/v+S7gPhVRcxN
+ bYe9XTlN4q04YTy8ignR7uxZHC9mpi1JCMFtK7dx0g4Alkb4+CNf5MIF0jIR6MnYxMciHtRHt
+ btvNxJPRcGYCyoTB6ucii4zoAHtkxcHU/Qnvqm1SUw3xdt5+3BUpzoVSLZbw4/twdBV+A4kYn
+ V6SdPj/krlLVoKdPsoGOCDxkte0OHWwhveg0AGTXiXmyzE=
 
-The handling of the WExx ACPI methods used for enabling and disabling
-WMI events has multiple flaws:
-
-- the ACPI methods are called even when the WMI device has not been
-  marked as expensive.
-
-- WExx ACPI methods might be called for inappropriate WMI devices.
-
-- the error code AE_NOT_FOUND is treated as success.
-
-The handling of the WCxx ACPI methods used for enabling and disabling
-WMI data blocks is also flawed:
-
-- WMI data blocks are enabled and disabled for every single "query"
-  operation. This is racy and inefficient.
-
-Unify the handling of both ACPI methods by introducing a common
-helper function for enabling and disabling WMI devices.
-
-Also enable/disable WMI data blocks during probe/remove and shutdown
-to match the handling of WMI events.
-
-Legacy GUID-based functions still have to enable/disable the WMI
-device manually and thus still suffer from a potential race condition.
-Since those functions are deprecated and suffer from various other
-flaws this issue is purposefully not fixed.
+Warn WMI driver developers to not use GUID-based and non-GUID-based
+functions for querying WMI data blocks and handling WMI events
+simultaneously on the same device, as this will corrupt the WMI device
+state and might thus lead to erratic behaviour.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/wmi.c | 108 +++++++++++++++++--------------------
- 1 file changed, 50 insertions(+), 58 deletions(-)
+ Documentation/wmi/driver-development-guide.rst | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 646370bd6b03..01d4ac480930 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -123,24 +123,6 @@ static const void *find_guid_context(struct wmi_block=
- *wblock,
- 	return NULL;
- }
+diff --git a/Documentation/wmi/driver-development-guide.rst b/Documentatio=
+n/wmi/driver-development-guide.rst
+index f7e1089a0559..99ef21fc1c1e 100644
+=2D-- a/Documentation/wmi/driver-development-guide.rst
++++ b/Documentation/wmi/driver-development-guide.rst
+@@ -96,6 +96,10 @@ on a given machine.
+ Because of this, WMI drivers should use the state container design patter=
+n as described in
+ Documentation/driver-api/driver-model/design-patterns.rst.
 
--static acpi_status wmi_method_enable(struct wmi_block *wblock, bool enabl=
-e)
--{
--	struct guid_block *block;
--	char method[5];
--	acpi_status status;
--	acpi_handle handle;
--
--	block =3D &wblock->gblock;
--	handle =3D wblock->acpi_device->handle;
--
--	snprintf(method, 5, "WE%02X", block->notify_id);
--	status =3D acpi_execute_simple_method(handle, method, enable);
--	if (status =3D=3D AE_NOT_FOUND)
--		return AE_OK;
--
--	return status;
--}
--
- #define WMI_ACPI_METHOD_NAME_SIZE 5
-
- static inline void get_acpi_method_name(const struct wmi_block *wblock,
-@@ -184,6 +166,42 @@ static int wmidev_match_guid(struct device *dev, cons=
-t void *data)
-
- static const struct bus_type wmi_bus_type;
-
-+static const struct device_type wmi_type_event;
++.. warning:: Using both GUID-based and non-GUID-based functions for query=
+ing WMI data blocks and
++             handling WMI events simultaneously on the same device is gua=
+ranteed to corrupt the
++             WMI device state and might lead to erratic behaviour.
 +
-+static const struct device_type wmi_type_method;
-+
-+static int wmi_device_enable(struct wmi_device *wdev, bool enable)
-+{
-+	struct wmi_block *wblock =3D container_of(wdev, struct wmi_block, dev);
-+	char method[WMI_ACPI_METHOD_NAME_SIZE];
-+	acpi_handle handle;
-+	acpi_status status;
-+
-+	if (!(wblock->gblock.flags & ACPI_WMI_EXPENSIVE))
-+		return 0;
-+
-+	if (wblock->dev.dev.type =3D=3D &wmi_type_method)
-+		return 0;
-+
-+	if (wblock->dev.dev.type =3D=3D &wmi_type_event)
-+		snprintf(method, sizeof(method), "WE%02X", wblock->gblock.notify_id);
-+	else
-+		get_acpi_method_name(wblock, 'C', method);
-+
-+	/* Not all WMI devices marked as expensive actually implement the necess=
-ary ACPI method.
-+	 * Ignore this missing ACPI method to match the behaviour of the Windows=
- driver.
-+	 */
-+	status =3D acpi_get_handle(wblock->acpi_device->handle, method, &handle)=
-;
-+	if (ACPI_FAILURE(status))
-+		return 0;
-+
-+	status =3D acpi_execute_simple_method(handle, NULL, enable);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
- static struct wmi_device *wmi_find_device_by_guid(const char *guid_string=
-)
- {
- 	struct device *dev;
-@@ -337,10 +355,8 @@ static acpi_status __query_block(struct wmi_block *wb=
-lock, u8 instance,
- {
- 	struct guid_block *block;
- 	acpi_handle handle;
--	acpi_status status, wc_status =3D AE_ERROR;
- 	struct acpi_object_list input;
- 	union acpi_object wq_params[1];
--	char wc_method[WMI_ACPI_METHOD_NAME_SIZE];
- 	char method[WMI_ACPI_METHOD_NAME_SIZE];
+ WMI method drivers
+ ------------------
 
- 	if (!out)
-@@ -364,40 +380,9 @@ static acpi_status __query_block(struct wmi_block *wb=
-lock, u8 instance,
- 	if (instance =3D=3D 0 && test_bit(WMI_READ_TAKES_NO_ARGS, &wblock->flags=
-))
- 		input.count =3D 0;
-
--	/*
--	 * If ACPI_WMI_EXPENSIVE, call the relevant WCxx method first to
--	 * enable collection.
--	 */
--	if (block->flags & ACPI_WMI_EXPENSIVE) {
--		get_acpi_method_name(wblock, 'C', wc_method);
--
--		/*
--		 * Some GUIDs break the specification by declaring themselves
--		 * expensive, but have no corresponding WCxx method. So we
--		 * should not fail if this happens.
--		 */
--		wc_status =3D acpi_execute_simple_method(handle, wc_method, 1);
--	}
--
- 	get_acpi_method_name(wblock, 'Q', method);
--	status =3D acpi_evaluate_object(handle, method, &input, out);
-
--	/*
--	 * If ACPI_WMI_EXPENSIVE, call the relevant WCxx method, even if
--	 * the WQxx method failed - we should disable collection anyway.
--	 */
--	if ((block->flags & ACPI_WMI_EXPENSIVE) && ACPI_SUCCESS(wc_status)) {
--		/*
--		 * Ignore whether this WCxx call succeeds or not since
--		 * the previously executed WQxx method call might have
--		 * succeeded, and returning the failing status code
--		 * of this call would throw away the result of the WQxx
--		 * call, potentially leaking memory.
--		 */
--		acpi_execute_simple_method(handle, wc_method, 0);
--	}
--
--	return status;
-+	return acpi_evaluate_object(handle, method, &input, out);
- }
-
- /**
-@@ -421,9 +406,15 @@ acpi_status wmi_query_block(const char *guid_string, =
-u8 instance,
- 	if (IS_ERR(wdev))
- 		return AE_ERROR;
-
-+	if (wmi_device_enable(wdev, true) < 0)
-+		dev_warn(&wdev->dev, "Failed to enable device\n");
-+
- 	wblock =3D container_of(wdev, struct wmi_block, dev);
- 	status =3D __query_block(wblock, instance, out);
-
-+	if (wmi_device_enable(wdev, false) < 0)
-+		dev_warn(&wdev->dev, "Failed to disable device\n");
-+
- 	wmi_device_put(wdev);
-
- 	return status;
-@@ -471,6 +462,7 @@ acpi_status wmi_set_block(const char *guid_string, u8 =
-instance, const struct acp
- 		return AE_ERROR;
-
- 	status =3D  wmidev_block_set(wdev, instance, in);
-+
- 	wmi_device_put(wdev);
-
- 	return status;
-@@ -551,7 +543,7 @@ acpi_status wmi_install_notify_handler(const char *gui=
-d,
- 		wblock->handler =3D handler;
- 		wblock->handler_data =3D data;
-
--		if (ACPI_FAILURE(wmi_method_enable(wblock, true)))
-+		if (wmi_device_enable(wdev, true) < 0)
- 			dev_warn(&wblock->dev.dev, "Failed to enable device\n");
-
- 		status =3D AE_OK;
-@@ -588,7 +580,7 @@ acpi_status wmi_remove_notify_handler(const char *guid=
-)
- 	if (!wblock->handler) {
- 		status =3D AE_NULL_ENTRY;
- 	} else {
--		if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
-+		if (wmi_device_enable(wdev, false) < 0)
- 			dev_warn(&wblock->dev.dev, "Failed to disable device\n");
-
- 		wblock->handler =3D NULL;
-@@ -844,14 +836,14 @@ static int wmi_dev_probe(struct device *dev)
- 			return -ENODEV;
- 	}
-
--	if (ACPI_FAILURE(wmi_method_enable(wblock, true)))
-+	if (wmi_device_enable(to_wmi_device(dev), true) < 0)
- 		dev_warn(dev, "failed to enable device -- probing anyway\n");
-
- 	if (wdriver->probe) {
- 		ret =3D wdriver->probe(to_wmi_device(dev),
- 				find_guid_context(wblock, wdriver));
- 		if (ret) {
--			if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
-+			if (wmi_device_enable(to_wmi_device(dev), false) < 0)
- 				dev_warn(dev, "Failed to disable device\n");
-
- 			return ret;
-@@ -877,7 +869,7 @@ static void wmi_dev_remove(struct device *dev)
- 	if (wdriver->remove)
- 		wdriver->remove(to_wmi_device(dev));
-
--	if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
-+	if (wmi_device_enable(to_wmi_device(dev), false) < 0)
- 		dev_warn(dev, "failed to disable device\n");
- }
-
-@@ -902,7 +894,7 @@ static void wmi_dev_shutdown(struct device *dev)
- 		if (wdriver->shutdown)
- 			wdriver->shutdown(to_wmi_device(dev));
-
--		if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
-+		if (wmi_device_enable(to_wmi_device(dev), false) < 0)
- 			dev_warn(dev, "Failed to disable device\n");
- 	}
- }
 =2D-
 2.39.5
 
