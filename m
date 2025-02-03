@@ -1,157 +1,97 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95198201116;
-	Mon,  3 Feb 2025 10:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA1B70809;
+	Mon,  3 Feb 2025 10:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738578542; cv=none; b=uCcCMEICsCYQW1+wTXRHp4l9Aam0+w8SVAtyb3oOdSKNpW1dcI/rXvHzLjnREKin3R22V6xJzsiCC9RtuwQTTUunmdj0ueLkSckvx9CfJqAbGd+5eak1PzUlgZbXk8/s3BW5erlr9E+BtKhpgeONDrautz71Fdi7HoWbYc+47ow=
+	t=1738578853; cv=none; b=kAtQRjphXcfOhZpl+TcSacgy+YYFY5AReBelKVVoHxBtt2lOJMQZVuieloN4r4fUbnUl7s5wu44SXdMoGu1p0A8bDVCSNSVaUtgdfpWcbMZY7irv63dV9NqdwEjHgtsqDnVsylb0JTx3vcgsUpfes9sks+rKtAGNPPVrckPR0l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738578542; c=relaxed/simple;
-	bh=yEdNOIPpD7/j1H5I4Ox6cnx7ti57tChBlnF+bbJo9kQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bnpoXW4JpiWzbwZgu5iplhqDxM4u/NUbzLmbFhlTlhC8v84RN+D4Gi12/rR6UhOizV2sD+/JJVWctGAg3S/OsP6sMi05kEYQujl9LUTgwevalRHW0BUzCG1NaJWScXuVHBrd9PsTMjZmxRX+61MkDpbj4ZKLY+1Mqr6ypBlcqBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5909D1BCA;
-	Mon,  3 Feb 2025 02:29:24 -0800 (PST)
-Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AE363F7BD;
-	Mon,  3 Feb 2025 02:28:56 -0800 (PST)
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-To: linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Howells <dhowells@redhat.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Jann Horn <jannh@google.com>,
-	Jeff Xu <jeffxu@chromium.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Kees Cook <kees@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	Quentin Perret <qperret@google.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	x86@kernel.org
-Subject: [RFC PATCH 8/8] mm: Add basic tests for kpkeys_hardened_cred
-Date: Mon,  3 Feb 2025 10:28:09 +0000
-Message-ID: <20250203102809.1223255-9-kevin.brodsky@arm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250203102809.1223255-1-kevin.brodsky@arm.com>
-References: <20250203102809.1223255-1-kevin.brodsky@arm.com>
+	s=arc-20240116; t=1738578853; c=relaxed/simple;
+	bh=uSP3FZGaYgB1Er254idTwB7j/p+pfihDDklq8RXpqDY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AY0sjm11WRI7Aa8qMsMWrq23K1iMofI7XeFQQzzn8/LOnQYKVRg55pAhFCcVJePRmeZ3FqQjNprxRLGDfioO2NUu7sJpLxpXREhrKJUTqtVmCGj0ekfe1kjyXq0Wku8Hjb4WkUdkOy3MIjy6XfY8DYnxUL/RpaSSjTkGc75uYuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V8ItnX1b; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V8ItnX1b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738578852; x=1770114852;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uSP3FZGaYgB1Er254idTwB7j/p+pfihDDklq8RXpqDY=;
+  b=V8ItnX1bF97TaddkGth7+JiAUFHUuoLbJF17TjkjHlSs0++WGvf/QTgo
+   zRNtxmqmcfE3XN79wir34i91hV9xLPpWWeMIOEeUcotV2nOYXkTGmXRMm
+   sZwErn9HisRhYjCPgVl5GWsYSGodzcMWx4VEIQtMMjqojhJ+hZO9FM+Go
+   uHP3SFqlhG8aE3cJ6Q1sDdCkELBPeMlU1jkooj2AlCIc8oFQtZYwqUkI1
+   ieV59Z8XoFiBt5CeaRRJxnoqMnaMW+z0zlilMBuVre7t2yGm09p4Z8EGz
+   cMDs2Ifsz7zxr0cMqvpqMV0W4kGJammJXNPbd+RM6gkzrT84+MsPb8ing
+   g==;
+X-CSE-ConnectionGUID: ffHgfInsQTab2kahgY63gA==
+X-CSE-MsgGUID: 8BdOZRnjT7KtLMPAWqwxew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="42722111"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="42722111"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 02:34:11 -0800
+X-CSE-ConnectionGUID: mAtv9XmoS/GK/ej27d7W2Q==
+X-CSE-MsgGUID: DOC0sd2ERJ2eWClI1z6NAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="141123795"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 02:34:07 -0800
+Date: Mon, 3 Feb 2025 12:34:03 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, linus.walleij@linaro.org,
+	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
+	lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
+	jic23@kernel.org, przemyslaw.kitszel@intel.com,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 00/20] Split devres APIs to device/devres.h and
+ introduce devm_kmemdup_array()
+Message-ID: <Z6Cbm3XAG-8XPvoU@black.fi.intel.com>
+References: <20250203080902.1864382-1-raag.jadav@intel.com>
+ <Z6CRBDpXpPha07mf@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6CRBDpXpPha07mf@smile.fi.intel.com>
 
-Add basic tests for the kpkeys_hardened_pgtables feature: try to
-perform a direct write to current->{cred,real_cred} and ensure it
-fails.
+On Mon, Feb 03, 2025 at 11:48:52AM +0200, Andy Shevchenko wrote:
+> On Mon, Feb 03, 2025 at 01:38:42PM +0530, Raag Jadav wrote:
+> > This series
+> > 
+> > 1. Splits device/devres.h for the users that are only interested in devres APIs.
+> >    Original work by Andy Shevchenko:
+> >    https://lore.kernel.org/r/20241203195340.855879-1-andriy.shevchenko@linux.intel.com
+> > 
+> > 2. Introduces a more robust and cleaner devm_kmemdup_array() helper and uses it
+> >    across drivers.
+> > 
+> > The idea behind embedding both work into a single series is to reduce conflicts
+> > and dependencies while merging.
+> > 
+> > v2: Use size_mul() for multiplication (Dmitry)
+> >     Update commit message (Dmitry)
+> > 
+> > v3: Embed devres.h work by Andy
+> 
+> >     Add more users of devm_kmemdup_array()
+> 
+> I understand the desire to cover as much as possible, but it becomes much
+> harder to coordinate.
 
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
----
- mm/Makefile                    |  1 +
- mm/kpkeys_hardened_cred_test.c | 42 ++++++++++++++++++++++++++++++++++
- security/Kconfig.hardening     | 11 +++++++++
- 3 files changed, 54 insertions(+)
- create mode 100644 mm/kpkeys_hardened_cred_test.c
+I have a few more patches which I'm delaying to reduce dependency.
 
-diff --git a/mm/Makefile b/mm/Makefile
-index f7263b7f45b8..2024226902d4 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -149,3 +149,4 @@ obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
- obj-$(CONFIG_PT_RECLAIM) += pt_reclaim.o
- obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES) += kpkeys_hardened_pgtables.o
- obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES_TEST) += kpkeys_hardened_pgtables_test.o
-+obj-$(CONFIG_KPKEYS_HARDENED_CRED_TEST) += kpkeys_hardened_cred_test.o
-diff --git a/mm/kpkeys_hardened_cred_test.c b/mm/kpkeys_hardened_cred_test.c
-new file mode 100644
-index 000000000000..46048098f99d
---- /dev/null
-+++ b/mm/kpkeys_hardened_cred_test.c
-@@ -0,0 +1,42 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <kunit/test.h>
-+#include <linux/sched.h>
-+
-+static void write_cred(struct kunit *test)
-+{
-+	long zero = 0;
-+	int ret;
-+
-+	ret = copy_to_kernel_nofault((unsigned long *)current->cred, &zero, sizeof(zero));
-+	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-+			    "Write to current->cred wasn't prevented");
-+
-+	ret = copy_to_kernel_nofault((unsigned long *)current->real_cred, &zero, sizeof(zero));
-+	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-+			    "Write to current->real_cred wasn't prevented");
-+}
-+
-+static int kpkeys_hardened_cred_suite_init(struct kunit_suite *suite)
-+{
-+	if (!arch_kpkeys_enabled()) {
-+		pr_err("Cannot run kpkeys_hardened_cred tests: kpkeys are not supported\n");
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct kunit_case kpkeys_hardened_cred_test_cases[] = {
-+	KUNIT_CASE(write_cred),
-+	{}
-+};
-+
-+static struct kunit_suite kpkeys_hardened_cred_test_suite = {
-+	.name = "Hardened credentials using kpkeys",
-+	.test_cases = kpkeys_hardened_cred_test_cases,
-+	.suite_init = kpkeys_hardened_cred_suite_init,
-+};
-+kunit_test_suite(kpkeys_hardened_cred_test_suite);
-+
-+MODULE_DESCRIPTION("Tests for the kpkeys_hardened_cred feature");
-+MODULE_LICENSE("GPL");
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index 1af3a9dae645..9b0563a03ab4 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -338,6 +338,17 @@ config KPKEYS_HARDENED_CRED
- 	  This option has no effect if the system does not support
- 	  kernel pkeys.
- 
-+config KPKEYS_HARDENED_CRED_TEST
-+	tristate "KUnit tests for kpkeys_hardened_cred" if !KUNIT_ALL_TESTS
-+	depends on KPKEYS_HARDENED_CRED
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable this option to check that the kpkeys_hardened_cred feature
-+	  functions as intended, i.e. prevents arbitrary writes to live credentials.
-+
-+	  If unsure, say N.
-+
- endmenu
- 
- config CC_HAS_RANDSTRUCT
--- 
-2.47.0
-
+Raag
