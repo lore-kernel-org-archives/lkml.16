@@ -1,35 +1,35 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDB420ADDF;
-	Mon,  3 Feb 2025 16:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CD620ADCB;
+	Mon,  3 Feb 2025 16:16:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738599379; cv=none; b=PLz78V9Wz6hX0rDbFrO4N7p4EP31SdufuqOeSMukhPjzd2MIeQqTg+v/azQ/F4/Tk/oJu8+DdGZMpTXSHhfyw1RAIw47AW/mmapFGnyGVCExhJRJsL7Adn7k/pYamMlTfyG2XsjAQtwrvrv/US8T2PnnNAjqQ4DaJuPiZLV63XA=
+	t=1738599380; cv=none; b=YpJ+wlbBfjeWv8f11cMXME7o+DAVNqdXQ7T4+UXm7aIj/beAOIVH4LgIyOATjaLDPb+twFcJz2F1Z3Hmi6NyPACRB8Nj16o7Gw4ahN5P2Hzjpb35X0Nd6YHiA44ks+FOP4gXjssSa3UwD8ddgVjX2j3C7wauK2CHFWlDfoolk1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738599379; c=relaxed/simple;
-	bh=asBk/Nh4HCaOWSrCJ+WvYDyEM2K5ZU9+gGTYfkKmS5w=;
+	s=arc-20240116; t=1738599380; c=relaxed/simple;
+	bh=KEP9JHOaQaC7WMar0N1Qoiwz++EeWdHjCPRociZouoM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=urRxinP1hjffDfLxpI7rZ132P0GqurEm77czUQrSaPFRzm4XQRutGF69kO26Cc9ibZ204UL2PgRSTArYWHsmguQst17deyQQIuv80dB9d9QvEn03FZ+I8fu4hBdP4Pq8jFsurN1bvN0sO7uQp/VhduVVLy7/OAgyL4YrF7880+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PLv8ugY1; arc=none smtp.client-ip=217.70.183.198
+	 MIME-Version; b=i4fXrFIWRCwQ8f3mgQXU+O8IaonE/I0TLYf15zr89a0xUvzP8X/E1L8pJ+ZojkjFBEAFYvxGpPBWBoZMbie0iTlHIZcxgrCOo1loBXBIxsdb1+t00GawlrPpJ4MLXtwOXveiNlNIXp1pnS9jTalXO2GnfAuAFYORTHK27piSgZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hXQf0yDx; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PLv8ugY1"
-Received: by mail.gandi.net (Postfix) with ESMTPA id F2E9844292;
-	Mon,  3 Feb 2025 16:16:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hXQf0yDx"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 87615442A4;
+	Mon,  3 Feb 2025 16:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738599374;
+	t=1738599377;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LmwX/1Q1RNDl1aoU1BI0wydrMi9PXMOL1skPCsvzrM8=;
-	b=PLv8ugY1SVyiSl27A/DJL1gzKKC6xFXa4dP9xqGetlX9i3OAPMPHWYViMLQnDt6KYC+FRc
-	/lq2aE+3bmD3D6b6ojWXS/gHx4N99Sxks7CBHASB/JYP0nZmOO7ipL+lqZ8+tfb9svban8
-	mxuBE0TcenRS3Bbm9snNwB9emekj6eER+blOAG1D/mT8ggC+fFwwWyV1GiQyNVKcMJa3Rc
-	d3rjeBoKa0F1DAz/pvjOeL3W/Px7xpl0Ep6GBOeWUdHbybWPErTiChS8Lgkvk5QWQqNN8m
-	WBgpKsV8SbJbXWkSlEj04yRGKVoWdra1VV2xHiqfbRSZ0ELmjFYVptns29jPLA==
+	bh=B35Kx103WOLl6yU6T8SxtTaWfDrXbRxl8yGjTq/oP7o=;
+	b=hXQf0yDx0LAnCMGH7zKihRNxLnYcxV1j8qo2jeU5FhlHd9EwidyJwpm7ScSJ9pbRDcE0cK
+	9SmjXgmEgthcmYIeI2KZGAIobzI2zkIXIOLXl6/LT7BgM7rNj5lz5EWSijvVyXaNBOuNcN
+	bN4KTx2+BvVi7LI1S+B4YeY+SIacSrPt66rACg4p9ZSwExwodeLhc8/fRo+Bj+PzcRBrzV
+	YJXRGcBRiRAiOiXtCSCCeoRpb23Y5ybNhxELkgF2cFyYpFuHxbql3YT9ktoO8WDz3KOfQ+
+	MnL+zkWkotmdwKUf+b1sy1x6U4K8ctoV7+EYZZXEGONs0Kt3dPiTDJSr0M+pUw==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Alexander Stein <alexander.stein@ew.tq-group.com>,
 	Andrzej Hajda <andrzej.hajda@intel.com>,
@@ -57,9 +57,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v5 2/4] drm/atomic-helper: Introduce drm_atomic_helper_reset_crtc()
-Date: Mon,  3 Feb 2025 17:16:04 +0100
-Message-ID: <20250203161607.223731-3-herve.codina@bootlin.com>
+Subject: [PATCH v5 4/4] drm: bridge: ti-sn65dsi83: Add error recovery mechanism
+Date: Mon,  3 Feb 2025 17:16:06 +0100
+Message-ID: <20250203161607.223731-5-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250203161607.223731-1-herve.codina@bootlin.com>
 References: <20250203161607.223731-1-herve.codina@bootlin.com>
@@ -72,86 +72,233 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehffeigfejueelueeuffelueefgfelhfejhfehieegudekteeiledttdfhffekffenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdeipdhrtghpthhtoheprghlvgigrghnuggvrhdrshhtvghinhesvgifrdhtqhdqghhrohhuphdrtghomhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopefnrghurhgvnhhtr
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehffeigfejueelueeuffelueefgfelhfejhfehieegudekteeiledttdfhffekffenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpeefnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdeipdhrtghpthhtoheprghlvgigrghnuggvrhdrshhtvghinhesvgifrdhtqhdqghhrohhuphdrtghomhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopefnrghurhgvnhhtr
  dhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvgdprhgtphhtthhopehjvghrnhgvjhdrshhkrhgrsggvtgesghhmrghilhdrtghomhdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhm
 X-GND-Sasl: herve.codina@bootlin.com
 
-drm_atomic_helper_reset_crtc() allows to reset the CRTC active outputs.
+In some cases observed during ESD tests, the TI SN65DSI83 cannot recover
+from errors by itself. A full restart of the bridge is needed in those
+cases to have the bridge output LVDS signals again.
 
-This resets all active components available between the CRTC and
-connectors.
+Also, during tests, cases were observed where reading the status of the
+bridge was not even possible. Indeed, in those cases, the bridge stops
+to acknowledge I2C transactions. Only a full reset of the bridge (power
+off/on) brings back the bridge to a functional state.
+
+The TI SN65DSI83 has some error detection capabilities. Introduce an
+error recovery mechanism based on this detection.
+
+The errors detected are signaled through an interrupt. On system where
+this interrupt is not available, the driver uses a polling monitoring
+fallback to check for errors. When an error is present or when reading
+the bridge status leads to an I2C failure, the recovery process is
+launched.
+
+Restarting the bridge needs to redo the initialization sequence. This
+initialization sequence has to be done with the DSI data lanes driven in
+LP11 state. In order to do that, the recovery process resets the whole
+output path (i.e the path from the encoder to the connector) where the
+bridge is located.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/gpu/drm/drm_atomic_helper.c | 41 +++++++++++++++++++++++++++++
- include/drm/drm_atomic_helper.h     |  2 ++
- 2 files changed, 43 insertions(+)
+ drivers/gpu/drm/bridge/ti-sn65dsi83.c | 131 ++++++++++++++++++++++++++
+ 1 file changed, 131 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index 5186d2114a50..0a636c398578 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -3362,6 +3362,47 @@ int drm_atomic_helper_disable_all(struct drm_device *dev,
- }
- EXPORT_SYMBOL(drm_atomic_helper_disable_all);
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+index 336380114eea..26a050b13997 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+@@ -35,9 +35,12 @@
+ #include <linux/of_graph.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/timer.h>
++#include <linux/workqueue.h>
  
-+/**
-+ * drm_atomic_helper_reset_crtc - reset the active outputs of a CRTC
-+ * @crtc: DRM CRTC
-+ * @ctx: lock acquisition context
-+ *
-+ * Reset the active outputs by indicating that connectors have changed.
-+ * This implies a reset of all active components available between the CRTC and
-+ * connectors.
-+ *
-+ * Returns:
-+ * 0 on success or a negative error code on failure.
-+ */
-+int drm_atomic_helper_reset_crtc(struct drm_crtc *crtc,
-+				 struct drm_modeset_acquire_ctx *ctx)
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_bridge.h>
++#include <drm/drm_drv.h> /* DRM_MODESET_LOCK_ALL_BEGIN() needs drm_drv_uses_atomic_modeset() */
+ #include <drm/drm_mipi_dsi.h>
+ #include <drm/drm_of.h>
+ #include <drm/drm_panel.h>
+@@ -159,6 +162,9 @@ struct sn65dsi83 {
+ 	bool				lvds_dual_link_even_odd_swap;
+ 	int				lvds_vod_swing_conf[2];
+ 	int				lvds_term_conf[2];
++	int				irq;
++	struct delayed_work		monitor_work;
++	struct work_struct		reset_work;
+ };
+ 
+ static const struct regmap_range sn65dsi83_readable_ranges[] = {
+@@ -363,6 +369,95 @@ static u8 sn65dsi83_get_dsi_div(struct sn65dsi83 *ctx)
+ 	return dsi_div - 1;
+ }
+ 
++static int sn65dsi83_reset_pipe(struct sn65dsi83 *sn65dsi83)
 +{
-+	struct drm_atomic_state *state;
-+	struct drm_crtc_state *crtc_state;
++	struct drm_device *dev = sn65dsi83->bridge.dev;
++	struct drm_modeset_acquire_ctx ctx;
++	int err;
++
++	/*
++	 * Reset active outputs of the related CRTC.
++	 *
++	 * This way, drm core will reconfigure each components in the CRTC
++	 * outputs path. In our case, this will force the previous component to
++	 * go back in LP11 mode and so allow the reconfiguration of SN64DSI83
++	 * bridge.
++	 *
++	 * Keep the lock during the whole operation to be atomic.
++	 */
++
++	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, err);
++
++	err = drm_atomic_helper_reset_crtc(sn65dsi83->bridge.encoder->crtc, &ctx);
++
++	DRM_MODESET_LOCK_ALL_END(dev, ctx, err);
++
++	return err;
++}
++
++static void sn65dsi83_reset_work(struct work_struct *ws)
++{
++	struct sn65dsi83 *ctx = container_of(ws, struct sn65dsi83, reset_work);
 +	int ret;
 +
-+	state = drm_atomic_state_alloc(crtc->dev);
-+	if (!state)
-+		return -ENOMEM;
++	dev_warn(ctx->dev, "reset the pipe\n");
 +
-+	state->acquire_ctx = ctx;
++	/* Reset the pipe */
++	ret = sn65dsi83_reset_pipe(ctx);
++	if (ret) {
++		dev_err(ctx->dev, "reset pipe failed %pe\n", ERR_PTR(ret));
++		return;
++	}
++	if (ctx->irq)
++		enable_irq(ctx->irq);
++}
 +
-+	crtc_state = drm_atomic_get_crtc_state(state, crtc);
-+	if (IS_ERR(crtc_state)) {
-+		ret = PTR_ERR(crtc_state);
-+		goto out;
++static void sn65dsi83_handle_errors(struct sn65dsi83 *ctx)
++{
++	unsigned int irq_stat;
++	int ret;
++
++	/*
++	 * Schedule a reset in case of:
++	 *  - the bridge doesn't answer
++	 *  - the bridge signals an error
++	 */
++
++	ret = regmap_read(ctx->regmap, REG_IRQ_STAT, &irq_stat);
++	if (ret || irq_stat) {
++		/*
++		 * IRQ acknowledged is not always possible (the bridge can be in
++		 * a state where it doesn't answer anymore). To prevent an
++		 * interrupt storm, disable interrupt. The interrupt will be
++		 * after the reset.
++		 */
++		if (ctx->irq)
++			disable_irq_nosync(ctx->irq);
++
++		schedule_work(&ctx->reset_work);
++	}
++}
++
++static void sn65dsi83_monitor_work(struct work_struct *work)
++{
++	struct sn65dsi83 *ctx = container_of(to_delayed_work(work),
++					     struct sn65dsi83, monitor_work);
++
++	sn65dsi83_handle_errors(ctx);
++
++	schedule_delayed_work(&ctx->monitor_work, msecs_to_jiffies(1000));
++}
++
++static void sn65dsi83_monitor_start(struct sn65dsi83 *ctx)
++{
++	schedule_delayed_work(&ctx->monitor_work, msecs_to_jiffies(1000));
++}
++
++static void sn65dsi83_monitor_stop(struct sn65dsi83 *ctx)
++{
++	cancel_delayed_work_sync(&ctx->monitor_work);
++}
++
+ static void sn65dsi83_atomic_pre_enable(struct drm_bridge *bridge,
+ 					struct drm_bridge_state *old_bridge_state)
+ {
+@@ -549,6 +644,15 @@ static void sn65dsi83_atomic_enable(struct drm_bridge *bridge,
+ 	regmap_read(ctx->regmap, REG_IRQ_STAT, &pval);
+ 	if (pval)
+ 		dev_err(ctx->dev, "Unexpected link status 0x%02x\n", pval);
++
++	if (ctx->irq) {
++		/* Enable irq to detect errors */
++		regmap_write(ctx->regmap, REG_IRQ_GLOBAL, REG_IRQ_GLOBAL_IRQ_EN);
++		regmap_write(ctx->regmap, REG_IRQ_EN, 0xff);
++	} else {
++		/* Use the polling task */
++		sn65dsi83_monitor_start(ctx);
++	}
+ }
+ 
+ static void sn65dsi83_atomic_disable(struct drm_bridge *bridge,
+@@ -557,6 +661,15 @@ static void sn65dsi83_atomic_disable(struct drm_bridge *bridge,
+ 	struct sn65dsi83 *ctx = bridge_to_sn65dsi83(bridge);
+ 	int ret;
+ 
++	if (ctx->irq) {
++		/* Disable irq */
++		regmap_write(ctx->regmap, REG_IRQ_EN, 0x0);
++		regmap_write(ctx->regmap, REG_IRQ_GLOBAL, 0x0);
++	} else {
++		/* Stop the polling task */
++		sn65dsi83_monitor_stop(ctx);
 +	}
 +
-+	crtc_state->connectors_changed = true;
-+
-+	ret = drm_atomic_commit(state);
-+out:
-+	drm_atomic_state_put(state);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(drm_atomic_helper_reset_crtc);
-+
- /**
-  * drm_atomic_helper_shutdown - shutdown all CRTC
-  * @dev: DRM device
-diff --git a/include/drm/drm_atomic_helper.h b/include/drm/drm_atomic_helper.h
-index 9aa0a05aa072..53382fe93537 100644
---- a/include/drm/drm_atomic_helper.h
-+++ b/include/drm/drm_atomic_helper.h
-@@ -139,6 +139,8 @@ int drm_atomic_helper_set_config(struct drm_mode_set *set,
+ 	/* Put the chip in reset, pull EN line low, and assure 10ms reset low timing. */
+ 	gpiod_set_value_cansleep(ctx->enable_gpio, 0);
+ 	usleep_range(10000, 11000);
+@@ -806,6 +919,14 @@ static int sn65dsi83_host_attach(struct sn65dsi83 *ctx)
+ 	return 0;
+ }
  
- int drm_atomic_helper_disable_all(struct drm_device *dev,
- 				  struct drm_modeset_acquire_ctx *ctx);
-+int drm_atomic_helper_reset_crtc(struct drm_crtc *crtc,
-+				 struct drm_modeset_acquire_ctx *ctx);
- void drm_atomic_helper_shutdown(struct drm_device *dev);
- struct drm_atomic_state *
- drm_atomic_helper_duplicate_state(struct drm_device *dev,
++static irqreturn_t sn65dsi83_irq(int irq, void *data)
++{
++	struct sn65dsi83 *ctx = data;
++
++	sn65dsi83_handle_errors(ctx);
++	return IRQ_HANDLED;
++}
++
+ static int sn65dsi83_probe(struct i2c_client *client)
+ {
+ 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+@@ -819,6 +940,8 @@ static int sn65dsi83_probe(struct i2c_client *client)
+ 		return -ENOMEM;
+ 
+ 	ctx->dev = dev;
++	INIT_WORK(&ctx->reset_work, sn65dsi83_reset_work);
++	INIT_DELAYED_WORK(&ctx->monitor_work, sn65dsi83_monitor_work);
+ 
+ 	if (dev->of_node) {
+ 		model = (enum sn65dsi83_model)(uintptr_t)
+@@ -843,6 +966,14 @@ static int sn65dsi83_probe(struct i2c_client *client)
+ 	if (IS_ERR(ctx->regmap))
+ 		return dev_err_probe(dev, PTR_ERR(ctx->regmap), "failed to get regmap\n");
+ 
++	if (client->irq) {
++		ctx->irq = client->irq;
++		ret = devm_request_threaded_irq(ctx->dev, ctx->irq, NULL, sn65dsi83_irq,
++						IRQF_ONESHOT, dev_name(ctx->dev), ctx);
++		if (ret)
++			return dev_err_probe(dev, ret, "failed to request irq\n");
++	}
++
+ 	dev_set_drvdata(dev, ctx);
+ 	i2c_set_clientdata(client, ctx);
+ 
 -- 
 2.47.1
 
