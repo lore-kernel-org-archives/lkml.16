@@ -1,160 +1,131 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006C0205512
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE28111A8
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738591576; cv=none; b=mmLY2qxhDhNqMPdVtiUgZfRV2a0K/wQEDHbguBYq7HLK2NZ5wUniXbUImaH1+dPRjBXquhfo7DN94sZZsrZsAV8ef5q3i9sNdG597/0XgiSvyMmq5pS6BioAr186dIYIQl8Bn+h46mVu4Iqns+ek+ynnX7YMdbuoj5vJmLs2rV8=
+	t=1738591772; cv=none; b=Yuqfbh8WRGlUUUdpvtpVJw89ZOpwf/Mv+Ea6oYPg29oRvhA6WSn2PPgOA4mDOkjahGarm9t74Zag/dQxT5G9NSDryUKB7+WBOSluktZeV4WlRuCffbPcTuqon8LhH2dyVZ9jkVLxsqmvpXkULP1++eXc53h1cgUPus1duEc8JyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738591576; c=relaxed/simple;
-	bh=f3nhNeQhnqOkT+ZMVNhMI11XyUbk9ojwQ5TtjrtWkXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QVGWmZmpcI/l4UOLX7/jWufWbtnK7qTSv8sd29VA2/H71uuJlCv9/cfkI6PEH0Y4CLn6qUtiG0oXs4ttZmvCE1fHbyxHRbsSnPcHZRRxrJRX+bGBlCY3f77T4dHDYN2L3iHCGYAsKCg8SJ/DQheFlCFhob8+eTIvC9nugHhNvrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kNHl9q2+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738591772; c=relaxed/simple;
+	bh=BhDJSrHYmdsEXplQFttxlJTvYf2TKpF3zvQiKJnEhX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LhmUj2fHzkKIk/7pg0+wFiB+Fd3kbpjftkd30DDH7FjN2PRzR7hrJEKMXVtCsGGWuGtAKy+PWAI1YKrDu4g1GPVuFecjmQv/7K2uSEE9i4fl4XESaZiT5FvsC74EMlovKA2Kw8KMPcNlV0F6wDFu3z/qRUm+r6hUr38HpZ/wsvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TFCn67Mh; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kNHl9q2+"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513E5Y5D002395
-	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 14:06:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	EZtNFCZgeL0FWLDNzLfu63fu2KsbwaM5gDoXUO3p8uU=; b=kNHl9q2+5MJEFKfI
-	t27DYFOPYhpguZy0evjQ5sPVCVjtNyzSW98Usht0gghVk3yW+j+uVlFc4/z6gQik
-	I2+xZNrj37DBpFzZJiD4NX9sNvUDihzF4IUbcCYk0oighf+Z4RQpBvhGAPvV3pK2
-	P1x6TYJ9ZS8FoeplQYDVc5QTDRlebVe3MYzoaZTPU4oNzVUxvfVmsC3ZjsufUkcl
-	a8IjPGvvLyfaTlGnRceUBg7n3ZY1u/wfa97373q8B4dJ/2rsaB+qzzvfELQ2tvkX
-	6VTYUZ8EcVa8Cw0s0qppZz1Ku+gucgSInDR4k5zTBeBA6h1Hbmappb34u7orG63M
-	3tuAnw==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jy8s802m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:06:14 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6dfba8de3cdso15264976d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:06:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TFCn67Mh"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54287a3ba3cso4950580e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:09:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738591768; x=1739196568; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=H4pmT0xng8YdhycWRMKJfsqizxwuIDbDyEJ81pc8bF0=;
+        b=TFCn67MhkpzqQA+g0ir89xZj7fDZ+gMAKDJ6ThfRd26IrFuYoEEMEAManmrbDbOySA
+         rLvIttQGiHYHmRG3dIOOLOvmKpreL/Psv0uJ7WQigmHEyOq/iZ7ToGgPFFFG8INO+aTz
+         Z9cATybj4kSx2ndQukfzSiDkQ+5Ef/hppwsj1I57d3ocZEPyH9G5ybFwgqaMZQQ9iMcn
+         6CFUbBeryZaVw8XFjZzuHLYHqZN8SgQ2I/L0JAeeFx7qh97Jrj8IK0N4lykGY3mbxfnP
+         dDvRMk1+6lohlOxLIyflVzeeaN/++s4QVsUs2Ha/6qSYec4x23o0iu+psk7dq+LnhBiL
+         WGBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738591573; x=1739196373;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EZtNFCZgeL0FWLDNzLfu63fu2KsbwaM5gDoXUO3p8uU=;
-        b=njPQNVSl/dyZ3Rl7Cc2ZQsHKXHI7285IGXSCzksuLzI/kLPbfd0nklZnKTZDKyiogJ
-         zvj/Be7l3oqeU+AbBmJlg8IFe1s1m1y3lxe56Zsl8htuLaIbznvdPGnmMbhYvLNKiFgN
-         hWwkMjBaOnMGCww4WrQc9Q/dXYfIOjnjh+ob6Wwq9DaCENtcGsviVFrW3pA7JqFJROr/
-         lHjayUa2m1KnZ+WAvc1h1SERrKPlytpMvCqWNQnA/P7PWXbiCNi/pmiLTDpFMHymhzkx
-         C0Ev5ve4/JHxvlWqGpo1UmdSDxohZ5RmRFXIe2V3jMQFieXxN+VBgFUnQE7wLjI3PYww
-         1WrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUnTyyXIlcaphqPjbN6CmApCbvinA7y5AECxpDx/xPPto39rY+t532Ar7Ckl2bWC9kpxt6UbFmprK7VDcU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN8NVybtaSkpk+lcnkPoOjdgR8ukKomBXrHseYPI+dwmyE/CLz
-	k1A6Lh3TDEteKbiEyZ7r94z0Vq38lyavzjafIq+gYjM9p9vrFmm2q0AwKDPXFz7EQejs4Mzy/xE
-	gtWQhqNGvapOTOxiB+cJdP21Cc4A3DTgcwrHgy16al/5ZGyjBIArtAVxFJ9BnDlo=
-X-Gm-Gg: ASbGncsLJ5VDtpNL6m8omgRLeqnYLWw5egctUhLtAINlTBm+rLcHDbFM0WWBEld6lY9
-	t5kX54uX8x9b4smqfx8yazpPQt+74B7FILocaPELx/E2LvuW6pXhgsN9KDxmLPZf/NDwcnP8tVX
-	WnFEz0NYfg42yo3w/GrfSxD4gLqEJRp7nydfU6u+7MHVix5Kh4IDhUR9HGBnvalesPuPx4yzx9t
-	KJKDKx5OzOrkBlxn9WH9E+tyaS1gxGhbMF4PBWsfeCydCnoIpIYl4nj39wVTEmTkLZn0ZHZCtAy
-	xvKLPn+wbZfVr9Z/lM4anZmkvTshUCxSXRm8112UoCb+96MtCNnKI0a7OU4=
-X-Received: by 2002:a05:620a:2894:b0:7a9:bf88:7d9a with SMTP id af79cd13be357-7c009b82e2bmr945576985a.10.1738591572560;
-        Mon, 03 Feb 2025 06:06:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGPDP0qol6PEmtndJ/qVx5GfFuI5eDR2ztN60QRNYMzKfDc3SNz9DsOhMZSkcbvAKF0wFjIyQ==
-X-Received: by 2002:a05:620a:2894:b0:7a9:bf88:7d9a with SMTP id af79cd13be357-7c009b82e2bmr945575185a.10.1738591572176;
-        Mon, 03 Feb 2025 06:06:12 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e45ccd6dsm757393166b.0.2025.02.03.06.06.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 06:06:11 -0800 (PST)
-Message-ID: <fe3424ac-2429-429f-a2a8-34b9a7f06b06@oss.qualcomm.com>
-Date: Mon, 3 Feb 2025 15:06:09 +0100
+        d=1e100.net; s=20230601; t=1738591768; x=1739196568;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H4pmT0xng8YdhycWRMKJfsqizxwuIDbDyEJ81pc8bF0=;
+        b=qGT8Pn+lY0FZrtJcAAieRz5FAp6P6bDg8w1kYBgYXOOdHNFL8PdepwPo12+z22OWRJ
+         fNAUl01ae3rGCSFbTMwxbaElG1rxd+qNCd3tJ5YCieX11QN31uZmAbwbaY2LwpnYku2l
+         WWQus5z7tFcK+/mMJ+fH1Uzteyn3CsjlNbyocXwjNoR+YJqmST9iiQ0FsHjcSFEYQTya
+         PanIPMhNIXS+mgOeZUcN0uaXfryG+zADi1ohXND2BZhrBEz8GCTLdnvMJvWvB+I1o3yA
+         Tc7R0ZsT2odQAQ80bI2PfLJGsbcyM/llkX09tFkTifUjCOX91WY2We5DDUBKNMhKwmHD
+         oyqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFvtt4Ty7g/WAo6HkBHg51OCYSlzsI4FiJFXyz6bBuS38px7WDm5o+xfeV1MdaFsyGLmj2cjs2HxJAjkg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1huWm1hIq2Yz6xTvfSlNLy+TcLFGiUoy9uvk/kbspNhU/1LbH
+	9ETvxpq03MJAsVOk1mMZ5rXFthtsixTXHe+y3ijb6s2OgWwQaeJmEJnV1zLEmzU=
+X-Gm-Gg: ASbGncs9TnPnfMJ2febprT2viOQrTP34LH9Eq0/BrqMv2dttZn0HawB3+04n5NPMybJ
+	2h3RsvjHsW9qWC9Mfxw4n5aaH0EmkzaZo2GoeH51nn3dAJgi9PzYZEoItxMTDxdzA3i43jdBymV
+	zD6RPbl0Wg9WQ3DifcC1Iq43vK92Dbpvj1G3r46zQn8rWYjMkeRVVVltzHqDGIz+CHxV4OCD6qv
+	JdQMo2VC+RosiLZ+fk6kHkYsiEWeic0Bsj2hLtliopIqSaJ8laO98syPJgf0wWwxCyVVzzL6UiS
+	j4w5GH1RTHqeNUJOkqwxboheB9W54iSXDyBrRDx9VQljscto7Nm+zUCxgxeUHvoDW7Wy0Uw=
+X-Google-Smtp-Source: AGHT+IFtAcXEaVrswkCO/X2ohPvix6C9anq5aWjz8V/6SOYEap4Iiw/P0CbtbcIo2Z8mkkAhqD9zAA==
+X-Received: by 2002:a05:6512:3994:b0:542:8d53:5eab with SMTP id 2adb3069b0e04-543ea3c894amr5745670e87.6.1738591768446;
+        Mon, 03 Feb 2025 06:09:28 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebdf0f97sm1303565e87.5.2025.02.03.06.09.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 06:09:27 -0800 (PST)
+Date: Mon, 3 Feb 2025 16:09:24 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: srinivas.kandagatla@linaro.org
+Cc: broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz, 
+	tiwai@suse.com, krzysztof.kozlowski@linaro.org, pierre-louis.bossart@linux.dev, 
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: q6apm-dai: schedule all the periods before we
+ start streaming
+Message-ID: <za6jydjpvhz77h22qvssjxv2vrh6g637ctgfndqavoxo7pnqel@vcalzbkbfoss>
+References: <20250203124945.11406-1-srinivas.kandagatla@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: qcom: sm8650: add all 8 coresight ETE
- nodes
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250129-topic-sm8650-upstream-add-all-coresight-cpus-v2-1-c62549307e01@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250129-topic-sm8650-upstream-add-all-coresight-cpus-v2-1-c62549307e01@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: gfv4MEVdzalgTrJoD9MdG-QYtUdWMOgq
-X-Proofpoint-ORIG-GUID: gfv4MEVdzalgTrJoD9MdG-QYtUdWMOgq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 suspectscore=0 clxscore=1015 mlxscore=0 spamscore=0
- malwarescore=0 impostorscore=0 phishscore=0 lowpriorityscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502030104
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203124945.11406-1-srinivas.kandagatla@linaro.org>
 
-On 29.01.2025 4:08 PM, Neil Armstrong wrote:
-> Only CPU0 Embedded Trace Extension (ETE) was added, but there's one
-> for all 8 CPUs, so add the missing ones.
+On Mon, Feb 03, 2025 at 12:49:45PM +0000, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > 
-> Fixes: 256e6937e48a ("arm64: dts: qcom: sm8650: Add coresight nodes")
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
-> Changes in v2:
-> - fixed the 7/8 cpu wording
-> - added the sm8650 prefix
-> - add review tag
-> - Link to v1: https://lore.kernel.org/r/20250129-topic-sm8650-upstream-add-all-coresight-cpus-v1-1-96996d37df8e@linaro.org
-> ---
->  arch/arm64/boot/dts/qcom/sm8650.dtsi | 163 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 161 insertions(+), 2 deletions(-)
+> With the existing code, we are only setting up one period at a time, in a
+> ping-pong buffer style. This tiggers lot of underruns in the dsp
+> leading to jitter noise during audio playback.
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> index 86684cb9a9325618ddb74458621cf4bbdc1cc0d1..d925d5e2c8182d522dd5b8e1fa0e253f5de2f7a7 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> @@ -365,7 +365,7 @@ cluster_sleep_1: cluster-sleep-1 {
->  		};
->  	};
+> Fix this by scheduling all the periods, this will ensure that the dsp
+> has enough buffer feed and ultimatley fixing the underruns and audio
+> distortion.
+> 
+> Fixes: 9b4fe0f1cd79 ("ASoC: qdsp6: audioreach: add q6apm-dai support")
+> Reported-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  sound/soc/qcom/qdsp6/q6apm-dai.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/sound/soc/qcom/qdsp6/q6apm-dai.c b/sound/soc/qcom/qdsp6/q6apm-dai.c
+> index c9404b5934c7..148c3fb77168 100644
+> --- a/sound/soc/qcom/qdsp6/q6apm-dai.c
+> +++ b/sound/soc/qcom/qdsp6/q6apm-dai.c
+> @@ -299,15 +299,17 @@ static int q6apm_dai_trigger(struct snd_soc_component *component,
+>  {
+>  	struct snd_pcm_runtime *runtime = substream->runtime;
+>  	struct q6apm_dai_rtd *prtd = runtime->private_data;
+> -	int ret = 0;
+> +	int ret = 0, i;
 >  
-> -	ete0 {
-> +	ete-0 {
->  		compatible = "arm,embedded-trace-extension";
->  
->  		cpu = <&cpu0>;
-> @@ -379,15 +379,174 @@ ete0_out_funnel_ete: endpoint {
->  		};
->  	};
->  
-> +	ete-1 {
-> +		compatible = "arm,embedded-trace-extension";
-> +
-> +		cpu = <&cpu1>;
-> +
-> +		out-ports {
-> +			port {
-> +				ete1_out_funnel_ete: endpoint {
-> +					remote-endpoint = <&funnel_ete_in_ete1>;
-> +				};
-> +			};
-> +		};
-> +	};
+>  	switch (cmd) {
+>  	case SNDRV_PCM_TRIGGER_START:
+>  	case SNDRV_PCM_TRIGGER_RESUME:
+>  	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+>  		 /* start writing buffers for playback only as we already queued capture buffers */
+> -		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> -			ret = q6apm_write_async(prtd->graph, prtd->pcm_count, 0, 0, 0);
+> +		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+> +			for (i = 0; i < runtime->periods; i++)
+> +				ret = q6apm_write_async(prtd->graph, prtd->pcm_count, 0, 0, 0);
 
-These bindings are kinda tragic, imagine this on a 128 core chip :/
+So, all errors except the last one are ignored now?
 
-But alas
+> +		}
+>  		break;
+>  	case SNDRV_PCM_TRIGGER_STOP:
+>  		/* TODO support be handled via SoftPause Module */
+> -- 
+> 2.39.5
+> 
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Konrad
+-- 
+With best wishes
+Dmitry
