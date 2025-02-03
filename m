@@ -1,176 +1,71 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D2C20E00E
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 20:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE76E20E016
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 20:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738613219; cv=none; b=uq5gnWtlHquwfwemuqDfA7PMisn6QGBJgSkkhXJqo+6IxmnYJ14E8tao4yTabxI3/s+4ysAStyHp3vUJCQ0q2foyQrE8aCn4HsdP++U3fhoFbCxKcXpxX/H70KicLUfvR1103fMsTTe/C1cQMI4F58tM9nFUBeMwOka357phvec=
+	t=1738613226; cv=none; b=Zn9dpIGON8/KwdaXNpuFgOEdal8cJIhdte9p+tZfXqzYA0+j5fxnS0ziFEdmIni0qVCc1PPbuJ20IR9YupKvvo206xw2mxSLxIvcaLE1mUjcrgZj/vgBpjJm12/ICVML0pin/gFDh7qsQRvJhiBtDLH+V+RSGfUvb1TzHTSyXuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738613219; c=relaxed/simple;
-	bh=tMNjJRHiSav1UF2tPZmUTe3Jimi0LB/cQ+OmsnsydUw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hLS3QwvKRrQ11+GamRasygIbDzIglSJsQMs8/UPJhkEsQDVU4IVs1p20nckvuz5iCd225g6RNWLnuWnov2nytiVJCAPlQB1AJBQhupq17Zovoak9UI0fgr7+ingW1lH6Y/5XYv5OjRtU0nqkpgjt1EPaaNCbElLaEaiUZzLDJKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QqYrTfRZ; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqYrTfRZ"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ee9b1a2116so987342a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 12:06:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738613217; x=1739218017; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5KlE2Pf5IIVTTj2bUHtbNPbqvQ4Q71CGMLbh1XWWKvI=;
-        b=QqYrTfRZ1F2IJTiUPKYykEzrTBcLtRVcQl+iyyDufxPEtoe/55uybz0/AQPVOl5hPd
-         BavCefuieGi0stdycck5xyKerJ4Fyo7Sfrl6QU5rokVM64AuTMRAGm/8c4s8qkq/84EJ
-         RuOVTZLBK6n1AQNmfqAEiiE4LSuzFOrZlGQMgLcusSp3FG/684xATMSHB+J7X4LDKWkI
-         Q42acF8AIpgCk9LxSmxms3GUswDC9NrOjd579b4USfjrYEu6idQuzbqNd1b1Ko7gzAvU
-         YmMCnnk+wWh7yg1odGpqjz/DNyHJ3oMzZeAZ6Azmrra81n8Yo2jw/yQ6VdrIPt6UaTi8
-         vqVw==
+	s=arc-20240116; t=1738613226; c=relaxed/simple;
+	bh=C4q7DhtXzubi4zoGZE/F/DY/GD4JroAQrUakRX70S4Y=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SuK6bZjwdX+ZX3Cjb+5vQQ29uc6NKgaX8fmyxzdGRNwy5rMuBRSiA0KjopAUMwBy6BYH+CHsUPiuiM86abU6qSH24uuiiqmkq+VwHUOI3CiyLO2ZIfT8bMpKn4hnuZIYveosTF1pS5KbshFzMSnV/I52tY42U1aFbKy98F3FGXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ce8cdf1898so33223885ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 12:07:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738613217; x=1739218017;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5KlE2Pf5IIVTTj2bUHtbNPbqvQ4Q71CGMLbh1XWWKvI=;
-        b=azuBzFWFNym7ruLyHyQT9wb1rDLCxsgw5CwbsjrvsWYBEkq6jbwnQwh/DfnybC9tOY
-         V7gsn2wcoyKStr+InBHR8f+B3Bv8NYjNCFdeLZBB9q/1J/s4xWPuUQ+XBmno2EhbcKLY
-         VR41uUkey7/GR1Mcr36zi/U1DcuX+u3gzLEl+/ewax+V6tTpAiWL6Dl3SU9YA1+N03cA
-         V2T1qEmwpeyJypN3a8wnN4FXYq6wKdBdqxc65gm0Eis6gwFtXaNY+wLHO0GXOUVoo/DO
-         39WsSSdLY30gKsAcjhL/60hDyWb0lceSJm4Emw5OOsAAt1JlwQ2LNXtYwhedGsz+WPKP
-         GqrA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0SuBHRB+PtuKsnLRgMFGQfw3+nBsjNDQqsyT8hrVTMfk8fDnvMUUGAFu/GD/QsjfUvYiV5rK4ZrBy3W0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+7XdR5W+yjjxRIECP2qoeuswXo4ebWUQk0jEjaLqpPwTxU8E4
-	9gRboGNPgOraAmECdos99QP9/GSACPbcHMLiZtxv7VLx85RURLoN0U9wDeN6fts0KDsI9EeJPWC
-	hSWVxvogPlgmDY6CUqh76bVtBYBs=
-X-Gm-Gg: ASbGncv3osOgCUhIF47kba5rJ07S/27VXm9yu3rf4zEBNuDSHpYQeYYBjRMVzFBg2X3
-	rMjm/c/6kHqE0w1b+iHveCIUwGvyR2H0cYzcRjgwZ2Ald/Hn/fRm/wKo4Tuu127mxAPePooIj
-X-Google-Smtp-Source: AGHT+IGA2GSTAywDothE4aaZEQCG9KA2LcsMMkt66UMVbFpOJqEwBYBrQrWcw8DiefRUGMpJEudlEvmgH0uRPQ2DcTM=
-X-Received: by 2002:a17:90b:5387:b0:2ee:f64b:9aab with SMTP id
- 98e67ed59e1d1-2f9b8c8ad8cmr542706a91.6.1738613216698; Mon, 03 Feb 2025
- 12:06:56 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738613223; x=1739218023;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q3dcaWL5e1yCWOQNb8AtC8uUY0dR4pJvtU+kJR/wqYY=;
+        b=FzST05FSeSkcG+myNCibpOVlZj+94uusO+psIHbFdSTagKCS5ZXVW3KtTYpUvOdZ/x
+         fQJo57pctY4UH0mX6ML9UD8wMSWf1IRA+nTAtWNOnFoa69qjrtidWeE2Lts/il8QxZ7C
+         gsfScp3PeKZN+SuSPkX+oWr3Jm8V64M6gdWmRzf4JYZyKog6hqsFqY/KVfTnOh2ebxep
+         CsiVG6tvNHLI9gW5ms1XtyzLOE+K1IkMbwgj7u9gIRhgIc9oPq7hg3vclmHm3FCJRwpw
+         at+jH6gDQHejVLduRnvkQo1efTxb9C4RncRTiDL0HP3LwzjhNmcU+Rggl85Ych429snv
+         QKgQ==
+X-Gm-Message-State: AOJu0YxtaZAI+UgQOEhgRKNJM/Gp8kxqkLqpSPPu9x4VlzHj+fcW+pEj
+	12LyINnefdABYMAkazxCBtY91efviqnYLC2EDTF76qs+UnwiDHSHz9SYQvGp5L3N+qiz8BG9FYO
+	JJFGbsLfyqIfqLlVrlmxrxFSBxcXQCUzxXGXoN9USzl5r2tEjTlIoxIw=
+X-Google-Smtp-Source: AGHT+IGEQiQAUeq5RSK3VPCFK0Hs/7UL17TU88bxf3e7LfTojNZWvUThdSuzBUmknn8NJDDrLBATdwhxl1rOu0fFxjcN4TB6McLp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131-amdgpu-respect-config_frame_warn-v1-1-68255384492b@kernel.org>
-In-Reply-To: <20250131-amdgpu-respect-config_frame_warn-v1-1-68255384492b@kernel.org>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 3 Feb 2025 15:06:45 -0500
-X-Gm-Features: AWEUYZk0GtNqRLHvGXHBa-bqtGt-kcqPR_WVOrpAlU7nAcGYHuK4kkpV-uBxenE
-Message-ID: <CADnq5_PGjwPKL5UXf9Ucf79PxWXO0s9W=eOwBnMQbQrdYT-Urg@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Respect user's CONFIG_FRAME_WARN more
- for dml files
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Jun Lei <jun.lei@amd.com>, Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+X-Received: by 2002:a05:6e02:20cd:b0:3ce:8ed9:ca81 with SMTP id
+ e9e14a558f8ab-3cffe384215mr215218485ab.5.1738613223036; Mon, 03 Feb 2025
+ 12:07:03 -0800 (PST)
+Date: Mon, 03 Feb 2025 12:07:03 -0800
+In-Reply-To: <CABMo7LJJOLC81RsPAu=TikqFD8QcOAYNeAPuK4cgakDKN9UAXQ@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a121e7.050a0220.163cdc.0052.GAE@google.com>
+Subject: Re: [syzbot] [usb?] KASAN: stack-out-of-bounds Read in usb_check_int_endpoints
+From: syzbot <syzbot+9c9179ac46169c56c1ad@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	tuliomf09@gmail.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Applied.  Thanks!
+Hello,
 
-Alex
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On Fri, Jan 31, 2025 at 5:38=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
->
-> Currently, there are several files in drm/amd/display that aim to have a
-> higher -Wframe-larger-than value to avoid instances of that warning with
-> a lower value from the user's configuration. However, with the way that
-> it is currently implemented, it does not respect the user's request via
-> CONFIG_FRAME_WARN for a higher stack frame limit, which can cause pain
-> when new instances of the warning appear and break the build due to
-> CONFIG_WERROR.
->
-> Adjust the logic to switch from a hard coded -Wframe-larger-than value
-> to only using the value as a minimum clamp and deferring to the
-> requested value from CONFIG_FRAME_WARN if it is higher.
->
-> Suggested-by: Harry Wentland <harry.wentland@amd.com>
-> Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Closes: https://lore.kernel.org/2025013003-audience-opposing-7f95@gregkh/
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
->  drivers/gpu/drm/amd/display/dc/dml/Makefile  | 14 +++++++++-----
->  drivers/gpu/drm/amd/display/dc/dml2/Makefile | 22 +++++++++++++---------
->  2 files changed, 22 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/dr=
-m/amd/display/dc/dml/Makefile
-> index 46f9c05de16e8c9035f9e26c0b5c481c274d52ef..e1d500633dfad75e4f2265552=
-be42a3e19dee6bf 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-> +++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-> @@ -29,11 +29,15 @@ dml_ccflags :=3D $(CC_FLAGS_FPU)
->  dml_rcflags :=3D $(CC_FLAGS_NO_FPU)
->
->  ifneq ($(CONFIG_FRAME_WARN),0)
-> -ifeq ($(filter y,$(CONFIG_KASAN)$(CONFIG_KCSAN)),y)
-> -frame_warn_flag :=3D -Wframe-larger-than=3D3072
-> -else
-> -frame_warn_flag :=3D -Wframe-larger-than=3D2048
-> -endif
-> +    ifeq ($(filter y,$(CONFIG_KASAN)$(CONFIG_KCSAN)),y)
-> +        frame_warn_limit :=3D 3072
-> +    else
-> +        frame_warn_limit :=3D 2048
-> +    endif
-> +
-> +    ifeq ($(call test-lt, $(CONFIG_FRAME_WARN), $(frame_warn_limit)),y)
-> +        frame_warn_flag :=3D -Wframe-larger-than=3D$(frame_warn_limit)
-> +    endif
->  endif
->
->  CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_lib.o :=3D $(dml_ccflags)
-> diff --git a/drivers/gpu/drm/amd/display/dc/dml2/Makefile b/drivers/gpu/d=
-rm/amd/display/dc/dml2/Makefile
-> index 91c4f3b4bd5f46ac5c1c74f665b06dbe61081917..21fd466dba26ef3359196d0b2=
-6bc29125bb1507a 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dml2/Makefile
-> +++ b/drivers/gpu/drm/amd/display/dc/dml2/Makefile
-> @@ -28,15 +28,19 @@ dml2_ccflags :=3D $(CC_FLAGS_FPU)
->  dml2_rcflags :=3D $(CC_FLAGS_NO_FPU)
->
->  ifneq ($(CONFIG_FRAME_WARN),0)
-> -ifeq ($(filter y,$(CONFIG_KASAN)$(CONFIG_KCSAN)),y)
-> -ifeq ($(CONFIG_CC_IS_CLANG)$(CONFIG_COMPILE_TEST),yy)
-> -frame_warn_flag :=3D -Wframe-larger-than=3D4096
-> -else
-> -frame_warn_flag :=3D -Wframe-larger-than=3D3072
-> -endif
-> -else
-> -frame_warn_flag :=3D -Wframe-larger-than=3D2048
-> -endif
-> +    ifeq ($(filter y,$(CONFIG_KASAN)$(CONFIG_KCSAN)),y)
-> +        ifeq ($(CONFIG_CC_IS_CLANG)$(CONFIG_COMPILE_TEST),yy)
-> +            frame_warn_limit :=3D 4096
-> +        else
-> +            frame_warn_limit :=3D 3072
-> +        endif
-> +    else
-> +        frame_warn_limit :=3D 2048
-> +    endif
-> +
-> +    ifeq ($(call test-lt, $(CONFIG_FRAME_WARN), $(frame_warn_limit)),y)
-> +        frame_warn_flag :=3D -Wframe-larger-than=3D$(frame_warn_limit)
-> +    endif
->  endif
->
->  subdir-ccflags-y +=3D -I$(FULL_AMD_DISPLAY_PATH)/dc/dml2
->
-> ---
-> base-commit: 7f2b5237e313e39008a85b33ca94ab503a8fdff9
-> change-id: 20250131-amdgpu-respect-config_frame_warn-739a9b24496e
->
-> Best regards,
-> --
-> Nathan Chancellor <nathan@kernel.org>
->
+Reported-by: syzbot+9c9179ac46169c56c1ad@syzkaller.appspotmail.com
+Tested-by: syzbot+9c9179ac46169c56c1ad@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         9682c35f usb: typec: thunderbolt: Remove IS_ERR check ..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=13c26eb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b18a1cb19d14c444
+dashboard link: https://syzkaller.appspot.com/bug?extid=9c9179ac46169c56c1ad
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=13eed724580000
+
+Note: testing is done by a robot and is best-effort only.
