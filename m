@@ -1,131 +1,318 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF64A12E7F;
-	Mon,  3 Feb 2025 14:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2193209F58;
+	Mon,  3 Feb 2025 14:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593851; cv=none; b=bVEUw1nV6mXDil2s/9lj4fO5eSsriOQ4vLPuYZtkBFXnQgsTbxMbgyP5z3UD2fgHsBFGBOpjM2mKNjiFbNuKrWDmcH/NLBOsKgbXGMadrXAnOYExEfkgkT7ao4fB8ZxwvoKmLcSeJf6rQYUG/Yk1rP5b5nU+klKplDOsbxW0oF8=
+	t=1738593896; cv=none; b=G/VbJD1xIbFwRM5bL30Ui++63YHrXVFMaoWoN/oNroVllpqmufeOxtuQBpqHXrVb8+vDlSeh2K+ikN4O98gEHxASSO8Q6EHP4x/1w/vDVBT9zqJGL/uBd4TLCtBUBWwCFXk/QbR1Eis6ygfPt/7rVFc9YYiBKU7immAchHQygdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593851; c=relaxed/simple;
-	bh=Bfgflru5YVUFZ7ASMuqZW3PVCjyXOqc2p/+ZP2Dkh60=;
+	s=arc-20240116; t=1738593896; c=relaxed/simple;
+	bh=oCFTl9ONo7RNluF4OduNuYzo9TaknkGoj/lwhRP2goE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bJc6E11HDwiaEhUoPRN8WegJEEZCxE3pna/GDuxniFwnFeqdPrOax6i8mMYoktQ9uR8Cui8HImOPakkFOkSDoMeDua8JqphV+ZlaNtRC7xrKbNrco+HV6MvdTJjdBro6tDyr3SKaOnFuDPBdozkeR9nMh+94Nos5HLJTI4jiPTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6jDgMnD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6jDgMnD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B1FC4AF0B;
-	Mon,  3 Feb 2025 14:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738593851;
-	bh=Bfgflru5YVUFZ7ASMuqZW3PVCjyXOqc2p/+ZP2Dkh60=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=K6jDgMnDq0dFQ53xBeJlxHnrJ8I1u9KJ8+uPMaNhaTJItahic44qJacdAAURpIvBx
-	 dKvXbjXpnLur7f8DxhsAKpeMOCLaBs+4CTc1zvVC9nFKAzRNLBRjo9vGPja+IegMen
-	 lfyJgQq8NZvoyzUw53VwORArNMQ80/U4rMFp5L4qPh3R3xWeFlcKK+biLHezLdS5kH
-	 h59emgOgacqSw4rUwe33U60IZFnjBInzGShlo3K4w0O6h2SYKr2l+w5pZQi5rAv9cL
-	 WvdwuJnJP7QjNJillek3Gq3n3QGvirefve2DclQfDPXQ9JwsdxtX1GL+AUHchFBYwy
-	 ZtkBz6uS6I8XQ==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ab2aea81cd8so804746366b.2;
-        Mon, 03 Feb 2025 06:44:11 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWc+LsTIwhipO8sqEQ5q/2lu1GoSW7ABN7AgHe/uAzNYWq5LZXIan5x3Wz5sJHIPVyrmSXGpbf4Teg6dSM=@vger.kernel.org, AJvYcCXWLF83PIjhcZFxUQHfdRoftzRdImNJx4NAfjqrlAdyV9zkPyykM8cp8plHb6Tq7KOSWTpS74yLrNhF@vger.kernel.org, AJvYcCXx7DQLEIVZ+qlJ0GMj993YM3HS/wvN0UHUX4O+6F23xp5VP472IbdRKNAt0T1wGP821+Xe3uzK@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/fMIoNlJRH1L0Tu8g31g32G9Giza3e7KfSeHLP/2uPzPzIx3m
-	g9Tfcb35sIXi31OCax1t21Skw1PtqrdipssSRiCTQ6DvpSPi/tGcEJrlu4Yg6pST4lziHye1uN3
-	lSVL9KfHJpr0E4NSd6NJFNt5ZGE8=
-X-Google-Smtp-Source: AGHT+IHzBb16zo7Eqvl8nv+wE/dsWdiP4hvDhKPVsonuM8YRvFst+h9o+ztWSsOT/uRCJ18WfZUbNAZWihtZC0ExQa0=
-X-Received: by 2002:a17:907:1ca7:b0:aa6:becf:b26a with SMTP id
- a640c23a62f3a-ab6cfcc67f1mr2458273266b.9.1738593849864; Mon, 03 Feb 2025
- 06:44:09 -0800 (PST)
+	 To:Cc:Content-Type; b=iJRgM4OckN0fnXiempASfkuPU7OVUPMAbqYcNuJIEtNrU2n2ACs+WAMjAMgxDyumtfQbbn6qRAvmGC7N9XL2TuoyI3SlBMGKE9Azot4GGmPs1f2I0EGK55zA8LKpyaewJ/wsuFtns/FC37Frhgp8qXASLeRawCuIeJZwxJObW8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-85c5adbca8eso989365241.0;
+        Mon, 03 Feb 2025 06:44:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738593892; x=1739198692;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=495pAs8BTk65AfSEE1DQQmDU62IOKL0yIh5oz0CPpMg=;
+        b=cSm27XyBIILWK46Ka7R0MrLKl9xMoraDVxw+IidILZ/OW8CM/h5RaUt6oIZppoKmmV
+         Qtuj/jCoPtb0tVXwfyrtx41szy7fHNIui9g+CDXQ+d2Erzdzri+RZQVt55Mf8h68gt/2
+         6J9w+3/pxLiYNPiD5SeXpmCCENZxNyzYSU+nMhUkirlXVIOxyTpzjXI2mzOdDTnTxNNg
+         kAkYw73/NTQVbm48erNRgsTpoHqenY19pR7YTzCmHYLxSPGwHpQOHoVt7Nb3R4s4sk+X
+         VwyQlQMiy+Jkkb7CzFMREV2m+EABRxN5fXY1HlVTEQt5jgdJfpTjXZlqm1FpfEw+H4cP
+         C+3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVkHRvm/sqkyDIIsm7NHgzgDfsH06R0vy5Hc1P9ON/fvMJsbts5VNwMWjnphG/SMiqBpHm5eO0fBm7/VDL3@vger.kernel.org, AJvYcCW7qou1IMNNYsp3i+n1iq2X76010eVVm/U877DGhUsFViqAUokkbu35nkkD9MREDlzYPSwDR4VkQLSD28LG@vger.kernel.org, AJvYcCWsaKnRvs9NpkyRadsteMp36rwrM2WVssP/1SmJ9E7DOk29tFcJTFdpmtuJ7euaWOAMqTxRZIyJwzqBipus4eY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHJRnrEweC1cq9fWMIR+zFUIdPZq8buMtMZrimdI9Y9uKwElZG
+	46d3ktWHF4FFefb/DxyaC4/J3jnI0ajPV3MpJN5klfhwh9SPD4qm+ltUf2ff
+X-Gm-Gg: ASbGncu7gQBLRTbYj0ielizzz5/vhjVKW1lUxQukELNtrOnmeevjy6h9ZzYy9BWpxK5
+	dAqFPyXwAqJLafI8jHIqkyrlRqwbo9r5jmaZU3L2cdtmXbLxWryNDAs6coC9pvGf5zSlW/bOLKM
+	YYvWdf1FnHUFmsJAI0W+42YH2uR/8B7qB6C+l7o7rO1qZ3KfcVxAoQ03WUyT2pXI1Ap621gN7bn
+	TRkMMOHLzLCr4NLXJ6nh3QwIF6eUVD2GPMvBAm6sfmmFwzpdu38Nm83Dj+4pV+tIeechLLAOH9w
+	icA2HTu9UKkVsmvt5nvDhDTd3TcmzIDtxFpc2yEEN0Cx6s4QPCraVw==
+X-Google-Smtp-Source: AGHT+IEMFtyvuiG7LqmsUg0tsQkZBGG+3WLxFa94pmmU5ohT1ikdrfOFiGJQuMSyOakfnV+8s57t4A==
+X-Received: by 2002:a05:6122:45a1:b0:50a:b728:5199 with SMTP id 71dfb90a1353d-51e9e4fdb03mr17729004e0c.7.1738593892147;
+        Mon, 03 Feb 2025 06:44:52 -0800 (PST)
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1bed875sm1233291e0c.4.2025.02.03.06.44.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 06:44:51 -0800 (PST)
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4afe1009960so1161743137.0;
+        Mon, 03 Feb 2025 06:44:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVENmyE85IJ2/YyM4E97KAzmkvYaYIj+JDtnDatykvLlT+x+z7m4BPVBtmmmCSnlzprJ/BJDm49ZHr84nmx@vger.kernel.org, AJvYcCW2+LiI6nlb73S+dMFIQgZODVnIJEAhkoyTEchquPOhkqIZwKwKLLnUa1VwBkrmlGDga0ZHccRoXDDSw0FVo70=@vger.kernel.org, AJvYcCWrlHtIpNKqe3YzqwJBMj15g/xAplvQ44p7KwUTH2T6w/vxgJypzeqlrO0cxLAhswHsE/KmXxza0cssQB0T@vger.kernel.org
+X-Received: by 2002:a05:6102:2acf:b0:4af:f275:e752 with SMTP id
+ ada2fe7eead31-4b9a5269b95mr14933042137.22.1738593891606; Mon, 03 Feb 2025
+ 06:44:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131100630.342995-1-chenhuacai@loongson.cn>
- <2f583e59-5322-4cac-aaaf-02163084c32c@rowland.harvard.edu>
- <CAAhV-H7Dt1bEo8qcwfVfcjTOgXSKW71D19k3+418J6CtV3pVsQ@mail.gmail.com> <fbe4a6c4-f8ba-4b5b-b20f-9a2598934c42@rowland.harvard.edu>
-In-Reply-To: <fbe4a6c4-f8ba-4b5b-b20f-9a2598934c42@rowland.harvard.edu>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 3 Feb 2025 22:44:01 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5PQk5aSu13kuqZqXWvusyqKD7a6G7f56CN3F5HjcD0DA@mail.gmail.com>
-X-Gm-Features: AWEUYZm0ERHSNnk-fYYYeWeEs86P_PnoJUYPR3CfzB8zjQkVZu_hzakqePnVLMo
-Message-ID: <CAAhV-H5PQk5aSu13kuqZqXWvusyqKD7a6G7f56CN3F5HjcD0DA@mail.gmail.com>
-Subject: Re: [PATCH] USB: core: Enable root_hub's remote wakeup for wakeup sources
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
+References: <20250127190636.it.745-kees@kernel.org> <20250127191031.245214-2-kees@kernel.org>
+In-Reply-To: <20250127191031.245214-2-kees@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 3 Feb 2025 15:44:38 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXW8VbtOAixO7w+aDOG70aZtZ50j1Ybcr8B3eYnRUcrcA@mail.gmail.com>
+X-Gm-Features: AWEUYZn4f2U45kmhTSRYxW6gXgpadIvKhLBo_20ukhjFkcFf9ymUqDMOZnVdOso
+Message-ID: <CAMuHMdXW8VbtOAixO7w+aDOG70aZtZ50j1Ybcr8B3eYnRUcrcA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] stackinit: Add union initialization to selftests
+To: Kees Cook <kees@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jakub Jelinek <jakub@redhat.com>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 2, 2025 at 12:55=E2=80=AFAM Alan Stern <stern@rowland.harvard.e=
-du> wrote:
->
-> On Sat, Feb 01, 2025 at 02:42:43PM +0800, Huacai Chen wrote:
-> > Hi, Alan,
-> >
-> > On Fri, Jan 31, 2025 at 11:17=E2=80=AFPM Alan Stern <stern@rowland.harv=
-ard.edu> wrote:
-> > >
-> > > On Fri, Jan 31, 2025 at 06:06:30PM +0800, Huacai Chen wrote:
-> > > > Now we only enable the remote wakeup function for the USB wakeup so=
-urce
-> > > > itself at usb_port_suspend(). But on pre-XHCI controllers this is n=
-ot
-> > > > enough to enable the S3 wakeup function for USB keyboards,
-> > >
-> > > Why do you say this?  It was enough on my system with an EHCI/UHCI
-> > > controller when I wrote that code.  What hardware do you have that is=
-n't
-> > > working?
-> > >
-> > > >  so we also
-> > > > enable the root_hub's remote wakeup (and disable it on error). Fran=
-kly
-> > > > this is unnecessary for XHCI, but enable it unconditionally make co=
-de
-> > > > simple and seems harmless.
-> > >
-> > > This does not make sense.  For hubs (including root hubs), enabling
-> > > remote wakeup means that the hub will generate a wakeup request when
-> > > there is a connect, disconnect, or over-current change.  That's not w=
-hat
-> > > you want to do, is it?  And it has nothing to do with how the hub
-> > > handles wakeup requests received from downstream devices.
-> > >
-> > > You need to explain what's going on here in much more detail.  What
-> > > exactly is going wrong, and why?  What is the hardware actually doing=
-,
-> > > as compared to what we expect it to do?
-> > OK, let me tell a long story:
-> >
-> > At first, someone reported that on Loongson platform we cannot wake up
-> > S3 with a USB keyboard, but no problem on x86. At that time we thought
-> > this was a platform-specific problem.
-> >
-> > After that we have done many experiments, then we found that if the
-> > keyboard is connected to a XHCI controller, it can wake up, but cannot
-> > wake up if it is connected to a non-XHCI controller, no matter on x86
-> > or on Loongson. We are not familiar with USB protocol, this is just
-> > observed from experiments.
-> >
-> > You are probably right that enabling remote wakeup on a hub means it
-> > can generate wakeup requests rather than forward downstream devices'
-> > requests. But from experiments we found that if we enable the "wakeup"
-> > knob of the root_hub via sysfs, then a keyboard becomes able to wake
-> > up S3 (for non-XHCI controllers). So we guess that the enablement also
-> > enables forwarding. So maybe this is an implementation-specific
-> > problem (but most implementations have problems)?
-> >
-> > This patch itself just emulates the enablement of root_hub's remote
-> > wakeup automatically (then we needn't operate on sysfs).
->
-> I'll run some experiments on my system.  Maybe you're right about the
-> problem, but your proposed solution looks wrong.
-OK, I'm glad to see a better solution. :)
+Hi Kees,
 
-Huacai
-
+On Mon, 27 Jan 2025 at 20:11, Kees Cook <kees@kernel.org> wrote:
+> The stack initialization selftests were checking scalars, strings,
+> and structs, but not unions. Add union tests (which are mostly identical
+> setup to structs). This catches the recent union initialization behavioral
+> changes seen in GCC 15. Before GCC 15, this new test passes:
 >
-> Alan Stern
+>     ok 18 test_small_start_old_zero
+>
+> With GCC 15, it fails:
+>
+>     not ok 18 test_small_start_old_zero
+>
+> Specifically, a union with a larger member where a smaller member is
+> initialized with the older "= { 0 }" syntax:
+>
+> union test_small_start {
+>      char one:1;
+>      char two;
+>      short three;
+>      unsigned long four;
+>      struct big_struct {
+>              unsigned long array[8];
+>      } big;
+> };
+>
+> This is a regression in compiler behavior that Linux has depended on.
+> GCC does not seem likely to fix it, instead suggesting that affected
+> projects start using -fzero-init-padding-bits=unions:
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=118403
+>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+
+I ran stackinit_kunit from v6.14-rc1 on m68k under ARAnyM.
+All small_start tests failed:
+
+KTAP version 1
+1..1
+    KTAP version 1
+    # Subtest: stackinit
+    # module: stackinit_kunit
+    1..108
+    ok 1 test_u8_zero
+    ok 2 test_u16_zero
+    ok 3 test_u32_zero
+    ok 4 test_u64_zero
+    ok 5 test_char_array_zero
+    ok 6 test_small_hole_zero
+    ok 7 test_big_hole_zero
+    ok 8 test_trailing_hole_zero
+    ok 9 test_packed_zero
+    ok 10 test_small_hole_old_zero
+    ok 11 test_big_hole_old_zero
+    ok 12 test_trailing_hole_old_zero
+    ok 13 test_packed_old_zero
+    ok 14 test_same_sizes_zero
+    # test_small_start_zero: ASSERTION FAILED at lib/stackinit_kunit.c:428
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 15 test_small_start_zero
+    ok 16 test_small_end_zero
+    ok 17 test_same_sizes_old_zero
+    # test_small_start_old_zero: ASSERTION FAILED at lib/stackinit_kunit.c:429
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 18 test_small_start_old_zero
+    ok 19 test_small_end_old_zero
+    ok 20 test_small_hole_dynamic_partial
+    ok 21 test_big_hole_dynamic_partial
+    ok 22 test_trailing_hole_dynamic_partial
+    ok 23 test_packed_dynamic_partial
+    ok 24 test_small_hole_assigned_dynamic_partial
+    ok 25 test_big_hole_assigned_dynamic_partial
+    ok 26 test_trailing_hole_assigned_dynamic_partial
+    ok 27 test_packed_assigned_dynamic_partial
+    ok 28 test_same_sizes_dynamic_partial
+    # test_small_start_dynamic_partial: ASSERTION FAILED at
+lib/stackinit_kunit.c:438
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 29 test_small_start_dynamic_partial
+    ok 30 test_small_end_dynamic_partial
+    ok 31 test_same_sizes_assigned_dynamic_partial
+    # test_small_start_assigned_dynamic_partial: ASSERTION FAILED at
+lib/stackinit_kunit.c:441
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 32 test_small_start_assigned_dynamic_partial
+    ok 33 test_small_end_assigned_dynamic_partial
+    ok 34 test_small_hole_static_partial
+    ok 35 test_big_hole_static_partial
+    ok 36 test_trailing_hole_static_partial
+    ok 37 test_packed_static_partial
+    ok 38 test_small_hole_static_all
+    ok 39 test_big_hole_static_all
+    ok 40 test_trailing_hole_static_all
+    ok 41 test_packed_static_all
+    ok 42 test_small_hole_dynamic_all
+    ok 43 test_big_hole_dynamic_all
+    ok 44 test_trailing_hole_dynamic_all
+    ok 45 test_packed_dynamic_all
+    ok 46 test_small_hole_runtime_partial
+    ok 47 test_big_hole_runtime_partial
+    ok 48 test_trailing_hole_runtime_partial
+    ok 49 test_packed_runtime_partial
+    ok 50 test_small_hole_runtime_all
+    ok 51 test_big_hole_runtime_all
+    ok 52 test_trailing_hole_runtime_all
+    ok 53 test_packed_runtime_all
+    ok 54 test_small_hole_assigned_static_partial
+    ok 55 test_big_hole_assigned_static_partial
+    ok 56 test_trailing_hole_assigned_static_partial
+    ok 57 test_packed_assigned_static_partial
+    ok 58 test_small_hole_assigned_static_all
+    ok 59 test_big_hole_assigned_static_all
+    ok 60 test_trailing_hole_assigned_static_all
+    ok 61 test_packed_assigned_static_all
+    ok 62 test_small_hole_assigned_dynamic_all
+    ok 63 test_big_hole_assigned_dynamic_all
+    ok 64 test_trailing_hole_assigned_dynamic_all
+    ok 65 test_packed_assigned_dynamic_all
+    ok 66 test_same_sizes_static_partial
+    # test_small_start_static_partial: ASSERTION FAILED at
+lib/stackinit_kunit.c:437
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 67 test_small_start_static_partial
+    ok 68 test_small_end_static_partial
+    ok 69 test_same_sizes_static_all
+    # test_small_start_static_all: ASSERTION FAILED at lib/stackinit_kunit.c:437
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 70 test_small_start_static_all
+    ok 71 test_small_end_static_all
+    ok 72 test_same_sizes_dynamic_all
+    # test_small_start_dynamic_all: ASSERTION FAILED at
+lib/stackinit_kunit.c:438
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 73 test_small_start_dynamic_all
+    ok 74 test_small_end_dynamic_all
+    ok 75 test_same_sizes_runtime_partial
+    # test_small_start_runtime_partial: ASSERTION FAILED at
+lib/stackinit_kunit.c:439
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 76 test_small_start_runtime_partial
+    ok 77 test_small_end_runtime_partial
+    ok 78 test_same_sizes_runtime_all
+    # test_small_start_runtime_all: ASSERTION FAILED at
+lib/stackinit_kunit.c:439
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 79 test_small_start_runtime_all
+    ok 80 test_small_end_runtime_all
+    ok 81 test_same_sizes_assigned_static_partial
+    # test_small_start_assigned_static_partial: ASSERTION FAILED at
+lib/stackinit_kunit.c:440
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 82 test_small_start_assigned_static_partial
+    ok 83 test_small_end_assigned_static_partial
+    ok 84 test_same_sizes_assigned_static_all
+    # test_small_start_assigned_static_all: ASSERTION FAILED at
+lib/stackinit_kunit.c:440
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 85 test_small_start_assigned_static_all
+    ok 86 test_small_end_assigned_static_all
+    ok 87 test_same_sizes_assigned_dynamic_all
+    # test_small_start_assigned_dynamic_all: ASSERTION FAILED at
+lib/stackinit_kunit.c:441
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 88 test_small_start_assigned_dynamic_all
+    ok 89 test_small_end_assigned_dynamic_all
+    ok 90 test_small_hole_assigned_copy # SKIP XFAIL uninit bytes: 1
+    ok 91 test_big_hole_assigned_copy # SKIP XFAIL uninit bytes: 124
+    ok 92 test_trailing_hole_assigned_copy # SKIP XFAIL uninit bytes: 1
+    ok 93 test_packed_assigned_copy
+    ok 94 test_same_sizes_assigned_copy
+    # test_small_start_assigned_copy: ASSERTION FAILED at
+lib/stackinit_kunit.c:442
+    Expected stackinit_range_contains(fill_start, fill_size,
+target_start, target_size) to be true, but is false
+
+stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
+    not ok 95 test_small_start_assigned_copy
+    ok 96 test_small_end_assigned_copy
+    ok 97 test_u8_none
+    ok 98 test_u16_none
+    ok 99 test_u32_none
+    ok 100 test_u64_none
+    ok 101 test_char_array_none
+    ok 102 test_switch_1_none # SKIP XFAIL uninit bytes: 80
+    ok 103 test_switch_2_none # SKIP XFAIL uninit bytes: 80
+    ok 104 test_small_hole_none
+    ok 105 test_big_hole_none
+    ok 106 test_trailing_hole_none
+    ok 107 test_packed_none
+    ok 108 test_user
+# stackinit: pass:90 fail:13 skip:5 total:108
+# Totals: pass:90 fail:13 skip:5 total:108
+not ok 1 stackinit
+
+m68k-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0, GNU ld (GNU
+Binutils for Ubuntu) 2.42
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
