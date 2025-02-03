@@ -1,135 +1,185 @@
-Received: from fallback19.i.mail.ru (fallback19.i.mail.ru [79.137.243.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D96E2036F0;
-	Mon,  3 Feb 2025 11:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F43B20408A
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738583708; cv=none; b=eQvVsN6Gl+AghQXKd64LMedBkMNwwwNrMfwoSWASYS74s07Jw39fkRa0tNXJEdssbTjkkNyz6CKm/R8S1hR9HUpeebk4bYDTGV3/l8RcTQMNZ3rM/22s8uuiUG4fvu8Wwvm6I8Wmlcs/YcZPiRhyPOUn0zIUZ70uEDXaH2+PzbA=
+	t=1738583744; cv=none; b=Hw0bEzw2IheDl80suHwPA9kVuX9IYu6Gj+0dJTzJhrSjcFhsFrxjBfb+v4qwutt2R2/HRbPcl8Tsg3JRbv+PR9k5/ZFYZby+H2BvBmlZDWNmho847g84tCzZXRBmxuzWqC+5CzUlRFNQKy9FOygIhqAcHKypOKFyTmG739ZcLEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738583708; c=relaxed/simple;
-	bh=08M3p9oGMzidDgKck+CoH1GdYkANxKqXHb1MUIHtTwg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eNlC2cw77Ld4uwKc/t45xxcVZKlVPQF6hTR+CrpbJAnHcES6ugrO1/2JLCEF0W84ioQtDLZZ3YjvQCwFOVau90WgJFoQjCqp9ifpj3r+rKw2IlvNFCP2BNKVzXkq+UG3BeaksFauqi5eb9aMe9yxM2qbNjCk/P58BeNh10ALmEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=sQbtKdep; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=acLk+Y5J; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=O6KBE2Qj; arc=none smtp.client-ip=79.137.243.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+	s=arc-20240116; t=1738583744; c=relaxed/simple;
+	bh=EsPCOcfHX++lYkOKqYtMC5V4g3bTre4opIa+vFXe444=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ej9vwpqSMXan2PerkgnWROEQtHuJ16TpgZtx6vjyRtraxvuC1wenHagJ8LyzTLpirUWwsqYPBOnwSlci679URA87MB5C34V0BD6mqyqdZQGETutYVyO4WKPPbcmcEl7Sd3rAEPgVJAaHreBSaxr2bniF6h5SBZGIVlaFsW8xbJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YFEXtTUW; arc=none smtp.client-ip=209.85.217.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="sQbtKdep";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="acLk+Y5J";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="O6KBE2Qj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
-	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=RvJ+Uu+o3CLYL49CuJSBzX+iZF2ycLEFbwANuuq0X4c=;
-	t=1738583704;x=1738673704; 
-	b=sQbtKdep1gnFRKc712yaxASwKZU8HO7MOvloKY58mEIOHQuDIsrCiaAZtwy7JqqxYPVfYvf7ujo3AjPOjYLR2vxlk9fWknkdO+a8SlX7Ot9iSjsZYjawQfWxFZSYbV4XmxQU92ZuKQVVbNXSFGoISiyUugag49FbgZNrvY5d9Ic=;
-Received: from [10.113.249.120] (port=36674 helo=send147.i.mail.ru)
-	by fallback19.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1teuPt-008esJ-Ii; Mon, 03 Feb 2025 14:15:01 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive:X-Cloud-Ids;
-	bh=RvJ+Uu+o3CLYL49CuJSBzX+iZF2ycLEFbwANuuq0X4c=; t=1738581301; x=1738671301; 
-	b=acLk+Y5JVuE9Y6K+oGzvesYgjQz8tePI9gKPNkmisc45msVWdJ73effPc54wySCNZ0vQQYtmYTB
-	h6mo390MbPZkzJ69mInG6r4JfdZVPLYqnPcWtpSvyhUrGdcxVgDnH7BwVxwcfbjKrjfw/lYRuKvME
-	4AKGLRIx7TBGG/9IFtA=;
-Received: from [10.113.228.105] (port=33732 helo=send126.i.mail.ru)
-	by exim-fallback-5fbdbdcb77-8zhhh with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1teuPk-00000000IpY-2SYj; Mon, 03 Feb 2025 14:14:52 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=RvJ+Uu+o3CLYL49CuJSBzX+iZF2ycLEFbwANuuq0X4c=; t=1738581292; x=1738671292; 
-	b=O6KBE2QjQcojRftB/yQ72SdQY9zAPqanV8PyCUteGsgb0rSF64+D2/OLy/MCQodb7MaR3daXTKY
-	ifwXzIWJCq5xLhKEhmqszzKEv1L3MbADZHoOiNT8r9Zl2l+i1Yb/qawiQv8QfNtWo3TqoHSvya5k/
-	iU3NWQ9Sw+mC9hvb7xk=;
-Received: by exim-smtp-6d97ff8cf4-hcpzs with esmtpa (envelope-from <danila@jiaxyga.com>)
-	id 1teuPT-00000000A0H-1tNK; Mon, 03 Feb 2025 14:14:36 +0300
-From: Danila Tikhonov <danila@jiaxyga.com>
-To: brgl@bgdev.pl,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andersson@kernel.org,
-	konradybcio@kernel.org
-Cc: linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux@mainlining.org,
-	~postmarketos/upstreaming@lists.sr.ht,
-	Danila Tikhonov <danila@jiaxyga.com>
-Subject: [PATCH 0/4] sm7325-nothing-spacewar: Preparing for the cameras
-Date: Mon,  3 Feb 2025 14:14:25 +0300
-Message-ID: <20250203111429.22062-1-danila@jiaxyga.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YFEXtTUW"
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4afdf8520c2so1323591137.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:55:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738583741; x=1739188541; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GacMvNXhqvCRLQph1oVuufh3vc3K/MAX4smWP5V4jW8=;
+        b=YFEXtTUWkzCkHZX/+vgiKjNP0ZpDDEHd3MKNWkZ99HoWTRm5sqXp/N0g7bhxU5BxFw
+         Hx3VpdzLRTANTt2XyjJj2olJm8F959goBk8dRxhsdSWIb7BKmGuwKrc54fq/xR0d1NZn
+         r0/QQ3sdq1lgOg8eCUDCvYp0/gYp0O/l4txFk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738583741; x=1739188541;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GacMvNXhqvCRLQph1oVuufh3vc3K/MAX4smWP5V4jW8=;
+        b=rLQAolhjjMzsCMZD6esJLzGe+C4hXmNFCWZsJNOjg//2c982vdhWa3V+q0wBe+8TW9
+         UUDWMow9VVkG296SzpwA4ncg3rHRXjHHXuEhVSknqRHLls59EWGx7luHrLKvYYVYIRaH
+         NRCRGl+VPvIYW00uy/RZvZHnDnfnPGFP3OSIgLJ5aKCPjoLDIEwttam1AFgMYn1fZvXs
+         n0EpkmfQM1QFURDZ5nZ0cbKwohPlHZ64oyW/U4wE9AiihTtbhNAhlAOybxCnWEV+J1NW
+         yMzLF+Bbpxrdm3dZMB5otsAvctO3xCvjla6OkQCK2vTpbVTrCjQUOawL/ZXHHRsESbHf
+         V2vw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhVAqI9j6yka9MrlqGctvGKiVt6INHdq4x2f0RtXfiZYsdhNOmGDuUrTf51nFMkA+GlMdEicW5x+VvUE4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxNpCJuREytv+KLH0IMMeW+xzuCXnx4092fbDRVytO0ZffAzSc
+	1BL+JLiZAMWUUiz+XtLwQUfkAy4uj5jMuiisaEMIKKnMbynWtuwfrN/myqClgA==
+X-Gm-Gg: ASbGncvLun1Bq+9rEKRv+4+TQ+tHvQL0xw8KVjfDwUyxCM/el1x91158gyPtfYN16qs
+	cwPpe8ks8La69K4Z64yJeSp01C3HYZhwxGeLVG5CqLrZxy33JOa0LNUYejCzut5SJxf6SDqmaKk
+	Ox4QxMvdzO+LE8PRrBHPIRdz9Tdrn00VpoZR6BZmnoHd2X+FEnldVT84QA5aXkPgirO9W0ykBI/
+	2muv5iD6NDKwmQN3L7q+fcpl3b7NCW1EZWgFgBIqhd8+pBC73Pn5nEXnnM+ntyqyp2BTCxYCC+h
+	o6lcB1w9AptpbuTV5SO5xYDinyJTo9ho8h/9k8BKFdF9+I6QnKwgdP0LrH1IfH7CYg==
+X-Google-Smtp-Source: AGHT+IE1lmg1KWeJ7UDgINieW2YJl2Q3eq5iYfGmNtJ1ohWQAd4rsPyIocygagEmGkKZp8YBU6ENDw==
+X-Received: by 2002:a05:6102:224d:b0:4b0:2542:d2d1 with SMTP id ada2fe7eead31-4b9a4f57cbemr11336527137.11.1738583741231;
+        Mon, 03 Feb 2025 03:55:41 -0800 (PST)
+Received: from denia.c.googlers.com (5.236.236.35.bc.googleusercontent.com. [35.236.236.5])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baa9aefcsm1592770137.12.2025.02.03.03.55.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 03:55:40 -0800 (PST)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Subject: [PATCH v17 00/17] media: uvcvideo: Implement UVC v1.5 ROI
+Date: Mon, 03 Feb 2025 11:55:36 +0000
+Message-Id: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD985D89FF3B425BBEF64F830AAED58760BC4D045B50C24E742CD62213F67905E7A2AC4D49D072AC54EBC5D9AA61015533C2A6F8CC78338C5D54B7100E68FD373F2C5C7FD16981B76AE
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE74D62681FFDF80F84EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006379BF04B24BEB7B2D58638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D805C50B9BDACD356DEE9DB705B7A98D04FBA8683A809B405DCC7F00164DA146DAFE8445B8C89999728AA50765F7900637E603D20A273AEC4F389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC80CABCCA60F52D7EBF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C2D01283D1ACF37BABA3038C0950A5D36C8A9BA7A39EFB766D91E3A1F190DE8FDBA3038C0950A5D36D5E8D9A59859A8B6B0E9FD5D4288160E3AA81AA40904B5D99C9F4D5AE37F343AD1F44FA8B9022EA23BBE47FD9DD3FB595F5C1EE8F4F765FC72CEEB2601E22B093A03B725D353964B0B7D0EA88DDEDAC722CA9DD8327EE4930A3850AC1BE2E735F3CCD8A865B74A75C4224003CC83647689D4C264860C145E
-X-C1DE0DAB: 0D63561A33F958A5DF821E4F645B6DB85002B1117B3ED69691FF9B2459FBC3D1AD0703CEB2EF9A27823CB91A9FED034534781492E4B8EEADEF0AF71940E62277C79554A2A72441328621D336A7BC284946AD531847A6065A17B107DEF921CE79BDAD6C7F3747799A
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFFFB4007EAC77398A43614324D7071F2D82408137FF06C7368DAE059F5ED1109014625291CC5E48B9D5D9813428A63F6CDCF5566733BBEC8E37F80B1A62BB60B559968CC7693375D1E4FDFA4A036B0C3902C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojbL9S8ysBdXgS6CEGaw2xI90KW7iM6K0A
-X-Mailru-Sender: 9EB879F2C80682A0D0AE6A344B45275F3916920A183BFB234756507F36A35F4B1DCB45136720F479B4B1E5B0E63599662C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-Mailru-Src: fallback
-X-7564579A: B8F34718100C35BD
-X-77F55803: 6242723A09DB00B4A84B4964F946E17EB1A91FC540E416C1CB476F615DCA8D7C049FFFDB7839CE9E5FC588583EA33AA18E9E85C91E8EEDEF3E541CD7046B48C47CD676F1951F6640EFADE2AA2806D7A2
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5+wYjsrrSY/u6NqYXWMR0/V85CnFjCYTu9APdQH0PvpnP5qz8aO2mjTJzjHGC4ogvVuzB3zfVUBtENeZ6b5av1fnCBE34JUDkWdM6QxE+Ga5d8voMtmXfSqgmQqKELHYkwyxHfUpwjuv
-X-Mras: Ok
-X-7564579A: B8F34718100C35BD
-X-77F55803: 6242723A09DB00B4A84B4964F946E17EB1A91FC540E416C17F4F1A202AC583AF049FFFDB7839CE9E5FC588583EA33AA12513C89A6A2555DE41AFFA8E49FEFF59D5E304D1DC8154CC
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5+wYjsrrSY/u6NqYXWMR0/V85CnFjCYTu9APdQH0PvpnP5qz8aO2mjTJzjHGC4ogvVuzB3zfVUBtENeZ6b5av1fnCBE34JUDkWdM6QxE+Ga5d8voMtmXfSocPAboFA1B23vnsmttD4RG
-X-Mailru-MI: 20000000000000800
-X-Mras: Ok
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALmuoGcC/12Myw6CMBBFf8V0bU2nloG48j+MCyhTmAXUtNJoC
+ P9uIfERl/dxziwiBaYoTrtZBEoc2Y85QLnfCdvXY0eS21wIrbQBgKOckpXBs0RsWrSuBkIj8vs
+ WyPFjU12uOfcc7z48N3OCYq3fEvOR5EEqicY6agps0FVn2wc/8DQcfOjEKkqAX1iD+oExw1RpB
+ a6kioryD16W5QUYIe0O4QAAAA==
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Yunke Cao <yunkec@chromium.org>, linux-media@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>, 
+ Yunke Cao <yunkec@google.com>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ Daniel Scally <dan.scally@ideasonboard.com>, 
+ Hans Verkuil <hverkuil@xs4all.nl>
+X-Mailer: b4 0.13.0
 
-Nothing Phone (1) - sm7325-nothing-spacewar has three camera sensors:
-- Wide sony,imx766
-- Ultra wide samsung,s5kjn1
-- Front sony,imx471
-We tested the UW and Front cameras by hacking the IMX412 in our fork and
-they work as expected. Wide is a C-PHY sensor, so unfortunately we haven't
-tested it fully yet.
+This patchset implements UVC v1.5 region of interest using V4L2
+control API.
 
-However, some of our work can already be upstreamed, so that's what we're
-doing in this series.
+ROI control is consisted two uvc specific controls.
+1. A rectangle control with a newly added type V4L2_CTRL_TYPE_RECT.
+2. An auto control with type bitmask.
 
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-i2c@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux@mainlining.org
-Cc: ~postmarketos/upstreaming@lists.sr.ht
-Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+V4L2_CTRL_WHICH_MIN/MAX_VAL is added to support the rectangle control.
 
-Danila Tikhonov (4):
-  arm64: dts: qcom: sm7325-nothing-spacewar: Add CAM fixed-regulators
-  dt-bindings: eeprom: at24: Add compatible for Puya P24C64F
-  dt-bindings: eeprom: at24: Add compatible for Giantec GT24P128E
-  arm64: dts: qcom: sm7325-nothing-spacewar: Enable camera EEPROMs
+The corresponding v4l-utils series can be found at
+https://patchwork.linuxtv.org/project/linux-media/list/?series=11069 .
 
- .../devicetree/bindings/eeprom/at24.yaml      |   5 +-
- .../boot/dts/qcom/sm7325-nothing-spacewar.dts | 157 +++++++++++++++++-
- 2 files changed, 158 insertions(+), 4 deletions(-)
+Tested with v4l2-compliance, v4l2-ctl, calling ioctls on usb cameras and
+VIVID with a newly added V4L2_CTRL_TYPE_RECT control.
 
+This set includes also the patch:
+media: uvcvideo: Fix event flags in uvc_ctrl_send_events
+It is not technically part of this change, but we conflict with it.
+
+I am continuing the work that Yunke did.
+
+Changes in v17:
+- Rebase on latest media-committers/next
+- Link to v16: https://lore.kernel.org/r/20241210-uvc-roi-v16-0-e8201f7e8e57@chromium.org
+
+Changes in v16:
+- add documentation
+- discard re-style
+- refactor -ENOMEM
+- remove "Use the camera to clamp compound controls"
+- move uvc_rect
+- data_out = 0
+- s/max/min in uvc_set_rect()
+- Return -EINVAL in uvc_ioctl_xu_ctrl_map instead of -ENOTTY.
+- Use switch inside uvc_set_le_value.
+- Link to v15: https://lore.kernel.org/r/20241114-uvc-roi-v15-0-64cfeb56b6f8@chromium.org
+
+Changes in v15:
+- Modify mapping set/get to support any size
+- Remove v4l2_size field. It is not needed, we can use the v4l2_type to
+  infer it.
+- Improve documentation.
+- Lots of refactoring, now adding compound and roi are very small
+  patches.
+- Remove rectangle clamping, not supported by some firmware.
+- Remove init, we can add it later.
+- Move uvc_cid to USER_BASE
+
+- Link to v14: https://lore.kernel.org/linux-media/20231201071907.3080126-1-yunkec@google.com/
+
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+Hans Verkuil (1):
+      media: v4l2-ctrls: add support for V4L2_CTRL_WHICH_MIN/MAX_VAL
+
+Ricardo Ribalda (10):
+      media: uvcvideo: Handle uvc menu translation inside uvc_get_le_value
+      media: uvcvideo: Handle uvc menu translation inside uvc_set_le_value
+      media: uvcvideo: refactor uvc_ioctl_g_ext_ctrls
+      media: uvcvideo: uvc_ioctl_(g|s)_ext_ctrls: handle NoP case
+      media: uvcvideo: Support any size for mapping get/set
+      media: uvcvideo: Factor out clamping from uvc_ctrl_set
+      media: uvcvideo: Factor out query_boundaries from query_ctrl
+      media: uvcvideo: let v4l2_query_v4l2_ctrl() work with v4l2_query_ext_ctrl
+      media: uvcvideo: Introduce uvc_mapping_v4l2_size
+      media: uvcvideo: Add sanity check to uvc_ioctl_xu_ctrl_map
+
+Yunke Cao (6):
+      media: v4l2_ctrl: Add V4L2_CTRL_TYPE_RECT
+      media: vivid: Add a rectangle control
+      media: uvcvideo: add support for compound controls
+      media: uvcvideo: support V4L2_CTRL_WHICH_MIN/MAX_VAL
+      media: uvcvideo: implement UVC v1.5 ROI
+      media: uvcvideo: document UVC v1.5 ROI
+
+ .../userspace-api/media/drivers/uvcvideo.rst       |  64 ++
+ .../userspace-api/media/v4l/vidioc-g-ext-ctrls.rst |  26 +-
+ .../userspace-api/media/v4l/vidioc-queryctrl.rst   |  14 +
+ .../userspace-api/media/videodev2.h.rst.exceptions |   4 +
+ drivers/media/i2c/imx214.c                         |   4 +-
+ drivers/media/platform/qcom/venus/venc_ctrls.c     |   9 +-
+ drivers/media/test-drivers/vivid/vivid-ctrls.c     |  34 +
+ drivers/media/usb/uvc/uvc_ctrl.c                   | 799 ++++++++++++++++-----
+ drivers/media/usb/uvc/uvc_v4l2.c                   |  77 +-
+ drivers/media/usb/uvc/uvcvideo.h                   |  25 +-
+ drivers/media/v4l2-core/v4l2-ctrls-api.c           |  54 +-
+ drivers/media/v4l2-core/v4l2-ctrls-core.c          | 167 ++++-
+ drivers/media/v4l2-core/v4l2-ioctl.c               |   4 +-
+ include/media/v4l2-ctrls.h                         |  38 +-
+ include/uapi/linux/usb/video.h                     |   1 +
+ include/uapi/linux/uvcvideo.h                      |  13 +
+ include/uapi/linux/v4l2-controls.h                 |   7 +
+ include/uapi/linux/videodev2.h                     |   5 +
+ 18 files changed, 1058 insertions(+), 287 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20241113-uvc-roi-66bd6cfa1e64
+
+Best regards,
 -- 
-2.48.1
+Ricardo Ribalda <ribalda@chromium.org>
 
