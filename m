@@ -1,177 +1,167 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164B720A5ED
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B21F208A7;
+	Mon,  3 Feb 2025 16:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738599364; cv=none; b=CBrjdvGbdOI59ngJ0+Xp6IEPgNVhGXjcho2CyHY9AZ0J+0lm5elCN1iqB65Q7zNaALvMNKm8lf3pLi3heGDPEUWrI08aSgNC7vc1dWKOpKRtq3RN/lMtU8s6pNcbLgPKjf5c8yYO9UF+of61ohOzCpShr+w3fMpSKWhSkUh5Yug=
+	t=1738599375; cv=none; b=LOnJmKjGfgS5y0dkMoaJOEXJFMfiZ3i0MdC2pkUShXXkxUYB84PRrZDSHPTdMxtJYM44DL0JPsy54Vkm1fopTYE+FRpJKacvVH8Gw0ZHpRyYx7A4sT1jE2jAUb1tZ1nBpgsOvQgBe8bRNlWEslOPhc1Zlq7AWDJW/7s4/0mJ3j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738599364; c=relaxed/simple;
-	bh=XgCgeJP7Yg9WIvgjjD69EuKfsXclzUie2BBefx1gxrU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hQnm6an2bx8YV1P9vXqCCLo1t0yEDpRoyJZHC34pGBE0Ru1efVFQjqv6cZMTfaBSo92MN0NhpFn9sW5ygLUHwkHTHS5KSWQelShrqDPhe0lObB5nQHpogShaEWzVi49sZWjWfN71ybS3fd7gM68Vb0mT2CDMhVCaZmrPt7T/DR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cgYa8XGK; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738599375; c=relaxed/simple;
+	bh=aubV9fAiDPlMlQcQh9qVDTT2zn1G4X+jo7TZDmBP9wc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HebFtzAVhtzXvD8Zy/lK/G+Fqyo3HulVB6F7cel2RtjOhGzFMInjfXcKoZ3UWbtLJLe5c4YzDZJ1xvGGxP0nD74kY3vZ845AOXr+Jpi5ursQrIstZ2fXkhlkW1jpk2u3ABZ5Ct/hBAU+4HbpgIQQq116+TPCNKE4qCLY0cF9FHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DYRhhiSd; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cgYa8XGK"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-215770613dbso61333655ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 08:16:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738599362; x=1739204162; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BUMXXvBYM9FA0XZxREanSlgpwy5RHuhf/5nOkGpm4AA=;
-        b=cgYa8XGK/EDNjZKZjxmiVlaLtumjuoMLdNqNWiuKFC6OOh9w1V+QVxLUEnrfqhymGz
-         UiiK3Kv0QXKipTm9MhHVB2uL0rOo9hRuVSyT/FPCZHp2mI42ectyG94xKnZE1k5AYXip
-         G2N5DITkefGGGxGf1Puiyc9acXazERZkPPXJjKoTQaQSThf24pPhpJc6KraO5F9TGdZr
-         RlIYniwK8jbV/PtQDhk1FxoMdDER80pOFbrB7QQWfugXJ7rUOxWc8KdYlLHSt6wkXOOu
-         1sYnMgLGoa//oBWWnOtggzQV7SS68UhrA28YcqhF0l4gHXfhvuMGRw22GFGMMw3l2afv
-         bZIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738599362; x=1739204162;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BUMXXvBYM9FA0XZxREanSlgpwy5RHuhf/5nOkGpm4AA=;
-        b=rlTso23+y6fQrZSoM3NtLu76JeOr8iA0JTMRUeF2gUeziSp3cU4bG0qGeGX4KUiU7S
-         zLoQGvNB4PljOKPlAF+94zXiRq1+eYUASGhqulZGuaVIHIyVDMWVolJvUGdIDhm3x8Bo
-         NXwI3s4RrJ05OyZYSf7s7UtfnhgGwdaYACPP1wLac+aKaCmIkRkbJVzrxIr8fYAj7sGn
-         vDhUFr27mSrx2/Y1VpKFjhiG09j0OfxDbgjcP+PfKcnHCRugphXWVLzFkXTck73dDc22
-         JwnFW+VGSlEylB1zs0DNoInUfCu0nnGtI6XxfBUP2OExGDeOBwMOhaBWdTRFlXo51Uui
-         oEdA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYHSA44AlbV6RdpMiWyFDgcoQoDFiASFV0Ybq6E4k/wdXzJcG82SIChkmL2O0mXptnbFt5vTF9Oh+RCNc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGQD+dIqPrWtXBQ20ri3bOYpyFGqdJbgWNXHFemlq5aEEt4HBB
-	G2UWMrRQ/yRDMpOn3twE8uljgeXmmvzEe6xcGLC3LAWlJzzWyDpTXkB8+nL67g==
-X-Gm-Gg: ASbGncthyE6Ms8LqS01+tn4hBiE9HI1cpItJOToOwccB+wUV36b8Xdl8D2YXOB8+/1Q
-	qukLelEXVsi4TTG8HI4WO9Slq/xu3y1b9HCQ77Y7RBDlOntBIf/TJ+7bqij1Cfuars74cCLeosx
-	cQr11UFBko43lMc7TuYByGqTBBCoq3hBJyq6q2dp1AN9rxyKsOR1QxO9djV4maYmWrglyUQNk+U
-	FfrPZZ6mEGJD+S3r4ubxhaQP6j/mtwMgFEbhPJyjcM/qo8rQsd7pyk2gOroC3GbkuYOuu639o/G
-	m9ul2L6Lrgfs8uoNGmMjsg89OQ==
-X-Google-Smtp-Source: AGHT+IFjb2et5efUw+zyoN0z9jRuYcDjtd3ic3btnHPpSguicV2FG29nk9FX8bZh7WGuu0uFADinPQ==
-X-Received: by 2002:a17:903:2447:b0:216:6901:d588 with SMTP id d9443c01a7336-21dd7c66599mr364839785ad.15.1738599362181;
-        Mon, 03 Feb 2025 08:16:02 -0800 (PST)
-Received: from thinkpad ([120.60.129.34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f832esm77789605ad.83.2025.02.03.08.15.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 08:16:01 -0800 (PST)
-Date: Mon, 3 Feb 2025 21:45:55 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DYRhhiSd"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 08FF24429E;
+	Mon,  3 Feb 2025 16:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738599371;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nzSYXGtjhazy1f4IqKxNqCqYk7NJaq4pu6AwjqCjoIk=;
+	b=DYRhhiSdrwFxqpw02vOdAbvWAuz17MTbhSJVWgo9KRHQ+FcdL5/MLU3gHSWGL1yBp+ZrJM
+	bJ8pxMSxBptGflsRUOosqVyYn2hC46S17vPiX8QYZ2CBf7ojv2WozKOhyi+dLFbNuevt3L
+	y4nR3Y6QGbAC2mhRxEVyo8MndrRZNpVNxcIFZdnLJgYdC0FI1Ls2AAQli/Hu3ZLa3KcRho
+	OBc/uSihc1TRLnPvORZPsm7alCwyG2QbYqiRU3wyOpC1VriwsYkzu1pQ6PB6BSQ+GupfIZ
+	cdMVqQU5RfEW7i/kBWaHC0gc/JxZHTQEJ3ifQsEuA7yDBYt1m5iRAqkSXWCDBA==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	konrad.dybcio@oss.qualcomm.com, quic_mrana@quicinc.com,
-	quic_vbadigan@quicinc.com, Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Subject: Re: [PATCH v4 4/4] PCI: dwc: Add support for configuring lane
- equalization presets
-Message-ID: <20250203161555.a32gpzv4j6cjajs5@thinkpad>
-References: <20250124-preset_v2-v4-0-0b512cad08e1@oss.qualcomm.com>
- <20250124-preset_v2-v4-4-0b512cad08e1@oss.qualcomm.com>
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
+	Marek Vasut <marex@denx.de>
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Louis Chauvet <louis.chauvet@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v5 0/4] Add support for errors recovery in the TI SN65DSI83 bridge driver
+Date: Mon,  3 Feb 2025 17:16:02 +0100
+Message-ID: <20250203161607.223731-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250124-preset_v2-v4-4-0b512cad08e1@oss.qualcomm.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepleetudffledtvddtffegudfgjeffgeegkeehjeeigffgieevhfekffehheehieeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdeipdhrtghpthhtoheprghlvgigrghnuggvrhdrshhtvghinhesvgifrdhtqhdqghhrohhuphdrtghomhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdro
+ hhrghdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvgdprhgtphhtthhopehjvghrnhgvjhdrshhkrhgrsggvtgesghhmrghilhdrtghomhdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Fri, Jan 24, 2025 at 04:52:50PM +0530, Krishna Chaitanya Chundru wrote:
-> PCIe equalization presets are predefined settings used to optimize
-> signal integrity by compensating for signal loss and distortion in
-> high-speed data transmission.
-> 
-> Based upon the number of lanes and the data rate supported, write
-> the preset data read from the device tree in to the lane equalization
-> control registers.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 41 +++++++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
->  include/uapi/linux/pci_regs.h                     |  3 ++
->  3 files changed, 47 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 2cd0acbf9e18..eced862fb8dd 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  	if (pci->num_lanes < 1)
->  		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
->  
-> +	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
-> +	if (ret)
-> +		goto err_free_msi;
-> +
->  	/*
->  	 * Allocate the resource for MSG TLP before programming the iATU
->  	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
-> @@ -802,6 +806,42 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  	return 0;
->  }
->  
-> +static void dw_pcie_program_presets(struct dw_pcie *pci, u8 cap_id, u8 lane_eq_offset,
-> +				    u8 lane_reg_size, u8 *presets, u8 num_lanes)
-> +{
-> +	u32 cap;
-> +	int i;
-> +
-> +	cap = dw_pcie_find_ext_capability(pci, cap_id);
-> +	if (!cap)
-> +		return;
-> +
-> +	/*
-> +	 * Write preset values to the registers byte-by-byte for the given
-> +	 * number of lanes and register size.
-> +	 */
-> +	for (i = 0; i < num_lanes * lane_reg_size; i++)
-> +		dw_pcie_writeb_dbi(pci, cap + lane_eq_offset + i, presets[i]);
+Hi,
 
-So this essentially means that the presets value derived from DT should be equal
-to 'num_lanes', otherwise this function will write 0 for the undefined lanes.
-But this should be taken care by binding as I mentioned in my review and code
-should not worry about it.
+Usually the TI SN65DSI83 recovers from error by itself but during ESD
+tests, we have some cases where the TI SN65DSI83 didn't recover.
 
-> +}
-> +
-> +static void dw_pcie_config_presets(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	enum pci_bus_speed speed = pcie_link_speed[pci->max_link_speed];
-> +
-> +	/* For data rate of 8 GT/S each lane equalization control is 16bits wide */
-> +	if (speed >= PCIE_SPEED_8_0GT && pp->presets.eq_presets_8gts[0] != 0xff)
-> +		dw_pcie_program_presets(pci, PCI_EXT_CAP_ID_SECPCI, PCI_SECPCI_LE_CTRL,
-> +					0x2, (u8 *)pp->presets.eq_presets_8gts, pci->num_lanes);
+In order to handle those cases, this series adds support for a recovery
+mechanism.
 
-You should just pass PCIE_SPEED_8_0GT to the dw_pcie_program_presets() helper
-and it should figure out the register bits, size and lane count inside. Like,
+Compare to the previous iteration, this v5 series fixes the v4 series
+because the v4 series fails to apply on top of v6.14-rc1.
 
-	dw_pcie_program_presets(pci, PCIE_SPEED_8_0GT);
+The modification are still the same as for the v4 series (v4 series
+should be simply ignored):
+  - rebase on top of v6.14-rc1
+  - disable/re-enable irq in the failure detection and reset process
+  - Split the patch moving reset_pipe() from VC4 to a new helper
+  - Rename the new helper to drm_atomic_helper_reset_crtc()
+  - Remove state duplication and use bridge.encoder->crtc
 
-> +
-> +	/* For data rate of 16 GT/S each lane equalization control is 8bits wide */
-> +	if (speed >= PCIE_SPEED_16_0GT &&
-> +	    pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS][0] != 0xff)
-> +		dw_pcie_program_presets(pci, PCI_EXT_CAP_ID_PL_16GT, PCI_PL_16GT_LE_CTRL,
-> +					0x1, pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS],
-> +					pci->num_lanes);
+Best regards,
+Hervé Codina
 
-Same here.
+Changes v4 -> v5
+  v4: https://lore.kernel.org/lkml/20250203145824.155869-1-herve.codina@bootlin.com/
 
-- Mani
+  Exact same changes as the v4. The v4 series doesn't apply on top of
+  v6.14-rc1 and should be simply ignore.
+  This v5 series is the v4 fixed to apply on top of v6.14-rc1.
+
+Changes v3 -> v4
+  v3: https://lore.kernel.org/lkml/20250108101907.410456-1-herve.codina@bootlin.com/
+
+  - Patch 1:
+    No changes
+
+  - Patch 2 and 3 (patch 2 in v3):
+    Rename the helper to drm_atomic_helper_reset_crtc()
+    Split the patch available in v3 in two patches.
+
+  - Patch 4 (patch 3 in v3):
+    Take into account commit d2b8c6d549570 ("drm/bridge: ti-sn65dsi83:
+    Add ti,lvds-vod-swing optional properties"), available in v6.14-rc1.
+    Disable irq when a fault is detected and re-enable it after the pipe
+    reset.
+    Remove state duplication and use bridge.encoder->crtc directly
+
+Changes v2 -> v3
+  v2: https://lore.kernel.org/lkml/20241217143216.658461-1-herve.codina@bootlin.com/
+
+  - Patch 1:
+    No changes
+
+  - Patch 2 (new in v3)
+    Move reset_pipe() from VC4 HDMI driver to a new atomic helper
+
+  - Patch 3
+    Use the new drm_atomic_helper_reset_pipe()
+
+  Patch removed in v3
+    - Patch 2 in v2
+      No more needed
+
+Changes v1 -> v2
+  v1: https://lore.kernel.org/lkml/20241024095539.1637280-1-herve.codina@bootlin.com/
+
+  - Patch 1:
+    Add 'Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>'
+    Add 'Acked-by: Conor Dooley <conor.dooley@microchip.com>'
+
+  - Patch 2 (new patch in v2)
+    Introduce drm_atomic_helper_disable_connector()
+
+  - Patch 3 (patch 2 in v1)
+    Reset the output path instead of the full pipeline.
+    Update and add more information related to the bridge in commit log.
+
+Herve Codina (4):
+  dt-bindings: display: bridge: sn65dsi83: Add interrupt
+  drm/atomic-helper: Introduce drm_atomic_helper_reset_crtc()
+  drm/vc4: hdmi: Use drm_atomic_helper_reset_crtc()
+  drm: bridge: ti-sn65dsi83: Add error recovery mechanism
+
+ .../bindings/display/bridge/ti,sn65dsi83.yaml |   3 +
+ drivers/gpu/drm/bridge/ti-sn65dsi83.c         | 131 ++++++++++++++++++
+ drivers/gpu/drm/drm_atomic_helper.c           |  41 ++++++
+ drivers/gpu/drm/vc4/vc4_hdmi.c                |  30 +---
+ include/drm/drm_atomic_helper.h               |   2 +
+ 5 files changed, 178 insertions(+), 29 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.47.1
+
