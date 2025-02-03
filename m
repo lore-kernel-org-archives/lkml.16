@@ -1,152 +1,163 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3BC635966;
-	Mon,  3 Feb 2025 09:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56BC35966;
+	Mon,  3 Feb 2025 09:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738574440; cv=none; b=sMRsBSfdw24NmRNm1uXF31zkoe1p9JdCknpxoN9Y9AGoLAQgGKHrOCZs1ZRRscrjGsESms7Sk/tH0rFJuvfNUPNj7npSFDUWNyBWNv0kPIU7TmD1DLjQHXl1fdC4EQ6IdnPJ3YoS+mKjvcauFspnINNWmeiPrDaEjADEMnBYBcE=
+	t=1738574455; cv=none; b=jFcH0yX/pRyMO9s1GArdzm9E5dq978JXnlTchiSlyhWOeFOzVgFyMJwzb2M///yQkB7AkcdDw8VskSZ5vfC8cwDiyzL5VnWni48mCPqEMEZFxLzaR1pLFdJlxgUMVbZHJyoqTzH9pvTPR6hKqw9uxxDhmZuGJwfbFkJIIiOVMAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738574440; c=relaxed/simple;
-	bh=eH8RTlzzHp4UeP8KiQIoY8gIaSQQAs8szmF27FWar1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=im5urJQGPGBkkh2GicJuWFjFq2aCuxPhakddrf7rA+nATCWLZHlb1z/6ds02w76uRXX+LWSuT2kiwsBgzUOQtog8K8/is2nD4FWB1Z7Se1KQznGZpIak+XrzqApRq4H2RyW3mQmacfep/bwufX7UYRuBXVtadejmexaBtZv3MIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=Vd9frdIm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PwVTjJiB; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	s=arc-20240116; t=1738574455; c=relaxed/simple;
+	bh=8nLfpnzQDcxbHNzeLggAsAc2VUzfaRKt25oxEShK2/I=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FNGo/FyWUVBD9OWHSbTlua77/+4/WA1tETmox1Wqw+Li4kszO1gZnefP/kK1nAj6+2PdqKOfzwUJzhY7AwDekFjk2/5do9q0vrVLBLh2uhNTh2aFv/czrNw3zqQBaHbUdhFYlm+JJbiLdZxfNhddrHkv+D2eLw4QoQs4zf2Bp4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AEp9n6HY; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="Vd9frdIm";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PwVTjJiB"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id B06D91140172;
-	Mon,  3 Feb 2025 04:20:35 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Mon, 03 Feb 2025 04:20:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1738574435; x=
-	1738660835; bh=YlFWSO22bl8+fawPp6D8ReMiTZsYoX3fNRXYOkRD+pw=; b=V
-	d9frdImBGEGNN6HH2PlR+iCuevMDIBikfhw4bmf75WnKy+9Z7tbZ04hBVaY84Riu
-	Uph5qGx28t6hoVT2oryTI6NtMqQFvOA5bj/JLb1rAcQc5zQOAyrEVvokxYQDr/Dw
-	a/nYrtj4RdP+MaBKefxEADAAC9qLBIs9u9z5dBzOssEZVm/4wx78C5ZyyDySmVCf
-	A54zf6kamdGTQUDGTdzcwon1px8SPICo7zl5N88vDdyoliIxObIsTx+E4s9p8Y1M
-	BAy/4Y8FzMug6ogRBbATemrBr6F6RtzxRGFIDt+ahEbLLhzB7vl1OrdDWiqB8lJ0
-	rzCPNVlU30vqYC+MuUNIQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738574435; x=1738660835; bh=YlFWSO22bl8+fawPp6D8ReMiTZsYoX3fNRX
-	YOkRD+pw=; b=PwVTjJiBiXi7CTfXdINoIOd4rhsNSaUgd+VjZnANQkP6MtjXRyr
-	MWWOcx2YT9Fky0JpKDlM860arvHGo0ayBJjIAz9Zc3NWPFSjl6ufOfk1LBI7YSmr
-	5967oyQBaT5sp/ajyfZHt9LtTx/4QJz07YUrnJyPICKBbqsmmAruGqkoIXhSeVqe
-	qAr1FN0GH7Fmb+Wahw4JXkz2cKNWuHvjHYR/xdLrLaVmc1jat4vzFLwSTkppUrDA
-	SzsVF3kb3Eo4cfcKfeJZiqcy6QXNLoecHHeLyAjO9VhtwkxrGJpeQxuXAAov0Q4w
-	KLxsSOUEs430dKjjqWUkXXIngioMAARNmiw==
-X-ME-Sender: <xms:Y4qgZ0xiJL2pHo30aU6RUjj96V8IbO1-CPZliu8s8dvhxsZC-h01YA>
-    <xme:Y4qgZ4Q-1AYIZ9q984zLi_ufHU2-Lgro1CHVvu8nVEZmCcozYj-6OdJCUhH-UlNvU
-    wxIusuFsIqOg3gVm00>
-X-ME-Received: <xmr:Y4qgZ2WOmal_QazD6njrFgBxcz4JVy5tGdq87D4aek7nC0ZcGIdmy5kC0CyD>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedvvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
-    necuhfhrohhmpefurggsrhhinhgrucffuhgsrhhotggruceoshgusehquhgvrghshihsnh
-    grihhlrdhnvghtqeenucggtffrrghtthgvrhhnpeeuhffhfffgfffhfeeuiedugedtfefh
-    keegteehgeehieffgfeuvdeuffefgfduffenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehsugesqhhuvggrshihshhnrghilhdrnhgvthdpnhgs
-    pghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrnhhtoh
-    hnihhosehophgvnhhvphhnrdhnvghtpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdr
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtg
-    homhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgr
-    sggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvg
-    hrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheprhihrgiirghnohhvrdhsrdgrsehgmhgrihhlrdgtohhmpdhrtghpth
-    htoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthh
-X-ME-Proxy: <xmx:Y4qgZyjLT0xB8dfB7DdEccyatt-wj7AG_zD9tkqFXRWPtF0vQeJhEw>
-    <xmx:Y4qgZ2A0o2M6tB16kz4-wmyPDnvjYK6heajikhBXcCrCKanJv9nFsA>
-    <xmx:Y4qgZzIp8hawpGgAcneq0QdkIRG64HRxGPX5sqISHEnFa5O-C5De6w>
-    <xmx:Y4qgZ9AH1B5tJ8pteapfOqSz4_CyrR1_kG92cTppsJnmeFl4xC0PXQ>
-    <xmx:Y4qgZyxPWjB6oEh6m5Rxs1fM623tW9bSHiMHva57f12qoQFffNCkjBK0>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 3 Feb 2025 04:20:34 -0500 (EST)
-Date: Mon, 3 Feb 2025 10:20:32 +0100
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Antonio Quartulli <antonio@openvpn.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
-Subject: Re: [PATCH net-next v18 17/25] ovpn: implement keepalive mechanism
-Message-ID: <Z6CKYA8ueI-ZGybN@hog>
-References: <20250113-b4-ovpn-v18-0-1f00db9c2bd6@openvpn.net>
- <20250113-b4-ovpn-v18-17-1f00db9c2bd6@openvpn.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AEp9n6HY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738574454; x=1770110454;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=8nLfpnzQDcxbHNzeLggAsAc2VUzfaRKt25oxEShK2/I=;
+  b=AEp9n6HYiwKi9Lg3EsAMptPZE3zhXGggbBoe3OO9K5rudTV51UQ8SXw7
+   3dK2Nc914YVi89pGAJ1vCA0+znnISQuUxic/N5K74bJatOByJNRCXKki8
+   4axQMIO+m5wnxe1cDTutNUiR5RVStKNWqrddD0gjgVxyJ3sYuM9JmrMGD
+   zu/G7uh98nbrkfFarolJZgcyRmF7SAbHAASAYGpVNsdWuAnXJfIJ9XVs4
+   e6yRHh/VU53dQoNtxRfrsyh1t47mEP8MyAtiXekJgwdZp5/yHiFDongkc
+   diu6oD5s8WxMrvSBhOq7bW6uD8rz66bPs33UaOvEeXZvUJC0dJ0/oCk5j
+   A==;
+X-CSE-ConnectionGUID: QXX36E+TRq+GF4Dh2d5IUg==
+X-CSE-MsgGUID: 7H6PpG/7Q4yE3zlrdKy7Vw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="38964613"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="38964613"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:20:53 -0800
+X-CSE-ConnectionGUID: 4O4lhcyqSRCPQNsBq2Uk5Q==
+X-CSE-MsgGUID: uchkHYW0RJ+jTk9z55UjYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="110184227"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.194])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:20:50 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 3 Feb 2025 11:20:46 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 00/14] platform/x86: alienware-wmi driver rework
+In-Reply-To: <20250203062055.2915-1-kuurtb@gmail.com>
+Message-ID: <c6e10cdd-6fba-6e8b-0913-66766cb9248e@linux.intel.com>
+References: <20250203062055.2915-1-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250113-b4-ovpn-v18-17-1f00db9c2bd6@openvpn.net>
+Content-Type: text/plain; charset=US-ASCII
 
-2025-01-13, 10:31:36 +0100, Antonio Quartulli wrote:
-> +void ovpn_xmit_special(struct ovpn_peer *peer, const void *data,
-> +		       const unsigned int len)
-> +{
-> +	struct ovpn_priv *ovpn;
-> +	struct sk_buff *skb;
-> +
-> +	ovpn = peer->ovpn;
-> +	if (unlikely(!ovpn))
-> +		return;
-> +
-> +	skb = alloc_skb(256 + len, GFP_ATOMIC);
-> +	if (unlikely(!skb))
-> +		return;
-> +
-> +	skb_reserve(skb, 128);
-> +	skb->priority = TC_PRIO_BESTEFFORT;
-> +	__skb_put_data(skb, data, len);
-> +
-> +	/* increase reference counter when passing peer to sending queue */
-> +	if (!ovpn_peer_hold(peer)) {
-> +		netdev_dbg(ovpn->dev,
-> +			   "cannot hold peer reference for sending special packet\n");
-> +		kfree_skb(skb);
-> +		return;
-> +	}
-> +
-> +	ovpn_send(ovpn, skb, peer);
-> +}
+On Mon, 3 Feb 2025, Kurt Borja wrote:
 
-[...]
-> +static void ovpn_peer_keepalive_send(struct work_struct *work)
-> +{
-> +	struct ovpn_peer *peer = container_of(work, struct ovpn_peer,
-> +					      keepalive_work);
-> +
-> +	local_bh_disable();
-> +	ovpn_xmit_special(peer, ovpn_keepalive_message,
-> +			  sizeof(ovpn_keepalive_message));
-> +	local_bh_enable();
-> +	ovpn_peer_put(peer);
+> Hi!
+>
+> I bring some last minute modifications.
+> 
+> I found commit
+> 
+> 	8d8fc146dd7a ("nvmem: core: switch to use device_add_groups()")
+> 
+> which states that it's unnecesary to call device_remove_groups() when
+> the device is removed, so I dropped it to simplify things.
 
-nit: could we simply drop this put and the hold in ovpn_xmit_special?
-ovpn_peer_keepalive_send has a reference on the peer from the WQ, just
-transfer it to ovpn_xmit_special and then ovpn_send. No need to
-pretend to acquire one for ovpn_send's sake and drop the one we got
-from the WQ? (ovpn_xmit_special would need to _put(peer) in case of
-early return)
+Hi Kurt,
 
-> +}
+> I also found commit
+> 
+> 	957961b6dcc8 ("hwmon: (oxp-sensors) Move tt_toggle attribute to dev_groups")
+> 
+> which states that no driver should add sysfs groups while probing the
+> device as it races with userspace, so I re-added PROBE_FORCE_SYNCHRONOUS
+> to the platform driver, so groups are added only after the device has
+> finished probing.
+>
+> I'm not 100% sure that the second commit message applies here, but it is
+> revd-by Greg K-H so I added it just in case.
+
+Which is why .dev_groups should be used as it is able to avoid those 
+races on driver core level.
+
+Why you call device_add_groups() at all? Can't you just insert it into 
+.dev_groups member in alienware_wmax_wmi_driver?
 
 -- 
-Sabrina
+ i.
+
+> Aside from that, I added .pprof to awcc_quirks because I'm going to add
+> support for new features after this series, and it makes sense that
+> force_platform_profile only forces the pprof and not other upcoming
+> features.
+> 
+> ~ Kurt
+> ---
+> [02/14]
+>   - In alienware_alienfx_setup() add a devm action to remove the created
+>     platform device
+>   - Drop device_remove_groups() in WMAX .remove callback
+>   - Add PROBE_FORCE_SYNCHRONOUS to the platform driver
+>   - Drop .remove callbacks on both WMI drivers
+> 
+> [03/14]
+>   - Add awcc_platform_profile_init() to create the platform_profile
+>     device on quirks->thermal == true condition
+> 
+> [07/14]
+>   - Add .pprof to awcc_quirks
+> 
+> [10/14]
+>   - Drop unused member `quirks` on `alienfx_priv` (remnant of another
+>     version)
+> 
+> v6: https://lore.kernel.org/platform-driver-x86/20250127040406.17112-1-kuurtb@gmail.com/
+> 
+> Kurt Borja (14):
+>   platform/x86: alienware-wmi: Add a state container for LED control
+>     feature
+>   platform/x86: alienware-wmi: Add WMI Drivers
+>   platform/x86: alienware-wmi: Add a state container for thermal control
+>     methods
+>   platform/x86: alienware-wmi: Refactor LED control methods
+>   platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp methods
+>   platform/x86: alienware-wmi: Refactor thermal control methods
+>   platform/x86: alienware-wmi: Split DMI table
+>   MAINTAINERS: Update ALIENWARE WMI DRIVER entry
+>   platform/x86: Rename alienware-wmi.c
+>   platform/x86: Add alienware-wmi.h
+>   platform/x86: Split the alienware-wmi driver
+>   platform/x86: dell: Modify Makefile alignment
+>   platform/x86: Update alienware-wmi config entries
+>   platform/x86: alienware-wmi: Update header and module information
+> 
+>  MAINTAINERS                                   |    4 +-
+>  drivers/platform/x86/dell/Kconfig             |   30 +-
+>  drivers/platform/x86/dell/Makefile            |   45 +-
+>  .../platform/x86/dell/alienware-wmi-base.c    |  496 +++++++
+>  .../platform/x86/dell/alienware-wmi-legacy.c  |   95 ++
+>  .../platform/x86/dell/alienware-wmi-wmax.c    |  790 +++++++++++
+>  drivers/platform/x86/dell/alienware-wmi.c     | 1249 -----------------
+>  drivers/platform/x86/dell/alienware-wmi.h     |  101 ++
+>  8 files changed, 1534 insertions(+), 1276 deletions(-)
+>  create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
+>  create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
+>  create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
+>  delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
+>  create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+> 
+> 
+> base-commit: 05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
+> 
