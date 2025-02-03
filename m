@@ -1,64 +1,64 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E06D209F5B
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCB6154457
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738611592; cv=none; b=MYRGKbAOt9ZI3x9ckjSCqRIASrjA7zB2WtjGNCOtVqS9Wvsoh79nCm6c6yT5yVIbo+uS74K6h4wPJwfBRG1kQ02xMrGQZoUMdbaE7QvcT9NqdPKSuhFMc4J1GHPf32b4r274fqs9Wxg1NKDzyr1vQqxTEwgD/HrixfMNKm7MzKk=
+	t=1738611647; cv=none; b=XpsbmBOzy8XxQUS7JyFxE/hf6HtMw0v6w5tA2i7PozLregTs3Ok70gw3J61LgUaXMmF5Ixqyx8fotoGE8nKPuzWtY8SnLBWxMi9tJ/1OSHejMT7JmPFl3GC+LY2faREV0D++mBIx4RN/HQBYEPlTCuW9G+KjnRfYbkT2C9Ol8j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738611592; c=relaxed/simple;
-	bh=/nukz/GWXKZKSnXA4M0zIsiw93sVPIl9e86Sl8alprc=;
+	s=arc-20240116; t=1738611647; c=relaxed/simple;
+	bh=4w5hI182C7EhB0pdVM2nhPdeGiASHD7UyoPbGWvGjIc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pxrpyLCa6ppp7tAxBxf/cqjdyXw3SwY3/QJlJ5I4ts8i/X21z8C465hbThFLl6h1yBOfGe4R5V7Mf8A7ohcIU3VIi+nQ2E9baAW8y3jgr0pb0thBzEQgmYFXo00z6vCCSYkEUgsveWaNl9QDhO0dlTcntMspB2LPaqx+vZsx2bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DXYl5a+o; arc=none smtp.client-ip=209.85.160.52
+	 In-Reply-To:Content-Type; b=r09XnJpaKXIQmVRqxgBzG21vyv7BpTGtj4216vPlpFfvIMrKBeDIE4SBAhXnrVWbmTFzwM0Rgzockwa0nQnm3mTLMyeml4jBNMF7sD3LL49Dp6Qwv/Yym+nM14wdMAvkHZmtMl6mLEQDSfpmuJAm8Oq58ehwnqDv4lWpXdD9X44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=okSaF/aR; arc=none smtp.client-ip=209.85.167.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DXYl5a+o"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2a383315d96so2272030fac.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:39:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="okSaF/aR"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3ebadbb14dcso2039106b6e.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:40:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738611588; x=1739216388; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738611644; x=1739216444; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=wLhKJbpbcl0F3714e9Wmp/i7a0BEVMhErOhbjcvQ7kQ=;
-        b=DXYl5a+oMMXofEHcAXfdG5TLGzWFaLn4Spt6/ZVpsV5Z9TcNm4/k8hbCkJHmwEIpuw
-         xE6VIk+PVzD2GCN5Txn5Bg4EPWjrwPtQxfkDF3WSFV1fN6h4wLWFL39I+ZaOR726yU5T
-         yXAse3KwG2+mARuZkdWKcj5Ji2xZ5zIL3Tb20BAk9dlV2YlVm01n66Lc87IzzTN7FmIj
-         JTBRPnxf8mYKYCC0hoVIwYhkmmVKH/YIedzqf0kcQ03Ku+KNvzwcnkpWeVE8lzqXH4DI
-         muFOZPgAfF4MXleeyhChBq50TOTF3yGCvJbZOHO7z7rUHSOlU2rF+epTol86ud5TRkhS
-         hdjw==
+        bh=9uBq3XbrrzPz0mKVXuQDtYlXTInCQgyur/dXytapL4E=;
+        b=okSaF/aRa1wvAE2zHQCNGL7paMGYWuTveHAxfqOv+Du9H0Yg2kikMImGsGFPrav91t
+         +NnhObqDIg7pj1lDx7zF+XPdN/qDz0kxp6Yn9/eTEfW6Tf8C6GfFwDWQ2V0RsQr8D2Ws
+         2n9yoX/J3v5FgEEIHy0zs5nLK9yMDGmwTmqrdpl8jd4xEN9ZBo/Q9JS+hgoHh6QNDMcg
+         hW+DStHzsXWjgwiNvui3ACKjFkArMGzxnwX0lMv6a+ILu7/5uK6+OYW0OHiNvalO6cOF
+         PFxSkb65BJBfr7ZEtHzpzYS4Hjz2Rmwjc0HRFro895a+bEVYyuIdj7aELCXW5JIVZ5/E
+         7E6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738611588; x=1739216388;
+        d=1e100.net; s=20230601; t=1738611644; x=1739216444;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wLhKJbpbcl0F3714e9Wmp/i7a0BEVMhErOhbjcvQ7kQ=;
-        b=ScmwCBPOsl0JxufuWh6r7QQBZrjwj+jvRwrJ89zCMjcIPLKaB5MkjNs9w/HYIwlpPS
-         dFAkwSDnhuiazmcqM0aARIfnh7MLoyRPNDPe+tsERgj4Bv5VLzKjSGmGB2bUf8oBzjSS
-         uX91bJGZYogbBM8J1hfg2rjogKhkv0cU9Kag/qDvXFulDMvKnFPh77DSngvF6B8jQ10a
-         s0q1O7/4LJeuDniVEr7BQiTCwTqzpM4jcsXwFHz3IMcZMn9cQhl1qdIo7JyzKNXke38O
-         CXic5vTqF2QaX2uTBkY0PXutCIDNKdEZWbXHF9q3Ka6I7d6EjQz8eV847xDwJTPIwwVM
-         KsZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKZR//JxiMr+Qkq/RDEV3efGtunpUoYRk9rxbC5ngvD2wdHq5wBruFIhlDcNFb2YlWabECeBAjFitT2Ns=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx73xeAkveODkJ/SAx/5Bg8Jky+9JzuNPTUtbLAEgp656Xwk0Kg
-	Q7NkaLOmQ1/lU+TAgij5gREUKZMRhDE0qAB9cPTj2uk4IxZ7LA5BMRfUpuUSFuU=
-X-Gm-Gg: ASbGncsndF5DwGRdy+hCcwsCHpZNzLbfUB9RsItRi0/DaQyLtejUFqUEN69NDNH2/dq
-	cDr/hwYQlsZ3mJU1sLcTUAqfqZco59MbW6uv6okVWyledJY9W8e1pIW+GKkGyNx+xI6hl18Ay6g
-	PIXoMwkvXOjPm82zP9vaj1qiAwyvqWMbHh+uxrdnjYDRJNMbS+ibZDQeDZh/l/fqRUxzDJrTlw/
-	XrVsBl5opXm8u6Fg/OSNTQIwz5iv8oPJVZoS6uyskMWNzVCL0wnM4PJD1ZT8yK8XryC3bJM+OvV
-	YNiA7gnQJpK2W5jzpwxApSnfqPf2ktYJFOuFqunLActhZIJ2uXEq
-X-Google-Smtp-Source: AGHT+IFfucymIugob4KH/abdiJ8VQNg7Vw5VVSmJVGXkdTO2+o2v+fhCLzJBh3eeVsgDk3LVoCc6nA==
-X-Received: by 2002:a05:6871:a0ca:b0:29e:70c7:a3f7 with SMTP id 586e51a60fabf-2b32f100b1amr14887069fac.4.1738611588131;
-        Mon, 03 Feb 2025 11:39:48 -0800 (PST)
+        bh=9uBq3XbrrzPz0mKVXuQDtYlXTInCQgyur/dXytapL4E=;
+        b=qA6255D63iTflUf5vMFA4C0O1XvoKU6/4Xggl3Xrby0kLrEY/5S8RxcQRx6X1V3UmR
+         8SQlrP6t6T37kk/MAGBnEJSQVDDKfQ8lionh33UNT/cmIGWL0CzxUDNUs6nt9nBNBHcM
+         +6PPWEMbqKy8mrBYRLKdlqEB03VKQ4oSKFkdsKlOF4YcDFYuUFJ3pUmgJh/FaJB8806+
+         9M91Xvf7ltjX5n0BWhQPNzV9Z46X58tTFQnNyHexHBKcCEV0mHoPaG13iSK02bYPgfvT
+         o9gl18mqExKRKgf/3myFVGeJwMwpg2xXAtv4yLQLoyQ0tpG2OnOqhv8WDexhzxpLXKtd
+         FLzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUivEjmsmHfrxfHddDmxgsQpYLNK4+9FVSHQ65f4OIcNh4n4reRsa6EB/zZMWAt7qGjFTLKv9ewxfTqcdo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9Ng3Y80d6bqXpZM+0qhA1NuhAC1CjO7fE1/fjUsPXZGbLkIc2
+	UaimyVSQtPrwD9CNNrl8lXgGIoF9vvgUFswUuCqMNBEEgTnXWZHH9ybH8Lqij1Y=
+X-Gm-Gg: ASbGncu6PKkJA99hwEW/ozjDedPf38+1ttfZ/wkh6z1LlVBTbkSFPy6sfbL4rbjFOqg
+	g3D06oPAJUgam8V6v8WpRWQOhfysIQr1HY24vRwZ0a8FVnWpJ5rZ8w1K4GN44GoGezhzUZN9npH
+	iIO0sJsCwU20J/5JfNYTZyhfDZoaze0SMUa5t3PLfuWZVdA0kmnNxq+NgRfmsV+JBzRG1wBVRds
+	N2AhxBb6SM7JuwyOEDbMppaCa/WCUhaM8QWFcDpTzHpdqrM+iJzVbGYPed3rKM6cJe8OtzJllOe
+	LJwusmWB0ji6kcs8nTh4yBDu+8lv2hIy0YmVfW+4HJTEqT2ij8ul
+X-Google-Smtp-Source: AGHT+IFStWlddd/hN330V2jKOqC9rdF9kDVFIFEz3wnO/4AylHuxPEivSEkFzdJ/qetqDYyi/+6s+A==
+X-Received: by 2002:a05:6808:1a06:b0:3ec:d30f:60e3 with SMTP id 5614622812f47-3f323b7318amr17300136b6e.39.1738611644653;
+        Mon, 03 Feb 2025 11:40:44 -0800 (PST)
 Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b3561a582csm3488650fac.13.2025.02.03.11.39.45
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726618b9f7fsm2907374a34.43.2025.02.03.11.40.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 11:39:46 -0800 (PST)
-Message-ID: <06a2cde6-f725-486b-b3f9-beefe3c227d2@baylibre.com>
-Date: Mon, 3 Feb 2025 13:39:45 -0600
+        Mon, 03 Feb 2025 11:40:43 -0800 (PST)
+Message-ID: <2f71bc82-c2c4-46d0-ae39-abfa4f2e8dc4@baylibre.com>
+Date: Mon, 3 Feb 2025 13:40:41 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,27 +66,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] Documentation: ABI: IIO: Add filter_type
- documentation
+Subject: Re: [PATCH v3 2/3] iio: adc: ad4130: Add filter_type attributes
 To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
  linux-kernel@vger.kernel.org
 Cc: cosmin.tanislav@analog.com, jic23@kernel.org, lars@metafoo.de,
  granquet@baylibre.com, u.kleine-koenig@baylibre.com,
  marcelo.schmitt1@gmail.com
 References: <cover.1738608986.git.marcelo.schmitt@analog.com>
- <cd749bbbf13b27caac5734b22c716124565a7216.1738608986.git.marcelo.schmitt@analog.com>
+ <77e5eb540e5d425016ea77a641e16cd31a2a761a.1738608986.git.marcelo.schmitt@analog.com>
 From: David Lechner <dlechner@baylibre.com>
 Content-Language: en-US
-In-Reply-To: <cd749bbbf13b27caac5734b22c716124565a7216.1738608986.git.marcelo.schmitt@analog.com>
+In-Reply-To: <77e5eb540e5d425016ea77a641e16cd31a2a761a.1738608986.git.marcelo.schmitt@analog.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/3/25 1:11 PM, Marcelo Schmitt wrote:
-> A previous patch added documentation for filter_type_available attributes.
-> However, the description for the value attribute (filter_type) was missing.
-> Add documentation for filter_type sysfs ABI.
+> Make filter control also available through filter_type attributes which are
+> now standardized in main IIO ABI documentation.
 > 
-> Fixes: 01bb12922b60 ("Documentation: ABI: added filter mode doc in sysfs-bus-iio")
+> Suggested-by: David Lechner <dlechner@baylibre.com>
 > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 > ---
+> Hi David, I forgot to ask if you wanted it, but I've added a suggested-by tag
+> for your advice on v2.
+
+OK with me. :-)
+
+> 
+> Thanks,
+> Marcelo
+> 
+>  drivers/iio/adc/ad4130.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/iio/adc/ad4130.c b/drivers/iio/adc/ad4130.c
+> index de32cc9d18c5..66097ff65740 100644
+> --- a/drivers/iio/adc/ad4130.c
+> +++ b/drivers/iio/adc/ad4130.c
+> @@ -942,6 +942,9 @@ static const struct iio_chan_spec_ext_info ad4130_filter_mode_ext_info[] = {
+
+I suggest to add a comment here to say that the duplication is intentional and
+the filter_mode attributes are for backwards compatibility.
+
+>  	IIO_ENUM("filter_mode", IIO_SEPARATE, &ad4130_filter_mode_enum),
+>  	IIO_ENUM_AVAILABLE("filter_mode", IIO_SHARED_BY_TYPE,
+>  			   &ad4130_filter_mode_enum),
+> +	IIO_ENUM("filter_type", IIO_SEPARATE, &ad4130_filter_mode_enum),
+> +	IIO_ENUM_AVAILABLE("filter_type", IIO_SHARED_BY_TYPE,
+> +			   &ad4130_filter_mode_enum),
+>  	{ }
+>  };
+>  
+
+With that...
+
 Reviewed-by: David Lechner <dlechner@baylibre.com>
