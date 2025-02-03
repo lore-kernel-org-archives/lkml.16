@@ -1,116 +1,113 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AB51FBC92;
-	Mon,  3 Feb 2025 08:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD55E1FC114;
+	Mon,  3 Feb 2025 08:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738572201; cv=none; b=KGe252LYa6EuVRBj3AQS2kL4TSVAcHwDUn9K7FIyi0gPKNIWWgPNLhOmxlAy8Jt6i+V8EowpSeZ4ara0yhC1Mz7hJ7dWGI6pqM8uVJigPW0PLBoHWGDghYzRhy2hpgbitvAJppl7gqThIuhWM6L1QsjjOxfhOXiKA+X5AxqVZ54=
+	t=1738572201; cv=none; b=t3miJMqt+W5kQPzM4tiPJvwFr1H8HhtLm9QIBvlPjUwUPqfEpaTBKJjVWLOm6UWCJrhlaLwB1jnQWcFP0tDyTx3NSebScB03cF0IqaTMlXDF29JeOtnItjZNsyTbwdWwRiDgk340i0JpWvTlz0DVZH2dTNFT9tdJcQep6elR/Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738572201; c=relaxed/simple;
-	bh=bc1imZ392wL8wBviv+l/3GFL8qfrorBj1RgtEI1IFNE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JZKMR//ihOmAGlDHC+rLzLRE27JswV0mBVgEnFeoNU0+W0U+r4BFn7WElXHbsPxktnRJHilvPfy+eYXjFQg+/K679FhlGi/qscvaF0S6+cIKAYh14plhEhKM9YAXEBzedeE5wECi5yw0TUvpEyd3PV2qGxFlkFeqCmTSvwdzGsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=moU2QYT4; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	bh=FwAUacQljcRZFF1xn1SPGI9pnq7pl2aJpEklQbzKrpo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lc6tv1HbdoZoTvzuAXgy3qxCKIbSxVcBP6HhBHTF7mUY4R8M+gofcULgEiKUNChqBTBV7wq7BqeA0Q8waocePsq5JjmDF+WUAEvt4MxZcOIfvP1GZbWLtQitFtC+9cDAPKFSlewjmByqCZ7nUfNkNWvVsjkvSpCIIu6OYXOCQ60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0cLxay6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="moU2QYT4"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5135kj5x006360;
-	Mon, 3 Feb 2025 08:43:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0KFPGyBP8cFud5VuycCONVstDIPld15I4GQjTCSxAiM=; b=moU2QYT4a/pEO839
-	qWSTwy7IR3/Ztry758QifN065S8qqKp5pSdoFbxOWqNUEgYGzxaApeFO21taw+qO
-	xg2XCL12xdamXvsJ+gf6em/JMGmsZjI4ioy0LnxpkJROCAyrpg+jLF4pI9Hb/elr
-	scRfvd8uiRMDBGCU8eHcoV9r1zwkN8jc1faim6AR4k441wMcgyprprer+wVytWDM
-	4/JGewvP4LRwirm2jbo0JuHzJGqUtNaniqToCbphZHCDdQVOzJHx81a7+MMv585n
-	rK/zr3R6zMTToin39wNSS2DZmU4U7j13aRAK6fT2Ik9n3ULk8TJF9w16fwEGzVl6
-	9HCbbg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jqxw0c8k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 08:43:13 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5138hCWu017000
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Feb 2025 08:43:12 GMT
-Received: from [10.216.42.141] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Feb 2025
- 00:43:09 -0800
-Message-ID: <a3c7b0e6-a440-4452-83a2-eb95de0de9bc@quicinc.com>
-Date: Mon, 3 Feb 2025 14:13:06 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0cLxay6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F56C4CED2;
+	Mon,  3 Feb 2025 08:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738572201;
+	bh=FwAUacQljcRZFF1xn1SPGI9pnq7pl2aJpEklQbzKrpo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W0cLxay68+wcUcOaB5u70pr54xWiiBRliaGDFPenjvefwsxm4WejrQS60RvrSgunQ
+	 x5zv2KiOMPjiahxLsnkif7BbPuWnEN3CThF2crQOxjEffEq/rqthvZMi2H13SiZX6r
+	 il+uujWR8DYTJaucNXxZTMfMMX0nW9RbN4liywSx0BMmjrFFyB4JY4SezEZxTH1rl3
+	 FlZHQKhAJXRqzLwxlAP2/jcKY1qRPk7MxGOfv5DQSAn1R53CeYI4UPA9avojfe86w9
+	 B2rN6pG2+kVgq7F3TDPviDA7l2DzOR0+rYL1wScr3mD2c1xRf0IUFDubB8GjJLFop9
+	 sCsFUdT5jIudw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tes3A-000000006dj-32tz;
+	Mon, 03 Feb 2025 09:43:24 +0100
+Date: Mon, 3 Feb 2025 09:43:24 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Stefan Schmidt <stefan.schmidt@linaro.org>
+Cc: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+	Vikash Garodia <quic_vgarodia@quicinc.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sebastian Fricke <sebastian.fricke@collabora.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Nicolas Dufresne <nicolas@ndufresne.ca>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Jianhua Lu <lujianhua000@gmail.com>, linux-media@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Vedang Nagar <quic_vnagar@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>
+Subject: Re: [PATCH v9 00/28] Qualcomm iris video decoder driver
+Message-ID: <Z6CBrMus4SdSG9oF@hovoldconsulting.com>
+References: <20241212-qcom-video-iris-v9-0-e8c2c6bd4041@quicinc.com>
+ <Z3_kLJ6Oy6m9D_wU@hovoldconsulting.com>
+ <CAEvtbuvHUF6tEiFOUUtqLh5hHf_Us+yA6TwtcmokM26v+QBLgg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/13] dt-bindings: net: wireless: describe the ath12k
- AHB module
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <ath12k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        Kalle Valo
-	<kvalo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Jeff Johnson
-	<jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
- <20250130043508.1885026-2-quic_rajkbhag@quicinc.com>
- <20250130-cunning-quail-of-opportunity-76d0ad@krzk-bin>
- <104e6b6f-3c1e-4a00-8822-aa6fb4562411@kernel.org>
-Content-Language: en-US
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-In-Reply-To: <104e6b6f-3c1e-4a00-8822-aa6fb4562411@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Lj1rFYiMu8IQ3m0ApuY4ljvBmZW9USKk
-X-Proofpoint-GUID: Lj1rFYiMu8IQ3m0ApuY4ljvBmZW9USKk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_03,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- phishscore=0 bulkscore=0 priorityscore=1501 mlxscore=0 suspectscore=0
- adultscore=0 impostorscore=0 clxscore=1015 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502030069
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEvtbuvHUF6tEiFOUUtqLh5hHf_Us+yA6TwtcmokM26v+QBLgg@mail.gmail.com>
 
-On 1/30/2025 2:10 PM, Krzysztof Kozlowski wrote:
-> On 30/01/2025 09:28, Krzysztof Kozlowski wrote:
->> On Thu, Jan 30, 2025 at 10:04:56AM +0530, Raj Kumar Bhagat wrote:
->>> Add device-tree bindings for the ATH12K module found in the IPQ5332
->>> device.
->>>
->>> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
->>> ---
->>>  .../net/wireless/qcom,ath12k-ahb.yaml         | 319 ++++++++++++++++++
->>>  1 file changed, 319 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
->>> new file mode 100644
->>> index 000000000000..bd953a028dc3
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
->>
->> Filename should match compatible. This binding does not look like
->> supporting more devices, so there is no much benefit calling it by generic name.
-> 
-> 
-> I saw now your other patchset, so you have here two devices, but I still
-> do not understand why this cannot follow standard naming practice like
-> most bindings supporting one or more devices. Like every review we give.
-> 
+On Wed, Jan 22, 2025 at 04:34:51PM +0100, Stefan Schmidt wrote:
+> On Thu, 9 Jan 2025 at 15:58, Johan Hovold <johan@kernel.org> wrote:
+> > On Thu, Dec 12, 2024 at 05:21:22PM +0530, Dikshita Agarwal wrote:
 
-Sure, we can rename the filename to match the compatibles - "qcom,ipq5x-wifi.yaml".
+> > > Introduce support for Qualcomm new video acceleration hardware i.e.
+> > > iris, used for video stream decoding.
+> >
+> > > Note: A harmless onetime error log "Lucid PLL latch failed. Output may
+> > > be unstable!" is seen during bootup.  It doesn't impact any video
+> > > usecase and is currently under discussion.
+> >
+> > This could be an indication that some resources are not described
+> > correctly and could potentially require both binding and driver changes
+> > to address.
+> >
+> > This is also something which could cause trouble later (e.g. during
+> > suspend) even if you manage to get the clock running after boot.
+> >
+> > Generally, you should not be introducing any new warnings; they are
+> > there to let you know that something is wrong.
+> >
+> > Where is this issue being discussed?
+> >
+> > I think we at least need a public analysis and understanding of the
+> > problem before merging this.
+> 
+> Taniya Das proposed a patchset to reconfigure PLL in the clk-alpha-pll
+> which allows the videocc-sm8550 driver to configure it correctly.
+> https://lore.kernel.org/linux-arm-msm/20250113-support-pll-reconfigure-v1-0-1fae6bc1062d@quicinc.com/T/
+> 
+> I tested the Iris driver with this patchset and I am no longer seeing
+> the Lucid PLL latch failed warning.
+
+Thanks for the pointer. Please make sure to reference this series (and
+summarise the underlying issue) when resending this series.
+
+Judging from a quick look the approach taken there seems like a bit of a
+hack so it may not get merged in its current form. IIUC fixing the PLL
+issue properly may depend on adding support for multiple power domains
+to the clock drivers.
+
+Johan
