@@ -1,89 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC93E3A8CB
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0BC3A8CB
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738604868; cv=none; b=spVdRA5Hh+ai2zpQx6aCfwjDRnSEf95s1OeUi2hSSB/7JjJqPhLkLhCWzwhJGTcsa9W4rW1fhInC0bQxZqFuDVGELYhUmvyvNjTKX73ge6TkhGFNBlorP7uSNWWW3kmKVZHpyZJoGIAI9sWAUBgP/eUZU2PFTQdM7W1fVDUAR8M=
+	t=1738604943; cv=none; b=RKjYbLT1WfafLh/+hOaAcuFjqZN6bYIerWzscvYdJuZ64KwgwhO1uAk4j1kSd3ImTLXGvJr+mo01eal/sVU4J8yZU27shAKKk9nmHL+90pp0iPuf0CiZJYdHqgSLldT8wtmxVK6obikNa25fWNvWpq1m076JUSVmblkfHcsFrf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738604868; c=relaxed/simple;
-	bh=zsOgjL9b01WTJgbOU01dqs5VBy3DnMGRjpcuxmk5XYQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZnenSIwQkzlgs3ZQ0N8an7T5sUscwGU/OcijOiaCpZEEuuV4xHSKHmnErBHlwjF7GeafxugzqPOfX9mSOnCuSFjin+5YeS5uapESty/RIVQoCKCICHUAk9nBotQBqgk+zW811fIvDtBhAPkiwmBk9xNNPZC+7s3sCtpftZf7ygo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cRiq8hIy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738604943; c=relaxed/simple;
+	bh=P7qsgwAoBh5F5PSnZbuhjlaHSVDOEQdeNekKrcCa3rE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:Cc:To:
+	 References:In-Reply-To; b=E/5iGyd7OZvO+nOQEU9DevH68epb0vdDvPIJQy2f+wUabItIz3ujzmgu9VRZ7iCUn9f7MZUGKqHFihW1y3RmvQx/8/tW9YbYakUQWj1SPbaueEX8wSwkTTPXhBpPiW7vTv69JLScT98Lwdr9NeE75XQfz8a2BevdeSrExjwk8bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=Dl4Nh2+x; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cRiq8hIy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738604865;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Wf8DeKimNBu7vRPukjIt1145Uefa5PAmCrQ1aqwjiXI=;
-	b=cRiq8hIyy8hbUezhURWAIF7ylhgKu9l5ACF/TwwlViZve2HGfqd6ORxyTxJEqqvSrKdZfk
-	G+kQ9X0l3jaUTkf7S1TmDkunuX4dvZj4aefgyTObUeyft+xKmPqLMwbG9b9jB45qugm7aw
-	9Ru31bNY+fDkivda0jlmUcQAosfSHtI=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-567-MaAXbB8UP0Gc73UcxpJgWg-1; Mon,
- 03 Feb 2025 12:47:40 -0500
-X-MC-Unique: MaAXbB8UP0Gc73UcxpJgWg-1
-X-Mimecast-MFC-AGG-ID: MaAXbB8UP0Gc73UcxpJgWg
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E282B19560B4;
-	Mon,  3 Feb 2025 17:47:38 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.72])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 42BF61800268;
-	Mon,  3 Feb 2025 17:47:36 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  3 Feb 2025 18:47:12 +0100 (CET)
-Date: Mon, 3 Feb 2025 18:47:09 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: ebiederm@xmission.com, brauner@kernel.org, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] reduce tasklist_lock hold time on exit and do some
-Message-ID: <20250203174708.GA1003@redhat.com>
-References: <20250201163106.28912-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="Dl4Nh2+x"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250201163106.28912-1-mjguzik@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
+	s=key1; t=1738604936;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wAX7PNJtWVKYZDJ8A6Vtwdu0ZwlwN4Kc8QcVWARzBUk=;
+	b=Dl4Nh2+xLRGqNzL1rYOZED8vMwiHr3x2pPvpB52PjVCFvthQUL2ZFzLnRp5fN//2W2d2u7
+	U2ipKgQH0DL8xQ2vG5oWTH+F48OzGdbA12TG2ESWG1QJuPqi/qHB6iWNKnIlvLtDcR8elo
+	EDS39mOHTj3E13IaEDFJP1OaV8HjHghPYTEDVIc+0rX1pQEfBdFL2e/Gqn7ESeQYkO5QVI
+	v3sFQOAuz/T1+tOqKeowoRDk/aXO6TxtaEWSkLkjf/gUqAroOxkY2/R1gjt4K3zVDuSQ7t
+	bNFwL/xoYZPYTpPAFQPjjV6juO2nhN0H1u1b8Ads7t7qNMkTw0H8TcGsAnqnxA==
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 03 Feb 2025 17:48:08 +0000
+Message-Id: <D7IZZVD446TD.EPLWERDL77DJ@postmarketos.org>
+Subject: Re: [PATCH v3 2/2] arm64: dts: amlogic: add support for
+ xiaomi-aquaman/Mi TV Stick
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Ferass El Hafidi" <funderscore@postmarketos.org>
+Cc: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <~postmarketos/upstreaming@lists.sr.ht>,
+ "Artur Weber" <aweber.kernel@gmail.com>, "Karl Chan"
+ <exxxxkc@getgoogleoff.me>, "Christian Hewitt" <christianshewitt@gmail.com>
+To: "Ferass El Hafidi" <funderscore@postmarketos.org>, "Neil Armstrong"
+ <neil.armstrong@linaro.org>, "Kevin Hilman" <khilman@baylibre.com>, "Jerome
+ Brunet" <jbrunet@baylibre.com>, "Martin Blumenstingl"
+ <martin.blumenstingl@googlemail.com>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, <linux-amlogic@lists.infradead.org>
+References: <20250203091453.15751-1-funderscore@postmarketos.org>
+ <20250203091453.15751-3-funderscore@postmarketos.org>
+In-Reply-To: <20250203091453.15751-3-funderscore@postmarketos.org>
+X-Migadu-Flow: FLOW_OUT
 
-On 02/01, Mateusz Guzik wrote:
->
-> Mateusz Guzik (6):
->   exit: perform add_device_randomness() without tasklist_lock
->   exit: hoist get_pid() in release_task() outside of tasklist_lock
->   exit: postpone tty_kref_put() until after tasklist_lock is dropped
->   pid: sprinkle tasklist_lock asserts
->   pid: perform free_pid() calls outside of tasklist_lock
->   pid: drop irq disablement around pidmap_lock
->
->  include/linux/pid.h |  7 ++--
->  kernel/exit.c       | 45 +++++++++++++++----------
->  kernel/pid.c        | 82 +++++++++++++++++++++++++--------------------
->  kernel/sys.c        | 14 +++++---
->  4 files changed, 86 insertions(+), 62 deletions(-)
+On Mon Feb 3, 2025 at 9:14 AM UTC, Ferass El Hafidi wrote:
+<...>
+> +&uart_AO {
+> +	status =3D "okay";
+> +	pinctrl-0 =3D <&uart_ao_a_pins>;
+> +	pinctrl-names =3D "default";
+> +};
+> +
+> +&usb {
+> +	status =3D "okay";
+> +	dr_mode =3D "otg";
+> +};
+> +
+> +&usb2_phy0 {
+> +	vbus-supply =3D <&vcc_5v>;
+> +};
 
-I see nothing wrong in this series, feel free to add
+I just noticed a typo.  This part should've been:
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+	&usb {
+		status =3D "okay";
+		dr_mode =3D "otg";
+		vbus-supply =3D <&vcc_5v>;
+	}
 
-I have a couple of very minor nits, will send in a minute...
+Sent a v4 to fix it:
+https://lore.kernel.org/linux-amlogic/20250203174346.13737-1-funderscore@po=
+stmarketos.org/
 
-Oleg.
-
+Cheers.
