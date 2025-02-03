@@ -1,119 +1,118 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CEF25A630
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 02:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1B92AE90
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 02:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738551001; cv=none; b=OOLkahkB6ls8e9zT5ZQe8sFBhGJHqWUYhct4vUvMutEVvH72+TDmd1OaGUEj92HtZo+2QQ+cwQrcnyemAU672WF1tCLr2qb67qwa8N87uLTsYauPn+9UYZpO4CnZG+8+BQHAxsz4qt/J7bcmumrO4NVFVgCTnrX4a0steRi3GfA=
+	t=1738551059; cv=none; b=Eik+zAnCZZFMecYbsm5ajiZhJNwGqPDkkMXUdYWJxq6rcm/6B4epQRLpMIuGPZOFoYE+lPyJVst3yL0XLjYO06TwrPiUZKBALLk7OywhSF7B9634lyESNU972b+3shveMgs5uc8Tptmq+aD1sRIG28GAmDYHGBz/YVHzX6rWeoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738551001; c=relaxed/simple;
-	bh=qzCf6w0kWR1848H5E9nYadnxcuCIu+NDN2mKGbf5Y+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KxUqLTg0eW3UQhWykNsBHAJrHay/28ubKzxMZzn3KElj0y73RIpLafU0zQA8fJGN88ySTdJA5viuBgN4rwZAjMH1a1qZddJeAockXTDhRp5l6YgYMERmYmju/BlW+TUuY/jgX3dtsDZ9e4ayt2upsVFWYWgt8LvB2Qd+UZWhJMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=SuisEVK9; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1738551059; c=relaxed/simple;
+	bh=sX3emVmKbYg3Ru2YUK+m+8QFUdK/P8QTu3RaowF1Z+A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PhIvQD9YhR065gBinWOWgUyOf9naozS+vYZoZ8k46RBpIt5b33QlolXqpb6hkB1oj1GYBS5i/wPZL4LAo1gkthCpHSPlVaa2Fvz7QKTFaIpKbRjtqIVahxw9iJSR4A4nzDRL2gAhu6cqNiZQtDFZgUkdYB4oFh1IzdoChhf4QwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvhT+ZH4; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="SuisEVK9"
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D67BB3F29D
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 02:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738550508;
-	bh=xZvdSBE+LgaOYmmFBhKsCXeW+YkHJkSKnanfbLe89eo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=SuisEVK98z0yD2f47s+sMlopW77h0oIdkmdj7k1Uh1+nwZsR/C/cDOA3mfZwQvggq
-	 pzR7IEt2F0387FEK8Y/hKUKkz9srm3IxZuoAwPGNqADS7pSkNO69N6zJD7W8LWaDXN
-	 SBK/rtTAXfKr8FLR+6Yd4qDAS8Dtstz8ORv93sXy+pCgHwa18CJ4i80lG5q5JYnvdX
-	 YQv+3pn0PWLiHt+zt4/UgSxGR24dLovc0BYv+ZtoLMPtYeiwO/TiDmui9qy/5N977n
-	 EOmYB2SbSTIUADwnw+Nx9XRUN7tRJcAWONoMHArBLxyDhs3o+1/MFia7Qt8dR1NMFS
-	 9Q4BSNIV4vrwQ==
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2f83e54432dso11244918a91.2
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 18:41:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvhT+ZH4"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ee67e9287fso6798597a91.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 18:50:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738551057; x=1739155857; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MSeB6FYUW5ok6sT4EnlWImkfqu+4Gq30fGY9HKZXdJA=;
+        b=JvhT+ZH4FG9QYOu7ZPl+cAWuxwVhzPLoye6yFvZSORuxrSesdFzF5QhPmPwfiADdHg
+         CArIT9UNe1HH003tvzPE2WbhkLMb3HrcKOAtAJn3xAm1dBm3GXJpb8F1SqeLV7b31/S7
+         LhtwFNdgWbj8PcwLN5UsjrrXWHVKFA9OhpfanOZ/IfPgQYUTVKzXLk3zr2YnOb3ZLJ9s
+         04BMgfImdNk/gsvX6u1ipelqHSSVdiZQlT4lD9S5svyIv0P6xz+9vUMMbuVeSN6cHncn
+         9dbCMdMD69rFDnHP2w1hILwXUujbnQMe5YxnfcouYy+e/CXXBOQ15MiOx6YrcxLijzH/
+         Btcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738550507; x=1739155307;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xZvdSBE+LgaOYmmFBhKsCXeW+YkHJkSKnanfbLe89eo=;
-        b=F51+j1nTwaej4G4C9hrngEiuD6/mfB2j46IeZzz8vRjJAIkyx491/UyPli/mBxDPC4
-         1S6/xOp1G1oR2gIQ8Cuuu9IqVR0pZdmxTAn3XM+TJInnHGxTe6N8IiM4qoyuMKhOcb72
-         UDezTBPTAxOksWnPVa6Q71DRleiFLiGDvgOVb248l34arWY69aoEy8NRU7+Isk3ggc7C
-         jjUlXy09uG478NiNoN801uoonpL1sLJ7e9RbHqkE9qX3LupCwauqVyvr7USB0nz7PfZw
-         kcauagZ+JoU2aLFSzKypyOSu+aMyMeol75sd/OfSGN9Q8xelUYVNS7K8euGBZoP5XyXn
-         VHNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdij4IIa/9yZBgnuQHwcpuNaeCjXdgPhJhhd5AbV7ZfDgrLPNzbpxHGE1yhmDB18rCIWzvVZDAp3oGDB0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6I9caIJwtui0zl8gVQISHarjeGjVqpJs6SfwPkcPuCjelfY4m
-	Ghy9ISxgEMA+ZoUgeUrNbhCamii3fYN+Mq1Uv5VkQ0cquAUhE2XTQDy0ZrP9czh4oJLF9nldYSM
-	mX3HIgSNWhnwf3jcJLong0Q8cvdyE6QAC6HzY6bpzk0kT2+Nspt6o3dDFaeAYwJoAKd2jg+TM9T
-	kjGQ==
-X-Gm-Gg: ASbGnct5sAVIw+4MtKV65oPYWd1affMxv5PpKXXUg1RFvlKw0DWXMmdx/FPVEsag7oe
-	MGZNemtJ5kn7Ikxf15AayyeQA5So5AgdUgtboRcmKdSceKKuNBIgF4HQB7EmHWkRFMkE1JugYi8
-	Tuxr8l0blbINUBGaLiBL3Xpntgkpv5nxWgPzO0Nrumu14m5dwko5z2qPfprpxGzIDOnzf3Z3pFH
-	EZd5JKtARElhb3aSfoweGhI0/uBko8vBSQvstg8HYpd8skXcJLTwBwHUel7eHplwSie4+q/OFJL
-	69f/jQ==
-X-Received: by 2002:a17:90b:288c:b0:2f4:432d:250d with SMTP id 98e67ed59e1d1-2f83ac17f80mr28520531a91.21.1738550507051;
-        Sun, 02 Feb 2025 18:41:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH6i84l0H8/NyTIQEDPCj+dTbpJBMzycl508u2oFUGlYYYue6YCfB1i+fgYjqkSujkuoyg7OA==
-X-Received: by 2002:a17:90b:288c:b0:2f4:432d:250d with SMTP id 98e67ed59e1d1-2f83ac17f80mr28520510a91.21.1738550506665;
-        Sun, 02 Feb 2025 18:41:46 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:33e1:5e62:5b35:92b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de330025esm65084985ad.166.2025.02.02.18.41.45
+        d=1e100.net; s=20230601; t=1738551057; x=1739155857;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MSeB6FYUW5ok6sT4EnlWImkfqu+4Gq30fGY9HKZXdJA=;
+        b=Y1mbZeCvFHJKUbQjINWilUv3ZqTHXoH0DN0sOz2B8skixyIbIzjEnr7DiLkVflye7a
+         wMWDKyA61z11kMSZ3y5W6iesZ67+rV7CDfksHMIsHdCrIxijze7VcfBhiCFrih2XlgOS
+         jU1YaeC4qp1rAaoNp0V4JV3A0hnHsXLb+5Kauv7p7u57joIYNRbHnf2vLTH2h1+mBJvL
+         DUAKedWIQ7JSaes+vohI6n71cOQwee9p3NHEb/gaaWLNMT9YVBZcd1NEC1aA+HACzfFO
+         uF9Y3GFIduxCLwfmqminPbbwABB89lU+1H855Zt9c5pYVBisvPp+I5sbLYbgwO+jOnYs
+         EmjA==
+X-Gm-Message-State: AOJu0YzKshVC2/v2TaTIG9bn5vzUIz/uQINgbdIgpXr/4nokaVjOaXSF
+	pNJucPiEMtj9w+YeWw2uyBR/G7x8CJ7gNCIEVXPgvXbMSgjTNcxK
+X-Gm-Gg: ASbGncvJHZtQeVyUpp3PqMWN6Ser1krJ/7U4jvHVe5n9W/Lz0QXXqwqYJkVN9/kGh+e
+	USQhnObpVPtL/FtUVttVxj+bh/MDGurnOHr451bypw8f02Jh1WHYeyfmGClwKoU7qByC+yS/jxl
+	2oK0/Neu5SzEvwINnBInukPwgxD1N9CzwKGEIL2m6B/DxN1ydlNywf/L4K03iqjl0w2/MZ8aoQ+
+	BrCMsXhi2EKv65+s7lmIpHQPCc/W+ShN+FL/2XraKfzfkrIue1shbsp8LvQBleEt0qvxgK2bYa7
+	WNIfL6Vt3zewquk=
+X-Google-Smtp-Source: AGHT+IEm+XYBYNUpKGHxS4iJYNlFNXXXqY4eXL11OV+CK4eNCH5CNZ0exIVXPocfSPFIBr77FrofDw==
+X-Received: by 2002:a05:6a00:8d6:b0:729:49a:2da6 with SMTP id d2e1a72fcca58-72fd0bbe0e1mr34833882b3a.3.1738551056820;
+        Sun, 02 Feb 2025 18:50:56 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631beecsm7449789b3a.12.2025.02.02.18.50.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 18:41:46 -0800 (PST)
-Date: Mon, 3 Feb 2025 11:41:43 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for
- gpio-aggregator
-Message-ID: <vscpr2piax6vgbrkbrfi5iboszymcuotflqjnk2jufannsgmvn@s6dyfs4ftbk3>
-References: <20250129155525.663780-1-koichiro.den@canonical.com>
- <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
- <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
- <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com>
- <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com>
- <rhdrieapetwdr3z7roguf5nex3esazhygjbjx4zklkrjzqrlsv@6vc5zmk3il5e>
- <CAMRc=MeRBABW6JCScGvsRR_4+W6u5QMWJwA7yMB9gj7=uOeD0g@mail.gmail.com>
- <xrllvn5tmshdbb2mjlxvoc4rpalnefy52wwd5p6s55ehhysl4l@k4w42cd7hxkn>
- <CAMRc=Mf6FZgTNBGUSsm3H2nSBLbp+DpamzbZiHZ67Xc62F3QnQ@mail.gmail.com>
+        Sun, 02 Feb 2025 18:50:56 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id F065F4209E79; Mon, 03 Feb 2025 09:50:53 +0700 (WIB)
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Memory Management List <linux-mm@kvack.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+	Petr Mladek <pmladek@suse.com>,
+	Wardenjohn <zhangwarden@gmail.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Leonardo Bras <leobras@redhat.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Bo Liu <liubo03@inspur.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: [PATCH] kernel: Fix "select" wording on HZ_250 description
+Date: Mon,  3 Feb 2025 09:50:00 +0700
+Message-ID: <20250203025000.17953-1-bagasdotme@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1076; i=bagasdotme@gmail.com; h=from:subject; bh=sX3emVmKbYg3Ru2YUK+m+8QFUdK/P8QTu3RaowF1Z+A=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDOkLtJMn/ChXZNzicz5s5jv1/VXzeM+ox8sEX9zK8un1d 7b4Mw0bOkpZGMS4GGTFFFkmJfI1nd5lJHKhfa0jzBxWJpAhDFycAjARYR5Ghu67Ipt5rmS7KT+N jOwKYtQR/Sa+dfXmsJcCh2VKRUNVzRgZ/r1pmJrMcvbNhCdN+y3apHh5/mfVNDtu1bBN0qlYWa/ FBAA=
+X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mf6FZgTNBGUSsm3H2nSBLbp+DpamzbZiHZ67Xc62F3QnQ@mail.gmail.com>
 
-On Sat, Feb 01, 2025 at 05:10:07PM GMT, Bartosz Golaszewski wrote:
-> On Sat, Feb 1, 2025 at 1:26 PM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> > On Fri, Jan 31, 2025 at 06:22:50PM GMT, Bartosz Golaszewski wrote:
-> > >
-> > > I too think a-1 is the best option. However, I'd go for line0, line1
-> > > etc. convention as for computers it doesn't make any difference while
-> > > for humans it's more readable.
-> >
-> > Thank you for the comments. I’ll address your feedbacks and send "v2"
-> > later, Since we seem to agree on the overall approach, I’ll send it as
-> > [PATCH v1] (i.e., without the "RFC").
-> >
-> 
-> No, please don't. It'll be confusing. The RFC WAS the v1. Next
-> iteration must be v2 with a changelog.
+HZ_250 config description contains alternative choice for NTSC
+media users (HZ_300), which is written as "selected 300Hz". This is
+incorrect, as it implies that HZ_300 is automatically selected
+whereas the user has chosen HZ_250 instead.
 
-Ok, I'll send it as v2. Thanks!
+Fix the wording to "select 300Hz".
 
--Koichiro
+Fixes: 40fcfc87222e ("[PATCH] HZ: 300Hz support")
+Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+---
+ kernel/Kconfig.hz | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Bartosz
+diff --git a/kernel/Kconfig.hz b/kernel/Kconfig.hz
+index 38ef6d06888ef1..ce1435cb08b1ec 100644
+--- a/kernel/Kconfig.hz
++++ b/kernel/Kconfig.hz
+@@ -30,7 +30,7 @@ choice
+ 	 250 Hz is a good compromise choice allowing server performance
+ 	 while also showing good interactive responsiveness even
+ 	 on SMP and NUMA systems. If you are going to be using NTSC video
+-	 or multimedia, selected 300Hz instead.
++	 or multimedia, select 300Hz instead.
+ 
+ 	config HZ_300
+ 		bool "300 HZ"
+
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+An old man doll... just what I always wanted! - Clara
+
