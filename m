@@ -1,149 +1,268 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388E1212B02;
-	Mon,  3 Feb 2025 14:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C21E212B3D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593921; cv=none; b=H7pPCkV++tqhfUnm1+ts9WnWWhLoQ3LABhPPJSDx/lX5OoxbCx0Hn92mjHFAabYgKG7vusedeuw+4xn3pRGiF3qpsrRHfsWPzleaoQOEsRGntRssqRACoLgDshXJwNvP2/jdQecYuheT9LVMiA6qT0U3hfOCZH4WLGPN7Bhu2Bg=
+	t=1738593929; cv=none; b=s49NXcBEXDgzZET5oWfU3L80oscdmUJ0lfxRdFgNtzCPF4e0pzAFeyImMHWQ6hcru7zYzp6phc9uERRcgbzxqGyJmLmx5NrIbeR+fmTe8ZtGG641j81wjoE1yAA81jyEa1JPuYRB0X09bUmRAmf5uULxmDhURkW5YOhzRSlRao8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593921; c=relaxed/simple;
-	bh=cOPunAFGLEqiK/+qH5XeFlWV6kGkKBRde43g5b2xD6Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rcStma0N0hWGWGV8hnPegu2BCcCTmc3BbITOh14UARL4e2HcEjlFlH1ZQJJbs/LxCRsX1thvU/dqex5963azcbN81Cd00OBfFG1X/Io5VzZhLUtg1ex6faVxwqkjX+pbxC6twwN1ODMSGBGn91hFyEBHWYgMGRe50/GN9zNrGwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FcLgd1co; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738593929; c=relaxed/simple;
+	bh=OpxJMFnv/T1gzYLzng4N96zBL35qTrhkXO4t27HLNeI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f54OE91WKrqQp4EEKStYKruUZxT8SrQawKJq/igsGgKt1t85MwLYMx0et8SWoJj/hsycr6yXxAASxy8hhK1FubWu6RUdvpbLNtREafQjiwwUzW1VD3yMsrMZVKOr9cscSLEVB02QuM5F3sxBaHyecMQ/tMQxiwDs+Pcd1clo9D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vVY3d/I0; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FcLgd1co"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513DHjeo007075;
-	Mon, 3 Feb 2025 14:44:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=9zTxOB2MAJNkzowxX
-	lrVMP/gAelSWngDs+u8PocDb6s=; b=FcLgd1co3XbSZxaImc1D1mTaiOf9AMP59
-	8s7+YmQaJkMQyvIPOZkG1huA+DdD1Og49fNVr5bM/+rItVnySvG7xZoeH4Az8Be1
-	yfcaQfTqAWtIFNL4vacLb/aRyjBKFCAJ07qaJkKyKwmeYLArAsytsdwAR6el7Jgn
-	/5IIJxuWBgyJxl1tySte/RpPS2Zfx6nrM/0XsM0qLopC43hziYQsGDEGpKoQaA5v
-	4dnnKunauXLRstT7jueGO7gIlthfqat3HZrf26ZLX2zKdM4e3v4dXrNgWwvJFIPp
-	N+Wy60kRZg/K7zcm1JcTqI5DdpyQTNXQ/LdZ4xb9yhojSFvdR74sQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jbht4knc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 14:44:37 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 513ESr4K019656;
-	Mon, 3 Feb 2025 14:44:37 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jbht4kn4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 14:44:36 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 513BJYRV007127;
-	Mon, 3 Feb 2025 14:44:36 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxayewng-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 14:44:36 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 513EiYwe20447890
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 14:44:35 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C5D5558043;
-	Mon,  3 Feb 2025 14:44:34 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C715D5805D;
-	Mon,  3 Feb 2025 14:44:33 +0000 (GMT)
-Received: from gfwa153.aus.stglabs.ibm.com (unknown [9.3.84.127])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  3 Feb 2025 14:44:33 +0000 (GMT)
-From: Ninad Palsule <ninad@linux.ibm.com>
-To: brgl@bgdev.pl, linus.walleij@linaro.org, minyard@acm.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, andrew+netdev@lunn.ch,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, openipmi-developer@lists.sourceforge.net,
-        netdev@vger.kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-        devicetree@vger.kernel.org, eajames@linux.ibm.com,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Cc: Ninad Palsule <ninad@linux.ibm.com>
-Subject: [PATCH v7 8/9] ARM: dts: aspeed: system1: Mark GPIO line high/low
-Date: Mon,  3 Feb 2025 08:44:18 -0600
-Message-ID: <20250203144422.269948-9-ninad@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250203144422.269948-1-ninad@linux.ibm.com>
-References: <20250203144422.269948-1-ninad@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vVY3d/I0"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30219437e63so57133531fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:45:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738593925; x=1739198725; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CgZWMbrsC8Ij7Hb0M5QH6HsBjmwyLIPOZpeHyhXcCxg=;
+        b=vVY3d/I0GwjAAmSDLnS5UCFyxYNVcyE0FbOgswCCsKXenCbCaOuqxXhQ15w1f74c9R
+         dn9obe3CZYI5/vM0NQXfHmz5XgOPbHoES+BCpebeIryU0JVxWe9NfJjwNXF3Y9cOxgB2
+         /X5bdTUSugayAF+GY+p+PboAHSB+j4z3ZleQlOu/oKj001e5yGmqCrbV7mFCixV4N+iK
+         sk9F6Qy+OwNwOjx8yP+gCV0q2BB/JXDJYqwgs1vaKlE/mN94ZGZgQWOyUvLHqM/ceu/a
+         vFDBaQp3dbmjwQZ39k+griaajW0qHU7ADTDooXiQUffNpygfMgSh4OWTMk0TE/RLfHd7
+         +RGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738593925; x=1739198725;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CgZWMbrsC8Ij7Hb0M5QH6HsBjmwyLIPOZpeHyhXcCxg=;
+        b=EiJtvKszwRvgS6vuP87sDrffKDOgdyMiz0JW5JqHfVOQoNbWG3jQ3ztHEPsxuBek8F
+         GuDboe/4BEnKVRMgrugP8RXq+0YTa0PuQpQX1VkCeWtsSYQ4XpQOGj25TokkQ2SI/Zv7
+         i8ggY460CWqlGh5/z6DBWjD60yuAl+di6WTmG/Rxuhzb3/8AvmNNrSIKGs3xQ3NxX6zE
+         ZIzsKIO5bo8OOe/g3CERONamiU4M2oL9mDEI98CwbJjyh8Z8CxCv/597NyfU5xPdg1mt
+         DNwGhUHYY/aqu1qNhAvXeGnVEqIw/DRpvKyjJW/7lxr/nCwRoJVQAaYMGhfLs0p9dWRh
+         bnPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsOivjBeJo93x//vX608XA/TpVMxpduYTKRtygiedByIah4TNyDZOmDSw9dBED4xtLN7t/j/fVb4vU6Zk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxhtlr11a0NJzL0uszd4mw8GHGa346ZN98dK1GhBk4qnVM8nooX
+	JaceXVs9f4XsORMsV5PSJi9+qKr52m1NvmlgoSdqKv2O5XsQWuKQxLadCBxeIAdSd9e0ywbm1HV
+	YtXVUW6rmJ+ufaBducDEdx59VpGhePaIGCBGB
+X-Gm-Gg: ASbGnct5QFevg1g0RFrra7SxxGA09KzIWX9/PFK4FTRKqRSm96xr/u3ZdVhXdjGpt17
+	q80f+lgWxT71FgbckD6DdFbavdW64EDidU2i3hYpEVF5tDZRlzKem8GG1e5XgbfEnuLgI7Kdspo
+	dmOIeiQp4KecnTSVFGAVSOlqfy
+X-Google-Smtp-Source: AGHT+IFdX20Dg79dKyo+FKKkKsITuCwGf69uB9vyO+Cx2mCC0SBMPBW7bLxT/A6zbwHn6Q/jEPB7m6Y2AjpSO0ySv00=
+X-Received: by 2002:a2e:86d3:0:b0:306:10cd:7bbe with SMTP id
+ 38308e7fff4ca-307aa37d20cmr37648251fa.4.1738593924922; Mon, 03 Feb 2025
+ 06:45:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: MRMP58t1xXGwvR5AtrwR8ClBqUZ_vB2R
-X-Proofpoint-GUID: Hdo4mqOJCRAmUNpwApukZmOil1HhgJWR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 impostorscore=0 phishscore=0 spamscore=0 mlxscore=0
- mlxlogscore=905 bulkscore=0 suspectscore=0 lowpriorityscore=0
- malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502030106
+References: <cover.1737971364.git.dvyukov@google.com> <70523ae7dd5d5c41d2d954324297d9d2cfad1b1f.1737971364.git.dvyukov@google.com>
+ <Z5m2hdR3HZxIdhWR@google.com> <CACT4Y+Z6KoYxY0AiC1eK=Ch9CQFuk7rWud_4GAMyjGdv+yemtQ@mail.gmail.com>
+ <Z5sccIPaYBeB_yab@google.com>
+In-Reply-To: <Z5sccIPaYBeB_yab@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Mon, 3 Feb 2025 15:45:13 +0100
+X-Gm-Features: AWEUYZlCJLC2kCWpCd-EenFvSdwDDoS87usTiieBHkpVbB4VVnJRh8jqXqhYW10
+Message-ID: <CACT4Y+ZREdDL7a+DMKGFGae1ZjX1C8uNRwCGF0c8iUJtTTq0Lw@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] perf report: Add --latency flag
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-- Mark following GPIO lines as input high:
-  - GPIOL4 (reset PCH registers)
-  - GPIOL5 (reset portition of intel ME)
-- Mark isolate errors from cpu1 gpio (GPIOO6) as active low output.
-- The fan controller reset line should be active high.
+On Thu, 30 Jan 2025 at 07:30, Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> On Wed, Jan 29, 2025 at 08:12:51AM +0100, Dmitry Vyukov wrote:
+> > On Wed, 29 Jan 2025 at 06:03, Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > On Mon, Jan 27, 2025 at 10:58:53AM +0100, Dmitry Vyukov wrote:
+> > > > Add record/report --latency flag that allows to capture and show
+> > > > latency-centric profiles rather than the default CPU-consumption-centric
+> > > > profiles. For latency profiles record captures context switch events,
+> > > > and report shows Latency as the first column.
+> > >
+> > > It'd be nice if you could add a small example output in the commit
+> > > message.
+> > >
+> > > >
+> > > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> > > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > > Cc: Ian Rogers <irogers@google.com>
+> > > > Cc: linux-perf-users@vger.kernel.org
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > > ---
+> > > [SNIP]
+> > > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > > > index bc4c3acfe7552..2b6023de7a53a 100644
+> > > > --- a/tools/perf/util/sort.c
+> > > > +++ b/tools/perf/util/sort.c
+> > > > @@ -2622,6 +2622,7 @@ struct hpp_dimension {
+> > > >       const char              *name;
+> > > >       struct perf_hpp_fmt     *fmt;
+> > > >       int                     taken;
+> > > > +     int                     was_taken;
+> > > >  };
+> > > >
+> > > >  #define DIM(d, n) { .name = n, .fmt = &perf_hpp__format[d], }
+> > > > @@ -3513,6 +3514,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
+> > > >               return -1;
+> > > >
+> > > >       hd->taken = 1;
+> > > > +     hd->was_taken = 1;
+> > > >       perf_hpp_list__register_sort_field(list, fmt);
+> > > >       return 0;
+> > > >  }
+> > > > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > -int hpp_dimension__add_output(unsigned col)
+> > > > +int hpp_dimension__add_output(unsigned col, bool implicit)
+> > > >  {
+> > > > +     struct hpp_dimension *hd;
+> > > > +
+> > > >       BUG_ON(col >= PERF_HPP__MAX_INDEX);
+> > > > -     return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
+> > > > +     hd = &hpp_sort_dimensions[col];
+> > > > +     if (implicit && !hd->was_taken)
+> > > > +             return 0;
+> > >
+> > > I don't understand why you need 'was_taken' field.  Can it use the
+> > > 'taken' field?
+> >
+> > I've started getting failed asserts in
+> > perf_hpp__cancel_cumulate/latency when removing columns still linked
+> > into sort order list.
+>
+> Ok.
+>
+> >
+> > I've figured out that columns we implicitly add in setup_overhead and
+> > perf_hpp__init must match exactly. If we add one in setup_overhead,
+> > but not in perf_hpp__init, then it starts failing.
+>
+> Right, I don't remember why we don't have unregister_sort_field or let
+> the perf_hpp__column_unregister() remove it from the sort_list too.
+>
+> >
+> > Taken does not work b/c there is reset_dimensions call between these
+> > functions, so they actually add the same columns twice to field/sort
+> > lists (and that prevents failures in
+> > perf_hpp__cancel_cumulate/latency).
+>
+> I see.
+>
+> >
+> > Initially I've just tried to match logic in setup_overhead and in
+> > perf_hpp__init. But it turned out quite messy, duplicate logic, and
+> > e.g. in setup_overhead we look at sort_order, but in perf_hpp__init we
+> > already can't look at it b/c we already altered it in setup_overhead.
+> > That logic would also be quite fragile. Adding was_taken looks like
+> > the simplest, most reliable, and less fragile with respect to future
+> > changes approach.
+>
+> Maybe just remove it from the sort_list.  There should be no reason to
+> keep it in the list.
 
-Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
----
- .../dts/aspeed/aspeed-bmc-ibm-system1.dts     | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
+I've tried that (and removing setup_overhead entirely), but none of
+that yielded the same result.
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
-index 089a8315753a..9abbad07c751 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
-@@ -383,6 +383,34 @@ &gpio0 {
- 	/*X0-X7*/	"fpga-pgood","power-chassis-good","pch-pgood","","","","","",
- 	/*Y0-Y7*/	"","","","","","","","",
- 	/*Z0-Z7*/	"","","","","","","","";
-+
-+	pin-gpio-hog-0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(L, 4) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "RST_RTCRST_N";
-+	};
-+
-+	pin-gpio-hog-1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(L, 5) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "RST_SRTCRST_N";
-+	};
-+
-+	pin-gpio-hog-2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(L, 6) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "BMC_FAN_E3_SVC_PEX_INT_N";
-+	};
-+
-+	pin-gpio-hog-3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(O, 6) GPIO_ACTIVE_LOW>;
-+		output-low;
-+		line-name = "isolate_errs_cpu1";
-+	};
- };
- 
- &emmc_controller {
--- 
-2.43.0
+E.g.:
 
+perf report --sort latency,symbol
+
+currently gives intended:
+
+ Latency  Symbol
+   4.37%  [k] native_queued_spin_lock_slowpath
+   2.71%  [.] _PyEval_EvalFrameDefault
+   2.18%  [.] iterative_hash
+   2.00%  [k] clear_page_erms
+
+but if I remove was_taken logic and make perf_hpp__column_unregister()
+remove from the sort list, I get:
+
+Overhead   Latency  Symbol
+  38.17%     4.37%  [k] native_queued_spin_lock_slowpath
+   0.86%     2.71%  [.] _PyEval_EvalFrameDefault
+   0.47%     2.18%  [.] iterative_hash
+   0.68%     2.00%  [k] clear_page_erms
+
+So, so far the current version of the code is unfortunately the
+simplest version with intended behavior that I come up with.
+
+
+
+> > > > +     return __hpp_dimension__add_output(&perf_hpp_list, hd);
+> > > >  }
+> > > >
+> > > >  int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+> > > > @@ -3809,10 +3816,24 @@ static char *setup_overhead(char *keys)
+> > > >       if (sort__mode == SORT_MODE__DIFF)
+> > > >               return keys;
+> > > >
+> > > > -     keys = prefix_if_not_in("overhead", keys);
+> > > > -
+> > > > -     if (symbol_conf.cumulate_callchain)
+> > > > -             keys = prefix_if_not_in("overhead_children", keys);
+> > > > +     if (symbol_conf.prefer_latency) {
+> > > > +             keys = prefix_if_not_in("overhead", keys);
+> > > > +             keys = prefix_if_not_in("latency", keys);
+> > > > +             if (symbol_conf.cumulate_callchain) {
+> > > > +                     keys = prefix_if_not_in("overhead_children", keys);
+> > > > +                     keys = prefix_if_not_in("latency_children", keys);
+> > > > +             }
+> > > > +     } else if (!keys || (!strstr(keys, "overhead") &&
+> > > > +                     !strstr(keys, "latency"))) {
+> > > > +             if (symbol_conf.enable_latency)
+> > > > +                     keys = prefix_if_not_in("latency", keys);
+> > > > +             keys = prefix_if_not_in("overhead", keys);
+> > > > +             if (symbol_conf.cumulate_callchain) {
+> > > > +                     if (symbol_conf.enable_latency)
+> > > > +                             keys = prefix_if_not_in("latency_children", keys);
+> > > > +                     keys = prefix_if_not_in("overhead_children", keys);
+> > > > +             }
+> > > > +     }
+> > >
+> > > Do you really need this complexity?  I think it's better to fix the order
+> > > of columns in both case.
+> >
+> > This is sort order which affects ordering of row, and order of rows is
+> > basically the most important thing for a profiler. If we fix the
+> > order, it will be showing completely different things.
+> >
+> > "latency" and "overhead" are equivalent with respect to their
+> > fundamentality for a profile. So we shouldn't be adding any of them,
+> > if any of them are already explicitly specified by the user.
+> >
+> > For example, the command from tips.txt:
+> >
+> > perf report --hierarchy --sort latency,parallelism,comm,symbol
+> >
+> > if we prepend "overhead", it all falls apart.
+> >
+> > Or for 2 default modes (normals and latency) we want "overhead" or
+> > "latency" to come first. Prepending "latency" for the current CPU mode
+> > would lead to completely different ordering.
+>
+> I see.  You want to sort by overhead in the default mode even if it has
+> implicitly-added latency field, and to sort by latency if --latency is
+> given explicitly.
+>
+> I think it can be done with the following command line.
+>
+>   $ perf report -F overhead,latency,parallelism,comm,sym -s overhead
+>
+> or
+>
+>   $ perf report -F overhead,latency,parallelism,comm,sym -s latency
+>
+> IOW, you can keep the same output column ordering and sort the result
+> differently.  But I'm not sure if it'd make the code simpler. :)
+>
+> Thanks,
+> Namhyung
+>
