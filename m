@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032D320F098;
-	Mon,  3 Feb 2025 19:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0139020FA9B;
+	Mon,  3 Feb 2025 19:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738610122; cv=none; b=SiBxAiyd2+qYsyDy9otVKQwQ1Bqo0+Yna9FiN8GpnOVJlRiftiv44JKdPA0nUdDEj/ICLyd5eeRFeTH6ewBHk/wD2CgBRuogNzouvbXbe8nQcxUqN0f7imAKPWuyLjgGtaRqX5RdM1Uvzc1d+xFabF+9jZkdn3/81vexIUC2tu8=
+	t=1738610123; cv=none; b=u2zPTNLOj8DCYaHpdqtQr7eIy5ddax3R5SEdM5V4TcAtgeyTcJgAQp03wGLD7xBmdnO5eZs2qQToVk9RftElw6XvKOTGZZJEqNJdYED7h0wm/EZuSoTjUkKNgAj34DfZTR32WgziHWz7MSkh/o6o9zQJftZrv7skz2hS5pt14TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738610122; c=relaxed/simple;
-	bh=WCkfjIwqrL/vZTemkLUHoj349eCNsHtsoy14HaLr43w=;
+	s=arc-20240116; t=1738610123; c=relaxed/simple;
+	bh=x4p1X9nOXxuhn4jEPid5fzjCvgZ4D3ZQU2ymjtjqU9E=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=leYNSS44GUAbzYvDeGQ9v5TCkv97jh2NtECy55C31KuKrpcvkC4JeC2RFb3fQsEfRSdDIXgJGW5K1mfpnkrdToYOxCDNq5ECE1NJhoxfbkoy4WCKMtQXvkKAEgI5Pe9inKymGYoJf+xnhBAKxEBd8Rfh8F9GDUi3upKMI7hzuhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JjVatSnA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=mZ3fwM0dNXS2bOaKj39X+DJAFtD0mknAK6JOjiGC5m2sWo0r7IDwBqjS2GWHfIAnL1HzEzy0yX/9ZcUWgjLMrfa6dLGEQdH5gkIdrcuFEen5EGu1fUFVK8SJZE4/reqmzzd3vgMBXIqW+9bRC9gpgilVZm8gM3vpHHWwCtjD3lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwiVodep; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JjVatSnA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 513E5C4CEE6;
-	Mon,  3 Feb 2025 19:15:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SwiVodep"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2CCFC4CEE3;
+	Mon,  3 Feb 2025 19:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738610121;
-	bh=WCkfjIwqrL/vZTemkLUHoj349eCNsHtsoy14HaLr43w=;
+	s=k20201202; t=1738610122;
+	bh=x4p1X9nOXxuhn4jEPid5fzjCvgZ4D3ZQU2ymjtjqU9E=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=JjVatSnAqwEZKnjH5gXnbCrtiH0i2lhdUz8zmvgLp7wqnjihF0v0qwDRr0oSisVeH
-	 QnYeoiUDwsQP1VnXR1hU/eeLw+uvdCuYcePrQn3kCGMKMBlxYuzdgF6s0t1vI9gYTi
-	 lsXDNszpS/S7b8oeMIkgUW4r251fDFxzh3guAc6BoGZ7he3m22VH7vA5wnz78TH8Wr
-	 CqwIfb+cgH6Yj/3R2Tk4nZiJPwHCmsajIyHvx5KKf63Of0jkZaCFPciPubr4h2EHcC
-	 KyREtOaCu4b5uqJtwLbKLrgxpv6wF1IVpa0FK68d7PtYDXrDacqWhYeuJaN2BcPlbv
-	 oDPARFDpSyL/Q==
+	b=SwiVodep/1/nWnRpopWbBGkkYwgqp6zjbivmPprSBDK7KEzSCdK2xq2o+52mpu2gS
+	 3zr7qNPdshAge0rXr1UkK0d0mAXUpI6C5KURLWQlqmy5xPSQEXP2peKrPfu9dENBeF
+	 q+QHs8EZaSp7fpT9t6Vgp36iZU34R/kSW4Mkw6R0EhsAK+RCRciPYLnz7OBuILt8Am
+	 ETjGYMXis2V0Vs6zUv5LGIP2vjtDlRM79Qr7rsaQ6x+eaH1FGxqQd3r8aZDTQ/nUCD
+	 B5QbsGm5nrDJVkFPaDDVc5Opb0m7VLr6fZRFl30v+USNqmOxNibUohAJO9AxpoXhrl
+	 2uh4Gek08nD7w==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7118C380AA67;
-	Mon,  3 Feb 2025 19:15:49 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33FB5380AA67;
+	Mon,  3 Feb 2025 19:15:51 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,53 +37,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/6] selftests/nolibc: wire up riscv32
+Subject: Re: [PATCH v2 0/3] Collect guest/host statistics during the redirected
+ traps
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <173861014802.3409359.16765792882817041253.git-patchwork-notify@kernel.org>
-Date: Mon, 03 Feb 2025 19:15:48 +0000
-References: <20241221-nolibc-rv32-v1-0-d9ef6dab7c63@weissschuh.net>
-In-Reply-To: <20241221-nolibc-rv32-v1-0-d9ef6dab7c63@weissschuh.net>
-To: =?utf-8?q?Thomas_Wei=C3=9Fschuh_=3Clinux=40weissschuh=2Enet=3E?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
-Cc: linux-riscv@lists.infradead.org, w@1wt.eu, shuah@kernel.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- falcon@tinylab.org
+ <173861014984.3409359.10285498075782232366.git-patchwork-notify@kernel.org>
+Date: Mon, 03 Feb 2025 19:15:49 +0000
+References: <20241224-kvm_guest_stat-v2-0-08a77ac36b02@rivosinc.com>
+In-Reply-To: <20241224-kvm_guest_stat-v2-0-08a77ac36b02@rivosinc.com>
+To: Atish Kumar Patra <atishp@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, anup@brainfault.org,
+ atishp@atishpatra.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, zhouquan@iscas.ac.cn
 
 Hello:
 
 This series was applied to riscv/linux.git (fixes)
-by Thomas Weißschuh <linux@weissschuh.net>:
+by Anup Patel <anup@brainfault.org>:
 
-On Sat, 21 Dec 2024 15:44:27 +0100 you wrote:
-> Nolibc has support for riscv32. But the testsuite did not allow to test
-> it so far. Add a test configuration.
+On Tue, 24 Dec 2024 13:04:52 -0800 you wrote:
+> As discussed in the patch[1], this series adds the host statistics for
+> traps that are redirected to the guest. Since there are 1-1 mapping for
+> firmware counters as well, this series enables those so that the guest
+> can collect information about these exits via perf if required.
 > 
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> ---
-> Thomas Weißschuh (6):
->       tools/nolibc: add support for waitid()
->       selftests/nolibc: use waitid() over waitpid()
->       selftests/nolibc: use a pipe to in vfprintf tests
->       selftests/nolibc: skip tests for unimplemented syscalls
->       selftests/nolibc: rename riscv to riscv64
->       selftests/nolibc: add configurations for riscv32
+> I have included the patch[1] as well in this series as it has not been
+> applied and there will be likely conflicts while merging both.
 > 
 > [...]
 
 Here is the summary with links:
-  - [1/6] tools/nolibc: add support for waitid()
-    https://git.kernel.org/riscv/c/7f89bc51101c
-  - [2/6] selftests/nolibc: use waitid() over waitpid()
-    https://git.kernel.org/riscv/c/a0bc8947ac73
-  - [3/6] selftests/nolibc: use a pipe to in vfprintf tests
-    https://git.kernel.org/riscv/c/4c7f09ab79b1
-  - [4/6] selftests/nolibc: skip tests for unimplemented syscalls
-    https://git.kernel.org/riscv/c/349afc8a52f8
-  - [5/6] selftests/nolibc: rename riscv to riscv64
-    https://git.kernel.org/riscv/c/a47b4b9fbaa1
-  - [6/6] selftests/nolibc: add configurations for riscv32
-    https://git.kernel.org/riscv/c/60fe18237f72
+  - [v2,1/3] RISC-V: KVM: Redirect instruction access fault trap to guest
+    https://git.kernel.org/riscv/c/51c58956732b
+  - [v2,2/3] RISC-V: KVM: Update firmware counters for various events
+    https://git.kernel.org/riscv/c/2f15b5eaff79
+  - [v2,3/3] RISC-V: KVM: Add new exit statstics for redirected traps
+    https://git.kernel.org/riscv/c/af79caa83f6a
 
 You are awesome, thank you!
 -- 
