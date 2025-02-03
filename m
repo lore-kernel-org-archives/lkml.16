@@ -1,163 +1,296 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2060.outbound.protection.outlook.com [40.107.244.60])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BBD184F;
-	Mon,  3 Feb 2025 05:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738562155; cv=fail; b=WToAM6wETr8SWHQz9yuOH5UZuU60wxZAdEJj9tVa64irsCH0hWg1DSmr/qvhJE2QksHG/H0uwORvNh7U6aGFzkDqqly53PUeNBrPo+odebYBC9Iqst8uIH4wn9l7tgPkGjZhFdMiZSfbi8JCXrdc/qo0f9ws9cZ5U6TTo30DG5Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738562155; c=relaxed/simple;
-	bh=ONQXRVTtlQzRuZbbZ3ZnRQE0tQvI5XI5OAsy0bDaIuY=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mZ6XMhj815ckMEQa8ACuvAolLvUqMmdEphXOiwXceE7x4QzhoeY5sTjaLzWB2T3R57AjLrdezAsV0pk/03GQbvCYylCB5khk6SeE71uQqzGY7jqbCyPiD9L5GIlfEPifEs7bQXsjs5GQXNz7VluES1AQlGiaRd60GqaV+TsYp1Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AR/5oMM0; arc=fail smtp.client-ip=40.107.244.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08D510E0
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 06:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738562650; cv=none; b=e5M0ETX5gG6z5qe8vI8TdFgWO7NPTRPgdAjHo/yDmrqSl+n7mJtK/W+/3ljxAxqiudnR5tWG6wEIpzr040A/5YAch82zJiFY8vfII1DNt6skI2pUc7NnbLzrkwXDUtCtM6dOlgDnbFodSI8POlaO9+XBfC8NZHjaMMhmcagA1ms=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738562650; c=relaxed/simple;
+	bh=durgU11lQ4dYcx2HLXEoqa0U7u7LZGRE+AdiLMGRBdo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=u57gvpu31ai7cStd+bYRQBOAMTz1tEPTXxLDTe6mdANM43JJkHlxfiG88gtE/leDBBL+5KkM8USpNHy9ogSM1RkAnRx1ZXHGZiWlZVI3Dn8edgrP0bdsE6Yxazoub1rP4rOsoWOLTjwr046Cfi7l81vh82fcdssBpkq7V0JSqvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r1ma00Ee; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AR/5oMM0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qe/HrCE+KcGzczlaNno3v3hblZvAvrNxga+jlDOUBmkF/9ogkFYAywUjsxSvaG4JApXyvzc4jkHUF2rP98eKSUtwKwpIdTFmL4AxvJxm13z/NdE6mRXv5KC/Uk1zDAegJcVefNatrYi2jtf2y/y34Mh3yy6fwzdoIr4Lq3/cx+K9/esXhgnJcQ6hKNZrflH5treVKtcEhnRpZYvnZqyrzdx3YAv4VtHiu4V+RclgMnxQjN/MbDLups/VZ7JuHLfbQGiA9PbR8lz25s0MxW+tmVKmlJNfaC2IlJtngI0rlUAGhLbefUcdAeNFOjSJPjMQVUVxT+TkV6qgQTwaZ0mIaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j8lK7oImK5GsAjjYujbZqwkRW6kPxfs15oiWYx+hDAA=;
- b=bgWHLc407qUOi57kg9bzpjWa9aZ919VWnSlCF2aBiHfu44jkW9mrzCQks2lQLHm8nZevMwukv7luoOnxk/0OkaqO04NbyReGVRBTKFfeiCSC9VVvrqRnEIfuEjXHnS9CIre2lH3xgOUzwtaNqRXuYzfNDYSkTEaLQ8d+fvn85g6Jg+U63u2ua2mngHdWFVAgex6WmpxqwjJmCK9j4I/+4dQzjoGAlU+ikxeYjMf8Yaj+HdMNHW3Aar0/34O0atsWhE3v1JMQDKoiNlb1jDf6ZNKYxPTjXWQ0+mP29dCKGYiz6yMC9KNvLa5DiWBdrkmNCooeB8cTfhYBpGYJlm3jWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j8lK7oImK5GsAjjYujbZqwkRW6kPxfs15oiWYx+hDAA=;
- b=AR/5oMM0Ep2Rp/Pgk6uw7drexzJo97IMWZ9SoskydpUVQHhYbAnb+qkwmXnDMnphDFBFEYk7Uv/RkiBRscQbvrNoauQBKVBJ35c6TQYopeHQLic8bWTTGy8Q10pX8PeY3t/7BUQBW39vUpqY/H0bLJ/yTLOU5FR37ZW2ENOKSlk=
-Received: from BYAPR06CA0060.namprd06.prod.outlook.com (2603:10b6:a03:14b::37)
- by MW6PR12MB8957.namprd12.prod.outlook.com (2603:10b6:303:23a::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Mon, 3 Feb
- 2025 05:55:51 +0000
-Received: from CO1PEPF000066EC.namprd05.prod.outlook.com
- (2603:10b6:a03:14b:cafe::89) by BYAPR06CA0060.outlook.office365.com
- (2603:10b6:a03:14b::37) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8377.14 via Frontend Transport; Mon,
- 3 Feb 2025 05:55:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000066EC.mail.protection.outlook.com (10.167.249.8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Mon, 3 Feb 2025 05:55:50 +0000
-Received: from BLR-L1-NDADHANI (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 2 Feb
- 2025 23:55:15 -0600
-From: Nikunj A Dadhania <nikunj@amd.com>
-To: Sean Christopherson <seanjc@google.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross
-	<jgross@suse.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
-	<haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
-	<decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, "Alexey
- Makhalov" <alexey.amakhalov@broadcom.com>, Jan Kiszka
-	<jan.kiszka@siemens.com>, Paolo Bonzini <pbonzini@redhat.com>, "Andy
- Lutomirski" <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-coco@lists.linux.dev>,
-	<virtualization@lists.linux.dev>, <linux-hyperv@vger.kernel.org>,
-	<jailhouse-dev@googlegroups.com>, <kvm@vger.kernel.org>,
-	<xen-devel@lists.xenproject.org>, Sean Christopherson <seanjc@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 01/16] x86/tsc: Add a standalone helpers for getting TSC
- info from CPUID.0x15
-In-Reply-To: <20250201021718.699411-2-seanjc@google.com>
-References: <20250201021718.699411-1-seanjc@google.com>
- <20250201021718.699411-2-seanjc@google.com>
-Date: Mon, 3 Feb 2025 05:55:02 +0000
-Message-ID: <855xlra7yh.fsf@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1ma00Ee"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F21E5C4CEE2;
+	Mon,  3 Feb 2025 06:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738562650;
+	bh=durgU11lQ4dYcx2HLXEoqa0U7u7LZGRE+AdiLMGRBdo=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=r1ma00EeevTn4DlJ1qGNErTeu8FOxNw37X7EQB88WfHduYi/PQ5jNY/LSnFITvxSn
+	 0eoh5g+iMOVvyfREePh+6HGLP0OiQy5Jx6gH+Wy/QsBjzFLffreyoFPzkzDCiFMpK/
+	 8ReYIh5zTaKTtYy9f/MSSsEBKX03tjxZazTo1rkYHbiv6f6TQb97XvlLqE0gYqFkPU
+	 kIiZzjailYhncLEYN2c2h3p+VbIZ+PDJfNTlD4Y5Bl5h4+FQsVzNkoC7C/M/V5gDHm
+	 jdo+unShSwYRP/dSPzh5duPr+tRFxegJqwuAin3nAVai1eWRrNuNhZfObejDIn2yZt
+	 6z46Z+1HusrYQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE45DC02193;
+	Mon,  3 Feb 2025 06:04:09 +0000 (UTC)
+From: Hermes Wu via B4 Relay <devnull+Hermes.wu.ite.com.tw@kernel.org>
+Date: Mon, 03 Feb 2025 14:04:30 +0800
+Subject: [PATCH v2] drm/bridge: it6505: support hdmi_codec_ops for audio
+ stream setup
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000066EC:EE_|MW6PR12MB8957:EE_
-X-MS-Office365-Filtering-Correlation-Id: a866d209-0981-4b8e-3556-08dd441769f8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|7416014|1800799024|82310400026|7053199007|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yHnpJxwWZjnytpYcAYL+LWwCw3QW/pQ9N+XyD8SerezGnn6wJ06BQIOh0seo?=
- =?us-ascii?Q?EoP4uTnKYbj1cTrmJceqzOtAkPVwUrisXaKd6J/u7R6HdSLUWdlVQqBAW33q?=
- =?us-ascii?Q?OOZq1bPgBtEmK65lvWVUaqN+BSTNwWNHZUQDR8tLC7s/husAIO3bXfifZZ5r?=
- =?us-ascii?Q?icQeNcNOnB0zVNtMWFLiMaX8fohdfkHyJuGtUTUilPQr2RlTz8CpZbd7xE+E?=
- =?us-ascii?Q?eVIW4r/dgceYuR4SIt9UKH/1qTOZCYq5GJtXONinVUPkqAMPWJIQ2jIW4p/G?=
- =?us-ascii?Q?31CeABi/NYLLVxC/5A2W9ak6UsGhBSsKThCbgXc64nOdlxHX/GE9X4YeqVkX?=
- =?us-ascii?Q?MPT+nd8swdb5yy1u90i4YZgq84qFMl+j2XriuUPkM6+OLYkDf+0c7b3Hm90x?=
- =?us-ascii?Q?p6H8FGvPHASk8WMkMwGf9gm/xOW1CtNiKxSzTnkS6YeYIpRoqZPHmwQ4vHzT?=
- =?us-ascii?Q?5Zhi3ejJ1+xOOT9MLIIxI/yU7DZQyozAF7Np7yKvfVDoyiduqmX1Gq5SMlkn?=
- =?us-ascii?Q?gI6KRiA2H9tA3KyK+72lW0gyoiiNAcmF+8GYD2PjB0VktT8L4Y88yLc9whJQ?=
- =?us-ascii?Q?NgBbnpgeE6u30+SeT3XyVQk5fd1wkUfUF0CCyyq0hk1EZxc0cOyuyidiDDVF?=
- =?us-ascii?Q?wlhMeRwkTt31KRUekS9gLXKlYHHdQtbBtoHSI2cxZWhSjqB5ESKrVs2HzHi2?=
- =?us-ascii?Q?ye9sVv6X8oXYzcIuLvVv0jAZVk3B5s/nP6gAJ79jMoyPf3YqYQqtQrR5bbTb?=
- =?us-ascii?Q?pbI31BN+QSWmKU1m13/cdlpF0sXfF9hILz6kakMFcnmuxCORTPii2xikvYca?=
- =?us-ascii?Q?886IcjHcQzRmvwL81r1uWJlsANVHO8Gqlnsykq5GBdzf7hZzqTA8mXxYAkHL?=
- =?us-ascii?Q?c9hIDuACr7aSfvdmfUeYgkVhj1ZPGjEOgFRhogUDRvg3uNT3Eb0EkCfvmt9T?=
- =?us-ascii?Q?nHTTWzAhBlrFB11XyCtnxH3wSrYzDaEav+CR2OjQ56ninqhwKNRmG2ELte9O?=
- =?us-ascii?Q?KdCfD9KppmwbjLW2GGMN2zL0IFBXHWir267iLpHQ8Mmt5mewJqVb6BUZkDgf?=
- =?us-ascii?Q?O8+TMZ+37oJRVw3qvikHV4eMuC5HwwCukX1xo9Zbd3WE7yEzPMukQLKxJSwD?=
- =?us-ascii?Q?7yS/ZsRWkn8nmwo9dquNnEtvLBsY7AVk/HgSkMiLV/P9PEdXhyCsw8pgxzvl?=
- =?us-ascii?Q?iHCheneNIq9/u8Dd8rHepKs90c7xW8OWsxdEzuuhWjJHBihBsT9uvOdWEXGa?=
- =?us-ascii?Q?hwpVGtXUXnrYSTS3u2fM5j11TYuqMyzwUXdAY+FC9I7O2Xbam86vEN4rR5vm?=
- =?us-ascii?Q?m/In9rYAVotUOQdOdec1SGLw7t9ktkpmlirztFxbw0IAP4vFUsh/25DrSk5D?=
- =?us-ascii?Q?qwG0Cx2ZaITOdv50qYkddEtT0hRLsmDNeDnhFs2sraZ9bmViKFdAgWDuNVcI?=
- =?us-ascii?Q?eIimnEZcqo/yrbsAJj1/hzdcGF2grP2MMQSW4ou43o1SLA928ouJmQGz8mLw?=
- =?us-ascii?Q?SOhHHyidjVEjbbQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(1800799024)(82310400026)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 05:55:50.8351
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a866d209-0981-4b8e-3556-08dd441769f8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000066EC.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8957
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250203-add-audio-codec-v2-1-5c8cd72ee5bb@ite.com.tw>
+X-B4-Tracking: v=1; b=H4sIAG1coGcC/2WNyw6CMBBFf8XM2iFMQR6u/A/Dok4HmYXUtIgaw
+ r9biTuX5yT33AWiBJUIx90CQWaN6scEZr8DHux4FVSXGExuDjlRidY5tA+nHtk7YWy4dWWdV8Z
+ WDGl1D9Lrayueu8SDxsmH93Yw09f+Wob+WjMhoRR9X9Ol4Ibak06Ssb9l0xO6dV0/ZVx3Qa8AA
+ AA=
+X-Change-ID: 20250114-add-audio-codec-8c9d47062a6c
+To: Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: treapking@chromium.org, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, Pet.Weng@ite.com.tw, Kenneth.Hung@ite.com.tw, 
+ Hermes Wu <Hermes.wu@ite.com.tw>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738562676; l=7353;
+ i=Hermes.wu@ite.com.tw; s=20241230; h=from:subject:message-id;
+ bh=lqZfEfNoydFlPCDKtWPfpO3fwht+N1S5cJwdQJmO1+c=;
+ b=/MzEvq2dYLYQujk9oTXPpGxAGAKJzh9XakdQCtNdueKsw5sorux3J1fj0smHHNszs/dZ0EGMC
+ jhApGPXTMH+D4G73sNuDwl4tneMGRDapt8DjbHNQZnYfQeVM708gVV/
+X-Developer-Key: i=Hermes.wu@ite.com.tw; a=ed25519;
+ pk=qho5Dawp2WWj9CGyjtJ6/Y10xH8odjRdS6SXDaDAerU=
+X-Endpoint-Received: by B4 Relay for Hermes.wu@ite.com.tw/20241230 with
+ auth_id=310
+X-Original-From: Hermes Wu <Hermes.wu@ite.com.tw>
+Reply-To: Hermes.wu@ite.com.tw
 
-Sean Christopherson <seanjc@google.com> writes:
-> Extract retrieval of TSC frequency information from CPUID into standalone
-> helpers so that TDX guest support and kvmlock can reuse the logic.  Provide
+From: Hermes Wu <Hermes.wu@ite.com.tw>
 
-s/kvmlock/kvmclock
+For supporting audio form I2S to DP audio data sub stream.
+Add hdmi_audio callbacks to drm_bridge_funcs for the
+HDMI codec framework. The DRM_BRIDGE_OP_HDMI flag in bridge.ops
+must be set, and hdmi_write_infoframe and hdmi_clear_infoframe
+are necessary for the drm_bridge_connector to enable the HDMI codec.
 
-> a version that includes the multiplier math as TDX in particular does NOT
-> want to use native_calibrate_tsc()'s fallback logic that derives the TSC
-> frequency based on CPUID.0x16 when the core crystal frequency isn't known.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
+Signed-off-by: Hermes Wu <Hermes.wu@ite.com.tw>
+---
+Changes in v2:
+- Use DRM HDMI codec framewrok for audio stream setup.
+- Link to v1: https://lore.kernel.org/r/20250121-add-audio-codec-v1-1-e3ff71b3c819@ite.com.tw
+---
+ drivers/gpu/drm/bridge/ite-it6505.c | 151 +++++++++++++++++++++++++++++++-----
+ 1 file changed, 132 insertions(+), 19 deletions(-)
 
-...
+diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
+index 88ef76a37fe6accacdd343839ff2569b31b18ceb..361e2412b8e8f040cf4254479b60588d99e8c99a 100644
+--- a/drivers/gpu/drm/bridge/ite-it6505.c
++++ b/drivers/gpu/drm/bridge/ite-it6505.c
+@@ -1414,32 +1414,43 @@ static void it6505_variable_config(struct it6505 *it6505)
+ 	memset(it6505->bksvs, 0, sizeof(it6505->bksvs));
+ }
+ 
++static int it6505_write_avi_infoframe(struct it6505 *it6505,
++				      const u8 *buffer, size_t len)
++{
++	struct device *dev = it6505->dev;
++
++	if (len - HDMI_INFOFRAME_HEADER_SIZE > 13) {
++		DRM_DEV_DEBUG_DRIVER(dev, "AVI size fail %d", len);
++		return -EINVAL;
++	}
++
++	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT, 0);
++	regmap_bulk_write(it6505->regmap, REG_AVI_INFO_DB1,
++			  buffer + HDMI_INFOFRAME_HEADER_SIZE,
++			  len - HDMI_INFOFRAME_HEADER_SIZE);
++
++	it6505_write(it6505, REG_AVI_INFO_SUM, buffer[3]);
++	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT,
++			EN_AVI_PKT);
++
++	return 0;
++}
++
+ static int it6505_send_video_infoframe(struct it6505 *it6505,
+ 				       struct hdmi_avi_infoframe *frame)
+ {
+ 	u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AVI_INFOFRAME_SIZE];
+-	int err;
++	int err, length;
+ 	struct device *dev = it6505->dev;
+ 
+-	err = hdmi_avi_infoframe_pack(frame, buffer, sizeof(buffer));
+-	if (err < 0) {
+-		dev_err(dev, "Failed to pack AVI infoframe: %d", err);
+-		return err;
++	length = hdmi_avi_infoframe_pack(frame, buffer, sizeof(buffer));
++	if (length < 0) {
++		dev_err(dev, "Failed to pack AVI infoframe: %d", length);
++		return length;
+ 	}
+ 
+-	err = it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT, 0x00);
+-	if (err)
+-		return err;
+-
+-	err = regmap_bulk_write(it6505->regmap, REG_AVI_INFO_DB1,
+-				buffer + HDMI_INFOFRAME_HEADER_SIZE,
+-				frame->length);
+-	if (err)
+-		return err;
+-
+-	err = it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT,
+-			      EN_AVI_PKT);
+-	if (err)
++	err = it6505_write_avi_infoframe(it6505, buffer, length);
++	if (err < 0)
+ 		return err;
+ 
+ 	return 0;
+@@ -1625,6 +1636,18 @@ static void it6505_enable_audio_infoframe(struct it6505 *it6505)
+ 			EN_AUD_CTRL_PKT);
+ }
+ 
++static void it6505_write_audio_infoframe(struct it6505 *it6505,
++					 const u8 *buffer, size_t len)
++{
++	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AUD_PKT, 0);
++	regmap_bulk_write(it6505->regmap, REG_AUD_INFOFRAM_DB1,
++			  buffer + HDMI_INFOFRAME_HEADER_SIZE,
++			  4);
++	it6505_write(it6505, REG_AUD_INFOFRAM_SUM, buffer[3]);
++	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AUD_PKT,
++			EN_AUD_PKT);
++}
++
+ static void it6505_disable_audio(struct it6505 *it6505)
+ {
+ 	it6505_set_bits(it6505, REG_DATA_MUTE_CTRL, EN_AUD_MUTE, EN_AUD_MUTE);
+@@ -3302,6 +3325,85 @@ static const struct drm_edid *it6505_bridge_edid_read(struct drm_bridge *bridge,
+ 	return drm_edid_dup(it6505->cached_edid);
+ }
+ 
++static int it6505_bridge_hdmi_audio_startup(struct drm_connector *connector,
++					    struct drm_bridge *bridge)
++{
++	struct it6505 *it6505 = bridge_to_it6505(bridge);
++	struct device *dev = it6505->dev;
++
++	if (!it6505->powered || it6505->enable_drv_hold)
++		return -EIO;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "Audio enable");
++	it6505_enable_audio(it6505);
++
++	return 0;
++}
++
++static int it6505_bridge_hdmi_audio_prepare(struct drm_connector *connector,
++					    struct drm_bridge *bridge,
++					    struct hdmi_codec_daifmt *fmt,
++					    struct hdmi_codec_params *hparms)
++{
++	struct it6505 *it6505 = bridge_to_it6505(bridge);
++
++	return it6505_audio_setup_hw_params(it6505, hparms);
++}
++
++static void it6505_bridge_hdmi_audio_shutdown(struct drm_connector *connector,
++					      struct drm_bridge *bridge)
++{
++	struct it6505 *it6505 = bridge_to_it6505(bridge);
++
++	if (it6505->powered && !it6505->enable_drv_hold)
++		it6505_disable_audio(it6505);
++}
++
++static int it6505_bridge_hdmi_clear_infoframe(struct drm_bridge *bridge,
++					      enum hdmi_infoframe_type type)
++{
++	struct it6505 *it6505 = bridge_to_it6505(bridge);
++	struct device *dev = it6505->dev;
++
++	switch (type) {
++	case HDMI_INFOFRAME_TYPE_AUDIO:
++		it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AUD_PKT, 0);
++		break;
++
++	case HDMI_INFOFRAME_TYPE_AVI:
++		it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT, 0);
++		break;
++	default:
++		dev_dbg(dev, "unsupported HDMI infoframe 0x%x\n", type);
++		break;
++	}
++
++	return 0;
++}
++
++static int it6505_bridge_hdmi_write_infoframe(struct drm_bridge *bridge,
++					      enum hdmi_infoframe_type type,
++					      const u8 *buffer, size_t len)
++{
++	struct it6505 *it6505 = bridge_to_it6505(bridge);
++	struct device *dev = it6505->dev;
++
++	switch (type) {
++	case HDMI_INFOFRAME_TYPE_AUDIO:
++		it6505_write_audio_infoframe(it6505, buffer, len);
++		break;
++
++	case HDMI_INFOFRAME_TYPE_AVI:
++		it6505_write_avi_infoframe(it6505, buffer, len);
++		break;
++	default:
++		dev_dbg(dev, "unsupported HDMI infoframe 0x%x\n", type);
++		break;
++	}
++
++	return 0;
++}
++
+ static const struct drm_bridge_funcs it6505_bridge_funcs = {
+ 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
+ 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+@@ -3315,6 +3417,12 @@ static const struct drm_bridge_funcs it6505_bridge_funcs = {
+ 	.atomic_post_disable = it6505_bridge_atomic_post_disable,
+ 	.detect = it6505_bridge_detect,
+ 	.edid_read = it6505_bridge_edid_read,
++	.hdmi_audio_startup = it6505_bridge_hdmi_audio_startup,
++	.hdmi_audio_prepare = it6505_bridge_hdmi_audio_prepare,
++	.hdmi_audio_shutdown = it6505_bridge_hdmi_audio_shutdown,
++	.hdmi_clear_infoframe = it6505_bridge_hdmi_clear_infoframe,
++	.hdmi_write_infoframe = it6505_bridge_hdmi_write_infoframe,
++
+ };
+ 
+ static __maybe_unused int it6505_bridge_resume(struct device *dev)
+@@ -3700,7 +3808,12 @@ static int it6505_i2c_probe(struct i2c_client *client)
+ 	it6505->bridge.funcs = &it6505_bridge_funcs;
+ 	it6505->bridge.type = DRM_MODE_CONNECTOR_DisplayPort;
+ 	it6505->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID |
+-			     DRM_BRIDGE_OP_HPD;
++			     DRM_BRIDGE_OP_HPD | DRM_BRIDGE_OP_HDMI;
++	it6505->bridge.vendor = "iTE";
++	it6505->bridge.product = "IT6505";
++	it6505->bridge.hdmi_audio_dev = dev;
++	it6505->bridge.hdmi_audio_max_i2s_playback_channels = 2;
++	it6505->bridge.hdmi_audio_dai_port = 1;
+ 	drm_bridge_add(&it6505->bridge);
+ 
+ 	return 0;
 
-> +
-> +static inline int cpuid_get_tsc_freq(unsigned int *tsc_khz,
-> +				     unsigned int *crystal_khz)
+---
+base-commit: fe003bcb69f7bff9ff2b30b659b004dbafe52907
+change-id: 20250114-add-audio-codec-8c9d47062a6c
 
-Should we add this in patch 6/16 where it is being used for the first time ?
+Best regards,
+-- 
+Hermes Wu <Hermes.wu@ite.com.tw>
 
-Regards
-Nikunj
+
