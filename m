@@ -1,308 +1,211 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2F6209F22;
-	Mon,  3 Feb 2025 19:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738610740; cv=none; b=tnq1WbSywhpPndgf9sQVqigxt8kQ8Y0myQdZQzIK4Rhc36ulZxWQ/Ci4LFeGm7rwz+e+IiCPBaYdL81boOA3w+SWqBmp/pxJrz58JT8j2wcFIXxN+wykaLkRcdJAHELrDY+oXN0fltkLGczjelMF2e2Wt3D/1zIgJ+NpmdOgibw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738610740; c=relaxed/simple;
-	bh=HJgMhVYKmo1LpCbV5Sm58gs256gbFZ4C3uwnZiw2VUg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ot5bI4LfrKQb4dIQH7hdFAHHa+rjH4kCr01RJu/5w1jYBuh2qaExmVSFp4j+INlHtq7oJOIf9by094JT6Ifrn7HR1mN2Udlsi5HbD0CSSY+4ZmSPcmCmFIHu1oE5G3CVlqmVwxsNtaMhPpgSMKawpWLMT6rtt+/0OQ5pV7KCuE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me; spf=pass smtp.mailfrom=beims.me; dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b=nJiKzJpD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=q61s0vZa; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beims.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AF42AF10
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738610881; cv=fail; b=RfGD5ApkLL1nTvDfwq7S02mhgegK+RnLG58r9zItZsZTXvBe0ZhOjXS70bP7PCrz1wgQ/XiGQlM1EXdM+wewRCeUmYJZkL+zmmLqSzNi3RjIN4SOCOCmlf8nuJDkwVXwph+chEkfCgLcSO4tDkpsP/q67c4a1/tBZqNQJoWccdY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738610881; c=relaxed/simple;
+	bh=jn2gTPTsCpJFk8LtwalGn8Eb490kWxEIYiRTnZaZDdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WE39i/pEmuLzeFNyf6oIiqfXLS9wxvfwuwpRdZF65hnk3vTsYqVanPW+4WGMUdadUbuHLNatDDDF21XthtKk+d1mm9UG4STxvaxCj9r4sOisvGqWi7DMtHNQ1IxHrUx7BvF2kGT2S5VX482CSAVExs+qWExFYSYJAQ79fdtxPf8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VpBM90k3; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=wPG86Tci; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b="nJiKzJpD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="q61s0vZa"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id 58A96114017A;
-	Mon,  3 Feb 2025 14:25:37 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Mon, 03 Feb 2025 14:25:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=beims.me; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738610737;
-	 x=1738697137; bh=2Hgo1jRUZ9s9TXxYIqNPV38Gn6KA2bh3Lhj0CvQNpgQ=; b=
-	nJiKzJpDhFyd34EVjkRUO9OS3PqE/WVvVA3/lYZc3KHiaYRgcB06jdMBB3tQaWmd
-	jxkrtl7KhCaZy15qwh8JT+1Nj4YEU+NDIsrkIQe1QwZf0+gLNAq27SChC+prSfQX
-	7E17+u1/HeYpk0fPB7uvc/xVTupDiposcy1bFyoADnExGE4wI0l+IoBQfKxRBCIq
-	wKg+TK1XfITaCWNdM3wCUpiaX9UhireUa2TyFPbwzGhvykk9GnvMgxUbrm4ve/3F
-	b3RTvu/D0dZutyMNsNXoQ9haeZ4s84tCSzqQwgPZPykR+6LpXkipZxAti+vuOvjI
-	mqKfwzsxnLMvSU9y059ZYg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738610737; x=
-	1738697137; bh=2Hgo1jRUZ9s9TXxYIqNPV38Gn6KA2bh3Lhj0CvQNpgQ=; b=q
-	61s0vZawASRcLa7egkJZDWnb3Dj1Y64QhJUJ2bQx8yxUveZrJdiy/JLbtEdwO0mN
-	pBpKJeuajilHLeIhFutEJI5kw2PhV08eDwlBYpE+0r9nAwKoZGXuU2fWOo45ZfPi
-	GIYgyH2oUFgY0mXLYW6u6dr3znIKGvT+M+3MqKUgroL3Q+pGlk1X0xyc9nW2J5ed
-	t8wS/3dKJjlfnddFXtyWRC/6zzhknslfljkVo8tF0NGCYRmpB0Exj0R39iqIrOB4
-	l0SHNVptBUfQ/2FMwTcJ/CrT7eZMLsh/MMAV2Kr/yuXgjsYbGD9O/KWPU+pdvnNC
-	Q+v4D16bywxvMLOe4FUVw==
-X-ME-Sender: <xms:MRihZzqOSYRHjLRpCSWRnLROgOEwAW5_8OdQ_9fP9zhVTfwXPATfFw>
-    <xme:MRihZ9rGhxpnBXf4-PUtc9jg3isgMgMjuERxSJzPpq45O5Ny78s_JWtHm5oTSM3NV
-    TU8TrltB4PigJXqZwQ>
-X-ME-Received: <xmr:MRihZwPfz5wQOk6KU119BhzKe1xvwfUme7i-YNfgNj6edOFGjVMLEGU4VVkMbQW4Ug>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeeggecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfgggtgfesthekredtredt
-    jeenucfhrhhomheprhgrfhgrvghlsegsvghimhhsrdhmvgenucggtffrrghtthgvrhhnpe
-    eggeeffeegveffleejtdeggeetgfffueehgeegtedvgeefudevveehheetvdehtdenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghfrggvlh
-    essggvihhmshdrmhgvpdhnsggprhgtphhtthhopedvtddpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtoheprggurhhivghnrdhgrhgrshhsvghinhesghhmrghilhdrtghomhdprh
-    gtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthht
-    ohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhope
-    hrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlrghurhgvnhhtrdhpihhn
-    tghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhhonhgrsh
-    eskhifihgsohhordhsvgdprhgtphhtthhopehjvghrnhgvjhdrshhkrhgrsggvtgesghhm
-    rghilhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlih
-    hnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghl
-    rdhorhhg
-X-ME-Proxy: <xmx:MRihZ24Shvz7DHqBS8BtGP8meqzyLjwkHRFwtqtyZl8bmTbmJX0QEQ>
-    <xmx:MRihZy5xUJdxwXpEMaQwCbx6XcBVzXb_64phOk3GNUIkwlRLQCKPXQ>
-    <xmx:MRihZ-ggPm6xwiJVnifaQE4IxnQvx-DqVy22XksGvlUrA0tp0ljurQ>
-    <xmx:MRihZ04Egrr8_UKi1dpL92goBtbO2khOi4csOIRewH_AlD_zqjlqow>
-    <xmx:MRihZ44gglIyra6qfsWAKtghpnywUpN53CS9293PWO65NhkNO51NpVge>
-Feedback-ID: idc214666:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 3 Feb 2025 14:25:32 -0500 (EST)
-From: rafael@beims.me
-To: Adrien Grassein <adrien.grassein@gmail.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joao Paulo Goncalves <joao.goncalves@toradex.com>
-Cc: Rafael Beims <rafael.beims@toradex.com>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm/bridge: lt8912b: Add support for audio
-Date: Mon,  3 Feb 2025 16:23:56 -0300
-Message-ID: <20250203192401.244651-3-rafael@beims.me>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250203192401.244651-1-rafael@beims.me>
-References: <20250203192401.244651-1-rafael@beims.me>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VpBM90k3";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="wPG86Tci"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513JMvxO024984;
+	Mon, 3 Feb 2025 19:27:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=mgO/n/+leKTvbWS2FB
+	nuIx0aL7rmm+68MrMlRPKcxxw=; b=VpBM90k3hiG72d27hXTnqqoqxWx/I/ZnXl
+	RmlQaKIG2cOeJ4B6AolWEcEfXmcwqNGYIX71TINjpkJFnxk+5WkyYvKbGsUUP6Ju
+	4KYCoQWh6F7uVhSSCiOhv1M9ZYQyhZeaFZe9efYv3vYCLIB6cAMRsufvsAInPV3E
+	Z8Rn2cmt+wVGI6B4CNgJcqVGnRxTz9sk328KGRmOfu8uQW9xk1cyNZ+IuXrOhMZX
+	Zb3tk29unGP74L2ABJQT6GGTTz9yuXEDFX2phqib9PfooQv5ZSr4YlKN+t4vQQ6V
+	ioq3uU4MKzyWSyLIxXJQLPdWFjnWZVeRA6ihpJwaDqpuobZ5x7Hw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44hfy83d3k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 03 Feb 2025 19:27:46 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 513JOFe1039048;
+	Mon, 3 Feb 2025 19:27:46 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2044.outbound.protection.outlook.com [104.47.55.44])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44j8e6sxyh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 03 Feb 2025 19:27:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=p8BJV3o+TJvohH4SHNwCp7AleFjfwT7Krl1MalyUgOVEnN5TzePhtu2mNqkwiubBdCrwY8Z5VsxrDQp1NpQyNERgfbG0WnK09Vzx9HN1PdXfVS55SjrxJPlQ4ReJ+zTLXXTYNQr9EVHhKSd1rIjQ9V9pcediPXz29Q5TQY4DMmOfLsqNioYrsN/EfeSbcd+q2LZwERKqONrzXUsW8f0D8HOdXg+5G1ZSu/NJa8NpPEpSP3t485Rkb72YOAyg8VgxL2WOQVkjLk/Bk7M9zYrVQBc3bPtYo6OX9oIOf3YS/9gOBWLDb/OHr0N6mF9O++wxSK4tukAEnfprFNEjW6CPyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mgO/n/+leKTvbWS2FBnuIx0aL7rmm+68MrMlRPKcxxw=;
+ b=pezXq250KUWJxOPXeoTijyJB6/fzXp6XeYEPGXrcuExK+H5v4yhyDTHaotgsbKcXtIAcXklFzVcuq7ggKJC9tRvxT+GyvbAVCivQbLB3BmH34pBRAX1xhMAHSvFGeQwlfMfG6ZAxBz1NC4xHSjBepmPf/2yox/d+CuCUm21bSHIbOVQhMr3NyaY7crDhi9AaJoOSa1AFkRThp90dm+MaU13+1i3w5KiCIeGD8u4MiYIa/V1ENBv4MUp1bCjEQLeL1C4Q1kG1Qu+goVVwvCdVcJNuwlV1pke611n2Yllj34DTG8EYPjk7NVn0nK26gw9RztzfhqdExsJ8wTXWozVNnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mgO/n/+leKTvbWS2FBnuIx0aL7rmm+68MrMlRPKcxxw=;
+ b=wPG86TciCC7YIfJ0HhpsDdtjovCoFb+IgUjpToFy9CeOdhPV4ATgvc1v1zD5NNJ31hYqg3toonT5hjVFlEEQi3G49L4AVSuXJVys9uKRvbZoQhjnuY6o17JOWJLVEah2JPBUMa5QzwDQZHn6sUViTmKBoW8JvfmVEJKuFSiaXFQ=
+Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
+ by SA6PR10MB8088.namprd10.prod.outlook.com (2603:10b6:806:43f::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Mon, 3 Feb
+ 2025 19:27:44 +0000
+Received: from PH0PR10MB5777.namprd10.prod.outlook.com
+ ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
+ ([fe80::75a8:21cc:f343:f68c%4]) with mapi id 15.20.8398.025; Mon, 3 Feb 2025
+ 19:27:44 +0000
+Date: Mon, 3 Feb 2025 14:27:41 -0500
+From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: ebiederm@xmission.com, oleg@redhat.com, brauner@kernel.org,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] exit: hoist get_pid() in release_task() outside
+ of tasklist_lock
+Message-ID: <eqoac7dyanvez62nc5ge3lfxxxbjcln3k6nrz4tkrg67v55sdb@sosx2sguy5f6>
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Mateusz Guzik <mjguzik@gmail.com>, ebiederm@xmission.com, oleg@redhat.com, brauner@kernel.org, 
+	akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250201163106.28912-1-mjguzik@gmail.com>
+ <20250201163106.28912-3-mjguzik@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250201163106.28912-3-mjguzik@gmail.com>
+User-Agent: NeoMutt/20240425
+X-ClientProxiedBy: YT1PR01CA0064.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2e::33) To PH0PR10MB5777.namprd10.prod.outlook.com
+ (2603:10b6:510:128::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|SA6PR10MB8088:EE_
+X-MS-Office365-Filtering-Correlation-Id: e01e93f5-eba6-4d30-34e8-08dd4488d528
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?t7pdO5MCqdFClPTQBQ+k6PHWzikUgemuYW34gZUQTo2Jp/mavmXpjA2WvVTf?=
+ =?us-ascii?Q?ZgNjDSDv3kEizEoWOlqjxJ1lxrL7mH/i698cRdgXRhCUUXx7e91ljcm9BOkR?=
+ =?us-ascii?Q?enRzlouqzNkxPNjZvBVXL6OM/xlc4frjprZZ0My3S3LJN3/NnT7oUftlfh6/?=
+ =?us-ascii?Q?U0luCZw05b7oQT/w2PLvcz67jR1oCbo+bcTVr187dxmvhkgzLs3pVuVGEJod?=
+ =?us-ascii?Q?aT+xZ7/lfhq/pmAd7pxym30xqmlMrrYvcxbpebp/mEYPbiNVIbs5EmlZC1ri?=
+ =?us-ascii?Q?qdoNLAsnhmfgOVUfHO7GokgYbF7elqFkE44mrGrHrrs3JLgsnQ6J/JiP3RUS?=
+ =?us-ascii?Q?Eh2oPDG5/rAg1LoH33vuWp7y3L5DsN9THlMvpyFTDxTFgraD+gmL5F1YSPAk?=
+ =?us-ascii?Q?dKujnfctYXUvWp3fPjmhCeAPWK8M7u6EcQDHWffysr4O51iIJqWslm1yIL/K?=
+ =?us-ascii?Q?8JX4MSBWdvAEdSs4Y5VAKYn6eHejoinDqdMOu+YbPQC+b4QxKmooe/tfn+IF?=
+ =?us-ascii?Q?NM+P7AUQsnZ2wOg2Ser3JUUdN/DNtQGURiF+reLW5yLCIO/qLAV+v98vfOBq?=
+ =?us-ascii?Q?8CPDaR82HTJrMebUyEgFSLNH2IFmoAO7+B0wGI4XYgcMHAnqq7uF/5Kf8DUv?=
+ =?us-ascii?Q?tjpzZOIBgWBvHAI7NssNiYHtXrpFukEivLzdOeXCuUR92mTgE18VFQ/y1r7z?=
+ =?us-ascii?Q?QFLjtnzqnC8XxnvXvAlZ1w6NSVRKuo8ov/a024XDyYoulaXfbpYMVStu+GyE?=
+ =?us-ascii?Q?/IzpoO9mMmLsKdhxzzvV6C5pq2IpVHB/6P+ezUMBZAG+65SsyXBJSCFSqZjE?=
+ =?us-ascii?Q?RWVm09gar/TKmToXVEsTqxGb0AK/Pgfn2y+4GnE2ktSn0hdAQu8n6GpqdLeY?=
+ =?us-ascii?Q?ozN3bHNNYv+yVgQZVPZKgQXdZxuB+zlCR1jTG9WhGyGzcb0YFccTWDzMDx0z?=
+ =?us-ascii?Q?nVtbBjsTpqr/Vr005fx8vNH7J3K148ArcSfti6dPNVX0jQ2waEnr1H0c0RQt?=
+ =?us-ascii?Q?OLjFX8DTFPM2RaeIksHWX/Av9+/FBUzetm/5K2vCm3ccJDo9VIzWNCXD9LOd?=
+ =?us-ascii?Q?MI0z83u/OvK2ekt0LbOiemCxxHe3oHhurQnUNtx8mi7fkOAXN9cGDlANUmhJ?=
+ =?us-ascii?Q?DDk4z38S2v6JYgrnJZtDJ15haVDf1qB3GyTMXwAToqM7meGbnTGbkFw+4YJn?=
+ =?us-ascii?Q?sC1oeb1MDlyFVp0xc/Q6W3T9fVS8Gc/xHQ+c3HYUVcofi35euY3rAzMBuCAC?=
+ =?us-ascii?Q?mjkp1jfQYIN5dQGT3Sjlua5OVIxdXVIqa2NV0AcG/jRuNKBWC8hZcffth7m6?=
+ =?us-ascii?Q?vR/lLgbxqhbWnoDDeV8XPBaNvpcJmEH0PedWPPwZ8OT08IHxftH2xmcLsVpx?=
+ =?us-ascii?Q?3GRanI2sG4sjeH2LGLzI34Kr7ERQ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?klLkTcikRv3JuPpkkmQj4HKmEo9pcbjkL5P89yc6ZVXiYbeEfCI5bjH3jZco?=
+ =?us-ascii?Q?7ltzlA5/EXEAm72qpGRGmQUtxJmOUB8Q6vPKg79eS2ZTB3Fq/xDeJZLwdbVe?=
+ =?us-ascii?Q?Ieoynq+rUBqtrzaUr9m2o0tZP2zLreYIEGVPOV/nyTis32QzaeGD8l5S65LL?=
+ =?us-ascii?Q?fTt6QLSmKmVAYLwMDUZVKvdlkD/nauWOkSGT9r/RzOU07STo/ZPUvWQcWtte?=
+ =?us-ascii?Q?wBsd7hItxzqq0CzAxBFN4K+1MHq9BLHKjcVu4sJjdLda+jJMkg1KBatRiJ3J?=
+ =?us-ascii?Q?byquGWpc8rejLxTvaW7ePzWe4A1Ujg/DJatmFIORviO+X/kG8JutwR08BBfF?=
+ =?us-ascii?Q?Ln8vptCV5Aq9YJoaZwtwQiiSkvscj7cjKnJetxw7q4NuHe2s2xWZTxIVlyLn?=
+ =?us-ascii?Q?yChIfyfziSar+coIVo0JprOxIUcYoQ52noZHWXtrAFIZVHtYeSoe1ylZ6Ud9?=
+ =?us-ascii?Q?JcAeNxNCVNWyESQDUpqumvG4EKkerzKbOAjcDGCi63X5RudxvhdtQnWidBuI?=
+ =?us-ascii?Q?hnD+YOZ49wvFpZMmClXV39ZwAJ9uwIqdXu/v3Odkm0pi2b7BHN89GhwIELvo?=
+ =?us-ascii?Q?hBM0r8iKVg0D5bAi4Q3F6d6GziBeFvQ7xUDkbEh52edlEFybrQ2VUal/TUJU?=
+ =?us-ascii?Q?4rfdUByoUU7tgRE0NtaQRsZZq+qTPFCCjpPv4Fl1qf/H0YNgxDtuEFJ7VtP9?=
+ =?us-ascii?Q?X+zw0lykLKLNEF2C7J3yKcjCwJei+WrhRxKdzpSEcpmBLTr2v+f7KL7yEFwK?=
+ =?us-ascii?Q?HcPIE3KkjI7sFecaPM+KnkwgefIXaqxqWZNrfsIdTLfalHzKW0q7bIEqBhqu?=
+ =?us-ascii?Q?enjoCKIOLHiYyff2Sd8b8a43ujthGrdQMd9eNarnvkJu/YER+yTf6K2+T5LW?=
+ =?us-ascii?Q?kXCEhODJPud3vnobg/vZBys141EX0p9kaWerxNnklF+vxxhl35wFc0v1y0r4?=
+ =?us-ascii?Q?mT4TDvbx4N1IA4VcN1tlOq+I+AZuzSpfCieeGmGUmvB+L+S7jR8rrv1tfoao?=
+ =?us-ascii?Q?w4iczcVHiDBbHHIu1OyXcxIU2XXdDsVLnVScb5xEU31it9+nDg37N5wsBed/?=
+ =?us-ascii?Q?m+ypmMwn+nw7sJMs6m3+QyziC/nOxf5nro0V3LNJ4dCP+gDGcd4VlUx3AvLY?=
+ =?us-ascii?Q?TMbzlNIyN8fOB/aCvgfLaO5xs4KbUWHas9LEpryPfJhdTHm4JvR3/kcYNPzs?=
+ =?us-ascii?Q?1Yszg5BDiX6Qiqbtu4XOS0yyqL9EFquFHvbdoyUYeYgdwp8T/KIaF+hqgo9d?=
+ =?us-ascii?Q?8CgbABJfNgDUMj3iuSa+d2SrynLeO/6mm/7gvi/1ml5q4WkfOnPhBEb3tfR3?=
+ =?us-ascii?Q?7OF1OHUeyGO8wkaJKiYXkHX1d63TJ0OdtQPrZG7feqmDXNIPefmsSMjwT3nl?=
+ =?us-ascii?Q?ZMgOd5BgXPebcAoBZb2WZRcIqtksJoAVZC3zal2CyMwYRvR5P6IUadd54ao6?=
+ =?us-ascii?Q?kX55MsV6jA4A72I/r59XGlMQjIQ1hv4+QVku+GkXRDi3DVFEopcBnPknVLTF?=
+ =?us-ascii?Q?7WwtJXgt94YT8nFMYIX6iuBdoxp8ZrRUyKBZxp8jy4ZuwIFmFqJrvBuCCf6b?=
+ =?us-ascii?Q?z6N76jrbXSaX7+4PH9VC+PIjRSJz5fol6GjqMbHQ?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	avnf6fjKctJDJaOFefrWtNqBJERJxF1sPwYVC0rqMtsCPyqgRmIviTeHO5WTyeyEPHCKwNVlZVlTrPXJTLIHcnMoZBXisBRqrzngdch++vn5bGk8ycWfcUw/BbtaHEzP3y062jVR7x6BUXdKtuk5g1p3+fNke241iSEsFgnNy+DwmMlip+kLApPQNSEuchGdEnYbZu271nTDJqjb/L9tF5JfqO0Z3TsYKkM/LM5Svr4hyNnlcXLQtGAIjo3pphjVUHF1UmGaWV30L0Cjd1FnlKW/DC09Ubvb6AhRlf3OIAoo4cKdcHKshDc4zRLvJeII7qqhgxam0oMy6RrXA9zSjsssohiOnZ+noPjVNewdirODIkO5mEHGEbA5pVJqGPJaZISBPItAdim1YMtMQEvoOS4Ak7OYMsQNyKg5BuDFRLSMsqpHYzkECbt27ZQo70qrgJDo2N73ESv41dvJmji+wqhY7cHydvjbvX5xeAdnFZCbAwjKeLP63Voux7sQ8yi22z9tQtqyVf2LmnNKtHWkNx1pMB9ily2fZ6pdGjxCrR3jIeEhhFY4YB56aAzROv5sd+El1bOIHE0ZQjyYDfWBljz3KlNjFR9+Yluv3EMQxfg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e01e93f5-eba6-4d30-34e8-08dd4488d528
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 19:27:44.0829
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 720Cty+TlZnqdPml6zQ6gLyFWhTOwouZ2mietRwMfrl2MUCjgpdnqiLWJwdwYEoH9Z9bbGvdVLBFAnbTrcPS/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR10MB8088
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_08,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2501170000 definitions=main-2502030141
+X-Proofpoint-GUID: yIPcRqRmcjV29bTtnGaQKbMxJu7am5bB
+X-Proofpoint-ORIG-GUID: yIPcRqRmcjV29bTtnGaQKbMxJu7am5bB
 
-From: Rafael Beims <rafael.beims@toradex.com>
+* Mateusz Guzik <mjguzik@gmail.com> [250201 11:31]:
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 
-Add support for HDMI codec with audio coming from the I2S input.
-Support 48kHz and 96kHz sample rate, with 16 bits word size.
+Change log is a bit sparse?  I get that the subject spells out what is
+done, but anything to say here at all?  Reduces lock contention by
+reducing lock time or something?  Maybe even some numbers you have in
+the cover letter?
 
-Co-developed-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
-Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
-Signed-off-by: Rafael Beims <rafael.beims@toradex.com>
----
- drivers/gpu/drm/bridge/Kconfig           |   1 +
- drivers/gpu/drm/bridge/lontium-lt8912b.c | 107 ++++++++++++++++++++++-
- 2 files changed, 107 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index 6b4664d91faa..489ce1041203 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -117,6 +117,7 @@ config DRM_ITE_IT6505
- 
- config DRM_LONTIUM_LT8912B
- 	tristate "Lontium LT8912B DSI/HDMI bridge"
-+	select SND_SOC_HDMI_CODEC if SND_SOC
- 	depends on OF
- 	select DRM_PANEL_BRIDGE
- 	select DRM_KMS_HELPER
-diff --git a/drivers/gpu/drm/bridge/lontium-lt8912b.c b/drivers/gpu/drm/bridge/lontium-lt8912b.c
-index 52da204f5740..2100b41e5f61 100644
---- a/drivers/gpu/drm/bridge/lontium-lt8912b.c
-+++ b/drivers/gpu/drm/bridge/lontium-lt8912b.c
-@@ -8,6 +8,8 @@
- #include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
- #include <linux/media-bus-format.h>
-+#include <linux/of_graph.h>
-+#include <linux/platform_device.h>
- #include <linux/regmap.h>
- 
- #include <drm/drm_probe_helper.h>
-@@ -16,6 +18,8 @@
- #include <drm/drm_mipi_dsi.h>
- #include <drm/drm_of.h>
- 
-+#include <sound/hdmi-codec.h>
-+
- #include <video/videomode.h>
- 
- #define I2C_MAIN 0
-@@ -24,7 +28,10 @@
- #define I2C_CEC_DSI 1
- #define I2C_ADDR_CEC_DSI 0x49
- 
--#define I2C_MAX_IDX 2
-+#define I2C_AUDIO 2
-+#define I2C_ADDR_AUDIO 0x4a
-+
-+#define I2C_MAX_IDX 3
- 
- struct lt8912 {
- 	struct device *dev;
-@@ -38,6 +45,7 @@ struct lt8912 {
- 	struct drm_bridge *hdmi_port;
- 
- 	struct mipi_dsi_device *dsi;
-+	struct platform_device *audio_pdev;
- 
- 	struct gpio_desc *gp_reset;
- 
-@@ -226,6 +234,7 @@ static int lt8912_init_i2c(struct lt8912 *lt, struct i2c_client *client)
- 	struct i2c_board_info info[] = {
- 		{ I2C_BOARD_INFO("lt8912p0", I2C_ADDR_MAIN), },
- 		{ I2C_BOARD_INFO("lt8912p1", I2C_ADDR_CEC_DSI), },
-+		{ I2C_BOARD_INFO("lt8912p2", I2C_ADDR_AUDIO), },
- 	};
- 
- 	if (!lt)
-@@ -754,6 +763,97 @@ static int lt8912_put_dt(struct lt8912 *lt)
- 	return 0;
- }
- 
-+static int lt8912_hdmi_hw_params(struct device *dev, void *data,
-+				 struct hdmi_codec_daifmt *fmt,
-+				 struct hdmi_codec_params *hparms)
-+{
-+	struct lt8912 *lt = data;
-+	unsigned int audio_params = 0x08; /* 16 bit word size */
-+
-+	if (hparms->sample_width != 16)
-+		return -EINVAL;
-+
-+	if (hparms->sample_rate == 48000)
-+		audio_params |= 0x20;
-+	else if (hparms->sample_rate == 96000)
-+		audio_params |= 0xa0;
-+	else
-+		return -EINVAL;
-+
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x0f, audio_params);
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x35, 0x00);
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x36, 0x18);
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x37, 0x00);
-+
-+	return 0;
-+}
-+
-+static int lt8912_audio_startup(struct device *dev, void *data)
-+{
-+	struct lt8912 *lt = data;
-+
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x34, 0xe2);
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x3c, 0x60);
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x07, 0xf0);
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x06, 0x08);
-+
-+	return 0;
-+}
-+
-+static void lt8912_audio_shutdown(struct device *dev, void *data)
-+{
-+	struct lt8912 *lt = data;
-+
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x06, 0x00);
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x07, 0x00);
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x34, 0x52);
-+	regmap_write(lt->regmap[I2C_AUDIO], 0x3c, 0x40);
-+}
-+
-+static int lt8912_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
-+				      struct device_node *endpoint)
-+{
-+	struct of_endpoint of_ep;
-+	int ret;
-+
-+	ret = of_graph_parse_endpoint(endpoint, &of_ep);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (of_ep.port != 2)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static const struct hdmi_codec_ops lt8912_codec_ops = {
-+	.hw_params = lt8912_hdmi_hw_params,
-+	.audio_shutdown = lt8912_audio_shutdown,
-+	.audio_startup = lt8912_audio_startup,
-+	.get_dai_id = lt8912_hdmi_i2s_get_dai_id,
-+};
-+
-+static int lt8912_audio_init(struct device *dev, struct lt8912 *lt)
-+{
-+	struct hdmi_codec_pdata codec_data = {
-+		.ops = &lt8912_codec_ops,
-+		.max_i2s_channels = 2,
-+		.i2s = 1,
-+		.data = lt,
-+	};
-+
-+	lt->audio_pdev = platform_device_register_data(dev, HDMI_CODEC_DRV_NAME,
-+						       PLATFORM_DEVID_AUTO,
-+						       &codec_data, sizeof(codec_data));
-+
-+	return PTR_ERR_OR_ZERO(lt->audio_pdev);
-+}
-+
-+static void lt8912_audio_exit(struct lt8912 *lt)
-+{
-+	platform_device_unregister(lt->audio_pdev);
-+}
-+
- static int lt8912_probe(struct i2c_client *client)
- {
- 	static struct lt8912 *lt;
-@@ -788,6 +888,10 @@ static int lt8912_probe(struct i2c_client *client)
- 	if (ret)
- 		goto err_attach;
- 
-+	ret = lt8912_audio_init(dev, lt);
-+	if (ret)
-+		goto err_attach;
-+
- 	return 0;
- 
- err_attach:
-@@ -803,6 +907,7 @@ static void lt8912_remove(struct i2c_client *client)
- {
- 	struct lt8912 *lt = i2c_get_clientdata(client);
- 
-+	lt8912_audio_exit(lt);
- 	drm_bridge_remove(&lt->bridge);
- 	lt8912_free_i2c(lt);
- 	lt8912_put_dt(lt);
--- 
-2.47.2
-
+> ---
+>  kernel/exit.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/exit.c b/kernel/exit.c
+> index 1eb2e7d36ce4..257dd8ed45ea 100644
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -248,9 +248,10 @@ void release_task(struct task_struct *p)
+>  
+>  	cgroup_release(p);
+>  
+> +	thread_pid = get_pid(p->thread_pid);
+> +
+>  	write_lock_irq(&tasklist_lock);
+>  	ptrace_release_task(p);
+> -	thread_pid = get_pid(p->thread_pid);
+>  	__exit_signal(p);
+>  
+>  	/*
+> -- 
+> 2.43.0
+> 
+> 
