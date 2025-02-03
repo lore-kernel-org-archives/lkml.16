@@ -1,237 +1,118 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D032080F0;
-	Mon,  3 Feb 2025 08:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204D42147FD
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738570386; cv=none; b=HSQ2XaIPM7ksRss4Qo88KHia4zGvue91JJEPPzSrtxI8p7WAEGY2ek+a6hQXNQaGUtIIDS/wJYRkigMxyB1P/Psd+tBhUS3hN1wgi6TbEnel5Ufz9VpJ+pQt1LhSdvA7wnIlJhE2DKId/QnD2nm0GCaY4JI4ovH3TtvPzxkI4qc=
+	t=1738570389; cv=none; b=hn314ytxq4XMc0dVHeRtn6BOuCA5e+QoUOTUvvjPNfa3SuEYfxzWrfHir6D13DcDt383wCHBIc1GWAvHf6OzoMa7u/EQRGE6aECu55oPG3QQnsYqlV7UzYbubRi29Lzvjftjae+1jITF6D+/Z37x0WePL27eO/Q92buFtx4EtRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738570386; c=relaxed/simple;
-	bh=N7qUijvmSEWwkIs0WTruQZrjtGDD53lX1cuNPvvVEtU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R/hqf6vJHIYC8WQx9FKSvlwl8Ogbw/vnLLhXp9x83MYLpdUEucAeWNW43lYc6iI9J5UALWGHzpvO8cKek0lS6uKXl6eIJQk68FTjlmkd1+7VTnfKlTNVAwwgzwjWCX8/jmgPUZMmVvYSFWfCAJU3zuqHn9vBFLLa1u20QeQlBqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FeOZxwo9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1738570389; c=relaxed/simple;
+	bh=8BzrjfzW6hMDq8JMBmAHvHJ/8jbUh41Fukiv4MAQV0g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iV265j6OrAwzw3uMyyfT1mEB8yfEc8o85obEvWPn3rRgDBeQp+KLWJjF3PfLL2aeagG7GnzibArG5RyqpX/E61Ep8Hssp6wRe5UffukORE/nVDNz2t0is0eruf3YeUxU0oTMYYyr/wA6ln9uWvDqzj4N2DDEcit3VjzYT1/qPto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=i3apWOqL; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FeOZxwo9"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 512NmWHG020606;
-	Mon, 3 Feb 2025 08:11:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=ATNPgEQKdHE
-	IUtU0UfuuKh+mMGaRkCdtWoOq3CmBWc4=; b=FeOZxwo9TBYIia7z+yS3HGFOH7f
-	/w+X9fYFSdWsvSdwVTdriT4YaOcnWFFl5svQbUOKPlDkAHAoPW2k5kSShT4mhKNs
-	FpVRmH5GZ+a64Eq5trMmcIJt0wVzAMY1WxNLBDDfXmmknno2QbF/GWpsIQ2ZETBb
-	VZOUI4jfQE/TGNHpZed9oP873q+RnuhFrA1JYrlxQYVsSgTziPbQv3hkMSAjuYRF
-	coijOunMZ641qO3jkBTP6FgsvpyZU3ogqimewLcLeO+9VVhJJIpo4RCE/2elfdFD
-	5fn4ScZOUPj65PiGoQj0O9XIb+sOB+TTC2qMYnmsF/5ajpljOCSIAT3UTyQ==
-Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44j6naseh3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 08:11:48 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5138Bk6K013387;
-	Mon, 3 Feb 2025 08:11:46 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 44hcpkhsay-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 08:11:46 +0000
-Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5138Bkpo013380;
-	Mon, 3 Feb 2025 08:11:46 GMT
-Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 5138Bjp4013378
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 08:11:46 +0000
-Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 393357)
-	id B278740BFE; Mon,  3 Feb 2025 16:11:44 +0800 (CST)
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-To: quic_cang@quicinc.com, bvanassche@acm.org, mani@kernel.org,
-        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
-        martin.petersen@oracle.com, quic_ziqichen@quicinc.com,
-        quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
-        quic_rampraka@quicinc.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Peter Wang <peter.wang@mediatek.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrew Halaney <ahalaney@redhat.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 5/8] scsi: ufs: core: Enable multi-level gear scaling
-Date: Mon,  3 Feb 2025 16:11:06 +0800
-Message-Id: <20250203081109.1614395-6-quic_ziqichen@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
-References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="i3apWOqL"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-385e27c75f4so3414408f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:13:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738570385; x=1739175185; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2IIA2EevMgnUnT2y0Tcftlgxz2rZdSe6sO6t8T4gDhc=;
+        b=i3apWOqLHYC6bL1RzMegFXJE7HYUYkRMcGjbc90X9vOytR7yAWZxhKFnu6pjVbUb59
+         JdocnU8BZZbfxuyxu9WMB/QBikj2BDJjt8dhXeqKy+ztRVfLejhJiU2BnHxVHbYgE82+
+         asDluLlVVwMVUGL0daoY0HSiyJAj+LINHn43NvO0UUdiDlHfoP5DKo/2JEvmE8ymgzyr
+         Xx5OnLRx2RBbBBi1RWQyEVD93Yv9fj/qichojPCL0f/+Gru0mdEwxwx00UbTGgjJMUTr
+         bfSDXCagosr/BeMCs+R1UrWSXFztVusqTOqMqY7CfpxO26FTZ4tAQ1ubKlaSIhC0gsKF
+         yO8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738570385; x=1739175185;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2IIA2EevMgnUnT2y0Tcftlgxz2rZdSe6sO6t8T4gDhc=;
+        b=sxomc+/lhDHIK2j1qiIymgXKTUJRwRk2H/66w0pTp23HF++/dNhPSukd8I866K4tJO
+         TmPNxzDm/0+ywh1eiG2IYzdxo/B2fFd/18xxI83JfBWUWbNvZaV5fXG24kpUnLWK10M3
+         5Gm0OboCNaNnZr5KkumLEjfXs9SYtJudUEsgBh3Plmuy/yadTffXoJwE5Sb6zbCT6zCU
+         J0v3AF9+66X46EhVG1fw/T2nQaZW1w3xQNMnedi5Ve6basTMNdi+eGFmBf+ZVUFjtTSS
+         o4N6f4Ano7+sc3+xWlnXaBC3P/l9E11ZqakmGdocqNlDRXI0GOiAJKZ3d26SyTZdoAz0
+         Wb+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWRTqFAgyoyMFRy1R70aRnQsj2lRnlriGkfkB4ZxhwRSWqPgwdcZ1rbaZQPRWAGwGCLtYtFT0NkAIAnIvM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ/hp8HKbUB2U4ciCasyySt/H7o0wA8hFrgY/Bpegn10zMSasY
+	npMh94th2ZrBhdc3KkglaxaJHMZx4Ai31x86NvzVMWT8x/C2ux0kuTHMnlqByLI=
+X-Gm-Gg: ASbGncsI6fd/PB33wdHMOiRcqEn+k9O/xU5NTm7SIbLAk3on1xLG2ELjhUL8AmCHYPn
+	YWMyntLk9izgWbcbggPHnVqhjVjFx1lP9635o3haViqj9Mk+UieBtnbUNbXcda2moC6vxRA0jRp
+	agLr2M45WeDMBTOMoFAEMTTy2SRUBnF/UXNZHfaB9sl8z4lgcYUN9W8gWFXw+UJiUHzsUdK2Qn8
+	+RVmK+KHkpRJOCFfSUnja3+tuWCl/7WGpVllCbM+Pc1HiIMl1/zn0EEwk2oI8chTwDzC8FqcT3s
+	z0P9RgyvVg8lMw==
+X-Google-Smtp-Source: AGHT+IF3lNNZmS2B9T8gXfcE5kd5EuOjnSuh3iWUdY1d50Algj3kP3sHpQaRcW0lvgZf4+fEDGkUsw==
+X-Received: by 2002:a05:6000:18a9:b0:385:df6d:6fc7 with SMTP id ffacd0b85a97d-38c51b5efb4mr18533137f8f.25.1738570385202;
+        Mon, 03 Feb 2025 00:13:05 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:62d7:938e:c76:df44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b574fsm12019825f8f.70.2025.02.03.00.13.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 00:13:03 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Nandor Han <nandor.han@ge.com>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	patches@opensource.cirrus.com,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2] gpio: Use str_enable_disable-like helpers
+Date: Mon,  3 Feb 2025 09:13:02 +0100
+Message-ID: <173857038027.20723.17081473974273068659.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250114191438.857656-1-krzysztof.kozlowski@linaro.org>
+References: <20250114191438.857656-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: vCjrz5QOzpDYdNhNOQgHiLZvjwALZLb0
-X-Proofpoint-GUID: vCjrz5QOzpDYdNhNOQgHiLZvjwALZLb0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_03,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- priorityscore=1501 mlxlogscore=999 mlxscore=0 spamscore=0 malwarescore=0
- adultscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502030065
 
-From: Can Guo <quic_cang@quicinc.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-With OPP V2 enabled, devfreq can scale clocks amongst multiple frequency
-plans. However, the gear speed is only toggled between min and max during
-clock scaling. Enable multi-level gear scaling by mapping clock frequencies
-to gear speeds, so that when devfreq scales clock frequencies we can put
-the UFS link at the appropraite gear speeds accordingly.
 
-Signed-off-by: Can Guo <quic_cang@quicinc.com>
-Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
-Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
----
+On Tue, 14 Jan 2025 20:14:38 +0100, Krzysztof Kozlowski wrote:
+> Replace ternary (condition ? "enable" : "disable") syntax with helpers
+> from string_choices.h because:
+> 1. Simple function call with one argument is easier to read.  Ternary
+>    operator has three arguments and with wrapping might lead to quite
+>    long code.
+> 2. Is slightly shorter thus also easier to read.
+> 3. It brings uniformity in the text - same string.
+> 4. Allows deduping by the linker, which results in a smaller binary
+>    file.
+> 
+> [...]
 
-v1 -> v2:
-Rename the lable "do_pmc" to "config_pwr_mode".
+Applied, thanks!
 
-v2 -> v3:
-Use assignment instead memcpy() in function ufshcd_scale_gear().
----
- drivers/ufs/core/ufshcd.c | 51 +++++++++++++++++++++++++++++++--------
- 1 file changed, 41 insertions(+), 10 deletions(-)
+[1/1] gpio: Use str_enable_disable-like helpers
+      commit: de454ac4fc5a117a4264e8bdf60fca58021574b1
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 8d295cc827cc..ebab897080a6 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -1308,16 +1308,26 @@ static int ufshcd_wait_for_doorbell_clr(struct ufs_hba *hba,
- /**
-  * ufshcd_scale_gear - scale up/down UFS gear
-  * @hba: per adapter instance
-+ * @target_gear: target gear to scale to
-  * @scale_up: True for scaling up gear and false for scaling down
-  *
-  * Return: 0 for success; -EBUSY if scaling can't happen at this time;
-  * non-zero for any other errors.
-  */
--static int ufshcd_scale_gear(struct ufs_hba *hba, bool scale_up)
-+static int ufshcd_scale_gear(struct ufs_hba *hba, u32 target_gear, bool scale_up)
- {
- 	int ret = 0;
- 	struct ufs_pa_layer_attr new_pwr_info;
- 
-+	if (target_gear) {
-+		new_pwr_info = hba->pwr_info;
-+		new_pwr_info.gear_tx = target_gear;
-+		new_pwr_info.gear_rx = target_gear;
-+
-+		goto config_pwr_mode;
-+	}
-+
-+	/* Legacy gear scaling, in case vops_freq_to_gear_speed() is not implemented */
- 	if (scale_up) {
- 		memcpy(&new_pwr_info, &hba->clk_scaling.saved_pwr_info,
- 		       sizeof(struct ufs_pa_layer_attr));
-@@ -1338,6 +1348,7 @@ static int ufshcd_scale_gear(struct ufs_hba *hba, bool scale_up)
- 		}
- 	}
- 
-+config_pwr_mode:
- 	/* check if the power mode needs to be changed or not? */
- 	ret = ufshcd_config_pwr_mode(hba, &new_pwr_info);
- 	if (ret)
-@@ -1408,15 +1419,26 @@ static void ufshcd_clock_scaling_unprepare(struct ufs_hba *hba, int err, bool sc
- static int ufshcd_devfreq_scale(struct ufs_hba *hba, unsigned long freq,
- 				bool scale_up)
- {
-+	u32 old_gear = hba->pwr_info.gear_rx;
-+	int new_gear = 0;
- 	int ret = 0;
- 
-+	new_gear = ufshcd_vops_freq_to_gear_speed(hba, freq);
-+	if (new_gear < 0)
-+		/*
-+		 * return negative value means that the vops_freq_to_gear_speed() is not
-+		 * implemented or didn't find matched gear speed, assign '0' to new_gear
-+		 * to switch to legacy gear scaling sequence in ufshcd_scale_gear().
-+		 */
-+		new_gear = 0;
-+
- 	ret = ufshcd_clock_scaling_prepare(hba, 1 * USEC_PER_SEC);
- 	if (ret)
- 		return ret;
- 
- 	/* scale down the gear before scaling down clocks */
- 	if (!scale_up) {
--		ret = ufshcd_scale_gear(hba, false);
-+		ret = ufshcd_scale_gear(hba, (u32)new_gear, false);
- 		if (ret)
- 			goto out_unprepare;
- 	}
-@@ -1424,13 +1446,13 @@ static int ufshcd_devfreq_scale(struct ufs_hba *hba, unsigned long freq,
- 	ret = ufshcd_scale_clks(hba, freq, scale_up);
- 	if (ret) {
- 		if (!scale_up)
--			ufshcd_scale_gear(hba, true);
-+			ufshcd_scale_gear(hba, old_gear, true);
- 		goto out_unprepare;
- 	}
- 
- 	/* scale up the gear after scaling up clocks */
- 	if (scale_up) {
--		ret = ufshcd_scale_gear(hba, true);
-+		ret = ufshcd_scale_gear(hba, (u32)new_gear, true);
- 		if (ret) {
- 			ufshcd_scale_clks(hba, hba->devfreq->previous_freq,
- 					  false);
-@@ -1723,6 +1745,8 @@ static ssize_t ufshcd_clkscale_enable_store(struct device *dev,
- 		struct device_attribute *attr, const char *buf, size_t count)
- {
- 	struct ufs_hba *hba = dev_get_drvdata(dev);
-+	struct ufs_clk_info *clki;
-+	unsigned long freq;
- 	u32 value;
- 	int err = 0;
- 
-@@ -1746,14 +1770,21 @@ static ssize_t ufshcd_clkscale_enable_store(struct device *dev,
- 
- 	if (value) {
- 		ufshcd_resume_clkscaling(hba);
--	} else {
--		ufshcd_suspend_clkscaling(hba);
--		err = ufshcd_devfreq_scale(hba, ULONG_MAX, true);
--		if (err)
--			dev_err(hba->dev, "%s: failed to scale clocks up %d\n",
--					__func__, err);
-+		goto out_rel;
- 	}
- 
-+	clki = list_first_entry(&hba->clk_list_head, struct ufs_clk_info, list);
-+	freq = clki->max_freq;
-+
-+	ufshcd_suspend_clkscaling(hba);
-+	err = ufshcd_devfreq_scale(hba, freq, true);
-+	if (err)
-+		dev_err(hba->dev, "%s: failed to scale clocks up %d\n",
-+				__func__, err);
-+	else
-+		hba->clk_scaling.target_freq = freq;
-+
-+out_rel:
- 	ufshcd_release(hba);
- 	ufshcd_rpm_put_sync(hba);
- out:
+Best regards,
 -- 
-2.34.1
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
