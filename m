@@ -1,30 +1,32 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8C91C1AAA
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 18:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789B11D54E2
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 18:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738607504; cv=none; b=GXt2q7LRD+dF3XQ9QTarO+ot42GZB5VZ2ugiEiH8wKa7cqU5MDWz5n//xpDHzPo127iGRJdnHQEteeA01H+8By2RG1J55iERxbg7mUO621eIu5kCEqaGSChxQpVOzBqLduG4TQtAJImVINgUaMGC87np7fSoY5patuZ/BG55Zyc=
+	t=1738607506; cv=none; b=FCg+e1RPlbJ5b5Wlth0nx6ev5ahlIN2Omn5irrqI3jsSyq/I//DDPG9qW3FbxIl2Fa49SwPdxSku5U40K/Hhpg4Tnb/EOZBl6XTOJIyMgCtXuQlBwE4UFvFisbAasFCd8Z5goTQvuqw+RwHU+1Ew6BidZOFUXlQ/3mnYoLngbjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738607504; c=relaxed/simple;
-	bh=daQJ6ETea9n+180bdivfIYERdbzsdAAUTyKsDfzUO7M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bsOpAp6R3FXd1AUjpOVT7mU4OFm/AhsQFY4Skls0aBRza5S4HWkokGzdM5CQ7sqTBWWWnc/ejnrQCsv0D84YAPy3/T8apkn6UWSg+9qtWnvWKl38fcGY82WOxbY2nX80VHzBTTadZV4CKR4biXOlRTPnY+Jq4pHFvMQ/NAv/VoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cpiXL2f4; arc=none smtp.client-ip=91.218.175.175
+	s=arc-20240116; t=1738607506; c=relaxed/simple;
+	bh=hGXtgTxlVOSEkZPZl6Q3pgWkOgOaE72a0yYctig5aeE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fl8ETc0PcFwyd5B+WOwusdQWxc7HH/Ez9gK+kIQk9Yw22jhhRXUHJwxKD/Pp0ooo0VsQU8SaEzRa+cKpj1+gcDP0YP8iplZJg395PczioUDy5aS1RgGQsWH/641ZrdNFgIMDCdjxquqgm/DQ0vHi9XmmxnCzsJTDTVKNWpExikY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OXs9h+Cx; arc=none smtp.client-ip=91.218.175.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cpiXL2f4"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OXs9h+Cx"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738607485;
+	t=1738607501;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Lr+rZhocEfUS/HlkswYK6NQV1238xdUU8Vazl6Hbx30=;
-	b=cpiXL2f4KtwMVnA7stRER6DK6i3BBVQAyKwD1vt5GTdAE5/900luZqfrht1i0+ullMnY28
-	VsENVFpmpbnqfNIN3fWbQlJ0zi3eoWC+8CNDF0H/+K3D5rTUzgjNW8QHqy1qMYLyq4x6b1
-	Glr9zwxLZbuko6CCzc1KheZk0Ud/KvU=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HVdhPRPhu/oRpEuf2KXzS/cqoEesNVF//Q5fOtfKKRU=;
+	b=OXs9h+CxohMA1hGtuk0TWjCwiDvzQLQdQEdksVxrQurPDD1Nh2a+w5HYxt/FzTeauxNXew
+	049151b7alpgPMOmOIahGzTBdn7wkkvaUyqAtndsG44k+IzawmzGO9Mlh7mZ2RjYMOON1c
+	MgcMZLlG4qI0shD4d4SpQdcd5eVEuNo=
 From: Oliver Upton <oliver.upton@linux.dev>
 To: kvmarm@lists.linux.dev
 Cc: Marc Zyngier <maz@kernel.org>,
@@ -39,10 +41,13 @@ Cc: Marc Zyngier <maz@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: [PATCH v2 00/14] KVM: arm64: Support FEAT_PMUv3 on Apple hardware
-Date: Mon,  3 Feb 2025 10:30:57 -0800
-Message-Id: <20250203183111.191519-1-oliver.upton@linux.dev>
+	Oliver Upton <oliver.upton@linux.dev>,
+	Janne Grunau <j@jannau.net>
+Subject: [PATCH v2 02/14] drivers/perf: apple_m1: Support host/guest event filtering
+Date: Mon,  3 Feb 2025 10:30:59 -0800
+Message-Id: <20250203183111.191519-3-oliver.upton@linux.dev>
+In-Reply-To: <20250203183111.191519-1-oliver.upton@linux.dev>
+References: <20250203183111.191519-1-oliver.upton@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,56 +57,92 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This series adds support for PMUv3 emulation on Apple hardware. See the
-v1 cover letter for a more detailed explanation.
+The PMU appears to have a separate register for filtering 'guest'
+exception levels (i.e. EL1 and !ELIsInHost(EL0)) which has the same
+layout as PMCR1_EL1. Conveniently, there exists a VHE register alias
+(PMCR1_EL12) that can be used to configure it.
 
-Tested on an M2 Pro Mac Mini w/ Debian + Windows guests. Also tested
-using kvm-unit-tests, with a small test fix [*].
+Support guest events by programming the EL12 register with the intended
+guest kernel/userspace filters. Limit support for guest events to VHE
+(i.e. kernel running at EL2), as it avoids involving KVM to context
+switch PMU registers. VHE is the only supported mode on M* parts anyway,
+so this isn't an actual feature limitation.
 
-[*]: https://lore.kernel.org/kvmarm/20250203181026.159721-1-oliver.upton@linux.dev/
+Tested-by: Janne Grunau <j@jannau.net>
+Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+---
+ drivers/perf/apple_m1_cpu_pmu.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-v1: https://lore.kernel.org/kvmarm/20241217212048.3709204-1-oliver.upton@linux.dev/
-
-v1 -> v2:
- - Rebase to 6.14-rc1
- - Fix CONFIG_GUEST_PERF_EVENTS=n compilation error
- - Enroll M1 parts for PMUv3 emulation (Janne)
- - Collect Janne's Tested-by
-
-Oliver Upton (14):
-  drivers/perf: apple_m1: Refactor event select/filter configuration
-  drivers/perf: apple_m1: Support host/guest event filtering
-  drivers/perf: apple_m1: Provide helper for mapping PMUv3 events
-  KVM: arm64: Compute PMCEID from arm_pmu's event bitmaps
-  KVM: arm64: Always support SW_INCR PMU event
-  KVM: arm64: Remap PMUv3 events onto hardware
-  KVM: arm64: Use a cpucap to determine if system supports FEAT_PMUv3
-  KVM: arm64: Drop kvm_arm_pmu_available static key
-  KVM: arm64: Use guard() to cleanup usage of arm_pmus_lock
-  KVM: arm64: Move PMUVer filtering into KVM code
-  KVM: arm64: Compute synthetic sysreg ESR for Apple PMUv3 traps
-  KVM: arm64: Advertise PMUv3 if IMPDEF traps are present
-  KVM: arm64: Provide 1 event counter on IMPDEF hardware
-  arm64: Enable IMP DEF PMUv3 traps on Apple M*
-
- arch/arm64/include/asm/apple_m1_pmu.h   |   1 +
- arch/arm64/include/asm/cpufeature.h     |  28 +-----
- arch/arm64/kernel/cpu_errata.c          |  44 ++++++++
- arch/arm64/kernel/cpufeature.c          |  19 ++++
- arch/arm64/kernel/image-vars.h          |   5 -
- arch/arm64/kvm/arm.c                    |   4 +-
- arch/arm64/kvm/hyp/include/hyp/switch.h |   4 +-
- arch/arm64/kvm/hyp/vhe/switch.c         |  22 ++++
- arch/arm64/kvm/pmu-emul.c               | 127 +++++++++++++++++-------
- arch/arm64/kvm/pmu.c                    |  10 +-
- arch/arm64/tools/cpucaps                |   2 +
- drivers/perf/apple_m1_cpu_pmu.c         | 101 +++++++++++++++----
- include/kvm/arm_pmu.h                   |  12 +--
- include/linux/perf/arm_pmu.h            |   1 +
- 14 files changed, 276 insertions(+), 104 deletions(-)
-
-
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
+index cea80afd1253..d6d4ff6da862 100644
+--- a/drivers/perf/apple_m1_cpu_pmu.c
++++ b/drivers/perf/apple_m1_cpu_pmu.c
+@@ -120,6 +120,8 @@ enum m1_pmu_events {
+ 	 */
+ 	M1_PMU_CFG_COUNT_USER					= BIT(8),
+ 	M1_PMU_CFG_COUNT_KERNEL					= BIT(9),
++	M1_PMU_CFG_COUNT_HOST					= BIT(10),
++	M1_PMU_CFG_COUNT_GUEST					= BIT(11),
+ };
+ 
+ /*
+@@ -328,7 +330,7 @@ static void m1_pmu_disable_counter_interrupt(unsigned int index)
+ }
+ 
+ static void __m1_pmu_configure_event_filter(unsigned int index, bool user,
+-					    bool kernel)
++					    bool kernel, bool host)
+ {
+ 	u64 clear, set, user_bit, kernel_bit;
+ 
+@@ -356,7 +358,10 @@ static void __m1_pmu_configure_event_filter(unsigned int index, bool user,
+ 	else
+ 		clear |= kernel_bit;
+ 
+-	sysreg_clear_set_s(SYS_IMP_APL_PMCR1_EL1, clear, set);
++	if (host)
++		sysreg_clear_set_s(SYS_IMP_APL_PMCR1_EL1, clear, set);
++	else if (is_kernel_in_hyp_mode())
++		sysreg_clear_set_s(SYS_IMP_APL_PMCR1_EL12, clear, set);
+ }
+ 
+ static void __m1_pmu_configure_eventsel(unsigned int index, u8 event)
+@@ -391,10 +396,13 @@ static void __m1_pmu_configure_eventsel(unsigned int index, u8 event)
+ static void m1_pmu_configure_counter(unsigned int index, unsigned long config_base)
+ {
+ 	bool kernel = config_base & M1_PMU_CFG_COUNT_KERNEL;
++	bool guest = config_base & M1_PMU_CFG_COUNT_GUEST;
++	bool host = config_base & M1_PMU_CFG_COUNT_HOST;
+ 	bool user = config_base & M1_PMU_CFG_COUNT_USER;
+ 	u8 evt = config_base & M1_PMU_CFG_EVENT;
+ 
+-	__m1_pmu_configure_event_filter(index, user, kernel);
++	__m1_pmu_configure_event_filter(index, user && host, kernel && host, true);
++	__m1_pmu_configure_event_filter(index, user && guest, kernel && guest, false);
+ 	__m1_pmu_configure_eventsel(index, evt);
+ }
+ 
+@@ -570,7 +578,7 @@ static int m1_pmu_set_event_filter(struct hw_perf_event *event,
+ {
+ 	unsigned long config_base = 0;
+ 
+-	if (!attr->exclude_guest) {
++	if (!attr->exclude_guest && !is_kernel_in_hyp_mode()) {
+ 		pr_debug("ARM performance counters do not support mode exclusion\n");
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -578,6 +586,10 @@ static int m1_pmu_set_event_filter(struct hw_perf_event *event,
+ 		config_base |= M1_PMU_CFG_COUNT_KERNEL;
+ 	if (!attr->exclude_user)
+ 		config_base |= M1_PMU_CFG_COUNT_USER;
++	if (!attr->exclude_host)
++		config_base |= M1_PMU_CFG_COUNT_HOST;
++	if (!attr->exclude_guest)
++		config_base |= M1_PMU_CFG_COUNT_GUEST;
+ 
+ 	event->config_base = config_base;
+ 
 -- 
 2.39.5
 
