@@ -1,59 +1,59 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D92211486
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 23:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBAB2010EF
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 23:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738623771; cv=none; b=Rc05w9u6v0FoGxMH4eGlsEk9aJ971c4SLTyNWTkWu1gReGB0eee7oyR3VAU28HCRhVzp9GXsX0GAKSqojdKFC8jGH/ODye7c3ffa1IqzHe0ekPyuW4F1yd3FVJm+/eOz+vXCFsRejJ8Z0Fn0eI8dve8IsRxymeg6Jn+6iKwxizE=
+	t=1738623793; cv=none; b=oyMEDzzNsnWmhRt8P6fJ3oAVWehGQ+F7POSWUgiCRmfqJXsErumtsiwiVSEqjF+D4JzZ7jWzPIVlNoVz0XGAviQhTTsIuBxjTlaugZARXsiEGDvfgONGiroAlmX7YEhg3j5zklTji/MEp8cx2LOLqn3IRHbtMxyqPciXKGcTpuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738623771; c=relaxed/simple;
-	bh=fzEUihxFzq98+/X27hF2eZDUwrOfj6deTYzvIWr9X8A=;
+	s=arc-20240116; t=1738623793; c=relaxed/simple;
+	bh=l+LwUfFmNF/g3P6HkqiDUNdJSiAS6CPvCZ0EgzQ3DQ8=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=rqi+qHQoYjEiIU5FkEZSE3OjJgELPmYaNyjgUajA9p0Nu7q5isyFw0Otu9t13y9a1oX9ocdsKCfB97f7TJbrxy/1tBBebRjeWY1QrSfzuCTeSx3rJcovl9zVrtfudnxtbsm7lXYtzqliLWew4Q/D9B/h5EKcHzTEYRLsYdDXQhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FpYOvllP; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=U0tnX3zA9H1Dm3/5RwCCQlw47ugpxJUdHq7Y6Ft+GFwcIrNV25Q8RtkU7LsuEXeo7NSZBFUzIZEsno3Q9f4sWvC7Zozpcu10L29bcLtnJb1XzR0tmJTo6kQl5RopPnYqaAq/a3oDXYWQLR9rczaLe69fOt3C6iZDvrULvc32E/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V+7Pux+J; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FpYOvllP"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f465f0f314so42674247b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 15:02:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V+7Pux+J"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e54d9b54500so7643953276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 15:02:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738623756; x=1739228556; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738623771; x=1739228571; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OwAJArMN77syxtgb9vbc8pdiz346fZhVEtpV4yQEKvA=;
-        b=FpYOvllPRhda2lrdGxY6Q9TnsB5+sQL0/NBFkLXDFohOm2lKyLtdqC9/0Bjf2+czwA
-         fFfpoqopHnVJM9fXBav/mQDE12oFF1TFnkjiNCa3U8vBsD+dDfLOZJ9OibBryxQr4nZy
-         rehMK88+RmYXvOHW/E/fnpzRFaaLY3Di9WhYMGBhcbXP2zm4f3kfhea4NteSErylaVZD
-         5dEQHNPxtZg8pqYmpE92CgC7lsMmS0z01lR1TKpWJsfHjzPfSsR8dlH7vjZABWiGRLEi
-         +Aik7rVyAUHEp0Xr6fpCX6aZFm8/IXXNChoA10NkIAjVowYOa9eQHRLm68B4YPXr5J7W
-         y2lA==
+        bh=npcLGbMEvZDvB10TkZ/V9Zgkm8F4Mw6G0ii/0Fa/r6M=;
+        b=V+7Pux+JOxwhAz0M+efs0NzOC39uFUgCP7YMLLYODldWEdhXm1mCMzIBIEUcKNZ4ZA
+         1QpGlZR4ePxe2kHZLMo080Eq+d1eO1+8e/lPu4hcCcnXyXLGzqrcfCQxSEWkN13vR6Sh
+         vNbTlbiaKYbLsfNRuUw2snvuYGyr6diYPOm31zC1+uQ8pcRzsos8kUNGKL9tKx0/3NA3
+         UL1fg4sQuaUWSWh8JoGQxuU21gbwO2SyFLpLD31RxVqQsPG48E03HsXy2cJd8fRrBjvj
+         zyM6bMvMpnRCdDYUPBrVocjh5DJQp5ThHHtfzEytw2CbxDFwkFoPfcElKlb3CIQP8u4o
+         6WcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738623756; x=1739228556;
+        d=1e100.net; s=20230601; t=1738623771; x=1739228571;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=OwAJArMN77syxtgb9vbc8pdiz346fZhVEtpV4yQEKvA=;
-        b=NSxWmJSvcWa3MkfJR557Ol+fL6HFzNnpyZrKkwRFerPN8Usoi75w+S7DAHAOoRyrw9
-         ks6Hg7OjR9fDIX1/JxpFKbaBKYvIlElFfcRqqF2oAkEyKRo2cdzodOiFzjd1N5G/tloJ
-         IN+pDspJthyKO8ufL3gqkVJTtaqnULp8XeZq/BlDiO9uELWVhVZUuPkDKLXeH3a839jk
-         nmM/KrqgVGaTV4L3BKEMglYEk8SC8uPtLql6KuwKZ+/l7uZ9GE1Xk+rk2cKa1ypYCWaF
-         mx3CgxhmccpIlm/Rxy7LiovEx9bmY2vHy4OKmFaAapS2LQfUnhZVLHfuBPlTPmRzl8oG
-         qTmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVizn6IS+J3iYa1jSW8yCuZ6u2FcDIA7xVKdlCNYqmAHtd8OMvh/RIwMqNLHvYctYiORdxBTtERWuSXrQI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyrf6eh8qYu+xReQoRxLkTgsHE7UmF8K3nHy5uYHO+TG3J4iT+H
-	oV+O8VUNFSlZXuh9O+i2oSvpa3Lh59/tgRmgKkK4i3VCw3BdEB5EEg9thHDXT/3Gs5yu31eoSgE
-	ZHQli/g==
-X-Google-Smtp-Source: AGHT+IFnxiQOiQX4fsLbBmZZtuPzSeiM/1DKo7+iY3E53Le/Q/vDAy4W9qHyG7BhaxioZmyapniixcZcqyQR
+        bh=npcLGbMEvZDvB10TkZ/V9Zgkm8F4Mw6G0ii/0Fa/r6M=;
+        b=URlTLZanwwElZV86mMiakavvBW8XVFXj4FTCpRsl/LPXpVlPiCNgbbA6WczHbwDAr2
+         FcI1k8vVmIHhXSAMZS569cPmk2MCPCB95CqOmG9ZDWLrRwkiMIT3+5/Nb9ZnXLr1Hh3b
+         PGjBUN2X3UVK+uU8c880+XOJuQy/j/rW7nYwjJX1HhfHkVhxWVJ+I3OKOa1+jJdSfXuK
+         BZAEubkU3CBXyZBGPspQO03CSClkN8/yiDBua03mvWygeLoWdPBV/dMAMH5wHMic8nPz
+         gNIJJ4/lZ1h1F4q4+01iI2rcAEPgoSC2xVmMWLbIijhf2PrvVQ24ELzTTeynYNEAawRM
+         D+vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWyiIwTt3N9b9H83nqJFW6+x5M17f8h3CsNh68ehIdTaXfMKr2lKI2TCxP+9nwCC9CZDyMJXh46+OiKaT8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySUccJjPVzoBwd/fiiPocI9BCn6hoF0uU1BBuJIguov37yMh6T
+	HpvZqn0OjITlu9Zi6vGXoC1UqqutbWI9s+Ix3mYrLyncly4V2UN+zMXKiJmut/Gb0+tjV9oXaCY
+	BxZYSGA==
+X-Google-Smtp-Source: AGHT+IGD0BPwTsOmN1khBaYyTmV6m+nAMyZzs32Br3dgc3KDBp9t6gGU9tzt4RmO//K2SPdrJ6z4UgblWQjw
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:b2d:fb9c:cc86:c014])
- (user=irogers job=sendgmr) by 2002:a81:d108:0:b0:6ef:6561:ed74 with SMTP id
- 00721157ae682-6f7a843f18cmr509737b3.7.1738623755573; Mon, 03 Feb 2025
- 15:02:35 -0800 (PST)
-Date: Mon,  3 Feb 2025 15:01:32 -0800
+ (user=irogers job=sendgmr) by 2002:a25:d350:0:b0:e58:fa3f:c8af with SMTP id
+ 3f1490d57ef6-e58fa3fc947mr42869276.2.1738623771606; Mon, 03 Feb 2025 15:02:51
+ -0800 (PST)
+Date: Mon,  3 Feb 2025 15:01:39 -0800
 In-Reply-To: <20250203230150.106823-1-irogers@google.com>
-Message-Id: <20250203230150.106823-7-irogers@google.com>
+Message-Id: <20250203230150.106823-14-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250203230150.106823-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Subject: [PATCH v3 06/23] perf vendor events: Update BroadwellX events/metrics
+Subject: [PATCH v3 13/23] perf vendor events: Update HaswellX events/metrics
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -79,12 +79,12 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update events from v22 to v23.
+Update events from v28 to v29.
 Update TMA metrics from 4.8 to 5.01.
 
-Bring in the event updates v23:
-https://github.com/intel/perfmon/commit/679982113f4bfa16cee19d5408a7f8e309e=
-3ac23
+Bring in the event updates v29:
+https://github.com/intel/perfmon/commit/71dbf03aba964f79fb096c9ded385c8a486=
+a99b3
 
 The TMA 5.01 update is from (with subsequent fixes):
 https://github.com/intel/perfmon/commit/1d72913b2d938781fb28f3cc3507aaec5c2=
@@ -95,23 +95,18 @@ Signed-off-by: Caleb Biggers <caleb.biggers@intel.com>
 Acked-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/broadwellx/bdx-metrics.json      | 344 ++++++++++--------
- .../pmu-events/arch/x86/broadwellx/cache.json |  10 +-
- .../arch/x86/broadwellx/frontend.json         |   4 +-
- .../arch/x86/broadwellx/memory.json           |   6 +-
- .../arch/x86/broadwellx/metricgroups.json     |   5 +
- .../arch/x86/broadwellx/pipeline.json         |  10 +-
- .../arch/x86/broadwellx/uncore-cache.json     |  28 +-
- .../x86/broadwellx/uncore-interconnect.json   |  36 +-
- .../arch/x86/broadwellx/uncore-memory.json    |   1 +
+ .../arch/x86/haswellx/hsx-metrics.json        | 296 ++++++++++--------
+ .../arch/x86/haswellx/metricgroups.json       |   5 +
+ .../arch/x86/haswellx/uncore-cache.json       |  28 +-
+ .../x86/haswellx/uncore-interconnect.json     |  38 +--
  tools/perf/pmu-events/arch/x86/mapfile.csv    |   2 +-
- 10 files changed, 230 insertions(+), 216 deletions(-)
+ 5 files changed, 191 insertions(+), 178 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b/t=
-ools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-index 0577d7460082..8016202bad1f 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
+diff --git a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json b/too=
+ls/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
+index 8f2ba3391e35..1a05b74be575 100644
+--- a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
 @@ -55,7 +55,7 @@
          "MetricName": "UNCORE_FREQ"
      },
@@ -172,9 +167,8 @@ e@ * 64 / 1e6 / duration_time",
 end device controllers that are writing memory to the CPU.",
 +        "BriefDescription": "Bandwidth of IO writes that are initiated by =
 end device controllers that are writing memory to the CPU",
-         "MetricExpr": "(cbox@UNC_C_TOR_INSERTS.OPCODE\\,filter_opc\\=3D0x1=
-c8\\,filter_tid\\=3D0x3e@ + cbox@UNC_C_TOR_INSERTS.OPCODE\\,filter_opc\\=3D=
-0x180\\,filter_tid\\=3D0x3e@) * 64 / 1e6 / duration_time",
+         "MetricExpr": "cbox@UNC_C_TOR_INSERTS.OPCODE\\,filter_opc\\=3D0x1c=
+8\\,filter_tid\\=3D0x3e@ * 64 / 1e6 / duration_time",
          "MetricName": "io_bandwidth_write",
          "ScaleUnit": "1MB/s"
 @@ -102,14 +102,14 @@
@@ -373,8 +367,7 @@ eculative path. Sample with: BR_MISP_RETIRED.ALL_BRANCHES. Related metrics:=
  CPU has wasted due to Branch Misprediction.  These slots are either wasted=
  by uops fetched from an incorrectly speculated program path; or stalls whe=
 n the out-of-order part of the machine needs to recover its state from a sp=
-eculative path. Sample with: BR_MISP_RETIRED.ALL_BRANCHES. Related metrics:=
- tma_mispredicts_resteers",
+eculative path. Sample with: BR_MISP_RETIRED.ALL_BRANCHES",
          "ScaleUnit": "100%"
      },
      {
@@ -405,7 +398,7 @@ NCHES. Related metrics: tma_l3_hit_latency, tma_store_latency",
          "ScaleUnit": "100%"
      },
      {
-@@ -345,8 +345,8 @@
+@@ -345,18 +345,18 @@
          "MetricExpr": "max(0, tma_microcode_sequencer - tma_assists)",
          "MetricGroup": "TopdownL4;tma_L4_group;tma_microcode_sequencer_gro=
 up",
@@ -429,23 +422,6 @@ ot imply sub-optimal use of machine resources",
          "ScaleUnit": "100%"
      },
      {
-@@ -354,7 +354,7 @@
-         "MetricExpr": "MACHINE_CLEARS.COUNT * tma_branch_resteers / (BR_MI=
-SP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT + BACLEARS.ANY)",
-         "MetricGroup": "BadSpec;MachineClears;TopdownL4;tma_L4_group;tma_b=
-ranch_resteers_group;tma_issueMC",
-         "MetricName": "tma_clears_resteers",
--        "MetricThreshold": "tma_clears_resteers > 0.05 & (tma_branch_reste=
-ers > 0.05 & (tma_fetch_latency > 0.1 & tma_frontend_bound > 0.15))",
-+        "MetricThreshold": "tma_clears_resteers > 0.05 & tma_branch_restee=
-rs > 0.05 & tma_fetch_latency > 0.1 & tma_frontend_bound > 0.15",
-         "PublicDescription": "This metric represents fraction of cycles th=
-e CPU was stalled due to Branch Resteers as a result of Machine Clears. Rel=
-ated metrics: tma_l1_bound, tma_machine_clears, tma_microcode_sequencer, tm=
-a_ms_switches",
-         "ScaleUnit": "100%"
-     },
-@@ -362,10 +362,10 @@
          "BriefDescription": "This metric estimates fraction of cycles whil=
 e the memory subsystem was handling synchronizations due to contested acces=
 ses",
@@ -493,7 +469,7 @@ S. Related metrics: tma_data_sharing, tma_false_sharing, tma_machine_clears=
          "ScaleUnit": "100%"
      },
      {
-@@ -376,7 +376,7 @@
+@@ -367,7 +367,7 @@
          "MetricName": "tma_core_bound",
          "MetricThreshold": "tma_core_bound > 0.1 & tma_backend_bound > 0.2=
 ",
@@ -515,7 +491,7 @@ hained long-latency arithmetic operations)",
          "ScaleUnit": "100%"
      },
      {
-@@ -385,8 +385,8 @@
+@@ -376,8 +376,8 @@
          "MetricExpr": "43 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT * (1 + =
 MEM_LOAD_UOPS_RETIRED.HIT_LFB / (MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_LOAD_UO=
 PS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_UOPS_L=
@@ -547,31 +523,25 @@ ma_false_sharing, tma_machine_clears, tma_remote_cache",
          "ScaleUnit": "100%"
      },
      {
-@@ -394,8 +394,8 @@
-         "MetricExpr": "ARITH.FPU_DIV_ACTIVE / tma_info_core_core_clks",
+@@ -385,7 +385,7 @@
+         "MetricExpr": "10 * ARITH.DIVIDER_UOPS / tma_info_core_core_clks",
          "MetricGroup": "BvCB;TopdownL3;tma_L3_group;tma_core_bound_group",
          "MetricName": "tma_divider",
 -        "MetricThreshold": "tma_divider > 0.2 & (tma_core_bound > 0.1 & tm=
 a_backend_bound > 0.2)",
--        "PublicDescription": "This metric represents fraction of cycles wh=
++        "MetricThreshold": "tma_divider > 0.2 & tma_core_bound > 0.1 & tma=
+_backend_bound > 0.2",
+         "PublicDescription": "This metric represents fraction of cycles wh=
 ere the Divider unit was active. Divide and square root instructions are pe=
 rformed by the Divider unit and can take considerably longer latency than i=
 nteger or Floating Point addition; subtraction; or multiplication. Sample w=
 ith: ARITH.DIVIDER_UOPS",
-+        "MetricThreshold": "tma_divider > 0.2 & tma_core_bound > 0.1 & tma=
-_backend_bound > 0.2",
-+        "PublicDescription": "This metric represents fraction of cycles wh=
-ere the Divider unit was active. Divide and square root instructions are pe=
-rformed by the Divider unit and can take considerably longer latency than i=
-nteger or Floating Point addition; subtraction; or multiplication. Sample w=
-ith: ARITH.FPU_DIV_ACTIVE",
          "ScaleUnit": "100%"
      },
-     {
-@@ -404,8 +404,8 @@
+@@ -395,8 +395,8 @@
          "MetricExpr": "(1 - MEM_LOAD_UOPS_RETIRED.L3_HIT / (MEM_LOAD_UOPS_=
 RETIRED.L3_HIT + 7 * MEM_LOAD_UOPS_RETIRED.L3_MISS)) * CYCLE_ACTIVITY.STALL=
-S_L2_MISS / tma_info_thread_clks",
+S_L2_PENDING / tma_info_thread_clks",
          "MetricGroup": "MemoryBound;TmaL3mem;TopdownL3;tma_L3_group;tma_me=
 mory_bound_group",
          "MetricName": "tma_dram_bound",
@@ -590,7 +560,7 @@ TIRED.L3_MISS",
          "ScaleUnit": "100%"
      },
      {
-@@ -414,7 +414,7 @@
+@@ -405,7 +405,7 @@
          "MetricGroup": "DSB;FetchBW;TopdownL3;tma_L3_group;tma_fetch_bandw=
 idth_group",
          "MetricName": "tma_dsb",
@@ -606,7 +576,7 @@ bank conflict when reading from it; are categorized here",
          "ScaleUnit": "100%"
      },
      {
-@@ -422,45 +422,45 @@
+@@ -413,7 +413,7 @@
          "MetricExpr": "DSB2MITE_SWITCHES.PENALTY_CYCLES / tma_info_thread_=
 clks",
          "MetricGroup": "DSBmiss;FetchLat;TopdownL3;tma_L3_group;tma_fetch_=
@@ -626,15 +596,9 @@ de pipeline). Switching between the two pipelines can cause penalties hence=
 idth, tma_info_frontend_dsb_coverage, tma_info_inst_mix_iptb, tma_lcp",
          "ScaleUnit": "100%"
      },
-     {
-         "BriefDescription": "This metric roughly estimates the fraction of=
- cycles where the Data TLB (DTLB) was missed by load accesses",
--        "MetricExpr": "(8 * DTLB_LOAD_MISSES.STLB_HIT + cpu@DTLB_LOAD_MISS=
-ES.WALK_DURATION\\,cmask\\=3D1@ + 7 * DTLB_LOAD_MISSES.WALK_COMPLETED) / tm=
-a_info_thread_clks",
-+        "MetricExpr": "(8 * DTLB_LOAD_MISSES.STLB_HIT + cpu@DTLB_LOAD_MISS=
-ES.WALK_DURATION\\,cmask\\=3D0x1@ + 7 * DTLB_LOAD_MISSES.WALK_COMPLETED) / =
-tma_info_thread_clks",
+@@ -422,8 +422,8 @@
+         "MetricExpr": "(8 * DTLB_LOAD_MISSES.STLB_HIT + DTLB_LOAD_MISSES.W=
+ALK_DURATION) / tma_info_thread_clks",
          "MetricGroup": "BvMT;MemoryTLB;TopdownL4;tma_L4_group;tma_issueTLB=
 ;tma_l1_bound_group",
          "MetricName": "tma_dtlb_load",
@@ -665,14 +629,9 @@ dtlb_store",
          "ScaleUnit": "100%"
      },
      {
-         "BriefDescription": "This metric roughly estimates the fraction of=
- cycles spent handling first-level data TLB store misses",
--        "MetricExpr": "(8 * DTLB_STORE_MISSES.STLB_HIT + cpu@DTLB_STORE_MI=
-SSES.WALK_DURATION\\,cmask\\=3D1@ + 7 * DTLB_STORE_MISSES.WALK_COMPLETED) /=
- tma_info_thread_clks",
-+        "MetricExpr": "(8 * DTLB_STORE_MISSES.STLB_HIT + cpu@DTLB_STORE_MI=
-SSES.WALK_DURATION\\,cmask\\=3D0x1@ + 7 * DTLB_STORE_MISSES.WALK_COMPLETED)=
- / tma_info_thread_clks",
+@@ -431,27 +431,27 @@
+         "MetricExpr": "(8 * DTLB_STORE_MISSES.STLB_HIT + DTLB_STORE_MISSES=
+.WALK_DURATION) / tma_info_thread_clks",
          "MetricGroup": "BvMT;MemoryTLB;TopdownL4;tma_L4_group;tma_issueTLB=
 ;tma_store_bound_group",
          "MetricName": "tma_dtlb_store",
@@ -734,11 +693,11 @@ often L1D Fill Buffer unavailability limited additional L1D miss memory acc=
 ess requests to proceed",
          "MetricConstraint": "NO_GROUP_EVENTS",
 -        "MetricExpr": "tma_info_memory_load_miss_real_latency * cpu@L1D_PE=
-ND_MISS.FB_FULL\\,cmask\\=3D1@ / tma_info_thread_clks",
+ND_MISS.REQUEST_FB_FULL\\,cmask\\=3D1@ / tma_info_thread_clks",
 -        "MetricGroup": "BvMS;MemoryBW;TopdownL4;tma_L4_group;tma_issueBW;t=
 ma_issueSL;tma_issueSmSt;tma_l1_bound_group",
 +        "MetricExpr": "tma_info_memory_load_miss_real_latency * cpu@L1D_PE=
-ND_MISS.FB_FULL\\,cmask\\=3D0x1@ / tma_info_thread_clks",
+ND_MISS.REQUEST_FB_FULL\\,cmask\\=3D0x1@ / tma_info_thread_clks",
 +        "MetricGroup": "BvMB;MemoryBW;TopdownL4;tma_L4_group;tma_issueBW;t=
 ma_issueSL;tma_issueSmSt;tma_l1_bound_group",
          "MetricName": "tma_fb_full",
@@ -760,116 +719,7 @@ ndwidth, tma_sq_full, tma_store_latency",
          "ScaleUnit": "100%"
      },
      {
-@@ -489,7 +489,7 @@
-         "MetricGroup": "HPC;TopdownL3;tma_L3_group;tma_light_operations_gr=
-oup",
-         "MetricName": "tma_fp_arith",
-         "MetricThreshold": "tma_fp_arith > 0.2 & tma_light_operations > 0.=
-6",
--        "PublicDescription": "This metric represents overall arithmetic fl=
-oating-point (FP) operations fraction the CPU has executed (retired). Note =
-this metric's value may exceed its parent due to use of \"Uops\" CountDomai=
-n and FMA double-counting.",
-+        "PublicDescription": "This metric represents overall arithmetic fl=
-oating-point (FP) operations fraction the CPU has executed (retired). Note =
-this metric's value may exceed its parent due to use of \"Uops\" CountDomai=
-n and FMA double-counting",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -497,8 +497,8 @@
-         "MetricExpr": "FP_ARITH_INST_RETIRED.SCALAR / UOPS_RETIRED.RETIRE_=
-SLOTS",
-         "MetricGroup": "Compute;Flops;TopdownL4;tma_L4_group;tma_fp_arith_=
-group;tma_issue2P",
-         "MetricName": "tma_fp_scalar",
--        "MetricThreshold": "tma_fp_scalar > 0.1 & (tma_fp_arith > 0.2 & tm=
-a_light_operations > 0.6)",
--        "PublicDescription": "This metric approximates arithmetic floating=
--point (FP) scalar uops fraction the CPU has retired. May overcount due to =
-FMA double counting. Related metrics: tma_fp_vector, tma_fp_vector_128b, tm=
-a_fp_vector_256b, tma_fp_vector_512b, tma_port_0, tma_port_1, tma_port_5, t=
-ma_port_6, tma_ports_utilized_2",
-+        "MetricThreshold": "tma_fp_scalar > 0.1 & tma_fp_arith > 0.2 & tma=
-_light_operations > 0.6",
-+        "PublicDescription": "This metric approximates arithmetic floating=
--point (FP) scalar uops fraction the CPU has retired. May overcount due to =
-FMA double counting. Related metrics: tma_fp_vector, tma_fp_vector_128b, tm=
-a_fp_vector_256b, tma_port_0, tma_port_1, tma_port_5, tma_port_6, tma_ports=
-_utilized_2",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -506,8 +506,8 @@
-         "MetricExpr": "FP_ARITH_INST_RETIRED.VECTOR / UOPS_RETIRED.RETIRE_=
-SLOTS",
-         "MetricGroup": "Compute;Flops;TopdownL4;tma_L4_group;tma_fp_arith_=
-group;tma_issue2P",
-         "MetricName": "tma_fp_vector",
--        "MetricThreshold": "tma_fp_vector > 0.1 & (tma_fp_arith > 0.2 & tm=
-a_light_operations > 0.6)",
--        "PublicDescription": "This metric approximates arithmetic floating=
--point (FP) vector uops fraction the CPU has retired aggregated across all =
-vector widths. May overcount due to FMA double counting. Related metrics: t=
-ma_fp_scalar, tma_fp_vector_128b, tma_fp_vector_256b, tma_fp_vector_512b, t=
-ma_port_0, tma_port_1, tma_port_5, tma_port_6, tma_ports_utilized_2",
-+        "MetricThreshold": "tma_fp_vector > 0.1 & tma_fp_arith > 0.2 & tma=
-_light_operations > 0.6",
-+        "PublicDescription": "This metric approximates arithmetic floating=
--point (FP) vector uops fraction the CPU has retired aggregated across all =
-vector widths. May overcount due to FMA double counting. Related metrics: t=
-ma_fp_scalar, tma_fp_vector_128b, tma_fp_vector_256b, tma_port_0, tma_port_=
-1, tma_port_5, tma_port_6, tma_ports_utilized_2",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -515,8 +515,8 @@
-         "MetricExpr": "(FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP_ARIT=
-H_INST_RETIRED.128B_PACKED_SINGLE) / UOPS_RETIRED.RETIRE_SLOTS",
-         "MetricGroup": "Compute;Flops;TopdownL5;tma_L5_group;tma_fp_vector=
-_group;tma_issue2P",
-         "MetricName": "tma_fp_vector_128b",
--        "MetricThreshold": "tma_fp_vector_128b > 0.1 & (tma_fp_vector > 0.=
-1 & (tma_fp_arith > 0.2 & tma_light_operations > 0.6))",
--        "PublicDescription": "This metric approximates arithmetic FP vecto=
-r uops fraction the CPU has retired for 128-bit wide vectors. May overcount=
- due to FMA double counting. Related metrics: tma_fp_scalar, tma_fp_vector,=
- tma_fp_vector_256b, tma_fp_vector_512b, tma_port_0, tma_port_1, tma_port_5=
-, tma_port_6, tma_ports_utilized_2",
-+        "MetricThreshold": "tma_fp_vector_128b > 0.1 & tma_fp_vector > 0.1=
- & tma_fp_arith > 0.2 & tma_light_operations > 0.6",
-+        "PublicDescription": "This metric approximates arithmetic FP vecto=
-r uops fraction the CPU has retired for 128-bit wide vectors. May overcount=
- due to FMA double counting prior to LNL. Related metrics: tma_fp_scalar, t=
-ma_fp_vector, tma_fp_vector_256b, tma_port_0, tma_port_1, tma_port_5, tma_p=
-ort_6, tma_ports_utilized_2",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -524,8 +524,8 @@
-         "MetricExpr": "(FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE + FP_ARIT=
-H_INST_RETIRED.256B_PACKED_SINGLE) / UOPS_RETIRED.RETIRE_SLOTS",
-         "MetricGroup": "Compute;Flops;TopdownL5;tma_L5_group;tma_fp_vector=
-_group;tma_issue2P",
-         "MetricName": "tma_fp_vector_256b",
--        "MetricThreshold": "tma_fp_vector_256b > 0.1 & (tma_fp_vector > 0.=
-1 & (tma_fp_arith > 0.2 & tma_light_operations > 0.6))",
--        "PublicDescription": "This metric approximates arithmetic FP vecto=
-r uops fraction the CPU has retired for 256-bit wide vectors. May overcount=
- due to FMA double counting. Related metrics: tma_fp_scalar, tma_fp_vector,=
- tma_fp_vector_128b, tma_fp_vector_512b, tma_port_0, tma_port_1, tma_port_5=
-, tma_port_6, tma_ports_utilized_2",
-+        "MetricThreshold": "tma_fp_vector_256b > 0.1 & tma_fp_vector > 0.1=
- & tma_fp_arith > 0.2 & tma_light_operations > 0.6",
-+        "PublicDescription": "This metric approximates arithmetic FP vecto=
-r uops fraction the CPU has retired for 256-bit wide vectors. May overcount=
- due to FMA double counting prior to LNL. Related metrics: tma_fp_scalar, t=
-ma_fp_vector, tma_fp_vector_128b, tma_port_0, tma_port_1, tma_port_5, tma_p=
-ort_6, tma_ports_utilized_2",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -535,33 +535,33 @@
+@@ -481,33 +481,33 @@
          "MetricName": "tma_frontend_bound",
          "MetricThreshold": "tma_frontend_bound > 0.15",
          "MetricgroupNoGroup": "TopdownL1",
@@ -952,7 +802,7 @@ RE_SLOTS / UOPS_ISSUED.ANY * BR_MISP_EXEC.INDIRECT)",
      {
          "BriefDescription": "Number of Instructions per non-speculative Br=
 anch Misprediction (JEClear) (lower number means higher occurrence rate)",
-@@ -572,7 +572,7 @@
+@@ -518,7 +518,7 @@
      },
      {
          "BriefDescription": "Core actual clocks when any Logical Processor=
@@ -965,33 +815,23 @@ a_info_thread_clks)",
          "MetricGroup": "SMT",
          "MetricName": "tma_info_core_core_clks"
      },
-@@ -593,11 +593,11 @@
-         "MetricExpr": "(FP_ARITH_INST_RETIRED.SCALAR + FP_ARITH_INST_RETIR=
-ED.VECTOR) / (2 * tma_info_core_core_clks)",
-         "MetricGroup": "Cor;Flops;HPC",
-         "MetricName": "tma_info_core_fp_arith_utilization",
--        "PublicDescription": "Actual per-core usage of the Floating Point =
-non-X87 execution units (regardless of precision or vector-width). Values >=
- 1 are possible due to ([BDW+] Fused-Multiply Add (FMA) counting - common; =
-[ADL+] use all of ADD/MUL/FMA in Scalar or 128/256-bit vectors - less commo=
-n)."
-+        "PublicDescription": "Actual per-core usage of the Floating Point =
-non-X87 execution units (regardless of precision or vector-width). Values >=
- 1 are possible due to ([BDW+] Fused-Multiply Add (FMA) counting - common; =
-[ADL+] use all of ADD/MUL/FMA in Scalar or 128/256-bit vectors - less commo=
-n)"
+@@ -530,7 +530,7 @@
      },
      {
          "BriefDescription": "Instruction-Level-Parallelism (average number=
  of uops executed when there is execution) per thread (logical-processor)",
--        "MetricExpr": "UOPS_EXECUTED.THREAD / cpu@UOPS_EXECUTED.THREAD\\,c=
-mask\\=3D1@",
-+        "MetricExpr": "UOPS_EXECUTED.THREAD / cpu@UOPS_EXECUTED.THREAD\\,c=
-mask\\=3D0x1@",
+-        "MetricExpr": "(UOPS_EXECUTED.CORE / 2 / (cpu@UOPS_EXECUTED.CORE\\=
+,cmask\\=3D1@ / 2 if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D1@) if=
+ #SMT_on else UOPS_EXECUTED.CORE / (cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D1@ /=
+ 2 if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D1@))",
++        "MetricExpr": "(UOPS_EXECUTED.CORE / 2 / (cpu@UOPS_EXECUTED.CORE\\=
+,cmask\\=3D0x1@ / 2 if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x1@=
+) if #SMT_on else UOPS_EXECUTED.CORE / (cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D=
+0x1@ / 2 if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x1@))",
          "MetricGroup": "Backend;Cor;Pipeline;PortsUtil",
          "MetricName": "tma_info_core_ilp"
      },
-@@ -616,7 +616,13 @@
+@@ -549,7 +549,13 @@
          "MetricName": "tma_info_frontend_ipunknown_branch"
      },
      {
@@ -1007,77 +847,7 @@ mask\\=3D0x1@",
 _TAKEN",
          "MetricGroup": "Branches;Fed;PGO",
          "MetricName": "tma_info_inst_mix_bptkbranch"
-@@ -634,7 +640,7 @@
-         "MetricGroup": "Flops;InsType",
-         "MetricName": "tma_info_inst_mix_iparith",
-         "MetricThreshold": "tma_info_inst_mix_iparith < 10",
--        "PublicDescription": "Instructions per FP Arithmetic instruction (=
-lower number means higher occurrence rate). Values < 1 are possible due to =
-intentional FMA double counting. Approximated prior to BDW."
-+        "PublicDescription": "Instructions per FP Arithmetic instruction (=
-lower number means higher occurrence rate). Values < 1 are possible due to =
-intentional FMA double counting. Approximated prior to BDW"
-     },
-     {
-         "BriefDescription": "Instructions per FP Arithmetic AVX/SSE 128-bi=
-t instruction (lower number means higher occurrence rate)",
-@@ -642,7 +648,7 @@
-         "MetricGroup": "Flops;FpVector;InsType",
-         "MetricName": "tma_info_inst_mix_iparith_avx128",
-         "MetricThreshold": "tma_info_inst_mix_iparith_avx128 < 10",
--        "PublicDescription": "Instructions per FP Arithmetic AVX/SSE 128-b=
-it instruction (lower number means higher occurrence rate). Values < 1 are =
-possible due to intentional FMA double counting."
-+        "PublicDescription": "Instructions per FP Arithmetic AVX/SSE 128-b=
-it instruction (lower number means higher occurrence rate). Values < 1 are =
-possible due to intentional FMA double counting"
-     },
-     {
-         "BriefDescription": "Instructions per FP Arithmetic AVX* 256-bit i=
-nstruction (lower number means higher occurrence rate)",
-@@ -650,7 +656,7 @@
-         "MetricGroup": "Flops;FpVector;InsType",
-         "MetricName": "tma_info_inst_mix_iparith_avx256",
-         "MetricThreshold": "tma_info_inst_mix_iparith_avx256 < 10",
--        "PublicDescription": "Instructions per FP Arithmetic AVX* 256-bit =
-instruction (lower number means higher occurrence rate). Values < 1 are pos=
-sible due to intentional FMA double counting."
-+        "PublicDescription": "Instructions per FP Arithmetic AVX* 256-bit =
-instruction (lower number means higher occurrence rate). Values < 1 are pos=
-sible due to intentional FMA double counting"
-     },
-     {
-         "BriefDescription": "Instructions per FP Arithmetic Scalar Double-=
-Precision instruction (lower number means higher occurrence rate)",
-@@ -658,7 +664,7 @@
-         "MetricGroup": "Flops;FpScalar;InsType",
-         "MetricName": "tma_info_inst_mix_iparith_scalar_dp",
-         "MetricThreshold": "tma_info_inst_mix_iparith_scalar_dp < 10",
--        "PublicDescription": "Instructions per FP Arithmetic Scalar Double=
--Precision instruction (lower number means higher occurrence rate). Values =
-< 1 are possible due to intentional FMA double counting."
-+        "PublicDescription": "Instructions per FP Arithmetic Scalar Double=
--Precision instruction (lower number means higher occurrence rate). Values =
-< 1 are possible due to intentional FMA double counting"
-     },
-     {
-         "BriefDescription": "Instructions per FP Arithmetic Scalar Single-=
-Precision instruction (lower number means higher occurrence rate)",
-@@ -666,7 +672,7 @@
-         "MetricGroup": "Flops;FpScalar;InsType",
-         "MetricName": "tma_info_inst_mix_iparith_scalar_sp",
-         "MetricThreshold": "tma_info_inst_mix_iparith_scalar_sp < 10",
--        "PublicDescription": "Instructions per FP Arithmetic Scalar Single=
--Precision instruction (lower number means higher occurrence rate). Values =
-< 1 are possible due to intentional FMA double counting."
-+        "PublicDescription": "Instructions per FP Arithmetic Scalar Single=
--Precision instruction (lower number means higher occurrence rate). Values =
-< 1 are possible due to intentional FMA double counting"
-     },
-     {
-         "BriefDescription": "Instructions per Branch (lower number means h=
-igher occurrence rate)",
-@@ -708,7 +714,7 @@
+@@ -594,7 +600,7 @@
          "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
          "MetricGroup": "Branches;Fed;FetchBW;Frontend;PGO;tma_issueFB",
          "MetricName": "tma_info_inst_mix_iptb",
@@ -1088,7 +858,7 @@ cs: tma_dsb_switches, tma_fetch_bandwidth, tma_info_frontend_dsb_coverage, =
 tma_lcp"
      },
      {
-@@ -731,7 +737,7 @@
+@@ -617,7 +623,7 @@
      },
      {
          "BriefDescription": "Average per-thread data fill bandwidth to the=
@@ -1098,7 +868,7 @@ tma_lcp"
          "MetricGroup": "Mem;MemoryBW",
          "MetricName": "tma_info_memory_l1d_cache_fill_bw"
      },
-@@ -743,7 +749,7 @@
+@@ -629,7 +635,7 @@
      },
      {
          "BriefDescription": "Average per-thread data fill bandwidth to the=
@@ -1108,7 +878,7 @@ tma_lcp"
          "MetricGroup": "Mem;MemoryBW",
          "MetricName": "tma_info_memory_l2_cache_fill_bw"
      },
-@@ -785,7 +791,7 @@
+@@ -647,7 +653,7 @@
      },
      {
          "BriefDescription": "Average per-thread data fill bandwidth to the=
@@ -1119,7 +889,7 @@ _time",
          "MetricGroup": "Mem;MemoryBW",
          "MetricName": "tma_info_memory_l3_cache_fill_bw"
      },
-@@ -804,7 +810,7 @@
+@@ -666,7 +672,7 @@
      {
          "BriefDescription": "Average Latency for L2 cache miss demand Load=
 s",
@@ -1130,17 +900,9 @@ RE_REQUESTS.DEMAND_DATA_RD",
          "MetricName": "tma_info_memory_latency_load_l2_miss_latency"
      },
      {
-@@ -837,19 +843,19 @@
-     },
-     {
-         "BriefDescription": "Instruction-Level-Parallelism (average number=
- of uops executed when there is execution) per core",
--        "MetricExpr": "UOPS_EXECUTED.THREAD / (cpu@UOPS_EXECUTED.CORE\\,cm=
-ask\\=3D1@ / 2 if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC)",
-+        "MetricExpr": "UOPS_EXECUTED.THREAD / (cpu@UOPS_EXECUTED.CORE\\,cm=
-ask\\=3D0x1@ / 2 if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC)",
-         "MetricGroup": "Cor;Pipeline;PortsUtil;SMT",
-         "MetricName": "tma_info_pipeline_execute"
+@@ -698,14 +704,14 @@
+         "MetricThreshold": "tma_info_memory_tlb_page_walks_utilization > 0=
+.5"
      },
      {
 -        "BriefDescription": "Average number of Uops retired in cycles wher=
@@ -1164,7 +926,7 @@ _info_system_time",
          "MetricGroup": "Power;Summary",
          "MetricName": "tma_info_system_core_frequency"
      },
-@@ -867,14 +873,14 @@
+@@ -723,7 +729,7 @@
      },
      {
          "BriefDescription": "Average external Memory Bandwidth Use for rea=
@@ -1178,21 +940,7 @@ ds and writes [GB / sec]",
          "PublicDescription": "Average external Memory Bandwidth Use for re=
 ads and writes [GB / sec]. Related metrics: tma_fb_full, tma_mem_bandwidth,=
  tma_sq_full"
-     },
-     {
-         "BriefDescription": "Giga Floating Point Operations Per Second",
--        "MetricExpr": "(FP_ARITH_INST_RETIRED.SCALAR + 2 * FP_ARITH_INST_R=
-ETIRED.128B_PACKED_DOUBLE + 4 * FP_ARITH_INST_RETIRED.4_FLOPS + 8 * FP_ARIT=
-H_INST_RETIRED.256B_PACKED_SINGLE) / 1e9 / duration_time",
-+        "MetricExpr": "(FP_ARITH_INST_RETIRED.SCALAR + 2 * FP_ARITH_INST_R=
-ETIRED.128B_PACKED_DOUBLE + 4 * FP_ARITH_INST_RETIRED.4_FLOPS + 8 * FP_ARIT=
-H_INST_RETIRED.256B_PACKED_SINGLE) / 1e9 / tma_info_system_time",
-         "MetricGroup": "Cor;Flops;HPC",
-         "MetricName": "tma_info_system_gflops",
-         "PublicDescription": "Giga Floating Point Operations Per Second. A=
-ggregate across all supported options of: FP precisions, scalar and vector =
-instructions, vector-width"
-@@ -884,13 +890,14 @@
+@@ -733,13 +739,14 @@
          "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.FAR_BRANCH:u",
          "MetricGroup": "Branches;OS",
          "MetricName": "tma_info_system_ipfarbranch",
@@ -1212,7 +960,7 @@ em (OS) Kernel mode",
      {
          "BriefDescription": "Fraction of cycles spent in the Operating Sys=
 tem (OS) Kernel mode",
-@@ -901,18 +908,31 @@
+@@ -750,18 +757,31 @@
      },
      {
          "BriefDescription": "Average number of parallel data read requests=
@@ -1263,7 +1011,7 @@ am@) / (duration_time * 1e6)",
 l Processors were active",
          "MetricExpr": "(1 - CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / (CPU_CLK_=
 UNHALTED.REF_XCLK_ANY / 2) if #SMT_on else 0)",
-@@ -925,6 +945,13 @@
+@@ -774,6 +794,13 @@
          "MetricGroup": "SoC",
          "MetricName": "tma_info_system_socket_clks"
      },
@@ -1278,7 +1026,7 @@ UNHALTED.REF_XCLK_ANY / 2) if #SMT_on else 0)",
          "BriefDescription": "Average Frequency Utilization relative nomina=
 l frequency",
          "MetricExpr": "tma_info_thread_clks / CPU_CLK_UNHALTED.REF_TSC",
-@@ -933,12 +960,12 @@
+@@ -782,12 +809,12 @@
      },
      {
          "BriefDescription": "Measured Average Uncore Frequency for the SoC=
@@ -1297,7 +1045,7 @@ Logical Processor is active",
          "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
          "MetricGroup": "Pipeline",
          "MetricName": "tma_info_thread_clks"
-@@ -947,14 +974,15 @@
+@@ -796,7 +823,8 @@
          "BriefDescription": "Cycles Per Instruction (per Logical Processor=
 )",
          "MetricExpr": "1 / tma_info_thread_ipc",
@@ -1307,21 +1055,9 @@ Logical Processor is active",
 +        "ScaleUnit": "1per_instr"
      },
      {
-         "BriefDescription": "The ratio of Executed- by Issued-Uops",
-         "MetricExpr": "UOPS_EXECUTED.THREAD / UOPS_ISSUED.ANY",
-         "MetricGroup": "Cor;Pipeline",
-         "MetricName": "tma_info_thread_execute_per_issue",
--        "PublicDescription": "The ratio of Executed- by Issued-Uops. Ratio=
- > 1 suggests high rate of uop micro-fusions. Ratio < 1 suggest high rate o=
-f \"execute\" at rename stage."
-+        "PublicDescription": "The ratio of Executed- by Issued-Uops. Ratio=
- > 1 suggests high rate of uop micro-fusions. Ratio < 1 suggest high rate o=
-f \"execute\" at rename stage"
-     },
-     {
          "BriefDescription": "Instructions Per Cycle (per Logical Processor=
 )",
-@@ -980,24 +1008,24 @@
+@@ -822,24 +850,24 @@
          "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / BR_INST_RETIRED.NEAR_TA=
 KEN",
          "MetricGroup": "Branches;Fed;FetchBW",
@@ -1332,12 +1068,8 @@ KEN",
      {
          "BriefDescription": "This metric represents fraction of cycles the=
  CPU was stalled due to Instruction TLB (ITLB) misses",
--        "MetricExpr": "(14 * ITLB_MISSES.STLB_HIT + cpu@ITLB_MISSES.WALK_D=
-URATION\\,cmask\\=3D1@ + 7 * ITLB_MISSES.WALK_COMPLETED) / tma_info_thread_=
-clks",
-+        "MetricExpr": "(14 * ITLB_MISSES.STLB_HIT + cpu@ITLB_MISSES.WALK_D=
-URATION\\,cmask\\=3D0x1@ + 7 * ITLB_MISSES.WALK_COMPLETED) / tma_info_threa=
-d_clks",
+         "MetricExpr": "(14 * ITLB_MISSES.STLB_HIT + ITLB_MISSES.WALK_DURAT=
+ION) / tma_info_thread_clks",
          "MetricGroup": "BigFootprint;BvBC;FetchLat;MemoryTLB;TopdownL3;tma=
 _L3_group;tma_fetch_latency_group",
          "MetricName": "tma_itlb_misses",
@@ -1355,8 +1087,9 @@ ISSES.WALK_COMPLETED",
 talled without loads missing the L1 data cache",
 +        "BriefDescription": "This metric estimates how often the CPU was s=
 talled without loads missing the L1 Data (L1D) cache",
-         "MetricExpr": "max((CYCLE_ACTIVITY.STALLS_MEM_ANY - CYCLE_ACTIVITY=
-.STALLS_L1D_MISS) / tma_info_thread_clks, 0)",
+         "MetricExpr": "max((min(CPU_CLK_UNHALTED.THREAD, CYCLE_ACTIVITY.ST=
+ALLS_LDM_PENDING) - CYCLE_ACTIVITY.STALLS_L1D_PENDING) / tma_info_thread_cl=
+ks, 0)",
          "MetricGroup": "CacheHits;MemoryBound;TmaL3mem;TopdownL3;tma_L3_gr=
 oup;tma_issueL1;tma_issueMC;tma_memory_bound_group",
          "MetricName": "tma_l1_bound",
@@ -1382,14 +1115,14 @@ s being satisfied by the L1D. Another example is loads who miss in the TLB.=
  These cases are characterized by execution unit stalls; while some non-com=
 pleted demand load lives in the machine without having that demand load mis=
 sing the L1 cache. Sample with: MEM_LOAD_UOPS_RETIRED.L1_HIT. Related metri=
-cs: tma_clears_resteers, tma_machine_clears, tma_microcode_sequencer, tma_m=
-s_switches, tma_ports_utilized_1",
+cs: tma_machine_clears, tma_microcode_sequencer, tma_ms_switches, tma_ports=
+_utilized_1",
          "ScaleUnit": "100%"
      },
      {
-@@ -1005,8 +1033,8 @@
-         "MetricExpr": "(CYCLE_ACTIVITY.STALLS_L1D_MISS - CYCLE_ACTIVITY.ST=
-ALLS_L2_MISS) / tma_info_thread_clks",
+@@ -847,8 +875,8 @@
+         "MetricExpr": "(CYCLE_ACTIVITY.STALLS_L1D_PENDING - CYCLE_ACTIVITY=
+.STALLS_L2_PENDING) / tma_info_thread_clks",
          "MetricGroup": "BvML;CacheHits;MemoryBound;TmaL3mem;TopdownL3;tma_=
 L3_group;tma_memory_bound_group",
          "MetricName": "tma_l2_bound",
@@ -1408,10 +1141,10 @@ th: MEM_LOAD_UOPS_RETIRED.L2_HIT",
          "ScaleUnit": "100%"
      },
      {
-@@ -1015,8 +1043,8 @@
+@@ -857,8 +885,8 @@
          "MetricExpr": "MEM_LOAD_UOPS_RETIRED.L3_HIT / (MEM_LOAD_UOPS_RETIR=
-ED.L3_HIT + 7 * MEM_LOAD_UOPS_RETIRED.L3_MISS) * CYCLE_ACTIVITY.STALLS_L2_M=
-ISS / tma_info_thread_clks",
+ED.L3_HIT + 7 * MEM_LOAD_UOPS_RETIRED.L3_MISS) * CYCLE_ACTIVITY.STALLS_L2_P=
+ENDING / tma_info_thread_clks",
          "MetricGroup": "CacheHits;MemoryBound;TmaL3mem;TopdownL3;tma_L3_gr=
 oup;tma_memory_bound_group",
          "MetricName": "tma_l3_bound",
@@ -1430,7 +1163,7 @@ d increase performance. Sample with: MEM_LOAD_UOPS_RETIRED.L3_HIT",
          "ScaleUnit": "100%"
      },
      {
-@@ -1025,8 +1053,8 @@
+@@ -867,8 +895,8 @@
          "MetricExpr": "41 * (MEM_LOAD_UOPS_RETIRED.L3_HIT * (1 + MEM_LOAD_=
 UOPS_RETIRED.HIT_LFB / (MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_LOAD_UOPS_RETIRE=
 D.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_UOPS_L3_HIT_RET=
@@ -1462,7 +1195,7 @@ tma_branch_resteers, tma_mem_latency, tma_store_latency",
          "ScaleUnit": "100%"
      },
      {
-@@ -1034,18 +1062,18 @@
+@@ -876,18 +904,18 @@
          "MetricExpr": "ILD_STALL.LCP / tma_info_thread_clks",
          "MetricGroup": "FetchLat;TopdownL3;tma_L3_group;tma_fetch_latency_=
 group;tma_issueFB",
@@ -1519,7 +1252,7 @@ ation using indirect events; [ADL+] .). Sample with: INST_RETIRED.PREC_DIST=
          "ScaleUnit": "100%"
      },
      {
-@@ -1063,18 +1091,18 @@
+@@ -905,18 +933,18 @@
          "MetricExpr": "200 * (MEM_LOAD_UOPS_L3_MISS_RETIRED.LOCAL_DRAM * (=
 1 + MEM_LOAD_UOPS_RETIRED.HIT_LFB / (MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_LOA=
 D_UOPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_UO=
@@ -1574,18 +1307,40 @@ DS. Related metrics: tma_store_latency",
          "ScaleUnit": "100%"
      },
      {
-@@ -1090,10 +1118,10 @@
+@@ -927,15 +955,15 @@
+         "MetricName": "tma_machine_clears",
+         "MetricThreshold": "tma_machine_clears > 0.1 & tma_bad_speculation=
+ > 0.15",
+         "MetricgroupNoGroup": "TopdownL2",
+-        "PublicDescription": "This metric represents fraction of slots the=
+ CPU has wasted due to Machine Clears.  These slots are either wasted by uo=
+ps fetched prior to the clear; or stalls the out-of-order portion of the ma=
+chine needs to recover its state after the clear. For example; this can hap=
+pen due to memory ordering Nukes (e.g. Memory Disambiguation) or Self-Modif=
+ying-Code (SMC) nukes. Sample with: MACHINE_CLEARS.COUNT. Related metrics: =
+tma_clears_resteers, tma_contested_accesses, tma_data_sharing, tma_false_sh=
+aring, tma_l1_bound, tma_microcode_sequencer, tma_ms_switches, tma_remote_c=
+ache",
++        "PublicDescription": "This metric represents fraction of slots the=
+ CPU has wasted due to Machine Clears.  These slots are either wasted by uo=
+ps fetched prior to the clear; or stalls the out-of-order portion of the ma=
+chine needs to recover its state after the clear. For example; this can hap=
+pen due to memory ordering Nukes (e.g. Memory Disambiguation) or Self-Modif=
+ying-Code (SMC) nukes. Sample with: MACHINE_CLEARS.COUNT. Related metrics: =
+tma_contested_accesses, tma_data_sharing, tma_false_sharing, tma_l1_bound, =
+tma_microcode_sequencer, tma_ms_switches, tma_remote_cache",
+         "ScaleUnit": "100%"
      },
      {
          "BriefDescription": "This metric estimates fraction of cycles wher=
 e the core's performance was likely hurt due to approaching bandwidth limit=
 s of external memory - DRAM ([SPR-HBM] and/or HBM)",
 -        "MetricExpr": "min(CPU_CLK_UNHALTED.THREAD, cpu@OFFCORE_REQUESTS_O=
-UTSTANDING.ALL_DATA_RD\\,cmask\\=3D4@) / tma_info_thread_clks",
+UTSTANDING.ALL_DATA_RD\\,cmask\\=3D6@) / tma_info_thread_clks",
 -        "MetricGroup": "BvMS;MemoryBW;Offcore;TopdownL4;tma_L4_group;tma_d=
 ram_bound_group;tma_issueBW",
 +        "MetricExpr": "min(CPU_CLK_UNHALTED.THREAD, cpu@OFFCORE_REQUESTS_O=
-UTSTANDING.ALL_DATA_RD\\,cmask\\=3D0x4@) / tma_info_thread_clks",
+UTSTANDING.ALL_DATA_RD\\,cmask\\=3D0x6@) / tma_info_thread_clks",
 +        "MetricGroup": "BvMB;MemoryBW;Offcore;TopdownL4;tma_L4_group;tma_d=
 ram_bound_group;tma_issueBW",
          "MetricName": "tma_mem_bandwidth",
@@ -1605,7 +1360,7 @@ counters for that). Related metrics: tma_fb_full, tma_info_system_dram_bw_u=
 se, tma_sq_full",
          "ScaleUnit": "100%"
      },
-@@ -1102,7 +1130,7 @@
+@@ -944,19 +972,19 @@
          "MetricExpr": "min(CPU_CLK_UNHALTED.THREAD, OFFCORE_REQUESTS_OUTST=
 ANDING.CYCLES_WITH_DATA_RD) / tma_info_thread_clks - tma_mem_bandwidth",
          "MetricGroup": "BvML;MemoryLat;Offcore;TopdownL4;tma_L4_group;tma_=
@@ -1622,7 +1377,34 @@ her Logical Processors/Physical Cores/sockets (see Uncore counters for that=
 ). Related metrics: tma_l3_hit_latency",
          "ScaleUnit": "100%"
      },
-@@ -1114,7 +1142,7 @@
+     {
+         "BriefDescription": "This metric represents fraction of slots the =
+Memory subsystem within the Backend was a bottleneck",
+         "MetricConstraint": "NO_GROUP_EVENTS",
+-        "MetricExpr": "((min(CPU_CLK_UNHALTED.THREAD, CYCLE_ACTIVITY.STALL=
+S_LDM_PENDING) + RESOURCE_STALLS.SB) / (min(CPU_CLK_UNHALTED.THREAD, CYCLE_=
+ACTIVITY.CYCLES_NO_EXECUTE) + (cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D1@ - (cpu=
+@UOPS_EXECUTED.CORE\\,cmask\\=3D3@ if tma_info_thread_ipc > 1.8 else cpu@UO=
+PS_EXECUTED.CORE\\,cmask\\=3D2@)) / 2 - (RS_EVENTS.EMPTY_CYCLES if tma_fetc=
+h_latency > 0.1 else 0) + RESOURCE_STALLS.SB) if #SMT_on else min(CPU_CLK_U=
+NHALTED.THREAD, CYCLE_ACTIVITY.CYCLES_NO_EXECUTE) + cpu@UOPS_EXECUTED.CORE\=
+\,cmask\\=3D1@ - (cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D3@ if tma_info_thread_=
+ipc > 1.8 else cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D2@) - (RS_EVENTS.EMPTY_CY=
+CLES if tma_fetch_latency > 0.1 else 0) + RESOURCE_STALLS.SB) * tma_backend=
+_bound",
++        "MetricExpr": "(min(CPU_CLK_UNHALTED.THREAD, CYCLE_ACTIVITY.STALLS=
+_LDM_PENDING) + RESOURCE_STALLS.SB) / (min(CPU_CLK_UNHALTED.THREAD, CYCLE_A=
+CTIVITY.CYCLES_NO_EXECUTE) + (cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x1@ - (cp=
+u@UOPS_EXECUTED.CORE\\,cmask\\=3D0x3@ if tma_info_thread_ipc > 1.8 else cpu=
+@UOPS_EXECUTED.CORE\\,cmask\\=3D0x2@)) / 2 - (RS_EVENTS.EMPTY_CYCLES if tma=
+_fetch_latency > 0.1 else 0) + RESOURCE_STALLS.SB if #SMT_on else min(CPU_C=
+LK_UNHALTED.THREAD, CYCLE_ACTIVITY.CYCLES_NO_EXECUTE) + cpu@UOPS_EXECUTED.C=
+ORE\\,cmask\\=3D0x1@ - (cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x3@ if tma_info=
+_thread_ipc > 1.8 else cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x2@) - (RS_EVENT=
+S.EMPTY_CYCLES if tma_fetch_latency > 0.1 else 0) + RESOURCE_STALLS.SB) * t=
+ma_backend_bound",
+         "MetricGroup": "Backend;TmaL2;TopdownL2;tma_L2_group;tma_backend_b=
+ound_group",
          "MetricName": "tma_memory_bound",
          "MetricThreshold": "tma_memory_bound > 0.2 & tma_backend_bound > 0=
 .2",
@@ -1646,27 +1428,30 @@ hen many of them get buffered at the same time (less common out of the two)=
          "ScaleUnit": "100%"
      },
      {
-@@ -1131,8 +1159,8 @@
-         "MetricExpr": "BR_MISP_RETIRED.ALL_BRANCHES * tma_branch_resteers =
-/ (BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT + BACLEARS.ANY)",
-         "MetricGroup": "BadSpec;BrMispredicts;BvMP;TopdownL4;tma_L4_group;=
-tma_branch_resteers_group;tma_issueBM",
-         "MetricName": "tma_mispredicts_resteers",
--        "MetricThreshold": "tma_mispredicts_resteers > 0.05 & (tma_branch_=
-resteers > 0.05 & (tma_fetch_latency > 0.1 & tma_frontend_bound > 0.15))",
--        "PublicDescription": "This metric represents fraction of cycles th=
-e CPU was stalled due to Branch Resteers as a result of Branch Mispredictio=
-n at execution stage. Related metrics: tma_branch_mispredicts, tma_info_bad=
-_spec_branch_misprediction_cost",
-+        "MetricThreshold": "tma_mispredicts_resteers > 0.05 & tma_branch_r=
-esteers > 0.05 & tma_fetch_latency > 0.1 & tma_frontend_bound > 0.15",
-+        "PublicDescription": "This metric represents fraction of cycles th=
-e CPU was stalled due to Branch Resteers as a result of Branch Mispredictio=
-n at execution stage. Related metrics: tma_branch_mispredicts",
+@@ -965,7 +993,7 @@
+         "MetricGroup": "MicroSeq;TopdownL3;tma_L3_group;tma_heavy_operatio=
+ns_group;tma_issueMC;tma_issueMS",
+         "MetricName": "tma_microcode_sequencer",
+         "MetricThreshold": "tma_microcode_sequencer > 0.05 & tma_heavy_ope=
+rations > 0.1",
+-        "PublicDescription": "This metric represents fraction of slots the=
+ CPU was retiring uops fetched by the Microcode Sequencer (MS) unit.  The M=
+S is used for CISC instructions not supported by the default decoders (like=
+ repeat move strings; or CPUID); or by microcode assists used to address so=
+me operation modes (like in Floating Point assists). These cases can often =
+be avoided. Sample with: IDQ.MS_UOPS. Related metrics: tma_clears_resteers,=
+ tma_l1_bound, tma_machine_clears, tma_ms_switches",
++        "PublicDescription": "This metric represents fraction of slots the=
+ CPU was retiring uops fetched by the Microcode Sequencer (MS) unit.  The M=
+S is used for CISC instructions not supported by the default decoders (like=
+ repeat move strings; or CPUID); or by microcode assists used to address so=
+me operation modes (like in Floating Point assists). These cases can often =
+be avoided. Sample with: IDQ.MS_UOPS. Related metrics: tma_l1_bound, tma_ma=
+chine_clears, tma_ms_switches",
          "ScaleUnit": "100%"
      },
      {
-@@ -1141,7 +1169,7 @@
+@@ -974,7 +1002,7 @@
          "MetricGroup": "DSBmiss;FetchBW;TopdownL3;tma_L3_group;tma_fetch_b=
 andwidth_group",
          "MetricName": "tma_mite",
@@ -1684,7 +1469,7 @@ f long immediate or LCP can manifest as MITE fetch bandwidth bottleneck",
          "ScaleUnit": "100%"
      },
      {
-@@ -1149,8 +1177,8 @@
+@@ -982,8 +1010,8 @@
          "MetricExpr": "2 * IDQ.MS_SWITCHES / tma_info_thread_clks",
          "MetricGroup": "FetchLat;MicroSeq;TopdownL3;tma_L3_group;tma_fetch=
 _latency_group;tma_issueMC;tma_issueMS;tma_issueMV;tma_issueSO",
@@ -1714,12 +1499,12 @@ st be performed by microcode (small programs injected into the execution st=
 ream). Switching to the MS too often can negatively impact performance. The=
  MS is designated to deliver long uop flows required by CISC instructions l=
 ike CPUID; or uncommon conditions like Floating Point Assists when dealing =
-with Denormals. Sample with: IDQ.MS_SWITCHES. Related metrics: tma_clears_r=
-esteers, tma_l1_bound, tma_machine_clears, tma_microcode_sequencer",
+with Denormals. Sample with: IDQ.MS_SWITCHES. Related metrics: tma_l1_bound=
+, tma_machine_clears, tma_microcode_sequencer",
          "ScaleUnit": "100%"
      },
      {
-@@ -1159,7 +1187,7 @@
+@@ -992,7 +1020,7 @@
          "MetricGroup": "Compute;TopdownL6;tma_L6_group;tma_alu_op_utilizat=
 ion_group;tma_issue2P",
          "MetricName": "tma_port_0",
@@ -1731,13 +1516,12 @@ scalar, tma_fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_fp_vecto=
 r_512b, tma_port_1, tma_port_5, tma_port_6, tma_ports_utilized_2",
 +        "PublicDescription": "This metric represents Core fraction of cycl=
 es CPU dispatched uops on execution port 0 ([SNB+] ALU; [HSW+] ALU and 2nd =
-branch). Sample with: UOPS_DISPATCHED_PORT.PORT_0. Related metrics: tma_fp_=
-scalar, tma_fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_port_1, =
-tma_port_5, tma_port_6, tma_ports_utilized_2",
+branch). Sample with: UOPS_DISPATCHED_PORT.PORT_0. Related metrics: tma_por=
+t_1, tma_port_5, tma_port_6, tma_ports_utilized_2",
          "ScaleUnit": "100%"
      },
      {
-@@ -1168,7 +1196,7 @@
+@@ -1001,7 +1029,7 @@
          "MetricGroup": "TopdownL6;tma_L6_group;tma_alu_op_utilization_grou=
 p;tma_issue2P",
          "MetricName": "tma_port_1",
@@ -1749,13 +1533,12 @@ or_128b, tma_fp_vector_256b, tma_fp_vector_512b, tma_port_0, tma_port_5, tm=
 a_port_6, tma_ports_utilized_2",
 +        "PublicDescription": "This metric represents Core fraction of cycl=
 es CPU dispatched uops on execution port 1 (ALU). Sample with: UOPS_DISPATC=
-HED_PORT.PORT_1. Related metrics: tma_fp_scalar, tma_fp_vector, tma_fp_vect=
-or_128b, tma_fp_vector_256b, tma_port_0, tma_port_5, tma_port_6, tma_ports_=
-utilized_2",
+HED_PORT.PORT_1. Related metrics: tma_port_0, tma_port_5, tma_port_6, tma_p=
+orts_utilized_2",
          "ScaleUnit": "100%"
      },
      {
-@@ -1204,7 +1232,7 @@
+@@ -1037,7 +1065,7 @@
          "MetricGroup": "TopdownL6;tma_L6_group;tma_alu_op_utilization_grou=
 p;tma_issue2P",
          "MetricName": "tma_port_5",
@@ -1767,13 +1550,12 @@ es CPU dispatched uops on execution port 5 ([SNB+] Branches and ALU; [HSW+]=
  tma_port_0, tma_port_1, tma_port_6, tma_ports_utilized_2",
 +        "PublicDescription": "This metric represents Core fraction of cycl=
 es CPU dispatched uops on execution port 5 ([SNB+] Branches and ALU; [HSW+]=
- ALU). Sample with: UOPS_DISPATCHED_PORT.PORT_5. Related metrics: tma_fp_sc=
-alar, tma_fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_port_0, tm=
-a_port_1, tma_port_6, tma_ports_utilized_2",
+ ALU). Sample with: UOPS_DISPATCHED_PORT.PORT_5. Related metrics: tma_port_=
+0, tma_port_1, tma_port_6, tma_ports_utilized_2",
          "ScaleUnit": "100%"
      },
      {
-@@ -1213,7 +1241,7 @@
+@@ -1046,7 +1074,7 @@
          "MetricGroup": "TopdownL6;tma_L6_group;tma_alu_op_utilization_grou=
 p;tma_issue2P",
          "MetricName": "tma_port_6",
@@ -1785,18 +1567,39 @@ calar, tma_fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_fp_vector=
 _512b, tma_port_0, tma_port_1, tma_port_5, tma_ports_utilized_2",
 +        "PublicDescription": "This metric represents Core fraction of cycl=
 es CPU dispatched uops on execution port 6 ([HSW+] Primary Branch and simpl=
-e ALU). Sample with: UOPS_DISPATCHED_PORT.PORT_1. Related metrics: tma_fp_s=
-calar, tma_fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_port_0, t=
-ma_port_1, tma_port_5, tma_ports_utilized_2",
+e ALU). Sample with: UOPS_DISPATCHED_PORT.PORT_1. Related metrics: tma_port=
+_0, tma_port_1, tma_port_5, tma_ports_utilized_2",
          "ScaleUnit": "100%"
      },
      {
-@@ -1231,43 +1259,43 @@
-         "MetricExpr": "(CYCLE_ACTIVITY.STALLS_TOTAL + UOPS_EXECUTED.CYCLES=
-_GE_1_UOP_EXEC - (UOPS_EXECUTED.CYCLES_GE_3_UOPS_EXEC if tma_info_thread_ip=
-c > 1.8 else UOPS_EXECUTED.CYCLES_GE_2_UOPS_EXEC) - (RS_EVENTS.EMPTY_CYCLES=
- if tma_fetch_latency > 0.1 else 0) + RESOURCE_STALLS.SB - RESOURCE_STALLS.=
-SB - CYCLE_ACTIVITY.STALLS_MEM_ANY) / tma_info_thread_clks",
+@@ -1061,46 +1089,46 @@
+     {
+         "BriefDescription": "This metric estimates fraction of cycles the =
+CPU performance was potentially limited due to Core computation issues (non=
+ divider-related)",
+         "MetricConstraint": "NO_GROUP_EVENTS",
+-        "MetricExpr": "(min(CPU_CLK_UNHALTED.THREAD, CYCLE_ACTIVITY.CYCLES=
+_NO_EXECUTE) + (cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D1@ - (cpu@UOPS_EXECUTED.=
+CORE\\,cmask\\=3D3@ if tma_info_thread_ipc > 1.8 else cpu@UOPS_EXECUTED.COR=
+E\\,cmask\\=3D2@)) / 2 - (RS_EVENTS.EMPTY_CYCLES if tma_fetch_latency > 0.1=
+ else 0) + RESOURCE_STALLS.SB if #SMT_on else min(CPU_CLK_UNHALTED.THREAD, =
+CYCLE_ACTIVITY.CYCLES_NO_EXECUTE) + cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D1@ -=
+ (cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D3@ if tma_info_thread_ipc > 1.8 else c=
+pu@UOPS_EXECUTED.CORE\\,cmask\\=3D2@) - (RS_EVENTS.EMPTY_CYCLES if tma_fetc=
+h_latency > 0.1 else 0) + RESOURCE_STALLS.SB - RESOURCE_STALLS.SB - min(CPU=
+_CLK_UNHALTED.THREAD, CYCLE_ACTIVITY.STALLS_LDM_PENDING)) / tma_info_thread=
+_clks",
++        "MetricExpr": "((min(CPU_CLK_UNHALTED.THREAD, CYCLE_ACTIVITY.CYCLE=
+S_NO_EXECUTE) + (cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x1@ - (cpu@UOPS_EXECUT=
+ED.CORE\\,cmask\\=3D0x3@ if tma_info_thread_ipc > 1.8 else cpu@UOPS_EXECUTE=
+D.CORE\\,cmask\\=3D0x2@)) / 2 - (RS_EVENTS.EMPTY_CYCLES if tma_fetch_latenc=
+y > 0.1 else 0) + RESOURCE_STALLS.SB if #SMT_on else min(CPU_CLK_UNHALTED.T=
+HREAD, CYCLE_ACTIVITY.CYCLES_NO_EXECUTE) + cpu@UOPS_EXECUTED.CORE\\,cmask\\=
+=3D0x1@ - (cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x3@ if tma_info_thread_ipc >=
+ 1.8 else cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x2@) - (RS_EVENTS.EMPTY_CYCLE=
+S if tma_fetch_latency > 0.1 else 0) + RESOURCE_STALLS.SB) - RESOURCE_STALL=
+S.SB - min(CPU_CLK_UNHALTED.THREAD, CYCLE_ACTIVITY.STALLS_LDM_PENDING)) / t=
+ma_info_thread_clks",
          "MetricGroup": "PortsUtil;TopdownL3;tma_L3_group;tma_core_bound_gr=
 oup",
          "MetricName": "tma_ports_utilization",
@@ -1825,11 +1628,13 @@ han Divider. For example; when there are too many multiply operations",
  executed no uops on any execution port (Logical Processor cycles since ICL=
 , Physical Core cycles otherwise)",
 -        "MetricExpr": "(cpu@UOPS_EXECUTED.CORE\\,inv\\,cmask\\=3D1@ / 2 if=
- #SMT_on else (CYCLE_ACTIVITY.STALLS_TOTAL - (RS_EVENTS.EMPTY_CYCLES if tma=
-_fetch_latency > 0.1 else 0)) / tma_info_core_core_clks)",
+ #SMT_on else (min(CPU_CLK_UNHALTED.THREAD, CYCLE_ACTIVITY.CYCLES_NO_EXECUT=
+E) - (RS_EVENTS.EMPTY_CYCLES if tma_fetch_latency > 0.1 else 0)) / tma_info=
+_core_core_clks)",
 +        "MetricExpr": "(cpu@UOPS_EXECUTED.CORE\\,inv\\=3D0x1\\,cmask\\=3D0=
-x1@ / 2 if #SMT_on else CYCLE_ACTIVITY.STALLS_TOTAL - (RS_EVENTS.EMPTY_CYCL=
-ES if tma_fetch_latency > 0.1 else 0)) / tma_info_core_core_clks",
+x1@ / 2 if #SMT_on else min(CPU_CLK_UNHALTED.THREAD, CYCLE_ACTIVITY.CYCLES_=
+NO_EXECUTE) - (RS_EVENTS.EMPTY_CYCLES if tma_fetch_latency > 0.1 else 0)) /=
+ tma_info_core_core_clks",
          "MetricGroup": "PortsUtil;TopdownL4;tma_L4_group;tma_ports_utiliza=
 tion_group",
          "MetricName": "tma_ports_utilized_0",
@@ -1852,13 +1657,13 @@ may contribute to this metric",
 re the CPU executed total of 1 uop per cycle on all execution ports (Logica=
 l Processor cycles since ICL, Physical Core cycles otherwise)",
 -        "MetricExpr": "((cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D1@ - cpu@UOPS_=
-EXECUTED.CORE\\,cmask\\=3D2@) / 2 if #SMT_on else (UOPS_EXECUTED.CYCLES_GE_=
-1_UOP_EXEC - UOPS_EXECUTED.CYCLES_GE_2_UOPS_EXEC) / tma_info_core_core_clks=
-)",
+EXECUTED.CORE\\,cmask\\=3D2@) / 2 if #SMT_on else (cpu@UOPS_EXECUTED.CORE\\=
+,cmask\\=3D1@ - cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D2@) / tma_info_core_core=
+_clks)",
 +        "MetricExpr": "((cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x1@ - cpu@UOP=
-S_EXECUTED.CORE\\,cmask\\=3D0x2@) / 2 if #SMT_on else UOPS_EXECUTED.CYCLES_=
-GE_1_UOP_EXEC - UOPS_EXECUTED.CYCLES_GE_2_UOPS_EXEC) / tma_info_core_core_c=
-lks",
+S_EXECUTED.CORE\\,cmask\\=3D0x2@) / 2 if #SMT_on else cpu@UOPS_EXECUTED.COR=
+E\\,cmask\\=3D0x1@ - cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x2@) / tma_info_co=
+re_core_clks",
          "MetricGroup": "PortsUtil;TopdownL4;tma_L4_group;tma_issueL1;tma_p=
 orts_utilization_group",
          "MetricName": "tma_ports_utilized_1",
@@ -1882,13 +1687,13 @@ n (due to the short L1 latency e.g. walking a linked list) - looking at the=
  executed total of 2 uops per cycle on all execution ports (Logical Process=
 or cycles since ICL, Physical Core cycles otherwise)",
 -        "MetricExpr": "((cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D2@ - cpu@UOPS_=
-EXECUTED.CORE\\,cmask\\=3D3@) / 2 if #SMT_on else (UOPS_EXECUTED.CYCLES_GE_=
-2_UOPS_EXEC - UOPS_EXECUTED.CYCLES_GE_3_UOPS_EXEC) / tma_info_core_core_clk=
-s)",
+EXECUTED.CORE\\,cmask\\=3D3@) / 2 if #SMT_on else (cpu@UOPS_EXECUTED.CORE\\=
+,cmask\\=3D2@ - cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D3@) / tma_info_core_core=
+_clks)",
 +        "MetricExpr": "((cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x2@ - cpu@UOP=
-S_EXECUTED.CORE\\,cmask\\=3D0x3@) / 2 if #SMT_on else UOPS_EXECUTED.CYCLES_=
-GE_2_UOPS_EXEC - UOPS_EXECUTED.CYCLES_GE_3_UOPS_EXEC) / tma_info_core_core_=
-clks",
+S_EXECUTED.CORE\\,cmask\\=3D0x3@) / 2 if #SMT_on else cpu@UOPS_EXECUTED.COR=
+E\\,cmask\\=3D0x2@ - cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x3@) / tma_info_co=
+re_core_clks",
          "MetricGroup": "PortsUtil;TopdownL4;tma_L4_group;tma_issue2P;tma_p=
 orts_utilization_group",
          "MetricName": "tma_ports_utilized_2",
@@ -1909,8 +1714,7 @@ U executed total of 2 uops per cycle on all execution ports (Logical Proces=
 sor cycles since ICL, Physical Core cycles otherwise).  Loop Vectorization =
 -most compilers feature auto-Vectorization options today- reduces pressure =
 on the execution ports as multiple elements are calculated with same uop. R=
-elated metrics: tma_fp_scalar, tma_fp_vector, tma_fp_vector_128b, tma_fp_ve=
-ctor_256b, tma_port_0, tma_port_1, tma_port_5, tma_port_6",
+elated metrics: tma_port_0, tma_port_1, tma_port_5, tma_port_6",
          "ScaleUnit": "100%"
      },
      {
@@ -1918,12 +1722,13 @@ ctor_256b, tma_port_0, tma_port_1, tma_port_5, tma_port_6",
  executed total of 3 or more uops per cycle on all execution ports (Logical=
  Processor cycles since ICL, Physical Core cycles otherwise).",
 -        "MetricExpr": "(cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D3@ / 2 if #SMT_=
-on else UOPS_EXECUTED.CYCLES_GE_3_UOPS_EXEC) / tma_info_core_core_clks",
+on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D3@) / tma_info_core_core_clks",
 +        "BriefDescription": "This metric represents fraction of cycles CPU=
  executed total of 3 or more uops per cycle on all execution ports (Logical=
  Processor cycles since ICL, Physical Core cycles otherwise)",
 +        "MetricExpr": "(cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x3@ / 2 if #SM=
-T_on else UOPS_EXECUTED.CYCLES_GE_3_UOPS_EXEC) / tma_info_core_core_clks",
+T_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=3D0x3@) / tma_info_core_core_clk=
+s",
          "MetricGroup": "BvCB;PortsUtil;TopdownL4;tma_L4_group;tma_ports_ut=
 ilization_group",
          "MetricName": "tma_ports_utilized_3m",
@@ -1934,7 +1739,7 @@ ation > 0.15 & tma_core_bound > 0.1 & tma_backend_bound > 0.2",
          "ScaleUnit": "100%"
      },
      {
-@@ -1276,8 +1304,8 @@
+@@ -1109,8 +1137,8 @@
          "MetricExpr": "(200 * (MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_HITM *=
  (1 + MEM_LOAD_UOPS_RETIRED.HIT_LFB / (MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_L=
 OAD_UOPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_=
@@ -1973,7 +1778,7 @@ accesses, tma_data_sharing, tma_false_sharing, tma_machine_clears",
          "ScaleUnit": "100%"
      },
      {
-@@ -1285,8 +1313,8 @@
+@@ -1118,8 +1146,8 @@
          "MetricExpr": "310 * (MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_DRAM * =
 (1 + MEM_LOAD_UOPS_RETIRED.HIT_LFB / (MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_LO=
 AD_UOPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_U=
@@ -2000,7 +1805,7 @@ _MISS_RETIRED.REMOTE_DRAM",
          "ScaleUnit": "100%"
      },
      {
-@@ -1305,8 +1333,8 @@
+@@ -1138,8 +1166,8 @@
          "MetricExpr": "tma_info_memory_load_miss_real_latency * LD_BLOCKS.=
 NO_SR / tma_info_thread_clks",
          "MetricGroup": "TopdownL4;tma_L4_group;tma_l1_bound_group",
@@ -2017,7 +1822,7 @@ ary. Sample with: MEM_UOPS_RETIRED.SPLIT_LOADS",
          "ScaleUnit": "100%"
      },
      {
-@@ -1314,16 +1342,16 @@
+@@ -1147,16 +1175,16 @@
          "MetricExpr": "2 * MEM_UOPS_RETIRED.SPLIT_STORES / tma_info_core_c=
 ore_clks",
          "MetricGroup": "TopdownL4;tma_L4_group;tma_issueSpSt;tma_store_bou=
@@ -2057,7 +1862,7 @@ oth hardware SMT threads (Logical Processors). Related metrics: tma_fb_full=
 , tma_info_system_dram_bw_use, tma_mem_bandwidth",
          "ScaleUnit": "100%"
      },
-@@ -1332,8 +1360,8 @@
+@@ -1165,8 +1193,8 @@
          "MetricExpr": "RESOURCE_STALLS.SB / tma_info_thread_clks",
          "MetricGroup": "MemoryBound;TmaL3mem;TopdownL3;tma_L3_group;tma_me=
 mory_bound_group",
@@ -2081,7 +1886,7 @@ alls. This metric will be flagged should RFO stores be a bottleneck. Sample=
          "ScaleUnit": "100%"
      },
      {
-@@ -1341,18 +1369,18 @@
+@@ -1174,18 +1202,18 @@
          "MetricExpr": "13 * LD_BLOCKS.STORE_FORWARD / tma_info_thread_clks=
 ",
          "MetricGroup": "TopdownL4;tma_L4_group;tma_l1_bound_group",
@@ -2139,259 +1944,11 @@ es - see FB_Full). Related metrics: tma_branch_resteers, tma_fb_full, tma_l=
          "ScaleUnit": "100%"
      },
      {
-@@ -1368,7 +1396,7 @@
-         "MetricExpr": "tma_branch_resteers - tma_mispredicts_resteers - tm=
-a_clears_resteers",
-         "MetricGroup": "BigFootprint;BvBC;FetchLat;TopdownL4;tma_L4_group;=
-tma_branch_resteers_group",
-         "MetricName": "tma_unknown_branches",
--        "MetricThreshold": "tma_unknown_branches > 0.05 & (tma_branch_rest=
-eers > 0.05 & (tma_fetch_latency > 0.1 & tma_frontend_bound > 0.15))",
-+        "MetricThreshold": "tma_unknown_branches > 0.05 & tma_branch_reste=
-ers > 0.05 & tma_fetch_latency > 0.1 & tma_frontend_bound > 0.15",
-         "PublicDescription": "This metric represents fraction of cycles th=
-e CPU was stalled due to new branch address clears. These are fetched branc=
-hes the Branch Prediction Unit was unable to recognize (e.g. first time the=
- branch is fetched or hitting BTB capacity limit) hence called Unknown Bran=
-ches. Sample with: BACLEARS.ANY",
-         "ScaleUnit": "100%"
-     },
-@@ -1377,8 +1405,8 @@
-         "MetricExpr": "INST_RETIRED.X87 * tma_info_thread_uoppi / UOPS_RET=
-IRED.RETIRE_SLOTS",
-         "MetricGroup": "Compute;TopdownL4;tma_L4_group;tma_fp_arith_group"=
-,
-         "MetricName": "tma_x87_use",
--        "MetricThreshold": "tma_x87_use > 0.1 & (tma_fp_arith > 0.2 & tma_=
-light_operations > 0.6)",
--        "PublicDescription": "This metric serves as an approximation of le=
-gacy x87 usage. It accounts for instructions beyond X87 FP arithmetic opera=
-tions; hence may be used as a thermometer to avoid X87 high usage and prefe=
-rably upgrade to modern ISA. See Tip under Tuning Hint.",
-+        "MetricThreshold": "tma_x87_use > 0.1 & tma_fp_arith > 0.2 & tma_l=
-ight_operations > 0.6",
-+        "PublicDescription": "This metric serves as an approximation of le=
-gacy x87 usage. It accounts for instructions beyond X87 FP arithmetic opera=
-tions; hence may be used as a thermometer to avoid X87 high usage and prefe=
-rably upgrade to modern ISA. See Tip under Tuning Hint",
-         "ScaleUnit": "100%"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/cache.json b/tools/p=
-erf/pmu-events/arch/x86/broadwellx/cache.json
-index beeda41b428a..59bc8c71487e 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/cache.json
-@@ -22,7 +22,7 @@
-         "Counter": "2",
-         "EventCode": "0x48",
-         "EventName": "L1D_PEND_MISS.PENDING",
--        "PublicDescription": "This event counts duration of L1D miss outst=
-anding, that is each cycle number of Fill Buffers (FB) outstanding required=
- by Demand Reads. FB either is held by demand loads, or it is held by non-d=
-emand loads and gets hit at least once by demand. The valid outstanding int=
-erval is defined until the FB deallocation by one of the following ways: fr=
-om FB allocation, if FB is allocated by demand; from the demand Hit FB, if =
-it is allocated by hardware or software prefetch.\nNote: In the L1D, a Dema=
-nd Read contains cacheable or noncacheable demand loads, including ones cau=
-sing cache-line splits and reads due to page walks resulted from any reques=
-t type.",
-+        "PublicDescription": "This event counts duration of L1D miss outst=
-anding, that is each cycle number of Fill Buffers (FB) outstanding required=
- by Demand Reads. FB either is held by demand loads, or it is held by non-d=
-emand loads and gets hit at least once by demand. The valid outstanding int=
-erval is defined until the FB deallocation by one of the following ways: fr=
-om FB allocation, if FB is allocated by demand; from the demand Hit FB, if =
-it is allocated by hardware or software prefetch. Note: In the L1D, a Deman=
-d Read contains cacheable or noncacheable demand loads, including ones caus=
-ing cache-line splits and reads due to page walks resulted from any request=
- type.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-@@ -434,7 +434,7 @@
-         "EventCode": "0xD1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.HIT_LFB",
-         "PEBS": "1",
--        "PublicDescription": "This event counts retired load uops which da=
-ta sources were load uops missed L1 but hit a fill buffer due to a precedin=
-g miss to the same cache line with the data not ready.\nNote: Only two data=
--sources of L1/FB are applicable for AVX-256bit  even though the correspond=
-ing AVX load could be serviced by a deeper level in the memory hierarchy. D=
-ata source is reported for the Low-half load.",
-+        "PublicDescription": "This event counts retired load uops which da=
-ta sources were load uops missed L1 but hit a fill buffer due to a precedin=
-g miss to the same cache line with the data not ready. Note: Only two data-=
-sources of L1/FB are applicable for AVX-256bit  even though the correspondi=
-ng AVX load could be serviced by a deeper level in the memory hierarchy. Da=
-ta source is reported for the Low-half load.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x40"
-     },
-@@ -445,7 +445,7 @@
-         "EventCode": "0xD1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.L1_HIT",
-         "PEBS": "1",
--        "PublicDescription": "This event counts retired load uops which da=
-ta sources were hits in the nearest-level (L1) cache.\nNote: Only two data-=
-sources of L1/FB are applicable for AVX-256bit  even though the correspondi=
-ng AVX load could be serviced by a deeper level in the memory hierarchy. Da=
-ta source is reported for the Low-half load. This event also counts SW pref=
-etches independent of the actual data source.",
-+        "PublicDescription": "This event counts retired load uops which da=
-ta sources were hits in the nearest-level (L1) cache. Note: Only two data-s=
-ources of L1/FB are applicable for AVX-256bit  even though the correspondin=
-g AVX load could be serviced by a deeper level in the memory hierarchy. Dat=
-a source is reported for the Low-half load. This event also counts SW prefe=
-tches independent of the actual data source.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-@@ -634,7 +634,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0xb2",
-         "EventName": "OFFCORE_REQUESTS_BUFFER.SQ_FULL",
--        "PublicDescription": "This event counts the number of cases when t=
-he offcore requests buffer cannot take more entries for the core. This can =
-happen when the superqueue does not contain eligible entries, or when L1D w=
-riteback pending FIFO requests is full.\nNote: Writeback pending FIFO has s=
-ix entries.",
-+        "PublicDescription": "This event counts the number of cases when t=
-he offcore requests buffer cannot take more entries for the core. This can =
-happen when the superqueue does not contain eligible entries, or when L1D w=
-riteback pending FIFO requests is full. Note: Writeback pending FIFO has si=
-x entries.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-@@ -697,7 +697,7 @@
-         "Errata": "BDM76",
-         "EventCode": "0x60",
-         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND_DATA_RD",
--        "PublicDescription": "This event counts the number of offcore outs=
-tanding Demand Data Read transactions in the super queue (SQ) every cycle. =
-A transaction is considered to be in the Offcore outstanding state between =
-L2 miss and transaction completion sent to requestor. See the corresponding=
- Umask under OFFCORE_REQUESTS.\nNote: A prefetch promoted to Demand is coun=
-ted from the promotion point.",
-+        "PublicDescription": "This event counts the number of offcore outs=
-tanding Demand Data Read transactions in the super queue (SQ) every cycle. =
-A transaction is considered to be in the Offcore outstanding state between =
-L2 miss and transaction completion sent to requestor. See the corresponding=
- Umask under OFFCORE_REQUESTS. Note: A prefetch promoted to Demand is count=
-ed from the promotion point.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/frontend.json b/tool=
-s/perf/pmu-events/arch/x86/broadwellx/frontend.json
-index db3488abf9fc..018020a51436 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/frontend.json
-@@ -12,7 +12,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0xAB",
-         "EventName": "DSB2MITE_SWITCHES.PENALTY_CYCLES",
--        "PublicDescription": "This event counts Decode Stream Buffer (DSB)=
--to-MITE switch true penalty cycles. These cycles do not include uops route=
-d through because of the switch itself, for example, when Instruction Decod=
-e Queue (IDQ) pre-allocation is unavailable, or Instruction Decode Queue (I=
-DQ) is full. SBD-to-MITE switch true penalty cycles happen after the merge =
-mux (MM) receives Decode Stream Buffer (DSB) Sync-indication until receivin=
-g the first MITE uop. \nMM is placed before Instruction Decode Queue (IDQ) =
-to merge uops being fed from the MITE and Decode Stream Buffer (DSB) paths.=
- Decode Stream Buffer (DSB) inserts the Sync-indication whenever a Decode S=
-tream Buffer (DSB)-to-MITE switch occurs.\nPenalty: A Decode Stream Buffer =
-(DSB) hit followed by a Decode Stream Buffer (DSB) miss can cost up to six =
-cycles in which no uops are delivered to the IDQ. Most often, such switches=
- from the Decode Stream Buffer (DSB) to the legacy pipeline cost 02 cycles.=
-",
-+        "PublicDescription": "This event counts Decode Stream Buffer (DSB)=
--to-MITE switch true penalty cycles. These cycles do not include uops route=
-d through because of the switch itself, for example, when Instruction Decod=
-e Queue (IDQ) pre-allocation is unavailable, or Instruction Decode Queue (I=
-DQ) is full. SBD-to-MITE switch true penalty cycles happen after the merge =
-mux (MM) receives Decode Stream Buffer (DSB) Sync-indication until receivin=
-g the first MITE uop.  MM is placed before Instruction Decode Queue (IDQ) t=
-o merge uops being fed from the MITE and Decode Stream Buffer (DSB) paths. =
-Decode Stream Buffer (DSB) inserts the Sync-indication whenever a Decode St=
-ream Buffer (DSB)-to-MITE switch occurs. Penalty: A Decode Stream Buffer (D=
-SB) hit followed by a Decode Stream Buffer (DSB) miss can cost up to six cy=
-cles in which no uops are delivered to the IDQ. Most often, such switches f=
-rom the Decode Stream Buffer (DSB) to the legacy pipeline cost 02 cycles.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x2"
-     },
-@@ -212,7 +212,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x9C",
-         "EventName": "IDQ_UOPS_NOT_DELIVERED.CORE",
--        "PublicDescription": "This event counts the number of uops not del=
-ivered to Resource Allocation Table (RAT) per thread adding 4  x when Resou=
-rce Allocation Table (RAT) is not stalled and Instruction Decode Queue (IDQ=
-) delivers x uops to Resource Allocation Table (RAT) (where x belongs to {0=
-,1,2,3}). Counting does not cover cases when:\n a. IDQ-Resource Allocation =
-Table (RAT) pipe serves the other thread;\n b. Resource Allocation Table (R=
-AT) is stalled for the thread (including uop drops and clear BE conditions)=
-; \n c. Instruction Decode Queue (IDQ) delivers four uops.",
-+        "PublicDescription": "This event counts the number of uops not del=
-ivered to Resource Allocation Table (RAT) per thread adding 4  x when Resou=
-rce Allocation Table (RAT) is not stalled and Instruction Decode Queue (IDQ=
-) delivers x uops to Resource Allocation Table (RAT) (where x belongs to {0=
-,1,2,3}). Counting does not cover cases when:  a. IDQ-Resource Allocation T=
-able (RAT) pipe serves the other thread;  b. Resource Allocation Table (RAT=
-) is stalled for the thread (including uop drops and clear BE conditions); =
-  c. Instruction Decode Queue (IDQ) delivers four uops.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/memory.json b/tools/=
-perf/pmu-events/arch/x86/broadwellx/memory.json
-index 86246f632d79..093c8b564fc0 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/memory.json
-@@ -68,7 +68,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0xc8",
-         "EventName": "HLE_RETIRED.START",
--        "PublicDescription": "Number of times we entered an HLE region\n d=
-oes not count nested transactions.",
-+        "PublicDescription": "Number of times we entered an HLE region  do=
-es not count nested transactions.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-@@ -77,7 +77,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0xC3",
-         "EventName": "MACHINE_CLEARS.MEMORY_ORDERING",
--        "PublicDescription": "This event counts the number of memory order=
-ing Machine Clears detected. Memory Ordering Machine Clears can result from=
- one of the following:\n1. memory disambiguation,\n2. external snoop, or\n3=
-. cross SMT-HW-thread snoop (stores) hitting load buffer.",
-+        "PublicDescription": "This event counts the number of memory order=
-ing Machine Clears detected. Memory Ordering Machine Clears can result from=
- one of the following: 1. memory disambiguation, 2. external snoop, or 3. c=
-ross SMT-HW-thread snoop (stores) hitting load buffer.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x2"
-     },
-@@ -470,7 +470,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0xc9",
-         "EventName": "RTM_RETIRED.START",
--        "PublicDescription": "Number of times we entered an RTM region\n d=
-oes not count nested transactions.",
-+        "PublicDescription": "Number of times we entered an RTM region  do=
-es not count nested transactions.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/metricgroups.json b/=
-tools/perf/pmu-events/arch/x86/broadwellx/metricgroups.json
+diff --git a/tools/perf/pmu-events/arch/x86/haswellx/metricgroups.json b/to=
+ols/perf/pmu-events/arch/x86/haswellx/metricgroups.json
 index 4193c90c3459..0863375bdead 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/metricgroups.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/metricgroups.json
+--- a/tools/perf/pmu-events/arch/x86/haswellx/metricgroups.json
++++ b/tools/perf/pmu-events/arch/x86/haswellx/metricgroups.json
 @@ -9,6 +9,7 @@
      "BvCB": "Grouping from Top-down Microarchitecture Analysis Metrics spr=
 eadsheet",
@@ -2461,151 +2018,12 @@ gory",
      "tma_l3_bound_group": "Metrics contributing to tma_l3_bound category",
      "tma_light_operations_group": "Metrics contributing to tma_light_opera=
 tions category",
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/pipeline.json b/tool=
-s/perf/pmu-events/arch/x86/broadwellx/pipeline.json
-index c03f77539362..962cd07eb307 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/pipeline.json
-@@ -379,7 +379,7 @@
-         "BriefDescription": "Reference cycles when the core is not in halt=
- state.",
-         "Counter": "Fixed counter 2",
-         "EventName": "CPU_CLK_UNHALTED.REF_TSC",
--        "PublicDescription": "This event counts the number of reference cy=
-cles when the core is not in a halt state. The core enters the halt state w=
-hen it is running the HLT instruction or the MWAIT instruction. This event =
-is not affected by core frequency changes (for example, P states, TM2 trans=
-itions) but has the same incrementing frequency as the time stamp counter. =
-This event can approximate elapsed time while the core was not in a halt st=
-ate. This event has a constant ratio with the CPU_CLK_UNHALTED.REF_XCLK eve=
-nt. It is counted on a dedicated fixed counter, leaving the four (eight whe=
-n Hyperthreading is disabled) programmable counters available for other eve=
-nts. \nNote: On all current platforms this event stops counting during 'thr=
-ottling (TM)' states duty off periods the processor is 'halted'.  This even=
-t is clocked by base clock (100 Mhz) on Sandy Bridge. The counter update is=
- done at a lower clock rate then the core clock the overflow status bit for=
- this counter may appear 'sticky'.  After the counter has overflowed and so=
-ftware clears the overflow status bit and resets the counter to less than M=
-AX. The reset value to the counter is not clocked immediately so the overfl=
-ow status bit will flip 'high (1)' and generate another PMI (if enabled) af=
-ter which the reset value gets clocked into the counter. Therefore, softwar=
-e will get the interrupt, read the overflow status bit '1 for bit 34 while =
-the counter value is less than MAX. Software should ignore this case.",
-+        "PublicDescription": "This event counts the number of reference cy=
-cles when the core is not in a halt state. The core enters the halt state w=
-hen it is running the HLT instruction or the MWAIT instruction. This event =
-is not affected by core frequency changes (for example, P states, TM2 trans=
-itions) but has the same incrementing frequency as the time stamp counter. =
-This event can approximate elapsed time while the core was not in a halt st=
-ate. This event has a constant ratio with the CPU_CLK_UNHALTED.REF_XCLK eve=
-nt. It is counted on a dedicated fixed counter, leaving the four (eight whe=
-n Hyperthreading is disabled) programmable counters available for other eve=
-nts.  Note: On all current platforms this event stops counting during 'thro=
-ttling (TM)' states duty off periods the processor is 'halted'.  This event=
- is clocked by base clock (100 Mhz) on Sandy Bridge. The counter update is =
-done at a lower clock rate then the core clock the overflow status bit for =
-this counter may appear 'sticky'.  After the counter has overflowed and sof=
-tware clears the overflow status bit and resets the counter to less than MA=
-X. The reset value to the counter is not clocked immediately so the overflo=
-w status bit will flip 'high (1)' and generate another PMI (if enabled) aft=
-er which the reset value gets clocked into the counter. Therefore, software=
- will get the interrupt, read the overflow status bit '1 for bit 34 while t=
-he counter value is less than MAX. Software should ignore this case.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x3"
-     },
-@@ -579,7 +579,7 @@
-         "BriefDescription": "Instructions retired from execution.",
-         "Counter": "Fixed counter 0",
-         "EventName": "INST_RETIRED.ANY",
--        "PublicDescription": "This event counts the number of instructions=
- retired from execution. For instructions that consist of multiple micro-op=
-s, this event counts the retirement of the last micro-op of the instruction=
-. Counting continues during hardware interrupts, traps, and inside interrup=
-t handlers. \nNotes: INST_RETIRED.ANY is counted by a designated fixed coun=
-ter, leaving the four (eight when Hyperthreading is disabled) programmable =
-counters available for other events. INST_RETIRED.ANY_P is counted by a pro=
-grammable counter and it is an architectural performance event. \nCounting:=
- Faulting executions of GETSEC/VM entry/VM Exit/MWait will not count as ret=
-ired instructions.",
-+        "PublicDescription": "This event counts the number of instructions=
- retired from execution. For instructions that consist of multiple micro-op=
-s, this event counts the retirement of the last micro-op of the instruction=
-. Counting continues during hardware interrupts, traps, and inside interrup=
-t handlers.  Notes: INST_RETIRED.ANY is counted by a designated fixed count=
-er, leaving the four (eight when Hyperthreading is disabled) programmable c=
-ounters available for other events. INST_RETIRED.ANY_P is counted by a prog=
-rammable counter and it is an architectural performance event.  Counting: F=
-aulting executions of GETSEC/VM entry/VM Exit/MWait will not count as retir=
-ed instructions.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-@@ -654,7 +654,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x03",
-         "EventName": "LD_BLOCKS.STORE_FORWARD",
--        "PublicDescription": "This event counts how many times the load op=
-eration got the true Block-on-Store blocking code preventing store forwardi=
-ng. This includes cases when:\n - preceding store conflicts with the load (=
-incomplete overlap);\n - store forwarding is impossible due to u-arch limit=
-ations;\n - preceding lock RMW operations are not forwarded;\n - store has =
-the no-forward bit set (uncacheable/page-split/masked stores);\n - all-bloc=
-king stores are used (mostly, fences and port I/O);\nand others.\nThe most =
-common case is a load blocked due to its address range overlapping with a p=
-receding smaller uncompleted store. Note: This event does not take into acc=
-ount cases of out-of-SW-control (for example, SbTailHit), unknown physical =
-STA, and cases of blocking loads on store due to being non-WB memory type o=
-r a lock. These cases are covered by other events.\nSee the table of not su=
-pported store forwards in the Optimization Guide.",
-+        "PublicDescription": "This event counts how many times the load op=
-eration got the true Block-on-Store blocking code preventing store forwardi=
-ng. This includes cases when:  - preceding store conflicts with the load (i=
-ncomplete overlap);  - store forwarding is impossible due to u-arch limitat=
-ions;  - preceding lock RMW operations are not forwarded;  - store has the =
-no-forward bit set (uncacheable/page-split/masked stores);  - all-blocking =
-stores are used (mostly, fences and port I/O); and others. The most common =
-case is a load blocked due to its address range overlapping with a precedin=
-g smaller uncompleted store. Note: This event does not take into account ca=
-ses of out-of-SW-control (for example, SbTailHit), unknown physical STA, an=
-d cases of blocking loads on store due to being non-WB memory type or a loc=
-k. These cases are covered by other events. See the table of not supported =
-store forwards in the Optimization Guide.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x2"
-     },
-@@ -822,7 +822,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x5E",
-         "EventName": "RS_EVENTS.EMPTY_CYCLES",
--        "PublicDescription": "This event counts cycles during which the re=
-servation station (RS) is empty for the thread.\nNote: In ST-mode, not acti=
-ve thread should drive 0. This is usually caused by severely costly branch =
-mispredictions, or allocator/FE issues.",
-+        "PublicDescription": "This event counts cycles during which the re=
-servation station (RS) is empty for the thread. Note: In ST-mode, not activ=
-e thread should drive 0. This is usually caused by severely costly branch m=
-ispredictions, or allocator/FE issues.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-@@ -1177,7 +1177,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x0E",
-         "EventName": "UOPS_ISSUED.FLAGS_MERGE",
--        "PublicDescription": "Number of flags-merge uops being allocated. =
-Such uops considered perf sensitive\n added by GSR u-arch.",
-+        "PublicDescription": "Number of flags-merge uops being allocated. =
-Such uops considered perf sensitive  added by GSR u-arch.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x10"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-cache.json b/=
-tools/perf/pmu-events/arch/x86/broadwellx/uncore-cache.json
-index b55b305aecaa..8f6955615bfd 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/uncore-cache.json
-@@ -802,7 +802,7 @@
+diff --git a/tools/perf/pmu-events/arch/x86/haswellx/uncore-cache.json b/to=
+ols/perf/pmu-events/arch/x86/haswellx/uncore-cache.json
+index 3c23bafcba28..d664af16c1db 100644
+--- a/tools/perf/pmu-events/arch/x86/haswellx/uncore-cache.json
++++ b/tools/perf/pmu-events/arch/x86/haswellx/uncore-cache.json
+@@ -812,7 +812,7 @@
          "EventCode": "0x12",
          "EventName": "UNC_C_RxR_EXT_STARVED.IPQ",
          "PerPkg": "1",
@@ -2618,7 +2036,7 @@ occurs when one of the ingress queues is being starved by the other queues.=
          "UMask": "0x2",
          "Unit": "CBOX"
      },
-@@ -1859,7 +1859,7 @@
+@@ -1869,7 +1869,7 @@
          "EventCode": "0x14",
          "EventName": "UNC_H_BYPASS_IMC.NOT_TAKEN",
          "PerPkg": "1",
@@ -2635,7 +2053,7 @@ s that could not take the bypass.",
          "UMask": "0x2",
          "Unit": "HA"
      },
-@@ -1869,7 +1869,7 @@
+@@ -1879,7 +1879,7 @@
          "EventCode": "0x14",
          "EventName": "UNC_H_BYPASS_IMC.TAKEN",
          "PerPkg": "1",
@@ -2652,7 +2070,7 @@ s that succeeded in taking the bypass.",
          "UMask": "0x1",
          "Unit": "HA"
      },
-@@ -2884,7 +2884,7 @@
+@@ -2874,7 +2874,7 @@
          "EventCode": "0x15",
          "EventName": "UNC_H_RPQ_CYCLES_NO_REG_CREDITS.CHN0",
          "PerPkg": "1",
@@ -2681,7 +2099,7 @@ me.; Filter for memory controller channel 0 only.",
          "UMask": "0x1",
          "Unit": "HA"
      },
-@@ -2894,7 +2894,7 @@
+@@ -2884,7 +2884,7 @@
          "EventCode": "0x15",
          "EventName": "UNC_H_RPQ_CYCLES_NO_REG_CREDITS.CHN1",
          "PerPkg": "1",
@@ -2710,7 +2128,7 @@ me.; Filter for memory controller channel 1 only.",
          "UMask": "0x2",
          "Unit": "HA"
      },
-@@ -2904,7 +2904,7 @@
+@@ -2894,7 +2894,7 @@
          "EventCode": "0x15",
          "EventName": "UNC_H_RPQ_CYCLES_NO_REG_CREDITS.CHN2",
          "PerPkg": "1",
@@ -2739,7 +2157,7 @@ me.; Filter for memory controller channel 2 only.",
          "UMask": "0x4",
          "Unit": "HA"
      },
-@@ -2914,7 +2914,7 @@
+@@ -2904,7 +2904,7 @@
          "EventCode": "0x15",
          "EventName": "UNC_H_RPQ_CYCLES_NO_REG_CREDITS.CHN3",
          "PerPkg": "1",
@@ -2768,7 +2186,7 @@ me.; Filter for memory controller channel 3 only.",
          "UMask": "0x8",
          "Unit": "HA"
      },
-@@ -3448,7 +3448,7 @@
+@@ -3438,7 +3438,7 @@
          "EventCode": "0x3",
          "EventName": "UNC_H_TRACKER_CYCLES_NE.ALL",
          "PerPkg": "1",
@@ -2799,7 +2217,7 @@ ring.; Requests coming from both local and remote sockets.",
          "UMask": "0x3",
          "Unit": "HA"
      },
-@@ -3458,7 +3458,7 @@
+@@ -3448,7 +3448,7 @@
          "EventCode": "0x3",
          "EventName": "UNC_H_TRACKER_CYCLES_NE.LOCAL",
          "PerPkg": "1",
@@ -2830,7 +2248,7 @@ ring.; This filter includes only requests coming from the local socket.",
          "UMask": "0x1",
          "Unit": "HA"
      },
-@@ -3468,7 +3468,7 @@
+@@ -3458,7 +3458,7 @@
          "EventCode": "0x3",
          "EventName": "UNC_H_TRACKER_CYCLES_NE.REMOTE",
          "PerPkg": "1",
@@ -2861,7 +2279,7 @@ ring.; This filter includes only requests coming from remote sockets.",
          "UMask": "0x2",
          "Unit": "HA"
      },
-@@ -3888,7 +3888,7 @@
+@@ -3878,7 +3878,7 @@
          "EventCode": "0x18",
          "EventName": "UNC_H_WPQ_CYCLES_NO_REG_CREDITS.CHN0",
          "PerPkg": "1",
@@ -2890,7 +2308,7 @@ en time.; Filter for memory controller channel 0 only.",
          "UMask": "0x1",
          "Unit": "HA"
      },
-@@ -3898,7 +3898,7 @@
+@@ -3888,7 +3888,7 @@
          "EventCode": "0x18",
          "EventName": "UNC_H_WPQ_CYCLES_NO_REG_CREDITS.CHN1",
          "PerPkg": "1",
@@ -2919,7 +2337,7 @@ en time.; Filter for memory controller channel 1 only.",
          "UMask": "0x2",
          "Unit": "HA"
      },
-@@ -3908,7 +3908,7 @@
+@@ -3898,7 +3898,7 @@
          "EventCode": "0x18",
          "EventName": "UNC_H_WPQ_CYCLES_NO_REG_CREDITS.CHN2",
          "PerPkg": "1",
@@ -2948,7 +2366,7 @@ en time.; Filter for memory controller channel 2 only.",
          "UMask": "0x4",
          "Unit": "HA"
      },
-@@ -3918,7 +3918,7 @@
+@@ -3908,7 +3908,7 @@
          "EventCode": "0x18",
          "EventName": "UNC_H_WPQ_CYCLES_NO_REG_CREDITS.CHN3",
          "PerPkg": "1",
@@ -2977,11 +2395,11 @@ en time.; Filter for memory controller channel 3 only.",
          "UMask": "0x8",
          "Unit": "HA"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-interconnect.=
-json b/tools/perf/pmu-events/arch/x86/broadwellx/uncore-interconnect.json
-index 765d44012bba..56d729c8e946 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-interconnect.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/uncore-interconnect.json
+diff --git a/tools/perf/pmu-events/arch/x86/haswellx/uncore-interconnect.js=
+on b/tools/perf/pmu-events/arch/x86/haswellx/uncore-interconnect.json
+index 121de411d312..8f73a8649b39 100644
+--- a/tools/perf/pmu-events/arch/x86/haswellx/uncore-interconnect.json
++++ b/tools/perf/pmu-events/arch/x86/haswellx/uncore-interconnect.json
 @@ -1,24 +1,4 @@
  [
 -    {
@@ -3135,34 +2553,43 @@ tions serviced by the IRP",
          "UMask": "0x40",
          "Unit": "IRP"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-memory.json b=
-/tools/perf/pmu-events/arch/x86/broadwellx/uncore-memory.json
-index 45555316f8ea..ca09c1286485 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/uncore-memory.json
-@@ -184,6 +184,7 @@
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-UNC_M_CLOCKTICKS_P",
-         "Counter": "0,1,2,3",
-+        "Deprecated": "1",
-         "EventName": "UNC_M_DCLOCKTICKS",
+@@ -493,7 +473,7 @@
+         "EventCode": "0x16",
+         "EventName": "UNC_I_TRANSACTIONS.WRITES",
          "PerPkg": "1",
-         "Unit": "iMC"
+-        "PublicDescription": "Counts the number of Inbound transactions fr=
+om the IRP to the Uncore.  This can be filtered based on request type in ad=
+dition to the source queue.  Note the special filtering equation.  We do OR=
+-reduction on the request type.  If the SOURCE bit is set, then we also do =
+AND qualification based on the source portID.; Trackes only write requests.=
+  Each write request should have a prefetch, so there is no need to explici=
+tly track these requests.  For writes that are tickled and have to retry, t=
+he counter will be incremented for each retry.",
++        "PublicDescription": "Counts the number of Inbound transactions fr=
+om the IRP to the Uncore.  This can be filtered based on request type in ad=
+dition to the source queue.  Note the special filtering equation.  We do OR=
+-reduction on the request type.  If the SOURCE bit is set, then we also do =
+AND qualification based on the source portID.; Tracks only write requests. =
+ Each write request should have a prefetch, so there is no need to explicit=
+ly track these requests.  For writes that are tickled and have to retry, th=
+e counter will be incremented for each retry.",
+         "UMask": "0x2",
+         "Unit": "IRP"
+     },
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index ccbe9be240b3..6405c7627e27 100644
+index bd87a41a1de7..ab55929df484 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -5,7 +5,7 @@ GenuineIntel-6-C[56],v1.07,arrowlake,core
- GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
- GenuineIntel-6-(3D|47),v30,broadwell,core
- GenuineIntel-6-56,v12,broadwellde,core
--GenuineIntel-6-4F,v22,broadwellx,core
-+GenuineIntel-6-4F,v23,broadwellx,core
- GenuineIntel-6-55-[56789ABCDEF],v1.22,cascadelakex,core
- GenuineIntel-6-9[6C],v1.05,elkhartlake,core
- GenuineIntel-6-CF,v1.09,emeraldrapids,core
+@@ -15,7 +15,7 @@ GenuineIntel-6-7A,v1.01,goldmontplus,core
+ GenuineIntel-6-B6,v1.05,grandridge,core
+ GenuineIntel-6-A[DE],v1.06,graniterapids,core
+ GenuineIntel-6-(3C|45|46),v36,haswell,core
+-GenuineIntel-6-3F,v28,haswellx,core
++GenuineIntel-6-3F,v29,haswellx,core
+ GenuineIntel-6-7[DE],v1.22,icelake,core
+ GenuineIntel-6-6[AC],v1.26,icelakex,core
+ GenuineIntel-6-3A,v24,ivybridge,core
 --=20
 2.48.1.362.g079036d154-goog
 
