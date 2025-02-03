@@ -1,211 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05F0153801;
-	Mon,  3 Feb 2025 20:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E64153801;
+	Mon,  3 Feb 2025 20:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738614712; cv=none; b=WE4VDjB2xrJEIMz/6QBrCkxMJnqns20j1riHts86Z8rQm51hXNMJPCG6+pXmeOykTCLmDRHiBMeQdXMjurfsQDCK2KYDig9pwhLFopjLiTeeZLDwvY4Tr48b3C7IgfBdYEJypy/fL4UZteTFvQRLyd5SpM2ZXUI/4jH7S3cWAG4=
+	t=1738614728; cv=none; b=LmlbRXWQ9KaavHOhNm5MMq62Jwsd9U5o2Zbsbw0QM222gOD/G+wsJ3cY/eMez5Cuw8ph710kGeV5hIcVpLdMF89YCpnKwK/5hdh+f7ydMYTcWlYtQH2gg+hxQZUFLkPFFJBWxRFnd70E2ugjrnkbZ1ET35Drta2G+5eGkbcJ8vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738614712; c=relaxed/simple;
-	bh=5eOxy8BIXo5rG346U1T+Y7S+7T3xpUd4UZPysTMJV4Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qS5g9RCImmAdeRcQLlN1NghhnMpuyRc7cBzlxfm8Yx6O3sSZHDFFWPHs7l7GvcFx1ljCySRQECkPs7XPYp7X8AQEDO7ay0mn5yBxedy72wf9nvIJgWe+sbC3MWqhbjo5TAwkxpdBQOzJMPTdJLvbwMZUm4kbPuYTeT/wO8kYx8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4CKZWXM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738614728; c=relaxed/simple;
+	bh=NG0T7KFAIKiHL+Zgrx0FfBVniTS7WNZL8+KqlJjo7Po=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hMbhjY0xNqa7MSrhbhTgXJ9PfHPSC/wUY4phoIPbB0eGuXH/mYsr1HLjC5WQCQigTAoqXkn4ubQpnB6BqOD/p2Gf4CgZPmbPMLLW4iuZgnhowkfKzlyqhBoxvKY35pkdjoSF9gX100kONpoPyfLJVHvEd2n1IIx+voSB5GkiDKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=WGDq/ASr; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4CKZWXM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E52EC4CED2;
-	Mon,  3 Feb 2025 20:31:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738614712;
-	bh=5eOxy8BIXo5rG346U1T+Y7S+7T3xpUd4UZPysTMJV4Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X4CKZWXM3xA0OhbYlw7moYCJJakyIks1FP16VkJfBYugZ+kYBv1aTDMg7mSB+Qp5z
-	 z5ykrhPg/Xor+4IDnp3JHVaVjOkatkLzaF6NoMGctlj989AM4V+tNdiGV6FiKocrit
-	 ejaDQ/LDnsPzxzEyy1upsiwDYTce/1RydshpKt9S/SBJUGY7/Z3oz9ODT3H//e43b0
-	 JCrAwlRr9vL6nl+qmNPEjBzrHod6POKQAlcdHpb92X8Ik3Fe3H5RBA1ctdDTY6nIAZ
-	 BPexrCl95mcMnDsoZRrjzY89gjq0MCNg3ohSRKhxaKzMX17KsiN7+Dmo/MutrsaKc7
-	 7Cp1kKVTgXVNQ==
-Message-ID: <e52e6257-1091-4cf8-a757-c2ddbe348a77@kernel.org>
-Date: Mon, 3 Feb 2025 21:31:46 +0100
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="WGDq/ASr"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 6297B25BB1;
+	Mon,  3 Feb 2025 21:31:57 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id ptaMgSM_c83N; Mon,  3 Feb 2025 21:31:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1738614716; bh=NG0T7KFAIKiHL+Zgrx0FfBVniTS7WNZL8+KqlJjo7Po=;
+	h=From:Date:Subject:To:Cc;
+	b=WGDq/ASrQqHxw2gubMhHnkwd1gCj4KPpSdJZC4wobNs9mo34B39vK0J9plUuDy9Th
+	 q0B1S03HCZN08IXx7lxo7lR4cFKggsIDkCSwSqZRdnGbMa7UhRIn8GkYLayqIgkh76
+	 INjthtsrtdoFQiOZqNZXNGdFS5+JazWDTV8+9rRNXGDhXMtITp3qQePyep5wGjZ4E0
+	 32lImbinTGd6EQlW/ng75jyM3e/dMQVVfUKr9pFadRa7Or9G1lIxeF1DGE+0A3n2qe
+	 T3Zy9oQPUASQZcH47D8Blf3rABxa/y/uSlmaVws13futeI4sVsJm+hU/tbxT6SUTXe
+	 1cPnNkCVD8F+A==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Date: Tue, 04 Feb 2025 02:01:47 +0530
+Subject: [PATCH] dt-bindings: soc: samsung,boot-mode: add boot mode
+ definitions for exynos7870
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] ASoC: dt-bindings: Add cmx655 codec
-To: Nikola Jelic <nikola.jelic83@gmail.com>, lgirdwood@gmail.com,
- broonie@kernel.org, perex@perex.cz, tiwai@suse.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: rwalton@cmlmicro.com
-References: <20250203170117.12004-1-nikola.jelic83@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250203170117.12004-1-nikola.jelic83@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250204-exynos7870-bootmode-v1-1-0f17b3033c2d@disroot.org>
+X-B4-Tracking: v=1; b=H4sIALInoWcC/x3MTQ5AMBBA4avIrDUZ9RtXEQvMYBY60ooQcXeN5
+ bd474HAXjhAmzzg+ZQg6iKyNIFpHdzCRigaLNoSLeaGr9tpqJsazah6bEpsRmTKq4qKsiCI5e5
+ 5luu/dv37fv+BJVRlAAAA
+X-Change-ID: 20250203-exynos7870-bootmode-b0ed366d454d
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Conor Dooley <conor@kernel.org>
+Cc: Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738614711; l=1291;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=NG0T7KFAIKiHL+Zgrx0FfBVniTS7WNZL8+KqlJjo7Po=;
+ b=pTF7S77HJby7HUJ4iEk6iHKCeJ7E+ye74eWzg3gPd89p+XXinFSHi2wQRgvIm5d3pmHMCrD2Z
+ msnWGxLDJ65BO8rYc/4RS67vVBqQNfF4ly/5/bv3ZoaD/9JmOvZZ6ZQ
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-On 03/02/2025 18:01, Nikola Jelic wrote:
-> +
-> +title: CML Micro CMX655D codec
-> +
-> +maintainers:
-> +  - Richard Walton <rwalton@cmlmicro.com>
-> +  - Nikola Jelic <nikola.jelic83@gmail.com>
-> +
-> +description: |
+Add bootmode values for bootloader, download, and recovery for
+Exynos7870. These values are used by the syscon-reboot-mode driver to
+facilitate rebooting in different modes.
 
-Do not need '|' unless you need to preserve formatting.
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+This patch series is a part of Exynos7870 upstreaming.
+---
+ include/dt-bindings/soc/samsung,boot-mode.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> +  The CMX655D is an ultra-low power voice codec.
-> +
-> +allOf:
-> +  - $ref: dai-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - cml,cmx655d
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#sound-dai-cells":
-> +    const: 0
-> +
-> +  reset-gpios:
-> +    description: GPIO used for codec reset, negative logic
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-names:
-> +    maxItems: 1
+diff --git a/include/dt-bindings/soc/samsung,boot-mode.h b/include/dt-bindings/soc/samsung,boot-mode.h
+index 47ef1cdd3916eb33dd729396dfe443ba6a49f22f..effb3d6fa501e28a0a1fe847e5a0fe6906ef4f29 100644
+--- a/include/dt-bindings/soc/samsung,boot-mode.h
++++ b/include/dt-bindings/soc/samsung,boot-mode.h
+@@ -9,6 +9,12 @@
+ #ifndef __DT_BINDINGS_SAMSUNG_BOOT_MODE_H
+ #define __DT_BINDINGS_SAMSUNG_BOOT_MODE_H
+ 
++/* Boot mode definitions for Exynos 7870 SoC */
++
++#define EXYNOS7870_BOOT_DOWNLOAD	0x12345671
++#define EXYNOS7870_BOOT_RECOVERY	0x12345674
++#define EXYNOS7870_BOOT_BOOTLOADER	0x1234567d
++
+ /* Boot mode definitions for Exynos Auto v9 SoC */
+ 
+ #define EXYNOSAUTOV9_BOOT_FASTBOOT	0xfa
 
-Describe the names or drop. Look how other bindings do it - there is
-never syntax like that alone.
-
-> +
-> +  pinctrl-names:
-> +    maxItems: 1
-
-Drop property, not needed here.
-
-> +
-> +  pinctr-0:
-> +    maxItems: 1
-
-Drop property, not needed and not correct.
-
-> +
-
-> +  cmx655,classd-oc-reset-attempts:
-> +    description: Maximum number of times to reset CMX655 class-D
-> +      following a overcurrent event.
-> +      Default = 5, >10000 = disable limit.
-
-Missing constraints, min/max. Drop also redundant part - schema already
-says default 5.
-
-But more important, I am not sure why this is board-configurable.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 5
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        status = "okay";
-
-Drop
-
-> +        codec: cmx655 {
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-audio-codec, codec etc.
-
-> +            reg = <0x54>;
-> +            #sound-dai-cells = <0>;
-> +            compatible = "cml,cmx655d";
-
-Follow DTS coding style. compatible must be first.
-
-> +            reset-gpios = <&gpio 24 1>;
-
-Use defines for standard flags.
-
-> +            interrupt-parent = <&gpio>;
-> +            interrupts = <25 0x2>;
-
-Use defines for standard flags.
-
-> +            interrupt-names = "irq";
-
-Drop
-
-> +            pinctrl-names = "default";
-> +            pinctrl-0 = <&ev6550DHAT_pins>;
-
-
+---
+base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
+change-id: 20250203-exynos7870-bootmode-b0ed366d454d
 
 Best regards,
-Krzysztof
+-- 
+Kaustabh Chakraborty <kauschluss@disroot.org>
+
