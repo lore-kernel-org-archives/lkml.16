@@ -1,178 +1,159 @@
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 665FC2046B2;
-	Mon,  3 Feb 2025 11:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939AC2046B7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738583755; cv=none; b=ijIDk3W0GaFHg3d3jlR82ZlYlOdYHJeKrcc2er8owbnyANgMC7+VpL3/lbJDWrsBrsiF0HUwhjl/gdlAMoHwyer4cMO1YMjHgxPfl/kKCcinie7Ep4am6At+/CAOqRikrspvVZ54WUEeP+lf7C583STRURQ4rlp3we7Lqk0+IQE=
+	t=1738583755; cv=none; b=sAgA1sT6IPhN5echtNUgmDJn6fWMeJ03yljoXyns1k7u6A02jYi9+3UviLpt11Og8TjpTab5oymtW3eJFgQ8qvTcS/6NRqxEiD/5/Y+PoHm10smzNZMLSa5C5PsMnlsWFp1LX5yMiUjhRQ7zqUoGLBQIIsqzp6XsCLsjVkzs2Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738583755; c=relaxed/simple;
-	bh=xLxCbpoA/4X6rIaPV3F//sTbwXjhJIN657Zw92ewmUI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=u9tyVQQ4wrW+Ru5T92QgJV5WpncN9Y9phzRXqIeVsAjP1tXmUb4BQJ0Ry+t4bru/h4oqSJ4++UscYEYEKZn4gplinUQecPzypS1ok9VpYkNhLJHTBFz2ACHQ15J+tGfnopdm6HfGMNfBaK0nOsfmM79Kq92y7GyU/h4nZydKG8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
-Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 03 Feb 2025 20:55:52 +0900
-Received: from mail.mfilter.local (mail-arc01.css.socionext.com [10.213.46.36])
-	by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 475BF208E5DC;
-	Mon,  3 Feb 2025 20:55:52 +0900 (JST)
-Received: from iyokan2.css.socionext.com ([172.31.9.53]) by m-FILTER with ESMTP; Mon, 3 Feb 2025 20:55:52 +0900
-Received: from [10.212.246.222] (unknown [10.212.246.222])
-	by iyokan2.css.socionext.com (Postfix) with ESMTP id 672281A9;
-	Mon,  3 Feb 2025 20:55:51 +0900 (JST)
-Message-ID: <2b22ecba-93b8-479c-ab16-42cf24cf2c06@socionext.com>
-Date: Mon, 3 Feb 2025 20:55:51 +0900
+	bh=3T3cQOz17m5Ds9rW6s0LrBZRHiluSRGdx/Rbl2rtwCI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bsRn9cPQxjxlfUH+ykc28NZJ8laVmGL6n62msU8fiJpLlRXAskWFVWoMk5avSYa3mYXx+NUd+WRtgxFAj9P4UNqPqggP3BCmqg+qCuI+BBfsK5nBGtqisYAoxL/MnXRDV8R4tYtsBycfE2Fh2PjpNrYDWjuiY2Yt5ddQMUC3QzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FZfYmpHz; arc=none smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FZfYmpHz"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4affbc4dc74so2764361137.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:55:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738583752; x=1739188552; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4T/jeZDyuPmkQiIqMcypfqD3cEs/NVatrloEFxJn+oE=;
+        b=FZfYmpHz606/DFx24V3jShiJH3OIOppIeD6HaoBJQrY7qBTIdRTsp5tYvgpXBEOh2w
+         fZ7uvZ2vNMqnhTNn1Bc8e+o3jFT/HEcY4KehurB6v6wEbrXZk+Osg5wuYHCckdgwtNNB
+         3+eE+EOV+wVYnvgyKbjzjms+/ux12PsyMZqgw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738583752; x=1739188552;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4T/jeZDyuPmkQiIqMcypfqD3cEs/NVatrloEFxJn+oE=;
+        b=mdvqKZcjDboWtk/gxxojRDAoezci1Y3ERwDDxY1qLebKm2nvyKBNMTHYUp4mcTqOwU
+         m7hX5k6lsRrdIhelpvY1Y19/jRgU45mIICcHLzqXikfi9ooRhvPesVJiT3tpi9p7KsFV
+         KUmvaHtBYoQ5wqE9/MN522s0pxWogT6pjoz5f8TYj/diZkKWghMgJosLphIL1teY9KCM
+         G54EuUXTzPfksr0hWY88XR6uLKHSbRu6sDFaVy3xRUGC7J74KOXkRsilYQ3TnlgvfgN3
+         PIvHw9J2x00gMcbobcy5htwqsPUi1477p1nn4SwsR7FUetePUGYa1dxhWOOVRzUmKBTc
+         bZAw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfYNLrxVu3o0Sd8knZbQ1+7r+isJYtOYj2+toMuOkd860WSAioPfzCKq8eI0eBstpr18Ep9rEkCoUqFhc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0QXPwtE0yZnQN/yNfPfC/O/xA2bZt/AWhpnQKriq3CVOoyeSQ
+	jv7xK0nZVo9Q9D3JieNo041ppLlGtatQPgdhspWFAzO7Y85KyW0pCBExtcx3xA==
+X-Gm-Gg: ASbGncs3g73neGcRDbR6e2rgrg+7jxQe2l3uYs9fwnK494IsBsrVG+AL8mVs+X+1OpV
+	TokpyQkfwwaj699b62yZabHYq+e8N8xVRUZtc6vRSCP3JJo1yUhuOoAhiRsk/NrI9qOn7Kmn6TQ
+	tB4iqYKgOR5ZxCohGkcCv9aTzUaAGSHKMsFTpzQn1oLXnQC5hIbgTJY1REmUTfM+yqU//T3QUsL
+	svVEhLYTm76OQyXHqJrW2bgGS3K9RNsnolRXZ+cs+Bl+ZyuJLkOigYmbCXocG6GTvuPN12veVS3
+	fFARM0D85WL21ZzyI3O4oSRQft8MTcqmt5kLcoGMTs+3M0B0ritIDz63u60cTUCgoQ==
+X-Google-Smtp-Source: AGHT+IHg7iII8wVGrHg4rxybjTvs73uue2/7WP9h+5WXhBhYPZ4vx0SJVudZFvGpnVRiTDgaJp6Png==
+X-Received: by 2002:a05:6102:508a:b0:4b6:d833:63b2 with SMTP id ada2fe7eead31-4b9a4f9acabmr14188569137.10.1738583752239;
+        Mon, 03 Feb 2025 03:55:52 -0800 (PST)
+Received: from denia.c.googlers.com (5.236.236.35.bc.googleusercontent.com. [35.236.236.5])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baa9aefcsm1592770137.12.2025.02.03.03.55.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 03:55:51 -0800 (PST)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 03 Feb 2025 11:55:41 +0000
+Subject: [PATCH v17 05/17] media: uvcvideo: Handle uvc menu translation
+ inside uvc_set_le_value
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v4 3/3] net: stmmac: Specify hardware capability value
- when FIFO size isn't specified
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Guenter Roeck <linux@roeck-us.net>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Yanteng Si <si.yanteng@linux.dev>, Furong Xu <0x1207@gmail.com>,
- Joao Pinto <Joao.Pinto@synopsys.com>, netdev@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250127013820.2941044-1-hayashi.kunihiko@socionext.com>
- <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
- <4e98f967-f636-46fb-9eca-d383b9495b86@roeck-us.net>
- <Z56FmH968FUGkC5J@shell.armlinux.org.uk>
- <905127b5-96c8-4866-8f69-d9d8a7091c99@socionext.com>
- <Z6CLDJJ21MMml3cD@shell.armlinux.org.uk>
- <e1654cc9-a696-454c-a9c7-80a8e1a148ff@socionext.com>
-Content-Language: en-US
-In-Reply-To: <e1654cc9-a696-454c-a9c7-80a8e1a148ff@socionext.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250203-uvc-roi-v17-5-5900a9fed613@chromium.org>
+References: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
+In-Reply-To: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Yunke Cao <yunkec@chromium.org>, linux-media@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>, 
+ Yunke Cao <yunkec@google.com>
+X-Mailer: b4 0.13.0
 
-On 2025/02/03 20:32, Kunihiko Hayashi wrote:
-> Hi,
-> 
-> On 2025/02/03 18:23, Russell King (Oracle) wrote:
->> On Mon, Feb 03, 2025 at 11:45:05AM +0900, Kunihiko Hayashi wrote:
->>> Hi all,
->>>
->>> On 2025/02/02 5:35, Russell King (Oracle) wrote:
->>>> On Sat, Feb 01, 2025 at 11:14:41AM -0800, Guenter Roeck wrote:
->>>>> Hi,
->>>>>
->>>>> On Mon, Jan 27, 2025 at 10:38:20AM +0900, Kunihiko Hayashi wrote:
->>>>>> When Tx/Rx FIFO size is not specified in advance, the driver
->> checks if
->>>>>> the value is zero and sets the hardware capability value in
->> functions
->>>>>> where that value is used.
->>>>>>
->>>>>> Consolidate the check and settings into function stmmac_hw_init()
->> and
->>>>>> remove redundant other statements.
->>>>>>
->>>>>> If FIFO size is zero and the hardware capability also doesn't have
->>>> upper
->>>>>> limit values, return with an error message.
->>>>>>
->>>>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->>>>>
->>>>> This patch breaks qemu's stmmac emulation, for example for
->>>>> npcm750-evb. The error message is:
->>>>> 	stmmaceth f0804000.eth: Can't specify Rx FIFO size
->>>
->>> Sorry for inconvenience.
->>>
->>>> Interesting. I looked at QEMU to see whether anything in the Debian
->>>> stable version of QEMU might possibly have STMMAC emulation, but
->>>> drew a blank... Even trying to find where in QEMU it emulates the
->>>> STMMAC. I do see that it does include this, so maybe I can use that
->>>> to test some of my stmmac changes. Thanks!
->>>>
->>>>> The setup function called for the emulated hardware is
->>>> dwmac1000_setup().
->>>>> That function does not set the DMA rx or tx fifo size.
->>>>>
->>>>> At the same time, the rx and tx fifo size is not provided in the
->>>>> devicetree file (nuvoton-npcm750.dtsi), so the failure is obvious.
->>>>>
->>>>> I understand that the real hardware may be based on a more recent
->>>>> version of the DWMAC IP which provides the DMA tx/rx fifo size, but
->>>>> I do wonder: Are the benefits of this patch so substantial that it
->>>>> warrants breaking the qemu emulation of this network interface >
->>>> Please see my message sent a while back on an earlier revision of this
->>>> patch series. I reviewed the stmmac driver for the fifo sizes and
->>>> documented what I found.
->>>>
->>>> https://lore.kernel.org/r/Z4_ZilVFKacuAUE8@shell.armlinux.org.uk
->>>>
->>>> To save clicking on the link, I'll reproduce the relevant part below.
->>>> It appears that dwmac1000 has no way to specify the FIFO size, and
->>>> thus would have priv->dma_cap.rx_fifo_size and
->>>> priv->dma_cap.tx_fifo_size set to zero.
->>>>
->>>> Given the responses, I'm now of the opinion that the patch series is
->>>> wrong, and probably should be reverted - I never really understood
->>>> the motivation why the series was necessary. It seemed to me to be a
->>>> "wouldn't it be nice if" series rather than something that is
->>>> functionally necessary.
->>>>
->>>>
->>>> Here's the extract from my previous email:
->>>>
->>>> Now looking at the defintions:
->>>>
->>>> drivers/net/ethernet/stmicro/stmmac/dwmac4.h:#define
->> GMAC_HW_RXFIFOSIZE
->>>> GENMASK(4, 0)
->>>> drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h:#define
->>>> XGMAC_HWFEAT_RXFIFOSIZE GENMASK(4, 0)
->>>>
->>>> So there's a 5-bit bitfield that describes the receive FIFO size for
->>>> these two MACs. Then we have:
->>>>
->>>> drivers/net/ethernet/stmicro/stmmac/common.h:#define
->>>> DMA_HW_FEAT_RXFIFOSIZE    0x00080000       /* Rx FIFO > 2048 Bytes */
->>>>
->>>> which is used here:
->>>>
->>>> drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c:
->>>> dma_cap->rxfifo_over_2048 = (hw_cap & DMA_HW_FEAT_RXFIFOSIZE) >> 19;
->>>>
->>>> which is only used to print a Y/N value in a debugfs file, otherwise
->>>> having no bearing on driver behaviour.
->>>>
->>>> So, I suspect MACs other than xgmac2 or dwmac4 do not have the ability
->>>> to describe the hardware FIFO sizes in hardware, thus why there's the
->>>> override and no checking of what the platform provided - and doing so
->>>> would break the driver. This is my interpretation from the code alone.
->>>>
->>>
->>> The {tx,rx}_queus_to_use are referenced in stmmac_ethtool.c,
->> stmmac_tc.c,
->>> and stmmac_selftests.c as the number of queues, so I've thought that
->>> these variables should not be non-zero.
->>
->> Huh? We're talking about {tx,rx}_fifo_size, not _queues_to_use.
-> 
-> Sorry, this topic is just about {tx,rx}_fifo_size.
-> Above comments are not needed here.
-> 
-> These value are only referenced in stmmac_main.c and stmmac_selftest.c.
-> As far as I can see, there is no usage that requires the values to be
-> non-zero.
+Be consistent with uvc_get_le_value() and do the menu translation there.
 
-Comment to myself:
-This is incorrect as it depends on how the values are used.
+Note that in this case, the refactor does not provide much... but
+consistency is a nice feature.
 
-Thank you,
-
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Yunke Cao <yunkec@google.com>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
-Best Regards
-Kunihiko Hayashi
+ drivers/media/usb/uvc/uvc_ctrl.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+index 4a55cf78ec52..3108d2fa1ff9 100644
+--- a/drivers/media/usb/uvc/uvc_ctrl.c
++++ b/drivers/media/usb/uvc/uvc_ctrl.c
+@@ -939,14 +939,22 @@ static void uvc_set_le_value(struct uvc_control_mapping *mapping,
+ 	int offset = mapping->offset;
+ 	u8 mask;
+ 
+-	/*
+-	 * According to the v4l2 spec, writing any value to a button control
+-	 * should result in the action belonging to the button control being
+-	 * triggered. UVC devices however want to see a 1 written -> override
+-	 * value.
+-	 */
+-	if (mapping->v4l2_type == V4L2_CTRL_TYPE_BUTTON)
++	switch (mapping->v4l2_type) {
++	case V4L2_CTRL_TYPE_MENU:
++		value = uvc_mapping_get_menu_value(mapping, value);
++		break;
++	case V4L2_CTRL_TYPE_BUTTON:
++		/*
++		 * According to the v4l2 spec, writing any value to a button
++		 * control should result in the action belonging to the button
++		 * control being triggered. UVC devices however want to see a 1
++		 * written -> override value.
++		 */
+ 		value = -1;
++		break;
++	default:
++		break;
++	}
+ 
+ 	data += offset / 8;
+ 	offset &= 7;
+@@ -2033,23 +2041,23 @@ int uvc_ctrl_set(struct uvc_fh *handle,
+ 		if (!test_bit(xctrl->value, &mapping->menu_mask))
+ 			return -EINVAL;
+ 
+-		value = uvc_mapping_get_menu_value(mapping, xctrl->value);
+-
+ 		/*
+ 		 * Valid menu indices are reported by the GET_RES request for
+ 		 * UVC controls that support it.
+ 		 */
+ 		if (mapping->data_type == UVC_CTRL_DATA_TYPE_BITMASK) {
++			int val = uvc_mapping_get_menu_value(mapping,
++							     xctrl->value);
+ 			if (!ctrl->cached) {
+ 				ret = uvc_ctrl_populate_cache(chain, ctrl);
+ 				if (ret < 0)
+ 					return ret;
+ 			}
+ 
+-			if (!(uvc_get_ctrl_bitmap(ctrl, mapping) & value))
++			if (!(uvc_get_ctrl_bitmap(ctrl, mapping) & val))
+ 				return -EINVAL;
+ 		}
+-
++		value = xctrl->value;
+ 		break;
+ 
+ 	default:
+
+-- 
+2.48.1.362.g079036d154-goog
+
