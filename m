@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD4884A3E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCED92040B5;
 	Mon,  3 Feb 2025 12:48:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738586901; cv=none; b=jVibBdEqOgBbo15GDl7A/4EDWXYd7G9082kOcFqPkE2Ik48LM0/r6t5eN1SCXafrTIkbfbN9CbxPkT8J4oU0vHBU9IFC0RgS3feRFp6HPiMvX+CWRl08DADHFWSs6HzkCMpxpMMb23McGS1D2sY/Lk7yRNRCPbw1Rectk/x0HXg=
+	t=1738586901; cv=none; b=Pg+arxQw3AjfZEJEU4k0DCwacPfOrAaPx/LRFeyLpa6P1uxBHlf0rNnc1vZwbgiDeQaEXtzwuk156e4ES2HjcJzUD8Xow8sqDyVwbWq9oZmmrIJ/F1NMff57xFjy6yMOgDtfsfwYm8j/cLcffAv5UpfcIooKcoeLTCFbMSq0mbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738586901; c=relaxed/simple;
-	bh=UogOpaxL+UDuwVWt+N42FjsnUlslcVhAM5oSD1Ca8FI=;
+	bh=+vgyv3Yw9NY0h3VzIiESYamsvGVlA8aZEZouU78+3QA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=pX2nmUUxWmpHHeRNDHMUCJzV23DiwdWnZaM+L4CeV1G2044yi49YhrNqNNCJUkEIlftFM/ruuspRd9Pi5K+oFeGpmXMuLyo02OhBixzyJg4EtxRQ33waYr/qqBpJMYnhJqofAGYIYpAgzMTWLwPz0sYe28VCrKsb+aNyc01LuDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VoV4j/xF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u2X4B9JA; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=sh48ymlctYhikgSap52FTC+nhxqpMEUD75vrocdd7j1gPx6KXw11bWKeLxnpuxoOjaxfWONIAlXLrFfol4wkq+OitD/U4PWM2iFdtkY5JtcelInk7l/DGAemKcyUtJXoyN60/iLADy4Fw/QeW5Nx6IzTyTpB01hs42wEVtLYqQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wj1DGhJr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ls2WUsPQ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VoV4j/xF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u2X4B9JA"
-Date: Mon, 03 Feb 2025 12:48:17 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wj1DGhJr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ls2WUsPQ"
+Date: Mon, 03 Feb 2025 12:48:15 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738586897;
+	s=2020; t=1738586896;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UQCFWak7O7cX8918dG2a3xWu+X2sZ22eN4ijueBE4mA=;
-	b=VoV4j/xFqPhCL1f9/iN5oQE0vWnAUqNrMmkrGpagQMJjxexBDEvrvapDgk2W303ZdSgyvK
-	s+hZoZRjkF2tpOvm5xP5vb+mxXk+FYjokTQSvsXLYK4c8Bdfemx1o5LMuWalNefmXtb7ob
-	dRZzTprMOtnQtaxAtQxI1eb2t15j0tYjYZqWLlztrR3wzDjfj79Ul270c5+7YAG8TH8mSj
-	/4E3TFy93mUYyb32XAPGJcPp/BgS1JMUeKiFXttjLh0h/HmSgbnxRPmgjtLzVR20PwnyMT
-	/YENfguzGDza+v+x1bqppI1NQ3FYhPLhhvBpiigCL8cJuY12Ux0p1qbXZ+61UQ==
+	bh=rLhMVIZ6z9NOUxstX01OHKEOl+mAHIv7x2LahfuW3bw=;
+	b=wj1DGhJrFoYsZDW1/gcF0FeOhpvEedSTJRaRPPznJTeSFeB/+af6qxwqkBfzSGLBFlMnZH
+	wf+5iY1OArPGuWRPGKHva9uBZnVErWgBM5srg/DA6Seb8xMUSKIkVPdUzRtCOEcjNpI476
+	eS/vllVDB/a4ScwwmeUMYZY+dyaiaoKO8RTV83k5CIDdfCH9f1x5vYM2ms7/ePNRlNIZcd
+	nsdMmZWR3TIhlRaKG1Pqs1W3QzlE4kFQZPGnQHJZ75465PgCDBpK6+5iTFYejTJxr9fE65
+	Sc0Posi1sn3oCnuN02ISQ6wbvv7UuocInQo+LRMkFxXwiFUxBR3XBvDyj2Rhog==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738586897;
+	s=2020e; t=1738586896;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UQCFWak7O7cX8918dG2a3xWu+X2sZ22eN4ijueBE4mA=;
-	b=u2X4B9JAOW1ukaCYGDRQxsImFHm5CaJSe3nLf2pDUZHBhJYqcqCf7IqooyHR14gO06zoxM
-	GIGuKhEakxg6pYCw==
-From: "tip-bot2 for Liao Chang" <tip-bot2@linutronix.de>
+	bh=rLhMVIZ6z9NOUxstX01OHKEOl+mAHIv7x2LahfuW3bw=;
+	b=Ls2WUsPQ4Lo2PQE4IWeW1kcWkeSn+BITWIhfAo1KSjweOH7PYLOh4LqNN8eazesVRf6vP5
+	bQGDRHV9U9UcpPCQ==
+From: "tip-bot2 for Peter Zijlstra (Intel)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: perf/core] uprobes: Remove the spinlock within handle_singlestep()
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+Subject: [tip: perf/core] perf: Avoid the read if the count is already updated
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Kan Liang <kan.liang@linux.intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250124093826.2123675-3-liaochang1@huawei.com>
-References: <20250124093826.2123675-3-liaochang1@huawei.com>
+In-Reply-To: <20250121152303.3128733-3-kan.liang@linux.intel.com>
+References: <20250121152303.3128733-3-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173858689713.10177.999351087906743555.tip-bot2@tip-bot2>
+Message-ID: <173858689553.10177.15768949365370071707.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,68 +67,143 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     a66396c911bd662d503de3ec8f0a140b1081bde7
-Gitweb:        https://git.kernel.org/tip/a66396c911bd662d503de3ec8f0a140b1081bde7
-Author:        Liao Chang <liaochang1@huawei.com>
-AuthorDate:    Fri, 24 Jan 2025 09:38:26 
+Commit-ID:     186dbd9cd489e7f895f909d336c58e4ba2f660a1
+Gitweb:        https://git.kernel.org/tip/186dbd9cd489e7f895f909d336c58e4ba2f660a1
+Author:        Peter Zijlstra (Intel) <peterz@infradead.org>
+AuthorDate:    Tue, 21 Jan 2025 07:23:02 -08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 03 Feb 2025 11:46:06 +01:00
+CommitterDate: Mon, 03 Feb 2025 11:46:07 +01:00
 
-uprobes: Remove the spinlock within handle_singlestep()
+perf: Avoid the read if the count is already updated
 
-This patch introduces a flag to track TIF_SIGPENDING is suppress
-temporarily during the uprobe single-step. Upon uprobe singlestep is
-handled and the flag is confirmed, it could resume the TIF_SIGPENDING
-directly without acquiring the siglock in most case, then reducing
-contention and improving overall performance.
+The event may have been updated in the PMU-specific implementation,
+e.g., Intel PEBS counters snapshotting. The common code should not
+read and overwrite the value.
 
-I've use the script developed by Andrii in [1] to run benchmark. The CPU
-used was Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@2.4GHz running the
-kernel on next tree + the optimization for get_xol_insn_slot() [2].
+The PERF_SAMPLE_READ in the data->sample_type can be used to detect
+whether the PMU-specific value is available. If yes, avoid the
+pmu->read() in the common code. Add a new flag, skip_read, to track the
+case.
 
-before-opt
+Factor out a perf_pmu_read() to clean up the code.
+
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250124093826.2123675-3-liaochang1@huawei.com
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20250121152303.3128733-3-kan.liang@linux.intel.com
 ---
- include/linux/uprobes.h | 1 +
- kernel/events/uprobes.c | 8 +++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ include/linux/perf_event.h  |  8 +++++++-
+ kernel/events/core.c        | 33 ++++++++++++++++-----------------
+ kernel/events/ring_buffer.c |  1 +
+ 3 files changed, 24 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index b1df7d7..a40efdd 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -143,6 +143,7 @@ struct uprobe_task {
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 8333f13..2d07bc1 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1062,7 +1062,13 @@ struct perf_output_handle {
+ 	struct perf_buffer		*rb;
+ 	unsigned long			wakeup;
+ 	unsigned long			size;
+-	u64				aux_flags;
++	union {
++		u64			flags;		/* perf_output*() */
++		u64			aux_flags;	/* perf_aux_output*() */
++		struct {
++			u64		skip_read : 1;
++		};
++	};
+ 	union {
+ 		void			*addr;
+ 		unsigned long		head;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index bcb09e0..0f8c559 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1191,6 +1191,12 @@ static void perf_assert_pmu_disabled(struct pmu *pmu)
+ 	WARN_ON_ONCE(*this_cpu_ptr(pmu->pmu_disable_count) == 0);
+ }
  
- 	struct uprobe			*active_uprobe;
- 	unsigned long			xol_vaddr;
-+	bool				signal_denied;
++static inline void perf_pmu_read(struct perf_event *event)
++{
++	if (event->state == PERF_EVENT_STATE_ACTIVE)
++		event->pmu->read(event);
++}
++
+ static void get_ctx(struct perf_event_context *ctx)
+ {
+ 	refcount_inc(&ctx->refcount);
+@@ -3473,8 +3479,7 @@ static void __perf_event_sync_stat(struct perf_event *event,
+ 	 * we know the event must be on the current CPU, therefore we
+ 	 * don't need to use it.
+ 	 */
+-	if (event->state == PERF_EVENT_STATE_ACTIVE)
+-		event->pmu->read(event);
++	perf_pmu_read(event);
  
- 	struct arch_uprobe              *auprobe;
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 33bd608..870f697 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2302,6 +2302,7 @@ bool uprobe_deny_signal(void)
- 	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
+ 	perf_event_update_time(event);
  
- 	if (task_sigpending(t)) {
-+		utask->signal_denied = true;
- 		clear_tsk_thread_flag(t, TIF_SIGPENDING);
+@@ -4618,15 +4623,8 @@ static void __perf_event_read(void *info)
  
- 		if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
-@@ -2735,9 +2736,10 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
- 	utask->state = UTASK_RUNNING;
- 	xol_free_insn_slot(utask);
+ 	pmu->read(event);
  
--	spin_lock_irq(&current->sighand->siglock);
--	recalc_sigpending(); /* see uprobe_deny_signal() */
--	spin_unlock_irq(&current->sighand->siglock);
-+	if (utask->signal_denied) {
-+		set_thread_flag(TIF_SIGPENDING);
-+		utask->signal_denied = false;
-+	}
+-	for_each_sibling_event(sub, event) {
+-		if (sub->state == PERF_EVENT_STATE_ACTIVE) {
+-			/*
+-			 * Use sibling's PMU rather than @event's since
+-			 * sibling could be on different (eg: software) PMU.
+-			 */
+-			sub->pmu->read(sub);
+-		}
+-	}
++	for_each_sibling_event(sub, event)
++		perf_pmu_read(sub);
  
- 	if (unlikely(err)) {
- 		uprobe_warn(current, "execute the probed insn, sending SIGILL.");
+ 	data->ret = pmu->commit_txn(pmu);
+ 
+@@ -7444,9 +7442,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+ 		values[n++] = running;
+ 
+-	if ((leader != event) &&
+-	    (leader->state == PERF_EVENT_STATE_ACTIVE))
+-		leader->pmu->read(leader);
++	if ((leader != event) && !handle->skip_read)
++		perf_pmu_read(leader);
+ 
+ 	values[n++] = perf_event_count(leader, self);
+ 	if (read_format & PERF_FORMAT_ID)
+@@ -7459,9 +7456,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 	for_each_sibling_event(sub, leader) {
+ 		n = 0;
+ 
+-		if ((sub != event) &&
+-		    (sub->state == PERF_EVENT_STATE_ACTIVE))
+-			sub->pmu->read(sub);
++		if ((sub != event) && !handle->skip_read)
++			perf_pmu_read(sub);
+ 
+ 		values[n++] = perf_event_count(sub, self);
+ 		if (read_format & PERF_FORMAT_ID)
+@@ -7520,6 +7516,9 @@ void perf_output_sample(struct perf_output_handle *handle,
+ {
+ 	u64 sample_type = data->type;
+ 
++	if (data->sample_flags & PERF_SAMPLE_READ)
++		handle->skip_read = 1;
++
+ 	perf_output_put(handle, *header);
+ 
+ 	if (sample_type & PERF_SAMPLE_IDENTIFIER)
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 1805091..59a52b1 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -185,6 +185,7 @@ __perf_output_begin(struct perf_output_handle *handle,
+ 
+ 	handle->rb    = rb;
+ 	handle->event = event;
++	handle->flags = 0;
+ 
+ 	have_lost = local_read(&rb->lost);
+ 	if (unlikely(have_lost)) {
