@@ -1,146 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9CF2040A6;
-	Mon,  3 Feb 2025 12:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C355D204590;
+	Mon,  3 Feb 2025 12:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738587311; cv=none; b=I+EKyCOkgGI9AI4B57ctrm2jtX6SD/3aaWL6IY1MCQ+8mGI8i8fxYfpLCjoj2u328DRUODbHyDgWygJ7tQpcVHqLlAFiB91dFznIABn79A2qJ0OTJLRVLmbU294W/DJGa8YrKz3YfOHChOCSMWBTedYwQiogPaDGiSh+AnnAV5c=
+	t=1738587344; cv=none; b=N9oPDzdrp3p8mhucU6TC89rkrNYgqQL3nDToADYf5iCHYqbYl0It77ELdUave8RCTxaI9mqY+X72gLW9o5j0pT9NN5nq9IoCIXCxzOmsc7+FfPS3rFuTTCoVXWNdEYwkRlDn5K1PZC2lMqEnNKYPQ4WZWa25XCQ0/Tk59GXfzTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738587311; c=relaxed/simple;
-	bh=MeY6uH2ARoh7Cb7jsYc6ETd6g0tfr5Job862/poiLYI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JBkPeBNHnjgtU6IRgPO3kS20M5vJ04rqI+LnYsYEwAZfzDe0iV57IEWQsAJk6Xhaxg7dLSM+zYzCBX4ezfOeXm20H8HJlLwW/1SInjbiE3jr1eDTLMgPNPxZTan8jEfKZNgk2IKFW2Kt3Qm1VyphMFrJBdjX6WOoCfNlH6isiR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PcyhG7PM; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738587344; c=relaxed/simple;
+	bh=bs8Tqd0CFF96NXsDeU5iUh1wpxnut02IrBS8m9fe34g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OKwepnGmmhbhAYSppSVLA0kp+CM4Zd6dNTJmTjoHFiA5Ht4RYyIPOPCwmSogIwRTHZk2gN9u7S2Q7Ik4JvBORLPlxQCZNbwRM2TzwJPXY7TL1EGv95OxlpiWbHkVneVIdFJ9v7EffRkP5eyIU/RI7nGW24oqkjIvPmGuyChIGCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q1iOGLtS; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PcyhG7PM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738587310; x=1770123310;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=MeY6uH2ARoh7Cb7jsYc6ETd6g0tfr5Job862/poiLYI=;
-  b=PcyhG7PMKVrV4kYQOkdz3aMRIlFeztoO05WFYO4br+WlZtmYS/J2YXBp
-   OsvEOL5s7ui6D8fObK61p79XJGIOKeQMffKRgZEx2yKXwklInl91m5/BU
-   0dURiNrGhY48WkmyexLFW4rLo2hEdPs3d62EH3iRzvfRashGnNgi60nt8
-   XtvDBuRhOCPCT0fKC0xqJxPMAoUXUl9sgiIEjgscb/2J0LWEle8ObBeEt
-   gdiC2o/cVhGYwGcJLOCIV/oEic9FhWBITagoumDaRoE5viFXdX56svLN9
-   frNF6fLgF5IXXtnheoLNSu5N7Qn9GjC2q6GodAod1LPRk0xlLJEAR7nE2
-   A==;
-X-CSE-ConnectionGUID: lRy9hj/1QNy7hSV45iWfTQ==
-X-CSE-MsgGUID: MgtwiW5nSHmfPCj3uBD0qg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="50464718"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="50464718"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:55:09 -0800
-X-CSE-ConnectionGUID: 32slTYCNQtWkGmmYbBhi9w==
-X-CSE-MsgGUID: PenPCx9VQliCTweMwDacUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="110039927"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.194])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:55:07 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 3 Feb 2025 14:55:03 +0200 (EET)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 00/14] platform/x86: alienware-wmi driver rework
-In-Reply-To: <D7ISQ5PQLOLR.2P6D3M7W54PA3@gmail.com>
-Message-ID: <30f4bdff-caf7-45ce-5997-70c1c36a71ae@linux.intel.com>
-References: <20250203062055.2915-1-kuurtb@gmail.com> <c6e10cdd-6fba-6e8b-0913-66766cb9248e@linux.intel.com> <D7ISQ5PQLOLR.2P6D3M7W54PA3@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q1iOGLtS"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38be3bfb045so3583545f8f.0;
+        Mon, 03 Feb 2025 04:55:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738587341; x=1739192141; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bs8Tqd0CFF96NXsDeU5iUh1wpxnut02IrBS8m9fe34g=;
+        b=Q1iOGLtS01vs8TdSmUSndmb1P2/Q9OAZM6IJssJUzE3rZ9gaU3gBzQl/duhWJWvLaL
+         hluAt9XVGUoFfdcLIAfLQewEkncSURMuRw6apjdlDYM+c7OSQoctldSOEIxswvQHJD06
+         UtDgjVfb2sOSLuZJOEKhPCwO0V/boMGVGmp8PL4MQpZWQTb/he7TpyisyCCUDcxP+29Q
+         jrUk1/rR1HyitIqxYete6VpQrw+pRSsrnL6HE88J45mcfSp9AiYUUcb2zo1qmMm5D7FE
+         fNdMnhbRJibhRafU8TCn5jzmgrVkJFkIZb9T3rlXri/LYubSf54xCBrYrLW5ZJM97OSc
+         ep6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738587341; x=1739192141;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bs8Tqd0CFF96NXsDeU5iUh1wpxnut02IrBS8m9fe34g=;
+        b=KieC8xV0lX4TdO5xJDSY7Xggu1p/xMVz5dBDw2I0JDP8Urw3mlSXCFm2b3+DV7z2r8
+         jmrFPTCs8p2rUfgPchJ7yMeEZooT47DsucGfEZe8vk+ER/ts3gw8P45GQBJMnokYwwWR
+         2EjItaHDrwnKwsMQmupZZ/Z8A+sC3JGCKIP41wpvVvTJmADr8RA0XlT+PuyKZDk0Q6RE
+         0B0RnR9BJi1m8GbdxsfmTRjF/IANN/1ydgd7sRmhYdzjysZrVK9rXnD6OqK7aNqOEeFz
+         sWEPVT1T4W+B/9EMqcYbYHApeMmdtx29lkgsB2fZFroiye4vF0TiTLeY/TDhI059wAPu
+         3O0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVVI/LX82lNPiaY2dN71wpfqb+S4CCIxJDiJOQK75u8DgJxoMv3RqhSVdnaUfVeugWuV9LOCj2kcFqoxao=@vger.kernel.org, AJvYcCVr1acTjDUz2Aq37DjIDYWuAsmZ+j9wMg2Wc+v9sQmwE69B1eRKVuM8eaTekFGoeczuWZxMiR4rvK98Lw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwkBDI2Lkm9pJD8kCgWef5EqlDl2zBHIQbxzsIpj3wTM3tZKOV
+	DrM9tKp97z0KHULHnoC2t4nzLIKCQLLGO5GGEwqW5J78OgcjHnZH
+X-Gm-Gg: ASbGncu/ZSm+YvdO9ag2qrTUdUROPvngWqqqAqPtg50dVyn3ZKbVF5AkV6iugWGlaPP
+	hZLuy3zUlLPGxkrqGEBRDLWbQwKkeTwlodg6gL3Exjvc8gd3O1Ttcq1GBLZE48g6w2VRWCdju1+
+	7uL+R/3AiVvuRcoYjchgQxjCxWFjH5Wv5UzIHNL4xl2V8cxvGsj7zzLUtQsoYKf5I0/B+mdwj38
+	3uOf38HEpCo9wtRmAsnnO0BwZOZEzFE/vvD9sVrkpi50S7yg0OPZ53DFfMBo44c0qMHFnI+l75r
+	EUDaaOCt0SLkPLcBVA==
+X-Google-Smtp-Source: AGHT+IEEJalytdX0QUtX6yL5bhNnoqVYfs8Qe+QO+eMTH0COVjkeIsK1vfCC60j4oez4kuL/EbEqwQ==
+X-Received: by 2002:a5d:47c3:0:b0:386:3327:4f21 with SMTP id ffacd0b85a97d-38c5a9bf70dmr15142010f8f.27.1738587340616;
+        Mon, 03 Feb 2025 04:55:40 -0800 (PST)
+Received: from [10.176.235.56] ([137.201.254.41])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec7f1sm12481772f8f.9.2025.02.03.04.55.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 04:55:40 -0800 (PST)
+Message-ID: <21d0a62a4f7f17304d81449e75c345f1e47948ae.camel@gmail.com>
+Subject: Re: [PATCH v3 3/8] scsi: ufs: core: Add a vop to map clock
+ frequency to gear speed
+From: Bean Huo <huobean@gmail.com>
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com, 
+ bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
+ avri.altman@wdc.com,  junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com,  quic_nitirawa@quicinc.com,
+ quic_rampraka@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Alim Akhtar
+ <alim.akhtar@samsung.com>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Peter Wang
+ <peter.wang@mediatek.com>,  Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Eric Biggers <ebiggers@google.com>,
+ Minwoo Im <minwoo.im@samsung.com>,  open list <linux-kernel@vger.kernel.org>
+Date: Mon, 03 Feb 2025 13:55:38 +0100
+In-Reply-To: <20250203081109.1614395-4-quic_ziqichen@quicinc.com>
+References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
+	 <20250203081109.1614395-4-quic_ziqichen@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1128701905-1738587303=:934"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1128701905-1738587303=:934
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Mon, 3 Feb 2025, Kurt Borja wrote:
-
-> On Mon Feb 3, 2025 at 4:20 AM -05, Ilpo J=C3=A4rvinen wrote:
-> > On Mon, 3 Feb 2025, Kurt Borja wrote:
-> >
-> >> Hi!
-> >>
-> >> I bring some last minute modifications.
-> >>=20
-> >> I found commit
-> >>=20
-> >> =098d8fc146dd7a ("nvmem: core: switch to use device_add_groups()")
-> >>=20
-> >> which states that it's unnecesary to call device_remove_groups() when
-> >> the device is removed, so I dropped it to simplify things.
-> >
-> > Hi Kurt,
+On Mon, 2025-02-03 at 16:11 +0800, Ziqi Chen wrote:
+> From: Can Guo <quic_cang@quicinc.com>
 >=20
-> Hi Ilpo,
->=20
-> >
-> >> I also found commit
-> >>=20
-> >> =09957961b6dcc8 ("hwmon: (oxp-sensors) Move tt_toggle attribute to dev=
-_groups")
-> >>=20
-> >> which states that no driver should add sysfs groups while probing the
-> >> device as it races with userspace, so I re-added PROBE_FORCE_SYNCHRONO=
-US
-> >> to the platform driver, so groups are added only after the device has
-> >> finished probing.
-> >>
-> >> I'm not 100% sure that the second commit message applies here, but it =
-is
-> >> revd-by Greg K-H so I added it just in case.
-> >
-> > Which is why .dev_groups should be used as it is able to avoid those=20
-> > races on driver core level.
->=20
-> In previous discussions with Armin we agreed it made more sense to move
-> WMAX-only groups from alienware-wmi-base.c to alienware-wmi-wmax.c when
-> splitting.
->=20
-> I have no problem in moving them back to .dev_groups though.
->=20
-> >
-> > Why you call device_add_groups() at all? Can't you just insert it into=
-=20
-> > .dev_groups member in alienware_wmax_wmi_driver?
->=20
-> I'd love to do this as it would simplify things a LOT, but some
-> user-space tools might expect this attributes to be exposed by the
-> "fake" platform device located at
->=20
-> /sys/devices/platform/alienware-wmi
->=20
-> If it were not for this, I would expose every attribute in the WMI
-> device.
+> Add a vop to map UFS host controller clock frequencies to the maximum
+> supported UFS high speed gear speeds.=20
 
-Ah, sorry, I didn't pay attention where they were added to. I vaguely=20
-recall that discussion.
+From the code, seems it is not "maximum" gear, it is corresponding UFS
+Gear.
 
-But still, you could make the groups available through .h and just add=20
-them directly into alienfx_groups (with an #ifdef/#else in .h), or is=20
-there again something I don't see?
+> During clock scaling, we canmap thetarget clock frequency, demanded
+> by devfreq, to the maximum supported gear
+> speed, so that devfreq can scale the gear to the highest gear speed
+> supported at the target clock frequency, instead of just scaling
+> up/down
+> the gear between the min and max gear speeds.
+>=20
+> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+> Signed-off-by: Can Guo <quic_cang@quicinc.com>
 
-Obviously, .is_visible functions need to be extended slightly to filter=20
-out by interface but that should be relatively easy too. Also, the group=20
-variable names should be properly prefixed when making them cross file=20
-boundary like that.
-
---=20
- i.
-
---8323328-1128701905-1738587303=:934--
+Reveiwed-by: Bean Huo <beanhuo@micron.com>
