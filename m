@@ -1,144 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539301FE473;
-	Mon,  3 Feb 2025 21:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A8B1D5166
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 21:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738617586; cv=none; b=Geo8+MKCiGN/1J2B0QgOYx6Qis9nDF3X07Urh8T7dqhEJl1WtE+Ko/U/XePBe8+3Z/xQQ+MnrlXj9NHNjUakQZckdp3RxW3p7Mi8JJuEPFe9AxzH4HmBgOQ4lN4I3PAgAVQBelGLNDWR9/4+p0hhd4MaUHArABlet0OlW6IFNVs=
+	t=1738617790; cv=none; b=dWa9uf3EYMfP5SimmbI2cZ8CIh8rfk0cCbLX4PbRiD8q+sWI9ZlpNX44TM0fWZ+dplyhV1NavAFP4ZBGq9hj8UcJazfKkfa7CtcLY/Bw1XGs/UY9GzIoAEI3TeBvHk5koOqmMz1xmEI7gW3c5WMBFonZ99Xh8m37Uh8R0/T5PAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738617586; c=relaxed/simple;
-	bh=eCZxdpw9h0m31EKFv7FIaJvsj/xMs7Hna0RtSbg7/uI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qmELwi07QOJcv+1a9URCajLCqjxyPlhHU3uxw228s44ht15K1e+VBq63t99gXxId9VG534a6ax0pE1KgRthqfb5804wHfQVzqNGPgtTePAiLMwWLyCFRq6y2gpl7ZDeu5v/63XojmlcOf0EBx+34E042FuBV5saVCxnL/6Gz2F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OHQGoyQb; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738617790; c=relaxed/simple;
+	bh=DEk0MlDPhkc3NJj7Yr5ayWkiEJtQDTBHsiChLxAnGd0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=LONLaSCp9NXtqrWB7jqb8o7JUaDd8B5gycDmD/ZsN5J4TjdUfoX7OzQCM4PnAZ22DNpZ57N1j6fosx2EQvt4SD6oHHQgZe3gtN5e657jDBQ1Ye7o/FTlYojSOOMUUvkFLAMK+66R3YVRoVtWaCpbPOH/RVearsHygU+ERjw613I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com; spf=pass smtp.mailfrom=jrtc27.com; dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b=mAjM+49+; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jrtc27.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OHQGoyQb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738617585; x=1770153585;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=eCZxdpw9h0m31EKFv7FIaJvsj/xMs7Hna0RtSbg7/uI=;
-  b=OHQGoyQbfXRVYttsdcBFKbtkz4uaRiwYLjjya45oktmdIHLJi34+AEol
-   tW2roVK87ZNrQNEmAnUsI7HpY8O66MOeJqI4QmAkGjG/i3UY7UZMqENnO
-   ikdHMDDj/bkTDq2zVZZzoJZGEu2Bkhg3+IPo/S6XakRzYCVj7H2JzsBFU
-   AtedTyQ4yUlXCDNNPpzHobUi/YpfwGF87vE/AB4nIl3ngXIpJ9R4JWGLT
-   m6T0I5xaLNAuTyYEkLaTshM1yZL0pWGkXpd/qX6fCJPTJfVgkFsGbPj8Z
-   9lokl7BmWDw3ZbsoOgRVUjTPnaKe5Ee2a8uqH5XPNsxBn1LcrbPNxCdUo
-   A==;
-X-CSE-ConnectionGUID: wfsTA/X9QXqDwuqHszN6zA==
-X-CSE-MsgGUID: 4Z1reWZWRpmYdbee/3onNQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="43052275"
-X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="43052275"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 13:19:44 -0800
-X-CSE-ConnectionGUID: u9LOLKB8RkOUim0CLP/V0g==
-X-CSE-MsgGUID: dsKai2PNTTmp3Enqv8PN5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="110347779"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.109.238]) ([10.125.109.238])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 13:19:44 -0800
-Message-ID: <702c5acb-6bab-4940-a8f1-c346373167bd@intel.com>
-Date: Mon, 3 Feb 2025 13:19:46 -0800
+	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="mAjM+49+"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43618283d48so36375375e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 13:23:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jrtc27.com; s=gmail.jrtc27.user; t=1738617786; x=1739222586; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mQvpp2LRYRT3K/cLfPDLqNS+9MqkGBxxZ8pBUN+MW2s=;
+        b=mAjM+49+dTlk2iFqIHgIq2qNlQJEX58xtr35HXujMCAkPPM+j2ywBux+6VUS3w2ahI
+         AxubBQJKjx0Wx7OUH3UXYoXknctcfgyHId2BGkiiNGlS5Tn2SJsfkm9xmwDq0OOmnkLL
+         lk2mBPSK2lsRZ02zAqYOnYSELxyIKKu3xy/a/pGBNZn9OQWSxBX0AM1LNhOnUizXT3eE
+         uaeMwFdvDx64RGl9ui7ViSce3sz+Y/T3SL+uHA+iLU07QMsKgMNk5Ou0DHjhGcBJVjgw
+         f5H/ryG6drw8VXJrAY1eu3LZl4bpBmNFE5DxuHaePWa/1NHpmqTN8/IA+HQlOL+z2fC6
+         yiaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738617786; x=1739222586;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mQvpp2LRYRT3K/cLfPDLqNS+9MqkGBxxZ8pBUN+MW2s=;
+        b=iR0KCSzRaMmsCMXXyrpcrlYJg4VfwFvvf3IWLoLRtToL8Wb2Tx6FtvkolLo+HMpL0A
+         V3vrK1sa3H0kKJ5uIYuEgCYF8Dnv6MRu8Blzta3vZ9htkNjqhRihtE4pl5n4xMYwT7Lh
+         d4lk41Nq4Wcldonkw90lCPmkyhG6NxC3GAspUgQn8LUfS7OGTpqP0t8LmgdR/sjSEo7V
+         jaCYu5yCK9Es/GcBEONsWWnHZeeOdWdh9/UKIK1OIVsNZlXONKcMWwqBlqSP/qz8zhwK
+         XyxeDE62HcCIRTbKrUn/VjGdQiUz9ZnJWslFMD5MaQ0zhflew1wtniohUTQ2gzfQVBEc
+         +yLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBncCbKx/Hs9ye5plvGR8DxfDGOZmC0Hynf79Xcw7+BzmwCwFMDJvNN4cVfz3UHiZdyWvc7kg7EDaD80A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhZHrnZ+OAL6jfbf7/jP4bokxTh+Xay0fQR+jXxBU+UD3V/zBe
+	AufCjgVP62nwa4iYJRrqxT3EXdt6GnseiKit1I1gQkBHgMezZXt3sr6pqehFLMk=
+X-Gm-Gg: ASbGncvunyY00fWhJ0wkMD22hkBimnYguITBxG/92EaWMovFhzqF8BIlh+JKlJ8ij7a
+	K35z6rUGwlIMtcTlrAOcOhhbCj/AuvSm463htTaKLa/sf0ayE+C+cX0BAEczUdlP1oCsm6S/B5A
+	P0ZRIq3OM6P6KHF9DqTWTD6a1UH4Mcb4iaHqyl5T26iuccU5FQgQ3daGbci2gYVwzVc8202zx1A
+	DEFGqZ28OBXdVaaFpUfuSOc9+oP59hc0Ze2J4ikw4ZGjo5hy1R6I5XVwQRL6gwxjZBTHwlsWA16
+	3evxIXHR1tE6gL7jG3tP6+FfqTZB
+X-Google-Smtp-Source: AGHT+IGRgSY98as0FO+OEr+iCd27zkPxvZBzkNQKfXeu12EQ7NnYzWoYKMRb+N3FcwOpbqZjf43ybA==
+X-Received: by 2002:a05:6000:1789:b0:386:4277:6cf1 with SMTP id ffacd0b85a97d-38c5208fb3emr21016029f8f.39.1738617785948;
+        Mon, 03 Feb 2025 13:23:05 -0800 (PST)
+Received: from smtpclient.apple ([131.111.5.201])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23deddcsm165659455e9.14.2025.02.03.13.23.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Feb 2025 13:23:05 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/1] x86/tdx: Route safe halt execution via
- tdx_safe_halt()
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Vishal Annapurve <vannapurve@google.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, pbonzini@redhat.com, seanjc@google.com,
- erdemaktas@google.com, ackerleytng@google.com, jxgao@google.com,
- sagis@google.com, oupton@google.com, pgonda@google.com,
- dave.hansen@linux.intel.com, linux-coco@lists.linux.dev,
- chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, stable@vger.kernel.org
-References: <20250129232525.3519586-1-vannapurve@google.com>
- <p6sbwtdmvwcbr55a4fmiirabkvp3f542nawdgxoyq22cdhnu33@ffbmyh2zuj2z>
- <CAGtprH8pJ3Zj_umygzxp8=4sJTdwY5v2bFDhoBdX=-3KQaDnCw@mail.gmail.com>
- <wmdg54v56uizuifhaufllnjtecmvhllv35jyrvdilf4ty4pfs5@y4zppjm2sthr>
- <CAGtprH82OjizyORJ91d6f6VAn_E9LY7WptN-DsoxwLT4VwOccg@mail.gmail.com>
- <2wooixyr7ekw3ebi4oytuolk5wtyi2gqhsiveshfcfixlz3kuq@d5h6gniewqzk>
- <CAGtprH-n=cfH_BJAmiNMoRbqq0XdGCf3RE67TYW8z7RARnsCiQ@mail.gmail.com>
- <40418980-6e5b-48eb-bc35-7ffaf3221fd9@intel.com>
- <qzl5vkhykj4anuvjrhfco5qoeuib3oskffnxnqbcszotttnnqa@up5b4xl5l55g>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <qzl5vkhykj4anuvjrhfco5qoeuib3oskffnxnqbcszotttnnqa@up5b4xl5l55g>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH] riscv/atomic: Do proper sign extension also for unsigned
+ in arch_cmpxchg
+From: Jessica Clarke <jrtc27@jrtc27.com>
+In-Reply-To: <alpine.DEB.2.21.2502030510390.41663@angie.orcam.me.uk>
+Date: Mon, 3 Feb 2025 21:22:54 +0000
+Cc: Andreas Schwab <schwab@suse.de>,
+ Alexandre Ghiti <alex@ghiti.fr>,
+ linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0DF64D04-D609-4790-8279-7DFE24D1FB2C@jrtc27.com>
+References: <mvmed0k4prh.fsf@suse.de>
+ <c9cbc2be-d1fd-44ef-aa14-fd25a5ff8490@ghiti.fr> <mvm5xlw4anb.fsf@suse.de>
+ <ac53a62e-4f89-49c9-a755-fdfa7a582337@ghiti.fr> <mvmwmec2t7u.fsf@suse.de>
+ <CC2D9220-F8DE-4CC8-ACAD-7B1A21E276FE@jrtc27.com>
+ <alpine.DEB.2.21.2502030510390.41663@angie.orcam.me.uk>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
 
-On 2/3/25 12:09, Kirill A. Shutemov wrote:
-...
-> But Sean's proposal with HLT check before enabling interrupts looks better
-> to me.
+On 3 Feb 2025, at 13:57, Maciej W. Rozycki <macro@orcam.me.uk> wrote:
+>=20
+> On Thu, 30 Jan 2025, Jessica Clarke wrote:
+>=20
+>>>> a2 is used as it is passed by the calling function, so we can't be =
+sure a2
+>>>> is sign extended to me, what am I missing?
+>>>=20
+>>> 32-bit scalar arguments are guaranteed to be sign extended on entry.
+>>=20
+>> Firstly, the calling convention is irrelevant if the function is
+>> inlined, which this almost always will be.
+>=20
+> Umm, that would be a compiler bug then, as inlining is supposed not to=20=
 
-"Sean's proposal" being this:
+> change language semantics.  IOW the compiler is expected to explicitly=20=
 
-	https://lore.kernel.org/all/Z5l6L3Hen9_Y3SGC@google.com/
+> sign-extend the arguments of an inlined function at their evaluation =
+point=20
+> just as it would at an actual function call unless the compiler is =
+able to=20
+> prove they have come out sign-extended already from previous =
+operations.
 
-?
+No it=E2=80=99s not. The calling convention is there so that each side =
+of the
+call know how the data is being passed between them. When inlining
+occurs there is no such call and compilers can do whatever they like.
+Calling conventions say absolutely nothing about what the
+representation of a value is whilst inside a function, only at
+boundaries. The ABI can also tell you what the observable
+representation of values within a function should be (e.g. that int is
+a 32-bit two=E2=80=99s complement value), but just like other platforms =
+there
+is nothing in the RISC-V ABI specifications to say that 32-bit integers
+are kept sign-extended in registers, and that=E2=80=99s not going to be =
+added
+because LLVM has never implemented that for RISC-V so it would be an
+ABI break for all LLVM-compiled RV64 code in existence.
 
-Is that just intended to quietly fix up a hlt-induced #VE? I'm not sure
-that's a good idea. The TDVMCALL is slow, but the #VE is also presumably
-quite slow. This is (presumably) getting called in an idle path which is
-actually one of the most performance-sensitive things we have in the kernel.
+Jess
 
-Or am I missing the point of Sean's proposal?
-
-I don't mind having the #VE handler warn about the situation if we end
-up there accidentally.
-
-I'd much rather have a kernel configured in a way that we are pretty
-sure there's no path to even call hlt.
