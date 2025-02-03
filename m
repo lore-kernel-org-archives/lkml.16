@@ -1,142 +1,95 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C60153801
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 20:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5688A20E716;
+	Mon,  3 Feb 2025 20:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738614954; cv=none; b=YuR1VWHsea2MF440adRH/jWZEfyQILS+yENYJa/L9EMuA+ckHHJHN+hww/r5vgIrh0RV6NxI3yY0kxFXAPiJhigAE8zKC0YSK69pc2s4RPKUTWAY6uSuyER9O+zKrf2IoS0m8uySBx02dxZXHKxiGNY7ah6K9llT2jkRv1TNUIA=
+	t=1738614959; cv=none; b=swNs3lUNhKsWGB0cJnjLBPIa1IpbxBWY8LLqrAWzr7mNy/efSSmiid5iOIMxSS40+6oRH2xv9U4TgJwyiQ32uuzNCPY2C2TxQ32cMuknb5zJNoXSJ5oFDJzAu2EHbRYPMm6R0Kbz3llP6QUwpaPioabgayMWHHUKfwMH8JKP0JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738614954; c=relaxed/simple;
-	bh=iHOgsgbTLasT+mAbTKI3kNcpK3vJNjZYaHQEoQJJPkk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H24K0Oa4GaDgO6WzDkZ5naUx2tvSCN3w90MHGBjmJn7lkjqE8VejICUa7iFnuh9MKRmuOGp8evA5sOrwmVJLYiXxkbr+FknehrRdXuUrYDUMSvMqzJzriLm1acD60iy3CTL9S9g+2Oic4b4Mu9V22XhHh5JTmktSjs9wN5cxsZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=f4RxBxKj; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1738614959; c=relaxed/simple;
+	bh=wyQCBq9DjeAid6FvobzALCpOnFonfXuOOwKS2EAE/Qk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eOD4ft9GaCgkSfbC9HccplLx37M5nKXLjUjShUaRpxAmlHzV+1wvvbXe+a5wcnx2RtEjT+Yj2muyGGZ131ou9dq+Ui0uYCNdWwcXgG6rCPrO5Li1RuP1b/CcnIDimRh96QWU2t38JGF1pYKDhAKmpjb9+TqVOJtYnuEaZs+60lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=CN+kqb9t; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="f4RxBxKj"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so920607566b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 12:35:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738614950; x=1739219750; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q7Ns3FLfIAZYGDFkK3fA+Vs5Q3I4AHQ7nr4KJPOKX0U=;
-        b=f4RxBxKjDTdDjBsIYLtm5ozeuzWueyoa/Rj8pjPgVkKjSJoTXu68kEtwUnPwHifA/h
-         NXZeBuQZcby81GQC0VeHQe9Ed0n0qTX2A6qxudxe4rqveZc/05092q+Bv2SxJW22K4gI
-         uiSzwjlxjoKNwl4paBJTen2GJiOpL1O+479Mw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738614950; x=1739219750;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q7Ns3FLfIAZYGDFkK3fA+Vs5Q3I4AHQ7nr4KJPOKX0U=;
-        b=OSI3fM8Qs/x9wlvcd2M6SvaAb96BlGsj0mJByBhxbrs2WyoSEr/3SUiJeM1zb45JmF
-         t3Y5IwMnhUarpWEvxisULjGxJrSZjw4vIq2A0vpl7jpcgnDQXrl+wXDoszlkDwXGRglo
-         ZX6Fn2PYp/0FNznIURJWXVMRrJOqHsNb2jOTccQXwtwA7WhuTDojvbJQGArTuxUdHZc9
-         Eb9R2mOZwdmOwzSr1qu1cd63esBvyIbWUYsANKuyuAHtp9GLYvY1ii0W6RjsNhQ89ben
-         SpRpyRINcGEPr6Wkb+n7p0vgpe4kb4hJH0pVevsyEQVZuhwoiTod8NhiIvAXaWbQRcFj
-         vKbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJMziKD2qYmvl3vbp2LVVP3ZqUnb2fjoC6L8tldBjmUeHaeMj6AwxHuPsEQjvAWJqlK+cG7Y5pkXrpFzU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUv8IYRa5NRHqWpl2QRNukIBLa6yH4R2V3cakm1NSBSnUqVNZ+
-	XE3eHgQQE5oNahSLazWvbcynKiW3AkBWGLl05UXhyurGRT77WF8GJTTEbHrUDnoNaQRhbzW3Zsb
-	Bu1iQ4LkSUxrwtTDdqwXPK38ZS2ip/x+6M9o7lyNvExrDpjC1mVtutE8mPW2K0Hr7FmbJ1lIKYT
-	+ULh65i4T1oyqof4cGFgB7cUcB/A==
-X-Gm-Gg: ASbGncvN9vRolpC4Iq0iY/0sx2P4vy8nT0S/qGMg9R5ROcOf82VRHir9uBpTHfJ+CLb
-	Bx3s23L/r1ZYOux3URvjCBg2mEWF6g/99wHKZxsnB3f1t26YigzCWF66qWdeWwdviJOZTy1tg
-X-Google-Smtp-Source: AGHT+IF5AWWdY4qYzAwQdbOtXfgV9YAbUE+7qvDb3Uh4Avo5Mcb4wzOObn3yCi/awJ7s1audhmtBacpaZff4AJ/3R0o=
-X-Received: by 2002:a17:907:9691:b0:ab6:dbd2:df78 with SMTP id
- a640c23a62f3a-ab6dbd2e39dmr2560575466b.35.1738614950459; Mon, 03 Feb 2025
- 12:35:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="CN+kqb9t"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 2014425A8D;
+	Mon,  3 Feb 2025 21:35:57 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id ege8AFfLagUn; Mon,  3 Feb 2025 21:35:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1738614956; bh=wyQCBq9DjeAid6FvobzALCpOnFonfXuOOwKS2EAE/Qk=;
+	h=From:Subject:Date:To:Cc;
+	b=CN+kqb9tPKDRZWtxkgdMx6XSyBV6f+WroWtfmeAlGUZ1lC2PZ0HmzlJZ3jdb99IGz
+	 E0iGSXvCaWGOgECbssScIVvaTzZqQd3NytYqUom+G/kgwSQc28BxSYBYUGTATdZRFT
+	 QtZaDpOucFvXHwCUN3rU0j5JJLkS11Z7ng0LhlHtFQLasEvEGHkUGkfWPpoZGZxwwi
+	 J14cgqLPaZSxEf1nwO8LF0bkLnc/z/l7b39eCb0kDOPBGh5276GuSA91HR+b850tNN
+	 e1H1qmJQucTa41zvNloQdL1ENnsnQUaHydtxYHv841RMKgxXxUupY57AjIHRGCCqAw
+	 0ziorugmFaD8g==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH 0/3] Introduce pin controller support for Exynos7870
+Date: Tue, 04 Feb 2025 02:05:42 +0530
+Message-Id: <20250204-exynos7870-pinctrl-v1-0-77b9800749b7@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <b1ddb439-9e28-4a58-ba86-0395bfc081e0@redhat.com>
- <CADH9ctCFYtNfhn3SSp2jp0fzxu6s_X1A+wBNnzvHZVb8qXPk=g@mail.gmail.com>
- <CADH9ctB0YSYqC_Vj2nP20vMO_gN--KsqOBOu8sfHDrkZJV6pmw@mail.gmail.com>
- <Z2IXvsM0olS5GvbR@google.com> <CABgObfadZZ5sXYB0xR5OcLDw_eVUmXTOTFSWkVpkgiCJmNnFRQ@mail.gmail.com>
- <CADH9ctAGt_VriKA7Ch1L9U+xud-6M54GzaPOM_2sSA780TpAYw@mail.gmail.com>
- <CABgObfb3Ttfg6H+_RpNQGSYKw9BLEwx3+EysXdL-wbpd1pkGHQ@mail.gmail.com>
- <CADH9ctAzffvDByS1s2PJoD63On-b+pCnCmER4Nf4Zc=62vkbMA@mail.gmail.com>
- <Z6Eb4PfmmHWFTR9A@google.com> <93df442c-8ec3-43ee-aba1-e770a5b7588f@redhat.com>
- <Z6EeyaOZUevXDBiH@google.com>
-In-Reply-To: <Z6EeyaOZUevXDBiH@google.com>
-From: Doug Covelli <doug.covelli@broadcom.com>
-Date: Mon, 3 Feb 2025 15:35:20 -0500
-X-Gm-Features: AWEUYZnthUXQ_pnDcokMXb4-W_1h4l_OREU8d1T2--Q60_3QnZjpsz7kj6ouJEQ
-Message-ID: <CADH9ctC0=YWJ1S-WVWhasjS+DHSWpzqQ0bbgz6N2vGHAcBrgRg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] KVM: x86: Add support for VMware guest specific hypercalls
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Zack Rusin <zack.rusin@broadcom.com>, 
-	kvm <kvm@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "the arch/x86 maintainers" <x86@kernel.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuah@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
-	Joel Stanley <joel@jms.id.au>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ4ooWcC/x3MQQqAIBBA0avErBNGI62uEi2ixhoIDY0wwrsnL
+ d/i/xciBaYIQ/VCoJsje1cg6wqWfXYbCV6LQaFqUWEjKD3OR9MZFCe75QqHQKN0a43sUUso4Rn
+ Icvqn45TzBzmdo95kAAAA
+X-Change-ID: 20250203-exynos7870-pinctrl-07265f719061
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Sergey Lisov <sleirsgoevy@gmail.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738614951; l=1117;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=wyQCBq9DjeAid6FvobzALCpOnFonfXuOOwKS2EAE/Qk=;
+ b=HXBcv69E5BIZnhQpyh7eiIErbwYj9N+jx6T9eEqdpuivBxypbOnA6ZyH8wZEkmm4fNO4kwY5q
+ j0tu3Kb/F4wCgqfa+nX73xopN2AL5wlOqqATIWWaY9eONf4785Eez8c
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-On Mon, Feb 3, 2025 at 2:53=E2=80=AFPM Sean Christopherson <seanjc@google.c=
-om> wrote:
->
-> On Mon, Feb 03, 2025, Paolo Bonzini wrote:
-> > On 2/3/25 20:41, Sean Christopherson wrote:
-> > > -EFAULT isn't the problem, KVM not being able to return useful inform=
-ation in
-> > > all situations is the issue.
-> >
-> > Yes, that's why I don't want it to be an automatically opted-in API.  I=
-f
-> > incremental improvements are possible, it may be useful to allow intere=
-sted
-> > userspace to enable it early.  For example...
-> >
-> > > Specifically, "guest" accesses that are emulated
-> > > by KVM are problematic, because the -EFAULT from e.g. __kvm_write_gue=
-st_page()
-> > > is disconnected from the code that actually kicks out to userspace.  =
-In that
-> > > case, userspace will get KVM_EXIT_MMIO, not -EFAULT.  There are more =
-problems
-> > > beyond KVM_EXIT_MMIO vs. -EFAULT, e.g. instructions that perform mult=
-iple memory
-> > > accesses,
-> >
-> > those are obviously synchronous and I expect VMware to handle them alre=
-ady.
-> >
-> > That said my preferred solution to just use userfaultfd, which is
-> > synchronous by definition.
->
-> Oh, right, userfaultfd would be far better than piggybacking write-tracki=
-ng.
+Add support for exynos7870 in the pinctrl driver. Also, document the
+ALIVE pin controller's wakeup interrupt compatible.
 
-Thanks.  We will look into using userfaultfd.
+This patch series is a part of Exynos7870 upstreaming.
 
-Doug
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+Kaustabh Chakraborty (2):
+      dt-bindings: pinctrl: samsung: add exynos7870-pinctrl compatible
+      dt-bindings: pinctrl: samsung: add exynos7870-wakeup-eint compatible
 
---=20
-This electronic communication and the information and any files transmitted=
-=20
-with it, or attached to it, are confidential and are intended solely for=20
-the use of the individual or entity to whom it is addressed and may contain=
-=20
-information that is confidential, legally privileged, protected by privacy=
-=20
-laws, or otherwise restricted from disclosure to anyone else. If you are=20
-not the intended recipient or the person responsible for delivering the=20
-e-mail to the intended recipient, you are hereby notified that any use,=20
-copying, distributing, dissemination, forwarding, printing, or copying of=
-=20
-this e-mail is strictly prohibited. If you received this e-mail in error,=
-=20
-please return the e-mail to the sender, delete it from your computer, and=
-=20
-destroy any printed copy of it.
+Sergey Lisov (1):
+      pinctrl: samsung: add support for exynos7870 pinctrl
+
+ .../pinctrl/samsung,pinctrl-wakeup-interrupt.yaml  |   2 +
+ .../bindings/pinctrl/samsung,pinctrl.yaml          |   1 +
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     | 141 +++++++++++++++++++++
+ drivers/pinctrl/samsung/pinctrl-exynos.h           |  29 +++++
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |   2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |   1 +
+ 6 files changed, 176 insertions(+)
+---
+base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
+change-id: 20250203-exynos7870-pinctrl-07265f719061
+
+Best regards,
+-- 
+Kaustabh Chakraborty <kauschluss@disroot.org>
+
