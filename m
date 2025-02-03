@@ -1,211 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9B7204C32;
-	Mon,  3 Feb 2025 08:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31885214A65;
+	Mon,  3 Feb 2025 08:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738570227; cv=none; b=FgL/0CtKfTRg1A+LfsYoWcCo/GHQW2/XCbj3Nfj8aU1s+D1jLeZKkYExw6o4XVeFIhKmbNBziwPGmqJTf2dFmaTOwMcE3mKbf9RdEbautsK9cXk7Wg2xRggD8IbBL8HqVeStD7c44Pmp9gPBZz7C700ogiE78yAYV3KV1/MyTiY=
+	t=1738570231; cv=none; b=OIdcircSE21fRJaIgwFymmdl4u7o/CIemIbZJIEy3Lkanxp/n9Zk9TwZyJu+ytbGpRacMzRfEiQTie/ztVPF7monD2GzRZgyTM/CbDwjRV948lu1CDMyEO4UlG31T8r1b1ZtxpYaUkIlpdvwJR785EqaYBxvtCp/H25Wef2DxYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738570227; c=relaxed/simple;
-	bh=/rID+RWk1vDCco+U0NssT5hH+428fhjipIysDT2gnc4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qgu/2KzIm6bWYQI5fQTP2wJ73YopocSZuGXeVtvkeRj13jMYKr4t/vzstzh8oQWY0R9jagN7Wnin/Pl64absd+gmbsD5FxRnZHauP3Tild/QIg9ZmGA4p0JGWPlpcRvC9c1NDYcSugaq5lVCmAqtl4qBy7mWqP3bzMUciFd/GYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YSl7irO8; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YSl7irO8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738570225; x=1770106225;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/rID+RWk1vDCco+U0NssT5hH+428fhjipIysDT2gnc4=;
-  b=YSl7irO8Gls2hVrNLeOQ41Aj5aaD9y1lWA16mvy9oDjnX2yJbmsK8UQj
-   oHYIerszMVB7s/M17v2HyVkYsZebEl+loqr0qwrsokMPviThJBAcrXO9a
-   +uQtSTq3sEgEQroN/9NZSAqKi9WtiZgpzR5qsSQpP7rf2nRpDZLWyfWVL
-   U9hagHlY4/+MOd+Ra1ir593DR5npkJr8+X71YfmtezptIPSdpZsX+RtKw
-   n6lOyJfiybiwrTfS4jnwHnQtMSzBbAmpspCSRUwGhA2AryTmrUhIxhWjv
-   HyDObWLpX277BwXKd490di31iexyGh0hg6BCgDRgSuGl3eDajqGkxIqIb
-   Q==;
-X-CSE-ConnectionGUID: b9NaDJtNQNGpWamZ/vRu4Q==
-X-CSE-MsgGUID: +xDUAN0URyevdU6xVYACew==
-X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="49654236"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="49654236"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 00:10:25 -0800
-X-CSE-ConnectionGUID: osTtKT7JRreL/ki+QCuwqw==
-X-CSE-MsgGUID: 08HaGt9wQ6Cojfh8FzbSUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="110788829"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by fmviesa009.fm.intel.com with ESMTP; 03 Feb 2025 00:10:21 -0800
-From: Raag Jadav <raag.jadav@intel.com>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	dmitry.torokhov@gmail.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	sre@kernel.org,
-	jic23@kernel.org,
-	przemyslaw.kitszel@intel.com
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>,
-	=?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>
-Subject: [PATCH v3 15/20] ASoC: Intel: avs: use devm_kmemdup_array()
-Date: Mon,  3 Feb 2025 13:38:57 +0530
-Message-Id: <20250203080902.1864382-16-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250203080902.1864382-1-raag.jadav@intel.com>
-References: <20250203080902.1864382-1-raag.jadav@intel.com>
+	s=arc-20240116; t=1738570231; c=relaxed/simple;
+	bh=H1CB2E56WKQIFvUzXhKB0YMNUM1bkWdcIUeiE9iPlKM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OR8NK2sdpOJcqZb0sR7mJSP5/TvSQOki2JvSXEivbByBAY4+RGx+dYCNeFXHhvwbZrITQbda7j4P+sAzU63OdRfOgngdiNbvK4hSweetFp8m4gofzRj66B5nzj692kCUV2cnFop9ZrvyPeKylpHpaFwxVntGT/mJ3tk9PykL0Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF97A1476;
+	Mon,  3 Feb 2025 00:10:52 -0800 (PST)
+Received: from [10.162.16.79] (unknown [10.162.16.79])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2E1A3F63F;
+	Mon,  3 Feb 2025 00:10:23 -0800 (PST)
+Message-ID: <e63478e7-de74-4228-9b75-a26a9a3dd294@arm.com>
+Date: Mon, 3 Feb 2025 13:40:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 06/11] perf: apple_m1: Don't disable counter in
+ m1_pmu_enable_event()
+To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-6-1c1300802385@kernel.org>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250202-arm-brbe-v19-v19-6-1c1300802385@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Convert to use devm_kmemdup_array() which is more robust.
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-Acked-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- sound/soc/intel/avs/boards/da7219.c  | 3 ++-
- sound/soc/intel/avs/boards/es8336.c  | 3 ++-
- sound/soc/intel/avs/boards/nau8825.c | 3 ++-
- sound/soc/intel/avs/boards/rt274.c   | 3 ++-
- sound/soc/intel/avs/boards/rt286.c   | 3 ++-
- sound/soc/intel/avs/boards/rt298.c   | 3 ++-
- sound/soc/intel/avs/boards/rt5663.c  | 3 ++-
- sound/soc/intel/avs/boards/rt5682.c  | 2 +-
- 8 files changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/intel/avs/boards/da7219.c b/sound/soc/intel/avs/boards/da7219.c
-index 76078a7005b0..6920a3737ddd 100644
---- a/sound/soc/intel/avs/boards/da7219.c
-+++ b/sound/soc/intel/avs/boards/da7219.c
-@@ -113,7 +113,8 @@ static int avs_da7219_codec_init(struct snd_soc_pcm_runtime *runtime)
- 	}
- 
- 	num_pins = ARRAY_SIZE(card_headset_pins);
--	pins = devm_kmemdup(card->dev, card_headset_pins, sizeof(*pins) * num_pins, GFP_KERNEL);
-+	pins = devm_kmemdup_array(card->dev, card_headset_pins, num_pins,
-+				  sizeof(*pins), GFP_KERNEL);
- 	if (!pins)
- 		return -ENOMEM;
- 
-diff --git a/sound/soc/intel/avs/boards/es8336.c b/sound/soc/intel/avs/boards/es8336.c
-index 426ce37105ae..159d5170dc56 100644
---- a/sound/soc/intel/avs/boards/es8336.c
-+++ b/sound/soc/intel/avs/boards/es8336.c
-@@ -109,7 +109,8 @@ static int avs_es8336_codec_init(struct snd_soc_pcm_runtime *runtime)
- 	data = snd_soc_card_get_drvdata(card);
- 	num_pins = ARRAY_SIZE(card_headset_pins);
- 
--	pins = devm_kmemdup(card->dev, card_headset_pins, sizeof(*pins) * num_pins, GFP_KERNEL);
-+	pins = devm_kmemdup_array(card->dev, card_headset_pins, num_pins,
-+				  sizeof(*pins), GFP_KERNEL);
- 	if (!pins)
- 		return -ENOMEM;
- 
-diff --git a/sound/soc/intel/avs/boards/nau8825.c b/sound/soc/intel/avs/boards/nau8825.c
-index bf902540744c..cf8604ac222a 100644
---- a/sound/soc/intel/avs/boards/nau8825.c
-+++ b/sound/soc/intel/avs/boards/nau8825.c
-@@ -88,7 +88,8 @@ static int avs_nau8825_codec_init(struct snd_soc_pcm_runtime *runtime)
- 	jack = snd_soc_card_get_drvdata(card);
- 	num_pins = ARRAY_SIZE(card_headset_pins);
- 
--	pins = devm_kmemdup(card->dev, card_headset_pins, sizeof(*pins) * num_pins, GFP_KERNEL);
-+	pins = devm_kmemdup_array(card->dev, card_headset_pins, num_pins,
-+				  sizeof(*pins), GFP_KERNEL);
- 	if (!pins)
- 		return -ENOMEM;
- 
-diff --git a/sound/soc/intel/avs/boards/rt274.c b/sound/soc/intel/avs/boards/rt274.c
-index 4b6c02a40204..746ae1a4adc5 100644
---- a/sound/soc/intel/avs/boards/rt274.c
-+++ b/sound/soc/intel/avs/boards/rt274.c
-@@ -98,7 +98,8 @@ static int avs_rt274_codec_init(struct snd_soc_pcm_runtime *runtime)
- 	jack = snd_soc_card_get_drvdata(card);
- 	num_pins = ARRAY_SIZE(card_headset_pins);
- 
--	pins = devm_kmemdup(card->dev, card_headset_pins, sizeof(*pins) * num_pins, GFP_KERNEL);
-+	pins = devm_kmemdup_array(card->dev, card_headset_pins, num_pins,
-+				  sizeof(*pins), GFP_KERNEL);
- 	if (!pins)
- 		return -ENOMEM;
- 
-diff --git a/sound/soc/intel/avs/boards/rt286.c b/sound/soc/intel/avs/boards/rt286.c
-index e40563ca99fd..7f9d8c216b31 100644
---- a/sound/soc/intel/avs/boards/rt286.c
-+++ b/sound/soc/intel/avs/boards/rt286.c
-@@ -59,7 +59,8 @@ static int avs_rt286_codec_init(struct snd_soc_pcm_runtime *runtime)
- 	jack = snd_soc_card_get_drvdata(card);
- 	num_pins = ARRAY_SIZE(card_headset_pins);
- 
--	pins = devm_kmemdup(card->dev, card_headset_pins, sizeof(*pins) * num_pins, GFP_KERNEL);
-+	pins = devm_kmemdup_array(card->dev, card_headset_pins, num_pins,
-+				  sizeof(*pins), GFP_KERNEL);
- 	if (!pins)
- 		return -ENOMEM;
- 
-diff --git a/sound/soc/intel/avs/boards/rt298.c b/sound/soc/intel/avs/boards/rt298.c
-index 94fce07c83f9..11cd7c85c4a7 100644
---- a/sound/soc/intel/avs/boards/rt298.c
-+++ b/sound/soc/intel/avs/boards/rt298.c
-@@ -70,7 +70,8 @@ static int avs_rt298_codec_init(struct snd_soc_pcm_runtime *runtime)
- 	jack = snd_soc_card_get_drvdata(card);
- 	num_pins = ARRAY_SIZE(card_headset_pins);
- 
--	pins = devm_kmemdup(card->dev, card_headset_pins, sizeof(*pins) * num_pins, GFP_KERNEL);
-+	pins = devm_kmemdup_array(card->dev, card_headset_pins, num_pins,
-+				  sizeof(*pins), GFP_KERNEL);
- 	if (!pins)
- 		return -ENOMEM;
- 
-diff --git a/sound/soc/intel/avs/boards/rt5663.c b/sound/soc/intel/avs/boards/rt5663.c
-index b456b9d14665..a47beab60c47 100644
---- a/sound/soc/intel/avs/boards/rt5663.c
-+++ b/sound/soc/intel/avs/boards/rt5663.c
-@@ -65,7 +65,8 @@ static int avs_rt5663_codec_init(struct snd_soc_pcm_runtime *runtime)
- 	jack = &priv->jack;
- 	num_pins = ARRAY_SIZE(card_headset_pins);
- 
--	pins = devm_kmemdup(card->dev, card_headset_pins, sizeof(*pins) * num_pins, GFP_KERNEL);
-+	pins = devm_kmemdup_array(card->dev, card_headset_pins, num_pins,
-+				  sizeof(*pins), GFP_KERNEL);
- 	if (!pins)
- 		return -ENOMEM;
- 
-diff --git a/sound/soc/intel/avs/boards/rt5682.c b/sound/soc/intel/avs/boards/rt5682.c
-index 335960cfd7ba..d503eff827fe 100644
---- a/sound/soc/intel/avs/boards/rt5682.c
-+++ b/sound/soc/intel/avs/boards/rt5682.c
-@@ -102,7 +102,7 @@ static int avs_rt5682_codec_init(struct snd_soc_pcm_runtime *runtime)
- 	jack = snd_soc_card_get_drvdata(card);
- 	num_pins = ARRAY_SIZE(card_jack_pins);
- 
--	pins = devm_kmemdup(card->dev, card_jack_pins, sizeof(*pins) * num_pins, GFP_KERNEL);
-+	pins = devm_kmemdup_array(card->dev, card_jack_pins, num_pins, sizeof(*pins), GFP_KERNEL);
- 	if (!pins)
- 		return -ENOMEM;
- 
--- 
-2.34.1
+On 2/3/25 06:13, Rob Herring (Arm) wrote:
+> Currently m1_pmu_enable_event() starts by disabling the event counter
+> it has been asked to enable. This should not be necessary as the
+> counter (and the PMU as a whole) should not be active when
+> m1_pmu_enable_event() is called.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  drivers/perf/apple_m1_cpu_pmu.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
+> index 06fd317529fc..39349ecec3c1 100644
+> --- a/drivers/perf/apple_m1_cpu_pmu.c
+> +++ b/drivers/perf/apple_m1_cpu_pmu.c
+> @@ -396,10 +396,6 @@ static void m1_pmu_enable_event(struct perf_event *event)
+>  	user = event->hw.config_base & M1_PMU_CFG_COUNT_USER;
+>  	kernel = event->hw.config_base & M1_PMU_CFG_COUNT_KERNEL;
+>  
+> -	m1_pmu_disable_counter_interrupt(event->hw.idx);
+> -	m1_pmu_disable_counter(event->hw.idx);
+> -	isb();
+> -
+>  	m1_pmu_configure_counter(event->hw.idx, evt, user, kernel);
+>  	m1_pmu_enable_counter(event->hw.idx);
+>  	m1_pmu_enable_counter_interrupt(event->hw.idx);
+> 
 
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
