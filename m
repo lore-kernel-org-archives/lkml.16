@@ -1,35 +1,35 @@
 Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E78C1DF27D;
-	Mon,  3 Feb 2025 07:00:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FA931DB377
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 07:01:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738566053; cv=none; b=CxQqI40QjHR2++EJsjXzZvP4+mMpOt48kOT6TDMg/SpsOHRce06g6cNG3ExiQT9MwVNWsYS1ijohtBbg3gutN2ykgAxHn4dZmKOzSIm+HN40cO5MdEwKY19IDQuxm81bkzR3MXE7keptNDTTk+VJTT5Llm/KCLitEPesubmC+2w=
+	t=1738566064; cv=none; b=uiczntlDDF2QUydj/WWWJXFGWhpRok7Vy7HoCnK7hwUI6KnL3vuKRjVvCPxCx0/dBF2lsL6mtvZ9IaC+xFiFykD8EOOk9eA0U0MnvXjqwpoADPxhZ/HKISpUq8mGlmwfmrf6NRbqTnAtjxm2qeQZHfbtNqbOCvIPSuyq7Vy7XsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738566053; c=relaxed/simple;
-	bh=iHIueqbnIDLgSAkX709VfxQMep8my0aDKCuofdmATXs=;
+	s=arc-20240116; t=1738566064; c=relaxed/simple;
+	bh=RmbnVGXALnPwPx+RxsbfbxAbfomCSSrfU0QMd2tzp94=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=G7cmPZS9xh1Zz3G/ROlcR9iP948eLAzmUdCG0NBLdYFWGUcX7TZ/6G+018pcYPsffKwV5xWqsKxoCbUpL9k35DqP9/wAWdcsA54hh6l11Dl52Z9gz/QuyYFUNHQimhaHG7a6ordRLSbdS/PDkOf9x3eprcF6DFdCimixzewf6nQ=
+	 Content-Disposition:In-Reply-To; b=LzBcz4MNEUSONOVpQDZ/PZphI3AZ1RJDkm6ccpKmCPUXpT+BL4sqNLzcw8ZOt4WZrMilQEtHv/8gE4EyXwTnQQ8du8PYmuqnRK1lVDLG171Dw4e4q9HqK16AFE515zQgZ6QN8YPz7XxlEKQjxepCfcp+HGMQ/CAu9xfEg9NbxYs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
 Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 59D0372C90D;
-	Mon,  3 Feb 2025 10:00:50 +0300 (MSK)
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 8648A72C97E;
+	Mon,  3 Feb 2025 10:01:01 +0300 (MSK)
 Received: by mua.local.altlinux.org (Postfix, from userid 508)
-	id 47AAB7CCB3B; Mon,  3 Feb 2025 09:00:50 +0200 (IST)
-Date: Mon, 3 Feb 2025 09:00:50 +0200
+	id 601CC7CCB3A; Mon,  3 Feb 2025 09:01:01 +0200 (IST)
+Date: Mon, 3 Feb 2025 09:01:01 +0200
 From: "Dmitry V. Levin" <ldv@strace.io>
 To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Alexey Gladkov <legion@kernel.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
+Cc: Oleg Nesterov <oleg@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	Alexey Gladkov <legion@kernel.org>,
 	Eugene Syromyatnikov <evgsyr@gmail.com>,
 	Mike Frysinger <vapier@gentoo.org>,
 	Renzo Davoli <renzo@cs.unibo.it>,
 	Davide Berardi <berardi.dav@gmail.com>,
-	strace-devel@lists.strace.io, linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org
-Subject: [PATCH v4 6/7] ptrace: introduce PTRACE_SET_SYSCALL_INFO request
-Message-ID: <20250203070050.GG14120@strace.io>
+	strace-devel@lists.strace.io, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 7/7] selftests/ptrace: add a test case for
+ PTRACE_SET_SYSCALL_INFO
+Message-ID: <20250203070101.GH14120@strace.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,240 +40,548 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20250203065849.GA14120@strace.io>
 
-PTRACE_SET_SYSCALL_INFO is a generic ptrace API that complements
-PTRACE_GET_SYSCALL_INFO by letting the ptracer modify details of
-system calls the tracee is blocked in.
+Check whether PTRACE_SET_SYSCALL_INFO semantics implemented in the
+kernel matches userspace expectations.
 
-This API allows ptracers to obtain and modify system call details
-in a straightforward and architecture-agnostic way.
-
-Current implementation supports changing only those bits of system call
-information that are used by strace, namely, syscall number, syscall
-arguments, and syscall return value.
-
-Support of changing additional details returned by PTRACE_GET_SYSCALL_INFO,
-such as instruction pointer and stack pointer, could be added later if
-needed, by using struct ptrace_syscall_info.flags to specify the additional
-details that should be set.  Currently, "flags" and "reserved" fields of
-struct ptrace_syscall_info must be initialized with zeroes; "arch",
-"instruction_pointer", and "stack_pointer" fields are ignored.
-
-PTRACE_SET_SYSCALL_INFO currently supports only PTRACE_SYSCALL_INFO_ENTRY,
-PTRACE_SYSCALL_INFO_EXIT, and PTRACE_SYSCALL_INFO_SECCOMP operations.
-Other operations could be added later if needed.
-
-Ideally, PTRACE_SET_SYSCALL_INFO should have been introduced along with
-PTRACE_GET_SYSCALL_INFO, but it didn't happen.  The last straw that
-convinced me to implement PTRACE_SET_SYSCALL_INFO was apparent failure
-to provide an API of changing the first system call argument on riscv
-architecture.
-
-ptrace(2) man page:
-
-long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);
-...
-PTRACE_SET_SYSCALL_INFO
-       Modify information about the system call that caused the stop.
-       The "data" argument is a pointer to struct ptrace_syscall_info
-       that specifies the system call information to be set.
-       The "addr" argument should be set to sizeof(struct ptrace_syscall_info)).
-
-Link: https://lore.kernel.org/all/59505464-c84a-403d-972f-d4b2055eeaac@gmail.com/
 Signed-off-by: Dmitry V. Levin <ldv@strace.io>
-Reviewed-by: Alexey Gladkov <legion@kernel.org>
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
-Tested-by: Charlie Jenkins <charlie@rivosinc.com>
-Reviewed-by: Eugene Syromiatnikov <esyr@redhat.com>
 Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 ---
- include/uapi/linux/ptrace.h |   7 ++-
- kernel/ptrace.c             | 121 +++++++++++++++++++++++++++++++++++-
- 2 files changed, 126 insertions(+), 2 deletions(-)
+ tools/testing/selftests/ptrace/Makefile       |   2 +-
+ .../selftests/ptrace/set_syscall_info.c       | 514 ++++++++++++++++++
+ 2 files changed, 515 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/ptrace/set_syscall_info.c
 
-diff --git a/include/uapi/linux/ptrace.h b/include/uapi/linux/ptrace.h
-index 72c038fc71d0..5f8ef6156752 100644
---- a/include/uapi/linux/ptrace.h
-+++ b/include/uapi/linux/ptrace.h
-@@ -74,6 +74,7 @@ struct seccomp_metadata {
- };
+diff --git a/tools/testing/selftests/ptrace/Makefile b/tools/testing/selftests/ptrace/Makefile
+index 1c631740a730..c5e0b76ba6ac 100644
+--- a/tools/testing/selftests/ptrace/Makefile
++++ b/tools/testing/selftests/ptrace/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ CFLAGS += -std=c99 -pthread -Wall $(KHDR_INCLUDES)
  
- #define PTRACE_GET_SYSCALL_INFO		0x420e
-+#define PTRACE_SET_SYSCALL_INFO		0x4212
- #define PTRACE_SYSCALL_INFO_NONE	0
- #define PTRACE_SYSCALL_INFO_ENTRY	1
- #define PTRACE_SYSCALL_INFO_EXIT	2
-@@ -81,7 +82,8 @@ struct seccomp_metadata {
+-TEST_GEN_PROGS := get_syscall_info peeksiginfo vmaccess get_set_sud
++TEST_GEN_PROGS := get_syscall_info set_syscall_info peeksiginfo vmaccess get_set_sud
  
- struct ptrace_syscall_info {
- 	__u8 op;	/* PTRACE_SYSCALL_INFO_* */
--	__u8 pad[3];
-+	__u8 reserved;
-+	__u16 flags;
- 	__u32 arch;
- 	__u64 instruction_pointer;
- 	__u64 stack_pointer;
-@@ -98,6 +100,7 @@ struct ptrace_syscall_info {
- 			__u64 nr;
- 			__u64 args[6];
- 			__u32 ret_data;
-+			__u32 reserved2;
- 		} seccomp;
- 	};
- };
-@@ -142,6 +145,8 @@ struct ptrace_sud_config {
- 	__u64 len;
- };
- 
-+/* 0x4212 is PTRACE_SET_SYSCALL_INFO */
+ include ../lib.mk
+diff --git a/tools/testing/selftests/ptrace/set_syscall_info.c b/tools/testing/selftests/ptrace/set_syscall_info.c
+new file mode 100644
+index 000000000000..0ec69401c008
+--- /dev/null
++++ b/tools/testing/selftests/ptrace/set_syscall_info.c
+@@ -0,0 +1,514 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (c) 2018-2025 Dmitry V. Levin <ldv@strace.io>
++ * All rights reserved.
++ *
++ * Check whether PTRACE_SET_SYSCALL_INFO semantics implemented in the kernel
++ * matches userspace expectations.
++ */
 +
- /*
-  * These values are stored in task->ptrace_message
-  * by ptrace_stop to describe the current syscall-stop.
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index 22e7d74cf4cd..75a84efad40f 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -944,7 +944,10 @@ ptrace_get_syscall_info_seccomp(struct task_struct *child, struct pt_regs *regs,
- 	ptrace_get_syscall_info_entry(child, regs, info);
- 	info->seccomp.ret_data = child->ptrace_message;
- 
--	/* ret_data is the last field in struct ptrace_syscall_info.seccomp */
-+	/*
-+	 * ret_data is the last non-reserved field
-+	 * in struct ptrace_syscall_info.seccomp
-+	 */
- 	return offsetofend(struct ptrace_syscall_info, seccomp.ret_data);
- }
- 
-@@ -1016,6 +1019,118 @@ ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
- 	write_size = min(actual_size, user_size);
- 	return copy_to_user(datavp, &info, write_size) ? -EFAULT : actual_size;
- }
++#include "../kselftest_harness.h"
++#include <err.h>
++#include <fcntl.h>
++#include <signal.h>
++#include <asm/unistd.h>
++#include <linux/types.h>
++#include <linux/ptrace.h>
++
++#if defined(_MIPS_SIM) && _MIPS_SIM == _MIPS_SIM_NABI32
++/*
++ * MIPS N32 is the only architecture where __kernel_ulong_t
++ * does not match the bitness of syscall arguments.
++ */
++typedef unsigned long long kernel_ulong_t;
++#else
++typedef __kernel_ulong_t kernel_ulong_t;
++#endif
++
++struct si_entry {
++	int nr;
++	kernel_ulong_t args[6];
++};
++struct si_exit {
++	unsigned int is_error;
++	int rval;
++};
++
++static unsigned int ptrace_stop;
++static pid_t tracee_pid;
 +
 +static int
-+ptrace_set_syscall_info_entry(struct task_struct *child, struct pt_regs *regs,
-+			      struct ptrace_syscall_info *info)
++kill_tracee(pid_t pid)
 +{
-+	unsigned long args[ARRAY_SIZE(info->entry.args)];
-+	int nr = info->entry.nr;
-+	int i;
++	if (!pid)
++		return 0;
 +
-+	/*
-+	 * Check that the syscall number specified in info->entry.nr
-+	 * is either a value of type "int" or a sign-extended value
-+	 * of type "int".
-+	 */
-+	if (nr != info->entry.nr)
-+		return -ERANGE;
++	int saved_errno = errno;
 +
-+	for (i = 0; i < ARRAY_SIZE(args); i++) {
-+		args[i] = info->entry.args[i];
++	int rc = kill(pid, SIGKILL);
++
++	errno = saved_errno;
++	return rc;
++}
++
++static long
++sys_ptrace(int request, pid_t pid, unsigned long addr, unsigned long data)
++{
++	return syscall(__NR_ptrace, request, pid, addr, data);
++}
++
++#define LOG_KILL_TRACEE(fmt, ...)				\
++	do {							\
++		kill_tracee(tracee_pid);			\
++		TH_LOG("wait #%d: " fmt,			\
++		       ptrace_stop, ##__VA_ARGS__);		\
++	} while (0)
++
++static void
++check_psi_entry(struct __test_metadata *_metadata,
++		const struct ptrace_syscall_info *info,
++		const struct si_entry *exp_entry,
++		const char *text)
++{
++	unsigned int i;
++
++	ASSERT_EQ(PTRACE_SYSCALL_INFO_ENTRY, info->op) {
++		LOG_KILL_TRACEE("%s: entry stop mismatch", text);
++	}
++	ASSERT_TRUE(info->arch) {
++		LOG_KILL_TRACEE("%s: entry stop mismatch", text);
++	}
++	ASSERT_TRUE(info->instruction_pointer) {
++		LOG_KILL_TRACEE("%s: entry stop mismatch", text);
++	}
++	ASSERT_TRUE(info->stack_pointer) {
++		LOG_KILL_TRACEE("%s: entry stop mismatch", text);
++	}
++	ASSERT_EQ(exp_entry->nr, info->entry.nr) {
++		LOG_KILL_TRACEE("%s: syscall nr mismatch", text);
++	}
++	for (i = 0; i < ARRAY_SIZE(exp_entry->args); ++i) {
++		ASSERT_EQ(exp_entry->args[i], info->entry.args[i]) {
++			LOG_KILL_TRACEE("%s: syscall arg #%u mismatch",
++					text, i);
++		}
++	}
++}
++
++static void
++check_psi_exit(struct __test_metadata *_metadata,
++	       const struct ptrace_syscall_info *info,
++	       const struct si_exit *exp_exit,
++	       const char *text)
++{
++	ASSERT_EQ(PTRACE_SYSCALL_INFO_EXIT, info->op) {
++		LOG_KILL_TRACEE("%s: exit stop mismatch", text);
++	}
++	ASSERT_TRUE(info->arch) {
++		LOG_KILL_TRACEE("%s: exit stop mismatch", text);
++	}
++	ASSERT_TRUE(info->instruction_pointer) {
++		LOG_KILL_TRACEE("%s: exit stop mismatch", text);
++	}
++	ASSERT_TRUE(info->stack_pointer) {
++		LOG_KILL_TRACEE("%s: exit stop mismatch", text);
++	}
++	ASSERT_EQ(exp_exit->is_error, info->exit.is_error) {
++		LOG_KILL_TRACEE("%s: exit stop mismatch", text);
++	}
++	ASSERT_EQ(exp_exit->rval, info->exit.rval) {
++		LOG_KILL_TRACEE("%s: exit stop mismatch", text);
++	}
++}
++
++TEST(set_syscall_info)
++{
++	const pid_t tracer_pid = getpid();
++	const kernel_ulong_t dummy[] = {
++		(kernel_ulong_t) 0xdad0bef0bad0fed0ULL,
++		(kernel_ulong_t) 0xdad1bef1bad1fed1ULL,
++		(kernel_ulong_t) 0xdad2bef2bad2fed2ULL,
++		(kernel_ulong_t) 0xdad3bef3bad3fed3ULL,
++		(kernel_ulong_t) 0xdad4bef4bad4fed4ULL,
++		(kernel_ulong_t) 0xdad5bef5bad5fed5ULL,
++	};
++	int splice_in[2], splice_out[2];
++
++	ASSERT_EQ(0, pipe(splice_in));
++	ASSERT_EQ(0, pipe(splice_out));
++	ASSERT_EQ(sizeof(dummy), write(splice_in[1], dummy, sizeof(dummy)));
++
++	const struct {
++		struct si_entry entry[2];
++		struct si_exit exit[2];
++	} si[] = {
++		/* change scno, keep non-error rval */
++		{
++			{
++				{
++					__NR_gettid,
++					{
++						dummy[0], dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}, {
++					__NR_getppid,
++					{
++						dummy[0], dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}
++			}, {
++				{ 0, tracer_pid }, { 0, tracer_pid }
++			}
++		},
++
++		/* set scno to -1, keep error rval */
++		{
++			{
++				{
++					__NR_chdir,
++					{
++						(uintptr_t) ".",
++						dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}, {
++					-1,
++					{
++						(uintptr_t) ".",
++						dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}
++			}, {
++				{ 1, -ENOSYS }, { 1, -ENOSYS }
++			}
++		},
++
++		/* keep scno, change non-error rval */
++		{
++			{
++				{
++					__NR_getppid,
++					{
++						dummy[0], dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}, {
++					__NR_getppid,
++					{
++						dummy[0], dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}
++			}, {
++				{ 0, tracer_pid }, { 0, tracer_pid + 1 }
++			}
++		},
++
++		/* change arg1, keep non-error rval */
++		{
++			{
++				{
++					__NR_chdir,
++					{
++						(uintptr_t) "",
++						dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}, {
++					__NR_chdir,
++					{
++						(uintptr_t) ".",
++						dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}
++			}, {
++				{ 0, 0 }, { 0, 0 }
++			}
++		},
++
++		/* set scno to -1, change error rval to non-error */
++		{
++			{
++				{
++					__NR_gettid,
++					{
++						dummy[0], dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}, {
++					-1,
++					{
++						dummy[0], dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}
++			}, {
++				{ 1, -ENOSYS }, { 0, tracer_pid }
++			}
++		},
++
++		/* change scno, change non-error rval to error */
++		{
++			{
++				{
++					__NR_chdir,
++					{
++						dummy[0], dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}, {
++					__NR_getppid,
++					{
++						dummy[0], dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}
++			}, {
++				{ 0, tracer_pid }, { 1, -EISDIR }
++			}
++		},
++
++		/* change scno and all args, change non-error rval */
++		{
++			{
++				{
++					__NR_gettid,
++					{
++						dummy[0], dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}, {
++					__NR_splice,
++					{
++						splice_in[0], 0, splice_out[1], 0,
++						sizeof(dummy), SPLICE_F_NONBLOCK
++					}
++				}
++			}, {
++				{ 0, sizeof(dummy) }, { 0, sizeof(dummy) + 1 }
++			}
++		},
++
++		/* change arg1, no exit stop */
++		{
++			{
++				{
++					__NR_exit_group,
++					{
++						dummy[0], dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}, {
++					__NR_exit_group,
++					{
++						0, dummy[1], dummy[2],
++						dummy[3], dummy[4], dummy[5]
++					}
++				}
++			}, {
++				{ 0, 0 }, { 0, 0 }
++			}
++		},
++	};
++
++	long rc;
++	unsigned int i;
++
++	tracee_pid = fork();
++
++	ASSERT_LE(0, tracee_pid) {
++		TH_LOG("fork: %m");
++	}
++
++	if (tracee_pid == 0) {
++		/* get the pid before PTRACE_TRACEME */
++		tracee_pid = getpid();
++		ASSERT_EQ(0, sys_ptrace(PTRACE_TRACEME, 0, 0, 0)) {
++			TH_LOG("PTRACE_TRACEME: %m");
++		}
++		ASSERT_EQ(0, kill(tracee_pid, SIGSTOP)) {
++			/* cannot happen */
++			TH_LOG("kill SIGSTOP: %m");
++		}
++		for (i = 0; i < ARRAY_SIZE(si); ++i) {
++			rc = syscall(si[i].entry[0].nr,
++				     si[i].entry[0].args[0],
++				     si[i].entry[0].args[1],
++				     si[i].entry[0].args[2],
++				     si[i].entry[0].args[3],
++				     si[i].entry[0].args[4],
++				     si[i].entry[0].args[5]);
++			if (si[i].exit[1].is_error) {
++				if (rc != -1 || errno != -si[i].exit[1].rval)
++					break;
++			} else {
++				if (rc != si[i].exit[1].rval)
++					break;
++			}
++		}
 +		/*
-+		 * Check that the syscall argument specified in
-+		 * info->entry.args[i] is either a value of type
-+		 * "unsigned long" or a sign-extended value of type "long".
++		 * Something went wrong, but in this state tracee
++		 * cannot reliably issue syscalls, so just crash.
 +		 */
-+		if (args[i] != info->entry.args[i])
-+			return -ERANGE;
++		*(volatile unsigned char *) (uintptr_t) i = 42;
++		/* unreachable */
++		_exit(i + 1);
 +	}
 +
-+	syscall_set_nr(child, regs, nr);
-+	/*
-+	 * If the syscall number is set to -1, setting syscall arguments is not
-+	 * just pointless, it would also clobber the syscall return value on
-+	 * those architectures that share the same register both for the first
-+	 * argument of syscall and its return value.
-+	 */
-+	if (nr != -1)
-+		syscall_set_arguments(child, regs, args);
++	for (ptrace_stop = 0; ; ++ptrace_stop) {
++		struct ptrace_syscall_info info = {
++			.op = 0xff	/* invalid PTRACE_SYSCALL_INFO_* op */
++		};
++		const size_t size = sizeof(info);
++		const int expected_entry_size =
++			(void *) &info.entry.args[6] - (void *) &info;
++		const int expected_exit_size =
++			(void *) (&info.exit.is_error + 1) -
++			(void *) &info;
++		int status;
 +
-+	return 0;
-+}
++		ASSERT_EQ(tracee_pid, wait(&status)) {
++			/* cannot happen */
++			LOG_KILL_TRACEE("wait: %m");
++		}
++		if (WIFEXITED(status)) {
++			tracee_pid = 0;	/* the tracee is no more */
++			ASSERT_EQ(0, WEXITSTATUS(status)) {
++				LOG_KILL_TRACEE("unexpected exit status %u",
++						WEXITSTATUS(status));
++			}
++			break;
++		}
++		ASSERT_FALSE(WIFSIGNALED(status)) {
++			tracee_pid = 0;	/* the tracee is no more */
++			LOG_KILL_TRACEE("unexpected signal %u",
++					WTERMSIG(status));
++		}
++		ASSERT_TRUE(WIFSTOPPED(status)) {
++			/* cannot happen */
++			LOG_KILL_TRACEE("unexpected wait status %#x", status);
++		}
 +
-+static int
-+ptrace_set_syscall_info_seccomp(struct task_struct *child, struct pt_regs *regs,
-+				struct ptrace_syscall_info *info)
-+{
-+	/*
-+	 * info->entry is currently a subset of info->seccomp,
-+	 * info->seccomp.ret_data is currently ignored.
-+	 */
-+	return ptrace_set_syscall_info_entry(child, regs, info);
-+}
++		ASSERT_LT(ptrace_stop, ARRAY_SIZE(si) * 2) {
++			LOG_KILL_TRACEE("ptrace stop overflow");
++		}
 +
-+static int
-+ptrace_set_syscall_info_exit(struct task_struct *child, struct pt_regs *regs,
-+			     struct ptrace_syscall_info *info)
-+{
-+	long rval = info->exit.rval;
++		switch (WSTOPSIG(status)) {
++		case SIGSTOP:
++			ASSERT_EQ(0, ptrace_stop) {
++				LOG_KILL_TRACEE("unexpected signal stop");
++			}
++			ASSERT_EQ(0, sys_ptrace(PTRACE_SETOPTIONS, tracee_pid,
++						0, PTRACE_O_TRACESYSGOOD)) {
++				LOG_KILL_TRACEE("PTRACE_SETOPTIONS: %m");
++			}
++			break;
 +
-+	/*
-+	 * Check that the return value specified in info->exit.rval
-+	 * is either a value of type "long" or a sign-extended value
-+	 * of type "long".
-+	 */
-+	if (rval != info->exit.rval)
-+		return -ERANGE;
++		case SIGTRAP | 0x80:
++			ASSERT_LT(0, ptrace_stop) {
++				LOG_KILL_TRACEE("unexpected syscall stop");
++			}
++			ASSERT_LT(0, (rc = sys_ptrace(PTRACE_GET_SYSCALL_INFO,
++						      tracee_pid, size,
++						      (uintptr_t) &info))) {
++				LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO #1: %m");
++			}
++			if (ptrace_stop & 1) {
++				/* entering syscall */
++				const struct si_entry *exp_entry =
++					&si[ptrace_stop / 2].entry[0];
++				const struct si_entry *set_entry =
++					&si[ptrace_stop / 2].entry[1];
 +
-+	if (info->exit.is_error)
-+		syscall_set_return_value(child, regs, rval, 0);
-+	else
-+		syscall_set_return_value(child, regs, 0, rval);
++				/* check ptrace_syscall_info before the changes */
++				ASSERT_EQ(expected_entry_size, rc) {
++					LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO #1"
++							": entry stop mismatch");
++				}
++				check_psi_entry(_metadata, &info, exp_entry,
++						"PTRACE_GET_SYSCALL_INFO #1");
 +
-+	return 0;
-+}
++				/* apply the changes */
++				info.entry.nr = set_entry->nr;
++				for (i = 0; i < ARRAY_SIZE(set_entry->args); ++i)
++					info.entry.args[i] = set_entry->args[i];
++				ASSERT_EQ(0, sys_ptrace(PTRACE_SET_SYSCALL_INFO,
++							tracee_pid, size,
++							(uintptr_t) &info)) {
++					LOG_KILL_TRACEE("PTRACE_SET_SYSCALL_INFO: %m");
++				}
 +
-+static int
-+ptrace_set_syscall_info(struct task_struct *child, unsigned long user_size,
-+			const void __user *datavp)
-+{
-+	struct pt_regs *regs = task_pt_regs(child);
-+	struct ptrace_syscall_info info;
++				/* check ptrace_syscall_info after the changes */
++				memset(&info, 0, sizeof(info));
++				info.op = 0xff;
++				ASSERT_LT(0, (rc = sys_ptrace(PTRACE_GET_SYSCALL_INFO,
++							      tracee_pid, size,
++							      (uintptr_t) &info))) {
++					LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO: %m");
++				}
++				ASSERT_EQ(expected_entry_size, rc) {
++					LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO #2"
++							": entry stop mismatch");
++				}
++				check_psi_entry(_metadata, &info, set_entry,
++						"PTRACE_GET_SYSCALL_INFO #2");
++			} else {
++				/* exiting syscall */
++				const struct si_exit *exp_exit =
++					&si[ptrace_stop / 2 - 1].exit[0];
++				const struct si_exit *set_exit =
++					&si[ptrace_stop / 2 - 1].exit[1];
 +
-+	if (user_size < sizeof(info))
-+		return -EINVAL;
++				/* check ptrace_syscall_info before the changes */
++				ASSERT_EQ(expected_exit_size, rc) {
++					LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO #1"
++							": exit stop mismatch");
++				}
++				check_psi_exit(_metadata, &info, exp_exit,
++						"PTRACE_GET_SYSCALL_INFO #1");
 +
-+	/*
-+	 * The compatibility is tracked by info.op and info.flags: if user-space
-+	 * does not instruct us to use unknown extra bits from future versions
-+	 * of ptrace_syscall_info, we are not going to read them either.
-+	 */
-+	if (copy_from_user(&info, datavp, sizeof(info)))
-+		return -EFAULT;
++				/* apply the changes */
++				info.exit.is_error = set_exit->is_error;
++				info.exit.rval = set_exit->rval;
++				ASSERT_EQ(0, sys_ptrace(PTRACE_SET_SYSCALL_INFO,
++							tracee_pid, size,
++							(uintptr_t) &info)) {
++					LOG_KILL_TRACEE("PTRACE_SET_SYSCALL_INFO: %m");
++				}
 +
-+	/* Reserved for future use. */
-+	if (info.flags || info.reserved)
-+		return -EINVAL;
++				/* check ptrace_syscall_info after the changes */
++				memset(&info, 0, sizeof(info));
++				info.op = 0xff;
++				ASSERT_LT(0, (rc = sys_ptrace(PTRACE_GET_SYSCALL_INFO,
++							      tracee_pid, size,
++							      (uintptr_t) &info))) {
++					LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO #2: %m");
++				}
++				ASSERT_EQ(expected_exit_size, rc) {
++					LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO #2"
++							": exit stop mismatch");
++				}
++				check_psi_exit(_metadata, &info, set_exit,
++						"PTRACE_GET_SYSCALL_INFO #2");
++			}
++			break;
 +
-+	/* Changing the type of the system call stop is not supported yet. */
-+	if (ptrace_get_syscall_info_op(child) != info.op)
-+		return -EINVAL;
++		default:
++			LOG_KILL_TRACEE("unexpected stop signal %u",
++					WSTOPSIG(status));
++			abort();
++		}
 +
-+	switch (info.op) {
-+	case PTRACE_SYSCALL_INFO_ENTRY:
-+		return ptrace_set_syscall_info_entry(child, regs, &info);
-+	case PTRACE_SYSCALL_INFO_EXIT:
-+		return ptrace_set_syscall_info_exit(child, regs, &info);
-+	case PTRACE_SYSCALL_INFO_SECCOMP:
-+		return ptrace_set_syscall_info_seccomp(child, regs, &info);
-+	default:
-+		/* Other types of system call stops are not supported yet. */
-+		return -EINVAL;
++		ASSERT_EQ(0, sys_ptrace(PTRACE_SYSCALL, tracee_pid, 0, 0)) {
++			LOG_KILL_TRACEE("PTRACE_SYSCALL: %m");
++		}
 +	}
-+}
- #endif /* CONFIG_HAVE_ARCH_TRACEHOOK */
- 
- int ptrace_request(struct task_struct *child, long request,
-@@ -1234,6 +1349,10 @@ int ptrace_request(struct task_struct *child, long request,
- 	case PTRACE_GET_SYSCALL_INFO:
- 		ret = ptrace_get_syscall_info(child, addr, datavp);
- 		break;
 +
-+	case PTRACE_SET_SYSCALL_INFO:
-+		ret = ptrace_set_syscall_info(child, addr, datavp);
-+		break;
- #endif
- 
- 	case PTRACE_SECCOMP_GET_FILTER:
++	ASSERT_EQ(ptrace_stop, ARRAY_SIZE(si) * 2);
++}
++
++TEST_HARNESS_MAIN
 -- 
 ldv
