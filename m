@@ -1,88 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C6420C472
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:57:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8A62C859;
+	Mon,  3 Feb 2025 20:00:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738612672; cv=none; b=cVp4kyWtR0dqWM1wKAXcWoEsIEqpC3GS52Y0R1ym7UovmebU7rqmF22UVq/mNQ9FDd0lDR8mUSbmxzrTh6J92SlzBopn+Jh0gtynPYMFKSkDeCwpn0WOMcOOShCVF6yO5F7qruChne/hEKrNt9tXn+C0N4m0YMonlrAL4Eq6KBM=
+	t=1738612801; cv=none; b=KxZPbwj4u3zWOoTZlkQcVNT9V6E+PvsnERYp+flllVGKyD0YWQbINh/pTh9eK3f6siQHree4iDPgJ3kbpeZvqfXBgLdJq2ZkypickbbAWRMabVC2RC2jzNNik0BlgjN1LW6M5faBzEHl/wJs6rsdW3DzJ7h/+K8mzoVZLXSIxR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738612672; c=relaxed/simple;
-	bh=1U+4bW3OdAEZLqi110FQ2TeRPXrfhTqN22R/3BK7pwc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FDYhfxfVeQEbErKNSOPb2fsL/qOTPYmldGIHshAS30k2E2bBZBxruBvXVTI6+URnQO6swT9Fy1TETJGqVqK8mDvgXCoppD8S8r+aGk2cX89D602iCc0z33Ve/POkgHu5WvO0lL3zDbYAOyWcRUrql8kjekj4+Xg2FT2dZGVXDd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTDyX/5U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738612801; c=relaxed/simple;
+	bh=8DyhvIJF6DSx5+OopDaU2BEOqUyGUVSWVwCXDYw+TdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iMf8tAUfqKQNrHdEBq/oezJ5bTozy6hKCupi0cPGAXfwaMmcAsS2ojsvqzyUBXjBTH4YhOyyeJ3+5XxixTgCjtjHNa55TWNsUy0Y6dfO8ycx9cfRbeQlczcUd3mti2hvmfzT5IqrLVH3mXPDgFiJXXsfwMMoEb9lwqM6MQL+aB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSoH8pm2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTDyX/5U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1925CC4CEEA;
-	Mon,  3 Feb 2025 19:57:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSoH8pm2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A99BC4CED2;
+	Mon,  3 Feb 2025 20:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738612671;
-	bh=1U+4bW3OdAEZLqi110FQ2TeRPXrfhTqN22R/3BK7pwc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=BTDyX/5USaZv71ksap4fCQAkegYhe7J4z15CVNvfilhla+JkenM/qRD//UyFqIG66
-	 FPlC4AgjiQMvPD8MTVT+SXUW02X0CtviirNybOpkspx8BxANkVfA1gjlLMZ/hHyOZd
-	 lPWOV6WDpTiGE3MfspTPVrwv9sHDJxLq1CQYfXID+JZNzDZYAlC3RrBgZWN08XqLeg
-	 i3VkSADPFWSS1n5XWb0ACm/Zei6kmErHD2j22kk306pp1gxgZxUFT0VoL16IL98Ort
-	 SV058dSTbBqtIv/xqkQUx++oCFg607jLMb86T1t3SE42VpaVI+qtOp3qa97rDTVAFd
-	 M3uNaL6QB0UtA==
-From: Mark Brown <broonie@kernel.org>
-To: michael.hennerich@analog.com, 
- Isaac Scott <isaac.scott@ideasonboard.com>
-Cc: lgirdwood@gmail.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20250128173143.959600-1-isaac.scott@ideasonboard.com>
-References: <20250128173143.959600-1-isaac.scott@ideasonboard.com>
-Subject: Re: (subset) [PATCH v2 0/3] regulator: Add device tree support to
- AD5398
-Message-Id: <173861267083.674751.11323507108232831225.b4-ty@kernel.org>
-Date: Mon, 03 Feb 2025 19:57:50 +0000
+	s=k20201202; t=1738612800;
+	bh=8DyhvIJF6DSx5+OopDaU2BEOqUyGUVSWVwCXDYw+TdY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NSoH8pm2LQEU5jZUs08TTx+3CvW1lttl3ZV13sJffJ4DuYY+RSVu8UikSwWuQdN1W
+	 TM2DvMlfD7xsZKxxNQP6xQZnKHtMEMNIbauu7h1Rsnq/RRl0uWq82Q7MWYsrRUBah8
+	 n9PSUDXXHanGbTBB5OFKG/vf1kiDNIGNvM8+Wygyk8KWn1xnrXsfso8oXJJZtXH+A8
+	 eedt0dVZd7Qe/a5IRJe+cS3FwolRHl3TK6Ck2Is4V5JjcGd66vdnH1OtjY/1/qN0KK
+	 R5LDx1T/MXTA6GQFy06vzpdOk+8zoCO322U8CahYnODHA9JCceg9ZxX8njJF/3HB2x
+	 +aCq0mzCYE7Rg==
+Date: Mon, 3 Feb 2025 11:59:58 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bcachefs docs: SubmittingPatches.rst
+Message-ID: <20250203195958.GB134490@frogsfrogsfrogs>
+References: <20250201175834.686165-1-kent.overstreet@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250201175834.686165-1-kent.overstreet@linux.dev>
 
-On Tue, 28 Jan 2025 17:31:40 +0000, Isaac Scott wrote:
-> The AD5398 is a DAC that can be used to control current flow in circuits
-> in a wide variety of applications such as motor control, or in my case,
-> LED control. I found when working with the current driver that it did
-> not work for my use case. It transpired that it only had support for
-> platform_data, and didn't appear to be correctly implemented according
-> to the datasheet, which can be found here:
+On Sat, Feb 01, 2025 at 12:58:34PM -0500, Kent Overstreet wrote:
+> Add an (initial?) patch submission checklist, focusing mainly on
+> testing.
 > 
-> [...]
+> Yes, all patches must be tested, and that starts (but does not end) with
+> the patch author.
+> 
+> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> ---
+>  .../bcachefs/SubmittingPatches.rst            | 76 +++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/filesystems/bcachefs/SubmittingPatches.rst
 
-Applied to
+You might want to link to this in MAINTAINERS with:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+P:      Documentation/filesystems/bcachefs/SubmittingPatches.rst
 
-Thanks!
+--D
 
-[1/3] regulator: ad5398: change enable bit name to improve readibility
-      commit: 19d022d67d7353f0e6e9ba255435d3de93862ac4
-[3/3] regulator: ad5398: Add device tree support
-      commit: 5a6a461079decea452fdcae955bccecf92e07e97
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+> 
+> diff --git a/Documentation/filesystems/bcachefs/SubmittingPatches.rst b/Documentation/filesystems/bcachefs/SubmittingPatches.rst
+> new file mode 100644
+> index 000000000000..5e4615620c4a
+> --- /dev/null
+> +++ b/Documentation/filesystems/bcachefs/SubmittingPatches.rst
+> @@ -0,0 +1,76 @@
+> +Submitting patches to bcachefs:
+> +===============================
+> +
+> +Patches must be tested before being submitted, either with the xfstests suite
+> +[0], or the full bcachefs test suite in ktest [1], depending on what's being
+> +touched. Note that ktest wraps xfstests and will be an easier method to running
+> +it for most users; it includes single-command wrappers for all the mainstream
+> +in-kernel local filesystems.
+> +
+> +Patches will undergo more testing after being merged (including
+> +lockdep/kasan/preempt/etc. variants), these are not generally required to be
+> +run by the submitter - but do put some thought into what you're changing and
+> +which tests might be relevant, e.g. are you dealing with tricky memory layout
+> +work? kasan, are you doing locking work? then lockdep; and ktest includes
+> +single-command variants for the debug build types you'll most likely need.
+> +
+> +The exception to this rule is incomplete WIP/RFC patches: if you're working on
+> +something nontrivial, it's encouraged to send out a WIP patch to let people
+> +know what you're doing and make sure you're on the right track. Just make sure
+> +it includes a brief note as to what's done and what's incomplete, to avoid
+> +confusion.
+> +
+> +Rigorous checkpatch.pl adherence is not required (many of its warnings are
+> +considered out of date), but try not to deviate too much without reason.
+> +
+> +Focus on writing code that reads well and is organized well; code should be
+> +aesthetically pleasing.
+> +
+> +CI:
+> +===
+> +
+> +Instead of running your tests locally, when running the full test suite it's
+> +prefereable to let a server farm do it in parallel, and then have the results
+> +in a nice test dashboard (which can tell you which failures are new, and
+> +presents results in a git log view, avoiding the need for most bisecting).
+> +
+> +That exists [2], and community members may request an account. If you work for
+> +a big tech company, you'll need to help out with server costs to get access -
+> +but the CI is not restricted to running bcachefs tests: it runs any ktest test
+> +(which generally makes it easy to wrap other tests that can run in qemu).
+> +
+> +Other things to think about:
+> +============================
+> +
+> +- How will we debug this code? Is there sufficient introspection to diagnose
+> +  when something starts acting wonky on a user machine?
+> +
+> +- Does it make the codebase more or less of a mess? Can we also try to do some
+> +  organizing, too?
+> +
+> +- Do new tests need to be written? New assertions? How do we know and verify
+> +  that the code is correct, and what happens if something goes wrong?
+> +
+> +- Does it need to be performance tested? Should we add new peformance counters?
+> +
+> +- If it's a new on disk format feature - have upgrades and downgrades been
+> +  tested? (Automated tests exists but aren't in the CI, due to the hassle of
+> +  disk image management; coordinate to have them run.)
+> +
+> +Mailing list, IRC:
+> +==================
+> +
+> +Patches should hit the list [3], but much discussion and code review happens on
+> +IRC as well [4]; many people appreciate the more conversational approach and
+> +quicker feedback.
+> +
+> +Additionally, we have a lively user community doing excellent QA work, which
+> +exists primarily on IRC. Please make use of that resource; user feedback is
+> +important for any nontrivial feature, and documenting it in commit messages
+> +would be a good idea.
+> +
+> +[0]: git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
+> +[1]: https://evilpiepirate.org/git/ktest.git/
+> +[2]: https://evilpiepirate.org/~testdashboard/ci/
+> +[3]: linux-bcachefs@vger.kernel.org
+> +[4]: irc.oftc.net#bcache, #bcachefs-dev
+> -- 
+> 2.45.2
+> 
+> 
