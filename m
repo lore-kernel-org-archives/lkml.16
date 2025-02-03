@@ -1,170 +1,171 @@
-Received: from gw2.atmark-techno.com (gw2.atmark-techno.com [35.74.137.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CEE2557C
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 06:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.74.137.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063252557C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 06:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738565930; cv=none; b=RARjV5W0fj3z/BlXNJ4mtdK9DjsD4rvorDOLMXl6BAQqrQxV+tA4Znwp0F94vmmRJsJkHvU5fijvgTJRlI5KO9le8pqNByyvqSsH4MtxkgsYsT48ZjSubNl28GIZj6UYSh4r7Jd40oohKEC4XbpgOhqfTbJicQnPEHfe6Ho4LZE=
+	t=1738565976; cv=none; b=JKOprIOmxcRD3i4ppck/A9McwFtMIXeSFQZ5HjiSlWtueUgvJl2TDRqqg4khAv7m3SdpE8tS15/Ywv0hrawDzr/xrYqRoBfvp0H1UhoP9FLGotqquRy5JpIfQPe0DdHkVNGrVwVJ8+gzioDTblmU5rVfSIw08A/hBkmWde46jyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738565930; c=relaxed/simple;
-	bh=HpKfWals6gvV6hSueqjY8CYDxxN+av46LngYDKJxyFM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ez8V0lbboKjOmC8FmW653HEvovESYEKqqaF6/5KYFjCe7pJUPI1AFsnXYT4LgZnQoiVDgVWOvy4zu7+yoiDp9V+Youe6p7j/+4ED2cRhagD//RxEwpOCUxKvI2JXJJY76IQz4VoSROOKguULOPcXAzxcNsuV4DTiDzTeRfuZYQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com; spf=pass smtp.mailfrom=atmark-techno.com; dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b=MKS0AEph; dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b=dvs9iWmg; arc=none smtp.client-ip=35.74.137.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atmark-techno.com
+	s=arc-20240116; t=1738565976; c=relaxed/simple;
+	bh=vFYnAZUFUao61yVy6zNuCPtiUmdvsXsUKmfDPfyAsoM=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=aaLrTBXU/vbeilzJYCBKfilN3nnH/JOHy6YwS8kXWcv9yPlFRMJfuHU02RFNPLiU/wyiyM1kzINMGPQa1qnhGv4utO3RnkA/ujT6XQ3hROjP+dCctxJL6rBBKdkpPrEIuIXkmByhgOhKB6+tNeetV2PBQzTPx1XHRN8K2O+0XL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com; spf=pass smtp.mailfrom=jrtc27.com; dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b=hKHVemmA; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jrtc27.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b="MKS0AEph";
-	dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b="dvs9iWmg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=atmark-techno.com;
-	s=gw2_bookworm; t=1738565927;
-	bh=HpKfWals6gvV6hSueqjY8CYDxxN+av46LngYDKJxyFM=;
-	h=From:Date:Subject:To:Cc:From;
-	b=MKS0AEph4ruaq7mgzdD4DiyBe0fsD3DfkZfQEONyIEwK5XTjQgj8ZyBwHOWJPC5zF
-	 JuYlVINMwOeSatdGmI4X1TCbPpx1SSJBs+0AUCRRnDFzi2QNnXjE5+vxOwEDNycSd+
-	 tH2t/pfzYsZSMOFwytJLHnC6mhCy0Hj63WqEI6yOnsSR1vp6PnZsVB+qHl6nCSPhOs
-	 w/ngwnq53plL0W/SELygelKof8eoWDLn2gbxY51RLvouJAta3auma2RZyxI9Hb38Ue
-	 fgR4xElybZNReb8i2Q5d5GcRdRagLX8PwRPC/43i3wulLooiSiS5SyqkJ1AauCBps6
-	 KfdOs0PipAWNg==
-Received: from gw2.atmark-techno.com (localhost [127.0.0.1])
-	by gw2.atmark-techno.com (Postfix) with ESMTP id E9FC532B
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:58:47 +0900 (JST)
-Authentication-Results: gw2.atmark-techno.com;
-	dkim=pass (2048-bit key; unprotected) header.d=atmark-techno.com header.i=@atmark-techno.com header.a=rsa-sha256 header.s=google header.b=dvs9iWmg;
-	dkim-atps=neutral
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by gw2.atmark-techno.com (Postfix) with ESMTPS id BD62C370
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:58:46 +0900 (JST)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-21655569152so88879215ad.2
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 22:58:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="hKHVemmA"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43626213fffso30753855e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 22:59:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atmark-techno.com; s=google; t=1738565926; x=1739170726; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=11ZT4H9fbLzjQvrQILyhKp3+cau0oLWEvJGvUrDp0l4=;
-        b=dvs9iWmg96VET6BRU8LdWa8HsxizLd4vwoWCvGu2cvtWLDY/Bp4J+Qra6exLiLcXeJ
-         kC1gDepRgsMaX62/w43iIVCb6H2zBEw7n3pO67RpgcDY+ZJh+eicxduDtI8I1FekLqQM
-         qy3qX6gV9KH581Pt115as3EW3HzQctKtJ+HA9UUT/j/wVj27ATJPAf2EEZJ1g+VmOssU
-         kvuy3z+cXINYefc7N+vLOFlhzqc48+8zCBRvHJy/u0n6jiV0rc3D+j/9xY+6+ZU9LAIT
-         +KdLmZgBXbBaonuDcnCVwQRac0tlXa98qKSeBFFJMJHgO6duu7247X44neu0iylUbkO8
-         cabA==
+        d=jrtc27.com; s=gmail.jrtc27.user; t=1738565971; x=1739170771; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vFYnAZUFUao61yVy6zNuCPtiUmdvsXsUKmfDPfyAsoM=;
+        b=hKHVemmAVaTkjNqH/W3BgBcImFbvp+T/DoD66OENWyYIwcZPNXuWETm5vO1EZQRAq2
+         re7HX18xGiPo6ZbZ/UzZUgwqvnfEd6SIZwb7OSJxbS14srS6tn7+ry++R04dZjmDAiFG
+         c0sBYGIZLUxrf/Jo8yn2oFvzfOHIyMEG23vQKTy/YOD89dlQLf0PaUcxb6n9DIxDvyiE
+         WECUVLbS6zKn//Z+OLtK75JFQxK9EHBBPJV8xk99VncgWEZ5jVQYBnEYwccNh8m+J33D
+         uI7tRcdr2EsjdwkZV6gQkF7FP7uLAC7kFS/w+S43ID158TEAteZ/Kp1pmFOMv+772vHK
+         MiRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738565926; x=1739170726;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=11ZT4H9fbLzjQvrQILyhKp3+cau0oLWEvJGvUrDp0l4=;
-        b=Q6NDAAYsB/LF3yuu0YO/U6qGmCsPyesErlJBCV0nKExvbBJfmEfiAHNfzmHSzuGZiT
-         ApVW05tgAR0xbtkjVrM1XYcpF7eNz0LoxMe4YKVdONuG9+P+tH+2YFL0RKsYJo85fAEw
-         P76lpat0W8cwSpYjNrh2EBppnF5FQd9FbfEbdjkV0+CuPdLw4XEXKegXOOoTRBGwayRf
-         zj7dF2Gip1a45uDQO6/J9JLS2EMuT9tiGqFMqVPwRq5hTnQ2sqB6BHnXQZAOPakyCQzz
-         VCMHcep9hKPKuaflZndNvEsuIJpuTdTqN8qf2mYgxcC49P2GsBS4RhyMQhn7E4dPT0zG
-         RiPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXg6K/A0bkZHSbQR+/SLC5SXeb9JAg89dMS3lfkyelWsFjy2ixxnNVDGeUisHN4XlM3Tts+39Y8ExFO8jc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yytipzis8X1re5ENUm1QH0ExGmO0Y+ijL5mDVHuYfLK7dv8V70h
-	zGr3UalQeDpH6Gb+7l8kLTvzq8kt75ltSfnT/haV27OkpMK1dUd0rE8ScVMlQqTIaptm3bQehGS
-	pPPuE5hCjgjAfpAMdN1vXzZgHcx+en4bT4QZASQIjy1wEEfH7ivYaBaj417hbpFg=
-X-Gm-Gg: ASbGnctPFkLK2iW2x2gDIXBET99tK8dcnDRpzChZwMoefkIsV2y3DUwfHOc3CSAxdcH
-	0EEOysFWmtQbZ6T3YVZHerO3xoUeD3APLytlI5perIGW8RcYMYt49I9uFWKjLuoQkUGlCT1GzID
-	3BGIutK7pnZPeK0SPsi81l7B3rTfoHe/Bk3F4Iifn4z9bajBhhKCAqvvt2bVUWt8ca0/JW5tkdg
-	rEgFRES79xFCT4YOh2Xnf8ZvXZol90ZYa2WEuJICgPRVdhEDbRECUL4CHvznmWx8dDbMpAL8pCv
-	/vdDInpxZ+jOggvE1NoL/tba/Xy6t+uiXt5Ak9+jbD0RVPc4Pf1duTQiAYNvdAHX
-X-Received: by 2002:a17:902:f54a:b0:216:282d:c67b with SMTP id d9443c01a7336-21dd7ddfd33mr363334425ad.35.1738565925808;
-        Sun, 02 Feb 2025 22:58:45 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFtPhFFH++bFRKPkUR0RSviTIbqX4KaViWw6lqaxHu4nVbbFwJqQuzm9j1D4TH/k0qb9akCSw==
-X-Received: by 2002:a17:902:f54a:b0:216:282d:c67b with SMTP id d9443c01a7336-21dd7ddfd33mr363333345ad.35.1738565924336;
-        Sun, 02 Feb 2025 22:58:44 -0800 (PST)
-Received: from localhost (117.209.187.35.bc.googleusercontent.com. [35.187.209.117])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31ee774sm68121615ad.41.2025.02.02.22.58.43
+        d=1e100.net; s=20230601; t=1738565971; x=1739170771;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vFYnAZUFUao61yVy6zNuCPtiUmdvsXsUKmfDPfyAsoM=;
+        b=gsd/KLNE3ZIJYa4PVX+rKOXkr9Fq+1b31k20TeI72AgSfG8IooYi2pn0MX8tua+a/4
+         nz3abh+ViB/OsQ54/BujccBvKRopde/ew5c4Qz9nOtesJLLeAlvlFnIeMKF+5PkUzt9I
+         j5099ZmUhQFwNldJaVU5q0mBaD5raFCUxwcvXM5Asno4eXXN8Ij9/Cttrefw5q8rqpFH
+         gR5cWqpbuJE/pU2Y0g7BbJUxjkX3ansYg1CaFcWNE2QEw3o8dj083Rf4eGH+myNqN4v/
+         c0B+1Lz5UAvEFBU0bw09LHYie1SKRw93vrq96XmZxwhZbzm2n3poasqsYCQZOVQp4WSK
+         zDVg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+ToSTwTJblxxmsTJYc5ycbm2NtuvBn5U4nbNoIoVgYjY/sCmQee4+up8iDbW7H0s9vlrDHx4Pyz7lQ/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXknl6e3VKwoFNQo91FDVmLQyYdQXvnWV+Rsr2Wu/gY1hhmVgT
+	n9gU5HalAVxKzjPiMkgxj/00CdVstQanQ6wKoVzxzKDncD31gRqhMTuoG9YikBc=
+X-Gm-Gg: ASbGncunckkjgy5092Hs4b2tursvpJXWX6GLBk6l9L22pB/Y1palJHNhMCWmRZXFA0t
+	FaDHaSZ3xGRRT1iUKSuhLdRCly+M/jdvzZ0wDXmyA93NBToGiMYZpFJ8GlqWkoHmSUj85bKxpiI
+	BZ0/QR66LhY1E2KFaMqxLvF2oCsVq7Pzn/sI5k55CRXzkv64NkHJnx71rJbalgFEOhawXnneDQj
+	CaCzyIw6t5AfRMTdwIJ2lm02XK9wCZqHVXfAG7jkQqV9MRsHF4kvDEgEoIq/OjCEd1OATtGHxbT
+	JJXQs0iREWad+mNuck+z0f4PCJpd
+X-Google-Smtp-Source: AGHT+IHc7TsMH05mlkvzaFMBpTxzhfd0jlMSaJGgcjOwELt4l0ZR8Uoj4RfcTaQK8b7AR3LEmPTKuA==
+X-Received: by 2002:a05:6000:1a8a:b0:38a:8d32:2707 with SMTP id ffacd0b85a97d-38c60f77922mr10339567f8f.26.1738565971037;
+        Sun, 02 Feb 2025 22:59:31 -0800 (PST)
+Received: from smtpclient.apple ([131.111.5.201])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cfccasm12025244f8f.92.2025.02.02.22.59.29
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Feb 2025 22:58:43 -0800 (PST)
-From: Dominique Martinet <dominique.martinet@atmark-techno.com>
-Date: Mon, 03 Feb 2025 15:58:41 +0900
-Subject: [PATCH v3] usb: phy: mxs: silence EPROBE_DEFER error on boot
+        Sun, 02 Feb 2025 22:59:30 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-defer_usb2-v3-1-428182286ce3@atmark-techno.com>
-X-B4-Tracking: v=1; b=H4sIACFpoGcC/3XMQQ6CMBCF4auQWVvTTnEMrryHMabAVBoDJS02G
- sLdLaxx+b/kfTNEDo4jXIoZAicXnR9y6EMBTWeGJwvX5gaUeJIotWjZcni8Y42CGckSGalMC/k
- wBrbus2G3e+7OxcmH72Ynta67TFJCCdREFqkkZHk1U2/CS0zcdIM/Nr6HlUv4n8BMUFVrU5VKn
- 5XZI5Zl+QGqRpKf7wAAAA==
-X-Change-ID: 20250203-defer_usb2-ee26f66a01ad
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: linux-usb@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Dominique Martinet <dominique.martinet@atmark-techno.com>
-X-Mailer: b4 0.15-dev-7be4f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1657;
- i=dominique.martinet@atmark-techno.com; h=from:subject:message-id;
- bh=HpKfWals6gvV6hSueqjY8CYDxxN+av46LngYDKJxyFM=;
- b=owEBbQKS/ZANAwAKAfKKYH/WjHEHAcsmYgBnoGkiGAgewFMK0YZ3yZfvnyEBWvr/Xmg4ikJng
- 7cJqrs3tbOJAjMEAAEKAB0WIQQoFSiLMD+txr0veJbyimB/1oxxBwUCZ6BpIgAKCRDyimB/1oxx
- B+L+D/44ciLQ9mN59Ny7bJdaq49k967IpOp18rI0KfriGa69NjMQEO/K5y3wjcY0TPuzMKilRvD
- zyBNlA8L166gDqfeFgLcQU8HXTM/3SpBBDhobiqwlPa90oz2i3q4aloqI342t1FoVHDufKB+cbk
- +3WP1FRNWHoueXQl1Uw/nehPEXdQB0gT/9FlYPNxg18gSy2M+eCXUqF2iPbYnTK4wrNgH/JUMDs
- I54fYL1X6T+oBi8frOQoWMpfXOWJ5smH8VKsw2QNOQw3LhgvB22N9fiiHjBOHiAE08D4rV9PhxA
- mNAygFkK1hI/ZU848NdtLKZU13IvB59c7iLgZG4IxaOE9oyTs2umM/TPftO/GgbLFgieD1SC+ff
- vdXd1bO5AYiRxryP4gQ1yJr/gxOjogvm+YmbHxiqjyaucTcJ7pedbig2xcwG7QQ+vzL/+oNRa19
- BLjCHARSk5d7zL2C+v+n2LpoUxmHy2hujw+HWsTmiA9Da+RVkPwDnhsCkfF+wsM6Wc3P6qmF7UG
- mgWiw25TJRPAezrkB4ymMPDGhTwhdvZmBxuOGw54Thh3GZ8FwDDSfwQsRPIemF/0bq6PMRDa0ED
- ScFwDUH2Bj70a2eFTFOMnxobUmPYM12xwMb6b2K1Cffl9DKRcqpK0aaxRsJW06tsFmNq2uhs3va
- E0LB7IbIEf+G3Rg==
-X-Developer-Key: i=dominique.martinet@atmark-techno.com; a=openpgp;
- fpr=2815288B303FADC6BD2F7896F28A607FD68C7107
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH v2] riscv: Use Zalrsc extension to implement atomic
+ functions
+From: Jessica Clarke <jrtc27@jrtc27.com>
+In-Reply-To: <20250202-clammy-skewed-eb0a0fce18f1@spud>
+Date: Mon, 3 Feb 2025 06:59:18 +0000
+Cc: Aleksandar Rikalo <arikalo@gmail.com>,
+ Charlie Jenkins <charlie@rivosinc.com>,
+ linux-riscv@lists.infradead.org,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Will Deacon <will@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Andrea Parri <parri.andrea@gmail.com>,
+ Leonardo Bras <leobras@redhat.com>,
+ Guo Ren <guoren@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Eric Chan <ericchancf@google.com>,
+ linux-kernel@vger.kernel.org,
+ Djordje Todorovic <djordje.todorovic@htecgroup.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D0D039F7-26EE-4687-9836-DE076006F2F0@jrtc27.com>
+References: <20241225082412.36727-1-arikalo@gmail.com>
+ <Z4CSpE9UKkJNM_g5@ghost>
+ <CAGQJe6oA8oiZmg0HGW7KrjdOJ7nXNK9hQFm4jdQ6n0WTG6i-vA@mail.gmail.com>
+ <20250202-clammy-skewed-eb0a0fce18f1@spud>
+To: Conor Dooley <conor@kernel.org>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
 
-Use dev_err_probe to silence EPROBE_DEFER error on boot on i.MX8ULP:
-[    0.127301] mxs_phy 29910000.usb-phy: can't get the clock, err=-517
+On 2 Feb 2025, at 20:08, Conor Dooley <conor@kernel.org> wrote:
+>=20
+> On Sat, Feb 01, 2025 at 01:04:25PM +0100, Aleksandar Rikalo wrote:
+>> On Fri, Jan 10, 2025 at 4:23=E2=80=AFAM Charlie Jenkins =
+<charlie@rivosinc.com> wrote:
+>>=20
+>>>> From: Chao-ying Fu <cfu@mips.com>
+>>>>=20
+>>>> Use only LR/SC instructions to implement atomic functions.
+>>>=20
+>>> In the previous patch you mention that this is to support MIPS =
+P8700. Can
+>>> you expand on why this change is required? The datasheet at [1] =
+says:
+>>>=20
+>>> "The P8700 core is configured to support the RV64GCZba_Zbb (G =3D =
+IMAFD)
+>>> Standard ISA. It includes the RV64I base ISA, Multiply (M), Atomic =
+(A),
+>>> Single-Precision Floating Point (F), Double (D), Compressed (C) =
+RISC-V
+>>> extensions, as well as the as well as the bit-manipulation =
+extensions
+>>> (Zba) and (Zbb)"
+>>>=20
+>>> The "A" extension is a part of "G" which is mostly assumed to exist =
+in
+>>> the kernel. Additionally, having this be a compilation flag will =
+cause
+>>> traps on generic kernels. We generally try to push everything we can
+>>> into runtime feature detection since there are so many possible =
+variants
+>>> of riscv.
+>>>=20
+>>> Expressing not being able to perform a feature like this is normally
+>>> better expressed as an errata. Then generic kernels will be able to
+>>> include this, and anybody who doesn't want to have the extra nops
+>>> introduced can disable the errata. A similar approach to what I =
+pointed
+>>> out last time should work here too (but with more places to replace)
+>>> [2].
+>>>=20
+>>> [1] https://mips.com/wp-content/uploads/2024/11/P8700_Data_Sheet.pdf
+>>> [2] https://lore.kernel.org/lkml/Z2-UNfwcAQYZqVBU@ghost/T/
+>>=20
+>> So far we haven't found a way to do this using errata.
+>=20
+> You mean using alternatives? Not implementing A, but instead
+> implementing Zalrsc, is not an erratum. It's a design decision.
+>=20
+>> There's no way
+>> to patch one instruction with multiple ones,
+>=20
+> Have you looked at how the alternatives work? There's no requirement
+> that the sequences have the same number of instructions, padding is
+> allowed.
+>=20
+>> and we also need an extra
+>> (temporary) register.
+>>=20
+>> A CPU can implement the Zalrsc extension [1] instead of "complete A"
+>> (which P8700 does).
+>>> =46rom "Zaamo and Zalrsc Extensions" spec:
+>=20
+> Why does this statement differ from the P8700 datasheet linked above?
 
-Signed-off-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
----
-Changes in v3:
-- add trailing newline to format string
-- Link to v2: https://lore.kernel.org/r/20250203-defer_usb2-v2-1-69b3a941371a@atmark-techno.com
+In an LLVM patch several weeks ago it was said that Zaamo is
+implemented in firmware by trapping and emulating with LR/SC.
 
-Changes in v2:
-- removed redundant error message and now useless braces, thank you for
-  the quick feedback!
-- adjusted message alignment (that was also bugging me...)
-- Link to v1: https://lore.kernel.org/r/20250203-defer_usb2-v1-1-2366f26462e0@atmark-techno.com
----
- drivers/usb/phy/phy-mxs-usb.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 7490f1798b461c39c29bb74e1e57e0a4adce2bd7..7069dd3f4d0d9433d62d3c3b494c2f99858e1899 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -769,11 +769,9 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 		return PTR_ERR(base);
- 
- 	clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(clk)) {
--		dev_err(&pdev->dev,
--			"can't get the clock, err=%ld", PTR_ERR(clk));
--		return PTR_ERR(clk);
--	}
-+	if (IS_ERR(clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(clk),
-+				     "can't get the clock\n");
- 
- 	mxs_phy = devm_kzalloc(&pdev->dev, sizeof(*mxs_phy), GFP_KERNEL);
- 	if (!mxs_phy)
-
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250203-defer_usb2-ee26f66a01ad
-
-Best regards,
--- 
-Dominique Martinet <dominique.martinet@atmark-techno.com>
-
+Jess
 
