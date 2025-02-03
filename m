@@ -1,548 +1,351 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D5A20D515
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAA420A5DE;
+	Mon,  3 Feb 2025 14:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738592734; cv=none; b=Jufs6BF9k5hKQSa8bEUCwzSvtqfP6/1COJ+LUObZoAEOmFpudmoKBvs+P3wUEoQHYDi7+TWBE/xfPDqp+YViNBe8eq/7xlTg/GxiCy60ltbfZo/CSJyIdakppypHKsO+tCDtbYpLt8WZJa+MWRtKn0SPtkRIrMpxi9S75s1+D4A=
+	t=1738592736; cv=none; b=Ud52NpYU5OmljIhp5druQALc8Hi/UocfFkdOb3y0BdORwxyNTmCWOYa4uw/3YrDn7iRi2zXTZ2EhXX282d+By3DcLV71IyUUb9jIaDnPwUj/oF1WoQi+Lz3xMpSTPDukByVnRkowXSCvPVOFPcsdmSRNBxBNMJ2DTSyxNeSvGVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738592734; c=relaxed/simple;
-	bh=eLO2ebc1nhZw/lo11Oi8pe4TviNYQus8WmUiKs1yReA=;
+	s=arc-20240116; t=1738592736; c=relaxed/simple;
+	bh=+nmWW1bZ6UVBEYR5zkaQ0IEV8ri+eM8vDjtD4wRg5i4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sNjE4JqYxVu0MVymFXIC4U5QzwfG6U/yGrVstPduBaEEko7Y1DaRB8vET2+g5szvrtF1g5tFfcAXZjH+2x5CxA0x0lUYtDpAS2PuwfW73LcGKbxqP0LlZ4GiCWwktWFnAYbBlzJ3Zm0UF/z1UW57SbbqOqbNHbVpeWWT3NjwWys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DDZHZ+cf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version; b=g/RKLAsv+ADvHSJxQa5w1cqXaE2dlysGdajOb838NO6Nnx6AKKtnPJQiJ4FiM4ZFZ6T60KSM4/P2q2YK9WXij3Jtyxf2piMz8c+8e840KD+14EAJKwKt9YrCeE0rHig018lbQ+6zM/LDrSCk+7adZBLPrAOmUSBTf7cR+SHXsCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Fc2BwV3I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DDZHZ+cf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738592730;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1kJ1lH0Ds8vxK9YuxQWCRulKqFjg2zxQKgzJ0JBFuq8=;
-	b=DDZHZ+cf/iNd3QHfkFtsiPpEqThORYmgbv9/F0vefcasHYqs2XFbvSsdvs3mSVJcwHBKmR
-	V86sf+OXui3Bl/G3+TYWUtc0qnSYJn+MirCK6SfA9RNkvuHq5ofMOjSWwnrDEUEZQ5vUn5
-	WCNti16lalv72qjiK5I5WfJnveDhX0o=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-541-pXmboRX9PkSZ7-e9iprVpg-1; Mon,
- 03 Feb 2025 09:25:27 -0500
-X-MC-Unique: pXmboRX9PkSZ7-e9iprVpg-1
-X-Mimecast-MFC-AGG-ID: pXmboRX9PkSZ7-e9iprVpg
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DE0DB19560B0;
-	Mon,  3 Feb 2025 14:25:24 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.92])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 856A61800365;
-	Mon,  3 Feb 2025 14:25:20 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: netdev@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>
-Cc: David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-crypto@vger.kernel.org,
-	linux-afs@lists.infradead.org,
-	linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net 15/24] crypto/krb5: Implement the AES enctypes from rfc8009
-Date: Mon,  3 Feb 2025 14:23:31 +0000
-Message-ID: <20250203142343.248839-16-dhowells@redhat.com>
-In-Reply-To: <20250203142343.248839-1-dhowells@redhat.com>
-References: <20250203142343.248839-1-dhowells@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Fc2BwV3I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8401EC4CEE3;
+	Mon,  3 Feb 2025 14:25:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738592736;
+	bh=+nmWW1bZ6UVBEYR5zkaQ0IEV8ri+eM8vDjtD4wRg5i4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Fc2BwV3ItPgbMwUt1lzN5YfUPbXowxuV59LxB110WhX01ofrPGo+P71Rp2ubbz98C
+	 Ul4m6tYtyFTTi1ps5Q6AOTIrUfFQUN684Tr7hJM0mTr0z5H22xPCcyOb7hsI43ko4a
+	 8auXMwRYv2tITXtNpFAFuHZBGFMMPfBlnCeZ7OKc=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Lyude Paul <lyude@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH 1/3] driver core: add a faux bus for use when a simple device/bus is needed
+Date: Mon,  3 Feb 2025 15:25:17 +0100
+Message-ID: <2025020326-backer-vendetta-7094@gregkh>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <2025020324-thermal-quilt-1bae@gregkh>
+References: <2025020324-thermal-quilt-1bae@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8853; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=+nmWW1bZ6UVBEYR5zkaQ0IEV8ri+eM8vDjtD4wRg5i4=; b=owGbwMvMwCRo6H6F97bub03G02pJDOkLLl5L2ymdfGXanmuzamZeEA1RPLn/1teph96vzOEM7 N2XuMEztyOWhUGQiUFWTJHlyzaeo/srDil6GdqehpnDygQyhIGLUwAmopzCMFeq8m/2vQUe6upu mj9K65YE/bY+IMswP0epWaOuSKxspWDzJbcHsk+zGzYlAgA=
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Implement the aes128-cts-hmac-sha256-128 and aes256-cts-hmac-sha384-192
-enctypes from rfc8009, overriding the rfc3961 kerberos 5 simplified crypto
-scheme.
+Many drivers abuse the platform driver/bus system as it provides a
+simple way to create and bind a device to a driver-specific set of
+probe/release functions.  Instead of doing that, and wasting all of the
+memory associated with a platform device, here is a "faux" bus that
+can be used instead.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Herbert Xu <herbert@gondor.apana.org.au>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Chuck Lever <chuck.lever@oracle.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Simon Horman <horms@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: linux-nfs@vger.kernel.org
-cc: linux-crypto@vger.kernel.org
-cc: netdev@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- crypto/krb5/Kconfig        |   2 +
- crypto/krb5/Makefile       |   3 +-
- crypto/krb5/internal.h     |   6 +
- crypto/krb5/krb5_api.c     |   2 +
- crypto/krb5/rfc8009_aes2.c | 362 +++++++++++++++++++++++++++++++++++++
- include/crypto/krb5.h      |   4 +
- 6 files changed, 378 insertions(+), 1 deletion(-)
- create mode 100644 crypto/krb5/rfc8009_aes2.c
+ drivers/base/Makefile       |   2 +-
+ drivers/base/base.h         |   1 +
+ drivers/base/faux.c         | 189 ++++++++++++++++++++++++++++++++++++
+ drivers/base/init.c         |   1 +
+ include/linux/device/faux.h |  33 +++++++
+ 5 files changed, 225 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/base/faux.c
+ create mode 100644 include/linux/device/faux.h
 
-diff --git a/crypto/krb5/Kconfig b/crypto/krb5/Kconfig
-index 2ad874990dc8..52f0ed2d7820 100644
---- a/crypto/krb5/Kconfig
-+++ b/crypto/krb5/Kconfig
-@@ -7,6 +7,8 @@ config CRYPTO_KRB5
- 	select CRYPTO_HASH_INFO
- 	select CRYPTO_HMAC
- 	select CRYPTO_SHA1
-+	select CRYPTO_SHA256
-+	select CRYPTO_SHA512
- 	select CRYPTO_CBC
- 	select CRYPTO_CTS
- 	select CRYPTO_AES
-diff --git a/crypto/krb5/Makefile b/crypto/krb5/Makefile
-index 35f21411abf8..7fd215ec3a85 100644
---- a/crypto/krb5/Makefile
-+++ b/crypto/krb5/Makefile
-@@ -7,6 +7,7 @@ krb5-y += \
- 	krb5_kdf.o \
- 	krb5_api.o \
- 	rfc3961_simplified.o \
--	rfc3962_aes.o
-+	rfc3962_aes.o \
-+	rfc8009_aes2.o
- 
- obj-$(CONFIG_CRYPTO_KRB5) += krb5.o
-diff --git a/crypto/krb5/internal.h b/crypto/krb5/internal.h
-index 43f904a69e32..f537f6eb86eb 100644
---- a/crypto/krb5/internal.h
-+++ b/crypto/krb5/internal.h
-@@ -185,3 +185,9 @@ int rfc3961_verify_mic(const struct krb5_enctype *krb5,
-  */
- extern const struct krb5_enctype krb5_aes128_cts_hmac_sha1_96;
- extern const struct krb5_enctype krb5_aes256_cts_hmac_sha1_96;
-+
-+/*
-+ * rfc8009_aes2.c
-+ */
-+extern const struct krb5_enctype krb5_aes128_cts_hmac_sha256_128;
-+extern const struct krb5_enctype krb5_aes256_cts_hmac_sha384_192;
-diff --git a/crypto/krb5/krb5_api.c b/crypto/krb5/krb5_api.c
-index ecc6655953d5..5b94cc5db461 100644
---- a/crypto/krb5/krb5_api.c
-+++ b/crypto/krb5/krb5_api.c
-@@ -19,6 +19,8 @@ MODULE_LICENSE("GPL");
- static const struct krb5_enctype *const krb5_supported_enctypes[] = {
- 	&krb5_aes128_cts_hmac_sha1_96,
- 	&krb5_aes256_cts_hmac_sha1_96,
-+	&krb5_aes128_cts_hmac_sha256_128,
-+	&krb5_aes256_cts_hmac_sha384_192,
- };
- 
- /**
-diff --git a/crypto/krb5/rfc8009_aes2.c b/crypto/krb5/rfc8009_aes2.c
+diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+index 7fb21768ca36..8074a10183dc 100644
+--- a/drivers/base/Makefile
++++ b/drivers/base/Makefile
+@@ -6,7 +6,7 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
+ 			   cpu.o firmware.o init.o map.o devres.o \
+ 			   attribute_container.o transport_class.o \
+ 			   topology.o container.o property.o cacheinfo.o \
+-			   swnode.o
++			   swnode.o faux.o
+ obj-$(CONFIG_AUXILIARY_BUS) += auxiliary.o
+ obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
+ obj-y			+= power/
+diff --git a/drivers/base/base.h b/drivers/base/base.h
+index 8cf04a557bdb..0042e4774b0c 100644
+--- a/drivers/base/base.h
++++ b/drivers/base/base.h
+@@ -137,6 +137,7 @@ int hypervisor_init(void);
+ static inline int hypervisor_init(void) { return 0; }
+ #endif
+ int platform_bus_init(void);
++int faux_bus_init(void);
+ void cpu_dev_init(void);
+ void container_dev_init(void);
+ #ifdef CONFIG_AUXILIARY_BUS
+diff --git a/drivers/base/faux.c b/drivers/base/faux.c
 new file mode 100644
-index 000000000000..d39851fc3a4e
+index 000000000000..0eba89a5cd57
 --- /dev/null
-+++ b/crypto/krb5/rfc8009_aes2.c
-@@ -0,0 +1,362 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* rfc8009 AES Encryption with HMAC-SHA2 for Kerberos 5
++++ b/drivers/base/faux.c
+@@ -0,0 +1,189 @@
++// SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
++ * Copyright (c) 2025 The Linux Foundation
 + *
-+ * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
++ * A "simple" faux bus that allows devices to be created and added
++ * automatically to it.  Whenever you need a device that is not "real",
++ * use this interface instead of even thinking of using a platform device.
++ *
 + */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
++#include <linux/device/faux.h>
++#include <linux/err.h>
++#include <linux/init.h>
 +#include <linux/slab.h>
-+#include <crypto/authenc.h>
-+#include "internal.h"
-+
-+static const struct krb5_buffer rfc8009_no_context = { .len = 0, .data = "" };
++#include <linux/string.h>
++#include "base.h"
 +
 +/*
-+ * Calculate the key derivation function KDF-HMAC-SHA2(key, label, [context,] k)
-+ *
-+ *	KDF-HMAC-SHA2(key, label, [context,] k) = k-truncate(K1)
-+ *
-+ *	Using the appropriate one of:
-+ *		K1 = HMAC-SHA-256(key, 0x00000001 | label | 0x00 | k)
-+ *		K1 = HMAC-SHA-384(key, 0x00000001 | label | 0x00 | k)
-+ *		K1 = HMAC-SHA-256(key, 0x00000001 | label | 0x00 | context | k)
-+ *		K1 = HMAC-SHA-384(key, 0x00000001 | label | 0x00 | context | k)
-+ *	[rfc8009 sec 3]
++ * Internal wrapper structure so we can hold the memory
++ * for the driver and the name string of the faux device.
 + */
-+static int rfc8009_calc_KDF_HMAC_SHA2(const struct krb5_enctype *krb5,
-+				      const struct krb5_buffer *key,
-+				      const struct krb5_buffer *label,
-+				      const struct krb5_buffer *context,
-+				      unsigned int k,
-+				      struct krb5_buffer *result,
-+				      gfp_t gfp)
++struct faux_object {
++	struct faux_device faux_dev;
++	struct device_driver driver;
++	const struct faux_driver_ops *faux_ops;
++	char name[];
++};
++#define to_faux_object(x) container_of_const(dev, struct faux_object, faux_dev.dev);
++
++static struct device faux_bus_root = {
++	.init_name	= "faux_bus",
++};
++
++static int faux_match(struct device *dev, const struct device_driver *drv)
 +{
-+	struct crypto_shash *shash;
-+	struct krb5_buffer K1, data;
-+	struct shash_desc *desc;
-+	__be32 tmp;
-+	size_t bsize;
-+	void *buffer;
-+	u8 *p;
-+	int ret = -ENOMEM;
++	struct faux_object *faux_obj = to_faux_object(dev);
 +
-+	if (WARN_ON(result->len != k / 8))
-+		return -EINVAL;
++	/* Match is simple, strcmp()! */
++	return (strcmp(faux_obj->name, drv->name) == 0);
++}
 +
-+	shash = crypto_alloc_shash(krb5->cksum_name, 0, 0);
-+	if (IS_ERR(shash))
-+		return (PTR_ERR(shash) == -ENOENT) ? -ENOPKG : PTR_ERR(shash);
-+	ret = crypto_shash_setkey(shash, key->data, key->len);
-+	if (ret < 0)
-+		goto error_shash;
++static int faux_probe(struct device *dev)
++{
++	struct faux_object *faux_obj = to_faux_object(dev);
++	struct faux_device *faux_dev = &faux_obj->faux_dev;
++	const struct faux_driver_ops *faux_ops = faux_obj->faux_ops;
++	int ret = 0;
 +
-+	ret = -EINVAL;
-+	if (WARN_ON(crypto_shash_digestsize(shash) * 8 < k))
-+		goto error_shash;
++	if (faux_ops && faux_ops->probe)
++		ret = faux_ops->probe(faux_dev);
 +
-+	ret = -ENOMEM;
-+	data.len = 4 + label->len + 1 + context->len + 4;
-+	bsize = krb5_shash_size(shash) +
-+		krb5_digest_size(shash) +
-+		crypto_roundup(data.len);
-+	buffer = kzalloc(bsize, GFP_NOFS);
-+	if (!buffer)
-+		goto error_shash;
-+
-+	desc = buffer;
-+	desc->tfm = shash;
-+	ret = crypto_shash_init(desc);
-+	if (ret < 0)
-+		goto error;
-+
-+	p = data.data = buffer +
-+		krb5_shash_size(shash) +
-+		krb5_digest_size(shash);
-+	*(__be32 *)p = htonl(0x00000001);
-+	p += 4;
-+	memcpy(p, label->data, label->len);
-+	p += label->len;
-+	*p++ = 0;
-+	memcpy(p, context->data, context->len);
-+	p += context->len;
-+	tmp = htonl(k);
-+	memcpy(p, &tmp, 4);
-+	p += 4;
-+
-+	ret = -EINVAL;
-+	if (WARN_ON(p - (u8 *)data.data != data.len))
-+		goto error;
-+
-+	K1.len = crypto_shash_digestsize(shash);
-+	K1.data = buffer +
-+		krb5_shash_size(shash);
-+
-+	ret = crypto_shash_finup(desc, data.data, data.len, K1.data);
-+	if (ret < 0)
-+		goto error;
-+
-+	memcpy(result->data, K1.data, result->len);
-+
-+error:
-+	kfree_sensitive(buffer);
-+error_shash:
-+	crypto_free_shash(shash);
 +	return ret;
 +}
 +
-+/*
-+ * Calculate the pseudo-random function, PRF().
++static void faux_remove(struct device *dev)
++{
++	struct faux_object *faux_obj = to_faux_object(dev);
++	struct faux_device *faux_dev = &faux_obj->faux_dev;
++	const struct faux_driver_ops *faux_ops = faux_obj->faux_ops;
++
++	if (faux_ops && faux_ops->remove)
++		faux_ops->remove(faux_dev);
++}
++
++static const struct bus_type faux_bus_type = {
++	.name		= "faux_bus",
++	.match		= faux_match,
++	.probe		= faux_probe,
++	.remove		= faux_remove,
++};
++
++static void faux_device_release(struct device *dev)
++{
++	struct faux_object *faux_obj = to_faux_object(dev);
++	struct device_driver *drv = &faux_obj->driver;
++
++	/*
++	 * Now that the device is going away, it has been unbound from the
++	 * driver we created for it, so it is safe to unregister the driver from
++	 * the system.
++	 */
++	driver_unregister(drv);
++
++	kfree(faux_obj);
++}
++
++/**
++ * __faux_device_create - create and register a faux device and driver
++ * @name: name of the device and driver we are adding
++ * @faux_ops: struct faux_driver_ops that the new device will call back into, can be NULL
++ * @owner: module owner of the device/driver
 + *
-+ *	PRF = KDF-HMAC-SHA2(input-key, "prf", octet-string, 256)
-+ *	PRF = KDF-HMAC-SHA2(input-key, "prf", octet-string, 384)
-+ *
-+ *      The "prfconstant" used in the PRF operation is the three-octet string
-+ *      "prf".
-+ *      [rfc8009 sec 5]
++ * Create a new faux device and driver, both with the same name, and register
++ * them in the driver core properly.  The probe() callback of @faux_ops will be
++ * called with the new device that is created for the caller to do something
++ * with.
 + */
-+static int rfc8009_calc_PRF(const struct krb5_enctype *krb5,
-+			    const struct krb5_buffer *input_key,
-+			    const struct krb5_buffer *octet_string,
-+			    struct krb5_buffer *result,
-+			    gfp_t gfp)
++struct faux_device *__faux_device_create(const char *name,
++					       struct faux_driver_ops *faux_ops,
++					       struct module *owner)
 +{
-+	static const struct krb5_buffer prfconstant = { 3, "prf" };
-+
-+	return rfc8009_calc_KDF_HMAC_SHA2(krb5, input_key, &prfconstant,
-+					  octet_string, krb5->prf_len * 8,
-+					  result, gfp);
-+}
-+
-+/*
-+ * Derive Ke.
-+ *	Ke = KDF-HMAC-SHA2(base-key, usage | 0xAA, 128)
-+ *	Ke = KDF-HMAC-SHA2(base-key, usage | 0xAA, 256)
-+ *      [rfc8009 sec 5]
-+ */
-+static int rfc8009_calc_Ke(const struct krb5_enctype *krb5,
-+			   const struct krb5_buffer *base_key,
-+			   const struct krb5_buffer *usage_constant,
-+			   struct krb5_buffer *result,
-+			   gfp_t gfp)
-+{
-+	return rfc8009_calc_KDF_HMAC_SHA2(krb5, base_key, usage_constant,
-+					  &rfc8009_no_context, krb5->key_bytes * 8,
-+					  result, gfp);
-+}
-+
-+/*
-+ * Derive Kc/Ki
-+ *	Kc = KDF-HMAC-SHA2(base-key, usage | 0x99, 128)
-+ *	Ki = KDF-HMAC-SHA2(base-key, usage | 0x55, 128)
-+ *	Kc = KDF-HMAC-SHA2(base-key, usage | 0x99, 192)
-+ *	Ki = KDF-HMAC-SHA2(base-key, usage | 0x55, 192)
-+ *      [rfc8009 sec 5]
-+ */
-+static int rfc8009_calc_Ki(const struct krb5_enctype *krb5,
-+			   const struct krb5_buffer *base_key,
-+			   const struct krb5_buffer *usage_constant,
-+			   struct krb5_buffer *result,
-+			   gfp_t gfp)
-+{
-+	return rfc8009_calc_KDF_HMAC_SHA2(krb5, base_key, usage_constant,
-+					  &rfc8009_no_context, krb5->cksum_len * 8,
-+					  result, gfp);
-+}
-+
-+/*
-+ * Apply encryption and checksumming functions to a message.  Unlike for
-+ * RFC3961, for RFC8009, we have to chuck the starting IV into the hash first.
-+ */
-+static ssize_t rfc8009_encrypt(const struct krb5_enctype *krb5,
-+			       struct crypto_aead *aead,
-+			       struct scatterlist *sg, unsigned int nr_sg, size_t sg_len,
-+			       size_t data_offset, size_t data_len,
-+			       bool preconfounded)
-+{
-+	struct aead_request *req;
-+	struct scatterlist bsg[2];
-+	ssize_t ret, done;
-+	size_t bsize, base_len, secure_offset, secure_len, pad_len, cksum_offset;
-+	void *buffer;
-+	u8 *iv, *ad;
-+
-+	if (WARN_ON(data_offset != krb5->conf_len))
-+		return -EINVAL; /* Data is in wrong place */
-+
-+	secure_offset	= 0;
-+	base_len	= krb5->conf_len + data_len;
-+	pad_len		= 0;
-+	secure_len	= base_len + pad_len;
-+	cksum_offset	= secure_len;
-+	if (WARN_ON(cksum_offset + krb5->cksum_len > sg_len))
-+		return -EFAULT;
-+
-+	bsize = krb5_aead_size(aead) +
-+		krb5_aead_ivsize(aead) * 2;
-+	buffer = kzalloc(bsize, GFP_NOFS);
-+	if (!buffer)
-+		return -ENOMEM;
-+
-+	req = buffer;
-+	iv = buffer + krb5_aead_size(aead);
-+	ad = buffer + krb5_aead_size(aead) + krb5_aead_ivsize(aead);
-+
-+	/* Insert the confounder into the buffer */
-+	ret = -EFAULT;
-+	if (!preconfounded) {
-+		get_random_bytes(buffer, krb5->conf_len);
-+		done = sg_pcopy_from_buffer(sg, nr_sg, buffer, krb5->conf_len,
-+					    secure_offset);
-+		if (done != krb5->conf_len)
-+			goto error;
-+	}
-+
-+	/* We may need to pad out to the crypto blocksize. */
-+	if (pad_len) {
-+		done = sg_zero_buffer(sg, nr_sg, pad_len, data_offset + data_len);
-+		if (done != pad_len)
-+			goto error;
-+	}
-+
-+	/* We need to include the starting IV in the hash. */
-+	sg_init_table(bsg, 2);
-+	sg_set_buf(&bsg[0], ad, krb5_aead_ivsize(aead));
-+	sg_chain(bsg, 2, sg);
-+
-+	/* Hash and encrypt the message. */
-+	aead_request_set_tfm(req, aead);
-+	aead_request_set_callback(req, 0, NULL, NULL);
-+	aead_request_set_ad(req, krb5_aead_ivsize(aead));
-+	aead_request_set_crypt(req, bsg, bsg, secure_len, iv);
-+	ret = crypto_aead_encrypt(req);
-+	if (ret < 0)
-+		goto error;
-+
-+	ret = secure_len + krb5->cksum_len;
-+
-+error:
-+	kfree_sensitive(buffer);
-+	return ret;
-+}
-+
-+/*
-+ * Apply decryption and checksumming functions to a message.  Unlike for
-+ * RFC3961, for RFC8009, we have to chuck the starting IV into the hash first.
-+ *
-+ * The offset and length are updated to reflect the actual content of the
-+ * encrypted region.
-+ */
-+static int rfc8009_decrypt(const struct krb5_enctype *krb5,
-+			   struct crypto_aead *aead,
-+			   struct scatterlist *sg, unsigned int nr_sg,
-+			   size_t *_offset, size_t *_len)
-+{
-+	struct aead_request *req;
-+	struct scatterlist bsg[2];
-+	size_t bsize;
-+	void *buffer;
++	struct device_driver *drv;
++	struct device *dev;
++	struct faux_object *faux_obj;
++	struct faux_device *faux_dev;
 +	int ret;
-+	u8 *iv, *ad;
 +
-+	if (WARN_ON(*_offset != 0))
-+		return -EINVAL; /* Can't set offset on aead */
++	faux_obj = kzalloc(sizeof(*faux_obj) + strlen(name) + 1, GFP_KERNEL);
++	if (!faux_obj)
++		return NULL;
 +
-+	if (*_len < krb5->conf_len + krb5->cksum_len)
-+		return -EPROTO;
++	/* Save off the name of the object into local memory */
++	strcpy(faux_obj->name, name);
 +
-+	bsize = krb5_aead_size(aead) +
-+		krb5_aead_ivsize(aead) * 2;
-+	buffer = kzalloc(bsize, GFP_NOFS);
-+	if (!buffer)
-+		return -ENOMEM;
++	/* Initialize the driver portion and register it with the driver core */
++	faux_obj->faux_ops = faux_ops;
++	drv = &faux_obj->driver;
 +
-+	req = buffer;
-+	iv = buffer + krb5_aead_size(aead);
-+	ad = buffer + krb5_aead_size(aead) + krb5_aead_ivsize(aead);
++	drv->owner = owner;
++	drv->name = faux_obj->name;
++	drv->bus = &faux_bus_type;
++	drv->probe_type = PROBE_PREFER_ASYNCHRONOUS;
 +
-+	/* We need to include the starting IV in the hash. */
-+	sg_init_table(bsg, 2);
-+	sg_set_buf(&bsg[0], ad, krb5_aead_ivsize(aead));
-+	sg_chain(bsg, 2, sg);
++	ret = driver_register(drv);
++	if (ret) {
++		pr_err("%s: driver_register for %s faux driver failed with %d\n",
++		       __func__, name, ret);
++		kfree(faux_obj);
++		return NULL;
++	}
 +
-+	/* Decrypt the message and verify its checksum. */
-+	aead_request_set_tfm(req, aead);
-+	aead_request_set_callback(req, 0, NULL, NULL);
-+	aead_request_set_ad(req, krb5_aead_ivsize(aead));
-+	aead_request_set_crypt(req, bsg, bsg, *_len, iv);
-+	ret = crypto_aead_decrypt(req);
-+	if (ret < 0)
-+		goto error;
++	/* Initialize the device portion and register it with the driver core */
++	faux_dev = &faux_obj->faux_dev;
++	dev = &faux_dev->dev;
 +
-+	/* Adjust the boundaries of the data. */
-+	*_offset += krb5->conf_len;
-+	*_len -= krb5->conf_len + krb5->cksum_len;
-+	ret = 0;
++	device_initialize(dev);
++	dev->release = faux_device_release;
++	dev->parent = &faux_bus_root;
++	dev->bus = &faux_bus_type;
++	dev_set_name(dev, "%s", name);
 +
-+error:
-+	kfree_sensitive(buffer);
-+	return ret;
++	ret = device_add(dev);
++	if (ret) {
++		pr_err("%s: device_add for %s faux device failed with %d\n",
++		       __func__, name, ret);
++		put_device(dev);
++		return NULL;
++	}
++
++	return faux_dev;
 +}
++EXPORT_SYMBOL_GPL(__faux_device_create);
 +
-+static const struct krb5_crypto_profile rfc8009_crypto_profile = {
-+	.calc_PRF		= rfc8009_calc_PRF,
-+	.calc_Kc		= rfc8009_calc_Ki,
-+	.calc_Ke		= rfc8009_calc_Ke,
-+	.calc_Ki		= rfc8009_calc_Ki,
-+	.derive_encrypt_keys	= authenc_derive_encrypt_keys,
-+	.load_encrypt_keys	= authenc_load_encrypt_keys,
-+	.derive_checksum_key	= rfc3961_derive_checksum_key,
-+	.load_checksum_key	= rfc3961_load_checksum_key,
-+	.encrypt		= rfc8009_encrypt,
-+	.decrypt		= rfc8009_decrypt,
-+	.get_mic		= rfc3961_get_mic,
-+	.verify_mic		= rfc3961_verify_mic,
++/**
++ * faux_device_destroy - destroy a faux device
++ * @faux_dev: faux device to destroy
++ *
++ * Unregister and free all memory associated with a faux device.
++ */
++void faux_device_destroy(struct faux_device *faux_dev)
++{
++	struct device *dev = &faux_dev->dev;
++
++	if (IS_ERR_OR_NULL(faux_dev))
++		return;
++
++	device_del(dev);
++
++	/* The final put_device() will clean up the driver we created for this device. */
++	put_device(dev);
++}
++EXPORT_SYMBOL_GPL(faux_device_destroy);
++
++int __init faux_bus_init(void)
++{
++	int error;
++
++	error = device_register(&faux_bus_root);
++	if (error) {
++		put_device(&faux_bus_root);
++		return error;
++	}
++
++	error =  bus_register(&faux_bus_type);
++	if (error)
++		device_unregister(&faux_bus_root);
++
++	return error;
++}
+diff --git a/drivers/base/init.c b/drivers/base/init.c
+index c4954835128c..9d2b06d65dfc 100644
+--- a/drivers/base/init.c
++++ b/drivers/base/init.c
+@@ -32,6 +32,7 @@ void __init driver_init(void)
+ 	/* These are also core pieces, but must come after the
+ 	 * core core pieces.
+ 	 */
++	faux_bus_init();
+ 	of_core_init();
+ 	platform_bus_init();
+ 	auxiliary_bus_init();
+diff --git a/include/linux/device/faux.h b/include/linux/device/faux.h
+new file mode 100644
+index 000000000000..b1a51fbb6f39
+--- /dev/null
++++ b/include/linux/device/faux.h
+@@ -0,0 +1,33 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
++ * Copyright (c) 2025 The Linux Foundation
++ *
++ * A "simple" faux bus that allows devices to be created and added
++ * automatically to it.  Whenever you need a device that is not "real",
++ * use this interface instead of even thinking of using a platform device.
++ *
++ */
++#ifndef _FAUX_DEVICE_H_
++#define _FAUX_DEVICE_H_
++
++#include <linux/module.h>
++#include <linux/device.h>
++
++struct faux_device {
++	struct device dev;
++};
++#define to_faux_device(x) container_of_const((x), struct faux_device, dev)
++
++struct faux_driver_ops {
++	int (*probe)(struct faux_device *faux_dev);
++	void (*remove)(struct faux_device *faux_dev);
 +};
 +
-+const struct krb5_enctype krb5_aes128_cts_hmac_sha256_128 = {
-+	.etype		= KRB5_ENCTYPE_AES128_CTS_HMAC_SHA256_128,
-+	.ctype		= KRB5_CKSUMTYPE_HMAC_SHA256_128_AES128,
-+	.name		= "aes128-cts-hmac-sha256-128",
-+	.encrypt_name	= "authenc(hmac(sha256),cts(cbc(aes)))",
-+	.cksum_name	= "hmac(sha256)",
-+	.hash_name	= "sha256",
-+	.derivation_enc	= "cts(cbc(aes))",
-+	.key_bytes	= 16,
-+	.key_len	= 16,
-+	.Kc_len		= 16,
-+	.Ke_len		= 16,
-+	.Ki_len		= 16,
-+	.block_len	= 16,
-+	.conf_len	= 16,
-+	.cksum_len	= 16,
-+	.hash_len	= 20,
-+	.prf_len	= 32,
-+	.keyed_cksum	= true,
-+	.random_to_key	= NULL, /* Identity */
-+	.profile	= &rfc8009_crypto_profile,
-+};
++#define faux_device_create(name, faux_ops) __faux_device_create(name, faux_ops, THIS_MODULE)
++struct faux_device *__faux_device_create(const char *name,
++					       struct faux_driver_ops *faux_ops,
++					       struct module *module);
++void faux_device_destroy(struct faux_device *faux_dev);
 +
-+const struct krb5_enctype krb5_aes256_cts_hmac_sha384_192 = {
-+	.etype		= KRB5_ENCTYPE_AES256_CTS_HMAC_SHA384_192,
-+	.ctype		= KRB5_CKSUMTYPE_HMAC_SHA384_192_AES256,
-+	.name		= "aes256-cts-hmac-sha384-192",
-+	.encrypt_name	= "authenc(hmac(sha384),cts(cbc(aes)))",
-+	.cksum_name	= "hmac(sha384)",
-+	.hash_name	= "sha384",
-+	.derivation_enc	= "cts(cbc(aes))",
-+	.key_bytes	= 32,
-+	.key_len	= 32,
-+	.Kc_len		= 24,
-+	.Ke_len		= 32,
-+	.Ki_len		= 24,
-+	.block_len	= 16,
-+	.conf_len	= 16,
-+	.cksum_len	= 24,
-+	.hash_len	= 20,
-+	.prf_len	= 48,
-+	.keyed_cksum	= true,
-+	.random_to_key	= NULL, /* Identity */
-+	.profile	= &rfc8009_crypto_profile,
-+};
-diff --git a/include/crypto/krb5.h b/include/crypto/krb5.h
-index b12f012cf354..b8fda81379ab 100644
---- a/include/crypto/krb5.h
-+++ b/include/crypto/krb5.h
-@@ -31,6 +31,8 @@ struct scatterlist;
- #define KRB5_ENCTYPE_DES3_CBC_SHA1		0x0010
- #define KRB5_ENCTYPE_AES128_CTS_HMAC_SHA1_96	0x0011
- #define KRB5_ENCTYPE_AES256_CTS_HMAC_SHA1_96	0x0012
-+#define KRB5_ENCTYPE_AES128_CTS_HMAC_SHA256_128	0x0013
-+#define KRB5_ENCTYPE_AES256_CTS_HMAC_SHA384_192	0x0014
- #define KRB5_ENCTYPE_ARCFOUR_HMAC		0x0017
- #define KRB5_ENCTYPE_ARCFOUR_HMAC_EXP		0x0018
- #define KRB5_ENCTYPE_UNKNOWN			0x01ff
-@@ -45,6 +47,8 @@ struct scatterlist;
- #define KRB5_CKSUMTYPE_HMAC_SHA1_DES3		0x000c
- #define KRB5_CKSUMTYPE_HMAC_SHA1_96_AES128	0x000f
- #define KRB5_CKSUMTYPE_HMAC_SHA1_96_AES256	0x0010
-+#define KRB5_CKSUMTYPE_HMAC_SHA256_128_AES128	0x0013
-+#define KRB5_CKSUMTYPE_HMAC_SHA384_192_AES256	0x0014
- #define KRB5_CKSUMTYPE_HMAC_MD5_ARCFOUR		-138 /* Microsoft md5 hmac cksumtype */
- 
- /*
++#endif /* _FAUX_DEVICE_H_ */
+-- 
+2.48.1
 
