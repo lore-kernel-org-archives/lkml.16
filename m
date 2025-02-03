@@ -1,129 +1,81 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56E42063D7
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385172063D7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738592862; cv=none; b=aElqVmhi6zZhUiKCxSHUGy60KgjJb8u3OxXER4tG1OOa/9LiZ/FIjcRiFbUYThcai1OcjxbDWIrAGsHdQkoc4yuGsqL62jd8n+yFaYoGZOhxK02KHMjDOzBGdEYjBca/uK+HbBgGxTb3EM4eqkZFavkLrmvlTEY86e+heIppayo=
+	t=1738592871; cv=none; b=F6zwUcmgbSysYQCHjRB4ZWf9XFV+yS84VZRmd/f3n7fdFKbSGrql0eubfiQItoq5GF42OiDFof9Ir9kO57o/bJPe2S/szA5TB3vYrWHYkmnJxjKiCTrLdS0+GScUvqA7FZSFunu4vJjdMCT34XOfGHCs2PKObJ5z/NNnBphQG2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738592862; c=relaxed/simple;
-	bh=Xf3vzzTJsIfG9mnXoUhr4AozPJo5ITepH/R/LGvc98I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CX7ecm6C5lJdOyoipzykKQq1l2R8JYBloSb1pkwaywdfl3/jBLq7S+6EA/IPJC2Q7VjQgsHc75xzjTKkY7e+5OgDwS7zTsfEscE7h6gR8m5IlJGjzMC7bl17IQUl1RxYRqflrX+M517IpxjV8M4b0mfLIFIrteq5zazT7+SusG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FulfmFw1; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738592871; c=relaxed/simple;
+	bh=GxwFoLlSJdqqUis2C5JDBGnJsOwNSZkIVOZMR4U7ngg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nBpepnA7WMwKMp/HYZTU9bPUjGGP60J2d2iZOjBd+MFltiqnZaKBO+FfOOD31WIdmPh5zYUNmWBRi5ppuAX7foQOQ5GdtglgI0gw2qXdmLjG5cbFr5mqBlLJhBYzmjQAf6/kumzfNNYht7WC1K2O7wD6n22Y76SEf6oqoDc0kxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GUltqbBA; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FulfmFw1"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5135OilV000874
-	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 14:27:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	z32PzU4coYuXq8q2uocAQsG8D+C94sos2b3J/CWJZq4=; b=FulfmFw1t2Ennp2z
-	JuUIoHD5+vFcsKnMhgiZInDaeSwdiwhZi+Wh4kzXFDs0ErEZrfx+QCF2lCKmLxxQ
-	DDgdRs3AldJR3QhAEYRu0BmzHZyhMLd8qiSRhVMsOX1MP/LpaehabeELV/Wwll5j
-	kGdtkKuGw0/ucpKNLlQGHpsxNNcQZHu3an8Ehut11H+1iafCmFrkQY5fxuIIxwah
-	pZhC7Rzy7E35/I8FNlTcZa1GQfT90XvR4/rP6rWhBDZfavewXhqZrUBXA/67TR6G
-	u6v6LCB9RGrODakW9Wy+DjlXGL7/3mrfwnno6gfvdePokgs9DFiroLj8LW71GgIO
-	JD+syg==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jqm41c08-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:27:39 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7b700506e64so24123885a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:27:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738592858; x=1739197658;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z32PzU4coYuXq8q2uocAQsG8D+C94sos2b3J/CWJZq4=;
-        b=g/o2s+tWegd8oTFmtyNJ3tBNzeSAX//C32SPB2JLA2/Ph0PTPu6TJuE2wcTMNGctt9
-         BWHPww0kpNzhQi3aJeCAgTLmFB72SfG868m0wuG3j6Y8OzU3KwSP8ZMIh9WF6Bx1RVAb
-         3VZgXhr+XzJdVadaIqiB8Nkmj5SUwu23QY5WVn8iv9FvZyC3T9ucSpApOz8ZJO8FRo4k
-         1TcfUumiwMX1b0vd1QxCxTEQ9sain2e0T9/VRoKqaHT/ZYx34Q+i8KHGonjj28N3YJ6W
-         s6KyAYx1ELvhiNv6dyaVI/flOLGmz8rwOhOcqSzQiIM5eDgOqjw6ZyC6JOP59YBgHYLJ
-         cEVA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcCPv4yJw7RMQeoX/VL1apr8jFBthR0ReRWogGTD/7aspyXwqf0Taa2xf2wTGn/pL4ZacL1lcY+y6OS9M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJacjREH2EiExrhBPVlEwA3/N+lZtAtOj7kQfYl04rg74eFhEU
-	wws9Y+69XuQhbBVRicH1SamtF6ps51Q1IC9oK+qW6sMQH27UxQF+kbS1U2ybmiGkP+cLUS1a2GM
-	5ajA0ZkT2AxiV8a+OusJ1zAeNsr3tQ1ipwirvwIeSRYM0KHJmvRlLrdH0l3J742Y=
-X-Gm-Gg: ASbGncsbRgW3fJmIdyjBJL+Wt+jA87X2fP/VEhisQ7Fy4lwa9pR71yf7aBxkYPj0nVd
-	p2CaUGQ1FLvwICaqzaul1WtD9DnO4L08dBGdCoIUFhfC49l9iWQHC4Wj5MaRlHnq+WeoHmb0CHO
-	jo3QfRzLeJw1jYBFkJhsdqXtIg9PHwT83b+C56O4Xgzb9gKTimBwHprrZM7voM1EvlXtZGYwM7/
-	AGJ18GIY6GZweFIoUDwLERXDflED9lf/lTFvgCuyCiG9h1b9t6LawgKPXXy1Ay6TRnUHShRBlFd
-	OSp+hgvN9D7682rgtXEkmsezJ+ZS8FdciXXuqubMwohRdraJE4d3ayWl0Q8=
-X-Received: by 2002:a05:620a:248c:b0:7b6:6bff:d141 with SMTP id af79cd13be357-7bffcd9d787mr1107870885a.13.1738592858492;
-        Mon, 03 Feb 2025 06:27:38 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFCVB1pFxx3ztPneFspzL94a8IE8Ob7/aW9iut9z+QQesefeV02zB01674x4dFFcNyiIcTNaw==
-X-Received: by 2002:a05:620a:248c:b0:7b6:6bff:d141 with SMTP id af79cd13be357-7bffcd9d787mr1107846485a.13.1738592852050;
-        Mon, 03 Feb 2025 06:27:32 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc7240608dsm8039781a12.47.2025.02.03.06.27.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 06:27:31 -0800 (PST)
-Message-ID: <716ce859-7bc4-47b9-9a1d-005427bfdf3d@oss.qualcomm.com>
-Date: Mon, 3 Feb 2025 15:27:29 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GUltqbBA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lS1m6otJ19LvMQIThmddQhHubfGv7UkNSWZYOmK+a6Y=; b=GUltqbBA+s+rHIayfs+GVDtGet
+	9+/FEYvRwc70WOSISGGn2Y/oKiyG+dSEfVjNpUnwrkcbTmpeUgBBzOb5YoYbIPOO0LFRbRGVzwoQi
+	BkH5AM9W5kbvr4n0YdbNc+35E+fSBPf184JLU8fChVxl3HPAp+IDIkeC8pSY45s2dV2QamQEBCnHX
+	GlWicplr7zvCfWZvgl2OQGCe8ZIl2cC8q7JDbmBm5S+Cv8AwkIvur0xS2JdktONViOl99TyZHVPJy
+	CNp3lqEr0NR7AMxc8pTaKOaLZiWJtpbAR6yoY+K3seWcV1weCcveCUwviif8fTHMTzqjxJeYkzZ/q
+	3ZPUTb1Q==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1texQO-0000000G6B9-0gfe;
+	Mon, 03 Feb 2025 14:27:44 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id BA1AF300310; Mon,  3 Feb 2025 15:27:43 +0100 (CET)
+Date: Mon, 3 Feb 2025 15:27:43 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v8 03/15] futex: Add basic infrastructure for local task
+ local hash.
+Message-ID: <20250203142743.GI7145@noisy.programming.kicks-ass.net>
+References: <20250203135935.440018-1-bigeasy@linutronix.de>
+ <20250203135935.440018-4-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sa8775p: Partially revert "arm64:
- dts: qcom: sa8775p: add QCrypto nodes"
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yuvaraj Ranganathan <quic_yrangana@quicinc.com>
-References: <20250128115333.95021-1-krzysztof.kozlowski@linaro.org>
- <2b07b8ea-9c7c-4f37-8d01-d14d1e82aff9@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <2b07b8ea-9c7c-4f37-8d01-d14d1e82aff9@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: gH3A74hKnr0P01mvyfrKb4Gl3W6m1yqY
-X-Proofpoint-ORIG-GUID: gH3A74hKnr0P01mvyfrKb4Gl3W6m1yqY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- spamscore=0 malwarescore=0 priorityscore=1501 suspectscore=0 adultscore=0
- clxscore=1015 impostorscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502030106
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203135935.440018-4-bigeasy@linutronix.de>
 
-On 3.02.2025 3:09 PM, Konrad Dybcio wrote:
-> On 28.01.2025 12:53 PM, Krzysztof Kozlowski wrote:
->> Partially revert commit 7ff3da43ef44 ("arm64: dts: qcom: sa8775p: add
->> QCrypto nodes") by dropping the untested QCE device node.  Devicetree
->> bindings test failures were reported on mailing list on 16th of January
->> and after two weeks still no fixes:
->>
->>   sa8775p-ride.dtb: crypto@1dfa000: compatible: 'oneOf' conditional failed, one must be fixed:
->>     ...
->>     'qcom,sa8775p-qce' is not one of ['qcom,ipq4019-qce', 'qcom,sm8150-qce']
->>
->> Reported-by: Rob Herring <robh@kernel.org>
->> Closes: https://lore.kernel.org/all/CAL_JsqJG_w9jyWjVR=QnPuJganG4uj9+9cEXZ__UAiCw2ZYZZA@mail.gmail.com/
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> ---
+On Mon, Feb 03, 2025 at 02:59:23PM +0100, Sebastian Andrzej Siewior wrote:
+> The futex hashmap is system wide and shared by random tasks. Each slot
+> is hashed based on its address and VMA. Due to randomized VMAs (and
+> memory allocations) the same logical lock (pointer) can end up in a
+> different hash bucket on each invocation of the application. This in
+> turn means that different applications may share a hash bucket on the
+> first invocation but not on the second an it is not always clear which
+> applications will be involved. This can result in high latency's to
+> acquire the futex_hash_bucket::lock especially if the lock owner is
+> limited to a CPU and not be effectively PI boosted.
 > 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Introduce a task local hash map. The hashmap can be allocated via
+> 	prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, 0)
 > 
-> +Yuvaraj Ranganathan, please resubmit your original series with the
-> required fixes, or this patch will need to avoid build warnings
+> The `0' argument allocates a default number of 16 slots, a higher number
+> can be specified if desired. The current upper limit is 131072.
 
-will need to be merged* is probably what I was trying to type
+Hmm, I would expect 0 to disable the local thing.
 
-Konrad
+Now, I realize this is somewhat tricky, since there might be futexes
+inside it. But mapping 0 to some default value seems.. well, odd.
