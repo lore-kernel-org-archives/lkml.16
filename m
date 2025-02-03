@@ -1,518 +1,269 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2089.outbound.protection.outlook.com [40.107.243.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A668202C20;
-	Mon,  3 Feb 2025 11:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738580507; cv=none; b=Z1WRaPYnLOORp/OcPtFWtscTjEUbsp2Ap6VN10Kl5a+Q5i9kCSM8ZMxyRqPQc50goKa2Kud+xQ2Fv5IQfRj2yB34AgT8+3YnPVj9uSzZbocoDT2xEhwfEURoeGxaR5eFe5mczJee9DNq88e9GatzLOLFSJ+meAss4tgMQAiVIN4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738580507; c=relaxed/simple;
-	bh=aQDbay049/YWg1F5NCoyLcdzJG7ygeLEJlfy7mzWD8M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NJBLTxcKgufpMrOMPWQ0XOfHrHu2xOGd36CIF5KiWnLal4DpgImr5AjcNG3OXmQTUrms9OgFIrk2ixVcZ/TRjuI2yNw5cnJiFY6hHGjQopI6hsMuL0e2chNSEcU5GY4V3zEi1ds0NFnCMih/sacGlIaIZmKDe4Crn9/jQO3BS8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RMCWjD9y; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330D0202C2E;
+	Mon,  3 Feb 2025 11:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738580523; cv=fail; b=lgZrEBu27OrdPrOoidwie3whWr+iiVFGqKjDuH+sfnMJXDR7GYBOBIVDww72NfvM8rIcdUa1gpfoHNPi4gToXUMcBykYt+KfcmXOYIfEbO57fJPbdhS5FCKGwF06s6W0U/x50oLMjPAN2doi/9QXrNplUoz7JhvC7OV/yuD6+UQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738580523; c=relaxed/simple;
+	bh=C40mKsw1NyOXav9anZJIMW3i8ieXsVbrZ8sDHFIyANs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tjduNZNsY5IU3WQ3sFTFIDSfbWE8C50Ab0dLApgg+tT5UetaFYyVleHjCYkwqN9iHlp5hGdWeD3CmFXVbBIY6Oei8sNHyNA2Az4mDxDhFzsnC779JCvorlGTciLccNZuVrMe7bJ87lLPEe01bSQCdxdPGT0SXcwzXkfzZFaAsY4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=smmN1g4s; arc=fail smtp.client-ip=40.107.243.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RMCWjD9y"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 265964427A;
-	Mon,  3 Feb 2025 11:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738580503;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YawhMMjsJd2hf/Fm4hW3F3LghMDiVLWEo+AjiYB3EiE=;
-	b=RMCWjD9y33VxQ2eq2IFIJ5aRNg7rMBaXYp8MMrJPE+B+jttBBlIaldJ/UI5GURd6RDUvB+
-	Pzsal3v8+Rq3WrzADS3y9nfYcBiR9xFAFCFOX4B/SEMTcIa9xv4J0ehIuFX8QmfUtCCO/s
-	rV9DxdMgezP9CEoAQn7+Za6r9wS3FsTndl2t8092QZU1zhMGtUzLtLpgavdiOKE37ekq4F
-	0tbmsbkkvp5+0wkOtGMOuGqOhQh0JgnD8S/PDs7sXNGwKX/re+9wWzX8zKZ6gCkEia94Ur
-	oRFuRguGLlfcBZLzhX9VKelkvCXgJLhl0WzbOSbEqRKZU85U1qfQdMheTMi4vg==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Mon, 03 Feb 2025 12:01:05 +0100
-Subject: [PATCH v4 1/2] hwmon: Add Congatec Board Controller monitoring
- driver
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="smmN1g4s"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YYQ13wP5Fj8myp45EYCIVy5d39QxNeqdfEAQw9kOiwedvxLT1mICPBFwGZaYqATumrw/D5NwmwZiFKtstiFFO/JW4GxQwXGj2V4tvtRt8oN4xxrcQXXNqWBemmb0dhULdCDHgrf8zBVcuyVYbrUTpYGVq6zS0GUKmSs6pvFENWljJHTcafiMOyb/Q6Zrpg8CMvERKeXICUutlEugAGDtHSUVBnp28eoUIyeMFpSvrV6DJU03qo46JToRiET45qrhfRKfGQ8pTx/LqWNtw9Jjt0ndT1mBUj4aH/Fb6/oq+6xXihvSP/insTbalmY9CCOjQQTNTpSms25RGkjVVbiiag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WZHQXduzEnkKHohpoFjxJqvQvp+EzR63p3AwqEplHqs=;
+ b=kLOSpRLt9/VlIsDZ3Oboze+NI9INCYZ6TXM31qm5pWQSxhrHUbW5Ey4Dmq7lnK5BharB0pJ0VLzTqf2teHmzVahblFfq44eAxz/vhBP87bgAK7lo4OTPagfaS1wqTv009UBtSyxqfsNh2UEidqOIm5tp54qt6pqVLRl+ea/3bW1zlQ7qtfRzMAQ6LjeOoIJ/8LVwqTpUb394y8jjmxpy9iOXzpwyBTCdJ4ssdjMtAQx0Xqp7mx+CfUqvihpbBRoC1eGmMAo5PrvShyp1CfmNZ+Qg/C+Vg540WFkolksnTmblOHPuBF8/wYdWNCnJ5KOwpJVkjqKDgCSJREtFm/3nFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WZHQXduzEnkKHohpoFjxJqvQvp+EzR63p3AwqEplHqs=;
+ b=smmN1g4s5v6NrcawkY0cI9J2p9GNNdAMR0m2nFvaKbyuZc5FzrAGoR72lef3crEVM+h5YtVSX67EOsIgWEaJ7oATc/1zm7e0NayadWm0Ih+NpxFiNTzziCVCX6UpbJHW2pl2ggi57TBV9+a8e1+B4JyiZGdr1k/4W43rU7NIw5F0g2d0wtqZsXqVh5SyliYnPv7LHOu3qYwAlExnAq/Ie0fSwyaBYumVEcPfEFjdSLJpGP6ADHErYRySiYgr/BWOJcD9FRmyICW44idykm2teo3aSYd6laBACKy3oGHunG78U6tKgzTA1vI3CzZA7MxENnGrzTblgOPTq7bUzsy/eg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by DS0PR12MB8453.namprd12.prod.outlook.com (2603:10b6:8:157::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Mon, 3 Feb
+ 2025 11:01:59 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%4]) with mapi id 15.20.8398.021; Mon, 3 Feb 2025
+ 11:01:59 +0000
+Message-ID: <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
+Date: Mon, 3 Feb 2025 11:01:51 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
+ for hotplug
+To: Juri Lelli <juri.lelli@redhat.com>
+Cc: Thierry Reding <treding@nvidia.com>, Waiman Long <longman@redhat.com>,
+ Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>, Aashish Sharma <shraash@google.com>,
+ Shin Kawamura <kawasin@google.com>,
+ Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+ linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+ "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <ZzYhyOQh3OAsrPo9@jlelli-thinkpadt14gen4.remote.csb>
+ <Zzc1DfPhbvqDDIJR@jlelli-thinkpadt14gen4.remote.csb>
+ <ba51a43f-796d-4b79-808a-b8185905638a@nvidia.com>
+ <Z4FAhF5Nvx2N_Zu6@jlelli-thinkpadt14gen4.remote.csb>
+ <5d7e5c02-00ee-4891-a8cf-09abe3e089e1@nvidia.com>
+ <Z4TdofljoDdyq9Vb@jlelli-thinkpadt14gen4.remote.csb>
+ <e9f527c0-4530-42ad-8cc9-cb04aa3d94b7@nvidia.com>
+ <Z4ZuaeGssJ-9RQA2@jlelli-thinkpadt14gen4.remote.csb>
+ <Z4fd_6M2vhSMSR0i@jlelli-thinkpadt14gen4.remote.csb>
+ <aebb2c29-2224-4d14-94e0-7a495923b401@nvidia.com>
+ <Z4kr7xq7tysrKGoR@jlelli-thinkpadt14gen4.remote.csb>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <Z4kr7xq7tysrKGoR@jlelli-thinkpadt14gen4.remote.csb>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO0P123CA0010.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:354::19) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-congatec-board-controller-hwmon-v4-1-ff6c76a4662c@bootlin.com>
-References: <20250203-congatec-board-controller-hwmon-v4-0-ff6c76a4662c@bootlin.com>
-In-Reply-To: <20250203-congatec-board-controller-hwmon-v4-0-ff6c76a4662c@bootlin.com>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
- Lee Jones <lee@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
- thomas.petazzoni@bootlin.com, blake.vermeer@keysight.com, 
- linux-doc@vger.kernel.org, Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.14.1
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeegvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkedthedvieethedtleetffehudevleegledvteegvdeujeeghffhkeeggfefudevnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgdphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehlihhnuhigsehrohgvtghkqdhushdrnhgvthdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnu
- higqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhfihmohhnsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqughotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehjuggvlhhvrghrvgesshhushgvrdgtohhm
-X-GND-Sasl: thomas.richard@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|DS0PR12MB8453:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed216991-ad34-46fc-1bc2-08dd44422e6e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|10070799003|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?b0JvUmo0VEVPaWhXQk1JTW85aFlwVHJBZ0szUW1Hd25FTjhSNXBlUk8wYTVt?=
+ =?utf-8?B?Q1BqMjFhaUJ4d1FESWxNVHNXNDkydWdhL1V0byt6ZytWVUVFL0FQTzlrSXVn?=
+ =?utf-8?B?Z0NhdmR6ZG4rVVFCaU5XVmhZUHNpbTZNVXlmVkpQR3pyUlFhVThkbVJpKzA3?=
+ =?utf-8?B?Y3VnQjhpSjA4MW9hMm5tdGQzWnFDeUFvd0xrVjUxa3RhZHlieGJhZFNDdjMw?=
+ =?utf-8?B?aEdBYjZXVXRPU1FGRzlzcXA2amtiN1FJRFpHNUpGR3Y1SzBPTzIzazluRkd3?=
+ =?utf-8?B?UkpSeXNBREJjeWtRVnpWWHlDSHpRMTVpb1U5bDhmVDRxbmlOZjdTQTdOOVU1?=
+ =?utf-8?B?MVNYNUhvOVFKWnVOU05icEIvY0tEc3haN2FwUWt5OVlJSURDNFhJQitEb0Q4?=
+ =?utf-8?B?SEdKOGQ0dWoyWHhyWHhmT0FhcWpGZkdCZ1dVTExTV3BHd1VxbHppeDQ3c0N1?=
+ =?utf-8?B?eVBtTm9DeStHcU10M0Q2M3lsSXpiVGNwZ2pJUnQ5eUlvMWxZZnVQNjZsNHNX?=
+ =?utf-8?B?TDhMaHBucnBTUVp0S0tSWXNEakZkZlZyMVp4VjAvcVNjWEprWE1pc2U2bnlT?=
+ =?utf-8?B?bUwrRmtYK1JiV1ZoZE9nTHM1ZzczU2hXdnhyRlpTazVBek0waVJuM1FEaU1H?=
+ =?utf-8?B?TkJPd0t0eXVnQmFBU2tRUzVJTVgzeTJBQnFTdTJ3ek1jdWtoajNodUtrWE55?=
+ =?utf-8?B?eHZPWkdtS3N3YnZXV2VSZnk5bFRCVU8rVHRmbFFHUTZxcktkSW9oOGFKMWdD?=
+ =?utf-8?B?TGlTdEZxSWhDM1hRRWJVY3p6NWNITzhFdkczRVlCQStGa0VaZEFMZU1qL09B?=
+ =?utf-8?B?NGptT3U0aDY3M09zTDJreHExaWlRdnFlbS9ncnJrSWdNNXF4aDUxWGhxRC8r?=
+ =?utf-8?B?QkdvVElDbjR1VkpWYlYrK0JXNmkwbUZDNnBPVEw2aHhWT0g0VDVoOVZ5MGFH?=
+ =?utf-8?B?RG1YN1Vya2FTVHJXaDl4bW9mSmp3U3lYdGxhb3gvc3UxaHVrblhMZ1NRSFZj?=
+ =?utf-8?B?UlJOcFYyTmc1M2VKY1pIa2VsdmtOTUdyS1BRWTZ0QzhGemplVUpTemFVTW5t?=
+ =?utf-8?B?dDlKN2pUZ29oUk5XYk5hOTNNVTBTN29PRURzQkRqdG41d1VqY3VkSElGR0hW?=
+ =?utf-8?B?RWpKU3JYZ250WWc4YjJGbEpnVHRGVzNLM1k0cWpYUEpXMzdsblhCU2tRMXI5?=
+ =?utf-8?B?UVJyWmhOU21jdEdHa0REZ29Bc2IrTjdZVlU0d2FzV2dDNXE5OEpyVEpvb1B0?=
+ =?utf-8?B?TzFMQkNNMng2TWt5aEE5V2kvSExnUHZVN1dvNTFiclhvWHVpeUwzVlV0eFg1?=
+ =?utf-8?B?TEoxUS9FbmlTNmFhYjY1cWRlc040R0tJUnFtQnpabTRZbjdKV0FiOU01THVm?=
+ =?utf-8?B?VGplRnpnQUhmTllRdkNpb3VmZTVXeWFQbDF4N0NhUVBCRVdxb3ZmdDJOekY4?=
+ =?utf-8?B?MWZHaHllR0QrUzJGbDZLMEFHMm1iZjZzeW5MSFdFdEZkNnBFc2RlRG0zekZt?=
+ =?utf-8?B?NkJEZGpud0xPK1RPU1A1djdteWRGRE1YbmFHZzlGR2xmTEJTQWo0VFM4K2ZQ?=
+ =?utf-8?B?R0JTUkx4NW9QZ0QzbDM0Yzkxek0va21zWG5nbWtYQTFENWphbGhDcmNNbHh5?=
+ =?utf-8?B?aHgyMmlVa0VpUlovODVkZ3B5MVV2bS9Qamx1MDVURTQ0aWFmc3BreWdvYzdv?=
+ =?utf-8?B?OHVBU0FYSlQxN21DRTZHb2x6aGRuYVNpNm9UMHFnUTAyYkl0aHdnSW5hajZD?=
+ =?utf-8?B?N0phWDhCZm9yWDlqR0FnYmZOMWwzYXhRckRrSStlOVVxaEZ1dTNFVWZIa1dK?=
+ =?utf-8?B?MnRDZkRJdTQvSDFDQmRlcEJST2J6M1U1TUd5alcrOStZNXp2TG9VS3JqRWJR?=
+ =?utf-8?Q?q2iv4C4xqVsfY?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(10070799003)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cmdpaTBTU0J6KzFVSzVSWHdKNUFkaU44QzFHSFBBQjAyZ1pZdzZnelpZNFdw?=
+ =?utf-8?B?NmIwRmlZcitVY0dQTG1JY3NqUHg2cWVUMjd1cHdCd29DcFNxRFVMWC8zeHZD?=
+ =?utf-8?B?ZU1iQlJGY2h5R3VNd24wUGtvL0NhOGxiSUduM2pGZFpwbmd6SWNiZnhlRkFS?=
+ =?utf-8?B?d2ZGb3ZlcjJMMFF2NUV3TkQ2bzV5QmpOV0NOTTV4ak9rZzJPNUo2L0NZSFhz?=
+ =?utf-8?B?R1FzZnpXMUs3eit0Z3E4dFE3TUdsSitwd2VDcUMxOTdzR2w2M1R2L3NXUnFR?=
+ =?utf-8?B?dHJhRnBqcC9XQTBPcUZCUlVIWVJnQ01Vay94cjcrWjB0UDFpMURIc3lSMTcz?=
+ =?utf-8?B?WHB5NVV0OVJqUy8rODhvVDc3OHZyZDBPT0RMdlpZTWJ4ZlhhdzA5ZERuU1Iw?=
+ =?utf-8?B?QVcvS01VQnZpRWt4b29oTGZBakZzNys0aFNyaWNqYW83NWx2WlU1SXY5aGJQ?=
+ =?utf-8?B?ejhoVmxyZXp6aXVRS2MvUEZaTzQzbVVnUFFLYlR3cEpWaVJWNXUrOVRkbG51?=
+ =?utf-8?B?cStVc1ZrSFhtbDVVRmFCYkxtVGgxVHFjdDB6bEJjUWY1aTlJbzZGRG1nSElH?=
+ =?utf-8?B?TlNiY2g2ek42Qkt2cGMrL2xkVWRBeUlHM2l4NEc5YXRNR0lCQUlBM0xjeEdj?=
+ =?utf-8?B?RG1vdzhITTI4aUlxNEM4THJNbG02bVMwTGRHVjJrV0l5YjRmU2FIdDBEMFlv?=
+ =?utf-8?B?MjdncWhWTHRhWlEvS0E5V2ZyaTIzZFRDOXE0a2ZrMlNKSEloMkh3MmNBbVlX?=
+ =?utf-8?B?WFNEYWtLcExPbTE0QmxoRlZzUDJiLzVlYTFJSElQNXdUZllQejdqN21NUTBy?=
+ =?utf-8?B?dERFZ0pMVGRpV0YzS3RLSGdyRnRnSHNubDhBQjljd3dsNDkvZ3hNTVh3MDBw?=
+ =?utf-8?B?T2hmb3p0eEQzekFJRWE0LzZROHhHYlhrdDdIaWI1M1lPMkFjcG5BU3FEOHEy?=
+ =?utf-8?B?ZkpJSmpPZnd2ZWsyb2VFejFJNVkwZjllZjc2d0ZXdUR0U1NhZWd2MXUwSjV6?=
+ =?utf-8?B?N2FMMEY4M2o4eTNRRk9rMjd5SnJHTjZuVkpsVWp6K2w2WlVkS25iQ3RYOWhx?=
+ =?utf-8?B?bGZlUXh0MlVvejh2UExyZ25MTVo2eE9NZTBHR0RrYmxyaEdPMWp1NURWTFlk?=
+ =?utf-8?B?L1hvMXF0M0ZwWHh4ZXFUdlo5Sk5wTVk0Z2lFNzFGQVk5M2xGQ2t6UjZEVnVj?=
+ =?utf-8?B?aGN6WEVFL3VyQVEzS0hURmhqaTRLZkRhQk43MnpJc045Q2N4RUNBeDRNeW5q?=
+ =?utf-8?B?QTlyYzVEbG9FcWVVZDIyUkthRmZSN3pQZmozTFN4WVBVUXNEZlRhaC8yWU5u?=
+ =?utf-8?B?UlhSd0I5RktBYk5heG1ZTmJtUVpNTnUxcWJvcHFvSlZQSWVVUHlUZkdPR0Zj?=
+ =?utf-8?B?MCtHOHJQMlMrOEZkR01uMzNYMWJGSEFZSjJWbFBKMWNOYzZUaEg3cWhnVXlR?=
+ =?utf-8?B?cWNNc1lWS3R0aWptcXhOVlo2WDJyYkZKSUw3UDhrMlVRQmdZYWZvV1pVM1pI?=
+ =?utf-8?B?UGYzN3JaL1hrTjFMUXQ1KzN3NldUSlM1MDF0akxxYjlsdnExTHIwY3dpYWJp?=
+ =?utf-8?B?QTV2SkFpblY1VTE1bXJiNzFTR3VYZEVyNjFRRlNDZ2tMeGVnN3ZiVCtNZll2?=
+ =?utf-8?B?WitnSWl0a3l5bGpRMlYvUzgrTnJlWGVsNWdjVVhYbnV5Vk1rcm8yYmQzS1lL?=
+ =?utf-8?B?b1BuQWN3YzhMejJTeFN4ZnBaMGo4YWpqT1JiYlR1SmRCbHlyNXJ5d0ZOTzNE?=
+ =?utf-8?B?T1N5eEM2TXBhbjFOTnFDMElVQ3RGZUQxWWtHQVorV3FCZkI4RlVSTlBnSFlO?=
+ =?utf-8?B?dmdNc0Y5R21GTHBPaUtlY0UvQ2tKWXNZS1lKUkhDUE1KM0ZUVjdKWnZyaEUy?=
+ =?utf-8?B?dXUvdytNRWl3Tml0aGd4SnRYejY0eEpiaE92b3VLT0NmdHJYODJZRlVMVDVW?=
+ =?utf-8?B?RVB3ZlN4Y3VRTVhmeFJoSm1UKzB6dVNKUXlxdHoxM1czNVR5NGRqOXI2NkdC?=
+ =?utf-8?B?SWFuMWJkdW1XK0pjZFdCWVhjWjhKYUZxU0lJRytvRjNyZkdBMzRicGRGV3dO?=
+ =?utf-8?B?MEpXVXRRejYrSDN1OFRQT2Z5WW9lRy9IUWQvcFNHd3VvTWZuZDAvR2I1aWVK?=
+ =?utf-8?B?cjM3K3owbUpKOWtvZUFmdGUzdjhieVN5TVROTjB0aXZFcGd0bitVVkJnbEdk?=
+ =?utf-8?Q?TfZtqDdMvoFX6dwwWadkbBrbt+paFSWE6GBZxStpBns3?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed216991-ad34-46fc-1bc2-08dd44422e6e
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 11:01:59.6556
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0IvLRkK+eERdcmK+h7WXCt97bqogbfbvm8sC68TNQju4BxBjzPMnHdWfMBO86wErFDa6sM6hf+6l92vNUnc4Pw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8453
 
-Add support for the Congatec Board Controller. This controller exposes
-temperature, voltage, current and fan sensors.
+Hi Juri,
 
-The available sensors list cannot be predicted. Some sensors can be
-present or not, depending the system.
-The driver has an internal list of all possible sensors, for all Congatec
-boards. The Board Controller gives to the driver its sensors list, and
-their status (active or not).
+On 16/01/2025 15:55, Juri Lelli wrote:
+> On 16/01/25 13:14, Jon Hunter wrote:
+>>
+>> On 15/01/2025 16:10, Juri Lelli wrote:
+>>> On 14/01/25 15:02, Juri Lelli wrote:
+>>>> On 14/01/25 13:52, Jon Hunter wrote:
+>>>>>
+>>>>> On 13/01/2025 09:32, Juri Lelli wrote:
+>>>>>> On 10/01/25 18:40, Jon Hunter wrote:
+>>>>>>
+>>>>>> ...
+>>>>>>
+>>>>>>> With the above I see the following ...
+>>>>>>>
+>>>>>>> [   53.919672] dl_bw_manage: cpu=5 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4
+>>>>>>> [   53.930608] dl_bw_manage: cpu=4 cap=2048 fair_server_bw=52428 total_bw=157284 dl_bw_cpus=3
+>>>>>>> [   53.941601] dl_bw_manage: cpu=3 cap=1024 fair_server_bw=52428 total_bw=104856 dl_bw_cpus=2
+>>>>>>
+>>>>>> So far so good.
+>>>>>>
+>>>>>>> [   53.952186] dl_bw_manage: cpu=2 cap=1024 fair_server_bw=52428 total_bw=576708 dl_bw_cpus=2
+>>>>>>
+>>>>>> But, this above doesn't sound right.
+>>>>>>
+>>>>>>> [   53.962938] dl_bw_manage: cpu=1 cap=0 fair_server_bw=52428 total_bw=576708 dl_bw_cpus=1
+>>>>>>> [   53.971068] Error taking CPU1 down: -16
+>>>>>>> [   53.974912] Non-boot CPUs are not disabled
+>>>>>>
+>>>>>> What is the topology of your board?
+>>>>>>
+>>>>>> Are you using any cpuset configuration for partitioning CPUs?
+>>>>>
+>>>>>
+>>>>> I just noticed that by default we do boot this board with 'isolcpus=1-2'. I
+>>>>> see that this is a deprecated cmdline argument now and I must admit I don't
+>>>>> know the history of this for this specific board. It is quite old now.
+>>>>>
+>>>>> Thierry, I am curious if you have this set for Tegra186 or not? Looks like
+>>>>> our BSP (r35 based) sets this by default.
+>>>>>
+>>>>> I did try removing this and that does appear to fix it.
+>>>>
+>>>> OK, good.
+>>>>
+>>>>> Juri, let me know your thoughts.
+>>>>
+>>>> Thanks for the additional info. I guess I could now try to repro using
+>>>> isolcpus at boot on systems I have access to (to possibly understand
+>>>> what the underlying problem is).
+>>>
+>>> I think the problem lies in the def_root_domain accounting of dl_servers
+>>> (which isolated cpus remains attached to).
+>>>
+>>> Came up with the following, of which I'm not yet fully convinced, but
+>>> could you please try it out on top of the debug patch and see how it
+>>> does with the original failing setup using isolcpus?
+>>
+>>
+>> Thanks I added the change, but suspend is still failing with this ...
+> 
+> Thanks!
+> 
+>> [  210.595431] dl_bw_manage: cpu=5 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4
+>> [  210.606269] dl_bw_manage: cpu=4 cap=2048 fair_server_bw=52428 total_bw=157284 dl_bw_cpus=3
+>> [  210.617281] dl_bw_manage: cpu=3 cap=1024 fair_server_bw=52428 total_bw=104856 dl_bw_cpus=2
+>> [  210.627205] dl_bw_manage: cpu=2 cap=1024 fair_server_bw=52428 total_bw=262140 dl_bw_cpus=2
+>> [  210.637752] dl_bw_manage: cpu=1 cap=0 fair_server_bw=52428 total_bw=262140 dl_bw_cpus=1
+>                                                                            ^
+> Different than before but still not what I expected. Looks like there
+> are conditions/path I currently cannot replicate on my setup, so more
+> thinking. Unfortunately I will be out traveling next week, so this
+> might required a bit of time.
 
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- Documentation/hwmon/cgbc-hwmon.rst |  63 ++++++++
- Documentation/hwmon/index.rst      |   1 +
- MAINTAINERS                        |   1 +
- drivers/hwmon/Kconfig              |  10 ++
- drivers/hwmon/Makefile             |   1 +
- drivers/hwmon/cgbc-hwmon.c         | 304 +++++++++++++++++++++++++++++++++++++
- 6 files changed, 380 insertions(+)
 
-diff --git a/Documentation/hwmon/cgbc-hwmon.rst b/Documentation/hwmon/cgbc-hwmon.rst
-new file mode 100644
-index 000000000000..3a5e6e6e8639
---- /dev/null
-+++ b/Documentation/hwmon/cgbc-hwmon.rst
-@@ -0,0 +1,63 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+Kernel driver cgbc-hwmon
-+========================
-+
-+Supported chips:
-+
-+ * Congatec Board Controller.
-+
-+   Prefix: 'cgbc-hwmon'
-+
-+Author: Thomas Richard <thomas.richard@bootlin.com>
-+
-+Description
-+-----------
-+
-+This driver enables monitoring support for the Congatec Board Controller.
-+This controller is embedded on the x86 SoMs of Congatec.
-+
-+Sysfs entries
-+-------------
-+
-+The following sysfs entries list contains all sensors defined in the Board
-+Controller. The available sensors in sysfs depend on the SoM and the
-+system.
-+
-+============= ======================
-+Name          Description
-+============= ======================
-+temp1_input   CPU temperature
-+temp2_input   Box temperature
-+temp3_input   Ambient temperature
-+temp4_input   Board temperature
-+temp5_input   Carrier temperature
-+temp6_input   Chipset temperature
-+temp7_input   Video temperature
-+temp8_input   Other temperature
-+temp9_input   TOPDIM temperature
-+temp10_input  BOTTOMDIM temperature
-+in0_input     CPU voltage
-+in1_input     DC Runtime voltage
-+in2_input     DC Standby voltage
-+in3_input     CMOS Battery voltage
-+in4_input     Battery voltage
-+in5_input     AC voltage
-+in6_input     Other voltage
-+in7_input     5V voltage
-+in8_input     5V Standby voltage
-+in9_input     3V3 voltage
-+in10_input    3V3 Standby voltage
-+in11_input    VCore A voltage
-+in12_input    VCore B voltage
-+in13_input    12V voltage
-+curr1_input   DC current
-+curr2_input   5V current
-+curr3_input   12V current
-+fan1_input    CPU fan
-+fan2_input    Box fan
-+fan3_input    Ambient fan
-+fan4_input    Chiptset fan
-+fan5_input    Video fan
-+fan6_input    Other fan
-+============= ======================
-diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-index 874f8fd26325..ef86489bb47c 100644
---- a/Documentation/hwmon/index.rst
-+++ b/Documentation/hwmon/index.rst
-@@ -53,6 +53,7 @@ Hardware Monitoring Kernel Drivers
-    bel-pfe
-    bpa-rs600
-    bt1-pvt
-+   cgbc-hwmon
-    chipcap2
-    coretemp
-    corsair-cpro
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa065..c85ce9deb397 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5874,6 +5874,7 @@ CONGATEC BOARD CONTROLLER MFD DRIVER
- M:	Thomas Richard <thomas.richard@bootlin.com>
- S:	Maintained
- F:	drivers/gpio/gpio-cgbc.c
-+F:	drivers/hwmon/cgbc-hwmon.c
- F:	drivers/i2c/busses/i2c-cgbc.c
- F:	drivers/mfd/cgbc-core.c
- F:	drivers/watchdog/cgbc_wdt.c
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 4cbaba15d86e..974cd532f0e2 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -463,6 +463,16 @@ config SENSORS_BT1_PVT_ALARMS
- 	  the data conversion will be periodically performed and the data will be
- 	  saved in the internal driver cache.
- 
-+config SENSORS_CGBC
-+	tristate "Congatec Board Controller Sensors"
-+	depends on MFD_CGBC
-+	help
-+	  Enable sensors support for the Congatec Board Controller. It has
-+	  temperature, voltage, current and fan sensors.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called cgbc-hwmon.
-+
- config SENSORS_CHIPCAP2
- 	tristate "Amphenol ChipCap 2 relative humidity and temperature sensor"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index b7ef0f0562d3..8af5fdbd5dff 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -59,6 +59,7 @@ obj-$(CONFIG_SENSORS_ASUS_ROG_RYUJIN)	+= asus_rog_ryujin.o
- obj-$(CONFIG_SENSORS_ATXP1)	+= atxp1.o
- obj-$(CONFIG_SENSORS_AXI_FAN_CONTROL) += axi-fan-control.o
- obj-$(CONFIG_SENSORS_BT1_PVT)	+= bt1-pvt.o
-+obj-$(CONFIG_SENSORS_CGBC)	+= cgbc-hwmon.o
- obj-$(CONFIG_SENSORS_CHIPCAP2) += chipcap2.o
- obj-$(CONFIG_SENSORS_CORETEMP)	+= coretemp.o
- obj-$(CONFIG_SENSORS_CORSAIR_CPRO) += corsair-cpro.o
-diff --git a/drivers/hwmon/cgbc-hwmon.c b/drivers/hwmon/cgbc-hwmon.c
-new file mode 100644
-index 000000000000..772f44d56ccf
---- /dev/null
-+++ b/drivers/hwmon/cgbc-hwmon.c
-@@ -0,0 +1,304 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * cgbc-hwmon - Congatec Board Controller hardware monitoring driver
-+ *
-+ * Copyright (C) 2024 Thomas Richard <thomas.richard@bootlin.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/device.h>
-+#include <linux/hwmon.h>
-+#include <linux/mfd/cgbc.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#define CGBC_HWMON_CMD_SENSOR		0x77
-+#define CGBC_HWMON_CMD_SENSOR_DATA_SIZE	0x05
-+
-+#define CGBC_HWMON_TYPE_MASK	GENMASK(6, 5)
-+#define CGBC_HWMON_ID_MASK	GENMASK(4, 0)
-+#define CGBC_HWMON_ACTIVE_BIT	BIT(7)
-+
-+struct cgbc_hwmon_sensor {
-+	enum hwmon_sensor_types type;
-+	bool active;
-+	unsigned int index;
-+	unsigned int channel;
-+	const char *label;
-+};
-+
-+struct cgbc_hwmon_data {
-+	struct cgbc_device_data *cgbc;
-+	unsigned int nb_sensors;
-+	struct cgbc_hwmon_sensor *sensors;
-+};
-+
-+enum cgbc_sensor_types {
-+	CGBC_HWMON_TYPE_TEMP = 1,
-+	CGBC_HWMON_TYPE_IN,
-+	CGBC_HWMON_TYPE_FAN
-+};
-+
-+static const char * const cgbc_hwmon_labels_temp[] = {
-+	"CPU Temperature",
-+	"Box Temperature",
-+	"Ambient Temperature",
-+	"Board Temperature",
-+	"Carrier Temperature",
-+	"Chipset Temperature",
-+	"Video Temperature",
-+	"Other Temperature",
-+	"TOPDIM Temperature",
-+	"BOTTOMDIM Temperature",
-+};
-+
-+static const struct {
-+	enum hwmon_sensor_types type;
-+	const char *label;
-+} cgbc_hwmon_labels_in[] = {
-+	{ hwmon_in, "CPU Voltage" },
-+	{ hwmon_in, "DC Runtime Voltage" },
-+	{ hwmon_in, "DC Standby Voltage" },
-+	{ hwmon_in, "CMOS Battery Voltage" },
-+	{ hwmon_in, "Battery Voltage" },
-+	{ hwmon_in, "AC Voltage" },
-+	{ hwmon_in, "Other Voltage" },
-+	{ hwmon_in, "5V Voltage" },
-+	{ hwmon_in, "5V Standby Voltage" },
-+	{ hwmon_in, "3V3 Voltage" },
-+	{ hwmon_in, "3V3 Standby Voltage" },
-+	{ hwmon_in, "VCore A Voltage" },
-+	{ hwmon_in, "VCore B Voltage" },
-+	{ hwmon_in, "12V Voltage" },
-+	{ hwmon_curr, "DC Current" },
-+	{ hwmon_curr, "5V Current" },
-+	{ hwmon_curr, "12V Current" },
-+};
-+
-+#define CGBC_HWMON_NB_IN_SENSORS	14
-+
-+static const char * const cgbc_hwmon_labels_fan[] = {
-+	"CPU Fan",
-+	"Box Fan",
-+	"Ambient Fan",
-+	"Chipset Fan",
-+	"Video Fan",
-+	"Other Fan",
-+};
-+
-+static int cgbc_hwmon_cmd(struct cgbc_device_data *cgbc, u8 index, u8 *data)
-+{
-+	u8 cmd[2] = {CGBC_HWMON_CMD_SENSOR, index};
-+
-+	return cgbc_command(cgbc, cmd, sizeof(cmd), data, CGBC_HWMON_CMD_SENSOR_DATA_SIZE, NULL);
-+}
-+
-+static int cgbc_hwmon_probe_sensors(struct device *dev, struct cgbc_hwmon_data *hwmon)
-+{
-+	struct cgbc_device_data *cgbc = hwmon->cgbc;
-+	struct cgbc_hwmon_sensor *sensor = hwmon->sensors;
-+	u8 data[CGBC_HWMON_CMD_SENSOR_DATA_SIZE], nb_sensors, i;
-+	int ret;
-+
-+	ret = cgbc_hwmon_cmd(cgbc, 0, &data[0]);
-+	if (ret)
-+		return ret;
-+
-+	nb_sensors = data[0];
-+
-+	hwmon->sensors = devm_kzalloc(dev, sizeof(*hwmon->sensors) * nb_sensors, GFP_KERNEL);
-+	sensor = hwmon->sensors;
-+
-+	for (i = 0; i < nb_sensors; i++) {
-+		enum cgbc_sensor_types type;
-+		unsigned int channel;
-+
-+		/*
-+		 * No need to request data for the first sensor.
-+		 * We got data for the first sensor when we ask the number of sensors to the Board
-+		 * Controller.
-+		 */
-+		if (i) {
-+			ret = cgbc_hwmon_cmd(cgbc, i, &data[0]);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		type = FIELD_GET(CGBC_HWMON_TYPE_MASK, data[1]);
-+		channel = FIELD_GET(CGBC_HWMON_ID_MASK, data[1]) - 1;
-+
-+		if (type == CGBC_HWMON_TYPE_TEMP && channel < ARRAY_SIZE(cgbc_hwmon_labels_temp)) {
-+			sensor->type = hwmon_temp;
-+			sensor->label = cgbc_hwmon_labels_temp[channel];
-+		} else if (type == CGBC_HWMON_TYPE_IN &&
-+			   channel < ARRAY_SIZE(cgbc_hwmon_labels_in)) {
-+			/*
-+			 * The Board Controller doesn't differentiate current and voltage sensors.
-+			 * Get the sensor type from cgbc_hwmon_labels_in[channel].type instead.
-+			 */
-+			sensor->type = cgbc_hwmon_labels_in[channel].type;
-+			sensor->label = cgbc_hwmon_labels_in[channel].label;
-+		} else if (type == CGBC_HWMON_TYPE_FAN &&
-+			   channel < ARRAY_SIZE(cgbc_hwmon_labels_fan)) {
-+			sensor->type = hwmon_fan;
-+			sensor->label = cgbc_hwmon_labels_fan[channel];
-+		} else {
-+			dev_warn(dev, "Board Controller returned an unknown sensor (type=%d, channel=%d), ignore it",
-+				 type, channel);
-+			continue;
-+		}
-+
-+		sensor->active = FIELD_GET(CGBC_HWMON_ACTIVE_BIT, data[1]);
-+		sensor->channel = channel;
-+		sensor->index = i;
-+		sensor++;
-+		hwmon->nb_sensors++;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct cgbc_hwmon_sensor *cgbc_hwmon_find_sensor(struct cgbc_hwmon_data *hwmon,
-+							enum hwmon_sensor_types type, int channel)
-+{
-+	struct cgbc_hwmon_sensor *sensor = NULL;
-+	int i;
-+
-+	/*
-+	 * The Board Controller doesn't differentiate current and voltage sensors.
-+	 * The channel value (from the Board Controller point of view) shall be computed for current
-+	 * sensors.
-+	 */
-+	if (type == hwmon_curr)
-+		channel += CGBC_HWMON_NB_IN_SENSORS;
-+
-+	for (i = 0; i < hwmon->nb_sensors; i++) {
-+		if (hwmon->sensors[i].type == type && hwmon->sensors[i].channel == channel) {
-+			sensor = &hwmon->sensors[i];
-+			break;
-+		}
-+	}
-+
-+	return sensor;
-+}
-+
-+static int cgbc_hwmon_read(struct device *dev, enum hwmon_sensor_types type, u32 attr, int channel,
-+			   long *val)
-+{
-+	struct cgbc_hwmon_data *hwmon = dev_get_drvdata(dev);
-+	struct cgbc_hwmon_sensor *sensor = cgbc_hwmon_find_sensor(hwmon, type, channel);
-+	struct cgbc_device_data *cgbc = hwmon->cgbc;
-+	u8 data[CGBC_HWMON_CMD_SENSOR_DATA_SIZE];
-+	int ret;
-+
-+	ret = cgbc_hwmon_cmd(cgbc, sensor->index, &data[0]);
-+	if (ret)
-+		return ret;
-+
-+	*val = (data[3] << 8) | data[2];
-+
-+	/*
-+	 * For the Board Controller 1lsb = 0.1 degree centigrade.
-+	 * Other units are as expected.
-+	 */
-+	if (sensor->type == hwmon_temp)
-+		*val *= 100;
-+
-+	return 0;
-+}
-+
-+static umode_t cgbc_hwmon_is_visible(const void *_data, enum hwmon_sensor_types type, u32 attr,
-+				     int channel)
-+{
-+	struct cgbc_hwmon_data *data = (struct cgbc_hwmon_data *)_data;
-+	struct cgbc_hwmon_sensor *sensor;
-+
-+	sensor = cgbc_hwmon_find_sensor(data, type, channel);
-+	if (!sensor)
-+		return 0;
-+
-+	return sensor->active ? 0444 : 0;
-+}
-+
-+static int cgbc_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type, u32 attr,
-+				  int channel, const char **str)
-+{
-+	struct cgbc_hwmon_data *hwmon = dev_get_drvdata(dev);
-+	struct cgbc_hwmon_sensor *sensor = cgbc_hwmon_find_sensor(hwmon, type, channel);
-+
-+	*str = sensor->label;
-+
-+	return 0;
-+}
-+
-+static const struct hwmon_channel_info * const cgbc_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_INPUT | HWMON_T_LABEL, HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL, HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL, HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL, HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL, HWMON_T_INPUT | HWMON_T_LABEL),
-+	HWMON_CHANNEL_INFO(in,
-+			   HWMON_I_INPUT | HWMON_I_LABEL, HWMON_I_INPUT | HWMON_I_LABEL,
-+			   HWMON_I_INPUT | HWMON_I_LABEL, HWMON_I_INPUT | HWMON_I_LABEL,
-+			   HWMON_I_INPUT | HWMON_I_LABEL, HWMON_I_INPUT | HWMON_I_LABEL,
-+			   HWMON_I_INPUT | HWMON_I_LABEL, HWMON_I_INPUT | HWMON_I_LABEL,
-+			   HWMON_I_INPUT | HWMON_I_LABEL, HWMON_I_INPUT | HWMON_I_LABEL,
-+			   HWMON_I_INPUT | HWMON_I_LABEL, HWMON_I_INPUT | HWMON_I_LABEL,
-+			   HWMON_I_INPUT | HWMON_I_LABEL, HWMON_I_INPUT | HWMON_I_LABEL),
-+	HWMON_CHANNEL_INFO(curr,
-+			   HWMON_C_INPUT | HWMON_C_LABEL, HWMON_C_INPUT | HWMON_C_LABEL,
-+			   HWMON_C_INPUT | HWMON_C_LABEL),
-+	HWMON_CHANNEL_INFO(fan,
-+			   HWMON_F_INPUT | HWMON_F_LABEL, HWMON_F_INPUT | HWMON_F_LABEL,
-+			   HWMON_F_INPUT | HWMON_F_LABEL, HWMON_F_INPUT | HWMON_F_LABEL,
-+			   HWMON_F_INPUT | HWMON_F_LABEL, HWMON_F_INPUT | HWMON_F_LABEL),
-+	NULL
-+};
-+
-+static const struct hwmon_ops cgbc_hwmon_ops = {
-+	.is_visible = cgbc_hwmon_is_visible,
-+	.read = cgbc_hwmon_read,
-+	.read_string = cgbc_hwmon_read_string,
-+};
-+
-+static const struct hwmon_chip_info cgbc_chip_info = {
-+	.ops = &cgbc_hwmon_ops,
-+	.info = cgbc_hwmon_info,
-+};
-+
-+static int cgbc_hwmon_probe(struct platform_device *pdev)
-+{
-+	struct cgbc_device_data *cgbc = dev_get_drvdata(pdev->dev.parent);
-+	struct device *dev = &pdev->dev;
-+	struct cgbc_hwmon_data *data;
-+	struct device *hwmon_dev;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->cgbc = cgbc;
-+
-+	ret = cgbc_hwmon_probe_sensors(dev, data);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to probe sensors");
-+
-+	hwmon_dev = devm_hwmon_device_register_with_info(dev, "cgbc_hwmon", data, &cgbc_chip_info,
-+							 NULL);
-+	return PTR_ERR_OR_ZERO(hwmon_dev);
-+}
-+
-+static struct platform_driver cgbc_hwmon_driver = {
-+	.driver = {
-+		.name = "cgbc-hwmon",
-+	},
-+	.probe = cgbc_hwmon_probe,
-+};
-+
-+module_platform_driver(cgbc_hwmon_driver);
-+
-+MODULE_AUTHOR("Thomas Richard <thomas.richard@bootlin.com>");
-+MODULE_DESCRIPTION("Congatec Board Controller Hardware Monitoring Driver");
-+MODULE_LICENSE("GPL");
+I see that this is now in the mainline and our board is still failing to 
+suspend. Let me know if there is anything else you need me to test.
+
+Thanks
+Jon
 
 -- 
-2.39.5
+nvpublic
 
