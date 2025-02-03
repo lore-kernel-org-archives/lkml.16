@@ -1,41 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8451FF1CE
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:16:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E823F204595
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:16:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738592207; cv=none; b=NrvimI8Jiu00NeQ94AqKGREkkCtAOuJcWZxiVELiVszE4YvCyCa0rvm59/q1GI5hWLEjs6e5IS2zpVWgcavKDXj1PcexZp1KTWwT3Od71tYHFHWqx7EBgtp9kJ5rrS6cVQj8CbRoO9HLOvAUjoum0JDq0Gf1Op5GkIDuZPlErWU=
+	t=1738592208; cv=none; b=UTXrJNaq5r3NlfP785GPK0Ii4l8mrZp+2z1eZO3y8vXSRhMNbdDkogpkbc0wguudNMmOpdLZSiDC2D+tLIaGSVE5DesnG5a+p8mqxgJ76CxURgL6Cu6QsL4C1/H5cu71hBRQ1dAnCCX3HjQAeIWNimlREsE8zzamGaLWpPdkD7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738592207; c=relaxed/simple;
-	bh=0GS4tNkkuf9vqpDi2bSkhhgFUZfoBbN3HJcoaeptZ2U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=thMsmJ2SS8Wb0TshlA76KXjwoABtHF7M/ljviX7gGrpllf2Xl1KGe11/a7uKeXiB4NSWCO/AwyqidKX4VWjuDg3+wphWL/WtHEExcrXZtK3TBPxyOyEK082EB6xWiXyi0870R5sODZrJO1JtmLXNqOx/Bgi3Ai4W3esa/dYHwl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f23Z3Pe5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VJN1wLsI; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1738592208; c=relaxed/simple;
+	bh=ra2thAmU8ozH0ETw5KywNHj7GHiO9m0XjN0qzhTk/sk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K8uObDItJBLa8v9esbGrhWMvvLDRtOZYv6EE/QSfJbZDdWanCVYvpj3vfLWsfgO1US9qWNxT6dtZ4izgPbSR7w2Xx4QWOP6J66VcRxWk77axi25Of4iLkoJVbInESIFlWecEVg7mK4ApQVnwWFejS6Wbz6X88eoRzJNhD6Ep2Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LF3l01ac; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iC4/nQxu; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f23Z3Pe5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VJN1wLsI"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LF3l01ac";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iC4/nQxu"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738592204;
+	s=2020; t=1738592205;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=nZefVyW1J+rhfeQZZFAPrMeN6Sk+norNJSsEYrrvtGc=;
-	b=f23Z3Pe56VOCo7y12XgaKmVaTtC3uTe2QVWIzRs6qk7WfesolpBlnRexVgPhokNIOkNUnE
-	DqBLhR1eZn1JHxdMTPloS1GrDXE1plk+FYYSL809BGMFe2zvWY7VulfbkTMKYQZUiTOMU/
-	PpiaEyrcjcIGsJUT/QbWLIgEvVDA/2dCbG2pBe8lCEBH/EyEB8XkdI0VPLdSsk97m/kBAk
-	7CAbgUpkt7kL+3hmyUsNUGbdlYbmtKU8TP5iSvjxhIEIqBFzr57LM7cgGFPqyxLQ6/l0Sw
-	Zbr3SfqSUKII4yFeCh7R4Plk0dBLZ1quCjqkFstOsmygRukwRt2Q2jHWXuHc5Q==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V13yIzrzFM11r3zZVa4A30yIhnkQb3enn/TKqKVG4ak=;
+	b=LF3l01ac2jy7YDc+QsiD+O8T3fpumEfH79CHIM+tyyWq9Jqn8mUe9Y4kj75D9oCluP0FOv
+	Ev6FVaNoKLMvAFIUppvBNjeo5b1gQjM0LM/w8DRVA5SXvoiCXZxExO7tEoJygFDHT0VOVk
+	tHC/TUcEctVcNISjcQdYGUdr58NoG4aT2y/yqLl4tCHKmSf7OY7TKePuGhvx3a0/02VVjt
+	zQNiDBMCeJApX+VCI34Zg+66/ab1/kRQ3g2YE1LvcPgJz1yIupONAMAh8Q/ZtJi5tR2Www
+	ou+O4drjAGczJVpvCI5WI9s62+WuIf/2YW13tGHXXvF+S0aZe268A34RUNQcFQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738592204;
+	s=2020e; t=1738592205;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=nZefVyW1J+rhfeQZZFAPrMeN6Sk+norNJSsEYrrvtGc=;
-	b=VJN1wLsIMRvsUQg+Hmbonc72buD2PpPYDxuG475mqgBPfLQe3GJjzu9kPbR3+2YPbMsDzb
-	HJ1mb6PtNKPEJxCA==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V13yIzrzFM11r3zZVa4A30yIhnkQb3enn/TKqKVG4ak=;
+	b=iC4/nQxuXkp6ffIi9ljHP8b1U4bQvbWxiMmAGkIUNMxGIyb4IJUaOhfDdR0Z0qYHXsA0k1
+	dB4ofBg7whIYbdBQ==
 To: linux-kernel@vger.kernel.org,
 	linux-rt-devel@lists.linux.dev
 Cc: Ben Segall <bsegall@google.com>,
@@ -51,64 +54,55 @@ Cc: Ben Segall <bsegall@google.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v2 0/9] preempt: Add a generic function to return the preemption string.
-Date: Mon,  3 Feb 2025 15:16:23 +0100
-Message-ID: <20250203141632.440554-1-bigeasy@linutronix.de>
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v2 2/9] lib/dump_stack: Use preempt_model_str().
+Date: Mon,  3 Feb 2025 15:16:25 +0100
+Message-ID: <20250203141632.440554-3-bigeasy@linutronix.de>
+In-Reply-To: <20250203141632.440554-1-bigeasy@linutronix.de>
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-The individual architectures often add the preemption model to the begin
-of the backtrace. This is the case on X86 or ARM64 for the "die" case
-but not for regular warning. With the addition of DYNAMIC_PREEMPT for
-PREEMPT_RT we end up with CONFIG_PREEMPT and CONFIG_PREEMPT_RT set
-simultaneously. That means that everyone who tried to add that piece of
-information gets it wrong for PREEMPT_RT because PREEMPT is checked
-first.
+Use preempt_model_str() to print the current preemption model. Use
+pr_warn() instead of printk() to pass a loglevel. This makes it part of
+generic WARN/ BUG traces.
 
-This series adds a generic helper which is used by
-dump_stack_print_info() and other architectures which don't use the
-function and provide this information on their own.
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ lib/dump_stack.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-RFC=E2=80=A6v2 https://lore.kernel.org/all/20241206113431.Q-VXMlru@linutron=
-ix.de/
-  - Split into individual patches.
-  - Implement preempt_model_str() based on feedback by Peter Zijlstra
-    and Steven Rostedt.
-
-Sebastian
-
-Sebastian Andrzej Siewior (9):
-  sched: Add a generic function to return the preemption string.
-  lib/dump_stack: Use preempt_model_str().
-  arm: Rely on generic printing of preemption model.
-  arm64: Rely on generic printing of preemption model.
-  powerpc: Use preempt_model_str().
-  s390: Rely on generic printing of preemption model.
-  x86: Rely on generic printing of preemption model.
-  xtensa: Use preempt_model_str().
-  tracing: Use preempt_model_str().
-
- arch/arm/kernel/traps.c      | 11 ++-------
- arch/arm64/kernel/traps.c    | 10 +-------
- arch/powerpc/kernel/traps.c  |  4 +--
- arch/s390/kernel/dumpstack.c |  9 ++-----
- arch/x86/kernel/dumpstack.c  |  9 ++-----
- arch/xtensa/kernel/traps.c   |  6 +----
- include/linux/preempt.h      |  2 ++
- kernel/sched/core.c          | 47 ++++++++++++++++++++++++++++++++++++
- kernel/sched/debug.c         | 10 +++++---
- kernel/sched/sched.h         |  1 +
- kernel/trace/trace.c         |  7 +-----
- lib/dump_stack.c             |  4 +--
- 12 files changed, 69 insertions(+), 51 deletions(-)
-
+diff --git a/lib/dump_stack.c b/lib/dump_stack.c
+index 388da1aea14a5..425556f3fd018 100644
+--- a/lib/dump_stack.c
++++ b/lib/dump_stack.c
+@@ -54,7 +54,7 @@ void __init dump_stack_set_arch_desc(const char *fmt, ...)
+  */
+ void dump_stack_print_info(const char *log_lvl)
+ {
+-	printk("%sCPU: %d UID: %u PID: %d Comm: %.20s %s%s %s %.*s" BUILD_ID_FMT =
+"\n",
++	pr_warn("%sCPU: %d UID: %u PID: %d Comm: %.20s %s%s %s %.*s %s " BUILD_ID=
+_FMT "\n",
+ 	       log_lvl, raw_smp_processor_id(),
+ 	       __kuid_val(current_real_cred()->euid),
+ 	       current->pid, current->comm,
+@@ -62,7 +62,7 @@ void dump_stack_print_info(const char *log_lvl)
+ 	       print_tainted(),
+ 	       init_utsname()->release,
+ 	       (int)strcspn(init_utsname()->version, " "),
+-	       init_utsname()->version, BUILD_ID_VAL);
++	       init_utsname()->version, preempt_model_str(), BUILD_ID_VAL);
+=20
+ 	if (get_taint())
+ 		printk("%s%s\n", log_lvl, print_tainted_verbose());
 --=20
 2.47.2
 
