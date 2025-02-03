@@ -1,265 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677BF1C5D62;
-	Mon,  3 Feb 2025 11:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCAFE20102A;
+	Mon,  3 Feb 2025 11:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738581471; cv=none; b=uk592kNY237Fs1SMUwSUqksqUTOijrUSSJrnsZjhjTaMwtBn97mdUnB+nZYY8qCtLl2fs5UszamTzaEWuvGz73NHxRi5CXmUIaXYVqbDKiB73RxkfKvi9HseHeRaus5ET2Jrn4uOGvQHZkTJ9q50A3ftkQYYCVlHMWiqn1t20oI=
+	t=1738581493; cv=none; b=Wpd732fJfm8vMb5Is65iU6XBBj+Ts3De2TP4ENRpJaYve9ky8QDXvVvxon+ZeQX9xp7mMiUF7pss2+i4LM4lHmmIVoNRN02OZzT8D0YaQatUvOi2ylgy3cODLdLjg+DiUIwHIzaMY2ZK41nwtMHCfRW9Myq5tOY6wyjMx+fpry8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738581471; c=relaxed/simple;
-	bh=4ST/Nu7Je5dP1VJQhsvA+K7aN37Bp+S43UwWoWS7b3o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RSJN5v/cXzueEB/i/ycYZsTkCDFxtoZgf8Qvojp91V1y3tZC2SedS2iVCy38bqqTelY+5oOgcLXDEP98+3JXvRZt6NInK1/Prwm7lvaRaRHTuMkyBVE2lN1ZCg/4uizwBAUDxx+rgtq3wPWnmEoOdzOw7S03+SN4RnI5IGhcSus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ISCGHttS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ISCGHttS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66087C4CED2;
-	Mon,  3 Feb 2025 11:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738581470;
-	bh=4ST/Nu7Je5dP1VJQhsvA+K7aN37Bp+S43UwWoWS7b3o=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ISCGHttSKcflJbJXB768kbYmWAaqUPa0RCf1+IusiH4/H/w65aexcvdlMDrlET+IZ
-	 d7jeMCl/UOmNMrqVmQoLl97+5pg3N7iWbSM1x+t1w1SrGPwTJyQ/t2kNPkuTHq2r9n
-	 sW4sGbOozF9/6X/psEZInPeZH9lO7zCeS/EqLUbjuFoOsQiI66PBes8uQI8VdeXveq
-	 VW72ZMOAOjtrC+u5gSLbb87nn5bOjDhxImPN3IgzPMnJV6B7vlKvG4pXAGGLh0meVi
-	 0SiMfSbERjhzRLsPwi7UxNtlMh4YKJVXyt3Cu0i+u2IRGPoGk25IENGq0gR+H/TdaE
-	 61Z59gBYRuiPA==
-Message-ID: <18b6d0b07d1c108f3c6ae5597136107768ea05e7.camel@kernel.org>
-Subject: Re: [PATCH] SUNRPC: Remove unused make_checksum
-From: Jeff Layton <jlayton@kernel.org>
-To: linux@treblig.org, trondmy@kernel.org, anna@kernel.org, 
-	chuck.lever@oracle.com, neilb@suse.de, okorniev@redhat.com,
- Dai.Ngo@oracle.com, 	tom@talpey.com
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, 	horms@kernel.org, linux-nfs@vger.kernel.org,
- netdev@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Mon, 03 Feb 2025 06:17:48 -0500
-In-Reply-To: <20250203020743.280722-1-linux@treblig.org>
-References: <20250203020743.280722-1-linux@treblig.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1738581493; c=relaxed/simple;
+	bh=Q0vtxORNYakjV7JbkbI4UxGVRUQsNGTkfnbh8NdEeD8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b+E6CDW5PXfK0pTXAgqSGkBHQpD/oF5dRwKHgYknYEdoZhMp3NixgLd7dyT6SvqZcVfvo7IY2E4wUMbMjxAcIU5EdY+TDxQ9zRW0snhc+Dlu8ypFmRp5MY0P0lAxFqFUTkALq86BfjkDF0A3eDDlEhCL45Nj76PoExL6zgyXcO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EA5811FB;
+	Mon,  3 Feb 2025 03:18:34 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 457093F58B;
+	Mon,  3 Feb 2025 03:18:07 -0800 (PST)
+Message-ID: <d499c3e7-cc0f-467a-8401-bc53b70259f7@arm.com>
+Date: Mon, 3 Feb 2025 11:18:06 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 12/43] arm64: RME: Allocate/free RECs to match vCPUs
+To: Steven Price <steven.price@arm.com>, Gavin Shan <gshan@redhat.com>,
+ kvm@vger.kernel.org, kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20241212155610.76522-1-steven.price@arm.com>
+ <20241212155610.76522-13-steven.price@arm.com>
+ <9a543b6f-5487-4159-89fb-73d9b6749a01@redhat.com>
+ <9174bc24-6217-4663-a370-291d4790a212@arm.com>
+Content-Language: en-US
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <9174bc24-6217-4663-a370-291d4790a212@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2025-02-03 at 02:07 +0000, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->=20
-> Commit ec596aaf9b48 ("SUNRPC: Remove code behind
-> CONFIG_RPCSEC_GSS_KRB5_SIMPLIFIED") was the last user of the
-> make_checksum() function.
->=20
-> Remove it.
->=20
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->  net/sunrpc/auth_gss/gss_krb5_crypto.c   | 90 -------------------------
->  net/sunrpc/auth_gss/gss_krb5_internal.h |  4 --
->  2 files changed, 94 deletions(-)
->=20
-> diff --git a/net/sunrpc/auth_gss/gss_krb5_crypto.c b/net/sunrpc/auth_gss/=
-gss_krb5_crypto.c
-> index 7e09b15c5538..8f2d65c1e831 100644
-> --- a/net/sunrpc/auth_gss/gss_krb5_crypto.c
-> +++ b/net/sunrpc/auth_gss/gss_krb5_crypto.c
-> @@ -148,96 +148,6 @@ checksummer(struct scatterlist *sg, void *data)
->  	return crypto_ahash_update(req);
->  }
-> =20
-> -/*
-> - * checksum the plaintext data and hdrlen bytes of the token header
-> - * The checksum is performed over the first 8 bytes of the
-> - * gss token header and then over the data body
-> - */
-> -u32
-> -make_checksum(struct krb5_ctx *kctx, char *header, int hdrlen,
-> -	      struct xdr_buf *body, int body_offset, u8 *cksumkey,
-> -	      unsigned int usage, struct xdr_netobj *cksumout)
-> -{
-> -	struct crypto_ahash *tfm;
-> -	struct ahash_request *req;
-> -	struct scatterlist              sg[1];
-> -	int err =3D -1;
-> -	u8 *checksumdata;
-> -	unsigned int checksumlen;
-> -
-> -	if (cksumout->len < kctx->gk5e->cksumlength) {
-> -		dprintk("%s: checksum buffer length, %u, too small for %s\n",
-> -			__func__, cksumout->len, kctx->gk5e->name);
-> -		return GSS_S_FAILURE;
-> -	}
-> -
-> -	checksumdata =3D kmalloc(GSS_KRB5_MAX_CKSUM_LEN, GFP_KERNEL);
-> -	if (checksumdata =3D=3D NULL)
-> -		return GSS_S_FAILURE;
-> -
-> -	tfm =3D crypto_alloc_ahash(kctx->gk5e->cksum_name, 0, CRYPTO_ALG_ASYNC)=
-;
-> -	if (IS_ERR(tfm))
-> -		goto out_free_cksum;
-> -
-> -	req =3D ahash_request_alloc(tfm, GFP_KERNEL);
-> -	if (!req)
-> -		goto out_free_ahash;
-> -
-> -	ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP, NULL, NULL);
-> -
-> -	checksumlen =3D crypto_ahash_digestsize(tfm);
-> -
-> -	if (cksumkey !=3D NULL) {
-> -		err =3D crypto_ahash_setkey(tfm, cksumkey,
-> -					  kctx->gk5e->keylength);
-> -		if (err)
-> -			goto out;
-> -	}
-> -
-> -	err =3D crypto_ahash_init(req);
-> -	if (err)
-> -		goto out;
-> -	sg_init_one(sg, header, hdrlen);
-> -	ahash_request_set_crypt(req, sg, NULL, hdrlen);
-> -	err =3D crypto_ahash_update(req);
-> -	if (err)
-> -		goto out;
-> -	err =3D xdr_process_buf(body, body_offset, body->len - body_offset,
-> -			      checksummer, req);
-> -	if (err)
-> -		goto out;
-> -	ahash_request_set_crypt(req, NULL, checksumdata, 0);
-> -	err =3D crypto_ahash_final(req);
-> -	if (err)
-> -		goto out;
-> -
-> -	switch (kctx->gk5e->ctype) {
-> -	case CKSUMTYPE_RSA_MD5:
-> -		err =3D krb5_encrypt(kctx->seq, NULL, checksumdata,
-> -				   checksumdata, checksumlen);
-> -		if (err)
-> -			goto out;
-> -		memcpy(cksumout->data,
-> -		       checksumdata + checksumlen - kctx->gk5e->cksumlength,
-> -		       kctx->gk5e->cksumlength);
-> -		break;
-> -	case CKSUMTYPE_HMAC_SHA1_DES3:
-> -		memcpy(cksumout->data, checksumdata, kctx->gk5e->cksumlength);
-> -		break;
-> -	default:
-> -		BUG();
-> -		break;
-> -	}
-> -	cksumout->len =3D kctx->gk5e->cksumlength;
-> -out:
-> -	ahash_request_free(req);
-> -out_free_ahash:
-> -	crypto_free_ahash(tfm);
-> -out_free_cksum:
-> -	kfree(checksumdata);
-> -	return err ? GSS_S_FAILURE : 0;
-> -}
-> -
->  /**
->   * gss_krb5_checksum - Compute the MAC for a GSS Wrap or MIC token
->   * @tfm: an initialized hash transform
-> diff --git a/net/sunrpc/auth_gss/gss_krb5_internal.h b/net/sunrpc/auth_gs=
-s/gss_krb5_internal.h
-> index 0bda0078d7d8..8769e9e705bf 100644
-> --- a/net/sunrpc/auth_gss/gss_krb5_internal.h
-> +++ b/net/sunrpc/auth_gss/gss_krb5_internal.h
-> @@ -155,10 +155,6 @@ static inline int krb5_derive_key(struct krb5_ctx *k=
-ctx,
-> =20
->  void krb5_make_confounder(u8 *p, int conflen);
-> =20
-> -u32 make_checksum(struct krb5_ctx *kctx, char *header, int hdrlen,
-> -		  struct xdr_buf *body, int body_offset, u8 *cksumkey,
-> -		  unsigned int usage, struct xdr_netobj *cksumout);
-> -
->  u32 gss_krb5_checksum(struct crypto_ahash *tfm, char *header, int hdrlen=
-,
->  		      const struct xdr_buf *body, int body_offset,
->  		      struct xdr_netobj *cksumout);
-> --=20
-> 2.48.1
->=20
+On 30/01/2025 16:40, Steven Price wrote:
+> On 29/01/2025 04:50, Gavin Shan wrote:
+>> On 12/13/24 1:55 AM, Steven Price wrote:
+>>> The RMM maintains a data structure known as the Realm Execution Context
+>>> (or REC). It is similar to struct kvm_vcpu and tracks the state of the
+>>> virtual CPUs. KVM must delegate memory and request the structures are
+>>> created when vCPUs are created, and suitably tear down on destruction.
+>>>
+>>> RECs must also be supplied with addition pages - auxiliary (or AUX)
+>>> granules - for storing the larger registers state (e.g. for SVE). The
+>>> number of AUX granules for a REC depends on the parameters with which
+>>> the Realm was created - the RMM makes this information available via the
+>>> RMI_REC_AUX_COUNT call performed after creating the Realm Descriptor
+>>> (RD).
+>>>
+>>> Note that only some of register state for the REC can be set by KVM, the
+>>> rest is defined by the RMM (zeroed). The register state then cannot be
+>>> changed by KVM after the REC is created (except when the guest
+>>> explicitly requests this e.g. by performing a PSCI call). The RMM also
+>>> requires that the VMM creates RECs in ascending order of the MPIDR.
+>>>
+>>> See Realm Management Monitor specification (DEN0137) for more
+>>> information:
+>>> https://developer.arm.com/documentation/den0137/
+>>>
+>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>> ---
+>>> Changes since v5:
+>>>    * Separate the concept of vcpu_is_rec() and
+>>>      kvm_arm_vcpu_rec_finalized() by using the KVM_ARM_VCPU_REC feature as
+>>>      the indication that the VCPU is a REC.
+>>> Changes since v2:
+>>>    * Free rec->run earlier in kvm_destroy_realm() and adapt to previous
+>>> patches.
+>>> ---
+>>>    arch/arm64/include/asm/kvm_emulate.h |   7 ++
+>>>    arch/arm64/include/asm/kvm_host.h    |   3 +
+>>>    arch/arm64/include/asm/kvm_rme.h     |  18 ++++
+>>>    arch/arm64/kvm/arm.c                 |   9 ++
+>>>    arch/arm64/kvm/reset.c               |  11 ++
+>>>    arch/arm64/kvm/rme.c                 | 144 +++++++++++++++++++++++++++
+>>>    6 files changed, 192 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/
+>>> include/asm/kvm_emulate.h
+>>> index 27f54a7778aa..ec2b6d9c9c07 100644
+>>> --- a/arch/arm64/include/asm/kvm_emulate.h
+>>> +++ b/arch/arm64/include/asm/kvm_emulate.h
+>>> @@ -722,7 +722,14 @@ static inline bool kvm_realm_is_created(struct
+>>> kvm *kvm)
+>>>      static inline bool vcpu_is_rec(struct kvm_vcpu *vcpu)
+>>>    {
+>>> +    if (static_branch_unlikely(&kvm_rme_is_available))
+>>> +        return vcpu_has_feature(vcpu, KVM_ARM_VCPU_REC);
+>>>        return false;
+>>>    }
+>>>    
+>>
+>> It seems the check on kvm_rme_is_available is unnecessary because
+>> KVM_ARM_VCPU_REC
+>> is possible to be true only when kvm_rme_is_available is true.
+> 
+> Similar to a previous patch - the check of the static key is to avoid
+> overhead on systems without RME.
+> 
+>>> +static inline bool kvm_arm_vcpu_rec_finalized(struct kvm_vcpu *vcpu)
+>>> +{
+>>> +    return vcpu->arch.rec.mpidr != INVALID_HWID;
+>>> +}
+>>> +
+>>>    #endif /* __ARM64_KVM_EMULATE_H__ */
+>>
+>> I would suggest to rename to kvm_arm_rec_finalized() since vCPU and REC are
+>> similar objects at the same level. It'd better to avoid duplicate object
+>> name reference in the function name.
+> 
+> Ack
+> 
+>>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/
+>>> asm/kvm_host.h
+>>> index 8482638dce3b..220195c727ef 100644
+>>> --- a/arch/arm64/include/asm/kvm_host.h
+>>> +++ b/arch/arm64/include/asm/kvm_host.h
+>>> @@ -789,6 +789,9 @@ struct kvm_vcpu_arch {
+>>>          /* Per-vcpu CCSIDR override or NULL */
+>>>        u32 *ccsidr;
+>>> +
+>>> +    /* Realm meta data */
+>>> +    struct realm_rec rec;
+>>>    };
+>>>      /*
+>>> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/
+>>> asm/kvm_rme.h
+>>> index 32bdedf1d866..62d4a63d3035 100644
+>>> --- a/arch/arm64/include/asm/kvm_rme.h
+>>> +++ b/arch/arm64/include/asm/kvm_rme.h
+>>> @@ -6,6 +6,7 @@
+>>>    #ifndef __ASM_KVM_RME_H
+>>>    #define __ASM_KVM_RME_H
+>>>    +#include <asm/rmi_smc.h>
+>>>    #include <uapi/linux/kvm.h>
+>>>      /**
+>>> @@ -65,6 +66,21 @@ struct realm {
+>>>        unsigned int ia_bits;
+>>>    };
+>>>    +/**
+>>> + * struct realm_rec - Additional per VCPU data for a Realm
+>>> + *
+>>> + * @mpidr: MPIDR (Multiprocessor Affinity Register) value to identify
+>>> this VCPU
+>>> + * @rec_page: Kernel VA of the RMM's private page for this REC
+>>> + * @aux_pages: Additional pages private to the RMM for this REC
+>>> + * @run: Kernel VA of the RmiRecRun structure shared with the RMM
+>>> + */
+>>> +struct realm_rec {
+>>> +    unsigned long mpidr;
+>>> +    void *rec_page;
+>>> +    struct page *aux_pages[REC_PARAMS_AUX_GRANULES];
+>>> +    struct rec_run *run;
+>>> +};
+>>> +
+>>>    void kvm_init_rme(void);
+>>>    u32 kvm_realm_ipa_limit(void);
+>>>    @@ -72,6 +88,8 @@ int kvm_realm_enable_cap(struct kvm *kvm, struct
+>>> kvm_enable_cap *cap);
+>>>    int kvm_init_realm_vm(struct kvm *kvm);
+>>>    void kvm_destroy_realm(struct kvm *kvm);
+>>>    void kvm_realm_destroy_rtts(struct kvm *kvm, u32 ia_bits);
+>>> +int kvm_create_rec(struct kvm_vcpu *vcpu);
+>>> +void kvm_destroy_rec(struct kvm_vcpu *vcpu);
+>>>      #define RMM_RTT_BLOCK_LEVEL    2
+>>>    #define RMM_RTT_MAX_LEVEL    3
+>>> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+>>> index 73016e1e0067..2d97147651be 100644
+>>> --- a/arch/arm64/kvm/arm.c
+>>> +++ b/arch/arm64/kvm/arm.c
+>>> @@ -525,6 +525,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>>>        /* Force users to call KVM_ARM_VCPU_INIT */
+>>>        vcpu_clear_flag(vcpu, VCPU_INITIALIZED);
+>>>    +    vcpu->arch.rec.mpidr = INVALID_HWID;
+>>> +
+>>>        vcpu->arch.mmu_page_cache.gfp_zero = __GFP_ZERO;
+>>>          /* Set up the timer */
+>>> @@ -1467,6 +1469,9 @@ static unsigned long
+>>> system_supported_vcpu_features(void)
+>>>        if (!cpus_have_final_cap(ARM64_HAS_NESTED_VIRT))
+>>>            clear_bit(KVM_ARM_VCPU_HAS_EL2, &features);
+>>>    +    if (!static_branch_unlikely(&kvm_rme_is_available))
+>>> +        clear_bit(KVM_ARM_VCPU_REC, &features);
+>>> +
+>>>        return features;
+>>>    }
+>>>    @@ -1506,6 +1511,10 @@ static int
+>>> kvm_vcpu_init_check_features(struct kvm_vcpu *vcpu,
+>>>        if (test_bit(KVM_ARM_VCPU_HAS_EL2, &features))
+>>>            return -EINVAL;
+>>>    +    /* RME is incompatible with AArch32 */
+>>> +    if (test_bit(KVM_ARM_VCPU_REC, &features))
+>>> +        return -EINVAL;
+>>> +
+>>>        return 0;
+>>>    }
+>>>    
+>>
+>> One corner case seems missed in kvm_vcpu_init_check_features(). It's
+>> allowed to
+>> initialize a vCPU with REC feature even kvm_is_realm(kvm) is false.
+>> Hopefully,
+>> I didn't miss something.
+> 
+> Ah, yes good point. I'll pass a kvm pointer to
+> kvm_vcpu_init_check_features() and use kvm_is_realm() in there.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+nit: kvm is available from the VCPU via vcpu->kvm
+
+Cheers
+Suzuki
+
+
