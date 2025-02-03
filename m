@@ -1,177 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3035F2080DF
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02282080F8
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738594153; cv=none; b=l2oqKUI9KsobBO2KqsgsJz17pZnJbrCFs3w5quQ4u6wdIlLLIqXAuGeGU7GZh6c5r471EDz2t4LcNtVLXKQgFWqfhakXnXgfa0RD/C4TF9jg7t2LdFhzC8b6cEU7A5O+Fhp8efa1SG4m+7J8tpFonvdFrTCNPupcrqtQT6s/cLU=
+	t=1738594284; cv=none; b=e7Z13WMzD6pknd2jWSa2uDjimsPIlCoTJppHClbE3GPW2VNNIHyryUQeDCw3cahEQCZnFMOEb4A2B2Xw3xPOINP+3SZ0kuWYXv1sLFmCjvhpZmjxDzyPQHHH/mhCD+GayYRdD8EFjHbVmNY+Xiu9xV1xW34l3DMucHAva47O5DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738594153; c=relaxed/simple;
-	bh=15kWMmNxkUMTSvkiTnVBrfsxV44/Ms3rMk3fOE2f0Q8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C8Uc9zAzMikyMwSqtuujehC+lm78G4yVaL2rKNdfMhanEGoaKndhlphjP+Fh83SD1Chwz8rAjJOx1e9ZaC215kvj4vTP03nokT870cze+y/izcV5K7uF8ZMPXWF44S31UeXD3luVg8RNmbVOAGl1UO0PLAFd8tixAuWnae/GGKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X6hVvvuw; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1738594284; c=relaxed/simple;
+	bh=uc9jPXSOkJumH2MlKMyRP4Ub4Dtbc0RCc9o6JV0zI/I=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=m5KizBJzXo7EaykSO9MC8MvtGEa+VvAAuGVyVV+pYPmv+bMSZFaUiNpJ1BasWi9ZyQ0/KORuBwNnsEzHUD/G/gkc644PgMUAoIuniF752XIqeWH6rpdkQMTz1fjhYQmul9/jFohipL7rdO1YkLxhnC1vhW23Lztc78yV1LaAIu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aZwPak+4; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X6hVvvuw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aZwPak+4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738594149;
+	s=mimecast20190719; t=1738594282;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=e4CveGpWscXAPpXhsgoWdG7ssIIW1D0dKJfj/YwXZHk=;
-	b=X6hVvvuwkzarKtlFJ9Cl0hZ4huY19WkI6v56nChwB/woNO6BIvyUOqWP7MVbCipWmCO8fs
-	e+xFSGXVmIxgsrNbA6UkKUViRgDbz+jdnHebSCg2C7+Vw4+RoPyHiUCGZf8LF0a8Ysa2uu
-	AalC/rS5IPRWNc1FhLGvSKF8uRYtcwQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-520-H6hNJjlkP9KwFhEiCHBS9g-1; Mon, 03 Feb 2025 09:49:05 -0500
-X-MC-Unique: H6hNJjlkP9KwFhEiCHBS9g-1
-X-Mimecast-MFC-AGG-ID: H6hNJjlkP9KwFhEiCHBS9g
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-385e3cbf308so1778814f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:49:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738594144; x=1739198944;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e4CveGpWscXAPpXhsgoWdG7ssIIW1D0dKJfj/YwXZHk=;
-        b=RJGKVUHMhuqm6hkpksLUxRpLHhMi5Xfe2lwNuqPZBpOYDSszFzFfDbxtugj4TOhv26
-         i8hIEkH2NA0UTw7HyIqUPOBXigGPpnEeBVlo+f7DDOg1aqYGy8o2MnWyyTPHx1TzmNsq
-         3yau+IYLzVh8wUX4hTysOJeHjxsJrWN39AYVID411dao4r/iiQak/+TNX9zFlWEBgSQc
-         zseQW7GgyHcPyx3r1W8b3fbXCpbPktc19ogPbwq4KzkEiIQmdjhxrvYnNLgu+plOPkv2
-         CcUaEAQjDqxw7hlmpYggv+bseQCoYOe9tZTV+GR5m4ALTKXK1stK2JS5HUotl3VJPPv/
-         w9Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVYIX5SAoEV0o09AtFBk2EB3Smkj12qxpVOzbKEo9pSpjRrvWgtspD6/EDmjFmaGk3v6Tq6kw3gF33vMg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4sI8mXIeX1bIE5JNKFcpu/fWMrPPH3zpHjUKx88XbPmb/MPA7
-	/J80ct05s/yrhbDYfjtzOKJEh3DyCtLkxkvpjhj4m+VM/bsG4TW7s08fh+x+ykaItzi6HR1vdn5
-	Zx44h+mUDBszWZFOi3MhCMses4uV+QqHMrHQRfD2kTUtPBWhuvhcMG4EB5cIx+g==
-X-Gm-Gg: ASbGncs8H5fCwGdwM2kk1+S+mbRv0/85rxJ3iSIhJAT5t7+p/28OwqwwXFi/PHJ0JrN
-	8uST4sSGEDTRegmVTLv4NvCJbG4lWpfO6VrbtmnnERY0oZvaTqb/w5oRAfoaxgLkZq2Kj+Z5RKT
-	87hY+kKniKWKUSODdt4JR/I14Omftai/GIlPQ6BzxNnEyvoThoz3AHK6VtqnHzo90GHJ10uPsgz
-	7IGDS8xhgn+Lwmpjsf25O9CGrPplS3GWE3e4BPQw/vEhrrUmkgXqKgWcx2CmHe2ZMsHsPu0w64=
-X-Received: by 2002:a05:6000:2a9:b0:385:fbb7:672d with SMTP id ffacd0b85a97d-38c5209753cmr17471719f8f.52.1738594143828;
-        Mon, 03 Feb 2025 06:49:03 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHFyFH+M2Te1TzwrsPgiAkNfzpyODrQhYKLHyFrAPwNqv4qZzpsT+b1HGtHLK7rKOHLDFMakQ==
-X-Received: by 2002:a05:6000:2a9:b0:385:fbb7:672d with SMTP id ffacd0b85a97d-38c5209753cmr17471694f8f.52.1738594143415;
-        Mon, 03 Feb 2025 06:49:03 -0800 (PST)
-Received: from redhat.com ([2a02:14f:1f2:ac69:6791:4264:88f3:ab93])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e244f0d2sm160681555e9.30.2025.02.03.06.48.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 06:49:02 -0800 (PST)
-Date: Mon, 3 Feb 2025 09:48:56 -0500
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Eric Auger <eauger@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Zhenzhong Duan <zhenzhong.duan@intel.com>,
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Hongyu Ning <hongyu.ning@linux.intel.com>
-Subject: Re: [PATCH] virtio: Remove virtio devices on device_shutdown()
-Message-ID: <20250203094700-mutt-send-email-mst@kernel.org>
-References: <20240808075141.3433253-1-kirill.shutemov@linux.intel.com>
- <cc7312ca-2745-48a5-a5ac-9ee1d1c4bee0@redhat.com>
+	bh=263/793DicuReYm8n6LPz47U+pOenJtRCwlDeJnQaDk=;
+	b=aZwPak+4vM7bBAwxaRapJGvJYtuOBtXUWslssuOg7wGq6IfTPtbyHSfeVEYMLoCGuIDODe
+	LMUAtWEiMufJlPQGeiRKZrmo8RlfnUczuXrMXrkw1JWLuYKz5AXCbKJf7wg/oI3RPE9XQC
+	YqoRyCVxLcUhB/on+WvwNMXGzBQOjgg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-nfZ4DFVIMHum5Xd7-j1IbA-1; Mon,
+ 03 Feb 2025 09:51:18 -0500
+X-MC-Unique: nfZ4DFVIMHum5Xd7-j1IbA-1
+X-Mimecast-MFC-AGG-ID: nfZ4DFVIMHum5Xd7-j1IbA
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 872951956080;
+	Mon,  3 Feb 2025 14:51:12 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.92])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 439391956094;
+	Mon,  3 Feb 2025 14:51:08 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20250203142343.248839-1-dhowells@redhat.com>
+References: <20250203142343.248839-1-dhowells@redhat.com>
+To: netdev@vger.kernel.org
+Cc: dhowells@redhat.com, Herbert Xu <herbert@gondor.apana.org.au>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Jakub Kicinski <kuba@kernel.org>,
+    "David S.
+ Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+    Simon Horman <horms@kernel.org>,
+    Trond Myklebust <trond.myklebust@hammerspace.com>,
+    Chuck Lever <chuck.lever@oracle.com>,
+    Eric Biggers <ebiggers@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+    linux-crypto@vger.kernel.org, linux-afs@lists.infradead.org,
+    linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 00/24] net/rxrpc, crypto: Add Kerberos crypto lib and AF_RXRPC GSSAPI security class
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cc7312ca-2745-48a5-a5ac-9ee1d1c4bee0@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <252339.1738594267.1@warthog.procyon.org.uk>
+Date: Mon, 03 Feb 2025 14:51:07 +0000
+Message-ID: <252340.1738594267@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Fri, Jan 31, 2025 at 10:53:15AM +0100, Eric Auger wrote:
-> Hi Kirill, Michael
-> 
-> On 8/8/24 9:51 AM, Kirill A. Shutemov wrote:
-> > Hongyu reported a hang on kexec in a VM. QEMU reported invalid memory
-> > accesses during the hang.
-> > 
-> > 	Invalid read at addr 0x102877002, size 2, region '(null)', reason: rejected
-> > 	Invalid write at addr 0x102877A44, size 2, region '(null)', reason: rejected
-> > 	...
-> > 
-> > It was traced down to virtio-console. Kexec works fine if virtio-console
-> > is not in use.
-> > 
-> > Looks like virtio-console continues to write to the MMIO even after
-> > underlying virtio-pci device is removed.
-> > 
-> > The problem can be mitigated by removing all virtio devices on virtio
-> > bus shutdown.
-> > 
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > Reported-by: Hongyu Ning <hongyu.ning@linux.intel.com>
-> 
-> Gentle ping on that patch that seems to have fallen though the cracks.
-> 
-> I think this fix is really needed. I have another test case with a
-> rebooting guest exposed with virtio-net (backed by vhost-net) and
-> viommu. Since there is currently no shutdown for the virtio-net, on
-> reboot, the IOMMU is disabled through the native_machine_shutdown()/
-> x86_platform.iommu_shutdown() while the virtio-net is still alive.
-> 
-> Normally device_shutdown() should call virtio-net shutdown before the
-> IOMMU tear down and we wouldn't see any spurious transactions after
-> iommu shutdown.
-> 
-> With that fix, the above test case is fixed and I do not see spurious
-> vhost IOTLB miss spurious requests.
-> 
-> For more details, see qemu thread ([PATCH] hw/virtio/vhost: Disable
-> IOTLB callbacks when IOMMU gets disabled,
-> https://lore.kernel.org/all/20250120173339.865681-1-eric.auger@redhat.com/)
-> 
-> 
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> Tested-by: Eric Auger <eric.auger@redhat.com>
-> 
-> Thanks
-> 
-> Eric
-> 
-> > ---
-> >  drivers/virtio/virtio.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> > index a9b93e99c23a..6c2f908eb22c 100644
-> > --- a/drivers/virtio/virtio.c
-> > +++ b/drivers/virtio/virtio.c
-> > @@ -356,6 +356,15 @@ static void virtio_dev_remove(struct device *_d)
-> >  	of_node_put(dev->dev.of_node);
-> >  }
-> >  
-> > +static void virtio_dev_shutdown(struct device *_d)
-> > +{
-> > +	struct virtio_device *dev = dev_to_virtio(_d);
-> > +	struct virtio_driver *drv = drv_to_virtio(dev->dev.driver);
-> > +
-> > +	if (drv && drv->remove)
-> > +		drv->remove(dev);
+Oops.  This should have been tagged for net-next, not for net.
 
-
-I am concerned that full remove is a heavyweight operation.
-Do not want to slow down reboots even more.
-How about just doing a reset, instead?
-
-> > +}
-> > +
-> >  static const struct bus_type virtio_bus = {
-> >  	.name  = "virtio",
-> >  	.match = virtio_dev_match,
-> > @@ -363,6 +372,7 @@ static const struct bus_type virtio_bus = {
-> >  	.uevent = virtio_uevent,
-> >  	.probe = virtio_dev_probe,
-> >  	.remove = virtio_dev_remove,
-> > +	.shutdown = virtio_dev_shutdown,
-> >  };
-> >  
-> >  int __register_virtio_driver(struct virtio_driver *driver, struct module *owner)
+David
 
