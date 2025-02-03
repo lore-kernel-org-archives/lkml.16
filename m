@@ -1,140 +1,116 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5016D1863E
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AB51FBC92;
+	Mon,  3 Feb 2025 08:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738572178; cv=none; b=ThHUixm3S2WBmrWR/uQwEhny1yFreupP82H3xbj8e/c5tgZb/gh6aV961ZksT1yDkiVbHE3gnm4JCZF7jKvh5YJDmVyn2/vKrO/ZgeAdaPZdZWam7kWNFTij/WXJIvBi7NRmYl5/PeE9EZD5xR6q8cbP0BhdMV9fD2EcfhVOaj4=
+	t=1738572201; cv=none; b=KGe252LYa6EuVRBj3AQS2kL4TSVAcHwDUn9K7FIyi0gPKNIWWgPNLhOmxlAy8Jt6i+V8EowpSeZ4ara0yhC1Mz7hJ7dWGI6pqM8uVJigPW0PLBoHWGDghYzRhy2hpgbitvAJppl7gqThIuhWM6L1QsjjOxfhOXiKA+X5AxqVZ54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738572178; c=relaxed/simple;
-	bh=H0TUOUnzJTRV5KnnyEuI0sVcg8CMj6k8cgKBeWm17LE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LixzFQAW90mi/Zg5nTZbJrUb5I0DDM4eYqfB9rJV6JUTNHpXF/dsjKrkZXHCH5dazdqD+KaRz7E3Kjy9E+cOrNavJAaISxY/Qk4oebHWHCeO+KVxMuaX19CwsskpbN+TW2L5It7wjYCtFAofuVVkNqPAB/nybluJ8hR9ugaSKo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZRYXQX62; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WhfXxcht; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZRYXQX62; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WhfXxcht; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1738572201; c=relaxed/simple;
+	bh=bc1imZ392wL8wBviv+l/3GFL8qfrorBj1RgtEI1IFNE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JZKMR//ihOmAGlDHC+rLzLRE27JswV0mBVgEnFeoNU0+W0U+r4BFn7WElXHbsPxktnRJHilvPfy+eYXjFQg+/K679FhlGi/qscvaF0S6+cIKAYh14plhEhKM9YAXEBzedeE5wECi5yw0TUvpEyd3PV2qGxFlkFeqCmTSvwdzGsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=moU2QYT4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZRYXQX62";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WhfXxcht";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZRYXQX62";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WhfXxcht"
-Received: from hawking.nue2.suse.org (unknown [IPv6:2a07:de40:a101:3:92b1:1cff:fe69:ddc])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 4266E1F37C;
-	Mon,  3 Feb 2025 08:42:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738572175; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n4KmZoQfw8THBhrTIiwcH+di+9FGYYevhJ3k+w9c0xc=;
-	b=ZRYXQX62EiH6D6fHevn7HpphdOaypDmDwrTpW7Cwo+d1b/O+2w3L2YhJAbrZenn8Ax6FS6
-	c8981AUwCheJOZr5SqbnPbR7FSIjh1iZoWWzTZTjqH3MkQf2UUoTdzT93+VhuL2G2POO6z
-	HLCzl+TC02gaVHILLiDqws9L3ZdTri4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738572175;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n4KmZoQfw8THBhrTIiwcH+di+9FGYYevhJ3k+w9c0xc=;
-	b=WhfXxchtS4RjUIWr3l54PdGjWM1HtrSqRPzqPTTvVn4e73Mp6DkrGzkNsq2orSTcKdJQXj
-	W3h2uh+1LdGnxPAw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ZRYXQX62;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=WhfXxcht
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738572175; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n4KmZoQfw8THBhrTIiwcH+di+9FGYYevhJ3k+w9c0xc=;
-	b=ZRYXQX62EiH6D6fHevn7HpphdOaypDmDwrTpW7Cwo+d1b/O+2w3L2YhJAbrZenn8Ax6FS6
-	c8981AUwCheJOZr5SqbnPbR7FSIjh1iZoWWzTZTjqH3MkQf2UUoTdzT93+VhuL2G2POO6z
-	HLCzl+TC02gaVHILLiDqws9L3ZdTri4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738572175;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n4KmZoQfw8THBhrTIiwcH+di+9FGYYevhJ3k+w9c0xc=;
-	b=WhfXxchtS4RjUIWr3l54PdGjWM1HtrSqRPzqPTTvVn4e73Mp6DkrGzkNsq2orSTcKdJQXj
-	W3h2uh+1LdGnxPAw==
-Received: by hawking.nue2.suse.org (Postfix, from userid 17005)
-	id 1EB8B4A0551; Mon,  3 Feb 2025 09:42:55 +0100 (CET)
-From: Andreas Schwab <schwab@suse.de>
-To: Jessica Clarke <jrtc27@jrtc27.com>
-Cc: Alexandre Ghiti <alex@ghiti.fr>,  linux-riscv@lists.infradead.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv/atomic: Do proper sign extension also for
- unsigned in arch_cmpxchg
-In-Reply-To: <CC2D9220-F8DE-4CC8-ACAD-7B1A21E276FE@jrtc27.com> (Jessica
-	Clarke's message of "Thu, 30 Jan 2025 17:21:28 +0000")
-References: <mvmed0k4prh.fsf@suse.de>
-	<c9cbc2be-d1fd-44ef-aa14-fd25a5ff8490@ghiti.fr>
-	<mvm5xlw4anb.fsf@suse.de>
-	<ac53a62e-4f89-49c9-a755-fdfa7a582337@ghiti.fr>
-	<mvmwmec2t7u.fsf@suse.de>
-	<CC2D9220-F8DE-4CC8-ACAD-7B1A21E276FE@jrtc27.com>
-Date: Mon, 03 Feb 2025 09:42:55 +0100
-Message-ID: <mvmo6zj2zcg.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="moU2QYT4"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5135kj5x006360;
+	Mon, 3 Feb 2025 08:43:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0KFPGyBP8cFud5VuycCONVstDIPld15I4GQjTCSxAiM=; b=moU2QYT4a/pEO839
+	qWSTwy7IR3/Ztry758QifN065S8qqKp5pSdoFbxOWqNUEgYGzxaApeFO21taw+qO
+	xg2XCL12xdamXvsJ+gf6em/JMGmsZjI4ioy0LnxpkJROCAyrpg+jLF4pI9Hb/elr
+	scRfvd8uiRMDBGCU8eHcoV9r1zwkN8jc1faim6AR4k441wMcgyprprer+wVytWDM
+	4/JGewvP4LRwirm2jbo0JuHzJGqUtNaniqToCbphZHCDdQVOzJHx81a7+MMv585n
+	rK/zr3R6zMTToin39wNSS2DZmU4U7j13aRAK6fT2Ik9n3ULk8TJF9w16fwEGzVl6
+	9HCbbg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jqxw0c8k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 08:43:13 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5138hCWu017000
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 3 Feb 2025 08:43:12 GMT
+Received: from [10.216.42.141] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Feb 2025
+ 00:43:09 -0800
+Message-ID: <a3c7b0e6-a440-4452-83a2-eb95de0de9bc@quicinc.com>
+Date: Mon, 3 Feb 2025 14:13:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Level: **
-X-Spamd-Result: default: False [2.70 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	HFILTER_HOSTNAME_UNKNOWN(2.50)[];
-	RDNS_NONE(2.00)[];
-	ONCE_RECEIVED(1.20)[];
-	HFILTER_HELO_IP_A(1.00)[hawking.nue2.suse.org];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HFILTER_HELO_NORES_A_OR_MX(0.30)[hawking.nue2.suse.org];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_NO_TLS_LAST(0.10)[];
-	MIME_GOOD(-0.10)[text/plain];
-	NEURAL_HAM_SHORT(-0.09)[-0.440];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DIRECT_TO_MX(0.00)[Gnus/5.13 (Gnus v5.13)];
-	DKIM_TRACE(0.00)[suse.de:+];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_ONE(0.00)[1];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid]
-X-Spam-Score: 2.70
-X-Spamd-Bar: ++
-X-Rspamd-Queue-Id: 4266E1F37C
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/13] dt-bindings: net: wireless: describe the ath12k
+ AHB module
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <ath12k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        Kalle Valo
+	<kvalo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Jeff Johnson
+	<jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
+ <20250130043508.1885026-2-quic_rajkbhag@quicinc.com>
+ <20250130-cunning-quail-of-opportunity-76d0ad@krzk-bin>
+ <104e6b6f-3c1e-4a00-8822-aa6fb4562411@kernel.org>
+Content-Language: en-US
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+In-Reply-To: <104e6b6f-3c1e-4a00-8822-aa6fb4562411@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Lj1rFYiMu8IQ3m0ApuY4ljvBmZW9USKk
+X-Proofpoint-GUID: Lj1rFYiMu8IQ3m0ApuY4ljvBmZW9USKk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_03,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 priorityscore=1501 mlxscore=0 suspectscore=0
+ adultscore=0 impostorscore=0 clxscore=1015 lowpriorityscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502030069
 
-On Jan 30 2025, Jessica Clarke wrote:
+On 1/30/2025 2:10 PM, Krzysztof Kozlowski wrote:
+> On 30/01/2025 09:28, Krzysztof Kozlowski wrote:
+>> On Thu, Jan 30, 2025 at 10:04:56AM +0530, Raj Kumar Bhagat wrote:
+>>> Add device-tree bindings for the ATH12K module found in the IPQ5332
+>>> device.
+>>>
+>>> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+>>> ---
+>>>  .../net/wireless/qcom,ath12k-ahb.yaml         | 319 ++++++++++++++++++
+>>>  1 file changed, 319 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>>> new file mode 100644
+>>> index 000000000000..bd953a028dc3
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>>
+>> Filename should match compatible. This binding does not look like
+>> supporting more devices, so there is no much benefit calling it by generic name.
+> 
+> 
+> I saw now your other patchset, so you have here two devices, but I still
+> do not understand why this cannot follow standard naming practice like
+> most bindings supporting one or more devices. Like every review we give.
+> 
 
-> On 30 Jan 2025, at 15:53, Andreas Schwab <schwab@suse.de> wrote:
->> 
->> On Jan 30 2025, Alexandre Ghiti wrote:
->> 
->>> a2 is used as it is passed by the calling function, so we can't be sure a2
->>> is sign extended to me, what am I missing?
->> 
->> 32-bit scalar arguments are guaranteed to be sign extended on entry.
->
-> Firstly, the calling convention is irrelevant if the function is
-> inlined, which this almost always will be.
-
-This is only about the non-inlined variant.
-
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Sure, we can rename the filename to match the compatibles - "qcom,ipq5x-wifi.yaml".
