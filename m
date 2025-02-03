@@ -1,109 +1,155 @@
-Received: from smtp153-141.sina.com.cn (smtp153-141.sina.com.cn [61.135.153.141])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8E41D95A9
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0244D599;
+	Mon,  3 Feb 2025 08:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738570059; cv=none; b=GjPSrUYEPTkeq+tc8FFJYOTrZh0s6cO+H8xm6YDuJmMNlVN+xsfb63csgyNVQC/3pMClh1XBJOk243UMMcUwS6WrMNL240Zugh2xEiJWFnyH3uS4B0bEiOeUUrmt5/ag2ZFMxE+eLmlprt/oXxZm5iPukuPyTq/CP68shB0fSPM=
+	t=1738570141; cv=none; b=W2XqHLEsgIZ6vdd5RtHA2SuefQMexp2PkH/IF5TW+OmHVF27cU2mq0pBP1isQ+t/ijYRu6m30sIz1DEq1i+vZXB08y0IMjgUzPgJN5sY9v5yLcpBBMO5dANlEXZYnUMFErpDtSqOKQ0+FlRzx3/O3ofCV6BmBcoe6kfDkSiUYq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738570059; c=relaxed/simple;
-	bh=irxJl59VOv85uFEyrqni9Se9zAhunpeUAS5gPwS4ieA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gndyjAVUb0Ipwg2FjRRo8lgwa5R4jvw+NLu9KBO9C0wplZjFYRYbtBMoKSQfauW+mzBbnPVQL4Y7kPDeUcUslsqitwfzm3l8emS1mTh/jb5sMn5uvzEOW0s9eEXP8xN/EwAql211qec3II/YxFO/vlUpTeDDr+K9YStJPdWyDlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=61.135.153.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.56.205])
-	by sina.com (10.182.253.25) with ESMTP
-	id 67A078AB00003049; Mon, 3 Feb 2025 16:05:02 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 9095812059037
-X-SMAIL-UIID: 6C9DE7596FBE49E792FD1C83CE517E4A-20250203-160502-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+3433b5cb8b2b70933f8d@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] possible deadlock in do_ipv6_setsockopt (4)
-Date: Mon,  3 Feb 2025 16:04:48 +0800
-Message-ID: <20250203080449.1988-1-hdanton@sina.com>
-In-Reply-To: <679feb2e.050a0220.d7c5a.0078.GAE@google.com>
-References: 
+	s=arc-20240116; t=1738570141; c=relaxed/simple;
+	bh=aaR9pZjiwfhbPrOCIRNo0C+Bcdbjnp4XI+XCgztJ7KM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=XvRxcuDDD1pxChpmv8Kuvs3ckL8OMy+fveAASAmCAClP07AoCR54He0UiHd0EyUwE91PLku+MG8ce9Jwwog46qVE6c4wR3GQcoOY2ex2ZONjZTKE8PEtHrKFoG2CoSoTZU3YL6YmBmmYgah8LBEgl/2BP2BDrNu9oaFJ1K+dGOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bxTO87lw; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bxTO87lw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738570140; x=1770106140;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aaR9pZjiwfhbPrOCIRNo0C+Bcdbjnp4XI+XCgztJ7KM=;
+  b=bxTO87lw+K+oe2XSohvjrDm2zVURZxEQTiU7Xvbfh0YuToiFMetHAVA+
+   reAT01ZNsN6ZEeelacw/79w8wxenagbS7fRFzjhNMpCcaM7CcIyjtkzKJ
+   Ud3BxMecSReL9GK1dpwEQEKfcQBgBU4cKsaPrX9heR/A8rT4e6RgFe1yb
+   xjTOJp43LR2Ncj4mjZXdpmuoiNWuIy8guFSXsXSDGZRXWsmRBs6kfriDo
+   tXuLGhaysjxarWFdtHl3k9bkPYdpr5lMI5jlvC8IsZl5AE3VpmK0oQC4/
+   c3XOCNOOTv4ANrsRovV3FOUYnC7+NcyGvJzIQ10mlOIt+IzFpYRB8D/N8
+   w==;
+X-CSE-ConnectionGUID: dPEcL7BXRwyn/I8B4f2UaQ==
+X-CSE-MsgGUID: DDG5c2H0SMKj8jRYSCV4dA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="49654053"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="49654053"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 00:08:59 -0800
+X-CSE-ConnectionGUID: zgeYX7/CS4eVImfPqjhaDg==
+X-CSE-MsgGUID: laeUjj0uQnu8wPOKim7bpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="110788405"
+Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
+  by fmviesa009.fm.intel.com with ESMTP; 03 Feb 2025 00:08:55 -0800
+From: Raag Jadav <raag.jadav@intel.com>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	linus.walleij@linaro.org,
+	mika.westerberg@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	dmitry.torokhov@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	sre@kernel.org,
+	jic23@kernel.org,
+	przemyslaw.kitszel@intel.com
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v3 00/20] Split devres APIs to device/devres.h and introduce devm_kmemdup_array()
+Date: Mon,  3 Feb 2025 13:38:42 +0530
+Message-Id: <20250203080902.1864382-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Sun, 02 Feb 2025 14:01:18 -0800
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    c2933b2befe2 Merge tag 'net-6.14-rc1' of git://git.kernel...
-> git tree:       net-next
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c69724580000
+This series
 
-#syz test
+1. Splits device/devres.h for the users that are only interested in devres APIs.
+   Original work by Andy Shevchenko:
+   https://lore.kernel.org/r/20241203195340.855879-1-andriy.shevchenko@linux.intel.com
 
---- x/net/smc/af_smc.c
-+++ y/net/smc/af_smc.c
-@@ -1597,6 +1597,7 @@ static void smc_connect_work(struct work
- 			rc = 0;
- 	}
- 	release_sock(smc->clcsock->sk);
-+	rtnl_lock();
- 	lock_sock(&smc->sk);
- 	if (rc != 0 || smc->sk.sk_err) {
- 		smc->sk.sk_state = SMC_CLOSED;
-@@ -1624,6 +1625,7 @@ out:
- 		}
- 	}
- 	release_sock(&smc->sk);
-+	rtnl_unlock();
- }
- 
- int smc_connect(struct socket *sock, struct sockaddr *addr,
-@@ -1641,6 +1643,7 @@ int smc_connect(struct socket *sock, str
- 	if (addr->sa_family != AF_INET && addr->sa_family != AF_INET6)
- 		goto out_err;
- 
-+	rtnl_lock();
- 	lock_sock(sk);
- 	switch (sock->state) {
- 	default:
-@@ -1703,6 +1706,7 @@ connected:
- 	sock->state = SS_CONNECTED;
- out:
- 	release_sock(sk);
-+	rtnl_unlock();
- out_err:
- 	return rc;
- }
---- x/net/smc/smc_core.c
-+++ y/net/smc/smc_core.c
-@@ -1888,6 +1888,7 @@ int smc_vlan_by_tcpsk(struct socket *clc
- 	struct net_device *ndev;
- 	int rc = 0;
- 
-+	ASSERT_RTNL();
- 	ini->vlan_id = 0;
- 	if (!dst) {
- 		rc = -ENOTCONN;
-@@ -1905,9 +1906,7 @@ int smc_vlan_by_tcpsk(struct socket *clc
- 	}
- 
- 	priv.data = (void *)&ini->vlan_id;
--	rtnl_lock();
- 	netdev_walk_all_lower_dev(ndev, smc_vlan_by_tcpsk_walk, &priv);
--	rtnl_unlock();
- 
- out_rel:
- 	dst_release(dst);
---
+2. Introduces a more robust and cleaner devm_kmemdup_array() helper and uses it
+   across drivers.
+
+The idea behind embedding both work into a single series is to reduce conflicts
+and dependencies while merging.
+
+v2: Use size_mul() for multiplication (Dmitry)
+    Update commit message (Dmitry)
+
+v3: Embed devres.h work by Andy
+    Add more users of devm_kmemdup_array()
+    Update tags and rebase
+
+Andy Shevchenko (2):
+  driver core: Split devres APIs to device/devres.h
+  iio: imu: st_lsm9ds0: Replace device.h with what is needed
+
+Raag Jadav (18):
+  devres: Introduce devm_kmemdup_array()
+  pinctrl: intel: copy communities using devm_kmemdup_array()
+  pinctrl: baytrail: copy communities using devm_kmemdup_array()
+  pinctrl: cherryview: use devm_kmemdup_array()
+  pinctrl: tangier: use devm_kmemdup_array()
+  pinctrl: pxa2xx: use devm_kmemdup_array()
+  input: sparse-keymap: use devm_kmemdup_array()
+  input: ipaq-micro-keys: use devm_kmemdup_array()
+  regulator: devres: use devm_kmemdup_array()
+  regulator: cros-ec: use devm_kmemdup_array()
+  power: supply: sc27xx: use devm_kmemdup_array()
+  iio: adc: xilinx-xadc-core: use devm_kmemdup_array()
+  ASoC: Intel: avs: use devm_kmemdup_array()
+  ASoC: hdac_hdmi: use devm_kmemdup_array()
+  ASoC: tlv320dac33: use devm_kmemdup_array()
+  ASoC: uda1380: use devm_kmemdup_array()
+  ASoC: meson: axg-tdm-interface: use devm_kmemdup_array()
+  ASoC: uniphier: use devm_kmemdup_array()
+
+ drivers/iio/adc/xilinx-xadc-core.c          |   4 +-
+ drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_i2c.c |   2 +-
+ drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_spi.c |   2 +-
+ drivers/input/keyboard/ipaq-micro-keys.c    |   5 +-
+ drivers/input/sparse-keymap.c               |   3 +-
+ drivers/pinctrl/intel/pinctrl-baytrail.c    |   6 +-
+ drivers/pinctrl/intel/pinctrl-cherryview.c  |   5 +-
+ drivers/pinctrl/intel/pinctrl-intel.c       |   6 +-
+ drivers/pinctrl/intel/pinctrl-tangier.c     |   5 +-
+ drivers/pinctrl/pxa/pinctrl-pxa2xx.c        |   8 +-
+ drivers/power/supply/sc27xx_fuel_gauge.c    |   5 +-
+ drivers/regulator/cros-ec-regulator.c       |   4 +-
+ drivers/regulator/devres.c                  |   5 +-
+ include/linux/device.h                      | 119 +-----------------
+ include/linux/device/devres.h               | 129 ++++++++++++++++++++
+ sound/soc/codecs/hdac_hdmi.c                |   3 +-
+ sound/soc/codecs/tlv320dac33.c              |   6 +-
+ sound/soc/codecs/uda1380.c                  |   6 +-
+ sound/soc/intel/avs/boards/da7219.c         |   3 +-
+ sound/soc/intel/avs/boards/es8336.c         |   3 +-
+ sound/soc/intel/avs/boards/nau8825.c        |   3 +-
+ sound/soc/intel/avs/boards/rt274.c          |   3 +-
+ sound/soc/intel/avs/boards/rt286.c          |   3 +-
+ sound/soc/intel/avs/boards/rt298.c          |   3 +-
+ sound/soc/intel/avs/boards/rt5663.c         |   3 +-
+ sound/soc/intel/avs/boards/rt5682.c         |   2 +-
+ sound/soc/meson/axg-tdm-interface.c         |   9 +-
+ sound/soc/uniphier/aio-cpu.c                |   8 +-
+ 28 files changed, 179 insertions(+), 184 deletions(-)
+ create mode 100644 include/linux/device/devres.h
+
+
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.34.1
+
