@@ -1,107 +1,278 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AF8202C48;
-	Mon,  3 Feb 2025 11:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97962202C45
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738581801; cv=none; b=awZhVLJikv4HjAegvBGtglkFoz32qc9LGEAhitPEIbVrAM+ZmoQChcnCbshEQ0YAKljxANrl7FKcMZq93RZ4vj83HGR/0VYqSeu8ws9ogwRh7DNQm/YnizudTiISmpHcWdtHY3MYp5bOC3s0jn7Aps3K/bCuqrV6QSmp2rX/omo=
+	t=1738581857; cv=none; b=QmkBWpKLlGOE0fmPIGH3xnsMKn5j9ddw1LS7ohipfi2+gYRDG/pGD2maShEZcPnQUFhhE+hHmfSCc7KPo8oBQh+TiquXrzrsej7LqVykMbDl5H/bVT9pS9IS7IQRl7T0yR0kY5rxufsmJ0pfMmpQOuSc3NMta1924PujwjzcEAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738581801; c=relaxed/simple;
-	bh=dak8ipRwbVtzkMauOnkZ93orNltxQIIyMt8SKoEo6bQ=;
+	s=arc-20240116; t=1738581857; c=relaxed/simple;
+	bh=OG2AwNXDl7tYdGKHDW1LqrFkFhDlg5w3f4+kjYs72aI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EqEMlWfqKFHCKUm5GSY/JM+xm9HJKQVsWZ2rv/BgiBIzdX1s/rTmQ6rHVhkf2FYxNTunGFWd1JFQiNGb6mbPFZUkhrFwajK1XgVxUL95Hlna+lxe69HAg5FQeiZEu6lmYGeWMs5T2lWCn2skpzIozKD+NcxlgV8Akf2WFZVnuec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xenh+X6A; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xenh+X6A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738581800; x=1770117800;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dak8ipRwbVtzkMauOnkZ93orNltxQIIyMt8SKoEo6bQ=;
-  b=Xenh+X6ATgeb/mmwSCN1ZtJ2tc9jGzdQd81zTRX+/TpB2/FmfYUj2o7O
-   C+tNl9IUaXNRj0YykMElr0KczCPwN+PAZzvi42GInJ/UVG3PknVWMe7U9
-   aN7YST+6uPfotdPZ5uaPGkqzmxaJz0wfu2VIJEacDV4vnhwt8zRBZzsEZ
-   Xyyu9jGzeXnG8OSdcVdj4FG0VInKz5QuQuuvBXMw4u9sbvaA3ERl3MAYG
-   fxsbztJr9oWKMtEhcJEmKbcOLBVf0hz8CxlN1d3GJbFesKjcG/ddoMI2R
-   fwr+Rtpc/mSQQYobhyCPkHpai9tVjYbtvHy5evEgaSVFnAnZjeKWIT3vt
-   w==;
-X-CSE-ConnectionGUID: nyw0FZrHTpyi59VDmaCNcw==
-X-CSE-MsgGUID: +OT7AEp7Q4edCg4ldK1ZOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="38975341"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="38975341"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 03:23:19 -0800
-X-CSE-ConnectionGUID: 6aQhP+P2R3q8WQxoKZKZkg==
-X-CSE-MsgGUID: NFZKZdwvSLy6JV3v2RFqPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="110085550"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 03:23:14 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1teuXn-00000007oOb-2YSh;
-	Mon, 03 Feb 2025 13:23:11 +0200
-Date: Mon, 3 Feb 2025 13:23:11 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
-	lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-	jic23@kernel.org, przemyslaw.kitszel@intel.com,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 12/20] regulator: cros-ec: use devm_kmemdup_array()
-Message-ID: <Z6CnH8nDLPlgAlmW@smile.fi.intel.com>
-References: <20250203080902.1864382-1-raag.jadav@intel.com>
- <20250203080902.1864382-13-raag.jadav@intel.com>
- <Z6CRjgG7y7YOiGpV@smile.fi.intel.com>
- <Z6CdF2OQQcP76_bi@black.fi.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ar/55+cp/W2pmyl9qoo/QOijTNKJ6b9uyu/X14u9zVkNmyrAhY9WrzoKiI9hjWLIUAQrb4Gj8uI1VrKDkTtybSMxysb19ckSZvKC6Pfb26uSJVf/juWYP6kwcvq6XeswS07nV7gDsA34RR7FMxHZv23wE7Gt/TK+yb7eX5CQj4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AD9811FB
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 03:24:39 -0800 (PST)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B4F6E3F58B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 03:24:14 -0800 (PST)
+Date: Mon, 3 Feb 2025 11:23:53 +0000
+From: Liviu Dudau <liviu.dudau@arm.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, asahi@lists.linux.dev,
+	Asahi Lina <lina@asahilina.net>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Frank Binns <frank.binns@imgtec.com>,
+	Matt Coster <matt.coster@imgtec.com>,
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+	Steven Price <steven.price@arm.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	nouveau@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+	akash.goel@arm.com
+Subject: Re: [PATCH 0/4] drm/gpuvm: Add support for single-page-filled
+ mappings
+Message-ID: <Z6CnSZz_Dm3YpZbx@e110455-lin.cambridge.arm.com>
+References: <20250202-gpuvm-single-page-v1-0-8cbd44fdcbd4@asahilina.net>
+ <Z5-_O8vkCO0LXcl7@pollux.localdomain>
+ <20250203102153.145229e0@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z6CdF2OQQcP76_bi@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250203102153.145229e0@collabora.com>
 
-On Mon, Feb 03, 2025 at 12:40:23PM +0200, Raag Jadav wrote:
-> On Mon, Feb 03, 2025 at 11:51:10AM +0200, Andy Shevchenko wrote:
-> > On Mon, Feb 03, 2025 at 01:38:54PM +0530, Raag Jadav wrote:
-> > > Convert to use devm_kmemdup_array() which is more robust.
-
-...
-
-> > >  	data->voltages_mV =
-> > > -		devm_kmemdup(dev, resp.voltages_mv,
-> > > -			     sizeof(u16) * data->num_voltages, GFP_KERNEL);
-> > > +		devm_kmemdup_array(dev, resp.voltages_mv, data->num_voltages,
-> > > +				   sizeof(u16), GFP_KERNEL);
-> > 
-> > Wondering if this can be sizeof(*data->voltages_mV) that makes code robust
-> > against type changes.
+On Mon, Feb 03, 2025 at 10:21:53AM +0100, Boris Brezillon wrote:
+> +Akash with whom we've been discussing adding a 'REPEAT' mode to
+> drm_gpuvm/panthor.
 > 
-> True, but I opted for a blind treewide conversion that is consistent with
-> existing driver conventions. Perhaps a better place for it is a separate
-> filewide series?
+> On Sun, 2 Feb 2025 19:53:47 +0100
+> Danilo Krummrich <dakr@kernel.org> wrote:
+> 
+> > Hi Lina,
+> > 
+> > On Sun, Feb 02, 2025 at 10:34:49PM +0900, Asahi Lina wrote:
+> > > Some hardware requires dummy page mappings to efficiently implement
+> > > Vulkan sparse features. These mappings consist of the same physical
+> > > memory page, repeated for a large range of address space (e.g. 16GiB).
+> > > 
+> > > Add support for this to drm_gpuvm. Currently, drm_gpuvm expects BO
+> > > ranges to correspond 1:1 to virtual memory ranges that are mapped, and
+> > > does math on the BO offset accordingly. To make single page mappings
+> > > work, we need a way to turn off that math, keeping the BO offset always
+> > > constant and pointing to the same page (typically BO offset 0).
+> > > 
+> > > To make this work, we need to handle all the corner cases when these
+> > > mappings intersect with regular mappings. The rules are simply to never
+> > > mix or merge a "regular" mapping with a single page mapping.
+> > > 
+> > > drm_gpuvm has support for a flags field in drm_gpuva objects. This is
+> > > normally managed by drivers directly. We can introduce a
+> > > DRM_GPUVA_SINGLE_PAGE flag to handle this. However, to make it work,
+> > > sm_map and friends need to know ahead of time whether the new mapping is
+> > > a single page mapping or not. Therefore, we need to add an argument to
+> > > these functions so drivers can provide the flags to be filled into
+> > > drm_gpuva.flags.
+> > > 
+> > > These changes should not affect any existing drivers that use drm_gpuvm
+> > > other than the API change:
+> > > 
+> > > - imagination: Does not use flags at all
+> > > - nouveau: Only uses drm_gpuva_invalidate(), which is only called on
+> > >   existing drm_gpuva objects (after the map steps)
+> > > - panthor: Does not use flags at all
+> > > - xe: Does not use drm_gpuva_init_from_op() or
+> > >   drm_gpuva_remap()/drm_gpuva_map() (which call it). This means that the
+> > > flags field of the gpuva object is managed by the driver only, so these
+> > > changes cannot clobber it.
+> > > 
+> > > Note that the way this is implemented, drm_gpuvm does not need to know
+> > > the GPU page size. It only has to never do math on the BO offset to meet
+> > > the requirements.
+> > > 
+> > > I suspect that after this change there could be some cleanup possible in
+> > > the xe driver (which right now passes flags around in various
+> > > driver-specific ways from the map step through to drm_gpuva objects),
+> > > but I'll leave that to the Xe folks.
+> > > 
+> > > Signed-off-by: Asahi Lina <lina@asahilina.net>
+> > > ---
+> > > Asahi Lina (4):
+> > >       drm/gpuvm: Add a flags argument to drm_gpuvm_sm_map[_*]
+> > >       drm/gpuvm: Plumb through flags into drm_gpuva_op_map
+> > >       drm/gpuvm: Add DRM_GPUVA_SINGLE_PAGE flag and logic
+> > >       drm/gpuvm: Plumb through flags into drm_gpuva_init  
+> > 
+> > Without looking into any details yet:
+> > 
+> > This is a bit of tricky one, since we're not even close to having a user for
+> > this new feature upstream yet, are we?
+> 
+> Actually, we would be interesting in having this feature hooked up in
+> panthor. One use case we have is Vulkan sparse bindings, of course. But
+> we also have cases where we need to map a dummy page repeatedly on the
+> FW side. The approach we've been considering is slightly different:
+> pass a DRM_GPUVA_REPEAT_FLAG along with GEM range, so we can repeat a
+> range of the GEM (see the below diff, which is completely untested by
+> the way), but I think we'd be fine with this SINGLE_PAGE flag.
 
-I think an additional series is just an increased churn. In this you are
-changing an API in use, it's completely fine to update a parameter in
-accordance with new API. I.o.w. I consider these two are coupled enough
-to be semantically and logically in a single change along with the fact
-that in all such case you are touching the same line(s).
+Unless I've misunderstood the intent completely, it looks like Xe also wants
+something similar although they call it CPU_ADDR_MIRROR for some reason:
+
+https://lore.kernel.org/r/20250129195212.745731-9-matthew.brost@intel.com
+
+Best regards,
+Liviu
+
+> 
+> --->8---
+> diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
+> index f9eb56f24bef..ea61f3ffaddf 100644
+> --- a/drivers/gpu/drm/drm_gpuvm.c
+> +++ b/drivers/gpu/drm/drm_gpuvm.c
+> @@ -2053,16 +2053,17 @@ EXPORT_SYMBOL_GPL(drm_gpuva_unmap);
+>  
+>  static int
+>  op_map_cb(const struct drm_gpuvm_ops *fn, void *priv,
+> -      u64 addr, u64 range,
+> -      struct drm_gem_object *obj, u64 offset)
+> +      u64 addr, u64 va_range,
+> +      struct drm_gem_object *obj, u64 offset, u64 gem_range)
+>  {
+>      struct drm_gpuva_op op = {};
+>  
+>      op.op = DRM_GPUVA_OP_MAP;
+>      op.map.va.addr = addr;
+> -    op.map.va.range = range;
+> +    op.map.va.range = va_range;
+>      op.map.gem.obj = obj;
+>      op.map.gem.offset = offset;
+> +    op.map.gem.range = gem_range;
+>  
+>      return fn->sm_step_map(&op, priv);
+>  }
+> @@ -2102,7 +2103,8 @@ static int
+>  __drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm,
+>             const struct drm_gpuvm_ops *ops, void *priv,
+>             u64 req_addr, u64 req_range,
+> -           struct drm_gem_object *req_obj, u64 req_offset)
+> +           struct drm_gem_object *req_obj,
+> +           u64 req_offset, u64 req_gem_range)
+>  {
+>      struct drm_gpuva *va, *next;
+>      u64 req_end = req_addr + req_range;
+> @@ -2237,7 +2239,7 @@ __drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm,
+>  
+>      return op_map_cb(ops, priv,
+>               req_addr, req_range,
+> -             req_obj, req_offset);
+> +             req_obj, req_offset, req_gem_range);
+>  }
+>  
+>  static int
+> @@ -2344,10 +2346,43 @@ drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm, void *priv,
+>  
+>      return __drm_gpuvm_sm_map(gpuvm, ops, priv,
+>                    req_addr, req_range,
+> -                  req_obj, req_offset);
+> +                  req_obj, req_offset, 0);
+>  }
+>  EXPORT_SYMBOL_GPL(drm_gpuvm_sm_map);
+>  
+> +/**
+> + * drm_gpuvm_sm_map_repeat() - repeatedly maps a GEM range over a VA range
+> + * @gpuvm: the &drm_gpuvm representing the GPU VA space
+> + * @priv: pointer to a driver private data structure
+> + * @req_addr: the start address of the new mapping
+> + * @req_range: the range of the new mapping
+> + * @req_obj: the &drm_gem_object to map
+> + * @req_offset: the offset within the &drm_gem_object
+> + * @req_gem_range: the offset within the &drm_gem_object
+> + *
+> + * Same as drm_gpuvm_sm_map() except it repeats a GEM range over a VA range
+> + *
+> + * Returns: 0 on success or a negative error code
+> + */
+> +int
+> +drm_gpuvm_sm_map_repeat(struct drm_gpuvm *gpuvm, void *priv,
+> +            u64 req_addr, u64 req_range,
+> +            struct drm_gem_object *req_obj,
+> +            u64 req_offset, u64 req_gem_range)
+> +{
+> +    const struct drm_gpuvm_ops *ops = gpuvm->ops;
+> +
+> +    if (unlikely(!(ops && ops->sm_step_map &&
+> +               ops->sm_step_remap &&
+> +               ops->sm_step_unmap)))
+> +        return -EINVAL;
+> +
+> +    return __drm_gpuvm_sm_map(gpuvm, ops, priv,
+> +                  req_addr, req_range,
+> +                  req_obj, req_offset, req_gem_range);
+> +}
+> +EXPORT_SYMBOL_GPL(drm_gpuvm_sm_map_repeat);
+> +
+>  /**
+>   * drm_gpuvm_sm_unmap() - creates the &drm_gpuva_ops to split on unmap
+>   * @gpuvm: the &drm_gpuvm representing the GPU VA space
+> @@ -2536,7 +2571,7 @@ drm_gpuvm_sm_map_ops_create(struct drm_gpuvm *gpuvm,
+>  
+>      ret = __drm_gpuvm_sm_map(gpuvm, &gpuvm_list_ops, &args,
+>                   req_addr, req_range,
+> -                 req_obj, req_offset);
+> +                 req_obj, req_offset, 0);
+>      if (ret)
+>          goto err_free_ops;
+>  
+> diff --git a/include/drm/drm_gpuvm.h b/include/drm/drm_gpuvm.h
+> index 00d4e43b76b6..8157ede365d1 100644
+> --- a/include/drm/drm_gpuvm.h
+> +++ b/include/drm/drm_gpuvm.h
+> @@ -846,6 +846,14 @@ struct drm_gpuva_op_map {
+>           */
+>          u64 offset;
+>  
+> +        /**
+> +         * @gem.range: the range of the GEM to map
+> +         *
+> +         * If smaller than va.range, the GEM range should be mapped
+> +         * multiple times over the VA range.
+> +         */
+> +        u64 range;
+> +
+>          /**
+>           * @gem.obj: the &drm_gem_object to map
+>           */
+> @@ -1203,6 +1211,11 @@ int drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm, void *priv,
+>               u64 addr, u64 range,
+>               struct drm_gem_object *obj, u64 offset);
+>  
+> +int drm_gpuvm_sm_map_repeat(struct drm_gpuvm *gpuvm, void *priv,
+> +                u64 addr, u64 range,
+> +                struct drm_gem_object *obj,
+> +                u64 offset, u64 gem_range);
+> +
+>  int drm_gpuvm_sm_unmap(struct drm_gpuvm *gpuvm, void *priv,
+>                 u64 addr, u64 range);
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
