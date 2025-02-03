@@ -1,192 +1,103 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E519D1F4275
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 21:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF1C211290
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 21:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738618503; cv=none; b=UC2zJRFCI0EADFfxYEdhykAZEdecxzTEi/zyJx4K4eoFGYWqmAEHZ446BkNOPPmkOKUYkGlvasB0L3QeM4n05zVftiKdsEnHB1am0C2zDtTXKN7w6uKsseO3SlRvQlWFv4nizD/OfDcuJ4lOpNYHDPyXCKMBxbtBnnH57GWGN+4=
+	t=1738618647; cv=none; b=R7TqyPfhkLfyZM90ci+ydj/zgl2uSEXT86mJTKAyqmPrYNktFdRo8GkXzArJ8flv5PJla6AyaU0EK4UP6bWdgZ4Jn+IFHUmjsGvoZw7+QPe/TeT8+EpEWjBiFSWVDlAOIe7QD3OmRtkt7L5NeTGJrVKAnng01tvhdQEbkvOPpnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738618503; c=relaxed/simple;
-	bh=MCb5j+oSeHVmI+eUEl3JT4D+775hG8GZKMdFdEvsyjM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=hQQeFUU/pI9mIyYipdCencBZSrDM7FIPTb209TH+XqRyZfnKsUZzgW7Y31kMmlAsjf7vW+0cqwBoc7nfU2R703kF/Hwmy5sJt/Pj0IVBT8nwoGk56fAxrJ2uhldUz1a5IQ8mPGcdDQM84rJFPSI81W54v8M6lrri8ZP+XY9LSgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com; spf=pass smtp.mailfrom=jrtc27.com; dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b=Rl1I1La8; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jrtc27.com
+	s=arc-20240116; t=1738618647; c=relaxed/simple;
+	bh=QLnx4/Rgy7zQOoI/TasPwiI6+hjEJs/e68fuOcK9rGs=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=GfU9c5uTcbxuR7SfyLMFK0PY0JuBj8EfcjHzI2FsZLI0wTx3GyeQMvhg2qhGZDi+n5NsO0dO6vbeYspNRpz0cQ6yghhKpZwtdpQ5yq31rGnc4QjC09+doO5PL2a/QgbypG2YDnZHUXoaXUxDvT0DfnfLEv1Bw0LIZBkNd9bvHCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qmDEtDXn; arc=none smtp.client-ip=209.85.166.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="Rl1I1La8"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38a8b17d7a7so2589595f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 13:35:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qmDEtDXn"
+Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-847500c9b9aso762763939f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 13:37:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jrtc27.com; s=gmail.jrtc27.user; t=1738618500; x=1739223300; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WVYSR4bTXlgQ7T8K6H5ODWPt2kh41i9bq2tVocO56SE=;
-        b=Rl1I1La8eZT6HxK0SjcWYwLnDqzs/5qTEl/nlcFEH3M0TN1NSjN+cPc+FMRTHyMfS5
-         W6K4bHzIdbGy4NPbut7BvObkbeA/RBk02VXXdkZnwGj9+RosQmbMlmx4Z3qaCLN/Ung+
-         y1HKgSotiWbW67rpXGYy9ZvDydCyrgCSFIWVlMCSOLSUb0qXajx5HAblcgGNz6qCp1nS
-         Vgo996TnxnPfE8Bf/VSWtHi4hnWO4RFy7c4b3ILfJddOw7LmMHDnofgkCPzgkFzlHu6z
-         +YknTTAcSWeXH76csgJAT3AcpaJa89Rz80EcicflkWI4Lbogs1GI8z3bO2/xqG8EnEhD
-         RykA==
+        d=google.com; s=20230601; t=1738618645; x=1739223445; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XEqP/YEsjQP6HXPcAZ+OLL0SnqZRyU2wi8fLU4Seg48=;
+        b=qmDEtDXnc+drZ2rBsx5VwzDTo8GAidumBDsj/exrwP3oPPPzqsVXCuGF68aWe3gD+9
+         fzEtf1YGvJojJQm6s9piBShclKbrI+4Jgs6yCx65MwpwhX5+dVpgfCWWVppr6fdpRsCo
+         RvX2A9Q2z5mplQVC1RKXwMyBzd2Hya9FENjOS/qMpJqcodTv41OfSqA6J0RrzH1dsgAH
+         IC572ulqisdDqw6RsKjq9T03zRi8lA37nIQLIcF85+S5qpQfUzeR1MlNsuCW910R3iEY
+         BNZhhqwPV09n/lrMSAkB/BgVgOwAELzePUlvyo5s/UoXcjwQht8jFSgy2GItQ8b1fBG3
+         qwHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738618500; x=1739223300;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WVYSR4bTXlgQ7T8K6H5ODWPt2kh41i9bq2tVocO56SE=;
-        b=wHyo4Fl4hXk0PT/IzRwvUpEjS6BjsC8g+mG08gPeTsBhVD31/2naKJv1ZoRb5b7TXn
-         H2BR8/joJf7GAPycwBr3LcBOHOic5gyxQvORJ4grsKQYjjdnQop+WgqPK1MqMbEDuM/l
-         PPilP00PLT8zzKOIZRmq+qXwwJyKhyqQogdi8MYT9Gl1T5KwfdDe0XNGB56omU/CUpeT
-         KJ9DlzgFx10VPd7ydXfoJZiHvla1XOtwmHOPQ6MAK8cAuMhEh96CpUupT+z08WEg4I8d
-         Osq7iEahsSaMq//bHRT+F/FZAl+ssdIgQAImXYzNVgOilifFh4GYIPfwn8Y4X43KeS6e
-         lp0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUl2coI9oLEc/nJ2roOoq0cgPOOYugj5CvAtiR2xTlxmkDZW3eJCLpzQBdbLS9XTj4Y9Aa2Xv+tRuFFJ2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNVDV24tFd18kEZD9+09D+jQbOahnOV/qEgKJYNYs7q0CkK325
-	3BBOlOpyo0FHrKDuFcdZ027QvvKlKJ9RSeJgkQUg+1449tRBVbw6cmIP94KuC+U=
-X-Gm-Gg: ASbGncvxTqbOJHjK4732z797fU/KXWaimZrl2+eFva1njQztIGKZBPuDm2itP6LtHuJ
-	pBoRa1HO+YU4FY+pat7LVEUlWbaZdKYHsVm7rdOBS29DZjhDJOAgVcqRyT3jJ4wQ/+eVRZZRsbg
-	HASjI9abgZdZEbgaq57//vpnEEwzNIfHOXkNS6QOqeW8KXXs4frwbI/ytmmeRmdvNrR5mt1Oxta
-	UuIuzRzTTuDZHFJCfzZHEFMHOZ8xTJsO8i9fPf8o2XSrWOjtdgVowfvARt/ySmn52m03whWCIes
-	OL4XRQqiYRstcAcA+VMFEeuDPrW3
-X-Google-Smtp-Source: AGHT+IHfpCIkZ4S+T60Xm+ShuyczBSeqMnQAFidKEp87h9uGDJX9GaMIdbY+W/cp0bHu0LZmOAbquA==
-X-Received: by 2002:a5d:6d86:0:b0:38b:ef22:d8c3 with SMTP id ffacd0b85a97d-38c5209395cmr22749650f8f.35.1738618500120;
-        Mon, 03 Feb 2025 13:35:00 -0800 (PST)
-Received: from smtpclient.apple ([131.111.5.201])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23de772sm166230485e9.13.2025.02.03.13.34.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Feb 2025 13:34:59 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+        d=1e100.net; s=20230601; t=1738618645; x=1739223445;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XEqP/YEsjQP6HXPcAZ+OLL0SnqZRyU2wi8fLU4Seg48=;
+        b=T1OW5mj5+E3Ao/Fg1BCxnKpHGTRii8newATy0Zd/DOWk1BQAwaomX41neoNWmiCvZd
+         KNPy556Ko7iZDcnUUo/dUiIDHmML2A3AlGooBR3augRARnzmpWx0eU5iOztyo9z0vEiY
+         vBtxMwTfbRtbWb7bXDLs/RoLKdhwuZjzIIlujZnKcNBmUrSFilzBhMm1AxbtQntcWuf+
+         IinesHiKCvDUH/i1NcVmOd7PLnhUazRMSxq6q6Zb0TgI8osNIXa4t6vWkwjkM9m+bk6q
+         umwOBxd6KHpdiIvZ/3WaA7lNUuyQPZ1RVESW6LYBbaFaVIOqZjg0cKKYrq9PPz5qDH+o
+         ztsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbR4Yd0cFPRryw7sPSOq8xTEyRVvNjw8J6qXk9toAlEYicNtE0G9+3uEYJBgW2VLhKhbE3L0+E0N1YE1k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTcKixKCXnOCQt+6rLKFOuleSDHG+SKIVHTuvYHUa7IWggdbxn
+	G7ufPek6guBBK5g27tB+5RMipttxmTVgL0FFdph9XgYnI1majP/vwye+KFsHyCPJXYOQpsV/VLz
+	NhSbpL5KPwGANNnxIpd841g==
+X-Google-Smtp-Source: AGHT+IFzEQXFVr/GsJOoiYsXrEqAdOToUP7ubJ3+EUez4554ouloGovsV2x1HVo9oXN98kh3qBpaq5S0IrbbEWoKkA==
+X-Received: from ilbby19.prod.google.com ([2002:a05:6e02:2613:b0:3cf:c127:d037])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a92:cd83:0:b0:3cf:b571:c08c with SMTP id e9e14a558f8ab-3cffe3d1bc2mr218960215ab.3.1738618645230;
+ Mon, 03 Feb 2025 13:37:25 -0800 (PST)
+Date: Mon, 03 Feb 2025 21:37:24 +0000
+In-Reply-To: <gsntzfj91fbs.fsf@coltonlewis-kvm.c.googlers.com> (message from
+ Colton Lewis on Wed, 29 Jan 2025 21:27:03 +0000)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v2] riscv: Use Zalrsc extension to implement atomic
- functions
-From: Jessica Clarke <jrtc27@jrtc27.com>
-In-Reply-To: <Z6Ed6gYzdKhQQQVM@ghost>
-Date: Mon, 3 Feb 2025 21:34:48 +0000
-Cc: Samuel Holland <samuel.holland@sifive.com>,
- Conor Dooley <conor@kernel.org>,
- Aleksandar Rikalo <arikalo@gmail.com>,
- linux-riscv@lists.infradead.org,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Will Deacon <will@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Boqun Feng <boqun.feng@gmail.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Yury Norov <yury.norov@gmail.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Andrea Parri <parri.andrea@gmail.com>,
- Leonardo Bras <leobras@redhat.com>,
- Guo Ren <guoren@kernel.org>,
- Eric Chan <ericchancf@google.com>,
- linux-kernel@vger.kernel.org,
- Djordje Todorovic <djordje.todorovic@htecgroup.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <17E9A830-AE5C-41F5-AC07-2BD9C70739BB@jrtc27.com>
-References: <20241225082412.36727-1-arikalo@gmail.com>
- <Z4CSpE9UKkJNM_g5@ghost>
- <CAGQJe6oA8oiZmg0HGW7KrjdOJ7nXNK9hQFm4jdQ6n0WTG6i-vA@mail.gmail.com>
- <20250202-clammy-skewed-eb0a0fce18f1@spud> <Z6EVIPc_t6zMU9qb@ghost>
- <6cac61f1-cf6d-4a43-836c-e83a0b0da096@sifive.com> <Z6Ed6gYzdKhQQQVM@ghost>
-To: Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
+Mime-Version: 1.0
+Message-ID: <gsntwme61zhn.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [RFC PATCH 1/4] perf: arm_pmuv3: Introduce module param to
+ partition the PMU
+From: Colton Lewis <coltonlewis@google.com>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: maz@kernel.org, kvm@vger.kernel.org, linux@armlinux.org.uk, 
+	catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, 
+	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
+	mark.rutland@arm.com, pbonzini@redhat.com, shuah@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kvmarm@lists.linux.dev, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-On 3 Feb 2025, at 19:50, Charlie Jenkins <charlie@rivosinc.com> wrote:
->=20
-> On Mon, Feb 03, 2025 at 01:30:48PM -0600, Samuel Holland wrote:
->> Hi Charlie,
->>=20
->> On 2025-02-03 1:12 PM, Charlie Jenkins wrote:
->>> On Sun, Feb 02, 2025 at 08:08:50PM +0000, Conor Dooley wrote:
->>>> On Sat, Feb 01, 2025 at 01:04:25PM +0100, Aleksandar Rikalo wrote:
->>>>> On Fri, Jan 10, 2025 at 4:23=E2=80=AFAM Charlie Jenkins =
-<charlie@rivosinc.com> wrote:
->>>>>=20
->>>>>>> From: Chao-ying Fu <cfu@mips.com>
->>>>>>>=20
->>>>>>> Use only LR/SC instructions to implement atomic functions.
->>>>>>=20
->>>>>> In the previous patch you mention that this is to support MIPS =
-P8700. Can
->>>>>> you expand on why this change is required? The datasheet at [1] =
-says:
->>>>>>=20
->>>>>> "The P8700 core is configured to support the RV64GCZba_Zbb (G =3D =
-IMAFD)
->>>>>> Standard ISA. It includes the RV64I base ISA, Multiply (M), =
-Atomic (A),
->>>>>> Single-Precision Floating Point (F), Double (D), Compressed (C) =
-RISC-V
->>>>>> extensions, as well as the as well as the bit-manipulation =
-extensions
->>>>>> (Zba) and (Zbb)"
->>>>>>=20
->>>>>> The "A" extension is a part of "G" which is mostly assumed to =
-exist in
->>>>>> the kernel. Additionally, having this be a compilation flag will =
-cause
->>>>>> traps on generic kernels. We generally try to push everything we =
-can
->>>>>> into runtime feature detection since there are so many possible =
-variants
->>>>>> of riscv.
->>>>>>=20
->>>>>> Expressing not being able to perform a feature like this is =
-normally
->>>>>> better expressed as an errata. Then generic kernels will be able =
-to
->>>>>> include this, and anybody who doesn't want to have the extra nops
->>>>>> introduced can disable the errata. A similar approach to what I =
-pointed
->>>>>> out last time should work here too (but with more places to =
-replace)
->>>>>> [2].
->>>>>>=20
->>>>>> [1] =
-https://mips.com/wp-content/uploads/2024/11/P8700_Data_Sheet.pdf
->>>>>> [2] https://lore.kernel.org/lkml/Z2-UNfwcAQYZqVBU@ghost/T/
->>>>>=20
->>>>> So far we haven't found a way to do this using errata.
->>>>=20
->>>> You mean using alternatives? Not implementing A, but instead
->>>> implementing Zalrsc, is not an erratum. It's a design decision.
->>>=20
->>> We could do the same thing we do with misaligned access detection =
-and
->>> run some instructions to determine if these instructions are being
->>> emulated.  If they are being emulated, patch all of the places to =
-use
->>> zalrsc.
->>=20
->> Is the implication here that the riscv,isa-extensions list passed to =
-the kernel
->> will contain "a", even though the hardware does not support it, =
-because AMOs are
->> emulated in M-mode?
->>=20
->> If that is not the case, there is no need for runtime detection. The =
-alternative
->> entry can check RISCV_ISA_EXT_ZAAMO (which would be implied by =
-RISCV_ISA_EXT_a)
->> in the ISA bitmap like normal.
->=20
-> That would be much better! I was under the assumption that the usecase
-> for this patch was that they were passing in "a" and wanting to only =
-get
-> zalrsc. We should be able to check
-> RISCV_ISA_EXT_ZAAMO/RISCV_ISA_EXT_ZALRSC to get the information =
-without
-> runtime detection.
+Colton Lewis <coltonlewis@google.com> writes:
 
-In LLVM at least -mcpu=3Dmips-p8700 enables the full A extension...
+> Marc Zyngier <maz@kernel.org> writes:
 
-Jess
+>> On Tue, 28 Jan 2025 22:08:27 +0000,
+>> Colton Lewis <coltonlewis@google.com> wrote:
 
+>>> >> +	bitmap_set(cpu_pmu->cntr_mask, 0, pmcr_n);
+>>> >> +
+>>> >> +	if (reserved_guest_counters > 0 && reserved_guest_counters <
+>>> pmcr_n) {
+>>> >> +		cpu_pmu->hpmn = reserved_guest_counters;
+>>> >> +		cpu_pmu->partitioned = true;
+
+>>> > Isn't this going to completely explode on a kernel running at EL1?
+
+>>> Trying to access an EL2 register at EL1 can do that. I'll add the
+>>> appropriate hypercalls.
+
+Ooohh. Making this work at EL1 is much more complicated than adding the
+hypercall to write MDCR because once HPMN takes effect, the upper range
+of counters that the host will use is only writable at EL2. That means
+using any register related to any counter in the upper range would also
+require a hypercall. The only way around that would be to avoid using
+this feature in the host entirely and only enable it when we load a
+guest.
+
+I know we don't like feature discrepencies between VHE and nVHE mode,
+but Oliver thinks it might be justified here to have PMU partitioning be
+VHE-only.
