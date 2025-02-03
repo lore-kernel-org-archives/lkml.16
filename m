@@ -1,63 +1,63 @@
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE692054F9
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3766E205E15
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738583761; cv=none; b=uKbixxN6s0Me59w+4KC/LShF+UU5DSPPPevg+xsNt9/St69NOmkJRN+rJUg4q55odkh1zLpO39uj56pv3UuJWR9+qzvGI5AHzL6HieBh33W5JU86XM6XRENzREpW7VXp2Nyb5bw2SUwqiTkwSkiodP0hHXUctL3XB0AG+DYKTBM=
+	t=1738583767; cv=none; b=QTqi2nrmuQ9ClRMAX8lYHsDQNKsfW/vTPzWKjrvkK3FgH3MVaTLe73/1XrFLugQknVGcB57Z6zmu46eXW7l+W0kjIf1VsPfmT8umDrCFKAuabpOZaItQtoBjppajagcE3cvRKZzjTKENhlquxUNKvsnmmdZmxCmkAUyASCNZwz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738583761; c=relaxed/simple;
-	bh=IfDfnmI9WexGaCozjlG56eHWRNpkJwSGj+oicfx0AIA=;
+	s=arc-20240116; t=1738583767; c=relaxed/simple;
+	bh=jr+PsfqAe1DMqBhomm2T99WaHj0J+agxbYUDnZWYmVo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=krpzMOONZQ9+lfq0Bcgb7EIVUb+FZcA/CwGVs2uw1yivmMmglUCY03RnNefmldrPsXs+NIX9VNlNiAIMbu89GkrxoVImjasKLu0WO5i28ebLNW8b47puk5aPoP2Iw0Sn+dOl1A4iU07CWrGAhXFSh0FIeMcGH00l/4xTocMeJs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=khe9klhu; arc=none smtp.client-ip=209.85.217.49
+	 In-Reply-To:To:Cc; b=T0nLnvG+iaw53KOiJ30SGsMLZmuBa8KPDgUGfIaZJRrerrbZlazNMW/tZiqBRqEq0/y+F0YHVkLn8OInh+ci7rTrYxwvIPfwUltyoqmicop9Z5NMR5tXVe4pRR/5Faw/slADhT/8VDx+8sCLfvO6Vi6VEd3ohGTsreKNQNUxJPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=i0Gmb3Pb; arc=none smtp.client-ip=209.85.222.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="khe9klhu"
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4b68cb2abacso1008162137.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:55:59 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i0Gmb3Pb"
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-85bc7d126b2so2203489241.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:56:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738583759; x=1739188559; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1738583765; x=1739188565; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Y1eOFJCjuwi+7HI+8fuv+RZbg2mJZX4fHHxSxUTTx/0=;
-        b=khe9klhu53bpcCexLIKhtRQLM9HLkJLgz9R/ymeFkg1DbH6/lb0WxPrfl+Yjt4Cqf6
-         G0XT+i/1U7GSr/sL2OGn0+4igQnnqJGSR4zNabwpy2ST1Fdaym0GvWICoAFaa2/Gwk/z
-         oI23EV/sSmTAN3zMfzuyBtIn6k1dULiLmo+CY=
+        bh=vmRIEuGB9w+y+UYSlcNFeXKIfbL+PvnOnrm5AaSkwZM=;
+        b=i0Gmb3PbE6//JW6+QrWIoPueO+VT/dSK/YH1XG6IvIVjYrMsXKNDjvpP0hhueydejj
+         uNgX7YA4xAn28FOVb1KNtrJ5WkAgKT10epxFZEAYDcs4r4Xmf5pkizZc3X3sTwiVlLHV
+         heDNYnYg2/GBT+TrAU+8NDxdH6uSWXyeuImJw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738583759; x=1739188559;
+        d=1e100.net; s=20230601; t=1738583765; x=1739188565;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y1eOFJCjuwi+7HI+8fuv+RZbg2mJZX4fHHxSxUTTx/0=;
-        b=sASAb4FxrhPyRqN/rHK15L2U39fYSKaN8dy1paceBeO6ZBp7aAYRKtjD5nB/XWKnqX
-         Oy6H6EoYrV2ZbE1bDrP/WF62wkXinxvgn2r+ZIM2Nz2OplWUnWaol+dMSaSbCkrj8WYw
-         vliZCD+4ACCwyZQmBXJTa+5F0Uzspy1ux7Y5rtCgouutsY7DUbHFymTdU1+OQpNcpNCV
-         HRtt1/Fs24XtYrPsrcAwZY9n9Jb+Io2mzfwdMnyky7YUQaGtANQj8p5SmamyVm4uWk/v
-         9/NB1sjtLIzFHP1NAJ98q72FRD/sqDPLc1HOyMs5LPzUCo4k6dEoLb0nlbzdpZtMR6im
-         hHGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUW1DVf6AJZdKJ2X9ytFqdIlVPnp5Z0pGahuyNieRKeIqyqcocjS2J/aRe4YNvskTlI6cEFMAFsIXvQ21o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCjal4jPqdYSXhPwCY8Aq/I0c+fJJboPBmDepjcQG60jWL5sPl
-	C9FfMrHMsB2f6us41Rwhv33+bx72st2TDhH+boZPGbGb/lJdZvRkHyMw+Edizg==
-X-Gm-Gg: ASbGncuAH9tUv401EbXrXWKWhi3twivMiWd/XeRe+2zEBA3S8yaLtqZ+/QrdrBR+m/3
-	Z3v0FJU81PL7Zg/ss7+YmpM0jRwLy9cr1inBJsRVv+dE3KZBjPTdn6Zu12N1LhHNqTjMjAku64w
-	Zgl0/G1nUZyD1+8iG0KzNw+4oL8K0daXVKLu6JvOoeAH+ZhPfQHKVnXv2gZyjlnFW6CGdbtQV1u
-	yqB68DQhtodl2q29hNU9gX1P0ZFRbnFw3CpMDHsAZekB8AHjETaUESu4uqktef/9GQLt8cPUYyY
-	kCZU9ad7c4UmtiOmUERXG8+4afj25+BaKfxDiUoPVkz3rBeOhOQFHeaJ3cCHhGbvHA==
-X-Google-Smtp-Source: AGHT+IHE/glGASrHlXx81gQujZaYMBk1kjOiTOdazBG8eg6EqYAu3Io5LOiy1wwKRjVdc8juoLGChQ==
-X-Received: by 2002:a05:6102:4687:b0:4b9:bd00:454b with SMTP id ada2fe7eead31-4b9bd004832mr5990018137.13.1738583758746;
-        Mon, 03 Feb 2025 03:55:58 -0800 (PST)
+        bh=vmRIEuGB9w+y+UYSlcNFeXKIfbL+PvnOnrm5AaSkwZM=;
+        b=sCQhgHGYw7CLwXCD7U8HnD+Qy2DIug3WEdlMLiolmoLZejUksILEmEH9qtmtkYv9+a
+         Nlp4aVsxwrKmmdpUaass4ayZt098NhPCpBe4OtVcNrArAHfV8rSLQnprGlxtMz+gMKRU
+         EKA9Ap9qTeODmDDIfiGzyrSKsIThZi+6hBU22WA4Gjzk1wqN47divGdTLNs3B3j1M7Er
+         oRTf3SxZYTSk1VNFgzoSK1JNCEQgif0gagBWoazw7qqOJMpiCngP+hdEATo4i9rJB9HJ
+         QDbNhH0oZ98YSCSxODsT5V+wUykHleOu8RFEbhEMV01GFXFRbEbkIJsuRJE7u8Vrt3zL
+         a4Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCWvTZjf+i7vyBcP59siJvsuFfY/lgYzOBRvNOAHD3P4zyv9Qpvb6s/kVOZxfg6jSvgkjF3Xx4Tfp1jtJWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmohaQDSkl+3MdvItj4bOCn43Yy3ROYVg1Nbdqk+IhW+Kp8ZHo
+	p03jPESdkLHMDbKBcwqSSHreusSLOgkML0q3gX3xmgja/TZiBbMtHUf03jZmDw==
+X-Gm-Gg: ASbGncsrr1IZZA0Z5e/n1OFh5thQ3I0Fv7G/rER4Rd3IpMOH97EMLHAS71ifBNT4PyM
+	DybKTj6NvU0NYPGVagW8LzHrXk6rY0nqS2L/nYx8B+qKoOw8TfO4G9buaQL6XFCSW745peAkGUW
+	jeS3J/IoIlO9VG73MKJ1sHb9mwdpo0iJVBTPKIfeKSfqzwszOjSOexbLYX90kCq+TV01o1eWAUI
+	5648nV5OBSeaC506qhmswm3au32o3DNAZtdBI8bUgEt/dlJWtQX2OYqdrNJCZR6GQYILNHeaioa
+	AH1wtQ1AfgLwjnGCr0W6RSVv4B8bf/p3SmLIojFf+Qgopunz5I8KLEAaLBuvTx/5TA==
+X-Google-Smtp-Source: AGHT+IEWbBLDqt8daDt8XTdjdKHl7zjnPV3tGAcQZ8yqpswx+3L0zw81Fua6kDJHw31NjGMFcULexg==
+X-Received: by 2002:a05:6102:e11:b0:4b2:7534:f26e with SMTP id ada2fe7eead31-4b9a525cda5mr13324873137.16.1738583765161;
+        Mon, 03 Feb 2025 03:56:05 -0800 (PST)
 Received: from denia.c.googlers.com (5.236.236.35.bc.googleusercontent.com. [35.236.236.5])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baa9aefcsm1592770137.12.2025.02.03.03.55.56
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baa9aefcsm1592770137.12.2025.02.03.03.56.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 03:55:57 -0800 (PST)
+        Mon, 03 Feb 2025 03:56:04 -0800 (PST)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 03 Feb 2025 11:55:44 +0000
-Subject: [PATCH v17 08/17] media: uvcvideo: Support any size for mapping
- get/set
+Date: Mon, 03 Feb 2025 11:55:47 +0000
+Subject: [PATCH v17 11/17] media: uvcvideo: Factor out query_boundaries
+ from query_ctrl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-uvc-roi-v17-8-5900a9fed613@chromium.org>
+Message-Id: <20250203-uvc-roi-v17-11-5900a9fed613@chromium.org>
 References: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
 In-Reply-To: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
@@ -79,376 +79,156 @@ Cc: Yunke Cao <yunkec@chromium.org>, linux-media@vger.kernel.org,
  Yunke Cao <yunkec@google.com>
 X-Mailer: b4 0.13.0
 
-Right now, we only support mappings for v4l2 controls with a max size of
-s32. This patch modifies the prototype of get/set so it can support any
-size.
+Split the function in two parts. queryctrl_boundaries will be used in
+future patches.
 
-This is done to prepare for compound controls.
+No functional change expected from this patch.
 
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Reviewed-by: Yunke Cao <yunkec@google.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Tested-by: Yunke Cao <yunkec@google.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/usb/uvc/uvc_ctrl.c | 181 +++++++++++++++++++++++++++------------
- drivers/media/usb/uvc/uvcvideo.h |   8 +-
- 2 files changed, 130 insertions(+), 59 deletions(-)
+ drivers/media/usb/uvc/uvc_ctrl.c | 106 ++++++++++++++++++++++-----------------
+ 1 file changed, 60 insertions(+), 46 deletions(-)
 
 diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-index 201af66a874d..a0156b79ab48 100644
+index b8bf8ca95747..6e27075939ac 100644
 --- a/drivers/media/usb/uvc/uvc_ctrl.c
 +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-@@ -367,6 +367,22 @@ static const u32 uvc_control_classes[] = {
- 
- static const int exposure_auto_mapping[] = { 2, 1, 4, 8 };
- 
-+static s32 uvc_mapping_get_s32(struct uvc_control_mapping *mapping,
-+			       u8 query, const void *data_in)
-+{
-+	s32 data_out = 0;
-+
-+	mapping->get(mapping, query, data_in, sizeof(data_out), &data_out);
-+
-+	return data_out;
-+}
-+
-+static void uvc_mapping_set_s32(struct uvc_control_mapping *mapping,
-+				s32 data_in, void *data_out)
-+{
-+	mapping->set(mapping, sizeof(data_in), &data_in, data_out);
-+}
-+
- /*
-  * This function translates the V4L2 menu index @idx, as exposed to userspace as
-  * the V4L2 control value, to the corresponding UVC control value used by the
-@@ -405,58 +421,93 @@ uvc_mapping_get_menu_name(const struct uvc_control_mapping *mapping, u32 idx)
- 	return v4l2_ctrl_get_menu(mapping->id)[idx];
- }
- 
--static s32 uvc_ctrl_get_zoom(struct uvc_control_mapping *mapping,
--	u8 query, const u8 *data)
-+static int uvc_ctrl_get_zoom(struct uvc_control_mapping *mapping, u8 query,
-+			     const void *uvc_in, size_t v4l2_size,
-+			     void *v4l2_out)
- {
--	s8 zoom = (s8)data[0];
-+	u8 value = ((u8 *)uvc_in)[2];
-+	s8 sign = ((s8 *)uvc_in)[0];
-+	s32 *out = v4l2_out;
-+
-+	if (WARN_ON(v4l2_size != sizeof(s32)))
-+		return -EINVAL;
- 
- 	switch (query) {
- 	case UVC_GET_CUR:
--		return (zoom == 0) ? 0 : (zoom > 0 ? data[2] : -data[2]);
-+		*out = (sign == 0) ? 0 : (sign > 0 ? value : -value);
-+		return 0;
- 
- 	case UVC_GET_MIN:
- 	case UVC_GET_MAX:
- 	case UVC_GET_RES:
- 	case UVC_GET_DEF:
- 	default:
--		return data[2];
-+		*out = value;
-+		return 0;
- 	}
- }
- 
--static void uvc_ctrl_set_zoom(struct uvc_control_mapping *mapping,
--	s32 value, u8 *data)
-+static int uvc_ctrl_set_zoom(struct uvc_control_mapping *mapping,
-+			     size_t v4l2_size, const void *v4l2_in,
-+			     void *uvc_out)
- {
--	data[0] = value == 0 ? 0 : (value > 0) ? 1 : 0xff;
--	data[2] = min((int)abs(value), 0xff);
-+	u8 *out = uvc_out;
-+	s32 value;
-+
-+	if (WARN_ON(v4l2_size != sizeof(s32)))
-+		return -EINVAL;
-+
-+	value = *(u32 *)v4l2_in;
-+	out[0] = value == 0 ? 0 : (value > 0) ? 1 : 0xff;
-+	out[2] = min_t(int, abs(value), 0xff);
-+
-+	return 0;
- }
- 
--static s32 uvc_ctrl_get_rel_speed(struct uvc_control_mapping *mapping,
--	u8 query, const u8 *data)
-+static int uvc_ctrl_get_rel_speed(struct uvc_control_mapping *mapping,
-+				  u8 query, const void *uvc_in,
-+				  size_t v4l2_size, void *v4l2_out)
- {
- 	unsigned int first = mapping->offset / 8;
--	s8 rel = (s8)data[first];
-+	u8 value = ((u8 *)uvc_in)[first + 1];
-+	s8 sign = ((s8 *)uvc_in)[first];
-+	s32 *out = v4l2_out;
-+
-+	if (WARN_ON(v4l2_size != sizeof(s32)))
-+		return -EINVAL;
- 
- 	switch (query) {
- 	case UVC_GET_CUR:
--		return (rel == 0) ? 0 : (rel > 0 ? data[first+1]
--						 : -data[first+1]);
-+		*out = (sign == 0) ? 0 : (sign > 0 ? value : -value);
-+		return 0;
- 	case UVC_GET_MIN:
--		return -data[first+1];
-+		*out = -value;
-+		return 0;
- 	case UVC_GET_MAX:
- 	case UVC_GET_RES:
- 	case UVC_GET_DEF:
- 	default:
--		return data[first+1];
-+		*out = value;
-+		return 0;
- 	}
- }
- 
--static void uvc_ctrl_set_rel_speed(struct uvc_control_mapping *mapping,
--	s32 value, u8 *data)
-+static int uvc_ctrl_set_rel_speed(struct uvc_control_mapping *mapping,
-+				  size_t v4l2_size, const void *v4l2_in,
-+				  void *uvc_out)
- {
- 	unsigned int first = mapping->offset / 8;
-+	u8 *out = uvc_out;
-+	s32 value;
-+
-+	if (WARN_ON(v4l2_size != sizeof(s32)))
-+		return -EINVAL;
-+
-+	value = *(u32 *)v4l2_in;
-+	out[first] = value == 0 ? 0 : (value > 0) ? 1 : 0xff;
-+	out[first + 1] = min_t(int, abs(value), 0xff);
- 
--	data[first] = value == 0 ? 0 : (value > 0) ? 1 : 0xff;
--	data[first+1] = min_t(int, abs(value), 0xff);
-+	return 0;
- }
- 
- static const struct uvc_control_mapping uvc_ctrl_power_line_mapping_limited = {
-@@ -887,14 +938,20 @@ static s32 uvc_menu_to_v4l2_menu(struct uvc_control_mapping *mapping, s32 val)
-  * a signed 32bit integer. Sign extension will be performed if the mapping
-  * references a signed data type.
-  */
--static s32 uvc_get_le_value(struct uvc_control_mapping *mapping,
--	u8 query, const u8 *data)
-+static int uvc_get_le_value(struct uvc_control_mapping *mapping,
-+			    u8 query, const void *uvc_in, size_t v4l2_size,
-+			    void *v4l2_out)
- {
--	int bits = mapping->size;
- 	int offset = mapping->offset;
-+	int bits = mapping->size;
-+	const u8 *data = uvc_in;
-+	s32 *out = v4l2_out;
- 	s32 value = 0;
- 	u8 mask;
- 
-+	if (WARN_ON(v4l2_size != sizeof(s32)))
-+		return -EINVAL;
-+
- 	data += offset / 8;
- 	offset &= 7;
- 	mask = ((1LL << bits) - 1) << offset;
-@@ -916,29 +973,41 @@ static s32 uvc_get_le_value(struct uvc_control_mapping *mapping,
- 		value |= -(value & (1 << (mapping->size - 1)));
- 
- 	/* If it is a menu, convert from uvc to v4l2. */
--	if (mapping->v4l2_type != V4L2_CTRL_TYPE_MENU)
--		return value;
-+	if (mapping->v4l2_type != V4L2_CTRL_TYPE_MENU) {
-+		*out = value;
-+		return 0;
-+	}
- 
- 	switch (query) {
- 	case UVC_GET_CUR:
- 	case UVC_GET_DEF:
--		return uvc_menu_to_v4l2_menu(mapping, value);
-+		*out = uvc_menu_to_v4l2_menu(mapping, value);
-+		return 0;
- 	}
- 
--	return value;
-+	*out = value;
-+	return 0;
- }
- 
- /*
-  * Set the bit string specified by mapping->offset and mapping->size
-  * in the little-endian data stored at 'data' to the value 'value'.
-  */
--static void uvc_set_le_value(struct uvc_control_mapping *mapping,
--	s32 value, u8 *data)
-+static int uvc_set_le_value(struct uvc_control_mapping *mapping,
-+			    size_t v4l2_size, const void *v4l2_in,
-+			    void *uvc_out)
- {
--	int bits = mapping->size;
- 	int offset = mapping->offset;
-+	int bits = mapping->size;
-+	u8 *data = uvc_out;
-+	s32 value;
- 	u8 mask;
- 
-+	if (WARN_ON(v4l2_size != sizeof(s32)))
-+		return -EINVAL;
-+
-+	value = *(s32 *)v4l2_in;
-+
- 	switch (mapping->v4l2_type) {
- 	case V4L2_CTRL_TYPE_MENU:
- 		value = uvc_mapping_get_menu_value(mapping, value);
-@@ -966,6 +1035,8 @@ static void uvc_set_le_value(struct uvc_control_mapping *mapping,
- 		bits -= 8 - offset;
- 		offset = 0;
- 	}
-+
-+	return 0;
- }
- 
- /* ------------------------------------------------------------------------
-@@ -1147,8 +1218,8 @@ static int __uvc_ctrl_get(struct uvc_video_chain *chain,
- 	if (ret < 0)
- 		return ret;
- 
--	*value = mapping->get(mapping, UVC_GET_CUR,
--			      uvc_ctrl_data(ctrl, UVC_CTRL_DATA_CURRENT));
-+	*value = uvc_mapping_get_s32(mapping, UVC_GET_CUR,
-+				     uvc_ctrl_data(ctrl, UVC_CTRL_DATA_CURRENT));
- 
- 	return 0;
- }
-@@ -1281,12 +1352,12 @@ static u32 uvc_get_ctrl_bitmap(struct uvc_control *ctrl,
- 	 * as supported.
- 	 */
- 	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_RES)
--		return mapping->get(mapping, UVC_GET_RES,
--				    uvc_ctrl_data(ctrl, UVC_CTRL_DATA_RES));
-+		return uvc_mapping_get_s32(mapping, UVC_GET_RES,
-+					   uvc_ctrl_data(ctrl, UVC_CTRL_DATA_RES));
- 
- 	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_MAX)
--		return mapping->get(mapping, UVC_GET_MAX,
--				    uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MAX));
-+		return uvc_mapping_get_s32(mapping, UVC_GET_MAX,
-+					   uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MAX));
- 
+@@ -1374,53 +1374,11 @@ static u32 uvc_get_ctrl_bitmap(struct uvc_control *ctrl,
  	return ~0;
  }
-@@ -1331,8 +1402,8 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
- 	}
  
- 	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_DEF) {
--		v4l2_ctrl->default_value = mapping->get(mapping, UVC_GET_DEF,
--				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_DEF));
-+		v4l2_ctrl->default_value = uvc_mapping_get_s32(mapping,
-+				UVC_GET_DEF, uvc_ctrl_data(ctrl, UVC_CTRL_DATA_DEF));
- 	}
- 
- 	switch (mapping->v4l2_type) {
-@@ -1365,16 +1436,16 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
- 	}
- 
+-static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+-	struct uvc_control *ctrl,
+-	struct uvc_control_mapping *mapping,
+-	struct v4l2_queryctrl *v4l2_ctrl)
++static int __uvc_queryctrl_boundaries(struct uvc_video_chain *chain,
++				      struct uvc_control *ctrl,
++				      struct uvc_control_mapping *mapping,
++				      struct v4l2_queryctrl *v4l2_ctrl)
+ {
+-	struct uvc_control_mapping *master_map = NULL;
+-	struct uvc_control *master_ctrl = NULL;
+-
+-	memset(v4l2_ctrl, 0, sizeof(*v4l2_ctrl));
+-	v4l2_ctrl->id = mapping->id;
+-	v4l2_ctrl->type = mapping->v4l2_type;
+-	strscpy(v4l2_ctrl->name, uvc_map_get_name(mapping),
+-		sizeof(v4l2_ctrl->name));
+-	v4l2_ctrl->flags = 0;
+-
+-	if (!(ctrl->info.flags & UVC_CTRL_FLAG_GET_CUR))
+-		v4l2_ctrl->flags |= V4L2_CTRL_FLAG_WRITE_ONLY;
+-	if (!(ctrl->info.flags & UVC_CTRL_FLAG_SET_CUR))
+-		v4l2_ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+-
+-	if (mapping->master_id)
+-		__uvc_find_control(ctrl->entity, mapping->master_id,
+-				   &master_map, &master_ctrl, 0, 0);
+-	if (master_ctrl && (master_ctrl->info.flags & UVC_CTRL_FLAG_GET_CUR)) {
+-		s32 val;
+-		int ret;
+-
+-		if (WARN_ON(uvc_ctrl_mapping_is_compound(master_map)))
+-			return -EIO;
+-
+-		ret = __uvc_ctrl_get(chain, master_ctrl, master_map, &val);
+-		if (ret < 0)
+-			return ret;
+-
+-		if (val != mapping->master_manual)
+-				v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
+-	}
+-
+-	if (v4l2_ctrl->type >= V4L2_CTRL_COMPOUND_TYPES) {
+-		v4l2_ctrl->flags |= V4L2_CTRL_FLAG_HAS_PAYLOAD;
+-		v4l2_ctrl->default_value = 0;
+-		v4l2_ctrl->minimum = 0;
+-		v4l2_ctrl->maximum = 0;
+-		v4l2_ctrl->step = 0;
+-		return 0;
+-	}
+-
+ 	if (!ctrl->cached) {
+ 		int ret = uvc_ctrl_populate_cache(chain, ctrl);
+ 		if (ret < 0)
+@@ -1464,18 +1422,74 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
  	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_MIN)
--		v4l2_ctrl->minimum = mapping->get(mapping, UVC_GET_MIN,
--				     uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MIN));
-+		v4l2_ctrl->minimum = uvc_mapping_get_s32(mapping, UVC_GET_MIN,
-+				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MIN));
+ 		v4l2_ctrl->minimum = uvc_mapping_get_s32(mapping, UVC_GET_MIN,
+ 				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MIN));
++	else
++		v4l2_ctrl->minimum = 0;
  
  	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_MAX)
--		v4l2_ctrl->maximum = mapping->get(mapping, UVC_GET_MAX,
--				     uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MAX));
-+		v4l2_ctrl->maximum = uvc_mapping_get_s32(mapping, UVC_GET_MAX,
-+				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MAX));
+ 		v4l2_ctrl->maximum = uvc_mapping_get_s32(mapping, UVC_GET_MAX,
+ 				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MAX));
++	else
++		v4l2_ctrl->maximum = 0;
  
  	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_RES)
--		v4l2_ctrl->step = mapping->get(mapping, UVC_GET_RES,
--				  uvc_ctrl_data(ctrl, UVC_CTRL_DATA_RES));
-+		v4l2_ctrl->step = uvc_mapping_get_s32(mapping, UVC_GET_RES,
-+				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_RES));
+ 		v4l2_ctrl->step = uvc_mapping_get_s32(mapping, UVC_GET_RES,
+ 				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_RES));
++	else
++		v4l2_ctrl->step = 0;
  
  	return 0;
  }
-@@ -1625,7 +1696,7 @@ void uvc_ctrl_status_event(struct uvc_video_chain *chain,
- 		uvc_ctrl_set_handle(handle, ctrl, NULL);
  
- 	list_for_each_entry(mapping, &ctrl->info.mappings, list) {
--		s32 value = mapping->get(mapping, UVC_GET_CUR, data);
-+		s32 value = uvc_mapping_get_s32(mapping, UVC_GET_CUR, data);
- 
- 		/*
- 		 * handle may be NULL here if the device sends auto-update
-@@ -1974,8 +2045,8 @@ int uvc_ctrl_get(struct uvc_video_chain *chain, u32 which,
- 			if (ret < 0)
- 				return ret;
- 		}
--		xctrl->value = mapping->get(mapping, UVC_GET_DEF,
--					    uvc_ctrl_data(ctrl, UVC_CTRL_DATA_DEF));
-+		xctrl->value = uvc_mapping_get_s32(mapping, UVC_GET_DEF,
-+						   uvc_ctrl_data(ctrl, UVC_CTRL_DATA_DEF));
- 		return 0;
- 	}
- 
-@@ -2014,12 +2085,12 @@ int uvc_ctrl_set(struct uvc_fh *handle,
- 				return ret;
- 		}
- 
--		min = mapping->get(mapping, UVC_GET_MIN,
--				   uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MIN));
--		max = mapping->get(mapping, UVC_GET_MAX,
--				   uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MAX));
--		step = mapping->get(mapping, UVC_GET_RES,
--				    uvc_ctrl_data(ctrl, UVC_CTRL_DATA_RES));
-+		min = uvc_mapping_get_s32(mapping, UVC_GET_MIN,
-+					  uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MIN));
-+		max = uvc_mapping_get_s32(mapping, UVC_GET_MAX,
-+					  uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MAX));
-+		step = uvc_mapping_get_s32(mapping, UVC_GET_RES,
-+					   uvc_ctrl_data(ctrl, UVC_CTRL_DATA_RES));
- 		if (step == 0)
- 			step = 1;
- 
-@@ -2098,8 +2169,8 @@ int uvc_ctrl_set(struct uvc_fh *handle,
- 		       ctrl->info.size);
- 	}
- 
--	mapping->set(mapping, value,
--		uvc_ctrl_data(ctrl, UVC_CTRL_DATA_CURRENT));
-+	uvc_mapping_set_s32(mapping, value,
-+			    uvc_ctrl_data(ctrl, UVC_CTRL_DATA_CURRENT));
- 
- 	ctrl->dirty = 1;
- 	ctrl->modified = 1;
-diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-index 018613f98f48..b55d5c23dfca 100644
---- a/drivers/media/usb/uvc/uvcvideo.h
-+++ b/drivers/media/usb/uvc/uvcvideo.h
-@@ -132,10 +132,10 @@ struct uvc_control_mapping {
- 	const struct uvc_control_mapping *(*filter_mapping)
- 				(struct uvc_video_chain *chain,
- 				struct uvc_control *ctrl);
--	s32 (*get)(struct uvc_control_mapping *mapping, u8 query,
--		   const u8 *data);
--	void (*set)(struct uvc_control_mapping *mapping, s32 value,
--		    u8 *data);
-+	int (*get)(struct uvc_control_mapping *mapping, u8 query,
-+		   const void *uvc_in, size_t v4l2_size, void *v4l2_out);
-+	int (*set)(struct uvc_control_mapping *mapping, size_t v4l2_size,
-+		   const void *v4l2_in, void *uvc_out);
- };
- 
- struct uvc_control {
++static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
++				 struct uvc_control *ctrl,
++				 struct uvc_control_mapping *mapping,
++				 struct v4l2_queryctrl *v4l2_ctrl)
++{
++	struct uvc_control_mapping *master_map = NULL;
++	struct uvc_control *master_ctrl = NULL;
++
++	memset(v4l2_ctrl, 0, sizeof(*v4l2_ctrl));
++	v4l2_ctrl->id = mapping->id;
++	v4l2_ctrl->type = mapping->v4l2_type;
++	strscpy(v4l2_ctrl->name, uvc_map_get_name(mapping),
++		sizeof(v4l2_ctrl->name));
++	v4l2_ctrl->flags = 0;
++
++	if (!(ctrl->info.flags & UVC_CTRL_FLAG_GET_CUR))
++		v4l2_ctrl->flags |= V4L2_CTRL_FLAG_WRITE_ONLY;
++	if (!(ctrl->info.flags & UVC_CTRL_FLAG_SET_CUR))
++		v4l2_ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
++
++	if (mapping->master_id)
++		__uvc_find_control(ctrl->entity, mapping->master_id,
++				   &master_map, &master_ctrl, 0, 0);
++	if (master_ctrl && (master_ctrl->info.flags & UVC_CTRL_FLAG_GET_CUR)) {
++		s32 val;
++		int ret;
++
++		if (WARN_ON(uvc_ctrl_mapping_is_compound(master_map)))
++			return -EIO;
++
++		ret = __uvc_ctrl_get(chain, master_ctrl, master_map, &val);
++		if (ret < 0)
++			return ret;
++
++		if (val != mapping->master_manual)
++			v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
++	}
++
++	if (v4l2_ctrl->type >= V4L2_CTRL_COMPOUND_TYPES) {
++		v4l2_ctrl->flags |= V4L2_CTRL_FLAG_HAS_PAYLOAD;
++		v4l2_ctrl->default_value = 0;
++		v4l2_ctrl->minimum = 0;
++		v4l2_ctrl->maximum = 0;
++		v4l2_ctrl->step = 0;
++		return 0;
++	}
++
++	return __uvc_queryctrl_boundaries(chain, ctrl, mapping, v4l2_ctrl);
++}
++
+ int uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+ 	struct v4l2_queryctrl *v4l2_ctrl)
+ {
 
 -- 
 2.48.1.362.g079036d154-goog
