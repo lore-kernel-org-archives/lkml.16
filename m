@@ -1,97 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F8E201016;
-	Mon,  3 Feb 2025 12:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6C7201016;
+	Mon,  3 Feb 2025 12:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738585507; cv=none; b=eDpAyhxg4lpnCc1hQcK7rlgyXy/akbWiODoOIbgQnainhmaN3+hmY3o05CbBxVyqTjKjP8t6MPdU7N5XRpF0PGFCYmAT7is3F+f931sjJHqofqbEk9c7YVcY/rou6BPgOND3uI4BFLxfBG4vYctLIG0625iXVlAYgGPIeZvJDqI=
+	t=1738585528; cv=none; b=u/Ny8kdODxpHUtRiazRhhq0bvfoxyPCZrdknYOTN6m2r5MtxSJVQ5z9QVVQYZPeX43EXUmTzvEJzRQKUNHdZ8jb30mKfvSeR4z18lYsoS1wD3rnnCpET1RBVHoHsUcvQxoijMOspTpmFmpJBDzlaZGj+LBNC+K11xDBpTcoIfhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738585507; c=relaxed/simple;
-	bh=Yy5ZhC9XApBt7e/QvLBQSPY6sVLlD4cP7bLWazn+hTM=;
+	s=arc-20240116; t=1738585528; c=relaxed/simple;
+	bh=Jx0tUDeK9QQM8yxTWsP8FNhUorvbUVvVZV10ygMt3rU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZmqFP0PE7meW755ZYON7aloSA8PMqWbPFAJuikwlPKSesYNGRjmlnIwTG7rXrfXxCNZNERS44jGfsZVnqPEaHY5GZ8P8A8Q7VPtREa1E336CGUuMvDwrHhOhwNaJ2MZ5a6JpsaM0rkq1+dL56YY6HC0GedPMCkR7MbPFpoxohY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgyFBLHk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=O8hKcKNaHc8XaBDFVbOyDqn8JASoSsUK9FzMzgka3ma449Jtgfjlp2/yDmgg1Cglh0bLHqW8SZrbK/wyuqlrcwZpY/Dbfh+/PY05MHff3AzT4IX9EUbml2uKY+blsYxGSoCtReHZBQvuvLK1lEMNmfWdPJuxuq9E2gB9ISyjsGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LYwBgSFE; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgyFBLHk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8399FC4CED2;
-	Mon,  3 Feb 2025 12:24:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738585506;
-	bh=Yy5ZhC9XApBt7e/QvLBQSPY6sVLlD4cP7bLWazn+hTM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WgyFBLHkuVy8bN5kDhkP1EGbAK7ioccPHVyLC25mEIayv3DJK7Tm2uRsQq2Jh0fAa
-	 Int2NvfquWUvgrFZzmX67B845a0Y8UBFyg7F9lNoSnr141x2o7Hovef8R5iaJkW14L
-	 O8Mw7GQg0x3bUmkm8V0HFhTiojVKh8J8yYO+/SA0RETVXQghpzP8Z6pw3Yuc9w2wuP
-	 O/+dKCQy4+GohyTHCsRFy49HyIbtiUwOfs6Pip5+i0hyjjmkT3KjAT7BRymP6hhhlc
-	 +7Lo9yiSJ7ER7dh3tF9j6L7ovChKtZABgfMeLV3WJ2J1EU47uFYiskzBnfxrlg6XKZ
-	 xHQ+uFN17i2eg==
-Date: Mon, 3 Feb 2025 12:24:55 +0000
-From: Mark Brown <broonie@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-sound@vger.kernel.org
-Subject: Re: [PATCH 13/13] ASoC: adau1701: use gpiods_set_array_value_cansleep
-Message-ID: <a6e7f5c5-6dfa-4478-9a18-85d0897c7ca4@sirena.org.uk>
-References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
- <20250131-gpio-set-array-helper-v1-13-991c8ccb4d6e@baylibre.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYwBgSFE"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ee86a1a92dso5691055a91.1;
+        Mon, 03 Feb 2025 04:25:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738585526; x=1739190326; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8mq07wVBt7GqzR4NZ1sXknFkx2PGTqOjqTr3fwMWvCo=;
+        b=LYwBgSFE+iW1tOMddD3tDUJZG8c84+3cVvJYB6r/JdyDbm/4RXgZj+9vv728xCfo2A
+         vFWE7CwsSUf2tid6BVSZiaZOmluQFpNyHeaGtcwRiS29vJ13AigY71839SwVW1e8NRLY
+         QgW+RmrY3ZPlZDyLMRa/A/O9iJ+U+KhlYnAkpFmtm5tzUkU3/yc7qK5n1UZQWcCRwOVf
+         DeSJsp2LSB0Ie8kZjXLaSmPH4L6NbkWr0vBV3yIpLftUJKdwuYvaDT2NIa79fPsBEIog
+         KVGzZuP7Oqxw5XZ4ViDAIMhBJJUAJLCxR82GHGq2KFMPFY9gHcJm1L0MAZM/MCEZncW5
+         YOsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738585526; x=1739190326;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8mq07wVBt7GqzR4NZ1sXknFkx2PGTqOjqTr3fwMWvCo=;
+        b=I5Z7gYAJcmRMLNF6TNiWhiVQWQHUYYvkHmxrlcwT6ixgy0dC0FQAJbLPDVYOe/pHHk
+         FCzF4vQShTuRCN6kv+xosL0k/PENRDuSsq+2gOmjflZoqqyv0DUeIxFpnVpBjklndSP8
+         LD5HxJYwaXtZ1tVGAWzIUYHeL7fNfU5lP+1SBNgdyrLOtaWEdVvTBQ0b+Vky5s5H1E0t
+         nRiDnlmo54vInWiom7tTY9RqjtxyDVP5/J2c+A0Bn6qqfrL9gFtRhGZ/kGcLEEp6/Cff
+         RFB2/TohTPUKsGnUfHPvQt9wAeIRxaa3u0nk5V/sO1NlIk3kOhnf/rNmBee2FM9TMT65
+         u7Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCWRI7oVy5qMDqA5hDkJkXu5cRKPoXftAqDCgQj9ohB6KcBDqZh1ONIZotYzx/0N4surHXw6oHzCw3Ur@vger.kernel.org, AJvYcCXk5TpHGzw/qrGFh+aofquwsh1x0h4XE6ojJ3w5ambFxJUQbaumYiVdYbtiHcorueh7TRWfADLD3fSG/Rw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBabofn0qAhOqFFnWaH0J5xoXjjj7NSXZLeziy+8sZ5EjV4ayk
+	xsQWV96i0blSlDpPPgnpseJ6W1B9MY6KcUmDLOkJt6DIrYJc4g+o
+X-Gm-Gg: ASbGncssc3Ip3AUoej3QPgOPX8bXtQyqxLFpyht6njCwLKeT1Lyr4Rsm/4ZGVHzXah5
+	6Xj2T4j6QESQA+InK5rSAdPTWSjq6u4UhI1BCxME3MLURibh2pCgA00e/sYhGOSJ3vPtT6yQN8C
+	3mGti6cEsFrGmIA3lj4WkH1uxUynl62G3T87qNfhnrtpuwRTDMPjtUjPsjQazkmqsvtO7us1zor
+	0C1RU0p3PmsJMIu7WKXKNVorGN/m03umjO3Oo3d6yh6o+60LFWIBV3Q9bRdDZhJRqXI/G14JhOC
+	Nn8SZMZMwXsu2w==
+X-Google-Smtp-Source: AGHT+IHLWCUcWn5F+rrkIZfLYDGdPNjX/5KloKg1jJwtTzLo8KFaHpTxeyhVruBP98y2PyGB+rcWDw==
+X-Received: by 2002:a05:6a00:1396:b0:72d:710d:611c with SMTP id d2e1a72fcca58-72fd0c7c142mr29936084b3a.20.1738585525985;
+        Mon, 03 Feb 2025 04:25:25 -0800 (PST)
+Received: from ubuntu ([175.141.178.229])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69ba322sm8256635b3a.110.2025.02.03.04.25.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 04:25:25 -0800 (PST)
+Date: Mon, 3 Feb 2025 12:25:21 +0000
+From: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: andreas.noever@gmail.com, michael.jamet@intel.com, 
+	YehezkelShB@gmail.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] thunderbolt: Disable Gen 4 Recovery on Asymmetric
+ Transitions
+Message-ID: <wxgsteiuto6qivnfttzuyw6jijs6ypcq4oyepqr6zbjgeez3ac@flvlpzswuyco>
+References: <20250131014406.28645-1-rahimi.mhmmd@gmail.com>
+ <20250131014406.28645-4-rahimi.mhmmd@gmail.com>
+ <20250203084224.GE3713119@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="QNJzo4TIn39F+gZd"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250131-gpio-set-array-helper-v1-13-991c8ccb4d6e@baylibre.com>
-X-Cookie: May your camel be as swift as the wind.
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250203084224.GE3713119@black.fi.intel.com>
 
+Hello.
 
---QNJzo4TIn39F+gZd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Feb 03, 2025 at 10:42:24AM GMT, Mika Westerberg wrote:
+> Hi,
+> 
+> On Fri, Jan 31, 2025 at 01:41:27AM +0000, Mohammad Rahimi wrote:
+> > Updates the Connection Manager to disable the Gen 4 Link Recovery
+> > flow before transitioning from a Symmetric Link to an Asymmetric
+> > Link, as specified in recent changes to the USB4 v2 specification.
+> > 
+> > According to the "USB4 2.0 ENGINEERING CHANGE NOTICE FORM"
+> > published in September 2024, the rationale for this change is:
+> > 
+> >   "Since the default value of the Target Asymmetric Link might be
+> >   different than Symmetric Link and Gen 4 Link Recovery flow checks
+> >   this field to make sure it matched the actual Negotiated Link Width,
+> >   we’re removing the condition for a Disconnect in the Gen 4 Link
+> >   Recovery flow when Target Asymmetric Link doesn’t match the actual
+> >   Link width and adding a Connection Manager note to Disable Gen 4 Link
+> >   Recovery flow before doing Asymmetric Transitions."
+> > 
+> > Signed-off-by: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
+> 
+> I did some minor modifications and applied to thunderbolt.git/next. Please
+> let me know if I missed something.
+> 
 
-On Fri, Jan 31, 2025 at 02:24:53PM -0600, David Lechner wrote:
-> Reduce verbosity by using gpiods_set_array_value_cansleep() instead of
-> gpiods_set_array_value_cansleep().
+Looks great. Just one question:
 
-Acked-by: Mark Brown <broonie@kernel.org>
+In tb_configure_asym(), if tb_switch_set_link_width() fails, we won’t restore
+the link recovery status. Is that okay?
 
---QNJzo4TIn39F+gZd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmegtZYACgkQJNaLcl1U
-h9BWNAf8CyCYjo0Xa7gTkGLLmI7BwVTj9VwAQiohEN7S8mXh4x6BMNsbB+GhBmqK
-2cqPWAhXgBCR1kvmebge+UItA8kk9Hm/vKTZ2fJEuzIYpyKG6wVv65lqUDTGme3j
-svxI492/g6DoPUWI/ZaK8PUVOqmQNjE+wky7xOZdb2eG5WFl5OwmCxNLlXogEngj
-cWS5wNOJfsvcnrpTUwUP3HFFMEqmCU+KQAvQrEDnNEi5ad4AHR9kElX7nlTRNvtQ
-CEboCfNuVvPxROZwWiizYuHZ920bL96QbtbAOiaXsYF5okR3tpwqkS07hsFyNr0u
-JaOgDbfFUiICPW9L9H5h2OFYo5ZpxQ==
-=nBtG
------END PGP SIGNATURE-----
-
---QNJzo4TIn39F+gZd--
+> I tested on Intel reference hardware as well but on those link recovery is
+> already disabled so it pretty much does nothing. Below are the steps that I
+> followed:
+> 
+> 1. Boot with "thunderbolt.asym_threshold=10000" so that the driver switches
+>    links to asymmetric already upon first DP connect.
+> 
+> 2. Connect USB4 v2 hub.
+> 3. Check link and PORT_CS_19:
+> 
+> # tblist -v
+> Domain 0 Route 0: 8087:5781 Intel Barlow Host Router
+>   Type: Router
+>   UUID: c9680000...
+>   Generation: USB4
+>   NVM version: 56.81
+> 
+> Domain 0 Route 1: 8087:1234 Intel Barlow HUB Router
+>   Type: Router
+>   Speed (Rx/Tx): 80/80 Gb/s
+>   Authorized: No
+>   UUID: e9688780...
+>   Generation: USB4
+>   NVM version: 56.81
+> 
+> # tbdump -r 0 -a 1 -vv -N 1 PORT_CS_19
+> 0x00d3 0x0004000e 0b00000000 00000100 00000000 00001110 .... PORT_CS_19     
+>   [00:00]        0x0 Downstream Port Reset (DPR)
+>   [01:01]        0x1 Request RS-FEC Gen 2 (RS2)
+>   [02:02]        0x1 Request RS-FEC Gen 3 (RS3)
+>   [03:03]        0x1 USB4 Port is Configured (PC)
+>   [04:04]        0x0 USB4 Port is Inter-Domain (PID)
+>   [16:16]        0x0 Enable Wake on Connect
+>   [17:17]        0x0 Enable Wake on Disconnect
+>   [18:18]        0x1 Enable Wake on USB4 Wake
+>   [19:19]        0x0 Enable Wake on Inter-Domain
+>   [24:24]        0x0 StartAsymmetricFlow
+>   [30:30]        0x0 Initiate Gen 4 Link Recovery (ILR)
+>   [31:31]        0x0 Enable Gen 4 Link Recovery (ELR)
+> 
+> # tbdump -r 1 -a 1 -vv -N 1 PORT_CS_19
+> 0x00d3 0x0004000e 0b00000000 00000100 00000000 00001110 .... PORT_CS_19     
+>   [00:00]        0x0 Downstream Port Reset (DPR)
+>   [01:01]        0x1 Request RS-FEC Gen 2 (RS2)
+>   [02:02]        0x1 Request RS-FEC Gen 3 (RS3)
+>   [03:03]        0x1 USB4 Port is Configured (PC)
+>   [04:04]        0x0 USB4 Port is Inter-Domain (PID)
+>   [16:16]        0x0 Enable Wake on Connect
+>   [17:17]        0x0 Enable Wake on Disconnect
+>   [18:18]        0x1 Enable Wake on USB4 Wake
+>   [19:19]        0x0 Enable Wake on Inter-Domain
+>   [24:24]        0x0 StartAsymmetricFlow
+>   [30:30]        0x0 Initiate Gen 4 Link Recovery (ILR)
+>   [31:31]        0x0 Enable Gen 4 Link Recovery (ELR)
+> 
+> 3. Connect monitor to USB4 v2 hub.
+> 4. Check link and PORT_CS_19.
+> 
+> # tblist -v
+> Domain 0 Route 0: 8087:5781 Intel Barlow Host Router
+>   Type: Router
+>   UUID: c9680000...
+>   Generation: USB4
+>   NVM version: 56.81
+> 
+> Domain 0 Route 1: 8087:1234 Intel Barlow HUB Router
+>   Type: Router
+>   Speed (Rx/Tx): 120/40 Gb/s
+>   Authorized: No
+>   UUID: e9688780...
+>   Generation: USB4
+>   NVM version: 56.81
+> 
+> # tbdump -r 0 -a 1 -vv -N 1 PORT_CS_19
+> 0x00d3 0x0004000e 0b00000000 00000100 00000000 00001110 .... PORT_CS_19
+>   [00:00]        0x0 Downstream Port Reset (DPR)
+>   [01:01]        0x1 Request RS-FEC Gen 2 (RS2)
+>   [02:02]        0x1 Request RS-FEC Gen 3 (RS3)
+>   [03:03]        0x1 USB4 Port is Configured (PC)
+>   [04:04]        0x0 USB4 Port is Inter-Domain (PID)
+>   [16:16]        0x0 Enable Wake on Connect
+>   [17:17]        0x0 Enable Wake on Disconnect
+>   [18:18]        0x1 Enable Wake on USB4 Wake
+>   [19:19]        0x0 Enable Wake on Inter-Domain
+>   [24:24]        0x0 StartAsymmetricFlow
+>   [30:30]        0x0 Initiate Gen 4 Link Recovery (ILR)
+>   [31:31]        0x0 Enable Gen 4 Link Recovery (ELR)
+> 
+> # tbdump -r 1 -a 1 -vv -N 1 PORT_CS_19
+> 0x00d3 0x0004000e 0b00000000 00000100 00000000 00001110 .... PORT_CS_19
+>   [00:00]        0x0 Downstream Port Reset (DPR)
+>   [01:01]        0x1 Request RS-FEC Gen 2 (RS2)
+>   [02:02]        0x1 Request RS-FEC Gen 3 (RS3)
+>   [03:03]        0x1 USB4 Port is Configured (PC)
+>   [04:04]        0x0 USB4 Port is Inter-Domain (PID)
+>   [16:16]        0x0 Enable Wake on Connect
+>   [17:17]        0x0 Enable Wake on Disconnect
+>   [18:18]        0x1 Enable Wake on USB4 Wake
+>   [19:19]        0x0 Enable Wake on Inter-Domain
+>   [24:24]        0x0 StartAsymmetricFlow
+>   [30:30]        0x0 Initiate Gen 4 Link Recovery (ILR)
+>   [31:31]        0x0 Enable Gen 4 Link Recovery (ELR)
