@@ -1,81 +1,80 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C9E25A62B;
-	Mon,  3 Feb 2025 04:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D33CA70809;
+	Mon,  3 Feb 2025 04:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738555560; cv=none; b=t1loEZ4GzwXAvfYem/icndB+zqx2qNoVVYbj8l30SZ0PCXwoRvjIs+W2TBBQozG2YMUIC0ng8sas7dJ1/MdAStajZIy+S+kOD+AweD5at1RQQp/cRvlb9pXuGNkk3rRX+CBy+ckv4eL0TULznnwVdJSbKsawsrhs9X0mrwCkDnM=
+	t=1738555669; cv=none; b=Gw+kkI7YTHGJPbpA2HimOn4rG7kLpZGa2r0GBgZY27rDWiJ/MQsETHJI0nYb3+yKf/gvWzAq3gaS0LWL6mAeXwtNqNCLcEgbJef7kdS9q59vDSp0cVhUuWw04Jm0XiB3MU+F+UF4gyMZTkEHQztfz9FaGQ4LUpnBkBwJJ142zqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738555560; c=relaxed/simple;
-	bh=EfiRw7gB8e/5MLrWL0BiJdfLFcVW2LHs3Jq0FFdnVo0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SrSPIjdsmzK1toqewb0nk3RFqp5XYrxVDmX+xIwx5Ib4eBrkui9mrR4t4qpYuLGJaBIijgtwzP21q+sHNxiPi20exwcEqLa3q9xZuJrHjCgC+z3ZZXgCuP/+r1b3NzE073vjOriehGFjcinaamM5SLP7BahItRlshOQbZIWsOT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=WqdTiAAe; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="WqdTiAAe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1738555556;
-	bh=EfiRw7gB8e/5MLrWL0BiJdfLFcVW2LHs3Jq0FFdnVo0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=WqdTiAAetAQKzDnEKAxG/R3ri9ZP0gG2mu2AqTf9zfCQLmvqRHEeqcjlFbxI8q6Vy
-	 YF5PJSeqgtcjFe1LFbJC7ga2/nTFHbxtubP0f891BE/g+tFzX+zAEmsWPgNql1/yKH
-	 uHiZzlkHo2WpAr8ze2u9IRE5+90PhFevbqvS2n05CB4w7oDoh04u/2/NzwBDNdx5IU
-	 YFqjgAhGJsfgGdg4jsPZzQSN5fuH55Opp9YUfK3r9NjHNEIBHIchSz5Z/eKcreUbdu
-	 u76oHkujWbGyHwDUgfpE207FzjXJlYYVk9mp1TR4ZW1v5gqJmFWdMqaVj5IAEVElvk
-	 /VSJ7VAFCHPzQ==
-Received: from [192.168.68.112] (58-7-156-140.dyn.iinet.net.au [58.7.156.140])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id BD4E773C54;
-	Mon,  3 Feb 2025 12:05:51 +0800 (AWST)
-Message-ID: <f01ea3f0184cb598cdfcc22d304ea31ef5b7dbbc.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v7 1/1] watchdog: aspeed: Update bootstatus handling
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Chin-Ting Kuo <chin-ting_kuo@aspeedtech.com>, patrick@stwcx.xyz, 
-	linux@roeck-us.net, wim@linux-watchdog.org, joel@jms.id.au, 
-	linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: Peter.Yin@quantatw.com, Patrick_NC_Lin@wiwynn.com,
- BMC-SW@aspeedtech.com,  chnguyen@amperecomputing.com,
- aaron_lee@aspeedtech.com
-Date: Mon, 03 Feb 2025 14:35:50 +1030
-In-Reply-To: <20250113093737.845097-2-chin-ting_kuo@aspeedtech.com>
-References: <20250113093737.845097-1-chin-ting_kuo@aspeedtech.com>
-	 <20250113093737.845097-2-chin-ting_kuo@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1738555669; c=relaxed/simple;
+	bh=WiErfKDTIO2GUE6Pb3PkwOPEVJSvmC7PZ0BfyEI2FZ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uQGSH3ClotoyboO002mYyWiChWKgadlt5I3CNNwswCs3kMXoUhrg7PsoFl4zLCIV9FgNQb969xLlLjq3NMiDElScB0cPe4aXFYc/kB4btcQEqO1sI0DQyPaV2GJsY88dKtmiq+TRZuboMWD5rbbRqe3oMKP28Achp/OA7zR+tC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A751A1476;
+	Sun,  2 Feb 2025 20:08:03 -0800 (PST)
+Received: from [10.162.16.79] (unknown [10.162.16.79])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C29863F63F;
+	Sun,  2 Feb 2025 20:07:34 -0800 (PST)
+Message-ID: <1910b0da-68fe-4161-b7bb-f0d5ac8d5fe7@arm.com>
+Date: Mon, 3 Feb 2025 09:37:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 01/11] perf: arm_pmuv3: Call kvm_vcpu_pmu_resync_el0()
+ before enabling counters
+To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-1-1c1300802385@kernel.org>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250202-arm-brbe-v19-v19-1-1c1300802385@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2025-01-13 at 17:37 +0800, Chin-Ting Kuo wrote:
-> The boot status in the watchdog device struct is updated during
-> controller probe stage. Application layer can get the boot status
-> through the command, cat /sys/class/watchdog/watchdogX/bootstatus.
-> The bootstatus can be,
-> WDIOF_CARDRESET =3D> System is reset due to WDT timeout occurs.
-> Others=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D> Other r=
-eset events, e.g., power on reset.
->=20
-> On ASPEED platforms, boot status is recorded in the SCU registers.
-> - AST2400: Only a bit is used to represent system reset triggered by
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 any WDT cont=
-roller.
-> - AST2500/AST2600: System reset triggered by different WDT
-> controllers
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 can be distinguished by different SCU =
-bits.
->=20
-> Besides, on AST2400 and AST2500, since alternating boot event is
-> also triggered by using WDT timeout mechanism, it is classified
-> as WDIOF_CARDRESET.
->=20
-> Signed-off-by: Chin-Ting Kuo <chin-ting_kuo@aspeedtech.com>
 
-Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+
+On 2/3/25 06:12, Rob Herring (Arm) wrote:
+> Counting events related to setup of the PMU is not desired, but
+> kvm_vcpu_pmu_resync_el0() is called just after the PMU counters have
+> been enabled. Move the call to before enabling the counters.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  drivers/perf/arm_pmuv3.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+> index 0e360feb3432..9ebc950559c0 100644
+> --- a/drivers/perf/arm_pmuv3.c
+> +++ b/drivers/perf/arm_pmuv3.c
+> @@ -825,10 +825,10 @@ static void armv8pmu_start(struct arm_pmu *cpu_pmu)
+>  	else
+>  		armv8pmu_disable_user_access();
+>  
+> +	kvm_vcpu_pmu_resync_el0();
+> +
+>  	/* Enable all counters */
+>  	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_E);
+> -
+> -	kvm_vcpu_pmu_resync_el0();
+>  }
+>  
+>  static void armv8pmu_stop(struct arm_pmu *cpu_pmu)
+> 
+
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
