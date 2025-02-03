@@ -1,107 +1,113 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7D2208995
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0A6209F35;
+	Mon,  3 Feb 2025 15:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738596962; cv=none; b=UWwXUitUTB+SYX9rLf16cvpNnBYWvHUqWiz21R2NrX/FPj0zqemSDjdAQX0Tw8mI70Sf5Nhr4qlSZqUx3qoigMJmwaGd/rk+d6uadZS27OWutE2Wd+7+gv70a6WEhMR/UTUQBreFiA0Bx9nFoewK66YaYoJohlISJth2fHtYPwM=
+	t=1738597028; cv=none; b=edKSKfdiewCFHRBfM2DDz+vS1ycXhARFLgDIiDv2NaoVxDwo3+gzBBg6ZnrMcZsH7li+tLzwTcA7M+oVPtKxBZ+HmMsjnF6x4HXrOIzTpoQGkJs2wnjkAobYJpUqDfiT1ACcSfLon6dGQ5OJ3qRprFo4MIdFxaB14jDgQzqb5ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738596962; c=relaxed/simple;
-	bh=NbT2jse7OVFtYE1b/6ZwaPDTwl+uyOn9KBHEP6I2QzI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZYuV7HcPa1Kcib+6JMAxrBBKZCRjR87M4FOxP5Uj3YcgcT+cis0Hpf3qMAQHaFwwcz71v4JFjBENlkvP7Owp1cgJatMlEdlrBSD378N93VdDUfhPFRnputz77e2t1Vc2tNQGR7SpuDasfvfB7JyezgpA7BuHpTiQQU1CmHOjS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lFAM/nHP; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738597028; c=relaxed/simple;
+	bh=PzVDimxpMVmqHkj6Wi8NHyIcxugKilb5dXJ7vtyncGw=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=W9vtVVaSA2zY4GdubDvbRH/rkbuUoqbSFdK6BHkZeV3BSRMlG/185jNkeDxwL42KlfrJLGXHOPpOwFwVa3d4Sw6RVsy0kMc+R7KINsyuMByah6SPU3gJ7K+beNi90/V8Nf1+i5stSjxPA+6OgX9ASTdq6KL6ikLnduFb66t9W90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENwwrB+P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFAM/nHP"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-436326dcb1cso31363135e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 07:36:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738596958; x=1739201758; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=azH/4pudPJJXolsxfYoMtAK2j6+tp+fBiLsk0O5rQeQ=;
-        b=lFAM/nHPM8PB2TXpcghtBQCtg9xdjWRX7SoKOnWuo2sfoEXeaZ0n8UG2kyjUQzCo4L
-         I+uoYFPvz0vRM2nt3/P3qXseblr1zPVr/MfhubhwC3romehyUeXT9GhozbbcUxiapDOY
-         /0nLLUE1QsjIeuq9/dW+HjYyzsnyRZBwDNI54HSS/MYguf6+ZGhPeJPNMK/iQbx7pH6x
-         yWmnVYqJdfF0gZt3WBG0HKLERoZ+OVPeyXjkS0FE34PvAfstihtr6pPADF4eE1ZDamt9
-         bD9xdqk2zWcDNbkySx6TCTI9dIMZeEfnVvIuDQ4+pkZfaq6LADUuVVxvQjGm2suuf+ZI
-         hAfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738596958; x=1739201758;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=azH/4pudPJJXolsxfYoMtAK2j6+tp+fBiLsk0O5rQeQ=;
-        b=EXJDPoCULpFB6RWilZ61jAxOTtRiXR+85TbNsLebUcn5PWgaPHXbT6Qa1hAZxbRCmX
-         RognH8Twb/pxoE5ewlanF/FmknfLytTEAIKenKfS7BD74z8IfHKza6tOJa+rlJo1XWm0
-         3ip+CcmlF5DchpN5McRHs7unTUHIRzCubgkRUU0jdIYV0OGndsN9Hy+ao8w9txoi+2PI
-         7y0wzgl9b5RJ7Wl5PwL1Qb9n4PH72gh3gS7c17kdGmWfsuUtiTg80L5ib9igFF7OnTW/
-         033JlQiJzmEAKfn4lo27ei+f3tRbIY0jSYPYZQhVXrl5CMGmw9CiPavPLhv9hizhkzQX
-         clRg==
-X-Forwarded-Encrypted: i=1; AJvYcCXzrBgNsQtEY6REwWKZscAmEEJG9U4+qD9Yk6lnKarlmwvDfi2mzwBgD0xpc18wbA24D1hMMVxKx+jp+GI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5ndxiusMKbpWBeu6ssHGF+VZgc9EBvSKqAxcrWJiedEjww/+b
-	Kcl3sqUKPckcl+cxx+vSeZElOyDGjNIhSQHLnJXeMp3CpVBpibqNIMxOn5TK
-X-Gm-Gg: ASbGncvISDyY9rVnmLYcg6XjKI44c8ZszblQUWjQ7ug0wJOtEAukZpybXVJKKi98TRh
-	UK+kNE02fMKZmhiyh1xnj+g88uM9lQV6lTqR3m6yx2ise5XayB6w0NEduQL0WIa7Q+U3dhoSVNT
-	DinN1ej+ubuFdLPplP5B21vhqbrUlf5ANz/4GDS/fg/yuZonOnx8YuwQKTnND5nmTXgut6hxQSA
-	SGlebzehTatwOsN6Zm820k7+WlWM6dw/8zMXEvDRmzweWNT5acySwl1msdhQA6t69ULrMTjuQKX
-	uRFRqDqk
-X-Google-Smtp-Source: AGHT+IHXIqNw+N1lB9ZZpb0dsMHwzYhno1UN8hXSkLNTI/vtKpv/45SICNEZcEigBsrTiarPNrxXGg==
-X-Received: by 2002:a05:600c:1c29:b0:434:e9ee:c1e with SMTP id 5b1f17b1804b1-438dc43625bmr201127175e9.31.1738596958366;
-        Mon, 03 Feb 2025 07:35:58 -0800 (PST)
-Received: from egonzo ([2a01:e0a:9ad:d3b0:ec4c:9f30:1dfe:440a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc80e61sm196512015e9.34.2025.02.03.07.35.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 07:35:57 -0800 (PST)
-Date: Mon, 3 Feb 2025 16:35:55 +0100
-From: Dave Penkler <dpenkler@gmail.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Ian To <onlyian4981@gmail.com>, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: gpib: format no multiple blank lines
-Message-ID: <Z6DiWyufORWca-4T@egonzo>
-References: <Z5yISXwXoyl59XWo@DESKTOP-GL3U3CJ>
- <2025020335-impromptu-renewable-83e8@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENwwrB+P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9637AC4CED2;
+	Mon,  3 Feb 2025 15:37:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738597027;
+	bh=PzVDimxpMVmqHkj6Wi8NHyIcxugKilb5dXJ7vtyncGw=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=ENwwrB+P1O9DXWFXtTId6TOjG5TTATnupf0gmJ2sTRcTu4lyUdFovAU/eUzQ33KvV
+	 gRd01o1WzL2QjEYeKoUUeLTzTOiUHINKsc0bmUDKRASlB5KS8X52jggQMAtAKQPjHK
+	 OGkJD0YddrfzUFnV9miCIWB2uDXB0eBeVREQGZZGL9xmmUewJBxnX85+kZc6fysa19
+	 VsXdYm6D/BHqd5K/d8g0dX5zwIKdNpyq0F+JMOOE1vwva9qDOgsjceU4u+OihF+4HK
+	 sNtXJSfA5S7pFdTaxzEEDBEvK7x+tFkN4LuxRIG5LjAI/5EzMiy0QRweHAh51v2Npj
+	 nJxB4nWaXaz6w==
+Date: Mon, 03 Feb 2025 09:37:06 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025020335-impromptu-renewable-83e8@gregkh>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Woojung Huh <woojung.huh@microchip.com>, Paolo Abeni <pabeni@redhat.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, devicetree@vger.kernel.org, 
+ Eric Dumazet <edumazet@google.com>, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ netdev@vger.kernel.org, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ kernel@pengutronix.de
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+In-Reply-To: <20250203085820.609176-1-o.rempel@pengutronix.de>
+References: <20250203085820.609176-1-o.rempel@pengutronix.de>
+Message-Id: <173859694746.2601652.11244969424431209545.robh@kernel.org>
+Subject: Re: [PATCH v3 0/4] Add support for Priva E-Measuringbox board
 
-On Mon, Feb 03, 2025 at 04:09:45PM +0100, Greg KH wrote:
-> On Fri, Jan 31, 2025 at 12:22:33AM -0800, Ian To wrote:
-> > Avoid adding multiple blank lines. Reported by checkpatch.
-> > 
-> > Signed-off-by: Ian To <onlyian4981@gmail.com>
-> > ---
-> >  drivers/staging/gpib/hp_82341/hp_82341.h | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/drivers/staging/gpib/hp_82341/hp_82341.h b/drivers/staging/gpib/hp_82341/hp_82341.h
-> > index 0065ebd9747c..d3cf1f43a1ef 100644
-> > --- a/drivers/staging/gpib/hp_82341/hp_82341.h
-> > +++ b/drivers/staging/gpib/hp_82341/hp_82341.h
-> > @@ -26,7 +26,6 @@ struct hp_82341_priv {
-> >  	enum hp_82341_hardware_version hw_version;
-> >  };
-> >  
-> > -
-> >  // interface functions
-> >  int hp_82341_accel_read(gpib_board_t *board, uint8_t *buffer, size_t length, int *end,
-> >  			size_t *bytes_read);
-> > -- 
-> > 2.45.3
-> > 
-> > 
+
+On Mon, 03 Feb 2025 09:58:16 +0100, Oleksij Rempel wrote:
+> This patch series introduces support for the Priva E-Measuringbox board
+> based on the ST STM32MP133 SoC. The set includes all the necessary
+> changes for device tree bindings, vendor prefixes, thermal support, and
+> board-specific devicetree to pass devicetree validation and checkpatch
+> tests.
 > 
-> Does not apply cleanly to 6.14-rc1 :(
-An earlier patch, commit 8418753187ba ("staging: gpib: Make static, reduce fwd declarations") changed this file. It is at this point checkpatch clean.
-cheers,
--dave
+> changes v2:
+> - drop: dt-bindings: net: Add TI DP83TD510 10BaseT1L PHY
+> 
+> Oleksij Rempel (2):
+>   dt-bindings: vendor-prefixes: Add prefix for Priva
+>   dt-bindings: arm: stm32: Add Priva E-Measuringbox board
+> 
+> Roan van Dijk (2):
+>   arm: dts: stm32: Add thermal support for STM32MP131
+>   arm: dts: stm32: Add Priva E-Measuringbox devicetree
+> 
+>  .../devicetree/bindings/arm/stm32/stm32.yaml  |   6 +
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>  arch/arm/boot/dts/st/Makefile                 |   1 +
+>  arch/arm/boot/dts/st/stm32mp131.dtsi          |  35 ++
+>  arch/arm/boot/dts/st/stm32mp133c-prihmb.dts   | 496 ++++++++++++++++++
+>  5 files changed, 540 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/st/stm32mp133c-prihmb.dts
+> 
+> --
+> 2.39.5
+> 
+> 
+> 
+
+
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/st/' for 20250203085820.609176-1-o.rempel@pengutronix.de:
+
+arch/arm/boot/dts/st/stm32mp133c-prihmb.dtb: adc@48004000: adc@0:interrupts: 0 was expected
+	from schema $id: http://devicetree.org/schemas/iio/adc/st,stm32-adc.yaml#
+arch/arm/boot/dts/st/stm32mp133c-prihmb.dtb: adc@48003000: adc@0:interrupts: 0 was expected
+	from schema $id: http://devicetree.org/schemas/iio/adc/st,stm32-adc.yaml#
+
+
+
+
+
