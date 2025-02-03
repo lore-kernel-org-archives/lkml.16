@@ -1,222 +1,196 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83402211294
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 22:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E34D21129D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 22:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738622533; cv=none; b=CJrdv59ggT1w4AXC+3sOH6P8Cnke7eR7ojed4bF3OEwv1RLbKAPRwz2hQue3+2Vs8C/xcg4wnuXl38XjzEiR1eZv3mXCHM9/tzjQooFW28DjBFB+f/FLfOTd1HUtTduSoWf9Bhu6RDIDRQW4ZYK3a1Rjo5YrOikijaYW5ZAfrpY=
+	t=1738622557; cv=none; b=TvmS4uPo4GKZ49t11RZMdHQr+UVG0jR9VfQdFxcxbEwLLXupTtCvuorxP8i7ASjmhj3d5yBvsEYJYICh2cz/ej17o9u5+ZhAsgyuKYy0K9ZI5I/B3Y65IQ4t0lb6/Vr95Z14/TaAk5HXKeBVk4ZjaVrZU5A4Nn/BWJVpDB4P4nE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738622533; c=relaxed/simple;
-	bh=SXY/ut4HPZGjQfV0TdHI+owQ/8IPFSL6uBL1jYm5kIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=lPhsSuhqOqBe6x7c6c/7akll5PK5r2wGduqzCzmXKiCjbMKDhHnnz1qRxEdTJY8wDYitxaJNO00lPG9UdelA6pxmob85DDYVUVfC0azWERuvL1lR9jVkx5b39Xh+Bo7w0fL2rD7hOQc6QxMbyjCJTQ9Qi8zJnuyul0A0MbqB6/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=f+6XVLDT; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1738622557; c=relaxed/simple;
+	bh=v2j6fiiUGhso4oABJ21kmiHiIb3uWi2+guik3vHO1as=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=UR4owHCQwwYnqQJtrt+SwAWGEnKjmPuj9K2z+i+uazaQr1cG8Z8EEO3DJNXGyZNf0EOuk2gqnP/dMueGRzDoZng+Jd54em5xASa4ZgQ0HsY/ON33+2qSNzTRw1njwN8oXTJAOf3LzW5dNIAQ8DnCrj1ZiumKqC/8ZmbfshgINWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WZDfe7ZO; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="f+6XVLDT"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3ebb4aae80dso2214989b6e.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:42:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738622530; x=1739227330; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SJnIfOP7+jSlUs29FECy5//ffpMPbLe/6pSEbA38u3M=;
-        b=f+6XVLDTnechdqBluVSaw5ZSyuaeMkrWSCzOIU0YoBMQyd87gOtCjssN32aN+ldeTf
-         Pqh8ZBTqzNfmbgqz8hLrf9IbtyuDBZUxTWVY+fqhFSHs5igqV7RjkcH7Y5SfBThQ1NTt
-         SzNIzm6rbA39f7faGwOlb9dJlqlzH741aSKQE3djTpu4XuWwdeeO/UYTHQ1H+J2WM+js
-         ThAahDQZCxFRBTEMnq3hBwH0xepC+q9gT3cezWS2iVYCsDliAiqK/tP2BwYEnLqCp5y+
-         Z4GnsPhmf3k+bEox8ce/qAQWKkQ+E0UGsmCcpAGFrm5FZPiB85WjnAW9bnFJr2PiSY1h
-         VYKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738622530; x=1739227330;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SJnIfOP7+jSlUs29FECy5//ffpMPbLe/6pSEbA38u3M=;
-        b=wOPjLE8ru3DXhPou5viAeYIGjeYR+jySmbBbrKVOKHQHiOChgr9TNkAHFd4GJVC2o/
-         LNSLaKMV5AMwgsECgvoQTrT1wxF5dJ2hfxTNPW4BW5nAAqnac7BXYYR+PESfpHBYDtvc
-         PILRiOm6ShzrLbXWT3eOzIMdle8WomammW7evZ18w2xYcvu/USjd61kFmKpbimDwmTrw
-         wgzO0SSi/WHC1F4gxbtEKus9bPK5cTeDCulRTmEx/KhPEz2NzWUbJqjXuTQb3VftiW7Y
-         CI27Uec6zP5eTpKJ0Tiv4xF9p9FNwLhcUipHORGl9u0CuYtPTyL8aIhTtEM8yDSby7x5
-         /EMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDBi15yiAulgPOyuB4t/ODnLhKzD6MFZpgKRoiicfj+syJvSvDq2/Jyg0DYGePaYYuE47TMp1znUogYTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJReF5mQXTPlRrLLGIw+Mo/XixmUCfcTr75NP7jOopfJZCVIEv
-	QnMuIUkmjv4kfxORLN0vwGzYjlYQ37YAqPndMLaIjua+XI6mRWYctR1mWKH9PKg=
-X-Gm-Gg: ASbGncsVV0w1JeYiuVgwiE4PIGcUklcW6I63pWQGvM07kGw3jhaBHF/mArqCWFxDAew
-	4VNwrF6IdTgpuk+T5/Pljyk7DRsnJRGL+IeElA4Dlht3Fjsw6kH4EAXQSchn7A1SSLc8uSlZHb0
-	JOmyMkf62o2RQi/eG1TPoB2EWsKBhU8r1cfWpotAwF7YfHoW1ZyM/zza8zxOlTWYgv3aJJquxgA
-	W4P6alKH/KwLltXGVNO0thk7YMpQqZgRf9lbzED4uY+mH613VWNvSAL/UWUuVTRZmbIoujn45fw
-	7HZ42EQzaw8rxhpsIoSVWgOw4vSd3ZhYCPYu7TBcvip7p3VN9Zh2
-X-Google-Smtp-Source: AGHT+IGPg3Ki4+QlI+PnxMX8N884nW9RTygynBG8qVyReXZuEsEhrg1HOrCB1+xLT/4DE7U7CBVGQQ==
-X-Received: by 2002:a05:6808:2f16:b0:3e7:df63:15bc with SMTP id 5614622812f47-3f323a184cdmr15101787b6e.12.1738622530456;
-        Mon, 03 Feb 2025 14:42:10 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f333523efcsm2731729b6e.8.2025.02.03.14.42.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 14:42:09 -0800 (PST)
-Message-ID: <c5722215-b720-49ab-9f0e-00b01eb4679d@baylibre.com>
-Date: Mon, 3 Feb 2025 16:42:08 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WZDfe7ZO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738622555; x=1770158555;
+  h=date:from:to:cc:subject:message-id;
+  bh=v2j6fiiUGhso4oABJ21kmiHiIb3uWi2+guik3vHO1as=;
+  b=WZDfe7ZOcwQtfnTkFtpQj15x1djJOpw94KaXZcu/LmuWdW6m+7YxAD5t
+   EBFBNuOQAmkQqyKtJC4qnWtfgoBJFOzkSbgB7h2xXFniEkhsbMydJ/09F
+   qXpMlkkCatVFECorYTz0An2UI6DlrVvGSkFr/1sDZuj94uboitBYKTwuG
+   DpWyPccZcweWvS94cKSiOwr+EKUVEMz00WWrlRiPXmM8fLY2cBr2utA5H
+   vnIq79fqzqjzxHFcL5uZ9SHJAGW/r0IsmFkZROLRH9hexJFBjXCxj6o4q
+   eROA/pyaeyCmEVII4ikkKpe6VYN2ZWRQivoWHJM/mGZhZlXWXIX6GWUqg
+   A==;
+X-CSE-ConnectionGUID: XNVE3e15QTKc5tK1LqC2zQ==
+X-CSE-MsgGUID: 9kN8Go7ZRRGlfA3UMKncHA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="61604884"
+X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
+   d="scan'208";a="61604884"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 14:42:34 -0800
+X-CSE-ConnectionGUID: MgYcbs0ETOuvGbQZPyi/DQ==
+X-CSE-MsgGUID: e0Ctb1B5QyClh/xfSgrx8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
+   d="scan'208";a="110308045"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 03 Feb 2025 14:42:33 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tf59D-000rcl-0o;
+	Mon, 03 Feb 2025 22:42:31 +0000
+Date: Tue, 04 Feb 2025 06:42:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:tip/urgent] BUILD SUCCESS
+ 68c149079f154436acac3d8f01cf6e541150484f
+Message-ID: <202502040606.dzMHBVgd-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 8/8] iio: adc: ad4851: add ad485x driver
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org,
- robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org
-References: <20250127105726.6314-1-antoniu.miclaus@analog.com>
- <20250127105726.6314-9-antoniu.miclaus@analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250127105726.6314-9-antoniu.miclaus@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 1/27/25 4:57 AM, Antoniu Miclaus wrote:
-> Add support for the AD485X a fully buffered, 8-channel simultaneous
-> sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
-> differential, wide common-mode range inputs.
-> 
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
+branch HEAD: 68c149079f154436acac3d8f01cf6e541150484f  Merge branch into tip/master: 'x86/urgent'
 
-I think we have the important bits sorted now (i.e. userspace-facing stuff).
-Just noticed a few minor things in the latest revision.
+elapsed time: 725m
 
+configs tested: 119
+configs skipped: 2
 
-> +static int ad4851_setup(struct ad4851_state *st)
-> +{
-> +	unsigned int product_id;
-> +	int ret;
-> +
-> +	if (st->pd_gpio) {
-> +		/* To initiate a global reset, bring the PD pin high twice */
-> +		gpiod_set_value(st->pd_gpio, 1);
-> +		fsleep(1);
-> +		gpiod_set_value(st->pd_gpio, 0);
-> +		fsleep(1);
-> +		gpiod_set_value(st->pd_gpio, 1);
-> +		fsleep(1);
-> +		gpiod_set_value(st->pd_gpio, 0);
-> +		fsleep(1000);
-> +	} else {
-> +		ret = regmap_set_bits(st->regmap, AD4851_REG_INTERFACE_CONFIG_A,
-> +				      AD4851_SW_RESET);
-> +		if (ret)
-> +			return ret;
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Do we also need fsleep() after software reset?
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              alldefconfig    gcc-13.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250203    gcc-13.2.0
+arc                   randconfig-002-20250203    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                       aspeed_g5_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250203    clang-18
+arm                   randconfig-002-20250203    gcc-14.2.0
+arm                   randconfig-003-20250203    clang-18
+arm                   randconfig-004-20250203    gcc-14.2.0
+arm                           sama7_defconfig    clang-16
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250203    gcc-14.2.0
+arm64                 randconfig-002-20250203    gcc-14.2.0
+arm64                 randconfig-003-20250203    gcc-14.2.0
+arm64                 randconfig-004-20250203    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250203    gcc-14.2.0
+csky                  randconfig-002-20250203    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250203    clang-21
+hexagon               randconfig-002-20250203    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250203    gcc-12
+i386        buildonly-randconfig-002-20250203    gcc-12
+i386        buildonly-randconfig-003-20250203    clang-19
+i386        buildonly-randconfig-004-20250203    gcc-12
+i386        buildonly-randconfig-005-20250203    clang-19
+i386        buildonly-randconfig-006-20250203    gcc-12
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250203    gcc-14.2.0
+loongarch             randconfig-002-20250203    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                           ip32_defconfig    clang-21
+mips                        omega2p_defconfig    clang-16
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250203    gcc-14.2.0
+nios2                 randconfig-002-20250203    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250203    gcc-14.2.0
+parisc                randconfig-002-20250203    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                 mpc834x_itx_defconfig    clang-21
+powerpc                  mpc885_ads_defconfig    clang-18
+powerpc                      pasemi_defconfig    clang-21
+powerpc               randconfig-001-20250203    clang-21
+powerpc               randconfig-002-20250203    clang-16
+powerpc               randconfig-003-20250203    gcc-14.2.0
+powerpc64             randconfig-001-20250203    gcc-14.2.0
+powerpc64             randconfig-002-20250203    clang-18
+powerpc64             randconfig-003-20250203    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-21
+riscv                    nommu_k210_defconfig    clang-15
+riscv                 randconfig-001-20250203    clang-16
+riscv                 randconfig-002-20250203    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250203    clang-19
+s390                  randconfig-002-20250203    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250203    gcc-14.2.0
+sh                    randconfig-002-20250203    gcc-14.2.0
+sh                        sh7785lcr_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250203    gcc-14.2.0
+sparc                 randconfig-002-20250203    gcc-14.2.0
+sparc64               randconfig-001-20250203    gcc-14.2.0
+sparc64               randconfig-002-20250203    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250203    gcc-12
+um                    randconfig-002-20250203    clang-18
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250203    clang-19
+x86_64      buildonly-randconfig-002-20250203    gcc-12
+x86_64      buildonly-randconfig-003-20250203    gcc-12
+x86_64      buildonly-randconfig-004-20250203    clang-19
+x86_64      buildonly-randconfig-005-20250203    gcc-12
+x86_64      buildonly-randconfig-006-20250203    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250203    gcc-14.2.0
+xtensa                randconfig-002-20250203    gcc-14.2.0
+xtensa                    smp_lx200_defconfig    gcc-14.2.0
+xtensa                    xip_kc705_defconfig    gcc-14.2.0
 
-> +	}
-> +
-
-...
-
-> +static int ad4851_parse_channels(struct iio_dev *indio_dev,
-> +				 const struct iio_chan_spec ad4851_chan)
-> +{
-> +	struct ad4851_state *st = iio_priv(indio_dev);
-> +	struct device *dev = &st->spi->dev;
-> +	struct iio_chan_spec *channels;
-> +	unsigned int num_channels, reg;
-> +	unsigned int index = 0;
-> +	int ret;
-> +
-> +	num_channels = device_get_child_node_count(dev);
-> +	if (num_channels > AD4851_MAX_CH_NR)
-> +		return dev_err_probe(dev, -EINVAL, "Too many channels: %u\n",
-> +				     num_channels);
-> +
-> +	channels = devm_kcalloc(dev, num_channels, sizeof(*channels), GFP_KERNEL);
-> +	if (!channels)
-> +		return -ENOMEM;
-> +
-> +	indio_dev->channels = channels;
-> +	indio_dev->num_channels = num_channels;
-> +
-> +	device_for_each_child_node_scoped(dev, child) {
-> +		ret = fwnode_property_read_u32(child, "reg", &reg);
-> +		if (reg >= AD4851_MAX_CH_NR)
-> +			return dev_err_probe(dev, ret,
-> +					     "Invalid channel number\n");
-
-Need to check ret first, otherwise reg may be unintialized.
-
-> +		if (ret)
-> +			return dev_err_probe(dev, ret,
-> +					     "Missing channel number\n");
-> +		*channels = ad4851_chan;
-> +		channels->scan_index = index++;
-> +		channels->channel = reg;
-> +
-> +		if (fwnode_property_present(child, "diff-channels")) {
-> +			channels->channel2 = reg + st->info->max_channels;
-> +			channels->differential = 1;
-> +		}
-> +
-> +		channels++;
-> +
-> +		st->bipolar_ch[reg] = fwnode_property_read_bool(child, "bipolar");
-> +
-> +		if (st->bipolar_ch[reg]) {
-> +			channels->scan_type.sign = 's';
-> +		} else {
-> +			ret = regmap_write(st->regmap, AD4851_REG_CHX_SOFTSPAN(reg),
-> +					   AD4851_SOFTSPAN_0V_40V);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad4857_parse_channels(struct iio_dev *indio_dev)
-> +{
-> +	const struct iio_chan_spec ad4851_chan = AD4857_IIO_CHANNEL;
-> +
-> +	return ad4851_parse_channels(indio_dev, ad4851_chan);
-> +}
-> +
-> +static int ad4858_parse_channels(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4851_state *st = iio_priv(indio_dev);
-> +	struct device *dev = &st->spi->dev;
-> +	struct iio_chan_spec *ad4851_channels;
-> +	const struct iio_chan_spec ad4851_chan = AD4858_IIO_CHANNEL;
-> +	int ret;
-> +
-> +	ad4851_channels = (struct iio_chan_spec *)indio_dev->channels;
-> +
-> +	ret = ad4851_parse_channels(indio_dev, ad4851_chan);
-> +	if (ret)
-> +		return ret;
-> +
-> +	device_for_each_child_node_scoped(dev, child) {
-> +		ad4851_channels->has_ext_scan_type = 1;
-> +		if (fwnode_property_present(child, "bipolar")) {
-
-fwnode_property_read_bool() 
-
-(to be consistent with same check in ad4851_parse_channels())
-
-> +			ad4851_channels->ext_scan_type = ad4851_scan_type_20_b;
-> +			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_b);
-> +
-> +		} else {
-> +			ad4851_channels->ext_scan_type = ad4851_scan_type_20_u;
-> +			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_u);
-> +		}
-> +		ad4851_channels++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
