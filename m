@@ -1,155 +1,104 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C78C2040A6
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 12:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D601FA15E;
+	Mon,  3 Feb 2025 12:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738584784; cv=none; b=irkd6hrRH++F9w7W0dYQzKB3Wi+vRML5oEnkE2zDdT1NSS/6dvnvy7qlljG92vVhBAG02WOdaAUKIImIkSmytV5+YwXBejfPSFL5mSxFhmxuPAtAjo1xt8Sgoax74o6pmyaxAwRHTjaGsGzGcaeLO9z2qk/uGRz8N2JevECBJbo=
+	t=1738584835; cv=none; b=m32vuaKBpftZmUpLVi+MmJo7ZEouCMePeeSAPF7MjkQLXHOPJorNHVcfHvvb7jpqbCQIp5XVGui3w8aSQ+260+TeZomgGHfQNYHt++1fiGWcgKBTiByiucwTch3QEfczoyHI6pqBrGiMmzyyqmHioJO58OLf5tsQ1VZS6AWYasI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738584784; c=relaxed/simple;
-	bh=jNibjm7Z5BWSQUu8aoxS9exwEy1QnRNA66PqXhHW/n0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=htavn98fFR+nDHOPEE1/21Yxt8Ys+jARlfcZxBR2eGu/S4kEuMhGQcZHzrB+DmMzgxxAFSp/5R+GfbzSBjbjQCDjl5ViLdqCkYw6qvrVv6x7Xc1dtigHF3H2HhkqYhCQDnjptLaVmbMmS5cMf+Mxo5eMrLT60bIBIAx+SxAG/p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=W2mK9rsi; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1738584835; c=relaxed/simple;
+	bh=ct1m8qnSRoUG1BuJX26GQpfL2oSAy2xCl3eci1O0qH4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O7GpAWQS7nXOdBVwABuCcM9bH/j4UTAtylCBWm/h+orOxtvEmeTFddmtPT1A+9UeS8Xl5U3FpbcAlr7zLLTQxOvCPkg10HC6LoNAbr/NbRGphVFrZJnVJWRcQBU4QMfR12UauFZNngC998gS29+zS54/7s1a4RQTPAgnBDYdj8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GvhFuRnk; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="W2mK9rsi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1738584780;
-	bh=jNibjm7Z5BWSQUu8aoxS9exwEy1QnRNA66PqXhHW/n0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=W2mK9rsiqT96jETmYB4MAss0AmacvbxIZEkiLTswofWhb/orWPJMG+zInUFphQbL1
-	 G+4dBpC7krikDrUmXyBhTwdstCY9SAXCRPmD727o9v8fdb5JcS/Nufrdy9X2ptQJ0t
-	 haibJYsQoApeqId1JON4SrW5Z5rBmnpKD4DDWIm38MrGDyKujFyMKGkeonYDDRbtys
-	 jWBRQkqZuz2mI/E5LpEWspiC8DMdXpxxupL86rkeKl3ufjnu+bg8KmrY5LbHq9rFbX
-	 aCLc9ppvUUiqiXVwWnQxxX2g6AIgeR8PAM/zYdjCN2jwwYA+InPVikFtJwE2dRhaay
-	 69LgVvcos9x0w==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 76EA717E0239;
-	Mon,  3 Feb 2025 13:12:59 +0100 (CET)
-Date: Mon, 3 Feb 2025 13:12:52 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, asahi@lists.linux.dev, Asahi Lina
- <lina@asahilina.net>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Frank Binns <frank.binns@imgtec.com>, Matt
- Coster <matt.coster@imgtec.com>, Karol Herbst <kherbst@redhat.com>, Lyude
- Paul <lyude@redhat.com>, Steven Price <steven.price@arm.com>, Lucas De
- Marchi <lucas.demarchi@intel.com>, Thomas =?UTF-8?B?SGVsbHN0csO2bQ==?=
- <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- nouveau@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- akash.goel@arm.com
-Subject: Re: [PATCH 0/4] drm/gpuvm: Add support for single-page-filled
- mappings
-Message-ID: <20250203131252.71a180ea@collabora.com>
-In-Reply-To: <Z6CnSZz_Dm3YpZbx@e110455-lin.cambridge.arm.com>
-References: <20250202-gpuvm-single-page-v1-0-8cbd44fdcbd4@asahilina.net>
-	<Z5-_O8vkCO0LXcl7@pollux.localdomain>
-	<20250203102153.145229e0@collabora.com>
-	<Z6CnSZz_Dm3YpZbx@e110455-lin.cambridge.arm.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GvhFuRnk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738584834; x=1770120834;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ct1m8qnSRoUG1BuJX26GQpfL2oSAy2xCl3eci1O0qH4=;
+  b=GvhFuRnkabjFSK84qxZbjBOSUPhE3f82An2XxS3LVjTx+qPqcu5qYqcW
+   /oNMc0LzWyQtwkEfcH8EhDLTEheacI7ykh/CJuUBL/qYlCn8HMEe9wWd4
+   4+EhaO/nqkysOmYChesWEB/wqm8zPJaFi7kc4gnOCmNGEc4gGNs+2V7dx
+   5IB6LqaBf7f5pqRWKJs056haQ7l6IJIAr7TBLJcR64eM5Ttj84oXNq8GS
+   Wy8IxnJjfD4B8snkyeu7s6OqKOKNOg0XCg+9cjnV4WUw1V1p2KsVyvV12
+   ESiDNksjvFYzytOSFJNiOX2u4d7+ao2B5Nv0/am8amfUR0SA/TVjGjSGp
+   A==;
+X-CSE-ConnectionGUID: u0+zT/R4Q7i8LyPf0D4PPg==
+X-CSE-MsgGUID: FBsKw/phQfWaH9lauzenRw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="26676183"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="26676183"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:13:53 -0800
+X-CSE-ConnectionGUID: cPOMVMPeRGaRVLvglrh2PQ==
+X-CSE-MsgGUID: 03UBfc3AQB2QttB6A11ckA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="110095012"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:13:51 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tevKn-00000007p5P-0Xuh;
+	Mon, 03 Feb 2025 14:13:49 +0200
+Date: Mon, 3 Feb 2025 14:13:48 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Patrick Rudolph <patrick.rudolph@9elements.com>
+Subject: Re: [PATCH v1 01/16] pinctrl: cy8c95x0: Respect IRQ trigger settings
+ from firmware
+Message-ID: <Z6Cy_Nap7Euvb7Am@smile.fi.intel.com>
+References: <20250117142304.596106-1-andriy.shevchenko@linux.intel.com>
+ <20250117142304.596106-2-andriy.shevchenko@linux.intel.com>
+ <CACRpkdb=WDLxerQCS4oGoxe4p+A6VZDw-WH9NJuDaxoxju8PeQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdb=WDLxerQCS4oGoxe4p+A6VZDw-WH9NJuDaxoxju8PeQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, 3 Feb 2025 11:23:53 +0000
-Liviu Dudau <liviu.dudau@arm.com> wrote:
-
-> On Mon, Feb 03, 2025 at 10:21:53AM +0100, Boris Brezillon wrote:
-> > +Akash with whom we've been discussing adding a 'REPEAT' mode to
-> > drm_gpuvm/panthor.
-> > 
-> > On Sun, 2 Feb 2025 19:53:47 +0100
-> > Danilo Krummrich <dakr@kernel.org> wrote:
-> >   
-> > > Hi Lina,
-> > > 
-> > > On Sun, Feb 02, 2025 at 10:34:49PM +0900, Asahi Lina wrote:  
-> > > > Some hardware requires dummy page mappings to efficiently implement
-> > > > Vulkan sparse features. These mappings consist of the same physical
-> > > > memory page, repeated for a large range of address space (e.g. 16GiB).
-> > > > 
-> > > > Add support for this to drm_gpuvm. Currently, drm_gpuvm expects BO
-> > > > ranges to correspond 1:1 to virtual memory ranges that are mapped, and
-> > > > does math on the BO offset accordingly. To make single page mappings
-> > > > work, we need a way to turn off that math, keeping the BO offset always
-> > > > constant and pointing to the same page (typically BO offset 0).
-> > > > 
-> > > > To make this work, we need to handle all the corner cases when these
-> > > > mappings intersect with regular mappings. The rules are simply to never
-> > > > mix or merge a "regular" mapping with a single page mapping.
-> > > > 
-> > > > drm_gpuvm has support for a flags field in drm_gpuva objects. This is
-> > > > normally managed by drivers directly. We can introduce a
-> > > > DRM_GPUVA_SINGLE_PAGE flag to handle this. However, to make it work,
-> > > > sm_map and friends need to know ahead of time whether the new mapping is
-> > > > a single page mapping or not. Therefore, we need to add an argument to
-> > > > these functions so drivers can provide the flags to be filled into
-> > > > drm_gpuva.flags.
-> > > > 
-> > > > These changes should not affect any existing drivers that use drm_gpuvm
-> > > > other than the API change:
-> > > > 
-> > > > - imagination: Does not use flags at all
-> > > > - nouveau: Only uses drm_gpuva_invalidate(), which is only called on
-> > > >   existing drm_gpuva objects (after the map steps)
-> > > > - panthor: Does not use flags at all
-> > > > - xe: Does not use drm_gpuva_init_from_op() or
-> > > >   drm_gpuva_remap()/drm_gpuva_map() (which call it). This means that the
-> > > > flags field of the gpuva object is managed by the driver only, so these
-> > > > changes cannot clobber it.
-> > > > 
-> > > > Note that the way this is implemented, drm_gpuvm does not need to know
-> > > > the GPU page size. It only has to never do math on the BO offset to meet
-> > > > the requirements.
-> > > > 
-> > > > I suspect that after this change there could be some cleanup possible in
-> > > > the xe driver (which right now passes flags around in various
-> > > > driver-specific ways from the map step through to drm_gpuva objects),
-> > > > but I'll leave that to the Xe folks.
-> > > > 
-> > > > Signed-off-by: Asahi Lina <lina@asahilina.net>
-> > > > ---
-> > > > Asahi Lina (4):
-> > > >       drm/gpuvm: Add a flags argument to drm_gpuvm_sm_map[_*]
-> > > >       drm/gpuvm: Plumb through flags into drm_gpuva_op_map
-> > > >       drm/gpuvm: Add DRM_GPUVA_SINGLE_PAGE flag and logic
-> > > >       drm/gpuvm: Plumb through flags into drm_gpuva_init    
-> > > 
-> > > Without looking into any details yet:
-> > > 
-> > > This is a bit of tricky one, since we're not even close to having a user for
-> > > this new feature upstream yet, are we?  
-> > 
-> > Actually, we would be interesting in having this feature hooked up in
-> > panthor. One use case we have is Vulkan sparse bindings, of course. But
-> > we also have cases where we need to map a dummy page repeatedly on the
-> > FW side. The approach we've been considering is slightly different:
-> > pass a DRM_GPUVA_REPEAT_FLAG along with GEM range, so we can repeat a
-> > range of the GEM (see the below diff, which is completely untested by
-> > the way), but I think we'd be fine with this SINGLE_PAGE flag.  
+On Mon, Jan 27, 2025 at 11:03:02AM +0100, Linus Walleij wrote:
+> On Fri, Jan 17, 2025 at 3:23 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> Unless I've misunderstood the intent completely, it looks like Xe also wants
-> something similar although they call it CPU_ADDR_MIRROR for some reason:
+> > Som of the platforms may connect the INT pin via inversion logic
+> > effectively make the triggering to be active-low.
+> > Remove explicit trigger flag to respect the settings from firmware.
+> >
+> > Without this change even idling chip produces spurious interrupts
+> > and kernel disables the line in the result:
+> >
+> >   irq 33: nobody cared (try booting with the "irqpoll" option)
+> >   CPU: 0 UID: 0 PID: 125 Comm: irq/33-i2c-INT3 Not tainted 6.12.0-00236-g8b874ed11dae #64
+> >   Hardware name: Intel Corp. QUARK/Galileo, BIOS 0x01000900 01/01/2014
+> >   ...
+> >   handlers:
+> >   [<86e86bea>] irq_default_primary_handler threaded [<d153e44a>] cy8c95x0_irq_handler [pinctrl_cy8c95x0]
+> >   Disabling IRQ #33
+> >
+> > Fixes: e6cbbe42944d ("pinctrl: Add Cypress cy8c95x0 support")
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> https://lore.kernel.org/r/20250129195212.745731-9-matthew.brost@intel.com
+> Patch applied for fixes! (Speling mistake on first line fixed in the process.)
 
-At first glance, it doesn't seem related. The Xe stuff looks more like
-an alloc-on-fault mechanism. SINGLE_PAGE is about mapping a dummy page
-repeatedly over a virtual address range so that sparse Vulkan images
-never get a fault when an unbound image region is accessed.
+Thanks! Any plans to take the rest of the fixes (except the one which Patrick
+rightfully objected on)?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
