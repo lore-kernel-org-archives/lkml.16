@@ -1,106 +1,155 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A96020E00E
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E24213229
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593031; cv=none; b=SHN5767QVmtK/jcmP23Px/LZexWQL7ZfxuUNqC3+iaLpgekzmK3O8op7h40/LDyyPa8Htv6gZ/8qdu8H4AlwAeMbk5aUG996+u4gVchdJLSscI/7T8nPBwFtfNzee+ezxtNpAsZfRUhrpviRLW3PJti5Y5G2+XrrvzqrvrvgEs4=
+	t=1738593070; cv=none; b=umC0HOT+URYyY2zZ/eumtKurRlKV4UX9dhWESiUdURfpJ89qSH47nUCnDx9wUYwo2ZiSkLIP51Ze9OvU9oFH7lESSxC7BMIj2PcJJtvjC/LCIELy1u68w81TVl7mVvS4O6mPNuncfNjgxLoEl10ydESnN4/dL8v57s/kT5ZvRMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593031; c=relaxed/simple;
-	bh=IWZd5hlmNpgXQZ0243k8J0hL5ndXbwMghQLT8bz/dl0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kD+o9HreYHfaO+abduQFLnOz3v+i9YGPKo9MWQHc56zwD7jX7EMiYDBH1RsGu654ZhPP20cxLHMq7A4bGYWnbR4mVuzNBtbq3GYbxUGHgzQZyhJ39cXj/qShvBnCfNyPfzeNqXsaCz60ts2VGP3qGL/Aay9B05NXU5m2bVRxHpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g6t8XjBT; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738593070; c=relaxed/simple;
+	bh=PVbFWCN7HItodTQ7x+MpdorA3QHoDoHexz9bhRZGmus=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GwaYSjj3jphSvTyLBCfAcQWM/er0OvmC7Ts7Vuj/BrpEormc2VsAUvF5I1jriHL2X/BWrYjTQnIr/HHbYRbuEBY/y3ML5zfU3MvQeMWcCP5aiAknq5VmW1r/zoRpV44BqzXhBNa+DmOehx6/CTOWdo+X4W8X6DREIspvHIR/oc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y9pfs2ke; arc=none smtp.client-ip=209.85.218.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g6t8XjBT"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4361f796586so52349595e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:30:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y9pfs2ke"
+Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ab547c18515so35711566b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:31:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738593028; x=1739197828; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9vWFSQn7DgiKs/FycuACWL8FOOG/NvIUTBk5O9mP/jE=;
-        b=g6t8XjBTUXglndFfVqzVdljDbO83j/VyLnqhmpi2yiCIcd+B/JjEO1VX+PSEzhpfB1
-         2mm2m3TcpfTFrd9fzqgIcDrHAMEL7FBLxATUFPpDwt68cLnjpvYdGkZSZoNruIsyTNvI
-         WEAwBOwKtLarvSMuj9HyVdYnovY6n72IiDUi8//PujcqXANVlmK/NPcL0Ua88hqWv/m9
-         N2DQ1WP58EL268ay/gp/QA/MYVysFpwFRtnpUlYlT8XDB0SfP0f84FmgVxkFjv424M2S
-         +quj9z1OpbGV2gUERzN2sBjpbAod91jRgKlaTiD7KmUordG9dUCpnYb+0bgQ85X4zEcL
-         6OoA==
+        d=google.com; s=20230601; t=1738593067; x=1739197867; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZoYuftsJovCPiMK5YLE5Tz6ZOId2A3gszI9fRt9aptA=;
+        b=Y9pfs2ke1doV3Om8jDzxiFkFQz5ufV2Ks4mO8tNMacUeDgFV5d1KtRy6F5nuP4d4PR
+         k9Ub4BOJe995Djf6B36BGTvlsM+tJ758EsrZfhmjlyLy7bAbDFuVtxERod4Q6qnkPPTR
+         9qR349dNUYJmXQB8Awuakf1y+RA8UIS6qlgLv2TMxBW+You/9bBUsWvwmYhGh5GV5/sD
+         4vP/8SvEcT8zld3ZBxFVNbBDl1moqxIC1nJHQVKhxH/2U6zI+W4UQi4U/sBF9dQ8mOpG
+         MYxB6OAWddjfFYEfesSFhOp08Ctc1nOIazIfgMOtmsBjtzQHzYKwY4P9/q/sv3ZmvL5v
+         G/oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738593028; x=1739197828;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9vWFSQn7DgiKs/FycuACWL8FOOG/NvIUTBk5O9mP/jE=;
-        b=UClsJsvdW68lt43ksweQrKMxARUh2lZCyDBWI4Vgneetvv8JqgJsSzwaPT2tK0B7nR
-         CABR5yJ+WgPlpNLV4rtnKyu1kraSXucbyjVEtBD19PkbnP0TLHIOAX/v+4yHfE1rAS+h
-         pg6PaGZ3N12/2083AjyLkgIu71NgimtxbKshW7bSp06ocTt6L10M3cejUiJSD6lojFUz
-         JEDsnHSGIRLhaip4ALi1Gd8k+zSzr1bx7POe55UtnS5/a0GU0Tfc/h/jc1lfEpbT0guu
-         gsFxckszOPYG1TzshH78Os4+wAKo/1Nfy8W2R65rZDXdFju/p8SScXKuQS/YBqU0nVky
-         Vpqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFoqZxXwy7IgWx2gO5C4JBHl4s7NNNM87+hADOgu4jukU/SSustvc3uSZqU7Ol4G6sGcNd6MpdThCR9Qc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyILhrAxS3A831f+YfI25SHOHuZ+xuioyuhdjPfgSnr/+wAbobg
-	zWUvDDFddy/RGtYeSkcnTjA3vxsEjkNcEb7ecRkE5aRIAsrJ9TeCL20z804+MeQ=
-X-Gm-Gg: ASbGnctCMuP0qfgbuOUJr/FhjqUPPNyuGXBqUbpJKSt3xbZvZ5ztNX5++Mri2LmG8Si
-	+xg0+NvKRfJmRXKcf/vaC4SxrZ1B1bJGtVY1HcUM7hIfyKWBxt8J4GElF1Wpp5syG2eJRMFwLXr
-	BS+JoxjmLNFB1E19J9I0z3vz3vYBoRk1n8zR4CetcgT/fwdBANi1TyODNy6+IhbHkksf9SGw5Ha
-	VO+YeK3fqjoDmZmTvo0PjlkGaaW5rPrla4HeaCRC9CnbW6j14NbkT8bS5TlhF/Zd1FPsSuhqExH
-	10slIV7t2tNfgSQ/IwYUryxLhWaYXiNMUQ==
-X-Google-Smtp-Source: AGHT+IHinY+xh0nJesZnDupVI2Wp4r4N0MF/Fkn9c+8reC2w8xLtTGDIrtM8PVUM9uRToGo6QBxJ7A==
-X-Received: by 2002:a05:600c:4fc1:b0:436:1ac2:1acf with SMTP id 5b1f17b1804b1-438dc40d55emr204148275e9.20.1738593027971;
-        Mon, 03 Feb 2025 06:30:27 -0800 (PST)
-Received: from [192.168.68.112] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-438dcc81589sm191206255e9.33.2025.02.03.06.30.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 06:30:27 -0800 (PST)
-Message-ID: <35cf66a2-05ef-4e49-a146-ca96ab19fcf8@linaro.org>
-Date: Mon, 3 Feb 2025 14:30:26 +0000
+        d=1e100.net; s=20230601; t=1738593067; x=1739197867;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZoYuftsJovCPiMK5YLE5Tz6ZOId2A3gszI9fRt9aptA=;
+        b=eT3W1vNfTlkT91AdnTMXF8hf0Bp+4kaEOLK8xW+bFHzlnTQ/NxijcFFvHsDBAW7azk
+         xSie8IkYOnlAFC7luJJH7NlaF3kr4Uk7NgPvXblmuvx79pDM7eQZkPS2C5wK6IZAW6v7
+         AHk2/RzJaidZ1ZSPWcz7ETFnvf7kWZtvK03sH2mbMIrsfR4onkLOY77a3e86FY77FeaP
+         eebtPMXJmvth63qONLQV7aQL4mGwzNRzo9LJwrZGxdboyibPGDB2GCinKjdsIgoOv8v0
+         ngvdslwWTf0pY1bbHXqa1fRdpvpoXggBAT/RoRkXm62Dtvuc66OnTvq9S1h7nDbXMjXJ
+         UBvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ4XdhvPeN7CSDs6N9Qhc7BDr9NRmPfK8hlR7gydVJZBSDe2UFiyD/K2EhC7XPbKX8zqiaKGVDXP3mnkI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxCaBqg3BH6ffRsx+1aNZys3RXPxvnKV1lSw+hxd7CE7IzBgLQ
+	GWKsPa3RGoiuTnS0kwg8ssVDpDVCBuhWSfm9FX33VgdT2D9SVY2GbJeQwelWeASWfa/HBlA+4nV
+	KUovbyw==
+X-Google-Smtp-Source: AGHT+IECppgacT++xJLUxgVzyFh92FyH95V1O4u0p40+2AOGv/Oah3vC8US1Upz3woTGzfV6BHPnUIZGdjuW
+X-Received: from edbef12.prod.google.com ([2002:a05:6402:28cc:b0:5db:f38e:f8c9])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:7d93:b0:aae:c3c1:1361
+ with SMTP id a640c23a62f3a-ab6cfdd6b4fmr2453177766b.44.1738593067429; Mon, 03
+ Feb 2025 06:31:07 -0800 (PST)
+Date: Mon,  3 Feb 2025 15:30:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: q6apm-dai: schedule all the periods before we start
- streaming
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
- krzysztof.kozlowski@linaro.org, pierre-louis.bossart@linux.dev,
- linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org
-References: <20250203124945.11406-1-srinivas.kandagatla@linaro.org>
- <357e28eb-f245-4647-8e10-79805b53731e@sirena.org.uk>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <357e28eb-f245-4647-8e10-79805b53731e@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <cover.1738592865.git.dvyukov@google.com>
+Subject: [PATCH v4 0/8] perf report: Add latency and parallelism profiling
+From: Dmitry Vyukov <dvyukov@google.com>
+To: namhyung@kernel.org, irogers@google.com, acme@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
+
+There are two notions of time: wall-clock time and CPU time.
+For a single-threaded program, or a program running on a single-core
+machine, these notions are the same. However, for a multi-threaded/
+multi-process program running on a multi-core machine, these notions are
+significantly different. Each second of wall-clock time we have
+number-of-cores seconds of CPU time.
+
+Currently perf only allows to profile CPU time. Perf (and all other
+existing profilers to the be best of my knowledge) does not allow to
+profile wall-clock time.
+
+Optimizing CPU overhead is useful to improve 'throughput', while
+optimizing wall-clock overhead is useful to improve 'latency'.
+These profiles are complementary and are not interchangeable.
+Examples of where latency profile is needed:
+ - optimzing build latency
+ - optimizing server request latency
+ - optimizing ML training/inference latency
+ - optimizing running time of any command line program
+
+CPU profile is useless for these use cases at best (if a user understands
+the difference), or misleading at worst (if a user tries to use a wrong
+profile for a job).
+
+This series add latency and parallelization profiling.
+See the added documentation and flags descriptions for details.
+
+Brief outline of the implementation:
+ - add context switch collection during record
+ - calculate number of threads running on CPUs (parallelism level)
+   during report
+ - divide each sample weight by the parallelism level
+This effectively models that we were taking 1 sample per unit of
+wall-clock time.
+
+We still default to the CPU profile, so it's up to users to learn
+about the second profiling mode and use it when appropriate.
+
+Changes in v4:
+ - added "Shrink struct hist_entry size" commit
+ - rebased to perf-tools-next HEAD
+
+Changes in v3:
+ - rebase and split into patches
+ - rename 'wallclock' to 'latency' everywhere
+ - don't enable latency profiling by default,
+   instead add record/report --latency flag
+
+Dmitry Vyukov (8):
+  perf report: Add machine parallelism
+  perf report: Add parallelism sort key
+  perf report: Switch filtered from u8 to u16
+  perf report: Add parallelism filter
+  perf report: Add latency output field
+  perf report: Add --latency flag
+  perf report: Add latency and parallelism profiling documentation
+  perf hist: Shrink struct hist_entry size
+
+ .../callchain-overhead-calculation.txt        |  5 +-
+ .../cpu-and-latency-overheads.txt             | 85 ++++++++++++++++++
+ tools/perf/Documentation/perf-report.txt      | 49 ++++++----
+ tools/perf/Documentation/tips.txt             |  3 +
+ tools/perf/builtin-record.c                   | 20 +++++
+ tools/perf/builtin-report.c                   | 39 ++++++++
+ tools/perf/ui/browsers/hists.c                | 27 +++---
+ tools/perf/ui/hist.c                          | 64 +++++++++----
+ tools/perf/util/addr_location.c               |  1 +
+ tools/perf/util/addr_location.h               |  7 +-
+ tools/perf/util/event.c                       | 11 +++
+ tools/perf/util/events_stats.h                |  2 +
+ tools/perf/util/hist.c                        | 90 +++++++++++++++----
+ tools/perf/util/hist.h                        | 32 +++++--
+ tools/perf/util/machine.c                     |  7 ++
+ tools/perf/util/machine.h                     |  6 ++
+ tools/perf/util/sample.h                      |  2 +-
+ tools/perf/util/session.c                     | 12 +++
+ tools/perf/util/session.h                     |  1 +
+ tools/perf/util/sort.c                        | 69 ++++++++++++--
+ tools/perf/util/sort.h                        |  3 +-
+ tools/perf/util/symbol.c                      | 34 +++++++
+ tools/perf/util/symbol_conf.h                 |  8 +-
+ 23 files changed, 502 insertions(+), 75 deletions(-)
+ create mode 100644 tools/perf/Documentation/cpu-and-latency-overheads.txt
 
 
+base-commit: 8ce0d2da14d3fb62844dd0e95982c194326b1a5f
+-- 
+2.48.1.362.g079036d154-goog
 
-On 03/02/2025 14:17, Mark Brown wrote:
-> On Mon, Feb 03, 2025 at 12:49:45PM +0000, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> With the existing code, we are only setting up one period at a time, in a
->> ping-pong buffer style. This tiggers lot of underruns in the dsp
->> leading to jitter noise during audio playback.
->>
->> Fix this by scheduling all the periods, this will ensure that the dsp
->> has enough buffer feed and ultimatley fixing the underruns and audio
->> distortion.
-> 
-> Should we be writing all periods or just the minimum number of periods
-> that's configured?  Userspace might not have filled the whole buffer
-> yet.
-Just minimum number of periods or 1 period. We are queuing up all the 
-periods to the DSP, so that we do not have to wait for period interrupt 
-to queue the next one. This significantly reduces the latency in queuing 
-the periods to dsp.
-
---srini
