@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F6420370A
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:16:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643602046A2
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:16:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738592208; cv=none; b=M1QoJEbwY0ffxQY1da8qIfdqtdPeq/BRovd6pzLsRAqD+Ewa/O4aiWIokfhHX2iEo2xTMAlKsvAS/Hb7O5X4Fte6wqAQ96pdkI/O4TSfr7Y5AzGcloUMoTLGdfscNFCc3DOZFaBr08DNSFuX0TqudgOSr88PF7iIH5YmfiJBq5M=
+	t=1738592208; cv=none; b=YqNqUzGtdD5hEpW26qrBn39se4mxcRLNBcfHTcZb9hY4Yenf6xTaAd9k1w8u1hoIuhJpnzUBDtClUcG89mBDN6vGPp0dxjXGAa5RWv/V7z6cw6BcM84QcJGdqig6eiGTBaMqdtKXsTnrXyzbhFRWm0g+OdgibrQmPE6fB1NnnWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738592208; c=relaxed/simple;
-	bh=pSKy/qsT+iXKg2g0H2gT9GJLhdQXpBlufpbUOra+KvM=;
+	bh=s6LR4cD4L+E9V3LOC+CayprvaMN8VoutnxDA+SpvIeQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D5sp81kVaFPNQTXx5vNwTgJ9P2qydxNzV93pgh2eaAAn1tdD0aM/h4C0qLk575fAyUoBmzWyp/F6HH4g+UBU2oB7qcy63He6xoOzT3Frl/q8gbAjycgDpQld4LKB+AXCQvFWUNdfJAW8GKphJAudnWFCxALTjDo1ucVG+zOovFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RXBO+YXS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N8m97Mwk; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Ck2d4H+UFdnRp804f/1pnff0yknSzN8PYbBiusnjVI6hPqcVAnnOFuL/9tAa77UiV5aWSVaPexv4LNz9Qc4ORFuJpcCg4znqUrbWyEyoZE4ej6gnPrls40s/IXeU8ClwzoZfwFCamr1hGIxv65ZTO+ELSl6t7rI/r+pIIzu7c3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qolkE9Wo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XCGcyddB; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RXBO+YXS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N8m97Mwk"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qolkE9Wo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XCGcyddB"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738592204;
+	s=2020; t=1738592205;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=znyJ87Rf5QSuIOA4QGRHzjQx5YRj+X4MdZFuK4VJ2mQ=;
-	b=RXBO+YXS3oP2YLi8XhX18qVnwDPWqoVjKdgEu997meGXHrokZZEB7WWBuA8BXoPBdDkWU3
-	6XSpQtXOvlGv+aP2is/zpW9jcm8iqzFj+Lh4x2MPofOrRrElYRnv54R0hT+sXxGEby75XD
-	g2dKVjrrnHY8kFEwq50y6tbCAFKDCJsywEjl5gi0BDmAE8si/IBxZ0qBdsLaTrsa9mUV5J
-	P+9jGWSSWldS+6GTR2MgZsT8nsJwKlDFa9iwZ8OY8c/D89z26mDsHtaPrBjP8w6jysEGDG
-	lNx0K+nLHDBwckUs7NCWXcbh+YJfTuu21DB/v7jj7r3Ohb4prDyK3pxf88r/0g==
+	bh=+4ulFTvDAefqAdJc6TUbpR3GW4CR8A3NjhobBVG3Dsg=;
+	b=qolkE9Wo1YEPfFcnO64QkD+SJyUvuAh/21nheTEdSJz1Aqc1+H7HDJ1/LwAbmD6R3kT0fz
+	NSuJbmEnfOYwxmy2MOga9jbOkPg39EBpryO5d7HZCnTx6KJteeY2Kw2LowkhkQ6MqkiSTP
+	zAYkVC1JQGc+E7kFBIZ5Y6m6ZV12pK85U84MyvsSy9tbf4+HIJGmaVqfeFIAgroW9iLDdT
+	ffDETyunDXAHTDDyeqxVsYv5WBFNntOuzId4ftexMqb6O8cOXLuskiEqpUm3d1t/lOuWzB
+	PdgAFi1PTvF1xEi7HHC4Z+DIHL8ze/fRiv6bKwQMac6LpdJM0xVZZM9xhwhYsQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738592204;
+	s=2020e; t=1738592205;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=znyJ87Rf5QSuIOA4QGRHzjQx5YRj+X4MdZFuK4VJ2mQ=;
-	b=N8m97MwktOuJaoUQu2wweXa7n3kcktzGltKb/3W9x/GM9cUX9rv9/dPRmb1mAR7g/UVBfl
-	ePENj9HNQOeY8ZCQ==
+	bh=+4ulFTvDAefqAdJc6TUbpR3GW4CR8A3NjhobBVG3Dsg=;
+	b=XCGcyddBg5I1tIU9Y/XRDUleszWy0XkjidrAz2iNusl1veVDgUwbxRAj5j58BW479NuOAZ
+	lqraoF4mk2MWsSCg==
 To: linux-kernel@vger.kernel.org,
 	linux-rt-devel@lists.linux.dev
 Cc: Ben Segall <bsegall@google.com>,
@@ -54,10 +54,12 @@ Cc: Ben Segall <bsegall@google.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v2 1/9] sched: Add a generic function to return the preemption string.
-Date: Mon,  3 Feb 2025 15:16:24 +0100
-Message-ID: <20250203141632.440554-2-bigeasy@linutronix.de>
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 3/9] arm: Rely on generic printing of preemption model.
+Date: Mon,  3 Feb 2025 15:16:26 +0100
+Message-ID: <20250203141632.440554-4-bigeasy@linutronix.de>
 In-Reply-To: <20250203141632.440554-1-bigeasy@linutronix.de>
 References: <20250203141632.440554-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -68,142 +70,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The individual architectures often add the preemption model to the begin
-of the backtrace. This is the case on X86 or ARM64 for the "die" case
-but not for regular warning. With the addition of DYNAMIC_PREEMPT for
-PREEMPT_RT we end up with CONFIG_PREEMPT and CONFIG_PREEMPT_RT set
-simultaneously. That means that everyone who tried to add that piece of
-information gets it wrong for PREEMPT_RT because PREEMPT is checked
-first.
+__die() invokes later __show_regs() -> show_regs_print_info() which
+prints the current preemption model.
+Remove it from the initial line.
 
-Provide a generic function which returns the current scheduling model
-considering LAZY preempt and the current state of PREEMPT_DYNAMIC.
-[ The dynamic building of the string can lead to an empty string if the
-  function is invoked simultaneously on two CPUs. ]
-
-Co-developed-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/preempt.h |  2 ++
- kernel/sched/core.c     | 47 +++++++++++++++++++++++++++++++++++++++++
- kernel/sched/debug.c    | 10 +++++----
- kernel/sched/sched.h    |  1 +
- 4 files changed, 56 insertions(+), 4 deletions(-)
+ arch/arm/kernel/traps.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/preempt.h b/include/linux/preempt.h
-index ca86235ac15c0..3e9808f2b5491 100644
---- a/include/linux/preempt.h
-+++ b/include/linux/preempt.h
-@@ -515,6 +515,8 @@ static inline bool preempt_model_rt(void)
- 	return IS_ENABLED(CONFIG_PREEMPT_RT);
+diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
+index 6ea645939573f..afbd2ebe5c39d 100644
+--- a/arch/arm/kernel/traps.c
++++ b/arch/arm/kernel/traps.c
+@@ -258,13 +258,6 @@ void show_stack(struct task_struct *tsk, unsigned long=
+ *sp, const char *loglvl)
+ 	barrier();
  }
 =20
-+extern const char *preempt_model_str(void);
-+
- /*
-  * Does the preemption model allow non-cooperative preemption?
-  *
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 165c90ba64ea9..bd2664755b09a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7646,10 +7646,57 @@ PREEMPT_MODEL_ACCESSOR(lazy);
+-#ifdef CONFIG_PREEMPT
+-#define S_PREEMPT " PREEMPT"
+-#elif defined(CONFIG_PREEMPT_RT)
+-#define S_PREEMPT " PREEMPT_RT"
+-#else
+-#define S_PREEMPT ""
+-#endif
+ #ifdef CONFIG_SMP
+ #define S_SMP " SMP"
+ #else
+@@ -282,8 +275,8 @@ static int __die(const char *str, int err, struct pt_re=
+gs *regs)
+ 	static int die_counter;
+ 	int ret;
 =20
- #else /* !CONFIG_PREEMPT_DYNAMIC: */
+-	pr_emerg("Internal error: %s: %x [#%d]" S_PREEMPT S_SMP S_ISA "\n",
+-	         str, err, ++die_counter);
++	pr_emerg("Internal error: %s: %x [#%d]" S_SMP S_ISA "\n",
++		 str, err, ++die_counter);
 =20
-+#define preempt_dynamic_mode -1
-+
- static inline void preempt_dynamic_init(void) { }
-=20
- #endif /* CONFIG_PREEMPT_DYNAMIC */
-=20
-+const char *preempt_modes[] =3D {
-+	"none", "voluntary", "full", "lazy", NULL,
-+};
-+
-+const char *preempt_model_str(void)
-+{
-+	bool brace =3D IS_ENABLED(CONFIG_PREEMPT_RT) &&
-+		(IS_ENABLED(CONFIG_PREEMPT_DYNAMIC) ||
-+		 IS_ENABLED(CONFIG_PREEMPT_LAZY));
-+	static char buf[128];
-+
-+	if (IS_ENABLED(CONFIG_PREEMPT_BUILD)) {
-+		struct seq_buf s;
-+
-+		seq_buf_init(&s, buf, 128);
-+		seq_buf_puts(&s, "PREEMPT");
-+
-+		if (IS_ENABLED(CONFIG_PREEMPT_RT))
-+			seq_buf_printf(&s, "%sRT%s",
-+				       brace ? "_{" : "_",
-+				       brace ? "," : "");
-+
-+		if (IS_ENABLED(CONFIG_PREEMPT_DYNAMIC)) {
-+			seq_buf_printf(&s, "(%s)%s",
-+				       preempt_dynamic_mode > 0 ?
-+				       preempt_modes[preempt_dynamic_mode] : "undef",
-+				       brace ? "}" : "");
-+			return seq_buf_str(&s);
-+		}
-+
-+		if (IS_ENABLED(CONFIG_PREEMPT_LAZY)) {
-+			seq_buf_printf(&s, "LAZY%s",
-+				       brace ? "}" : "");
-+			return seq_buf_str(&s);
-+		}
-+
-+		return seq_buf_str(&s);
-+	}
-+
-+	if (IS_ENABLED(CONFIG_PREEMPT_VOLUNTARY_BUILD))
-+		return "VOLUNTARY";
-+
-+	return "NONE";
-+}
-+
- int io_schedule_prepare(void)
- {
- 	int old_iowait =3D current->in_iowait;
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index fd7e852207157..755232ac88de9 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -244,11 +244,13 @@ static ssize_t sched_dynamic_write(struct file *filp,=
- const char __user *ubuf,
-=20
- static int sched_dynamic_show(struct seq_file *m, void *v)
- {
--	static const char * preempt_modes[] =3D {
--		"none", "voluntary", "full", "lazy",
--	};
--	int j =3D ARRAY_SIZE(preempt_modes) - !IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT=
-_LAZY);
- 	int i =3D IS_ENABLED(CONFIG_PREEMPT_RT) * 2;
-+	int j;
-+
-+	/* Count entries in NULL terminated preempt_modes */
-+	for (j =3D 0; preempt_modes[j]; j++)
-+		;
-+	j -=3D !IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT_LAZY);
-=20
- 	for (; i < j; i++) {
- 		if (preempt_dynamic_mode =3D=3D i)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 38e0e323dda26..fb4486ceb978a 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -3619,6 +3619,7 @@ extern int preempt_dynamic_mode;
- extern int sched_dynamic_mode(const char *str);
- extern void sched_dynamic_update(int mode);
- #endif
-+extern const char *preempt_modes[];
-=20
- #ifdef CONFIG_SCHED_MM_CID
-=20
+ 	/* trap and error numbers are mostly meaningless on ARM */
+ 	ret =3D notify_die(DIE_OOPS, str, regs, err, tsk->thread.trap_no, SIGSEGV=
+);
 --=20
 2.47.2
 
