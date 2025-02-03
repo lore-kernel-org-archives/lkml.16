@@ -1,290 +1,174 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87088C139;
-	Mon,  3 Feb 2025 13:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C499204F74;
+	Mon,  3 Feb 2025 13:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588135; cv=none; b=oLfWRIgxUHWmQnRtWPthnLg155z2Q0Se0gmnY6RruwMFv/xkJA3pYUA5mW7hcBS28K5CPBSDqKm74EuwJyzt6nh9LmvnIMdjUWCUd5kPVhwCONj8/xYVX4FjScpJ3SnkWC2CfCULrHguUQilk5kWxxIZb3XLSnQshz0+skP/z64=
+	t=1738588140; cv=none; b=eMpOIQhmcr/JKavlfuDJZyFewWWu2kZ23FgJAmSiK2HUMfDuIEA7EFgQEJO7BlhWgBn5ijAM54u9Lz2FrsUuyvW1+uXO4YD7BvcCZn+jmarInTN6RNBk1cTbE4VK25JHtlX4PtVhIKU118SPFmiZ/b7XuANLp22hNcI7B2FoZEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588135; c=relaxed/simple;
-	bh=uVAMvhFVmhaZQMyq8sE9xqZswhwVTo+AbxI41rusfEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dBpu6iBbC3ekjn/t2LyjKKp7hxxUJCO7kkWvGWIX/mXgHl0dltV6jmuqHwuWnsN0TfpOYMysDwAeD6osiFnXmxNyOvxOv4vXYTfg9rFqvrub6vM7Ed3Rmv4xaAcYm1358eSZb0FRjoyeL1uSU3L3cOtAowAXtmO7brTr5qlx+SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iLsy7qR1; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738588140; c=relaxed/simple;
+	bh=+NwHHzB7CfXzPsy0HnohhfWy3Y5mQ9HH10z6NP2WYeo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Wo8+nGCbkvr73vUueNMrzEPDGR83A9TTPLrIq8x6Naj10kXqIbXmzM+B7j6rqJc3YoTndPJTxCAREgSq/T8n6Pe6b33b9OWnu9mmqIpSpL7oOSR4KRoy39MV/RRK8/dFscPDSpjHetEpmaWBSYcmcwaNZgNjRTKLND51+7toNok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Wlu6S2hJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=wcVjbAjV; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLsy7qR1"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-46e48278a9dso7070631cf.0;
-        Mon, 03 Feb 2025 05:08:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738588132; x=1739192932; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CHjKhVXQwB5PNmTEPHLSlpwqAm0HS0J9XwM/xzqkTnw=;
-        b=iLsy7qR1ckQUrdm4JhQ7HTpQDiqkcrfTyBqBgSibmveyLA/Ot2vtMkILNgijnc1MbM
-         /rihPOh/LzOnrG+1W/wDK/M9rP2givPBIGqCzqAks97YeKNNXaB7rQdUzDdJCQlrV1Ve
-         4UtaXvinoB9bUkt5MjUyDCnp5W5Br7m4+G23+rUwTBbUEygPhZx4hQSLQOLohdHwQqhK
-         OAlCPNnKYUb7DMI/cJ9sgExdRe2rb7g+xSnGtNXTwQykuFFF9bMEnG346NLkyOPS1ndS
-         PRxBVnEz9C4J6pmQKkWE3keN1V7EeB+LkOPpv1tlPGoRlrQIw6UthB6VrjWy0TOYanvY
-         E6Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738588132; x=1739192932;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CHjKhVXQwB5PNmTEPHLSlpwqAm0HS0J9XwM/xzqkTnw=;
-        b=oXrwiccKRjhKeWJmLFXF76pHMOseB9DGbuSNMVkvSL9iNmk9//LKeiO4d4K7XtiqYN
-         O7lPtizk1/xvZvCMXo+e6fwS9UR4WEbnJTyUbcu7Hx1sBGXXtJnqczTbU/Fw7HFnMSt1
-         iCupVcpXFA/QLn82eOTUyYy9p7/Zd7WjHxIsbMVxsJSYN9mkowBulzKNWS05ZXx0oEFK
-         3NB4t3wgsXdH41uy/LJxEL9u3yPeZNWRQo//n5QQ99Jox7X2Bh3Xvis6GuilG8inaGL2
-         Qpg2q7jknBSzc+evpuCmpwKSo6+EF4bRa+PGzLLnF1crlG/hPCLk2m62bHFt+9Qf1N+C
-         omEA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFJ79VF4Jgfpi4aittew2p/L2MzFwhSWZISPb1Qu40RbwMr+PjdJYXoYHH9Lct8Z5ujzlOdURErVvj@vger.kernel.org, AJvYcCWkDP4IedxAiitk3QDXOMdYeFVYax6WXjKf1j+NKULA4WXu0LrFdi3IZA1CtSsnyZiAFHT4+LLCPLFiNNYD@vger.kernel.org, AJvYcCWlYg5rrSOrlCtK8s/oMq5qncySQ1YRYMHLK+hkOpRRyo7uxCMo2Gb7X6LHshG2yWcDRQgGEjxBahFw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKSR3iyrDdxpUTOCV6J00OEsYQR5vmLJcfgbu0r57/5tTGg1P0
-	E80LCuv6MtlVGyawVOZ8wfmjOUUeTC56oI2X2CiX37gLpoG8K7tI
-X-Gm-Gg: ASbGncucbmT2bJJrKyhWZOF/bmi+SkEQIZlDGrUaxYcbEcf5ZF1UmDMwY56ujfKHmny
-	mfYUXL59YXFKmLSGuPvI/y+6TlUygWRaYfVo4eNgb0vVjS8pUdar7+ukBnzfrinOZNW3IfnEf4+
-	lEQmGLWitB/iP8hGAHHgrxZ6TZJvsyzJ1FwLGn/u9jxu8KUTPANBRRP0H20OV27yuPJpvNZQo57
-	jbRYoMb1EO02k1UxCJWr625APl/uJ1yahOF/wP0iFCyuFW3ozkObhjOX0qqya6KpNkBlOLHCjyl
-	oC59K+eYgFY8XmNV6TybvCXTgv2SxosxrfQW
-X-Google-Smtp-Source: AGHT+IEqnpw2iu4Rhuyshxr0dAVk2n19CIbEqrlmz7BVxwnupqK/gZxIcSCsyO+Mxbh2xCyzQyBbbQ==
-X-Received: by 2002:a05:622a:1821:b0:460:9272:6591 with SMTP id d75a77b69052e-46fddba8284mr91829271cf.14.1738588132191;
-        Mon, 03 Feb 2025 05:08:52 -0800 (PST)
-Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0a74a5sm48423181cf.8.2025.02.03.05.08.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 05:08:50 -0800 (PST)
-Date: Mon, 3 Feb 2025 10:08:46 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, lars@metafoo.de,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v2 12/16] iio: adc: ad7768-1: Add GPIO controller support
-Message-ID: <Z6C/3qqJaHUc1IR/@JSANTO12-L01.ad.analog.com>
-Reply-To: be495c92-6e6f-47dc-baee-9524055f4f53@baylibre.com
-References: <cover.1737985435.git.Jonathan.Santos@analog.com>
- <4067fc67ef617edbaea0de21241d59d6ff8eaf98.1737985435.git.Jonathan.Santos@analog.com>
- <be495c92-6e6f-47dc-baee-9524055f4f53@baylibre.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Wlu6S2hJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wcVjbAjV"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 1C6A01140198;
+	Mon,  3 Feb 2025 08:08:57 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Mon, 03 Feb 2025 08:08:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738588137;
+	 x=1738674537; bh=ZMwnP1Jj4y0bYniSzOqznHTLK7DvuIzD53X1nOSo2so=; b=
+	Wlu6S2hJ3V6eae3giIyRLi4sHW45sZ8u+Y8Uq0BoVhbfm5uBS+rovaDuhsDGkmQD
+	uc97vDi+A6++JKbIhQkOOMi6csyc3VXtHsbKOHIuztQH/KyT0BB+8z8b5afVHzBG
+	KTWPw0WDmungyJ7i/6W3O1yE+gcm4+qYqKn5bi1AjC/VBiH3c0Yo8EgsqZgCSNSU
+	a2k7JuuQZoYeAgubxqojAqP8wIUgHHz2nkZId9Ikem+epR/lFbxErNOg2GME2VEL
+	v/wqDTuelkrUOIJcM9XsvbkTbMrjnlgbO8yls796MiAiLGAqcDFgm224/UFD8tbE
+	jXG+oMPUR5fxB+tz1r5GrA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738588137; x=
+	1738674537; bh=ZMwnP1Jj4y0bYniSzOqznHTLK7DvuIzD53X1nOSo2so=; b=w
+	cVjbAjVQzMzSozR0VuSKKFykHQFZPn/8gDkxs8XxZOIOPWWOalFAa5FqXZaKi4o5
+	8p4GA64tvx0Oz7T3rJAq8p4qb1Bg2MfSAif6/iysBsj0WJ+YEDL7K0JJB7ssWRbn
+	01ww4akOZyn23NNoJ8K5Vds8uSjphFOKAujX/dM3V7oShc/+eE5OOgyiJ63nvHIQ
+	kQ+RGANwCB3NANratCcd+pxhYLxT5y1PMWppnTGiz2XXZPPk1OHSEEvvxVJmnV2g
+	yH1ZM+j1H4VM36W3qzjKCbdgSh58tBwhKX20riZEoAveiRyYDBdub6+3dCeeRvwK
+	0mw+UCLA71aT7nASfV3wg==
+X-ME-Sender: <xms:6L-gZznE0UZbA7NVtk8klM7BS9ngko2W7lp36n3zfztcNpuKyLGdRg>
+    <xme:6L-gZ23eHThm8GPlxIrWflEi29qWatazdmY9gpZP54BLzaVN7HACwpc0loMJIAo8m
+    wjc6NKMLq2sqrEL1QU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeeikecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhueevudegudfgieffvddttedtieefveffgffh
+    feevhfdvheelhfehheejvdffgfenucffohhmrghinhepsghoohhtlhhinhdrtghomhenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
+    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehrihgthhgrrhgutghotghhrhgrnhesghhmrghilhdrtghomhdprhgtphht
+    thhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdifvg
+    hishhsshgthhhuhheslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopegrkhhpmhes
+    lhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprghnughrihihrd
+    hshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehp
+    rghlmhgvrhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtoheplhhinhhugidqrghrtg
+    hhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
+    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:6L-gZ5r6aURK0nBysX31y2R-VrWpmu8xIC-aKK1cxCCAAJUpRe6dpg>
+    <xmx:6L-gZ7l7IS81coZAE0f60LVHy8EyVvfPXPytE0JEn5EuWgfBZoGc2g>
+    <xmx:6L-gZx2oOd8Uky31v6NHQOTA4b1GwWywUhdtHAok05p0sbNt-FLSpA>
+    <xmx:6L-gZ6s-OXpgKuY-g2r7KQDFl9jsJ370PCLcNE8NcTHFpVBmDByglg>
+    <xmx:6b-gZ-ndHxekzEwbP0HKFjDJV6b8cACfCE51jgewYpH2yxvvWH8RzAuF>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 423C02220072; Mon,  3 Feb 2025 08:08:56 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be495c92-6e6f-47dc-baee-9524055f4f53@baylibre.com>
+Date: Mon, 03 Feb 2025 14:08:35 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ "Kees Cook" <kees@kernel.org>, "Palmer Dabbelt" <palmer@rivosinc.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org,
+ "Richard Cochran" <richardcochran@gmail.com>
+Message-Id: <96829b49-62a9-435b-9e35-fe3ef01d1c67@app.fastmail.com>
+In-Reply-To: <Z6Cxan9WE38_x41e@smile.fi.intel.com>
+References: <20250203-um-io-v1-1-822af81bcdac@linutronix.de>
+ <15b87c5f-92de-4201-9c67-a93d5dcefe68@app.fastmail.com>
+ <20250203092335-3cb21dd4-5276-4ac5-bd8d-7db6662f18f5@linutronix.de>
+ <4d4ac954-16c4-4c85-995d-c7bb1e15b0ce@app.fastmail.com>
+ <Z6Cxan9WE38_x41e@smile.fi.intel.com>
+Subject: Re: [PATCH] iomap: Fix -Wmissing-prototypes on UM
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On 01/27, David Lechner wrote:
-> On 1/27/25 9:13 AM, Jonathan Santos wrote:
-> > From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> > 
-> > The AD7768-1 has the ability to control other local hardware (such as gain
-> > stages),to power down other blocks in the signal chain, or read local
-> > status signals over the SPI interface.
-> > 
-> > This change exports the AD7768-1's four gpios and makes them accessible
-> > at an upper layer.
-> > 
-> > Co-developed-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> > Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> > ---
-> > v2 Changes:
-> > * Replaced mutex for iio_device_claim_direct_mode().
-> > * Use gpio-controller property to conditionally enable the
-> >   GPIO support.
-> > * OBS: when the GPIO is configured as output, we should read 
-> >   the current state value from AD7768_REG_GPIO_WRITE.
-> > ---
-> >  drivers/iio/adc/ad7768-1.c | 148 ++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 146 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> > index c540583808c2..e3ea078e6ec4 100644
-> > --- a/drivers/iio/adc/ad7768-1.c
-> > +++ b/drivers/iio/adc/ad7768-1.c
-> > @@ -9,6 +9,8 @@
-> >  #include <linux/delay.h>
-> >  #include <linux/device.h>
-> >  #include <linux/err.h>
-> > +#include <linux/gpio.h>
-> > +#include <linux/gpio/driver.h>
-> >  #include <linux/gpio/consumer.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> > @@ -79,6 +81,19 @@
-> >  #define AD7768_CONV_MODE_MSK		GENMASK(2, 0)
-> >  #define AD7768_CONV_MODE(x)		FIELD_PREP(AD7768_CONV_MODE_MSK, x)
-> >  
-> > +/* AD7768_REG_GPIO_CONTROL */
-> > +#define AD7768_GPIO_UNIVERSAL_EN	BIT(7)
-> > +#define AD7768_GPIO_CONTROL_MSK		GENMASK(3, 0)
-> > +
-> > +/* AD7768_REG_GPIO_WRITE */
-> > +#define AD7768_GPIO_WRITE_MSK		GENMASK(3, 0)
-> > +
-> > +/* AD7768_REG_GPIO_READ */
-> > +#define AD7768_GPIO_READ_MSK		GENMASK(3, 0)
-> > +
-> > +#define AD7768_GPIO_INPUT(x)		0x00
-> > +#define AD7768_GPIO_OUTPUT(x)		BIT(x)
-> > +
-> >  #define AD7768_RD_FLAG_MSK(x)		(BIT(6) | ((x) & 0x3F))
-> >  #define AD7768_WR_FLAG_MSK(x)		((x) & 0x3F)
-> >  
-> > @@ -160,6 +175,8 @@ struct ad7768_state {
-> >  	struct regulator *vref;
-> >  	struct mutex lock;
-> >  	struct clk *mclk;
-> > +	struct gpio_chip gpiochip;
-> > +	unsigned int gpio_avail_map;
-> >  	unsigned int mclk_freq;
-> >  	unsigned int samp_freq;
-> >  	struct completion completion;
-> > @@ -309,6 +326,125 @@ static int ad7768_set_dig_fil(struct ad7768_state *st,
-> >  	return 0;
-> >  }
-> >  
-> > +static int ad7768_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
-> > +{
-> > +	struct iio_dev *indio_dev = gpiochip_get_data(chip);
-> > +	struct ad7768_state *st = iio_priv(indio_dev);
-> > +	int ret;
-> > +
-> > +	ret = iio_device_claim_direct_mode(indio_dev);
-> > +	if (ret)
-> > +		return ret;
-> 
-> Missing iio_device_release_direct_mode() here and in other functions.
-> 
-> (And we are in the process of removing iio_device_claim_direct_scoped(), so
-> don't use that.)
-> 
+On Mon, Feb 3, 2025, at 13:07, Andy Shevchenko wrote:
+> On Mon, Feb 03, 2025 at 12:43:01PM +0100, Arnd Bergmann wrote:
+>> In addition, these seem to be timer registers that may overrun
+>> from the lo into the hi field between the two accesses, so
+>> technically a 32-bit host needs to do an extra read to
+>> check for overflow and possibly repeat the access.
+>
+> Yes, precisely why hi_lo is used to minimize the error when it races like this.
+>
+> But IIRC *_pch drivers are for 32-bit platform, the code, if so, was made
+> to be compiled on 64-bit but never used IRL, just for test coverage.
+>
+> (I believe the PCH stands for EG20 PCH, I have [32-bit] boards with it.)
 
-Sure, my mistake. I am fixing this.
+Ok, so we don't even know how that hardware block would read to
+a 64-bit bus transaction, it might give a race-free result, might
+have the same race as 32-bit or might just cause data corruption
+(e.g. ignoring half the bits).
 
-> > +
-> > +	return regmap_update_bits(st->regmap,
-> > +				  AD7768_REG_GPIO_CONTROL,
-> > +				  BIT(offset),
-> > +				  AD7768_GPIO_INPUT(offset));
-> 
-> Can be simplified to regmap_clear_bits(), then we can get rid of the odd
-> AD7768_GPIO_INPUT macro that ignores the argument.
-> 
-> > +}
-> > +
-> > +static int ad7768_gpio_direction_output(struct gpio_chip *chip,
-> > +					unsigned int offset, int value)
-> > +{
-> > +	struct iio_dev *indio_dev = gpiochip_get_data(chip);
-> > +	struct ad7768_state *st = iio_priv(indio_dev);
-> > +	int ret;
-> > +
-> > +	ret = iio_device_claim_direct_mode(indio_dev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return regmap_update_bits(st->regmap,
-> > +				  AD7768_REG_GPIO_CONTROL,
-> > +				  BIT(offset),
-> > +				  AD7768_GPIO_OUTPUT(offset));
-> 
-> And regmap_set_bits() here.
-> 
-> > +}
-> > +
-> > +static int ad7768_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> > +{
-> > +	struct iio_dev *indio_dev = gpiochip_get_data(chip);
-> > +	struct ad7768_state *st = iio_priv(indio_dev);
-> > +	unsigned int val;
-> > +	int ret;
-> > +
-> > +	ret = iio_device_claim_direct_mode(indio_dev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = regmap_read(st->regmap, AD7768_REG_GPIO_CONTROL, &val);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	if (val & BIT(offset))
-> > +		ret = regmap_read(st->regmap, AD7768_REG_GPIO_WRITE, &val);
-> > +	else
-> > +		ret = regmap_read(st->regmap, AD7768_REG_GPIO_READ, &val);
-> 
-> Can we get a comment explaining why GPIO_READ doesn't work in output mode?
-> 
-> Or if it does work, we can simplify this function.
-> 
-> 
+I think the usual way to access a timestamp in two registers works
+like this
 
-The datasheet does not mention this; I reached this conclusion through testing.
-It seems they separate the output state from the read register. Anyway, I will
-add a comment.
+u64 read_double_reg(u32 __iomem *reg)
+{
+       u32 hi, lo;
 
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return !!(val & BIT(offset));
-> > +}
-> > +
-> > +static void ad7768_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-> > +{
-> > +	struct iio_dev *indio_dev = gpiochip_get_data(chip);
-> > +	struct ad7768_state *st = iio_priv(indio_dev);
-> > +	unsigned int val;
-> > +	int ret;
-> > +
-> > +	ret = iio_device_claim_direct_mode(indio_dev);
-> > +	if (ret)
-> > +		return;
-> > +
-> > +	ret = regmap_read(st->regmap, AD7768_REG_GPIO_CONTROL, &val);
-> > +	if (ret < 0)
-> > +		return;
-> > +
-> > +	if (val & BIT(offset))
-> > +		regmap_update_bits(st->regmap,
-> > +				   AD7768_REG_GPIO_WRITE,
-> > +				   BIT(offset),
-> > +				   (value << offset));
-> 
-> Can remove extra ().
-> 
-> > +}
-> > +
-> > +static int ad7768_gpio_request(struct gpio_chip *chip, unsigned int offset)
-> > +{
-> > +	struct iio_dev *indio_dev = gpiochip_get_data(chip);
-> > +	struct ad7768_state *st = iio_priv(indio_dev);
-> > +
-> > +	if (!(st->gpio_avail_map & BIT(offset)))
-> > +		return -ENODEV;
-> > +
-> > +	st->gpio_avail_map &= ~BIT(offset);
-> 
-> Is this really needed? It seems like GPIO core would be keeping track already.
-> 
-> Also would need a .free callback to undo this action.
-> 
-> It seems like most ADC's with GPIO controllers don't implement .request though.
-> 
+       /* check for overflow race by re-reading upper bits */
+       do {
+               hi = readl(reg + 1);
+               lo = readl(reg);
+       } while (hi != readl(reg + 1);
 
-Indeed, .request is optional and does not seem to make a pratical  
-difference if the core handles that. If that is the case i can remove
-this
+       return (u64)hi << 32 | lo;
+}
 
-> > +
-> > +	return 0;
-> > +}
-> > +
+void write_double_reg(u32 __iomem *reg, u64 val)
+{
+       /* ensure the low bits don't overflow right now, assumes
+          low word is ticking up */
+       writel(reg, 0);
+
+       writel(reg + 1, upper_32_bits(val));
+       writel(reg,     lower_32_bits(val));
+}
+
+[If there might be concurrent read/write accesses, it gets
+much more complicated than this.]
+
+Do you know why the driver doesn't do it like that?
+
+> I like the lib/* and include/* cleanup but PTP probably should stay as is.
+> OTOH WWAN case most likely had been tested on 64-bit platforms only and
+> proves that readq()/writeq() works there, so it's okay to unify.
+
+Ok, I'll try to split it up into sensible patches then. For ptp
+(both ixp46x and pch), these are the options I see:
+
+- leave it unchanged since nobody cares any more
+- add some comments about being racy and possibly broken on 64-bit
+- revert your pch patch d09adf61002f/8664d49a815e3 to make it have 32-
+  bit accesses again and fix the theoretical 64-bit issue but not the
+  race
+- use helper functions like the ones I showed above and test it
+  properly
+
+I also added Richard Cochran to cc, as he wrote the original
+ixp46x driver and may know of other ptp drivers that have
+this issue. One potential candidate I see is
+https://elixir.bootlin.com/linux/v6.13.1/source/drivers/ptp/ptp_dfl_tod.c#L226
+and other functions in that file.
+
+       Arnd
