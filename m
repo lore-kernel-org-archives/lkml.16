@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D9D204F8C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDE6204F9B;
 	Mon,  3 Feb 2025 12:48:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738586905; cv=none; b=dj9KFaAKzQ7T1kRO6tIOoIyNPFtq2z5tv3sUr5Ed76SkS0/3DVavTkqzTkG2CmE/3sY/e6UlvhZgxUqcLFVkxHC8WwRir9OD1+Lzi03mPQFzvl7WuERSbkDTK1w7jvrMOta7v553uBps6k6xOgqRvN1MWXUmXmFjo4qXhYuOzmI=
+	t=1738586905; cv=none; b=uaEoK0pDKMolmRQ6yqiKD99UWcAPdSqSNJCHe3vEkDjt7h4sJ+SeKSF5W9Yj4ZaCOw2bz3y/xkgn0XPKZeJqYsrreAA/zP6kFby0/FPDFLqi8G21h/ff1OkFb07U1Lmz5kygSpBJ3QGPE/+uFAs11SHnsuQDVeOE1EODCf/ha7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738586905; c=relaxed/simple;
-	bh=SqBPxJkrb6ETKFTLXVZHFq1UJXDq0NCO+5xLFDQMzE0=;
+	bh=EsOdw/KGZZKGasHOEkSPwAuGgQin8TCmYh4P/jdHTvM=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ACRNb3AfsMaHT30lQ9y4VQB4fKnNxiB59IZigPZo54+7elA0HR45EPssgjWDCF2rK8JuWzZyGLIEamb7EBiHNGZItDf85yBCndpeUJRBTfTtxAXr9jwo2Te4DiloVBC/v+BQA0YovuPqCTL0VsdJAehhaHmY+A2cfWLrmW5Hi2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2kvmTlOz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0dMlU4rB; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=TaoG0eEhcS1qAmTkZM6xctq7Rpxto8Ij0aFComh0sg4+U4muGrGEJTdl8qKh4/Zdf+7Cu/tJzUAUdEVL6zhK8a7RjGhKe+hLEx7eiiZE7+UtGpAr6J8EAd0+TlQk8bOyIy9Q+vV0tujimReaLaBP/MB7cWfV+dGCD4bxMlxUr+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dcva94JX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cey1W3Vp; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2kvmTlOz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0dMlU4rB"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dcva94JX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cey1W3Vp"
 Date: Mon, 03 Feb 2025 12:48:20 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738586901;
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ygulU40BbxrTKuhnwVZ0yk1ptKVvi8uMsUam4ORMcdQ=;
-	b=2kvmTlOzOOCEIMlh0Ap6V+SmKlFdL70pMxXko5bq+W6fW6jHfmyQh+HgQEBSHhw4csZrAD
-	p0JDAHxBDqZ+RVcj+wssrAMldtShwuXou6Qklb2kP9qJVXSsm5XHbhFfOqLds9jwV0HsMJ
-	i4wdGt1XQqbTg4A/pGhyvx+4p0Q6Ns59X2SBnarceByqj55pES2oB2rUC11wyy2iMA8Gqv
-	wFfiTglEpLuzgzD2JFu4Xv9XhannKmInsYtw4Y+8pPvKMFl51lhsu0R22vyskaH0jMgU7O
-	F62eApz8sxs+mwrwpLX6jqxoHqaFan7h87acyGr98YtKe8AihsWjWQLR5Idoaw==
+	bh=vySdLVLJsEUo5lq66U7n2sqt1XWf6269xNs2dQqekOA=;
+	b=dcva94JXNLbKR022GAXEpKFCUqUrw7fEuKOgA5tQjiEpYpcuT9diRty8HpVxhw9uhGszMJ
+	Unbpt7ACQOVoT7OVK1pg5A3KJvx+F7UxKzU7BUUva/57scAcXXUscCl5Gmo/Pq1uWKQnKC
+	4eIOg6+dZyCdPQY5fes8cU6pakftd5BujM/WTdQLp4ArcJzCDm50P2LaREUv5zUVUFILjV
+	CPuMhoUpvTExbxLKJHTPONqcsAJKSxc0N++4G9IzxD4z8YczagbcZ7RJRjeBGYuFjgXGeb
+	nwSSH7HE51HkxPGTT6kG1c3DU1a58wi4aRfsYMT3xrVW0WByWsPCJsebiQVKgg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738586901;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,27 +38,28 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ygulU40BbxrTKuhnwVZ0yk1ptKVvi8uMsUam4ORMcdQ=;
-	b=0dMlU4rBpyge+jq0gsIzCGRxD0I10BKFQxdQbQPqC5MmN2FqngtYsdBWVX3D9UWXmZBngJ
-	R/+4JcslNQf5qiDw==
+	bh=vySdLVLJsEUo5lq66U7n2sqt1XWf6269xNs2dQqekOA=;
+	b=cey1W3VpoIDZe/Q48Ee3WuL7Vh5mq2jb0Oh1rrXnR9CcdSDyuf3uV0msaUI2YstJ76tvtx
+	ew7aaGO1awtX6uCA==
 From: "tip-bot2 for Ravi Bangoria" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/amd/ibs: Remove pointless sample period check
+Subject:
+ [tip: perf/core] perf/amd/ibs: Remove IBS_{FETCH|OP}_CONFIG_MASK macros
 Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>,
  Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250115054438.1021-3-ravi.bangoria@amd.com>
-References: <20250115054438.1021-3-ravi.bangoria@amd.com>
+In-Reply-To: <20250115054438.1021-2-ravi.bangoria@amd.com>
+References: <20250115054438.1021-2-ravi.bangoria@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173858690058.10177.11171001068661803463.tip-bot2@tip-bot2>
+Message-ID: <173858690094.10177.4993434304735211612.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,61 +69,55 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     88c7bcad71c83f52f24108dedcecae0d18dbc627
-Gitweb:        https://git.kernel.org/tip/88c7bcad71c83f52f24108dedcecae0d18dbc627
+Commit-ID:     003c0414318a1829a1a5b195ad81e8a7960c3f5d
+Gitweb:        https://git.kernel.org/tip/003c0414318a1829a1a5b195ad81e8a7960c3f5d
 Author:        Ravi Bangoria <ravi.bangoria@amd.com>
-AuthorDate:    Wed, 15 Jan 2025 05:44:31 
+AuthorDate:    Wed, 15 Jan 2025 05:44:30 
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Mon, 03 Feb 2025 11:46:04 +01:00
 
-perf/amd/ibs: Remove pointless sample period check
+perf/amd/ibs: Remove IBS_{FETCH|OP}_CONFIG_MASK macros
 
-Valid perf event sample period value for IBS PMUs (Fetch and Op both)
-is limited to multiple of 0x10. perf_ibs_init() has this check:
-
-  if (!event->attr.sample_freq && hwc->sample_period & 0x0f)
-          return -EINVAL;
-
-But it's broken since hwc->sample_period will always be 0 when
-event->attr.sample_freq is 0 (irrespective of event->attr.freq value.)
-
-One option to fix this is to change the condition:
-
-  - if (!event->attr.sample_freq && hwc->sample_period & 0x0f)
-  + if (!event->attr.freq && hwc->sample_period & 0x0f)
-
-However, that will break all userspace tools which have been using IBS
-event with sample_period not multiple of 0x10.
-
-Another option is to remove the condition altogether and mask lower
-nibble _silently_, same as what current code is inadvertently doing.
-I'm preferring this approach as it keeps the existing behavior.
+Definition of these macros are very simple and they are used at only one
+place. Get rid of unnecessary redirection.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/r/20250115054438.1021-3-ravi.bangoria@amd.com
+Link: https://lkml.kernel.org/r/20250115054438.1021-2-ravi.bangoria@amd.com
 ---
- arch/x86/events/amd/ibs.c |  9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ arch/x86/events/amd/ibs.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 4ca8006..bd8919e 100644
+index e7a8b87..4ca8006 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -307,13 +307,8 @@ static int perf_ibs_init(struct perf_event *event)
- 		if (config & perf_ibs->cnt_mask)
- 			/* raw max_cnt may not be set */
- 			return -EINVAL;
--		if (!event->attr.sample_freq && hwc->sample_period & 0x0f)
--			/*
--			 * lower 4 bits can not be set in ibs max cnt,
--			 * but allowing it in case we adjust the
--			 * sample period to set a frequency.
--			 */
--			return -EINVAL;
-+
-+		/* Silently mask off lower nibble. IBS hw mandates it. */
- 		hwc->sample_period &= ~0x0FULL;
- 		if (!hwc->sample_period)
- 			hwc->sample_period = 0x10;
+@@ -28,9 +28,6 @@ static u32 ibs_caps;
+ #include <asm/nmi.h>
+ #include <asm/amd-ibs.h>
+ 
+-#define IBS_FETCH_CONFIG_MASK	(IBS_FETCH_RAND_EN | IBS_FETCH_MAX_CNT)
+-#define IBS_OP_CONFIG_MASK	IBS_OP_MAX_CNT
+-
+ /* attr.config2 */
+ #define IBS_SW_FILTER_MASK	1
+ 
+@@ -688,7 +685,7 @@ static struct perf_ibs perf_ibs_fetch = {
+ 		.read		= perf_ibs_read,
+ 	},
+ 	.msr			= MSR_AMD64_IBSFETCHCTL,
+-	.config_mask		= IBS_FETCH_CONFIG_MASK,
++	.config_mask		= IBS_FETCH_MAX_CNT | IBS_FETCH_RAND_EN,
+ 	.cnt_mask		= IBS_FETCH_MAX_CNT,
+ 	.enable_mask		= IBS_FETCH_ENABLE,
+ 	.valid_mask		= IBS_FETCH_VAL,
+@@ -711,7 +708,7 @@ static struct perf_ibs perf_ibs_op = {
+ 		.read		= perf_ibs_read,
+ 	},
+ 	.msr			= MSR_AMD64_IBSOPCTL,
+-	.config_mask		= IBS_OP_CONFIG_MASK,
++	.config_mask		= IBS_OP_MAX_CNT,
+ 	.cnt_mask		= IBS_OP_MAX_CNT | IBS_OP_CUR_CNT |
+ 				  IBS_OP_CUR_CNT_RAND,
+ 	.enable_mask		= IBS_OP_ENABLE,
