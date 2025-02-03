@@ -1,1461 +1,277 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B27202C43;
-	Mon,  3 Feb 2025 11:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738583296; cv=none; b=PVzfaNtnCwL3GZ7u/qIY/ZItwbJ4yArhkx8C/9ZCYLSO+DuCvIWSfUBAngBLE4ZrEsagZTRp2JfBslFmQp2BKVrserVB3tRVKu/S8X+nReIPjHvid3swZ7c/aDIcejOiZRRiXssYSj9tocrM3FPIfUdkz7vpXYGtzidNYPDy3Yw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738583296; c=relaxed/simple;
-	bh=5cxOCHYksEkn1J3Q8sibzWMbDsHlPbVcR8LWKwmbAjY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lwpuHYVT15Xgu/qvdnLY3HWANOeegQ2//y65D8ihuqlV+6iVQjHhSkjlg79SmbTqRMO2aFfca6RbtxGtmJ9ETo4FTAf22ykaXJhfpZcVC5EgRW0P9a8qxqzDcQX/pUR8fDbuaxf/iyR1rBnOeMWGCVDvTK3VQThoUY8WISqLRxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lEzampRA; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEB32036F3
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738583326; cv=fail; b=M3FKkI6hR1XPme5E9IZlfDjJedHkbSLddlE7XLsVzf8eCUTYs5gnCZ8US6cDQYJR/OwDd9yOmAJdkTfQGnUNct202BE5R8qFyLCPi7526+TF8upJMxULxQJ6xzJHoZcsbverkcVm9TfwwYubwR/+cOvSN1vtodavn1hkAnOetfw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738583326; c=relaxed/simple;
+	bh=sikthtVkgxV1kU6FYXsY5FYz+nIvkVSsGknXZ6dPByQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tjhExSDI6HdOW/RUX6lbScjXQyNm13ee2xVDmp41Apu0UoK92T6NIKuN4nfFo+ZNUhxhuGJNx55ZYpOl3vBrskVR90tpKkPZ+nJsoz3FdNtewywcOuMHoc5E/0bWGRdnT+44HfLN5Dz2e7Xeyhpkl0krSr4W7WSoRPKo86nkZbg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Wnrn1gW4; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=mgGMRTWL; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEzampRA"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6dd16e1cfa1so30896526d6.1;
-        Mon, 03 Feb 2025 03:48:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Wnrn1gW4";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="mgGMRTWL"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5138Mi1n028819;
+	Mon, 3 Feb 2025 11:48:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-id:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=sikthtVkgxV1kU6FYXsY5FYz+nIvkVSsGknXZ6dPByQ=; b=
+	Wnrn1gW44BrfEb56aPBhXirs+pI3RHBX9Qg2Z17/wAHspiN/3t2M7WhaCyTMZ5ui
+	tI8Q4xHyICJKs7TgRdxE7o2INCrSww9SVdhdZAycjzr67WRj+ICCBXK9YIbE9lup
+	FR2MbtLSpAC/xqHul7xEO2dvkkrvSSU6D7CaZSPQdKpR5ijK4B3YTWbI8uaMhJlj
+	UHq6OZ2eQJc+wYJyBVZfGSOCiY2LEYJJ8yFCBTLN0D92g10HBoqX9NJX23/t1wVA
+	A1eyT/9Y9hOsGSMAFNEi++rIJ5qfhhjAhYXnsnnjX+cEVBS2vODj9leMboOXA2Ai
+	XoAePjhjFaOconqaMV7MJQ==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44hhbta3d9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 03 Feb 2025 11:48:34 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5139hkxw005072;
+	Mon, 3 Feb 2025 11:48:33 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2170.outbound.protection.outlook.com [104.47.56.170])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44j8fmhqrw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 03 Feb 2025 11:48:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ePv46sUId53SYj/UUMo8/xKjTdCkuK/kWYEkn56+X7lshnrG2oPYoZf/JQrjWICbuuPwoT2HHXv2eFkcHsSEyIQs8z3XkdQLoVA8NzS8bOujcwyptzM6LcpnNylGyrNFtADYhSeNLbjFHPWzks5qKuN2fWpRG3JowtLn0GqSI8qr4Pi6HZQnWHDnfvr4e5VWTXMTrid3YEhRDo5tqArAbCihD8t78NL56lUAZLAPmpFKa1a6AubPtFGJVNsKcYKsMyitLOlu9m0KnIp+UekVwUlB9/pDLzqYpzL7/hHf8ycIoZuxGyXOlgIn4GmIUB1Kg8ywjCveJ56vcwTpI7IyMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sikthtVkgxV1kU6FYXsY5FYz+nIvkVSsGknXZ6dPByQ=;
+ b=lfLcwPLUKyWfovx+RUzfFVqBatJkMs59d0OGadtSpKPEriRwYFvBQbpeRxCOYB98AaWlTQGnVa6YO89Zj30xI3FI29IUn5AM8hgak1tFP6skbMi17NzT69cWEtlkgTk738uLEyhRBtONCkKDG2c5XQMExsTwEowFY8HwL3XCRABK3+wdZN1/pQ/MWvFMwq9UsZwqvHSYTPqc/xImF/8/xgItpSFf2oIi11eFLpDqUyo0BNkw2Yujb2tzLid+eAWMTDTegpix3uQ4KAzGDbaLMa2MC8s5EYuI+mWdURQnoJ2sR8Dj8l2CjnhCO0ICSKbBQFluqGvjbACPN46HKvJBMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738583291; x=1739188091; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7FleVFt0HPiCo3sejcChVy26DsI2+kOLk3b/3kuS6W8=;
-        b=lEzampRAPsaz55HNDRmHZXQELdVwa1bOG/P1083JJFEHTD2rD9eTrQfiMoT54p7Pyi
-         URrxCiCbCKP8xx4BNoHcKN/RdErIafYgLMa7BEKUQCdr6aVanyNzDYT+bwGiCPSAOyKe
-         DVg4z3Bip7KNGwG78aEv9Mzb07xuX4mCeo5ajYpDaeHDrB84iTiuEXo7m9ZBW8uyj1tr
-         2BLVMPLUrTVA1uuK4RZ4yhxwzjZRfAT7tY2Sx8Jd7Af0nsVlKhOgHSyUAIMKXE46PCCx
-         NPXIDKOlStyUeXGSWlMYth1nd3d60Otd5PuIe/iQ+8tYcW720uVvxth461SxeEat78vQ
-         /Ihg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738583291; x=1739188091;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7FleVFt0HPiCo3sejcChVy26DsI2+kOLk3b/3kuS6W8=;
-        b=CIMdgqKMxO6NDdUSFOzCo441xFMwGrLQ96VQAntt2eUnHsgq4DbhHCYMFsYY+heMkF
-         W3iuYTPPkae3kl74nJ6ME/hCEiF23vuIAOw3DVJF/mnlJXE+zLALbgkOWc0ISKX8f541
-         bPQh5Gyco3pBfInNk+au9pHLFvBiY40FS/RqJuqxI3u87x+1RX3SdUXaimPchKS3PhMW
-         JyGt61r4v/Na1BWcpt4SYCH4+RJuQFF81xpgDQqNAfkiK53xN2oWqP0f4dEyoET6HhwB
-         2v2q4Mj+9kBTscVk4ayWm9gwPK5zkVyiI0bYsIMmITRy36QzgkCORqo/zRoG50lVt96R
-         dVFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWu5guAj5Ajo5UhSGD8TIPf/F14T/PJjQjbz5Gg/ddMc+O4/NAJ5VrRJmLy+nthmtUsuYFL7hHsq6y+rFDwlQ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/4QEoSEVj30DlITxxwbWtennj0QCENfik3qVQBIJxXndG3zwk
-	PnD2bbtpD3TuSmZ5xi9zNO2jkk30kg0hMzwUQF0Y6tNM7fA3F+3d
-X-Gm-Gg: ASbGncvyDxCVmDfBPyK2LS1TZrc5+g2iMvU7cbPezNzVB2QXef4507X/7Peoi+6tqMS
-	Tq5kXRLL3otTvb5ETuRKMIsRj69VuDYuFWsvl+B7w8F0OWVwIjjnYzMNZqwtPzSkTlw/6OIUtZD
-	4KJVJ5Ez6bW9EBo/iHYr4JfWAh5wFZTONGxygEriTOjg05Ga6djowJvzaFJ+KMwFCFJCicNoUxe
-	drQbYaBsR35FMIaq3dENY5iq0UzcLxoGJ/fBT3nByy3GkxQRQ74eGCDX8+UzxJtFZ6ngLbjgO0K
-	Vr5eh3i8tWk6VNrsipBQ52cX3CfcIuiOHENkRJs=
-X-Google-Smtp-Source: AGHT+IHaeM50LMTiHlEvQIipWYsCnrtzPdeDLs3neDLnYFTQOZORW9d7ge4+u/vBb2C3bK0gpM4iPg==
-X-Received: by 2002:ad4:5de2:0:b0:6df:93dc:9161 with SMTP id 6a1803df08f44-6e243bf7f88mr343796506d6.27.1738583290809;
-        Mon, 03 Feb 2025 03:48:10 -0800 (PST)
-Received: from tamird-mac.local ([2600:4041:5be7:7c00:f07f:fb14:288d:6f1e])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e25494166csm49550356d6.104.2025.02.03.03.48.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 03:48:10 -0800 (PST)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 03 Feb 2025 06:48:05 -0500
-Subject: [PATCH v2] scanf: convert self-test to KUnit
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sikthtVkgxV1kU6FYXsY5FYz+nIvkVSsGknXZ6dPByQ=;
+ b=mgGMRTWLe+OY/xheIjTbrZCrLn2aO2YRBBYkPLtWeRTQOLVNZnund94V94APTtWX381vvR0nH34C8E7OKDvf8FHWn3a/HLoKzi/hiPqFPYqKxorp8My9OsyJr5HwCZgYZ2LakyGNx7nqo0+g6T9Me1/5VcEncaGekHEC4o9zDWQ=
+Received: from CY8PR10MB6826.namprd10.prod.outlook.com (2603:10b6:930:9d::13)
+ by DS0PR10MB7901.namprd10.prod.outlook.com (2603:10b6:8:1a8::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Mon, 3 Feb
+ 2025 11:48:30 +0000
+Received: from CY8PR10MB6826.namprd10.prod.outlook.com
+ ([fe80::b3df:777f:7515:d04f]) by CY8PR10MB6826.namprd10.prod.outlook.com
+ ([fe80::b3df:777f:7515:d04f%4]) with mapi id 15.20.8398.021; Mon, 3 Feb 2025
+ 11:48:30 +0000
+From: Haakon Bugge <haakon.bugge@oracle.com>
+To: Imran Khan <imran.f.khan@oracle.com>
+CC: Tejun Heo <tj@kernel.org>,
+        "jiangshanlai@gmail.com"
+	<jiangshanlai@gmail.com>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] workqueue: introduce
+ queue_delayed_work_on_offline_safe.
+Thread-Topic: [RFC PATCH] workqueue: introduce
+ queue_delayed_work_on_offline_safe.
+Thread-Index: AQHbdi/+k4JzHyUGp0OwmZSG9rTjGrM1dqmA
+Date: Mon, 3 Feb 2025 11:48:30 +0000
+Message-ID: <28ECBC8D-FD58-4A32-A9DE-7839BD2A77D7@oracle.com>
+References: <20250113043540.2396426-1-imran.f.khan@oracle.com>
+ <Z4VZsFBn13nBnGjb@slm.duckdns.org>
+ <eab73ac2-d9eb-4ac7-9e0f-9a02b81a31bb@oracle.com>
+ <8715d5cf-1f63-4c57-b855-8abae8debaa2@oracle.com>
+ <08fd6f46-1e85-4642-b2ca-17013cb7a9c9@oracle.com>
+In-Reply-To: <08fd6f46-1e85-4642-b2ca-17013cb7a9c9@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: Apple Mail (2.3826.300.87.4.3)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY8PR10MB6826:EE_|DS0PR10MB7901:EE_
+x-ms-office365-filtering-correlation-id: 9e93de32-bc3a-4b9d-ac62-08dd4448ae14
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?eWRpTERqTlk3ekRva1h1LzlTRzlrV3ZQUHZRVDNtRUtYK1dHSncraHlSZDlN?=
+ =?utf-8?B?SkF3YW1Oclh4MlZSZFJhOXc0Z2Vic1dud29qUHFpbktDc0VyVmYvWWxoTWVS?=
+ =?utf-8?B?L0ZZYzN3aVE2Nm1JZm0vODJtUmhsV1lFOXFSVjduRjg2YnlPalhndnhlYUsx?=
+ =?utf-8?B?M0hWb0dCcmRYcGNOWWFBN1NGemFTRndyakVvbWoyMUM3R1d5cU44dDVmTnU1?=
+ =?utf-8?B?M296SjV2S2d3ZWpXL0FyQjJkTUNEMTRKWHBGbDlqcEN0OEZEWGNNSzRkYkc0?=
+ =?utf-8?B?RDc1MTNTSGcwdFhpRHFaZURWYzR0RlBnTXpJZTN4V2ZjVUdRR1IwWHZwanQ2?=
+ =?utf-8?B?Z3NldVFzamQzNlVZTVFYcUR6Ukh0ZWpnYTdzYVlUa1JhOStLWXo1ZEtrampN?=
+ =?utf-8?B?eHp5elhHV3BtQzExTlZXTWw5MUlZSXpCaTk0dVd1czRsOUlHWFpLRFpEQ25v?=
+ =?utf-8?B?T0NXdnZtMDVLVHo5cDZtR1dZbmxxM0NKRlVPeDJZVzB2Mm5GYTF1RFMxNmtM?=
+ =?utf-8?B?Y1BvakRkV2pFbmRQWEd2Z01tSkd3VlFIWktIN3RDTk1LMm5ZVVI1M21xUlE0?=
+ =?utf-8?B?aXhHTnQwLzZLcDBEaFlMb2p2TDkxUktCa05GWVZmUHJPUDJKZENuS01PaEwx?=
+ =?utf-8?B?dG9FY085Y1R6WjJWdjBXT0ZHWGUxcmg3aXVRMngzL1dwOUVxSXM4czZuaVF0?=
+ =?utf-8?B?NVN2RXMwZU5uV0tJUWpGSndza3k5WUwvUmRFS3YxUWs1UTBEV29VTks4TXNE?=
+ =?utf-8?B?dDFIc01nWE5id3V4VG9VSUd2YWVOSi9XampKSWZoNkRjYkhieUdFMXV0RSs3?=
+ =?utf-8?B?MDkrWGJRaWtZc0RqKzgrOFExU2FDRk85clRPcnZSS3pRa29oS0V6LzgvTWQy?=
+ =?utf-8?B?OHMyKzNyZWRjODJIaExJSnYyWFpzdUt1Qnk4K01XRStJQTVBb3p3Y0w2RDhJ?=
+ =?utf-8?B?blpRUkRtUmZSTVZNamRkNU9hdVprY3hYYnRObWNzaFMwa1pXeW1BK2QrVGh1?=
+ =?utf-8?B?OFhiUzQ0NDZSa0pKOEpBMERHRVIrc0RUR3AyR0s5alRXS25xQmVDcEJ3Z2cz?=
+ =?utf-8?B?Qm95QnF1TisrdUxLZWJRSTRpVStodnQ1T25TcDloTG53UVBWcm9jSXVnSXJ5?=
+ =?utf-8?B?NEhNZUhvMzAxaEdEUkM5bWxlMCt4T2Zod2RsMmo5SkRISEFRb2VwZGNReC9B?=
+ =?utf-8?B?d2xjbW1FSkE4MzZnSDFsblhqRk9XOVE0SkpFdjluYkpTRlNOaWZLSloxbGgw?=
+ =?utf-8?B?QlZ2R3EwRG93MzM5REYyelpJaGp6MUw1MUkzUU5Na3c3MHhEUFFOK3ZEb1NQ?=
+ =?utf-8?B?TU1Kd0E3OHpxWTc2VDllZnIwTmFUeHVPWnRyMUxVcUFRSy9JcWt4cU01SUM1?=
+ =?utf-8?B?Vi9sL0x4SUZybElIQkh2Y0pmZHpSSkk5cjhFRDYrd2N0em1QbVoxTEFKZEhV?=
+ =?utf-8?B?QWhXTmhjMVVTVnVKcFdiZmtQbURNUFNvcDZyRE8zUm1SbEdZL0ttZXZCSVMy?=
+ =?utf-8?B?QzVXRk05d3ZNQUt4aXYyVHh5bndxYXc0eSttMXN1d21UdDQ5MmJXdEtueXZz?=
+ =?utf-8?B?YllvaWZwZGt6TGJkMENBVndQYjhJNDk3bjlGblpTSVlReFJDc1RKeWpjcXNW?=
+ =?utf-8?B?Qm90WnZXZ1NxbXBzWFJTODJLM2RSZHpLZmZmL0IwazJMT01DckgrN1g4ZXpD?=
+ =?utf-8?B?THFjb0dtaCtKNFNPdUFkYXBJUlpVbStTeHhDdXA0N0FLcU9MeXBuNzlISmhT?=
+ =?utf-8?B?WE9ZQnFGS0lURnFMb3pXc3ZzWm84WEtXR051dUJlaS96VktHNFFTeVN0Z1BV?=
+ =?utf-8?B?VlMyekFUZUJMSVllNmlWOEtQNkxlS0h3cDI3bmVUS2RiV0xxS2x0TGlKWWZs?=
+ =?utf-8?B?R09XSEI2R0VkdXE3bmJrcVJjL2RWR3c4T2JuSVAxVnlKZVJwcC9CMjViOWcw?=
+ =?utf-8?Q?ut1fr4XdK+WVTrDuGkpJDalZkVynupd0?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR10MB6826.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?T29RTnAvSVdYZFNBOGVZOWh6b2hGTWZacVNUeks1WFdOU3p2N1h5MGRCZ3hi?=
+ =?utf-8?B?Ti85Ymh0SUNRVHpGNU1EMEtRbUgxTTRqVWwxc05CaFFTejJ5eFYrNjNET1JG?=
+ =?utf-8?B?TjM5cTVBOFplamt4NE8vbmdJOTJNL2JNeHpiUlF5RHZmQWJKVGE2ekJrU1FG?=
+ =?utf-8?B?NjJUK2Rsdk1BajVTWWE1OTh6MlJ6VW51TU1iaHAyeVdSVXpQcFEvQmhuU25t?=
+ =?utf-8?B?TGMxbEczWnBac1YrMnNLRkR1aWROV0NxNjludVdQRkFCOHZFTXJCdm5CdTl1?=
+ =?utf-8?B?bXdXcTN4bkRCTW82bE9meWtBUlVlWnE5SVN6dTRYaUFVV281cXpPSUorZmp6?=
+ =?utf-8?B?YWZBQ3ZLL1gzRGZlRjlqanJINVBmdjROOFA0K3VRdUVmeGFoWGxoU2pGNi92?=
+ =?utf-8?B?VEdDL3BWcExhMzM3aFRYQ1cxQ1dGUmVyODBwTWJCV3M0VTVlRDlGUGVEL0Np?=
+ =?utf-8?B?ZWdQUEI2VGRWTjAzV3doTjQzWWF6anNqSTlObHE0elFPdmFuZ0hpK2hSTkpw?=
+ =?utf-8?B?Q3RhM0c2dWhaZXViQTNweGlaZk5idkd4cG40QVE1YmhaclFIRloybnd4UXBx?=
+ =?utf-8?B?M1E5Z2xMaGJjaTBZbDB2eENxMEFjK0hjWkh6SjVPK1pxZjJhWSsyZFhsQkxB?=
+ =?utf-8?B?cXFKdWRsUGZhM3ZXOXNxaW9vWWc0bzVUT3l3N3N2d2U4TlpYYlFBdFpDRnlV?=
+ =?utf-8?B?c3VMOVdZaXVBNkQxTUltVUYrMElrRjlnb0U3Q0U2OXhST0FGdWE2UXpXR1FW?=
+ =?utf-8?B?SERZS0xHUmY2N0FJNExZZjdyQlBORG4zRytrUndIK0hYVVVzM3FPdmpRNS84?=
+ =?utf-8?B?T29sSXNXVzU4aWw5c01lQWpubTlPUTB6TWdwMXloYVdyWWlQbkdaOUl4RUN0?=
+ =?utf-8?B?enE3c3RiOEE0LytVT0ppMFR3cEZMcnU3d3JjK1dsM0l6TDNRa0ZPU2syNHQ0?=
+ =?utf-8?B?UjlGYVYvR05za1R6T0VNbkEwUy94Z3k2TUc4bUhJSGt6eXUzQWNnZFJzZTB2?=
+ =?utf-8?B?RWhmWFE5Q1Y3VjdxVjRrVHBBeGpZclVvcVNuU3c5YlcxVTR0QjZ3ckwyK0hO?=
+ =?utf-8?B?T0lTZTl2bloyOEh1VGtNMTYwcFpMY1pURG9XR0g1Zi9XTjR0S3h5eFl0UTYv?=
+ =?utf-8?B?T2l1WkJpeGpNMzRHOTExMnRtTVVRWDl2TXFxUWtBd2xaTHdObkNUVUZJam9n?=
+ =?utf-8?B?dlJ5K0hSaW12OWRHbnBSUWZ4WThqb2oxRHczK0RqWmwrV1hrUU9QWDd5ZWJq?=
+ =?utf-8?B?dTBUNkttWlBGMU5DNmlaVzRXOHZOaTZzeWFZZURmWTdGbE00RzVobUI0RUR6?=
+ =?utf-8?B?R0wyc25TNjJLR1ZoTTZYLy9XempXcDNpK2ZzZXFPcTgrL0Q0SjBsQ3Z1cDB6?=
+ =?utf-8?B?cWxvSnpCZWFZa3F2dHE4RFEwRWZnZkRsZkJibSs3aTdVZWphNENtZVJMZDls?=
+ =?utf-8?B?L29XUFEwVzRiLzI1ZWJIYVlKRmo1RDZzN2NVS3RxZVArdjQrRmkrVk9ybmVJ?=
+ =?utf-8?B?Nm42ZXEvN3NrRmFKVmRKeDR4TDl4TjgvbjkrUVBSWEk3d2pkejRIR2tpQUJO?=
+ =?utf-8?B?Vk1leHdFSDFIVGY2c2t0UHZIemIraFBOUzhxUjdtaUp4RjRZZGtyQnNNMXQv?=
+ =?utf-8?B?OEFIQk0vN3NyM1JnaFY0SklCMjNXSnUwT2ljM05nbDJUVnJuTUgzVGJxYjZL?=
+ =?utf-8?B?UGNUUFFvbjNxcmJnOU1iMFNhOUtLZmhDSWlDQlZkbzFiUnZYRmVjSm1xSVFR?=
+ =?utf-8?B?cU1Oa2lqMnNSYW5GcEVtV3VNdW9ZQTJCd3Fmd2xPUUR0S0hhcytxTTRyeGVT?=
+ =?utf-8?B?NTYxQWowOHkzNDNxTnpjSlBIaFFEdjlrdjhRNGFTVnhmbTJrbm1xNm01eWU4?=
+ =?utf-8?B?T1ljckVEOC9iL3paMTlMbDNvcDNGaDdYNjV0TzhjcWJXV1ViNk5RWVhZS1hN?=
+ =?utf-8?B?bi9obWNxTWk5WXpqSWNMVW1ydlBsSnZsVUlNZ0ZCQTk1RDZ0ZkkwQk1VSU1S?=
+ =?utf-8?B?ZEh6d1RiT0lFQlVxRktzV3F4djlTdmtXS1BMQlZNc2owWWt0QmNMZVB5amQy?=
+ =?utf-8?B?Q1dLODZ1U3N3K2hkNWxrdnplclV3eHU4RmxtRTVKUHZtYmdGZ2tyWDdYVERR?=
+ =?utf-8?B?S1l6eEh2VWx3UTNYbmxOMEowNkRtNHVpMUN3a2Rtb3IxblpWeWpodWZTbEJP?=
+ =?utf-8?B?UGc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8618403A6A493A459DF8E5306BA938F7@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-scanf-kunit-convert-v2-1-277a618d804e@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAPSsoGcC/32NTQ6CMBBGr0Jm7Zj+gERX3sOwKGUKE6U1LTYaw
- t2tHMDle8n3vhUSRaYEl2qFSJkTB19AHSqwk/EjIQ+FQQnVCKklJmu8w/vL84I2+ExxQdeKwWr
- d97q2UJbPSI7fe/XWFZ44LSF+9pMsf/Z/L0uUKM7tqVG1E9Sb6zgbfhxtmKHbtu0L0j1W4bYAA
- AA=
-X-Change-ID: 20250131-scanf-kunit-convert-f70dc33bb34c
-To: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>, 
- Geert Uytterhoeven <geert@linux-m68k.org>
-X-Mailer: b4 0.15-dev
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	8JQ/NFXI6iTFUKxzppCvg/DG0jR/zmnEsGiGwYQmsaneWVG/tZ7MVqbtX35GcKtqcfW6Zx4Fw+cCuvspaBaLDdWztrA7/kKR7uJRgcRGpv8nMUueUNGprrJxnEF6jONd15xgHmOpuCgCpjorJtzgm6MF1U9zmLCECbxNwjx+kzrQ6eMuX5ZcsPhCUMWeqUpzlEwoIYA8hvG5Y9BzhFqKKP2XttvKxHlIxL6HAo/UMARo+2TC6HHD7uYb1VGZovGd/JOeovVnTU89TAeGV0BeixjkDe08F1PKHHeYbwsSByp5tzLEOz9O1HWbmHzW9+WUU8ZEZMRHU3rQ8akrYu6XPYihRaKrDZhGZSXLP8X2JY6enVY6mNuVDvAZDheGZATegsoVsnI4tuco1TQpwbLYNQ1M+h+2EE4EHuokyY7Chgms/Q7q64YqnK3YecRw7b8E8+SguHrMQEHUujFR0+7sdf9DOFeqBABGPQ2DsovXXl5/L7Bj5PGEAfo/EVOWciVp2aPSVqu4unMuXdGt9R+EdIjxPjf741A8JA7BTSEd//2mfq5ADXDbk33Hbyqezj6Owrczrhv3EsLmZKcXAlTFEuy8kJlh2wudHrbNuC/fyr8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY8PR10MB6826.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e93de32-bc3a-4b9d-ac62-08dd4448ae14
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2025 11:48:30.5029
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iE0Q+vZXQ/ObkwGZLN7Q3OSqiqjCnoiPI0C7SHlIFT03mW0CV0gZNQD+xlCJeDgqJIUGeQs29e/VlGEI1LwqKw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7901
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_05,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
+ definitions=main-2502030089
+X-Proofpoint-GUID: lA9kKJ8QqTD8vIcSHeeEf4gfwE-f2IEC
+X-Proofpoint-ORIG-GUID: lA9kKJ8QqTD8vIcSHeeEf4gfwE-f2IEC
 
-Convert the scanf() self-test to a KUnit test.
-
-In the interest of keeping the patch reasonably-sized this doesn't
-refactor the tests into proper parameterized tests - it's all one big
-test case.
-
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
----
-This is one of just 3 remaining "Test Module" kselftests (the others
-being bitmap and printf), the rest having been converted to KUnit. In
-addition to the enclosed patch, please consider this an RFC on the
-removal of the "Test Module" kselftest machinery.
-
-I tested this using:
-
-$ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 scanf
----
-Changes in v2:
-- Rename lib/{test_scanf.c => scanf_kunit.c}. (Andy Shevchenko)
-- Link to v1: https://lore.kernel.org/r/20250131-scanf-kunit-convert-v1-1-0976524f0eba@gmail.com
----
- MAINTAINERS                          |   2 +-
- arch/m68k/configs/amiga_defconfig    |   1 -
- arch/m68k/configs/apollo_defconfig   |   1 -
- arch/m68k/configs/atari_defconfig    |   1 -
- arch/m68k/configs/bvme6000_defconfig |   1 -
- arch/m68k/configs/hp300_defconfig    |   1 -
- arch/m68k/configs/mac_defconfig      |   1 -
- arch/m68k/configs/multi_defconfig    |   1 -
- arch/m68k/configs/mvme147_defconfig  |   1 -
- arch/m68k/configs/mvme16x_defconfig  |   1 -
- arch/m68k/configs/q40_defconfig      |   1 -
- arch/m68k/configs/sun3_defconfig     |   1 -
- arch/m68k/configs/sun3x_defconfig    |   1 -
- arch/powerpc/configs/ppc64_defconfig |   1 -
- lib/Kconfig.debug                    |  20 +-
- lib/Makefile                         |   4 +-
- lib/{test_scanf.c => scanf_kunit.c}  | 704 +++++++++++++++++------------------
- tools/testing/selftests/lib/Makefile |   2 +-
- tools/testing/selftests/lib/config   |   1 -
- tools/testing/selftests/lib/scanf.sh |   4 -
- 20 files changed, 360 insertions(+), 390 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ab7463b2f165..7c6eb5dc0470 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -25358,8 +25358,8 @@ R:	Sergey Senozhatsky <senozhatsky@chromium.org>
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git
- F:	Documentation/core-api/printk-formats.rst
-+F:	lib/scanf_kunit.c
- F:	lib/test_printf.c
--F:	lib/test_scanf.c
- F:	lib/vsprintf.c
- 
- VT1211 HARDWARE MONITOR DRIVER
-diff --git a/arch/m68k/configs/amiga_defconfig b/arch/m68k/configs/amiga_defconfig
-index dbf2ea561c85..e85a4b3a9847 100644
---- a/arch/m68k/configs/amiga_defconfig
-+++ b/arch/m68k/configs/amiga_defconfig
-@@ -623,7 +623,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/m68k/configs/apollo_defconfig b/arch/m68k/configs/apollo_defconfig
-index b0fd199cc0a4..232b885cc26e 100644
---- a/arch/m68k/configs/apollo_defconfig
-+++ b/arch/m68k/configs/apollo_defconfig
-@@ -580,7 +580,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/m68k/configs/atari_defconfig b/arch/m68k/configs/atari_defconfig
-index bb5b2d3b6c10..228af5b4cd42 100644
---- a/arch/m68k/configs/atari_defconfig
-+++ b/arch/m68k/configs/atari_defconfig
-@@ -600,7 +600,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/m68k/configs/bvme6000_defconfig b/arch/m68k/configs/bvme6000_defconfig
-index 8315a13bab73..cbc59aed3d97 100644
---- a/arch/m68k/configs/bvme6000_defconfig
-+++ b/arch/m68k/configs/bvme6000_defconfig
-@@ -572,7 +572,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/m68k/configs/hp300_defconfig b/arch/m68k/configs/hp300_defconfig
-index 350370657e5f..8d3787b8fe6d 100644
---- a/arch/m68k/configs/hp300_defconfig
-+++ b/arch/m68k/configs/hp300_defconfig
-@@ -582,7 +582,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/m68k/configs/mac_defconfig b/arch/m68k/configs/mac_defconfig
-index f942b4755702..a68893d83361 100644
---- a/arch/m68k/configs/mac_defconfig
-+++ b/arch/m68k/configs/mac_defconfig
-@@ -599,7 +599,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/m68k/configs/multi_defconfig b/arch/m68k/configs/multi_defconfig
-index b1eaad02efab..9a17526cefd2 100644
---- a/arch/m68k/configs/multi_defconfig
-+++ b/arch/m68k/configs/multi_defconfig
-@@ -686,7 +686,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/m68k/configs/mvme147_defconfig b/arch/m68k/configs/mvme147_defconfig
-index 6309a4442bb3..5cf2e2860044 100644
---- a/arch/m68k/configs/mvme147_defconfig
-+++ b/arch/m68k/configs/mvme147_defconfig
-@@ -572,7 +572,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/m68k/configs/mvme16x_defconfig b/arch/m68k/configs/mvme16x_defconfig
-index 3feb0731f814..eb395749bc75 100644
---- a/arch/m68k/configs/mvme16x_defconfig
-+++ b/arch/m68k/configs/mvme16x_defconfig
-@@ -573,7 +573,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/m68k/configs/q40_defconfig b/arch/m68k/configs/q40_defconfig
-index ea04b1b0da7d..8891f12c2a18 100644
---- a/arch/m68k/configs/q40_defconfig
-+++ b/arch/m68k/configs/q40_defconfig
-@@ -589,7 +589,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/m68k/configs/sun3_defconfig b/arch/m68k/configs/sun3_defconfig
-index f52d9af92153..a49ff5330e5b 100644
---- a/arch/m68k/configs/sun3_defconfig
-+++ b/arch/m68k/configs/sun3_defconfig
-@@ -569,7 +569,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/m68k/configs/sun3x_defconfig b/arch/m68k/configs/sun3x_defconfig
-index f348447824da..3022ff492136 100644
---- a/arch/m68k/configs/sun3x_defconfig
-+++ b/arch/m68k/configs/sun3x_defconfig
-@@ -570,7 +570,6 @@ CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
-index 465eb96c755e..819387cbbe69 100644
---- a/arch/powerpc/configs/ppc64_defconfig
-+++ b/arch/powerpc/configs/ppc64_defconfig
-@@ -445,7 +445,6 @@ CONFIG_STRING_SELFTEST=m
- CONFIG_TEST_STRING_HELPERS=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_TEST_UUID=m
- CONFIG_TEST_XARRAY=m
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 1af972a92d06..716c4ef857bb 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2427,6 +2427,23 @@ config ASYNC_RAID6_TEST
- config TEST_HEXDUMP
- 	tristate "Test functions located in the hexdump module at runtime"
- 
-+config SCANF_KUNIT_TEST
-+	tristate "KUnit test scanf() family of functions at runtime" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable this option to test the scanf functions at boot.
-+
-+	  KUnit tests run during boot and output the results to the debug log
-+	  in TAP format (http://testanything.org/). Only useful for kernel devs
-+	  running the KUnit test harness, and not intended for inclusion into a
-+	  production build.
-+
-+	  For more information on KUnit and unit tests in general please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-+
-+	  If unsure, say N.
-+
- config STRING_KUNIT_TEST
- 	tristate "KUnit test string functions at runtime" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
-@@ -2443,9 +2460,6 @@ config TEST_KSTRTOX
- config TEST_PRINTF
- 	tristate "Test printf() family of functions at runtime"
- 
--config TEST_SCANF
--	tristate "Test scanf() family of functions at runtime"
--
- config TEST_BITMAP
- 	tristate "Test bitmap_*() family of functions at runtime"
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index d5cfc7afbbb8..a53cf6dd1505 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -85,7 +85,6 @@ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
- obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
- obj-$(CONFIG_TEST_DYNAMIC_DEBUG) += test_dynamic_debug.o
- obj-$(CONFIG_TEST_PRINTF) += test_printf.o
--obj-$(CONFIG_TEST_SCANF) += test_scanf.o
- 
- obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
- ifeq ($(CONFIG_CC_IS_CLANG)$(CONFIG_KASAN),yy)
-@@ -373,8 +372,9 @@ CFLAGS_bitfield_kunit.o := $(DISABLE_STRUCTLEAK_PLUGIN)
- obj-$(CONFIG_BITFIELD_KUNIT) += bitfield_kunit.o
- obj-$(CONFIG_CHECKSUM_KUNIT) += checksum_kunit.o
- obj-$(CONFIG_UTIL_MACROS_KUNIT) += util_macros_kunit.o
--obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
- obj-$(CONFIG_HASHTABLE_KUNIT_TEST) += hashtable_test.o
-+obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
-+obj-$(CONFIG_SCANF_KUNIT_TEST) += scanf_kunit.o
- obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
- obj-$(CONFIG_BITS_TEST) += test_bits.o
- obj-$(CONFIG_CMDLINE_KUNIT_TEST) += cmdline_kunit.o
-diff --git a/lib/test_scanf.c b/lib/scanf_kunit.c
-similarity index 30%
-rename from lib/test_scanf.c
-rename to lib/scanf_kunit.c
-index 44f8508c9d88..70364ce20ec3 100644
---- a/lib/test_scanf.c
-+++ b/lib/scanf_kunit.c
-@@ -5,8 +5,8 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <kunit/test.h>
- #include <linux/bitops.h>
--#include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/overflow.h>
-@@ -15,148 +15,123 @@
- #include <linux/slab.h>
- #include <linux/string.h>
- 
--#include "../tools/testing/selftests/kselftest_module.h"
--
- #define BUF_SIZE 1024
- 
--KSTM_MODULE_GLOBALS();
--static char *test_buffer __initdata;
--static char *fmt_buffer __initdata;
--static struct rnd_state rnd_state __initdata;
-+static char *test_buffer;
-+static char *fmt_buffer;
-+static struct rnd_state rnd_state;
- 
--typedef int (*check_fn)(const void *check_data, const char *string,
-+typedef void (*check_fn)(struct kunit *test, const void *check_data, const char *string,
- 			const char *fmt, int n_args, va_list ap);
- 
--static void __scanf(4, 6) __init
--_test(check_fn fn, const void *check_data, const char *string, const char *fmt,
-+static void __scanf(5, 7)
-+_test(struct kunit *test, check_fn fn, const void *check_data, const char *string, const char *fmt,
- 	int n_args, ...)
- {
- 	va_list ap, ap_copy;
--	int ret;
--
--	total_tests++;
- 
- 	va_start(ap, n_args);
- 	va_copy(ap_copy, ap);
--	ret = vsscanf(string, fmt, ap_copy);
-+	KUNIT_EXPECT_EQ_MSG(test, vsscanf(string, fmt, ap_copy), n_args,
-+			    "vsscanf(\"%s\", \"%s\", ...)", string, fmt);
- 	va_end(ap_copy);
- 
--	if (ret != n_args) {
--		pr_warn("vsscanf(\"%s\", \"%s\", ...) returned %d expected %d\n",
--			string, fmt, ret, n_args);
--		goto fail;
--	}
--
--	ret = (*fn)(check_data, string, fmt, n_args, ap);
--	if (ret)
--		goto fail;
--
--	va_end(ap);
--
--	return;
--
--fail:
--	failed_tests++;
-+	(*fn)(test, check_data, string, fmt, n_args, ap);
- 	va_end(ap);
- }
- 
--#define _check_numbers_template(arg_fmt, expect, str, fmt, n_args, ap)		\
-+#define _check_numbers_template(test, arg_fmt, expect, str, fmt, n_args, ap)	\
- do {										\
- 	pr_debug("\"%s\", \"%s\" ->\n", str, fmt);				\
- 	for (; n_args > 0; n_args--, expect++) {				\
- 		typeof(*expect) got = *va_arg(ap, typeof(expect));		\
- 		pr_debug("\t" arg_fmt "\n", got);				\
--		if (got != *expect) {						\
--			pr_warn("vsscanf(\"%s\", \"%s\", ...) expected " arg_fmt " got " arg_fmt "\n", \
--				str, fmt, *expect, got);			\
--			return 1;						\
--		}								\
-+		KUNIT_EXPECT_EQ_MSG(test, got, *expect, "vsscanf(\"%s\", \"%s\", ...)", str, fmt); \
- 	}									\
--	return 0;								\
- } while (0)
- 
--static int __init check_ull(const void *check_data, const char *string,
-+static void check_ull(struct kunit *test, const void *check_data, const char *string,
- 			    const char *fmt, int n_args, va_list ap)
- {
- 	const unsigned long long *pval = check_data;
- 
--	_check_numbers_template("%llu", pval, string, fmt, n_args, ap);
-+	_check_numbers_template(test, "%llu", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_ll(const void *check_data, const char *string,
-+static void check_ll(struct kunit *test, const void *check_data, const char *string,
- 			   const char *fmt, int n_args, va_list ap)
- {
- 	const long long *pval = check_data;
- 
--	_check_numbers_template("%lld", pval, string, fmt, n_args, ap);
-+	_check_numbers_template(test, "%lld", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_ulong(const void *check_data, const char *string,
-+static void check_ulong(struct kunit *test, const void *check_data, const char *string,
- 			   const char *fmt, int n_args, va_list ap)
- {
- 	const unsigned long *pval = check_data;
- 
--	_check_numbers_template("%lu", pval, string, fmt, n_args, ap);
-+	_check_numbers_template(test, "%lu", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_long(const void *check_data, const char *string,
-+static void check_long(struct kunit *test, const void *check_data, const char *string,
- 			  const char *fmt, int n_args, va_list ap)
- {
- 	const long *pval = check_data;
- 
--	_check_numbers_template("%ld", pval, string, fmt, n_args, ap);
-+	_check_numbers_template(test, "%ld", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_uint(const void *check_data, const char *string,
-+static void check_uint(struct kunit *test, const void *check_data, const char *string,
- 			     const char *fmt, int n_args, va_list ap)
- {
- 	const unsigned int *pval = check_data;
- 
--	_check_numbers_template("%u", pval, string, fmt, n_args, ap);
-+	_check_numbers_template(test, "%u", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_int(const void *check_data, const char *string,
-+static void check_int(struct kunit *test, const void *check_data, const char *string,
- 			    const char *fmt, int n_args, va_list ap)
- {
- 	const int *pval = check_data;
- 
--	_check_numbers_template("%d", pval, string, fmt, n_args, ap);
-+	_check_numbers_template(test, "%d", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_ushort(const void *check_data, const char *string,
-+static void check_ushort(struct kunit *test, const void *check_data, const char *string,
- 			       const char *fmt, int n_args, va_list ap)
- {
- 	const unsigned short *pval = check_data;
- 
--	_check_numbers_template("%hu", pval, string, fmt, n_args, ap);
-+	_check_numbers_template(test, "%hu", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_short(const void *check_data, const char *string,
-+static void check_short(struct kunit *test, const void *check_data, const char *string,
- 			       const char *fmt, int n_args, va_list ap)
- {
- 	const short *pval = check_data;
- 
--	_check_numbers_template("%hd", pval, string, fmt, n_args, ap);
-+	_check_numbers_template(test, "%hd", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_uchar(const void *check_data, const char *string,
-+static void check_uchar(struct kunit *test, const void *check_data, const char *string,
- 			       const char *fmt, int n_args, va_list ap)
- {
- 	const unsigned char *pval = check_data;
- 
--	_check_numbers_template("%hhu", pval, string, fmt, n_args, ap);
-+	_check_numbers_template(test, "%hhu", pval, string, fmt, n_args, ap);
- }
- 
--static int __init check_char(const void *check_data, const char *string,
-+static void check_char(struct kunit *test, const void *check_data, const char *string,
- 			       const char *fmt, int n_args, va_list ap)
- {
- 	const signed char *pval = check_data;
- 
--	_check_numbers_template("%hhd", pval, string, fmt, n_args, ap);
-+	_check_numbers_template(test, "%hhd", pval, string, fmt, n_args, ap);
- }
- 
- /* Selection of interesting numbers to test, copied from test-kstrtox.c */
--static const unsigned long long numbers[] __initconst = {
-+static const unsigned long long numbers[] = {
- 	0x0ULL,
- 	0x1ULL,
- 	0x7fULL,
-@@ -190,76 +165,76 @@ static const unsigned long long numbers[] __initconst = {
- 	: ((unsigned long long)(val) <= type_max(T)))
- 
- 
--#define test_one_number(T, gen_fmt, scan_fmt, val, fn)			\
--do {									\
--	const T expect_val = (T)(val);					\
--	T result = ~expect_val; /* should be overwritten */		\
--									\
--	snprintf(test_buffer, BUF_SIZE, gen_fmt, expect_val);		\
--	_test(fn, &expect_val, test_buffer, "%" scan_fmt, 1, &result);	\
-+#define test_one_number(test, T, gen_fmt, scan_fmt, val, fn)			\
-+do {										\
-+	const T expect_val = (T)(val);						\
-+	T result = ~expect_val; /* should be overwritten */			\
-+										\
-+	snprintf(test_buffer, BUF_SIZE, gen_fmt, expect_val);			\
-+	_test(test, fn, &expect_val, test_buffer, "%" scan_fmt, 1, &result);	\
- } while (0)
- 
--#define simple_numbers_loop(T, gen_fmt, scan_fmt, fn)			\
-+#define simple_numbers_loop(test, T, gen_fmt, scan_fmt, fn)		\
- do {									\
- 	int i;								\
- 									\
- 	for (i = 0; i < ARRAY_SIZE(numbers); i++) {			\
- 		if (value_representable_in_type(T, numbers[i]))		\
--			test_one_number(T, gen_fmt, scan_fmt,		\
-+			test_one_number(test, T, gen_fmt, scan_fmt,	\
- 					numbers[i], fn);		\
- 									\
- 		if (value_representable_in_type(T, -numbers[i]))	\
--			test_one_number(T, gen_fmt, scan_fmt,		\
-+			test_one_number(test, T, gen_fmt, scan_fmt,	\
- 					-numbers[i], fn);		\
- 	}								\
- } while (0)
- 
--static void __init numbers_simple(void)
--{
--	simple_numbers_loop(unsigned long long,	"%llu",	  "llu", check_ull);
--	simple_numbers_loop(long long,		"%lld",	  "lld", check_ll);
--	simple_numbers_loop(long long,		"%lld",	  "lli", check_ll);
--	simple_numbers_loop(unsigned long long,	"%llx",	  "llx", check_ull);
--	simple_numbers_loop(long long,		"%llx",	  "llx", check_ll);
--	simple_numbers_loop(long long,		"0x%llx", "lli", check_ll);
--	simple_numbers_loop(unsigned long long, "0x%llx", "llx", check_ull);
--	simple_numbers_loop(long long,		"0x%llx", "llx", check_ll);
--
--	simple_numbers_loop(unsigned long,	"%lu",	  "lu", check_ulong);
--	simple_numbers_loop(long,		"%ld",	  "ld", check_long);
--	simple_numbers_loop(long,		"%ld",	  "li", check_long);
--	simple_numbers_loop(unsigned long,	"%lx",	  "lx", check_ulong);
--	simple_numbers_loop(long,		"%lx",	  "lx", check_long);
--	simple_numbers_loop(long,		"0x%lx",  "li", check_long);
--	simple_numbers_loop(unsigned long,	"0x%lx",  "lx", check_ulong);
--	simple_numbers_loop(long,		"0x%lx",  "lx", check_long);
--
--	simple_numbers_loop(unsigned int,	"%u",	  "u", check_uint);
--	simple_numbers_loop(int,		"%d",	  "d", check_int);
--	simple_numbers_loop(int,		"%d",	  "i", check_int);
--	simple_numbers_loop(unsigned int,	"%x",	  "x", check_uint);
--	simple_numbers_loop(int,		"%x",	  "x", check_int);
--	simple_numbers_loop(int,		"0x%x",   "i", check_int);
--	simple_numbers_loop(unsigned int,	"0x%x",   "x", check_uint);
--	simple_numbers_loop(int,		"0x%x",   "x", check_int);
--
--	simple_numbers_loop(unsigned short,	"%hu",	  "hu", check_ushort);
--	simple_numbers_loop(short,		"%hd",	  "hd", check_short);
--	simple_numbers_loop(short,		"%hd",	  "hi", check_short);
--	simple_numbers_loop(unsigned short,	"%hx",	  "hx", check_ushort);
--	simple_numbers_loop(short,		"%hx",	  "hx", check_short);
--	simple_numbers_loop(short,		"0x%hx",  "hi", check_short);
--	simple_numbers_loop(unsigned short,	"0x%hx",  "hx", check_ushort);
--	simple_numbers_loop(short,		"0x%hx",  "hx", check_short);
--
--	simple_numbers_loop(unsigned char,	"%hhu",	  "hhu", check_uchar);
--	simple_numbers_loop(signed char,	"%hhd",	  "hhd", check_char);
--	simple_numbers_loop(signed char,	"%hhd",	  "hhi", check_char);
--	simple_numbers_loop(unsigned char,	"%hhx",	  "hhx", check_uchar);
--	simple_numbers_loop(signed char,	"%hhx",	  "hhx", check_char);
--	simple_numbers_loop(signed char,	"0x%hhx", "hhi", check_char);
--	simple_numbers_loop(unsigned char,	"0x%hhx", "hhx", check_uchar);
--	simple_numbers_loop(signed char,	"0x%hhx", "hhx", check_char);
-+static void numbers_simple(struct kunit *test)
-+{
-+	simple_numbers_loop(test, unsigned long long,	"%llu",		"llu", check_ull);
-+	simple_numbers_loop(test, long long,		"%lld",		"lld", check_ll);
-+	simple_numbers_loop(test, long long,		"%lld",		"lli", check_ll);
-+	simple_numbers_loop(test, unsigned long long,	"%llx",		"llx", check_ull);
-+	simple_numbers_loop(test, long long,		"%llx",		"llx", check_ll);
-+	simple_numbers_loop(test, long long,		"0x%llx",	"lli", check_ll);
-+	simple_numbers_loop(test, unsigned long long,	"0x%llx",	"llx", check_ull);
-+	simple_numbers_loop(test, long long,		"0x%llx",	"llx", check_ll);
-+
-+	simple_numbers_loop(test, unsigned long,	"%lu",		"lu", check_ulong);
-+	simple_numbers_loop(test, long,			"%ld",		"ld", check_long);
-+	simple_numbers_loop(test, long,			"%ld",		"li", check_long);
-+	simple_numbers_loop(test, unsigned long,	"%lx",		"lx", check_ulong);
-+	simple_numbers_loop(test, long,			"%lx",		"lx", check_long);
-+	simple_numbers_loop(test, long,			"0x%lx",	"li", check_long);
-+	simple_numbers_loop(test, unsigned long,	"0x%lx",	"lx", check_ulong);
-+	simple_numbers_loop(test, long,			"0x%lx",	"lx", check_long);
-+
-+	simple_numbers_loop(test, unsigned int,		"%u",		"u", check_uint);
-+	simple_numbers_loop(test, int,			"%d",		"d", check_int);
-+	simple_numbers_loop(test, int,			"%d",		"i", check_int);
-+	simple_numbers_loop(test, unsigned int,		"%x",		"x", check_uint);
-+	simple_numbers_loop(test, int,			"%x",		"x", check_int);
-+	simple_numbers_loop(test, int,			"0x%x",		"i", check_int);
-+	simple_numbers_loop(test, unsigned int,		"0x%x",		"x", check_uint);
-+	simple_numbers_loop(test, int,			"0x%x",		"x", check_int);
-+
-+	simple_numbers_loop(test, unsigned short,	"%hu",		"hu", check_ushort);
-+	simple_numbers_loop(test, short,		"%hd",		"hd", check_short);
-+	simple_numbers_loop(test, short,		"%hd",		"hi", check_short);
-+	simple_numbers_loop(test, unsigned short,	"%hx",		"hx", check_ushort);
-+	simple_numbers_loop(test, short,		"%hx",		"hx", check_short);
-+	simple_numbers_loop(test, short,		"0x%hx",	"hi", check_short);
-+	simple_numbers_loop(test, unsigned short,	"0x%hx",	"hx", check_ushort);
-+	simple_numbers_loop(test, short,		"0x%hx",	"hx", check_short);
-+
-+	simple_numbers_loop(test, unsigned char,	"%hhu",		"hhu", check_uchar);
-+	simple_numbers_loop(test, signed char,		"%hhd",		"hhd", check_char);
-+	simple_numbers_loop(test, signed char,		"%hhd",		"hhi", check_char);
-+	simple_numbers_loop(test, unsigned char,	"%hhx",		"hhx", check_uchar);
-+	simple_numbers_loop(test, signed char,		"%hhx",		"hhx", check_char);
-+	simple_numbers_loop(test, signed char,		"0x%hhx",	"hhi", check_char);
-+	simple_numbers_loop(test, unsigned char,	"0x%hhx",	"hhx", check_uchar);
-+	simple_numbers_loop(test, signed char,		"0x%hhx",	"hhx", check_char);
- }
- 
- /*
-@@ -267,14 +242,14 @@ static void __init numbers_simple(void)
-  * the raw prandom*() functions (Not mathematically rigorous!!).
-  * Variabilty of length and value is more important than perfect randomness.
-  */
--static u32 __init next_test_random(u32 max_bits)
-+static u32 next_test_random(u32 max_bits)
- {
- 	u32 n_bits = hweight32(prandom_u32_state(&rnd_state)) % (max_bits + 1);
- 
- 	return prandom_u32_state(&rnd_state) & GENMASK(n_bits, 0);
- }
- 
--static unsigned long long __init next_test_random_ull(void)
-+static unsigned long long next_test_random_ull(void)
- {
- 	u32 rand1 = prandom_u32_state(&rnd_state);
- 	u32 n_bits = (hweight32(rand1) * 3) % 64;
-@@ -311,7 +286,7 @@ do {										\
-  * updating buf_pos and returning the number of characters appended.
-  * On error buf_pos is not changed and return value is 0.
-  */
--static int __init __printf(4, 5)
-+static int __printf(4, 5)
- append_fmt(char *buf, int *buf_pos, int buf_len, const char *val_fmt, ...)
- {
- 	va_list ap;
-@@ -333,7 +308,7 @@ append_fmt(char *buf, int *buf_pos, int buf_len, const char *val_fmt, ...)
-  * Convenience function to append the field delimiter string
-  * to both the value string and format string buffers.
-  */
--static void __init append_delim(char *str_buf, int *str_buf_pos, int str_buf_len,
-+static void append_delim(char *str_buf, int *str_buf_pos, int str_buf_len,
- 				char *fmt_buf, int *fmt_buf_pos, int fmt_buf_len,
- 				const char *delim_str)
- {
-@@ -341,15 +316,15 @@ static void __init append_delim(char *str_buf, int *str_buf_pos, int str_buf_len
- 	append_fmt(fmt_buf, fmt_buf_pos, fmt_buf_len, delim_str);
- }
- 
--#define test_array_8(fn, check_data, string, fmt, arr)				\
-+#define test_array_8(test, fn, check_data, string, fmt, arr)			\
- do {										\
- 	BUILD_BUG_ON(ARRAY_SIZE(arr) != 8);					\
--	_test(fn, check_data, string, fmt, 8,					\
-+	_test(test, fn, check_data, string, fmt, 8,				\
- 		&(arr)[0], &(arr)[1], &(arr)[2], &(arr)[3],			\
- 		&(arr)[4], &(arr)[5], &(arr)[6], &(arr)[7]);			\
- } while (0)
- 
--#define numbers_list_8(T, gen_fmt, field_sep, scan_fmt, fn)			\
-+#define numbers_list_8(test, T, gen_fmt, field_sep, scan_fmt, fn)		\
- do {										\
- 	int i, pos = 0, fmt_pos = 0;						\
- 	T expect[8], result[8];							\
-@@ -366,18 +341,18 @@ do {										\
- 		append_fmt(fmt_buffer, &fmt_pos, BUF_SIZE, "%%%s", scan_fmt);	\
- 	}									\
- 										\
--	test_array_8(fn, expect, test_buffer, fmt_buffer, result);		\
-+	test_array_8(test, fn, expect, test_buffer, fmt_buffer, result);	\
- } while (0)
- 
--#define numbers_list_fix_width(T, gen_fmt, field_sep, width, scan_fmt, fn)	\
-+#define numbers_list_fix_width(test, T, gen_fmt, field_sep, width, scan_fmt, fn)\
- do {										\
- 	char full_fmt[16];							\
- 										\
- 	snprintf(full_fmt, sizeof(full_fmt), "%u%s", width, scan_fmt);		\
--	numbers_list_8(T, gen_fmt, field_sep, full_fmt, fn);			\
-+	numbers_list_8(test, T, gen_fmt, field_sep, full_fmt, fn);		\
- } while (0)
- 
--#define numbers_list_val_width(T, gen_fmt, field_sep, scan_fmt, fn)		\
-+#define numbers_list_val_width(test, T, gen_fmt, field_sep, scan_fmt, fn)	\
- do {										\
- 	int i, val_len, pos = 0, fmt_pos = 0;					\
- 	T expect[8], result[8];							\
-@@ -395,201 +370,201 @@ do {										\
- 			   "%%%u%s", val_len, scan_fmt);			\
- 	}									\
- 										\
--	test_array_8(fn, expect, test_buffer, fmt_buffer, result);		\
-+	test_array_8(test, fn, expect, test_buffer, fmt_buffer, result);	\
- } while (0)
- 
--static void __init numbers_list_ll(const char *delim)
-+static void numbers_list_ll(struct kunit *test, const char *delim)
- {
--	numbers_list_8(unsigned long long, "%llu",   delim, "llu", check_ull);
--	numbers_list_8(long long,	   "%lld",   delim, "lld", check_ll);
--	numbers_list_8(long long,	   "%lld",   delim, "lli", check_ll);
--	numbers_list_8(unsigned long long, "%llx",   delim, "llx", check_ull);
--	numbers_list_8(unsigned long long, "0x%llx", delim, "llx", check_ull);
--	numbers_list_8(long long,	   "0x%llx", delim, "lli", check_ll);
-+	numbers_list_8(test, unsigned long long,	"%llu",		delim, "llu", check_ull);
-+	numbers_list_8(test, long long,			"%lld",		delim, "lld", check_ll);
-+	numbers_list_8(test, long long,			"%lld",		delim, "lli", check_ll);
-+	numbers_list_8(test, unsigned long long,	"%llx",		delim, "llx", check_ull);
-+	numbers_list_8(test, unsigned long long,	"0x%llx",	delim, "llx", check_ull);
-+	numbers_list_8(test, long long,			"0x%llx",	delim, "lli", check_ll);
- }
- 
--static void __init numbers_list_l(const char *delim)
-+static void numbers_list_l(struct kunit *test, const char *delim)
- {
--	numbers_list_8(unsigned long,	   "%lu",    delim, "lu", check_ulong);
--	numbers_list_8(long,		   "%ld",    delim, "ld", check_long);
--	numbers_list_8(long,		   "%ld",    delim, "li", check_long);
--	numbers_list_8(unsigned long,	   "%lx",    delim, "lx", check_ulong);
--	numbers_list_8(unsigned long,	   "0x%lx",  delim, "lx", check_ulong);
--	numbers_list_8(long,		   "0x%lx",  delim, "li", check_long);
-+	numbers_list_8(test, unsigned long,	"%lu",		delim, "lu", check_ulong);
-+	numbers_list_8(test, long,		"%ld",		delim, "ld", check_long);
-+	numbers_list_8(test, long,		"%ld",		delim, "li", check_long);
-+	numbers_list_8(test, unsigned long,	"%lx",		delim, "lx", check_ulong);
-+	numbers_list_8(test, unsigned long,	"0x%lx",	delim, "lx", check_ulong);
-+	numbers_list_8(test, long,		"0x%lx",	delim, "li", check_long);
- }
- 
--static void __init numbers_list_d(const char *delim)
-+static void numbers_list_d(struct kunit *test, const char *delim)
- {
--	numbers_list_8(unsigned int,	   "%u",     delim, "u", check_uint);
--	numbers_list_8(int,		   "%d",     delim, "d", check_int);
--	numbers_list_8(int,		   "%d",     delim, "i", check_int);
--	numbers_list_8(unsigned int,	   "%x",     delim, "x", check_uint);
--	numbers_list_8(unsigned int,	   "0x%x",   delim, "x", check_uint);
--	numbers_list_8(int,		   "0x%x",   delim, "i", check_int);
-+	numbers_list_8(test, unsigned int,	"%u",	delim, "u", check_uint);
-+	numbers_list_8(test, int,		"%d",	delim, "d", check_int);
-+	numbers_list_8(test, int,		"%d",	delim, "i", check_int);
-+	numbers_list_8(test, unsigned int,	"%x",	delim, "x", check_uint);
-+	numbers_list_8(test, unsigned int,	"0x%x",	delim, "x", check_uint);
-+	numbers_list_8(test, int,		"0x%x",	delim, "i", check_int);
- }
- 
--static void __init numbers_list_h(const char *delim)
-+static void numbers_list_h(struct kunit *test, const char *delim)
- {
--	numbers_list_8(unsigned short,	   "%hu",    delim, "hu", check_ushort);
--	numbers_list_8(short,		   "%hd",    delim, "hd", check_short);
--	numbers_list_8(short,		   "%hd",    delim, "hi", check_short);
--	numbers_list_8(unsigned short,	   "%hx",    delim, "hx", check_ushort);
--	numbers_list_8(unsigned short,	   "0x%hx",  delim, "hx", check_ushort);
--	numbers_list_8(short,		   "0x%hx",  delim, "hi", check_short);
-+	numbers_list_8(test, unsigned short,	"%hu",		delim, "hu", check_ushort);
-+	numbers_list_8(test, short,		"%hd",		delim, "hd", check_short);
-+	numbers_list_8(test, short,		"%hd",		delim, "hi", check_short);
-+	numbers_list_8(test, unsigned short,	"%hx",		delim, "hx", check_ushort);
-+	numbers_list_8(test, unsigned short,	"0x%hx",	delim, "hx", check_ushort);
-+	numbers_list_8(test, short,		"0x%hx",	delim, "hi", check_short);
- }
- 
--static void __init numbers_list_hh(const char *delim)
-+static void numbers_list_hh(struct kunit *test, const char *delim)
- {
--	numbers_list_8(unsigned char,	   "%hhu",   delim, "hhu", check_uchar);
--	numbers_list_8(signed char,	   "%hhd",   delim, "hhd", check_char);
--	numbers_list_8(signed char,	   "%hhd",   delim, "hhi", check_char);
--	numbers_list_8(unsigned char,	   "%hhx",   delim, "hhx", check_uchar);
--	numbers_list_8(unsigned char,	   "0x%hhx", delim, "hhx", check_uchar);
--	numbers_list_8(signed char,	   "0x%hhx", delim, "hhi", check_char);
-+	numbers_list_8(test, unsigned char,	"%hhu",		delim, "hhu", check_uchar);
-+	numbers_list_8(test, signed char,	"%hhd",		delim, "hhd", check_char);
-+	numbers_list_8(test, signed char,	"%hhd",		delim, "hhi", check_char);
-+	numbers_list_8(test, unsigned char,	"%hhx",		delim, "hhx", check_uchar);
-+	numbers_list_8(test, unsigned char,	"0x%hhx",	delim, "hhx", check_uchar);
-+	numbers_list_8(test, signed char,	"0x%hhx",	delim, "hhi", check_char);
- }
- 
--static void __init numbers_list(const char *delim)
-+static void numbers_list(struct kunit *test, const char *delim)
- {
--	numbers_list_ll(delim);
--	numbers_list_l(delim);
--	numbers_list_d(delim);
--	numbers_list_h(delim);
--	numbers_list_hh(delim);
-+	numbers_list_ll(test, delim);
-+	numbers_list_l(test, delim);
-+	numbers_list_d(test, delim);
-+	numbers_list_h(test, delim);
-+	numbers_list_hh(test, delim);
- }
- 
--static void __init numbers_list_field_width_ll(const char *delim)
-+static void numbers_list_field_width_ll(struct kunit *test, const char *delim)
- {
--	numbers_list_fix_width(unsigned long long, "%llu",   delim, 20, "llu", check_ull);
--	numbers_list_fix_width(long long,	   "%lld",   delim, 20, "lld", check_ll);
--	numbers_list_fix_width(long long,	   "%lld",   delim, 20, "lli", check_ll);
--	numbers_list_fix_width(unsigned long long, "%llx",   delim, 16, "llx", check_ull);
--	numbers_list_fix_width(unsigned long long, "0x%llx", delim, 18, "llx", check_ull);
--	numbers_list_fix_width(long long,	   "0x%llx", delim, 18, "lli", check_ll);
-+	numbers_list_fix_width(test, unsigned long long, "%llu",   delim, 20, "llu", check_ull);
-+	numbers_list_fix_width(test, long long,		 "%lld",   delim, 20, "lld", check_ll);
-+	numbers_list_fix_width(test, long long,		 "%lld",   delim, 20, "lli", check_ll);
-+	numbers_list_fix_width(test, unsigned long long, "%llx",   delim, 16, "llx", check_ull);
-+	numbers_list_fix_width(test, unsigned long long, "0x%llx", delim, 18, "llx", check_ull);
-+	numbers_list_fix_width(test, long long,		 "0x%llx", delim, 18, "lli", check_ll);
- }
- 
--static void __init numbers_list_field_width_l(const char *delim)
-+static void numbers_list_field_width_l(struct kunit *test, const char *delim)
- {
- #if BITS_PER_LONG == 64
--	numbers_list_fix_width(unsigned long,	"%lu",	     delim, 20, "lu", check_ulong);
--	numbers_list_fix_width(long,		"%ld",	     delim, 20, "ld", check_long);
--	numbers_list_fix_width(long,		"%ld",	     delim, 20, "li", check_long);
--	numbers_list_fix_width(unsigned long,	"%lx",	     delim, 16, "lx", check_ulong);
--	numbers_list_fix_width(unsigned long,	"0x%lx",     delim, 18, "lx", check_ulong);
--	numbers_list_fix_width(long,		"0x%lx",     delim, 18, "li", check_long);
-+	numbers_list_fix_width(test, unsigned long, "%lu",   delim, 20,	"lu", check_ulong);
-+	numbers_list_fix_width(test, long,	    "%ld",   delim, 20,	"ld", check_long);
-+	numbers_list_fix_width(test, long,	    "%ld",   delim, 20,	"li", check_long);
-+	numbers_list_fix_width(test, unsigned long, "%lx",   delim, 16,	"lx", check_ulong);
-+	numbers_list_fix_width(test, unsigned long, "0x%lx", delim, 18,	"lx", check_ulong);
-+	numbers_list_fix_width(test, long,	    "0x%lx", delim, 18,	"li", check_long);
- #else
--	numbers_list_fix_width(unsigned long,	"%lu",	     delim, 10, "lu", check_ulong);
--	numbers_list_fix_width(long,		"%ld",	     delim, 11, "ld", check_long);
--	numbers_list_fix_width(long,		"%ld",	     delim, 11, "li", check_long);
--	numbers_list_fix_width(unsigned long,	"%lx",	     delim, 8,  "lx", check_ulong);
--	numbers_list_fix_width(unsigned long,	"0x%lx",     delim, 10, "lx", check_ulong);
--	numbers_list_fix_width(long,		"0x%lx",     delim, 10, "li", check_long);
-+	numbers_list_fix_width(test, unsigned long, "%lu",   delim, 10,	"lu", check_ulong);
-+	numbers_list_fix_width(test, long,	    "%ld",   delim, 11,	"ld", check_long);
-+	numbers_list_fix_width(test, long,	    "%ld",   delim, 11,	"li", check_long);
-+	numbers_list_fix_width(test, unsigned long, "%lx",   delim, 8,	"lx", check_ulong);
-+	numbers_list_fix_width(test, unsigned long, "0x%lx", delim, 10,	"lx", check_ulong);
-+	numbers_list_fix_width(test, long,	    "0x%lx", delim, 10,	"li", check_long);
- #endif
- }
- 
--static void __init numbers_list_field_width_d(const char *delim)
-+static void numbers_list_field_width_d(struct kunit *test, const char *delim)
- {
--	numbers_list_fix_width(unsigned int,	"%u",	     delim, 10, "u", check_uint);
--	numbers_list_fix_width(int,		"%d",	     delim, 11, "d", check_int);
--	numbers_list_fix_width(int,		"%d",	     delim, 11, "i", check_int);
--	numbers_list_fix_width(unsigned int,	"%x",	     delim, 8,  "x", check_uint);
--	numbers_list_fix_width(unsigned int,	"0x%x",	     delim, 10, "x", check_uint);
--	numbers_list_fix_width(int,		"0x%x",	     delim, 10, "i", check_int);
-+	numbers_list_fix_width(test, unsigned int, "%u",   delim, 10, "u", check_uint);
-+	numbers_list_fix_width(test, int,	   "%d",   delim, 11, "d", check_int);
-+	numbers_list_fix_width(test, int,	   "%d",   delim, 11, "i", check_int);
-+	numbers_list_fix_width(test, unsigned int, "%x",   delim, 8,  "x", check_uint);
-+	numbers_list_fix_width(test, unsigned int, "0x%x", delim, 10, "x", check_uint);
-+	numbers_list_fix_width(test, int,	   "0x%x", delim, 10, "i", check_int);
- }
- 
--static void __init numbers_list_field_width_h(const char *delim)
-+static void numbers_list_field_width_h(struct kunit *test, const char *delim)
- {
--	numbers_list_fix_width(unsigned short,	"%hu",	     delim, 5, "hu", check_ushort);
--	numbers_list_fix_width(short,		"%hd",	     delim, 6, "hd", check_short);
--	numbers_list_fix_width(short,		"%hd",	     delim, 6, "hi", check_short);
--	numbers_list_fix_width(unsigned short,	"%hx",	     delim, 4, "hx", check_ushort);
--	numbers_list_fix_width(unsigned short,	"0x%hx",     delim, 6, "hx", check_ushort);
--	numbers_list_fix_width(short,		"0x%hx",     delim, 6, "hi", check_short);
-+	numbers_list_fix_width(test, unsigned short, "%hu",   delim, 5, "hu", check_ushort);
-+	numbers_list_fix_width(test, short,	     "%hd",   delim, 6, "hd", check_short);
-+	numbers_list_fix_width(test, short,	     "%hd",   delim, 6, "hi", check_short);
-+	numbers_list_fix_width(test, unsigned short, "%hx",   delim, 4, "hx", check_ushort);
-+	numbers_list_fix_width(test, unsigned short, "0x%hx", delim, 6, "hx", check_ushort);
-+	numbers_list_fix_width(test, short,	     "0x%hx", delim, 6, "hi", check_short);
- }
- 
--static void __init numbers_list_field_width_hh(const char *delim)
-+static void numbers_list_field_width_hh(struct kunit *test, const char *delim)
- {
--	numbers_list_fix_width(unsigned char,	"%hhu",	     delim, 3, "hhu", check_uchar);
--	numbers_list_fix_width(signed char,	"%hhd",	     delim, 4, "hhd", check_char);
--	numbers_list_fix_width(signed char,	"%hhd",	     delim, 4, "hhi", check_char);
--	numbers_list_fix_width(unsigned char,	"%hhx",	     delim, 2, "hhx", check_uchar);
--	numbers_list_fix_width(unsigned char,	"0x%hhx",    delim, 4, "hhx", check_uchar);
--	numbers_list_fix_width(signed char,	"0x%hhx",    delim, 4, "hhi", check_char);
-+	numbers_list_fix_width(test, unsigned char, "%hhu",   delim, 3, "hhu", check_uchar);
-+	numbers_list_fix_width(test, signed char,   "%hhd",   delim, 4, "hhd", check_char);
-+	numbers_list_fix_width(test, signed char,   "%hhd",   delim, 4, "hhi", check_char);
-+	numbers_list_fix_width(test, unsigned char, "%hhx",   delim, 2, "hhx", check_uchar);
-+	numbers_list_fix_width(test, unsigned char, "0x%hhx", delim, 4, "hhx", check_uchar);
-+	numbers_list_fix_width(test, signed char,   "0x%hhx", delim, 4, "hhi", check_char);
- }
- 
- /*
-  * List of numbers separated by delim. Each field width specifier is the
-  * maximum possible digits for the given type and base.
-  */
--static void __init numbers_list_field_width_typemax(const char *delim)
-+static void numbers_list_field_width_typemax(struct kunit *test, const char *delim)
- {
--	numbers_list_field_width_ll(delim);
--	numbers_list_field_width_l(delim);
--	numbers_list_field_width_d(delim);
--	numbers_list_field_width_h(delim);
--	numbers_list_field_width_hh(delim);
-+	numbers_list_field_width_ll(test, delim);
-+	numbers_list_field_width_l(test, delim);
-+	numbers_list_field_width_d(test, delim);
-+	numbers_list_field_width_h(test, delim);
-+	numbers_list_field_width_hh(test, delim);
- }
- 
--static void __init numbers_list_field_width_val_ll(const char *delim)
-+static void numbers_list_field_width_val_ll(struct kunit *test, const char *delim)
- {
--	numbers_list_val_width(unsigned long long, "%llu",   delim, "llu", check_ull);
--	numbers_list_val_width(long long,	   "%lld",   delim, "lld", check_ll);
--	numbers_list_val_width(long long,	   "%lld",   delim, "lli", check_ll);
--	numbers_list_val_width(unsigned long long, "%llx",   delim, "llx", check_ull);
--	numbers_list_val_width(unsigned long long, "0x%llx", delim, "llx", check_ull);
--	numbers_list_val_width(long long,	   "0x%llx", delim, "lli", check_ll);
-+	numbers_list_val_width(test, unsigned long long, "%llu",   delim, "llu", check_ull);
-+	numbers_list_val_width(test, long long,		 "%lld",   delim, "lld", check_ll);
-+	numbers_list_val_width(test, long long,		 "%lld",   delim, "lli", check_ll);
-+	numbers_list_val_width(test, unsigned long long, "%llx",   delim, "llx", check_ull);
-+	numbers_list_val_width(test, unsigned long long, "0x%llx", delim, "llx", check_ull);
-+	numbers_list_val_width(test, long long,		 "0x%llx", delim, "lli", check_ll);
- }
- 
--static void __init numbers_list_field_width_val_l(const char *delim)
-+static void numbers_list_field_width_val_l(struct kunit *test, const char *delim)
- {
--	numbers_list_val_width(unsigned long,	"%lu",	     delim, "lu", check_ulong);
--	numbers_list_val_width(long,		"%ld",	     delim, "ld", check_long);
--	numbers_list_val_width(long,		"%ld",	     delim, "li", check_long);
--	numbers_list_val_width(unsigned long,	"%lx",	     delim, "lx", check_ulong);
--	numbers_list_val_width(unsigned long,	"0x%lx",     delim, "lx", check_ulong);
--	numbers_list_val_width(long,		"0x%lx",     delim, "li", check_long);
-+	numbers_list_val_width(test, unsigned long, "%lu",   delim, "lu", check_ulong);
-+	numbers_list_val_width(test, long,	    "%ld",   delim, "ld", check_long);
-+	numbers_list_val_width(test, long,	    "%ld",   delim, "li", check_long);
-+	numbers_list_val_width(test, unsigned long, "%lx",   delim, "lx", check_ulong);
-+	numbers_list_val_width(test, unsigned long, "0x%lx", delim, "lx", check_ulong);
-+	numbers_list_val_width(test, long,	    "0x%lx", delim, "li", check_long);
- }
- 
--static void __init numbers_list_field_width_val_d(const char *delim)
-+static void numbers_list_field_width_val_d(struct kunit *test, const char *delim)
- {
--	numbers_list_val_width(unsigned int,	"%u",	     delim, "u", check_uint);
--	numbers_list_val_width(int,		"%d",	     delim, "d", check_int);
--	numbers_list_val_width(int,		"%d",	     delim, "i", check_int);
--	numbers_list_val_width(unsigned int,	"%x",	     delim, "x", check_uint);
--	numbers_list_val_width(unsigned int,	"0x%x",	     delim, "x", check_uint);
--	numbers_list_val_width(int,		"0x%x",	     delim, "i", check_int);
-+	numbers_list_val_width(test, unsigned int, "%u",   delim, "u", check_uint);
-+	numbers_list_val_width(test, int,	   "%d",   delim, "d", check_int);
-+	numbers_list_val_width(test, int,	   "%d",   delim, "i", check_int);
-+	numbers_list_val_width(test, unsigned int, "%x",   delim, "x", check_uint);
-+	numbers_list_val_width(test, unsigned int, "0x%x", delim, "x", check_uint);
-+	numbers_list_val_width(test, int,	   "0x%x", delim, "i", check_int);
- }
- 
--static void __init numbers_list_field_width_val_h(const char *delim)
-+static void numbers_list_field_width_val_h(struct kunit *test, const char *delim)
- {
--	numbers_list_val_width(unsigned short,	"%hu",	     delim, "hu", check_ushort);
--	numbers_list_val_width(short,		"%hd",	     delim, "hd", check_short);
--	numbers_list_val_width(short,		"%hd",	     delim, "hi", check_short);
--	numbers_list_val_width(unsigned short,	"%hx",	     delim, "hx", check_ushort);
--	numbers_list_val_width(unsigned short,	"0x%hx",     delim, "hx", check_ushort);
--	numbers_list_val_width(short,		"0x%hx",     delim, "hi", check_short);
-+	numbers_list_val_width(test, unsigned short, "%hu",   delim, "hu", check_ushort);
-+	numbers_list_val_width(test, short,	     "%hd",   delim, "hd", check_short);
-+	numbers_list_val_width(test, short,	     "%hd",   delim, "hi", check_short);
-+	numbers_list_val_width(test, unsigned short, "%hx",   delim, "hx", check_ushort);
-+	numbers_list_val_width(test, unsigned short, "0x%hx", delim, "hx", check_ushort);
-+	numbers_list_val_width(test, short,	     "0x%hx", delim, "hi", check_short);
- }
- 
--static void __init numbers_list_field_width_val_hh(const char *delim)
-+static void numbers_list_field_width_val_hh(struct kunit *test, const char *delim)
- {
--	numbers_list_val_width(unsigned char,	"%hhu",	     delim, "hhu", check_uchar);
--	numbers_list_val_width(signed char,	"%hhd",	     delim, "hhd", check_char);
--	numbers_list_val_width(signed char,	"%hhd",	     delim, "hhi", check_char);
--	numbers_list_val_width(unsigned char,	"%hhx",	     delim, "hhx", check_uchar);
--	numbers_list_val_width(unsigned char,	"0x%hhx",    delim, "hhx", check_uchar);
--	numbers_list_val_width(signed char,	"0x%hhx",    delim, "hhi", check_char);
-+	numbers_list_val_width(test, unsigned char, "%hhu",   delim, "hhu", check_uchar);
-+	numbers_list_val_width(test, signed char,   "%hhd",   delim, "hhd", check_char);
-+	numbers_list_val_width(test, signed char,   "%hhd",   delim, "hhi", check_char);
-+	numbers_list_val_width(test, unsigned char, "%hhx",   delim, "hhx", check_uchar);
-+	numbers_list_val_width(test, unsigned char, "0x%hhx", delim, "hhx", check_uchar);
-+	numbers_list_val_width(test, signed char,   "0x%hhx", delim, "hhi", check_char);
- }
- 
- /*
-  * List of numbers separated by delim. Each field width specifier is the
-  * exact length of the corresponding value digits in the string being scanned.
-  */
--static void __init numbers_list_field_width_val_width(const char *delim)
-+static void numbers_list_field_width_val_width(struct kunit *test, const char *delim)
- {
--	numbers_list_field_width_val_ll(delim);
--	numbers_list_field_width_val_l(delim);
--	numbers_list_field_width_val_d(delim);
--	numbers_list_field_width_val_h(delim);
--	numbers_list_field_width_val_hh(delim);
-+	numbers_list_field_width_val_ll(test, delim);
-+	numbers_list_field_width_val_l(test, delim);
-+	numbers_list_field_width_val_d(test, delim);
-+	numbers_list_field_width_val_h(test, delim);
-+	numbers_list_field_width_val_hh(test, delim);
- }
- 
- /*
-@@ -598,67 +573,67 @@ static void __init numbers_list_field_width_val_width(const char *delim)
-  * of digits. For example the hex values c0,3,bf01,303 would have a
-  * string representation of "c03bf01303" and extracted with "%2x%1x%4x%3x".
-  */
--static void __init numbers_slice(void)
-+static void numbers_slice(struct kunit *test)
- {
--	numbers_list_field_width_val_width("");
-+	numbers_list_field_width_val_width(test, "");
- }
- 
--#define test_number_prefix(T, str, scan_fmt, expect0, expect1, n_args, fn)	\
-+#define test_number_prefix(test, T, str, scan_fmt, expect0, expect1, n_args, fn)\
- do {										\
- 	const T expect[2] = { expect0, expect1 };				\
- 	T result[2] = { (T)~expect[0], (T)~expect[1] };				\
- 										\
--	_test(fn, &expect, str, scan_fmt, n_args, &result[0], &result[1]);	\
-+	_test(test, fn, &expect, str, scan_fmt, n_args, &result[0], &result[1]);\
- } while (0)
- 
- /*
-  * Number prefix is >= field width.
-  * Expected behaviour is derived from testing userland sscanf.
-  */
--static void __init numbers_prefix_overflow(void)
-+static void numbers_prefix_overflow(struct kunit *test)
- {
- 	/*
- 	 * Negative decimal with a field of width 1, should quit scanning
- 	 * and return 0.
- 	 */
--	test_number_prefix(long long,	"-1 1", "%1lld %lld",	0, 0, 0, check_ll);
--	test_number_prefix(long,	"-1 1", "%1ld %ld",	0, 0, 0, check_long);
--	test_number_prefix(int,		"-1 1", "%1d %d",	0, 0, 0, check_int);
--	test_number_prefix(short,	"-1 1", "%1hd %hd",	0, 0, 0, check_short);
--	test_number_prefix(signed char,	"-1 1", "%1hhd %hhd",	0, 0, 0, check_char);
--
--	test_number_prefix(long long,	"-1 1", "%1lli %lli",	0, 0, 0, check_ll);
--	test_number_prefix(long,	"-1 1", "%1li %li",	0, 0, 0, check_long);
--	test_number_prefix(int,		"-1 1", "%1i %i",	0, 0, 0, check_int);
--	test_number_prefix(short,	"-1 1", "%1hi %hi",	0, 0, 0, check_short);
--	test_number_prefix(signed char,	"-1 1", "%1hhi %hhi",	0, 0, 0, check_char);
-+	test_number_prefix(test, long long,	"-1 1", "%1lld %lld",	0, 0, 0, check_ll);
-+	test_number_prefix(test, long,		"-1 1", "%1ld %ld",	0, 0, 0, check_long);
-+	test_number_prefix(test, int,		"-1 1", "%1d %d",	0, 0, 0, check_int);
-+	test_number_prefix(test, short,		"-1 1", "%1hd %hd",	0, 0, 0, check_short);
-+	test_number_prefix(test, signed char,	"-1 1", "%1hhd %hhd",	0, 0, 0, check_char);
-+
-+	test_number_prefix(test, long long,	"-1 1", "%1lli %lli",	0, 0, 0, check_ll);
-+	test_number_prefix(test, long,		"-1 1", "%1li %li",	0, 0, 0, check_long);
-+	test_number_prefix(test, int,		"-1 1", "%1i %i",	0, 0, 0, check_int);
-+	test_number_prefix(test, short,		"-1 1", "%1hi %hi",	0, 0, 0, check_short);
-+	test_number_prefix(test, signed char,	"-1 1", "%1hhi %hhi",	0, 0, 0, check_char);
- 
- 	/*
- 	 * 0x prefix in a field of width 1: 0 is a valid digit so should
- 	 * convert. Next field scan starts at the 'x' which isn't a digit so
- 	 * scan quits with one field converted.
- 	 */
--	test_number_prefix(unsigned long long,	"0xA7", "%1llx%llx", 0, 0, 1, check_ull);
--	test_number_prefix(unsigned long,	"0xA7", "%1lx%lx",   0, 0, 1, check_ulong);
--	test_number_prefix(unsigned int,	"0xA7", "%1x%x",     0, 0, 1, check_uint);
--	test_number_prefix(unsigned short,	"0xA7", "%1hx%hx",   0, 0, 1, check_ushort);
--	test_number_prefix(unsigned char,	"0xA7", "%1hhx%hhx", 0, 0, 1, check_uchar);
--	test_number_prefix(long long,		"0xA7", "%1lli%llx", 0, 0, 1, check_ll);
--	test_number_prefix(long,		"0xA7", "%1li%lx",   0, 0, 1, check_long);
--	test_number_prefix(int,			"0xA7", "%1i%x",     0, 0, 1, check_int);
--	test_number_prefix(short,		"0xA7", "%1hi%hx",   0, 0, 1, check_short);
--	test_number_prefix(char,		"0xA7", "%1hhi%hhx", 0, 0, 1, check_char);
-+	test_number_prefix(test, unsigned long long, "0xA7", "%1llx%llx", 0, 0, 1, check_ull);
-+	test_number_prefix(test, unsigned long,	     "0xA7", "%1lx%lx",   0, 0, 1, check_ulong);
-+	test_number_prefix(test, unsigned int,	     "0xA7", "%1x%x",     0, 0, 1, check_uint);
-+	test_number_prefix(test, unsigned short,     "0xA7", "%1hx%hx",   0, 0, 1, check_ushort);
-+	test_number_prefix(test, unsigned char,	     "0xA7", "%1hhx%hhx", 0, 0, 1, check_uchar);
-+	test_number_prefix(test, long long,	     "0xA7", "%1lli%llx", 0, 0, 1, check_ll);
-+	test_number_prefix(test, long,		     "0xA7", "%1li%lx",   0, 0, 1, check_long);
-+	test_number_prefix(test, int,		     "0xA7", "%1i%x",     0, 0, 1, check_int);
-+	test_number_prefix(test, short,		     "0xA7", "%1hi%hx",   0, 0, 1, check_short);
-+	test_number_prefix(test, char,		     "0xA7", "%1hhi%hhx", 0, 0, 1, check_char);
- 
- 	/*
- 	 * 0x prefix in a field of width 2 using %x conversion: first field
- 	 * converts to 0. Next field scan starts at the character after "0x".
- 	 * Both fields will convert.
- 	 */
--	test_number_prefix(unsigned long long,	"0xA7", "%2llx%llx", 0, 0xa7, 2, check_ull);
--	test_number_prefix(unsigned long,	"0xA7", "%2lx%lx",   0, 0xa7, 2, check_ulong);
--	test_number_prefix(unsigned int,	"0xA7", "%2x%x",     0, 0xa7, 2, check_uint);
--	test_number_prefix(unsigned short,	"0xA7", "%2hx%hx",   0, 0xa7, 2, check_ushort);
--	test_number_prefix(unsigned char,	"0xA7", "%2hhx%hhx", 0, 0xa7, 2, check_uchar);
-+	test_number_prefix(test, unsigned long long, "0xA7", "%2llx%llx", 0, 0xa7, 2, check_ull);
-+	test_number_prefix(test, unsigned long,	     "0xA7", "%2lx%lx",	  0, 0xa7, 2, check_ulong);
-+	test_number_prefix(test, unsigned int,	     "0xA7", "%2x%x",	  0, 0xa7, 2, check_uint);
-+	test_number_prefix(test, unsigned short,     "0xA7", "%2hx%hx",	  0, 0xa7, 2, check_ushort);
-+	test_number_prefix(test, unsigned char,	     "0xA7", "%2hhx%hhx", 0, 0xa7, 2, check_uchar);
- 
- 	/*
- 	 * 0x prefix in a field of width 2 using %i conversion: first field
-@@ -666,124 +641,112 @@ static void __init numbers_prefix_overflow(void)
- 	 * which will convert if can be interpreted as decimal but will fail
- 	 * if it contains any hex digits (since no 0x prefix).
- 	 */
--	test_number_prefix(long long,	"0x67", "%2lli%lli", 0, 67, 2, check_ll);
--	test_number_prefix(long,	"0x67", "%2li%li",   0, 67, 2, check_long);
--	test_number_prefix(int,		"0x67", "%2i%i",     0, 67, 2, check_int);
--	test_number_prefix(short,	"0x67", "%2hi%hi",   0, 67, 2, check_short);
--	test_number_prefix(char,	"0x67", "%2hhi%hhi", 0, 67, 2, check_char);
--
--	test_number_prefix(long long,	"0xA7", "%2lli%lli", 0, 0,  1, check_ll);
--	test_number_prefix(long,	"0xA7", "%2li%li",   0, 0,  1, check_long);
--	test_number_prefix(int,		"0xA7", "%2i%i",     0, 0,  1, check_int);
--	test_number_prefix(short,	"0xA7", "%2hi%hi",   0, 0,  1, check_short);
--	test_number_prefix(char,	"0xA7", "%2hhi%hhi", 0, 0,  1, check_char);
--}
--
--#define _test_simple_strtoxx(T, fn, gen_fmt, expect, base)			\
--do {										\
--	T got;									\
--	char *endp;								\
--	int len;								\
--	bool fail = false;							\
--										\
--	total_tests++;								\
--	len = snprintf(test_buffer, BUF_SIZE, gen_fmt, expect);			\
--	got = (fn)(test_buffer, &endp, base);					\
--	pr_debug(#fn "(\"%s\", %d) -> " gen_fmt "\n", test_buffer, base, got);	\
--	if (got != (expect)) {							\
--		fail = true;							\
--		pr_warn(#fn "(\"%s\", %d): got " gen_fmt " expected " gen_fmt "\n", \
--			test_buffer, base, got, expect);			\
--	} else if (endp != test_buffer + len) {					\
--		fail = true;							\
--		pr_warn(#fn "(\"%s\", %d) startp=0x%px got endp=0x%px expected 0x%px\n", \
--			test_buffer, base, test_buffer,				\
--			test_buffer + len, endp);				\
--	}									\
--										\
--	if (fail)								\
--		failed_tests++;							\
-+	test_number_prefix(test, long long,	"0x67", "%2lli%lli",	0, 67, 2, check_ll);
-+	test_number_prefix(test, long,		"0x67", "%2li%li",	0, 67, 2, check_long);
-+	test_number_prefix(test, int,		"0x67", "%2i%i",	0, 67, 2, check_int);
-+	test_number_prefix(test, short,		"0x67", "%2hi%hi",	0, 67, 2, check_short);
-+	test_number_prefix(test, char,		"0x67", "%2hhi%hhi",	0, 67, 2, check_char);
-+
-+	test_number_prefix(test, long long,	"0xA7", "%2lli%lli",	0, 0,  1, check_ll);
-+	test_number_prefix(test, long,		"0xA7", "%2li%li",	0, 0,  1, check_long);
-+	test_number_prefix(test, int,		"0xA7", "%2i%i",	0, 0,  1, check_int);
-+	test_number_prefix(test, short,		"0xA7", "%2hi%hi",	0, 0,  1, check_short);
-+	test_number_prefix(test, char,		"0xA7", "%2hhi%hhi",	0, 0,  1, check_char);
-+}
-+
-+#define _test_simple_strtoxx(test, T, fn, gen_fmt, expect, base)			\
-+do {											\
-+	T got;										\
-+	char *endp;									\
-+	int len;									\
-+											\
-+	len = snprintf(test_buffer, BUF_SIZE, gen_fmt, expect);				\
-+	got = (fn)(test_buffer, &endp, base);						\
-+	pr_debug(#fn "(\"%s\", %d) -> " gen_fmt "\n", test_buffer, base, got);		\
-+	KUNIT_EXPECT_EQ_MSG(test, got, expect, #fn "(\"%s\", %d)", test_buffer, base);	\
-+	KUNIT_EXPECT_PTR_EQ_MSG(test, endp, test_buffer + len,				\
-+				#fn "(\"%s\", %d)", test_buffer, base);			\
- } while (0)
- 
--#define test_simple_strtoxx(T, fn, gen_fmt, base)				\
-+#define test_simple_strtoxx(test, T, fn, gen_fmt, base)				\
- do {										\
- 	int i;									\
- 										\
- 	for (i = 0; i < ARRAY_SIZE(numbers); i++) {				\
--		_test_simple_strtoxx(T, fn, gen_fmt, (T)numbers[i], base);	\
-+		_test_simple_strtoxx(test, T, fn, gen_fmt, (T)numbers[i], base);\
- 										\
- 		if (is_signed_type(T))						\
--			_test_simple_strtoxx(T, fn, gen_fmt,			\
-+			_test_simple_strtoxx(test, T, fn, gen_fmt,		\
- 					      -(T)numbers[i], base);		\
- 	}									\
- } while (0)
- 
--static void __init test_simple_strtoull(void)
-+static void test_simple_strtoull(struct kunit *test)
- {
--	test_simple_strtoxx(unsigned long long, simple_strtoull, "%llu",   10);
--	test_simple_strtoxx(unsigned long long, simple_strtoull, "%llu",   0);
--	test_simple_strtoxx(unsigned long long, simple_strtoull, "%llx",   16);
--	test_simple_strtoxx(unsigned long long, simple_strtoull, "0x%llx", 16);
--	test_simple_strtoxx(unsigned long long, simple_strtoull, "0x%llx", 0);
-+	test_simple_strtoxx(test, unsigned long long, simple_strtoull, "%llu",		10);
-+	test_simple_strtoxx(test, unsigned long long, simple_strtoull, "%llu",		0);
-+	test_simple_strtoxx(test, unsigned long long, simple_strtoull, "%llx",		16);
-+	test_simple_strtoxx(test, unsigned long long, simple_strtoull, "0x%llx",	16);
-+	test_simple_strtoxx(test, unsigned long long, simple_strtoull, "0x%llx",	0);
- }
- 
--static void __init test_simple_strtoll(void)
-+static void test_simple_strtoll(struct kunit *test)
- {
--	test_simple_strtoxx(long long, simple_strtoll, "%lld",	 10);
--	test_simple_strtoxx(long long, simple_strtoll, "%lld",	 0);
--	test_simple_strtoxx(long long, simple_strtoll, "%llx",	 16);
--	test_simple_strtoxx(long long, simple_strtoll, "0x%llx", 16);
--	test_simple_strtoxx(long long, simple_strtoll, "0x%llx", 0);
-+	test_simple_strtoxx(test, long long, simple_strtoll, "%lld",	10);
-+	test_simple_strtoxx(test, long long, simple_strtoll, "%lld",	0);
-+	test_simple_strtoxx(test, long long, simple_strtoll, "%llx",	16);
-+	test_simple_strtoxx(test, long long, simple_strtoll, "0x%llx",	16);
-+	test_simple_strtoxx(test, long long, simple_strtoll, "0x%llx",	0);
- }
- 
--static void __init test_simple_strtoul(void)
-+static void test_simple_strtoul(struct kunit *test)
- {
--	test_simple_strtoxx(unsigned long, simple_strtoul, "%lu",   10);
--	test_simple_strtoxx(unsigned long, simple_strtoul, "%lu",   0);
--	test_simple_strtoxx(unsigned long, simple_strtoul, "%lx",   16);
--	test_simple_strtoxx(unsigned long, simple_strtoul, "0x%lx", 16);
--	test_simple_strtoxx(unsigned long, simple_strtoul, "0x%lx", 0);
-+	test_simple_strtoxx(test, unsigned long, simple_strtoul, "%lu",		10);
-+	test_simple_strtoxx(test, unsigned long, simple_strtoul, "%lu",		0);
-+	test_simple_strtoxx(test, unsigned long, simple_strtoul, "%lx",		16);
-+	test_simple_strtoxx(test, unsigned long, simple_strtoul, "0x%lx",	16);
-+	test_simple_strtoxx(test, unsigned long, simple_strtoul, "0x%lx",	0);
- }
- 
--static void __init test_simple_strtol(void)
-+static void test_simple_strtol(struct kunit *test)
- {
--	test_simple_strtoxx(long, simple_strtol, "%ld",   10);
--	test_simple_strtoxx(long, simple_strtol, "%ld",   0);
--	test_simple_strtoxx(long, simple_strtol, "%lx",   16);
--	test_simple_strtoxx(long, simple_strtol, "0x%lx", 16);
--	test_simple_strtoxx(long, simple_strtol, "0x%lx", 0);
-+	test_simple_strtoxx(test, long, simple_strtol, "%ld",	10);
-+	test_simple_strtoxx(test, long, simple_strtol, "%ld",	0);
-+	test_simple_strtoxx(test, long, simple_strtol, "%lx",	16);
-+	test_simple_strtoxx(test, long, simple_strtol, "0x%lx",	16);
-+	test_simple_strtoxx(test, long, simple_strtol, "0x%lx",	0);
- }
- 
- /* Selection of common delimiters/separators between numbers in a string. */
--static const char * const number_delimiters[] __initconst = {
-+static const char * const number_delimiters[] = {
- 	" ", ":", ",", "-", "/",
- };
- 
--static void __init test_numbers(void)
-+static void test_numbers(struct kunit *test)
- {
- 	int i;
- 
- 	/* String containing only one number. */
--	numbers_simple();
-+	numbers_simple(test);
- 
- 	/* String with multiple numbers separated by delimiter. */
- 	for (i = 0; i < ARRAY_SIZE(number_delimiters); i++) {
--		numbers_list(number_delimiters[i]);
-+		numbers_list(test, number_delimiters[i]);
- 
- 		/* Field width may be longer than actual field digits. */
--		numbers_list_field_width_typemax(number_delimiters[i]);
-+		numbers_list_field_width_typemax(test, number_delimiters[i]);
- 
- 		/* Each field width exactly length of actual field digits. */
--		numbers_list_field_width_val_width(number_delimiters[i]);
-+		numbers_list_field_width_val_width(test, number_delimiters[i]);
- 	}
- 
- 	/* Slice continuous sequence of digits using field widths. */
--	numbers_slice();
-+	numbers_slice(test);
- 
--	numbers_prefix_overflow();
-+	numbers_prefix_overflow(test);
- }
- 
--static void __init selftest(void)
-+static void scanf_test(struct kunit *test)
- {
- 	test_buffer = kmalloc(BUF_SIZE, GFP_KERNEL);
- 	if (!test_buffer)
-@@ -797,18 +760,29 @@ static void __init selftest(void)
- 
- 	prandom_seed_state(&rnd_state, 3141592653589793238ULL);
- 
--	test_numbers();
-+	test_numbers(test);
- 
--	test_simple_strtoull();
--	test_simple_strtoll();
--	test_simple_strtoul();
--	test_simple_strtol();
-+	test_simple_strtoull(test);
-+	test_simple_strtoll(test);
-+	test_simple_strtoul(test);
-+	test_simple_strtol(test);
- 
- 	kfree(fmt_buffer);
- 	kfree(test_buffer);
- }
- 
--KSTM_MODULE_LOADERS(test_scanf);
-+static struct kunit_case scanf_test_cases[] = {
-+	KUNIT_CASE(scanf_test),
-+	{}
-+};
-+
-+static struct kunit_suite scanf_test_suite = {
-+	.name = "scanf",
-+	.test_cases = scanf_test_cases,
-+};
-+
-+kunit_test_suite(scanf_test_suite);
-+
- MODULE_AUTHOR("Richard Fitzgerald <rf@opensource.cirrus.com>");
- MODULE_DESCRIPTION("Test cases for sscanf facility");
- MODULE_LICENSE("GPL v2");
-diff --git a/tools/testing/selftests/lib/Makefile b/tools/testing/selftests/lib/Makefile
-index c52fe3ad8e98..4afda556151f 100644
---- a/tools/testing/selftests/lib/Makefile
-+++ b/tools/testing/selftests/lib/Makefile
-@@ -4,5 +4,5 @@
- # No binaries, but make sure arg-less "make" doesn't trigger "run_tests"
- all:
- 
--TEST_PROGS := printf.sh bitmap.sh prime_numbers.sh scanf.sh
-+TEST_PROGS := printf.sh bitmap.sh prime_numbers.sh
- include ../lib.mk
-diff --git a/tools/testing/selftests/lib/config b/tools/testing/selftests/lib/config
-index dc15aba8d0a3..80b55a504868 100644
---- a/tools/testing/selftests/lib/config
-+++ b/tools/testing/selftests/lib/config
-@@ -1,5 +1,4 @@
- CONFIG_TEST_PRINTF=m
--CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_PRIME_NUMBERS=m
- CONFIG_TEST_BITOPS=m
-diff --git a/tools/testing/selftests/lib/scanf.sh b/tools/testing/selftests/lib/scanf.sh
-deleted file mode 100755
-index b59b8ba561c3..000000000000
---- a/tools/testing/selftests/lib/scanf.sh
-+++ /dev/null
-@@ -1,4 +0,0 @@
--#!/bin/sh
--# SPDX-License-Identifier: GPL-2.0
--# Tests the scanf infrastructure using test_scanf kernel module.
--$(dirname $0)/../kselftest/module.sh "scanf" test_scanf
-
----
-base-commit: 18fe18c99c8d90d77c7ed6b42f48fa5b4e5c99c3
-change-id: 20250131-scanf-kunit-convert-f70dc33bb34c
-
-Best regards,
--- 
-Tamir Duberstein <tamird@gmail.com>
-
+DQoNCk9uIDMxIEphbiAyMDI1LCBhdCAxMjoxNiwgSW1yYW4gS2hhbiA8aW1yYW4uZi5raGFuQG9y
+YWNsZS5jb20+IHdyb3RlOg0KPiBIZWxsbyBhZ2FpbiBUZWp1biwNCj4gc29ycnksIGp1c3QgZm91
+bmQgb25lIG1pc3Rha2UgaW4gZWFybGllciBzaGFyZWQgcGF0Y2gsIGl0DQo+IG1pc3NlZCBhbiB1
+bmxvY2sgZG9uZSBiZWxvdzoNCj4gDQo+IFRoYW5rcywNCj4gSW1yYW4NCj4gT24gMzEvMS8yMDI1
+IDk6MzcgcG0sIGltcmFuLmYua2hhbkBvcmFjbGUuY29tIHdyb3RlOg0KPiBIZWxsbyBUZWp1biwN
+Cj4gDQo+IFsuLi5dDQo+IA0KPiBDb3VsZCB5b3Uga2luZGx5IGxldCBtZSBrbm93LCBpZiBpdCB3
+b3VsZCBiZSBhY2NlcHRhYmxlLCB0byBoYXZlDQo+IHF1ZXVlX2RlbGF5ZWRfd29ya19vbl9vZmZs
+aW5lX3NhZmUsIGFzIGEgd3JhcHBlciBhcm91bmQNCj4gcXVldWVfZGVsYXllZF93b3JrX29uLCBz
+dWNoIHRoYXQgaXQgY2FuIGNoZWNrIGFuZCBlbnN1cmUgQ1BVJ3MNCj4gYXZhaWxhYmlsaXR5LiBJ
+ZiBpdCBjYW4ndCwgdGhlbiBpdCBjYW4gc2ltcGx5IHJldHVybiBmYWxzZSBhbmQgbGV0DQo+IGNh
+bGxlciBkZWNpZGUgd2hpY2ggY3B1IHRvIHVzZSBuZXh0LiBTb21ldGhpbmcgbGlrZSBiZWxvdzoN
+Cj4gDQo+IA0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC93b3JrcXVldWUuaCBiL2luY2x1
+ZGUvbGludXgvd29ya3F1ZXVlLmgNCj4gaW5kZXggYjBkYzk1N2MzZTU2MC4uNTdmMzk4MDdmM2Jm
+MSAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC93b3JrcXVldWUuaA0KPiArKysgYi9pbmNs
+dWRlL2xpbnV4L3dvcmtxdWV1ZS5oDQo+IEBAIC01ODksNiArNTg5LDkgQEAgZXh0ZXJuIGJvb2wg
+cXVldWVfd29ya19ub2RlKGludCBub2RlLCBzdHJ1Y3Qgd29ya3F1ZXVlX3N0cnVjdCAqd3EsDQo+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCB3b3JrX3N0cnVjdCAqd29yayk7DQo+
+IGV4dGVybiBib29sIHF1ZXVlX2RlbGF5ZWRfd29ya19vbihpbnQgY3B1LCBzdHJ1Y3Qgd29ya3F1
+ZXVlX3N0cnVjdCAqd3EsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRlbGF5ZWRf
+d29yayAqd29yaywgdW5zaWduZWQgbG9uZyBkZWxheSk7DQo+ICtleHRlcm4gYm9vbCBxdWV1ZV9k
+ZWxheWVkX3dvcmtfb25fb2ZmbGluZV9zYWZlKGludCBjcHUsDQo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIHN0cnVjdCB3b3JrcXVldWVfc3RydWN0ICp3cSwgc3RydWN0IGRlbGF5ZWRfd29yayAq
+d29yaywNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBkZWxheSk7DQoN
+CkhpIEltcmFuLA0KDQoNCkkgYW0gbm90IHF1aXRlIHN1cmUgdGhpcyBzaWduYXR1cmUgd2lsbCBi
+ZSBPSy4gU2VlIGJlbG93Lg0KDQo+IGV4dGVybiBib29sIG1vZF9kZWxheWVkX3dvcmtfb24oaW50
+IGNwdSwgc3RydWN0IHdvcmtxdWV1ZV9zdHJ1Y3QgKndxLA0KPiAgICAgICAgICAgICAgICAgICAg
+ICAgIHN0cnVjdCBkZWxheWVkX3dvcmsgKmR3b3JrLCB1bnNpZ25lZCBsb25nIGRlbGF5KTsNCj4g
+ZXh0ZXJuIGJvb2wgcXVldWVfcmN1X3dvcmsoc3RydWN0IHdvcmtxdWV1ZV9zdHJ1Y3QgKndxLCBz
+dHJ1Y3QgcmN1X3dvcmsgKnJ3b3JrKTsNCj4gDQo+IGRpZmYgLS1naXQgYS9rZXJuZWwvd29ya3F1
+ZXVlLmMgYi9rZXJuZWwvd29ya3F1ZXVlLmMNCj4gaW5kZXggOTM2MjQ4NGE2NTNjNC4uN2QzYjgw
+NTA0MjJlNCAxMDA2NDQNCj4gLS0tIGEva2VybmVsL3dvcmtxdWV1ZS5jDQo+ICsrKyBiL2tlcm5l
+bC93b3JrcXVldWUuYw0KPiBAQCAtMjU2NSw2ICsyNTY1LDM3IEBAIGJvb2wgcXVldWVfZGVsYXll
+ZF93b3JrX29uKGludCBjcHUsIHN0cnVjdCB3b3JrcXVldWVfc3RydWN0ICp3cSwNCj4gfQ0KPiBF
+WFBPUlRfU1lNQk9MKHF1ZXVlX2RlbGF5ZWRfd29ya19vbik7DQo+IA0KPiArLyoqDQo+ICsgKiBx
+dWV1ZV9kZWxheWVkX3dvcmtfb25fb2ZmbGluZV9zYWZlIC0gcXVldWUgd29yayBvbiBzcGVjaWZp
+YyBvbmxpbmUgQ1BVIGFmdGVyDQo+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBkZWxheSwNCj4gKyAqDQo+ICsgKiBAY3B1OiBDUFUgbnVtYmVyIHRvIGV4ZWN1dGUgd29y
+ayBvbg0KPiArICogQHdxOiB3b3JrcXVldWUgdG8gdXNlDQo+ICsgKiBAZHdvcms6IHdvcmsgdG8g
+cXVldWUNCj4gKyAqIEBkZWxheTogbnVtYmVyIG9mIGppZmZpZXMgdG8gd2FpdCBiZWZvcmUgcXVl
+dWVpbmcNCj4gKyAqDQo+ICsgKiBhIHdyYXBwZXIsIGFyb3VuZCBxdWV1ZV9kZWxheWVkX3dvcmtf
+b24sIHRoYXQgY2hlY2tzIGFuZCBlbnN1cmVzIHRoYXQNCj4gKyAqIHNwZWNpZmllZCBAY3B1IGlz
+IG9ubGluZS4gSWYgQGNwdSBpcyBmb3VuZCB0byBiZSBvZmZsaW5lIG9yIGlmIGl0cyBvbmxpbmUN
+Cj4gKyAqIHN0YXR1cyBjYW4ndCBiZSByZWxpYWJseSBkZXRlcm1pbmVkLCByZXR1cm4gZmFsc2Ug
+YW5kIGxlYXZlIHRoZSBkZWNpc2lvbiwNCj4gKyAqIG9mIHNlbGVjdGluZyBuZXcgY3B1IGZvciBk
+ZWxheWVkX3dvcmssIHRvIGNhbGxlci4NCg0KVGhlIHJldHVybiB2YWx1ZSBoZXJlIGlzIGFtYmln
+dW91cy4NCg0KPiArICoNCj4gKyAqLw0KPiArYm9vbCBxdWV1ZV9kZWxheWVkX3dvcmtfb25fb2Zm
+bGluZV9zYWZlKGludCBjcHUsIHN0cnVjdCB3b3JrcXVldWVfc3RydWN0ICp3cSwNCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRlbGF5ZWRfd29yayAqZHdvcmssIHVuc2lnbmVk
+IGxvbmcgZGVsYXkpDQo+ICt7DQo+ICsgICAgICAgYm9vbCByZXQgPSBmYWxzZTsNCj4gKyAgICAg
+ICBpbnQgbG9ja2VkID0gMDsNCj4gKw0KPiArICAgICAgIGlmICgobG9ja2VkID0gY3B1c19yZWFk
+X3RyeWxvY2soKSkgJiYgY3B1X29ubGluZShjcHUpKSB7DQo+ICsgICAgICAgICAgICAgICByZXQg
+PSBxdWV1ZV9kZWxheWVkX3dvcmtfb24oY3B1LCB3cSwgZHdvcmssIGRlbGF5KTsNCg0KTm93LCBy
+ZXQgd2lsbCBiZSBmYWxzZSBpZiB0aGUgd29yayB3YXMgYWxyZWFkeSBxdWV1ZWQuDQoNCj4gICAg
+ICAgICAgICAgICAgICBjcHVzX3JlYWRfdW5sb2NrKCk7DQo+ICsgICAgICAgfSBlbHNlIGlmIChs
+b2NrZWQpDQo+ICsgICAgICAgICAgICAgICBjcHVzX3JlYWRfdW5sb2NrKCk7DQo+ICsNCj4gKyAg
+ICAgICByZXR1cm4gcmV0Ow0KDQpJZiBmYWxzZSBpcyByZXR1cm5lZCwgaXQgaXMgYSkgYmVjYXVz
+ZSB0aGUgZGVzaWduYXRlZCBAY3B1IHdhcyByZWxpYWJsZSBkZXRlY3RlZCBvbmxpbmUgYnV0IHRo
+ZSB3b3JrIHdhcyBhbHJlYWR5IHF1ZXVlZCBvciBiKSBiZWNhdXNlIHRoZSBkZXNpZ25hdGVkIEBj
+cHUgY291bGQgbm90IHJlbGlhYmxlIGJlIGRldGVjdGVkIG9ubGluZS4NCg0KSGVuY2UsIEkgdGhp
+bmsgeW91IG5lZWQgdG8gZGlzdGluZ3Vpc2ggdGhlc2UgY2FzZXMuIEkgc3VnZ2VzdCB0byBrZWVw
+IHRoZSBib29sIHJldHVybiB2YWx1ZSB0byBtZWFuIHdoYXQgaXQgZG9lcyBmb3IgcXVldWVfZGVs
+YXllZF93b3JrX29uKCkgYW5kIGFkZCBhIGJvb2wgcG9pbnRlciBhcyBhcmd1bWVudCB3aGljaCBj
+YW4gYmUgdXNlZCB0byBkZXRlcm1pbmUgcmVsaWFibGUgb25saW5lIGRldGVjdGlvbiBvZiBAY3B1
+IG9yIG5vdC4NCg0KQSBuaXQgaXMgdGhhdCB5b3Ugc2hvdWxkIGhhdmUgYnJhY2VzIG9uIGJvdGgg
+dGhlIGlmL2Vsc2UgY2xhdXNlcyBpcyBhbnkgb2YgdGhlbSBoYXZlIGl0LiBCdXQgZXZlbiBzaW1w
+bGVyLCBkbyBub3QgdXNlICJlbHNlIGlmIiBidXQgYW4gb3JkaW5hcnkgImlmIChsb2NrZWQpIiwg
+YW5kIHRoaXMgd2F5LCB5b3UgY2FuIHJlbW92ZSB0aGUgZmlyc3QgY3B1c19yZWFkX3VubG9jaygp
+Lg0KDQoNClRoeHMsIEjDpWtvbg0KDQoNCj4gK30NCj4gK0VYUE9SVF9TWU1CT0wocXVldWVfZGVs
+YXllZF93b3JrX29uX29mZmxpbmVfc2FmZSk7DQo+ICsNCj4gKw0KPiANCj4gSWYgdGhpcyBsb29r
+cyBhY2NlcHRhYmxlIHRvIHlvdSwgSSBjYW4gc2VuZCBhIHYyIG9mIGVhcmxpZXIgcGF0Y2guDQo+
+IA0KPiBUaGFua3MsDQo+IEltcmFuDQo=
