@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9050D1DB377;
-	Mon,  3 Feb 2025 19:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB3220DD5C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:15:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738610109; cv=none; b=XwFL1xL2wqnAVdQL66eRWsKOcIHj5LqJXieGIp9Qy3STR+F6WXgtAZCq5135QmY8l2UW1OEY1M73P/X7JdbDLa6irZ5m9b+/TtHjfFQEdKHmCgC2cXWK6rJfHwVTw3VX00FM/HSs4H+vhMEgHOwfBrYrmw0WfT8UhNc6grxCGXA=
+	t=1738610111; cv=none; b=O61PuGEgOm+mLSnvDgOk9idBgpip95i0fs3jA70kCc32JV1Kue31ZbkViPPe4YG8r9G1b/JiOaQYiM8L06DEBHqozsE1QoTD4D+cMfHqap960Kt3X+P+hVN72emMZUWvIKPCwL1TNZ18cbeZjRJHJYdrph3VGRX1QRgyHLDs/Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738610109; c=relaxed/simple;
-	bh=CbxsuWIv8VDWrnmls2vfuqVQB78ke4z+CYI65G16m2s=;
+	s=arc-20240116; t=1738610111; c=relaxed/simple;
+	bh=wYJsv6Ip8xBUuijIyu9SEbYTkFPxUHuia0rzAhiQbTY=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=uRbw3Jx82difO7LGoFgvUlwDnOvbUSSRc2b6VUlvqDzn3zRu1W40IZqizIitfrsZkbGAA09+BCqKrElk9gaOTxtSZD/vlblqxtY7ONbkgmxkHpYbMDihh7Jp0N8Ohs0E8ZQq9kwWSIPYZM+vZc4QkR2rBOmoqgTU7Eubra/A0Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ErK7o7xO; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=gTA8bVVMMxLyjYDOJPrdef+LrfdZApagPxjZ3DLFyVF9y8siFKtgxt2hVowXLUJA6IeQHmSM5IFL8qLeyzN8KCPp6vYzmSWsI1/PxtRCr5W8i+AB76oRuWw6/57cN5GXW52DfQyZX9x1vOGknRyVDhtzDE7bIQLsoKWQBdzNSI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nT1V9ZuB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ErK7o7xO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFDDEC4CED2;
-	Mon,  3 Feb 2025 19:15:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nT1V9ZuB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DDCBC4CED2;
+	Mon,  3 Feb 2025 19:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738610108;
-	bh=CbxsuWIv8VDWrnmls2vfuqVQB78ke4z+CYI65G16m2s=;
+	s=k20201202; t=1738610110;
+	bh=wYJsv6Ip8xBUuijIyu9SEbYTkFPxUHuia0rzAhiQbTY=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ErK7o7xObNb9MWkMXICLbCujWlewHxytKj49aMyDvOiDTHB+hH/lMulpTdFf/OWid
-	 XeJuHRoSzzcNVTeLkaJyZJH3oKLDsc9OXUmc+Yvnuvi6fd68awZo5JwGh1hxoXoXmD
-	 ZqfR3f7odxlyI02lIRG8HsqFm78f8VWRnusRPhm0KX/GRQ0daYRKHWCSanq0uj3DQy
-	 k+T/SyQ0+r6UxdZJsDwo1asgeM8VZMB1z5ECsBwJCNEPhdUpnBjteMDEk4i7bnfxbl
-	 AvdwvdD0flje15IGuCF4aRBBVQukQO7HiH6Gw/kQVQaoDypBEWXUF8Azq6AHdL1aBe
-	 CTyzC/UHBRWuw==
+	b=nT1V9ZuBZz/M7OG34ICcaQlVBd2ecDEkC8PqR69ZQNryLFl35xKAJWIO2ArC9euaW
+	 CY+XTGfAH3mIw3Pk/hf6u7etNb2IFyJ8i7qpxOINcV+FN2fY74nfhI647+ytKEYqN5
+	 rv9NzVl6hy/uRylwN0CS2fkMA3tbL70TKOoOl6wtC4YdLzknbvrRCdYOdulzNjlZad
+	 nxxJiEnwddUIqmbBcL29UiO39cii9KH4h7+Kql6MdicCoSaF696fpYS1WJyxiuwmMu
+	 zwCVPZUvVBraATcDi5rbm/swneDjGZLA/yEfclo4+HrqQbFsmIItF0ncmZGSz6/0U1
+	 P8eNfk+BBSbxw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33ECA380AA67;
-	Mon,  3 Feb 2025 19:15:37 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0C5380AA67;
+	Mon,  3 Feb 2025 19:15:38 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,62 +37,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v5 00/10] riscv: add initial support for SpacemiT K1
+Subject: Re: [PATCH v6 0/2] Improve interrupt handling during machine kexec
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <173861013603.3409359.4773072632762735715.git-patchwork-notify@kernel.org>
-Date: Mon, 03 Feb 2025 19:15:36 +0000
-References: <20240730-k1-01-basic-dt-v5-0-98263aae83be@gentoo.org>
-In-Reply-To: <20240730-k1-01-basic-dt-v5-0-98263aae83be@gentoo.org>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: linux-riscv@lists.infradead.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, cyy@cyyself.name, daniel.lezcano@linaro.org,
- tglx@linutronix.de, samuel.holland@sifive.com, anup@brainfault.org,
- gregkh@linuxfoundation.org, jirislaby@kernel.org, lkundrak@v3.sk,
- devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org, jesse@rivosinc.com, conor.dooley@microchip.com,
- inochiama@outlook.com, zhangmeng.kevin@spacemit.com, jszhang@kernel.org,
- matthias.bgg@kernel.org, kevin.z.m@hotmail.com
+ <173861013755.3409359.8865555054206741851.git-patchwork-notify@kernel.org>
+Date: Mon, 03 Feb 2025 19:15:37 +0000
+References: <20241204142003.32859-1-farbere@amazon.com>
+In-Reply-To: <20241204142003.32859-1-farbere@amazon.com>
+To: Eliav Farber <farbere@amazon.com>
+Cc: linux-riscv@lists.infradead.org, linux@armlinux.org.uk,
+ catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
+ npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org,
+ maddy@linux.ibm.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, tglx@linutronix.de, akpm@linux-foundation.org,
+ bhe@redhat.com, hbathini@linux.ibm.com, sourabhjain@linux.ibm.com,
+ adityag@linux.ibm.com, songshuaishuai@tinylab.org, takakura@valinux.co.jp,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, jonnyc@amazon.com
 
 Hello:
 
 This series was applied to riscv/linux.git (fixes)
-by Yixun Lan <dlan@gentoo.org>:
+by Thomas Gleixner <tglx@linutronix.de>:
 
-On Tue, 30 Jul 2024 00:28:03 +0000 you wrote:
-> SpacemiT K1 is an ideal chip for some new extension such as RISC-V Vector
-> 1.0 and Zicond evaluation now. Add initial support for it to allow more
-> people to participate in building drivers to mainline for it.
+On Wed, 4 Dec 2024 14:20:01 +0000 you wrote:
+> This patch series focuses on improving the machine_kexec_mask_interrupts()
+> function by consolidating its implementation and optimizing its behavior to
+> avoid redundant interrupt masking.
 > 
-> This kernel has been tested upon Banana Pi BPI-F3 board on vendor U-Boot
-> bootflow generated by Armbian SDK[1] and patched OpenSBI[2] to enable
-> Zicboz, which does not in the vendor dts on its U-Boot. Then successfully
-> booted to busybox on initrd with this log[3].
+> Patch Summary:
+> [PATCH v6 1/2] Move machine_kexec_mask_interrupts() to kernel/irq/kexec.c,
+>                removing duplicate architecture-specific implementations.
+> [PATCH v6 2/2] Refine machine_kexec_mask_interrupts() to avoid re-masking
+>                already-masked interrupts, resolving specific warnings
+>                triggered in GPIO IRQ flows.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v5,01/10] dt-bindings: vendor-prefixes: add spacemit
-    (no matching commit)
-  - [v5,02/10] dt-bindings: riscv: Add SpacemiT X60 compatibles
-    https://git.kernel.org/riscv/c/16c9147e6a6c
-  - [v5,03/10] dt-bindings: riscv: add SpacemiT K1 bindings
-    https://git.kernel.org/riscv/c/244fe889b950
-  - [v5,04/10] dt-bindings: timer: Add SpacemiT K1 CLINT
-    https://git.kernel.org/riscv/c/e5164af2a2fe
-  - [v5,05/10] dt-bindings: interrupt-controller: Add SpacemiT K1 PLIC
-    https://git.kernel.org/riscv/c/562272a287d5
-  - [v5,06/10] dt-bindings: serial: 8250: Add SpacemiT K1 uart compatible
-    https://git.kernel.org/riscv/c/dfe6d083edff
-  - [v5,07/10] riscv: add SpacemiT SoC family Kconfig support
-    https://git.kernel.org/riscv/c/8814aa123adb
-  - [v5,08/10] riscv: dts: add initial SpacemiT K1 SoC device tree
-    https://git.kernel.org/riscv/c/d8fe64691955
-  - [v5,09/10] riscv: dts: spacemit: add Banana Pi BPI-F3 board device tree
-    https://git.kernel.org/riscv/c/d60d57ab6b2a
-  - [v5,10/10] riscv: defconfig: enable SpacemiT SoC
-    https://git.kernel.org/riscv/c/21bef40ad121
+  - [v6,1/2] kexec: Consolidate machine_kexec_mask_interrupts() implementation
+    https://git.kernel.org/riscv/c/bad6722e478f
+  - [v6,2/2] kexec: Prevent redundant IRQ masking by checking state before shutdown
+    https://git.kernel.org/riscv/c/b4706d814921
 
 You are awesome, thank you!
 -- 
