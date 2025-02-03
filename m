@@ -1,157 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27771D5159;
-	Mon,  3 Feb 2025 17:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E14720B7F3;
+	Mon,  3 Feb 2025 17:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738602573; cv=none; b=SM0zyHxUs7ogcXMv3O3Wxy3WZ/f+1162hUt7qfhzqFFfSlj883M0TSwYg/n/Qfwz7Mu3LK6ZeP2AOJoZgkiYheB8RGUmyUV/vshYv4afMVCxbmh0LOZzKhO6MmmhUJx2mpbF4rDjc80RMZDG6DqhfxK1O3GCzqRaCnAVIvOtbXw=
+	t=1738602596; cv=none; b=I+EXGg/UJ3WVfMcmUOHkDHTxROwT5OnovRjKFCYrsWi0pRHOEWjkZuu1g9/1JzawS91Oqut2CTN0MvkFs9ehkwIK4sqsd4r2bx3NjlcxYqps4XABVxUp1EhR+Enh5igdhGyh9IaBdByzdDmSRtDPPJwykmHXsql3OC/2KHrIv30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738602573; c=relaxed/simple;
-	bh=Z9XDuHu7bVd8nF328qwy+Qj5EiiwyMI6eckREbDdUG8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=koR2nkv7UMfGsGUnJYfOyf6mDfcE59N6UJ1HoWVz8MvdrOVQRvKrBEH6z0TPhfKaIEQbtLVExXZKYWmsafGQVChHJIMtoMBZ3VxbT0vrEvLjJXMmmb8m7jYWxB0+mIGDNhDmb3VlwleKvz8O3j8J0wght4jaHMyFv6AS1ymkuXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lGGjozCc; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738602596; c=relaxed/simple;
+	bh=MddWkbwDmY4Djr2ktBMCExUfhg8X2JcTrHjDlOIt4xY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VOF9jxFIslTD418JTlP7Tr+nveYGKY0GIyr2DZ3fcUqM21BeAedn7Imkele+2uWbeLhHBuLmRWNCPwzN5VApA/PdOFCrGJ1mkhUBgRtYm5M5yNdEKgCKfLO+QpPPxa1CTGKgMqyJCyj9yioNVOqx1V0AwU1wocIsbfNwobclksw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lv/3bCky; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lGGjozCc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738602572; x=1770138572;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Z9XDuHu7bVd8nF328qwy+Qj5EiiwyMI6eckREbDdUG8=;
-  b=lGGjozCcQlWshhCpAlH10637+hG73VdJgJjDeKdoezLk+DR/3wsC6DP1
-   qggrZRHVWdv1eZ/Q8BZKM80KwQJaHajA14MBY4mh2IHxYmyQDb8hd99Rj
-   yX/VFcXD7H9khRYpHq2hYIbbNA+hfFGMNp5YUUtDMsjoS4C8ZeHLThWc5
-   RdKO/GQum96ulrausYkqSS3vWo7EWDI20woSqCi50c74WonzhU0vtUB+8
-   CCB82NJUaRSGbKYAk8XNBnwy8bJIXIUXULFRHk6HNC6LBiSrIk9vnLsHV
-   c830KjzrvriDhBPgOpOYfEJgp3L77fRt1P5jjSfmQM5pEog4o/BiBVmGQ
-   A==;
-X-CSE-ConnectionGUID: HG3/owADTea3S4iPuMXycA==
-X-CSE-MsgGUID: TxcyLx92Rqq7+Y+Yfg7/vg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39364463"
-X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="39364463"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 09:09:31 -0800
-X-CSE-ConnectionGUID: dy7a5vIXSP2ysIp3Fpcgcw==
-X-CSE-MsgGUID: ICCug2eFTjmbVDo6yM/uVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="141219966"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.109.215]) ([10.125.109.215])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 09:09:31 -0800
-Message-ID: <37fec847-47fa-4b8d-9616-14c9c1d55ceb@intel.com>
-Date: Mon, 3 Feb 2025 10:09:29 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lv/3bCky"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14668C4CEE3;
+	Mon,  3 Feb 2025 17:09:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738602595;
+	bh=MddWkbwDmY4Djr2ktBMCExUfhg8X2JcTrHjDlOIt4xY=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Lv/3bCkyE6abQpl2DOZACzozO4x093WZ8QzHbyaS6IDtTxnMjcIGA3F3Hmp9u2kK6
+	 eP9XinhsMmqN09V4jNlXDnfPERNMcTckUJGYpLcwLne9JPoDdfDRX7AGeqYwYOm2ma
+	 4HUPy32pM9LOv+4wWIttCSCftQ1bW5paQV2Qdbcq6aDMpX+xW7CLnlOzafqj6M192d
+	 REyRfG6t8aTL++zh5ludMuYDvzHrb2YxeU/Sv57owXsT8vBXfYdilNNMeLm1oj1Boz
+	 Qz5p6AT5/9McgJ9Vdk8Rsbdp6jEU6iL87BpvN7onoPstVOcjHTDSR7hOhP3H0OanMb
+	 TQx2BuX8Hcj8g==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Mon, 03 Feb 2025 12:09:48 -0500
+Subject: [PATCH] statmount: add a new supported_mask field
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/6] acpi/ghes, cper, cxl: Process CXL CPER Protocol
- errors
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>
-References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250203-statmount-v1-1-871fa7e61f69@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAFv4oGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIwNj3eKSxJLc/NK8Et0085REy6TUZIM0I2MloPqCotS0zAqwWdGxtbU
+ AaiVa5lsAAAA=
+X-Change-ID: 20250203-statmount-f7da9bec0f23
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3606; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=MddWkbwDmY4Djr2ktBMCExUfhg8X2JcTrHjDlOIt4xY=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnoPhfaP3N3BuhZsrZkuJ5z+LXfaJ/NYIS/NLbS
+ VKz6qOkDsaJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6D4XwAKCRAADmhBGVaC
+ FSR5D/4pGdT8m7uFzHlGipckUwlkaao3TpO6OQauenhhiHkDujTKMxkNtGqJPMvUY2rPh+E+qo9
+ iBIndeKSq+x4JhVOT5L0wdaWei07fCWCh9R6uRPsba1UWXwX58zrt78yG5iIg4AMOCRA/dc0UIo
+ WgvTF3SxACubl/3Sw1YxWSIwNo3wB9gESvc+NkLGsi4287dQ2SVz1nMELXNxtAEziUeG4qThrhI
+ oNyYnbNAhRk8+xtHuKaFMO+qUgyPmYk4wX0KM3AbGMdwvtV5LFz62g1I8yNRVvSBBR33qN09T2t
+ tEWHS5iq/ivIM+jMWsAjnkbh8joEu2qf9TFgekZWhhNNtBvolUVWxcPtXZY7wq2Wcdy0GRDfSgB
+ wD70QiKALVLnvO2RWYmeSNLsLwKTNejiKjZIvbfe+suJDb2yvb6U/TiW8Oq2zN+6p1dJz23QAql
+ p0Vr2rwEJt3nU+PtOixQxEBQNl/gyWecyNn6aRuhH9/FkChgFA5KNzEZWKw0Kb7qWe63++MuQeg
+ SC0oSGII4d2dnQcQ7kk+hCcZazcj8nQspEO/GWJegZe+fh4G+FN43IPXuaUXKT8eXhXe70/uE6I
+ Hvy8v7lMW+PC9dXXSLMANGlu4ESwIoI0glXpYwOeo31dyesI1H4+xhUc+/coRm1IufJPa9TeLGx
+ i+PxjU1RPbRLOVg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
+Some of the fields in the statmount() reply can be optional. If the
+kernel has nothing to emit in that field, then it doesn't set the flag
+in the reply. This presents a problem: There is currently no way to
+know what mask flags the kernel supports since you can't always count on
+them being in the reply.
 
+Add a new STATMOUNT_SUPPORTED_MASK flag and field that the kernel can
+set in the reply. Userland can use this to determine if the fields it
+requires from the kernel are supported. This also gives us a way to
+deprecate fields in the future, if that should become necessary.
 
-On 1/23/25 1:44 AM, Smita Koralahalli wrote:
-> This patchset adds logging support for CXL CPER endpoint and port protocol
-> errors.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+I ran into this problem recently. We have a variety of kernels running
+that have varying levels of support of statmount(), and I need to be
+able to fall back to /proc scraping if support for everything isn't
+present. This is difficult currently since statmount() doesn't set the
+flag in the return mask if the field is empty.
+---
+ fs/namespace.c             | 18 ++++++++++++++++++
+ include/uapi/linux/mount.h |  4 +++-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
-Hi Ard,
-I'd like to apply this series to cxl/next. If the EFI bits look ok to you, can you please ack the relevant patches? Thank you!
+diff --git a/fs/namespace.c b/fs/namespace.c
+index a3ed3f2980cbae6238cda09874e2dac146080eb6..7ec5fc436c4ff300507c4ed71a757f5d75a4d520 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -5317,6 +5317,21 @@ static int grab_requested_root(struct mnt_namespace *ns, struct path *root)
+ 	return 0;
+ }
  
-> 
-> The first 3 patches update the existing codebase to support CXL CPER
-> Protocol error reporting.
-> 
-> The last 3 patches introduce recognizing and reporting CXL CPER Protocol
-> errors.
-> 
-> Link to v5:
-> https://lore.kernel.org/linux-cxl/20250114120427.149260-1-Smita.KoralahalliChannabasappa@amd.com
-> 
-> Changes in v5 -> v6:
-> [Dave, Jonathan, Ira]: Reviewed-by tags.
-> [Dave]: Check for cxlds before assigning fe.
-> Merge one of the patches (Port error trace logging) from Terry's Port
-> error handling.
-> Rename host -> parent.
-> 
-> Changes in v4 -> v5:
-> [Dave]: Reviewed-by tags.
-> [Jonathan]: Remove blank line.
-> [Jonathan, Ira]: Change CXL -> "CXL".
-> [Ira]: Fix build error for CONFIG_ACPI_APEI_PCIEAER.
-> 
-> Changes in v3 -> v4:
-> [Ira]: Use memcpy() for RAS Cap struct.
-> [Jonathan]: Commit description edits.
-> [Jonathan]: Use separate work registration functions for protocol and
-> component errors.
-> [Jonathan, Ira]: Replace flags with separate functions for port and
-> device errors.
-> [Jonathan]: Use goto for register and unregister calls.
-> 
-> Changes in v2 -> v3:
-> [Dan]: Define a new workqueue for CXL CPER Protocol errors and avoid
-> reusing existing workqueue which handles CXL CPER events.
-> [Dan] Update function and struct names.
-> [Ira] Don't define common function get_cxl_devstate().
-> [Dan] Use switch cases rather than defining array of structures.
-> [Dan] Pass the entire cxl_cper_prot_err struct for CXL subsystem.
-> [Dan] Use pr_err_ratelimited().
-> [Dan] Use AER_ severities directly. Don't define CXL_ severities.
-> [Dan] Limit either to Device ID or Agent Info check.
-> [Dan] Validate size of RAS field matches expectations.
-> 
-> Changes in v2 -> v1:
-> [Jonathan] Refactor code for trace support. Rename get_cxl_dev()
-> to get_cxl_devstate().
-> [Jonathan] Cleanups for get_cxl_devstate().
-> [Alison, Jonathan]: Define array of structures for Device ID and Serial
-> number comparison.
-> [Dave] p_err -> rec/p_rec.
-> [Jonathan] Remove pr_warn.
-> 
-> Smita Koralahalli (6):
->   efi/cper, cxl: Prefix protocol error struct and function names with
->     cxl_
->   efi/cper, cxl: Make definitions and structures global
->   efi/cper, cxl: Remove cper_cxl.h
->   acpi/ghes, cper: Recognize and cache CXL Protocol errors
->   acpi/ghes, cxl/pci: Process CXL CPER Protocol Errors
->   cxl/pci: Add trace logging for CXL PCIe Port RAS errors
-> 
->  drivers/acpi/apei/ghes.c        | 103 ++++++++++++++++++++++++++++++++
->  drivers/cxl/core/pci.c          |  62 +++++++++++++++++++
->  drivers/cxl/core/trace.h        |  47 +++++++++++++++
->  drivers/cxl/cxlpci.h            |   9 +++
->  drivers/cxl/pci.c               |  59 +++++++++++++++++-
->  drivers/firmware/efi/cper.c     |   6 +-
->  drivers/firmware/efi/cper_cxl.c |  39 +-----------
->  drivers/firmware/efi/cper_cxl.h |  66 --------------------
->  include/cxl/event.h             | 101 +++++++++++++++++++++++++++++++
->  include/linux/cper.h            |   8 +++
->  10 files changed, 394 insertions(+), 106 deletions(-)
->  delete mode 100644 drivers/firmware/efi/cper_cxl.h
-> 
++/* This must be updated whenever a new flag is added */
++#define STATMOUNT_SUPPORTED (STATMOUNT_SB_BASIC | \
++			     STATMOUNT_MNT_BASIC | \
++			     STATMOUNT_PROPAGATE_FROM | \
++			     STATMOUNT_MNT_ROOT | \
++			     STATMOUNT_MNT_POINT | \
++			     STATMOUNT_FS_TYPE | \
++			     STATMOUNT_MNT_NS_ID | \
++			     STATMOUNT_MNT_OPTS | \
++			     STATMOUNT_FS_SUBTYPE | \
++			     STATMOUNT_SB_SOURCE | \
++			     STATMOUNT_OPT_ARRAY | \
++			     STATMOUNT_OPT_SEC_ARRAY | \
++			     STATMOUNT_SUPPORTED_MASK)
++
+ static int do_statmount(struct kstatmount *s, u64 mnt_id, u64 mnt_ns_id,
+ 			struct mnt_namespace *ns)
+ {
+@@ -5386,6 +5401,9 @@ static int do_statmount(struct kstatmount *s, u64 mnt_id, u64 mnt_ns_id,
+ 	if (!err && s->mask & STATMOUNT_MNT_NS_ID)
+ 		statmount_mnt_ns_id(s, ns);
+ 
++	if (!err && s->mask & STATMOUNT_SUPPORTED_MASK)
++		s->sm.supported_mask = STATMOUNT_SUPPORTED_MASK;
++
+ 	if (err)
+ 		return err;
+ 
+diff --git a/include/uapi/linux/mount.h b/include/uapi/linux/mount.h
+index c07008816acae89cbea3087caf50d537d4e78298..c553dc4ba68407ee38c27238e9bdec2ebf5e2457 100644
+--- a/include/uapi/linux/mount.h
++++ b/include/uapi/linux/mount.h
+@@ -179,7 +179,8 @@ struct statmount {
+ 	__u32 opt_array;	/* [str] Array of nul terminated fs options */
+ 	__u32 opt_sec_num;	/* Number of security options */
+ 	__u32 opt_sec_array;	/* [str] Array of nul terminated security options */
+-	__u64 __spare2[46];
++	__u64 supported_mask;	/* Mask flags that this kernel supports */
++	__u64 __spare2[45];
+ 	char str[];		/* Variable size part containing strings */
+ };
+ 
+@@ -217,6 +218,7 @@ struct mnt_id_req {
+ #define STATMOUNT_SB_SOURCE		0x00000200U	/* Want/got sb_source */
+ #define STATMOUNT_OPT_ARRAY		0x00000400U	/* Want/got opt_... */
+ #define STATMOUNT_OPT_SEC_ARRAY		0x00000800U	/* Want/got opt_sec... */
++#define STATMOUNT_SUPPORTED_MASK	0x00001000U	/* Want/got supported mask flags */
+ 
+ /*
+  * Special @mnt_id values that can be passed to listmount
+
+---
+base-commit: 57c64cb6ddfb6c79a6c3fc2e434303c40f700964
+change-id: 20250203-statmount-f7da9bec0f23
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
