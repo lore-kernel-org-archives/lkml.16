@@ -1,91 +1,119 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04D820AF65;
-	Mon,  3 Feb 2025 15:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C27B20897F;
+	Mon,  3 Feb 2025 15:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738595601; cv=none; b=pz2okNsV+kP7MMlkL005qhmNSk+plBk6bpRTL768JW+fhkIpGjF050KPq6emRqAsHh0YAn9c00taKAIonU07cXXCYqTslH8UHRnLW+flJ44DVh5/jYjGP9iP1XzzkamwpcMb4wpZzMiMmbXfMR7MZ1HdMmFQolNoaVANJUHHdi0=
+	t=1738595602; cv=none; b=fjMfC2TxM73fRIxzib7CufSi7/bCQTg6MGWDXAyiop5ow5KPADzMGemDeGJ702c6sprRHXwu6KVgjHYL8++lSl/O2kG8Ea3sIrcnJJW+L+AjllbQD6XrQ1O1qmakkpntJiWAnpPKiuKmSIobd9ppsrdj3aZzaeiycCFNHWdDEew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738595601; c=relaxed/simple;
-	bh=S4iSdPY0u2qGzgIj6sz+1VT7L8s6eD4vS+xdZJk5T1Q=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JPdQKUXGE+9mIR/PK27Jq/7EP4AoMUnEGMeHexBe32EcEmBbsFkaOKjynAoFlDTFWYHx/+0EV65a9KuosPNAKS6oEjR7ee4iJvKNQV2O3h0mt3HIM7YK3zlxTnUHDTT7wK07FoIT03eMHui1tLokBkd2DmVKtSeos2GdyjOvlKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=ZkOGUhdE; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1738595602; c=relaxed/simple;
+	bh=ay/xlLnF2UIkqMJHUCgw4xMC7ig0hdNfW+uwg24oVzw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ccz7nD+D0mu83Rrgje6AcyQr0MnqUQSHHfbGuTxCVvyGcbCLfkr0UiL1CTL/QIcs5rqjFUfc9XSvnEioubIcGbvJidkVYBjPny8jmNEh0FsJc7pEEF56PD7XT/wNYqeLQHyxpOh1AnNmlYL1wCQn0VajdUHJFtUgfXuFBh5VMXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hE6/bCu/; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="ZkOGUhdE"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id E560EA0E4F;
-	Mon,  3 Feb 2025 16:13:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=KsW8X9WKTUVjkLOMVLun4STQMn5HssaiU+p3WX0jzQw=; b=
-	ZkOGUhdEZdk7nZcdBpWIynCii/QLezGnYiubpZmIP1nbEsFPV/VrJIVF5IaJTpqo
-	gEgut8MklY1FQc38+jyXZMvY8iSMwvUu8b3dmlTU2nwZm9MQZ9SawibxDHCgXCFu
-	hz9epWJh5YtWkNHRY3uaUToFhOuyZ6dSRUWuBId4uqIfXqATAU3lxbV2xTEnzFk9
-	Q/8T3i4DVAFSfUrNQkheHUOu0Sf2Y7jvh+IpzuQb74CCMYCjHemWFctTXarz+f75
-	2t3Nmx1hAHSRNua1pk71sr7Fy7dM6YxjkgwbWGt7WSeBLo02Cjyzc8lqhhlGN9CD
-	Y+c+qbXBEQCs5h71oaXWm0qk0jd4KZqRVX/zqm20d8fOhwi9y21mR4G86V9sifxH
-	Yw/8tVr4gXcdrlXSn4KQN/Jd3s+P5BoAljXMkUuutV+Vdn5kGPk+cJPLvRwRrEAB
-	GXZ0kTJqgCfbAbzF7/I2DZfpYuu6+cP4ZHXDQCDtqoYFref5apShFiMGy2XvPUyx
-	bjWxjJ3r0FnMfzqHGTsdGvjK9Ql+e12nGZrBPNn3FjTKWzkzeSs6bLOKi44jwT7A
-	244J1GsxeZ//J+g+WT4qgGfuokPC+/hyJ08GdthvOUzBe+lpP/cPbDJ5AJaTfA5Z
-	3kqVPMLb0rYebPocaKcZaKetv4LYylaj2Q0PqdsThBE=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: Mark Brown <broonie@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Varshini Rajendran <varshini.rajendran@microchip.com>,
-	=?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>,
-	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: kernel test robot <lkp@intel.com>, Nicolas Ferre
-	<nicolas.ferre@microchip.com>, Alexandre Belloni
-	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Subject: [PATCH for-6.14] spi: atmel-quadspi: Fix warning in doc-comment
-Date: Mon, 3 Feb 2025 16:12:49 +0100
-Message-ID: <20250203151249.79876-2-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hE6/bCu/"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5135OO9O013995;
+	Mon, 3 Feb 2025 15:13:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=zcXYfq7y3Ykx9nkv3
+	r9zTbWUpugtYvbNec4z//sgjIQ=; b=hE6/bCu/saTCv8MrwSlRoI30eTxVDIu4O
+	oBOqNeOdyDBXSAilJh53cwBxfZwOlmZmFcAo5nXUr44JjqzEuu7isvOJaXn5sLeh
+	T/0AcCbdXd54kMoxcy6RJmVKAYIxZbORxVmJbzo7wMHd6+8w0Y7dHws8XywINHw1
+	bqHl1RuKT20W1rWw0HJxgXpHZLVP6Y0YPwSd6ZtLU4eFH+XEBgLphdAWHmmRnnvY
+	/J3lSITRZP+qI/WwGrpHAbapwWlyyEuoHCsdBGgHUh8Tc8UFs7Ap7r45PMGq6K6M
+	erLwieudtyWb3VPRXeJwVnGcMJaKHs54VAz1snqerhVCN4AD2I/IQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jqm7aqj8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 15:13:11 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 513F3stq001306;
+	Mon, 3 Feb 2025 15:13:10 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jqm7aqj5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 15:13:10 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 513Dj7pe021474;
+	Mon, 3 Feb 2025 15:13:09 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j0n16kh7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 15:13:09 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 513FD9Xr66257310
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Feb 2025 15:13:09 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0DABC58056;
+	Mon,  3 Feb 2025 15:13:09 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B5D4E58069;
+	Mon,  3 Feb 2025 15:13:08 +0000 (GMT)
+Received: from gfwa153.aus.stglabs.ibm.com (unknown [9.3.84.127])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  3 Feb 2025 15:13:08 +0000 (GMT)
+From: Ninad Palsule <ninad@linux.ibm.com>
+To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, ratbert@faraday-tech.com,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Ninad Palsule <ninad@linux.ibm.com>
+Subject: [PATCH v1 1/1] dt-bindings: net: faraday,ftgmac100: Add phys mode
+Date: Mon,  3 Feb 2025 09:12:55 -0600
+Message-ID: <20250203151306.276358-2-ninad@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250203151306.276358-1-ninad@linux.ibm.com>
+References: <20250203151306.276358-1-ninad@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1738595593;VERSION=7984;MC=1580607873;ID=182239;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852667064
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: oaInlqtfjCNPZ2lSqnIHE8D65UXgQ0PW
+X-Proofpoint-ORIG-GUID: bHv6LQVbjrzxQjr0yYP4IPI-Lxi4c2d_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=933 bulkscore=0 mlxscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 impostorscore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502030110
 
-The doc-comment for `struct atmel_qspi_pcal` had a typo in one of the
-struct members' name, causing a warning with the `W=1` option.
+Aspeed device supports rgmii, rgmii-id, rgmii-rxid, rgmii-txid so
+document them.
 
-Fixes: 5af42209a4d2 ("spi: atmel-quadspi: Add support for sama7g5 QSPI")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202501311707.Ltj0qXse-lkp@intel.com/
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
 ---
- drivers/spi/atmel-quadspi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-index abdc49d9d940..d8c9be64d006 100644
---- a/drivers/spi/atmel-quadspi.c
-+++ b/drivers/spi/atmel-quadspi.c
-@@ -235,8 +235,8 @@
- /**
-  * struct atmel_qspi_pcal - Pad Calibration Clock Division
-  * @pclk_rate: peripheral clock rate.
-- * @pclkdiv: calibration clock division. The clock applied to the calibration
-- *           cell is divided by pclkdiv + 1.
-+ * @pclk_div: calibration clock division. The clock applied to the calibration
-+ *           cell is divided by pclk_div + 1.
-  */
- struct atmel_qspi_pcal {
- 	u32 pclk_rate;
+diff --git a/Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml b/Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml
+index 9bcbacb6640d..55d6a8379025 100644
+--- a/Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml
++++ b/Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml
+@@ -44,6 +44,9 @@ properties:
+   phy-mode:
+     enum:
+       - rgmii
++      - rgmii-id
++      - rgmii-rxid
++      - rgmii-txid
+       - rmii
+ 
+   phy-handle: true
 -- 
-2.48.1
-
+2.43.0
 
