@@ -1,65 +1,63 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9208F2036E1
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD95E200BA9
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738581416; cv=none; b=jvCjVN8H0NDjTR0qFuCknH0gkBq7p9piQVSS8cD5cwfjuwD4voAtXPViAitQ9+jwY++rv5X5Ht48ZfstxTyENbWmshZ8ro6PDyA2Kbo7wY4LUypL0pM2WXqWpJyT4f2LbhSiENYuYpcl3sXwZfCRtROeHY4A6nmGRFMfnmqe3MQ=
+	t=1738581444; cv=none; b=TRVN8SKi7VCMkIxQriDHAlNVQgApXXfBlEeM/6MA/Nf40eE+X4CWHZWENF9zq5QMPcBz6F8WNS/6HbIN0QoiwvCJC0vSnQppg2hxJOzYoO/grOlOilr6maEEdI435fJM00c8qBXFejkSc3wCA61STmG8eYvjGON9CKomVO8Z2Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738581416; c=relaxed/simple;
-	bh=itoNMLYdiXiTIITprU+dQimHf4SEtH9w2NTnFP84r4s=;
+	s=arc-20240116; t=1738581444; c=relaxed/simple;
+	bh=db6KlM8qXxXyoU+JF0iNNq7fiWQZj3Ljb1eIuFg5Srk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ia5Dnt0cAYe97vDNSOOiQgRAz8OK0ixJZVRmz864GKjgA9j2uVb6bTPTYaPZxHoV5gDn+JGdTO5FrN/Y2FRC0tf9fpT6lPl194m1Uaa2PZlyNdB6BTtWjR6q99KkQ+TazHgLeyYNAA/g7WMM53em6+Xa8yUvC5m7VjChYnVjo7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JpFGoISA; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=iOgpL/Qo/+RESyZORcZ1CSDUuaK6eo/yaKLJTpHIWcKDoBmbJbpCkTfi19+edtfOqlM04/WRrdtQwN+HzlW4lQtA7v+ucdyzp5Wix0DME1FER478iOf/GjTdz9dtM8AlqXeuXqqqQTptbPY0ljjZUimp/80w9xkhfGK072zNDS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu; spf=none smtp.mailfrom=monstr.eu; dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b=UbH9la9H; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=monstr.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JpFGoISA"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-436246b1f9bso6507025e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:16:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b="UbH9la9H"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5d3bdccba49so7297101a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:17:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738581413; x=1739186213; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ozyTlPLnaugnaEoHQY+R4AXQEUzCLS18GW7s5hKxc5M=;
-        b=JpFGoISAoTAVzIzOpRHzIQ8IpzsXgoKnqvp93Bl5OBng8NLJ6g5niAPqFEwfD4323t
-         xOugaRt1MVFIwqB6KWndLKyW72kABUxOUtL3nHD1a9K5mXmszrvX6d3rO1EWc3rsHW/V
-         NCzrTYHR23jJ9bfozd4OsErG3YNHkoPF9Q8JVNEmQ5TeWCAAPe0ykqAZxZnjycMP061R
-         8ACjyhlip/oDsjcKZbOsS4rmOknTnD7nuHKSlehL+Zi881NjIcd74EuZrN+OoFqS3C+h
-         0tFMUcWd1wfWiRbBR269dcR4mphmQmeOHTSIKGBCeSPYHpJ/5kGFhcWRRVp92lCnFn+e
-         1vgQ==
+        d=monstr-eu.20230601.gappssmtp.com; s=20230601; t=1738581440; x=1739186240; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JJsT8bvC2Cv39Q1RkjM/NEHGTBUp78qspuyoijzQViY=;
+        b=UbH9la9H4wuI+GRn/ZBYsiTylss3IWJU1KNaaN7UmbCBXHukDaR6JD0+D6yX8dX3Mq
+         yOP/f/uP6FdYu09OWAW+NVBdZi97mYkXsCD8sD1pllwkVNk+y24M+lnsfCLYtbZSf1rN
+         pybIuC9lZX7hWnz8IZaqObi7wJMXT1JQm5nuZaPXz2JIR1Bqi0MVOGZnTQjX6kN4xWRX
+         3nOEm1l3qcQQZ7oOjTw79x+T1yUNiA6+cYmNkbxmAubTWtQOLDwMwKVYLBdjxEBoe7lX
+         jsjenkzL3t4H2Ib1yQskAgRKkhLN4VCdDKWiVzYu+9Wmvv5FKaSvgDaVa0+NeJoUdC+m
+         ZCsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738581413; x=1739186213;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ozyTlPLnaugnaEoHQY+R4AXQEUzCLS18GW7s5hKxc5M=;
-        b=G9kVuAZ0m6VlpXGvObqLb8Taz7+GugpSDyykWPHPBJ/IRoc7f5DhbZFjmryCS4CmO2
-         NxH6OkYCXJQvVT0CBRpZU0nYwG+vda6EHdzed3o5ULDDdsw6AsBFvX1VZ+9cpLbdFMuR
-         6IoXG8uoD97M4hnUzS+H25XOo4AcIRbclp6CMH1URsAhFrnp2K5X8HonPqF5jJUkKpff
-         QU6xmkDCs7e82AVAi60U562tWfKvRX2V5D8wtFBRtGiM5TT91JjCLZ1iKXP8Cjk38HmA
-         y+nLV45E5SmMOm3qQmDR6DUBoPqB9J2/OtR16uI1x7UgN0KA2Ldz2LQB2TS+cdeQI3BR
-         OeZw==
-X-Forwarded-Encrypted: i=1; AJvYcCVzT19Jjjr+hhhZ3igRfT3tSqfot++wgQCsxYjFrMm4iUHPsouyjRCjzIcPkpKePTs6et8MTcDL8xiyEcM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+m6b0wjiNsT17tWETPi04Pprx15ErsviZK6qCN6f0eC5+8scX
-	+2nEbR9AVTx+0dlUq/WDJz99UDtrvHZki+eWDFwA9ujMlLH3uqT9PxWjCD/2rEI=
-X-Gm-Gg: ASbGncvby2UFY4L9EwYyaoCyrT8+Pofcvq7B9WDQLudesnDr1uKKqDax0DRRIujM4yS
-	4vyOa9wI0s82h9Cf8mh3/Ke+rw4M1vVlnogFruFzQOYxNQf2KB7jdSsioUFkSuc2LxZv+QBcYPw
-	rv721oJfbEAhoeVlbyS4aocb0HCYFNoePTKRotOvtk2hRwAJyEC7y7FfjjmlT+Sgff1rS5wNmKl
-	CPYqwEATkK6cSYLBcj3F4QvdUxNrRbS8/VSIHCa4/dZaQhIb6I9AHvyER3Oea2BoerHPqZGGyIg
-	8+A8EpLhy5uXe34J32yeQlz7ZLMwbo2U0gE=
-X-Google-Smtp-Source: AGHT+IER4b8x4k4tSsG3NXSbXAj/U65SZ2uRmU7FJsNnr3cP55/fxC2eGPVEdqHi8nEykzMTwVK4eg==
-X-Received: by 2002:a5d:6d86:0:b0:38b:eb86:694c with SMTP id ffacd0b85a97d-38c5167a2cfmr6601607f8f.0.1738581412780;
-        Mon, 03 Feb 2025 03:16:52 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.144])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b57b6sm12487667f8f.72.2025.02.03.03.16.51
+        d=1e100.net; s=20230601; t=1738581440; x=1739186240;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JJsT8bvC2Cv39Q1RkjM/NEHGTBUp78qspuyoijzQViY=;
+        b=WmuqEIR5xcR6HBgtOWRIkNy8YM+8w/syxMR1RgfAiYt5Eu5uYzbd5+IFshJitceMz3
+         S6UQvJjC4YBKY10HplEJrYvRsYNCGonm0y5NkSWntoq124I5mEi4l+uuCb7LlaTXGbcs
+         TRyAlSAxPckyJXn+o7mZi+O3Ok90c6XqQ20kSpd1StgRr1HbU658v0uA9++73Va9c2ae
+         YF0gPR6DBjyMAYUijAyM3QI4XvdSRe03yYH4PwsZNPJ9xYo5/9ysZ3cKIlXIZ1Cubsia
+         RZCAQsEwoOu5Gl/Ta+RIoWzUgef/LKSwrFAyYepYbKalDNTk9fR1mCaMQP6lkMqdmsDl
+         qe6Q==
+X-Gm-Message-State: AOJu0YyZEYxRW4sPkH8LWR50/c7xli5558FdyNIgfwrTVSlCyjp78QkN
+	EXbricriDTGBPfqF6OZihfYWoOHC4TnGFVpxKm12JelDnROMcSBywq8RkFvlvg==
+X-Gm-Gg: ASbGncvptCQ4dIQLOTtsABIRNFAr1i6XAgGASA4Y2rP+orO6UDZKJodk0c325n/9L9q
+	v7BZBDQASx9GUXnGwnDu5lSmZ/PvK7qm8MyDp82B+qVNcd/1M20ujDISQoA1tMMOt15WVptlQFK
+	KpokxBqjGM25gApejBaMUvk/JmH03mQktOhp0vxScRyTBkUAcWy7DHDxZwgDqGt2SNRzVtHYmay
+	soEFANWG8iVK+xVXbURpNM/+m91VyrJs2VNy6lc3JiwItnyayX9jZG+02ht5+OAmuUPTPUB+MUo
+	w9gKBthGcYrzI/EjseaajtmXF+aCxLM=
+X-Google-Smtp-Source: AGHT+IH5WRoI4pnF2qqVJhtPMNzaBUhdizGqFDdzVCuRA3ioLA1dXPfpbm5LjsDdotvaN8DkWpUMNA==
+X-Received: by 2002:a05:6402:3208:b0:5dc:af64:d775 with SMTP id 4fb4d7f45d1cf-5dcaf64da72mr2466261a12.31.1738581439715;
+        Mon, 03 Feb 2025 03:17:19 -0800 (PST)
+Received: from [192.168.0.105] (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc724aa174sm7303887a12.63.2025.02.03.03.17.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 03:16:52 -0800 (PST)
-Message-ID: <ab65d951-7d1e-436e-8bcd-5b389991a0ef@linaro.org>
-Date: Mon, 3 Feb 2025 12:16:50 +0100
+        Mon, 03 Feb 2025 03:17:19 -0800 (PST)
+Message-ID: <b211188e-6c31-49fd-96be-137d3fc3f7bb@monstr.eu>
+Date: Mon, 3 Feb 2025 12:17:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,79 +65,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] drm/msm/dsi/phy: Improvements around concurrent
- PHY_CMN_CLK_CFG[01]
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar
- <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250131-drm-msm-phy-pll-cfg-reg-v1-0-3b99efeb2e8d@linaro.org>
- <gyslnttjsuav5dsbmglroujpwrqazokfnj65uhbegja3w27yxc@iamitbbg2e7e>
+Subject: Re: [PATCH 4/4] microblaze: remove unnecessary system.dts
+To: Masahiro Yamada <masahiroy@kernel.org>, Rob Herring <robh@kernel.org>,
+ "Simek, Michal" <michal.simek@amd.com>
+Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org
+References: <20250114181359.4192564-1-masahiroy@kernel.org>
+ <20250114181359.4192564-4-masahiroy@kernel.org>
+ <CAL_JsqJyNiUF8--wz2DsngUAuSUboq8oqZRxAzqY+iBRM7rkjQ@mail.gmail.com>
+ <CAK7LNATCFFQFYenkY2F5HkXx_otub9ebuTHJOD_TLiqCDnYN0w@mail.gmail.com>
 Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <gyslnttjsuav5dsbmglroujpwrqazokfnj65uhbegja3w27yxc@iamitbbg2e7e>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Michal Simek <monstr@monstr.eu>
+In-Reply-To: <CAK7LNATCFFQFYenkY2F5HkXx_otub9ebuTHJOD_TLiqCDnYN0w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 31/01/2025 17:24, Dmitry Baryshkov wrote:
-> On Fri, Jan 31, 2025 at 04:02:49PM +0100, Krzysztof Kozlowski wrote:
->> Calling these improvements, not fixes, because I don't think we ever hit
->> actual concurrency issue.  Although if we ever hit it, it would be very
->> tricky to debug and find the cause.
+
+
+On 2/1/25 04:42, Masahiro Yamada wrote:
+> On Sat, Feb 1, 2025 at 7:25 AM Rob Herring <robh@kernel.org> wrote:
+>>
+>> On Tue, Jan 14, 2025 at 12:15 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>>>
+>>> The default image linux.bin does not contain any DTB, but a separate
+>>> system.dtb is compiled.
+>>>
+>>> Michal Simek clearly explained "system.dtb is really old dtb more for
+>>> demonstration purpose and nothing else and likely it is not working on
+>>> any existing board." [1]
+>>>
+>>> The system.dts is not necessary even for demonstration purposes. There
+>>> is no need to compile out-of-tree *.dts under arch/microblaze/boot/dts/
+>>> unless it is embedded into the kernel. Users can directly use dtc.
+>>>
+>>> [1]: https://lore.kernel.org/all/d2bdfbfd-3721-407f-991e-566d48392add@amd.com/
+>>>
+>>> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>>> ---
+>>>
+>>>   arch/microblaze/boot/dts/Makefile   |   3 +-
+>>>   arch/microblaze/boot/dts/system.dts | 353 ----------------------------
+>>>   2 files changed, 1 insertion(+), 355 deletions(-)
+>>>   delete mode 100644 arch/microblaze/boot/dts/system.dts
+>>>
+>>> diff --git a/arch/microblaze/boot/dts/Makefile b/arch/microblaze/boot/dts/Makefile
+>>> index 932dc7550a1b..fa0a6c0854ca 100644
+>>> --- a/arch/microblaze/boot/dts/Makefile
+>>> +++ b/arch/microblaze/boot/dts/Makefile
+>>> @@ -1,8 +1,6 @@
+>>>   # SPDX-License-Identifier: GPL-2.0
+>>>   #
+>>>
+>>> -dtb-y := system.dtb
+>>> -
+>>>   ifneq ($(DTB),)
+>>>   obj-y += linked_dtb.o
+>>>
+>>> @@ -11,6 +9,7 @@ $(obj)/linked_dtb.o: $(obj)/system.dtb
+>>>
+>>>   # Generate system.dtb from $(DTB).dtb
+>>>   ifneq ($(DTB),system)
+>>
+>> Can't this be dropped as setting DTB=system.dtb should work if there's
+>> not an in-tree system.dts anymore.
 > 
-> All of the patches miss Fixes: tags.  Could you please provide those.
+> I believe this ifneq is necessary, just in case
+> a user adds system.dtb to arch/microblaze/boot/dts/.
+> 
+> 'system.dtb' is a special name because
+> arch/microblaze/boot/dts/linked_dtb.S wraps it.
+> 
+> So, $(DTB) is copied to system.dtb, and then
+> it is wrapped by linked_dtb.S.
+> 
+> If $(DTB) is already 'system',
+> we cannot copy system.dtb to itself.
+> 
+> 
+> See the definition of cmd_copy in scripts/Makefile.lib
+> 
+> cmd_copy = cat $< > $@
+> 
+> 
+> "cat system.dtb > system.dtb"
+> would create an empty system.dtb
+> 
 
+I have played with this and pretty much this patch is blocking 
+simpleImage.system build target.
 
-I did not provide on purpose, but I don't mind calling these commits
-fixes. Will do  in v2.
+I have no issue with patches 1-3 and I would keep system.dts as empty and keep 
+it in the tree because users (including me) just rewrite system.dts with proper 
+DTS and call make simpleImage.system.
 
+Thanks,
+Michal
 
-Best regards,
-Krzysztof
+-- 
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP/Versal ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal/Versal NET SoCs
+TF-A maintainer - Xilinx ZynqMP/Versal/Versal NET SoCs
+
