@@ -1,360 +1,280 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9D2194AEC;
-	Mon,  3 Feb 2025 19:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9C31552FA;
+	Mon,  3 Feb 2025 19:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738609409; cv=none; b=hYKAtS9YkFGf2Y2mb4m9+HmcW4hDS9iyd906A/XEW7AllqygcbjKQVTVjcreoUSIa3sw4FmH/JE1lRPgsl3XDpEhHdTQR4OF0BAOwR+My2mgyuD2oUzZd1wOQdS7fNz2QUif1IH/KHYOBmlI5MRqdIsr8Ts/5/D4Kgs0E3c74iU=
+	t=1738609469; cv=none; b=Y+D+01OFFFHIkLAE6+WjeaFTZq4GLdbEvJ0uRbjmUziF5F5BiDSbBsg63tGVsAtf09vAtL0LARyPg+/PISTcJsmuowGQdU86/p6+0Q1AllwNIvAR2tAN59bJ+r11Fc2h0hzKSNxux3b+jvTJXHpI8l43wK6TlghxiWqt9lP3dQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738609409; c=relaxed/simple;
-	bh=XQhXHbhAEDtxueqiSGQTYU0jh9vxvyAdS/Wgrh2l3Kw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y7GmFuTHgY8j8JLWQz46tPWEMvmthkLte3GPgcqFyc1oPiHiyKoEcPJQ3CZqc2JD6hm2ZBGpr30dLhFfWgxzL4rMcw4nDdLsM8nIj4oRa0pM+Asmy1vBKNWN0Qaz0zhU4OYN5Xc/kF/7IL1YiA3M9t0MdaPhgkoHYPiDJmEf17o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sbija6gW; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sbija6gW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738609406; x=1770145406;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XQhXHbhAEDtxueqiSGQTYU0jh9vxvyAdS/Wgrh2l3Kw=;
-  b=Sbija6gW5xkPxgd8OnjrOiJlto672Pg85nQW4bHfZ7QvEiNgHuTPz2+I
-   UtV3E/XrXfqtpEj76fDyGK6iEVYZqMakSiBrFphq78w1iST2Gn8meYcSH
-   ZGXn69wUxSSWIEXX3s6eb0T7C6P+tQrpu4mCtdNQ1bh9pjbGJ539hru3k
-   8f/Ebofju5S38dZe042bB+FLm/P9xA1aP2Cgw4JbubkVVoOXjEeuSswTr
-   Pg8uEAzwu/N6g/nR89sDpFuHaGK/do9SQ6b+fSD3tK4su6YgFayVlPGch
-   gKllBI+dcfUi2E5VR1VX3NUZxoTcjSHtGTfvKfMyxQKOACwF9D3uEIgoa
-   Q==;
-X-CSE-ConnectionGUID: YfDgAxqLSomT61Bt5ovo0Q==
-X-CSE-MsgGUID: S7sqgUmuTFKwV/Fhi6P0Pw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="42867451"
-X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="42867451"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 11:03:26 -0800
-X-CSE-ConnectionGUID: 8XdfAsNPTi6nDdVLCtJEzA==
-X-CSE-MsgGUID: /Qkl5+twQHq12NhbURUgtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114409656"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 11:03:26 -0800
-Date: Mon, 3 Feb 2025 11:03:24 -0800
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v6 5/6] acpi/ghes, cxl/pci: Process CXL CPER Protocol
- Errors
-Message-ID: <Z6ES_MZy2FuRsfjF@agluck-desk3>
-References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250123084421.127697-6-Smita.KoralahalliChannabasappa@amd.com>
+	s=arc-20240116; t=1738609469; c=relaxed/simple;
+	bh=9TyOHTPopbhR1FIEPISRYJ1tSPB5Xv7M18R5IBwc6BU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rXmQGTEAudsC5TxfYI66DKPnczbNs5PJYlGG1Rizu8wCmhOAMAcTYhOu96yTAR9tYTlSYydW7inTOV6NvI+IlmB8eiiweLZCK2TUDNwpgGqLI0eYho2bGClf9wowoVGJMV1I54AZpfaY+hinulIQxqw+KJZ4j6Ao9TaJJhG+018=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5d3f28881d6so6385512a12.1;
+        Mon, 03 Feb 2025 11:04:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738609466; x=1739214266;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gdgTVEkL21P1dCV/QSRL4KH/N5z3s6ompZ19YyT1RLk=;
+        b=NGMcE/n0P5Lp4AhQYC5vz4JCWTVlGZukdoBTC6kfME2gAElRwoI/OLxLJD29tfJ7GM
+         fAYwtP9k8eySR46vtCJUXPXaqlsfkb42y2KiM1zoLEKohQQVmuCY31c50Kl+mJkPUo6u
+         6wDFS9tAB7f485FUidxghiF6tEX8yCKilI/toOKTaJCwhlKNmNp6ZhvhxSHYOOlpnB9M
+         /52zz/c+nu6Pc2iXT0F7ZfA/9TmU59Fli9ext7lHXlK5ZBxPqQUKE/O7Yog4et4wvnec
+         eKLp4SNktHnDUKNwyjrnYMMkuOeNh9viuvBXlW8EoI+Wkl3bAtOyiG2sICQSCO4As4GV
+         Re9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVS1mQadk6sb4/G5E92V0qsESl6mK+1IkG3AOJZ2bfxH8g4ea5VpkQ2HH8bAGYAIkSOvKSYGXiR@vger.kernel.org, AJvYcCWRHatv0uXESYg+Di8RxXdGP/hR4MxWraIRKET6HxNrLwHsBXtp8OHGNHSB3KGiC9jNdaKfFpszKCKpCMTGkNs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpY6dk8O48Rn7IUaXE6+kSJzq3s4pxKJ/PKLe+qNlnjDQt+B1B
+	aXjBMdMboffpaRwwpfkjfih78PMYjEWf9xWYXl1JlhUy7TIcnMPukcDb/Q==
+X-Gm-Gg: ASbGnctSdRpFrvNejmtK3ttdyXv1SHuKYIx/y2y53AyyDjSB/eguZrnmALBu5FhcOyK
+	1yol1v4wAuZnmf+99hqbr2S01vlGfJ0QFSLNz4DJgWuvkBw3rrl0ZopAhRwox33g+oMjnVSX5+1
+	AsRd4z2Rk4+F4F9kH0ygo1TfCDwhlZnL87KOnvLSvII09DuVSIh4GvUG97OnMr1dM8s279oQz/L
+	4MMGcmaVrmz+ZjGsEObGga9CgowrwK+UgkVkvUm5uUE/j29I3l7oZk2sdwzlRkc+7gMEXmXOiZC
+	r4DEWXc=
+X-Google-Smtp-Source: AGHT+IFZulild2aMgwYbtTFLSHZH1Je+SAKGjcc3nWSrgzwbd2d6jpKjBtj1VK9Gs9Dn/XpWW/Qhlw==
+X-Received: by 2002:a05:6402:268d:b0:5dc:740b:3cdb with SMTP id 4fb4d7f45d1cf-5dc740b3efcmr49850124a12.29.1738609465518;
+        Mon, 03 Feb 2025 11:04:25 -0800 (PST)
+Received: from localhost ([2a03:2880:30ff:70::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ffd42sm811083366b.95.2025.02.03.11.04.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 11:04:24 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+Date: Mon, 03 Feb 2025 11:04:15 -0800
+Subject: [PATCH net-next] netconsole: selftest: Add test for fragmented
+ messages
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250123084421.127697-6-Smita.KoralahalliChannabasappa@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250203-netcons_frag_msgs-v1-1-5bc6bedf2ac0@debian.org>
+X-B4-Tracking: v=1; b=H4sIAC4ToWcC/23NQQqDMBBA0auEWZuSiWirq96jiEQziVk0kUwQi
+ 3j3gt12/eH9A5hyIIZeHJBpCxxShF5gJWBeTPQkg4VegFa6Uag7GanMKfLosvHjmz3LDhvVWqx
+ b1yioBKyZXNgv8wWRioy0FxgqAUvgkvLnmm149Z9b4x93Q4lSWXrUk9PmTu3T0hRMvKXsYTjP8
+ wuKb6UZvQAAAA==
+X-Change-ID: 20250129-netcons_frag_msgs-91506d136f50
+To: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kernel-team@meta.com, 
+ Breno Leitao <leitao@debian.org>, Simon Horman <horms@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7266; i=leitao@debian.org;
+ h=from:subject:message-id; bh=9TyOHTPopbhR1FIEPISRYJ1tSPB5Xv7M18R5IBwc6BU=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBnoRM3WoR2TosEPCO4m+X4Tg+goahbiqLrgVpGb
+ MiVkpG1vDWJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ6ETNwAKCRA1o5Of/Hh3
+ bULbD/9BZ40u+Nq4zcxUuQsn2cDL12XRqTO0pvn+AtQOwsjOf8mHBMHdjq1GILm5y4DKgs8iTkH
+ msv91salNU9A2u25yQSvdnHXQbtULFbcl9oY/Qw6j8NNfgQ57vJMT8uVeJJ5uLEMEvQZRqoPFBf
+ oKbNaukdOK54BmlzZ4myVJ4ayxKKjyQImlYZe8a5Mv4r6c8yKlZdB9P565For+9gKy73Qa3b1Iz
+ caJjav6rOYYVlTAYUx87Tw2eUlJcYr5vcmPhnby1vIbk0y+Ax0M8u4CZmuPEGgCSzOBfAn9ukL0
+ HGt+Le1Yn3RiY9IUPu7ppTBPW1dUFXctsOkYrqhb36f3DhwQGf45B5Hq6PCJ9sT8FPPOMNuFtf1
+ pU1tgRbieiFBTs/4ubflu1SYqgiQuqbJegk/ArWNvasAK/0MzbHWbP5Qr0zZkRpyc6QrXQDThMZ
+ ktz/eYFNprKi7X9plXmzrieQSYPluAENaH3pgz/laWiOwyZ8rGUqw0LKMJpYVWYrieJdo1KT/jZ
+ coUaUhf698phfUvwyepU8/CBdM+XsmMn/BAS9WC9WFcan9DIsHthpGVpvXK9jCjoA8ZPjO47Xj3
+ oBM6BVzNWIcZr/louoV7hUujvnVALw0FEzq6yTFr6ChEC5Hn3T1VI3MfdSrghEWyqJDf97m9+Y4
+ NRD44SwPp+hHJ7w==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-On Thu, Jan 23, 2025 at 08:44:20AM +0000, Smita Koralahalli wrote:
-> When PCIe AER is in FW-First, OS should process CXL Protocol errors from
-> CPER records. Introduce support for handling and logging CXL Protocol
-> errors.
-> 
-> The defined trace events cxl_aer_uncorrectable_error and
-> cxl_aer_correctable_error trace native CXL AER endpoint errors. Reuse them
-> to trace FW-First Protocol errors.
-> 
-> Since the CXL code is required to be called from process context and
-> GHES is in interrupt context, use workqueues for processing.
-> 
-> Similar to CXL CPER event handling, use kfifo to handle errors as it
-> simplifies queue processing by providing lock free fifo operations.
-> 
-> Add the ability for the CXL sub-system to register a workqueue to
-> process CXL CPER protocol errors.
-> 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  drivers/acpi/apei/ghes.c | 49 ++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/pci.c   | 36 +++++++++++++++++++++++++++++
->  drivers/cxl/cxlpci.h     |  5 ++++
->  drivers/cxl/pci.c        | 46 ++++++++++++++++++++++++++++++++++++-
->  include/cxl/event.h      | 15 ++++++++++++
->  5 files changed, 150 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 4d725d988c43..289e365f84b2 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -674,6 +674,15 @@ static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
->  	schedule_work(&entry->work);
->  }
->  
-> +/* Room for 8 entries */
+Add a new selftest to verify netconsole's handling of messages that
+exceed the packet size limit and require fragmentation. The test sends
+messages with varying sizes and userdata, validating that:
 
-Any science behind the choice of "8" here? This comment is merely
-stating what the #define is used for, not why 8 was chosen.
+1. Large messages are correctly fragmented and reassembled
+2. Userdata fields are properly preserved across fragments
+3. Messages work correctly with and without kernel release version
+   appending
 
-> +#define CXL_CPER_PROT_ERR_FIFO_DEPTH 8
-> +static DEFINE_KFIFO(cxl_cper_prot_err_fifo, struct cxl_cper_prot_err_work_data,
-> +		    CXL_CPER_PROT_ERR_FIFO_DEPTH);
-> +
-> +/* Synchronize schedule_work() with cxl_cper_prot_err_work changes */
-> +static DEFINE_SPINLOCK(cxl_cper_prot_err_work_lock);
-> +struct work_struct *cxl_cper_prot_err_work;
-> +
->  static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
->  				   int severity)
->  {
-> @@ -700,6 +709,11 @@ static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
->  	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
->  		pr_warn(FW_WARN "CXL CPER no device serial number\n");
->  
-> +	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-> +
-> +	if (!cxl_cper_prot_err_work)
-> +		return;
-> +
->  	switch (prot_err->agent_type) {
->  	case RCD:
->  	case DEVICE:
-> @@ -721,9 +735,44 @@ static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
->  				   prot_err->agent_type);
->  		return;
->  	}
-> +
-> +	if (!kfifo_put(&cxl_cper_prot_err_fifo, wd)) {
-> +		pr_err_ratelimited("CXL CPER kfifo overflow\n");
-> +		return;
-> +	}
-> +
-> +	schedule_work(cxl_cper_prot_err_work);
->  #endif
->  }
->  
-> +int cxl_cper_register_prot_err_work(struct work_struct *work)
-> +{
-> +	if (cxl_cper_prot_err_work)
-> +		return -EINVAL;
-> +
-> +	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-> +	cxl_cper_prot_err_work = work;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_register_prot_err_work, "CXL");
-> +
-> +int cxl_cper_unregister_prot_err_work(struct work_struct *work)
-> +{
-> +	if (cxl_cper_prot_err_work != work)
-> +		return -EINVAL;
-> +
-> +	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-> +	cxl_cper_prot_err_work = NULL;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_unregister_prot_err_work, "CXL");
-> +
-> +int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd)
-> +{
-> +	return kfifo_get(&cxl_cper_prot_err_fifo, wd);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_prot_err_kfifo_get, "CXL");
-> +
->  /* Room for 8 entries for each of the 4 event log queues */
->  #define CXL_CPER_FIFO_DEPTH 32
->  DEFINE_KFIFO(cxl_cper_fifo, struct cxl_cper_work_data, CXL_CPER_FIFO_DEPTH);
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 9d58ab9d33c5..5840056bb9a3 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -650,6 +650,42 @@ void read_cdat_data(struct cxl_port *port)
->  }
->  EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
->  
-> +void cxl_cper_trace_corr_prot_err(struct pci_dev *pdev,
-> +				  struct cxl_ras_capability_regs ras_cap)
-> +{
-> +	u32 status = ras_cap.cor_status & ~ras_cap.cor_mask;
-> +	struct cxl_dev_state *cxlds;
-> +
-> +	cxlds = pci_get_drvdata(pdev);
-> +	if (!cxlds)
-> +		return;
-> +
-> +	trace_cxl_aer_correctable_error(cxlds->cxlmd, status);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_trace_corr_prot_err, "CXL");
-> +
-> +void cxl_cper_trace_uncorr_prot_err(struct pci_dev *pdev,
-> +				    struct cxl_ras_capability_regs ras_cap)
-> +{
-> +	u32 status = ras_cap.uncor_status & ~ras_cap.uncor_mask;
-> +	struct cxl_dev_state *cxlds;
-> +	u32 fe;
-> +
-> +	cxlds = pci_get_drvdata(pdev);
-> +	if (!cxlds)
-> +		return;
-> +
-> +	if (hweight32(status) > 1)
-> +		fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK,
-> +				   ras_cap.cap_control));
-> +	else
-> +		fe = status;
-> +
-> +	trace_cxl_aer_uncorrectable_error(cxlds->cxlmd, status, fe,
-> +					  ras_cap.header_log);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_trace_uncorr_prot_err, "CXL");
-> +
->  static void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds,
->  				 void __iomem *ras_base)
->  {
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 4da07727ab9c..e457616373ed 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -129,4 +129,9 @@ void read_cdat_data(struct cxl_port *port);
->  void cxl_cor_error_detected(struct pci_dev *pdev);
->  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->  				    pci_channel_state_t state);
-> +struct cxl_ras_capability_regs;
-> +void cxl_cper_trace_corr_prot_err(struct pci_dev *pdev,
-> +				  struct cxl_ras_capability_regs ras_cap);
-> +void cxl_cper_trace_uncorr_prot_err(struct pci_dev *pdev,
-> +				    struct cxl_ras_capability_regs ras_cap);
->  #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 6d94ff4a4f1a..9d4b5f39b21a 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -1160,6 +1160,37 @@ static void cxl_cper_work_fn(struct work_struct *work)
->  }
->  static DECLARE_WORK(cxl_cper_work, cxl_cper_work_fn);
->  
-> +static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
-> +{
-> +	unsigned int devfn = PCI_DEVFN(data->prot_err.agent_addr.device,
-> +				       data->prot_err.agent_addr.function);
-> +	struct pci_dev *pdev __free(pci_dev_put) =
-> +		pci_get_domain_bus_and_slot(data->prot_err.agent_addr.segment,
-> +					    data->prot_err.agent_addr.bus,
-> +					    devfn);
-> +
-> +	if (!pdev)
-> +		return;
-> +
-> +	guard(device)(&pdev->dev);
-> +	if (pdev->driver != &cxl_pci_driver)
-> +		return;
-> +
-> +	if (data->severity == AER_CORRECTABLE)
-> +		cxl_cper_trace_corr_prot_err(pdev, data->ras_cap);
-> +	else
-> +		cxl_cper_trace_uncorr_prot_err(pdev, data->ras_cap);
-> +}
-> +
-> +static void cxl_cper_prot_err_work_fn(struct work_struct *work)
-> +{
-> +	struct cxl_cper_prot_err_work_data wd;
-> +
-> +	while (cxl_cper_prot_err_kfifo_get(&wd))
-> +		cxl_cper_handle_prot_err(&wd);
-> +}
-> +static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
-> +
->  static int __init cxl_pci_driver_init(void)
->  {
->  	int rc;
-> @@ -1170,7 +1201,18 @@ static int __init cxl_pci_driver_init(void)
->  
->  	rc = cxl_cper_register_work(&cxl_cper_work);
->  	if (rc)
-> -		pci_unregister_driver(&cxl_pci_driver);
-> +		goto err_unreg;
-> +
-> +	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
-> +	if (rc)
-> +		goto err_unregister_work;
-> +
-> +	return 0;
-> +
-> +err_unregister_work:
-> +	cxl_cper_unregister_work(&cxl_cper_work);
-> +err_unreg:
-> +	pci_unregister_driver(&cxl_pci_driver);
->  
->  	return rc;
->  }
-> @@ -1178,7 +1220,9 @@ static int __init cxl_pci_driver_init(void)
->  static void __exit cxl_pci_driver_exit(void)
->  {
->  	cxl_cper_unregister_work(&cxl_cper_work);
-> +	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
->  	cancel_work_sync(&cxl_cper_work);
-> +	cancel_work_sync(&cxl_cper_prot_err_work);
->  	pci_unregister_driver(&cxl_pci_driver);
->  }
->  
-> diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index ee1c3dec62fa..359a8f44a2e0 100644
-> --- a/include/cxl/event.h
-> +++ b/include/cxl/event.h
-> @@ -242,6 +242,9 @@ struct cxl_cper_prot_err_work_data {
->  int cxl_cper_register_work(struct work_struct *work);
->  int cxl_cper_unregister_work(struct work_struct *work);
->  int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd);
-> +int cxl_cper_register_prot_err_work(struct work_struct *work);
-> +int cxl_cper_unregister_prot_err_work(struct work_struct *work);
-> +int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd);
->  #else
->  static inline int cxl_cper_register_work(struct work_struct *work)
->  {
-> @@ -256,6 +259,18 @@ static inline int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd)
->  {
->  	return 0;
->  }
-> +static inline int cxl_cper_register_prot_err_work(struct work_struct *work)
-> +{
-> +	return 0;
-> +}
-> +static inline int cxl_cper_unregister_prot_err_work(struct work_struct *work)
-> +{
-> +	return 0;
-> +}
-> +static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd)
-> +{
-> +	return 0;
-> +}
->  #endif
->  
->  #endif /* _LINUX_CXL_EVENT_H */
-> -- 
-> 2.17.1
-> 
+The test creates a networking environment using netdevsim, sends
+messages through /dev/kmsg, and verifies the received fragments maintain
+message integrity.
 
-Nitpick about the "8" value, but patch can go in like this
-and the value changed if there is later evidence to justify
-some other value.
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+Changes compared to RFC
+- Removed the long-line comment (Simon)
+- Added Simon's reviwed-by tag.
+- Link to v1: https://lore.kernel.org/r/20250131-netcons_frag_msgs-v1-1-0de83bf2a7e6@debian.org
+---
+ tools/testing/selftests/drivers/net/Makefile       |   1 +
+ .../selftests/drivers/net/lib/sh/lib_netcons.sh    |   7 ++
+ .../drivers/net/netcons_fragmented_msg.sh          | 122 +++++++++++++++++++++
+ 3 files changed, 130 insertions(+)
 
-Reviewed-by: Tony Luck <tony.luck@intel.com>
+diff --git a/tools/testing/selftests/drivers/net/Makefile b/tools/testing/selftests/drivers/net/Makefile
+index 137470bdee0c7fd2517bd1baafc12d575de4b4ac..c7f1c443f2af091aa13f67dd1df9ae05d7a43f40 100644
+--- a/tools/testing/selftests/drivers/net/Makefile
++++ b/tools/testing/selftests/drivers/net/Makefile
+@@ -7,6 +7,7 @@ TEST_INCLUDES := $(wildcard lib/py/*.py) \
+ 
+ TEST_PROGS := \
+ 	netcons_basic.sh \
++	netcons_fragmented_msg.sh \
+ 	netcons_overflow.sh \
+ 	ping.py \
+ 	queues.py \
+diff --git a/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh b/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh
+index 3acaba41ac7b21aa2fd8457ed640a5ac8a41bc12..0c262b123fdd3082c40b2bd899ec626d223226ed 100644
+--- a/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh
++++ b/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh
+@@ -110,6 +110,13 @@ function create_dynamic_target() {
+ 	echo 1 > "${NETCONS_PATH}"/enabled
+ }
+ 
++# Do not append the release to the header of the message
++function disable_release_append() {
++	echo 0 > "${NETCONS_PATH}"/enabled
++	echo 0 > "${NETCONS_PATH}"/release
++	echo 1 > "${NETCONS_PATH}"/enabled
++}
++
+ function cleanup() {
+ 	local NSIM_DEV_SYS_DEL="/sys/bus/netdevsim/del_device"
+ 
+diff --git a/tools/testing/selftests/drivers/net/netcons_fragmented_msg.sh b/tools/testing/selftests/drivers/net/netcons_fragmented_msg.sh
+new file mode 100755
+index 0000000000000000000000000000000000000000..4a71e01a230c75c14147a9937920fe0b68a0926a
+--- /dev/null
++++ b/tools/testing/selftests/drivers/net/netcons_fragmented_msg.sh
+@@ -0,0 +1,122 @@
++#!/usr/bin/env bash
++# SPDX-License-Identifier: GPL-2.0
++
++# Test netconsole's message fragmentation functionality.
++#
++# When a message exceeds the maximum packet size, netconsole splits it into
++# multiple fragments for transmission. This test verifies:
++#  - Correct fragmentation of large messages
++#  - Proper reassembly of fragments at the receiver
++#  - Preservation of userdata across fragments
++#  - Behavior with and without kernel release version appending
++#
++# Author: Breno Leitao <leitao@debian.org>
++
++set -euo pipefail
++
++SCRIPTDIR=$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")
++
++source "${SCRIPTDIR}"/lib/sh/lib_netcons.sh
++
++modprobe netdevsim 2> /dev/null || true
++modprobe netconsole 2> /dev/null || true
++
++# The content of kmsg will be save to the following file
++OUTPUT_FILE="/tmp/${TARGET}"
++
++# set userdata to a long value. In this case, it is "1-2-3-4...50-"
++USERDATA_VALUE=$(printf -- '%.2s-' {1..60})
++
++# Convert the header string in a regexp, so, we can remove
++# the second header as well.
++# A header looks like "13,468,514729715,-,ncfrag=0/1135;". If
++# release is appended, you might find something like:L
++# "6.13.0-04048-g4f561a87745a,13,468,514729715,-,ncfrag=0/1135;"
++function header_to_regex() {
++	# header is everything before ;
++	local HEADER="${1}"
++	REGEX=$(echo "${HEADER}" | cut -d'=' -f1)
++	echo "${REGEX}=[0-9]*\/[0-9]*;"
++}
++
++# We have two headers in the message. Remove both to get the full message,
++# and extract the full message.
++function extract_msg() {
++	local MSGFILE="${1}"
++	# Extract the header, which is the very first thing that arrives in the
++	# first list.
++	HEADER=$(sed -n '1p' "${MSGFILE}" | cut -d';' -f1)
++	HEADER_REGEX=$(header_to_regex "${HEADER}")
++
++	# Remove the two headers from the received message
++	# This will return the message without any header, similarly to what
++	# was sent.
++	sed "s/""${HEADER_REGEX}""//g" "${MSGFILE}"
++}
++
++# Validate the message, which has two messages glued together.
++# unwrap them to make sure all the characters were transmitted.
++# File will look like the following:
++#  13,468,514729715,-,ncfrag=0/1135;<message>
++#   key=<part of key>-13,468,514729715,-,ncfrag=967/1135;<rest of the key>
++function validate_fragmented_result() {
++	# Discard the netconsole headers, and assemble the full message
++	RCVMSG=$(extract_msg "${1}")
++
++	# check for the main message
++	if ! echo "${RCVMSG}" | grep -q "${MSG}"; then
++		echo "Message body doesn't match." >&2
++		echo "msg received=" "${RCVMSG}" >&2
++		exit "${ksft_fail}"
++	fi
++
++	# check userdata
++	if ! echo "${RCVMSG}" | grep -q "${USERDATA_VALUE}"; then
++		echo "message userdata doesn't match" >&2
++		echo "msg received=" "${RCVMSG}" >&2
++		exit "${ksft_fail}"
++	fi
++	# test passed. hooray
++}
++
++# Check for basic system dependency and exit if not found
++check_for_dependencies
++# Set current loglevel to KERN_INFO(6), and default to KERN_NOTICE(5)
++echo "6 5" > /proc/sys/kernel/printk
++# Remove the namespace, interfaces and netconsole target on exit
++trap cleanup EXIT
++# Create one namespace and two interfaces
++set_network
++# Create a dynamic target for netconsole
++create_dynamic_target
++# Set userdata "key" with the "value" value
++set_user_data
++
++
++# TEST 1: Send message and userdata. They will fragment
++# =======
++MSG=$(printf -- 'MSG%.3s=' {1..150})
++
++# Listen for netconsole port inside the namespace and destination interface
++listen_port_and_save_to "${OUTPUT_FILE}" &
++# Wait for socat to start and listen to the port.
++wait_local_port_listen "${NAMESPACE}" "${PORT}" udp
++# Send the message
++echo "${MSG}: ${TARGET}" > /dev/kmsg
++# Wait until socat saves the file to disk
++busywait "${BUSYWAIT_TIMEOUT}" test -s "${OUTPUT_FILE}"
++# Check if the message was not corrupted
++validate_fragmented_result "${OUTPUT_FILE}"
++
++# TEST 2: Test with smaller message, and without release appended
++# =======
++MSG=$(printf -- 'FOOBAR%.3s=' {1..100})
++# Let's disable release and test again.
++disable_release_append
++
++listen_port_and_save_to "${OUTPUT_FILE}" &
++wait_local_port_listen "${NAMESPACE}" "${PORT}" udp
++echo "${MSG}: ${TARGET}" > /dev/kmsg
++busywait "${BUSYWAIT_TIMEOUT}" test -s "${OUTPUT_FILE}"
++validate_fragmented_result "${OUTPUT_FILE}"
++exit "${ksft_pass}"
 
--Tony
+---
+base-commit: 0ad9617c78acbc71373fb341a6f75d4012b01d69
+change-id: 20250129-netcons_frag_msgs-91506d136f50
+
+Best regards,
+-- 
+Breno Leitao <leitao@debian.org>
+
