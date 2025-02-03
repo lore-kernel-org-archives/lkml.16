@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B071FF1AF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E585E1FF1D2;
 	Mon,  3 Feb 2025 09:05:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738573525; cv=none; b=C/QlNINq2n0B3x9cq+7V+s/KG21OCZ2cjP7a7b/i+G5S77N0zKj1+6vgktHuSEkSy613nXl4hd7hEZk3A83BKbKJi3tr2uhyEG1cv5a/MoQe9TLcCdIB21peGJnNnD86aQ50D10tSMybTEFR02QblZv4YUzFXFwHEcczRJE6zJk=
+	t=1738573526; cv=none; b=g0E6FSxJaqOXf/CqmgO38CQbLCpw0L7jjchKhFVJOX+bdw+gs2Ml5VDmcX91yoVO3VFWyxi00pqelr8n+ZUENlY4MoqBwsTHIjrMyjeddJjGoDyzlSlTcNHGDogP7bKkJt2c4O0qJpOmExGyjDNlH1tjz6R6upfrn/+JYQhq8pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738573525; c=relaxed/simple;
-	bh=FHjDFl0GoKn6nit/F9ipB8685b6fIBNR9d7/04YuOok=;
+	s=arc-20240116; t=1738573526; c=relaxed/simple;
+	bh=0OYIxTlpnbjEhvswabtZg49j38hT3MAFwMnYXuy7rHo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=e8YcWWHjZbCv6lfRLDE8vdDwaFoLEH+wk0smj1BWZf+AK28Vd+MEd+SEJrnwf38iPgn1DR2ybhVMV2pjuUJrE3YUekPPvnbcFS8YARQ4gZozIvAr4Q5uw4Ne4ChYEGKJO7FEhappTQwqKT3rKs003VbhbqmBJMaRL+R12UX2EKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xGfx6yHi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=94Z1dN2Q; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=YCqO7nuHP5nN/scx9bA0iz9nuNXZGIbLSa4NRlOjM2J8WW93NC59tF9478EIEGvzIguypTeEZcMyVCkATHdncxrvY3ho0iw2J78lkwENueLSK6jCBHX+9Eq9pvABUxb+RmVq0ONrWYpDuVTgjI8ubPg3zrIoKNthhM+TzNdq/MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JhMKYXZh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sjZoTqPe; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xGfx6yHi";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="94Z1dN2Q"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JhMKYXZh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sjZoTqPe"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738573521;
+	s=2020; t=1738573522;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VgSqTSk81su0MmtqYLownOdk49YkaFaYXYtHKJAxgm0=;
-	b=xGfx6yHi7iZ3B50wSZNmDCxhoV3oerxbIl2ErFtWav52FPiddPhdhOciwkBMntgQhFximk
-	yCTtzX4GgCWDIveJ8PZwLnNjl+aHmyPZkm0NlVbCpBf/zHfydpWcYv0XL5iSmTX9AgagXw
-	LrEKVjWPLp/43xACs1aooe450j/1mUODTSBUMhqhA7Zf/a5xga8zhWb2EILAtQZEx/8s38
-	tFDUV2IDZ7dnXovL/3Qb/b6mCfnYNuLvG6ZTyMwvwC6NXeett0g/jCSBF3kB7rDL2ohhQl
-	wKx6cgKzFN6dIOYFSEFug1EGJ4lt4oq2zS/yHOdm0gqeuht2HOa6Et91Az97Zw==
+	bh=sG/oZgAVhh6ntwQfY2W+UbeC4PlDV/c3H2R+4urGbL8=;
+	b=JhMKYXZhVSl8/w2BmQY+EqIs3pyiQ1lhM0emDgv0arK+K4XfGigIh+g7r0at1+9pdkHLaV
+	BEDeI0QuP5p2TSNd7UcHI4NU5k/ph0uuA3OrMPWoMI6Xg9xCBm0mh6N2wJPUumv53sSPSg
+	jL6FXZz5CdlgIxGLAYDIyDs2pVr4njxIO9MAQ/YKVAH80I3CQPxXcCx/QgeUJYzh+Fp3+v
+	rwpHneaSmTQZujuYiT7zMvIFTTSt22ck+3CsHkeKfaSkBQsDE4PMEIFzV2RxeOgTYch/7U
+	AcVJEAcWLxm//knVgt04bowdoOenBJzIBREKOl5QDJ9UsN9f+OedDsp6JRfQvw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738573521;
+	s=2020e; t=1738573522;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VgSqTSk81su0MmtqYLownOdk49YkaFaYXYtHKJAxgm0=;
-	b=94Z1dN2QIVLYeT7X8BukIFB1pvRBZ6naLClEBvXDwYwMHCHp2L4vY5GaF9jAJcIOiwyVCt
-	YeoqYPpzVKYwMnCQ==
-Date: Mon, 03 Feb 2025 10:05:07 +0100
-Subject: [PATCH 06/16] elf, uapi: Add types ElfXX_Verdef and ElfXX_Veraux
+	bh=sG/oZgAVhh6ntwQfY2W+UbeC4PlDV/c3H2R+4urGbL8=;
+	b=sjZoTqPehK2ud05RLSFDc5lU4mzS47xZKf+CsUnMXqFCM4Bm54cCYDsz1eW1TtpPW2KZbw
+	nGrE4YodtXB7OtBQ==
+Date: Mon, 03 Feb 2025 10:05:09 +0100
+Subject: [PATCH 08/16] selftests: Add headers target
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250203-parse_vdso-nolibc-v1-6-9cb6268d77be@linutronix.de>
+Message-Id: <20250203-parse_vdso-nolibc-v1-8-9cb6268d77be@linutronix.de>
 References: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
 In-Reply-To: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
 To: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>, 
@@ -61,63 +61,40 @@ To: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  linux-kselftest@vger.kernel.org, llvm@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738573516; l=1518;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738573516; l=1095;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=FHjDFl0GoKn6nit/F9ipB8685b6fIBNR9d7/04YuOok=;
- b=K34MIkI7ABRtpHTTzHhgAEtIuBVWA3OhksDhhthQLvZ5GSkDTjSWJ4guUs3+fffHpJGidwdBJ
- pKjCcN1XSZwCXzYW1BHvHOTiY17D9qpTzV9/nm9rj5CRqcZetbWcppf
+ bh=0OYIxTlpnbjEhvswabtZg49j38hT3MAFwMnYXuy7rHo=;
+ b=7OFfX8P7FhSczFpGy/axi3iZncIH116trhlD/v/wjEr2m0wr4S0g/2HGcyDlWkMjKCfp4pL/9
+ UfyCKzpFw7ACjbY83Xh0CMIYZqw0+FIc4YHGYKq3pWuiltxDT9sA6C7
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-The types are used by tools/testing/selftests/vDSO/parse_vdso.c.
-To be able to build the vDSO selftests without a libc dependency,
-add the types to the kernels own UAPI headers.
+Some selftests need access to a full UAPI headers tree, for example when
+building with nolibc which heavily relies on UAPI headers.
+A reference to such a tree is available in the KHDR_INCLUDES variable,
+but there is currently no way to populate such a tree automatically.
 
-Link: https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERDEFEXTS
+Provide a target that the tests can depend on to get access to usable
+UAPI headers.
+
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- include/uapi/linux/elf.h | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ tools/testing/selftests/lib.mk | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 8846fe03ca5b836c96aad1be6d8fb9daf3d4b1d9..49f9f90458d8ca8e7b8f823d32be0a719ff827b3 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -491,4 +491,34 @@ typedef struct elf64_note {
- /* Bits for GNU_PROPERTY_AARCH64_FEATURE_1_BTI */
- #define GNU_PROPERTY_AARCH64_FEATURE_1_BTI	(1U << 0)
+diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
+index d6edcfcb5be832ddee4c3d34b5ad221e9295f878..5303900339292e618dee4fd7ff8a7c2fa3209a68 100644
+--- a/tools/testing/selftests/lib.mk
++++ b/tools/testing/selftests/lib.mk
+@@ -228,4 +228,7 @@ $(OUTPUT)/%:%.S
+ 	$(LINK.S) $^ $(LDLIBS) -o $@
+ endif
  
-+typedef struct {
-+  Elf32_Half	vd_version;
-+  Elf32_Half	vd_flags;
-+  Elf32_Half	vd_ndx;
-+  Elf32_Half	vd_cnt;
-+  Elf32_Word	vd_hash;
-+  Elf32_Word	vd_aux;
-+  Elf32_Word	vd_next;
-+} Elf32_Verdef;
+-.PHONY: run_tests all clean install emit_tests gen_mods_dir clean_mods_dir
++headers:
++	$(Q)$(MAKE) -C $(top_srcdir) headers
 +
-+typedef struct {
-+  Elf64_Half	vd_version;
-+  Elf64_Half	vd_flags;
-+  Elf64_Half	vd_ndx;
-+  Elf64_Half	vd_cnt;
-+  Elf64_Word	vd_hash;
-+  Elf64_Word	vd_aux;
-+  Elf64_Word	vd_next;
-+} Elf64_Verdef;
-+
-+typedef struct {
-+  Elf32_Word    vda_name;
-+  Elf32_Word    vda_next;
-+} Elf32_Verdaux;
-+
-+typedef struct {
-+  Elf64_Word    vda_name;
-+  Elf64_Word    vda_next;
-+} Elf64_Verdaux;
-+
- #endif /* _UAPI_LINUX_ELF_H */
++.PHONY: run_tests all clean install emit_tests gen_mods_dir clean_mods_dir headers
 
 -- 
 2.48.1
