@@ -1,198 +1,177 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E613208A7;
-	Mon,  3 Feb 2025 16:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164B720A5ED
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738599337; cv=none; b=S6rVABoji/GUy1O6IG7jq1rB5zYgZ+uhNwyuzoy5cuXStU4Zo4EoR8zPBNg5mUDpefUuvM8zkeeZIDP5PKUJoW/Bfz9mGWmOOA08KJHYvueQ04I0zCNw8nGJeuD+wTIqH5nng8fkl40Gk8oC2k4gPsE7BJV09ESiAOgA3BVy+DE=
+	t=1738599364; cv=none; b=CBrjdvGbdOI59ngJ0+Xp6IEPgNVhGXjcho2CyHY9AZ0J+0lm5elCN1iqB65Q7zNaALvMNKm8lf3pLi3heGDPEUWrI08aSgNC7vc1dWKOpKRtq3RN/lMtU8s6pNcbLgPKjf5c8yYO9UF+of61ohOzCpShr+w3fMpSKWhSkUh5Yug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738599337; c=relaxed/simple;
-	bh=jUwhSe87g02uoy84SImiW3iRnVIQ00CyAOokehw2rvw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=hgh/XyXEfGJKN56k68C3SwX4wVnqVqUxBigeu6lMSzml3ar3H4h5QBy3J4YY+xQnOkD4hE9G+RcOLCYzaAWx8YiStmr2kmczoFXQqCrOqcrSnV9Cwjn+1pjha/l8i35bv2/tQrbN9P4r6e2sm3JnoSmxNDFJVg7T2NGRzbPUbzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JItIBMR7; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738599364; c=relaxed/simple;
+	bh=XgCgeJP7Yg9WIvgjjD69EuKfsXclzUie2BBefx1gxrU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hQnm6an2bx8YV1P9vXqCCLo1t0yEDpRoyJZHC34pGBE0Ru1efVFQjqv6cZMTfaBSo92MN0NhpFn9sW5ygLUHwkHTHS5KSWQelShrqDPhe0lObB5nQHpogShaEWzVi49sZWjWfN71ybS3fd7gM68Vb0mT2CDMhVCaZmrPt7T/DR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cgYa8XGK; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JItIBMR7"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4678cce3d60so47276391cf.2;
-        Mon, 03 Feb 2025 08:15:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cgYa8XGK"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-215770613dbso61333655ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 08:16:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738599334; x=1739204134; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3tS/7qTS4m70JkAze3DpkSpMUHgCMv050Qq58puGuWY=;
-        b=JItIBMR7Q5nURpcEcD/3BE1w7JT02laSUcOwI99yImfu2t5hBfoX+4oS3EbLMszHfU
-         +iOFQSqO6hfuuhTHrLq9jZGmKjSzEKyOcKUscbgAIKlrNuN7udDcqiDHHtinZJtQevZE
-         LCntGi0sS7QcFTKzJ+oPjjA62mDuL/s37p7Mu2LIgJRPzXLecG4ZUNrLi4LlFFvpcEtk
-         VIvXg9lUWcRHdyQKgj8yrg08imDh194iQs5CRMPZiV28y0zN2llSnV+TNl/PEmuLu5fw
-         22O3zHpyKkGGWPa3N+ll5p8ApSY/ywKGwCfSC6U5LKl1ljYvVyhKAeEZ2ziR+LPUgITH
-         3C2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738599334; x=1739204134;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+        d=linaro.org; s=google; t=1738599362; x=1739204162; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=3tS/7qTS4m70JkAze3DpkSpMUHgCMv050Qq58puGuWY=;
-        b=oJyBarGnZjOfHJ8rrL8tfw7LvsG7ryqs2vxbcUU1dZykeghrV0v2M2GVmhTnHh2skA
-         ous1QwqPsD1oOsXW3gxD9jFQfXHKgWvGmmfL5cAbVRGIYnGo9aySuzCI6u6c1MWrtj4L
-         CIEXuFchd5UErbNq595PsCKRbk3YjrCBbHn76VzsSbQD6nIL/BZFM3I2UyQOzDmQI3Nn
-         bdDsSUtR8eRuevpHKmucQB9WGsbi+heuM8B+giK2dTBrF1AbeHfPjmCrXumHiF+5SMCW
-         K64nhgWf0J6lbbufCrdBqrxh5/wJTheunfJCB9MbC7Zdu5LABykzqQoJjHC8mXJ9O4nP
-         JDyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZMbN7jNkQRhYdDIBSrSfizxVpD1ijGFLwzUW6IZVA6CfqaXflfjoYIGjkOOWKxJ9JeD2uyexW9MosAkkHZ2AS6U2q6g==@vger.kernel.org, AJvYcCVnYatb6X/CxtbIqeoB2eBUq3CRSEeAgo0Zz+qgJeO2zy1UddZJNQQ7jW1QQFmrU7BL+1aBD2Dnt4HF1/k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxI34xNwdtavrIPsxjL7aBq0cM11gTM7XKlp+M57jfTSzPECUS
-	nlyIkSC8IYlpQOaKJVbwD4U+9A6MfiyndC2zw5UdT0MbfPE/O7X5
-X-Gm-Gg: ASbGncsULzlbo4jLJcLso0ngsQdACqigOcIVz73XsWbTGG0siqRoQC0jdGy0iodKVmS
-	t9Pll4nOG4PZCyJQfHUAcGjoAI41Ww+2aOQVdJbjLo9OEAujPW/FqDVAWJ4bA0dIS268zLCXP3Z
-	8mUW5rSSsLuYhk3Eeeeu6C752T4HlEcVVdMXAXueACDZ2rIakVQaIOSDErv3Wcip1wCKkrWiXuG
-	dn6xOd+/PSJLCYcJ3T00LoD3vgGp5W5fp0XmwYL/V+0j0z6a5T6oudcTyfPkOBmdP9QT5VpvHMU
-	X2OEgB8=
-X-Google-Smtp-Source: AGHT+IFRBhTOmGMRTDgquhOoPafkUNQIAOUKTz9yGcentgDY3hJhT0Mux0KPf2YTh1eh35gTqFTb7Q==
-X-Received: by 2002:a05:620a:f0f:b0:7b6:6d5a:d51b with SMTP id af79cd13be357-7bffcdafb19mr2967329085a.52.1738599334052;
-        Mon, 03 Feb 2025 08:15:34 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8669407cc41sm1708989241.8.2025.02.03.08.15.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 08:15:33 -0800 (PST)
+        bh=BUMXXvBYM9FA0XZxREanSlgpwy5RHuhf/5nOkGpm4AA=;
+        b=cgYa8XGK/EDNjZKZjxmiVlaLtumjuoMLdNqNWiuKFC6OOh9w1V+QVxLUEnrfqhymGz
+         UiiK3Kv0QXKipTm9MhHVB2uL0rOo9hRuVSyT/FPCZHp2mI42ectyG94xKnZE1k5AYXip
+         G2N5DITkefGGGxGf1Puiyc9acXazERZkPPXJjKoTQaQSThf24pPhpJc6KraO5F9TGdZr
+         RlIYniwK8jbV/PtQDhk1FxoMdDER80pOFbrB7QQWfugXJ7rUOxWc8KdYlLHSt6wkXOOu
+         1sYnMgLGoa//oBWWnOtggzQV7SS68UhrA28YcqhF0l4gHXfhvuMGRw22GFGMMw3l2afv
+         bZIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738599362; x=1739204162;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BUMXXvBYM9FA0XZxREanSlgpwy5RHuhf/5nOkGpm4AA=;
+        b=rlTso23+y6fQrZSoM3NtLu76JeOr8iA0JTMRUeF2gUeziSp3cU4bG0qGeGX4KUiU7S
+         zLoQGvNB4PljOKPlAF+94zXiRq1+eYUASGhqulZGuaVIHIyVDMWVolJvUGdIDhm3x8Bo
+         NXwI3s4RrJ05OyZYSf7s7UtfnhgGwdaYACPP1wLac+aKaCmIkRkbJVzrxIr8fYAj7sGn
+         vDhUFr27mSrx2/Y1VpKFjhiG09j0OfxDbgjcP+PfKcnHCRugphXWVLzFkXTck73dDc22
+         JwnFW+VGSlEylB1zs0DNoInUfCu0nnGtI6XxfBUP2OExGDeOBwMOhaBWdTRFlXo51Uui
+         oEdA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYHSA44AlbV6RdpMiWyFDgcoQoDFiASFV0Ybq6E4k/wdXzJcG82SIChkmL2O0mXptnbFt5vTF9Oh+RCNc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGQD+dIqPrWtXBQ20ri3bOYpyFGqdJbgWNXHFemlq5aEEt4HBB
+	G2UWMrRQ/yRDMpOn3twE8uljgeXmmvzEe6xcGLC3LAWlJzzWyDpTXkB8+nL67g==
+X-Gm-Gg: ASbGncthyE6Ms8LqS01+tn4hBiE9HI1cpItJOToOwccB+wUV36b8Xdl8D2YXOB8+/1Q
+	qukLelEXVsi4TTG8HI4WO9Slq/xu3y1b9HCQ77Y7RBDlOntBIf/TJ+7bqij1Cfuars74cCLeosx
+	cQr11UFBko43lMc7TuYByGqTBBCoq3hBJyq6q2dp1AN9rxyKsOR1QxO9djV4maYmWrglyUQNk+U
+	FfrPZZ6mEGJD+S3r4ubxhaQP6j/mtwMgFEbhPJyjcM/qo8rQsd7pyk2gOroC3GbkuYOuu639o/G
+	m9ul2L6Lrgfs8uoNGmMjsg89OQ==
+X-Google-Smtp-Source: AGHT+IFjb2et5efUw+zyoN0z9jRuYcDjtd3ic3btnHPpSguicV2FG29nk9FX8bZh7WGuu0uFADinPQ==
+X-Received: by 2002:a17:903:2447:b0:216:6901:d588 with SMTP id d9443c01a7336-21dd7c66599mr364839785ad.15.1738599362181;
+        Mon, 03 Feb 2025 08:16:02 -0800 (PST)
+Received: from thinkpad ([120.60.129.34])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f832esm77789605ad.83.2025.02.03.08.15.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 08:16:01 -0800 (PST)
+Date: Mon, 3 Feb 2025 21:45:55 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	konrad.dybcio@oss.qualcomm.com, quic_mrana@quicinc.com,
+	quic_vbadigan@quicinc.com, Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Subject: Re: [PATCH v4 4/4] PCI: dwc: Add support for configuring lane
+ equalization presets
+Message-ID: <20250203161555.a32gpzv4j6cjajs5@thinkpad>
+References: <20250124-preset_v2-v4-0-0b512cad08e1@oss.qualcomm.com>
+ <20250124-preset_v2-v4-4-0b512cad08e1@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 03 Feb 2025 11:15:31 -0500
-Message-Id: <D7IY0YO7DFXE.1V78T6V77EDF2@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Armin Wolf" <W_Armin@gmx.de>, <platform-driver-x86@vger.kernel.org>
-Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Mario
- Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
- <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v7 00/14] platform/x86: alienware-wmi driver rework
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250203062055.2915-1-kuurtb@gmail.com>
- <7d4e693e-5d12-4c55-9db8-7f7dd45e8086@gmx.de>
-In-Reply-To: <7d4e693e-5d12-4c55-9db8-7f7dd45e8086@gmx.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250124-preset_v2-v4-4-0b512cad08e1@oss.qualcomm.com>
 
-On Mon Feb 3, 2025 at 10:34 AM -05, Armin Wolf wrote:
-> Am 03.02.25 um 07:20 schrieb Kurt Borja:
->
->> Hi!
->>
->> I bring some last minute modifications.
->>
->> I found commit
->>
->> 	8d8fc146dd7a ("nvmem: core: switch to use device_add_groups()")
->>
->> which states that it's unnecesary to call device_remove_groups() when
->> the device is removed, so I dropped it to simplify things.
->
-> What? That sound quite strange to me. I CCed Greg because i am curious ho=
-w this
-> should work.
+On Fri, Jan 24, 2025 at 04:52:50PM +0530, Krishna Chaitanya Chundru wrote:
+> PCIe equalization presets are predefined settings used to optimize
+> signal integrity by compensating for signal loss and distortion in
+> high-speed data transmission.
+> 
+> Based upon the number of lanes and the data rate supported, write
+> the preset data read from the device tree in to the lane equalization
+> control registers.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 41 +++++++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
+>  include/uapi/linux/pci_regs.h                     |  3 ++
+>  3 files changed, 47 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 2cd0acbf9e18..eced862fb8dd 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  	if (pci->num_lanes < 1)
+>  		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
+>  
+> +	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
+> +	if (ret)
+> +		goto err_free_msi;
+> +
+>  	/*
+>  	 * Allocate the resource for MSG TLP before programming the iATU
+>  	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
+> @@ -802,6 +806,42 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+>  	return 0;
+>  }
+>  
+> +static void dw_pcie_program_presets(struct dw_pcie *pci, u8 cap_id, u8 lane_eq_offset,
+> +				    u8 lane_reg_size, u8 *presets, u8 num_lanes)
+> +{
+> +	u32 cap;
+> +	int i;
+> +
+> +	cap = dw_pcie_find_ext_capability(pci, cap_id);
+> +	if (!cap)
+> +		return;
+> +
+> +	/*
+> +	 * Write preset values to the registers byte-by-byte for the given
+> +	 * number of lanes and register size.
+> +	 */
+> +	for (i = 0; i < num_lanes * lane_reg_size; i++)
+> +		dw_pcie_writeb_dbi(pci, cap + lane_eq_offset + i, presets[i]);
 
-I'm curious too!=20
+So this essentially means that the presets value derived from DT should be equal
+to 'num_lanes', otherwise this function will write 0 for the undefined lanes.
+But this should be taken care by binding as I mentioned in my review and code
+should not worry about it.
 
-I found it while searching for something like devm_device_add_groups
-which it turns out, was removed from the kernel.
+> +}
+> +
+> +static void dw_pcie_config_presets(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	enum pci_bus_speed speed = pcie_link_speed[pci->max_link_speed];
+> +
+> +	/* For data rate of 8 GT/S each lane equalization control is 16bits wide */
+> +	if (speed >= PCIE_SPEED_8_0GT && pp->presets.eq_presets_8gts[0] != 0xff)
+> +		dw_pcie_program_presets(pci, PCI_EXT_CAP_ID_SECPCI, PCI_SECPCI_LE_CTRL,
+> +					0x2, (u8 *)pp->presets.eq_presets_8gts, pci->num_lanes);
 
->
->>
->> I also found commit
->>
->> 	957961b6dcc8 ("hwmon: (oxp-sensors) Move tt_toggle attribute to dev_gro=
-ups")
->>
->> which states that no driver should add sysfs groups while probing the
->> device as it races with userspace, so I re-added PROBE_FORCE_SYNCHRONOUS
->> to the platform driver, so groups are added only after the device has
->> finished probing.
->
-> Using PROBE_FORCE_SYNCHRONOUS is not going to solve this problem here, pl=
-ease remove it.
+You should just pass PCIE_SPEED_8_0GT to the dw_pcie_program_presets() helper
+and it should figure out the register bits, size and lane count inside. Like,
 
-Yes, I'm going for Ilpo's .dev_groups approach.
+	dw_pcie_program_presets(pci, PCIE_SPEED_8_0GT);
 
-~ Kurt
+> +
+> +	/* For data rate of 16 GT/S each lane equalization control is 8bits wide */
+> +	if (speed >= PCIE_SPEED_16_0GT &&
+> +	    pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS][0] != 0xff)
+> +		dw_pcie_program_presets(pci, PCI_EXT_CAP_ID_PL_16GT, PCI_PL_16GT_LE_CTRL,
+> +					0x1, pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS],
+> +					pci->num_lanes);
 
->
-> Thanks,
-> Armin Wolf
->
->> I'm not 100% sure that the second commit message applies here, but it is
->> revd-by Greg K-H so I added it just in case.
->>
->> Aside from that, I added .pprof to awcc_quirks because I'm going to add
->> support for new features after this series, and it makes sense that
->> force_platform_profile only forces the pprof and not other upcoming
->> features.
->>
->> ~ Kurt
->> ---
->> [02/14]
->>    - In alienware_alienfx_setup() add a devm action to remove the create=
-d
->>      platform device
->>    - Drop device_remove_groups() in WMAX .remove callback
->>    - Add PROBE_FORCE_SYNCHRONOUS to the platform driver
->>    - Drop .remove callbacks on both WMI drivers
->>
->> [03/14]
->>    - Add awcc_platform_profile_init() to create the platform_profile
->>      device on quirks->thermal =3D=3D true condition
->>
->> [07/14]
->>    - Add .pprof to awcc_quirks
->>
->> [10/14]
->>    - Drop unused member `quirks` on `alienfx_priv` (remnant of another
->>      version)
->>
->> v6: https://lore.kernel.org/platform-driver-x86/20250127040406.17112-1-k=
-uurtb@gmail.com/
->>
->> Kurt Borja (14):
->>    platform/x86: alienware-wmi: Add a state container for LED control
->>      feature
->>    platform/x86: alienware-wmi: Add WMI Drivers
->>    platform/x86: alienware-wmi: Add a state container for thermal contro=
-l
->>      methods
->>    platform/x86: alienware-wmi: Refactor LED control methods
->>    platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp method=
-s
->>    platform/x86: alienware-wmi: Refactor thermal control methods
->>    platform/x86: alienware-wmi: Split DMI table
->>    MAINTAINERS: Update ALIENWARE WMI DRIVER entry
->>    platform/x86: Rename alienware-wmi.c
->>    platform/x86: Add alienware-wmi.h
->>    platform/x86: Split the alienware-wmi driver
->>    platform/x86: dell: Modify Makefile alignment
->>    platform/x86: Update alienware-wmi config entries
->>    platform/x86: alienware-wmi: Update header and module information
->>
->>   MAINTAINERS                                   |    4 +-
->>   drivers/platform/x86/dell/Kconfig             |   30 +-
->>   drivers/platform/x86/dell/Makefile            |   45 +-
->>   .../platform/x86/dell/alienware-wmi-base.c    |  496 +++++++
->>   .../platform/x86/dell/alienware-wmi-legacy.c  |   95 ++
->>   .../platform/x86/dell/alienware-wmi-wmax.c    |  790 +++++++++++
->>   drivers/platform/x86/dell/alienware-wmi.c     | 1249 -----------------
->>   drivers/platform/x86/dell/alienware-wmi.h     |  101 ++
->>   8 files changed, 1534 insertions(+), 1276 deletions(-)
->>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
->>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
->>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
->>   delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
->>   create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
->>
->>
->> base-commit: 05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
+Same here.
 
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
