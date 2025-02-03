@@ -1,166 +1,104 @@
-Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABC7209F59;
-	Mon,  3 Feb 2025 15:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.141.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D90205E06
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738596651; cv=none; b=Qrb+is9c4xWlgnFKlFGAor2/EvvdjJAJcAODDqlRamsXK7b1CEbEH8v6Hz7wxPjlz6lo0ZJxn01sGjFb2a/qoIJVh0Iv/LFlK/BRM00CE2G4dgzCCLk/H1Y2CUaKCnvnZh6bd8vz+oEwZwwVPri0Sm7jXOslsXSvvGpMgk2/LVU=
+	t=1738596679; cv=none; b=VEP+H8UBKaQydWxliNdZiZTECmDt0x7dTFr0dwXbNocSYZtTtnS9ZNkDqKbepNVlZ/svjDVuI/KYSuhhWwgY46aGfN6cBgXftGhVW2ppht4lpDlQFqh9+YHZdg3QH2jZ/i/pVMuJu0J7fzmJvJw814oUIXih5GuW50AGECJNPjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738596651; c=relaxed/simple;
-	bh=3Tt41DcaDXGlLXYMvRGQ2OROmQPcbjs9ADeuAa7WHkQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RrC29c8Yl5h3tdbMwMzf2/g5kJsEMa0AQz/ycssnCnLifjLiYOz9gkEEmzd8wjh/S3wFJYKrxw+WQPU4NV1hZMyEp6jHgMCoPdx0XYp6uQ99ckXV+IvrSbm7fHBfxnGr1eYOFd6RyS121rgRZ/sSrNTWqqnQHwnlZiCEYvbPpcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=C2rQV2kT; arc=none smtp.client-ip=68.232.141.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1738596679; c=relaxed/simple;
+	bh=3eugK1vqrccz38OY5GN0YkQW2c0WOhGqGyxEzYxxH68=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DWytJhcViXIta6AcBvIlvhkxvpKSUAzEVf15+k3uggJkFLtoiDxEJyjOVM3yiRLhIPvYS4QnLL38gL03SE05hVWvYMpF6DLPVqhm3xYyLEdgaZe7Nc3XEPbNwVuMS30HCdEAL34FgKKKo/0d78dpVAFNsgCrknI9/h2ik82rEEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pUw4g7/3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="C2rQV2kT"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1738596649; x=1770132649;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3Tt41DcaDXGlLXYMvRGQ2OROmQPcbjs9ADeuAa7WHkQ=;
-  b=C2rQV2kTW1eTBrJNaKbU4e7jyPUGywgNlmNvUdi2bWjUYir/xNTvHsT0
-   XfZ6BtNdjouuNrUiSELXRty2tATO61c72keJuqH0pPlDNXFy13mA65wYz
-   DknJiTrUr/OhCKFYRKZEvtg+f9d2GVBDkAvWbtFB7Pylz7xLBnOn3LkXo
-   QcgQpBM2ULAPvjsuvMhd4HvNR0zsZcTPdV87K4oKXEiohHZrxlJD5RjZZ
-   UKdUUiXvdxQXuH4coqeg3jsMgeC5StP//WW4NCL6tQGg9oMslcvkqzIwj
-   hTFJNo23xrHZc4seNFSL+++u13XLk8jX29yXyxOfjBmvoutRimIr7GlwG
-   Q==;
-X-CSE-ConnectionGUID: R2ruNb1VS6+1gRnv6Nh4Hw==
-X-CSE-MsgGUID: QPpShF4hQGOw8OAXeetxsQ==
-X-IronPort-AV: E=Sophos;i="6.13,256,1732550400"; 
-   d="scan'208";a="38686225"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Feb 2025 23:30:49 +0800
-IronPort-SDR: 67a0d382_YHb+hISC1C6Xp7XbUJrOWoEBKn39YFgZbPeQxpr9fyHj2oX
- GyT9a5poKkupqufgPm9ObdAvnLP459nB16ljWCA==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Feb 2025 06:32:35 -0800
-WDCIronportException: Internal
-Received: from avri-office.ad.shared (HELO avri-office.sdcorp.global.sandisk.com) ([10.45.31.142])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Feb 2025 07:30:47 -0800
-From: Avri Altman <avri.altman@wdc.com>
-To: "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Avri Altman <avri.altman@wdc.com>
-Subject: [PATCH 2/2] scsi: ufs: Add support for critical health notification
-Date: Mon,  3 Feb 2025 17:27:35 +0200
-Message-Id: <20250203152735.825010-3-avri.altman@wdc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250203152735.825010-1-avri.altman@wdc.com>
-References: <20250203152735.825010-1-avri.altman@wdc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pUw4g7/3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2CB3EC4CEE0;
+	Mon,  3 Feb 2025 15:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738596678;
+	bh=3eugK1vqrccz38OY5GN0YkQW2c0WOhGqGyxEzYxxH68=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=pUw4g7/32e4byQkzsZ9ZfFol47D7JPJkLDC8UFDs84A6ptKIjXKMLzIJtDee1T5zx
+	 6GBU01T4ofBfIXTng4ptU+s/Vt34BKLPm3dLs2gg5OOzX3pAk0JPQdQcNYawOfc9QT
+	 Ey2UErxz3rCHgdS1wQU8RmHljtQ0B8aha1sow5d1xhNMPAhbvtvazOUnKkLCNHpoKS
+	 b1kqlcrxAcgKWP9ov5HgznS5eTMlKS7mr92x2MAaVXPc81plqrHAMdPibd2dz4GQ4Y
+	 dH2T283jNnKI72TM94SDRwrL3K/c5ouR7ouhHIBUQVWgj3n4TDieO0X3KdD0tCt8DB
+	 g1LhFF9NGODVg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3B7C02192;
+	Mon,  3 Feb 2025 15:31:18 +0000 (UTC)
+From: Brendan King via B4 Relay <devnull+Brendan.King.imgtec.com@kernel.org>
+Date: Mon, 03 Feb 2025 15:31:03 +0000
+Subject: [PATCH] drm/imagination: only init job done fences once
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250203-init-done-fences-once-v1-1-a2d62406564b@imgtec.com>
+X-B4-Tracking: v=1; b=H4sIADbhoGcC/x2MMQqAMAwAv1IyG2jVgvgVcZA01SyptCJC8e8Wl
+ 4Mb7ioUzsIFZlMh8y1FkjZxnQE6Nt0ZJTSH3vbeusGhqFwYkjJGVuKCqRHJe/LBxjFMBK09M0d
+ 5/u+yvu8H/PicQGcAAAA=
+X-Change-ID: 20250131-init-done-fences-once-c55c5d0f4d8c
+To: Frank Binns <frank.binns@imgtec.com>, 
+ Matt Coster <matt.coster@imgtec.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Brendan King <brendan.king@imgtec.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738596677; l=1196;
+ i=Brendan.King@imgtec.com; s=20250203; h=from:subject:message-id;
+ bh=UjK3FC3XXdkxQeYEYfFWpaTm/iFaz77TzbxNoVMDyf0=;
+ b=My4AKSVKqtml8fmbWNeG7+uNB1hJeePCt8h5m8p1YMXMVMWi4Ca2kDGbYQYyuowV8VWFHz3o5
+ BX+BCQa2pX4AlrXF5avolyMkWWzU/cSzJUtfcAn4aJKKwRMqhOmj+Iz
+X-Developer-Key: i=Brendan.King@imgtec.com; a=ed25519;
+ pk=i3JvC3unEBLW+4r5s/aEWQZFsRCWaCBrWdFbMXIXCqg=
+X-Endpoint-Received: by B4 Relay for Brendan.King@imgtec.com/20250203 with
+ auth_id=335
+X-Original-From: Brendan King <Brendan.King@imgtec.com>
+Reply-To: Brendan.King@imgtec.com
 
-The UFS 4.1 standard, released on January 8, 2025, introduces several
-new features, including a new exception event: HEALTH_CRITICAL. This
-event notifies the host of a device's critical health condition,
-indicating that the device is approaching the end of its lifetime based
-on the number of program/erase cycles performed.
+From: Brendan King <Brendan.King@imgtec.com>
 
-We utilize the hwmon (hardware monitoring) subsystem to propagate this
-information via the chip alarm channel.
+Ensure job done fences are only initialised once.
 
-The host can gain further insight into the specific issue by reading one
-of the following attributes: bPreEOLInfo, bDeviceLifeTimeEstA,
-bDeviceLifeTimeEstB, bWriteBoosterBufferLifeTimeEst, and
-bRPMBLifeTimeEst. However, we do not provide the corresponding .read
-method in the hwmon subsystem. This is intentional: all other
-end-of-life (EOL) signals are available for reading via the driver's
-sysfs entries or through an applicable utility. It is up to user-space
-to read these attributes if needed. It is not the kernel's
-responsibility to interpret any EOL signals, as they may vary from
-vendor to vendor.
+This fixes a memory manager not clean warning from drm_mm_takedown
+on module unload.
 
-Signed-off-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Brendan King <brendan.king@imgtec.com>
 ---
- drivers/ufs/core/ufs-hwmon.c |  4 ++++
- drivers/ufs/core/ufshcd.c    | 15 +++++++++++++++
- include/ufs/ufs.h            |  1 +
- 3 files changed, 20 insertions(+)
+ drivers/gpu/drm/imagination/pvr_queue.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ufs/core/ufs-hwmon.c b/drivers/ufs/core/ufs-hwmon.c
-index db28f456b923..410dc6568de5 100644
---- a/drivers/ufs/core/ufs-hwmon.c
-+++ b/drivers/ufs/core/ufs-hwmon.c
-@@ -149,6 +149,7 @@ static umode_t ufs_hwmon_is_visible(const void *data,
- 
- static const struct hwmon_channel_info *const ufs_hwmon_info[] = {
- 	HWMON_CHANNEL_INFO(temp, HWMON_T_ENABLE | HWMON_T_INPUT | HWMON_T_CRIT | HWMON_T_LCRIT),
-+	HWMON_CHANNEL_INFO(chip, HWMON_C_ALARMS),
- 	NULL
- };
- 
-@@ -209,4 +210,7 @@ void ufs_hwmon_notify_event(struct ufs_hba *hba, u16 ee_mask)
- 
- 	if (ee_mask & MASK_EE_TOO_LOW_TEMP)
- 		hwmon_notify_event(hba->hwmon_device, hwmon_temp, hwmon_temp_min_alarm, 0);
-+
-+	if (ee_mask & MASK_EE_HEALTH_CRITICAL)
-+		hwmon_notify_event(hba->hwmon_device, hwmon_chip, hwmon_chip_alarms, 0);
- }
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 9fbaf74b0fef..407dc1acca0f 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -6198,6 +6198,9 @@ static void ufshcd_exception_event_handler(struct work_struct *work)
- 	if (status & hba->ee_drv_mask & MASK_EE_URGENT_TEMP)
- 		ufs_hwmon_notify_event(hba, status & MASK_EE_URGENT_TEMP);
- 
-+	if (status & hba->ee_drv_mask & MASK_EE_HEALTH_CRITICAL)
-+		ufs_hwmon_notify_event(hba, status & MASK_EE_HEALTH_CRITICAL);
-+
- 	ufs_debugfs_exception_event(hba, status);
- }
- 
-@@ -8091,12 +8094,24 @@ static void ufshcd_temp_notif_probe(struct ufs_hba *hba, const u8 *desc_buf, u16
- 		*mask |= MASK_EE_TOO_HIGH_TEMP;
- }
- 
-+static void ufshcd_critical_health_probe(struct ufs_hba *hba, u16 *mask)
-+{
-+	struct ufs_dev_info *dev_info = &hba->dev_info;
-+
-+	if (dev_info->wspecversion < 0x410)
-+		return;
-+
-+	*mask |= MASK_EE_HEALTH_CRITICAL;
-+}
-+
- static void ufshcd_hwmon_probe(struct ufs_hba *hba, const u8 *desc_buf)
+diff --git a/drivers/gpu/drm/imagination/pvr_queue.c b/drivers/gpu/drm/imagination/pvr_queue.c
+index c4f08432882b12f5cdfeb7fc991fd941f0946676..9a67e646f1eae709859f664c796e1940f0b45300 100644
+--- a/drivers/gpu/drm/imagination/pvr_queue.c
++++ b/drivers/gpu/drm/imagination/pvr_queue.c
+@@ -304,8 +304,9 @@ pvr_queue_cccb_fence_init(struct dma_fence *fence, struct pvr_queue *queue)
+ static void
+ pvr_queue_job_fence_init(struct dma_fence *fence, struct pvr_queue *queue)
  {
- 	u16 mask = 0;
+-	pvr_queue_fence_init(fence, queue, &pvr_queue_job_fence_ops,
+-			     &queue->job_fence_ctx);
++	if (!fence->ops)
++		pvr_queue_fence_init(fence, queue, &pvr_queue_job_fence_ops,
++				     &queue->job_fence_ctx);
+ }
  
- 	ufshcd_temp_notif_probe(hba, desc_buf, &mask);
- 
-+	ufshcd_critical_health_probe(hba, &mask);
-+
- 	if (mask) {
- 		ufshcd_enable_ee(hba, mask);
- 		ufs_hwmon_probe(hba, mask);
-diff --git a/include/ufs/ufs.h b/include/ufs/ufs.h
-index f151feb0ca8c..8a24ed59ec46 100644
---- a/include/ufs/ufs.h
-+++ b/include/ufs/ufs.h
-@@ -419,6 +419,7 @@ enum {
- 	MASK_EE_TOO_LOW_TEMP		= BIT(4),
- 	MASK_EE_WRITEBOOSTER_EVENT	= BIT(5),
- 	MASK_EE_PERFORMANCE_THROTTLING	= BIT(6),
-+	MASK_EE_HEALTH_CRITICAL		= BIT(9),
- };
- #define MASK_EE_URGENT_TEMP (MASK_EE_TOO_HIGH_TEMP | MASK_EE_TOO_LOW_TEMP)
- 
+ /**
+
+---
+base-commit: 3ab334814dc7dff39075e055e12847d51878916e
+change-id: 20250131-init-done-fences-once-c55c5d0f4d8c
+
+Best regards,
 -- 
-2.25.1
+Brendan King <Brendan.King@imgtec.com>
+
 
