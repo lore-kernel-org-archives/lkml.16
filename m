@@ -1,107 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7D12F509
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473803594B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738576828; cv=none; b=Zkedxik/NSGdUC9YEoSWm1QJF7YIQqE14meH/IZGCtXaex+nrPHKYGLc5Uf0KLG94gev4f+9fOt1/aONyXURq0KXGtqr8yG0ns2lT7sfEucx3QAMJkwwMgxUIUz8bTc39OZfH8YpyhXQ1StzaAXLXtb6Dwfpa+I0Qpsi31J8Cok=
+	t=1738576881; cv=none; b=bAbGlFQYj45ZM3xje2lhY0V2Dt2/1eXOWDNWTYv2kdQo4BEro3Fk3Z2w+TW/o+kDjhqafT0thSnAliMjPvIr+vHQZrE7jnu/zOzD+eUQgYYEafwjsw3elyWwcyF7e+0Zi4D3q7olZo8jw9axyNGUEeGVeGk4sXQys/zs9rIZ60Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738576828; c=relaxed/simple;
-	bh=FPrHohtJnR6Qg6FsIEIeD9g7Kg3lF9OuQnDh2df+xjc=;
+	s=arc-20240116; t=1738576881; c=relaxed/simple;
+	bh=kdua4+YQ85GykUIHsDe45i3nydQ0QIA06M4GK2rq+eI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UJG+SIyxMd10OyxEOPnNyd6kpnJc8UBl9js7B52ocYla+OHMjagpXQNZq6gkxQfExAOzCPOUfap0mG9hLnIs00m6iuUK7nXlzP9qwYEej7PfA87pw8/3hDVrNkGY1AQp0pTodboRIxLn34Uh/vDdaYNHrQMWYtJVxaYf8nhITkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9+h3vf8; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=QrY5+rSR2EYdu23hJzKHUIeOHJmsaeJUrw0Rgo3jJJxty716zHyLTzBJnbZoI8EZ96hmavJ0XNximzZuHRHzBnYFOAgQWpZtxsAAAyjZxg8MDGDTeDoeqH5m4Q8jwx8sfqvbd0rgy2KPSpRuVIgJMg8cD4keGidt1Tbv+mtXh7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h+6FB+zg; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9+h3vf8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351FDC4CED2
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738576828;
-	bh=FPrHohtJnR6Qg6FsIEIeD9g7Kg3lF9OuQnDh2df+xjc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=g9+h3vf8K9rOWPh+2qaIMalIRanvflZMZYJpMir5CZhSt4WMMjnOxfc9LIiceyZmd
-	 26QCHLouTGXji4paRHFSbjdN5uxvtkzDNHPvRLfDd1t7toritv+q344l0uIY/1ky5d
-	 j2Aohm4HMpuG3VPf1T2iLQoNSX2sKpTuCtYM9z7jjTiWo+OgUadJpw6LSAf5IiKR0u
-	 OO0JD+0uSIgcW+Iz18JDrj/vvye1/XKti3Ic/VzFsmXCPuIH1M9384Le2IfUjDe9Mw
-	 5aMYOadQuhM1tuddfLHPXAL0hMwHuWrk2HJCXhYd+e7yLnidGghSFZ6/xh0B1B08xn
-	 KiRUEd2q0t5ZQ==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30229d5b229so42440251fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 02:00:28 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU5khhnHnO4VYeAmwORWo+k94IlSX+auVFNrCha69E5dqHXxuNVfU5dpOMSBj390rLPABI5GPQ9gkTUrgo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAXv+9UYVfJknNrrHJVT/iH8rn/EryfuYsIiQMAEHBwnUGPuZm
-	duc92fUR5X/q2Bt0j2waJA2I9SfVQzZHM23wAmPMma5CwspM80kPK5OibsnEIde0nWc1LYOVQim
-	+5waXU4J8IDN9/zOPo7SJmUf4n0M=
-X-Google-Smtp-Source: AGHT+IGgEy7Oq246cS1+VT0Mx0PMlfwpl68k9GaharbvrvOxjNfPt8dFzE7mT76XDDnBwNSsqx5VUYecVSEKs7cOjZ0=
-X-Received: by 2002:a05:6512:3e29:b0:540:3571:f51a with SMTP id
- 2adb3069b0e04-543e4c03792mr5122850e87.26.1738576826534; Mon, 03 Feb 2025
- 02:00:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h+6FB+zg"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-388cae9eb9fso2353708f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 02:01:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738576877; x=1739181677; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dEGNgfB2S/8AjXy/uNgsGPvZS31C4zTjkg+WKJogdi8=;
+        b=h+6FB+zgWxmAYXsiRN2XcG8PlGdjL29+43/yB8qNsalDSe3hSvUX4YEtssYMNj8pNn
+         ZjyPGe5wU6OgM8+mwSSfUG6KsLEe7RmFs/NJTx5DWMbCE7y1TOGPidLElbkcI2sXJS+S
+         BvSVNTWJDNPgPwZOjX3CjOLPdaCYuzTTDzWM/tYigHzqZd6Hq1djfAYlCG4FIEv369Ip
+         DXURg13Qo9UJ97E/UcAjnJofHjLtgAH3DkCmD7bChN9rI6sv2QV9efoyBOTkKufW0oM1
+         yEpWMnePiqnZlCGd8ac8UBwh8LexhQRygImI5xiJ6EJ1qy7e3hrrVqzgG+gfA+0aVBMA
+         25Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738576877; x=1739181677;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dEGNgfB2S/8AjXy/uNgsGPvZS31C4zTjkg+WKJogdi8=;
+        b=hcUzgPUKtGylG9W7M8yKZxgwULibYLxdwEIan0jIrGt1L5mLHDf8sSmbrPkjHCLY0m
+         /thAQZUVoflAODFyldzcvoHhkx3c2yel9YwBtL7TFtrO40duxOqEbNDeLRMIw485rt1t
+         qPIQ7chhe+TFa5iHmxwclwSAc5NzZW4OGupl5fnumTJGWm+GViWVuKOOMfyuPkyxL98w
+         TrifKsuvdhBzhOO063sLwVLvd21/LYSY9HOB36izsItgOvgqu/oWXhFrSvim1pnX2KRL
+         H0iaIdK8vYe6I7/zv2vtqjJCihOwa+aPDRlxo/7w7wXtttJsueojj5bwgcdHbr9OKsSr
+         v3oA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNEU6KFy231mVw6vaZDtQkbHSpjdeII9oXNdUTzlPuDDtVrqNDcJb+GS/1R6F3I6SDFgrb4DI/zFQZNEU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZyn1n7SPopkON1T7UgYDDVodXzS9lzcxsQiaKIbvsxxm2OPei
+	Z8ViXUYJWRYQ7Y4pRc5FEsZyLBeiaweTUKy5DMKpIGX8XZt5vZLflNoHXsmxZbwLOTrS1wcxeS6
+	ruOlhGLygkEb5+OMBNEfiPD564c8tQxjnz3Ta
+X-Gm-Gg: ASbGncvN+koW3wqQU39GPLg09Y/9pxhVYs5LPBQjUuWQQoAjWKXY/szKSIbgQcbv6QQ
+	0W+gvGyRPTqwgPaVhSKnMVgmgj0VMwqB6vQACmCWyPQOQ9AT42Wf+btotyVW77Qd/8J1eFHclfD
+	jjyzaxEc6X9FQdhZ9tiixJYXib
+X-Google-Smtp-Source: AGHT+IH3g2mPZEl5GlZ3WLWpDP89LKo0b2KChSH5cl3Q6a9dl/Hpn/AlGzitcM3Z4OiZyJKWLS+CB0K0XadAjdKQxbo=
+X-Received: by 2002:a5d:6d02:0:b0:385:f092:e1a with SMTP id
+ ffacd0b85a97d-38c5194c3b6mr16768265f8f.11.1738576877295; Mon, 03 Feb 2025
+ 02:01:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127114334.1045857-4-ardb+git@google.com> <20250127114334.1045857-5-ardb+git@google.com>
- <CAHk-=wgD1TGxZPC0yoiVJb3qDN9vDpzNkcW1z17+6mk_Rh+iFg@mail.gmail.com>
- <CAMj1kXGfgxBM5DJ6vwwGvqPs9hH57h-G4w=-bF51+7cckayPGA@mail.gmail.com> <Z6CPFv_ye8aSf320@gmail.com>
-In-Reply-To: <Z6CPFv_ye8aSf320@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 3 Feb 2025 11:00:12 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHi63vHS7EuZE-frb-nf8P9RV=dPyFR+UU9=NaCHvP=MA@mail.gmail.com>
-X-Gm-Features: AWEUYZmGx3e9BIZqw9ZMFX784VDOBf6PpayuoUs4HWrNb27Bdv4f4xMY22q2Tis
-Message-ID: <CAMj1kXHi63vHS7EuZE-frb-nf8P9RV=dPyFR+UU9=NaCHvP=MA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] x86/relocs: Improve diagnostic for rejected
- absolute references
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ard Biesheuvel <ardb+git@google.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Nathan Chancellor <nathan@kernel.org>
+References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
+ <20250202-rust-page-v1-5-e3170d7fe55e@asahilina.net> <87jza74amo.fsf@kloenk.dev>
+In-Reply-To: <87jza74amo.fsf@kloenk.dev>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 3 Feb 2025 11:01:05 +0100
+X-Gm-Features: AWEUYZndXPsUdFaaW3upqQnP0AEq9KZD2d2molkEULuOFcYuzceGr2VHgZKEEdM
+Message-ID: <CAH5fLgh7gKRpT7wXzkqTwi0rwg+QyzAbqYzt12=85LqduC-oiA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] rust: page: Add physical address conversion functions
+To: Fiona Behrens <me@kloenk.dev>
+Cc: Asahi Lina <lina@asahilina.net>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Jann Horn <jannh@google.com>, 
+	Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Valentin Obst <kernel@valentinobst.de>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	asahi@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 3 Feb 2025 at 10:40, Ingo Molnar <mingo@kernel.org> wrote:
+On Mon, Feb 3, 2025 at 10:54=E2=80=AFAM Fiona Behrens <me@kloenk.dev> wrote=
+:
 >
+> Asahi Lina <lina@asahilina.net> writes:
 >
-> * Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> > On Mon, 27 Jan 2025 at 17:57, Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> > >
-> > > On Mon, 27 Jan 2025 at 03:43, Ard Biesheuvel <ardb+git@google.com> wrote:
-> > > >
-> > > >   Absolute reference to symbol '.rodata+0x180' detected in .head.text (0xffffffff820cb4ba).
-> > >
-> > > Do we have any symbol name lookup logic anywhere?
-> > >
+> > Add methods to allow code using the Page type to obtain the physical
+> > address of a page, convert to and from an (owned) physical address, and
+> > borrow a Page from a physical address. Most of these operations are, as
+> > you might expect, unsafe.
 > >
-> > I can look into that. In this particular case, though, there is no
-> > symbol to look up as it is a anonymous jump table generated by the
-> > compiler. And the function name would be inaccurate too, as
-> > snp_cpuid_postprocess() got inlined into its caller. But I guess with
-> > the right DWARF data, at least the call site could be narrowed down a
-> > bit better.
+> > These primitives are useful to implement page table structures in Rust,
+> > and to implement arbitrary physical memory access (as needed to walk
+> > arbitrary page tables and dereference through them). These mechanisms
+> > are, of course, fraught with danger, and are only expected to be used
+> > for core memory management code (in e.g. drivers with their own device
+> > page table implementations) and for debug features such as crash dumps
+> > of device memory.
+> >
+> > Signed-off-by: Asahi Lina <lina@asahilina.net>
+> > ---
+> >  rust/helpers/page.c | 26 +++++++++++++++++++++
+> >  rust/kernel/page.rs | 65 +++++++++++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  2 files changed, 91 insertions(+)
+> >
+> > diff --git a/rust/helpers/page.c b/rust/helpers/page.c
+> > index b3f2b8fbf87fc9aa89cb1636736c52be16411301..1c3bd68818d77f7ce780632=
+9b8f040a7d4205bb3 100644
+> > --- a/rust/helpers/page.c
+> > +++ b/rust/helpers/page.c
+> > @@ -1,5 +1,6 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >
+> > +#include <linux/io.h>
+> >  #include <linux/gfp.h>
+> >  #include <linux/highmem.h>
+> >
+> > @@ -17,3 +18,28 @@ void rust_helper_kunmap_local(const void *addr)
+> >  {
+> >       kunmap_local(addr);
+> >  }
+> > +
+> > +struct page *rust_helper_phys_to_page(phys_addr_t phys)
+> > +{
+> > +     return phys_to_page(phys);
+> > +}
+> > +
+> > +phys_addr_t rust_helper_page_to_phys(struct page *page)
+> > +{
+> > +     return page_to_phys(page);
+> > +}
+> > +
+> > +unsigned long rust_helper_phys_to_pfn(phys_addr_t phys)
+> > +{
+> > +     return __phys_to_pfn(phys);
+> > +}
+> > +
+> > +struct page *rust_helper_pfn_to_page(unsigned long pfn)
+> > +{
+> > +     return pfn_to_page(pfn);
+> > +}
+> > +
+> > +bool rust_helper_pfn_valid(unsigned long pfn)
+> > +{
+> > +     return pfn_valid(pfn);
+> > +}
+> > diff --git a/rust/kernel/page.rs b/rust/kernel/page.rs
+> > index fe5f879f9d1a86083fd55c682fad9d52466f79a2..67cd7006fa63ab5aed4c4de=
+2be639ed8e1fbc2ba 100644
+> > --- a/rust/kernel/page.rs
+> > +++ b/rust/kernel/page.rs
+> > @@ -3,6 +3,7 @@
+> >  //! Kernel page allocation and management.
+> >
+> >  use crate::{
+> > +    addr::*,
+> >      alloc::{AllocError, Flags},
+> >      bindings,
+> >      error::code::*,
+> > @@ -10,6 +11,7 @@
+> >      types::{Opaque, Ownable, Owned},
+> >      uaccess::UserSliceReader,
+> >  };
+> > +use core::mem::ManuallyDrop;
+> >  use core::ptr::{self, NonNull};
+> >
+> >  /// A bitwise shift for the page size.
+> > @@ -249,6 +251,69 @@ pub unsafe fn copy_from_user_slice_raw(
+> >              reader.read_raw(unsafe { core::slice::from_raw_parts_mut(d=
+st.cast(), len) })
+> >          })
+> >      }
+> > +
+> > +    /// Returns the physical address of this page.
+> > +    pub fn phys(&self) -> PhysicalAddr {
 >
-> So patch #2 is now upstream, but should I apply this diagnostic patch
-> as-is, or will there be a -v2?
->
+> Rust  uses for similar references `as_*` so `as_phys`, would it make
+> sense to use the same naming format here?
 
-I'm looking into this. But give the points above, I'm reaching the
-conclusion that producing a better diagnostic based solely on vmlinux
-(which may be built without debug info) is intractable, and not even
-the DWARF metadata will describe a compiler generated jump table using
-a named ELF symbol.
+The as_ prefix is only used when returning a borrow, which is not the
+case here. I think not having a prefix is correct in this case.
 
-So I am also looking into isolating the startup code like I did for
-arm64 (and which has been adopted by RISC-V as well), but this is
-rather hairy on x86 so it will take some time. But once that lands,
-this diagnostic can be removed.
+https://rust-lang.github.io/api-guidelines/naming.html#ad-hoc-conversions-f=
+ollow-as_-to_-into_-conventions-c-conv
 
-So I will leave it up to you to decide whether to merge this
-improvement for now, or revert the diagnostic as you suggested before.
-This code has already identified some issues that were subsequently
-fixed, so it has already served its purpose.
-
-As for the related changes: .head.text can be removed in its entirety
-once this is all done, so no need to revert the linker script changes
-at this point. (The startup code that only executes at boot on the BSP
-can move into .init.text where it belongs)
+Alice
