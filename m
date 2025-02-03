@@ -1,134 +1,373 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9841D5166
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 21:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE6B20E00E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 21:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738617915; cv=none; b=qa12oQGFZuzuVdEWei84PGcM6mZ5q0i/bf4ERtuQzQQPcfTcBFQCewU8RLxNWLJVwr0oK/tBJDMJSthWSOWR0i4KwYNm/qbcNlNSXG6j5WYMl8mHctAk/bQ1mNGskGwgNqdgNJXNlWk246e1fY0gJdq5bxoRltok5Q8gPvGyNTg=
+	t=1738617997; cv=none; b=YzHq2IYgkrXIMtcHH8ifxu8WRXW0rx2KK8jtSuMMUHBEwvMUQWsVHpumuZw0zLG9VbpzvCvZ/gLx0E4bltM1hUdaoIrt4MNNgnUYnTEMP44fWElWFP6uskobXsl44eOLxIy/0fDOPiLo0BKhzZDbmR6Hccvmel506WeIR7609NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738617915; c=relaxed/simple;
-	bh=oxfDkLjCk0AkOG+vwiyK666xUMh0E7AfwUEKDP882jY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=IEwW9K/Ct8GruLB89J0d7jIC5iFJJxYoyzYJ0rP8A0qnmi1A/eKpJovxghjgQgsDpJzvPFpjStdR6J3lKwuGqBzB4nCFszy5FGvBxufDUO5Gve3DbK+ON31jI+9k0iHM0+xFab2+d0wHmYgmsGBuq3yC7AiIc7JaKWC8fLZ7WPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com; spf=pass smtp.mailfrom=jrtc27.com; dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b=UPSDjvaD; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jrtc27.com
+	s=arc-20240116; t=1738617997; c=relaxed/simple;
+	bh=JeDac0q7kV6pCKlgWMuLm1akLXt+s+WKT6IT+w2VOew=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=KnnsPfovxfoV1Px3VvhFSe9wnuxsE0nYCH7Q8zb6GJZqmngbvuaPytXAvGl4F57hc6FwYSXpvilfZ7FcsoQamPpefFZ/ju5ZOJBsA+PJYCMxdBsK7WckW2i1sCT/Un75nOObXPgBPe1RGxVJpoyKCQtPV/o5kcvt9CMP9ET6n5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T6U9qiRe; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="UPSDjvaD"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38632b8ae71so4121373f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 13:25:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T6U9qiRe"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef9204f898so9068860a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 13:26:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jrtc27.com; s=gmail.jrtc27.user; t=1738617912; x=1739222712; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lbKbU/bqlOpQtMaXcZ1AxNL8WEdNxKO/z7RXdei3kBA=;
-        b=UPSDjvaDF1E+9v9FsIPsvUTgkhddGuViPol6/ylWsH1y+Y0ULw0nrlqhhsqhpF6tXB
-         TWeBau/t1UtALLR3FLQiSNnbAsySaOCtV7C3HXpXb1SnrBhPoUGD70uMyOU+0md/EiZW
-         hhxGEqPn1xfcO4u7BAPfMag/mAt4SCixdraQHYPKMGhPRC01dm1l+X/TjB/k1SBXiZYd
-         UaEkWYtkVCsQ2BbaSUCFSNhXqJX+HqewmkEziOQsw7GWFj+QUxDmd6UAqeCAIUaB4d0o
-         T32c4QVmhEXQW/m192A7KYbgDepcQWpM2mH0/sb7K3W/r/CxH8YHe36AybuwrUZMJZBS
-         T6Yw==
+        d=google.com; s=20230601; t=1738617995; x=1739222795; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xjzG1KpOB33WO7MG4/hnojjzcuAojKCRhLZ9X+LEtag=;
+        b=T6U9qiReiV9A1GVTwHgWeFB7H3+8Sv13EzJXP3NcC59QcclvEBRba2KBLmvlIjNtBk
+         fzlSvW+s803cNkM8er694Bwx6dk3MPE4485DT+eJfbLFFAn9/VSgN7yuhsE0PihnICMT
+         ZDRLYsIb2HNQBhhIwYRHcO014dFnL8ux1bFqe8fZFub32MlXnXP9VlV8mAwRjars1sQc
+         B6m7zilFTMnL0gCZVDssPKJULL2rJMeXc8kPSIt9bce/p+OwMTjPUNl1iAmh4ZjCDXoN
+         pjpm4+ukp3zWqV6m6ok2gc2SH3tJZWR2PJ6kDJcHy30f21bPGAG2oUg+BZaF+C6+zsFL
+         qNjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738617912; x=1739222712;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lbKbU/bqlOpQtMaXcZ1AxNL8WEdNxKO/z7RXdei3kBA=;
-        b=gHT2b/S5YW7jzFkBOFrM41aW7ul8fCc96E1vbDjkB2p0e5fipiRUUYUANUG8IqdHzC
-         l/nUKFggCGzGKJzO+DpyLLt7cxlIPhV4RpCtg9PxR8q+682s2WB8IUfOB0+b4Ir6jPa1
-         +jgdUeiID86+iFAERoIu/fBpaz2/7bXa6izQLJLLGB0ICTd9Sv5BW3KEuW9JekUAG9A0
-         EkWBNBuzZeBjhJUXjsWOMumzDx2yUXqi+26sMpH+euQdjR8Yk4+Ap5Ep2EP7zGufJBXh
-         6hH8qaQvh3NCmX2hQY96hsXi/rimB8rOZ0Pbds3kzm01nPkSilkPISIidDe1rL57vOZH
-         g0dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvVf6ZRIYpbFkm4nPsc4QWPu8zTJQ62I/A/50XX8Gmvq7mxgqIxjfZXSFy4DfNBvbXiFM8U85af/OnC/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8ckKcVsu/1MDwDinRm8kDJOhzoxHteMdvqUzY8fPRzdT3r5as
-	MBzNBffZWRWaHdWx8qU2pdqDzvl1BNO7HK8gOtehT8Mp6X61SVlVCy3WnpMr/UE=
-X-Gm-Gg: ASbGncsiu/SDE1/MMY2CPZZep/3ItEg6urL/PTOUQGhzKZNfEzPbokQjr2a3fjUqCoA
-	KlpFYzY7+t/hayZfbFe14fIaNOBBAAvjeAil3Wt357c3O9J9C3ZKTzMYaRfX6HO2QKC1pC5SWhq
-	0OMDDL4NgOLUkF/r+I4FwrEJmRn3I8X3zDfabVmifR8eMdfN+L20QeDuIJnGDquhsbAJsh3KY0h
-	ViQ5ZE8Ty8vYUzfFsq4AtlSNr07Rij74eGpXKo0ID7t0KV4h4qp0Lw6bA03zKLZcwJAjqSdt9rd
-	ieBQNU035JRP0v4TATCdhWQc/g+7
-X-Google-Smtp-Source: AGHT+IELM/Kalt3oJfQk1rk/oSLFELbF/EGfEM6vZ+8Wv94UQU4wednyhkpRtjOQFeZ0eXJ+Qn77sA==
-X-Received: by 2002:a05:6000:1562:b0:385:df73:2f18 with SMTP id ffacd0b85a97d-38c520bc36amr22323581f8f.51.1738617912049;
-        Mon, 03 Feb 2025 13:25:12 -0800 (PST)
-Received: from smtpclient.apple ([131.111.5.201])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2f73asm204475025e9.24.2025.02.03.13.25.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Feb 2025 13:25:10 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+        d=1e100.net; s=20230601; t=1738617995; x=1739222795;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xjzG1KpOB33WO7MG4/hnojjzcuAojKCRhLZ9X+LEtag=;
+        b=VzHXIKfYCAiOwqgofmueJIAo32pUAF9nUH7XlavDlskHX1yeUGGTFi8xYYOFbPHEpB
+         4gtu2WSyCfaBmU5CCdY1skmPXApETKayoEWLn3IAsWWZC7hnppAh5fn3cGvNP9vEKAgu
+         pFfcs53ZIOlOxBZvY8Q97W8OZNwAqzQSR9/cOZin1jhvDGz9ww0kEqkhjlLy+VPDdgKp
+         m0P4B3uAgxPL4utrS7GgTziv5OJJ1ayFsHSaIj1c/V8zqQS17NH4DG72xWuOenbU4fIt
+         QUfXXo7hILMCv/vTzGYyD3yIDboA2h5MpHb+EBRk0WtKI2ktOUXoNENyi/ITbIKlOrIw
+         U0kA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfrGPQXXGoGRVBJKOS9Nf9EaJDbp58iJaG7+FvqDyLAH/jh2AZqjU40reFWfPT1S7IpYsHknNsB9+zK0I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0aZjHg3xvuanmb77bEvG2IldhU9HO8dveRzwEvbFY2NqzGiVF
+	RWhM4YvIaLULeVzNl7MJ8CY/pmEfPBj3Rthp9uoofdvT3tbPfsh3GLBVsWcB+SPkOHX2I5ctaWa
+	7H1f+glvO0shbJ/rtX6UowQ+gvA==
+X-Google-Smtp-Source: AGHT+IFp8Bb1uts8l0ivJKmHnFfAT/7nzBCLJaIOvCG8JcYD0WSwRz844mjcXsBSV6UmkLE4IXKqBJ2dFLizO3GXShk=
+X-Received: from pfbik10.prod.google.com ([2002:a05:6a00:8d0a:b0:72b:ccb:c99b])
+ (user=samitolvanen job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:2e88:b0:725:df1a:288 with SMTP id d2e1a72fcca58-72fd0c74f49mr37105211b3a.24.1738617994983;
+ Mon, 03 Feb 2025 13:26:34 -0800 (PST)
+Date: Mon,  3 Feb 2025 21:26:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH] riscv/futex: sign extend compare value in atomic cmpxchg
-From: Jessica Clarke <jrtc27@jrtc27.com>
-In-Reply-To: <mvmfrkv2vhz.fsf@suse.de>
-Date: Mon, 3 Feb 2025 21:25:00 +0000
-Cc: linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A31D967F-B057-4C6D-B403-B4FB3973F185@jrtc27.com>
-References: <mvmfrkv2vhz.fsf@suse.de>
-To: Andreas Schwab <schwab@suse.de>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
+Mime-Version: 1.0
+X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8722; i=samitolvanen@google.com;
+ h=from:subject; bh=JeDac0q7kV6pCKlgWMuLm1akLXt+s+WKT6IT+w2VOew=;
+ b=owGbwMvMwCEWxa662nLh8irG02pJDOkLTdpPikoo/T7Vf3b7ZPFZ8dkdAeH/J8trcKxRl+sXP
+ mjcE7iko5SFQYyDQVZMkaXl6+qtu787pb76XCQBM4eVCWQIAxenAEykyI7hr1x8j3Yj5+52gziL
+ jIn8a78dnuehxTixh22uB2fupqveqgz/DNeevHjKdQpLxy2Zu+Ih/q9W9RUXfbTQM/nluW7O/e1 tfAA=
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250203212631.565818-2-samitolvanen@google.com>
+Subject: [PATCH] gendwarfksyms: Add a separate pass to resolve FQNs
+From: Sami Tolvanen <samitolvanen@google.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Matthew Maurer <mmaurer@google.com>, 
+	Petr Pavlu <petr.pavlu@suse.com>, Daniel Gomez <da.gomez@samsung.com>, 
+	Sedat Dilek <sedat.dilek@gmail.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>, 
+	Giuliano Procida <gprocida@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 3 Feb 2025, at 10:06, Andreas Schwab <schwab@suse.de> wrote:
->=20
-> Make sure the compare value in the lr/sc loop is sign extended to =
-match
-> what lr.w does.  Fortunately, due to the compiler keeping the register
-> contents sign extended anyway the lack of the explicit extension =
-didn't
-> result in wrong code so far, but this cannot be relied upon.
+Using dwarf_getscopes_die to resolve fully-qualified names turns out to
+be rather slow, and also results in duplicate scopes being processed,
+which doesn't help. Simply adding an extra pass to resolve names for all
+DIEs before processing exports is noticeably faster.
 
-GCC may guarantee this today, but LLVM does not, and definitely
-generates code that does not do so. Whether that happens for any of the
-consumers of this API today I don=E2=80=99t know, but it is definitely =
-relying
-on things that aren=E2=80=99t true for LLVM, and are not specified in =
-the psABI.
+For the object files with the most exports in a defconfig+Rust build,
+the performance improvement is consistently >50%:
 
-Jess
+rust/bindings.o: 1038 exports
+    before: 9.5980 +- 0.0183 seconds time elapsed  ( +-  0.19% )
+     after: 4.3116 +- 0.0287 seconds time elapsed  ( +-  0.67% )
 
-> Fixes: b90edb33010b ("RISC-V: Add futex support.")
-> Signed-off-by: Andreas Schwab <schwab@suse.de>
-> ---
-> arch/riscv/include/asm/futex.h | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/riscv/include/asm/futex.h =
-b/arch/riscv/include/asm/futex.h
-> index fc8130f995c1..6907c456ac8c 100644
-> --- a/arch/riscv/include/asm/futex.h
-> +++ b/arch/riscv/include/asm/futex.h
-> @@ -93,7 +93,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user =
-*uaddr,
-> _ASM_EXTABLE_UACCESS_ERR(1b, 3b, %[r]) \
-> _ASM_EXTABLE_UACCESS_ERR(2b, 3b, %[r]) \
-> : [r] "+r" (ret), [v] "=3D&r" (val), [u] "+m" (*uaddr), [t] "=3D&r" =
-(tmp)
-> - : [ov] "Jr" (oldval), [nv] "Jr" (newval)
-> + : [ov] "Jr" ((long)(int)oldval), [nv] "Jr" (newval)
-> : "memory");
-> __disable_user_access();
->=20
-> --=20
-> 2.48.1
->=20
->=20
-> --=20
-> Andreas Schwab, SUSE Labs, schwab@suse.de
-> GPG Key fingerprint =3D 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA =
-B9D7
-> "And now for something completely different."
->=20
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+rust/core.o: 424 exports
+    before: 5.3584 +- 0.0204 seconds time elapsed  ( +-  0.38% )
+     after: 0.05348 +- 0.00129 seconds time elapsed  ( +-  2.42% )
+            ^ Not a mistake.
+
+net/core/dev.o: 190 exports
+    before: 9.0507 +- 0.0297 seconds time elapsed  ( +-  0.33% )
+     after: 3.2882 +- 0.0165 seconds time elapsed  ( +-  0.50% )
+
+rust/kernel.o: 129 exports
+    before: 6.8571 +- 0.0317 seconds time elapsed  ( +-  0.46% )
+     after: 2.9096 +- 0.0316 seconds time elapsed  ( +-  1.09% )
+
+net/core/skbuff.o: 120 exports
+    before: 5.4805 +- 0.0291 seconds time elapsed  ( +-  0.53% )
+     after: 2.0339 +- 0.0231 seconds time elapsed  ( +-  1.14% )
+
+drivers/gpu/drm/display/drm_dp_helper.o: 101 exports
+    before: 1.7877 +- 0.0187 seconds time elapsed  ( +-  1.05% )
+     after: 0.69245 +- 0.00994 seconds time elapsed  ( +-  1.44% )
+
+net/core/sock.o: 97 exports
+    before: 5.8327 +- 0.0653 seconds time elapsed  ( +-  1.12% )
+     after: 2.0784 +- 0.0291 seconds time elapsed  ( +-  1.40% )
+
+drivers/net/phy/phy_device.o: 95 exports
+    before: 3.0671 +- 0.0371 seconds time elapsed  ( +-  1.21% )
+     after: 1.2127 +- 0.0207 seconds time elapsed  ( +-  1.70% )
+
+drivers/pci/pci.o: 93 exports
+    before: 1.1130 +- 0.0113 seconds time elapsed  ( +-  1.01% )
+     after: 0.4848 +- 0.0127 seconds time elapsed  ( +-  2.63% )
+
+kernel/sched/core.o: 83 exports
+    before: 3.5092 +- 0.0223 seconds time elapsed  ( +-  0.64% )
+     after: 1.1231 +- 0.0145 seconds time elapsed  ( +-  1.29% )
+
+Overall, a defconfig+DWARF5 build with gendwarfksyms and Rust is 14.8%
+faster with this patch applied on my test system. Without Rust, there's
+still a 10.4% improvement in build time when gendwarfksyms is used.
+
+Note that symbol versions are unchanged with this patch.
+
+Suggested-by: Giuliano Procida <gprocida@google.com>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+---
+ scripts/gendwarfksyms/die.c           |   2 +-
+ scripts/gendwarfksyms/dwarf.c         | 152 ++++++++++++++------------
+ scripts/gendwarfksyms/gendwarfksyms.h |   2 +
+ scripts/gendwarfksyms/types.c         |   2 +-
+ 4 files changed, 86 insertions(+), 72 deletions(-)
+
+diff --git a/scripts/gendwarfksyms/die.c b/scripts/gendwarfksyms/die.c
+index 66bd4c9bc952..6183bbbe7b54 100644
+--- a/scripts/gendwarfksyms/die.c
++++ b/scripts/gendwarfksyms/die.c
+@@ -6,7 +6,7 @@
+ #include <string.h>
+ #include "gendwarfksyms.h"
+ 
+-#define DIE_HASH_BITS 15
++#define DIE_HASH_BITS 16
+ 
+ /* {die->addr, state} -> struct die * */
+ static HASHTABLE_DEFINE(die_map, 1 << DIE_HASH_BITS);
+diff --git a/scripts/gendwarfksyms/dwarf.c b/scripts/gendwarfksyms/dwarf.c
+index 534d9aa7c114..eed247d8abfc 100644
+--- a/scripts/gendwarfksyms/dwarf.c
++++ b/scripts/gendwarfksyms/dwarf.c
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2024 Google LLC
+  */
+ 
++#define _GNU_SOURCE
+ #include <assert.h>
+ #include <inttypes.h>
+ #include <stdarg.h>
+@@ -193,79 +194,17 @@ static void process_fmt(struct die *cache, const char *fmt, ...)
+ 	va_end(args);
+ }
+ 
+-#define MAX_FQN_SIZE 64
+-
+-/* Get a fully qualified name from DWARF scopes */
+-static char *get_fqn(Dwarf_Die *die)
++static void update_fqn(struct die *cache, Dwarf_Die *die)
+ {
+-	const char *list[MAX_FQN_SIZE];
+-	Dwarf_Die *scopes = NULL;
+-	bool has_name = false;
+-	char *fqn = NULL;
+-	char *p;
+-	int count = 0;
+-	int len = 0;
+-	int res;
+-	int i;
+-
+-	res = checkp(dwarf_getscopes_die(die, &scopes));
+-	if (!res) {
+-		list[count] = get_name_attr(die);
+-
+-		if (!list[count])
+-			return NULL;
+-
+-		len += strlen(list[count]);
+-		count++;
+-
+-		goto done;
+-	}
+-
+-	for (i = res - 1; i >= 0 && count < MAX_FQN_SIZE; i--) {
+-		if (dwarf_tag(&scopes[i]) == DW_TAG_compile_unit)
+-			continue;
+-
+-		list[count] = get_name_attr(&scopes[i]);
+-
+-		if (list[count]) {
+-			has_name = true;
+-		} else {
+-			list[count] = "<anonymous>";
+-			has_name = false;
+-		}
++	struct die *fqn;
+ 
+-		len += strlen(list[count]);
+-		count++;
+-
+-		if (i > 0) {
+-			list[count++] = "::";
+-			len += 2;
+-		}
++	if (!cache->fqn) {
++		if (!__die_map_get((uintptr_t)die->addr, DIE_FQN, &fqn) &&
++		    *fqn->fqn)
++			cache->fqn = xstrdup(fqn->fqn);
++		else
++			cache->fqn = "";
+ 	}
+-
+-	free(scopes);
+-
+-	if (count == MAX_FQN_SIZE)
+-		warn("increase MAX_FQN_SIZE: reached the maximum");
+-
+-	/* Consider the DIE unnamed if the last scope doesn't have a name */
+-	if (!has_name)
+-		return NULL;
+-done:
+-	fqn = xmalloc(len + 1);
+-	*fqn = '\0';
+-
+-	p = fqn;
+-	for (i = 0; i < count; i++)
+-		p = stpcpy(p, list[i]);
+-
+-	return fqn;
+-}
+-
+-static void update_fqn(struct die *cache, Dwarf_Die *die)
+-{
+-	if (!cache->fqn)
+-		cache->fqn = get_fqn(die) ?: "";
+ }
+ 
+ static void process_fqn(struct die *cache, Dwarf_Die *die)
+@@ -1148,8 +1087,81 @@ static void process_symbol_ptr(struct symbol *sym, void *arg)
+ 	cache_free(&state.expansion_cache);
+ }
+ 
++static int resolve_fqns(struct state *parent, struct die *unused,
++			Dwarf_Die *die)
++{
++	struct state state;
++	struct die *cache;
++	const char *name;
++	bool use_prefix;
++	char *prefix = NULL;
++	char *fqn = "";
++	int tag;
++
++	if (!__die_map_get((uintptr_t)die->addr, DIE_FQN, &cache))
++		return 0;
++
++	tag = dwarf_tag(die);
++
++	/*
++	 * Only namespaces and structures need to pass a prefix to the next
++	 * scope.
++	 */
++	use_prefix = tag == DW_TAG_namespace || tag == DW_TAG_class_type ||
++		     tag == DW_TAG_structure_type;
++
++	state.expand.current_fqn = NULL;
++	name = get_name_attr(die);
++
++	if (parent && parent->expand.current_fqn && (use_prefix || name)) {
++		/*
++		 * The fqn for the current DIE, and if needed, a prefix for the
++		 * next scope.
++		 */
++		if (asprintf(&prefix, "%s::%s", parent->expand.current_fqn,
++			     name ? name : "<anonymous>") < 0)
++			error("asprintf failed");
++
++		if (use_prefix)
++			state.expand.current_fqn = prefix;
++
++		/*
++		 * Use fqn only if the DIE has a name. Otherwise fqn will
++		 * remain empty.
++		 */
++		if (name) {
++			fqn = prefix;
++			/* prefix will be freed by die_map. */
++			prefix = NULL;
++		}
++	} else if (name) {
++		/* No prefix from the previous scope. Use only the name. */
++		fqn = xstrdup(name);
++
++		if (use_prefix)
++			state.expand.current_fqn = fqn;
++	}
++
++	/* If the DIE has a non-empty name, cache it. */
++	if (*fqn) {
++		cache = die_map_get(die, DIE_FQN);
++		/* Move ownership of fqn to die_map. */
++		cache->fqn = fqn;
++		cache->state = DIE_FQN;
++	}
++
++	check(process_die_container(&state, NULL, die, resolve_fqns,
++				    match_all));
++
++	free(prefix);
++	return 0;
++}
++
+ void process_cu(Dwarf_Die *cudie)
+ {
++	check(process_die_container(NULL, NULL, cudie, resolve_fqns,
++				    match_all));
++
+ 	check(process_die_container(NULL, NULL, cudie, process_exported_symbols,
+ 				    match_all));
+ 
+diff --git a/scripts/gendwarfksyms/gendwarfksyms.h b/scripts/gendwarfksyms/gendwarfksyms.h
+index 197a1a8123c6..2feec168bf73 100644
+--- a/scripts/gendwarfksyms/gendwarfksyms.h
++++ b/scripts/gendwarfksyms/gendwarfksyms.h
+@@ -139,6 +139,7 @@ void symbol_free(void);
+ 
+ enum die_state {
+ 	DIE_INCOMPLETE,
++	DIE_FQN,
+ 	DIE_UNEXPANDED,
+ 	DIE_COMPLETE,
+ 	DIE_SYMBOL,
+@@ -170,6 +171,7 @@ static inline const char *die_state_name(enum die_state state)
+ {
+ 	switch (state) {
+ 	CASE_CONST_TO_STR(DIE_INCOMPLETE)
++	CASE_CONST_TO_STR(DIE_FQN)
+ 	CASE_CONST_TO_STR(DIE_UNEXPANDED)
+ 	CASE_CONST_TO_STR(DIE_COMPLETE)
+ 	CASE_CONST_TO_STR(DIE_SYMBOL)
+diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksyms/types.c
+index 6c03265f4d10..6f37289104ff 100644
+--- a/scripts/gendwarfksyms/types.c
++++ b/scripts/gendwarfksyms/types.c
+@@ -248,7 +248,7 @@ static char *get_type_name(struct die *cache)
+ 		warn("found incomplete cache entry: %p", cache);
+ 		return NULL;
+ 	}
+-	if (cache->state == DIE_SYMBOL)
++	if (cache->state == DIE_SYMBOL || cache->state == DIE_FQN)
+ 		return NULL;
+ 	if (!cache->fqn || !*cache->fqn)
+ 		return NULL;
+
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.48.1.362.g079036d154-goog
 
