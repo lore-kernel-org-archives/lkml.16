@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C269209669;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1BD2080F9;
 	Mon,  3 Feb 2025 15:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738595137; cv=none; b=cLSieN1PS1LudNqVG8Y8BjR5r+0cWdZD7gNdfoI+Gcl4uZOx/5NgGe1XaphEp9KK1GQLMwkZ5ZWTT7eFEAyiVW9dXp9VKFULCXYq4myuwa27wBn/ZKkBsBkNndQrMaEi3FYbiPDaEqwfyinZrFDSKdw/aLue/QgPUOztczjAqzc=
+	t=1738595138; cv=none; b=uLJLP/4POFy2gfy1dhFN1iStKFleIjtnUYNSlp6fj83SmLMTUNmjtjbF/4FDxMxaRzgfu4tjzhIG+3dL9P5/WQqEFIdb4jxP7GRlN++lvupJVdTL1qezbU+MkY4jX+80QZcVhx7Lar93mhfCu/3P379+8jkab+thTQApAp7PL0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738595137; c=relaxed/simple;
-	bh=OK+jjP1BbZyIi0ssNy/G6Co6NiIxx8Mftl1ZXIchREU=;
+	s=arc-20240116; t=1738595138; c=relaxed/simple;
+	bh=tKnh+kKottUjOUdTWNtI3LHAb+KtZ0BffGkQSU7pKrA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kG1QBjap4n97FTtmvyaObxcdAXZ4YyyP7jIoLIIIpywv2frop93zIr7y8z2FvOAtbQnOlRELT3FQjlub4+H0NQnoNOPJSBiBs5bJwcy+4/wPYUlz58W/nySq72N5Pcb2dl9MT8EQJYTggoe1vZsfQwNqKRAtLlPjxtQr70Q4zUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Xl3Y7N2g; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FCsnnDqD; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Xr+eAx0ef618AYJtLwdkbWU8UHrESY+HBPfQoYD6pLtInnZDyJcYndSIK+cQkvRPY7p0oAs5xShktatZby6PZ0klBcusy5U/zYcfqYtQNFxkqf5+GA5sNOCU+brePoOYX8Br1ycBdpzoeVYRa4WRVXSMKcl3cuFDcmcbgTM/pao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0ZbbXXFr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ggj5AKXh; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xl3Y7N2g";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FCsnnDqD"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0ZbbXXFr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ggj5AKXh"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1738595133;
@@ -24,21 +24,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g/YC+WrCwCy8jU9IgZ0UBmsm9LE5suKhW48TMzGwyHg=;
-	b=Xl3Y7N2gm9AWBuNZWaFwtrshtQeqFuVHdAaTnEzmyCudnVivxTw/C9kNuyfwDIH2Cn/Qts
-	pskpB74IsS1dR4N17fYXX1CH5dUyB1pQ8BkjwDTQipNmPHje498nNipUZo0I04P63m9WFa
-	21wZZlktX9yOgW3+WyTeERN41fdLs8BhHxWY7OvFoV6F2DRZB409O5MAqo6hTQL8fnqBLE
-	E9VILjj9H2eIAfv6kePJMyOAqn8WPtwjFPGmD9e1qeeZ5VdNEswaHb4LdPtZS4Bj1UiqSq
-	1oZkq+lBh4XuKBdztjdCfHthpcKqFKfrMcHCOMRP0a+NRH8gozVvdrIrIcACeg==
+	bh=F/fZu6xb+Szg+d8vtwSZnj4vBZAZohI+wxhZ6Q3N7B8=;
+	b=0ZbbXXFrwenSMc6uxmEYuSRqnbNnDttcLnabAinX0KuKsGrcrgqG9zc11Kj1R5PI4CHn4E
+	3ivBYxviO60jpMWVu70aXJPaWuWM+n3ZbNwCXCkLKeG6kggkKFhnz3T6OzypRH1f+oNarF
+	2II3IFvw3EpmNP/ipqWHdNAlCGqB+PaJrzYkIxRWTTsZ0JU1Voa/UYc+TC3dm8iG7iaNbR
+	mKKNVZ9vZzLa/GpHCNJEMd1Ufkma6pa2CPOq0jlWaTZJqqyUVCTmemPZiYPXV5mUAP4UEu
+	DpZJYxMw2WLqmWSJrFzhrK1QIGZEd6d5XX80+o4PDAm/RQrX+Qsn0Gc15oTqEw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1738595133;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g/YC+WrCwCy8jU9IgZ0UBmsm9LE5suKhW48TMzGwyHg=;
-	b=FCsnnDqDI7I4cPhfYeSHNQz7gD7v8pFMIbnCHIhJHQLZ1yyLHX+3GZz1BVf8v8v2b7YKJf
-	Lt4GI8bcx8anhZBg==
+	bh=F/fZu6xb+Szg+d8vtwSZnj4vBZAZohI+wxhZ6Q3N7B8=;
+	b=Ggj5AKXhGFY/+u9Ea9vNMSv10xKbJagbXN+6zZwqrWuIOSfKtO7wlgnhTsmyz05IO2D8fR
+	0VgvTUm99PKBHKBA==
 To: linux-kernel@vger.kernel.org,
 	rcu@vger.kernel.org
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -55,9 +55,9 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Zqiang <qiang.zhang1211@gmail.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 4/4] ucount: Use rcuref_t for reference counting.
-Date: Mon,  3 Feb 2025 16:05:25 +0100
-Message-ID: <20250203150525.456525-5-bigeasy@linutronix.de>
+Subject: [PATCH 3/4] ucount: Use RCU for ucounts lookups.
+Date: Mon,  3 Feb 2025 16:05:24 +0100
+Message-ID: <20250203150525.456525-4-bigeasy@linutronix.de>
 In-Reply-To: <20250203150525.456525-1-bigeasy@linutronix.de>
 References: <20250203150525.456525-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -68,116 +68,182 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Use rcuref_t for reference counting. This eliminates the cmpxchg loop in
-the get and put path. This also eliminates the need to acquire the lock
-in the put path because once the final user returns the reference, it
-can no longer be obtained anymore.
+The ucounts element is looked up under ucounts_lock. This can be
+optimized by using RCU for a lockless lookup and return and element if the
+reference can be obtained.
 
-Use rcuref_t for reference counting.
+Replace hlist_head with hlist_nulls_head which is RCU compatible. Let
+find_ucounts() search for the required item within a RCU section and
+return the item if a reference could be obtained.
+This means alloc_ucounts() will always return an element (unless the
+memory allocation failed). Let put_ucounts() RCU free the element if the
+reference counter dropped to zero.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/user_namespace.h | 11 +++++++++--
- kernel/ucount.c                | 16 +++++-----------
- 2 files changed, 14 insertions(+), 13 deletions(-)
+ include/linux/user_namespace.h |  4 +-
+ kernel/ucount.c                | 75 ++++++++++++++++++----------------
+ 2 files changed, 43 insertions(+), 36 deletions(-)
 
 diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
-index ad4dbef92597b..a0bb6d0121378 100644
+index 7183e5aca2829..ad4dbef92597b 100644
 --- a/include/linux/user_namespace.h
 +++ b/include/linux/user_namespace.h
-@@ -8,6 +8,7 @@
- #include <linux/rculist_nulls.h>
+@@ -5,6 +5,7 @@
+ #include <linux/kref.h>
+ #include <linux/nsproxy.h>
+ #include <linux/ns_common.h>
++#include <linux/rculist_nulls.h>
  #include <linux/sched.h>
  #include <linux/workqueue.h>
-+#include <linux/rcuref.h>
  #include <linux/rwsem.h>
- #include <linux/sysctl.h>
- #include <linux/err.h>
-@@ -120,7 +121,7 @@ struct ucounts {
+@@ -115,9 +116,10 @@ struct user_namespace {
+ } __randomize_layout;
+=20
+ struct ucounts {
+-	struct hlist_node node;
++	struct hlist_nulls_node node;
  	struct user_namespace *ns;
  	kuid_t uid;
- 	struct rcu_head rcu;
--	atomic_t count;
-+	rcuref_t count;
++	struct rcu_head rcu;
+ 	atomic_t count;
  	atomic_long_t ucount[UCOUNT_COUNTS];
  	atomic_long_t rlimit[UCOUNT_RLIMIT_COUNTS];
- };
-@@ -133,9 +134,15 @@ void retire_userns_sysctls(struct user_namespace *ns);
- struct ucounts *inc_ucount(struct user_namespace *ns, kuid_t uid, enum uco=
-unt_type type);
- void dec_ucount(struct ucounts *ucounts, enum ucount_type type);
- struct ucounts *alloc_ucounts(struct user_namespace *ns, kuid_t uid);
--struct ucounts * __must_check get_ucounts(struct ucounts *ucounts);
- void put_ucounts(struct ucounts *ucounts);
-=20
-+static inline struct ucounts * __must_check get_ucounts(struct ucounts *uc=
-ounts)
-+{
-+	if (rcuref_get(&ucounts->count))
-+		return ucounts;
-+	return NULL;
-+}
-+
- static inline long get_rlimit_value(struct ucounts *ucounts, enum rlimit_t=
-ype type)
- {
- 	return atomic_long_read(&ucounts->rlimit[type]);
 diff --git a/kernel/ucount.c b/kernel/ucount.c
-index b6abaf68cdccb..8686e329b8f2c 100644
+index 4aa5011538257..b6abaf68cdccb 100644
 --- a/kernel/ucount.c
 +++ b/kernel/ucount.c
-@@ -11,7 +11,7 @@
- struct ucounts init_ucounts =3D {
- 	.ns    =3D &init_user_ns,
- 	.uid   =3D GLOBAL_ROOT_UID,
--	.count =3D ATOMIC_INIT(1),
-+	.count =3D RCUREF_INIT(1),
+@@ -15,7 +15,10 @@ struct ucounts init_ucounts =3D {
  };
 =20
  #define UCOUNTS_HASHTABLE_BITS 10
-@@ -138,7 +138,7 @@ static struct ucounts *find_ucounts(struct user_namespa=
-ce *ns, kuid_t uid,
- 	guard(rcu)();
- 	hlist_nulls_for_each_entry_rcu(ucounts, pos, hashent, node) {
- 		if (uid_eq(ucounts->uid, uid) && (ucounts->ns =3D=3D ns)) {
--			if (atomic_inc_not_zero(&ucounts->count))
-+			if (rcuref_get(&ucounts->count))
- 				return ucounts;
- 		}
+-static struct hlist_head ucounts_hashtable[(1 << UCOUNTS_HASHTABLE_BITS)];
++#define UCOUNTS_HASHTABLE_ENTRIES (1 << UCOUNTS_HASHTABLE_BITS)
++static struct hlist_nulls_head ucounts_hashtable[UCOUNTS_HASHTABLE_ENTRIES=
+] =3D {
++	[0 ... UCOUNTS_HASHTABLE_ENTRIES - 1] =3D HLIST_NULLS_HEAD_INIT(0)
++};
+ static DEFINE_SPINLOCK(ucounts_lock);
+=20
+ #define ucounts_hashfn(ns, uid)						\
+@@ -24,7 +27,6 @@ static DEFINE_SPINLOCK(ucounts_lock);
+ #define ucounts_hashentry(ns, uid)	\
+ 	(ucounts_hashtable + ucounts_hashfn(ns, uid))
+=20
+-
+ #ifdef CONFIG_SYSCTL
+ static struct ctl_table_set *
+ set_lookup(struct ctl_table_root *root)
+@@ -127,22 +129,28 @@ void retire_userns_sysctls(struct user_namespace *ns)
+ #endif
+ }
+=20
+-static struct ucounts *find_ucounts(struct user_namespace *ns, kuid_t uid,=
+ struct hlist_head *hashent)
++static struct ucounts *find_ucounts(struct user_namespace *ns, kuid_t uid,
++				    struct hlist_nulls_head *hashent)
+ {
+ 	struct ucounts *ucounts;
++	struct hlist_nulls_node *pos;
+=20
+-	hlist_for_each_entry(ucounts, hashent, node) {
+-		if (uid_eq(ucounts->uid, uid) && (ucounts->ns =3D=3D ns))
+-			return ucounts;
++	guard(rcu)();
++	hlist_nulls_for_each_entry_rcu(ucounts, pos, hashent, node) {
++		if (uid_eq(ucounts->uid, uid) && (ucounts->ns =3D=3D ns)) {
++			if (atomic_inc_not_zero(&ucounts->count))
++				return ucounts;
++		}
  	}
-@@ -154,13 +154,6 @@ static void hlist_add_ucounts(struct ucounts *ucounts)
+ 	return NULL;
+ }
+=20
+ static void hlist_add_ucounts(struct ucounts *ucounts)
+ {
+-	struct hlist_head *hashent =3D ucounts_hashentry(ucounts->ns, ucounts->ui=
+d);
++	struct hlist_nulls_head *hashent =3D ucounts_hashentry(ucounts->ns, ucoun=
+ts->uid);
++
+ 	spin_lock_irq(&ucounts_lock);
+-	hlist_add_head(&ucounts->node, hashent);
++	hlist_nulls_add_head_rcu(&ucounts->node, hashent);
  	spin_unlock_irq(&ucounts_lock);
  }
 =20
--struct ucounts *get_ucounts(struct ucounts *ucounts)
--{
--	if (atomic_inc_not_zero(&ucounts->count))
--		return ucounts;
--	return NULL;
--}
--
+@@ -155,37 +163,33 @@ struct ucounts *get_ucounts(struct ucounts *ucounts)
+=20
  struct ucounts *alloc_ucounts(struct user_namespace *ns, kuid_t uid)
  {
- 	struct hlist_nulls_head *hashent =3D ucounts_hashentry(ns, uid);
-@@ -176,7 +169,7 @@ struct ucounts *alloc_ucounts(struct user_namespace *ns=
-, kuid_t uid)
-=20
- 	new->ns =3D ns;
- 	new->uid =3D uid;
--	atomic_set(&new->count, 1);
-+	rcuref_init(&new->count, 1);
+-	struct hlist_head *hashent =3D ucounts_hashentry(ns, uid);
+-	struct ucounts *ucounts, *new =3D NULL;
++	struct hlist_nulls_head *hashent =3D ucounts_hashentry(ns, uid);
++	struct ucounts *ucounts, *new;
++
++	ucounts =3D find_ucounts(ns, uid, hashent);
++	if (ucounts)
++		return ucounts;
++
++	new =3D kzalloc(sizeof(*new), GFP_KERNEL);
++	if (!new)
++		return NULL;
++
++	new->ns =3D ns;
++	new->uid =3D uid;
++	atomic_set(&new->count, 1);
 =20
  	spin_lock_irq(&ucounts_lock);
  	ucounts =3D find_ucounts(ns, uid, hashent);
-@@ -196,7 +189,8 @@ void put_ucounts(struct ucounts *ucounts)
- {
+-	if (!ucounts) {
++	if (ucounts) {
+ 		spin_unlock_irq(&ucounts_lock);
+-
+-		new =3D kzalloc(sizeof(*new), GFP_KERNEL);
+-		if (!new)
+-			return NULL;
+-
+-		new->ns =3D ns;
+-		new->uid =3D uid;
+-		atomic_set(&new->count, 1);
+-
+-		spin_lock_irq(&ucounts_lock);
+-		ucounts =3D find_ucounts(ns, uid, hashent);
+-		if (!ucounts) {
+-			hlist_add_head(&new->node, hashent);
+-			get_user_ns(new->ns);
+-			spin_unlock_irq(&ucounts_lock);
+-			return new;
+-		}
++		kfree(new);
++		return ucounts;
+ 	}
+-	if (!atomic_inc_not_zero(&ucounts->count))
+-		ucounts =3D NULL;
+-	spin_unlock_irq(&ucounts_lock);
+-	kfree(new);
+=20
+-	return ucounts;
++	hlist_nulls_add_head_rcu(&new->node, hashent);
++	get_user_ns(new->ns);
++	spin_unlock_irq(&ucounts_lock);
++	return new;
+ }
+=20
+ void put_ucounts(struct ucounts *ucounts)
+@@ -193,10 +197,11 @@ void put_ucounts(struct ucounts *ucounts)
  	unsigned long flags;
 =20
--	if (atomic_dec_and_lock_irqsave(&ucounts->count, &ucounts_lock, flags)) {
-+	if (rcuref_put(&ucounts->count)) {
-+		spin_lock_irqsave(&ucounts_lock, flags);
- 		hlist_nulls_del_rcu(&ucounts->node);
+ 	if (atomic_dec_and_lock_irqsave(&ucounts->count, &ucounts_lock, flags)) {
+-		hlist_del_init(&ucounts->node);
++		hlist_nulls_del_rcu(&ucounts->node);
  		spin_unlock_irqrestore(&ucounts_lock, flags);
++
+ 		put_user_ns(ucounts->ns);
+-		kfree(ucounts);
++		kfree_rcu(ucounts, rcu);
+ 	}
+ }
 =20
 --=20
 2.47.2
