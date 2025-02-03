@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D3D21129D
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 22:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC669211476
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 22:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738622364; cv=none; b=pNzzUgA2MwXv/mNw9nOENJhhBQLcTq8R4P/E1MFPLng4PDsH3eTNJHQokK2Qdp1SaCBZ91vgaHT7LVISaZcTBsG1mKpsEGl3GyEc5ayjagq6yutSkHvzdE6psA9zix74tQ2YXomNR2w8PuoxUNs4s54raZN1aCBLaH1UsOF2KP0=
+	t=1738622367; cv=none; b=btwKW6M/aQSoTQstPaCD08DlZOkUYpdV/GcIeIoGyvuGhIvCY5TBDkiyRfkBKmDEKPM67wXt7ktgPeXVsFoA1XyrQWuGx6WFsPXfoLAY78hS+hN+NP6aUh3i97ZjDxHPeQtTBkQaMSuukKInhg5uoRulGWKXf5Up6HPciEstOdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738622364; c=relaxed/simple;
-	bh=B57kW1yvNRnK7o9wBpD56b5z9WEFuoFDqC2vAcf1tIo=;
+	s=arc-20240116; t=1738622367; c=relaxed/simple;
+	bh=E9ctK/poFQ58gKtoNoX5ieGA/joniFMVp8KL024oVgY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rbRonPJdw9a+UVJlCAcvnitE5OeLwDcBaK4fP5Y86mptU4tPBLFTCck457DzxTQEbt0VWBw88aiHMVfIburZIR0j3c1ISDQTiTt/EMgW90lDCgHUMRgd1Aul9iUC8a+jUWftw06mV9yXQxJ83OKYWETNFDV4dLGNle7eOGXYd+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g5AGptMl; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=Q3ErrtTXF5E1uv6LF9j2uKbuCf0KxhJqGpq2gODpl+euwv9/WDwByi4fqxEbW+VGIRrJjzDytvOW4rlgx668pCOx6fPeO58ab9eP0HcM0UQqxfXbw5QBw7ik+v2UBooCIqxd1lS2l/tvJ+Xf/mLpn9w4okTMSqQKuyCNdie8HkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gyZSljAV; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g5AGptMl"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ef9e4c5343so13795370a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:39:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gyZSljAV"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2166464e236so157977295ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:39:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738622361; x=1739227161; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738622364; x=1739227164; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NoumIr2NWF7hd9cn5yHj8D4DJ+Pk9SACiZ5SNvWOoS0=;
-        b=g5AGptMl4tKdkZWjobe84lufY8UY4s6jO6iwbwLhsdl29pah3qsDtFAxefJVXtheFx
-         MsZoqQRDGTo455QQOJamVs/JjucC4SlLeiBfOTfiRvr/Hvz3/MkBCtnYJ/wlwEmcy+M+
-         U6xvpS/tXL/QLcSu7nSJ7gdM5ovZdgIy7aXnzJPo6jbX5AwfO/KXnx70OH8LHZEGHuR0
-         Ls5F90D15ZL6/TmTM+p/o/G2GgLKOUerIBzervnS2C7LMhhW+u5q07tdgIvLhcipY7KE
-         quUIVMeVkXoB7NjNEb4NADEDHKLNYILz0jPRYFV9i2O07k+aEky0PjhyinsZuvWL9pBP
-         F8yA==
+        bh=9QoG1IX3VKf0iSgQmXqfz0x8dnartqdM80wF5XjRoPo=;
+        b=gyZSljAV8RRBQg2VmpeBkPGWruA7F5yiFn/atKqnxZP0PJG/ZEE0ZnTKqd8ytUWVRr
+         pNVEwN/2kFnRQTMkZrOCngeSOd1EGnJw1CDFEjyJOUbq+GNrHr4M/hlrC5LOB2YLhjO4
+         L2o2CXgv7o+k5GsFxvOb5+QPIeni9NLnnDOdwfJrvm3SChzroXP0/MYgEr5EE0SeH14J
+         g3JdUY5/YjUJTov8VRMFRt6Lp7ZxEPwyuT4FhJP6uW1sM5B2dlJ/9AdIwI2zK0KitZZE
+         a3b3FeoQq90NWKoOFOqTN4gYb7vnfeuDRiAEPiO4ebad34Fo7FUbqpL3oLk5vS+LSed/
+         7lTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738622361; x=1739227161;
+        d=1e100.net; s=20230601; t=1738622364; x=1739227164;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NoumIr2NWF7hd9cn5yHj8D4DJ+Pk9SACiZ5SNvWOoS0=;
-        b=ehV0o3SknfhXJo3C6x4MIIhRQt2FlLthBEQeB9+gZAm0Lsx/fr2T/cI86oPUp+PVFI
-         auXTwiCObj4cKcXGf6p15PkDeixMIRXVKG+ohQTRmFrirL+scCrCZzDbQ0BHfcDOgPtE
-         ft2wA9GGPB3juIjWmId5ccbqSJxjVx6SsTVv2W+cg3gEfq+yUAqkhZsmPBm7M1ikBbcx
-         h1to3FPlYIZH5BaTAEZB6JX0duyZIFsS5v321p4H05r8BillplJmpz2SlDwPz+O32Stb
-         PiwH2lrJeb9+qzH1u4RuC0t/0T63EeDHrM3Mgf1WMbpNZB5+P2WK2DXtFbu6Z/uORDAr
-         2kSg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMSM7q4G71Ef5IKicyiDtBDsyIlNAh1BcjrdpoRTfhrBtgyyRaDAO948W2YcJIiZAbUm78EOvFtYDmvcM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEY4STuzX+p3RWBb9PLmoXwGvsk7vySF33Fk9BmZmx7lOIDF6o
-	0JtCMN/H6QqwczhiJn6slIwPfhMD4qyi+2oprpHZRINnRTfb7WL3geXmg6flkR7I9uYofJuRVGV
-	s4XIxV4kk8HXL4YIGNi5rdQ==
-X-Google-Smtp-Source: AGHT+IFY5oJEaEe/sPoO/XYQkh/VUAJ2yDKDeukpK+zFchJO8a0EcIJDLprjVo/YUe8JqQL4TV0kfjYLAlixoIbEwQ==
-X-Received: from pjbsi11.prod.google.com ([2002:a17:90b:528b:b0:2ea:4139:e72d])
+        bh=9QoG1IX3VKf0iSgQmXqfz0x8dnartqdM80wF5XjRoPo=;
+        b=U12L+uvoZc/WjcysSxNljmmOOkb7fws6hlf0tKJQqxlZ/uGmMuTbwjnT/cn8DNqCUJ
+         BbIW1/7OuT8ZyPqHXxR8nuGTTpxTO8dSTRsb2BakrXdoMPXDkJimz7SW2aB8397bA+JJ
+         sQxbIPExqJdfNR2TQvA9c6k6pq+kh27ESBSSKB6VXHmcO5NfIdmY2uwSpwc6rdFelxOI
+         IojkRZ+DimY6/KDmXUTbujiAuZ7fT4nx7lxZdJG4OBwM0blfhgahI6pTtdNXoGIKgrdZ
+         HzWqCNwPkvt+qY7HNs+wf+A75OvQxlBsBl6sIa3cErtux5roKiIO+UOi2EBqtVaOPSr1
+         Eksg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOLRGLnIPd/nOknvFkbYLYiJaSKRwfLYaLscSv86ncsC7qXsBwQ3JxhRfhyioTeVrVXj/yAqffpHyg4v0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZF19AFyRLJNvfWRwxFq3PnoRktW9ie03SPvpQudMZr5vcA6d1
+	3Zq6g6qqq4tXxT5+yGhgVb+DldE1cavZMIlIf8Xk8XJyQoEngJ+hzcVd3tWrjyZ8opnGPOEUIhE
+	BpZhKDLsqsyFnfvmRowe9eg==
+X-Google-Smtp-Source: AGHT+IGd9E1uzoDNwwzafdy0csHGORrkGiyiT6++YmdgkD7II8siJy6QkaN+wMaIlrdg6BZIw6g7aZw11tgOGPqaUQ==
+X-Received: from plgv14.prod.google.com ([2002:a17:902:e8ce:b0:21a:7e04:7006])
  (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:1f8c:b0:2ee:9d49:3ae6 with SMTP id 98e67ed59e1d1-2f83abd7da8mr37215866a91.10.1738622361011;
- Mon, 03 Feb 2025 14:39:21 -0800 (PST)
-Date: Mon,  3 Feb 2025 22:39:12 +0000
+ 2002:a17:903:1c5:b0:210:f706:dc4b with SMTP id d9443c01a7336-21dd7c653b7mr322527705ad.13.1738622364115;
+ Mon, 03 Feb 2025 14:39:24 -0800 (PST)
+Date: Mon,  3 Feb 2025 22:39:14 +0000
 In-Reply-To: <20250203223916.1064540-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250203223916.1064540-1-almasrymina@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250203223916.1064540-3-almasrymina@google.com>
-Subject: [PATCH net-next v3 2/6] selftests: ncdevmem: Implement devmem TCP TX
+Message-ID: <20250203223916.1064540-5-almasrymina@google.com>
+Subject: [PATCH net-next v3 4/6] net: devmem: TCP tx netlink api
 From: Mina Almasry <almasrymina@google.com>
 To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
@@ -79,456 +79,135 @@ Cc: Mina Almasry <almasrymina@google.com>, Donald Hunter <donald.hunter@gmail.co
 	Samiullah Khawaja <skhawaja@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add support for devmem TX in ncdevmem.
+From: Stanislav Fomichev <sdf@fomichev.me>
 
-This is a combination of the ncdevmem from the devmem TCP series RFCv1
-which included the TX path, and work by Stan to include the netlink API
-and refactored on top of his generic memory_provider support.
+Add bind-tx netlink call to attach dmabuf for TX; queue is not
+required, only ifindex and dmabuf fd for attachment.
 
-Signed-off-by: Mina Almasry <almasrymina@google.com>
 Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+
 
 ---
 
 v3:
-- Update ncdevmem docs to run validation with RX-only and RX-with-TX.
-- Fix build warnings (Stan).
-- Make the validation expect new lines in the pattern so we can have the
-  TX path behave like netcat (Stan).
-- Change ret to errno in error() calls (Stan).
-- Handle the case where client_ip is not provided (Stan).
-- Don't assume mid is <= 2000 (Stan).
-
-v2:
-- make errors a static variable so that we catch instances where there
-  are less than 20 errors across different buffers.
-- Fix the issue where the seed is reset to 0 instead of its starting
-  value 1.
-- Use 1000ULL instead of 1000 to guard against overflow (Willem).
-- Do not set POLLERR (Willem).
-- Update the test to use the new interface where iov_base is the
-  dmabuf_offset.
-- Update the test to send 2 iov instead of 1, so we get some test
-  coverage over sending multiple iovs at once.
-- Print the ifindex the test is using, useful for debugging issues where
-  maybe the test may fail because the ifindex of the socket is different
-  from the dmabuf binding.
+- Fix ynl-regen.sh error (Simon).
 ---
- .../selftests/drivers/net/hw/ncdevmem.c       | 300 +++++++++++++++++-
- 1 file changed, 289 insertions(+), 11 deletions(-)
+ Documentation/netlink/specs/netdev.yaml | 12 ++++++++++++
+ include/uapi/linux/netdev.h             |  1 +
+ net/core/netdev-genl-gen.c              | 13 +++++++++++++
+ net/core/netdev-genl-gen.h              |  1 +
+ net/core/netdev-genl.c                  |  6 ++++++
+ tools/include/uapi/linux/netdev.h       |  1 +
+ 6 files changed, 34 insertions(+)
 
-diff --git a/tools/testing/selftests/drivers/net/hw/ncdevmem.c b/tools/testing/selftests/drivers/net/hw/ncdevmem.c
-index 19a6969643f4..a5ac78ed007e 100644
---- a/tools/testing/selftests/drivers/net/hw/ncdevmem.c
-+++ b/tools/testing/selftests/drivers/net/hw/ncdevmem.c
-@@ -9,22 +9,31 @@
-  *     ncdevmem -s <server IP> [-c <client IP>] -f eth1 -l -p 5201
-  *
-  *     On client:
-- *     echo -n "hello\nworld" | nc -s <server IP> 5201 -p 5201
-+ *     echo -n "hello\nworld" | \
-+ *		ncdevmem -s <server IP> [-c <client IP>] -p 5201 -f eth1
-  *
-- * Test data validation:
-+ * Note this is compatible with regular netcat. i.e. the sender or receiver can
-+ * be replaced with regular netcat to test the RX or TX path in isolation.
-+ *
-+ * Test data validation (devmem TCP on RX only):
-  *
-  *     On server:
-  *     ncdevmem -s <server IP> [-c <client IP>] -f eth1 -l -p 5201 -v 7
-  *
-  *     On client:
-  *     yes $(echo -e \\x01\\x02\\x03\\x04\\x05\\x06) | \
-- *             tr \\n \\0 | \
-- *             head -c 5G | \
-+ *             head -c 1G | \
-  *             nc <server IP> 5201 -p 5201
-  *
-+ * Test data validation (devmem TCP on RX and TX, validation happens on RX):
-  *
-- * Note this is compatible with regular netcat. i.e. the sender or receiver can
-- * be replaced with regular netcat to test the RX or TX path in isolation.
-+ *	On server:
-+ *	ncdevmem -s <server IP> [-c <client IP>] -l -p 5201 -v 8 -f eth1
-+ *
-+ *	On client:
-+ *	yes $(echo -e \\x01\\x02\\x03\\x04\\x05\\x06\\x07) | \
-+ *		head -c 1M | \
-+ *		ncdevmem -s <server IP> [-c <client IP>] -p 5201 -f eth1
-  */
- #define _GNU_SOURCE
- #define __EXPORTED_HEADERS__
-@@ -40,15 +49,18 @@
- #include <fcntl.h>
- #include <malloc.h>
- #include <error.h>
-+#include <poll.h>
+diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/netlink/specs/netdev.yaml
+index cbb544bd6c84..93f4333e7bc6 100644
+--- a/Documentation/netlink/specs/netdev.yaml
++++ b/Documentation/netlink/specs/netdev.yaml
+@@ -711,6 +711,18 @@ operations:
+             - defer-hard-irqs
+             - gro-flush-timeout
+             - irq-suspend-timeout
++    -
++      name: bind-tx
++      doc: Bind dmabuf to netdev for TX
++      attribute-set: dmabuf
++      do:
++        request:
++          attributes:
++            - ifindex
++            - fd
++        reply:
++          attributes:
++            - id
  
- #include <arpa/inet.h>
- #include <sys/socket.h>
- #include <sys/mman.h>
- #include <sys/ioctl.h>
- #include <sys/syscall.h>
-+#include <sys/time.h>
+ kernel-family:
+   headers: [ "linux/list.h"]
+diff --git a/include/uapi/linux/netdev.h b/include/uapi/linux/netdev.h
+index e4be227d3ad6..04364ef5edbe 100644
+--- a/include/uapi/linux/netdev.h
++++ b/include/uapi/linux/netdev.h
+@@ -203,6 +203,7 @@ enum {
+ 	NETDEV_CMD_QSTATS_GET,
+ 	NETDEV_CMD_BIND_RX,
+ 	NETDEV_CMD_NAPI_SET,
++	NETDEV_CMD_BIND_TX,
  
- #include <linux/memfd.h>
- #include <linux/dma-buf.h>
-+#include <linux/errqueue.h>
- #include <linux/udmabuf.h>
- #include <libmnl/libmnl.h>
- #include <linux/types.h>
-@@ -80,6 +92,8 @@ static int num_queues = -1;
- static char *ifname;
- static unsigned int ifindex;
- static unsigned int dmabuf_id;
-+static uint32_t tx_dmabuf_id;
-+static int waittime_ms = 500;
- 
- struct memory_buffer {
- 	int fd;
-@@ -93,6 +107,8 @@ struct memory_buffer {
- struct memory_provider {
- 	struct memory_buffer *(*alloc)(size_t size);
- 	void (*free)(struct memory_buffer *ctx);
-+	void (*memcpy_to_device)(struct memory_buffer *dst, size_t off,
-+				 void *src, int n);
- 	void (*memcpy_from_device)(void *dst, struct memory_buffer *src,
- 				   size_t off, int n);
- };
-@@ -153,6 +169,20 @@ static void udmabuf_free(struct memory_buffer *ctx)
- 	free(ctx);
- }
- 
-+static void udmabuf_memcpy_to_device(struct memory_buffer *dst, size_t off,
-+				     void *src, int n)
-+{
-+	struct dma_buf_sync sync = {};
-+
-+	sync.flags = DMA_BUF_SYNC_START | DMA_BUF_SYNC_WRITE;
-+	ioctl(dst->fd, DMA_BUF_IOCTL_SYNC, &sync);
-+
-+	memcpy(dst->buf_mem + off, src, n);
-+
-+	sync.flags = DMA_BUF_SYNC_END | DMA_BUF_SYNC_WRITE;
-+	ioctl(dst->fd, DMA_BUF_IOCTL_SYNC, &sync);
-+}
-+
- static void udmabuf_memcpy_from_device(void *dst, struct memory_buffer *src,
- 				       size_t off, int n)
- {
-@@ -170,6 +200,7 @@ static void udmabuf_memcpy_from_device(void *dst, struct memory_buffer *src,
- static struct memory_provider udmabuf_memory_provider = {
- 	.alloc = udmabuf_alloc,
- 	.free = udmabuf_free,
-+	.memcpy_to_device = udmabuf_memcpy_to_device,
- 	.memcpy_from_device = udmabuf_memcpy_from_device,
+ 	__NETDEV_CMD_MAX,
+ 	NETDEV_CMD_MAX = (__NETDEV_CMD_MAX - 1)
+diff --git a/net/core/netdev-genl-gen.c b/net/core/netdev-genl-gen.c
+index 996ac6a449eb..f27608d6301c 100644
+--- a/net/core/netdev-genl-gen.c
++++ b/net/core/netdev-genl-gen.c
+@@ -99,6 +99,12 @@ static const struct nla_policy netdev_napi_set_nl_policy[NETDEV_A_NAPI_IRQ_SUSPE
+ 	[NETDEV_A_NAPI_IRQ_SUSPEND_TIMEOUT] = { .type = NLA_UINT, },
  };
  
-@@ -188,14 +219,16 @@ void validate_buffer(void *line, size_t size)
- {
- 	static unsigned char seed = 1;
- 	unsigned char *ptr = line;
--	int errors = 0;
-+	unsigned char expected;
-+	static int errors;
- 	size_t i;
++/* NETDEV_CMD_BIND_TX - do */
++static const struct nla_policy netdev_bind_tx_nl_policy[NETDEV_A_DMABUF_FD + 1] = {
++	[NETDEV_A_DMABUF_IFINDEX] = NLA_POLICY_MIN(NLA_U32, 1),
++	[NETDEV_A_DMABUF_FD] = { .type = NLA_U32, },
++};
++
+ /* Ops table for netdev */
+ static const struct genl_split_ops netdev_nl_ops[] = {
+ 	{
+@@ -190,6 +196,13 @@ static const struct genl_split_ops netdev_nl_ops[] = {
+ 		.maxattr	= NETDEV_A_NAPI_IRQ_SUSPEND_TIMEOUT,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
++	{
++		.cmd		= NETDEV_CMD_BIND_TX,
++		.doit		= netdev_nl_bind_tx_doit,
++		.policy		= netdev_bind_tx_nl_policy,
++		.maxattr	= NETDEV_A_DMABUF_FD,
++		.flags		= GENL_CMD_CAP_DO,
++	},
+ };
  
- 	for (i = 0; i < size; i++) {
--		if (ptr[i] != seed) {
-+		expected = seed ? seed : '\n';
-+		if (ptr[i] != expected) {
- 			fprintf(stderr,
- 				"Failed validation: expected=%u, actual=%u, index=%lu\n",
--				seed, ptr[i], i);
-+				expected, ptr[i], i);
- 			errors++;
- 			if (errors > 20)
- 				error(1, 0, "validation failed.");
-@@ -394,6 +427,49 @@ static int bind_rx_queue(unsigned int ifindex, unsigned int dmabuf_fd,
- 	return -1;
+ static const struct genl_multicast_group netdev_nl_mcgrps[] = {
+diff --git a/net/core/netdev-genl-gen.h b/net/core/netdev-genl-gen.h
+index e09dd7539ff2..c1fed66e92b9 100644
+--- a/net/core/netdev-genl-gen.h
++++ b/net/core/netdev-genl-gen.h
+@@ -34,6 +34,7 @@ int netdev_nl_qstats_get_dumpit(struct sk_buff *skb,
+ 				struct netlink_callback *cb);
+ int netdev_nl_bind_rx_doit(struct sk_buff *skb, struct genl_info *info);
+ int netdev_nl_napi_set_doit(struct sk_buff *skb, struct genl_info *info);
++int netdev_nl_bind_tx_doit(struct sk_buff *skb, struct genl_info *info);
+ 
+ enum {
+ 	NETDEV_NLGRP_MGMT,
+diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
+index 715f85c6b62e..0e41699df419 100644
+--- a/net/core/netdev-genl.c
++++ b/net/core/netdev-genl.c
+@@ -911,6 +911,12 @@ int netdev_nl_bind_rx_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return err;
  }
  
-+static int bind_tx_queue(unsigned int ifindex, unsigned int dmabuf_fd,
-+			 struct ynl_sock **ys)
++/* stub */
++int netdev_nl_bind_tx_doit(struct sk_buff *skb, struct genl_info *info)
 +{
-+	struct netdev_bind_tx_req *req = NULL;
-+	struct netdev_bind_tx_rsp *rsp = NULL;
-+	struct ynl_error yerr;
-+
-+	*ys = ynl_sock_create(&ynl_netdev_family, &yerr);
-+	if (!*ys) {
-+		fprintf(stderr, "YNL: %s\n", yerr.msg);
-+		return -1;
-+	}
-+
-+	req = netdev_bind_tx_req_alloc();
-+	netdev_bind_tx_req_set_ifindex(req, ifindex);
-+	netdev_bind_tx_req_set_fd(req, dmabuf_fd);
-+
-+	rsp = netdev_bind_tx(*ys, req);
-+	if (!rsp) {
-+		perror("netdev_bind_tx");
-+		goto err_close;
-+	}
-+
-+	if (!rsp->_present.id) {
-+		perror("id not present");
-+		goto err_close;
-+	}
-+
-+	fprintf(stderr, "got tx dmabuf id=%d\n", rsp->id);
-+	tx_dmabuf_id = rsp->id;
-+
-+	netdev_bind_tx_req_free(req);
-+	netdev_bind_tx_rsp_free(rsp);
-+
-+	return 0;
-+
-+err_close:
-+	fprintf(stderr, "YNL failed: %s\n", (*ys)->err.msg);
-+	netdev_bind_tx_req_free(req);
-+	ynl_sock_destroy(*ys);
-+	return -1;
-+}
-+
- static void enable_reuseaddr(int fd)
- {
- 	int opt = 1;
-@@ -432,7 +508,7 @@ static int parse_address(const char *str, int port, struct sockaddr_in6 *sin6)
- 	return 0;
- }
- 
--int do_server(struct memory_buffer *mem)
-+static int do_server(struct memory_buffer *mem)
- {
- 	char ctrl_data[sizeof(int) * 20000];
- 	struct netdev_queue_id *queues;
-@@ -686,6 +762,206 @@ void run_devmem_tests(void)
- 	provider->free(mem);
- }
- 
-+static uint64_t gettimeofday_ms(void)
-+{
-+	struct timeval tv;
-+
-+	gettimeofday(&tv, NULL);
-+	return (tv.tv_sec * 1000ULL) + (tv.tv_usec / 1000ULL);
-+}
-+
-+static int do_poll(int fd)
-+{
-+	struct pollfd pfd;
-+	int ret;
-+
-+	pfd.revents = 0;
-+	pfd.fd = fd;
-+
-+	ret = poll(&pfd, 1, waittime_ms);
-+	if (ret == -1)
-+		error(1, errno, "poll");
-+
-+	return ret && (pfd.revents & POLLERR);
-+}
-+
-+static void wait_compl(int fd)
-+{
-+	int64_t tstop = gettimeofday_ms() + waittime_ms;
-+	char control[CMSG_SPACE(100)] = {};
-+	struct sock_extended_err *serr;
-+	struct msghdr msg = {};
-+	struct cmsghdr *cm;
-+	__u32 hi, lo;
-+	int ret;
-+
-+	msg.msg_control = control;
-+	msg.msg_controllen = sizeof(control);
-+
-+	while (gettimeofday_ms() < tstop) {
-+		if (!do_poll(fd))
-+			continue;
-+
-+		ret = recvmsg(fd, &msg, MSG_ERRQUEUE);
-+		if (ret < 0) {
-+			if (errno == EAGAIN)
-+				continue;
-+			error(1, errno, "recvmsg(MSG_ERRQUEUE)");
-+			return;
-+		}
-+		if (msg.msg_flags & MSG_CTRUNC)
-+			error(1, 0, "MSG_CTRUNC\n");
-+
-+		for (cm = CMSG_FIRSTHDR(&msg); cm; cm = CMSG_NXTHDR(&msg, cm)) {
-+			if (cm->cmsg_level != SOL_IP &&
-+			    cm->cmsg_level != SOL_IPV6)
-+				continue;
-+			if (cm->cmsg_level == SOL_IP &&
-+			    cm->cmsg_type != IP_RECVERR)
-+				continue;
-+			if (cm->cmsg_level == SOL_IPV6 &&
-+			    cm->cmsg_type != IPV6_RECVERR)
-+				continue;
-+
-+			serr = (void *)CMSG_DATA(cm);
-+			if (serr->ee_origin != SO_EE_ORIGIN_ZEROCOPY)
-+				error(1, 0, "wrong origin %u", serr->ee_origin);
-+			if (serr->ee_errno != 0)
-+				error(1, 0, "wrong errno %d", serr->ee_errno);
-+
-+			hi = serr->ee_data;
-+			lo = serr->ee_info;
-+
-+			fprintf(stderr, "tx complete [%d,%d]\n", lo, hi);
-+			return;
-+		}
-+	}
-+
-+	error(1, 0, "did not receive tx completion");
-+}
-+
-+static int do_client(struct memory_buffer *mem)
-+{
-+	char ctrl_data[CMSG_SPACE(sizeof(struct dmabuf_tx_cmsg))];
-+	struct sockaddr_in6 server_sin;
-+	struct sockaddr_in6 client_sin;
-+	struct dmabuf_tx_cmsg ddmabuf;
-+	struct ynl_sock *ys = NULL;
-+	struct msghdr msg = {};
-+	ssize_t line_size = 0;
-+	struct cmsghdr *cmsg;
-+	struct iovec iov[2];
-+	char *line = NULL;
-+	unsigned long mid;
-+	size_t len = 0;
-+	int socket_fd;
-+	int ret;
-+	int opt = 1;
-+
-+	ret = parse_address(server_ip, atoi(port), &server_sin);
-+	if (ret < 0)
-+		error(1, 0, "parse server address");
-+
-+	socket_fd = socket(AF_INET6, SOCK_STREAM, 0);
-+	if (socket_fd < 0)
-+		error(1, socket_fd, "create socket");
-+
-+	enable_reuseaddr(socket_fd);
-+
-+	ret = setsockopt(socket_fd, SOL_SOCKET, SO_BINDTODEVICE, ifname,
-+			 strlen(ifname) + 1);
-+	if (ret)
-+		error(1, errno, "bindtodevice");
-+
-+	if (bind_tx_queue(ifindex, mem->fd, &ys))
-+		error(1, 0, "Failed to bind\n");
-+
-+	if (client_ip) {
-+		ret = parse_address(client_ip, atoi(port), &client_sin);
-+		if (ret < 0)
-+			error(1, 0, "parse client address");
-+
-+		ret = bind(socket_fd, &client_sin, sizeof(client_sin));
-+		if (ret)
-+			error(1, errno, "bind");
-+	}
-+
-+	ret = setsockopt(socket_fd, SOL_SOCKET, SO_ZEROCOPY, &opt, sizeof(opt));
-+	if (ret)
-+		error(1, errno, "set sock opt");
-+
-+	fprintf(stderr, "Connect to %s %d (via %s)\n", server_ip,
-+		ntohs(server_sin.sin6_port), ifname);
-+
-+	ret = connect(socket_fd, &server_sin, sizeof(server_sin));
-+	if (ret)
-+		error(1, errno, "connect");
-+
-+	while (1) {
-+		free(line);
-+		line = NULL;
-+		line_size = getline(&line, &len, stdin);
-+
-+		if (line_size < 0)
-+			break;
-+
-+		mid = (line_size / 2) + 1;
-+
-+		iov[0].iov_base = (void *)1;
-+		iov[0].iov_len = mid;
-+		iov[1].iov_base = (void *)(mid + 2);
-+		iov[1].iov_len = line_size - mid;
-+
-+		provider->memcpy_to_device(mem, (size_t)iov[0].iov_base, line,
-+					   iov[0].iov_len);
-+		provider->memcpy_to_device(mem, (size_t)iov[1].iov_base,
-+					   line + iov[0].iov_len,
-+					   iov[1].iov_len);
-+
-+		fprintf(stderr,
-+			"read line_size=%ld iov[0].iov_base=%lu, iov[0].iov_len=%lu, iov[1].iov_base=%lu, iov[1].iov_len=%lu\n",
-+			line_size, (unsigned long)iov[0].iov_base,
-+			iov[0].iov_len, (unsigned long)iov[1].iov_base,
-+			iov[1].iov_len);
-+
-+		msg.msg_iov = iov;
-+		msg.msg_iovlen = 2;
-+
-+		msg.msg_control = ctrl_data;
-+		msg.msg_controllen = sizeof(ctrl_data);
-+
-+		cmsg = CMSG_FIRSTHDR(&msg);
-+		cmsg->cmsg_level = SOL_SOCKET;
-+		cmsg->cmsg_type = SCM_DEVMEM_DMABUF;
-+		cmsg->cmsg_len = CMSG_LEN(sizeof(struct dmabuf_tx_cmsg));
-+
-+		ddmabuf.dmabuf_id = tx_dmabuf_id;
-+
-+		*((struct dmabuf_tx_cmsg *)CMSG_DATA(cmsg)) = ddmabuf;
-+
-+		ret = sendmsg(socket_fd, &msg, MSG_ZEROCOPY);
-+		if (ret < 0)
-+			error(1, errno, "Failed sendmsg");
-+
-+		fprintf(stderr, "sendmsg_ret=%d\n", ret);
-+
-+		if (ret != line_size)
-+			error(1, errno, "Did not send all bytes");
-+
-+		wait_compl(socket_fd);
-+	}
-+
-+	fprintf(stderr, "%s: tx ok\n", TEST_PREFIX);
-+
-+	free(line);
-+	close(socket_fd);
-+
-+	if (ys)
-+		ynl_sock_destroy(ys);
-+
 +	return 0;
 +}
 +
- int main(int argc, char *argv[])
+ void netdev_nl_sock_priv_init(struct list_head *priv)
  {
- 	struct memory_buffer *mem;
-@@ -729,6 +1005,8 @@ int main(int argc, char *argv[])
+ 	INIT_LIST_HEAD(priv);
+diff --git a/tools/include/uapi/linux/netdev.h b/tools/include/uapi/linux/netdev.h
+index e4be227d3ad6..04364ef5edbe 100644
+--- a/tools/include/uapi/linux/netdev.h
++++ b/tools/include/uapi/linux/netdev.h
+@@ -203,6 +203,7 @@ enum {
+ 	NETDEV_CMD_QSTATS_GET,
+ 	NETDEV_CMD_BIND_RX,
+ 	NETDEV_CMD_NAPI_SET,
++	NETDEV_CMD_BIND_TX,
  
- 	ifindex = if_nametoindex(ifname);
- 
-+	fprintf(stderr, "using ifindex=%u\n", ifindex);
-+
- 	if (!server_ip && !client_ip) {
- 		if (start_queue < 0 && num_queues < 0) {
- 			num_queues = rxq_num(ifindex);
-@@ -779,7 +1057,7 @@ int main(int argc, char *argv[])
- 		error(1, 0, "Missing -p argument\n");
- 
- 	mem = provider->alloc(getpagesize() * NUM_PAGES);
--	ret = is_server ? do_server(mem) : 1;
-+	ret = is_server ? do_server(mem) : do_client(mem);
- 	provider->free(mem);
- 
- 	return ret;
+ 	__NETDEV_CMD_MAX,
+ 	NETDEV_CMD_MAX = (__NETDEV_CMD_MAX - 1)
 -- 
 2.48.1.362.g079036d154-goog
 
