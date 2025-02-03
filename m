@@ -1,78 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F01014F12D;
-	Mon,  3 Feb 2025 15:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0768E20967A
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:46:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738597567; cv=none; b=kJw9i9Jgsc4EbQaXuY1E2PnvQuuXs0Oo7iJtXLUJX73pvzb6yZxFMWbfwt8B/5EEwHvMo/fTsopUnodqT9uZT86g/qXVSwJohTTiGvTL6Wn4XNhE7TZPoGt4bsr3HMArSgkecovS39VbN9YonNq3c5i32vCI1k0J+sattkiZJoo=
+	t=1738597577; cv=none; b=IGFPFFS+2dgtB1reVF+CD7jfLySFg3OHlW2F+9YpYO/9mJjPmDvQ3dGr01r5qpUrjLuaGMHHjJeXZdaI5qip9v3bTGKu8FcPwl8PZoyikf4KjFQ03HQgJGTD0bdEzDUf40HLf/NcCsolMUNC4LISviaOnMBy4zxHkKdnMs3emH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738597567; c=relaxed/simple;
-	bh=jaYinU+QnQfEY5yFyQZV4YjBXqkEFnOQyHwM0AfRWPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UufAugG6GfZDfKD7O4pq0WKiPniYyeD4jgDknpXCEVrhiFtDTSYUxfJfc278fR9jS7IqEzcnPMJNiudIabkdJI0VIulHLOscaojgTlQnHYUzHzOlIVqCUx52uHHXk0pdQp9uj8K8eh9UAPpU2Z7XUndT89bmWfotlNittF4G+Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tmQlvmc4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738597577; c=relaxed/simple;
+	bh=VUDFAoH2yWf/eG9Odxs/zyBPuh7h8+lxwkoJs2sMwwc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lqbxP4Yl6u/TT9rOJN6zuIF7U+vrwzPFmxPiQTv2QJxwa69RN5YNxV9zUpjnRtLXP30vAd+xFTzULJIvm+eWfg2X/PZeE/4MxZNC0+wE6sgM5kJaBejFeYleV0d0FO+dcNQZf27h4LQDUAzOON7J9X6XukLm+/+sSE6tfvMqGfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=f6vRSukE; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tmQlvmc4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00671C4CED2;
-	Mon,  3 Feb 2025 15:46:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738597565;
-	bh=jaYinU+QnQfEY5yFyQZV4YjBXqkEFnOQyHwM0AfRWPI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tmQlvmc41AoJ2uckKW8/OhwLRJ5n5oUhG3fXvOAjG0zi6PN0n2xYLdXxA1GKKN64s
-	 ej4+B5rRb6x6AVaAyTAoDoKAA1R85Orv2f1R9TaXMGs/K2FoJXTyqo0Q6hlOE150xT
-	 8BFhlDQ1cJXBYm83A2jR4St/itScLyn5GRwCNxDQ=
-Date: Mon, 3 Feb 2025 16:46:02 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 2/3] regulator: dummy: convert to use the faux bus
-Message-ID: <2025020313-constant-ravishing-1506@gregkh>
-References: <2025020324-thermal-quilt-1bae@gregkh>
- <2025020326-applicant-unwomanly-13df@gregkh>
- <3238a3af-3296-435a-a326-859d0188d51c@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="f6vRSukE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=VUDFAoH2yWf/eG9Odxs/zyBPuh7h8+lxwkoJs2sMwwc=; b=f6vRSukEthrlkNZoRN0gQ8r6X2
+	H3+Z8wE0mGiMDBbn5Abzo9KR2QnuK+azNRLZaCpKoaLUvLsSshytbmKCvLtxcSDTyQeEyP6jSjoEe
+	437OUAMSolYyVpxxFHRwEmV2p7ASbq69o0oiuaa0s7iXN9rIEEikKI4a71SH3qV+ptDV3MyiGH7QE
+	gBeDnUJsjSt8zRNUoq35lYrKAlYpPY6182+nbdOoJ7wr/iaEhFEAxem6/S0lgy+7F7JN3pXcBWJM1
+	h23aVqqSdFANzFoumN5gp7EdN2NxinMvz1gpR/+Vs1xmqj9Qv+clY8SYWbEf6VQQiwNyUbTY2IZPH
+	MmdK5nEw==;
+Received: from [58.29.143.236] (helo=[192.168.1.6])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1teye9-00369h-0s; Mon, 03 Feb 2025 16:46:07 +0100
+Message-ID: <2add5e06-811c-44af-904a-3bb75521512f@igalia.com>
+Date: Tue, 4 Feb 2025 00:46:00 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3238a3af-3296-435a-a326-859d0188d51c@sirena.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/11] sched_ext: Add an event, SCX_EV_ENQ_SKIP_EXITING
+To: Tejun Heo <tj@kernel.org>
+Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org
+References: <20250131070938.95551-1-changwoo@igalia.com>
+ <20250131070938.95551-6-changwoo@igalia.com>
+ <Z5-pTOjBwsQRB0OF@slm.duckdns.org>
+From: Changwoo Min <changwoo@igalia.com>
+Content-Language: en-US, ko-KR, en-US-large, ko
+In-Reply-To: <Z5-pTOjBwsQRB0OF@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 03:39:06PM +0000, Mark Brown wrote:
-> On Mon, Feb 03, 2025 at 03:25:18PM +0100, Greg Kroah-Hartman wrote:
-> > The dummy regulator driver does not need to create a platform device, it
-> > only did so because it was simple to do.  Change it over to use the
-> > faux bus instead as this is NOT a real platform device, and it makes
-> > the code even smaller than before.
-> 
-> No, they did this because you explicitly asked that this be done....
+Hello,
 
-I did?  What was it attempting to be before this?  I don't remember that
-at all, sorry.
+On 25. 2. 3. 02:20, Tejun Heo wrote:
+> On Fri, Jan 31, 2025 at 04:09:32PM +0900, Changwoo Min wrote:
+> Missing agg call?
+Ah, you are right. Will fix it.
 
-> > -static int dummy_regulator_probe(struct platform_device *pdev)
-> > +static int dummy_regulator_probe(struct faux_device *vdev)
-> 
-> Just dev or fdev - we could just pass a struct device in here, we don't
-> actually care that it's a platform device at this point.  Having the
-> abbreviation mismatch with the device type is odd.
+Regards,
+Changwoo Min
 
-Ah, that's a mistake from my first pass when this was a "struct
-virtual_device" and I called this "vdev".  I'll go fix that up, thanks.
-
-greg k-h
