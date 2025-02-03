@@ -1,83 +1,108 @@
-Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F043204598
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A55204C06;
+	Mon,  3 Feb 2025 13:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588875; cv=none; b=Crz6b6o7914wdheHaxIrPIbP6gAnDRChVTzyQvk7RaLNDj1R1UMMtNwpLilaC/3HSjV8mWC5M4e2fMZx1LIJbbtZslENkpspoaa2n+KWJppUCD0LQe9bpXdBlDY1B25/KwHRPV/iJc5loMWxNuB1ROfcmtsZLwSldkV/VvSo9PM=
+	t=1738588893; cv=none; b=fFScv367dqiH1MzpPxJzdZwzXcZMHtulC1/x6lPySDGnkRhBjfUygGr1ad7YikZv1aLNAHpAtZ+hn8XcNN3W8+70WX1oPbA3NxlBDsZPgP2zDPY8cWSajGhe/g0rgCeDfLCFduyoVngL8z1cJXewzrlQKddxptteTCAv/niAfvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588875; c=relaxed/simple;
-	bh=43aqwoFqEadmaiaEL1evHdDHKrDHYllGJKxj2XFQdv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AE3fNAhnEravuEOS4TghA9lgQSPXQ2gvcckmFd0DiVh/TRJfIRRa7S5WA4CffzK2Iy74LUE5dgYOewGkRf06zDqDQXV0nmPrU8y7FO+sJ2Jl9cBIa40Dd42lFO4m0AGAIru6DTLCe8gup6iZz+BI2QgrECB0FpKPrNs1wTce9Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=drkIDBbh; arc=none smtp.client-ip=95.215.58.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738588893; c=relaxed/simple;
+	bh=qNUiPO2yHgXnsW5NYL968qRQlYZ+KbplWMOxfDHT4Pg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MakbPZ3pbftWbFANQh/6s5BsYyLwf+sgF/Ipg1YJbfVi6xAfjpSpy62vflI4jWfRjHBf4UO0EsLMVo4ayeToK/dQdEBKcgcGRSEDaEvv+3moJtEptbasIIqIUDMrthlVRBW/TppKzG6kwzltdlGaPMoOS5qW03RkYUbxNK6ZUoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5wtFJe8; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="drkIDBbh"
-Date: Mon, 3 Feb 2025 14:21:07 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738588869;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oSl7lrm4KEuJioP7eaV2gboPggwLzfzD3mDrXk5z0bM=;
-	b=drkIDBbhAYcULTSuQt9kmDX+HKaZKBJYl4rCH25JaGU11sjRAjthhDUf4/LdJE9CQdIltj
-	MXJrthEEKYyaJqBhPoiFsJuGP+9HOaRVSG/xR5fs29z8Xi3xH4ghibGxABvDo/JuS+EMwT
-	G9JX4xg56u5s+kEGgBqi6gfkP2kaJss=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Richard Leitner <richard.leitner@linux.dev>
-To: Dominique Martinet <dominique.martinet@atmark-techno.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: usb251xb: silence EPROBE_DEFER error on boot
-Message-ID: <i2qbsl5vhi7ltwxabmnbeiixcb4kmliezuokmv7sknkfgzwgns@g4jhh4ldugcz>
-References: <20250203-defer_usb1-v2-1-eba405ebee2c@atmark-techno.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5wtFJe8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738588891; x=1770124891;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=qNUiPO2yHgXnsW5NYL968qRQlYZ+KbplWMOxfDHT4Pg=;
+  b=I5wtFJe8qlk3/6b46f5FAvFb2kCCnPKz4Aw7vuJZJsjlYbO1q4qe64R5
+   YPVGcRIM/7NfQi6suxh0WsQeN2T19Hk2L7q+IeBYxwk8YjUaHJWFsqOVA
+   0olESev/VkOuhWWgChgqNcWDG6IucN8loxzIVMs+UEkrOP400H9EDefgM
+   nVEsnvfd7pPD5praskPLUr9QVPXSjljoeJGycjY0FCFbvHQ5YdJxF7ofw
+   LQGYAR6fnG8A4DT3aIBFDJ7y8HKb09EomxT1XkarSfAerdzwI05eFwxiI
+   G787v80EyalZEBT+pQI8A2PH/TFuH1YyGH0mMC06jDGDhTvrblkk+0Iik
+   w==;
+X-CSE-ConnectionGUID: gM2rJpvmQ2iFgOCigd5vgA==
+X-CSE-MsgGUID: ieO81YWnRd+Yn26Bdz3zpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="56616568"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="56616568"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:21:31 -0800
+X-CSE-ConnectionGUID: nlVN1aI0QFSUS/IyFmEeRg==
+X-CSE-MsgGUID: 4btVPqeHRnaIw1rKsBA+MA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="110855444"
+Received: from lfiedoro-mobl.ger.corp.intel.com (HELO localhost) ([10.245.246.71])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:21:26 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Haoyu Li <lihaoyu499@gmail.com>, Lee Jones <lee@kernel.org>, Daniel
+ Thompson <danielt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>
+Cc: Helge Deller <deller@gmx.de>, Rob Herring <robh@kernel.org>,
+ dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, chenyuan0y@gmail.com,
+ zichenxie0106@gmail.com, Haoyu Li <lihaoyu499@gmail.com>,
+ stable@vger.kernel.org
+Subject: Re: [PATCH] drivers: video: backlight: Fix NULL Pointer Dereference
+ in backlight_device_register()
+In-Reply-To: <20250130145228.96679-1-lihaoyu499@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250130145228.96679-1-lihaoyu499@gmail.com>
+Date: Mon, 03 Feb 2025 15:21:23 +0200
+Message-ID: <87ldun6u5o.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203-defer_usb1-v2-1-eba405ebee2c@atmark-techno.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-On Mon, Feb 03, 2025 at 03:33:49PM +0900, Dominique Martinet wrote:
-> Use dev_err_probe to silence EPROBE_DEFER error on boot:
-> [    0.757677] usb251xb 1-002c: failed to get ofdata: -517
-> 
-> Signed-off-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
-> ---
-> Changes in v2:
-> - removed redundant error code in message and brace
-> - Link to v1: https://lore.kernel.org/r/20250203-defer_usb1-v1-1-f6bba254215d@atmark-techno.com
-> ---
->  drivers/usb/misc/usb251xb.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-> index e24cdb667307802b9eee856e20744ebf694395e8..4fb453ca545013f8b89c43d3bb5cc6d1c53b39c9 100644
-> --- a/drivers/usb/misc/usb251xb.c
-> +++ b/drivers/usb/misc/usb251xb.c
-> @@ -636,10 +636,8 @@ static int usb251xb_probe(struct usb251xb *hub)
->  
->  	if (np && usb_data) {
->  		err = usb251xb_get_ofdata(hub, usb_data);
-> -		if (err) {
-> -			dev_err(dev, "failed to get ofdata: %d\n", err);
-> -			return err;
-> -		}
-> +		if (err)
-> +			return dev_err_probe(dev, err, "failed to get ofdata\n");
->  	}
->  
->  	/*
-> 
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250203-defer_usb1-254070d18cc9
+On Thu, 30 Jan 2025, Haoyu Li <lihaoyu499@gmail.com> wrote:
+> In the function "wled_probe", the "wled->name" is dynamically allocated
+> (wled_probe -> wled_configure -> devm_kasprintf), which is possible
+> to be null.
+>
+> In the call trace: wled_probe -> devm_backlight_device_register
+> -> backlight_device_register, this "name" variable is directly
+> dereferenced without checking. We add a null-check statement.
+>
+> Fixes: f86b77583d88 ("backlight: pm8941: Convert to using %pOFn instead of device_node.name")
+> Signed-off-by: Haoyu Li <lihaoyu499@gmail.com>
+> Cc: stable@vger.kernel.org
 
-Acked-by: Richard Leitner <richard.leitner@linux.dev>
+IMO whoever allocates should be responsible for checking NULL instead of
+passing NULL around and expecting everyone check their input for NULL.
+
+BR,
+Jani.
+
+
+> ---
+>  drivers/video/backlight/backlight.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
+> index f699e5827ccb..b21670bd86de 100644
+> --- a/drivers/video/backlight/backlight.c
+> +++ b/drivers/video/backlight/backlight.c
+> @@ -414,6 +414,8 @@ struct backlight_device *backlight_device_register(const char *name,
+>  	struct backlight_device *new_bd;
+>  	int rc;
+>  
+> +	if (!name)
+> +		return ERR_PTR(-EINVAL);
+>  	pr_debug("backlight_device_register: name=%s\n", name);
+>  
+>  	new_bd = kzalloc(sizeof(struct backlight_device), GFP_KERNEL);
+
+-- 
+Jani Nikula, Intel
