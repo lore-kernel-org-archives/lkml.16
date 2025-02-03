@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5A5770E2;
-	Mon,  3 Feb 2025 18:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25371770E2;
+	Mon,  3 Feb 2025 18:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738607992; cv=none; b=j0SmQ16kY6mQ+UILAL76MNQy+gQoF0i5A+sXfXHfLTXnS3TiTCW0hiRXnuHbPB0HzVof7EfRIWjSMTebbPtNaezosm672p4T1nsglax6sko3xLBAN0VxcD/7Q3af6dSHOzcqgDMD9xwVQQ+WfGL9iF+n84m9hKnguxj7VOZ6HPs=
+	t=1738608038; cv=none; b=ARu5+hImsO021lhNp7COej6PIOL44jJVu4Nm+tXe9TMukWnB79SK8rUhhZiypp79O7yZeKxQEAUhFwFNNAvfHigmHBg8LUItMh3W+wHEZ1d2uYBoVrNRn93+k9fYqeQ201DnupDqZ36PHqR3flVrOkRV3+V2438cdY2oYfTuXxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738607992; c=relaxed/simple;
-	bh=1ECSg/FdzmSV0OQodMbSYlZPzPP5tXnGfeHYyV+4P1M=;
+	s=arc-20240116; t=1738608038; c=relaxed/simple;
+	bh=+6ckti/z1a7X8H97U3gdQmYqIcQSGnKdX9UNyUe7tB0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nGCOp/wXApuN7av2+dRAp57NW+fZb2OCeJiycu8E4XCFUM0crk5nsVFW4KxujcL3sMvO1wMSOA+tqAV2G+aOvYGWB2jaQpkKn+pJWCfPzP/YfTuo7BZ3pi26c2SBbc2Q34KQeMZdxONpn5DqAD0y0VVKi2fSRAbgb/hci0jFUvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=MC2ryNCF; arc=none smtp.client-ip=212.227.15.15
+	 In-Reply-To:Content-Type; b=gzeE8WPMb0L6N3dlaNUXvXawA5ZmtACxhMyDCoAxU3WtrW8ZIKdLsbYbKQLzH4501LN6KiGOxwidgJTt7qMOP9pAJe2fHCjkTkruIO8nd0O17BlFDjm932qXdpLTThxnt8RqEvC+/B7LyDTdWoEGv169WKVgkGWQQ/WU0fp3yoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=oQ+Bm6u/; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="MC2ryNCF"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="oQ+Bm6u/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1738607987; x=1739212787; i=deller@gmx.de;
-	bh=1ECSg/FdzmSV0OQodMbSYlZPzPP5tXnGfeHYyV+4P1M=;
+	s=s31663417; t=1738608033; x=1739212833; i=deller@gmx.de;
+	bh=SPsrMCij8N12q9ZkI/NgCYBnAHlTtBTY61jNeAqIMAE=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=MC2ryNCF6Q1Tw5QGpmwWP9+J6wiv9nK6O21t90ObJRMKKGEJ1clnlGr5Ljr4aQ3m
-	 D6NuaF0N9GFsehmFO/8Cs/rMABc07WtTv7yx6Ntgsybkqecq3Wj2yqwLfk5nN1Ev/
-	 zmS1C+OA/yluJtC4pRRuyj2DBYme8UsMAYXcNyX2HQkz0/v7xKORfq0048RxPiR9N
-	 4ui8GiJbMiLw6RBk7mfr5QcOKRK5D+2gIDzhcjOLAlz6OPk8vbHOan42XsielpPY7
-	 AobEze3Uh0UTmxlJcoa1qLx070RftQDm7mGPvgGRJPpWaHBr+QBKotKPihlmd9zaa
-	 xI388EIFS7W9tprsdg==
+	b=oQ+Bm6u/TOAHWfaJ4ShkrmdWo+7gb6IMpAjTUMmJHUflWDKOFJ+yX5i9dxZ1ut0d
+	 JcYmgpJ/uS9BifPh1GK9M9stZAdLWOUiH6QF4vZqEvXebFOgof8R/7nsR5F9FMGp6
+	 A68lAiPkRgFfXfP9kEG69QfEBLr8f3qHCbiSqN8jZbMrpl24ujGjW90pP+2b3J0Du
+	 XpuZHi3u4hhySWyb0idN2ftKy1aF+EO30w1WhuQTxd0GcDqL1uAGb66dt+YW/V5tM
+	 pL5ZktuM5gdz4PK/JDcx0QGxAN8LJdCetV2zKwiZvaJz6thbXuIbc29oLbr3F31kb
+	 WVCH7wkaXVThg+22Qw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.20.172] ([109.250.63.6]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MqJm5-1t1tAm2k8R-00Zgw6; Mon, 03
- Feb 2025 19:39:47 +0100
-Message-ID: <61390496-2066-4b9f-bf1f-235d29b64135@gmx.de>
-Date: Mon, 3 Feb 2025 19:39:46 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4hvR-1tGEcB3xnr-00wjdT; Mon, 03
+ Feb 2025 19:40:32 +0100
+Message-ID: <aabef8b0-8344-4fee-a581-5c09345b77f9@gmx.de>
+Date: Mon, 3 Feb 2025 19:40:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,12 +43,11 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] parisc: Remove memcpy_fromio
-To: Arnd Bergmann <arnd@arndb.de>, Julian Vetter <julian@outer-limits.org>,
- "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>
+Subject: Re: [PATCH] parisc: Fix formatting errors in io.c
+To: Julian Vetter <julian@outer-limits.org>, Arnd Bergmann <arnd@arndb.de>,
+ "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>
 Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250130134825.2646380-1-julian@outer-limits.org>
- <543bd0f6-b25d-48b4-8039-496b8ddd10ce@app.fastmail.com>
+References: <20250130134810.2646219-1-julian@outer-limits.org>
 Content-Language: en-US
 From: Helge Deller <deller@gmx.de>
 Autocrypt: addr=deller@gmx.de; keydata=
@@ -94,50 +93,45 @@ Autocrypt: addr=deller@gmx.de; keydata=
  FwRDcGV6nxanxZGKEkSHHOm8jHwvQWvPP73pvuPBEPtKGLzbgd7OOcGZWtq2hNC6cRtsRdDx
  4TAGMCz4j238m+2mdbdhRh3iBnWT5yPFfnv/2IjFAk+sdix1Mrr+LIDF++kiekeq0yUpDdc4
  ExBy2xf6dd+tuFFBp3/VDN4U0UfG4QJ2fg19zE5Z8dS4jGIbLg==
-In-Reply-To: <543bd0f6-b25d-48b4-8039-496b8ddd10ce@app.fastmail.com>
+In-Reply-To: <20250130134810.2646219-1-julian@outer-limits.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NJykvA3vcriUa0/YiN0vyq6lejL9Ru4P+kP4MRJ481XlM62U42P
- gX3HtutHu+6P2XXJX8F07XGibpWsSxRdrlJD/JnHIr/2OTXFSYfRINmCas1B/Te/3zj3uxb
- mWXJVDmBqVJH0DH2EsrMhaEejb2jH6wlvkRj42oCxEPSus/kw4+9gPaECCkrjxbsD4njR6i
- qnwuQqTi0HUeU8yhTD3Og==
+X-Provags-ID: V03:K1:tsQ5T0/WHZye1Y0OEYo+ztuSCDhlxs02gN+bcqXs/uo5YLeEeiy
+ E4C4QUTR6s8Vtc5bTna+LJj2EfpeBKmzOrAS6h+68R+mRxjoOeIpkmQdKNCSXgMASAQ56tg
+ vCBxwKA80LupciN4dbpS1h+JYzrTTYGbGnGcuTqKq50GhKvAquMyoC1tvC/qkP1fUdML7Ew
+ QcutoyWORWfqJjxpI7lMA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:K7pVWQhOrTw=;roAyh53KDu9P1GnOD1aWSNkKpE6
- Fcy8dJ2cq1Q9M11pkKY1fz2FKkpQbR4oCt2I5T0AKdpADQrK3fh3LAGnUZWOjEkEkRrSFYr5H
- 8ldpbGZnmwEDOcIMW/a9wn7dLtrEcwsqxm41kwQ1MG6fgfPr1xuPe/EeeubAS6U7+CYp6+N/e
- jLjrylseLFplZROe4W42g7ZeemvHnUXs5VNadlT+LqLq32ipUDgMWQXWliVbbD1DX+jRinEGZ
- zS3CexaDxhgjyXe0JAGV5xN3qN2CnM+tHeQonSX0V+YcAF4lliuTWHJywHzQWHIgmfW+T+wjO
- W3wEEeBGMMdq3i8XCdIgHBoDu485nuzt0xxUZFC6pITIp1MTiWhCOEG/2vnRiHbIcCtitv4V6
- WYgdlyTYzLIhk3tGOqZjiSN6+6Qj1VS6Bf1MvrIkPxVXfU7TUC0UJouHd8sNWrp9SrKMrFL0f
- 3LNKMfGXlr/9fUhKtFAnl3qmX0FiJv2F6DFYxIcom1PMFkIt1Ou0jrH6ktIvksuQl49AZ/BB9
- o3TlSM/9kVy34rdvnW/jS7ScZ2fiOHZgSt4QSKhK4kAqhTgrxDryXS8Iv9ypeFvtM/71KjYqK
- g9gXQ7Ge7Z98Coy3is2qB1Ej5a47o8jY+98SfVB9ASWFcVCeeC5fTGjiBGeHw5eGI4FlTGnkl
- 77uROCKlgFWM/TgpHSdXE0FI49F2v5BaPJBiL4nRYkFMTUIFj0/quHPKZzaUzse5kYXKDtZ/5
- yt3Bt/rg8h2zEj8mE/YaAQHwog9Qsa6MgKZIOIv6RmNZPCQ8F4vTZ2XOl6VDUmIz0eoN0QgVM
- 40m5DqJ8DQSgMRN8bMblqysc7WTFQ81F2PhK9RHX2DgRrKoDk51w1r1iH25y1LJHwjl2bT2c4
- NzLrRP/GNy8Y/pULiCZOdvVpoS+3AweEWghWTlGy4nmM1tPn1FcsK6tO2UqG7i83kQIRpidUt
- JRqBpzPVSeQvxMDwjkwjE3i7TpBt8yMbQaglFUOfdxodzcVnZ5bp2GEJAOTuNCSpnZ4a9Vlqi
- xedlmIv+QEgd5+M1DL+iLZoZp44oJU1hukZOsZablWMXILzmJwl/G5TnLUFVfAgwQ6D3ctEAV
- yUTKNFjNNHAjFt9VfI73oz+j1LbfetOcQKjmJmkJo7DNGxQEmMu6kuf7XU5/yQPwbORTxStbk
- CmwzUvg84k9bvUceaCMtnN2sTN2snZmmfISY18Jw4kp5RRDKeJ2NXdOWkfnldJvycA+L+x/0C
- j9M2915RGHVGMtm5kSfrw0fCS/QiMOHXhll/zdPV4AYH7vsorY3NSFUWd8rtANXsMhgnmqGro
- 4CxXQFIzqOD14OpvAC+oUP2p1Ckpe7DT6qLR4/idzZCd2I=
+UI-OutboundReport: notjunk:1;M01:P0:0tDUDlNvEn0=;/VPRIzTjK5EXLgAgxuP0+wzxEIe
+ TSW0pgpOkACzpyFtjjy5AX/X855ccYK3khzVdkjevLpGMZq8O00LY4WTuzzsGtOgnLycQ66XC
+ QoedzDvFHrh3E/0CQQBzjyigmJs5nzNwkZ6+IgcXerzP720hG9RqsS37lsl8Rw6kLqbWYyPbf
+ csQ5Xo3gdtbIxpxoDPhpBO6j956KqcCLtwyl0OHwRmRb8Wh6d3wRm38pV5RmRedWY42l9SWtO
+ ypQ5ZdFDehrnAUpdB39UnEk+8MXSAOQDGAyqPP1KHt0BmZP/ocbSjfAHtcj5fGYeClNp8uLeO
+ atUoru5Npf+n4kxQUoRFOyDxuJbSuMuF9BiAOfNb+4U/QJqEyrKiAV5AO0VYKWH0AjUDo3Nyz
+ EiyIg+KIW4opNETVQi3zm+oSLdL3/d4aMFiD1KzcTatP+ZXhcvrMPDD3KXeL5r/hG/ldTkHtK
+ dbxIgKLfCUcIyyd+VFczsX/awxwbwvq9AodPEuRbbP+8R/AordT5Pevol+z819XekDGCVC2Qy
+ MFwjaVw9xWeqTgdGXWbTn2orQWQp0cFKYA+9ouYG4w1NFuKe/KneP3DL5cVhl5GNPFcfvXgrc
+ ICyGsUBo6ukeTHnYPyl4aOJMX7B2ba2exTYDw/jcYUkpYewYXzym04bo+QFWZ3t0UjOJrjdJF
+ pNBN5sUe3z9y1gtfLdEXJiMnJ3NfRdPOLJYxc9FVIrU7D/ufKtgbq4QeDbPZt7Li5wkXKpNIb
+ vSjRUAanjEJ12NqKf/SfogufDF95vieeFRYorQBogitrzUNHxxUCeK3wMy+qHZuQQVd4VvYHV
+ tmtpVK1yvYGJiNHlLqVRijP22oKSLpX04YqiDVps24aQRC3bVBrIVErr0vStDan8b26lHdysD
+ 6ZDxMn+ljciVvZxdZpYc1hr70cRfMYMxw641mwE9emtnTgzbF/fMg+uXubPrFZckf2VkUBjNb
+ HvhPyI5FajVzCV6Kn/wkrg6g+JIbbwM5OemShEh8/ao1jw32bTzDLJ2syyySsLNe2KesjPRFn
+ o3IWIWHcsT9huGFe7PJjMI7TeVl9ZpATsUcwryoqgNpEbmaEGIluocujBJLvtwk17k7MEGdyL
+ g2OhXu5W0b808239Katis+efLfyYFmp1Ifo2eLZvi4HZKAbO5ud0fXSbfpmq0TRJ/a5kTy8Di
+ UqZ/sPCCm/xo1GIVt+uxvfqGdfnjXa7NZgyr7AfImjMwtaJ7o9DwC0X/ZUrVq4dAF6SQVA8dI
+ JBtyYXh4quaEzshFydb1GdOTpREe6fp2oQJ3di10onxJtkLyFGChJJQMvd2keF8eq3Pwzoon2
+ 90FCCjMLbxXnDPfV2jQMNP1WIU61rjcekbcZBZnplPkJwc=
 
-On 1/31/25 08:28, Arnd Bergmann wrote:
-> On Thu, Jan 30, 2025, at 14:48, Julian Vetter wrote:
->> Fully migrate parisc to the IO functions from lib/iomem_copy.c. In a
->> recent patch the functions memset_io and memcpy_toio were removed, but
->> the memcpy_fromio was kept, because for very short sequences it does
->> half word accesses, whereas the functions in lib/iomem_copy.c do byte
->> accesses until the memory is naturally aligned and then do machine word
->> accesses. But I don't think the single half-word access merits keeping
->> the arch specific implementation, so, remove it as well.
->>
->> Signed-off-by: Julian Vetter <julian@outer-limits.org>
+On 1/30/25 14:48, Julian Vetter wrote:
+> Mutliple lines in the file contain tabs in lines where there is no
+> code. Just remove them.
 >
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Julian Vetter <julian@outer-limits.org>
+> ---
+>   arch/parisc/lib/io.c | 58 ++++++++++++++++++++++----------------------
+>   1 file changed, 29 insertions(+), 29 deletions(-)
+
+applied to parisc git tree.
 
 Thanks!
-I've added the patch to the parisc git tree.
-
 Helge
