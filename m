@@ -1,113 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mail-gw01.astralinux.ru (mail-gw01.astralinux.ru [37.230.196.243])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38553202C45;
-	Mon,  3 Feb 2025 11:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6288D1FC7E1;
+	Mon,  3 Feb 2025 11:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.230.196.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738582200; cv=none; b=m12cibs2AmHK3UrFCCejZxLAB/EzWLL6g44KpRxgzzYb62jSIkrnnHJrZEcb3fcXNSW7XnXZT7yv3zAfLh0W7TnqaYPfDeM+oFAWSWobgFX/PFZOQOnKuixzH6tqWCnIbNOZLFSoZXgXilHJzvkIw4ob2+p0f1AnvVZYxrqeqLs=
+	t=1738582226; cv=none; b=bKdvmDkmMpybHbEHWlVO5y/WXdWd4i8VJy3uqY9PfUrB9/SZpn/uoxEYhEnaxgEqic8mgr8mkgpwxuQl7WXZMmVwGUeRMAbYzqF9Nc9lTrjh+EIO37mLzuVIOezPiT/c1fNBuCyRqwwOOH8/ROwHeOXQPlBoTjv8ajfsmwLJzk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738582200; c=relaxed/simple;
-	bh=zU6C8PMSaf7d2L+2vDg6ZpHqQ4i/CwNFkGr/V1AYSRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IkRq0WbAaoQyfEBIOLR+4skmK8Tjyeyx5McPfq/KJGVUncjg9qsJReaazy/BmcHyZDABYLpXpu9ViIC+djB8NErXek+DYHvZSUP8EXWMGJaQVguyuSL1L9UNfcVCO2wFA7FFG5Bb9OL1ev1hB5IBHmcI+UnrTTHtX6EMxwTvjOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IpUzQHv6; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IpUzQHv6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738582199; x=1770118199;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zU6C8PMSaf7d2L+2vDg6ZpHqQ4i/CwNFkGr/V1AYSRI=;
-  b=IpUzQHv69K1K9wwLhXT0aO1HoUYcJG63BU73HFyUm7dbzQCzPkaIg9EV
-   1998qhwlr7HrThUNc8K7mfPW566EaOabJUivRx5FMawWTrgfF17eeBo28
-   cdqtMRU4cqNR30jd8Vf8//CAJ2cvxJ5AioS7MOyGMTszper+mDd/M+vFn
-   +Az7+z0XtypzdKHnwfhLh6vaLX1Ezs7t0hrBfOmvPNe5csn4pzDqRM2i2
-   q63H8yhqpaQpMz3QqhPOqbyzRSyqSnWz4Q0UpVdA6TTcrnR+V4Pr7+T1i
-   EBRzxDuT6/nwh3zOBG6/oWRZF4l+uU4UHxrIszf1dabBxixLxYCc5AxSZ
-   A==;
-X-CSE-ConnectionGUID: 5lEJac38RICZ18+xCZ0SSQ==
-X-CSE-MsgGUID: QlhHwAKwRAShvZJ8vIV+uQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="38777843"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="38777843"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 03:29:58 -0800
-X-CSE-ConnectionGUID: +c1qlMQ/ThKf6agLJ7MEvw==
-X-CSE-MsgGUID: IWYnO/GNQVidhJnUapXmVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="110216485"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 03:29:55 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1teueF-00000007oU2-4B1n;
-	Mon, 03 Feb 2025 13:29:51 +0200
-Date: Mon, 3 Feb 2025 13:29:51 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
-	lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-	jic23@kernel.org, przemyslaw.kitszel@intel.com,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 00/20] Split devres APIs to device/devres.h and
- introduce devm_kmemdup_array()
-Message-ID: <Z6Cor4FvFK65XUd3@smile.fi.intel.com>
-References: <20250203080902.1864382-1-raag.jadav@intel.com>
- <Z6CRBDpXpPha07mf@smile.fi.intel.com>
- <Z6Cbm3XAG-8XPvoU@black.fi.intel.com>
+	s=arc-20240116; t=1738582226; c=relaxed/simple;
+	bh=baN8Og7egUm0YAgH+MLV7CddHfdSlD1CiAUJq8ntw68=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S7sPSt7inh7vJ47E5ZwJdDQZXREk6o4IzYfzIpc6VFwJ3ncul7npHivFz4dyS1CT+n69fbUZt+hIATyiHIanNKumMJmH+MXtGVsdbs2zLhY8Toqb8f/ebIiV5zT91bM4/KWatxCpCMXYqjaqtcUjdC5PxLpktiFp2w15J3KRJbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=37.230.196.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from gca-sc-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
+	by mail-gw01.astralinux.ru (Postfix) with ESMTP id 630DD24D3A;
+	Mon,  3 Feb 2025 14:30:12 +0300 (MSK)
+Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail04.astralinux.ru [10.177.185.109])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-gw01.astralinux.ru (Postfix) with ESMTPS;
+	Mon,  3 Feb 2025 14:30:05 +0300 (MSK)
+Received: from localhost.localdomain (unknown [10.198.57.103])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4Ymkn30cV8zkWyl;
+	Mon,  3 Feb 2025 14:29:58 +0300 (MSK)
+From: Anastasia Belova <abelova@astralinux.ru>
+To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>,
+	David Laight <david.laight.linux@gmail.com>
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] clk: sunxi: clean up rate counting
+Date: Mon,  3 Feb 2025 14:29:28 +0300
+Message-ID: <20250203112930.650813-1-abelova@astralinux.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6Cbm3XAG-8XPvoU@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
+X-KSMG-AntiSpam-Info: LuaCore: 50 0.3.50 df4aeb250ed63fd3baa80a493fa6caee5dd9e10f, {Tracking_from_domain_doesnt_match_to}, astralinux.ru:7.1.1;new-mail.astralinux.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 190748 [Feb 03 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.7
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/02/03 07:33:00 #27201296
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 1
 
-On Mon, Feb 03, 2025 at 12:34:03PM +0200, Raag Jadav wrote:
-> On Mon, Feb 03, 2025 at 11:48:52AM +0200, Andy Shevchenko wrote:
-> > On Mon, Feb 03, 2025 at 01:38:42PM +0530, Raag Jadav wrote:
-> > > This series
-> > > 
-> > > 1. Splits device/devres.h for the users that are only interested in devres APIs.
-> > >    Original work by Andy Shevchenko:
-> > >    https://lore.kernel.org/r/20241203195340.855879-1-andriy.shevchenko@linux.intel.com
-> > > 
-> > > 2. Introduces a more robust and cleaner devm_kmemdup_array() helper and uses it
-> > >    across drivers.
-> > > 
-> > > The idea behind embedding both work into a single series is to reduce conflicts
-> > > and dependencies while merging.
-> > > 
-> > > v2: Use size_mul() for multiplication (Dmitry)
-> > >     Update commit message (Dmitry)
-> > > 
-> > > v3: Embed devres.h work by Andy
-> > 
-> > >     Add more users of devm_kmemdup_array()
-> > 
-> > I understand the desire to cover as much as possible, but it becomes much
-> > harder to coordinate.
-> 
-> I have a few more patches which I'm delaying to reduce dependency.
+If n = 255, the result of multiplication of n and 24000000
+may not fit int type. Swap division and shift with multiplication.
 
-So, let's focus on the IIO/pin control ones only for the starter? With the
-produced immutable tag you may convince the respective maintainers to pull
-that tag along with the patches to their subsystems. It will be much easier
-to coordinate and execute.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
+Fixes: 6424e0aeebc4 ("clk: sunxi: rewrite sun9i_a80_get_pll4_factors()")
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
+---
+ drivers/clk/sunxi/clk-sun9i-core.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/clk/sunxi/clk-sun9i-core.c b/drivers/clk/sunxi/clk-sun9i-core.c
+index d93c7a53c6c0..639c83ed63b8 100644
+--- a/drivers/clk/sunxi/clk-sun9i-core.c
++++ b/drivers/clk/sunxi/clk-sun9i-core.c
+@@ -25,12 +25,12 @@
+ 
+ static void sun9i_a80_get_pll4_factors(struct factors_request *req)
+ {
+-	int n;
+-	int m = 1;
+-	int p = 1;
++	unsigned int n;
++	unsigned int m = 1;
++	unsigned int p = 1;
+ 
+ 	/* Normalize value to a 6 MHz multiple (24 MHz / 4) */
+-	n = DIV_ROUND_UP(req->rate, 6000000);
++	n = DIV_ROUND_UP(req->rate, 6000000ul);
+ 
+ 	/* If n is too large switch to steps of 12 MHz */
+ 	if (n > 255) {
+@@ -50,7 +50,11 @@ static void sun9i_a80_get_pll4_factors(struct factors_request *req)
+ 	else if (n < 12)
+ 		n = 12;
+ 
+-	req->rate = ((24000000 * n) >> p) / (m + 1);
++	/* Division and shift should be done before multiplication to
++	 * avoid overflow. The result will be correct because '>> p' and
++	 * '/ (m + 1)' are both just conditional 'divide by 2'
++	 */
++	req->rate = ((24000000ul >> p) / (m + 1)) * n;
+ 	req->n = n;
+ 	req->m = m;
+ 	req->p = p;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
