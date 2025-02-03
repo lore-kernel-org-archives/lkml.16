@@ -1,66 +1,70 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.167])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B8B209F4C;
-	Mon,  3 Feb 2025 15:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9233720A5C8;
+	Mon,  3 Feb 2025 15:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738597347; cv=pass; b=pd8drZilFzMVdrUN+O4OPbX3/zVOeTcLkqqwJn82Y7eHFKx8A3tJOBxODe1kdaX40s5eWORSHhPfjiVUYiC9669vL3g0Yvy3MXbyvFH/Qb5fBKTKP0oG8Z04wuILDzA9tKQ5UWRxxWfIzMI6StOZb1E93tOW1Dt1QI9qono9Hio=
+	t=1738597353; cv=pass; b=Jzvv5WrfRmDnhdgmiSmIDhJvxwH2Fo5P9r9CSffvLsONKCU9OC3v9JJVK50BQr/ecSqC9x/UsM6IVdTD0RSRz8Oh7GT9H7fDI/5Z6JgO0rdHavybTRF5zqSeCaZz86WBKJ3qeQ3vRP/OZf8sdwqwVHsoSZ5ueUEE0mHtdxkXmeM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738597347; c=relaxed/simple;
-	bh=+dDk8QmoYU+rFV84x362F96ajoFuvPzAEV+yywKHlQg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ttJO2Xg4f/PDZkw6aTN7fL92Lyu90skVp5jMkdr5te9HbHZIdGFm7+Mjtv/RTTIArZLmA5bVtka3t/MPqD1qoeYv5AUEhxHKbhoZ70GFzcTQEvrHaEc61lRgbh7TNSyzgfdBuafQQ1NFU0wKSoU1/JeI+Fkwjqn3E15R1ZsNsCM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=ZxI1TzDR; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=MiooMPHQ; arc=pass smtp.client-ip=81.169.146.167
+	s=arc-20240116; t=1738597353; c=relaxed/simple;
+	bh=SEsrsy0vMv27i2pCiS3XUVK6T6Nd5cC5BOZnx21VJgo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sRXdiyY8SxzMC/QqpBwBQ41HdQuScI55DwSL+o5cTOPqA/ZV4u68e4wOTP8bG0BDZgRn2M+cKYn9HmdvZFDP4ggQxgd2hioyi/M6tUaJQunF0g6NlsLJUxQ/KVU8tvlIG+Nhl0L5cBLMPm+r+YEeGIpEVLYHq0ZOZXaqGwW+BzE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=FHmXz2JI; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=EkssJjtw; arc=pass smtp.client-ip=85.215.255.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="ZxI1TzDR";
-	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="MiooMPHQ"
+	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="FHmXz2JI";
+	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="EkssJjtw"
 ARC-Seal: i=1; a=rsa-sha256; t=1738597342; cv=none;
     d=strato.com; s=strato-dkim-0002;
-    b=h5uBBBE3c/Fa+JYDHMi/jGRFYXjy+F8yBvlPN2UIxKH4Z1M9FrZZFbRdk982Yxq1m2
-    3nRTfp718bhrk6oSZVmrxcHzELSda8Hhrn0ouvybTbfF5eFiSnWJKHewri/O5F4tcaGs
-    QDhBcxidXS0POqL9ZI+ldRPCS1eaxsebqhgKACZPGDO5u2JMc4dn7+UkLU/Pi1GREoEv
-    A19t+G2a5Hng1dR6d1PYTemlcsbVVrN+k7A8AguVZNhQ93KB/8uZtInSUXHEqq1GoKVS
-    fPExY7HnlYRN/9Bi4nhkLhczpTG2Pvq3oehMeWVHHjTMCw5tl7q9ggJaDbBggQGNguUY
-    2n/g==
+    b=NXX31/qhIDuQbz/sHdqKQEvWvhumOVUcqc2H1dykGB3KTATHRiRPr2JTYgOGGEx+RY
+    CbiyfMeL+m/CVoRwiLNh+ddwLjaZAoBmjnO+kmc/WXUhSDJu/vpj6aYS0LWiXZ68wGVt
+    l3GLq7d0+wa/5j7xKshOA9/6pUJVa6K0K+WkJMaAaNTFWc3N055/tuM+rCQtMzjrnion
+    obcoCpoDQC6mtIhc21Rqr+cyErA5B4b7R8Vj6fCx8KSiVtG0eQdg0wNs7u2E1ddio7Oy
+    K+/Jvqu+1d5U4HfRcsltvnqUYlABwz+TGwXrPr/CNXH45Qg+NusYorfa35B7OrbxViL7
+    4QEA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1738597342;
     s=strato-dkim-0002; d=strato.com;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=G5dzb8nk5KEWKjxhI2WoisRcHxkN9yXX/ahlj1W6C8Y=;
-    b=HuxFuvaaTd8+H3vZs2JXOtCWJE4y/kfay3ZOVHdq3sZ/PqAUWDdUOjn/hdSuNYRvwJ
-    ZswaHeFlxb3WZ+Oil6V/pFRh65NU44MRzuxyjqRDTgiHs308Jh4l2wpBqf1IBM3lnX5S
-    0CnouU6AtDvCXxdw/CwWm68saYr+hRv8M+NLcd+7mRB16N4bfGQCTIUzxwIIEtnaLzIQ
-    V9EkHdAusKXkefihDyXCbtkzNFpZMKugTOGnKyu4wv0FXh4UIwedLExHl3BgJu/wblUS
-    25CEccledsS2Lq8p0X4S5HLsDzuWRNZrprcXn/ji6yITZfXjvYaiqhYxljv/7eTWCBnc
-    kOiA==
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=pQhwB4aRGyRUTDm1T/bb07MveF9L9AHnShW286QE52g=;
+    b=q+okQF7jNxkA6EcQFezDpXBiDPvi2BpeCliTRhfPCm5KKx+vmr8M+rErB/B/X4XZWK
+    hcd0WKQxKkeA+cSsa6xsSuXEzqXLpdyIm0z7EW8CR9T/rYmSwD+dbxTGC+nq1hgKySgY
+    0ccP2JqSSCRCcz2sPMkyoAzpJp+umf9RgrTapEBbIUneVojwyl124LlsMYwd3+3U+qtL
+    1jQp5wq76CI6B49opC3UxEbjkF2EP/f63CZdPIPGK/Vv1V1J/0IFJpWy4GOPsbqhNp9G
+    cQ0M2duRQtMTEk3nSHRSxctqh84ydF4biGTUaxry1xweWttGCRAIcWVtF44xLSp53MCt
+    dFrA==
 ARC-Authentication-Results: i=1; strato.com;
     arc=none;
     dkim=none
 X-RZG-CLASS-ID: mo01
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1738597342;
     s=strato-dkim-0002; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=G5dzb8nk5KEWKjxhI2WoisRcHxkN9yXX/ahlj1W6C8Y=;
-    b=ZxI1TzDR+rB6wCEd/qRP9crzakJQZtggdQqFlZMej+tf51MQZS6zpwXH+vQuzwaisR
-    /VL+zLJbjAXELvhPxc56WHmB+S1lzLMxoJcid8dYz6dGGPIvetb5BWKyR+38WIwJgXJ3
-    HXQslQ6zTnLgwSoPuHOnP6kd28vpj4x5WeBPuA/JIDQts1fkZDf0xBCAZOCMFuZk4+Zg
-    2N3NwjNT7gXqx+6XkmBWe+k7v0+87uImcsnB+2HPVqEjidR4yYciIsFeu/VHuaPlLVUr
-    Y5JFjlSce2f3MmnLNsYYxDXHP27EfeZSrNWWXolF8d1g6KalRLsjhxuDwdQzcJqBWAaU
-    UaqQ==
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=pQhwB4aRGyRUTDm1T/bb07MveF9L9AHnShW286QE52g=;
+    b=FHmXz2JITm3Bo7K8X13S2jqpguqCchO2142VgVvw7bSRi9R1m/vogVKByr2uZSOojg
+    J+Tg1O8DXFB1Fp+mah7K6hJrE79j6yzx7o29vGCxVKqD5fO6FywCbFgndNnX2TLUsHcI
+    Iqq2rqeM5hB0zLhXL4BO3VsgpqAIbU3Szfrp3JKkVtg1YPNQvvGynhi49/O1TdlEZ+GQ
+    B+fEt7D0HcILUKMJq3+Yqotmd1urf2L95I5V52N3rJluewmxRCPRdadmvekAUNFScjnJ
+    oyP9pmmiMYbrpAlszf37oYMGjCrGwPvLUabW1s+zfe0dId5r5E/SwbbbB8l0ZBV20XLX
+    kaMg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1738597342;
     s=strato-dkim-0003; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=G5dzb8nk5KEWKjxhI2WoisRcHxkN9yXX/ahlj1W6C8Y=;
-    b=MiooMPHQp3O6Ll6+zSS0/oruf9cFgsihNMlEnFi1y1wkkzxLcpFU5vjBPYVVnynLl3
-    gKszA9+K9QkO0Urmm8AQ==
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=pQhwB4aRGyRUTDm1T/bb07MveF9L9AHnShW286QE52g=;
+    b=EkssJjtwICzQbb98zDlEdCZQ/vthFAMYRSgKCsfec1h/4jMa4W7J81y5QgrWEx+5X6
+    bzcFVT18R316ce+Jz/Ag==
 X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
 Received: from ws2104.lan.kalrayinc.com
     by smtp.strato.de (RZmta 51.2.17 AUTH)
-    with ESMTPSA id J1a251113FgLFKL
+    with ESMTPSA id J1a251113FgMFKN
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
 	(Client did not present a certificate);
-    Mon, 3 Feb 2025 16:42:21 +0100 (CET)
+    Mon, 3 Feb 2025 16:42:22 +0100 (CET)
 From: Julian Vetter <julian@outer-limits.org>
 To: Arnd Bergmann <arnd@arndb.de>,
 	Richard Henderson <richard.henderson@linaro.org>,
@@ -71,10 +75,12 @@ To: Arnd Bergmann <arnd@arndb.de>,
 Cc: linux-alpha@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Julian Vetter <julian@outer-limits.org>
-Subject: [PATCH v2 1/2] alpha: rework use of memset_io, memsetw_io and scr_memsetw
-Date: Mon,  3 Feb 2025 16:42:15 +0100
-Message-Id: <20250203154216.172040-1-julian@outer-limits.org>
+Subject: [PATCH v2 2/2] alpha: Remove IO memcpy and memset
+Date: Mon,  3 Feb 2025 16:42:16 +0100
+Message-Id: <20250203154216.172040-2-julian@outer-limits.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250203154216.172040-1-julian@outer-limits.org>
+References: <20250203154216.172040-1-julian@outer-limits.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,10 +90,8 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="us-ascii"
 
-In order to prepare the alpha architecture to use the generic IO
-functions from lib/iomem_copy.c, rename _memset_c_io to memsetw_io.
-Then move scr_memsetw to io.c, along the scr_memcpyw and scr_memmovew,
-inside the CONFIG_VGA_CONSOLE.
+Recently new IO memcpy were added in libs/iomem_copy.c. So, remove the
+alpha specific implementations and use the ones from the lib code.
 
 Signed-off-by: Julian Vetter <julian@outer-limits.org>
 ---
@@ -96,152 +100,148 @@ Changes for V2:
   - One that shuffles the memsetw_io and _memset_c_io around
   - And one that removed the memcpy_fromio and memcpy_toio
 ---
- arch/alpha/include/asm/io.h  | 14 +------------
- arch/alpha/include/asm/vga.h |  9 +--------
- arch/alpha/kernel/io.c       | 38 +++++++++++++++++++-----------------
- 3 files changed, 22 insertions(+), 39 deletions(-)
+ arch/alpha/include/asm/io.h |   5 --
+ arch/alpha/kernel/io.c      | 109 ------------------------------------
+ 2 files changed, 114 deletions(-)
 
 diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
-index 65fe1e54c6da..d6e868872e19 100644
+index d6e868872e19..ba45f84c97f1 100644
 --- a/arch/alpha/include/asm/io.h
 +++ b/arch/alpha/include/asm/io.h
-@@ -592,20 +592,8 @@ extern inline u64 readq_relaxed(const volatile void __iomem *addr)
+@@ -590,13 +590,8 @@ extern inline u64 readq_relaxed(const volatile void __iomem *addr)
+ /*
+  * String version of IO memory access ops:
   */
- extern void memcpy_fromio(void *, const volatile void __iomem *, long);
- extern void memcpy_toio(volatile void __iomem *, const void *, long);
--extern void _memset_c_io(volatile void __iomem *, unsigned long, long);
-+extern void memsetw_io(volatile void __iomem *to, u16 c, long count);
+-extern void memcpy_fromio(void *, const volatile void __iomem *, long);
+-extern void memcpy_toio(volatile void __iomem *, const void *, long);
+ extern void memsetw_io(volatile void __iomem *to, u16 c, long count);
  
--static inline void memset_io(volatile void __iomem *addr, u8 c, long len)
--{
--	_memset_c_io(addr, 0x0101010101010101UL * c, len);
--}
+-#define memcpy_fromio memcpy_fromio
+-#define memcpy_toio memcpy_toio
 -
--#define __HAVE_ARCH_MEMSETW_IO
--static inline void memsetw_io(volatile void __iomem *addr, u16 c, long len)
--{
--	_memset_c_io(addr, 0x0001000100010001UL * c, len);
--}
--
--#define memset_io memset_io
- #define memcpy_fromio memcpy_fromio
- #define memcpy_toio memcpy_toio
- 
-diff --git a/arch/alpha/include/asm/vga.h b/arch/alpha/include/asm/vga.h
-index 919931cb5b63..01611d792597 100644
---- a/arch/alpha/include/asm/vga.h
-+++ b/arch/alpha/include/asm/vga.h
-@@ -31,17 +31,10 @@ static inline u16 scr_readw(volatile const u16 *addr)
- 		return *addr;
- }
- 
--static inline void scr_memsetw(u16 *s, u16 c, unsigned int count)
--{
--	if (__is_ioaddr(s))
--		memsetw_io((u16 __iomem *) s, c, count);
--	else
--		memset16(s, c, count / 2);
--}
--
- /* Do not trust that the usage will be correct; analyze the arguments.  */
- extern void scr_memcpyw(u16 *d, const u16 *s, unsigned int count);
- extern void scr_memmovew(u16 *d, const u16 *s, unsigned int count);
-+extern void scr_memsetw(u16 *s, u16 c, unsigned int count);
- 
- /* ??? These are currently only used for downloading character sets.  As
-    such, they don't need memory barriers.  Is this all they are intended
+ /*
+  * String versions of in/out ops:
+  */
 diff --git a/arch/alpha/kernel/io.c b/arch/alpha/kernel/io.c
-index c28035d6d1e6..353b1dcbd422 100644
+index 353b1dcbd422..a6a53fcfafb6 100644
 --- a/arch/alpha/kernel/io.c
 +++ b/arch/alpha/kernel/io.c
-@@ -585,29 +585,31 @@ void memcpy_toio(volatile void __iomem *to, const void *from, long count)
+@@ -476,115 +476,6 @@ void outsl(unsigned long port, const void *src, unsigned long count)
+ EXPORT_SYMBOL(iowrite32_rep);
+ EXPORT_SYMBOL(outsl);
  
- EXPORT_SYMBOL(memcpy_toio);
- 
-+#if IS_ENABLED(CONFIG_VGA_CONSOLE) || IS_ENABLED(CONFIG_MDA_CONSOLE)
- 
+-
 -/*
-- * "memset" on IO memory space.
+- * Copy data from IO memory space to "real" memory space.
+- * This needs to be optimized.
 - */
--void _memset_c_io(volatile void __iomem *to, unsigned long c, long count)
-+#include <asm/vga.h>
-+
-+void memsetw_io(volatile void __iomem *to, u16 c, long count)
- {
-+	unsigned long v = 0x0001000100010001UL * c;
-+
- 	/* Handle any initial odd byte */
- 	if (count > 0 && ((u64)to & 1)) {
--		__raw_writeb(c, to);
-+		__raw_writeb(v, to);
- 		to++;
- 		count--;
- 	}
- 
- 	/* Handle any initial odd halfword */
- 	if (count >= 2 && ((u64)to & 2)) {
--		__raw_writew(c, to);
-+		__raw_writew(v, to);
- 		to += 2;
- 		count -= 2;
- 	}
- 
- 	/* Handle any initial odd word */
- 	if (count >= 4 && ((u64)to & 4)) {
--		__raw_writel(c, to);
-+		__raw_writel(v, to);
- 		to += 4;
- 		count -= 4;
- 	}
-@@ -617,7 +619,7 @@ void _memset_c_io(volatile void __iomem *to, unsigned long c, long count)
- 	count -= 8;
- 	if (count >= 0) {
- 		do {
--			__raw_writeq(c, to);
-+			__raw_writeq(v, to);
- 			to += 8;
- 			count -= 8;
- 		} while (count >= 0);
-@@ -626,14 +628,14 @@ void _memset_c_io(volatile void __iomem *to, unsigned long c, long count)
- 
- 	/* The tail is word-aligned if we still have count >= 4 */
- 	if (count >= 4) {
--		__raw_writel(c, to);
-+		__raw_writel(v, to);
- 		to += 4;
- 		count -= 4;
- 	}
- 
- 	/* The tail is half-word aligned if we have count >= 2 */
- 	if (count >= 2) {
--		__raw_writew(c, to);
-+		__raw_writew(v, to);
- 		to += 2;
- 		count -= 2;
- 	}
-@@ -645,14 +647,14 @@ void _memset_c_io(volatile void __iomem *to, unsigned long c, long count)
- 	mb();
- }
- 
--EXPORT_SYMBOL(_memset_c_io);
+-void memcpy_fromio(void *to, const volatile void __iomem *from, long count)
+-{
+-	/* Optimize co-aligned transfers.  Everything else gets handled
+-	   a byte at a time. */
 -
--#if IS_ENABLED(CONFIG_VGA_CONSOLE) || IS_ENABLED(CONFIG_MDA_CONSOLE)
+-	if (count >= 8 && ((u64)to & 7) == ((u64)from & 7)) {
+-		count -= 8;
+-		do {
+-			*(u64 *)to = __raw_readq(from);
+-			count -= 8;
+-			to += 8;
+-			from += 8;
+-		} while (count >= 0);
+-		count += 8;
+-	}
 -
--#include <asm/vga.h>
+-	if (count >= 4 && ((u64)to & 3) == ((u64)from & 3)) {
+-		count -= 4;
+-		do {
+-			*(u32 *)to = __raw_readl(from);
+-			count -= 4;
+-			to += 4;
+-			from += 4;
+-		} while (count >= 0);
+-		count += 4;
+-	}
 -
--/* A version of memcpy used by the vga console routines to move data around
--   arbitrarily between screen and main memory.  */
-+void scr_memsetw(u16 *s, u16 c, unsigned int count)
-+{
-+	if (__is_ioaddr(s))
-+		memsetw_io((u16 __iomem *) s, c, count);
-+	else
-+		memset16(s, c, count / 2);
-+}
-+EXPORT_SYMBOL(scr_memsetw);
+-	if (count >= 2 && ((u64)to & 1) == ((u64)from & 1)) {
+-		count -= 2;
+-		do {
+-			*(u16 *)to = __raw_readw(from);
+-			count -= 2;
+-			to += 2;
+-			from += 2;
+-		} while (count >= 0);
+-		count += 2;
+-	}
+-
+-	while (count > 0) {
+-		*(u8 *) to = __raw_readb(from);
+-		count--;
+-		to++;
+-		from++;
+-	}
+-	mb();
+-}
+-
+-EXPORT_SYMBOL(memcpy_fromio);
+-
+-
+-/*
+- * Copy data from "real" memory space to IO memory space.
+- * This needs to be optimized.
+- */
+-void memcpy_toio(volatile void __iomem *to, const void *from, long count)
+-{
+-	/* Optimize co-aligned transfers.  Everything else gets handled
+-	   a byte at a time. */
+-	/* FIXME -- align FROM.  */
+-
+-	if (count >= 8 && ((u64)to & 7) == ((u64)from & 7)) {
+-		count -= 8;
+-		do {
+-			__raw_writeq(*(const u64 *)from, to);
+-			count -= 8;
+-			to += 8;
+-			from += 8;
+-		} while (count >= 0);
+-		count += 8;
+-	}
+-
+-	if (count >= 4 && ((u64)to & 3) == ((u64)from & 3)) {
+-		count -= 4;
+-		do {
+-			__raw_writel(*(const u32 *)from, to);
+-			count -= 4;
+-			to += 4;
+-			from += 4;
+-		} while (count >= 0);
+-		count += 4;
+-	}
+-
+-	if (count >= 2 && ((u64)to & 1) == ((u64)from & 1)) {
+-		count -= 2;
+-		do {
+-			__raw_writew(*(const u16 *)from, to);
+-			count -= 2;
+-			to += 2;
+-			from += 2;
+-		} while (count >= 0);
+-		count += 2;
+-	}
+-
+-	while (count > 0) {
+-		__raw_writeb(*(const u8 *) from, to);
+-		count--;
+-		to++;
+-		from++;
+-	}
+-	mb();
+-}
+-
+-EXPORT_SYMBOL(memcpy_toio);
+-
+ #if IS_ENABLED(CONFIG_VGA_CONSOLE) || IS_ENABLED(CONFIG_MDA_CONSOLE)
  
- void
- scr_memcpyw(u16 *d, const u16 *s, unsigned int count)
+ #include <asm/vga.h>
 -- 
 2.34.1
 
