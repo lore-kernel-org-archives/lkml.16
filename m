@@ -1,46 +1,46 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2065.outbound.protection.outlook.com [40.107.100.65])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2085.outbound.protection.outlook.com [40.107.101.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3E120B801;
-	Mon,  3 Feb 2025 16:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C81820B1EF;
+	Mon,  3 Feb 2025 16:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.85
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738600768; cv=fail; b=IPXLK5Hq6gaLypuWDL20F4WSKJ13VQgD1N3MlByTMggG8i+02VGK//JcfyMnNG0/8GJN3t0hQ+zg3+9u5xZWd+aWaxa9rq5F/OnYbLlm12LxFVDpybaKt3hnbsbSKd6m9j4PMzpMaf1nTVyGHuX7rKl95oYUcz1mcliLy0+7jHE=
+	t=1738600774; cv=fail; b=o1R2YGfKrQFIABj21Kpe84MyQw9iJj/H+e5nUL2KXqrkuivUCKe6pdIKQOp6QwLMHZ/cusuIvOGti0tKWsAzXBlaiEiTzKdXUK7CahBepKG38owQrCULT7d1b/tQphJLA7h8vRoJNxGJkBgEjPooknAa4tfD3B8hNiLrq6lO3Uk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738600768; c=relaxed/simple;
-	bh=SRKiQvcGNEMRm/4GUXAPfsYw74I79ay7nhdSUnx+Yig=;
+	s=arc-20240116; t=1738600774; c=relaxed/simple;
+	bh=+jSQf/Gr4acmyLhhyPaP/EXiwN+V2xT0LlYFWxHtJdg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=leiMVWFAFLIAanT2NYjVnPfTeZTx4KTau89EzexejvowD7tSIIe8kiadhTvWANvtyQSBVC7lB77XQMM9/HJXXFGn3xIrQyf3oxNIx5wVHdk1I4yXTFjiWi4qxJjn55unYT+/21evbSPg9G7p6ygVSNccelc+5+UbJD7yu49/ALo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cucqjrmi; arc=fail smtp.client-ip=40.107.100.65
+	 MIME-Version:Content-Type; b=DRTyRUf1ANgVlMELGmn5L9jlfHoF5pmwgCIwB0kBSoL5gplDN4jei/8ta9Yg7N+K6ljmzvMpdKwyeAxMywY6IUNYaVR1aMdOQBnY4EXCr5i3bgZnuAGIbNZtVmcxdIG7MbbtsWPubuqp4D/C6vZ+PlyzK+DfdW1Dpw/aO4peFPk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CcM+krmB; arc=fail smtp.client-ip=40.107.101.85
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cucqjrmi"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CcM+krmB"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fZHkmIE7d/osBYC3iyqNVjl1IX9E0feqJQqM5yvYDTV7KTpbexGaOhbYSPQwaJm+DY3Eb+A9GBDkySfSl4d55IW3arN/kR20/cWI3WPxFURBYoRiqfchxWvKiCBPCMarcqoYYPGGl+8kceEX8tK0KPpuolYVSm5oR5fGBShd5air3MQx9Owu9zHvq5TXkg7FhcHwx5ESWYj3PCShITGssAwnssTrnGLW76MG8Ex+cRIkr1bCgdOG9CFCGbUsHIKEJNbW9harmy81NT/zb25US83ZmGOuANrY2m0oDSfreqTEO8xW+15yLSmPY4n5n9Bh53teE+s5U2g/ChdRPBc4bg==
+ b=UjGJrhKszhFzGYioHDhYBojx1CO2CvOUuWgOMHuRzBmavfrFlFObgngyAmMY1+xlfGzrgGfIuKUISuCjgeslBwtZkGhyOgJshWN6rA+vtVnsdi+OiMWKCtWA60h4Hw1KFzrQY9WPnnfFLvff/2QZxuhIDGa0+zdFtgX+PWV0pjj+M6LQeoWqFVZVm0Xnjp/C/CwwEVAFsDsuCQ26zQ57xv9r5mZ31cxrnFvEsGR3iJTkp9Uy2B4KIm8s1iTaz1dSghKEy9akO01lcwgbvKWxirokaHt4RYaNaJpByDsxaNafwU9Vyv3KWmBDk1EbyUFoltxcglMlCo9cymKNWETUPA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Wn2rlqCQZUL4PxOBMb33QP51ZrUhOtl9fvyyS8WAn2Q=;
- b=U8PRpZlXFOOV1JubouO+Lup5ZCc15GU63SbeBW2ISf9LRccXVAH5wevlqiqvuIrEjW9Fs26DvCThp4Pgs5VzZ4tGFaNLGnZTAFb8ABJtgu0CrqYH6mqfzLWDnhfcmvnLNuduHCr+/ZaIie/3ohN4V4DXKEq8w4LrjE3DZjJFgxlcaDu+2n/v/j9lC+f8P7ODGycNC80UykLgJvKhWfy8Lu/ZxiA4F8AdKZ4wqVyghRXTlv95/MHhehFEsR8+fvjVhG0VhT8/gtXiOcYPciyefii8AIOh+/7zkr4oznheneA2h4pwROBqAmKxI+LJUqPoJUwxirB/fwQ3R4vqTcDBLg==
+ bh=Oxo7EEfcw0Pt1miinnT6cq3B2NNPzlz1Sa2Mok5SOy0=;
+ b=H5FiySKuSGbKt/WL/oZw0eVQed0XpC2nrdJ14JJnuJqDjKwz29eTf2/xpg1fFJQDbQXkIiVLYHLCy0tUgV/ZryEWo0NC+6V/ODjNHlfyLxVYxSCSNI3Brt/GnNd/a7LWcsVX/lmKs8goAiNwcuw/AqPbgkpN1awMjKysdeUoOXAri1z6pgWFPii8IoQZh46k6SrWzK+OpdlHS4UHHsFXXjnFrtmnfjEkECS+smD9g0Zj6OHNydenNV6nuJs0I9vKkpzPwqcyBsbLZrkfvD+WDoB1UzcKORuJbpRlRhVVgoSzW9QSnrym3+hyDtl4ne4SjEmBtCMxYudLpwkM2V8jvw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wn2rlqCQZUL4PxOBMb33QP51ZrUhOtl9fvyyS8WAn2Q=;
- b=cucqjrmiGPXJt6Azegasg6GspwwOtmKAYBfm2gQ7thQGgkQaLO8WGlYaiP/m2Ugt3ijKPzV2uaXHTJnXk23hLlUmChuNZGXufuYAfol3equU+83KqAziRmDjz5AS8s9j5Frcds0xKouYXlawHB2b3veN36hobOy6Qbavm6tmQMg=
-Received: from SA9PR13CA0072.namprd13.prod.outlook.com (2603:10b6:806:23::17)
- by CY8PR12MB7361.namprd12.prod.outlook.com (2603:10b6:930:53::21) with
+ bh=Oxo7EEfcw0Pt1miinnT6cq3B2NNPzlz1Sa2Mok5SOy0=;
+ b=CcM+krmBp03UPKd1zafcvvPJ8i4bi4HMCLw7H14GhaILssvEiUsQeYM9S45zDcMnfDSJT5yrUoN2yxWk29NdsZM/Ig35iPgdodI3rXH5tSG8zYdZw4xbJI3wOSYH67pKgBTC0KRVdBOUX6DKpTgzp2sRMZDQNwbXpHBgsFUI+jA=
+Received: from SJ0PR13CA0178.namprd13.prod.outlook.com (2603:10b6:a03:2c7::33)
+ by MW4PR12MB7334.namprd12.prod.outlook.com (2603:10b6:303:219::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Mon, 3 Feb
- 2025 16:39:21 +0000
-Received: from SN1PEPF00036F3C.namprd05.prod.outlook.com
- (2603:10b6:806:23:cafe::8) by SA9PR13CA0072.outlook.office365.com
- (2603:10b6:806:23::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8377.13 via Frontend Transport; Mon,
- 3 Feb 2025 16:39:21 +0000
+ 2025 16:39:26 +0000
+Received: from SN1PEPF00036F41.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c7:cafe::3c) by SJ0PR13CA0178.outlook.office365.com
+ (2603:10b6:a03:2c7::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.24 via Frontend Transport; Mon,
+ 3 Feb 2025 16:39:25 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,23 +48,42 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF00036F3C.mail.protection.outlook.com (10.167.248.20) with Microsoft
+ SN1PEPF00036F41.mail.protection.outlook.com (10.167.248.25) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Mon, 3 Feb 2025 16:39:21 +0000
+ 15.20.8398.14 via Frontend Transport; Mon, 3 Feb 2025 16:39:25 +0000
 Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 3 Feb
- 2025 10:39:19 -0600
+ 2025 10:39:23 -0600
 From: Michal Simek <michal.simek@amd.com>
 To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
 	<michal.simek@xilinx.com>, <git@xilinx.com>
-CC: Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE
- AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated
- list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 1/2] arm64: zynqmp: Use DT header for firmware constants
-Date: Mon, 3 Feb 2025 17:39:10 +0100
-Message-ID: <c3f011812597f4c3095448726f5924b2334c7da1.1738600745.git.michal.simek@amd.com>
+CC: Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>, Andrew Lunn
+	<andrew+netdev@lunn.ch>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, "Conor
+ Dooley" <conor+dt@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, Harini Katakam
+	<harini.katakam@amd.com>, Jakub Kicinski <kuba@kernel.org>, Jonathan Cameron
+	<jic23@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Lars-Peter
+ Clausen" <lars@metafoo.de>, Mark Brown <broonie@kernel.org>, Michael Tretter
+	<m.tretter@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>,
+	Mubin Sayyed <mubin.sayyed@amd.com>, Nicolas Ferre
+	<nicolas.ferre@microchip.com>, Niklas Cassel <cassel@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Shyam Pandey
+	<radhey.shyam.pandey@amd.com>, Stephen Boyd <sboyd@kernel.org>, Vinod Koul
+	<vkoul@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ BINDINGS" <devicetree@vger.kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE
+ SUBSYSTEM" <dmaengine@vger.kernel.org>, "moderated list:ARM/ZYNQ
+ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:COMMON CLK
+ FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:LIBATA SUBSYSTEM (Serial
+ and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, "open list:XILINX AMS
+ DRIVER" <linux-iio@vger.kernel.org>, "open list:SPI SUBSYSTEM"
+	<linux-spi@vger.kernel.org>, "open list:USB SUBSYSTEM"
+	<linux-usb@vger.kernel.org>, "open list:NETWORKING DRIVERS"
+	<netdev@vger.kernel.org>
+Subject: [PATCH 2/2] dt-bindings: xilinx: Deprecate header with firmware constants
+Date: Mon, 3 Feb 2025 17:39:11 +0100
+Message-ID: <2a6f0229522327939e6893565e540b75f854a37b.1738600745.git.michal.simek@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1738600745.git.michal.simek@amd.com>
 References: <cover.1738600745.git.michal.simek@amd.com>
@@ -74,7 +93,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4291; i=michal.simek@amd.com; h=from:subject:message-id; bh=SRKiQvcGNEMRm/4GUXAPfsYw74I79ay7nhdSUnx+Yig=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhvQFH/Wui685ozF3RmnUrtxTL/ec71t0TT5Y3bq6zfSsN 89OzT3uHbEsDIJMDLJiiizSNlfO7K2cMUX44mE5mDmsTCBDGLg4BWAiRlMY5qf2WQg/vOHsav9x y9rztW8vRzHdXMswz+5pyz272dd4A5l2/D8u9pDp1jqVNAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7990; i=michal.simek@amd.com; h=from:subject:message-id; bh=+jSQf/Gr4acmyLhhyPaP/EXiwN+V2xT0LlYFWxHtJdg=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhvQFH/Uly/cozLT9NHXTtG1/olc/PZ9V9//Hv5glty+4q Knascs864hlYRBkYpAVU2SRtrlyZm/ljCnCFw/LwcxhZQIZwsDFKQATuV/DsGDCusSzjI3JTXEl EqJSuSXFkvKNPAzzzH/aVt9wrLdf/6J8u45mwpq7vZ7hAA==
 X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -82,211 +101,225 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3C:EE_|CY8PR12MB7361:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5b7b9b51-c951-417c-8216-08dd44714fad
+X-MS-TrafficTypeDiagnostic: SN1PEPF00036F41:EE_|MW4PR12MB7334:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3be94396-7605-45b6-08ec-08dd44715230
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+	BCL:0;ARA:13230040|1800799024|36860700013|30052699003|82310400026|376014|7416014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5g6ZihDLpDTrZtHR9jCXtafn/+NBfeGLa4hzok1Of2xVxqQi7X8T1R6gMWb8?=
- =?us-ascii?Q?i8AXEItGNdlUt44pAvsfZJvi0Bi3mGIwRjgrvnN1LIhi9/c9KrnRrN3HcVsI?=
- =?us-ascii?Q?BVd4kLEGotyvn0ALIwUJ4tAo5nNDSygTE3hqKO1dc+4hC0UnwoISM57XwqI7?=
- =?us-ascii?Q?8sKNtzWHyl+OstPEcxGMzQCdsuxsJMMEPMfGOCj0/DX6JuKyRCIikh5wyMrS?=
- =?us-ascii?Q?iJ2vL0adc0I5B273sHaafscvpI1UK3J5qDL/c+ReCsM25G51jJDxahFB0ev0?=
- =?us-ascii?Q?CR6meAnH6eEAlHsMkTpOZ6W9HrsaT6FhKJQhfe6o32ynwTnayCv6vtUfw2q3?=
- =?us-ascii?Q?DPhhPVGghEqOxIeKpFdT3M72PBNJK+Btj0637cjNUl/VhLFeYpwb3bKxSxz6?=
- =?us-ascii?Q?+unEZWkGabeHJXeofcu1II78xViplrovktCDwaFN3JL6aBymTSICdzTa4PDL?=
- =?us-ascii?Q?YaEbSyZ0t/UEZ5PzFVGoy63YY7LNYgsuvnAU/62NV07dTnRhB3a7k6ydChrt?=
- =?us-ascii?Q?VESzSe1tA6nJqdP7Y63wA+EDkpkjutOzhvzXzpdVIjcLAmpOZ2M6/fNUXVAq?=
- =?us-ascii?Q?tJRghvdR6Qq22r8hFLVqwD0pFbRIQWTfIdmwzaZBYYjSELbIKmlaV/Wp2blQ?=
- =?us-ascii?Q?CVNBJnrQ6JgmqSyvC6YDL6Xf2Pxdb04qf7ic/+JqrUW235++K2gQ1p1fc0Ch?=
- =?us-ascii?Q?c+7onnMxE97wfSS3CmMKHfijRrHGrPBlsdLwY+2dcFKSgBsRvV2LwT2g/V0C?=
- =?us-ascii?Q?L0i825nQLoZhp+4FpS8Q+0c9NAmz6XFDDoLB5sQE/uK7B3e0HH1NPwrcjGJR?=
- =?us-ascii?Q?+hawYCA9VJHtUpFm5mbgZTthgluEsJtNql978rWYI2ksjVNukYal16woXhFv?=
- =?us-ascii?Q?QV9YOovEJIEH3+5Mr1FOrz/qv5nIZfYgQ+mendwSIxxk8ySzAudU442VSmVC?=
- =?us-ascii?Q?CWgwsdcl/Q54CRjjeymMZExtMFRFZ1scEsaVDy/IriKwr9r21t0nXV2wfKww?=
- =?us-ascii?Q?gxbIG8n5FU5sdHon+ddQn6rnGU4ti/iVjM+b01j9Dtrv2F3yg1mNbeFXpFE1?=
- =?us-ascii?Q?4MDmytWwL59DDaU15DGastYfKCH5GeocLiRdgzo9ygsuJW/kPpOomiW6vAjB?=
- =?us-ascii?Q?lDQAQQ85+60QMp1aX8peGvkZtX0mJcGrhNTqu6DPqoQr0+cbMDXQAEEbUWkw?=
- =?us-ascii?Q?jbSKl50oezlIp0OBO6HOAeIlmtdsgGv4tWz6Ug0zuwa1B/YkT2Xb8avpi3Vw?=
- =?us-ascii?Q?qedmQ5UvxJnC1aKLEDsdmFuXAfZJBJ3x2Jj+7LOD8gZ+cA93UdrR/lDHPdYb?=
- =?us-ascii?Q?5PJsU4j39svcHJm0eWc3fp2E7Uo/V+7JKdnAg0DyO5IbjQecPLqM3CBE5e7A?=
- =?us-ascii?Q?JMcVurfoor4pOWovUlqiJxXdeE1zhRmZ47gN80DkbP66guFPEbIlH463kRht?=
- =?us-ascii?Q?n79jA4JsTeGLxwFOK89MFEEHQs7t2ZVMX1JG/5j3fLoWuyB4JOjCrG6l2Ibu?=
- =?us-ascii?Q?haB3q979gti1/YY=3D?=
+	=?us-ascii?Q?LJeZFRk2OOQH/3mRw/ckgthqDs+08DXHUorvEYlAwwHF93rutjEWXqTy7Ijc?=
+ =?us-ascii?Q?AXddcQbiKfthM+BGebr+TZ8NrfRJ0tJp0jK4EhU26xGyxz2X5bsuhjBi8vOX?=
+ =?us-ascii?Q?22iqhW9O3DCuoRRgv7ZTmbuiF7BZkxIfRxLGp2NMBw8BrO7XwqOWbn3TF1yy?=
+ =?us-ascii?Q?0IpRRiAMK7zHAVP7/lQhHW7Wi7ZF+uz2Y0mYVrB6lOgCdcks+jqyl616MN9y?=
+ =?us-ascii?Q?I1tz4pyKlgcC74NMGoQvWvSHsvxeYoJs+bbq3FkS/3zdH3qqlL145pYaKmkK?=
+ =?us-ascii?Q?9nFdRH4IhsNKbGIOUgLtVtUWOKmALkprrVhpJk0baBNtOsYJIxbGVnp5lM/P?=
+ =?us-ascii?Q?Z5SyMxuIUMXtm6Cx9tot/1uyjhVDYhdtFMVpo+4A5lbzsilhUQAUC/F/dqZV?=
+ =?us-ascii?Q?xa8a5mSA2rszfXPhPMwK+EGghjeNwpAQAR6Tz1ZmUaTDBRC2oVThvxoJHTOq?=
+ =?us-ascii?Q?KR+StkYTXGA0ipwJe1YOgZk8yPpqRBkB+TMArtrXXK0M5R46HT2MMP59rNcP?=
+ =?us-ascii?Q?/Y7LN9Nc79vogKzidPZb5FqBnoZfMB5w+M6z3TwF72i8xWBgboI66uDsyrAV?=
+ =?us-ascii?Q?nTcIAfTKHc4ts0irG+kpysaQGaaipPHleZelM3d64bMio4FToqMHsSW5qPFr?=
+ =?us-ascii?Q?51W8PS0dnzKbE24eXzZV+Ws2dkMn3th4wjvIp0OFYMKW5FrKIvQVvUghypdw?=
+ =?us-ascii?Q?HzmLd5uK6X5DwHoznly+3R60S0HR0ZPvLbViPwFTB5Moqf3UvY5iHTze040W?=
+ =?us-ascii?Q?IctjcKTrpnBf3x+K3HfEm09CRKcfJg6Wz9ovwcVaisNQMpLYbkOvI6vyVI9i?=
+ =?us-ascii?Q?W4G96v++JmXb1EnyVraBYVYwRMHSCjSlTi3O/YhDjXXsP0EvQYd4/QiXGxic?=
+ =?us-ascii?Q?3WEoCWBL9J1iu0Og0qKCLPsq+JKuz98Pzlo9vAXMgmwdUgJH+ceXbJNLhGIV?=
+ =?us-ascii?Q?kRJcwWyQSggkRg607VOVpKlQHqovCrEWFk94iU/X2vwP/D0mKmCH3+DKZxeW?=
+ =?us-ascii?Q?H+STjSV5LhtPYBAl542cUPhl2rTwMfLwvT/Vd6RDJsEvQnEsp7V4IARVPawx?=
+ =?us-ascii?Q?8x6cprIllX+rsJW0SnE/5IXVDFN1pZHukiYVizEm5O6dj6bT0nOvJLha1lDX?=
+ =?us-ascii?Q?D5shoXUsMwqp/jvKwXop905emIaM7N1960OTm4M9v7AqTG/+na1pt4W8XUVx?=
+ =?us-ascii?Q?RzOyOcSvfw7F5skjQ5Jm9lpQ2jyribCZXIGZNBiTPYXSDX+yTY68tP91Q8Wt?=
+ =?us-ascii?Q?wBqpNmAiMCGrb3ShGSSDv1sXbephPAMM1+baHLNGfOq/xZA6IImt3e9HLrlq?=
+ =?us-ascii?Q?mK75xNjpO+A89ccqAQ8FSzFTs8O2SzIzGyzLf0Pr2vpcpAaXv+CujzBlYFWA?=
+ =?us-ascii?Q?j53u7j/IBuzW5Huf+Xx5ER7zHZPVhFr2PDzcceA6UcgDpdKTUe8pFlCYmqP0?=
+ =?us-ascii?Q?cQwaSvrGyP5uClYU0v5pytAPkJ/bOOGyZtswAxEyu/YmLH2EoxlgAg=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(30052699003)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 16:39:21.4462
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 16:39:25.6570
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b7b9b51-c951-417c-8216-08dd44714fad
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3be94396-7605-45b6-08ec-08dd44715230
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F3C.namprd05.prod.outlook.com
+	SN1PEPF00036F41.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7361
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7334
 
 Firmware contants do not fit the purpose of bindings because they are not
 independent IDs for abstractions. They are more or less just contants which
-better to wire via header with DT which is using it. That's why copy header
-to platform folder (align macro) and use it locally.
+better to wire via header with DT which is using it.
+That's why add deprecated message to dt binding header and also update
+existing dt bindings not to use macros from the header  and replace them by
+it's value. Actually value is not relevant because it is only example.
+
+The similar changes have been done by commit 9d9292576810 ("dt-bindings:
+pinctrl: samsung: deprecate header with register constants").
 
 Signed-off-by: Michal Simek <michal.simek@amd.com>
 ---
 
- arch/arm64/boot/dts/xilinx/xlnx-zynqmp-clk.h  | 126 ++++++++++++++++++
- .../arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi |   2 +-
- 2 files changed, 127 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/xilinx/xlnx-zynqmp-clk.h
+ Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml  | 4 +---
+ .../bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml           | 3 +--
+ .../devicetree/bindings/iio/adc/xlnx,zynqmp-ams.yaml       | 3 +--
+ Documentation/devicetree/bindings/net/cdns,macb.yaml       | 7 +++----
+ Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml | 3 +--
+ Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml     | 3 +--
+ include/dt-bindings/clock/xlnx-zynqmp-clk.h                | 7 +++++++
+ 7 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/xilinx/xlnx-zynqmp-clk.h b/arch/arm64/boot/dts/xilinx/xlnx-zynqmp-clk.h
-new file mode 100644
-index 000000000000..0aa17f2a2818
---- /dev/null
-+++ b/arch/arm64/boot/dts/xilinx/xlnx-zynqmp-clk.h
-@@ -0,0 +1,126 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Xilinx Zynq MPSoC Firmware layer
-+ *
-+ *  Copyright (C) 2014-2018 Xilinx, Inc.
-+ *
-+ */
-+
-+#ifndef _XLNX_ZYNQMP_CLK_H
-+#define _XLNX_ZYNQMP_CLK_H
-+
-+#define IOPLL			0
-+#define RPLL			1
-+#define APLL			2
-+#define DPLL			3
-+#define VPLL			4
-+#define IOPLL_TO_FPD		5
-+#define RPLL_TO_FPD		6
-+#define APLL_TO_LPD		7
-+#define DPLL_TO_LPD		8
-+#define VPLL_TO_LPD		9
-+#define ACPU			10
-+#define ACPU_HALF		11
-+#define DBF_FPD			12
-+#define DBF_LPD			13
-+#define DBG_TRACE		14
-+#define DBG_TSTMP		15
-+#define DP_VIDEO_REF		16
-+#define DP_AUDIO_REF		17
-+#define DP_STC_REF		18
-+#define GDMA_REF		19
-+#define DPDMA_REF		20
-+#define DDR_REF			21
-+#define SATA_REF		22
-+#define PCIE_REF		23
-+#define GPU_REF			24
-+#define GPU_PP0_REF		25
-+#define GPU_PP1_REF		26
-+#define TOPSW_MAIN		27
-+#define TOPSW_LSBUS		28
-+#define GTGREF0_REF		29
-+#define LPD_SWITCH		30
-+#define LPD_LSBUS		31
-+#define USB0_BUS_REF		32
-+#define USB1_BUS_REF		33
-+#define USB3_DUAL_REF		34
-+#define USB0			35
-+#define USB1			36
-+#define CPU_R5			37
-+#define CPU_R5_CORE		38
-+#define CSU_SPB			39
-+#define CSU_PLL			40
-+#define PCAP			41
-+#define IOU_SWITCH		42
-+#define GEM_TSU_REF		43
-+#define GEM_TSU			44
-+#define GEM0_TX			45
-+#define GEM1_TX			46
-+#define GEM2_TX			47
-+#define GEM3_TX			48
-+#define GEM0_RX			49
-+#define GEM1_RX			50
-+#define GEM2_RX			51
-+#define GEM3_RX			52
-+#define QSPI_REF		53
-+#define SDIO0_REF		54
-+#define SDIO1_REF		55
-+#define UART0_REF		56
-+#define UART1_REF		57
-+#define SPI0_REF		58
-+#define SPI1_REF		59
-+#define NAND_REF		60
-+#define I2C0_REF		61
-+#define I2C1_REF		62
-+#define CAN0_REF		63
-+#define CAN1_REF		64
-+#define CAN0			65
-+#define CAN1			66
-+#define DLL_REF			67
-+#define ADMA_REF		68
-+#define TIMESTAMP_REF		69
-+#define AMS_REF			70
-+#define PL0_REF			71
-+#define PL1_REF			72
-+#define PL2_REF			73
-+#define PL3_REF			74
-+#define WDT			75
-+#define IOPLL_INT		76
-+#define IOPLL_PRE_SRC		77
-+#define IOPLL_HALF		78
-+#define IOPLL_INT_MUX		79
-+#define IOPLL_POST_SRC		80
-+#define RPLL_INT		81
-+#define RPLL_PRE_SRC		82
-+#define RPLL_HALF		83
-+#define RPLL_INT_MUX		84
-+#define RPLL_POST_SRC		85
-+#define APLL_INT		86
-+#define APLL_PRE_SRC		87
-+#define APLL_HALF		88
-+#define APLL_INT_MUX		89
-+#define APLL_POST_SRC		90
-+#define DPLL_INT		91
-+#define DPLL_PRE_SRC		92
-+#define DPLL_HALF		93
-+#define DPLL_INT_MUX		94
-+#define DPLL_POST_SRC		95
-+#define VPLL_INT		96
-+#define VPLL_PRE_SRC		97
-+#define VPLL_HALF		98
-+#define VPLL_INT_MUX		99
-+#define VPLL_POST_SRC		100
-+#define CAN0_MIO		101
-+#define CAN1_MIO		102
-+#define ACPU_FULL		103
-+#define GEM0_REF		104
-+#define GEM1_REF		105
-+#define GEM2_REF		106
-+#define GEM3_REF		107
-+#define GEM0_REF_UNG		108
-+#define GEM1_REF_UNG		109
-+#define GEM2_REF_UNG		110
-+#define GEM3_REF_UNG		111
-+#define LPD_WDT			112
-+
-+#endif /* _XLNX_ZYNQMP_CLK_H */
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-index 385fed8a852a..52e122fc7c9e 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-@@ -8,7 +8,7 @@
-  * Michal Simek <michal.simek@amd.com>
-  */
+diff --git a/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml b/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
+index 9952e0ef7767..6ad78429dc74 100644
+--- a/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
++++ b/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
+@@ -163,11 +163,9 @@ additionalProperties: false
  
--#include <dt-bindings/clock/xlnx-zynqmp-clk.h>
-+#include "xlnx-zynqmp-clk.h"
- / {
- 	pss_ref_clk: pss-ref-clk {
- 		bootph-all;
+ examples:
+   - |
+-    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
+     #include <dt-bindings/interrupt-controller/irq.h>
+     #include <dt-bindings/power/xlnx-zynqmp-power.h>
+     #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
+-    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
+     #include <dt-bindings/phy/phy.h>
+ 
+     sata: ahci@fd0c0000 {
+@@ -175,7 +173,7 @@ examples:
+         reg = <0xfd0c0000 0x200>;
+         interrupt-parent = <&gic>;
+         interrupts = <0 133 IRQ_TYPE_LEVEL_HIGH>;
+-        clocks = <&zynqmp_clk SATA_REF>;
++        clocks = <&zynqmp_clk 22>;
+         ceva,p0-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
+         ceva,p0-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
+         ceva,p0-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
+index ac3198953b8e..b5399c65a731 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
++++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
+@@ -75,7 +75,6 @@ additionalProperties: false
+ 
+ examples:
+   - |
+-    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
+ 
+     fpd_dma_chan1: dma-controller@fd500000 {
+       compatible = "xlnx,zynqmp-dma-1.0";
+@@ -84,7 +83,7 @@ examples:
+       interrupts = <0 117 0x4>;
+       #dma-cells = <1>;
+       clock-names = "clk_main", "clk_apb";
+-      clocks = <&zynqmp_clk GDMA_REF>, <&zynqmp_clk LPD_LSBUS>;
++      clocks = <&zynqmp_clk 19>, <&zynqmp_clk 31>;
+       xlnx,bus-width = <128>;
+       dma-coherent;
+     };
+diff --git a/Documentation/devicetree/bindings/iio/adc/xlnx,zynqmp-ams.yaml b/Documentation/devicetree/bindings/iio/adc/xlnx,zynqmp-ams.yaml
+index 8cbad7e792b6..a403392fb263 100644
+--- a/Documentation/devicetree/bindings/iio/adc/xlnx,zynqmp-ams.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/xlnx,zynqmp-ams.yaml
+@@ -193,7 +193,6 @@ additionalProperties: false
+ 
+ examples:
+   - |
+-    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
+ 
+     bus {
+         #address-cells = <2>;
+@@ -204,7 +203,7 @@ examples:
+             interrupt-parent = <&gic>;
+             interrupts = <0 56 4>;
+             reg = <0x0 0xffa50000 0x0 0x800>;
+-            clocks = <&zynqmp_clk AMS_REF>;
++            clocks = <&zynqmp_clk 70>;
+             #address-cells = <1>;
+             #size-cells = <1>;
+             #io-channel-cells = <1>;
+diff --git a/Documentation/devicetree/bindings/net/cdns,macb.yaml b/Documentation/devicetree/bindings/net/cdns,macb.yaml
+index 3c30dd23cd4e..8d69846b2e09 100644
+--- a/Documentation/devicetree/bindings/net/cdns,macb.yaml
++++ b/Documentation/devicetree/bindings/net/cdns,macb.yaml
+@@ -197,7 +197,6 @@ examples:
+     };
+ 
+   - |
+-    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
+     #include <dt-bindings/power/xlnx-zynqmp-power.h>
+     #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
+     #include <dt-bindings/phy/phy.h>
+@@ -210,9 +209,9 @@ examples:
+                     interrupt-parent = <&gic>;
+                     interrupts = <0 59 4>, <0 59 4>;
+                     reg = <0x0 0xff0c0000 0x0 0x1000>;
+-                    clocks = <&zynqmp_clk LPD_LSBUS>, <&zynqmp_clk GEM1_REF>,
+-                             <&zynqmp_clk GEM1_TX>, <&zynqmp_clk GEM1_RX>,
+-                             <&zynqmp_clk GEM_TSU>;
++                    clocks = <&zynqmp_clk 31>, <&zynqmp_clk 105>,
++                             <&zynqmp_clk 51>, <&zynqmp_clk 50>,
++                             <&zynqmp_clk 44>;
+                     clock-names = "pclk", "hclk", "tx_clk", "rx_clk", "tsu_clk";
+                     #address-cells = <1>;
+                     #size-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
+index 04d4d3b4916d..02cf1314367b 100644
+--- a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
+@@ -65,14 +65,13 @@ allOf:
+ 
+ examples:
+   - |
+-    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
+     soc {
+       #address-cells = <2>;
+       #size-cells = <2>;
+ 
+       qspi: spi@ff0f0000 {
+         compatible = "xlnx,zynqmp-qspi-1.0";
+-        clocks = <&zynqmp_clk QSPI_REF>, <&zynqmp_clk LPD_LSBUS>;
++        clocks = <&zynqmp_clk 53>, <&zynqmp_clk 82>;
+         clock-names = "ref_clk", "pclk";
+         interrupts = <0 15 4>;
+         interrupt-parent = <&gic>;
+diff --git a/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml b/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
+index 00f87a558c7d..b5843f4d17d8 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
++++ b/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
+@@ -101,7 +101,6 @@ examples:
+     #include <dt-bindings/dma/xlnx-zynqmp-dpdma.h>
+     #include <dt-bindings/power/xlnx-zynqmp-power.h>
+     #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
+-    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
+     #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
+     #include <dt-bindings/phy/phy.h>
+     axi {
+@@ -113,7 +112,7 @@ examples:
+             #size-cells = <0x2>;
+             compatible = "xlnx,zynqmp-dwc3";
+             reg = <0x0 0xff9d0000 0x0 0x100>;
+-            clocks = <&zynqmp_clk USB0_BUS_REF>, <&zynqmp_clk USB3_DUAL_REF>;
++            clocks = <&zynqmp_clk 32>, <&zynqmp_clk 34>;
+             clock-names = "bus_clk", "ref_clk";
+             power-domains = <&zynqmp_firmware PD_USB_0>;
+             resets = <&zynqmp_reset ZYNQMP_RESET_USB1_CORERESET>,
+diff --git a/include/dt-bindings/clock/xlnx-zynqmp-clk.h b/include/dt-bindings/clock/xlnx-zynqmp-clk.h
+index cdc4c0b9a374..f0f7ddd3dcbd 100644
+--- a/include/dt-bindings/clock/xlnx-zynqmp-clk.h
++++ b/include/dt-bindings/clock/xlnx-zynqmp-clk.h
+@@ -9,6 +9,13 @@
+ #ifndef _DT_BINDINGS_CLK_ZYNQMP_H
+ #define _DT_BINDINGS_CLK_ZYNQMP_H
+ 
++/*
++ * These bindings are deprecated, because they do not match the actual
++ * concept of bindings but rather contain pure firmware values.
++ * Instead include the header in the DTS source directory.
++ */
++#warning "These bindings are deprecated. Instead use the header in the DTS source directory."
++
+ #define IOPLL			0
+ #define RPLL			1
+ #define APLL			2
 -- 
 2.43.0
 
