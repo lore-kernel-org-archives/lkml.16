@@ -1,53 +1,43 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67731D86E6
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 06:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857B31D88A6
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 06:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738564494; cv=none; b=J1RFvRMHVH5PNzTb9hTZzLSdAOVKPt/bCVyqsUha52sB5n+/9oLVdcjRbcL50L4luxqVH99KCfSulMEy/JysCrQ8F2Ql4Eih8BnSRUeM7gEahqxvdDKynbdUA6jceSTvfnyKwF7Kp5dZsldhDuS73+Gcxl2YKOf+3cGP6IoXZ1E=
+	t=1738564497; cv=none; b=B0YQOLqlvkV8rHsNM9g5SHgc8f+6e+DEYNFisKFxxrypxcCsVE9zQa1yLtIkbEO2W1WGKqE1tMtu1XFbDpfd0L+BEyci3dVJzxEDvc/TbZy05XpmONb/4nLacEhE2Uh6Nq9W3ljkXVVFrUtWLRWpN7H7LCHdbxmz59OcKIoofJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738564494; c=relaxed/simple;
-	bh=FFnqvapRkzDuWXPCQq67sFJeL5dRDjb37o20Z82GzSI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qs/Fn6uAMdgvBqfFX7VJAyekeUcj0DnU0O5xlK8lVABr4excppHUVgPMcDLyyTB18U3Bw6XieP24eR8yxozH2Uilc3xF3uYzycy1xGBGFMe7x301Lvj+tmI7eDo1+n5k9feTxviJJJXNTiqxy8JHm2/dUnng/gd4WLCQSYNErS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=h4LJ129n; arc=none smtp.client-ip=95.215.58.171
+	s=arc-20240116; t=1738564497; c=relaxed/simple;
+	bh=xGMuxjiG3J1KY0tpr4BD/2R/zK2QTssBPpcx8ig7gas=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rI0T7PNs1tSlYsc9kHHrMPsBTKIXuovMkmxR35mur4reFAMZGcXqXDML4Qe6y51fOOthfqg15uYjh4BYA+0ZG7auqqIu51xc1MtX3x63jueCQCksdnMpFPU9uThx3fjt290u+74ITEFdmayICWuYnE2Z8aVuUYVr28AKFIjTLlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=QcBht3c+; arc=none smtp.client-ip=95.215.58.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="h4LJ129n"
+	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="QcBht3c+"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1738564489;
+	s=key1; t=1738564482;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+kCkhRAYk9c9VDEl9lyK5nkwt4FcdUmGsfEiMHKrscg=;
-	b=h4LJ129njIKAmd30yLmQZqidP9fwl44WcDKvVs5StMRwER7PzTQUvYB5xzceMKebX1nYm6
-	QqadUb0RSoDj9oMTktlFdS6QwKVbalcCH2NhbTlWElTvNIK0qZHNI2pqldjTV8hw+mTR+e
-	RsW4WPQOcz7p/HAsZ8DuojmNRDVYOJLTH1cLS1sJ4k+U3OV8FaVAUNQsIvjYV0xYFgyGGd
-	xP5rnFaZYiYmqCPmuuhNSzQMb9L/BAD1iqfh1X4ThlYLeI1Do2sasWQdY1RSMVeKaJaMIY
-	MYy/0Kl96wCFk244wFj7eCOOTstVhjYfWQvNtIbhM4zu2wtHiejMArXskGuLbA==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Rxn7KNy58nycOR58GR1ZstIpveHU6RnMKXkVaNeuEy0=;
+	b=QcBht3c+OufRO3iFS6wrhVpjylMePpMaqwaomd/7X7hA8XBPKaNDGk9iC3dWPZ9NzKoy/g
+	UYw9TC40q+nyqQqgLo1Ij+y2kpsccgqveHqHIfjc6h9MfZ6pzShLgYgU3nL6s3pjXuyPg7
+	fPN1jxxJGazM4Uy5ja9rIjqCURIGWIsirdPTRhDkIxyBmydOZa+ZLN1+Xj385iUc2Kc2JY
+	bl78FjPa3bZ1s46bnHrJwkg3mhQYAwKuYi718li0Auz8IpFG43O7yYnKfKnwUd301qMYGS
+	o6z4hltl0OkyfGtVNBxcbbHGJ6hGAwP1O1th1T08VnCk0BWclX7Sb5e/h2Cxbw==
 From: Alexey Minnekhanov <alexeymin@postmarketos.org>
 To: linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
+	linux-kernel@vger.kernel.org
 Cc: ~postmarketos/upstreaming@lists.sr.ht,
 	phone-devel@vger.kernel.org,
 	Alexey Minnekhanov <alexeymin@postmarketos.org>
-Subject: [PATCH v3 1/3] dt-bindings: clock: gcc-sdm660: Add missing SDCC resets
-Date: Mon,  3 Feb 2025 09:34:24 +0300
-Message-ID: <20250203063427.358327-2-alexeymin@postmarketos.org>
-In-Reply-To: <20250203063427.358327-1-alexeymin@postmarketos.org>
-References: <20250203063427.358327-1-alexeymin@postmarketos.org>
+Subject: [PATCH v3 0/3] Add missing SDCC resets for SDM630/660
+Date: Mon,  3 Feb 2025 09:34:23 +0300
+Message-ID: <20250203063427.358327-1-alexeymin@postmarketos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,29 +47,27 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Add resets for eMMC/SD card blocks that were missed during initial
-driver submission.
+These resets are part of GCC space and were missed during initial
+porting of the platform.
 
-Signed-off-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
----
+Changelog:
 
-v3: dropped "Fixes:" tag since no user-observable bug is being fixed.
+v3:
+ * dropped fixes tags, picked r-b
 
+v2:
+ * split into 3 patches
+
+Alexey Minnekhanov (3):
+  dt-bindings: clock: gcc-sdm660: Add missing SDCC resets
+  clk: qcom: gcc-sdm660: Add missing SDCC block resets
+  arm64: dts: qcom: sdm630: Add missing resets to mmc blocks
+
+ arch/arm64/boot/dts/qcom/sdm630.dtsi        | 3 +++
+ drivers/clk/qcom/gcc-sdm660.c               | 2 ++
  include/dt-bindings/clock/qcom,gcc-sdm660.h | 2 ++
- 1 file changed, 2 insertions(+)
+ 3 files changed, 7 insertions(+)
 
-diff --git a/include/dt-bindings/clock/qcom,gcc-sdm660.h b/include/dt-bindings/clock/qcom,gcc-sdm660.h
-index df8a6f3d367e..74c22f67da21 100644
---- a/include/dt-bindings/clock/qcom,gcc-sdm660.h
-+++ b/include/dt-bindings/clock/qcom,gcc-sdm660.h
-@@ -153,5 +153,7 @@
- #define GCC_USB_30_BCR			7
- #define GCC_USB_PHY_CFG_AHB2PHY_BCR	8
- #define GCC_MSS_RESTART			9
-+#define GCC_SDCC1_BCR			10
-+#define GCC_SDCC2_BCR			11
- 
- #endif
 -- 
 2.45.3
 
