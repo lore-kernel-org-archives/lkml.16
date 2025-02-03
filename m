@@ -1,379 +1,306 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2054.outbound.protection.outlook.com [40.107.95.54])
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904F64414;
-	Mon,  3 Feb 2025 21:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738616757; cv=fail; b=uc6wytbN+exWmDZWmRyVpztu3IQNIjWeEnnA8i1WJoqXstUnN8dUehbJZ9Gu6vf43qHEGnMC7Jxtye6vNLrehngIHzVKdg3HM56Uk0s2T935hWk6KaDnJhERETqB3L4RCdhYz9uqT80iDD+TdQFflkzhaFo0uUDvfiF0NCyI5Ik=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738616757; c=relaxed/simple;
-	bh=18WWLv4ofakDWrPnt8DRBlAgbt6ADFFWZBYa7K5GAnw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VUEIoFSnWDxipb/FD68D/tkflFL9ZSMhzQqhALx/8umxoZZu+enWNGm/dFWJIx6yTFOoPcBfdhy6cNkKNcWLagaaNIeghq7VhrSrm3kvidkgDDzmrXRZdMeq2OBWYebfmHZSDzQSovTntt1N6mv1IsfRd/yYZp0hu0c48uLM1do=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dsXTJaHi; arc=fail smtp.client-ip=40.107.95.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816681E7C20;
+	Mon,  3 Feb 2025 21:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738616771; cv=none; b=MDwW+TPCMnD6VzC1pB/LQeatGSSEJNF+Gte1mURmhrPMd2IO1KPXqvBnP/xiIwBBkMo8KbI20FO3zbzpSXfYpnaQ8y5w52edJ8xThNh26JElyzenxyQR9Yl8k9Xp80Wmr/yOuL4cPGclj2JIkQh/ji9zACozlpet0xlg4Hmo1uc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738616771; c=relaxed/simple;
+	bh=TEqAQlGdZO/vs7Arti4Isv62aqupR8RxJK3lgMmDxH4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=VSyR7lKTo4r4HIjHhcZTbPRD1U7YcdPyqFm6aOE5vYEsFSVzqX08y9i4+gziSPvgDKyrkK9PBjt9DZWyWalSVA8zpjlMowB/jCl1cRsGTE7OWNmqjWpXKJGMLBofx1UrFfTT1c2c+qF0ECf2uCuxjfnW4CV7NO/YxIpEx6Zc30A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me; spf=pass smtp.mailfrom=beims.me; dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b=t1ocVs5A; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=t9d4HjEM; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beims.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dsXTJaHi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ad0CWkVqIOfR7S4C0PdndoUHIJhWR9J4F/DiaqdSOppa+ivAG6FPZZ3EOpKjlH/mSnIEG2lb/o4F4BrzIwBodQ7Bp7Fu5x6Sd0B6GiKxCb7+hNkSCscAXMtyteJn238et9djaG/txEAiCHDXLWVVBNw301wbIcT3o3DL7gs9xhR1qtqcM3/LWqN9eZCRWrpsc9QTUBLxx5dzAarfD/18+ljZWvENglu3Cj3mIOnIvnnTX79244jmxlrtaV13Rdq49ADkI663m5kT1uIT6YAs5+B1tIC2g5u5THXZfe3BkCXgvfxPP8ZRsCb/SLzL0llYAkN9V7H1IY4VxZb4YNwrFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dC18PVYx92wZJlw/sJZzVJZC4rMoIFAv3m7iMcM2MeU=;
- b=aiB7YhC63r/uUw4uDkfhKfIScP5Z7M4742CeLKezl8NDE7OpUqJ9hFJ52gYRM6XfLaPFsqaY9mJ8JD6sGnTyCg6V+PYyAwExAaSQJslgv+IZsDA8FbdyaQYDHWdowxOjeHSR84OSNJNMEz17qJi+mMEGvodtFRVgUUeXQzdZT6jfwgbJNZ/RTrEswC2Yskqbyv6TemDeQcIJipv1R3cHpGJ5hmTRRU63Efz6PGsMXQgGrZ96afRJ3jXGbP1jX+Nh+tpQEBiabnI0UueqBeVUM6UGrpMfc5uOWp0K+AvPpfIufGvlq7sx22qlRc8KFR8jnqjND/Ke0WgcMiApMr2XMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dC18PVYx92wZJlw/sJZzVJZC4rMoIFAv3m7iMcM2MeU=;
- b=dsXTJaHiEVele2pqGV8QgIP/vvUBkQK6UX+iTllmr6zViwa+OEDqFu0ArGGp7ObWRTdF/JGEkt+C6ECOiRuCfXywFLgFU9EOhFotxyrd7QbECsULFXhZF7nuE1wCXhjV+g37N+vOyoyu50NJn40pcHoY7U4MI+Dwl9gVw9YdguuPgvr0uOYXpw7FNlE6PIB9AXco2oXZFkF7jZBbcYI4Suy/X6DR95Ow70Q/+M4Vsr/TAALieB47tkbzmGdOXclhh8M0/T7xUn3B4plYciFRutcMcVEz03Q9XMauEVrwXd2T7ZuV54U5J/dFcYPECnsOX2bhU5KvOOEMA3UDcKvvxg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- SJ2PR12MB8782.namprd12.prod.outlook.com (2603:10b6:a03:4d0::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Mon, 3 Feb
- 2025 21:05:52 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%6]) with mapi id 15.20.8398.021; Mon, 3 Feb 2025
- 21:05:52 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Asahi Lina <lina@asahilina.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Jann Horn <jannh@google.com>,
- Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>,
- Wedson Almeida Filho <wedsonaf@gmail.com>,
- Valentin Obst <kernel@valentinobst.de>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- asahi@lists.linux.dev, David Hildenbrand <david@redhat.com>,
- Oscar Salvador <osalvador@suse.de>, Muchun Song <muchun.song@linux.dev>
-Subject: Re: [PATCH 0/6] rust: page: Support borrowing `struct page` and
- physaddr conversion
-Date: Mon, 03 Feb 2025 16:05:49 -0500
-X-Mailer: MailMate (2.0r6222)
-Message-ID: <37A0729B-A711-4D45-B9F0-328FDB9ADD28@nvidia.com>
-In-Reply-To: <41ca3445-80cd-43c1-8f9e-634c195c9187@asahilina.net>
-References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
- <Z6CTLB2NggwYafi9@phenom.ffwll.local>
- <41ca3445-80cd-43c1-8f9e-634c195c9187@asahilina.net>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BN9PR03CA0455.namprd03.prod.outlook.com
- (2603:10b6:408:139::10) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b="t1ocVs5A";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="t9d4HjEM"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 053E8254018D;
+	Mon,  3 Feb 2025 16:06:05 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Mon, 03 Feb 2025 16:06:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=beims.me; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738616765;
+	 x=1738703165; bh=Ra9MI1InI9gP8+SgSwb7MAwqv6kU3tmMoSZj8CtIFVU=; b=
+	t1ocVs5AALcA1N8uT+IIXOb8dTYgtfpNqUnbtJBit8RMtEiceAwUYPTcIvGSFGuI
+	T6zKsOoYEmpoPFBnPYpCIq9+Z2cubxvKuUnJtQ5I/t8WQ1vtOQ8786QWdMXu9V0z
+	PI/3e2kwObMbYQvgOnxX+DgILx87idcUarIIC24XSsihDGycQzsKWe/k2tyitFL7
+	FllHw02LEwz7s2TkpKusYySmnCcabtGtrHJgL5h/wV/Xe6ETCOgzV/7csCjgmeIf
+	6sZGBjouHHI0SuosNEekahCU7nShK5WoW0rSRtnyLChSRJXjI/VdI0CMpN7ZXg//
+	lp3yP3poPE+lbThNzkLA2w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738616765; x=
+	1738703165; bh=Ra9MI1InI9gP8+SgSwb7MAwqv6kU3tmMoSZj8CtIFVU=; b=t
+	9d4HjEMCeYndVx7oq3je+I4XOl0tfzfQI0Xxujm6CbB8+vyFlAmIUADneAXLddV2
+	f12wLgiBzfIQE53qfrh6kFYs1JOoK2CGaJw27S2wKKd1PyVWBTgs+xlMRQvAnE8Y
+	uPKhHnShWwKQ1F4qlqCJqDzhHzhzzWLoijBlGDUn+Vfo84P1HIP5g28UWzRibFg7
+	BQv4yUdx6k5gJ/cYHoXTOJM/L2mG7Ikg6+WZUaGIuHnFd/GA4bFw1zNG2wkRxH4i
+	Xag6DMcmVxaKnjjHKP5gm+rmcNVaiOZFVnciWvfuXi38FYwPZc9cCRLXOHSVElvk
+	a9w3iWUwj8Rdlq9L+hi0Q==
+X-ME-Sender: <xms:vC-hZ1yKikS7F835uEnPgmRKIf7KE3EMTlfmzIaux8OGHezQ8KeVLw>
+    <xme:vC-hZ1StEUQ0C0fjELXRmCGtQNBCMHRDm2tKI32_Nl_f6lcOIn2bk12pTzaqKCZvW
+    p7st59wlRYltV_eu70>
+X-ME-Received: <xmr:vC-hZ_WcEHZVBamrqiqrufjr9oSJ0CSiw4gEjKVag3wSMpnZOwEq1ZJEIBGcXjJE8g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeeihecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuhffvvehfjggtgfesthekredttddv
+    jeenucfhrhhomheptfgrfhgrvghluceuvghimhhsuceorhgrfhgrvghlsegsvghimhhsrd
+    hmvgeqnecuggftrfgrthhtvghrnhepffevveejiedvueegiedtkeetuddvtdduieefkeek
+    ffffvdejkeeujeeuvdetieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprhgrfhgrvghlsegsvghimhhsrdhmvgdpnhgspghrtghpthhtohep
+    vddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrughrihgvnhdrghhrrghssh
+    gvihhnsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurges
+    ihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinh
+    grrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtoheplhgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtg
+    homhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepjhgv
+    rhhnvghjrdhskhhrrggsvggtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrth
+    gvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthho
+    pehmrhhiphgrrhgusehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:vC-hZ3he1p6YXRGhRWsolqFF6JiGhD9fqH7ZEU4o06cWK-ErH6f4Kg>
+    <xmx:vC-hZ3DNCZ2x0KxEyMkFbi4VeG8OjZs0MfVGlEs4qRwjcH5zh_fDlQ>
+    <xmx:vC-hZwK15a9hlwkpryxFnRs6VPI7bTtKRW_yWyd5VyyD-ImJnVoK4Q>
+    <xmx:vC-hZ2Bv41Egr0oAuAIH5_2zaAG0vxPlS0xCVDWN-qI4qNrzjg0TpA>
+    <xmx:vS-hZ2CUiBwoDZJ8Iv_Qn7A2he7PlmVBsGVJTdlkkbCLJdX-Qxz1-R9E>
+Feedback-ID: idc214666:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 3 Feb 2025 16:06:00 -0500 (EST)
+Message-ID: <6d3519c6-4bad-4d9f-aaea-576e152902ff@beims.me>
+Date: Mon, 3 Feb 2025 18:05:57 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|SJ2PR12MB8782:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4b2ab35b-b59d-401a-89cf-08dd44968aa4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?voqeQ6snkHSJ+nkld2i0deSFIrtzjezhyW6cH9hhFwzTfWewDKl9aJ6oJbb8?=
- =?us-ascii?Q?UinnEDTVDu2T86R0dpuuIEyfnZ6KC6ceRrqMVH9/D0T2ykdGRlWYM4LGETTl?=
- =?us-ascii?Q?9rM1eW4Q+69U3B8V+NQv1eCtYhf3hQNGil+YVnIEpY8fb5SWoTzppBdOeSLV?=
- =?us-ascii?Q?EOt60hlS0KgPR3H/CmfqfF9PwyFlv0Hq1tnS/9LobMu6xe93fdpoUt1asCnL?=
- =?us-ascii?Q?peuQ9RyJP7e9IcQ1eTZSIyBXN12ZIT3Z1yasji1B9iJyXBLGiRBAJEZBrCzS?=
- =?us-ascii?Q?h8z2EHEhmBzSze1yZxsDpkRxBv0GJH+lycnpmO11WYtgJch8AKnAcM21qbvk?=
- =?us-ascii?Q?hvuFF8oD3LlauDEl5vIxBmkBsIJjbyPUbWufZf+ysnj/V0ug3ST1ELGWXcmt?=
- =?us-ascii?Q?wLbq+nCMtK+D3AyABuXXvHcT/Sxhb+q58Q2STg7Kkr48AErSziWT01r7Um76?=
- =?us-ascii?Q?iEBTaTJliw8VR5CvRxTcmAFynLOpnvOkemRb5nHXc2ksXyOp89njkDEh11aL?=
- =?us-ascii?Q?1DLdIhdEvu+SKLetXzZZin5UExG84BzIKyr7lvPHZTCDt2PYjSIh9aPxGZKN?=
- =?us-ascii?Q?VV9mkLCyekOkGnEYjZ5qPQkTzE3Glf2NJ6TPuq+5Z94XwYr1y2XPS9ZKfFK9?=
- =?us-ascii?Q?UAkYpP6UALWEuJVVg4OWmOH1fEZimhUe18Dit6X4ZhWVMWPyKv+t0RBumzXB?=
- =?us-ascii?Q?fYsgDneHkzCDXXjIxET0FW3cGDt29IVlLpqo6CYY9yvt/bfc5K1m/IS49FaY?=
- =?us-ascii?Q?GDm5aeXC00URRipWljq5n1jcl/3k2YS47sKLHe47w4Uf8yIyo3+EA87aeeLT?=
- =?us-ascii?Q?wTef8rzS0JUzG5VSZJIgYaa6xcNlVFCrnkZeAlA+inrcAL3M8brF1rZnjQYv?=
- =?us-ascii?Q?0iJTzve4F59vboRu5PORhS3VWHBN2dBGAnFkqdV4V2i8V7D3DvB4DMiElVsh?=
- =?us-ascii?Q?OvpIVHy2TlQ87hJOX9vIFZHpXWrgXwP7gYv5BdWI8ujnBH7IfVbP34qti1to?=
- =?us-ascii?Q?sApjsRSN08GIWaDpqdDXzjckL6gt1l2QzslCBTd2abXuJpgXatBR1st9CkSd?=
- =?us-ascii?Q?61I8gkQLNz+Tq8SZDvFhLsh0mdjV+hVeQHqDLbilvEhXDPdikkCW6FeMidMv?=
- =?us-ascii?Q?b/BpcrmgJqNWVNmY/9exDILLaxgen1q7cEhYzox0gjPk9Am6qBkNwEpcr7fC?=
- =?us-ascii?Q?dIeaou+vDgeFRsWDh0o2O634PgWv0E+ZqlduZ1iYnPIWmLoMSqyQxSEpE/CS?=
- =?us-ascii?Q?N284J6cmITHthRdZTM5xaULqKd622Lpwi54+OFQhZmVWv1zfwzWuz5XWjLfT?=
- =?us-ascii?Q?2Q3Q0aKykwbqZZhOObvYa4V1VHqqBnRcJJbHmLpzFsiJKlZrifaGv5mr4BXh?=
- =?us-ascii?Q?/EQFshcHdlvim7roco8BPdck8jl3?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9Wer04Sq3W0WAVqxGdAZEq7tuatwzDVcuQ2dHt9m4d/WNDIjLu0qIuHDMe7F?=
- =?us-ascii?Q?7NexMyQ7WgnGBriSe6wgV2UCQ1zYxcOIc7+fYY+8SEHvbkHEVTcQqdgVU8Ex?=
- =?us-ascii?Q?DOBLvqH/UxJzbJFbbBnPhWKXUQEYN/kaeIPZrLDzGYfAgdurd5vJR77LB5B6?=
- =?us-ascii?Q?3TXtIoF9qEDiGyLqzF3TECmg41lQPu2U85ZxadZHXrSWwwQ6+Orx1ugkcij1?=
- =?us-ascii?Q?39Yedebov7Lt8A2E5GYoc+jKzIZHJir5DwxjHkFGPNczvzsturm36VxUJ7Ps?=
- =?us-ascii?Q?ZgqsnYvLkDHmqGAtd/RQ8Ji1xb5MDWllrQGqnMlYfJAt6UcS6Na9czzQ5xxD?=
- =?us-ascii?Q?KKURSn5xxNtorpAYRh7DNOMEnR6e6kjnHwO+pMV3YJEfDbx1Nf4avSQRm8JA?=
- =?us-ascii?Q?wTyt9yydrQoeiUl/rmtPspOL7Dr6YEhxxTMJzZNlwvG7z6USuBN+oR4nZH7a?=
- =?us-ascii?Q?FCzjpw/jFI8Xg7kfgHwzsUg8p2462Bj/Y4llC9A/wXIdq14xCwPV1DhiiGp1?=
- =?us-ascii?Q?w63A1Lm1L0Hyx7DrKUWppWUf3a3tLxk6dOj9p/t8++ykT9ziEu/8BfoH096m?=
- =?us-ascii?Q?Toi8O3fAz7/hBI89VLWGaSUXJst9cqt3r0VT7F07rAwTj1u9BxnNVl6gTNV4?=
- =?us-ascii?Q?cPYk4eKsPnweGkT15C4va4XI65oFr7alHVc5VVHTQDON8SLPHpgB8/pPKJHM?=
- =?us-ascii?Q?vi/UOw2CHHahTCnv2abOWuJS1wN+4fuT7eUkifHsrdIdbC0YUJU++587WPqS?=
- =?us-ascii?Q?ejOOPbTaEqGEfIfVh8OfaXP7haMPKu5Q1Fv7m5SHLsdkdJZxMW5hO9ygRniW?=
- =?us-ascii?Q?svEyMPFhyewLbKjp85yWy9ftB1Lz0BBZxQs/2ZJw/wXCwYY/OENzFUbS8hfs?=
- =?us-ascii?Q?HdWA5G1gk0Ak9KEuL2ymDahEQMV34Z2Jy4yywjp/iny2C7vDoxlraFibt3DI?=
- =?us-ascii?Q?EZWuJsxLc9cQoGLMCAdlhfgBQl8ORVZBRDhEcDe0iXMWgyDoKZDiI5LAccyh?=
- =?us-ascii?Q?VGK+XZe3JDnFmXiedDoffbhgwBCpdV1FCQoi1096ZPlVXY61WXQIwgyW3f5N?=
- =?us-ascii?Q?gUFcmiBui9bOrELZvxenIYsqrCX4gPPIhWP44DNibyqYlT4BEUX+CVYfcABP?=
- =?us-ascii?Q?geG9qbCPTBYNPGbtpYioF1D+0Y5km5Lfbbg4yg0HZf19m58EPqnNlsBxiZqh?=
- =?us-ascii?Q?KbAca6nM+86Dnxgbj0VjuZJaWUq8jLPRF+85yIjGrLqTgJm++8EFYtjBKiFt?=
- =?us-ascii?Q?LMN7X3GGp5Eon1w/HhSuPtjLp+JrFNlWEmqX0/1fFf/3N0v4Pe5TZalI/2yp?=
- =?us-ascii?Q?eCyHVuhaGqaqjdOqpzBNzqfFugPo8dcEN7CyT9DcS1MKYLbiXfDYqOnaPJ4S?=
- =?us-ascii?Q?ltta5IseLiLf9naw9rDKq1AAskFCaxCMGHZn0kd100NIASJxjmr7wEt3gM5X?=
- =?us-ascii?Q?CWJW2pq4IBhLwsZFLqyhClV841QUIkOS3vwj7VOZPdHJuUIrbNVv6gbXKqP6?=
- =?us-ascii?Q?jrLLaS2Fo9KaFrd4dvI0UmN4OIKLOgIOY+QrefrZSL58PRRzV8UkPCF5TWvp?=
- =?us-ascii?Q?xkPwI9u7UuCLqyMYYvU=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b2ab35b-b59d-401a-89cf-08dd44968aa4
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 21:05:51.9602
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2rTbP8aowZhgxvKvNWw4uaPCUDIKhTKZ9fx0AwIah+K4Fa4+yJoJuFe/+iBm5zia
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8782
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/bridge: lt8912b: Add support for audio
+Content-Language: pt-BR
+From: Rafael Beims <rafael@beims.me>
+To: Adrien Grassein <adrien.grassein@gmail.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Joao Paulo Goncalves <joao.goncalves@toradex.com>
+Cc: Rafael Beims <rafael.beims@toradex.com>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250203192401.244651-1-rafael@beims.me>
+ <20250203192401.244651-3-rafael@beims.me>
+In-Reply-To: <20250203192401.244651-3-rafael@beims.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 3 Feb 2025, at 9:32, Asahi Lina wrote:
-
-> On 2/3/25 6:58 PM, Simona Vetter wrote:
->> On Sun, Feb 02, 2025 at 10:05:42PM +0900, Asahi Lina wrote:
->>> This series refactors the existing Page wrapper to support borrowing
->>> `struct page` objects without ownership on the Rust side, and convert=
-ing
->>> page references to/from physical memory addresses.
->>>
->>> The series overlaps with the earlier submission in [1] and follows a
->>> different approach, based on the discussion that happened there.
->>>
->>> The primary use case for this is implementing IOMMU-style page table
->>> management in Rust. This allows drivers for IOMMUs and MMU-containing=
-
->>> SoC devices to be written in Rust (such as embedded GPUs). The intend=
-ed
->>> logic is similar to how ARM SMMU page tables are managed in the
->>> drivers/iommu tree.
->>>
->>> First, introduce a concept of Owned<T> and an Ownable trait. These ar=
-e
->>> similar to ARef<T> and AlwaysRefCounted, but are used for types which=
-
->>> are not ref counted but rather have a single intended owner.
->>>
->>> Then, refactor the existing Page support to use the new mechanism. Pa=
-ges
->>> returned from the page allocator are not intended to be ref counted b=
-y
->>> consumers (see previous discussion in [1]), so this keeps Rust's view=
- of
->>> page ownership as a simple "owned or not". Of course, this is still
->>> composable as Arc<Owned<Page>> if Rust code needs to reference count =
-its
->>> own Page allocations for whatever reason.
->>
->> I think there's a bit a potential mess here because the conversion to
->> folios isn't far enough yet that we can entirely ignore page refcounts=
- and
->> just use folio refcounts. But I guess we can deal with that oddity if =
-we
->> hit it (maybe folio conversion moves fast enough), since this only rea=
-lly
->> starts to become relevant for hmm/svm gpu stuff.
->>
->> iow I think anticipating the future where struct page really doesn't h=
-ave
->> a refcount is the right move. Aside from that it's really not a refcou=
-nt
->> that works in the rust ARef sense, since struct page cannot disappear =
-for
->> system memory, and for dev_pagemap memory it's an entirely different
->> reference you need (and then there's a few more special cases).
+On 03/02/2025 16:23, rafael@beims.me wrote:
+> From: Rafael Beims <rafael.beims@toradex.com>
 >
-> Right, as far as this abstraction is concerned, all that needs to hold
-> is that:
+> Add support for HDMI codec with audio coming from the I2S input.
+> Support 48kHz and 96kHz sample rate, with 16 bits word size.
 >
-> - alloc_pages() and __free_pages() work as intended, however that may
-> be, to reserve and return one page (for now, though I think extending
-> the Rust abstraction to handle higher-order folios is pretty easy, but
-> that can happen later).
-> - Whatever borrows pages knows what it's doing. In this case there's
-> only support for borrowing pages by physaddr, and it's only going to be=
-
-> used in a driver for a platform without memory hot remove (so far) and
-> only for pages which have known usage (in principle) and are either
-> explicitly allocated or known pinned or reserved, so it's not a problem=
-
-> right now. Future abstractions that return borrowed pages can do their
-> own locking/bookkeeping/whatever is necessary to keep it safe.
+> Co-developed-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
+> Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
+> Signed-off-by: Rafael Beims <rafael.beims@toradex.com>
+> ---
+>   drivers/gpu/drm/bridge/Kconfig           |   1 +
+>   drivers/gpu/drm/bridge/lontium-lt8912b.c | 107 ++++++++++++++++++++++-
+>   2 files changed, 107 insertions(+), 1 deletion(-)
 >
-> I would like to hear how memory hot-remove is supposed to work though,
-> to see if we should be doing something to make the abstraction safer
-> (though it's still unsafe and always will be). Is there a chance a
-> `struct page` could vanish out from under us under some conditions?
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 6b4664d91faa..489ce1041203 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -117,6 +117,7 @@ config DRM_ITE_IT6505
+>   
+>   config DRM_LONTIUM_LT8912B
+>   	tristate "Lontium LT8912B DSI/HDMI bridge"
+> +	select SND_SOC_HDMI_CODEC if SND_SOC
+>   	depends on OF
+>   	select DRM_PANEL_BRIDGE
+>   	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/bridge/lontium-lt8912b.c b/drivers/gpu/drm/bridge/lontium-lt8912b.c
+> index 52da204f5740..2100b41e5f61 100644
+> --- a/drivers/gpu/drm/bridge/lontium-lt8912b.c
+> +++ b/drivers/gpu/drm/bridge/lontium-lt8912b.c
+> @@ -8,6 +8,8 @@
+>   #include <linux/gpio/consumer.h>
+>   #include <linux/i2c.h>
+>   #include <linux/media-bus-format.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/platform_device.h>
+>   #include <linux/regmap.h>
+>   
+>   #include <drm/drm_probe_helper.h>
+> @@ -16,6 +18,8 @@
+>   #include <drm/drm_mipi_dsi.h>
+>   #include <drm/drm_of.h>
+>   
+> +#include <sound/hdmi-codec.h>
+> +
+>   #include <video/videomode.h>
+>   
+>   #define I2C_MAIN 0
+> @@ -24,7 +28,10 @@
+>   #define I2C_CEC_DSI 1
+>   #define I2C_ADDR_CEC_DSI 0x49
+>   
+> -#define I2C_MAX_IDX 2
+> +#define I2C_AUDIO 2
+> +#define I2C_ADDR_AUDIO 0x4a
+> +
+> +#define I2C_MAX_IDX 3
+>   
+>   struct lt8912 {
+>   	struct device *dev;
+> @@ -38,6 +45,7 @@ struct lt8912 {
+>   	struct drm_bridge *hdmi_port;
+>   
+>   	struct mipi_dsi_device *dsi;
+> +	struct platform_device *audio_pdev;
+>   
+>   	struct gpio_desc *gp_reset;
+>   
+> @@ -226,6 +234,7 @@ static int lt8912_init_i2c(struct lt8912 *lt, struct i2c_client *client)
+>   	struct i2c_board_info info[] = {
+>   		{ I2C_BOARD_INFO("lt8912p0", I2C_ADDR_MAIN), },
+>   		{ I2C_BOARD_INFO("lt8912p1", I2C_ADDR_CEC_DSI), },
+> +		{ I2C_BOARD_INFO("lt8912p2", I2C_ADDR_AUDIO), },
+>   	};
+>   
+>   	if (!lt)
+> @@ -754,6 +763,97 @@ static int lt8912_put_dt(struct lt8912 *lt)
+>   	return 0;
+>   }
+>   
+> +static int lt8912_hdmi_hw_params(struct device *dev, void *data,
+> +				 struct hdmi_codec_daifmt *fmt,
+> +				 struct hdmi_codec_params *hparms)
+> +{
+> +	struct lt8912 *lt = data;
+> +	unsigned int audio_params = 0x08; /* 16 bit word size */
+> +
+> +	if (hparms->sample_width != 16)
+> +		return -EINVAL;
+> +
+> +	if (hparms->sample_rate == 48000)
+> +		audio_params |= 0x20;
+> +	else if (hparms->sample_rate == 96000)
+> +		audio_params |= 0xa0;
+> +	else
+> +		return -EINVAL;
+> +
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x0f, audio_params);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x35, 0x00);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x36, 0x18);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x37, 0x00);
+> +
+> +	return 0;
+> +}
+> +
+> +static int lt8912_audio_startup(struct device *dev, void *data)
+> +{
+> +	struct lt8912 *lt = data;
+> +
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x34, 0xe2);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x3c, 0x60);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x07, 0xf0);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x06, 0x08);
+> +
+> +	return 0;
+> +}
+> +
+> +static void lt8912_audio_shutdown(struct device *dev, void *data)
+> +{
+> +	struct lt8912 *lt = data;
+> +
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x06, 0x00);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x07, 0x00);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x34, 0x52);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x3c, 0x40);
+> +}
+> +
+> +static int lt8912_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
+> +				      struct device_node *endpoint)
+> +{
+> +	struct of_endpoint of_ep;
+> +	int ret;
+> +
+> +	ret = of_graph_parse_endpoint(endpoint, &of_ep);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (of_ep.port != 2)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct hdmi_codec_ops lt8912_codec_ops = {
+> +	.hw_params = lt8912_hdmi_hw_params,
+> +	.audio_shutdown = lt8912_audio_shutdown,
+> +	.audio_startup = lt8912_audio_startup,
+> +	.get_dai_id = lt8912_hdmi_i2s_get_dai_id,
+> +};
+> +
+> +static int lt8912_audio_init(struct device *dev, struct lt8912 *lt)
+> +{
+> +	struct hdmi_codec_pdata codec_data = {
+> +		.ops = &lt8912_codec_ops,
+> +		.max_i2s_channels = 2,
+> +		.i2s = 1,
+> +		.data = lt,
+> +	};
+> +
+> +	lt->audio_pdev = platform_device_register_data(dev, HDMI_CODEC_DRV_NAME,
+> +						       PLATFORM_DEVID_AUTO,
+> +						       &codec_data, sizeof(codec_data));
+> +
+> +	return PTR_ERR_OR_ZERO(lt->audio_pdev);
+> +}
+> +
+> +static void lt8912_audio_exit(struct lt8912 *lt)
+> +{
+> +	platform_device_unregister(lt->audio_pdev);
+> +}
+> +
+>   static int lt8912_probe(struct i2c_client *client)
+>   {
+>   	static struct lt8912 *lt;
+> @@ -788,6 +888,10 @@ static int lt8912_probe(struct i2c_client *client)
+>   	if (ret)
+>   		goto err_attach;
+>   
+> +	ret = lt8912_audio_init(dev, lt);
+> +	if (ret)
+> +		goto err_attach;
+> +
+>   	return 0;
+>   
+>   err_attach:
+> @@ -803,6 +907,7 @@ static void lt8912_remove(struct i2c_client *client)
+>   {
+>   	struct lt8912 *lt = i2c_get_clientdata(client);
+>   
+> +	lt8912_audio_exit(lt);
+>   	drm_bridge_remove(&lt->bridge);
+>   	lt8912_free_i2c(lt);
+>   	lt8912_put_dt(lt);
 
-Add DavidH and OscarS for memory hot-remove questions.
+This patch contains an error, v2 with the fix will follow shortly.
 
-IIUC, struct page could be freed if a chunk of memory is hot-removed.
+Rafael
 
-Another case struct page can be freed is when hugetlb vmemmap optimizatio=
-n
-is used. Muchun (cc'd) is the maintainer of hugetlbfs.
-
->
-> For dev_pagemap memory I imagine we'd have an entirely different
-> abstraction wrapping that, that can just return a borrowed &Page to giv=
-e
-> the user access to page operations without going through Owned<Page>.
->
->> For dma/iommu stuff there's also a push to move towards pfn + metadata=
-
->> model, so that p2pdma doesn't need struct page. But I haven't looked i=
-nto
->> that much yet.
->
-> Yeah, I don't know how that stuff works...
->
->>
->> Cheers, Sima
->>
->>> Then, make some existing private methods public, since this is needed=
- to
->>> reasonably use allocated pages as IOMMU page tables.
->>>
->>> Along the way we also add a small module to represent a core kernel
->>> address types (PhysicalAddr, DmaAddr, ResourceSize, Pfn). In the futu=
-re,
->>> this might grow with helpers to make address math safer and more
->>> Rust-like.
->>>
->>> Finally, add methods to:
->>> - Get a page's physical address
->>> - Convert an owned Page into its physical address
->>> - Convert a physical address back to its owned Page
->>> - Borrow a Page from a physical address, in both checked (with checks=
-
->>>   that a struct page exists and is accessible as regular RAM) and not=
-
->>>   checked forms (useful when the user knows the physaddr is valid,
->>>   for example because it got it from Page::into_phys()).
->>>
->>> Of course, all but the first two have to be `unsafe` by nature, but t=
-hat
->>> comes with the territory of writing low level memory management code.=
-
->>>
->>> These methods allow page table code to know the physical address of
->>> pages (needed to build intermediate level PTEs) and to essentially
->>> transfer ownership of the pages into the page table structure itself,=
-
->>> and back into Page objects when freeing page tables. Without that, th=
-e
->>> code would have to keep track of page allocations in duplicate, once =
-in
->>> Rust code and once in the page table structure itself, which is less
->>> desirable.
->>>
->>> For Apple GPUs, the address space shared between firmware and the dri=
-ver
->>> is actually pre-allocated by the bootloader, with the top level page
->>> table already pre-allocated, and the firmware owning some PTEs within=
- it
->>> while the kernel populates others. This cooperation works well when t=
-he
->>> kernel can reference this top level page table by physical address. T=
-he
->>> only thing the driver needs to ensure is that it never attempts to fr=
-ee
->>> it in this case, nor the page tables corresponding to virtual address=
-
->>> ranges it doesn't own. Without the ability to just borrow the
->>> pre-allocated top level page and access it, the driver would have to
->>> special-case this and manually manage the top level PTEs outside the
->>> main page table code, as well as introduce different page table
->>> configurations with different numbers of levels so the kernel's view =
-is
->>> one lever shallower.
->>>
->>> The physical address borrow feature is also useful to generate virtua=
-l
->>> address space dumps for crash dumps, including firmware pages. The
->>> intent is that firmware pages are configured in the Device Tree as
->>> reserved System RAM (without no-map), which creates struct page objec=
-ts
->>> for them and makes them available in the kernel's direct map. Then th=
-e
->>> driver's page table code can walk the page tables and make a snapshot=
- of
->>> the entire address space, including firmware code and data pages,
->>> pre-allocated shared segments, and driver-allocated objects (which ar=
-e
->>> GEM objects), again without special casing anything. The checks in
->>> `Page::borrow_phys()` should ensure that the page is safe to access a=
-s
->>> RAM, so this will skip MMIO pages and anything that wasn't declared t=
-o
->>> the kernel in the DT.
->>>
->>> Example usage:
->>> https://github.com/AsahiLinux/linux/blob/gpu/rust-wip/drivers/gpu/drm=
-/asahi/pgtable.rs
->>>
->>> The last patch is a minor cleanup to the Page abstraction noticed whi=
-le
->>> preparing this series.
->>>
->>> [1] https://lore.kernel.org/lkml/20241119112408.779243-1-abdiel.janul=
-gue@gmail.com/T/#u
->>>
->>> Signed-off-by: Asahi Lina <lina@asahilina.net>
->>> ---
->>> Asahi Lina (6):
->>>       rust: types: Add Ownable/Owned types
->>>       rust: page: Convert to Ownable
->>>       rust: page: Make with_page_mapped() and with_pointer_into_page(=
-) public
->>>       rust: addr: Add a module to declare core address types
->>>       rust: page: Add physical address conversion functions
->>>       rust: page: Make Page::as_ptr() pub(crate)
->>>
->>>  rust/helpers/page.c  |  26 ++++++++++++
->>>  rust/kernel/addr.rs  |  15 +++++++
->>>  rust/kernel/lib.rs   |   1 +
->>>  rust/kernel/page.rs  | 101 ++++++++++++++++++++++++++++++++++++++---=
------
->>>  rust/kernel/types.rs | 110 +++++++++++++++++++++++++++++++++++++++++=
-++++++++++
->>>  5 files changed, 236 insertions(+), 17 deletions(-)
->>> ---
->>> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
->>> change-id: 20250202-rust-page-80892069fc78
->>>
->>> Cheers,
->>> ~~ Lina
->>>
->>
->
-> ~~ Lina
-
---
-Best Regards,
-Yan, Zi
