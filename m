@@ -1,89 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E0820ADCF;
-	Mon,  3 Feb 2025 14:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BF52080E7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593216; cv=none; b=KWNbMMLaOjtYPiJqRjLekLvZLe+/gs/piWaBSPCCtIIietNYAuaejF+7IJWIWQnmDNpfZqSg28cz1JM2mz+MW+xi96HEHpwFgeAZzS47BnolEfdKUG6anmUqHCljcVLXVOX7WnqjRhLSv5p9DDoofhk7GCWq9554uD4sDJL9pLI=
+	t=1738593268; cv=none; b=dIHk8nrw2WjYIFwgPC23BVzkoNt7m5SOh1R3TWjvc9T3eohSIJob83Ia1Io+ww3mQAT589RnlewGUkSvT11YR47+SjG1CvO703g2Eqe5fkPFKg4t2vA1yGvHsfexsWBAlTFUwe7DjwLt/8Huf6LPRwXIzYbYJIptYt9cJ8UuNj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593216; c=relaxed/simple;
-	bh=JLavaaOhrnEE9p6owSTsfMaaxQcLSd9qqQap8LGvZfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iTxKy8os7tWQt85HAKSsVgpVRfWvak0F9N9BDA6c1o9BfOoVLkMr5uuM1IfGn0R1w1kzl63KAzVk+kd94Nzjw5PSBCVkaskvfUYDrOzV6dSX2Ym+VdIhY/BtiysMoYse+pnl1PWCjylqb8JNOQfVY+o1/b3Hmwg5hah3czwZnY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XCjSUAM8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XCjSUAM8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F00E7C4CED2;
-	Mon,  3 Feb 2025 14:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738593215;
-	bh=JLavaaOhrnEE9p6owSTsfMaaxQcLSd9qqQap8LGvZfA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XCjSUAM8ygAOvkm9LUK/VPyfWi2YhJRkY1S9M2wyR9Qk/DuzE93kFTC9pCgAaatvx
-	 7VJZWEu497BfXRDtSEYGZoKxD8gKYqephW8Oz/xESGibvuClNtdaix8LdpNLGjuyfC
-	 rejputx+SgzNE47MoTFrM8/LSvH0aSXAfBuKgKtA=
-Date: Mon, 3 Feb 2025 15:33:32 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
+	s=arc-20240116; t=1738593268; c=relaxed/simple;
+	bh=625RtJRCTtNa1lSKe81zsXGX4BP5nv6d1/mkV8i9Jn0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fjev99eYCvvMvmd5/OTDZHOXJJjfOrkULD4s3AX7Nj6mZNGm2hdt3iVm4uNq2YGaGoamJLjrwaaAiK3+1VYL11w7O21TDj6/NMU9mMlSgEdd43FmHjDKfZvaaki4PAYffc2lL4iF+DGfPDD7++AXWJ5/A/NeuKS09jeLk7HDAfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+	by gauss.telenet-ops.be (Postfix) with ESMTP id 4Ympsl4P72z4wyHP
+	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 15:34:19 +0100 (CET)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:d465:743d:7f2:30d8])
+	by andre.telenet-ops.be with cmsmtp
+	id 92aB2E00Z4UDnen012aBTz; Mon, 03 Feb 2025 15:34:12 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1texWS-0000000FcxH-0KVJ;
+	Mon, 03 Feb 2025 15:34:11 +0100
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1texWd-00000003Ril-2DTh;
+	Mon, 03 Feb 2025 15:34:11 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>
-Subject: Re: [RFC] driver core: add a virtual bus for use when a simple
- device/bus is needed
-Message-ID: <2025020300-carol-emblem-07ff@gregkh>
-References: <Z5Nw8kaieLueWyUu@pollux>
- <20250130212843.659437-1-lyude@redhat.com>
- <2025013159-shabby-professor-515b@gregkh>
- <2025013140-propeller-dirtiness-6cb4@gregkh>
- <Z50ZuzrDn-GQWOuP@cassiopeiae>
- <2025020106-avert-senorita-4181@gregkh>
- <2025020306-overhang-glider-7d42@gregkh>
- <Z6Ch8O-0oY70Jhi6@pollux>
- <2025020307-cavalier-knapsack-7f89@gregkh>
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] stackinit: Fix comment for test_small_end
+Date: Mon,  3 Feb 2025 15:34:07 +0100
+Message-ID: <3f8faa2d7d0d6b36571093ab0fb1fd5157abd7bb.1738593178.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025020307-cavalier-knapsack-7f89@gregkh>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 03, 2025 at 12:25:23PM +0100, Greg Kroah-Hartman wrote:
-> > The more I think about it, the less I think it's a good idea, since it'd
-> > probably trick people into coming up with questionable constructs...
-> 
-> No, I think it will work, let me do some replacements later today after
-> I get some other work done, I think it does make sense, don't doubt
-> yourself :)
+In union test_small_end, the small members are three and four.
 
-New version is now at:
-	https://lore.kernel.org/r/2025020324-thermal-quilt-1bae@gregkh
+Fixes: e71a29db79da1946 ("stackinit: Add union initialization to selftests")
+Closes: https://lore.kernel.org/CAMuHMdWvcKOc6v5o3-9-SqP_4oh5-GZQjZZb=-krhY=mVRED_Q@mail.gmail.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ lib/stackinit_kunit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I've renamed it from "virtual" to "faux" as virtual can easily get
-confused with virtio stuff, and we already have a /sys/devices/virtual/
-that is for something else at the moment.
+diff --git a/lib/stackinit_kunit.c b/lib/stackinit_kunit.c
+index fbe910c9c8253480..12ffbcc8d4753107 100644
+--- a/lib/stackinit_kunit.c
++++ b/lib/stackinit_kunit.c
+@@ -349,7 +349,7 @@ union test_small_start {
+ 	} big;
+ };
+ 
+-/* Mismatched sizes, with one and two being small */
++/* Mismatched sizes, with three and four being small */
+ union test_small_end {
+ 	short one;
+ 	unsigned long two;
+-- 
+2.43.0
 
-Let me know if there's anything I can change that would make a rust
-binding simpler.
-
-thanks,
-
-greg k-h
-
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
