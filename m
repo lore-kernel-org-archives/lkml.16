@@ -1,234 +1,547 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB96910FD
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 00:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED1F17C2
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 00:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738541955; cv=none; b=c7nRHV+CDeZ7ippu1xWWY9N3Vh0GAH84f2310fFEsoix3v6Y0AqvgPeBy4TJhZ26Dudw9kRMwTaqL8N5NxYC3tWT4VvGzTttU4YmjQhGeys7+NXT6mFITl95AF6mBohTVeEJogRfsN+OqtqnuR4wCbdtieXudtesnVssJX4OVhs=
+	t=1738542436; cv=none; b=qtbGXDTR0cW72h6Ia07DzoITK5y0eXw2KoeVoHnQl36JCIWgBMqsctUSxXet2N9z9ifa22N3Tpxczlm36PkmYyyE8MTz0lrV1UxLjNsUsM3dUZ7XwXuiWmOW0ieeyJl5Twr8l0wXECQGwQJJIpZGwbW9UDTPIvV4xlvR2HDD62Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738541955; c=relaxed/simple;
-	bh=2YZmbXo1wL0LKZHCmnlP5NuWpSw4oSuUBQvKOH9Yp88=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EBh1qRDo0dkdHuPuqztec/OyPrvuD7rJA/XWqWqMkBAtgVq95XZFX+arC/DhNngP8AHiEyGoPdsbvt+fHi7jkmpRydUbP6RgLDfbsM+jTlBFsfkz0WXegfoNmX0fidClpWtyK8O3C/2bWt8BUmH1cbjbB8ZDmqCvfpR4XFvGgi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=fE22bMy0; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1738542436; c=relaxed/simple;
+	bh=7YK2f3ZOZK3xBDTdYU+KVjIaKpEJWc7yVBKZai6lyJk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=dIk8lFDZmGcDOQTPcuaWpWQ4JOhFlQVG9Hxn8+KsDF5k/PfMWaRq2cNnRNH1rHCbw9N1VBlatUEuonSk95SwPNwa5uHjlNs7rvWg2kOOU4l/8njErzPP7Q4rtzMbr29fZCmlWNXdUZDzC5D86Nl95I0SEy6UjAa2WuGMqvmDpv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SZDuy7ul; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="fE22bMy0"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ee9b1a2116so779254a91.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 16:19:13 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SZDuy7ul"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab6ed8a3f6aso549286466b.2
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 16:27:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1738541953; x=1739146753; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/CD8OS0v/yDUliDZljFbLDPJ3YJ6X1i9bJSHN/SY1h0=;
-        b=fE22bMy0lmlIiKn5xFt/ZE59wRo1T2xtDGwZixveftwFBs56B85SJ4OBJywJyoGJA+
-         DYFFMo5109I5TBvGYCu+JO/l8A2dMCGeGV+KJtj/TBS3mJVrqwAvRBQRtZtwprwNGV+q
-         VRInboLSk4eKtP/W4IVRa7gtpIQ2XaP3vtKkT5ugyQbkg371BDBPvgI/UThXU7z3H9Bn
-         EJ9YwOQ1SEi/Sd6xBJC6yw0BkbsyguaW7MFFXsYKwBAhl3zFvxBz+YTkwtKF6RDB4uxc
-         IHo24saUbSvKxTgkvHIli4YqZ8LenNrWtWCe5EcIzBAktjBEr0sXaOPE4AR+QYswlp7B
-         Weig==
+        d=linux-foundation.org; s=google; t=1738542432; x=1739147232; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=gzeMTX54+GgflXYifh4U86Lvz49xOOXYr95A+NMUbhM=;
+        b=SZDuy7ulT5F5ys3+jS9CoThElzcYLUPWNPJSgKpOWXTkecHT+oL+135WXuZxBIXiiW
+         qEMhgycZt45859NbrMppZ4pFqnz2ngdnWJ1GDrwa0AP7Zsa1LxPXqNNeW2zBapNaudEo
+         MmuDWHw9HXzmtlxfVjDAgyKQ9R51plK8ly+Kw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738541953; x=1739146753;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/CD8OS0v/yDUliDZljFbLDPJ3YJ6X1i9bJSHN/SY1h0=;
-        b=h8K87NP/zAqqmrlnN5Z+yz3U3irvgsTI9IF/dN7vGVJEiOP4c2WvO7uxXszcSNpvEZ
-         JwN/ovv6gkYbvRy21QlmenQMBawf9pKbzXajZis3TSlLiL+r24zzf/sclELU5pud/rcR
-         p1h4T/e58u8xsg/NuwfPdmq2u3mKTZQ5ypkVgS7DuIPdmyOc+GIaGO6lQBLduF8Xed/S
-         s1Asc9cxOEe3t2luhMrPsrxSh2bRS37mW0KpiovqNFlu38x37yrhazzm0yMkC0cmWoyh
-         iSI1KoK1St5Ap/Vw3Qc5DqvOEUEDNbEV1cIHWdxZQhh8B7tMlr+m8/dsCHcdXGHoTOcC
-         Y6jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXa2svBWmYK6NW3M09zIJNSTOKKBD6ycbe7isitGGIa4A2JmnNO49fBK5bGiqWytWVJcdFRSHWH5DCY0nY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7KU1HJOq6kgvValhRULqqLnC915vbjBdpopATYWT7BBNf83zL
-	Qf8sLRfR9tnmfOihcrWaOF9tck2HWDFza3HWYi72u4HRAM3yal5GHfraVOVdd3jgTAE1pvUmB4R
-	YP1gBZcIY3Y/E4P6IWwKC/jmRAXreP2KkIY6BpULjVMnMNTGbAM8=
-X-Gm-Gg: ASbGncvof2z9rs+47FMtUXcd7rz7T/3vuYLtK9/xyJtmy2OwxaVr1hzzh0dohVvj/6b
-	gVMmQTgNCXN8BRPzK9/O40NABkBFD0OdbhJzHJJjRfYl5/CZgT0ZCZsbMzgWRaMImPW97YFo=
-X-Google-Smtp-Source: AGHT+IFmzoWCYaEfo5enZeTMzTrar2GW00RaNdMzCm+dxuNCQvwT32LxLfM4mpkC355ACLYCKpn75ZVcF4TOn8qxYt0=
-X-Received: by 2002:a17:90b:2cc3:b0:2ea:bb3a:8f09 with SMTP id
- 98e67ed59e1d1-2f83aa65d88mr11673305a91.0.1738541952924; Sun, 02 Feb 2025
- 16:19:12 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738542432; x=1739147232;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gzeMTX54+GgflXYifh4U86Lvz49xOOXYr95A+NMUbhM=;
+        b=ttOCE6GiO1dEPM0HUObcFybpaq0b6YHB9s9f4qFvW+a84ZEJau+hJpRUZRR8GxSu2D
+         i9w6znpnNMd2qT46lYDr6XlihGniZ+ppSFxOMFhIu20uycnwSdMQQWkZSl8yzqu48R3z
+         uUnPLe08MuP65Ff2NPBp3BJv67++/UDdU2z9zHTviBA2h1tW0y5fP4c6mPui5kPyTDHh
+         7Yvkx2oluqXfIqHwnsCdGpxdOcvIJE6Rwvpg6QDXNpOmj7NTwez6UujQkFxPq8oJ+lXx
+         QWoBWzUqvjDQunZrjagYfOERtXuKOae4SElExA41BSuvuun3NkCt5kzuUFETj1HENJTN
+         eRiA==
+X-Gm-Message-State: AOJu0YwtRw86KZIMGSRWsUBqio1UXoiArw/ak/bfvyrmGIWv5a/VlnDz
+	37kRvbYE/I0F6ClVoXeUhQ7AHf7NAOVRbACpRLSdGNSQNqCf+/O5EPbnfQuU6L9TW84UkgwVKz1
+	MjTU=
+X-Gm-Gg: ASbGncvKydNJ4tZLKc/aAgZ6xAjmmGdtV4W3zwJcjLwwX4awU2Ayivps9V/wK74ZBH0
+	xmfHpM4Kztb15wYMhLofCEy7nFF8jvp7OjFw1kbMuYTYWoWuFh+m7fM0BhYuC5KY2C2S7N46zDO
+	gD/lb0oTrxpXgwP9sWgsyJZ8mSeYucBiItYs2XOCp0ZP5JmzmbMYlAnzq59pxLsu5k3sXwt+dFM
+	nMeNpsv38pC+IP3gZqghNUAegd7xT7N/T3eg3aH9cyhnSm/NVAnXPG1SpXd+QO0WNOqDFKlX41l
+	yc3T8FF3GTOMNxpBCsxgqK0RnOt7Lp5WlVxHbsk8PJB/ewFcoXdK02dag29vpobuag==
+X-Google-Smtp-Source: AGHT+IHjg39cHYRfAZs5h7xh3F52b5IIB0tvoWF71DlTXF7ssWT50c12AnbMdCwukmPeL5RlxQosug==
+X-Received: by 2002:a17:906:c143:b0:ab6:597a:f5d7 with SMTP id a640c23a62f3a-ab6cfce750fmr2268995366b.24.1738542431559;
+        Sun, 02 Feb 2025 16:27:11 -0800 (PST)
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab702d70c8fsm436304766b.161.2025.02.02.16.27.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Feb 2025 16:27:11 -0800 (PST)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaeef97ff02so605377766b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 16:27:10 -0800 (PST)
+X-Received: by 2002:a17:907:3ea8:b0:ab6:efd6:3292 with SMTP id
+ a640c23a62f3a-ab6efd637a3mr1428236566b.0.1738542430308; Sun, 02 Feb 2025
+ 16:27:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250124184311.1642797-1-csander@purestorage.com>
- <9ea74200-7cbc-4a30-9503-864dcec9b45d@suse.de> <CADUfDZoT7JW+d+j6YNmWJ3CKZ45gbvcUSsE6boZwE1C3iXw2_g@mail.gmail.com>
- <f75c62ce-04a7-4bc0-ae77-8ed80842bf37@suse.de> <CADUfDZrvHmYQgqu5GiQDrAg_MOEiRigCLCmBSO6jeyd1z+Q-JQ@mail.gmail.com>
- <3bcc6e3f-5172-40d4-a4d4-b0f914b9406b@grimberg.me>
-In-Reply-To: <3bcc6e3f-5172-40d4-a4d4-b0f914b9406b@grimberg.me>
-From: Caleb Sander <csander@purestorage.com>
-Date: Sun, 2 Feb 2025 16:19:01 -0800
-X-Gm-Features: AWEUYZlJ4nSE-xwpmFAqYdPyI5t_TuDWsFBFF8tDUCGLXuTuUk3HguK3xGsbwmY
-Message-ID: <CADUfDZq3ZqpP9hZhgG1gzyyggG6SCQiHqHdgbm95TU2oZ5QFUQ@mail.gmail.com>
-Subject: Re: [PATCH v4] nvme-tcp: fix connect failure on receiving partial
- ICResp PDU
-To: Sagi Grimberg <sagi@grimberg.me>
-Cc: Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Christoph Hellwig <hch@lst.de>, Maurizio Lombardi <mlombard@redhat.com>, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 2 Feb 2025 16:26:53 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wicYNCkEgH06w0mpR+GJhJ_ywe0BLTTFXBAj1+y0dqe4Q@mail.gmail.com>
+X-Gm-Features: AWEUYZlXnvhvu2f4hQW_uPbom7U2QPI3mufFWi5ir3dJ9ZC1_PUglw-OxOjLa3o
+Message-ID: <CAHk-=wicYNCkEgH06w0mpR+GJhJ_ywe0BLTTFXBAj1+y0dqe4Q@mail.gmail.com>
+Subject: Linux 6.14-rc1
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 31, 2025 at 12:17=E2=80=AFAM Sagi Grimberg <sagi@grimberg.me> w=
-rote:
-...
-> Caleb, can you please make sure to test this patch with TLS?
+Two weeks have passed, and the merge window is over.
 
-Can you point me to some documentation for that? I tried setting up a
-nvmet_tcp port to use TLS and connecting to it as described in the
-cover letter for the patch series (https://lwn.net/Articles/941139/).
-But the TLS Server Hello seems to fail with EACCES. Any idea what I'm
-doing wrong?
-$ modprobe nvmet_tcp
-$ modprobe null_blk nr_devices=3D1
-$ mkdir /sys/kernel/config/nvmet/subsystems/nqn.nvmet
-$ echo 1 > /sys/kernel/config/nvmet/subsystems/nqn.nvmet/attr_allow_any_hos=
-t
-$ mkdir /sys/kernel/config/nvmet/subsystems/nqn.nvmet/namespaces/1
-$ echo /dev/nullb0 >
-/sys/kernel/config/nvmet/subsystems/nqn.nvmet/namespaces/1/device_path
-$ echo 1 > /sys/kernel/config/nvmet/subsystems/nqn.nvmet/namespaces/1/enabl=
-e
-$ mkdir /sys/kernel/config/nvmet/ports/1
-$ echo tcp > /sys/kernel/config/nvmet/ports/1/addr_trtype
-$ echo ipv4 > /sys/kernel/config/nvmet/ports/1/addr_adrfam
-$ echo 127.0.0.1 > /sys/kernel/config/nvmet/ports/1/addr_traddr
-$ echo 4420 > /sys/kernel/config/nvmet/ports/1/addr_trsvcid
-$ echo required > /sys/kernel/config/nvmet/ports/1/addr_treq
-$ echo tls1.3 > /sys/kernel/config/nvmet/ports/1/addr_tsas
-$ ln -s /sys/kernel/config/nvmet/subsystems/nqn.nvmet
-/sys/kernel/config/nvmet/ports/1/subsystems
-$ nvme gen-tls-key --subsysnqn nqn.nvmet --insert
-Inserted TLS key 005e8a74
-$ nvme gen-tls-key --subsysnqn nqn.2014-08.org.nvmexpress.discovery --inser=
-t
-Inserted TLS key 22d676b8
-$ tlshd &
-$ nvme discover --transport tcp --traddr 127.0.0.1 --trsvcid 4420 --tls
-Failed to write to /dev/nvme-fabrics: Input/output error
-failed to add controller, error failed to write to nvme-fabrics device
+This is actually a _tiny_ merge window, and that's ok. The holidays
+clearly meant that people did less development than during a normal
+cycle, and that then shows up as a much smaller-than-average release.
+I really felt like this year we got the whole holiday season release
+timing right, and this is just another sign of that.
 
-With debug logs enabled, I see the following:
-$ dmesg | tail -6
-[  440.405298] nvme nvme0: connecting queue 0
-[  440.405403] nvmet_tcp: queue 0: TLS ServerHello
-[  440.405433] nvme nvme0: queue 0: start TLS with key 11b456f9
-[  440.407836] nvmet_tcp: queue 0: TLS handshake done, key 0, status -13
-[  440.422881] nvme nvme0: queue 0: TLS handshake done, key 0, status -13
-[  440.422932] nvme nvme0: queue 0: TLS handshake complete, error 13
+Of course, "tiny" for us still means that there's half a million lines
+changed, and more than 10k commits in there - but only barely. In
+fact, not counting merges there's only something like 9.3k commits. So
+the shortlog is still much too large to post - it's really "tiny" only
+when compared to our normal releases.
 
-A tcpdump shows the host sending a TLS Client Hello packet and the
-target immediately closing the connection.
+Aside from the size, the stats otherwise look fairly normal: pretty
+much exactly half of the diff is drivers, with the rest being a pretty
+normal mix of arch updates, filesystem code, tooling and
+documentation. And all the usual changes spread all over.
 
-> Do you have a reliable way to reproduce this?
+Let's hope that a small release also ends up meaning smooth sailing
+during the stabilization phase. That's obviously guaranteed, but
+fingers crossed...
 
-Sure, here's a fake Python NVMe/TCP controller that immediately closes
-each connection after receiving the ICReq PDU:
-```
-import socket
+            Linus
 
-def recv_all(socket, length):
-    result =3D b''
-    while len(result) < length:
-        result +=3D socket.recv(length - len(result))
-    return result
+---
 
-listen_sock =3D socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-listen_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-listen_sock.bind(('', 4420))
-listen_sock.listen()
-while True:
-    client_sock, _ =3D listen_sock.accept()
-    recv_all(client_sock, 128) # ICReq
-    client_sock.close()
-```
-Attempting to connect to it reports an error about the ICResp PDU type
-field even though no ICResp was sent:
-$ nvme connect --transport tcp --traddr 192.168.1.12 --nqn nqn.abc
-Failed to write to /dev/nvme-fabrics: Invalid argument
-could not add new controller: invalid arguments/configuration
-$ dmesg | tail -1
-[1351639.614853] nvme_tcp: queue 0: bad type returned 0
+Al Viro (3):
+    vfs d_revalidate updates
+    hostfs fix
+    misc vfs cleanups
 
-Here's a valid scenario where the controller sends the ICResp Common
-Header and PDU Specific Header separately (using TCP_NODELAY to ensure
-the sends are not coalesced):
-```
-import socket
+Alex Williamson (1):
+    vfio updates
 
-def recv_all(socket, length):
-    result =3D b''
-    while len(result) < length:
-        result +=3D socket.recv(length - len(result))
-    return result
+Alexander Gordeev (3):
+    s390 updates
+    more s390 updates
+    s390 fixes
 
-def send_all(socket, data):
-    while data:
-        data =3D data[socket.send(data):]
+Alexandre Belloni (2):
+    i3c updates
+    RTC updates
 
-listen_sock =3D socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-listen_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-listen_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-listen_sock.bind(('', 4420))
-listen_sock.listen()
-while True:
-    client_sock, _ =3D listen_sock.accept()
-    recv_all(client_sock, 128) # ICReq
-    common_header =3D bytes([
-        0x01, # PDU-type
-        0, # FLAGS
-        128, # HLEN
-        0, # PDO
-        128, 0, 0, 0, # PLEN
-    ])
-    send_all(client_sock, common_header)
-    ic_resp =3D bytes([
-        0, 0, # PFV
-        0, # CPDA
-        0, # DGST
-        0xFC, 0xFF, 0xFF, 0xFF, # MAXH2CDATA
-    ] + [0] * 112)
-    send_all(client_sock, ic_resp)
-    client_sock.close()
-```
-The host refuses to connect, complaining that the MAXH2CDATA field in
-the ICResp is invalid. But that is because it only received the Common
-Header.
-$ nvme connect --transport tcp --traddr 192.168.1.12 --nqn nqn.abc
-Failed to write to /dev/nvme-fabrics: Invalid argument
-could not add new controller: invalid arguments/configuration
-$ dmesg | tail -1
-[1351960.082011] nvme_tcp: queue 0: invalid maxh2cdata returned 0
+Alexei Starovoitov (1):
+    bpf updates
 
-With the patch applied, the controller closing the connection without
-sending a ICResp PDU correctly results in a "Connection reset by peer"
-error:
-$ nvme connect --transport tcp --traddr 192.168.1.12 --nqn nqn.abc
-Failed to write to /dev/nvme-fabrics: Connection reset by peer
-could not add new controller: failed to write to nvme-fabrics device
-$ dmesg | tail -1
-[  450.050463] nvme_tcp: queue 0: failed to receive icresp, error 0
+Andreas Gruenbacher (1):
+    gfs2 updates
 
-And when the controller sends the Common Header separately from the
-PDU Specific Header, nvme_tcp_init_connection() now succeeds. The
-connection attempt instead times out waiting for a response to the
-Fabrics Connect command, since the fake NVMe/TCP controller doesn't
-implement that:
-$ nvme connect --transport tcp --traddr 192.168.1.12 --nqn nqn.abc
-Failed to write to /dev/nvme-fabrics: Input/output error
-could not add new controller: failed to write to nvme-fabrics device
-$ dmesg | tail -3
-[  644.728894] nvme nvme0: I/O tag 0 (0000) type 4 opcode 0x7f
-(Connect) QID 0 timeout
-[  644.728974] nvme nvme0: Connect command failed, error wo/DNR bit: 881
-[  644.728999] nvme nvme0: failed to connect queue: 0 ret=3D881
+Andreas Larsson (1):
+    sparc updates
 
-Thanks,
-Caleb
+Andrew Morton (3):
+    non-MM updates
+    MM updates
+    misc fixes
+
+Andy Shevchenko (1):
+    auxdisplay updates
+
+Anna Schumaker (1):
+    NFS client updates
+
+Ard Biesheuvel (1):
+    EFI updates
+
+Arnd Bergmann (5):
+    SoC arm platform code updates
+    new SoC support
+    SoC devicetree updates
+    SoC driver updates
+    SoC defconfig updates
+
+Bartosz Golaszewski (3):
+    gpio updates
+    power sequencing updates
+    gpio fixes
+
+Bjorn Andersson (1):
+    remoteproc updates
+
+Bjorn Helgaas (2):
+    pci updates
+    pci fix
+
+Borislav Petkov (8):
+    x86 RAS updates
+    EDAC updates
+    x86 CPU speculation update
+    x86 resource control updates
+    x86 microcode loader updates
+    x86 SEV updates
+    x86 cpuid updates
+    misc x86 updates
+
+Brian Cain (1):
+    hexagon updates
+
+Carlos Maiolino (1):
+    XFS updates
+
+Casey Schaufler (1):
+    smack update
+
+Christian Brauner (10):
+    vfs netfs updates
+    /proc/kcore updates
+    misc vfs updates
+    pidfs updates
+    cred refcount updates
+    pid_max namespacing update
+    vfs mount updates
+    vfs libfs updates
+    vfs direct-io updates
+    afs updates
+
+Chuck Lever (1):
+    nfsd updates
+
+Corey Minyard (1):
+    ipmi updates
+
+Damien Le Moal (1):
+    ata updates
+
+Daniel Thompson (1):
+    kgdb updates
+
+Dave Airlie (2):
+    drm updates
+    drm fixes
+
+Dave Hansen (1):
+    x86 TDX updates
+
+Dave Jiang (1):
+    Compute Express Link (CXL) updates
+
+David Sterba (1):
+    btrfs updates
+
+David Teigland (1):
+    dlm updates
+
+Dmitry Torokhov (1):
+    input updates
+
+Eric Biggers (2):
+    CRC updates
+    CRC cleanups
+
+Frederic Weisbecker (1):
+    kthread updates
+
+Gao Xiang (1):
+    erofs updates
+
+Geert Uytterhoeven (1):
+    m68k updates
+
+Greg KH (6):
+    USB / Thunderbolt driver updates
+    staging driver updates
+    Char/Misc/IIO driver updates
+    tty / serial driver updates
+    driver core and debugfs updates
+    debugfs fix
+
+Greg Ungerer (1):
+    m68knommu update
+
+Guenter Roeck (1):
+    hwmon updates
+
+Helge Deller (2):
+    fbdev updates
+    parisc architecture updates
+
+Herbert Xu (1):
+    crypto updates
+
+Huacai Chen (1):
+    LoongArch updates
+
+Ilpo J=C3=A4rvinen (1):
+    x86 platform driver updates
+
+Ilya Dryomov (1):
+    ceph updates
+
+Ingo Molnar (8):
+    locking updates
+    objtool updates
+    performance events updates
+    x86 cleanups
+    scheduler updates
+    x86 boot updates
+    x86 fix
+    x86 mm updates
+
+Jaegeuk Kim (1):
+    f2fs updates
+
+Jakub Kicinski (1):
+    networking fixes
+
+James Bottomley (1):
+    SCSI updates
+
+Jan Kara (3):
+    inotify update
+    isofs update
+    fsnotify pre-content notification support
+
+Jarkko Sakkinen (2):
+    keys updates
+    TPM update
+
+Jason Gunthorpe (2):
+    iommufd updates
+    rdma updates
+
+Jassi Brar (1):
+    mailbox updates
+
+Jens Axboe (4):
+    block updates
+    io_uring updates
+    more io_uring updates
+    more block updates
+
+Jiri Kosina (1):
+    HID updates
+
+Joel Granados (1):
+    sysctl table constification
+
+Joerg Roedel (1):
+    iommu updates
+
+John Paul Adrian Glaubitz (1):
+    sh updates
+
+Jonathan Corbet (2):
+    Documentation updates
+    documentation fixes
+
+Juergen Gross (1):
+    xen updates
+
+Kees Cook (6):
+    execve updates
+    pstore updates
+    hardening updates
+    AT_EXECVE_CHECK
+    hardening fixes
+    AT_EXECVE_CHECK selftest fix
+
+Kent Overstreet (2):
+    bcachefs updates
+    bcachefs fixes
+
+Konstantin Komarov (1):
+    ntfs3 fixes
+
+Lee Jones (2):
+    mfd updates
+    LED updates
+
+Len Brown (1):
+    turbostat updates
+
+Linus Walleij (1):
+    pin control updates
+
+Madhavan Srinivasan (2):
+    powerpc updates
+    powerpc fixes
+
+Mark Brown (5):
+    regmap updates
+    regulator updates
+    spi updates
+    spi fix
+    regulator fixes
+
+Masahiro Yamada (1):
+    Kbuild updates
+
+Masami Hiramatsu (2):
+    probes updates
+    bootconfig fix
+
+Mauro Carvalho Chehab (2):
+    media updates
+    media fix
+
+Max Filippov (1):
+    xtensa updates
+
+Michael Tsirkin (1):
+    virtio updates
+
+Micka=C3=ABl Sala=C3=BCn (1):
+    landlock updates
+
+Miguel Ojeda (1):
+    rust updates
+
+Mike Marshall (1):
+    orangefs fix
+
+Miklos Szeredi (1):
+    fuse updates
+
+Mikulas Patocka (1):
+    device mapper updates
+
+Mimi Zohar (1):
+    integrity updates
+
+Miquel Raynal (1):
+    MTD updates
+
+Namhyung Kim (2):
+    perf-tools updates
+    perf tools fixes
+
+Niklas Cassel (1):
+    more ata updates
+
+Palmer Dabbelt (1):
+    RISC-V updates
+
+Paolo Abeni (1):
+    networking updates
+
+Paolo Bonzini (1):
+    kvm updates
+
+Paul McKenney (2):
+    CSD-lock update
+    stop_machine update
+
+Paul Moore (4):
+    lsm updates
+    selinux updates
+    audit update
+    audit fix
+
+Petr Mladek (2):
+    printk updates
+    livepatching updates
+
+Petr Pavlu (1):
+    modules updates
+
+Rafael Wysocki (5):
+    power management updates
+    ACPI updates
+    thermal control updates
+    more power management updates
+    ACPI fixes
+
+Richard Weinberger (2):
+    UBI and UBIFS updates
+    UML updates
+
+Rob Herring (1):
+    devicetree updates
+
+Russell King (1):
+    ARM updates
+
+Sebastian Reichel (1):
+    power supply and reset updates
+
+Serge Hallyn (1):
+    capabilities updates
+
+Shuah Khan (3):
+    kselftest updates
+    kunit updates
+    nolibc updates
+
+Simona Vetter (1):
+    drm fixes
+
+Stafford Horne (1):
+    OpenRISC updates
+
+Stephen Boyd (1):
+    clk updates
+
+Steve French (3):
+    smb server updates
+    smb client updates
+    more smb client updates
+
+Steven Rostedt (9):
+    trace ring-buffer updates
+    ftrace updates
+    scipts/sorttable updates
+    ktest updates
+    tracing updates
+    fgraph updates
+    trace fing buffer fix
+    runtime verifier and osnoise fixes
+    rv and tools/rtla updates
+
+Takashi Iwai (2):
+    sound updates
+    sound fixes
+
+Takashi Sakamoto (1):
+    firewire updates
+
+Tejun Heo (1):
+    sched_ext updates
+
+Tetsuo Handa (1):
+    tomoyo updates
+
+Thomas Bogendoerfer (2):
+    MIPS updates
+    MIPS fix
+
+Thomas Gleixner (2):
+    timer and timekeeping updates
+    interrupt subsystem updates
+
+Tzung-Bi Shih (2):
+    chrome platform updates
+    chrome platform firmware updates
+
+Uladzislau Rezki (1):
+    RCU updates
+
+Ulf Hansson (2):
+    MMC updates
+    pmdomain updates
+
+Uwe Kleine-K=C3=B6nig (2):
+    pwm updates
+    pwm fixes
+
+Vinod Koul (3):
+    dmaengine updates
+    phy updates
+    soundwire updates
+
+Vlastimil Babka (1):
+    slab updates
+
+Wei Liu (1):
+    hyperv updates
+
+Will Deacon (2):
+    arm64 updates
+    KVM/arm64 updates
+
+Wim Van Sebroeck (1):
+    watchdog updates
+
+Wolfram Sang (2):
+    i2c updates
+    i2c fixes
+
+Yury Norov (1):
+    bitmap updates
