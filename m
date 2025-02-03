@@ -1,35 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931B7202F76;
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98BAE202F79;
 	Mon,  3 Feb 2025 10:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738578005; cv=none; b=hKgvMXgpTo827uysX8R+Nz8Ob4uqf3NZWLOfVfc9TVH27EDmNAvAvZ+8Es62A/+NHafMe1e06OqBomqHJ0GQqtxfEG2NF+QD3eA0bnKD914TStg2+ylx7QyyVFNBh5cKM7XoqydHgSi82ScBv5qEcBuq7BZtcD2qv22VPNdwvu8=
+	t=1738578007; cv=none; b=XST1grKeSKTxVPU3G8xb491aKY/tdDsGIAaF+4mVarzLXpD+xzBSmZfxTwBPQrXHtscZosfE3Ajex2ojOUXWoP0XIojUKwLLja8HM5H3V7bsegKAbDbr4tu5f1Bc5jXJWZnWkjigUvPEbmgKsSOOiQwcgq1U3SNe45jHcYP59lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738578005; c=relaxed/simple;
-	bh=Xv9eHcbnU/1+NEYnwYBURbDcBgKdPynV+1Vz9Yzsz0s=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=YHlZ4gjLSO1VoZC/I2W/uCqth3KnbokPrb3hCEvIm4dQKLal0S+MLiI7HfpE8obCKQRUfZZH/zXYL9z64pd/i4AVXVBkE/UN9Uh6vSpG8LmmhkRrZzYGpWuIfhmUiYapEP4Tp5GTzLDsjWXojRhC3maGTMrMRcrC4BLIZQvfDxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNgSVED/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNgSVED/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 724A2C4AF09;
-	Mon,  3 Feb 2025 10:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738578005;
-	bh=Xv9eHcbnU/1+NEYnwYBURbDcBgKdPynV+1Vz9Yzsz0s=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=QNgSVED/JmQbTFVli2cUTnpuh2bOZqDfMAm7W6/pbrxOeqUBxF6cx4WVdtK4z31CR
-	 gmH+4tjzaUVvN1ciUrE2oP5XfX3CV3rSn4okG/EZiobXIRhodFAmwzzivroL75k7nG
-	 bxLnRg7EM/VRuVHT1vt7hBUkUv3G7NlU6GgJhmrz0LspBHdfPpVaeDaocoMuYdPdfc
-	 /yUmJOBrd/KRUcfhFvms9MkbM65mpepCP2jFaiRy9gQsLL3JBWFLpSJm/5tQpIpKoU
-	 GJdhIvkZkKEcIE+GoFySGl7yLPv6akJnG2vMcJl4bqoi2pNePl/A0mZ+m5PTVHRNX4
-	 /zCOT4URQKShA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE763380AA76;
-	Mon,  3 Feb 2025 10:20:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1738578007; c=relaxed/simple;
+	bh=CtB3Rp8ru3NaFysQJ/kjJii9E7HcGhVM2wbMbgejRF8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ttHgzhkOR/LrqRgxWoI7pzpBLJJknboMh1Nnrmtoe5rxESgL+F3uay5uAQ9/mVMDeNODwbxMi0nHXqN8h7Rvv3BduI6T2gqEo9xk5BcQKaVpFKcTMgTdj9kxpeF5jB7MDMWNPt/KtDaqsmh71vh+FR/9p9MLkQqbCX535EyuY+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66BB711FB;
+	Mon,  3 Feb 2025 02:20:29 -0800 (PST)
+Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74BCD3F63F;
+	Mon,  3 Feb 2025 02:20:01 -0800 (PST)
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+To: linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@chromium.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Kees Cook <kees@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	Quentin Perret <qperret@google.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org,
+	x86@kernel.org
+Subject: [RFC PATCH v3 06/15] arm64: set_memory: Implement set_memory_pkey()
+Date: Mon,  3 Feb 2025 10:18:30 +0000
+Message-ID: <20250203101839.1223008-7-kevin.brodsky@arm.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250203101839.1223008-1-kevin.brodsky@arm.com>
+References: <20250203101839.1223008-1-kevin.brodsky@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,41 +58,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v3] tg3: Disable tg3 PCIe AER on system reboot
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173857803225.3097404.12260057603363109670.git-patchwork-notify@kernel.org>
-Date: Mon, 03 Feb 2025 10:20:32 +0000
-References: <20250130215754.123346-1-lszubowi@redhat.com>
-In-Reply-To: <20250130215754.123346-1-lszubowi@redhat.com>
-To: Lenny Szubowicz <lszubowi@redhat.com>
-Cc: pavan.chebbi@broadcom.com, mchan@broadcom.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- george.shuklin@gmail.com, andrea.fois@eventsense.it, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
 
-Hello:
+Implement set_memory_pkey() using POE if supported.
 
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
+Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+---
+ arch/arm64/include/asm/set_memory.h |  4 ++++
+ arch/arm64/mm/pageattr.c            | 25 +++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-On Thu, 30 Jan 2025 16:57:54 -0500 you wrote:
-> Disable PCIe AER on the tg3 device on system reboot on a limited
-> list of Dell PowerEdge systems. This prevents a fatal PCIe AER event
-> on the tg3 device during the ACPI _PTS (prepare to sleep) method for
-> S5 on those systems. The _PTS is invoked by acpi_enter_sleep_state_prep()
-> as part of the kernel's reboot sequence as a result of commit
-> 38f34dba806a ("PM: ACPI: reboot: Reinstate S5 for reboot").
-> 
-> [...]
-
-Here is the summary with links:
-  - [net,v3] tg3: Disable tg3 PCIe AER on system reboot
-    https://git.kernel.org/netdev/net/c/e0efe83ed325
-
-You are awesome, thank you!
+diff --git a/arch/arm64/include/asm/set_memory.h b/arch/arm64/include/asm/set_memory.h
+index 90f61b17275e..b6cd6de34abf 100644
+--- a/arch/arm64/include/asm/set_memory.h
++++ b/arch/arm64/include/asm/set_memory.h
+@@ -19,4 +19,8 @@ bool kernel_page_present(struct page *page);
+ int set_memory_encrypted(unsigned long addr, int numpages);
+ int set_memory_decrypted(unsigned long addr, int numpages);
+ 
++#ifdef CONFIG_ARCH_HAS_KPKEYS
++int set_memory_pkey(unsigned long addr, int numpages, int pkey);
++#endif
++
+ #endif /* _ASM_ARM64_SET_MEMORY_H */
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index 39fd1f7ff02a..9721a74adbe2 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -8,6 +8,7 @@
+ #include <linux/mem_encrypt.h>
+ #include <linux/sched.h>
+ #include <linux/vmalloc.h>
++#include <linux/pkeys.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/pgtable-prot.h>
+@@ -292,6 +293,30 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
+ 	return set_memory_valid(addr, nr, valid);
+ }
+ 
++#ifdef CONFIG_ARCH_HAS_KPKEYS
++int set_memory_pkey(unsigned long addr, int numpages, int pkey)
++{
++	unsigned long set_prot = 0;
++
++	if (!system_supports_poe())
++		return 0;
++
++	if (!__is_lm_address(addr))
++		return -EINVAL;
++
++	if (pkey >= arch_max_pkey())
++		return -EINVAL;
++
++	set_prot |= pkey & BIT(0) ? PTE_PO_IDX_0 : 0;
++	set_prot |= pkey & BIT(1) ? PTE_PO_IDX_1 : 0;
++	set_prot |= pkey & BIT(2) ? PTE_PO_IDX_2 : 0;
++
++	return __change_memory_common(addr, PAGE_SIZE * numpages,
++				      __pgprot(set_prot),
++				      __pgprot(PTE_PO_IDX_MASK));
++}
++#endif
++
+ #ifdef CONFIG_DEBUG_PAGEALLOC
+ /*
+  * This is - apart from the return value - doing the same
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.47.0
 
