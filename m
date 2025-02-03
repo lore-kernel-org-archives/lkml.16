@@ -1,196 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E34D21129D
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 22:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0F47D07D;
+	Mon,  3 Feb 2025 22:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738622557; cv=none; b=TvmS4uPo4GKZ49t11RZMdHQr+UVG0jR9VfQdFxcxbEwLLXupTtCvuorxP8i7ASjmhj3d5yBvsEYJYICh2cz/ej17o9u5+ZhAsgyuKYy0K9ZI5I/B3Y65IQ4t0lb6/Vr95Z14/TaAk5HXKeBVk4ZjaVrZU5A4Nn/BWJVpDB4P4nE=
+	t=1738622679; cv=none; b=kLGIBUSUL+4o+sBG0zC3NJ2t0y3FpYWqUuRX9oSgMTvcHO5w7XvOXwb93ZvIGw02E3qlwnYQVQtyQg4I9OqD5NzmazwYsbKUkmDUVlIMwLYnT8X+6oQWsYBf1Nxp48Uu8A5I+93R/A6iw6yuSGNkVsd39S4LB89CcpwfEwYO1DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738622557; c=relaxed/simple;
-	bh=v2j6fiiUGhso4oABJ21kmiHiIb3uWi2+guik3vHO1as=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=UR4owHCQwwYnqQJtrt+SwAWGEnKjmPuj9K2z+i+uazaQr1cG8Z8EEO3DJNXGyZNf0EOuk2gqnP/dMueGRzDoZng+Jd54em5xASa4ZgQ0HsY/ON33+2qSNzTRw1njwN8oXTJAOf3LzW5dNIAQ8DnCrj1ZiumKqC/8ZmbfshgINWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WZDfe7ZO; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738622679; c=relaxed/simple;
+	bh=xmSkXHE4yrh5WE9/qixdoYlepUyA6sUkXRP9MquXhMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QeGVlk5t0O3U4ILknIMJeHmgvmzDayadm9E1ouDHFkLpHc+yI69mwdni7Wzgi/VBy7rz802tfT611/xM+lJ2NcBviqwEaPJgeb3p5K53K9wopX/B7XWoDxzsVru4uNe2I746o6uKhvg+tz+SpZ/svblCETVTs/vPRG3GhX2mgpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDjWdEXq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WZDfe7ZO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738622555; x=1770158555;
-  h=date:from:to:cc:subject:message-id;
-  bh=v2j6fiiUGhso4oABJ21kmiHiIb3uWi2+guik3vHO1as=;
-  b=WZDfe7ZOcwQtfnTkFtpQj15x1djJOpw94KaXZcu/LmuWdW6m+7YxAD5t
-   EBFBNuOQAmkQqyKtJC4qnWtfgoBJFOzkSbgB7h2xXFniEkhsbMydJ/09F
-   qXpMlkkCatVFECorYTz0An2UI6DlrVvGSkFr/1sDZuj94uboitBYKTwuG
-   DpWyPccZcweWvS94cKSiOwr+EKUVEMz00WWrlRiPXmM8fLY2cBr2utA5H
-   vnIq79fqzqjzxHFcL5uZ9SHJAGW/r0IsmFkZROLRH9hexJFBjXCxj6o4q
-   eROA/pyaeyCmEVII4ikkKpe6VYN2ZWRQivoWHJM/mGZhZlXWXIX6GWUqg
-   A==;
-X-CSE-ConnectionGUID: XNVE3e15QTKc5tK1LqC2zQ==
-X-CSE-MsgGUID: 9kN8Go7ZRRGlfA3UMKncHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="61604884"
-X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
-   d="scan'208";a="61604884"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 14:42:34 -0800
-X-CSE-ConnectionGUID: MgYcbs0ETOuvGbQZPyi/DQ==
-X-CSE-MsgGUID: e0Ctb1B5QyClh/xfSgrx8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
-   d="scan'208";a="110308045"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 03 Feb 2025 14:42:33 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tf59D-000rcl-0o;
-	Mon, 03 Feb 2025 22:42:31 +0000
-Date: Tue, 04 Feb 2025 06:42:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:tip/urgent] BUILD SUCCESS
- 68c149079f154436acac3d8f01cf6e541150484f
-Message-ID: <202502040606.dzMHBVgd-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDjWdEXq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0094AC4CED2;
+	Mon,  3 Feb 2025 22:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738622678;
+	bh=xmSkXHE4yrh5WE9/qixdoYlepUyA6sUkXRP9MquXhMc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mDjWdEXqxxXWHowybWCOSGUTQQYvNaN0HJKdcy0XG+3P+6+Zyi7W+ZW6HL+FLXBmW
+	 rjGNNk1bXv8y7Ng877xCBeGfFHT6d5cKoybz0QVzOwmjgdH2NqpKoh85lPRjGQlves
+	 QIBhCyfsai8kXc4WqCdOU0ksZpBcokQNBqc5ndZgpfsS1vBewEmMRUqmqobiJzuHdw
+	 6Jnw1YGcv8Gw7Jz+TeyYu9qDFonxzuEhuEJJCvifHzeasZLIcFJfUXTRe/hGqjnnfA
+	 /FEv9Rq/vsGfJYe63aQN8CnvalH0XhQeU5c/CBOQ9uFSKC5UvHXF4Dc32Ydz4VRwNK
+	 ZT1TtAny0D32g==
+Date: Mon, 3 Feb 2025 16:44:36 -0600
+From: Rob Herring <robh@kernel.org>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 03/17] dt-bindings: mailbox: Add bindings for
+ RISC-V SBI MPXY extension
+Message-ID: <20250203224436.GA363790-robh@kernel.org>
+References: <20250203084906.681418-1-apatel@ventanamicro.com>
+ <20250203084906.681418-4-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203084906.681418-4-apatel@ventanamicro.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
-branch HEAD: 68c149079f154436acac3d8f01cf6e541150484f  Merge branch into tip/master: 'x86/urgent'
+On Mon, Feb 03, 2025 at 02:18:52PM +0530, Anup Patel wrote:
+> Add device tree bindings for the RISC-V SBI Message Proxy (MPXY)
+> extension as a mailbox controller.
+> 
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>  .../bindings/mailbox/riscv,sbi-mpxy-mbox.yaml | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-mbox.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-mbox.yaml b/Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-mbox.yaml
+> new file mode 100644
+> index 000000000000..8a05e089b710
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-mbox.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/riscv,sbi-mpxy-mbox.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: RISC-V SBI Message Proxy (MPXY) extension based mailbox
+> +
+> +maintainers:
+> +  - Anup Patel <anup@brainfault.org>
+> +
+> +description: |
+> +  The RISC-V SBI Message Proxy (MPXY) extension [1] allows supervisor
+> +  software to send messages through the SBI implementation (M-mode
+> +  firmware or HS-mode hypervisor). The underlying message protocol
+> +  and message format used by the supervisor software could be some
+> +  other standard protocol compatible with the SBI MPXY extension
+> +  (such as RISC-V Platform Management Interface (RPMI) [2]).
+> +
+> +  ===========================================
+> +  References
+> +  ===========================================
+> +
+> +  [1] RISC-V Supervisor Binary Interface (SBI)
+> +      https://github.com/riscv-non-isa/riscv-sbi-doc/releases
+> +
+> +  [2] RISC-V Platform Management Interface (RPMI)
+> +      https://github.com/riscv-non-isa/riscv-rpmi/releases
+> +
+> +properties:
+> +  $nodename:
+> +    const: sbi-mpxy-mbox
 
-elapsed time: 725m
+'mailbox' is the defined name for mailbox providers.
 
-configs tested: 119
-configs skipped: 2
+> +
+> +  compatible:
+> +    const: riscv,sbi-mpxy-mbox
+> +
+> +  "#mbox-cells":
+> +    const: 2
+> +    description:
+> +      The first cell specifies channel_id of the SBI MPXY channel,
+> +      the second cell specifies MSG_PROT_ID of the SBI MPXY channel
+> +
+> +required:
+> +  - compatible
+> +  - "#mbox-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    sbi-mpxy-mbox {
+> +          compatible = "riscv,sbi-mpxy-mbox";
+> +          #mbox-cells = <2>;
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Is there an SBI node? #mbox-cells could just be part of that along with 
+anything else that SBI is a provider for. And we already have the PMU 
+SBI binding. It's all one thing, so there should be one SBI node. Then 
+we can debate about child nodes of it.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              alldefconfig    gcc-13.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250203    gcc-13.2.0
-arc                   randconfig-002-20250203    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                       aspeed_g5_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250203    clang-18
-arm                   randconfig-002-20250203    gcc-14.2.0
-arm                   randconfig-003-20250203    clang-18
-arm                   randconfig-004-20250203    gcc-14.2.0
-arm                           sama7_defconfig    clang-16
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250203    gcc-14.2.0
-arm64                 randconfig-002-20250203    gcc-14.2.0
-arm64                 randconfig-003-20250203    gcc-14.2.0
-arm64                 randconfig-004-20250203    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250203    gcc-14.2.0
-csky                  randconfig-002-20250203    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250203    clang-21
-hexagon               randconfig-002-20250203    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250203    gcc-12
-i386        buildonly-randconfig-002-20250203    gcc-12
-i386        buildonly-randconfig-003-20250203    clang-19
-i386        buildonly-randconfig-004-20250203    gcc-12
-i386        buildonly-randconfig-005-20250203    clang-19
-i386        buildonly-randconfig-006-20250203    gcc-12
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250203    gcc-14.2.0
-loongarch             randconfig-002-20250203    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           ip32_defconfig    clang-21
-mips                        omega2p_defconfig    clang-16
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250203    gcc-14.2.0
-nios2                 randconfig-002-20250203    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250203    gcc-14.2.0
-parisc                randconfig-002-20250203    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                 mpc834x_itx_defconfig    clang-21
-powerpc                  mpc885_ads_defconfig    clang-18
-powerpc                      pasemi_defconfig    clang-21
-powerpc               randconfig-001-20250203    clang-21
-powerpc               randconfig-002-20250203    clang-16
-powerpc               randconfig-003-20250203    gcc-14.2.0
-powerpc64             randconfig-001-20250203    gcc-14.2.0
-powerpc64             randconfig-002-20250203    clang-18
-powerpc64             randconfig-003-20250203    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                    nommu_k210_defconfig    clang-15
-riscv                 randconfig-001-20250203    clang-16
-riscv                 randconfig-002-20250203    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250203    clang-19
-s390                  randconfig-002-20250203    clang-21
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250203    gcc-14.2.0
-sh                    randconfig-002-20250203    gcc-14.2.0
-sh                        sh7785lcr_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250203    gcc-14.2.0
-sparc                 randconfig-002-20250203    gcc-14.2.0
-sparc64               randconfig-001-20250203    gcc-14.2.0
-sparc64               randconfig-002-20250203    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250203    gcc-12
-um                    randconfig-002-20250203    clang-18
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250203    clang-19
-x86_64      buildonly-randconfig-002-20250203    gcc-12
-x86_64      buildonly-randconfig-003-20250203    gcc-12
-x86_64      buildonly-randconfig-004-20250203    clang-19
-x86_64      buildonly-randconfig-005-20250203    gcc-12
-x86_64      buildonly-randconfig-006-20250203    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250203    gcc-14.2.0
-xtensa                randconfig-002-20250203    gcc-14.2.0
-xtensa                    smp_lx200_defconfig    gcc-14.2.0
-xtensa                    xip_kc705_defconfig    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Rob
