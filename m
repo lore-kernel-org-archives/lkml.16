@@ -1,49 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9A5209F46;
-	Mon,  3 Feb 2025 15:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7D2208995
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738596949; cv=none; b=fLlvudZ9M7SEQPhhF3foeo1kdLR6muxC+IiqhQ2z63KCr7tHonf+zNv/zL7Yfg7dy8xQ6LdNeVSSQlpNVw63DR9a6gkoOrZH41TK1Xf6Xla56nzcY77KO/wsPrzHIKKuGvWUK4raCYk42EE3oZEkK21Z0U21jY2gi/ZBZNtj+TI=
+	t=1738596962; cv=none; b=UWwXUitUTB+SYX9rLf16cvpNnBYWvHUqWiz21R2NrX/FPj0zqemSDjdAQX0Tw8mI70Sf5Nhr4qlSZqUx3qoigMJmwaGd/rk+d6uadZS27OWutE2Wd+7+gv70a6WEhMR/UTUQBreFiA0Bx9nFoewK66YaYoJohlISJth2fHtYPwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738596949; c=relaxed/simple;
-	bh=8pM+c7QBDyH2vUswp/7fZ+2pllmIy0tVn+gEwVNo0sg=;
+	s=arc-20240116; t=1738596962; c=relaxed/simple;
+	bh=NbT2jse7OVFtYE1b/6ZwaPDTwl+uyOn9KBHEP6I2QzI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPkvqskdBg8mWA0Sp82ACC0b3Fv53hr1dlitXzGv61SQBSKlozypL5wktNvBXHKa8n6qJYDwqJn6iyn7EMusej43rxi9ZIx5CBTUPyDTM0maD8khmi3t0OxqgY7i0s+b+oivJGyIhWQHFMvvpuvCDwD5ctUUWjwalcolHCACNZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lrwX++1A; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kZYuV7HcPa1Kcib+6JMAxrBBKZCRjR87M4FOxP5Uj3YcgcT+cis0Hpf3qMAQHaFwwcz71v4JFjBENlkvP7Owp1cgJatMlEdlrBSD378N93VdDUfhPFRnputz77e2t1Vc2tNQGR7SpuDasfvfB7JyezgpA7BuHpTiQQU1CmHOjS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lFAM/nHP; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lrwX++1A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05E3EC4CED2;
-	Mon,  3 Feb 2025 15:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738596948;
-	bh=8pM+c7QBDyH2vUswp/7fZ+2pllmIy0tVn+gEwVNo0sg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lrwX++1AsvZW/JrlixMh9boM+dU5zTuAfjM9wEog2ejR34cNwgMxRbVuoprGdXPa8
-	 XcwyF+iziBBfpxSedTYQC+Dp7CxgubwO1egdwtgYllgGxB2i2Jlv4U69FrLrQrbyzE
-	 WlKBcN/GToZRHmBwDR3xxOcBj2XyEFyjVWj5IRHM=
-Date: Mon, 3 Feb 2025 16:35:45 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 1/3] driver core: add a faux bus for use when a simple
- device/bus is needed
-Message-ID: <2025020300-gown-outmatch-1343@gregkh>
-References: <2025020324-thermal-quilt-1bae@gregkh>
- <2025020326-backer-vendetta-7094@gregkh>
- <Z6DchyPieQKBJ0SN@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFAM/nHP"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-436326dcb1cso31363135e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 07:36:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738596958; x=1739201758; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=azH/4pudPJJXolsxfYoMtAK2j6+tp+fBiLsk0O5rQeQ=;
+        b=lFAM/nHPM8PB2TXpcghtBQCtg9xdjWRX7SoKOnWuo2sfoEXeaZ0n8UG2kyjUQzCo4L
+         I+uoYFPvz0vRM2nt3/P3qXseblr1zPVr/MfhubhwC3romehyUeXT9GhozbbcUxiapDOY
+         /0nLLUE1QsjIeuq9/dW+HjYyzsnyRZBwDNI54HSS/MYguf6+ZGhPeJPNMK/iQbx7pH6x
+         yWmnVYqJdfF0gZt3WBG0HKLERoZ+OVPeyXjkS0FE34PvAfstihtr6pPADF4eE1ZDamt9
+         bD9xdqk2zWcDNbkySx6TCTI9dIMZeEfnVvIuDQ4+pkZfaq6LADUuVVxvQjGm2suuf+ZI
+         hAfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738596958; x=1739201758;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=azH/4pudPJJXolsxfYoMtAK2j6+tp+fBiLsk0O5rQeQ=;
+        b=EXJDPoCULpFB6RWilZ61jAxOTtRiXR+85TbNsLebUcn5PWgaPHXbT6Qa1hAZxbRCmX
+         RognH8Twb/pxoE5ewlanF/FmknfLytTEAIKenKfS7BD74z8IfHKza6tOJa+rlJo1XWm0
+         3ip+CcmlF5DchpN5McRHs7unTUHIRzCubgkRUU0jdIYV0OGndsN9Hy+ao8w9txoi+2PI
+         7y0wzgl9b5RJ7Wl5PwL1Qb9n4PH72gh3gS7c17kdGmWfsuUtiTg80L5ib9igFF7OnTW/
+         033JlQiJzmEAKfn4lo27ei+f3tRbIY0jSYPYZQhVXrl5CMGmw9CiPavPLhv9hizhkzQX
+         clRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXzrBgNsQtEY6REwWKZscAmEEJG9U4+qD9Yk6lnKarlmwvDfi2mzwBgD0xpc18wbA24D1hMMVxKx+jp+GI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5ndxiusMKbpWBeu6ssHGF+VZgc9EBvSKqAxcrWJiedEjww/+b
+	Kcl3sqUKPckcl+cxx+vSeZElOyDGjNIhSQHLnJXeMp3CpVBpibqNIMxOn5TK
+X-Gm-Gg: ASbGncvISDyY9rVnmLYcg6XjKI44c8ZszblQUWjQ7ug0wJOtEAukZpybXVJKKi98TRh
+	UK+kNE02fMKZmhiyh1xnj+g88uM9lQV6lTqR3m6yx2ise5XayB6w0NEduQL0WIa7Q+U3dhoSVNT
+	DinN1ej+ubuFdLPplP5B21vhqbrUlf5ANz/4GDS/fg/yuZonOnx8YuwQKTnND5nmTXgut6hxQSA
+	SGlebzehTatwOsN6Zm820k7+WlWM6dw/8zMXEvDRmzweWNT5acySwl1msdhQA6t69ULrMTjuQKX
+	uRFRqDqk
+X-Google-Smtp-Source: AGHT+IHXIqNw+N1lB9ZZpb0dsMHwzYhno1UN8hXSkLNTI/vtKpv/45SICNEZcEigBsrTiarPNrxXGg==
+X-Received: by 2002:a05:600c:1c29:b0:434:e9ee:c1e with SMTP id 5b1f17b1804b1-438dc43625bmr201127175e9.31.1738596958366;
+        Mon, 03 Feb 2025 07:35:58 -0800 (PST)
+Received: from egonzo ([2a01:e0a:9ad:d3b0:ec4c:9f30:1dfe:440a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc80e61sm196512015e9.34.2025.02.03.07.35.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 07:35:57 -0800 (PST)
+Date: Mon, 3 Feb 2025 16:35:55 +0100
+From: Dave Penkler <dpenkler@gmail.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Ian To <onlyian4981@gmail.com>, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: gpib: format no multiple blank lines
+Message-ID: <Z6DiWyufORWca-4T@egonzo>
+References: <Z5yISXwXoyl59XWo@DESKTOP-GL3U3CJ>
+ <2025020335-impromptu-renewable-83e8@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,112 +73,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6DchyPieQKBJ0SN@smile.fi.intel.com>
+In-Reply-To: <2025020335-impromptu-renewable-83e8@gregkh>
 
-On Mon, Feb 03, 2025 at 05:11:03PM +0200, Andy Shevchenko wrote:
-> On Mon, Feb 03, 2025 at 03:25:17PM +0100, Greg Kroah-Hartman wrote:
-> > Many drivers abuse the platform driver/bus system as it provides a
-> > simple way to create and bind a device to a driver-specific set of
-> > probe/release functions.  Instead of doing that, and wasting all of the
-> > memory associated with a platform device, here is a "faux" bus that
-> > can be used instead.
+On Mon, Feb 03, 2025 at 04:09:45PM +0100, Greg KH wrote:
+> On Fri, Jan 31, 2025 at 12:22:33AM -0800, Ian To wrote:
+> > Avoid adding multiple blank lines. Reported by checkpatch.
+> > 
+> > Signed-off-by: Ian To <onlyian4981@gmail.com>
+> > ---
+> >  drivers/staging/gpib/hp_82341/hp_82341.h | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/drivers/staging/gpib/hp_82341/hp_82341.h b/drivers/staging/gpib/hp_82341/hp_82341.h
+> > index 0065ebd9747c..d3cf1f43a1ef 100644
+> > --- a/drivers/staging/gpib/hp_82341/hp_82341.h
+> > +++ b/drivers/staging/gpib/hp_82341/hp_82341.h
+> > @@ -26,7 +26,6 @@ struct hp_82341_priv {
+> >  	enum hp_82341_hardware_version hw_version;
+> >  };
+> >  
+> > -
+> >  // interface functions
+> >  int hp_82341_accel_read(gpib_board_t *board, uint8_t *buffer, size_t length, int *end,
+> >  			size_t *bytes_read);
+> > -- 
+> > 2.45.3
+> > 
+> > 
 > 
-> ...
-> 
-> > +#include <linux/device/faux.h>
-> 
-> I would rather think that this goes after generic inclusions...
-> 
-> > +#include <linux/err.h>
-> > +#include <linux/init.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/string.h>
-> 
-> ...somewhere here.
-> 
-> But looking into organisation of device.h and device/*.h,
-> I would rather think of the linux/faux_device.h.
-
-It can go anywhere, there is no need to sort things :)
-
-> > +#include "base.h"
-> 
-> I don't remember by heart what it does include, I would go with IWYU principle
-> and list above all what we use.
-> 
-> container_of.h
-> device.h
-> export.h
-> printk.h
-> types.h
-
-That's not what the driver core ever did, so no need to worry about it,
-thanks.
-
-
-> 
-> ...
-> 
-> > +static int faux_match(struct device *dev, const struct device_driver *drv)
-> > +{
-> > +	struct faux_object *faux_obj = to_faux_object(dev);
-> > +
-> > +	/* Match is simple, strcmp()! */
-> > +	return (strcmp(faux_obj->name, drv->name) == 0);
-> 
-> Outer parentheses are not needed.
-
-Makes me feel good as it is an assignment test, and that's what
-platform.c has for the past few decades.
-
-
-> > +/**
-> > + * __faux_device_create - create and register a faux device and driver
-> > + * @name: name of the device and driver we are adding
-> > + * @faux_ops: struct faux_driver_ops that the new device will call back into, can be NULL
-> > + * @owner: module owner of the device/driver
-> > + *
-> > + * Create a new faux device and driver, both with the same name, and register
-> > + * them in the driver core properly.  The probe() callback of @faux_ops will be
-> > + * called with the new device that is created for the caller to do something
-> > + * with.
-> 
-> The kernel-doc will complain on missing Return: section.
-
-Is that new?  Does that mean platform.c has lots of complaints in it as
-well?  What does platform_find_device_by_driver() give you for a
-documentation issue?
-
-And as I didn't hook this up to the kernel documentation build yet, it
-shouldn't produce any warnings anywhere :)
-
-> > + */
-> > +struct faux_device *__faux_device_create(const char *name,
-> > +					       struct faux_driver_ops *faux_ops,
-> > +					       struct module *owner)
-> > +{
-> > +	struct device_driver *drv;
-> > +	struct device *dev;
-> > +	struct faux_object *faux_obj;
-> > +	struct faux_device *faux_dev;
-> > +	int ret;
-> 
-> > +	faux_obj = kzalloc(sizeof(*faux_obj) + strlen(name) + 1, GFP_KERNEL);
-> 
-> Potential overflow. To avoid one may use struct_size() from overflow.h.
-
-Users should not be providing the string here.  Again, this comes from
-platform.c.
-
-> > +#ifndef _FAUX_DEVICE_H_
-> > +#define _FAUX_DEVICE_H_
-> 
-> > +#include <linux/module.h>
-> 
-> + container_of.h
-
-Not needed to compile this file, only if someone uses the #define in it.
-
-thanks,
-
-greg k-h
+> Does not apply cleanly to 6.14-rc1 :(
+An earlier patch, commit 8418753187ba ("staging: gpib: Make static, reduce fwd declarations") changed this file. It is at this point checkpatch clean.
+cheers,
+-dave
