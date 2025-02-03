@@ -1,53 +1,49 @@
 Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D8645009;
-	Mon,  3 Feb 2025 03:44:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DB91DFED;
+	Mon,  3 Feb 2025 03:48:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738554259; cv=none; b=FkzDjp7ghvP1m7dc8ovCflfhrUVk/zJSPqJwTjO3sLvqgoz0gaWw/rUTdRT3xAJM4ioW0feJnyT4xtmANTKqieGYpXZbwFlkzqjGh/Pvsvms7Wr/WLN+YHfarSgeGzoPl4HhEef1bZcy/IPwmBlJ+E1gUuxKiDkVbkDuvNQgQSE=
+	t=1738554497; cv=none; b=Sdwn3Vylg71gTLxM0iE93pheV4I1yRH2bLGOFnAOm+GWK2yUcI6Fwjz/aZoPeSHGLQTCKevjuXm9HyOVkc9gMQm8zFdjiGHQBNMj10/cV9b5tlQvnfFg3niyvhHlReiDN+RDfZIlrCusjXCR3+aS4+6BtZmEoD/xyeWVxXGC6H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738554259; c=relaxed/simple;
-	bh=Wp99182AkTFqDJl4wZTchFzd2M+OFA1zhhQoeHWdJCY=;
+	s=arc-20240116; t=1738554497; c=relaxed/simple;
+	bh=n8IcwophMB3hoBBGXT86DKcgpvdtGcA9h2Vz1Sh5RwU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HslYTkhLt0CTehudA38BTH8Sl/JvmpWiCGkWQxo0149VuXhCSmvFWpTYshNdYdebQ8FIcJpTmUXTLZv5kXYtIWKyfdm3XW9ub827bPgIGGbef7LcjDVOgoQdM09ymCgA7hNi2hX/4l9MS0EYpBwnwj1A82KLxRf7CT+rJekk6DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=DWaLK4Wa; arc=none smtp.client-ip=203.29.241.158
+	 Content-Type:MIME-Version; b=B6NdgqEywO9S7arvLpHEVbXouE7+h7ruyTqGupBzBSWbiIAwGpW29D73MCrT0fGMREsZ3qSXKbFEnhM2FA66DHnUvOX/wgfTVQejC1vDDmRZ6i87kU61zKgD4caFqxzhrf4u/Bq5qpWQBKAhHS+qZWLefwPPOp9lzTw2T4wVsJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=eMdjBFk3; arc=none smtp.client-ip=203.29.241.158
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="DWaLK4Wa"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="eMdjBFk3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1738554254;
-	bh=Wp99182AkTFqDJl4wZTchFzd2M+OFA1zhhQoeHWdJCY=;
+	d=codeconstruct.com.au; s=2022a; t=1738554494;
+	bh=n8IcwophMB3hoBBGXT86DKcgpvdtGcA9h2Vz1Sh5RwU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=DWaLK4WayH54o8v7DdeKvhmSSvpefqr4vxexVIH1MYxQ6wNAqnbrayBeakLRIB57a
-	 WOTQLYaXFxtDzIdqXBIAd/31pYXCBOjqw0PgjYHwqyqrKoxGoLchkEknDGrAvA7jS0
-	 ZhB+jKWqUPRVmvGVrlRQxDREYx5S3dmLpoIMVJVgCgRXPYA5ozKtKil+ayY0ziPMY6
-	 rBNocLhukHJjLiBqeXk/LyvapgfdyGa6N/8X2DjvpCA+qTlE1ynmhAlbjtoUjZqMuI
-	 nqShEZSdAYps4cMvbWR6Bv0O6g7vWGcfZhCGWldEgNEdADR0sLjVaFaxOhb9zEyuYd
-	 5IcjOcfsaTUug==
+	b=eMdjBFk3KbuTs5LrRrBeRuUqTEk7k4QsMpb/VX5ewByVywkhR5nQEJwluEJ/4pdRE
+	 tvN9zct23uahM+UuXIXsQza+rKNiTbRDbn3ORYvLYyr4dlxm7zW/yC11kTCcj/vYiK
+	 XyKs6sCqI4rOqRN5/Jdj4rDRnSP/ujlvUaFNOvN83pN13aYHPxQBWhEOzqDk43JlOr
+	 PETvdpqQRMN3BdD+L8Z3g2JZRNsWU3yqKAUzhS+C8CSHhxWdGK4U/WlL7JkPXh6Vhw
+	 eQwjKpQw+B6mwwH7Ra6Mf0QGmf6u4fVFS2gzIqxCOvZTTYq3+xi5DBMO9haGMa1e5K
+	 DkLmHOoJlKxRw==
 Received: from [192.168.68.112] (58-7-156-140.dyn.iinet.net.au [58.7.156.140])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id E54D973C54;
-	Mon,  3 Feb 2025 11:44:09 +0800 (AWST)
-Message-ID: <ee2f8d2315e27e800643195bdacba9f88ce2d2c6.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 5/6] USB: gadget: Use str_enable_disable-like helpers
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 5B04173C54;
+	Mon,  3 Feb 2025 11:48:12 +0800 (AWST)
+Message-ID: <0cbefd2b2488b7855fb374ce94facd9f7440b7a6.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v3] ARM: dts: aspeed: catalina: Update DTS to support
+ multiple PDB board sources
 From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, 
- Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter
- <jonathanh@nvidia.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,  Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>,
- Robert Jarzmik <robert.jarzmik@free.fr>, Peter Chen
- <peter.chen@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alan
- Stern <stern@rowland.harvard.edu>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	usb-storage@lists.one-eyed-alien.net
-Date: Mon, 03 Feb 2025 14:14:09 +1030
-In-Reply-To: <20250114-str-enable-disable-usb-v1-5-c8405df47c19@linaro.org>
-References: <20250114-str-enable-disable-usb-v1-0-c8405df47c19@linaro.org>
-	 <20250114-str-enable-disable-usb-v1-5-c8405df47c19@linaro.org>
+To: Potin Lai <potin.lai.pt@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski
+	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Joel Stanley
+	 <joel@jms.id.au>, Patrick Williams <patrick@stwcx.xyz>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Cosmo Chou
+	 <cosmo.chou@quantatw.com>, Potin Lai <potin.lai@quantatw.com>
+Date: Mon, 03 Feb 2025 14:18:11 +1030
+In-Reply-To: <20250114-potin-catalina-dts-update-20250102-v3-1-14981744b2fe@gmail.com>
+References: 
+	<20250114-potin-catalina-dts-update-20250102-v3-1-14981744b2fe@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.46.4-2 
@@ -58,32 +54,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2025-01-14 at 21:05 +0100, Krzysztof Kozlowski wrote:
-> Replace ternary (condition ? "enable" : "disable") syntax with
-> helpers
-> from string_choices.h because:
-> 1. Simple function call with one argument is easier to read.=C2=A0 Ternar=
-y
-> =C2=A0=C2=A0 operator has three arguments and with wrapping might lead to=
- quite
-> =C2=A0=C2=A0 long code.
-> 2. Is slightly shorter thus also easier to read.
-> 3. It brings uniformity in the text - same string.
-> 4. Allows deduping by the linker, which results in a smaller binary
-> =C2=A0=C2=A0 file.
+Hi Potin,
+
+On Tue, 2025-01-14 at 14:12 +0800, Potin Lai wrote:
+> This patch updates the Catalina device tree to support different
+> sources
+> of PDB boards.
+
+Can you expand "PDB"?
+
 >=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
-> =C2=A0drivers/usb/gadget/function/f_ecm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0 4 ++--
-> =C2=A0drivers/usb/gadget/function/f_ncm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0 3 ++-
-> =C2=A0drivers/usb/gadget/function/u_serial.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 3 ++-
-> =C2=A0drivers/usb/gadget/legacy/inode.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 3 ++-
-> =C2=A0drivers/usb/gadget/udc/aspeed-vhub/hub.c=C2=A0=C2=A0=C2=A0 |=C2=A0 =
-3 ++-
+> Changes for Main source PDB board
+> - Thermal Sensor Monitoring:
+> =C2=A0 - Added IOB NIC nodes (TMP421) for thermal sensor monitoring.
 
-Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au> #aspeed
+Can you expand "IOB"?
 
+> =C2=A0 - Added FIO remote thermal node (TMP75) for thermal sensor
+> monitoring.
+
+Can you expand "FIO"?
+
+> - Fan Monitoring and Control:
+> =C2=A0 - Add fan p12V power sensor node (MP5990) for sensor monitoring.
+> =C2=A0 - Add fan controllers (MAX31790) for fan control and tach
+> monitoring.
+>=20
+> Changes for 2nd source PDB board
+> - Fan Monitoring and Control:
+> =C2=A0 - Added 2nd source fan controllers (NCT7363) for fan duty control
+> and
+> =C2=A0=C2=A0=C2=A0 tach monitoring.
+> - Power Monitoring:
+> =C2=A0 - Added 2nd source HSC nodes (XDP710) for power sensor monitoring.
+> - Address Conflicts:
+> =C2=A0 - Removed all ina238 nodes due to address conflicts. Moved the
+> driver
+> =C2=A0=C2=A0=C2=A0 probe for ina238 to userspace.
+
+Can you unpack the issue with the conflicts a little further? What was
+going on here?
+
+Andrew
