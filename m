@@ -1,146 +1,223 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1594C182B4;
-	Mon,  3 Feb 2025 22:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083041D5CD4;
+	Mon,  3 Feb 2025 22:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738620764; cv=none; b=Nf2DCPWuWN9Mesout6gG60ITiMESwLXwzhbtsM9xexH8UaJdU6O2z6NWyfvHY8yxCAyfuZZb0Fu6Iptg2sruMe4pP17uYcDqSS26+ScYcns4MaO6xvASCA4ff6G3AIkpa4QzqzNSLNpZCFW5/fWilmUNc/c1P5HAvv4EasLpKws=
+	t=1738621021; cv=none; b=oxXZuEk8Nf4Iu9ligcUIrCev+Vib8mQWnrWz5SCzwA8GJ5+vB1vGkODiRcxl+IFvzh6ZQuVz7oK1HLUPmhmvVLlIX+KhMrAHHigS/pMRENsML08ySP+eSRvB8QxlIax/NkKb2aBz11sI5uEKlayHcYf7OZ/Bdh5vBvjpBZMD9m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738620764; c=relaxed/simple;
-	bh=NsRTrXKomzHTefKbNl8Fxxih3U7UqON2ERThnZ0x/YY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Gk8nCquMJI/Pj8XJRoSx5wYlaPIoZxtUbnv8b54vIFlSoQLtZWHVwIFOu/zyrrYYcJ1kqgZXGv8gPFhJHEVU7Tkbjz48ObroMJMjE8FJ22vmSf7mfbmfksR2JOqmahpWSuLOXo1oZQM+chUqfsAB81Nzk0wPkVC4jyGRkgZm3WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Ue2x718p; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738621021; c=relaxed/simple;
+	bh=7svs+wKmG+cmpxhyFwkJOaZkFZ0sH/NMkYxSYvVASpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iiIB7H5J2NiP1BTOEzrqihl918HmVYpg7/BZtf6RRukDUYU58QIURCQ9cFnCdMQAcD0qxb/FnJu43aPO81CkRJDEF74ia+P9YcEaYBhOlGzlcrvDNISngdVhUvBLmsi16O32+5+tCEqcVEY6VfjjdgNLtOwyzdcKkKQhFgkUDu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5SGTJYV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ue2x718p"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 513MCZbG2218398
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 3 Feb 2025 16:12:35 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738620755;
-	bh=OfI9dlLcSjW6HM4VB+FL+prEF7OaRxVLjKZpK9XkkAs=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Ue2x718piSpMFvKdib39neMBkky7Ugk6w3cDbVaR0ZJLKXQgpHuMspFfW84AgKqOY
-	 U4751Rk+D96+MjZugGZX6WeQCqUcADXDBPUQn1A7xLBh/n/Bv3ZCoTOwL+2pJDaP/3
-	 ufZiSKPCXrIE6h61DHA0vyePvmo79mAmxuBszfMA=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 513MCZm1065356;
-	Mon, 3 Feb 2025 16:12:35 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
- Feb 2025 16:12:35 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 3 Feb 2025 16:12:35 -0600
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 513MCZB6086602;
-	Mon, 3 Feb 2025 16:12:35 -0600
-Message-ID: <6fe74c50-1430-4556-90b5-f635fb48e6fb@ti.com>
-Date: Mon, 3 Feb 2025 16:12:35 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5SGTJYV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AE5EC4CED2;
+	Mon,  3 Feb 2025 22:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738621020;
+	bh=7svs+wKmG+cmpxhyFwkJOaZkFZ0sH/NMkYxSYvVASpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O5SGTJYVHZPmJijhTIVkKFqBL/LQ+LXHOLoLZN6HyTVDQpvwslxaAt8rk/NQIKXRQ
+	 rXzTeiz3f0E+oQJXbWPzUhUxigwKvrzwRbhwa5L4y2PqvHnN4SWwP4uS+KybParPIv
+	 rAI2Olu+qiKqkx1t4yawMj7b1Yyg6P7MGel+divo5gTXDgUEtOMMFVuMs3pQ3e9UW0
+	 br+V0YLQNoHYbM5YNVWH9g/i4lha4WmtmCmAkWsMqePah/WWMXriUEqxXBjZjzwvi4
+	 b1SxTU9P/sm53pRcDsUEY0tycrSbHKil2dqhkeHUk8UkJAdN7tTlLB2CtO3azrAPPU
+	 sJAMHHfY2MAZg==
+Date: Mon, 3 Feb 2025 16:16:59 -0600
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, "Guoniu.zhou" <guoniu.zhou@nxp.com>,
+	Robby Cai <robby.cai@nxp.com>,
+	Robert Chiras <robert.chiras@nxp.com>,
+	Mirela Rabulea <mirela.rabulea@nxp.com>,
+	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Subject: Re: [PATCH 05/14] media: dt-bindings: nxp,imx8-isi: Add i.MX8Q ISI
+ compatible strings
+Message-ID: <20250203221659.GA130749-robh@kernel.org>
+References: <20250131-8qxp_camera-v1-0-319402ab606a@nxp.com>
+ <20250131-8qxp_camera-v1-5-319402ab606a@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/9] arm64: dts: ti: k3-am62-wakeup: Add wakeup r5f
- node
-To: Andrew Davis <afd@ti.com>, <devicetree@vger.kernel.org>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Hari Nagalla <hnagalla@ti.com>, Nishanth
- Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-References: <20250131214611.3288742-1-jm@ti.com>
- <20250131214611.3288742-2-jm@ti.com>
- <1c2c67b7-987e-4b92-b0be-c0b2f25adae6@ti.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <1c2c67b7-987e-4b92-b0be-c0b2f25adae6@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131-8qxp_camera-v1-5-319402ab606a@nxp.com>
 
-Hi Andrew,
-
-On 1/31/25 5:40 PM, Andrew Davis wrote:
-> On 1/31/25 3:46 PM, Judith Mendez wrote:
->> From: Hari Nagalla <hnagalla@ti.com>
->>
+On Fri, Jan 31, 2025 at 04:33:50PM -0500, Frank Li wrote:
+> From: Robert Chiras <robert.chiras@nxp.com>
 > 
-> Subject should capitalize R5F
-
-Will fix in v3, thanks
-
+> Add compatible strings for i.MX8QM and i.MX8QXP platforms.
 > 
->> AM62 SoC devices have a single core R5F processor in wakeup domain.
->> The R5F processor in wakeup domain is used as a device manager
->> for the SoC.
->>
->> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
->> Signed-off-by: Judith Mendez <jm@ti.com>
->> ---
->> Changes since v1:
->> - disable each device node in the voltage domain files and
->>    enable at the board level file
->> - fix firmware names
->> ---
->>   arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi | 25 ++++++++++++++++++++++
->>   1 file changed, 25 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi 
->> b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
->> index 9b8a1f85aa15c..12b1520974ade 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
->> +++ b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
->> @@ -106,6 +106,31 @@ wkup_rti0: watchdog@2b000000 {
->>           status = "reserved";
->>       };
->> +    wkup_r5fss0: r5fss@78000000 {
->> +        compatible = "ti,am62-r5fss";
->> +        #address-cells = <1>;
->> +        #size-cells = <1>;
->> +        ranges = <0x78000000 0x00 0x78000000 0x8000>,
->> +                 <0x78100000 0x00 0x78100000 0x8000>;
+> Increase the number of max interrupts and clock to 8. i.MX8QM have 8
+> channels and i.MX8QXP have 5 channels. Each channel requires one clock
+> source and interrupt.
 > 
-> Odd alignment, looks like you have an extra tab on the above line
-
-Hmm missed this, thanks will fix.
-
-~ Judith
-
+> Remove fsl,blk-ctrl from required list because i.MX8Q needn't it.
 > 
-> Andrew
+> i.MX8QM use port@2 and port@3. i.MX8QXP use port@2 and port@6.
 > 
->> +        power-domains = <&k3_pds 119 TI_SCI_PD_EXCLUSIVE>;
->> +        status = "disabled";
->> +
->> +        wkup_r5fss0_core0: r5f@78000000 {
->> +            compatible = "ti,am62-r5f";
->> +            reg = <0x78000000 0x00008000>,
->> +                  <0x78100000 0x00008000>;
->> +            reg-names = "atcm", "btcm";
->> +            ti,sci = <&dmsc>;
->> +            ti,sci-dev-id = <121>;
->> +            ti,sci-proc-ids = <0x01 0xff>;
->> +            resets = <&k3_reset 121 1>;
->> +            firmware-name = "am62-wkup-r5f0_0-fw";
->> +            ti,atcm-enable = <1>;
->> +            ti,btcm-enable = <1>;
->> +            ti,loczrama = <1>;
->> +        };
->> +    };
->> +
->>       wkup_vtm0: temperature-sensor@b00000 {
->>           compatible = "ti,j7200-vtm";
->>           reg = <0x00 0xb00000 0x00 0x400>,
+> Keep the same restriction for the other platform.
+> 
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Reviewed-by: Robby Cai <robby.cai@nxp.com>
+> Reviewed-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+> Reviewed-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../devicetree/bindings/media/nxp,imx8-isi.yaml    | 87 +++++++++++++++++++---
+>  1 file changed, 75 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/nxp,imx8-isi.yaml b/Documentation/devicetree/bindings/media/nxp,imx8-isi.yaml
+> index f43b91984f015..b713c8ba79e39 100644
+> --- a/Documentation/devicetree/bindings/media/nxp,imx8-isi.yaml
+> +++ b/Documentation/devicetree/bindings/media/nxp,imx8-isi.yaml
+> @@ -21,6 +21,8 @@ properties:
+>      enum:
+>        - fsl,imx8mn-isi
+>        - fsl,imx8mp-isi
+> +      - fsl,imx8qm-isi
+> +      - fsl,imx8qxp-isi
+>        - fsl,imx8ulp-isi
+>        - fsl,imx93-isi
+>  
+> @@ -28,17 +30,12 @@ properties:
+>      maxItems: 1
+>  
+>    clocks:
+> -    items:
+> -      - description: The AXI clock
+> -      - description: The APB clock
+> -      # TODO: Check if the per-channel ipg_proc_clk clocks need to be specified
+> -      # as well, in case some SoCs have the ability to control them separately.
+> -      # This may be the case of the i.MX8[DQ]X(P)
+> +    minItems: 1
+> +    maxItems: 8
 
+Isn't the minimum still 2?
+
+>  
+>    clock-names:
+> -    items:
+> -      - const: axi
+> -      - const: apb
+> +    minItems: 1
+> +    maxItems: 8
+>  
+>    fsl,blk-ctrl:
+>      $ref: /schemas/types.yaml#/definitions/phandle
+> @@ -49,10 +46,11 @@ properties:
+>    interrupts:
+>      description: Processing pipeline interrupts, one per pipeline
+>      minItems: 1
+> -    maxItems: 2
+> +    maxItems: 8
+>  
+>    power-domains:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 8
+>  
+>    ports:
+>      $ref: /schemas/graph.yaml#/properties/ports
+> @@ -66,7 +64,6 @@ required:
+>    - interrupts
+>    - clocks
+>    - clock-names
+> -  - fsl,blk-ctrl
+>    - ports
+>  
+>  allOf:
+> @@ -79,9 +76,17 @@ allOf:
+>                - fsl,imx8ulp-isi
+>                - fsl,imx93-isi
+>      then:
+> +      required:
+> +        - fsl,blk-ctrl
+>        properties:
+>          interrupts:
+>            maxItems: 1
+> +        clocks:
+> +          maxItems: 2
+> +        clock-names:
+> +          items:
+> +            - const: axi
+> +            - const: apb
+>          ports:
+>            properties:
+>              port@0:
+> @@ -96,9 +101,17 @@ allOf:
+>            contains:
+>              const: fsl,imx8mp-isi
+>      then:
+> +      required:
+> +        - fsl,blk-ctrl
+>        properties:
+>          interrupts:
+>            maxItems: 2
+> +        clocks:
+> +          maxItems: 2
+> +        clock-names:
+> +          items:
+> +            - const: axi
+> +            - const: apb
+>          ports:
+>            properties:
+>              port@0:
+> @@ -109,6 +122,56 @@ allOf:
+>              - port@0
+>              - port@1
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: fsl,imx8qm-isi
+> +    then:
+> +      properties:
+> +        clocks:
+> +          minItems: 8
+> +        clock-names:
+> +          items:
+> +            pattern: "^per[0-7]"
+> +        interrupts:
+> +          minItems: 8
+> +        ports:
+> +          properties:
+> +            port@2:
+> +              description: MIPI CSI-2 RX 0
+> +            port@3:
+> +              description: MIPI CSI-2 RX 1
+> +          required:
+> +            - port@2
+> +            - port@3
+
+This schema is completely missing proper schemas for port nodes. It 
+needs to reference the port schema for each port. That should be at the 
+top-level.
+
+I think this addition is borderline whether it should be its own schema 
+doc. The if/then schemas are larger than the main part. The ports are 
+not even the same.
+
+Rob
