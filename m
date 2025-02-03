@@ -1,142 +1,182 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA5B2940F
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738572863; cv=none; b=JD9p5ajav0CI8TLiyYVsEh/m/Hxu5QXcC1ofH+FwsXCSV9Fy7imByafe8TvpDqiQef6vZ/aiIKwOEi8cqz/d6dXYfvvw9jMOQ1w5K7tU1wI49udAC5tPp035DgSHdJqHd2/3pjpiLfHR7T5d1eyu9u/kEk2p+dAXUyGEhLFeF/s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738572863; c=relaxed/simple;
-	bh=FQXErMb9+9uu4t1x3Yp13v6LB0lbyeSIdFUt1gLmk+0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=urhyDV3lZQfltAiHOt0/kBcjF19QyF39yT94Z6YMYzX5e9edfcN/5lMSj6AnUZLgyH7JE2PSNoXeDg2CWyb7dgTy9i+Q2SfFzasQmbrKKasaEm4tksNoKsu3OPT2UQa+oB1648CtB593JBqgaYoxmH9zHQIzhPu9Ljo3v8Lt4dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JVUM071F; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD88B5336E;
+	Mon,  3 Feb 2025 08:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.156.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738572941; cv=fail; b=T3oZieCcgat0CvG588nJrArzSv6fdWp00ccdpHlPAJzROGaoLgiCBwcccleqBYmuyvLKmnuQ3sdpIGfxaYPqbPYSPWNKQgxh+NOGTZBJwDhfoWglOXka7z6mkEfEklF0xYYTspr934VhaVlX5Zl6CzRgW3FUS8EkMv6oXuxFuxo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738572941; c=relaxed/simple;
+	bh=YxBZz8y+sX/hxZKVUr3CVuuWWtOWd9u3NVtDN+ydXb0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=IET9O3peiIjlEb6cIQ9uFHJ4zFsB7b4OAM4dBQYbsiSaQcTuKUQZbONKTVxcf4ImVKssqbEFXRFatEUs/nfxWB66Tgnovv5TYmdSx4GYrfqJ06rTavSb/LwNmoJyTtqGntHtLzfhmI2Pp/+eS7Y+6ggsXAh5Y3lG806K3Sml5vI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=acxbLm6Y; arc=fail smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JVUM071F"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5138rtem2987207
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 02:53:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738572835;
-	bh=h/uGUGzt7+mJ3CwBhXgxnoxyshAQovDxkoGYmZUziAU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=JVUM071FNqkzh0wXZklCFaMxYYwr15bZpDwthXGdcpTEvp9sh7lNFouh1sii6iOwY
-	 15P3BKVgKUn/7oPa89xdtrf4l/v9AQElIaLIMtkaahZ4/IJ84Pj+aEWhhBYb+lrqtu
-	 /aFovwqal0PiVfVuX191fZJn9fOio5XNNIdi1484=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5138rtPt014226
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 3 Feb 2025 02:53:55 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
- Feb 2025 02:53:54 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 3 Feb 2025 02:53:54 -0600
-Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5138roF7064092;
-	Mon, 3 Feb 2025 02:53:50 -0600
-Message-ID: <63585990-b670-2a8f-a450-6ade850d53a4@ti.com>
-Date: Mon, 3 Feb 2025 14:23:49 +0530
+	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="acxbLm6Y"
+Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5138dnrO012269;
+	Mon, 3 Feb 2025 00:55:28 -0800
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2177.outbound.protection.outlook.com [104.47.55.177])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 44jtfvg0kb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 00:55:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kXX+efcnQAUIaMqRBujTII8g0XYmOP0DqIMaMmb13qb2WpLCIks+FRvPqmnFtFuADK7przwyj3PCe6M3w05d4YCRpzOBBXnsFnGRmR3VHh1jVDHg+//QjphBoOIPDTmkJa+XVvmSU2NUlfF9o9oomDDYRV//7ffgFh4eeksJQ5QaYuQE51RZCRXa8x7AVmogjkT+r6LsEBwakI5cLpuYEAKHNlDl8pedSUzA8E8rnpsS39fq6P8flRYvie5CxE6MPMbJfJzR5EuM5mp4SiKI5jez8Ulo+vc/BOG/hfx+E0spe45x0ctrxjtAVP3Yud0nsQP6kpYDYRqVp4OY+UZGWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YxBZz8y+sX/hxZKVUr3CVuuWWtOWd9u3NVtDN+ydXb0=;
+ b=dwpyOzyk9OOMGrBp3GZBV9B6K5Dl+Gj363toayJ5jPXYLDmg5+qcnAyFBkqhkW5K7xqanQXe7MM57BfAlq8bwc0aai24zAn5nTYS58XaFLpv08JhZPEZzRgPjKUzic099zK8//FAharzrkITdPlDxdS/9T+LUNuqpuTyjl5ZaKZp63lvpVBSZoTyu+qFsnkfF9LKts0Zekj/Bhc0iwYOHBv7xjNZv+Sqs/QAZ8/yQINZhEPvOcX1b6D4CH2PdO/9XzAErH4w786mFkkF+P66Mm23PfA2nMGcam7plyQVyl4pqU3z+fi+qrisox8B6rdkg/WWBLaNxlxLhdOwRzDpHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YxBZz8y+sX/hxZKVUr3CVuuWWtOWd9u3NVtDN+ydXb0=;
+ b=acxbLm6YGrn0CfSuFIi83P9dn32bYP4hzIITfvhpU+6jMo8DuKWSpqy2qRaZZkLXFXUp4koZFLHnxzQSBqDTrEcyfpb0ud1ZKG/Y1fYEVXALC7oqH6cLNsnlJjfj/2JsdVzeDHuSbUc/mYmWr1H+T4iOd+0s+zvgwb6JzNJbhZg=
+Received: from BY3PR18MB4708.namprd18.prod.outlook.com (2603:10b6:a03:3cb::17)
+ by PH8PR18MB5382.namprd18.prod.outlook.com (2603:10b6:510:255::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Mon, 3 Feb
+ 2025 08:55:25 +0000
+Received: from BY3PR18MB4708.namprd18.prod.outlook.com
+ ([fe80::6f9:3adb:ab46:9b20]) by BY3PR18MB4708.namprd18.prod.outlook.com
+ ([fe80::6f9:3adb:ab46:9b20%4]) with mapi id 15.20.8398.020; Mon, 3 Feb 2025
+ 08:55:25 +0000
+From: Igor Russkikh <irusskikh@marvell.com>
+To: Jacob Moroni <mail@jakemoroni.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXTERNAL] [PATCH net] net: atlantic: fix warning during hot
+ unplug
+Thread-Topic: [EXTERNAL] [PATCH net] net: atlantic: fix warning during hot
+ unplug
+Thread-Index: AQHbdb9Oq+K+sFxG2UOb6eX82Jla37M1Ro9Q
+Date: Mon, 3 Feb 2025 08:55:25 +0000
+Message-ID:
+ <BY3PR18MB47088FFA08160AA078E2CB1BB7F52@BY3PR18MB4708.namprd18.prod.outlook.com>
+References: <20250202220921.13384-2-mail@jakemoroni.com>
+In-Reply-To: <20250202220921.13384-2-mail@jakemoroni.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BY3PR18MB4708:EE_|PH8PR18MB5382:EE_
+x-ms-office365-filtering-correlation-id: e9bef4ff-0e92-4b0d-0b97-08dd4430805c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?aWROVVF2VUpGSk82OVJCcSs5dVM0NjB2Vndna2IzNHcydUQxaEZqbjF2M2xS?=
+ =?utf-8?B?ZWxaQ2JHU3FzWUZERTR3eG9ocEFVd3UzS1ZGbWJ3WlFyZlFIU0Z1bzlMT0Rr?=
+ =?utf-8?B?ZCtXT2lSK1ZiUVVFY01qVHFyUCszdis5YkljMzZzMHE5MW9BVkdCdEFRZjJk?=
+ =?utf-8?B?SUpHcWNrWVExeDBOaVdtcEpnOEZKM3haMTI3enZKQnFkS3lnT205WmRaSVEy?=
+ =?utf-8?B?R0szK2dld1NHVUZhR2grTmdFUzlFQituby9LdmNnMnhkOVFxVXc0WXhmdDNN?=
+ =?utf-8?B?ck5jREVjL1k5cks0dWtSSjNrRU5jUzBNNWNtekdpaU5EZ2NSa21VREJDSVFW?=
+ =?utf-8?B?S25GZ1Jwc1NLakxTa3ZSMGNCUGRaeUt5OStPdnF4OG42c3BDK1dyMmlIeXdM?=
+ =?utf-8?B?QWlOS2hWalhUUi9ZMGFna1VoZXlvQUNndTY5anhmZmhKWERITDhDbUZJeXAy?=
+ =?utf-8?B?b3g3SzFvZGtzbjZ5RkR4UnA0QW1QZFpndzV4dFQrbXQ1eVUwSGdhOGNodzNz?=
+ =?utf-8?B?ckh5SjlydVh6NUJudXdvdmxkeUtEZUJqY2VNUzVqb0JGZEY4MURWTmxSaDBL?=
+ =?utf-8?B?aC90RTh5OGE3ZDA2eHFXRmVOUUpLM0NyeVVHUXBTS1lwQlo0WWRlcDVvaTds?=
+ =?utf-8?B?NFVJOUlOUVNDUmNCYnYwMUk0QWhQWWUyOVE5ZFBid1FieHROeHRkRVYwcUpx?=
+ =?utf-8?B?K3pidG1BZ2Y4SUgwYnJCRWNkVXJva1BHdUphVTREQlhOZ2ZKMk51alFaRWdv?=
+ =?utf-8?B?ZDRVTDJDZHZNQVBlMHhiamoxU0dpT0Vub0g2N3FhODM0NGtwSFZrVDdrNHk0?=
+ =?utf-8?B?K09KTTdIRzdwekw5bmdubEJMRktDbGRCK0JLVkNPUnYwSUY4cVYxUXdQd3Aw?=
+ =?utf-8?B?WmhSeDJsMTVuYU50RXVibFJPMFgzcXZ6b2RHSlZiakp2MDltRU5rWEZneVhY?=
+ =?utf-8?B?ZERTUVJyN09CNm80M0x0T2xYUC80bzFVL3o2VHJYY3JkT3FVb3R1RGVvcVo1?=
+ =?utf-8?B?UnlPQ1RmdWNzNjVUVzR0c3JiK3RiRlhKbnNKdHBRRTNuLzZvVXdGQ2Z3bDBk?=
+ =?utf-8?B?MUNWRjE5bFM4Nk9JWmpneFI1N0J4MzI0aUJ4eUhzZmJNL1hiVnp5a1RJY29D?=
+ =?utf-8?B?ckxsZnBKb2JGUkVaNnY3ZUxRVG1nU0lqRWV4SlBhZWlNRTNpb2tONHJQa3Bj?=
+ =?utf-8?B?YmFkMm90QTh0Y1Y0VlY2bk0wR2hCenhCSEw1YUFVMDBtZmtjNVhNanlvZng1?=
+ =?utf-8?B?UGxxb3VQejNxOUZiM0NVWi9Kd3doc1V0azNJRUYydkQyWGRWYnJpNUFJcmZV?=
+ =?utf-8?B?VEJycEtocEFza3FrekE3WEFrZUF2N09VZXVDRys0QXB2R1VQK2VHVER0Qllv?=
+ =?utf-8?B?eUViZ2V2WXo2bXJjaDhUT2ZZbUhnMTlSUmMzdS9oV1hDMzQ2cmxCa09vZ0k1?=
+ =?utf-8?B?TnJhR2wwb2pjTjJJUEZmR1dOUXRnT2k1bVBvUVZjRCtOZGJWLzQwSzlKdFpn?=
+ =?utf-8?B?L3R2elpQS2t0M1BZektlOE1kMWViYVhBN0xLaDhlbGVTNExnRDBVQ252alEw?=
+ =?utf-8?B?UWtqc0xZS1RRMFdLR2oyeFQyMXdvQXVDQ0owYjlFK204QWs0YWNLaWRkNzZ6?=
+ =?utf-8?B?b1VVaWs5ZnhRRG9Ba213S1Bpd2IyZFQ3UHcybldTUkk2UHcvYk5Lb1N0a2Qz?=
+ =?utf-8?B?MzBpbEpTTUN6NitIM3BXeU9zV2pQQ24wMzkrUkZ2eCtHd1JkRVR0SlRyTW5Y?=
+ =?utf-8?B?NUVOeWFJelAydkpCYjJFaHBNUGVKbm9pMlE4dlZvZGcyTkZ1UEFKeDAyUkVZ?=
+ =?utf-8?B?R0RKQXFLbklNc3RpWW83U2FWNllpOWpuempNOUJZUTZDeWxRNHUyZDEwZk9z?=
+ =?utf-8?B?OTVIZHYvZVVEN2xjaXAzYk5kbmZ6TFZkdW5JRGNabDB5N3JGVlY4WnliZ2gr?=
+ =?utf-8?Q?tmGs1iVILNmzgRGsw7gu6kbyrpQ4tIhL?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR18MB4708.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Wk5yV2RPY2ljUmNSelBSaWRiSEtkMHNvR1VuNzc4aDFUcnJjaGRJQk5DQ2lE?=
+ =?utf-8?B?RDR0amNsWGZVekFmWkgwN2pjUWwwNVlMczhKRU42NTlRZ3MzbnlSeWFnbGRs?=
+ =?utf-8?B?TDFyLy81a1VBSWt1V0lHK1d4emlHOVFnUjdzU0dBdWZrOS9PTER4S2ZtdHlx?=
+ =?utf-8?B?Q3VpWlFpSWRGYWxYR3U3a2ZqbHExV0FxcGtDMktwc0RTOWxOWVFLN0U2bWxO?=
+ =?utf-8?B?S3ZCN1FRK3pnbG54d3pYejdReWFsSnhQZUtlUXM0QVJNYWs3NGlVNUxvMHgr?=
+ =?utf-8?B?UFVBZHIyaWdVMlJ0aXFyRnFGajZwODFTY1ZKSHo0cTBSRSs2VXlzay8zRE5j?=
+ =?utf-8?B?YmJxa1EyQXJJUmZzZlFBbXp6a2ZmbzQ3cVRkZ1RaZUZkOWFINDR5b3pNZ0wz?=
+ =?utf-8?B?bTdUMmlZd05URzJvbmlhRHp4RmpkVllMZVlkR3NhQ1lrOVpqaWcySElqT0ty?=
+ =?utf-8?B?QS9Cell1QlVzdU5udHpFZm5GTExkOUpmUEhnbXZTWGdIK0dDNmlTYkxTbEZ5?=
+ =?utf-8?B?cnZIVTAweEVwcjJndlJxdFdYRnZacUdWMVBCWDE3Q1hzTFlsaSt4aGhwWnFK?=
+ =?utf-8?B?OFkvczhYV3pOVzZhSzl1SURISk1sODZnRmhJVTlYZWZIaDJrZ3FnWldUT282?=
+ =?utf-8?B?OXZyMjBTb1BTZE1ZVHZFK05WaGVaOTFnRk5YaVp3Z2hNTyszWHRibENSaXph?=
+ =?utf-8?B?RVVnWUQ5SGE4dm95NWxLTEE5cTllTWNaOFNObW9GRGJUTUpjelFSZVZ6Q2FG?=
+ =?utf-8?B?blFGaFU0dHVtSjNKYWI2RUw0TnZuTjUvRWlBOHVxeHpYYTNLbFJ0YjNVNTc0?=
+ =?utf-8?B?ZmJMVWdyZlNFb2s4dEVkeXE5VnNaWkVnakF5NzU1Nm15bGw5bUMrQnhseVRG?=
+ =?utf-8?B?SHhsVlJnSnJnNFFrQ1V0aXR6WWl3bkZmWnhtdm5GNEpsUjliUVZIekJ4c3A4?=
+ =?utf-8?B?N29NNzFiRFM5SWtjdW9zTlhhRkk3aENIeUxEeXFETm94OUltRStKU2I1Tklu?=
+ =?utf-8?B?YmIxVmtGWUwrVnZIVlplQ0JpVk9INWw0S0k4cWY5NS9PQ1RoNEcwd2FmM3JF?=
+ =?utf-8?B?cEVTaVo5elp5a3JHRFZuU3pTdThraHRaSHp2R3VOUldORWxEUGpYZFc5SGhM?=
+ =?utf-8?B?R25QZFpyZDBmc3hjWDVlSnNYb2NLdFNSSTF2eXJnUWZBdFh0MEJJcXVrTmtk?=
+ =?utf-8?B?bTBUeGVHZDUrYUpaMllXUXpjeWl6T3Rld2llclc3c29xZ0hEY2tlVXJMeXNv?=
+ =?utf-8?B?bWQ4eHZGQ3FuMGVYQUlVTnNUM2FneDFZZXU1NEYxZ1l2UUFCRnFLUUE2VnR6?=
+ =?utf-8?B?R0JUTlJZV1ExS2ZxWEV2dUpQNVo4R1Z2THNRMWQ1cU8wM3BzSStBOFZIb0FQ?=
+ =?utf-8?B?MU5POUFzYlBQZjRFWjU4elFvTVJScUQ0M2RqMFBpTzdNaTBiNEtFaUpOdSs1?=
+ =?utf-8?B?TVdsUElkMUF2bDF5dUhyekR3QUF6SlZrbjNTNHBLZmh5eElucVJJeVAzTHdG?=
+ =?utf-8?B?RW8rU2lhaDRyUWlMbjdUbDM5b21PaWJHTlNlUmtkakpVR1hjNGRsZ2h4OW0z?=
+ =?utf-8?B?c2xnOGNtT2RiWW4zZEpnbFBaWTMyOFV1eTJEVEhwQ0tGTUtQOVFXdXZjOVUz?=
+ =?utf-8?B?ZWdOellNZENsZUlIcStqeE9xSk91bDE4TStZTkpvMDFhTXVFVTRVVnBXaXZ2?=
+ =?utf-8?B?ZFl6cDc3M3lPYTA4dFBibmhsNHpJelRLN0lCN3NMSlJsOUtERGtvbWJGNkE3?=
+ =?utf-8?B?RkFYK29PM0pJaGxFbGZ1OHVDbDFrbXQ2NGxVYWR6VlhrWVpPY2U3WEtEWDE4?=
+ =?utf-8?B?cTdYcXg4Yk93Q3lpMUd3cFluY3gxV3VKa0dLdkZ5N1JwNkoyVTd6ZGsvdmsy?=
+ =?utf-8?B?WWs0aXUxbWpqYmk5NVlrNnNTRkVHaStadnI5QTdIWWp6LzNGRU1Ma1dBUk9C?=
+ =?utf-8?B?VmxDMXBreFNJc0VXTWZ6d0pJVFlCR2liZHQ1YVB3Z05vbkUvU0hEaWMrYUNW?=
+ =?utf-8?B?OFM0T3lVVUZkak5kaktxZkdSd3dweUlzVlJ5QmNuUjBQK05XdFpGTW94dE9K?=
+ =?utf-8?B?b2VyQnJTcENSWEUxS0ZFTkRtZXBVOERsRFhCcVZyeHRvWi9wUmtTWXpYQWdD?=
+ =?utf-8?Q?qVZXqnxfcZ9/YTu+d/aSSS+PR?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] phy: cadence: cdns-dphy: Fix PLL lock and common ready
- poll timeout
-Content-Language: en-US
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <mripard@kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: <sakari.ailus@linux.intel.com>, <vigneshr@ti.com>,
-        <aradhya.bhatia@linux.dev>, <s-jain1@ti.com>, <r-donadkar@ti.com>,
-        <j-choudhary@ti.com>, <h-shenoy@ti.com>, <praneeth@ti.com>,
-        <u-kumar1@ti.com>
-References: <20241230125319.941372-1-devarsht@ti.com>
- <2cb9ff06-ca8d-4c15-a0bc-e30e065e720b@ideasonboard.com>
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <2cb9ff06-ca8d-4c15-a0bc-e30e065e720b@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-OriginatorOrg: marvell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY3PR18MB4708.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9bef4ff-0e92-4b0d-0b97-08dd4430805c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2025 08:55:25.8718
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tdPrpXr59zs0q9j0MM8jcsY3emuOK+BIPw6A7thn8e0sCLTYqJwwmUHnM/lZWKVTUCE52lVvJuDD6E2HOMu3Aw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR18MB5382
+X-Proofpoint-ORIG-GUID: usQTzU0L4bc5VAKwihlW6wlVG0TTkoLe
+X-Proofpoint-GUID: usQTzU0L4bc5VAKwihlW6wlVG0TTkoLe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_03,2025-01-31_02,2024-11-22_01
 
-Hi Tomi,
-
-Thanks for the review.
-On 06/01/25 14:25, Tomi Valkeinen wrote:
-
-<snip>
->>                   const struct cdns_dphy_cfg *cfg);
->> +    void (*wait_for_pll_lock)(struct cdns_dphy *dphy);
->> +    void (*wait_for_cmn_ready)(struct cdns_dphy *dphy);
-> 
-> I think both of these should return an error code.
->
-
-Yes I thought about this but did not see much benefit. Similar to other
-cdns_dphy_ops, there is no error recovery/handling in case of timeout for
-above two wait* functions. The implementer function can just print a dev_err
-with timeout message as being done already. Also this maintains homogeneity
-with existing cdns_dphy_ops such as set_pll_cfg which used void function as
-return value.
-
->>       unsigned long (*get_wakeup_time_ns)(struct cdns_dphy *dphy);
->>   };
->>   @@ -191,6 +193,18 @@ static unsigned long
->> cdns_dphy_get_wakeup_time_ns(struct cdns_dphy *dphy)
->>       return dphy->ops->get_wakeup_time_ns(dphy);
->>   }
->>   +static void cdns_dphy_wait_for_pll_lock(struct cdns_dphy *dphy)
->> +{
->> +    if (dphy->ops->wait_for_pll_lock)
->> +        dphy->ops->wait_for_pll_lock(dphy);
->> +}
->> +
->> +static void cdns_dphy_wait_for_cmn_ready(struct cdns_dphy *dphy)
->> +{
->> +    if (dphy->ops->wait_for_cmn_ready)
->> +        dphy->ops->wait_for_cmn_ready(dphy);
->> +}
->> +
->>   static unsigned long cdns_dphy_ref_get_wakeup_time_ns(struct cdns_dphy *dphy)
->>   {
->>       /* Default wakeup time is 800 ns (in a simulated environment). */
->> @@ -212,7 +226,7 @@ static void cdns_dphy_ref_set_pll_cfg(struct cdns_dphy
->> *dphy,
->>       writel(DPHY_CMN_FBDIV_FROM_REG |
->>              DPHY_CMN_FBDIV_VAL(fbdiv_low, fbdiv_high),
->>              dphy->regs + DPHY_CMN_FBDIV);
->> -    writel(DPHY_CMN_PWM_HIGH(6) | DPHY_CMN_PWM_LOW(0x101) |
->> +    writel(readl(dphy->regs + DPHY_CMN_PWM) | DPHY_CMN_PWM_HIGH(6) |
->> DPHY_CMN_PWM_LOW(0x101) |
-> 
-> This, and the rest in the patch, is probably not a good idea. You just "or"
-> the bit fields, without clearing the fields in the register. If the register
-> default values contain ones (or maybe e.g. bootloader has set the register
-> already), this might result in wrong value written.
-> 
-> Maybe add a helper to update bit fields, similar to regmap_update_bits(). Or
-> read the current reg value to a local, modify there, and write back.
-> 
-
-Yes, but if we want to be totally agnostic to current state of register
-assuming bootloader or some other entity has already updated some bits, then
-it means that the reset values for some or all of the register bits may have
-also been over-written. In that case read-modify-write be it with
-regmap_update_bits or any other mechanism may not help either.
-
-To handle this, I am thinking to use macros for default reset bits and use it
-always to program concerned registers.
-
-Regards
-Devarsh
+DQo+IEZpcm13YXJlIGRlaW5pdGlhbGl6YXRpb24gcGVyZm9ybXMgTU1JTyBhY2Nlc3NlcyB3aGlj
+aCBhcmUgbm90IG5lY2Vzc2FyeSBpZiB0aGUgZGV2aWNlIGhhcyBhbHJlYWR5IGJlZW4gcmVtb3Zl
+ZC4gSW4gc29tZSBjYXNlcywgdGhlc2UgYWNjZXNzZXMgaGFwcGVuIHZpYSByZWFkeF9wb2xsX3Rp
+bWVvdXRfYXRvbWljIHdoaWNoIGVuZHMgdXAgdGltaW5nIG91dCwgcmVzdWx0aW5nIGluIGEgd2Fy
+bmluZyBhdCBod19hdGwyX3V0aWxzX2Z3LuKAimM64oCKMTEyOuKAig0KDQpIaSBKYWNvYiwNCg0K
+TWFrZXMgc2Vuc2UsIHRoYW5rcyENCg0KUmV2aWV3ZWQtYnk6IElnb3IgUnVzc2tpa2ggPGlydXNz
+a2lraEBtYXJ2ZWxsLmNvbT4NCg0KSWdvcg0K
