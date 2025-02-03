@@ -1,120 +1,118 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A271FFC4A;
-	Mon,  3 Feb 2025 09:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DBE1FF7C3;
+	Mon,  3 Feb 2025 09:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738575835; cv=none; b=Y1/+efV9UQyi78HnwC/nOLS1IeFuRdnnN6efd57CyO58q8INGFR8ylHQlx30sBcw55m2ufi2CqpgKaMOlRNhMc0NWe/sgXGWUFCTKFyb/6g+1JdI6BHNSMo7EOp03I3e/jwZCQnySNheLWQ2MaQJDelFhI5hK3BcRDjSVu0+LEk=
+	t=1738575884; cv=none; b=HodDk3+gHniMlpwvb2rAzxyGU3x12ntPlU738VUqeBws+UxQcaGdNpWPQgbhVblxPoA+ESnRmmMgcoF9tYcTzasBOsz6kLwVXPlxD8BagVcju1mY4euSr/LZAlGmHlC+ILpHEaQx2cxPV/OYkUbT4D2kT6GQotJHFkt+bE+BmU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738575835; c=relaxed/simple;
-	bh=u/TiDheBGQMUcfKMENR1ti8/63pZ28MNQGX44NFvsT8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aqZsM8Q+/QRDlrg7khNsmqav68ti2DM/LXUqaBYHe852N9mIP8hwpekWXTDEh7d6cayxwFxcajpzwXQObDnRWS34TAPjEp6dFoUJCdS103WWKDGo/OGvbQBHBjWJd4cpFEApb1YLDF7WlGHSODqttIDHY0D9w3ro4ZUzWcxQjxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ymgy16hQ4z6L4xM;
-	Mon,  3 Feb 2025 17:22:33 +0800 (CST)
-Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7160B14011B;
-	Mon,  3 Feb 2025 17:25:05 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 3 Feb 2025 10:25:05 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 3 Feb 2025 10:25:05 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Daniel Ferguson <danielf@os.amperecomputing.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "bp@alien8.de" <bp@alien8.de>, "tony.luck@intel.com"
-	<tony.luck@intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>, "mchehab@kernel.org"
-	<mchehab@kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
-	<ira.weiny@intel.com>, "david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>, "leo.duran@amd.com"
-	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>, "jiaqiyan@google.com"
-	<jiaqiyan@google.com>, "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>, "james.morse@arm.com"
-	<james.morse@arm.com>, "jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>, "erdemaktas@google.com"
-	<erdemaktas@google.com>, "pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>, "gthelen@google.com"
-	<gthelen@google.com>, "wschwartz@amperecomputing.com"
-	<wschwartz@amperecomputing.com>, "dferguson@amperecomputing.com"
-	<dferguson@amperecomputing.com>, "wbs@os.amperecomputing.com"
-	<wbs@os.amperecomputing.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v18 00/19] EDAC: Scrub: introduce generic EDAC RAS control
- feature driver + CXL/ACPI-RAS2 drivers
-Thread-Topic: [PATCH v18 00/19] EDAC: Scrub: introduce generic EDAC RAS
- control feature driver + CXL/ACPI-RAS2 drivers
-Thread-Index: AQHbYDQZq6uipUr1qkCeE+MAaYkJNbMvxkMAgAWzXZA=
-Date: Mon, 3 Feb 2025 09:25:05 +0000
-Message-ID: <a00264d506064598b81c31a369408e74@huawei.com>
-References: <20250106121017.1620-1-shiju.jose@huawei.com>
- <a6af63e2-227a-4909-9b87-8eff96be088b@os.amperecomputing.com>
-In-Reply-To: <a6af63e2-227a-4909-9b87-8eff96be088b@os.amperecomputing.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1738575884; c=relaxed/simple;
+	bh=gxdfI5WrcRHDD2llHshM5Duzx8/HXQUlsmDY2FonnOI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RbYWB5S8xKTo2WtJ8v89w0FxG3su2fDaFWe7Ec7oGJQaOFol75McHFwvfZYsHF4Bgcmd4pL99SfMWq5OhLzo2eMjzo8tlfwhuyCIk68Qn7TdhvAYY1S4v+/rU4bnrV8HhwTe+K9hfrEZk+XI3k+eTPpnL/Spf9cBYPQFaCpB3cY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mMpiZKc1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mMpiZKc1"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5138CVjD031453;
+	Mon, 3 Feb 2025 09:44:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	g2DFr8O0VMaWPwK0ueg3lGyqTuoLafEqVtZgKNF8Qq4=; b=mMpiZKc1ctumbGZH
+	hhITUglLt+Sl5PWErTTybucNccie1DuSJqcK3NzyhyJiypI2EULfqbs4lytxYMRP
+	HSUEdcQ7ZAo8p1NVRlYes0Bc6L7I5hTkckAHbHUV93PQPXPO+dFiAiMThYij6kf8
+	xwSQ+ok5Jqf9PpRlD90V6CYRCuxwdlymSAVHOtArYTkUE0LwNtUvOy2BJX3L6v/T
+	HkOPuyxjBS9tMNpAiOAh7eryTRQqDdzskKr0cslzyEOMMuCtfxavldNL8Ch9vkvl
+	vZ5v6cspbxOHQOlKo2NsBhtixP++6iVEz5u3CQniSQiMg+mX46+JXBbZ12t7nMf/
+	UAIm5A==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jt3ar672-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 09:44:35 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5139iYLN001103
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 3 Feb 2025 09:44:34 GMT
+Received: from [10.216.42.141] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Feb 2025
+ 01:44:31 -0800
+Message-ID: <7d5f7b4c-2a55-41c7-b85c-cb4cd76d553f@quicinc.com>
+Date: Mon, 3 Feb 2025 15:14:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 07/13] wifi: ath12k: add support for fixed QMI firmware
+ memory
+To: Krzysztof Kozlowski <krzk@kernel.org>, <ath12k@lists.infradead.org>
+CC: <linux-wireless@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>,
+        Rob
+ Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>,
+        Jeff Johnson <jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
+ <20250130043508.1885026-8-quic_rajkbhag@quicinc.com>
+ <4c9b512f-59d2-4d96-a899-5af4de2c823e@kernel.org>
+Content-Language: en-US
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+In-Reply-To: <4c9b512f-59d2-4d96-a899-5af4de2c823e@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: lw-e8y6ZMt4lsEKxF5uTHuk6yG7IqSW9
+X-Proofpoint-ORIG-GUID: lw-e8y6ZMt4lsEKxF5uTHuk6yG7IqSW9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_04,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 mlxlogscore=986
+ impostorscore=0 bulkscore=0 malwarescore=0 clxscore=1015 adultscore=0
+ spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502030076
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IERhbmllbCBGZXJndXNvbiA8
-ZGFuaWVsZkBvcy5hbXBlcmVjb21wdXRpbmcuY29tPg0KPlNlbnQ6IDMwIEphbnVhcnkgMjAyNSAx
-OToxOA0KPlRvOiBTaGlqdSBKb3NlIDxzaGlqdS5qb3NlQGh1YXdlaS5jb20+OyBsaW51eC1lZGFj
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+Y3hsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYWNw
-aUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LW1tQGt2YWNrLm9yZzsgbGludXgtDQo+a2VybmVsQHZn
-ZXIua2VybmVsLm9yZw0KPkNjOiBicEBhbGllbjguZGU7IHRvbnkubHVja0BpbnRlbC5jb207IHJh
-ZmFlbEBrZXJuZWwub3JnOyBsZW5iQGtlcm5lbC5vcmc7DQo+bWNoZWhhYkBrZXJuZWwub3JnOyBk
-YW4uai53aWxsaWFtc0BpbnRlbC5jb207IGRhdmVAc3Rnb2xhYnMubmV0OyBKb25hdGhhbg0KPkNh
-bWVyb24gPGpvbmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT47IGRhdmUuamlhbmdAaW50ZWwuY29t
-Ow0KPmFsaXNvbi5zY2hvZmllbGRAaW50ZWwuY29tOyB2aXNoYWwubC52ZXJtYUBpbnRlbC5jb207
-IGlyYS53ZWlueUBpbnRlbC5jb207DQo+ZGF2aWRAcmVkaGF0LmNvbTsgVmlsYXMuU3JpZGhhcmFu
-QGFtZC5jb207IGxlby5kdXJhbkBhbWQuY29tOw0KPllhemVuLkdoYW5uYW1AYW1kLmNvbTsgcmll
-bnRqZXNAZ29vZ2xlLmNvbTsgamlhcWl5YW5AZ29vZ2xlLmNvbTsNCj5Kb24uR3JpbW1AYW1kLmNv
-bTsgZGF2ZS5oYW5zZW5AbGludXguaW50ZWwuY29tOw0KPm5hb3lhLmhvcmlndWNoaUBuZWMuY29t
-OyBqYW1lcy5tb3JzZUBhcm0uY29tOyBqdGhvdWdodG9uQGdvb2dsZS5jb207DQo+c29tYXN1bmRh
-cmFtLmFAaHBlLmNvbTsgZXJkZW1ha3Rhc0Bnb29nbGUuY29tOyBwZ29uZGFAZ29vZ2xlLmNvbTsN
-Cj5kdWVud2VuQGdvb2dsZS5jb207IGd0aGVsZW5AZ29vZ2xlLmNvbTsNCj53c2Nod2FydHpAYW1w
-ZXJlY29tcHV0aW5nLmNvbTsgZGZlcmd1c29uQGFtcGVyZWNvbXB1dGluZy5jb207DQo+d2JzQG9z
-LmFtcGVyZWNvbXB1dGluZy5jb207IG5pZmFuLmN4bEBnbWFpbC5jb207IHRhbnhpYW9mZWkNCj48
-dGFueGlhb2ZlaUBodWF3ZWkuY29tPjsgWmVuZ3RhbyAoQikgPHByaW1lLnplbmdAaGlzaWxpY29u
-LmNvbT47IFJvYmVydG8NCj5TYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPjsga2FuZ2th
-bmcuc2hlbkBmdXR1cmV3ZWkuY29tOw0KPndhbmdodWlxaWFuZyA8d2FuZ2h1aXFpYW5nQGh1YXdl
-aS5jb20+OyBMaW51eGFybQ0KPjxsaW51eGFybUBodWF3ZWkuY29tPg0KPlN1YmplY3Q6IFJlOiBb
-UEFUQ0ggdjE4IDAwLzE5XSBFREFDOiBTY3J1YjogaW50cm9kdWNlIGdlbmVyaWMgRURBQyBSQVMN
-Cj5jb250cm9sIGZlYXR1cmUgZHJpdmVyICsgQ1hML0FDUEktUkFTMiBkcml2ZXJzDQo+DQo+SGkg
-U2hpanUsDQo+DQo+SSd2ZSB0ZXN0ZWQgdGhlIFNjcnViIHNwZWNpZmljIHBpZWNlcyBhbmQgdGhl
-IEVEQUMgaW5mcmFzdHJ1Y3R1cmUgcGllY2VzKGFzIGZhciBhcw0KPmhvdyBpdCByZWxhdGVzIHRv
-IHRoZSBTY3J1YiBwaWVjZXMpLiBJIGFtIHVzaW5nIGFuIEFSTTY0IHBsYXRmb3JtIGZvciB0aGlz
-DQo+dGVzdGluZy4gSSB3b3VsZCBsaWtlIHRvIG9mZmVyIG15IHRlc3RlZC1ieSB0byB0aG9zZSBw
-aWVjZXMgSSBoYXZlIHBlcnNvbmFsDQo+ZXhwZXJpZW5jZSB3aXRoLiBJIHdpbGwgc2VuZCB0aGVt
-IGFzIHJlcGxpZXMgdG8gdGhlaXIgcmVzcGVjdGl2ZSBwYXRjaGVzLg0KDQpIaSBEYW5pZWwsDQoN
-ClRoYW5rcyBmb3IgdGVzdGluZyB0aGUgRURBQyBpbmZyYXN0cnVjdHVyZSBmb3Igc2NydWJiaW5n
-IGZlYXR1cmUuDQpJIHdpbGwgYWRkICB0ZXN0ZWQtYnkgZm9yIHlvdS4gDQoNClRoYW5rcywNClNo
-aWp1DQo+DQo+VGhhbmsgeW91LA0KPn5EYW5pZWwNCg==
+On 1/30/2025 1:16 PM, Krzysztof Kozlowski wrote:
+> On 30/01/2025 05:35, Raj Kumar Bhagat wrote:
+>> @@ -2646,6 +2663,136 @@ static int ath12k_qmi_alloc_target_mem_chunk(struct ath12k_base *ab)
+>>  	return ret;
+>>  }
+>>  
+>> +static int ath12k_qmi_assign_target_mem_chunk(struct ath12k_base *ab)
+>> +{
+>> +	struct device_node *mem_node;
+>> +	struct resource res, m3_res;
+>> +	u32 bdf_start_addr;
+>> +	int i, idx, ret;
+>> +
+>> +	for (i = 0, idx = 0; i < ab->qmi.mem_seg_count; i++) {
+>> +		switch (ab->qmi.target_mem[i].type) {
+>> +		case HOST_DDR_REGION_TYPE:
+>> +			mem_node = ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
+> 
+> 
+> Why cannot you use existing API for reserved memory -
+> of_reserved_mem_lookup()?
+> 
+
+The of_reserved_mem_lookup() requires reserved memory node to read the memory and
+return in the structure "struct reserved_mem".
+
+The of_reserved_mem_lookup() would be used after we get the reserved memory node
+using the API - ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
+
+In next version we would use of_reserved_mem_lookup(), Something like below:
+    mem_node = ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
+    struct reserved_mem res = of_reserved_mem_lookup(mem_node)
