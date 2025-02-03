@@ -1,65 +1,66 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5276E204F8B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03FE204F98
 	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738589006; cv=none; b=TWpAjOBx/AofzS7Cwdoty0+UJOJdlR9gJ3SJbsFQX08vf5nyXFnCPT97acdaQzTqXCJb2U4FFuchOx/ogScKE5FVL4TKhJbUTwvaCdZY42SnP7ZPGS4q82rK+VtJSax2nK3zawDHgwpe3IesekreV023eV75l3tEHTQjkoaF+Ec=
+	t=1738589006; cv=none; b=PYQV3abwtxifVevfXsfzSjC329UmnIXusWglySeWtI702LQ5voOYDjrrsRb4LrhT7NrgEan7ZW4O0WUbxwtqpPhIZ4Oh7L/AFNhX1mfI9yzdZUV8k6FQq446eLRPQqe7h9daOU3G3122ZxS0G54EntH5K6KWUNBn69IuVZkjeZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738589006; c=relaxed/simple;
-	bh=cQrv2SqpUl7InSRqNh2aggA1ZtzP147tm85RdAJwW4E=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oL/mOH9lj7cJ6NYY5g2TUBJG/tfNATKQTgloGo/cxdKwxBlWyR/LSWTE15jrYGDOY9YY97JnOmtsecmsMuxqNK585sO7LAJ1zfxibFld02xh60XGXWY9bDwqPqlR0H+q5PcZk+cedHXU1n3lUke90VRgVQ1Vs+JyZ55sm1kSCe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PxHgEq+6; arc=none smtp.client-ip=209.85.128.44
+	bh=Lpvp0u73x3ubU5UrDV0TdedIOkakoM8csxlvAZtxZxM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dMPL/hD1OQLjynGgwUJr2ouFov50EqP7I/T5/7Of2Io8UqpCAFPyzywgLDI6llDdBUuXocA8UwX7yeziLBGQiaNjSp2i4eMPgbjaHOxBhFTaku/qQxTE2hBGs5/IxXF/UsMeI/j6xC8Ux0FdQfzdWUQAF3hxNsrX007Fc56iwTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Sjoo1cYn; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PxHgEq+6"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-436281c8a38so31107795e9.3
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sjoo1cYn"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-438a3216fc2so44316065e9.1
         for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 05:23:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738589001; x=1739193801; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SidIMQ+TcWPZhwjq7NYPUDFpmffy0JRNbe4lk/zAxYI=;
-        b=PxHgEq+6gDCeq0NSCtcqPCyNR4jOFl/XRmzaNKRtynAzQVU4S49+VAIChl2o4W1z/L
-         g/7drXY/kHZFXhjdYQzn0fo1fOKRiQIgfS19AyBpmEGcFy34JBVwrfvBj6fDmUkjPO+1
-         mPh0DH1l55dJZjEon5Jpbo4gl1dq7jhvytwJGqmJEsfUQZVwrAGWRUESTwKRW9ObY8xA
-         pfQtoPr/trPWYsQ4mXiCG12HgfuBVujwCjcbcGvDqbmStGRW3jeSFcyrMEX1RDme3ac8
-         kOVBJQc3Ls1+Y6KpWE7W5/9ovIk3V1OswEm1bFi+AzTqikOhx1RHHvWVwVNtr+fM+q4k
-         vt6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738589001; x=1739193801;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1738589002; x=1739193802; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SidIMQ+TcWPZhwjq7NYPUDFpmffy0JRNbe4lk/zAxYI=;
-        b=HJeNGwtf1/MzoxYv3Ck6KQXmKV+smputO2DJKV0QBveIr0p2C+NLUeKX2wfUr0gpTU
-         1FV73en2X5uUNAphjFhb8xEEePmZH3/EoZb7pLij0v9EH3RzoCw5c0gb9IXXKPBmHoNr
-         f3xx9IXBThjM6NPk7Fm84Fj9BmZzmuGaINNblvunRHPQ/syWJv7O9Y78AxjhRt4Z3cLZ
-         1WtiP5T3Oxeck7I4YZAAqhVyCaGJ0q+8kGuX9yEVxDYutD+YTemKuGo//BSs9cz2TNN3
-         QGeSGH/ah5UEO4MC5nQwAXx5XhqbB3/nDuewH/7PAna/gvG3rY38Uw+/yzQPm7qnz0p7
-         2qCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWh0mBhHulJ9xxLZ3Ghg70ohA9z7vlEeHgUpU+DGH3aLnx+OdiLQBVVZu9JkYsVsBRf6GPz66bTwgAvB5w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHq0h1+diCTYgAwczxc3q9d/FhKNkS81cEE2tYwqNUCiezXqTy
-	NDuCWghBuDkOWvNgIuFcpLAWLrUSM8JNCLaAgoTjAUp46XaTze03wH6aSDA44do=
-X-Gm-Gg: ASbGnctWPxE/hEqr1WqCAMtxhm/akAVPK2xStLdDg+8UHFFBVXPaooSdnuW3p6m4xMr
-	EA+GrwM60Vezfgf1PKJRAqWMSX9oYFpeMWxTzsO3oTuA/LeWjfu5KIRf2qlsi8VRLqG6mIfypmv
-	zIpSw7eYl71WIgpcz8pmtZvruSlyX5wmasDRb2HrXSRX0eO1dTGz3IQ1GIgfgORC9DMix/ihXWv
-	GRSUp3KQoD9w2MI/O9CLWT4jR0vdhpgXNo1hTw7U3p33Z4OPqUDsVqlXzmznnWS1c/s3YV07bYA
-	EYVtrPeMvS/nBnLzXy6cQeWTWnsTsq0vlSxq
-X-Google-Smtp-Source: AGHT+IFL7lwZPaISIj1WLpf269+Pu5E33d6YUEVqcrc6nTOi1M6k0m9WUT3F6CqNiFcb7IdjyRkzYQ==
-X-Received: by 2002:a05:600c:4e52:b0:434:9dfe:20e6 with SMTP id 5b1f17b1804b1-438dc3fc2b0mr182747655e9.23.1738589001477;
-        Mon, 03 Feb 2025 05:23:21 -0800 (PST)
+        bh=AGPRCN+4MJTf9yyHW8IbDG/NcTY8+Z+VttrmJ0Xh5q4=;
+        b=Sjoo1cYnRxS7ogH4R7/aiNZ4nBtVGX6g5wD6pst26FVZiwoqto08ey98L/3qGbB4NL
+         86GwxUXzPIqvqIaPrREdz8Vng6Tr4med/GcRiLemE0pOz1cQE4ZXrR0wECIbZbv1TvTW
+         Tad2PbtxIS+FiKrxkciYgduBEkhz3oRwOph59VQ6LFXuFt5rQRU0ahunbqprEP24RZdL
+         wHL6skxgSrq4WATogdLvJ0J6hQON1hvusDFz8sSHaR9x7U53sOPG6VyL9VnarF6q6gOu
+         hlNHO4flugthmcooOJviYAhJgaU33ckDRu8XFrqHQEYw4J51ddWUpjSGYgbSKGNp+2yZ
+         jy6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738589002; x=1739193802;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AGPRCN+4MJTf9yyHW8IbDG/NcTY8+Z+VttrmJ0Xh5q4=;
+        b=lleMM5jwnKTEktO6cDaX/8oVawNgYzcEqxcH7n19mWQwHj59vBPvdkOUUxtGVD0ouK
+         IML6k/XDgw1huqm+FuO8N8Ae9DnhpYkRGZYj8xmGflHNPQctlXKVnoouVAFWDHhnxZM3
+         RetHJbE49LFZj1BVXMVsFOIc5JIKMN7iwu2eOIIUaMnusLreqJytINKbNByOC2D71kcM
+         MLMJbBoZmGlbLHohlzfDtvL8TUch8dK2tihmIcrk5j9rCgZZIsDhBmSLsCUi30WkW1z9
+         J7yIoj7iJCErXVsmQ28SVwFPall0a6LgzgfBUM5ZI44boi9smaAZlKQGNx40CTBv5UwF
+         q26g==
+X-Forwarded-Encrypted: i=1; AJvYcCVLO/yUrV1/+E6sl7DOQrb73f6d0zQNerx0FwJ1vwPBAMctGuuUykT29JDhLvqIH6WxUfngJTBfY389rVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrMxhVXvg6vF/D6fCmzmHI7rcr6UODbBZBjtLuikIdbyLJk/98
+	3MewUr6+zuW7Fd30oWEfSLZNIHHczlQEmpgP26SYgvlCNZELRj+uS1NUC34AP/8=
+X-Gm-Gg: ASbGncvHXhh/lsRtHklw8vQbBVkOcVfzw1plkBw4eisZ42irQ4xwdguraohpfKfFGK4
+	GGur/K6gUBAAqHq595xvXxTjOHdi+QkOBEj/EmlrTnlIfALhVTnB73PIe3sOx8p3jLgozuAaphT
+	xK0aLTTm1baNWlwo3YuwspPMiidoBJ/XJMQa7siuiYIDhLQcjdtYmBNXcO+o3u7a5VbkMrwKX0M
+	/OYHYIgAq2WOTC+NQP84A6lSP8g4ijmtefBh70TLGDS1wQI+JMyD59vr7KodtqQ0WwRsZ6X89yc
+	twyPL6GiWHZvtxMSVCxlVfxBj/3XA3v/zShW
+X-Google-Smtp-Source: AGHT+IHSrVoAeR8CvFOpm/KLo/lYQGLkfOymi8NjX1llKLvGV9X7F5CzwyX6n14Q64FZPjBje8QrFA==
+X-Received: by 2002:a05:6000:1a8c:b0:38c:5bb2:b932 with SMTP id ffacd0b85a97d-38c5bb2bc01mr13239406f8f.3.1738589002167;
+        Mon, 03 Feb 2025 05:23:22 -0800 (PST)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ece21sm12570858f8f.20.2025.02.03.05.23.20
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ece21sm12570858f8f.20.2025.02.03.05.23.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 03 Feb 2025 05:23:21 -0800 (PST)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [PATCH v4 0/4] arm64: dts: qcom: sm8650: rework CPU & GPU thermal
- zones
-Date: Mon, 03 Feb 2025 14:23:16 +0100
-Message-Id: <20250203-topic-sm8650-thermal-cpu-idle-v4-0-65e35f307301@linaro.org>
+Date: Mon, 03 Feb 2025 14:23:17 +0100
+Subject: [PATCH v4 1/4] arm64: dts: qcom: sm8650: drop cpu thermal passive
+ trip points
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,100 +69,350 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAETDoGcC/43NTQ6CMBCG4auQrq3plN+68h7GxUAHaIKUtEg0h
- LtbWGFc4PL9MnlmZp6cIc8u0cwcTcYb24dIThGrWuwb4kaHZlLIVICI+WgHU3H/KLJU8LEl98C
- OV8Mz3HXEgUBBAagS0iwYg6PavDb/dg/dGj9a997eTbCu/8oTcMFrRKgFAFVaXTvTo7Nn6xq20
- pPccSCOOBm4NC9y1LnCsix/uHjHSXXExYHLJJaAWSJUob+4ZVk+v3wwy2kBAAA=
-X-Change-ID: 20250103-topic-sm8650-thermal-cpu-idle-1e19181a94ed
+Message-Id: <20250203-topic-sm8650-thermal-cpu-idle-v4-1-65e35f307301@linaro.org>
+References: <20250203-topic-sm8650-thermal-cpu-idle-v4-0-65e35f307301@linaro.org>
+In-Reply-To: <20250203-topic-sm8650-thermal-cpu-idle-v4-0-65e35f307301@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+ linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3113;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7736;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=cQrv2SqpUl7InSRqNh2aggA1ZtzP147tm85RdAJwW4E=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnoMNGt+5dpbHKnfldK7Gfxb8F3+lEtWQFff1cel8l
- qH82eROJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ6DDRgAKCRB33NvayMhJ0eSEEA
- CHxvS4lrhCgZK28ztPFBV9weW0ZVwFjj3NEt8vSMx74bbpmLMoMjqDIBxpVIdQCdCJGdopbYmtuGWE
- VR63POYKSsXSfW26nzqQgoWzol6QHEmfUhBPT8WXmVPbosckJIPcjYPoODmKiZtoB9obrtjCvcbRkJ
- c3el6JsriIUAHfPAIiz2DHAP5j1/5nCdjAirJ17yairhuYcHHC34pSLowaqrGg1ICoqz7hEHTsfwSB
- YCnghG7FhylYlmVyrbwuGYVnPXB4CLYBguvyQtidZ4hnqaRSrB6qDBGiobzeTKkAsWVvSQXiFe9Ll4
- pEUq6IaRhDBNBXkk/9ksc8chmEM0ijj2cCwqlrraJOR8smbZSeEb66e1x880vOq47S5T1TTyMePfLT
- ir6C0B73yBfipaZ7hR3l25DScDHwDHVSqYk5VOFHIXmcT0swSRKSbhZlNC+1S9OeMPXjq4Ibuc14Mf
- g8kMwWRhwhuu8uN930kh6SnQ+Q0jdGRq/87oHLu+1Tn8UiRSTEyEHDt3XivzYOGS4q6MHfqtoVnZPO
- Zd7NOlL0Rf1qNXZ0uKSrbfuyZTX73tIWfdLRgJ4dEYQc9YBG1DTvEJmPVwnZqToB9yXiFmEr65FDXw
- DhvHfKuWySlQfgnyREe5DuCf9+jN0Ldi0J+5gSiyJ27BZf7YWl4OIxNWtPpA==
+ bh=Lpvp0u73x3ubU5UrDV0TdedIOkakoM8csxlvAZtxZxM=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnoMNHnDH9SXi8/O6onFwXjR+RUWCBjAN0CF3aYDVm
+ x7nerpCJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ6DDRwAKCRB33NvayMhJ0df1D/
+ 9JJ4j4yzw7qLaOa/zo8b2tr0DZ5quNAhNduTVELukS+B9Zdsol/ehArfdQdoNooHi2R9rcs11kR3rq
+ 9utELawz19DPaDXNBOeIfc0KM8lwgStbrvAu31+Bh9ot+F28bzgiDjH6v17Doc05kRjr2wm/EOd9gV
+ Lof/AsE6sUYWqZDTRBVd0HA6QG8DdMl4Z6yqF4pLGxlSyAG6bhAiNSv1yyQS3dF/gI5XHteFwKnU2Q
+ zbLAt8VnalN+Jfswelm/LZ9qn232VK5aqik5ksbWS/lldAQmX4iViV7+4LSIwFlE91ztdFhLQxRZo1
+ ukHsxb6VUc2iKLc5JyJvhQHD0KozUBW2JgTF/VbRR1pFfVwR6pmoUCa77CPZZSsTovvHF5o7CIJf8P
+ +jMsl+5MZfAmbjAk60Hqp/htHAXhG60TnQagWmNJ6dn9KTL9RSS+eFgMC+q5s/51K/4C0wpi7PquiF
+ vIuEsHSlO3MrWKJoJQ3cJ3dN+LIYZymtceFd9yycUx4BkZ5LSEe4i5fNKxqpB6AzymoCLPCdH9RtqU
+ RvRpxjrwJb1pmekBGgevWc77NIeKRcfX0VwoNBGl5Sh9mDvqT+fc2yFrl1ARoI1YDsTFNQ7cqGmtHy
+ un9b7w4ZGIMlaU3N3SUa6tBqrHg56wmo1DQm7cubKCmSLTivWT+Zn+dI8ZSA==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-On the SM8650 platform, the dynamic clock and voltage scaling (DCVS) for
-the CPUs is handled by hardware & firmware using factory and
-form-factor determined parameters in order to maximize frequency while
-keeping the temperature way below the junction temperature where the SoC
-would experience a thermal shutdown if not permanent damages.
+On the SM8650, the dynamic clock and voltage scaling (DCVS) is done in an
+hardware controlled loop using the LMH and EPSS blocks with constraints and
+OPPs programmed in the board firmware.
 
-On the other side, the High Level Ooperating System (HLOS), like Linux,
-is able to adjust the CPU and GPU frequency using the internal SoC
-temperature sensors (here tsens) and it's UP/LOW interrupts, but it
-effectly does the same work twice for CPU in an less effective manner.
+Since the Hardware does a better job at maintaining the CPUs temperature
+in an acceptable range by taking in account more parameters like the die
+characteristics or other factory fused values, it makes no sense to try
+and reproduce a similar set of constraints with the Linux cpufreq thermal
+core.
 
-Let's take the CPU Hardware & Firmware action in account and design the
-thermal zones trip points and cooling devices mapping to use the HLOS
-as a safety warant in case the platform experiences a temperature surge
-to helpfully avoid a thermal shutdown and handle the scenario gracefully.
+In addition, the tsens IP is responsible for monitoring the temperature
+across the SoC and the current settings will heavily trigger the tsens
+UP/LOW interrupts if the CPU temperatures reaches the hardware thermal
+constraints which are currently defined in the DT. And since the CPUs
+are not hooked in the thermal trip points, the potential interrupts and
+calculations are a waste of system resources.
 
-On the CPU side, the LMh hardware does the DCVS control loop, so
-only keep the critical trip point that would do a software system
-reboot as an emergency action to avoid the thermal shutdown.
-
-On the GPU side, the GPU can achieve much higher temperature,
-update the trip point with the downstream implementation as a
-reference.
-
-Those 2 changes optimizes the thermal management design by avoiding
-concurrent thermal management, calculations & avoidable interrupts
-for CPU, and allows us to use reach higher OPPs for the GPUs and
-squeeze more performances in both cases.
-
-While we're at it, also harmonize the remaining thermal blocks
-by using 110C as hot trip point, and 115 as critical trip point,
-and remove the unneeded polling-delay-passive properties.
+Drop the current passive trip points and only leave the critical trip
+point that will trigger a software system reboot before an hardware
+thermal shutdown in the allmost impossible case the hardware DCVS cannot
+handle the temperature surge.
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
-Changes in v4:
-- Also uniformize the other thermal blocks, using 110 as hot, 115 as critical
-- Also remove the uneeded polling-delay-passive
-- Link to v3: https://lore.kernel.org/r/20250129-topic-sm8650-thermal-cpu-idle-v3-0-62ab1a64098d@linaro.org
+ arch/arm64/boot/dts/qcom/sm8650.dtsi | 180 -----------------------------------
+ 1 file changed, 180 deletions(-)
 
-Changes in v3:
-- The GMU doesn't handle temperature, remove it from all texts, just bump the temps
-- Link to v2: https://lore.kernel.org/r/20250110-topic-sm8650-thermal-cpu-idle-v2-0-5787ad79abbb@linaro.org
+diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+index 25e47505adcb790d09f1d2726386438487255824..95509ce2713d4fcc3dbe0c5cd5827312d5681af4 100644
+--- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+@@ -5751,18 +5751,6 @@ cpu2-top-thermal {
+ 			thermal-sensors = <&tsens0 5>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu2-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -5775,18 +5763,6 @@ cpu2-bottom-thermal {
+ 			thermal-sensors = <&tsens0 6>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu2-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -5799,18 +5775,6 @@ cpu3-top-thermal {
+ 			thermal-sensors = <&tsens0 7>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu3-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -5823,18 +5787,6 @@ cpu3-bottom-thermal {
+ 			thermal-sensors = <&tsens0 8>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu3-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -5847,18 +5799,6 @@ cpu4-top-thermal {
+ 			thermal-sensors = <&tsens0 9>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu4-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -5871,18 +5811,6 @@ cpu4-bottom-thermal {
+ 			thermal-sensors = <&tsens0 10>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu4-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -5895,18 +5823,6 @@ cpu5-top-thermal {
+ 			thermal-sensors = <&tsens0 11>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu5-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -5919,18 +5835,6 @@ cpu5-bottom-thermal {
+ 			thermal-sensors = <&tsens0 12>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu5-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -5943,18 +5847,6 @@ cpu6-top-thermal {
+ 			thermal-sensors = <&tsens0 13>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu6-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -5967,18 +5859,6 @@ cpu6-bottom-thermal {
+ 			thermal-sensors = <&tsens0 14>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu6-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -6009,18 +5889,6 @@ cpu7-top-thermal {
+ 			thermal-sensors = <&tsens1 1>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu7-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -6033,18 +5901,6 @@ cpu7-middle-thermal {
+ 			thermal-sensors = <&tsens1 2>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu7-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -6057,18 +5913,6 @@ cpu7-bottom-thermal {
+ 			thermal-sensors = <&tsens1 3>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu7-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -6081,18 +5925,6 @@ cpu0-thermal {
+ 			thermal-sensors = <&tsens1 4>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu0-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
+@@ -6105,18 +5937,6 @@ cpu1-thermal {
+ 			thermal-sensors = <&tsens1 5>;
+ 
+ 			trips {
+-				trip-point0 {
+-					temperature = <90000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+-				trip-point1 {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-
+ 				cpu1-critical {
+ 					temperature = <110000>;
+ 					hysteresis = <1000>;
 
-Changes in v2:
-- Drop idle injection
-- only keep critical trip points
-- reword commmit msg and cover letter
-- Link to v1: https://lore.kernel.org/r/20250103-topic-sm8650-thermal-cpu-idle-v1-0-faa1f011ecd9@linaro.org
-
----
-Neil Armstrong (4):
-      arm64: dts: qcom: sm8650: drop cpu thermal passive trip points
-      arm64: dts: qcom: sm8650: setup gpu thermal with higher temperatures
-      arm64: dts: qcom: sm8650: harmonize all unregulated thermal trip points
-      arm64: dts: qcom: sm8650: drop remaining polling-delay-passive properties
-
- arch/arm64/boot/dts/qcom/sm8650.dtsi | 430 ++++++++++-------------------------
- 1 file changed, 117 insertions(+), 313 deletions(-)
----
-base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
-change-id: 20250103-topic-sm8650-thermal-cpu-idle-1e19181a94ed
-
-Best regards,
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
+2.34.1
 
