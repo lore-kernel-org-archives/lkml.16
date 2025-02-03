@@ -1,268 +1,159 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32F71FF1B6
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B777E107;
+	Mon,  3 Feb 2025 09:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738575029; cv=none; b=thdYOfUR031ISTJwkIxBsLMbl/FzpDnw60Kzi0DnlgNoX2goOi9KRrIbZcDElqbXDsW4Dv2M/YBhBnH0jvwWpsJKXckJc4NkLEuCe56aItX0scd/A6yJas1ZmTmwQg6Tuq96V7wvSMaxDJYcohzq6icTk1bass01Yor7ihNW/xE=
+	t=1738575061; cv=none; b=t8d++jMs7MmlA+aAKOnPWWpHjsNP87x3rbADNMrd1Smh3oeujH4ANynNcF4KTqAE0hVXhiSci4J0RwccXtnSglJsaLcRMNQiqmhG5jN5gio1dMzrY8A4hzWeYi5jxsxDSYlupGj7aH1ticCFaFa3x5kTn2GIcH23scELgTjM/eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738575029; c=relaxed/simple;
-	bh=7U7Yl06go+bByThCK2iknqMhLcveevfT0vv3Dt817BE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RZvfmxmxp1teIWxmStE8WVtBWOhoQXR7+VmoapyRZr+O8+5VaaBc7Bhg7I91AtGjFv62SRfA2cV5uR3oNkVRwG38VmNMbSR46a+LrzTcfZTbWKQEWyGzzJDEiHJgQZDysdRJdR+LrdLt4vlOYxJ7GPguwXqfaezEjXb+7wj5myQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mZjjl17G; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1738575061; c=relaxed/simple;
+	bh=EXgeldZ4Kuji/SVlAFtvKiLgZ9sXXhNmORGolm7IKCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G8M4SD84G0RhydghopYAodIfRfEHdGs61Bv3r9sGePvpzaNFo0sdGRX3JVMt33DNqGoL46FxGZx4RLm4RUoHBJjuUJKfIy52jB5T5HH8r7AlHl9AquCUZOrIGV6AZKAo7DvWiF8019KrK7paZ7F7bLude52WbmtxrFEOBAKOHzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sc7OrPzM; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mZjjl17G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1738574522;
-	bh=7U7Yl06go+bByThCK2iknqMhLcveevfT0vv3Dt817BE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mZjjl17G/l4cbQnyEM4LJ3L6AlSgH9HNznFxRBcOM+deSS9In+FxlBMtMNguZtZ7g
-	 ZKzfzSJ20gpG0ptp6q06ib3xOM8EmhNQzEBdcwwHXk2Zhq4OJga8AUfTo5kNJYuX43
-	 TmYli/TCRaQglmoMKZPfvX45JJPzsXBfytXYAHwEpBZWVybgj6HKTj0btx/Nti/kHB
-	 JkNdmhDK8LpB8r2GI8q8xjT6eGFUAbKnkWLbfE3qdJnd/8R79EB7+uzEF++k76rX//
-	 QShXOzJsCXJDsOTziqWjRfsqF/9GzNiiCyfh5FRFnup14+afaqwrhkVOlU8B6TrFkH
-	 Rmv7GLyGpHOpg==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 31D4917E07B3;
-	Mon,  3 Feb 2025 10:22:01 +0100 (CET)
-Date: Mon, 3 Feb 2025 10:21:53 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Danilo Krummrich <dakr@kernel.org>, asahi@lists.linux.dev
-Cc: Asahi Lina <lina@asahilina.net>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Frank Binns <frank.binns@imgtec.com>, Matt
- Coster <matt.coster@imgtec.com>, Karol Herbst <kherbst@redhat.com>, Lyude
- Paul <lyude@redhat.com>, Steven Price <steven.price@arm.com>, Liviu Dudau
- <liviu.dudau@arm.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Thomas
- =?UTF-8?B?SGVsbHN0csO2bQ==?= <thomas.hellstrom@linux.intel.com>, Rodrigo
- Vivi <rodrigo.vivi@intel.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, akash.goel@arm.com
-Subject: Re: [PATCH 0/4] drm/gpuvm: Add support for single-page-filled
- mappings
-Message-ID: <20250203102153.145229e0@collabora.com>
-In-Reply-To: <Z5-_O8vkCO0LXcl7@pollux.localdomain>
-References: <20250202-gpuvm-single-page-v1-0-8cbd44fdcbd4@asahilina.net>
-	<Z5-_O8vkCO0LXcl7@pollux.localdomain>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sc7OrPzM"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51320bgd006146;
+	Mon, 3 Feb 2025 09:29:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=HOOVTMKGmYfDs61vIKKu/2n6mo1Uqh
+	rzh3Nw0X9R5us=; b=sc7OrPzM94Qro1TPoi9WldL23dl8EhUQA0uUcOii03fm/0
+	ZWjWgFI+dUHnyykPX4KurBljs5VF0FTUDOZVPKQ0Nic1W5aixU4tXgMwUo9Ej4Sp
+	IhX2kpJQptytYHQ7XzYAy9RoZviZkDVVyjToIShTjmSz3tGfHU97EQ/GMBty3KDe
+	U7Y/o3wrR/8Po81HWdFM8acEVLigG7jG/rrAvF0q3j95Qgp65mDoim4AyXlTi4+s
+	JSs5sBEVEVSX1pC6uB3pEJ+UczNnVeDbO13pZiffvHI9SIwAVPdnyEwhgbJoiLlY
+	rEhklncisvpySSfLHaTqfnQztgOZ+zZlXlJpmmmA==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jmmy9m6k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 09:29:47 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5136tpND016288;
+	Mon, 3 Feb 2025 09:29:46 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44hwxs5syv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 09:29:46 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5139Th5c21955204
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Feb 2025 09:29:43 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0F9EF200D4;
+	Mon,  3 Feb 2025 09:29:43 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4A882200D3;
+	Mon,  3 Feb 2025 09:29:39 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.179.20.74])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  3 Feb 2025 09:29:39 +0000 (GMT)
+Date: Mon, 3 Feb 2025 10:29:37 +0100
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: "Dmitry V. Levin" <ldv@strace.io>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Oleg Nesterov <oleg@redhat.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Charlie Jenkins <charlie@rivosinc.com>,
+        Eugene Syromyatnikov <evgsyr@gmail.com>,
+        Mike Frysinger <vapier@gentoo.org>, Renzo Davoli <renzo@cs.unibo.it>,
+        Davide Berardi <berardi.dav@gmail.com>,
+        Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Shuah Khan <shuah@kernel.org>, strace-devel@lists.strace.io,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH v4 0/7] ptrace: introduce PTRACE_SET_SYSCALL_INFO API
+Message-ID: <Z6CMgVm8QKEMRf8L@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250203065849.GA14120@strace.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203065849.GA14120@strace.io>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: tAr2MtM5PWIBRxaWi6Br0hi8CNE4am_9
+X-Proofpoint-ORIG-GUID: tAr2MtM5PWIBRxaWi6Br0hi8CNE4am_9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_03,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ phishscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 mlxlogscore=836 bulkscore=0 spamscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502030071
 
-+Akash with whom we've been discussing adding a 'REPEAT' mode to
-drm_gpuvm/panthor.
+On Mon, Feb 03, 2025 at 08:58:49AM +0200, Dmitry V. Levin wrote:
 
-On Sun, 2 Feb 2025 19:53:47 +0100
-Danilo Krummrich <dakr@kernel.org> wrote:
+Hi Dmitry,
 
-> Hi Lina,
-> 
-> On Sun, Feb 02, 2025 at 10:34:49PM +0900, Asahi Lina wrote:
-> > Some hardware requires dummy page mappings to efficiently implement
-> > Vulkan sparse features. These mappings consist of the same physical
-> > memory page, repeated for a large range of address space (e.g. 16GiB).
-> > 
-> > Add support for this to drm_gpuvm. Currently, drm_gpuvm expects BO
-> > ranges to correspond 1:1 to virtual memory ranges that are mapped, and
-> > does math on the BO offset accordingly. To make single page mappings
-> > work, we need a way to turn off that math, keeping the BO offset always
-> > constant and pointing to the same page (typically BO offset 0).
-> > 
-> > To make this work, we need to handle all the corner cases when these
-> > mappings intersect with regular mappings. The rules are simply to never
-> > mix or merge a "regular" mapping with a single page mapping.
-> > 
-> > drm_gpuvm has support for a flags field in drm_gpuva objects. This is
-> > normally managed by drivers directly. We can introduce a
-> > DRM_GPUVA_SINGLE_PAGE flag to handle this. However, to make it work,
-> > sm_map and friends need to know ahead of time whether the new mapping is
-> > a single page mapping or not. Therefore, we need to add an argument to
-> > these functions so drivers can provide the flags to be filled into
-> > drm_gpuva.flags.
-> > 
-> > These changes should not affect any existing drivers that use drm_gpuvm
-> > other than the API change:
-> > 
-> > - imagination: Does not use flags at all
-> > - nouveau: Only uses drm_gpuva_invalidate(), which is only called on
-> >   existing drm_gpuva objects (after the map steps)
-> > - panthor: Does not use flags at all
-> > - xe: Does not use drm_gpuva_init_from_op() or
-> >   drm_gpuva_remap()/drm_gpuva_map() (which call it). This means that the
-> > flags field of the gpuva object is managed by the driver only, so these
-> > changes cannot clobber it.
-> > 
-> > Note that the way this is implemented, drm_gpuvm does not need to know
-> > the GPU page size. It only has to never do math on the BO offset to meet
-> > the requirements.
-> > 
-> > I suspect that after this change there could be some cleanup possible in
-> > the xe driver (which right now passes flags around in various
-> > driver-specific ways from the map step through to drm_gpuva objects),
-> > but I'll leave that to the Xe folks.
-> > 
-> > Signed-off-by: Asahi Lina <lina@asahilina.net>
-> > ---
-> > Asahi Lina (4):
-> >       drm/gpuvm: Add a flags argument to drm_gpuvm_sm_map[_*]
-> >       drm/gpuvm: Plumb through flags into drm_gpuva_op_map
-> >       drm/gpuvm: Add DRM_GPUVA_SINGLE_PAGE flag and logic
-> >       drm/gpuvm: Plumb through flags into drm_gpuva_init  
-> 
-> Without looking into any details yet:
-> 
-> This is a bit of tricky one, since we're not even close to having a user for
-> this new feature upstream yet, are we?
+> PTRACE_SET_SYSCALL_INFO is a generic ptrace API that complements
+> PTRACE_GET_SYSCALL_INFO by letting the ptracer modify details of
+> system calls the tracee is blocked in.
+...
 
-Actually, we would be interesting in having this feature hooked up in
-panthor. One use case we have is Vulkan sparse bindings, of course. But
-we also have cases where we need to map a dummy page repeatedly on the
-FW side. The approach we've been considering is slightly different:
-pass a DRM_GPUVA_REPEAT_FLAG along with GEM range, so we can repeat a
-range of the GEM (see the below diff, which is completely untested by
-the way), but I think we'd be fine with this SINGLE_PAGE flag.
+FWIW, I am getting these on s390:
 
---->8---
-diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
-index f9eb56f24bef..ea61f3ffaddf 100644
---- a/drivers/gpu/drm/drm_gpuvm.c
-+++ b/drivers/gpu/drm/drm_gpuvm.c
-@@ -2053,16 +2053,17 @@ EXPORT_SYMBOL_GPL(drm_gpuva_unmap);
- 
- static int
- op_map_cb(const struct drm_gpuvm_ops *fn, void *priv,
--      u64 addr, u64 range,
--      struct drm_gem_object *obj, u64 offset)
-+      u64 addr, u64 va_range,
-+      struct drm_gem_object *obj, u64 offset, u64 gem_range)
- {
-     struct drm_gpuva_op op = {};
- 
-     op.op = DRM_GPUVA_OP_MAP;
-     op.map.va.addr = addr;
--    op.map.va.range = range;
-+    op.map.va.range = va_range;
-     op.map.gem.obj = obj;
-     op.map.gem.offset = offset;
-+    op.map.gem.range = gem_range;
- 
-     return fn->sm_step_map(&op, priv);
- }
-@@ -2102,7 +2103,8 @@ static int
- __drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm,
-            const struct drm_gpuvm_ops *ops, void *priv,
-            u64 req_addr, u64 req_range,
--           struct drm_gem_object *req_obj, u64 req_offset)
-+           struct drm_gem_object *req_obj,
-+           u64 req_offset, u64 req_gem_range)
- {
-     struct drm_gpuva *va, *next;
-     u64 req_end = req_addr + req_range;
-@@ -2237,7 +2239,7 @@ __drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm,
- 
-     return op_map_cb(ops, priv,
-              req_addr, req_range,
--             req_obj, req_offset);
-+             req_obj, req_offset, req_gem_range);
- }
- 
- static int
-@@ -2344,10 +2346,43 @@ drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm, void *priv,
- 
-     return __drm_gpuvm_sm_map(gpuvm, ops, priv,
-                   req_addr, req_range,
--                  req_obj, req_offset);
-+                  req_obj, req_offset, 0);
- }
- EXPORT_SYMBOL_GPL(drm_gpuvm_sm_map);
- 
-+/**
-+ * drm_gpuvm_sm_map_repeat() - repeatedly maps a GEM range over a VA range
-+ * @gpuvm: the &drm_gpuvm representing the GPU VA space
-+ * @priv: pointer to a driver private data structure
-+ * @req_addr: the start address of the new mapping
-+ * @req_range: the range of the new mapping
-+ * @req_obj: the &drm_gem_object to map
-+ * @req_offset: the offset within the &drm_gem_object
-+ * @req_gem_range: the offset within the &drm_gem_object
-+ *
-+ * Same as drm_gpuvm_sm_map() except it repeats a GEM range over a VA range
-+ *
-+ * Returns: 0 on success or a negative error code
-+ */
-+int
-+drm_gpuvm_sm_map_repeat(struct drm_gpuvm *gpuvm, void *priv,
-+            u64 req_addr, u64 req_range,
-+            struct drm_gem_object *req_obj,
-+            u64 req_offset, u64 req_gem_range)
-+{
-+    const struct drm_gpuvm_ops *ops = gpuvm->ops;
-+
-+    if (unlikely(!(ops && ops->sm_step_map &&
-+               ops->sm_step_remap &&
-+               ops->sm_step_unmap)))
-+        return -EINVAL;
-+
-+    return __drm_gpuvm_sm_map(gpuvm, ops, priv,
-+                  req_addr, req_range,
-+                  req_obj, req_offset, req_gem_range);
-+}
-+EXPORT_SYMBOL_GPL(drm_gpuvm_sm_map_repeat);
-+
- /**
-  * drm_gpuvm_sm_unmap() - creates the &drm_gpuva_ops to split on unmap
-  * @gpuvm: the &drm_gpuvm representing the GPU VA space
-@@ -2536,7 +2571,7 @@ drm_gpuvm_sm_map_ops_create(struct drm_gpuvm *gpuvm,
- 
-     ret = __drm_gpuvm_sm_map(gpuvm, &gpuvm_list_ops, &args,
-                  req_addr, req_range,
--                 req_obj, req_offset);
-+                 req_obj, req_offset, 0);
-     if (ret)
-         goto err_free_ops;
- 
-diff --git a/include/drm/drm_gpuvm.h b/include/drm/drm_gpuvm.h
-index 00d4e43b76b6..8157ede365d1 100644
---- a/include/drm/drm_gpuvm.h
-+++ b/include/drm/drm_gpuvm.h
-@@ -846,6 +846,14 @@ struct drm_gpuva_op_map {
-          */
-         u64 offset;
- 
-+        /**
-+         * @gem.range: the range of the GEM to map
-+         *
-+         * If smaller than va.range, the GEM range should be mapped
-+         * multiple times over the VA range.
-+         */
-+        u64 range;
-+
-         /**
-          * @gem.obj: the &drm_gem_object to map
-          */
-@@ -1203,6 +1211,11 @@ int drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm, void *priv,
-              u64 addr, u64 range,
-              struct drm_gem_object *obj, u64 offset);
- 
-+int drm_gpuvm_sm_map_repeat(struct drm_gpuvm *gpuvm, void *priv,
-+                u64 addr, u64 range,
-+                struct drm_gem_object *obj,
-+                u64 offset, u64 gem_range);
-+
- int drm_gpuvm_sm_unmap(struct drm_gpuvm *gpuvm, void *priv,
-                u64 addr, u64 range);
+# ./tools/testing/selftests/ptrace/set_syscall_info 
+TAP version 13
+1..1
+# Starting 1 tests from 1 test cases.
+#  RUN           global.set_syscall_info ...
+# set_syscall_info.c:87:set_syscall_info:Expected exp_entry->nr (-1) == info->entry.nr (65535)
+# set_syscall_info.c:88:set_syscall_info:wait #3: PTRACE_GET_SYSCALL_INFO #2: syscall nr mismatch
+# set_syscall_info: Test terminated by assertion
+#          FAIL  global.set_syscall_info
+not ok 1 global.set_syscall_info
+# FAILED: 0 / 1 tests passed.
+# Totals: pass:0 fail:1 xfail:0 xpass:0 skip:0 error:0
+
+I remember one of the earlier versions (v1 or v2) was working for me.
+
+Thanks!
