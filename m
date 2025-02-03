@@ -1,168 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A481D47AD
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DE825A623;
+	Mon,  3 Feb 2025 19:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738612000; cv=none; b=lQmAMz1NNBTRvy7x44TyCn8EMSDuFhbYj5878TIj1UdC3NP+XqdncsCC+YJFQUsLenS4gx9uyhBVLieY2uVSLURW/EiF+YqjoSL27mlQ+T4PO0T/U99fiO1iWA+k5+f1gAmbCJZJp2MtxzTEjv7pQY2Pm/pRaUDres7Psown6VA=
+	t=1738612042; cv=none; b=X1qfxk1ck4kEsoylVmDjKKqss0OKhT/IsmORWySIb7qljmQQvvetKiX7guFCtZVAnrcqwhTtQ9cnBxPKcP1jr20nx9/vCfRpma5d2gsnFJxcAlnRzTBiE45B78N4d/9VemPtMzboDkHaQ9N1h1VwuBRyU0Wp5qg1r7/+2Arn2sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738612000; c=relaxed/simple;
-	bh=09whj4uZGPY+MU0n+/5yUTtg1hWaTb1nkD/DeIxUkCI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BNlnJ4hYJrdOc5zv2U1IRbU8sX380MgJPNWdVhEa2O6dZ5E82BYvvZ8ERt3N7Ig8m/69lJB/JBM03rM8LJNvcWri70wF0PpoCa3QjMVKPp0wz90RRLFeiKU1+VPf27ZJvcSDmwPO1K9lpT+V98Bg7Q8a9ncygWzRetG/z3/FiGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tq3jmft+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738612042; c=relaxed/simple;
+	bh=m4U7xFFLg++Pozd3+X5web1+L1b+FX/ZNZOJPseBAAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eCWue0/5V96nkRMgHw/vit5QHms8R6H9EB7ZtB90igLHT2HNXN2xEWiPl7Pv+9SE2UfOwtmDCGkMZ6LnRtJGTYcTrVRMdYfW5UR/eRYJUYKADncXqEa9L+vpDFLBsbwTnvJy5F1lEAVqNovCeBXxHm2ugnj/YOcug1fyflD7yM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GEvInlyL; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tq3jmft+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738611997;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OXEsTHoAIxPyeu+L6p4C4IoY0yLlvxYneWJOKrJchu0=;
-	b=Tq3jmft+uMzYDuJmj6FvetgMoiczMuc643bxBJgEdH3W9pN4r1QdTtQTLkMI8CbvmfzK3e
-	2WltnDHD1k6v1xj7ClzFMCDo2uby5FcG8MgbcSQKTdNONnb0uPJHRDyYbv5Qa/63NPan2J
-	W61IbEJ9osrSOU6wyp22td/kdCApV0c=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-117-m9fMsB8ZO3e2Ur9o1zLi_g-1; Mon, 03 Feb 2025 14:46:36 -0500
-X-MC-Unique: m9fMsB8ZO3e2Ur9o1zLi_g-1
-X-Mimecast-MFC-AGG-ID: m9fMsB8ZO3e2Ur9o1zLi_g
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-438e180821aso24995665e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:46:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738611995; x=1739216795;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OXEsTHoAIxPyeu+L6p4C4IoY0yLlvxYneWJOKrJchu0=;
-        b=wuZriJAqvCzTMrjAgULiQdWAmWCl7RLJBbPcyfEaoU7QotcvWd0D0bEi19q7A+9EsL
-         khpxFdOsKn1cjrv/x+DpvckBFcANP/l3UEXOUuUqT+zYH2H4ZKA36uB9cGXyxSQf5QxN
-         WPScVGD3rYkMZAXgvGXY49IgpVso8cYVquO25J5JjFVabVzobi4uo0XUDiuEaDWDf25U
-         pYoV2wvKR1uF28IdMOyh6dtlgIpFH3RQ3MxUo/JzYoioj0amIrgsmH4yzvBVhbJfBkeJ
-         +yFTHjUvL/DdghIamJ+/1DeL1BO66cgA+OCJmaI3nbcdrfljpgNjo8yMFSeosBmjOEd5
-         e3jw==
-X-Forwarded-Encrypted: i=1; AJvYcCU81odjHTydll+H2M+BbyHr8El2eilYbRRasCNRU+RQ/0tIa+v4VtmqUk5WJqBH5HyHE8jCRLL0D8kbKUY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMziSeRFmuZScH+2DK9LeZ/5gCQTuLz56T2Fz6/q3/PwvqU0mN
-	r1HuYJ4yh4920kE8GRI1YONXGdZZhfgJZwm/LPiXUUqIfXTK2iqZsepJZ8gJntFPpJK4VTzV6M7
-	RQp8aBMeoVkhcFh6EWyo6dP7guMxY+PBFjHvXCW2q+uAGHJcx+5nC7Q/o+BXG+g==
-X-Gm-Gg: ASbGncuf+5gvVPgKMWGx5nN6OMrlwBc1HWqqgWRA+ig7XM3fSLKmgdryPQK4s8XsUjB
-	bBQnK3TvqL5TBqY1UpUR2BIKhg2BCadEtR1UYskxH7deinu4HOQUOlJB31Xui3SGMDQSZ+KVdVN
-	4+zkKHtqhwzP8HjTk6tsyOo3DsvHJBLaZ22syda/U3U8Uxcen2ctizMKHx/3o0iJeFcNmJA/nWD
-	llHTJ9nwiPixTLBaVCYVoU6dVneW9iQkAl4Jsf+VwV8oTnZLmeLMYWtv+fwtKDzm/Df98X9JBal
-	C9treQ==
-X-Received: by 2002:a05:600c:470e:b0:431:52f5:f48d with SMTP id 5b1f17b1804b1-438dc436f30mr209582265e9.31.1738611994932;
-        Mon, 03 Feb 2025 11:46:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IExzO583g33zUPWRI/zcaL35RgYJp4iCWf0jOXygzTMxI95IkQaUBxik56T44eVLnel04j5hw==
-X-Received: by 2002:a05:600c:470e:b0:431:52f5:f48d with SMTP id 5b1f17b1804b1-438dc436f30mr209582095e9.31.1738611994560;
-        Mon, 03 Feb 2025 11:46:34 -0800 (PST)
-Received: from [192.168.10.3] ([151.62.97.55])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-438e236f9bfsm170727385e9.0.2025.02.03.11.46.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 11:46:33 -0800 (PST)
-Message-ID: <93df442c-8ec3-43ee-aba1-e770a5b7588f@redhat.com>
-Date: Mon, 3 Feb 2025 20:46:32 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GEvInlyL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738612042; x=1770148042;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=m4U7xFFLg++Pozd3+X5web1+L1b+FX/ZNZOJPseBAAg=;
+  b=GEvInlyLXHF6ivxZ9eDOjXd+Ywu+UL4KDyfAURyPb58bwno7qRYolaKO
+   ETOwjExk3jgTWHa+GlWi3C6hLFa93kSvPFzrEwuWv6wNUfFWnxdOoORmY
+   10EVqXR2hdpSN0fTIRFrjJ5pWiPgvEnP9mlOpWBFbht0BCTyBgonbP2h1
+   cSTGyxCWhYTrzTUICgp4MelWhjO6LWAbDo5VKj0JsrWER55/jMvAo60oV
+   0PYl5OJhI9JQv0DIx7FKvgQT4I3rT6hqNh7PsPbtLwbZkqDvulVg04itQ
+   uyHgCG2b+CD7ootcWxLI2CXh4XQ9N/Z6V/9DdnfuGQ7EOfIhHVWTX+ajR
+   Q==;
+X-CSE-ConnectionGUID: wBdGAbWZRsGA4tgaovkRmg==
+X-CSE-MsgGUID: P7GGv4KIRl2HQKMpKvd9wg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="50113353"
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="50113353"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 11:46:34 -0800
+X-CSE-ConnectionGUID: 3Vag7cZCSIG8K9QW4q7I0Q==
+X-CSE-MsgGUID: jv3KzLAjSr68hzjQJA5O4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="115404791"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa004.fm.intel.com with ESMTP; 03 Feb 2025 11:46:32 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 84BB723F; Mon, 03 Feb 2025 21:46:30 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Subject: [PATCH v1 1/1] ACPI: property: Fix return value for nval == 0 in acpi_data_prop_read()
+Date: Mon,  3 Feb 2025 21:46:29 +0200
+Message-ID: <20250203194629.3731895-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] KVM: x86: Add support for VMware guest specific
- hypercalls
-To: Sean Christopherson <seanjc@google.com>,
- Doug Covelli <doug.covelli@broadcom.com>
-Cc: Zack Rusin <zack.rusin@broadcom.com>, kvm <kvm@vger.kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- the arch/x86 maintainers <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Shuah Khan <shuah@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@redhat.com>,
- Isaku Yamahata <isaku.yamahata@intel.com>, Joel Stanley <joel@jms.id.au>,
- Linux Doc Mailing List <linux-doc@vger.kernel.org>,
- linux-kernel@vger.kernel.org,
- linux-kselftest <linux-kselftest@vger.kernel.org>
-References: <CABgObfZrTyft-3vqMz5w0ZiAhp-v6c32brgftynZGJO8OafrdA@mail.gmail.com>
- <CADH9ctBYp-LMbW4hm3+QwNoXvAc5ryVeB0L1jLY0uDWSe3vbag@mail.gmail.com>
- <b1ddb439-9e28-4a58-ba86-0395bfc081e0@redhat.com>
- <CADH9ctCFYtNfhn3SSp2jp0fzxu6s_X1A+wBNnzvHZVb8qXPk=g@mail.gmail.com>
- <CADH9ctB0YSYqC_Vj2nP20vMO_gN--KsqOBOu8sfHDrkZJV6pmw@mail.gmail.com>
- <Z2IXvsM0olS5GvbR@google.com>
- <CABgObfadZZ5sXYB0xR5OcLDw_eVUmXTOTFSWkVpkgiCJmNnFRQ@mail.gmail.com>
- <CADH9ctAGt_VriKA7Ch1L9U+xud-6M54GzaPOM_2sSA780TpAYw@mail.gmail.com>
- <CABgObfb3Ttfg6H+_RpNQGSYKw9BLEwx3+EysXdL-wbpd1pkGHQ@mail.gmail.com>
- <CADH9ctAzffvDByS1s2PJoD63On-b+pCnCmER4Nf4Zc=62vkbMA@mail.gmail.com>
- <Z6Eb4PfmmHWFTR9A@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <Z6Eb4PfmmHWFTR9A@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/3/25 20:41, Sean Christopherson wrote:
-> -EFAULT isn't the problem, KVM not being able to return useful information in
-> all situations is the issue. 
+While analysing code for software and OF node for the corner case when
+caller asks to read zero items in the supposed to be an array of values
+I found that ACPI behaves differently to what OF does, i.e.
 
-Yes, that's why I don't want it to be an automatically opted-in API.  If 
-incremental improvements are possible, it may be useful to allow 
-interested userspace to enable it early.  For example...
+1. It returns -EINVAL when caller asks to read zero items from integer
+array, while OF returns 0, if no other errors happened.
 
-> Specifically, "guest" accesses that are emulated
-> by KVM are problematic, because the -EFAULT from e.g. __kvm_write_guest_page()
-> is disconnected from the code that actually kicks out to userspace.  In that
-> case, userspace will get KVM_EXIT_MMIO, not -EFAULT.  There are more problems
-> beyond KVM_EXIT_MMIO vs. -EFAULT, e.g. instructions that perform multiple memory
-> accesses,
+2. It returns -EINVAL when caller asks to read zero items from string
+array, while OF returns -ENODATA, if no other errors happened.
 
-those are obviously synchronous and I expect VMware to handle them already.
+Amend ACPI implementation to follow what OF does.
 
-That said my preferred solution to just use userfaultfd, which is 
-synchronous by definition.
+Fixes: b31384fa5de3 ("Driver core: Unified device properties interface for platform firmware")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/acpi/property.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Paolo
-
-> "failures" that are squashed and never propagated to userspace (PV
-> features tend to do this), page splits, etc.
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index 1144c2368d89..7d7f4974c5b1 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -1189,8 +1189,6 @@ static int acpi_data_prop_read(const struct acpi_device_data *data,
+ 			return -EOVERFLOW;
+ 		break;
+ 	}
+-	if (nval == 0)
+-		return -EINVAL;
+ 
+ 	if (obj->type == ACPI_TYPE_BUFFER) {
+ 		if (proptype != DEV_PROP_U8)
+@@ -1214,9 +1212,10 @@ static int acpi_data_prop_read(const struct acpi_device_data *data,
+ 		ret = acpi_copy_property_array_uint(items, (u64 *)val, nval);
+ 		break;
+ 	case DEV_PROP_STRING:
+-		ret = acpi_copy_property_array_string(
+-			items, (char **)val,
+-			min_t(u32, nval, obj->package.count));
++		nval = min_t(u32, nval, obj->package.count);
++		if (nval == 0)
++			return -ENODATA;
++		ret = acpi_copy_property_array_string(items, (char **)val, nval);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
