@@ -1,74 +1,131 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4E0150980
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81D620DD5C;
+	Mon,  3 Feb 2025 19:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738610706; cv=none; b=avFFwHoavvlebQF52ntw0pp0Fh2cHXkENRGCzfQsgiz17bNFngHOJxPK8Rla0/bjXsQnIXvldoJQ87wS25XkaXginFWXpa6O4W+f9PJsp64WsEr2cMkZe6EHPhJR72CgsPsbUF0tgvB1+/xdqXeAmGrLNvBqH1iOQ+uoWO+uK0o=
+	t=1738610711; cv=none; b=JYTGRJhsgPT1ldnbUk2sbVp6AQRpbgLXaUvpW4fCE92ZzGHNu8S20zheoLGglcCMb4N2vWLKh+c+S7UJ/qDUaPt+xJ/Vt35azL4ap5EmEX5K5yotYs1M3M9YXAxexxzPVFyHErfIvtfCcZZPSdNY1Xxff7aAVB98w1fUPeUzjCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738610706; c=relaxed/simple;
-	bh=nH8Wz0h1IYXVBNjfVUZX39iep3FLojNXQ38mfec6ptE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=V1rUmlFR8kVEIKF3MnBhtXdgxtO7mlnv3dyFJURMdRXJoiA6GM7lNShq9JLzvhbD5AEuhVt9/tR9zrX+88SzVdLB94GreBX7G6AlKUdcBBLbYTlG2FIoNfF3YBcK9yVALFRJC9ScXuK3InwiRtRl4CTMq7TSZ540baCq3+zJ7tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ce8dadfb67so25196135ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:25:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738610703; x=1739215503;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lhI5OIpMPH2QnJaYcIqJZFy+BM0BfyBikG6nAIf8x/g=;
-        b=LR/AVTK1LVP4L1k+72JQBmb0AtOMx3ASIEeS1T/6vqo4T8VOpCmB7n3OD96J/34DTC
-         hiHL8oESNdEUKq4BwJVvsVnhOTZKantuLGz3TlmQjPsiFBFVJSAzp2RaC7VygRkjXdeU
-         1fKTeDHUj+uOjOCx9eGwJfFL2igcrxxo7VUQWluNUnaLHaZioCz5Z6ErU7i9GFZUUiwB
-         QH4i5Q4XmGH6DGV1rUs5jSk6LAHA/Ng5NSy8V8qOKDF2KfagOpTl0YmBTLGXQtapd9FO
-         xAlKpGvYMP1VJCMM+p1TH1x/aywFmqpJQCk/Uu+lIcknuBlygZ1PhuPXBl58EN1JNnFB
-         r4FA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqlxfMDZpgMLLfGiWoPz5nP8BEqOF8dddTFkWYu2P4lB3sayeYEuInJVC+DTnqMmkxxdqzk5L31jp0dj8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoSS1tH/JolwfgQxQsuI+FMxb14XwCon9M+Hj3DY4ypsS1kl8v
-	uvy2zGFfGP9evNJq8qf+IClKoba96FY9veJ3oVmJQEZaEoIgzauOmBSa0xq1VA5aL7kLaT0Wcbj
-	uLpDkPP7+8gx1+C+zIOA78VHwvkcOYHO+q20Eo2Z9+9EttQUZkLgR2CY=
-X-Google-Smtp-Source: AGHT+IHwY2iLqAbIe5jLZh1gn1a2tBOXNrpNK+9CnnJ9ALI7AoOC+WThdnVTKSoTTxLcTCp4ffNsncLkC8XMRSlNtlSZ9C1ZpolU
+	s=arc-20240116; t=1738610711; c=relaxed/simple;
+	bh=0qC34cH+uetK9hFY0GwPJRDWU8GDP3YxGpAkwzbpygY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f0tWwuZzuBhFbd0kuD7AWYuFQkb1r8pgRjQ6JhVKqdgkSPA9m8zrs3QyWhkjsfc5LLWX9AWuuxW8I2SWr0qvIAJ5VhNTBstLTSL2u2ArC9EU4Sc9/iJzbURpAut+atnvdI7GMloePKhX6j3JiCTFmwUkg/aYflLuQlEu9c8d29U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YOTkN2da; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YOTkN2da"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B02EC4CED2;
+	Mon,  3 Feb 2025 19:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738610710;
+	bh=0qC34cH+uetK9hFY0GwPJRDWU8GDP3YxGpAkwzbpygY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YOTkN2daJAqDFgIByGpH81Dbhpbtka1+WAYqYeAH+bP27YQjIfgMa2GjDeGTqSMLz
+	 Mdp9dlP4dTwzvHR5brDt4XPG4FnVy3SM7ZuRQlA7qNxQ1UloaLLCRyRTVxJBnvwsfL
+	 pfHjS/TMiL6sGvBkByXqYWseCEKEAwyjFObvFO2M=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Subject: [PATCH] perf/core: move all of the pmu devices into their own location
+Date: Mon,  3 Feb 2025 20:25:05 +0100
+Message-ID: <2025020304-chip-trench-4e56@gregkh>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c08:b0:3cf:cac9:b02d with SMTP id
- e9e14a558f8ab-3cffe3e5db3mr188410605ab.8.1738610703570; Mon, 03 Feb 2025
- 11:25:03 -0800 (PST)
-Date: Mon, 03 Feb 2025 11:25:03 -0800
-In-Reply-To: <IA0PR11MB71859E012D110DCD92D7B179F8F52@IA0PR11MB7185.namprd11.prod.outlook.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a1180f.050a0220.163cdc.004f.GAE@google.com>
-Subject: Re: [syzbot] [mm?] kernel BUG in alloc_hugetlb_folio_reserve
-From: syzbot <syzbot+a504cb5bae4fe117ba94@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, david@redhat.com, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, muchun.song@linux.dev, steven.sistare@oracle.com, 
-	syzkaller-bugs@googlegroups.com, vivek.kasireddy@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+In sysfs, for some reason, all pmu devices seem to show up in the "root"
+of /sys/devices/ making for a confusing mess as these devices are not
+really at the root of the system at all.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Create a fake root devices, "pmu_bus" and place them all under there if
+they do not already have a parent device set, cleaning up sysfs to look
+more sane.
 
-Reported-by: syzbot+a504cb5bae4fe117ba94@syzkaller.appspotmail.com
-Tested-by: syzbot+a504cb5bae4fe117ba94@syzkaller.appspotmail.com
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
 
-Tested on:
+Note, if you all don't like "pmu_bus" for the name, that's fine, please
+let me know and I can rename it to something else, but it should be
+something to get these objects out of the root sysfs directory.
 
-commit:         d1302efc selftests/udmabuf: add a test to pin first be..
-git tree:       https://gitlab.freedesktop.org/Vivek/drm-tip.git syzbot_fix_htlb_reserve_v2_rebase
-console output: https://syzkaller.appspot.com/x/log.txt?x=114b75f8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3ed8e2f9a4233102
-dashboard link: https://syzkaller.appspot.com/bug?extid=a504cb5bae4fe117ba94
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+ kernel/events/core.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index bcb09e011e9e..786537faed2c 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11767,6 +11767,11 @@ static const struct attribute_group *pmu_dev_groups[] = {
+ };
+ 
+ static int pmu_bus_running;
++
++static struct device pmu_bus_root = {
++	.init_name	= "pmu_bus",
++};
++
+ static struct bus_type pmu_bus = {
+ 	.name		= "event_source",
+ 	.dev_groups	= pmu_dev_groups,
+@@ -11790,7 +11795,10 @@ static int pmu_dev_alloc(struct pmu *pmu)
+ 
+ 	dev_set_drvdata(pmu->dev, pmu);
+ 	pmu->dev->bus = &pmu_bus;
+-	pmu->dev->parent = pmu->parent;
++	if (pmu->parent)
++		pmu->dev->parent = pmu->parent;
++	else
++		pmu->dev->parent = &pmu_bus_root;
+ 	pmu->dev->release = pmu_dev_release;
+ 
+ 	ret = dev_set_name(pmu->dev, "%s", pmu->name);
+@@ -14232,9 +14240,17 @@ static int __init perf_event_sysfs_init(void)
+ 
+ 	mutex_lock(&pmus_lock);
+ 
+-	ret = bus_register(&pmu_bus);
+-	if (ret)
++	ret = device_register(&pmu_bus_root);
++	if (ret) {
++		put_device(&pmu_bus_root);
+ 		goto unlock;
++	}
++
++	ret = bus_register(&pmu_bus);
++	if (ret) {
++		device_unregister(&pmu_bus_root);
++		goto unlock;
++	}
+ 
+ 	list_for_each_entry(pmu, &pmus, entry) {
+ 		if (pmu->dev)
+-- 
+2.48.1
+
