@@ -1,269 +1,178 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1AE2046B3;
-	Mon,  3 Feb 2025 12:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2698202C21
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 12:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738585001; cv=none; b=BFITtVSDTsqIHPos0kXT17nIMS5sPL0aKZLVSaGa8Nq6s8ACICyH9GUaWMF3ND3wbXZwHlKJz93Kv34XmmiUOflbkvi7IIMEfNOBaB89zbUyBGuFXjIG2lzLfZfFemxEKrFyQTh+YDWB4NIRMsqQahenbfK6JJiejKxoXW+0p9s=
+	t=1738585069; cv=none; b=a9P9dnN4At0abrK828Emtmf152S4FeLXbT8obAUZn/oBkPoHsWzxYqqbsXqJDsMWRwh8nBxOqKFYJvfBLLQcXiuGzLKzt6dew8ZygGs1292gcvhQzLtTeFlrUJPJDnSJl6uXsuQqaht5SIRg9S1rCnRk+sk+cMJkVK7R5aGR/3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738585001; c=relaxed/simple;
-	bh=YuQbtxF/0uj/9v3z5S3Lkwr3pWSd+re9V4XEsn+KtY0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hs/1vIZaM9KD6Aebyt2QSc5BUCgyaJ8GhwR4bh1WXHTCLaaogswMb6Z1z7aoKj7XclfpKINIqR5GhmLucgN7xVwS/3oJhar/zf9Uv26bp+1aRpRQMzrih6Q3gIPlxrosmeRdIJpXbeY4h8/4vtGgXMa0/L5iO/z7pVBY9nhuax0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LaWByffv; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738585069; c=relaxed/simple;
+	bh=X+a2j3NEjktDX4PEe6BGw5N9d3k0DRBuEpZ6PnUMGdw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lESUKXJcFoCMn7gbQBVpCK8dLagKNkMyTmd0fI1ObQSa7sbHsegjva0jMP9ipyShg18cAGecEJD5Us23yglJNRY1w0LcBJrMssAM1BfyMEx1m7dyiePtvcC9GutwsjMHI0T8iq/oNWLgF1qiPdwmPZ8BfuiUqOusJtCLJ5oC9ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c1eyW+70; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LaWByffv"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4361f65ca01so44842305e9.1;
-        Mon, 03 Feb 2025 04:16:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738584997; x=1739189797; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dtc0ZCnm8/eC9KODTwvCTS4jrazLi7CE3FYwUcCkFj4=;
-        b=LaWByffvVh+mntuMVu+Y027LPeGxNhS2HGoiSbYCGiZUY6yuioo5RIAB5mPsXsqvgp
-         35S3U8eOhHQ8BbQkpEmG6f8wozEl2k5dCgzatihO5ktVAFBXS9l069/BsoNRaNqicCW6
-         1tdkSicPMk3zv13weAcZDOPvkOkYjsZp94ED44VqJYsraxosoDD2iIfOsnZQ3H/stUnv
-         zoYVLOo5RWDGcD3fNHw+uFS9O5QC3MyENpi55MG7vKZK7Av2JLKqKUYJnOdZbpfFv3bd
-         OfXE4RtTOLWoeFvN7x6CjEiKG2ACSb/Ff088PcL0yy/z8O4s1IR796jmlegVCwIrkvoZ
-         6z6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738584997; x=1739189797;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Dtc0ZCnm8/eC9KODTwvCTS4jrazLi7CE3FYwUcCkFj4=;
-        b=MWqUqOUYbOsy7lKCz7P6zUYp4EwXtRi1prrYfFuh0pdZ9biPrJbAOeqlYnv7nnYdIU
-         u5q0NILDeumXe+8ijPiLjw8AoHth6kY5fI5oo62RDWhK9IJ89AezRDj9J9K9aSu5Xyhl
-         Kv7CMxywFnVpHatb13MErw01sTZOVA0yfQcv8baqn03nAx68Ws30Wfg2IosB3/30leEZ
-         utgmZAN5FGghkvrkdx28RJ4u4AN+mScuOOB+a9D1XcFtzioft9OmbvMdXD1yT0Z8miu1
-         LpBgcWVtvGF7HVWrDT5PIKuGsoppW41VVQaYZl86W33QMSMa5XCUzyGfCxMGjPXX9/A6
-         nVzA==
-X-Forwarded-Encrypted: i=1; AJvYcCUN8o+pqqbPP38Ke7IfTNDvM2d1ZMo3NNMzbddnEQuaZpreX3+SOfc1Ik6X3CKaLwVOq+Qq6NNWM/A=@vger.kernel.org, AJvYcCXX9Xphn15e/fvqh0jTGVZugduKch5Zy0U7O1mXHbB0GzmbmJOHcLJCCDb/G/t4eQZ2SXxkwxua5e3uLq6w@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4nDL0lkoNP3WYdVuajMyjKG6bsZOzCl9f//W/53jAGYyRNFXu
-	httGLnl6SfesA2vczmCqfjO5GBOM86fN/lG+vlkr4VeCgAmSbwhM0tDf5w==
-X-Gm-Gg: ASbGncugxpcJgwyGzUPU/IrzohSSrZmQgEqjmAxjrUAf1fnZ9CFIgpmqpnJ1e8+ix0b
-	WhzsLfp52lMGjfCNlMNU8n/xq66+Cf635ReVRoUv8RYjwRMOuD6J2pyi5n0TEUD+9djrIb7dEu0
-	jybzTdToqqLEEEDccuW/81qb/4lujEOdNKZSVgDN9BgSucZNtjfq0TGis7AGG8yYDzP9prQMtQ3
-	9n0PC664FqVljfzBT9b4BJKnkc+LDfx6zNnU7mfFvqTVhHvD81e1su2Uivfb5bbNrAt8UGV9f/B
-	xX769tsuUx+aIQdFf7RDPT4Fk2o=
-X-Google-Smtp-Source: AGHT+IHhPpDkiEh0xogPX+coK9qZVwBFg88jC2rMPsY829UGLfoZBxcyKdx78bZYRaao/0sxhghMvA==
-X-Received: by 2002:a05:600c:3149:b0:438:c18c:5ad8 with SMTP id 5b1f17b1804b1-438dc434e10mr190503235e9.31.1738584997191;
-        Mon, 03 Feb 2025 04:16:37 -0800 (PST)
-Received: from demon-pc.localdomain ([86.121.79.71])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cfa3dsm12805326f8f.93.2025.02.03.04.16.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 04:16:36 -0800 (PST)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: 
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH 3/3] i2c: atr: add passthrough flag
-Date: Mon,  3 Feb 2025 14:15:17 +0200
-Message-ID: <20250203121629.2027871-4-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250203121629.2027871-1-demonsingur@gmail.com>
-References: <20250203121629.2027871-1-demonsingur@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c1eyW+70"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738585068; x=1770121068;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=X+a2j3NEjktDX4PEe6BGw5N9d3k0DRBuEpZ6PnUMGdw=;
+  b=c1eyW+70RpDwHEqrzXCMXgIG/bP2c3Y2XIDxIUIubcN7ljuZ6YvQakGC
+   Ek301y725WibTehMaQQG8bUVTS3Sp0g/jDmUOd9tgryIIgrvwXcZmyHCV
+   +U+I4VCYC8gcdq3vSsBcuonbnip+0VGEFnErpYo+K+qctH4NKfzMAm4wL
+   z5lGYlcGJAyXR3Kt6zvbcXnmOJ3oIAFINn68pp2K54Pzb7C/YgZY9m7Hz
+   SJCMwgVIgA/7Er0Pxl2qacZk+Jf7U46PeZbNzJq2K2EYa5Nj4hwV43Wtj
+   sNd7Amom5MSaCyhtG5BXomnJXf0Zoo+5SdfZtLAXXu7KhOkzpCr8O+Pk3
+   w==;
+X-CSE-ConnectionGUID: pcr1I6SHSjO4YOfadd9iRQ==
+X-CSE-MsgGUID: GGIMtKRaTIWvcMUUcyDCLg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="56502911"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="56502911"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:17:47 -0800
+X-CSE-ConnectionGUID: c869K6U/RNyLmyj8qBxR4w==
+X-CSE-MsgGUID: VHBYPrGYTf61rZiMDGlmxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="115279016"
+Received: from oandoniu-mobl3.ger.corp.intel.com (HELO [10.245.245.228]) ([10.245.245.228])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:17:43 -0800
+Message-ID: <bb0d15b3-9e68-478d-9eb0-86814e60eb6f@intel.com>
+Date: Mon, 3 Feb 2025 12:17:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] drm/gpuvm: Add support for single-page-filled
+ mappings
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+ Liviu Dudau <liviu.dudau@arm.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, asahi@lists.linux.dev,
+ Asahi Lina <lina@asahilina.net>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Steven Price <steven.price@arm.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, akash.goel@arm.com
+References: <20250202-gpuvm-single-page-v1-0-8cbd44fdcbd4@asahilina.net>
+ <Z5-_O8vkCO0LXcl7@pollux.localdomain> <20250203102153.145229e0@collabora.com>
+ <Z6CnSZz_Dm3YpZbx@e110455-lin.cambridge.arm.com>
+ <20250203131252.71a180ea@collabora.com>
+Content-Language: en-GB
+From: Matthew Auld <matthew.auld@intel.com>
+In-Reply-To: <20250203131252.71a180ea@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Some I2C ATRs can have other I2C ATRs as children. The I2C messages of
-the child ATRs need to be forwarded as-is since the parent I2C ATR can
-only do address remapping for the direct children.
+On 03/02/2025 12:12, Boris Brezillon wrote:
+> On Mon, 3 Feb 2025 11:23:53 +0000
+> Liviu Dudau <liviu.dudau@arm.com> wrote:
+> 
+>> On Mon, Feb 03, 2025 at 10:21:53AM +0100, Boris Brezillon wrote:
+>>> +Akash with whom we've been discussing adding a 'REPEAT' mode to
+>>> drm_gpuvm/panthor.
+>>>
+>>> On Sun, 2 Feb 2025 19:53:47 +0100
+>>> Danilo Krummrich <dakr@kernel.org> wrote:
+>>>    
+>>>> Hi Lina,
+>>>>
+>>>> On Sun, Feb 02, 2025 at 10:34:49PM +0900, Asahi Lina wrote:
+>>>>> Some hardware requires dummy page mappings to efficiently implement
+>>>>> Vulkan sparse features. These mappings consist of the same physical
+>>>>> memory page, repeated for a large range of address space (e.g. 16GiB).
+>>>>>
+>>>>> Add support for this to drm_gpuvm. Currently, drm_gpuvm expects BO
+>>>>> ranges to correspond 1:1 to virtual memory ranges that are mapped, and
+>>>>> does math on the BO offset accordingly. To make single page mappings
+>>>>> work, we need a way to turn off that math, keeping the BO offset always
+>>>>> constant and pointing to the same page (typically BO offset 0).
+>>>>>
+>>>>> To make this work, we need to handle all the corner cases when these
+>>>>> mappings intersect with regular mappings. The rules are simply to never
+>>>>> mix or merge a "regular" mapping with a single page mapping.
+>>>>>
+>>>>> drm_gpuvm has support for a flags field in drm_gpuva objects. This is
+>>>>> normally managed by drivers directly. We can introduce a
+>>>>> DRM_GPUVA_SINGLE_PAGE flag to handle this. However, to make it work,
+>>>>> sm_map and friends need to know ahead of time whether the new mapping is
+>>>>> a single page mapping or not. Therefore, we need to add an argument to
+>>>>> these functions so drivers can provide the flags to be filled into
+>>>>> drm_gpuva.flags.
+>>>>>
+>>>>> These changes should not affect any existing drivers that use drm_gpuvm
+>>>>> other than the API change:
+>>>>>
+>>>>> - imagination: Does not use flags at all
+>>>>> - nouveau: Only uses drm_gpuva_invalidate(), which is only called on
+>>>>>    existing drm_gpuva objects (after the map steps)
+>>>>> - panthor: Does not use flags at all
+>>>>> - xe: Does not use drm_gpuva_init_from_op() or
+>>>>>    drm_gpuva_remap()/drm_gpuva_map() (which call it). This means that the
+>>>>> flags field of the gpuva object is managed by the driver only, so these
+>>>>> changes cannot clobber it.
+>>>>>
+>>>>> Note that the way this is implemented, drm_gpuvm does not need to know
+>>>>> the GPU page size. It only has to never do math on the BO offset to meet
+>>>>> the requirements.
+>>>>>
+>>>>> I suspect that after this change there could be some cleanup possible in
+>>>>> the xe driver (which right now passes flags around in various
+>>>>> driver-specific ways from the map step through to drm_gpuva objects),
+>>>>> but I'll leave that to the Xe folks.
+>>>>>
+>>>>> Signed-off-by: Asahi Lina <lina@asahilina.net>
+>>>>> ---
+>>>>> Asahi Lina (4):
+>>>>>        drm/gpuvm: Add a flags argument to drm_gpuvm_sm_map[_*]
+>>>>>        drm/gpuvm: Plumb through flags into drm_gpuva_op_map
+>>>>>        drm/gpuvm: Add DRM_GPUVA_SINGLE_PAGE flag and logic
+>>>>>        drm/gpuvm: Plumb through flags into drm_gpuva_init
+>>>>
+>>>> Without looking into any details yet:
+>>>>
+>>>> This is a bit of tricky one, since we're not even close to having a user for
+>>>> this new feature upstream yet, are we?
+>>>
+>>> Actually, we would be interesting in having this feature hooked up in
+>>> panthor. One use case we have is Vulkan sparse bindings, of course. But
+>>> we also have cases where we need to map a dummy page repeatedly on the
+>>> FW side. The approach we've been considering is slightly different:
+>>> pass a DRM_GPUVA_REPEAT_FLAG along with GEM range, so we can repeat a
+>>> range of the GEM (see the below diff, which is completely untested by
+>>> the way), but I think we'd be fine with this SINGLE_PAGE flag.
+>>
+>> Unless I've misunderstood the intent completely, it looks like Xe also wants
+>> something similar although they call it CPU_ADDR_MIRROR for some reason:
+>>
+>> https://lore.kernel.org/r/20250129195212.745731-9-matthew.brost@intel.com
+> 
+> At first glance, it doesn't seem related. The Xe stuff looks more like
+> an alloc-on-fault mechanism. SINGLE_PAGE is about mapping a dummy page
+> repeatedly over a virtual address range so that sparse Vulkan images
+> never get a fault when an unbound image region is accessed.
 
-In the case of GMSL, the deserializer I2C ATR actually doesn't have I2C
-address remapping hardware capabilities, but it is able to select which
-GMSL link to talk to, allowing it to change the address of the
-serializer.
+Yeah, the CPU_ADDR_MIRROR is for upcoming svm stuff and not related. I 
+believe in xe the sparse/repeat stuff in this series is rather done 
+using a special HW feature called "NULL page", which is just a bit you 
+can set in the pte (can also use huge pages) that creates a special 
+mapping that doesn't actually point to any real memory underneath, but 
+when doing a read it will always return zeroes and any writes to it will 
+be dropped by the HW.
 
-The child ATRs need to have their alias pools defined in such a way to
-prevent overlapping addresses between them, but there's no way around
-this without orchestration between multiple ATR instances.
-
-To allow for this use-case, add a flag that allows unmapped addresses
-to be passed through, since they are already remapped by the child ATRs,
-and disables dynamic remapping, since devices that need passthrough
-messages to be forwarded as-is, can only handle remapping for their
-direct children.
-
-There's no case where a non-remapped address will hit the parent ATR.
-
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
----
- drivers/i2c/i2c-atr.c   | 26 ++++++++++++++++++--------
- include/linux/i2c-atr.h | 20 +++++++++++++++++---
- 2 files changed, 35 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
-index 13f7e07fd8e87..5f0e8f1cf69f7 100644
---- a/drivers/i2c/i2c-atr.c
-+++ b/drivers/i2c/i2c-atr.c
-@@ -106,6 +106,7 @@ struct i2c_atr_chan {
-  * @lock:      Lock for the I2C bus segment (see &struct i2c_lock_operations)
-  * @lock_key:  Lock key for @lock
-  * @max_adapters: Maximum number of adapters this I2C ATR can have
-+ * @flags:     Flags for ATR
-  * @alias_pool: Optional common pool of available client aliases
-  * @i2c_nb:    Notifier for remote client add & del events
-  * @adapter:   Array of adapters
-@@ -122,6 +123,7 @@ struct i2c_atr {
- 	struct mutex lock;
- 	struct lock_class_key lock_key;
- 	int max_adapters;
-+	u32 flags;
- 
- 	struct i2c_atr_alias_pool *alias_pool;
- 
-@@ -241,7 +243,7 @@ static void i2c_atr_release_alias(struct i2c_atr_alias_pool *alias_pool, u16 ali
- 
- /* Must be called with alias_pairs_lock held */
- static struct i2c_atr_alias_pair *
--i2c_atr_find_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
-+i2c_atr_find_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr, bool new_addr)
- {
- 	struct i2c_atr *atr = chan->atr;
- 	struct i2c_atr_alias_pair *c2a;
-@@ -260,6 +262,9 @@ i2c_atr_find_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
- 
- 	ret = i2c_atr_reserve_alias(chan->alias_pool);
- 	if (ret < 0) {
-+		if (!new_addr && (atr->flags & I2C_ATR_PASSTHROUGH))
-+			return NULL;
-+
- 		// If no free aliases are left, replace an existing one
- 		if (unlikely(list_empty(alias_pairs)))
- 			return NULL;
-@@ -335,9 +340,12 @@ static int i2c_atr_map_msgs(struct i2c_atr_chan *chan, struct i2c_msg *msgs,
- 	for (i = 0; i < num; i++) {
- 		chan->orig_addrs[i] = msgs[i].addr;
- 
--		c2a = i2c_atr_find_mapping_by_addr(chan, msgs[i].addr);
-+		c2a = i2c_atr_find_mapping_by_addr(chan, msgs[i].addr, false);
- 
- 		if (!c2a) {
-+			if (atr->flags & I2C_ATR_PASSTHROUGH)
-+				continue;
-+
- 			dev_err(atr->dev, "client 0x%02x not mapped!\n",
- 				msgs[i].addr);
- 
-@@ -428,7 +436,7 @@ static int i2c_atr_smbus_xfer(struct i2c_adapter *adap, u16 addr,
- 
- 	mutex_lock(&chan->alias_pairs_lock);
- 
--	c2a = i2c_atr_find_mapping_by_addr(chan, addr);
-+	c2a = i2c_atr_find_mapping_by_addr(chan, addr, false);
- 
- 	if (!c2a) {
- 		dev_err(atr->dev, "client 0x%02x not mapped!\n", addr);
-@@ -491,7 +499,7 @@ static int i2c_atr_attach_addr(struct i2c_adapter *adapter,
- 
- 	mutex_lock(&chan->alias_pairs_lock);
- 
--	c2a = i2c_atr_find_mapping_by_addr(chan, addr);
-+	c2a = i2c_atr_find_mapping_by_addr(chan, addr, true);
- 	if (!c2a) {
- 		dev_err(atr->dev, "failed to find a free alias\n");
- 		mutex_unlock(&chan->alias_pairs_lock);
-@@ -517,7 +525,7 @@ static void i2c_atr_detach_addr(struct i2c_adapter *adapter,
- 
- 	mutex_lock(&chan->alias_pairs_lock);
- 
--	c2a = i2c_atr_find_mapping_by_addr(chan, addr);
-+	c2a = i2c_atr_find_mapping_by_addr(chan, addr, false);
- 	if (!c2a) {
- 		 /* This should never happen */
- 		dev_warn(atr->dev, "Unable to find address mapping\n");
-@@ -650,8 +658,9 @@ static int i2c_atr_parse_alias_pool(struct i2c_atr *atr)
- 	return ret;
- }
- 
--struct i2c_atr *i2c_atr_new(struct i2c_adapter *parent, struct device *dev,
--			    const struct i2c_atr_ops *ops, int max_adapters)
-+struct i2c_atr *i2c_atr_new_flags(struct i2c_adapter *parent, struct device *dev,
-+				  const struct i2c_atr_ops *ops, int max_adapters,
-+				  u32 flags)
- {
- 	struct i2c_atr *atr;
- 	int ret;
-@@ -673,6 +682,7 @@ struct i2c_atr *i2c_atr_new(struct i2c_adapter *parent, struct device *dev,
- 	atr->dev = dev;
- 	atr->ops = ops;
- 	atr->max_adapters = max_adapters;
-+	atr->flags = flags;
- 
- 	if (parent->algo->master_xfer)
- 		atr->algo.master_xfer = i2c_atr_master_xfer;
-@@ -700,7 +710,7 @@ struct i2c_atr *i2c_atr_new(struct i2c_adapter *parent, struct device *dev,
- 
- 	return ERR_PTR(ret);
- }
--EXPORT_SYMBOL_NS_GPL(i2c_atr_new, "I2C_ATR");
-+EXPORT_SYMBOL_NS_GPL(i2c_atr_new_flags, "I2C_ATR");
- 
- void i2c_atr_delete(struct i2c_atr *atr)
- {
-diff --git a/include/linux/i2c-atr.h b/include/linux/i2c-atr.h
-index 1c3a5bcd939fc..116067b5b9ba6 100644
---- a/include/linux/i2c-atr.h
-+++ b/include/linux/i2c-atr.h
-@@ -18,6 +18,15 @@ struct device;
- struct fwnode_handle;
- struct i2c_atr;
- 
-+/**
-+ * enum i2c_atr_flags - Flags for an I2C ATR driver
-+ *
-+ * @I2C_ATR_PASSTHROUGH: Allow unmapped incoming addresses to pass through
-+ */
-+enum i2c_atr_flags {
-+	I2C_ATR_PASSTHROUGH = BIT(0),
-+};
-+
- /**
-  * struct i2c_atr_ops - Callbacks from ATR to the device driver.
-  * @attach_addr: Notify the driver of a new device connected on a child
-@@ -60,11 +69,12 @@ struct i2c_atr_adap_desc {
- };
- 
- /**
-- * i2c_atr_new() - Allocate and initialize an I2C ATR helper.
-+ * i2c_atr_new_flags() - Allocate and initialize an I2C ATR helper.
-  * @parent:       The parent (upstream) adapter
-  * @dev:          The device acting as an ATR
-  * @ops:          Driver-specific callbacks
-  * @max_adapters: Maximum number of child adapters
-+ * @flags:        Flags for ATR
-  *
-  * The new ATR helper is connected to the parent adapter but has no child
-  * adapters. Call i2c_atr_add_adapter() to add some.
-@@ -73,8 +83,12 @@ struct i2c_atr_adap_desc {
-  *
-  * Return: pointer to the new ATR helper object, or ERR_PTR
-  */
--struct i2c_atr *i2c_atr_new(struct i2c_adapter *parent, struct device *dev,
--			    const struct i2c_atr_ops *ops, int max_adapters);
-+struct i2c_atr *i2c_atr_new_flags(struct i2c_adapter *parent, struct device *dev,
-+				  const struct i2c_atr_ops *ops, int max_adapters,
-+				  u32 flags);
-+
-+#define i2c_atr_new(parent, dev, ops, max_adapters) \
-+	i2c_atr_new_flags(parent, dev, ops, max_adapters, 0)
- 
- /**
-  * i2c_atr_delete - Delete an I2C ATR helper.
--- 
-2.48.1
 
