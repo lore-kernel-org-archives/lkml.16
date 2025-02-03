@@ -1,64 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E215288B1;
-	Mon,  3 Feb 2025 09:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99871D5AA7;
+	Mon,  3 Feb 2025 09:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738574600; cv=none; b=sy4jLejYR1FK9dSBkytGARtj8Jkdc+l7OaOp7XmSwP3PIxFYA0cRjXssXdT9lEpN6iiOHgYI0RAzX/3rR4cUGWtQ/hy99+K9Aj56pXWJ4M50SpBNK3zCOe/KChc/DNjs+VUnChsIJi2pQ18fl7gIoJf3qPcUMNhABgKBPvCsXA0=
+	t=1738574633; cv=none; b=pdTUKHwEwgDczupcU1oTe6l4nRFrvfZ80EU06ojlEzBZ0FCBb/d0x4bYJbdP9A/uDazrrxxLBcFCPjRfxcOEmg+g5lTMPDfIM1NcGAqQpwHPBIp7RW2sprYI+QTrUqswPqB845Rf+x/sN415CKcrQNBosyK/X2T9bix2KitoqC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738574600; c=relaxed/simple;
-	bh=VbFDT5cjrVHHigACBdyZriVMCPiqVugmKlgYJpkK1oY=;
+	s=arc-20240116; t=1738574633; c=relaxed/simple;
+	bh=dDQ5bXMFvIraDFaSI7JVfQHoVaBkW/EmdurEQQ/tck8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WN5nuo2/yU7lcEcFBWdJiAJhEwAVIIj9JlVHXLnRedLj0Cf9A/wTqfOWgRPObpVzIPO/b374qi/6gooOd3pROxl5issNctHnlAMOBAAWLEVii5YJIGwMP3aKWO9kFBS4I1LjWcZETFmGLYtXFKhvsGhkCHWEhi06LWsPTpKoz5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C2+ljKe0; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rlsOeKSpIj2Iup6A9ES0r5bi5odJtv23NzogyPkREhGrdX009bQJ09EQFze2xUadvbOv8TSJ4J5DfCrsnClEjsjAVvKfF1PbA4lPCGVdiN2wCjam4UAJoHHhdlXASuw5cuvm7tM5A6DgAFXccvfDiLvwDrq6G30nUb+w0+XJU94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=TZW91go4; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C2+ljKe0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738574599; x=1770110599;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VbFDT5cjrVHHigACBdyZriVMCPiqVugmKlgYJpkK1oY=;
-  b=C2+ljKe0dwlck0yytXn8XKas3E4t8ZS5PVKukDGp2dkPUn4vhyThdIvU
-   M8YCd61DpyAoJHQsV5AJK6P27a74R5Qv6Sbz9U16gKkodpx1HFMb48AKU
-   4u5Fn/gBuOIHtlT7VV+ayJrfUoZB0CcGUU0ze1MxKxGCoGeo26YQ06gQX
-   OIToHuyCsSKrz38DFX26aFiypyPM07R9gwE6Gh79YDYR8dG7ahejlgsak
-   xed66hzNynrAPMz07GQVDl1U7Tbt1kIn3PHn9U8dq9ZFI6eWlLpVqY/dP
-   os+84bV7Ng20rcX2t4R84jXOLCC3N5CxdMoQ6o2urHWN7T2l8jfoz1dPg
-   A==;
-X-CSE-ConnectionGUID: o44FPI0KSU68Es3tHDcOLw==
-X-CSE-MsgGUID: /7IfYiXoQK+qC771vjkIxQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="42715525"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="42715525"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:23:19 -0800
-X-CSE-ConnectionGUID: m0M9MAp9R8OwBWrMZDL5xQ==
-X-CSE-MsgGUID: OLzlCXTAQ+uSHd8kFDcFBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="115209673"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:23:17 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id D417311F9C3;
-	Mon,  3 Feb 2025 11:23:14 +0200 (EET)
-Date: Mon, 3 Feb 2025 09:23:14 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Devarsh Thakkar <devarsht@ti.com>,
-	Jai Luthra <jai.luthra@ideasonboard.com>
-Subject: Re: [PATCH 07/19] media: i2c: ds90ub953: Speed-up I2C watchdog timer
-Message-ID: <Z6CLAtL160DEtPfz@kekkonen.localdomain>
-References: <20250110-ub9xx-improvements-v1-0-e0b9a1f644da@ideasonboard.com>
- <20250110-ub9xx-improvements-v1-7-e0b9a1f644da@ideasonboard.com>
- <Z4fDfQcnZiHC0Fms@kekkonen.localdomain>
- <7e034745-831a-4518-8c4e-003fa7773a57@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TZW91go4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=m5jmdUkGlxQxv9j6TR/kZFsFhMcHmh7F4KYY06PhH2s=; b=TZW91go4bW/NtbN3bRhNdp7b/o
+	82lAtW0CuXpeFbZGIS3tutxiyrMWjVgz0QWnNuC7z4TYzv1v0MnIVeOKu4hqQMVUhrCoO04yE4vyF
+	8dndEFNWReCrluOSBueXFs8zeQLrhk2zdLRWFopuQZJjIWIk5XQ40V3qQcqZp8Vuw9hJNFoGskmzQ
+	7rkwUl92OjOd2XE3dB5bYEiqdUqWxIzsT/pAivvc7LBgMu1eckXz8H2aR9aVeruutrdqoIn1X6Tip
+	Sdji9Uy5DFhCG/BtT8mXVuGehwXd3a4h/D4RzGihjQAH//+/VD41gyAe0qYA9PVz9bImo5jsHuYly
+	MWQIqLoQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41610)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tesfy-00082N-1c;
+	Mon, 03 Feb 2025 09:23:30 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tesfs-0000G4-2j;
+	Mon, 03 Feb 2025 09:23:24 +0000
+Date: Mon, 3 Feb 2025 09:23:24 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Guenter Roeck <linux@roeck-us.net>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Yanteng Si <si.yanteng@linux.dev>, Furong Xu <0x1207@gmail.com>,
+	Joao Pinto <Joao.Pinto@synopsys.com>, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v4 3/3] net: stmmac: Specify hardware capability
+ value when FIFO size isn't specified
+Message-ID: <Z6CLDJJ21MMml3cD@shell.armlinux.org.uk>
+References: <20250127013820.2941044-1-hayashi.kunihiko@socionext.com>
+ <20250127013820.2941044-4-hayashi.kunihiko@socionext.com>
+ <4e98f967-f636-46fb-9eca-d383b9495b86@roeck-us.net>
+ <Z56FmH968FUGkC5J@shell.armlinux.org.uk>
+ <905127b5-96c8-4866-8f69-d9d8a7091c99@socionext.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,80 +68,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7e034745-831a-4518-8c4e-003fa7773a57@ideasonboard.com>
+In-Reply-To: <905127b5-96c8-4866-8f69-d9d8a7091c99@socionext.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Moi,
-
-On Fri, Jan 24, 2025 at 03:19:32PM +0200, Tomi Valkeinen wrote:
-> Hi,
+On Mon, Feb 03, 2025 at 11:45:05AM +0900, Kunihiko Hayashi wrote:
+> Hi all,
 > 
-> On 15/01/2025 16:17, Sakari Ailus wrote:
-> > Moi,
-> > 
-> > On Fri, Jan 10, 2025 at 11:14:07AM +0200, Tomi Valkeinen wrote:
-> > > From: Jai Luthra <jai.luthra@ideasonboard.com>
+> On 2025/02/02 5:35, Russell King (Oracle) wrote:
+> > On Sat, Feb 01, 2025 at 11:14:41AM -0800, Guenter Roeck wrote:
+> > > Hi,
 > > > 
-> > > On the I2C bus for remote clients (sensors), by default the watchdog
-> > > timer expires in 1s. To allow for a quicker system bring-up time, TI
-> > > recommends to speed it up to 50us [1].
+> > > On Mon, Jan 27, 2025 at 10:38:20AM +0900, Kunihiko Hayashi wrote:
+> > > > When Tx/Rx FIFO size is not specified in advance, the driver checks if
+> > > > the value is zero and sets the hardware capability value in functions
+> > > > where that value is used.
+> > > > 
+> > > > Consolidate the check and settings into function stmmac_hw_init() and
+> > > > remove redundant other statements.
+> > > > 
+> > > > If FIFO size is zero and the hardware capability also doesn't have
+> > upper
+> > > > limit values, return with an error message.
+> > > > 
+> > > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > > > 
-> > > [1]: Section 7.3.1.1 - https://www.ti.com/lit/gpn/ds90ub953-q1
+> > > This patch breaks qemu's stmmac emulation, for example for
+> > > npcm750-evb. The error message is:
+> > > 	stmmaceth f0804000.eth: Can't specify Rx FIFO size
+> 
+> Sorry for inconvenience.
+> 
+> > Interesting. I looked at QEMU to see whether anything in the Debian
+> > stable version of QEMU might possibly have STMMAC emulation, but
+> > drew a blank... Even trying to find where in QEMU it emulates the
+> > STMMAC. I do see that it does include this, so maybe I can use that
+> > to test some of my stmmac changes. Thanks!
+> > 
+> > > The setup function called for the emulated hardware is
+> > dwmac1000_setup().
+> > > That function does not set the DMA rx or tx fifo size.
 > > > 
-> > > Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
-> > > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> > > ---
-> > >   drivers/media/i2c/ds90ub953.c | 11 +++++++++++
-> > >   1 file changed, 11 insertions(+)
+> > > At the same time, the rx and tx fifo size is not provided in the
+> > > devicetree file (nuvoton-npcm750.dtsi), so the failure is obvious.
 > > > 
-> > > diff --git a/drivers/media/i2c/ds90ub953.c b/drivers/media/i2c/ds90ub953.c
-> > > index 99a4852b9381..6c36980e8beb 100644
-> > > --- a/drivers/media/i2c/ds90ub953.c
-> > > +++ b/drivers/media/i2c/ds90ub953.c
-> > > @@ -54,6 +54,10 @@
-> > >   #define UB953_REG_CLKOUT_CTRL0			0x06
-> > >   #define UB953_REG_CLKOUT_CTRL1			0x07
-> > > +#define UB953_REG_I2C_CONTROL2			0x0a
-> > > +#define UB953_REG_I2C_CONTROL2_SDA_OUTPUT_SETUP_SHIFT	4
-> > > +#define UB953_REG_I2C_CONTROL2_BUS_SPEEDUP	BIT(1)
-> > > +
-> > >   #define UB953_REG_SCL_HIGH_TIME			0x0b
-> > >   #define UB953_REG_SCL_LOW_TIME			0x0c
-> > > @@ -1320,6 +1324,13 @@ static int ub953_hw_init(struct ub953_data *priv)
-> > >   	if (ret)
-> > >   		return ret;
-> > > +	v = 0;
-> > > +	v |= 1 << UB953_REG_I2C_CONTROL2_SDA_OUTPUT_SETUP_SHIFT;
+> > > I understand that the real hardware may be based on a more recent
+> > > version of the DWMAC IP which provides the DMA tx/rx fifo size, but
+> > > I do wonder: Are the benefits of this patch so substantial that it
+> > > warrants breaking the qemu emulation of this network interface >
+> > Please see my message sent a while back on an earlier revision of this
+> > patch series. I reviewed the stmmac driver for the fifo sizes and
+> > documented what I found.
 > > 
-> > BIT()? Or at least 1U <<< ...;.
+> > https://lore.kernel.org/r/Z4_ZilVFKacuAUE8@shell.armlinux.org.uk
+> > 
+> > To save clicking on the link, I'll reproduce the relevant part below.
+> > It appears that dwmac1000 has no way to specify the FIFO size, and
+> > thus would have priv->dma_cap.rx_fifo_size and
+> > priv->dma_cap.tx_fifo_size set to zero.
+> > 
+> > Given the responses, I'm now of the opinion that the patch series is
+> > wrong, and probably should be reverted - I never really understood
+> > the motivation why the series was necessary. It seemed to me to be a
+> > "wouldn't it be nice if" series rather than something that is
+> > functionally necessary.
+> > 
+> > 
+> > Here's the extract from my previous email:
+> > 
+> > Now looking at the defintions:
+> > 
+> > drivers/net/ethernet/stmicro/stmmac/dwmac4.h:#define GMAC_HW_RXFIFOSIZE
+> > GENMASK(4, 0)
+> > drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h:#define
+> > XGMAC_HWFEAT_RXFIFOSIZE GENMASK(4, 0)
+> > 
+> > So there's a 5-bit bitfield that describes the receive FIFO size for
+> > these two MACs. Then we have:
+> > 
+> > drivers/net/ethernet/stmicro/stmmac/common.h:#define
+> > DMA_HW_FEAT_RXFIFOSIZE    0x00080000       /* Rx FIFO > 2048 Bytes */
+> > 
+> > which is used here:
+> > 
+> > drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c:
+> > dma_cap->rxfifo_over_2048 = (hw_cap & DMA_HW_FEAT_RXFIFOSIZE) >> 19;
+> > 
+> > which is only used to print a Y/N value in a debugfs file, otherwise
+> > having no bearing on driver behaviour.
+> > 
+> > So, I suspect MACs other than xgmac2 or dwmac4 do not have the ability
+> > to describe the hardware FIFO sizes in hardware, thus why there's the
+> > override and no checking of what the platform provided - and doing so
+> > would break the driver. This is my interpretation from the code alone.
+> > 
 > 
-> It's a three-bit field, the value just happens to be 1. What's wrong with 1
-> << SHIFT?
+> The {tx,rx}_queus_to_use are referenced in stmmac_ethtool.c, stmmac_tc.c,
+> and stmmac_selftests.c as the number of queues, so I've thought that
+> these variables should not be non-zero.
 
-Shifting a signed value leads to the sign bit being undefined on some
-architectures.
+Huh? We're talking about {tx,rx}_fifo_size, not _queues_to_use.
 
+> However, currently the variables are allowed to be zero, so I understand
+> this patch 3/3 breaks on the chips that hasn't hardware capabilities.
 > 
-> > 
-> > > +	v |= UB953_REG_I2C_CONTROL2_BUS_SPEEDUP;
-> > > +	ret = ub953_write(priv, UB953_REG_I2C_CONTROL2, v, NULL);
-> > 
-> > I'd just do this without a temporary variable. If you prefer to keep it, do
-> > assign the first calculated value there first and remove the assignment to
-> > zero.
+> In hwif.c, stmmac_hw[] defines four patterns of hardwares:
 > 
-> I think we can do without.
+> "dwmac100"  .gmac=false, .gmac4=false, .xgmac=false, .get_hw_feature = NULL
+> "dwmac1000" .gmac=true,  .gmac4=false, .xgmac=false, .get_hw_feature = dwmac1000_get_hw_feature()
+> "dwmac4"    .gmac=false, .gmac4=true,  .xgmac=false, .get_hw_feature = dwmac4_get_hw_feature()
+> "dwxgmac2"  .gmac=false, .gmac4=false, .xgmac=true , .get_hw_feature = dwxgmac2_get_hw_feature()
 > 
-> > > +	if (ret)
-> > > +		return ret;
-> > 
-> > No need for this.
-> 
-> No, but it keeps the code structure consistent and allows easy future/debug
-> modifications.
+> As Russell said, the dwmac100 can't get the number of queues from the hardware
+> capability. And some environments (at least QEMU device that Guenter said)
+> seems the capability values are zero in spite of dwmac1000.
 
-Please still remove such redundancies.
+Huh? I mentioned dwmac1000, not dwmac100.
+
+> Since I can't test all of the device patterns, so I appreciate checking each
+> hardware and finding the issue.
+> 
+> The patch 3/3 includes some cleanup and code reduction, though, I think
+> it would be better to revert it once.
+
+I'm not sure you're discussing the same issue as the rest of us.
+You seem to be talking about a different pair of structure members
+(queues_to_use) whereas your patches and the problem at hand is with
+the changes made to {tx,rx}_fifo_size.
 
 -- 
-Terveisin,
-
-Sakari Ailus
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
