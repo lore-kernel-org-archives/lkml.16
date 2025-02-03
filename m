@@ -1,63 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21092204F82;
-	Mon,  3 Feb 2025 12:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421EE204F85;
+	Mon,  3 Feb 2025 12:48:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738586905; cv=none; b=E1I0VM5XbDAYUbT1/OEftkAeppei8TEdzM+LkxSFNOIf8R02yFDNm7KK5J6r5R/w0dYRM8onBkHiI70e4ecDMwmteiSZfS9agVw023eQJ7Gg1d5zbmhn0cBQQj7XOHTvEgFlek7v5wfPHGk9TIaCo8renBTyYkzLzHZdN11KddI=
+	t=1738586905; cv=none; b=ZvjfcawQekHvjcy2dOsrn4ikk0+EqUz91Nrlc64ZGdOeA9FZEWyDCN9AZmqatOBTTr6HBVDn46m59h2oQZozxtiTflFnld9zryILDsK1aqKY+G0L8niepI1Ty+L993eFPFqRSmS9sAK62xQN9A4uKwxb2vyxaZkqhPjbEwiRquU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738586905; c=relaxed/simple;
-	bh=WIUm3+LwImYx6n4WCijMJRe6Ir62MAPQW+vOEPw/8qM=;
+	bh=I57nZrOe/XGH2HJ5MimuEi4DfkxoICraiHHOG62nSM8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=kp6s4VT+P8/DzxzLSe1Zx0NeboIXstRuqaQGD6sqCV9UgKKhU++/VZV/J+Jn91F91bJMyBhHnFf586CrsvZUtogvNDnRrarbnR12cTcgkAgTkP0Kl4XqY5O7hpXfx+zlhCs3YJZ+HbyWJ93fu7iEp+zXWNJRtZVCVPr9KaAfIbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aA+iLX9W; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r0GNq5CS; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=c2/F+CPK5Ai7T8f2hrZ4KZ8gDIe4QNtPhSFoqXyd2ikigCLKokcUZSUJWHgppGHMjdNBc4zBK8WBh02MvxRpHsp1bodxf+FnzOTVvUlWQ9xRJn3BeNVQB7QZ5fRkUpiwv4E6SbZ2CYFbJm/BD59mzjNduCIp+lYW5Nn2FKyU6C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cFrJEpEu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=59Rz0R22; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aA+iLX9W";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r0GNq5CS"
-Date: Mon, 03 Feb 2025 12:48:17 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cFrJEpEu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="59Rz0R22"
+Date: Mon, 03 Feb 2025 12:48:19 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738586898;
+	s=2020; t=1738586899;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6kLDun1gneFBdWYqZv9n7G7pbLgN24D2/TmiVhrNy6I=;
-	b=aA+iLX9WUO6LfwmHVHx5tgX24Lhe+X4KtVrLgJA3mFUishOtJrP4x75o3xC/tuWyUwNTtS
-	yWo5Z+623yeTDouazXjQyUwqm73iQmeB473kcgkX3FVjBL2Xo3cwthf4g5NZZKzivj9+GV
-	drQ8yjqR42qTo9vmK8ABtlZb3Ax5ve0wxJrq4YjglAY2xP1veHO7Ex1h03YrXx8z3DWnWO
-	ncVtsnVzvCIm7bjyOE3Z2Qy96fNTzBc1XCyjl3CcOXJRWSvaxzd2f+BjA7pa3JtVt0h9mR
-	7kjWweI2ak4KEh+Ut4/cz4nGUF8LE/FG5SJ9dxIj6CuXjsrK6mlQCE/NG1DU5A==
+	bh=4hdRM1hbk0mUWoPKFRFl45Qo9r4GgPBE1dWgwurZeck=;
+	b=cFrJEpEunH/NUSumGwopyGHy1iDjdh8Ojiy4hZ51yB1MoUpEyeFIe7qjw55LjpFcdZm817
+	4PjBuqhcch4BbObLSeBmmDnrrG/Kg8FXJ3j6jP5wraKuv/rMk3jHzpXnKUXo1LlJzGCm22
+	D6CJ1MOus/S3ZcsZnK+wvMCXntlPZsura5F8lSDcJyWGN2TPWVKDXxX0uXNRZ2KmflvWIC
+	Qj643Ig6GlDjzeR2uQwni5D+PpXr06uvL4KIzVpofCFkp93pbQtHSlVQjhPBrW09v155GS
+	xnR/y1oJmNrZwukTidwpw8lXeNHYpkzL99/Swo5cOpg0JdoBpqveECu16OUsnw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738586898;
+	s=2020e; t=1738586899;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6kLDun1gneFBdWYqZv9n7G7pbLgN24D2/TmiVhrNy6I=;
-	b=r0GNq5CSxPjMimqKhLt+zN5TAUM02YzmWkqDbCFos3musdu/jbIu8H9ZkkYg5YHWVBY3bS
-	eZh810Ilzs4TO9AA==
+	bh=4hdRM1hbk0mUWoPKFRFl45Qo9r4GgPBE1dWgwurZeck=;
+	b=59Rz0R22mUe8V0/PwDqWShLk0GDWqZbwNjht3lfQLbjmiYhBZLMpBtLFuoTTWbAMK+Wxc6
+	KS56jCV4CHGmwbCQ==
 From: "tip-bot2 for Ravi Bangoria" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/amd/ibs: Ceil sample_period to min_period
+Subject: [tip: perf/core] perf/amd/ibs: Don't allow freq mode event creation
+ through ->config interface
 Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250115054438.1021-9-ravi.bangoria@amd.com>
-References: <20250115054438.1021-9-ravi.bangoria@amd.com>
+In-Reply-To: <20250115054438.1021-6-ravi.bangoria@amd.com>
+References: <20250115054438.1021-6-ravi.bangoria@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173858689799.10177.15849214227121985213.tip-bot2@tip-bot2>
+Message-ID: <173858689925.10177.10452300443051134355.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,64 +69,51 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     fa5d0a824e3bbd1f793d962f9e012ab0a8ee11c5
-Gitweb:        https://git.kernel.org/tip/fa5d0a824e3bbd1f793d962f9e012ab0a8ee11c5
+Commit-ID:     e1e7844ced88f9558a48579390a7d4eaac6a28eb
+Gitweb:        https://git.kernel.org/tip/e1e7844ced88f9558a48579390a7d4eaac6a28eb
 Author:        Ravi Bangoria <ravi.bangoria@amd.com>
-AuthorDate:    Wed, 15 Jan 2025 05:44:37 
+AuthorDate:    Wed, 15 Jan 2025 05:44:34 
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 03 Feb 2025 11:46:06 +01:00
+CommitterDate: Mon, 03 Feb 2025 11:46:05 +01:00
 
-perf/amd/ibs: Ceil sample_period to min_period
+perf/amd/ibs: Don't allow freq mode event creation through ->config interface
 
-The sample_period needs to be recalibrated after every sample to match
-the desired sampling freq for a 'freq mode event'. Since the next
-sample_period is calculated by generic kernel, PMU specific constraints
-are not (explicitly) reckoned.
+Most perf_event_attr->config bits directly maps to IBS_{FETCH|OP}_CTL
+MSR. Since the sample period is programmed in these control registers,
+IBS PMU driver allows opening an IBS event by setting sample period
+value directly in perf_event_attr->config instead of using explicit
+perf_event_attr->sample_period interface.
 
-The sample_period value is programmed in a MaxCnt field of IBS PMUs, and
-the MaxCnt field has following constraints:
+However, this logic is not applicable for freq mode events since the
+semantics of control register fields are applicable only to fixed
+sample period whereas the freq mode event adjusts sample period after
+each and every sample. Currently, IBS driver (unintentionally) allows
+creating freq mode event via ->config interface, which is semantically
+wrong as well as detrimental because it can be misused to bypass
+perf_event_max_sample_rate checks.
 
-1) MaxCnt must be multiple of 0x10.
-
-  Kernel keeps track of residual / over-counted period into period_left,
-  which should take care of this constraint by programming MaxCnt with
-  (sample_period & ~0xF) and adding remaining period into the next sample.
-
-2) MaxCnt must be >= 0x10 for IBS Fetch PMU and >= 0x90 for IBS Op PMU.
-
-  Currently, IBS PMU driver allows sample_period below min_period, which
-  is an undefined HW behavior. Reset sample_period to min_period whenever
-  it's less than that.
+Don't allow freq mode event creation through perf_event_attr->config
+interface.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250115054438.1021-9-ravi.bangoria@amd.com
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/r/20250115054438.1021-6-ravi.bangoria@amd.com
 ---
- arch/x86/events/amd/ibs.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/events/amd/ibs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index aea893a..7978d79 100644
+index d9c84f1..3e7ca1e 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -457,6 +457,9 @@ static void perf_ibs_start(struct perf_event *event, int flags)
- 	WARN_ON_ONCE(!(hwc->state & PERF_HES_UPTODATE));
- 	hwc->state = 0;
+@@ -315,6 +315,9 @@ static int perf_ibs_init(struct perf_event *event)
+ 	} else {
+ 		u64 period = 0;
  
-+	if (event->attr.freq && hwc->sample_period < perf_ibs->min_period)
-+		hwc->sample_period = perf_ibs->min_period;
++		if (event->attr.freq)
++			return -EINVAL;
 +
- 	perf_ibs_set_period(perf_ibs, hwc, &period);
- 	if (perf_ibs == &perf_ibs_op && (ibs_caps & IBS_CAPS_OPCNTEXT)) {
- 		config |= period & IBS_OP_MAX_CNT_EXT_MASK;
-@@ -1191,6 +1194,10 @@ fail:
- 	perf_sample_save_callchain(&data, event, iregs);
- 
- 	throttle = perf_event_overflow(event, &data, &regs);
-+
-+	if (event->attr.freq && hwc->sample_period < perf_ibs->min_period)
-+		hwc->sample_period = perf_ibs->min_period;
-+
- out:
- 	if (throttle) {
- 		perf_ibs_stop(event, 0);
+ 		if (perf_ibs == &perf_ibs_op) {
+ 			period = (config & IBS_OP_MAX_CNT) << 4;
+ 			if (ibs_caps & IBS_CAPS_OPCNTEXT)
