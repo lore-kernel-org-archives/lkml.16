@@ -1,62 +1,78 @@
-Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964F31FF7A9;
-	Mon,  3 Feb 2025 09:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676721D798E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738575564; cv=none; b=JyHUs2B3rzE6hyTLppoPXPjz+b2wwjhWUFpx6WZyR3Jds9uXA/0DFjNTI4KEQf+9yxadputnTxxBMZHNCcmzsOLCTFZcE9zVXntNkdjDQ3Lk6GYk1rJ0MS7GaPsP7xNzrHAyUbvVz++XLchWb3QJOmGwcXadkIDzEaEQSlvmZnA=
+	t=1738575649; cv=none; b=VYvq8OrCYIMRI0rwElRG8VhWPJTEVWvh+CKDmhMU/oworZdb7IsskONXl+I22MGkjXH9MRMWIwdHJX6DEUkyHh31+GscPrgorMkdGUnXdprHR0yElEBti1W6a8X1kSc76hlR4tDDQVANQ6nMagKEj0iziNGgITbPW2jlaXqXGn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738575564; c=relaxed/simple;
-	bh=d9KrmqcjKygeXQKFY1B1tTd5Y3bnHyn+8V+W97V7Xow=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=c9sCeVIalp3r0CylGbZ+OeMp8bsJZoKx6tMrSVcH4Fy8b7HxBgjL8qFhQjqwrUJZVbTyWgxkseF1isCdppSW9I5Ym9nFV8dQCbgCq0Y/8dKg3QMQSgmRyDBcAcLTk0tdAcVHpsvGX7xPGYNwoQnijhSi+IDd3oNys5jp/u3vfNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=oEiIp5aL; arc=none smtp.client-ip=49.12.72.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
+	s=arc-20240116; t=1738575649; c=relaxed/simple;
+	bh=yLSfCwtDFL9/kwjAl+TQSWLN4kcDC05ZHSjanwhfXu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FsDZO7rbLTXGrej6ht3wdCIJ4ogkSH/FWSBHt1gsD7OYxL35fX91+HZ2DeXzrcB4SHkMbntBluKDjDnEwqplY1p4Jg+egkScGAgew7AhZGVTxdJPZgAOquwLcl0AtnwvB4MMu9lmiMoKTqJV5NpmRBqIrCZ+wVh6o+bMgy5zchU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0df3y5d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="oEiIp5aL"
-From: Fiona Behrens <me@kloenk.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
-	t=1738575550; bh=d9KrmqcjKygeXQKFY1B1tTd5Y3bnHyn+8V+W97V7Xow=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=oEiIp5aLfXpHVrybmpQ3+9QtLZ0K1/8WMnaSm+xCJe3RyvUOIHS5woAOAMAa8FmKN
-	 6bhl3+W8kqj/TSGV/thWoGhfHa78ZEwTAGV/lSAS63Y5/icTSKr2hDow0upRkH6Fq5
-	 zI6BJOKw7Lp8xuLnGEpYT1pJUk5z0ikLePrCp2ak=
-To: Asahi Lina <lina@asahilina.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,
-  Boqun Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?=
- Roy Baron <bjorn3_gh@protonmail.com>,  Benno Lossin
- <benno.lossin@proton.me>,  Andreas Hindborg <a.hindborg@kernel.org>,
-  Alice Ryhl <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>,
-  Jann Horn <jannh@google.com>,  Matthew Wilcox <willy@infradead.org>,
-  Paolo Bonzini <pbonzini@redhat.com>,  Danilo Krummrich <dakr@kernel.org>,
-  Wedson Almeida Filho <wedsonaf@gmail.com>,  Valentin Obst
- <kernel@valentinobst.de>,  Andrew Morton <akpm@linux-foundation.org>,
-  linux-mm@kvack.org,  airlied@redhat.com,  Abdiel Janulgue
- <abdiel.janulgue@gmail.com>,  rust-for-linux@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  asahi@lists.linux.dev
-Subject: Re: [PATCH 2/6] rust: page: Convert to Ownable
-In-Reply-To: <20250202-rust-page-v1-2-e3170d7fe55e@asahilina.net> (Asahi
-	Lina's message of "Sun, 02 Feb 2025 22:05:44 +0900")
-References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
-	<20250202-rust-page-v1-2-e3170d7fe55e@asahilina.net>
-Date: Mon, 03 Feb 2025 10:39:09 +0100
-Message-ID: <87v7tr4bb6.fsf@kloenk.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0df3y5d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A63DC4CED2;
+	Mon,  3 Feb 2025 09:40:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738575648;
+	bh=yLSfCwtDFL9/kwjAl+TQSWLN4kcDC05ZHSjanwhfXu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B0df3y5d7oa1AzCmf1U7aQfWk/NiZFIehMMGU6NL2ENewTzMrfIF5wDFPTXDd6RlW
+	 kyfZuw/ui6VH4DHqGaqu3NuLuYCBcdRP145i/lVNf4toPqP4a0Ogz8KY3Gp4Ob5jkb
+	 TyoeaJzH9P3syhWy0TSHcM/FCvrB/LNJ2Rwk7OTnscI3IQAwJb5Ptl228UNebWpEIm
+	 CvwSF9AfwNPAGhBAupH1DkQPuA6yAfaqdlf6zJqkW/z7AOIDcYDwONW2KOVOMfnZDv
+	 tFX52XqphZIQfgwoppIfhnQj5IWpR7wkFQiINKq70TG/Y016jJn9Dd2/am7cTqzM2L
+	 KLT4I14L/TB3g==
+Date: Mon, 3 Feb 2025 10:40:38 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+	Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [RFC PATCH 1/2] x86/relocs: Improve diagnostic for rejected
+ absolute references
+Message-ID: <Z6CPFv_ye8aSf320@gmail.com>
+References: <20250127114334.1045857-4-ardb+git@google.com>
+ <20250127114334.1045857-5-ardb+git@google.com>
+ <CAHk-=wgD1TGxZPC0yoiVJb3qDN9vDpzNkcW1z17+6mk_Rh+iFg@mail.gmail.com>
+ <CAMj1kXGfgxBM5DJ6vwwGvqPs9hH57h-G4w=-bF51+7cckayPGA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGfgxBM5DJ6vwwGvqPs9hH57h-G4w=-bF51+7cckayPGA@mail.gmail.com>
 
-Asahi Lina <lina@asahilina.net> writes:
 
-> This allows Page references to be returned as borrowed references,
-> without necessarily owning the struct page.
->
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> On Mon, 27 Jan 2025 at 17:57, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Mon, 27 Jan 2025 at 03:43, Ard Biesheuvel <ardb+git@google.com> wrote:
+> > >
+> > >   Absolute reference to symbol '.rodata+0x180' detected in .head.text (0xffffffff820cb4ba).
+> >
+> > Do we have any symbol name lookup logic anywhere?
+> >
+> 
+> I can look into that. In this particular case, though, there is no
+> symbol to look up as it is a anonymous jump table generated by the
+> compiler. And the function name would be inaccurate too, as
+> snp_cpuid_postprocess() got inlined into its caller. But I guess with
+> the right DWARF data, at least the call site could be narrowed down a
+> bit better.
+
+So patch #2 is now upstream, but should I apply this diagnostic patch 
+as-is, or will there be a -v2?
+
+Thanks,
+
+	Ingo
