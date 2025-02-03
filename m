@@ -1,151 +1,104 @@
-Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0121FFC69;
-	Mon,  3 Feb 2025 12:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5F21FFC69;
+	Mon,  3 Feb 2025 12:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738586128; cv=none; b=DAxNEJRvXLAZLlgspC45RlyCOOSj2E181fqqRn7ETbriIUfoa+Cr/pPxKMIw5Z3n1WAQ6cWD1gH6vwyUfRQuS7qObPMqrS5Su/+qM1caawpQcCxLiG472L/4R/fPJ+n/1Zks1PvzZgT4olvwZO96wJ5+1gPPx2atymWF59vPnMg=
+	t=1738586143; cv=none; b=SGa1K6Feb2+zusELHU3g63aJHjLMjmixBK+xtSoCePri/5knQ8SH8OuwnL9eLILTfzElOeWlHFsz7TveVYj8wUhdeu5hNwlJLjHT6wOusBswKRRe+AzKNN6hzfhDOwMGqr5YwD7wYxY9Btft5LvR3jQpjzmi1ddmRUXekRgfPWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738586128; c=relaxed/simple;
-	bh=CxfZW7dBnO3GBXmccZ9Y/mBeu6zRLvvGYqVPWtDM8rI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mNr5kxnDTzocd9kv4p9wttEOC2sEnAwTtqqePwqpfyon0uwSmoMDQKSq28YZQqD1pDhgjFIIYh3+U4Uta5XTFPitoPn0brGlqb51amalU+jDjwg9+YK9J6GKiBlm0XFROmRa5nhd59geUD7xkq2vY/FA9SFAE/GkYVuXuKA6WoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=dcFHh2th; arc=none smtp.client-ip=217.92.40.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+	s=arc-20240116; t=1738586143; c=relaxed/simple;
+	bh=yZ3xaJ6k/ZFfrRa0l3yCCfuJsOmGcScT1QJ6S5+PGMI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=E5VeZswJRUvd9H1RzG+RNbiE9T76rs0r7Plhvqz+opu9NdMZySyWmWwNH4BHG7PpA4YYtwNJd2k3QWpspknb4VB1vX+oYI+AQyZInoy/dhhGfqb6kpgMcm4LhOEp3UdwR/hN+yQJ4uWjhwV4+nAoaserpDxoZNspCF1H1jojyJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZQDHQxY3; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="dcFHh2th"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7F6CF14830BD;
-	Mon,  3 Feb 2025 13:27:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
-	t=1738585624;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YKnI1H6bH4Cdf0+aRcBE2xV6xY9vSuXcbUzXoEYfRuc=;
-	b=dcFHh2thNZzdlG/h8AL7zj5T96WsL+ZwTrkv5rpW0fA/Kbb4iKWfX1iy4NXnl+IExfYHop
-	OM2xWT4w4gmASbcQBsWPh5kUdKj34Oe3rPrXk3ylNGsjiWjeVDagfe3x8y4tQpyr3i1Qs3
-	z61tW7ik4TKnPj7QLFWnn/A9T6xJ+vX/LY4j8RGwXTXs5R60oK9Oyt05jvFYV4MQ7Cgq0B
-	+T1VU0dr5xPXc/7tRVI7CYFm5tcrP7pi7DGNXeSlJdY4e6kLkddZv/ucgIso/5dGdkCWff
-	aXLMZjF3FNIwnkApjt/Q9ykr97zmzLKwRjPYP7JXmdTtTrWuE2j2K3k7BAySwQ==
-Date: Mon, 3 Feb 2025 13:27:02 +0100
-From: Alexander Dahl <ada@thorsis.com>
-To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>, linux-spi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dma: Add devm_dma_request_chan()
-Message-ID: <20250203-chalice-ninth-8235590e29d2@thorsis.com>
-Mail-Followup-To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>, linux-spi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-References: <20250124085221.766303-4-csokas.bence@prolan.hu>
- <20250124085221.766303-8-csokas.bence@prolan.hu>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZQDHQxY3"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 513CYoXQ2192284
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Feb 2025 06:34:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738586090;
+	bh=k+Iyg6+jxdDXDDmQldk/ZFJvlNMPElJBNaK5YfhBuGs=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=ZQDHQxY3+lMSV0OsuNCLOwqNGu3KVlT7e5T10cMpp5uB00HlGx8HVP+qfnx9mP0P3
+	 /VETYsL8aH1bAXmZ2r2eunItBNoDKUcPdmjETaIuSR4NbaMKiL21ImCoOZDGDsLb7B
+	 aBtaWkWV+WSnfiffRSWx5Q7bGZtnoY6c9s94WBPA=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 513CYo9Y028147
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 3 Feb 2025 06:34:50 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
+ Feb 2025 06:34:49 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 3 Feb 2025 06:34:49 -0600
+Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193] (may be forged))
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 513CYiGc040705;
+	Mon, 3 Feb 2025 06:34:45 -0600
+Message-ID: <9c938a69-c168-18e6-39f9-43b97f7aaaa9@ti.com>
+Date: Mon, 3 Feb 2025 18:04:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 1/2] dt-bindings: display: ti,am65x-dss: Add support for
+ AM62L DSS
+Content-Language: en-US
+To: Jayesh Choudhary <j-choudhary@ti.com>, <jyri.sarha@iki.fi>,
+        <tomi.valkeinen@ideasonboard.com>, <airlied@gmail.com>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <dri-devel@lists.freedesktop.org>,
+        <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>
+CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
+        <s-jain1@ti.com>, <r-donadkar@ti.com>, <h-shenoy@ti.com>
+References: <20241231090432.3649158-1-devarsht@ti.com>
+ <20241231090432.3649158-2-devarsht@ti.com>
+ <4df0097f-2672-4bf0-8321-5922783e9278@ti.com>
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <4df0097f-2672-4bf0-8321-5922783e9278@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250124085221.766303-8-csokas.bence@prolan.hu>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-Last-TLS-Session-Version: TLSv1.3
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello,
+Hi Jayesh,
 
-Am Fri, Jan 24, 2025 at 09:52:20AM +0100 schrieb Bence Cs�k�s:
-> Expand the arsenal of devm functions for DMA
-> devices, this time for requesting channels.
-> 
-> Signed-off-by: Bence Cs�k�s <csokas.bence@prolan.hu>
-> ---
->  drivers/dma/dmaengine.c   | 30 ++++++++++++++++++++++++++++++
->  include/linux/dmaengine.h |  7 +++++++
->  2 files changed, 37 insertions(+)
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index c1357d7f3dc6..02c29d26ac85 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -926,6 +926,36 @@ void dma_release_channel(struct dma_chan *chan)
->  }
->  EXPORT_SYMBOL_GPL(dma_release_channel);
->  
-> +static void dmaenginem_release_channel(void *chan)
-> +{
-> +	dma_release_channel(chan);
-> +}
-> +
-> +/**
-> + * devm_dma_request_chan - try to allocate an exclusive slave channel
-> + * @dev:	pointer to client device structure
-> + * @name:	slave channel name
-> + *
-> + * Returns pointer to appropriate DMA channel on success or an error pointer.
-> + *
-> + * The operation is managed and will be undone on driver detach.
-> + */
-> +
-> +struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
-> +{
-> +	struct dma_chan *chan = dma_request_chan(dev, name);
-> +	int ret = 0;
-> +
-> +	if (!IS_ERR(chan))
-> +		ret = devm_add_action_or_reset(dev, dmaenginem_release_channel, chan);
-
-Why not using dma_release_channel() directly here?  What's the point
-of introducing dmaenginem_release_channel() further above?
-
-Greets
-Alex
-
-> +
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	return chan;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_dma_request_chan);
-> +
->  /**
->   * dmaengine_get - register interest in dma_channels
->   */
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 346251bf1026..ffb54b52ef0c 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -1528,6 +1528,7 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
->  
->  struct dma_chan *dma_request_chan(struct device *dev, const char *name);
->  struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
-> +struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name);
->  
->  void dma_release_channel(struct dma_chan *chan);
->  int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
-> @@ -1564,6 +1565,12 @@ static inline struct dma_chan *dma_request_chan_by_mask(
->  {
->  	return ERR_PTR(-ENODEV);
->  }
-> +
-> +static inline struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
->  static inline void dma_release_channel(struct dma_chan *chan)
->  {
->  }
-> -- 
-> 2.48.1
+On 24/01/25 13:50, Jayesh Choudhary wrote:
+<snip>
+>>     compatible:
+>>       enum:
+>>         - ti,am625-dss
+>>         - ti,am62a7,dss
+>> +      - ti,am62l,dss
 > 
 > 
+> s/ti,am62l,dss/ti,am62l-dss
 > 
+> There seems to be inconsistency in the usage of the compatible name in
+> the conditional below.
+> 
+> Same is with the compatible "ti,am62a7,dss".
+> Can you fix that too?
+> 
+> 
+> With the above comments addressed,
+> 
+> Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
+> 
+
+Thanks for the comments, indeed above needs to be fixed, will include it in V2.
+
+Regards
+Devarsh
