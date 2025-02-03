@@ -1,306 +1,136 @@
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816681E7C20;
-	Mon,  3 Feb 2025 21:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EA31E7C20;
+	Mon,  3 Feb 2025 21:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738616771; cv=none; b=MDwW+TPCMnD6VzC1pB/LQeatGSSEJNF+Gte1mURmhrPMd2IO1KPXqvBnP/xiIwBBkMo8KbI20FO3zbzpSXfYpnaQ8y5w52edJ8xThNh26JElyzenxyQR9Yl8k9Xp80Wmr/yOuL4cPGclj2JIkQh/ji9zACozlpet0xlg4Hmo1uc=
+	t=1738616849; cv=none; b=NYDt/SqND6QkqyBfMIfLZhuZSwEfz3wowtb0QrVWEEih82JOgArFnghocHc8lHC7vY420DztsIrWsN6FWSSRAOgwDzr1Vc2tud2EWD55qkF549d1VWdonbA46wnRrXKfhpiS+Ruvd/CoFPV7ZUy3RD62y9XT0abOtScYyfeZVLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738616771; c=relaxed/simple;
-	bh=TEqAQlGdZO/vs7Arti4Isv62aqupR8RxJK3lgMmDxH4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VSyR7lKTo4r4HIjHhcZTbPRD1U7YcdPyqFm6aOE5vYEsFSVzqX08y9i4+gziSPvgDKyrkK9PBjt9DZWyWalSVA8zpjlMowB/jCl1cRsGTE7OWNmqjWpXKJGMLBofx1UrFfTT1c2c+qF0ECf2uCuxjfnW4CV7NO/YxIpEx6Zc30A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me; spf=pass smtp.mailfrom=beims.me; dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b=t1ocVs5A; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=t9d4HjEM; arc=none smtp.client-ip=202.12.124.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beims.me
+	s=arc-20240116; t=1738616849; c=relaxed/simple;
+	bh=I6E+KMf+GC7gcZDiOUy+LrrXr+s80/o+Eqd493BSBcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=duN4NlzfLgP8BoE0+2IYpLPB79QPa3LbUWTDdfkz3QDSIXa0risq1PF9uq3FtcDEAWFLMY00LV2IJCHLrtsPaVE4wJmDgdQW7sjKQir3l+NJ8TWGOtCmiE+3Gv/3Xkwt3zFi1Z/fcGnyibMcb+36DbBw+7xxhQWHxw/FxA6nqi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hxmc/mCG; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b="t1ocVs5A";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="t9d4HjEM"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 053E8254018D;
-	Mon,  3 Feb 2025 16:06:05 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Mon, 03 Feb 2025 16:06:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=beims.me; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738616765;
-	 x=1738703165; bh=Ra9MI1InI9gP8+SgSwb7MAwqv6kU3tmMoSZj8CtIFVU=; b=
-	t1ocVs5AALcA1N8uT+IIXOb8dTYgtfpNqUnbtJBit8RMtEiceAwUYPTcIvGSFGuI
-	T6zKsOoYEmpoPFBnPYpCIq9+Z2cubxvKuUnJtQ5I/t8WQ1vtOQ8786QWdMXu9V0z
-	PI/3e2kwObMbYQvgOnxX+DgILx87idcUarIIC24XSsihDGycQzsKWe/k2tyitFL7
-	FllHw02LEwz7s2TkpKusYySmnCcabtGtrHJgL5h/wV/Xe6ETCOgzV/7csCjgmeIf
-	6sZGBjouHHI0SuosNEekahCU7nShK5WoW0rSRtnyLChSRJXjI/VdI0CMpN7ZXg//
-	lp3yP3poPE+lbThNzkLA2w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738616765; x=
-	1738703165; bh=Ra9MI1InI9gP8+SgSwb7MAwqv6kU3tmMoSZj8CtIFVU=; b=t
-	9d4HjEMCeYndVx7oq3je+I4XOl0tfzfQI0Xxujm6CbB8+vyFlAmIUADneAXLddV2
-	f12wLgiBzfIQE53qfrh6kFYs1JOoK2CGaJw27S2wKKd1PyVWBTgs+xlMRQvAnE8Y
-	uPKhHnShWwKQ1F4qlqCJqDzhHzhzzWLoijBlGDUn+Vfo84P1HIP5g28UWzRibFg7
-	BQv4yUdx6k5gJ/cYHoXTOJM/L2mG7Ikg6+WZUaGIuHnFd/GA4bFw1zNG2wkRxH4i
-	Xag6DMcmVxaKnjjHKP5gm+rmcNVaiOZFVnciWvfuXi38FYwPZc9cCRLXOHSVElvk
-	a9w3iWUwj8Rdlq9L+hi0Q==
-X-ME-Sender: <xms:vC-hZ1yKikS7F835uEnPgmRKIf7KE3EMTlfmzIaux8OGHezQ8KeVLw>
-    <xme:vC-hZ1StEUQ0C0fjELXRmCGtQNBCMHRDm2tKI32_Nl_f6lcOIn2bk12pTzaqKCZvW
-    p7st59wlRYltV_eu70>
-X-ME-Received: <xmr:vC-hZ_WcEHZVBamrqiqrufjr9oSJ0CSiw4gEjKVag3wSMpnZOwEq1ZJEIBGcXjJE8g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeeihecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuhffvvehfjggtgfesthekredttddv
-    jeenucfhrhhomheptfgrfhgrvghluceuvghimhhsuceorhgrfhgrvghlsegsvghimhhsrd
-    hmvgeqnecuggftrfgrthhtvghrnhepffevveejiedvueegiedtkeetuddvtdduieefkeek
-    ffffvdejkeeujeeuvdetieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprhgrfhgrvghlsegsvghimhhsrdhmvgdpnhgspghrtghpthhtohep
-    vddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrughrihgvnhdrghhrrghssh
-    gvihhnsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurges
-    ihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinh
-    grrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheplhgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtg
-    homhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepjhgv
-    rhhnvghjrdhskhhrrggsvggtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrth
-    gvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthho
-    pehmrhhiphgrrhgusehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:vC-hZ3he1p6YXRGhRWsolqFF6JiGhD9fqH7ZEU4o06cWK-ErH6f4Kg>
-    <xmx:vC-hZ3DNCZ2x0KxEyMkFbi4VeG8OjZs0MfVGlEs4qRwjcH5zh_fDlQ>
-    <xmx:vC-hZwK15a9hlwkpryxFnRs6VPI7bTtKRW_yWyd5VyyD-ImJnVoK4Q>
-    <xmx:vC-hZ2Bv41Egr0oAuAIH5_2zaAG0vxPlS0xCVDWN-qI4qNrzjg0TpA>
-    <xmx:vS-hZ2CUiBwoDZJ8Iv_Qn7A2he7PlmVBsGVJTdlkkbCLJdX-Qxz1-R9E>
-Feedback-ID: idc214666:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 3 Feb 2025 16:06:00 -0500 (EST)
-Message-ID: <6d3519c6-4bad-4d9f-aaea-576e152902ff@beims.me>
-Date: Mon, 3 Feb 2025 18:05:57 -0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hxmc/mCG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738616847; x=1770152847;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=I6E+KMf+GC7gcZDiOUy+LrrXr+s80/o+Eqd493BSBcw=;
+  b=hxmc/mCGZI2jT6oeRYFAWd2YcKB/dKOXYzTJC7VSW38lZZdcLRhJzk4/
+   CyqPShPzaOr1vsdjDxnqInc2MMw6Drw+KI0DkGOFKqo5q7cb7ClREmtT3
+   sppVIKideOa/s3/g/TV9PfnnEo7E/vH2PRW/p/JbFjjVB6hXf8WXhyCsO
+   d8gFsD++4IpqCrXiHHcNDpQCQVBmvR3CY9itN1ORTUx2La5eudD4BKbSa
+   evM/sMBFocyy5FB+CBAe6ZpxKX2K5ofaZlhD39S5bdQZIEQ9g5rdMRkTs
+   tT01xuoUZMBnPQ34QTGmYU2YJ2yzVRGB2fiZq4cYo5egvT9UCygquUloF
+   g==;
+X-CSE-ConnectionGUID: yR3X3FeKRqurGuxM0uc4rw==
+X-CSE-MsgGUID: zmH6HdExSqmjp1xcJJwtBg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50538727"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="50538727"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 13:07:26 -0800
+X-CSE-ConnectionGUID: u7ApK2OGQ0CWTyIheuKY8Q==
+X-CSE-MsgGUID: nAhNm/7wQ16zDiTFT72Ydg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="110171999"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 03 Feb 2025 13:07:24 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tf3f8-000rX1-0I;
+	Mon, 03 Feb 2025 21:07:22 +0000
+Date: Tue, 4 Feb 2025 05:06:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Naveen N Rao (AMD)" <naveen@kernel.org>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>
+Subject: Re: [PATCH v2 2/2] KVM: SVM: Limit AVIC physical max index based on
+ configured max_vcpu_ids
+Message-ID: <202502040421.WqVoesZI-lkp@intel.com>
+References: <b79610c60de53048f3fda942fd45973c4ab1de97.1738563890.git.naveen@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm/bridge: lt8912b: Add support for audio
-Content-Language: pt-BR
-From: Rafael Beims <rafael@beims.me>
-To: Adrien Grassein <adrien.grassein@gmail.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Joao Paulo Goncalves <joao.goncalves@toradex.com>
-Cc: Rafael Beims <rafael.beims@toradex.com>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250203192401.244651-1-rafael@beims.me>
- <20250203192401.244651-3-rafael@beims.me>
-In-Reply-To: <20250203192401.244651-3-rafael@beims.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b79610c60de53048f3fda942fd45973c4ab1de97.1738563890.git.naveen@kernel.org>
 
-On 03/02/2025 16:23, rafael@beims.me wrote:
-> From: Rafael Beims <rafael.beims@toradex.com>
->
-> Add support for HDMI codec with audio coming from the I2S input.
-> Support 48kHz and 96kHz sample rate, with 16 bits word size.
->
-> Co-developed-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
-> Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
-> Signed-off-by: Rafael Beims <rafael.beims@toradex.com>
-> ---
->   drivers/gpu/drm/bridge/Kconfig           |   1 +
->   drivers/gpu/drm/bridge/lontium-lt8912b.c | 107 ++++++++++++++++++++++-
->   2 files changed, 107 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 6b4664d91faa..489ce1041203 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -117,6 +117,7 @@ config DRM_ITE_IT6505
->   
->   config DRM_LONTIUM_LT8912B
->   	tristate "Lontium LT8912B DSI/HDMI bridge"
-> +	select SND_SOC_HDMI_CODEC if SND_SOC
->   	depends on OF
->   	select DRM_PANEL_BRIDGE
->   	select DRM_KMS_HELPER
-> diff --git a/drivers/gpu/drm/bridge/lontium-lt8912b.c b/drivers/gpu/drm/bridge/lontium-lt8912b.c
-> index 52da204f5740..2100b41e5f61 100644
-> --- a/drivers/gpu/drm/bridge/lontium-lt8912b.c
-> +++ b/drivers/gpu/drm/bridge/lontium-lt8912b.c
-> @@ -8,6 +8,8 @@
->   #include <linux/gpio/consumer.h>
->   #include <linux/i2c.h>
->   #include <linux/media-bus-format.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/platform_device.h>
->   #include <linux/regmap.h>
->   
->   #include <drm/drm_probe_helper.h>
-> @@ -16,6 +18,8 @@
->   #include <drm/drm_mipi_dsi.h>
->   #include <drm/drm_of.h>
->   
-> +#include <sound/hdmi-codec.h>
-> +
->   #include <video/videomode.h>
->   
->   #define I2C_MAIN 0
-> @@ -24,7 +28,10 @@
->   #define I2C_CEC_DSI 1
->   #define I2C_ADDR_CEC_DSI 0x49
->   
-> -#define I2C_MAX_IDX 2
-> +#define I2C_AUDIO 2
-> +#define I2C_ADDR_AUDIO 0x4a
-> +
-> +#define I2C_MAX_IDX 3
->   
->   struct lt8912 {
->   	struct device *dev;
-> @@ -38,6 +45,7 @@ struct lt8912 {
->   	struct drm_bridge *hdmi_port;
->   
->   	struct mipi_dsi_device *dsi;
-> +	struct platform_device *audio_pdev;
->   
->   	struct gpio_desc *gp_reset;
->   
-> @@ -226,6 +234,7 @@ static int lt8912_init_i2c(struct lt8912 *lt, struct i2c_client *client)
->   	struct i2c_board_info info[] = {
->   		{ I2C_BOARD_INFO("lt8912p0", I2C_ADDR_MAIN), },
->   		{ I2C_BOARD_INFO("lt8912p1", I2C_ADDR_CEC_DSI), },
-> +		{ I2C_BOARD_INFO("lt8912p2", I2C_ADDR_AUDIO), },
->   	};
->   
->   	if (!lt)
-> @@ -754,6 +763,97 @@ static int lt8912_put_dt(struct lt8912 *lt)
->   	return 0;
->   }
->   
-> +static int lt8912_hdmi_hw_params(struct device *dev, void *data,
-> +				 struct hdmi_codec_daifmt *fmt,
-> +				 struct hdmi_codec_params *hparms)
-> +{
-> +	struct lt8912 *lt = data;
-> +	unsigned int audio_params = 0x08; /* 16 bit word size */
-> +
-> +	if (hparms->sample_width != 16)
-> +		return -EINVAL;
-> +
-> +	if (hparms->sample_rate == 48000)
-> +		audio_params |= 0x20;
-> +	else if (hparms->sample_rate == 96000)
-> +		audio_params |= 0xa0;
-> +	else
-> +		return -EINVAL;
-> +
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x0f, audio_params);
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x35, 0x00);
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x36, 0x18);
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x37, 0x00);
-> +
-> +	return 0;
-> +}
-> +
-> +static int lt8912_audio_startup(struct device *dev, void *data)
-> +{
-> +	struct lt8912 *lt = data;
-> +
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x34, 0xe2);
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x3c, 0x60);
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x07, 0xf0);
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x06, 0x08);
-> +
-> +	return 0;
-> +}
-> +
-> +static void lt8912_audio_shutdown(struct device *dev, void *data)
-> +{
-> +	struct lt8912 *lt = data;
-> +
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x06, 0x00);
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x07, 0x00);
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x34, 0x52);
-> +	regmap_write(lt->regmap[I2C_AUDIO], 0x3c, 0x40);
-> +}
-> +
-> +static int lt8912_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
-> +				      struct device_node *endpoint)
-> +{
-> +	struct of_endpoint of_ep;
-> +	int ret;
-> +
-> +	ret = of_graph_parse_endpoint(endpoint, &of_ep);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (of_ep.port != 2)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct hdmi_codec_ops lt8912_codec_ops = {
-> +	.hw_params = lt8912_hdmi_hw_params,
-> +	.audio_shutdown = lt8912_audio_shutdown,
-> +	.audio_startup = lt8912_audio_startup,
-> +	.get_dai_id = lt8912_hdmi_i2s_get_dai_id,
-> +};
-> +
-> +static int lt8912_audio_init(struct device *dev, struct lt8912 *lt)
-> +{
-> +	struct hdmi_codec_pdata codec_data = {
-> +		.ops = &lt8912_codec_ops,
-> +		.max_i2s_channels = 2,
-> +		.i2s = 1,
-> +		.data = lt,
-> +	};
-> +
-> +	lt->audio_pdev = platform_device_register_data(dev, HDMI_CODEC_DRV_NAME,
-> +						       PLATFORM_DEVID_AUTO,
-> +						       &codec_data, sizeof(codec_data));
-> +
-> +	return PTR_ERR_OR_ZERO(lt->audio_pdev);
-> +}
-> +
-> +static void lt8912_audio_exit(struct lt8912 *lt)
-> +{
-> +	platform_device_unregister(lt->audio_pdev);
-> +}
-> +
->   static int lt8912_probe(struct i2c_client *client)
->   {
->   	static struct lt8912 *lt;
-> @@ -788,6 +888,10 @@ static int lt8912_probe(struct i2c_client *client)
->   	if (ret)
->   		goto err_attach;
->   
-> +	ret = lt8912_audio_init(dev, lt);
-> +	if (ret)
-> +		goto err_attach;
-> +
->   	return 0;
->   
->   err_attach:
-> @@ -803,6 +907,7 @@ static void lt8912_remove(struct i2c_client *client)
->   {
->   	struct lt8912 *lt = i2c_get_clientdata(client);
->   
-> +	lt8912_audio_exit(lt);
->   	drm_bridge_remove(&lt->bridge);
->   	lt8912_free_i2c(lt);
->   	lt8912_put_dt(lt);
+Hi Naveen,
 
-This patch contains an error, v2 with the fix will follow shortly.
+kernel test robot noticed the following build errors:
 
-Rafael
+[auto build test ERROR on eb723766b1030a23c38adf2348b7c3d1409d11f0]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Naveen-N-Rao-AMD/KVM-SVM-Increase-X2AVIC-limit-to-4096-vcpus/20250203-144127
+base:   eb723766b1030a23c38adf2348b7c3d1409d11f0
+patch link:    https://lore.kernel.org/r/b79610c60de53048f3fda942fd45973c4ab1de97.1738563890.git.naveen%40kernel.org
+patch subject: [PATCH v2 2/2] KVM: SVM: Limit AVIC physical max index based on configured max_vcpu_ids
+config: x86_64-randconfig-008-20250203 (https://download.01.org/0day-ci/archive/20250204/202502040421.WqVoesZI-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250204/202502040421.WqVoesZI-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502040421.WqVoesZI-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/x86/kvm/svm/avic.c:20:
+   In file included from include/linux/kvm_host.h:16:
+   In file included from include/linux/mm.h:2223:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> arch/x86/kvm/svm/avic.c:88:66: error: expected ')'
+      88 | static inline u32 avic_get_max_physical_id(struct kvm *kvm, bool x2apic_mode)
+         |                                                                  ^
+   arch/x86/include/asm/apic.h:258:23: note: expanded from macro 'x2apic_mode'
+     258 | #define x2apic_mode             (0)
+         |                                  ^
+   arch/x86/kvm/svm/avic.c:88:66: note: to match this '('
+   arch/x86/include/asm/apic.h:258:22: note: expanded from macro 'x2apic_mode'
+     258 | #define x2apic_mode             (0)
+         |                                 ^
+   arch/x86/kvm/svm/avic.c:88:66: warning: omitting the parameter name in a function definition is a C23 extension [-Wc23-extensions]
+      88 | static inline u32 avic_get_max_physical_id(struct kvm *kvm, bool x2apic_mode)
+         |                                                                  ^
+   arch/x86/include/asm/apic.h:258:23: note: expanded from macro 'x2apic_mode'
+     258 | #define x2apic_mode             (0)
+         |                                  ^
+   2 warnings and 1 error generated.
+
+
+vim +88 arch/x86/kvm/svm/avic.c
+
+    87	
+  > 88	static inline u32 avic_get_max_physical_id(struct kvm *kvm, bool x2apic_mode)
+    89	{
+    90		u32 avic_max_physical_id = x2apic_mode ? x2avic_max_physical_id : AVIC_MAX_PHYSICAL_ID;
+    91	
+    92		/*
+    93		 * Assume vcpu_id is the same as APIC ID. Per KVM_CAP_MAX_VCPU_ID, max_vcpu_ids
+    94		 * represents the max APIC ID for this vm, rather than the max vcpus.
+    95		 */
+    96		return min(kvm->arch.max_vcpu_ids - 1, avic_max_physical_id);
+    97	}
+    98	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
