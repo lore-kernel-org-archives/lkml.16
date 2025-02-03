@@ -1,385 +1,208 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2050.outbound.protection.outlook.com [40.107.244.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4843C20E01D
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 20:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738616114; cv=none; b=rnU9H08hkj2ewkKAdFiBpULj5KqmDECLCPA/8Vg/ZJbLMx0ZeixjFAvf085n+RZLI2sMJcn5uPtcdnDKaGAfKq3HGckp8wHH7zDs6/A0qcZgV0d4Ey598rO/Iy3SI/RsGTM8x3o37+71L70MFE+Fs+Atn8WS65W+bckv4Qt8m/Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738616114; c=relaxed/simple;
-	bh=bAcEThKuMc8PFLRFATLoMnWG6H5KtQP46+rWaTlFgsg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kpjNHjQ9l5HtRkWu5fi6sMQg/Ws92dPfLnO/YMXVoei7lA7tccRzL4hAg6wNqC94AzkGCEm6hO9ItqukB2d5xr7rpE9yMlS36d2bkSMxOk9fFP83Y5XLEJagQ6Z1f9QJoes+tVzYLwhflLvEfssQHz6kVQqutHluqKkcFIbvy3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DTWYGr6X; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8334C1DC745;
+	Mon,  3 Feb 2025 21:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738616414; cv=fail; b=LSvoaSnV2woD0dwRnEc7s77EhLX3xNYp8qXBXDlmNWPSmMOjvCmNk9ou5dsFXxe4FcRZTxJtkNCARI2+WGE5XVQQfPGfmEr/bdeG9wMlLBRsJ7pDtPJzZGQZxwERF73z3y3KJLk/7/PZU9Bf9LM3DrfyQ13s1a7DXXKyJlZwT8M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738616414; c=relaxed/simple;
+	bh=mazNxIRVd4PIwyf9p7K+CmGzqZyhqoV3H63SqlahSus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=P87k6NcH7EXz4G9ssKe3lI9ERRf4Fu68HBPEZw/eQfaH8r3TYAbAXvnZ7CgjnA4AIRvdqTkIbmA04CwVLuCkESOvyWxhfflMu5gTyyXnjpYkY9GdkwnoWR3WBsbHFOg8G1/FqYu6svbnKWHQtJ/6p8es/Y0PeSTLPCsNkoLQwos=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jJqZ6JQV; arc=fail smtp.client-ip=40.107.244.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DTWYGr6X"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so35175ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 12:55:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738616111; x=1739220911; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0CpkOvatLv4wKhG0xtf/lUUhTY7jRaSGKWWG+/sybmU=;
-        b=DTWYGr6XmyBRmZ5Sy0wmChhbUiqxAcDHYvyvnUl0mwLeJXajF50NgJHdGlUb3021IL
-         nkGW3gXihPIB7YreC2h1AOUkng//hUsMkgZPEJ8CjNJ7DPGRnYBdrTk8Fr/JxdxVWiwu
-         eP0d4rD969rAUs7/kab12FZwz71r1Miw7+NkU7pqGuyfa7ch1p39HCBt2RTxnbjmIFC5
-         KQXmCRELmzUX1uUHFwakSavFoILhD6zJh9/mN27JuKEumE38V5rAX6V8BxJCaUZEKpuL
-         9av8gDmBNJq1mzIndM3+f6Z8KYYn0Y9Smw016Z4SnXVSfR+fypy7W0WS4yDBAVYy5cFs
-         abFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738616111; x=1739220911;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0CpkOvatLv4wKhG0xtf/lUUhTY7jRaSGKWWG+/sybmU=;
-        b=WMmiAsFC/RDKSryRTaHaBQcsT/ttpmR8/gtvj+88igXTLCht+Ebt8yoD+z4HvIfhOd
-         UfKEVKOYI6oYCj6ZUCeHhWeEODY2D8mMTNLo2u3lE69J1Lkk35PLUnZtHXZyZ8rRjE/p
-         i78pgJ/o+5j1CuyVLrvUkx1pb6dVzD38JY7rBLTmptPmrhkREDUo+3Gs42bi2iAsscCV
-         k3ZzkgPZK4nZqJMV5LR1MDC4OKI3B3W+KnqxI3PVviNAN4jaMy1H25lCqXKWVWVzi6AK
-         9Yc/HgEG3zvYgB6GlFmfxS0SxHsRNoX0+ELUA6TU5DsX6CVTpoSnzrdGgEFKWxpnLoQI
-         eDnw==
-X-Forwarded-Encrypted: i=1; AJvYcCULnXoNYg3Ndw12Ic0SXHbyZA6YEnKmQfHW79Wdx/epbYxE3AKX6Rr+GEk2wWCCIXuOWJkf0Y+I95rd80Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDVw3N4RUKLkX3EnKi2d2EmuTXLFoeiPFSGbannZMQZlLUlStx
-	/UbMx9bUHn3gO8kOfmSVlxfDii0hxfWv4eO1BS6DUC7AEBK9TvP4x3315m4IQsZ9bF2XZQ2PMst
-	KxCktO1TgJOwmdtOy1uDYzXG1NGq3snWnKR86
-X-Gm-Gg: ASbGnctYrJZ1OrqBF5GTlJjbFwKMpFH6+me+LKCuOH99CsYV8iV7LH+w58JeUxSyn6B
-	Yb0LhAQRMD1aPRImZB/f9/H7LjhVPzk9cHXLZEI00hnn0kwfteJHixA7b/agAmoqgk+vKY5uKIA
-	vCTu0tKJMJLFXhnpCKC2H8xrg=
-X-Google-Smtp-Source: AGHT+IFovB/1hVfLQEVpXp2hcX+JruDAGn+2X9tQzrpodvNkO71mW2lpNbYirYKNTnTRjw3Jno81IOERpP52GSqP9hw=
-X-Received: by 2002:a05:6e02:1b03:b0:3d0:a9b:bf4b with SMTP id
- e9e14a558f8ab-3d03fbc124emr730575ab.12.1738616111091; Mon, 03 Feb 2025
- 12:55:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jJqZ6JQV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xFqsODahUtNC+02DDtm29WWfJ0cnN1bDSfLMUnj8NhSiRF9OCitPPd7cB5jDnzr7Fww55wxLc/4nT0GthO+A/kBL5lRgJx0rRNrfqqcCX148aUEPMIR/SKUoWSreC8Ayd3Ii06SPUm2XNZkaaz4ejZCmPmlcor62z22Bd5a6OmNxWFD55AYtSAqT5ZJIGjX9hR/Wh8ODCZ9tnmpTVnPNtSHXtpO+UbjIio63UU/1XRzxzbrwQCdWOkO1VmGePGYMSenrOG+SbRHKO+Tg5PmrMvqdGwKksriXVxwLZS3uKRfOEaNQEkXTseQoujjQBTCsVtud+blm0W3guKFp5tSDug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xEvL1OXWBfJUYlGy5Le2d+ikAXjzaLqutrDUCcUMPek=;
+ b=hSruqAEGUd5YOJiwbE6tl5wonIjBGB1L7su6qlBl9Pt46omTfhAWpfjAvrQgYBgtZviy+M06na6pzn7HKos3jFpk9dBgJ42sIs36LXzz17jyle93Nx9zKbTXxeUuCd0kpEBhBZAtwqFcGg8KKKx1HwqPXcDg9adI+54fBSeS4tYddYkusRfgnZaWi2dG51taBuraZwiqYY6sZ1pnfgA2O+xungV45zcbo4AdTu0U+3mIiKUUPyWdMcW9e2z1lgNJkQe+vOrhiS5NhLkBBd/k2LRRGcR6pSrOgqqKle2rswlAYCysoA5w1mxK07Ttv82mN59WWh5cOvkfm+EwM9KO4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=joelfernandes.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xEvL1OXWBfJUYlGy5Le2d+ikAXjzaLqutrDUCcUMPek=;
+ b=jJqZ6JQVFAhLRjOVRYNgWjHEs3Ey/+0EMX92ogYNGa1DvHK06jCRd7Yws320C90jtWX6QB5I0rML4A4Yi8l2PnDVNtOFFhc/N/dOBdS4yPW3DxRIZU1UGTqPTdwfw9D8/prpJiNSfhr2Lboi1DwIlHHkLGfoMc5jnDbn8SS43ztWUXCnqHfRB4E4YSM5BSc9GFmg1O7w2cWvUXFXdMfUEVdqTCX3T6Vlyp8endDBWnaiEicWKLaTNiV6gvvoxPnWraOf6tDIneZqgskqIN9L4nf548pCyYyZo5QDAI6jw3wzsmHA5ZNPS1KHavjQP/XSVvtpRSrpKakyAgLO8P11Lg==
+Received: from DM6PR12CA0012.namprd12.prod.outlook.com (2603:10b6:5:1c0::25)
+ by CY8PR12MB7362.namprd12.prod.outlook.com (2603:10b6:930:52::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Mon, 3 Feb
+ 2025 21:00:09 +0000
+Received: from DS1PEPF0001709C.namprd05.prod.outlook.com
+ (2603:10b6:5:1c0:cafe::24) by DM6PR12CA0012.outlook.office365.com
+ (2603:10b6:5:1c0::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.23 via Frontend Transport; Mon,
+ 3 Feb 2025 21:00:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ DS1PEPF0001709C.mail.protection.outlook.com (10.167.18.106) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8398.14 via Frontend Transport; Mon, 3 Feb 2025 21:00:08 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 3 Feb 2025
+ 12:59:58 -0800
+Received: from [10.110.48.28] (10.126.230.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 3 Feb
+ 2025 12:59:58 -0800
+Message-ID: <34d7a6af-5974-482e-9f70-3f92a823bd96@nvidia.com>
+Date: Mon, 3 Feb 2025 12:59:57 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201071455.718247-1-irogers@google.com> <Z6EStkn-YZ8zaO7u@ghost>
- <CAP-5=fXRz_8CKNz4Fr-=0yhKbf_QE2ND+PPykSAO5p8wcUz7xA@mail.gmail.com>
- <Z6EVwaOVYaKtaK1j@ghost> <CAP-5=fX1hCNWWmGJPKYxj93S=zM1-eRucqzb4WW5fB_sZBCRLg@mail.gmail.com>
- <Z6Eh1QLuqTbUKLCc@ghost>
-In-Reply-To: <Z6Eh1QLuqTbUKLCc@ghost>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 3 Feb 2025 12:54:59 -0800
-X-Gm-Features: AWEUYZlmOKvF2fD96Nbnrom7gMtVtXNQBtvLmxWr7es0TmhML1shSJVYzZg-gUA
-Message-ID: <CAP-5=fXZr8L4Z=Lb28QDZF8cbv2eJJEHSb0H9zcqSOB9cn5-9g@mail.gmail.com>
-Subject: Re: [PATCH v1 0/7] perf: Support multiple system call tables in the build
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>, 
-	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] gpu: nova-core: add initial driver stub
+To: Joel Fernandes <joel@joelfernandes.org>, Danilo Krummrich
+	<dakr@kernel.org>
+CC: <airlied@gmail.com>, <simona@ffwll.ch>, <corbet@lwn.net>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <ajanulgu@redhat.com>, <lyude@redhat.com>,
+	<pstanner@redhat.com>, <zhiw@nvidia.com>, <cjia@nvidia.com>,
+	<bskeggs@nvidia.com>, <acurrid@nvidia.com>, <ojeda@kernel.org>,
+	<alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+	<bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
+	<a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+	<dri-devel@lists.freedesktop.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+	<rust-for-linux@vger.kernel.org>, <joelagnelf@nvidia.com>
+References: <20250131220432.17717-1-dakr@kernel.org>
+ <20250203202410.GA3936980@joelbox2>
+Content-Language: en-US
+From: John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <20250203202410.GA3936980@joelbox2>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001709C:EE_|CY8PR12MB7362:EE_
+X-MS-Office365-Filtering-Correlation-Id: e2d2607c-d2b8-46c6-1e91-08dd4495be42
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|7416014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cnhhckdHZkpTd2NmTGFHcVMvMmQ1VnBpbG5LMnVwbUhmVDUvdXhLcUl4dXdB?=
+ =?utf-8?B?QjU3bzJsUmlNalpDTlJOUU5kUlRZakJ5UXZYWGNQLy9wSnUxMm9KSUNvZk5s?=
+ =?utf-8?B?SnQ4UjVQVW85Y3M4d3NtUGJNMU5hZmpuV2lOaGM0MVZwR2pSRnFZNklBQXZX?=
+ =?utf-8?B?TUltVEo4czk4bC9FdVZucU9wcmpaK0lUenhkNk1nMVVFODNPZExnNmdqTVlB?=
+ =?utf-8?B?TVJXa2ljZU1CT2REVm5nTmZXMVp6c3Nwa2hKZXBxRGJwWXNVVEFHQkFva1VD?=
+ =?utf-8?B?NVNTcnE2ODh0VUMvUjQ0YkdCZTc1RGJhaFNuYlVzMHJhUEo5VThvdGh1SHdo?=
+ =?utf-8?B?VHBUWHYwWDIzVlNOL2FtY2dyRitOckRVY0FZTDUvNHZhY1RKTkpNVUF5Z0ZN?=
+ =?utf-8?B?bGZRNzB0cWxLWnpxbUx3d2tLdnpsdnFlVlNiTkNab3VxM2JPc1A5S282bWND?=
+ =?utf-8?B?YmVLN3ZmdmpNM0o4MU9wTlN3cE5UeXVMbm90aUwzd3lQTVdLbEdMK3phclRM?=
+ =?utf-8?B?TzFkK2plL3JGd0N3NnRIMjJIYXkvdUY0TGR2L0R0SmZaR2gyaGdtMllBQkNr?=
+ =?utf-8?B?MXdlQzd4ejBRQkVBTno2Z1BwTWU3Wk5YUkF6RGFEMEk2ZGcxc1VwUGhCdkF1?=
+ =?utf-8?B?bjlLMVFma01CRzdoMXVKVXViaW1OWHpNK1cvcnlZVDQrTWlwcHJ6RjZVeExY?=
+ =?utf-8?B?ZUV0dGZqZXV0TU5pdWc3dDA3ZlptQWl5K1NZb1JZTEFwYnMzLytBQkZXeWcw?=
+ =?utf-8?B?bGR4MFhzWXBQYUZ0Vi9pS3JybEQ5Nkg5eC8yUkFqcVVVN3VpWDgyenNZRWRi?=
+ =?utf-8?B?NlNEZTEvclJha1FIY1lob280czJGc0Z0SDV4YVF3V0c1dGpLeExvWStQQldL?=
+ =?utf-8?B?QjlReDVNalpHRGhzc0lIKzdiVGpuK0Y1eEVDdkk2K3Vqck1CTEt5UXJCb3hj?=
+ =?utf-8?B?VWF1cFFQRmc5ODdYSmxzak5EUDN0WDIvTmVMeUV6N1Z6VUlETlExbVJDdGM1?=
+ =?utf-8?B?amdDM3hENHZSOHZZeXFtQ3c4eUpZZXJmak5qUmZocm1RYndxVXdycHJvSlhP?=
+ =?utf-8?B?ZkhRd0NpdEhLUHdTZ3Exdkd3YndkVTZzcGN5N3loVERDRjhzU2VhazZBYzJU?=
+ =?utf-8?B?WkUxbytOcUhEWXdFaVk4T1kra3Z5SGNFZSsvVzNwSVR6RWZ4czQ4YXdOd0F3?=
+ =?utf-8?B?czRtTUVkUHgxUkx4eWZ3WW1vc1lWUTJTV1hxUkFKOEZCSjg2ZTk3M3djM1J0?=
+ =?utf-8?B?WkJtL2hKZms4Z0Rhb1MzNGxMY1pXb0ZYRTRNbzVleTc3VHhqWnR3MnRsSTBD?=
+ =?utf-8?B?ZHRpeHNyU1N6cU94dlBtck5wTXVEKzc5bHRmMCt5ZGhpSktkb3VtcEFaenBY?=
+ =?utf-8?B?NzBuZk1Ealc1YXVFSE4yK0VWYmVsNHJEN2tLcEFUSHJvbWRqUUJIbTNRUUhi?=
+ =?utf-8?B?bjJuRnF5VW5RZHJKK01VWEhmemYvaVNLdTF2b3Jlem1qZ2c5elBlS1hhVlV2?=
+ =?utf-8?B?UG9sY0VkVlJuVi9PenRwUWIxOHNLNGVUZjU2T0dUZWNKOEFPaG02aE1tQ1d5?=
+ =?utf-8?B?UXEwZEFrV01ZTTZTdld4eUQ3TWhKSnY3OENlVXZmL2gwcXhVM1hGWEEyMG9M?=
+ =?utf-8?B?Ymd6cHNHWnpXdVhrTTcwMkRYTUFYbFJseVlLQUsxamZ6b3MwRXlaWHNTMWgr?=
+ =?utf-8?B?bzJvRFBiV0hxcmNNODdteWhFYmxJOEc3NWtxZkhqN3BUandHOVVuMEdNM0l1?=
+ =?utf-8?B?V0FJYXMvZVpyUTZ4Q2g1WUFvemRHaUVwWkE2dXpuZzZ5a0orVDQ2V1JzWldu?=
+ =?utf-8?B?UFRZRUFuS1BURExLMGNCM0JFT29KMDI5YjROTXhTWjZWNWpmelZUQnhSSy90?=
+ =?utf-8?B?b05HRGNlZytxMlN2Sk93ODZvUk1sK0xqemt6Yk5MRkhOK1FBdy9QOHNlbGhC?=
+ =?utf-8?B?U09tSjdqbWIyWlEzbmVpZ0JFbVZGTU5aVERySjBIOWxlaWViYW1Fei8rNVhG?=
+ =?utf-8?Q?Xdl1jc8YIJj7cPIoz4H69SRwBxuP9s=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 21:00:08.7736
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2d2607c-d2b8-46c6-1e91-08dd4495be42
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001709C.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7362
 
-On Mon, Feb 3, 2025 at 12:06=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.c=
-om> wrote:
->
-> On Mon, Feb 03, 2025 at 11:39:01AM -0800, Ian Rogers wrote:
-> > On Mon, Feb 3, 2025 at 11:15=E2=80=AFAM Charlie Jenkins <charlie@rivosi=
-nc.com> wrote:
-> > >
-> > > On Mon, Feb 03, 2025 at 11:10:49AM -0800, Ian Rogers wrote:
-> > > > On Mon, Feb 3, 2025 at 11:02=E2=80=AFAM Charlie Jenkins <charlie@ri=
-vosinc.com> wrote:
-> > > > >
-> > > > > On Fri, Jan 31, 2025 at 11:14:48PM -0800, Ian Rogers wrote:
-> > > > > > This work builds on the clean up of system call tables and remo=
-val of
-> > > > > > libaudit by Charlie Jenkins <charlie@rivosinc.com>.
-> > > > > >
-> > > > > > The system call table in perf trace is used to map system call =
-numbers
-> > > > > > to names and vice versa. Prior to these changes, a single table
-> > > > > > matching the perf binary's build was present. The table would b=
-e
-> > > > > > incorrect if tracing say a 32-bit binary from a 64-bit version =
-of
-> > > > > > perf, the names and numbers wouldn't match.
-> > > > > >
-> > > > > > Change the build so that a single system call file is built and=
- the
-> > > > > > potentially multiple tables are identifiable from the ELF machi=
-ne type
-> > > > > > of the process being examined. To determine the ELF machine typ=
-e, the
-> > > > > > executable's header is read from /proc/pid/exe with fallbacks t=
-o using
-> > > > > > the perf's binary type when unknown.
-> > > > > >
-> > > > > > Remove some runtime types used by the system call tables and ma=
-ke
-> > > > > > equivalents generated at build time.
-> > > > >
-> > > > > Our approaches are very different but I sent out a patch to do th=
-is a
-> > > > > couple of weeks ago [1].
-> > > > >
-> > > > > Did you look at that and decide you didn't like the approach?
-> > > >
-> > > > Missing link?
-> > >
-> > > Whoops here is the link:
-> > >
-> > > https://lore.kernel.org/all/20250114-perf_syscall_arch_runtime-v1-1-5=
-b304e408e11@rivosinc.com/
-> >
-> > I agree it is similar and progress, I think I prefer my changes :-)
-> >
-> > Anything in the arch directories is only going to be built given a
-> > Makefile SRCARCH:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/arch/Build?h=3Dperf-tools-next#n2
-> > which means if we want the system call tables for say ARM on x86-64 we
-> > need to reinvent the build - this isn't a problem today but perhaps
-> > something to consider if we wanted a cross-architecture perf trace
-> > record. I'd like to do away entirely with the arch directory for this
-> > kind of reason. For example, if we run perf on a user space emulator
-> > (say a testing set up) and it sees AMD data fabric PMUs, logic for
-> > those PMUs currently lives in the arch directory for x86 and likely
-> > wasn't even built into the perf tool. We should be able to identify
-> > PMUs and act accordingly based on their names. In the case of the
-> > overloaded "cpu" PMU we can identify it with the CPUID. The less code
-> > in arch and the fewer architecture ifdefs, the better things should
-> > work cross-architecture, in testing scenarios, etc. We also win by
-> > getting code coverage without, for example, having to build and test
-> > on csky or super H.
-> >
-> > Your changes are using the string for the architecture name. I think
-> > that string is something we should get rid of:
-> > https://lore.kernel.org/lkml/CAP-5=3DfX2BtFzhGLCSqO1QszqfX=3DHT8RrTdG_5=
-Ttp5Gw4seSstA@mail.gmail.com/
-> > but there's no reason we couldn't clean that up on top of your change.
->
-> Yes that part is not ideal.
->
-> >
-> > The build with lots of separate Build/Makefiles is something of a pain
-> > to port/maintain in a bazel version of the build I maintain at Google
-> > (happy to open source if anyone cares). In these changes you just run
-> > a big script and get a big header file out the end, which largely
-> > matches the other perf trace beauty things we build.
->
-> Fair enough! I wanted to mimic how the kernel was building the syscall
-> tables as closely as possible, it's convenient to have cohesion.
+On 2/3/25 12:24 PM, Joel Fernandes wrote:
+> Hi Danilo,
+> On Fri, Jan 31, 2025 at 11:04:24PM +0100, Danilo Krummrich wrote:
+...
+>> +const BAR0_SIZE: usize = 8;
+>> +pub(crate) type Bar0 = pci::Bar<BAR0_SIZE>;
+>> +
+>> +kernel::pci_device_table!(
+>> +    PCI_TABLE,
+>> +    MODULE_PCI_TABLE,
+>> +    <NovaCore as pci::Driver>::IdInfo,
+>> +    [(
+>> +        pci::DeviceId::from_id(bindings::PCI_VENDOR_ID_NVIDIA, bindings::PCI_ANY_ID as _),
+> 
+> Does this mean it will match even non-GSP Nvidia devices?
+> 
 
-I think it makes sense in the kernel, as the built binary doesn't have
-cross-platform concerns. This is probably also the reason why the perf
-tool has an arch directory. Let me know what you think is the right
-direction for the perf tool syscall table code.
+Yes, it does. However, the Gpu construction a little further down
+will fail on pre-GSP GPUs, thus failing the probe(), so all is well.
 
-> What is the usecase for the bazel version?
+More below:
 
-I'm sure there's more info in:
-https://bazel.build/
-but the main thing is having hermetic and reproducible builds. The
-main problem with open sourcing would be dealing with external
-repositories, test set up, etc. Tbh, hermetic builds are a challenge
-as things like lex and yacc will vary the C code they generate based
-on the platform they run on. Bazel has plans to change the world so
-maybe this could be more of a thing in the future.
+>> +        ()
+>> +    )]
+>> +);
+>> +
+>> +impl pci::Driver for NovaCore {
+>> +    type IdInfo = ();
+>> +    const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+>> +
+>> +    fn probe(pdev: &mut pci::Device, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
+>> +        dev_dbg!(pdev.as_ref(), "Probe Nova Core GPU driver.\n");
+>> +
+>> +        pdev.enable_device_mem()?;
+>> +        pdev.set_master();
+>> +
+>> +        let bar = pdev.iomap_region_sized::<BAR0_SIZE>(0, c_str!("nova-core"))?;
+>> +
+>> +        let this = KBox::pin_init(
+>> +            try_pin_init!(Self {
+>> +                gpu <- Gpu::new(pdev, bar)?,
 
-Fwiw, I did push changes into the perf tree so that man page building
-was reproducible:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/co=
-mmit/tools/perf/Documentation?h=3Dperf-tools-next&id=3Dd586ac10ce56b2381b8e=
-1d8ed74660c1b2b8ab0d
-The man pages used to reflect the date/time they were built, but now
-reflect the date the of the commit of the file being built:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/Documentation/Makefile?h=3Dperf-tools-next#n255
+Here. Try to construct a Gpu, which tries to construct a GpuSpec, which
+fails out if Chipset is not listed, or if CardType (which should be
+renamed to Architecture) is not listed.
 
-Thanks,
-Ian
+And only Turing+ GPUs are listed. Turing is the first GPU that has a
+GSP unit.
 
-> - Charlie
->
-> >
-> > Thanks,
-> > Ian
-> >
-> > > >
-> > > > The patches generating a syscall(_32|_64)?.h landed. These changes
-> > > > take your changes and make it so that we just run the script once
-> > > > building a header file for all architectures. On x86 we then have t=
-he
-> > > > tables be guarded by ifdefs on i386 and x86-64. Then rather than th=
-e
-> > > > table just matching the host architecture the ELF machine is used f=
-or
-> > > > the executable running.
-> > > >
-> > > > Thanks,
-> > > > Ian
-> > > >
-> > > > > - Charlie
-> > > > >
-> > > > > >
-> > > > > > Ian Rogers (7):
-> > > > > >   perf syscalltble: Remove syscall_table.h
-> > > > > >   perf trace: Reorganize syscalls
-> > > > > >   perf syscalltbl: Remove struct syscalltbl
-> > > > > >   perf thread: Add support for reading the e_machine type for a=
- thread
-> > > > > >   perf trace beauty: Add syscalltbl.sh generating all system ca=
-ll tables
-> > > > > >   perf syscalltbl: Use lookup table containing multiple archite=
-ctures
-> > > > > >   perf build: Remove Makefile.syscalls
-> > > > > >
-> > > > > >  tools/perf/Makefile.perf                      |  10 +-
-> > > > > >  tools/perf/arch/alpha/entry/syscalls/Kbuild   |   2 -
-> > > > > >  .../alpha/entry/syscalls/Makefile.syscalls    |   5 -
-> > > > > >  tools/perf/arch/alpha/include/syscall_table.h |   2 -
-> > > > > >  tools/perf/arch/arc/entry/syscalls/Kbuild     |   2 -
-> > > > > >  .../arch/arc/entry/syscalls/Makefile.syscalls |   3 -
-> > > > > >  tools/perf/arch/arc/include/syscall_table.h   |   2 -
-> > > > > >  tools/perf/arch/arm/entry/syscalls/Kbuild     |   4 -
-> > > > > >  .../arch/arm/entry/syscalls/Makefile.syscalls |   2 -
-> > > > > >  tools/perf/arch/arm/include/syscall_table.h   |   2 -
-> > > > > >  tools/perf/arch/arm64/entry/syscalls/Kbuild   |   3 -
-> > > > > >  .../arm64/entry/syscalls/Makefile.syscalls    |   6 -
-> > > > > >  tools/perf/arch/arm64/include/syscall_table.h |   8 -
-> > > > > >  tools/perf/arch/csky/entry/syscalls/Kbuild    |   2 -
-> > > > > >  .../csky/entry/syscalls/Makefile.syscalls     |   3 -
-> > > > > >  tools/perf/arch/csky/include/syscall_table.h  |   2 -
-> > > > > >  .../perf/arch/loongarch/entry/syscalls/Kbuild |   2 -
-> > > > > >  .../entry/syscalls/Makefile.syscalls          |   3 -
-> > > > > >  .../arch/loongarch/include/syscall_table.h    |   2 -
-> > > > > >  tools/perf/arch/mips/entry/syscalls/Kbuild    |   2 -
-> > > > > >  .../mips/entry/syscalls/Makefile.syscalls     |   5 -
-> > > > > >  tools/perf/arch/mips/include/syscall_table.h  |   2 -
-> > > > > >  tools/perf/arch/parisc/entry/syscalls/Kbuild  |   3 -
-> > > > > >  .../parisc/entry/syscalls/Makefile.syscalls   |   6 -
-> > > > > >  .../perf/arch/parisc/include/syscall_table.h  |   8 -
-> > > > > >  tools/perf/arch/powerpc/entry/syscalls/Kbuild |   3 -
-> > > > > >  .../powerpc/entry/syscalls/Makefile.syscalls  |   6 -
-> > > > > >  .../perf/arch/powerpc/include/syscall_table.h |   8 -
-> > > > > >  tools/perf/arch/riscv/entry/syscalls/Kbuild   |   2 -
-> > > > > >  .../riscv/entry/syscalls/Makefile.syscalls    |   4 -
-> > > > > >  tools/perf/arch/riscv/include/syscall_table.h |   8 -
-> > > > > >  tools/perf/arch/s390/entry/syscalls/Kbuild    |   2 -
-> > > > > >  .../s390/entry/syscalls/Makefile.syscalls     |   5 -
-> > > > > >  tools/perf/arch/s390/include/syscall_table.h  |   2 -
-> > > > > >  tools/perf/arch/sh/entry/syscalls/Kbuild      |   2 -
-> > > > > >  .../arch/sh/entry/syscalls/Makefile.syscalls  |   4 -
-> > > > > >  tools/perf/arch/sh/include/syscall_table.h    |   2 -
-> > > > > >  tools/perf/arch/sparc/entry/syscalls/Kbuild   |   3 -
-> > > > > >  .../sparc/entry/syscalls/Makefile.syscalls    |   5 -
-> > > > > >  tools/perf/arch/sparc/include/syscall_table.h |   8 -
-> > > > > >  tools/perf/arch/x86/entry/syscalls/Kbuild     |   3 -
-> > > > > >  .../arch/x86/entry/syscalls/Makefile.syscalls |   6 -
-> > > > > >  tools/perf/arch/x86/include/syscall_table.h   |   8 -
-> > > > > >  tools/perf/arch/xtensa/entry/syscalls/Kbuild  |   2 -
-> > > > > >  .../xtensa/entry/syscalls/Makefile.syscalls   |   4 -
-> > > > > >  .../perf/arch/xtensa/include/syscall_table.h  |   2 -
-> > > > > >  tools/perf/builtin-trace.c                    | 275 ++++++++++=
-+-------
-> > > > > >  tools/perf/scripts/Makefile.syscalls          |  61 ----
-> > > > > >  tools/perf/scripts/syscalltbl.sh              |  86 ------
-> > > > > >  tools/perf/trace/beauty/syscalltbl.sh         | 274 ++++++++++=
-+++++++
-> > > > > >  tools/perf/util/syscalltbl.c                  | 142 ++++-----
-> > > > > >  tools/perf/util/syscalltbl.h                  |  22 +-
-> > > > > >  tools/perf/util/thread.c                      |  50 ++++
-> > > > > >  tools/perf/util/thread.h                      |  14 +-
-> > > > > >  54 files changed, 598 insertions(+), 506 deletions(-)
-> > > > > >  delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Kbuild
-> > > > > >  delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Makefi=
-le.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/alpha/include/syscall_table=
-.h
-> > > > > >  delete mode 100644 tools/perf/arch/arc/entry/syscalls/Kbuild
-> > > > > >  delete mode 100644 tools/perf/arch/arc/entry/syscalls/Makefile=
-.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/arc/include/syscall_table.h
-> > > > > >  delete mode 100644 tools/perf/arch/arm/entry/syscalls/Kbuild
-> > > > > >  delete mode 100644 tools/perf/arch/arm/entry/syscalls/Makefile=
-.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/arm/include/syscall_table.h
-> > > > > >  delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Kbuild
-> > > > > >  delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Makefi=
-le.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/arm64/include/syscall_table=
-.h
-> > > > > >  delete mode 100644 tools/perf/arch/csky/entry/syscalls/Kbuild
-> > > > > >  delete mode 100644 tools/perf/arch/csky/entry/syscalls/Makefil=
-e.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/csky/include/syscall_table.=
-h
-> > > > > >  delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Kb=
-uild
-> > > > > >  delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Ma=
-kefile.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/loongarch/include/syscall_t=
-able.h
-> > > > > >  delete mode 100644 tools/perf/arch/mips/entry/syscalls/Kbuild
-> > > > > >  delete mode 100644 tools/perf/arch/mips/entry/syscalls/Makefil=
-e.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/mips/include/syscall_table.=
-h
-> > > > > >  delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Kbuil=
-d
-> > > > > >  delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Makef=
-ile.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/parisc/include/syscall_tabl=
-e.h
-> > > > > >  delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Kbui=
-ld
-> > > > > >  delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Make=
-file.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/powerpc/include/syscall_tab=
-le.h
-> > > > > >  delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Kbuild
-> > > > > >  delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Makefi=
-le.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/riscv/include/syscall_table=
-.h
-> > > > > >  delete mode 100644 tools/perf/arch/s390/entry/syscalls/Kbuild
-> > > > > >  delete mode 100644 tools/perf/arch/s390/entry/syscalls/Makefil=
-e.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/s390/include/syscall_table.=
-h
-> > > > > >  delete mode 100644 tools/perf/arch/sh/entry/syscalls/Kbuild
-> > > > > >  delete mode 100644 tools/perf/arch/sh/entry/syscalls/Makefile.=
-syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/sh/include/syscall_table.h
-> > > > > >  delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Kbuild
-> > > > > >  delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Makefi=
-le.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/sparc/include/syscall_table=
-.h
-> > > > > >  delete mode 100644 tools/perf/arch/x86/entry/syscalls/Kbuild
-> > > > > >  delete mode 100644 tools/perf/arch/x86/entry/syscalls/Makefile=
-.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/x86/include/syscall_table.h
-> > > > > >  delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Kbuil=
-d
-> > > > > >  delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Makef=
-ile.syscalls
-> > > > > >  delete mode 100644 tools/perf/arch/xtensa/include/syscall_tabl=
-e.h
-> > > > > >  delete mode 100644 tools/perf/scripts/Makefile.syscalls
-> > > > > >  delete mode 100755 tools/perf/scripts/syscalltbl.sh
-> > > > > >  create mode 100755 tools/perf/trace/beauty/syscalltbl.sh
-> > > > > >
-> > > > > > --
-> > > > > > 2.48.1.362.g079036d154-goog
-> > > > > >
+By the way, I have loaded this on a system with a Kepler GPU (pre-Turing),
+and an Ampere GPU, and traced through actually loading NovaCore, and it
+behaves as described above.
+
+thanks,
+-- 
+John Hubbard
+
