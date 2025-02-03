@@ -1,51 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3070A2C859;
-	Mon,  3 Feb 2025 19:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C6420C472
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738612671; cv=none; b=b7eZ2bUGLtrs6brBukIs1IZyqJF7wvrv6OGSQRQQP2Jmyl6xeBnm3Sqj6RtoNqYlrGg+gBUeifGsKvulpNXiHC+IveXzZcZaQu62cz3vIFO3+F569dkUGjyBX788paZIBdlSdp7c+F4F8xB4VzDJWCmLrf9ZPpnxW7yxV5dbQBQ=
+	t=1738612672; cv=none; b=cVp4kyWtR0dqWM1wKAXcWoEsIEqpC3GS52Y0R1ym7UovmebU7rqmF22UVq/mNQ9FDd0lDR8mUSbmxzrTh6J92SlzBopn+Jh0gtynPYMFKSkDeCwpn0WOMcOOShCVF6yO5F7qruChne/hEKrNt9tXn+C0N4m0YMonlrAL4Eq6KBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738612671; c=relaxed/simple;
-	bh=durZiyUzKeQV8I7CDYBd9bdRLrh73k2nsD8U1EuoMNI=;
+	s=arc-20240116; t=1738612672; c=relaxed/simple;
+	bh=1U+4bW3OdAEZLqi110FQ2TeRPXrfhTqN22R/3BK7pwc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=XPFa7tmfNxy9fr7mwJLuCHdSYCRX3giuK/aXL61TAbpNSHc/9zDNraeJ+inBVWQmqFW9UwDWyJGOwu2gadPRBfT25pJBp6ureryVyF5LlNmM/f6YWMlcLq1rxGcLz3ZtzmXYCh/ZxkEq1DPPFQTlEr5UQwLBCqo3RJDGnOffwJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwzGCyl+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=FDYhfxfVeQEbErKNSOPb2fsL/qOTPYmldGIHshAS30k2E2bBZBxruBvXVTI6+URnQO6swT9Fy1TETJGqVqK8mDvgXCoppD8S8r+aGk2cX89D602iCc0z33Ve/POkgHu5WvO0lL3zDbYAOyWcRUrql8kjekj4+Xg2FT2dZGVXDd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTDyX/5U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwzGCyl+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A37BDC4CED2;
-	Mon,  3 Feb 2025 19:57:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTDyX/5U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1925CC4CEEA;
+	Mon,  3 Feb 2025 19:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738612670;
-	bh=durZiyUzKeQV8I7CDYBd9bdRLrh73k2nsD8U1EuoMNI=;
+	s=k20201202; t=1738612671;
+	bh=1U+4bW3OdAEZLqi110FQ2TeRPXrfhTqN22R/3BK7pwc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=GwzGCyl+NjMgN6QiwVEbFS1WawVGL2e3kcTGvNzQUqJ9W93Jk/xBCjut6IL6lN30t
-	 HPAiZoCt9knGKLw4BWT+5jplUrJ08LSqhhNEmlFN+bBgRsmvencGfc53E8lb9L2oZF
-	 IrHMnff+KS1Ktq1Mw9A0JJb9TvavUnidAHJHV+A3rcRQiGlOhcmyTdM/3/4G18/tYe
-	 LZv4hPRa1RIu/hS8qqM+xX8wDtHO6NPv75H8KhKoUxOQzxRd0g9XUX1VZhKOx3cUkh
-	 VFUSFeZ2vPwFIc56CMBTXcYsy5cyKcwnhfVrE18N3OQnEtQr4cbuZ5anw4eEW+VAPp
-	 nBE5nGZeSZF2w==
+	b=BTDyX/5USaZv71ksap4fCQAkegYhe7J4z15CVNvfilhla+JkenM/qRD//UyFqIG66
+	 FPlC4AgjiQMvPD8MTVT+SXUW02X0CtviirNybOpkspx8BxANkVfA1gjlLMZ/hHyOZd
+	 lPWOV6WDpTiGE3MfspTPVrwv9sHDJxLq1CQYfXID+JZNzDZYAlC3RrBgZWN08XqLeg
+	 i3VkSADPFWSS1n5XWb0ACm/Zei6kmErHD2j22kk306pp1gxgZxUFT0VoL16IL98Ort
+	 SV058dSTbBqtIv/xqkQUx++oCFg607jLMb86T1t3SE42VpaVI+qtOp3qa97rDTVAFd
+	 M3uNaL6QB0UtA==
 From: Mark Brown <broonie@kernel.org>
-To: linux-arm-kernel@lists.infradead.org, Marek Vasut <marex@denx.de>, 
- Conor Dooley <conor@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- devicetree@vger.kernel.org, Frieder Schrempf <frieder.schrempf@kontron.de>, 
- imx@lists.linux.dev, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, 
- Rob Herring <robh@kernel.org>, Robin Gong <yibin.gong@nxp.com>, 
- Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
- Frieder Schrempf <frieder@fris.de>
-Cc: Bo Liu <liubo03@inspur.com>, Conor Dooley <conor.dooley@microchip.com>, 
- Fabio Estevam <festevam@gmail.com>, Frank Li <Frank.Li@nxp.com>, 
- Joy Zou <joy.zou@nxp.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>
-In-Reply-To: <20241218152842.97483-1-frieder@fris.de>
-References: <20241218152842.97483-1-frieder@fris.de>
-Subject: Re: (subset) [PATCH v3 0/9] Use correct LDO5 control registers for
- PCA9450
-Message-Id: <173861266637.674751.16665389874730608623.b4-ty@kernel.org>
-Date: Mon, 03 Feb 2025 19:57:46 +0000
+To: michael.hennerich@analog.com, 
+ Isaac Scott <isaac.scott@ideasonboard.com>
+Cc: lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20250128173143.959600-1-isaac.scott@ideasonboard.com>
+References: <20250128173143.959600-1-isaac.scott@ideasonboard.com>
+Subject: Re: (subset) [PATCH v2 0/3] regulator: Add device tree support to
+ AD5398
+Message-Id: <173861267083.674751.11323507108232831225.b4-ty@kernel.org>
+Date: Mon, 03 Feb 2025 19:57:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,14 +46,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-1b0d6
 
-On Wed, 18 Dec 2024 16:27:23 +0100, Frieder Schrempf wrote:
-> This is a follow-up of [1].
-> 
-> The main objective of this is to fix the PCA9450 driver to
-> use the correct control register for the LDO5 regulator.
-> 
-> Currently the control register to use for LDO5 is hardcoded to
-> LDO5CTRL_H. This is wrong for two reasons:
+On Tue, 28 Jan 2025 17:31:40 +0000, Isaac Scott wrote:
+> The AD5398 is a DAC that can be used to control current flow in circuits
+> in a wide variety of applications such as motor control, or in my case,
+> LED control. I found when working with the current driver that it did
+> not work for my use case. It transpired that it only had support for
+> platform_data, and didn't appear to be correctly implemented according
+> to the datasheet, which can be found here:
 > 
 > [...]
 
@@ -73,16 +62,10 @@ Applied to
 
 Thanks!
 
-[1/9] dt-bindings: regulator: pca9450: Add properties for handling LDO5
-      commit: f9cbf56b0a1966d977df87d15a5bdbff2c342062
-[2/9] arm64: dts: imx8mp-skov-reva: Use hardware signal for SD card VSELECT
-      commit: b5ec74c2aec76fbdff9bc16951455602e11902bf
-[3/9] Revert "regulator: pca9450: Add SD_VSEL GPIO for LDO5"
-      commit: c73be62caabbec6629689c705aea65e5ce364d5d
-[4/9] regulator: pca9450: Fix control register for LDO5
-      commit: 3ce6f4f943ddd9edc03e450a2a0d89cb025b165b
-[5/9] regulator: pca9450: Fix enable register for LDO5
-      commit: f5aab0438ef17f01c5ecd25e61ae6a03f82a4586
+[1/3] regulator: ad5398: change enable bit name to improve readibility
+      commit: 19d022d67d7353f0e6e9ba255435d3de93862ac4
+[3/3] regulator: ad5398: Add device tree support
+      commit: 5a6a461079decea452fdcae955bccecf92e07e97
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
