@@ -1,183 +1,171 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEBE1FF7A1;
-	Mon,  3 Feb 2025 09:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282C11FFC74
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738575931; cv=none; b=FoE/L77Hm2XbN6VV2WZdzc1OItiIPsDhNxhl+8tqur6/librOw43ZWi/dzLqlGN84bODs0BBVHk3QUyzM/xNZiy8i1frBXNc85nILqKkNoJzdKVRVUs9WzyvTojJ7yMxynroVJ/MC4HJXmNFcX5ZbQZxCgHkxrvJBmDtLQVIk4o=
+	t=1738575945; cv=none; b=HI/7A6uFrE/ohzJtGXfjmUikoVyN2j/92LCGh+lvvB5/fs2sm1+KCVaJMXFnrC0/Utrqx5JJ5TS5ydn4WylQaiJRRqmCzuk4NIumvfCe36m11IoRaK1GjrytsNyfdM6iGlXGNgA2QTlYxYI0yygskyDUt4HBFHoZYXWNlG5TiwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738575931; c=relaxed/simple;
-	bh=fIgcGBvqDbLq7kS0K19wxfiPZ79yRpz1C2hfr9gQqoI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SsV9UT64tkWg+Jla8KmONuqVy1pEmhckhxnis8kMT9V3Hqu/krPWC6yREjo6PA+cBuVz4BZf0Echb4DBIIGOp/ICyxfpfzptmaBFOF1Oi/37IkRoLMi2nOrgwBIBxVapt4jS4RtBMIqx2xR328qpVPPYKTmJ5MfWjf21A2709/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HWmu7Vzk; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738575945; c=relaxed/simple;
+	bh=F9DEP827Yf9q6DBUARR9/3T54ckPf/8fBNAzaAKI6N4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=irKfNSrt7WfUwVWk0PWOhvUHOwHWMaE3wCfJXM6YKWOBoi0xuIWzX26EmI47n/ymu/IF/Zu1B/qRAh5B08MfpKsanjl5PMcRevSM/NGwnyissUDPInp0+yIhIpDuLuvgXMtRpJX5ro8D8MRG3s1NWFkJ02Xn1Cs+eR9OS1zAoEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=VogFafGx; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWmu7Vzk"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6dd5c544813so42950246d6.1;
-        Mon, 03 Feb 2025 01:45:29 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VogFafGx"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3863c36a731so3238413f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:45:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738575929; x=1739180729; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yI5g0smySPHHeVACX7JhK2ZoaTHZN0JQLDEIzqW27Mg=;
-        b=HWmu7VzkUk8pmA+qNa/Je0OsBBpX1C7823v52GwvU6nR3VRHPE6bplgMygKx1LggQJ
-         lMR0jZjzySOptUiBmAFw658Nwsqjrb6mFJ7O8UNBW1t5htNq8z4k82E793nvKwS+jNbF
-         LC2PCSIhj0ADc4Gif+5PRDNSeN1CwMmslPsr5DJlhRCX0p8NvF5sGMKi/1sj2e9bB0cH
-         cjIf5WlfaqeoNI6O6cemwUfFYSMpv2ERSuxEKLOqN5xZudP1FpgbMylYUKGvVQLEJVra
-         H+J0ehAnDjj2+9FpsCQYyI1OQBqIFmWhoy+zijwnfPEfhbrWRq1DLiJHWTNoAF+hs5qV
-         38Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738575929; x=1739180729;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=ffwll.ch; s=google; t=1738575940; x=1739180740; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yI5g0smySPHHeVACX7JhK2ZoaTHZN0JQLDEIzqW27Mg=;
-        b=ljGuoXmidsTUunNWoYaJA00Tk+23mLWlxvarXxNb6/sfkBP/Gbhoi2QddrQ1tmw+Xi
-         FY2r7uqUr21626tm2/dwxuBjROFvcob4G3q7KLc+QPl/KsJ6UBGF0KDnMaSFgBj4gg5b
-         l97NmS4H2c3Qvuw7NR1dW8RfBzu1hSsEygX/LtHK6aCzSQuK/airRZfjUnuF4F1hEBdR
-         8hoob+DOB0G0YGqVujRiB77zhy323t1iineknkXTiPBldGJpAzYEkUVWMB91S1gOLzfX
-         UTUjByIOaovcVABxeV70Rv1Myqgwp/70pAjNmyJO2s+x1U4BYKoXELZuKH3g/tvoyC46
-         Xx3A==
-X-Forwarded-Encrypted: i=1; AJvYcCU9BONob8/7RaQhCF84bNO2JfuiOCd9/XR8vUdThvecKagQLXHdp80mms3Cpgu8eBicrIWbkXoDdAlC1HAa2A==@vger.kernel.org, AJvYcCXtd8UOzSBTx+Avpka2hSg4tGmsvlu8mRVJsMhKjef1GEPjNn/nwNVZbLJfw98IeOo+rYw1ZGF/r9slfyw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVVDDpJ8WqOFoWpsGwS9GrAaHmyWwYieUfj9ARejdMOQce6doI
-	lk0i4uWbX76Ra05dXgZE/p/wo7pp96rF4VZ73M2YKk80BAv3FGQ57I2ufxsTn8VOUK8YH5DUnXG
-	zeEFc15LJ+DF3c3eBknzUSogWWvo=
-X-Gm-Gg: ASbGncsixFoKMnx6owF1Lp8nx4jrGj+OijG2wTzjKTEuAfxN9EPkaY2dTMiueJT7D+9
-	5byl5r48dQzI8Fbf3johJuedQbVnrUVj33nRuT3Z9drr3apFbhnLF5lhQHZoGVmShGvJUXZ7Obo
-	A=
-X-Google-Smtp-Source: AGHT+IGvMyY5kE20lb9+gjNPiN+ok4bJSat72WlIS8jV/PsJPNHLlUf8lp/DCJcxYGgnhJ7QrxM5+XhiWUOVzLO2aUM=
-X-Received: by 2002:ad4:5c63:0:b0:6d8:7ed4:3367 with SMTP id
- 6a1803df08f44-6e243bfa9cbmr344740486d6.19.1738575928886; Mon, 03 Feb 2025
- 01:45:28 -0800 (PST)
+        bh=77lujEVv3EMAidmfrKRz++J2MUJPK/0SmZ7KBdwq7nI=;
+        b=VogFafGxeo5s2XOwECfbQ73fnAWjFC42D+hQdV3A6ej/oVc7bUYu74FcqvrDXYmP5E
+         EF91ynUXcpPyqJPptD+FSLZ34exEjnvEv9mv0KZEojure+3eeEYn5jJlTcZ/kIjwXSDE
+         AQPIpwHJE5SETXkZnJSC7lZxE9n9MmdHj94cg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738575940; x=1739180740;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=77lujEVv3EMAidmfrKRz++J2MUJPK/0SmZ7KBdwq7nI=;
+        b=Cv3vW8G1hDEStgVx8qDI5C0nUSlDUcT2sybSs/YIZL/a509uk47DDy9ToBwa6kfcq7
+         e8UfnEBpMldj7Apf3KrntwpmrN7XHCH+bT4YCykzfIlvQommRs+mokgDxHxvnZbmlWBb
+         KUwo7LwD0OUFt+B8OtMuEY2TtpvzDyQVAEcl4jQav1JTsaCajATsXmZWnvEPxnhGPYbS
+         MBIqDmUmmaX0K+nF/HtAaJu44WTnuU11qeJJsi+tq+HdU22ZPC0mpLqmhgxML6DljM7i
+         jY/2l2Urii/A/UrvUJL1qejoBop8BiT68BCze7cdv2+8vXYS+vR1fQuGDOYcaqmZN0eF
+         BIAA==
+X-Forwarded-Encrypted: i=1; AJvYcCU78k4QyVUZpxUtZ8jq7B3bEvNYLQmljgRhAPFkCRxBmq5A7AdsS+qWsdsvsuw6ufLV1oXCrz2jBwvA9hA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzR5QsMPRQKbAW4rnsBOye9xRONK96pXMWu+FkKvtwDCR3Z1vD7
+	a6MSk1kQQwiHx/05QCyjPqSo2uyRrMmWYOwZrZbF8uisGO+C0nveHrFpDkDLvZ4=
+X-Gm-Gg: ASbGnctjRddp9BRRcgy9RusLEBjz0wcc/mNjbEiiGvEEbIAPrYAqxRw8uAXaTepnssf
+	3SEC52D42mzo9DN2/j3B71v/0nXacR6KvlrAZMPRLCza8b4SDk21HYtbeSds3JUP9WA5STFzswH
+	/l/k50mEPz/bN2ONNMZgPFBpRsB00fAnMzNSOqQ8gBVYJJBdA8o0jwuLrtw9TG7G++2CfK2Vooz
+	yZut2hhclxvQLFaKIg+XVZUjh47/OJIzTcfVfzf/LoxiZ1t3++t345lwaMVveLjBBC6025Ta+4u
+	zwLDpIzeG4ehZzzTdXwOMg1C5N8=
+X-Google-Smtp-Source: AGHT+IGtCR6HSkBC+tXLtZ1cIILYqsPDImD8BvFKwvB7f7WEENZ/bnSYuPhTe7TyO11dgd4Lwm9bnw==
+X-Received: by 2002:a05:6000:1884:b0:388:e377:8a1b with SMTP id ffacd0b85a97d-38c51b60c11mr16499686f8f.28.1738575940333;
+        Mon, 03 Feb 2025 01:45:40 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e245f49dsm147899985e9.35.2025.02.03.01.45.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 01:45:39 -0800 (PST)
+Date: Mon, 3 Feb 2025 10:45:37 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] WIP: drivers/base: Add virtual_device_create()
+Message-ID: <Z6CQQZ5fbBwCJ63K@phenom.ffwll.local>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>
+References: <Z5Nw8kaieLueWyUu@pollux>
+ <20250130212843.659437-1-lyude@redhat.com>
+ <2025013159-shabby-professor-515b@gregkh>
+ <2025013140-propeller-dirtiness-6cb4@gregkh>
+ <Z50ZuzrDn-GQWOuP@cassiopeiae>
+ <2025020106-avert-senorita-4181@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127063526.76687-1-laoar.shao@gmail.com> <Z5eOIQ4tDJr8N4UR@pathway.suse.cz>
- <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com> <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz>
-In-Reply-To: <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Mon, 3 Feb 2025 17:44:52 +0800
-X-Gm-Features: AWEUYZkgVAbCEEqv9xLAAam3naI3QqVSMewJrFrQ8C5LyjSMOMVLC7GGoXuY--I
-Message-ID: <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
-To: Miroslav Benes <mbenes@suse.cz>
-Cc: Petr Mladek <pmladek@suse.com>, jpoimboe@kernel.org, jikos@kernel.org, 
-	joe.lawrence@redhat.com, live-patching@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025020106-avert-senorita-4181@gregkh>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
-On Fri, Jan 31, 2025 at 9:18=E2=80=AFPM Miroslav Benes <mbenes@suse.cz> wro=
-te:
->
-> > >
-> > >   + What exactly is meant by frequent replacements (busy loop?, once =
-a minute?)
-> >
-> > The script:
-> >
-> > #!/bin/bash
-> > while true; do
-> >         yum install -y ./kernel-livepatch-6.1.12-0.x86_64.rpm
-> >         ./apply_livepatch_61.sh # it will sleep 5s
-> >         yum erase -y kernel-livepatch-6.1.12-0.x86_64
-> >         yum install -y ./kernel-livepatch-6.1.6-0.x86_64.rpm
-> >         ./apply_livepatch_61.sh  # it will sleep 5s
-> > done
->
-> A live patch application is a slowpath. It is expected not to run
-> frequently (in a relative sense).
+On Sat, Feb 01, 2025 at 09:00:00AM +0100, Greg Kroah-Hartman wrote:
+> On Fri, Jan 31, 2025 at 07:43:07PM +0100, Danilo Krummrich wrote:
+> > On Fri, Jan 31, 2025 at 05:40:01PM +0100, Greg Kroah-Hartman wrote:
+> > > On Fri, Jan 31, 2025 at 09:00:32AM +0100, Greg Kroah-Hartman wrote:
+> > > > On Thu, Jan 30, 2025 at 04:28:26PM -0500, Lyude Paul wrote:
+> > > > > As Greg KH pointed out, we have a nice /sys/devices/virtual directory free
+> > > > > for the taking - but the vast majority of device drivers concerned with
+> > > > > virtual devices do not use this and instead misuse the platform device API.
+> > > > > 
+> > > > > To fix this, let's start by adding a simple function that can be used for
+> > > > > creating virtual devices - virtual_device_create().
+> > > > > 
+> > > > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > > > 
+> > > > > ---
+> > > > > 
+> > > > > So, WIP obviously because I wrote this up in a few minutes - but this goes
+> > > > > off the idea that Danilo suggested to me off-list of coming up with a
+> > > > > simple API for handling virtual devices that's a little more obvious to
+> > > > > use. I wanted to get people's feedback and if we're happy with this idea,
+> > > > > I'm willing to go through and add some pointers to this function in various
+> > > > > platform API docs - along with porting over the C version of VKMS over to
+> > > > > this API.
+> > > > 
+> > > > This is a big better, but not quite.  Let me carve out some time today
+> > > > to knock something a bit nicer together...
+> > > 
+> > > Ok, here's a rough first-cut.  It builds, and boots, and I've converted
+> > > a driver to use the api to prove it works here.  I'll add a bunch more
+> > > documentation before turning it into a "real" patch, but this should
+> > > give you something to work off of.
+> > > 
+> > > I've run out of time for tonight (dinner is calling), but I think you
+> > > get the idea, right?  If you want to knock up a rust binding for this
+> > > api, it should almost be identical to the platform api you were trying
+> > > to use before, right?
+> > 
+> > Yes, additionally, since this can't use the existing platform abstractions any
+> > more, we need the bus abstraction for the virtual bus, i.e. the corresponding
+> > driver::RegistrationOps implementation, module_virtual_driver macro, etc. Should
+> > be a little less than 200 lines of code.
+> 
+> I hope so as the original C code for this is less than 200 lines of code :)
+> 
+> I wonder what it would look like to do a "real" bus in rust, maybe I'll
+> try that someday, but for now, I want this to be used by C code...
+> 
+> > Other than in C, in Rust we don't need the "artificial" match between a virtual
+> > device and a virtual driver to have automatic cleanup through things like
+> > devm_kzalloc().
+> 
+> What artificial match?  Ah, you mean they would both be in the same
+> "object"?
+> 
+> > But I guess we want it for consistency and to have the corresponding sysfs
+> > entries and uevents. OOC, are there any other reasons?
+> 
+> I don't really understand the objection here.  Oooh, you want the C code
+> to both create/manage the driver AND the device at the same time?  Hey I
+> like that, it would make the interface to it even simpler!  Let me go
+> try that, and see if it is what you are thinking of here...
 
-The frequency isn=E2=80=99t the main concern here; _scalability_ is the key=
- issue.
-Running livepatches once per day (a relatively low frequency) across all of=
- our
-production servers (hundreds of thousands) isn=E2=80=99t feasible. Instead,=
- we need to
-periodically run tests on a subset of test servers.
-
-
-> If you stress it like this, it is quite
-> expected that it will have an impact. Especially on a large busy system.
-
-It seems you agree that the current atomic-replace process lacks scalabilit=
-y.
-When deploying a livepatch across a large fleet of servers, it=E2=80=99s im=
-possible to
-ensure that the servers are idle, as their workloads are constantly varying=
- and
-are not deterministic.
-
-The challenges are very different when managing 1K servers versus 1M server=
-s.
-Similarly, the issues differ significantly between patching a single
-function and
-patching 100 functions, especially when some of those functions are critica=
-l.
-That=E2=80=99s what scalability is all about.
-
-Since we transitioned from the old livepatch mode to the new
-atomic-replace mode,
-our SREs have consistently reported that one or more servers become
-stalled during
-the upgrade (replacement).
-
->
-> > >
-> > > > Other potential risks may also arise
-> > > >   due to inconsistencies or race conditions during transitions.
-> > >
-> > > What inconsistencies and race conditions you have in mind, please?
-> >
-> > I have explained it at
-> > https://lore.kernel.org/live-patching/Z5DHQG4geRsuIflc@pathway.suse.cz/=
-T/#m5058583fa64d95ef7ac9525a6a8af8ca865bf354
-> >
-> >  klp_ftrace_handler
-> >       if (unlikely(func->transition)) {
-> >           WARN_ON_ONCE(patch_state =3D=3D KLP_UNDEFINED);
-> >   }
-> >
-> > Why is WARN_ON_ONCE() placed here? What issues have we encountered in t=
-he past
-> > that led to the decision to add this warning?
->
-> A safety measure for something which really should not happen.
-
-Unfortunately, this issue occurs during my stress tests.
-
->
-> > > The main advantage of the atomic replace is simplify the maintenance
-> > > and debugging.
-> >
-> > Is it worth the high overhead on production servers?
->
-> Yes, because the overhead once a live patch is applied is negligible.
-
-If you=E2=80=99re managing a large fleet of servers, this issue is far from=
- negligible.
-
->
-> > Can you provide examples of companies that use atomic replacement at
-> > scale in their production environments?
->
-> At least SUSE uses it as a solution for its customers. No many problems
-> have been reported since we started ~10 years ago.
-
-Perhaps we=E2=80=99re running different workloads.
-Going back to the original purpose of livepatching: is it designed to addre=
-ss
-security vulnerabilities, or to deploy new features?
-If it=E2=80=99s the latter, then there=E2=80=99s definitely a lot of room f=
-or improvement.
-
---=20
-Regards
-Yafang
+So at least in vkms we plan to allow instantiating more than one device,
+with the same driver, so not sure we really want this. The idea is that
+you can also validate the multi-gpu (or at least multi-display) code of
+compositors with entirely fake hw in CI. It is a pretty common pattern
+though for these virtual devices/drivers, but not universal I think.
+-Sima
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
