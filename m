@@ -1,167 +1,95 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DAF1553A3
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 18:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373571925A2;
+	Mon,  3 Feb 2025 18:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738608515; cv=none; b=Z45Dn27HndUKFvOJqj/wFn/qZ2u1McxbC+pGsice7NSWoP5uC1W3IKxrFrNt7+tfP1VLYDAtdxJcXgkUYG3lOzbMp34pj5uOxfkMaYa/QTT56xKScjPxq39hgdacmmdUhd46caEbkyWN7FdLgzD8IWKHkllQmFf+RSzpy/GNxng=
+	t=1738608529; cv=none; b=CTFY7psNRgO0vhIjtmDaYR5x163qaQ12JPPXYzTUBwvPylGVqvCIL5mcXyulNcUR2Upw1gsuLsvDzkBMh2pRzBjwv1S0vy1O0i+cQ75xJmxgMy6pTR2nkXb4SkMLkjFWrz7Cd3WjsIebg4behKkoejUHC6nhoBP+nCDFuTS/NFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738608515; c=relaxed/simple;
-	bh=YFnj24VvreG7lG3Pu3vMo/s91BwtpspZy+voBLJyXRE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=DAfao+nriO6rxqzFe8ByJF2ruutOD0+b6rG7F/8T+WYQzCzxjUrxw2Tqxg32hDefNoEifrQd9oVZCwEtJYxkmDVSfHFdTHNjK5RN0w+lSSuAfNPq/wCDPi5Z4/j31Cuzd4/vwjoBgDqQNbHKnvgBordoT4+E3iEBuOFLb4JE5V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=simg.de; spf=pass smtp.mailfrom=simg.de; dkim=pass (2048-bit key) header.d=simg.de header.i=linux-kernel@simg.de header.b=yiR3wKc6; arc=none smtp.client-ip=212.227.126.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=simg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simg.de
+	s=arc-20240116; t=1738608529; c=relaxed/simple;
+	bh=Lsbd4FEj52HH1IAKgnllNowWn3xfHmVQra2SG9SrUQM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WaBK7HsgbGB5eGoU1kH5YV+UJFUVEJfBLIej7TPimOzgC163+6yP+a8EDf1WcWxPYcAaon3kiukrpAnL9s4F7TZKZiDRhIAnEN0nLPYGwpRdk9QARAjxvvk8TW+cGjVoTt0hZ3shj3eMj4zuwf75BjNkSv3PnMReOxPecddKskw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hJATIDvr; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=simg.de header.i=linux-kernel@simg.de header.b="yiR3wKc6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=simg.de;
-	s=s1-ionos; t=1738608493; x=1739213293; i=linux-kernel@simg.de;
-	bh=YFnj24VvreG7lG3Pu3vMo/s91BwtpspZy+voBLJyXRE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=yiR3wKc6N+LWPS067T1xEU+aA9y6KP4KMhzLXslFRPH5jN6atOAmeUyGOgDt1upX
-	 DFQ6lPL12Tqm8w/ieZPfdA4Mr2jaIs9TubQ473itbQKpz/EDdEjauO+Cp0NfAOnEV
-	 rOr/mf/M+4LQL6VAJvL4D4nnvce8HLDS7/Kw7ybPL7TrFfkmW5ffeT45Iw0RYDOR1
-	 7Fj+B8NAg4UjJMRVwHvwJPOL5o6Ddlqlo3/0H9uPQfUElW6zi2j/v4oby8T0pPDnh
-	 7pf008CFkuGUCcSImsUOtwYuZ4V4GZYcup4dvVcCVD0a+Cm/xiIKEwhC7idDPrsjE
-	 fViNGSeWiFU1q+0Sbw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.1.60] ([87.158.47.249]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MLi4W-1twgrk40Dw-00J9ey; Mon, 03 Feb 2025 19:48:13 +0100
-Message-ID: <4270c0e3-161e-42d5-a6d3-f16b7fbcdc00@simg.de>
-Date: Mon, 3 Feb 2025 19:48:11 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJATIDvr"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21634338cfdso17318055ad.2;
+        Mon, 03 Feb 2025 10:48:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738608526; x=1739213326; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Lsbd4FEj52HH1IAKgnllNowWn3xfHmVQra2SG9SrUQM=;
+        b=hJATIDvrctpi7zYmw10HjVi8cEIfHbYHhmanNT5Jm8FrUJymud8MBgZkFcf/IhSIO1
+         bFJMnmqbNR5sfVf6VE7uXkN0ruAAH46O64tXUo8esB8PmgacNLZASfjW+Y2r4rlTYtex
+         +tIlydrbc2QA1KkbXliHRMtIdc0IBzVTHyESJqVe2fDScwXT0In8aSJTKociYVcD2a4I
+         ECnyYj2zpF8wT2Ht8caGuXdUm5HFJJhq6EcuscEv8hNuS1RWbKp6P0yN7pEmx0JZZuqf
+         mUtKQZIGiidxDYzPnX4Cmmj4ecMCDVCqvQnEhld5EECDy+DleIfvXZP4tDoeDOXX2USo
+         h2xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738608526; x=1739213326;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Lsbd4FEj52HH1IAKgnllNowWn3xfHmVQra2SG9SrUQM=;
+        b=DtNJX3lNb0AI/C9C+lfg2288ncUi/A4CTuT+1t6Tt8xQbywBJAvFPBZv0bXnrI3Umf
+         JR59bnv8aYO7ogu3XvnWbBPSCS8e12nRKtvRdzCT9YxCY18pdTuDJhZC/XTJPhPp+haP
+         OHxCKHPUqU5VaKmqxWQQzsBvhUpfte3D4TKmhSnyj9GYUFFj6qx+tt7tbdH0NFO617zf
+         cRcYZedEk1O1eBYV9jsAylNKQRyVgFxsPPnRJRvjcL95Ul3ZCaRrwgaUqfBY56TS/G/Q
+         7QQGB5pwburLpk5WMly+YIUl2RHsTMw32nbfFwIGgqOdn7XHQX22dIitSK8T4YCjnM0w
+         pF4A==
+X-Forwarded-Encrypted: i=1; AJvYcCV6nJFwm2uk0TpPbfLP6OrxgnTqq7nsZMATZhaPrmhTgO751WJGoI+vfjOYbKOiv0SHlP1aDnQRFim7jtzH3y5e@vger.kernel.org, AJvYcCWsrp0lqSSvoslw2wh8ZtU1gNu82qGDU872KO9rkYNYnC6vOML7rixfDqX4p6hdejqC3H3iHmp/POqC0ddJ@vger.kernel.org, AJvYcCX5M2T0b3v3G4Ti6gM2al9ogH2xRk9vdaOUN4K9IME9AsgWwZ6ESrewPFiP2KdRdVMwYFo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHL5fKggkf0a8F8Ez9+IrkhZrkt+9l5WnXWosMW4/BzMqoYOSf
+	6GIqh6kA7cvnAfhv5iW7yesCx3bJk5qNwuxOD7hm9JBpRNHPh6P+
+X-Gm-Gg: ASbGncuYfjqOGq2utBumyAY9d9yozHRLj8UDsoti13LOvKMbur/1NP5LyADQhsF9kdS
+	St0nSR5oQJRn+oD2vwDNljDhmnJiz9+ovHkK44F59H9PXqaxy5xxm5Jx752QA5RZc8taTQEW6xl
+	OvFiCeyG7Gzix+iR/irK5KKj7InHpObfBPoJN/OBiRZGDc2ZM9jDu7jGRjFbCQg/XbZPl8qSWFQ
+	9JIz/CmZe4Qeu0CHKnALOr4KmyIpom3qnAqvYzWrszD9tN7Qm8upIR2jAZIoI55gDOlMxW4A/mh
+	fgTRgRTUuQW+
+X-Google-Smtp-Source: AGHT+IFITU2OmUI0zcBfuM11sK28MhKdCTwH1hJZGMSzYYt5FEIw42H+u0k06fjcj+R4/qWCivD79A==
+X-Received: by 2002:a05:6a21:8dc8:b0:1e0:d867:c875 with SMTP id adf61e73a8af0-1ed7a623248mr43239572637.36.1738608526355;
+        Mon, 03 Feb 2025 10:48:46 -0800 (PST)
+Received: from [192.168.0.235] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acec096ac4asm8392673a12.63.2025.02.03.10.48.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 10:48:45 -0800 (PST)
+Message-ID: <a89075ae0cdd03d94e61a009214cb399ad4f2382.camel@gmail.com>
+Subject: Re: [PATCH bpf-next 2/3] bpf: selftests: Test constant key
+ extraction on irrelevant maps
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Daniel Xu <dxu@dxuuu.xyz>, daniel@iogearbox.net, shuah@kernel.org, 
+	andrii@kernel.org, ast@kernel.org
+Cc: mykolal@fb.com, martin.lau@linux.dev, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mhartmay@linux.ibm.com, iii@linux.ibm.com
+Date: Mon, 03 Feb 2025 10:48:40 -0800
+In-Reply-To: <d6f48c9cb8b7981fd037a19a8cfbba5def40f2ea.1738439839.git.dxu@dxuuu.xyz>
+References: <cover.1738439839.git.dxu@dxuuu.xyz>
+	 <d6f48c9cb8b7981fd037a19a8cfbba5def40f2ea.1738439839.git.dxu@dxuuu.xyz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of AsRock
- X600M-STX + Ryzen 8700G
-From: Stefan <linux-kernel@simg.de>
-To: "Dr. David Alan Gilbert" <linux@treblig.org>, bugzilla-daemon@kernel.org
-Cc: Christoph Hellwig <hch@lst.de>, Thorsten Leemhuis <linux@leemhuis.info>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Bruno Gravato <bgravato@gmail.com>, Keith Busch <kbusch@kernel.org>,
- Adrian Huang <ahuang12@lenovo.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250109082849.GC20724@lst.de>
- <210e7b28-de05-44bc-9604-83a79ae131b0@leemhuis.info>
- <726275aa-a3c2-4dbd-9055-a14db93efa29@simg.de>
- <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com>
- <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info>
- <20250117080507.GA25953@lst.de>
- <f81bb87a-c181-4973-be05-f7df84133a46@leemhuis.info>
- <10e39c88-4667-4c61-b3eb-3dd7ee3074c3@leemhuis.info>
- <20250128074133.GA22435@lst.de>
- <379bba80-df0f-44c5-a15e-fd4393c52b8f@simg.de> <Z5jTKTfKUeLm4uJT@gallifrey>
- <e01fdde0-4760-487d-af0e-2aecf9d7ade2@simg.de>
-Content-Language: en-US
-In-Reply-To: <e01fdde0-4760-487d-af0e-2aecf9d7ade2@simg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:f9RM+83asFATTdzAoEoXNJJMSOExToxSRQTNr1E6qWGNJeaLQyF
- S57KAWJOB+/4BcEw0KqA8LEijhiaROxGbBCO9oNzEdB+I5IZMFZjuAyPDC0tKYdxmsazgxp
- ysc7W1hd9y19As35jwU7UbrBmNWD/rCMXhFwW/te2drR5fFK78p63usD/fHv29p60YV9224
- FwJ7Qv93NOltqeL7F9e6A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2xs3pvJSyk4=;JuSnkWSq5ZJcSuUA2ef0ZXq5+QD
- VPYJJN6027rReFn8B88BuG1vvhSS2i+1Q590jL+YMsbv7HIs30TjWnI1UrkeEgIPXei7gzJSa
- ORpYgs/q6c9PXLtzgVfLKBkXV6m9HlJGxWwj6TX0zkKeDURd/wStDyWdbDAwykSd87amuYb34
- /oQDSM17OH+9UTQv8Ms1neV/XX0sGioTuE8PDdPK4Dieeq91lQ/feXYiJ3J4CYHWARBL1qhZn
- TkfTsks7/lpSlxOMEgYUWs61eBNFiBHP0BhO2e7jqKT5s37EN8iLKMtDLzGAStFWOKdIpHQgS
- k2TBu7gqeQg5F9Eam+GfAegQmCxOVjJu3j+eyKLDjUp0rFPtbOBGN+Y/upciBTODiC1WrPEAv
- qw+SkljIZHPZvO7K0yk/M7g/QVtvuRwgbJ1Prqmyy7f58y4UFrR9tXXERjszjj+f9ENN9Aj/C
- SjOcYyXWil7G0B75UoP0yfe6DUdAoDsV82Zn4VvgLNdU5GKXXwXBjXmgHSmUhO2n25lFt56P0
- u7eL+V7IVCV5ti4fzx/l55ObG5lznIx3Ha+5unIGJZYsK9BKWqx6Kd+vJtM7wX9uRUak9DGqG
- cmGPxo2yPn20bSUb/rBIjo5J/FHzm8zmrguObQ75kIDZTKJ+B1HVnuXQi8ABqoQ5bCYF6wTyE
- hDTaMpQKV5ACXYbwugpE1Bru1j87KCqsg7rkMv1jrJvTDHwkSOmJd8iUHy2jDp99apx5/JshS
- YKQ/EDUJxIBregjnsTm62ZFrqtEc5xLeTvs6Xpjvz/W1iZJ80ylymKNeXzwwCByhE2ZCxNdQU
- THznIZPBG6in2X3qNwkvDuK9f0Kaff/AmroN0YpDbRBlFTHfEplHJQdvHoymJ5PtjIt5xVCG3
- iluRtHgEwPGXjIrmLMG9iwC0Jp+HBWF6Hw0mS4GpDbnLSi11eqAVAt22p7aQsj07o7XvEg8NN
- Ja+OZsugjjk+X+L9gyixyMgoyL5W8KR1bYsvPZxEw4rk67gzgn7xeDEMOx7QOJvkS78gggD+Y
- azdgNNG8q+zB7TlVYpce8orMjIc7ljh/Rt38fV5b6Jnveh0fKD4z+um5KLudCb8mkr/ue1UxE
- 08nLbAlUgxFlJJyEqlg8HwMeVeYVNWnesqUJ6eRLumNd0633xJk6K67vNHtQbISYfLNyByt7w
- bXYc80U+6zrwnpQWgAjU7TToOuD90Uq5m3/P7HFqK8SMaAKF26255VoCAPBukSRZkAg3YNZKt
- BL5HyeAW1qZy4JMcTOrrl3nGu5dEaaoodslX3koylONNCHGnA+Cw8m0=
 
-Hi,
+On Sat, 2025-02-01 at 12:58 -0700, Daniel Xu wrote:
+> Test that very high constant map keys are not interpreted as an error
+> value by the verifier. This would previously fail.
+>=20
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> ---
 
-just got feedback from ASRock. They asked me to make a video from the
-corruptions occurring on my remotely (and headless) running system.
-Maybe I should make video of printing out the logs that can be found an
-the Linux and Debian bug trackers ...
+Acked-by: Eduard Zingerman <eddyz87@gmail.com>
 
-Seems that ASRock is unwilling to solve the problem.
-
-Regards Stefan
-
-
-Am 28.01.25 um 15:24 schrieb Stefan:
-> Hi,
->
-> Am 28.01.25 um 13:52 schrieb Dr. David Alan Gilbert:
->> Is there any characterisation of the corrupted data; last time I
->> looked at the bz there wasn't.
->
-> Yes, there is. (And I already reported it at least on the Debian bug
-> tracker, see links in the initial message.)
->
-> f3 reports overwritten sectors, i.e. it looks like the pseudo-random
-> test pattern is written to wrong position. These corruptions occur in
-> clusters whose size is an integer multiple of 2^17 bytes in most cases
-> (about 80%) and 2^15 in all cases.
->
-> The frequency of these corruptions is roughly 1 cluster per 50 GB writte=
-n.
->
-> Can others confirm this or do they observe a different characteristic?
->
-> Regards Stefan
->
->
->> I mean, is it reliably any of:
->> =C2=A0=C2=A0=C2=A0 a) What's the size of the corruption?
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 block, cac=
-he line, word, bit???
->> =C2=A0=C2=A0=C2=A0 b) Position?
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 e.g. last =
-word in a block or something?
->> =C2=A0=C2=A0=C2=A0 c) Data?
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pile of ze=
-ro's/ff's junk/etc?
->>
->> =C2=A0=C2=A0=C2=A0 d) Is it a missed write, old data, or partially writ=
-ten block?
->>
->> Dave
->>
->>>> Puh.=C2=A0 I'm kinda lost on what we could do about this on the Linux
->>>> side.
->>>
->>> Because it also depends on the CPU series, a firmware or hardware issu=
-e
->>> seems to be more likely than a Linux bug.
->>>
->>> ATM ASRock is still trying to reproduce the issue. (I'm in contact wit=
-h
->>> them to. But they have Chinese new year holidays in Taiwan this week.)
->>>
->>> If they can't reproduce it, they have to provide an explanation why th=
-e
->>> issues are seen by so many users.
->>>
->>> Regards Stefan
->>>
->>>
->
+[...]
 
