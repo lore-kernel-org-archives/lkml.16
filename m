@@ -1,85 +1,165 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4B97D07D
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 23:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB425201267;
+	Mon,  3 Feb 2025 23:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738624766; cv=none; b=RMdpfYGnvZxyzaE6u51tiC8qnhJy0TAGAQjy4sqZ9878LuK2Ub59bU0PEfooinCcCV0G8TgbLLxm83VQ3nyNfq6oe9Ed4+z09Tx5wt/UVQT4jaZlWjR960WkWkegSY/lgw8vge58LBo4wUx7s8UkG+m0EpmumNYeCA3aquWKSbY=
+	t=1738624843; cv=none; b=jsgTiX0uGi/ABEiPSZlkatZb0/hE1qP3HofwbaiKRUQFHG+fHKduaPtAGfDXiuoHlQpsDcXU+Z/wgWdZ2fSgAtxXjJnQzkVjqwTw7uQ3IS6cG6I4p3U/u43HdRceb1eOtokkEdJ6bkUgdYa2JdlqZ2+34wnpzS0L2yxsb+1tt1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738624766; c=relaxed/simple;
-	bh=Ig4aI1lduZ5GHIVvXm/8TWYwIggL/qtvv+UiO8KmmNY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IEeva6rD6IesvREs6v6B4Vk3pY2qeaM7QNz4vMKO9JeMHQ34ad+1pSKNY7jj6RJFcm4qsoRfg+aRwwzf0hpTq3ajBJOnSFBD3aSEBXTDSZS1pAMV0m2nO925DQ2kH0xTP5u31NfUXZ2FaWP/xsLtNlowi+x3YWcZwoQNltNuV4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nkDIi8Qe; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738624843; c=relaxed/simple;
+	bh=Jf5yLF0QA77l3vRMWJUEaa8p/xUOR3jCWV62rrEDc6Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bmM1iSO/VHzTLK06ZjWNHz0aL96GhVNWiXFBa0L4WW7QI5+MssO9hhL6nGAijAZwwMf79M3b7UYKDi7duHqqQgect5Z7UkcW8hJ7egWWoDu5qv0+D7Gg6LCkBJIY0PVRzC5gBVlCMCTggcRA7PvD7eIhCH8M0N9n6ObLDtIVPko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KRGm4uKa; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nkDIi8Qe"
-Date: Mon, 3 Feb 2025 15:19:03 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738624752;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ifjGUGvJkZYFo5L1bDL9tJSz13ntSb3dYeATt2mrijo=;
-	b=nkDIi8QemCzBZF8njMmkcisysylZn7FnuZHeo3M2nQqj6RzgOPaW92LEWdN0FyTrlkb86o
-	cyEcFMhlDLKhOnrgzBt1i+mbCGCj0GM+j/T3Y0Sv/KmOfL06xkHRLgXwPyujRdjtQQBSX4
-	+aE36IGv4bVky5Dp65wUTsi4/WdF1jI=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Mark Brown <broonie@kernel.org>, uJap072421@linux.dev
-Cc: Quentin Perret <qperret@google.com>, Marc Zyngier <maz@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Fuad Tabba <tabba@google.com>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Sebastian Ene <sebastianene@google.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 09/18] KVM: arm64: Introduce __pkvm_vcpu_{load,put}()
-Message-ID: <Z6FO04PZtY8fsJhq@linux.dev>
-References: <20241218194059.3670226-1-qperret@google.com>
- <20241218194059.3670226-10-qperret@google.com>
- <5ca7588c-7bf2-4352-8661-e4a56a9cd9aa@sirena.org.uk>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KRGm4uKa"
+Received: from localhost.localdomain (unknown [167.220.59.4])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 391DE205493E;
+	Mon,  3 Feb 2025 15:20:41 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 391DE205493E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738624841;
+	bh=0pLOnkZ3BBhZrWSrqRS0hKDrePzR0/4CteyR8x89gQk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KRGm4uKa6uwqYp++gYLVkz+w0G7XRLKWZaiSa9r29oDDeni8lIRGaUO621/GkcQqz
+	 f4DvTtm91iRY4M/PLDUtRvf74WyB/q92NbJ5YXcU86f8KDZAoOOGX9f9yAU2MBPzAu
+	 UUF/xF5N5b0aCSP4671roPFX9K8P9odm+R1FPLSk=
+From: steven chen <chenste@linux.microsoft.com>
+To: zohar@linux.ibm.com,
+	stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com,
+	roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com,
+	ebiederm@xmission.com,
+	paul@paul-moore.com,
+	code@tyhicks.com,
+	bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chenste@linux.microsoft.com
+Cc: madvenka@linux.microsoft.com,
+	nramas@linux.microsoft.com,
+	James.Bottomley@HansenPartnership.com
+Subject: [PATCH v7 3/7] ima: kexec: skip IMA segment validation after kexec soft reboot
+Date: Mon,  3 Feb 2025 15:20:28 -0800
+Message-Id: <20250203232033.64123-4-chenste@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250203232033.64123-1-chenste@linux.microsoft.com>
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ca7588c-7bf2-4352-8661-e4a56a9cd9aa@sirena.org.uk>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 03, 2025 at 07:50:44PM +0000, Mark Brown wrote:
-> On Wed, Dec 18, 2024 at 07:40:50PM +0000, Quentin Perret wrote:
-> > From: Marc Zyngier <maz@kernel.org>
-> > 
-> > Rather than look-up the hyp vCPU on every run hypercall at EL2,
-> > introduce a per-CPU 'loaded_hyp_vcpu' tracking variable which is updated
-> > by a pair of load/put hypercalls called directly from
-> > kvm_arch_vcpu_{load,put}() when pKVM is enabled.
-> 
-> Current mainline crashes when running the arch_timer_edge_cases selftest
-> in pKVM mode on a LibreTech Le Potato board, with a bisection pointing
-> at this change.  The system dies like this:
-> 
-> # selftests: kvm: arch_timer_edge_cases
-> [  130.599140] kvm [4518]: nVHE hyp panic at: [<ffff800081102b58>] __kvm_nvhe___vgic_v3_restore_vmcr_aprs+0x8/0x84!
-> [  130.603685] kvm [4518]: Cannot dump pKVM nVHE stacktrace: !CONFIG_PROTECTED_NVHE_STACKTRACE
-> [  130.611962] kvm [4518]: Hyp Offset: 0xfffeca95ed000000
-> [  130.617053] Kernel panic - not syncing: HYP panic:
+kexec_calculate_store_digests() calculates and stores the digest of the
+segment at kexec_file_load syscall where the IMA segment is also
+allocated.  With this series, the IMA segment will be updated with the
+measurement log at kexec excute stage when soft reboot is initiated. 
+Therefore, it may fail digest verification in verify_sha256_digest() 
+after kexec soft reboot into the new kernel. Therefore, the digest 
+calculation/verification of the IMA segment needs to be skipped.
 
-Thanks, fix posted here [*], although as a consequence this machine will
-stop running KVM in protected mode (which was never meant to work in the
-first place).
+Skip IMA segment from calculating and storing digest in function
+kexec_calculate_store_digests() so that it is not added to the
+'purgatory_sha_regions'.
 
-[*]: https://lore.kernel.org/kvmarm/20250203231543.233511-1-oliver.upton@linux.dev/
+Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
+no change is needed in verify_sha256_digest() in this context.
 
+With this change, the IMA segment is not included in the digest
+calculation, storage, and verification.
+
+Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Signed-off-by: steven chen <chenste@linux.microsoft.com>
+---
+ include/linux/kexec.h              |  3 +++
+ kernel/kexec_file.c                | 23 +++++++++++++++++++++++
+ security/integrity/ima/ima_kexec.c |  3 +++
+ 3 files changed, 29 insertions(+)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index f8413ea5c8c8..f3246e881ac8 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -362,6 +362,9 @@ struct kimage {
+ 
+ 	phys_addr_t ima_buffer_addr;
+ 	size_t ima_buffer_size;
++
++	unsigned long ima_segment_index;
++	bool is_ima_segment_index_set;
+ #endif
+ 
+ 	/* Core ELF header buffer */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 3eedb8c226ad..a3370a0dce20 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -38,6 +38,22 @@ void set_kexec_sig_enforced(void)
+ }
+ #endif
+ 
++#ifdef CONFIG_IMA_KEXEC
++static bool check_ima_segment_index(struct kimage *image, int i) 
++{
++	if (image->is_ima_segment_index_set &&
++			i == image->ima_segment_index)
++		return true;
++	else
++		return false;
++}
++#else
++static bool check_ima_segment_index(struct kimage *image, int i)
++{
++	return false;
++}
++#endif
++
+ static int kexec_calculate_store_digests(struct kimage *image);
+ 
+ /* Maximum size in bytes for kernel/initrd files. */
+@@ -764,6 +780,13 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 		if (ksegment->kbuf == pi->purgatory_buf)
+ 			continue;
+ 
++		/*
++		 * Skip the segment if ima_segment_index is set and matches
++		 * the current index
++		 */
++		if (check_ima_segment_index(image, i))
++			continue;
++
+ 		ret = crypto_shash_update(desc, ksegment->kbuf,
+ 					  ksegment->bufsz);
+ 		if (ret)
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index b60a902460e2..283860d20521 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -162,6 +162,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	kbuf.buffer = kexec_buffer;
+ 	kbuf.bufsz = kexec_buffer_size;
+ 	kbuf.memsz = kexec_segment_size;
++	image->is_ima_segment_index_set = false;
+ 	ret = kexec_add_buffer(&kbuf);
+ 	if (ret) {
+ 		pr_err("Error passing over kexec measurement buffer.\n");
+@@ -172,6 +173,8 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	image->ima_buffer_addr = kbuf.mem;
+ 	image->ima_buffer_size = kexec_segment_size;
+ 	image->ima_buffer = kexec_buffer;
++	image->ima_segment_index = image->nr_segments - 1;
++	image->is_ima_segment_index_set = true;
+ 
+ 	/*
+ 	 * kexec owns kexec_buffer after kexec_add_buffer() is called
 -- 
-Thanks,
-Oliver
+2.25.1
+
