@@ -1,65 +1,66 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3E3C139;
-	Mon,  3 Feb 2025 13:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8310B204F6E;
+	Mon,  3 Feb 2025 13:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588307; cv=none; b=XOYCw5AIF7m9OzEWGVr6vNhLyLFawUDNdoPQObkaHhSkTiArS/z3uH8PXp4Kt4JTxHgjZBd94pnGBqu8kKK/lbUnJpVcXV0FyZHLwpRUEGkdzWTxKLxWIe643/kGXcieGb2exHkgLQvTikBbweIkHZGtdRumUxxu1LTin0FpSzg=
+	t=1738588309; cv=none; b=sV9mH2SqW0m/B5j/J67lgrFIkqili36QjCkt2V1bImXV1XXd8pcu6L3v9q/UUOLbug1BsdRotk88xEnGiF+/7+1B/Pe5UnuDvrEchWY8CBl68EynPgWgo/1hSkMxhJTYgxTdJIeG1gwgz+QTbiEWtZcnRIA/BoxDZAz116vwoiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588307; c=relaxed/simple;
-	bh=DzSU1APOzsACEuytza3v3Qeh6L0yur890Etpm9FdP1Y=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=G5X3LmE4FrmnIMcQCVY860yOm3hGjMLe77zzaaftCHTtKafyTupQfGgFikZGKXPnCVrDqiS6ybyFOEhOJze3tPXfKg9ohGPGPvoId/LYDmORsVD0W/O/ChZBZsrG0Z723Sr4Nwj3XYMywSZ6Fk1yDVp90JcwaxoSMjs3v1vaYZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fho6tbCt; arc=none smtp.client-ip=209.85.216.47
+	s=arc-20240116; t=1738588309; c=relaxed/simple;
+	bh=qw6/oRijMeiMYBDoqhdnPazfxbD4I4FYFWBsgfYvwO0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=sLABNn0KhBHmtRkeZcvjsl6Uop6WJJ2nW6C19Fqv3BiA7EP2URBF+AHWKbFs3fY130SMuK7U6GpCmrdQGM3b/ueKk8dIVPK6rSmXX2I7tMt7D4swgj1sQSzhpXb5UPIJQQdX7o/h4WLBljtoyVOnidN/NDW4RJ1hRFdb0CRrgBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IFhPc/8a; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fho6tbCt"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ee50ffcf14so8127263a91.0;
-        Mon, 03 Feb 2025 05:11:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IFhPc/8a"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21c2f1b610dso99600005ad.0;
+        Mon, 03 Feb 2025 05:11:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738588305; x=1739193105; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ERRh6bhULTaxnqjnEtSSbfFqlVmrwqBeGnZ+e7hDD18=;
-        b=fho6tbCtM26s89aTLpsGrF8XhVvwXPiihi1RXghXktzeTnmcQOHZE4oBPVV7KYMFm4
-         sQBRFKaZXo6A9umWnLJFcPVsMClytaU0IG1NwyZaHlgpfwZQMkZyDVAb38VpsjA2GQTx
-         3iq4RqQjYEBEnwAmlNsxsJroZAPCIAp6YkzOH4RlFhtxR0/M348aJWbIqYgado3CZHwP
-         sEDqr/ZDqHqrd02SBtLfRIqwva0AL4G2lYrP1sDsjD0LEUPnO9Pzr1kqpuifLItNj0nQ
-         woMMGwq3+bAtwFpIvl0SJ/OK2B1zNzr0QZIppz4eK8EfoxkspFkiNhFUXgbNt8KRbnHb
-         FR6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738588305; x=1739193105;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1738588308; x=1739193108; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ERRh6bhULTaxnqjnEtSSbfFqlVmrwqBeGnZ+e7hDD18=;
-        b=MMP9AEUb6TDyjyOn+bv23dt3t3QDees04RTQ/jkOVaJnaNIrR+UG25GA781TqLPnqc
-         OWrJMiwMTvCVGjDveKB5O3Om1N4/c2/8ylxHcE4xczWvLzKdZ1kRCsYXzIo8LelsfDYD
-         KqEj00XhWW1tuyEHmv8IWaf4PW1RsdhDxbwlizZqY45EZfnLkxjrCwdy29UFUNtq8MB4
-         HBytEytJtJKuhmSzUDCCaQoRHAD3BahCN9+juYBejK4DgeC6xdLhpgnZMIM76F7YnRAs
-         hfzgK1ZziJbjahQ1lfKyf9ndKxilglo80CVONrORwmvrKEezAAQmmWEKWlDULsgkFY+A
-         5new==
-X-Forwarded-Encrypted: i=1; AJvYcCUcZiFU5YpXY8MmEwOcvtaCisuyz4mT3V8fvLuzs9xo5Iic8fp76r/aKv99jrHrIXj6i5Nt4mOrbuoYdixk@vger.kernel.org, AJvYcCW9a7V1SUMO6fT8DjOgw+NbLS1O2Kh7z2FeSnOyvq/4knk5MtzYRwLaqkx+PZC/SzNBreGDS4Xobovc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI/HUqgH/xm0TAzINJhWXRTucNQHTxorIUTuuxUU+TkPj8p1Fn
-	n4AbiOxLT6yqW6J5Ie3/Ur4X8y3lSvYb3K0gbY+ao55QAwXQJhCc
-X-Gm-Gg: ASbGnctD51j1FpGT43ggy6xUEscKksL71eTjufPiEKIwNjq9CUiaOvT6yrqukUfGuUQ
-	j43Ow7Sm4tK2SeyLfEcz0uP55iC/saX/aBXvmarhAVMrHtNTt+04i+bDYfwHV83QafQeyiOJvgc
-	ronHJ0FjmwV7uaYu5PFyKqTxFgF+DKRW+fGYEi49iioN/DRq4cjVqMG0xLLULs8p7VU7DPwiymG
-	I1ZHEYffBkDSY7ai/G8/V8T5Dbxgt8L57UOgCWARe6P2ZQyQtCsh3nRcQr6S6W+49pjanQQkQHU
-	FF5RKJw54du5092D3I6clm9xlGu7KxChqPj4yMaX/8UajjfJXilv1kcWoW+CQhdmp0EZ
-X-Google-Smtp-Source: AGHT+IH4i92orUFnRVo9rLyLqwfaOElTRxGUQRBJpk9f36CmBg6ebio9whJ38cg0kwFE8XUnCvcjFQ==
-X-Received: by 2002:a05:6a00:2e1b:b0:729:425:fde4 with SMTP id d2e1a72fcca58-72ff2c61dcfmr22974293b3a.11.1738588304994;
-        Mon, 03 Feb 2025 05:11:44 -0800 (PST)
+        bh=b1FY1lFZx1d7qtietTMvsLIGmuJzU+GwniaWJjqysAo=;
+        b=IFhPc/8akn+kkvH/oMCrlcG/ly0gNu2eI9I4EwhkOewi1A0+jrDhgVWlcLGSvMob3X
+         MRQdtBXOFXdrVUOX3WVPCAUFs+NSJzaDIxPeDdmrFWfFOkvPL4+u6G6qpwzHRt1cfAyk
+         RXoH044cSA4nhsfXMV4wlfnF82fqz7bD/pHEmzR9+5cjdXimzTdwv20NuQ//dJ7k8axb
+         Iu8RbggCJQcyPFVLDch8TsUVyri1VtecV1NHiEg105br+mZIw5t7HVyQxO1Z+KwyNDZV
+         YYNCOMspqPzgABy6cRHa0sts88gp0yAjfcxhvYKOEiAb4G68PLS8tv7/XS4PJSATG6/b
+         q3zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738588308; x=1739193108;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b1FY1lFZx1d7qtietTMvsLIGmuJzU+GwniaWJjqysAo=;
+        b=VXPo2pb36YhnN4Uwox3kHoCN6JdU+xqcg+nxkewM1crl5yKWk0n575Uk0g5AB/8xlA
+         0CS6qRfcKicTvWGHW8pW3ZLkfOxyFusA7dZgPqxKlcxVGbRj1DVLukdu/k3fwpPLCFEW
+         AYPvAwVqUz4NApGWeRBks+Dz/Sjz09allmMYBaAqXnVSe8jatNd8F4qfpo0y5LUGGwhn
+         YYh51KnEBdTRNpP4mS6jQ6Id/ZXS8qLCFEHp32s0OPlEfaWdCECKtXXU2A5kL95eb/J1
+         /eomgys3zJMsnRoxZrbj7Ziwqr+8X9GHrpZrTcGS7bwwyVOaU30sNEm88iQpksUoNoBM
+         tmUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUolP/2IgiOYQF5KyUq/H5XOKHxDIBHSl1ih2+MlAMSkKdDCbKKac7D4Iv7Fz6WJ+fX0yoNB5jnUWv2@vger.kernel.org, AJvYcCWDuk/ZtA9YmtmqvkjROszm0eS1DUwIu29f/pJGc/JsN3Fw2MXKWMlU2Axsa6JDxw3QX4bq3be4f1TKDb7u@vger.kernel.org
+X-Gm-Message-State: AOJu0YygyyquWnT7BLdlW0PRMgw99q0Fhdx8R3LDenD+4LgZXOvIJk16
+	i5vh9JT8WJQbO65+blzC7NRJiAFAVnGS8QcrXhiXT7mCMORZWTcn
+X-Gm-Gg: ASbGnctmucBNQU+vBMKsBCM70niaMEtwsCC9jKwT3KNPDLh43DcSmDA0igrLvn0PNrI
+	KSk2qoapHrIqp6x0dlXtLJPf/FVtfSXP/ZwAuMyhTMav4AffTAOtUJJKgA5FI5jO6lgdCnq3IYW
+	SKOx9uuVPoF/B15Bw/gB+F2ZQCsoGagsLbdKa6fYxEtbGzmIRS2joGychBN/RVVShUm1c6Wmkah
+	8iETgRAgdJSz5CqapZR/pyPcrsOOna6jOUTwXfqCufVsMKXDBJTVN9suQAOtvLJ6XJiVDY3k0Vq
+	kxIw70XwUVyVfEM8+AIe6Ns4TsabZvy229yqUmRNYQl0HL9S+izaAzTMncEZn9ORCEOi
+X-Google-Smtp-Source: AGHT+IGT7jAJmUUjkG0BGyDGRldNkdDhZUJrCU7FxK0JnZjhlR1jS8uZ/XiuM5Sfwz08ryIp703/Tg==
+X-Received: by 2002:a05:6a21:9102:b0:1e1:faa:d8cf with SMTP id adf61e73a8af0-1ed7a6e1efcmr39872358637.40.1738588307666;
+        Mon, 03 Feb 2025 05:11:47 -0800 (PST)
 Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631be3csm8377629b3a.7.2025.02.03.05.11.42
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631be3csm8377629b3a.7.2025.02.03.05.11.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 05:11:44 -0800 (PST)
+        Mon, 03 Feb 2025 05:11:47 -0800 (PST)
 From: Potin Lai <potin.lai.pt@gmail.com>
-Subject: [PATCH 0/2] ipmi: ssif_bmc: Add support for adjustable response
- timeout
-Date: Mon, 03 Feb 2025 21:09:12 +0800
-Message-Id: <20250203-ssif-response-timeout-ms-v1-0-6fe279740181@gmail.com>
+Date: Mon, 03 Feb 2025 21:09:13 +0800
+Subject: [PATCH 1/2] bindings: ipmi: ssif-bmc: Add property to adjust
+ response timeout
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,9 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPi/oGcC/x3MQQqAIBBA0avErBswJYquEi20xppFGo5FEN09a
- fkW/z8glJgEhuqBRBcLx1DQ1BXMmw0rIS/FoJVulVYGRdhjIjliEMLMO8Uz4y5o3OL63jpjOg8
- lPxJ5vv/1OL3vB0G9huhqAAAA
+Message-Id: <20250203-ssif-response-timeout-ms-v1-1-6fe279740181@gmail.com>
+References: <20250203-ssif-response-timeout-ms-v1-0-6fe279740181@gmail.com>
+In-Reply-To: <20250203-ssif-response-timeout-ms-v1-0-6fe279740181@gmail.com>
 To: Corey Minyard <corey@minyard.net>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -80,39 +81,44 @@ Cc: openipmi-developer@lists.sourceforge.net, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, Cosmo Chou <cosmo.chou@quantatw.com>, 
  Potin Lai <potin.lai@quantatw.com>, Potin Lai <potin.lai.pt@gmail.com>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738588302; l=1181;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738588302; l=1068;
  i=potin.lai.pt@gmail.com; s=20240724; h=from:subject:message-id;
- bh=DzSU1APOzsACEuytza3v3Qeh6L0yur890Etpm9FdP1Y=;
- b=GAK/aX4VSX/tXNfs/Y9fqhcSM1vwK8pu5MogHQzQ5xKFxxmwp3ZvPuIAnc/D6mk9APw609dr7
- 9uNIy81NfJ1AyPBSgYeMdvDXSQfejkYDNuZQEamhJFHEWPHEI6ZaVBU
+ bh=qw6/oRijMeiMYBDoqhdnPazfxbD4I4FYFWBsgfYvwO0=;
+ b=GphBV5ux1rtL3yI82K1iZX8DbcLYPnDAEW6mgZAMtCBvCuJhsB8VvMB4KdeNGred/5XaW2fjV
+ WP5bZpBWXC/A135QX0XhY812LMteOCwmJd80L8SKtM26uG24A5FJwPW
 X-Developer-Key: i=potin.lai.pt@gmail.com; a=ed25519;
  pk=6Z4H4V4fJwLteH/WzIXSsx6TkuY5FOcBBP+4OflJ5gM=
 
-The SSIF response is handled by a userspace application, which may exceed  
-the default 500 ms timeout when the BMC or application is under heavy load.  
-To provide flexibility, this patch introduces the `timeout-ms` property in  
-the device tree binding, allowing platforms to adjust the response timeout  
-as needed.  
+The SSIF response is handled by a userspace application, which may exceed
+the default 500 ms timeout when the BMC or application is under heavy load.
 
-If `timeout-ms` is not specified, the default response timeout remains  
-500 ms, ensuring backward compatibility while giving platforms the option  
-to configure a longer timeout when necessary. This prevents timeouts in
-cases where userspace processing may take longer.
+Add a new device tree property, `timeout-ms`, allowing platforms to adjust
+the response timeout based on their specific requirements. This helps
+prevent timeouts in scenarios where longer processing times are expected.
 
 Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
 ---
-Potin Lai (2):
-      bindings: ipmi: ssif-bmc: Add property to adjust response timeout
-      ipmi: ssif_bmc: Add support for adjustable response timeout
-
  Documentation/devicetree/bindings/ipmi/ssif-bmc.yaml | 6 ++++++
- drivers/char/ipmi/ssif_bmc.c                         | 8 +++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250203-ssif-response-timeout-ms-3bdb88ab337f
+ 1 file changed, 6 insertions(+)
 
-Best regards,
+diff --git a/Documentation/devicetree/bindings/ipmi/ssif-bmc.yaml b/Documentation/devicetree/bindings/ipmi/ssif-bmc.yaml
+index 02b662d780bb..c8a863d44f97 100644
+--- a/Documentation/devicetree/bindings/ipmi/ssif-bmc.yaml
++++ b/Documentation/devicetree/bindings/ipmi/ssif-bmc.yaml
+@@ -19,6 +19,12 @@ properties:
+   reg:
+     maxItems: 1
+ 
++  timeout-ms:
++    minimum: 0
++    maximum: 4294967295
++    default: 500
++    description: Response timeout in millisecond.
++
+ required:
+   - compatible
+   - reg
+
 -- 
-Potin Lai <potin.lai.pt@gmail.com>
+2.31.1
 
