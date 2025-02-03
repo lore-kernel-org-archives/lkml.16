@@ -1,74 +1,62 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621D21FAC56
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247063594E;
+	Mon,  3 Feb 2025 08:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738569642; cv=none; b=mADXnSIvUvhzckDJw0SIteZHdKShGepgYUoXxZwOmPmhJ5kWDR4wolWRlqXBFzHWV3jwmD94K2hVEIXDX3eKGJUcHZURCg8PQDI0bqnJDPMNq1Uxf8PMD/CttBjKAzG81m+/sC3ee4+vx8QzGvUrVAoCoYuTkXzJbIBQNprwTyI=
+	t=1738569677; cv=none; b=V3FYuuYn9FoDtToRIEk762/o+I62YuayX13G1dBTY+6kKHdb/egCFkfQgbTteJfL/JjvoWWTMOgnCahX1c99zZMKdgm+avZdmNDc8aFYbtWcAMn5CULYxFvZ+F6C8xAG0nZlYLy5qnsqFYbPtkVm/jRSuqbL5zgGo7pmvkjZCMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738569642; c=relaxed/simple;
-	bh=jaKiohpGb5GRdH2MM0NHY0F9IMzao8bMivRAcK7K9P8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a0cxIcBQwaLkd/UKgplBwPhaM4K2Z5Ge430+hzsEfUWY+Rtm/cB3Hca1aupdyHsLA4wehGITBZa4/Z6EDoXhBaWu/VCEsOBNXWGgILSw+7tbSWgsZIAYJ4fNSU+a78N0qUBNq974XOl3UBo+Dcn2ccvE/YaJE4EoluS20tY89lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VOZCFPIP; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738569677; c=relaxed/simple;
+	bh=XpWCKtg67/hJeluoR1hBURydjATUTN+jcQUT571xdtg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HY3UpcYGoBw9MkpncHHnrVQvs88dXv40fOc1Csl2ml9FGrkeHlW8HEgGmHJX420todsEDj9TqllNO+Nll6FiC8ucVnMNDXN6HjOG7lCMPwQaDIqIXLT5O6yrQ1kuBBGoe07yGAqktnUfDfnsD6i1Hdx1ztvpNhIxTrA23smARhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MK8sqxI8; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VOZCFPIP"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2165448243fso74151295ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:00:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738569639; x=1739174439; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xEhIHxdD7NA+wb7AGZrBPq/eWZXsbGs0lajgHFDORFY=;
-        b=VOZCFPIPJBsFnPu+4rYTCOdUOmVhs1EhTyShILZyxefa0G9uF1IyO8VRHv1ZiKzJNH
-         ZvQExOt0TpzVq4Jkj4M1KfyoX5jI+uyocCv2C1afuQIqBARvfIu85X7FmqbikqmPSZTE
-         AuIBqDMM6xfqLaKg20GEYWDhGVhkDfkFvqr19J5VDAH1rkcXpdB7Einds4Vwg2aPXrHp
-         ivgzTJqyO+CTiDbeKmBp8rcONn7jV7QNODlyvTutrRmvaExJT6v5sB76lfRy+AjHRE7E
-         gmSTtlt6xkLLyJyGuoRPd1pQmI7/PGRQ9R/UKJ0vS/bGrk6pjg1R9dlZBJPIiM8aVzYa
-         KKOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738569639; x=1739174439;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xEhIHxdD7NA+wb7AGZrBPq/eWZXsbGs0lajgHFDORFY=;
-        b=udQohZwvyYHQnjG9e4yZf7GfirMSiAdY+1Ebzqx+0ZvMLbmXIsQSY4KDiMtfdg6bfm
-         BRlXTOsE1tipf7mXUDNk6c++UIFZ2MEWXkDItnyFine6nqG71SQqnRF6+hdwLTdOYeXM
-         b/FJ57KQdfjBtV5J3LsoWjX8iaJuq0bVlF++iq/joO3ZoS2mbiSrclzydAioFZ2+l7rf
-         XpMUbVai0FSjmR0qJ7T3enxVzRmAfSrI2ZXAGaXD05F6cXNH7t93nua3AcdNjOdcERWj
-         XD2KcP2VHqKNzHJQ6m2GuFtXT/W0udjDT/0BEbf48auMbazzO+lRQ7+uNUe3ISE5Rl29
-         peSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVWNnriRr6nN2L6fBlVBtbVtsHxJmRlQxjqjwznEzfSsrgz/9Q/hnomPlhjBMXwR6XKcpFF7UqPrMqNe/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyThm5CMkYVEpK24RsDiDWBnC2DG+adGOMKVeQz9twqhWJmy3o7
-	96B+mtplwxbZJ6ceVRXJ38Ki/FqAoM/b3V4fwqEPuKPyG3Z30NkcV25SoiaNgCE=
-X-Gm-Gg: ASbGncuZ6ymxvEVxRpGFClYPl0qdCyoxQmQo15qkA8xiWJ2JrvCFroYpVgDuJ7HPwQ+
-	XXlQG0HR3EqhA1YPQ/7MCn3Cvzk5YSN/vsERs7Mhe1ewdAAPW4g7YpZJC9i74VHHj1zvrDPUHbq
-	O34qnnorL3zcfqoCi/+tDlaYetcgBKymP11qTscrTBzSjRQslQJtPq0oGyJyUqQ94gjobUASfV7
-	VKOx5rVmdsQ07mJPJQzbUKEGIK3DYbjjxg2JcBG3NYiz78LVDGh2COt15tGYmGbH3af8wwY8g+t
-	HW9PWRwkgk4tXDzJ
-X-Google-Smtp-Source: AGHT+IFygNmOrpVihmSPJ5OWge6wX18dOo3mm00DI8j33PuGPe0wQOTVelVmoTclLlggQpQiNOjbbg==
-X-Received: by 2002:a17:902:d4c3:b0:216:6ef9:621 with SMTP id d9443c01a7336-21dd7d96eb8mr319257395ad.31.1738569639585;
-        Mon, 03 Feb 2025 00:00:39 -0800 (PST)
-Received: from sumit-X1.. ([223.178.212.16])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f71b9sm70236425ad.84.2025.02.03.00.00.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 00:00:39 -0800 (PST)
-From: Sumit Garg <sumit.garg@linaro.org>
-To: jens.wiklander@linaro.org,
-	arnd@arndb.de
-Cc: op-tee@lists.trustedfirmware.org,
-	jerome.forissier@linaro.org,
-	dannenberg@ti.com,
-	javier@javigon.com,
-	linux-kernel@vger.kernel.org,
-	Sumit Garg <sumit.garg@linaro.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] tee: optee: Fix supplicant wait loop
-Date: Mon,  3 Feb 2025 13:30:30 +0530
-Message-ID: <20250203080030.384929-1-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MK8sqxI8"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5135kZhF006247;
+	Mon, 3 Feb 2025 08:01:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qKwfrzvUpQdflcvqUg2Vh7TcaEWI+YoEQoCPT5pIGbo=; b=MK8sqxI8yxZ4nWL0
+	LSZo3+sXlMrNl3hjCE6gT1+J4jSRXhNXoRDZMpsTafjSHApG4sr27X4cDCTKk+2a
+	jMf4o2k3ae7PYvJqtWd/DPqJga5cXL9mT8KxxIKPPl4aMtOBz5LdG8ToPrYirFC8
+	vil/TGlGVKfK0Q5uuVQhIaHw3qqYNiBwR9VEJ9pKYQatVeMwvY71LFEUa2gRThC5
+	xNQzYzdbaqKezNKkd5wCwSURN5QrmH3vCGOciiWifI3t4jbAjM1fK+CCoDypSLCD
+	owQceB8hFuUOIv/X1wluxBeaXJ++XjPEkWBpxRtTn8fAVQUBsc4kGbaK9UBTbo1b
+	tQ8p9g==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jqxw094p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 08:01:12 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51381Ba8004107
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 3 Feb 2025 08:01:11 GMT
+Received: from hu-ckantibh-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 3 Feb 2025 00:01:08 -0800
+From: Sanjay Chitroda <quic_ckantibh@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Sanjay Chitroda <quic_ckantibh@quicinc.com>
+Subject: [PATCH V2] arm: dts: qcom: Fix indentation error
+Date: Mon, 3 Feb 2025 13:30:59 +0530
+Message-ID: <40fc9c914f5972decbd6d639396d65bf080d3ceb.1738568609.git.quic_ckantibh@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <372bdb4d-95a3-429f-be16-64eb909ec5fb@kernel.org>
+References: <372bdb4d-95a3-429f-be16-64eb909ec5fb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,92 +64,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ZCswm9MoEhCfO7HKCVT-pTh4d2CvjvvL
+X-Proofpoint-GUID: ZCswm9MoEhCfO7HKCVT-pTh4d2CvjvvL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_03,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 priorityscore=1501 mlxscore=0 suspectscore=0
+ adultscore=0 impostorscore=0 clxscore=1015 lowpriorityscore=0
+ mlxlogscore=752 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502030064
 
-OP-TEE supplicant is a user-space daemon and it's possible for it
-being hung or crashed or killed in the middle of processing an OP-TEE
-RPC call. It becomes more complicated when there is incorrect shutdown
-ordering of the supplicant process vs the OP-TEE client application which
-can eventually lead to system hang-up waiting for the closure of the
-client application.
+Corrected indentation issues in the qcom devicetree files as
+identified by ./scripts/checkpatch.pl.
 
-Allow the client process waiting in kernel for supplicant response to
-be killed rather than indefinitetly waiting in an unkillable state. This
-fixes issues observed during system reboot/shutdown when supplicant got
-hung for some reason or gets crashed/killed which lead to client getting
-hung in an unkillable state. It in turn lead to system being in hung up
-state requiring hard power off/on to recover.
-
-Fixes: 4fb0a5eb364d ("tee: add OP-TEE driver")
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Signed-off-by: Sanjay Chitroda <quic_ckantibh@quicinc.com>
 ---
+ arch/arm/boot/dts/qcom/qcom-apq8074-dragonboard.dts | 4 ++--
+ arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi  | 2 +-
+ arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi            | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-Changes in v2:
-- Switch to killable wait instead as suggested by Arnd instead
-  of supplicant timeout. It atleast allow the client to wait for
-  supplicant in killable state which in turn allows system to reboot
-  or shutdown gracefully.
-
- drivers/tee/optee/supp.c | 32 +++++++-------------------------
- 1 file changed, 7 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/tee/optee/supp.c b/drivers/tee/optee/supp.c
-index 322a543b8c27..3fbfa9751931 100644
---- a/drivers/tee/optee/supp.c
-+++ b/drivers/tee/optee/supp.c
-@@ -80,7 +80,6 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_params,
- 	struct optee *optee = tee_get_drvdata(ctx->teedev);
- 	struct optee_supp *supp = &optee->supp;
- 	struct optee_supp_req *req;
--	bool interruptable;
- 	u32 ret;
+diff --git a/arch/arm/boot/dts/qcom/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom/qcom-apq8074-dragonboard.dts
+index 6fce0112361f..34b0cf35fdac 100644
+--- a/arch/arm/boot/dts/qcom/qcom-apq8074-dragonboard.dts
++++ b/arch/arm/boot/dts/qcom/qcom-apq8074-dragonboard.dts
+@@ -149,7 +149,7 @@ &mdss {
+ };
  
- 	/*
-@@ -111,36 +110,19 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_params,
- 	/*
- 	 * Wait for supplicant to process and return result, once we've
- 	 * returned from wait_for_completion(&req->c) successfully we have
--	 * exclusive access again.
-+	 * exclusive access again. Allow the wait to be killable such that
-+	 * the wait doesn't turn into an indefinite state if the supplicant
-+	 * gets hung for some reason.
- 	 */
--	while (wait_for_completion_interruptible(&req->c)) {
--		mutex_lock(&supp->mutex);
--		interruptable = !supp->ctx;
--		if (interruptable) {
--			/*
--			 * There's no supplicant available and since the
--			 * supp->mutex currently is held none can
--			 * become available until the mutex released
--			 * again.
--			 *
--			 * Interrupting an RPC to supplicant is only
--			 * allowed as a way of slightly improving the user
--			 * experience in case the supplicant hasn't been
--			 * started yet. During normal operation the supplicant
--			 * will serve all requests in a timely manner and
--			 * interrupting then wouldn't make sense.
--			 */
-+	if (wait_for_completion_killable(&req->c)) {
-+		if (!mutex_lock_killable(&supp->mutex))	{
- 			if (req->in_queue) {
- 				list_del(&req->link);
- 				req->in_queue = false;
- 			}
-+			mutex_unlock(&supp->mutex);
- 		}
--		mutex_unlock(&supp->mutex);
--
--		if (interruptable) {
--			req->ret = TEEC_ERROR_COMMUNICATION;
--			break;
--		}
-+		req->ret = TEEC_ERROR_COMMUNICATION;
- 	}
+ &pm8941_gpios {
+-        msm_keys_default: pm8941-gpio-keys-state {
++	msm_keys_default: pm8941-gpio-keys-state {
+ 		pins = "gpio5", "gpio23";
+ 		function = "normal";
+ 		input-enable;
+@@ -157,7 +157,7 @@ msm_keys_default: pm8941-gpio-keys-state {
+ 		bias-pull-up;
+ 		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+ 		power-source = <PM8941_GPIO_S3>; /* 1.8V */
+-        };
++	};
+ };
  
- 	ret = req->ret;
+ &pm8941_lpg {
+diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi
+index cc88cf5f0d9b..5a95a2d03c42 100644
+--- a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi
+@@ -43,7 +43,7 @@ nand_pins: nand-state {
+ 				       "gpio64", "gpio65", "gpio66",
+ 				       "gpio67", "gpio68", "gpio69";
+ 				function = "qpic";
+-                        };
++			};
+ 		};
+ 
+ 		serial@78af000 {
+diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi
+index 06b20c196faf..ecfb6e41bf05 100644
+--- a/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi
+@@ -126,7 +126,7 @@ opp-500000000 {
+ 		opp-716000000 {
+ 			opp-hz = /bits/ 64 <716000000>;
+ 			clock-latency-ns = <256000>;
+- 		};
++		};
+ 	};
+ 
+ 	memory {
 -- 
-2.43.0
+2.34.1
 
