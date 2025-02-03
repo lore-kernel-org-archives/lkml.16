@@ -1,106 +1,129 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050D620ADE9
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56E42063D7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738592797; cv=none; b=MMLe1as7ChQbT3NjnDX/j7bWiOjl/Hq8aenGU+XxuNueg1mYPx8us6L6kM/yk8J35TRCbSQ8Fibkzkq/xHbkpSQH4GMhyGwP1UvjFjWnlPwiXuzmPhCPvTi+cCWevhtMD4LTY2wLbcEBr+WQMTIGYRau1Jg+V4Lx9usMlw/fPRU=
+	t=1738592862; cv=none; b=aElqVmhi6zZhUiKCxSHUGy60KgjJb8u3OxXER4tG1OOa/9LiZ/FIjcRiFbUYThcai1OcjxbDWIrAGsHdQkoc4yuGsqL62jd8n+yFaYoGZOhxK02KHMjDOzBGdEYjBca/uK+HbBgGxTb3EM4eqkZFavkLrmvlTEY86e+heIppayo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738592797; c=relaxed/simple;
-	bh=Tj7tRy4kZnsxFzQuBtc04+Ahrz10XdqH0zrjX5oVM6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bRHnRfRi751IoFETna6CrmTjzQUHv8HpBiweuYPr2xUc+6TU6s9o/GKeZ4WmjaZbENgn/XaHFGNAeuZYQ1NgLfhMt9lBkUOsUyrNqx9u1vkm/TfF9tRixWFrduGuEzgL83YBuSQOqNHYdELaGfEg/8zKn/rFKxdwIds4n1dez+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AhHsSeis; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738592862; c=relaxed/simple;
+	bh=Xf3vzzTJsIfG9mnXoUhr4AozPJo5ITepH/R/LGvc98I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CX7ecm6C5lJdOyoipzykKQq1l2R8JYBloSb1pkwaywdfl3/jBLq7S+6EA/IPJC2Q7VjQgsHc75xzjTKkY7e+5OgDwS7zTsfEscE7h6gR8m5IlJGjzMC7bl17IQUl1RxYRqflrX+M517IpxjV8M4b0mfLIFIrteq5zazT7+SusG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FulfmFw1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AhHsSeis"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a9e44654ae3so716795366b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:26:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738592793; x=1739197593; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wApwa+Vg7pEhvhJZMOtchLW1Qtniq1LAppbarYJzbvQ=;
-        b=AhHsSeisaNRxfF5kpEuWH/NuGkEEpv1vnTj7ov8dvc4SOqrwanUdq0cerpIrAIY5KO
-         e0xLN3NncTQKdHp+2y51NgGmv9ulwc6s6YlQvvC8sEwYzXjrmDPfW1P5sJZJVDo2DO7a
-         6Lu7iex/hWVl/LNtRHc9nk1a6ySPHTG1l0ZTCGB9wcC1cOHKHvB92C8kPHmpY1ukj9la
-         tpeIMaAJAJis7ibRRLXp8njUjDeCMVKXbSKJVW26O/Tr+nSQrg8bmJLV9r5TKEVm9HkD
-         0sdyYVw94J5FrQwbw/TXiWME1NugDiPTG57lSyJ2gwt/zJu1Q3tSraQUpYQTCABsq4U6
-         osOA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FulfmFw1"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5135OilV000874
+	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 14:27:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	z32PzU4coYuXq8q2uocAQsG8D+C94sos2b3J/CWJZq4=; b=FulfmFw1t2Ennp2z
+	JuUIoHD5+vFcsKnMhgiZInDaeSwdiwhZi+Wh4kzXFDs0ErEZrfx+QCF2lCKmLxxQ
+	DDgdRs3AldJR3QhAEYRu0BmzHZyhMLd8qiSRhVMsOX1MP/LpaehabeELV/Wwll5j
+	kGdtkKuGw0/ucpKNLlQGHpsxNNcQZHu3an8Ehut11H+1iafCmFrkQY5fxuIIxwah
+	pZhC7Rzy7E35/I8FNlTcZa1GQfT90XvR4/rP6rWhBDZfavewXhqZrUBXA/67TR6G
+	u6v6LCB9RGrODakW9Wy+DjlXGL7/3mrfwnno6gfvdePokgs9DFiroLj8LW71GgIO
+	JD+syg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jqm41c08-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:27:39 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7b700506e64so24123885a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:27:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738592793; x=1739197593;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wApwa+Vg7pEhvhJZMOtchLW1Qtniq1LAppbarYJzbvQ=;
-        b=IQ81e3Uz/Afn36C6xuVXP2rv1jFwiphqI+xeQj7UMgf3FBFLSw239XUfQNxOLBFm8V
-         MIHdLy7txlDCiuDcW6ToCAMDK4/dlGuoTfcWzSZOBDb/RtqFgxq7L5rZpWbrZq1TJswR
-         zdmJC7NyM5GKrbOtfqfnHBCokVpXiQz/ryApcbsCsZfGBmF4MTstshRRefNy80GvO4Yf
-         gQj9bro7yjCmedioEZd15HGpc1SQNGVqGhRZ3pvjuHDM7xadJqlCGR929wDuH5TSTLSA
-         tMaHkLjzVOCUgMSdRp0ZyYjsyIzZRANz5UrmeH9OJYBRufd5812Qo+YGMdl/12BaWrbV
-         131Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXXwDMJxwiC8R1et+QONDtKjv3B/JJmJCbnSWE6LeYsrnmFSRExWzO7mp05w8jNWQr5ferCLXIaoPZcN48=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDqEnUCqoFKr/8L6r1HBZW3Kq3MdSUK7rdmQEetnwZz+e6qHfp
-	z1hsfaDv4BqEVod+IDo9yzJgSsm8uZ/1eG5I4nzR36KGwqKMMk00ckD+0/GxRq8=
-X-Gm-Gg: ASbGncvHv+hh3+v0fk1AHZdjyrJtFFFoM/6+Pk9w07bbkdcK4VZEntiALZPq/A09Q2K
-	GPa+4FUHEQSraq0MS8EXW5A7fbR62mrvoWRbBLNQWACU0UItM6OUahl9om/RsCwvwqwxLLDo5DR
-	GC1pcQ5WwgQ97zWSb9QWIQxZuKrsaEP1k4vWAmSd1qDaJdJm7MQ4hemdrDIIeadIRxZR5UOhDZu
-	mKh7s9Bi7Pz/GHV7GEO8HNj6ZGv+I5ATzbwOZgHq6FAPZDWYCf7YV1AvFaoe3jwZ0fSX5oGuY3x
-	hOUqiQ==
-X-Google-Smtp-Source: AGHT+IEMvqFtWMQcGcbew8g5CbtS87OK4kOUrbaUT5fxc6WJnZS+Qe69TNruF9V9SFX0gjEEIeYYSg==
-X-Received: by 2002:a17:907:6eab:b0:ab2:ea29:a2 with SMTP id a640c23a62f3a-ab6cfe11e85mr2509321666b.48.1738592793317;
-        Mon, 03 Feb 2025 06:26:33 -0800 (PST)
-Received: from localhost ([193.86.92.181])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ab706ce9a53sm509134266b.72.2025.02.03.06.26.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 06:26:33 -0800 (PST)
-Date: Mon, 3 Feb 2025 15:26:32 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: lsf-pc@lists.linuxfoundation.org
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: REMINDER - LSF/MM/BPF: 2025: Call for Proposals
-Message-ID: <Z6DSGOsqjw1ahIYi@tiehlicka>
-References: <Z4pwZkf3px21OVJm@tiehlicka>
+        d=1e100.net; s=20230601; t=1738592858; x=1739197658;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z32PzU4coYuXq8q2uocAQsG8D+C94sos2b3J/CWJZq4=;
+        b=g/o2s+tWegd8oTFmtyNJ3tBNzeSAX//C32SPB2JLA2/Ph0PTPu6TJuE2wcTMNGctt9
+         BWHPww0kpNzhQi3aJeCAgTLmFB72SfG868m0wuG3j6Y8OzU3KwSP8ZMIh9WF6Bx1RVAb
+         3VZgXhr+XzJdVadaIqiB8Nkmj5SUwu23QY5WVn8iv9FvZyC3T9ucSpApOz8ZJO8FRo4k
+         1TcfUumiwMX1b0vd1QxCxTEQ9sain2e0T9/VRoKqaHT/ZYx34Q+i8KHGonjj28N3YJ6W
+         s6KyAYx1ELvhiNv6dyaVI/flOLGmz8rwOhOcqSzQiIM5eDgOqjw6ZyC6JOP59YBgHYLJ
+         cEVA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcCPv4yJw7RMQeoX/VL1apr8jFBthR0ReRWogGTD/7aspyXwqf0Taa2xf2wTGn/pL4ZacL1lcY+y6OS9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJacjREH2EiExrhBPVlEwA3/N+lZtAtOj7kQfYl04rg74eFhEU
+	wws9Y+69XuQhbBVRicH1SamtF6ps51Q1IC9oK+qW6sMQH27UxQF+kbS1U2ybmiGkP+cLUS1a2GM
+	5ajA0ZkT2AxiV8a+OusJ1zAeNsr3tQ1ipwirvwIeSRYM0KHJmvRlLrdH0l3J742Y=
+X-Gm-Gg: ASbGncsbRgW3fJmIdyjBJL+Wt+jA87X2fP/VEhisQ7Fy4lwa9pR71yf7aBxkYPj0nVd
+	p2CaUGQ1FLvwICaqzaul1WtD9DnO4L08dBGdCoIUFhfC49l9iWQHC4Wj5MaRlHnq+WeoHmb0CHO
+	jo3QfRzLeJw1jYBFkJhsdqXtIg9PHwT83b+C56O4Xgzb9gKTimBwHprrZM7voM1EvlXtZGYwM7/
+	AGJ18GIY6GZweFIoUDwLERXDflED9lf/lTFvgCuyCiG9h1b9t6LawgKPXXy1Ay6TRnUHShRBlFd
+	OSp+hgvN9D7682rgtXEkmsezJ+ZS8FdciXXuqubMwohRdraJE4d3ayWl0Q8=
+X-Received: by 2002:a05:620a:248c:b0:7b6:6bff:d141 with SMTP id af79cd13be357-7bffcd9d787mr1107870885a.13.1738592858492;
+        Mon, 03 Feb 2025 06:27:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFCVB1pFxx3ztPneFspzL94a8IE8Ob7/aW9iut9z+QQesefeV02zB01674x4dFFcNyiIcTNaw==
+X-Received: by 2002:a05:620a:248c:b0:7b6:6bff:d141 with SMTP id af79cd13be357-7bffcd9d787mr1107846485a.13.1738592852050;
+        Mon, 03 Feb 2025 06:27:32 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc7240608dsm8039781a12.47.2025.02.03.06.27.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 06:27:31 -0800 (PST)
+Message-ID: <716ce859-7bc4-47b9-9a1d-005427bfdf3d@oss.qualcomm.com>
+Date: Mon, 3 Feb 2025 15:27:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z4pwZkf3px21OVJm@tiehlicka>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sa8775p: Partially revert "arm64:
+ dts: qcom: sa8775p: add QCrypto nodes"
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yuvaraj Ranganathan <quic_yrangana@quicinc.com>
+References: <20250128115333.95021-1-krzysztof.kozlowski@linaro.org>
+ <2b07b8ea-9c7c-4f37-8d01-d14d1e82aff9@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <2b07b8ea-9c7c-4f37-8d01-d14d1e82aff9@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: gH3A74hKnr0P01mvyfrKb4Gl3W6m1yqY
+X-Proofpoint-ORIG-GUID: gH3A74hKnr0P01mvyfrKb4Gl3W6m1yqY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ spamscore=0 malwarescore=0 priorityscore=1501 suspectscore=0 adultscore=0
+ clxscore=1015 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502030106
 
-On Fri 17-01-25 15:59:51, Michal Hocko wrote:
-> Hi,
-> this is a friendly reminder for LSF/MM/BPF Call for proposals - you can
-> find the original announcement here: https://lore.kernel.org/all/Z1wQcKKw14iei0Va@tiehlicka/T/#u.
+On 3.02.2025 3:09 PM, Konrad Dybcio wrote:
+> On 28.01.2025 12:53 PM, Krzysztof Kozlowski wrote:
+>> Partially revert commit 7ff3da43ef44 ("arm64: dts: qcom: sa8775p: add
+>> QCrypto nodes") by dropping the untested QCE device node.  Devicetree
+>> bindings test failures were reported on mailing list on 16th of January
+>> and after two weeks still no fixes:
+>>
+>>   sa8775p-ride.dtb: crypto@1dfa000: compatible: 'oneOf' conditional failed, one must be fixed:
+>>     ...
+>>     'qcom,sa8775p-qce' is not one of ['qcom,ipq4019-qce', 'qcom,sm8150-qce']
+>>
+>> Reported-by: Rob Herring <robh@kernel.org>
+>> Closes: https://lore.kernel.org/all/CAL_JsqJG_w9jyWjVR=QnPuJganG4uj9+9cEXZ__UAiCw2ZYZZA@mail.gmail.com/
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
 > 
-> Please also note you need to fill out the following Google form to
-> request attendance and suggest any topics for discussion:
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 > 
->           https://forms.gle/xXvQicSFeFKjayxB9
-> 
-> The deadline to do that is Feb 1st!
+> +Yuvaraj Ranganathan, please resubmit your original series with the
+> required fixes, or this patch will need to avoid build warnings
 
-The deadline has passed but if you forgot or this slipped through then
-no worries you can still apply but please do so ASAP. We are going
-through all applications these days and will try to send invitations
-ASAP so that people can start planning their travel.
+will need to be merged* is probably what I was trying to type
 
-Let me also remind that all the topics that are to be scheduled should
-be posted to the mailing list (CCing track specific and lsf-pc mailing
-lists). 
-
-Let us know if you have any questions!
-
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+Konrad
