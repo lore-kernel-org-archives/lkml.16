@@ -1,100 +1,116 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2790F9D6
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0835B1D63DD;
+	Mon,  3 Feb 2025 16:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738598517; cv=none; b=sggin1Im6arc2C57jCbUMVAWbJ2UPZZ6Lfq+8xzVu1fNRpbkjpjaAZAibH7C9ew/PjyecViVb/h5cNu4Zq+EYkrrWwKgYu3uRSdSfTnifO/KGDkYxhsadEzf+NRI6EKi/01kfGvyCGZ99qHAcB2yI/rV2EINTxAfj7BfKvUHKhk=
+	t=1738598524; cv=none; b=dZ75hfw/4BKGIK3P/fttXBo2e8aYE4+oZmCoxm5kUwUdlJaxkFCKOO3cGAFi6zKyZoHvtPMz9EZ9dJqkluNKLZBBpiWUECuRo2CjTx1rcgBN3AOGtrwEAL5+HOv8bAibW7L0XHoBQINToF967AyVWnEeOhUEK8eLWTPUatuuwbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738598517; c=relaxed/simple;
-	bh=GRCaqWuU09U3T2jXMnWL1ADrKkzTr/bvXQmYgmOjVmE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VvsZ9g/qjvt8YgBan7CoMXqHUHMWF7+knK4qGx8nFw4zuaGSuLwhUkiLOWXVw1c1IWdcBtCdDsBNoaWd8B6GDbY8owst2rjdIeMVzbd8ay6driHwEAqo+XThdR7eypS1L/ikf3cV4JYkTJ56kTBxEJiPgWtip22euhjhPjEIOj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=gUWi1tp+; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1738598524; c=relaxed/simple;
+	bh=4SOGZvOaekagYSOdFlhRq9Mi7M/irJXQFpp55w2Pnjw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=olI1NvS6uCgW9ZlMWChLqFU4Z2lCkEMXOTHoVNJTpswC+8A6nXe6DgBSdVDHXu4ILEvsERRlDoO06ju35XgIImmwZgLTtzk5t0vyTedrZNY+783uULx0dWEZ2wY7Nm2bMAlDc6l9zTGEwW5P9Dsk2StEywm6/949pG7is2UP/yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9KS/Mii; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="gUWi1tp+"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3cffbcd520aso14043335ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 08:01:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1738598512; x=1739203312; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GRCaqWuU09U3T2jXMnWL1ADrKkzTr/bvXQmYgmOjVmE=;
-        b=gUWi1tp+1bolsLx8ane/+nB/4dK116oyiGHThrkK6H2Uq49bZQTCLB15WGL2rGTKmy
-         VMOwNHqQC0oobPs+W1uQQynoWrZXUniaLQ8Ycgfi3I8opftFxNN3X11HRhKrDBkX+g67
-         mlVdAqk4af3GCy7wEXyU5m9mVkwI51zTar7t8ul1bfBD8BKSPl09hWhj0SlsyFOsDPzp
-         VJo85ZFShLYzliLQFQ3+dFjdw2gx+nE/WuBKcrs/eMUWfkagRuNEKCL8W9NJZL3L3Flh
-         5PdvtIXuywyvhbc2wRcKKvXijxY6JTf1nW5INozZpfWpbW7dFnOJmXM2CkNtIQZgBg4M
-         Yhwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738598512; x=1739203312;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GRCaqWuU09U3T2jXMnWL1ADrKkzTr/bvXQmYgmOjVmE=;
-        b=hmP7IRjPYfDWsdp4nCi7S3Rhjmj83RM2JdK3I3U8nY71YQEBH5AW2k7XujXctfxYGn
-         hlinzu3KibUPMbIoaojOl9wOqV2B4rB7po6b4pjQ6VPaSfJNmRse2dgZR/oEMlz81Wux
-         lQ1xkx4D62TcJn16hnLtR5SQBAATW4esPUa27nz/6xy0ORGrYFqV/h34H7/tiRzY1mC0
-         6TCcUiBP/Zuy/lGOSMfJAcPO7dkMrEz32TCo+sDiM8sRttsJ79cKDivYnx9jIZHKaIGB
-         gIkzyURthZB5IjMaBgOGrIf6Fi/olYc0MqDdxWyMNm4m7N3wQKROlIlZMgfdaHAB+kSW
-         UVGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJeiMEifP76Hqpm4OkVFfg+tqO6ChQ92xO1iFv9u0jH44QjlB6qE3Tjb0hUSot+bZ2CXnOuopB16bXpxs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWZHv6EC0CAnPAgXGsxBDuPghflEOKZ9R1sdHwXIPo4tnYudc1
-	wnYXMWYcouRMvHA4ggnS7kvemJeeF6DT/x+jifN5HzbbBtvW0VbIKhZGIHuLCdJhHOnYofyjGlQ
-	7dolaj5+sUtH6WdjK/Ddo/8WXBn/ZwslawHM/9w==
-X-Gm-Gg: ASbGnctfR9Y9eNtwTjlbYJcZ1ZW8jLDBXGH1ARaUbP1gSn52UmPxdejrqYm7E9VfQYc
-	/PO3vaNTHMQDr11JYoOQwbv5Q0B11KejHQcTp9uvGVfoSF5VLu1COHBtMiRoDnuaU9kkctm3Puw
-	==
-X-Google-Smtp-Source: AGHT+IGh48EGwTYFSKrKDNbwh6iM4EsoVfBSxF4gz8U4VFmSmI9atHaxKvm8zrK7zrd+YcMu62K8X5RTMCsgFSldYNE=
-X-Received: by 2002:a05:6e02:1809:b0:3cf:c7bc:4523 with SMTP id
- e9e14a558f8ab-3d008eec85emr149079765ab.6.1738598512548; Mon, 03 Feb 2025
- 08:01:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9KS/Mii"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75567C4CED2;
+	Mon,  3 Feb 2025 16:01:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738598523;
+	bh=4SOGZvOaekagYSOdFlhRq9Mi7M/irJXQFpp55w2Pnjw=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=I9KS/MiibRSI2Ryxjqm7t0PljJAXoeskl6/xHFQFUm0yFMnJtBAkXQ+sF+Ry7rhOl
+	 VkqMoBVH6h5VrnN4REBsew7ng6oTGp8PZaefRGXv/3QRGofug/xfseROZ44rFG8eXK
+	 ShFyKw3ufT74BBUYDVMJ0VcTYxaqTLB4+vi0PsgH9sV54EoJJNRoXomXq2jkO6CeUI
+	 CUR0VaTv0CXWvQ2vt3Z1ovtBj0BatJpiHLSS9MCSVgcpUXKIr5u5wtxfnpNSU92eHk
+	 kXkyxOlUzzVJV9t4pVB0Hsp1P7CUZIwbUSMatBZSqeH0b1fkteUA15gMhDYI+qESUf
+	 cEMiXofmyuVyw==
+Message-ID: <6271c4e0-de99-4d40-a147-8f742edcb362@kernel.org>
+Date: Mon, 3 Feb 2025 17:01:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241214172549.8842-1-apatel@ventanamicro.com> <87tt9bnmcz.ffs@tglx>
-In-Reply-To: <87tt9bnmcz.ffs@tglx>
-From: Anup Patel <anup@brainfault.org>
-Date: Mon, 3 Feb 2025 21:31:41 +0530
-X-Gm-Features: AWEUYZlO5PZddtosW3YVPDmyhEnZw9_BooCQby6hNDlavzyqwz_yNvI7qNklqJg
-Message-ID: <CAAhSdy26zZNOfD8CW_MaYq0PrZCVef6gqD7b=D1KWNZpcqYjrA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] RISC-V IMSIC driver improvements
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>, 
-	Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Atish Patra <atishp@atishpatra.org>, 
-	Andrew Jones <ajones@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>, 
-	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/9] bindings: ipmi: Add binding for IPMB device intf
+To: Ninad Palsule <ninad@linux.ibm.com>, brgl@bgdev.pl,
+ linus.walleij@linaro.org, minyard@acm.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, openipmi-developer@lists.sourceforge.net,
+ netdev@vger.kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
+ devicetree@vger.kernel.org, eajames@linux.ibm.com,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+References: <20250203144422.269948-1-ninad@linux.ibm.com>
+ <20250203144422.269948-2-ninad@linux.ibm.com>
+ <6def1c5d-d1a0-4a6f-9db2-453692d5423d@kernel.org>
+ <c06056b4-db8a-4c0b-b061-aa596d3519f8@linux.ibm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <c06056b4-db8a-4c0b-b061-aa596d3519f8@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 3, 2025 at 7:47=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de>=
- wrote:
->
-> Anup!
->
-> On Sat, Dec 14 2024 at 22:55, Anup Patel wrote:
-> > This series is based on recent discussion on LKML:
-> > https://lore.kernel.org/lkml/20241114161845.502027-18-ajones@ventanamic=
-ro.com/
-> >
-> > It primarily focuses on moving to RISC-V IMSIC driver use common MSI
-> > lib and GENERIC_PENDING_IRQ.
->
-> Can you please respin this series on top of rc1?
+On 03/02/2025 16:17, Ninad Palsule wrote:
+> Hi Krzysztof,
+> 
+> Thanks for the review.
+> 
+> 
+>>> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+>>> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
+>> You still need to fix the subject. Why patch #1 has bindings but patch
+>> #2 dt-bindings? Why can't this be consistent?
+> 
+> What is preferred now a days? bindings or dt-bindings?
+dt-bindings. nowadays? submitting patches asks for this since 2018.
 
-Sure, I will rebase and send v3 tomorrow.
-
-Thanks,
-Anup
+Best regards,
+Krzysztof
