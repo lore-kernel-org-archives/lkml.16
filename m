@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE6C209679;
-	Mon,  3 Feb 2025 15:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF986209F24;
+	Mon,  3 Feb 2025 15:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738595414; cv=none; b=QIANIaRQMJBHn0mCjf33N2afvwQUIaNQMxKS8RBJsjzDp5o1B7w9xfSNr7u93bSyQgLtwfL7M6+4REELIEhIQ0nCCSnbxgTZRolKTriFQNyLbCDfc16iTCqT88u1ECg1LC7jazWAcSlxPN5/cc1FkjDwp8QsT4cNpmMECubh03k=
+	t=1738595418; cv=none; b=NcJEAbXah0uSTLPrH18QtlVAoNGsldjwFzP/e3jEsFDC2IiN0P+71B92cfW45p2Pmar0atW5PM8sMCDzRmr56NbSjKMpLMbc/3vTbBvwoA7JOtweYLkrUp23Sge0dIYzpDjQMj3yW04qSYe+3rJHp6IndTgf3P1hkjKPOhc+I4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738595414; c=relaxed/simple;
-	bh=WcA3kPv5iDC8b2KCR1IFW4zckDGb5vp23+fuV9V0gKQ=;
+	s=arc-20240116; t=1738595418; c=relaxed/simple;
+	bh=8XpJSLJ55SDaveXMAsKmhWitbwmSWaNN5s8GVphJwa8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ICGCNZ7ppZ6Q942h86HbOYahhIonj+1/NrHLrVjekf9C+sW3BwxGprqOWtxobmqmIHqmnzV4ITcl31buEEID4mqy46k3sRRr+zkSjhA9Z/e9V4wtVhF2H/EGF+GvxqnsTe2lBn/UBh56oy9IKhFBukhgPrcZXfNG0WuwLZPN6Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SU8WEnVD; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=SZCH0FQ17gUZszGOYR9xy+LxFjRSdvUefrZcROnxvT2N3P9k8asmZrTY2G4JjyNdS3QCp/qYCALdsRV4mosDX6U+S0a+qdt8m9hyrNJRFlzVDYKKtYYh+GwFqNaqmsMGzpI0YZ8YPO7sTNfDfyyAyLCjpo8F/lKIA0GhhtC0RSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JJpJHC0x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SU8WEnVD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87AA3C4CED2;
-	Mon,  3 Feb 2025 15:10:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JJpJHC0x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8904CC4CED2;
+	Mon,  3 Feb 2025 15:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738595413;
-	bh=WcA3kPv5iDC8b2KCR1IFW4zckDGb5vp23+fuV9V0gKQ=;
+	s=k20201202; t=1738595418;
+	bh=8XpJSLJ55SDaveXMAsKmhWitbwmSWaNN5s8GVphJwa8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=SU8WEnVD2dQGPdU457jC2LBRdJt6P/fZeDAkPNZenkPoU8YSpqnYy3lvdQnseK0Io
-	 pOLrUEywh/BHw99GVph1QYlNV9O57O+Plny+0rIHZPRcI9lr1vXM6DFhHIKeaMurOi
-	 dtBD/BMJhuO+BRLdwhd8jZ3vueV3eXSyJP9ieVZR7yK4q1U0LVAnb6geOuE5/tM+gJ
-	 zau30X3OIQ62M2ABJ5TueTlwCNQszfbEWz8yJ0Jn4S89uY7aOOn46STNZCnNIOd8B1
-	 LOIr/gAaKU8MKND9gRqIhNbfn4R1EfONwHQzjIxaFBb1WlB8oLaoOxNq6CRpqRfq+h
-	 8uDLOeJ6qlY3g==
+	b=JJpJHC0x07Y5CchLCvOLz9TBYC47t98cl7rBlbmGvZmzuB4MO0SV1xH2KeNTUMES9
+	 8oZ5v8uvofJpXq+xCl6bY3nVryrpcKi5508RYFjclcNKQtIODnxyEFbxL2/6qrFpjw
+	 sAENjnBXtZlu4uZuRlAwXo7KObmUNCsgsWYZbl9VVOPbrTRpsBAAVpC/9pOsqek6dD
+	 AcwnNYTmIlkrTZ6eFJpGf+9tCmcAz8WKW/WFk7G4lvi249f9VHKBcMRgCq8dOINwXp
+	 qjFL3RUELAMpS6Ulo6WK/o6SbRVkjW6PYXbtn/wGVnd3mwwcR887MvwUhrb0GYw7XI
+	 Uf+1WPAXUSN9g==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Mon, 03 Feb 2025 16:07:47 +0100
-Subject: [PATCH v7 01/14] rust: time: Add Ktime::from_ns()
+Date: Mon, 03 Feb 2025 16:07:58 +0100
+Subject: [PATCH v7 12/14] rust: hrtimer: add `HrTimerMode`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-hrtimer-v3-v6-12-rc2-v7-1-189144725399@kernel.org>
+Message-Id: <20250203-hrtimer-v3-v6-12-rc2-v7-12-189144725399@kernel.org>
 References: <20250203-hrtimer-v3-v6-12-rc2-v7-0-189144725399@kernel.org>
 In-Reply-To: <20250203-hrtimer-v3-v6-12-rc2-v7-0-189144725399@kernel.org>
 To: Miguel Ojeda <ojeda@kernel.org>, 
@@ -54,65 +54,159 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
  Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1427; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=vRt29LHxNF2wToo1w0j7/SlmbaaQNhsEhnpJ66ceDJk=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnoNvOEVdoIQm4tNaY3DSs3z3ZzxIRa/RcWefFj
- xvkkbI2T/KJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ6DbzgAKCRDhuBo+eShj
- dwDBEACj19cU32sMiC+xa6Z6bNfGrCvqB6vxAIUivHvmwuww735I3fibjLJZaN5cpEf5QhMi9sL
- ihckviGV3r51d5lGIyn8KtvAmXRPrUuz+DV8ZFNfhdsNkOtAK9deVw1bAgmrdRD5TfSe3nN52h3
- l5JFyF36gDlMZvaBNDT+y3RoFYvMcevUz+fpw3GFZbzCLqYXZlYskvPxs64J4v16oAmeMOe98gP
- NF34P1MmjXP7WonvyFW7RF6W5NcuIRC6lRE3xLNBtUBq8A8IBRcUwxbwURbTuJ4VXP/PDu035Jq
- DExWC0FrbB5qfwnVgNldk9UMbyjk8FRW2vtTgov7XqCup8MwXdVqBAEFLu09CbreYNgXeGvGcxv
- KRwK0mAezmLJ5sd37yj8pfLP5PD8hkfwx+zUAPUZO2OS6cLzWGB1n3VJsJ30L053fPHzXL48AJR
- OZ9OYEg8lpn0JT+PlWsXsqWpp/cCBQzqTJUdTx3ni/hCenm/3tB8GvOPeigbyR6ssxw3+pyQ2um
- YLe8lm969ebwvs2JixPOLHn4yV35GQ+yFqgITn8QNc+cqytQ+2lxSRIpcqL9q3DDeQ/6qJ7ChUn
- l6Cyf54HPyWjNYGGZUVHM1HFvHxEF5SOlBxddfwyyBeJ7hCa74+bCQ95SuS2O/FkiNMDpvD30H0
- lAdUjsbymvmc7dA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5684; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=8XpJSLJ55SDaveXMAsKmhWitbwmSWaNN5s8GVphJwa8=;
+ b=kA0DAAgB4bgaPnkoY3cByyZiAGeg29mg1CJLD7qglfAHRz/AtnmuDAWDlGEUKD7x6RpE6GPnU
+ okCMwQAAQgAHRYhBBLB+UdWv3wqFdbAEuG4Gj55KGN3BQJnoNvZAAoJEOG4Gj55KGN3YpcP/iLA
+ gqInH0l83EXOodpR/B8oqfNyHqnar4uAQDSpdPSle4fraeRVX3z3rZd6lluyQqxXjXOzy/PncGi
+ GBij8nbsfXul45u36eeSzmOxy/s52lKWZYeHWB0kSF2v2m62tZ+cB5IQTIVdf83k8pV0NmeTdoU
+ CKUTNEgIi99pp/04bMepRhdIQ1Igi38qyBpJzpK4VEZ1OzHV5B9YEL1LwxgvPfUj6fRVhydJGGH
+ Lfvq9ivD0X3nueLIUksz7WV1tEzVuamtjtx8IYhxdJeRGgYtPiQrswfJmT4X6uVMhB3T/JAc3u9
+ 3jU/U4ICGJa+AU8X79zVEG6L73uoP7Mukj2KS5ZIDh/NIr1A8YjcvQuxok8VRTTloDjE4Cp2DjH
+ vDoNKbH+fkCejJsZ74/s7z9x88XENwo0F0wgBmfkzTtMS9KeuSCo/2WmdquDcUAu5lUeolMkzxy
+ dKXAppVLndtZkP7t/DPqIqFmnzKXw13Nq1ga0mCrH3baaNArzfAQOjeLsw1Jrv4w2bim7S48K5C
+ ZAGGfozWybrplFLsugU23uzGBfnT6iLG0HW8RvaNBjM/j0zHjS2H/wQ3Dkt64A+suaXASctjnH4
+ A3OGxdBC3nWeK5uw8EwDqUglot6z9bTePFkoy5uc6TaJ2TpmPPKBPVcvQHbbYdy+r7Ulb8LdKIz
+ riESH
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-From: Lyude Paul <lyude@redhat.com>
+Allow selection of timer mode by passing a `HrTimerMode` variant to
+`HrTimer::new`.
 
-A simple function to turn the provided value in nanoseconds into a Ktime
-value. We allow any type which implements Into<bindings::ktime_t>, which
-resolves to Into<i64>.
-
-This is useful for some of the older DRM APIs that never got moved to
-Ktime.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/time.rs | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ rust/kernel/time/hrtimer.rs | 86 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 83 insertions(+), 3 deletions(-)
 
-diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-index 379c0f5772e575c9ceacb9c85255b13501db8f30..87e47f2f5618d6a4c2e534dd7ec663ced0e91503 100644
---- a/rust/kernel/time.rs
-+++ b/rust/kernel/time.rs
-@@ -8,6 +8,8 @@
- //! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.h).
- //! C header: [`include/linux/ktime.h`](srctree/include/linux/ktime.h).
- 
-+use core::convert::Into;
-+
- /// The number of nanoseconds per millisecond.
- pub const NSEC_PER_MSEC: i64 = bindings::NSEC_PER_MSEC as i64;
- 
-@@ -63,6 +65,12 @@ pub fn to_ns(self) -> i64 {
-     pub fn to_ms(self) -> i64 {
-         self.divns_constant::<NSEC_PER_MSEC>()
-     }
-+
-+    /// Creates a new Ktime from the given duration in nanoseconds.
-+    #[inline]
-+    pub fn from_nanos(ns: impl Into<bindings::ktime_t>) -> Self {
-+        Self { inner: ns.into() }
-+    }
+diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+index 5eaf86fd099566e9d837a1d394e666fcb8f8dab4..6a7344cb32647b6ed033c22fc3774981708c3a67 100644
+--- a/rust/kernel/time/hrtimer.rs
++++ b/rust/kernel/time/hrtimer.rs
+@@ -59,6 +59,7 @@
+ pub struct HrTimer<T> {
+     #[pin]
+     timer: Opaque<bindings::hrtimer>,
++    mode: HrTimerMode,
+     _t: PhantomData<T>,
  }
  
- /// Returns the number of milliseconds between two ktimes.
+@@ -72,7 +73,7 @@ unsafe impl<T> Sync for HrTimer<T> {}
+ 
+ impl<T> HrTimer<T> {
+     /// Return an initializer for a new timer instance.
+-    pub fn new() -> impl PinInit<Self>
++    pub fn new(mode: HrTimerMode) -> impl PinInit<Self>
+     where
+         T: HrTimerCallback,
+     {
+@@ -87,10 +88,11 @@ pub fn new() -> impl PinInit<Self>
+                         place,
+                         Some(T::CallbackTarget::run),
+                         bindings::CLOCK_MONOTONIC as i32,
+-                        bindings::hrtimer_mode_HRTIMER_MODE_REL,
++                        mode.into(),
+                     );
+                 }
+             }),
++            mode: mode,
+             _t: PhantomData,
+         })
+     }
+@@ -336,7 +338,7 @@ unsafe fn start(self_ptr: *const Self, expires: Ktime) {
+                 Self::c_timer_ptr(self_ptr).cast_mut(),
+                 expires.to_ns(),
+                 0,
+-                bindings::hrtimer_mode_HRTIMER_MODE_REL,
++                (*Self::raw_get_timer(self_ptr)).mode.into(),
+             );
+         }
+     }
+@@ -368,6 +370,84 @@ fn from(value: HrTimerRestart) -> Self {
+     }
+ }
+ 
++/// Operational mode of [`HrTimer`].
++#[derive(Clone, Copy)]
++pub enum HrTimerMode {
++    /// Timer expires at the given expiration time.
++    Absolute,
++    /// Timer expires after the given expiration time interpreted as a duration from now.
++    Relative,
++    /// Timer does not move between CPU cores.
++    Pinned,
++    /// Timer handler is executed in soft irq context.
++    Soft,
++    /// Timer handler is executed in hard irq context.
++    Hard,
++    /// Timer expires at the given expiration time.
++    /// Timer does not move between CPU cores.
++    AbsolutePinned,
++    /// Timer expires after the given expiration time interpreted as a duration from now.
++    /// Timer does not move between CPU cores.
++    RelativePinned,
++    /// Timer expires at the given expiration time.
++    /// Timer handler is executed in soft irq context.
++    AbsoluteSoft,
++    /// Timer expires after the given expiration time interpreted as a duration from now.
++    /// Timer handler is executed in soft irq context.
++    RelativeSoft,
++    /// Timer expires at the given expiration time.
++    /// Timer does not move between CPU cores.
++    /// Timer handler is executed in soft irq context.
++    AbsolutePinnedSoft,
++    /// Timer expires after the given expiration time interpreted as a duration from now.
++    /// Timer does not move between CPU cores.
++    /// Timer handler is executed in soft irq context.
++    RelativePinnedSoft,
++    /// Timer expires at the given expiration time.
++    /// Timer handler is executed in hard irq context.
++    AbsoluteHard,
++    /// Timer expires after the given expiration time interpreted as a duration from now.
++    /// Timer handler is executed in hard irq context.
++    RelativeHard,
++    /// Timer expires at the given expiration time.
++    /// Timer does not move between CPU cores.
++    /// Timer handler is executed in hard irq context.
++    AbsolutePinnedHard,
++    /// Timer expires after the given expiration time interpreted as a duration from now.
++    /// Timer does not move between CPU cores.
++    /// Timer handler is executed in hard irq context.
++    RelativePinnedHard,
++}
++
++impl From<HrTimerMode> for bindings::hrtimer_mode {
++    fn from(value: HrTimerMode) -> Self {
++        use bindings::*;
++        match value {
++            HrTimerMode::Absolute => hrtimer_mode_HRTIMER_MODE_ABS,
++            HrTimerMode::Relative => hrtimer_mode_HRTIMER_MODE_REL,
++            HrTimerMode::Pinned => hrtimer_mode_HRTIMER_MODE_PINNED,
++            HrTimerMode::Soft => hrtimer_mode_HRTIMER_MODE_SOFT,
++            HrTimerMode::Hard => hrtimer_mode_HRTIMER_MODE_HARD,
++            HrTimerMode::AbsolutePinned => hrtimer_mode_HRTIMER_MODE_ABS_PINNED,
++            HrTimerMode::RelativePinned => hrtimer_mode_HRTIMER_MODE_REL_PINNED,
++            HrTimerMode::AbsoluteSoft => hrtimer_mode_HRTIMER_MODE_ABS_SOFT,
++            HrTimerMode::RelativeSoft => hrtimer_mode_HRTIMER_MODE_REL_SOFT,
++            HrTimerMode::AbsolutePinnedSoft => hrtimer_mode_HRTIMER_MODE_ABS_PINNED_SOFT,
++            HrTimerMode::RelativePinnedSoft => hrtimer_mode_HRTIMER_MODE_REL_PINNED_SOFT,
++            HrTimerMode::AbsoluteHard => hrtimer_mode_HRTIMER_MODE_ABS_HARD,
++            HrTimerMode::RelativeHard => hrtimer_mode_HRTIMER_MODE_REL_HARD,
++            HrTimerMode::AbsolutePinnedHard => hrtimer_mode_HRTIMER_MODE_ABS_PINNED_HARD,
++            HrTimerMode::RelativePinnedHard => hrtimer_mode_HRTIMER_MODE_REL_PINNED_HARD,
++        }
++    }
++}
++
++impl From<HrTimerMode> for u64 {
++    fn from(value: HrTimerMode) -> Self {
++        Into::<bindings::hrtimer_mode>::into(value) as u64
++    }
++}
++
+ /// Use to implement the [`HasHrTimer<T>`] trait.
+ ///
+ /// See [`module`] documentation for an example.
 
 -- 
 2.47.0
