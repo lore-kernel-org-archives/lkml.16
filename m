@@ -1,181 +1,271 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F151DD9D1
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19231DD9D1
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738575120; cv=none; b=PpGZ31vwr/BieFulpVfQAcFoen3BbUwWQv5ObbCvsFqaMRdFy14eA+dL+gh7Q9DRK3DPDCXzofOFH0Aly29zTP6ByJVfVtM8ujQzJuPt6NuBzLmfcIgSc+Mqmz3OLNJeZeHVR1vZ9kzjCH7L0vPVbDOCjyzNPYq8LTUreo7aHvA=
+	t=1738575155; cv=none; b=Ay2dvUScsp1GvevcqKO/KkJS9Z5Y6qCIQKg/IqdTkRCzUvXh14LcVtPm7783TmwvGmqcZ8eXY5jYHsKTY32du/vMztcnF+vNzRfeN0RY0SNpfA3FGAub9wgHjWPG/oN5G6tjgwD+tq4A2KTi7sOtznrT1tvqCtjnxJ7AVCjc0Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738575120; c=relaxed/simple;
-	bh=I63rOjnCCdYeabHEACElWvT5v+80dCPI5Uh/pXHFZsM=;
+	s=arc-20240116; t=1738575155; c=relaxed/simple;
+	bh=tHeNzsPP5pqjXoE6hN8s4deC/sNuvZhZRHQmcbXY9/c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BIvszy3XPbsxbkn2ZTjr1Phk5PybEFkCmSQuFediDmELOKs5d8D93wppzxfi82zPiz74bYj7J2Vujxp4qiDdOgktkQ91Eobg9sSQkjFuLDXJ2W6HyYP6ucG9LHmsJHnhZfqCRBx9Ve0gHzDMXfHBQRHl2X1Y+B5luT6iHsyLT4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SUOp9s0H; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=ZQKYCgxFu3IB3n+ZyLVph8Kn/NXLcbc1kP9zAL7TVYshkaiuppSTMolqx7qQfEuzrtZgt1JRgpvQyTeIYuwkRC0A+aNfezhxqIKw4AoTi6qjwrueSNmiSHSBY7vC9tryza0nVKHiEiL+DJ6SaXJ+OzxYMFIlV8Gaj0EIHt3CLJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uPMPPCa5; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SUOp9s0H"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-71ded02b779so2367165a34.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:31:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uPMPPCa5"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4361c705434so30263395e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:32:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738575118; x=1739179918; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738575152; x=1739179952; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0b/Cjql8YcuaYzXvGj+YKhtAwAo8DMeJsHKMU0SBdds=;
-        b=SUOp9s0HdI5LfcYd2JN+AvpmE2Zb4/0jcj/m70LQn8te9rO1n6vd7i6+qGBBrPTtXV
-         UOYOAggdHkGwjN9gqTLWtut1qfZo+ePM6kO+/8+oZY3v7bE9ZoqcA8r6aRTyT32ZGNV7
-         FN9SFUsEto/v7DBwzJg0hlukLpNYBVpDeCGPf3aqHzDgdTjM1hGa5r0LUJ1t6chz6Li9
-         +XCOgNfNJAuhZYSwSIh12qG6IajzzSdGFtzsQhR5oQHMia0VQLHlfM7dNB5RhQgyZR1x
-         3Nt5vfehI5Dz0xGtq23Gz4rvja/d58goIl3uC/Y+48F7jR9vS9GxSZnILMm7H7Y87tuh
-         eJJg==
+        bh=XrYBjepLttts43wmKj/MYk2WDjZApOA0ZfEIn34BDXg=;
+        b=uPMPPCa5Vhkkj4tG0vA9eLNvBGWyomW6rcCWPoqs3LeYDBRG9szNM9nwYqysekFJzl
+         cabqWl6R0FB/GGhYgduVXx5+O7pzVnSPUE6k1HPyLWc5vSqR3iIOxc9aFaxL1bp3jX9+
+         luLzYnLpCGMmm2sRI3N1QcXHcdZxdEZBWMEWrsySKXImM81qtQr0febAGQmJW5Zkm2g0
+         UykVO0u7dBFSpnhR9ompff4bMbW3XefD0I3fsqyAC3qVlNZhIYGKj7hqogkVLix7X4P8
+         gJimkaO+Q5SG8aXQKTKExPWfF8bjSCESN/o9JkqGPZKpJRyGgmKGyG2hPsm/jo2foIdN
+         /1cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738575118; x=1739179918;
+        d=1e100.net; s=20230601; t=1738575152; x=1739179952;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0b/Cjql8YcuaYzXvGj+YKhtAwAo8DMeJsHKMU0SBdds=;
-        b=anQvcU9SSujlc3TaNLVCIrwjBdJq7qpQKejRIFPydS1RKYwPDJcrS3JyaXCfqljxd3
-         IuJfi+upmcX1pHwzzGFtinpKCCIeFLHWgwfj5YR1b6L0p+9ioJFoaZZQjG3aa5cYIEHd
-         Zk1V64u2hXb1wCsMGddFw854MoyrbqwYSmO7E9wUeSsOBQSSrsgZ1i69TKmxV3wz5pJ5
-         VuWDUV/XPVPFoe02rnXtS+gK5BlCcV2ByHINfetiyDaduXnEImBdQBaQODW6ejzZKo1z
-         nOBovOjwnDoMhHB3ZnYLtmDTGwlOiYbYjbOGEeNA2gkoMB0xdA4yYaQnjJd5Vcri5hoK
-         RlnA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBrkKkOqN0hjOhE6oFABfCc0epxooc4OoTq7tzI/YKL64zQy2PE0X0Rv4/BtbkFWIPfdpW8qu760O2Coc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9GkGf4k0pze+0RHFucN2exIJa2Y7SHGtz+71KfOr8Rye5fAaT
-	DxaJLSmNYMs1Ih6+cpplrElibkhp+6A1unXTusvERXnob3ND98I2X0GFXAd9XhN+PIGA+ycl7rx
-	MGTm5z+x4Om/quZXK1P8Mndhpm8/nXrjf6d0cvw==
-X-Gm-Gg: ASbGncvzBSAq9+e41jNrsteJ9qpENTewP9GF6G1jTGFoa3TsJgndHg6zCA/pghdLCyU
-	nesezSGQPebR9W+LgbrlWPhSIS4Gtg80syWNL3nuqu+GUABGsoTbsjhgicnlQ7d0kkINQYU1t8A
-	==
-X-Google-Smtp-Source: AGHT+IEJR8hIqhnAeUdKOXgl0A4tp839fV0qz7B2ghRrTXHtlZLHQoPUdfrFDSD4+GV3YT8Rl/1A2cL6Ht+DjXLmwE4=
-X-Received: by 2002:a05:6830:470c:b0:71d:eb29:3c58 with SMTP id
- 46e09a7af769-7265672f9ffmr13729710a34.3.1738575117736; Mon, 03 Feb 2025
- 01:31:57 -0800 (PST)
+        bh=XrYBjepLttts43wmKj/MYk2WDjZApOA0ZfEIn34BDXg=;
+        b=q/RfaXttaiI89J04IQE/M4uIebfjnzBateyx9eu2AAqUOZEfCLGyuBp2mVAfJg4D0w
+         iSbh6QOcguasppqqnJD5DGQvHlAzWU56NjHhWHcoUlQmdhgVtlZlQRt3AdSe3vce/gyB
+         5pf+6KM74ey5XqqcIhcfRlIPpHIQWEIRdvCD8Qd3FxT7nK2KUp/xOBLSNGsrvHiMLfXz
+         LHIfQDmuJ/dE/PahtLhXzfhc7AeKPZ8jw0MPhfGktQZKxhF4QXBRVcZF3GOe59eH9j9n
+         cMySYIOTXVrtIeWaIgm4XjjnKkFOB/K858BPXA/VCmoyCDLGByoucYkJ9mdAlbREwpyt
+         q9WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmzTd1z5OoG2j8kKWpDVR9VE/1AVfUzJGP9HOuQsP3ZgHEJGftg1tQBDt8ezF3g3oXYwbH0rj3mlsjBK0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyulJB902ammkJ9NcfZ+aLCdV9hNuijZb8ucbKdy2vq9RlUpbzt
+	ntFb3mvWqPKp4YeZPHDjlx3C65nkpT7YW3Tmg/AWWc/ghI7YbnUmSCsMlGmIVIG+4aozK66WeL/
+	5lZjX0ddQzLCIm7NUASVWCIPhgXCBT0LN4SF5
+X-Gm-Gg: ASbGncs4cMiHax1R0yJqOmqCQDRn/0ROU2lU2Oqh+QJDeFwqEGA1zd3pdfvkaLOEF6p
+	uDYLqDAyjeyau4yrOLmXE4OWUokZ6zcKGJ0QwwM1vbNszodwL/Vcgx6nIOhZtm1NdBC5TcR0N/m
+	kM5CJUDDlLZbN2xk5CrXA3O8qH
+X-Google-Smtp-Source: AGHT+IEPOyVPZQUNY0BD8dcY972kpjgVEpIOCaVoZTGD0Z4lhAQzI0DbFE8z1emthp5xKKrsgHdBFrStIjH33NSco+o=
+X-Received: by 2002:a05:600c:138f:b0:434:f1e9:afae with SMTP id
+ 5b1f17b1804b1-438dc3aa785mr152784995e9.1.1738575152049; Mon, 03 Feb 2025
+ 01:32:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203080030.384929-1-sumit.garg@linaro.org>
-In-Reply-To: <20250203080030.384929-1-sumit.garg@linaro.org>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Mon, 3 Feb 2025 10:31:46 +0100
-X-Gm-Features: AWEUYZlwCSm4HwtHohHUPDc6_Po7Sc0pFggJId4hRg-F_HDxQ5gYmp8XH_94HjM
-Message-ID: <CAHUa44FXzL-MZ5y7x6qrsn3GJR=1oR8bbRVCv6ZTvDRoQmENEg@mail.gmail.com>
-Subject: Re: [PATCH v2] tee: optee: Fix supplicant wait loop
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: arnd@arndb.de, op-tee@lists.trustedfirmware.org, 
-	jerome.forissier@linaro.org, dannenberg@ti.com, javier@javigon.com, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250130220529.665896-1-daniel.almeida@collabora.com> <20250130220529.665896-3-daniel.almeida@collabora.com>
+In-Reply-To: <20250130220529.665896-3-daniel.almeida@collabora.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 3 Feb 2025 10:32:19 +0100
+X-Gm-Features: AWEUYZlRzjKzAy1qfsG7-6ppCOGlMXmjKZybC1DCrZZOTMMhoUFZyu1SCCCeYE0
+Message-ID: <CAH5fLgi5bQgztdxm2Ly-Bdp_W=f+xEdyQX+=y-mQ=d2h+FMhHQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] rust: io: mem: add a generic iomem abstraction
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.mco, benno.lossin@proton.me, 
+	a.hindborg@kernel.org, tmgross@umich.edu, gregkh@linuxfoundation.org, 
+	rafael@kernel.org, dakr@kernel.org, boris.brezillon@collabora.com, 
+	robh@kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 3, 2025 at 9:00=E2=80=AFAM Sumit Garg <sumit.garg@linaro.org> w=
-rote:
+On Thu, Jan 30, 2025 at 11:14=E2=80=AFPM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
 >
-> OP-TEE supplicant is a user-space daemon and it's possible for it
-> being hung or crashed or killed in the middle of processing an OP-TEE
-> RPC call. It becomes more complicated when there is incorrect shutdown
-> ordering of the supplicant process vs the OP-TEE client application which
-> can eventually lead to system hang-up waiting for the closure of the
-> client application.
+> Add a generic iomem abstraction to safely read and write ioremapped
+> regions.
 >
-> Allow the client process waiting in kernel for supplicant response to
-> be killed rather than indefinitetly waiting in an unkillable state. This
-> fixes issues observed during system reboot/shutdown when supplicant got
-> hung for some reason or gets crashed/killed which lead to client getting
-> hung in an unkillable state. It in turn lead to system being in hung up
-> state requiring hard power off/on to recover.
+> The reads and writes are done through IoRaw, and are thus checked either
+> at compile-time, if the size of the region is known at that point, or at
+> runtime otherwise.
 >
-> Fixes: 4fb0a5eb364d ("tee: add OP-TEE driver")
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> Non-exclusive access to the underlying memory region is made possible to
+> cater to cases where overlapped regions are unavoidable.
+>
+> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
 > ---
+>  rust/kernel/io.rs     |   1 +
+>  rust/kernel/io/mem.rs | 125 ++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 126 insertions(+)
+>  create mode 100644 rust/kernel/io/mem.rs
 >
-> Changes in v2:
-> - Switch to killable wait instead as suggested by Arnd instead
->   of supplicant timeout. It atleast allow the client to wait for
->   supplicant in killable state which in turn allows system to reboot
->   or shutdown gracefully.
+> diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
+> index 566d8b177e01..9ce3482b5ecd 100644
+> --- a/rust/kernel/io.rs
+> +++ b/rust/kernel/io.rs
+> @@ -7,6 +7,7 @@
+>  use crate::error::{code::EINVAL, Result};
+>  use crate::{bindings, build_assert};
 >
->  drivers/tee/optee/supp.c | 32 +++++++-------------------------
->  1 file changed, 7 insertions(+), 25 deletions(-)
+> +pub mod mem;
+>  pub mod resource;
 >
-> diff --git a/drivers/tee/optee/supp.c b/drivers/tee/optee/supp.c
-> index 322a543b8c27..3fbfa9751931 100644
-> --- a/drivers/tee/optee/supp.c
-> +++ b/drivers/tee/optee/supp.c
-> @@ -80,7 +80,6 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u32 fu=
-nc, size_t num_params,
->         struct optee *optee =3D tee_get_drvdata(ctx->teedev);
->         struct optee_supp *supp =3D &optee->supp;
->         struct optee_supp_req *req;
-> -       bool interruptable;
->         u32 ret;
->
->         /*
-> @@ -111,36 +110,19 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u3=
-2 func, size_t num_params,
->         /*
->          * Wait for supplicant to process and return result, once we've
->          * returned from wait_for_completion(&req->c) successfully we hav=
-e
-> -        * exclusive access again.
-> +        * exclusive access again. Allow the wait to be killable such tha=
-t
-> +        * the wait doesn't turn into an indefinite state if the supplica=
-nt
-> +        * gets hung for some reason.
->          */
-> -       while (wait_for_completion_interruptible(&req->c)) {
-> -               mutex_lock(&supp->mutex);
-> -               interruptable =3D !supp->ctx;
-> -               if (interruptable) {
-> -                       /*
-> -                        * There's no supplicant available and since the
-> -                        * supp->mutex currently is held none can
-> -                        * become available until the mutex released
-> -                        * again.
-> -                        *
-> -                        * Interrupting an RPC to supplicant is only
-> -                        * allowed as a way of slightly improving the use=
-r
-> -                        * experience in case the supplicant hasn't been
-> -                        * started yet. During normal operation the suppl=
-icant
-> -                        * will serve all requests in a timely manner and
-> -                        * interrupting then wouldn't make sense.
-> -                        */
-> +       if (wait_for_completion_killable(&req->c)) {
-> +               if (!mutex_lock_killable(&supp->mutex)) {
+>  /// Raw representation of an MMIO region.
+> diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
+> new file mode 100644
+> index 000000000000..f87433ed858e
+> --- /dev/null
+> +++ b/rust/kernel/io/mem.rs
+> @@ -0,0 +1,125 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Generic memory-mapped IO.
+> +
+> +use core::ops::Deref;
+> +
+> +use crate::device::Device;
+> +use crate::devres::Devres;
+> +use crate::io::resource::Region;
+> +use crate::io::resource::Resource;
+> +use crate::io::Io;
+> +use crate::io::IoRaw;
+> +use crate::prelude::*;
+> +
+> +/// An exclusive memory-mapped IO region.
+> +///
+> +/// # Invariants
+> +///
+> +/// - ExclusiveIoMem has exclusive access to the underlying `iomem`.
+> +pub struct ExclusiveIoMem<const SIZE: usize> {
+> +    /// The region abstraction. This represents exclusive access to the
+> +    /// range represented by the underlying `iomem`.
+> +    ///
+> +    /// It's placed first to ensure that the region is released before i=
+t is
+> +    /// unmapped as a result of the drop order.
+> +    #[allow(dead_code)]
+> +    region: Region,
 
-Why not mutex_lock()? If we fail to acquire the mutex here, we will
-quite likely free the req list item below at the end of this function
-while it remains in the list.
+Instead of #[allow(dead_code)], I would prefix the name with an
+underscore and comment that you hold on to it only for ownership.
 
-Cheers,
-Jens
+> +    /// The underlying `IoMem` instance.
+> +    iomem: IoMem<SIZE>,
+> +}
+> +
+> +impl<const SIZE: usize> ExclusiveIoMem<SIZE> {
+> +    /// Creates a new `ExclusiveIoMem` instance.
+> +    pub(crate) fn ioremap(resource: &Resource) -> Result<Self> {
+> +        let iomem =3D IoMem::ioremap(resource)?;
+> +
+> +        let start =3D resource.start();
+> +        let size =3D resource.size();
+> +        let name =3D resource.name();
+> +
+> +        let region =3D resource
+> +            .request_mem_region(start, size, name)
+> +            .ok_or(EBUSY)?;
+> +
+> +        let iomem =3D ExclusiveIoMem { iomem, region };
+> +
+> +        Ok(iomem)
+> +    }
+> +
+> +    pub(crate) fn new(resource: &Resource, device: &Device) -> Result<De=
+vres<Self>> {
+> +        let iomem =3D Self::ioremap(resource)?;
+> +        let devres =3D Devres::new(device, iomem, GFP_KERNEL)?;
+> +
+> +        Ok(devres)
+> +    }
+> +}
+> +
+> +impl<const SIZE: usize> Deref for ExclusiveIoMem<SIZE> {
+> +    type Target =3D Io<SIZE>;
+> +
+> +    fn deref(&self) -> &Self::Target {
+> +        &*self.iomem
+> +    }
+> +}
+> +
+> +/// A generic memory-mapped IO region.
+> +///
+> +/// Accesses to the underlying region is checked either at compile time,=
+ if the
+> +/// region's size is known at that point, or at runtime otherwise.
+> +///
+> +/// # Invariants
+> +///
+> +/// `IoMem` always holds an `IoRaw` inststance that holds a valid pointe=
+r to the
 
->                         if (req->in_queue) {
->                                 list_del(&req->link);
->                                 req->in_queue =3D false;
->                         }
-> +                       mutex_unlock(&supp->mutex);
->                 }
-> -               mutex_unlock(&supp->mutex);
-> -
-> -               if (interruptable) {
-> -                       req->ret =3D TEEC_ERROR_COMMUNICATION;
-> -                       break;
-> -               }
-> +               req->ret =3D TEEC_ERROR_COMMUNICATION;
->         }
->
->         ret =3D req->ret;
+typo: instance
+
+> +/// start of the I/O memory mapped region.
+> +pub struct IoMem<const SIZE: usize =3D 0> {
+> +    io: IoRaw<SIZE>,
+> +}
+> +
+> +impl<const SIZE: usize> IoMem<SIZE> {
+> +    fn ioremap(resource: &Resource) -> Result<Self> {
+> +        let size =3D resource.size();
+> +        if size =3D=3D 0 {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        let res_start =3D resource.start();
+> +
+> +        // SAFETY:
+> +        // - `res_start` and `size` are read from a presumably valid `st=
+ruct resource`.
+> +        // - `size` is known not to be zero at this point.
+> +        let addr =3D unsafe { bindings::ioremap(res_start, size as kerne=
+l::ffi::c_ulong) };
+
+Once you rebase on v6.14-rc1 this cast is no longer necessary.
+
+> +        if addr.is_null() {
+> +            return Err(ENOMEM);
+> +        }
+> +
+> +        let io =3D IoRaw::new(addr as usize, size as usize)?;
+
+Ditto here. Though isn't usize the wrong type for `addr`? Shouldn't
+you have a type alias for phys_addr_t?
+
+> +        let io =3D IoMem { io };
+> +
+> +        Ok(io)
+> +    }
+> +
+> +    /// Creates a new `IoMem` instance.
+> +    pub(crate) fn new(resource: &Resource, device: &Device) -> Result<De=
+vres<Self>> {
+> +        let io =3D Self::ioremap(resource)?;
+> +        let devres =3D Devres::new(device, io, GFP_KERNEL)?;
+> +
+> +        Ok(devres)
+> +    }
+> +}
+> +
+> +impl<const SIZE: usize> Drop for IoMem<SIZE> {
+> +    fn drop(&mut self) {
+> +        // SAFETY: Safe as by the invariant of `Io`.
+> +        unsafe { bindings::iounmap(self.io.addr() as *mut core::ffi::c_v=
+oid) }
+
+Hmm ... void pointer? I wonder whether IoRaw should store this as a
+pointer instead of an integer?
+
+Alice
+
+> +    }
+> +}
+> +
+> +impl<const SIZE: usize> Deref for IoMem<SIZE> {
+> +    type Target =3D Io<SIZE>;
+> +
+> +    fn deref(&self) -> &Self::Target {
+> +        // SAFETY: Safe as by the invariant of `IoMem`.
+> +        unsafe { Io::from_raw(&self.io) }
+> +    }
+> +}
 > --
-> 2.43.0
+> 2.48.0
 >
