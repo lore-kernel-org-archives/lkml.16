@@ -1,136 +1,290 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A271204C03
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87088C139;
+	Mon,  3 Feb 2025 13:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588080; cv=none; b=ZsGsw8igcY5V9j3OdS68T0K7FlXDU6wgRv3erAxSDmqJ8F1RP1CPDSSHIs4FDtpU4LVpj0FgOMLGXrKBVgO9zTGj2GuGIQ5n87MYMluyJugE/fWLRPJ0vEbRZUqQrsuLEEg91xCZTrwcd466PENWj+BDs29hqFeH3p8tSEpWMW4=
+	t=1738588135; cv=none; b=oLfWRIgxUHWmQnRtWPthnLg155z2Q0Se0gmnY6RruwMFv/xkJA3pYUA5mW7hcBS28K5CPBSDqKm74EuwJyzt6nh9LmvnIMdjUWCUd5kPVhwCONj8/xYVX4FjScpJ3SnkWC2CfCULrHguUQilk5kWxxIZb3XLSnQshz0+skP/z64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588080; c=relaxed/simple;
-	bh=WWw+K9LAmi9SdlLNI+IAamnYBiiIiqnarRUibDNdU+o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u4UgfBAk9KHu/n6q5QjCT9CGTcHOh6DW3b7qLx2HD8zzv3aRYxk4aqBFow5xG9IUx/d362O3q+kAyZN6No9qo98JeJWwAnvaWAYre3kxOdUMfRse5Y5xEugAuZw1mn505G3d9fAVSeZQEp4GHrSPb/1UkDtV7tioK1DhtJtjXwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oR2NBUKQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738588135; c=relaxed/simple;
+	bh=uVAMvhFVmhaZQMyq8sE9xqZswhwVTo+AbxI41rusfEw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dBpu6iBbC3ekjn/t2LyjKKp7hxxUJCO7kkWvGWIX/mXgHl0dltV6jmuqHwuWnsN0TfpOYMysDwAeD6osiFnXmxNyOvxOv4vXYTfg9rFqvrub6vM7Ed3Rmv4xaAcYm1358eSZb0FRjoyeL1uSU3L3cOtAowAXtmO7brTr5qlx+SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iLsy7qR1; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oR2NBUKQ"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5132bGT2017667
-	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 13:07:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	HHQbos0F5o8aVGN+bxdm35249+HKbFkE1Tu5vGmxSwg=; b=oR2NBUKQ7/7OVoEz
-	75Z3S7Zi+G+LZmrUzGcpm86o+ATl/EufZiB0ZgLofGPG1yyLZiKL71K3kds4BD1b
-	io5BosJk90tr2DaGkCLxHIk0fSSOZD1FLWIkjgq7SdRiuuJxAV1bUIb7PRqVTNmZ
-	HgnhRWO7xsvt/2zjnkz3M/WbSF545hG/I/CRZmtuhPnEMC2rF9AY582TwJvqQtK3
-	ulKJnUFQ3kYGUM/997y11W5t/wAxZ/5Vb6DOnYGGUVeEjF2j/1WP5nLv26CtfBDO
-	3/EoGPka/7COUwWhQlCpimrd6gFwctpRzAlPU9TwpjXrEaYHu+78LcxuefK/4omZ
-	ZV+zhw==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jn5vhbks-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 13:07:58 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6dfba8de3cdso15086186d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 05:07:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLsy7qR1"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-46e48278a9dso7070631cf.0;
+        Mon, 03 Feb 2025 05:08:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738588132; x=1739192932; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CHjKhVXQwB5PNmTEPHLSlpwqAm0HS0J9XwM/xzqkTnw=;
+        b=iLsy7qR1ckQUrdm4JhQ7HTpQDiqkcrfTyBqBgSibmveyLA/Ot2vtMkILNgijnc1MbM
+         /rihPOh/LzOnrG+1W/wDK/M9rP2givPBIGqCzqAks97YeKNNXaB7rQdUzDdJCQlrV1Ve
+         4UtaXvinoB9bUkt5MjUyDCnp5W5Br7m4+G23+rUwTBbUEygPhZx4hQSLQOLohdHwQqhK
+         OAlCPNnKYUb7DMI/cJ9sgExdRe2rb7g+xSnGtNXTwQykuFFF9bMEnG346NLkyOPS1ndS
+         PRxBVnEz9C4J6pmQKkWE3keN1V7EeB+LkOPpv1tlPGoRlrQIw6UthB6VrjWy0TOYanvY
+         E6Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738588077; x=1739192877;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HHQbos0F5o8aVGN+bxdm35249+HKbFkE1Tu5vGmxSwg=;
-        b=RbBV8Br3pNH1PEK5FlHbMSHOcbw+nezhfwDgflw+Jdm8OFoRlMuO1Yt97Af9SG9Wus
-         o+ktOyXCnYhh0LuH5gSXYvbB0cOlTfsle62OiWyzDGC3e2/rwPbC1ZYEnkYrLUmd2g6k
-         K0zx/LWp2m/CMF8G0WKHHgHAs/i/P3qwBtBK40ceeixQEtxoIRLrGe67Jta6HxswCeNt
-         zBfy34JADMfkZ4mi0oKV6/+zwDeeMZ+3RRBRImjlESP8qRZk4/2lnvY4CkbxW+c+wzQZ
-         vCt3x7HhR0MYWPMVeKRD0RxAg4Rpc4urBbX91siPqyFHD5v5+eJZwEJXVgD57YU6qmJc
-         7W+A==
-X-Forwarded-Encrypted: i=1; AJvYcCU1ndnrzz+j1xxLUuiuiwCWjtMlinXrDcIynOjRWQgsIFVEEzlxfmr4qN8fiuZoJU9eNStqn/3A01r8+1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHb+6ZRPRsYfzIKL7Wov9Gx2+w5ahZKxlxXbwWU/1D4thtmtbR
-	YWEHppyhAcEN07ymaV8iHNNQNhZ9Vp3NtGDf/47pOwZA/f0BDsERlzWJKkjYZaFJlGAEoLr1XwE
-	lAkiQSiA2uY9vJG4f/c2BEtsn9FAUXIsyED4ZRfKyC7iegrJfMxLER4sRQUI8ZU6XemDSf68=
-X-Gm-Gg: ASbGnculJMEyVHVLOMFIwJiDHH8n8yUrtofgbsztRhLLGepKq9/MWFssW/IZQyaSCdX
-	VPHVcj3Rc1JUbE4iylXWSlIIV9Nmz3qnT40ehoNWtd/UT+KQsdamJbAi/PrfuY9riFysDCnVLHG
-	FqZ827tMY73AXth7Ipx6WSzmhIY2jc4oHzBnvloV4okJSW7ekIqlRDbgndoGNAAwZ3I6o4yw8Fs
-	YQTgBhgPmqe3R51er5/gXyC1UvCMKdRBNnghqdhDb78nm6ITCZUoxuVyeLr0m/ninzaQDuqDlmk
-	rVhh42WfLL0W+VtqVXoz4/JQlm2w+pHeoPLjilY8UbvXjoTQXtFLtjWDhcg=
-X-Received: by 2002:a05:620a:2550:b0:7b6:d026:29f with SMTP id af79cd13be357-7c009afc404mr999176885a.1.1738588077087;
-        Mon, 03 Feb 2025 05:07:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHvZLxGFmUqIUuPB9CPetG+6orsrmU4X1UOL7phutO1KWwcJSP9Qy+xUEKLVon5cWbx4x4Pgw==
-X-Received: by 2002:a05:620a:2550:b0:7b6:d026:29f with SMTP id af79cd13be357-7c009afc404mr999174385a.1.1738588076548;
-        Mon, 03 Feb 2025 05:07:56 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a8268sm753013366b.28.2025.02.03.05.07.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 05:07:56 -0800 (PST)
-Message-ID: <7fef1b3a-6b63-47fd-a3a8-346bded682c3@oss.qualcomm.com>
-Date: Mon, 3 Feb 2025 14:07:54 +0100
+        d=1e100.net; s=20230601; t=1738588132; x=1739192932;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CHjKhVXQwB5PNmTEPHLSlpwqAm0HS0J9XwM/xzqkTnw=;
+        b=oXrwiccKRjhKeWJmLFXF76pHMOseB9DGbuSNMVkvSL9iNmk9//LKeiO4d4K7XtiqYN
+         O7lPtizk1/xvZvCMXo+e6fwS9UR4WEbnJTyUbcu7Hx1sBGXXtJnqczTbU/Fw7HFnMSt1
+         iCupVcpXFA/QLn82eOTUyYy9p7/Zd7WjHxIsbMVxsJSYN9mkowBulzKNWS05ZXx0oEFK
+         3NB4t3wgsXdH41uy/LJxEL9u3yPeZNWRQo//n5QQ99Jox7X2Bh3Xvis6GuilG8inaGL2
+         Qpg2q7jknBSzc+evpuCmpwKSo6+EF4bRa+PGzLLnF1crlG/hPCLk2m62bHFt+9Qf1N+C
+         omEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFJ79VF4Jgfpi4aittew2p/L2MzFwhSWZISPb1Qu40RbwMr+PjdJYXoYHH9Lct8Z5ujzlOdURErVvj@vger.kernel.org, AJvYcCWkDP4IedxAiitk3QDXOMdYeFVYax6WXjKf1j+NKULA4WXu0LrFdi3IZA1CtSsnyZiAFHT4+LLCPLFiNNYD@vger.kernel.org, AJvYcCWlYg5rrSOrlCtK8s/oMq5qncySQ1YRYMHLK+hkOpRRyo7uxCMo2Gb7X6LHshG2yWcDRQgGEjxBahFw@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKSR3iyrDdxpUTOCV6J00OEsYQR5vmLJcfgbu0r57/5tTGg1P0
+	E80LCuv6MtlVGyawVOZ8wfmjOUUeTC56oI2X2CiX37gLpoG8K7tI
+X-Gm-Gg: ASbGncucbmT2bJJrKyhWZOF/bmi+SkEQIZlDGrUaxYcbEcf5ZF1UmDMwY56ujfKHmny
+	mfYUXL59YXFKmLSGuPvI/y+6TlUygWRaYfVo4eNgb0vVjS8pUdar7+ukBnzfrinOZNW3IfnEf4+
+	lEQmGLWitB/iP8hGAHHgrxZ6TZJvsyzJ1FwLGn/u9jxu8KUTPANBRRP0H20OV27yuPJpvNZQo57
+	jbRYoMb1EO02k1UxCJWr625APl/uJ1yahOF/wP0iFCyuFW3ozkObhjOX0qqya6KpNkBlOLHCjyl
+	oC59K+eYgFY8XmNV6TybvCXTgv2SxosxrfQW
+X-Google-Smtp-Source: AGHT+IEqnpw2iu4Rhuyshxr0dAVk2n19CIbEqrlmz7BVxwnupqK/gZxIcSCsyO+Mxbh2xCyzQyBbbQ==
+X-Received: by 2002:a05:622a:1821:b0:460:9272:6591 with SMTP id d75a77b69052e-46fddba8284mr91829271cf.14.1738588132191;
+        Mon, 03 Feb 2025 05:08:52 -0800 (PST)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0a74a5sm48423181cf.8.2025.02.03.05.08.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 05:08:50 -0800 (PST)
+Date: Mon, 3 Feb 2025 10:08:46 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, lars@metafoo.de,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v2 12/16] iio: adc: ad7768-1: Add GPIO controller support
+Message-ID: <Z6C/3qqJaHUc1IR/@JSANTO12-L01.ad.analog.com>
+Reply-To: be495c92-6e6f-47dc-baee-9524055f4f53@baylibre.com
+References: <cover.1737985435.git.Jonathan.Santos@analog.com>
+ <4067fc67ef617edbaea0de21241d59d6ff8eaf98.1737985435.git.Jonathan.Santos@analog.com>
+ <be495c92-6e6f-47dc-baee-9524055f4f53@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: sm8650: setup gpu thermal with
- higher temperatures
-To: neil.armstrong@linaro.org, Konrad Dybcio
- <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250129-topic-sm8650-thermal-cpu-idle-v3-0-62ab1a64098d@linaro.org>
- <20250129-topic-sm8650-thermal-cpu-idle-v3-2-62ab1a64098d@linaro.org>
- <3db4b41c-0d29-468a-875b-eec3cced5aa5@linaro.org>
- <292ed7db-aa9a-4dd3-a887-70e0ccf346c2@oss.qualcomm.com>
- <82828c3a-ed8c-42b8-b603-bc73d3be7497@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <82828c3a-ed8c-42b8-b603-bc73d3be7497@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: zc9j2-7OIstC-ufzw0ZATE4J5Y949lFM
-X-Proofpoint-GUID: zc9j2-7OIstC-ufzw0ZATE4J5Y949lFM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_05,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- malwarescore=0 phishscore=0 spamscore=0 bulkscore=0 suspectscore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 clxscore=1015
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502030097
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be495c92-6e6f-47dc-baee-9524055f4f53@baylibre.com>
 
-On 3.02.2025 9:23 AM, neil.armstrong@linaro.org wrote:
-> On 01/02/2025 16:37, Konrad Dybcio wrote:
->> On 29.01.2025 3:41 PM, Neil Armstrong wrote:
->>> On 29/01/2025 10:43, Neil Armstrong wrote:
->>>> On the SM8650, the dynamic clock and voltage scaling (DCVS) for the GPU
->>>> is done from the HLOS, but the GPU can achieve a much higher temperature
->>>> before failing according the the reference downstream implementation.
->>>>
->>>> Set higher temperatures in the GPU trip points corresponding to
->>>> the temperatures provided by Qualcomm in the dowstream source, much
->>>> closer to the junction temperature and with a higher critical
->>>> temperature trip in the case the HLOS DCVS cannot handle the
->>>> temperature surge.
->>>
->>> Since the tsens MAX_THRESHOLD which leads to a system
->>> monitor thermal shutdown is set at 120C, I need to lower
->>> the critical and hot trip point, so please ignore this patchset.
->>
->> Should we make the "critical" trip point something like 110 or so? If
->> LMH triggers a hard shutdown at 120, the OS will not have any time to
->> take action. And 120 sounds like we're pushing it quite hard anyway.
+On 01/27, David Lechner wrote:
+> On 1/27/25 9:13 AM, Jonathan Santos wrote:
+> > From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> > 
+> > The AD7768-1 has the ability to control other local hardware (such as gain
+> > stages),to power down other blocks in the signal chain, or read local
+> > status signals over the SPI interface.
+> > 
+> > This change exports the AD7768-1's four gpios and makes them accessible
+> > at an upper layer.
+> > 
+> > Co-developed-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> > Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> > ---
+> > v2 Changes:
+> > * Replaced mutex for iio_device_claim_direct_mode().
+> > * Use gpio-controller property to conditionally enable the
+> >   GPIO support.
+> > * OBS: when the GPIO is configured as output, we should read 
+> >   the current state value from AD7768_REG_GPIO_WRITE.
+> > ---
+> >  drivers/iio/adc/ad7768-1.c | 148 ++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 146 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+> > index c540583808c2..e3ea078e6ec4 100644
+> > --- a/drivers/iio/adc/ad7768-1.c
+> > +++ b/drivers/iio/adc/ad7768-1.c
+> > @@ -9,6 +9,8 @@
+> >  #include <linux/delay.h>
+> >  #include <linux/device.h>
+> >  #include <linux/err.h>
+> > +#include <linux/gpio.h>
+> > +#include <linux/gpio/driver.h>
+> >  #include <linux/gpio/consumer.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> > @@ -79,6 +81,19 @@
+> >  #define AD7768_CONV_MODE_MSK		GENMASK(2, 0)
+> >  #define AD7768_CONV_MODE(x)		FIELD_PREP(AD7768_CONV_MODE_MSK, x)
+> >  
+> > +/* AD7768_REG_GPIO_CONTROL */
+> > +#define AD7768_GPIO_UNIVERSAL_EN	BIT(7)
+> > +#define AD7768_GPIO_CONTROL_MSK		GENMASK(3, 0)
+> > +
+> > +/* AD7768_REG_GPIO_WRITE */
+> > +#define AD7768_GPIO_WRITE_MSK		GENMASK(3, 0)
+> > +
+> > +/* AD7768_REG_GPIO_READ */
+> > +#define AD7768_GPIO_READ_MSK		GENMASK(3, 0)
+> > +
+> > +#define AD7768_GPIO_INPUT(x)		0x00
+> > +#define AD7768_GPIO_OUTPUT(x)		BIT(x)
+> > +
+> >  #define AD7768_RD_FLAG_MSK(x)		(BIT(6) | ((x) & 0x3F))
+> >  #define AD7768_WR_FLAG_MSK(x)		((x) & 0x3F)
+> >  
+> > @@ -160,6 +175,8 @@ struct ad7768_state {
+> >  	struct regulator *vref;
+> >  	struct mutex lock;
+> >  	struct clk *mclk;
+> > +	struct gpio_chip gpiochip;
+> > +	unsigned int gpio_avail_map;
+> >  	unsigned int mclk_freq;
+> >  	unsigned int samp_freq;
+> >  	struct completion completion;
+> > @@ -309,6 +326,125 @@ static int ad7768_set_dig_fil(struct ad7768_state *st,
+> >  	return 0;
+> >  }
+> >  
+> > +static int ad7768_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+> > +{
+> > +	struct iio_dev *indio_dev = gpiochip_get_data(chip);
+> > +	struct ad7768_state *st = iio_priv(indio_dev);
+> > +	int ret;
+> > +
+> > +	ret = iio_device_claim_direct_mode(indio_dev);
+> > +	if (ret)
+> > +		return ret;
+> 
+> Missing iio_device_release_direct_mode() here and in other functions.
+> 
+> (And we are in the process of removing iio_device_claim_direct_scoped(), so
+> don't use that.)
+> 
+
+Sure, my mistake. I am fixing this.
+
+> > +
+> > +	return regmap_update_bits(st->regmap,
+> > +				  AD7768_REG_GPIO_CONTROL,
+> > +				  BIT(offset),
+> > +				  AD7768_GPIO_INPUT(offset));
+> 
+> Can be simplified to regmap_clear_bits(), then we can get rid of the odd
+> AD7768_GPIO_INPUT macro that ignores the argument.
+> 
+> > +}
+> > +
+> > +static int ad7768_gpio_direction_output(struct gpio_chip *chip,
+> > +					unsigned int offset, int value)
+> > +{
+> > +	struct iio_dev *indio_dev = gpiochip_get_data(chip);
+> > +	struct ad7768_state *st = iio_priv(indio_dev);
+> > +	int ret;
+> > +
+> > +	ret = iio_device_claim_direct_mode(indio_dev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return regmap_update_bits(st->regmap,
+> > +				  AD7768_REG_GPIO_CONTROL,
+> > +				  BIT(offset),
+> > +				  AD7768_GPIO_OUTPUT(offset));
+> 
+> And regmap_set_bits() here.
+> 
+> > +}
+> > +
+> > +static int ad7768_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> > +{
+> > +	struct iio_dev *indio_dev = gpiochip_get_data(chip);
+> > +	struct ad7768_state *st = iio_priv(indio_dev);
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	ret = iio_device_claim_direct_mode(indio_dev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = regmap_read(st->regmap, AD7768_REG_GPIO_CONTROL, &val);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	if (val & BIT(offset))
+> > +		ret = regmap_read(st->regmap, AD7768_REG_GPIO_WRITE, &val);
+> > +	else
+> > +		ret = regmap_read(st->regmap, AD7768_REG_GPIO_READ, &val);
+> 
+> Can we get a comment explaining why GPIO_READ doesn't work in output mode?
+> 
+> Or if it does work, we can simplify this function.
 > 
 > 
-> My plan is to harmonize and use 110 for hot and 115 for critical, and
-> if available any passive cooling devices is available at 95C
 
-sounds good!
+The datasheet does not mention this; I reached this conclusion through testing.
+It seems they separate the output state from the read register. Anyway, I will
+add a comment.
 
-Konrad
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	return !!(val & BIT(offset));
+> > +}
+> > +
+> > +static void ad7768_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+> > +{
+> > +	struct iio_dev *indio_dev = gpiochip_get_data(chip);
+> > +	struct ad7768_state *st = iio_priv(indio_dev);
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	ret = iio_device_claim_direct_mode(indio_dev);
+> > +	if (ret)
+> > +		return;
+> > +
+> > +	ret = regmap_read(st->regmap, AD7768_REG_GPIO_CONTROL, &val);
+> > +	if (ret < 0)
+> > +		return;
+> > +
+> > +	if (val & BIT(offset))
+> > +		regmap_update_bits(st->regmap,
+> > +				   AD7768_REG_GPIO_WRITE,
+> > +				   BIT(offset),
+> > +				   (value << offset));
+> 
+> Can remove extra ().
+> 
+> > +}
+> > +
+> > +static int ad7768_gpio_request(struct gpio_chip *chip, unsigned int offset)
+> > +{
+> > +	struct iio_dev *indio_dev = gpiochip_get_data(chip);
+> > +	struct ad7768_state *st = iio_priv(indio_dev);
+> > +
+> > +	if (!(st->gpio_avail_map & BIT(offset)))
+> > +		return -ENODEV;
+> > +
+> > +	st->gpio_avail_map &= ~BIT(offset);
+> 
+> Is this really needed? It seems like GPIO core would be keeping track already.
+> 
+> Also would need a .free callback to undo this action.
+> 
+> It seems like most ADC's with GPIO controllers don't implement .request though.
+> 
+
+Indeed, .request is optional and does not seem to make a pratical  
+difference if the core handles that. If that is the case i can remove
+this
+
+> > +
+> > +	return 0;
+> > +}
+> > +
