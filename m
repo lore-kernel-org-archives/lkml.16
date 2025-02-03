@@ -1,66 +1,80 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0768E20967A
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714DD205E12;
+	Mon,  3 Feb 2025 15:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738597577; cv=none; b=IGFPFFS+2dgtB1reVF+CD7jfLySFg3OHlW2F+9YpYO/9mJjPmDvQ3dGr01r5qpUrjLuaGMHHjJeXZdaI5qip9v3bTGKu8FcPwl8PZoyikf4KjFQ03HQgJGTD0bdEzDUf40HLf/NcCsolMUNC4LISviaOnMBy4zxHkKdnMs3emH4=
+	t=1738597620; cv=none; b=MblMZvxTBt+LX8nv86rMq39ax2RVrJdl6aJ9+84tCvc0pZZ9bsolYbKoOM7/SW9V+I7v4CUdKt4+K/ctViAS/wSa81x3gSW8FsnMFw+8KUCSE6fB8M93G8oHOtd4inpuBkia1m1Su+vWmmdtzys3fam8CeFj3VPyXRKH3jSKt8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738597577; c=relaxed/simple;
-	bh=VUDFAoH2yWf/eG9Odxs/zyBPuh7h8+lxwkoJs2sMwwc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lqbxP4Yl6u/TT9rOJN6zuIF7U+vrwzPFmxPiQTv2QJxwa69RN5YNxV9zUpjnRtLXP30vAd+xFTzULJIvm+eWfg2X/PZeE/4MxZNC0+wE6sgM5kJaBejFeYleV0d0FO+dcNQZf27h4LQDUAzOON7J9X6XukLm+/+sSE6tfvMqGfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=f6vRSukE; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1738597620; c=relaxed/simple;
+	bh=3JIFy9yC+Zkwr+QsSfGenMJKEGpT65ER3lGktOs1qmM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cGwdmP4/+HRVAzWwbgtLqF7xIBnqgkRZ0wd7uiL7YPHdPbMmzzk9tM+gq5c6S1C7X+mGfBR/Nbm9amHGH5yZsLwAIksXyTMSQ+vt87jDbOqPkEqiyvRuuOjMBNcCajyrtm28TYDeS2o3k7FbNQEzYHGpFFoZbGHL7jDBi0jtS8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iJvek9q9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="f6vRSukE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VUDFAoH2yWf/eG9Odxs/zyBPuh7h8+lxwkoJs2sMwwc=; b=f6vRSukEthrlkNZoRN0gQ8r6X2
-	H3+Z8wE0mGiMDBbn5Abzo9KR2QnuK+azNRLZaCpKoaLUvLsSshytbmKCvLtxcSDTyQeEyP6jSjoEe
-	437OUAMSolYyVpxxFHRwEmV2p7ASbq69o0oiuaa0s7iXN9rIEEikKI4a71SH3qV+ptDV3MyiGH7QE
-	gBeDnUJsjSt8zRNUoq35lYrKAlYpPY6182+nbdOoJ7wr/iaEhFEAxem6/S0lgy+7F7JN3pXcBWJM1
-	h23aVqqSdFANzFoumN5gp7EdN2NxinMvz1gpR/+Vs1xmqj9Qv+clY8SYWbEf6VQQiwNyUbTY2IZPH
-	MmdK5nEw==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1teye9-00369h-0s; Mon, 03 Feb 2025 16:46:07 +0100
-Message-ID: <2add5e06-811c-44af-904a-3bb75521512f@igalia.com>
-Date: Tue, 4 Feb 2025 00:46:00 +0900
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iJvek9q9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4071FC4CED2;
+	Mon,  3 Feb 2025 15:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738597619;
+	bh=3JIFy9yC+Zkwr+QsSfGenMJKEGpT65ER3lGktOs1qmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iJvek9q9lvw2bVSOMUGghoKXUTGSc8f2yuK/YX1ohsicCpC0byuYEtzPL973972ZY
+	 IUl5D9Axe5Von0Dc+0ngRFk+ER8kVq1P2JK4yV4KM+esYRuktUIT1zLM/Toub5x0k2
+	 su4OV5KqhDdc4Y8AclR2miIWBntF0zGck3XrxFyI=
+Date: Mon, 3 Feb 2025 16:46:56 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 1/3] driver core: add a faux bus for use when a simple
+ device/bus is needed
+Message-ID: <2025020308-shrill-brewery-38d6@gregkh>
+References: <2025020324-thermal-quilt-1bae@gregkh>
+ <2025020326-backer-vendetta-7094@gregkh>
+ <Z6DchyPieQKBJ0SN@smile.fi.intel.com>
+ <2025020300-gown-outmatch-1343@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/11] sched_ext: Add an event, SCX_EV_ENQ_SKIP_EXITING
-To: Tejun Heo <tj@kernel.org>
-Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org
-References: <20250131070938.95551-1-changwoo@igalia.com>
- <20250131070938.95551-6-changwoo@igalia.com>
- <Z5-pTOjBwsQRB0OF@slm.duckdns.org>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <Z5-pTOjBwsQRB0OF@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025020300-gown-outmatch-1343@gregkh>
 
-Hello,
+On Mon, Feb 03, 2025 at 04:35:45PM +0100, Greg Kroah-Hartman wrote:
+> > > + */
+> > > +struct faux_device *__faux_device_create(const char *name,
+> > > +					       struct faux_driver_ops *faux_ops,
+> > > +					       struct module *owner)
+> > > +{
+> > > +	struct device_driver *drv;
+> > > +	struct device *dev;
+> > > +	struct faux_object *faux_obj;
+> > > +	struct faux_device *faux_dev;
+> > > +	int ret;
+> > 
+> > > +	faux_obj = kzalloc(sizeof(*faux_obj) + strlen(name) + 1, GFP_KERNEL);
+> > 
+> > Potential overflow. To avoid one may use struct_size() from overflow.h.
+> 
+> Users should not be providing the string here.  Again, this comes from
+> platform.c.
 
-On 25. 2. 3. 02:20, Tejun Heo wrote:
-> On Fri, Jan 31, 2025 at 04:09:32PM +0900, Changwoo Min wrote:
-> Missing agg call?
-Ah, you are right. Will fix it.
+Sima just proved me wrong, I'll go check for this now, thanks for
+pointing it out.
 
-Regards,
-Changwoo Min
-
+greg k-h
