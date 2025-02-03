@@ -1,146 +1,194 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEEB9204094
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F57820370C;
+	Mon,  3 Feb 2025 11:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738583410; cv=none; b=KKvYQKYT74rvAjW1t6rqAHbDQq98en/wCUirpImPcnPbYvTJt30c7bJtW8fmFMpIWWJeir4C3AMvNx9BZg5jHLOOQAmJbP+TiltmEaHkLLkB/dM599+Fyl2MT8y1yxfGzEdBFgoim3q8IfIOVvTWkRRj+JUVSpq3BFFVxvfUmfY=
+	t=1738583439; cv=none; b=VAZsesmdJXyE35u/NWH3B9mez8BOjUeBy5IqkJAQI8y429IcY2V6/RoNE2MieXmJ+fiUsvR2sTP8nho54VIDLbTE+wK8nVpyrP2QHiawWnLf53RDtqzbAi5NOpLMuiUDrsSrT6Me2BSXoiyxuJ8nkTSAO32dQCJjdx49ZuMM8fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738583410; c=relaxed/simple;
-	bh=wiXX7GseMnf0CAkGInhemcdG19OuOZo2Pnji6hPKJJo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J1mWak6of6UTpX+sMnmqqFihdMGExgu0AX1tVdfsuexokdjDjyQJs3xKDLWwJ8jsqYAnTNz1Azk/bxgGBwjWnbuRA/kFKu2W+LqodObkR1hWzikU6xVCnG/CyP+V19H9mvMLW581KWIx0gp0xWQa/nE8bchdk1c4T0EuJFW6REw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4Ymj6j0dnsz9sRy;
-	Mon,  3 Feb 2025 11:15:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id edW2Lj5g4zeh; Mon,  3 Feb 2025 11:15:08 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4Ymj6h6dwNz9sPd;
-	Mon,  3 Feb 2025 11:15:08 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id D18508B767;
-	Mon,  3 Feb 2025 11:15:08 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id WY6UOIcsx0kV; Mon,  3 Feb 2025 11:15:08 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.202.221])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 264DE8B766;
-	Mon,  3 Feb 2025 11:15:08 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Erhard Furtner <erhard_f@mailbox.org>
-Subject: [PATCH] powerpc/code-patching: Disable KASAN report during patching via temporary mm
-Date: Mon,  3 Feb 2025 11:14:57 +0100
-Message-ID: <1c05b2a1b02ad75b981cfc45927e0b4a90441046.1738577687.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1738583439; c=relaxed/simple;
+	bh=BoxP5Y/8z1hHT9KvfiG76QO6yOSw0im155jB54VJ1VQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LzrjdZ8O8/AfeuLp2+9XPeipYJjRkGu4Ue5jepfFFIlM7wAVZSWYDngEIurBdUt2Wam8mnKuLZIHEfBf6MTqHGhAnvfdw7F4Sqtz/NRbL7nsbzDmbzTvcHZeqfeaqdfZDi3rziD4s6aOHHzqE0jGanFZJV8BAjsMnqfPUqTco8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nX4v4OZG; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nX4v4OZG"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6dd049b5428so32417146d6.2;
+        Mon, 03 Feb 2025 03:50:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738583436; x=1739188236; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lIjziw5Zd+39PQufs8diBl9oy2Y7gM74Sl+o4aK2Pmk=;
+        b=nX4v4OZG7/AQQeQGFfqf1FOcYrJDncTFouOXavnDzDL/nAO7r4urmFj6Kc3HTigi/H
+         VKd96yH+F9suByU40Wk9p6lbnK1rl0pATSR/wIyi6q1Rkn5fGblxcNQX9B/Usixk+Lc4
+         o73vLTmz/Nw2IAm+buAr8OZo4FX+ZuwO3+CTD+aPnbg9IDghn7eKkN4B4Q4DSMkJdGNf
+         poFmh1jy1mSJ6CB/jyD/58edXB6DyKrBdhhz7XFMJUPXMpPSkLx66z3WIie7BOKRFpTn
+         1gRP9M56+P8mIdw+pciahgvc3x3h62TCrdhsogEfkCd0WXh/i7Xa23AF0+6w9wjyv4DK
+         cDLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738583436; x=1739188236;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lIjziw5Zd+39PQufs8diBl9oy2Y7gM74Sl+o4aK2Pmk=;
+        b=Q5ApQ4SvIHX9Ld+cJjyTC9g1RsssOI6Azwr8qiZbrmd2DZ0F3DAS50fIJZ5rF7+5XF
+         W++rZTsa9cSLQiplC6CzZUYSftjEqhnqePu7A0ZLIzDHFwHn6vF0AVYAB3sY6UDVemkc
+         j2qZ/BJ0CYJlvLEcaqp/wFpW+JjGEJlqAG5WZBqpUE+ZjzV9vGxYk3nxxfUNQm7urg63
+         dBinXh9lKnIR12GA3h4by3wSFNJlDxMCNQsOI8X22t99NORSxhztsJxNzBgZbGzeqMEK
+         LX/3NgHFAeZnWx2gO5UFtUVI1CGrrXg5oonWvK5HYxUr4RYRK77oFGEt4h2ImljPHGm/
+         V54A==
+X-Forwarded-Encrypted: i=1; AJvYcCWTzbFVFgXFSTDc2q3WhGnz64Qy3f13XB+DgwOEspauZ5RUca4winvY4qUJFPixHXPYWV5BopWJnvRT1HA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuHG6tHoZqLbH6vsCDqCBC7QTzStcMcN/OGcw8cgl4aWHI94E9
+	V/n8b4WgGNq2QX3aqPcPwIEkRSoW/+AEmCny8a1L617gO3w9Ew/O
+X-Gm-Gg: ASbGncvLZOVH5ijGEWK91A2d+e2VvcdfUzotRmLzaVc84SK2l/npPWbqA0miP+m6/aA
+	o0vQa5JmnLb0omyt86RIi5XNELErKB3cR3lI+ZGgAywk2J/rNwgljvL2hnFmIs73FHT28Es44iJ
+	dB+sfEU0qtEiuduBunYSSY9HplLziWS0Eyj/8ARADvIgzFcqHugRDta58UNeaCLmkH5YmDAmUGd
+	D3uXC+iqWUIgn+aLc89RwDaewA6RhivUE7/sy47Bs8XwLvgq6eqsieB+hzRoOf0rCJSe7dl/Njl
+	FUNKEcEjv7N8Lr4G+VlOGvCsea6qlFsa2WryJ38=
+X-Google-Smtp-Source: AGHT+IHBQ3t8BOiIdDN6PzetGNfE6npdGOR7bEwfs2Kr8b83nXiLdHdbTyMApuzROEzetNdV0c6JlQ==
+X-Received: by 2002:a05:6214:46a1:b0:6d8:68a1:b7aa with SMTP id 6a1803df08f44-6e243c940fbmr327327016d6.28.1738583435969;
+        Mon, 03 Feb 2025 03:50:35 -0800 (PST)
+Received: from tamird-mac.local ([2600:4041:5be7:7c00:f07f:fb14:288d:6f1e])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254835641sm49537626d6.62.2025.02.03.03.50.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 03:50:35 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v8 0/4] rust: replace kernel::str::CStr w/ core::ffi::CStr
+Date: Mon, 03 Feb 2025 06:50:30 -0500
+Message-Id: <20250203-cstr-core-v8-0-cb3f26e78686@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738577698; l=5368; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=wiXX7GseMnf0CAkGInhemcdG19OuOZo2Pnji6hPKJJo=; b=hnkmHRVbpIhnKdpl5axPAUioZBWcxN1JWyRbrxpkjwu6lvyUyJaWCEBngqxhR+ts6GFvgfEpT pQur9Y9R00NAisdIIFRACH/lsy4KUIPZdplQ8G65xQWZpOOTTGSVupx
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIetoGcC/3WOwa7CIBBFf8WwdgyMLYW38j9eXCBQS57tmKEhG
+ tN/l5po3Lzlzcw5OQ+RI6eYxc/mITiWlBNNdZjtRvjBTecIKdQtUGIrUSrweWbwxBFCc7InbRV
+ K34v6f+XYp9vL9Xusu2caYR44urehkUZZ1e51q3dojOwAobhATCX/3Q9Xppmm0aXLztO4KoeUZ
+ +L7q67oVfwOwa+QokGCabT1QQe0fTicP5I1pHT/kl0lg1OmnlA2e/NNLsvyBGAZJF0fAQAA
+X-Change-ID: 20250201-cstr-core-d4b9b69120cf
+To: Michal Rostecki <vadorovsky@protonmail.com>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-Erhard reports the following KASAN hit on Talos II (power9) with kernel 6.13:
+This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
+have omitted Co-authored tags, as the end result is quite different.
 
-[   12.028126] ==================================================================
-[   12.028198] BUG: KASAN: user-memory-access in copy_to_kernel_nofault+0x8c/0x1a0
-[   12.028260] Write of size 8 at addr 0000187e458f2000 by task systemd/1
+Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vadorovsky@protonmail.com/t/#u [0]
+Closes: https://github.com/Rust-for-Linux/linux/issues/1075
 
-[   12.028346] CPU: 87 UID: 0 PID: 1 Comm: systemd Tainted: G                T  6.13.0-P9-dirty #3
-[   12.028408] Tainted: [T]=RANDSTRUCT
-[   12.028446] Hardware name: T2P9D01 REV 1.01 POWER9 0x4e1202 opal:skiboot-bc106a0 PowerNV
-[   12.028500] Call Trace:
-[   12.028536] [c000000008dbf3b0] [c000000001656a48] dump_stack_lvl+0xbc/0x110 (unreliable)
-[   12.028609] [c000000008dbf3f0] [c0000000006e2fc8] print_report+0x6b0/0x708
-[   12.028666] [c000000008dbf4e0] [c0000000006e2454] kasan_report+0x164/0x300
-[   12.028725] [c000000008dbf600] [c0000000006e54d4] kasan_check_range+0x314/0x370
-[   12.028784] [c000000008dbf640] [c0000000006e6310] __kasan_check_write+0x20/0x40
-[   12.028842] [c000000008dbf660] [c000000000578e8c] copy_to_kernel_nofault+0x8c/0x1a0
-[   12.028902] [c000000008dbf6a0] [c0000000000acfe4] __patch_instructions+0x194/0x210
-[   12.028965] [c000000008dbf6e0] [c0000000000ade80] patch_instructions+0x150/0x590
-[   12.029026] [c000000008dbf7c0] [c0000000001159bc] bpf_arch_text_copy+0x6c/0xe0
-[   12.029085] [c000000008dbf800] [c000000000424250] bpf_jit_binary_pack_finalize+0x40/0xc0
-[   12.029147] [c000000008dbf830] [c000000000115dec] bpf_int_jit_compile+0x3bc/0x930
-[   12.029206] [c000000008dbf990] [c000000000423720] bpf_prog_select_runtime+0x1f0/0x280
-[   12.029266] [c000000008dbfa00] [c000000000434b18] bpf_prog_load+0xbb8/0x1370
-[   12.029324] [c000000008dbfb70] [c000000000436ebc] __sys_bpf+0x5ac/0x2e00
-[   12.029379] [c000000008dbfd00] [c00000000043a228] sys_bpf+0x28/0x40
-[   12.029435] [c000000008dbfd20] [c000000000038eb4] system_call_exception+0x334/0x610
-[   12.029497] [c000000008dbfe50] [c00000000000c270] system_call_vectored_common+0xf0/0x280
-[   12.029561] --- interrupt: 3000 at 0x3fff82f5cfa8
-[   12.029608] NIP:  00003fff82f5cfa8 LR: 00003fff82f5cfa8 CTR: 0000000000000000
-[   12.029660] REGS: c000000008dbfe80 TRAP: 3000   Tainted: G                T   (6.13.0-P9-dirty)
-[   12.029735] MSR:  900000000280f032 <SF,HV,VEC,VSX,EE,PR,FP,ME,IR,DR,RI>  CR: 42004848  XER: 00000000
-[   12.029855] IRQMASK: 0
-               GPR00: 0000000000000169 00003fffdcf789a0 00003fff83067100 0000000000000005
-               GPR04: 00003fffdcf78a98 0000000000000090 0000000000000000 0000000000000008
-               GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-               GPR12: 0000000000000000 00003fff836ff7e0 c000000000010678 0000000000000000
-               GPR16: 0000000000000000 0000000000000000 00003fffdcf78f28 00003fffdcf78f90
-               GPR20: 0000000000000000 0000000000000000 0000000000000000 00003fffdcf78f80
-               GPR24: 00003fffdcf78f70 00003fffdcf78d10 00003fff835c7239 00003fffdcf78bd8
-               GPR28: 00003fffdcf78a98 0000000000000000 0000000000000000 000000011f547580
-[   12.030316] NIP [00003fff82f5cfa8] 0x3fff82f5cfa8
-[   12.030361] LR [00003fff82f5cfa8] 0x3fff82f5cfa8
-[   12.030405] --- interrupt: 3000
-[   12.030444] ==================================================================
-
-Commit c28c15b6d28a ("powerpc/code-patching: Use temporary mm for
-Radix MMU") is inspired from x86 but unlike x86 is doesn't disable
-KASAN reports during patching. This wasn't a problem at the begining
-because __patch_mem() is not instrumented.
-
-Commit 465cabc97b42 ("powerpc/code-patching: introduce
-patch_instructions()") use copy_to_kernel_nofault() to copy several
-instructions at once. But when using temporary mm the destination is
-not regular kernel memory but a kind of kernel-like memory located
-in user address space. Because it is not in kernel address space it is
-not covered by KASAN shadow memory. Since commit e4137f08816b ("mm,
-kasan, kmsan: instrument copy_from/to_kernel_nofault") KASAN reports
-bad accesses from copy_to_kernel_nofault(). Here a bad access to user
-memory is reported because KASAN detects the lack of shadow memory and
-the address is below TASK_SIZE.
-
-Do like x86 in commit b3fd8e83ada0 ("x86/alternatives: Use temporary
-mm for text poking") and disable KASAN reports during patching when
-using temporary mm.
-
-Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-Close: https://lore.kernel.org/all/20250201151435.48400261@yea/
-Fixes: 465cabc97b42 ("powerpc/code-patching: introduce patch_instructions()")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- arch/powerpc/lib/code-patching.c | 2 ++
- 1 file changed, 2 insertions(+)
+Changes in v8:
+- Move `{from,as}_char_ptr` back to `CStrExt`. This reduces the diff
+  some.
+- Restore `from_bytes_with_nul_unchecked_mut`, `to_cstring`.
+- Link to v7: https://lore.kernel.org/r/20250202-cstr-core-v7-0-da1802520438@gmail.com
 
-diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
-index 8a378fc19074..f84e0337cc02 100644
---- a/arch/powerpc/lib/code-patching.c
-+++ b/arch/powerpc/lib/code-patching.c
-@@ -493,7 +493,9 @@ static int __do_patch_instructions_mm(u32 *addr, u32 *code, size_t len, bool rep
- 
- 	orig_mm = start_using_temp_mm(patching_mm);
- 
-+	kasan_disable_current();
- 	err = __patch_instructions(patch_addr, code, len, repeat_instr);
-+	kasan_enable_current();
- 
- 	/* context synchronisation performed by __patch_instructions */
- 	stop_using_temp_mm(patching_mm, orig_mm);
+Changes in v7:
+- Rebased on mainline.
+- Restore functionality added in commit a321f3ad0a5d ("rust: str: add
+  {make,to}_{upper,lower}case() to CString").
+- Used `diff.algorithm patience` to improve diff readability.
+- Link to v6: https://lore.kernel.org/r/20250202-cstr-core-v6-0-8469cd6d29fd@gmail.com
+
+Changes in v6:
+- Split the work into several commits for ease of review.
+- Restore `{from,as}_char_ptr` to allow building on ARM (see commit
+  message).
+- Add `CStrExt` to `kernel::prelude`. (Alice Ryhl)
+- Remove `CStrExt::from_bytes_with_nul_unchecked_mut` and restore
+  `DerefMut for CString`. (Alice Ryhl)
+- Rename and hide `kernel::c_str!` to encourage use of C-String
+  literals.
+- Drop implementation and invocation changes in kunit.rs. (Trevor Gross)
+- Drop docs on `Display` impl. (Trevor Gross)
+- Rewrite docs in the style of the standard library.
+- Restore the `test_cstr_debug` unit tests to demonstrate that the
+  implementation has changed.
+
+Changes in v5:
+- Keep the `test_cstr_display*` unit tests.
+
+Changes in v4:
+- Provide the `CStrExt` trait with `display()` method, which returns a
+   `CStrDisplay` wrapper with `Display` implementation. This addresses
+   the lack of `Display` implementation for `core::ffi::CStr`.
+- Provide `from_bytes_with_nul_unchecked_mut()` method in `CStrExt`,
+   which might be useful and is going to prevent manual, unsafe casts.
+- Fix a typo (s/preffered/prefered/).
+
+Changes in v3:
+- Fix the commit message.
+- Remove redundant braces in `use`, when only one item is imported.
+
+Changes in v2:
+- Do not remove `c_str` macro. While it's preferred to use C-string
+   literals, there are two cases where `c_str` is helpful:
+   - When working with macros, which already return a Rust string literal
+     (e.g. `stringify!`).
+   - When building macros, where we want to take a Rust string literal as an
+     argument (for caller's convenience), but still use it as a C-string
+     internally.
+- Use Rust literals as arguments in macros (`new_mutex`, `new_condvar`,
+   `new_mutex`). Use the `c_str` macro to convert these literals to C-string
+   literals.
+- Use `c_str` in kunit.rs for converting the output of `stringify!` to a
+   `CStr`.
+- Remove `DerefMut` implementation for `CString`.
+
+---
+Tamir Duberstein (4):
+      rust: move BStr,CStr Display impls behind method
+      rust: replace `CStr` with `core::ffi::CStr`
+      rust: replace `kernel::c_str!` with C-Strings
+      rust: remove core::ffi::CStr reexport
+
+ drivers/net/phy/ax88796b_rust.rs     |   7 +-
+ drivers/net/phy/qt2025.rs            |   5 +-
+ rust/kernel/device.rs                |   7 +-
+ rust/kernel/devres.rs                |   2 +-
+ rust/kernel/driver.rs                |   4 +-
+ rust/kernel/error.rs                 |  10 +-
+ rust/kernel/firmware.rs              |   7 +-
+ rust/kernel/kunit.rs                 |  18 +-
+ rust/kernel/lib.rs                   |   2 +-
+ rust/kernel/miscdevice.rs            |   5 +-
+ rust/kernel/net/phy.rs               |   8 +-
+ rust/kernel/of.rs                    |   5 +-
+ rust/kernel/pci.rs                   |   3 +-
+ rust/kernel/platform.rs              |   7 +-
+ rust/kernel/prelude.rs               |   2 +-
+ rust/kernel/seq_file.rs              |   4 +-
+ rust/kernel/str.rs                   | 542 +++++++++++++----------------------
+ rust/kernel/sync.rs                  |   4 +-
+ rust/kernel/sync/condvar.rs          |   3 +-
+ rust/kernel/sync/lock.rs             |   4 +-
+ rust/kernel/sync/lock/global.rs      |   6 +-
+ rust/kernel/sync/poll.rs             |   1 +
+ rust/kernel/workqueue.rs             |   1 +
+ rust/macros/module.rs                |   2 +-
+ samples/rust/rust_driver_pci.rs      |   4 +-
+ samples/rust/rust_driver_platform.rs |   4 +-
+ samples/rust/rust_misc_device.rs     |   3 +-
+ 27 files changed, 268 insertions(+), 402 deletions(-)
+---
+base-commit: 8b3f2116ea4a9521f852b7f9d1d6dd4d7ad86810
+change-id: 20250201-cstr-core-d4b9b69120cf
+
+Best regards,
 -- 
-2.47.0
+Tamir Duberstein <tamird@gmail.com>
 
