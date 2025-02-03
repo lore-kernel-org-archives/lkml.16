@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492C8201266
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:03:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B302036E8
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:03:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738580624; cv=none; b=QPVo6g1Wr1I5uqIhONGSw2583nglocOkwkbnUg0/iAXMtk2vVvZBQfVnNL/2lYqku6OASoiIx7VofGZ2b7h38US9JfENswnEDtf3WZhyeHGB0QAYQuMgNEJvr0B+61tTsgFQKS+Po079qEF5S29fPASLxti9RlWxL8FCBhd3E2k=
+	t=1738580630; cv=none; b=AQLDVk4lUVDfAkL5uORGPplN2toI9PZoyj3lzs4qi7/HKTublMfLJKrQD+CAckHUYbFqYFueFEic8uFksv1oovnVPh2xabHDEYySdOgdrOtYT8h5R5cIs+kJl7AvO0giA0RHKVI/ypwzKLFtDp46ixigOT0x0S3kknrOCzXkJYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738580624; c=relaxed/simple;
-	bh=9ttUZ5MeuwK6L18C0A/46Tx2d9LnOwn9KM4EyWin0n8=;
+	s=arc-20240116; t=1738580630; c=relaxed/simple;
+	bh=3pxWZFne/qbgvUqEBMm2XO/O0uoTztX+XknAwDRObrI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b790ubZR0L7NBaClgqG456nr6SqJ/bU81TxjuoOOjBiTV2YQiAHpBLXnjodoLGpyIPp8ElKbaYH5xXHxlWBIxX0cLtD+WBwdMo0kbtsMfAxtToNU3UivsNquBQ6TcbblHp2VZwkUF3JSDBe0pLH9avIjR55zoqwBy150bFX3AcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JDAdMb5H; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=qpiyxV88NhtkZFfrEx3r1sQ7oiTRVYGBdkKMByyXGC+qrYHmUbjcQOA3+6HrSsWCphxoOPw2MSbPqoTzA70rqeYmui5Xkx5ry4AuLGH03t2gMPZ61l/gzus6YdkDrY+7uu+RPEaZrviGZ8eehd+EQtJc+Nh1yeYtsfCAMFyIja8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kx3uVfoJ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JDAdMb5H"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kx3uVfoJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738580621;
+	s=mimecast20190719; t=1738580628;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QepoMhZxvCaprwxe/kKQUIMTTRdToaS1EIkiLoYlbcE=;
-	b=JDAdMb5HpV5/Qxi8l3un+G2ILiXwn4Wr50/k6AsuvwH6aeXGCMJSat3SOkHv2B1C7rgQ5Z
-	kSDcY3xjaQYJ6GUFWhnnNA/NwmC1dNBQn+KdkeuGs82iOVqfwRFIiRMjxxTRN9SampauTC
-	AWiOcpU91UM/mkb/nq8+211P7A8CC6k=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=vQgoewskazO2en03STRprTa1lLjeCB4xHN38VWeAptw=;
+	b=Kx3uVfoJxqQag30X5461X4GdC+ReD6R6UGFOA+x+i86/EMWYyE2KG+eyi8O8NO3WrP61rT
+	ez30UaN9eQFcIgZC8/DR9VXpEtU7SrqtGLS4vWQwj2osCQndRrAbM8sVVoS/93t6GHgTh6
+	YwDbsqN2wHV9RE8moXJQ6yxL3GxdA4I=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-QFtrjEV2MZqm7YBy8_mTYw-1; Mon,
- 03 Feb 2025 06:03:35 -0500
-X-MC-Unique: QFtrjEV2MZqm7YBy8_mTYw-1
-X-Mimecast-MFC-AGG-ID: QFtrjEV2MZqm7YBy8_mTYw
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-531-j_PZvd1aOnWQOgHMTAytXA-1; Mon,
+ 03 Feb 2025 06:03:44 -0500
+X-MC-Unique: j_PZvd1aOnWQOgHMTAytXA-1
+X-Mimecast-MFC-AGG-ID: j_PZvd1aOnWQOgHMTAytXA
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 28FCF1956055;
-	Mon,  3 Feb 2025 11:03:33 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F0ED91850DF7;
+	Mon,  3 Feb 2025 11:03:29 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.92])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 143A7180A313;
-	Mon,  3 Feb 2025 11:03:27 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BED1A1800980;
+	Mon,  3 Feb 2025 11:03:16 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: netdev@vger.kernel.org
 Cc: David Howells <dhowells@redhat.com>,
@@ -53,9 +53,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-afs@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH net 2/2] rxrpc: Fix the rxrpc_connection attend queue handling
-Date: Mon,  3 Feb 2025 11:03:04 +0000
-Message-ID: <20250203110307.7265-3-dhowells@redhat.com>
+Subject: [PATCH net 1/2] rxrpc: Fix call state set to not include the SERVER_SECURING state
+Date: Mon,  3 Feb 2025 11:03:03 +0000
+Message-ID: <20250203110307.7265-2-dhowells@redhat.com>
 In-Reply-To: <20250203110307.7265-1-dhowells@redhat.com>
 References: <20250203110307.7265-1-dhowells@redhat.com>
 Precedence: bulk
@@ -67,20 +67,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-The rxrpc_connection attend queue is never used because conn::attend_link
-is never initialised and so is always NULL'd out and thus always appears to
-be busy.  This requires the following fix:
+The RXRPC_CALL_SERVER_SECURING state doesn't really belong with the other
+states in the call's state set as the other states govern the call's Rx/Tx
+phase transition and govern when packets can and can't be received or
+transmitted.  The "Securing" state doesn't actually govern the reception of
+packets and would need to be split depending on whether or not we've
+received the last packet yet (to mirror RECV_REQUEST/ACK_REQUEST).
 
- (1) Fix this the attend queue problem by initialising conn::attend_link.
+The "Securing" state is more about whether or not we can start forwarding
+packets to the application as recvmsg will need to decode them and the
+decoding can't take place until the challenge/response exchange has
+completed.
 
-And, consequently, two further fixes for things masked by the above bug:
+Fix this by removing the RXRPC_CALL_SERVER_SECURING state from the state
+set and, instead, using a flag, RXRPC_CALL_CONN_CHALLENGING, to track
+whether or not we can queue the call for reception by recvmsg() or notify
+the kernel app that data is ready.  In the event that we've already
+received all the packets, the connection event handler will poke the app
+layer in the appropriate manner.
 
- (2) Fix rxrpc_input_conn_event() to handle being invoked with a NULL
-     sk_buff pointer - something that can now happen with the above change.
+Also there's a race whereby the app layer sees the last packet before rxrpc
+has managed to end the rx phase and change the state to one amenable to
+allowing a reply.  Fix this by queuing the packet after calling
+rxrpc_end_rx_phase().
 
- (3) Fix the RXRPC_SKB_MARK_SERVICE_CONN_SECURED message to carry a pointer
-     to the connection and a ref on it.
-
+Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Marc Dionne <marc.dionne@auristor.com>
 cc: Jakub Kicinski <kuba@kernel.org>
@@ -91,69 +102,118 @@ cc: Simon Horman <horms@kernel.org>
 cc: linux-afs@lists.infradead.org
 cc: netdev@vger.kernel.org
 ---
- include/trace/events/rxrpc.h |  1 +
- net/rxrpc/conn_event.c       | 17 ++++++++++-------
- net/rxrpc/conn_object.c      |  1 +
- 3 files changed, 12 insertions(+), 7 deletions(-)
+ net/rxrpc/ar-internal.h | 2 +-
+ net/rxrpc/call_object.c | 6 ++----
+ net/rxrpc/conn_event.c  | 4 +---
+ net/rxrpc/input.c       | 4 ++--
+ net/rxrpc/sendmsg.c     | 2 +-
+ 5 files changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index 2f119d18a061..cad50d91077e 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -219,6 +219,7 @@
- 	EM(rxrpc_conn_get_conn_input,		"GET inp-conn") \
- 	EM(rxrpc_conn_get_idle,			"GET idle    ") \
- 	EM(rxrpc_conn_get_poke_abort,		"GET pk-abort") \
-+	EM(rxrpc_conn_get_poke_secured,		"GET secured ") \
- 	EM(rxrpc_conn_get_poke_timer,		"GET poke    ") \
- 	EM(rxrpc_conn_get_service_conn,		"GET svc-conn") \
- 	EM(rxrpc_conn_new_client,		"NEW client  ") \
+diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
+index 718193df9d2e..f251845fe532 100644
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -582,6 +582,7 @@ enum rxrpc_call_flag {
+ 	RXRPC_CALL_EXCLUSIVE,		/* The call uses a once-only connection */
+ 	RXRPC_CALL_RX_IS_IDLE,		/* recvmsg() is idle - send an ACK */
+ 	RXRPC_CALL_RECVMSG_READ_ALL,	/* recvmsg() read all of the received data */
++	RXRPC_CALL_CONN_CHALLENGING,	/* The connection is being challenged */
+ };
+ 
+ /*
+@@ -602,7 +603,6 @@ enum rxrpc_call_state {
+ 	RXRPC_CALL_CLIENT_AWAIT_REPLY,	/* - client awaiting reply */
+ 	RXRPC_CALL_CLIENT_RECV_REPLY,	/* - client receiving reply phase */
+ 	RXRPC_CALL_SERVER_PREALLOC,	/* - service preallocation */
+-	RXRPC_CALL_SERVER_SECURING,	/* - server securing request connection */
+ 	RXRPC_CALL_SERVER_RECV_REQUEST,	/* - server receiving request */
+ 	RXRPC_CALL_SERVER_ACK_REQUEST,	/* - server pending ACK of request */
+ 	RXRPC_CALL_SERVER_SEND_REPLY,	/* - server sending reply */
+diff --git a/net/rxrpc/call_object.c b/net/rxrpc/call_object.c
+index 5a543c3f6fb0..c4c8b46a68c6 100644
+--- a/net/rxrpc/call_object.c
++++ b/net/rxrpc/call_object.c
+@@ -22,7 +22,6 @@ const char *const rxrpc_call_states[NR__RXRPC_CALL_STATES] = {
+ 	[RXRPC_CALL_CLIENT_AWAIT_REPLY]		= "ClAwtRpl",
+ 	[RXRPC_CALL_CLIENT_RECV_REPLY]		= "ClRcvRpl",
+ 	[RXRPC_CALL_SERVER_PREALLOC]		= "SvPrealc",
+-	[RXRPC_CALL_SERVER_SECURING]		= "SvSecure",
+ 	[RXRPC_CALL_SERVER_RECV_REQUEST]	= "SvRcvReq",
+ 	[RXRPC_CALL_SERVER_ACK_REQUEST]		= "SvAckReq",
+ 	[RXRPC_CALL_SERVER_SEND_REPLY]		= "SvSndRpl",
+@@ -453,17 +452,16 @@ void rxrpc_incoming_call(struct rxrpc_sock *rx,
+ 	call->cong_tstamp	= skb->tstamp;
+ 
+ 	__set_bit(RXRPC_CALL_EXPOSED, &call->flags);
+-	rxrpc_set_call_state(call, RXRPC_CALL_SERVER_SECURING);
++	rxrpc_set_call_state(call, RXRPC_CALL_SERVER_RECV_REQUEST);
+ 
+ 	spin_lock(&conn->state_lock);
+ 
+ 	switch (conn->state) {
+ 	case RXRPC_CONN_SERVICE_UNSECURED:
+ 	case RXRPC_CONN_SERVICE_CHALLENGING:
+-		rxrpc_set_call_state(call, RXRPC_CALL_SERVER_SECURING);
++		__set_bit(RXRPC_CALL_CONN_CHALLENGING, &call->flags);
+ 		break;
+ 	case RXRPC_CONN_SERVICE:
+-		rxrpc_set_call_state(call, RXRPC_CALL_SERVER_RECV_REQUEST);
+ 		break;
+ 
+ 	case RXRPC_CONN_ABORTED:
 diff --git a/net/rxrpc/conn_event.c b/net/rxrpc/conn_event.c
-index d93b041c4894..4d9c5e21ba78 100644
+index 713e04394ceb..d93b041c4894 100644
 --- a/net/rxrpc/conn_event.c
 +++ b/net/rxrpc/conn_event.c
-@@ -270,6 +270,7 @@ static int rxrpc_process_event(struct rxrpc_connection *conn,
- 			 * we've already received the packet, put it on the
- 			 * front of the queue.
- 			 */
-+			sp->conn = rxrpc_get_connection(conn, rxrpc_conn_get_poke_secured);
- 			skb->mark = RXRPC_SKB_MARK_SERVICE_CONN_SECURED;
- 			rxrpc_get_skb(skb, rxrpc_skb_get_conn_secured);
- 			skb_queue_head(&conn->local->rx_queue, skb);
-@@ -435,14 +436,16 @@ void rxrpc_input_conn_event(struct rxrpc_connection *conn, struct sk_buff *skb)
- 	if (test_and_clear_bit(RXRPC_CONN_EV_ABORT_CALLS, &conn->events))
- 		rxrpc_abort_calls(conn);
+@@ -228,10 +228,8 @@ static void rxrpc_abort_calls(struct rxrpc_connection *conn)
+  */
+ static void rxrpc_call_is_secure(struct rxrpc_call *call)
+ {
+-	if (call && __rxrpc_call_state(call) == RXRPC_CALL_SERVER_SECURING) {
+-		rxrpc_set_call_state(call, RXRPC_CALL_SERVER_RECV_REQUEST);
++	if (call && __test_and_clear_bit(RXRPC_CALL_CONN_CHALLENGING, &call->flags))
+ 		rxrpc_notify_socket(call);
+-	}
+ }
  
--	switch (skb->mark) {
--	case RXRPC_SKB_MARK_SERVICE_CONN_SECURED:
--		if (conn->state != RXRPC_CONN_SERVICE)
--			break;
-+	if (skb) {
-+		switch (skb->mark) {
-+		case RXRPC_SKB_MARK_SERVICE_CONN_SECURED:
-+			if (conn->state != RXRPC_CONN_SERVICE)
-+				break;
+ /*
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 4974b5accafa..2d3004031832 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -448,11 +448,11 @@ static void rxrpc_input_queue_data(struct rxrpc_call *call, struct sk_buff *skb,
+ 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
+ 	bool last = sp->hdr.flags & RXRPC_LAST_PACKET;
  
--		for (loop = 0; loop < RXRPC_MAXCALLS; loop++)
--			rxrpc_call_is_secure(conn->channels[loop].call);
--		break;
-+			for (loop = 0; loop < RXRPC_MAXCALLS; loop++)
-+				rxrpc_call_is_secure(conn->channels[loop].call);
-+			break;
-+		}
+-	skb_queue_tail(&call->recvmsg_queue, skb);
+ 	rxrpc_input_update_ack_window(call, window, wtop);
+ 	trace_rxrpc_receive(call, last ? why + 1 : why, sp->hdr.serial, sp->hdr.seq);
+ 	if (last)
+ 		rxrpc_end_rx_phase(call, sp->hdr.serial);
++	skb_queue_tail(&call->recvmsg_queue, skb);
+ }
+ 
+ /*
+@@ -657,7 +657,7 @@ static bool rxrpc_input_split_jumbo(struct rxrpc_call *call, struct sk_buff *skb
+ 		rxrpc_propose_delay_ACK(call, sp->hdr.serial,
+ 					rxrpc_propose_ack_input_data);
  	}
- 
- 	/* Process delayed ACKs whose time has come. */
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 7eba4d7d9a38..2f1fd1e2e7e4 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -67,6 +67,7 @@ struct rxrpc_connection *rxrpc_alloc_connection(struct rxrpc_net *rxnet,
- 		INIT_WORK(&conn->destructor, rxrpc_clean_up_connection);
- 		INIT_LIST_HEAD(&conn->proc_link);
- 		INIT_LIST_HEAD(&conn->link);
-+		INIT_LIST_HEAD(&conn->attend_link);
- 		mutex_init(&conn->security_lock);
- 		mutex_init(&conn->tx_data_alloc_lock);
- 		skb_queue_head_init(&conn->rx_queue);
+-	if (notify) {
++	if (notify && !test_bit(RXRPC_CALL_CONN_CHALLENGING, &call->flags)) {
+ 		trace_rxrpc_notify_socket(call->debug_id, sp->hdr.serial);
+ 		rxrpc_notify_socket(call);
+ 	}
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index 0e8da909d4f2..584397aba4a0 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -707,7 +707,7 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
+ 	} else {
+ 		switch (rxrpc_call_state(call)) {
+ 		case RXRPC_CALL_CLIENT_AWAIT_CONN:
+-		case RXRPC_CALL_SERVER_SECURING:
++		case RXRPC_CALL_SERVER_RECV_REQUEST:
+ 			if (p.command == RXRPC_CMD_SEND_ABORT)
+ 				break;
+ 			fallthrough;
 
