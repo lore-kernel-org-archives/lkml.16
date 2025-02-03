@@ -1,362 +1,114 @@
-Received: from mtxmxout3.matrox.com (mtxmxout3.matrox.com [138.11.2.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0BCC139
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=138.11.2.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45566C139;
+	Mon,  3 Feb 2025 13:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588464; cv=none; b=gpVrhF93h5ZpaZRV01FhIqJGFfdtGmjl4xlULHRVCSv4Nx3PfMngyrMH70RyewDm9rK+dOIlXP9Owf9S8imyeQG0/G1TASjKmRTgj8rlz6Ls4mnz8qmM+neeyDEb/cFqbZQ1npOX4w9mVEot0Gb54SB8SJ6zcJnin7gN41l52KU=
+	t=1738588474; cv=none; b=OZgdlc+ean3WH9MWqNTFPV4no8okLmKEcTnfuEOuHcWGNyzTroYxk7loD4dZCIHHG5aN2HGopFWgh7sdIsTOMnD6J2a+eCa6MDhcTsQ4ZFJ+8yrz8He8VIWwhVi+YaegOY/RV4GjhANaGIUkQjUngKh7ykU8ywMdlzydDoc7iB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588464; c=relaxed/simple;
-	bh=Rd91snfQISx1V1oKL6wKfZGoBBLlGokbPUcaLbk6dYE=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=HYToWfjeL6sZ7CEIQGzrGm/y0wPatVJtmTJLcmLQKaHO7Keq0hQICW3kLzbEgebXT8h5fV+JIREjGj55UFkn4RUx/vj+i4BYwULFOPVgbPYwcAIk+mOFuHiOvm2c0CVYMoFcOO6LgdUZDr2igx8tz5dTW6kH5NpROjyQNy4dFoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matrox.com; spf=pass smtp.mailfrom=matrox.com; dkim=pass (1024-bit key) header.d=matrox.com header.i=@matrox.com header.b=a/LM2cDh; arc=none smtp.client-ip=138.11.2.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matrox.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matrox.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=matrox.com header.i=@matrox.com header.b="a/LM2cDh"
-Received: from venus.matrox.com (unknown [192.168.1.36])
-	by mtxmxout3.matrox.com (Postfix) with ESMTP id 78B25400D7
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:07:34 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=matrox.com; s=dkim;
-	t=1738588054; bh=Rd91snfQISx1V1oKL6wKfZGoBBLlGokbPUcaLbk6dYE=;
-	h=Date:From:To:Subject;
-	b=a/LM2cDhfO2+0NaeMKmysXkLazoupHyCI971/kiXFbswZ5yh8nSOR4NnxdE1Gw59D
-	 dGziP4C1qXysk/dqtXXQvKjs80RvckNTpq8fSqnt6PlwvjBkP11p4kaTCba3vQuRd3
-	 37+zczhLdKbs62YUPiLli/UOLkRxmcy+lPRyqe/k=
-Received: (from ssmsp@localhost)
-	by venus.matrox.com (8.14.6/8.13.2) id 513D7YMF010890
-	for linux-kernel@vger.kernel.org; Mon, 3 Feb 2025 08:07:34 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by venus.matrox.com (Postfix) with ESMTP id 6D64B5F760;
-	Mon,  3 Feb 2025 08:07:34 -0500 (EST)
-X-Virus-MTX-Scanned: by Matrox Virus scanner at venus.matrox.com
-Received: from venus.matrox.com ([127.0.0.1])
-	by localhost (venus.matrox.com [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id qDoW15h4H9d4; Mon,  3 Feb 2025 08:07:34 -0500 (EST)
-Received: from venus-in.matrox.com (localhost.localdomain [127.0.0.1])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by venus.matrox.com (Postfix) with ESMTPS id 58D9A5F75B;
-	Mon,  3 Feb 2025 08:07:34 -0500 (EST)
-Received: from pluton.matrox.com (pluton.matrox.com [192.168.8.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by venus-in.matrox.com (Postfix) with ESMTPS id 5707E61F04;
-	Mon,  3 Feb 2025 08:07:34 -0500 (EST)
-Received: by pluton.matrox.com (Postfix, from userid 3820)
-	id 5463E340366; Mon,  3 Feb 2025 08:07:34 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by pluton.matrox.com (Postfix) with ESMTP id 51C62340365;
-	Mon,  3 Feb 2025 08:07:34 -0500 (EST)
-Date: Mon, 3 Feb 2025 08:07:34 -0500 (EST)
-From: Gwenael Georgeault <ggeorgea@matrox.com>
-To: David Airlie <airlied@redhat.com>, Jocelyn Falempe <jfalempe@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/mgag200: Added support for the new device G200eH5
-Message-ID: <alpine.LFD.2.00.2502030802150.30536@pluton.matrox.com>
-User-Agent: Alpine 2.00 (LFD 1167 2008-08-23)
+	s=arc-20240116; t=1738588474; c=relaxed/simple;
+	bh=+NfmGvN2gosbrEcfAH28Y+dERHmzZHo9CpvkcW9ohNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eamF9GzrN8ww4fL0BpNy7ZroFsru8u6ms2Lqo/Li/I5RZn7P97bPBbpi31cC8nUGwLUDlZFiHmITlb65beIu4I3JOGDkbbXVSQ6cUDH5q0EKJo4aNVXPlPDPo9z5C/B0cbcRfk10BS8OX3fsBSBZN7Tm3Gd/OTdJ8ABAkJUsL3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A59C0C4CED2;
+	Mon,  3 Feb 2025 13:14:31 +0000 (UTC)
+Date: Mon, 3 Feb 2025 08:15:05 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Wander Lairson Costa <wander@redhat.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
+ <david@redhat.com>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, "Darrick J. Wong" <djwong@kernel.org>, Richard
+ Chang <richardycc@google.com>, Johannes Weiner <hannes@cmpxchg.org>, "open
+ list:TRACING" <linux-kernel@vger.kernel.org>, "open list:TRACING"
+ <linux-trace-kernel@vger.kernel.org>, David Rientjes <rientjes@google.com>,
+ Christoph Lameter <cl@gentwo.org>, Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Subject: Re: [PATCH] kmem/tracing: Add kmem name to kmem_cache_alloc
+ tracepoint
+Message-ID: <20250203081505.675e52af@gandalf.local.home>
+In-Reply-To: <46e70b3c-6d96-4507-ba17-a52e8362873d@suse.cz>
+References: <20250130181639.58280-1-wander@redhat.com>
+	<46e70b3c-6d96-4507-ba17-a52e8362873d@suse.cz>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-- Added the new device ID
-- Added new pll algorithm
+On Mon, 3 Feb 2025 09:34:29 +0100
+Vlastimil Babka <vbabka@suse.cz> wrote:
 
-Co-authored-by: Mamadou Insa Diop <mdiop@matrox.com>
----
-  drivers/gpu/drm/mgag200/Makefile          |   1 +
-  drivers/gpu/drm/mgag200/mgag200_drv.c     |   4 +
-  drivers/gpu/drm/mgag200/mgag200_drv.h     |   7 +-
-  drivers/gpu/drm/mgag200/mgag200_g200eh5.c | 212 ++++++++++++++++++++++
-  4 files changed, 222 insertions(+), 2 deletions(-)
-  create mode 100644 drivers/gpu/drm/mgag200/mgag200_g200eh5.c
+> On 1/30/25 19:16, Wander Lairson Costa wrote:
+> > The kmem_cache_free tracepoint includes a "name" field, which allows
+> > for easy identification and filtering of specific kmem's. However, the
+> > kmem_cache_alloc tracepoint lacks this field, making it difficult to
+> > pair corresponding alloc and free events for analysis.  
+> 
+> Hm yeah looks like the free one was added in commit 3544de8ee6e48 and their
+> use case didn't need alloc too, but it makes sense.
+> 
+> > Add the "name" field to kmem_cache_alloc to enable consistent tracking
+> > and correlation of kmem alloc and free events.
+> > 
+> > Signed-off-by: Wander Lairson Costa <wander@redhat.com>  
+> 
+> I will take this in the slab tree, unless Steven objects.
 
-diff --git a/drivers/gpu/drm/mgag200/Makefile b/drivers/gpu/drm/mgag200/Makefile
-index 5a02203fad12..94f063c8722a 100644
---- a/drivers/gpu/drm/mgag200/Makefile
-+++ b/drivers/gpu/drm/mgag200/Makefile
-@@ -6,6 +6,7 @@ mgag200-y := \
-  	mgag200_g200.o \
-  	mgag200_g200eh.o \
-  	mgag200_g200eh3.o \
-+	mgag200_g200eh5.o \
-  	mgag200_g200er.o \
-  	mgag200_g200ev.o \
-  	mgag200_g200ew3.o \
-diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.c b/drivers/gpu/drm/mgag200/mgag200_drv.c
-index 069fdd2dc8f6..1c257f5b5136 100644
---- a/drivers/gpu/drm/mgag200/mgag200_drv.c
-+++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
-@@ -214,6 +214,7 @@ static const struct pci_device_id mgag200_pciidlist[] = {
-  	{ PCI_VENDOR_ID_MATROX, 0x534, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_ER },
-  	{ PCI_VENDOR_ID_MATROX, 0x536, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_EW3 },
-  	{ PCI_VENDOR_ID_MATROX, 0x538, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_EH3 },
-+	{ PCI_VENDOR_ID_MATROX, 0x53A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_EH5 },
-  	{0,}
-  };
+No objections but...
 
-@@ -256,6 +257,9 @@ mgag200_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-  	case G200_EH3:
-  		mdev = mgag200_g200eh3_device_create(pdev, &mgag200_driver);
-  		break;
-+	case G200_EH5:
-+		mdev = mgag200_g200eh5_device_create(pdev, &mgag200_driver);
-+		break;
-  	case G200_ER:
-  		mdev = mgag200_g200er_device_create(pdev, &mgag200_driver);
-  		break;
-diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.h b/drivers/gpu/drm/mgag200/mgag200_drv.h
-index 0608fc63e588..065ba09d109b 100644
---- a/drivers/gpu/drm/mgag200/mgag200_drv.h
-+++ b/drivers/gpu/drm/mgag200/mgag200_drv.h
-@@ -196,6 +196,7 @@ enum mga_type {
-  	G200_EV,
-  	G200_EH,
-  	G200_EH3,
-+	G200_EH5,
-  	G200_ER,
-  	G200_EW3,
-  };
-@@ -333,11 +334,13 @@ void mgag200_g200eh_pixpllc_atomic_update(struct drm_crtc *crtc, struct drm_atom
-  struct mga_device *mgag200_g200eh_device_create(struct pci_dev *pdev,
-  						const struct drm_driver *drv);
-  struct mga_device *mgag200_g200eh3_device_create(struct pci_dev *pdev,
--						 const struct drm_driver *drv);
-+						const struct drm_driver *drv);
-+struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
-+						const struct drm_driver *drv);
-  struct mga_device *mgag200_g200er_device_create(struct pci_dev *pdev,
-  						const struct drm_driver *drv);
-  struct mga_device *mgag200_g200ew3_device_create(struct pci_dev *pdev,
--						 const struct drm_driver *drv);
-+						const struct drm_driver *drv);
+> 
+> Thanks,
+> Vlastimil
+> 
+> > ---
+> >  include/trace/events/kmem.h | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+> > index b37eb0a7060f..8ffb022f024c 100644
+> > --- a/include/trace/events/kmem.h
+> > +++ b/include/trace/events/kmem.h
+> > @@ -22,6 +22,7 @@ TRACE_EVENT(kmem_cache_alloc,
+> >  	TP_STRUCT__entry(
+> >  		__field(	unsigned long,	call_site	)
+> >  		__field(	const void *,	ptr		)
+> > +		__string(	name,		s->name		)
 
-  /*
-   * mgag200_mode.c
-diff --git a/drivers/gpu/drm/mgag200/mgag200_g200eh5.c b/drivers/gpu/drm/mgag200/mgag200_g200eh5.c
-new file mode 100644
-index 000000000000..5e39504785d8
---- /dev/null
-+++ b/drivers/gpu/drm/mgag200/mgag200_g200eh5.c
-@@ -0,0 +1,212 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/pci.h>
-+
-+#include <drm/drm_atomic.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_drv.h>
-+#include <drm/drm_gem_atomic_helper.h>
-+#include <drm/drm_probe_helper.h>
-+
-+#include "mgag200_drv.h"
-+
-+/*
-+ * PIXPLLC
-+ */
-+
-+static int mgag200_g200eh5_pixpllc_atomic_check(struct drm_crtc *crtc,
-+					struct drm_atomic_state *new_state)
-+{
-+
-+	static u64 ulVCOMax     = 10000000000ULL;   // units in Hz (10 GHz)
-+	static u64 ulVCOMin     = 2500000000LL;     // units in Hz (2.5 GHz)
-+	static u64 ulPLLFreqRef = 25000000ULL;      // units in Hz (25 MHz)
-+
-+	struct drm_crtc_state *new_crtc_state = drm_atomic_get_new_crtc_state(new_state, crtc);
-+	struct mgag200_crtc_state *new_mgag200_crtc_state = to_mgag200_crtc_state(new_crtc_state);
-+	long   clock = new_crtc_state->mode.clock;
-+	struct mgag200_pll_values *pixpllc = &new_mgag200_crtc_state->pixpllc;
-+
-+	u64 ulFDelta     = 0xFFFFFFFFFFFFFFFFULL;
-+
-+	u16 ulMultMax    = (u16)(ulVCOMax / ulPLLFreqRef);    // 400 (0x190)
-+	u16 ulMultMin    = (u16)(ulVCOMin / ulPLLFreqRef);    // 100 (0x64)
-+
-+	u64 ulFTmpDelta;
-+	u64 ulComputedFo;
-+
-+	u16 ulTestM;
-+	u8  ulTestDivA;
-+	u8  ulTestDivB;
-+	u64 ulFoHz;
-+	int iDone = 0;
-+
-+	u8 ucM = 0;
-+	u8 ucN = 0;
-+	u8 ucP = 0;
-+
-+	ulFoHz = (u64)clock * 1000ULL;
-+
-+
-+	for (ulTestM = ulMultMin; ulTestM <= ulMultMax; ulTestM++) { // This gives 100 <= M <= 400
-+		for (ulTestDivA = 8; ulTestDivA > 0; ulTestDivA--) { // This gives 1 <= A <= 8
-+			for (ulTestDivB = 1; ulTestDivB <= ulTestDivA; ulTestDivB++) {
-+				// This gives 1 <= B <= A
-+				ulComputedFo = (ulPLLFreqRef * ulTestM) /
-+					(4 * ulTestDivA * ulTestDivB);
-+
-+				if (ulComputedFo > ulFoHz)
-+					ulFTmpDelta = ulComputedFo - ulFoHz;
-+				else
-+					ulFTmpDelta = ulFoHz - ulComputedFo;
-+
-+				if (ulFTmpDelta < ulFDelta) {
-+					ulFDelta = ulFTmpDelta;
-+					ucM = (u8)(0xFF & ulTestM);
-+					ucN = (u8)(
-+					(0x7 & (ulTestDivA - 1))
-+					| (0x70 & (0x7 & (ulTestDivB - 1)) << 4)
-+					);
-+					ucP = (u8)(1 & (ulTestM >> 8));
-+				}
-+				if (ulFDelta == 0) {
-+					iDone = 1;
-+					break;
-+				}
-+			} // End of DivB if (iDone)
-+			if (iDone)
-+				break;
-+		} // End of DivA Loop
-+
-+		if (iDone)
-+			break;
-+	} // End of M Loop
-+
-+	pixpllc->m = ucM + 1;
-+	pixpllc->n = ucN + 1;
-+	pixpllc->p = ucP + 1;
-+	pixpllc->s = 0;
-+
-+	return 0;
-+	}
-+
-+
-+
-+/*
-+ * Mode-setting pipeline
-+ */
-+
-+static const struct drm_plane_helper_funcs mgag200_g200eh5_primary_plane_helper_funcs = {
-+	MGAG200_PRIMARY_PLANE_HELPER_FUNCS,
-+};
-+
-+static const struct drm_plane_funcs mgag200_g200eh5_primary_plane_funcs = {
-+	MGAG200_PRIMARY_PLANE_FUNCS,
-+};
-+
-+static const struct drm_crtc_helper_funcs mgag200_g200eh5_crtc_helper_funcs = {
-+	MGAG200_CRTC_HELPER_FUNCS,
-+};
-+
-+static const struct drm_crtc_funcs mgag200_g200eh5_crtc_funcs = {
-+	MGAG200_CRTC_FUNCS,
-+};
-+
-+static int mgag200_g200eh5_pipeline_init(struct mga_device *mdev)
-+{
-+	struct drm_device *dev = &mdev->base;
-+	struct drm_plane *primary_plane = &mdev->primary_plane;
-+	struct drm_crtc *crtc = &mdev->crtc;
-+	int ret;
-+
-+	ret = drm_universal_plane_init(dev, primary_plane, 0,
-+		&mgag200_g200eh5_primary_plane_funcs,
-+		mgag200_primary_plane_formats,
-+		mgag200_primary_plane_formats_size,
-+		mgag200_primary_plane_fmtmods,
-+		DRM_PLANE_TYPE_PRIMARY, NULL);
-+	if (ret) {
-+		drm_err(dev, "drm_universal_plane_init() failed: %d\n", ret);
-+		return ret;
-+	}
-+	drm_plane_helper_add(primary_plane, &mgag200_g200eh5_primary_plane_helper_funcs);
-+	drm_plane_enable_fb_damage_clips(primary_plane);
-+
-+	ret = drm_crtc_init_with_planes(dev, crtc, primary_plane, NULL,
-+		&mgag200_g200eh5_crtc_funcs, NULL);
-+	if (ret) {
-+		drm_err(dev, "drm_crtc_init_with_planes() failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	drm_crtc_helper_add(crtc, &mgag200_g200eh5_crtc_helper_funcs);
-+
-+	/* FIXME: legacy gamma tables, but atomic gamma doesn't work without */
-+	drm_mode_crtc_set_gamma_size(crtc, MGAG200_LUT_SIZE);
-+	drm_crtc_enable_color_mgmt(crtc, 0, false, MGAG200_LUT_SIZE);
-+	ret = mgag200_vga_bmc_output_init(mdev);
-+
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/*
-+ * DRM device
-+ */
-+
-+static const struct mgag200_device_info mgag200_g200eh5_device_info =
-+	MGAG200_DEVICE_INFO_INIT(2048, 2048, 0, false, 1, 0, false);
-+
-+static const struct mgag200_device_funcs mgag200_g200eh5_device_funcs = {
-+	.pixpllc_atomic_check = mgag200_g200eh5_pixpllc_atomic_check,
-+	.pixpllc_atomic_update = mgag200_g200eh_pixpllc_atomic_update, // same as G200EH
-+};
-+
-+struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
-+	const struct drm_driver *drv)
-+{
-+
-+	struct mga_device *mdev;
-+	struct drm_device *dev;
-+	resource_size_t vram_available;
-+	int ret;
-+
-+	mdev = devm_drm_dev_alloc(&pdev->dev, drv, struct mga_device, base);
-+
-+	if (IS_ERR(mdev))
-+		return mdev;
-+	dev = &mdev->base;
-+
-+	pci_set_drvdata(pdev, dev);
-+
-+	ret = mgag200_init_pci_options(pdev, 0x00000120, 0x0000b000);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	ret = mgag200_device_preinit(mdev);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	ret = mgag200_device_init(mdev, &mgag200_g200eh5_device_info,
-+		&mgag200_g200eh5_device_funcs);
-+
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	mgag200_g200eh_init_registers(mdev); // same as G200EH
-+	vram_available = mgag200_device_probe_vram(mdev);
-+
-+	ret = mgag200_mode_config_init(mdev, vram_available);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	ret = mgag200_g200eh5_pipeline_init(mdev);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	drm_mode_config_reset(dev);
-+	drm_kms_helper_poll_init(dev);
-+
-+	return mdev;
-+}
--- 
-2.34.1
+The string place holder in the "struct" is 4 bytes and not a pointer. So I
+would place it either at the end or next to another "int" to avoid any
+holes caused by it being placed next to a 8 byte field.
+
+-- Steve
+
+
+> >  		__field(	size_t,		bytes_req	)
+> >  		__field(	size_t,		bytes_alloc	)
+> >  		__field(	unsigned long,	gfp_flags	)
+> > @@ -32,6 +33,7 @@ TRACE_EVENT(kmem_cache_alloc,
+> >  	TP_fast_assign(
+> >  		__entry->call_site	= call_site;
+> >  		__entry->ptr		= ptr;
+> > +		__assign_str(name);
+> >  		__entry->bytes_req	= s->object_size;
+> >  		__entry->bytes_alloc	= s->size;
+> >  		__entry->gfp_flags	= (__force unsigned long)gfp_flags;
+> > @@ -41,9 +43,10 @@ TRACE_EVENT(kmem_cache_alloc,
+> >  					  (s->flags & SLAB_ACCOUNT)) : false;
+> >  	),
+> >  
+> > -	TP_printk("call_site=%pS ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d accounted=%s",
+> > +	TP_printk("call_site=%pS ptr=%p name=%s bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d accounted=%s",
+> >  		(void *)__entry->call_site,
+> >  		__entry->ptr,
+> > +		__get_str(name),
+> >  		__entry->bytes_req,
+> >  		__entry->bytes_alloc,
+> >  		show_gfp_flags(__entry->gfp_flags),  
 
