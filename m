@@ -1,147 +1,147 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD641D618C;
-	Mon,  3 Feb 2025 11:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845481D618C;
+	Mon,  3 Feb 2025 11:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738582505; cv=none; b=Xh88CVW30OEHIiws5KQEujdHEqCADoqJeaAC8mXt/yEPMPaBABGC/DQT6v8sJn25z39P5gAHp2Vmx/Bf3NvQsTnQQngaTIx0YguqJg1rKcG8RtKOt1yGix8rLngwT9REnr91rsxNodil8C2jkc/ytgX/OYNnF6Un3YlKy3/SQ4I=
+	t=1738582611; cv=none; b=QVWacGYVX+onnIxzK5M6WdSXBtdTDpjTvXlS3n9WeCadlrRYevoGxoSdyvpWhG1zrKw1LkwAkThWE3SdIc5ud4vXZiicJ5KUUSslLCOB06LTt6GiQ8i54REmpivIkTIPJnGqfkWeKC3zNhUpWhEC+OuUuqzn4h21S7JTmvZfk18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738582505; c=relaxed/simple;
-	bh=ZZC112jheDFQ7cKlLTubHT5MVGGREXP43bHGLV2neSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uonHfeVcuLjbUWy6hM0zheLLBEuOR48jUurL+fC6SoNl119jDz95hw/DZ667qhA2QpGSlcF4I7aSI5cTFkM4+LA+LthtIV+ihzuzflphhIB3FCk2YqjbJCBN615Tnu9DTIPSviNrcN6Eu7O0hgo3CxlmItH+UwsAONPPKHllFtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GaooIsLm; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738582611; c=relaxed/simple;
+	bh=NhCjmqR1AMDBVHMLcVPUqp41ZS7rrh0UdVWlXinAe0g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e2ao+McfytwtHt8Dmuq2o7KRKDm4Ne3OV1qvoEVshAD9JF6WNXiH1ty0K1MfAUapbSj/GuGAbGm07Puqd7hTo4tObp5FdyTyGGvzKhgTcd1uwJvQFuIR3FAJi8VlcIo9U7vsktiP6MZMpAhYqD11XpBmTWnniZpGPlZLvQL8wTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ib12liYm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GaooIsLm"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7b6e9dd985dso39422585a.2;
-        Mon, 03 Feb 2025 03:35:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738582502; x=1739187302; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f7kmQU++zCjecKOuT9us00kONsOTq8yKlvsXZdzel4M=;
-        b=GaooIsLm+aYxLIlWbWTkYPRstUCuils+aweLCCt8Vv63rQF43I0kiB3zcZ1peUqnW1
-         cjF7cbTNPYIV2tsWUbAD4f17yM/pQSfi7gYNvzE2Oq8pLAZOlqlOst6S2lOc3BsPZubN
-         EqDlvS4OEEanBMi4XnalIcKplSvlu4c5A3o/kDNx7uK399SptCQtYBKAULXaVjJwB5DE
-         2cJCoTCi12w+ic/vldSXPL9tHXmSDyoA26UyvM0P31+kljmiKB/tAOL0UD1rhKiUdFBE
-         hjHWFsoT7na4AKwaUV/pV+2/MLG8Wk6BpUOPcvNBef1aN2V08/LHqj9V2xdrhSBJA5rb
-         N1xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738582502; x=1739187302;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f7kmQU++zCjecKOuT9us00kONsOTq8yKlvsXZdzel4M=;
-        b=TRI9rsA1OeOO9xNGpauVdVAgiWAsLLcClpUUp84Z77HJ+8i9P+0364cRZHpQmDvh8y
-         /w+BSjR7P/k/XR36FvK+4M7JB6aHu8RuJkx84uFj43iNbqNueEpHz5SR41v4C2fznG17
-         C0FBxxJnFxxfcwfpImQbesjbxlANJc/9ACIDl+3XaSLgGJM1cs4YnEJp3Y/78hbDa0kz
-         XGzcCAiPTMJJivfMxw0h/YRjn1aJt2ayVjTq+4cr1s2SxwIHEWwMAeVfSuArRyw1TVv4
-         eMs7tdJ8h9tJASKiAIVHkqmvXopyr81J/2QczVZ+ScDHRkvz8wybup40cV7guRdPhCZa
-         jMkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUt9E3IeGgCyPg+OdbVrLwISRyusPS912FMDAJb/rHPmXCoVcmqf44EH6vv/tLpZPiWJOkJrtv4xegiHzSP@vger.kernel.org, AJvYcCVk31nVHqNJg4ztGFpy3YI2w9/QrR7xA1aTvS4Kmro09Qvcd+dCNqPU0fqjOC5yIoXAeTUPLKvq9kei@vger.kernel.org, AJvYcCVqJabWsBl8MYr+KSSo170iEQDb35/dbAFd12OzCuuVjw77CYy/l4Drja24DdlbdXkXGW+/A/FtHvDX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz65kPbp61555vooAFTBBMPC8rwcJazpUNsUlcGDelrTnTz6iv8
-	VhthLmLeHLjLkS4gv69eZBvJ9WLs8igvOHnTN9swHxL4EVwP+tbi
-X-Gm-Gg: ASbGncsjBoMkZJQgntunho0e9aVbpxXccBxWWpPd2Jri1Y0TBVafdCOGqqH53/jZO0f
-	kZXsN/kspiDKhcumoih/2lpS6pl3jF4ybUBCIdU1JdJIjDU0Us7G/GfBrAjIOC5uKG+jum2FKOw
-	Sx35hPBn9Pj49EX9QbBj+JLW7QCca5jMGTg19W29Fz8ttOIkXHgxnHrSwXo4YEVv7NvdGxbEdhX
-	5xeWtUVg05RMXIxKqmph+gYHiQVcqI8MxmtkM191xut8JRL1dZPGvnNq4oLxpttBhCPkPHDoJdZ
-	Q8/A7CWh9kKvAE1bJ4eHknP3usxehmDIkGEP
-X-Google-Smtp-Source: AGHT+IEEDOCixJL7mVcFXUgoPZ/4MU5nuObbCBUqhgV26fSUbJfCWdPgZYYhx8RrS7wapVvBp3Oubw==
-X-Received: by 2002:a05:620a:248e:b0:7b6:c405:b586 with SMTP id af79cd13be357-7c009b382f5mr910804685a.8.1738582502282;
-        Mon, 03 Feb 2025 03:35:02 -0800 (PST)
-Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a90558csm521006785a.74.2025.02.03.03.34.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 03:35:01 -0800 (PST)
-Date: Mon, 3 Feb 2025 08:34:57 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v2 06/16] iio: adc: ad7768-1: set MOSI idle state to
- prevent accidental reset
-Message-ID: <Z6Cp4ftJCl4F5Tce@JSANTO12-L01.ad.analog.com>
-Reply-To: 20250201153103.60675555@jic23-huawei
-References: <cover.1737985435.git.Jonathan.Santos@analog.com>
- <b99ec75a9f8a47df72a0e8cf126d7e9312ce59c1.1737985435.git.Jonathan.Santos@analog.com>
- <20250201153103.60675555@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ib12liYm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 437D9C4CED2;
+	Mon,  3 Feb 2025 11:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738582611;
+	bh=NhCjmqR1AMDBVHMLcVPUqp41ZS7rrh0UdVWlXinAe0g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ib12liYmhwp2Q4N6Hz6bVfhio8HNH4kU/n+q/ueVZJYPER3MI9W7ai+I1yFPlVj3T
+	 MRFYKmrJa7uTSwK4TQYUhQAwyUOZJqVxz2mOime9loFMFAFWjRljx/T9yx2To9cdkk
+	 M2f3ZNUHDd4dhZtPKF+HKi4vrA4+LWI0zW6k3mRLQ1zAUXoLv3tLdifibSIJOh3BvD
+	 ZaqVdFbGRxxSG2htZamYRsPVCQ6NdOpS6doh2zgPByrSmSJPK1L9xkXuzBwdwikhoU
+	 SuD0iyrmryVvzPiDPrJWUBHnZvf5kSQfE6BbbaqVuIg1BRwr2RyQnNnZuwFB9ulfzS
+	 +rnDktdpZdbWQ==
+Message-ID: <18a9f8f4-a534-4341-8061-918aea72e74f@kernel.org>
+Date: Mon, 3 Feb 2025 12:36:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250201153103.60675555@jic23-huawei>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] media: ox05b1s: Add support for Omnivision OS08A20
+ raw sensor
+To: Mirela Rabulea <mirela.rabulea@nxp.com>
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com,
+ hverkuil-cisco@xs4all.nl, laurent.pinchart+renesas@ideasonboard.com,
+ robh@kernel.org, krzk+dt@kernel.org, bryan.odonoghue@linaro.org,
+ laurentiu.palcu@nxp.com, robert.chiras@nxp.com, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, LnxRevLi@nxp.com,
+ kieran.bingham@ideasonboard.com, hdegoede@redhat.com,
+ dave.stevenson@raspberrypi.com, mike.rudenko@gmail.com,
+ alain.volmat@foss.st.com, devicetree@vger.kernel.org, conor+dt@kernel.org,
+ alexander.stein@ew.tq-group.com, umang.jain@ideasonboard.com,
+ zhi.mao@mediatek.com, festevam@denx.de, julien.vuillaumier@nxp.com,
+ alice.yuan@nxp.com
+References: <20250124001243.446511-1-mirela.rabulea@nxp.com>
+ <20250124001243.446511-5-mirela.rabulea@nxp.com>
+ <20250124-bizarre-cherry-mayfly-9f2bce@krzk-bin>
+ <56fe323f-ee09-4a60-ab57-be2baab3af30@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <56fe323f-ee09-4a60-ab57-be2baab3af30@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 02/01, Jonathan Cameron wrote:
-> On Mon, 27 Jan 2025 12:12:29 -0300
-> Jonathan Santos <Jonathan.Santos@analog.com> wrote:
+On 03/02/2025 09:43, Mirela Rabulea wrote:
+> Hi Krzysztof,
 > 
-> > Datasheet recommends Setting the MOSI idle state to high in order to
-> > prevent accidental reset of the device when SCLK is free running.
-> > This happens when the controller clocks out a 1 followed by 63 zeros
-> > while the CS is held low.
-> > 
-> > Check if SPI controller supports SPI_MOSI_IDLE_HIGH flag and set it.
-> > 
-> > Fixes: a5f8c7da3dbe ("iio: adc: Add AD7768-1 ADC basic support")
-> > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> thanks again for feedback.
 > 
-> Ideally drag fix to start of patch set to make it obvious it can be
-> picked up without the rest.  I'm not grabbing it yet as doesn't
-> feel like it has enough review yet.
+> On 24.01.2025 10:09, Krzysztof Kozlowski wrote:
+>> On Fri, Jan 24, 2025 at 02:12:43AM +0200, Mirela Rabulea wrote:
+>>> @@ -758,6 +914,9 @@ static int ox05b1s_read_chip_id(struct ox05b1s *sensor)
+>>>        }
+>>>
+>>>        switch (chip_id) {
+>>> +     case 0x530841:
+>>> +             camera_name = "os08a20";
+>>> +             break;
+>> Ah, so here I see missing second device support.
+>>
+>> It is still confusing to see that you use here some sort of
+>> autodetection, but in the same time not.
 > 
-Sure, will do.
-> > ---
-> > v2 Changes:
-> > * Only setup SPI_MOSI_IDLE_HIGH flag if the controller supports it, otherwise the driver
-> >   continues the same. I realized that using bits_per_word does not avoid the problem that
-> >   MOSI idle state is trying to solve. If the controller drives the MOSI low between bytes
-> >   during a transfer, nothing happens.
-> > ---
-> >  drivers/iio/adc/ad7768-1.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> > index c3cf04311c40..95ba89435652 100644
-> > --- a/drivers/iio/adc/ad7768-1.c
-> > +++ b/drivers/iio/adc/ad7768-1.c
-> > @@ -574,6 +574,22 @@ static int ad7768_probe(struct spi_device *spi)
-> >  		return -ENOMEM;
-> >  
-> >  	st = iio_priv(indio_dev);
-> > +	/*
-> > +	 * Datasheet recommends SDI line to be kept high when
-> > +	 * data is not being clocked out of the controller
+> The two sensors that I included in this driver have some similarities, 
+> but also differences, for which I used the platform data. I made 
+> separate patches for the two sensors, such that it is visible how much 
+> is common/different.  The chip_id reading is for validating that the 
+> sensor that is actually attached matches the device tree. It happens to 
+> me sometimes, that I switch the sensors, but forget to switch the dtb, 
+> and it helps to see which sensor is actually attached. Also, it helps a 
+> lot when the evaluation board is in some remote lab and I am unsure what 
+> sensor is attached to it.
 > 
-> Very short line wrap.  Go up to 80 chars.  If this picks up
-> some review, I can fix that whilst applying. If not do it for
-> your v3.
+> I saw most sensor drivers have some kind of identification of the sensor 
+> module by the means of reading the chip_id register. Some examples with 
+> multiple compatibles supported and chip_id validation: imx296, ov9650, 
+> ov772x.
 > 
-Right, i will do it in the v3.
-> > +	 * and the spi clock is free running, to prevent
-> > +	 * accidental reset.
-> > +	 * Since many controllers do not support the
-> > +	 * SPI_MOSI_IDLE_HIGH flag yet, only request the MOSI
-> > +	 * idle state to enable if the controller supports it.
-> > +	 */
-> > +	if (spi->controller->mode_bits & SPI_MOSI_IDLE_HIGH) {
-> > +		spi->mode |= SPI_MOSI_IDLE_HIGH;
-> > +		ret = spi_setup(spi);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> >  	st->spi = spi;
-> >  
-> >  	st->vref = devm_regulator_get(&spi->dev, "vref");
-> 
+> Please let me know what you suggest further.
+
+
+If devices are from the same family and support reliable autodetection,
+they should be made compatible. At least that's generic approach.
+
+
+Best regards,
+Krzysztof
