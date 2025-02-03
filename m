@@ -1,188 +1,163 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BD51D47AD
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239321D47AD
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738612109; cv=none; b=VU7gOGB7lqzqLenUhuSW8oYPvf1NuPbrIHUvQjm4uu3ij7Pzw65wLSHN38tEX0nkKuEiTAolgKo+sriHPIM8qRAaf+kHjmlWIT9I6/8gefw9tdeY5ypsv96fkCdBBGJzSvF0LeIOr5F3+JnN8FV7eL0c0KlSWERrKBw9T3sHeVg=
+	t=1738612208; cv=none; b=nTcD5naLXAfDH1zXISctdaiDlUlY3ygxgGmtrJMjHVOJCrSpQ1vrcwHMAXcBRnAfTWoD+4BvxK99fOfjsUAe6mHEsPlPvS/G7DOLzUj97KwwMwDiHdc+YVdA555ciECjXuh86tG5XL1JWj9NO/NiCXymmL5U9Dkam+06jOF+0Uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738612109; c=relaxed/simple;
-	bh=VBKeXvVpxzsbDD2gzQOz5enbyWOMnGBYHhlsZ2Gq4z4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=FR/mdDZUSechweBl3EArgYfvVCuecqesrxJkI+h32+nFtzi0QzQEKWXCBnjpTwnPQfwWbA/bhV69jck3G5IX+W1B/6LEaJ3F2YS72Jg5VB6pk4nO7Rm7gP63ys9n678P4Zs/MDWHFwD9wzJWIZNnXZxu8EWwY/V+C5zmqQIuDrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d0246e4c2dso39765595ab.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:48:27 -0800 (PST)
+	s=arc-20240116; t=1738612208; c=relaxed/simple;
+	bh=gclRStCHsv5L1K7SyfbAP9R/C91W3CfnMHQl5kZ0UJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zh7zRo/njZKbOZfW5h2cpjJan+jRMrDS/Viy48FYtJZ8Z91wbjUh2aPWWPMMqN4CyJ9rduIO7/gxuHbzrGiy3iLE2UsRjnhY14lEWVNX5SPFFak07iiOIsVHBMi+f/M+Q0o2zJfXCGbCZdwKA5bsnp3+jxi2LW5BPoTbNNs77bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=G8Ooq4GD; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="G8Ooq4GD"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-216395e151bso58075925ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:50:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738612205; x=1739217005; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yFHGqbxIEoUkwsAnPlyxex2jjkQB0xBfGkX7c+zLGSM=;
+        b=G8Ooq4GD1eetRp/+0eKgR+FOuoRk6cbYbFg282xiDsTfP4b56EmhkO+LJtF7De/OT3
+         ReG6TfpSzdwaoWGFc+XHDPZf+6AD/aRW8ERIU//h/9kfGsBLwp7e4JMNfUU9yT6b/jon
+         GsB1bm1DuTGGg9Hu5Q05APn0nSxNXgr95d50b1VuXVUNqPL8WfPQfU9IAeQZZ9TsJNUL
+         HoDuFEpTOt4araP4d4CjL7kmq7QMJO/3KPdv5OvjvocYUg2ed/Yz0aKHxjwtauP1DhWx
+         TTQTnSUGnkxfAsTkuB61yfJE+DC1ktT3mW/7FK4NJADcfn0EOx7iejd8D4HPAWmrSIQQ
+         Fq+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738612106; x=1739216906;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=D5u+KEwvUiQ1R4lQW9YeruG6CDtjvrWJJAfql7IrJ7c=;
-        b=kpGqILWf0ScuKCGHKR41JHeBdOoGL0Mqr5wIbs+GK+x5Qdjy5hRIu52N2Xm5t2SueF
-         jhabJlF+vY1fKQ8j1xl9WbBybjr0+bWPEZf3PrANTNU+l3N1jCwwGBy6eNbeyeTPpKZE
-         IFBYwXJQVzvh/CYLwPGBjdRF4SURsmaU8iSEbFI3eJdK6IrWjv9R3D1PkWOaQXvl/0e7
-         dudfm7KqGVcnPwtBeeX9G+U6CzfL2ri4oYKbWvKwMo9UHWL9NPhVMMVlYooGqciR/nAs
-         i+HSK+3VRCDDpZ2/Nr/SlnpvksPFaU5otVF1RM/5W4ORHZDaeBatT/LYqiD31pmZu/cF
-         34Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCWeU4EQn4Vs7ncoKcqThj7v6Qht/P3X4+/A7dXm7u3hZG6fLe3lBSl5fl5p8RxdR/Cjgu/JbRv0slXp50Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/KArtbe0fSc/Rv7VXQHGFXZAlEGEph9gXggif9pN3dIfpcG8x
-	1aHkZ6a4VIzUFdOmi7rC+BKLVuCQEBzTr115Ks4uaD5pIqhXfTZ6tdYPCq/sNYYV0umqsQj1yvT
-	gOUjVu2h41bjAxW/IAqo2TEnHpdacg5s/SQvJtBvxRNOfTnOPDU2SjN0=
-X-Google-Smtp-Source: AGHT+IEmqLf94zcO652pUFeOrh1ZTBYTJK0PxvISMseIvYGnAdBDOLiaFM71kpMY2kxdhp8E2R0as2E2Zl0PXZRQ+Z2OUHHVx25V
+        d=1e100.net; s=20230601; t=1738612205; x=1739217005;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yFHGqbxIEoUkwsAnPlyxex2jjkQB0xBfGkX7c+zLGSM=;
+        b=eFWYYGSrClJ4qEJCrcIeQJaRgv0CkF93eYFNvDX6RECc2YNUcektPwEWwefhMpnOMm
+         rp4Y1XmKe5Isw5vyF9luAtNBaVPLc4+SQXbcWtcGzmHYXGUJHrPafJS0SDJ1R+MO9n3L
+         +2wdkpALetihQ078byMEjgx+BttSKbv4agfid+y73/SBRyN2MgV3BwOa3wF0mOvPUOkJ
+         GYo/jft1wkgvSnBYlFZVE/9uDTdyIyznLYECsKnJJf2jSbK5i+EZXm1UZjJH5igNQWLy
+         BYbGz9ACCML1xeEjzkEExkaNtNJY73JuA9jZSo4FPzY7lp0ZBRer0arBFDcMzxOgf1j1
+         9a+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUWU91cQkFfe5zzsFCIhzv2HEnZ34o7aSbfSgsILN5S3llDCjjPnpolCErIDfQNpXFbeYPbtpwUAHI/hb0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0KP8j3lDZZWRIO0ZlaSF+QCLj4M6MfMfztUk6jjXymIzPAGzX
+	ODjzxZnMQ4LMbJgYwHc/u0zzPg1PDxCrl72O/tqfc0/BFkqSeJNNIx84ntdqI2A=
+X-Gm-Gg: ASbGncuoqAyiNGtO23sEwConALlbvcorbJ/lU4hM3bT2OZg/XNoM0YelYFsI4zZUoTg
+	olKxO/8FLm3InSgjzq4MyHRZBkwR5W6Cdk3uBGju1lmt91JtJuiv+ABnPrR5BQWwLrhnFShOueg
+	rA4v9VECedYkHhV+GPiUmzxD4cWvAkQF9Ir22zL4vkFVtqYmRaOFhjPqM7RmLXQbekemD08Z5mW
+	D6cidbzzsKoNvcOadub/OhOJwMQnlem2VwVit5G0bShwju/q2oBSSu89k0C5IVux1OXd0N72ABI
+	6+dvxDWV/QE=
+X-Google-Smtp-Source: AGHT+IEchQZJ+49I8J5Gk0AWuiHX7StzWjiS1tUolkAZSGk0Th2flkDcybEtCm4KVdc/Y9uGIZeKPQ==
+X-Received: by 2002:a17:902:d50a:b0:215:9eac:1857 with SMTP id d9443c01a7336-21f01bfe998mr1628735ad.5.1738612205293;
+        Mon, 03 Feb 2025 11:50:05 -0800 (PST)
+Received: from ghost ([2601:647:6700:64d0:4f63:f9d5:2cbd:2947])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f8344sm80007255ad.75.2025.02.03.11.50.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 11:50:04 -0800 (PST)
+Date: Mon, 3 Feb 2025 11:50:02 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Conor Dooley <conor@kernel.org>, Aleksandar Rikalo <arikalo@gmail.com>,
+	linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Leonardo Bras <leobras@redhat.com>, Guo Ren <guoren@kernel.org>,
+	Eric Chan <ericchancf@google.com>, linux-kernel@vger.kernel.org,
+	Djordje Todorovic <djordje.todorovic@htecgroup.com>
+Subject: Re: [PATCH v2] riscv: Use Zalrsc extension to implement atomic
+ functions
+Message-ID: <Z6Ed6gYzdKhQQQVM@ghost>
+References: <20241225082412.36727-1-arikalo@gmail.com>
+ <Z4CSpE9UKkJNM_g5@ghost>
+ <CAGQJe6oA8oiZmg0HGW7KrjdOJ7nXNK9hQFm4jdQ6n0WTG6i-vA@mail.gmail.com>
+ <20250202-clammy-skewed-eb0a0fce18f1@spud>
+ <Z6EVIPc_t6zMU9qb@ghost>
+ <6cac61f1-cf6d-4a43-836c-e83a0b0da096@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:221e:b0:3d0:239a:c46f with SMTP id
- e9e14a558f8ab-3d0239acd38mr94298665ab.12.1738612106568; Mon, 03 Feb 2025
- 11:48:26 -0800 (PST)
-Date: Mon, 03 Feb 2025 11:48:26 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a11d8a.050a0220.163cdc.0051.GAE@google.com>
-Subject: [syzbot] [udf?] general protection fault in d_splice_alias
-From: syzbot <syzbot+a9c0867e4d1dd0c7ab19@syzkaller.appspotmail.com>
-To: amir73il@gmail.com, asmadeus@codewreck.org, brauner@kernel.org, 
-	corbet@lwn.net, ericvh@kernel.org, jack@suse.com, jack@suse.cz, 
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux_oss@crudebyte.com, lucho@ionkov.net, 
-	mjguzik@gmail.com, syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev, 
-	viro@zeniv.linux.org.uk, willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6cac61f1-cf6d-4a43-836c-e83a0b0da096@sifive.com>
 
-Hello,
+On Mon, Feb 03, 2025 at 01:30:48PM -0600, Samuel Holland wrote:
+> Hi Charlie,
+> 
+> On 2025-02-03 1:12 PM, Charlie Jenkins wrote:
+> > On Sun, Feb 02, 2025 at 08:08:50PM +0000, Conor Dooley wrote:
+> >> On Sat, Feb 01, 2025 at 01:04:25PM +0100, Aleksandar Rikalo wrote:
+> >>> On Fri, Jan 10, 2025 at 4:23 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> >>>
+> >>>>> From: Chao-ying Fu <cfu@mips.com>
+> >>>>>
+> >>>>> Use only LR/SC instructions to implement atomic functions.
+> >>>>
+> >>>> In the previous patch you mention that this is to support MIPS P8700. Can
+> >>>> you expand on why this change is required? The datasheet at [1] says:
+> >>>>
+> >>>> "The P8700 core is configured to support the RV64GCZba_Zbb (G = IMAFD)
+> >>>> Standard ISA. It includes the RV64I base ISA, Multiply (M), Atomic (A),
+> >>>> Single-Precision Floating Point (F), Double (D), Compressed (C) RISC-V
+> >>>> extensions, as well as the as well as the bit-manipulation extensions
+> >>>> (Zba) and (Zbb)"
+> >>>>
+> >>>> The "A" extension is a part of "G" which is mostly assumed to exist in
+> >>>> the kernel. Additionally, having this be a compilation flag will cause
+> >>>> traps on generic kernels. We generally try to push everything we can
+> >>>> into runtime feature detection since there are so many possible variants
+> >>>> of riscv.
+> >>>>
+> >>>> Expressing not being able to perform a feature like this is normally
+> >>>> better expressed as an errata. Then generic kernels will be able to
+> >>>> include this, and anybody who doesn't want to have the extra nops
+> >>>> introduced can disable the errata. A similar approach to what I pointed
+> >>>> out last time should work here too (but with more places to replace)
+> >>>> [2].
+> >>>>
+> >>>> [1] https://mips.com/wp-content/uploads/2024/11/P8700_Data_Sheet.pdf
+> >>>> [2] https://lore.kernel.org/lkml/Z2-UNfwcAQYZqVBU@ghost/T/
+> >>>
+> >>> So far we haven't found a way to do this using errata.
+> >>
+> >> You mean using alternatives? Not implementing A, but instead
+> >> implementing Zalrsc, is not an erratum. It's a design decision.
+> > 
+> > We could do the same thing we do with misaligned access detection and
+> > run some instructions to determine if these instructions are being
+> > emulated.  If they are being emulated, patch all of the places to use
+> > zalrsc.
+> 
+> Is the implication here that the riscv,isa-extensions list passed to the kernel
+> will contain "a", even though the hardware does not support it, because AMOs are
+> emulated in M-mode?
+> 
+> If that is not the case, there is no need for runtime detection. The alternative
+> entry can check RISCV_ISA_EXT_ZAAMO (which would be implied by RISCV_ISA_EXT_a)
+> in the ISA bitmap like normal.
 
-syzbot found the following issue on:
+That would be much better! I was under the assumption that the usecase
+for this patch was that they were passing in "a" and wanting to only get
+zalrsc. We should be able to check
+RISCV_ISA_EXT_ZAAMO/RISCV_ISA_EXT_ZALRSC to get the information without
+runtime detection.
 
-HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=11bfc518580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d1a6d4df5fcc342f
-dashboard link: https://syzkaller.appspot.com/bug?extid=a9c0867e4d1dd0c7ab19
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125d0eb0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a595f8580000
+- Charlie
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a4b4612f419c/disk-69e858e0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/07abf7c78a98/vmlinux-69e858e0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/085b44906cce/bzImage-69e858e0.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/0e8d208f30b1/mount_0.gz
-
-The issue was bisected to:
-
-commit 30d61efe118cad1a73ad2ad66a3298e4abdf9f41
-Author: Al Viro <viro@zeniv.linux.org.uk>
-Date:   Mon Jan 6 02:33:17 2025 +0000
-
-    9p: fix ->rename_sem exclusion
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1050fddf980000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1250fddf980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1450fddf980000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a9c0867e4d1dd0c7ab19@syzkaller.appspotmail.com
-Fixes: 30d61efe118c ("9p: fix ->rename_sem exclusion")
-
-UDF-fs: INFO Mounting volume 'LinuxUDF', timestamp 2022/11/22 14:59 (1000)
-Oops: general protection fault, probably for non-canonical address 0xdffffc000000000d: 0000 [#1] PREEMPT SMP KASAN NOPTI
-KASAN: null-ptr-deref in range [0x0000000000000068-0x000000000000006f]
-CPU: 0 UID: 0 PID: 5832 Comm: syz-executor165 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-RIP: 0010:__d_unalias fs/dcache.c:2969 [inline]
-RIP: 0010:d_splice_alias+0x9cd/0xf30 fs/dcache.c:3037
-Code: 48 c1 ea 03 80 3c 02 00 0f 85 4e 05 00 00 49 8b 85 70 ff ff ff 48 ba 00 00 00 00 00 fc ff df 48 8d 78 68 48 89 f9 48 c1 e9 03 <80> 3c 11 00 0f 85 14 05 00 00 48 8b 40 68 48 85 c0 74 31 48 89 44
-RSP: 0018:ffffc90003667c18 EFLAGS: 00010212
-RAX: 0000000000000000 RBX: ffff88807dbd7318 RCX: 000000000000000d
-RDX: dffffc0000000000 RSI: ffffffff82348f0c RDI: 0000000000000068
-RBP: ffff8880754107b8 R08: 0000000000000000 R09: ffffed100f23d67a
-R10: ffff8880791eb3d3 R11: 0000000000000032 R12: ffff8880791eb318
-R13: ffff8880791eafd8 R14: ffff8880791eaeb0 R15: ffff8880791eaf48
-FS:  0000555581642380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffe875be000 CR3: 0000000076b7a000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- udf_lookup+0x191/0x240 fs/udf/namei.c:130
- lookup_one_qstr_excl+0x120/0x190 fs/namei.c:1693
- do_rmdir+0x247/0x410 fs/namei.c:4444
- __do_sys_rmdir fs/namei.c:4474 [inline]
- __se_sys_rmdir fs/namei.c:4472 [inline]
- __x64_sys_rmdir+0xc5/0x110 fs/namei.c:4472
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f9ee0142d99
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe875bd248 EFLAGS: 00000246 ORIG_RAX: 0000000000000054
-RAX: ffffffffffffffda RBX: 6f72746e6f632f2e RCX: 00007f9ee0142d99
-RDX: 00007f9ee0142d99 RSI: 00007f9ee0142d99 RDI: 0000000020000100
-RBP: 00007f9ee01b75f0 R08: 00005555816434c0 R09: 00005555816434c0
-R10: 00005555816434c0 R11: 0000000000000246 R12: 00007ffe875bd270
-R13: 00007ffe875bd498 R14: 431bde82d7b634db R15: 00007f9ee018c03b
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:__d_unalias fs/dcache.c:2969 [inline]
-RIP: 0010:d_splice_alias+0x9cd/0xf30 fs/dcache.c:3037
-Code: 48 c1 ea 03 80 3c 02 00 0f 85 4e 05 00 00 49 8b 85 70 ff ff ff 48 ba 00 00 00 00 00 fc ff df 48 8d 78 68 48 89 f9 48 c1 e9 03 <80> 3c 11 00 0f 85 14 05 00 00 48 8b 40 68 48 85 c0 74 31 48 89 44
-RSP: 0018:ffffc90003667c18 EFLAGS: 00010212
-RAX: 0000000000000000 RBX: ffff88807dbd7318 RCX: 000000000000000d
-RDX: dffffc0000000000 RSI: ffffffff82348f0c RDI: 0000000000000068
-RBP: ffff8880754107b8 R08: 0000000000000000 R09: ffffed100f23d67a
-R10: ffff8880791eb3d3 R11: 0000000000000032 R12: ffff8880791eb318
-R13: ffff8880791eafd8 R14: ffff8880791eaeb0 R15: ffff8880791eaf48
-FS:  0000555581642380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffe875be000 CR3: 0000000076b7a000 CR4: 0000000000350ef0
-----------------
-Code disassembly (best guess):
-   0:	48 c1 ea 03          	shr    $0x3,%rdx
-   4:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
-   8:	0f 85 4e 05 00 00    	jne    0x55c
-   e:	49 8b 85 70 ff ff ff 	mov    -0x90(%r13),%rax
-  15:	48 ba 00 00 00 00 00 	movabs $0xdffffc0000000000,%rdx
-  1c:	fc ff df
-  1f:	48 8d 78 68          	lea    0x68(%rax),%rdi
-  23:	48 89 f9             	mov    %rdi,%rcx
-  26:	48 c1 e9 03          	shr    $0x3,%rcx
-* 2a:	80 3c 11 00          	cmpb   $0x0,(%rcx,%rdx,1) <-- trapping instruction
-  2e:	0f 85 14 05 00 00    	jne    0x548
-  34:	48 8b 40 68          	mov    0x68(%rax),%rax
-  38:	48 85 c0             	test   %rax,%rax
-  3b:	74 31                	je     0x6e
-  3d:	48                   	rex.W
-  3e:	89                   	.byte 0x89
-  3f:	44                   	rex.R
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> 
+> Regards,
+> Samuel
+> 
