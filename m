@@ -1,261 +1,119 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E8A192B74
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE966205507;
+	Mon,  3 Feb 2025 19:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738609863; cv=none; b=JHJNCBgxHcs+FEYpy4zLFclIyGicIbKeAIXbGAK0C605B4o/vuC8FFwiEEmf2PmbXBFTyWVciYF9rj2Poe+vA70ZyWrDS/W8eq+kRbg5MUzaX+gb0+TWK2VuH2DKlLmZxuQzZ6ePNRaN2xfZg0R2alprbBnb/D0vmS1MuzJR6N0=
+	t=1738609893; cv=none; b=rJM1AkAzaF/3ih6AY7TuAiQx7yZrw/dFXt3GJbqUttpdv+KnhYLjjI2TdmLFo2TMwC3QuOvaRDPQD82YfVr8Vgy7gISE0qLaqxQWpUX6iGB6MnRncbwIc88PoOuVnE6j5a/zLizF7tDO8gAYKAfZ4n1B599TL1dI7lXj1PPZVMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738609863; c=relaxed/simple;
-	bh=cWkN6Wus5rQgkywr9t4nC/2nXTrW2TRQSZoyHLp8nB0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ul0Gu54dD9R0OY8cGwsvHCMBKoBhHOJ7lqboMZ+Mdf+C9pyGiu73wFOogOL6RSD530V2DJQS5v2zKN2SiQJD0nx904Ae+/7SDMlguSNLe1BpFQ1Hm1lZPv1CwhEB3GpyrvlDtobPzfP38BwMKB2k7VFb/mhbYIYrkMsFykrZP0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ht/XIQBQ; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738609893; c=relaxed/simple;
+	bh=wsMMIMq1C/N6bJhF4VtiDEOlnNV12lE/8UIo0noR294=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ddH5EsTPv4uKQn70csn6YoNjI904zyCSfeo5t4MiOpuU2oIrQ+GANLq7XCRxzEnyf72COsef415zKcLFMBT3gNA3HV2BQPhklsEeDk7Y2ohaxFIP6vYEH8Pav6Q7IWCo0IhdjDHN54KV0p+WEpUBfx1IgsAtZ3ojXAx/l3hjr9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=qSLstqN7; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ht/XIQBQ"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so18505ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:11:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738609860; x=1739214660; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UuQ0P6aa5euSiNOGk5a0mkHvd4tUoriLp9ElbvjCQv4=;
-        b=Ht/XIQBQW5zGgfEPsJkCVppDlgnOXztDEQiLQSkmSVpzo6Jf1RpJJGG4qEvyXbJFhL
-         qos0UtYVOLSQc8sh29mR1SIwsY1PbQkpHBmQ8XtrcBpRAuH3QCEkbltLmjZHE4fK6NKZ
-         KzA22GENdUJYBY3AQjjDRGWhgMh9PeMEZOo+YJ15KZ1jlFdoL3l9HcIzFJuJgc+fhXik
-         PlcWsw7GddC6Sr++gZh0CUCaHSxrOTbP352Yjf/u+wguCK894sGpWA/2uhMkCNBmgkoY
-         0Tx3tJajE/tCwPn+AdfcqCuSJDHVgwlwpQk6yDH7J0999Y9U+gcXf3Pdzzc0h1c6uBTP
-         LUIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738609860; x=1739214660;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UuQ0P6aa5euSiNOGk5a0mkHvd4tUoriLp9ElbvjCQv4=;
-        b=oR/sx6G9cI/RZS1HN4IyutsE1st+X0rhrPJYTh68V7fTUpra1/1sKqgWkoMhMOooFs
-         3GTuMqaiiHAv0ZewoLwgAguj1p+/xMv9qn1olr9egPxyLfGMJu+kM/KhDB/wLDl4srGU
-         N+tz+/cT9jVa5HmSaFm16SWJvYcw2hPzTCutouOCkbG6jU3flzxlXp3Gdro7qjipUluO
-         U0IRkG1Mm03JCCdIpa/WUVn8NrXF/96nd6s+rgwbSTpQkAHwwBHySzfyV8AjhGJCyorb
-         0KCm07KuNjTe03BiaMRZVk5jmgcAlAFACzQo+sSGEJ75Ehulc/zBBDPQAEr0m5juzeTU
-         qdMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHOJBHz0qW5YCOeZXxk8mRA11f7mY2zCvRUDGFpfEed5bUNvDIlftKNb1I+/8sKRpKywkgB/DskvBTm24=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCZ0K+0eeHdPqcpDtBrnH/BC9LD3aowT1pXzoGvWDdkCjUmKL2
-	a/amLlvzreYbrTbFxItdrM861SApvU8TQnpXiD57xCKCmew0DgU24H07xvdwf+xYz59qIOtPJMy
-	FYLDFV2Z41ynSoxVWGy5WMUimmbYnba5PTRAw
-X-Gm-Gg: ASbGncu21i90tuoTVDGQCbux8N0TMcvdeKhD3j69UESh9SpV61R70Ui/3ytQTL6WN8C
-	fHImB8lhahh/FlGeV7a3QfPkZhuSRwjdhFRfg4NqdbA2XvBfZTw2K0u8u6s4GOb5fXYnZyYb1MR
-	lQckU4g4APlc2dRgAOfd610P0=
-X-Google-Smtp-Source: AGHT+IGFam83cjFexWYWxYML0aNMo7d0bERNXXrQRxxhtI+ko75GLdGDjsk3yHchwpsCyHuJtDvXW2RiHXR1t2nBo34=
-X-Received: by 2002:a92:c544:0:b0:3ce:3873:48d4 with SMTP id
- e9e14a558f8ab-3d03fbc113dmr232265ab.4.1738609860250; Mon, 03 Feb 2025
- 11:11:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="qSLstqN7"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513I2RtG029876;
+	Mon, 3 Feb 2025 14:11:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=qViXkyLZy/s+CobQAADEY7NcJWf
+	8zZntyNQPukceM3E=; b=qSLstqN735cu9aPwgatQdnRAfMMtncsEqi1NS5y5ONF
+	lVffxbvZxsUraqB3dSYVFLdVYo9LrZIC2q4PQ+fJyKdyWvMnc5IHhu/72ZqDjVhV
+	B+xJilwHTDDHcWtRPtw+a14SHZPsPm8SWUQwxv4xhLTMZLI2xrpSQK1wKBBGQDde
+	bkgKUzRnV9dcmwoadWfivoZtQiFijVSbGKGNghH8k6lAvJPavP3Elq0DP6W/au2j
+	owmYf0mL/qYrJPPfjNYq5/h/Awq2lKzK7wXWGsrrKTYuzDElhNu9Ig10lRL7Ve6y
+	5KxIWiUzW09w9ZvNqJnmh1R481n2R7bbwALb3aAQyXw==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 44k2qtr8bg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 14:11:03 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 513JB2gh051995
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 3 Feb 2025 14:11:02 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Mon, 3 Feb 2025
+ 14:11:02 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 3 Feb 2025 14:11:02 -0500
+Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 513JAmuB026369;
+	Mon, 3 Feb 2025 14:10:50 -0500
+From: Marcelo Schmitt <marcelo.schmitt@analog.com>
+To: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <cosmin.tanislav@analog.com>, <jic23@kernel.org>, <lars@metafoo.de>,
+        <marcelo.schmitt@analog.com>, <dlechner@baylibre.com>,
+        <granquet@baylibre.com>, <u.kleine-koenig@baylibre.com>,
+        <marcelo.schmitt1@gmail.com>
+Subject: [PATCH v3 0/3] Re-add filter_type/filter_mode
+Date: Mon, 3 Feb 2025 16:10:44 -0300
+Message-ID: <cover.1738608986.git.marcelo.schmitt@analog.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201071455.718247-1-irogers@google.com> <Z6EStkn-YZ8zaO7u@ghost>
-In-Reply-To: <Z6EStkn-YZ8zaO7u@ghost>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 3 Feb 2025 11:10:49 -0800
-X-Gm-Features: AWEUYZkIMZtV_LyqmOa-QL7z_3riCEn0NPF-ooDjGEkZz_zb41gccBqBZrEDEvk
-Message-ID: <CAP-5=fXRz_8CKNz4Fr-=0yhKbf_QE2ND+PPykSAO5p8wcUz7xA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/7] perf: Support multiple system call tables in the build
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>, 
-	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: cZx1c8T1fiA7lMCl29w2TS1lAHZhSr4Q
+X-Proofpoint-ORIG-GUID: cZx1c8T1fiA7lMCl29w2TS1lAHZhSr4Q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_08,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ bulkscore=0 phishscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502030139
 
-On Mon, Feb 3, 2025 at 11:02=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
-om> wrote:
->
-> On Fri, Jan 31, 2025 at 11:14:48PM -0800, Ian Rogers wrote:
-> > This work builds on the clean up of system call tables and removal of
-> > libaudit by Charlie Jenkins <charlie@rivosinc.com>.
-> >
-> > The system call table in perf trace is used to map system call numbers
-> > to names and vice versa. Prior to these changes, a single table
-> > matching the perf binary's build was present. The table would be
-> > incorrect if tracing say a 32-bit binary from a 64-bit version of
-> > perf, the names and numbers wouldn't match.
-> >
-> > Change the build so that a single system call file is built and the
-> > potentially multiple tables are identifiable from the ELF machine type
-> > of the process being examined. To determine the ELF machine type, the
-> > executable's header is read from /proc/pid/exe with fallbacks to using
-> > the perf's binary type when unknown.
-> >
-> > Remove some runtime types used by the system call tables and make
-> > equivalents generated at build time.
->
-> Our approaches are very different but I sent out a patch to do this a
-> couple of weeks ago [1].
->
-> Did you look at that and decide you didn't like the approach?
+Better document sysfs ABI for ADC digital filter configuration.
+Also update ad4130 driver to support the standardized IIO ABI for digital filter
+configuration.
 
-Missing link?
+Change log v2 -> v3
+- Added in_voltageY-voltageZ_filter_type to main IIO ADI doc too.
+- Added filter_type attributes to ad4130 driver so it also supports the
+  standardized ABI for digital filter configuration.
+- No longer dropping AD4130 specific filter_type_available options from sysfs-bus-iio.
+- Re-add sysfs-bus-iio-adc-ad4130 just mentioning the ABI at sysfs-bus-iio instead
+  of repeating the doc.
 
-The patches generating a syscall(_32|_64)?.h landed. These changes
-take your changes and make it so that we just run the script once
-building a header file for all architectures. On x86 we then have the
-tables be guarded by ifdefs on i386 and x86-64. Then rather than the
-table just matching the host architecture the ELF machine is used for
-the executable running.
+Change log v1 -> v2
+- Split into 3 patches.
+- Re-added sysfs-bus-iio-adc-ad4130 to keep filter_mode separate from filter_type.
+- Removed in_voltage-voltage_filter_mode_available from sysfs-bus-iio.
+- Added deprecation notes in sysfs-bus-iio-adc-ad4130 asking to use filter_type
+  for new drivers and referencing sysfs-bus-iio.
+- Improved commit message with explanation about use of filter type attributes.
+- Dropped AD4130 specific filter_type_available options from sysfs-bus-iio.
 
-Thanks,
-Ian
+Link to v2: https://lore.kernel.org/linux-iio/cover.1736261047.git.marcelo.schmitt@analog.com/
+Link to v1: https://lore.kernel.org/linux-iio/b2132bd3ca1d64cdd8d5afab1f1f33c574718b50.1732901318.git.marcelo.schmitt@analog.com/
 
-> - Charlie
->
-> >
-> > Ian Rogers (7):
-> >   perf syscalltble: Remove syscall_table.h
-> >   perf trace: Reorganize syscalls
-> >   perf syscalltbl: Remove struct syscalltbl
-> >   perf thread: Add support for reading the e_machine type for a thread
-> >   perf trace beauty: Add syscalltbl.sh generating all system call table=
-s
-> >   perf syscalltbl: Use lookup table containing multiple architectures
-> >   perf build: Remove Makefile.syscalls
-> >
-> >  tools/perf/Makefile.perf                      |  10 +-
-> >  tools/perf/arch/alpha/entry/syscalls/Kbuild   |   2 -
-> >  .../alpha/entry/syscalls/Makefile.syscalls    |   5 -
-> >  tools/perf/arch/alpha/include/syscall_table.h |   2 -
-> >  tools/perf/arch/arc/entry/syscalls/Kbuild     |   2 -
-> >  .../arch/arc/entry/syscalls/Makefile.syscalls |   3 -
-> >  tools/perf/arch/arc/include/syscall_table.h   |   2 -
-> >  tools/perf/arch/arm/entry/syscalls/Kbuild     |   4 -
-> >  .../arch/arm/entry/syscalls/Makefile.syscalls |   2 -
-> >  tools/perf/arch/arm/include/syscall_table.h   |   2 -
-> >  tools/perf/arch/arm64/entry/syscalls/Kbuild   |   3 -
-> >  .../arm64/entry/syscalls/Makefile.syscalls    |   6 -
-> >  tools/perf/arch/arm64/include/syscall_table.h |   8 -
-> >  tools/perf/arch/csky/entry/syscalls/Kbuild    |   2 -
-> >  .../csky/entry/syscalls/Makefile.syscalls     |   3 -
-> >  tools/perf/arch/csky/include/syscall_table.h  |   2 -
-> >  .../perf/arch/loongarch/entry/syscalls/Kbuild |   2 -
-> >  .../entry/syscalls/Makefile.syscalls          |   3 -
-> >  .../arch/loongarch/include/syscall_table.h    |   2 -
-> >  tools/perf/arch/mips/entry/syscalls/Kbuild    |   2 -
-> >  .../mips/entry/syscalls/Makefile.syscalls     |   5 -
-> >  tools/perf/arch/mips/include/syscall_table.h  |   2 -
-> >  tools/perf/arch/parisc/entry/syscalls/Kbuild  |   3 -
-> >  .../parisc/entry/syscalls/Makefile.syscalls   |   6 -
-> >  .../perf/arch/parisc/include/syscall_table.h  |   8 -
-> >  tools/perf/arch/powerpc/entry/syscalls/Kbuild |   3 -
-> >  .../powerpc/entry/syscalls/Makefile.syscalls  |   6 -
-> >  .../perf/arch/powerpc/include/syscall_table.h |   8 -
-> >  tools/perf/arch/riscv/entry/syscalls/Kbuild   |   2 -
-> >  .../riscv/entry/syscalls/Makefile.syscalls    |   4 -
-> >  tools/perf/arch/riscv/include/syscall_table.h |   8 -
-> >  tools/perf/arch/s390/entry/syscalls/Kbuild    |   2 -
-> >  .../s390/entry/syscalls/Makefile.syscalls     |   5 -
-> >  tools/perf/arch/s390/include/syscall_table.h  |   2 -
-> >  tools/perf/arch/sh/entry/syscalls/Kbuild      |   2 -
-> >  .../arch/sh/entry/syscalls/Makefile.syscalls  |   4 -
-> >  tools/perf/arch/sh/include/syscall_table.h    |   2 -
-> >  tools/perf/arch/sparc/entry/syscalls/Kbuild   |   3 -
-> >  .../sparc/entry/syscalls/Makefile.syscalls    |   5 -
-> >  tools/perf/arch/sparc/include/syscall_table.h |   8 -
-> >  tools/perf/arch/x86/entry/syscalls/Kbuild     |   3 -
-> >  .../arch/x86/entry/syscalls/Makefile.syscalls |   6 -
-> >  tools/perf/arch/x86/include/syscall_table.h   |   8 -
-> >  tools/perf/arch/xtensa/entry/syscalls/Kbuild  |   2 -
-> >  .../xtensa/entry/syscalls/Makefile.syscalls   |   4 -
-> >  .../perf/arch/xtensa/include/syscall_table.h  |   2 -
-> >  tools/perf/builtin-trace.c                    | 275 +++++++++++-------
-> >  tools/perf/scripts/Makefile.syscalls          |  61 ----
-> >  tools/perf/scripts/syscalltbl.sh              |  86 ------
-> >  tools/perf/trace/beauty/syscalltbl.sh         | 274 +++++++++++++++++
-> >  tools/perf/util/syscalltbl.c                  | 142 ++++-----
-> >  tools/perf/util/syscalltbl.h                  |  22 +-
-> >  tools/perf/util/thread.c                      |  50 ++++
-> >  tools/perf/util/thread.h                      |  14 +-
-> >  54 files changed, 598 insertions(+), 506 deletions(-)
-> >  delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Makefile.sysca=
-lls
-> >  delete mode 100644 tools/perf/arch/alpha/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/arc/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/arc/entry/syscalls/Makefile.syscall=
-s
-> >  delete mode 100644 tools/perf/arch/arc/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/arm/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/arm/entry/syscalls/Makefile.syscall=
-s
-> >  delete mode 100644 tools/perf/arch/arm/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Makefile.sysca=
-lls
-> >  delete mode 100644 tools/perf/arch/arm64/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/csky/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/csky/entry/syscalls/Makefile.syscal=
-ls
-> >  delete mode 100644 tools/perf/arch/csky/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Makefile.s=
-yscalls
-> >  delete mode 100644 tools/perf/arch/loongarch/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/mips/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/mips/entry/syscalls/Makefile.syscal=
-ls
-> >  delete mode 100644 tools/perf/arch/mips/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Makefile.sysc=
-alls
-> >  delete mode 100644 tools/perf/arch/parisc/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Makefile.sys=
-calls
-> >  delete mode 100644 tools/perf/arch/powerpc/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Makefile.sysca=
-lls
-> >  delete mode 100644 tools/perf/arch/riscv/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/s390/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/s390/entry/syscalls/Makefile.syscal=
-ls
-> >  delete mode 100644 tools/perf/arch/s390/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/sh/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/sh/entry/syscalls/Makefile.syscalls
-> >  delete mode 100644 tools/perf/arch/sh/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Makefile.sysca=
-lls
-> >  delete mode 100644 tools/perf/arch/sparc/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/x86/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/x86/entry/syscalls/Makefile.syscall=
-s
-> >  delete mode 100644 tools/perf/arch/x86/include/syscall_table.h
-> >  delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Kbuild
-> >  delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Makefile.sysc=
-alls
-> >  delete mode 100644 tools/perf/arch/xtensa/include/syscall_table.h
-> >  delete mode 100644 tools/perf/scripts/Makefile.syscalls
-> >  delete mode 100755 tools/perf/scripts/syscalltbl.sh
-> >  create mode 100755 tools/perf/trace/beauty/syscalltbl.sh
-> >
-> > --
-> > 2.48.1.362.g079036d154-goog
-> >
+
+Marcelo Schmitt (3):
+  Documentation: ABI: IIO: Add filter_type documentation
+  iio: adc: ad4130: Add filter_type attributes
+  Documentation: ABI: IIO: Re-add sysfs-bus-iio-adc-ad4130
+
+ Documentation/ABI/testing/sysfs-bus-iio       |  9 ++++++++-
+ .../ABI/testing/sysfs-bus-iio-adc-ad4130      | 20 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ drivers/iio/adc/ad4130.c                      |  3 +++
+ 4 files changed, 32 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-ad4130
+
+
+base-commit: 9b75dd1b7d6b98699a104c6b1eec0c8817e5fd4b
+-- 
+2.47.2
+
