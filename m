@@ -1,76 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01457210187;
-	Mon,  3 Feb 2025 21:40:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D342D20F09D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 21:40:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738618815; cv=none; b=qv9VycFBDRdZqN8426DWJv/9hrPiqOJZiDd7GU1vmQRdPdXmhm/N4GNh2Y2xGahNUwzaXbRB+Z4iARkClGHQoxGyX/flQ6OVcp4tbhcNZJeb3AU4a4aG8Sh1i/5FHHBsTto0hzIJgrapg7WtdWE7lUbeh02FxrWI8e/gV4Dux3A=
+	t=1738618835; cv=none; b=kiMZoFmcErzf6wpgxmldOIdM7iEvwefLWaFu+oWY3G1E1DRl2Q3KIwhgPB37AERS1RJ6qlz2aAwtayGFTguOAfy5WvQanfgrCxIPnOEZ4SVQIB95REH6G9QBkh8iDVfWcY/qtPiEl98FyQcPk49+2tbRUaR/Q3tuR71EWrg9rwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738618815; c=relaxed/simple;
-	bh=WJq3XnPJz/jA14AyuJACDWt7VaQ2f0A+QY9EV0Hk05w=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=QVeb7d3mVICC7vGrvoS7VHc9cJmoZKFgjawaNFYbzh1OrfB6rdR49Uq8v+TdNDGfiUryhvxOD0JAAu4gmELt5FKuTRmHR7/8EGWkgC5NViebJUoIXwysC1c7KtiiYZ2oXlWFuyv9rR4XrNvCqXqIsDb0peVicGgDI4Sn+MUVJ2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ChV0xYgw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738618835; c=relaxed/simple;
+	bh=VYCbSdXLJAo0G5h51wpv/9glXHCBiN/zrDRBjbCoWgM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aOnIKamvOEMJW37u+j0uAL1vYGuXwnKRC/0DSZ1dnPU/1VM5+fKm5rWAKerpDpLsnAZ2r+slylj9tUw+dB3gP93FUjWz671iL1eKb8z7A274bJUyLZNZM4COwNBQ82NklxeOLuAALJxq5d1s36P0Kbk8pUSZtmHO6lB1KP1Pfyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OpNXxv7w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ChV0xYgw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 611B5C4CED2;
-	Mon,  3 Feb 2025 21:40:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OpNXxv7w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECF4FC4CED2;
+	Mon,  3 Feb 2025 21:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738618814;
-	bh=WJq3XnPJz/jA14AyuJACDWt7VaQ2f0A+QY9EV0Hk05w=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ChV0xYgwsk3IAXDtrvdnrvyO6mc7w8khL0AcaRYEoMP9/5bxFaurNEUe7wAUOa7d3
-	 xzbAjbrbzgW6CA+kPPV9ozwJIyPKOpK5dATGKk4yEwjCZKaDi241HNCDGlCLta8Psp
-	 eV1bjLK67N8BLB/PKM2EuByzThPxzy862Xuelb2wuTcAgpUeMPPei07TvZzvObi84y
-	 e9ySbrkk9jsz4ADQvIUIkXMIwWI8HEmmpPYr0vJwsYVwxetfRNGQM2ajHtpxrF1kLG
-	 hTcvoCXPPWFnrr08/rY+4Ac3hedLBedAHLHAgpI6ac2RfecSE+5gIMw9f4uI1BN1Fv
-	 vA2BIssVRfxKw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADED6380AA67;
-	Mon,  3 Feb 2025 21:40:42 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1738618835;
+	bh=VYCbSdXLJAo0G5h51wpv/9glXHCBiN/zrDRBjbCoWgM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OpNXxv7wPskYIU5W1eX6NnJLBl9y4p/m1YIgi6u+hJqquXLM4DHQz+4ySgmhL14y3
+	 FX1KbBbFGhTgUO9fr1dBr+jN90QSjDZbBvkz6hycOreX69tirmXklt+sZKgJGYY6ji
+	 BcnBwGLIWIJeJTKlAoiidN21nS2Zjt+osBSpzKiYW+goEX+YzVSYaWadb/cezrfwY6
+	 ahbgk1UhBIAtxcr8eBb8CDZmsDX81t2ikcJvoLw/yvvcpBswVQdqPdMINQZKDq+F8v
+	 65TlIA5wt98F22A8CuOgAAlljmsCDJbzfV8VX92WSMQMST9bNMHCPaqDMLmM/IMLJh
+	 byH70SFvb9EIw==
+Date: Mon, 3 Feb 2025 13:40:33 -0800
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mark Salyzyn <salyzyn@android.com>,
+	Tim Murray <timmurray@google.com>,
+	Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+	kernel-team@android.com
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Mark Salyzyn <salyzyn@android.com>, Dave Airlie <airlied@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	dri-devel <dri-devel@lists.freedesktop.org>, russ.weight@linux.dev
+Subject: Re: question about firmware caching and relying on it
+ (CONFIG_FW_CACHE)
+Message-ID: <Z6E30W9aEh2tQOkw@bombadil.infradead.org>
+References: <CAPM=9twyvq3EWkwUeoTdMMj76u_sRPmUDHWrzbzEZFQ8eL++BQ@mail.gmail.com>
+ <CAHk-=whRBX0aQq1J5S5nHXE2GvXnQ5z+cqu=iTY9xU34kvYMzw@mail.gmail.com>
+ <2025020347-chewy-paradox-ce71@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [RESEND PATCH v2] Bluetooth: hci_uart: fix race during initialization
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <173861884154.3508836.6443423049193135714.git-patchwork-notify@kernel.org>
-Date: Mon, 03 Feb 2025 21:40:41 +0000
-References: <f5ea6c5c-1904-22a4-72f2-d4050878dd26@gmail.com>
-In-Reply-To: <f5ea6c5c-1904-22a4-72f2-d4050878dd26@gmail.com>
-To: Arseniy Krasnov <oxffffaa@gmail.com>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025020347-chewy-paradox-ce71@gregkh>
 
-Hello:
-
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-
-On Sat, 1 Feb 2025 19:24:31 +0300 you wrote:
-> 'hci_register_dev()' calls power up function, which is executed by
-> kworker - 'hci_power_on()'. This function does access to bluetooth chip
-> using callbacks from 'hci_ldisc.c', for example 'hci_uart_send_frame()'.
-> Now 'hci_uart_send_frame()' checks 'HCI_UART_PROTO_READY' bit set, and
-> if not - it fails. Problem is that 'HCI_UART_PROTO_READY' is set after
-> 'hci_register_dev()', and there is tiny chance that 'hci_power_on()' will
-> be executed before setting this bit. In that case HCI init logic fails.
+On Mon, Feb 03, 2025 at 09:19:59AM +0100, Greg Kroah-Hartman wrote:
+> On Sun, Feb 02, 2025 at 12:54:07PM -0800, Linus Torvalds wrote:
+> > Greg, Luis, can you explain that odd uevent message / netlink issue?
 > 
-> [...]
+> There was reports from Android devices that the uevent was causing the
+> system to wake up from the netlink messages that were sent when going to
+> sleep and so it would get caught in a loop and never actually go to
+> sleep.  I can't remember any more than that, maybe Mark can recall the
+> specifics and dig up the Android bug reports for it?
 
-Here is the summary with links:
-  - [RESEND,v2] Bluetooth: hci_uart: fix race during initialization
-    https://git.kernel.org/bluetooth/bluetooth-next/c/c411c62cc133
+Nope, the only thing that my spidy senses tells me is that it would be
+great to know if the uevent flood was caused by the uevent flood which
+caused the same udev duplicate messages to load modules per-cpu. Linus
+had a nice fix to make these idempotent via commit 9b9879fc03275ffe
+("modules: catch concurrent module loads, treat them as idempotent")
+on the module load path, so I'm wondering if uvents could likely could
+trigger floods to delays suspend.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Provided Mark Salyzyn hasn't moved on (from commit 030cc787c30e
+("firmware_class: make firmware caching configurable") it would
+be great if he could enable the FW_CACHE and re-test. At the very least
+hopefully kernel-team-android can redirect this to the appropriate folks
+to verify.
 
+One of the reasons to *not* want the fw cache is for firmware images
+which are *huge*, like those which may be used on remote procs. But we
+we already have an internal FW_OPT_NOCACHE and remote-proc stuff likely
+already uses request_firmware_into_buf() which uses FW_OPT_NOCACHE.
 
+  Luis
