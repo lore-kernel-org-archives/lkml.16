@@ -1,160 +1,145 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4025C202F65;
-	Mon,  3 Feb 2025 11:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9208F2036E1
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738581413; cv=none; b=dUGeC1kAs9GxUKVYuIXPcN4hDUwKdngjEBI+3S5b+Gfn3hY+5yTDFQ9pSr6jBTpHTQ5Gd47VznsSzp+fr9VcIaweDvMf58rZtp3JGqH27c+iIADbWpDg1NjOxShOz1KLmulrBA351K2RP7SWjC9RH+kz3+0dw6psoRmO+kMbq60=
+	t=1738581416; cv=none; b=jvCjVN8H0NDjTR0qFuCknH0gkBq7p9piQVSS8cD5cwfjuwD4voAtXPViAitQ9+jwY++rv5X5Ht48ZfstxTyENbWmshZ8ro6PDyA2Kbo7wY4LUypL0pM2WXqWpJyT4f2LbhSiENYuYpcl3sXwZfCRtROeHY4A6nmGRFMfnmqe3MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738581413; c=relaxed/simple;
-	bh=LtKUSzsM94RsNtQt3FSM52WxZx1hj1kt305TJoOS+iY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WBey7FVDjj84Q7p2qFi4L7K87m2DCjS+jftosnJ7XYQ5FbhATT9czBeH1FKuOBG/+rdJQuhhn2FzVcBqE8Qsz2tuYV3wyylv/lv32SGWz6JHEL5xm+wsuPkMkodxPuRW7PhRc7lih3ZBIPeAGkgpJ5ByG7pcNrWzYtPX9lDgyGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=AfI813dt; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1738581416; c=relaxed/simple;
+	bh=itoNMLYdiXiTIITprU+dQimHf4SEtH9w2NTnFP84r4s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ia5Dnt0cAYe97vDNSOOiQgRAz8OK0ixJZVRmz864GKjgA9j2uVb6bTPTYaPZxHoV5gDn+JGdTO5FrN/Y2FRC0tf9fpT6lPl194m1Uaa2PZlyNdB6BTtWjR6q99KkQ+TazHgLeyYNAA/g7WMM53em6+Xa8yUvC5m7VjChYnVjo7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JpFGoISA; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="AfI813dt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=7LuywntJh/PQcJEXxacusK5UZs3P6Qb5WkOs/kb1NpI=; b=AfI813dtjuXWBnrTAo6rfz8u6O
-	yl4jZrZRwGditu3POnJqKCkjwx4WCcQ1WP4n3MbtwqePmBWODYOxJDPR0GfFAR4D4JIHg4a6RnEJY
-	Sje/15EqxwilmuOAmSkleR2OZ7IP99zlO5rzpyqfHJt3aiCMHlC3TkhwmJTxp+5QfOeNqW0KcH/yj
-	7NrSMjBI2AiglJp0lJvVikNHI7+SyRlzncyzIM5fNJy0Pg4vS1F+sRI82HZoT+TgaxUOjAJUzjmKk
-	i5Do782/duyChkCxM+TnzOQmLKkXKRZJo1j16ndXQyYcL3OiCac+9KVrDicgtdc3CTZFMpAILs2Yd
-	uNTn/zeQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60612)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1teuRS-0008NT-19;
-	Mon, 03 Feb 2025 11:16:38 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1teuRO-0000Ke-0V;
-	Mon, 03 Feb 2025 11:16:34 +0000
-Date: Mon, 3 Feb 2025 11:16:34 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Steven Price <steven.price@arm.com>
-Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Jose Abreu <joabreu@synopsys.com>, Paolo Abeni <pabeni@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com, netdev@vger.kernel.org,
-	Furong Xu <0x1207@gmail.com>, Petr Tesarik <petr@tesarici.cz>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Yanteng Si <si.yanteng@linux.dev>, Xi Ruoyao <xry111@xry111.site>
-Subject: Re: [PATCH] net: stmmac: Allow zero for [tr]x_fifo_size
-Message-ID: <Z6Clkh44QgdNJu_O@shell.armlinux.org.uk>
-References: <20250203093419.25804-1-steven.price@arm.com>
- <Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
- <811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JpFGoISA"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-436246b1f9bso6507025e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:16:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738581413; x=1739186213; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ozyTlPLnaugnaEoHQY+R4AXQEUzCLS18GW7s5hKxc5M=;
+        b=JpFGoISAoTAVzIzOpRHzIQ8IpzsXgoKnqvp93Bl5OBng8NLJ6g5niAPqFEwfD4323t
+         xOugaRt1MVFIwqB6KWndLKyW72kABUxOUtL3nHD1a9K5mXmszrvX6d3rO1EWc3rsHW/V
+         NCzrTYHR23jJ9bfozd4OsErG3YNHkoPF9Q8JVNEmQ5TeWCAAPe0ykqAZxZnjycMP061R
+         8ACjyhlip/oDsjcKZbOsS4rmOknTnD7nuHKSlehL+Zi881NjIcd74EuZrN+OoFqS3C+h
+         0tFMUcWd1wfWiRbBR269dcR4mphmQmeOHTSIKGBCeSPYHpJ/5kGFhcWRRVp92lCnFn+e
+         1vgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738581413; x=1739186213;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ozyTlPLnaugnaEoHQY+R4AXQEUzCLS18GW7s5hKxc5M=;
+        b=G9kVuAZ0m6VlpXGvObqLb8Taz7+GugpSDyykWPHPBJ/IRoc7f5DhbZFjmryCS4CmO2
+         NxH6OkYCXJQvVT0CBRpZU0nYwG+vda6EHdzed3o5ULDDdsw6AsBFvX1VZ+9cpLbdFMuR
+         6IoXG8uoD97M4hnUzS+H25XOo4AcIRbclp6CMH1URsAhFrnp2K5X8HonPqF5jJUkKpff
+         QU6xmkDCs7e82AVAi60U562tWfKvRX2V5D8wtFBRtGiM5TT91JjCLZ1iKXP8Cjk38HmA
+         y+nLV45E5SmMOm3qQmDR6DUBoPqB9J2/OtR16uI1x7UgN0KA2Ldz2LQB2TS+cdeQI3BR
+         OeZw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzT19Jjjr+hhhZ3igRfT3tSqfot++wgQCsxYjFrMm4iUHPsouyjRCjzIcPkpKePTs6et8MTcDL8xiyEcM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+m6b0wjiNsT17tWETPi04Pprx15ErsviZK6qCN6f0eC5+8scX
+	+2nEbR9AVTx+0dlUq/WDJz99UDtrvHZki+eWDFwA9ujMlLH3uqT9PxWjCD/2rEI=
+X-Gm-Gg: ASbGncvby2UFY4L9EwYyaoCyrT8+Pofcvq7B9WDQLudesnDr1uKKqDax0DRRIujM4yS
+	4vyOa9wI0s82h9Cf8mh3/Ke+rw4M1vVlnogFruFzQOYxNQf2KB7jdSsioUFkSuc2LxZv+QBcYPw
+	rv721oJfbEAhoeVlbyS4aocb0HCYFNoePTKRotOvtk2hRwAJyEC7y7FfjjmlT+Sgff1rS5wNmKl
+	CPYqwEATkK6cSYLBcj3F4QvdUxNrRbS8/VSIHCa4/dZaQhIb6I9AHvyER3Oea2BoerHPqZGGyIg
+	8+A8EpLhy5uXe34J32yeQlz7ZLMwbo2U0gE=
+X-Google-Smtp-Source: AGHT+IER4b8x4k4tSsG3NXSbXAj/U65SZ2uRmU7FJsNnr3cP55/fxC2eGPVEdqHi8nEykzMTwVK4eg==
+X-Received: by 2002:a5d:6d86:0:b0:38b:eb86:694c with SMTP id ffacd0b85a97d-38c5167a2cfmr6601607f8f.0.1738581412780;
+        Mon, 03 Feb 2025 03:16:52 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.144])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b57b6sm12487667f8f.72.2025.02.03.03.16.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 03:16:52 -0800 (PST)
+Message-ID: <ab65d951-7d1e-436e-8bcd-5b389991a0ef@linaro.org>
+Date: Mon, 3 Feb 2025 12:16:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] drm/msm/dsi/phy: Improvements around concurrent
+ PHY_CMN_CLK_CFG[01]
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250131-drm-msm-phy-pll-cfg-reg-v1-0-3b99efeb2e8d@linaro.org>
+ <gyslnttjsuav5dsbmglroujpwrqazokfnj65uhbegja3w27yxc@iamitbbg2e7e>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <gyslnttjsuav5dsbmglroujpwrqazokfnj65uhbegja3w27yxc@iamitbbg2e7e>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 11:01:28AM +0000, Steven Price wrote:
-> [Moved Kunihiko to the To: line]
+On 31/01/2025 17:24, Dmitry Baryshkov wrote:
+> On Fri, Jan 31, 2025 at 04:02:49PM +0100, Krzysztof Kozlowski wrote:
+>> Calling these improvements, not fixes, because I don't think we ever hit
+>> actual concurrency issue.  Although if we ever hit it, it would be very
+>> tricky to debug and find the cause.
 > 
-> On 03/02/2025 10:38, Russell King (Oracle) wrote:
-> > On Mon, Feb 03, 2025 at 09:34:18AM +0000, Steven Price wrote:
-> >> Commit 8865d22656b4 ("net: stmmac: Specify hardware capability value
-> >> when FIFO size isn't specified") modified the behaviour to bail out if
-> >> both the FIFO size and the hardware capability were both set to zero.
-> >> However devices where has_gmac4 and has_xgmac are both false don't use
-> >> the fifo size and that commit breaks platforms for which these values
-> >> were zero.
-> >>
-> >> Only warn and error out when (has_gmac4 || has_xgmac) where the values
-> >> are used and zero would cause problems, otherwise continue with the zero
-> >> values.
-> >>
-> >> Fixes: 8865d22656b4 ("net: stmmac: Specify hardware capability value when FIFO size isn't specified")
-> >> Tested-by: Xi Ruoyao <xry111@xry111.site>
-> >> Signed-off-by: Steven Price <steven.price@arm.com>
-> > 
-> > I'm still of the opinion that the original patch set was wrong, and
-> > I was thinking at the time that it should _not_ have been submitted
-> > for the "net" tree (it wasn't fixing a bug afaics, and was a risky
-> > change.)
-> > 
-> > Yes, we had multiple places where we have code like:
-> > 
-> >         int rxfifosz = priv->plat->rx_fifo_size;
-> >         int txfifosz = priv->plat->tx_fifo_size;
-> > 
-> >         if (rxfifosz == 0)
-> >                 rxfifosz = priv->dma_cap.rx_fifo_size;
-> >         if (txfifosz == 0)
-> >                 txfifosz = priv->dma_cap.tx_fifo_size;
-> > 
-> >         /* Split up the shared Tx/Rx FIFO memory on DW QoS Eth and DW XGMAC */
-> >         if (priv->plat->has_gmac4 || priv->plat->has_xgmac) {
-> >                 rxfifosz /= rx_channels_count;
-> >                 txfifosz /= tx_channels_count;
-> >         }
-> > 
-> > and this is passed to stmmac_dma_rx_mode() and stmmac_dma_tx_mode().
-> > 
-> > We also have it in the stmmac_change_mtu() path for the transmit side,
-> > which ensures that the MTU value is not larger than the transmit FIFO
-> > size (which is going to fail as it's always done before or after the
-> > original patch set, and whether or not your patch is applied.)
-> > 
-> > Now, as for the stmmac_dma_[tr]x_mode(), these are method functions
-> > calling into the DMA code. dwmac4, dwmac1000, dwxgmac2, dwmac100 and
-> > sun8i implement methods for this.
-> > 
-> > Of these, dwmac4, dwxgmac2 makes use of the value passed into
-> > stmmac_dma_[tr]x_mode() - both of which initialise dma.[tr]x_fifo_size.
-> > dwmac1000, dwmac100 and sun8i do not make use of it.
-> > 
-> > So, going back to the original patch series, I still question the value
-> > of the changes there - and with your patch, it makes their value even
-> > less because the justification seemed to be to ensure that
-> > priv->plat->[tr]x_fifo_size contained a sensible value. With your patch
-> > we're going back to a situation where we allow these to effectively be
-> > "unset" or zero.
-> > 
-> > I'll ask the question straight out - with your patch applied, what is
-> > the value of the original four patch series that caused the breakage?
-> > 
-> 
-> I've no opinion whether the original series "had value" - I'm just 
-> trying to fix the breakage that entailed. My first attempt at a patch 
-> was indeed a (partial) revert, but Andrew was keen to find a better 
-> solution[1].
+> All of the patches miss Fixes: tags.  Could you please provide those.
 
-There are two ways to fix the breakage - either revert the original
-patches (which if they have little value now would be the sensible
-approach IMHO) or try to fix them up, which may entail several patches
-if further breakage is found.
 
-Does the flow control test behave the same before and after the patch
-series? Please can you test that?
+I did not provide on purpose, but I don't mind calling these commits
+fixes. Will do  in v2.
 
-See
-drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c::stmmac_test_flowctrl()
 
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Best regards,
+Krzysztof
