@@ -1,155 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E14720B7F3;
-	Mon,  3 Feb 2025 17:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A04D20B7ED
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738602596; cv=none; b=I+EXGg/UJ3WVfMcmUOHkDHTxROwT5OnovRjKFCYrsWi0pRHOEWjkZuu1g9/1JzawS91Oqut2CTN0MvkFs9ehkwIK4sqsd4r2bx3NjlcxYqps4XABVxUp1EhR+Enh5igdhGyh9IaBdByzdDmSRtDPPJwykmHXsql3OC/2KHrIv30=
+	t=1738602596; cv=none; b=J0S6wuLvHR1HHU6/YIFdYtp01e/V1+WeLarqaQkABxtgKEQuQCspOMnL6hjjbYWBv/J6IPVMyvBWVIJYNoHiEnxDUtxD6t2lV7uPbpfuq/jRjTX10+N4Rc06dUwE9oQjrjBuAUAHuqv1/yeIobIgolNc80zSnAr7Y+ZL8YpUmsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738602596; c=relaxed/simple;
-	bh=MddWkbwDmY4Djr2ktBMCExUfhg8X2JcTrHjDlOIt4xY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VOF9jxFIslTD418JTlP7Tr+nveYGKY0GIyr2DZ3fcUqM21BeAedn7Imkele+2uWbeLhHBuLmRWNCPwzN5VApA/PdOFCrGJ1mkhUBgRtYm5M5yNdEKgCKfLO+QpPPxa1CTGKgMqyJCyj9yioNVOqx1V0AwU1wocIsbfNwobclksw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lv/3bCky; arc=none smtp.client-ip=10.30.226.201
+	bh=SXFqC3GVQkD/2PTYtutR27FxaGFkclss2JtUVCOlaeY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dk0L3YswyogstaMObhGKSCvDgWIZpamwcBWC88rWSr/c4FZdXsrhFSCn70kqZUGYASk5slSaVeYw6wAGmHm/63aDP+2CDsw53KclNx2XEJCBsm9kL4w+zoifoWGy5MesVZaJdgHXaqy07BbuKfk8c8X7k4lfj0rxmb3Zwi65hvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cogentembedded.com; spf=pass smtp.mailfrom=cogentembedded.com; dkim=pass (2048-bit key) header.d=cogentembedded-com.20230601.gappssmtp.com header.i=@cogentembedded-com.20230601.gappssmtp.com header.b=FAH1Wn6x; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cogentembedded.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cogentembedded.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lv/3bCky"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14668C4CEE3;
-	Mon,  3 Feb 2025 17:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738602595;
-	bh=MddWkbwDmY4Djr2ktBMCExUfhg8X2JcTrHjDlOIt4xY=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Lv/3bCkyE6abQpl2DOZACzozO4x093WZ8QzHbyaS6IDtTxnMjcIGA3F3Hmp9u2kK6
-	 eP9XinhsMmqN09V4jNlXDnfPERNMcTckUJGYpLcwLne9JPoDdfDRX7AGeqYwYOm2ma
-	 4HUPy32pM9LOv+4wWIttCSCftQ1bW5paQV2Qdbcq6aDMpX+xW7CLnlOzafqj6M192d
-	 REyRfG6t8aTL++zh5ludMuYDvzHrb2YxeU/Sv57owXsT8vBXfYdilNNMeLm1oj1Boz
-	 Qz5p6AT5/9McgJ9Vdk8Rsbdp6jEU6iL87BpvN7onoPstVOcjHTDSR7hOhP3H0OanMb
-	 TQx2BuX8Hcj8g==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 03 Feb 2025 12:09:48 -0500
-Subject: [PATCH] statmount: add a new supported_mask field
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20230601.gappssmtp.com header.i=@cogentembedded-com.20230601.gappssmtp.com header.b="FAH1Wn6x"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5dca4521b95so3188942a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 09:09:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20230601.gappssmtp.com; s=20230601; t=1738602591; x=1739207391; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eksEQebHQVa7hAdVv6wfTibFsvEsjwpBHgMoKU8/cxg=;
+        b=FAH1Wn6xu9xvEzXRDXzDgiFv8tIQKwBcgeFS6fmKluD/fa9DJluquB9Q85Q3soYuUP
+         7H6OUp/aveIfnNjI6so31lJIqCIcoAQ09H0JEmAgceLr6PVDcLvwxK47vNVoOuheFwd1
+         JN7WVTRf03CcpGlI8VLwlvJX5wqswWVIMEAe0icbsXY0dkwKVcZMpbwQqH4EgRrsZ/q7
+         ea94JNIF0xfkibwHWaGVmOSfziR21CmKNoH1V50soNFbNuhffsBHROAVJzfgIPNaukSG
+         oElVh4DJlegDDI0UvY1QD+rdKQvAUaEZM+euWtbh0TxWwaemlqIqGAYD3TbrcR+2IdTh
+         TUZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738602591; x=1739207391;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eksEQebHQVa7hAdVv6wfTibFsvEsjwpBHgMoKU8/cxg=;
+        b=rNjnQArCfvF4ZvbiroqT/RQay4Tss1RP/Yt2yqUqkZJGUeuTCcoYFbfMUZBC4AOkO+
+         sNR3XU+6O4iK+gMzAYYQVdVjL64dljCld+mJ5MMVrWmtA7KH1DIIBKqaaY2DvSGbt1Zu
+         Vm3ZcUnvcXGy4aJlm/3vxe+1VdP2A0zjauq/0uoqojWUckHyxfTMG/BGpj82D7Et1RIF
+         og8nJdANrtGYvrsFZOd8wZw4E1ecd82wo0juA2ems8AJsvAcqrFn+yo3Cr6E1+Xt9pH4
+         HBZme85gO3/RynP7ve6Kb/X+7sRS6LbGeTQb/vpbmkqbYhpuG6NVneNW3BrcihQ+r2up
+         wkOw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5HGBqJ3H9K3hDkjMgudusMj0qQyvmUGTe1nPWZZkNyzQcTsTAaK0NKA5ZZXnlH4UAbi6IejiHH+z9wdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJv5u3agEWaPtGkksXUBf6xoLfTAtBTp/OwplekzUM0krfJtAj
+	xHxIVXYcYgelxts2p3qY4dEw+L98aYE6CqBLqNjkzPE6AwgOiQiEeMF4q+kJ6kY=
+X-Gm-Gg: ASbGnctZ1l5wfpuCw01I4J7lge1QPOp2ZIgr/gBH7chagJC6fx1pAM+uOoOcxmGrgUe
+	RTF08H18uFiDYjr8BbgArmHQD1EgvYx+G+YbmVbHO2Sf/sbyr1bC9xjyzG0PhVaODwzFZeydpT1
+	XQTh8PkdugGKFrEhNTkmxL2PfV3MCNDm3rH2b8CieRJk9wjX61kDONOTyKF9J8ulJEAID5sH1v1
+	jmYE27PFKI83S82fguxuVtPi4nekZLgLS6c9dMH2EabvOObJgdQLOm/zpbBLm5WCL8OPqdVQTBR
+	vnSZc2o8IttQNjc=
+X-Google-Smtp-Source: AGHT+IHm3lvdOVBK08x71NIQ4g8uOHa3z7Flg3SfLzj55T4B2PjV/ugNB/4jIcX7xqSKo29Zb5cA/g==
+X-Received: by 2002:a17:907:d30c:b0:ab6:eec5:a7cd with SMTP id a640c23a62f3a-ab6eec5aa1fmr1902610666b.32.1738602591169;
+        Mon, 03 Feb 2025 09:09:51 -0800 (PST)
+Received: from cobook.home ([2a02:810a:b8b:f900::9891])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47f2071sm778794066b.85.2025.02.03.09.09.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 09:09:50 -0800 (PST)
+From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michael Dege <michael.dege@renesas.com>,
+	Christian Mardmoeller <christian.mardmoeller@renesas.com>,
+	Dennis Ostermann <dennis.ostermann@renesas.com>,
+	Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: [PATCH net-next] net: renesas: rswitch: cleanup max_speed setting
+Date: Mon,  3 Feb 2025 18:09:41 +0100
+Message-Id: <20250203170941.2491964-1-nikita.yoush@cogentembedded.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-statmount-v1-1-871fa7e61f69@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAFv4oGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwNj3eKSxJLc/NK8Et0085REy6TUZIM0I2MloPqCotS0zAqwWdGxtbU
- AaiVa5lsAAAA=
-X-Change-ID: 20250203-statmount-f7da9bec0f23
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3606; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=MddWkbwDmY4Djr2ktBMCExUfhg8X2JcTrHjDlOIt4xY=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnoPhfaP3N3BuhZsrZkuJ5z+LXfaJ/NYIS/NLbS
- VKz6qOkDsaJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6D4XwAKCRAADmhBGVaC
- FSR5D/4pGdT8m7uFzHlGipckUwlkaao3TpO6OQauenhhiHkDujTKMxkNtGqJPMvUY2rPh+E+qo9
- iBIndeKSq+x4JhVOT5L0wdaWei07fCWCh9R6uRPsba1UWXwX58zrt78yG5iIg4AMOCRA/dc0UIo
- WgvTF3SxACubl/3Sw1YxWSIwNo3wB9gESvc+NkLGsi4287dQ2SVz1nMELXNxtAEziUeG4qThrhI
- oNyYnbNAhRk8+xtHuKaFMO+qUgyPmYk4wX0KM3AbGMdwvtV5LFz62g1I8yNRVvSBBR33qN09T2t
- tEWHS5iq/ivIM+jMWsAjnkbh8joEu2qf9TFgekZWhhNNtBvolUVWxcPtXZY7wq2Wcdy0GRDfSgB
- wD70QiKALVLnvO2RWYmeSNLsLwKTNejiKjZIvbfe+suJDb2yvb6U/TiW8Oq2zN+6p1dJz23QAql
- p0Vr2rwEJt3nU+PtOixQxEBQNl/gyWecyNn6aRuhH9/FkChgFA5KNzEZWKw0Kb7qWe63++MuQeg
- SC0oSGII4d2dnQcQ7kk+hCcZazcj8nQspEO/GWJegZe+fh4G+FN43IPXuaUXKT8eXhXe70/uE6I
- Hvy8v7lMW+PC9dXXSLMANGlu4ESwIoI0glXpYwOeo31dyesI1H4+xhUc+/coRm1IufJPa9TeLGx
- i+PxjU1RPbRLOVg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Transfer-Encoding: 8bit
 
-Some of the fields in the statmount() reply can be optional. If the
-kernel has nothing to emit in that field, then it doesn't set the flag
-in the reply. This presents a problem: There is currently no way to
-know what mask flags the kernel supports since you can't always count on
-them being in the reply.
+It was observed on spider board that with upstream kernel, PHY
+auto-negotiation takes almost 1 second longer than with renesas BSP
+kernel. This was tracked down to upstream kernel allowing more PHY modes
+than renesas BSP kernel.
 
-Add a new STATMOUNT_SUPPORTED_MASK flag and field that the kernel can
-set in the reply. Userland can use this to determine if the fields it
-requires from the kernel are supported. This also gives us a way to
-deprecate fields in the future, if that should become necessary.
+To avoid that effect when possible, always set max_speed to not more
+than phy_interface allows.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+While at this, also ensure that etha->speed always gets a supported
+value, even if max_speed in device tree is set to something else.
+
+Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 ---
-I ran into this problem recently. We have a variety of kernels running
-that have varying levels of support of statmount(), and I need to be
-able to fall back to /proc scraping if support for everything isn't
-present. This is difficult currently since statmount() doesn't set the
-flag in the return mask if the field is empty.
----
- fs/namespace.c             | 18 ++++++++++++++++++
- include/uapi/linux/mount.h |  4 +++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/renesas/rswitch.c | 48 ++++++++++++++------------
+ drivers/net/ethernet/renesas/rswitch.h |  1 +
+ 2 files changed, 27 insertions(+), 22 deletions(-)
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index a3ed3f2980cbae6238cda09874e2dac146080eb6..7ec5fc436c4ff300507c4ed71a757f5d75a4d520 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -5317,6 +5317,21 @@ static int grab_requested_root(struct mnt_namespace *ns, struct path *root)
- 	return 0;
- }
+diff --git a/drivers/net/ethernet/renesas/rswitch.c b/drivers/net/ethernet/renesas/rswitch.c
+index 84d09a8973b7..4b4e174e3abb 100644
+--- a/drivers/net/ethernet/renesas/rswitch.c
++++ b/drivers/net/ethernet/renesas/rswitch.c
+@@ -1308,37 +1308,41 @@ static struct device_node *rswitch_get_port_node(struct rswitch_device *rdev)
  
-+/* This must be updated whenever a new flag is added */
-+#define STATMOUNT_SUPPORTED (STATMOUNT_SB_BASIC | \
-+			     STATMOUNT_MNT_BASIC | \
-+			     STATMOUNT_PROPAGATE_FROM | \
-+			     STATMOUNT_MNT_ROOT | \
-+			     STATMOUNT_MNT_POINT | \
-+			     STATMOUNT_FS_TYPE | \
-+			     STATMOUNT_MNT_NS_ID | \
-+			     STATMOUNT_MNT_OPTS | \
-+			     STATMOUNT_FS_SUBTYPE | \
-+			     STATMOUNT_SB_SOURCE | \
-+			     STATMOUNT_OPT_ARRAY | \
-+			     STATMOUNT_OPT_SEC_ARRAY | \
-+			     STATMOUNT_SUPPORTED_MASK)
-+
- static int do_statmount(struct kstatmount *s, u64 mnt_id, u64 mnt_ns_id,
- 			struct mnt_namespace *ns)
+ static int rswitch_etha_get_params(struct rswitch_device *rdev)
  {
-@@ -5386,6 +5401,9 @@ static int do_statmount(struct kstatmount *s, u64 mnt_id, u64 mnt_ns_id,
- 	if (!err && s->mask & STATMOUNT_MNT_NS_ID)
- 		statmount_mnt_ns_id(s, ns);
+-	u32 max_speed;
++	struct rswitch_etha *etha = rdev->etha;
+ 	int err;
  
-+	if (!err && s->mask & STATMOUNT_SUPPORTED_MASK)
-+		s->sm.supported_mask = STATMOUNT_SUPPORTED_MASK;
-+
+ 	if (!rdev->np_port)
+ 		return 0;	/* ignored */
+ 
+-	err = of_get_phy_mode(rdev->np_port, &rdev->etha->phy_interface);
++	err = of_get_phy_mode(rdev->np_port, &etha->phy_interface);
  	if (err)
  		return err;
  
-diff --git a/include/uapi/linux/mount.h b/include/uapi/linux/mount.h
-index c07008816acae89cbea3087caf50d537d4e78298..c553dc4ba68407ee38c27238e9bdec2ebf5e2457 100644
---- a/include/uapi/linux/mount.h
-+++ b/include/uapi/linux/mount.h
-@@ -179,7 +179,8 @@ struct statmount {
- 	__u32 opt_array;	/* [str] Array of nul terminated fs options */
- 	__u32 opt_sec_num;	/* Number of security options */
- 	__u32 opt_sec_array;	/* [str] Array of nul terminated security options */
--	__u64 __spare2[46];
-+	__u64 supported_mask;	/* Mask flags that this kernel supports */
-+	__u64 __spare2[45];
- 	char str[];		/* Variable size part containing strings */
- };
+-	err = of_property_read_u32(rdev->np_port, "max-speed", &max_speed);
+-	if (!err) {
+-		rdev->etha->speed = max_speed;
+-		return 0;
+-	}
+-
+-	/* if no "max-speed" property, let's use default speed */
+-	switch (rdev->etha->phy_interface) {
+-	case PHY_INTERFACE_MODE_MII:
+-		rdev->etha->speed = SPEED_100;
+-		break;
++	switch (etha->phy_interface) {
+ 	case PHY_INTERFACE_MODE_SGMII:
+-		rdev->etha->speed = SPEED_1000;
++		etha->max_speed = SPEED_1000;
+ 		break;
+ 	case PHY_INTERFACE_MODE_USXGMII:
+-		rdev->etha->speed = SPEED_2500;
++	case PHY_INTERFACE_MODE_5GBASER:
++		etha->max_speed = SPEED_2500;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
  
-@@ -217,6 +218,7 @@ struct mnt_id_req {
- #define STATMOUNT_SB_SOURCE		0x00000200U	/* Want/got sb_source */
- #define STATMOUNT_OPT_ARRAY		0x00000400U	/* Want/got opt_... */
- #define STATMOUNT_OPT_SEC_ARRAY		0x00000800U	/* Want/got opt_sec... */
-+#define STATMOUNT_SUPPORTED_MASK	0x00001000U	/* Want/got supported mask flags */
++	/* Allow max_speed override */
++	of_property_read_u32(rdev->np_port, "max-speed", &etha->max_speed);
++
++	/* Set etha->speed to one of values expected by the driver */
++	if (etha->max_speed < SPEED_100)
++		return -EINVAL;
++	else if (etha->max_speed < SPEED_1000)
++		etha->speed = SPEED_100;
++	else if (etha->max_speed < SPEED_2500)
++		etha->speed = SPEED_1000;
++	else
++		etha->speed = SPEED_2500;
++
+ 	return 0;
+ }
  
- /*
-  * Special @mnt_id values that can be passed to listmount
-
----
-base-commit: 57c64cb6ddfb6c79a6c3fc2e434303c40f700964
-change-id: 20250203-statmount-f7da9bec0f23
-
-Best regards,
+@@ -1412,6 +1416,13 @@ static void rswitch_adjust_link(struct net_device *ndev)
+ static void rswitch_phy_remove_link_mode(struct rswitch_device *rdev,
+ 					 struct phy_device *phydev)
+ {
++	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_10baseT_Half_BIT);
++	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_10baseT_Full_BIT);
++	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_100baseT_Half_BIT);
++	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
++
++	phy_set_max_speed(phydev, rdev->etha->max_speed);
++
+ 	if (!rdev->priv->etha_no_runtime_change)
+ 		return;
+ 
+@@ -1431,8 +1442,6 @@ static void rswitch_phy_remove_link_mode(struct rswitch_device *rdev,
+ 	default:
+ 		break;
+ 	}
+-
+-	phy_set_max_speed(phydev, rdev->etha->speed);
+ }
+ 
+ static int rswitch_phy_device_init(struct rswitch_device *rdev)
+@@ -1462,11 +1471,6 @@ static int rswitch_phy_device_init(struct rswitch_device *rdev)
+ 	if (!phydev)
+ 		goto out;
+ 
+-	phy_set_max_speed(phydev, SPEED_2500);
+-	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_10baseT_Half_BIT);
+-	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_10baseT_Full_BIT);
+-	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_100baseT_Half_BIT);
+-	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
+ 	rswitch_phy_remove_link_mode(rdev, phydev);
+ 
+ 	phy_attached_info(phydev);
+diff --git a/drivers/net/ethernet/renesas/rswitch.h b/drivers/net/ethernet/renesas/rswitch.h
+index 532192cbca4b..09f5d5e1933e 100644
+--- a/drivers/net/ethernet/renesas/rswitch.h
++++ b/drivers/net/ethernet/renesas/rswitch.h
+@@ -920,6 +920,7 @@ struct rswitch_etha {
+ 	bool external_phy;
+ 	struct mii_bus *mii;
+ 	phy_interface_t phy_interface;
++	u32 max_speed;
+ 	u32 psmcs;
+ 	u8 mac_addr[MAX_ADDR_LEN];
+ 	int link;
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.39.5
 
