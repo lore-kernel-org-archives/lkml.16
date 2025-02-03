@@ -1,254 +1,138 @@
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B3C53594E;
-	Mon,  3 Feb 2025 08:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B0A3594E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738569788; cv=none; b=ITMf3vZ/sIbVQmSHDaeHwx1BnLytH2sFTVD9vL4JXJoQiOf4E1K03gsXd38P/FwpQDxgxEjK6Ws752QaN2x9FFMybTIMmA8Vgu9nYjgVUX1B5pzM75uVVwpsyskv6/FrdjDh/3NXDEQtsYMbyrwf5FCyiC/9Z6SbfUVHRKEL9Wg=
+	t=1738569801; cv=none; b=dAmwZY18EcQNjTTYnwB3S5vGjlUXFNu5kPLQl+JxCXXjh66AUX9ehwhg4xYqKu2DzGNTCowWnPl+FMa6bj9u7N5/efSbMScVTw6DXbLVD2QaIHW1hfv4SwgELIC09ltXDVC0vSYOnuVfMY5YcmvqmyGm5yc6gT4r4Q52/Qf+k2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738569788; c=relaxed/simple;
-	bh=HxvnRxsWH1IhQ8Dp10Gb3fAsPQ2pF+y7S0v2qGO8xok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PEc2Abev4h/YPe5wcr/666xquU72Yyx6jpPRdAIPeoZ8n3nhSAf2ApHu+f1xHDGKfIjdnfjKJitMUTDk8fYexo4LUs2dzy1cJSkSQhzyD8nbGgxiYfuGubc9QtPjqb4P0o768OBG6r+0G+JaQgV+x4soc944BMYMgJoQTlxRhmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 03 Feb 2025 17:03:04 +0900
-Received: from mail.mfilter.local (mail-arc02.css.socionext.com [10.213.46.40])
-	by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id EF2EF2006FCC;
-	Mon,  3 Feb 2025 17:03:03 +0900 (JST)
-Received: from iyokan2.css.socionext.com ([172.31.9.53]) by m-FILTER with ESMTP; Mon, 3 Feb 2025 17:03:03 +0900
-Received: from [10.212.246.222] (unknown [10.212.246.222])
-	by iyokan2.css.socionext.com (Postfix) with ESMTP id 9C62E1A9;
-	Mon,  3 Feb 2025 17:03:03 +0900 (JST)
-Message-ID: <b60d845e-5bea-4d85-a400-8a579a3e28b9@socionext.com>
-Date: Mon, 3 Feb 2025 17:03:03 +0900
+	s=arc-20240116; t=1738569801; c=relaxed/simple;
+	bh=QrWQ2WKE4sI7115aKLlatif48JOYPm9yzXpHcTYJNrQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HdoSuQxTkZYw9P2EtRYOr7l7qG7rEfQPlSEZtQSsJ7fAimAQ8gZ+fBDXKDqlxduTPhzst+aq2JDi26iRaKMGbPF0gWPIcPtVRgTPkK6GKcnklubVBnyC88b5+8nIBNAIf3ZJJE3XBAM3iSsanyoPHv6R2cqA54A0VF61cWf9Hjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LmKHFxI7; arc=none smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LmKHFxI7"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4affbc4dc74so2647851137.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:03:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738569798; x=1739174598; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QrWQ2WKE4sI7115aKLlatif48JOYPm9yzXpHcTYJNrQ=;
+        b=LmKHFxI7tt/PYNhc2EdraQfBV+Ab1hLsyHIHAP3yLC7jqwQ/uwIcEkAv1crt/L2Wi6
+         uPLcMGpJcYbI5LNuYFG4oKHqpYbp22tJO0I+gz5e56mS1rtCkuacZHLxVOYU5caXf9h2
+         ZHlokEdlh9vDW5oUPrHjWVMuhCY2Uk2iRh99zkXPApWTcaYs+01PkE2+SWM2WyCr1ly4
+         39XbxYh9ipXEAX6hCe7xt1DrwlGvI7hOx3/KkYTxuW5f5FQ9aRSGvC66wd+mbiCFAW/s
+         nOrotHPpPCkZP1AklDcJmXfw9EtPfsPZ4tS5qCiIxHnVBkb0pNw09NUeDfx5DMc6qQVA
+         Yk2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738569798; x=1739174598;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QrWQ2WKE4sI7115aKLlatif48JOYPm9yzXpHcTYJNrQ=;
+        b=SfOlt6CVfq+tqZBZsX/M0Vir0VoARPEDdtac0URiPOfvsITVxJVGQGzR7apNQF/YYU
+         eOxb1DePm5SJpVG+9fn1NLU/nmwOJJ0MiPfuM0kIMaWhSXLxrlZbV6EXfnLZUcSIQ6xt
+         UaIS9RgQKqruwtWzZvKmUVGlI1FWa6yde6gI5afGyErlIxdiwFY/7UiTRzhPu/23THsS
+         s+SeSND5U0ITP2ehq81A8UKAKyPN48CeSEl3uFpmPaT1nIP6lm6hN8Z/2qLRgVrKgE9R
+         CBz25hvhtqarW+4VRFZEjC4mJjbwVaaJID5h1iXflNSj8LMzCMf9hk2lriwufwB9I9/Z
+         okzA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2LppqcIwLwBRI948YLsk43LXJLW8HXSrH+9SoAC7OSSc0OhlxhZjGXdaW8iNEd8egz7JZnZiBwujmIyU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXh6mP+Heji3reMHpSw97gPUWghcJuoWi8h9dpPCmsxdnKadYd
+	+SK88bhSRCfeKaAUJCdd9J6dzJ+JOVrjTZTC3gVGqGs6iybwjAhbPAiZTybhPD+BOwQdKO/OYhl
+	kkyn+DPIfrH8JFLBlhz/PFxkRfniPw/ymLUruzw==
+X-Gm-Gg: ASbGncuCFfTl0rvQtk4YbZqLwk4zEcjSpUsMTOzvEh+Zke9vc3bUGb5Mvz3Q5CpkRGk
+	DmV7SSyQTpMRy9qoSTjfIl6x3jXay5HxRxyxryg2CN/wez3pTG7oDcdGelRkKXrgdIgi9qt/yUw
+	==
+X-Google-Smtp-Source: AGHT+IGx/zcHNb0KNJn1OlD+LxfDqmzEuqqLYZfWE7i0X2+6ITt3LUtS1bJEVKp5xrJKbWMTCb94452lW2XHypAU8aQ=
+X-Received: by 2002:a05:6102:1504:b0:4b6:1a64:1c95 with SMTP id
+ ada2fe7eead31-4b9a52dd9famr15012722137.22.1738569798027; Mon, 03 Feb 2025
+ 00:03:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] misc: pci_endpoint_test: Fix irq_type to convey
- the correct type
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
- Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
- <20250122022446.2898248-4-hayashi.kunihiko@socionext.com>
- <20250128143231.ondpjpugft37qwo5@thinkpad> <Z5oX5Fe5FY2Pym0u@ryzen>
- <fe8c2233-fa2a-4356-8005-6cbabf6a0e96@socionext.com> <Z5y9zpFGkBnY2TG1@ryzen>
-Content-Language: en-US
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-In-Reply-To: <Z5y9zpFGkBnY2TG1@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20241213111453.367031-1-sumit.garg@linaro.org>
+ <CAFA6WYO+T2pZcB2VBhP=ut2w9HtkeCvYkqoM85LZnJ9iF+gvNw@mail.gmail.com>
+ <CAHUa44EE6XL5zgf0VNeqPkUukFGz5BgiHz=0yAVdd=tEzLEq6Q@mail.gmail.com>
+ <CAFA6WYNRD-CGTHufafFLX4SjvpH6fBKwqCac8JE2oLepqqsNOw@mail.gmail.com>
+ <CAHUa44F76AqB4ijQHBfoNXveiyxeBLOLh6ULT+pc+va3y0qBdg@mail.gmail.com>
+ <CAFA6WYO1aXiUozs8WiawSbok5hCmV8bXz9cRgEJ0r+LAwL9J9A@mail.gmail.com>
+ <CAHUa44GdxO3TCLyOQdCHbdVGKpSHpnxBp_JAfAhpVgXuWYOVhw@mail.gmail.com>
+ <c3c782f8-fb48-4d3e-95b0-d0707f57acff@app.fastmail.com> <CAHUa44H4yLvkU6ATvk0KOzVDa2TOgS9EBsU+BKR2piZbX26kLQ@mail.gmail.com>
+ <CAFA6WYNj0aWnV+jxoxHU7OOg8oWC2-AboUMztxaPCDQuO+c8gg@mail.gmail.com> <11d19be4-85a2-40dd-b3c6-07bbdd794df0@app.fastmail.com>
+In-Reply-To: <11d19be4-85a2-40dd-b3c6-07bbdd794df0@app.fastmail.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Mon, 3 Feb 2025 13:33:07 +0530
+X-Gm-Features: AWEUYZkQbIfgPPrO9DIl_5ofovbjnFCiZLbYA9dl7AmZETK_pU2ULtMhAra0l_4
+Message-ID: <CAFA6WYOHbv4GA2j7DWf25QFGjoyzp7szoxhij4CMFjg+NQvN9w@mail.gmail.com>
+Subject: Re: [PATCH] tee: optee: Add support for supplicant timeout
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, op-tee@lists.trustedfirmware.org, 
+	Jerome Forissier <jerome.forissier@linaro.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Niklas,
+On Fri, 31 Jan 2025 at 17:03, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Fri, Jan 31, 2025, at 12:06, Sumit Garg wrote:
+> > On Tue, 28 Jan 2025 at 13:49, Jens Wiklander <jens.wiklander@linaro.org> wrote:
+> >> >
+> >> > As far as I can tell, even that DEFAULT_HUNG_TASK_TIMEOUT
+> >> > limit is only for tasks that are in an unkillable state for more
+> >> > than two minutes, but the supplicant not providing results
+> >> > to the kernel could also happen when it waits in a killable
+> >> > or interruptible state, or when it does multiple I/Os in a
+> >> > row that each block for a time under 120 seconds.
+> >
+> > The supplicant itself can be in a killable state but the client
+> > application which will be waiting for it in the kernel is in
+> > unkillable state. So if a shutdown/reboot is issued at that point
+> > which has to kill the client application first and then the
+> > tee-supplicant, it will just cause the system to hang up. That is a
+> > real problem that I am trying to address here.
+>
+> Is the client the one waiting in optee_supp_thrd_req(), or
+> is that the supplicant?
 
-On 2025/01/31 21:10, Niklas Cassel wrote:
-> On Fri, Jan 31, 2025 at 07:16:54PM +0900, Kunihiko Hayashi wrote:
->> Hi Niklas,
->>
->> On 2025/01/29 20:58, Niklas Cassel wrote:
->>> On Tue, Jan 28, 2025 at 08:02:31PM +0530, Manivannan Sadhasivam wrote:
->>>> On Wed, Jan 22, 2025 at 11:24:46AM +0900, Kunihiko Hayashi wrote:
->>>>> There are two variables that indicate the interrupt type to be
-> used
->>>>> in the next test execution, "irq_type" as global and
-> test->irq_type.
->>>>>
->>>>> The global is referenced from pci_endpoint_test_get_irq() to
-> preserve
->>>>> the current type for ioctl(PCITEST_GET_IRQTYPE).
->>>>>
->>>>> The type set in this function isn't reflected in the global
-> "irq_type",
->>>>> so ioctl(PCITEST_GET_IRQTYPE) returns the previous type.
->>>>> As a result, the wrong type will be displayed in "pcitest" as
-> follows:
->>>>>
->>>>>       # pcitest -i 0
->>>>>       SET IRQ TYPE TO LEGACY:         OKAY
->>>>>       # pcitest -I
->>>>>       GET IRQ TYPE:           MSI
->>>>>
->>>>> Fix this issue by propagating the current type to the global
-> "irq_type".
->>>>>
->>>>
->>>> This is becoming a nuisance. I think we should get rid of the global
->>>> 'irq_type'
->>>> and just stick to the one that is configurable using IOCTL command.
-> Even
->>>> if the
->>>> user has configured the global 'irq_type' it is bound to change with
-> IOCTL
->>>> command.
->>>
->>> +1
->>
->> After fixing the issue described in this patch,
->> we can replace with a new member of 'struct pci_endpoint_test' instead.
-> 
-> Sorry, but I don't understand what you mean here.
-> You want this patch to be applied.
-> Then you want to add a new struct member to struct pci_endpoint_test?
-> struct pci_endpoint_test already has a struct member named irq_type,
-> so why do you want to add a new member?
+It's the client only.
 
-Sorry for confusion.
+>
+> If the problem is the client being unkillable at the moment,
+> could you address that by using wait_even_killable() or
+> mutex_lock_killable() and just bail out safely? I assume
+> at the point the system is rebooting, there is no need to
+> wait for the supplicant to complete, other than making sure
+> the function can return without running into undefined state
+> of the kernel.
 
-The internal state (test->irq_type) has the state IRQ_TYPE_UNDEFINED and
-the global irq_type doesn't. Then I've thought that ioctl(GET_IRQTYPE)
-should not return UNDEFINED state.
+Thanks for the suggestion, it helps to resolve the shutdown/reboot
+hung up issue we were observing. Incorporated your suggestion in v2.
 
-However, ioctl(GET_IRQTYPE) can return with an error if the state is
-UNDEFINED. This is new behavior, but not inconsistent.
-So the additional irq_type is no longer necessary.
+>
+> >> > A single sector write to an eMMC can easily take multiple
+> >> > seconds by itself when nothing is going on and the device is
+> >> > in need of garbage collection. If the system is already in
+> >> > low memory or there are other tasks writing to the file system,
+> >> > you can have many such I/O operations queued up in the device
+> >> > when it adds another I/O to the back of the queue.
+> >>
+> >> Adding a timeout means we must somehow handle them to avoid spurious errors.
+> >>
+> >
+> > The timeout I am proposing here as default being 2 minutes is just for
+> > a single tee-supplicant RPC request. I suppose that should be
+> > sufficient to avoid any spurious errors.
+>
+> It won't guarantee that, but if there is a 2 minute delay, that
+> likely means that the system has become quite unusable from being
+> slow, even if it hasn't otherwise misbehaved to that point.
 
-> Like Mani suggested, I think it would be nice if we could remove the
-> global irq_type kernel module parameter, and change so that
-> PCITEST_GET_IRQTYPE returns test->irq_type.
+Agree.
 
-I see.
-I'll add new patch to remove the global irq_type and replace with
-test->irq_type.
-
-> Note that your series does not apply to pci/next, and needs to be rebased.
-> (It conflicts with f26d37ee9bda ("misc: pci_endpoint_test: Fix IOCTL
-> return value"))
-
-Yes, I've confirmed the conflict and I'll rebase it next.
-
->>
->>> But I also don't like how since we migrated to selftests:
->>> READ_TEST / WRITE_TEST / COPY_TEST unconditionally call
->>> ioctl(PCITEST_SET_IRQTYPE, MSI) before doing their thing.
->>
->> I think that it's better to prepare new patch series.
-> 
-> Here, I was pointing out what I think is a regression with the
-> migration to selftests. (Which is unrelated to this series.)
-> 
-> I do suggest a way to improve things futher down (introducing a
-> PCITEST_SET_IRQTYPE, AUTO), but I don't think that you need to be
-> the one implementing this suggestion, since you did not introduce
-> this regression.
-
-Okay, I expect another topic after we remove the global variables.
-
->>
->>> Will this cause the test case to fail for platforms that only support
-> MSI-X?
->>> (See e.g. dwc/pci-layerscape-ep.c where this could be the case.)
->>>
->>>
->>> Sure, before, in pcitest.sh, we would do:
->>>
->>>
->>> pcitest -i 2
->>>           pcitest -x $msix
->>>
->>>
->>> pcitest -i 1
->>>
->>> pcitest -r -s 1
->>> pcitest -r -s 1024
->>> pcitest -r -s 1025
->>> pcitest -r -s 1024000
->>> pcitest -r -s 1024001
->>>
->>>
->>> Which would probably print an error if:
->>> pcitest -i 1
->>> failed.
->>>
->>> but the READ_TEST / WRITE_TEST / COPY_TEST tests themselves
->>> would not fail.
->>>
->>>
->>> Perhaps we should rethink this, and introduce a new
->>> PCITEST_SET_IRQTYPE, AUTO
->>>
->>> I would be fine if
->>> READ_TEST / WRITE_TEST / COPY_TEST
->>> called PCITEST_SET_IRQTYPE, AUTO
->>> before doing their thing.
->>>
->>>
->>>
->>> How I suggest PCITEST_SET_IRQTYPE, AUTO
->>> would work:
->>>
->>> Since we now have capabilties merged:
->>>
-> https://lore.kernel.org/linux-pci/20241203063851.695733-4-cassel@kernel.or
-> g/
->>>
->>> Add epc_features->msi_capable and epc->features->msix_capable
->>> as two new bits in the PCI_ENDPOINT_TEST_CAPS register.
->>>
->>> If PCITEST_SET_IRQTYPE, AUTO:
->>> if EP CAP has msi_capable set: set IRQ type MSI
->>> else if EP CAP has msix_capable set: set IRQ type MSI-X
->>> else: set legacy/INTx
->>
->> There is something ambiguous about the behavior for me.
->>
->> The test->irq_type has a state "UNDEFINED".
->> After issueing "Clear IRQ", test->irq_type becomes "UNDEFINED"
-> currently,
->> and all tests with IRQs will fail until new test->irq_type is set.
-> 
-> That is fine, no?
-> 
-> If a user calls PCITEST_CLEAR_IRQ without doing a PCITEST_SET_IRQTYPE
-> afterwards, what else can the tests relying on IRQs to other than fail?
-> 
-> FWIW, tools/testing/selftests/pci_endpoint/pci_endpoint_test.c never does
-> an ioctl(PCITEST_CLEAR_IRQ).
-
-As mentioned above, PCITEST_GET_IRQTYPE can fail with an error, and
-I understand that this will not affect the test.
-
-Thank you,
-
->>
->> If SET_IRQTYPE is AUTO, how will test->irq_type be set?
-> 
-> I was thinking something like this:
-> 
-> pci_endpoint_test_set_irq()
-> {
-> 	u32 caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
-> 
-> 	...
-> 
-> 	if (req_irq_type == IRQ_TYPE_AUTO) {
-> 		if (caps & MSI_CAPABLE)
-> 			test->irq_type = IRQ_TYPE_MSI;
-> 		else if (caps & MSIX_CAPABLE)
-> 			test->irq_type = IRQ_TYPE_MSIX;
-> 		else
-> 			test->irq_type = IRQ_TYPE_INTX;
-> 
-> 	}
-> 
-> 	...
-> }
-> 
-> 
-> Kind regards,
-> Niklas
-
----
-Best Regards
-Kunihiko Hayashi
+-Sumit
