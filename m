@@ -1,65 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C42420E6E7;
-	Mon,  3 Feb 2025 18:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D142919938D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 18:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738607403; cv=none; b=ldieDUz376oucxCYdS2pxBkSDjmKOl/Bb62o3el90zonwinlxA8lzyBYNrWPYQFCd/l97sGz3+tqtT1RIlVXslk9FrsMtLjgzohxpWE+rOoHi/WAZJn/T7K4M/hZg1ILDdrShSALAXMkvnYqOmuC+ezPwSCqZ45S5fMfHfxCToE=
+	t=1738607502; cv=none; b=cyEl/FvH9/vrPuVT8Q6js1j/v03CLt03+kxsEPi6L7aIihFF+oVxZOzxghke+IVhaNUtQACkLKjSeJsB6xU5txaP5Zqd20NdfMk5jmA5kwmoutmQGMGmTcvZ9/LvJgGhDJTqdn+cFlT0Vr8I8HDl2c4x2vUIvEtZlYsF7CXMbq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738607403; c=relaxed/simple;
-	bh=hfIn6Nqm/wp7zDRzCx0UTbwibJWk73BuSUAvwxU6kT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HP45ebmvLBWgtW0ursJWfigekfcfTq5TpyOylvyTA9VFuGGmiUhC5khrlg5e3ywy4WEPATG2gaj6kP/y747ewSAwkkLVOxQCZlwvAbqeqnABjFgrFBcI6s0MdXKgGqPMbHU9O+Sj4v81b0br7CXZFKDxApvk4+c98H4k8QsBIRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X46kaLir; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738607502; c=relaxed/simple;
+	bh=xY+mxWUIwcoJgnhfGlaSlV532s+yW7KbR+gZRh/8eTo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Pfixkocc7qRKJOiyZBFfHJcpiaNNW/jKpDzZw3XWAB986qTtg+hmy5Titu7/fD+F69Yu0ZQZZRnuLudLVpMIiWeIHE7onfzRXfnYOC5VGOUaf+Sr07SXgcQfdO9YitKUwziJ32NB9kJJSd5iUzbfYl+0KrN/umD8yX4nTfmXgG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=svjl2qkN; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X46kaLir"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F289C4CED2;
-	Mon,  3 Feb 2025 18:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738607403;
-	bh=hfIn6Nqm/wp7zDRzCx0UTbwibJWk73BuSUAvwxU6kT0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X46kaLirVYi1oOPQRemFPlg1QxntTBeMtPk5CwqLluRieEt2emoxsOaZDnM8UUWrn
-	 gJr7okpzE3lfjRd5Q2HdylVD2Gvfo4aRE7duRZs0xiXiAFq/M60FIG6t6FHW24QOXV
-	 3uiI71+WhFgzNeEPW9/CeHAZQhdwZmNnKbv5byGG4lxEPA04Z1NRVqHCvGylfe5Z8M
-	 o6rNQSnbucc9DyeGEbfLilrkYlyA5FyJ5YS2BPjPdRT3r2gdBVQWoRPw+NDtV9nhby
-	 Znngv084wkcfcsaHC3lqt8JUmDpx39L/B1lWUwDB4TOIB9k/tJemEP/rO5nkip2oL+
-	 LI8JvvtvO3vqA==
-Date: Mon, 3 Feb 2025 12:30:01 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Michal Simek <michal.simek@amd.com>
-Cc: git@xilinx.com, monstr@monstr.eu,
-	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, michal.simek@xilinx.com,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: xilinx: Remove desciption for 16550 uart
-Message-ID: <173860739995.3355439.1989355900626957984.robh@kernel.org>
-References: <cover.1738600116.git.michal.simek@amd.com>
- <d90a839566a56df6a0c3b203f701bd863108d047.1738600116.git.michal.simek@amd.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="svjl2qkN"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738607493;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sf6sBMMAV5XjKoDS/ngB0As3YdpZ4fzfIUulH+JWe4I=;
+	b=svjl2qkNOXxx/ORuRlNmH1+hK72/bHVIzo5KboZBHF8OnpcNXt7NFJ0eQxA+u+YTDVo5n+
+	RA7dJUgkWmIy3ZtCWhA1clKAjEYG684wATyovmhHkDl+8pC0LGR65BUJR4jdRLa6mprVAi
+	3uO7IaBXWr6xqKLNgLDamGve0S/zQ9Q=
+From: Oliver Upton <oliver.upton@linux.dev>
+To: kvmarm@lists.linux.dev
+Cc: Marc Zyngier <maz@kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Colton Lewis <coltonlewis@google.com>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Janne Grunau <j@jannau.net>
+Subject: [PATCH v2 01/14] drivers/perf: apple_m1: Refactor event select/filter configuration
+Date: Mon,  3 Feb 2025 10:30:58 -0800
+Message-Id: <20250203183111.191519-2-oliver.upton@linux.dev>
+In-Reply-To: <20250203183111.191519-1-oliver.upton@linux.dev>
+References: <20250203183111.191519-1-oliver.upton@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d90a839566a56df6a0c3b203f701bd863108d047.1738600116.git.michal.simek@amd.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+Supporting guest mode events will necessitate programming two event
+filters. Prepare by splitting up the programming of the event selector +
+event filter into separate headers.
 
-On Mon, 03 Feb 2025 17:28:40 +0100, Michal Simek wrote:
-> Documentation/devicetree/bindings/serial/8250.yaml already contains
-> description for mentined 3 properties that's why remove them from
-> xilinx.txt file.
-> 
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
-> ---
-> 
->  Documentation/devicetree/bindings/xilinx.txt | 10 ----------
->  1 file changed, 10 deletions(-)
-> 
+Opportunistically replace RMW patterns with sysreg_clear_set_s().
 
-Applied, thanks!
+Tested-by: Janne Grunau <j@jannau.net>
+Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+---
+ arch/arm64/include/asm/apple_m1_pmu.h |  1 +
+ drivers/perf/apple_m1_cpu_pmu.c       | 52 ++++++++++++++++-----------
+ 2 files changed, 33 insertions(+), 20 deletions(-)
+
+diff --git a/arch/arm64/include/asm/apple_m1_pmu.h b/arch/arm64/include/asm/apple_m1_pmu.h
+index 99483b19b99f..02e05d05851f 100644
+--- a/arch/arm64/include/asm/apple_m1_pmu.h
++++ b/arch/arm64/include/asm/apple_m1_pmu.h
+@@ -37,6 +37,7 @@
+ #define PMCR0_PMI_ENABLE_8_9	GENMASK(45, 44)
+ 
+ #define SYS_IMP_APL_PMCR1_EL1	sys_reg(3, 1, 15, 1, 0)
++#define SYS_IMP_APL_PMCR1_EL12	sys_reg(3, 1, 15, 7, 2)
+ #define PMCR1_COUNT_A64_EL0_0_7	GENMASK(15, 8)
+ #define PMCR1_COUNT_A64_EL1_0_7	GENMASK(23, 16)
+ #define PMCR1_COUNT_A64_EL0_8_9	GENMASK(41, 40)
+diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
+index 06fd317529fc..cea80afd1253 100644
+--- a/drivers/perf/apple_m1_cpu_pmu.c
++++ b/drivers/perf/apple_m1_cpu_pmu.c
+@@ -327,11 +327,10 @@ static void m1_pmu_disable_counter_interrupt(unsigned int index)
+ 	__m1_pmu_enable_counter_interrupt(index, false);
+ }
+ 
+-static void m1_pmu_configure_counter(unsigned int index, u8 event,
+-				     bool user, bool kernel)
++static void __m1_pmu_configure_event_filter(unsigned int index, bool user,
++					    bool kernel)
+ {
+-	u64 val, user_bit, kernel_bit;
+-	int shift;
++	u64 clear, set, user_bit, kernel_bit;
+ 
+ 	switch (index) {
+ 	case 0 ... 7:
+@@ -346,19 +345,24 @@ static void m1_pmu_configure_counter(unsigned int index, u8 event,
+ 		BUG();
+ 	}
+ 
+-	val = read_sysreg_s(SYS_IMP_APL_PMCR1_EL1);
+-
++	clear = set = 0;
+ 	if (user)
+-		val |= user_bit;
++		set |= user_bit;
+ 	else
+-		val &= ~user_bit;
++		clear |= user_bit;
+ 
+ 	if (kernel)
+-		val |= kernel_bit;
++		set |= kernel_bit;
+ 	else
+-		val &= ~kernel_bit;
++		clear |= kernel_bit;
+ 
+-	write_sysreg_s(val, SYS_IMP_APL_PMCR1_EL1);
++	sysreg_clear_set_s(SYS_IMP_APL_PMCR1_EL1, clear, set);
++}
++
++static void __m1_pmu_configure_eventsel(unsigned int index, u8 event)
++{
++	u64 clear = 0, set = 0;
++	int shift;
+ 
+ 	/*
+ 	 * Counters 0 and 1 have fixed events. For anything else,
+@@ -371,21 +375,29 @@ static void m1_pmu_configure_counter(unsigned int index, u8 event,
+ 		break;
+ 	case 2 ... 5:
+ 		shift = (index - 2) * 8;
+-		val = read_sysreg_s(SYS_IMP_APL_PMESR0_EL1);
+-		val &= ~((u64)0xff << shift);
+-		val |= (u64)event << shift;
+-		write_sysreg_s(val, SYS_IMP_APL_PMESR0_EL1);
++		clear |= (u64)0xff << shift;
++		set |= (u64)event << shift;
++		sysreg_clear_set_s(SYS_IMP_APL_PMESR0_EL1, clear, set);
+ 		break;
+ 	case 6 ... 9:
+ 		shift = (index - 6) * 8;
+-		val = read_sysreg_s(SYS_IMP_APL_PMESR1_EL1);
+-		val &= ~((u64)0xff << shift);
+-		val |= (u64)event << shift;
+-		write_sysreg_s(val, SYS_IMP_APL_PMESR1_EL1);
++		clear |= (u64)0xff << shift;
++		set |= (u64)event << shift;
++		sysreg_clear_set_s(SYS_IMP_APL_PMESR1_EL1, clear, set);
+ 		break;
+ 	}
+ }
+ 
++static void m1_pmu_configure_counter(unsigned int index, unsigned long config_base)
++{
++	bool kernel = config_base & M1_PMU_CFG_COUNT_KERNEL;
++	bool user = config_base & M1_PMU_CFG_COUNT_USER;
++	u8 evt = config_base & M1_PMU_CFG_EVENT;
++
++	__m1_pmu_configure_event_filter(index, user, kernel);
++	__m1_pmu_configure_eventsel(index, evt);
++}
++
+ /* arm_pmu backend */
+ static void m1_pmu_enable_event(struct perf_event *event)
+ {
+@@ -400,7 +412,7 @@ static void m1_pmu_enable_event(struct perf_event *event)
+ 	m1_pmu_disable_counter(event->hw.idx);
+ 	isb();
+ 
+-	m1_pmu_configure_counter(event->hw.idx, evt, user, kernel);
++	m1_pmu_configure_counter(event->hw.idx, event->hw.config_base);
+ 	m1_pmu_enable_counter(event->hw.idx);
+ 	m1_pmu_enable_counter_interrupt(event->hw.idx);
+ 	isb();
+-- 
+2.39.5
 
