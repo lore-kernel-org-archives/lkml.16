@@ -1,201 +1,121 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110F5F9E6
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 01:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A4C35944;
+	Mon,  3 Feb 2025 01:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738546649; cv=none; b=bjxPR9na+cWvxugFAPhUf+rYFP4RIUUPOIv/ZyZJWap8cKCOw7YC+YDtCHLshK+AEN3GCpM321HWQuNZ3G1y2qIwhMoPAvdEPHfYfFlE7rc+Y2hvkEXonZDqhkm0rfuqCKvGq/ry2EBT3YnQVxEvKlEK9rqVzJpZh04aEfFk81o=
+	t=1738546789; cv=none; b=ETLaqen7cetnAEBpu45Wn+QmrRvsHWZr1Mdguaz0g/hqTJ7L4tg5rnDZJStV7lni66NjFEpfrzrW8+6BiG3nd+Nunhb8ad5rkdfN16hWAkR3cOlF5Yr7Mg2e3X2AhGAm+UYrIMZ/7vNtDQPD4oIaMNydw6HsTsGmgvwhpAdMbxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738546649; c=relaxed/simple;
-	bh=lKFqnOLMiCtpNmYJkU7K/TBuaKv1pbeWhDU29+Qd/2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=C6r7zpCzAmuGsHvfd7Tm2EG5RKd8bfvqVf9arXGSTAJQ+iVs2nhms7ujAvIv2tD/XRwU3qaMzf6fiAHTa9a288hQGXVOBplp5OQ9vc6jVTTAxqTzvN1WCvdXJiDaY6wot34ML0Y0HE6EXKbJBdwTpZrsC3clrUgava/3RPQ46NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=pjSeePmw; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1738546789; c=relaxed/simple;
+	bh=/y6k81+zaNnSlojA9+tv0fGOmgCbPw3lTMpWbqBXuBc=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=Zhhi4rpKyv4Sxea41KvbSFdIzzJvVWmwEOCiW1mpSVryNB3kcJg+Ts/Zb44lkIQrX3poDgfBlCb/nIolxyGs6AWAluHzj3knAqJElp7hx1HRJtwq4t0Ndxtl7YO/oFgfvwNMvFRmHmECJ8aA4KHzvOw+XV30y39ovKvJo2JsTwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gRAtWn+d; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="pjSeePmw"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 58D1F240101
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 02:37:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1738546639; bh=lKFqnOLMiCtpNmYJkU7K/TBuaKv1pbeWhDU29+Qd/2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=pjSeePmwfBx2X6iyvMmutIcJgET6k+tWssMsg+yIKQLvj1zAboUa1AD0CDNA0k9Yz
-	 VwolRNY8WMXm99+TBSC28S5Ie9Zj2kSKVq66CyWkJtfWL+gWgWmTqNeFqUPpMiGs1r
-	 EhO/2Gxv19jzDapJAQJ8JWCJ4IEtoGwnZ/4XUrQLLcKSocoQyoGZ2Zp7+82eQy/QD/
-	 urmmkvSaL1Fyb9iYb3/Wda4q7OB5n6d66LvSbBiGlEUhXQncKqv4FjTr7MUdFLrcdE
-	 x92ZkTgdVXV2Hfp2LXz3xfngoxK1ZJfocYt49oSbTArlnPXe0nbBzs9zkBLgUU/oU9
-	 ARRaV/p6qx6Kw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YmTd94HqTz9rxB;
-	Mon,  3 Feb 2025 02:37:17 +0100 (CET)
-Message-ID: <c7e1d6c7-8f91-4aa7-a887-98047e904ade@posteo.net>
-Date: Mon,  3 Feb 2025 01:37:16 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gRAtWn+d"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7be49f6b331so368070685a.1;
+        Sun, 02 Feb 2025 17:39:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738546786; x=1739151586; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rOWzjSFyTHIcf6LMOu1NrdiYYI4JP58h04qND62AjuQ=;
+        b=gRAtWn+d0QLBTVwqMWfJZBRy6MnuuWsqSeSmGd48DTU5BypVkiB02222u+Rs/Pjjvg
+         TDDiUfyI5G8FMaa73LOH3D1QOzAjPFteLT/rVI+3a+w6JeBbcGxQaAq+raQy8UOKT86m
+         LyAensybshkcBMrksGNV5yjqYknZbTquzr8V7NELRzArs+2cLkcUg650yRbcL3TPJiGd
+         Vm1u/9Q2r9IZD4w00Nf/e+UaakRqXHBbTQQAttgDTGBwvm65pEnzpISgc2Fftzooy4H2
+         koJjI+8M4cG4NFj0cGySXxWNP7bHbj3tY3aqZp21r1l+EHOKZbPlhwhUWbWCnakY/Ddl
+         n2+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738546786; x=1739151586;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rOWzjSFyTHIcf6LMOu1NrdiYYI4JP58h04qND62AjuQ=;
+        b=gpQHJIJ53QhpIqkXvbAgJsL2I6zPVa5/n5tKmbENsQekKuVloRJ7Gsf5QeQd1Mr/h5
+         AaY/+jJAy4KBYQ3mqtB82gFcxiwc4qDaTtAlRCa/pux0xvV1DZRsDek3DlgPh+mwQi4w
+         lZQEj/SFjgahXX5B6gjcYzaCfifwpjFHCgqHdbOOkqbb0mz2wipWiNz1+4JAfQrRTfO+
+         6iexeanc8Ek6CTpibV70L4+qXKZqLyf1Kn0qMhJwqqeAfsMk+/SWlXXm0gpaXlGD5eDc
+         V2cRgVPDOJsgla7MZAqV6y7y7ehYipchTcpL8NUPAS7SamfKbBtSfvoxWSjsp/hgUMFt
+         LHRg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUOeJ3dG8vmjdPbsMFYZTbQJIt31x2utcrXMOGz0+cK8bq8V1N86TWcMoe3VR0yBEe2yI=@vger.kernel.org, AJvYcCXBtkZItfDumpNMCHxENjC0WlDO7ugFu/oyd04yg3nOZUjK7cKvYeK3I5SxqJNSgso3f0A9BcYDCRLHR31d@vger.kernel.org
+X-Gm-Message-State: AOJu0YygrUKttzYishkOjpNgvZchUtrYMVRxmUW4FGlpLAPnFq+hLa/U
+	3i/hIR16sR4ReA0eACTXlhXug/ypFeRhpc4mdTQjK37za+thFbce
+X-Gm-Gg: ASbGncsOf+Ak+2fhsKLLu5sa8GgdqCZQskC6LYK/JQizVO3v4/U+QNHa2rIW2QG0wt6
+	prTtfohx8CBrnayUdnDFu/I3fhPBqOq9lvujZrEGYsjDg1BTQII582h8ymrkECJr421hL50aJ/I
+	NXhEtI05ZtEujsQCjvrO76wHLcLD9l947R099hHPecq+9rsqNbm37/Qjc7OlzhVLhKMoLd3iLnQ
+	ar6oan65UlhIeGWaHqX56KV8mbt8XDM9pAEJo4BzQh/jfSRxgDR5gHqdE8Q6dJpVRWgbN9QgF6D
+	LKIbx2ERZulEd0mTTFgulYkkvmOnI0JYhUij7fFK9CDIyNCZx0brFwCf75+eJaA=
+X-Google-Smtp-Source: AGHT+IGfoEhAbfzxVd2bQSUt84oOn6agnOvwoEG69chfiMNlVMXtcWns6kgBNh1e0mL2sr33I/qYbQ==
+X-Received: by 2002:a05:6214:1302:b0:6d8:a5f7:f116 with SMTP id 6a1803df08f44-6e243cc11acmr301853246d6.42.1738546786498;
+        Sun, 02 Feb 2025 17:39:46 -0800 (PST)
+Received: from localhost (15.60.86.34.bc.googleusercontent.com. [34.86.60.15])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254814405sm44826206d6.40.2025.02.02.17.39.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 17:39:45 -0800 (PST)
+Date: Sun, 02 Feb 2025 20:39:45 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>, 
+ Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, 
+ willemdebruijn.kernel@gmail.com, 
+ jasowang@redhat.com, 
+ andrew+netdev@lunn.ch, 
+ davem@davemloft.net, 
+ edumazet@google.com, 
+ kuba@kernel.org, 
+ pabeni@redhat.com, 
+ ast@kernel.org, 
+ daniel@iogearbox.net, 
+ hawk@kernel.org, 
+ john.fastabend@gmail.com
+Message-ID: <67a01e615bdb1_3c12af2942f@willemb.c.googlers.com.notmuch>
+In-Reply-To: <67a01caec79d1_3bbd8e29416@willemb.c.googlers.com.notmuch>
+References: <20250130171614.1657224-1-marcus.wichelmann@hetzner-cloud.de>
+ <20250130171614.1657224-2-marcus.wichelmann@hetzner-cloud.de>
+ <Z5wIZ2LAjz0wTWg5@mini-arch>
+ <a1120039-b0a6-4882-be23-7ea1174f8ab7@hetzner-cloud.de>
+ <67a01caec79d1_3bbd8e29416@willemb.c.googlers.com.notmuch>
+Subject: Re: [PATCH 1/1] net: tun: add XDP metadata support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [syzbot] [fs?] KMSAN: uninit-value in full_proxy_poll
-To: syzbot <syzbot+a84ce0b8e1f3da037bf7@syzkaller.appspotmail.com>,
- dakr@kernel.org, gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, rafael@kernel.org,
- syzkaller-bugs@googlegroups.com
-References: <67a01871.050a0220.d7c5a.007b.GAE@google.com>
-Content-Language: en-US
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-In-Reply-To: <67a01871.050a0220.d7c5a.007b.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
+> > >> +		metasize = metasize > 0 ? metasize : 0;
+> > > 
+> > > Why is this part needed?
+> > 
+> > When an xdp_buff was initialized withouth metadata support (meta_valid
+> > argument of xdp_prepare_buff is false), then data_meta == data + 1.
+> > So this check makes sure that metadata was supported for the given xdp_buff
+> > and metasize is not -1 (data - data_meta).
+> > 
+> > But you have a good point here: Because we have control over the
+> > initialization of xdp_buff in the tun_build_skb function (first code path),
+> > we know, that metadata is always supported for that buffer and metasize
+> > is never < 0. So this check is redundant and I'll remove it.
+> > 
+> > But in the tun_xdp_one function (second code path), I'd prefer to keep that
+> > check, as the xdp_buff is externally passed to tun_sendmsg and the tun driver
+> > should probably not make assumptions about the metadata support of buffers
+> > created by other drivers (e.g. vhost_net).
+> > 
+> > Thank you for taking a look, I hope things are more clear now.
+> 
+> Please use min()
+> 
 
-On 3/2/25 3:14 AM, syzbot wrote:
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    b4b0881156fb Merge tag 'docs-6.14-2' of git://git.lwn.net/..
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=146c5ddf980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7d0bb5e08cf54aa2
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a84ce0b8e1f3da037bf7
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10cb8518580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=122a0b24580000
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/4dbe3cd3dcb8/disk-b4b08811.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/592d90859f86/vmlinux-b4b08811.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/4cfde2b63c7f/bzImage-b4b08811.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+a84ce0b8e1f3da037bf7@syzkaller.appspotmail.com
->
-> =====================================================
-> BUG: KMSAN: uninit-value in full_proxy_poll+0xdf/0x3b0 fs/debugfs/file.c:411
->   full_proxy_poll+0xdf/0x3b0 fs/debugfs/file.c:411
->   vfs_poll include/linux/poll.h:82 [inline]
->   ep_item_poll fs/eventpoll.c:1060 [inline]
->   ep_insert+0x19c7/0x2740 fs/eventpoll.c:1736
->   do_epoll_ctl+0xd83/0x17f0 fs/eventpoll.c:2394
->   __do_sys_epoll_ctl fs/eventpoll.c:2445 [inline]
->   __se_sys_epoll_ctl fs/eventpoll.c:2436 [inline]
->   __x64_sys_epoll_ctl+0x1b5/0x210 fs/eventpoll.c:2436
->   x64_sys_call+0x1658/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:234
->   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->   do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
->   entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> Uninit was stored to memory at:
->   __debugfs_file_get+0xe86/0xef0 fs/debugfs/file.c:122
->   full_proxy_open_regular+0x67/0xa00 fs/debugfs/file.c:447
->   do_dentry_open+0x1bdd/0x26b0 fs/open.c:955
->   vfs_open+0x53/0x5b0 fs/open.c:1085
->   do_open fs/namei.c:3830 [inline]
->   path_openat+0x56a1/0x6250 fs/namei.c:3989
->   do_filp_open+0x268/0x600 fs/namei.c:4016
->   do_sys_openat2+0x1bf/0x2f0 fs/open.c:1427
->   do_sys_open fs/open.c:1442 [inline]
->   __do_sys_openat fs/open.c:1458 [inline]
->   __se_sys_openat fs/open.c:1453 [inline]
->   __x64_sys_openat+0x2a1/0x310 fs/open.c:1453
->   x64_sys_call+0x36f5/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:258
->   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->   do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
->   entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> Uninit was stored to memory at:
->   __debugfs_file_get+0xe59/0xef0 fs/debugfs/file.c:120
->   full_proxy_open_regular+0x67/0xa00 fs/debugfs/file.c:447
->   do_dentry_open+0x1bdd/0x26b0 fs/open.c:955
->   vfs_open+0x53/0x5b0 fs/open.c:1085
->   do_open fs/namei.c:3830 [inline]
->   path_openat+0x56a1/0x6250 fs/namei.c:3989
->   do_filp_open+0x268/0x600 fs/namei.c:4016
->   do_sys_openat2+0x1bf/0x2f0 fs/open.c:1427
->   do_sys_open fs/open.c:1442 [inline]
->   __do_sys_openat fs/open.c:1458 [inline]
->   __se_sys_openat fs/open.c:1453 [inline]
->   __x64_sys_openat+0x2a1/0x310 fs/open.c:1453
->   x64_sys_call+0x36f5/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:258
->   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->   do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
->   entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> Uninit was stored to memory at:
->   __debugfs_file_get+0xdff/0xef0 fs/debugfs/file.c:118
->   full_proxy_open_regular+0x67/0xa00 fs/debugfs/file.c:447
->   do_dentry_open+0x1bdd/0x26b0 fs/open.c:955
->   vfs_open+0x53/0x5b0 fs/open.c:1085
->   do_open fs/namei.c:3830 [inline]
->   path_openat+0x56a1/0x6250 fs/namei.c:3989
->   do_filp_open+0x268/0x600 fs/namei.c:4016
->   do_sys_openat2+0x1bf/0x2f0 fs/open.c:1427
->   do_sys_open fs/open.c:1442 [inline]
->   __do_sys_openat fs/open.c:1458 [inline]
->   __se_sys_openat fs/open.c:1453 [inline]
->   __x64_sys_openat+0x2a1/0x310 fs/open.c:1453
->   x64_sys_call+0x36f5/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:258
->   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->   do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
->   entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> Uninit was created at:
->   slab_post_alloc_hook mm/slub.c:4121 [inline]
->   slab_alloc_node mm/slub.c:4164 [inline]
->   __kmalloc_cache_noprof+0x8e3/0xdf0 mm/slub.c:4320
->   kmalloc_noprof include/linux/slab.h:901 [inline]
->   __debugfs_file_get+0x31d/0xef0 fs/debugfs/file.c:101
->   full_proxy_open_regular+0x67/0xa00 fs/debugfs/file.c:447
->   do_dentry_open+0x1bdd/0x26b0 fs/open.c:955
->   vfs_open+0x53/0x5b0 fs/open.c:1085
->   do_open fs/namei.c:3830 [inline]
->   path_openat+0x56a1/0x6250 fs/namei.c:3989
->   do_filp_open+0x268/0x600 fs/namei.c:4016
->   do_sys_openat2+0x1bf/0x2f0 fs/open.c:1427
->   do_sys_open fs/open.c:1442 [inline]
->   __do_sys_openat fs/open.c:1458 [inline]
->   __se_sys_openat fs/open.c:1453 [inline]
->   __x64_sys_openat+0x2a1/0x310 fs/open.c:1453
->   x64_sys_call+0x36f5/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:258
->   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->   do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
->   entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> CPU: 0 UID: 0 PID: 5778 Comm: syz-executor303 Not tainted 6.13.0-syzkaller-09585-gb4b0881156fb #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-> =====================================================
->
->
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
->
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->
-> If you want to undo deduplication, reply with:
-> #syz undup
->
-
-|#syz test: |git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git|57b314752ec0ad42685bc78b376326f1f4c04669|
-
+Err.. max.
