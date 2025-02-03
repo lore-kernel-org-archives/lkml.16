@@ -1,120 +1,146 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7242182B4
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 22:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1594C182B4;
+	Mon,  3 Feb 2025 22:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738620536; cv=none; b=QcINwmVYfiCoq35CQyB1GAQurBEU8rKR9t1/YGi047tvo1d1bpUdDfs1p2h9hJtMWhKs5+ICKyArp7hvbQ+WNkpUs0CSEzf1+qGznZM7bnNBVIOGnk/BphgAHeg32yygwKeaYD5hyopkOgI8bMRDgwcE9AfBOuwEt7w7yKXgJ+k=
+	t=1738620764; cv=none; b=Nf2DCPWuWN9Mesout6gG60ITiMESwLXwzhbtsM9xexH8UaJdU6O2z6NWyfvHY8yxCAyfuZZb0Fu6Iptg2sruMe4pP17uYcDqSS26+ScYcns4MaO6xvASCA4ff6G3AIkpa4QzqzNSLNpZCFW5/fWilmUNc/c1P5HAvv4EasLpKws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738620536; c=relaxed/simple;
-	bh=5RAtnqgSsJW3L/OucE/O3ftfhIA9MkIbq8HBQmwo9mM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NPXtf6Icq3guT6+HeG3l/S9MvGF7iL0Oiy0FqPkWQlIsOPff8j2NgnePyDaJsrJxlmzZ6gQ9AG0T2t1lwieUg8PfEPragQIllDgQQ5YUNknDrxeHR2zYf/CE3RjLXtv9p4aoDASIR8TkM625kO5xFwr1ITAu25pjrAyOjJ+OWnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U/mFp8K6; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738620764; c=relaxed/simple;
+	bh=NsRTrXKomzHTefKbNl8Fxxih3U7UqON2ERThnZ0x/YY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Gk8nCquMJI/Pj8XJRoSx5wYlaPIoZxtUbnv8b54vIFlSoQLtZWHVwIFOu/zyrrYYcJ1kqgZXGv8gPFhJHEVU7Tkbjz48ObroMJMjE8FJ22vmSf7mfbmfksR2JOqmahpWSuLOXo1oZQM+chUqfsAB81Nzk0wPkVC4jyGRkgZm3WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Ue2x718p; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U/mFp8K6"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5401af8544bso118e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:08:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738620533; x=1739225333; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YSoo65ANk1ACUgD5CEe1MmfBfCx6K8V18L1pZv5jKUg=;
-        b=U/mFp8K6kOjCQUGiq16ftHdAizOEbwDtF9bX6JgYYEGcB4azgC7vabPNLgPgp7jtek
-         e90myPCj9lWjYJEOK/B0TaRn5Gp3wsMyq4xG5wCv46IkAQRHCC4NKSzC2yaAm8OsX9IR
-         zJih8KUdou5DJNFsOP2tbHcPc/vl6IpAeANflVFesYVWSr1JUGBrsGTMCNNwNN+GFLrH
-         jruNnmI5rj688tjLcN2HnM+qaRtBfH9greqjaHkUfAGMJqxefld0uAjZyZcHjn8kALgL
-         PE8VBKF6uOhXyaCDqlVC6DrqcnwFwqRogcwPdP00eDyajK6yYkR/As9Zg2gjtNcT/MeX
-         HQgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738620533; x=1739225333;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YSoo65ANk1ACUgD5CEe1MmfBfCx6K8V18L1pZv5jKUg=;
-        b=vC0rG6ZPcG+6EBq5CfNW5c8eMO/kf+4JH8oW/Y8ipHltKrOomo5DT+w0DVG0J1MVrf
-         +I4ZGqm/4mQDcaXH8aRSDCAnPmtnHOS8aPAsrA2bkrDNmwUFBmUqcivd7pJ6nrkwrBHh
-         1flIRr/Q4SphkpfJQ8JWAe2+XdfG9bxo7wlRS0OsrYwT3J6ZEKoYNDmy1Jy7Sesd0m5q
-         3iJazGG859WZpM51j3YWburnOZQYTSI1a8Vt713gRMOSV80GpbmKSytr8RtSHVG7Qsg+
-         /vB0k2MKQs6fT79WOwHjQ2cj2JDL9xrvLBRopwKBfa9wytJxkJNyk/Uj7y0VAqQljscI
-         6lYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbG/YmbHT79iJOOvFYHq5dt0TkDvpGMz7wpeUxf/qYjPIL/3iknQRNWY1aVQnh3YRmfOXJpQfiJ6K9Gh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtaPUN2Rbtf7QgEwwa0tVPEZD6bvTNLhJCr0Zw5h5RgJfZGwub
-	JdbOUa89S3EFrCwE8V2dTomasrz+fewRKldJVHjXMLZkBaeef+m/LYAR6t9UnmP2nyY4oZd0b80
-	KYFxhNtSrp3puaZcfj09jgJulgDzUtB3CxU4s
-X-Gm-Gg: ASbGncvpcjYQMIORs2LjbefP3w65SaPRMdDzxPO9R/V39XWkCt+xXBPpdhNqTg99gx4
-	E9/FQoIfXZVdj88iTHdP6efnVJcFOQJbh+9lBaC8Q7W+VNzAoqXhi50ttXMimeo/KtzAIknFCvB
-	fsK5EOcxz/jH9IRSiJImYUUJQ+BaB7hQ==
-X-Google-Smtp-Source: AGHT+IHtm70vTgHPrrcUuJwFAa+5zFIj4hqVrwA8yzRqmy3Y13vzkDTGy11M0PhuNPkDVSVa0ZHRUqRBsdcAg8i1d2U=
-X-Received: by 2002:a05:6512:3b2a:b0:542:92ba:a08c with SMTP id
- 2adb3069b0e04-54400bd712cmr17275e87.1.1738620532535; Mon, 03 Feb 2025
- 14:08:52 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ue2x718p"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 513MCZbG2218398
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 3 Feb 2025 16:12:35 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738620755;
+	bh=OfI9dlLcSjW6HM4VB+FL+prEF7OaRxVLjKZpK9XkkAs=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=Ue2x718piSpMFvKdib39neMBkky7Ugk6w3cDbVaR0ZJLKXQgpHuMspFfW84AgKqOY
+	 U4751Rk+D96+MjZugGZX6WeQCqUcADXDBPUQn1A7xLBh/n/Bv3ZCoTOwL+2pJDaP/3
+	 ufZiSKPCXrIE6h61DHA0vyePvmo79mAmxuBszfMA=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 513MCZm1065356;
+	Mon, 3 Feb 2025 16:12:35 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
+ Feb 2025 16:12:35 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 3 Feb 2025 16:12:35 -0600
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 513MCZB6086602;
+	Mon, 3 Feb 2025 16:12:35 -0600
+Message-ID: <6fe74c50-1430-4556-90b5-f635fb48e6fb@ti.com>
+Date: Mon, 3 Feb 2025 16:12:35 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129232525.3519586-1-vannapurve@google.com>
- <p6sbwtdmvwcbr55a4fmiirabkvp3f542nawdgxoyq22cdhnu33@ffbmyh2zuj2z>
- <CAGtprH8pJ3Zj_umygzxp8=4sJTdwY5v2bFDhoBdX=-3KQaDnCw@mail.gmail.com>
- <wmdg54v56uizuifhaufllnjtecmvhllv35jyrvdilf4ty4pfs5@y4zppjm2sthr>
- <CAGtprH82OjizyORJ91d6f6VAn_E9LY7WptN-DsoxwLT4VwOccg@mail.gmail.com>
- <2wooixyr7ekw3ebi4oytuolk5wtyi2gqhsiveshfcfixlz3kuq@d5h6gniewqzk>
- <CAGtprH-n=cfH_BJAmiNMoRbqq0XdGCf3RE67TYW8z7RARnsCiQ@mail.gmail.com>
- <40418980-6e5b-48eb-bc35-7ffaf3221fd9@intel.com> <qzl5vkhykj4anuvjrhfco5qoeuib3oskffnxnqbcszotttnnqa@up5b4xl5l55g>
- <702c5acb-6bab-4940-a8f1-c346373167bd@intel.com>
-In-Reply-To: <702c5acb-6bab-4940-a8f1-c346373167bd@intel.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Mon, 3 Feb 2025 14:08:41 -0800
-X-Gm-Features: AWEUYZn4lp_A5AbUjUHimrHcFYW36fbGNYwCsxNdJcmy9mUWfgPSBJE-b3l4FDY
-Message-ID: <CAGtprH-grdiE2AaagnYNUQC4ytSMxErYoh_Xyg2Nwmto33Yyyw@mail.gmail.com>
-Subject: Re: [PATCH V2 1/1] x86/tdx: Route safe halt execution via tdx_safe_halt()
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: "Kirill A. Shutemov" <kirill@shutemov.name>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	pbonzini@redhat.com, seanjc@google.com, erdemaktas@google.com, 
-	ackerleytng@google.com, jxgao@google.com, sagis@google.com, oupton@google.com, 
-	pgonda@google.com, dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
-	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/9] arm64: dts: ti: k3-am62-wakeup: Add wakeup r5f
+ node
+To: Andrew Davis <afd@ti.com>, <devicetree@vger.kernel.org>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Hari Nagalla <hnagalla@ti.com>, Nishanth
+ Menon <nm@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+References: <20250131214611.3288742-1-jm@ti.com>
+ <20250131214611.3288742-2-jm@ti.com>
+ <1c2c67b7-987e-4b92-b0be-c0b2f25adae6@ti.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <1c2c67b7-987e-4b92-b0be-c0b2f25adae6@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, Feb 3, 2025 at 1:19=E2=80=AFPM Dave Hansen <dave.hansen@intel.com> =
-wrote:
->
-> On 2/3/25 12:09, Kirill A. Shutemov wrote:
-> ...
-> > But Sean's proposal with HLT check before enabling interrupts looks bet=
-ter
-> > to me.
->
-> "Sean's proposal" being this:
->
->         https://lore.kernel.org/all/Z5l6L3Hen9_Y3SGC@google.com/
->
-> ?
-Yes.
+Hi Andrew,
 
->
-> Is that just intended to quietly fix up a hlt-induced #VE? I'm not sure
-> that's a good idea. The TDVMCALL is slow, but the #VE is also presumably
-> quite slow. This is (presumably) getting called in an idle path which is
-> actually one of the most performance-sensitive things we have in the kern=
-el.
->
-> Or am I missing the point of Sean's proposal?
+On 1/31/25 5:40 PM, Andrew Davis wrote:
+> On 1/31/25 3:46 PM, Judith Mendez wrote:
+>> From: Hari Nagalla <hnagalla@ti.com>
+>>
+> 
+> Subject should capitalize R5F
 
-I think you have captured the intent correctly.
+Will fix in v3, thanks
 
->
-> I don't mind having the #VE handler warn about the situation if we end
-> up there accidentally.
->
-> I'd much rather have a kernel configured in a way that we are pretty
-> sure there's no path to even call hlt.
+> 
+>> AM62 SoC devices have a single core R5F processor in wakeup domain.
+>> The R5F processor in wakeup domain is used as a device manager
+>> for the SoC.
+>>
+>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+>> Signed-off-by: Judith Mendez <jm@ti.com>
+>> ---
+>> Changes since v1:
+>> - disable each device node in the voltage domain files and
+>>    enable at the board level file
+>> - fix firmware names
+>> ---
+>>   arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi | 25 ++++++++++++++++++++++
+>>   1 file changed, 25 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi 
+>> b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
+>> index 9b8a1f85aa15c..12b1520974ade 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
+>> @@ -106,6 +106,31 @@ wkup_rti0: watchdog@2b000000 {
+>>           status = "reserved";
+>>       };
+>> +    wkup_r5fss0: r5fss@78000000 {
+>> +        compatible = "ti,am62-r5fss";
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
+>> +        ranges = <0x78000000 0x00 0x78000000 0x8000>,
+>> +                 <0x78100000 0x00 0x78100000 0x8000>;
+> 
+> Odd alignment, looks like you have an extra tab on the above line
 
-+1.
+Hmm missed this, thanks will fix.
+
+~ Judith
+
+> 
+> Andrew
+> 
+>> +        power-domains = <&k3_pds 119 TI_SCI_PD_EXCLUSIVE>;
+>> +        status = "disabled";
+>> +
+>> +        wkup_r5fss0_core0: r5f@78000000 {
+>> +            compatible = "ti,am62-r5f";
+>> +            reg = <0x78000000 0x00008000>,
+>> +                  <0x78100000 0x00008000>;
+>> +            reg-names = "atcm", "btcm";
+>> +            ti,sci = <&dmsc>;
+>> +            ti,sci-dev-id = <121>;
+>> +            ti,sci-proc-ids = <0x01 0xff>;
+>> +            resets = <&k3_reset 121 1>;
+>> +            firmware-name = "am62-wkup-r5f0_0-fw";
+>> +            ti,atcm-enable = <1>;
+>> +            ti,btcm-enable = <1>;
+>> +            ti,loczrama = <1>;
+>> +        };
+>> +    };
+>> +
+>>       wkup_vtm0: temperature-sensor@b00000 {
+>>           compatible = "ti,j7200-vtm";
+>>           reg = <0x00 0xb00000 0x00 0x400>,
+
