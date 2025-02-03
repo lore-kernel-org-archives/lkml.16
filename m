@@ -1,165 +1,86 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D9220A5C0
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EA2209F5C;
+	Mon,  3 Feb 2025 15:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738598339; cv=none; b=ge3eOk2PPj97u5DJBXMIevZlA8fW3y/C34P5rtfvbUeWoDgxWp8aU0mAy2pvLaEdcuh3O2WDuLTw4vIeLvJEKesfstICO3KGeLNfQabaswQ7FrpgFE+NH1FPteKSKsMO2CaB3v50gepzsDypZFqAFWn/pfC65iyuhYF4oVnEJAA=
+	t=1738598375; cv=none; b=BoLKnRelkKW0G4WhiZy8uTUIx4lG8TJyC1IaALGVM+UnDnSacxPrSBEHG68BaDlhOnUiuCisF9lVuoPFVob5UcCYRX1jtABW8JyzEXTEHHfK25na7VR97G9HTUk75IraGHWwrekulVtsSI8evrbmzxtseho78QEVvg4HNVezG08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738598339; c=relaxed/simple;
-	bh=aUrbssakHKRmbHsTKxoIl+W1rISGH8qU5OuzHz3Ol6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V1NAIBRkxwUv/GUpkDkSkRpU4DSlj8wyirgZ9e14ENZmmSgcgQAgcFm3VJqVlvvdFvuLCgpm3uPP6Goc7mR3bbQiq27MpQcL+JhtI9vRdXx4f0iw0xllMPrMWcYGsaPPa8sqcJejEU02cOyXqbCSYzd8cEg8rq2ctjUsbSicqTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F4MoJL3F; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738598375; c=relaxed/simple;
+	bh=pB/avWjDA66o8qKuT2L9+9mKgLG7V6fnqRlYSS+zEjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=CFYWu/s7fSLVlNMK1DuhS0wzw5SjiFwwkB/wQqvTMM0rAeHfrF0U3QXWkxn5run2i3nhUYVBsxWelemLdwJGk8QKxvHSDX+sD+69qGtUw72G7mMnAnKHRUUWCnpX4+i/7UOGCM7PJYDZfASVcRRuehZIDwL3CCCCmgfjOCtUyWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjfWlBNE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F4MoJL3F"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2f833af7a09so5788018a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 07:58:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738598336; x=1739203136; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DpktXx5iJjZi+5c0dXUGpqrqAIBxwOyO2Pl2fHijR8g=;
-        b=F4MoJL3Fnl1afOem/3Q4Kv+AlTiGqBolZL2TZNicv8mZrqlYg0txrgErn94OknZxLi
-         9QuzDYvbB9kwhPAHbZPgK0qp4BDlEJKrQSijlrdmKzCWx3JXsNosG40V/UxNZqOs2fzI
-         r3+ZDoV+RUUkq6QrlLOBU60W9aI8qOh/+5uFOWRePrNQLDCOuityWTcB5AwcT5WLxuac
-         wQNQeot2ABULDGxoALm0FqqNWHFjdTiT6FmeNoYJkFrDjNbrpEVFOkPm3Uj1WW9BpMyJ
-         ahKCHs41Mvt4rXDn3Rscia+EYRRqIkmGCrYfjoQWnd1WnDkJm4uOmsxRAZZNC1t4+7ME
-         tWHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738598336; x=1739203136;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DpktXx5iJjZi+5c0dXUGpqrqAIBxwOyO2Pl2fHijR8g=;
-        b=sJcqthakXHnEvfvnQ6pT/5Z9o8Mii5ydwKgeg++n6Hqxm1rMljPGu5drHdNAcrZihA
-         Taun9GDUHl6twdm/4AjxOFlDCDMLecpOPASx+4PSA6Hj91AzSvc+HRj13UIvT9oDg0zd
-         EdvOOhcktcFTLV7qVfNrl3EmRktKG+R40btnGb3OSKBrXPyGMXOAMMxkilAq4eMzS3A3
-         vKaAaS9JtWhCD9U3OrGS4ejhgtG9UjvwOLh6ZrycCZ2F9+jtNU7k6C3LS9XS/06hxPla
-         3OgtNcShEyfFmAynytXbrOis/iXlqsZ9LMJFhYnN0vV/PlAgbwP9cGN+KQGCARE8I1nc
-         Wk4A==
-X-Gm-Message-State: AOJu0YzPo6jt/dGhgy8EiMMKbvZyphjsO150Yq7YU5ogOcZc9qISJYaH
-	+FEzAea+C7dDiofwgiOZPWf5WLb3Gq24QtpRl4sPmKHsuJrX0V0p
-X-Gm-Gg: ASbGncuUJMZyihalRs+69YBsVkbbjwJzDrnpTBrDG83rRqERgKahoIiRFkhBv8Tw/Tj
-	5zIAjFFFR7yfflszvvQ6OYshr5ZD9ZmjGSbrUHn//RUJAGjPVRAXifBIKPt0syVOS6MXCuOzNFu
-	IC/VxxudZMLQb4h+y+jBXvsSaqehIXaWobiEt2QBo44F/q96dPLMtK+qPQ00iFpFZx/AcHPDbD6
-	foE77Kh9kY7jN2ODqEaAK3UxE8daHNKqm0M9UR6X4qtuptyx/+lSzvxZqRAdTifEvtpg3EZqx8R
-	kVARvMDe+eBwvwIKge1FvTqLfeRo
-X-Google-Smtp-Source: AGHT+IFQm0tOwqWRaucnv0UpFfDG/Qz3pkhDVmQgsjERxkyQpWFs28Y96pTizCcD6WtHzlY4VppT1A==
-X-Received: by 2002:a17:90a:c88b:b0:2ee:8619:210b with SMTP id 98e67ed59e1d1-2f83acaf8a0mr32599958a91.29.1738598336329;
-        Mon, 03 Feb 2025 07:58:56 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32ea47dsm77523305ad.155.2025.02.03.07.58.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 07:58:55 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 3 Feb 2025 07:58:54 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Kees Cook <kees@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Jens Axboe <axboe@kernel.dk>,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: Linux 6.14-rc1
-Message-ID: <28ff9a23-f7cc-49da-8975-788ba0646763@roeck-us.net>
-References: <CAHk-=wicYNCkEgH06w0mpR+GJhJ_ywe0BLTTFXBAj1+y0dqe4Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjfWlBNE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C28D4C4CEE2;
+	Mon,  3 Feb 2025 15:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738598375;
+	bh=pB/avWjDA66o8qKuT2L9+9mKgLG7V6fnqRlYSS+zEjA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=tjfWlBNE0ro2NFADlOh5t7iM+e5SYlVBcjAvJI1pvU3sAOYkBkuaLtsgzyY890KLD
+	 W+/AHwBP880dWVzZhETmMYAuqqaaMUUabAL0zq7aSNZEKqR3l+8MyZV5SIjEv6C/Jc
+	 fPx71AYeqD/Rw1A2U2eqWXkpBBbfLFCnpkvZOLH1BdJFC3wxGqLaN4lvbS+UQ4oml+
+	 GxxemtxZ1Hf/WLwm/yrg1ESx5brqCoM+ma7EJk0/DxPP1tWMIkof3gujXlLpI26i11
+	 12YJ/ZSPwL/2eQYq24WhG+khBlM9XYYqv5aLSjnOh8dFaRck8tGo66yZQNO9aHia2H
+	 Ihmkm0uGc+d3w==
+Date: Mon, 3 Feb 2025 09:59:33 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Inki Dae <daeinki@gmail.com>
+Cc: Seung-Woo Kim <sw0312.kim@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: wait_event_timeout() usage in decon_wait_for_vblank()
+Message-ID: <20250203155933.GA786168@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wicYNCkEgH06w0mpR+GJhJ_ywe0BLTTFXBAj1+y0dqe4Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAQKjZNqFt=SYxCzpQ5JwOADRUwsWsq5KzLRoPG++27SXGubnQ@mail.gmail.com>
 
-On Sun, Feb 02, 2025 at 04:26:53PM -0800, Linus Torvalds wrote:
-> Two weeks have passed, and the merge window is over.
+On Sun, Feb 02, 2025 at 01:02:47PM +0900, Inki Dae wrote:
+> 2025년 2월 1일 (토) 오전 1:56, Bjorn Helgaas <helgaas@kernel.org>님이 작성:
+> >
+> > I don't know this code at all, so this is likely just noise, but the
+> > wait_event_timeout() usage in decon_wait_for_vblank() looks funny to
+> > me.
+> >
+> > decon_wait_for_vblank() waits on wait_vsync_queue for wait_vsync_event
+> > to be cleared.
+> >
+> > But decon_irq_handler() only clears wait_vsync_event and wakes up
+> > wait_vsync_queue when !ctx->i80_if.
+> >
+> > I don't see any i80_if connection in decon_wait_for_vblank().  Does
+> > the wait always time out if i80_if is set?  Is there some reason we
+> > don't use decon_wait_for_vblank() at all if i80_if is set?
 > 
-...
+> For the decon series, the implementation for the i80 interface has not
+> yet been completed. If you would like to see how the i80 interface is
+> handled in Exynos, please refer to the code for the legacy display
+> controller module, exynos_drm_fimd.c, available at the following link:
+> https://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git/tree/drivers/gpu/drm/exynos/exynos_drm_fimd.c?h=exynos-drm-fixes#n1053
 > 
-> Let's hope that a small release also ends up meaning smooth sailing
-> during the stabilization phase. That's obviously guaranteed, but
-> fingers crossed...
-> 
+> Furthermore, please note that within the decon driver, prior to
+> creating the CRTC, it is necessary to implement the TE handler for the
+> i80 interface in the te_handler of exynos_drm_crtc_ops and register it
+> as a callback.
 
-Build results:
-	total: 161 pass: 156 fail: 5
-Failed builds:
-	i386:allyesconfig
-	i386:allmodconfig
-	parisc:allmodconfig
-	sparc64:allmodconfig
-	sparc64:defconfig
-Qemu test results:
-	total: 544 pass: 517 fail: 27
-Failed tests:
-	arm:npcm750-evb:multi_v7_defconfig:npcm:net=nic,npcm-gmac:nuvoton-npcm750-evb:initrd
-	arm:npcm750-evb:multi_v7_defconfig:npcm:mtd32,6,5:net=nic,npcm-gmac:nuvoton-npcm750-evb:sqf
-	arm:npcm750-evb:multi_v7_defconfig:npcm:usb0.1:net=nic,npcm-gmac:nuvoton-npcm750-evb:ext2
-	arm:quanta-gsj:multi_v7_defconfig:npcm:net=nic,npcm-gmac:nuvoton-npcm730-gsj:initrd
-	arm:quanta-gsj:multi_v7_defconfig:npcm:mtd32:net=nic,npcm-gmac:nuvoton-npcm730-gsj:ext2
-	arm:quanta-gsj:multi_v7_defconfig:npcm:usb0.1:net=nic,npcm-gmac:nuvoton-npcm730-gsj:ext2
-	arm:kudo-bmc:multi_v7_defconfig:npcm:net=nic,npcm-gmac:nuvoton-npcm730-kudo:initrd
-	arm:kudo-bmc:multi_v7_defconfig:npcm:mtd64,8,3:net=nic,npcm-gmac:nuvoton-npcm730-kudo:cramfs
-	arm:kudo-bmc:multi_v7_defconfig:npcm:usb0.1:net=nic,npcm-gmac:nuvoton-npcm730-kudo:ext2
-	sheb:rts7751r2dplus_defconfig:ext2
-	sparc64:sun4u:smp:net=default:initrd
-	sparc64:sun4u:smp:ata:net=rtl8139:hd
-	sparc64:sun4u:smp:ata:net=e1000:cd
-	sparc64:sun4u:smp:ata:net=e1000-82544gc:hd
-	sparc64:sun4u:smp:sdhci-mmc:net=rtl8139:hd
-	sparc64:sun4u:smp:nvme:net=tulip:hd
-	sparc64:sun4u:smp:scsi[DC395]:net=i82559c:cd
-	sparc64:sun4u:smp:scsi[MEGASAS]:net=i82559a:hd
-	sparc64:sun4u:smp:scsi[AM53C974]:net=usb-net:hd
-	sparc64:sun4u:smp:usb-xhci:net=virtio-net-pci:hd
-	sparc64:sun4u:smp:usb-uas-xhci:net=i82801:hd
-	sparc64:sun4u:smp:virtio-pci:net=i82559er:hd
-	sparc64:sun4v:smp:ata:net=i82562:hd
-	sparc64:sun4v:smp:ata:net=e1000-82545em:cd
-	sparc64:sun4v:smp:nvme:net=default:hd
-	sparc64:sun4u:nosmp:ata:net=e1000:hd
-	sparc64:sun4v:nosmp:ata:net=pcnet:hd
-Unit test results:
-	pass: 472629 fail: 39
+I'll take your word for it that this all works as intended.  For many
+wait_event_timeout() callers, the connection between kicking off some
+operation, waiting for completion, and doing the wakeup is a little
+bit obscure and hard to analyze without deep knowledge of the driver.
+This was just one instance of those.
 
-Most failures are known with fixes submitted. Patches with more details
-are available in the 'fixes' branch at
-git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git.
-
-950432b79a5d net: stmmac: Allow zero for [tr]x_fifo_size
-	Fixes arm boot failures
-9d7a89e83e06 dmaengine: tegra210-adma: Fix build error due to 64-by-32 division
-	Fixes i386 build failures
-eadf076115eb drm/i915/backlight: Return immediately when scale() finds invalid parameters
-	Fixes parisc build failure
-
-The sparc64 build failures are due to commit 1e1a9cecfab3 ("block: force
-noio scope in blk_mq_freeze_queue"), which changed some APIs but not all
-drivers using it.
-
-The sheb boot failure is a problem in the sh4eb emulation, seen when
-booting from flash. I just mention it here for reference and will likely
-stop testing that going forward.
-
-There is also a parisc64 boot failure seen if KFENCE and SLUB_DEBUG are
-enabled. That is also an emulation bug, mentioned here for reference.
-
-The failed unit tests are
-
-	m68k:q800:stackinit
-
-The patches introducing the failures are:
-
-e71a29db79da stackinit: Add union initialization to selftests
-ad9f265c7328 stackinit: Add old-style zero-init syntax to struct tests
-
-Similar to 1e1a9cecfab3, those are all last minute patches, so I did
-not have time to analyze the problems.
-
-Guenter
+Bjorn
