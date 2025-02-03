@@ -1,79 +1,88 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD85C139;
-	Mon,  3 Feb 2025 13:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACEA204C36
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588206; cv=none; b=DNmFL+Szl1Y0zzAT9anFINlKXzXOM0Lj7xPMF+W8Sokoncrt9GDRdNeYR1iNk6+AEUUc72EB0BW15oLemOwDzE8BH7nnvgZqcx6szCFvwkEOKZdMzNhAVdZdYmL42xHUP7moRHlNWvGted1xosPrS4rY5YSrFwvcUP9DeIcwAwg=
+	t=1738588232; cv=none; b=s35jZeH0A+419hTL1Wm0hHVRs7PlLsOJ0dBYEDoMY+cQwbmnZFqbAw8AE+gtAT9C1N9b+8ggUTI19/iuUoPifSz3yQd8CjCFmaW8C3RoMPAA6yLfhJPMMLBShlAq3WkKbTQMA22MVtI6mUVEFKqeP4IcvyvGT52JfApbo5S7nSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588206; c=relaxed/simple;
-	bh=0dZmUsmVdpc0nFZ6x5rfDtAfZ8L5Hy85g2JGgxodjiU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hT2CXIQMgFtSPLry2oiiwun2lWupcwuMIHHMb9gkKrzzKh58myMJVtBP+63vy2ik3PF0wju+R8EQM1MWUvh8mtKikgd6VPqQyGXj7lbDP1SJtPOIkg5ZO8+bTFTafCMqnpAhRX+fsC2p4/OkADrSDyEe2jvZFnKBctPQUIVT/F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=YlFNyO7Y; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="YlFNyO7Y"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 622D3A0A06;
-	Mon,  3 Feb 2025 14:09:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:content-transfer-encoding:content-type:content-type:date:from
-	:from:in-reply-to:message-id:mime-version:references:reply-to
-	:subject:subject:to:to; s=mail; bh=Z4oFHXHx29Qg7053vOUzsNdaD5NZq
-	jXMjU19+Z9WIxw=; b=YlFNyO7YaQTlGuytcsi2Rwplw4nDKUNoBAx6JMxM3KfW6
-	ABjHntaHoehXkdW+A9Ey155y1ZgHcy8ic1ur5PFI+BdxlX8OX00FQJokEWOspEWE
-	RtsOVUm1tgayB3N44JZti4wAF3xyBpJQEHpF7El4SPQR+frJ/KhyHguBtbaj8jR8
-	3lkeDy2QkBeW0O9JMR5biv8H09tPoIa1bH+E8wqBvc6K6/2OrGqKmJoyH4BAYOC+
-	I2134J9ZTJ0Rc4kIQ/MPZhGlCEfrBRtwlMyVQGbKGTlPCBEgOPwOuNhEqX0paHl8
-	gngerSOUZrhCcR0M2L0QOPyDyat4cz2tfZB5DB/9cycUEw/XnE42xoj5rdlFI5e8
-	KRbmgzCxE2dqa+VIENJ3rhpmhgaNG1AJGtSPGxI7MyxLJVre+YSHUk/Vauoo+ji3
-	eaereyKyLr70MZbektMbmGZLK4l44AB/y0hYfJOh+krWuGpPGkdqTBUWZDVK/Jgq
-	REbJJZnkqNoCUljd3IqcBqDj6lKAJhVowMsaRLtSfY+j0y7Ek4nLJiO1NVu4frtL
-	lBpiqYal7w6OhCqjPvzcv5bDPdUL0++phhhxD5P0w7JOChGml/Ep+oMcfLGGDEA1
-	AJJ77bcpYN7CA8ZXLRNGMQzNtMkKs/nU3BdjvmoHQIBbCa7oTX/+9fQbyRlLo0=
-Message-ID: <9354a990-b4ef-4ca1-8666-6c5905eaf86d@prolan.hu>
-Date: Mon, 3 Feb 2025 14:09:54 +0100
+	s=arc-20240116; t=1738588232; c=relaxed/simple;
+	bh=3V9EWmDSZmuk3+piik4gYUDhM6wjBadbX05witTb86g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXpMSXELXamXImkoxm3AtUr1elRrJwUS5s/yg7xAsCi+WXzZQfwSoHJvM2gicInNkwcEOQDxfr8okXUk/dRbIWFqvmA8bdAW2huQeuLLv2E17ns+zvNI6gNDWZ9roDij2LojIOeTgA0dDTwU/WECKC/2xMRvt0M5p1fxGi4+Lbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tewDL-0003ae-Ae; Mon, 03 Feb 2025 14:10:11 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tewDK-003IYN-0p;
+	Mon, 03 Feb 2025 14:10:10 +0100
+Received: from pengutronix.de (unknown [IPv6:2a01:4f8:1c1c:29e9:22:41ff:fe00:1400])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id BB1113B7A82;
+	Mon, 03 Feb 2025 13:10:07 +0000 (UTC)
+Date: Mon, 3 Feb 2025 14:10:06 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+Cc: "Rob Herring (Arm)" <robh@kernel.org>, 
+	linux-stm32@st-md-mailman.stormreply.com, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	linux-kernel@vger.kernel.org, kernel@pengutronix.de, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Leonard =?utf-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH stm32-next v3 0/2] ARM: dts: stm32: lxa-fairytux2: add
+ gen{1,2} boards
+Message-ID: <20250203-congenial-falcon-of-destiny-43b5c0-mkl@pengutronix.de>
+References: <20250121-lxa-fairytux-v3-0-8d42d7d232fb@pengutronix.de>
+ <173764775141.3793586.6690578690442295161.robh@kernel.org>
+ <20250123-urban-belligerent-bullfinch-2fa9e6-mkl@pengutronix.de>
+ <8f28bbc1-1ada-41b2-bff2-5ad549c934a5@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] dma: Add devm_dma_request_chan()
-To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Mark Brown
-	<broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, <linux-spi@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>
-References: <20250124085221.766303-4-csokas.bence@prolan.hu>
- <20250124085221.766303-8-csokas.bence@prolan.hu>
- <20250203-chalice-ninth-8235590e29d2@thorsis.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <20250203-chalice-ninth-8235590e29d2@thorsis.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852667066
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8f28bbc1-1ada-41b2-bff2-5ad549c934a5@foss.st.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi,
+On 03.02.2025 13:00:13, Alexandre TORGUE wrote:
+> > > My bot found new DTB warnings on the .dts files added or changed in t=
+his
+> > > series.
+> >=20
+> > This patch doesn't touch the offending file "ste-hrefv60plus-tvk.dtb".
+> > Might be a new warning, but not due to this patch, could this be a false
+> > positive?
+>=20
+> Can you reproduce ?
 
-On 2025. 02. 03. 13:27, Alexander Dahl wrote:
->> +	if (!IS_ERR(chan))
->> +		ret = devm_add_action_or_reset(dev, dmaenginem_release_channel, chan);
-> 
-> Why not using dma_release_channel() directly here?  What's the point
-> of introducing dmaenginem_release_channel() further above?
+Nope!
 
-I followed the existing practice, used by 
-`dmaenginem_async_device_unregister()`. I suspect it was done like this 
-because the devm callback function's signature takes a `void *` and not 
-`struct dma_chan *`.
+> On my side I can't. As you said the reported error has
+> no link with your patch. I'll merge it.
 
-Bence
+Thanks,
+Marc
 
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
