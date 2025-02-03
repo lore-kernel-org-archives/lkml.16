@@ -1,103 +1,181 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB64920127F;
-	Mon,  3 Feb 2025 12:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB794204096
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 12:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738584675; cv=none; b=aUXxz5DkcLwZxAKhjSGQjnex2gpHFzsFZRHq6kHPeRd/jS7EsAJnWQwRhNB4tZVw3e8+/KfOoUV0q3O77/Il9/v093wM1YjuN/f/pSawGYtjd2b/aqoeR6Joj7W5qehkclFaJCvV/bIjLtTRDTQpjYOmq3hUZcY38Z6nEnG25FQ=
+	t=1738584774; cv=none; b=ZdfCi6lz+OvonaxkU9VD5ov41vxEVkzy4cdyAxaJYkmfnY/+6510g4Jk7QT6ibaATNh7TXIL5D5Jz0QsNQlTeqhZpFODiV9H7Ov4aKwSoPgTJRTyzF24kqnGW4VvGWYqxeEPlcVohEzkzCuOn91d26qbkAUJHFF+0ZKWRAW2dLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738584675; c=relaxed/simple;
-	bh=QJSfw0ibffczpv3ZVDja1neQo0fo+tjFi3CxupB7wBg=;
+	s=arc-20240116; t=1738584774; c=relaxed/simple;
+	bh=Al5nN7+VVsS+6jTXW2BhemO8tZMv7evAKrd72FfIn8c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MIZnEbg1pV37N3YU/Lf6oCZoeD2AQwyPV6J49v84CJYfvptar7H9VpkAH6pOeAT+rs1Km5KdG0bsnHZsbNUaIn/z8f1+68Tr5CO25HZPTuP4ohFlbCGLv4CTbd/IRDHYuieeaS/3U1U/9Pscja+5cuaErCLtSNbXmZityqY9vmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lQWOE/JJ; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Wr5dx9X2r5CNaB94bJNTKGI5yojrKzFXJuHk1XmLeJcrlxicqQr3lGfc5ip840M6wSKMXVtbfrYPMj/QICFceU6qc+2BbOXVRNaQ9ijdEc6C9T08ahNtCLfB+UyJqhNbRkDynG65nNsFNkkJOi587NA0zrSHlCtJvFj4cnJ480E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RwpBMjvh; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQWOE/JJ"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab6fb2940d4so618418766b.1;
-        Mon, 03 Feb 2025 04:11:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RwpBMjvh"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6f679788fd1so23195367b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 04:12:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738584672; x=1739189472; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vC3+WjLhlpstTgR2X3bUINeiUZ7D7J/mU9HK8P5Il04=;
-        b=lQWOE/JJlcdjat++l0KrI7Dyx7R/wQPV/2zT1jb9cikcNxcklRTcJug0n57k7nYBzb
-         TRJYx5gYtI4qmXIxQDzq2e9ERqiQjkOOoh+0jDqJmW5YFEHMgNBQ6xHk7KYglf/JlWVy
-         LIPIVoA+ZrRsUgKkjT38MU+BCknW7m5P7i9gAMDG7bF+PTH2/u5dFUoklJTIuA1e01Cl
-         vlGraL7USPLef/Eh6oQbUltSkSZQPlUP3Fyqu4GNraMbHJjxirpf5h0PC65bskxcHg3N
-         RAz9ACdriWCo440OzkyQ5irTH+mOVA/sA+yGp/U53OTLY46TuxyATjPVtMnGQc9mLuT9
-         skrA==
+        d=linaro.org; s=google; t=1738584771; x=1739189571; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=G1fCnNO9BE+pRYsCkXAChxvPSR83W+kvApJS3N7O428=;
+        b=RwpBMjvhc76XSBYuCALvMc+iK/K0mSKq9fTFPQuu4KEfONDzTIpNXTCg29fgHyM00n
+         XQKKqulzsIDmkae2zkOS6vWIaqOpiy59T1lSdIKsNn9GHw79qD03dNuTuYoPPuk4WGPo
+         GaVV+O+Zs0NdVT7YuFx2peo3K1TzshxVobFyYIWZUxwbO/zaWofvsgO3pgjDBP1FBz9G
+         ZFu4jAr6oZepExmSKJOWTUpNmp5mnnPmMGMBs6Mad3o9b9/i83/jNRpqJMdC0C3uvKTq
+         xPYGDfXKd+7ROUyQYN6wuJxIELzCvM/JHzzMtUv6koW/qtXSkKKmUvgr8eX6hQXf4iqK
+         0UQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738584672; x=1739189472;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vC3+WjLhlpstTgR2X3bUINeiUZ7D7J/mU9HK8P5Il04=;
-        b=Kjn4xov1Tx2b/z8j0FrayrY0rsfYewM/XnwKRPSf7XbwhN+QKPElqa5f1pop3emxlV
-         2YIH8ZUWlRZKOwwuU7SjQxK9mbw2JhBAjfccjStQ82XFH7Y4nGWG0+KKJJJhz0NAUqo7
-         pVU7B6ev7FDc7Z0asdL+/Fk4Fg2cSyKRAbInv39UaXhzDVkMvdlcxjd9hn0vNQW6LuFq
-         VOu/ULYjCMqkAwTbkgWosY9ZZFzOAW20DOe+kxHF6JTSwjIlBioxfRy7lA4szIbidZA6
-         MtqKRXDQYxvCm0iqaU8as3YZYYF3Ry7vayK2xyZ9WeOusx+FgdXvTT6cjCUr2OPhewDP
-         /WUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHKGvhUbkNYcOXyRil3pLt/NsehFEQHU9BKKVhdjO+1HIgurtN3NQCrf5ZpoFrXN/sTb6j6IC+/kE4@vger.kernel.org, AJvYcCULJtjdd/pwaXRhAw11+AQA8Dn6gn5ydG6RVA6RYqh27Pc5D2jC73aWtkN4Thgz1OsdSffbcMR82yCD@vger.kernel.org, AJvYcCVHq1n+qAKqomWif3mj3YSN+3avimmx5HTQfgycna7dL3RC623xEKVClSs1UcG6+Glf+gAoE17U4XLbOU+j@vger.kernel.org, AJvYcCVnxD83y24YqZRin5danHyXj+9ZaAdXKpG0q2n77ZcQM/756cRcp88IicOMzEewP98ZY8lPSKPEx8nXz+M=@vger.kernel.org, AJvYcCX5bZSMjXbqXcUTODn4iYAijehUmuYm8b3LwvkArjKK17p5L1gRgSPX6gNv2Drh6n/xST3UFMrB@vger.kernel.org, AJvYcCXnS1Wg3y78e8t9cX1klcQiHF4Uzl93cIzBXKa79ED8554JbWAN557MW5/5Ci+vwDyBfCjjDi1wftuQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHQQDkdAhX5Wt2o05tvvUYK5pckvQuVhisuP+iuIlb5fOsXluH
-	iprGJBhwUJN88NX8KiGwrUNbS1TSLx/0/Tsl2KWq4rOMU5g/PZPYCzpXPzEHz8Mkwp56GLHdIeq
-	YikjefmTrd7lJ8+kv7jgr0V7kbsA=
-X-Gm-Gg: ASbGncv9BcF8HBd0bji2UkwCOHmpbWHAj1UexDyVcwE177AXJRP8h2Sjcx99+qRsiC1
-	cXHG1/9AxubbP2xKtrzKipchDRq+TLgFuoLiktDjedopfyf8dn5gz5vPz3JJQ0zwnKpWoZJ7qNj
-	4=
-X-Google-Smtp-Source: AGHT+IEl0shu0wyCbYmjiWbZ8xSkp39SyMbNA10oWwjLNUg4dYl7AJ/ctOStbBTvln5XQSzLfDgbhCKUVzpxgJe5YOM=
-X-Received: by 2002:a17:906:1707:b0:ab3:a18e:c8b6 with SMTP id
- a640c23a62f3a-ab6e0c3105fmr1897817666b.10.1738584671668; Mon, 03 Feb 2025
- 04:11:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738584771; x=1739189571;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G1fCnNO9BE+pRYsCkXAChxvPSR83W+kvApJS3N7O428=;
+        b=EWkncQUBqRYEAye6zzgKK3J0AL05MQAavoRDOxrnmVhaYYztRBej1Q0og1gXlhJc7T
+         lMmc1RHzegZrmd80/HcwMcKCfdIET3A4UZsEAv9BeErsAfx2Hjq9+bJtQnU3MdsIxO2H
+         2ZQN3nZgqAqubrfQrKz2WDyP7iUOqZNZwp0k41eA1866zgDhOOdw4eyGnkyDY9LmKQDR
+         Yd+XAczOdE6IKGuO/YS+7Ieh3oRL+1aI14KT8MBzeYznXUhdb5wyMJOLwKMrPDtJYdcT
+         RJbexwzlqaUqByyPHtuidQBwTj3J3eTNDEkiCzu1ZGL9zZApCqLqGmswCP3t/F7htoJE
+         c4KA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9HlWxI6+/2oVOc8Tmla+Qa7l5JWatuFwpHUpKg04F79P/Q2hQc0F40A3wygNDV6Q1ovt87v1b+DJu7g0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIgXch5XeIbEZCio87F73OMiu/5uOH4FqGpA3SJGxYApkTmoES
+	ga9+Egjg0Qxsu9wzHYgRoB3qGxHe03KKRFHiM68e0ii1GY9oRMfnQX+lADFGjVy2FA5VF3H2pZ1
+	VpdQXhSRRmBupAxLwOFMuRj+5M6BF2jZMd7VfNg==
+X-Gm-Gg: ASbGncvZGEOiFR1mJbfGi5ap7hfOsO9SF9xE/+vIB6pcL7ADybed97Fgd3ciNZ7kZe4
+	K0uQ56pH7Ci/fNKwR6Rv/Aot3S47Po60qmH36ySVQ9s8+JY2cLVTxqLw2akI0V62G3wTG1Os5Zw
+	==
+X-Google-Smtp-Source: AGHT+IFRUR8JbA29f5mpJGLTtBTaacsV+IGEaozqrnO9adT6XC3/4NobaMzzaIo2HNZrmPqrTbZHo5WN9mGkT+rdHeQ=
+X-Received: by 2002:a05:690c:3581:b0:6f6:7b02:2568 with SMTP id
+ 00721157ae682-6f7a8423943mr162561157b3.32.1738584771686; Mon, 03 Feb 2025
+ 04:12:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
- <20250131-gpio-set-array-helper-v1-2-991c8ccb4d6e@baylibre.com> <CAMuHMdVqNiquGdEs16GMTA6DPCko=TX84XWJygAorTnQk=+PUA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVqNiquGdEs16GMTA6DPCko=TX84XWJygAorTnQk=+PUA@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 3 Feb 2025 14:10:34 +0200
-X-Gm-Features: AWEUYZk_mY3onXi_-WCfb4vPsGEHZy7b021-vFp4QXXzEaG2YFkuGveLah_lXTQ
-Message-ID: <CAHp75VcUiNVFktAL8zFSf-8tw_J1vJp+D_4Z-hYDqRp4S9C7ZA@mail.gmail.com>
-Subject: Re: [PATCH 02/13] auxdisplay: seg-led-gpio: use gpiods_set_array_value_cansleep
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: David Lechner <dlechner@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
+References: <12619233.O9o76ZdvQC@rjwysocki.net> <CAPDyKFpc5p3sXZ6LfdVgt8jR5ZbsQExTgeyMNA-PzcWs5A9U0A@mail.gmail.com>
+ <CAJZ5v0gvQjp_P-5Ww7iN1cGiiMJ6tvLLnPpkTQNk++KhoRe=GA@mail.gmail.com>
+ <CAPDyKFrBO+r8qYRrhoFZN21__8RuR61ofbsGQZbA=pyQbti5CA@mail.gmail.com>
+ <CAJZ5v0jTutgKeXtg3YLR1Onw9gOmvHudHamVVgMxEsieNDXViw@mail.gmail.com>
+ <CAPDyKFpmNPhyV3YoBFu7KnW04550DQgqzGHAbGLLqp7=TggVtw@mail.gmail.com>
+ <CAJZ5v0iYHBeMra_ba-1Ht4xoPGsyt7gg05RtGxoa_gG91s1xEA@mail.gmail.com>
+ <CAPDyKFqkqOXD0oVZoOFR4O6ucqLS4n85_S4SNPvPAc6hfaELgw@mail.gmail.com> <CAJZ5v0jAEJ7DPS4yarwL5Nx_8EVNR0XepjnsCdNuM4pF=Cw9bg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jAEJ7DPS4yarwL5Nx_8EVNR0XepjnsCdNuM4pF=Cw9bg@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 3 Feb 2025 13:12:15 +0100
+X-Gm-Features: AWEUYZntgiPQgKGhnRjLHhrJxgceqb9ss7gC4Ai8-DSdXsy0Am7_yZUV7wpNkTU
+Message-ID: <CAPDyKFp9RGFAGjChF6jLqy9GttbJm06BGAfOLdZaXUrcagfCgg@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
+	Bjorn Helgaas <helgaas@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Kevin Xie <kevin.xie@starfivetech.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 3, 2025 at 12:35=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
-> On Fri, 31 Jan 2025 at 21:24, David Lechner <dlechner@baylibre.com> wrote=
-:
-> > Reduce verbosity by using gpiods_set_array_value_cansleep() instead of
-> > gpiods_set_array_value_cansleep().
->   ^^^^^^
->   gpiod
+[...]
+
+> >
+> > The problem with $subject patch is that drivers/buses are required to
+> > check the runtime PM status, with pm_runtime_suspended(),
+> > pm_runtime_status_suspended() or pm_runtime_active() in one of its
+> > system suspend/resume callbacks , to synchronize it with the HW state
+> > for its device (turn on/off clocks for example).
 >
-> Am I really the first to notice you got this wrong in each and every patc=
-h? ;-)
+> Well, I'm kind of unaware of this requirement.
+>
+> It clearly is not even followed by the code without the $subject patch.
+>
+> The real requirement is that the runtime PM status at the point when
+> runtime PM is re-enabled, that is in device_resume_early(), must
+> reflect the current actual HW state.
 
-Who reads the commit messages? :-)
+Right. Seems like we are in agreement, just that there seems to be
+multiple ways to describe the similar problem.
 
---=20
-With Best Regards,
-Andy Shevchenko
+>
+> > Certainly, we can not rely on drivers to conform to this behaviour and
+> > there are plenty of cases where they really don't. For example, we
+> > have drivers that only implements runtime PM support or simply don't
+> > care about the runtime PM status during system resume, but just leaves
+> > the device in the state it is already in.
+>
+> Drivers that only support runtime PM are broken with respect to system
+> sleep ATM.  They need to be made to support system sleep or they
+> cannot be used on systems that use system sleep.  There may be a way
+> around this for system suspend/resume (see below), but not for
+> hibernation.
+
+I think calling them broken may be to take this a step too far.
+
+While I certainly agree that these drivers have room for some
+improvements, it looks to me that these drivers work today, but may
+not with $subject patch.
+
+>
+> > Moreover, we have the users of pm_runtime_force_suspend|resume(),
+> > which we also know *not* to work with DPM_FLAG_SMART_SUSPEND and thus
+> > $subject patch too. I am less worried about these cases though, as I
+> > believe we should be able to fix them, by taking into account the
+> > suggested "->power.set_active flag", or something along those lines.
+>
+> Yes, and that's what I'm going to do.
+>
+> > That said, it seems like we need another way forward.
+>
+> I still don't see why, sorry.
+>
+> I guess the concern is that if a device suddenly needs to be resumed
+> during system resume even though it was runtime-suspended before the
+> preceding system suspend, there is no way to tell its driver/bus
+> type/etc that this is the case if they all decide to leave the device
+> as is, but as I have said for multiple times in this thread, leaving a
+> device as is during system resume may not be an option unless it is a
+> leaf device without any subordinates.  This has always been the case.
+>
+> We'll see if there is any damage resulting from the $subject change
+> and we'll fix it if so.
+>
+> In the future, though, I'd like to integrate system resume with
+> runtime PM more than it is now.  Namely, it should be possible to move
+> the re-enabling of runtime PM to the front of device_resume_early()
+> and then use pm_runtime_resume() for resuming devices whose drivers
+> support runtime PM (I don't see any fundamental obstacles to this).
+> One benefit of doing this would be that pm_runtime_resume() would
+> automatically trigger a runtime resume for all of the "superior"
+> devices, so they could be left in whatever state they had been in
+> before the preceding system suspend regardless of what happens to
+> their "subordinates".  It is likely that some kind of driver opt-in
+> will be needed for this or maybe the core can figure it out by itself.
+
+Right, I am certainly interested to discuss this topic too. It's not
+an easy thing and the biggest problem is that we can't really just
+change the behaviour without a big risk of breaking things.
+
+Some kind of opt-in behaviour is the only thing that can work, in my
+opinion. Anyway, I am here to review and discuss. :-)
+
+>
+> It can look at what callbacks are implemented etc.  For example, if a
+> driver only implements :runtime_suspend() and :runtime_resume() and no
+> other PM callbacks, it is reasonable to assume that the devices
+> handled by it should be suspended and resumed with the help of the
+> runtime PM infrastructure even during system-wide suspend/resume (that
+> doesn't apply to hibernation, though).
+
+Maybe this can work in some opt-in/out way, but certainly not as a
+solution for all.
+
+For example, we have subsystems that deal with system suspend/resume
+quite differently, where drivers instead implement some subsystem
+specific callbacks, rather than the common system suspend/resume ops.
+
+Kind regards
+Uffe
