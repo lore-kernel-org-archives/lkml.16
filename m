@@ -1,62 +1,41 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E0715383A
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 18:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5A5770E2;
+	Mon,  3 Feb 2025 18:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738607901; cv=none; b=up/BRjwd9DlurDffjPkqp/GYfmDr0Bplmh1jaG9KSZPVuIA8KkIAYAuE4AZ2sTL+W21nrZQj0O6eZbv4GrtQO0SHmsqPOkvBVqgVXZACHaYUVFsGX4Oyb91Foy6rYLY7epKnigrXR4GkO+WFY6Xfr5ceRDtUJq1fd14gq2fN3MA=
+	t=1738607992; cv=none; b=j0SmQ16kY6mQ+UILAL76MNQy+gQoF0i5A+sXfXHfLTXnS3TiTCW0hiRXnuHbPB0HzVof7EfRIWjSMTebbPtNaezosm672p4T1nsglax6sko3xLBAN0VxcD/7Q3af6dSHOzcqgDMD9xwVQQ+WfGL9iF+n84m9hKnguxj7VOZ6HPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738607901; c=relaxed/simple;
-	bh=NfoHEeS9ety3RUabRC5wtZ/YDZzyPb5mVsFRQaWmcaE=;
+	s=arc-20240116; t=1738607992; c=relaxed/simple;
+	bh=1ECSg/FdzmSV0OQodMbSYlZPzPP5tXnGfeHYyV+4P1M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LnD4T4B4npVRoVEAOqyCvgscKpI7cvT6s8ca07ytNDWGAbwKniWtvzAdHtYmOq4f/6ZbPEDVeZHS8YBUiL0THTg4bG49GNSg3l9QRJrbwJO0+/A+2EBXOXenK5BsgIalh283skBOmOWN8787t0BXZZGETMOpF5MVK5ebS1Y6NCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=S3om0FC6; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	 In-Reply-To:Content-Type; b=nGCOp/wXApuN7av2+dRAp57NW+fZb2OCeJiycu8E4XCFUM0crk5nsVFW4KxujcL3sMvO1wMSOA+tqAV2G+aOvYGWB2jaQpkKn+pJWCfPzP/YfTuo7BZ3pi26c2SBbc2Q34KQeMZdxONpn5DqAD0y0VVKi2fSRAbgb/hci0jFUvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=MC2ryNCF; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S3om0FC6"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5f2dee7d218so2115733eaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 10:38:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738607897; x=1739212697; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=SVQO+IqVJBjIpGvloQABHH8Rsr9K0FypYEqAHJLTov4=;
-        b=S3om0FC66+7ID3mVH850TojMM6AuCcuipWVG63N+rPmEinDNwBQm1h6j3VLmOH9E59
-         lcF4CpagEuXuGgPbQJzY1NXZwhl81++opQaCRgEkdZpekFF5gsbYzJddChA1HEerocMj
-         02sA+W7L4yVzolgvBfCi+9I0/X3wv+3IgkO58=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738607897; x=1739212697;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SVQO+IqVJBjIpGvloQABHH8Rsr9K0FypYEqAHJLTov4=;
-        b=rgZUOfnwbXhh82PB8z91ZmsBjDJAPF8qQ9Y40t0RAbHmuzU0jpzTyqXaetA6SsKK+Y
-         VkhOcn7QqmxTHKuUPM7hXHjfTrXuEZ0ypW2+gAUXAdTY6P++7bydS2YWwXkX9O1DlJK8
-         /MqKzpRqrRKa0RcOVKdIHaebCaXjmA8zrQyUxY6XFJdPst/Mn9C63j382Fa6lWWKFJU/
-         8hykBkUH+zrxMFRPQYsjz6IstN+h3+IsWN3KGh5XjF81V1M+MJh6M0F2mmjJk1inWHSX
-         Gc7WlnhYo/1j+dn5Urc6vDrWtOenK98Y6hI0yGKAvoqpL99Jwuzk+41fT9PyMuNCMccE
-         p0Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVlHACM62Vv8pYO3brBGTkizCnDDtIYsId0XLmuLipKUiubT31ThZSCR8aPAPZnmSzad24kERAV2OPOmi4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyvmzdw8p79BNWX6D0Gy90g9rbrdZ3Xcq+zSRAPD36q8JRoPVXv
-	NJFPhjNetxkF0mIIOHN3S98eftDAblszA1Fr36KpLc+CT68F+vlNouCvUtS9eg==
-X-Gm-Gg: ASbGncslP/eoW1tXPB9jbSWgjeH9O1O60gDbtvmHmR2z1Hp1K3gdPBPbFc28K7bYrv+
-	cT6eux3fQQDc1Kao8J/Pugh+d0EMgE6RsYXWybFN6Okr/kX53/R+fOiuNtoNQ/O9OBn43ic5Oat
-	/v+joeQd151Dz3VTvEiMOtwswMtLTyvccUQU4+VXZgTv582tC2bMBsVV7UAUGZJPctVZSONN99c
-	OOtVyGqfU/fR8fiUUfyBFCuRGDCf/UVrmMlwWRnPLRfT2yokFSGIY5WFYEAkqkXTft9StmWfVhg
-	Grx20Ims8Tv8mJeOqcPz6V1xUp87ikZdH7ya+dMVh8GYLu/0ikuiJGY=
-X-Google-Smtp-Source: AGHT+IHq0UgRpgomIh9PzY77Gg9Jllh5zVnpCNlPjS94WHuq2Eom48xqYLcjpklGGEZPFXErKSueNA==
-X-Received: by 2002:a05:6820:2d43:b0:5f8:89bd:b99b with SMTP id 006d021491bc7-5fc0045ccccmr13214655eaf.8.1738607897456;
-        Mon, 03 Feb 2025 10:38:17 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc1059ae47sm2782744eaf.28.2025.02.03.10.38.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 10:38:16 -0800 (PST)
-Message-ID: <682b3f4e-7a32-4baf-a4ac-04ddf9c01a3c@broadcom.com>
-Date: Mon, 3 Feb 2025 10:38:13 -0800
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="MC2ryNCF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1738607987; x=1739212787; i=deller@gmx.de;
+	bh=1ECSg/FdzmSV0OQodMbSYlZPzPP5tXnGfeHYyV+4P1M=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=MC2ryNCF6Q1Tw5QGpmwWP9+J6wiv9nK6O21t90ObJRMKKGEJ1clnlGr5Ljr4aQ3m
+	 D6NuaF0N9GFsehmFO/8Cs/rMABc07WtTv7yx6Ntgsybkqecq3Wj2yqwLfk5nN1Ev/
+	 zmS1C+OA/yluJtC4pRRuyj2DBYme8UsMAYXcNyX2HQkz0/v7xKORfq0048RxPiR9N
+	 4ui8GiJbMiLw6RBk7mfr5QcOKRK5D+2gIDzhcjOLAlz6OPk8vbHOan42XsielpPY7
+	 AobEze3Uh0UTmxlJcoa1qLx070RftQDm7mGPvgGRJPpWaHBr+QBKotKPihlmd9zaa
+	 xI388EIFS7W9tprsdg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.172] ([109.250.63.6]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MqJm5-1t1tAm2k8R-00Zgw6; Mon, 03
+ Feb 2025 19:39:47 +0100
+Message-ID: <61390496-2066-4b9f-bf1f-235d29b64135@gmx.de>
+Date: Mon, 3 Feb 2025 19:39:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,64 +43,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: brcmstb: Fix for missing of_node_put
-To: Stanimir Varbanov <svarbanov@suse.de>,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- stable@vger.kernel.org
-References: <20250122222955.1752778-1-svarbanov@suse.de>
+Subject: Re: [PATCH] parisc: Remove memcpy_fromio
+To: Arnd Bergmann <arnd@arndb.de>, Julian Vetter <julian@outer-limits.org>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>
+Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250130134825.2646380-1-julian@outer-limits.org>
+ <543bd0f6-b25d-48b4-8039-496b8ddd10ce@app.fastmail.com>
 Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250122222955.1752778-1-svarbanov@suse.de>
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <543bd0f6-b25d-48b4-8039-496b8ddd10ce@app.fastmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:NJykvA3vcriUa0/YiN0vyq6lejL9Ru4P+kP4MRJ481XlM62U42P
+ gX3HtutHu+6P2XXJX8F07XGibpWsSxRdrlJD/JnHIr/2OTXFSYfRINmCas1B/Te/3zj3uxb
+ mWXJVDmBqVJH0DH2EsrMhaEejb2jH6wlvkRj42oCxEPSus/kw4+9gPaECCkrjxbsD4njR6i
+ qnwuQqTi0HUeU8yhTD3Og==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:K7pVWQhOrTw=;roAyh53KDu9P1GnOD1aWSNkKpE6
+ Fcy8dJ2cq1Q9M11pkKY1fz2FKkpQbR4oCt2I5T0AKdpADQrK3fh3LAGnUZWOjEkEkRrSFYr5H
+ 8ldpbGZnmwEDOcIMW/a9wn7dLtrEcwsqxm41kwQ1MG6fgfPr1xuPe/EeeubAS6U7+CYp6+N/e
+ jLjrylseLFplZROe4W42g7ZeemvHnUXs5VNadlT+LqLq32ipUDgMWQXWliVbbD1DX+jRinEGZ
+ zS3CexaDxhgjyXe0JAGV5xN3qN2CnM+tHeQonSX0V+YcAF4lliuTWHJywHzQWHIgmfW+T+wjO
+ W3wEEeBGMMdq3i8XCdIgHBoDu485nuzt0xxUZFC6pITIp1MTiWhCOEG/2vnRiHbIcCtitv4V6
+ WYgdlyTYzLIhk3tGOqZjiSN6+6Qj1VS6Bf1MvrIkPxVXfU7TUC0UJouHd8sNWrp9SrKMrFL0f
+ 3LNKMfGXlr/9fUhKtFAnl3qmX0FiJv2F6DFYxIcom1PMFkIt1Ou0jrH6ktIvksuQl49AZ/BB9
+ o3TlSM/9kVy34rdvnW/jS7ScZ2fiOHZgSt4QSKhK4kAqhTgrxDryXS8Iv9ypeFvtM/71KjYqK
+ g9gXQ7Ge7Z98Coy3is2qB1Ej5a47o8jY+98SfVB9ASWFcVCeeC5fTGjiBGeHw5eGI4FlTGnkl
+ 77uROCKlgFWM/TgpHSdXE0FI49F2v5BaPJBiL4nRYkFMTUIFj0/quHPKZzaUzse5kYXKDtZ/5
+ yt3Bt/rg8h2zEj8mE/YaAQHwog9Qsa6MgKZIOIv6RmNZPCQ8F4vTZ2XOl6VDUmIz0eoN0QgVM
+ 40m5DqJ8DQSgMRN8bMblqysc7WTFQ81F2PhK9RHX2DgRrKoDk51w1r1iH25y1LJHwjl2bT2c4
+ NzLrRP/GNy8Y/pULiCZOdvVpoS+3AweEWghWTlGy4nmM1tPn1FcsK6tO2UqG7i83kQIRpidUt
+ JRqBpzPVSeQvxMDwjkwjE3i7TpBt8yMbQaglFUOfdxodzcVnZ5bp2GEJAOTuNCSpnZ4a9Vlqi
+ xedlmIv+QEgd5+M1DL+iLZoZp44oJU1hukZOsZablWMXILzmJwl/G5TnLUFVfAgwQ6D3ctEAV
+ yUTKNFjNNHAjFt9VfI73oz+j1LbfetOcQKjmJmkJo7DNGxQEmMu6kuf7XU5/yQPwbORTxStbk
+ CmwzUvg84k9bvUceaCMtnN2sTN2snZmmfISY18Jw4kp5RRDKeJ2NXdOWkfnldJvycA+L+x/0C
+ j9M2915RGHVGMtm5kSfrw0fCS/QiMOHXhll/zdPV4AYH7vsorY3NSFUWd8rtANXsMhgnmqGro
+ 4CxXQFIzqOD14OpvAC+oUP2p1Ckpe7DT6qLR4/idzZCd2I=
 
-On 1/22/25 14:29, Stanimir Varbanov wrote:
-> A call to of_parse_phandle() is incrementing the refcount, of_node_put
-> must be called when done the work on it. Add missing of_node_put() after
-> the check for msi_np == np and MSI initialization.
-> 
-> Cc: stable@vger.kernel.org # v5.10+
-> Fixes: 40ca1bf580ef ("PCI: brcmstb: Add MSI support")
-> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+On 1/31/25 08:28, Arnd Bergmann wrote:
+> On Thu, Jan 30, 2025, at 14:48, Julian Vetter wrote:
+>> Fully migrate parisc to the IO functions from lib/iomem_copy.c. In a
+>> recent patch the functions memset_io and memcpy_toio were removed, but
+>> the memcpy_fromio was kept, because for very short sequences it does
+>> half word accesses, whereas the functions in lib/iomem_copy.c do byte
+>> accesses until the memory is naturally aligned and then do machine word
+>> accesses. But I don't think the single half-word access merits keeping
+>> the arch specific implementation, so, remove it as well.
+>>
+>> Signed-off-by: Julian Vetter <julian@outer-limits.org>
+>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Thanks!
+I've added the patch to the parisc git tree.
+
+Helge
