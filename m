@@ -1,112 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F9F20A5CB;
-	Mon,  3 Feb 2025 16:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A93202C2F
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738599217; cv=none; b=GHIDEzBRGsng/r3tc+2PN5rCNehThUtlxJS2rEXypjtu8NdWfUMHW6Ic3zBFNvGEobIFFdzDyAJuQcGzU+i+4j/OZcKz2CHDVsOjJEiQG6ZwTIw6tYZjNXKf9/mXueELXq5OEMgk5QuzGqs+kifDqch6lrm6LN7c4mBpf+K6U3Y=
+	t=1738599260; cv=none; b=Z9Dd/k3zZW/1gqA5PlapWOHHtn32ZywS6POkCW1XeaKEVrEV3tv4pKYM61OHalU1PVZW47hvc0sfMYr8VbM7S/cU7UaPfQhHIwV9XJjts/VeNH6wFro3aXtexpm8PhxPP/BAlHOG8Sks0eBu3vT0sQ9F0i7X/9in/oMeM6JCapA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738599217; c=relaxed/simple;
-	bh=t/Y+Z+5KTI+edvzeLZ3jJzu3xlo3CBjQnZgM83t7eCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NOEe77VRlK2ppq+WBYXBQHD3Rz8zUJubQeiCqiaqXXTlduPfoMREoGU7QgAHlPwOGTIEg0TLdGk+ysAYH2HaiO+ygvhVyM3x7BZy1XK2EOQ3SwVjYxX4uqvXkbt8Za6Qd6SO223QS7b+s5gm7JqTTZutcLWPh/bpDPQN+N/ov08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PqP7LvUN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738599260; c=relaxed/simple;
+	bh=b2JOUkIYh6C7SR/NDzXSOGXjIDLsFLX8XgBG4uI9Nn8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MyDbXxjOAikICQt5hVnQPUGI1ipZXPTxdoBkcP/6LUE5uYEagJZ8T901byn+niYWlXU8ie4pkFW6eK4eAwBR8oOraLcOrmw87+zFVXKCMkiryoV8tFJ0Q9D25uEdytOWBo5ec0NxAuZhiaC/NVV3SBzfBBlOYRbXPCTugym6DZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TZt0I+dl; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PqP7LvUN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB68AC4CED2;
-	Mon,  3 Feb 2025 16:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738599216;
-	bh=t/Y+Z+5KTI+edvzeLZ3jJzu3xlo3CBjQnZgM83t7eCA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PqP7LvUNUQ5wLFIgTKsUlVmDB2F52hSIRFrsNKXjHo4mbls7wv3/e9BEc/wErpvAV
-	 5cZAoIWNixGZOU/u8YSStbnASLWuEhk3M1F76f8UJz985iTGt6glnFYyY1GTo8FAY9
-	 3R0BVWzBKU0olMmA9YzVplvMnInGXc0jdRK5jnDY=
-Date: Mon, 3 Feb 2025 17:13:28 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 1/3] driver core: add a faux bus for use when a simple
- device/bus is needed
-Message-ID: <2025020337-obstruct-washbasin-63a4@gregkh>
-References: <2025020324-thermal-quilt-1bae@gregkh>
- <2025020326-backer-vendetta-7094@gregkh>
- <Z6DchyPieQKBJ0SN@smile.fi.intel.com>
- <2025020300-gown-outmatch-1343@gregkh>
- <Z6DpP3qMNYZoKEP2@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TZt0I+dl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738599258; x=1770135258;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=b2JOUkIYh6C7SR/NDzXSOGXjIDLsFLX8XgBG4uI9Nn8=;
+  b=TZt0I+dlLJthLp9fJKYdKYyr+lJBhPgyKun7YrVyg9rorqsesE4uCNbH
+   xuviEAdWxigQnbkmwG2ty4Ak9kIlF0TDS/dKCotGPgv9K8v3lwYHmHMdj
+   llHo+KAT/hWgaGqAsJVuUWSnIesJkCp8o3bkRjuy+UmNcCljTqRdTjELl
+   kchHTurh+hKmycSjkAOruX9w9JxGEsYbaCbSm65guKVCSu8LuNHha4HU4
+   Fp8KJFPxnxekVNyJQxE398R0irrXFqJY4nOBuNXSGLwJk2usvL3Vu/huK
+   ziSiFBoHte0YMAX9/1YPqpucgEOqaeql373HW42kXxSN72zK8uX+uOU9/
+   g==;
+X-CSE-ConnectionGUID: t+vwlwxrRLKI8duDoSCSsg==
+X-CSE-MsgGUID: q0lxp3gVRNmIersO25foEQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39129514"
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="39129514"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 08:14:17 -0800
+X-CSE-ConnectionGUID: DvlgXxWgTZqP6iniT7WhKg==
+X-CSE-MsgGUID: s5AYetY8TJ+Egl9KFJNEQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="147538490"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 08:14:18 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id C78FB20B5713;
+	Mon,  3 Feb 2025 08:14:15 -0800 (PST)
+Message-ID: <5341a60f-087b-485f-8988-4a57f1d0cee3@linux.intel.com>
+Date: Mon, 3 Feb 2025 11:14:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6DpP3qMNYZoKEP2@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Cleanup for Intel PMU initialization
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com,
+ alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+ linux-kernel@vger.kernel.org, dapeng1.mi@linux.intel.com
+References: <20250129154820.3755948-1-kan.liang@linux.intel.com>
+ <20250203131600.GD14028@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250203131600.GD14028@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 06:05:19PM +0200, Andy Shevchenko wrote:
-> > > > +/**
-> > > > + * __faux_device_create - create and register a faux device and driver
-> > > > + * @name: name of the device and driver we are adding
-> > > > + * @faux_ops: struct faux_driver_ops that the new device will call back into, can be NULL
-> > > > + * @owner: module owner of the device/driver
-> > > > + *
-> > > > + * Create a new faux device and driver, both with the same name, and register
-> > > > + * them in the driver core properly.  The probe() callback of @faux_ops will be
-> > > > + * called with the new device that is created for the caller to do something
-> > > > + * with.
-> > > 
-> > > The kernel-doc will complain on missing Return: section.
-> > 
-> > Is that new?  Does that mean platform.c has lots of complaints in it as
-> > well?  What does platform_find_device_by_driver() give you for a
-> > documentation issue?
-> > 
-> > And as I didn't hook this up to the kernel documentation build yet, it
-> > shouldn't produce any warnings anywhere :)
-> 
-> I would rather say it's old.
-> 
-> Run
-> 
-> 	kernel-doc -Wall -none -v ...your file...
-> 
-> and find the warning. During the kernel builds this is moved to extra warnings.
 
-Ah, nice, didn't know about that.  Now fixed up.
 
-> > > > + */
+On 2025-02-03 8:16 a.m., Peter Zijlstra wrote:
+> On Wed, Jan 29, 2025 at 07:48:17AM -0800, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The patches are to clean up different features. They all touch the
+>> initialization code. There are some dependencies. So I put them in
+>> a patch set to facilitate the review and merge.
+>>
+>> Patch 1 is to clear up the PEBS-via-PT on hybrid.
+>> The original V1 patch can be found at
+>> https://lore.kernel.org/lkml/20250124183432.3565061-1-kan.liang@linux.intel.com/
+>> This is the V2, which only update the comments.
+>>
+>> Patch 2 is to clean up the 023H enumeration.
+>> To close the discussion at
+>> https://lore.kernel.org/lkml/20250127212901.GB9557@noisy.programming.kicks-ass.net/
+>>
+>> Patch 3 is to clean up the counter information update and check codes.
+>> To close the discussion at
+>> https://lore.kernel.org/lkml/20250127164406.GN16742@noisy.programming.kicks-ass.net/
 > 
-> ...
+> So I can take 1 and 2, 
+
+Thanks.
+
+> but 3 is part of that arch pebs things, and that
+> series is not in a shape I want to apply.
 > 
-> > > > +	faux_obj = kzalloc(sizeof(*faux_obj) + strlen(name) + 1, GFP_KERNEL);
-> > > 
-> > > Potential overflow. To avoid one may use struct_size() from overflow.h.
-> > 
-> > Users should not be providing the string here.  Again, this comes from
-> > platform.c.
-> 
-> I'm not sure I follow. The name parameter is not limited anyhow, so one may
-> provide non-terminated string and strlen() will return an arbitrary number.
-> Potentially this can lead to big numbers and become an overflow when gets
-> to a parameter for kmalloc(). This most likely never happen in real life,
-> but still the overflow is possible.
+> Also, I'm not at all sure 3 improves things, it might just make it
+> worse.
 
-I've now bounded at 256, because really, who needs a bigger name for a
-device than that :)
+There should be some improvements for the initialization code. At least,
+we can reduce the is_hybrid() check and move the 0x23 enumeration in one
+place.
 
-thanks,
+Anyway, I will think more and see if there is more that can be improved.
+Then, put it as part of the arch pebs code. We may have further
+discussions with the V2 arch PEBS code.
 
-greg k-h
+Thanks,
+Kan
+
+
