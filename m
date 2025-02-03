@@ -1,181 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB3D1D7E50;
-	Mon,  3 Feb 2025 08:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08711FC11E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738572011; cv=none; b=cM5LpnVnOt7nyhOVUEkxA9eKix6HKCbXLwYYiQadZ/hNUNBe6GEN8Ven2qxzwpCeqDF7NhJ0CIf0nV8jzloFzFnPXQDrtvFrU7u6Q67VPKkqS5ID0LB6W/ZO2UJ86zxOwZoPxKZpPo774P2eD5+lhRIn8X7ApSvbP8PTnsEHH3I=
+	t=1738572015; cv=none; b=L1LJ78vP+cA8aLfluQV6T1f+q52ba/t4Ud82/GbBBJWXWhcBYHzmrBVW993Vc8nwS8ZK0qlKLKhAhryYA4CPGnxMg8RQsZDusnd1N7DcfORunTaj0IyORP9QSx36Am0iO+D3qa6YkcRvQQg5FocFhoC9u8hA8D8fhS678FB8aZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738572011; c=relaxed/simple;
-	bh=7nb8HRa0cFbzBFBnN4bI0GsAQD01kUzx8HOrS7jz88s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QPYuRk6PoZJqZ9J/Mcv12c900tB8VCaX4S8WrwjydnOqPRH9LxRTCgCPGJuLLDoX8w+gRgMm9yTR4Zr7rhI0nuQkrBuz9AffO4jkG0TiRHVfoVyH81uJw/JJ+jpTtdwxOYKGnCFlHMyJSAzYCM3TzRzLTSAOdGoDlKh/jI1LCUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PTnlTc6W; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738572015; c=relaxed/simple;
+	bh=S+86EJ1lLsVul0int75aL7Lj7PiAJjUt0p43qzaqYOw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f48qotB5gJa9CEIHsXzES3aGEHUSKj1wW1zvpwb5N/qIydI/2UjFdvrNTkFdTtsDw4g8rB7yV84bvpDuA+V2SV2x7YusbQFIqgVlKUBB8CANbd60D2h1+5OSMleHqnZRyrYtzhrLcRcMVfMelwWoIb5TBlz6K/Ofi/UsHMd/DCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=ZldHIGBU; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PTnlTc6W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738572009; x=1770108009;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=7nb8HRa0cFbzBFBnN4bI0GsAQD01kUzx8HOrS7jz88s=;
-  b=PTnlTc6WMsypsE1aCRyIwVH3LbvAzQESdXgB91gx+wQp/OhtD6WrcHKr
-   tf2u0D13J1kzFzg1mJbFlFXveOy/UTtlXZqWkEvC7mAEe/b7CHJz9sQw8
-   knLr7zHdkLtxPRd+kMXPoBaomMR+Z9jkMBZhcsELTMBrTVT5VvXT4/yxz
-   05URi/U0LzEiYpLNlEODEPsqYCV9i61gLqEES7nmu/KRXLRsVS531/KWA
-   oXAFYbrU2BUmgbII5qa67S5PyLeu3UP/+4wxrNbYwd/Pppr4o2bowLLrV
-   yDtXsCUFdvrCD2SGrQbZAJbkWhAQ+eVxIdz8vQFAF5T0SsuyorZuA+7PJ
-   Q==;
-X-CSE-ConnectionGUID: lgpPdlxPR6OimqkatQlqYw==
-X-CSE-MsgGUID: ZdN7GR0pT/G23mrNpPTXEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="26657675"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="26657675"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 00:40:08 -0800
-X-CSE-ConnectionGUID: /pEpuut2SbaCB2xPbjWkbA==
-X-CSE-MsgGUID: th6k5N9TR0e9cGBt5VIk/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="141100533"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 03 Feb 2025 00:40:00 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id CF435214; Mon, 03 Feb 2025 10:39:58 +0200 (EET)
-Date: Mon, 3 Feb 2025 10:39:58 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 06/11] mm/vmscan: Use PG_dropbehind instead of
- PG_reclaim
-Message-ID: <42h65xowqe36eymr6pcomo7wzpe26kzwvyzg44hftqqczc5n6y@w2z5wvdrvktm>
-References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
- <20250130100050.1868208-7-kirill.shutemov@linux.intel.com>
- <CAMgjq7AWZg0Y7+v3_Z8-YVUXrANB29mCDSyzF39dtAM_TQ0aKw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="ZldHIGBU"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-385e0e224cbso2189116f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:40:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openvpn.net; s=google; t=1738572011; x=1739176811; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=cEHwfTC0nlTwzp6/24FbLsvLnBpQSYFrP5VEo1YUJGk=;
+        b=ZldHIGBU2b6lQ+UkRSddPZigzWjn2Ll/j7MJASQlIjKQuzbF7VVa9FDsRixYgj3VBu
+         s2UGWuu4sJHgaTM961QI6zjA1UvqyPeVwjHPZgl0dlDtbq+miwRhJdCvuLMAoKfuL8fG
+         sornuyJQk561BXx7x++KL7GFlbS5/AtMJGjZDDM7gwye0vUWHrFcNc8MB+UnQowfbbax
+         KoFfQU6r9aJ5PSjV4bBKK7NV7lOLg5DeNnrVxf+mExV2cpsdtJc738h5qZJTXKmCMLYn
+         aUDtFBc+FyonlTt4Q0+zXRWd92BRExPNNu0LH8isYcj5TPGmusOOjWJiUzNGIUAm1dHV
+         UeTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738572011; x=1739176811;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cEHwfTC0nlTwzp6/24FbLsvLnBpQSYFrP5VEo1YUJGk=;
+        b=iKBlNXn9oAQXe5wVLnFXTpwKxJggSQ9DirnBBDbbSchytHEWL236YCyJmvUmbn3tGU
+         MA1h5nm7SP5mhkGXQSC4ZHnUECopo22GEeCFMhlHtdEZzA/CKZ4o0xirdc3LoKkcKF1E
+         626iZhysPyh2ai19igJfFrjH/6Pm8Ev4yw05btNqgsc7ri4TLPaRjSfQx73bWTE0ZxEL
+         quUTlLsoJ/qI0FFVMUXpyaj1N5SPpjLXzZ/DyBGjH3bQod9fSibaYq2OT1vDz3lGu/00
+         qYAmlW5i+bhaTBWx/aOgh6kkOsOiT3ZqOeT0XtpEwn57HCFjntaSl5iyh8VIatqfdZlb
+         CrXg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFbqnwb5+Or/zcAhm4Vj+vdAjqW7nnIozdqmQx/ND+fOhM41e0L18DOAWlEVvyYIoKb1X+tlq/iA4+Mvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3/GGnoqMgr48hhZkeMr/tSNO6UHrryU1rQbKkMIvxReEBMScd
+	eIPK2zohas64uOSXR+cXWN2jKZy/CfIKT6CpZSJrFKzBQeyv50eNeDslWWkicJE=
+X-Gm-Gg: ASbGncv8fZVnbkEKYK3E0fqC77i0rNL8Dc9QafBGYprsfikIm3TNvIUI3Ea/ymm+PdD
+	hsb2Aq96lzSXOuXJRGlP4V/KXnM7WMLpOXTK69Trk2RYyobob3supvfK9Phlkkt2A9IjTQGuv+E
+	wLZhOVIdhbC5v+DkXV3Mo4+s0BWOP1AybuPxUCFax/SQOJ5BRe9Yrx+1i6iNHpc3GgsYJG6d9U7
+	5qhiC98HhaTxS23oNnBWh9Kadhqojkbg26X/1YwKz+oz5SzrUeEKBGNd2sDLt/0SLiIxYsMKu4O
+	cXMWAlJt9xJ/X8mqGcQIsbZda2yUBFwiJ74fw6wJ3cLgHp8NBDo63w==
+X-Google-Smtp-Source: AGHT+IFsf/cTF2ZBcKE5MVojia1h7vGdqQrlMxrM+ECVRLY29yr0IVdVHjq7QNVjyJAzKl2Vtsi0pw==
+X-Received: by 2002:a5d:47a1:0:b0:38c:5bb2:b938 with SMTP id ffacd0b85a97d-38c5bb2bd19mr12298533f8f.2.1738572011053;
+        Mon, 03 Feb 2025 00:40:11 -0800 (PST)
+Received: from ?IPV6:2001:67c:2fbc:1:b4fe:e6fa:32a0:6a72? ([2001:67c:2fbc:1:b4fe:e6fa:32a0:6a72])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c102e19sm12279954f8f.36.2025.02.03.00.40.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 00:40:10 -0800 (PST)
+Message-ID: <1c53012a-5771-47d7-9bf4-104f8d9093a6@openvpn.net>
+Date: Mon, 3 Feb 2025 09:41:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMgjq7AWZg0Y7+v3_Z8-YVUXrANB29mCDSyzF39dtAM_TQ0aKw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v18 05/25] ovpn: introduce the ovpn_peer object
+To: Sabrina Dubroca <sd@queasysnail.net>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Donald Hunter <donald.hunter@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ ryazanov.s.a@gmail.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
+References: <20250113-b4-ovpn-v18-0-1f00db9c2bd6@openvpn.net>
+ <20250113-b4-ovpn-v18-5-1f00db9c2bd6@openvpn.net> <Z5_4OmdmKvHJ5P-_@hog>
+Content-Language: en-US
+From: Antonio Quartulli <antonio@openvpn.net>
+Autocrypt: addr=antonio@openvpn.net; keydata=
+ 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
+Organization: OpenVPN Inc.
+In-Reply-To: <Z5_4OmdmKvHJ5P-_@hog>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 01, 2025 at 04:01:43PM +0800, Kairui Song wrote:
-> On Thu, Jan 30, 2025 at 6:02 PM Kirill A. Shutemov
-> <kirill.shutemov@linux.intel.com> wrote:
-> >
-> > The recently introduced PG_dropbehind allows for freeing folios
-> > immediately after writeback. Unlike PG_reclaim, it does not need vmscan
-> > to be involved to get the folio freed.
-> >
-> > Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
-> > pageout().
-> >
-> > It is safe to leave PG_dropbehind on the folio if, for some reason
-> > (bug?), the folio is not in a writeback state after ->writepage().
-> > In these cases, the kernel had to clear PG_reclaim as it shared a page
-> > flag bit with PG_readahead.
-> >
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > Acked-by: David Hildenbrand <david@redhat.com>
-> > ---
-> >  mm/vmscan.c | 9 +++------
-> >  1 file changed, 3 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index bc1826020159..c97adb0fdaa4 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -692,19 +692,16 @@ static pageout_t pageout(struct folio *folio, struct address_space *mapping,
-> >                 if (shmem_mapping(mapping) && folio_test_large(folio))
-> >                         wbc.list = folio_list;
-> >
-> > -               folio_set_reclaim(folio);
-> > +               folio_set_dropbehind(folio);
-> > +
-> >                 res = mapping->a_ops->writepage(&folio->page, &wbc);
-> >                 if (res < 0)
-> >                         handle_write_error(mapping, folio, res);
-> >                 if (res == AOP_WRITEPAGE_ACTIVATE) {
-> > -                       folio_clear_reclaim(folio);
-> > +                       folio_clear_dropbehind(folio);
-> >                         return PAGE_ACTIVATE;
-> >                 }
-> >
-> > -               if (!folio_test_writeback(folio)) {
-> > -                       /* synchronous write or broken a_ops? */
-> > -                       folio_clear_reclaim(folio);
-> > -               }
-> >                 trace_mm_vmscan_write_folio(folio);
-> >                 node_stat_add_folio(folio, NR_VMSCAN_WRITE);
-> >                 return PAGE_SUCCESS;
-> > --
-> > 2.47.2
-> >
+On 02/02/2025 23:56, Sabrina Dubroca wrote:
+> 2025-01-13, 10:31:24 +0100, Antonio Quartulli wrote:
+>> +static int ovpn_peer_del_p2p(struct ovpn_peer *peer,
+>> +			     enum ovpn_del_peer_reason reason)
+>> +{
+>> +	struct ovpn_peer *tmp;
+>> +
+>> +	lockdep_assert_held(&peer->ovpn->lock);
+>> +
+>> +	tmp = rcu_dereference_protected(peer->ovpn->peer,
+>> +					lockdep_is_held(&peer->ovpn->lock));
+>> +	if (tmp != peer) {
+>> +		DEBUG_NET_WARN_ON_ONCE(1);
 > 
-> Hi, I'm seeing following panic with SWAP after this commit:
+> I think this WARN should be removed. If 2 almost-simultanenous
+> DEL_PEER manage to fetch the peer, the first will delete it and NULL
+> peer->ovpn->peer, then when it releases ovpn->lock, the 2nd will find
+> NULL != peer and hit this WARN.
 > 
-> [   29.672319] Oops: general protection fault, probably for
-> non-canonical address 0xffff88909a3be3: 0000 [#1] PREEMPT SMP NOPTI
-> [   29.675503] CPU: 82 UID: 0 PID: 5145 Comm: tar Kdump: loaded Not
-> tainted 6.13.0.ptch-g1fe9ea48ec98 #917
-> [   29.677508] Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
-> [   29.678886] RIP: 0010:__lock_acquire+0x20/0x15d0
+> (probably not happening in practical cases, but syzbot will manage to
+> hit it)
 
-Ouch.
+I can see this happening with two almost-simultaneous netlink PEER_DEL 
+calls.
 
-I failed to trigger it my setup. Could you share your reproducer?
+Thanks, will get rid of the warning.
 
-> I'm testing with PROVE_LOCKING on. It seems folio_unmap_invalidate is
-> called for swapcache folio and it doesn't work well, following PATCH
-> on top of mm-unstable seems fix it well:
+Regards,
 
-Right. I don't understand swapping good enough. I missed this.
-
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 4fe551037bf7..98493443d120 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -1605,8 +1605,9 @@ static void folio_end_reclaim_write(struct folio *folio)
->          * invalidation in that case.
->          */
->         if (in_task() && folio_trylock(folio)) {
-> -               if (folio->mapping)
-> -                       folio_unmap_invalidate(folio->mapping, folio, 0);
-> +               struct address_space *mapping = folio_mapping(folio);
-> +               if (mapping)
-> +                       folio_unmap_invalidate(mapping, folio, 0);
->                 folio_unlock(folio);
->         }
->  }
-
-Once you do this, folio_unmap_invalidate() will never succeed for
-swapcache as folio->mapping != mapping check will always be true and it
-will fail with -EBUSY.
-
-I guess we need to do something similar to what __remove_mapping() does
-for swapcache folios.
+> 
+>> +		return -ENOENT;
+>> +	}
+>> +
+>> +	ovpn_peer_remove(peer, reason);
+>> +
+>> +	return 0;
+>> +}
+> 
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Antonio Quartulli
+OpenVPN Inc.
+
