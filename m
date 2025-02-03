@@ -1,119 +1,106 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D2E29A5;
-	Mon,  3 Feb 2025 03:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CCF29A5;
+	Mon,  3 Feb 2025 03:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738554009; cv=none; b=ehbXKn+FiT0YtXMe02Dl8WHYgwa72Igu061lU5i2oxbN4OIqKdgci2OUxQFYVKOGPRL7NEzVRWNno13RPCA9soV+CbUCUPbiUzBZXJW5iqCMQr7ZnlYYLz1nxYxgPPy9CkkQzYZNaFdS+lu09oSZwcKiIXsZ5Hox6qNUZ4dmGtc=
+	t=1738554092; cv=none; b=Z+X8y8j1hnA0ISLEpxaogLxjqCsA3BX0AkqT+n4aOwLrF24KUmy5pJivfMQrsF3YebZukX8S3AJo16llsokvv3bkOrAwNqqbBdbaWCx5uoHxWgN+bS2vwBm//Z6WD3FKp+buUwcen9qTcyw8LBLZv9sMm9L85x88+6sTXAIrpl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738554009; c=relaxed/simple;
-	bh=zfsuTILH/eWQPUyqwomkj6abdgucor8q4nBTCb+4ETc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JzMk2Wt30VgzXRVzF5iMvSy6nqqf08OqbmCndJuzUgp1O6TRDeL7hSsDrnm86+/JfG/D81tP61Ba+oKeWqZjp7XKb/jsSUYLIkS19KOK5fRMaMUQoT9QFkPl8fp/1yHtpAN+O7R+EwYJNNItXQxT0TO/QbZdOR/DdHTP5wNyYCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=HOwZ4qqw; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1738554092; c=relaxed/simple;
+	bh=2QjPEXJ8qS247NeodoMw7CC7n+N0uXp4G4AAD3qW77Q=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=JZyF3y+owPSOIQ1IViLvlHuHCz4OPR9v1aN/zrT0l8938Gf3teWFtZv5cdWUkv1mpiHohhO4OQV7ePJ9wKXfj5+HxUHYZO7jvaWO1II3p12Bb2uMZBBwMDi09jZIfQkjN57g/v+QObjWmF6EG80c4qYvK63m2OQRkhMl/NsO4yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=yw9fTVe4; arc=none smtp.client-ip=203.205.221.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="HOwZ4qqw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1738554005;
-	bh=zfsuTILH/eWQPUyqwomkj6abdgucor8q4nBTCb+4ETc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=HOwZ4qqwuL2nhQDO404IUhiOe6WgQ0UWJ16RPrNcLSbwR/Hrc19MOhREnPeveUeGI
-	 MvCdTW9QM1Fqe4+XlwgL2Vj9T/YcmUDxJvWG/kFYvUeDJJhQl9IkZH6fvs8eNONBtY
-	 yqbMbwjarHMi1+fi4zfrW9wOjpfFei24503rqo7prYGErIRl2SvKFnB/oPqb/vwhsJ
-	 ciG4Pp5T1+yB8JCOym/n2V+PNOJv1EbvmwlW+wGm371p6nObXvu2ryu37FjTD2lPPr
-	 /BTJW5+Fe38J4r9Nam2iUNio8CAdQvyvkiz9Kh4hehIqknWlQW2dgy5IWGf4SpWGfw
-	 og3yw2L4w86hA==
-Received: from [192.168.68.112] (58-7-156-140.dyn.iinet.net.au [58.7.156.140])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 64E8A73C54;
-	Mon,  3 Feb 2025 11:40:01 +0800 (AWST)
-Message-ID: <df21af9083a189bf9d2598ee4658f9e45fcdde5f.camel@codeconstruct.com.au>
-Subject: Re: (subset) [PATCH v6 1/3] dt-bindings: mfd: aspeed: support for
- AST2700
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Ryan Chen <ryan_chen@aspeedtech.com>, Lee Jones <lee@kernel.org>, 
-	"robh@kernel.org"
-	 <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
-	"conor+dt@kernel.org"
-	 <conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>, 
-	"mturquette@baylibre.com"
-	 <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, 
-	"p.zabel@pengutronix.de"
-	 <p.zabel@pengutronix.de>, "devicetree@vger.kernel.org"
-	 <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	 <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
-	 <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org"
-	 <linux-clk@vger.kernel.org>, "dmitry.baryshkov@linaro.org"
-	 <dmitry.baryshkov@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Date: Mon, 03 Feb 2025 14:10:00 +1030
-In-Reply-To: <OS8PR06MB75417CF1E84556D1492EADF4F2E82@OS8PR06MB7541.apcprd06.prod.outlook.com>
-References: <20241023090153.1395220-1-ryan_chen@aspeedtech.com>
-	 <20241023090153.1395220-2-ryan_chen@aspeedtech.com>
-	 <173047754439.1930424.6922132618537420144.b4-ty@kernel.org>
-	 <OS8PR06MB75417CF1E84556D1492EADF4F2E82@OS8PR06MB7541.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="yw9fTVe4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1738554079; bh=NYnGRtdhOhOsIpPhQadV8J5ByKmTraTOgY6+AzSZqPk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=yw9fTVe4sK93aJbsvUHoV4hbwlX1Q2SRq85uaAKON8FsJmpydXhwFQ2z/lRoOLmrc
+	 wXtfFZdpAO3PJBVhqqorq+hPYQZ6ixt3X+pJO3CQoKjDGUopkjhf0KGE/wBdpOwa75
+	 ycWNvdcXEY+NsEOBxwUp3XF/0wHcnaNHRrokqozo=
+Received: from pek-lxu-l1.wrs.com ([2408:8435:9910:167a:8cb3:3b5b:faa2:1ccb])
+	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
+	id 6F7BBA9B; Mon, 03 Feb 2025 11:27:55 +0800
+X-QQ-mid: xmsmtpt1738553275t2pg1fiph
+Message-ID: <tencent_8D66623CFF36BA96EE36FE4B7474B1778509@qq.com>
+X-QQ-XMAILINFO: Ny9b0zP53WzJy+lbJ0qZAmwf362UUI/jsREqewRS4BvBnoXk7sAs4KrUcm8Lyw
+	 Lny045v31BUDNhQsh9gHF+jvewaA4y7msrpgcZJFFgqgTRkJ1pSx0xuoFnA19QXhB0alQV2l1gUM
+	 rRTbjXFkpNTGOJD2/qSgPLggZvn0p50mqxyqlWXK76jQXRKKVWKhgwEKooAtYNQd6nZIVtHSIpi1
+	 euxMJQ+9EuTN2NqjOlASsLjqCP+QP/UmUb0TYO3FtCDyOww3lardHhz71RicGhVTCmLAIPnOpj8o
+	 TKLvYl0m1eOgl7dUysLlkRRya01wLPvx62RghEkX23EFRCmecp+OkERkBhYZTkYHplHfSfY1DWvL
+	 zAsbw87IKnR2Aj6lQXyeZu0Or3iQXW2Aevyc/yuzN997N2GB5B0F63df9sxc2lZjgpqBADYVE0GL
+	 KOa4uLCPG4QV7pT31ZTcWppibKkR1kGe57BYW1H/lZOkfGDTs5AHgse2YyNZrdVxYWj3O3pJBqvm
+	 Q9kFCIkz+/jMlixLnojZ61xmEgn+ebWuLRBpk7I8tan8gk87yZZBPxh9XIhWknrgpP2PtO59LxZ4
+	 SP38lZPMIm2DPHh7J3XDTLhfvPb9Tj3r6jyaSZliqgMPR5cz1EPjPirpX/Ano+1oGziHUB/fUtGx
+	 0/IXkUNat98X2wesDU5t9J95F+wMEELDV+QOnYa5XpivrUVTnMTxUXzWaEj9eD6YTuBvuki8dunO
+	 L5fN43sJRjoC8s4z9aumFuGtX2qSm5CZ/p1mFHcw53RcJvH2vuCHOcdQ59Zi+ITAJk2PQablClsE
+	 +IUWpLjj6Znehn9MyJuZAWy465gN5dhcfZowCeaIe8jmj5n4rXpSwaV5JxwuY1HjK5wXw9FmX4PA
+	 7jGkiEgA5UaN/tRW0lrGkm1GbwaLHQTijFn6R7CVFR
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+8928e473a91452caca2f@syzkaller.appspotmail.com
+Cc: dakr@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rafael@kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] debugfs: add fsd's methods initialization
+Date: Mon,  3 Feb 2025 11:27:56 +0800
+X-OQ-MSGID: <20250203032755.1430494-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <679f72f6.050a0220.48cbc.000d.GAE@google.com>
+References: <679f72f6.050a0220.48cbc.000d.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Ryan,
+syzbot reported a uninit-value in full_proxy_unlocked_ioctl. [1]
 
-On Fri, 2025-01-31 at 03:51 +0000, Ryan Chen wrote:
-> > -----Original Message-----
-> > From: Lee Jones <lee@kernel.org>
-> > Sent: Saturday, November 2, 2024 12:12 AM
-> > To: lee@kernel.org; robh@kernel.org; krzk+dt@kernel.org;
-> > conor+dt@kernel.org; joel@jms.id.au; andrew@codeconstruct.com.au;
-> > mturquette@baylibre.com; sboyd@kernel.org; p.zabel@pengutronix.de;
-> > devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > linux-aspeed@lists.ozlabs.org; linux-kernel@vger.kernel.org;
-> > linux-clk@vger.kernel.org; dmitry.baryshkov@linaro.org; Ryan Chen
-> > <ryan_chen@aspeedtech.com>
-> > Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> > Subject: Re: (subset) [PATCH v6 1/3] dt-bindings: mfd: aspeed:
-> > support for
-> > AST2700
-> >=20
-> > On Wed, 23 Oct 2024 17:01:51 +0800, Ryan Chen wrote:
-> > > Add reset, clk dt bindings headers, and update compatible support
-> > > for
-> > > AST2700 clk, silicon-id in yaml.
-> > >=20
-> > >=20
-> >=20
-> > Applied, thanks!
-> >=20
-> > [1/3] dt-bindings: mfd: aspeed: support for AST2700
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 commit: 76c6217c31266e800b67a476bba59dfe=
-b9858a90
-> >=20
-> > --
-> > Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
->=20
-> Hello,
-> Since this patch have been applied, if I still want modify I will do
-> the rebase and still patch base on this.
-> Am I right?
->=20
-> For example I want to modify include/dt-
-> bindings/clock/aspeed,ast2700-scu.h
-> I send the patchv8 [1/3] patch for aspeed,ast2700-scu.h
-> Others [2/3], [3/3] still progress, am I right?
+The newly created fsd does not initialize methods, and increases the
+initialization of methods for fsd.
 
-I'd rebase the series on top of v6.14-rc1 and continue incrementing the
-series version. You've replied to v6 here, but I see v7 at [1], so I
-guess v8 as you suggest?
+[1]
+BUG: KMSAN: uninit-value in full_proxy_unlocked_ioctl+0xed/0x3a0 fs/debugfs/file.c:399
+ full_proxy_unlocked_ioctl+0xed/0x3a0 fs/debugfs/file.c:399
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0x246/0x440 fs/ioctl.c:892
+ __x64_sys_ioctl+0x96/0xe0 fs/ioctl.c:892
+ x64_sys_call+0x19f0/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-[1]: https://lore.kernel.org/all/20241028053018.2579200-1-ryan_chen@aspeedt=
-ech.com/
+Fixes: 41a0ecc0997c ("debugfs: get rid of dynamically allocation proxy_ops")
+Reported-by: syzbot+8928e473a91452caca2f@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=8928e473a91452caca2f
+Tested-by: syzbot+8928e473a91452caca2f@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ fs/debugfs/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Andrew
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index e33cc77699cd..5fbefce2b372 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -102,6 +102,7 @@ static int __debugfs_file_get(struct dentry *dentry, enum dbgfs_get_mode mode)
+ 		if (!fsd)
+ 			return -ENOMEM;
+ 
++		fsd->methods = 0;
+ 		if (mode == DBGFS_GET_SHORT) {
+ 			const struct debugfs_short_fops *ops;
+ 			ops = fsd->short_fops = DEBUGFS_I(inode)->short_fops;
+-- 
+2.43.0
+
