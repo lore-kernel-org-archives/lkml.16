@@ -1,186 +1,144 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEEC23A6;
-	Mon,  3 Feb 2025 05:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E6F8633A;
+	Mon,  3 Feb 2025 05:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738559515; cv=none; b=kEon7j3qTxvxVl6jayMYZPreQCdMEaw0NZX9kqyjk1KyalscWXthcN/ALOPXUim/+5nCaCUbzx20jY3raRfflllhlFSgQDzyJQOXwiPytUPaF43xt35Y3pGyYskAQtumNITN1CvhZzFsi1FAp8k/dCEStB1/97wGui0dq9o3F1Q=
+	t=1738559693; cv=none; b=AWtpmZIjJB2Me0YVx/hx0k6Zn8YBULxPtWwDSPhzug8XIplg69tTrkI9nHjXHE5HPhPWmsPZBhY+x4drKwVhoko/UTntPUVt6fiNMBG7O+FS2dxi9Ni2owhxFFgII/JL8MNaDa7BvZiOJAk+pMGiUVR8brYisb75ZpgTMjDccWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738559515; c=relaxed/simple;
-	bh=EE5BWW6S+jQVlXUrEb1w/ROXsxiLZ2ytZwHRHQ0G4Tw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PoptKsypCCpliC3TkpsJug3sp4B7TKWtyMtjr/JIYh80k1v5C9lZIXLLgG9yy466IFP03RoKI9lW2S/c5kHZFWbNcAgIwH/DICBMBPczHTysZdXmLQk27pFmCMo5CMOXdF+Rrt+CJDyewpIdrr1GO5M7ShplM2m0iDhqrgR3/Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hpXa7Huo; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738559693; c=relaxed/simple;
+	bh=7K/KZ6Mv4XicIlnn5RnFFamx7pc5D5iDvAQua02o/7w=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=tluLeyWGNSHxwhsxAxKHdtGlmQbjnW2NYDtxpSvQomEd7Ugvls4AHKS0U2rTY0/eLwMHlVitFcVRN0wSRhpkJ21Y6Jwplbe6uZaGrz95vryWByQ0qUMvmG43SxID1ki9bRXTUYIdDba+89dYUtC3n9ZI8VjkXFS5FjF/4NpzLAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJwCGi10; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hpXa7Huo"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51313f8F028359;
-	Mon, 3 Feb 2025 05:11:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LAnVZy9dnDxfBGSk1QI1Ada8QoUxoMy+3kYJsHo6mqA=; b=hpXa7Huo+HdByZ76
-	YstxHE53ta5ZWIl52uhE6hmeUeiUJ2do2JPA/BIoK+r54tbefmkMAWuSoeNnxbWV
-	UmvL8W0JjdoB+scFz84twJNxs5g6WhpdQfLce2USUTqDuscYg9E8bXrWdVRaGWPM
-	8yHhR+iHHyDcFv77QH8pEFfQsUpcB3OM5poQK1n2BkFllEfFA3onDaWROe0/tJer
-	Dy183Xv3HqpXKKVdeej5279MYkHiZgdC6beg0BogAQot/xbNfrXeJ7n9Ax3LvuCN
-	oUa2A69dgL5QNAcisvVlUWHh6BssK5pB+SOTj3IMJknLkDQTsMnzYdhqh9TCxSGv
-	WNrB6A==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jkt9ga08-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 05:11:49 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5135Bm0Q011488
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Feb 2025 05:11:48 GMT
-Received: from [10.219.57.57] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 2 Feb 2025
- 21:11:44 -0800
-Message-ID: <0d4e9563-4a1c-4b7d-b075-eb5a6595ebe4@quicinc.com>
-Date: Mon, 3 Feb 2025 10:41:35 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJwCGi10"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38a88ba968aso3551177f8f.3;
+        Sun, 02 Feb 2025 21:14:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738559690; x=1739164490; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R4SdSWDVAgbLsgCBmC0L8GxMeMI8eSrHGh6gpVTV9+w=;
+        b=FJwCGi10a0LraaXYYIUSrb/aEfwLCGRFpIIQUqEeV4YrhscYFoSBo5hRRnY4C8fRGS
+         N2WLnRTpkOWcjDbeExF07gy7aA64UhiRyy9nmoYoufwB/cA+dM8z97hbOVuTnMQ3kHrF
+         9OUb9YZOHYsfuEmaLH+Gw6tFA50FOBL1PQTY2sqfRqFdH4GZQgKS6kmpGxjMCUbLiQtx
+         CUAaGQW4vdCks4wP+dFnELRbxXl8eEUwfWt6a4W0UsVzeNVJLMDfBQxr1Zpqt0t1bzGE
+         s2ltbcZcVIMRBqbKw4u6+5Z3frApSbd2zav9DSTFUaeRA7F6joQQX1QDmVhW3wun7dZ1
+         DMEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738559690; x=1739164490;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=R4SdSWDVAgbLsgCBmC0L8GxMeMI8eSrHGh6gpVTV9+w=;
+        b=Ug0wB4vtRhyPtZoUrnBpt6cte58KP2QAs6/bSCSgytgp6WBniE0QawSVScK1Xs1cpw
+         lTzTv0Gqe9NDez4KAB39hFJCtxjWPaGrZuPTj2sAUjqLEj3yNs0m0K2wuZ76qJRG7FJ7
+         ftkZS/JNakfT2HcDG0+USRgPS+5JeKVovzg5SID+3VRtNHpjRIWkgx59P/l2aN/Ou7wg
+         LYTOXZ06O7OOYxeMIsMlCHjergHxoUgFvHR8eJh9BB+VUzCDX8JIB3A3FMaCQWkkhU+n
+         xjm4aqpL81C6wilvd/W5Dpe0eqP2WJ8m86jlCXxBGz+4CWZk/WTNP+UgG5Vmf4RXnZR0
+         SACA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmEZV7007FHXCMS9E5GOYl6Vf2fgAPNL8myzxrcWAEgxzmVW/sfBEBi9EcpDvadtcw5N5VRH1IJciU+okr@vger.kernel.org, AJvYcCXIpOEoZPw0hDGiXlO5xmY3a+GU5f2ISCM4AOTgsjf3j2xucxF7g+TUF1Au/yaAOIyXBAs9W3lRBr8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCdmC/Za/MQQ9GPOLjwYurnb+fWLslRIvIa+DgUF1Tat2j0vlb
+	8MJIM4rWnGTyJrvMdtIywQaLT3ySbiZOkLXu2YbON7I7b5/Ra2db
+X-Gm-Gg: ASbGncvJR10vOdBuvUEaUp/+mor+o/pWUWzClJxcC36Ii8NBixIPjKgWB2tvLG4gISP
+	baMFSAToIyLfRGjA5sb83aeiVsdlgZyXhxk8+EaI78EWPo/Xb5iQaDNNaYij1WXHTrc5+X7XIsB
+	dR4lwHKnXy/NJg68xWXn3DZcF/wsbyIr+ihG8Te5PNet7RJTQ8CgNR0TcvQH+ffs2+WmS/9893l
+	gNQrY7VgeFD9YxFX1WYCDOm63RXMccHCPXPZHDZztH/BuvwCJSIeFSp4kBs6RQLMSK0Pukcw+BY
+	XsLi8mP9n7e9gsbSRdL7RMVrog21
+X-Google-Smtp-Source: AGHT+IENPXJB0G7Tte420zKL8FGXF/oXVUQkX0RxUEym7mrwO5nT7+s/Cfmi4dGro/OBIbyO6f9v8Q==
+X-Received: by 2002:a05:6000:18ac:b0:38a:88f8:aadd with SMTP id ffacd0b85a97d-38c520a64b7mr20005609f8f.53.1738559690110;
+        Sun, 02 Feb 2025 21:14:50 -0800 (PST)
+Received: from localhost ([185.238.219.103])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1e8addsm11508694f8f.101.2025.02.02.21.14.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Feb 2025 21:14:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: qcs8300: Add device node for
- gfx_smmu
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andersson@kernel.org>
-CC: <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Prakash Gupta
-	<quic_guptap@quicinc.com>
-References: <20241227110024.30203-1-quic_pbrahma@quicinc.com>
- <1c8af731-c551-4d72-84a0-f14d57bec4ec@oss.qualcomm.com>
- <e7abe34c-9df9-425b-933e-cc744a63b80c@quicinc.com>
- <41fd6b59-249d-4f19-9ff8-4ae169a6db05@oss.qualcomm.com>
- <27aa8dc3-34b9-40e7-93bc-e52118b46138@quicinc.com>
- <ba800255-e2b0-4b92-9ff0-f7ed744fec8c@oss.qualcomm.com>
- <d28f5482-81bc-4600-9a60-872dadd22b96@quicinc.com>
- <5defdbcb-f134-4332-8b63-50794da6e2cd@oss.qualcomm.com>
-Content-Language: en-US
-From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-In-Reply-To: <5defdbcb-f134-4332-8b63-50794da6e2cd@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: tggpiVwz1r45JOWcdr0WxbkBM82PCFPy
-X-Proofpoint-GUID: tggpiVwz1r45JOWcdr0WxbkBM82PCFPy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_02,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=999 adultscore=0
- clxscore=1015 priorityscore=1501 suspectscore=0 phishscore=0
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502030043
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 03 Feb 2025 06:14:46 +0100
+Message-Id: <D7IJZ2639BOH.3KPFSYMOLZBGM@gmail.com>
+Subject: Re: [PATCH] iio: light: Add check for array bounds in
+ veml6075_read_int_time_ms
+Cc: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+ <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Shuah Khan"
+ <skhan@linuxfoundation.org>
+To: "Javier Carrasco" <javier.carrasco.cruz@gmail.com>, "Karan Sanghavi"
+ <karansanghvi98@gmail.com>, "Jonathan Cameron" <jic23@kernel.org>,
+ "Lars-Peter Clausen" <lars@metafoo.de>
+From: "Javier Carrasco" <javier.carrasco.cruz@gmail.com>
+X-Mailer: aerc 0.18.2
+References: <20250202-outofboundsread1573409-v1-1-5e3dd97a24a6@gmail.com>
+ <D7I4JY638HIU.1OH0ECMRKC7K7@gmail.com>
+In-Reply-To: <D7I4JY638HIU.1OH0ECMRKC7K7@gmail.com>
 
-
-On 2/1/2025 9:21 PM, Konrad Dybcio wrote:
-> On 30.01.2025 6:40 AM, Pratyush Brahma wrote:
->> On 1/29/2025 7:56 PM, Konrad Dybcio wrote:
->>> On 28.01.2025 11:02 AM, Pratyush Brahma wrote:
->>>> On 1/9/2025 8:56 PM, Konrad Dybcio wrote:
->>>>> On 8.01.2025 1:10 PM, Pratyush Brahma wrote:
->>>>>> On 12/30/2024 6:49 PM, Konrad Dybcio wrote:
->>>>>>> On 27.12.2024 12:00 PM, Pratyush Brahma wrote:
->>>>>>>> Add the device node for gfx smmu that is required for gpu
->>>>>>>> specific address translations.
->>>>>>>>
->>>>>>>> This patch depends on the patch series [1] posted by Imran Shaik
->>>>>>>> adding the clock support for gpu.
->>>>>>>>
->>>>>>>> [1] https://lore.kernel.org/all/802d32f1-ff7e-4d61-83f1-f804ee1750ed@oss.qualcomm.com/
->>>>>>>>
->>>>>>>> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
->>>>>>>> ---
->>>>>>>>      arch/arm64/boot/dts/qcom/qcs8300.dtsi | 37 +++++++++++++++++++++++++++
->>>>>>>>      1 file changed, 37 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->>>>>>>> index 80226992a65d..8eb688e2df0a 100644
->>>>>>>> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->>>>>>>> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->>>>>>>> @@ -816,6 +816,43 @@
->>>>>>>>                  #power-domain-cells = <1>;
->>>>>>>>              };
->>>>>>>>      +        adreno_smmu: iommu@3da0000 {
->>>>>>>> +            compatible = "qcom,qcs8300-smmu-500", "qcom,adreno-smmu",
->>>>>>>> +                   "qcom,smmu-500", "arm,mmu-500";
->>>>>>>> +            reg = <0x0 0x3da0000 0x0 0x20000>;
->>>>>>>> +            #iommu-cells = <2>;
->>>>>>>> +            #global-interrupts = <2>;
->>>>>>>> +            dma-coherent;
->>>>>>>> +
->>>>>>>> +            power-domains = <&gpucc GPU_CC_CX_GDSC>;
->>>>>>>> +            clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
->>>>>>>> +                 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>,
->>>>>>>> +                 <&gpucc GPU_CC_AHB_CLK>,
->>>>>>>> +                 <&gpucc GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK>,
->>>>>>>> +                 <&gpucc GPU_CC_CX_GMU_CLK>,
->>>>>>>> +                 <&gpucc GPU_CC_HUB_CX_INT_CLK>,
->>>>>>>> +                 <&gpucc GPU_CC_HUB_AON_CLK>;
->>>>>>>> +            clock-names = "gcc_gpu_memnoc_gfx_clk",
->>>>>>>> +                      "gcc_gpu_snoc_dvm_gfx_clk",
->>>>>>>> +                      "gpu_cc_ahb_clk",
->>>>>>>> +                      "gpu_cc_hlos1_vote_gpu_smmu_clk",
->>>>>>>> +                      "gpu_cc_cx_gmu_clk",
->>>>>>>> +                      "gpu_cc_hub_cx_int_clk",
->>>>>>>> +                      "gpu_cc_hub_aon_clk";
->>>>>>> Most of these entries look totally bogus, please make sure you only
->>>>>>> reference the ones actually required
->>>>>> These entries are exactly similar to the ones we use in sa8775p as well [1] and the usecases
->>>>>> haven't changed between qcs8300 and sa8775p.
->>>>>>
->>>>>> Can you please let me know which entries you find irrelevant here?
->>>>> Well, I'm particularly unsure about CX_GMU and the HUB clocks.
->>>>> I >>don't think<< they don't have much to do with the SMMU, but please
->>>>> check internally with someone who knows for sure
->>>> I checked internally and found that these clocks are required for gpu smmu operations
->>>> as we don't use interconnect voting mechanism here as we do downstream. Hence the
->>>> list of clocks is same across all targets using gpu smmu as described in [1] previously.
->>> I managed to dig up some documents too.. It seems you're right, however the order
->>> is supposed to be slightly different:
->>>
->>> GPU_CC_CX_GMU_CLK
->>> GPU_CC_HUB_CX_INT_CLK
->>> GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK
->>> GCC_GPU_MEMNOC_GFX_CLK
->>>
->>> Unsure if it *actually* matters given we've added them in a random order on a
->>> multitude of platforms and there haven't been any visible adverse effects.
->> Thanks for checking this. We haven't really adhered to this order in
->> most of our platforms and things have been running fine. So I guess it doesn't matter.
->> However, I'll still send out the next patchset in the order you've mentioned. Just so that we
->> are in consonance, the final order would look like the following. Please correct me if you'd
->> prefer otherwise.
->>
->>                  clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
->>                                 <&gpucc GPU_CC_HUB_CX_INT_CLK>,
->>                                 <&gpucc GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK>,
->>                                 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
->>                                 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>,
->>                                 <&gpucc GPU_CC_AHB_CLK>,
->>                                 <&gpucc GPU_CC_HUB_AON_CLK>;
-> Looks good, please double-check if it works without clk_ignore_unused
-Thanks. Yes, these have been tested without clk_ignore_unused. I will 
-send out the next set of patches
-with this order.
+On Sun Feb 2, 2025 at 6:09 PM CET, Javier Carrasco wrote:
+> On Sun Feb 2, 2025 at 11:49 AM CET, Karan Sanghavi wrote:
+> > The array contains only 5 elements, but the index calculated by
+> > veml6075_read_int_time_index can range from 0 to 7,
+> > which could lead to out-of-bounds access. The check prevents this issue=
+.
+> >
+> > Coverity Issue
+> > CID 1574309: (#1 of 1): Out-of-bounds read (OVERRUN)
+> > overrun-local: Overrunning array veml6075_it_ms of 5 4-byte
+> > elements at element index 7 (byte offset 31) using
+> > index int_index (which evaluates to 7)
+> >
+> > Fixes: 3b82f43238ae ("iio: light: add VEML6075 UVA and UVB light sensor=
+ driver")
+> > Signed-off-by: Karan Sanghavi <karansanghvi98@gmail.com>
+> > ---
+> >  drivers/iio/light/veml6075.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/iio/light/veml6075.c b/drivers/iio/light/veml6075.=
+c
+> > index 05d4c0e9015d..a892330582f4 100644
+> > --- a/drivers/iio/light/veml6075.c
+> > +++ b/drivers/iio/light/veml6075.c
+> > @@ -210,7 +210,7 @@ static int veml6075_read_int_time_ms(struct veml607=
+5_data *data, int *val)
+> >
+> >  	guard(mutex)(&data->lock);
+> >  	int_index =3D veml6075_read_int_time_index(data);
+> > -	if (int_index < 0)
+> > +	if (int_index < 0 || int_index >=3D ARRAY_SIZE(veml6075_it_ms))
+> >  		return int_index;
+> >
+> >  	*val =3D veml6075_it_ms[int_index];
+> >
+> > ---
+> > base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
+> > change-id: 20250202-outofboundsread1573409-378997439be1
+> >
+> > Best regards,
 >
-> Konrad
+>
+> Hi Karan,
+>
+> Thanks for your patch. That could never happen because the device does
+> not support those values: it only delivers values between 0 and 4 for
+> that field because it does not support more integration times.
+>
+> Even though the check does not do anything in reality, it does not hurt
+> either, and I would like to avoid future noise from coverity.
+>
+> Reviewed-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
--- 
-Thanks and Regards
-Pratyush Brahma
+Second thought: you are not returning an error code, only a value
+between 5 and 7. 5 and 6 are even valid return codes.
 
+Please complete your patch to return a sensible error code.
+
+Best regards,
+Javier Carrasco
