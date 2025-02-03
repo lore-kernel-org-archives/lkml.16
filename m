@@ -1,118 +1,115 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1B92AE90
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 02:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E1DFBF6
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 02:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738551059; cv=none; b=Eik+zAnCZZFMecYbsm5ajiZhJNwGqPDkkMXUdYWJxq6rcm/6B4epQRLpMIuGPZOFoYE+lPyJVst3yL0XLjYO06TwrPiUZKBALLk7OywhSF7B9634lyESNU972b+3shveMgs5uc8Tptmq+aD1sRIG28GAmDYHGBz/YVHzX6rWeoY=
+	t=1738551402; cv=none; b=aJbpEwyxwW9E3H7xY4ejntB9ojaVzpiikliXMMdtXYYeu3MELpqdlQpmk6TJd4tiig1Kw4b/qeQco+1nF4nAYtV9Qq/PWvSZJ4y1/Sm1fjVm7O6VE6ofJoBgvrtkwUppHfsn+OedL/PbZdu/bwSDyxvbxw3VOeMXc/S7jyDXCNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738551059; c=relaxed/simple;
-	bh=sX3emVmKbYg3Ru2YUK+m+8QFUdK/P8QTu3RaowF1Z+A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PhIvQD9YhR065gBinWOWgUyOf9naozS+vYZoZ8k46RBpIt5b33QlolXqpb6hkB1oj1GYBS5i/wPZL4LAo1gkthCpHSPlVaa2Fvz7QKTFaIpKbRjtqIVahxw9iJSR4A4nzDRL2gAhu6cqNiZQtDFZgUkdYB4oFh1IzdoChhf4QwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvhT+ZH4; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738551402; c=relaxed/simple;
+	bh=xO/RMkNWYfJW5EfAaeTQExpxZH9Emoq+GcI52bu2g5E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sAZSmT+oSKlmcj7/+TApyc2byHG6+bUc9/bRLhA33+p/GG9UkbDs3Is2nIeAaByCjV5qU7/PpmzG2c34NK52QufyonOcu0nLtDSZotHrDYemHEf7GCyRxRPOGH7VX3GkHvm6US9q4SkDSh7Dmr8VXMnXj+FTEWYRW/5ANXoQ3Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=iAzPVrTB; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvhT+ZH4"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ee67e9287fso6798597a91.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 18:50:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="iAzPVrTB"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3ce915a8a25so14792115ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 18:56:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738551057; x=1739155857; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MSeB6FYUW5ok6sT4EnlWImkfqu+4Gq30fGY9HKZXdJA=;
-        b=JvhT+ZH4FG9QYOu7ZPl+cAWuxwVhzPLoye6yFvZSORuxrSesdFzF5QhPmPwfiADdHg
-         CArIT9UNe1HH003tvzPE2WbhkLMb3HrcKOAtAJn3xAm1dBm3GXJpb8F1SqeLV7b31/S7
-         LhtwFNdgWbj8PcwLN5UsjrrXWHVKFA9OhpfanOZ/IfPgQYUTVKzXLk3zr2YnOb3ZLJ9s
-         04BMgfImdNk/gsvX6u1ipelqHSSVdiZQlT4lD9S5svyIv0P6xz+9vUMMbuVeSN6cHncn
-         9dbCMdMD69rFDnHP2w1hILwXUujbnQMe5YxnfcouYy+e/CXXBOQ15MiOx6YrcxLijzH/
-         Btcg==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738551397; x=1739156197; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wVtq97j9ICe348ocRanCKFkmU9emEBsOz8Azqtk3h/4=;
+        b=iAzPVrTBJvxXmLSzUcAxj1vWIlLxQCgpJHd2FzhRsyJ+2eYjUqtU2ZGJ6pSTEDfJAP
+         S+h7QLNtzWjTueQv8H0iNi/y0DsTzRiSqdTMCiTeNVW0FxezKZcZPBlhdeyfMVQLRhB6
+         KkcbbMAHLgobb3ZVGWzMsCLMUA7NM6LXdNh57x5Wg3urNOTkvijl23ciBYU1oseug43R
+         pSSU1bqyOYG4Xfulurmp+fY0j92DGfOLD9t+/haPO1viDH0IojMp8N5LZisHxN8D86zN
+         TCFa6UAwGgarx8Mj5DLYh/CQRmkeEcRUNbLsI6ddq67z3M5jx4jVRaZc/YA/+zS2AabS
+         OQ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738551057; x=1739155857;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MSeB6FYUW5ok6sT4EnlWImkfqu+4Gq30fGY9HKZXdJA=;
-        b=Y1mbZeCvFHJKUbQjINWilUv3ZqTHXoH0DN0sOz2B8skixyIbIzjEnr7DiLkVflye7a
-         wMWDKyA61z11kMSZ3y5W6iesZ67+rV7CDfksHMIsHdCrIxijze7VcfBhiCFrih2XlgOS
-         jU1YaeC4qp1rAaoNp0V4JV3A0hnHsXLb+5Kauv7p7u57joIYNRbHnf2vLTH2h1+mBJvL
-         DUAKedWIQ7JSaes+vohI6n71cOQwee9p3NHEb/gaaWLNMT9YVBZcd1NEC1aA+HACzfFO
-         uF9Y3GFIduxCLwfmqminPbbwABB89lU+1H855Zt9c5pYVBisvPp+I5sbLYbgwO+jOnYs
-         EmjA==
-X-Gm-Message-State: AOJu0YzKshVC2/v2TaTIG9bn5vzUIz/uQINgbdIgpXr/4nokaVjOaXSF
-	pNJucPiEMtj9w+YeWw2uyBR/G7x8CJ7gNCIEVXPgvXbMSgjTNcxK
-X-Gm-Gg: ASbGncvJHZtQeVyUpp3PqMWN6Ser1krJ/7U4jvHVe5n9W/Lz0QXXqwqYJkVN9/kGh+e
-	USQhnObpVPtL/FtUVttVxj+bh/MDGurnOHr451bypw8f02Jh1WHYeyfmGClwKoU7qByC+yS/jxl
-	2oK0/Neu5SzEvwINnBInukPwgxD1N9CzwKGEIL2m6B/DxN1ydlNywf/L4K03iqjl0w2/MZ8aoQ+
-	BrCMsXhi2EKv65+s7lmIpHQPCc/W+ShN+FL/2XraKfzfkrIue1shbsp8LvQBleEt0qvxgK2bYa7
-	WNIfL6Vt3zewquk=
-X-Google-Smtp-Source: AGHT+IEm+XYBYNUpKGHxS4iJYNlFNXXXqY4eXL11OV+CK4eNCH5CNZ0exIVXPocfSPFIBr77FrofDw==
-X-Received: by 2002:a05:6a00:8d6:b0:729:49a:2da6 with SMTP id d2e1a72fcca58-72fd0bbe0e1mr34833882b3a.3.1738551056820;
-        Sun, 02 Feb 2025 18:50:56 -0800 (PST)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631beecsm7449789b3a.12.2025.02.02.18.50.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 18:50:56 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id F065F4209E79; Mon, 03 Feb 2025 09:50:53 +0700 (WIB)
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-	Petr Mladek <pmladek@suse.com>,
-	Wardenjohn <zhangwarden@gmail.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Leonardo Bras <leobras@redhat.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Bo Liu <liubo03@inspur.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: [PATCH] kernel: Fix "select" wording on HZ_250 description
-Date: Mon,  3 Feb 2025 09:50:00 +0700
-Message-ID: <20250203025000.17953-1-bagasdotme@gmail.com>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1738551397; x=1739156197;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wVtq97j9ICe348ocRanCKFkmU9emEBsOz8Azqtk3h/4=;
+        b=UIe9Q8w8c49I57dWv8iO3BxS2pjc3BZ77ClsKE5+uTRdeupKSkIHDk+7/QH1uF3J9E
+         Q2Fy2QS/it5FkK/sicrEznzgre9JTy7MHRGF8Vl3l3z00x7XvnjkKsPKOaacZdDwp4hZ
+         hDqBd5+ws57DuPtcqek+UXK063bIu7cMjQOqzBLYnYjK1h5qVi7b7HsnH49i6v6as2gT
+         0yxEXScwvfXtQ/rZNHM16NKsBr6w7y/7XIR1jH1DN84w3xBh5r8ysczf97eVkBqTB3WZ
+         K2IW8u50rzwsWWo8qJTbf2BDRNR2C8hIHRr/KQ43izPxucy+rKKk1X/tG4YywJtZBJqm
+         XOHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcljV9/uLMTkqJ2tLApixT1pqlVuoFGGF1N/D41hOXiJKSqI3wr9QSdfz5bDvbkLZ3BfSZJ9pxFczeHDI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFvHkel6z2GAvaniMXcxd+5avcU7T9xjlM3J4Rf4f6EC/fg1iu
+	aGazJzU3gb5hnk6AVImKBpZoSIs5ADlElNlQ1aFJQcILBOb44Ka7qNq1mbTMOlok2Fr0mBfUu/E
+	0TZw=
+X-Gm-Gg: ASbGncsEzIZhxoIVp7nUj1f4BMMU5wjyhqU5OO/eEYDH3oe6Powp7kdMIUKiGJp1bkS
+	c8XCIOl0x41aIbYyHbfiVaYEL7EwbcP31xh0MWNrGS+ZaEApmYm02gCcd6udMOfBC+Wt3UL9342
+	OkGpr7kqNiDh9l1PLFX1n2zAZYP7QaM9x9KLjQjnjTp++RSSnDc2P8bqhjiqbAWEdhqaXUuuEzC
+	xxm7PVTsxmACllPYkL34gnI03b7H0ccgKy+bDos6Q4rEBFfACxEidoi036L7fVW7Ig7vbSIFk52
+	g3szfa30llxu
+X-Google-Smtp-Source: AGHT+IFNK7rOqQb3JV5xTgQckQXlw3xSt8jA7xPZ3nlNZEIOit+k7XL+xGUX7QmDN+wZlEblX/jCGQ==
+X-Received: by 2002:a92:c24f:0:b0:3d0:1abc:fe03 with SMTP id e9e14a558f8ab-3d01abcff3emr86079835ab.15.1738551397025;
+        Sun, 02 Feb 2025 18:56:37 -0800 (PST)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ec746a0a3csm2024871173.95.2025.02.02.18.56.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Feb 2025 18:56:36 -0800 (PST)
+Message-ID: <8d47be36-c317-4392-a242-64d6c1727d46@kernel.dk>
+Date: Sun, 2 Feb 2025 19:56:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1076; i=bagasdotme@gmail.com; h=from:subject; bh=sX3emVmKbYg3Ru2YUK+m+8QFUdK/P8QTu3RaowF1Z+A=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDOkLtJMn/ChXZNzicz5s5jv1/VXzeM+ox8sEX9zK8un1d 7b4Mw0bOkpZGMS4GGTFFFkmJfI1nd5lJHKhfa0jzBxWJpAhDFycAjARYR5Ghu67Ipt5rmS7KT+N jOwKYtQR/Sa+dfXmsJcCh2VKRUNVzRgZ/r1pmJrMcvbNhCdN+y3apHh5/mfVNDtu1bBN0qlYWa/ FBAA=
-X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: build failure after merge of Linus' tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christoph Hellwig <hch@lst.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250203125914.439f72fd@canb.auug.org.au>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250203125914.439f72fd@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-HZ_250 config description contains alternative choice for NTSC
-media users (HZ_300), which is written as "selected 300Hz". This is
-incorrect, as it implies that HZ_300 is automatically selected
-whereas the user has chosen HZ_250 instead.
+On 2/2/25 6:59 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging Linus' tree, today's linux-next build (sparc64
+> defconfig) failed like this:
+> 
+> drivers/block/sunvdc.c: In function 'vdc_queue_drain':
+> drivers/block/sunvdc.c:1130:9: error: too many arguments to function 'blk_mq_unquiesce_queue'
+>  1130 |         blk_mq_unquiesce_queue(q, memflags);
+>       |         ^~~~~~~~~~~~~~~~~~~~~~
+> In file included from drivers/block/sunvdc.c:10:
+> include/linux/blk-mq.h:895:6: note: declared here
+>   895 | void blk_mq_unquiesce_queue(struct request_queue *q);
+>       |      ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/block/sunvdc.c:1131:9: error: too few arguments to function 'blk_mq_unfreeze_queue'
+>  1131 |         blk_mq_unfreeze_queue(q);
+>       |         ^~~~~~~~~~~~~~~~~~~~~
+> In file included from drivers/block/sunvdc.c:10:
+> include/linux/blk-mq.h:914:1: note: declared here
+>   914 | blk_mq_unfreeze_queue(struct request_queue *q, unsigned int memflags)
+>       | ^~~~~~~~~~~~~~~~~~~~~
+> 
+> Caused by commit
+> 
+>   1e1a9cecfab3 ("block: force noio scope in blk_mq_freeze_queue")
+> 
+> I have applied the following fix:
 
-Fix the wording to "select 300Hz".
+Thanks Stephen, I've applied it to the block tree for 6.14.
 
-Fixes: 40fcfc87222e ("[PATCH] HZ: 300Hz support")
-Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
----
- kernel/Kconfig.hz | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/Kconfig.hz b/kernel/Kconfig.hz
-index 38ef6d06888ef1..ce1435cb08b1ec 100644
---- a/kernel/Kconfig.hz
-+++ b/kernel/Kconfig.hz
-@@ -30,7 +30,7 @@ choice
- 	 250 Hz is a good compromise choice allowing server performance
- 	 while also showing good interactive responsiveness even
- 	 on SMP and NUMA systems. If you are going to be using NTSC video
--	 or multimedia, selected 300Hz instead.
-+	 or multimedia, select 300Hz instead.
- 
- 	config HZ_300
- 		bool "300 HZ"
-
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
 -- 
-An old man doll... just what I always wanted! - Clara
+Jens Axboe
 
