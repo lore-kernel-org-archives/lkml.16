@@ -1,111 +1,120 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10548209681
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B076209681
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738597874; cv=none; b=sTnAjmQG/3dxbk8TW4+J0mJ06WFpDTSiQ4ZH8UaLPp3P2plAWmQODClAFe3OzOlFiMfmk7xl8bXlGa556ruLNEfUGvfrexuIaCHtrl9TUHiGnXmtIJcnH9QMNddJ184wKBwflMaluLqcFdzVphq2EKTopIJfmXciaWwKQhY0mJQ=
+	t=1738597879; cv=none; b=kEnhDMJMF3z2fs+7hMS2MaOjsJF6IBjiJrAGpEdZ4hu5G5bYZvJtNmMRK9E9QEO4ZFHIr3IEFWzp58yOkYujikMwDHFGMBspUyBFVVos3rshXpye/3c4Ta/Cfm3L466/1JB2ERhDrYQUAje3iBpD+jLhHwMNSvBcoJka9++yyr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738597874; c=relaxed/simple;
-	bh=lMaK/K+RDFxOAFU0o9DWEGPlrM4YR72RaKYYPFOFA1Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V4CjvM00b4yr0xDiXI3BUojbSJFcK+tDIusiSIePnnQw5lhy+RClhG/Z+8+GVoqjLZzGd8OcyHtYqjC2bHFb1aMrOCNznz+ajd3wf3YG0gn2j6sUvjbUBMuUPudNNB9+FzqVbfcSqwx2b8YxAND5El+E9lAzLwB0nyk+GssdV8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lBesa8WJ; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1738597879; c=relaxed/simple;
+	bh=e8N0Aob9bWqLhNePorMvSnmf+ovzuHoW9bu593uZPdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s0awp4zuHfMGciFHl8/bMGv9mFdHgTUWS5EKxbfkobSXWQ3lxGpVeFU53Je6kalk90YGWsvB1fZCvCcXyCiqzdc9eWncsPvl6U01jxxUiZadhJjYExs/YDPu6DlAC4vb6GVtFQaTv4nHVeUwQbNpSuqws0+iPUzBXVXGkKRmUQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HBg2lJq5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dMGsAtDy; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lBesa8WJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=jfJqV6xJvqeZcbd6dJyII4Jk4SeOCxHX5F5W/AfHLCQ=; b=lBesa8WJm0pR1UCfiVG4AYFaLQ
-	7Vcv362rhttqDtSAIwfikWpoTO3UjzCMI52yvj0jXKIYKKLTrHBWnZMN2rvXDstYMRGP9i0dosS+5
-	q5UYqizX0MQHp2fIzFNzl0xDIi6i+Swlth/LmBejis4hvImvcvsRJCWonYK8zEEmcm40xhktRV7e2
-	5fIB0PvVtjpbJMrQRb5Na5pqKQKr9hNOZzv9GAYuXz1Q1sFApdT5BosfrgkPNwj1NJqqqwkIBcflD
-	aHq6JLZOzTSFkvRK7o/wgyMnMXKvm/dJn5tMFFZ6g3b/okvTqYDRThjmTvdc48j6W4OkEbDABa6jm
-	dmH341bA==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1teyiz-0036H0-M3; Mon, 03 Feb 2025 16:51:07 +0100
-Message-ID: <e1a028d8-3be2-4bea-961a-855de4626999@igalia.com>
-Date: Tue, 4 Feb 2025 00:51:02 +0900
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HBg2lJq5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dMGsAtDy"
+Date: Mon, 3 Feb 2025 16:51:14 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738597876;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v7RnrCaV5xQ03TwmmjrTbH5ki25PvHPH8YZBjrzbXRg=;
+	b=HBg2lJq5njsLys3qQUM9Sp3MsdHfp0QXw7+v5WOKXgRzoiSWvHkHFSOAKQ4yGIyaW/G5FD
+	bujST94qzM4/Igh/q0Lj5fLn0XcGJpTx07os2t4s0wX2wRQ24xEUXSsiJupNzhA++hJKJF
+	uw2pIvzBlXMMcSVzu5rbzOKOGe12BLDDr9MaC1TcViikZAZy6n0TMyAOEqZTDBbuunRSCS
+	yrPamVF0r3Rxp1M4u4tauVK7TETXySW5vTsttQ0O3tHqETtXJgR3NRxuA7WYDoxHjpSJrQ
+	PO9jU+CvR7M9WWBYdlr6u2991qeb3udeAoB3OGfl98ivw05ZTI1p23h0f7z9UQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738597876;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v7RnrCaV5xQ03TwmmjrTbH5ki25PvHPH8YZBjrzbXRg=;
+	b=dMGsAtDyiFtBh3f/Y67cU5pLW9rYAvhMOB07Uc/mxZAoWAE7++emdDvxxrd0vlZOIKRIo8
+	bz5Bwd9RugQ1Q4Dw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v8 03/15] futex: Add basic infrastructure for local task
+ local hash.
+Message-ID: <20250203155114.YVGnCHUT@linutronix.de>
+References: <20250203135935.440018-1-bigeasy@linutronix.de>
+ <20250203135935.440018-4-bigeasy@linutronix.de>
+ <20250203142743.GI7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/11] sched_ext: Add an event, SCX_EV_BYPASS_DISPATCH
-To: Tejun Heo <tj@kernel.org>
-Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org
-References: <20250131070938.95551-1-changwoo@igalia.com>
- <20250131070938.95551-8-changwoo@igalia.com>
- <Z5-sgoiOGTJvB8e5@slm.duckdns.org>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <Z5-sgoiOGTJvB8e5@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250203142743.GI7145@noisy.programming.kicks-ass.net>
 
-Hello,
-
-On 25. 2. 3. 02:33, Tejun Heo wrote:
-> Hello,
+On 2025-02-03 15:27:43 [+0100], Peter Zijlstra wrote:
+> On Mon, Feb 03, 2025 at 02:59:23PM +0100, Sebastian Andrzej Siewior wrote:
+> > The futex hashmap is system wide and shared by random tasks. Each slot
+> > is hashed based on its address and VMA. Due to randomized VMAs (and
+> > memory allocations) the same logical lock (pointer) can end up in a
+> > different hash bucket on each invocation of the application. This in
+> > turn means that different applications may share a hash bucket on the
+> > first invocation but not on the second an it is not always clear which
+> > applications will be involved. This can result in high latency's to
+> > acquire the futex_hash_bucket::lock especially if the lock owner is
+> > limited to a CPU and not be effectively PI boosted.
+> > 
+> > Introduce a task local hash map. The hashmap can be allocated via
+> > 	prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, 0)
+> > 
+> > The `0' argument allocates a default number of 16 slots, a higher number
+> > can be specified if desired. The current upper limit is 131072.
 > 
-> On Fri, Jan 31, 2025 at 04:09:34PM +0900, Changwoo Min wrote:
-> ...
->> @@ -2869,11 +2874,17 @@ static int balance_one(struct rq *rq, struct task_struct *prev)
->>   	}
->>   
->>   	/* if there already are tasks to run, nothing to do */
->> -	if (rq->scx.local_dsq.nr)
->> +	if (rq->scx.local_dsq.nr) {
->> +		if (scx_rq_bypassing(rq))
->> +			__scx_add_event(SCX_EV_BYPASS_DISPATCH, 1);
->>   		goto has_tasks;
->> +	}
->>   
->> -	if (consume_global_dsq(rq))
->> +	if (consume_global_dsq(rq)) {
->> +		if (scx_rq_bypassing(rq))
->> +			__scx_add_event(SCX_EV_BYPASS_DISPATCH, 1);
+> Hmm, I would expect 0 to disable the local thing.
 > 
-> Hmm... Wouldn't it be easier to count it from select_task_rq_scx() and
-> do_enqueue_task()? The latter already has scx_rq_bypassing() condition and
-> the former one can easily cache bypassing test result and use that in the
-> else block.
+> Now, I realize this is somewhat tricky, since there might be futexes
+> inside it. But mapping 0 to some default value seems.. well, odd.
 
-That makes sense. I will change the code as you suggested.
+Looking at this from the top of the series:
+- The default value (currently 16) supposed to be something sane so the
+  user does not have to worry about it. We could increase it if needed.
 
-> 
->> @@ -2899,10 +2910,16 @@ static int balance_one(struct rq *rq, struct task_struct *prev)
->>   			rq->scx.flags |= SCX_RQ_BAL_KEEP;
->>   			goto has_tasks;
->>   		}
->> -		if (rq->scx.local_dsq.nr)
->> +		if (rq->scx.local_dsq.nr) {
->> +			if (scx_rq_bypassing(rq))
->> +				__scx_add_event(SCX_EV_BYPASS_DISPATCH, 1);
->>   			goto has_tasks;
->> -		if (consume_global_dsq(rq))
->> +		}
->> +		if (consume_global_dsq(rq)) {
->> +			if (scx_rq_bypassing(rq))
->> +				__scx_add_event(SCX_EV_BYPASS_DISPATCH, 1);
->>   			goto has_tasks;
->> +		}
-> 
-> The above can happen while bypass mode is being turned on but once on
-> control doesn't even reach here, right?
+- Currently each thread will alter the limit if needed based on the
+  formula. So even if you set it to 2 or 16, once you have 16 threads
+  you will have 64 buckets.
 
-You are right. I will clean this up.
+- The number of buckets can only be increased, not shrunk. There is no
+  technical requirement for it other than "avoid a race where you use a
+  lower number if a lot of threads a fired at once".
 
-Regards,
-Changwoo Min
+- It is not expected to go back to the global hash.
+
+- The upper limit is the same limit as for the global hash.
+
+All the things I mentioned are open for debate:
+
+- We could force the user to specify a power-of-number for the buckets
+  (due to current implementation) and not round.
+
+- We could allow to increase and shrink the number of buckets. Allowing
+  it to shrink by accident if many threads are fired at once.
+
+- We could say the user knows best and disable the heuristic once a size
+  has been requested.
+
+- We could use 0 to disable the local hash and use the global one
+  instead if this is a requirement. Doing this before a thread is
+  created is preferred. Later might get tricky.
+
+Sebastian
