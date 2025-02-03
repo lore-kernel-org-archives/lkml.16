@@ -1,171 +1,103 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4D720AF8E;
-	Mon,  3 Feb 2025 16:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED851205AC4
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738600305; cv=none; b=tPycJOQQXF18fu0A8sVbWHze0K3dEyML0d6I1lUOIZ1gThybcvXR34gD9r+B5RRteuQPDeiFW208cktLKayehWS6TUTZC1pGW/W4woj7b8j95HheDSc5yw0tAnCg0OZn7O+0c5SFhK3bXImGmJ/EEKUsAjH7GXjdT37SY5xrMAg=
+	t=1738600379; cv=none; b=jJSWnAqkXE+U5gwffUAr8ToTcJwZ3OGVlzAqx2VZug9zjtoxHO/k6WGDGGTjihRDN4hKt5m3r9W22BL9XW2JNLvNoY06XHyId4LxtFqQmZhnKQfwnyuvGwF1EEkJ1NAGcb6z98VkNgaKOKdMnb0A71yF/viAJiDG37pwfKn08Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738600305; c=relaxed/simple;
-	bh=pGb/zDE/OUDnW3AJ+/h1+wUKS5rddQcaYnC3FG1Jen0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vvx4hbsX9lGCKuUC+1gSI4fyJ+SQSo0d16yDsvVARlwPXtT3NV9BUlxUExxyQ3PG4sl9aw0NEXR4w4zKjp3XXMncJZHlU89Fdxhmqkq0uOVU2lNnulnQ1zRLsZmq9r/911+U7ffhhzToXq81EavWIO86qPambcAhvqNnJgcdoz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=idGHTcRQ; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1738600379; c=relaxed/simple;
+	bh=psme0VaIIhjLKce46d38tZjzdqnc0vcgoTsX/wa/3Go=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eH/umsmcZZNGSESiPsnb6qjF6g7SeHiUWhunXWrUcFqiqsJdYrLf41RroWRwV8AbM9EwmuKdxjmp2nb7weMHx0Zvf0gbMFVWT2MolxyYx8/LIQ0k6WsmwUYekpHKstir8zVhQWi+6lzlv9TE4JgXfl0CewyQqCRVBJc8dGKVVWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=dNoKx26u; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="idGHTcRQ"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 6E7D2A0E19;
-	Mon,  3 Feb 2025 17:31:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=HK4s81J1k83QEgvXWPtd
-	0kbv6ClLvjUueZlqzkVxOI8=; b=idGHTcRQINOpTLzJwksjtJJDi4dieWUuSG+v
-	gcYcbDKv3TiaHEIYmC8rW+iFS3oCDIoFtIQVHBbySXMk0P3SoFYMs48c1Uj/uSYl
-	EhqmTJ2pzfVLYzuY5flTsnmT8kXNTKlWYsjBmI1PrApj6FTlcy+Z+ywEc0i4qEIR
-	6ydIRymdwJ/NBCEvAXb/gr6mrRUBoUIYzsOfnv7JB1eEt/9AWXa5D/VvVbHT03X+
-	XgnIat6UDbOb5e7WRc1TfzJglnxk1EVvbFvqCrIOObME6yaawX473zbWHWvtb7aJ
-	+nmKygQTiK9lwl/saAvKQUFb0jxnYN+GQgXnQiRDTXi5Kzv1cC4oorjKy/g9Ou44
-	sysmA3h7PDW8iWC1npMiTL92dDSl3ELQQSvmWjOo4ZUciME/bUeWh5b8pqQ6C+LL
-	yqGlrSHhNNTV1PFDIGYl+BiopL5XC6iqKnzpjH7sLiuZZFXl1AIIofdzuWKmqSjG
-	tCQCJzhkKVLiiTELy0Dc8ZpdtyT9MIMx3EifRMvST/VNT1ZCTYT0/rVG/3EP95P4
-	kFGsZw1RAxzAefT4tJgKDtYB4dSlbfbRysX343AP0oBoZz+9qwFtjxxiv3SO8+R3
-	i6PTgG5SNEePWOrisksBSj9qceUxmy8Ma20F00okcxUax2Eee/x8FY4PXjArzMWV
-	cfs0OF8=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Kamel
- Bouhara" <kamel.bouhara@bootlin.com>, William Breathitt Gray <wbg@kernel.org>
-Subject: [PATCH v2 2/2] counter: microchip-tcb-capture: Add capture extensions for registers RA-RC
-Date: Mon, 3 Feb 2025 17:29:53 +0100
-Message-ID: <20250203162955.102559-2-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250203162955.102559-1-csokas.bence@prolan.hu>
-References: <20250203162955.102559-1-csokas.bence@prolan.hu>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dNoKx26u"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4678cce3d60so47548351cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 08:32:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1738600377; x=1739205177; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xa+KehmHCdO7ws33puD503ZY+SFlPD5TNxEbLB/jkew=;
+        b=dNoKx26uG0x154ao34L9ktpgpp8MFcEc7XNXnxVHSukZflsRfhYXLPL1hsgJO+K5+z
+         EpoDBo2wm9ia3T6QeSvLqsjDaD/rKSPeLbfh4pghQHyxQd5I6lQnwPPdCEs+MhOX4+8f
+         rZyKYxEp7D8d07BmdpJ/2utcDzEqcWLJ9O+5roA4FWrskZjrIqxQLZuYG2UvbK3s/jGz
+         mG+rt35zI+Y2iZrmP3HQlhqnz/W9Owxe5FbYcTIqNZViKlXzdivAIsl4he+fRJqOGtYm
+         IYYW/1ppAAMt5jmtT+xRHIcwg13+Qv7yiKRfF0W747MlIPwleXnkdhzErBZG2ZQ5vS3v
+         V7Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738600377; x=1739205177;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xa+KehmHCdO7ws33puD503ZY+SFlPD5TNxEbLB/jkew=;
+        b=gUFfduI8a2Ty6+XZAoal28L9tBunZMwHrWmX9YuaBlLZGw4qnAS1hC8ydscrYHDe8r
+         aDisptSMesl1oznjcuAltfl4JH9AOWo7RqIqJQjtz3rVFuCw8c/fsi0YkP9COG7J4d1x
+         DTd1qC6HxR3TTmNuFixb5EZ6H4siM+Wog8wdymIOFe6T1ZZ53kZ4uTGZb6OwbCQZZ9dU
+         xZio4ntXf5wZ9SIhU2xmfqvxem4MIlp3q7+1TSd9T7O3v9uzu1NNGzdOWadM9+NAYCSd
+         vyJpkzXb19L98XXLdamOQOy6BBKLVW4m3Pgkz5fXDIGHDkfVrVsm+7rSYgaHWeS4IKzf
+         RWhA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqF6fzAih6MfqcIZfSrnuCyMkDGIU9hEy04EzWnP2flgbuYjWyzsswj/n1ieFgzLXsFf9b+xQJ+/PZl90=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzALe1Q/+fJSJOzOTwCqQdTWobQR/jtGoMrTZtf9E2r4SgyRzuw
+	kJx14E57/bKz28kspBt+PZ3lrjmiJGfuQWAHUC33bV0xRZiXsJERN7lyJz6xE/E=
+X-Gm-Gg: ASbGnct1f+ATNuf8WQ9ODFHsqaWaWyeN95kotwDBEyA3lfoRGE5iLExFqDzHAu/hbZZ
+	44jCSIKqJPvih0NPeVFiikMHFERo+BIz5TZFkjwFMkWYfmlTC6WVjJBn+wKUB/xLe/Sb9uE+SJN
+	FVEWfMhU+t+EdEaFCyDJbrA9iqUkvDz44Dkjq7B1Vf2/KhDEkL3A4WEXMTd42kV9OG52N2vQZ1+
+	fyKPL/mShbhihBl6UHJUhYUWQgbVf2+yurBwhkgY4Nq3iJEJEHcidj8Z7UyEe3V+R6k8jUVClp7
+	eamSF6IByF7jARBRmCee5hYzLKDWHZ3ssyCMSZQGFJ+4+so9tL/woBpThjV2LtmB
+X-Google-Smtp-Source: AGHT+IHJeum439RmIFr9FXgOIQUKfCXniHSnRf0z51bI9P10KDm1UkVD+AzLPEv8lPXna3iL1oMiyA==
+X-Received: by 2002:ac8:59ce:0:b0:467:6dd9:c961 with SMTP id d75a77b69052e-46fd0b317f2mr301268431cf.48.1738600376789;
+        Mon, 03 Feb 2025 08:32:56 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0a7547sm50263121cf.4.2025.02.03.08.32.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 08:32:56 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tezNX-0000000B68y-2tjd;
+	Mon, 03 Feb 2025 12:32:55 -0400
+Date: Mon, 3 Feb 2025 12:32:55 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: "Daisuke Matsuda (Fujitsu)" <matsuda-daisuke@fujitsu.com>
+Cc: Joe Klein <joe.klein812@gmail.com>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"leon@kernel.org" <leon@kernel.org>,
+	"zyjzyj2000@gmail.com" <zyjzyj2000@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"rpearsonhpe@gmail.com" <rpearsonhpe@gmail.com>,
+	"Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+Subject: Re: [PATCH for-next v9 0/5] On-Demand Paging on SoftRoCE
+Message-ID: <20250203163255.GD2296753@ziepe.ca>
+References: <20241220100936.2193541-1-matsuda-daisuke@fujitsu.com>
+ <CAHjRaAeXCC+AAV+Ne0cJMpZJYxbD8ox28kp966wkdVJLJdSC_g@mail.gmail.com>
+ <OS3PR01MB98654FDD5E833D1C409B9C2CE5022@OS3PR01MB9865.jpnprd01.prod.outlook.com>
+ <OS3PR01MB9865F967A8BE67AE332FC926E5032@OS3PR01MB9865.jpnprd01.prod.outlook.com>
+ <20250103150546.GD26854@ziepe.ca>
+ <CAHjRaAfuTDGP9TKqBWVDE32t0JzE3jpL8WPBpO_iMhrgMS6MFQ@mail.gmail.com>
+ <CAHjRaAd+x1DapbWu0eMXdFuVru5Jw8jzTHyXo2-+RSZYUK9vgg@mail.gmail.com>
+ <20250113201611.GI26854@ziepe.ca>
+ <OS3PR01MB98659E07C0DAA1838FFBC70DE5E92@OS3PR01MB9865.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1738600299;VERSION=7984;MC=3773513757;ID=183986;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852667064
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OS3PR01MB98659E07C0DAA1838FFBC70DE5E92@OS3PR01MB9865.jpnprd01.prod.outlook.com>
 
-TCB hardware is capable of capturing the timer value to registers RA and
-RB. On top, it is capable of triggering on compare against a third
-register, RC. Add these registers as extensions.
+On Thu, Jan 30, 2025 at 10:51:58AM +0000, Daisuke Matsuda (Fujitsu) wrote:
 
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
- drivers/counter/microchip-tcb-capture.c | 65 ++++++++++++++++++++++++-
- 1 file changed, 64 insertions(+), 1 deletion(-)
+> However, to be honest, I do not think Joe's report is valid. It is not normal to
+> complain other's patches without providing any details. It makes difficult to 
+> assess the validity of the claim, and blocks any further discussions forever.
 
-diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
-index 316755c7659a..a25b54493c7f 100644
---- a/drivers/counter/microchip-tcb-capture.c
-+++ b/drivers/counter/microchip-tcb-capture.c
-@@ -20,7 +20,8 @@
- 				 ATMEL_TC_ETRGEDG_RISING | ATMEL_TC_LDBDIS | \
- 				 ATMEL_TC_LDBSTOP)
- 
--#define ATMEL_TC_DEF_IRQS	(ATMEL_TC_ETRGS | ATMEL_TC_COVFS)
-+#define ATMEL_TC_DEF_IRQS	(ATMEL_TC_ETRGS | ATMEL_TC_COVFS | \
-+				 ATMEL_TC_LDRAS | ATMEL_TC_LDRBS)
- 
- #define ATMEL_TC_QDEN			BIT(8)
- #define ATMEL_TC_POSEN			BIT(9)
-@@ -252,6 +253,62 @@ static int mchp_tc_count_read(struct counter_device *counter,
- 	return 0;
- }
- 
-+static int mchp_tc_count_cap_read(struct counter_device *counter,
-+				  struct counter_count *count, size_t idx, u64 *val)
-+{
-+	struct mchp_tc_data *const priv = counter_priv(counter);
-+	u32 cnt;
-+
-+	switch (idx) {
-+	case 0:
-+		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RA), &cnt);
-+		break;
-+	case 1:
-+		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RB), &cnt);
-+		break;
-+	case 2:
-+		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RC), &cnt);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	*val = cnt;
-+
-+	return 0;
-+}
-+
-+static int mchp_tc_count_cap_write(struct counter_device *counter,
-+				   struct counter_count *count, size_t idx, u64 val)
-+{
-+	struct mchp_tc_data *const priv = counter_priv(counter);
-+
-+	if (val > U32_MAX)
-+		return -ERANGE;
-+
-+	switch (idx) {
-+	case 0:
-+		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RA), val);
-+		break;
-+	case 1:
-+		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RB), val);
-+		break;
-+	case 2:
-+		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RC), val);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_COUNTER_ARRAY_CAPTURE(mchp_tc_cnt_cap_array, 3);
-+
-+static struct counter_comp mchp_tc_count_ext[] = {
-+	COUNTER_COMP_ARRAY_CAPTURE(mchp_tc_count_cap_read, mchp_tc_count_cap_write,
-+				   mchp_tc_cnt_cap_array),
-+};
-+
- static struct counter_count mchp_tc_counts[] = {
- 	{
- 		.id = 0,
-@@ -260,6 +317,8 @@ static struct counter_count mchp_tc_counts[] = {
- 		.num_functions = ARRAY_SIZE(mchp_tc_count_functions),
- 		.synapses = mchp_tc_count_synapses,
- 		.num_synapses = ARRAY_SIZE(mchp_tc_count_synapses),
-+		.ext = mchp_tc_count_ext,
-+		.num_ext = ARRAY_SIZE(mchp_tc_count_ext),
- 	},
- };
- 
-@@ -314,6 +373,10 @@ static irqreturn_t mchp_tc_isr(int irq, void *dev_id)
- 
- 	if (sr & ATMEL_TC_ETRGS)
- 		counter_push_event(counter, COUNTER_EVENT_CHANGE_OF_STATE, 0);
-+	if (sr & ATMEL_TC_LDRAS)
-+		counter_push_event(counter, COUNTER_EVENT_CAPTURE, 0);
-+	if (sr & ATMEL_TC_LDRBS)
-+		counter_push_event(counter, COUNTER_EVENT_CAPTURE, 1);
- 	if (sr & ATMEL_TC_COVFS)
- 		counter_push_event(counter, COUNTER_EVENT_OVERFLOW, 0);
- 
--- 
-2.48.1
+Yes, I agree, let's move past anything without concrete actionable
+details.
 
-
+Jason
