@@ -1,116 +1,177 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF468208A7
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670AB20896D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738595325; cv=none; b=G8FeZ0B8GbPEp9gIMBJCHSsAqfKQdz64MgsIbcQc2Cli53Aq0r4S3hgfuk6GM1MNeDpEVKmGVS+LWvHWMDq1cxkB8+uEnAinlWtEzb2ORoJrVP6qlwJInl9Luwo9e7YSrjaxT+YSdC2jprLf01X8h26vWWVMc582pd66V7QW6wk=
+	t=1738595340; cv=none; b=lHn7L6rms+zJaJcmhEwc5NIlr4iFHaw/XEJNsnc+pQgzUEKWlcPH5aVoQ6D+0OPweZhWGNcHA+8XLKUme1+4mBkUa0fOWa1q5arxDe7zMj8iTG1fmf3qZP0K6taSk1HzMOyh4MkksEhaYxncp/KoIUj3YUW1LL8MpE9FsyjHiKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738595325; c=relaxed/simple;
-	bh=aEeebPTGI6rZxoOmCPnb27JtxTWh0SwSxBRZJWXg3aA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Pg9luh54D9D+FwKzYrvkqMysYR2Oj3ZvEeE+FZisOJvjRclrO/5M+344Aj29wGjxMkAMax/JONi6tRGVQ5fTKYnBV0HGLBg+Bnypm4Y2NCFllVU2YjhkfUPdE6/jpsGjcqmYjicHXcIdjq7cU8W2BMCLq64YAleIA8bYXqJzn0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fdwggEnY; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738595340; c=relaxed/simple;
+	bh=H2VxtfLjRgDMEkL8lutZkw6RV1QTTIhNQ1OHrEPbnpc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qSjq5lK3ll5Ml5hdt7IWLZv+fqWUguvz01YJimSJVP07RSnbOw/7tqFgzvJwP/l6s8B4yzPQO5KUBQp8aZ8PaloIE6HUyVF/FHimJg3BP6K6kvXMCi30b2Q1FS/WWaieS6ykFpstl6RnfRUTjsYsIDNrHxQKa8jf9YAyNdWRjd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Gq5AQg80; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fdwggEnY"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 513F87PG2214454
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 09:08:07 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738595288;
-	bh=HqEE3YRbTbE7T+1H+FMsBDpAKDlGN4RiEhakRYvsKYs=;
-	h=From:To:CC:Subject:Date;
-	b=fdwggEnYMuGDpLyX25DdN2X2/f4rp1PO6ToRqREfCBCR0PJsNDNp7d8iFSftz2yMN
-	 3qCWIrqFfz1V3F+mmHl7r0LjkIP4LZdZh8a5fPuO7cVU5r2dVx/zevLPQvXMvHQZ7N
-	 59b3VaOsTM+c0/bDRNLBANgWjLQaIr06fPGqafXU=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 513F87DH050204
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 3 Feb 2025 09:08:07 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
- Feb 2025 09:08:07 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 3 Feb 2025 09:08:07 -0600
-Received: from uda0490681.. ([10.24.69.142])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 513F81hC112820;
-	Mon, 3 Feb 2025 09:08:02 -0600
-From: Vaishnav Achath <vaishnav.a@ti.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <quic_bjorande@quicinc.com>,
-        <geert+renesas@glider.be>, <krzysztof.kozlowski@linaro.org>,
-        <dmitry.baryshkov@linaro.org>, <arnd@arndb.de>,
-        <nfraprado@collabora.com>, <ebiggers@google.com>, <ardb@kernel.org>,
-        <nm@ti.com>, <vigneshr@ti.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <nfrayer@baylibre.com>, <glaroque@baylibre.com>, <tglx@linutronix.de>,
-        <u-kumar1@ti.com>, <vaishnav.a@ti.com>
-Subject: [PATCH v2] arm64: defconfig: Enable TISCI Interrupt Router and Aggregator
-Date: Mon, 3 Feb 2025 20:38:01 +0530
-Message-ID: <20250203150801.2399555-1-vaishnav.a@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gq5AQg80"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21644aca3a0so105380595ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 07:08:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738595338; x=1739200138; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tNJuttpR9ZTjDV/l1jMgUgWhO6WwINcyvVT+7TM8akc=;
+        b=Gq5AQg80UTglR0tlxKx9+RRpKzyfY2K3rs/GW7MiT29gFAcD2M5bIP9MV0i6d4znpC
+         H0GzE87Ct/aKkB9/cb+Eg6G8cRLGF02rB3TqMSzOocrRZbKVpxHWzk83rm0f03olLjT+
+         tgxayqXwmCmEsDxCy1je6Sid7zkZZqsgpCJx7c0rrEfPBoXd7kQJ3uBQRT8BFuIZwO6y
+         urK3NBQELpCvP+RCKraq1OqVhLGeD8vqHYVkUPw2wTGdf2Sd15jaqKa14u1jUOXaJmbj
+         HECQV17xLZCKyjITIGxEuAMwHIz/lfpUDik0Az29K3FeXS6dAA/y9wmFFrwSGSs9UNmI
+         JcQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738595338; x=1739200138;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tNJuttpR9ZTjDV/l1jMgUgWhO6WwINcyvVT+7TM8akc=;
+        b=Mb1tlSI4AaUQiFfESlAuFhLd2MJZq3lBNC/aiHq9toSVnVg21l/JfYkSPlIphoStL8
+         1rsa+LIjSBw6eblkfrvYV8vUILyUOvfEO8YVkfAnIauL0qWXkoH5btjQu8U9/fPLFt5H
+         75NBZ0UbQOHCGiYRH6JPxLWZEAInyjk2nKuO2F7J/fYYRVNv5AxDAOZXi+Xn7Wpd8NjI
+         LxLjMlxCavzoo0xD4OurDfpDzAMzvTx3ieHJxKRwPEEEa9kTY5HehGck1N9kEf4NcJiD
+         41LlHEdVSnRgFcNPl0bH+BVusfTYXh5jHDBTMo9xiP/crk6VFl+VRdTtDPzwTXmuq2X4
+         z1Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCWdlWFxABr6TOgbuo9aV0z8Q5VPCuxgPrg0+/n+IhT75QqtYOw+BQue4zVbQB2jb1KSL9L5N4tlWn7ZnK0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWBHoCsdDnehFJY+fLHRCh5RxsA2vyIVWzPR/9WP40W+kE9ZP1
+	LpFGYUigmYlBdF4V7p3VcjtlvRXfbzEkabyjG0rwRyNv+1V7K8MefVqJLfLuiQ==
+X-Gm-Gg: ASbGncsMqB253DC2Vqw5VIQKWNNa+NmQqJ8Y6J4UdDTbUbUGzCymUBlDw7grJmSI8lk
+	b5dX7ErLb1zzIVNhpkbeHIzvmWnoIKmqC8TbK7AtN5nXeFsVWsaDsX2IRfj+lO23nIhYe6W46+g
+	Mv9pUOjjM3Fod0jB4FxUbR88Pxe5X6Aw5Hv8K2Tz2QxJkeI1LxzaKnMWmnjb77ygXpxHtek2UqF
+	r2hr9aK8EbYE7dchD0Qsfb5bNMhVBxnn/4LPQACk0BwQYqiBXfh29ZHCyb+V0dxHDCZcQNEy/up
+	8Ks2Rs+tbDQl7HM3Y/y0FNvAEQ==
+X-Google-Smtp-Source: AGHT+IEZb9kYuWencbwluM7c4b3QTHaf56X5Dqp18EvM3dc0h2OMqMVo+Pn2s8eDLXdA1N1UiIMUFg==
+X-Received: by 2002:a05:6a20:9383:b0:1db:eead:c588 with SMTP id adf61e73a8af0-1ed7a6c8ac5mr38752070637.29.1738595336636;
+        Mon, 03 Feb 2025 07:08:56 -0800 (PST)
+Received: from thinkpad ([120.60.129.34])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acebddbb1dfsm8203509a12.5.2025.02.03.07.08.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 07:08:56 -0800 (PST)
+Date: Mon, 3 Feb 2025 20:38:49 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	konrad.dybcio@oss.qualcomm.com, quic_mrana@quicinc.com,
+	quic_vbadigan@quicinc.com, Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Subject: Re: [PATCH v4 2/4] PCI: of: Add API to retrieve equalization presets
+ from device tree
+Message-ID: <20250203150849.nexmt3ywv7x4b7e3@thinkpad>
+References: <20250124-preset_v2-v4-0-0b512cad08e1@oss.qualcomm.com>
+ <20250124-preset_v2-v4-2-0b512cad08e1@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <20250124-preset_v2-v4-2-0b512cad08e1@oss.qualcomm.com>
 
-Enable TISCI Interrupt Router and Interrupt Aggregator drivers.
-These IPs are found in all TI K3 SoCs like J721E, AM62X and is required
-for core functionality like DMA, GPIO Interrupts which is necessary
-during boot, thus make them built-in.
+On Fri, Jan 24, 2025 at 04:52:48PM +0530, Krishna Chaitanya Chundru wrote:
+> PCIe equalization presets are predefined settings used to optimize
+> signal integrity by compensating for signal loss and distortion in
+> high-speed data transmission.
+> 
+> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
+> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
+> configure lane equalization presets for each lane to enhance the PCIe
+> link reliability. Each preset value represents a different combination
+> of pre-shoot and de-emphasis values. For each data rate, different
+> registers are defined: for 8.0 GT/s, registers are defined in section
+> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
+> an extra receiver preset hint, requiring 16 bits per lane, while the
+> remaining data rates use 8 bits per lane.
+> 
+> Based on the number of lanes and the supported data rate, this function
+> reads the device tree property and stores in the presets structure.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/pci/of.c  | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h | 24 +++++++++++++++++++++++-
+>  2 files changed, 70 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index dacea3fc5128..7aa17c0042c5 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -826,3 +826,50 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
+>  	return slot_power_limit_mw;
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+> +
+> +/**
+> + * of_pci_get_equalization_presets - Parses the "eq-presets-ngts" property.
+> + *
+> + * @dev: Device containing the properties.
+> + * @presets: Pointer to store the parsed data.
+> + * @num_lanes: Maximum number of lanes supported.
+> + *
+> + * If the property is present read and store the data in the preset structure
+> + * assign default value 0xff to indicate property is not present.
+> + *
+> + * If the property is not found or is invalid, returns 0.
 
-bloat-o-meter summary on vmlinux:
-	add/remove: 460/1 grow/shrink: 4/0 up/down: 162483/-8 (162475)
-	...
-	Total: Before=31615984, After=31778459, chg +0.51%
+Use "Return:" prefix to define the return value. Like,
 
-Fixes: 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
-Fixes: b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
+	"Return: 0 if the property is not available or successfully parsed,
+		 errno otherwise."
 
-Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
----
+> + */
+> +int of_pci_get_equalization_presets(struct device *dev,
+> +				    struct pci_eq_presets *presets,
+> +				    int num_lanes)
+> +{
+> +	char name[20];
+> +	int ret;
+> +
+> +	presets->eq_presets_8gts[0] = 0xff;
+> +	if (of_property_present(dev->of_node, "eq-presets-8gts")) {
+> +		ret = of_property_read_u16_array(dev->of_node, "eq-presets-8gts",
+> +						 presets->eq_presets_8gts, num_lanes);
 
-V1 : https://lore.kernel.org/all/20250119182121.3956546-1-vaishnav.a@ti.com/
+As Konrad mentioned, you can use -EINVAL from these APIs to determine whether
+the property exists or not.
 
-V1->V2:
-	* Add Fixes tag.
-	* Add bloat-o-meter summary to commit message.
+> +		if (ret) {
+> +			dev_err(dev, "Error reading eq-presets-8gts %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	for (int i = 0; i < EQ_PRESET_TYPE_MAX; i++) {
+> +		presets->eq_presets_Ngts[i][0] = 0xff;
+> +		snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << (i + 1));
+> +		if (of_property_present(dev->of_node, name)) {
+> +			ret = of_property_read_u8_array(dev->of_node, name,
+> +							presets->eq_presets_Ngts[i],
+> +							num_lanes);
+> +			if (ret) {
+> +				dev_err(dev, "Error %s %d\n", name, ret);
 
-Previously both of these configs were selected for ARCH_K3 in respective
-Kconfigs, but commit b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
-and commit 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
-in dropped this recently without adding those back in arm64
-defconfig, this causes boot failure in all TI K3 platforms.
+"Error reading..."
 
-Passing bootlog with configs enabled:
-https://gist.github.com/vaishnavachath/03d8d3ce0f22219643c2f4d1dd243fd1
+- Mani
 
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index cb7da4415599..1f25423de383 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1551,6 +1551,8 @@ CONFIG_PWM_VISCONTI=m
- CONFIG_SL28CPLD_INTC=y
- CONFIG_QCOM_PDC=y
- CONFIG_QCOM_MPM=y
-+CONFIG_TI_SCI_INTR_IRQCHIP=y
-+CONFIG_TI_SCI_INTA_IRQCHIP=y
- CONFIG_RESET_GPIO=m
- CONFIG_RESET_IMX7=y
- CONFIG_RESET_QCOM_AOSS=y
 -- 
-2.34.1
-
+மணிவண்ணன் சதாசிவம்
