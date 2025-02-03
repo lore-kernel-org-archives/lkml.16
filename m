@@ -1,104 +1,78 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5211C695;
-	Mon,  3 Feb 2025 07:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E6B1C695;
+	Mon,  3 Feb 2025 07:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738568974; cv=none; b=hTTDk7YVj/s5fBTJ8zuofjgYgV0cPUCSMJrKq/Ec4NI1U3ocU39gjkgjFngulNp1H6qbK8hG+bm5v0zSisW7Q1P5aS3s06HtWhcoiiuGbMXJTxVsdwHYE7/EYfA+PLkgH7sGsr9NZd0T0IxAToOPY2/bg8N+x7AbaqygbPxkyIE=
+	t=1738569189; cv=none; b=RK6zTqSvmB1mon6xxP9Hl7c9LUwb/++yf/7zbilddxFpJAYeE1ZpRqDC20RRsQLsFZA2/1FUIn8Wkyq+jrQZPx2UcG7BNMFa/XV8Y8mUoeDRLvdSeRyN8DIHydI0FfOzwlaeDJlXpdYSE6F+3vNTFsGPIao44C5pbD244cpZ9cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738568974; c=relaxed/simple;
-	bh=UWOdnQSXCQCUpLex2fFMN2HU0ExUKNaMCm3aZTAkfxc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n9tcf4+1ZPxkcXziggLQb9zJQ7fTjx47tKPE5fclkUmfm27ukabtkcMleUoJ1r3VzlMIzlZBBkyIZprpHuby05oU70xX9llvNcr9T2iKKzxGIJcsRN92nwQb1upT8FlExFvvUeQ6fjrjU1A5wqEnt5oloQ+J9HGtusTJEVU5oT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nIESzpK1; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738569189; c=relaxed/simple;
+	bh=98P8X6HMfcm3Oxb2BZKVpxuLvrRbMpgR2GrkKyq4mkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JcdFWNoWRqb2nhtgwALRKvLQtX38l0NowDU6Cb1ZMUy41xWgk66rivjTt1L5QLviMo4YSG/XdbEs2KMQCGU5xk3/6fFZ1AqzTvq8ltvNy9vRwrAPeRYtbymobM4thMa5PEH9akZJAP9ls2p2p1sADvDeGNwAeTXAdjH+EZvMpwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdzDDw+T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nIESzpK1"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5137nKm82978540
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 01:49:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738568960;
-	bh=0ixPdjMr9uhbk9uqgulbTw/c2bwsozG2r58q5xC4kRE=;
-	h=From:To:CC:Subject:Date;
-	b=nIESzpK1RM1OAEphFOgCcsXaOkTCscsp6oWROrFxk3c4pRhJe/J2H+MZQMemZEi5K
-	 tmDyoACbuMOcCmQ5gXUDjdpgSSw6cN18MjJNyDeAePUGOSmXYcMWqfu/OaKu4nrpdO
-	 S+YuNXjAoVLqvcDbK6Cwa1Bmun6LcSnac0BXW0oQ=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5137nK2C008081
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 3 Feb 2025 01:49:20 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
- Feb 2025 01:49:19 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 3 Feb 2025 01:49:19 -0600
-Received: from abhilash-HP.dhcp.ti.com (abhilash-hp.dhcp.ti.com [172.24.227.115])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5137nHIi114856;
-	Mon, 3 Feb 2025 01:49:17 -0600
-From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>
-CC: <vaishnav.a@ti.com>, <u-kumar1@ti.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <y-abhilashchandra@ti.com>
-Subject: [PATCH] dmaengine: ti: k3-udma: Use cap_mask directly from dma_device structure instead of a local copy
-Date: Mon, 3 Feb 2025 13:19:15 +0530
-Message-ID: <20250203074915.3634508-1-y-abhilashchandra@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdzDDw+T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D18AC4CEE2;
+	Mon,  3 Feb 2025 07:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738569188;
+	bh=98P8X6HMfcm3Oxb2BZKVpxuLvrRbMpgR2GrkKyq4mkM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GdzDDw+TQ2RB5QCOljApbh1Dlc8hoYjvO4lSQ/49lsQ6ZVV2A4k2pJaVsWI+FbVNo
+	 VJ0yLHPv9e01G669yA0cuIG1WK5T0WTiUegMwrtsOhcnUeitdHku8VcHPoepnDJlw8
+	 nKJqcmFLJrGplgm03KhG48/AI5d0XlKpajVGrFIv7SBLqq6QE05rpho4o4HNhHNnXr
+	 d8pLn1baGWmyQ7nL3QgzE6t+29sl0NIKOwo3GOwMGDtBM0fK9eXa7LqHDX5ggldgBy
+	 NAhtDZ4dmKbGXZwVM37OEtQwAQvLvyAJXI61czxKGZ0rwcFHOkR0idtiPKZFfgURMR
+	 VVlgiT8sUR8Pg==
+Date: Mon, 3 Feb 2025 08:53:05 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Andi Shyti <andi.shyti@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, 
+	Vivek Gautam <gautam.vivek@samsung.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>, Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 02/34] dt-bindings: hwinfo: samsung,exynos-chipid: add
+ exynos7870-chipid compatible
+Message-ID: <20250203-roadrunner-of-unnatural-wind-54bddf@krzk-bin>
+References: <20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org>
+ <20250202190353.14572-1-kauschluss@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250202190353.14572-1-kauschluss@disroot.org>
 
-Currently, a local dma_cap_mask_t variable is used to store device
-cap_mask within udma_of_xlate(). However, the DMA_PRIVATE flag in
-the device cap_mask can get cleared when the last channel is released.
-This can happen right after storing the cap_mask locally in
-udma_of_xlate(), and subsequent dma_request_channel() can fail due to
-mismatch in the cap_mask. Fix this by removing the local dma_cap_mask_t
-variable and directly using the one from the dma_device structure.
+On Mon, Feb 03, 2025 at 12:33:53AM +0530, Kaustabh Chakraborty wrote:
+> Add the compatible string "samsung,exynos7870-chipid" to the documentation,
+> with a fallback to "samsung,exynos4210-chipid".
 
-Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
-Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
----
-RFC: https://lore.kernel.org/all/20250117121728.203452-1-y-abhilashchandra@ti.com/ 
+This we see from the diff. Say something not obvious about hardware
+instead of repeating redudundantly subject and diff. Otherwise what you
+said is equivalent in just few words: "Document Exynos7870 ChipID."
+instead of two lines of text. Instead say whether device is or is not
+compatible.
 
- drivers/dma/ti/k3-udma.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 7ed1956b4642..c775a2284e86 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -4246,7 +4246,6 @@ static struct dma_chan *udma_of_xlate(struct of_phandle_args *dma_spec,
- 				      struct of_dma *ofdma)
- {
- 	struct udma_dev *ud = ofdma->of_dma_data;
--	dma_cap_mask_t mask = ud->ddev.cap_mask;
- 	struct udma_filter_param filter_param;
- 	struct dma_chan *chan;
- 
-@@ -4278,7 +4277,7 @@ static struct dma_chan *udma_of_xlate(struct of_phandle_args *dma_spec,
- 		}
- 	}
- 
--	chan = __dma_request_channel(&mask, udma_dma_filter_fn, &filter_param,
-+	chan = __dma_request_channel(&ud->ddev.cap_mask, udma_dma_filter_fn, &filter_param,
- 				     ofdma->of_node);
- 	if (!chan) {
- 		dev_err(ud->dev, "get channel fail in %s.\n", __func__);
--- 
-2.34.1
+Best regards,
+Krzysztof
 
