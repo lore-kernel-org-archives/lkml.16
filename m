@@ -1,424 +1,177 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0961C2036F0;
-	Mon,  3 Feb 2025 11:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62C3F2036EB;
+	Mon,  3 Feb 2025 11:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738582817; cv=none; b=VKDRGPo4Fg85aPFpnrnKNJM6Yfgzuec0F1Cn86MOdHHS/IOb6WBy2VHBEe3qqwj1GnTcUNpxE42TqO6XQ+yZZw2YD1mlupwZHAt9/wBqcdGongRsgu9xu1HtudqL6CAOg39xb9avmE9RCyoWLfEyi9GlkLTM7WfbxlwtZh+LqzU=
+	t=1738582833; cv=none; b=KppdLegbg5IgrckZJdRqYpPCbC4Ju7pQTzgAq01bY+yWq9kPgPZGTrYGi8RwxFSeTaCQy8IHYWuVrZmQ/yuh1vDZgo0vSA9CgljQ7PD55usVIEwhMLBpVe6VATq4z7gsb4OsVrYYm6gatRBobmMYUQSr/VNqcIQEPnIYW25Q2DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738582817; c=relaxed/simple;
-	bh=Pznr0Bts4D0FtUDtSu2Wtdp7OSNmccFCgV9QhrjQAow=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sOc+Y6dNTmP5ABQ1gu6RhikcD8iLzLTRr1aj0+HtwYJItnnVFWlmw29kkD8V3cy1WM29QvggFJtJBXd6nXAHGUR/cleJWlc07K1wgh9jkt5cwzo8E4qWIzIe2LwMHtNiAVhBO0HhA0anO/2kn0uNV65rfFoHeQOdmgftyG8f5o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DcCl1/u4; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DcCl1/u4"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21649a7bcdcso71394165ad.1;
-        Mon, 03 Feb 2025 03:40:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738582815; x=1739187615; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4gduqE5+XkKRgfOuTSHYpyohOphdvP2oewiQ8WxF2r4=;
-        b=DcCl1/u44nbVAM2qO7ejBfRPJHvXEHDrqxhPbGiGrXf5P0YlomfbP3i1F0a9E3uxTj
-         JdG3Np7Y/CmNpeXqy4qv0egCNPViyEGYZMjxeiW15BNcsKTXfNHKKyy9l4MiiYLXal4D
-         Y7sllhG4RwsI1LGpx73eF8ORRJ9nCFxcB2z89WC0eE6Y3vs2ut6I+cZX/WZs08wM7FpA
-         ySPAvKMC8ndl/WhGnFciuB9yGKKeDEHp2odxHbLKTPjIRsJIIRSqdVNSxdbcX2Cnqeep
-         CByjkj4HYo6ZtWn1d+9ZT7MWaKMATdEUPkfiCdwzveuFRXeYGU0W9MBBv5VdC3yN4Mry
-         4I6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738582815; x=1739187615;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4gduqE5+XkKRgfOuTSHYpyohOphdvP2oewiQ8WxF2r4=;
-        b=dg0XUwCJD4MJHj/DatYkwju6uyV9Fg1fGa9rtIRwyj4bKy/pGZCxWFJE/5sxKV8q5H
-         NI/7SHu1N9IGq3UAtdl27juQqNCL2sQzzOqSfrXyh8W41L4HJ2kiEivb6aXXjl3a8m2R
-         jEXFgrGr4juMD0JJJE0KBVUB6IlC0rxK3osp+m+/yDhN8E872rWGmue0E1bwE85g1h1x
-         Gw1aG9An9PKFmAxD2FAJ7JDmC/WUR+A+sJN4NqkPYzWoDwvL0eJsWv70xozfMVqRX1zz
-         fBnKdbUaJKbeAvsX+yBQNeWFy6MXiBEmeFn/VnGVUeCFgiRzG4divru1zWH1l1FyK0aD
-         r1Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMQXxvt6M5DiBl6BsCGMhMBm38tU3oPceIXKVP7IHSed3FgMrwA0jfZtnINuKMga9Nm7WZNPEMPIcpNlct@vger.kernel.org, AJvYcCXyuWV6P9OZB2vqjGjyFwLNxtcnytCbtN7t5bkTPiljfrftN5a1242gO3YHOACQrnEkf3nHrG+BJ+5b@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBPmBWJpwYV4YNrfHWYzIb/nQMzhfXM0OiY223QKbaeaW/vA5x
-	8H2iHrQLkWEVgCurt+FqnrDCQ0UPb51EuFyvkPwwvhZesy0k08Tj
-X-Gm-Gg: ASbGncvDv6hqSTrFJGdm26Cd91JSacYtXCN3fAUrPYxYgfPCUuu6khjfr55utK4cfMY
-	ylx1BArnlmn3e75q2c02R9Ukrf/usuagdyEBd8DpozwFPkmN/aZDs1CZ5WIwljL7sGTq4SgU478
-	sLVblSXvZ06Jx/UNZFboqL2vcFJmNG35CepGTlodPtWAFd6/Qm2hj19xzpfZUILGSRJA9xKFG14
-	nTeO7UP323Lq3+ZaGm1huA2PsP2RIVNrkoq9CamY8LbdgZr2t3Xa7h2/Ot3C3Str/6zKKRZudP/
-	xhNaiGJM1tChbENZ
-X-Google-Smtp-Source: AGHT+IG/voCx4BoOF7MZR1nPTGgCOf7e1n+k46BNNiWJ1p0YoUYHkwqU6ASyPIUVLd/56kA/7gIkAA==
-X-Received: by 2002:a05:6a20:d809:b0:1e0:df27:10b5 with SMTP id adf61e73a8af0-1ed7a6e0e6bmr38809210637.29.1738582814998;
-        Mon, 03 Feb 2025 03:40:14 -0800 (PST)
-Received: from nick-mbp.. ([59.188.211.160])
-        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-acec04796d6sm7721614a12.55.2025.02.03.03.40.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 03:40:14 -0800 (PST)
-From: Nick Chan <towinchenmi@gmail.com>
-To: Hector Martin <marcan@marcan.st>,
-	Sven Peter <sven@svenpeter.dev>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Nick Chan <towinchenmi@gmail.com>
-Subject: [PATCH v2 RESEND] arm64: dts: apple: Split s8000/s8003 SoC DTS files
-Date: Mon,  3 Feb 2025 19:38:31 +0800
-Message-ID: <20250203113949.14760-1-towinchenmi@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1738582833; c=relaxed/simple;
+	bh=X8u3EDZ0TiHq2BOKLXkT/rMzjenNrZ+dOHynEnOm/5Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wa9m2XngOtx4xC0zxsY2frqBPB67VlOqqL1l1xrXOI3f5JtzjT6tHf0nj0HXU8GUrs28/uL1WbAdE7finQu3Opl+atYZZEKj4x2bX7lAqmbcSUbtk4wPPY+QdvcDCARMlsxr6V6/H4liZ3bMcuIfVL6vzTZvHIIq5gPy6J3p870=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1CA511FB;
+	Mon,  3 Feb 2025 03:40:54 -0800 (PST)
+Received: from [10.1.34.25] (e122027.cambridge.arm.com [10.1.34.25])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8C9C3F58B;
+	Mon,  3 Feb 2025 03:40:27 -0800 (PST)
+Message-ID: <303db538-97ae-4582-a476-f90749c04cff@arm.com>
+Date: Mon, 3 Feb 2025 11:40:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: stmmac: Allow zero for [tr]x_fifo_size
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Jose Abreu <joabreu@synopsys.com>,
+ Paolo Abeni <pabeni@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ netdev@vger.kernel.org, Furong Xu <0x1207@gmail.com>,
+ Petr Tesarik <petr@tesarici.cz>, Serge Semin <fancer.lancer@gmail.com>,
+ Yanteng Si <si.yanteng@linux.dev>, Xi Ruoyao <xry111@xry111.site>
+References: <20250203093419.25804-1-steven.price@arm.com>
+ <Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
+ <811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
+ <Z6Clkh44QgdNJu_O@shell.armlinux.org.uk>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <Z6Clkh44QgdNJu_O@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Despite what the code comments said, the DTS files were not split properly.
-Since these two SoCs are now known to have minor differences like in
-latencies for cpufreq state transistions, split the DTS files now.
+On 03/02/2025 11:16, Russell King (Oracle) wrote:
+> On Mon, Feb 03, 2025 at 11:01:28AM +0000, Steven Price wrote:
+>> [Moved Kunihiko to the To: line]
+>>
+>> On 03/02/2025 10:38, Russell King (Oracle) wrote:
+>>> On Mon, Feb 03, 2025 at 09:34:18AM +0000, Steven Price wrote:
+>>>> Commit 8865d22656b4 ("net: stmmac: Specify hardware capability value
+>>>> when FIFO size isn't specified") modified the behaviour to bail out if
+>>>> both the FIFO size and the hardware capability were both set to zero.
+>>>> However devices where has_gmac4 and has_xgmac are both false don't use
+>>>> the fifo size and that commit breaks platforms for which these values
+>>>> were zero.
+>>>>
+>>>> Only warn and error out when (has_gmac4 || has_xgmac) where the values
+>>>> are used and zero would cause problems, otherwise continue with the zero
+>>>> values.
+>>>>
+>>>> Fixes: 8865d22656b4 ("net: stmmac: Specify hardware capability value when FIFO size isn't specified")
+>>>> Tested-by: Xi Ruoyao <xry111@xry111.site>
+>>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>>
+>>> I'm still of the opinion that the original patch set was wrong, and
+>>> I was thinking at the time that it should _not_ have been submitted
+>>> for the "net" tree (it wasn't fixing a bug afaics, and was a risky
+>>> change.)
+>>>
+>>> Yes, we had multiple places where we have code like:
+>>>
+>>>         int rxfifosz = priv->plat->rx_fifo_size;
+>>>         int txfifosz = priv->plat->tx_fifo_size;
+>>>
+>>>         if (rxfifosz == 0)
+>>>                 rxfifosz = priv->dma_cap.rx_fifo_size;
+>>>         if (txfifosz == 0)
+>>>                 txfifosz = priv->dma_cap.tx_fifo_size;
+>>>
+>>>         /* Split up the shared Tx/Rx FIFO memory on DW QoS Eth and DW XGMAC */
+>>>         if (priv->plat->has_gmac4 || priv->plat->has_xgmac) {
+>>>                 rxfifosz /= rx_channels_count;
+>>>                 txfifosz /= tx_channels_count;
+>>>         }
+>>>
+>>> and this is passed to stmmac_dma_rx_mode() and stmmac_dma_tx_mode().
+>>>
+>>> We also have it in the stmmac_change_mtu() path for the transmit side,
+>>> which ensures that the MTU value is not larger than the transmit FIFO
+>>> size (which is going to fail as it's always done before or after the
+>>> original patch set, and whether or not your patch is applied.)
+>>>
+>>> Now, as for the stmmac_dma_[tr]x_mode(), these are method functions
+>>> calling into the DMA code. dwmac4, dwmac1000, dwxgmac2, dwmac100 and
+>>> sun8i implement methods for this.
+>>>
+>>> Of these, dwmac4, dwxgmac2 makes use of the value passed into
+>>> stmmac_dma_[tr]x_mode() - both of which initialise dma.[tr]x_fifo_size.
+>>> dwmac1000, dwmac100 and sun8i do not make use of it.
+>>>
+>>> So, going back to the original patch series, I still question the value
+>>> of the changes there - and with your patch, it makes their value even
+>>> less because the justification seemed to be to ensure that
+>>> priv->plat->[tr]x_fifo_size contained a sensible value. With your patch
+>>> we're going back to a situation where we allow these to effectively be
+>>> "unset" or zero.
+>>>
+>>> I'll ask the question straight out - with your patch applied, what is
+>>> the value of the original four patch series that caused the breakage?
+>>>
+>>
+>> I've no opinion whether the original series "had value" - I'm just 
+>> trying to fix the breakage that entailed. My first attempt at a patch 
+>> was indeed a (partial) revert, but Andrew was keen to find a better 
+>> solution[1].
+> 
+> There are two ways to fix the breakage - either revert the original
+> patches (which if they have little value now would be the sensible
+> approach IMHO) or try to fix them up, which may entail several patches
+> if further breakage is found.
+> 
+> Does the flow control test behave the same before and after the patch
+> series? Please can you test that?
 
-Signed-off-by: Nick Chan <towinchenmi@gmail.com>
----
+Yes I see the same results from "ethtool -t eth0" on v6.13 and after
+applying this patch on v6.14-rc1. Although neither exactly look healthy:
 
-Changes since v1:
-- Drop PMGR nodes file rename. This is now the first patch and other series
-that modifies Apple A9 DTS files now depend on this series. This avoids
-less than ideal situations like adding a file only for it to be renamed
-immediately.
+The test result is FAIL
+The test extra info:
+ 1. MAC Loopback               	 0
+ 2. PHY Loopback               	 -110
+ 3. MMC Counters               	 0
+ 4. EEE                        	 -95
+ 5. Hash Filter MC             	 0
+ 6. Perfect Filter UC          	 -110
+ 7. MC Filter                  	 -110
+ 8. UC Filter                  	 0
+ 9. Flow Control               	 -110
+10. RSS                        	 -95
+11. VLAN Filtering             	 -95
+12. VLAN Filtering (perf)      	 -95
+13. Double VLAN Filter         	 -95
+14. Double VLAN Filter (perf)  	 -95
+15. Flexible RX Parser         	 -95
+16. SA Insertion (desc)        	 -95
+17. SA Replacement (desc)      	 -95
+18. SA Insertion (reg)         	 -95
+19. SA Replacement (reg)       	 -95
+20. VLAN TX Insertion          	 -95
+21. SVLAN TX Insertion         	 -95
+22. L3 DA Filtering            	 -95
+23. L3 SA Filtering            	 -95
+24. L4 DA TCP Filtering        	 -95
+25. L4 SA TCP Filtering        	 -95
+26. L4 DA UDP Filtering        	 -95
+27. L4 SA UDP Filtering        	 -95
+28. ARP Offload                	 -95
+29. Jumbo Frame                	 1
+30. Multichannel Jumbo         	 -95
+31. Split Header               	 -95
+32. TBS (ETF Scheduler)        	 -95
 
-Link to v1: https://lore.kernel.org/asahi/20241206135051.56049-1-towinchenmi@gmail.com/T
+But I'll admit I've no idea what I'm doing here, so perhaps I don't have
+a correct setup for running these tests?
 
-Nick Chan
-
- arch/arm64/boot/dts/apple/s800-0-3.dtsi | 140 ++++++++++++++++++++++++
- arch/arm64/boot/dts/apple/s8000.dtsi    | 133 +---------------------
- arch/arm64/boot/dts/apple/s8003.dtsi    |  10 +-
- 3 files changed, 146 insertions(+), 137 deletions(-)
- create mode 100644 arch/arm64/boot/dts/apple/s800-0-3.dtsi
-
-diff --git a/arch/arm64/boot/dts/apple/s800-0-3.dtsi b/arch/arm64/boot/dts/apple/s800-0-3.dtsi
-new file mode 100644
-index 000000000000..082e5b1733d0
---- /dev/null
-+++ b/arch/arm64/boot/dts/apple/s800-0-3.dtsi
-@@ -0,0 +1,140 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+/*
-+ * Apple S8000/S8003 "A9" SoC
-+ *
-+ * This file contains parts common to both variants of A9
-+ *
-+ * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/apple-aic.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/apple.h>
-+
-+/ {
-+	interrupt-parent = <&aic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	clkref: clock-ref {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24000000>;
-+		clock-output-names = "clkref";
-+	};
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "apple,twister";
-+			reg = <0x0 0x0>;
-+			cpu-release-addr = <0 0>; /* To be filled in by loader */
-+			enable-method = "spin-table";
-+			device_type = "cpu";
-+		};
-+
-+		cpu1: cpu@1 {
-+			compatible = "apple,twister";
-+			reg = <0x0 0x1>;
-+			cpu-release-addr = <0 0>; /* To be filled in by loader */
-+			enable-method = "spin-table";
-+			device_type = "cpu";
-+		};
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		nonposted-mmio;
-+		ranges;
-+
-+		serial0: serial@20a0c0000 {
-+			compatible = "apple,s5l-uart";
-+			reg = <0x2 0x0a0c0000 0x0 0x4000>;
-+			reg-io-width = <4>;
-+			interrupt-parent = <&aic>;
-+			interrupts = <AIC_IRQ 192 IRQ_TYPE_LEVEL_HIGH>;
-+			/* Use the bootloader-enabled clocks for now. */
-+			clocks = <&clkref>, <&clkref>;
-+			clock-names = "uart", "clk_uart_baud0";
-+			status = "disabled";
-+		};
-+
-+		aic: interrupt-controller@20e100000 {
-+			compatible = "apple,s8000-aic", "apple,aic";
-+			reg = <0x2 0x0e100000 0x0 0x100000>;
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+		};
-+
-+		pinctrl_ap: pinctrl@20f100000 {
-+			compatible = "apple,s8000-pinctrl", "apple,pinctrl";
-+			reg = <0x2 0x0f100000 0x0 0x100000>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl_ap 0 0 208>;
-+			apple,npins = <208>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			interrupt-parent = <&aic>;
-+			interrupts = <AIC_IRQ 42 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 43 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 44 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 45 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 46 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 47 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 48 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		pinctrl_aop: pinctrl@2100f0000 {
-+			compatible = "apple,s8000-pinctrl", "apple,pinctrl";
-+			reg = <0x2 0x100f0000 0x0 0x100000>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl_aop 0 0 42>;
-+			apple,npins = <42>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			interrupt-parent = <&aic>;
-+			interrupts = <AIC_IRQ 113 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 114 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 115 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 116 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 117 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 118 IRQ_TYPE_LEVEL_HIGH>,
-+				     <AIC_IRQ 119 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		wdt: watchdog@2102b0000 {
-+			compatible = "apple,s8000-wdt", "apple,wdt";
-+			reg = <0x2 0x102b0000 0x0 0x4000>;
-+			clocks = <&clkref>;
-+			interrupt-parent = <&aic>;
-+			interrupts = <AIC_IRQ 4 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&aic>;
-+		interrupt-names = "phys", "virt";
-+		/* Note that A9 doesn't actually have a hypervisor (EL2 is not implemented). */
-+		interrupts = <AIC_FIQ AIC_TMR_GUEST_PHYS IRQ_TYPE_LEVEL_HIGH>,
-+			     <AIC_FIQ AIC_TMR_GUEST_VIRT IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+};
-+
-+/*
-+ * The A9 was made by two separate fabs on two different process
-+ * nodes: Samsung made the S8000 (APL0898) on 14nm and TSMC made
-+ * the S8003 (APL1022) on 16nm. There are some minor differences
-+ * such as timing in cpufreq state transistions.
-+ */
-diff --git a/arch/arm64/boot/dts/apple/s8000.dtsi b/arch/arm64/boot/dts/apple/s8000.dtsi
-index 6e9046ea106c..c7e39abda7e1 100644
---- a/arch/arm64/boot/dts/apple/s8000.dtsi
-+++ b/arch/arm64/boot/dts/apple/s8000.dtsi
-@@ -7,138 +7,11 @@
-  * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
-  */
- 
--#include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/interrupt-controller/apple-aic.h>
--#include <dt-bindings/interrupt-controller/irq.h>
--#include <dt-bindings/pinctrl/apple.h>
--
--/ {
--	interrupt-parent = <&aic>;
--	#address-cells = <2>;
--	#size-cells = <2>;
--
--	clkref: clock-ref {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <24000000>;
--		clock-output-names = "clkref";
--	};
--
--	cpus {
--		#address-cells = <2>;
--		#size-cells = <0>;
--
--		cpu0: cpu@0 {
--			compatible = "apple,twister";
--			reg = <0x0 0x0>;
--			cpu-release-addr = <0 0>; /* To be filled in by loader */
--			enable-method = "spin-table";
--			device_type = "cpu";
--		};
--
--		cpu1: cpu@1 {
--			compatible = "apple,twister";
--			reg = <0x0 0x1>;
--			cpu-release-addr = <0 0>; /* To be filled in by loader */
--			enable-method = "spin-table";
--			device_type = "cpu";
--		};
--	};
--
--	soc {
--		compatible = "simple-bus";
--		#address-cells = <2>;
--		#size-cells = <2>;
--		nonposted-mmio;
--		ranges;
--
--		serial0: serial@20a0c0000 {
--			compatible = "apple,s5l-uart";
--			reg = <0x2 0x0a0c0000 0x0 0x4000>;
--			reg-io-width = <4>;
--			interrupt-parent = <&aic>;
--			interrupts = <AIC_IRQ 192 IRQ_TYPE_LEVEL_HIGH>;
--			/* Use the bootloader-enabled clocks for now. */
--			clocks = <&clkref>, <&clkref>;
--			clock-names = "uart", "clk_uart_baud0";
--			status = "disabled";
--		};
--
--		aic: interrupt-controller@20e100000 {
--			compatible = "apple,s8000-aic", "apple,aic";
--			reg = <0x2 0x0e100000 0x0 0x100000>;
--			#interrupt-cells = <3>;
--			interrupt-controller;
--		};
--
--		pinctrl_ap: pinctrl@20f100000 {
--			compatible = "apple,s8000-pinctrl", "apple,pinctrl";
--			reg = <0x2 0x0f100000 0x0 0x100000>;
--
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio-ranges = <&pinctrl_ap 0 0 208>;
--			apple,npins = <208>;
--
--			interrupt-controller;
--			#interrupt-cells = <2>;
--			interrupt-parent = <&aic>;
--			interrupts = <AIC_IRQ 42 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 43 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 44 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 45 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 46 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 47 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 48 IRQ_TYPE_LEVEL_HIGH>;
--		};
--
--		pinctrl_aop: pinctrl@2100f0000 {
--			compatible = "apple,s8000-pinctrl", "apple,pinctrl";
--			reg = <0x2 0x100f0000 0x0 0x100000>;
--
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio-ranges = <&pinctrl_aop 0 0 42>;
--			apple,npins = <42>;
--
--			interrupt-controller;
--			#interrupt-cells = <2>;
--			interrupt-parent = <&aic>;
--			interrupts = <AIC_IRQ 113 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 114 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 115 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 116 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 117 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 118 IRQ_TYPE_LEVEL_HIGH>,
--				     <AIC_IRQ 119 IRQ_TYPE_LEVEL_HIGH>;
--		};
--
--		wdt: watchdog@2102b0000 {
--			compatible = "apple,s8000-wdt", "apple,wdt";
--			reg = <0x2 0x102b0000 0x0 0x4000>;
--			clocks = <&clkref>;
--			interrupt-parent = <&aic>;
--			interrupts = <AIC_IRQ 4 IRQ_TYPE_LEVEL_HIGH>;
--		};
--	};
--
--	timer {
--		compatible = "arm,armv8-timer";
--		interrupt-parent = <&aic>;
--		interrupt-names = "phys", "virt";
--		/* Note that A9 doesn't actually have a hypervisor (EL2 is not implemented). */
--		interrupts = <AIC_FIQ AIC_TMR_GUEST_PHYS IRQ_TYPE_LEVEL_HIGH>,
--			     <AIC_FIQ AIC_TMR_GUEST_VIRT IRQ_TYPE_LEVEL_HIGH>;
--	};
--};
-+#include "s800-0-3.dtsi"
- 
- /*
-  * The A9 was made by two separate fabs on two different process
-  * nodes: Samsung made the S8000 (APL0898) on 14nm and TSMC made
-- * the S8003 (APL1022) on 16nm. While they are seemingly the same,
-- * they do have distinct part numbers and devices using them have
-- * distinct model names. There are currently no known differences
-- * between these as far as Linux is concerned, but let's keep things
-- * structured properly to make it easier to alter the behaviour of
-- * one of the chips if need be.
-+ * the S8003 (APL1022) on 16nm. There are some minor differences
-+ * such as timing in cpufreq state transistions.
-  */
-diff --git a/arch/arm64/boot/dts/apple/s8003.dtsi b/arch/arm64/boot/dts/apple/s8003.dtsi
-index 7e4ad4f7e499..807e3452f8a7 100644
---- a/arch/arm64/boot/dts/apple/s8003.dtsi
-+++ b/arch/arm64/boot/dts/apple/s8003.dtsi
-@@ -7,15 +7,11 @@
-  * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
-  */
- 
--#include "s8000.dtsi"
-+#include "s800-0-3.dtsi"
- 
- /*
-  * The A9 was made by two separate fabs on two different process
-  * nodes: Samsung made the S8000 (APL0898) on 14nm and TSMC made
-- * the S8003 (APL1022) on 16nm. While they are seemingly the same,
-- * they do have distinct part numbers and devices using them have
-- * distinct model names. There are currently no known differences
-- * between these as far as Linux is concerned, but let's keep things
-- * structured properly to make it easier to alter the behaviour of
-- * one of the chips if need be.
-+ * the S8003 (APL1022) on 16nm. There are some minor differences
-+ * such as timing in cpufreq state transistions.
-  */
-
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
--- 
-2.48.1
+Thanks,
+Steve
 
