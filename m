@@ -1,63 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE86921129D;
-	Mon,  3 Feb 2025 22:00:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B54182B4;
+	Mon,  3 Feb 2025 22:00:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738620008; cv=none; b=uzq8KL6caHTTe6JTb3KISq+cyW9b5BhjoauuE8aCtAxIDt6WgMuUEmuTTjvMfM6YUEaK/GIuoIAR0f8r2I5hPz2PhkCBjyJj4rczbOCUJr+ENSb2g2x4V6dh444gNRbH7LbZZnc5Bkun5HMHrWCHEVhgyNaqk2pENSL77Ifk9hM=
+	t=1738620052; cv=none; b=rApFjyWicUtZDTAsJuWEycGyynQCcNA4PTz0rDy1OkvVObmlutUfknAcBDyhCNuPLrK+ycjo3wbefZOHT039kXvCOtLJO9VhXbcT/qTMjq96xJrcV6LVG86ZD1foRJ79aMz7IST+9fzUc3zWgyQqA8Mk4y+fIwcgM78j+0lqu5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738620008; c=relaxed/simple;
-	bh=zTpbD3p4Exi+pVjfbAPzlpxt15x0aHmzV3xzArB9Gek=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oZcwCdkwxh2zkKIonFj+2Sa5EANe+T+CdJC68Wla418EEUSjBrQQXsmpeJcHeul+2sREz53V5fBXZfmP08q7pwKZ2kBKIrdti4JZMMt4MUEVfBD/+0uIZaKudW2MRoKEhvQXlCs6agoGsxt+F/jCyAZgUm2nqvfgOM1+zf4us38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzgsAT5C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738620052; c=relaxed/simple;
+	bh=EezpAkBoF00zoksO8UOZh2TfHi73W3du7AXPR52YZEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QmGrKS+xCeaStVBZj3SZ8ljUP/+n8GhhwEXfk9SkIQsRENGf7IPrlpXrySl31HH3SDBAGC/J69k+ihiD46lMqcD4XMNRY1NYC9HBhT4kWtPX2ORO/76Ay/4HXwYuc8433c+BGSvmWwMzWN0/CRhGVevrF3lMJYjxS5J+4ssZ8Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJDcfNuV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzgsAT5C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFCDFC4CED2;
-	Mon,  3 Feb 2025 22:00:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJDcfNuV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D980C4CED2;
+	Mon,  3 Feb 2025 22:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738620007;
-	bh=zTpbD3p4Exi+pVjfbAPzlpxt15x0aHmzV3xzArB9Gek=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=gzgsAT5Cb2gc99fo91wbkV1kJgG7ZBs4s2ucSWNCcuGUAUukYrT7ftO5ODMrpHVVA
-	 5SV0+kmZ/gPz4LdcgBoXE2L7HX6A2y25BRffiEO/MusTz7b2TFue4PmOOMLK4si4DA
-	 Yo1/j8ZekC80lM6BJHL3QSvRDRgl6zCk/R9hIP4tbfoVVPuWfmJpwLeQaFkYb2lU9y
-	 4xBLccqZQ+0aRMWEblUSynt68FP3G5l+daDQexaM6WPuwtBq6x60le6BOEg3qHbBev
-	 xtII9X3TjYPiLMHXQhZRCnDtnc9uLeR9+mTqYtOseyTVAT2kCEAXvaQxN0ozE+Xem3
-	 Avi3NJtpaX5DA==
-Date: Mon, 3 Feb 2025 23:00:04 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Daniel Brackenbury <daniel.brackenbury@gmail.com>
-cc: bentiss@kernel.org, linux-input@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hid: topre: Fix n-key rollover on Realforce R3S TKL
- boards
-In-Reply-To: <20250129010849.722271-1-daniel.brackenbury@gmail.com>
-Message-ID: <43o3oo85-sq99-013o-9955-8r4p3q64350s@xreary.bet>
-References: <20250129010849.722271-1-daniel.brackenbury@gmail.com>
+	s=k20201202; t=1738620051;
+	bh=EezpAkBoF00zoksO8UOZh2TfHi73W3du7AXPR52YZEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MJDcfNuVQehzIIhYWFfRycZA7HXKJl4RHWD3q0+OgGvbAvMdJ+peRG96CU7FvPvt4
+	 3PDF/pyir2PwxQpzmGjFkOo5Jvvx1IhEVUw1ERanAvB66ZD500bSk10yuFMZYyY1d5
+	 kR19G5gF0GEBUVYIUzZXwprGgMEcJ9L8jWSQkK1WvZ3oiVxCyCdW5eR0KQKG+XUyni
+	 ZAT8zJlDNbBlUnjrvuqKHLv0kdmpyvhUarN4WgHOT2pqi6A9Vm/XWNwKYXGk8IIRA3
+	 sAC7Uz8I3gKOLkQGqmxKHSzcelFE7ZuKBDjYwdMW57ybpXT3yDRkJSmFEfkjCCQs63
+	 fL2rOKE1tmpIA==
+Date: Mon, 3 Feb 2025 16:00:50 -0600
+From: Rob Herring <robh@kernel.org>
+To: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [RFC 02/12] dt-bindings: i2c: maxim,max96712: add a couple of
+ new properties
+Message-ID: <20250203220050.GA114735-robh@kernel.org>
+References: <20250131163408.2019144-1-laurentiu.palcu@oss.nxp.com>
+ <20250131163408.2019144-3-laurentiu.palcu@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250131163408.2019144-3-laurentiu.palcu@oss.nxp.com>
 
-On Tue, 28 Jan 2025, Daniel Brackenbury wrote:
-
-> Newer model R3* Topre Realforce keyboards share an issue with their older
-> R2 cousins where a report descriptor fixup is needed in order for n-key
-> rollover to work correctly, otherwise only 6-key rollover is available.
-> This patch adds some new hardware IDs for the R3S 87-key keyboard and
-> makes amendments to the existing hid-topre driver in order to change the
-> correct byte in the new model.
+On Fri, Jan 31, 2025 at 06:33:56PM +0200, Laurentiu Palcu wrote:
+> Add new properties for configuring FSYNC functionality and operation
+> mode, as the chip can support both tunneling and pixel modes.
 > 
-> Signed-off-by: Daniel Brackenbury <daniel.brackenbury@gmail.com>
+> While at it, add the maxim,max96724 compatible to the bindings since it
+> was already added in the driver some time back.
 
-Applied, thank you.
+I don't see that change.
 
--- 
-Jiri Kosina
-SUSE Labs
+> 
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+> ---
+>  .../bindings/media/i2c/maxim,max96712.yaml    | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
+> index 26f85151afbd3..410004f3a032f 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
+> @@ -36,6 +36,48 @@ properties:
+>  
+>    enable-gpios: true
+>  
+> +  '#gpio-cells':
+> +    const: 2
+> +    description: |
 
+Don't need '|' if no formatting.
+
+> +      First cell is the GPIO pin number, second cell is the flags. The GPIO pin
+> +      number must be in range of [0, 11].
+> +
+> +  gpio-controller: true
+> +
+> +  maxim,operation-mode:
+> +    description: |
+> +      Deserializer mode of operation: 0 - tunneling mode, 1 - pixel mode
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [0, 1]
+> +    default: 0
+> +
+> +  maxim,fsync-config:
+> +    description: |
+> +      Frame synchronization (FSYNC) is used to align images sent from multiple
+> +      sources in surround-view applications and is required for concatenation.
+> +      In FSYNC mode, the deserializer sends a sync signal to each serializer;
+> +      the serializers then send the signal to the connected sensor.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 2
+> +    items:
+> +      - description: |
+> +          FSYNC mode:
+> +            0 - off, no FSYNC generation
+> +            1 - internal, GPIO is not used as input or output
+> +            2 - master, GPIO pin is used to drive a slave deserializer
+> +            3 - slave, GPIO pin is used as FSYNC input driven by a master device
+> +        enum: [0, 1, 2, 3]
+> +        default: 0
+> +      - description: |
+> +          FSYNC TX ID: GPIO ID used for transmitting FSYNC signal
+> +        minimum: 0
+> +        maximum: 31
+> +        default: 0
+> +      - description: |
+> +          FSYNC pin: 0 - MFP0, 1 - MFP7. Not used for internal mode.
+> +        enum: [0, 1]
+> +        default: 0
+> +
+>    ports:
+>      $ref: /schemas/graph.yaml#/properties/ports
+>  
+> @@ -92,6 +134,9 @@ examples:
+>      #include <dt-bindings/gpio/gpio.h>
+>      #include <dt-bindings/media/video-interfaces.h>
+>  
+> +    maxim,operation-mode = <0>;
+> +    maxim,fsync-config = <1 0>;
+> +
+>      i2c@e6508000 {
+>              #address-cells = <1>;
+>              #size-cells = <0>;
+> -- 
+> 2.44.1
+> 
