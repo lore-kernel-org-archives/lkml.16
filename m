@@ -1,102 +1,100 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.pissmail.com (mail.pissmail.com [173.249.47.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8051D7E50;
-	Mon,  3 Feb 2025 08:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B9C1FA859
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.47.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738571826; cv=none; b=DwPGFvazALyCFAvrRWpXm/d3NHfW2QPgwcgmz6fro4vErJGYAaxMeqXyv+gy30CNLYLNRnH4Qp+73HTniBF4MfUwFoLVjBHVrR6Cpnut+F8cB/PJKLt2h3kFaQCcea2cv/w3pT76/QJWPWR+giszGQbYW5Wm404wNSDeGg3Jxjk=
+	t=1738571854; cv=none; b=JbQORIR1hg5DBmQeASU/A9PcuaVPpDC9YAYiqsArOk0OW4ezz0BfdKMXY7ZzW9ac0zW8aWhS0a0n+oCqJnAlzImtNo1+L5G0SXewCs8+iLTMTkbE9L6KQ5T4REyhHc2zkwystfYU4WUiSzF1hFIN/F9vAbqNFzVw4sTI2V/fS6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738571826; c=relaxed/simple;
-	bh=gWOFAt2rybSaMtiQKrZAONssTjaaeIu2CUJS662ZrX0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aBFG20qMydPolNkN7Lnhu5VmsEapcjhQp7jxjHZdwob7O9G4NKZ/o4cZsicNx7fqAeeKObFsImfCTtlgvr8BSAuRODeKw2WSNiqEK837MC/MUoCUPtFeq7zov/nR1e6QGJJvnKzTJNYmFMXgTj+1eRtc5WNhBJRsorSBIyQMe9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H5ZXp7zp; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738571854; c=relaxed/simple;
+	bh=yApOaxx7OTtO19902XIc0nY3Y+TnKNtmKi9r3F108t8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M6gdzC7X5gk/QXixoPbW+vDONW0sc42KeYqAXzytlJfqbwZtFOguAtxo+7rXOCC70/sDAvtYfquzEr/7tmal1FHHK3KDoHbwOx7X4Hv27PXMHARtwH7bd0X/Be07XOLdGksB/fJpVIC84vqrkWheA3cLcrqWVNUfjCFpYdXwkmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pissmail.com; spf=pass smtp.mailfrom=pissmail.com; dkim=pass (2048-bit key) header.d=pissmail.com header.i=@pissmail.com header.b=daCxwBUc; arc=none smtp.client-ip=173.249.47.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pissmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pissmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5ZXp7zp"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54021daa6cbso4374714e87.0;
-        Mon, 03 Feb 2025 00:37:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738571823; x=1739176623; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j30JImXL8j/mQY7XDaNDiKvNWf91T15iq6ow2JICGdU=;
-        b=H5ZXp7zpFt5/riOpzI2EtMGjrbyiUIUVVNvn/jXuoVEGhC5ggOUUjBG4++vZoI0x4R
-         e24CGy5zkMySy1LsOHi9FrKvR1mYoOJFtu3sTcowxuFSjvYzDhpSZjfUcaXa8Axyaf/o
-         q/BWtD9ffnQDWQMW5zQkfTOF4fW6N6WoWUZ7/NjVZDszGfrdVzG9/PqWhnHH5aNNgbNp
-         OnaymSjQT6oe1vltCAsSanPJ94fGDVutJQ1MnnWJxugqzfwx67h2ed/fdS7uxHdx/2zo
-         tEHPW1eOcbozbK255lwGwvcl3EweMBWKFntGiBdLEj4fzVQDdoxIkotJpChfdB+kQu+S
-         e8zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738571823; x=1739176623;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j30JImXL8j/mQY7XDaNDiKvNWf91T15iq6ow2JICGdU=;
-        b=gq8AXUR1UKNoZvU5iXWYELsuIs3RwHCQ1/hpmJ8e6tpQ62a6WJsffOTzKxTUjCAVjo
-         nSlx3aZ2xhrWBHDGGU7gjlO7rnQ0smVJrwlStfdIWaQva6zhfTkC9bG3O4XrHzby9mAx
-         WbvMrVJaReFuadHM8s3wavgtSB4JMb+ZtGNtmXph5y64HofCCbqk0VbohaeISygZhiGO
-         y3qd9H2EQDFTLsT/iFhWiO/C3GrvbfTyIs4b3ee4qRldvEYQsU8/doO2QJ+cB0qiY8J6
-         hemXRqY1hLF0QPQ3JEZ58XNHYPwE9cFKxqwhMvAYIu+LtYOGJXynyax4NgYk0WqSd/3h
-         9vFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjeIWKE/5lqJAXYa5tXgObzMbutdUvNL0Buy/q96u5d8SDuYgHUIUs5xR1PUXAL+/wbxjpdQPoUJHRHIY=@vger.kernel.org, AJvYcCWMTOzkkvfKuNgyo9PXX8aYWyIzsWx1D37vWKtZVvNvSxbB9ChQemU9SUO8ytI0UYW+ixHXTBODAsAL10uBV0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCUvrNENkONVImHnESwWXRrxne29r4uDP7Zah2degJK83WVYi+
-	UYo0d37YTQaCqUMxTmVk6zVBJVL6TccUpgHH4T/fWBEukCvIk1Zb
-X-Gm-Gg: ASbGnctVuJhfAu7fA1jE70tgmXELzD7I1OttzJD8Ya1lMIa/yidG6yQq1lDbVtV3lh0
-	o3flDaCieWTA+A2FUjrQSXScg4Cw8iDMifz3zWpCDk8jR1xLEZPaJZEVGnQkweGu9CYKVDXh83Y
-	vmon1fjBSEwFQmVFNrVASSYgfOUII7K6JlJRJSrlq+e41KxR/fbebLrb74SEvGdSmOjvUveHDrs
-	N1UEzhG2zW/0eJqanSWAOBymRcCPYcugXGN5QUVCK5Rf7B6JdEKbjVDudQFAoWgwMmp2QtrE/vp
-	zHMrYGzUSHKGmihUJQx3x9MH0H7ChQ6zuZsLEOwk/GV52+1HinNOa5i8jXY3eQ==
-X-Google-Smtp-Source: AGHT+IF2J0IfkNwwMwXACa9nZcYDX3ga+w/KRzEdi7zlalBoWSm0GuqBJLQ+dPRSCXr9qDRpU/nP3A==
-X-Received: by 2002:ac2:430a:0:b0:540:1b2d:8ef3 with SMTP id 2adb3069b0e04-543e4c3ca2cmr5198254e87.52.1738571822740;
-        Mon, 03 Feb 2025 00:37:02 -0800 (PST)
-Received: from [192.168.1.146] (87-94-132-183.rev.dnainternet.fi. [87.94.132.183])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebebe6a3sm1197056e87.219.2025.02.03.00.37.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 00:37:02 -0800 (PST)
-Message-ID: <b8ea4215-f4f9-44ba-8976-7d60afd7c8d7@gmail.com>
-Date: Mon, 3 Feb 2025 10:37:00 +0200
+	dkim=pass (2048-bit key) header.d=pissmail.com header.i=@pissmail.com header.b="daCxwBUc"
+From: mortodinoite <mortodinoite@pissmail.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pissmail.com;
+	s=dkim; t=1738571851;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2fZ2gDsDhzBX3IW6Z5Hqy+AFju+cFV43p6SccCGLi3o=;
+	b=daCxwBUcgWvboEdGZvknUhUpvfekAbTjl8iVybiK4VoqibRLhYGWDr2ZdNd/pYnwpbSG88
+	yo6MU+P/PluSN0tBPwf/P6FpP+PlHL4pqu5DyBMHcmgyi1Pt/1zDsaSlWz4OUv9FrF2JXQ
+	Hm6Q5M5VyNpOm+8eOUnJ0EHSOfdpIEYr7FGFI4KnTf1IABQSvX+M8YzJUe2/JuAqJtAOYp
+	AAJAQ52SerysyVoGssrlcr35ymj1S4jZFr9hSIdkz6qh+hEBqkFrX0la+lkvK3fAOmXgUk
+	aGGDh7xr9uDkHfoMpzS4irjr+8hmBxqiRHCkCRAyJDYOseNfRIew6C66DaHaXA==
+To: linux-kernel@vger.kernel.org
+Cc: corbet@lwn.net,
+	mortodinoite <mortodinoite@pissmail.com>
+Subject: [PATCH TRIVIAL] docs: admin-guide: rename GTK+ to GTK
+Date: Mon,  3 Feb 2025 05:37:06 -0300
+Message-ID: <20250203083707.11175-1-mortodinoite@pissmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 3/3] MAINTAINERS: add entry for Rust dma mapping
- helpers device driver API
-To: Robin Murphy <robin.murphy@arm.com>, rust-for-linux@vger.kernel.org,
- daniel.almeida@collabora.com, dakr@kernel.org, aliceryhl@google.com
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
- Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-References: <20250123104333.1340512-1-abdiel.janulgue@gmail.com>
- <20250123104333.1340512-4-abdiel.janulgue@gmail.com>
- <4956d01e-2d06-4edd-813b-9da94b482069@arm.com>
-Content-Language: en-US
-From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-In-Reply-To: <4956d01e-2d06-4edd-813b-9da94b482069@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: /
+Authentication-Results: mail.pissmail.com;
+	auth=pass smtp.mailfrom=mortodinoite@pissmail.com
 
+Upstream calls it "GTK" now, see [1]
 
+[1] https://mail.gnome.org/archives/gtk-devel-list/2019-February/msg00000.html
 
-On 30/01/2025 13:49, Robin Murphy wrote:
-> On 2025-01-23 10:42 am, Abdiel Janulgue wrote:
->> Add an entry for the Rust dma mapping helpers abstractions.
-> 
-> Can't really speak for the Rust side of things, but I could be an 
-> additional reviewer to keep an eye on the DMA API angle if that would help.
-> 
+Signed-off-by: mortodinoite <mortodinoite@pissmail.com>
+---
+ Documentation/admin-guide/README.rst                    | 2 +-
+ Documentation/translations/zh_CN/admin-guide/README.rst | 2 +-
+ Documentation/translations/zh_TW/admin-guide/README.rst | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Yes, would really appreciate your help! Thanks!
-Abdiel
+diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
+index eb9452668..d30867620 100644
+--- a/Documentation/admin-guide/README.rst
++++ b/Documentation/admin-guide/README.rst
+@@ -165,7 +165,7 @@ Configuring the kernel
+ 
+      "make xconfig"     Qt based configuration tool.
+ 
+-     "make gconfig"     GTK+ based configuration tool.
++     "make gconfig"     GTK based configuration tool.
+ 
+      "make oldconfig"   Default all questions based on the contents of
+                         your existing ./.config file and asking about
+diff --git a/Documentation/translations/zh_CN/admin-guide/README.rst b/Documentation/translations/zh_CN/admin-guide/README.rst
+index e679cbc3c..1bdafdc4c 100644
+--- a/Documentation/translations/zh_CN/admin-guide/README.rst
++++ b/Documentation/translations/zh_CN/admin-guide/README.rst
+@@ -146,7 +146,7 @@ Linux内核6.x版本 <http://kernel.org/>
+ 
+      "make xconfig"     基于Qt的配置工具。
+ 
+-     "make gconfig"     基于GTK+的配置工具。
++     "make gconfig"     基于GTK的配置工具。
+ 
+      "make oldconfig"   基于现有的 ./.config 文件选择所有选项，并询问
+                         新配置选项。
+diff --git a/Documentation/translations/zh_TW/admin-guide/README.rst b/Documentation/translations/zh_TW/admin-guide/README.rst
+index a6e34c200..0b038074d 100644
+--- a/Documentation/translations/zh_TW/admin-guide/README.rst
++++ b/Documentation/translations/zh_TW/admin-guide/README.rst
+@@ -149,7 +149,7 @@ Linux內核6.x版本 <http://kernel.org/>
+ 
+      "make xconfig"     基於Qt的配置工具。
+ 
+-     "make gconfig"     基於GTK+的配置工具。
++     "make gconfig"     基於GTK的配置工具。
+ 
+      "make oldconfig"   基於現有的 ./.config 文件選擇所有選項，並詢問
+                         新配置選項。
+-- 
+2.48.1
+
