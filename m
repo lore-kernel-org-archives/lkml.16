@@ -1,54 +1,55 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51795207DE4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92905206F3A;
 	Mon,  3 Feb 2025 08:16:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738570582; cv=none; b=hG+pjFqbfMBM9opMFb7p9b/kVDobS42hxfJMv7UpIRGdLFJs6CiLxayn343I7P5peY4jrd2w5EdPfKh3wUZmWRjzI0butBmNjrUVM6wZsKI0CCxeaLANoe88U2WTpuJHf6hEQnZf7hD7x1WahO/5KLt/rcfO076n2G4hvRh6GJg=
+	t=1738570582; cv=none; b=hnhYE86h0JDHoPzNgjbllbF4QcsxvGiw/THHuSyXJs7Pg7O+/ahi3J4WqBhIrYu1+inioM1EvRE1/bm27PuBpLooW6TTY1MSC4BdL1xHXzP9JQZZxqmWquq95AZUlklJ1+NHAvBl6Mb32yWGMKuK4vWhjHD09asjMFf47gBCxlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738570582; c=relaxed/simple;
-	bh=BsauXE9nKeWRfzmzDj0Frx1cH/ntoi+uf87BQGOlPk4=;
+	bh=fDfnTD/jnBdLem0v+cEPI9L//YYA5v5r7mZzMN3mAOc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gp0puYOcJdVc62lFdgTBJvA1/Q6763CzLEhtL0/V/BY5YEabaYW4MBmxpia/EMgLHO2oXGV3PWfehiEihpXROKOZrZJc6DN/lK2nQBRoIUIgt9Vncd765u4avz2uC9/OpBvUeDRqjaST2U7ZXPU+iwkS6BU9XSeq373FqCNQq/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=nVLjUxqB; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version:Content-Type; b=esrifhmSAsDPHEwVxJrM1BdncX1OrrY8VJ/pbHDCFY1+3NLcMJOoVf0KM57oobzfpyvgrF6yMfO2smAEPrFXsC25msDzOHNtYoYAbrjiwjAYw3uNvlv1O5P94eaxCjdJC/SpEd99zXTqd9CFttOWcddgaGajCJmpvYBaPqg0l4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=MVBkHUZq; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="nVLjUxqB"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="MVBkHUZq"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
 	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=reaWstUDNn0gyEm8JVdVpAA3G71FH+2FgWs8P9PO6rU=; b=nVLjUxqBX4etEg5dNV5JFfCarZ
-	IXEYAiNM4brMmYnTMeE2CZpsnz/eodjPJxcZFzkqt7/E6HkQhpTDPhI4+eiyKEZaw0Uaydm6qercL
-	ja3HZJgnzM94qVzbIHd3rWwykeSprH5AjgepTQBo/SoEmDRdtuF9hS8Lodjs43m/jbXrkK3+thWmT
-	eOBukXrqEkj0arHWS+DMj2RZfxUdZZ2t3BxqM+Twp3T+yA82Y96yB+PBcMhDGfFS7beHBDGPHLZ2v
-	3YBXYJnOaIgqkWydKz1S6QWF+GeIXA/AQCja8a7wRZWMatStWxxKlWpgsyyk5QVqTErKYRuA77LxU
-	xplVYf0w==;
+	bh=r24954j0p83e4iaisXbIHzASJ/hedULNQIzGrOvva9U=; b=MVBkHUZqYiC0jbcoOvC2m9tlao
+	uS8bSj5DCT7Rh72PREbBtwNYnwXwvZcN415feVn9KvXYFUE7b51dH0r4Clr/RAOucJLzpN5SfbtYV
+	+c1/mGBTHTTAjPFOsLNxT7kph9lUXjuj1aoHzFNlcRxABgzHKNB+fKJCTsFz96zzvuI2rs3ltm/eL
+	QaQbvRje1PyjItf9Vt67pymwMiQuhsN2O86vEjNYHrlZe4n8PQB0Wm8Nqld+QmaCMgWsbAMzkL4M4
+	cmJz4xmmW9GSp1yQFCe8xeGZnFGqDbDWX7xC2YHQpmqI+ZcbKFWXOMvmijpAos8Y/klI/+ji+nWei
+	8ObiVG/w==;
 Received: from i53875b5c.versanet.de ([83.135.91.92] helo=phil..)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1tercj-0005Vr-E8; Mon, 03 Feb 2025 09:16:05 +0100
+	id 1tercm-0005Vr-Kz; Mon, 03 Feb 2025 09:16:08 +0100
 From: Heiko Stuebner <heiko@sntech.de>
-To: Andy Yan <andyshrk@163.com>
+To: linux-rockchip@lists.infradead.org,
+	Jianfeng Liu <liujianfeng1994@gmail.com>
 Cc: Heiko Stuebner <heiko@sntech.de>,
-	krzk+dt@kernel.org,
-	dsimic@manjaro.org,
-	robh@kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix lcdpwr_en pin for Cool Pi GenBook
-Date: Mon,  3 Feb 2025 09:15:53 +0100
-Message-ID: <173857053622.78657.7882688074333021130.b4-ty@sntech.de>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: rockchip: Enable HDMI on armsom-sige7
+Date: Mon,  3 Feb 2025 09:16:00 +0100
+Message-ID: <173857053621.78657.10703057328583669922.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250113104825.2390427-1-andyshrk@163.com>
-References: <20250113104825.2390427-1-andyshrk@163.com>
+In-Reply-To: <20250115023327.2881820-1-liujianfeng1994@gmail.com>
+References: <20250115023327.2881820-1-liujianfeng1994@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,16 +60,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Mon, 13 Jan 2025 18:47:34 +0800, Andy Yan wrote:
-> According to the schematic, the lcdpwr_en pin is GPIO0_C4,
-> not GPIO1_C4.
+On Wed, 15 Jan 2025 10:33:21 +0800, Jianfeng Liu wrote:
+> Add the necessary DT changes to enable HDMI on ArmSoM Sige7.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] arm64: dts: rockchip: Fix lcdpwr_en pin for Cool Pi GenBook
-      commit: 52f5d7de3dc5ea9350170949d0ec19a9f0676e35
+[1/1] arm64: dts: rockchip: Enable HDMI on armsom-sige7
+      commit: 1a6a05d15195f74596d5209b4fd8b781a33b7fbe
 
 Best regards,
 -- 
