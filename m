@@ -1,250 +1,93 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1BD2080F9;
-	Mon,  3 Feb 2025 15:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F1C1E493;
+	Mon,  3 Feb 2025 15:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738595138; cv=none; b=uLJLP/4POFy2gfy1dhFN1iStKFleIjtnUYNSlp6fj83SmLMTUNmjtjbF/4FDxMxaRzgfu4tjzhIG+3dL9P5/WQqEFIdb4jxP7GRlN++lvupJVdTL1qezbU+MkY4jX+80QZcVhx7Lar93mhfCu/3P379+8jkab+thTQApAp7PL0Y=
+	t=1738595247; cv=none; b=dW05tAx19a5tpcSPBjJ3z9PjR6MXEA3bZo+9TxNNJ2Tf4wCjGWPjPQMqOecITNFi9baS2Ef/SSyNdHQ1NGF4hbN+1qaeBExBLzBBBAMsbzCnEDiKiWKRXt+AgzFXasa1dTMgeitOZPtkQCNtQVu2JZUTICh1BguuZXlXKUAtaVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738595138; c=relaxed/simple;
-	bh=tKnh+kKottUjOUdTWNtI3LHAb+KtZ0BffGkQSU7pKrA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xr+eAx0ef618AYJtLwdkbWU8UHrESY+HBPfQoYD6pLtInnZDyJcYndSIK+cQkvRPY7p0oAs5xShktatZby6PZ0klBcusy5U/zYcfqYtQNFxkqf5+GA5sNOCU+brePoOYX8Br1ycBdpzoeVYRa4WRVXSMKcl3cuFDcmcbgTM/pao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0ZbbXXFr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ggj5AKXh; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738595247; c=relaxed/simple;
+	bh=QribRiGaUqW5JW0Nku/kRgIHHe/W76K2SrolOsyJDv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OL2fUQwwLdCkJwkcH7xamCQMT7cVFYPkLEKjcCj3ZipiYPFXnoSplVDCjrVy5SzfkiEK1b7Ll9jsJe0NsG27oBP7jpPF4GBz/UUxv+NkP6lm5qaKj/5AandkhvqRZ3HR5m9dpCiBz9rPm49C75U16UU4/N+zpy2L03Y7GjvniKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8biLreJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0ZbbXXFr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ggj5AKXh"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738595133;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F/fZu6xb+Szg+d8vtwSZnj4vBZAZohI+wxhZ6Q3N7B8=;
-	b=0ZbbXXFrwenSMc6uxmEYuSRqnbNnDttcLnabAinX0KuKsGrcrgqG9zc11Kj1R5PI4CHn4E
-	3ivBYxviO60jpMWVu70aXJPaWuWM+n3ZbNwCXCkLKeG6kggkKFhnz3T6OzypRH1f+oNarF
-	2II3IFvw3EpmNP/ipqWHdNAlCGqB+PaJrzYkIxRWTTsZ0JU1Voa/UYc+TC3dm8iG7iaNbR
-	mKKNVZ9vZzLa/GpHCNJEMd1Ufkma6pa2CPOq0jlWaTZJqqyUVCTmemPZiYPXV5mUAP4UEu
-	DpZJYxMw2WLqmWSJrFzhrK1QIGZEd6d5XX80+o4PDAm/RQrX+Qsn0Gc15oTqEw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738595133;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F/fZu6xb+Szg+d8vtwSZnj4vBZAZohI+wxhZ6Q3N7B8=;
-	b=Ggj5AKXhGFY/+u9Ea9vNMSv10xKbJagbXN+6zZwqrWuIOSfKtO7wlgnhTsmyz05IO2D8fR
-	0VgvTUm99PKBHKBA==
-To: linux-kernel@vger.kernel.org,
-	rcu@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	MengEn Sun <mengensun@tencent.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	YueHong Wu <yuehongwu@tencent.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 3/4] ucount: Use RCU for ucounts lookups.
-Date: Mon,  3 Feb 2025 16:05:24 +0100
-Message-ID: <20250203150525.456525-4-bigeasy@linutronix.de>
-In-Reply-To: <20250203150525.456525-1-bigeasy@linutronix.de>
-References: <20250203150525.456525-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8biLreJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42F7AC4CED2;
+	Mon,  3 Feb 2025 15:07:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738595247;
+	bh=QribRiGaUqW5JW0Nku/kRgIHHe/W76K2SrolOsyJDv0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J8biLreJ+zl4vnwurVvuiJjqwCTVPQW+g2Qb6U+uxPq9AN6fWn3S6rIIKluqhm8BD
+	 /xSVlRdmC0S5//OmogjBnaGhYxWYl0WHOl0o1j49CdSK5/BTd1s8C96owOnOhq+DxD
+	 0zG42ix9UNeYrfU1+kiGHiSKq20wOdPEnzwyO19dl9tYNCj6g1HNTZdEZDH9hzIBUP
+	 75qpyraCR++PoVSUCVGGTNpY+lGzT3TmeTCdATOOwMiEPqUa6dFDLfM7TmFp+hX9r0
+	 3eOrEFN46AnQOYmMJcitFmGY0eTKfGpZ9eBhYpsCNreOAKP8VDc5OdyRA0Mo5WWIQk
+	 YyPmQEgrUZYww==
+Date: Mon, 3 Feb 2025 15:07:22 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+	krzysztof.kozlowski@linaro.org, pierre-louis.bossart@linux.dev,
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org
+Subject: Re: [PATCH] ASoC: q6apm-dai: schedule all the periods before we
+ start streaming
+Message-ID: <4678ae0d-434e-4e04-bd77-abae1969ff6c@sirena.org.uk>
+References: <20250203124945.11406-1-srinivas.kandagatla@linaro.org>
+ <357e28eb-f245-4647-8e10-79805b53731e@sirena.org.uk>
+ <35cf66a2-05ef-4e49-a146-ca96ab19fcf8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mzMOcDtz8JcxuGvr"
+Content-Disposition: inline
+In-Reply-To: <35cf66a2-05ef-4e49-a146-ca96ab19fcf8@linaro.org>
+X-Cookie: May your camel be as swift as the wind.
 
-The ucounts element is looked up under ucounts_lock. This can be
-optimized by using RCU for a lockless lookup and return and element if the
-reference can be obtained.
 
-Replace hlist_head with hlist_nulls_head which is RCU compatible. Let
-find_ucounts() search for the required item within a RCU section and
-return the item if a reference could be obtained.
-This means alloc_ucounts() will always return an element (unless the
-memory allocation failed). Let put_ucounts() RCU free the element if the
-reference counter dropped to zero.
+--mzMOcDtz8JcxuGvr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/linux/user_namespace.h |  4 +-
- kernel/ucount.c                | 75 ++++++++++++++++++----------------
- 2 files changed, 43 insertions(+), 36 deletions(-)
+On Mon, Feb 03, 2025 at 02:30:26PM +0000, Srinivas Kandagatla wrote:
+> On 03/02/2025 14:17, Mark Brown wrote:
+> > On Mon, Feb 03, 2025 at 12:49:45PM +0000, srinivas.kandagatla@linaro.org wrote:
 
-diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
-index 7183e5aca2829..ad4dbef92597b 100644
---- a/include/linux/user_namespace.h
-+++ b/include/linux/user_namespace.h
-@@ -5,6 +5,7 @@
- #include <linux/kref.h>
- #include <linux/nsproxy.h>
- #include <linux/ns_common.h>
-+#include <linux/rculist_nulls.h>
- #include <linux/sched.h>
- #include <linux/workqueue.h>
- #include <linux/rwsem.h>
-@@ -115,9 +116,10 @@ struct user_namespace {
- } __randomize_layout;
-=20
- struct ucounts {
--	struct hlist_node node;
-+	struct hlist_nulls_node node;
- 	struct user_namespace *ns;
- 	kuid_t uid;
-+	struct rcu_head rcu;
- 	atomic_t count;
- 	atomic_long_t ucount[UCOUNT_COUNTS];
- 	atomic_long_t rlimit[UCOUNT_RLIMIT_COUNTS];
-diff --git a/kernel/ucount.c b/kernel/ucount.c
-index 4aa5011538257..b6abaf68cdccb 100644
---- a/kernel/ucount.c
-+++ b/kernel/ucount.c
-@@ -15,7 +15,10 @@ struct ucounts init_ucounts =3D {
- };
-=20
- #define UCOUNTS_HASHTABLE_BITS 10
--static struct hlist_head ucounts_hashtable[(1 << UCOUNTS_HASHTABLE_BITS)];
-+#define UCOUNTS_HASHTABLE_ENTRIES (1 << UCOUNTS_HASHTABLE_BITS)
-+static struct hlist_nulls_head ucounts_hashtable[UCOUNTS_HASHTABLE_ENTRIES=
-] =3D {
-+	[0 ... UCOUNTS_HASHTABLE_ENTRIES - 1] =3D HLIST_NULLS_HEAD_INIT(0)
-+};
- static DEFINE_SPINLOCK(ucounts_lock);
-=20
- #define ucounts_hashfn(ns, uid)						\
-@@ -24,7 +27,6 @@ static DEFINE_SPINLOCK(ucounts_lock);
- #define ucounts_hashentry(ns, uid)	\
- 	(ucounts_hashtable + ucounts_hashfn(ns, uid))
-=20
--
- #ifdef CONFIG_SYSCTL
- static struct ctl_table_set *
- set_lookup(struct ctl_table_root *root)
-@@ -127,22 +129,28 @@ void retire_userns_sysctls(struct user_namespace *ns)
- #endif
- }
-=20
--static struct ucounts *find_ucounts(struct user_namespace *ns, kuid_t uid,=
- struct hlist_head *hashent)
-+static struct ucounts *find_ucounts(struct user_namespace *ns, kuid_t uid,
-+				    struct hlist_nulls_head *hashent)
- {
- 	struct ucounts *ucounts;
-+	struct hlist_nulls_node *pos;
-=20
--	hlist_for_each_entry(ucounts, hashent, node) {
--		if (uid_eq(ucounts->uid, uid) && (ucounts->ns =3D=3D ns))
--			return ucounts;
-+	guard(rcu)();
-+	hlist_nulls_for_each_entry_rcu(ucounts, pos, hashent, node) {
-+		if (uid_eq(ucounts->uid, uid) && (ucounts->ns =3D=3D ns)) {
-+			if (atomic_inc_not_zero(&ucounts->count))
-+				return ucounts;
-+		}
- 	}
- 	return NULL;
- }
-=20
- static void hlist_add_ucounts(struct ucounts *ucounts)
- {
--	struct hlist_head *hashent =3D ucounts_hashentry(ucounts->ns, ucounts->ui=
-d);
-+	struct hlist_nulls_head *hashent =3D ucounts_hashentry(ucounts->ns, ucoun=
-ts->uid);
-+
- 	spin_lock_irq(&ucounts_lock);
--	hlist_add_head(&ucounts->node, hashent);
-+	hlist_nulls_add_head_rcu(&ucounts->node, hashent);
- 	spin_unlock_irq(&ucounts_lock);
- }
-=20
-@@ -155,37 +163,33 @@ struct ucounts *get_ucounts(struct ucounts *ucounts)
-=20
- struct ucounts *alloc_ucounts(struct user_namespace *ns, kuid_t uid)
- {
--	struct hlist_head *hashent =3D ucounts_hashentry(ns, uid);
--	struct ucounts *ucounts, *new =3D NULL;
-+	struct hlist_nulls_head *hashent =3D ucounts_hashentry(ns, uid);
-+	struct ucounts *ucounts, *new;
-+
-+	ucounts =3D find_ucounts(ns, uid, hashent);
-+	if (ucounts)
-+		return ucounts;
-+
-+	new =3D kzalloc(sizeof(*new), GFP_KERNEL);
-+	if (!new)
-+		return NULL;
-+
-+	new->ns =3D ns;
-+	new->uid =3D uid;
-+	atomic_set(&new->count, 1);
-=20
- 	spin_lock_irq(&ucounts_lock);
- 	ucounts =3D find_ucounts(ns, uid, hashent);
--	if (!ucounts) {
-+	if (ucounts) {
- 		spin_unlock_irq(&ucounts_lock);
--
--		new =3D kzalloc(sizeof(*new), GFP_KERNEL);
--		if (!new)
--			return NULL;
--
--		new->ns =3D ns;
--		new->uid =3D uid;
--		atomic_set(&new->count, 1);
--
--		spin_lock_irq(&ucounts_lock);
--		ucounts =3D find_ucounts(ns, uid, hashent);
--		if (!ucounts) {
--			hlist_add_head(&new->node, hashent);
--			get_user_ns(new->ns);
--			spin_unlock_irq(&ucounts_lock);
--			return new;
--		}
-+		kfree(new);
-+		return ucounts;
- 	}
--	if (!atomic_inc_not_zero(&ucounts->count))
--		ucounts =3D NULL;
--	spin_unlock_irq(&ucounts_lock);
--	kfree(new);
-=20
--	return ucounts;
-+	hlist_nulls_add_head_rcu(&new->node, hashent);
-+	get_user_ns(new->ns);
-+	spin_unlock_irq(&ucounts_lock);
-+	return new;
- }
-=20
- void put_ucounts(struct ucounts *ucounts)
-@@ -193,10 +197,11 @@ void put_ucounts(struct ucounts *ucounts)
- 	unsigned long flags;
-=20
- 	if (atomic_dec_and_lock_irqsave(&ucounts->count, &ucounts_lock, flags)) {
--		hlist_del_init(&ucounts->node);
-+		hlist_nulls_del_rcu(&ucounts->node);
- 		spin_unlock_irqrestore(&ucounts_lock, flags);
-+
- 		put_user_ns(ucounts->ns);
--		kfree(ucounts);
-+		kfree_rcu(ucounts, rcu);
- 	}
- }
-=20
---=20
-2.47.2
+> > > Fix this by scheduling all the periods, this will ensure that the dsp
+> > > has enough buffer feed and ultimatley fixing the underruns and audio
+> > > distortion.
 
+> > Should we be writing all periods or just the minimum number of periods
+> > that's configured?  Userspace might not have filled the whole buffer
+> > yet.
+
+> Just minimum number of periods or 1 period. We are queuing up all the
+> periods to the DSP, so that we do not have to wait for period interrupt to
+> queue the next one. This significantly reduces the latency in queuing the
+> periods to dsp.
+
+What guarantee do you have that the data isn't garbage?
+
+--mzMOcDtz8JcxuGvr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeg26kACgkQJNaLcl1U
+h9DitAf/bYF2gjujw9lNOQppAbEPmN5RCHZN3eAqU0X6CNt4iSyf3L6zU9D4UUpQ
+Xdrh3jo5U/bJ935lFESzN4824ajFOv8hglYDsKMaV5TfdgZw+aAtB3ZqU/iQ1kjS
+pINp1pWfS2zJnqAPPW4ch87eG3fPZbIRcYpgDxOyFSAsU2ibUpiTqiPuHOAEdSEh
+s/lo48W7ylskoINKHXRaCy07FCVjcl25YV40cl6ZhlBo3s7YBBoZ05vjjdy9Qi2Q
+AYDc/j7XndzwyNNLQ6QjaFWF401g88jl89ztr+SLS5dATHaB5DLAaJq404LmR6Jk
+qoHCkK1VzEMBru/QWmycgQUZG8eiVQ==
+=DGlw
+-----END PGP SIGNATURE-----
+
+--mzMOcDtz8JcxuGvr--
