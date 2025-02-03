@@ -1,194 +1,191 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D701DACB1
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D09B18EAB
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738611684; cv=none; b=EOQZ5uuFuMgXrOb2PZHuxH1nURFnYL3yqabo+4M7MaAyBbQdz1ZBQvtJLFTQjPotWcxyWHqw4Z3YmB85naMk0IS7lmoUfjxlMXTWqW1SUZx4tIpcIlv1oJUN+tj7AAKwferFbw+eO5hHo3w9EqjS1vWbQVAma0md+z1P+dCWYTo=
+	t=1738611867; cv=none; b=ioFdcSkJ6DfJxxw/lPE/T3/xw2CCtOOC1HY0LRMZ26GO98DOw1so523syLb6fFRSkh5AdlqfPuayLk4xf8Vxl+A/vptx5EhzEIr2uVk7z/VeW5hsiAwqyHBKIAgaphfRkuKbLV+g9TcmitHbARZ2iY2wGCvlGVLo2vcXzAIxQlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738611684; c=relaxed/simple;
-	bh=bmzPo8fjt8JOhc/1bHrIPMZFP8Y2muFcWZy4Ysux2lU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tFtVe+7ShiZ0PvoLg1XT3nFyIX0evbcExxkiUru19aOAeCZWUlPlgt04zJvq8Ihb17lH9W6wcYPmR8bAS/oyFDXg9qXxkLkyCe3NbEgGkvHsk2vjqai1ekfj6JUWpwW3I6E/qSyJ0S9mQ9ctMRXhKAxCjxYJA70/F+rq1+Kovig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cu5lf5Lt; arc=none smtp.client-ip=209.85.216.74
+	s=arc-20240116; t=1738611867; c=relaxed/simple;
+	bh=nrAlE666rFAn1ngWhdaEaAsW5DAnVjyGQuoCKVEqwgU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TV9IIuUminezY51ALUCtYTqJsbzBJTxC+eCbUOQy1SZJ099J8VtFpMfi/ifRGITcrMJb9MrEcCdXX07vY/+XV53nzUiaReBn+D+CMnqtdqSKUYIlip235lwVgzl95Z5yHjxXC474Dz+buTR4nI+mdYcT3cigWCsBODJzLltlgN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nwf/Gmxo; arc=none smtp.client-ip=209.85.166.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cu5lf5Lt"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ee5616e986so13253778a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:41:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nwf/Gmxo"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so23815ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:44:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738611682; x=1739216482; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VJXV2LQY26MqizxcjQXhtNRXXOMRYW+qm0imDYwsMvw=;
-        b=Cu5lf5LtLxTxa/GXdUK7k6HYS89RYuoTJsSXOUkd1YWJ1CRns2Dv24VD+GQC1WCdx9
-         SU/Dmie28f+2sAhXWZhXxNfhQTba8j3FGJbf96LsPhRKbGH1iDICxGvhcBBartou1FN8
-         n2+8NNevuM+X2ijWyYLMKT+VJhaZnATrPzkphxXMZ2w0uALjmDj2qwuW6z/y3RlUyh98
-         4JYUuARYARwHpGq6q7gwg5k9ZGHdkII6Le8jJGPxvB3gE6tNxzeFt16qTZ2vqQV76zP5
-         37HyhsOyz4Tz+uanh+iSJRpX4vlqOAo/atRHozWIyUBynEKAWn880gOZt0ovSlavlBWW
-         llIg==
+        d=google.com; s=20230601; t=1738611864; x=1739216664; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+ArIi6EcPdEJOdtVrxaQGxMJGADVRBcROw3Hql8dm4k=;
+        b=nwf/GmxometKYcz119XGZe22PdcJgKnlqv/4zwZSkBYbdK27aHtl3ooZv+kv8Mf/XW
+         ZDvhkEtfYA4z/CV2zjxCNRYijQYaHfC95JYT0uF+c06dW0qsEYWrSJ2Har2tcjItYOvh
+         iRs2hgb812xNx6Ml2Ny6sBZT08GYYZuWDxr0KKl7zW7zaxzP6UM9ZuB1HCmrFvSL5HOT
+         ltRkfPMDvT+PNeKjYpf7DvFIWPqaHATjlwDlaxzJHwivHWpgKJPo2MBwwb38PANqpMtZ
+         6kEWUSpYSaggTX912Tr8DuWGoazzkffPp6xmqCRZg+TGHtwqLae6aoMWenwcp0YqUX8W
+         v99Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738611682; x=1739216482;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VJXV2LQY26MqizxcjQXhtNRXXOMRYW+qm0imDYwsMvw=;
-        b=rruSbcszxqPkn7f9j3AD5RjmBR0JRJp1f1E/o7KebDmKWk572avJgRaTdi4gPFK4vz
-         sWk1Eh43NNocigfCYrTvX50zG6pgXQ52rKIyZm3UEiN56MmK5jNiz/Bmmxeg69A2l50p
-         8ncF4N17Ewdxf3LuJvwA040JkV5DC+UrXYbV9y5RrJ2dgmEtz1pibSQLq6mGYdFFDlJU
-         NJqNWB45uWtHPrVIwIlyi8/KcZCmOGjuuIjxNnTes/B8FKGXPS4rEvu5qhEVD+/Ikyo5
-         6oeos/T1wfm2G55XwjmmEgn127cvw3dZOEI9HKjvgY0BEbWDSWXp5wH5k0EUN2RukiT+
-         Y1nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVddK+QA/PWa8qBYH3gRIN+IqO0TxzM4LBHEaN8nAA15z4cXgQpASxhRz2+EDujEbMCfYijmc7W/xabzWI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGP8rH3ZcDXHBvgkKjyxycjc13hxkfWy5EVheg9kq0UGJAvXfq
-	XCfasafvUQrXn2B9yewXndguM/2HwEjyEGcU5E/x5bxaClIbktmAZyGweA+8nfWJF18blLB33/n
-	xZA==
-X-Google-Smtp-Source: AGHT+IGcEY16oN3aex7QCo8rxntT+v0xmLo7K0x8S2drWCxpjUutztQRaAT/c6jmhnfhVhYFkmYgpyMZlK8=
-X-Received: from pjtu5.prod.google.com ([2002:a17:90a:c885:b0:2ee:3128:390f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b88:b0:2f8:34df:564e
- with SMTP id 98e67ed59e1d1-2f83abf3506mr38263640a91.14.1738611682399; Mon, 03
- Feb 2025 11:41:22 -0800 (PST)
-Date: Mon, 3 Feb 2025 11:41:20 -0800
-In-Reply-To: <CADH9ctAzffvDByS1s2PJoD63On-b+pCnCmER4Nf4Zc=62vkbMA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1738611864; x=1739216664;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+ArIi6EcPdEJOdtVrxaQGxMJGADVRBcROw3Hql8dm4k=;
+        b=Zb7IakU3yCFjaqxLaVdtVjn6JWT18rIM9oydvmNVj96GdktMHPKVnuKa1/86jwcbEA
+         A1rCE8ei9B4qNs2Rk6txTv51103sFMjWPG8rEjrzU504PWiGwjU4xqMnmoxyhPncaS9R
+         a7R9rja6HNxErMvIzcH72pwUQ27Bz0WM99sYS7rUOcjSwlM3Da96vQ8PFf91Js8zqlMn
+         GDGKj+3xswV4JhM5+k8ggFjycpdPzr5npzvzXv2DXd2DffJrm94t68u9ddAO8OeqoeLF
+         p9URMVNTg1xmE333KGC51Dxlub1o/gXWzIB4uhfR85oW6PGTJHGFhoHOqtoRQTpHyjSt
+         Hy0g==
+X-Forwarded-Encrypted: i=1; AJvYcCV0F0NJdd3pg8ZEyVrKVBB46H1+qqwZy8hyH0HgoaCuPah1NHpTCyxJ6i2GUc1mVkzYY2I+0+PPsTP5LZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqxhuMAQE0xMF11YQ+fOMxHb+IDYK2XMpDt59d0Cukfj4UVLF0
+	tv5fGqBqRBKGjcKkEJspZ5Q4KkZ0IA4w+ZYCFBfJJNPc7/O8gy+dKhVZKBDj8N68YqBbVVXfo7i
+	r09K0pkeMYcvWrqF4RuJuyvRGnmQvmS7xpJ0+
+X-Gm-Gg: ASbGncsqnanq1SGbIfyQiVndItqHiQdwjs6sjat/aCyM/Q/FD8DaHdn88j0FvZdBvyG
+	io7hU5J2LyaHqzh9iZv1vC56upNvQJYjh/JqWQSQashRdbIbvGy2u8yc/DLXrkjDOLiUjHMU/Ca
+	OpjIH3K1d3ME9Dv3IfQsEofIc=
+X-Google-Smtp-Source: AGHT+IEAmexK7LtMhHP5yPwIjwGzN/4IYmaeMLcEzOJUJ5x3CNal4YKNr7gDAk2rntJ7Myd9EoKGnFGBTf6Ew5YrrCQ=
+X-Received: by 2002:a05:6e02:1b03:b0:3d0:a9b:bf4b with SMTP id
+ e9e14a558f8ab-3d03fbc124emr431565ab.12.1738611864470; Mon, 03 Feb 2025
+ 11:44:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CABgObfZrTyft-3vqMz5w0ZiAhp-v6c32brgftynZGJO8OafrdA@mail.gmail.com>
- <CADH9ctBYp-LMbW4hm3+QwNoXvAc5ryVeB0L1jLY0uDWSe3vbag@mail.gmail.com>
- <b1ddb439-9e28-4a58-ba86-0395bfc081e0@redhat.com> <CADH9ctCFYtNfhn3SSp2jp0fzxu6s_X1A+wBNnzvHZVb8qXPk=g@mail.gmail.com>
- <CADH9ctB0YSYqC_Vj2nP20vMO_gN--KsqOBOu8sfHDrkZJV6pmw@mail.gmail.com>
- <Z2IXvsM0olS5GvbR@google.com> <CABgObfadZZ5sXYB0xR5OcLDw_eVUmXTOTFSWkVpkgiCJmNnFRQ@mail.gmail.com>
- <CADH9ctAGt_VriKA7Ch1L9U+xud-6M54GzaPOM_2sSA780TpAYw@mail.gmail.com>
- <CABgObfb3Ttfg6H+_RpNQGSYKw9BLEwx3+EysXdL-wbpd1pkGHQ@mail.gmail.com> <CADH9ctAzffvDByS1s2PJoD63On-b+pCnCmER4Nf4Zc=62vkbMA@mail.gmail.com>
-Message-ID: <Z6Eb4PfmmHWFTR9A@google.com>
-Subject: Re: [PATCH 2/3] KVM: x86: Add support for VMware guest specific hypercalls
-From: Sean Christopherson <seanjc@google.com>
-To: Doug Covelli <doug.covelli@broadcom.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Zack Rusin <zack.rusin@broadcom.com>, 
-	kvm <kvm@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "the arch/x86 maintainers" <x86@kernel.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuah@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
-	Joel Stanley <joel@jms.id.au>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <2025020304-chip-trench-4e56@gregkh>
+In-Reply-To: <2025020304-chip-trench-4e56@gregkh>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 3 Feb 2025 11:44:13 -0800
+X-Gm-Features: AWEUYZnP0BxdeiIlpIvjMP_0h8pDl8-n2R3WbSzT7UXkDfCMvuT3h9jntgd4m88
+Message-ID: <CAP-5=fXwprvLc3ubPmAuyUaTL2aD1frqL+RHJzkp8oe5z85oRw@mail.gmail.com>
+Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own location
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2025, Doug Covelli wrote:
-> On Mon, Feb 3, 2025 at 1:22=E2=80=AFPM Paolo Bonzini <pbonzini@redhat.com=
-> wrote:
-> >
-> > On Mon, Feb 3, 2025 at 5:35=E2=80=AFPM Doug Covelli <doug.covelli@broad=
-com.com> wrote:
-> > > OK.  It seems like fully embracing the in-kernel APIC is the way to g=
-o
-> > > especially considering it really simplifies using KVM's support for n=
-ested
-> > > virtualization.  Speaking of nested virtualization we have been worki=
-ng on
-> > > adding support for that and would like to propose a couple of changes=
-:
-> > >
-> > > - Add an option for L0 to handle backdoor accesses from CPL3 code run=
-ning in L2.
-> > > On a #GP nested_vmx_l0_wants_exit can check if this option is enabled=
- and KVM
-> > > can handle the #GP like it would if it had been from L1 (exit to user=
-level iff
-> > > it is a backdoor access otherwwise deliver the fault to L2).  When co=
-mbined with
-> > > enable_vmware_backdoor this will allow L0 to optionally handle backdo=
-or accesses
-> > > from CPL3 code running in L2.  This is needed for cases such as runni=
-ng VMware
-> > > tools in a Windows VM with VBS enabled.  For other cases such as runn=
-ing tools
-> > > in a Windows VM in an ESX VM we still want L1 to handle the backdoor =
-accesses
-> > > from L2.
-> >
-> > I think this makes sense and could be an argument to KVM_ENABLE_CAP.
-> >
-> > > - Extend KVM_EXIT_MEMORY_FAULT for permission faults (e.g the guest a=
-ttempting
-> > > to write to a page that has been protected by userlevel calling mprot=
-ect).  This
-> > > is useful for cases where we want synchronous detection of guest writ=
-es such as
-> > > lazy snapshots (dirty page tracking is no good for this case).  Curre=
-ntly
-> > > permission faults result in KVM_RUN returning EFAULT which we handle =
-by
-> > > interpreting the instruction as we do not know the guest physical add=
-ress
-> > > associated with the fault.
-> >
-> > Yes, this makes sense too, though you might want to look into
-> > userfaultfd as well.
-> >
-> > We had something planned using attributes, but I don't see any issue
-> > extending it to EFAULT. Maybe it would have to be yet another
-> > KVM_ENABLE_CAP; considering that it would break your existing code,
-> > there might be someone else in the wild doing it.
->=20
-> It looks like KVM_EXIT_MEMORY_FAULT was implemented in such a way that it
-> won't break existing code:
->=20
-> Note! KVM_EXIT_MEMORY_FAULT is unique among all KVM exit reasons in
-> that it accompanies a return code of =E2=80=98-1=E2=80=99, not =E2=80=980=
-=E2=80=99! errno will always
-> be set to EFAULT or EHWPOISON when KVM exits with
-> KVM_EXIT_MEMORY_FAULT, userspace should assume kvm_run.exit_reason is
-> stale/undefined for all other error numbers.
->=20
-> That being said we could certainly make this opt-in if that is preferable=
-.
+On Mon, Feb 3, 2025 at 11:25=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> In sysfs, for some reason, all pmu devices seem to show up in the "root"
+> of /sys/devices/ making for a confusing mess as these devices are not
+> really at the root of the system at all.
+>
+> Create a fake root devices, "pmu_bus" and place them all under there if
+> they do not already have a parent device set, cleaning up sysfs to look
+> more sane.
+>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: "Liang, Kan" <kan.liang@linux.intel.com>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>
+> Note, if you all don't like "pmu_bus" for the name, that's fine, please
+> let me know and I can rename it to something else, but it should be
+> something to get these objects out of the root sysfs directory.
 
--EFAULT isn't the problem, KVM not being able to return useful information =
-in
-all situations is the issue.  Specifically, "guest" accesses that are emula=
-ted
-by KVM are problematic, because the -EFAULT from e.g. __kvm_write_guest_pag=
-e()
-is disconnected from the code that actually kicks out to userspace.  In tha=
-t
-case, userspace will get KVM_EXIT_MMIO, not -EFAULT.  There are more proble=
-ms
-beyond KVM_EXIT_MMIO vs. -EFAULT, e.g. instructions that perform multiple m=
-emory
-accesses, "failures" that are squashed and never propagated to userspace (P=
-V
-features tend to do this), page splits, etc.
+Excuse my ignorance, does the event_source bus already provide a
+similar solution?
+```
+$ ls /sys/bus/event_source/devices
+breakpoint   i915       msr         uncore_arb     uncore_cbox_3
+uncore_cbox_7              uprobe
+cpu          intel_bts  power       uncore_cbox_0  uncore_cbox_4  uncore_cl=
+ock
+cstate_core  intel_pt   software    uncore_cbox_1  uncore_cbox_5
+uncore_imc_free_running_0
+cstate_pkg   kprobe     tracepoint  uncore_cbox_2  uncore_cbox_6
+uncore_imc_free_running_1
+$ ls /sys/devices
+breakpoint   intel_pt     platform    uncore_arb     uncore_cbox_5
+         uprobe
+cpu          isa          pnp0        uncore_cbox_0  uncore_cbox_6
+         virtual
+cstate_core  kprobe       power       uncore_cbox_1  uncore_cbox_7
+cstate_pkg   LNXSYSTM:00  software    uncore_cbox_2  uncore_clock
+i915         msr          system      uncore_cbox_3  uncore_imc_free_runnin=
+g_0
+intel_bts    pci0000:00   tracepoint  uncore_cbox_4  uncore_imc_free_runnin=
+g_1
+```
 
-In general, I don't expect most KVM access to guest memory to Just Work, as=
- I
-doubt KVM will behave as you want.
+Thanks,
+Ian
 
-We spent a lot of time trying to sort out a viable approach in the context =
-of the
-USERFAULT_ON_MISSING series[1], and ultimately gave up (ignoring that we po=
-stponed
-the entire series)[2], because we decided that fully solving KVM accesses w=
-ould
-require an absurd amount of effort and churn, and wasn't at all necessary f=
-or the
-userfault use case.
-
-What exactly needs to happen on "synchronous detection of guest writes"?  O=
-ne
-idea (which may be horribly flawed as I have put *very* little thought into=
- it)
-would be to implement a module (or KVM extension) that utilizes KVM's "exte=
-rnal"
-write-tracking APIs to get the synchronous notifications (see
-arch/x86/include/asm/kvm_page_track.h).
-
-[1] https://lore.kernel.org/all/ZIn6VQSebTRN1jtX@google.com
-[2] https://lore.kernel.org/all/ZR88w9W62qsZDro-@google.com
+>  kernel/events/core.c | 22 +++++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index bcb09e011e9e..786537faed2c 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -11767,6 +11767,11 @@ static const struct attribute_group *pmu_dev_gro=
+ups[] =3D {
+>  };
+>
+>  static int pmu_bus_running;
+> +
+> +static struct device pmu_bus_root =3D {
+> +       .init_name      =3D "pmu_bus",
+> +};
+> +
+>  static struct bus_type pmu_bus =3D {
+>         .name           =3D "event_source",
+>         .dev_groups     =3D pmu_dev_groups,
+> @@ -11790,7 +11795,10 @@ static int pmu_dev_alloc(struct pmu *pmu)
+>
+>         dev_set_drvdata(pmu->dev, pmu);
+>         pmu->dev->bus =3D &pmu_bus;
+> -       pmu->dev->parent =3D pmu->parent;
+> +       if (pmu->parent)
+> +               pmu->dev->parent =3D pmu->parent;
+> +       else
+> +               pmu->dev->parent =3D &pmu_bus_root;
+>         pmu->dev->release =3D pmu_dev_release;
+>
+>         ret =3D dev_set_name(pmu->dev, "%s", pmu->name);
+> @@ -14232,9 +14240,17 @@ static int __init perf_event_sysfs_init(void)
+>
+>         mutex_lock(&pmus_lock);
+>
+> -       ret =3D bus_register(&pmu_bus);
+> -       if (ret)
+> +       ret =3D device_register(&pmu_bus_root);
+> +       if (ret) {
+> +               put_device(&pmu_bus_root);
+>                 goto unlock;
+> +       }
+> +
+> +       ret =3D bus_register(&pmu_bus);
+> +       if (ret) {
+> +               device_unregister(&pmu_bus_root);
+> +               goto unlock;
+> +       }
+>
+>         list_for_each_entry(pmu, &pmus, entry) {
+>                 if (pmu->dev)
+> --
+> 2.48.1
+>
