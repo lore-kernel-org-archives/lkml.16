@@ -1,185 +1,109 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp153-141.sina.com.cn (smtp153-141.sina.com.cn [61.135.153.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2621A4D599;
-	Mon,  3 Feb 2025 08:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8E41D95A9
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738570049; cv=none; b=mwyzUKxQn9itV2binwTFrAFnM0wyd4oskEhSeTCWziwgMsP1cdZAJvR1ZtRZxWDdy1btm8owukEtv21vQ+kASs9fmdIrZeuA3e5s0T1Ewl0hpUVSmyqtE9gwBdMo8QvrdAVbiY6vOyAjdYpza7QKgKEEuwCsVPn+WsODUfR05M0=
+	t=1738570059; cv=none; b=GjPSrUYEPTkeq+tc8FFJYOTrZh0s6cO+H8xm6YDuJmMNlVN+xsfb63csgyNVQC/3pMClh1XBJOk243UMMcUwS6WrMNL240Zugh2xEiJWFnyH3uS4B0bEiOeUUrmt5/ag2ZFMxE+eLmlprt/oXxZm5iPukuPyTq/CP68shB0fSPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738570049; c=relaxed/simple;
-	bh=XOp4H+WOcByLhmFDhTidKzAOiywwOz5OfjkvWFchcxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G9KGzgaeJzo1k1nfnd1goYXTTTrtgiejTtIAnIliB3P6EDCOk8P0FDMzLdboz07No3/adcOoRtlAFnct/aepMoHnzIyk22DqczuaGEEAPm3jEFrEPgzinanFle8e/i/ieYmsPXhGp7nRledZiFj8w5wFaARoV/AeSnjSXnCafag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 2024168AA6; Mon,  3 Feb 2025 09:07:21 +0100 (CET)
-Date: Mon, 3 Feb 2025 09:07:20 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: syzbot <syzbot+acb56162aef712929d3f@syzkaller.appspotmail.com>
-Cc: cem@kernel.org, chandan.babu@oracle.com, djwong@kernel.org, hch@lst.de,
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	s=arc-20240116; t=1738570059; c=relaxed/simple;
+	bh=irxJl59VOv85uFEyrqni9Se9zAhunpeUAS5gPwS4ieA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gndyjAVUb0Ipwg2FjRRo8lgwa5R4jvw+NLu9KBO9C0wplZjFYRYbtBMoKSQfauW+mzBbnPVQL4Y7kPDeUcUslsqitwfzm3l8emS1mTh/jb5sMn5uvzEOW0s9eEXP8xN/EwAql211qec3II/YxFO/vlUpTeDDr+K9YStJPdWyDlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=61.135.153.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.56.205])
+	by sina.com (10.182.253.25) with ESMTP
+	id 67A078AB00003049; Mon, 3 Feb 2025 16:05:02 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 9095812059037
+X-SMAIL-UIID: 6C9DE7596FBE49E792FD1C83CE517E4A-20250203-160502-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+3433b5cb8b2b70933f8d@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
 	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [xfs?] possible deadlock in xfs_buf_find_insert
-Message-ID: <20250203080720.GA18459@lst.de>
-References: <20250203073038.GA17805@lst.de> <67a07656.050a0220.d7c5a.0081.GAE@google.com>
+Subject: Re: [syzbot] [net?] possible deadlock in do_ipv6_setsockopt (4)
+Date: Mon,  3 Feb 2025 16:04:48 +0800
+Message-ID: <20250203080449.1988-1-hdanton@sina.com>
+In-Reply-To: <679feb2e.050a0220.d7c5a.0078.GAE@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67a07656.050a0220.d7c5a.0081.GAE@google.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+On Sun, 02 Feb 2025 14:01:18 -0800
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    c2933b2befe2 Merge tag 'net-6.14-rc1' of git://git.kernel...
+> git tree:       net-next
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c69724580000
 
-From a9ab28b3d21aec6d0f56fe722953e20ce470237b Mon Sep 17 00:00:00 2001
-From: Christoph Hellwig <hch@lst.de>
-Date: Tue, 28 Jan 2025 06:22:58 +0100
-Subject: xfs: remove xfs_buf_cache.bc_lock
+#syz test
 
-xfs_buf_cache.bc_lock serializes adding buffers to and removing them from
-the hashtable.  But as the rhashtable code already uses fine grained
-internal locking for inserts and removals the extra protection isn't
-actually required.
-
-It also happens to fix a lock order inversion vs b_lock added by the
-recent lookup race fix.
-
-Fixes: ee10f6fcdb96 ("xfs: fix buffer lookup vs release race")
-Reported-by: Lai, Yi <yi1.lai@linux.intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: Carlos Maiolino <cem@kernel.org>
----
- fs/xfs/xfs_buf.c | 31 +++++++++++++++++--------------
- fs/xfs/xfs_buf.h |  1 -
- 2 files changed, 17 insertions(+), 15 deletions(-)
-
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index f1252ed8bd0a..ef207784876c 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -41,8 +41,7 @@ struct kmem_cache *xfs_buf_cache;
-  *
-  * xfs_buf_rele:
-  *	b_lock
-- *	  pag_buf_lock
-- *	    lru_lock
-+ *	  lru_lock
-  *
-  * xfs_buftarg_drain_rele
-  *	lru_lock
-@@ -220,14 +219,21 @@ _xfs_buf_alloc(
- 	 */
- 	flags &= ~(XBF_UNMAPPED | XBF_TRYLOCK | XBF_ASYNC | XBF_READ_AHEAD);
- 
--	spin_lock_init(&bp->b_lock);
-+	/*
-+	 * A new buffer is held and locked by the owner.  This ensures that the
-+	 * buffer is owned by the caller and racing RCU lookups right after
-+	 * inserting into the hash table are safe (and will have to wait for
-+	 * the unlock to do anything non-trivial).
-+	 */
- 	bp->b_hold = 1;
-+	sema_init(&bp->b_sema, 0); /* held, no waiters */
-+
-+	spin_lock_init(&bp->b_lock);
- 	atomic_set(&bp->b_lru_ref, 1);
- 	init_completion(&bp->b_iowait);
- 	INIT_LIST_HEAD(&bp->b_lru);
- 	INIT_LIST_HEAD(&bp->b_list);
- 	INIT_LIST_HEAD(&bp->b_li_list);
--	sema_init(&bp->b_sema, 0); /* held, no waiters */
- 	bp->b_target = target;
- 	bp->b_mount = target->bt_mount;
- 	bp->b_flags = flags;
-@@ -497,7 +503,6 @@ int
- xfs_buf_cache_init(
- 	struct xfs_buf_cache	*bch)
- {
--	spin_lock_init(&bch->bc_lock);
- 	return rhashtable_init(&bch->bc_hash, &xfs_buf_hash_params);
+--- x/net/smc/af_smc.c
++++ y/net/smc/af_smc.c
+@@ -1597,6 +1597,7 @@ static void smc_connect_work(struct work
+ 			rc = 0;
+ 	}
+ 	release_sock(smc->clcsock->sk);
++	rtnl_lock();
+ 	lock_sock(&smc->sk);
+ 	if (rc != 0 || smc->sk.sk_err) {
+ 		smc->sk.sk_state = SMC_CLOSED;
+@@ -1624,6 +1625,7 @@ out:
+ 		}
+ 	}
+ 	release_sock(&smc->sk);
++	rtnl_unlock();
  }
  
-@@ -647,17 +652,20 @@ xfs_buf_find_insert(
- 	if (error)
- 		goto out_free_buf;
+ int smc_connect(struct socket *sock, struct sockaddr *addr,
+@@ -1641,6 +1643,7 @@ int smc_connect(struct socket *sock, str
+ 	if (addr->sa_family != AF_INET && addr->sa_family != AF_INET6)
+ 		goto out_err;
  
--	spin_lock(&bch->bc_lock);
-+	/* The new buffer keeps the perag reference until it is freed. */
-+	new_bp->b_pag = pag;
-+
-+	rcu_read_lock();
- 	bp = rhashtable_lookup_get_insert_fast(&bch->bc_hash,
- 			&new_bp->b_rhash_head, xfs_buf_hash_params);
- 	if (IS_ERR(bp)) {
-+		rcu_read_unlock();
- 		error = PTR_ERR(bp);
--		spin_unlock(&bch->bc_lock);
- 		goto out_free_buf;
- 	}
- 	if (bp && xfs_buf_try_hold(bp)) {
- 		/* found an existing buffer */
--		spin_unlock(&bch->bc_lock);
-+		rcu_read_unlock();
- 		error = xfs_buf_find_lock(bp, flags);
- 		if (error)
- 			xfs_buf_rele(bp);
-@@ -665,10 +673,8 @@ xfs_buf_find_insert(
- 			*bpp = bp;
- 		goto out_free_buf;
- 	}
-+	rcu_read_unlock();
++	rtnl_lock();
+ 	lock_sock(sk);
+ 	switch (sock->state) {
+ 	default:
+@@ -1703,6 +1706,7 @@ connected:
+ 	sock->state = SS_CONNECTED;
+ out:
+ 	release_sock(sk);
++	rtnl_unlock();
+ out_err:
+ 	return rc;
+ }
+--- x/net/smc/smc_core.c
++++ y/net/smc/smc_core.c
+@@ -1888,6 +1888,7 @@ int smc_vlan_by_tcpsk(struct socket *clc
+ 	struct net_device *ndev;
+ 	int rc = 0;
  
--	/* The new buffer keeps the perag reference until it is freed. */
--	new_bp->b_pag = pag;
--	spin_unlock(&bch->bc_lock);
- 	*bpp = new_bp;
- 	return 0;
- 
-@@ -1085,7 +1091,6 @@ xfs_buf_rele_cached(
++	ASSERT_RTNL();
+ 	ini->vlan_id = 0;
+ 	if (!dst) {
+ 		rc = -ENOTCONN;
+@@ -1905,9 +1906,7 @@ int smc_vlan_by_tcpsk(struct socket *clc
  	}
  
- 	/* we are asked to drop the last reference */
--	spin_lock(&bch->bc_lock);
- 	__xfs_buf_ioacct_dec(bp);
- 	if (!(bp->b_flags & XBF_STALE) && atomic_read(&bp->b_lru_ref)) {
- 		/*
-@@ -1097,7 +1102,6 @@ xfs_buf_rele_cached(
- 			bp->b_state &= ~XFS_BSTATE_DISPOSE;
- 		else
- 			bp->b_hold--;
--		spin_unlock(&bch->bc_lock);
- 	} else {
- 		bp->b_hold--;
- 		/*
-@@ -1115,7 +1119,6 @@ xfs_buf_rele_cached(
- 		ASSERT(!(bp->b_flags & _XBF_DELWRI_Q));
- 		rhashtable_remove_fast(&bch->bc_hash, &bp->b_rhash_head,
- 				xfs_buf_hash_params);
--		spin_unlock(&bch->bc_lock);
- 		if (pag)
- 			xfs_perag_put(pag);
- 		freebuf = true;
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index 7e73663c5d4a..3b4ed42e11c0 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -80,7 +80,6 @@ typedef unsigned int xfs_buf_flags_t;
- #define XFS_BSTATE_IN_FLIGHT	 (1 << 1)	/* I/O in flight */
+ 	priv.data = (void *)&ini->vlan_id;
+-	rtnl_lock();
+ 	netdev_walk_all_lower_dev(ndev, smc_vlan_by_tcpsk_walk, &priv);
+-	rtnl_unlock();
  
- struct xfs_buf_cache {
--	spinlock_t		bc_lock;
- 	struct rhashtable	bc_hash;
- };
- 
--- 
-2.45.2
-
+ out_rel:
+ 	dst_release(dst);
+--
