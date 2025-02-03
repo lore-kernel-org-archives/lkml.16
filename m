@@ -1,50 +1,79 @@
-Received: from mail-gw01.astralinux.ru (mail-gw01.astralinux.ru [37.230.196.243])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6288D1FC7E1;
-	Mon,  3 Feb 2025 11:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.230.196.243
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1E51D63F5;
+	Mon,  3 Feb 2025 11:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738582226; cv=none; b=bKdvmDkmMpybHbEHWlVO5y/WXdWd4i8VJy3uqY9PfUrB9/SZpn/uoxEYhEnaxgEqic8mgr8mkgpwxuQl7WXZMmVwGUeRMAbYzqF9Nc9lTrjh+EIO37mLzuVIOezPiT/c1fNBuCyRqwwOOH8/ROwHeOXQPlBoTjv8ajfsmwLJzk0=
+	t=1738582242; cv=none; b=sfUkhctlneSqIkEjRkyy+L+6c5WlN28UH3L2APXz5TEu6Z6hUcyf1XfGllMpwmD4a+hXjVaXJYPqFN+DbWuUjSL58KMkTqqw6OrWJALOpNV+IcLgxBsiPmLvDr56Ct0TsDZDV7sr1O0hIyaosHS5vH2OlYotrXEi6JqtiX81M0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738582226; c=relaxed/simple;
-	bh=baN8Og7egUm0YAgH+MLV7CddHfdSlD1CiAUJq8ntw68=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S7sPSt7inh7vJ47E5ZwJdDQZXREk6o4IzYfzIpc6VFwJ3ncul7npHivFz4dyS1CT+n69fbUZt+hIATyiHIanNKumMJmH+MXtGVsdbs2zLhY8Toqb8f/ebIiV5zT91bM4/KWatxCpCMXYqjaqtcUjdC5PxLpktiFp2w15J3KRJbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=37.230.196.243
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from gca-sc-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
-	by mail-gw01.astralinux.ru (Postfix) with ESMTP id 630DD24D3A;
-	Mon,  3 Feb 2025 14:30:12 +0300 (MSK)
-Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail04.astralinux.ru [10.177.185.109])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-gw01.astralinux.ru (Postfix) with ESMTPS;
-	Mon,  3 Feb 2025 14:30:05 +0300 (MSK)
-Received: from localhost.localdomain (unknown [10.198.57.103])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4Ymkn30cV8zkWyl;
-	Mon,  3 Feb 2025 14:29:58 +0300 (MSK)
-From: Anastasia Belova <abelova@astralinux.ru>
-To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>,
-	David Laight <david.laight.linux@gmail.com>
-Cc: Anastasia Belova <abelova@astralinux.ru>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
+	s=arc-20240116; t=1738582242; c=relaxed/simple;
+	bh=pDuRPkoKfqw6nq0A2p8YOlo6PxxkTi/ik44ZtSf4kRw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dFQl3/xO3uk9+IEUOAwmXTiYj2QhlvN4Ay/v4DAs2i9pmnOjTEYRediiRDczgWWuW7KF8YjFxRAy+PG2zw4rxbkPCl3vawdXRWDB2zjfovxnhPVjfZyWZWcmSl+HGTyLftyR5R83jSspHHrQMg4lzrJGWOGIZpoibBVSAcE1B68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P6xWojiP; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P6xWojiP"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-385deda28b3so2201153f8f.0;
+        Mon, 03 Feb 2025 03:30:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738582238; x=1739187038; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3xnI/TsHAocOuYHAYr9if7jEUms/tx4tWKMg4pTajBM=;
+        b=P6xWojiPQQxthc752Bk6ncGuyQpHQ/+OzvuVNCkLRW/JjcQP0Gnw43iUacqQOb10AH
+         R/7C+NM7PdL8GiroOC9NtqPJ1AQL9prFbchOzhap6AcApknI13I7q1dwvfnV1x+lO9Yd
+         suLP14WH0w/Jg4bi7+EvNc0LEILWr7vPWt5AHw8L3DtKBejeupzGfKjqAp+sc+hYihhQ
+         RwHxnbqD76EsaVj1/Z0B+PTrRPRtjlzu4efJfq0AkzaIwWO008a4EuF9kvgZTg313rib
+         NpSXwpwyf1l65jIukbg41kM1qgTo6cjlppfIZgii3gaHYpY49XqSGI1nVqma8fAF9ZIb
+         Kzkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738582238; x=1739187038;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3xnI/TsHAocOuYHAYr9if7jEUms/tx4tWKMg4pTajBM=;
+        b=s3+TqwVbTPfurvKUGjKXA5OIiC++iWuddIzBObcL8Jw9KaErEEV4pqTlTG1PzRpdBb
+         SxfVe3zQlXec8so1mTF/ich7pc8uh0VWvJbhyEVfuaJCYxCb2aBESgtUutnx9o7SsWhP
+         QTleeEVTuUCl/31TZc9I56/1mi6erBMZhy9aOnQ07QTJN97DfcXkkmGkWzWobA9bkPdZ
+         k74mMj22KxfnCKgF7KAFRMgqzoEfPsvkFKbG4/v/TcXMKLGzNApJlcgdawOAT2ReDet6
+         jXiHG82OSAv69o358GH9jefPVHaMU9oii4DXk87GyQB6likh0t0ENIzB6TrBQ9v47fG3
+         ysvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTJwMaGZlzIaj1XAfL69mla2BbZuY++pbfNL3JHBfjKNW9Uc+JpKvaDd5DEPdzjD4CnjN0ZaX2@vger.kernel.org, AJvYcCXk26cthmR9p/r4gpi5Ta2rJQxfd3dXorb3+PpTrhaJWo2pJ/xY8oO2TvMzZCnuAOXzpkggSDP6d002kkM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIyqlNDJgvYbRYuGkPgL0eMcVp0tsPq2BX/u66BWvopvoWtdlM
+	SrbL84JG1QAxuIrWI0gT5xrVFHiL9qkbmR6KZtMtoiyxHwqVz7E0rkZFqSVC
+X-Gm-Gg: ASbGncsH2zE/yb2f9fOeB6Pl45rF54wrSH/OQNMhWJfxRTcH80bJ1/ALpcq0UqsLBW6
+	YEhJZWGY479Q9JyD8ClGPs/Act7+Jyxsq/SzdTKra1fsezWfhi/ySgilxbUh8lYLEOKDuTF4y2V
+	YHiFuR3WXQs7CjvU3Uog+gjKGR5bXs7zq8B93m7WSdGlKqekEXioFyfRlYXXF8vPdD9Sb235mtV
+	c5QyKcDWbP7ihv5Sv4006zElJ0U+xCNHV3TaPmmAUwR7KnKuOoOnYyqGc4AwN6kXeCIsuD4aPEl
+	+bNnI7h04ndmKyB9yqLjm/lkxSw=
+X-Google-Smtp-Source: AGHT+IEM2TgIFGGxtjZAzXPWgmjVsyAHG+HJRhpojwX5+mPNVmuMuoGnOU6WD/ikBik+NuNeGyCcjw==
+X-Received: by 2002:a5d:6c6e:0:b0:38c:5bc1:1ef5 with SMTP id ffacd0b85a97d-38c5bc120a4mr13657329f8f.3.1738582237856;
+        Mon, 03 Feb 2025 03:30:37 -0800 (PST)
+Received: from workstation.redhat.com ([90.168.92.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b5136sm12770210f8f.65.2025.02.03.03.30.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 03:30:37 -0800 (PST)
+From: Andreas Karis <ak.karis@gmail.com>
+To: linux-doc@vger.kernel.org
+Cc: ak.karis@gmail.com,
 	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] clk: sunxi: clean up rate counting
-Date: Mon,  3 Feb 2025 14:29:28 +0300
-Message-ID: <20250203112930.650813-1-abelova@astralinux.ru>
-X-Mailer: git-send-email 2.43.0
+	davem@davemloft.net,
+	netdev@vger.kernel.org,
+	corbet@lwn.net,
+	pshelar@ovn.org,
+	dev@openvswitch.org,
+	mirq-linux@rere.qmqm.pl,
+	i.maximets@ovn.org,
+	edumazet@google.com,
+	ovs-dev@openvswitch.org,
+	pabeni@redhat.com,
+	kuba@kernel.org
+Subject: [PATCH REPOST] docs: networking: Remove VLAN_TAG_PRESENT from openvswitch doc
+Date: Mon,  3 Feb 2025 12:30:12 +0100
+Message-ID: <20250203113012.14943-1-ak.karis@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,67 +81,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
-X-KSMG-AntiSpam-Info: LuaCore: 50 0.3.50 df4aeb250ed63fd3baa80a493fa6caee5dd9e10f, {Tracking_from_domain_doesnt_match_to}, astralinux.ru:7.1.1;new-mail.astralinux.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 190748 [Feb 03 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.7
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/02/03 07:33:00 #27201296
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 1
 
-If n = 255, the result of multiplication of n and 24000000
-may not fit int type. Swap division and shift with multiplication.
+Since commit 0c4b2d370514 ("net: remove VLAN_TAG_PRESENT"), the kernel
+no longer uses VLAN_TAG_PRESENT.
+Update the openvswitch documentation which still contained an outdated
+reference to VLAN_TAG_PRESENT.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 6424e0aeebc4 ("clk: sunxi: rewrite sun9i_a80_get_pll4_factors()")
-Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
+Signed-off-by: Andreas Karis <ak.karis@gmail.com>
 ---
- drivers/clk/sunxi/clk-sun9i-core.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ Documentation/networking/openvswitch.rst | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/sunxi/clk-sun9i-core.c b/drivers/clk/sunxi/clk-sun9i-core.c
-index d93c7a53c6c0..639c83ed63b8 100644
---- a/drivers/clk/sunxi/clk-sun9i-core.c
-+++ b/drivers/clk/sunxi/clk-sun9i-core.c
-@@ -25,12 +25,12 @@
+diff --git a/Documentation/networking/openvswitch.rst b/Documentation/networking/openvswitch.rst
+index 1a8353dbf1b6..8d2bbcb92286 100644
+--- a/Documentation/networking/openvswitch.rst
++++ b/Documentation/networking/openvswitch.rst
+@@ -230,9 +230,8 @@ an all-zero-bits vlan and an empty encap attribute, like this::
+     eth(...), eth_type(0x8100), vlan(0), encap()
  
- static void sun9i_a80_get_pll4_factors(struct factors_request *req)
- {
--	int n;
--	int m = 1;
--	int p = 1;
-+	unsigned int n;
-+	unsigned int m = 1;
-+	unsigned int p = 1;
+ Unlike a TCP packet with source and destination ports 0, an
+-all-zero-bits VLAN TCI is not that rare, so the CFI bit (aka
+-VLAN_TAG_PRESENT inside the kernel) is ordinarily set in a vlan
+-attribute expressly to allow this situation to be distinguished.
++all-zero-bits VLAN TCI is not that rare, so the CFI bit is ordinarily set
++in a vlan attribute expressly to allow this situation to be distinguished.
+ Thus, the flow key in this second example unambiguously indicates a
+ missing or malformed VLAN TCI.
  
- 	/* Normalize value to a 6 MHz multiple (24 MHz / 4) */
--	n = DIV_ROUND_UP(req->rate, 6000000);
-+	n = DIV_ROUND_UP(req->rate, 6000000ul);
- 
- 	/* If n is too large switch to steps of 12 MHz */
- 	if (n > 255) {
-@@ -50,7 +50,11 @@ static void sun9i_a80_get_pll4_factors(struct factors_request *req)
- 	else if (n < 12)
- 		n = 12;
- 
--	req->rate = ((24000000 * n) >> p) / (m + 1);
-+	/* Division and shift should be done before multiplication to
-+	 * avoid overflow. The result will be correct because '>> p' and
-+	 * '/ (m + 1)' are both just conditional 'divide by 2'
-+	 */
-+	req->rate = ((24000000ul >> p) / (m + 1)) * n;
- 	req->n = n;
- 	req->m = m;
- 	req->p = p;
 -- 
-2.43.0
+2.48.1
 
