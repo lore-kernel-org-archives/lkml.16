@@ -1,194 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99031863E;
-	Mon,  3 Feb 2025 08:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5016D1863E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738572151; cv=none; b=h7zbrC2oEBuYP1hIIG3wABX6XXhS7Buyxig01tM9yedesGYNNM5BLVxj7kUrAbZdKA+8E0U33emddoQrgTfEo6hasgqZfTNwfaaMJFEQAuMN14/86TDWZmPS8FD1qoJdqyCMPJA9L3ao/I2MfYy/FyJSoAz5rayrvSljUOzvo+g=
+	t=1738572178; cv=none; b=ThHUixm3S2WBmrWR/uQwEhny1yFreupP82H3xbj8e/c5tgZb/gh6aV961ZksT1yDkiVbHE3gnm4JCZF7jKvh5YJDmVyn2/vKrO/ZgeAdaPZdZWam7kWNFTij/WXJIvBi7NRmYl5/PeE9EZD5xR6q8cbP0BhdMV9fD2EcfhVOaj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738572151; c=relaxed/simple;
-	bh=9aJ9BHrjqaB9M3L/phe1w/cBaLzDm/a1APfOO4N4alM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nORQgxpshRXiQb08Wr2l+zhc3tXQB021a1IWpN+gOAKiW++3CV5TGOOT4HXOgZcxDTObR5uH/nLbYVNSwW+FBzEA4n7oLSY4oltjtksyHEmwwOly/T/V6wcO2Eq3GpcvwXHdBO1c0BEYw4BJXuvaqoEDp6zJT5eatXB/KCzDQRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KBo2AI0d; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738572178; c=relaxed/simple;
+	bh=H0TUOUnzJTRV5KnnyEuI0sVcg8CMj6k8cgKBeWm17LE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LixzFQAW90mi/Zg5nTZbJrUb5I0DDM4eYqfB9rJV6JUTNHpXF/dsjKrkZXHCH5dazdqD+KaRz7E3Kjy9E+cOrNavJAaISxY/Qk4oebHWHCeO+KVxMuaX19CwsskpbN+TW2L5It7wjYCtFAofuVVkNqPAB/nybluJ8hR9ugaSKo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZRYXQX62; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WhfXxcht; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZRYXQX62; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WhfXxcht; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KBo2AI0d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738572149; x=1770108149;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=9aJ9BHrjqaB9M3L/phe1w/cBaLzDm/a1APfOO4N4alM=;
-  b=KBo2AI0dAsF74ktJf0Ft9GR6Bo20dkGcvooiQ1KfjcdHzl6yjz2dG9nb
-   fOSkf2tnZEY/lGRY0hTt5ROV8Ct/WswqdQ9BfQiTIFMCpmK3oNrBc3LOI
-   EJm3xkUniOdjunyLzpDBFzLxm4bRAXHLGHt22wDBb5DaB3IHRRjwWv8q+
-   cUL06dSbyTPRYmb1YQ5ddjq0pmfaIIbcGY52NAf4UiNBtIIkLTUs9x/hL
-   XEycITQDMIhaQZ35CKQMjquqDRYv89mtakHd0r6fck2abn8eV8YbIMrMg
-   vdZl6gz0tPEwrCY8hvOhePpD/CK0MQm0WGGOFumknkBCfO2e7s2i33vVR
-   w==;
-X-CSE-ConnectionGUID: cnSD0tz+TuyxEZjIh9r5Tw==
-X-CSE-MsgGUID: aGvdMprKQ6KTGgsRLw2SLg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="38261529"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="38261529"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 00:42:27 -0800
-X-CSE-ConnectionGUID: r2cvfThLTbiJWagSZet7QQ==
-X-CSE-MsgGUID: 4JfoicegTxucAaa9yLbL3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="133480373"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP; 03 Feb 2025 00:42:26 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id C36E5214; Mon, 03 Feb 2025 10:42:24 +0200 (EET)
-Date: Mon, 3 Feb 2025 10:42:24 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
-Cc: andreas.noever@gmail.com, michael.jamet@intel.com,
-	YehezkelShB@gmail.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] thunderbolt: Disable Gen 4 Recovery on Asymmetric
- Transitions
-Message-ID: <20250203084224.GE3713119@black.fi.intel.com>
-References: <20250131014406.28645-1-rahimi.mhmmd@gmail.com>
- <20250131014406.28645-4-rahimi.mhmmd@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZRYXQX62";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WhfXxcht";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZRYXQX62";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WhfXxcht"
+Received: from hawking.nue2.suse.org (unknown [IPv6:2a07:de40:a101:3:92b1:1cff:fe69:ddc])
+	by smtp-out2.suse.de (Postfix) with ESMTP id 4266E1F37C;
+	Mon,  3 Feb 2025 08:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738572175; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n4KmZoQfw8THBhrTIiwcH+di+9FGYYevhJ3k+w9c0xc=;
+	b=ZRYXQX62EiH6D6fHevn7HpphdOaypDmDwrTpW7Cwo+d1b/O+2w3L2YhJAbrZenn8Ax6FS6
+	c8981AUwCheJOZr5SqbnPbR7FSIjh1iZoWWzTZTjqH3MkQf2UUoTdzT93+VhuL2G2POO6z
+	HLCzl+TC02gaVHILLiDqws9L3ZdTri4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738572175;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n4KmZoQfw8THBhrTIiwcH+di+9FGYYevhJ3k+w9c0xc=;
+	b=WhfXxchtS4RjUIWr3l54PdGjWM1HtrSqRPzqPTTvVn4e73Mp6DkrGzkNsq2orSTcKdJQXj
+	W3h2uh+1LdGnxPAw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ZRYXQX62;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=WhfXxcht
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738572175; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n4KmZoQfw8THBhrTIiwcH+di+9FGYYevhJ3k+w9c0xc=;
+	b=ZRYXQX62EiH6D6fHevn7HpphdOaypDmDwrTpW7Cwo+d1b/O+2w3L2YhJAbrZenn8Ax6FS6
+	c8981AUwCheJOZr5SqbnPbR7FSIjh1iZoWWzTZTjqH3MkQf2UUoTdzT93+VhuL2G2POO6z
+	HLCzl+TC02gaVHILLiDqws9L3ZdTri4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738572175;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n4KmZoQfw8THBhrTIiwcH+di+9FGYYevhJ3k+w9c0xc=;
+	b=WhfXxchtS4RjUIWr3l54PdGjWM1HtrSqRPzqPTTvVn4e73Mp6DkrGzkNsq2orSTcKdJQXj
+	W3h2uh+1LdGnxPAw==
+Received: by hawking.nue2.suse.org (Postfix, from userid 17005)
+	id 1EB8B4A0551; Mon,  3 Feb 2025 09:42:55 +0100 (CET)
+From: Andreas Schwab <schwab@suse.de>
+To: Jessica Clarke <jrtc27@jrtc27.com>
+Cc: Alexandre Ghiti <alex@ghiti.fr>,  linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv/atomic: Do proper sign extension also for
+ unsigned in arch_cmpxchg
+In-Reply-To: <CC2D9220-F8DE-4CC8-ACAD-7B1A21E276FE@jrtc27.com> (Jessica
+	Clarke's message of "Thu, 30 Jan 2025 17:21:28 +0000")
+References: <mvmed0k4prh.fsf@suse.de>
+	<c9cbc2be-d1fd-44ef-aa14-fd25a5ff8490@ghiti.fr>
+	<mvm5xlw4anb.fsf@suse.de>
+	<ac53a62e-4f89-49c9-a755-fdfa7a582337@ghiti.fr>
+	<mvmwmec2t7u.fsf@suse.de>
+	<CC2D9220-F8DE-4CC8-ACAD-7B1A21E276FE@jrtc27.com>
+Date: Mon, 03 Feb 2025 09:42:55 +0100
+Message-ID: <mvmo6zj2zcg.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250131014406.28645-4-rahimi.mhmmd@gmail.com>
+Content-Type: text/plain
+X-Spam-Level: **
+X-Spamd-Result: default: False [2.70 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	HFILTER_HOSTNAME_UNKNOWN(2.50)[];
+	RDNS_NONE(2.00)[];
+	ONCE_RECEIVED(1.20)[];
+	HFILTER_HELO_IP_A(1.00)[hawking.nue2.suse.org];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HFILTER_HELO_NORES_A_OR_MX(0.30)[hawking.nue2.suse.org];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_NO_TLS_LAST(0.10)[];
+	MIME_GOOD(-0.10)[text/plain];
+	NEURAL_HAM_SHORT(-0.09)[-0.440];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DIRECT_TO_MX(0.00)[Gnus/5.13 (Gnus v5.13)];
+	DKIM_TRACE(0.00)[suse.de:+];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_ONE(0.00)[1];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid]
+X-Spam-Score: 2.70
+X-Spamd-Bar: ++
+X-Rspamd-Queue-Id: 4266E1F37C
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spam-Flag: NO
 
-Hi,
+On Jan 30 2025, Jessica Clarke wrote:
 
-On Fri, Jan 31, 2025 at 01:41:27AM +0000, Mohammad Rahimi wrote:
-> Updates the Connection Manager to disable the Gen 4 Link Recovery
-> flow before transitioning from a Symmetric Link to an Asymmetric
-> Link, as specified in recent changes to the USB4 v2 specification.
-> 
-> According to the "USB4 2.0 ENGINEERING CHANGE NOTICE FORM"
-> published in September 2024, the rationale for this change is:
-> 
->   "Since the default value of the Target Asymmetric Link might be
->   different than Symmetric Link and Gen 4 Link Recovery flow checks
->   this field to make sure it matched the actual Negotiated Link Width,
->   we’re removing the condition for a Disconnect in the Gen 4 Link
->   Recovery flow when Target Asymmetric Link doesn’t match the actual
->   Link width and adding a Connection Manager note to Disable Gen 4 Link
->   Recovery flow before doing Asymmetric Transitions."
-> 
-> Signed-off-by: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
+> On 30 Jan 2025, at 15:53, Andreas Schwab <schwab@suse.de> wrote:
+>> 
+>> On Jan 30 2025, Alexandre Ghiti wrote:
+>> 
+>>> a2 is used as it is passed by the calling function, so we can't be sure a2
+>>> is sign extended to me, what am I missing?
+>> 
+>> 32-bit scalar arguments are guaranteed to be sign extended on entry.
+>
+> Firstly, the calling convention is irrelevant if the function is
+> inlined, which this almost always will be.
 
-I did some minor modifications and applied to thunderbolt.git/next. Please
-let me know if I missed something.
+This is only about the non-inlined variant.
 
-I tested on Intel reference hardware as well but on those link recovery is
-already disabled so it pretty much does nothing. Below are the steps that I
-followed:
-
-1. Boot with "thunderbolt.asym_threshold=10000" so that the driver switches
-   links to asymmetric already upon first DP connect.
-
-2. Connect USB4 v2 hub.
-3. Check link and PORT_CS_19:
-
-# tblist -v
-Domain 0 Route 0: 8087:5781 Intel Barlow Host Router
-  Type: Router
-  UUID: c9680000...
-  Generation: USB4
-  NVM version: 56.81
-
-Domain 0 Route 1: 8087:1234 Intel Barlow HUB Router
-  Type: Router
-  Speed (Rx/Tx): 80/80 Gb/s
-  Authorized: No
-  UUID: e9688780...
-  Generation: USB4
-  NVM version: 56.81
-
-# tbdump -r 0 -a 1 -vv -N 1 PORT_CS_19
-0x00d3 0x0004000e 0b00000000 00000100 00000000 00001110 .... PORT_CS_19     
-  [00:00]        0x0 Downstream Port Reset (DPR)
-  [01:01]        0x1 Request RS-FEC Gen 2 (RS2)
-  [02:02]        0x1 Request RS-FEC Gen 3 (RS3)
-  [03:03]        0x1 USB4 Port is Configured (PC)
-  [04:04]        0x0 USB4 Port is Inter-Domain (PID)
-  [16:16]        0x0 Enable Wake on Connect
-  [17:17]        0x0 Enable Wake on Disconnect
-  [18:18]        0x1 Enable Wake on USB4 Wake
-  [19:19]        0x0 Enable Wake on Inter-Domain
-  [24:24]        0x0 StartAsymmetricFlow
-  [30:30]        0x0 Initiate Gen 4 Link Recovery (ILR)
-  [31:31]        0x0 Enable Gen 4 Link Recovery (ELR)
-
-# tbdump -r 1 -a 1 -vv -N 1 PORT_CS_19
-0x00d3 0x0004000e 0b00000000 00000100 00000000 00001110 .... PORT_CS_19     
-  [00:00]        0x0 Downstream Port Reset (DPR)
-  [01:01]        0x1 Request RS-FEC Gen 2 (RS2)
-  [02:02]        0x1 Request RS-FEC Gen 3 (RS3)
-  [03:03]        0x1 USB4 Port is Configured (PC)
-  [04:04]        0x0 USB4 Port is Inter-Domain (PID)
-  [16:16]        0x0 Enable Wake on Connect
-  [17:17]        0x0 Enable Wake on Disconnect
-  [18:18]        0x1 Enable Wake on USB4 Wake
-  [19:19]        0x0 Enable Wake on Inter-Domain
-  [24:24]        0x0 StartAsymmetricFlow
-  [30:30]        0x0 Initiate Gen 4 Link Recovery (ILR)
-  [31:31]        0x0 Enable Gen 4 Link Recovery (ELR)
-
-3. Connect monitor to USB4 v2 hub.
-4. Check link and PORT_CS_19.
-
-# tblist -v
-Domain 0 Route 0: 8087:5781 Intel Barlow Host Router
-  Type: Router
-  UUID: c9680000...
-  Generation: USB4
-  NVM version: 56.81
-
-Domain 0 Route 1: 8087:1234 Intel Barlow HUB Router
-  Type: Router
-  Speed (Rx/Tx): 120/40 Gb/s
-  Authorized: No
-  UUID: e9688780...
-  Generation: USB4
-  NVM version: 56.81
-
-# tbdump -r 0 -a 1 -vv -N 1 PORT_CS_19
-0x00d3 0x0004000e 0b00000000 00000100 00000000 00001110 .... PORT_CS_19
-  [00:00]        0x0 Downstream Port Reset (DPR)
-  [01:01]        0x1 Request RS-FEC Gen 2 (RS2)
-  [02:02]        0x1 Request RS-FEC Gen 3 (RS3)
-  [03:03]        0x1 USB4 Port is Configured (PC)
-  [04:04]        0x0 USB4 Port is Inter-Domain (PID)
-  [16:16]        0x0 Enable Wake on Connect
-  [17:17]        0x0 Enable Wake on Disconnect
-  [18:18]        0x1 Enable Wake on USB4 Wake
-  [19:19]        0x0 Enable Wake on Inter-Domain
-  [24:24]        0x0 StartAsymmetricFlow
-  [30:30]        0x0 Initiate Gen 4 Link Recovery (ILR)
-  [31:31]        0x0 Enable Gen 4 Link Recovery (ELR)
-
-# tbdump -r 1 -a 1 -vv -N 1 PORT_CS_19
-0x00d3 0x0004000e 0b00000000 00000100 00000000 00001110 .... PORT_CS_19
-  [00:00]        0x0 Downstream Port Reset (DPR)
-  [01:01]        0x1 Request RS-FEC Gen 2 (RS2)
-  [02:02]        0x1 Request RS-FEC Gen 3 (RS3)
-  [03:03]        0x1 USB4 Port is Configured (PC)
-  [04:04]        0x0 USB4 Port is Inter-Domain (PID)
-  [16:16]        0x0 Enable Wake on Connect
-  [17:17]        0x0 Enable Wake on Disconnect
-  [18:18]        0x1 Enable Wake on USB4 Wake
-  [19:19]        0x0 Enable Wake on Inter-Domain
-  [24:24]        0x0 StartAsymmetricFlow
-  [30:30]        0x0 Initiate Gen 4 Link Recovery (ILR)
-  [31:31]        0x0 Enable Gen 4 Link Recovery (ELR)
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
