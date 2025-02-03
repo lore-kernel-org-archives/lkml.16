@@ -1,71 +1,61 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE76E20E016
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 20:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F4720AF96;
+	Mon,  3 Feb 2025 20:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738613226; cv=none; b=Zn9dpIGON8/KwdaXNpuFgOEdal8cJIhdte9p+tZfXqzYA0+j5fxnS0ziFEdmIni0qVCc1PPbuJ20IR9YupKvvo206xw2mxSLxIvcaLE1mUjcrgZj/vgBpjJm12/ICVML0pin/gFDh7qsQRvJhiBtDLH+V+RSGfUvb1TzHTSyXuU=
+	t=1738613261; cv=none; b=HVlllV3W2rFbvQUeGi4lfhoJL0r08S8OTI+ptcMeIAHN0uxx/LgGLj/VBGqlrNGix/hXu3x0WtrKi/tOuj+bB9wzY3gaROTnoKsIsORZZzybP7xJ+7i4it4BIMBHl75u9/rPMJgX+Ca4DQSNyOt1J7SM18HjCG3jPSAlBppFrHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738613226; c=relaxed/simple;
-	bh=C4q7DhtXzubi4zoGZE/F/DY/GD4JroAQrUakRX70S4Y=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=SuK6bZjwdX+ZX3Cjb+5vQQ29uc6NKgaX8fmyxzdGRNwy5rMuBRSiA0KjopAUMwBy6BYH+CHsUPiuiM86abU6qSH24uuiiqmkq+VwHUOI3CiyLO2ZIfT8bMpKn4hnuZIYveosTF1pS5KbshFzMSnV/I52tY42U1aFbKy98F3FGXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ce8cdf1898so33223885ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 12:07:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738613223; x=1739218023;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q3dcaWL5e1yCWOQNb8AtC8uUY0dR4pJvtU+kJR/wqYY=;
-        b=FzST05FSeSkcG+myNCibpOVlZj+94uusO+psIHbFdSTagKCS5ZXVW3KtTYpUvOdZ/x
-         fQJo57pctY4UH0mX6ML9UD8wMSWf1IRA+nTAtWNOnFoa69qjrtidWeE2Lts/il8QxZ7C
-         gsfScp3PeKZN+SuSPkX+oWr3Jm8V64M6gdWmRzf4JYZyKog6hqsFqY/KVfTnOh2ebxep
-         CsiVG6tvNHLI9gW5ms1XtyzLOE+K1IkMbwgj7u9gIRhgIc9oPq7hg3vclmHm3FCJRwpw
-         at+jH6gDQHejVLduRnvkQo1efTxb9C4RncRTiDL0HP3LwzjhNmcU+Rggl85Ych429snv
-         QKgQ==
-X-Gm-Message-State: AOJu0YxtaZAI+UgQOEhgRKNJM/Gp8kxqkLqpSPPu9x4VlzHj+fcW+pEj
-	12LyINnefdABYMAkazxCBtY91efviqnYLC2EDTF76qs+UnwiDHSHz9SYQvGp5L3N+qiz8BG9FYO
-	JJFGbsLfyqIfqLlVrlmxrxFSBxcXQCUzxXGXoN9USzl5r2tEjTlIoxIw=
-X-Google-Smtp-Source: AGHT+IGEQiQAUeq5RSK3VPCFK0Hs/7UL17TU88bxf3e7LfTojNZWvUThdSuzBUmknn8NJDDrLBATdwhxl1rOu0fFxjcN4TB6McLp
+	s=arc-20240116; t=1738613261; c=relaxed/simple;
+	bh=g1TUYz8ik05AL78+32hVi0hU3xQaqP9CdIyOOhf96xI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kxudhhMEYkhAqzmsDvn82VcHDmWe3jfy56XvL9O+p6gOO+SYRF9ZBzD1S2IwpObM+RLpRUTOIwmBCCPWqHrULPkyXbAr/1HwW1Gkd9MXs3y0RTP8LkrSXlXUvZBSz9xO9CyB7JiQuSKFZ4sLS7Pt+MPgDTj8RgFOwJ8gSVv08ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=kX+w+khU; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="kX+w+khU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=JJHTLSUarSwrkBkd8godphowSLUqNXXms9dJY8HP1UE=; b=kX
+	+w+khUuT+5KPPD8HTeyIgcJ/hwm/iGgksMWl/J4Wij1C/ZKnIQR63t9d5vB+qrXfvvNvB92z3e/Fx
+	5G+514rP3N+qeKdl1tAqQV8kNJnAjwxp/ojyjPgrjFDdqsxRKGsjjB8FIXMlKhpCHYgoFpsk09NbH
+	9PWADP9m1UVcy8M=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tf2jB-00Ad0g-Gw; Mon, 03 Feb 2025 21:07:29 +0100
+Date: Mon, 3 Feb 2025 21:07:29 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Richard Cochran <richardcochran@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net] ptp: Add mock device
+Message-ID: <b383c0b2-42cc-4e40-a7b8-f2b393387043@lunn.ch>
+References: <20250203-ptp-mock-dev-v1-1-f84c56fd9e45@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:20cd:b0:3ce:8ed9:ca81 with SMTP id
- e9e14a558f8ab-3cffe384215mr215218485ab.5.1738613223036; Mon, 03 Feb 2025
- 12:07:03 -0800 (PST)
-Date: Mon, 03 Feb 2025 12:07:03 -0800
-In-Reply-To: <CABMo7LJJOLC81RsPAu=TikqFD8QcOAYNeAPuK4cgakDKN9UAXQ@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a121e7.050a0220.163cdc.0052.GAE@google.com>
-Subject: Re: [syzbot] [usb?] KASAN: stack-out-of-bounds Read in usb_check_int_endpoints
-From: syzbot <syzbot+9c9179ac46169c56c1ad@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	tuliomf09@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250203-ptp-mock-dev-v1-1-f84c56fd9e45@weissschuh.net>
 
-Hello,
+On Mon, Feb 03, 2025 at 08:50:46PM +0100, Thomas Weißschuh wrote:
+> While working on the PTP core or userspace components,
+> a real PTP device is not always available.
+> Introduce a tiny module which creates a mock PTP device.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+What does this add which netdevsim does not provide?
 
-Reported-by: syzbot+9c9179ac46169c56c1ad@syzkaller.appspotmail.com
-Tested-by: syzbot+9c9179ac46169c56c1ad@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         9682c35f usb: typec: thunderbolt: Remove IS_ERR check ..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=13c26eb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b18a1cb19d14c444
-dashboard link: https://syzkaller.appspot.com/bug?extid=9c9179ac46169c56c1ad
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=13eed724580000
-
-Note: testing is done by a robot and is best-effort only.
+     Andrew
