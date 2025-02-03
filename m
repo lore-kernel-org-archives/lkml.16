@@ -1,76 +1,156 @@
-Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7368489
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 01:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF84111A8;
+	Mon,  3 Feb 2025 01:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738547964; cv=none; b=iBp4xMlwOBdvCmTa5XB/NnTwwaLBi9nimkNq2GeJlcMMhcOiLZfeL8wvdR5hHzVsN5TLzBpU+o/osnIbdNjfc6dItb6C1j6NeUBcu2GJ9cC08tZkzcb+MjKTl3oHq3BdVQPSCV9jDz8ayK+bWCSEs4rHE5BwGesYfQlFJQIYejA=
+	t=1738547967; cv=none; b=LUZB+M4VZCX+R+2QcWi7ZnO1+ZS9M1pFpvwROLg5GdowZ9+GqfPkldzvRvQ+L02Z4bpdm5OUysJIjO17H7hc+5i5M8w/f7rFx9oa6Ta/4Zk0olOFTShG8SsrJuJ6DcIIC+kELjjdypPIIkdhgzkMAmd/acur+h7hYYkpbsGBXGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738547964; c=relaxed/simple;
-	bh=6zz/jaIm/bxbFPinbqZGklT3DECEhARP4QY/gC6WmHM=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=ifaAvf+y95SeFWBkSmNkBn+/v5DFY3yQhu4U2FapolZh0ebTtuwA5TRoY867RQO9nVTAtYpufW5aoM3OUVPGDQPycEIaODiEBwuEDuARZbiM6ugaXqw92xrWkZr0IjOUSsy6H01TbexSMlyRHt6RWDVRgrds9lkZ4vNmTZzIGQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=E5PQjorb; arc=none smtp.client-ip=162.62.57.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1738547967; c=relaxed/simple;
+	bh=Br9DCisr6RX8AgB2FdhE+BmfQLuaWkbZwg7fThfGaeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZjEbqATn9KGl+zi4wBc0DQtbZlI08Npo5T4DODhP0nvd9+nV2hTCBNUnvGgmJAl6PDJ0RPE0SDmsX+lF6B01yhdRZTXzR2okpdvZdPKUauuorUWc0dXVRSl9X0mPYo8qO9n1IclgcvYXaVucwM0vbCDJzPb6F+e3R9p0rEz3oaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Hyk7BZdh; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="E5PQjorb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1738547649; bh=SCnXB8xy49EeeCkZxk1unpJhTUDD8rXUuNzsT6N9L1s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=E5PQjorbOJ8JK91fpTq6zUtjVmjZ72Kq8KsK8J5GPmhTqxRF9drtVXShw/nhl1v4k
-	 VYplisK+zJfjhjfSWKDqk8G/Nv8hFC/pzZtPcHElDK7GZQ486tRkaz776NfBoCFmxb
-	 kYQHoHdV1HVJvzUGmW7EC75t9O3Pf6UUPrNNUa3k=
-Received: from pek-lxu-l1.wrs.com ([2408:8435:9910:167a:8cb3:3b5b:faa2:1ccb])
-	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
-	id D858A8F6; Mon, 03 Feb 2025 09:54:05 +0800
-X-QQ-mid: xmsmtpt1738547645tgf9rlycj
-Message-ID: <tencent_2D66063C753604966437E44B8A7423769B09@qq.com>
-X-QQ-XMAILINFO: NyTsQ4JOu2J2NZ6rDN4Pd1GRE2O45VRis1eXytMFo3WEoAYKTzdl9NKDWqxYe6
-	 HAaOcrfULl00CaQD+uTwEvy/ld4XFxU7/hfkOorrmgYMDvhE/4lgV7QI4ZKwPzT+x2O2ZlTFjlAt
-	 8GR627CRjuCla8hATcGVnebZFPc1xVYgXVijo2AEXHaQbboZes0B8VM8/G9IK7HzyCMI5I5EW4we
-	 FlZNb31kusLSbE6hOTsvCk6slA0M2aNNUWQXb0EfAx2IIam4WU+Iy+aOUB2OHy9DxlOEPTVAzchB
-	 HKvkkj1Thcc2v28JGFpcf8o48dfKR/Ht2p9tH3rdgx66zFA54wIAAph8G8/kCHvCn4fnYBxQ7uBR
-	 ATiSYRwK0Rc4c1lVOErda8ROq5VyvuQWGXvi7hUueSFKTCaAxi0aa6CihblLPOMztG7AxpDdiEiL
-	 iFwfksNa7LQLBxrfbpQef0su9Mj7uDEHYF3vj/vC2lV2QHe8zkcMi9U3IXffxUP5Ivg7wdN9nPss
-	 ZcqbG/sHo72cA4gE29XX4w68/KRA+xCw0Mq+3joPH6Eoz2F9pReN+w5Q8Y38zNLCNOH+nfT0Fi7Q
-	 3D6W2A9ntWkgefvZvjE465Jo0ScxsaaJBEDxnEyZKI+BpujvnKGMkHp0prawYr3Q5e1ooysoEOtK
-	 iXZzExqVJIeDf606vZiiVsswvBd7lCTuBi0C3hmFT5hY+gs1VQGRQxCS4U8XMV4MWPmgP2pn//FN
-	 mM7n/LA7FGaZEtld8FZj+b7QqBB2KArgeZB2o+5E5osENo9fXYTnwaUcZamk6AMZOFAX2oCcTkpX
-	 6nnE33/gWCMh2gcwr9gse/pzdYif1Sj0CHqX52q4wlUlcci83Id1Tsk5yRTH8V5j6o2aNNGL3VqL
-	 yJeldpPhfME64w2MMCEIIDRs7lQIYINQ==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+8928e473a91452caca2f@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [fs?] KMSAN: uninit-value in full_proxy_unlocked_ioctl
-Date: Mon,  3 Feb 2025 09:54:06 +0800
-X-OQ-MSGID: <20250203015405.1347291-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <679f72f6.050a0220.48cbc.000d.GAE@google.com>
-References: <679f72f6.050a0220.48cbc.000d.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Hyk7BZdh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1738547948;
+	bh=snENRT0lEZIJjhySX0UYb8FY2FurFVbekw30dejtRzk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Hyk7BZdhn2OGYmZkHUtb+R3cK8LOSCfCORf1+a+rsg4gQIHhPk7ju61QYU7swWNzR
+	 6i8sd5vw/LAuWePLSRbyJ9gmaB4Tza9A0ir4cwYAXq6UZpQ0s+Rn7UoN7plnWcdnnd
+	 5PMvD5DjcJcomodNatZB5hhtVR7fyW6l2ewa6nBNhAWuqfcJ5uuH1frscqqLtxR5MK
+	 fOq3WBbcKFq0KXHrgRZhX0HnmUszqfBXrlJvVo7vGCIZONYuqwjQxO/dC5LvEk1Sp2
+	 epM9EJk4Uvwf2A9zk6utgwtMZJjND9IDnu+zDMr/hhsvg9pVdkfjjTZvQvaaBkdFW9
+	 fPz9zdaD0OvwA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YmV6M1QrDz4wcf;
+	Mon,  3 Feb 2025 12:59:07 +1100 (AEDT)
+Date: Mon, 3 Feb 2025 12:59:14 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of Linus' tree
+Message-ID: <20250203125914.439f72fd@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/lxXUkxv0vftc0RvcxiPfPty";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-#syz test
+--Sig_/lxXUkxv0vftc0RvcxiPfPty
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-index e33cc77699cd..5fbefce2b372 100644
---- a/fs/debugfs/file.c
-+++ b/fs/debugfs/file.c
-@@ -102,6 +102,7 @@ static int __debugfs_file_get(struct dentry *dentry, enum dbgfs_get_mode mode)
- 		if (!fsd)
- 			return -ENOMEM;
- 
-+		fsd->methods = 0;
- 		if (mode == DBGFS_GET_SHORT) {
- 			const struct debugfs_short_fops *ops;
- 			ops = fsd->short_fops = DEBUGFS_I(inode)->short_fops;
+Hi all,
 
+After merging Linus' tree, today's linux-next build (sparc64
+defconfig) failed like this:
+
+drivers/block/sunvdc.c: In function 'vdc_queue_drain':
+drivers/block/sunvdc.c:1130:9: error: too many arguments to function 'blk_m=
+q_unquiesce_queue'
+ 1130 |         blk_mq_unquiesce_queue(q, memflags);
+      |         ^~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/block/sunvdc.c:10:
+include/linux/blk-mq.h:895:6: note: declared here
+  895 | void blk_mq_unquiesce_queue(struct request_queue *q);
+      |      ^~~~~~~~~~~~~~~~~~~~~~
+drivers/block/sunvdc.c:1131:9: error: too few arguments to function 'blk_mq=
+_unfreeze_queue'
+ 1131 |         blk_mq_unfreeze_queue(q);
+      |         ^~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/block/sunvdc.c:10:
+include/linux/blk-mq.h:914:1: note: declared here
+  914 | blk_mq_unfreeze_queue(struct request_queue *q, unsigned int memflag=
+s)
+      | ^~~~~~~~~~~~~~~~~~~~~
+
+Caused by commit
+
+  1e1a9cecfab3 ("block: force noio scope in blk_mq_freeze_queue")
+
+I have applied the following fix:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 3 Feb 2025 12:47:17 +1100
+Subject: [PATCH] drivers/block/sunvdc.c: update the correct AIP call
+
+My sparc64 defconfig build failed like this:
+
+drivers/block/sunvdc.c: In function 'vdc_queue_drain':
+drivers/block/sunvdc.c:1130:9: error: too many arguments to function 'blk_m=
+q_unquiesce_queue'
+ 1130 |         blk_mq_unquiesce_queue(q, memflags);
+      |         ^~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/block/sunvdc.c:10:
+include/linux/blk-mq.h:895:6: note: declared here
+  895 | void blk_mq_unquiesce_queue(struct request_queue *q);
+      |      ^~~~~~~~~~~~~~~~~~~~~~
+drivers/block/sunvdc.c:1131:9: error: too few arguments to function 'blk_mq=
+_unfreeze_queue'
+ 1131 |         blk_mq_unfreeze_queue(q);
+      |         ^~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/block/sunvdc.c:10:
+include/linux/blk-mq.h:914:1: note: declared here
+  914 | blk_mq_unfreeze_queue(struct request_queue *q, unsigned int memflag=
+s)
+      | ^~~~~~~~~~~~~~~~~~~~~
+
+Fixes: 1e1a9cecfab3 ("block: force noio scope in blk_mq_freeze_queue")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/block/sunvdc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/sunvdc.c b/drivers/block/sunvdc.c
+index 33b3bc99d532..282f81616a78 100644
+--- a/drivers/block/sunvdc.c
++++ b/drivers/block/sunvdc.c
+@@ -1127,8 +1127,8 @@ static void vdc_queue_drain(struct vdc_port *port)
+=20
+ 	spin_lock_irq(&port->vio.lock);
+ 	port->drain =3D 0;
+-	blk_mq_unquiesce_queue(q, memflags);
+-	blk_mq_unfreeze_queue(q);
++	blk_mq_unquiesce_queue(q);
++	blk_mq_unfreeze_queue(q, memflags);
+ }
+=20
+ static void vdc_ldc_reset_timer_work(struct work_struct *work)
+--=20
+2.45.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/lxXUkxv0vftc0RvcxiPfPty
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmegIvIACgkQAVBC80lX
+0Gz7HQf/SMVY15Ls5EsRZrDlV1Sey740bAwe7sokBsTwj9hmNVYRclB0d0yC8DcK
+2MfRch7CpCIqZSlOxb3Wq+99ME92FUB1xZko5xU9D5FmAmIzn0g8zlME/QLSYPXm
+e5ob9f+JL4bjAWjyvU+yQI7xsIBQF+10DF2w6b1jUhmLZBAbumwfBGmJ7I5eUvnB
+bMP/2VEi00xIjB7sURBV8MS/agYOVqMk713vxwikYcWmSLFzd74Sr1U728FKwaJD
+AhQpGX9GHe2Sta5FxEayQipowMxid+8J0e3cqcl7kOjCw1KarD1ikKuWoDphheZ1
+xWGLJ2nDL3QAtlFKPVRD644A/xm1gw==
+=0jfZ
+-----END PGP SIGNATURE-----
+
+--Sig_/lxXUkxv0vftc0RvcxiPfPty--
