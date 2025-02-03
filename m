@@ -1,118 +1,253 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5751204F84
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C49204C0D;
+	Mon,  3 Feb 2025 11:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738583759; cv=none; b=ZFcxpivhQKjZyIhZyfjK7hL174G4NsWrwXU+OTVMWB6x1Rw9IFkBajUnWwtj/Q3IfztqJ9SBWeen85hYnjko0MOEeycoEFrsryZ/Nhfgd6gSVbJQZhgpZIM3InChgn6PDqkIk+YyaG6/NmNdDM1VidK+mtUm3JAqLga0R76V4jg=
+	t=1738583758; cv=none; b=HDx7sZGeTfsPHmU8taJ0hy3ZkNVuqLQ8F1ecyEbvk6997tReEZ2h4EWlonVw/6KqYmRaO5SE+T5i1Nl9MyrE/B0CS8fTSTv4LrGEqolrfzlFnzKj7i8Ha/LJAZP4MpKy1RIMT3UmT86xeBO+Sh9+EC02mdbKfbzSEKgAGs6u8l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738583759; c=relaxed/simple;
-	bh=MAIrdEevNn7N12nkJ1J1RhnEvLIu/5K6r/M3d+E6MoQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uhmfbWoyVzb6MCenMHifE8wXeKcPCxnr5pYwY6KyrYzxvEif/dGGPffp3DwaUp48QVWRmCO5Wsh70MwDpiXXNpg2CDTkMR6JcIDBetod11mTifXHxpZ8fYRIj9yO68RBGtx5GKs8EQUyLeA1IX99PMTM1EsiC0bhN65HEEqbDxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CsEJXWYg; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1738583758; c=relaxed/simple;
+	bh=vUDUAA2Mwdbp1/Er12nWiPLs910s5YY8Kv4CQwNzd9o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AmtmZZHNYsbNqaU+V+SkQUBSUq56XC8Q46O9PARPmeDU7AypXjcKFTpICifpzXSbMbO2rfQJ+We9wfsa2X6t05CeQbsiQP6GQ+btelAGiFoe8yLdeCVKzjxYURNdKSEoGCk//NoHCD3zYwYQWrsBECJTQK/I8V42bzRIK8vRx5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=l4QysHYf; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CsEJXWYg"
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4afefc876c6so1212925137.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:55:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738583756; x=1739188556; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hxX88IJj+cJJK7Q7MEUbEa8fVnW5ArFeBowg00h7XKs=;
-        b=CsEJXWYgldD2LqG72HuJmn8hlXYa+GsEfoU4bcfGOYHIknaTvOPvr0e+ye3N9WtitD
-         ORI38yqoKz8YPikCRgxvE74Y2as/mEtnDyVWMqtZhVP1Hk1N+3bElHjodbRUCEr7YJ5q
-         O9PSEqikjveK3UpikZE5DgyH1ymnD2oblG7GQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738583756; x=1739188556;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hxX88IJj+cJJK7Q7MEUbEa8fVnW5ArFeBowg00h7XKs=;
-        b=plsnTjZJKzmCqXfWdiPX6ElWuo63bRydocQfrO3E6mbdRtaA9+1MNAlUaMl+7Z7gpm
-         u99NFSnty10WwzzSoGNgrlD7Vs+VNB29H7vOYhdkAssqBIvmvsfUHGun+zeQKAvfqll6
-         7LMzU43pnL9b9PtmR4+Y9M3pdppUz9jkZkJUrC8adnid8bvdFmpxufkBnVJjXUIVpTW4
-         AyCVFFW2IZNmusWElAd9CO2yzeFaR+TNPYCHJhhNEGEo6/sGCQIa68f6MxDS2Uwtj+Zl
-         Dtw6QwYS2vscfoBhwPxjBXQYx3AvP9quBD+m+qGDn3LJW2RAbryqvkonhnQTARiHGnai
-         0sGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpVWT1jqngt96CcGiB+guX+Aw76XN5mb3wa0SJAsBe2OjKps4If2gZmeTS2WJpSOtW9b9xIevdlx6p/Q8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7gFaygKbagElFMtHTfi0K6z0aycNF1BXzN9ZOEwXpdIaTUWRx
-	kM9e3CO3CaW/d19mbWjWIxNMcf4WG6qmvAQ9L/fgLYIHNlT31sGFJu5LHa6VQw==
-X-Gm-Gg: ASbGncvtk5VMPZKno04iGaNg+cX0atX9dsSHRwFU2lJDoyliyIDqsTkasjMznLrszng
-	7eFJ+cQY50n+/wSR7/42fnAhFUYhATKGYjnFbeHeDEfyW6tiVbea/Tl5S44QK7vsLwO4ZOU9LUL
-	1o/KaJlZV14sboMs9CR0T+/62PE7Enl98FnPnQcYmCS8zsS4GodefQbDxDA6fOfEMkkATHhOzB3
-	FTqrRAVvOoprosjChOgPH8dAyADWFF81i7bgD5AP6wZr+H5lV4lImu/uoG71b8mGIqMTlTEWbh+
-	PYPxmXqrGVSyOSJHAbmdXBamPFtr9RMnN+u+EhkRR/0Ve7sl9VlHfKokCRJH8FOZGw==
-X-Google-Smtp-Source: AGHT+IEK9q1tPQQgkuLEv6EU9rWEmJulUzWiAbWq4EJZ+pG8GCm2x+nnTJsHB8Vnf7iHLALMqu2m9A==
-X-Received: by 2002:a05:6102:2c0f:b0:4b2:bc6b:c845 with SMTP id ada2fe7eead31-4b9a4f0da6emr14805180137.6.1738583756605;
-        Mon, 03 Feb 2025 03:55:56 -0800 (PST)
-Received: from denia.c.googlers.com (5.236.236.35.bc.googleusercontent.com. [35.236.236.5])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baa9aefcsm1592770137.12.2025.02.03.03.55.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 03:55:55 -0800 (PST)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 03 Feb 2025 11:55:43 +0000
-Subject: [PATCH v17 07/17] media: uvcvideo: uvc_ioctl_(g|s)_ext_ctrls:
- handle NoP case
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="l4QysHYf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WuSovR9QdAIaryYdW+A1g1o31MDAJLE+4vMtcjJlDmY=; t=1738583755; x=1739188555; 
+	b=l4QysHYfInJ5lc4c+anDe87jmyOuknNbBpJ+IrCjAowpK7bVG653YlDCfwvWTEdqY3PibFqcFYc
+	gaMOodkJRJ0DtZrvCc1++zdbVNLqLbgUG5pNofE95VpIJxeSVzaIHm5F3zYO+nekU525HxYnyN3h8
+	cbqCuoa1pXa4zntJsgAjXdPV81fYgafExMKURzUT9zOEQ8ZgBSYQNrcxrxvXrZVw2VwqKRgRyQA4D
+	S3C8kAROTVAoVjBF9HuleS5ZBNi2BZLIHiLt6jVuXr/prlZ2EhjDI3QfPoD5DvGOtNoq/PfWb3lw0
+	Dt8IMoYewk9xgLcrXwSUPosLYLca0oL0f6zQ==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1tev3M-00000003S4r-39wC; Mon, 03 Feb 2025 12:55:48 +0100
+Received: from p5dc55198.dip0.t-ipconnect.de ([93.197.81.152] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1tev3M-00000003WUE-1xuf; Mon, 03 Feb 2025 12:55:48 +0100
+Message-ID: <950a85c8651b193f95fa839fceaec68d40356555.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v2] alpha/elf: Fix misc/setarch test of util-linux by
+ removing 32bit support
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Arnd Bergmann <arnd@arndb.de>, 
+ Richard Henderson <richard.henderson@linaro.org>, Matt Turner
+ <mattst88@gmail.com>, Kees Cook <kees@kernel.org>,  "Paul E. McKenney"	
+ <paulmck@kernel.org>, linux-alpha@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Michael Cree <mcree@orcon.net.nz>, Sam James	
+ <sam@gentoo.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Michael
+ Karcher	 <kernel@mkarcher.dialup.fu-berlin.de>, Chris Hofstaedtler
+ <zeha@debian.org>, 	util-linux@vger.kernel.org, linux-mips@vger.kernel.org,
+ 	loongarch@lists.linux.dev
+Date: Mon, 03 Feb 2025 12:55:47 +0100
+In-Reply-To: <87y0zfs26i.fsf_-_@email.froward.int.ebiederm.org>
+References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de>
+		<24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com>
+		<678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com>
+		<bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de>
+		<82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com>
+		<cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de>
+		<87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org>
+		<2758fa70d237ff972b0c8d7114777dc4a20c8f3b.camel@physik.fu-berlin.de>
+		<alpine.DEB.2.21.2501120146480.18889@angie.orcam.me.uk>
+		<78f3ae1f68842a9d1af62caaac3929834ce6ecfa.camel@physik.fu-berlin.de>
+	 <87y0zfs26i.fsf_-_@email.froward.int.ebiederm.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-uvc-roi-v17-7-5900a9fed613@chromium.org>
-References: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
-In-Reply-To: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans de Goede <hdegoede@redhat.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Yunke Cao <yunkec@chromium.org>, linux-media@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>, 
- Yunke Cao <yunkec@google.com>
-X-Mailer: b4 0.13.0
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-If nothing needs to be done. Exit early.
+Hi,
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Yunke Cao <yunkec@google.com>
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/media/usb/uvc/uvc_v4l2.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Sun, 2025-01-12 at 23:39 -0600, Eric W. Biederman wrote:
+> Richard Henderson <richard.henderson@linaro.org> writes[1]:
+>=20
+> > There was a Spec benchmark (I forget which) which was memory bound and =
+ran
+> > twice as fast with 32-bit pointers.
+> >=20
+> > I copied the idea from DEC to the ELF abi, but never did all the other =
+work
+> > to allow the toolchain to take advantage.
+> >=20
+> > Amusingly, a later Spec changed the benchmark data sets to not fit into=
+ a
+> > 32-bit address space, specifically because of this.
+> >=20
+> > I expect one could delete the ELF bit and personality and no one would
+> > notice. Not even the 10 remaining Alpha users.
+>=20
+> In [2] it was pointed out that parts of setarch weren't working
+> properly on alpha because it has it's own SET_PERSONALITY
+> implementation.  In the discussion that followed Richard Henderson
+> pointed out that the 32bit pointer support for alpha was never
+> completed.
+>=20
+> Fix this by removing alpha's 32bit pointer support.
+>=20
+> As a bit of paranoia refuse to execute any alpha binaries that have
+> the EF_ALPHA_32BIT flag set.  Just in case someone somewhere has
+> binaries that try to use alpha's 32bit pointer support.
+>=20
+> [1] https://lkml.kernel.org/r/CAFXwXrkgu=3D4Qn-v1PjnOR4SG0oUb9LSa0g6QXpBq=
+4ttm52pJOQ@mail.gmail.com
+> [2] https://lkml.kernel.org/r/20250103140148.370368-1-glaubitz@physik.fu-=
+berlin.de
+> v1: https://lkml.kernel.org/r/87jzb2tdb7.fsf_-_@email.froward.int.ebieder=
+m.org
+> Reviewed-by: Richard Henderson <richard.henderson@linaro.org>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> ---
+>=20
+> Kees can you pick this one up?
+>=20
+>  arch/alpha/include/asm/elf.h       |  6 +-----
+>  arch/alpha/include/asm/pgtable.h   |  2 +-
+>  arch/alpha/include/asm/processor.h |  8 ++------
+>  arch/alpha/kernel/osf_sys.c        | 11 ++---------
+>  4 files changed, 6 insertions(+), 21 deletions(-)
+>=20
+> diff --git a/arch/alpha/include/asm/elf.h b/arch/alpha/include/asm/elf.h
+> index 4d7c46f50382..50c82187e60e 100644
+> --- a/arch/alpha/include/asm/elf.h
+> +++ b/arch/alpha/include/asm/elf.h
+> @@ -74,7 +74,7 @@ typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
+>  /*
+>   * This is used to ensure we don't load something for the wrong architec=
+ture.
+>   */
+> -#define elf_check_arch(x) ((x)->e_machine =3D=3D EM_ALPHA)
+> +#define elf_check_arch(x) (((x)->e_machine =3D=3D EM_ALPHA) && !((x)->e_=
+flags & EF_ALPHA_32BIT))
+> =20
+>  /*
+>   * These are used to set parameters in the core dumps.
+> @@ -137,10 +137,6 @@ extern int dump_elf_task(elf_greg_t *dest, struct ta=
+sk_struct *task);
+>  	: amask (AMASK_CIX) ? "ev6" : "ev67");	\
+>  })
+> =20
+> -#define SET_PERSONALITY(EX)					\
+> -	set_personality(((EX).e_flags & EF_ALPHA_32BIT)		\
+> -	   ? PER_LINUX_32BIT : PER_LINUX)
+> -
+>  extern int alpha_l1i_cacheshape;
+>  extern int alpha_l1d_cacheshape;
+>  extern int alpha_l2_cacheshape;
+> diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pg=
+table.h
+> index 635f0a5f5bbd..02e8817a8921 100644
+> --- a/arch/alpha/include/asm/pgtable.h
+> +++ b/arch/alpha/include/asm/pgtable.h
+> @@ -360,7 +360,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte=
+)
+> =20
+>  extern void paging_init(void);
+> =20
+> -/* We have our own get_unmapped_area to cope with ADDR_LIMIT_32BIT.  */
+> +/* We have our own get_unmapped_area */
+>  #define HAVE_ARCH_UNMAPPED_AREA
+> =20
+>  #endif /* _ALPHA_PGTABLE_H */
+> diff --git a/arch/alpha/include/asm/processor.h b/arch/alpha/include/asm/=
+processor.h
+> index 55bb1c09fd39..5dce5518a211 100644
+> --- a/arch/alpha/include/asm/processor.h
+> +++ b/arch/alpha/include/asm/processor.h
+> @@ -8,23 +8,19 @@
+>  #ifndef __ASM_ALPHA_PROCESSOR_H
+>  #define __ASM_ALPHA_PROCESSOR_H
+> =20
+> -#include <linux/personality.h>	/* for ADDR_LIMIT_32BIT */
+> -
+>  /*
+>   * We have a 42-bit user address space: 4TB user VM...
+>   */
+>  #define TASK_SIZE (0x40000000000UL)
+> =20
+> -#define STACK_TOP \
+> -  (current->personality & ADDR_LIMIT_32BIT ? 0x80000000 : 0x00120000000U=
+L)
+> +#define STACK_TOP (0x00120000000UL)
+> =20
+>  #define STACK_TOP_MAX	0x00120000000UL
+> =20
+>  /* This decides where the kernel will search for a free chunk of vm
+>   * space during mmap's.
+>   */
+> -#define TASK_UNMAPPED_BASE \
+> -  ((current->personality & ADDR_LIMIT_32BIT) ? 0x40000000 : TASK_SIZE / =
+2)
+> +#define TASK_UNMAPPED_BASE (TASK_SIZE / 2)
+> =20
+>  /* This is dead.  Everything has been moved to thread_info.  */
+>  struct thread_struct { };
+> diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
+> index 86185021f75a..a08e8edef1a4 100644
+> --- a/arch/alpha/kernel/osf_sys.c
+> +++ b/arch/alpha/kernel/osf_sys.c
+> @@ -1210,8 +1210,7 @@ SYSCALL_DEFINE1(old_adjtimex, struct timex32 __user=
+ *, txc_p)
+>  	return ret;
+>  }
+> =20
+> -/* Get an address range which is currently unmapped.  Similar to the
+> -   generic version except that we know how to honor ADDR_LIMIT_32BIT.  *=
+/
+> +/* Get an address range which is currently unmapped. */
+> =20
+>  static unsigned long
+>  arch_get_unmapped_area_1(unsigned long addr, unsigned long len,
+> @@ -1230,13 +1229,7 @@ arch_get_unmapped_area(struct file *filp, unsigned=
+ long addr,
+>  		       unsigned long len, unsigned long pgoff,
+>  		       unsigned long flags, vm_flags_t vm_flags)
+>  {
+> -	unsigned long limit;
+> -
+> -	/* "32 bit" actually means 31 bit, since pointers sign extend.  */
+> -	if (current->personality & ADDR_LIMIT_32BIT)
+> -		limit =3D 0x80000000;
+> -	else
+> -		limit =3D TASK_SIZE;
+> +	unsigned long limit =3D TASK_SIZE;
+> =20
+>  	if (len > limit)
+>  		return -ENOMEM;
 
-diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-index 9493ab375f07..4025811fb9e7 100644
---- a/drivers/media/usb/uvc/uvc_v4l2.c
-+++ b/drivers/media/usb/uvc/uvc_v4l2.c
-@@ -1030,6 +1030,9 @@ static int uvc_ioctl_g_ext_ctrls(struct file *file, void *fh,
- 	u32 which;
- 	int ret;
- 
-+	if (!ctrls->count)
-+		return 0;
-+
- 	switch (ctrls->which) {
- 	case V4L2_CTRL_WHICH_DEF_VAL:
- 	case V4L2_CTRL_WHICH_CUR_VAL:
-@@ -1070,6 +1073,9 @@ static int uvc_ioctl_s_try_ext_ctrls(struct uvc_fh *handle,
- 	unsigned int i;
- 	int ret;
- 
-+	if (!ctrls->count)
-+		return 0;
-+
- 	ret = uvc_ctrl_check_access(chain, ctrls, ioctl);
- 	if (ret < 0)
- 		return ret;
+Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
--- 
-2.48.1.362.g079036d154-goog
+Can someone pick up this patch for v6.14?
 
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
