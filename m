@@ -1,108 +1,58 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0CA20FA8E;
-	Mon,  3 Feb 2025 20:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13C920E6F6
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 20:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738615025; cv=none; b=V0pIJoVGMqVmvMoJf2EsM18ReIu5cJ4qQ2cgKBuc5bxJMEMaYnTLzllc2jcSpc1yW5CV+cYvklNzYn9uROsOT7Ce78yoQDwf+efFrXU/04xIokX+r+3OaarKBojApoklOwb0pj1VsIJ+6ca/D0z96wZVhcGT1C3puH2kgMnO81k=
+	t=1738615028; cv=none; b=JHH67fc1g1jw28Xify1pquSzL3/Qj0WKt3r6/6Ay9/ImunUTiziPt3WY47uoBPm8PAph7LylERMTFhNeSwN7I81BRpi32wBuqAxtzuEhdNbeKWgxxtOLboByxn1fDaRIXlh/8WbbMhgGt11e1fR9tJC2QvIuZG3tq/RA2OsVyHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738615025; c=relaxed/simple;
-	bh=fK71DFpTRzxbkAhjS6lPFVqITohBrsB1knOO6JRF+GM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dQucOjC5hIEucjmjLl2ZdzwaJZ5U1EIJXh8izUyRCrMecK74hvZ6lYRga9v+nCKOzstEV5jBDfys/0An4RFQVINgJW5YDiGuovD/WjexC3WkoxPVhZDsComaOp6/a1QT5Dc126anVvVZGgJk+dIg8unslID98fzI8RIxbcPESGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=LZ4LUny7; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1738615028; c=relaxed/simple;
+	bh=WWotbqxj0Y80LrPCw1qgh1L9hnsVzMY8E+CueG8+oSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UTTHEaX0WpHXeOc8zGk7c23JsrAx6RkSH0iirkfGaJLdVbNoB/1+1t2oPjYXOwA5CVNZ5uqG8RBvL6Dg8mXmpxFKflgL0gDM8YVRGPNeqyWrjg1nPvIY7Ux6CW/5t9RxJW1GAFnZP0PtyY1rFBHaXFIFIM95aNe9fylqO2of5U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sXQmKBAv; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="LZ4LUny7"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 4A38E25908;
-	Mon,  3 Feb 2025 21:37:02 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 9t2zrK4kzNQA; Mon,  3 Feb 2025 21:37:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1738615021; bh=fK71DFpTRzxbkAhjS6lPFVqITohBrsB1knOO6JRF+GM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=LZ4LUny7YqbKGTTIeQahjqb9ohXVaJlDf0SZA0OZhAvJEOR68mMHonDB8t1gfZcCP
-	 CWAsifMlPWd+PGR7u12zMuGWz1egkBCM5NJYOCmnB7Thz5cc00fT2Ov93NahFS7oC0
-	 vkZQOJbUp/rbNINVxj/EF2J0YTItdc/y/SYhLlWoS5HSoqujZ79DGBmyA0iWIrHYz2
-	 fS0UBYje3uNjCvwrl8WslPj1lj+25Rfc4OlruVfEsNcq+/exTlStb4y5uma3Rz6DRY
-	 GqJuPPt49U5zik1AZbj9cyFHL+/Szkoi+kJv906FcrVZbKcG8emXl9nDk5B0Fvah2Q
-	 C84C2aadfsuXw==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Tue, 04 Feb 2025 02:06:27 +0530
-Subject: [PATCH 2/4] dt-bindings: mfd: samsung,s2mps11: add compatible for
- s2mpu05-pmic
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sXQmKBAv"
+Date: Mon, 3 Feb 2025 12:36:51 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738615017;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1gaHygG/Wj5xg8tFGLChtaLS9Fm/l2fZZilX9j+aHII=;
+	b=sXQmKBAv40AY3g25v0e4Xa0tTIQ7TvW9ppxUa9EYaBLlIDUdJn4E2KoOZQH0V8aLqbV18s
+	eD8eQjvSW+WoyOajMKCRYDmGrvJ1gKSmVrvpz25+bgoxCraQS08dj2LSoUQXCdEoYlhOpE
+	gJFiedZ7WmDaU+NWr1g+sVuHo13LXzU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, vbabka@suse.cz, 
+	rostedt@goodmis.org, peterz@infradead.org, yuzhao@google.com, minchan@google.com, 
+	souravpanda@google.com, pasha.tatashin@soleen.com, 00107082@163.com, 
+	quic_zhenhuah@quicinc.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] mm: avoid extra mem_alloc_profiling_enabled()
+ checks
+Message-ID: <vn7bns35qfeibasfgpinsrot4tipupcg5cjawrhobb4g2ibwor@6moxbtmo5l7m>
+References: <20250201231803.2661189-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-exynos7870-pmic-regulators-v1-2-05adad38102c@disroot.org>
-References: <20250204-exynos7870-pmic-regulators-v1-0-05adad38102c@disroot.org>
-In-Reply-To: <20250204-exynos7870-pmic-regulators-v1-0-05adad38102c@disroot.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
- Lee Jones <lee@kernel.org>
-Cc: Sergey Lisov <sleirsgoevy@gmail.com>, linux-kernel@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
- Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738614996; l=1516;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=fK71DFpTRzxbkAhjS6lPFVqITohBrsB1knOO6JRF+GM=;
- b=jEKPnKEoyqjgzOep5UMBo4iYZynu3QAVZg7YH4GcNDGNRCRa8ZEnokp1JWtZiXLWQVRthFT3m
- 2XxS/HjVmmvDLgrEv5cIvEoEHcPCi73fji4t/pCo7zy1rZAy6RjJJ5C
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250201231803.2661189-1-surenb@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-S2MPU05 is a PMIC present in Samsung's Exynos7870 devices. It houses
-voltage regulators (21 LDOs and 5 BUCKs), and an RTC module. Add the
-compatible string "samsung,s2mpu05-pmic" to the PMIC documentation.
+On Sat, Feb 01, 2025 at 03:18:00PM -0800, Suren Baghdasaryan wrote:
+> Refactor code to avoid extra mem_alloc_profiling_enabled() checks inside
+> pgalloc_tag_get() function which is often called after that check was
+> already done.
+> 
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
----
- Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml b/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
-index a4be642de33ce6b987fe011adfe4f6b938c20c19..ac5d0c149796b6a4034b5d4245bfa8be0433cfab 100644
---- a/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
-+++ b/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
-@@ -25,6 +25,7 @@ properties:
-       - samsung,s2mps14-pmic
-       - samsung,s2mps15-pmic
-       - samsung,s2mpu02-pmic
-+      - samsung,s2mpu05-pmic
- 
-   clocks:
-     $ref: /schemas/clock/samsung,s2mps11.yaml
-@@ -125,6 +126,18 @@ allOf:
-         samsung,s2mps11-acokb-ground: false
-         samsung,s2mps11-wrstbi-ground: false
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: samsung,s2mpu05-pmic
-+    then:
-+      properties:
-+        regulators:
-+          $ref: /schemas/regulator/samsung,s2mpu05.yaml
-+        samsung,s2mps11-acokb-ground: false
-+        samsung,s2mps11-wrstbi-ground: false
-+
- examples:
-   - |
-     #include <dt-bindings/interrupt-controller/irq.h>
-
--- 
-2.48.1
-
+Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
