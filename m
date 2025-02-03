@@ -1,103 +1,136 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107E715383A;
-	Mon,  3 Feb 2025 18:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E229C15383A
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 18:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738608579; cv=none; b=h+UhSOYnB6JL05RnpRyR3TeXIwXCEdxlzxz5zcMhwLjCXsbsRwmT4U2ZHmBaFQgg8dJk+fmMuTTho2e7PNKvNZHq8nBU/iF1cfWv9wFUANEbvzQ1RY9aPrD7qNQUU3QOOSVIvPHrNMve/GWfAd7V3Ju4XPZfFbN1+Kx40wmmhXY=
+	t=1738608584; cv=none; b=iV1fiR39Ml5nwqW8b+l8F4+LYQIDp7Zz2WiZS/rFVna1JGIg1UFtP6uCAwdGw+7Zu58uSAeA7wb7xiXpQQsnw494uB+wrehXD91qvL9aLpWY2qx7E/0ej/0BsOmk6U9XSSehkNj6Ln5xXGcUr6DytByqlqX5jJWdWElf/CoQhHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738608579; c=relaxed/simple;
-	bh=qgGONtHPC/Ty6jUwVsHq7zYhNRjj0Ao6gDdxoXvb+bE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oU1jZ0OLckKKIdlhDWxNN1UNbHgbC8jL9SBqUX/8RShxMp33EL2gkpixecCcjWihZhhLOl3xQFhNwQL5DcsaJ68hUCXTbBFP2Bu2olry9E4wOlHLiyrEvPe9WIGTHDkGiv3xyzd5f/rhbjyCQVIR7wCq9oG7o/ks84NHXxZmStA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FVataTR5; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738608584; c=relaxed/simple;
+	bh=e6mfjCAhjspD99GgKLJ+Kp3DDrQVj0wKKan7rFRR2f0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pWG/hDhG4ksolgv2XxCYQ/mFb4uN/y7O6uf9+WvUvJ3gP4BPq7Bab1uw6AwPjdnYGggWjcud1LZ6mJzAr0BtGTygOE6rq5n2IdWHCTRjlaJ6XwNTuFxwYSFX9Z2Dl87fQLeFmF/HpEpOHAG730jelRCbJ9bybEngp76exPvo0YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pSvxJvFF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVataTR5"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2166651f752so95865035ad.3;
-        Mon, 03 Feb 2025 10:49:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738608577; x=1739213377; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qgGONtHPC/Ty6jUwVsHq7zYhNRjj0Ao6gDdxoXvb+bE=;
-        b=FVataTR54D5x+JOMEY5gzzfRskFuLYu9/lt2nrA6CK9xBfQQwm4cVm4z/WM6lqQ7OI
-         zc+1WEpOdyJfe3sR/WnAZRDd9Sw/7Xdz1LgU239821IulJiESIrBYfDwPavmb1o72KMK
-         Wy0oUOGbTsgf/+N1sdX3ZHlO0hQFswYuJBvbUtdgW/mgdsETI3RDqdnp3HJXD+88vqUN
-         oeE5L1VLCXKgjr0/iK+C0spp/dXlWpAzweD99Lqt6J0GGrXOePDQm9QQjutm+rMJsFI3
-         iNVAGrjZEyHbZ/6GffHPfugiyh4/OkNy+VRjNajmEoh7LyyLfJDHgsNjquDBYlBIBnbQ
-         8Ymg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738608577; x=1739213377;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qgGONtHPC/Ty6jUwVsHq7zYhNRjj0Ao6gDdxoXvb+bE=;
-        b=OK0TZEenIFz1Gb7pQjS7l6CTIIgx6mxKxIV0ldD1tZqlHJMiFhdX0+uDwmkFBMua76
-         znds3I7R4SM4rpFcapWWHJL2eaPj4WDlLH9EDnrjUC+qJbgGOpKiC64r9OC9faEvIEzU
-         OXnA2ktNbJupLNJCz0xkV3CbvGJLowSNr35dsKkfIJfk+4wjLEP6NFHek2i+ddcVQ7Or
-         O0pV8o+vLnvvhCvus81U2WsbU5vBF0ta9sUu7Jn3TzADoFtJ+DNza4U2eP8RXa718MTv
-         I1p8hAHzYyZGAl64GJjzbzhEuqGu8kErMAe2qT3RimP7oa464w3qiJZ/so1D1dKUzNEw
-         9NwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkQHSZjJq41orIpmvn+o6tioVwj9PeU+uTe3gMPLYLjYBk2NXek8UpRjonCLaZqwxg6HA=@vger.kernel.org, AJvYcCVyCdEkrtBAbAbIwl6vQyOldf9zxVgJu6J7soW6uqcBTye7+2Uz3im68DBu/B4pPac58E+3kBf6Cg+f2Vqi@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhVvOERh9ngXR9MSaxnyNGJWu16Hkyft4ZbwlJ6/ajQCNsbgCs
-	yvOqywcXW/IgF8sVxWRl+9E75dNhALb2TJYfqeofdSp3N3YGKaaM
-X-Gm-Gg: ASbGncvXsvvQH0cktRdpZ38o/QeL8mbqakAngQ8MSnXSufxGLlpOexgu/neZXJE/XBx
-	pe2o25uP6BHDYLWpsEId16K//ZDCKmQYGJVPOMTblVFXLE4Y1CEvrGHD3hYLBJqvniHPMLLDs5w
-	B8ugKYJ07t4YDxG1y4ZiHababHU8v6xWtS8eZ1r4//bm04ZZkxLkeKsazwhyA8eUJgwuEISln1e
-	djX+zRRDkr3cC9BrVZ7o15eP0HoGtD5zA/iBoeLcagqOKlF3Phib6vIpbqWV5CdJfP78OamI4cD
-	Nvmjs6J8LTGN
-X-Google-Smtp-Source: AGHT+IEe90exmdsZBFOBpeg803N01nxZF/OlJ6R3+R5xB0+5Q6Qa/ZM33LE8v2QjhqzRwV2bt70cmA==
-X-Received: by 2002:a17:903:90d:b0:216:4016:5aea with SMTP id d9443c01a7336-21dd7d7bb8emr371801875ad.29.1738608577230;
-        Mon, 03 Feb 2025 10:49:37 -0800 (PST)
-Received: from [192.168.0.235] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bd0ce4dsm11703247a91.27.2025.02.03.10.49.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 10:49:36 -0800 (PST)
-Message-ID: <3f392f10e29f651836bf28e342150a6169e6e0d9.camel@gmail.com>
-Subject: Re: [PATCH bpf-next 3/3] bpf: verifier: Disambiguate
- get_constant_map_key() errors
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Daniel Xu <dxu@dxuuu.xyz>, daniel@iogearbox.net, andrii@kernel.org, 
-	ast@kernel.org
-Cc: john.fastabend@gmail.com, martin.lau@linux.dev, song@kernel.org, 
-	yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, 	jolsa@kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	mhartmay@linux.ibm.com, iii@linux.ibm.com
-Date: Mon, 03 Feb 2025 10:49:32 -0800
-In-Reply-To: <91d84512b4082e5eb095b31e5536944a3d53f0eb.1738439839.git.dxu@dxuuu.xyz>
-References: <cover.1738439839.git.dxu@dxuuu.xyz>
-	 <91d84512b4082e5eb095b31e5536944a3d53f0eb.1738439839.git.dxu@dxuuu.xyz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pSvxJvFF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438DFC4CEE2
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 18:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738608583;
+	bh=e6mfjCAhjspD99GgKLJ+Kp3DDrQVj0wKKan7rFRR2f0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pSvxJvFF9UrjbVoIUYRuKL8lqdMqjS9oiOYB4XkfY+N/aKtbtlPuD3WnV6xRx4yfF
+	 SGjNNta3TeOU6GasV3698gpylNBR3o+AvQRHdvl9gNUrzXnRxxzEKz9Io+Wa0Ytg9y
+	 s0FjFS+x1I/yk3ZxLNgIyjb5ef9IN9gxgErdsVNdZc/ZzpaJARwOa1ZHt3uMaSEA1+
+	 2JPLKv3q9llRr5B4w+x3yQa+/jd48QiMC9XqEc4C1Mbxiw9r2JOsy65WEtY7p7zNOi
+	 /ECsK0HWi5hUNeRSDrD/q6u181GIBrqatCMVoDHGxU+wn8DMaXuDE9OWxO7uLUw5UQ
+	 9tHTGyWcu92Rg==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5d3bbb0f09dso8524656a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 10:49:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV2kN4tPs2MhHqtgmH7hTrcNDEUbDpiEUECfbAVpNErqLRNeZBnKnrrQrTikL5bsBP73e2aBppNhOMgQAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuYZYqeq1DzgsfoB5Vlx/6u75Wk6pXRfIp4izuD6isQJ+N0/dj
+	KQBXZje6d7x4nyEGCTj1Z0wZUT3nY3TEynLa3Td0OF9HjyvLtYNw2U9+uTH1zbr2815QN9Rv6KB
+	y9cKE+iwOMYngv2aTcQ7b+IWFEg==
+X-Google-Smtp-Source: AGHT+IHRZ8R8fpMxBKgCgw8bavXdzA9H5kA8wOOZn2wZu4+SQJ2Dew1ZJUxSmYvEqAH1df8byjuznOAH4vRk3K9otZo=
+X-Received: by 2002:a05:6402:274f:b0:5dc:58ad:b8d5 with SMTP id
+ 4fb4d7f45d1cf-5dc5efc112cmr25980752a12.9.1738608581813; Mon, 03 Feb 2025
+ 10:49:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20241231163121.241543-1-robh@kernel.org>
+In-Reply-To: <20241231163121.241543-1-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 3 Feb 2025 12:49:30 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL7jUGqfFcpv6-WahhF69xQb9ODTU_xxm-Q3ySJusyi3w@mail.gmail.com>
+X-Gm-Features: AWEUYZmiVScQsdeQTyyJLHGWj9QAFvMynSzif201Zu1U_YbABWsPT1LJOWLY8wM
+Message-ID: <CAL_JsqL7jUGqfFcpv6-WahhF69xQb9ODTU_xxm-Q3ySJusyi3w@mail.gmail.com>
+Subject: Re: [PATCH] phy: Use (of|device)_property_present() for non-boolean properties
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2025-02-01 at 12:58 -0700, Daniel Xu wrote:
-> Refactor get_constant_map_key() to disambiguate the constant key
-> value from potential error values. In the case that the key is
-> negative, it could be confused for an error.
->=20
-> It's not currently an issue, as the verifier seems to track s32 spills
-> as u32. So even if the program wrongly uses a negative value for an
-> arraymap key, the verifier just thinks it's an impossibly high value
-> which gets correctly discarded.
->=20
-> Refactor anyways to make things cleaner and prevent potential future
-> issues.
->=20
-> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+On Tue, Dec 31, 2024 at 10:32=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org=
+> wrote:
+>
+> The use of (of|device)_property_read_bool() for non-boolean properties
+> is deprecated in favor of (of|device)_property_present() when testing
+> for property presence.
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
+>  drivers/phy/mediatek/phy-mtk-tphy.c           | 4 ++--
+>  drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 
-Acked-by: Eduard Zingerman <eddyz87@gmail.com>
+Ping. These now cause warnings in v6.14-rc1.
 
-[...]
-
+>
+> diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/p=
+hy-mtk-tphy.c
+> index 3f7095ec5978..d36f68dd622e 100644
+> --- a/drivers/phy/mediatek/phy-mtk-tphy.c
+> +++ b/drivers/phy/mediatek/phy-mtk-tphy.c
+> @@ -1215,7 +1215,7 @@ static int phy_type_syscon_get(struct mtk_phy_insta=
+nce *instance,
+>         int ret;
+>
+>         /* type switch function is optional */
+> -       if (!of_property_read_bool(dn, "mediatek,syscon-type"))
+> +       if (!of_property_present(dn, "mediatek,syscon-type"))
+>                 return 0;
+>
+>         ret =3D of_parse_phandle_with_fixed_args(dn, "mediatek,syscon-typ=
+e",
+> @@ -1278,7 +1278,7 @@ static int phy_efuse_get(struct mtk_tphy *tphy, str=
+uct mtk_phy_instance *instanc
+>         }
+>
+>         /* software efuse is optional */
+> -       instance->efuse_sw_en =3D device_property_read_bool(dev, "nvmem-c=
+ells");
+> +       instance->efuse_sw_en =3D device_property_present(dev, "nvmem-cel=
+ls");
+>         if (!instance->efuse_sw_en)
+>                 return 0;
+>
+> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/=
+rockchip/phy-rockchip-inno-usb2.c
+> index 96f3d868a526..b5e6a864deeb 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+> @@ -440,7 +440,7 @@ static int rockchip_usb2phy_extcon_register(struct ro=
+ckchip_usb2phy *rphy)
+>         struct extcon_dev *edev;
+>         int ret;
+>
+> -       if (of_property_read_bool(node, "extcon")) {
+> +       if (of_property_present(node, "extcon")) {
+>                 edev =3D extcon_get_edev_by_phandle(rphy->dev, 0);
+>                 if (IS_ERR(edev))
+>                         return dev_err_probe(rphy->dev, PTR_ERR(edev),
+> @@ -1323,7 +1323,7 @@ static int rockchip_usb2phy_otg_port_init(struct ro=
+ckchip_usb2phy *rphy,
+>                         goto out;
+>                 }
+>
+> -               if (!of_property_read_bool(rphy->dev->of_node, "extcon"))=
+ {
+> +               if (!of_property_present(rphy->dev->of_node, "extcon")) {
+>                         /* do initial sync of usb state */
+>                         id =3D property_enabled(rphy->grf, &rport->port_c=
+fg->utmi_id);
+>                         extcon_set_state_sync(rphy->edev, EXTCON_USB_HOST=
+, !id);
+> --
+> 2.45.2
+>
