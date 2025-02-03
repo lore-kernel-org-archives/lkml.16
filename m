@@ -1,180 +1,128 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436151FCF4F;
-	Mon,  3 Feb 2025 12:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4271FCF4F;
+	Mon,  3 Feb 2025 12:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738584209; cv=none; b=rfjoSWpiDMZoIg/25tzvFw5z4rjC871IPWbXm3MhPJqmEv1FLkrRNOVfmhkS/YkwkCg7tHmUzvMsI7LCThZSaa/AgRsleLWQ5zI84bSDawvkcAITROZt8esz+K+Dr4w8DdGRsBWl3oJik+KF4pHsMl/wI7gvKL6bonkGdPLC0vE=
+	t=1738584312; cv=none; b=mNpgGazr0Sk2+g87GEmoGdabBc5LmdH+dbHaR1TPMNwUxXke5rJNoUDtK/syGX23Gdn+9MFftO2zyPECGsg2NE0xE4pIec1zDI8BrJt3tY+xBqogXVVRq+JGNPferHTMw3DnPl/eOCEWLt8XE1Y7bShrg4n16WsnYevslwwgh9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738584209; c=relaxed/simple;
-	bh=FamOOCUFm3NRarEU1KK0g2LOZ/2bn3n/zihztU6lesM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZDsrWgcuu+4mGou67NrBFps20xOhrLS3hApShaM3bYGsWl0tJfsFDGssGeApgFKQ9unAYi8oquXphss7a7liN13zQRzcQ+yuLiH30lsIlMU0DCE92QWTL4J4VUAdOZ+Skv3npRX6VGxZ/sv6iaDJgP46zRjAZhgWzhMqLy9lCh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=df2rOXWn; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738584312; c=relaxed/simple;
+	bh=VPcubRj9CoN4sPFzpUiz3S70ryFgL1nf2vdTLvmesSE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eNFf3vbpRBDKGP/xoqAkSYv/8WlwS3mqBP4E2PPJ3SMkByLlpRwQDUe7g1IBt3h5LYjD7D2jVk2Cvbxw68uFBt7toCHe23sz+1vS+GCDfHvTbDwLTLgpMlMrQXcYaHvsgp77sySdXWjfXmVKYBZ1MTUWWs46ha862u9NFxHSg80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=U2qqKZKU; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="df2rOXWn"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7b6fcf01742so40841485a.2;
-        Mon, 03 Feb 2025 04:03:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738584207; x=1739189007; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pi6lD+pIbfx374l0CnUPRRk4Jv13XwUAHByC02hR2sg=;
-        b=df2rOXWnBx9LMpAdaMXBJvX1m6Ohnsj3R0sB5ACknfMi8L5B8bWll2a6zs6j1irJ1E
-         B1k3+ZKVnkR6hhGafiJ0Nk8poSGqT8eNpVJDQPxAdouPScaIDu5uU1L6o52+ihU7lDnF
-         Z5huQRkn91Dlb+rGewn0zS3BXFqEDVEualWbRP90xTA2HyMkf893ydhzftaOxMTHMrk9
-         CjeMciD46gql0U/fF10B0c0RdkvfRCO6ben+dq8haPf2CY/sD+u1yZuCYfHk/yxIRSdv
-         e0EIV0wvklSZLUQBwcRuUyEulcsBASN9K2YIyOOVEWAPwUWYhvV8/99SxnDDhyCfHHuh
-         f9Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738584207; x=1739189007;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pi6lD+pIbfx374l0CnUPRRk4Jv13XwUAHByC02hR2sg=;
-        b=S/t+FZN/HWbzq7Z11A/mYWwfwDo5q46uZO45fhDw7KkMRjwT2wLsvg9g5ktQzbHCP6
-         CX4oum+9QxIZrXj3CDhoORRILAv4NUfTagfyI7z3iZZtKMM97FKnfP7W01FrbCxt44E1
-         pfptU6m5EKVAbeOjgUaWtx9Bm13KubWNCjnLjNhIa2KaGsh217OpCrPO8KRym880u+cR
-         8ukQGzzuKSLoJChcRyH7zic+hqClZkIM1F9tmdu9PyXhVoAaFSnrFcia36uE+ZbOvb9u
-         uzXZO+jDG1eGFLGg3N2NL55oRkXSBMltK0EEJVQjPO7ytKWgMVoE+mdI/AfELFbcWCPT
-         +aHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVASO9sMHj9UemWyXrUMvbVSQHDVHkG/u/IkBHftlcpSGN1PM5BziTWteWJKeDpoAMtoER+uF3QAT5+1Pr6@vger.kernel.org, AJvYcCVPB/feUINfQNoL3ZfIiriYaAtDm3qPDGfOfpWXKaRlwfhaPb0O/Jo75cNkmq84l6qFR01ezXQo0s9S@vger.kernel.org, AJvYcCWokuNXHyO6u0znO8dlfU5aeVGtGP4Xo8GdJ0a7OzQT+up4OzhIydjn571aS3saRb56oGDOV4UJ/X4N@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2rVtkgid6JNVMRbsQ/FsTne3vBk8HqyY5d2cVpsHYoB+psjeG
-	NHL4p7M48sWifv+Vgv+wK6Fz3bt0xO87sXDk3lDgXa121kYiI398RDwNn1b4UlU=
-X-Gm-Gg: ASbGncunvlV9G67YjNwCgxbOW4680wcOMOQO81VBoKeJAsFBnA3nk2Cft8AyxY8l6Dv
-	/gQo6zEGYucr2iucmpuUVc30m0wrnP88X3TU3DO851UvZYlhbzzM0yNYhsR0CahOf/oVVE7eigg
-	cmI8OKl+cxi7q3r5+BMw9fHrE+67AYWQSrWgTWVA53zvs1aCgK+TB1ILHtUmQS0e1IogE2v8sBz
-	gONWXUSZ541X5RaepMMBtqsEAq1U9ow8nsEWI/iTULlSertulZM5OmfcfKC335qmW1p/4Zaxt3v
-	XugStRr+dW7i87+DlxJ/Aj7b84beCzvPTb++
-X-Google-Smtp-Source: AGHT+IFoAGBvXqmeHO1EF/ECKXnY77Xf5B6XwoV6dB0M6LSTKJWD748ue/S2nHch2ISm+35takjgrQ==
-X-Received: by 2002:a05:620a:394b:b0:7be:3cf2:5b46 with SMTP id af79cd13be357-7bffcd08abcmr1159991085a.8.1738584207012;
-        Mon, 03 Feb 2025 04:03:27 -0800 (PST)
-Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8bb957sm517156785a.14.2025.02.03.04.03.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 04:03:26 -0800 (PST)
-Date: Mon, 3 Feb 2025 09:03:21 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, lars@metafoo.de,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v2 10/16] iio: adc: ad7768-1: Move buffer allocation to a
- separate function
-Message-ID: <Z6CwiaEhudvbbbT7@JSANTO12-L01.ad.analog.com>
-Reply-To: 20250201153539.5617b5b8@jic23-huawei
-References: <cover.1737985435.git.Jonathan.Santos@analog.com>
- <e39115cee88524f05c8a628b0d3836928c6cc190.1737985435.git.Jonathan.Santos@analog.com>
- <20250201153539.5617b5b8@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="U2qqKZKU"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513B5mKr027354;
+	Mon, 3 Feb 2025 13:04:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	trAJpNigM/p/7CDqNVkhgXtOYUHb2njJXY7wSKnvEw8=; b=U2qqKZKUQh20Q7XV
+	GYoP+i+o1iiEc6U8QGvRD0STaaCcMx36GXROeLAs0fvw2sKwlYbykZx13Vfm87dm
+	/2JXHHrt7oExDJ6/Xw9kIBRvDllq+Z1Dbk9ncbX4KrM1ZhKYtNUT35I/LB7oUJXc
+	pX54KOw5/dRfPyBlVtAeCvBzlXF0y82r/z5PTHdoXmIc66x0qUI/xOqaSej1V7Pq
+	FzyzPtVXwCICnw8lvLRFFt1MxbiFxcQZq0XUJslTT0RfRL6RIcH6NwHr2qZx0xpf
+	ITVP1K7m2rw9j0AoadaZORfS9L82W2DozDHtVlw39RnjMTXP7hEb+QFfxAjdCyj0
+	Rc+oEw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44jn0fhx1m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 13:04:50 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 378B440048;
+	Mon,  3 Feb 2025 13:03:22 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BE7BE263541;
+	Mon,  3 Feb 2025 13:02:08 +0100 (CET)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 3 Feb
+ 2025 13:02:08 +0100
+Message-ID: <0fade761-2485-465b-9fb1-d0e4dabdb189@foss.st.com>
+Date: Mon, 3 Feb 2025 13:02:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250201153539.5617b5b8@jic23-huawei>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH stm32-next v3 0/2] ARM: dts: stm32: lxa-fairytux2: add
+ gen{1,2} boards
+To: Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC: <kernel@pengutronix.de>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+References: <20250121-lxa-fairytux-v3-0-8d42d7d232fb@pengutronix.de>
+Content-Language: en-US
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20250121-lxa-fairytux-v3-0-8d42d7d232fb@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_05,2025-01-31_02,2024-11-22_01
 
-On 02/01, Jonathan Cameron wrote:
-> On Mon, 27 Jan 2025 12:13:19 -0300
-> Jonathan Santos <Jonathan.Santos@analog.com> wrote:
-> 
-> > From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> > 
-> > This change moves the buffer allocation in a separate function, making
-> > space for adding another type of iio buffer if needed.
-> > 
-> > Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> Jonathan, this one needs your sign off to reflect that you handled
-> the patch as part of it's path to upstream.  I can't apply
-> anything that is missing such SoB.
-> 
+Hi Marc
 
-Sorry about that, I am fixing the SoBs for v3.
+On 1/21/25 12:14, Marc Kleine-Budde wrote:
+> Hello,
+> 
+> this series adds support for the Linux Automation GmbH FairyTux2
+> boards generation 1 and 2.
+> 
+> The FairyTux2 is a small Linux device based on an Octavo Systems
+> OSD32MP153c SiP, that occupies just two slots on a DIN rail.
+> 
+> regards,
+> Marc
+> 
+> Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+> ---
+> Changes in v3:
+> - 2/2: fix use generic node names for external GPIO and USB Type-C controller (thanks Krzysztof)
+> - 2/2: LEDs: replace label by color and function property (thanks Krzysztof)
+> - 2/2: gen2: sort nodes of i2c1 by address (thanks Krzysztof)
+> - Link to v2: https://patch.msgid.link/20250120-lxa-fairytux-v2-0-95f4a0eaa44d@pengutronix.de
+> 
+> Changes in v2:
+> - 1/2: Added Krzysztof's Acked-by
+> - 2/2: fix alignment for gpio-line-names (thanks Krzysztof)
+> - 2/2: only use color:function for LED labels (thanks Krzysztof)
+> - 2/2: use generic node names for external GPIO and USB Type-C controller
+> - Link to v1: https://patch.msgid.link/20241210-lxa-fairytux-v1-0-9aea01cdb83e@pengutronix.de
+> 
+> ---
+> Leonard Göhrs (2):
+>        dt-bindings: arm: stm32: add compatible strings for Linux Automation GmbH LXA FairyTux 2
+>        ARM: dts: stm32: lxa-fairytux2: add Linux Automation GmbH FairyTux 2
+> 
+>   .../devicetree/bindings/arm/stm32/stm32.yaml       |   2 +
+>   arch/arm/boot/dts/st/Makefile                      |   2 +
+>   .../boot/dts/st/stm32mp153c-lxa-fairytux2-gen1.dts | 103 ++++++
+>   .../boot/dts/st/stm32mp153c-lxa-fairytux2-gen2.dts | 147 ++++++++
+>   .../arm/boot/dts/st/stm32mp153c-lxa-fairytux2.dtsi | 397 +++++++++++++++++++++
+>   5 files changed, 651 insertions(+)
+> ---
+> base-commit: b7ebfb84a09de6b44492974339654d8ffc5ad9e1
+> change-id: 20241210-lxa-fairytux-e730979d3d3f
+> 
+> Best regards,
 
-> 
-> > ---
-> > v2 Changes:
-> > * Interrupt and completion moved out from ad7768_triggered_buffer_alloc(). 
-> > ---
-> >  drivers/iio/adc/ad7768-1.c | 44 ++++++++++++++++++++++----------------
-> >  1 file changed, 26 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> > index 5e2093be9b92..8487b9a06609 100644
-> > --- a/drivers/iio/adc/ad7768-1.c
-> > +++ b/drivers/iio/adc/ad7768-1.c
-> > @@ -599,6 +599,31 @@ static const struct regmap_config ad7768_regmap_config = {
-> >  	.max_register = AD7768_REG_MCLK_COUNTER,
-> >  };
-> >  
-> > +static int ad7768_triggered_buffer_alloc(struct iio_dev *indio_dev)
-> > +{
-> > +	struct ad7768_state *st = iio_priv(indio_dev);
-> > +	int ret;
-> > +
-> > +	st->trig = devm_iio_trigger_alloc(indio_dev->dev.parent, "%s-dev%d",
-> > +					  indio_dev->name,
-> > +					  iio_device_id(indio_dev));
-> > +	if (!st->trig)
-> > +		return -ENOMEM;
-> > +
-> > +	st->trig->ops = &ad7768_trigger_ops;
-> > +	iio_trigger_set_drvdata(st->trig, indio_dev);
-> > +	ret = devm_iio_trigger_register(indio_dev->dev.parent, st->trig);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	indio_dev->trig = iio_trigger_get(st->trig);
-> > +
-> > +	return devm_iio_triggered_buffer_setup(indio_dev->dev.parent, indio_dev,
-> > +					       &iio_pollfunc_store_time,
-> > +					       &ad7768_trigger_handler,
-> > +					       &ad7768_buffer_ops);
-> > +}
-> > +
-> >  static int ad7768_probe(struct spi_device *spi)
-> >  {
-> >  	struct ad7768_state *st;
-> > @@ -669,20 +694,6 @@ static int ad7768_probe(struct spi_device *spi)
-> >  		return ret;
-> >  	}
-> >  
-> > -	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-dev%d",
-> > -					  indio_dev->name,
-> > -					  iio_device_id(indio_dev));
-> > -	if (!st->trig)
-> > -		return -ENOMEM;
-> > -
-> > -	st->trig->ops = &ad7768_trigger_ops;
-> > -	iio_trigger_set_drvdata(st->trig, indio_dev);
-> > -	ret = devm_iio_trigger_register(&spi->dev, st->trig);
-> > -	if (ret)
-> > -		return ret;
-> > -
-> > -	indio_dev->trig = iio_trigger_get(st->trig);
-> > -
-> >  	init_completion(&st->completion);
-> >  
-> >  	ret = ad7768_set_channel_label(indio_dev, ARRAY_SIZE(ad7768_channels));
-> > @@ -696,10 +707,7 @@ static int ad7768_probe(struct spi_device *spi)
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > -	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-> > -					      &iio_pollfunc_store_time,
-> > -					      &ad7768_trigger_handler,
-> > -					      &ad7768_buffer_ops);
-> > +	ret = ad7768_triggered_buffer_alloc(indio_dev);
-> >  	if (ret)
-> >  		return ret;
-> >  
-> 
+Series applied on stm32-next.
+
+Thanks
+Alex
