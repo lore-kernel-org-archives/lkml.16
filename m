@@ -1,209 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBAC4414;
-	Mon,  3 Feb 2025 21:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E7A20F089
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 21:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738617195; cv=none; b=pAJvXGj2v4MN1ffpOYl0Yjg7V/awJ2W+L7UGJac+Y4+D9nq5D7pk2QEw+2nnyeJlCc1stjfRVS67Y1TI6sTn0CxbYJn6irQ3lcS4PvkutqEvPZ7XYxmdjGtVamDb5aPHrCO1pmr/tbSbpjx4sq07TS2PXFzNjKDv4CkvebNZW9A=
+	t=1738617228; cv=none; b=GmrgcjhzgZunweVWUVUPw88gBztyEY5wSxmsG3/Sj6+zXeIkvGZBvhh8c+c47o1s4oLmUqV4a/ra2W3QEUEKXpEWD302N6t6RV3+0jRLYrd8argE1xCVPTA/MTUvyChIr95oWemi6CjToWGYrIc0bFQbzgUowuJFXCFGpSjb4i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738617195; c=relaxed/simple;
-	bh=Vin1Wn2guK5HRry0AO82szSOfxlKodsGBCZzYwG5uIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ev0Zjk3suzgh60lfpdteyA2bhupLdrG4B0Y/kReHH85mDk0CrYfYUbxC0eMuQfJLgNQaRP8SMlpsiWG1TBYFSt1h5XD7j2QE69ABl1JGs8rnEuEYPUXCq1h9+ku6DseRdmcPAEWHnLbY0JKCTzvmIezl/0QHCZAKcQ+vXROgO2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GoupvWYd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738617228; c=relaxed/simple;
+	bh=tAYmfpPpTIx5FZc3r00kVagj8/8I8DNBOJ+e1U6EjuY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VT7tij0Pe7PCIQ07KkWOaHospsoA8pFbpF+WGo60/A4p1l3emkhidN5BBvtCTcvzqNp3GoZ/6U8VVMlDJndUHY1vF/RgyvIhajz0/79kQ41/MzSyg25SThjO6GYeaz1+XxwAgUT/5yPXy/OWuf+E7FwBgHnSoT/FiUgDCRWcqeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PGvJ8dpx; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GoupvWYd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF57C4CED2;
-	Mon,  3 Feb 2025 21:13:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738617195;
-	bh=Vin1Wn2guK5HRry0AO82szSOfxlKodsGBCZzYwG5uIY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GoupvWYdKqXwXY38WgvEmIWVV50G2gfo5TkhrkYBHXBg3mkUPQLERUesC7AxY7m2d
-	 NyoG0uon2zdPl0f2P1tlwgZI8Gcq6SXwe6WBDkz+KtfJgbvHOHTx/l2mm4KoQyJBQ7
-	 oPT38CQi0tb5Y9OLcc3Ir/0PcUzDJ6Qd+nG7iesNMNe2QK5bDXX5+wCgiisXfpADS9
-	 GIJRyqTS73YR4Dl06VBtc4lyg3ml+VPP6oKDYQFPGSfwcgVQ0q0LOdpJHmrd6VsL7W
-	 yUKp9haBdQ6TjGzC0FOaGyBG4wmngLRbr7L4Mu1dXaYXu2oVeqdhzWie8w/M/KodWw
-	 dw7aiw7yH5+yw==
-Date: Mon, 3 Feb 2025 22:13:08 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>
-Subject: Re: [RFC] driver core: add a virtual bus for use when a simple
- device/bus is needed
-Message-ID: <Z6ExZOzIgAHlX_MP@pollux>
-References: <Z5Nw8kaieLueWyUu@pollux>
- <20250130212843.659437-1-lyude@redhat.com>
- <2025013159-shabby-professor-515b@gregkh>
- <2025013140-propeller-dirtiness-6cb4@gregkh>
- <Z50ZuzrDn-GQWOuP@cassiopeiae>
- <2025020106-avert-senorita-4181@gregkh>
- <2025020306-overhang-glider-7d42@gregkh>
- <Z6Ch8O-0oY70Jhi6@pollux>
- <2025020307-cavalier-knapsack-7f89@gregkh>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PGvJ8dpx"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-53f22fd6832so5421860e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 13:13:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738617224; x=1739222024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UbnTeeOBFGu3Hhq+Z/m06fuNB5/77NFmMN/5+AMCt/E=;
+        b=PGvJ8dpxWzL5KYtC5K3X83nbyHuB64KCityPCzdo0s6/LIEKx6Ts+QO7IA4SiQVNIA
+         /2WcEFCvpovO8rTRUPeliml5x6QMxxIUW503wrf5cJW/f7RBz/bTQ+6+k0kAxNX6FSyW
+         bodd8NyH6I+/kGcaySBZXhjXJMfOxjSu+J7l4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738617224; x=1739222024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UbnTeeOBFGu3Hhq+Z/m06fuNB5/77NFmMN/5+AMCt/E=;
+        b=lv56n3uPzWyjSXkS6vvBt2xx8ZFB65P0hP4yYjOpRa3HWIpRNZDX5NeP3jcqmpemPg
+         GGWIwsaaaoDPtiy0GQQYH7G6VjhnlQQUeeHFbukCmZozThF4wgB/ro/oZa+G0BcRTHwc
+         yILJITms6K/XjJkhHl6cVIWxI3wRtEzAqBOk7gOMfsH1wxcWgx32dukjQawf9UZD5MFS
+         gqXM3+i51xW+R3qk4TcjKBJ8a9OaGuSO2ma+iiVcGpJ/O9K4zJK+pwwja/NvtdI4II1g
+         1RcW65086wIP+zHjnlDKegmaPy2rf81HfF+Vc3djgN9jMNNez2nOvako17lUc6/Rtk07
+         bavg==
+X-Forwarded-Encrypted: i=1; AJvYcCWxcv1kJD/cAbbystH/CVjVSjLu9BXHV9y7XUJJiDlhQk80C0lQYcSBZ8Yi4QWDMBmzhJ65xQFPpjybbG8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRcD97Vflmi6qJPwkOTDFglWCUs2jKg7M8J2T5KNND6l8YvUqT
+	KcUZtGIspy62U0isFOIeid4lsICbhTyDeANQnWfmNhfk6N/KfJ3DVAs7ysh7z7cWEQRtUt/f348
+	edQ==
+X-Gm-Gg: ASbGncuO34mXRK313VdftMBpHXTrA8jY9jRAr6pjpLFhLqHXMFoY4RwNuQPOnvaAkaS
+	o7JXcIrgBrNTvugVr2JCUI3GFy8eEq2gO1zrV9QAhD/T+ZyVOqA6a1o98nniJi0/Z5TGgrtQSIL
+	KrGh/i1XPyI/OoQpylEG7eJ4m0R5+KU75gbBeiN4vqX8V6HNKTSlWvHIcO2oYjnNhOEcYF0QF8h
+	4yH4OmHst/s+Ozbv2aMRrbmyXrQwPjMgBXrtkRrVdlGyF+Z9Ic3/2KZBtaJ5amxOED+xZniH2w0
+	pNdutYER+wbq2Ik4hj6IvcfgrY+bithA/rr4NZaqkAE8fRIItAMOPNI=
+X-Google-Smtp-Source: AGHT+IGf3eXv/OdJM6ACWomKkXMzdoanqYXSkb/JytzvgzRVhsGhUJH3TPel9uBa0+GhAQUkDqXmqg==
+X-Received: by 2002:ac2:4895:0:b0:542:91ac:3919 with SMTP id 2adb3069b0e04-543e4c02d92mr5860989e87.23.1738617223729;
+        Mon, 03 Feb 2025 13:13:43 -0800 (PST)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebe0fbcdsm1443702e87.60.2025.02.03.13.13.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 13:13:42 -0800 (PST)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54021daa6cbso5207689e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 13:13:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXMINbi8aoJAobxUrC6lHxf96GdZ0kJLNTQMWJXV96Mh1MFpmkGatqof0wUhQHU47FfDJrj6MCvVhXcobg=@vger.kernel.org
+X-Received: by 2002:a05:651c:1145:b0:2ff:c027:cf5c with SMTP id
+ 38308e7fff4ca-30796866f46mr74227291fa.16.1738617222537; Mon, 03 Feb 2025
+ 13:13:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025020307-cavalier-knapsack-7f89@gregkh>
+References: <20250203202028.GA1215122@lichtman.org>
+In-Reply-To: <20250203202028.GA1215122@lichtman.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 3 Feb 2025 13:13:31 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WoS+WZ-OX5FnAUuab8re0ovrN9jEm4uADo1XmP5DAGQQ@mail.gmail.com>
+X-Gm-Features: AWEUYZkwwpC4ZQkpVf23tESEqF37M3-K6zXbboQkcQWm1IjIhDcWSGutoT6z24A
+Message-ID: <CAD=FV=WoS+WZ-OX5FnAUuab8re0ovrN9jEm4uADo1XmP5DAGQQ@mail.gmail.com>
+Subject: Re: [PATCH] kdb: remove usage of static environment buffer
+To: Nir Lichtman <nir@lichtman.org>
+Cc: jason.wessel@windriver.com, danielt@kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2025 at 12:25:23PM +0100, Greg Kroah-Hartman wrote:
-> On Mon, Feb 03, 2025 at 12:01:04PM +0100, Danilo Krummrich wrote:
-> > On Mon, Feb 03, 2025 at 10:39:58AM +0100, Greg Kroah-Hartman wrote:
-> > > From 4c7aa0f9f0f7d25c962b70a11bad48d418b9490a Mon Sep 17 00:00:00 2001
-> > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Date: Fri, 31 Jan 2025 15:01:32 +0100
-> > > Subject: [PATCH] driver core: add a virtual bus for use when a simple
-> > >  device/bus is needed
-> > > 
-> > > Many drivers abuse the platform driver/bus system as it provides a
-> > > simple way to create and bind a device to a driver-specific set of
-> > > probe/release functions.  Instead of doing that, and wasting all of the
-> > > memory associated with a platform device, here is a "virtual" bus that
-> > > can be used instead.
-> > > 
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > I think it turned out pretty nice combining the driver and device creation for
-> > convenience.
-> > 
-> > But I think we may still need the option to create multiple devices for the same
-> > driver, as mentioned by Sima.
-> 
-> That will work just fine, the api will allow that, just give each device
-> a unique name and you are good to go.
-> 
-> > @Sima: I wonder if the number of devices could just be an argument?
-> 
-> Then the virtual bus logic will have to create some sort of number/name
-> system and I don't want to do that.  It's a "first caller gets the name"
-> type thing here.  You can easily in a driver do this:
-> 
-> 	my_dev_1 = virtual_device_create(&my_virt_ops, "my_dev_1");
-> 	my_dev_2 = virtual_device_create(&my_virt_ops, "my_dev_2");
-> 	my_dev_3 = virtual_device_create(&my_virt_ops, "my_dev_3");
-> 	...
-> 
-> You share the same callbacks, and that's all you really care about.  If
-> you want to hang sysfs files off of these things, I can make them take a
-> device_groups pointer as well, but let's keep it simple first.
+Hi,
 
-Sure, that works perfectly. Just thought, we might not want to also create a new
-struct driver for each device.
+On Mon, Feb 3, 2025 at 12:20=E2=80=AFPM Nir Lichtman <nir@lichtman.org> wro=
+te:
+>
+> @@ -348,9 +315,12 @@ static int kdb_setenv(const char *var, const char *v=
+al)
+>
+>         varlen =3D strlen(var);
+>         vallen =3D strlen(val);
+> -       ep =3D kdballocenv(varlen + vallen + 2);
+> -       if (ep =3D=3D (char *)0)
+> -               return KDB_ENVBUFFULL;
+> +       ep =3D kmalloc(varlen + vallen + 2, GFP_KDB);
+> +       if (!ep) {
+> +               kdb_printf("Could not allocate space for the env var: %s\=
+n",
+> +                               var);
 
-> 
-> > > +/*
-> > > + * Internal rapper structure so we can hold the memory
-> > 
-> > I guess having an internal "rapper" does make the interface even cooler! :-)
-> 
-> Hah, I totally missed that.  Language is fun...
-> 
-> > > +static void virtual_device_release(struct device *dev)
-> > > +{
-> > > +	struct virtual_object *virt_obj = to_virtual_object(dev);
-> > > +	struct device_driver *drv = &virt_obj->driver;
-> > > +
-> > > +	/*
-> > > +	 * Now that the device is going away, it has been unbound from the
-> > > +	 * driver we created for it, so it is safe to unregister the driver from
-> > > +	 * the system.
-> > > +	 */
-> > > +	driver_unregister(drv);
-> > 
-> > This is probably becoming non-trivial if we allow multiple devices to be created
-> > for the driver.
-> 
-> Nope, see above, the driver is created dynamically per device created,
-> but that has NOTHING to do with the caller of this api, this is all
-> internal housekeeping.
-> 
-> You will note that the caller knows nothing about a driver or anything
-> like that, all it does is provide some callbacks.
+You don't need the printout. kmalloc is already very shouty if memory
+allocations fail.
 
-Should have said in case we allow multiple devices per driver, but as long as we
-already create the full "virtual_object", that's fine for sure.
 
-> 
-> > > +/**
-> > > + * __virtual_device_create - create and register a virtual device and driver
-> > > + * @virt_ops: struct virtual_driver_ops that the new device will call back into
-> > > + * @name: name of the device and driver we are adding
-> > > + * @owner: module owner of the device/driver
-> > > + *
-> > > + * Create a new virtual device and driver, both with the same name, and register
-> > > + * them in the driver core properly.  The probe() callback of @virt_ops will be
-> > > + * called with the new device that is created for the caller to do something
-> > > + * with.
-> > > + */
-> > > +struct virtual_device *__virtual_device_create(struct virtual_driver_ops *virt_ops,
-> > > +					       const char *name, struct module *owner)
-> > > +{
-> > > +	struct device_driver *drv;
-> > > +	struct device *dev;
-> > > +	struct virtual_object *virt_obj;
-> > > +	struct virtual_device *virt_dev;
-> > > +	int ret;
-> > > +
-> > > +	pr_info("%s: %s\n", __func__, name);
-> > > +
-> > > +	virt_obj = kzalloc(sizeof(*virt_obj) + strlen(name) + 1, GFP_KERNEL);
-> > > +	if (!virt_obj)
-> > > +		return NULL;
-> > > +
-> > > +	/* Save off the name of the object into local memory */
-> > > +	strcpy(virt_obj->name, name);
-> > > +
-> > > +	/* Initialize the driver portion and register it with the driver core */
-> > > +	virt_obj->virt_ops = virt_ops;
-> > 
-> > I wonder if it would make sense to allow NULL for virt_ops and use default ops
-> > in this case.
-> 
-> What would be a "default"?  If you don't care/want to do anything with
-> probe/remove, then yes, we can allow it to be set to NULL.
+> +               return KDB_KMALLOCFAILED;
+> +       }
+>
+>         sprintf(ep, "%s=3D%s", var, val);
+>
+> @@ -359,6 +329,7 @@ static int kdb_setenv(const char *var, const char *va=
+l)
+>                  && ((strncmp(__env[i], var, varlen) =3D=3D 0)
+>                    && ((__env[i][varlen] =3D=3D '\0')
+>                     || (__env[i][varlen] =3D=3D '=3D')))) {
+> +                       kfree(__env[i]);
 
-Exactly that, no probe, no remove. With that we can avoid the full bus
-abstraction in Rust.
+I haven't tested it, but shouldn't the above be kfree_const() instead
+of kfree()? Otherwise won't you be trying to kfree() the initial
+strings? ...or am I missing something?
 
-> 
-> Actually looking at some of the places this can be replaced with, that
-> does make sense, I'll go make that change.
-> 
-> > This could be useful for the Rust side of things, since then we could probably
-> > avoid having a virtual bus abstraction and instead would only need an
-> > abstraction of __virtual_device_create() itself.
-> 
-> Ok.
-> 
-> > However, this is probalby only convenient for when we have a single device /
-> > driver, but not multiple devices for a single driver.
-> 
-> Again, see above, and stop worrying about the traditional "driver" model
-> here, I took that away from you :)
-> 
-> > The more I think about it, the less I think it's a good idea, since it'd
-> > probably trick people into coming up with questionable constructs...
-> 
-> No, I think it will work, let me do some replacements later today after
-> I get some other work done, I think it does make sense, don't doubt
-> yourself :)
-> 
-> thanks,
-> 
-> greg k-h
+
+-Doug
