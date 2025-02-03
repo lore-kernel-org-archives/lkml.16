@@ -1,119 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A93202C2F
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D14320A5CB;
+	Mon,  3 Feb 2025 16:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738599260; cv=none; b=Z9Dd/k3zZW/1gqA5PlapWOHHtn32ZywS6POkCW1XeaKEVrEV3tv4pKYM61OHalU1PVZW47hvc0sfMYr8VbM7S/cU7UaPfQhHIwV9XJjts/VeNH6wFro3aXtexpm8PhxPP/BAlHOG8Sks0eBu3vT0sQ9F0i7X/9in/oMeM6JCapA=
+	t=1738599282; cv=none; b=hgo2Vn0u5D6qMXE2xOzoikdLuKJdmClMQgGE6Ik9aGzv5x6OKs9TcaWOKthg4r4K3X7LENH2Go17MwGlgt3kPazuwyjgHx3678xIaJQW6CgHRw9/beosswEIEAqLEPXTKggTGTt2dzPsoz4elO6l+Iw+54al5toS4Hb4NsmL7lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738599260; c=relaxed/simple;
-	bh=b2JOUkIYh6C7SR/NDzXSOGXjIDLsFLX8XgBG4uI9Nn8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MyDbXxjOAikICQt5hVnQPUGI1ipZXPTxdoBkcP/6LUE5uYEagJZ8T901byn+niYWlXU8ie4pkFW6eK4eAwBR8oOraLcOrmw87+zFVXKCMkiryoV8tFJ0Q9D25uEdytOWBo5ec0NxAuZhiaC/NVV3SBzfBBlOYRbXPCTugym6DZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TZt0I+dl; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738599282; c=relaxed/simple;
+	bh=EykmNP3rluS5wErrw7ovJbnACKEeoG9NBVz3oDMId4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=itMMCy7LRJlXy8SnEqGx5Wu001HRltH2A7aNjU5xEJcyGfI2nd3C+V28tcRzQ+dwStVimhykW2ENa1j30Hpp2Lp0rHkMdAMug81ofVmbETsaIcil0KJvkxzfTNnHjWsZgLTB7fsUHmT2CxNk+XkvqG17GltFggo/9SXx15W4k40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S5D3jBy/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dTjtlolF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TZt0I+dl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738599258; x=1770135258;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=b2JOUkIYh6C7SR/NDzXSOGXjIDLsFLX8XgBG4uI9Nn8=;
-  b=TZt0I+dlLJthLp9fJKYdKYyr+lJBhPgyKun7YrVyg9rorqsesE4uCNbH
-   xuviEAdWxigQnbkmwG2ty4Ak9kIlF0TDS/dKCotGPgv9K8v3lwYHmHMdj
-   llHo+KAT/hWgaGqAsJVuUWSnIesJkCp8o3bkRjuy+UmNcCljTqRdTjELl
-   kchHTurh+hKmycSjkAOruX9w9JxGEsYbaCbSm65guKVCSu8LuNHha4HU4
-   Fp8KJFPxnxekVNyJQxE398R0irrXFqJY4nOBuNXSGLwJk2usvL3Vu/huK
-   ziSiFBoHte0YMAX9/1YPqpucgEOqaeql373HW42kXxSN72zK8uX+uOU9/
-   g==;
-X-CSE-ConnectionGUID: t+vwlwxrRLKI8duDoSCSsg==
-X-CSE-MsgGUID: q0lxp3gVRNmIersO25foEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39129514"
-X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="39129514"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 08:14:17 -0800
-X-CSE-ConnectionGUID: DvlgXxWgTZqP6iniT7WhKg==
-X-CSE-MsgGUID: s5AYetY8TJ+Egl9KFJNEQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147538490"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 08:14:18 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id C78FB20B5713;
-	Mon,  3 Feb 2025 08:14:15 -0800 (PST)
-Message-ID: <5341a60f-087b-485f-8988-4a57f1d0cee3@linux.intel.com>
-Date: Mon, 3 Feb 2025 11:14:14 -0500
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S5D3jBy/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dTjtlolF"
+Date: Mon, 3 Feb 2025 17:14:37 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738599278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=asZhdw1u+KARy/b4tMAOwMpkr8n4az3G/BP7Mu330JE=;
+	b=S5D3jBy/sT0HegQpG/bxMlN7VEX+wbEsF6ffTEin8SUYVFio3vdIlffoEffOprdmQon+gD
+	QVpAGlzW58fZwQvzlQnpmFyC7V6/bMy/DbY/DmLanGm+3LwasiDd8VAzhaoMhkOopwv1Lv
+	sIk9tdCBWA1A1RoKhl4cMH6lejYIpCa6uR3fNuTvKOPzdrtxojqjDYojll05mUPIOApG3h
+	UGYVHxJaP+3wws+XVq3e32nnz2BTRfR5WeorfiDE6/NPs8voq5JC7f8ybhPV6UJAK4YkKH
+	69U6oG7/38+gfOjVQR9IrSEMAvuPcq6s/orvL7QJhA7A17Zz27IdTR+0Fg0Cjg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738599278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=asZhdw1u+KARy/b4tMAOwMpkr8n4az3G/BP7Mu330JE=;
+	b=dTjtlolFTco+U66XNRG7CydXJoVHM9X6HvRGSZSw8iS4SW2LtJAyH01zeWKk/ilgf/1/L4
+	x7g6AVMb0aJ7zVCw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>, 
+	Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	llvm@lists.linux.dev
+Subject: Re: [PATCH 00/16] selftests: vDSO: parse_vdso: Make compatible with
+ nolibc
+Message-ID: <20250203165859-8af1246b-6dd8-468a-8e05-68c7b0cad304@linutronix.de>
+References: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
+ <cd1147a8-25ba-47d2-a59a-0a686469a808@csgroup.eu>
+ <20250203143640-70c59c53-af45-40cb-9a52-6395b3fdd263@linutronix.de>
+ <937c99b3-3837-4510-be65-4eca3b280ce2@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Cleanup for Intel PMU initialization
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com,
- alexander.shishkin@linux.intel.com, ak@linux.intel.com,
- linux-kernel@vger.kernel.org, dapeng1.mi@linux.intel.com
-References: <20250129154820.3755948-1-kan.liang@linux.intel.com>
- <20250203131600.GD14028@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250203131600.GD14028@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <937c99b3-3837-4510-be65-4eca3b280ce2@csgroup.eu>
+
+On Mon, Feb 03, 2025 at 04:43:22PM +0100, Christophe Leroy wrote:
+<snip>
+
+> Do you have any plan to get it work with nolibc for all test programs in
+> selftests/vDSO, not only the standalone x86 test ?
+
+Not directly as next step. I am focussing on some other work which will
+integrate (vDSO) selftests with nolibc slightly differently.
+However if you have interest in converting the tests now, that would be
+great and will also be useful for my future changes.
+The current issues I see:
+* Missing architecture support in nolibc (should be fairly easy to implement)
+* Missing kselftest_harness.h support in nolibc (I'm working on that)
+* Maybe some users want to stick with their regular libc
+  (Nothing should prevent that, but the mechanism may need some discussion)
 
 
-
-On 2025-02-03 8:16 a.m., Peter Zijlstra wrote:
-> On Wed, Jan 29, 2025 at 07:48:17AM -0800, kan.liang@linux.intel.com wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The patches are to clean up different features. They all touch the
->> initialization code. There are some dependencies. So I put them in
->> a patch set to facilitate the review and merge.
->>
->> Patch 1 is to clear up the PEBS-via-PT on hybrid.
->> The original V1 patch can be found at
->> https://lore.kernel.org/lkml/20250124183432.3565061-1-kan.liang@linux.intel.com/
->> This is the V2, which only update the comments.
->>
->> Patch 2 is to clean up the 023H enumeration.
->> To close the discussion at
->> https://lore.kernel.org/lkml/20250127212901.GB9557@noisy.programming.kicks-ass.net/
->>
->> Patch 3 is to clean up the counter information update and check codes.
->> To close the discussion at
->> https://lore.kernel.org/lkml/20250127164406.GN16742@noisy.programming.kicks-ass.net/
-> 
-> So I can take 1 and 2, 
-
-Thanks.
-
-> but 3 is part of that arch pebs things, and that
-> series is not in a shape I want to apply.
-> 
-> Also, I'm not at all sure 3 improves things, it might just make it
-> worse.
-
-There should be some improvements for the initialization code. At least,
-we can reduce the is_hybrid() check and move the 0x23 enumeration in one
-place.
-
-Anyway, I will think more and see if there is more that can be improved.
-Then, put it as part of the arch pebs code. We may have further
-discussions with the V2 arch PEBS code.
-
-Thanks,
-Kan
-
-
+Thomas
