@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEB7211461;
-	Mon,  3 Feb 2025 21:30:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8676220F094;
+	Mon,  3 Feb 2025 21:31:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738618247; cv=none; b=Wk8rej14fVeffTkjluKodD5Ky+6SFKqJ/YY7qvkJiOdXubQvhncVvRgS73PK0jMn3CSddwzFtMUoYHrvSzspdf0TrE5NgZztuq0JWzSmDuIFaiZFbsPNkfINP5wE04Ls+eQfpE8s4IDaDivLoU6/ZU0DS80Uppl/Htt/Z7TrtTw=
+	t=1738618262; cv=none; b=sKE2++F08lMTsHwqRlfE8bIAq8P1eIyd3YWxaON77YFRMkqjukg4342x50qsuETeSv188nlIrAkBajRkyCLUFtn3JdWGEhMqocacyXvgK/wqJyYKf21ggD8DIzfkP9iRvsn4GyOZ7nSzJCDxvhlvtNDdsrn7+MEjNjyGYApInoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738618247; c=relaxed/simple;
-	bh=w/B2PvR+rOYxS9BmE/d4TKVImkrqlQOtKXqLwF4auMk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TU+/uYSZ0AqbaOmCuT8I3PVNuaP9XdxycgauiiDM/iGZd1u2Hj/rapRx5XFR40dgw2QOg9wnItj7BKTdEAuahY742lP3neR+reGUmqzrLJ/hxlkv60fuGRbaiW120/Fne19a4vYQOMqEDQUVrvJL+Ma/cfdedRbrkgZyZQzJ5yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+Nw3wLH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738618262; c=relaxed/simple;
+	bh=k9EUAUSdgz8Hi+LWzo64vfqQmxZJ++evupmA/smLcuw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lXY2zpmnZRJb9nTjz0A8z7uJvqm1ocMU1nysVxV0/MTEYK+9d7FaifegvRVVIPGhlkan385UqvQy2pDN38Om2E2lbpY9A38TZcQ/ez3a0JQtIg+q767P6b+F25QeavUPM4uULsg22tGHuCX4+b28vIGSA8icM+H6txESZGheYGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtUdTdOJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+Nw3wLH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6A9CC4CED2;
-	Mon,  3 Feb 2025 21:30:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YtUdTdOJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0E02C4CEE6;
+	Mon,  3 Feb 2025 21:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738618247;
-	bh=w/B2PvR+rOYxS9BmE/d4TKVImkrqlQOtKXqLwF4auMk=;
+	s=k20201202; t=1738618262;
+	bh=k9EUAUSdgz8Hi+LWzo64vfqQmxZJ++evupmA/smLcuw=;
 	h=From:To:Cc:Subject:Date:From;
-	b=B+Nw3wLH4wcKtwW9y2gBt16zd3vDkmxLaqkk5Sz9rEhwOqqOC2oSFyzjjnsiF1znM
-	 UwpAtxL0jCIKY3CSVgd/IyRrD4CX6douZyyuWUHdneVm8ru5SPAk0vvopmdG/VrNBb
-	 UrT8xs2V6vEz2i0A8ZKqa3vWVPEKCSQq9cibY91jynn1mZtu5z3eQlZ0cvK8KoU8OE
-	 dFINc9H4O4d+VVDofJUl6QZuM47ia+aEnfWBi2wVHHrh9eDPRRoiIbsvCoLkvg4yzm
-	 0wMRFyLi7ChParoDW9YeUbQqkmjhDSeSlCsi8VcqAG1SB3XYnoir3gWzkFiZYf01kC
-	 9/ys9u12xY5/A==
+	b=YtUdTdOJt3vrSk8Om8vBARgbR43K0mYKeBkEP6EcvIl2FCHZRsUgQMPU5Vf8tIKNJ
+	 A6EjboDC0O0prEQl1HJE57uOkrm4f05KlArcI9kr0/6NEk5qf/sD/9D9W07ZVEReKR
+	 wfKTpDFsb70jeQWA3qrPOhU3MLFcuozsuC290Qrv/YQAG8z/0sxwJMuAjIyPPtGR6j
+	 xEjryUDro4usDCKwgSEcNt2Bz5IJIvHZS4vi15Di0tH5Uzb+l7fjIflrG4M2eOzCyO
+	 86NyBid3WDvv3QgIAMfJR9oOwJKZiD4YTYIt4KW9REXORj8fgs95K2vQCiOgFKOmFn
+	 bnrKUBjIe+l/A==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-mtd@lists.infradead.org,
-	devicetree@vger.kernel.org,
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Elaine Zhang <zhangqing@rock-chips.com>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: mtd: arasan,nand-controller: Ensure all properties are defined
-Date: Mon,  3 Feb 2025 15:30:41 -0600
-Message-ID: <20250203213042.12657-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: rockchip: pmu: Ensure all properties are defined
+Date: Mon,  3 Feb 2025 15:30:56 -0600
+Message-ID: <20250203213056.13827-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,23 +47,34 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Device specific schemas should not allow undefined properties which is
-what 'unevaluatedProperties: true' allows. Fix this constraint.
+what 'additionalProperties: true' allows. Add the missing child nodes
+and fix this constraint.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../devicetree/bindings/mtd/arasan,nand-controller.yaml         | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/rockchip/pmu.yaml | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
-index 15b63bbb82a2..b90d3b48c2f2 100644
---- a/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
-+++ b/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
-@@ -42,7 +42,7 @@ required:
-   - clock-names
-   - interrupts
+diff --git a/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml b/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
+index 932f981265cc..52016a141227 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
+@@ -53,11 +53,17 @@ properties:
+   reg:
+     maxItems: 1
  
--unevaluatedProperties: true
-+unevaluatedProperties: false
++  power-controller:
++    type: object
++
++  reboot-mode:
++    type: object
++
+ required:
+   - compatible
+   - reg
+ 
+-additionalProperties: true
++additionalProperties: false
  
  examples:
    - |
