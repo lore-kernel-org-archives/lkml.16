@@ -1,190 +1,112 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE762036E1
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312E0200BB9;
+	Mon,  3 Feb 2025 10:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738580311; cv=none; b=TQtDAHLOwd5IL5y5JKYFCO30qCTGipowo+Y+Gqf/rVnq3pamKoKT53VdENRIgISjaK26Vkwi9wTsgTmGnj95UpD8tW0EbRG/XSGwZxHxc4B6augewr76jF0v4B0TLaa2etkx8MM3cLwtUpsF4jP1r+AHqUmAEjwrl7citYX5fOw=
+	t=1738580331; cv=none; b=e0QoHzFyZEEo0VSsNyhRh88zccDtt21CbFTwXX0EGE3nemh/eLXM0K/+ZWX5F10vQuUuJ720cVl3P0T7/R5bblzBuVJhpY3v94gqwyBQtor/NcW2CMujdmO6FetR/i4cxDUCFAHgluxd5/P/N4coeO5xeA9f6mQDZKTGT/srb9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738580311; c=relaxed/simple;
-	bh=Jh+EL4p/6JSMFadATMQ/dMawzZEL4l2MOkq/1iyumns=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pd2aWmfzIA23jy07wZHKtKl9stFLsh/PFD4cz0kTElugtIw7/ghQ2FsFju0r9awo0LiNMz7SQOm2ToQ/IGUnn7F2+QmFw6yB6IeO1n0nr89bhMfvT/t2t4R1evrKLCV9OEnxtVjouweG4dz4AQteBNvtjvbnMRDs1QDnQAyONOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sDyDYXVN; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738580331; c=relaxed/simple;
+	bh=SR6S50EegGgplWqOre9ZfXPRLkLlRwOigQB40MvBL4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hnyAI/8Z5prGXRVX+kQ+eCmVI4Z9wSYZUJT6rQy5RaGq38NecUF3w+7f3HTOZcQA+gu+hF1EphG2PW5rvKV5VA33+NqitcWddpJoorgSFiHka/CRfeTMp3nJVd40pUhIOeVwrGV1tgmBsu++EOFnb7KR004DcBNxu2n4fC6N2qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XljpRbmc; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sDyDYXVN"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436202dd7f6so49961005e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 02:58:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738580308; x=1739185108; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YU2toixtghG/UIHIgDfi+TrJAb+KbxkNuLjUS/jgDXM=;
-        b=sDyDYXVNFP+iewVdmnRCOTGbB8y1zrIccusyVzUPSBbgkIsQB7aC0cfik+PBycS4Am
-         J+TwWKqOqbdXe1UgHVTSwOl4LM8Ey4NRML6gfy4YXr1gZFLyQzqt7tpA30BeLx+aTP5G
-         8+vtiNJtmtQV+wzh/u7f4CWan+VhimqYarzI974NqFmvKOMuVNcdKRXwuhLSX/VXdhOm
-         tE+YNG1fMr0Sh7d6wMCGGfA4YiIpFNjjc4E6r7VSb/0B4IP8ufzC3DtYVAFiX22R289n
-         +LB2hE03iFXO56yimOiujIdS+SJXsgbdweOshpYRFeWQfaAB+TVUsct+xsH5KOKxXpXl
-         01QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738580308; x=1739185108;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YU2toixtghG/UIHIgDfi+TrJAb+KbxkNuLjUS/jgDXM=;
-        b=iqTR+i3PEZv5aFyQPdVLT1QzmVloA4TaT7WhT89/OBkn9vOE5nyBijQiBBrfu4FEnE
-         BK6+RyZNB50+vnj6PA1NbMKMTCzQmwzYXWjvxS+NGea4/9jcE7Gd7qTBTJoaCv0+scDi
-         Gh42UmoE7rCJQ6TI0o91H1c9tSAv4f+tyf+aWIFQC3W8BUCgy3lqiFBEjuUaFVZf1Wi0
-         BYCAMo6LhzoZjnMfZI7C6oRu+5GX2SdWBrg7RG+tvxDMb7lf0VzguRmmtTiJ0+WauaEt
-         W71RJxk69drM6BfAVNdsdYbYMHas+FB1fkzROGlvnyxFlInedqoxWl3Vjw7eoEOx3M7F
-         gsKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkba54GeYhpQMRAcJwBurBkXyF9NC1onj6IQWll7FBiSct8Sm90ASVz7EqTO5oYXRyqA7ccvJExm33G2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC5KVXmU3U71nh/2T+ye67Pw/UmmQrxRPPNdvLCkmq0O2/g2nG
-	g09tIK9ebHxb06dRwW1UgyIxJJXi8fp2rOHgFy1oluR0mKWdIMtI7hbClXJ2ikk=
-X-Gm-Gg: ASbGncsf/qV7DRrhBn7IKHD1E9Ztfa/YrgNM5fAfCM41t7r57T+lXG9ZpKPhaJMCNZ3
-	SK+0Zr3sfUVndS2n6WY7RUCqQ78K7qYhIukTqS9bXZYe51vL4eZMi+344xEzRX16XHt18yGM2NF
-	tszjYa+ezMP91G5bCvMiNxYAcanDKwdPFMoR4dyUcFnV3IEsr+vWPA5v0MQrsTgYxrUzErIvdAq
-	FbnvT4wh/CWRJBG7vMiQ/cdZaQfkogXGX9PrVwNGGDy/JMVg83gcPkPfDdcY+hU1TdfQyyvfHN3
-	uOTG32r+ZwPf1Js=
-X-Google-Smtp-Source: AGHT+IG3sxZoF1BxKwDs6D8yKh85vjYaq2CGCwZLuA4JBiE6X/IAqNanFP9ag+j0VZ8Qqg5mgek9bg==
-X-Received: by 2002:a05:600c:35d1:b0:436:1971:2a4 with SMTP id 5b1f17b1804b1-438dc3cc9f1mr185238805e9.17.1738580307609;
-        Mon, 03 Feb 2025 02:58:27 -0800 (PST)
-Received: from [127.0.1.1] ([86.123.96.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c13a0efsm12555083f8f.60.2025.02.03.02.58.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 02:58:27 -0800 (PST)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Mon, 03 Feb 2025 12:57:59 +0200
-Subject: [PATCH v5 4/4] drm/msm/dp: Add support for LTTPR handling
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XljpRbmc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738580329; x=1770116329;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SR6S50EegGgplWqOre9ZfXPRLkLlRwOigQB40MvBL4o=;
+  b=XljpRbmcjBl+a0/iISDxodXgEue9ds8C2QnJaqgPaf+ewOKzA3Y54gvL
+   6o8v1ju88NQIKMblONBfPJsLhpW74R93Sor4QTl54SnZtnBIJKkytlgvt
+   fGssYAnErte9Sp13WMueK4XYteBaypxsLF8BuBH4p4MgA8ojKy152RDjv
+   IK4twSBUMe9jagE5vESGSsSuVUIg3w8c7BnFM2q5vulg6nP3yNDrUpCoG
+   H1kFPkKaTePqPAnJOYTSYj2Ej7izEaXDYCs/Gx6zn2id764CaqycQVpIn
+   8/qasASssK8pkb/OofUPjg8hFjLhPZ8/r5ckkgsNtguwwnfavkleIqZb9
+   g==;
+X-CSE-ConnectionGUID: SQrlttj4SaO5KeGCzq0f7w==
+X-CSE-MsgGUID: VAV859OPTsWWJbCn7XG8VA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="38274025"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="38274025"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 02:58:47 -0800
+X-CSE-ConnectionGUID: yUZ9ybxJQxKd1zvikw0xzQ==
+X-CSE-MsgGUID: gK/kZ4cyR8uM+cJCjynQIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="110413582"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 03 Feb 2025 02:58:42 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id D91A7214; Mon, 03 Feb 2025 12:58:40 +0200 (EET)
+Date: Mon, 3 Feb 2025 12:58:40 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Anup Patel <apatel@ventanamicro.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 12/17] ACPI: property: Add support for nargs_prop
+ in acpi_fwnode_get_reference_args()
+Message-ID: <20250203105840.GH3713119@black.fi.intel.com>
+References: <20250203084906.681418-1-apatel@ventanamicro.com>
+ <20250203084906.681418-13-apatel@ventanamicro.com>
+ <Z6CPvteWv89Xo70j@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-drm-dp-msm-add-lttpr-transparent-mode-set-v5-4-c865d0e56d6e@linaro.org>
-References: <20250203-drm-dp-msm-add-lttpr-transparent-mode-set-v5-0-c865d0e56d6e@linaro.org>
-In-Reply-To: <20250203-drm-dp-msm-add-lttpr-transparent-mode-set-v5-0-c865d0e56d6e@linaro.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
- Danilo Krummrich <dakr@redhat.com>, 
- Jani Nikula <jani.nikula@linux.intel.com>, 
- Rodrigo Vivi <rodrigo.vivi@intel.com>, 
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
- Tvrtko Ursulin <tursulin@ursulin.net>, Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
- intel-xe@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
- freedreno@lists.freedesktop.org, Abel Vesa <abel.vesa@linaro.org>, 
- Johan Hovold <johan+linaro@kernel.org>
-X-Mailer: b4 0.15-dev-dedf8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3226; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=Jh+EL4p/6JSMFadATMQ/dMawzZEL4l2MOkq/1iyumns=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBnoKFIouFywSlDaZiCw4jErWqSRIqEpI3epr4AW
- pUfu6e93kKJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZ6ChSAAKCRAbX0TJAJUV
- VkinEADM92QE1zN3OdqwoLmwOoyxpCMwh545d6+dM1Jydy6p2+/Kc4BB1xjuxNF1HNo5rtoqH07
- ym9dN4Q2Qq7XF1KIk/3CrsDT4I6xsQyH+dZXcInkRjCUYzr92gP/vw1kR3ZEqKR0MhGKoby+vee
- AMNZ73KL9sbyxqDOSvYlfU64YT+4M3Y0RjyunUFlc8d0B77KoL9D1lf+9S/cf/VIG5xt10eHvCI
- Y/7TVphY3czZAV8pnzwIf8rvKl8ovXxM1wuxLd5rbHSICbG9xkbeuPm9Gk0ayUP21CpdlnMwnrO
- ZgiMbd646uADECWUTsnLP+vy/yGmYdZk+wxCNssoiv8Uwdn5ZBIDrTreTRLOTRfs0yrkWKw+2Rr
- nvsWS9eg48JbmcR2ZEUHO9TK8fTbA7zOnb/X1M9Xm6dTObpCTrH/1WvFKyJHOT+F8lkUhOhWYM5
- FHml27aV+44Peh/GLto6Qzz4d2+f92sCsBH9ywrCKadg7S/0e9kxiYCsVG5CPv74tlxnI1MJTIk
- 38joR4PETewNrhxKk1ppq87XoZJCSGrVxk/IZsbYHALamKacJUTrn6kJ91yS/mNIU23LtyOTkdh
- M2PhJ+2wRSHuQtQv19TyrWt+d38PCVc5NM4iGWqb0J4QbPzEgPwhp1xeCLwRcvp1mk/vM6udNFY
- hRWMZsNaZcQlw7w==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z6CPvteWv89Xo70j@smile.fi.intel.com>
 
-Link Training Tunable PHY Repeaters (LTTPRs) are defined in DisplayPort
-1.4a specification. As the name suggests, these PHY repeaters are
-capable of adjusting their output for link training purposes.
+On Mon, Feb 03, 2025 at 11:43:26AM +0200, Andy Shevchenko wrote:
+> On Mon, Feb 03, 2025 at 02:19:01PM +0530, Anup Patel wrote:
+> > From: Sunil V L <sunilvl@ventanamicro.com>
+> > 
+> > fwnode_get_reference_args() which is common for both DT and ACPI passes
+> > a property name like #mbox-cells which needs to be fetched from the
+> > reference node to determine the number of arguments needed for the
+> > property. However, the ACPI version of this function doesn't support
+> > this and simply ignores the parameter passed from the wrapper function.
+> > Add support for dynamically finding number of arguments by reading the
+> > nargs property value. Update the callers to pass extra parameter.
+> 
+> I don't like this (implementation).
 
-According to the DisplayPort standard, LTTPRs have two operating
-modes:
- - non-transparent - it replies to DPCD LTTPR field specific AUX
-   requests, while passes through all other AUX requests
- - transparent - it passes through all AUX requests.
+Agree.
 
-Switching between these two modes is done by the DPTX by issuing
-an AUX write to the DPCD PHY_REPEATER_MODE register.
+> It seems that we basically have two parameters which values are duplicating
+> each other. This is error prone API and confusing in the cases when both are
+> defined. If you want property, add a new API that takes const char *nargs
+> and relies on the property be present.
 
-The msm DP driver is currently lacking any handling of LTTPRs.
-This means that if at least one LTTPR is found between DPTX and DPRX,
-the link training would fail if that LTTPR was not already configured
-in transparent mode.
-
-The section 3.6.6.1 from the DisplayPort v2.0 specification mandates
-that before link training with the LTTPR is started, the DPTX may place
-the LTTPR in non-transparent mode by first switching to transparent mode
-and then to non-transparent mode. This operation seems to be needed only
-on first link training and doesn't need to be done again until device is
-unplugged.
-
-It has been observed on a few X Elite-based platforms which have
-such LTTPRs in their board design that the DPTX needs to follow the
-procedure described above in order for the link training to be successful.
-
-So add support for reading the LTTPR DPCD caps to figure out the number
-of such LTTPRs first. Then, for platforms (or Type-C dongles) that have
-at least one such an LTTPR, set its operation mode to transparent mode
-first and then to non-transparent, just like the mentioned section of
-the specification mandates.
-
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- drivers/gpu/drm/msm/dp/dp_display.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-index 24dd37f1682bf5016bb0efbeb44489061deff060..1dd8f94e27475ae5b5b25d80f758968e6818f6cc 100644
---- a/drivers/gpu/drm/msm/dp/dp_display.c
-+++ b/drivers/gpu/drm/msm/dp/dp_display.c
-@@ -367,6 +367,19 @@ static int msm_dp_display_send_hpd_notification(struct msm_dp_display_private *d
- 	return 0;
- }
- 
-+static void msm_dp_display_lttpr_init(struct msm_dp_display_private *dp)
-+{
-+	u8 lttpr_caps[DP_LTTPR_COMMON_CAP_SIZE];
-+	int rc;
-+
-+	if (drm_dp_read_lttpr_common_caps(dp->aux, dp->panel->dpcd, lttpr_caps))
-+		return;
-+
-+	rc = drm_dp_lttpr_init(dp->aux, drm_dp_lttpr_count(lttpr_caps));
-+	if (rc)
-+		DRM_ERROR("failed to set LTTPRs transparency mode, rc=%d\n", rc);
-+}
-+
- static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
- {
- 	struct drm_connector *connector = dp->msm_dp_display.connector;
-@@ -377,6 +390,8 @@ static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
- 	if (rc)
- 		goto end;
- 
-+	msm_dp_display_lttpr_init(dp);
-+
- 	msm_dp_link_process_request(dp->link);
- 
- 	if (!dp->msm_dp_display.is_edp)
-
--- 
-2.34.1
-
+Also this is not really needed for ACPI case because it has types so it can
+distinguish references from integer. Having separate property for this just
+makes things more complex than they need to be IMHO.
