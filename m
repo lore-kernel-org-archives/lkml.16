@@ -1,181 +1,155 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB794204096
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 12:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C78C2040A6
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 12:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738584774; cv=none; b=ZdfCi6lz+OvonaxkU9VD5ov41vxEVkzy4cdyAxaJYkmfnY/+6510g4Jk7QT6ibaATNh7TXIL5D5Jz0QsNQlTeqhZpFODiV9H7Ov4aKwSoPgTJRTyzF24kqnGW4VvGWYqxeEPlcVohEzkzCuOn91d26qbkAUJHFF+0ZKWRAW2dLQ=
+	t=1738584784; cv=none; b=irkd6hrRH++F9w7W0dYQzKB3Wi+vRML5oEnkE2zDdT1NSS/6dvnvy7qlljG92vVhBAG02WOdaAUKIImIkSmytV5+YwXBejfPSFL5mSxFhmxuPAtAjo1xt8Sgoax74o6pmyaxAwRHTjaGsGzGcaeLO9z2qk/uGRz8N2JevECBJbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738584774; c=relaxed/simple;
-	bh=Al5nN7+VVsS+6jTXW2BhemO8tZMv7evAKrd72FfIn8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wr5dx9X2r5CNaB94bJNTKGI5yojrKzFXJuHk1XmLeJcrlxicqQr3lGfc5ip840M6wSKMXVtbfrYPMj/QICFceU6qc+2BbOXVRNaQ9ijdEc6C9T08ahNtCLfB+UyJqhNbRkDynG65nNsFNkkJOi587NA0zrSHlCtJvFj4cnJ480E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RwpBMjvh; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738584784; c=relaxed/simple;
+	bh=jNibjm7Z5BWSQUu8aoxS9exwEy1QnRNA66PqXhHW/n0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=htavn98fFR+nDHOPEE1/21Yxt8Ys+jARlfcZxBR2eGu/S4kEuMhGQcZHzrB+DmMzgxxAFSp/5R+GfbzSBjbjQCDjl5ViLdqCkYw6qvrVv6x7Xc1dtigHF3H2HhkqYhCQDnjptLaVmbMmS5cMf+Mxo5eMrLT60bIBIAx+SxAG/p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=W2mK9rsi; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RwpBMjvh"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6f679788fd1so23195367b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 04:12:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738584771; x=1739189571; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=G1fCnNO9BE+pRYsCkXAChxvPSR83W+kvApJS3N7O428=;
-        b=RwpBMjvhc76XSBYuCALvMc+iK/K0mSKq9fTFPQuu4KEfONDzTIpNXTCg29fgHyM00n
-         XQKKqulzsIDmkae2zkOS6vWIaqOpiy59T1lSdIKsNn9GHw79qD03dNuTuYoPPuk4WGPo
-         GaVV+O+Zs0NdVT7YuFx2peo3K1TzshxVobFyYIWZUxwbO/zaWofvsgO3pgjDBP1FBz9G
-         ZFu4jAr6oZepExmSKJOWTUpNmp5mnnPmMGMBs6Mad3o9b9/i83/jNRpqJMdC0C3uvKTq
-         xPYGDfXKd+7ROUyQYN6wuJxIELzCvM/JHzzMtUv6koW/qtXSkKKmUvgr8eX6hQXf4iqK
-         0UQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738584771; x=1739189571;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G1fCnNO9BE+pRYsCkXAChxvPSR83W+kvApJS3N7O428=;
-        b=EWkncQUBqRYEAye6zzgKK3J0AL05MQAavoRDOxrnmVhaYYztRBej1Q0og1gXlhJc7T
-         lMmc1RHzegZrmd80/HcwMcKCfdIET3A4UZsEAv9BeErsAfx2Hjq9+bJtQnU3MdsIxO2H
-         2ZQN3nZgqAqubrfQrKz2WDyP7iUOqZNZwp0k41eA1866zgDhOOdw4eyGnkyDY9LmKQDR
-         Yd+XAczOdE6IKGuO/YS+7Ieh3oRL+1aI14KT8MBzeYznXUhdb5wyMJOLwKMrPDtJYdcT
-         RJbexwzlqaUqByyPHtuidQBwTj3J3eTNDEkiCzu1ZGL9zZApCqLqGmswCP3t/F7htoJE
-         c4KA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9HlWxI6+/2oVOc8Tmla+Qa7l5JWatuFwpHUpKg04F79P/Q2hQc0F40A3wygNDV6Q1ovt87v1b+DJu7g0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIgXch5XeIbEZCio87F73OMiu/5uOH4FqGpA3SJGxYApkTmoES
-	ga9+Egjg0Qxsu9wzHYgRoB3qGxHe03KKRFHiM68e0ii1GY9oRMfnQX+lADFGjVy2FA5VF3H2pZ1
-	VpdQXhSRRmBupAxLwOFMuRj+5M6BF2jZMd7VfNg==
-X-Gm-Gg: ASbGncvZGEOiFR1mJbfGi5ap7hfOsO9SF9xE/+vIB6pcL7ADybed97Fgd3ciNZ7kZe4
-	K0uQ56pH7Ci/fNKwR6Rv/Aot3S47Po60qmH36ySVQ9s8+JY2cLVTxqLw2akI0V62G3wTG1Os5Zw
-	==
-X-Google-Smtp-Source: AGHT+IFRUR8JbA29f5mpJGLTtBTaacsV+IGEaozqrnO9adT6XC3/4NobaMzzaIo2HNZrmPqrTbZHo5WN9mGkT+rdHeQ=
-X-Received: by 2002:a05:690c:3581:b0:6f6:7b02:2568 with SMTP id
- 00721157ae682-6f7a8423943mr162561157b3.32.1738584771686; Mon, 03 Feb 2025
- 04:12:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="W2mK9rsi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1738584780;
+	bh=jNibjm7Z5BWSQUu8aoxS9exwEy1QnRNA66PqXhHW/n0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=W2mK9rsiqT96jETmYB4MAss0AmacvbxIZEkiLTswofWhb/orWPJMG+zInUFphQbL1
+	 G+4dBpC7krikDrUmXyBhTwdstCY9SAXCRPmD727o9v8fdb5JcS/Nufrdy9X2ptQJ0t
+	 haibJYsQoApeqId1JON4SrW5Z5rBmnpKD4DDWIm38MrGDyKujFyMKGkeonYDDRbtys
+	 jWBRQkqZuz2mI/E5LpEWspiC8DMdXpxxupL86rkeKl3ufjnu+bg8KmrY5LbHq9rFbX
+	 aCLc9ppvUUiqiXVwWnQxxX2g6AIgeR8PAM/zYdjCN2jwwYA+InPVikFtJwE2dRhaay
+	 69LgVvcos9x0w==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 76EA717E0239;
+	Mon,  3 Feb 2025 13:12:59 +0100 (CET)
+Date: Mon, 3 Feb 2025 13:12:52 +0100
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, asahi@lists.linux.dev, Asahi Lina
+ <lina@asahilina.net>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Frank Binns <frank.binns@imgtec.com>, Matt
+ Coster <matt.coster@imgtec.com>, Karol Herbst <kherbst@redhat.com>, Lyude
+ Paul <lyude@redhat.com>, Steven Price <steven.price@arm.com>, Lucas De
+ Marchi <lucas.demarchi@intel.com>, Thomas =?UTF-8?B?SGVsbHN0csO2bQ==?=
+ <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ nouveau@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ akash.goel@arm.com
+Subject: Re: [PATCH 0/4] drm/gpuvm: Add support for single-page-filled
+ mappings
+Message-ID: <20250203131252.71a180ea@collabora.com>
+In-Reply-To: <Z6CnSZz_Dm3YpZbx@e110455-lin.cambridge.arm.com>
+References: <20250202-gpuvm-single-page-v1-0-8cbd44fdcbd4@asahilina.net>
+	<Z5-_O8vkCO0LXcl7@pollux.localdomain>
+	<20250203102153.145229e0@collabora.com>
+	<Z6CnSZz_Dm3YpZbx@e110455-lin.cambridge.arm.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12619233.O9o76ZdvQC@rjwysocki.net> <CAPDyKFpc5p3sXZ6LfdVgt8jR5ZbsQExTgeyMNA-PzcWs5A9U0A@mail.gmail.com>
- <CAJZ5v0gvQjp_P-5Ww7iN1cGiiMJ6tvLLnPpkTQNk++KhoRe=GA@mail.gmail.com>
- <CAPDyKFrBO+r8qYRrhoFZN21__8RuR61ofbsGQZbA=pyQbti5CA@mail.gmail.com>
- <CAJZ5v0jTutgKeXtg3YLR1Onw9gOmvHudHamVVgMxEsieNDXViw@mail.gmail.com>
- <CAPDyKFpmNPhyV3YoBFu7KnW04550DQgqzGHAbGLLqp7=TggVtw@mail.gmail.com>
- <CAJZ5v0iYHBeMra_ba-1Ht4xoPGsyt7gg05RtGxoa_gG91s1xEA@mail.gmail.com>
- <CAPDyKFqkqOXD0oVZoOFR4O6ucqLS4n85_S4SNPvPAc6hfaELgw@mail.gmail.com> <CAJZ5v0jAEJ7DPS4yarwL5Nx_8EVNR0XepjnsCdNuM4pF=Cw9bg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jAEJ7DPS4yarwL5Nx_8EVNR0XepjnsCdNuM4pF=Cw9bg@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 3 Feb 2025 13:12:15 +0100
-X-Gm-Features: AWEUYZntgiPQgKGhnRjLHhrJxgceqb9ss7gC4Ai8-DSdXsy0Am7_yZUV7wpNkTU
-Message-ID: <CAPDyKFp9RGFAGjChF6jLqy9GttbJm06BGAfOLdZaXUrcagfCgg@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
- parents and children
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
-	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Kevin Xie <kevin.xie@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-[...]
+On Mon, 3 Feb 2025 11:23:53 +0000
+Liviu Dudau <liviu.dudau@arm.com> wrote:
 
-> >
-> > The problem with $subject patch is that drivers/buses are required to
-> > check the runtime PM status, with pm_runtime_suspended(),
-> > pm_runtime_status_suspended() or pm_runtime_active() in one of its
-> > system suspend/resume callbacks , to synchronize it with the HW state
-> > for its device (turn on/off clocks for example).
->
-> Well, I'm kind of unaware of this requirement.
->
-> It clearly is not even followed by the code without the $subject patch.
->
-> The real requirement is that the runtime PM status at the point when
-> runtime PM is re-enabled, that is in device_resume_early(), must
-> reflect the current actual HW state.
+> On Mon, Feb 03, 2025 at 10:21:53AM +0100, Boris Brezillon wrote:
+> > +Akash with whom we've been discussing adding a 'REPEAT' mode to
+> > drm_gpuvm/panthor.
+> > 
+> > On Sun, 2 Feb 2025 19:53:47 +0100
+> > Danilo Krummrich <dakr@kernel.org> wrote:
+> >   
+> > > Hi Lina,
+> > > 
+> > > On Sun, Feb 02, 2025 at 10:34:49PM +0900, Asahi Lina wrote:  
+> > > > Some hardware requires dummy page mappings to efficiently implement
+> > > > Vulkan sparse features. These mappings consist of the same physical
+> > > > memory page, repeated for a large range of address space (e.g. 16GiB).
+> > > > 
+> > > > Add support for this to drm_gpuvm. Currently, drm_gpuvm expects BO
+> > > > ranges to correspond 1:1 to virtual memory ranges that are mapped, and
+> > > > does math on the BO offset accordingly. To make single page mappings
+> > > > work, we need a way to turn off that math, keeping the BO offset always
+> > > > constant and pointing to the same page (typically BO offset 0).
+> > > > 
+> > > > To make this work, we need to handle all the corner cases when these
+> > > > mappings intersect with regular mappings. The rules are simply to never
+> > > > mix or merge a "regular" mapping with a single page mapping.
+> > > > 
+> > > > drm_gpuvm has support for a flags field in drm_gpuva objects. This is
+> > > > normally managed by drivers directly. We can introduce a
+> > > > DRM_GPUVA_SINGLE_PAGE flag to handle this. However, to make it work,
+> > > > sm_map and friends need to know ahead of time whether the new mapping is
+> > > > a single page mapping or not. Therefore, we need to add an argument to
+> > > > these functions so drivers can provide the flags to be filled into
+> > > > drm_gpuva.flags.
+> > > > 
+> > > > These changes should not affect any existing drivers that use drm_gpuvm
+> > > > other than the API change:
+> > > > 
+> > > > - imagination: Does not use flags at all
+> > > > - nouveau: Only uses drm_gpuva_invalidate(), which is only called on
+> > > >   existing drm_gpuva objects (after the map steps)
+> > > > - panthor: Does not use flags at all
+> > > > - xe: Does not use drm_gpuva_init_from_op() or
+> > > >   drm_gpuva_remap()/drm_gpuva_map() (which call it). This means that the
+> > > > flags field of the gpuva object is managed by the driver only, so these
+> > > > changes cannot clobber it.
+> > > > 
+> > > > Note that the way this is implemented, drm_gpuvm does not need to know
+> > > > the GPU page size. It only has to never do math on the BO offset to meet
+> > > > the requirements.
+> > > > 
+> > > > I suspect that after this change there could be some cleanup possible in
+> > > > the xe driver (which right now passes flags around in various
+> > > > driver-specific ways from the map step through to drm_gpuva objects),
+> > > > but I'll leave that to the Xe folks.
+> > > > 
+> > > > Signed-off-by: Asahi Lina <lina@asahilina.net>
+> > > > ---
+> > > > Asahi Lina (4):
+> > > >       drm/gpuvm: Add a flags argument to drm_gpuvm_sm_map[_*]
+> > > >       drm/gpuvm: Plumb through flags into drm_gpuva_op_map
+> > > >       drm/gpuvm: Add DRM_GPUVA_SINGLE_PAGE flag and logic
+> > > >       drm/gpuvm: Plumb through flags into drm_gpuva_init    
+> > > 
+> > > Without looking into any details yet:
+> > > 
+> > > This is a bit of tricky one, since we're not even close to having a user for
+> > > this new feature upstream yet, are we?  
+> > 
+> > Actually, we would be interesting in having this feature hooked up in
+> > panthor. One use case we have is Vulkan sparse bindings, of course. But
+> > we also have cases where we need to map a dummy page repeatedly on the
+> > FW side. The approach we've been considering is slightly different:
+> > pass a DRM_GPUVA_REPEAT_FLAG along with GEM range, so we can repeat a
+> > range of the GEM (see the below diff, which is completely untested by
+> > the way), but I think we'd be fine with this SINGLE_PAGE flag.  
+> 
+> Unless I've misunderstood the intent completely, it looks like Xe also wants
+> something similar although they call it CPU_ADDR_MIRROR for some reason:
+> 
+> https://lore.kernel.org/r/20250129195212.745731-9-matthew.brost@intel.com
 
-Right. Seems like we are in agreement, just that there seems to be
-multiple ways to describe the similar problem.
-
->
-> > Certainly, we can not rely on drivers to conform to this behaviour and
-> > there are plenty of cases where they really don't. For example, we
-> > have drivers that only implements runtime PM support or simply don't
-> > care about the runtime PM status during system resume, but just leaves
-> > the device in the state it is already in.
->
-> Drivers that only support runtime PM are broken with respect to system
-> sleep ATM.  They need to be made to support system sleep or they
-> cannot be used on systems that use system sleep.  There may be a way
-> around this for system suspend/resume (see below), but not for
-> hibernation.
-
-I think calling them broken may be to take this a step too far.
-
-While I certainly agree that these drivers have room for some
-improvements, it looks to me that these drivers work today, but may
-not with $subject patch.
-
->
-> > Moreover, we have the users of pm_runtime_force_suspend|resume(),
-> > which we also know *not* to work with DPM_FLAG_SMART_SUSPEND and thus
-> > $subject patch too. I am less worried about these cases though, as I
-> > believe we should be able to fix them, by taking into account the
-> > suggested "->power.set_active flag", or something along those lines.
->
-> Yes, and that's what I'm going to do.
->
-> > That said, it seems like we need another way forward.
->
-> I still don't see why, sorry.
->
-> I guess the concern is that if a device suddenly needs to be resumed
-> during system resume even though it was runtime-suspended before the
-> preceding system suspend, there is no way to tell its driver/bus
-> type/etc that this is the case if they all decide to leave the device
-> as is, but as I have said for multiple times in this thread, leaving a
-> device as is during system resume may not be an option unless it is a
-> leaf device without any subordinates.  This has always been the case.
->
-> We'll see if there is any damage resulting from the $subject change
-> and we'll fix it if so.
->
-> In the future, though, I'd like to integrate system resume with
-> runtime PM more than it is now.  Namely, it should be possible to move
-> the re-enabling of runtime PM to the front of device_resume_early()
-> and then use pm_runtime_resume() for resuming devices whose drivers
-> support runtime PM (I don't see any fundamental obstacles to this).
-> One benefit of doing this would be that pm_runtime_resume() would
-> automatically trigger a runtime resume for all of the "superior"
-> devices, so they could be left in whatever state they had been in
-> before the preceding system suspend regardless of what happens to
-> their "subordinates".  It is likely that some kind of driver opt-in
-> will be needed for this or maybe the core can figure it out by itself.
-
-Right, I am certainly interested to discuss this topic too. It's not
-an easy thing and the biggest problem is that we can't really just
-change the behaviour without a big risk of breaking things.
-
-Some kind of opt-in behaviour is the only thing that can work, in my
-opinion. Anyway, I am here to review and discuss. :-)
-
->
-> It can look at what callbacks are implemented etc.  For example, if a
-> driver only implements :runtime_suspend() and :runtime_resume() and no
-> other PM callbacks, it is reasonable to assume that the devices
-> handled by it should be suspended and resumed with the help of the
-> runtime PM infrastructure even during system-wide suspend/resume (that
-> doesn't apply to hibernation, though).
-
-Maybe this can work in some opt-in/out way, but certainly not as a
-solution for all.
-
-For example, we have subsystems that deal with system suspend/resume
-quite differently, where drivers instead implement some subsystem
-specific callbacks, rather than the common system suspend/resume ops.
-
-Kind regards
-Uffe
+At first glance, it doesn't seem related. The Xe stuff looks more like
+an alloc-on-fault mechanism. SINGLE_PAGE is about mapping a dummy page
+repeatedly over a virtual address range so that sparse Vulkan images
+never get a fault when an unbound image region is accessed.
