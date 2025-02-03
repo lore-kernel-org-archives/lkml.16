@@ -1,115 +1,114 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFCD204C34;
-	Mon,  3 Feb 2025 16:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B08204C34;
+	Mon,  3 Feb 2025 16:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738599650; cv=none; b=KmFNApcyOO37zcYBF7fuUAYFCG+am53/O8KHhSqkAa3PH1SjBq3q21Rqxdshy+nuZ864JclESEYUjIP0CdZtaZOJSWE/BUvUa1elfPb5tRUbOd1kwRntEXSNvJYy0jxZSoIDW9IAwM9wImJg9VXw+yTkki3kqbiCUBiar2Jd2lk=
+	t=1738599746; cv=none; b=ECnglEShsdVoaaNnSffdGBTwHIWCf1nGyt3c/X+93gKLGsKbOUHKqb/vSDBj/nkCmxRmM2KuVXugGKDLoXRgRkxkrI1aaD9ZB4a49W3Ows12UK5K1yowboHrfU8a6RpFbx3lf8TJhDI8/LXB6O6wtLwGxNe9dsNrZqX05koQvkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738599650; c=relaxed/simple;
-	bh=3xv+V17Ptrg6wSsQ3/e+Aw/cVitVuSazuk113nt7JC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OQ50YgDqQiMfIPAiR2L4uLqqlv/QZDRB1mTbrkrDLGdzdWldp86y6FR7lbEzemoPEmpory5LghgX2/UzFGivWpBg6teu+xnmUTInxuTIMxITIl0ueG0XPPYcolfyGcafr9Am37AHvDP12NaqcyLWEw6L3FJMMB4APA8FN9L0EhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VGzLqo7r; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1738599746; c=relaxed/simple;
+	bh=DFHJ3vmErFa4deYA6nOa61KF1ALiQmcEM90eIIvvFMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X7CnFrE729MZAnoXeDBP9+QpYj9aNl6eGbYUVup97Pez7ZYJp4Ce4M3hug7NamhgQhtE4Vd+Cqj+Ci8kHpoJPLzS+us/S0/7aCtSI/gYmoK2Q2x/64VLuqBm7+pNkMGgvgE0VEuuhHG2KYju3jrV20Wjbvx71gJ4RsTAptymjpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B9YrFUCI; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VGzLqo7r"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 64D014429D;
-	Mon,  3 Feb 2025 16:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738599646;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EYz4KDbtDKCjrsbHPX2KqcCz6vpI0HGScIWPHv7yNeY=;
-	b=VGzLqo7ru3D7byHGtK6ocWVcwnSs36x6BnaWyYIukQWJhHOtQn/ZBtEImP02ZGUViqbu3b
-	eF0+2qyDnuD4vcvel0aJadqM8isOU/j/bTLY3iUyS9ng8PyET8lRFbbyHGEGXs6vRvXn3v
-	0BQefURaqb48Ua8GSquRvHV9ZuobtYv71QewVDX6gRYJOkrpGKkV3p+iphKdksNFi/vyxv
-	XHXN2PCwo708ruuSd0ojlLFGbygxbsEz4d5d/FD99DKM1TFDiRSSZdF1IXS+oiWSQONpMt
-	iltSwgN3+aE4OuuK3uzeecxg4tP6ALEqKheyGFg/u59G9j+gE5lc2DWf328kRA==
-Date: Mon, 3 Feb 2025 17:20:44 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Laurent Pinchart
- <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>,
- =?UTF-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel
- Maintenance <kernel-list@raspberrypi.com>, Marek Vasut <marex@denx.de>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Louis Chauvet <louis.chauvet@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 3/4] drm/vc4: hdmi: Use
- drm_atomic_helper_reset_crtc()
-Message-ID: <20250203172044.74967850@bootlin.com>
-In-Reply-To: <lu2crev4ikpn2tu6mizmvi4oorb7tbat2uxmcci3qekqi4ohqq@vfps25gpnurk>
-References: <20250203145824.155869-1-herve.codina@bootlin.com>
-	<20250203145824.155869-4-herve.codina@bootlin.com>
-	<lu2crev4ikpn2tu6mizmvi4oorb7tbat2uxmcci3qekqi4ohqq@vfps25gpnurk>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B9YrFUCI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738599744; x=1770135744;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DFHJ3vmErFa4deYA6nOa61KF1ALiQmcEM90eIIvvFMI=;
+  b=B9YrFUCIBDCvFSpwd+S9iTQ4qO7DCbVB686QsnItOJmOHz/VV3UoFrxa
+   SiRdovjPy3we0ApHbnsgHDtlB/2XgjDn+W7bZa92nr5F5luCugQo4UNkQ
+   tc0dtLKWDLFrct6+ZZGXsOb8NO164OW7c+eh+VH+UApbk3zIRQX9wl4Pe
+   d2qW1jD4bxpJyVY6QOmrZwmiFxWQVCaIvktKW6qYJcZA31VYWU4Aqn7N/
+   W+fKAcbFDzY5uJlQfJjETYv7BhZV6pDX2AAV5wCe0rceEoX/vH9V9YCZe
+   34lRPH2J8xhnxKhP2pqFaHJvnN7bmC1/6WoGdLFZztlT6nH3+7rR7PZiq
+   A==;
+X-CSE-ConnectionGUID: ktu542HeQBOMeCzQuNpbJg==
+X-CSE-MsgGUID: iASaq+xrQFO5C7o7/7Xeug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="43023613"
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="43023613"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 08:22:23 -0800
+X-CSE-ConnectionGUID: zEXEqU0pSfmp2fB4xfr6fQ==
+X-CSE-MsgGUID: LfxRPiJRQ0O+0kB14sbVRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="110158738"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 08:22:20 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tezDE-00000007szN-2wlB;
+	Mon, 03 Feb 2025 18:22:16 +0200
+Date: Mon, 3 Feb 2025 18:22:16 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 1/3] driver core: add a faux bus for use when a simple
+ device/bus is needed
+Message-ID: <Z6DtOEPqTb_9Aqdl@smile.fi.intel.com>
+References: <2025020324-thermal-quilt-1bae@gregkh>
+ <2025020326-backer-vendetta-7094@gregkh>
+ <Z6DchyPieQKBJ0SN@smile.fi.intel.com>
+ <2025020300-gown-outmatch-1343@gregkh>
+ <Z6DpP3qMNYZoKEP2@smile.fi.intel.com>
+ <2025020337-obstruct-washbasin-63a4@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekfedtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeduveetteevfeevhfeikeehheeujeehfeeutdehgfeiieffteekieevfeehffeiteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdeipdhrtghpthhtohepughmihhtrhihrdgsrghrhihshhhkohhvsehlihhnrghrohdrohhrghdprhgtphhtthhopegrlhgvgigrnhguvghrrdhsthgvihhnsegvfidrthhqqdhgrhhouhhprdgtohhmpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrr
- hhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnfgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepjhgvrhhnvghjrdhskhhrrggsvggtsehgmhgrihhlrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025020337-obstruct-washbasin-63a4@gregkh>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Dmitry,
+On Mon, Feb 03, 2025 at 05:13:28PM +0100, Greg Kroah-Hartman wrote:
+> On Mon, Feb 03, 2025 at 06:05:19PM +0200, Andy Shevchenko wrote:
 
-On Mon, 3 Feb 2025 17:56:46 +0200
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
+...
 
-> On Mon, Feb 03, 2025 at 03:58:22PM +0100, Herve Codina wrote:
-> > The current code uses a the reset_pipe() local function to reset the
-> > CRTC outputs.
+> > > > > +	faux_obj = kzalloc(sizeof(*faux_obj) + strlen(name) + 1, GFP_KERNEL);
+> > > > 
+> > > > Potential overflow. To avoid one may use struct_size() from overflow.h.
+> > > 
+> > > Users should not be providing the string here.  Again, this comes from
+> > > platform.c.
 > > 
-> > drm_atomic_helper_reset_crtc() has been introduced recently and it
-> > performs exact same operations.
-> > 
-> > In order to avoid code duplication, use the new helper instead of the
-> > local function.
-> > 
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > ---
-> >  drivers/gpu/drm/vc4/vc4_hdmi.c | 30 +-----------------------------
-> >  1 file changed, 1 insertion(+), 29 deletions(-)
-> >   
+> > I'm not sure I follow. The name parameter is not limited anyhow, so one may
+> > provide non-terminated string and strlen() will return an arbitrary number.
+> > Potentially this can lead to big numbers and become an overflow when gets
+> > to a parameter for kmalloc(). This most likely never happen in real life,
+> > but still the overflow is possible.
 > 
-> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
+> I've now bounded at 256, because really, who needs a bigger name for a
+> device than that :)
 
-I messed me up in this v4. It doesn't apply on top of v6.14-rc1.
-
-I already sent a v5 to fix that.
-
-Can you add your tag on the v5?
-
-Of course, I will add them myself if a v6 is needed.
-
-I am sorry about my mistake.
-
-Apologies,
-Hervé
+Works for me! With printable ASCII characters it can be estimated as up to
+64^256 combinations, which "ought to be enough for everybody" (of course
+it will be much less if we count only human-readable strings). :-)
 
 -- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+With Best Regards,
+Andy Shevchenko
+
+
