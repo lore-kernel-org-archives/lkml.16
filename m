@@ -1,63 +1,41 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E3620FA91
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 20:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3FE20FAA0;
+	Mon,  3 Feb 2025 20:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738615254; cv=none; b=cC8mebYvAnN5kbuKwLHYEZbl3w9AB9Hkrwq/xIqnWM2oxWPO2BK+9hxHUFNVlITg8N0ojcaNIeG02UDIODS2JVSz/iw7QfcYQiaoPhX2aKtG23giIeBDdESmwekpJXHqx33Sr5faVtCSKlRY/1W+UEvnJ+MrPfu7K27n4fIztfg=
+	t=1738615257; cv=none; b=kn9WBldD0yd6hR6Tfn2ZCA8geKv+lrm3cEx/TWNWAWYg8iHK/p02NsGLxxWeYzpEWznhOkZakL/DGk47tQHVx+es/0g26tDSxleVr7KSGkpJ5Vkp1WuQioyKV/ibf4qYJhHm4OOvflMgCLE0VYrML2GaDIxai51kP1kzDxoaeYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738615254; c=relaxed/simple;
-	bh=rXFfU6ED2XfqPewvtEzU67hZBmLdE6NpBeM4mArIHdo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YDlyZ47gGtpDYDl3Vc01vzo4Zf03+CZr9lo3AYQXtgUlR/4rE/CoXDUYvtrE0jVn1l1FFx2QzI1TCErbu0F0n3zvMyFi4ILp8icI5e2vxpnHYN2nD7a5Hd1vIuWgeVm4rhxUSTpacYl2pHmvuhTK1rJfzvUTRRQ7EmG1wJI6UvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=azgAFIBf; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738615257; c=relaxed/simple;
+	bh=wt2GHvwQc8oyS/a94zlZqsI73cR1u9EzFQZlaA/5+ZU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OSX+nYVanoWIn22o89mE4c1+fTl4jvb8bjQQbhkwtPwPEv21TsTXPURblHO3T7ugVFsdcRJe5MTL4WsgFFZXZXmuR3bSWHCBTL9x3r6IeVhNMMTfScXWuMigvUre1XSBFHUo9u3YGLje6BpxD/sf2xMhLdQh6TDOoLVRo0EAN2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Zg/jxgRz; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="azgAFIBf"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21654fdd5daso83980235ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 12:40:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738615251; x=1739220051; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=L8Zy0lPG6xJFXQmA/ow+W2nd6atRP51DXYjGxeq5LAU=;
-        b=azgAFIBf5OwUksk2uVSbRRivrrcIy7Ofy+ZsBIkuSmfrIWomvHTsEJ8zfeQZMoZcnN
-         ea2P8EJb9ndZv0hGfvLTW/en1Blw0UdcfoR5Y/o7l1MFHvAPpD5lAFWSW5WOVKYVMrl9
-         mvED3McRqOpgK0p7PRd5+NIFVZDBivrG8FrWnZ06wECa0xKYlHDE0PzK95z4ioJRe995
-         jaG39kvodRP58M9J7dmbyDTlk1HSg9F5eP8J2dgBcYv7Zbxl/SE/p68qoYn5dgMxW9MZ
-         jx02Z6nb7V48Mn9YekoFOHg8my2tJtYlYYcBcTsMxqdyZUFKSl6/NKRGRlUxUlZ53Tf1
-         mF2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738615251; x=1739220051;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=L8Zy0lPG6xJFXQmA/ow+W2nd6atRP51DXYjGxeq5LAU=;
-        b=MPQsPh/adhmoWYg3J55puoptPq6yJ8BwnCvU0JFfky0+P+OokYzunj1744uQTgiKQw
-         5yDO2GotdfJ8piwdt3hm34Iet6et4yrGQIwqAQoiPkY2Xn+v2DFf8vkVW4Mb3Tf6zpgO
-         CxN7/G1ZKy/Z7doz/wjhBCI6NSFeBTAoIK3Zz1Xuz82lm7Fr6f165MJZiSmymxBcAdH+
-         DbnmhIvj0MSCZutYj4CRwouHw1UNtJHshfAuq8IzFtkPZy6I4HlCk1RFLL56pE/9UfXI
-         EfVdc/lNBk8udNzbCDwe6khLGg8CaBGbrk6uhPO/R8GF6KocCnUai3+SEKy8o7jK1+zf
-         n5oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVMbswGSup4iCiLfKyVQGjpvNvZpmiCGDARHFYW4abpYycqMoSS0IO1K26kVVSx8kxwLmhEIhw/KSC2G6I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvEkdRGh12mRWW3QqHt2N7mdpmdggeM6SiFR9Tj20uzXhAMFi5
-	on0WXkJwtVOlNiUjrcH+Kt8HBSzocC9aGf1DvcjytCrbTpxiwNHVVyM14Mxea8A=
-X-Gm-Gg: ASbGncvqEPGKywazrEbWM9+qHgHbCwAy84rsLKa4qSZixqSKpQN8XQzT/3+hm5Zd90u
-	lYyiT/t9uA06+z8hKc1ZvHh0XrPgwvRQoM8yeFnq/x8l0HVjBoTgKhCYBRHUKRZFtjxVHjiVoZR
-	jF9BsbFlyNME165zN4AFRWd2FZWdv0XCduh/a2X0HMzKDuk0ysrKoJ8uKSEIc02FwT5eHgQDtCg
-	FCRi8zhvdjqGrJmgX1D/BswdV9Zl7yV2nXMB8hIya9AuuQZiC51TjqRXtHdB3njbcRPLkMYPCdY
-	pFrMABQ9yFfmNU3OMkNarJ/y1vW68eo=
-X-Google-Smtp-Source: AGHT+IGDmQaZbcrvssMiiL60j+TVXJEpN3gw5/WiVLAA4e66OJsLZm6LCawjbeTXAmyvS8VkbmBo+A==
-X-Received: by 2002:a17:903:41c3:b0:216:56d5:d87 with SMTP id d9443c01a7336-21dd7db93f5mr371364575ad.34.1738615251439;
-        Mon, 03 Feb 2025 12:40:51 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de33000e0sm80853465ad.167.2025.02.03.12.40.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 12:40:50 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Mon, 03 Feb 2025 12:40:41 -0800
-Subject: [PATCH v5] riscv: Add runtime constant support
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Zg/jxgRz"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 03CC725C59;
+	Mon,  3 Feb 2025 21:40:54 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 3blw3TwI0hZa; Mon,  3 Feb 2025 21:40:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1738615252; bh=wt2GHvwQc8oyS/a94zlZqsI73cR1u9EzFQZlaA/5+ZU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=Zg/jxgRznMkz2a2RdPlY5Lo0N6vCZuL3AC4b3Kl/oWwzGfnGcUSlPUrJ7B2vFYm8Z
+	 C6S5GNRWMqY9KiBw9yK8C+pylfgIotqkSN4rjKDZCPlBUJpcQOrYdoC45YiauFAibb
+	 jrfUpoDLdQxLVsvWiAa6Gpw2705qnCC7OVXLuYSlg79unG16X8o9Q9Xsu8eTz265Wf
+	 n+ZTqCuUscAq/4D61IdwYGQ+zcav//hr6dzTQSxvnQufT4pgqGNdeJ2IpIjgMjZis6
+	 cWzD9wd8LmKeQtCmnFNstioo2BPy1E11GkOdJ7PRRzb6L3XFeAXeADlKGYYLfjHg5r
+	 SiVl9RH5SQ7Ag==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Date: Tue, 04 Feb 2025 02:10:13 +0530
+Subject: [PATCH 2/4] phy: exynos5-usbdrd: use GENMASK and FIELD_PREP for
+ Exynos5 PHY registers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,289 +44,336 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-runtime_const_riscv-v5-1-bc61736a3229@rivosinc.com>
-X-B4-Tracking: v=1; b=H4sIAMgpoWcC/43NwYrCMBDG8VeRnDdLMmlMs6d9DxFpp+M6BxNJa
- lCk724UFkRy8Pgf+H5zE5kSUxY/q5tIVDhzDDXs10rgYQh/JHmqLUCBVRqMTOcw85F2GEOed4k
- zFrnGqbcdEfTaibo8Jdrz5alutrUPnOeYrs8nRT+u/55rekVLLZ23owJDA6jxN3GJmQN+YzyKB
- 1ngAwYq4+1ADvfeDcY3GPPK9G3GVEZrD+B7TzCZBtO9MEa1ma4ydb3GTo9u9PjGLMtyB7fVmRO
- OAQAA
-X-Change-ID: 20250123-runtime_const_riscv-6cd854ee2817
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Ard Biesheuvel <ardb@kernel.org>, 
- Ben Dooks <ben.dooks@codethink.co.uk>, 
- Pasha Bouzarjomehri <pasha@rivosinc.com>, 
- Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8649; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=rXFfU6ED2XfqPewvtEzU67hZBmLdE6NpBeM4mArIHdo=;
- b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/pCzTNuP+5yfBE6eWibTVvU3MV/rtUZPuxh7hPQ/sCsc
- IJ3U6JgRykLgxgXg6yYIgvPtQbm1jv6ZUdFyybAzGFlAhnCwMUpABPR2cTIMGvly0LfO9fNXkzM
- aA/ZU/pX6dXtm7UqZ9VXvpj+4wjDIjNGhva1CyXro5sXWU58s12D4Wpe+yuJ8zWn9ZdfkitRYhT
- W5QQA
-X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
- fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
+Message-Id: <20250204-exynos7870-usbphy-v1-2-f30a9857efeb@disroot.org>
+References: <20250204-exynos7870-usbphy-v1-0-f30a9857efeb@disroot.org>
+In-Reply-To: <20250204-exynos7870-usbphy-v1-0-f30a9857efeb@disroot.org>
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Vivek Gautam <gautam.vivek@samsung.com>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor@kernel.org>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sergey Lisov <sleirsgoevy@gmail.com>, linux-phy@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738615219; l=12277;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=wt2GHvwQc8oyS/a94zlZqsI73cR1u9EzFQZlaA/5+ZU=;
+ b=iia+uq4EAucOrUu4rUoWAsax86cUgcZKLtoZCcDA0W4GLOeOa4EHPXvxHCh634NZ/QhiQJNQD
+ 9mSrHGApBhKCUnj+yFtms7Twka906ct+HyVIB5uOWE5mysd/8bXn9ut
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-Implement the runtime constant infrastructure for riscv. Use this
-infrastructure to generate constants to be used by the d_hash()
-function.
+Most Exynos850 and Exynos9 (GS101) DRD PHY registers use GENMASK for masks
+and FIELD_PREP for writing values to registers.
 
-This is the riscv variant of commit 94a2bc0f611c ("arm64: add 'runtime
-constant' support") and commit e3c92e81711d ("runtime constants: add
-x86 architecture support").
+Rewrite the register definitions which don't follow this approach to follow
+it as much as possible. This patch doesn't introduce any fixes or
+functional changes, it's merely an attempt to introduce some uniformity and
+consistency in the driver code.
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+The CRPORT SuperSpeed control registers have been exempted from this
+change. Since the writing of register values do not require any masking
+operations, implementing it would unnecessarily complicate things.
+
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 ---
-Ard brought this to my attention in this patch [1].
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 147 ++++++++++++++++---------------
+ 1 file changed, 75 insertions(+), 72 deletions(-)
 
-[1] https://lore.kernel.org/lkml/CAMj1kXE4DJnwFejNWQu784GvyJO=aGNrzuLjSxiowX_e7nW8QA@mail.gmail.com/
----
-Changes in v5:
-- Split instructions into 16-bit parcels to avoid alignment (Emil)
-- Link to v4: https://lore.kernel.org/r/20250130-runtime_const_riscv-v4-1-2d36c41b7b9c@rivosinc.com
-
-Changes in v4:
-- Add newlines after riscv32 assembler directives
-- Align instructions along 32-bit boundary (Emil)
-- Link to v3: https://lore.kernel.org/r/20250128-runtime_const_riscv-v3-1-11922989e2d3@rivosinc.com
-
-Changes in v3:
-- Leverage "pack" instruction for runtime_const_ptr() to reduce hot path
-  by 3 instructions if Zbkb is supported. Suggested by Pasha Bouzarjomehri (pasha@rivosinc.com)
-- Link to v2: https://lore.kernel.org/r/20250127-runtime_const_riscv-v2-1-95ae7cf97a39@rivosinc.com
-
-Changes in v2:
-- Treat instructions as __le32 and do proper conversions (Ben)
-- Link to v1: https://lore.kernel.org/r/20250127-runtime_const_riscv-v1-1-795b023ea20b@rivosinc.com
----
- arch/riscv/include/asm/runtime-const.h | 199 +++++++++++++++++++++++++++++++++
- arch/riscv/kernel/vmlinux.lds.S        |   3 +
- 2 files changed, 202 insertions(+)
-
-diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..bbfa8c512c602e49a34f4e1b1174c77c0478ca44
---- /dev/null
-+++ b/arch/riscv/include/asm/runtime-const.h
-@@ -0,0 +1,199 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_RISCV_RUNTIME_CONST_H
-+#define _ASM_RISCV_RUNTIME_CONST_H
-+
-+#include <asm/alternative.h>
-+#include <asm/cacheflush.h>
-+#include <asm/text-patching.h>
-+#include <linux/uaccess.h>
-+
-+#ifdef CONFIG_32BIT
-+#define runtime_const_ptr(sym)					\
-+({								\
-+	typeof(sym) __ret;					\
-+	asm_inline(".option push\n\t"				\
-+		".option norvc\n\t"				\
-+		"1:\t"						\
-+		"lui	%[__ret],0x89abd\n\t"			\
-+		"addi	%[__ret],%[__ret],-0x211\n\t"		\
-+		".option pop\n\t"				\
-+		".pushsection runtime_ptr_" #sym ",\"a\"\n\t"	\
-+		".long 1b - .\n\t"				\
-+		".popsection"					\
-+		: [__ret] "=r" (__ret));			\
-+	__ret;							\
-+})
-+#else
-+/*
-+ * Loading 64-bit constants into a register from immediates is a non-trivial
-+ * task on riscv64. To get it somewhat performant, load 32 bits into two
-+ * different registers and then combine the results.
-+ *
-+ * If the processor supports the Zbkb extension, we can combine the final
-+ * "slli,slli,srli,add" into the single "pack" instruction. If the processor
-+ * doesn't support Zbkb but does support the Zbb extension, we can
-+ * combine the final "slli,srli,add" into one instruction "add.uw".
-+ */
-+#define runtime_const_ptr(sym)						\
-+({									\
-+	typeof(sym) __ret, __tmp;					\
-+	asm_inline(".option push\n\t"					\
-+		".option norvc\n\t"					\
-+		"1:\t"							\
-+		"lui	%[__ret],0x89abd\n\t"				\
-+		"lui	%[__tmp],0x1234\n\t"				\
-+		"addiw	%[__ret],%[__ret],-0x211\n\t"			\
-+		"addiw	%[__tmp],%[__tmp],0x567\n\t"			\
-+		ALTERNATIVE_2(						\
-+			"slli	%[__tmp],%[__tmp],32\n\t"		\
-+			"slli	%[__ret],%[__ret],32\n\t"		\
-+			"srli	%[__ret],%[__ret],32\n\t"		\
-+			"add	%[__ret],%[__ret],%[__tmp]\n\t",	\
-+			".option push\n\t"				\
-+			".option arch,+zba\n\t"				\
-+			"slli	%[__tmp],%[__tmp],32\n\t"		\
-+			"add.uw %[__ret],%[__ret],%[__tmp]\n\t"		\
-+			"nop\n\t"					\
-+			"nop\n\t"					\
-+			".option pop\n\t",				\
-+			0, RISCV_ISA_EXT_ZBA, 1,			\
-+			".option push\n\t"				\
-+			".option arch,+zbkb\n\t"			\
-+			"pack	%[__ret],%[__ret],%[__tmp]\n\t"		\
-+			"nop\n\t"					\
-+			"nop\n\t"					\
-+			"nop\n\t"					\
-+			".option pop\n\t",				\
-+			0, RISCV_ISA_EXT_ZBKB, 1			\
-+		)							\
-+		".option pop\n\t"					\
-+		".pushsection runtime_ptr_" #sym ",\"a\"\n\t"		\
-+		".long 1b - .\n\t"					\
-+		".popsection"						\
-+		: [__ret] "=r" (__ret), [__tmp] "=r" (__tmp));		\
-+	__ret;								\
-+})
-+#endif
-+
-+#ifdef CONFIG_32BIT
-+#define SRLI "srli "
-+#else
-+#define SRLI "srliw "
-+#endif
-+
-+#define runtime_const_shift_right_32(val, sym)			\
-+({								\
-+	u32 __ret;						\
-+	asm_inline(".option push\n\t"				\
-+		".option norvc\n\t"				\
-+		"1:\t"						\
-+		SRLI "%[__ret],%[__val],12\n\t"			\
-+		".option pop\n\t"				\
-+		".pushsection runtime_shift_" #sym ",\"a\"\n\t"	\
-+		".long 1b - .\n\t"				\
-+		".popsection"					\
-+		: [__ret] "=r" (__ret)				\
-+		: [__val] "r" (val));				\
-+	__ret;							\
-+})
-+
-+#define runtime_const_init(type, sym) do {			\
-+	extern s32 __start_runtime_##type##_##sym[];		\
-+	extern s32 __stop_runtime_##type##_##sym[];		\
-+								\
-+	runtime_const_fixup(__runtime_fixup_##type,		\
-+			    (unsigned long)(sym),		\
-+			    __start_runtime_##type##_##sym,	\
-+			    __stop_runtime_##type##_##sym);	\
-+} while (0)
-+
-+static inline void __runtime_fixup_caches(void *where, unsigned int insns)
-+{
-+	/* On riscv there are currently only cache-wide flushes so va is ignored. */
-+	__always_unused uintptr_t va = (uintptr_t)where;
-+
-+	flush_icache_range(va, va + 4*insns);
-+}
-+
-+/*
-+ * The 32-bit immediate is stored in a lui+addi pairing.
-+ * lui holds the upper 20 bits of the immediate in the first 20 bits of the instruction.
-+ * addi holds the lower 12 bits of the immediate in the first 12 bits of the instruction.
-+ */
-+static inline void __runtime_fixup_32(__le16 *lui_parcel, __le16 *addi_parcel, unsigned int val)
-+{
-+	unsigned int lower_immediate, upper_immediate;
-+	__le32 lui_res, addi_res;
-+	u32 lui_insn, addi_insn;
-+
-+	lui_insn = (u32)le16_to_cpu(lui_parcel[0]) | (u32)le16_to_cpu(lui_parcel[1]) << 16;
-+	addi_insn = (u32)le16_to_cpu(addi_parcel[0]) | (u32)le16_to_cpu(addi_parcel[1]) << 16;
-+
-+	lower_immediate = sign_extend32(val, 11);
-+	upper_immediate = (val - lower_immediate);
-+
-+	if (upper_immediate & 0xfffff000) {
-+		/* replace upper 20 bits of lui with upper immediate */
-+		lui_insn &= 0x00000fff;
-+		lui_insn |= upper_immediate & 0xfffff000;
-+	} else {
-+		/* replace lui with nop if immediate is small enough to fit in addi */
-+		lui_insn = 0x00000013;
-+	}
-+
-+	if (lower_immediate & 0x00000fff) {
-+		/* replace upper 12 bits of addi with lower 12 bits of val */
-+		addi_insn &= 0x000fffff;
-+		addi_insn |= (lower_immediate & 0x00000fff) << 20;
-+	} else {
-+		/* replace addi with nop if lower_immediate is empty */
-+		addi_insn = 0x00000013;
-+	}
-+
-+	addi_res = cpu_to_le32(addi_insn);
-+	lui_res = cpu_to_le32(lui_insn);
-+	patch_insn_write(addi_parcel, &addi_res, sizeof(addi_res));
-+	patch_insn_write(lui_parcel, &lui_res, sizeof(lui_res));
-+}
-+
-+static inline void __runtime_fixup_ptr(void *where, unsigned long val)
-+{
-+#ifdef CONFIG_32BIT
-+		__runtime_fixup_32(where, where + 4, val);
-+		__runtime_fixup_caches(where, 2);
-+#else
-+		__runtime_fixup_32(where, where + 8, val);
-+		__runtime_fixup_32(where + 4, where + 12, val >> 32);
-+		__runtime_fixup_caches(where, 4);
-+#endif
-+}
-+
-+/*
-+ * Replace the least significant 5 bits of the srli/srliw immediate that is
-+ * located at bits 20-24
-+ */
-+static inline void __runtime_fixup_shift(void *where, unsigned long val)
-+{
-+	__le16 *parcel = where;
-+	__le32 res;
-+	u32 insn;
-+
-+	insn = (u32)le16_to_cpu(parcel[0]) | (u32)le16_to_cpu(parcel[1]) << 16;
-+
-+	insn &= 0xfe0fffff;
-+	insn |= (val & 0b11111) << 20;
-+
-+	res = cpu_to_le32(insn);
-+	patch_text_nosync(where, &res, sizeof(insn));
-+}
-+
-+static inline void runtime_const_fixup(void (*fn)(void *, unsigned long),
-+				       unsigned long val, s32 *start, s32 *end)
-+{
-+	while (start < end) {
-+		fn(*start + (void *)start, val);
-+		start++;
-+	}
-+}
-+
-+#endif /* _ASM_RISCV_RUNTIME_CONST_H */
-diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-index 002ca58dd998cb78b662837b5ebac988fb6c77bb..61bd5ba6680a786bf1db7dc37bf1acda0639b5c7 100644
---- a/arch/riscv/kernel/vmlinux.lds.S
-+++ b/arch/riscv/kernel/vmlinux.lds.S
-@@ -97,6 +97,9 @@ SECTIONS
- 	{
- 		EXIT_DATA
- 	}
-+
-+	RUNTIME_CONST_VARIABLES
-+
- 	PERCPU_SECTION(L1_CACHE_BYTES)
+diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+index 4a108fdab118c0edd76bd88dc9dbf6a498e064b3..b2194134193984392c8b48bac249591a92eaa924 100644
+--- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
++++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+@@ -37,8 +37,7 @@
+ /* Exynos5: USB 3.0 DRD PHY registers */
+ #define EXYNOS5_DRD_LINKSYSTEM			0x04
+ #define LINKSYSTEM_XHCI_VERSION_CONTROL		BIT(27)
+-#define LINKSYSTEM_FLADJ_MASK			(0x3f << 1)
+-#define LINKSYSTEM_FLADJ(_x)			((_x) << 1)
++#define LINKSYSTEM_FLADJ			GENMASK(6, 1)
  
- 	.rel.dyn : {
+ #define EXYNOS5_DRD_PHYUTMI			0x08
+ #define PHYUTMI_OTGDISABLE			BIT(6)
+@@ -49,30 +48,27 @@
+ 
+ #define EXYNOS5_DRD_PHYCLKRST			0x10
+ #define PHYCLKRST_EN_UTMISUSPEND		BIT(31)
+-#define PHYCLKRST_SSC_REFCLKSEL_MASK		(0xff << 23)
+-#define PHYCLKRST_SSC_REFCLKSEL(_x)		((_x) << 23)
+-#define PHYCLKRST_SSC_RANGE_MASK		(0x03 << 21)
+-#define PHYCLKRST_SSC_RANGE(_x)			((_x) << 21)
++#define PHYCLKRST_SSC_REFCLKSEL			GENMASK(30, 23)
++#define PHYCLKRST_SSC_RANGE			GENMASK(22, 21)
+ #define PHYCLKRST_SSC_EN			BIT(20)
+ #define PHYCLKRST_REF_SSP_EN			BIT(19)
+ #define PHYCLKRST_REF_CLKDIV2			BIT(18)
+-#define PHYCLKRST_MPLL_MULTIPLIER_MASK		(0x7f << 11)
+-#define PHYCLKRST_MPLL_MULTIPLIER_100MHZ_REF	(0x19 << 11)
+-#define PHYCLKRST_MPLL_MULTIPLIER_50M_REF	(0x32 << 11)
+-#define PHYCLKRST_MPLL_MULTIPLIER_24MHZ_REF	(0x68 << 11)
+-#define PHYCLKRST_MPLL_MULTIPLIER_20MHZ_REF	(0x7d << 11)
+-#define PHYCLKRST_MPLL_MULTIPLIER_19200KHZ_REF	(0x02 << 11)
+-#define PHYCLKRST_FSEL_PIPE_MASK		(0x7 << 8)
+-#define PHYCLKRST_FSEL_UTMI_MASK		(0x7 << 5)
+-#define PHYCLKRST_FSEL(_x)			((_x) << 5)
+-#define PHYCLKRST_FSEL_PAD_100MHZ		(0x27 << 5)
+-#define PHYCLKRST_FSEL_PAD_24MHZ		(0x2a << 5)
+-#define PHYCLKRST_FSEL_PAD_20MHZ		(0x31 << 5)
+-#define PHYCLKRST_FSEL_PAD_19_2MHZ		(0x38 << 5)
++#define PHYCLKRST_MPLL_MULTIPLIER		GENMASK(17, 11)
++#define PHYCLKRST_MPLL_MULTIPLIER_100MHZ_REF	0x19
++#define PHYCLKRST_MPLL_MULTIPLIER_50M_REF	0x32
++#define PHYCLKRST_MPLL_MULTIPLIER_24MHZ_REF	0x68
++#define PHYCLKRST_MPLL_MULTIPLIER_20MHZ_REF	0x7d
++#define PHYCLKRST_MPLL_MULTIPLIER_19200KHZ_REF	0x02
++#define PHYCLKRST_FSEL_PIPE			GENMASK(10, 8)
++#define PHYCLKRST_FSEL_UTMI			GENMASK(7, 5)
++#define PHYCLKRST_FSEL_PAD_100MHZ		0x27
++#define PHYCLKRST_FSEL_PAD_24MHZ		0x2a
++#define PHYCLKRST_FSEL_PAD_20MHZ		0x31
++#define PHYCLKRST_FSEL_PAD_19_2MHZ		0x38
+ #define PHYCLKRST_RETENABLEN			BIT(4)
+-#define PHYCLKRST_REFCLKSEL_MASK		(0x03 << 2)
+-#define PHYCLKRST_REFCLKSEL_PAD_REFCLK		(0x2 << 2)
+-#define PHYCLKRST_REFCLKSEL_EXT_REFCLK		(0x3 << 2)
++#define PHYCLKRST_REFCLKSEL			GENMASK(3, 2)
++#define PHYCLKRST_REFCLKSEL_PAD_REFCLK		0x2
++#define PHYCLKRST_REFCLKSEL_EXT_REFCLK		0x3
+ #define PHYCLKRST_PORTRESET			BIT(1)
+ #define PHYCLKRST_COMMONONN			BIT(0)
+ 
+@@ -81,22 +77,22 @@
+ #define PHYREG0_SSC_RANGE			BIT(20)
+ #define PHYREG0_CR_WRITE			BIT(19)
+ #define PHYREG0_CR_READ				BIT(18)
+-#define PHYREG0_CR_DATA_IN(_x)			((_x) << 2)
++#define PHYREG0_CR_DATA_IN			GENMASK(17, 2)
+ #define PHYREG0_CR_CAP_DATA			BIT(1)
+ #define PHYREG0_CR_CAP_ADDR			BIT(0)
+ 
+ #define EXYNOS5_DRD_PHYREG1			0x18
+-#define PHYREG1_CR_DATA_OUT(_x)			((_x) << 1)
++#define PHYREG0_CR_DATA_OUT			GENMASK(16, 1)
+ #define PHYREG1_CR_ACK				BIT(0)
+ 
+ #define EXYNOS5_DRD_PHYPARAM0			0x1c
+ #define PHYPARAM0_REF_USE_PAD			BIT(31)
+-#define PHYPARAM0_REF_LOSLEVEL_MASK		(0x1f << 26)
+-#define PHYPARAM0_REF_LOSLEVEL			(0x9 << 26)
++#define PHYPARAM0_REF_LOSLEVEL			GENMASK(30, 26)
++#define PHYPARAM0_REF_LOSLEVEL_VAL		0x9
+ 
+ #define EXYNOS5_DRD_PHYPARAM1			0x20
+-#define PHYPARAM1_PCS_TXDEEMPH_MASK		(0x1f << 0)
+-#define PHYPARAM1_PCS_TXDEEMPH			(0x1c)
++#define PHYPARAM1_PCS_TXDEEMPH			GENMASK(4, 0)
++#define PHYPARAM1_PCS_TXDEEMPH_VAL		0x1c
+ 
+ #define EXYNOS5_DRD_PHYTERM			0x24
+ 
+@@ -138,7 +134,7 @@
+ #define LINKCTRL_FORCE_PHYSTATUS		BIT(17)
+ #define LINKCTRL_FORCE_PIPE_EN			BIT(16)
+ #define LINKCTRL_FORCE_QACT			BIT(8)
+-#define LINKCTRL_BUS_FILTER_BYPASS(_x)		((_x) << 4)
++#define LINKCTRL_BUS_FILTER_BYPASS		GENMASK(7, 4)
+ 
+ #define EXYNOS850_DRD_LINKPORT			0x08
+ #define LINKPORT_HOST_NUM_U3			GENMASK(19, 16)
+@@ -484,29 +480,34 @@ exynos5_usbdrd_pipe3_set_refclk(struct phy_usb_instance *inst)
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
+ 
+ 	/* Use EXTREFCLK as ref clock */
+-	reg &= ~PHYCLKRST_REFCLKSEL_MASK;
+-	reg |=	PHYCLKRST_REFCLKSEL_EXT_REFCLK;
++	reg &= ~PHYCLKRST_REFCLKSEL;
++	reg |=	FIELD_PREP_CONST(PHYCLKRST_REFCLKSEL,
++				 PHYCLKRST_REFCLKSEL_EXT_REFCLK);
+ 
+ 	/* FSEL settings corresponding to reference clock */
+-	reg &= ~(PHYCLKRST_FSEL_PIPE_MASK |
+-		 PHYCLKRST_MPLL_MULTIPLIER_MASK |
+-		 PHYCLKRST_SSC_REFCLKSEL_MASK);
++	reg &= ~(PHYCLKRST_FSEL_PIPE |
++		 PHYCLKRST_MPLL_MULTIPLIER |
++		 PHYCLKRST_SSC_REFCLKSEL);
+ 	switch (phy_drd->extrefclk) {
+ 	case EXYNOS5_FSEL_50MHZ:
+-		reg |= (PHYCLKRST_MPLL_MULTIPLIER_50M_REF |
+-			PHYCLKRST_SSC_REFCLKSEL(0x00));
++		reg |= (FIELD_PREP_CONST(PHYCLKRST_SSC_REFCLKSEL, 0x00) |
++			FIELD_PREP_CONST(PHYCLKRST_MPLL_MULTIPLIER,
++					 PHYCLKRST_MPLL_MULTIPLIER_50M_REF));
+ 		break;
+ 	case EXYNOS5_FSEL_24MHZ:
+-		reg |= (PHYCLKRST_MPLL_MULTIPLIER_24MHZ_REF |
+-			PHYCLKRST_SSC_REFCLKSEL(0x88));
++		reg |= (FIELD_PREP_CONST(PHYCLKRST_SSC_REFCLKSEL, 0x88) |
++			FIELD_PREP_CONST(PHYCLKRST_MPLL_MULTIPLIER,
++					 PHYCLKRST_MPLL_MULTIPLIER_24MHZ_REF));
+ 		break;
+ 	case EXYNOS5_FSEL_20MHZ:
+-		reg |= (PHYCLKRST_MPLL_MULTIPLIER_20MHZ_REF |
+-			PHYCLKRST_SSC_REFCLKSEL(0x00));
++		reg |= (FIELD_PREP_CONST(PHYCLKRST_SSC_REFCLKSEL, 0x00) |
++			FIELD_PREP_CONST(PHYCLKRST_MPLL_MULTIPLIER,
++					 PHYCLKRST_MPLL_MULTIPLIER_20MHZ_REF));
+ 		break;
+ 	case EXYNOS5_FSEL_19MHZ2:
+-		reg |= (PHYCLKRST_MPLL_MULTIPLIER_19200KHZ_REF |
+-			PHYCLKRST_SSC_REFCLKSEL(0x88));
++		reg |= (FIELD_PREP_CONST(PHYCLKRST_SSC_REFCLKSEL, 0x88) |
++			FIELD_PREP_CONST(PHYCLKRST_MPLL_MULTIPLIER,
++					 PHYCLKRST_MPLL_MULTIPLIER_19200KHZ_REF));
+ 		break;
+ 	default:
+ 		dev_dbg(phy_drd->dev, "unsupported ref clk\n");
+@@ -529,13 +530,14 @@ exynos5_usbdrd_utmi_set_refclk(struct phy_usb_instance *inst)
+ 	/* restore any previous reference clock settings */
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
+ 
+-	reg &= ~PHYCLKRST_REFCLKSEL_MASK;
+-	reg |=	PHYCLKRST_REFCLKSEL_EXT_REFCLK;
++	reg &= ~PHYCLKRST_REFCLKSEL;
++	reg |=	FIELD_PREP_CONST(PHYCLKRST_REFCLKSEL,
++				 PHYCLKRST_REFCLKSEL_EXT_REFCLK);
+ 
+-	reg &= ~(PHYCLKRST_FSEL_UTMI_MASK |
+-		 PHYCLKRST_MPLL_MULTIPLIER_MASK |
+-		 PHYCLKRST_SSC_REFCLKSEL_MASK);
+-	reg |= PHYCLKRST_FSEL(phy_drd->extrefclk);
++	reg &= ~(PHYCLKRST_FSEL_UTMI |
++		 PHYCLKRST_MPLL_MULTIPLIER |
++		 PHYCLKRST_SSC_REFCLKSEL);
++	reg |= FIELD_PREP(PHYCLKRST_FSEL_UTMI, phy_drd->extrefclk);
+ 
+ 	return reg;
+ }
+@@ -585,8 +587,9 @@ static void exynos5_usbdrd_pipe3_init(struct exynos5_usbdrd_phy *phy_drd)
+ 
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
+ 	/* Set Tx De-Emphasis level */
+-	reg &= ~PHYPARAM1_PCS_TXDEEMPH_MASK;
+-	reg |=	PHYPARAM1_PCS_TXDEEMPH;
++	reg &= ~PHYPARAM1_PCS_TXDEEMPH;
++	reg |=	FIELD_PREP_CONST(PHYPARAM1_PCS_TXDEEMPH,
++				 PHYPARAM1_PCS_TXDEEMPH_VAL);
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
+ 
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYTEST);
+@@ -607,7 +610,7 @@ exynos5_usbdrd_usbdp_g2_v4_ctrl_pma_ready(struct exynos5_usbdrd_phy *phy_drd)
+ 
+ 	reg = readl(regs_base + EXYNOS850_DRD_SECPMACTL);
+ 	reg &= ~SECPMACTL_PMA_REF_FREQ_SEL;
+-	reg |= FIELD_PREP(SECPMACTL_PMA_REF_FREQ_SEL, 1);
++	reg |= FIELD_PREP_CONST(SECPMACTL_PMA_REF_FREQ_SEL, 1);
+ 	/* SFR reset */
+ 	reg |= (SECPMACTL_PMA_LOW_PWR | SECPMACTL_PMA_APB_SW_RST);
+ 	reg &= ~(SECPMACTL_PMA_ROPLL_REF_CLK_SEL |
+@@ -723,14 +726,16 @@ static void exynos5_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
+ 
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM0);
+ 	/* Set Loss-of-Signal Detector sensitivity */
+-	reg &= ~PHYPARAM0_REF_LOSLEVEL_MASK;
+-	reg |=	PHYPARAM0_REF_LOSLEVEL;
++	reg &= ~PHYPARAM0_REF_LOSLEVEL;
++	reg |=	FIELD_PREP_CONST(PHYPARAM0_REF_LOSLEVEL,
++				 PHYPARAM0_REF_LOSLEVEL_VAL);
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM0);
+ 
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
+ 	/* Set Tx De-Emphasis level */
+-	reg &= ~PHYPARAM1_PCS_TXDEEMPH_MASK;
+-	reg |=	PHYPARAM1_PCS_TXDEEMPH;
++	reg &= ~PHYPARAM1_PCS_TXDEEMPH;
++	reg |=	FIELD_PREP_CONST(PHYPARAM1_PCS_TXDEEMPH,
++				 PHYPARAM1_PCS_TXDEEMPH_VAL);
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
+ 
+ 	/* UTMI Power Control */
+@@ -761,7 +766,7 @@ static int exynos5_usbdrd_phy_init(struct phy *phy)
+ 	 * See xHCI 1.0 spec, 5.2.4
+ 	 */
+ 	reg =	LINKSYSTEM_XHCI_VERSION_CONTROL |
+-		LINKSYSTEM_FLADJ(0x20);
++		FIELD_PREP_CONST(LINKSYSTEM_FLADJ, 0x20);
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_LINKSYSTEM);
+ 
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM0);
+@@ -920,26 +925,24 @@ static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
+ static int crport_ctrl_write(struct exynos5_usbdrd_phy *phy_drd,
+ 			     u32 addr, u32 data)
+ {
++	u32 val;
+ 	int ret;
+ 
+ 	/* Write Address */
+-	writel(PHYREG0_CR_DATA_IN(addr),
+-	       phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+-	ret = crport_handshake(phy_drd, PHYREG0_CR_DATA_IN(addr),
+-			       PHYREG0_CR_CAP_ADDR);
++	val = FIELD_PREP(PHYREG0_CR_DATA_IN, addr);
++	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
++	ret = crport_handshake(phy_drd, val, PHYREG0_CR_CAP_ADDR);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/* Write Data */
+-	writel(PHYREG0_CR_DATA_IN(data),
+-	       phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+-	ret = crport_handshake(phy_drd, PHYREG0_CR_DATA_IN(data),
+-			       PHYREG0_CR_CAP_DATA);
++	val = FIELD_PREP(PHYREG0_CR_DATA_IN, data);
++	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
++	ret = crport_handshake(phy_drd, val, PHYREG0_CR_CAP_DATA);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = crport_handshake(phy_drd, PHYREG0_CR_DATA_IN(data),
+-			       PHYREG0_CR_WRITE);
++	ret = crport_handshake(phy_drd, val, PHYREG0_CR_WRITE);
+ 
+ 	return ret;
+ }
+@@ -1108,7 +1111,7 @@ static void exynos850_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
+ 
+ 	/* Set VBUS Valid and D+ pull-up control by VBUS pad usage */
+ 	reg = readl(regs_base + EXYNOS850_DRD_LINKCTRL);
+-	reg |= LINKCTRL_BUS_FILTER_BYPASS(0xf);
++	reg |= FIELD_PREP_CONST(LINKCTRL_BUS_FILTER_BYPASS, 0xf);
+ 	writel(reg, regs_base + EXYNOS850_DRD_LINKCTRL);
+ 
+ 	reg = readl(regs_base + EXYNOS850_DRD_UTMI);
+@@ -1123,19 +1126,19 @@ static void exynos850_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
+ 	reg &= ~SSPPLLCTL_FSEL;
+ 	switch (phy_drd->extrefclk) {
+ 	case EXYNOS5_FSEL_50MHZ:
+-		reg |= FIELD_PREP(SSPPLLCTL_FSEL, 7);
++		reg |= FIELD_PREP_CONST(SSPPLLCTL_FSEL, 7);
+ 		break;
+ 	case EXYNOS5_FSEL_26MHZ:
+-		reg |= FIELD_PREP(SSPPLLCTL_FSEL, 6);
++		reg |= FIELD_PREP_CONST(SSPPLLCTL_FSEL, 6);
+ 		break;
+ 	case EXYNOS5_FSEL_24MHZ:
+-		reg |= FIELD_PREP(SSPPLLCTL_FSEL, 2);
++		reg |= FIELD_PREP_CONST(SSPPLLCTL_FSEL, 2);
+ 		break;
+ 	case EXYNOS5_FSEL_20MHZ:
+-		reg |= FIELD_PREP(SSPPLLCTL_FSEL, 1);
++		reg |= FIELD_PREP_CONST(SSPPLLCTL_FSEL, 1);
+ 		break;
+ 	case EXYNOS5_FSEL_19MHZ2:
+-		reg |= FIELD_PREP(SSPPLLCTL_FSEL, 0);
++		reg |= FIELD_PREP_CONST(SSPPLLCTL_FSEL, 0);
+ 		break;
+ 	default:
+ 		dev_warn(phy_drd->dev, "unsupported ref clk: %#.2x\n",
 
----
-base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
-change-id: 20250123-runtime_const_riscv-6cd854ee2817
 -- 
-- Charlie
+2.48.1
 
