@@ -1,321 +1,230 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8E221420C
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036FD2080E6;
+	Mon,  3 Feb 2025 14:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593089; cv=none; b=R09hgOGFWl11CYsVnF2cseOjRjnByMLiBP/cOCZcC7nkrGz87uxhhhQvlzeoK7oKdRs9mdgNlQ+4YOt/sb5dpI2j5iyd2cBDG7p9VHVA+RbfoL3DKg4gMXm+qQzKBZcV0uviphVXiR5xfVlYNV+O79ttj7BbY8IOTbaWwetxLvs=
+	t=1738593149; cv=none; b=Ht0T3Ec4Fbr71YSWG/L55pv2OHlC4EinuNPZ3wuoC1E7UxsZ+whLMS8f/vrJtmy5VfSN/G04Mm+GEMlkhsBgzEf88v0KCOslIbBnkWtBZGn/rFDbTl2Lh5/zmQIsOctFLDmxplbtaAPj5xU6ow39iloPgUh5Acnw13mz+YLotr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593089; c=relaxed/simple;
-	bh=Flm72J3X3TDvLIeQHIIlYLGaUwFP9lEWoVmqSXmZ1ZQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BouIkKwebrkAyGzEufbxzZZOa5Kyl+zuEXYC9jr5k5rKHnWlWpObjzDGODudOGXDDxSaQMXiiZYoDwhVvuGO23oQJSFf7abk5EIbANWyx8mQPWVSF7cxSY/MljAljyYeNxzgFjsdMEOdC866PFGk+gTajefA6aCCbfCha5OmLjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cvj2hamA; arc=none smtp.client-ip=209.85.208.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+	s=arc-20240116; t=1738593149; c=relaxed/simple;
+	bh=o2atDu1PWcl9Kgs88c64C/EyOfqDqKG+Y34fJ02LYlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=XHNE/0DOjV5YPxGPtNwrNUCQzQCUrAjnHai7hy0k7hSvnIHArc5UfNab9MB5jcLpja1eePpwZRc7GKs2eod5oP4DpApfHgpU7G/NmgFlzposPs8/JuWUUU9Ka47ehxlvghoupy71IfVOmQ32jrVeod5Ez8IonQbYOVAt5tJt5u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=zZtvrsfE; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cvj2hamA"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5dca72b74d1so1233069a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:31:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738593085; x=1739197885; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fpow2I7r2epfm+Hk8LQFmWg+JcDtDThGqhtUFrwFWBU=;
-        b=cvj2hamAai2/9ImeLSc7Cj2UzUCDy61eWDZzMf7BGDoKk4MxmIJkOP/M+rDWihXYwy
-         6vNPB/7yzH8/dkfNjy/uXNnWyH+l5Ukfvfd1m191ITGIjpwnQ2ee52YSp4FiPMRLjJ0U
-         I2+JHTl4oYueWJDHW/z0o3gEAcSB0PINHZ66YhwnFLvimzKGphiwTDxFaU571Y11E+jK
-         opvYJCmU0fem80/q1S4BS/z6JMQf2o3lDw6Te/fGGuD3EUlX2owOQmV1mk/W/0THfBZG
-         VLcmHXEuh+Fws/QqiK2pDVtEmMQWIo8l9C1W7rbrCADWlAi4cFPQSqivy7wRDR/IszPS
-         vGzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738593085; x=1739197885;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fpow2I7r2epfm+Hk8LQFmWg+JcDtDThGqhtUFrwFWBU=;
-        b=CE8orjJ9Idy7teYBIv1Gtz8Fx374sxnzP3ugFTyDD5utvse2IkAFyezquieM3BZB/j
-         xaj2HE7ZtPgu8XJLZdZo7wwVNNdLScDuJLUO23YM945NUlUQVzkQVBxzF2G9/LVFnUlR
-         V5WHOzep3zSaI5OZPTEBipLjYeT/xw6YpGXinVJSK+FlwgTW7tDwXx0mRSqNxFkIcS74
-         udFQai3sw6+H9OwhAb/HcaGEpdOxeuV6o9xcf1WwC/m13ooZKJY6YuPkrDU0HZb8h6oz
-         M5tJbSiGNPEHBp/94Bwt2qoOC91GvhgpVmIQoKC/4zZ47WIWuljAqfxt+8dX4pX4iNZC
-         h9zw==
-X-Forwarded-Encrypted: i=1; AJvYcCViyPGyEYfha6NcCLRQbvKbQ9yn+LYlFvIXzD0YR0aCiQaVc87AeoJTWIRJ/7ZEYfLbT/lEnNWsF3YyBf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw28SAvvcFY06YInGBfpbowh7oDx5J2iNDr0qULpU0K8gjrrha5
-	wABO1VplfdSa3/+kCPlIrm4AaIN0wbQ+F8hTgkOp1yWwVkVBMosMqInp+SdsTP+l9mv/lVGptUL
-	HFCc/0Q==
-X-Google-Smtp-Source: AGHT+IESlhe7llB78fQq9cR6AMRTd5TrK+EdBY2CrigYoNTWQ4dq1OthZTxMn6H/ntBH49eMrwOOSPH/Mle4
-X-Received: from edbfj18.prod.google.com ([2002:a05:6402:2b92:b0:5dc:4848:561d])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:51ce:b0:5db:efcc:c19c
- with SMTP id 4fb4d7f45d1cf-5dc5efc4e33mr23491573a12.19.1738593085721; Mon, 03
- Feb 2025 06:31:25 -0800 (PST)
-Date: Mon,  3 Feb 2025 15:30:43 +0100
-In-Reply-To: <cover.1738592865.git.dvyukov@google.com>
+	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="zZtvrsfE"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: lina@asahilina.net)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id D59D13FA6A;
+	Mon,  3 Feb 2025 14:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
+	s=default; t=1738593144;
+	bh=o2atDu1PWcl9Kgs88c64C/EyOfqDqKG+Y34fJ02LYlY=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=zZtvrsfEWZHYSIaS690wPRQu+ZMjSgYb3OctW6aa1PyNYqyc83s12Dv/5OyJkfOaG
+	 l038s4t7eFIhWV1biQVmOXMrTF3Mud7NAxnfp5Bg+hY7RRhj9poKYb0ut0Gs4ZrIt6
+	 FqC/yck1wBkJn+9d0DtVu63mR7alYox6d0aRIAwZaLwDAQ50gEjqcMXtyWJv9fy71N
+	 +pp2fMaqyYMW4Xv5BJJEsqr58mJq9ne7vhI1bblz4fdaumqbfwHD8bmWKSGiF26Zsk
+	 lF+CEx7Tvv46k9mp5Qim4msJFFx/9cXzCvQA51YCKUrqVjuHCGrlfY3WAGLSfz789c
+	 6QFtir98VcDgA==
+Message-ID: <41ca3445-80cd-43c1-8f9e-634c195c9187@asahilina.net>
+Date: Mon, 3 Feb 2025 23:32:21 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1738592865.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <75dd56a2d467515dc354d8fc8d5acd841d63b565.1738592865.git.dvyukov@google.com>
-Subject: [PATCH v3 8/8] perf hist: Shrink struct hist_entry size
-From: Dmitry Vyukov <dvyukov@google.com>
-To: namhyung@kernel.org, irogers@google.com, acme@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] rust: page: Support borrowing `struct page` and
+ physaddr conversion
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Jann Horn <jannh@google.com>,
+ Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, Wedson Almeida Filho
+ <wedsonaf@gmail.com>, Valentin Obst <kernel@valentinobst.de>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ asahi@lists.linux.dev
+References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
+ <Z6CTLB2NggwYafi9@phenom.ffwll.local>
+Content-Language: en-US
+From: Asahi Lina <lina@asahilina.net>
+In-Reply-To: <Z6CTLB2NggwYafi9@phenom.ffwll.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Reorder the struct fields by size to reduce paddings and reduce
-struct simd_flags size from 8 to 1 byte.
 
-This reduces struct hist_entry size by 8 bytes (592->584),
-and leaves a single more usable 6 byte padding hole.
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+On 2/3/25 6:58 PM, Simona Vetter wrote:
+> On Sun, Feb 02, 2025 at 10:05:42PM +0900, Asahi Lina wrote:
+>> This series refactors the existing Page wrapper to support borrowing
+>> `struct page` objects without ownership on the Rust side, and converting
+>> page references to/from physical memory addresses.
+>>
+>> The series overlaps with the earlier submission in [1] and follows a
+>> different approach, based on the discussion that happened there.
+>>
+>> The primary use case for this is implementing IOMMU-style page table
+>> management in Rust. This allows drivers for IOMMUs and MMU-containing
+>> SoC devices to be written in Rust (such as embedded GPUs). The intended
+>> logic is similar to how ARM SMMU page tables are managed in the
+>> drivers/iommu tree.
+>>
+>> First, introduce a concept of Owned<T> and an Ownable trait. These are
+>> similar to ARef<T> and AlwaysRefCounted, but are used for types which
+>> are not ref counted but rather have a single intended owner.
+>>
+>> Then, refactor the existing Page support to use the new mechanism. Pages
+>> returned from the page allocator are not intended to be ref counted by
+>> consumers (see previous discussion in [1]), so this keeps Rust's view of
+>> page ownership as a simple "owned or not". Of course, this is still
+>> composable as Arc<Owned<Page>> if Rust code needs to reference count its
+>> own Page allocations for whatever reason.
+> 
+> I think there's a bit a potential mess here because the conversion to
+> folios isn't far enough yet that we can entirely ignore page refcounts and
+> just use folio refcounts. But I guess we can deal with that oddity if we
+> hit it (maybe folio conversion moves fast enough), since this only really
+> starts to become relevant for hmm/svm gpu stuff.
+> 
+> iow I think anticipating the future where struct page really doesn't have
+> a refcount is the right move. Aside from that it's really not a refcount
+> that works in the rust ARef sense, since struct page cannot disappear for
+> system memory, and for dev_pagemap memory it's an entirely different
+> reference you need (and then there's a few more special cases).
 
----
-Pahole output before:
+Right, as far as this abstraction is concerned, all that needs to hold
+is that:
 
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
+- alloc_pages() and __free_pages() work as intended, however that may
+be, to reserve and return one page (for now, though I think extending
+the Rust abstraction to handle higher-order folios is pretty easy, but
+that can happen later).
+- Whatever borrows pages knows what it's doing. In this case there's
+only support for borrowing pages by physaddr, and it's only going to be
+used in a driver for a platform without memory hot remove (so far) and
+only for pages which have known usage (in principle) and are either
+explicitly allocated or known pinned or reserved, so it's not a problem
+right now. Future abstractions that return borrowed pages can do their
+own locking/bookkeeping/whatever is necessary to keep it safe.
 
-	/* XXX last struct has 4 bytes of padding */
+I would like to hear how memory hot-remove is supposed to work though,
+to see if we should be doing something to make the abstraction safer
+(though it's still unsafe and always will be). Is there a chance a
+`struct page` could vanish out from under us under some conditions?
 
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	s32                        socket;               /*   232     4 */
-	s32                        cpu;                  /*   236     4 */
-	int                        parallelism;          /*   240     4 */
+For dev_pagemap memory I imagine we'd have an entirely different
+abstraction wrapping that, that can just return a borrowed &Page to give
+the user access to page operations without going through Owned<Page>.
 
-	/* XXX 4 bytes hole, try to pack */
+> For dma/iommu stuff there's also a push to move towards pfn + metadata
+> model, so that p2pdma doesn't need struct page. But I haven't looked into
+> that much yet.
 
-	u64                        code_page_size;       /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        weight;               /*   256     8 */
-	u64                        ins_lat;              /*   264     8 */
-	u64                        p_stage_cyc;          /*   272     8 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
+Yeah, I don't know how that stuff works...
 
-	/* XXX 2 bytes hole, try to pack */
+> 
+> Cheers, Sima
+> 
+>> Then, make some existing private methods public, since this is needed to
+>> reasonably use allocated pages as IOMMU page tables.
+>>
+>> Along the way we also add a small module to represent a core kernel
+>> address types (PhysicalAddr, DmaAddr, ResourceSize, Pfn). In the future,
+>> this might grow with helpers to make address math safer and more
+>> Rust-like.
+>>
+>> Finally, add methods to:
+>> - Get a page's physical address
+>> - Convert an owned Page into its physical address
+>> - Convert a physical address back to its owned Page
+>> - Borrow a Page from a physical address, in both checked (with checks
+>>   that a struct page exists and is accessible as regular RAM) and not
+>>   checked forms (useful when the user knows the physaddr is valid,
+>>   for example because it got it from Page::into_phys()).
+>>
+>> Of course, all but the first two have to be `unsafe` by nature, but that
+>> comes with the territory of writing low level memory management code.
+>>
+>> These methods allow page table code to know the physical address of
+>> pages (needed to build intermediate level PTEs) and to essentially
+>> transfer ownership of the pages into the page table structure itself,
+>> and back into Page objects when freeing page tables. Without that, the
+>> code would have to keep track of page allocations in duplicate, once in
+>> Rust code and once in the page table structure itself, which is less
+>> desirable.
+>>
+>> For Apple GPUs, the address space shared between firmware and the driver
+>> is actually pre-allocated by the bootloader, with the top level page
+>> table already pre-allocated, and the firmware owning some PTEs within it
+>> while the kernel populates others. This cooperation works well when the
+>> kernel can reference this top level page table by physical address. The
+>> only thing the driver needs to ensure is that it never attempts to free
+>> it in this case, nor the page tables corresponding to virtual address
+>> ranges it doesn't own. Without the ability to just borrow the
+>> pre-allocated top level page and access it, the driver would have to
+>> special-case this and manually manage the top level PTEs outside the
+>> main page table code, as well as introduce different page table
+>> configurations with different numbers of levels so the kernel's view is
+>> one lever shallower.
+>>
+>> The physical address borrow feature is also useful to generate virtual
+>> address space dumps for crash dumps, including firmware pages. The
+>> intent is that firmware pages are configured in the Device Tree as
+>> reserved System RAM (without no-map), which creates struct page objects
+>> for them and makes them available in the kernel's direct map. Then the
+>> driver's page table code can walk the page tables and make a snapshot of
+>> the entire address space, including firmware code and data pages,
+>> pre-allocated shared segments, and driver-allocated objects (which are
+>> GEM objects), again without special casing anything. The checks in
+>> `Page::borrow_phys()` should ensure that the page is safe to access as
+>> RAM, so this will skip MMIO pages and anything that wasn't declared to
+>> the kernel in the DT.
+>>
+>> Example usage:
+>> https://github.com/AsahiLinux/linux/blob/gpu/rust-wip/drivers/gpu/drm/asahi/pgtable.rs
+>>
+>> The last patch is a minor cleanup to the Page abstraction noticed while
+>> preparing this series.
+>>
+>> [1] https://lore.kernel.org/lkml/20241119112408.779243-1-abdiel.janulgue@gmail.com/T/#u
+>>
+>> Signed-off-by: Asahi Lina <lina@asahilina.net>
+>> ---
+>> Asahi Lina (6):
+>>       rust: types: Add Ownable/Owned types
+>>       rust: page: Convert to Ownable
+>>       rust: page: Make with_page_mapped() and with_pointer_into_page() public
+>>       rust: addr: Add a module to declare core address types
+>>       rust: page: Add physical address conversion functions
+>>       rust: page: Make Page::as_ptr() pub(crate)
+>>
+>>  rust/helpers/page.c  |  26 ++++++++++++
+>>  rust/kernel/addr.rs  |  15 +++++++
+>>  rust/kernel/lib.rs   |   1 +
+>>  rust/kernel/page.rs  | 101 ++++++++++++++++++++++++++++++++++++++--------
+>>  rust/kernel/types.rs | 110 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  5 files changed, 236 insertions(+), 17 deletions(-)
+>> ---
+>> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+>> change-id: 20250202-rust-page-80892069fc78
+>>
+>> Cheers,
+>> ~~ Lina
+>>
+> 
 
-	int                        mem_type_off;         /*   284     4 */
-	struct simd_flags          simd_flags;           /*   288     8 */
-	_Bool                      dummy;                /*   296     1 */
-	_Bool                      leaf;                 /*   297     1 */
-	char                       level;                /*   298     1 */
-
-	/* XXX 1 byte hole, try to pack */
-
-	filter_mask_t              filtered;             /*   300     2 */
-	u16                        callchain_size;       /*   302     2 */
-	union {
-		struct hist_entry_diff diff;             /*   304   120 */
-		struct {
-			u16        row_offset;           /*   304     2 */
-			u16        nr_rows;              /*   306     2 */
-			_Bool      init_have_children;   /*   308     1 */
-			_Bool      unfolded;             /*   309     1 */
-			_Bool      has_children;         /*   310     1 */
-			_Bool      has_no_entry;         /*   311     1 */
-		};                                       /*   304     8 */
-	};                                               /*   304   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 40 bytes ago --- */
-	char *                     srcline;              /*   424     8 */
-	char *                     srcfile;              /*   432     8 */
-	struct symbol *            parent;               /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	struct branch_info *       branch_info;          /*   448     8 */
-	long int                   time;                 /*   456     8 */
-	struct hists *             hists;                /*   464     8 */
-	struct mem_info *          mem_info;             /*   472     8 */
-	struct block_info *        block_info;           /*   480     8 */
-	struct kvm_info *          kvm_info;             /*   488     8 */
-	void *                     raw_data;             /*   496     8 */
-	u32                        raw_size;             /*   504     4 */
-	int                        num_res;              /*   508     4 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	struct res_sample *        res_samples;          /*   512     8 */
-	void *                     trace_output;         /*   520     8 */
-	struct perf_hpp_list *     hpp_list;             /*   528     8 */
-	struct hist_entry *        parent_he;            /*   536     8 */
-	struct hist_entry_ops *    ops;                  /*   544     8 */
-	struct annotated_data_type * mem_type;           /*   552     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   560    16 */
-			/* --- cacheline 9 boundary (576 bytes) --- */
-			struct rb_root_cached hroot_out; /*   576    16 */
-		};                                       /*   560    32 */
-		struct rb_root     sorted_chain;         /*   560     8 */
-	};                                               /*   560    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 16 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   592     0 */
-
-	/* size: 592, cachelines: 10, members: 49 */
-	/* sum members: 585, holes: 3, sum holes: 7 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 16 bytes */
-} __attribute__((__aligned__(8)));
-
-After:
-
-struct hist_entry {
-	struct rb_node             rb_node_in __attribute__((__aligned__(8))); /*     0    24 */
-	struct rb_node             rb_node __attribute__((__aligned__(8))); /*    24    24 */
-	union {
-		struct list_head   node;                 /*    48    16 */
-		struct list_head   head;                 /*    48    16 */
-	} pairs;                                         /*    48    16 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct he_stat             stat;                 /*    64    80 */
-
-	/* XXX last struct has 4 bytes of padding */
-
-	/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
-	struct he_stat *           stat_acc;             /*   144     8 */
-	struct map_symbol          ms;                   /*   152    24 */
-	struct thread *            thread;               /*   176     8 */
-	struct comm *              comm;                 /*   184     8 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	struct namespace_id        cgroup_id;            /*   192    16 */
-	u64                        cgroup;               /*   208     8 */
-	u64                        ip;                   /*   216     8 */
-	u64                        transaction;          /*   224     8 */
-	u64                        code_page_size;       /*   232     8 */
-	u64                        weight;               /*   240     8 */
-	u64                        ins_lat;              /*   248     8 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	u64                        p_stage_cyc;          /*   256     8 */
-	s32                        socket;               /*   264     4 */
-	s32                        cpu;                  /*   268     4 */
-	int                        parallelism;          /*   272     4 */
-	int                        mem_type_off;         /*   276     4 */
-	u8                         cpumode;              /*   280     1 */
-	u8                         depth;                /*   281     1 */
-	struct simd_flags          simd_flags;           /*   282     1 */
-	_Bool                      dummy;                /*   283     1 */
-	_Bool                      leaf;                 /*   284     1 */
-	char                       level;                /*   285     1 */
-	filter_mask_t              filtered;             /*   286     2 */
-	u16                        callchain_size;       /*   288     2 */
-
-	/* XXX 6 bytes hole, try to pack */
-
-	union {
-		struct hist_entry_diff diff;             /*   296   120 */
-		struct {
-			u16        row_offset;           /*   296     2 */
-			u16        nr_rows;              /*   298     2 */
-			_Bool      init_have_children;   /*   300     1 */
-			_Bool      unfolded;             /*   301     1 */
-			_Bool      has_children;         /*   302     1 */
-			_Bool      has_no_entry;         /*   303     1 */
-		};                                       /*   296     8 */
-	};                                               /*   296   120 */
-	/* --- cacheline 6 boundary (384 bytes) was 32 bytes ago --- */
-	char *                     srcline;              /*   416     8 */
-	char *                     srcfile;              /*   424     8 */
-	struct symbol *            parent;               /*   432     8 */
-	struct branch_info *       branch_info;          /*   440     8 */
-	/* --- cacheline 7 boundary (448 bytes) --- */
-	long int                   time;                 /*   448     8 */
-	struct hists *             hists;                /*   456     8 */
-	struct mem_info *          mem_info;             /*   464     8 */
-	struct block_info *        block_info;           /*   472     8 */
-	struct kvm_info *          kvm_info;             /*   480     8 */
-	void *                     raw_data;             /*   488     8 */
-	u32                        raw_size;             /*   496     4 */
-	int                        num_res;              /*   500     4 */
-	struct res_sample *        res_samples;          /*   504     8 */
-	/* --- cacheline 8 boundary (512 bytes) --- */
-	void *                     trace_output;         /*   512     8 */
-	struct perf_hpp_list *     hpp_list;             /*   520     8 */
-	struct hist_entry *        parent_he;            /*   528     8 */
-	struct hist_entry_ops *    ops;                  /*   536     8 */
-	struct annotated_data_type * mem_type;           /*   544     8 */
-	union {
-		struct {
-			struct rb_root_cached hroot_in;  /*   552    16 */
-			struct rb_root_cached hroot_out; /*   568    16 */
-		};                                       /*   552    32 */
-		struct rb_root     sorted_chain;         /*   552     8 */
-	};                                               /*   552    32 */
-	/* --- cacheline 9 boundary (576 bytes) was 8 bytes ago --- */
-	struct callchain_root      callchain[] __attribute__((__aligned__(8))); /*   584     0 */
-
-	/* size: 584, cachelines: 10, members: 49 */
-	/* sum members: 578, holes: 1, sum holes: 6 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 3 */
-	/* last cacheline: 8 bytes */
-} __attribute__((__aligned__(8)));
----
- tools/perf/util/hist.h   | 8 ++++----
- tools/perf/util/sample.h | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 29d4c7a3d1747..317d06cca8b88 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -239,16 +239,16 @@ struct hist_entry {
- 	u64			cgroup;
- 	u64			ip;
- 	u64			transaction;
--	s32			socket;
--	s32			cpu;
--	int			parallelism;
- 	u64			code_page_size;
- 	u64			weight;
- 	u64			ins_lat;
- 	u64			p_stage_cyc;
-+	s32			socket;
-+	s32			cpu;
-+	int			parallelism;
-+	int			mem_type_off;
- 	u8			cpumode;
- 	u8			depth;
--	int			mem_type_off;
- 	struct simd_flags	simd_flags;
- 
- 	/* We are added by hists__add_dummy_entry. */
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 70b2c3135555e..ab756d61cbcd6 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -67,7 +67,7 @@ struct aux_sample {
- };
- 
- struct simd_flags {
--	u64	arch:1,	/* architecture (isa) */
-+	u8	arch:1,	/* architecture (isa) */
- 		pred:2;	/* predication */
- };
- 
--- 
-2.48.1.362.g079036d154-goog
+~~ Lina
 
