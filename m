@@ -1,56 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF90878F54;
-	Mon,  3 Feb 2025 21:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A2378F54;
+	Mon,  3 Feb 2025 21:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738619509; cv=none; b=EFsi0qH0CJr3uDVRP2FEoWGm3KaorYYC96XX9GsKaYPjEUeB0UsNkPd+z07wnc2Ba3HcQ98bijwx4Gcd1L2l/Su0HRersSkw3GyhQFwhmV2rkcxGo5l/+RF6Stcim9x7+YDFYvCpjOn2CZWSUXlDvxpUpJy6QhOYJ7sY6pqbUQM=
+	t=1738619518; cv=none; b=ITR1fYPhtsc63MpriBQrzE0Ts00s9eGQGROsL1ttLv49RKWQC8dQ5oVsFZxc5wmOZrt2HemBabtY6iMHv+lxi6GOhWbPAbZwuGTL+kj1lgkOe4pd9kCQXXkmLMb5/Vz1t4dId6/TAjqzqAImGjsNB5Q3pwcXW83FOiwDlSQzHps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738619509; c=relaxed/simple;
-	bh=ONkJZrHrFBNuUcQv4eyEKDaVDxCriWhOsqaF4GbL/ak=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tjLhOY4pCWVIr9x1Vvxa7SleQvcm/RfvljnseAt/UDd5CMIH0yGSL8c9Pcqy9saIwag/1uHAs/b235i73e9fQ6OLTY9tUWJMPfUYKk+GAjJPDNhIG2IGrcMggYwwm/TYkQdEGCNW13MB6YPxsb4qCgB4ap3+SeZcMt9/pZciASU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XLPU5o9u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738619518; c=relaxed/simple;
+	bh=728BrBv206yX7DgvBTDxxW1BhKgtOFRBXnffHS/zVtw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mZSfCM8zziwJG3dd7tZ14NOeEIS1VaT2WX+71c/fqNRb3Q1aCYIRR6f4YVT6O+J/BN9XuJuv6Hg/BY/hVfsenbBRAfiBtbrXGZs564oBa1uZTw/2EjTszFc3Yqwpdw+QVFgI23yyX7nWP7MQ/REvLxmhOUjmdEieXl9hwQbJQdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=xKdkt2Ri; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XLPU5o9u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06C98C4CED2;
-	Mon,  3 Feb 2025 21:51:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738619508;
-	bh=ONkJZrHrFBNuUcQv4eyEKDaVDxCriWhOsqaF4GbL/ak=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=XLPU5o9uEcxqtXJT/dekqG3EGHvvXdoVvZ6NopnriorTk8A1QWWKz8vrzg6rnWo7a
-	 D1cWyRG7Mo6tcb18iAMSyyx9fFHiqbAiIsm4RWD5xt9BSBJT9tpPI8tkBaC9PciLea
-	 2sY+6LD5JBhP2PGyq3cPgMJNOfICvKYVDuhOo4fNffdS2kLf9SEEAhoYWSbthm/jIC
-	 GsYsxc6wK2XsbmBB5SBfWD8z4K2EBxTDefssjfIKLuJP2a6KlTRnLTxVxN+13oJsta
-	 rfWrP7/fBhgePdvA2lO3eIOcmR+SAskYHKiF5aPhbgVgYctobW1RyDAhx7IQfHE5im
-	 s4BNTdghPB+kg==
-Date: Mon, 3 Feb 2025 22:51:45 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: junan <junan76@163.com>
-cc: bentiss@kernel.org, linux-usb@vger.kernel.org, linux-input@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HID: Fix the bit shift number for LED_KANA.
-In-Reply-To: <20241128023518.23372-1-junan76@163.com>
-Message-ID: <42on38np-2q38-2nrs-or10-95531pq8qos2@xreary.bet>
-References: <20241128023518.23372-1-junan76@163.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xKdkt2Ri"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=NKIGVS9TsZAEjbJBcEBnZELE8gnbQlRrAdJ9mthvRmc=; b=xK
+	dkt2RiersZjg+SHtkRW4B1kKho3yC4vfB7CKHht9Z1WskfPB78q0/cR9VwG6KOpMqSz1u2iHI76m4
+	oN+vIpCzKvF3ReYV4Mv6mxpsBNuZlv3vKo4voVGVJd4Fwh4QBUCtfF4A5hHoZA3atGQSRzJnlwvs8
+	NfU//cmkVdSkO0E=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tf4M9-00Aemq-N7; Mon, 03 Feb 2025 22:51:49 +0100
+Date: Mon, 3 Feb 2025 22:51:49 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Richard Cochran <richardcochran@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net] ptp: Add mock device
+Message-ID: <1be7f0e7-b8d5-482d-9474-dfd252f94fed@lunn.ch>
+References: <20250203-ptp-mock-dev-v1-1-f84c56fd9e45@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250203-ptp-mock-dev-v1-1-f84c56fd9e45@weissschuh.net>
 
-On Thu, 28 Nov 2024, junan wrote:
+On Mon, Feb 03, 2025 at 08:50:46PM +0100, Thomas Weißschuh wrote:
+> While working on the PTP core or userspace components,
+> a real PTP device is not always available.
+> Introduce a tiny module which creates a mock PTP device.
 
-> Since "LED_KANA" was defined as "0x04", the shift number should be "4".
+Since netdevsim already has this functionality, lets drop this patch.
 
-Heh, this bug has been there for _*AGES*_, and it's a pretty obscure 
-driver anyway. Let's fix it though, thanks. Applied.
+    Andrew
 
--- 
-Jiri Kosina
-SUSE Labs
+---
+pw-bot: rejected
 
