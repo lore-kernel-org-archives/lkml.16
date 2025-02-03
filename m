@@ -1,104 +1,109 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0988C1FFC7D;
-	Mon,  3 Feb 2025 22:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E259C7D07D;
+	Mon,  3 Feb 2025 22:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738622842; cv=none; b=dGcMYnGLJkgvgnUY0VjA9u+h/3FTPDEFrjKH3EpAvfXpBdonq/xXL4cimqKE6CgheMn60axHFirAlnh82MhfU33HKNOLrxQY6Y626knqbch1r8cA3I4PU4zW/QFcQYs7Wh9B9BYzDdW+pCAhQMheleGGI9CdzIihe2306ljT1/M=
+	t=1738622879; cv=none; b=QAzO7wcRJNMZNBgQg3Y5Jgy9sy0lIDQTndHdpDkeoG6T8ml0VbtWlQksta9A+Om8yQ4HmZPOEHvClmqZhzTZnWKFiU0QrrtKmaVZjOF8s/rX3Q46f0RYywlHCr7gyJvguZ09SbiM8rb9iS9f4SH0HyqTyxIXsTHr2O+X6IYkxvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738622842; c=relaxed/simple;
-	bh=7d46RoY65alDw38bKJwoy+yPglRBvvjFb0HrFVhITMQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L1+Ndr5bsUvkIZIIg8SDkvjR3nrKq9wlSxYe3rnRF6vSm0Gr55VrIVT7S2v1goI53k4MX1XXRhGHfdrzQEfCbYl2yJ9kvYozXLIJA2LvnqdHMgQLjsZd9leqlsnfdu6QZUX30Ba1jbI1FMwdWw+z7Ka8iLBM9W2Bdf7suXpvNfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iS3cs0Ru; arc=none smtp.client-ip=209.85.208.178
+	s=arc-20240116; t=1738622879; c=relaxed/simple;
+	bh=hHTSotaKXn6mqlfsuZRFL7mUlXbYedRwitXa3n7zsZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=is8bmuqTNvJnTcmZZVmS2EYNqudnB7YpgZdypyPTwOMiqjhwcQHt7xiauLCsurLHbrkIPDMlzFavRtyzqq1xPclGZhLWguvfGdNvjkud55WV/Qe5z3kIxyUbu6JEGPILdX3udFbaa1icviySmREAopF/SO3z1T2LwYmQR0f2K5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DoFbihVm; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iS3cs0Ru"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30613802a59so54979861fa.0;
-        Mon, 03 Feb 2025 14:47:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DoFbihVm"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4361f664af5so57747505e9.1;
+        Mon, 03 Feb 2025 14:47:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738622839; x=1739227639; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7d46RoY65alDw38bKJwoy+yPglRBvvjFb0HrFVhITMQ=;
-        b=iS3cs0Ru8LUzspNZ0AqNmlPwwIWXGnttwLbVr+K2v8f2z/l3Aia4SUOYiqcGBcHZkp
-         tMU/wiZHHVopBNt7tyZ4/1RDpHEYtr+inoJRNoSQUdHRp8MTxUGw4SDRc88DHt9AVAk/
-         0eT0X5wgkZw8L6cPViIM0pgHbRtkrJGMIW/bJyDaVJGNg0E1flh9VFALII2fiUa9gzm7
-         AC3qvf+BCqfN5TniOmTwkIfhdBt0B18xm3ndHOReXYlYEZSSbPWy1sP3e2RtRoi1bATH
-         DIGxhFPMO6Ql7bYLMa2EtuF1sX0XVG6IntGbW8Yb4Z5XsUZbz1cngOM9ffpToKpr7Vvn
-         vA5Q==
+        d=gmail.com; s=20230601; t=1738622875; x=1739227675; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DNk8vcXhWS2lnex0vmdV4Bh3p7QN4YitPegQzBHEFfU=;
+        b=DoFbihVmVNRM88GV2daMdqjDrnEQWHVQUCC9vjxRsvivPBJWkBgcZ/EJpOd3G2CGMO
+         V5N68a6/ySKJQ4u/SprajcG4Bo0nf2y1691vRVoOnzTL69l76J0lOqS7/eN1z9Skch6C
+         gaCa8VuXvc4VoAlh7PXl1WNtaXaB7KlPqjXpb+CGDZusFu7dbyp31cSGdhq+vt3aTfzY
+         DQiQYorrk8rT3VKHeLBB2wvLGTftoYV4ETZhIMa9w4WKEB18/r5igwPctryfwkISe3Ut
+         mH1i522jk+xCW29SnmfN1YOuzukVyNOvn7uPWIdUkeiErcqR9PS71Mv4oCZmNV/QFIbl
+         fZPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738622839; x=1739227639;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7d46RoY65alDw38bKJwoy+yPglRBvvjFb0HrFVhITMQ=;
-        b=ui2AGUjSSUoXZBxwzZkdsuCsEJQMPNge0nRr4eLDAlXYh7hjJKXyrF73Xl+qm+Pg+8
-         901p+/PhDtLvRzX8ivoQtsMNz0LOh6OQqDqDoJ8dIrFqgZLYRn9FsR7JSo4Wm7i4PYxJ
-         MLLiTTySOnB3a+dCp6+WW45sPrXdhd2YrOSBrHq5jX3L3juBHadKgqgBlhYTnfME8fV9
-         1TPvN5wzrcSwyzBhsEa6GEniYPvrvOu/pqd6Q0rzRCZ8lALCYfj26OxTf+NNEeZJ6wt+
-         y7NtR6WfQoyxUQezTYchQg3Phh5GM9/RXZymaZQsF3hrosFaeDarnVtLYbZBLdh4Er+6
-         gZ1A==
-X-Forwarded-Encrypted: i=1; AJvYcCV9dw9Ky28GPOqc13i97KJujm3FDkyCDOa6ElgW75E1KNDFmZ1kiLw59vyYbBjm67RzRWVJL2TAga+SlCw=@vger.kernel.org, AJvYcCWMvGn4orTNR5j9UltG3HP0xP02vt/gpadxmWIgOPE4pf/4WQk8B1FoHon8gBfu1q2XEoelsbPB4U+Db8SLSQM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoTdHlcTXhSl83jr3Yqj5bApKjxkFWORQwiM76VaMy04Bda/LK
-	OWuV9P5cclqZQarHkz4O5untYiZhcwAeohHuaWCYVNYRbkPRQSaZq/zz4ydSduHuvMc9uFPcU+2
-	35KObRxueXxxDERWKonr2ir6coTg=
-X-Gm-Gg: ASbGnctrEB7UVv0hvJcgxbaoeCWfyMt0C9XuDGc6/QoIEpqXHi/xwgxtseTH4mvQfse
-	nO+wMRY+ytU4ZDZ+E6vWdF3r5bT1QjP4zwPoyGNLD/05kPTCyqgGk6bbaJlBNTrPMDZDlnoYj8z
-	7y4yCxLMuiW53o
-X-Google-Smtp-Source: AGHT+IFyaX94PZiWjBYdW6Wz4tbz4DlkGTKPrDrnjUfsiCFgUwBdwwtfWYHCIooF3vuildN7LmldMIfovJTbJI/O4OY=
-X-Received: by 2002:a2e:9a11:0:b0:302:4115:acd with SMTP id
- 38308e7fff4ca-30796872a96mr102119061fa.22.1738622838805; Mon, 03 Feb 2025
- 14:47:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738622875; x=1739227675;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DNk8vcXhWS2lnex0vmdV4Bh3p7QN4YitPegQzBHEFfU=;
+        b=brryxdv2D9iuw+DfNg4rWv6FE7FbtYEq0tl0VS7zB6uhjDDZNWYyJXU+AY40Il37ms
+         O/BcyOwiYBNKxu5+dTbcmGawQ/GnhAy5FwQHdPsBzRuOzZMhsZYE/7cl6jPuiEVtvF2z
+         kKNfw85IfL0+hmUysfc5T1pGpjEydftQANIZ29TcbLANhXMP/0YLEP5Cv+3/3HMRsUzg
+         Ub8YPhwOAaxtCDbP3lJtXh6ANWD44xTq/OxsRMaUItgx+APKtujD+n1g8KNshbtH0WO6
+         AH68rU48PMZtplSb3YXO0rSqZgog/DcIYIoaNkaLp29KzPezjYc/QtdcMTJVXxx2QXI9
+         wjKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCURKqRPM6e9HPrWg6YVCs2CtKB4Aspbo0PGFeqpEKgzzBmk/Q6MduUxlcPZuEwYMy6VqMd145tJ@vger.kernel.org, AJvYcCWgoKUHGDit6/RN2hV7PEkB8CAc7HLA0aU8jaIKMOcfB3/bNUayjsOOSKOKxh/jUqK9hD89pSDVLG0=@vger.kernel.org, AJvYcCXGwj0GvdgrNSEPcknWWaJPbciIz3cpC6vwA6CNv5cZMHErLcJL97etntlEdJhsoZWDzk86fT+G+Iu0@vger.kernel.org, AJvYcCXWwkiqBD1NGtJ2G8NIXmYgSfTAoy5XIrHAkBeQCMOfbR6MmeI8SUID7/Uqet1X90aAlu6p8M0tfhtgzAcj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG7kIL/mkNDwnoCLrQT/eM5uSrX9+FVmX2bDZL1MwyNL6/8pOb
+	8GH6uvc8KzhAS9mBn2s/V6nv58eoDuA1SIamjL277EFzx2smk8Tf
+X-Gm-Gg: ASbGnctrwv8LxmLbn+SKIcupgliBLNXRITFwHJocfU0nQt8yChzZX1US27WHSZigOhD
+	DGvUrWADJUfFKKKmTa/JejvxAZObeN0B7OXjwbyr8wDgon3MAqVM/3dutRdmNVmtZ7LX6CRp2zM
+	UFhT37YlKrnv6leIc3S2lSomRqCeqoCA7UihP69hePXUuS6ELfVKhbQY/KylzU2nGNAYi2PEL7h
+	Z+xYWprLmxI2YZjnebcCE7dMG0+znlHT97HKjh4r+Uw2s7MqhQ4favuP3b4ndR32MrxrtIOcDwP
+	zu0=
+X-Google-Smtp-Source: AGHT+IE/EFKa2c0I79aiOGpHh/J+3xdNGIulwoDYDqj1uGt8aSw1iorBtbN/fXpYftwxNNhOalmTpw==
+X-Received: by 2002:a05:600c:870a:b0:434:fff1:1ade with SMTP id 5b1f17b1804b1-438dc3cb7c8mr198340375e9.13.1738622874881;
+        Mon, 03 Feb 2025 14:47:54 -0800 (PST)
+Received: from ffc.. ([5.224.37.232])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc81911sm202559165e9.38.2025.02.03.14.47.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 14:47:53 -0800 (PST)
+From: Reyders Morales <reyders1@gmail.com>
+To: kuba@kernel.org
+Cc: Reyders Morales <reyders1@gmail.com>,
+	Oliver Hartkopp <socketcan@hartkopp.net>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-can@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation/networking: Fix basic node example document ISO 15765-2
+Date: Mon,  3 Feb 2025 23:47:20 +0100
+Message-ID: <20250203224720.42530-1-reyders1@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250110-hrtimer-v3-v6-12-rc2-v6-0-f71d50f16482@kernel.org>
- <20250110-hrtimer-v3-v6-12-rc2-v6-3-f71d50f16482@kernel.org>
- <3zUeHP9VQ7ZaBieXue_fQ_8V8tcTW1nc83OQA7ehwV7itvlpzwF5DHHmyqTU70UzpXhUKWoDtueUb2fsFQdyUA==@protonmail.internalid>
- <CAJ-ks9mygX61B=FOgQegs3uReBHDju2cs6eFRohjNEX_GPwAjQ@mail.gmail.com> <8734hid0qh.fsf@kernel.org>
-In-Reply-To: <8734hid0qh.fsf@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 3 Feb 2025 17:46:42 -0500
-X-Gm-Features: AWEUYZn5SU9cpBdRg3Li86auuAMhip7Uqop2pGVeup-4Tv62QMJTLI9KhyyoEtg
-Message-ID: <CAJ-ks9=gKET-yaTkqta2TfTaxe031yKqnUHNXFjjJH_AYF2oqw@mail.gmail.com>
-Subject: Re: [PATCH v6 03/14] rust: sync: add `Arc::as_ptr`
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, 
-	Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 16, 2025 at 2:23=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
->
-> "Tamir Duberstein" <tamird@gmail.com> writes:
->
-> > On Fri, Jan 10, 2025 at 3:19=E2=80=AFPM Andreas Hindborg <a.hindborg@ke=
-rnel.org> wrote:
-> >>
-> >> Add a method to get a pointer to the data contained in an `Arc`.
-> >>
-> >> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-> >
-> > Can this mention why it is needed?
->
-> I can add that after the cut. It is for impleminting `HrTimerPointer`
-> for `Arc`.
+In the current struct sockaddr_can tp is member of can_addr.
+tp is not member of struct sockaddr_can.
 
-The broader question is: why do we need to implement `/HrTimerPointer
-` for `Arc`? Even broader is: why do we need to use raw pointers so
-much?
+Signed-off-by: Reyders Morales <reyders1@gmail.com>
+---
+ Documentation/networking/iso15765-2.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/networking/iso15765-2.rst b/Documentation/networking/iso15765-2.rst
+index 0e9d96074178..37ebb2c417cb 100644
+--- a/Documentation/networking/iso15765-2.rst
++++ b/Documentation/networking/iso15765-2.rst
+@@ -369,8 +369,8 @@ to their default.
+ 
+   addr.can_family = AF_CAN;
+   addr.can_ifindex = if_nametoindex("can0");
+-  addr.tp.tx_id = 0x18DA42F1 | CAN_EFF_FLAG;
+-  addr.tp.rx_id = 0x18DAF142 | CAN_EFF_FLAG;
++  addr.can_addr.tp.tx_id = 0x18DA42F1 | CAN_EFF_FLAG;
++  addr.can_addr.tp.rx_id = 0x18DAF142 | CAN_EFF_FLAG;
+ 
+   ret = bind(s, (struct sockaddr *)&addr, sizeof(addr));
+   if (ret < 0)
+-- 
+2.43.0
+
