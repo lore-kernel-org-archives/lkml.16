@@ -1,120 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51395182B4;
-	Mon,  3 Feb 2025 22:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7242182B4
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 22:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738620417; cv=none; b=riLSMeQ6qPLzvVVJT2riwOhVkt8JCeMGE2A9uYVyHVwZPFgGu2Xg9KQ3WGfA1P4ak67LCUeK0OMdnarY4FSfwI1q9w9CGUih8M7qXivzAoUI48MvwMpmxbUTcY9YA0CL/bEE24PEUxthFjnt2OegNGfBZZjRNvqLYrfQiv6WGBk=
+	t=1738620536; cv=none; b=QcINwmVYfiCoq35CQyB1GAQurBEU8rKR9t1/YGi047tvo1d1bpUdDfs1p2h9hJtMWhKs5+ICKyArp7hvbQ+WNkpUs0CSEzf1+qGznZM7bnNBVIOGnk/BphgAHeg32yygwKeaYD5hyopkOgI8bMRDgwcE9AfBOuwEt7w7yKXgJ+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738620417; c=relaxed/simple;
-	bh=OPQj1Abt3xsx43s9Y7uZoXay8fLRxRNIDzNqC0JHfuU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z5V31gBKvBJnu8bOHZM/T703XhOdhjTGeQ4N8AKAFqhcIQ/1LTq56MAlEJL0GUToLFsQwsgCyJvtWrudvaL8XMOoKqFq9oB2BTbO5rIiHuo73xIGrJsrd+SEiIypmeojflHYrpIs2Xih7B9i9jMxLI5Mv6GG/+bE+GVsBZ3VBes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+hxIZm6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738620536; c=relaxed/simple;
+	bh=5RAtnqgSsJW3L/OucE/O3ftfhIA9MkIbq8HBQmwo9mM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NPXtf6Icq3guT6+HeG3l/S9MvGF7iL0Oiy0FqPkWQlIsOPff8j2NgnePyDaJsrJxlmzZ6gQ9AG0T2t1lwieUg8PfEPragQIllDgQQ5YUNknDrxeHR2zYf/CE3RjLXtv9p4aoDASIR8TkM625kO5xFwr1ITAu25pjrAyOjJ+OWnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U/mFp8K6; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+hxIZm6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C982C4CED2;
-	Mon,  3 Feb 2025 22:06:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738620416;
-	bh=OPQj1Abt3xsx43s9Y7uZoXay8fLRxRNIDzNqC0JHfuU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V+hxIZm69ec87/kixoCd7sjM5/QXCqZOvZubHEi9QPXScZMTZ73pCrWL6DBEKZEA0
-	 M0vThFr4EA0C1QmAK6oshEBEuNR4VKhqb5cn6tr+z8ViUlGaUVZa/7EZmP3ljnQ5Al
-	 PxP8pkQnMguBWsQpLERdnpHB3yLFOPRmSQ+ntL8j3JxE+VRzyKGfAfV4/Jz91c9X60
-	 nnvtOvjWLXnZH+k26K5p3FwqFYKfG/v87rpSW7Wtiy14YMl09x380kiBhr93acWWGH
-	 ceQnfBYSe8by5T/CoXXRxE+yLxDxgysHiuKwHCb3z8FyPQyro3HoHa52w9pMaFCCQ1
-	 3YyJ2+kAmEhYw==
-Date: Mon, 3 Feb 2025 16:06:55 -0600
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, "Guoniu.zhou" <guoniu.zhou@nxp.com>,
-	Robby Cai <robby.cai@nxp.com>,
-	Robert Chiras <robert.chiras@nxp.com>
-Subject: Re: [PATCH 03/14] dt-bindings: reset: Add reset controller for
- i.MX8QM and i.MX8QXP
-Message-ID: <20250203220655.GA123074-robh@kernel.org>
-References: <20250131-8qxp_camera-v1-0-319402ab606a@nxp.com>
- <20250131-8qxp_camera-v1-3-319402ab606a@nxp.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U/mFp8K6"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5401af8544bso118e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:08:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738620533; x=1739225333; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YSoo65ANk1ACUgD5CEe1MmfBfCx6K8V18L1pZv5jKUg=;
+        b=U/mFp8K6kOjCQUGiq16ftHdAizOEbwDtF9bX6JgYYEGcB4azgC7vabPNLgPgp7jtek
+         e90myPCj9lWjYJEOK/B0TaRn5Gp3wsMyq4xG5wCv46IkAQRHCC4NKSzC2yaAm8OsX9IR
+         zJih8KUdou5DJNFsOP2tbHcPc/vl6IpAeANflVFesYVWSr1JUGBrsGTMCNNwNN+GFLrH
+         jruNnmI5rj688tjLcN2HnM+qaRtBfH9greqjaHkUfAGMJqxefld0uAjZyZcHjn8kALgL
+         PE8VBKF6uOhXyaCDqlVC6DrqcnwFwqRogcwPdP00eDyajK6yYkR/As9Zg2gjtNcT/MeX
+         HQgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738620533; x=1739225333;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YSoo65ANk1ACUgD5CEe1MmfBfCx6K8V18L1pZv5jKUg=;
+        b=vC0rG6ZPcG+6EBq5CfNW5c8eMO/kf+4JH8oW/Y8ipHltKrOomo5DT+w0DVG0J1MVrf
+         +I4ZGqm/4mQDcaXH8aRSDCAnPmtnHOS8aPAsrA2bkrDNmwUFBmUqcivd7pJ6nrkwrBHh
+         1flIRr/Q4SphkpfJQ8JWAe2+XdfG9bxo7wlRS0OsrYwT3J6ZEKoYNDmy1Jy7Sesd0m5q
+         3iJazGG859WZpM51j3YWburnOZQYTSI1a8Vt713gRMOSV80GpbmKSytr8RtSHVG7Qsg+
+         /vB0k2MKQs6fT79WOwHjQ2cj2JDL9xrvLBRopwKBfa9wytJxkJNyk/Uj7y0VAqQljscI
+         6lYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWbG/YmbHT79iJOOvFYHq5dt0TkDvpGMz7wpeUxf/qYjPIL/3iknQRNWY1aVQnh3YRmfOXJpQfiJ6K9Gh4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtaPUN2Rbtf7QgEwwa0tVPEZD6bvTNLhJCr0Zw5h5RgJfZGwub
+	JdbOUa89S3EFrCwE8V2dTomasrz+fewRKldJVHjXMLZkBaeef+m/LYAR6t9UnmP2nyY4oZd0b80
+	KYFxhNtSrp3puaZcfj09jgJulgDzUtB3CxU4s
+X-Gm-Gg: ASbGncvpcjYQMIORs2LjbefP3w65SaPRMdDzxPO9R/V39XWkCt+xXBPpdhNqTg99gx4
+	E9/FQoIfXZVdj88iTHdP6efnVJcFOQJbh+9lBaC8Q7W+VNzAoqXhi50ttXMimeo/KtzAIknFCvB
+	fsK5EOcxz/jH9IRSiJImYUUJQ+BaB7hQ==
+X-Google-Smtp-Source: AGHT+IHtm70vTgHPrrcUuJwFAa+5zFIj4hqVrwA8yzRqmy3Y13vzkDTGy11M0PhuNPkDVSVa0ZHRUqRBsdcAg8i1d2U=
+X-Received: by 2002:a05:6512:3b2a:b0:542:92ba:a08c with SMTP id
+ 2adb3069b0e04-54400bd712cmr17275e87.1.1738620532535; Mon, 03 Feb 2025
+ 14:08:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131-8qxp_camera-v1-3-319402ab606a@nxp.com>
+References: <20250129232525.3519586-1-vannapurve@google.com>
+ <p6sbwtdmvwcbr55a4fmiirabkvp3f542nawdgxoyq22cdhnu33@ffbmyh2zuj2z>
+ <CAGtprH8pJ3Zj_umygzxp8=4sJTdwY5v2bFDhoBdX=-3KQaDnCw@mail.gmail.com>
+ <wmdg54v56uizuifhaufllnjtecmvhllv35jyrvdilf4ty4pfs5@y4zppjm2sthr>
+ <CAGtprH82OjizyORJ91d6f6VAn_E9LY7WptN-DsoxwLT4VwOccg@mail.gmail.com>
+ <2wooixyr7ekw3ebi4oytuolk5wtyi2gqhsiveshfcfixlz3kuq@d5h6gniewqzk>
+ <CAGtprH-n=cfH_BJAmiNMoRbqq0XdGCf3RE67TYW8z7RARnsCiQ@mail.gmail.com>
+ <40418980-6e5b-48eb-bc35-7ffaf3221fd9@intel.com> <qzl5vkhykj4anuvjrhfco5qoeuib3oskffnxnqbcszotttnnqa@up5b4xl5l55g>
+ <702c5acb-6bab-4940-a8f1-c346373167bd@intel.com>
+In-Reply-To: <702c5acb-6bab-4940-a8f1-c346373167bd@intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Mon, 3 Feb 2025 14:08:41 -0800
+X-Gm-Features: AWEUYZn4lp_A5AbUjUHimrHcFYW36fbGNYwCsxNdJcmy9mUWfgPSBJE-b3l4FDY
+Message-ID: <CAGtprH-grdiE2AaagnYNUQC4ytSMxErYoh_Xyg2Nwmto33Yyyw@mail.gmail.com>
+Subject: Re: [PATCH V2 1/1] x86/tdx: Route safe halt execution via tdx_safe_halt()
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: "Kirill A. Shutemov" <kirill@shutemov.name>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	pbonzini@redhat.com, seanjc@google.com, erdemaktas@google.com, 
+	ackerleytng@google.com, jxgao@google.com, sagis@google.com, oupton@google.com, 
+	pgonda@google.com, dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
+	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 31, 2025 at 04:33:48PM -0500, Frank Li wrote:
-> Add binding doc for reset controller of i.MX8QM and i.MX8QXP, which use
-> System Controller Firmware(SCU) reset some peripherals, such as CSI.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../devicetree/bindings/reset/fsl,imx-scu.yaml     | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-scu.yaml b/Documentation/devicetree/bindings/reset/fsl,imx-scu.yaml
-> new file mode 100644
-> index 0000000000000..6046df8723262
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/fsl,imx-scu.yaml
-> @@ -0,0 +1,35 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/reset/fsl,imx-scu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX8 SCU Reset
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +description:
-> +  i.MX8QM and i.MX8QXP System Controller Firmware(SCU) provide reset for
-> +  some peripheral.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,imx-scu-reset
-> +
-> +  '#reset-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - '#reset-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    reset-controller {
-> +        compatible = "fsl,imx-scu-reset";
-> +        #reset-cells = <1>;
+On Mon, Feb 3, 2025 at 1:19=E2=80=AFPM Dave Hansen <dave.hansen@intel.com> =
+wrote:
+>
+> On 2/3/25 12:09, Kirill A. Shutemov wrote:
+> ...
+> > But Sean's proposal with HLT check before enabling interrupts looks bet=
+ter
+> > to me.
+>
+> "Sean's proposal" being this:
+>
+>         https://lore.kernel.org/all/Z5l6L3Hen9_Y3SGC@google.com/
+>
+> ?
+Yes.
 
-This should just be a property in the parent SCU node. You don't need a 
-node for every provider.
+>
+> Is that just intended to quietly fix up a hlt-induced #VE? I'm not sure
+> that's a good idea. The TDVMCALL is slow, but the #VE is also presumably
+> quite slow. This is (presumably) getting called in an idle path which is
+> actually one of the most performance-sensitive things we have in the kern=
+el.
+>
+> Or am I missing the point of Sean's proposal?
 
-We need a binding for the SCU as a whole.
+I think you have captured the intent correctly.
 
-Rob
+>
+> I don't mind having the #VE handler warn about the situation if we end
+> up there accidentally.
+>
+> I'd much rather have a kernel configured in a way that we are pretty
+> sure there's no path to even call hlt.
+
++1.
