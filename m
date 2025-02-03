@@ -1,118 +1,165 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931CC1D5176;
-	Mon,  3 Feb 2025 13:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA691D5176;
+	Mon,  3 Feb 2025 13:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738590328; cv=none; b=HNEY4ohBNmJjs2ThaWNexTXA9fek63hgNxAvqAMToVqtqwgLqV+/z7VounaOaDSz6C3+EFYKvR41cWA5ZGTEB8URXF5U/WDYhWMqejHrpHeR1AYqU60yOgie2n39EQMQA4DF8cKbUMbcFmhaa72L+GiPJ5kYqCz0VhvYgUMEl4o=
+	t=1738590380; cv=none; b=qPZ3Cdrm6JAmUTfzzEuy5tagls7qMaw0+Yk43rHmkaCNtlnv4G6MGdwi0ktHW0pZY9f1pG3Ow+Vab7YuHCk6z1Tc+VBmHPBW9BresuUGdexFIfdfJT229PdbbW3SALp7lKQSNiWNbi9F0lkjKw0yLJJBcoBOn1gYEoeEktYhPPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738590328; c=relaxed/simple;
-	bh=iL4VFw7hpCkHJMYrrBbsJDPioQL2CZn4VAQ9qFEwDYA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=N4Blt4D6lXGNLrds4dRg27MNH6+1ZrT003kd+oyWurcAJeSB0AUYSuWfvNkXCM43b0VisaL9WKoRz0rlmyWegTcbblVYZ3b8+KKutXLR527mXkEuc4hvDrY2/I2q7O8YLsaeors0rhFi9eaD2bqYj/cc0Dh5k11PsAm0J/fUZgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=oB2RWJZ2; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1738590380; c=relaxed/simple;
+	bh=yRjrClPp2Y8t2oce11v42+iDROF1lGwF9ONkK5huTd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B9ov4UoH+gyibJ3wYPBPP/G+E54gV1VdQB9/Qbzayh1cUHS8rgUEB7nK0QAYPgEQKUJs3CMQ+wck6DLX5QpwME+YJJKDkhlD+rnqZNQsa0d5ozOpyfVDuwYesyAC++jiGJCjoFcLan8L5swQX/G7IyXzaBjmamJgUbOYI3rNexg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D8RTg75h; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="oB2RWJZ2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738590314; x=1739195114; i=markus.elfring@web.de;
-	bh=BrMaFaTHbjNz6cmKTtG7569JFcgiiXmAOEQFMA9TFPo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=oB2RWJZ2YGCxROajQEFxhn9oBhttaShn8aL5il1RXZwEFSbsHUaOuF+R+KNpKK4P
-	 HNSu3UU0NpbSADTajMEgMd3V6vdurgQa1xy5d0QzXdUO+BBKpoRcbYEzQZY+hXO42
-	 kwOntGYb/UKl2VZMB13WWl6pl5FplWE53fyrm3QUD2zDe6XDp/AHrdmfS9Kkq0ODV
-	 HNqZvjZNK8HGpPDSImXGo4ohDE9dyB0tGIdjJG3jVqS/f6LDeTjFWzWI9+/2RXhvN
-	 3GAxLODMKd1CRLOI6cwc67znr1OxR3VPaOyf/sIE6FZlILQEnni7WEutzVv9WSidy
-	 NvbXAib0imxquWWdAQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.29]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N947J-1tKj532fI7-014rha; Mon, 03
- Feb 2025 14:45:14 +0100
-Message-ID: <6c32c1e8-0950-4bba-ac32-3284d144b142@web.de>
-Date: Mon, 3 Feb 2025 14:45:09 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8RTg75h"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-216281bc30fso6712305ad.0;
+        Mon, 03 Feb 2025 05:46:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738590375; x=1739195175; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=I/ATTF8zsbMuGG2i0AfdxDB1dr4BRw0eSCC+NReTqNk=;
+        b=D8RTg75huQBB2he3MUoBz0mE+L+kFKZhvjV43Q5fsHNYgt+ZjOqAHKmoxMWNGTpFAf
+         mVwEdovhhzPaCi2UrhhxUKEIfpuMP7NvHdvruFgBq9NNEUz71cELm+oo12X8F+KXtjWr
+         dFqB2prkGp5SGCKDzuvr8nRrFU67oRo9DEY1oNLxN3RAK3j0Fl2uRgjyTW1xQ0hlGkpQ
+         VR20MqvxRA54CJ0Mpm/6oeFvu07F4UMh6iY47iXivwkPRSkGUDfOmItPtMAfm2f0FXA6
+         Qn1aWj3z8r9HPSkit9jeYm1eacG+9fhLQm0j5Xz1FnMpmkDcYd1yjO0pwleCjHbxm9c8
+         /G0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738590375; x=1739195175;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I/ATTF8zsbMuGG2i0AfdxDB1dr4BRw0eSCC+NReTqNk=;
+        b=dvR1LGv90s5lwyzmlPFtydaV/3/mAiX+lLsGpgo24ihE0utlRhhFxMTenRcSRXdHJ4
+         Ar3QZ8KoAcYU81DhjcJYc9YIWoZu+/elkgSE+pRofItYqueqVXH7j5YRZwrTeLo+ZFNp
+         YzyO9FZ3v3pk6nU8lMWLL/Ze+2d13tQI/5tFaEG4d80ZVobvTqsDWZYOrzRCa2/c5oDI
+         m2TSSYeFaeLWETt0ASI0PQoVOUBdy+VdkJF7sOCyrmkUQ+gEv/5GZY0/dileW1jl+e/X
+         6lkbqgjWzEKKQlk8E3sAgI44Cg9of7BpDIwGLHZWZIOt6cYTSCBeOTVdsXjIz3nXogt3
+         RNKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUb24AQQgQBHMFBLkUH9bwvbkmLIcGMNPG9x3QY4IO/GRW4ekPtk1SWvjZ7A7DJ6s9A892V98wcSG0q@vger.kernel.org, AJvYcCXx2rnKiTcbIXn5Pi57SQxM0a8fjGHWm8g/Rk0YQcou4Xn8lNjuyq2yErtyFX1Zb1t7UehsAjuWNvmzA5JV@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEDDECcyXJeOcdMwsfvpAIti509ahKfOpWizKjTptNBAXyo0Ck
+	4vnXJ2q86JhZE0QE6XFPAs+x5CLn416W098lqHv/ehsMOMwERrvTERav5VSz
+X-Gm-Gg: ASbGncuWW6sx2QkRxLnvuW1b1CuR+0qjH0BjlJ3DVRXvqdZrJr+EyC22LO7Remeu3Iw
+	EFdemZgBM+odqPllEjtPw/us21bCttUPAKASNnJOcBFUKU+HD5XAHKlDWBCLe/mmSiY/tIjNjEf
+	40mldGBmYqHXiKO4fdJd8oQ6KBjcuY6CxfQSIlFgihZ7CHVZYB7CjoJu79NoEwPsNJdiojCLg9m
+	5DcpA/nZEq8gxDi6mxVgjJ6Mw22RPXgfanoRVmRYhRMkuPMdNBkLIqygbeipirTAFWI2TxgI6s3
+	Jt1XlJnjWP/omR8Th4JFF9SxbA==
+X-Google-Smtp-Source: AGHT+IEtE5h1/69abVRfO3Y5Rwh6qpPD2rb2iCTavBPfOdeI5wLdc63YNsthxfNn1hA3WoY4KYmcag==
+X-Received: by 2002:a05:6a00:a88e:b0:725:e057:c3dd with SMTP id d2e1a72fcca58-72fd0c98729mr33207627b3a.22.1738590374831;
+        Mon, 03 Feb 2025 05:46:14 -0800 (PST)
+Received: from localhost ([2804:30c:273d:6d00:d9cf:ba3b:291b:37ce])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69ceb1csm8253776b3a.151.2025.02.03.05.46.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 05:46:14 -0800 (PST)
+Date: Mon, 3 Feb 2025 10:46:57 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, lars@metafoo.de,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, jonath4nns@gmail.com
+Subject: Re: [PATCH v2 08/16] iio: adc: ad7768-1: Add reset gpio
+Message-ID: <Z6DI0Wo0sEY-yqvh@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1737985435.git.Jonathan.Santos@analog.com>
+ <722340b0efff3ed22a763ce6581c96ca403316d8.1737985435.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Mirela Rabulea <mirela.rabulea@nxp.com>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
- Laurentiu Palcu <laurentiu.palcu@nxp.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Robert Chiras <robert.chiras@nxp.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alain Volmat <alain.volmat@foss.st.com>,
- Alexander Stein <alexander.stein@ew.tq-group.com>,
- Alice Yuan <alice.yuan@nxp.com>, Conor Dooley <conor+dt@kernel.org>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Fabio Estevam <festevam@denx.de>, Hans de Goede <hdegoede@redhat.com>,
- Julien Vuillaumier <julien.vuillaumier@nxp.com>,
- Kieran Bingham <kieran.bingham@ideasonboard.com>, LnxRevLi@nxp.com,
- Mikhail Rudenko <mike.rudenko@gmail.com>,
- Umang Jain <umang.jain@ideasonboard.com>, Zhi Mao <zhi.mao@mediatek.com>
-References: <20250124001243.446511-3-mirela.rabulea@nxp.com>
-Subject: Re: [PATCH v3 2/4] media: ox05b1s: Add omnivision OX05B1S raw sensor
- driver
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250124001243.446511-3-mirela.rabulea@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:N457mtSPHMpil6w0dAFIRluGF2eNRFq1WajiJUDwx3tduTI/67w
- 30hKEGcTfnLHVx369mjN9AqjJPzjdFskbs2NQKob+uZviUB85lCgsMqc4ol0L1JdfX3hyD6
- fgRSMwb3twTjMXheIfT8vOneAqxSdDbztcAVOZ/LtQHvo9pY7TJL6UCb6bSxI7mU7g1H9Dz
- blsx8JXAc+2XesWg2Z0kA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:se+8RxEol8s=;21++833pN3rnAJqhYhv6dTmD8QS
- m4CXOzFXfW4MOFViJ2nJbD8NYRrkZREG39bRuonpG4lf+SnHREsp/AXCuzng9SL1U16CFLKHJ
- 8tMSJV0MME/yP9VktEidiYScXsEcjqM434YC12cm4XZT7kEeGH4KIAU20FBYscqCH5SluSfpX
- +TRBCi0XH2Q9igVCjeuZgKr7/zHQ5ZBJQnQfY7+ZJw6+1yG1FlkEsyS2UsN6VuGsWmtKq8hBz
- 3Lt8bi1DQSKo+XRlCHJMtkY+Gf97TC/o+OHlX0Et5KaTNRlrTW+AILgRWFDgrNr6Cpq4nTpYZ
- JUw4lV2HW1TjXg4DRa9I1kG1piLSlMWB6LNz/GuSeFVA9Ku6iDeVMRDec8ZYtnQ2fycSYshvd
- 3NUrpVwjixYRKJEcAKMQ1piO1xiGWNifHDUnDYPTJ0Q/0PJn4+3E0jePe7IPPSpS2qQiOWFDY
- C5v5yLNptw7kGiLKp1rJ2f36Zb5oxh++2U4U1oifcMHbeofmhhJjyct6EtHixMqLAMaRmwWeq
- LUvD2LTTfSDM6fhJTsX7HESeLkqkK0pteGc8PFco1p8GTvEnpqzqq9skibpXRgbXSdOeMmM4B
- 7iwGu6i8RkUSPrYlVA5SHY4TUK6MxFf7NNhYvkBQPi6cajm0yF42saAiMMjESWmHd5oVFRH0p
- Sfztp8TVLec+2k1XbFOXr70tntxr9fVMAeZzNtLF+b1boQt+wIZ792OhYRMIDwSGtYvTpLMUm
- 2921ycSOi4a6Tb07xdidQO/2ifIf+28tVPHkQb0HwAH/MAnzIw4RCSt6e9szqegCwd5kIcniF
- 4kSw9wZ3Rjf/vnfNPrJmFGRWhMYzyn5g0AuJ9wzJyjb4mXodeCRY00ZIf5DZXX56D9nQkhaEd
- hCQVZobrRpfw7j31TXvLXpOcD8jkCaaGKF7ivbPHSqjMhySXx1qEEQ5+SCG12eRIdR/heKtIP
- xXWrI38c+qIdMA+NxHvYA7eYpL6MbbNM9wMZ6+Fe+ydo+xQei7u//AC5m0rfsN5EjhBiwHEsn
- zoHfVDRFwgSUAAE9cmpCO+pBAiOFiWub75f+daXQCoy2erUA75sfMjmxrMMPS/52fficWOvK7
- ofm0iFRWT4G25/1eai0bamjVsHCG22oTcs49QgC4Iu7jGVHdrvBnu9XC5mdQC92JhfXNsTwHU
- 7rTst9xS50BEEA/nv6R1KViGyzdSO4P2jG+YPiZg7ZDqwXkGEjCkz5/mRaRhJEJTzErhhknyb
- C8CXwwWrkceig0mRgo+NvKACZCYH5Y4wsZoBAaTrk33xGLRl3wElTvr3vi2iM9c7V28OITwGT
- 6DPEGuSu7BJw6sVDp5h0bDpEbee21vANirjufJHgqm/TUQ9jlkg/kn8nQAPkqIorR/C
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <722340b0efff3ed22a763ce6581c96ca403316d8.1737985435.git.Jonathan.Santos@analog.com>
 
-=E2=80=A6
-> +++ b/drivers/media/i2c/ox05b1s/ox05b1s_mipi.c
-> @@ -0,0 +1,939 @@
-=E2=80=A6
-> +static int ox05b1s_get_frame_desc(struct v4l2_subdev *sd, unsigned int =
-pad,
-> +				  struct v4l2_mbus_frame_desc *fd)
-> +{
-=E2=80=A6
-> +	/* get sensor current code*/
-> +	mutex_lock(&sensor->lock);
-> +	fd->entry[0].pixelcode =3D sensor->mode->code;
-> +	mutex_unlock(&sensor->lock);
-=E2=80=A6
+On 01/27, Jonathan Santos wrote:
+> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> 
+> Depending on the controller, the default state of a gpio can vary. This
+> change excludes the probability that the dafult state of the ADC reset
+> gpio will be HIGH if it will be passed as reference in the devicetree.
+> 
+> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> ---
+> v2 Changes:
+> * Replaced usleep_range() for fsleep() and gpiod_direction_output() for 
+>   gpiod_set_value_cansleep().
+> * Reset via SPI register is performed if the Reset GPIO is not defined. 
+> ---
+LGTM.
+Aside from including your the SoB, one minor thing about reset timings.
+Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 
-Under which circumstances would you become interested to apply a statement
-like =E2=80=9Cguard(mutex)(&sensor->lock);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/mutex.h#L201
+>  drivers/iio/adc/ad7768-1.c | 36 ++++++++++++++++++++++++------------
+>  1 file changed, 24 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+> index fb8d6fae5f8a..17a49bf74637 100644
+> --- a/drivers/iio/adc/ad7768-1.c
+> +++ b/drivers/iio/adc/ad7768-1.c
+> @@ -163,6 +163,7 @@ struct ad7768_state {
+>  	struct completion completion;
+>  	struct iio_trigger *trig;
+>  	struct gpio_desc *gpio_sync_in;
+> +	struct gpio_desc *gpio_reset;
+>  	const char *labels[ARRAY_SIZE(ad7768_channels)];
+>  	/*
+>  	 * DMA (thus cache coherency maintenance) may require the
+> @@ -453,19 +454,30 @@ static int ad7768_setup(struct ad7768_state *st)
+>  {
+>  	int ret;
+>  
+> -	/*
+> -	 * Two writes to the SPI_RESET[1:0] bits are required to initiate
+> -	 * a software reset. The bits must first be set to 11, and then
+> -	 * to 10. When the sequence is detected, the reset occurs.
+> -	 * See the datasheet, page 70.
+> -	 */
+> -	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x3);
+> -	if (ret)
+> -		return ret;
+> +	st->gpio_reset = devm_gpiod_get_optional(&st->spi->dev, "reset",
+> +						 GPIOD_OUT_HIGH);
+> +	if (IS_ERR(st->gpio_reset))
+> +		return PTR_ERR(st->gpio_reset);
+>  
+> -	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x2);
+> -	if (ret)
+> -		return ret;
+> +	if (st->gpio_reset) {
+> +		fsleep(10);
+> +		gpiod_set_value_cansleep(st->gpio_reset, 0);
+> +		fsleep(10);
+Is 10 us enough time here? AD7768-1 datasheet page 58 sais
+"The time taken from RESET to an SPI write must be at least 200 μs."
 
-Regards,
-Markus
+> +	} else {
+> +		/*
+> +		 * Two writes to the SPI_RESET[1:0] bits are required to initiate
+> +		 * a software reset. The bits must first be set to 11, and then
+> +		 * to 10. When the sequence is detected, the reset occurs.
+> +		 * See the datasheet, page 70.
+> +		 */
+> +		ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x3);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x2);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+>  	st->gpio_sync_in = devm_gpiod_get(&st->spi->dev, "adi,sync-in",
+>  					  GPIOD_OUT_LOW);
+> -- 
+> 2.34.1
+> 
