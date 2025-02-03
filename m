@@ -1,209 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE0C1F92A
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 22:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C901FF7CA;
+	Mon,  3 Feb 2025 22:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738621349; cv=none; b=L9C5IBXb2ajlWNOOt2bcb/BCnxY+5fQQyvwcS6ksWq3hk4UDV71NQF+HlkSDnVsjFrBwy5g0L+8TA87VQI3DLuoVVa3gRZNlDYqfH7tZD58HDiyvBHeyUsSdxILzAvY/uIgEw8rHKQPB522cSHsqQJcLd2Zj/qT1lGPkZG3cjyc=
+	t=1738621424; cv=none; b=Y7Zmb7DR9luU9dRKBj4aAZWdTQp1ih7CqGsPvJMm/lzveFavaun27Tx6Og0RJbcIYE+DJdSjzqnNPdSQ8GvyOo11Z+LbmMY42DI0nj4GgMQqO1LR1NUCMkjU+ghA7AuSwcBaBkiFzM0PF1IZzHcZOs2s5zmQhLY5WP2bZxnIQv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738621349; c=relaxed/simple;
-	bh=YqD3RZ0M2iehtfo1xWoiI5ByTs+aCohE9EF5pyxmA+0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aHw8pfiBUSj99XL7UhbKnJ3W3JdnEBK9xi7F92UNat7t0gHCAK6G24uOkw4fE/AeGQrtrIyUYuOUA0N/QrmApTrwRVask4PsE7sLhevhmVR/63e2KHg5fLZp5HJmbI+3LGXeqxzFjOFOnY+eR17uMBkddQUOp6CcUDirN5hWk5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dkKuR4N0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738621424; c=relaxed/simple;
+	bh=QDO9GVeXAOaaRZkSWSLtvHPPP50q6hnF5jk/+ZuAFCo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AtHcXGy/AUPOKX93kJQlB7POW5ryy6qxCCTDCdxeOLOkaEOdlU6Tzn05rZMxJE9adn9yQNyOcmaoogI3Cz89aLlg7tOjBEtGO1QXoYAckI7caDODisM/UIow+q+ImGHJwV4EE0J0FzqY/5eFcLx0zQWopjbfYYwYmvXUDkqtv7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odAS0O7+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dkKuR4N0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738621345;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=nB3o37Oac6kH5hUcZJcd+W+A/0dY8NDzxfAxbBF16u0=;
-	b=dkKuR4N0cPHB29HLJXIXwWfd6et+00O1Q8HVcV7DrHP55oGFgNpT9rDmgntkk5jpVm97YP
-	mWoeSwKxbJOou/dOgv8axFuThbbLe6P1c7isHY6EdZi8s9z4cSYNvyJo5yqd1mx8hcTnGu
-	gPM/KwY8OydajXxQcXOM+hHj703JPWg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-75-JgWSWBeJMU6J6OpNx9wRuw-1; Mon, 03 Feb 2025 17:22:24 -0500
-X-MC-Unique: JgWSWBeJMU6J6OpNx9wRuw-1
-X-Mimecast-MFC-AGG-ID: JgWSWBeJMU6J6OpNx9wRuw
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43624b08181so23703125e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:22:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738621343; x=1739226143;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nB3o37Oac6kH5hUcZJcd+W+A/0dY8NDzxfAxbBF16u0=;
-        b=u/21sCkRy4aH2ZJ0DxZFXTpxk4FxECfwLy6ssWrV9aWglUwUgnn1GBO+IyAg3W1xUD
-         vtemhewU5I7hNSSZFO4c9swgtqOMYhw6WwNQqbx/t7XzPFqsf6KUo1J9eJOPM3d7YHVr
-         2Q5Bng8NmQVauib8PsIDHgjEuX5rvhy/Tcg37h2BKOiv0r5IxhxtQxkSi89jXV/6PTx9
-         QNj/KohK+VsvLBNhswPh7gYnS0oAJlNHbMevJhrVXrK4vP1ZDmf/YX8lXSopAE4AefLn
-         TSNWewrYhHEjtdDK9IWIPwNWcvMC9FVH/xJ+QaT6bnazq/l3nGwFqxCSBi/P8WvL2nXX
-         t3gg==
-X-Forwarded-Encrypted: i=1; AJvYcCWjdr2vOc2f3rMrxmOIyESq8PFCCY6IqDnvyG7qeXQvzea+yZKg6cpQZXsBL714rz6dE7dnz53kTtiQSJs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9qeQ09JxZWbej3zRBFhLbgNm4owM6t0Jn7UMLT09EEvfD321p
-	Ozj2jhImy6xHBjPanAYt5YCenfKT+bDbRtV7F8Gd/IAHIiztokVb/QqF1NAvuFzXPGgJ79nvLYf
-	IeOjn0a727yEBZorTFcKPXhSRlLHVtOWgmA6vNGJ9jF19L/X5I+96ZlOPAA3+qg==
-X-Gm-Gg: ASbGncslPX0KryaOCpisntuXGxHQ7aSB4jfffQFD4BMTaHFdAVfjygOi561fzLu3Mzg
-	wP1BStwHTmddcA7zy41c7yCJ/luDHcVYslsfkN+6mlhz8eyoVXVIUxMgPW3zxmfode6xRcQEE6/
-	e5KsVzGHNci+QF4grFPvTlFjsEKNCfqK6xG0EWzKM5Q6aiibVoy4nJuKc3j5RBr9aB+fzrlvI+x
-	f9JDvL95J84zA+enZgEc7jLFI2Fu6Y+2+aN0pzjhOuHLMa8iqmbgR9ln5C9Qa6D+hEo0O8G7NRk
-	BkNn0g==
-X-Received: by 2002:a05:600c:5347:b0:438:e521:1a4d with SMTP id 5b1f17b1804b1-43905f71a89mr6135565e9.5.1738621343007;
-        Mon, 03 Feb 2025 14:22:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGAH/W5hu0D32jTL4qwOO6xGL01jamVSHNmrzNCpw6ZBQisyMNmahw0XCcNu+AHyWghWTKStw==
-X-Received: by 2002:a05:600c:5347:b0:438:e521:1a4d with SMTP id 5b1f17b1804b1-43905f71a89mr6135405e9.5.1738621342576;
-        Mon, 03 Feb 2025 14:22:22 -0800 (PST)
-Received: from [192.168.10.3] ([151.62.97.55])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-438e244ecd6sm172909045e9.28.2025.02.03.14.22.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 14:22:22 -0800 (PST)
-Message-ID: <60cef3e4-8e94-4cf1-92ae-34089e78a82d@redhat.com>
-Date: Mon, 3 Feb 2025 23:22:20 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odAS0O7+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2C93C4CED2;
+	Mon,  3 Feb 2025 22:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738621423;
+	bh=QDO9GVeXAOaaRZkSWSLtvHPPP50q6hnF5jk/+ZuAFCo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=odAS0O7+0BpU5Lz+GlKYMGQ6c4ARoLckDjtLnhs8REL6A5uZgF1zTxV5NDNXJD8om
+	 M8fSprvOVg3y5Fr9qU/2ggqb/XMEPTVVcO5GS/cP5vbjoJ/FaBi1czc80yrdigPSaU
+	 sht0CkU3zWTLkYPlFF8eRXXnEGVC9YAFsqj3S+jtwd8OdbiQUJXAmK4YZ8og5R2SnJ
+	 ZrJ9dSpKHeNgb/Q59p2FDVNYhY3x9S6FOslm2m88S4Ob4Ah44GDMJFp/ZzloWLRqhc
+	 Fi1sDvBpk28JWpKvKy3s42spNVNCkwNjQJPf4TP1C2VfsZhqjXveKY1PLInfYyOKei
+	 f5XmO3mH2VpOg==
+Date: Mon, 3 Feb 2025 14:23:42 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Steven Price <steven.price@arm.com>, Kunihiko Hayashi
+ <hayashi.kunihiko@socionext.com>, "David S. Miller" <davem@davemloft.net>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>, Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>, Jose Abreu <joabreu@synopsys.com>,
+ Paolo Abeni <pabeni@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ netdev@vger.kernel.org, Furong Xu <0x1207@gmail.com>, Petr Tesarik
+ <petr@tesarici.cz>, Serge Semin <fancer.lancer@gmail.com>, Yanteng Si
+ <si.yanteng@linux.dev>, Xi Ruoyao <xry111@xry111.site>
+Subject: Re: [PATCH] net: stmmac: Allow zero for [tr]x_fifo_size
+Message-ID: <20250203142342.145af901@kernel.org>
+In-Reply-To: <Z6Clkh44QgdNJu_O@shell.armlinux.org.uk>
+References: <20250203093419.25804-1-steven.price@arm.com>
+	<Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
+	<811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
+	<Z6Clkh44QgdNJu_O@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] KVM: x86: Decouple APICv activation state from
- apicv_inhibit_reasons
-To: Sean Christopherson <seanjc@google.com>,
- "Naveen N Rao (AMD)" <naveen@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Vasant Hegde <vasant.hegde@amd.com>, Maxim Levitsky <mlevitsk@redhat.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <cover.1738595289.git.naveen@kernel.org>
- <405a98c2f21b9fe73eddbc35c80b60d6523db70c.1738595289.git.naveen@kernel.org>
- <Z6EOxxZA9XLdXvrA@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <Z6EOxxZA9XLdXvrA@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 2/3/25 19:45, Sean Christopherson wrote:
-> Unless there's a very, very good reason to support a use case that generates
-> ExtInts during boot, but _only_ during boot, and otherwise doesn't have any APICv
-> ihibits, I'm leaning towards making SVM's IRQ window inhibit sticky, i.e. never
-> clear it.
+On Mon, 3 Feb 2025 11:16:34 +0000 Russell King (Oracle) wrote:
+> > I've no opinion whether the original series "had value" - I'm just 
+> > trying to fix the breakage that entailed. My first attempt at a patch 
+> > was indeed a (partial) revert, but Andrew was keen to find a better 
+> > solution[1].  
+> 
+> There are two ways to fix the breakage - either revert the original
+> patches (which if they have little value now would be the sensible
+> approach IMHO)
 
-BIOS tends to use PIT, so that may be too much.  With respect to Naveen's report
-of contention on apicv_update_lock, I would go with the sticky-bit idea but apply
-it to APICV_INHIBIT_REASON_PIT_REINJ.
-
-Plus, to avoid crazy ExtINT configurations, something like this:
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 3ec6197b1386..3e358d55b676 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1295,6 +1295,11 @@ enum kvm_apicv_inhibit {
-  	 */
-  	APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED,
-  
-+	/*
-+	 * AVIC is disabled because more than one vCPU has extint unmasked
-+	 */
-+	APICV_INHIBIT_REASON_EXTINT,
-+
-  	/*********************************************************/
-  	/* INHIBITs that are relevant only to the Intel's APICv. */
-  	/*********************************************************/
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 71544b0f6301..33a5f4ef42bd 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -377,6 +377,7 @@ void kvm_recalculate_apic_map(struct kvm *kvm)
-  	struct kvm_apic_map *new, *old = NULL;
-  	struct kvm_vcpu *vcpu;
-  	unsigned long i;
-+	int extint_cnt = 0;
-  	u32 max_id = 255; /* enough space for any xAPIC ID */
-  	bool xapic_id_mismatch;
-  	int r;
-@@ -432,6 +433,8 @@ void kvm_recalculate_apic_map(struct kvm *kvm)
-  		if (!kvm_apic_present(vcpu))
-  			continue;
-  
-+		extint_cnt += kvm_apic_accept_pic_intr(vcpu);
-+
-  		r = kvm_recalculate_phys_map(new, vcpu, &xapic_id_mismatch);
-  		if (r) {
-  			kvfree(new);
-@@ -457,6 +460,11 @@ void kvm_recalculate_apic_map(struct kvm *kvm)
-  	else
-  		kvm_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_PHYSICAL_ID_ALIASED);
-  
-+	if (extint_cnt > 1)
-+		kvm_set_apicv_inhibit(kvm, APICV_INHIBIT_REASON_EXTINT);
-+	else
-+		kvm_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_EXTINT);
-+
-  	if (!new || new->logical_mode == KVM_APIC_MODE_MAP_DISABLED)
-  		kvm_set_apicv_inhibit(kvm, APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED);
-  	else
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 57ff79bc02a4..ba2fc7dd8ca2 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -676,6 +676,7 @@ extern struct kvm_x86_nested_ops svm_nested_ops;
-  	BIT(APICV_INHIBIT_REASON_HYPERV) |		\
-  	BIT(APICV_INHIBIT_REASON_NESTED) |		\
-  	BIT(APICV_INHIBIT_REASON_IRQWIN) |		\
-+	BIT(APICV_INHIBIT_REASON_EXTINT) |		\
-  	BIT(APICV_INHIBIT_REASON_PIT_REINJ) |		\
-  	BIT(APICV_INHIBIT_REASON_BLOCKIRQ) |		\
-  	BIT(APICV_INHIBIT_REASON_SEV)      |		\
-
-
-I don't love adding another inhibit reason but, together, these two should
-remove the contention on apicv_update_lock.  Another idea could be to move
-IRQWIN to per-vCPU reason but Maxim tells me that it's not so easy.
-
-Paolo
-
++1, I also vote revert FWIW
