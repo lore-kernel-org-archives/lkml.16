@@ -1,62 +1,362 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mtxmxout3.matrox.com (mtxmxout3.matrox.com [138.11.2.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206E9C139
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0BCC139
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=138.11.2.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588344; cv=none; b=oAtPHFGeMBl75rpcnbFVJowsM8oKxzXCHefyMif0VdhWGIaV+1jHdhHVrN1Jy7vV3zxIJKXbwT/M3HocP7i1dO3KJFiB91G6rRLzpUZK975n2/RGym/5GGZtV0KeWlZiQRTgCFq7WDWCs1dhr9dBz3kPyz5K8J+XdwBKlxgOhJc=
+	t=1738588464; cv=none; b=gpVrhF93h5ZpaZRV01FhIqJGFfdtGmjl4xlULHRVCSv4Nx3PfMngyrMH70RyewDm9rK+dOIlXP9Owf9S8imyeQG0/G1TASjKmRTgj8rlz6Ls4mnz8qmM+neeyDEb/cFqbZQ1npOX4w9mVEot0Gb54SB8SJ6zcJnin7gN41l52KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588344; c=relaxed/simple;
-	bh=1Rf62eXRmwpvteA12V5qtJ/DcWfXeXSz5IBgQtwngmk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=PI5LVlIEFNxsIOW4McZK97xrjAuuR9zOfntn/Vs19T45xpBfhGORzHDD3Fk7PByodHGsJ/fS00XouTXzOjjgq6iCeVAI8YlWed9nUkKoW9LXl5EboKHBRWq2SCJZjiFEPJgJtI4Nxi3NNMtxEpgDiE67CCoabskeCjeEuK/Gz6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ce8cdf1898so29790535ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 05:12:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738588342; x=1739193142;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Rf62eXRmwpvteA12V5qtJ/DcWfXeXSz5IBgQtwngmk=;
-        b=Kvx/kz8Foi4SP/d4zlnbW0Ksh2fJeZRig4gCZziO6xG0E9QTjxcBISfq81s8ZFfv0U
-         PjJMJQpxZa+ybRECilJy1glpSmScEU27f/eTzxDSA/UG3VKAe6IrLgHl1QRTZeQi7x/k
-         Vidh27nmATk1X87jTvA2kemh6aU+lwM2MSlUWhLuwaiAu+1sffWS40Fuh/BPDjWbHuQR
-         UQ5C2o1jKpvUZztH9NHudraACPr0YzaRh1f1BwtXmaoPUbOrLRQybH6aOWG604Tkg7OA
-         HU6HKtFN6ofw+imLsXJMP4PtvaOdWgfkpMm/grydZ5ogw593nWSauXjuqqKrVhyi1ZUB
-         aI9w==
-X-Gm-Message-State: AOJu0Yyz8HA5NrlU1tYoK731eskdtRJKj+bFMwuC17qiAw73/mDSdM+k
-	oT6Y13on7IlrlbM6EMzrMuWQJeP8Wy6EEeNrc/NU9HRb6iZrabVEUGYMUzAWX1qrM2wIqxne4dz
-	eS6Aml/RkJQ0yqWeNLp1J54OLY73uIZ5vt5chWZE4gY+iUMFgcs/rtK0=
-X-Google-Smtp-Source: AGHT+IEAhMLyVVj8C1r79+b8iqErU0HsCzwbZcjFgQ26JKggGp74rcFaW/obIlbmNMrD90++PgYEvmP4EhdMvsW/oOf2QMmqQhmO
+	s=arc-20240116; t=1738588464; c=relaxed/simple;
+	bh=Rd91snfQISx1V1oKL6wKfZGoBBLlGokbPUcaLbk6dYE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=HYToWfjeL6sZ7CEIQGzrGm/y0wPatVJtmTJLcmLQKaHO7Keq0hQICW3kLzbEgebXT8h5fV+JIREjGj55UFkn4RUx/vj+i4BYwULFOPVgbPYwcAIk+mOFuHiOvm2c0CVYMoFcOO6LgdUZDr2igx8tz5dTW6kH5NpROjyQNy4dFoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matrox.com; spf=pass smtp.mailfrom=matrox.com; dkim=pass (1024-bit key) header.d=matrox.com header.i=@matrox.com header.b=a/LM2cDh; arc=none smtp.client-ip=138.11.2.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matrox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matrox.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=matrox.com header.i=@matrox.com header.b="a/LM2cDh"
+Received: from venus.matrox.com (unknown [192.168.1.36])
+	by mtxmxout3.matrox.com (Postfix) with ESMTP id 78B25400D7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:07:34 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=matrox.com; s=dkim;
+	t=1738588054; bh=Rd91snfQISx1V1oKL6wKfZGoBBLlGokbPUcaLbk6dYE=;
+	h=Date:From:To:Subject;
+	b=a/LM2cDhfO2+0NaeMKmysXkLazoupHyCI971/kiXFbswZ5yh8nSOR4NnxdE1Gw59D
+	 dGziP4C1qXysk/dqtXXQvKjs80RvckNTpq8fSqnt6PlwvjBkP11p4kaTCba3vQuRd3
+	 37+zczhLdKbs62YUPiLli/UOLkRxmcy+lPRyqe/k=
+Received: (from ssmsp@localhost)
+	by venus.matrox.com (8.14.6/8.13.2) id 513D7YMF010890
+	for linux-kernel@vger.kernel.org; Mon, 3 Feb 2025 08:07:34 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by venus.matrox.com (Postfix) with ESMTP id 6D64B5F760;
+	Mon,  3 Feb 2025 08:07:34 -0500 (EST)
+X-Virus-MTX-Scanned: by Matrox Virus scanner at venus.matrox.com
+Received: from venus.matrox.com ([127.0.0.1])
+	by localhost (venus.matrox.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id qDoW15h4H9d4; Mon,  3 Feb 2025 08:07:34 -0500 (EST)
+Received: from venus-in.matrox.com (localhost.localdomain [127.0.0.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by venus.matrox.com (Postfix) with ESMTPS id 58D9A5F75B;
+	Mon,  3 Feb 2025 08:07:34 -0500 (EST)
+Received: from pluton.matrox.com (pluton.matrox.com [192.168.8.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by venus-in.matrox.com (Postfix) with ESMTPS id 5707E61F04;
+	Mon,  3 Feb 2025 08:07:34 -0500 (EST)
+Received: by pluton.matrox.com (Postfix, from userid 3820)
+	id 5463E340366; Mon,  3 Feb 2025 08:07:34 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by pluton.matrox.com (Postfix) with ESMTP id 51C62340365;
+	Mon,  3 Feb 2025 08:07:34 -0500 (EST)
+Date: Mon, 3 Feb 2025 08:07:34 -0500 (EST)
+From: Gwenael Georgeault <ggeorgea@matrox.com>
+To: David Airlie <airlied@redhat.com>, Jocelyn Falempe <jfalempe@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/mgag200: Added support for the new device G200eH5
+Message-ID: <alpine.LFD.2.00.2502030802150.30536@pluton.matrox.com>
+User-Agent: Alpine 2.00 (LFD 1167 2008-08-23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fc3:b0:3cf:c17d:5cba with SMTP id
- e9e14a558f8ab-3cffe3a68a5mr172933855ab.9.1738588342138; Mon, 03 Feb 2025
- 05:12:22 -0800 (PST)
-Date: Mon, 03 Feb 2025 05:12:22 -0800
-In-Reply-To: <672efa7e.050a0220.138bd5.0039.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a0c0b6.050a0220.163cdc.0045.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [bluetooth?] INFO: task hung in
- hci_cmd_sync_clear (3)
-From: syzbot <syzbot+217e3f1283cafe80586e@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; format=flowed; charset=US-ASCII
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+- Added the new device ID
+- Added new pll algorithm
 
-***
+Co-authored-by: Mamadou Insa Diop <mdiop@matrox.com>
+---
+  drivers/gpu/drm/mgag200/Makefile          |   1 +
+  drivers/gpu/drm/mgag200/mgag200_drv.c     |   4 +
+  drivers/gpu/drm/mgag200/mgag200_drv.h     |   7 +-
+  drivers/gpu/drm/mgag200/mgag200_g200eh5.c | 212 ++++++++++++++++++++++
+  4 files changed, 222 insertions(+), 2 deletions(-)
+  create mode 100644 drivers/gpu/drm/mgag200/mgag200_g200eh5.c
 
-Subject: Re: [syzbot] [bluetooth?] INFO: task hung in hci_cmd_sync_clear (3)
-Author: iulia.tanasescu@nxp.com
+diff --git a/drivers/gpu/drm/mgag200/Makefile b/drivers/gpu/drm/mgag200/Makefile
+index 5a02203fad12..94f063c8722a 100644
+--- a/drivers/gpu/drm/mgag200/Makefile
++++ b/drivers/gpu/drm/mgag200/Makefile
+@@ -6,6 +6,7 @@ mgag200-y := \
+  	mgag200_g200.o \
+  	mgag200_g200eh.o \
+  	mgag200_g200eh3.o \
++	mgag200_g200eh5.o \
+  	mgag200_g200er.o \
+  	mgag200_g200ev.o \
+  	mgag200_g200ew3.o \
+diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.c b/drivers/gpu/drm/mgag200/mgag200_drv.c
+index 069fdd2dc8f6..1c257f5b5136 100644
+--- a/drivers/gpu/drm/mgag200/mgag200_drv.c
++++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
+@@ -214,6 +214,7 @@ static const struct pci_device_id mgag200_pciidlist[] = {
+  	{ PCI_VENDOR_ID_MATROX, 0x534, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_ER },
+  	{ PCI_VENDOR_ID_MATROX, 0x536, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_EW3 },
+  	{ PCI_VENDOR_ID_MATROX, 0x538, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_EH3 },
++	{ PCI_VENDOR_ID_MATROX, 0x53A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_EH5 },
+  	{0,}
+  };
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git master
+@@ -256,6 +257,9 @@ mgag200_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+  	case G200_EH3:
+  		mdev = mgag200_g200eh3_device_create(pdev, &mgag200_driver);
+  		break;
++	case G200_EH5:
++		mdev = mgag200_g200eh5_device_create(pdev, &mgag200_driver);
++		break;
+  	case G200_ER:
+  		mdev = mgag200_g200er_device_create(pdev, &mgag200_driver);
+  		break;
+diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.h b/drivers/gpu/drm/mgag200/mgag200_drv.h
+index 0608fc63e588..065ba09d109b 100644
+--- a/drivers/gpu/drm/mgag200/mgag200_drv.h
++++ b/drivers/gpu/drm/mgag200/mgag200_drv.h
+@@ -196,6 +196,7 @@ enum mga_type {
+  	G200_EV,
+  	G200_EH,
+  	G200_EH3,
++	G200_EH5,
+  	G200_ER,
+  	G200_EW3,
+  };
+@@ -333,11 +334,13 @@ void mgag200_g200eh_pixpllc_atomic_update(struct drm_crtc *crtc, struct drm_atom
+  struct mga_device *mgag200_g200eh_device_create(struct pci_dev *pdev,
+  						const struct drm_driver *drv);
+  struct mga_device *mgag200_g200eh3_device_create(struct pci_dev *pdev,
+-						 const struct drm_driver *drv);
++						const struct drm_driver *drv);
++struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
++						const struct drm_driver *drv);
+  struct mga_device *mgag200_g200er_device_create(struct pci_dev *pdev,
+  						const struct drm_driver *drv);
+  struct mga_device *mgag200_g200ew3_device_create(struct pci_dev *pdev,
+-						 const struct drm_driver *drv);
++						const struct drm_driver *drv);
+
+  /*
+   * mgag200_mode.c
+diff --git a/drivers/gpu/drm/mgag200/mgag200_g200eh5.c b/drivers/gpu/drm/mgag200/mgag200_g200eh5.c
+new file mode 100644
+index 000000000000..5e39504785d8
+--- /dev/null
++++ b/drivers/gpu/drm/mgag200/mgag200_g200eh5.c
+@@ -0,0 +1,212 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <linux/pci.h>
++
++#include <drm/drm_atomic.h>
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_drv.h>
++#include <drm/drm_gem_atomic_helper.h>
++#include <drm/drm_probe_helper.h>
++
++#include "mgag200_drv.h"
++
++/*
++ * PIXPLLC
++ */
++
++static int mgag200_g200eh5_pixpllc_atomic_check(struct drm_crtc *crtc,
++					struct drm_atomic_state *new_state)
++{
++
++	static u64 ulVCOMax     = 10000000000ULL;   // units in Hz (10 GHz)
++	static u64 ulVCOMin     = 2500000000LL;     // units in Hz (2.5 GHz)
++	static u64 ulPLLFreqRef = 25000000ULL;      // units in Hz (25 MHz)
++
++	struct drm_crtc_state *new_crtc_state = drm_atomic_get_new_crtc_state(new_state, crtc);
++	struct mgag200_crtc_state *new_mgag200_crtc_state = to_mgag200_crtc_state(new_crtc_state);
++	long   clock = new_crtc_state->mode.clock;
++	struct mgag200_pll_values *pixpllc = &new_mgag200_crtc_state->pixpllc;
++
++	u64 ulFDelta     = 0xFFFFFFFFFFFFFFFFULL;
++
++	u16 ulMultMax    = (u16)(ulVCOMax / ulPLLFreqRef);    // 400 (0x190)
++	u16 ulMultMin    = (u16)(ulVCOMin / ulPLLFreqRef);    // 100 (0x64)
++
++	u64 ulFTmpDelta;
++	u64 ulComputedFo;
++
++	u16 ulTestM;
++	u8  ulTestDivA;
++	u8  ulTestDivB;
++	u64 ulFoHz;
++	int iDone = 0;
++
++	u8 ucM = 0;
++	u8 ucN = 0;
++	u8 ucP = 0;
++
++	ulFoHz = (u64)clock * 1000ULL;
++
++
++	for (ulTestM = ulMultMin; ulTestM <= ulMultMax; ulTestM++) { // This gives 100 <= M <= 400
++		for (ulTestDivA = 8; ulTestDivA > 0; ulTestDivA--) { // This gives 1 <= A <= 8
++			for (ulTestDivB = 1; ulTestDivB <= ulTestDivA; ulTestDivB++) {
++				// This gives 1 <= B <= A
++				ulComputedFo = (ulPLLFreqRef * ulTestM) /
++					(4 * ulTestDivA * ulTestDivB);
++
++				if (ulComputedFo > ulFoHz)
++					ulFTmpDelta = ulComputedFo - ulFoHz;
++				else
++					ulFTmpDelta = ulFoHz - ulComputedFo;
++
++				if (ulFTmpDelta < ulFDelta) {
++					ulFDelta = ulFTmpDelta;
++					ucM = (u8)(0xFF & ulTestM);
++					ucN = (u8)(
++					(0x7 & (ulTestDivA - 1))
++					| (0x70 & (0x7 & (ulTestDivB - 1)) << 4)
++					);
++					ucP = (u8)(1 & (ulTestM >> 8));
++				}
++				if (ulFDelta == 0) {
++					iDone = 1;
++					break;
++				}
++			} // End of DivB if (iDone)
++			if (iDone)
++				break;
++		} // End of DivA Loop
++
++		if (iDone)
++			break;
++	} // End of M Loop
++
++	pixpllc->m = ucM + 1;
++	pixpllc->n = ucN + 1;
++	pixpllc->p = ucP + 1;
++	pixpllc->s = 0;
++
++	return 0;
++	}
++
++
++
++/*
++ * Mode-setting pipeline
++ */
++
++static const struct drm_plane_helper_funcs mgag200_g200eh5_primary_plane_helper_funcs = {
++	MGAG200_PRIMARY_PLANE_HELPER_FUNCS,
++};
++
++static const struct drm_plane_funcs mgag200_g200eh5_primary_plane_funcs = {
++	MGAG200_PRIMARY_PLANE_FUNCS,
++};
++
++static const struct drm_crtc_helper_funcs mgag200_g200eh5_crtc_helper_funcs = {
++	MGAG200_CRTC_HELPER_FUNCS,
++};
++
++static const struct drm_crtc_funcs mgag200_g200eh5_crtc_funcs = {
++	MGAG200_CRTC_FUNCS,
++};
++
++static int mgag200_g200eh5_pipeline_init(struct mga_device *mdev)
++{
++	struct drm_device *dev = &mdev->base;
++	struct drm_plane *primary_plane = &mdev->primary_plane;
++	struct drm_crtc *crtc = &mdev->crtc;
++	int ret;
++
++	ret = drm_universal_plane_init(dev, primary_plane, 0,
++		&mgag200_g200eh5_primary_plane_funcs,
++		mgag200_primary_plane_formats,
++		mgag200_primary_plane_formats_size,
++		mgag200_primary_plane_fmtmods,
++		DRM_PLANE_TYPE_PRIMARY, NULL);
++	if (ret) {
++		drm_err(dev, "drm_universal_plane_init() failed: %d\n", ret);
++		return ret;
++	}
++	drm_plane_helper_add(primary_plane, &mgag200_g200eh5_primary_plane_helper_funcs);
++	drm_plane_enable_fb_damage_clips(primary_plane);
++
++	ret = drm_crtc_init_with_planes(dev, crtc, primary_plane, NULL,
++		&mgag200_g200eh5_crtc_funcs, NULL);
++	if (ret) {
++		drm_err(dev, "drm_crtc_init_with_planes() failed: %d\n", ret);
++		return ret;
++	}
++
++	drm_crtc_helper_add(crtc, &mgag200_g200eh5_crtc_helper_funcs);
++
++	/* FIXME: legacy gamma tables, but atomic gamma doesn't work without */
++	drm_mode_crtc_set_gamma_size(crtc, MGAG200_LUT_SIZE);
++	drm_crtc_enable_color_mgmt(crtc, 0, false, MGAG200_LUT_SIZE);
++	ret = mgag200_vga_bmc_output_init(mdev);
++
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++/*
++ * DRM device
++ */
++
++static const struct mgag200_device_info mgag200_g200eh5_device_info =
++	MGAG200_DEVICE_INFO_INIT(2048, 2048, 0, false, 1, 0, false);
++
++static const struct mgag200_device_funcs mgag200_g200eh5_device_funcs = {
++	.pixpllc_atomic_check = mgag200_g200eh5_pixpllc_atomic_check,
++	.pixpllc_atomic_update = mgag200_g200eh_pixpllc_atomic_update, // same as G200EH
++};
++
++struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
++	const struct drm_driver *drv)
++{
++
++	struct mga_device *mdev;
++	struct drm_device *dev;
++	resource_size_t vram_available;
++	int ret;
++
++	mdev = devm_drm_dev_alloc(&pdev->dev, drv, struct mga_device, base);
++
++	if (IS_ERR(mdev))
++		return mdev;
++	dev = &mdev->base;
++
++	pci_set_drvdata(pdev, dev);
++
++	ret = mgag200_init_pci_options(pdev, 0x00000120, 0x0000b000);
++	if (ret)
++		return ERR_PTR(ret);
++
++	ret = mgag200_device_preinit(mdev);
++	if (ret)
++		return ERR_PTR(ret);
++
++	ret = mgag200_device_init(mdev, &mgag200_g200eh5_device_info,
++		&mgag200_g200eh5_device_funcs);
++
++	if (ret)
++		return ERR_PTR(ret);
++
++	mgag200_g200eh_init_registers(mdev); // same as G200EH
++	vram_available = mgag200_device_probe_vram(mdev);
++
++	ret = mgag200_mode_config_init(mdev, vram_available);
++	if (ret)
++		return ERR_PTR(ret);
++
++	ret = mgag200_g200eh5_pipeline_init(mdev);
++	if (ret)
++		return ERR_PTR(ret);
++
++	drm_mode_config_reset(dev);
++	drm_kms_helper_poll_init(dev);
++
++	return mdev;
++}
+-- 
+2.34.1
+
