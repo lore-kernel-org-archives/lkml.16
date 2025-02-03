@@ -1,108 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A55204C06;
-	Mon,  3 Feb 2025 13:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6645B204C06;
+	Mon,  3 Feb 2025 13:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588893; cv=none; b=fFScv367dqiH1MzpPxJzdZwzXcZMHtulC1/x6lPySDGnkRhBjfUygGr1ad7YikZv1aLNAHpAtZ+hn8XcNN3W8+70WX1oPbA3NxlBDsZPgP2zDPY8cWSajGhe/g0rgCeDfLCFduyoVngL8z1cJXewzrlQKddxptteTCAv/niAfvI=
+	t=1738588926; cv=none; b=iEzA9kTLgSyYzMer6f3rt5yL8w6wywvohM3e58HGqAtg8wwnGeL64daVabu7DAOirzb/uwmTkh40VwAJYMjU8qBXriDuHU2+hqjSHrBI69BYtTikWXEVyXcQdiXzHwRXWmEDY9ns2Yg7ZXnuXjz9zn4XSkcuzeSSTdTr488wZLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588893; c=relaxed/simple;
-	bh=qNUiPO2yHgXnsW5NYL968qRQlYZ+KbplWMOxfDHT4Pg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MakbPZ3pbftWbFANQh/6s5BsYyLwf+sgF/Ipg1YJbfVi6xAfjpSpy62vflI4jWfRjHBf4UO0EsLMVo4ayeToK/dQdEBKcgcGRSEDaEvv+3moJtEptbasIIqIUDMrthlVRBW/TppKzG6kwzltdlGaPMoOS5qW03RkYUbxNK6ZUoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5wtFJe8; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738588926; c=relaxed/simple;
+	bh=NuqqQyHfFGF1hnhhM8hscJiABk2U4z0F25oUREhkTK0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dOf8+cl7Mf/kgkUC0pzwbwpD/dxe+VKL8rl9an9Ti1WthKiYyyM3WLYJ5FYtQoLUGzehQLzC9ODp8FVcxM8NdIgphu8IWGPVHhZjrfyBIzdBydRfebb0Fdx2jGq6vtJrVHZ8NASc5T107P/MyCKwT08hvxKDp+0DCHhjKRhCBfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OEQDNj5f; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5wtFJe8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738588891; x=1770124891;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=qNUiPO2yHgXnsW5NYL968qRQlYZ+KbplWMOxfDHT4Pg=;
-  b=I5wtFJe8qlk3/6b46f5FAvFb2kCCnPKz4Aw7vuJZJsjlYbO1q4qe64R5
-   YPVGcRIM/7NfQi6suxh0WsQeN2T19Hk2L7q+IeBYxwk8YjUaHJWFsqOVA
-   0olESev/VkOuhWWgChgqNcWDG6IucN8loxzIVMs+UEkrOP400H9EDefgM
-   nVEsnvfd7pPD5praskPLUr9QVPXSjljoeJGycjY0FCFbvHQ5YdJxF7ofw
-   LQGYAR6fnG8A4DT3aIBFDJ7y8HKb09EomxT1XkarSfAerdzwI05eFwxiI
-   G787v80EyalZEBT+pQI8A2PH/TFuH1YyGH0mMC06jDGDhTvrblkk+0Iik
-   w==;
-X-CSE-ConnectionGUID: gM2rJpvmQ2iFgOCigd5vgA==
-X-CSE-MsgGUID: ieO81YWnRd+Yn26Bdz3zpA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="56616568"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="56616568"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:21:31 -0800
-X-CSE-ConnectionGUID: nlVN1aI0QFSUS/IyFmEeRg==
-X-CSE-MsgGUID: 4btVPqeHRnaIw1rKsBA+MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="110855444"
-Received: from lfiedoro-mobl.ger.corp.intel.com (HELO localhost) ([10.245.246.71])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:21:26 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Haoyu Li <lihaoyu499@gmail.com>, Lee Jones <lee@kernel.org>, Daniel
- Thompson <danielt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>
-Cc: Helge Deller <deller@gmx.de>, Rob Herring <robh@kernel.org>,
- dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, chenyuan0y@gmail.com,
- zichenxie0106@gmail.com, Haoyu Li <lihaoyu499@gmail.com>,
- stable@vger.kernel.org
-Subject: Re: [PATCH] drivers: video: backlight: Fix NULL Pointer Dereference
- in backlight_device_register()
-In-Reply-To: <20250130145228.96679-1-lihaoyu499@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250130145228.96679-1-lihaoyu499@gmail.com>
-Date: Mon, 03 Feb 2025 15:21:23 +0200
-Message-ID: <87ldun6u5o.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEQDNj5f"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-438a3216fc2so44300885e9.1;
+        Mon, 03 Feb 2025 05:22:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738588922; x=1739193722; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NuqqQyHfFGF1hnhhM8hscJiABk2U4z0F25oUREhkTK0=;
+        b=OEQDNj5fy159O68qFtk0hxFD+iAWPd5eMPqiDur/7DtzaF2OmfRWboMzs2S7JTz5HE
+         vHWj5YZQXHQBWEGYQsBGSh+c2PAt0YYCrAQLDQgcZrrqtM4O8fooWGxyeeTEzpspmoge
+         G9SIRjOinT7CdanVMrFb+wkvVKWzVwxl3STUNnyjxKyfXkmOuZ1uJFyGOuzBKegpENcx
+         j6pTKPuagTvQKb/WTapV61R9hRwHYQTq5+ueA6mu7lrEMHV3qqZ+eKrNjdLYFxc9pMTH
+         lAt37kGO4iLruylgSB7+gSxQjyP5eS1E5dlgFd/PQ9qkWyqcxEnNglFdvxrq09r8Gnga
+         pbvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738588922; x=1739193722;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NuqqQyHfFGF1hnhhM8hscJiABk2U4z0F25oUREhkTK0=;
+        b=CskSkOmrgEvOTQ6pggpSg3bV4NbrzBAiMVaShq7+z79NgM56tk6YsrYWRwsym4BQOl
+         skSVt8NBbVZFd7SmHsa49ohfJIE359LzrX9UD9zJlB3A7+QsomIZ0Baub90zLTqCpsJI
+         zEEfK3kJZpw9N3GtInj0wqmdPDqj6ZFMS5+Axsxy51uq1mi/o+EcCI4Ziaq68h4Syh2z
+         j14PdpmyEiWoxW0WeyjC5Bq7ct9ltIwO9fMhj/Uc4W83j3juN39648/wTHQyHjmHuo17
+         CLnlZB3dlwo+GncAoUYWMfF8iW2Nn0DTstllglpc8uf31png4+RxNGkdqGln97Ur4G7/
+         tHUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbaU26YKluPqdvA0KgxODGyQZ/tbb5GLOQIL+qrr8sxISODYBpXnJ8YyUEyyD5YrvxN2ZBSncdj5MkyvY=@vger.kernel.org, AJvYcCVWkuc9iAbWuPth4V0/z+zIoCn4pmepQEPWuW/cGjoMs5RrbkoQra2OQdVM35+gQn0LQLj0BWB7zVaOYw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsonZioWIF2clPYJPVNb9tjs8IKixusp5qv56GJYlZ4+EQ5eYC
+	zd+/xn6JuSIqzCu9AGQH3Hpu//uiZF1RoIdY1AjEpwgplsCbBAf9
+X-Gm-Gg: ASbGnctF5Sgeb3hECR4M9IURthghiUZoFmjO95p4XpsngI2fJ3H12aKKL/cLrM7/om9
+	aYQTFblp13LnERyAIaBGtC8CyF0c8iAxfwMETuGhangIjoQhxuKDvThG60mSTYG3q9kCk0XJPFG
+	lFoS5dupfZdzgj9aJu1ByFjcv4PnyaDEOiydld3UXlxklLChvykzNBGogBKfWDU6m91IrdiN43d
+	4iFdeWZr9BMcqjPjgSILIogImUAKenjyTOXRD1jj++3jQllbj50RBnDeMyzCmTkeQpDhVmNl6pE
+	evjLz06ShrgDIkAcug==
+X-Google-Smtp-Source: AGHT+IEJPEowxycx9DAnaDaZhWHphmjMmX0zz+Mt0tMvxSHPPfnIEvt8NuHmqHb2F1fxGnRr2wQvQQ==
+X-Received: by 2002:a05:6000:1f88:b0:385:e176:4420 with SMTP id ffacd0b85a97d-38c5194da70mr17191751f8f.10.1738588922422;
+        Mon, 03 Feb 2025 05:22:02 -0800 (PST)
+Received: from [10.176.235.56] ([137.201.254.41])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23d4456sm158215415e9.7.2025.02.03.05.22.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 05:22:01 -0800 (PST)
+Message-ID: <a6e95e276bdb8f2e217281361734cb044311c416.camel@gmail.com>
+Subject: Re: [PATCH v3 4/8] scsi: ufs: qcom: Implement the
+ freq_to_gear_speed() vop
+From: Bean Huo <huobean@gmail.com>
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com, 
+ bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
+ avri.altman@wdc.com,  junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com,  quic_nitirawa@quicinc.com,
+ quic_rampraka@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Manivannan
+	Sadhasivam <manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
+	 <James.Bottomley@HansenPartnership.com>, open list
+	 <linux-kernel@vger.kernel.org>
+Date: Mon, 03 Feb 2025 14:22:00 +0100
+In-Reply-To: <20250203081109.1614395-5-quic_ziqichen@quicinc.com>
+References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
+	 <20250203081109.1614395-5-quic_ziqichen@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 
-On Thu, 30 Jan 2025, Haoyu Li <lihaoyu499@gmail.com> wrote:
-> In the function "wled_probe", the "wled->name" is dynamically allocated
-> (wled_probe -> wled_configure -> devm_kasprintf), which is possible
-> to be null.
->
-> In the call trace: wled_probe -> devm_backlight_device_register
-> -> backlight_device_register, this "name" variable is directly
-> dereferenced without checking. We add a null-check statement.
->
-> Fixes: f86b77583d88 ("backlight: pm8941: Convert to using %pOFn instead of device_node.name")
-> Signed-off-by: Haoyu Li <lihaoyu499@gmail.com>
-> Cc: stable@vger.kernel.org
+On Mon, 2025-02-03 at 16:11 +0800, Ziqi Chen wrote:
+> From: Can Guo <quic_cang@quicinc.com>
+>=20
+> Implement the freq_to_gear_speed() vop to map the unipro core clock
+> frequency to the corresponding maximum supported gear speed.
+>=20
+> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
 
-IMO whoever allocates should be responsible for checking NULL instead of
-passing NULL around and expecting everyone check their input for NULL.
-
-BR,
-Jani.
-
-
-> ---
->  drivers/video/backlight/backlight.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-> index f699e5827ccb..b21670bd86de 100644
-> --- a/drivers/video/backlight/backlight.c
-> +++ b/drivers/video/backlight/backlight.c
-> @@ -414,6 +414,8 @@ struct backlight_device *backlight_device_register(const char *name,
->  	struct backlight_device *new_bd;
->  	int rc;
->  
-> +	if (!name)
-> +		return ERR_PTR(-EINVAL);
->  	pr_debug("backlight_device_register: name=%s\n", name);
->  
->  	new_bd = kzalloc(sizeof(struct backlight_device), GFP_KERNEL);
-
--- 
-Jani Nikula, Intel
+Reviewed-by: Bean Huo <beanhuo@micron.com>
