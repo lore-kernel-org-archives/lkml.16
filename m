@@ -1,460 +1,185 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3E020A5F3
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79A720B213;
+	Mon,  3 Feb 2025 16:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738600637; cv=none; b=IgsHP0TOSDMk8LJcOLYaOu1I3FqoW5RqDwzFQQbrAZWTOckdHAXI0drhHzoEBDMb9gsH5uIGZ4ecV+lnkSSxuAEbbia7FH5J/nKKJ1++eVAQddCkFo7d+u6cK8wqVnwEQMdssSiGLbLVVlNVCbK6NSVmMZgDp+33oCwDLMs2ahY=
+	t=1738600641; cv=none; b=AMYAgEfqT8Q4IBqHB7DEBP7En4VyoBo5qAh8PUSdxylf3utWO7K57NI0XHWs3I9bgWbVSzSpvahXiwSvCNdcpEUiN8Wt6d7HxCSSM5s4GqKjOj5Ibqd3/dAEwUgR8s4ldIgiu9Ok/ZAVhR1lsnHQKBHfU1t/nkcVXaIOE0tlIMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738600637; c=relaxed/simple;
-	bh=S5xz3BOn2q5hEPeQurYXiPfbGl/GMz2S1iwPaT+H+7I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=WJFBrYpawOJ5AekWmGyNwmnC6IQwI/7f+cHMh8ghF0HQAkpriWFWyOwi7bKfGerTd/tuDO5ACXt6cmyzA9mq/P77Ah2brlFp2U5YJ0/gOg4ZZK+fvg1uH/mV2yL2391QLjRFVOzESpOUWV2Zl1Kv5+CbJrv/IqimnEBiBkRylJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=eqIlO/HO; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1738600641; c=relaxed/simple;
+	bh=PTEQg+KoPw4rUZvEINnJWwcR+6Sxha5H214W4w+bQv4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=knRxtv5iQnFJRsFYDCCelONlj7lq/lRSpEisRbDOqLGB7yPv2+5SV9T4jS12GT4KraPr3oHs0HVGe8lgqjP0OAe7/NwcuDaJCcy1zCjRL/T6rbnVVCwN5IlYlYhQWmufL5wNZ3GXWwLqJZm/4O0QQhilTy7ui+UPJGhBPeTNTq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJ6BmngV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eqIlO/HO"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250203163712euoutp01f10308f9185097307c167c97f27d796e~gwBBsdMLR1063510635euoutp01M
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:37:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250203163712euoutp01f10308f9185097307c167c97f27d796e~gwBBsdMLR1063510635euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1738600632;
-	bh=/cjF2im7siOiRdn6B6izW0xKqowa+3BJEzUkFArNsjo=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=eqIlO/HOAFpoGziSEqaOMHHc+ydxjJJu8CpeLv0ufip4qyRX9/GVe4MwHyM18GO4p
-	 G5Htabhaa706MiR8mAA5vpe5FN9TkY04l613ObrzbTiQKPG4DHUXQM3TU5TaBHFGeS
-	 9JUVGgJaBHcG8CnDnpnKYrsINeOmFOSXzWQODxQg=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250203163712eucas1p196275d9f0ceacf6984a9f5673ad536bb~gwBBPupgn2798727987eucas1p1N;
-	Mon,  3 Feb 2025 16:37:12 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id C1.B5.20397.8B0F0A76; Mon,  3
-	Feb 2025 16:37:12 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250203163711eucas1p2ab0c98052dc0a04ce4987506bd35a049~gwBAlOVr90838708387eucas1p2D;
-	Mon,  3 Feb 2025 16:37:11 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250203163711eusmtrp25c9d58ffb8e37537f418fd4b3409e540~gwBAkaHwf0261902619eusmtrp2P;
-	Mon,  3 Feb 2025 16:37:11 +0000 (GMT)
-X-AuditID: cbfec7f5-e59c770000004fad-81-67a0f0b809ad
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 64.52.19654.7B0F0A76; Mon,  3
-	Feb 2025 16:37:11 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250203163709eusmtip19af3cc094845c3ff2a93337b7ae89a3b~gwA_S6qf32821528215eusmtip1O;
-	Mon,  3 Feb 2025 16:37:09 +0000 (GMT)
-Message-ID: <ac770f68-8518-460c-ae07-7655b4dd2dea@samsung.com>
-Date: Mon, 3 Feb 2025 17:37:08 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJ6BmngV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E53C4CEE3;
+	Mon,  3 Feb 2025 16:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738600640;
+	bh=PTEQg+KoPw4rUZvEINnJWwcR+6Sxha5H214W4w+bQv4=;
+	h=From:Date:Subject:To:Cc:From;
+	b=ZJ6BmngV7dhkxhhYKl2ceQ/+uvGAWgmgReWG7Fahpdsypf741KkJ+SUod9tFS/gvq
+	 JTmvF+x9waHH1KMbQyg4eVVrWfa35BacZoDsPPLIoyyAWkE9GjA1rNybf1+mdHFCih
+	 P4HbZelvaVYYZqvG8sk/LDnP+pf1RSDiMm7UYEJUd4lS2Jb2EMP7Oaix/vSI2mMZsr
+	 o/hgIELi2qMSPkPIfM6u7DY5DUbywPPZ91HHcwte1IiF52wrbfgELyz0BhMlDMj5a/
+	 E9axXnk5N1d3XLbZIn6/QlvDwgWc7ikbmtZkTPuAgNXVYfXjzli8khi9NETsUCjsR4
+	 GB+HQLEfUFaAA==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Mon, 03 Feb 2025 11:37:06 -0500
+Subject: [PATCH] fuse: add a new "connections" file to show longest waiting
+ reqeust
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/18] clk: thead: Add clock support for VO subsystem
- in T-Head TH1520 SoC
-To: Matt Coster <Matt.Coster@imgtec.com>, "mturquette@baylibre.com"
-	<mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"drew@pdp7.com" <drew@pdp7.com>, "guoren@kernel.org" <guoren@kernel.org>,
-	"wefu@redhat.com" <wefu@redhat.com>, "jassisinghbrar@gmail.com"
-	<jassisinghbrar@gmail.com>, "paul.walmsley@sifive.com"
-	<paul.walmsley@sifive.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, Frank Binns
-	<Frank.Binns@imgtec.com>, "maarten.lankhorst@linux.intel.com"
-	<maarten.lankhorst@linux.intel.com>, "mripard@kernel.org"
-	<mripard@kernel.org>, "tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
-	<simona@ffwll.ch>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-	"jszhang@kernel.org" <jszhang@kernel.org>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "m.szyprowski@samsung.com"
-	<m.szyprowski@samsung.com>
-Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <cf668998-4f86-4a85-8137-7a8f689c2aa9@imgtec.com>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xTZxzGfXtOzzltUjgUGC86A6mOOeOwG3V5iYYogXFwH7YlZDP7oFQ5
-	qSi39ABublM2LgGsiIBBi0DxMlgn4LgWUmDSCnZVoHQrxEFhG2SAXGT1Mh2DUQ9ufPvl+V+e
-	//PmpTCpkdhIxSelsuokZYKMEOMtPc/63zQ81Knk9puvoDtDVwSo+W8tiW509AlQpblPiJyD
-	TQL00+MFAtVNDpBoquMrHDlqykmU2VNPoGmtk0CLGqcQ2dsvE8h11gxQiyuLQLXmURJVLTbj
-	6JqhHaCcvG+EyPZjJBp13sHRtF2DoRytJ1oxGki07PgeR2XzXSRqmj0vRL21H6OsrhJ872Zm
-	YTibZGanp3HGlPuIZDqe6HCmTTtKMpq2u4Bp0OcRzIjDSDAVlg+ZsTO9Aqbx2mkmq7ZHwJz7
-	R84sdP5MMAVNesAMZg6RH0g/Ee+JYxPi01n1zrBY8dG79gEspZz9dPaXQmEGeBKTD0QUpBWw
-	KKME5AMxJaVrAJycN5HugpR+BKDT/A5fcAH4YHgKezlhzJhYm6gGsOKHBYKfmAPQZPVys4QO
-	g+Z6G3AzTm+Fi+Zsgte9oOXSBO5mXzoAjt2/+MLNmz4Cr56bFLqX+tCtFCxoHHtRwOgMDOYW
-	nuLZD96fqBS4maDfhuPVlUI3i1bNzpuyAN8TAFvnLmPuRZC+J4ZPbzmE/NkRsG6pai2CN5zp
-	bSJ5fhWutPFLIZ0Mx5v/XOv5ArZpetd4Nxzpe76agFo1eAPWt+/k5X1wvPw26ZYh7QGH57z4
-	EzxgUUspxssSmJsj5buD4AXN2f9M+2paBIVApl33Ktp1IbXrwmj/99UBXA/82DQuUcVyIUns
-	iWBOmcilJamCjyQnNoDVD25d7n1sADUzi8HdQECBbgApTOYjsbbqVFJJnPKzk6w6+ZA6LYHl
-	usEmCpf5Sa50ZauktEqZyh5n2RRW/bIqoEQbMwSb+vee9IigLv1eF1lxVTVVPONDK7KHd7TT
-	+3yrDx/ovBmeeHprkF0dcEv17LbveH93bObn1lKPyHe37WeWg4pB4475wcKDZbrQsl2HuMOp
-	qqHimfiPxCmG8uvRCnHMif0rYeH96QOug9fzOxWnZHLV7p5joX+UBIso/1C5PjBkaVEs3OAa
-	fD2ZEln8l6LSrJ6eN4y/vn/stYGGvD1/VR33ezAz4giJKoivimtLln9bFBhSvhJvVBQn/Vbq
-	76SzYzu8N39niYo+0FApfy/wjE6hD8+MiJVHx+yyLV20lT3kvvSO0mzgpiK23MMTbRav9Jav
-	Tf7GUf0Fq23789Gn2xyVW2Q4d1T51nZMzSn/BQp3GV1PBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsVy+t/xu7rbPyxIN+h+oWZx4voiJoutv2ex
-	W6zZe47JYv6Rc6wW9y5tYbK48vU9m8W6pxfYLV7sbWSxuLZiLrtF87H1bBYvZ91js/jYc4/V
-	4vKuOWwWn3uPMFps+9zCZrH2yF12i4Uft7JYLNmxi9GirXMZq8XFU64Wd++dYLF4ebmH2aJt
-	Fr/F/z072C3+XdvIYjH73X52iy1vJrJaHF8bbtGyfwqLg6zH+xut7B5vXr5k8Tjc8YXdY++3
-	BSweO2fdZffo2XmG0WPTqk42jzvX9rB5zDsZ6HG/+ziTx+Yl9R4ta48xefT/NfB4v+8qm0ff
-	llWMHpear7MHCEXp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSW
-	pRbp2yXoZZy5fIG5YG5qxZvbE1gbGL+FdDFyckgImEjsaXjC2MXIxSEksJRRYuKxFawQCRmJ
-	a90vWSBsYYk/17rYIIpeM0r8PX2ZCSTBK2AncWT9RUYQm0VAReLjkVY2iLigxMmZT8CaRQXk
-	Je7fmsEOYgsLJEss7n/KCjJIRGAvh8SuGz9ZQBxmgQZmiVWzbzBDrPjLKHH09hKwFcwC4hK3
-	nswHs9kEjCQeLJ8Pdh8n0OqJh1uAVnMA1ahLrJ8nBFEuL7H97RzmCYxCs5AcMgvJpFkIHbOQ
-	dCxgZFnFKJJaWpybnltspFecmFtcmpeul5yfu4kRmLa2Hfu5ZQfjylcf9Q4xMnEwHmKU4GBW
-	EuE9vX1BuhBvSmJlVWpRfnxRaU5q8SFGU2BgTGSWEk3OBybOvJJ4QzMDU0MTM0sDU0szYyVx
-	XrYr59OEBNITS1KzU1MLUotg+pg4OKUamBadD7rj/1l//7y3gaz7TvfK3/qR5ajo0rVCouH6
-	p6m+tg6sBUVNdmfFfrH/uG1x1Kbec+WxG9maUu1di0+wCe2PyCu8e2TDj9OvDEOmMFkZ8pee
-	dBDa92xxaA6L7ql7BvyTGy/9PV1lfGGnSna8auSNqw/qko//ehK6okLusubJvX/tz8lZW3qE
-	cpq38h1/0DSRt8Te8arwe7ezaxUuuaZ8Z2K+++rfVZ9SfvUlLLnW5e2ruSz2VW7SSrXJbnNb
-	XvXd8+fMZq3lzBba1UL19s5J7gzTo17z2U1xefe1q3nD1b9KH4VtBCaz3lXtuhSrer7hWrDF
-	BJ51fOf+vsj/4tN15//RjVda/vE+mvnllBJLcUaioRZzUXEiAJshIF/kAwAA
-X-CMS-MailID: 20250203163711eucas1p2ab0c98052dc0a04ce4987506bd35a049
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250128194827eucas1p25db822456e223563b8b411f77754c760
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250128194827eucas1p25db822456e223563b8b411f77754c760
-References: <20250128194816.2185326-1-m.wilczynski@samsung.com>
-	<CGME20250128194827eucas1p25db822456e223563b8b411f77754c760@eucas1p2.samsung.com>
-	<20250128194816.2185326-3-m.wilczynski@samsung.com>
-	<cf668998-4f86-4a85-8137-7a8f689c2aa9@imgtec.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250203-fuse-sysfs-v1-1-36faa01f2338@kernel.org>
+X-B4-Tracking: v=1; b=H4sIALHwoGcC/x3MMQqAMAxA0auUzAbSli5eRRykppqlSoOilN7d4
+ viG/ysoF2GF0VQofIvKkTvsYCDuS94YZe0GRy6QI4/pUkZ9NSlG9sGulkJMBD04Cyd5/tk0t/Y
+ B7lQEGVwAAAA=
+X-Change-ID: 20250203-fuse-sysfs-ce351d105cf0
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4220; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=PTEQg+KoPw4rUZvEINnJWwcR+6Sxha5H214W4w+bQv4=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnoPC4BprHsPxU60mfjU3S6jKFJj9kmsLN+GvL7
+ ggMSdHHgzaJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6DwuAAKCRAADmhBGVaC
+ FdzsEACVDqbBrb8Z5INcw5Wp3DpjKBTNJPgHzNGJePMG17qx9XRC6Egpsw6hJ7uxbaQzbq0t0hG
+ 6L5/fUU+CYXcnzMFjwjmL1u/jtrenAOB+OpwPCb8bbWceUUJKgB8Yh0s765a2BmZl2DpTD6Mpqd
+ oe3nil5bVvMDg0xhhUdZi+dGZt+OR2TVXPKbPHSLUVdxsyW6XE3h+uLNubMe/TKWqk5kXjQ/qCu
+ tZMc4n1QnOvOkXAqGWJlRjwV8RLKJciGERfC+U6s//vo7vZ0GUtv7O/0OQ8pR5hkPBS+6076fil
+ KilqaXXRz2HareOCY+rQ+ESRYVLgZWXpEvDfB08S0spj87oi3tZxXdBs4TOyO2GraBDQFTOtbl5
+ KTAnvwo2kC4YgkvckHKOx4iOGnLp6uwwTn7FlJUjWUBHqQaH/vAh+eFuGrT+DJNO2vCUuBW2YOg
+ AowckWUOv36X9yF1Auudhdsk1Fx1gdLvHDyzdy4n/ZUSMWL3Uju18sKm7NfZzccNUH/TlRpq1Pt
+ ne+OfPgEv7r41yrnG2rQdmcbD3tvBaOqPTVPoTfHJNR7bIKbGC66as2OJkXvsbp5QHHqP/KnyCN
+ GYfaNzE6zYbfgzQO8fP7k0hrz3GhVmNUbNDpV5DxdtgnTaj2GI8/0pVeCHkQUq11H+Wv5zACE2S
+ 6VuGt6+sqz/BwfA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
+Add a new file to the "connections" directory that shows how long (in
+seconds) the oldest fuse_req in the processing hash or pending queue has
+been waiting.
 
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+This is based on top of Joanne's work, as it requires the "create_time"
+field in fuse_req.  We have some internal detection of hung fuse server
+processes that relies on seeing elevated values in the "waiting" sysfs
+file. The problem with that method is that it can't detect when highly
+serialized workloads on a FUSE mount are hung. This adds another metric
+that we can use to detect when fuse mounts are hung.
+---
+ fs/fuse/control.c | 56 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/fuse/fuse_i.h  |  2 +-
+ 2 files changed, 57 insertions(+), 1 deletion(-)
 
-On 1/31/25 16:39, Matt Coster wrote:
-> On 28/01/2025 19:48, Michal Wilczynski wrote:
->> The T-Head TH1520 SoC integrates a variety of clocks for its subsystems,
->> including the Application Processor (AP) and the Video Output (VO) [1].
->> Up until now, the T-Head clock driver only supported AP clocks.
->>
->> This commit extends the driver to provide clock functionality for the VO
->> subsystem. At this stage, the focus is on implementing the VO clock
->> gates, as these are currently the most relevant and required components
->> for enabling and disabling the VO subsystem functionality.  Future
->> enhancements may introduce additional VO-related clocks as necessary.
->>
->> Link: https://protect2.fireeye.com/v1/url?k=e2f52701-bd6e1e1e-e2f4ac4e-000babdfecba-2c98780e6a3b772c&q=1&e=4ed72090-09ae-4d99-9a05-caed33873a2b&u=https%3A%2F%2Fopenbeagle.org%2Fbeaglev-ahead%2Fbeaglev-ahead%2F-%2Fblob%2Fmain%2Fdocs%2FTH1520%2520System%2520User%2520Manual.pdf  [1]
->>
->> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->> ---
->>  drivers/clk/thead/clk-th1520-ap.c | 197 +++++++++++++++++++++++++-----
->>  1 file changed, 169 insertions(+), 28 deletions(-)
->>
->> diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
->> index 4c9555fc6184..57972589f120 100644
->> --- a/drivers/clk/thead/clk-th1520-ap.c
->> +++ b/drivers/clk/thead/clk-th1520-ap.c
->> @@ -847,6 +847,67 @@ static CCU_GATE(CLK_SRAM1, sram1_clk, "sram1", axi_aclk_pd, 0x20c, BIT(3), 0);
->>  static CCU_GATE(CLK_SRAM2, sram2_clk, "sram2", axi_aclk_pd, 0x20c, BIT(2), 0);
->>  static CCU_GATE(CLK_SRAM3, sram3_clk, "sram3", axi_aclk_pd, 0x20c, BIT(1), 0);
->>  
->> +static CCU_GATE(CLK_AXI4_VO_ACLK, axi4_vo_aclk, "axi4-vo-aclk",
->> +		video_pll_clk_pd, 0x0, BIT(0), 0);
->> +static CCU_GATE(CLK_GPU_CORE, gpu_core_clk, "gpu-core-clk", video_pll_clk_pd,
->> +		0x0, BIT(3), 0);
->> +static CCU_GATE(CLK_GPU_CFG_ACLK, gpu_cfg_aclk, "gpu-cfg-aclk",
->> +		video_pll_clk_pd, 0x0, BIT(4), 0);
-> 
-> I see CORE and CFG clocks here; what about MEM? It's listed in the
-> linked TRM as BIT(2).
+diff --git a/fs/fuse/control.c b/fs/fuse/control.c
+index 2a730d88cc3bdb50ea1f8a3185faad5f05fc6e74..b213db11a2d7d85c4403baa61f9f7850fed150a8 100644
+--- a/fs/fuse/control.c
++++ b/fs/fuse/control.c
+@@ -180,6 +180,55 @@ static ssize_t fuse_conn_congestion_threshold_write(struct file *file,
+ 	return ret;
+ }
+ 
++/* Show how long (in s) the oldest request has been waiting */
++static ssize_t fuse_conn_oldest_read(struct file *file, char __user *buf,
++				      size_t len, loff_t *ppos)
++{
++	char tmp[32];
++	size_t size;
++	unsigned long oldest = jiffies;
++
++	if (!*ppos) {
++		struct fuse_conn *fc = fuse_ctl_file_conn_get(file);
++		struct fuse_iqueue *fiq = &fc->iq;
++		struct fuse_dev *fud;
++		struct fuse_req *req;
++
++		if (!fc)
++			return 0;
++
++		spin_lock(&fc->lock);
++		list_for_each_entry(fud, &fc->devices, entry) {
++			struct fuse_pqueue *fpq = &fud->pq;
++			int i;
++
++			spin_lock(&fpq->lock);
++			for (i = 0; i < FUSE_PQ_HASH_SIZE; i++) {
++				if (list_empty(&fpq->processing[i]))
++					continue;
++				/*
++				 * Only check the first request in the queue. The
++				 * assumption is that the one at the head of the list
++				 * will always be the oldest.
++				 */
++				req = list_first_entry(&fpq->processing[i], struct fuse_req, list);
++				if (req->create_time < oldest)
++					oldest = req->create_time;
++			}
++			spin_unlock(&fpq->lock);
++		}
++		if (!list_empty(&fiq->pending)) {
++			req = list_first_entry(&fiq->pending, struct fuse_req, list);
++			if (req->create_time < oldest)
++				oldest = req->create_time;
++		}
++		spin_unlock(&fc->lock);
++		fuse_conn_put(fc);
++	}
++	size = sprintf(tmp, "%ld\n", (jiffies - oldest)/HZ);
++	return simple_read_from_buffer(buf, len, ppos, tmp, size);
++}
++
+ static const struct file_operations fuse_ctl_abort_ops = {
+ 	.open = nonseekable_open,
+ 	.write = fuse_conn_abort_write,
+@@ -202,6 +251,11 @@ static const struct file_operations fuse_conn_congestion_threshold_ops = {
+ 	.write = fuse_conn_congestion_threshold_write,
+ };
+ 
++static const struct file_operations fuse_ctl_oldest_ops = {
++	.open = nonseekable_open,
++	.read = fuse_conn_oldest_read,
++};
++
+ static struct dentry *fuse_ctl_add_dentry(struct dentry *parent,
+ 					  struct fuse_conn *fc,
+ 					  const char *name,
+@@ -264,6 +318,8 @@ int fuse_ctl_add_conn(struct fuse_conn *fc)
+ 
+ 	if (!fuse_ctl_add_dentry(parent, fc, "waiting", S_IFREG | 0400, 1,
+ 				 NULL, &fuse_ctl_waiting_ops) ||
++	    !fuse_ctl_add_dentry(parent, fc, "oldest", S_IFREG | 0400, 1,
++				 NULL, &fuse_ctl_oldest_ops) ||
+ 	    !fuse_ctl_add_dentry(parent, fc, "abort", S_IFREG | 0200, 1,
+ 				 NULL, &fuse_ctl_abort_ops) ||
+ 	    !fuse_ctl_add_dentry(parent, fc, "max_background", S_IFREG | 0600,
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index dcc1c327a0574b1fd1adda4b7ca047aa353b6a0a..b46c26bc977ad2d75d10fb306d3ecc4caf2c53bd 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -42,7 +42,7 @@
+ #define FUSE_NAME_MAX 1024
+ 
+ /** Number of dentries for each connection in the control filesystem */
+-#define FUSE_CTL_NUM_DENTRIES 5
++#define FUSE_CTL_NUM_DENTRIES 6
+ 
+ /* Frequency (in seconds) of request timeout checks, if opted into */
+ #define FUSE_TIMEOUT_TIMER_FREQ 15
 
-It is however marked as 'Reserved' in manual, so I assumed I shouldn't
-touch it.
+---
+base-commit: 9afd7336f3acbe5678cca3b3bc5baefb51ce9564
+change-id: 20250203-fuse-sysfs-ce351d105cf0
 
-Additionally referring to the vendor kernel, only two clocks are used to
-program the GPU [1] in the old non-upstream driver.
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-[1] - https://github.com/revyos/thead-kernel/blob/lpi4a/drivers/gpu/drm/img-rogue/thead_sys.c#L400
-
-> 
-> Cheers,
-> Matt
-> 
->> +static CCU_GATE(CLK_DPU_PIXELCLK0, dpu0_pixelclk, "dpu0-pixelclk",
->> +		video_pll_clk_pd, 0x0, BIT(5), 0);
->> +static CCU_GATE(CLK_DPU_PIXELCLK1, dpu1_pixelclk, "dpu1-pixelclk",
->> +		video_pll_clk_pd, 0x0, BIT(6), 0);
->> +static CCU_GATE(CLK_DPU_HCLK, dpu_hclk, "dpu-hclk", video_pll_clk_pd, 0x0,
->> +		BIT(7), 0);
->> +static CCU_GATE(CLK_DPU_ACLK, dpu_aclk, "dpu-aclk", video_pll_clk_pd, 0x0,
->> +		BIT(8), 0);
->> +static CCU_GATE(CLK_DPU_CCLK, dpu_cclk, "dpu-cclk", video_pll_clk_pd, 0x0,
->> +		BIT(9), 0);
->> +static CCU_GATE(CLK_HDMI_SFR, hdmi_sfr_clk, "hdmi-sfr-clk", video_pll_clk_pd,
->> +		0x0, BIT(10), 0);
->> +static CCU_GATE(CLK_HDMI_PCLK, hdmi_pclk, "hdmi-pclk", video_pll_clk_pd, 0x0,
->> +		BIT(11), 0);
->> +static CCU_GATE(CLK_HDMI_CEC, hdmi_cec_clk, "hdmi-cec-clk", video_pll_clk_pd,
->> +		0x0, BIT(12), 0);
->> +static CCU_GATE(CLK_MIPI_DSI0_PCLK, mipi_dsi0_pclk, "mipi-dsi0-pclk",
->> +		video_pll_clk_pd, 0x0, BIT(13), 0);
->> +static CCU_GATE(CLK_MIPI_DSI1_PCLK, mipi_dsi1_pclk, "mipi-dsi1-pclk",
->> +		video_pll_clk_pd, 0x0, BIT(14), 0);
->> +static CCU_GATE(CLK_MIPI_DSI0_CFG, mipi_dsi0_cfg_clk, "mipi-dsi0-cfg-clk",
->> +		video_pll_clk_pd, 0x0, BIT(15), 0);
->> +static CCU_GATE(CLK_MIPI_DSI1_CFG, mipi_dsi1_cfg_clk, "mipi-dsi1-cfg-clk",
->> +		video_pll_clk_pd, 0x0, BIT(16), 0);
->> +static CCU_GATE(CLK_MIPI_DSI0_REFCLK, mipi_dsi0_refclk, "mipi-dsi0-refclk",
->> +		video_pll_clk_pd, 0x0, BIT(17), 0);
->> +static CCU_GATE(CLK_MIPI_DSI1_REFCLK, mipi_dsi1_refclk, "mipi-dsi1-refclk",
->> +		video_pll_clk_pd, 0x0, BIT(18), 0);
->> +static CCU_GATE(CLK_HDMI_I2S, hdmi_i2s_clk, "hdmi-i2s-clk", video_pll_clk_pd,
->> +		0x0, BIT(19), 0);
->> +static CCU_GATE(CLK_X2H_DPU1_ACLK, x2h_dpu1_aclk, "x2h-dpu1-aclk",
->> +		video_pll_clk_pd, 0x0, BIT(20), 0);
->> +static CCU_GATE(CLK_X2H_DPU_ACLK, x2h_dpu_aclk, "x2h-dpu-aclk",
->> +		video_pll_clk_pd, 0x0, BIT(21), 0);
->> +static CCU_GATE(CLK_AXI4_VO_PCLK, axi4_vo_pclk, "axi4-vo-pclk",
->> +		video_pll_clk_pd, 0x0, BIT(22), 0);
->> +static CCU_GATE(CLK_IOPMP_VOSYS_DPU_PCLK, iopmp_vosys_dpu_pclk,
->> +		"iopmp-vosys-dpu-pclk", video_pll_clk_pd, 0x0, BIT(23), 0);
->> +static CCU_GATE(CLK_IOPMP_VOSYS_DPU1_PCLK, iopmp_vosys_dpu1_pclk,
->> +		"iopmp-vosys-dpu1-pclk", video_pll_clk_pd, 0x0, BIT(24), 0);
->> +static CCU_GATE(CLK_IOPMP_VOSYS_GPU_PCLK, iopmp_vosys_gpu_pclk,
->> +		"iopmp-vosys-gpu-pclk", video_pll_clk_pd, 0x0, BIT(25), 0);
->> +static CCU_GATE(CLK_IOPMP_DPU1_ACLK, iopmp_dpu1_aclk, "iopmp-dpu1-aclk",
->> +		video_pll_clk_pd, 0x0, BIT(27), 0);
->> +static CCU_GATE(CLK_IOPMP_DPU_ACLK, iopmp_dpu_aclk, "iopmp-dpu-aclk",
->> +		video_pll_clk_pd, 0x0, BIT(28), 0);
->> +static CCU_GATE(CLK_IOPMP_GPU_ACLK, iopmp_gpu_aclk, "iopmp-gpu-aclk",
->> +		video_pll_clk_pd, 0x0, BIT(29), 0);
->> +static CCU_GATE(CLK_MIPIDSI0_PIXCLK, mipi_dsi0_pixclk, "mipi-dsi0-pixclk",
->> +		video_pll_clk_pd, 0x0, BIT(30), 0);
->> +static CCU_GATE(CLK_MIPIDSI1_PIXCLK, mipi_dsi1_pixclk, "mipi-dsi1-pixclk",
->> +		video_pll_clk_pd, 0x0, BIT(31), 0);
->> +static CCU_GATE(CLK_HDMI_PIXCLK, hdmi_pixclk, "hdmi-pixclk", video_pll_clk_pd,
->> +		0x4, BIT(0), 0);
->> +
->>  static CLK_FIXED_FACTOR_HW(gmac_pll_clk_100m, "gmac-pll-clk-100m",
->>  			   &gmac_pll_clk.common.hw, 10, 1, 0);
->>  
->> @@ -963,7 +1024,38 @@ static struct ccu_common *th1520_gate_clks[] = {
->>  	&sram3_clk.common,
->>  };
->>  
->> -#define NR_CLKS	(CLK_UART_SCLK + 1)
->> +static struct ccu_common *th1520_vo_gate_clks[] = {
->> +	&axi4_vo_aclk.common,
->> +	&gpu_core_clk.common,
->> +	&gpu_cfg_aclk.common,
->> +	&dpu0_pixelclk.common,
->> +	&dpu1_pixelclk.common,
->> +	&dpu_hclk.common,
->> +	&dpu_aclk.common,
->> +	&dpu_cclk.common,
->> +	&hdmi_sfr_clk.common,
->> +	&hdmi_pclk.common,
->> +	&hdmi_cec_clk.common,
->> +	&mipi_dsi0_pclk.common,
->> +	&mipi_dsi1_pclk.common,
->> +	&mipi_dsi0_cfg_clk.common,
->> +	&mipi_dsi1_cfg_clk.common,
->> +	&mipi_dsi0_refclk.common,
->> +	&mipi_dsi1_refclk.common,
->> +	&hdmi_i2s_clk.common,
->> +	&x2h_dpu1_aclk.common,
->> +	&x2h_dpu_aclk.common,
->> +	&axi4_vo_pclk.common,
->> +	&iopmp_vosys_dpu_pclk.common,
->> +	&iopmp_vosys_dpu1_pclk.common,
->> +	&iopmp_vosys_gpu_pclk.common,
->> +	&iopmp_dpu1_aclk.common,
->> +	&iopmp_dpu_aclk.common,
->> +	&iopmp_gpu_aclk.common,
->> +	&mipi_dsi0_pixclk.common,
->> +	&mipi_dsi1_pixclk.common,
->> +	&hdmi_pixclk.common
->> +};
->>  
->>  static const struct regmap_config th1520_clk_regmap_config = {
->>  	.reg_bits = 32,
->> @@ -972,8 +1064,44 @@ static const struct regmap_config th1520_clk_regmap_config = {
->>  	.fast_io = true,
->>  };
->>  
->> +struct th1520_plat_data {
->> +	struct ccu_common **th1520_pll_clks;
->> +	struct ccu_common **th1520_div_clks;
->> +	struct ccu_common **th1520_mux_clks;
->> +	struct ccu_common **th1520_gate_clks;
->> +
->> +	int nr_clks;
->> +	int nr_pll_clks;
->> +	int nr_div_clks;
->> +	int nr_mux_clks;
->> +	int nr_gate_clks;
->> +};
->> +
->> +static const struct th1520_plat_data th1520_ap_platdata = {
->> +	.th1520_pll_clks = th1520_pll_clks,
->> +	.th1520_div_clks = th1520_div_clks,
->> +	.th1520_mux_clks = th1520_mux_clks,
->> +	.th1520_gate_clks = th1520_gate_clks,
->> +
->> +	.nr_clks = CLK_UART_SCLK + 1,
->> +
->> +	.nr_pll_clks = ARRAY_SIZE(th1520_pll_clks),
->> +	.nr_div_clks = ARRAY_SIZE(th1520_div_clks),
->> +	.nr_mux_clks = ARRAY_SIZE(th1520_mux_clks),
->> +	.nr_gate_clks = ARRAY_SIZE(th1520_gate_clks),
->> +};
->> +
->> +static const struct th1520_plat_data th1520_vo_platdata = {
->> +	.th1520_gate_clks = th1520_vo_gate_clks,
->> +
->> +	.nr_clks = CLK_HDMI_PIXCLK + 1,
->> +
->> +	.nr_gate_clks = ARRAY_SIZE(th1520_vo_gate_clks),
->> +};
->> +
->>  static int th1520_clk_probe(struct platform_device *pdev)
->>  {
->> +	const struct th1520_plat_data *plat_data;
->>  	struct device *dev = &pdev->dev;
->>  	struct clk_hw_onecell_data *priv;
->>  
->> @@ -982,11 +1110,17 @@ static int th1520_clk_probe(struct platform_device *pdev)
->>  	struct clk_hw *hw;
->>  	int ret, i;
->>  
->> -	priv = devm_kzalloc(dev, struct_size(priv, hws, NR_CLKS), GFP_KERNEL);
->> +	plat_data = device_get_match_data(&pdev->dev);
->> +	if (!plat_data) {
->> +		dev_err(&pdev->dev, "Error: No device match data found\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	priv = devm_kzalloc(dev, struct_size(priv, hws, plat_data->nr_clks), GFP_KERNEL);
->>  	if (!priv)
->>  		return -ENOMEM;
->>  
->> -	priv->num = NR_CLKS;
->> +	priv->num = plat_data->nr_clks;
->>  
->>  	base = devm_platform_ioremap_resource(pdev, 0);
->>  	if (IS_ERR(base))
->> @@ -996,35 +1130,35 @@ static int th1520_clk_probe(struct platform_device *pdev)
->>  	if (IS_ERR(map))
->>  		return PTR_ERR(map);
->>  
->> -	for (i = 0; i < ARRAY_SIZE(th1520_pll_clks); i++) {
->> -		struct ccu_pll *cp = hw_to_ccu_pll(&th1520_pll_clks[i]->hw);
->> +	for (i = 0; i < plat_data->nr_pll_clks; i++) {
->> +		struct ccu_pll *cp = hw_to_ccu_pll(&plat_data->th1520_pll_clks[i]->hw);
->>  
->> -		th1520_pll_clks[i]->map = map;
->> +		plat_data->th1520_pll_clks[i]->map = map;
->>  
->> -		ret = devm_clk_hw_register(dev, &th1520_pll_clks[i]->hw);
->> +		ret = devm_clk_hw_register(dev, &plat_data->th1520_pll_clks[i]->hw);
->>  		if (ret)
->>  			return ret;
->>  
->>  		priv->hws[cp->common.clkid] = &cp->common.hw;
->>  	}
->>  
->> -	for (i = 0; i < ARRAY_SIZE(th1520_div_clks); i++) {
->> -		struct ccu_div *cd = hw_to_ccu_div(&th1520_div_clks[i]->hw);
->> +	for (i = 0; i < plat_data->nr_div_clks; i++) {
->> +		struct ccu_div *cd = hw_to_ccu_div(&plat_data->th1520_div_clks[i]->hw);
->>  
->> -		th1520_div_clks[i]->map = map;
->> +		plat_data->th1520_div_clks[i]->map = map;
->>  
->> -		ret = devm_clk_hw_register(dev, &th1520_div_clks[i]->hw);
->> +		ret = devm_clk_hw_register(dev, &plat_data->th1520_div_clks[i]->hw);
->>  		if (ret)
->>  			return ret;
->>  
->>  		priv->hws[cd->common.clkid] = &cd->common.hw;
->>  	}
->>  
->> -	for (i = 0; i < ARRAY_SIZE(th1520_mux_clks); i++) {
->> -		struct ccu_mux *cm = hw_to_ccu_mux(&th1520_mux_clks[i]->hw);
->> +	for (i = 0; i < plat_data->nr_mux_clks; i++) {
->> +		struct ccu_mux *cm = hw_to_ccu_mux(&plat_data->th1520_mux_clks[i]->hw);
->>  		const struct clk_init_data *init = cm->common.hw.init;
->>  
->> -		th1520_mux_clks[i]->map = map;
->> +		plat_data->th1520_mux_clks[i]->map = map;
->>  		hw = devm_clk_hw_register_mux_parent_data_table(dev,
->>  								init->name,
->>  								init->parent_data,
->> @@ -1040,10 +1174,10 @@ static int th1520_clk_probe(struct platform_device *pdev)
->>  		priv->hws[cm->common.clkid] = hw;
->>  	}
->>  
->> -	for (i = 0; i < ARRAY_SIZE(th1520_gate_clks); i++) {
->> -		struct ccu_gate *cg = hw_to_ccu_gate(&th1520_gate_clks[i]->hw);
->> +	for (i = 0; i < plat_data->nr_gate_clks; i++) {
->> +		struct ccu_gate *cg = hw_to_ccu_gate(&plat_data->th1520_gate_clks[i]->hw);
->>  
->> -		th1520_gate_clks[i]->map = map;
->> +		plat_data->th1520_gate_clks[i]->map = map;
->>  
->>  		hw = devm_clk_hw_register_gate_parent_data(dev,
->>  							   cg->common.hw.init->name,
->> @@ -1057,19 +1191,21 @@ static int th1520_clk_probe(struct platform_device *pdev)
->>  		priv->hws[cg->common.clkid] = hw;
->>  	}
->>  
->> -	ret = devm_clk_hw_register(dev, &osc12m_clk.hw);
->> -	if (ret)
->> -		return ret;
->> -	priv->hws[CLK_OSC12M] = &osc12m_clk.hw;
->> +	if (plat_data == &th1520_ap_platdata) {
->> +		ret = devm_clk_hw_register(dev, &osc12m_clk.hw);
->> +		if (ret)
->> +			return ret;
->> +		priv->hws[CLK_OSC12M] = &osc12m_clk.hw;
->>  
->> -	ret = devm_clk_hw_register(dev, &gmac_pll_clk_100m.hw);
->> -	if (ret)
->> -		return ret;
->> -	priv->hws[CLK_PLL_GMAC_100M] = &gmac_pll_clk_100m.hw;
->> +		ret = devm_clk_hw_register(dev, &gmac_pll_clk_100m.hw);
->> +		if (ret)
->> +			return ret;
->> +		priv->hws[CLK_PLL_GMAC_100M] = &gmac_pll_clk_100m.hw;
->>  
->> -	ret = devm_clk_hw_register(dev, &emmc_sdio_ref_clk.hw);
->> -	if (ret)
->> -		return ret;
->> +		ret = devm_clk_hw_register(dev, &emmc_sdio_ref_clk.hw);
->> +		if (ret)
->> +			return ret;
->> +	}
->>  
->>  	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, priv);
->>  	if (ret)
->> @@ -1081,6 +1217,11 @@ static int th1520_clk_probe(struct platform_device *pdev)
->>  static const struct of_device_id th1520_clk_match[] = {
->>  	{
->>  		.compatible = "thead,th1520-clk-ap",
->> +		.data = &th1520_ap_platdata,
->> +	},
->> +	{
->> +		.compatible = "thead,th1520-clk-vo",
->> +		.data = &th1520_vo_platdata,
->>  	},
->>  	{ /* sentinel */ },
->>  };
-> 
