@@ -1,53 +1,47 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC881D61A2
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 18:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F77013212A;
+	Mon,  3 Feb 2025 18:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738607576; cv=none; b=tZVJY8C0zNvcNlLAZqd1PdROTLQjV50FWlt5K6zzXmsu6lBjbLlxIZIYZR8gwdwW8mcQ1IbUqX8grZS18A0S/0PQ5Hq6m55iD9vJkXjZYCC7hAr16XhrU41B3/laeDvQP34Od8az57NjF1X16AjfSCALsRUtJ2th9Xy81wiBTtI=
+	t=1738607635; cv=none; b=SNEFKZ5k1cR27GGp/wDwKrHjiyLORYSM887LjUpqt0gbkVej4vzlTmQ4fSKall8IllgYWY9tA4AJbO/DerrjKVKeQ+ofm8GOpM5YnT+EGwvPQc/49KF838s7sAtyy8huyClF/sjRQebdUpF2+8Igy+9DfQ8cuzIR1pU/i4loQQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738607576; c=relaxed/simple;
-	bh=CMFyWCDGDbW9/mXeVsTOJ32gxb6vUpEPCaJZb22v4aI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uhMvb+F4txJKZHQ3z/feOto8sy5T09PunrUTilPJ9vMfLDIrGhm3Sp/mihMH7L7njQTeyjT7Y8kutjh41mVFxnI/azK1Wwnv8UriHeR7Tdq+uIP2KhBeoithDUmnd513RJDjgfQo7ND1Vp7SPfOamAmojys3PHRJMI1omHFiFQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lohwccsL; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738607635; c=relaxed/simple;
+	bh=Qv/oA1NGqm3eNS3fmvEshfrAJP0CchhzemG1BbiJx+s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VpxA+zUnL1mLjnBNgGEyqVvt+VOr5sSVeCfxucRHPW6yYH2KyajqBf6r4zx1F0Xx8ag6sSot8Q6W+R+LGfhAqcG7ueQs99qLNs+M3NPRKhoS6fyHYyGKP4FLHMQ8cH+s248OWXvSoEbdkzcTFbixs3f7jNpLfHPpNqvEIyq+zfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=n3LaZN3Z; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lohwccsL"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738607573;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p04z4NA8ANBpeee2BaIv4nfZi9bpNGy7L59DW/TFIH4=;
-	b=lohwccsLQVXqPCGCaUJpvLH2LWJNXS1hJWN3EUOWLZD8Xy0Z6P+pE/iWpnEG+x8xcjdRKm
-	xQQ/GyjkONdhF0Iw8r/ftkacNb+HvFhns4AB+E7YE4eOx60SWOA+AzvFd+qutjeJyW/beh
-	AvimWjSrwANWSEjXLRSTctQ83k1AAys=
-From: Oliver Upton <oliver.upton@linux.dev>
-To: kvmarm@lists.linux.dev
-Cc: Marc Zyngier <maz@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Colton Lewis <coltonlewis@google.com>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="n3LaZN3Z"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=1jgkRuEtsRrFHms0bbp4Vipk3ibC4Od1v2ikll/s3rM=; b=n3LaZN3ZhlpxdzX0
+	oazk7LTtlzI+nrDaU8GYyFBOm7AjuRhurj8v2LPgcif3kaLG1kmfb2Hpjpt+3OeuT6usBkDW2aNuC
+	97NDrQBEPD2CMNNOKov/49Nt++wf0GFMmwSYnnSWAp5sMzWhY9NmkYsFoB6yMQ+NwYQOxxFoydD1X
+	iTqtRQxkLX9ZeHE5ACldFS32cIlqmT+EPeVDEfqezuxzleZFB/2IX1WeBI4f0wFNlB4NI339eybYf
+	FRIDeP5FVxBp4IonBMiU+xta/TjVyP7nhR9QFnDlSPTOBsYKyDul6vO9oBar2LqUEI/1bJ1QcdbOp
+	ukWpicfPZH/bUgbFkg==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1tf1GS-00DLY3-0Z;
+	Mon, 03 Feb 2025 18:33:44 +0000
+From: linux@treblig.org
+To: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: horms@kernel.org,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Janne Grunau <j@jannau.net>
-Subject: [PATCH v2 14/14] arm64: Enable IMP DEF PMUv3 traps on Apple M*
-Date: Mon,  3 Feb 2025 10:31:11 -0800
-Message-Id: <20250203183111.191519-15-oliver.upton@linux.dev>
-In-Reply-To: <20250203183111.191519-1-oliver.upton@linux.dev>
-References: <20250203183111.191519-1-oliver.upton@linux.dev>
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH net-next] cavium/liquidio: Remove unused lio_get_device_id
+Date: Mon,  3 Feb 2025 18:33:43 +0000
+Message-ID: <20250203183343.193691-1-linux@treblig.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,80 +49,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Apple M1 and M2 CPUs support IMPDEF traps of the PMUv3 sysregs, allowing
-a hypervisor to virtualize an architectural PMU for a VM. Flip the
-appropriate bit in HACR_EL2 on supporting hardware.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Tested-by: Janne Grunau <j@jannau.net>
-Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+lio_get_device_id() has been unused since 2018's
+commit 64fecd3ec512 ("liquidio: remove obsolete functions and data
+structures")
+
+Remove it.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Reviewed-by: Simon Horman <horms@kernel.org>
 ---
- arch/arm64/kernel/cpu_errata.c | 44 ++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ .../net/ethernet/cavium/liquidio/octeon_device.c | 16 ----------------
+ .../net/ethernet/cavium/liquidio/octeon_device.h |  7 -------
+ 2 files changed, 23 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 7ce555862895..a1e16b156fab 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -194,6 +194,43 @@ has_neoverse_n1_erratum_1542419(const struct arm64_cpu_capabilities *entry,
- 	return is_midr_in_range(midr, &range) && has_dic;
+diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_device.c b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
+index 6b6cb73482d7..1753bb87dfbd 100644
+--- a/drivers/net/ethernet/cavium/liquidio/octeon_device.c
++++ b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
+@@ -1433,22 +1433,6 @@ int octeon_wait_for_ddr_init(struct octeon_device *oct, u32 *timeout)
  }
+ EXPORT_SYMBOL_GPL(octeon_wait_for_ddr_init);
  
-+static const struct midr_range impdef_pmuv3_cpus[] = {
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M1_ICESTORM),
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M1_FIRESTORM),
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M1_ICESTORM_PRO),
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M1_FIRESTORM_PRO),
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M1_ICESTORM_MAX),
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M1_FIRESTORM_MAX),
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M2_BLIZZARD),
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M2_AVALANCHE),
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M2_BLIZZARD_PRO),
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M2_AVALANCHE_PRO),
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M2_BLIZZARD_MAX),
-+	MIDR_ALL_VERSIONS(MIDR_APPLE_M2_AVALANCHE_MAX),
-+	{},
-+};
-+
-+static bool has_impdef_pmuv3(const struct arm64_cpu_capabilities *entry, int scope)
-+{
-+	u64 dfr0 = read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1);
-+	unsigned int pmuver;
-+
-+	if (!is_kernel_in_hyp_mode())
-+		return false;
-+
-+	pmuver = cpuid_feature_extract_unsigned_field(dfr0,
-+						      ID_AA64DFR0_EL1_PMUVer_SHIFT);
-+	if (pmuver != ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
-+		return false;
-+
-+	return is_midr_in_range_list(read_cpuid_id(), impdef_pmuv3_cpus);
-+}
-+
-+static void cpu_enable_impdef_pmuv3_traps(const struct arm64_cpu_capabilities *__unused)
-+{
-+	sysreg_clear_set_s(SYS_HACR_EL2, 0, BIT(56));
-+}
-+
- #ifdef CONFIG_ARM64_WORKAROUND_REPEAT_TLBI
- static const struct arm64_cpu_capabilities arm64_repeat_tlbi_list[] = {
- #ifdef CONFIG_QCOM_FALKOR_ERRATUM_1009
-@@ -794,6 +831,13 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- 					{}
- 				})),
- 	},
-+	{
-+		.desc = "Apple IMPDEF PMUv3 Traps",
-+		.capability = ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS,
-+		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
-+		.matches = has_impdef_pmuv3,
-+		.cpu_enable = cpu_enable_impdef_pmuv3_traps,
-+	},
- 	{
- 	}
- };
+-/* Get the octeon id assigned to the octeon device passed as argument.
+- *  This function is exported to other modules.
+- *  @param dev - octeon device pointer passed as a void *.
+- *  @return octeon device id
+- */
+-int lio_get_device_id(void *dev)
+-{
+-	struct octeon_device *octeon_dev = (struct octeon_device *)dev;
+-	u32 i;
+-
+-	for (i = 0; i < MAX_OCTEON_DEVICES; i++)
+-		if (octeon_device[i] == octeon_dev)
+-			return octeon_dev->octeon_id;
+-	return -1;
+-}
+-
+ void lio_enable_irq(struct octeon_droq *droq, struct octeon_instr_queue *iq)
+ {
+ 	u64 instr_cnt;
+diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_device.h b/drivers/net/ethernet/cavium/liquidio/octeon_device.h
+index d26364c2ac81..19344b21f8fb 100644
+--- a/drivers/net/ethernet/cavium/liquidio/octeon_device.h
++++ b/drivers/net/ethernet/cavium/liquidio/octeon_device.h
+@@ -705,13 +705,6 @@ octeon_get_dispatch(struct octeon_device *octeon_dev, u16 opcode,
+  */
+ struct octeon_device *lio_get_device(u32 octeon_id);
+ 
+-/** Get the octeon id assigned to the octeon device passed as argument.
+- *  This function is exported to other modules.
+- *  @param dev - octeon device pointer passed as a void *.
+- *  @return octeon device id
+- */
+-int lio_get_device_id(void *dev);
+-
+ /** Read windowed register.
+  *  @param  oct   -  pointer to the Octeon device.
+  *  @param  addr  -  Address of the register to read.
 -- 
-2.39.5
+2.48.1
 
