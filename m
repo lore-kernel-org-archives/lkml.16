@@ -1,121 +1,129 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4535F200BA9
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 11:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 255A4202C2A;
+	Mon,  3 Feb 2025 11:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738580494; cv=none; b=jmYZggRWK7CQSEkairc31/8EtahGUAEBOW5kgwR+E9o/EY6J2Gf7o4TLFRDcLDb3p/MHMduM2WTc58+LvboAWs+Qyl81eOn7VUbHbRXnCnztQ9MtP5dswO87Sr0XLzSHk1lYf+0V1aZ7H1O11fbJKpqxk99V2of1Wl6tRG/Nt2Y=
+	t=1738580497; cv=none; b=oXoWf35a9QvPx/kO/v8Gg1kP3nFsBiPVDzAylZWgnNCvnPnXwosHJD6Uvdk9F4FBF/NtNWYzDo/E3O5KRAs9VRrnuYlhTJLLhHYsasYqupmvgXLAGD4IaIONneyU0bgO9NigGt8A2RhN/R5kx58egAlwmsBIl1Bq2a7bRmgg4WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738580494; c=relaxed/simple;
-	bh=YdZ1F2UIY2BKSTH/78CeGePqnoOFXkPUh4G0+xOW8I4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nM3ctUx80TeGipNCRBPAOi4UttDkCOJqcjXa0KLUOXNFZxhTI0fKbIHq+DKgvBwjGXWprkYUuquixMJAquNxtyqiamZpXnw9Tiy5DgNwyp+F30pMNZmBUTpf1gkfG6hXQywwRT4S1UdEpOfarHP2O6vvZLfG+QqxZtbsdLaPABo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=w8HRxYe2; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="w8HRxYe2"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38633b5dbcfso4355434f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 03:01:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738580489; x=1739185289; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cw22mpAU6PFV8UovQOXfDj306Sn0bhW1MdW6JnCSix8=;
-        b=w8HRxYe24ch3I7IIFKjLd/PrqMMPVcbflsiYPAwG1alizGMJ/1q1X13LWO43k+wH6a
-         M+PDBWKHa1mthMyLDWq9o7moSVlSUYevttc2CSDdL7cCtyh8ecdkqygwPn1fVmvwcarL
-         FkK0qZ2qJIMHTtIeBAyCvFWweAu5qjeA+4XanWQKVJ9KfjWdzakkmXqaoV+s6sXz+3PA
-         BJncAWN9InY6p7logdzYs571M5DWiMUWQkSZytyOjgnzL2i+7ZDm8hoGM1Q6IDXkgfXw
-         yZF+/S0ZD5cNH0uBQSGiZ7dcZ/5Pq9RyuSYwmluBccy68qigHZCr0+mK3BO4wnnbA/30
-         ul8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738580489; x=1739185289;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cw22mpAU6PFV8UovQOXfDj306Sn0bhW1MdW6JnCSix8=;
-        b=GlmIIVvtY7xQ2epSmeMpCKE2bB8rS5EvQXTTWNQ51jpvjh/XsABFKvkvR0vb8gVmg8
-         NJoXpdv1OEzOZZQnNxAOAxWnZ/yo8/xAjxROQfeK+ayTgWQ4i9Gm2X8REhxjkk5PmrrI
-         ls+uJ8bl02S7QF/CK8KRkdnKUjsjBd7FILws449mtNFCj2sbu20AIaKJ1CbkOCoINuVG
-         zoHXjPuYTHYVrHWqdNSFzjcKnyDGpJRKBdAPSYERZ7J3gQHNikhRs7RfFDRwT245vlJS
-         PcibYhKOvd/1MdE2LydNEvvcHN5f5cDW8oHTQMJ92tPfJM8bIXVofgJdzI+zPiGFSeR5
-         TkeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWRumaCrLZvmdi8feftZbGojPZuciPcLFHj9UEpz1OpI0eVf/hB1H/lJ/z92vnITsNOqFyqj5+ue95Ic64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWtos3C74294UAlYscO5jzfmcT4HtSfXkqV5OZzIE9si3Qhzny
-	8QGm2Lj/CgQzTrtG3YJZSPuU++5v91Fy3DQnAd1k/07JTx0jbxwUIuQv6AGLjHb/snKqQIlIgh2
-	WVvqrBQ==
-X-Gm-Gg: ASbGncu0uM0GGKSLXAAoxEyOVpS7ksQg429wyRjcP5OsscNASTSVRAtg6WvxdYhVnyj
-	Ha0BqI9UvsXc6dtSKYO2L+EPsFm+2iIR0UFtCarpZUSk0DjeIMUOXbTORAGhcHNCFQ5zVkU8h45
-	dhC/Y8GH/ZDepkQA6Ds0Art0FEQ1mrSa9dAvI9Zr8vSyNB+6V8LA2Eis4/b62Hyop2xL8bEexH+
-	Bh374ynXPSVCeYfrxX6gEDXBSsIGL4SiqaO2Kj5pX7etzJaQGcpjvMHL+fpdNmL8T5ontcrTM5z
-	CPg2pqbNBxRw3w==
-X-Google-Smtp-Source: AGHT+IHnarVZWqY3vGCVzchvGea+YM7uiTfqLn9N97rzsoYlda8HMAkD7/6sIilZA3qM5d1MQ2HkQA==
-X-Received: by 2002:a5d:6c65:0:b0:38c:5cd0:ecf3 with SMTP id ffacd0b85a97d-38c5cd0efe3mr13978813f8f.11.1738580489130;
-        Mon, 03 Feb 2025 03:01:29 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:62d7:938e:c76:df44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec78esm12245894f8f.3.2025.02.03.03.01.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 03:01:28 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Koichiro Den <koichiro.den@canonical.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: sim: lock hog configfs items if present
-Date: Mon,  3 Feb 2025 12:01:23 +0100
-Message-ID: <20250203110123.87701-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1738580497; c=relaxed/simple;
+	bh=i8TuiKp63KwQmYHvZeyeU2ehTe/euGjJ+1y3V/bFTqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i8uHZNGerYHGzZYbwYvHa2WJumls8cCkmtQGsSFOSUGCX0EQk4GTm1yUF/Pwcxgc20TDN0VLmSYqFmPoOSNBYGz9YHkLmsWLEljPpeOzx+OpkvciImEJ/EDpkZCDrlfzQg8PtkPW3f2M53pDTtB9e/+fzqWk++7FDaudIRXwSB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B88211FB;
+	Mon,  3 Feb 2025 03:01:58 -0800 (PST)
+Received: from [10.1.34.25] (e122027.cambridge.arm.com [10.1.34.25])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 973B43F5A1;
+	Mon,  3 Feb 2025 03:01:30 -0800 (PST)
+Message-ID: <811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
+Date: Mon, 3 Feb 2025 11:01:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: stmmac: Allow zero for [tr]x_fifo_size
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Jose Abreu <joabreu@synopsys.com>,
+ Paolo Abeni <pabeni@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ netdev@vger.kernel.org, Furong Xu <0x1207@gmail.com>,
+ Petr Tesarik <petr@tesarici.cz>, Serge Semin <fancer.lancer@gmail.com>,
+ Yanteng Si <si.yanteng@linux.dev>, Xi Ruoyao <xry111@xry111.site>
+References: <20250203093419.25804-1-steven.price@arm.com>
+ <Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+[Moved Kunihiko to the To: line]
 
-Depending on the user config, the leaf entry may be the hog directory,
-not line. Check it and lock the correct item.
+On 03/02/2025 10:38, Russell King (Oracle) wrote:
+> On Mon, Feb 03, 2025 at 09:34:18AM +0000, Steven Price wrote:
+>> Commit 8865d22656b4 ("net: stmmac: Specify hardware capability value
+>> when FIFO size isn't specified") modified the behaviour to bail out if
+>> both the FIFO size and the hardware capability were both set to zero.
+>> However devices where has_gmac4 and has_xgmac are both false don't use
+>> the fifo size and that commit breaks platforms for which these values
+>> were zero.
+>>
+>> Only warn and error out when (has_gmac4 || has_xgmac) where the values
+>> are used and zero would cause problems, otherwise continue with the zero
+>> values.
+>>
+>> Fixes: 8865d22656b4 ("net: stmmac: Specify hardware capability value when FIFO size isn't specified")
+>> Tested-by: Xi Ruoyao <xry111@xry111.site>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+> 
+> I'm still of the opinion that the original patch set was wrong, and
+> I was thinking at the time that it should _not_ have been submitted
+> for the "net" tree (it wasn't fixing a bug afaics, and was a risky
+> change.)
+> 
+> Yes, we had multiple places where we have code like:
+> 
+>         int rxfifosz = priv->plat->rx_fifo_size;
+>         int txfifosz = priv->plat->tx_fifo_size;
+> 
+>         if (rxfifosz == 0)
+>                 rxfifosz = priv->dma_cap.rx_fifo_size;
+>         if (txfifosz == 0)
+>                 txfifosz = priv->dma_cap.tx_fifo_size;
+> 
+>         /* Split up the shared Tx/Rx FIFO memory on DW QoS Eth and DW XGMAC */
+>         if (priv->plat->has_gmac4 || priv->plat->has_xgmac) {
+>                 rxfifosz /= rx_channels_count;
+>                 txfifosz /= tx_channels_count;
+>         }
+> 
+> and this is passed to stmmac_dma_rx_mode() and stmmac_dma_tx_mode().
+> 
+> We also have it in the stmmac_change_mtu() path for the transmit side,
+> which ensures that the MTU value is not larger than the transmit FIFO
+> size (which is going to fail as it's always done before or after the
+> original patch set, and whether or not your patch is applied.)
+> 
+> Now, as for the stmmac_dma_[tr]x_mode(), these are method functions
+> calling into the DMA code. dwmac4, dwmac1000, dwxgmac2, dwmac100 and
+> sun8i implement methods for this.
+> 
+> Of these, dwmac4, dwxgmac2 makes use of the value passed into
+> stmmac_dma_[tr]x_mode() - both of which initialise dma.[tr]x_fifo_size.
+> dwmac1000, dwmac100 and sun8i do not make use of it.
+> 
+> So, going back to the original patch series, I still question the value
+> of the changes there - and with your patch, it makes their value even
+> less because the justification seemed to be to ensure that
+> priv->plat->[tr]x_fifo_size contained a sensible value. With your patch
+> we're going back to a situation where we allow these to effectively be
+> "unset" or zero.
+> 
+> I'll ask the question straight out - with your patch applied, what is
+> the value of the original four patch series that caused the breakage?
+> 
 
-Fixes: 8bd76b3d3f3a ("gpio: sim: lock up configfs that an instantiated device depends on")
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-sim.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+I've no opinion whether the original series "had value" - I'm just 
+trying to fix the breakage that entailed. My first attempt at a patch 
+was indeed a (partial) revert, but Andrew was keen to find a better 
+solution[1].
 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index a086087ada17..b843682b47e9 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -1028,6 +1028,7 @@ gpio_sim_device_lockup_configfs(struct gpio_sim_device *dev, bool lock)
- 	struct configfs_subsystem *subsys = dev->group.cg_subsys;
- 	struct gpio_sim_bank *bank;
- 	struct gpio_sim_line *line;
-+	struct config_item *item;
- 
- 	/*
- 	 * The device only needs to depend on leaf line entries. This is
-@@ -1036,12 +1037,14 @@ gpio_sim_device_lockup_configfs(struct gpio_sim_device *dev, bool lock)
- 	 */
- 	list_for_each_entry(bank, &dev->bank_list, siblings) {
- 		list_for_each_entry(line, &bank->line_list, siblings) {
-+			item = line->hog ? &line->hog->item
-+					 : &line->group.cg_item;
-+
- 			if (lock)
--				WARN_ON(configfs_depend_item_unlocked(
--						subsys, &line->group.cg_item));
-+				WARN_ON(configfs_depend_item_unlocked(subsys,
-+								      item));
- 			else
--				configfs_undepend_item_unlocked(
--						&line->group.cg_item);
-+				configfs_undepend_item_unlocked(item);
- 		}
- 	}
- }
--- 
-2.45.2
+I'd prefer we don't delay getting a fix merged arguing about the finer 
+details on this. Obviously once a fix is merged the code can be
+improved at leisure. If you want to propose a straight revert then
+by all means send the patch and I'll post a Tested-By.
 
+Steve
+
+[1] https://lore.kernel.org/all/fc08926d-b9af-428f-8811-4bfe08acc5b7@lunn.ch/
