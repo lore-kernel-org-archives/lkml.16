@@ -1,352 +1,424 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7DC1D618C;
-	Mon,  3 Feb 2025 11:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0961C2036F0;
+	Mon,  3 Feb 2025 11:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738582814; cv=none; b=jk5iQxcRgIl7dji18c4Zjwnoi551K1N1StUg2NPaJzHqCobPeLsLqjw+psiXmQ//TJwng1+tCvoxS4ERlfwyhfa4xLeaZ85Vz7cPifzxZDP5kVezf2N+10xahTD3WmWwQfGBPtQIQCpCISaxNfo2pzOMJPmpD38R+CD5y/ZvQNs=
+	t=1738582817; cv=none; b=VKDRGPo4Fg85aPFpnrnKNJM6Yfgzuec0F1Cn86MOdHHS/IOb6WBy2VHBEe3qqwj1GnTcUNpxE42TqO6XQ+yZZw2YD1mlupwZHAt9/wBqcdGongRsgu9xu1HtudqL6CAOg39xb9avmE9RCyoWLfEyi9GlkLTM7WfbxlwtZh+LqzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738582814; c=relaxed/simple;
-	bh=3zNzo18yRoE57C14OAbpkC4c+wCaWI0bwb/UU0LPgw4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IKtIVpQlLQN3bDuIV+iWks9MVptoX85PkyGkGPzPDsWgHJTVKNq1OlwVfdF4ztQ5N9ls1SP8NoxoEVxWbQZtvUGMVUhKFMgBFiljwYwlKMEStSHtGvh2PdkpqC8OvX8eZtVQ5rCz2kvCMrqx9p6UjEoOEuARvHlezptl9AWlQ40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iD2ogGxn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738582817; c=relaxed/simple;
+	bh=Pznr0Bts4D0FtUDtSu2Wtdp7OSNmccFCgV9QhrjQAow=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sOc+Y6dNTmP5ABQ1gu6RhikcD8iLzLTRr1aj0+HtwYJItnnVFWlmw29kkD8V3cy1WM29QvggFJtJBXd6nXAHGUR/cleJWlc07K1wgh9jkt5cwzo8E4qWIzIe2LwMHtNiAVhBO0HhA0anO/2kn0uNV65rfFoHeQOdmgftyG8f5o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DcCl1/u4; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iD2ogGxn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E33AC4CED2;
-	Mon,  3 Feb 2025 11:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738582814;
-	bh=3zNzo18yRoE57C14OAbpkC4c+wCaWI0bwb/UU0LPgw4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iD2ogGxnKC63VuHqOZ/uyXqUB/xOG3jHYDQDLFXMJgoQ7K9F+tr1yufOsmnsP/WUN
-	 Fb2IexyI/M+euld1Bmg2DUwc3ean2SR6CQiHq1eADZ75TG5H5dPnzw64fluIt7+I2R
-	 7kb5xBlh7GFgDzkg9C7CxF9vuvJe/wZiJDBZnM7HoXjklnx0g0BlTsU2xF4dF5iYEd
-	 NWWebpDbMlWgHY0ti3zF4peV0+DU8azC7EzM8CLNzIWAYheouf2KfkskYHojX9d1+L
-	 yzyN1x+q+kYwqGjM9G3Sj9jKNQQytJt/GSzeQFP4Fr3HuMf7i3ZKGI8Kr/ZELMqt2T
-	 NppNMm+OO9IHQ==
-Message-ID: <6a639549-f8c8-4e36-8cfe-839f247780bb@kernel.org>
-Date: Mon, 3 Feb 2025 12:40:05 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DcCl1/u4"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21649a7bcdcso71394165ad.1;
+        Mon, 03 Feb 2025 03:40:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738582815; x=1739187615; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4gduqE5+XkKRgfOuTSHYpyohOphdvP2oewiQ8WxF2r4=;
+        b=DcCl1/u44nbVAM2qO7ejBfRPJHvXEHDrqxhPbGiGrXf5P0YlomfbP3i1F0a9E3uxTj
+         JdG3Np7Y/CmNpeXqy4qv0egCNPViyEGYZMjxeiW15BNcsKTXfNHKKyy9l4MiiYLXal4D
+         Y7sllhG4RwsI1LGpx73eF8ORRJ9nCFxcB2z89WC0eE6Y3vs2ut6I+cZX/WZs08wM7FpA
+         ySPAvKMC8ndl/WhGnFciuB9yGKKeDEHp2odxHbLKTPjIRsJIIRSqdVNSxdbcX2Cnqeep
+         CByjkj4HYo6ZtWn1d+9ZT7MWaKMATdEUPkfiCdwzveuFRXeYGU0W9MBBv5VdC3yN4Mry
+         4I6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738582815; x=1739187615;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4gduqE5+XkKRgfOuTSHYpyohOphdvP2oewiQ8WxF2r4=;
+        b=dg0XUwCJD4MJHj/DatYkwju6uyV9Fg1fGa9rtIRwyj4bKy/pGZCxWFJE/5sxKV8q5H
+         NI/7SHu1N9IGq3UAtdl27juQqNCL2sQzzOqSfrXyh8W41L4HJ2kiEivb6aXXjl3a8m2R
+         jEXFgrGr4juMD0JJJE0KBVUB6IlC0rxK3osp+m+/yDhN8E872rWGmue0E1bwE85g1h1x
+         Gw1aG9An9PKFmAxD2FAJ7JDmC/WUR+A+sJN4NqkPYzWoDwvL0eJsWv70xozfMVqRX1zz
+         fBnKdbUaJKbeAvsX+yBQNeWFy6MXiBEmeFn/VnGVUeCFgiRzG4divru1zWH1l1FyK0aD
+         r1Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCVMQXxvt6M5DiBl6BsCGMhMBm38tU3oPceIXKVP7IHSed3FgMrwA0jfZtnINuKMga9Nm7WZNPEMPIcpNlct@vger.kernel.org, AJvYcCXyuWV6P9OZB2vqjGjyFwLNxtcnytCbtN7t5bkTPiljfrftN5a1242gO3YHOACQrnEkf3nHrG+BJ+5b@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBPmBWJpwYV4YNrfHWYzIb/nQMzhfXM0OiY223QKbaeaW/vA5x
+	8H2iHrQLkWEVgCurt+FqnrDCQ0UPb51EuFyvkPwwvhZesy0k08Tj
+X-Gm-Gg: ASbGncvDv6hqSTrFJGdm26Cd91JSacYtXCN3fAUrPYxYgfPCUuu6khjfr55utK4cfMY
+	ylx1BArnlmn3e75q2c02R9Ukrf/usuagdyEBd8DpozwFPkmN/aZDs1CZ5WIwljL7sGTq4SgU478
+	sLVblSXvZ06Jx/UNZFboqL2vcFJmNG35CepGTlodPtWAFd6/Qm2hj19xzpfZUILGSRJA9xKFG14
+	nTeO7UP323Lq3+ZaGm1huA2PsP2RIVNrkoq9CamY8LbdgZr2t3Xa7h2/Ot3C3Str/6zKKRZudP/
+	xhNaiGJM1tChbENZ
+X-Google-Smtp-Source: AGHT+IG/voCx4BoOF7MZR1nPTGgCOf7e1n+k46BNNiWJ1p0YoUYHkwqU6ASyPIUVLd/56kA/7gIkAA==
+X-Received: by 2002:a05:6a20:d809:b0:1e0:df27:10b5 with SMTP id adf61e73a8af0-1ed7a6e0e6bmr38809210637.29.1738582814998;
+        Mon, 03 Feb 2025 03:40:14 -0800 (PST)
+Received: from nick-mbp.. ([59.188.211.160])
+        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-acec04796d6sm7721614a12.55.2025.02.03.03.40.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 03:40:14 -0800 (PST)
+From: Nick Chan <towinchenmi@gmail.com>
+To: Hector Martin <marcan@marcan.st>,
+	Sven Peter <sven@svenpeter.dev>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Nick Chan <towinchenmi@gmail.com>
+Subject: [PATCH v2 RESEND] arm64: dts: apple: Split s8000/s8003 SoC DTS files
+Date: Mon,  3 Feb 2025 19:38:31 +0800
+Message-ID: <20250203113949.14760-1-towinchenmi@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/9] dt-bindings: memory-controllers: Add STM32 Octo
- Memory Manager controller
-To: Patrice CHOTARD <patrice.chotard@foss.st.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- christophe.kerello@foss.st.com
-References: <20250128081731.2284457-1-patrice.chotard@foss.st.com>
- <20250128081731.2284457-4-patrice.chotard@foss.st.com>
- <20250129-hilarious-glittering-mustang-fb5471@krzk-bin>
- <3660580d-72eb-45ca-8240-55557e334e37@foss.st.com>
- <951e4d16-2bb2-44b1-99e7-dd28349f20aa@kernel.org>
- <02b947e3-dd5c-4ee8-bd65-5775923fe33f@foss.st.com>
- <899675e8-4c2e-4ff2-a6af-854e0ec29bb6@kernel.org>
- <6ed4fa56-e7ee-4b6b-951b-61a92be5c6c2@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <6ed4fa56-e7ee-4b6b-951b-61a92be5c6c2@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 03/02/2025 11:46, Patrice CHOTARD wrote:
-> 
-> 
-> On 1/30/25 16:09, Krzysztof Kozlowski wrote:
->> On 30/01/2025 14:32, Patrice CHOTARD wrote:
->>>
->>>
->>> On 1/30/25 13:12, Krzysztof Kozlowski wrote:
->>>> On 30/01/2025 09:57, Patrice CHOTARD wrote:
->>>>>
->>>>>
->>>>> On 1/29/25 08:52, Krzysztof Kozlowski wrote:
->>>>>> On Tue, Jan 28, 2025 at 09:17:25AM +0100, patrice.chotard@foss.st.com wrote:
->>>>>>> From: Patrice Chotard <patrice.chotard@foss.st.com>
->>>>>>>
->>>>>>> Add bindings for STM32 Octo Memory Manager (OMM) controller.
->>>>>>>
->>>>>>> OMM manages:
->>>>>>>   - the muxing between 2 OSPI busses and 2 output ports.
->>>>>>>     There are 4 possible muxing configurations:
->>>>>>>       - direct mode (no multiplexing): OSPI1 output is on port 1 and OSPI2
->>>>>>>         output is on port 2
->>>>>>>       - OSPI1 and OSPI2 are multiplexed over the same output port 1
->>>>>>>       - swapped mode (no multiplexing), OSPI1 output is on port 2,
->>>>>>>         OSPI2 output is on port 1
->>>>>>>       - OSPI1 and OSPI2 are multiplexed over the same output port 2
->>>>>>>   - the split of the memory area shared between the 2 OSPI instances.
->>>>>>>   - chip select selection override.
->>>>>>>   - the time between 2 transactions in multiplexed mode.
->>>>>>>
->>>>>>> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
->>>>>>> ---
->>>>>>>  .../memory-controllers/st,stm32-omm.yaml      | 190 ++++++++++++++++++
->>>>>>>  1 file changed, 190 insertions(+)
->>>>>>>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml b/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
->>>>>>> new file mode 100644
->>>>>>> index 000000000000..7e0b150e0005
->>>>>>> --- /dev/null
->>>>>>> +++ b/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
->>>>>>
->>>>>>
->>>>>> Filename as compatible, so st,stm32mp25-omm.yaml
->>>>>>
->>>>>> You already received this comment.
->>>>>
->>>>> Sorry, i missed this update
->>>>>
->>>>>>
->>>>>>> @@ -0,0 +1,190 @@
->>>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>>>> +%YAML 1.2
->>>>>>> +---
->>>>>>> +$id: http://devicetree.org/schemas/memory-controllers/st,stm32-omm.yaml#
->>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>>>> +
->>>>>>> +title: STM32 Octo Memory Manager (OMM)
->>>>>>> +
->>>>>>> +maintainers:
->>>>>>> +  - Patrice Chotard <patrice.chotard@foss.st.com>
->>>>>>> +
->>>>>>> +description: |
->>>>>>> +  The STM32 Octo Memory Manager is a low-level interface that enables an
->>>>>>> +  efficient OCTOSPI pin assignment with a full I/O matrix (before alternate
->>>>>>> +  function map) and multiplex of single/dual/quad/octal 		SPI interfaces over
->>>>>>> +  the same bus. It Supports up to:
->>>>>>> +    - Two single/dual/quad/octal SPI interfaces
->>>>>>> +    - Two ports for pin assignment
->>>>>>> +
->>>>>>> +properties:
->>>>>>> +  compatible:
->>>>>>> +    const: st,stm32mp25-omm
->>>>>>> +
->>>>>>> +  "#address-cells":
->>>>>>> +    const: 2
->>>>>>> +
->>>>>>> +  "#size-cells":
->>>>>>> +    const: 1
->>>>>>> +
->>>>>>> +  ranges:
->>>>>>> +    description: |
->>>>>>> +      Reflects the memory layout with four integer values per OSPI instance.
->>>>>>> +      Format:
->>>>>>> +      <chip-select> 0 <registers base address> <size>
->>>>>>
->>>>>> Do you always have two children? If so, this should have maxItems.
->>>>>
->>>>> No, we can have one child.
->>>>
->>>> For the same SoC? How? You put the spi@ in the soc, so I don't
->>>> understand how one child is possible.
->>>
->>> Yes for the same SoC, in DTSI file, the both OCTOSPI child are declared 
->>> but are disabled by default.
->>
->> But the child node is there anyway so are the ranges.
-> 
-> if both child are disabled, omm-manager should be disabled as well, 
-> omm-manager alone makes no sense.
+Despite what the code comments said, the DTS files were not split properly.
+Since these two SoCs are now known to have minor differences like in
+latencies for cpufreq state transistions, split the DTS files now.
 
+Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+---
 
-Yes, it is obvious, but how is this related?
+Changes since v1:
+- Drop PMGR nodes file rename. This is now the first patch and other series
+that modifies Apple A9 DTS files now depend on this series. This avoids
+less than ideal situations like adding a file only for it to be renamed
+immediately.
 
-> 
->>
->>>
->>> In the DTS board file, 0,1 or 2 OCTOSPI instance can be enabled depending of the board design.
->>>
->>> In our case, on stm32mp257f-ev1 board, one SPI-NOR is soldered on PCB, so only one OCTOSPI 
->>> instance is needed and enabled.
->>>
->>> Internally we got validation boards with several memory devices connected to OCTOSPI1 and 
->>> OCTOSPI2, in this case, both OCTOSPI instance are needed and enabled.
->>
->> I could imagine that you would not want to have unused reserved ranges,
->> so that one indeed is flexible, I agree.
->>
->>>
->>>>
->>>>>
->>>>>>
->>>>>>> +
->>>>>>> +  reg:
->>>>>>> +    items:
->>>>>>> +      - description: OMM registers
->>>>>>> +      - description: OMM memory map area
->>>>>>> +
->>>>>>> +  reg-names:
->>>>>>> +    items:
->>>>>>> +      - const: regs
->>>>>>> +      - const: memory_map
->>>>>>> +
->>>>>>> +  memory-region:
->>>>>>> +    description: Phandle to node describing memory-map region to used.
->>>>>>> +    minItems: 1
->>>>>>> +    maxItems: 2
->>>>>>
->>>>>> List the items with description instead with optional minItems. Why is
->>>>>> this flexible in number of items?
->>>>>
->>>>> If only one child (OCTOSPI instance), only one memory-region is needed.
->>>>
->>>> Which is not possible... look at your DTSI.
->>>
->>> It's possible. if one OCTOSPI is used (the second one is kept disabled), only
->>> one memory-region is needed.
->>
->> Ack.
->>
->>>
->>>>
->>>>>
->>>>> Another update, i will reintroduce "memory-region-names:" which was 
->>>>> wrongly removed in V2, i have forgotten one particular case.
->>>>>
->>>>> We need memory-region-names in case only one OCTOSPI instance is 
->>>>> used. If it's OCTOCPI2 and the whole memory-map region
->>>>> is dedicated to OCTOSPI2 (OCTOSPI1 unmapped, OCTOSPI2 (256 Mbytes)
->>>>>
->>>>> We need to know to which OCTOSPI instance the memory region is associated
->>>>> with, in order to check "st,syscfg-amcr" 's value which must be coherent 
->>>>> with memory region declared.
->>>>>
->>>>> so i will add :
->>>>>
->>>>>   memory-region-names:
->>>>>     description: |
->>>>>       OCTOSPI instance's name to which memory region is associated
->>>>>     items:
->>>>>       - const: ospi1
->>>>>       - const: ospi2
->>>>>
->>>>
->>>> I don't think this matches what you are saying to us. Let's talk about
->>>> the hardware which is directly represented by DTS/DTSI. You always have
->>>> two instances.
->>>>
->>>>
->>>
->>> We have 2 instances, but both not always enabled.
->>> In case only one is enabled, only one memory-region-names is needed.
->>>
->>> We must know to which OCTCOSPI the memory-region makes reference to, in order
->>> to configure and/or check the memory region split configuration. That' swhy 
->>> the memory-regions-names must specify if it's the OCTOSPI1 or OCTOSPI2 instance.
->>
->> Well, in that case two comments.
->> 1. Above syntax does not allow you to skip one item. You would need:
->> items:
->>   enum: [ospi1, ospi2]
->> minItems: 1
->> maxItems: 2
->>
-> 
-> ok
-> 
->> 2. But this points to other problem. From the omm-manager node point of
->> view, you should define all the resources regardless whether the child
->> is enabled or not. You do not skip some part of 'reg' if child is
->> missing. Do not skip interrupts, access controllers, clocks etc.
->> If some resource is to be skipped, it means that it belongs to the
->> child, not to the parent, IMO.
-> 
-> I didn't get your point. 
-> 
-> The resource declared in omm-manager's node pnly belongs to omm-manager
-> (reg/clocks/resets/access-controllers/st,syscfg-amcr/power-domains), regardless 
-> there are 1 or 2 children. None of them can be skipped.
+Link to v1: https://lore.kernel.org/asahi/20241206135051.56049-1-towinchenmi@gmail.com/T
 
-That's not true, you skip ranges and memory region.
+Nick Chan
 
-> 
-> If omm-manager has no child enabled, omm-manager must be disabled as well in DT.
+ arch/arm64/boot/dts/apple/s800-0-3.dtsi | 140 ++++++++++++++++++++++++
+ arch/arm64/boot/dts/apple/s8000.dtsi    | 133 +---------------------
+ arch/arm64/boot/dts/apple/s8003.dtsi    |  10 +-
+ 3 files changed, 146 insertions(+), 137 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/apple/s800-0-3.dtsi
 
-That's not what we talk about. We do not talk about enabled or disabled.
-We talk about being there in the first place.
+diff --git a/arch/arm64/boot/dts/apple/s800-0-3.dtsi b/arch/arm64/boot/dts/apple/s800-0-3.dtsi
+new file mode 100644
+index 000000000000..082e5b1733d0
+--- /dev/null
++++ b/arch/arm64/boot/dts/apple/s800-0-3.dtsi
+@@ -0,0 +1,140 @@
++// SPDX-License-Identifier: GPL-2.0+ OR MIT
++/*
++ * Apple S8000/S8003 "A9" SoC
++ *
++ * This file contains parts common to both variants of A9
++ *
++ * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/apple-aic.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/apple.h>
++
++/ {
++	interrupt-parent = <&aic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	clkref: clock-ref {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24000000>;
++		clock-output-names = "clkref";
++	};
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			compatible = "apple,twister";
++			reg = <0x0 0x0>;
++			cpu-release-addr = <0 0>; /* To be filled in by loader */
++			enable-method = "spin-table";
++			device_type = "cpu";
++		};
++
++		cpu1: cpu@1 {
++			compatible = "apple,twister";
++			reg = <0x0 0x1>;
++			cpu-release-addr = <0 0>; /* To be filled in by loader */
++			enable-method = "spin-table";
++			device_type = "cpu";
++		};
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		nonposted-mmio;
++		ranges;
++
++		serial0: serial@20a0c0000 {
++			compatible = "apple,s5l-uart";
++			reg = <0x2 0x0a0c0000 0x0 0x4000>;
++			reg-io-width = <4>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 192 IRQ_TYPE_LEVEL_HIGH>;
++			/* Use the bootloader-enabled clocks for now. */
++			clocks = <&clkref>, <&clkref>;
++			clock-names = "uart", "clk_uart_baud0";
++			status = "disabled";
++		};
++
++		aic: interrupt-controller@20e100000 {
++			compatible = "apple,s8000-aic", "apple,aic";
++			reg = <0x2 0x0e100000 0x0 0x100000>;
++			#interrupt-cells = <3>;
++			interrupt-controller;
++		};
++
++		pinctrl_ap: pinctrl@20f100000 {
++			compatible = "apple,s8000-pinctrl", "apple,pinctrl";
++			reg = <0x2 0x0f100000 0x0 0x100000>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl_ap 0 0 208>;
++			apple,npins = <208>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 42 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 43 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 44 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 45 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 46 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 47 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 48 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pinctrl_aop: pinctrl@2100f0000 {
++			compatible = "apple,s8000-pinctrl", "apple,pinctrl";
++			reg = <0x2 0x100f0000 0x0 0x100000>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl_aop 0 0 42>;
++			apple,npins = <42>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 113 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 114 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 115 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 116 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 117 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 118 IRQ_TYPE_LEVEL_HIGH>,
++				     <AIC_IRQ 119 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		wdt: watchdog@2102b0000 {
++			compatible = "apple,s8000-wdt", "apple,wdt";
++			reg = <0x2 0x102b0000 0x0 0x4000>;
++			clocks = <&clkref>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 4 IRQ_TYPE_LEVEL_HIGH>;
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupt-parent = <&aic>;
++		interrupt-names = "phys", "virt";
++		/* Note that A9 doesn't actually have a hypervisor (EL2 is not implemented). */
++		interrupts = <AIC_FIQ AIC_TMR_GUEST_PHYS IRQ_TYPE_LEVEL_HIGH>,
++			     <AIC_FIQ AIC_TMR_GUEST_VIRT IRQ_TYPE_LEVEL_HIGH>;
++	};
++};
++
++/*
++ * The A9 was made by two separate fabs on two different process
++ * nodes: Samsung made the S8000 (APL0898) on 14nm and TSMC made
++ * the S8003 (APL1022) on 16nm. There are some minor differences
++ * such as timing in cpufreq state transistions.
++ */
+diff --git a/arch/arm64/boot/dts/apple/s8000.dtsi b/arch/arm64/boot/dts/apple/s8000.dtsi
+index 6e9046ea106c..c7e39abda7e1 100644
+--- a/arch/arm64/boot/dts/apple/s8000.dtsi
++++ b/arch/arm64/boot/dts/apple/s8000.dtsi
+@@ -7,138 +7,11 @@
+  * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
+  */
+ 
+-#include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/interrupt-controller/apple-aic.h>
+-#include <dt-bindings/interrupt-controller/irq.h>
+-#include <dt-bindings/pinctrl/apple.h>
+-
+-/ {
+-	interrupt-parent = <&aic>;
+-	#address-cells = <2>;
+-	#size-cells = <2>;
+-
+-	clkref: clock-ref {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <24000000>;
+-		clock-output-names = "clkref";
+-	};
+-
+-	cpus {
+-		#address-cells = <2>;
+-		#size-cells = <0>;
+-
+-		cpu0: cpu@0 {
+-			compatible = "apple,twister";
+-			reg = <0x0 0x0>;
+-			cpu-release-addr = <0 0>; /* To be filled in by loader */
+-			enable-method = "spin-table";
+-			device_type = "cpu";
+-		};
+-
+-		cpu1: cpu@1 {
+-			compatible = "apple,twister";
+-			reg = <0x0 0x1>;
+-			cpu-release-addr = <0 0>; /* To be filled in by loader */
+-			enable-method = "spin-table";
+-			device_type = "cpu";
+-		};
+-	};
+-
+-	soc {
+-		compatible = "simple-bus";
+-		#address-cells = <2>;
+-		#size-cells = <2>;
+-		nonposted-mmio;
+-		ranges;
+-
+-		serial0: serial@20a0c0000 {
+-			compatible = "apple,s5l-uart";
+-			reg = <0x2 0x0a0c0000 0x0 0x4000>;
+-			reg-io-width = <4>;
+-			interrupt-parent = <&aic>;
+-			interrupts = <AIC_IRQ 192 IRQ_TYPE_LEVEL_HIGH>;
+-			/* Use the bootloader-enabled clocks for now. */
+-			clocks = <&clkref>, <&clkref>;
+-			clock-names = "uart", "clk_uart_baud0";
+-			status = "disabled";
+-		};
+-
+-		aic: interrupt-controller@20e100000 {
+-			compatible = "apple,s8000-aic", "apple,aic";
+-			reg = <0x2 0x0e100000 0x0 0x100000>;
+-			#interrupt-cells = <3>;
+-			interrupt-controller;
+-		};
+-
+-		pinctrl_ap: pinctrl@20f100000 {
+-			compatible = "apple,s8000-pinctrl", "apple,pinctrl";
+-			reg = <0x2 0x0f100000 0x0 0x100000>;
+-
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-			gpio-ranges = <&pinctrl_ap 0 0 208>;
+-			apple,npins = <208>;
+-
+-			interrupt-controller;
+-			#interrupt-cells = <2>;
+-			interrupt-parent = <&aic>;
+-			interrupts = <AIC_IRQ 42 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 43 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 44 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 45 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 46 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 47 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 48 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+-
+-		pinctrl_aop: pinctrl@2100f0000 {
+-			compatible = "apple,s8000-pinctrl", "apple,pinctrl";
+-			reg = <0x2 0x100f0000 0x0 0x100000>;
+-
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-			gpio-ranges = <&pinctrl_aop 0 0 42>;
+-			apple,npins = <42>;
+-
+-			interrupt-controller;
+-			#interrupt-cells = <2>;
+-			interrupt-parent = <&aic>;
+-			interrupts = <AIC_IRQ 113 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 114 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 115 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 116 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 117 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 118 IRQ_TYPE_LEVEL_HIGH>,
+-				     <AIC_IRQ 119 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+-
+-		wdt: watchdog@2102b0000 {
+-			compatible = "apple,s8000-wdt", "apple,wdt";
+-			reg = <0x2 0x102b0000 0x0 0x4000>;
+-			clocks = <&clkref>;
+-			interrupt-parent = <&aic>;
+-			interrupts = <AIC_IRQ 4 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+-	};
+-
+-	timer {
+-		compatible = "arm,armv8-timer";
+-		interrupt-parent = <&aic>;
+-		interrupt-names = "phys", "virt";
+-		/* Note that A9 doesn't actually have a hypervisor (EL2 is not implemented). */
+-		interrupts = <AIC_FIQ AIC_TMR_GUEST_PHYS IRQ_TYPE_LEVEL_HIGH>,
+-			     <AIC_FIQ AIC_TMR_GUEST_VIRT IRQ_TYPE_LEVEL_HIGH>;
+-	};
+-};
++#include "s800-0-3.dtsi"
+ 
+ /*
+  * The A9 was made by two separate fabs on two different process
+  * nodes: Samsung made the S8000 (APL0898) on 14nm and TSMC made
+- * the S8003 (APL1022) on 16nm. While they are seemingly the same,
+- * they do have distinct part numbers and devices using them have
+- * distinct model names. There are currently no known differences
+- * between these as far as Linux is concerned, but let's keep things
+- * structured properly to make it easier to alter the behaviour of
+- * one of the chips if need be.
++ * the S8003 (APL1022) on 16nm. There are some minor differences
++ * such as timing in cpufreq state transistions.
+  */
+diff --git a/arch/arm64/boot/dts/apple/s8003.dtsi b/arch/arm64/boot/dts/apple/s8003.dtsi
+index 7e4ad4f7e499..807e3452f8a7 100644
+--- a/arch/arm64/boot/dts/apple/s8003.dtsi
++++ b/arch/arm64/boot/dts/apple/s8003.dtsi
+@@ -7,15 +7,11 @@
+  * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
+  */
+ 
+-#include "s8000.dtsi"
++#include "s800-0-3.dtsi"
+ 
+ /*
+  * The A9 was made by two separate fabs on two different process
+  * nodes: Samsung made the S8000 (APL0898) on 14nm and TSMC made
+- * the S8003 (APL1022) on 16nm. While they are seemingly the same,
+- * they do have distinct part numbers and devices using them have
+- * distinct model names. There are currently no known differences
+- * between these as far as Linux is concerned, but let's keep things
+- * structured properly to make it easier to alter the behaviour of
+- * one of the chips if need be.
++ * the S8003 (APL1022) on 16nm. There are some minor differences
++ * such as timing in cpufreq state transistions.
+  */
 
-> 
->> Therefore memory-region looks like child's property.
->>
->> Imagine different case: runtime loaded overlay. In your setup, you probe
->> omm-manager with one memory-region and one child. Then someone loads
->> overlay enabling the second child, second SPI.
->>
->> That's of course imaginary case, but shows the concept how the parent
->> would work.
->>
->> It's the same with other buses in the kernel. You can load overlay with
->> any new child and the parent should not get new properties.
->>
-> 
-> In case of runtime loaded overlay, if a second child is added with an associated 
-> memory-region, omm-manager must be unbind/bind to :
->   _ check the added child's access rights.
->   _ take into account the added child's memory-region configuration (to set 
->     the syscfg-amcr register accordingly) 
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.48.1
 
-That's driver part, we talk about bindings and DTS.
-
-
-
-Best regards,
-Krzysztof
