@@ -1,140 +1,198 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF12209F44
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 16:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E613208A7;
+	Mon,  3 Feb 2025 16:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738599314; cv=none; b=jhJC1Yw2FRH/LYJN2QdFzywqiLTvaL+T+2O7kEB1NWSkgR4+udAbMpXbze5jXBvSdiRVYCUsTmBrPSu2LRdPF+A6OG6v8lYJhMTyBWuxq4ojCHhX8hbi7Z82pKmyLbgOx2jdqlh39YAkq06Lamhg4kPLoBcCSquuvwdW3hksGzM=
+	t=1738599337; cv=none; b=S6rVABoji/GUy1O6IG7jq1rB5zYgZ+uhNwyuzoy5cuXStU4Zo4EoR8zPBNg5mUDpefUuvM8zkeeZIDP5PKUJoW/Bfz9mGWmOOA08KJHYvueQ04I0zCNw8nGJeuD+wTIqH5nng8fkl40Gk8oC2k4gPsE7BJV09ESiAOgA3BVy+DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738599314; c=relaxed/simple;
-	bh=zDVsGVRJipMVFnd7EMQBF3dnIplT6UT0+jGAW0VZjmE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gjwn7vcFBkooxlaUPHHpgL353zFO+aclvDSqO8ZdnSESr+HkjHv0g0pbL+BOSUuCfdBduodREZFAJrR/iM6yo+MOJ+zRwuEbAoaElLP2JOgWsrp8FvJ0s/jHYQ3QAnt0XkYrvZ1tHP8QN8tLY6Pa9hvyQvSutul2cOmY1s40/gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=AwjQ66gC; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1738599337; c=relaxed/simple;
+	bh=jUwhSe87g02uoy84SImiW3iRnVIQ00CyAOokehw2rvw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=hgh/XyXEfGJKN56k68C3SwX4wVnqVqUxBigeu6lMSzml3ar3H4h5QBy3J4YY+xQnOkD4hE9G+RcOLCYzaAWx8YiStmr2kmczoFXQqCrOqcrSnV9Cwjn+1pjha/l8i35bv2/tQrbN9P4r6e2sm3JnoSmxNDFJVg7T2NGRzbPUbzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JItIBMR7; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="AwjQ66gC"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6dd1b895541so88006166d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 08:15:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JItIBMR7"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4678cce3d60so47276391cf.2;
+        Mon, 03 Feb 2025 08:15:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1738599311; x=1739204111; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bPasqTS0flnHE5VF++CqhxrbQnr9GQuOM0i0z93o3tA=;
-        b=AwjQ66gCXkFkol+eUMjbsM/c/a3SYR4iYCtV7u1tjbS+yXOePRvLKbLmdFlYUe2aQQ
-         TgO5EPttdVzuILmLbsXZhoO/C7VL+54owXnWgwJW8yoYG1snJcPRnRsNHOp57UEQ+TqT
-         AAmSWZgZUCYO2Ek4qbuw3c7XZJeykpU15pURs2ZSfCxaqC6r+Da6o4quG/h/F6cqdH5S
-         gbTwILb97BDKlbPCxB+NBnUvu0r2OrEvIrraXxiH6lxx5J7TCn4WIQBWhe28ZeHIk0ms
-         OgXg1ESR/dZ4roh4tL1DFpJlb0OnlfxXD6RRkD3Da6P/8qtvmmETTYa6501aF7AxBeqS
-         vEpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738599311; x=1739204111;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738599334; x=1739204134; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bPasqTS0flnHE5VF++CqhxrbQnr9GQuOM0i0z93o3tA=;
-        b=OQEzoxks+q2MuyvgheN/xGxKm2fufYaBJAa+Qw/R0G2XnL7A3y1+BCPMR9RU0orqop
-         nrAQvxy/1JdNbLHABnOewmBtGoNGCS1+6LK0gSHOZbLBIpCR3L3KfjHorZGsYeBa/yRB
-         P9b05AIlBAlO20P0KrraBgm3hnPUwbem7OKDoEsFaETb3NLcY7pDkPMAyenZeNyrQfYL
-         T2fr3Q+f61LCw5SsJBNwUCx2g5+m6Kp4TQWvVBoWfBOyunTV/8sm+dV827RRvTH40eKg
-         gy5YrIpb+FSnJuoh2/qsiL9toB9kusCI7TxteJEXonRRS32WqEPPtiIhoBsTCHOm5kN2
-         YGaw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNIJ/BWJi0DSN+B0NSm+YP7sknlrsSNEwTmUp7JxN4Xdbc2IkoK5Pci+3OnX95K9dXiVFG1eXiINsxLqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP/6nrvGKjmjpIPun0+AG3FeIu3+jXg2GXRYHPhk/fGnXHXCPA
-	CPT6oKfU4s1Sgv+abyT2R7SHccWyaU28pVccpnT21CDm+nlnTDBLLM7cgn/WOg==
-X-Gm-Gg: ASbGnctLsUqX7V90cG5qn8tRdy5ZfiR3TlVsKYLB9tFVhGLysIDGTQqAaYLH+tyDCT2
-	f3w2wRrlG6oZL9eLud3/pcTkMTlKWM70NpsjxHcnehasFaBJ67kdoY28J6K/0H3/hqCeJDkgOO7
-	aCxP8Vb9Ur0qpoh3Yx3JZ5G9BnkP8KRV9lGI4n8AExAqZ/hGR+6F0uaUX3eO88EzZR8XUN/bR3j
-	sEQuZM+/FH8m5lkDL+fwCpjDVgK0GJTGNrK1q9mMzFrE7sWvMfKqTkztCclcJgIgJRghwvn0kJW
-	JouT3bEPrweFAABNEIVG/pylZm2t9QPYiA==
-X-Google-Smtp-Source: AGHT+IGwPouMQe5+kqUqm04OghExTDFTU7rKqXnjTVa9WJRHHomAQ9IalFm3FMWHWpAOMj/baL4wEQ==
-X-Received: by 2002:a05:6214:dcb:b0:6e0:f451:2e22 with SMTP id 6a1803df08f44-6e243c7fa66mr379958426d6.38.1738599311210;
-        Mon, 03 Feb 2025 08:15:11 -0800 (PST)
-Received: from rowland.harvard.edu ([140.247.181.15])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e2547f0e5asm51736096d6.7.2025.02.03.08.15.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 08:15:10 -0800 (PST)
-Date: Mon, 3 Feb 2025 11:15:08 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Mingcong Bai <jeffbai@aosc.io>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH] USB: core: Enable root_hub's remote wakeup for wakeup
- sources
-Message-ID: <06c81c97-7e5f-412b-b6af-04368dd644c9@rowland.harvard.edu>
-References: <20250131100630.342995-1-chenhuacai@loongson.cn>
- <2f583e59-5322-4cac-aaaf-02163084c32c@rowland.harvard.edu>
- <CAAhV-H7Dt1bEo8qcwfVfcjTOgXSKW71D19k3+418J6CtV3pVsQ@mail.gmail.com>
- <fbe4a6c4-f8ba-4b5b-b20f-9a2598934c42@rowland.harvard.edu>
- <61fecc0b-d5ac-4fcb-aca7-aa84d8219493@rowland.harvard.edu>
- <2a8d65f4-6832-49c5-9d61-f8c0d0552ed4@aosc.io>
+        bh=3tS/7qTS4m70JkAze3DpkSpMUHgCMv050Qq58puGuWY=;
+        b=JItIBMR7Q5nURpcEcD/3BE1w7JT02laSUcOwI99yImfu2t5hBfoX+4oS3EbLMszHfU
+         +iOFQSqO6hfuuhTHrLq9jZGmKjSzEKyOcKUscbgAIKlrNuN7udDcqiDHHtinZJtQevZE
+         LCntGi0sS7QcFTKzJ+oPjjA62mDuL/s37p7Mu2LIgJRPzXLecG4ZUNrLi4LlFFvpcEtk
+         VIvXg9lUWcRHdyQKgj8yrg08imDh194iQs5CRMPZiV28y0zN2llSnV+TNl/PEmuLu5fw
+         22O3zHpyKkGGWPa3N+ll5p8ApSY/ywKGwCfSC6U5LKl1ljYvVyhKAeEZ2ziR+LPUgITH
+         3C2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738599334; x=1739204134;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3tS/7qTS4m70JkAze3DpkSpMUHgCMv050Qq58puGuWY=;
+        b=oJyBarGnZjOfHJ8rrL8tfw7LvsG7ryqs2vxbcUU1dZykeghrV0v2M2GVmhTnHh2skA
+         ous1QwqPsD1oOsXW3gxD9jFQfXHKgWvGmmfL5cAbVRGIYnGo9aySuzCI6u6c1MWrtj4L
+         CIEXuFchd5UErbNq595PsCKRbk3YjrCBbHn76VzsSbQD6nIL/BZFM3I2UyQOzDmQI3Nn
+         bdDsSUtR8eRuevpHKmucQB9WGsbi+heuM8B+giK2dTBrF1AbeHfPjmCrXumHiF+5SMCW
+         K64nhgWf0J6lbbufCrdBqrxh5/wJTheunfJCB9MbC7Zdu5LABykzqQoJjHC8mXJ9O4nP
+         JDyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZMbN7jNkQRhYdDIBSrSfizxVpD1ijGFLwzUW6IZVA6CfqaXflfjoYIGjkOOWKxJ9JeD2uyexW9MosAkkHZ2AS6U2q6g==@vger.kernel.org, AJvYcCVnYatb6X/CxtbIqeoB2eBUq3CRSEeAgo0Zz+qgJeO2zy1UddZJNQQ7jW1QQFmrU7BL+1aBD2Dnt4HF1/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxI34xNwdtavrIPsxjL7aBq0cM11gTM7XKlp+M57jfTSzPECUS
+	nlyIkSC8IYlpQOaKJVbwD4U+9A6MfiyndC2zw5UdT0MbfPE/O7X5
+X-Gm-Gg: ASbGncsULzlbo4jLJcLso0ngsQdACqigOcIVz73XsWbTGG0siqRoQC0jdGy0iodKVmS
+	t9Pll4nOG4PZCyJQfHUAcGjoAI41Ww+2aOQVdJbjLo9OEAujPW/FqDVAWJ4bA0dIS268zLCXP3Z
+	8mUW5rSSsLuYhk3Eeeeu6C752T4HlEcVVdMXAXueACDZ2rIakVQaIOSDErv3Wcip1wCKkrWiXuG
+	dn6xOd+/PSJLCYcJ3T00LoD3vgGp5W5fp0XmwYL/V+0j0z6a5T6oudcTyfPkOBmdP9QT5VpvHMU
+	X2OEgB8=
+X-Google-Smtp-Source: AGHT+IFRBhTOmGMRTDgquhOoPafkUNQIAOUKTz9yGcentgDY3hJhT0Mux0KPf2YTh1eh35gTqFTb7Q==
+X-Received: by 2002:a05:620a:f0f:b0:7b6:6d5a:d51b with SMTP id af79cd13be357-7bffcdafb19mr2967329085a.52.1738599334052;
+        Mon, 03 Feb 2025 08:15:34 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8669407cc41sm1708989241.8.2025.02.03.08.15.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 08:15:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2a8d65f4-6832-49c5-9d61-f8c0d0552ed4@aosc.io>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 03 Feb 2025 11:15:31 -0500
+Message-Id: <D7IY0YO7DFXE.1V78T6V77EDF2@gmail.com>
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>, <platform-driver-x86@vger.kernel.org>
+Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
+ <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v7 00/14] platform/x86: alienware-wmi driver rework
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250203062055.2915-1-kuurtb@gmail.com>
+ <7d4e693e-5d12-4c55-9db8-7f7dd45e8086@gmx.de>
+In-Reply-To: <7d4e693e-5d12-4c55-9db8-7f7dd45e8086@gmx.de>
 
-On Tue, Feb 04, 2025 at 12:01:37AM +0800, Mingcong Bai wrote:
-> Hi Alan, Huacai,
-> 
-> <snip>
-> 
-> > I just tried running the experiment on my system.  I enabled wakeup for
-> > the mouse device, made sure it was disabled for the intermediate hub and
-> > the root hub, and made sure it was enabled for the host controller.
-> > (Those last three are the default settings.)  Then I put the system in
-> > S3 suspend by writing "mem" to /sys/power/state, and when the system was
-> > asleep I pressed one of the mouse buttons -- and the system woke up.
-> > This was done under a 6.12.10 kernel, with an EHCI host controller, not
-> > xHCI.
-> > 
-> > So it seems like something is wrong with your system in particular, not
-> > the core USB code in general.  What type of host controller is your
-> > mouse attached to?  Have you tested whether the mouse is able to wake up
-> > from runtime suspend, as opposed to S3 suspend?
-> > 
-> 
-> Just to chime in with my own test results. I was looking at this with Huacai
-> a few days back and we suspected that this had something to do with
-> particular systems, as you have found; we also suspected that if a keyboard
-> was connected to a non-xHCI controller, it would fail to wake up the system.
-> 
-> I conducted a simple experiment on my Lenovo ThinkPad X200s, which does not
-> come with any USB 3.0 port. Here are my findings:
+On Mon Feb 3, 2025 at 10:34 AM -05, Armin Wolf wrote:
+> Am 03.02.25 um 07:20 schrieb Kurt Borja:
+>
+>> Hi!
+>>
+>> I bring some last minute modifications.
+>>
+>> I found commit
+>>
+>> 	8d8fc146dd7a ("nvmem: core: switch to use device_add_groups()")
+>>
+>> which states that it's unnecesary to call device_remove_groups() when
+>> the device is removed, so I dropped it to simplify things.
+>
+> What? That sound quite strange to me. I CCed Greg because i am curious ho=
+w this
+> should work.
 
-What sort of USB controller does the X200s have?  Is the controller 
-enabled for wakeup?
+I'm curious too!=20
 
-What happens with runtime suspend rather than S3 suspend?
+I found it while searching for something like devm_device_add_groups
+which it turns out, was removed from the kernel.
 
-> 1. With upstream code, the system would not wake up with neither the
-> internal nor the external keyboards. One exception being the Fn key on the
-> internal keyboard, which would wake up the system (but I suspect that this
-> is EC behaviour). This behaviour is consistent across any USB port on the
-> laptop and, regardless if the external keyboard was connected to the laptop
-> itself or via a hub.
-> 
-> 2. With Huacai's code, I was able to wake up the laptop with an external
-> keyboard in all the scenarios listed in (1). The internal keyboard still
-> failed to wake up the system unless I strike the Fn key.
-> 
-> I should note, however, that the internal keyboard is not connected via USB
-> so it's probably irrelevant information anyway.
-> 
-> As for mice, it seems that the kernel disables wake-up via USB mice and
-> enables wake-up via USB keyboards. This is also consistent with your
-> findings.
+>
+>>
+>> I also found commit
+>>
+>> 	957961b6dcc8 ("hwmon: (oxp-sensors) Move tt_toggle attribute to dev_gro=
+ups")
+>>
+>> which states that no driver should add sysfs groups while probing the
+>> device as it races with userspace, so I re-added PROBE_FORCE_SYNCHRONOUS
+>> to the platform driver, so groups are added only after the device has
+>> finished probing.
+>
+> Using PROBE_FORCE_SYNCHRONOUS is not going to solve this problem here, pl=
+ease remove it.
 
-Yes, and of course you can manually change the default wakeup settings 
-whenever you want.
+Yes, I'm going for Ilpo's .dev_groups approach.
 
-Alan Stern
+~ Kurt
+
+>
+> Thanks,
+> Armin Wolf
+>
+>> I'm not 100% sure that the second commit message applies here, but it is
+>> revd-by Greg K-H so I added it just in case.
+>>
+>> Aside from that, I added .pprof to awcc_quirks because I'm going to add
+>> support for new features after this series, and it makes sense that
+>> force_platform_profile only forces the pprof and not other upcoming
+>> features.
+>>
+>> ~ Kurt
+>> ---
+>> [02/14]
+>>    - In alienware_alienfx_setup() add a devm action to remove the create=
+d
+>>      platform device
+>>    - Drop device_remove_groups() in WMAX .remove callback
+>>    - Add PROBE_FORCE_SYNCHRONOUS to the platform driver
+>>    - Drop .remove callbacks on both WMI drivers
+>>
+>> [03/14]
+>>    - Add awcc_platform_profile_init() to create the platform_profile
+>>      device on quirks->thermal =3D=3D true condition
+>>
+>> [07/14]
+>>    - Add .pprof to awcc_quirks
+>>
+>> [10/14]
+>>    - Drop unused member `quirks` on `alienfx_priv` (remnant of another
+>>      version)
+>>
+>> v6: https://lore.kernel.org/platform-driver-x86/20250127040406.17112-1-k=
+uurtb@gmail.com/
+>>
+>> Kurt Borja (14):
+>>    platform/x86: alienware-wmi: Add a state container for LED control
+>>      feature
+>>    platform/x86: alienware-wmi: Add WMI Drivers
+>>    platform/x86: alienware-wmi: Add a state container for thermal contro=
+l
+>>      methods
+>>    platform/x86: alienware-wmi: Refactor LED control methods
+>>    platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp method=
+s
+>>    platform/x86: alienware-wmi: Refactor thermal control methods
+>>    platform/x86: alienware-wmi: Split DMI table
+>>    MAINTAINERS: Update ALIENWARE WMI DRIVER entry
+>>    platform/x86: Rename alienware-wmi.c
+>>    platform/x86: Add alienware-wmi.h
+>>    platform/x86: Split the alienware-wmi driver
+>>    platform/x86: dell: Modify Makefile alignment
+>>    platform/x86: Update alienware-wmi config entries
+>>    platform/x86: alienware-wmi: Update header and module information
+>>
+>>   MAINTAINERS                                   |    4 +-
+>>   drivers/platform/x86/dell/Kconfig             |   30 +-
+>>   drivers/platform/x86/dell/Makefile            |   45 +-
+>>   .../platform/x86/dell/alienware-wmi-base.c    |  496 +++++++
+>>   .../platform/x86/dell/alienware-wmi-legacy.c  |   95 ++
+>>   .../platform/x86/dell/alienware-wmi-wmax.c    |  790 +++++++++++
+>>   drivers/platform/x86/dell/alienware-wmi.c     | 1249 -----------------
+>>   drivers/platform/x86/dell/alienware-wmi.h     |  101 ++
+>>   8 files changed, 1534 insertions(+), 1276 deletions(-)
+>>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
+>>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
+>>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
+>>   delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
+>>   create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+>>
+>>
+>> base-commit: 05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
+
