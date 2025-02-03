@@ -1,124 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8ED73594B
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:01:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A867218651;
+	Mon,  3 Feb 2025 10:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738576893; cv=none; b=csITpBsQOJfbdf/2XvL8nUgHiwkUlpKM2jc7pPG6Iy7LsmenEiAOtxWWHVJPUtFxbyyPQOWPdQk7xX9JOIXbchcw8OV3oCa61gHwBQ43tHrDUu5R8rg6l748oSWzDcwK1kakghXIcjkHv51lUjFsks7+HquT3otzF+Y0xMJpm7I=
+	t=1738576962; cv=none; b=RnJw18TBgA7S+CpmhnX360KiTizoMtNv334ZNobjGf7sO5TDEeechYM35RqcG4LlFK730kUJmzzXwB3JCsZuSpetG/NO0J8p49cak7wxqWtMussk7rjszpLye2t7Yz0RiyJbYsZoJ7RGRukYQBbvAW6AMdz3Lbu2tGPfpKRAyVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738576893; c=relaxed/simple;
-	bh=V9giy5MX7MQSqkqjoJi+cO3oEo1PEdyOZ3ruRKzX5XM=;
+	s=arc-20240116; t=1738576962; c=relaxed/simple;
+	bh=j64qVmWci3xBNkGE0mS2OOj0BR2pEsdKu6w5rANbRP4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fyAh8Ae4olD8tcvdeCNPORXVtxLrZM9eEX2/27x1B70n2/tOhAT75dJ6wsTOSHAU/e5fVjLimA49c6r/b7/SJd9LtkCCf6yY+hPZ+s4pfiKxKrigJVDaQFX5FiV/bzLAIlgBuMcni7ZgDFpHECBAIcwWNBa5/lcntNsLDU8fj9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fx5CF1bS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=u50LuZgY8MsxniNRY42DhxaKEeQwC5YHuM8ka0HBu5OVM9ilt5/y8Przb+9TbSl/ijnK2FnbbyMdp+N76qS/YCU+HTHi0KFzLB7oIWN46Loo5cdXzDT5hS0wI1Mpm6G1kpfw1liaudfoBjsxyrAGDJROpBP09FMIW2zx5bBtPGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rE100XoE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fx5CF1bS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B60C4CED2;
-	Mon,  3 Feb 2025 10:01:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rE100XoE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A8BC4CED2;
+	Mon,  3 Feb 2025 10:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738576891;
-	bh=V9giy5MX7MQSqkqjoJi+cO3oEo1PEdyOZ3ruRKzX5XM=;
+	s=k20201202; t=1738576961;
+	bh=j64qVmWci3xBNkGE0mS2OOj0BR2pEsdKu6w5rANbRP4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fx5CF1bS+Y/KZTcL1rmhAhY7/bcfAJ+nXP+GaOavGFpHeYn+ijO/aNwHcTsjkfhdT
-	 F9x29ZrdgRiLk3H+wCE6zfud/e3MiyZgbLkpTsjHi8YWTmTTr6se+p9PPbqFuqjF+a
-	 CfQSSMLPZ7UcE3l68LnxlxsER5ujm1X/zYbCvaeRBDzkUgJGzV/5pcRj7aRKZBX4WK
-	 2DqBps2D4jU8s4h4p5ynKpKo39ukQsGMN1HSt5Ll2Lc1mvVV0X3fguDjjpyTpjrL8s
-	 McWuiwHaEM2b4i6TVr9yR0t+WjSk0A6W5r9y5aw/0ZmVLrM6zwk9LkBP6zDr+Kz4G8
-	 tt7qEXalUplzg==
-Date: Mon, 3 Feb 2025 11:01:28 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 29/29] drm/bridge: ti-sn65dsi86: Use bridge_state crtc
- pointer
-Message-ID: <20250203-orthodox-watchful-poodle-4018f4@houat>
-References: <20250115-bridge-connector-v1-0-9a2fecd886a6@kernel.org>
- <20250115-bridge-connector-v1-29-9a2fecd886a6@kernel.org>
- <cfn3xpwyoo6lbugaxjwxvcq4l7eqbznlgnunxxfg4jnbrwtnpo@wdoizsk6ckvg>
+	b=rE100XoEQCDq/GAsA/kFJsCV1lURPiPFtj6MKbrKUU5SNDELwgYo3zmqtzFhOmi9Y
+	 xNgN4y0dRzaxjWTc5bvZD1fZYk0nhWkam/HxMmGz6MTsC7r8uJZZUz37pr79OXvAFX
+	 84gFWn4bWVo7iQ2nXiX9FfL9zEYY4Qd6PFTlEWA+ueXhrz7687HjBmAYJM4l+fxoeT
+	 ZVucXR5qfZT0yZmYjCApK3pwM43twtCrKiH/Kqmo6YAV6qSCQhmNtOFgUwImewlCqK
+	 oQN3um9/oF1nhPTSFbbA5DwmuWMzSmZhJV8pHn5MisZNDP9Lv1WyM+GT+ceZ+ksT1N
+	 iNf4litnb2bcA==
+Date: Mon, 3 Feb 2025 10:02:36 +0000
+From: Simon Horman <horms@kernel.org>
+To: Jacob Moroni <mail@jakemoroni.com>
+Cc: Igor Russkikh <irusskikh@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: atlantic: fix warning during hot unplug
+Message-ID: <20250203100236.GB234677@kernel.org>
+References: <20250202220921.13384-2-mail@jakemoroni.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="hb7p4hxkklv2bgl3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cfn3xpwyoo6lbugaxjwxvcq4l7eqbznlgnunxxfg4jnbrwtnpo@wdoizsk6ckvg>
+In-Reply-To: <20250202220921.13384-2-mail@jakemoroni.com>
 
+On Sun, Feb 02, 2025 at 05:09:21PM -0500, Jacob Moroni wrote:
+> Firmware deinitialization performs MMIO accesses which are not
+> necessary if the device has already been removed. In some cases,
+> these accesses happen via readx_poll_timeout_atomic which ends up
+> timing out, resulting in a warning at hw_atl2_utils_fw.c:112:
+> 
+> [  104.595913] Call Trace:
+> [  104.595915]  <TASK>
+> [  104.595918]  ? show_regs+0x6c/0x80
+> [  104.595923]  ? __warn+0x8d/0x150
+> [  104.595925]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
+> [  104.595934]  ? report_bug+0x182/0x1b0
+> [  104.595938]  ? handle_bug+0x6e/0xb0
+> [  104.595940]  ? exc_invalid_op+0x18/0x80
+> [  104.595942]  ? asm_exc_invalid_op+0x1b/0x20
+> [  104.595944]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
+> [  104.595952]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
+> [  104.595959]  aq_nic_deinit.part.0+0xbd/0xf0 [atlantic]
+> [  104.595964]  aq_nic_deinit+0x17/0x30 [atlantic]
+> [  104.595970]  aq_ndev_close+0x2b/0x40 [atlantic]
+> [  104.595975]  __dev_close_many+0xad/0x160
+> [  104.595978]  dev_close_many+0x99/0x170
+> [  104.595979]  unregister_netdevice_many_notify+0x18b/0xb20
+> [  104.595981]  ? __call_rcu_common+0xcd/0x700
+> [  104.595984]  unregister_netdevice_queue+0xc6/0x110
+> [  104.595986]  unregister_netdev+0x1c/0x30
+> [  104.595988]  aq_pci_remove+0xb1/0xc0 [atlantic]
+> 
+> Fix this by skipping firmware deinitialization altogether if the
+> PCI device is no longer present.
+> 
+> Tested with an AQC113 attached via Thunderbolt by performing
+> repeated unplug cycles while traffic was running via iperf.
+> 
 
---hb7p4hxkklv2bgl3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 29/29] drm/bridge: ti-sn65dsi86: Use bridge_state crtc
- pointer
-MIME-Version: 1.0
+Hi Jacob,
 
-Hi Dmitry,
+As a fix for net a Fixes tag should go here
+(immediately before your signed-off-by line, no blank line in between).
 
-On Thu, Jan 16, 2025 at 03:08:00AM +0200, Dmitry Baryshkov wrote:
-> On Wed, Jan 15, 2025 at 10:05:36PM +0100, Maxime Ripard wrote:
-> > The TI sn65dsi86 driver follows the drm_encoder->crtc pointer that is
-> > deprecated and shouldn't be used by atomic drivers.
-> >=20
-> > This was due to the fact that we did't have any other alternative to
-> > retrieve the CRTC pointer. Fortunately, the crtc pointer is now provided
-> > in the bridge state, so we can move to atomic callbacks and drop that
-> > deprecated pointer usage.
-> >=20
-> > Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> > ---
-> >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 41 ++++++++++++++++++++-------=
---------
-> >  1 file changed, 24 insertions(+), 17 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/br=
-idge/ti-sn65dsi86.c
-> > index b3d617505dda7d22b38c000fb79de46376adf3f1..c17d9486cf5c36d61eb00af=
-2bdf9ba1b6f890ffd 100644
-> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > @@ -242,15 +242,16 @@ static void ti_sn65dsi86_write_u16(struct ti_sn65=
-dsi86 *pdata,
-> >  	u8 buf[2] =3D { val & 0xff, val >> 8 };
-> > =20
-> >  	regmap_bulk_write(pdata->regmap, reg, buf, ARRAY_SIZE(buf));
-> >  }
-> > =20
-> > -static u32 ti_sn_bridge_get_dsi_freq(struct ti_sn65dsi86 *pdata)
-> > +static u32 ti_sn_bridge_get_dsi_freq(struct ti_sn65dsi86 *pdata,
-> > +				     struct drm_bridge_state *bridge_state)
-> >  {
-> >  	u32 bit_rate_khz, clk_freq_khz;
-> >  	struct drm_display_mode *mode =3D
-> > -		&pdata->bridge.encoder->crtc->state->adjusted_mode;
-> > +		&bridge_state->crtc->state->adjusted_mode;
->=20
-> At least we should document why is it safe to follow the crtc->state.
+I'm wondering if this one is appropriate: the problem seems
+to go all the way back to here.
 
-What do you have in mind there? crtc->state is a pointer that is widely
-used, what is there to document?
+Fixes: 97bde5c4f909 ("net: ethernet: aquantia: Support for NIC-specific code")
 
-Maxime
+> Signed-off-by: Jacob Moroni <mail@jakemoroni.com>
+> ---
+>  drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+> index fe0e3e2a8117..e2ae95a01947 100644
+> --- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+> +++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+> @@ -1428,7 +1428,7 @@ void aq_nic_deinit(struct aq_nic_s *self, bool link_down)
+>  	unsigned int i = 0U;
+>  
+>  	if (!self)
+> -		goto err_exit;
+> +		return;
+>  
+>  	for (i = 0U; i < self->aq_vecs; i++) {
+>  		aq_vec = self->aq_vec[i];
 
---hb7p4hxkklv2bgl3
-Content-Type: application/pgp-signature; name="signature.asc"
+This hunk, and the removal of the err_exit label, seem to be more
+clean-up than addressing the bug described in the patch description.
+I don't think they belong in this patch. But could be candidates for
+a follow-up patch targeted at net-next.
 
------BEGIN PGP SIGNATURE-----
+> @@ -1441,13 +1441,14 @@ void aq_nic_deinit(struct aq_nic_s *self, bool link_down)
+>  	aq_ptp_ring_free(self);
+>  	aq_ptp_free(self);
+>  
+> -	if (likely(self->aq_fw_ops->deinit) && link_down) {
+> -		mutex_lock(&self->fwreq_mutex);
+> -		self->aq_fw_ops->deinit(self->aq_hw);
+> -		mutex_unlock(&self->fwreq_mutex);
+> +	/* May be invoked during hot unplug. */
+> +	if (pci_device_is_present(self->pdev)) {
+> +		if (likely(self->aq_fw_ops->deinit) && link_down) {
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6CT+AAKCRAnX84Zoj2+
-dtdLAYCdHjDt4GIpb9n69qtZ2rJopO8NmJl9wHbaVQ+n3z0enAPsXbbi+FdbPYBG
-5WXU9s8BgLlhSxE2FiJeFCmxnPWMhMw2Z3tZ+D84/jOXbZaDOuekJubWJ06RCVkm
-Gw5KIKrPww==
-=nrxJ
------END PGP SIGNATURE-----
+Maybe not important, but I would have written this as a single if
+condition rather than two.
 
---hb7p4hxkklv2bgl3--
+Also, not really appropriate to change in this patch as it's not part
+of the bug, but I'm not sure that likely() is appropriate here:
+is this a fast path?
+
+> +			mutex_lock(&self->fwreq_mutex);
+> +			self->aq_fw_ops->deinit(self->aq_hw);
+> +			mutex_unlock(&self->fwreq_mutex);
+> +		}
+>  	}
+> -
+> -err_exit:;
+>  }
+>  
+>  void aq_nic_free_vectors(struct aq_nic_s *self)
+
+-- 
+pw-bot: changes-requested
