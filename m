@@ -1,72 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135F120F098;
-	Mon,  3 Feb 2025 18:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5B021147A;
+	Mon,  3 Feb 2025 18:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738607282; cv=none; b=i/CF/cylkS1O9o2AkmqdSwEYYTxmXprlEa2wVzppF8ifSZc8RJ6sq7tTGuqdOF99unwyY8wSY4Qoom0dgPtNsJg/ITKt6zkN1UvyANxMvL9QJyA89OxUz7PF1/eLLk6P7apgfdKwQN/fcdomVCdSCZNgc2o3xg1aff6VIiK/pfE=
+	t=1738607283; cv=none; b=QuqSsQZ8m2y275bAmd+PS7ySigf9f2w5pYe/OCAXV+uIrOIq/6uZ0TUf5uGb2DJoynb77GoBOIHOgtPoUif7wzmsfAeFRsYfl2lJtoCuZVWLIiCvPTJoa2HWLemZct281CU+kx6ouq2sqyCP8b68NAp8BJU+EUJywcKZ5JTck0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738607282; c=relaxed/simple;
-	bh=j6QY1ALFobq2N/DPHsWZlH3iFEMeCCQWmy90WW7dn2Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F89VCBHg+BQwLrdHhM3PTVr4To25vcshpyZdo4l2PCpJqYWlNKF4F4KRWzFHHPLIPg+Q/iU40hxM+iftSOlKZzTY963yZO3tjUsZG4nHdAn6ZwBvumzOLop8qP5L/+7sjqTybzBrfMcjtoR2ZMUXqPpcDG6f2+rD2fzf1xKsQ5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hnbbm+8d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738607283; c=relaxed/simple;
+	bh=6RWNKULCLcyX3qpo9lp6BHXXTfrdV+asCm2vmn5XUs4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ndouv763fE9QQ3Uz/yWj5AS07PfHp792BQr4sdl8FDuX/altZjzyIVnPy9ciqfd4+NePnIUktJ4KmM2Jw2HGxUPRiq59TcVPKjKSzozN9C976V0CWrk7fD+cEGWFkPpp3EJEOh2na86mdG0Dk3frEhy2mMhdI9fa0sfi99WLWVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IQY0EspV; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hnbbm+8d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEA4EC4CED2;
-	Mon,  3 Feb 2025 18:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738607281;
-	bh=j6QY1ALFobq2N/DPHsWZlH3iFEMeCCQWmy90WW7dn2Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hnbbm+8dCFdJki12PScz0Xj4K8W3cpni97cZY48MKKCvm7A0fXXY/fGXjPsIlTKc7
-	 9++SiKYwLFw1xi8l/+HEPpwTh/utHMczHLtONvMwnfV9cjGh7vTxl0EtqDhBbJ30Cb
-	 cCzx/Db6rXfU5K07mW/8GAMyoD+XH+5bmFWgN5PphmDOulC5rCk1DgE2PrmckCBGtT
-	 dStaGDzsbrNVfjNp9Cd0HirGfgLxMMAJJ8N32JL/yYr4C9GNUR1XomebDo9OSv9ecu
-	 zOKEtdvyf1VBzxYtbJMXT1TiKERAT8Q9DTY80s7TIEoYcGohUdkpkbZ1lwNGA5/zGr
-	 513x/O4iV5XjQ==
-Date: Mon, 3 Feb 2025 12:27:59 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: tomi.valkeinen@ideasonboard.com, tzimmermann@suse.de,
-	conor+dt@kernel.org, praneeth@ti.com, vigneshr@ti.com,
-	maarten.lankhorst@linux.intel.com, s-jain1@ti.com, simona@ffwll.ch,
-	airlied@gmail.com, dri-devel@lists.freedesktop.org,
-	r-donadkar@ti.com, devicetree@vger.kernel.org, j-choudhary@ti.com,
-	aradhya.bhatia@linux.dev, linux-kernel@vger.kernel.org,
-	h-shenoy@ti.com, krzysztof.kozlowski@linaro.org, krzk+dt@kernel.org,
-	jyri.sarha@iki.fi, mripard@kernel.org
-Subject: Re: [PATCH v2] dt-bindings: display: ti: Fix compatible for am62a7
- dss
-Message-ID: <173860727794.3352453.14301718625197300615.robh@kernel.org>
-References: <20250203155431.2174170-1-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQY0EspV"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e5b107c4346so415087276.2;
+        Mon, 03 Feb 2025 10:27:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738607270; x=1739212070; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S0LaXj60IfZoo+YSUXOLYVoLSI33CAZzHP32NqgEr2w=;
+        b=IQY0EspV5+uyGO11lIaUXOUK1F6xEbUuNWCzqvx3N4foK306DRx/iYbf2K9jOHhYGh
+         LgtSOHw1Cm28YessWbUivV0C9xyEGtF+ngPer6XfGLOBf5RToaAbU+b78OIqDIO5bXCU
+         JE0kh3BdiNjbg3xqMc2Hw6kpvo8JLbjfiW+0083upqwRQY9yqgAafMGZihWf9kNOjN3K
+         +oMgHT4lhg5pZF1JK5jCj4u1c/e35j3kK6El0GpnJi1C12EUTCEDNiKEZxcUmbE6WIAJ
+         tsG4uKo/hIbCBAFmfRnPXCF3JksrLvMIkEwRysg7Z1emxl0dwDIszyuN9bpIawUXs2fa
+         /+yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738607270; x=1739212070;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S0LaXj60IfZoo+YSUXOLYVoLSI33CAZzHP32NqgEr2w=;
+        b=LUUZ77Que3+o+PVtfsfAd4biKIgFDaGLE2hpfiv5eYFrMEMpW6JYWLTV0symMTZPnp
+         yVF+9DppDoXET0CkrAtwKUFWL2RJHlasNwqBug79dRcalh/TssceanxMo7rqebi1bqLD
+         ZiQGStqcBESmwlFVfrc7WFEY2o96xmIrOaqRto6z4ImGv6HYyFbGfgW8Fh915o2wMFR9
+         SmH0T84rfeSlJq0VkQPEKvOIpz9qX7KT7r8lhsyDzamJ1iy2S473wQIW/IKiAOhUTxdF
+         2KEcNA6fPwVFkJFvlnHCkx6IU8bHkqErLiN6C3gXsA5zJBGjQrpL1XjsLgIz1EM88ZGN
+         6uxw==
+X-Forwarded-Encrypted: i=1; AJvYcCVea/3vo27NSMkVOPDBlYduJQcrBSpf0Q0HYA3FVEXigLbNjfwCaEXNyxv0wHs3JFO5Lgh2cJGt0QaEKFw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywl5+5Y5faDVOHh4f2QyHUs7qeJ1adEqAzAKKOVA+vpa1J7GvNc
+	gDCsF2G8Miketr89etblgILbyEJWE3FL6QlbWqw7NIB8RxsHhpHb1IP9tA==
+X-Gm-Gg: ASbGncvFmAm+T5ZgTAiX2q+wtRrd8HbqGTJ+fvAsN2kHUk3J15VknG9gUDEdqwdOQi/
+	GeMf3EmwYOdRfDXaei4E0GUqa8EPi9pbE6rLbagWQybU+pV0FAk2RUPwYbJ+X3vmSINz3X3Ugby
+	+eevPsMTK5KG073pQQrCzuo/dbtSonM6f3NjnU/h96hE0F2t4U/reWG28HVH4nfIyvexDkORTOr
+	qXf74a3MJ3rV44fsPutq49VXiknQHjnU0n7AooJgkDO2UGEX2coYLhzWy8/CU6jCVTZ6vOk28LE
+	1nIxQ2OGqQLc4v0f80ZlGeY=
+X-Google-Smtp-Source: AGHT+IGlt5LBhudCIejKRxRIYNU6Q8RGyjJvzbi3NtxDQACdauyvC2LW5gLq3BsQED6KNBljh+7ACw==
+X-Received: by 2002:a05:6902:102a:b0:e57:caaa:fe60 with SMTP id 3f1490d57ef6-e58a4bcb243mr16462541276.30.1738607270122;
+        Mon, 03 Feb 2025 10:27:50 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5acb2bc726sm2142239276.30.2025.02.03.10.27.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 10:27:49 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Armin Wolf" <W_Armin@gmx.de>,
+	"Mario Limonciello" <mario.limonciello@amd.com>,
+	"Hans de Goede" <hdegoede@redhat.com>,
+	Dell.Client.Kernel@dell.com,
+	linux-kernel@vger.kernel.org,
+	"Kurt Borja" <kuurtb@gmail.com>
+Subject: [PATCH v8 14/14] platform/x86: alienware-wmi: Update header and module information
+Date: Mon,  3 Feb 2025 13:27:13 -0500
+Message-ID: <20250203182713.27446-15-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250203182713.27446-1-kuurtb@gmail.com>
+References: <20250203182713.27446-1-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203155431.2174170-1-devarsht@ti.com>
+Content-Transfer-Encoding: 8bit
 
+Update module header and description. Additionally add myself as a module
+author.
 
-On Mon, 03 Feb 2025 21:24:31 +0530, Devarsh Thakkar wrote:
-> Fix incorrect format of compatible string (comma instead of hyphen) for
-> TI's AM62A7 SoC.
-> 
-> s/ti,am62a7,dss/ti,am62a7-dss
-> 
-> Fixes: 7959ceb767e4 ("dt-bindings: display: ti: Add support for am62a7 dss")
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-> ---
-> V2: Add Reviewed-by and update commit msg
-> ---
->  Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+ drivers/platform/x86/dell/alienware-wmi-base.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Applied, thanks!
+diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/platform/x86/dell/alienware-wmi-base.c
+index 7bad9717183d..64562b92314f 100644
+--- a/drivers/platform/x86/dell/alienware-wmi-base.c
++++ b/drivers/platform/x86/dell/alienware-wmi-base.c
+@@ -1,8 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+- * Alienware AlienFX control
++ * Alienware special feature control
+  *
+  * Copyright (C) 2014 Dell Inc <Dell.Client.Kernel@dell.com>
++ * Copyright (C) 2025 Kurt Borja <kuurtb@gmail.com>
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+@@ -16,6 +17,7 @@
+ #include "alienware-wmi.h"
+ 
+ MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
++MODULE_AUTHOR("Kurt Borja <kuurtb@gmail.com>");
+ MODULE_DESCRIPTION("Alienware special feature control");
+ MODULE_LICENSE("GPL");
+ 
+-- 
+2.48.1
 
