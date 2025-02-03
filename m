@@ -1,82 +1,79 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35623202C2A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E953C200BA9;
 	Mon,  3 Feb 2025 11:13:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738581236; cv=none; b=n2Wjc8ICjUIy+2I5aQYPpv6wnJhhEoUhXjATsLS+vj+bs7bsXxRqAA3SaEvpz9bLZqwJ/IZkVNQ5Ma60OB4GaW3JNLJjKKNeHHm8c48L3rjjOP66V5XFQbAle39YiRcKdyP1dBmqw5YyVzM7ZNzgUk2xRw0TyFlQEmQYajamOnA=
+	t=1738581236; cv=none; b=qq1JtWiT6gnMoVqGPSs4wBHDCzk+IwGWg17rNr/XcXDZ9k2l63jAmrFM2rFFB0EMe52XMnR42E7MDdK+40le1OfZUfOh/hZKxejce8qlQfb742d0eiEwsTJDgxaRll/bjAoMzvRzWW273KpqYZqlcDNxPEL9XPMWVBgztJEZePc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738581236; c=relaxed/simple;
-	bh=e7rQ6ja5aEko/PdvDV9MQiOOrhtNYuMK/XWIlX2/Y64=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TI9b7/JEpdWgL9jJkLmF6FfbFT8h04mj4E8mkll5Pu8FtYCQqTRw9Wf/19LQWYWVlX1IR1HMbEtPidIbARsdJtO3xfQA5pfidt0mShj5x1VydjoWLH236ZBjS+UIon7E7rLOASAD2Sq6cMndCfjC7vcakBH1UY1PJ7IGq4SAmdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mUAHpSDe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gfgQoOeJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=v+X5MjbE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ziMobxZ1; arc=none smtp.client-ip=195.135.223.130
+	bh=MbfcwHZh5GliKXIbvOogGlzNDxUqYzHRQ5MH/DbYS04=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NA1cS5fW3+oV3tXVct2W0nF4FOC64boo975AIGoBWXvLRXp01wjBVEohn1hOXnUOMAEtHB7TRd1bsUHW0zzbs0BKe9ZAVZ30y2l7yClvW88RU8I54U/YltNMdoX1J2HXNZCOJRseSOgmWIoNpaocRF+0RXPpNsWiTDID6KFniwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=NDl1TP2X; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Mc5xi5EC; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SeAkC7gH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2dyvGCWZ; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mUAHpSDe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gfgQoOeJ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="v+X5MjbE";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ziMobxZ1"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NDl1TP2X";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Mc5xi5EC";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SeAkC7gH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2dyvGCWZ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E7F7621164;
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C58CB21163;
 	Mon,  3 Feb 2025 11:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738581229; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1738581228; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gb5zq7frvFT+WumnDDdfbhccoEdy6xM1MzWPfZkMk6o=;
-	b=mUAHpSDe5vwJdQY9l6sZeAk2lgqT5DpLCjmFgz1GUhptWNQayhaKmOijpzF/o9ofwSW5DW
-	pyge/eVa9TtqbgVZZABH75+s35A1usJJxM598qydI69QU7d4XrqlJ0nCnPWWvUWz9g2FEg
-	VqqiulBy7hdsxEqP7PKXoBotAFUaLxA=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+2RYvZOtPHSbL30JwR7N+DIaUDvNLLe80DNsz8td3/8=;
+	b=NDl1TP2XN8eggPf9qIQAasgZm4/UCKx9a0Syl5zjFCkMbzeXkhCLZl/eg81ArUnyBXHWfL
+	xkHffcmm/LruCdHP+QLXTq1LzrCj9BGbCEIzvK2p7IhT6goDt7B0Jd4sxEmX+GkPL94U/n
+	8yNu9y76BY0JEMlTuTOZ1PciSzDq6pw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738581229;
+	s=susede2_ed25519; t=1738581228;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gb5zq7frvFT+WumnDDdfbhccoEdy6xM1MzWPfZkMk6o=;
-	b=gfgQoOeJQ0qHkNXb3JEyRqZSgwgohx8N90vSM19U1/nPs/2wJrOwXLRl3k+WqtJJ8xLI72
-	R+X02e2rVLj5nGBw==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+2RYvZOtPHSbL30JwR7N+DIaUDvNLLe80DNsz8td3/8=;
+	b=Mc5xi5ECaohMjpljZmKTWjx0cf1lkvEeizeBn18kY+jlFuliDm0+xIhr5jnshfLYLcEBH2
+	/5X6N3ZJzmIAc5DQ==
 Authentication-Results: smtp-out1.suse.de;
-	none
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=SeAkC7gH;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=2dyvGCWZ
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
 	t=1738581224; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gb5zq7frvFT+WumnDDdfbhccoEdy6xM1MzWPfZkMk6o=;
-	b=v+X5MjbEF6yXUgShsI+DJ1Kx59U7vtL2sZEakLCBVFoM3FM2M8+t7Crh3tGxiwN4qg543H
-	twJcqNreRhPEz0BKxC3yyfXg32kDBssO9nU3hxaEN7hjdGTylSX6QII9h+vkqPz0wiNlyR
-	fRwP3CF/88MxDGgXZz7pu03YUB6rQ0g=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+2RYvZOtPHSbL30JwR7N+DIaUDvNLLe80DNsz8td3/8=;
+	b=SeAkC7gH0qpsDqH6o5AmPEPVgsVKBk7DzNsVghAO4dAk3JF3npah2ulpkLqIdIzX6XzY93
+	UCTtxv6F5bmnwQuAFChvQQYRB6fwFGWZNjSMC1TBeVl0k9QcGFQS6Oobp9E9WuwywvnMuu
+	TF763ePbGaBu90rHF40u3+np1p1DpM0=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
 	s=susede2_ed25519; t=1738581224;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gb5zq7frvFT+WumnDDdfbhccoEdy6xM1MzWPfZkMk6o=;
-	b=ziMobxZ1bAHhjHsi47Ie6TGIdL6cCZks+TvahnC+OTai6qirCg37OzGuLkjOhifDnWvD6B
-	u8mhRdac0MQDqvCg==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+2RYvZOtPHSbL30JwR7N+DIaUDvNLLe80DNsz8td3/8=;
+	b=2dyvGCWZz3LKCgIwbBXhRY+C05g5LJHvIsWk90s57feDOIlZbd2Y5iyriSD7xqAx0GvY+c
+	aQicyLM1jOI3rNCg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D258013A96;
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B276313A78;
 	Mon,  3 Feb 2025 11:13:44 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0C0VM+ikoGdNAwAAD6G6ig
+	id 3t04K+ikoGdNAwAAD6G6ig
 	(envelope-from <vbabka@suse.cz>); Mon, 03 Feb 2025 11:13:44 +0000
 From: Vlastimil Babka <vbabka@suse.cz>
-Date: Mon, 03 Feb 2025 12:13:17 +0100
-Subject: [PATCH v2 2/2] get_maintainer: stop reporting subsystem status as
- maintainer role
+Subject: [PATCH v2 0/2] get_maintainer: report subsystem status separately
+ from maintainer role
+Date: Mon, 03 Feb 2025 12:13:15 +0100
+Message-Id: <20250203-b4-get_maintainer-v2-0-83ba008b491f@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,9 +82,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-b4-get_maintainer-v2-2-83ba008b491f@suse.cz>
-References: <20250203-b4-get_maintainer-v2-0-83ba008b491f@suse.cz>
-In-Reply-To: <20250203-b4-get_maintainer-v2-0-83ba008b491f@suse.cz>
+X-B4-Tracking: v=1; b=H4sIAMukoGcC/32NQQ7CIBBFr9LMWsxAadK48h6mMS0M7SykBihRG
+ +4u9gAu/uL95L+/Q6TAFOHS7BAoc+TVV1CnBswy+pkE28qgUHUopRaTFjOl+2Nkn2ooCGPatus
+ n6qVBqLtnIMevw3kbKi8c0xrex0WWv/afLUuBgozT6NBiq+w1bpHO5gNDKeULnmRsu7AAAAA=
+X-Change-ID: 20250114-b4-get_maintainer-cc3358be81c0
 To: Joe Perches <joe@perches.com>, 
  Andrew Morton <akpm@linux-foundation.org>
 Cc: workflows@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, 
@@ -95,102 +93,106 @@ Cc: workflows@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
  Thorsten Leemhuis <linux@leemhuis.info>, Kees Cook <kees@kernel.org>, 
  linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2329; i=vbabka@suse.cz;
- h=from:subject:message-id; bh=e7rQ6ja5aEko/PdvDV9MQiOOrhtNYuMK/XWIlX2/Y64=;
- b=owEBbQGS/pANAwAIAbvgsHXSRYiaAcsmYgBnoKTljifJI1ftEE9Q4Cza4VPCM9k6VbLXxijZm
- 5oWNvUM9zuJATMEAAEIAB0WIQR7u8hBFZkjSJZITfG74LB10kWImgUCZ6Ck5QAKCRC74LB10kWI
- mnbaB/0W5KCbtGSA0sLJyz6Rv5jvnVZnokyA67PMzu87/QlK9CgHPfk7kaQ6u6ll1LNdO+/TbTD
- Rvijhz9AfV0ou+JpvN7EK528jaeUADiubMqhREcsYjTUr+O7HIaYolsWPh9Ln24XmLZsEIvfhlF
- nb6wIE7e3rvXjsV0nZzcJkWVs6AI153NB8HpAxKACfsAP/Huv/Dc5+R9c1l7oxgbae36oyMGAUN
- daMkzU0mt3CNo+5OI7qUzcxKiMgw1ZHrbxizkBhjAk4DOtsuD4ciZV9QCtMVnnVJDHxd3jbTORA
- JVjPQDBf+iovUAEg5IO07p4TKdUE5JdQsWA+cgGz5KAZWfjr
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2901; i=vbabka@suse.cz;
+ h=from:subject:message-id; bh=MbfcwHZh5GliKXIbvOogGlzNDxUqYzHRQ5MH/DbYS04=;
+ b=owEBbQGS/pANAwAIAbvgsHXSRYiaAcsmYgBnoKTeSafLSNhsm7ZJ84dTAsNt6q2BTLb/FF3S/
+ t/il7xwrSeJATMEAAEIAB0WIQR7u8hBFZkjSJZITfG74LB10kWImgUCZ6Ck3gAKCRC74LB10kWI
+ mo7dB/0e3T+HHclQB2WL6PPQ/QIWccpFOHstjK12h6dkPidF46uceqaXHBr57+8CzQ9p1mViihY
+ oDjGnvVgMFG+C5TdJLMcNnn+9OxvgTDuRMS5EtoUgHXIQtFGijI8CK56P7zGV6sraUBwC/ae3XO
+ sK/dPzjoyaITYQpI9DdPBt2RoAjuiBtwaZmq1kK5/UqkqbHqQ1Ck6CMhgiwleOfHPgsFKggRF2z
+ VmHB2Hm8JvdCkjoAE+QlzKZYKvoY/iFc4o/Qa/k9JBTYcqjxlcfooBtnv3c/w1rAr2XSC8RfwaD
+ UQ325v0EDlFgOxDaYdiQ6cTYPGgB9jYzYKyEbdJmVkqzEqCx
 X-Developer-Key: i=vbabka@suse.cz; a=openpgp;
  fpr=A940D434992C2E8E99103D50224FA7E7CC82A664
+X-Rspamd-Queue-Id: C58CB21163
 X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	MID_RHS_MATCH_FROM(0.00)[];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:mid]
-X-Spam-Score: -4.30
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.cz:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
 X-Spam-Flag: NO
 
-After introducing the --substatus option, we can stop adjusting the
-reported maintainer role by the subsystem's status.
+The subsystem status (S: field) can inform a patch submitter if the
+subsystem is well maintained or e.g. maintainers are missing. In
+get_maintainer, it is currently reported with --role(stats) by adjusting
+the maintainer role for any status different from Maintained.  This has
+two downsides:
 
-For compatibility with the --git-chief-penguins option, keep the "chief
-penguin" role.
+- if a subsystem has only reviewers or mailing lists and no maintainers,
+  the status is not reported. For example Orphan subsystems typically
+  have no maintainers so there's nobody to report as orphan minder.
+
+- the Supported status means that someone is paid for maintaining, but
+  it is reported as "supporter" for all the maintainers, which can be
+  incorrect (only some of them may be paid). People (including myself)
+  have been also confused about what "supporter" means.
+
+The second point has been brought up in 2022 and the discussion in the
+end resulted in adjusting documentation only [1]. I however agree with
+Ted's points that it's misleading to take the subsystem status and apply
+it to all maintainers [2].
+
+The attempt to modify get_maintainer output was retracted after Joe
+objected that the status becomes not reported at all [3]. This series
+addresses that concern by reporting the status (unless it's the most
+common Maintained one) on separate lines that follow the reported
+emails, using a new --substatus parameter. Care is taken to reduce the
+noise to minimum by not reporting the most common Maintained status, by
+detault require no opt-in that would need the users to discover the new
+parameter, and at the same time not to break existing git --cc-cmd
+usage.
+
+The advantage of these changes is that subsystem status is now reported
+also for subsystems with no maintainers, and maintainers are reported as
+maintainers.
+
+Changes since v1 [4]
+- Change the approach to report subsystem status on separate lines via
+  the new (effectively enabled by default) --substatus option. The
+  "SUBSYSTEM [status]" output felt more and more clumsy.
+- Drop R-b from Kees due to the major change of approach.
+
+[1] https://lore.kernel.org/all/20221006162413.858527-1-bryan.odonoghue@linaro.org/
+[2] https://lore.kernel.org/all/Yzen4X1Na0MKXHs9@mit.edu/
+[3] https://lore.kernel.org/all/30776fe75061951777da8fa6618ae89bea7a8ce4.camel@perches.com/
+[4] https://lore.kernel.org/r/20250114-b4-get_maintainer-v1-0-ecf40f0d032d@suse.cz
 
 Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- scripts/get_maintainer.pl | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+Vlastimil Babka (2):
+      get_maintainer: add --substatus for reporting subsystem status
+      get_maintainer: stop reporting subsystem status as maintainer role
 
-diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-index da7fc70f17cd8d46b45da8db0b2029bb11b25af1..cf902417a52cccfd5dd00ac7d2fe43d9f43d2528 100755
---- a/scripts/get_maintainer.pl
-+++ b/scripts/get_maintainer.pl
-@@ -1084,7 +1084,7 @@ version: $V
-     --moderated => include moderated lists(s) if any (default: true)
-     --s => include subscriber only list(s) if any (default: false)
-     --remove-duplicates => minimize duplicate email names/addresses
--    --roles => show roles (status:subsystem, git-signer, list, etc...)
-+    --roles => show roles (role:subsystem, git-signer, list, etc...)
-     --rolestats => show roles and statistics (commits/total_commits, %)
-     --substatus => show subsystem status if not Maintained (default: match --roles)"
-     --file-emails => add email addresses found in -f file (default: 0 (off))
-@@ -1298,8 +1298,9 @@ sub get_maintainer_role {
-     my $start = find_starting_index($index);
-     my $end = find_ending_index($index);
- 
--    my $role = "unknown";
-+    my $role = "maintainer";
-     my $subsystem = get_subsystem_name($index);
-+    my $status = "unknown";
- 
-     for ($i = $start + 1; $i < $end; $i++) {
- 	my $tv = $typevalue[$i];
-@@ -1307,23 +1308,13 @@ sub get_maintainer_role {
- 	    my $ptype = $1;
- 	    my $pvalue = $2;
- 	    if ($ptype eq "S") {
--		$role = $pvalue;
-+		$status = $pvalue;
- 	    }
- 	}
-     }
- 
--    $role = lc($role);
--    if      ($role eq "supported") {
--	$role = "supporter";
--    } elsif ($role eq "maintained") {
--	$role = "maintainer";
--    } elsif ($role eq "odd fixes") {
--	$role = "odd fixer";
--    } elsif ($role eq "orphan") {
--	$role = "orphan minder";
--    } elsif ($role eq "obsolete") {
--	$role = "obsolete minder";
--    } elsif ($role eq "buried alive in reporters") {
-+    $status = lc($status);
-+    if ($status eq "buried alive in reporters") {
- 	$role = "chief penguin";
-     }
- 
+ scripts/get_maintainer.pl | 49 ++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 31 insertions(+), 18 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250114-b4-get_maintainer-cc3358be81c0
 
+Best regards,
 -- 
-2.48.1
+Vlastimil Babka <vbabka@suse.cz>
 
