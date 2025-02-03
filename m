@@ -1,99 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A69F205AB5;
-	Mon,  3 Feb 2025 15:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A529E2080F9
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738594952; cv=none; b=lGD2TuAEAMiI5oLjYy/nBy2ow7w7KUuNQOMXr/5t/9FtfHrnfefN4QX+CilC2DS8QKGwD2+rTpKkDZLIqPI1T1Ujpzl2DzL1Mwtg4h7Yh1FPIJhCsLqLkhT8ZSSXBQzgJGhuJ4z80FHds66tHFm9ir+buDl9U2E+pKZOeN1hCSY=
+	t=1738595044; cv=none; b=VAV/qWdQEKvQZZOjiNRC9v8hPRoPMZCyYFbzX9eKDq8GDFkMSDEH5hbmje8VbWb3ESHP5V8PT6JPsDhl5gaLpym3m7b/DLS4kyAIO1DAEaBEQwsITyaMjZ0jyKZYbOMKT4CSuohS+Yf/7nqUjA/erdKDNkn11hDeW+rpGiWNsZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738594952; c=relaxed/simple;
-	bh=+PkJrc74aX1iAPjaFb0hAaPGitbXKazei/4Vi7dvsQo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BYmkdzAd7HfmY0NTQepqeDnanBX30Rps5eBhdDI4uNOQBbF56tK8NnbAiYZT67q99zD7QtjZtcsojtqgAG7g7SKwM3Pxuzjt1WTJfCw2pZBs8imqFIUensIb7LywzEbhNvBj9vInKVTZZjJ+AodeIKrkw8+9xG/hsgFf9mXO52s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P1NXXZW9; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738595044; c=relaxed/simple;
+	bh=RQjGAj1IWyaNTRzxKQHHBrEelrAVESw3rl3VydV04Js=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cx4VIeLt9cHqa+SZpxrRodP33osmid8vWKhvfiNf/35mXU3qycKOvq8I7yzTqS8HEJXwevqEeFgg7u/6uFdzS+Ux6SJZXjqLNCLWrNEM/XO8g0FiD0cmqYx5+vmKztxU3H3YseSCNaB5Yx/L3Xy35DqZQJ6X9jUmq0nFzcsbnqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=Im7x7fAh; arc=none smtp.client-ip=195.133.245.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P1NXXZW9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738594951; x=1770130951;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=+PkJrc74aX1iAPjaFb0hAaPGitbXKazei/4Vi7dvsQo=;
-  b=P1NXXZW9+UQo1qGaxpzX/olnAPsWqWbUrhxBMWt/rhFCfxneOPEkkzbp
-   VffiBCdV+ODsGWelA6o8HXDOFbq8wvG4YyPwalV9tYrfDCFBWhF+Nti+0
-   RIorDhgOobELAEsG8IaD7PDQoQdmiN70Glg9tNK7mCugy9rRSIr+1AqWb
-   peZYakz8RGa9/S6bqyxRA11uopohwl7uG8zDdXIBu+p0bN6GEt82GUKAC
-   qjCHNnFvQzxk/iDwlgJtshs6KIKAUn1fIeslHt8se0F0F/g3djBKdo8BM
-   thXJyfusBs9iKPh8cMkSCL5VuLj7TZWCIbwdmESEHEVYl399191xbo1I7
-   Q==;
-X-CSE-ConnectionGUID: nLLjJGKdQyysKw1H9V5KzA==
-X-CSE-MsgGUID: 1cw6Dz6nTzCepxAMlIm2wQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="38977789"
-X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="38977789"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 07:02:30 -0800
-X-CSE-ConnectionGUID: cEcSTHOFTuulXn9v9rIwqg==
-X-CSE-MsgGUID: 0sUVOiOqRD2DOixfAv2FTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="133554077"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.194])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 07:02:25 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 3 Feb 2025 17:02:22 +0200 (EET)
-To: Joshua Grisham <josh@joshuagrisham.com>
-cc: W_Armin@gmx.de, thomas@t-8ch.de, kuurtb@gmail.com, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    corbet@lwn.net, linux-doc@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>
-Subject: Re: [PATCH v10] platform/x86: samsung-galaxybook: Add samsung-galaxybook
- driver
-In-Reply-To: <20250201105450.193450-1-josh@joshuagrisham.com>
-Message-ID: <a22ecdd5-a2a5-4f6b-0a1a-e1bc115dc01f@linux.intel.com>
-References: <20250201105450.193450-1-josh@joshuagrisham.com>
+	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="Im7x7fAh"
+Received: from mail.nppct.ru (localhost [127.0.0.1])
+	by mail.nppct.ru (Postfix) with ESMTP id B762D1C2423
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 18:03:45 +0300 (MSK)
+Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
+	reason="pass (just generated, assumed good)" header.d=nppct.ru
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:to:from:from; s=dkim; t=1738595024; x=
+	1739459025; bh=RQjGAj1IWyaNTRzxKQHHBrEelrAVESw3rl3VydV04Js=; b=I
+	m7x7fAhrG1fuLBZUihpWl2IfKvk9lAZyxCPK0r+XNiYPdvX7UYZFi2I0PcMjD9v7
+	rxDJylmJNcOPa9u6rE/vNvx7iHCwBYzAff0b4wVlW5QGKbtc4eNlrF1xkfNP4PK0
+	NrXkpdO8m1407Y4sv31RgT9hefJXGeIXypi30qaTr4=
+X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
+Received: from mail.nppct.ru ([127.0.0.1])
+	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id F9kCVosuLJsN for <linux-kernel@vger.kernel.org>;
+	Mon,  3 Feb 2025 18:03:44 +0300 (MSK)
+Received: from localhost.localdomain (unknown [87.249.24.51])
+	by mail.nppct.ru (Postfix) with ESMTPSA id 19AE21C0E7A;
+	Mon,  3 Feb 2025 18:03:43 +0300 (MSK)
+From: Alexey Nepomnyashih <sdl@nppct.ru>
+To: Jeremy Kerr <jk@ozlabs.org>
+Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH 6.1] efivars: Fix "BUG: corrupted list in efivar_entry_remove"
+Date: Mon,  3 Feb 2025 15:03:26 +0000
+Message-ID: <20250203150336.2694569-1-sdl@nppct.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-450076370-1738594942=:15198"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Prevent list corruption in efivar_entry_remove() and efivar_entry_list_del_unlock() 
+by verifying that an entry is still in the list (list_empty() == false) before calling 
+list_del(). Also reset the list pointers with INIT_LIST_HEAD() to avoid potential double-removal issues. 
+Ensure robust handling of entries and prevent the kernel BUG observed when list_del() was called on an 
+already-removed entry.
+Fix https://syzkaller.appspot.com/bug?extid=246ea4feed277471958a
 
---8323328-450076370-1738594942=:15198
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Syzkaller report:
+list_del corruption. prev->next should be ffff0000d86d6828, but was ffff800016216e60. (prev=ffff800016216e60)
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:61!
+Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 PID: 4299 Comm: syz-executor237 Not tainted 6.1.119-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : __list_del_entry_valid+0x13c/0x158 lib/list_debug.c:59
+lr : __list_del_entry_valid+0x13c/0x158 lib/list_debug.c:59
+Call trace:
+ __list_del_entry_valid+0x13c/0x158 lib/list_debug.c:59
+ __list_del_entry include/linux/list.h:134 [inline]
+ list_del include/linux/list.h:148 [inline]
+ efivar_entry_remove+0x38/0x110 fs/efivarfs/vars.c:493
+ efivarfs_destroy+0x20/0x3c fs/efivarfs/super.c:184
+ efivar_entry_iter+0x94/0xdc fs/efivarfs/vars.c:720
+ efivarfs_kill_sb+0x58/0x70 fs/efivarfs/super.c:258
+ deactivate_locked_super+0xac/0x124 fs/super.c:332
+ deactivate_super+0xf0/0x110 fs/super.c:363
+ cleanup_mnt+0x394/0x41c fs/namespace.c:1186
+ __cleanup_mnt+0x20/0x30 fs/namespace.c:1193
+ task_work_run+0x240/0x2f0 kernel/task_work.c:203
+ resume_user_mode_work include/linux/resume_user_mode.h:49 [inline]
+ do_notify_resume+0x2080/0x2cb8 arch/arm64/kernel/signal.c:1132
+ prepare_exit_to_user_mode arch/arm64/kernel/entry-common.c:137 [inline]
+ exit_to_user_mode arch/arm64/kernel/entry-common.c:142 [inline]
+ el0_svc+0x9c/0x168 arch/arm64/kernel/entry-common.c:638
+ el0t_64_sync_handler+0x84/0xf0 arch/arm64/kernel/entry-common.c:655
+ el0t_64_sync+0x18c/0x190 arch/arm64/kernel/entry.S:585
 
-On Sat, 1 Feb 2025, Joshua Grisham wrote:
+Reported-by: syzbot+75dc11...@syzkaller.appspotmail.com
+Fixes: 2d82e6227ea1 ("efi: vars: Move efivar caching layer into efivarfs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
+---
+ fs/efivarfs/vars.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-> Add a new driver for Samsung Galaxy Book series notebook devices with the
-> following features:
->=20
-> - Keyboard backlight control
-> - Battery hook for installing power supply extension to add charge
->   control end threshold
-> - Controller for Samsung's performance modes using the platform profile
->   interface
-> - Adds firmware-attributes to control various system features
-> - Handles various hotkeys and notifications
->=20
-> Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
-> Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+diff --git a/fs/efivarfs/vars.c b/fs/efivarfs/vars.c
+index 13bc60698955..42977138e30b 100644
+--- a/fs/efivarfs/vars.c
++++ b/fs/efivarfs/vars.c
+@@ -490,7 +490,10 @@ void __efivar_entry_add(struct efivar_entry *entry, struct list_head *head)
+  */
+ void efivar_entry_remove(struct efivar_entry *entry)
+ {
+-	list_del(&entry->list);
++	if (!list_empty(&entry->list)) {
++        list_del(&entry->list);
++        INIT_LIST_HEAD(&entry->list);
++	}
+ }
+ 
+ /*
+@@ -506,7 +509,10 @@ void efivar_entry_remove(struct efivar_entry *entry)
+  */
+ static void efivar_entry_list_del_unlock(struct efivar_entry *entry)
+ {
+-	list_del(&entry->list);
++	if (!list_empty(&entry->list)) {
++        list_del(&entry->list);
++        INIT_LIST_HEAD(&entry->list);
++    }
+ 	efivar_unlock();
+ }
+ 
+-- 
+2.43.0
 
-I've applied this to review-ilpo-next.
-
-Thanks a lot to all who have taken time to help in getting this into=20
-shape!
-
---=20
- i.
-
---8323328-450076370-1738594942=:15198--
