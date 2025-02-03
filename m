@@ -1,130 +1,141 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB5B210F44;
-	Mon,  3 Feb 2025 21:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FD82116EA
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 21:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738619836; cv=none; b=MLnpOJ6BBYcjzyKYSGWPCK2Jdw0QEFR/7TpIhALwMAmRwIQGRc1DG/OatwwC+zixBIbAM2UPpplQnMe/7820moGrnbuw9K5eV3+lGioNnyAvQ0SIiEgD1tO67xuNM5r0GaqtugcsYW1kbEI68I78PQZmhxDCcPgPj8jH3P1DWrg=
+	t=1738619838; cv=none; b=PhKl9lGutn8rNgexmvu6MFIenzkjwAd/MEqdWsZp3qVMkMkCqtIqtEhYmWuZbjVRT77fO+I1kQpWQP+hOOcEiw8iJZkdqMIZlwbQS1QkC8nHbcnVJ6DERHiGlNcvX7oXaF2ZM8O4+040BcyqNkjLs3qy+2PH2qHERoJqIx6Lr0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738619836; c=relaxed/simple;
-	bh=6B7I62WFdHL/FBLe1LbQxhHw1vXaY7HD/ur5Qpncrv0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FoiC2L/rNN7HnJdoOrK5ASg3LV50xohBAdld3bWBLueZUSOVRB7qqpd3sOvGORoULZ4ijA3hLkNlUIGR0URZoN22SbpltNTptp8/sNsW7l+mVLwqa7C134Rme1i4eOtnyRqJgvB8q+Xy0WZrtQmYfW0RRf0ERV1fhWlFNE44VVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=stTC3xHP; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738619838; c=relaxed/simple;
+	bh=eKBZlYN+UXP8rPzQPDSdT5QMTblxvC3+jEREKY9IPpU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=oRbmHRfq44qngB0foR8sxuU6+U8Beef+HDj1o4Mk0joQCfCWqPOCcDdm970fqcJJHpXEzvOEkgUdr5BSNYMTbrt5paK2VRRO27wewVVUQJ9wmlnuyCZda7VS4hZsfm8LvIrjVqLz/2F192Q8iC+rV9fm+c+YehStzM6cJE386Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=VgrB6yK7; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="stTC3xHP"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 513Lv5v42216422
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 15:57:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738619825;
-	bh=nKhOijkAhJ5opCbgXaSaTL1eqHs8b9sk12sPB0FqAHc=;
-	h=From:To:CC:Subject:Date;
-	b=stTC3xHPs4xUdypH+XDe+ynJgIbWHSZvI+JdkWHqrKUoeXR6cONIYr8heXER1S3Ti
-	 ogSPUeIsPff628lMWbWXUy4+JnQdP2hAkJ1t/3w14NJFN8Wi3Ip3yzbj7dV+3mXQ3g
-	 yJ8l7GqiBhUqiYBOzOyN+Jla5OpQaW7HprADQYYM=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 513Lv56d121781
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 3 Feb 2025 15:57:05 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
- Feb 2025 15:57:04 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 3 Feb 2025 15:57:04 -0600
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 513Lv4ZT062150;
-	Mon, 3 Feb 2025 15:57:04 -0600
-From: Judith Mendez <jm@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] arm64: dts: ti: k3-am62-lp-sk: Add bootph flag to support sd boot
-Date: Mon, 3 Feb 2025 15:57:04 -0600
-Message-ID: <20250203215704.1333881-1-jm@ti.com>
-X-Mailer: git-send-email 2.48.0
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="VgrB6yK7"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 50F04240028
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 22:57:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738619834; bh=eKBZlYN+UXP8rPzQPDSdT5QMTblxvC3+jEREKY9IPpU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 From;
+	b=VgrB6yK7jIGrjCpMVpMuX3pHVzFPbXmCHL5tX0pzX7Yx0jCOG8pZfgOpmxNF+ZDAV
+	 A3EA10gDLr2ydlPmVDOTowrXy2kw1z490QqL2zxfJE8QlNkPHezPNUyIgn/ZDzwSBT
+	 MBZ8nu77SkbRRRTBXRVN5zo95J4+ojaxvV+nfGu5y5oExszBLKrlMbPa7W3X0HEL0B
+	 HGJl7Pu5oRjbwU+1sY/Qp6vVuRE3Aik/7IKJOd2sAVX6QGZONZBfGvJOK4vHPtoeiv
+	 jpjRCkedoNJtsYEobkPK5AhlYMFHDp8D7jhUZ9ZZhekNIftJsG1FBfjZ3TQKmYLsDe
+	 4Gq5Y1rBqtxOg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Yn0hm6hC5z6tn4;
+	Mon,  3 Feb 2025 22:57:12 +0100 (CET)
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+To: albankurti <kurti@invicto.ai>
+Cc: Joe Perches <joe@perches.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Miguel Ojeda <ojeda@kernel.org>,
+  linux-kernel@vger.kernel.org,  rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 1/1 RESEND] checkpatch: add warning for pr_* and dev_*
+ macros without a trailing newline
+In-Reply-To: <20250203201149.330117-1-kurti@invicto.ai> (albankurti's message
+	of "Mon, 03 Feb 2025 20:11:51 +0000 (UTC)")
+References: <20250203201149.330117-1-kurti@invicto.ai>
+Date: Mon, 03 Feb 2025 21:57:11 +0000
+Message-ID: <m2seou3d54.fsf@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-In order to boot using SD boot, voltage regulator nodes, io-expander
-nodes, and gpio nodes need to be present in all stages of boot in
-order to do voltage switching, thus add bootph-all flag to these nodes
-to not fail SD boot on am62 lp SK board.
+albankurti <kurti@invicto.ai> writes:
 
-Signed-off-by: Judith Mendez <jm@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+> Add a new check in scripts/checkpatch.pl to detect usage of pr_(level)
+> and dev_(level) macros (for both C and Rust) when the string literal
+> does not end with '\n'. Missing trailing newlines can lead to incomplete
+> log lines that do not appear properly in dmesg or in console output.
+> To show an example of this working after applying the patch we can run
+> the script on the commit that likely motivated this need/issue:
+>   ./scripts/checkpatch.pl --strict -g f431c5c581fa176f608ba3fdebb3c1051bad5774
+>
+> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1140
+> Signed-off-by: albankurti <kurti@invicto.ai>
+> ---
+>  scripts/checkpatch.pl | 48 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 9eed3683ad76..86ff666f5017 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3888,6 +3888,54 @@ sub process {
+>  			}
+>  		}
+>  
+> +# check for pr_* and dev_* logs without a newline for C and Rust files to avoid missing log messages
+> +    my $macro_pattern_c = qr{
+> +        \b
+> +        (
+> +            pr_(?:emerg|alert|crit|err|warn|notice|info|debug)
+> +          | dev_(?:emerg|alert|crit|err|warn|notice|info|dbg)
+> +        )
+> +        \(\s*
+> +        "((?:\\.|[^"])*)"
+> +        \s*
+> +        (?:,|\))
+> +    }x;
+> +
+> +    my $macro_pattern_rust = qr{
+> +        \b
+> +        (
+> +            pr_(?:emerg|alert|crit|err|warn|notice|info|debug)
+> +          | dev_(?:emerg|alert|crit|err|warn|notice|info|dbg)
+> +        )
+> +        !\s*
+> +        \(\s*
+> +        "((?:\\.|[^"])*)"
+> +        \s*
+> +        (?:,|\))
+> +    }x;
+> +
+> +    if ($realfile =~ /\.(?:c|h|rs)$/) {
+> +      my $is_rust = ($realfile =~ /\.rs$/);
+> +      my $macro_pattern = $is_rust ? $macro_pattern_rust : $macro_pattern_c;
+> +
+> +      if ($line =~ /^\+/) {
+> +        my $cleanline = $line;
+> +        $cleanline =~ s/^[+\s]+//;
+> +        $cleanline =~ s/\r?$//;
+> +
+> +        if ($cleanline =~ /$macro_pattern/) {
+> +          my $macro_call = $1;
+> +          my $string_arg = $2;
+> +
+> +          if ($string_arg !~ /\\n$/ && $string_arg !~ /\n$/) {
+> +            my $lang = $is_rust ? "Rust" : "C";
+> +            WARN("${lang}_LOG_NO_NEWLINE",
+> +                 "Usage of $macro_call without a trailing newline. Consider adding '\\n'.\n" . $herecurr);
+> +          }
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts b/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
-index 8e9fc00a6b3c7..5f6cc3567cba5 100644
---- a/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
-@@ -58,6 +58,7 @@ vdd_mmc1: regulator-3 {
- 	};
- 
- 	vddshv_sdio: regulator-4 {
-+		bootph-all;
- 		compatible = "regulator-gpio";
- 		regulator-name = "vddshv_sdio";
- 		pinctrl-names = "default";
-@@ -74,12 +75,14 @@ vddshv_sdio: regulator-4 {
- 
- &main_pmx0 {
- 	vddshv_sdio_pins_default: vddshv-sdio-default-pins {
-+		bootph-all;
- 		pinctrl-single,pins = <
- 			AM62X_IOPAD(0x07c, PIN_OUTPUT, 7) /* (M19) GPMC0_CLK.GPIO0_31 */
- 		>;
- 	};
- 
- 	main_gpio1_ioexp_intr_pins_default: main-gpio1-ioexp-intr-default-pins {
-+		bootph-all;
- 		pinctrl-single,pins = <
- 			AM62X_IOPAD(0x01d4, PIN_INPUT, 7) /* (C13) UART0_RTSn.GPIO1_23 */
- 		>;
-@@ -94,6 +97,7 @@ AM62X_IOPAD(0x01f4, PIN_INPUT, 0) /* (B16) EXTINTn */
- 
- &main_i2c1 {
- 	exp1: gpio@22 {
-+		bootph-all;
- 		compatible = "ti,tca6424";
- 		reg = <0x22>;
- 		gpio-controller;
-@@ -229,6 +233,14 @@ &tlv320aic3106 {
- 	DVDD-supply = <&buck2_reg>;
- };
- 
-+&main_gpio0 {
-+	bootph-all;
-+};
-+
-+&main_gpio1 {
-+	bootph-all;
-+};
-+
- &gpmc0 {
- 	ranges = <0 0 0x00 0x51000000 0x01000000>; /* CS0 space. Min partition = 16MB */
- };
+Having a comment breaks this,
 
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
--- 
-2.48.0
+  $ ./scripts/checkpatch.pl --strict -f newlines.rs
+  [...]
+  WARNING: Usage of pr_err without a trailing newline. Consider adding '\n'.
+  #3: FILE: newlines.rs:3:
+  +pr_err!("Has newline\n"); // A comment
 
+I believe you also have to strip out comments?
+
+> +        }
+> +      }
+> +    }
+> +
+>  # check for .L prefix local symbols in .S files
+>  		if ($realfile =~ /\.S$/ &&
+>  		    $line =~ /^\+\s*(?:[A-Z]+_)?SYM_[A-Z]+_(?:START|END)(?:_[A-Z_]+)?\s*\(\s*\.L/) {
