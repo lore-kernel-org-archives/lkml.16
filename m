@@ -1,143 +1,180 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF29310E0;
-	Mon,  3 Feb 2025 18:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0589215530C;
+	Mon,  3 Feb 2025 18:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738608344; cv=none; b=DcU0IvSV0ifr6hkbh6w/rczdZ5fzXPx2f/0LdoylRktpZPH4bgovmYK8pbfj57yH1qG8uMhtfBM0vy+pKKKKZ2qwQj8S+zGV/lrT6a1Pxc9c+5YyAGYcY789F0yfeUOAigAGypK8gNu8zOn4RIkK0+E1cz7wHSL+0FfcfsJHF5k=
+	t=1738608367; cv=none; b=cTfOM6OaclTXGZFlsmN7N2Wa3XeP0cyYfv1pGKjRAEtGFKJfounpOVHv0GxPm4Qh1kvbb36lUN4DSGom+8g3ZrWmVdZ0QqxxJAmIOpUuhWN7pldmiiQ9egvk/PWwPvv5Bdr696q86sbTFR+GraUxJZS8CJNYu9J1DBNBIMEtOeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738608344; c=relaxed/simple;
-	bh=Sh9JqsMn3+WNjs/UhIQpp+0bQxQfRenxCzV9TC5Mz8k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rWMGxaovvE+ES1No7m/vfSL3tRnU5sbGCGWr6dqt6UTf9yRyODNaNwHuPAisHXwRC1uN8waF8YU0AvssKWpGxqnfGVH3zmhuRoC+EvpcdB3PBkbZ/b9YUwK+xNIB3MznjTYKbheawNRP7tvIXX9+cerUm8+qzgNyB0kQOC/EyJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FV287DvZ; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738608367; c=relaxed/simple;
+	bh=t4XqqrYhwscr6FS7U4bhL3N2YVK27fxTi1qasHS8jzw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DpZeAN5WpKI6DmPE3MiIu2MaU60ENQ5f6RVNl9e4SP1HKhe24XYQDajO0GnSJFr08AkY+tQORndLpBwcl41zLwaYpmX5wzQA+CmKrm8QfPaGzuPS8VGN59hasiX+BW0e0o/kw1xmKt/kmMYwg0eJVVWlv1Xv9Lzf7Ljvs9UTvdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Ci9lo6ij; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FV287DvZ"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2166651f752so95779665ad.3;
-        Mon, 03 Feb 2025 10:45:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738608340; x=1739213140; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GF5bCNHsQSd0Et+4UjT6iUc3/eSHGhbwhOmyy8nTBgs=;
-        b=FV287DvZuf7riuMOhmW7hDHvKAEl5Obxw6SG5MtDcu8dGp86Jhkzkv+S0/vJWsGX9F
-         bxA8OsjCc4liekYYIulazqqOlZb/npZTOaAE9//mdzuEh3H7Pw/vTn8uKpstuYQg8gTS
-         d3d/mg2/J1yE8djBEuB33ZQFTldXVD2uoORfNKWqY0Z8YsVUjY3tcQn567j8PZ5ZFTsn
-         9qxZPzAOMM6yqDeV897thTjrwhZ/7pr2xANAJFYGYsAqOqfHcxA2IG9utqidmUaizTaD
-         LI+PFV+BylItIwu1om1sGq7RQPyds8TxeSupBibfGXZALKxdP5XGV+Rc09OPpx3RQyPe
-         owOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738608340; x=1739213140;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GF5bCNHsQSd0Et+4UjT6iUc3/eSHGhbwhOmyy8nTBgs=;
-        b=KOZXvaVNlGAqA+VZ8CMK74I5kpH/iJ5kWivDvFBJ1BmexSmp47/yEoKHIZemPnh+ng
-         7IuqybTZUGoOzpIrRlnFhxF5T7lII1QnO20HJqSmPPqSomC9N04Sup9ZyxR2SnW0jGQb
-         Y3mUKbGcoVLZxUGkzx4Yxr1aOOiYPxlfBZRSoSRVqi12a9mCWssj8Ff8eMQlBNbNrGn6
-         AntTCukm/o5qjMo5WxUMEyMS4nSDxaTethyx2sCPFOboQLsm7NYI0DPSbQ1C9Bi8ueN9
-         NpaEFGVKxbF5ypCIilx+9wK58u1U+d+G5KtaDoknnbHdPVj8RsLaR0qo6+TFs8+pmpVK
-         hqDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBoD/MaFho6uGttHN5vJDdmdH9hru8jC2N7ohmo5SlEF171b6ePsyqgIMm+0CFM0aUYNY=@vger.kernel.org, AJvYcCWqSIl4V5szysFylIZ1IMo7cIy5B3tyn/Te2TzCxW0vUg9Dn7nmUzZWm8Efw7X003BGeu3yeqbpPKlW/ek7@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAvUi7iL9b+54IxgjJatTffSajxjZ+hPXiCNKXEbSfGSkKu1uU
-	Eto7pLreySolrY6lcbjraNCB/9myTEAKYFmeaROxwttj1szoCFnO
-X-Gm-Gg: ASbGncv0vRCnggiNqsAt6M4MMzjvNR5kZi2NvSCcfodJBXS4afYVx/VUBNJid86CB7H
-	tnC/1WxU/Bz+3KNMmsjSngHuOaPwVVGS2yc1JusdPgO93EYOi9VQCFE6YjItcvX2TWKC0qP2rok
-	JaQjPChY7hMGJnQJ6l/p+U0g1zhAYYtEZxe4kjZd7Ph27bccEHCA2yNXcbapeSjoINNGyDagVYG
-	bit/bqVJe75kyqoWUt2CqEBV0BXfjCZOmwNE1x38nq5nEoS/eVMTD134Bvan/SMyxEAVD8dLseU
-	QCusH46AGYWJ
-X-Google-Smtp-Source: AGHT+IHi/LhXzMClWbHreZV7J7kdHrZ4MloVmok977ZqERzj4/39svg06fAAaCiNlzrpPRBw5iARKw==
-X-Received: by 2002:a17:903:41cf:b0:216:3c2b:a5e5 with SMTP id d9443c01a7336-21dd7d7bc9emr325633955ad.27.1738608339860;
-        Mon, 03 Feb 2025 10:45:39 -0800 (PST)
-Received: from [192.168.0.235] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f80a1sm80499695ad.87.2025.02.03.10.45.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 10:45:39 -0800 (PST)
-Message-ID: <084abedc8ec36ffe77f97531c0bcebc291547415.camel@gmail.com>
-Subject: Re: [PATCH bpf-next 1/3] bpf: verifier: Do not extract constant map
- keys for irrelevant maps
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Daniel Xu <dxu@dxuuu.xyz>, daniel@iogearbox.net, andrii@kernel.org, 
-	ast@kernel.org
-Cc: john.fastabend@gmail.com, martin.lau@linux.dev, song@kernel.org, 
-	yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, 	jolsa@kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	mhartmay@linux.ibm.com, iii@linux.ibm.com
-Date: Mon, 03 Feb 2025 10:45:35 -0800
-In-Reply-To: <ebbf8edf871a6543425b75bb659400221bd28275.1738439839.git.dxu@dxuuu.xyz>
-References: <cover.1738439839.git.dxu@dxuuu.xyz>
-	 <ebbf8edf871a6543425b75bb659400221bd28275.1738439839.git.dxu@dxuuu.xyz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ci9lo6ij"
+Received: from localhost.localdomain (unknown [167.220.59.4])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 785A3206AB6B;
+	Mon,  3 Feb 2025 10:46:05 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 785A3206AB6B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738608365;
+	bh=l74eF+4+r695BFOwyov/kRxEW4Z5jvFKpT/pUDEgh3Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ci9lo6ijBENhL+jeGWd4iBIoMRYgrXjcPoC5sXsOArpUziivTBDbQkKycZaPN2gqF
+	 ue4/bbc1kCl7wvdaYI/cSd+VhNpSUvznQ2YZfQoTbkAc9EU6fJiI0KsrXL6xwdg3OM
+	 KlbYq7c4Z4rBEmzD5GTiF45I+0PhDht1G3QqBPGs=
+From: steven chen <chenste@linux.microsoft.com>
+To: zohar@linux.ibm.com,
+	stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com,
+	roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com,
+	ebiederm@xmission.com,
+	paul@paul-moore.com,
+	code@tyhicks.com,
+	bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chenste@linux.microsoft.com
+Cc: madvenka@linux.microsoft.com,
+	nramas@linux.microsoft.com,
+	James.Bottomley@HansenPartnership.com
+Subject: [PATCH v7 2/7] kexec: define functions to map and unmap segments
+Date: Mon,  3 Feb 2025 10:45:53 -0800
+Message-Id: <20250203184558.61367-3-chenste@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250203184558.61367-1-chenste@linux.microsoft.com>
+References: <20250203184558.61367-1-chenste@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sat, 2025-02-01 at 12:58 -0700, Daniel Xu wrote:
-> Previously, we were trying to extract constant map keys for all
-> bpf_map_lookup_elem(), regardless of map type. This is an issue if the
-> map has a u64 key and the value is very high, as it can be interpreted
-> as a negative signed value. This in turn is treated as an error value by
-> check_func_arg() which causes a valid program to be incorrectly
-> rejected.
->=20
-> Fix by only extracting constant map keys for relevant maps. See next
-> commit for an example via selftest.
->=20
-> Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-> Reported-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> Tested-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+Currently, the mechanism to map and unmap segments to the kimage
+structure is not available to the subsystems outside of kexec.  This
+functionality is needed when IMA is allocating the memory segments
+during kexec 'load' operation.  Implement functions to map and unmap
+segments to kimage.
 
-Acked-by: Eduard Zingerman <eddyz87@gmail.com>
+Implement kimage_map_segment() to enable mapping of IMA buffer source
+pages to the kimage structure post kexec 'load'.  This function,
+accepting a kimage pointer, an address, and a size, will gather the
+source pages within the specified address range, create an array of page
+pointers, and map these to a contiguous virtual address range.  The
+function returns the start of this range if successful, or NULL if
+unsuccessful.
 
-Nit:
-  would be good if commit message said something along the lines:
-  ... the fix works because nullness elision is only allowed for
-      {PERCPU_}ARRAY maps, and keys for these are within u32 range ...
+Implement kimage_unmap_segment() for unmapping segments
+using vunmap().
 
-> ---
->  kernel/bpf/verifier.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
->=20
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index 9971c03adfd5..e9176a5ce215 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -9206,6 +9206,8 @@ static s64 get_constant_map_key(struct bpf_verifier=
-_env *env,
->  	return reg->var_off.value;
->  }
-> =20
-> +static bool can_elide_value_nullness(enum bpf_map_type type);
-> +
->  static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
->  			  struct bpf_call_arg_meta *meta,
->  			  const struct bpf_func_proto *fn,
-> @@ -9354,9 +9356,11 @@ static int check_func_arg(struct bpf_verifier_env =
-*env, u32 arg,
->  		err =3D check_helper_mem_access(env, regno, key_size, BPF_READ, false,=
- NULL);
->  		if (err)
->  			return err;
-> -		meta->const_map_key =3D get_constant_map_key(env, reg, key_size);
-> -		if (meta->const_map_key < 0 && meta->const_map_key !=3D -EOPNOTSUPP)
-> -			return meta->const_map_key;
-> +		if (can_elide_value_nullness(meta->map_ptr->map_type)) {
-> +			meta->const_map_key =3D get_constant_map_key(env, reg, key_size);
-> +			if (meta->const_map_key < 0 && meta->const_map_key !=3D -EOPNOTSUPP)
-> +				return meta->const_map_key;
-> +		}
->  		break;
->  	case ARG_PTR_TO_MAP_VALUE:
->  		if (type_may_be_null(arg_type) && register_is_null(reg))
+From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Signed-off-by: steven chen <chenste@linux.microsoft.com>
+---
+ include/linux/kexec.h |  7 ++++++
+ kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
 
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index f0e9f8eda7a3..f8413ea5c8c8 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -467,6 +467,9 @@ extern bool kexec_file_dbg_print;
+ #define kexec_dprintk(fmt, arg...) \
+         do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+ 
++extern void *kimage_map_segment(struct kimage *image,
++					unsigned long addr, unsigned long size);
++extern void kimage_unmap_segment(void *buffer);
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+ struct task_struct;
+@@ -474,6 +477,10 @@ static inline void __crash_kexec(struct pt_regs *regs) { }
+ static inline void crash_kexec(struct pt_regs *regs) { }
+ static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+ static inline int kexec_crash_loaded(void) { return 0; }
++static inline void *kimage_map_segment(struct kimage *image,
++					unsigned long addr, unsigned long size)
++{ return NULL; }
++static inline void kimage_unmap_segment(void *buffer) { }
+ #define kexec_in_progress false
+ #endif /* CONFIG_KEXEC_CORE */
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c0caa14880c3..4029df8f6860 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
+ 	return result;
+ }
+ 
++void *kimage_map_segment(struct kimage *image,
++			 unsigned long addr, unsigned long size)
++{
++	unsigned long eaddr = addr + size;
++	unsigned long src_page_addr, dest_page_addr;
++	unsigned int npages;
++	struct page **src_pages;
++	int i;
++	kimage_entry_t *ptr, entry;
++	void *vaddr = NULL;
++
++	/*
++	 * Collect the source pages and map them in a contiguous VA range.
++	 */
++	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
++	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
++	if (!src_pages) {
++		pr_err("Could not allocate ima pages array.\n");
++		return NULL;
++	}
++
++	i = 0;
++	for_each_kimage_entry(image, ptr, entry) {
++		if (entry & IND_DESTINATION)
++			dest_page_addr = entry & PAGE_MASK;
++		else if (entry & IND_SOURCE) {
++			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
++				src_page_addr = entry & PAGE_MASK;
++				src_pages[i++] =
++					virt_to_page(__va(src_page_addr));
++				if (i == npages)
++					break;
++				dest_page_addr += PAGE_SIZE;
++			}
++		}
++	}
++
++	/* Sanity check. */
++	WARN_ON(i < npages);
++
++	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
++	kfree(src_pages);
++
++	if (!vaddr)
++		pr_err("Could not map ima buffer.\n");
++
++	return vaddr;
++}
++
++void kimage_unmap_segment(void *segment_buffer)
++{
++	vunmap(segment_buffer);
++}
++
+ struct kexec_load_limit {
+ 	/* Mutex protects the limit count. */
+ 	struct mutex mutex;
+-- 
+2.25.1
 
