@@ -1,293 +1,147 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FEA1FFC60;
-	Mon,  3 Feb 2025 09:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9003F1A270;
+	Mon,  3 Feb 2025 09:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738573530; cv=none; b=C2BXmQt8cZ41KOYWOZ9KAZTiLzJskh7wRmAorWzSXpexWIFywlWY6g2cdoY821E4zgq8+Hk00y92NSSOPfZ+plPQKDQGK3Q78kIERYpBfr8At0hvxaPvbnwWDk13j+EQkS5LDipkNw1gh4CmbTvI+ELaZu31m3vbLdQtMaD4huE=
+	t=1738573556; cv=none; b=l5Q4KPPJy00CuHgHogSEmWx0uDPuTMJy1y/BCP8mBolCaGCZ7Lftj+TGpx4iKeEb5ALudejFa+41Tbu1mysSZk5qW91WmoITRekH8rxJM9yQ7Z1MofzqFLbJhF2kSjG2qLL9SG1Eq7bBmB62vNSyhtvWuCfnSqJvUuQ710I0xhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738573530; c=relaxed/simple;
-	bh=io6sXt7iIEpqclAN5udDVtDQPsKQqT7YCXVo80AmeIk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AFUgl10Vr+uf2PG685b5w5pVFshppzguRoYhgcmZrE3vh2fKnBR62c5AI1Ku9YQ51Bw4aLGmynM+WXY+dkCzg6RPqi7/u/WsXWcUFl5ZErZAcrIyHyMHXiKZ+yxJGHuKFFjdkWfTxBb6IogFCKu+rG6yICyEY0Lx4MSATe9p8qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tu8Hh9hb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M1mKAq5B; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738573556; c=relaxed/simple;
+	bh=FF0AYy7QO4wAppz+BTEHxQ8EQD+ttCMNis84es56hb0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AsvaZeWJ83VQt630EgwIXc+SNQYiyvInQupJmyuERIzk3lQToiCvWhqUWko48w3zZ8aUXWXRmwA+PxMdrxf8uJhErp6H7Zooas6t22itmrJkN6tG+Ww11/zrohJkOxu9L7cf4CgZxTm6jKO5+EBV4gfNIHEIc0xDm2H6Vld1qbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QgEtN3pR; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tu8Hh9hb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M1mKAq5B"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738573526;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wWWpuwHkmHsBX34pcGl1jvCG52qLLh0La3Bmm84Eboo=;
-	b=tu8Hh9hbsWetkIDgzcpH2nG14ZI8nV2lcq3oKrs+KHbFh8KtE4qTpI38Igq94jhAvFsFQj
-	3yY9SX6JdKiD8tVe2lUU9LRtsvnnjdn1JhlJXI2mhmuz8+sLGmg738B9CYWqJu3GcKAmBR
-	eAZBHmf/DNUJNQ4HU3P4/HKvBWjUi8TdvgzhWp8BgOqw/UWfqmIFX4Ii8DQWyiZRkNMGxo
-	XnDY1pvwSsJZetB95mma2AdKtOTPOicddBbhqUJKIL7EuaTezJuUX5Ac44BaK7XUGYnMqr
-	qMdTdJVpXfOXIriZL4wt6wd6AqBXU45ogl118Na0xqoUU0pDPq51ih4XZk2scA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738573526;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wWWpuwHkmHsBX34pcGl1jvCG52qLLh0La3Bmm84Eboo=;
-	b=M1mKAq5BEsyd2vw89rzEqIJlchsRF4h8bG5ZOfxZUaEDBVmgPocf4eab2VMqxI3symVNg2
-	4ntxneSBMmqJbIAA==
-Date: Mon, 03 Feb 2025 10:05:17 +0100
-Subject: [PATCH 16/16] selftests: vDSO: vdso_standalone_test_x86: Switch to
- nolibc
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QgEtN3pR"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5135OiAi000874;
+	Mon, 3 Feb 2025 09:05:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	cV5qVf3KEl2mKoV6KdKVtnjnoxdRcDLKf/ZGrf//YiE=; b=QgEtN3pRRXyiHuM0
+	67MPQxFj9e0NFoGssmje7xW1tX6zAUuNqMoBsZiQMjnMrVZylVUxvgY4wkeswSkC
+	bz/WpD10ijntB4lTvdo9Ki4dhR5K/qytjc+0j33ktrz/V0EhuUf2rUrFsI4X8+E7
+	u6Dmbg5coGxbWPm6WIRwxtRlO2Gl5oc1md+iCAp3dlgYUpvVK12/+pCCLMvAP74w
+	Uq06bFgOXqnk+ur6onX5N1bscmNtF9VVsST/gYTFhbHVh5WjJ/s2r2bPr3Z3spCa
+	8iwSwBKMzUYT6dDqZQ0BhKBbaI496V/I53/kB9YQMEgcRgfEafTHOjmNGjGj4DwR
+	g3laxQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jqm40ex0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 09:05:48 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51395ll8026043
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 3 Feb 2025 09:05:47 GMT
+Received: from [10.216.42.141] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Feb 2025
+ 01:05:44 -0800
+Message-ID: <724a4822-469a-45bb-bfb1-c02b54e971a3@quicinc.com>
+Date: Mon, 3 Feb 2025 14:35:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250203-parse_vdso-nolibc-v1-16-9cb6268d77be@linutronix.de>
-References: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
-In-Reply-To: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
-To: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>, 
- Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <ndesaulniers@google.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, llvm@lists.linux.dev, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738573516; l=6263;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=io6sXt7iIEpqclAN5udDVtDQPsKQqT7YCXVo80AmeIk=;
- b=GwjI5bSquW7zdPwOw/ObHOwJd3uaE2TURfhr6wXyXJSxHF8582pBDftmeCnGijOcc4+cOJsgI
- vZbb5XCvvLxC6Hni87Pvz2ilsFxfk0A2G8pgIDBOlJWWLW/J36zx9Uk
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/13] dt-bindings: net: wireless: describe the ath12k
+ AHB module
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <ath12k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        Kalle Valo
+	<kvalo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Jeff Johnson
+	<jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
+ <20250130043508.1885026-2-quic_rajkbhag@quicinc.com>
+ <20250130-cunning-quail-of-opportunity-76d0ad@krzk-bin>
+Content-Language: en-US
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+In-Reply-To: <20250130-cunning-quail-of-opportunity-76d0ad@krzk-bin>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: VPpC0vgZfiIO8bQBVN4TbmeZz2zgh_7x
+X-Proofpoint-ORIG-GUID: VPpC0vgZfiIO8bQBVN4TbmeZz2zgh_7x
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_03,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ spamscore=0 malwarescore=0 priorityscore=1501 suspectscore=0 adultscore=0
+ clxscore=1015 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=822 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502030072
 
-vdso_standalone_test_x86 provides its own ASM syscall wrappers and
-_start() implementation. The in-tree nolibc library already provides
-this functionality for multiple architectures. By making use of nolibc,
-the standalone testcase can be built from the exact same codebase as the
-non-standalone version.
+On 1/30/2025 1:58 PM, Krzysztof Kozlowski wrote:
+>> +  memory-region:
+>> +    description:
+>> +      phandle to a node describing reserved memory (System RAM memory)
+>> +      used by ath12k firmware (see bindings/reserved-memory/reserved-memory.txt)
+> Do not say what DT syntax is, so "phandle to a node" is redundant,
+> reserved-memory.txt is redundant. The only useful part here is "used by
+> ath12k firmware", so based on this none of below are used by the driver
+> and driver just passes them to the firmware?
+> 
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- tools/testing/selftests/vDSO/Makefile              |   8 +-
- .../selftests/vDSO/vdso_standalone_test_x86.c      | 168 +--------------------
- 2 files changed, 7 insertions(+), 169 deletions(-)
+Sure, will rephrase the description.
 
-diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
-index bc8ca186fb877dc11740c37f1e07e45e84c2ae92..12a0614b9fd4983deffe5d6a7cfa06ba8d92a516 100644
---- a/tools/testing/selftests/vDSO/Makefile
-+++ b/tools/testing/selftests/vDSO/Makefile
-@@ -22,13 +22,17 @@ include ../lib.mk
- 
- CFLAGS += $(TOOLS_INCLUDES)
- 
-+CFLAGS_NOLIBC := -nostdlib -nostdinc -ffreestanding -fno-asynchronous-unwind-tables \
-+		 -fno-stack-protector -include $(top_srcdir)/tools/include/nolibc/nolibc.h \
-+		 -I$(top_srcdir)/tools/include/nolibc/ $(KHDR_INCLUDES)
-+
- $(OUTPUT)/vdso_test_gettimeofday: parse_vdso.c vdso_test_gettimeofday.c
- $(OUTPUT)/vdso_test_getcpu: parse_vdso.c vdso_test_getcpu.c
- $(OUTPUT)/vdso_test_abi: parse_vdso.c vdso_test_abi.c
- $(OUTPUT)/vdso_test_clock_getres: vdso_test_clock_getres.c
- 
--$(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c
--$(OUTPUT)/vdso_standalone_test_x86: CFLAGS +=-nostdlib -fno-asynchronous-unwind-tables -fno-stack-protector
-+$(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c | headers
-+$(OUTPUT)/vdso_standalone_test_x86: CFLAGS:=$(CFLAGS_NOLIBC) $(CFLAGS)
- 
- $(OUTPUT)/vdso_test_correctness: vdso_test_correctness.c
- $(OUTPUT)/vdso_test_correctness: LDFLAGS += -ldl
-diff --git a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-deleted file mode 100644
-index 500608f89c66b5747e3d845ebc54e4c3a35b6ccd..0000000000000000000000000000000000000000
---- a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-+++ /dev/null
-@@ -1,167 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * vdso_test.c: Sample code to test parse_vdso.c on x86
-- * Copyright (c) 2011-2014 Andy Lutomirski
-- *
-- * You can amuse yourself by compiling with:
-- * gcc -std=gnu99 -nostdlib
-- *     -Os -fno-asynchronous-unwind-tables -flto -lgcc_s
-- *      vdso_standalone_test_x86.c parse_vdso.c
-- * to generate a small binary.  On x86_64, you can omit -lgcc_s
-- * if you want the binary to be completely standalone.
-- */
--
--#include <sys/syscall.h>
--#include <sys/time.h>
--#include <unistd.h>
--#include <stdint.h>
--#include <linux/auxvec.h>
--
--#include "parse_vdso.h"
--
--/* We need some libc functions... */
--int strcmp(const char *a, const char *b)
--{
--	/* This implementation is buggy: it never returns -1. */
--	while (*a || *b) {
--		if (*a != *b)
--			return 1;
--		if (*a == 0 || *b == 0)
--			return 1;
--		a++;
--		b++;
--	}
--
--	return 0;
--}
--
--/*
-- * The clang build needs this, although gcc does not.
-- * Stolen from lib/string.c.
-- */
--void *memcpy(void *dest, const void *src, size_t count)
--{
--	char *tmp = dest;
--	const char *s = src;
--
--	while (count--)
--		*tmp++ = *s++;
--	return dest;
--}
--
--/* ...and two syscalls.  This is x86-specific. */
--static inline long x86_syscall3(long nr, long a0, long a1, long a2)
--{
--	long ret;
--#ifdef __x86_64__
--	asm volatile ("syscall" : "=a" (ret) : "a" (nr),
--		      "D" (a0), "S" (a1), "d" (a2) :
--		      "cc", "memory", "rcx",
--		      "r8", "r9", "r10", "r11" );
--#else
--	asm volatile ("int $0x80" : "=a" (ret) : "a" (nr),
--		      "b" (a0), "c" (a1), "d" (a2) :
--		      "cc", "memory" );
--#endif
--	return ret;
--}
--
--static inline long linux_write(int fd, const void *data, size_t len)
--{
--	return x86_syscall3(__NR_write, fd, (long)data, (long)len);
--}
--
--static inline void linux_exit(int code)
--{
--	x86_syscall3(__NR_exit, code, 0, 0);
--}
--
--void to_base10(char *lastdig, time_t n)
--{
--	while (n) {
--		*lastdig = (n % 10) + '0';
--		n /= 10;
--		lastdig--;
--	}
--}
--
--unsigned long getauxval(const unsigned long *auxv, unsigned long type)
--{
--	unsigned long ret;
--
--	if (!auxv)
--		return 0;
--
--	while (1) {
--		if (!auxv[0] && !auxv[1]) {
--			ret = 0;
--			break;
--		}
--
--		if (auxv[0] == type) {
--			ret = auxv[1];
--			break;
--		}
--
--		auxv += 2;
--	}
--
--	return ret;
--}
--
--void c_main(void **stack)
--{
--	/* Parse the stack */
--	long argc = (long)*stack;
--	stack += argc + 2;
--
--	/* Now we're pointing at the environment.  Skip it. */
--	while(*stack)
--		stack++;
--	stack++;
--
--	/* Now we're pointing at auxv.  Initialize the vDSO parser. */
--	vdso_init_from_sysinfo_ehdr(getauxval((unsigned long *)stack, AT_SYSINFO_EHDR));
--
--	/* Find gettimeofday. */
--	typedef long (*gtod_t)(struct timeval *tv, struct timezone *tz);
--	gtod_t gtod = (gtod_t)vdso_sym("LINUX_2.6", "__vdso_gettimeofday");
--
--	if (!gtod)
--		linux_exit(1);
--
--	struct timeval tv;
--	long ret = gtod(&tv, 0);
--
--	if (ret == 0) {
--		char buf[] = "The time is                     .000000\n";
--		to_base10(buf + 31, tv.tv_sec);
--		to_base10(buf + 38, tv.tv_usec);
--		linux_write(1, buf, sizeof(buf) - 1);
--	} else {
--		linux_exit(ret);
--	}
--
--	linux_exit(0);
--}
--
--/*
-- * This is the real entry point.  It passes the initial stack into
-- * the C entry point.
-- */
--asm (
--	".text\n"
--	".global _start\n"
--	".type _start,@function\n"
--	"_start:\n\t"
--#ifdef __x86_64__
--	"mov %rsp,%rdi\n\t"
--	"and $-16,%rsp\n\t"
--	"sub $8,%rsp\n\t"
--	"jmp c_main"
--#else
--	"push %esp\n\t"
--	"call c_main\n\t"
--	"int $3"
--#endif
--	);
-diff --git a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-new file mode 120000
-index 0000000000000000000000000000000000000000..4d3d96f1e440c965474681a6f35375a60b3921be
---- /dev/null
-+++ b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-@@ -0,0 +1 @@
-+vdso_test_gettimeofday.c
-\ No newline at end of file
+These reserved memory-regions are utilized by the ath12k firmware. The ath12k driver
+stores these memory addresses solely for the purpose of collecting crash dumps
+(RAM dumps) when the firmware encounters a crash.
 
--- 
-2.48.1
+>> +    items:
+>> +      - description: Q6 memory region
+>> +      - description: m3 dump memory region
+>> +      - description: Q6 caldata memory region
+>> +      - description: Multi Link Operation (MLO) Global memory region
+>> +
+>> +  memory-region-names:
+>> +    description:
+>> +      Name of the reserved memory region used by ath12k firmware
+> Drop description.
+> 
+
+Sure.
+
+>> +    items:
+>> +      - const: q6-region
+>> +      - const: m3-dump
+>> +      - const: q6-caldb
+>> +      - const: mlo-global-mem
+>> +
+>> +  qcom,ath12k-calibration-variant:
+>> +    $ref: /schemas/types.yaml#/definitions/string
+> Why this is named after ath12k? Why this is just not
+> "qcom,calibration-variant"? None of the other properties have ath12k in
+> their names, so why this one in the WSI schema was named like that?
+> 
+
+This property is added after the below comment.
+https://lore.kernel.org/all/qzjgpwemwaknwbs3dwils6kaa5c3inabfvkaryvc32kblzfhy3@6yduooj4dk63/
+
+This `ath12k` in the name of this property is inherited from the 'qcom,ath10k.yaml' and
+'qcom,ath11k.yaml'. Same was followed for WSI schema as well.
+
+>> +    description:
+>> +      String to uniquely identify variant of the calibration data for designs
+>> +      with colliding bus and device ids
+> I don't think this property is here possible. How could you have on the
+> same SoC different devices?
+
+The WiFi controller in the SoC includes an internal or external Front-End Module (FEM).
+These FEMs can vary and require different calibration data. This property uniquely
+identify the variant of calibration data required by a FEM.
 
