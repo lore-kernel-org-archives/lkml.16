@@ -1,149 +1,227 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D021F2AE99;
-	Mon,  3 Feb 2025 07:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC681E260C;
+	Mon,  3 Feb 2025 07:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738567598; cv=none; b=a+ViKcmsa3CdJf6hhgeAYsdThEbYW9rDEZ5etIjh/LO2fWEufIWEUhcdPJU6wf6ijuFiRy3rURafBBj9OmMue0DxwxbiRZm9VtQOV4U05m69W9zB7zxIVog4ldSX5gzYdlOT4gSt+I3oT41hXalSEyWGNJMx7L5bynrHHz6rlTg=
+	t=1738567723; cv=none; b=oNo8WvqpNjQJYAF82w/OuIKJ1uvDxC7Rgx82A7q/h8HmGKIivzoJkNXEjs6H+JqiGTWMuUudB8jR8sQUk48PDGRY7rJqEs68pYsq/RlhE6WIufXAC5QWGYMTgu1MiSKhZtFvSmRz45PplwSNtx/xltoQF63hAi6YAIPFkUL5fAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738567598; c=relaxed/simple;
-	bh=EsY9mv3Ft9PmhX/XvueUEsGFS8g7TsjkC+vY8EhZl/w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HBpcYXfuHZY9gnzCd8Enq817qd/EiTYtB4ktBmnQTgGeCw/MmLJ9KRw5yiT/dSjc1hmEA7rzU8AcOsQXds4fRXVdAVZYRx9WnD2BvKeXZAk1dsZfmc4zihGl00ZD/Phw69zU1UIcpNRwKVx1JNLKmSsHkjs4efrMHtpETZ8kyiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eiXyn5H9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d4PQcDGa; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738567723; c=relaxed/simple;
+	bh=Xe9C1ziRVKiL4LZJED8c8PrdXILQ/N9sSBEOWZsgzx8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Kll8PHxqVyemCl6BdmR4dqAOc7gwiPcTHcsAxR7rZVDcjgXITeq1fRMLjNlpz5nPQMBoVKWOK8aHSg0ip/1MK/tU29o0UAPB9FRlkwq6STEWEoPZ8E4DoGwnCkSfhl9P5bdY+9ESgdi/PLIxykPamZkEd2lUWmmVZVCZ4U7EQ0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=geaHWHhm; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eiXyn5H9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d4PQcDGa"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738567588;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eoaKnCKJmvXrDrdAtKF1Z2hUqlDG8isSz3qg8Dq/520=;
-	b=eiXyn5H9ROUyZGxFJu30+mPxwFPrKGl32gpnrHZ0Rx5hR8BvoaPxMufkZxWoLfQt/oVHpI
-	xrZKfbGEJWqrDqMZyAXgW0SlLEa4T2MKOfJl5/LqceaBJwNkGQvS0E+cidDZiOGPwO0hwg
-	hh9qgkY8tqtrgYJVDE1EeZ0FMgUsT9IrfXAQls25RhMkVehkZCGgBp8DTruUkoloe9YxYo
-	p3t0frl5Mu5wF1xXbAMQWIovYvoUYO8UtjiI0h+Bla9EIoj4rte0cK90uZV30aN6dqoNmH
-	6sxYu4Cqfk8Si8phAbYjktryMDQh7ddbgCLZyR6+ASpx2bkvXJAwCqqNM1GA/Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738567588;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eoaKnCKJmvXrDrdAtKF1Z2hUqlDG8isSz3qg8Dq/520=;
-	b=d4PQcDGan0h1MbBeRFanmWc858IWIMqjtDiAfjyQ9wcceJR8jlqxyohxVLJ+sS0KdcLFQ3
-	vcf3/jC/WbBJIuBg==
-Date: Mon, 03 Feb 2025 08:26:22 +0100
-Subject: [PATCH] iomap: Fix -Wmissing-prototypes on UM
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="geaHWHhm"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51320o6g006345;
+	Mon, 3 Feb 2025 07:28:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=E5bR3jepdUkDh3/74F9w2LrEwz7edByQa0448Wox8
+	j0=; b=geaHWHhmGu9sbNPWOt4kJQpWpq/EqeB4tgUDOBLmXBwv9KfpKGhmUNZT9
+	cs3B3/43lObJ51dz+egfWs5jTtZ0XYBI04OLyAGx0eUs+mhVA94PkjlP57oN2pk9
+	5SjplepyjyUE/HlV2as/2ss+2/pl19hpUSxIJ5d+AR8JjODV90CFtS9xWt3ZXbZE
+	xAqPiExt+rTPulD+LAenOrOFxcQ9HbKdAO3Z9u+4ajVnvs4DLB1nuETotDx/zZLm
+	1ixqSa7u18i2k9KLuzRuxDdRSjlK6F3QOvDUAYV68D7HzY9bP6Wp0/yXIPLPxcqM
+	wZ/Ji48HULfBrTWuV7gk7qJ93lm4A==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jmmy92yv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 07:28:36 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5134VBHI005277;
+	Mon, 3 Feb 2025 07:28:35 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j05jmxq0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 07:28:35 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5137SXUV45089056
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Feb 2025 07:28:33 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C6ED5200BC;
+	Mon,  3 Feb 2025 07:28:33 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0887C200BD;
+	Mon,  3 Feb 2025 07:28:33 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.63.197.14])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  3 Feb 2025 07:28:32 +0000 (GMT)
+Received: from jarvis.ozlabs.ibm.com (haven.au.ibm.com [9.63.198.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 0503360395;
+	Mon,  3 Feb 2025 18:28:30 +1100 (AEDT)
+From: Andrew Donnellan <ajd@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, fbarrat@linux.ibm.com, ukrishn@linux.ibm.com,
+        clombard@linux.ibm.com, vaibhav@linux.ibm.com
+Subject: [PATCH v2 0/2] Remove cxl and cxlflash drivers
+Date: Mon,  3 Feb 2025 18:27:58 +1100
+Message-ID: <20250203072801.365551-1-ajd@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250203-um-io-v1-1-822af81bcdac@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIAJ1voGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDQyNL3dJc3cx8XbO0tJQ0Q0szc3OTZCWg2oKi1LTMCrA50bG1tQCNLY0
- LVwAAAA==
-X-Change-ID: 20250129-um-io-6ffdf196774c
-To: Arnd Bergmann <arnd@arndb.de>, Kees Cook <kees@kernel.org>, 
- Palmer Dabbelt <palmer@rivosinc.com>, 
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738567587; l=3395;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=EsY9mv3Ft9PmhX/XvueUEsGFS8g7TsjkC+vY8EhZl/w=;
- b=kKbo6LD1ZXtwmDNrQdWmzvqMl1QObLTFzhsw3my4nhRNE1JfOgSUsOck+4eKAb960/5TyklOh
- P0A+VvNW8AXAXl6PRGIx7RpBcyhfjRblM2dXI8QlEBCEwHBqsHmbFBE
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: oiINUuUq5ROf8y8tvhXl8qcLJri0htfT
+X-Proofpoint-ORIG-GUID: oiINUuUq5ROf8y8tvhXl8qcLJri0htfT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_02,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ phishscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 mlxlogscore=576 bulkscore=0 spamscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502030058
 
-Building lib/iomap.o on UM triggers warnings about missing prototypes.
-These prototypes should be defined by asm-generic/iomap.h, depending on
-other symbols. For example "ioread64_lo_hi" is based on "readq".
-However the generic variants of those tested symbols are defined in
-asm-generic/io.h, only after asm-generic/iomap.h has already been
-included, breaking the ifdef logic.
+This series removes the cxl and cxlflash drivers for IBM CAPI devices.
 
-Move the inclusion of asm-generic/iomap.h in asm-generic/io.h after the
-generic symbols have been defined, so the checks can work.
+CAPI devices have been out of production for some time, and we're not
+aware of any remaining users who are likely to want a modern kernel.
+There's almost certainly some remaining driver bugs and we don't have much
+hardware available to properly test the drivers any more. Removing these
+drivers will also mean we can get rid of a non-trivial amount of support
+code in arch/powerpc.
 
-Triggered warnings:
+Thanks to everyone who's worked on these drivers over the last decade.
 
-$ make ARCH=um allyesconfig lib/iomap.o
-make[1]: Entering directory '/tmp/um'
-  GEN     Makefile
-  GEN     Makefile
-  CALL    scripts/checksyscalls.sh
-  CC      lib/iomap.o
-lib/iomap.c:156:5: error: no previous prototype for ‘ioread64_lo_hi’ [-Werror=missing-prototypes]
-  156 | u64 ioread64_lo_hi(const void __iomem *addr)
-      |     ^~~~~~~~~~~~~~
-lib/iomap.c:163:5: error: no previous prototype for ‘ioread64_hi_lo’ [-Werror=missing-prototypes]
-  163 | u64 ioread64_hi_lo(const void __iomem *addr)
-      |     ^~~~~~~~~~~~~~
-lib/iomap.c:170:5: error: no previous prototype for ‘ioread64be_lo_hi’ [-Werror=missing-prototypes]
-  170 | u64 ioread64be_lo_hi(const void __iomem *addr)
-      |     ^~~~~~~~~~~~~~~~
-lib/iomap.c:178:5: error: no previous prototype for ‘ioread64be_hi_lo’ [-Werror=missing-prototypes]
-  178 | u64 ioread64be_hi_lo(const void __iomem *addr)
-      |     ^~~~~~~~~~~~~~~~
-lib/iomap.c:264:6: error: no previous prototype for ‘iowrite64_lo_hi’ [-Werror=missing-prototypes]
-  264 | void iowrite64_lo_hi(u64 val, void __iomem *addr)
-      |      ^~~~~~~~~~~~~~~
-lib/iomap.c:272:6: error: no previous prototype for ‘iowrite64_hi_lo’ [-Werror=missing-prototypes]
-  272 | void iowrite64_hi_lo(u64 val, void __iomem *addr)
-      |      ^~~~~~~~~~~~~~~
-lib/iomap.c:280:6: error: no previous prototype for ‘iowrite64be_lo_hi’ [-Werror=missing-prototypes]
-  280 | void iowrite64be_lo_hi(u64 val, void __iomem *addr)
-      |      ^~~~~~~~~~~~~~~~~
-iomap.c:288:6: error: no previous prototype for ‘iowrite64be_hi_lo’ [-Werror=missing-prototypes]
-  288 | void iowrite64be_hi_lo(u64 val, void __iomem *addr)
-      |      ^~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
+This series does not affect the OpenCAPI/ocxl driver, nor does it affect
+Compute Express Link (the other cxl, an amusing but unfortunate naming
+collision).
 
-Fixes: 0fcb70851fbf ("Makefile.extrawarn: turn on missing-prototypes globally")
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- include/asm-generic/io.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+v1: https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=436014&state=*
 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index a5cbbf3e26ec7d06f7e67ee9731021031b39aa13..1bfdc4d5643054701c27073c146a6d8cc3903384 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -13,10 +13,6 @@
- #include <linux/types.h>
- #include <linux/instruction_pointer.h>
- 
--#ifdef CONFIG_GENERIC_IOMAP
--#include <asm-generic/iomap.h>
--#endif
--
- #include <asm/mmiowb.h>
- #include <asm-generic/pci_iomap.h>
- 
-@@ -1250,4 +1246,8 @@ extern int devmem_is_allowed(unsigned long pfn);
- 
- #endif /* __KERNEL__ */
- 
-+#ifdef CONFIG_GENERIC_IOMAP
-+#include <asm-generic/iomap.h>
-+#endif
-+
- #endif /* __ASM_GENERIC_IO_H */
+v1->v2: rebase and update docs
 
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250129-um-io-6ffdf196774c
+Andrew Donnellan (2):
+  cxlflash: Remove driver
+  cxl: Remove driver
 
-Best regards,
+ .../ABI/{obsolete => removed}/sysfs-class-cxl |   55 +-
+ Documentation/arch/powerpc/cxl.rst            |  469 --
+ Documentation/arch/powerpc/cxlflash.rst       |  433 --
+ Documentation/arch/powerpc/index.rst          |    2 -
+ .../userspace-api/ioctl/ioctl-number.rst      |    4 +-
+ MAINTAINERS                                   |   21 -
+ arch/powerpc/configs/skiroot_defconfig        |    1 -
+ arch/powerpc/include/asm/copro.h              |    6 -
+ arch/powerpc/include/asm/device.h             |    3 -
+ arch/powerpc/include/asm/pnv-pci.h            |   17 -
+ arch/powerpc/mm/book3s64/hash_native.c        |   13 +-
+ arch/powerpc/mm/book3s64/hash_utils.c         |   10 +-
+ arch/powerpc/mm/book3s64/pgtable.c            |    1 -
+ arch/powerpc/mm/book3s64/slice.c              |    6 +-
+ arch/powerpc/mm/copro_fault.c                 |   12 -
+ arch/powerpc/platforms/powernv/Makefile       |    1 -
+ arch/powerpc/platforms/powernv/pci-cxl.c      |  153 -
+ arch/powerpc/platforms/powernv/pci-ioda.c     |   43 -
+ arch/powerpc/platforms/powernv/pci.c          |   61 -
+ arch/powerpc/platforms/powernv/pci.h          |    2 -
+ drivers/misc/Kconfig                          |    1 -
+ drivers/misc/Makefile                         |    1 -
+ drivers/misc/cxl/Kconfig                      |   28 -
+ drivers/misc/cxl/Makefile                     |   14 -
+ drivers/misc/cxl/api.c                        |  532 ---
+ drivers/misc/cxl/base.c                       |  126 -
+ drivers/misc/cxl/context.c                    |  362 --
+ drivers/misc/cxl/cxl.h                        | 1135 -----
+ drivers/misc/cxl/cxllib.c                     |  271 --
+ drivers/misc/cxl/debugfs.c                    |  134 -
+ drivers/misc/cxl/fault.c                      |  341 --
+ drivers/misc/cxl/file.c                       |  699 ---
+ drivers/misc/cxl/flash.c                      |  538 ---
+ drivers/misc/cxl/guest.c                      | 1208 -----
+ drivers/misc/cxl/hcalls.c                     |  643 ---
+ drivers/misc/cxl/hcalls.h                     |  200 -
+ drivers/misc/cxl/irq.c                        |  450 --
+ drivers/misc/cxl/main.c                       |  383 --
+ drivers/misc/cxl/native.c                     | 1592 -------
+ drivers/misc/cxl/of.c                         |  346 --
+ drivers/misc/cxl/pci.c                        | 2103 ---------
+ drivers/misc/cxl/sysfs.c                      |  771 ----
+ drivers/misc/cxl/trace.c                      |    9 -
+ drivers/misc/cxl/trace.h                      |  691 ---
+ drivers/misc/cxl/vphb.c                       |  309 --
+ drivers/scsi/Kconfig                          |    1 -
+ drivers/scsi/Makefile                         |    1 -
+ drivers/scsi/cxlflash/Kconfig                 |   15 -
+ drivers/scsi/cxlflash/Makefile                |    5 -
+ drivers/scsi/cxlflash/backend.h               |   48 -
+ drivers/scsi/cxlflash/common.h                |  340 --
+ drivers/scsi/cxlflash/cxl_hw.c                |  177 -
+ drivers/scsi/cxlflash/lunmgt.c                |  278 --
+ drivers/scsi/cxlflash/main.c                  | 3970 -----------------
+ drivers/scsi/cxlflash/main.h                  |  129 -
+ drivers/scsi/cxlflash/ocxl_hw.c               | 1399 ------
+ drivers/scsi/cxlflash/ocxl_hw.h               |   72 -
+ drivers/scsi/cxlflash/sislite.h               |  560 ---
+ drivers/scsi/cxlflash/superpipe.c             | 2218 ---------
+ drivers/scsi/cxlflash/superpipe.h             |  150 -
+ drivers/scsi/cxlflash/vlun.c                  | 1336 ------
+ drivers/scsi/cxlflash/vlun.h                  |   82 -
+ include/misc/cxl-base.h                       |   48 -
+ include/misc/cxl.h                            |  265 --
+ include/misc/cxllib.h                         |  129 -
+ include/uapi/misc/cxl.h                       |  156 -
+ include/uapi/scsi/cxlflash_ioctl.h            |  276 --
+ .../filesystems/statmount/statmount_test.c    |   13 +-
+ 68 files changed, 49 insertions(+), 25819 deletions(-)
+ rename Documentation/ABI/{obsolete => removed}/sysfs-class-cxl (87%)
+ delete mode 100644 Documentation/arch/powerpc/cxl.rst
+ delete mode 100644 Documentation/arch/powerpc/cxlflash.rst
+ delete mode 100644 arch/powerpc/platforms/powernv/pci-cxl.c
+ delete mode 100644 drivers/misc/cxl/Kconfig
+ delete mode 100644 drivers/misc/cxl/Makefile
+ delete mode 100644 drivers/misc/cxl/api.c
+ delete mode 100644 drivers/misc/cxl/base.c
+ delete mode 100644 drivers/misc/cxl/context.c
+ delete mode 100644 drivers/misc/cxl/cxl.h
+ delete mode 100644 drivers/misc/cxl/cxllib.c
+ delete mode 100644 drivers/misc/cxl/debugfs.c
+ delete mode 100644 drivers/misc/cxl/fault.c
+ delete mode 100644 drivers/misc/cxl/file.c
+ delete mode 100644 drivers/misc/cxl/flash.c
+ delete mode 100644 drivers/misc/cxl/guest.c
+ delete mode 100644 drivers/misc/cxl/hcalls.c
+ delete mode 100644 drivers/misc/cxl/hcalls.h
+ delete mode 100644 drivers/misc/cxl/irq.c
+ delete mode 100644 drivers/misc/cxl/main.c
+ delete mode 100644 drivers/misc/cxl/native.c
+ delete mode 100644 drivers/misc/cxl/of.c
+ delete mode 100644 drivers/misc/cxl/pci.c
+ delete mode 100644 drivers/misc/cxl/sysfs.c
+ delete mode 100644 drivers/misc/cxl/trace.c
+ delete mode 100644 drivers/misc/cxl/trace.h
+ delete mode 100644 drivers/misc/cxl/vphb.c
+ delete mode 100644 drivers/scsi/cxlflash/Kconfig
+ delete mode 100644 drivers/scsi/cxlflash/Makefile
+ delete mode 100644 drivers/scsi/cxlflash/backend.h
+ delete mode 100644 drivers/scsi/cxlflash/common.h
+ delete mode 100644 drivers/scsi/cxlflash/cxl_hw.c
+ delete mode 100644 drivers/scsi/cxlflash/lunmgt.c
+ delete mode 100644 drivers/scsi/cxlflash/main.c
+ delete mode 100644 drivers/scsi/cxlflash/main.h
+ delete mode 100644 drivers/scsi/cxlflash/ocxl_hw.c
+ delete mode 100644 drivers/scsi/cxlflash/ocxl_hw.h
+ delete mode 100644 drivers/scsi/cxlflash/sislite.h
+ delete mode 100644 drivers/scsi/cxlflash/superpipe.c
+ delete mode 100644 drivers/scsi/cxlflash/superpipe.h
+ delete mode 100644 drivers/scsi/cxlflash/vlun.c
+ delete mode 100644 drivers/scsi/cxlflash/vlun.h
+ delete mode 100644 include/misc/cxl-base.h
+ delete mode 100644 include/misc/cxl.h
+ delete mode 100644 include/misc/cxllib.h
+ delete mode 100644 include/uapi/misc/cxl.h
+ delete mode 100644 include/uapi/scsi/cxlflash_ioctl.h
+
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-
+2.48.1
