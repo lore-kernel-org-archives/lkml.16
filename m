@@ -1,95 +1,128 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32731FF1D6;
-	Mon,  3 Feb 2025 10:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADDA1E7C0E;
+	Mon,  3 Feb 2025 10:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738578328; cv=none; b=knAHueuoVBMI48naa4HSel9IzEDDu8f/8LDobxMqLwEZMwLUMY6EawSuVCktt50R9fIXftzSZ31f5SyJD9OK6bNpZ94xyclOnfSH+TwzP3fp5+kuxNX6Qc/xQWXk+p23LV4gErpCNBScgimHfY7a3V1jDr8hGJBZiOGhvXgmF60=
+	t=1738578488; cv=none; b=d0+ipS+HvpcmLIpQdYt2F8G19DnW83eDuJAkEIT1YvcyB4NlZkbW9UqIsi9PtqpV7rmVWetmVtVRHDYn6x0P0rmkmk8SAKG8hpCiRV+IXMO53EWIGwJSrTI4XTyYtWwOnMsmTf3Krz2WBpxSabJM4kG/4BBNBp3//KSseihmTCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738578328; c=relaxed/simple;
-	bh=8/fUTzKy1MF71wYKcPFhSwEBzx24YLOM/aFyLuKpmos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mw8l/5qsgRr+VsAGsGuUsLwPW/2U2c6rce4d+RlSo27yd5FUCjY0RE8PTYo7V3NiVPa1LAcmySwOJYXmwAFpg2YpSFQHgi85jOiqKXBDBXu+YDqjhcEO6PFHUz5n8flwW1tilgwlqg7HJW2JZKYcyNkaGsXFN/7Lz0nkKHWVFuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=iYDYxmKp; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1738578488; c=relaxed/simple;
+	bh=HM9co9bHk3fz6yhzYqHJ2p5kWjd1y6fPfQIMblAplFk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JCzoElCCjZCfN5czE25NbiWusFLDwg4Bf2JKVmtHv/EhiiSOK9BOJ1UpEdEWzooLqLAatENU0ztqUxkZvIhUDcaFidCawrVC2FSbU36hGsmrSF4xr/8eUKWTISwNvuABZNNb9K0Fh9TtRnJ2Qvk1HFsr5Ntk0PfPVuWXHgzAblo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Z0P5jlAp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="iYDYxmKp"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A339C10382D0D;
-	Mon,  3 Feb 2025 11:25:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1738578319;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L6NLy4tPMvGPZS1BPxy3IPZATwSK5IX2UjuVNeKK0Yw=;
-	b=iYDYxmKpXRJ6+7QLyvFSDFMMoxZtriFmxUTpagPkkGq6yBAUe0emhFHocTEQxOyJkb6C5U
-	wstV3qBg0MNoO/oGee70zmw+EPYsyW76PP6cw4FxXZvRYtHRttb84LUBRgPfwYwNLRq+Dp
-	JiOLQ5CuZeRH6uTHJMsPuO74BkjC3YeXWu0KraD/liJkj+iEKDXAwtO7/rkRaFxtMzMYTc
-	vnzkN4gzTxmE0EouE1acFs4uJNnMqsy5hs1l4HvFB7JZuFlo05rRhzaRM+4oamCFo01Rdj
-	2y8bvv+jc3P0dtz6OhLKVJabfZ/u3pMJXcVX+9QqY3E4aSpEfr0pb07chov3NA==
-Date: Mon, 3 Feb 2025 11:25:11 +0100
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.13 00/25] 6.13.1-rc1 review
-Message-ID: <Z6CZh+2NVVp6nwte@duo.ucw.cz>
-References: <20250130133456.914329400@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Z0P5jlAp"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 512MxSs3005964;
+	Mon, 3 Feb 2025 10:28:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	6x8BAunRvsjNsAkzeigQzLsRnDaLSX8GrXI9PQGXuhg=; b=Z0P5jlApR87jwpR/
+	JvpCtZD7NT2qguc941qD803+UVnSrfXctufSmGm8x13X7zgaI/rZ8cWzP8O4mxbA
+	uKOxqHFKxkr4HpkYQUiFreeky8l5CUPn/zArMikRVdFKHRlEjJ7FpFbSicJ7GbGO
+	hPgUjgsCwXy/nx407+1IbFM4Vp4LA+VenmnR2WyqqnWWAWsWmMbEzxg+fAWLoplT
+	/PGymaWRqQkY1AIFSEbzO9zJJd1DlezglgW4wv/Z/qsdEGwUwmQ8pi9epp++SKxx
+	rl/R81q8P0mjCNVtOm+FaKUXAJShHeidqHAhtiPbcP15SAo3W6y/IiC80m4hYgdD
+	0o5qow==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jd429bh1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 10:27:59 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 513ARwNC024654
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 3 Feb 2025 10:27:58 GMT
+Received: from [10.216.42.141] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Feb 2025
+ 02:27:55 -0800
+Message-ID: <b4276ac3-42a5-4a9f-83b1-875721d483d9@quicinc.com>
+Date: Mon, 3 Feb 2025 15:57:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kd9VI+nPNDmTcI7L"
-Content-Disposition: inline
-In-Reply-To: <20250130133456.914329400@linuxfoundation.org>
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/13] dt-bindings: net: wireless: describe the ath12k
+ AHB module
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <ath12k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        Kalle Valo
+	<kvalo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Jeff Johnson
+	<jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
+ <20250130043508.1885026-2-quic_rajkbhag@quicinc.com>
+ <20250130-cunning-quail-of-opportunity-76d0ad@krzk-bin>
+ <104e6b6f-3c1e-4a00-8822-aa6fb4562411@kernel.org>
+ <a3c7b0e6-a440-4452-83a2-eb95de0de9bc@quicinc.com>
+ <7b57f8c8-7d0b-46f8-8364-a13860ab530e@kernel.org>
+Content-Language: en-US
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+In-Reply-To: <7b57f8c8-7d0b-46f8-8364-a13860ab530e@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: yJcKrWY2_aG_p9Gq0oZ-j5LSCDEeeCKR
+X-Proofpoint-ORIG-GUID: yJcKrWY2_aG_p9Gq0oZ-j5LSCDEeeCKR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_04,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 malwarescore=0
+ spamscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
+ adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502030080
 
+On 2/3/2025 3:35 PM, Krzysztof Kozlowski wrote:
+> On 03/02/2025 09:43, Raj Kumar Bhagat wrote:
+>> On 1/30/2025 2:10 PM, Krzysztof Kozlowski wrote:
+>>> On 30/01/2025 09:28, Krzysztof Kozlowski wrote:
+>>>> On Thu, Jan 30, 2025 at 10:04:56AM +0530, Raj Kumar Bhagat wrote:
+>>>>> Add device-tree bindings for the ATH12K module found in the IPQ5332
+>>>>> device.
+>>>>>
+>>>>> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+>>>>> ---
+>>>>>  .../net/wireless/qcom,ath12k-ahb.yaml         | 319 ++++++++++++++++++
+>>>>>  1 file changed, 319 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>>>>> new file mode 100644
+>>>>> index 000000000000..bd953a028dc3
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>>>>
+>>>> Filename should match compatible. This binding does not look like
+>>>> supporting more devices, so there is no much benefit calling it by generic name.
+>>>
+>>>
+>>> I saw now your other patchset, so you have here two devices, but I still
+>>> do not understand why this cannot follow standard naming practice like
+>>> most bindings supporting one or more devices. Like every review we give.
+>>>
+>>
+>> Sure, we can rename the filename to match the compatibles - "qcom,ipq5x-wifi.yaml".
+> 
+> No:
+> 
+>>>> Filename should match compatible.
+> 
+> 
 
---kd9VI+nPNDmTcI7L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> This is the start of the stable review cycle for the 6.13.1 release.
-> There are 25 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-
-CIP testing did not find any problems here:
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.13.y
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.12.y
-
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>
-
-Best regards,
-									Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---kd9VI+nPNDmTcI7L
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iFwEABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ6CZhwAKCRAw5/Bqldv6
-8tzRAJYpGK1aHcYpbt44DIEkOb+zAjDgAJ0bfZVE/bkbkHFwDXvDMl4HyyxT8w==
-=hQaF
------END PGP SIGNATURE-----
-
---kd9VI+nPNDmTcI7L--
+Ok, will rename to - "qcom,ipq5332-wifi.yaml"
