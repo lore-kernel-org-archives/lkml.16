@@ -1,111 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4774209F3E;
-	Mon,  3 Feb 2025 15:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EB92063C4
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:33:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738596815; cv=none; b=byA0YJ3uTds3BtauXGaJFYQJB9uc0X/ECmvsmDU7IR2G9aXN+SKi6e/NC55oa/VGkNafI+uN1Rnf7aQkRJ1RKz+vs9XnBnZMDRkq+3f7jV3UPQeFaXCQtav0EloUc8Pe/p6e0vINohNygQsYZympUgMsQGROhn/kR33J5ysTQKw=
+	t=1738596834; cv=none; b=o/EAElH+eN4i5EO5/MEGEulfasePMihbHoewKZLPEvOI6UFNjffPquQlL5wem/6MBXi+F0tjWGYKije0VXRW8TDw/TYY+vtyIhzBxoTW28JXNNMe9iqZ3j0fIxBSMYDfWCqrA6mFvx7dIIZ/ArCGEVGkURtYj7c4zuBypdl+zJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738596815; c=relaxed/simple;
-	bh=gtVOuXCAMtI7LKy/rbLT9nWF2AFUDwt76QYSAMwecU4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g4pDHHH36BiwPltQkwi877JcvkxBY6ly8Nc5kcYC49R6IHLFiSEmlZGuKLFrmiyL2/qoMlHVOavVMH26FES63lcT00WfS1LvGiIRTY26VqNjHTSUpXyGiWkGAmMr35EI/rwWZvYKfXX9JAHnuAWMeHe6L4vmwUjBbiC1DIT4FZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJdKS55g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738596834; c=relaxed/simple;
+	bh=1AMEL90TOYAiTq+wyZ9+Tqush4WsmqodawyJnoTLY5Y=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RVHCYj4aRyMg02ew6J/2X/ndbx1ON5/6SDDupyjwhVFrOoYUZ7LoRzTgP3afIOIUU7duCCt9L2kkbgky6rOq+pvCesQWBj3zXyBDtYX94DGTgEhkoge09BAPqQl+w2ky/jcSES+yO+63D3pOTD9gN6n1DXnKe9mPt7Elplsx9po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agTwQGhX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJdKS55g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 441B0C4CED2;
-	Mon,  3 Feb 2025 15:33:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agTwQGhX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD9F6C4CED2;
+	Mon,  3 Feb 2025 15:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738596815;
-	bh=gtVOuXCAMtI7LKy/rbLT9nWF2AFUDwt76QYSAMwecU4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nJdKS55gOxxPu6k1Sv2gFpVQgAlx1AQ4pOqCJKl/ZrPsohkp8vd1tH0LXowDqi08/
-	 bGebebipOjAUvXybk380YqEuL1GEyxJmSf2bhC62Eim5qREvsjhJUaeWcCX7CFEOtU
-	 MZIQU24Mcfu5mCD0WzJIqlDmQJz2xNaw3ATCMrsT9WdiBlRq4q9pJ7Y3CJXEADig81
-	 BMtC3tEDGhgD0DpAUDPpZzJPftyBv9mwc9RvR+05j3kvrXbgLYDVB+nMvSfDTPi9jV
-	 MCBFMi06TCfvVD7Le5dAsuZrKB3dfJXn8OL6hIOY89Ni5rtXb2quNKwAGPe3R2tW6m
-	 8b6VUNNmEZP6g==
-Message-ID: <af105a98-1dea-4dbc-af9f-078fd8eb7bb8@kernel.org>
-Date: Mon, 3 Feb 2025 16:33:27 +0100
+	s=k20201202; t=1738596834;
+	bh=1AMEL90TOYAiTq+wyZ9+Tqush4WsmqodawyJnoTLY5Y=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=agTwQGhXyE39J4X2qXtC6qzQG0GXRcmfDq7EvYDSRIDLznwnvxI4aubVD0DpFhtSn
+	 l7viQmzRItspd+UwHpdIllNI242e7TsPZRu6SVkwAgJJIPRpe5GEajdt+PB0EIHagb
+	 P7iHxcitpmN5w/Z4iIIIZIFNZWqpvo+XitifKURkboN0yG2uCHxRBr2IUZgpoiZzqP
+	 ZWKQfQJmUEO8VSthBJ2tpyzmzQaEo2Wzy7LdZSEv4teZDFh+2bJSBmk+NoDk0PaJsV
+	 laHiei6F+JyPO2CQE3V+3AgjicN39CW1qhxRV/7qxrnikCW/M7iMF5T5tUKkYSis37
+	 5mh20xK5N1suA==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Andreas Schwab <schwab@suse.de>, linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv/futex: sign extend compare value in atomic cmpxchg
+In-Reply-To: <mvmfrkv2vhz.fsf@suse.de>
+References: <mvmfrkv2vhz.fsf@suse.de>
+Date: Mon, 03 Feb 2025 16:33:50 +0100
+Message-ID: <87jza7oxep.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: display: ti: Fix compatible for am62a7 dss
-To: Devarsh Thakkar <devarsht@ti.com>, jyri.sarha@iki.fi,
- tomi.valkeinen@ideasonboard.com, airlied@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- dri-devel@lists.freedesktop.org, simona@ffwll.ch,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: praneeth@ti.com, vigneshr@ti.com, aradhya.bhatia@linux.dev,
- s-jain1@ti.com, r-donadkar@ti.com, j-choudhary@ti.com, h-shenoy@ti.com
-References: <20250203140323.1992920-1-devarsht@ti.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250203140323.1992920-1-devarsht@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 03/02/2025 15:03, Devarsh Thakkar wrote:
-> Fix compatible string for AM62A7 DSS.
+Andreas Schwab <schwab@suse.de> writes:
 
-Fix incorrect format of compatible string (comma instead of hyphen) for....
+> Make sure the compare value in the lr/sc loop is sign extended to match
+> what lr.w does.  Fortunately, due to the compiler keeping the register
+> contents sign extended anyway the lack of the explicit extension didn't
+> result in wrong code so far, but this cannot be relied upon.
+>
+> Fixes: b90edb33010b ("RISC-V: Add futex support.")
+> Signed-off-by: Andreas Schwab <schwab@suse.de>
 
-> s/ti,am62a7,dss/ti,am62a7-dss
-> 
-> Fixes: 7959ceb767e4 ("dt-bindings: display: ti: Add support for am62a7 dss")
-> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+Hmm, in this scenario we *can* rely on it, no (inline vs macro)?
+
+Regardless, having an explicit cast there doesn't hurt, and make it more
+obvious!
+
+Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+
+Let's add a link to Jessica's comment as well:
+Link: https://lore.kernel.org/linux-riscv/CC2D9220-F8DE-4CC8-ACAD-7B1A21E27=
+6FE@jrtc27.com/
+
 > ---
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
+>  arch/riscv/include/asm/futex.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/include/asm/futex.h b/arch/riscv/include/asm/fute=
+x.h
+> index fc8130f995c1..6907c456ac8c 100644
+> --- a/arch/riscv/include/asm/futex.h
+> +++ b/arch/riscv/include/asm/futex.h
+> @@ -93,7 +93,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *ua=
+ddr,
+>  		_ASM_EXTABLE_UACCESS_ERR(1b, 3b, %[r])	\
+>  		_ASM_EXTABLE_UACCESS_ERR(2b, 3b, %[r])	\
+>  	: [r] "+r" (ret), [v] "=3D&r" (val), [u] "+m" (*uaddr), [t] "=3D&r" (tm=
+p)
+> -	: [ov] "Jr" (oldval), [nv] "Jr" (newval)
+> +	: [ov] "Jr" ((long)(int)oldval), [nv] "Jr" (newval)
+>  	: "memory");
+>  	__disable_user_access();
+>=20=20
+> --=20
+> 2.48.1
+>
+>
+> --=20
+> Andreas Schwab, SUSE Labs, schwab@suse.de
+> GPG Key fingerprint =3D 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+> "And now for something completely different."
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
