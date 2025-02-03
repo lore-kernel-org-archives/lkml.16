@@ -1,204 +1,121 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC0220B7FB
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739D620B7FF
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738602384; cv=none; b=E1zQTBhyEbu5mX8EFoo3oDlvzPMsq0AnURobLkbmPkSp9+HXOmzX7PQAhTwYOYCeoIO685iEgwp+1Yrbvm1D8GkBrhh2qsQf4Ncd6vjm4gOi2fFfCSOS8Xj/iQ+SQ1VitK1BFaoA3kCchYQfIuyWagbUUzzF5qu4Z70G4k48vxQ=
+	t=1738602421; cv=none; b=hOqtruV00g3PFrlLNqdR2V/RhPQNY91M1l2I6Vi+5PUxFBd/oMRsdRCbx4tF+D1NCu2JgsHR27q0rEVB7ZM/a+pMs/9JqjJ3VPfyhPq/afODDc0aBuwa755qSVwTyDj2PnIgN81RTrXgxNoyAphBqLzQY33+ZA+dl/45BgS4kj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738602384; c=relaxed/simple;
-	bh=BrCxbpYcd+JnXrPkcfr6lCs/aTPwdnfGgVrzCmZxKnQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=m7Vk/vLb2RGpEGd6fnR+ye6Ky+JA8iWdEAzxaSErenfnlMF/Pkv7guHl8xhK+PIzSkMHL90xkEvdhA1cTumdKiwx5ZpC5OsCITkDVLQtQ4AV8/yMsHDGOde0XnKpen+n0zBgJYlQCRaHPu87zxWTfr0W6UXj8VZZAQd4XAwbCNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3a814bfb77bso37736865ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 09:06:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738602382; x=1739207182;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EvIJAMDztJTBQDqmwsIIAqNRRzmhnnKPFMl2MQnHWFs=;
-        b=KNip1E3Ni6/S3IhWpannK3J9aYhVDWKj4Jq3+PhlyVFNbmphtJ604EPepXsV5X/H9I
-         mYb74Jw0SMKNr7adtlY7IlEFEuIkHkEvVWM2NUYWTkchRQ5ctj1MCN9huL4aYTGDqJkw
-         yjcNGCo521yXO4b/EnK5Lc1+n3bykH23MNGstvJBqD5oTn9TU64yrVBOPvJ6rwmSIFcJ
-         u6nAfabifsNDIvX8O0WH8SXPZfbVgT2IS6qp3SY4KUpcDTufuPmM3P9nvwBerhZQ0zS5
-         t+k8HeyJOHP/Im7s+j7P1pMRrap9PNGGnt4xp5DmDO1CCe+qPIEyoPujs6gm1f2YudG+
-         O3Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUG/O8KGbiMabCL/3GPzaUew7lI6DN/3yIzDq8h6uOoFw+fNRrRLtwgztJ3+gQ5NqlHUSWFBwRMP+2jYw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+lK76e7T8mvVN+uNYPNCWtjLLewxfmnmSt8str/TmAF4gl+IO
-	VPqs4PuXalpKZwDxYGmd7UkXvImPnzRUXyb5T3xyuGcDITIhnGdU2BbwCWOauxWUXHrQRZWoHtP
-	g6nJRq9sclTKPSbEX+YkdEdcrnvsyHjkutBGvpys04LuOQRJSUQcBGjs=
-X-Google-Smtp-Source: AGHT+IFK9hAgpJhY7Jr0yXxf8XJkawng8GwmfeYpkqFFGFi7+/+QAD3e0sWxk3BAQvw4z/PjcMzqIARG48F19gP7ndd1WRd81iLh
+	s=arc-20240116; t=1738602421; c=relaxed/simple;
+	bh=EiQB0sYBQAho8pe6u94W/tfr8rXHV1YpEzUOZK+DVUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LcjBJELwLuQ1+M5TIsTnh1vL6Z8BDBWT+jjhIwkxx3kuLp0WYUtBwvR+pyZEaxYKX/pGSN+QVYxotuQmz9mArWcybgTybyZKYqlo382SaAj51Lo1gjMbXmPqSXmZpb8GWI3qtM6ATTOmb2IS+6rrQmeZKDEMtnGnqVKsI81Rf0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XmS7OigK; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XmS7OigK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738602420; x=1770138420;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EiQB0sYBQAho8pe6u94W/tfr8rXHV1YpEzUOZK+DVUo=;
+  b=XmS7OigKOJjwjvVfW9H1r0+bOSvjvolLjxxBY+YaT91TLDFDGtdsUt7z
+   6ybaJ+NLX7pejtrXT5MQrmiEKZW8QUsAZlXo2vaxIJGnkWRTytpI4pIQD
+   1rfkI/mvmADevukQeaUKqDa2bFz870/N6MVbtlecIH/RYOZYghzKi/Bpe
+   E7+iF7gszPdCtRQzRXdKzN2nNVF4CYNJHx6tx1KS6VhXnER7HClXSBSwU
+   xEQoWMGsQsDjNbxgl5gQdRUFex/p0pLGn7pXAq5rFUpZAOJE8pkhaX0z1
+   mP6lepLgzhrVxGeHhWhFn/LNNrsm+ibCo9ftFyY5TQvMjYlAkJtTxrUt+
+   g==;
+X-CSE-ConnectionGUID: 7Hc7uZEnR2iwZPC0RMAS9g==
+X-CSE-MsgGUID: cyWc//a/R82Z1+T1dvfqdA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="26706715"
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="26706715"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 09:06:57 -0800
+X-CSE-ConnectionGUID: ia0Qpw0DQfCrdKcIAo414Q==
+X-CSE-MsgGUID: HrHf0u6URWuyOeJPMYIroQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="110150579"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 03 Feb 2025 09:06:54 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tezuO-000rE7-0S;
+	Mon, 03 Feb 2025 17:06:52 +0000
+Date: Tue, 4 Feb 2025 01:06:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Charlie Jenkins <charlie@rivosinc.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Pasha Bouzarjomehri <pasha@rivosinc.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Charlie Jenkins <charlie@rivosinc.com>
+Subject: Re: [PATCH v4] riscv: Add runtime constant support
+Message-ID: <202502040018.8DyjnzNe-lkp@intel.com>
+References: <20250130-runtime_const_riscv-v4-1-2d36c41b7b9c@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:a0:b0:3cf:ba90:6ad9 with SMTP id
- e9e14a558f8ab-3d03f4fc490mr222185ab.9.1738602381964; Mon, 03 Feb 2025
- 09:06:21 -0800 (PST)
-Date: Mon, 03 Feb 2025 09:06:21 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a0f78d.050a0220.d7c5a.00a0.GAE@google.com>
-Subject: [syzbot] [hams?] BUG: soft lockup in rose_loopback_timer
-From: syzbot <syzbot+7ff41b5215f0c534534e@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250130-runtime_const_riscv-v4-1-2d36c41b7b9c@rivosinc.com>
 
-Hello,
+Hi Charlie,
 
-syzbot found the following issue on:
+kernel test robot noticed the following build errors:
 
-HEAD commit:    573067a5a685 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=1189ff30580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cd7202b56d469648
-dashboard link: https://syzkaller.appspot.com/bug?extid=7ff41b5215f0c534534e
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f4ffe8580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1663aadf980000
+[auto build test ERROR on ffd294d346d185b70e28b1a28abe367bbfe53c04]
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/9d3b5c855aa0/disk-573067a5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/0c06fc1ead83/vmlinux-573067a5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3390e59b9e4b/Image-573067a5.gz.xz
+url:    https://github.com/intel-lab-lkp/linux/commits/Charlie-Jenkins/riscv-Add-runtime-constant-support/20250131-092950
+base:   ffd294d346d185b70e28b1a28abe367bbfe53c04
+patch link:    https://lore.kernel.org/r/20250130-runtime_const_riscv-v4-1-2d36c41b7b9c%40rivosinc.com
+patch subject: [PATCH v4] riscv: Add runtime constant support
+config: riscv-randconfig-002-20250203 (https://download.01.org/0day-ci/archive/20250204/202502040018.8DyjnzNe-lkp@intel.com/config)
+compiler: riscv32-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250204/202502040018.8DyjnzNe-lkp@intel.com/reproduce)
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7ff41b5215f0c534534e@syzkaller.appspotmail.com
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502040018.8DyjnzNe-lkp@intel.com/
 
-watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:0]
-Modules linked in:
-irq event stamp: 232963
-hardirqs last  enabled at (232962): [<ffff80008b69c960>] __el1_irq arch/arm64/kernel/entry-common.c:565 [inline]
-hardirqs last  enabled at (232962): [<ffff80008b69c960>] el1_interrupt+0x58/0x68 arch/arm64/kernel/entry-common.c:575
-hardirqs last disabled at (232963): [<ffff80008b69c92c>] __el1_irq arch/arm64/kernel/entry-common.c:557 [inline]
-hardirqs last disabled at (232963): [<ffff80008b69c92c>] el1_interrupt+0x24/0x68 arch/arm64/kernel/entry-common.c:575
-softirqs last  enabled at (228290): [<ffff80008030e7b4>] softirq_handle_end kernel/softirq.c:407 [inline]
-softirqs last  enabled at (228290): [<ffff80008030e7b4>] handle_softirqs+0xb44/0xd34 kernel/softirq.c:589
-softirqs last disabled at (228401): [<ffff800080020db4>] __do_softirq+0x14/0x20 kernel/softirq.c:595
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.13.0-rc3-syzkaller-g573067a5a685 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-pstate: 40400005 (nZcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : preempt_count arch/arm64/include/asm/preempt.h:13 [inline]
-pc : in_softirq_really kernel/kcov.c:171 [inline]
-pc : check_kcov_mode kernel/kcov.c:183 [inline]
-pc : write_comp_data kernel/kcov.c:246 [inline]
-pc : __sanitizer_cov_trace_cmp4+0x38/0xa0 kernel/kcov.c:288
-lr : rose_find_socket+0x7c/0x130 net/rose/af_rose.c:309
-sp : ffff800080007b60
-x29: ffff800080007b70 x28: 1ffff00012f27be0 x27: 0000000000000000
-x26: 00000000000003e7 x25: dfff800000000000 x24: 0000000000000033
-x23: dfff800000000000 x22: 0000000000000000 x21: ffff0000c2c8e000
-x20: 0000000000000033 x19: ffff0000d2670400 x18: ffff800080007840
-x17: 0000000000015d97 x16: ffff80008069d55c x15: ffff700010000f54
-x14: 1ffff00010000f54 x13: 0000000000000004 x12: ffffffffffffffff
-x11: ffff700010000f54 x10: 0000000000ff0100 x9 : 0000000000000302
-x8 : ffff80008f9c67c0 x7 : 0000000000000000 x6 : 0000000000000000
-x5 : ffff8000935a9f90 x4 : 0000000000000008 x3 : ffff80008047cdcc
-x2 : 0000000000000001 x1 : 0000000000000033 x0 : 0000000000000000
-Call trace:
- in_softirq_really kernel/kcov.c:171 [inline] (P)
- check_kcov_mode kernel/kcov.c:183 [inline] (P)
- write_comp_data kernel/kcov.c:246 [inline] (P)
- __sanitizer_cov_trace_cmp4+0x38/0xa0 kernel/kcov.c:288 (P)
- rose_loopback_timer+0x1bc/0x4bc net/rose/rose_loopback.c:91
- call_timer_fn+0x1b4/0x8b8 kernel/time/timer.c:1793
- expire_timers kernel/time/timer.c:1844 [inline]
- __run_timers kernel/time/timer.c:2418 [inline]
- __run_timer_base+0x56c/0x7b4 kernel/time/timer.c:2430
- run_timer_base kernel/time/timer.c:2439 [inline]
- run_timer_softirq+0xcc/0x194 kernel/time/timer.c:2449
- handle_softirqs+0x320/0xd34 kernel/softirq.c:561
- __do_softirq+0x14/0x20 kernel/softirq.c:595
- ____do_softirq+0x14/0x20 arch/arm64/kernel/irq.c:81
- call_on_irq_stack+0x24/0x4c arch/arm64/kernel/entry.S:891
- do_softirq_own_stack+0x20/0x2c arch/arm64/kernel/irq.c:86
- invoke_softirq kernel/softirq.c:442 [inline]
- __irq_exit_rcu+0x1d8/0x544 kernel/softirq.c:662
- irq_exit_rcu+0x14/0x84 kernel/softirq.c:678
- __el1_irq arch/arm64/kernel/entry-common.c:561 [inline]
- el1_interrupt+0x38/0x68 arch/arm64/kernel/entry-common.c:575
- el1h_64_irq_handler+0x18/0x24 arch/arm64/kernel/entry-common.c:580
- el1h_64_irq+0x6c/0x70 arch/arm64/kernel/entry.S:596
- __daif_local_irq_enable arch/arm64/include/asm/irqflags.h:26 [inline] (P)
- arch_local_irq_enable+0x8/0xc arch/arm64/include/asm/irqflags.h:48 (P)
- cpuidle_idle_call kernel/sched/idle.c:185 [inline]
- do_idle+0x1ec/0x4e0 kernel/sched/idle.c:325
- cpu_startup_entry+0x5c/0x74 kernel/sched/idle.c:423
- rest_init+0x2dc/0x2f4 init/main.c:747
- start_kernel+0x3f4/0x4f4 init/main.c:1102
- __primary_switched+0x8c/0x94 arch/arm64/kernel/head.S:246
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 6586 Comm: syz-executor306 Not tainted 6.13.0-rc3-syzkaller-g573067a5a685 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-pstate: 00400005 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : queued_spin_lock_slowpath+0x15c/0xd04 kernel/locking/qspinlock.c:380
-lr : queued_spin_lock_slowpath+0x168/0xd04 kernel/locking/qspinlock.c:380
-sp : ffff8000a3887920
-x29: ffff8000a38879e0 x28: 1ffff00012545d44 x27: dfff800000000000
-x26: 1ffff00014710f50 x25: ffff8000a3887960 x24: dfff800000000000
-x23: ffff8000a38879a0 x22: ffff700014710f2c x21: 0000000000000001
-x20: 1ffff00014710f34 x19: ffff800092a2ea20 x18: 0000000000000000
-x17: 0000000000000000 x16: ffff800080bf1494 x15: 0000000000000001
-x14: 1ffff00012545d44 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff700012545d45 x10: 1ffff00012545d44 x9 : 0000000000000000
-x8 : 0000000000000001 x7 : ffff80008a73b3a4 x6 : 0000000000000000
-x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff80008b6c1928
-x2 : 0000000000000000 x1 : 0000000000000001 x0 : 0000000000000001
-Call trace:
- __cmpwait_case_8 arch/arm64/include/asm/cmpxchg.h:229 [inline] (P)
- __cmpwait arch/arm64/include/asm/cmpxchg.h:257 [inline] (P)
- queued_spin_lock_slowpath+0x15c/0xd04 kernel/locking/qspinlock.c:380 (P)
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- do_raw_spin_lock+0x2ec/0x334 kernel/locking/spinlock_debug.c:116
- __raw_spin_lock_bh include/linux/spinlock_api_smp.h:127 [inline]
- _raw_spin_lock_bh+0x50/0x60 kernel/locking/spinlock.c:178
- spin_lock_bh include/linux/spinlock.h:356 [inline]
- rose_insert_socket+0x2c/0x15c net/rose/af_rose.c:261
- rose_bind+0x490/0x640 net/rose/af_rose.c:753
- __sys_bind_socket net/socket.c:1827 [inline]
- __sys_bind+0x1ac/0x248 net/socket.c:1858
- __do_sys_bind net/socket.c:1863 [inline]
- __se_sys_bind net/socket.c:1861 [inline]
- __arm64_sys_bind+0x7c/0x94 net/socket.c:1861
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
- el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+All errors (new ones prefixed by >>):
+
+   In file included from fs/dcache.c:38:
+   arch/riscv/include/asm/runtime-const.h: In function '__runtime_fixup_ptr':
+   arch/riscv/include/asm/runtime-const.h:167:63: warning: right shift count >= width of type [-Wshift-count-overflow]
+     167 |                 __runtime_fixup_32(where + 4, where + 12, val >> 32);
+         |                                                               ^~
+   fs/dcache.c: In function 'd_hash':
+   arch/riscv/include/asm/runtime-const.h:13:28: warning: unused variable '__tmp' [-Wunused-variable]
+      13 |         typeof(sym) __ret, __tmp;                               \
+         |                            ^~~~~
+   fs/dcache.c:112:16: note: in expansion of macro 'runtime_const_ptr'
+     112 |         return runtime_const_ptr(dentry_hashtable) +
+         |                ^~~~~~~~~~~~~~~~~
+   fs/dcache.c: Assembler messages:
+>> fs/dcache.c:116: Error: illegal operands `addi a0,-0x211'
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+vim +116 fs/dcache.c
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ceb5bdc2d246f6 Nicholas Piggin 2011-01-07  115  
+94bdd655caba20 Al Viro         2016-04-15 @116  #define IN_LOOKUP_SHIFT 10
+94bdd655caba20 Al Viro         2016-04-15  117  static struct hlist_bl_head in_lookup_hashtable[1 << IN_LOOKUP_SHIFT];
+94bdd655caba20 Al Viro         2016-04-15  118  
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
