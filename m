@@ -1,144 +1,352 @@
-Received: from fallback21.i.mail.ru (fallback21.i.mail.ru [79.137.243.75])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4EF1D618C;
-	Mon,  3 Feb 2025 11:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7DC1D618C;
+	Mon,  3 Feb 2025 11:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738582767; cv=none; b=fcEXNFKanPoEcYhxyvi60zlyWm+ZPXJuNKJvRm9CcRMRf1fVbN9AMFF1jlcg19HEjB3VQ8BcBCiko1kmk45qdyfZ7uE1lyXnTGWwIH5KnnnnTxMWfqpxNrV90irK40MnsgKEqs3g9am7LoDZKDgstmBbV+KLNZpQpXOBJDpBSFE=
+	t=1738582814; cv=none; b=jk5iQxcRgIl7dji18c4Zjwnoi551K1N1StUg2NPaJzHqCobPeLsLqjw+psiXmQ//TJwng1+tCvoxS4ERlfwyhfa4xLeaZ85Vz7cPifzxZDP5kVezf2N+10xahTD3WmWwQfGBPtQIQCpCISaxNfo2pzOMJPmpD38R+CD5y/ZvQNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738582767; c=relaxed/simple;
-	bh=uzQm9lr7G9aVprngTlgi2l/rsm9lHbu1PrevEWYOewQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MiEpafRoVjMLyUYbEW443p8O+zHYV+t311+hOWZTslziOF8J7mwhoKRBpcjKb5qBvx8Q9TDiZ8BZciVetucsxBV9P8Ln4I72L7wmILT3s1wdCKDY6xBAuFxb3Fs50RlFOCXf2j120J5wU9YdOrZhNHHfMhzASg9TjuZqhWkrm4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=ywqLbPUa; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=UdLSfGZx; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=q2sjpkAc; arc=none smtp.client-ip=79.137.243.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+	s=arc-20240116; t=1738582814; c=relaxed/simple;
+	bh=3zNzo18yRoE57C14OAbpkC4c+wCaWI0bwb/UU0LPgw4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IKtIVpQlLQN3bDuIV+iWks9MVptoX85PkyGkGPzPDsWgHJTVKNq1OlwVfdF4ztQ5N9ls1SP8NoxoEVxWbQZtvUGMVUhKFMgBFiljwYwlKMEStSHtGvh2PdkpqC8OvX8eZtVQ5rCz2kvCMrqx9p6UjEoOEuARvHlezptl9AWlQ40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iD2ogGxn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="ywqLbPUa";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="UdLSfGZx";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="q2sjpkAc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
-	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=LtgUQF6/DA3JmlXx/khljgwyBzY4Mpa3OgoQtWy2VrE=;
-	t=1738582765;x=1738672765; 
-	b=ywqLbPUazEuC4mPMCAfwheHEq69X/1rSZZ0/v3iaQcaQUnAxDw+VvNi9dBnkoGvRr/faiPjoOtDrtrP9MOwnGW8s6Wb499rP6oBsQwRmZ9GVUxNNQZG9fpeJMSALASAIDrl2Uq7DLMKDmfBdQwC0eg1UVfWQg6Y7rOiwlWTYFDA=;
-Received: from [10.113.100.239] (port=50834 helo=send54.i.mail.ru)
-	by fallback21.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1teunT-0067SV-4G; Mon, 03 Feb 2025 14:39:23 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive:X-Cloud-Ids;
-	bh=LtgUQF6/DA3JmlXx/khljgwyBzY4Mpa3OgoQtWy2VrE=; t=1738582763; x=1738672763; 
-	b=UdLSfGZxyC0HcUX7uPs9IbC+brdE6x8Zkp7i2rGHm0VViv8VcG2RrEvPLp6OMU5xDTJuHhieT6e
-	0JA4WxQwfjNhjUmY6JeupkTcC/LAY75D3aX8fP+XAgAnztRzfMPrsR8TZoYKQfSjgyfOpAQb/u3W2
-	n5RBPU0Aq1TwctEfGTQ=;
-Received: from [10.113.187.12] (port=51480 helo=send127.i.mail.ru)
-	by exim-fallback-5fbdbdcb77-mqqb9 with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1teunK-00000000K3N-1BE8; Mon, 03 Feb 2025 14:39:14 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=LtgUQF6/DA3JmlXx/khljgwyBzY4Mpa3OgoQtWy2VrE=; t=1738582754; x=1738672754; 
-	b=q2sjpkAcNp4lqRPOrmhnfHF47xZ6PtBKXU+56eiBjmk49B1xIIERiRDARvNznfBk0su3U9PYEzz
-	1mWEXCJfjf3Yz4CI0MqysNbkwrqQqNRckQzEfhaJNu6t8ksZVeo4HzoFdurOkI9sVbgj1VPNJs40c
-	5bakeGCwoWXwCClSEsA=;
-Received: by exim-smtp-6d97ff8cf4-rrm92 with esmtpa (envelope-from <danila@jiaxyga.com>)
-	id 1teun5-00000000DTK-2ZMn; Mon, 03 Feb 2025 14:39:00 +0300
-From: Danila Tikhonov <danila@jiaxyga.com>
-To: srinivas.kandagatla@linaro.org,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@mainlining.org,
-	~postmarketos/upstreaming@lists.sr.ht,
-	Danila Tikhonov <danila@jiaxyga.com>
-Subject: [PATCH] ASoC: qcom: sc8280xp: enable primary mi2s
-Date: Mon,  3 Feb 2025 14:38:57 +0300
-Message-ID: <20250203113857.34728-1-danila@jiaxyga.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iD2ogGxn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E33AC4CED2;
+	Mon,  3 Feb 2025 11:40:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738582814;
+	bh=3zNzo18yRoE57C14OAbpkC4c+wCaWI0bwb/UU0LPgw4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iD2ogGxnKC63VuHqOZ/uyXqUB/xOG3jHYDQDLFXMJgoQ7K9F+tr1yufOsmnsP/WUN
+	 Fb2IexyI/M+euld1Bmg2DUwc3ean2SR6CQiHq1eADZ75TG5H5dPnzw64fluIt7+I2R
+	 7kb5xBlh7GFgDzkg9C7CxF9vuvJe/wZiJDBZnM7HoXjklnx0g0BlTsU2xF4dF5iYEd
+	 NWWebpDbMlWgHY0ti3zF4peV0+DU8azC7EzM8CLNzIWAYheouf2KfkskYHojX9d1+L
+	 yzyN1x+q+kYwqGjM9G3Sj9jKNQQytJt/GSzeQFP4Fr3HuMf7i3ZKGI8Kr/ZELMqt2T
+	 NppNMm+OO9IHQ==
+Message-ID: <6a639549-f8c8-4e36-8cfe-839f247780bb@kernel.org>
+Date: Mon, 3 Feb 2025 12:40:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-7564579A: EEAE043A70213CC8
-X-77F55803: 4F1203BC0FB41BD9279F651DE5037A50CB9835DFB12218DF141C43C6B1DC11281313CFAB8367EF908E2BE116634AD74D9DAF345B830A31CEAC8EDD30083ED68EA8B434D654C51975D2A8E994D559ECF14DF7BC4678047644
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE796AEF990C7BF66FEEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063716A4A39B750036BB8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8473FBC76134777A80AFA6CDB8F0FBF6A1C463966C30DF1DACC7F00164DA146DAFE8445B8C89999728AA50765F790063783E00425F71A4181389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8D2DCF9CF1F528DBCF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947CDA7BFA4571439BB2C0837EA9F3D197644AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C3E43D663FACA9F152BA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CF3D321E7403792E342EB15956EA79C166A417C69337E82CC275ECD9A6C639B01B78DA827A17800CE78DD9044B304389D4731C566533BA786AA5CC5B56E945C8DA
-X-C1DE0DAB: 0D63561A33F958A5C0A99AB6759B11E45002B1117B3ED696A12BBD6F12FE8FE854BB1175C6E7DD94823CB91A9FED034534781492E4B8EEAD4ADCFBF7921B375DC79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFC00CDE29973320DC63417E4FF87B1FC5A53A05AE1163B07BAA20AD324B7BB95D5C1052AD1686EE73D5D9813428A63F6CF719D10C52FB165BA2F385568FAC22F01FCBDEFD0A89EA51AF108DC32EA72A8402C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojODHyJtLJ2QgLTjYPv2Tk5w==
-X-Mailru-Sender: 9EB879F2C80682A0D0AE6A344B45275F0A64072CE9418C59AC4385294E02B5FB575A762C2041BEEA07ED6260DC71E4C12C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-Mailru-Src: fallback
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B4A84B4964F946E17EB1A91FC540E416C1BDB3A1FA17F234B6049FFFDB7839CE9E5FC588583EA33AA135E0A86D076A310E070ACABD80DF30C8865C3644565E8059E1ED26BD90F949EF
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5+wYjsrrSY/u6NqYXWMR0/V85CnFjCYTu9APdQH0PvpnP5qz8aO2mjTJzjHGC4ogvVuzB3zfVUBtENeZ6b5av1fnCBE34JUDkWdM6QxE+Ga5d8voMtmXfSrl3vZ7XAIcHbRFuIOw5Q1i
-X-Mras: Ok
-X-7564579A: B8F34718100C35BD
-X-77F55803: 6242723A09DB00B4A84B4964F946E17EB1A91FC540E416C11582D74B19986F8F049FFFDB7839CE9E5FC588583EA33AA1CA8BF9D109371751F8F55B56E9ABC05A53C643781AA89585
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5+wYjsrrSY/u6NqYXWMR0/V85CnFjCYTu9APdQH0PvpnP5qz8aO2mjTJzjHGC4ogvVuzB3zfVUBtENeZ6b5av1fnCBE34JUDkWdM6QxE+Ga5d8voMtmXfSpPtEiBfN5W1tyqHyU9iLcO
-X-Mailru-MI: 20000000000000800
-X-Mras: Ok
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/9] dt-bindings: memory-controllers: Add STM32 Octo
+ Memory Manager controller
+To: Patrice CHOTARD <patrice.chotard@foss.st.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ christophe.kerello@foss.st.com
+References: <20250128081731.2284457-1-patrice.chotard@foss.st.com>
+ <20250128081731.2284457-4-patrice.chotard@foss.st.com>
+ <20250129-hilarious-glittering-mustang-fb5471@krzk-bin>
+ <3660580d-72eb-45ca-8240-55557e334e37@foss.st.com>
+ <951e4d16-2bb2-44b1-99e7-dd28349f20aa@kernel.org>
+ <02b947e3-dd5c-4ee8-bd65-5775923fe33f@foss.st.com>
+ <899675e8-4c2e-4ff2-a6af-854e0ec29bb6@kernel.org>
+ <6ed4fa56-e7ee-4b6b-951b-61a92be5c6c2@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <6ed4fa56-e7ee-4b6b-951b-61a92be5c6c2@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When using primary mi2s on sc8280xp-compatible SoCs, the correct clock
-needs to get enabled to be able to use the mi2s interface.
+On 03/02/2025 11:46, Patrice CHOTARD wrote:
+> 
+> 
+> On 1/30/25 16:09, Krzysztof Kozlowski wrote:
+>> On 30/01/2025 14:32, Patrice CHOTARD wrote:
+>>>
+>>>
+>>> On 1/30/25 13:12, Krzysztof Kozlowski wrote:
+>>>> On 30/01/2025 09:57, Patrice CHOTARD wrote:
+>>>>>
+>>>>>
+>>>>> On 1/29/25 08:52, Krzysztof Kozlowski wrote:
+>>>>>> On Tue, Jan 28, 2025 at 09:17:25AM +0100, patrice.chotard@foss.st.com wrote:
+>>>>>>> From: Patrice Chotard <patrice.chotard@foss.st.com>
+>>>>>>>
+>>>>>>> Add bindings for STM32 Octo Memory Manager (OMM) controller.
+>>>>>>>
+>>>>>>> OMM manages:
+>>>>>>>   - the muxing between 2 OSPI busses and 2 output ports.
+>>>>>>>     There are 4 possible muxing configurations:
+>>>>>>>       - direct mode (no multiplexing): OSPI1 output is on port 1 and OSPI2
+>>>>>>>         output is on port 2
+>>>>>>>       - OSPI1 and OSPI2 are multiplexed over the same output port 1
+>>>>>>>       - swapped mode (no multiplexing), OSPI1 output is on port 2,
+>>>>>>>         OSPI2 output is on port 1
+>>>>>>>       - OSPI1 and OSPI2 are multiplexed over the same output port 2
+>>>>>>>   - the split of the memory area shared between the 2 OSPI instances.
+>>>>>>>   - chip select selection override.
+>>>>>>>   - the time between 2 transactions in multiplexed mode.
+>>>>>>>
+>>>>>>> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+>>>>>>> ---
+>>>>>>>  .../memory-controllers/st,stm32-omm.yaml      | 190 ++++++++++++++++++
+>>>>>>>  1 file changed, 190 insertions(+)
+>>>>>>>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml b/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
+>>>>>>> new file mode 100644
+>>>>>>> index 000000000000..7e0b150e0005
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
+>>>>>>
+>>>>>>
+>>>>>> Filename as compatible, so st,stm32mp25-omm.yaml
+>>>>>>
+>>>>>> You already received this comment.
+>>>>>
+>>>>> Sorry, i missed this update
+>>>>>
+>>>>>>
+>>>>>>> @@ -0,0 +1,190 @@
+>>>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>>>>> +%YAML 1.2
+>>>>>>> +---
+>>>>>>> +$id: http://devicetree.org/schemas/memory-controllers/st,stm32-omm.yaml#
+>>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>>>> +
+>>>>>>> +title: STM32 Octo Memory Manager (OMM)
+>>>>>>> +
+>>>>>>> +maintainers:
+>>>>>>> +  - Patrice Chotard <patrice.chotard@foss.st.com>
+>>>>>>> +
+>>>>>>> +description: |
+>>>>>>> +  The STM32 Octo Memory Manager is a low-level interface that enables an
+>>>>>>> +  efficient OCTOSPI pin assignment with a full I/O matrix (before alternate
+>>>>>>> +  function map) and multiplex of single/dual/quad/octal 		SPI interfaces over
+>>>>>>> +  the same bus. It Supports up to:
+>>>>>>> +    - Two single/dual/quad/octal SPI interfaces
+>>>>>>> +    - Two ports for pin assignment
+>>>>>>> +
+>>>>>>> +properties:
+>>>>>>> +  compatible:
+>>>>>>> +    const: st,stm32mp25-omm
+>>>>>>> +
+>>>>>>> +  "#address-cells":
+>>>>>>> +    const: 2
+>>>>>>> +
+>>>>>>> +  "#size-cells":
+>>>>>>> +    const: 1
+>>>>>>> +
+>>>>>>> +  ranges:
+>>>>>>> +    description: |
+>>>>>>> +      Reflects the memory layout with four integer values per OSPI instance.
+>>>>>>> +      Format:
+>>>>>>> +      <chip-select> 0 <registers base address> <size>
+>>>>>>
+>>>>>> Do you always have two children? If so, this should have maxItems.
+>>>>>
+>>>>> No, we can have one child.
+>>>>
+>>>> For the same SoC? How? You put the spi@ in the soc, so I don't
+>>>> understand how one child is possible.
+>>>
+>>> Yes for the same SoC, in DTSI file, the both OCTOSPI child are declared 
+>>> but are disabled by default.
+>>
+>> But the child node is there anyway so are the ranges.
+> 
+> if both child are disabled, omm-manager should be disabled as well, 
+> omm-manager alone makes no sense.
 
-Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
----
- sound/soc/qcom/sc8280xp.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
 
-diff --git a/sound/soc/qcom/sc8280xp.c b/sound/soc/qcom/sc8280xp.c
-index 311377317176..03687de1ebb0 100644
---- a/sound/soc/qcom/sc8280xp.c
-+++ b/sound/soc/qcom/sc8280xp.c
-@@ -14,6 +14,8 @@
- #include "common.h"
- #include "sdw.h"
- 
-+#define MI2S_BCLK_RATE	1536000
-+
- struct sc8280xp_snd_data {
- 	bool stream_prepared[AFE_PORT_MAX];
- 	struct snd_soc_card *card;
-@@ -25,13 +27,24 @@ struct sc8280xp_snd_data {
- 
- static int sc8280xp_snd_init(struct snd_soc_pcm_runtime *rtd)
- {
-+	unsigned int codec_dai_fmt = SND_SOC_DAIFMT_BC_FC;
-+	unsigned int fmt = SND_SOC_DAIFMT_BP_FP;
- 	struct sc8280xp_snd_data *data = snd_soc_card_get_drvdata(rtd->card);
-+	struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
- 	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
- 	struct snd_soc_card *card = rtd->card;
- 	struct snd_soc_jack *dp_jack  = NULL;
- 	int dp_pcm_id = 0;
- 
- 	switch (cpu_dai->id) {
-+	case PRIMARY_MI2S_RX:
-+		codec_dai_fmt |= SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_I2S;
-+		snd_soc_dai_set_sysclk(cpu_dai,
-+			Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT,
-+			MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
-+		snd_soc_dai_set_fmt(cpu_dai, fmt);
-+		snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
-+		break;
- 	case WSA_CODEC_DMA_RX_0:
- 	case WSA_CODEC_DMA_RX_1:
- 		/*
--- 
-2.48.1
+Yes, it is obvious, but how is this related?
 
+> 
+>>
+>>>
+>>> In the DTS board file, 0,1 or 2 OCTOSPI instance can be enabled depending of the board design.
+>>>
+>>> In our case, on stm32mp257f-ev1 board, one SPI-NOR is soldered on PCB, so only one OCTOSPI 
+>>> instance is needed and enabled.
+>>>
+>>> Internally we got validation boards with several memory devices connected to OCTOSPI1 and 
+>>> OCTOSPI2, in this case, both OCTOSPI instance are needed and enabled.
+>>
+>> I could imagine that you would not want to have unused reserved ranges,
+>> so that one indeed is flexible, I agree.
+>>
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>>> +
+>>>>>>> +  reg:
+>>>>>>> +    items:
+>>>>>>> +      - description: OMM registers
+>>>>>>> +      - description: OMM memory map area
+>>>>>>> +
+>>>>>>> +  reg-names:
+>>>>>>> +    items:
+>>>>>>> +      - const: regs
+>>>>>>> +      - const: memory_map
+>>>>>>> +
+>>>>>>> +  memory-region:
+>>>>>>> +    description: Phandle to node describing memory-map region to used.
+>>>>>>> +    minItems: 1
+>>>>>>> +    maxItems: 2
+>>>>>>
+>>>>>> List the items with description instead with optional minItems. Why is
+>>>>>> this flexible in number of items?
+>>>>>
+>>>>> If only one child (OCTOSPI instance), only one memory-region is needed.
+>>>>
+>>>> Which is not possible... look at your DTSI.
+>>>
+>>> It's possible. if one OCTOSPI is used (the second one is kept disabled), only
+>>> one memory-region is needed.
+>>
+>> Ack.
+>>
+>>>
+>>>>
+>>>>>
+>>>>> Another update, i will reintroduce "memory-region-names:" which was 
+>>>>> wrongly removed in V2, i have forgotten one particular case.
+>>>>>
+>>>>> We need memory-region-names in case only one OCTOSPI instance is 
+>>>>> used. If it's OCTOCPI2 and the whole memory-map region
+>>>>> is dedicated to OCTOSPI2 (OCTOSPI1 unmapped, OCTOSPI2 (256 Mbytes)
+>>>>>
+>>>>> We need to know to which OCTOSPI instance the memory region is associated
+>>>>> with, in order to check "st,syscfg-amcr" 's value which must be coherent 
+>>>>> with memory region declared.
+>>>>>
+>>>>> so i will add :
+>>>>>
+>>>>>   memory-region-names:
+>>>>>     description: |
+>>>>>       OCTOSPI instance's name to which memory region is associated
+>>>>>     items:
+>>>>>       - const: ospi1
+>>>>>       - const: ospi2
+>>>>>
+>>>>
+>>>> I don't think this matches what you are saying to us. Let's talk about
+>>>> the hardware which is directly represented by DTS/DTSI. You always have
+>>>> two instances.
+>>>>
+>>>>
+>>>
+>>> We have 2 instances, but both not always enabled.
+>>> In case only one is enabled, only one memory-region-names is needed.
+>>>
+>>> We must know to which OCTCOSPI the memory-region makes reference to, in order
+>>> to configure and/or check the memory region split configuration. That' swhy 
+>>> the memory-regions-names must specify if it's the OCTOSPI1 or OCTOSPI2 instance.
+>>
+>> Well, in that case two comments.
+>> 1. Above syntax does not allow you to skip one item. You would need:
+>> items:
+>>   enum: [ospi1, ospi2]
+>> minItems: 1
+>> maxItems: 2
+>>
+> 
+> ok
+> 
+>> 2. But this points to other problem. From the omm-manager node point of
+>> view, you should define all the resources regardless whether the child
+>> is enabled or not. You do not skip some part of 'reg' if child is
+>> missing. Do not skip interrupts, access controllers, clocks etc.
+>> If some resource is to be skipped, it means that it belongs to the
+>> child, not to the parent, IMO.
+> 
+> I didn't get your point. 
+> 
+> The resource declared in omm-manager's node pnly belongs to omm-manager
+> (reg/clocks/resets/access-controllers/st,syscfg-amcr/power-domains), regardless 
+> there are 1 or 2 children. None of them can be skipped.
+
+That's not true, you skip ranges and memory region.
+
+> 
+> If omm-manager has no child enabled, omm-manager must be disabled as well in DT.
+
+That's not what we talk about. We do not talk about enabled or disabled.
+We talk about being there in the first place.
+
+> 
+>> Therefore memory-region looks like child's property.
+>>
+>> Imagine different case: runtime loaded overlay. In your setup, you probe
+>> omm-manager with one memory-region and one child. Then someone loads
+>> overlay enabling the second child, second SPI.
+>>
+>> That's of course imaginary case, but shows the concept how the parent
+>> would work.
+>>
+>> It's the same with other buses in the kernel. You can load overlay with
+>> any new child and the parent should not get new properties.
+>>
+> 
+> In case of runtime loaded overlay, if a second child is added with an associated 
+> memory-region, omm-manager must be unbind/bind to :
+>   _ check the added child's access rights.
+>   _ take into account the added child's memory-region configuration (to set 
+>     the syscfg-amcr register accordingly) 
+
+That's driver part, we talk about bindings and DTS.
+
+
+
+Best regards,
+Krzysztof
