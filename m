@@ -1,176 +1,136 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9DE1FBE89;
-	Mon,  3 Feb 2025 10:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98C178F49;
+	Mon,  3 Feb 2025 10:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738577119; cv=none; b=YmHeTJrI6sC/vK8xKfuBRh/EFI9HTZBLc47qirWrk2bJygzhVnB2aUQRXv0R7QgvzgwCPXP4cyrKlJqsfeC1+0se18//YeDT9ES0jTBWT3tzSZIBueuLZpf8QOC8vl5/Y3RJORUzFyWrDWYGqRyipeJa8iyDnjzQ4ugD7ptyd74=
+	t=1738577162; cv=none; b=UpsHqGFApUx5dxFboeSGG8UKM4GgkIm909YqMJtpSQXeAXIKsQcI6I2QmkONGuBgDBX7NuYTXifnbFAS7ZGA3dD3Rw9SwKNXAlMtWIW7toQTrnLLFAXvfNhftmRMwbJAh+wB13So94Jvw0qeWQbs4GDPVMYfUgTEuk9CnGu4e1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738577119; c=relaxed/simple;
-	bh=3HHG+wimANz9PCn4LqlAg/P/yA1akIgyINNXDfylSfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=flkhaYHg795V0cRRzg8XJVzbJT87TD9JI23K3LIAz2SMByynoTKAQuNB1gKGhbMeN1j98rWreVKnvyHd+s0ySwYWVn2PDP8dFAC33FXFWeQKil2UGCSZ9Xcg/s+BkgJ+ZafAZhSGT/9m2xd9viZMDhGJ8RHqdfk2rxB9z+qazr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=UzAOEhaJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ncrkRvQ0; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	s=arc-20240116; t=1738577162; c=relaxed/simple;
+	bh=0LAer1+VCPuEwTxq68r3aBJGH3VUj8GQfN5OepHe5cg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fv4FmQWo+TdL3TEM0/cT8tkyyuYWObUm22hQdXw+Bgdd8Lxu05YxIdmjcTuB5p78C2/79EXxxQ+/w7Po8yiYtk4itXW2ks2C1kNIemexpXvrKrM7yQL38PKaFhdj/1vnq8Q3llmSuEbONDaj80rCWu0uUlbP87m9b2zD38lVqtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1W9GlEL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="UzAOEhaJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ncrkRvQ0"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 88FC111400A2;
-	Mon,  3 Feb 2025 05:05:15 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Mon, 03 Feb 2025 05:05:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1738577115; x=
-	1738663515; bh=wiAtp5B6f/uLxzPGB/aY07G4Vjh7/bji9bknfJtXxs0=; b=U
-	zAOEhaJRcQvSEB5oNhR79kQgGXPBh7qV3p/JB/GDI6SS6puuJPg6fLYCK+Qwz20q
-	nxQ17bsZIf7saqNKH7ZuNx2Up3jkFMf2VDcNqubo3ufWy4Ymd8oHB7eUj5gJFS1u
-	SBlWvcOGHl9AfJ2fRowZ9E0W4SDeSLc9npC6vHUe1cL20VbrR+l/vUCHFMfzTa0V
-	r92I7XL+S0CE3ZmFrIKfmuitxlVau8PnBU1BAs+wSvKKch02Xl7pJI+EDbS1K3jd
-	wvZIq+twClXNy7x1w6PfX5hWEWqYmhb+dBboIuWLJ1FC5J2qPVMxNoGzRnQR1Wbb
-	l5qXMTLkYSguly+/2jzCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738577115; x=1738663515; bh=wiAtp5B6f/uLxzPGB/aY07G4Vjh7/bji9bk
-	nfJtXxs0=; b=ncrkRvQ0xlD/YnkmsY7G2uZPfSj2igsDvJbchnY/Mfjdr+ZWLdH
-	PHm6HKn1i/9PPqfkJlsT66KIsGXjn3pTZE2OnSJzRSD2s+WMS6aC9kjzPdhnOldp
-	EagQPJpj9sB/OFgCpKEvYP1RBOD6g+Wb7Kxz8lnsy9W359fOkmSrhK6jYSdPJ88V
-	3+2YxAOSL+ecyf+pWc93LhdwVDKgfJ/P2cZw8TEQOPQ4v/327cR1ctxWbIxVcHyo
-	XJB3isS8xZkMOXc6hsxUEf5YELQFgs01dSWZhPq76QoI5glVHeUxdUdNzaziYDJk
-	bugUdbwt50+AquaR/xh+2tExXlinOJc+h6w==
-X-ME-Sender: <xms:2pSgZ01glIi_t20VkD7C6hltG5WUQcRnTvZbb_9CVN0klWq5ZpeyDA>
-    <xme:2pSgZ_FKpEpSKLNEePodAd8l8aGGW0KOoSfZLfGbhrNJev5cGJ6DwTtD2cKDm-1xa
-    mKqanLmXChwD1cwHd0>
-X-ME-Received: <xmr:2pSgZ87G1G7cT2zDNzdiqhm3m5qpzu2HJN07VMO5txhvSbuW5fTlh6V3K_7Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeeftdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
-    necuhfhrohhmpefurggsrhhinhgrucffuhgsrhhotggruceoshgusehquhgvrghshihsnh
-    grihhlrdhnvghtqeenucggtffrrghtthgvrhhnpeevjeehuefguedtudffgfegjeefleek
-    udehgedvjefhgfduhedtveeuvdejffefjeenucffohhmrghinhepshhkpggtsgdrshhkne
-    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgusehq
-    uhgvrghshihsnhgrihhlrdhnvghtpdhnsggprhgtphhtthhopedufedpmhhouggvpehsmh
-    htphhouhhtpdhrtghpthhtoheprghnthhonhhiohesohhpvghnvhhpnhdrnhgvthdprhgt
-    phhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    gvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtg
-    hpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomhdprhgtphhtthho
-    pehshhhurghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrhigriigrnhhovhdrsh
-    drrgesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehl
-    uhhnnhdrtghh
-X-ME-Proxy: <xmx:25SgZ90lAYpnraoO-U43dqA_YW3SVrFVU-PPjfH-wNB_AigTnbCV0w>
-    <xmx:25SgZ3FxgZTHd2tGKoC2Zph6RnOahxiBZBc38QffFWG0Qt3S1XJwTg>
-    <xmx:25SgZ29vG5oDfbk15UwNmKc-20A8WkyWtPLq8i1joQZ83UriDeQl0g>
-    <xmx:25SgZ8m9vbJCl6bIumXSjPXVCksJz9XwMV0I1jGHF0Hk6xnOut7p7w>
-    <xmx:25SgZ3HLmOXm8FWCqahYy5yRdgB3J8iUMs2QGqDZt6g3S6ayMBcprMiM>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 3 Feb 2025 05:05:14 -0500 (EST)
-Date: Mon, 3 Feb 2025 11:05:13 +0100
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Antonio Quartulli <antonio@openvpn.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
-Subject: Re: [PATCH net-next v18 12/25] ovpn: implement TCP transport
-Message-ID: <Z6CU2emFGy1L3MDT@hog>
-References: <20250113-b4-ovpn-v18-0-1f00db9c2bd6@openvpn.net>
- <20250113-b4-ovpn-v18-12-1f00db9c2bd6@openvpn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1W9GlEL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E935C4CED2;
+	Mon,  3 Feb 2025 10:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738577162;
+	bh=0LAer1+VCPuEwTxq68r3aBJGH3VUj8GQfN5OepHe5cg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=n1W9GlELmoY0Xxf1nkM+Y21j5G7kaIlhVj4r8CeRt5KvWtEttcNAp5bwimCMSkD/6
+	 gYjaHlz30C93NlrDMkSweqVRJXIXuqUb5JFksXIGTuHW5Zlc6bfx+TurYZYaQcrUFN
+	 j7X3T6+0oQnKtE9ofsll82/UklIK3akSNqO6XWqnEu8JNOj1RyVWZc23xhnXmfkbv6
+	 OtT+vD0iKGGxCFD1xHQu0YoP2rAyHDRojQOEddsKljOF4BzxMnZLYHgfZiI3vRHv9H
+	 2jiB1F8nDwiltCxOrHHx0g6R5Dbkx2z0NvmPHoZOv5qTW4SQJ/SVhEgXiRO4PR3gye
+	 FOqTw/emX7I0w==
+Message-ID: <7b57f8c8-7d0b-46f8-8364-a13860ab530e@kernel.org>
+Date: Mon, 3 Feb 2025 11:05:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250113-b4-ovpn-v18-12-1f00db9c2bd6@openvpn.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/13] dt-bindings: net: wireless: describe the ath12k
+ AHB module
+To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Cc: ath12k@lists.infradead.org, linux-wireless@vger.kernel.org,
+ Kalle Valo <kvalo@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
+ <20250130043508.1885026-2-quic_rajkbhag@quicinc.com>
+ <20250130-cunning-quail-of-opportunity-76d0ad@krzk-bin>
+ <104e6b6f-3c1e-4a00-8822-aa6fb4562411@kernel.org>
+ <a3c7b0e6-a440-4452-83a2-eb95de0de9bc@quicinc.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <a3c7b0e6-a440-4452-83a2-eb95de0de9bc@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-2025-01-13, 10:31:31 +0100, Antonio Quartulli wrote:
-> +static void ovpn_tcp_rcv(struct strparser *strp, struct sk_buff *skb)
-> +{
-[...]
-> +	/* we need the first byte of data to be accessible
-> +	 * to extract the opcode and the key ID later on
-> +	 */
-> +	if (!pskb_may_pull(skb, 1)) {
+On 03/02/2025 09:43, Raj Kumar Bhagat wrote:
+> On 1/30/2025 2:10 PM, Krzysztof Kozlowski wrote:
+>> On 30/01/2025 09:28, Krzysztof Kozlowski wrote:
+>>> On Thu, Jan 30, 2025 at 10:04:56AM +0530, Raj Kumar Bhagat wrote:
+>>>> Add device-tree bindings for the ATH12K module found in the IPQ5332
+>>>> device.
+>>>>
+>>>> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+>>>> ---
+>>>>  .../net/wireless/qcom,ath12k-ahb.yaml         | 319 ++++++++++++++++++
+>>>>  1 file changed, 319 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..bd953a028dc3
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-ahb.yaml
+>>>
+>>> Filename should match compatible. This binding does not look like
+>>> supporting more devices, so there is no much benefit calling it by generic name.
+>>
+>>
+>> I saw now your other patchset, so you have here two devices, but I still
+>> do not understand why this cannot follow standard naming practice like
+>> most bindings supporting one or more devices. Like every review we give.
+>>
+> 
+> Sure, we can rename the filename to match the compatibles - "qcom,ipq5x-wifi.yaml".
 
-make sure we have 1B...
+No:
 
-> +		net_warn_ratelimited("%s: packet too small to fetch opcode for peer %u\n",
-> +				     netdev_name(peer->ovpn->dev), peer->id);
-> +		goto err;
-> +	}
-> +
-> +	/* DATA_V2 packets are handled in kernel, the rest goes to user space */
-> +	opcode = ovpn_opcode_from_skb(skb, 0);
-
-but this reads a u32 (4B) from skb->data
-
-[...]
-> +void ovpn_tcp_socket_detach(struct ovpn_socket *ovpn_sock)
-> +{
-> +	struct ovpn_peer *peer = ovpn_sock->peer;
-> +	struct socket *sock = ovpn_sock->sock;
-> +
-> +	strp_stop(&peer->tcp.strp);
-> +
-> +	skb_queue_purge(&peer->tcp.user_queue);
->
-> +	/* restore CBs that were saved in ovpn_sock_set_tcp_cb() */
-> +	sock->sk->sk_data_ready = peer->tcp.sk_cb.sk_data_ready;
-> +	sock->sk->sk_write_space = peer->tcp.sk_cb.sk_write_space;
-> +	sock->sk->sk_prot = peer->tcp.sk_cb.prot;
-> +	sock->sk->sk_socket->ops = peer->tcp.sk_cb.ops;
-> +
-> +	/* drop reference to peer */
-
-nit: not really :)
-
-> +	rcu_assign_sk_user_data(sock->sk, NULL);
-> +
-> +	/* before canceling any ongoing work we must ensure that CBs
-> +	 * have been reset to prevent workers from being re-armed
-> +	 */
-> +	barrier();
-> +
-> +	cancel_work_sync(&peer->tcp.tx_work);
-> +	strp_done(&peer->tcp.strp);
-> +	skb_queue_purge(&peer->tcp.out_queue);
-
-Also kfree_skb(peer->tcp.out_msg.skb)?
-
-> +	ovpn_peer_put(peer);
-> +}
+>>> Filename should match compatible.
 
 
-[...]
-> +static int ovpn_tcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
-> +{
-[...]
-> +	ret = skb_copy_datagram_from_iter(skb, 0, &msg->msg_iter, size);
-> +	if (ret) {
-> +		kfree_skb(skb);
-> +		net_err_ratelimited("%s: skb copy from iter failed: %d\n",
-> +				    netdev_name(sock->peer->ovpn->dev), ret);
-> +		goto peer_free;
-> +	}
-> +
-> +	ovpn_tcp_send_sock_skb(sock->peer, skb);
-
-This isn't propagating MSG_DONTWAIT down to ovpn_tcp_send_sock?
-
--- 
-Sabrina
+Best regards,
+Krzysztof
