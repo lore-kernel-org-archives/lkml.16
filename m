@@ -1,40 +1,40 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E64153801;
-	Mon,  3 Feb 2025 20:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61D7189F43;
+	Mon,  3 Feb 2025 20:32:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738614728; cv=none; b=LmlbRXWQ9KaavHOhNm5MMq62Jwsd9U5o2Zbsbw0QM222gOD/G+wsJ3cY/eMez5Cuw8ph710kGeV5hIcVpLdMF89YCpnKwK/5hdh+f7ydMYTcWlYtQH2gg+hxQZUFLkPFFJBWxRFnd70E2ugjrnkbZ1ET35Drta2G+5eGkbcJ8vE=
+	t=1738614758; cv=none; b=Qs5DF7prrP2VrhG0fZlgb5fm2A7gpJx8vxsIUm6UgEeMLljQiuuZZxD6B2bzaIWMs8nxgFOb8d7+y4mFQ++2h/tSBNu+hmEaBmBAQDuld/GJsbMtO32YHSHd1ElJdpxhctYg5mzphFFJJ2oDH+6Sw15GctdmWqSzIp4/GenoGKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738614728; c=relaxed/simple;
-	bh=NG0T7KFAIKiHL+Zgrx0FfBVniTS7WNZL8+KqlJjo7Po=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hMbhjY0xNqa7MSrhbhTgXJ9PfHPSC/wUY4phoIPbB0eGuXH/mYsr1HLjC5WQCQigTAoqXkn4ubQpnB6BqOD/p2Gf4CgZPmbPMLLW4iuZgnhowkfKzlyqhBoxvKY35pkdjoSF9gX100kONpoPyfLJVHvEd2n1IIx+voSB5GkiDKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=WGDq/ASr; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1738614758; c=relaxed/simple;
+	bh=NeQcw5rrhoA9bA5UTKSw3syXrmeuhQwUW7S3N0b3KQU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Es38Ie3l0Z4D2sCDDK1OXV9/FVNkFm8jkaPVUPaQlaryuJmPzvSsSYLe/jNl1r7hAav432NT+qPBqWagqhCzpDGxP2K117xrqkd3/WkzltQe0UQ6DwCZ8HRuI4gP7f9thxsC/NbOlKwJD0TNhJbqoPdMp3utSxVWCVD1l5hFG78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=c2vTYrym; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="WGDq/ASr"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="c2vTYrym"
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 6297B25BB1;
-	Mon,  3 Feb 2025 21:31:57 +0100 (CET)
+	by disroot.org (Postfix) with ESMTP id 62A4825BB1;
+	Mon,  3 Feb 2025 21:32:35 +0100 (CET)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id ptaMgSM_c83N; Mon,  3 Feb 2025 21:31:56 +0100 (CET)
+ id uvAOHOSqMBCO; Mon,  3 Feb 2025 21:32:34 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1738614716; bh=NG0T7KFAIKiHL+Zgrx0FfBVniTS7WNZL8+KqlJjo7Po=;
-	h=From:Date:Subject:To:Cc;
-	b=WGDq/ASrQqHxw2gubMhHnkwd1gCj4KPpSdJZC4wobNs9mo34B39vK0J9plUuDy9Th
-	 q0B1S03HCZN08IXx7lxo7lR4cFKggsIDkCSwSqZRdnGbMa7UhRIn8GkYLayqIgkh76
-	 INjthtsrtdoFQiOZqNZXNGdFS5+JazWDTV8+9rRNXGDhXMtITp3qQePyep5wGjZ4E0
-	 32lImbinTGd6EQlW/ng75jyM3e/dMQVVfUKr9pFadRa7Or9G1lIxeF1DGE+0A3n2qe
-	 T3Zy9oQPUASQZcH47D8Blf3rABxa/y/uSlmaVws13futeI4sVsJm+hU/tbxT6SUTXe
-	 1cPnNkCVD8F+A==
+	t=1738614754; bh=NeQcw5rrhoA9bA5UTKSw3syXrmeuhQwUW7S3N0b3KQU=;
+	h=From:Subject:Date:To:Cc;
+	b=c2vTYrymOaujh4T/+OU36Wex/6DpyinJUMXrQdJrlb3eBEZXznX/U9L7WyEtTmfCK
+	 lXXi1JNw1DXwcZyNGdZlC0BUSjymliMR5zBQnYclB60oyL5ulFwmyy13+txrHwYgzq
+	 LRC3VGSaSUA5U5bZDT/R1T8h5xEFOn3lZlhFhGaK5fcRlwZPPUCtL1Gn1i3xA/59xN
+	 zVL9DlhvD9mDrkLHrZn31kyTLTEt72Ze4xaknkyrMpO5vaLwf9rJiSKZuED2dtS4HR
+	 bMGNk1o9ml6amOkO2n3GgEGUJCPR4UPkG1nvG44AUEoIm2Z+zrLTiMyXdInV2VTRVt
+	 AnHZDiJkNta+A==
 From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Tue, 04 Feb 2025 02:01:47 +0530
-Subject: [PATCH] dt-bindings: soc: samsung,boot-mode: add boot mode
- definitions for exynos7870
+Subject: [PATCH 0/2] Add chip ID for Exynos7870 SoC
+Date: Tue, 04 Feb 2025 02:02:18 +0530
+Message-Id: <20250204-exynos7870-chipid-v1-0-0bf2db08e621@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,55 +43,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-exynos7870-bootmode-v1-1-0f17b3033c2d@disroot.org>
-X-B4-Tracking: v=1; b=H4sIALInoWcC/x3MTQ5AMBBA4avIrDUZ9RtXEQvMYBY60ooQcXeN5
- bd474HAXjhAmzzg+ZQg6iKyNIFpHdzCRigaLNoSLeaGr9tpqJsazah6bEpsRmTKq4qKsiCI5e5
- 5luu/dv37fv+BJVRlAAAA
-X-Change-ID: 20250203-exynos7870-bootmode-b0ed366d454d
+X-B4-Tracking: v=1; b=H4sIANInoWcC/x3MQQqAIBBA0avIrBPMLKurRAvRqWajohCFePek5
+ Vv8XyBjIsywsgIJb8oUfEPfMbCX8Sdycs0ghRyFFAPH5/Uh61kLbi+K5LidDqnMYuZeOWhdTHj
+ Q8z+3vdYP3D/ueWMAAAA=
+X-Change-ID: 20250203-exynos7870-chipid-c6f24a9a814d
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
- Conor Dooley <conor@kernel.org>
+ Conor Dooley <conor@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
 Cc: Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738614711; l=1291;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738614748; l=669;
  i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=NG0T7KFAIKiHL+Zgrx0FfBVniTS7WNZL8+KqlJjo7Po=;
- b=pTF7S77HJby7HUJ4iEk6iHKCeJ7E+ye74eWzg3gPd89p+XXinFSHi2wQRgvIm5d3pmHMCrD2Z
- msnWGxLDJ65BO8rYc/4RS67vVBqQNfF4ly/5/bv3ZoaD/9JmOvZZ6ZQ
+ bh=NeQcw5rrhoA9bA5UTKSw3syXrmeuhQwUW7S3N0b3KQU=;
+ b=4fi2GlMBwPdxvLlv0ut4beRiUG8bQwm7b+MzOCl95ltxb58PjnrGf4Obu0Voao6rKyLMtzzPS
+ myowzHHGdGtDd7V22l+Uek37yEL8AgeK9vMgDwGTDxH/1eVMpQdJyEl
 X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
  pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-Add bootmode values for bootloader, download, and recovery for
-Exynos7870. These values are used by the syscon-reboot-mode driver to
-facilitate rebooting in different modes.
+This patch series is a part of Exynos7870 upstreaming.
 
 Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 ---
-This patch series is a part of Exynos7870 upstreaming.
----
- include/dt-bindings/soc/samsung,boot-mode.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+Kaustabh Chakraborty (2):
+      dt-bindings: hwinfo: samsung,exynos-chipid: add exynos7870-chipid compatible
+      soc: samsung: exynos-chipid: add support for exynos7870
 
-diff --git a/include/dt-bindings/soc/samsung,boot-mode.h b/include/dt-bindings/soc/samsung,boot-mode.h
-index 47ef1cdd3916eb33dd729396dfe443ba6a49f22f..effb3d6fa501e28a0a1fe847e5a0fe6906ef4f29 100644
---- a/include/dt-bindings/soc/samsung,boot-mode.h
-+++ b/include/dt-bindings/soc/samsung,boot-mode.h
-@@ -9,6 +9,12 @@
- #ifndef __DT_BINDINGS_SAMSUNG_BOOT_MODE_H
- #define __DT_BINDINGS_SAMSUNG_BOOT_MODE_H
- 
-+/* Boot mode definitions for Exynos 7870 SoC */
-+
-+#define EXYNOS7870_BOOT_DOWNLOAD	0x12345671
-+#define EXYNOS7870_BOOT_RECOVERY	0x12345674
-+#define EXYNOS7870_BOOT_BOOTLOADER	0x1234567d
-+
- /* Boot mode definitions for Exynos Auto v9 SoC */
- 
- #define EXYNOSAUTOV9_BOOT_FASTBOOT	0xfa
-
+ Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml | 1 +
+ drivers/soc/samsung/exynos-chipid.c                                 | 1 +
+ 2 files changed, 2 insertions(+)
 ---
 base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
-change-id: 20250203-exynos7870-bootmode-b0ed366d454d
+change-id: 20250203-exynos7870-chipid-c6f24a9a814d
 
 Best regards,
 -- 
