@@ -1,109 +1,125 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E259C7D07D;
-	Mon,  3 Feb 2025 22:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9F31EEA2D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 22:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738622879; cv=none; b=QAzO7wcRJNMZNBgQg3Y5Jgy9sy0lIDQTndHdpDkeoG6T8ml0VbtWlQksta9A+Om8yQ4HmZPOEHvClmqZhzTZnWKFiU0QrrtKmaVZjOF8s/rX3Q46f0RYywlHCr7gyJvguZ09SbiM8rb9iS9f4SH0HyqTyxIXsTHr2O+X6IYkxvY=
+	t=1738622953; cv=none; b=PfLZnOegEzkaC3URMxIJQN7oDPYNwNI9l29F9aCy5ZsV5LyeH4zRc6Un0RERt6nNrSdxDK9roEUGDB2/jWQKyUH+CN1N1SNkDqB2qmfKTD67kVs/rFUh5hRGV7nyIrUrkyeowII+JSSdySChxQ2cjU3vGIZSmxn6Gq5OmyjGsBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738622879; c=relaxed/simple;
-	bh=hHTSotaKXn6mqlfsuZRFL7mUlXbYedRwitXa3n7zsZ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=is8bmuqTNvJnTcmZZVmS2EYNqudnB7YpgZdypyPTwOMiqjhwcQHt7xiauLCsurLHbrkIPDMlzFavRtyzqq1xPclGZhLWguvfGdNvjkud55WV/Qe5z3kIxyUbu6JEGPILdX3udFbaa1icviySmREAopF/SO3z1T2LwYmQR0f2K5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DoFbihVm; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738622953; c=relaxed/simple;
+	bh=2yUs+IM5Pl1W55T4vQoTAtoqlF3k1yeqhi4aT/ur60M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=GYxifdp+nC+4MHQYIyQw9tCo0ntm19byMZXTdwqATnUyH3wS2jDQLNNhid6dOOsyN+gnV7UI4p2M2x/wFnK0XuOUNIPXRztoXoudYH5YZaJ0XXmf7SUCLMSCext5+ZZV+jvkyhQcAOjZHnHa7K9nni8m3wXKdKSAV3yNvFeJbzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TlsGb3O+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DoFbihVm"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4361f664af5so57747505e9.1;
-        Mon, 03 Feb 2025 14:47:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738622875; x=1739227675; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DNk8vcXhWS2lnex0vmdV4Bh3p7QN4YitPegQzBHEFfU=;
-        b=DoFbihVmVNRM88GV2daMdqjDrnEQWHVQUCC9vjxRsvivPBJWkBgcZ/EJpOd3G2CGMO
-         V5N68a6/ySKJQ4u/SprajcG4Bo0nf2y1691vRVoOnzTL69l76J0lOqS7/eN1z9Skch6C
-         gaCa8VuXvc4VoAlh7PXl1WNtaXaB7KlPqjXpb+CGDZusFu7dbyp31cSGdhq+vt3aTfzY
-         DQiQYorrk8rT3VKHeLBB2wvLGTftoYV4ETZhIMa9w4WKEB18/r5igwPctryfwkISe3Ut
-         mH1i522jk+xCW29SnmfN1YOuzukVyNOvn7uPWIdUkeiErcqR9PS71Mv4oCZmNV/QFIbl
-         fZPw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TlsGb3O+"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513E5Vg7002360
+	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 22:49:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Hw7bNV05959ms6oss+YF+4qJZNr/KZytbXPLNUurobM=; b=TlsGb3O+0wCAGyyt
+	TbjEp2XQVfuCz34of4l0mDy2Znw4AqVHPY0UkUC7Tq+ees+9ILfuCz5yfeiw9QjK
+	pZZKErkqZF4RTHMVy/o8fRF0uur5V+hpGWXKHlBKbPX/pXI4wI+BpNmoTdeWwHvP
+	sDlcIyGhOWXb6qKDAUD52/RYt1lZuYOZWPtceAL0yAxno5kjW8guhYKl9uGlmJAc
+	ClTnYJGU94lE9MiUuxrKJfxqpOctKe0MxeRlJ5UqabeaUTE02x5LfAVulD6PSwvo
+	bmQh9VWq3rhh5lgCLDEyqIrlzI8F4gvlyiMhOOlqzRxPhSbsM9V/ZBAb9cjIcqDp
+	zaZJBQ==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jy8s943x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 22:49:10 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2163a2a1ec2so173363965ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:49:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738622875; x=1739227675;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DNk8vcXhWS2lnex0vmdV4Bh3p7QN4YitPegQzBHEFfU=;
-        b=brryxdv2D9iuw+DfNg4rWv6FE7FbtYEq0tl0VS7zB6uhjDDZNWYyJXU+AY40Il37ms
-         O/BcyOwiYBNKxu5+dTbcmGawQ/GnhAy5FwQHdPsBzRuOzZMhsZYE/7cl6jPuiEVtvF2z
-         kKNfw85IfL0+hmUysfc5T1pGpjEydftQANIZ29TcbLANhXMP/0YLEP5Cv+3/3HMRsUzg
-         Ub8YPhwOAaxtCDbP3lJtXh6ANWD44xTq/OxsRMaUItgx+APKtujD+n1g8KNshbtH0WO6
-         AH68rU48PMZtplSb3YXO0rSqZgog/DcIYIoaNkaLp29KzPezjYc/QtdcMTJVXxx2QXI9
-         wjKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURKqRPM6e9HPrWg6YVCs2CtKB4Aspbo0PGFeqpEKgzzBmk/Q6MduUxlcPZuEwYMy6VqMd145tJ@vger.kernel.org, AJvYcCWgoKUHGDit6/RN2hV7PEkB8CAc7HLA0aU8jaIKMOcfB3/bNUayjsOOSKOKxh/jUqK9hD89pSDVLG0=@vger.kernel.org, AJvYcCXGwj0GvdgrNSEPcknWWaJPbciIz3cpC6vwA6CNv5cZMHErLcJL97etntlEdJhsoZWDzk86fT+G+Iu0@vger.kernel.org, AJvYcCXWwkiqBD1NGtJ2G8NIXmYgSfTAoy5XIrHAkBeQCMOfbR6MmeI8SUID7/Uqet1X90aAlu6p8M0tfhtgzAcj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG7kIL/mkNDwnoCLrQT/eM5uSrX9+FVmX2bDZL1MwyNL6/8pOb
-	8GH6uvc8KzhAS9mBn2s/V6nv58eoDuA1SIamjL277EFzx2smk8Tf
-X-Gm-Gg: ASbGnctrwv8LxmLbn+SKIcupgliBLNXRITFwHJocfU0nQt8yChzZX1US27WHSZigOhD
-	DGvUrWADJUfFKKKmTa/JejvxAZObeN0B7OXjwbyr8wDgon3MAqVM/3dutRdmNVmtZ7LX6CRp2zM
-	UFhT37YlKrnv6leIc3S2lSomRqCeqoCA7UihP69hePXUuS6ELfVKhbQY/KylzU2nGNAYi2PEL7h
-	Z+xYWprLmxI2YZjnebcCE7dMG0+znlHT97HKjh4r+Uw2s7MqhQ4favuP3b4ndR32MrxrtIOcDwP
-	zu0=
-X-Google-Smtp-Source: AGHT+IE/EFKa2c0I79aiOGpHh/J+3xdNGIulwoDYDqj1uGt8aSw1iorBtbN/fXpYftwxNNhOalmTpw==
-X-Received: by 2002:a05:600c:870a:b0:434:fff1:1ade with SMTP id 5b1f17b1804b1-438dc3cb7c8mr198340375e9.13.1738622874881;
-        Mon, 03 Feb 2025 14:47:54 -0800 (PST)
-Received: from ffc.. ([5.224.37.232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc81911sm202559165e9.38.2025.02.03.14.47.51
+        d=1e100.net; s=20230601; t=1738622950; x=1739227750;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hw7bNV05959ms6oss+YF+4qJZNr/KZytbXPLNUurobM=;
+        b=a2UvjvesHQxxvo1/sgAiFUHKQCJQ57TqD/w4FEFSWBZACrQTXHMR6DuUj7YR578BAJ
+         MG3l7f0gVdrE5LB0DqMDtP5G170SG4gQRWYtg6V5i3dzYfp3ZFvs6yALrFJECMlE4rXY
+         BzU3Lf9Aurj+8x3h5qjZy+I1DNPj2F70AfRwLWp6bKyFzkL5Gfc7bB+6iZP0NhHEVDzA
+         r/vHNO6eiyLUXGUb++TPstuGpaSHi4MUUn+sm8rPhPS8SOzwMdIHpdlKkrsMRo2AELfH
+         fmo0//CU0MlimeBi/nQUg6pXk8toJqDXsgWJhm73+Q8IRDNEFFQ37dpj3b/F90dCXmXk
+         rREg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdAzHA5fcCaBa8mG+VuE5gpMDAUOjsQJM0weZq+TTn5UZR6VhGKtnKNgUwil34CS/XO+mvsPcM3Gdst5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfWc55rITaAdXqzrDJPiXKGjnTLQfJP5BIYURpt9Vg9GhcwHE6
+	FsNW00jwlge/qbJlBbi1jAPf3nmz6bD6vmMoDJ9O3lWp00kAikHfMmBZOjmOv2Fh2CHe9rbJ8F3
+	x6IkKlQi81Bg4NuG2jiocBW8W7Gxr8LEvDbQd/kO2QJF8yq7VvcaLpsU9NmeLXRc=
+X-Gm-Gg: ASbGncuttrTfMrW4L39jY8xECjhbO8EJRxPbVHqwpyFKdEO4jeIEpfAgdB6g3suSfOg
+	CE5R0MpUAa9opbH6R4g0YZ4djX4w1ljefpEY2CWnvATwsJ56f4RP2HMWygrcvFhTr7nrkWn65uf
+	ZW+JDNzTCRYbsBs8ewncJC4u/ZM+wMS7G9Y2H2I4iQDyTV47/KagbyGQGZxiZoZLpLknRHTLwi0
+	ppXz0ENqu+SWY3fHaTHbF0ifts0bYzeMcKnuGroOAaOnrCjOnm60SKGb3xl3TO4hUZ+hrltf+AV
+	9W/sb/wWt2nXUg9fbhK1vwePcTH5E1oGfnxx68drGA==
+X-Received: by 2002:a05:6300:8a03:b0:1ed:9abe:c663 with SMTP id adf61e73a8af0-1ed9abec6e5mr15242519637.10.1738622949685;
+        Mon, 03 Feb 2025 14:49:09 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHLgkO3wpYZ3B0nMiUJkb7E9OU7kLXT89O26RAqf3BGd34605SKsXiAulB5vO5cyrzb9LtnHg==
+X-Received: by 2002:a05:6300:8a03:b0:1ed:9abe:c663 with SMTP id adf61e73a8af0-1ed9abec6e5mr15242499637.10.1738622949298;
+        Mon, 03 Feb 2025 14:49:09 -0800 (PST)
+Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69ba353sm8887444b3a.112.2025.02.03.14.49.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 14:47:53 -0800 (PST)
-From: Reyders Morales <reyders1@gmail.com>
-To: kuba@kernel.org
-Cc: Reyders Morales <reyders1@gmail.com>,
-	Oliver Hartkopp <socketcan@hartkopp.net>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-can@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation/networking: Fix basic node example document ISO 15765-2
-Date: Mon,  3 Feb 2025 23:47:20 +0100
-Message-ID: <20250203224720.42530-1-reyders1@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Mon, 03 Feb 2025 14:49:08 -0800 (PST)
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+        Aditya Kumar Singh <quic_adisi@quicinc.com>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20250124-ath12k_mlo_csa-v2-0-420c42fcfecf@quicinc.com>
+References: <20250124-ath12k_mlo_csa-v2-0-420c42fcfecf@quicinc.com>
+Subject: Re: [PATCH v2 0/4] wifi: ath12k: add MLO CSA support
+Message-Id: <173862294852.3734728.6340802985504252357.b4-ty@oss.qualcomm.com>
+Date: Mon, 03 Feb 2025 14:49:08 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.0
+X-Proofpoint-GUID: waeVSMr-yRyYo7zRXVycyf3qLDk_QSRT
+X-Proofpoint-ORIG-GUID: waeVSMr-yRyYo7zRXVycyf3qLDk_QSRT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_09,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 mlxscore=0 spamscore=0
+ malwarescore=0 impostorscore=0 phishscore=0 lowpriorityscore=0
+ mlxlogscore=913 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502030166
 
-In the current struct sockaddr_can tp is member of can_addr.
-tp is not member of struct sockaddr_can.
 
-Signed-off-by: Reyders Morales <reyders1@gmail.com>
----
- Documentation/networking/iso15765-2.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Fri, 24 Jan 2025 11:46:34 +0530, Aditya Kumar Singh wrote:
+> Patch 1 and 2 are pre-req fixes (applies to non-MLO as well)
+> 
+> Patch 3 basically uses arvif->link_id to enable MLO for CSA while adding
+> support to update counters throughout the CSA time.
+> 
+> Patch 4 fixes a potential problem seen when medium is busy. Again this
+> applies to both MLO and non-MLO. But this is exposed only when Patch 3 is
+> there.
+> 
+> [...]
 
-diff --git a/Documentation/networking/iso15765-2.rst b/Documentation/networking/iso15765-2.rst
-index 0e9d96074178..37ebb2c417cb 100644
---- a/Documentation/networking/iso15765-2.rst
-+++ b/Documentation/networking/iso15765-2.rst
-@@ -369,8 +369,8 @@ to their default.
- 
-   addr.can_family = AF_CAN;
-   addr.can_ifindex = if_nametoindex("can0");
--  addr.tp.tx_id = 0x18DA42F1 | CAN_EFF_FLAG;
--  addr.tp.rx_id = 0x18DAF142 | CAN_EFF_FLAG;
-+  addr.can_addr.tp.tx_id = 0x18DA42F1 | CAN_EFF_FLAG;
-+  addr.can_addr.tp.rx_id = 0x18DAF142 | CAN_EFF_FLAG;
- 
-   ret = bind(s, (struct sockaddr *)&addr, sizeof(addr));
-   if (ret < 0)
+Applied, thanks!
+
+[1/4] wifi: ath12k: update beacon template function to use arvif structure
+      commit: 4094445969740028f9b637977781b73b64c5bc7c
+[2/4] wifi: ath12k: fix handling of CSA offsets in beacon template command
+      commit: f9c88d65e805ca06f26806ac99f569a3dfac2229
+[3/4] wifi: ath12k: update the latest CSA counter
+      commit: e26a6989b10a3dfc97b8c206023a6bf3a3ccb94e
+[4/4] wifi: ath12k: prevent CSA counter to reach 0 and hit WARN_ON_ONCE
+      commit: 36f002a3e36efd3370f5b6abfc157e7481ecb1e0
+
+Best regards,
 -- 
-2.43.0
+Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 
