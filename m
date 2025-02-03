@@ -1,171 +1,241 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDA2192B74;
-	Mon,  3 Feb 2025 19:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943551D516C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738609312; cv=none; b=fFUN71JyIIgcBFjudVgOsUs3fxdKlVlAKgjT1fkd33V3OKsSOt7k7+sF1IiCtbxUtU/zEZhgjRWVf5es++lfMA71149om+UBo/MxdWb8YLvI4bAdfV/F6hNRpGDgT0FjyzMDGC1rCxjBwaRwS/yMifXWdDB1dCZPqU+T+XDUHHc=
+	t=1738609342; cv=none; b=hKgdmUwgURxZ9STi28vmUB6AQ9EgxBm03oc+ZxN7zitPG/4x1N161cxptsE6M911p4uLjLuRQ4n2Eswgi7BU0aiViUlHQsXv4do/YLtGzQGJVun08CTkGDtkknN4qgnyrf7+wLnSrU+aoPv6IsqMs9x2opNywG8DGOvv3dCDVbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738609312; c=relaxed/simple;
-	bh=jHJiNTOghaJcsfWgqGiqFe6TF49153O2wgj+WCPt+Aw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eqefm+FfizX1Z2ZE2epgz3M0if4+jghmCxk+lt97foE4dpkhhEs3ZV0zjlwZTF1u0rPtaJeUeFz/06jXd1DtUgugyJctg4FX/2x4AV7tSUphzE0A+W7NlWbkwpzB+zGZmIcQCwYYg9g5H4bUcygKAHTrT31g+2zDOQSHuvgWpM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=P12XajL/; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1738609342; c=relaxed/simple;
+	bh=RrA6XOwtMtx+JH6++S6+ucWJ7rkJfmXz5me7tMf1tnk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QISIhe3/mEyR60VWwKtuWKoTIqBsEmCw5IUYByLxzL/NmbFyTXFwLF1fWwAzI2fPqAezCg+OM5sYG99c4ttJbRVbYgRaxA1G/nImd5pIuaRWg0CrwmCSrFYLLQotqgZBQlW0INPaYjqgDqdVS1uLaak55hSNJLX6x/KBwlHWhOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=qyg7Acxd; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="P12XajL/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=crZwIZPhwBOH6mXJdKimuCTfVSYTTkH5F1qVpozDxDM=; b=P12XajL/oRwP2m7w
-	EOX/p5dbtR7nO7qHg1aRoX4Y+M5CzDtVfGk4HMsHMAY3+gkEdy7FHqReBIpmsPLkf4sQeIGkt6SM1
-	0c+LoV3jVUgDS+yqFsnC15ObbTrarQcZzilbUzVOKXNfA8ayjPE35NyxMSu8QCLfHbk5PU2Um3UOB
-	bblHUZWu1J7qBELKlirRj5NHENBg5tHpHoXEwq97lxM2AxaJQ+kTK3XDVFbCAhFgqyHKjeMZM6uTc
-	uZKBE6cYx5hCJW51rENEimxCdyk8gmrgAIQB9M3N3yq+r9W2YMyM/eQpfEswrta9EK6GwxC+Zi3BS
-	JrKqqLk5KawlHQKuhA==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1tf1hW-00DM0O-1p;
-	Mon, 03 Feb 2025 19:01:42 +0000
-From: linux@treblig.org
-To: idosch@nvidia.com,
-	petrm@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH net-next] mlxsw: spectrum_router: Remove unused functions
-Date: Mon,  3 Feb 2025 19:01:41 +0000
-Message-ID: <20250203190141.204951-1-linux@treblig.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="qyg7Acxd"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2156e078563so69539865ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:02:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738609340; x=1739214140; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6+cVOS5FJmIAsNqPulg8a9PrdBe6p9kJKl40HshGULo=;
+        b=qyg7AcxdhP2NMx4n5i6oVyjcPexrpC51Yvwza7w9n95KB3mQ0HJkO95SfBeCq2y3W+
+         /roead5zMV2PnLyhvo4NFxerQix0QOmSUlkkppxED7Ck5xnA7gXgEkkVCp/gZ6uBahA2
+         oKLqWGHLfPDs6xHqQXJQCt8cfX402E4CC2X15DcAzwuOKzPe+1ueFmr9dTlJ2mBbyC5J
+         CKp03i8qy6+s9OIhwj7Gul0uwaPCoPFpKRtpI+ScK4OyNH1H5nu7nUsLBs9i0BvGsco9
+         XNZdIX1eSkwewu04xPGo+3HKL9VT/87OLRFRJZMTuI0brcuCmHM8thTfc5XK2LWBgS0o
+         qTOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738609340; x=1739214140;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6+cVOS5FJmIAsNqPulg8a9PrdBe6p9kJKl40HshGULo=;
+        b=PIjQu0V+CQE4qPDZ5DPPOPyIKUpuxWLLJK4b6nrqFZjpitk7mSKJJofZfcC3jPtpbh
+         ZR68sjCWLzqJr8MkQBluS1IWaIkgs8uSoZlvAD6lJqFBZRsFuDoSGtxTiRXgXG5cNegI
+         e1xggetHNeauXUAUzul64M5e6jcYqZG8HACZ1L3USGJSjD6FmnSoiolbORulF/OPXoG0
+         zc76hRcsqBXEg64eGHeSPWTPkdxB7eZnnkL2OQMRPohn+CQNbGJ8/jkfEkkpkSfeH5PT
+         ev6UfBnBwndLR0IqgQoxVM4E+XmdcIAe6Rk/+jfixr5Iq9cTLnMfl/p9AtVm9elvczt0
+         iglA==
+X-Forwarded-Encrypted: i=1; AJvYcCWIvtYjZPDYbYIw/aGY3bcgpLYGx3z3JQDzJlUttbrnjPFvLZL83fXSkSSXei5HgHUJgTrba4jHGzIS7mc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqSt4ViNNH0D6+XLbPQxXKe3crVY83U2CbLL6pVVLFD8HDJlDo
+	xLkgwAvpbN1Fd3ie/DoLOAtO1VMXLJNtu2hMSa67Cq4vPmkEGEPIF2BIb9BAMIU=
+X-Gm-Gg: ASbGncuQp9xmjTyQ7SGc6aA9pe+CL+M5Tz4UbvpmDwrrQr5Nk9nv/SxWUK11KMiYWH0
+	WO9oRRRB+6PiWl1AAhIOYZ0HBWk86bdm58bqYin8JhaXYsn1D62XSmoSpLf9rslE2CHVtTkCNU7
+	1BGkUJPtpkgrM02JkgdI4gt1CIPHhQmgABKTlj5AjPAPTv4IkBtQBUC5n33YHj44hJbHNadnKMn
+	b/aFmrQW9zUi8CTg29kqgfC3jh79En8vOdYbqSzDdoC0/LQpC0Wy9zUMqq8yfBmqNvnB0cyVSXQ
+	GMBEzSed+s8=
+X-Google-Smtp-Source: AGHT+IGcN0Vo5CKWdsr1pwOo6noYRq4z5e3fkA1+iadto7tAVdbWOLyGP+oftVvWDTpnF5AAlr0ojg==
+X-Received: by 2002:a17:902:db02:b0:216:69ca:7714 with SMTP id d9443c01a7336-21dd7c46297mr353702245ad.11.1738609339800;
+        Mon, 03 Feb 2025 11:02:19 -0800 (PST)
+Received: from ghost ([2601:647:6700:64d0:4f63:f9d5:2cbd:2947])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31fcd3esm79813435ad.104.2025.02.03.11.02.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 11:02:19 -0800 (PST)
+Date: Mon, 3 Feb 2025 11:02:14 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v1 0/7] perf: Support multiple system call tables in the
+ build
+Message-ID: <Z6EStkn-YZ8zaO7u@ghost>
+References: <20250201071455.718247-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250201071455.718247-1-irogers@google.com>
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Fri, Jan 31, 2025 at 11:14:48PM -0800, Ian Rogers wrote:
+> This work builds on the clean up of system call tables and removal of
+> libaudit by Charlie Jenkins <charlie@rivosinc.com>.
+> 
+> The system call table in perf trace is used to map system call numbers
+> to names and vice versa. Prior to these changes, a single table
+> matching the perf binary's build was present. The table would be
+> incorrect if tracing say a 32-bit binary from a 64-bit version of
+> perf, the names and numbers wouldn't match.
+> 
+> Change the build so that a single system call file is built and the
+> potentially multiple tables are identifiable from the ELF machine type
+> of the process being examined. To determine the ELF machine type, the
+> executable's header is read from /proc/pid/exe with fallbacks to using
+> the perf's binary type when unknown.
+> 
+> Remove some runtime types used by the system call tables and make
+> equivalents generated at build time.
 
-mlxsw_sp_ipip_lb_ul_vr_id() has been unused since 2020's
-commit acde33bf7319 ("mlxsw: spectrum_router: Reduce
-mlxsw_sp_ipip_fib_entry_op_gre4()")
+Our approaches are very different but I sent out a patch to do this a
+couple of weeks ago [1].
 
-mlxsw_sp_rif_exists() has been unused since 2023's
-commit 49c3a615d382 ("mlxsw: spectrum_router: Replay MACVLANs when RIF is
-made")
+Did you look at that and decide you didn't like the approach?
 
-mlxsw_sp_rif_vid() has been unused since 2023's
-commit a5b52692e693 ("mlxsw: spectrum_switchdev: Manage RIFs on PVID
-change")
+- Charlie
 
-Remove them.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- .../net/ethernet/mellanox/mlxsw/spectrum.h    |  3 --
- .../ethernet/mellanox/mlxsw/spectrum_router.c | 48 -------------------
- .../ethernet/mellanox/mlxsw/spectrum_router.h |  1 -
- 3 files changed, 52 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.h b/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
-index b10f80fc651b..fa7082ee5183 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
-@@ -754,9 +754,6 @@ void
- mlxsw_sp_port_vlan_router_leave(struct mlxsw_sp_port_vlan *mlxsw_sp_port_vlan);
- void mlxsw_sp_rif_destroy_by_dev(struct mlxsw_sp *mlxsw_sp,
- 				 struct net_device *dev);
--bool mlxsw_sp_rif_exists(struct mlxsw_sp *mlxsw_sp,
--			 const struct net_device *dev);
--u16 mlxsw_sp_rif_vid(struct mlxsw_sp *mlxsw_sp, const struct net_device *dev);
- u16 mlxsw_sp_router_port(const struct mlxsw_sp *mlxsw_sp);
- int mlxsw_sp_router_nve_promote_decap(struct mlxsw_sp *mlxsw_sp, u32 ul_tb_id,
- 				      enum mlxsw_sp_l3proto ul_proto,
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-index 7d6d859cef3f..464821dd492d 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-@@ -8184,41 +8184,6 @@ mlxsw_sp_rif_find_by_dev(const struct mlxsw_sp *mlxsw_sp,
- 	return NULL;
- }
- 
--bool mlxsw_sp_rif_exists(struct mlxsw_sp *mlxsw_sp,
--			 const struct net_device *dev)
--{
--	struct mlxsw_sp_rif *rif;
--
--	mutex_lock(&mlxsw_sp->router->lock);
--	rif = mlxsw_sp_rif_find_by_dev(mlxsw_sp, dev);
--	mutex_unlock(&mlxsw_sp->router->lock);
--
--	return rif;
--}
--
--u16 mlxsw_sp_rif_vid(struct mlxsw_sp *mlxsw_sp, const struct net_device *dev)
--{
--	struct mlxsw_sp_rif *rif;
--	u16 vid = 0;
--
--	mutex_lock(&mlxsw_sp->router->lock);
--	rif = mlxsw_sp_rif_find_by_dev(mlxsw_sp, dev);
--	if (!rif)
--		goto out;
--
--	/* We only return the VID for VLAN RIFs. Otherwise we return an
--	 * invalid value (0).
--	 */
--	if (rif->ops->type != MLXSW_SP_RIF_TYPE_VLAN)
--		goto out;
--
--	vid = mlxsw_sp_fid_8021q_vid(rif->fid);
--
--out:
--	mutex_unlock(&mlxsw_sp->router->lock);
--	return vid;
--}
--
- static int mlxsw_sp_router_rif_disable(struct mlxsw_sp *mlxsw_sp, u16 rif)
- {
- 	char ritr_pl[MLXSW_REG_RITR_LEN];
-@@ -8417,19 +8382,6 @@ u16 mlxsw_sp_ipip_lb_rif_index(const struct mlxsw_sp_rif_ipip_lb *lb_rif)
- 	return lb_rif->common.rif_index;
- }
- 
--u16 mlxsw_sp_ipip_lb_ul_vr_id(const struct mlxsw_sp_rif_ipip_lb *lb_rif)
--{
--	struct net_device *dev = mlxsw_sp_rif_dev(&lb_rif->common);
--	u32 ul_tb_id = mlxsw_sp_ipip_dev_ul_tb_id(dev);
--	struct mlxsw_sp_vr *ul_vr;
--
--	ul_vr = mlxsw_sp_vr_get(lb_rif->common.mlxsw_sp, ul_tb_id, NULL);
--	if (WARN_ON(IS_ERR(ul_vr)))
--		return 0;
--
--	return ul_vr->id;
--}
--
- u16 mlxsw_sp_ipip_lb_ul_rif_id(const struct mlxsw_sp_rif_ipip_lb *lb_rif)
- {
- 	return lb_rif->ul_rif_id;
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.h b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.h
-index 0432c7cc6b07..313efab5c324 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.h
-@@ -90,7 +90,6 @@ struct mlxsw_sp_ipip_entry;
- struct mlxsw_sp_rif *mlxsw_sp_rif_by_index(const struct mlxsw_sp *mlxsw_sp,
- 					   u16 rif_index);
- u16 mlxsw_sp_ipip_lb_rif_index(const struct mlxsw_sp_rif_ipip_lb *rif);
--u16 mlxsw_sp_ipip_lb_ul_vr_id(const struct mlxsw_sp_rif_ipip_lb *rif);
- u16 mlxsw_sp_ipip_lb_ul_rif_id(const struct mlxsw_sp_rif_ipip_lb *lb_rif);
- u32 mlxsw_sp_ipip_dev_ul_tb_id(const struct net_device *ol_dev);
- int mlxsw_sp_rif_dev_ifindex(const struct mlxsw_sp_rif *rif);
--- 
-2.48.1
-
+> 
+> Ian Rogers (7):
+>   perf syscalltble: Remove syscall_table.h
+>   perf trace: Reorganize syscalls
+>   perf syscalltbl: Remove struct syscalltbl
+>   perf thread: Add support for reading the e_machine type for a thread
+>   perf trace beauty: Add syscalltbl.sh generating all system call tables
+>   perf syscalltbl: Use lookup table containing multiple architectures
+>   perf build: Remove Makefile.syscalls
+> 
+>  tools/perf/Makefile.perf                      |  10 +-
+>  tools/perf/arch/alpha/entry/syscalls/Kbuild   |   2 -
+>  .../alpha/entry/syscalls/Makefile.syscalls    |   5 -
+>  tools/perf/arch/alpha/include/syscall_table.h |   2 -
+>  tools/perf/arch/arc/entry/syscalls/Kbuild     |   2 -
+>  .../arch/arc/entry/syscalls/Makefile.syscalls |   3 -
+>  tools/perf/arch/arc/include/syscall_table.h   |   2 -
+>  tools/perf/arch/arm/entry/syscalls/Kbuild     |   4 -
+>  .../arch/arm/entry/syscalls/Makefile.syscalls |   2 -
+>  tools/perf/arch/arm/include/syscall_table.h   |   2 -
+>  tools/perf/arch/arm64/entry/syscalls/Kbuild   |   3 -
+>  .../arm64/entry/syscalls/Makefile.syscalls    |   6 -
+>  tools/perf/arch/arm64/include/syscall_table.h |   8 -
+>  tools/perf/arch/csky/entry/syscalls/Kbuild    |   2 -
+>  .../csky/entry/syscalls/Makefile.syscalls     |   3 -
+>  tools/perf/arch/csky/include/syscall_table.h  |   2 -
+>  .../perf/arch/loongarch/entry/syscalls/Kbuild |   2 -
+>  .../entry/syscalls/Makefile.syscalls          |   3 -
+>  .../arch/loongarch/include/syscall_table.h    |   2 -
+>  tools/perf/arch/mips/entry/syscalls/Kbuild    |   2 -
+>  .../mips/entry/syscalls/Makefile.syscalls     |   5 -
+>  tools/perf/arch/mips/include/syscall_table.h  |   2 -
+>  tools/perf/arch/parisc/entry/syscalls/Kbuild  |   3 -
+>  .../parisc/entry/syscalls/Makefile.syscalls   |   6 -
+>  .../perf/arch/parisc/include/syscall_table.h  |   8 -
+>  tools/perf/arch/powerpc/entry/syscalls/Kbuild |   3 -
+>  .../powerpc/entry/syscalls/Makefile.syscalls  |   6 -
+>  .../perf/arch/powerpc/include/syscall_table.h |   8 -
+>  tools/perf/arch/riscv/entry/syscalls/Kbuild   |   2 -
+>  .../riscv/entry/syscalls/Makefile.syscalls    |   4 -
+>  tools/perf/arch/riscv/include/syscall_table.h |   8 -
+>  tools/perf/arch/s390/entry/syscalls/Kbuild    |   2 -
+>  .../s390/entry/syscalls/Makefile.syscalls     |   5 -
+>  tools/perf/arch/s390/include/syscall_table.h  |   2 -
+>  tools/perf/arch/sh/entry/syscalls/Kbuild      |   2 -
+>  .../arch/sh/entry/syscalls/Makefile.syscalls  |   4 -
+>  tools/perf/arch/sh/include/syscall_table.h    |   2 -
+>  tools/perf/arch/sparc/entry/syscalls/Kbuild   |   3 -
+>  .../sparc/entry/syscalls/Makefile.syscalls    |   5 -
+>  tools/perf/arch/sparc/include/syscall_table.h |   8 -
+>  tools/perf/arch/x86/entry/syscalls/Kbuild     |   3 -
+>  .../arch/x86/entry/syscalls/Makefile.syscalls |   6 -
+>  tools/perf/arch/x86/include/syscall_table.h   |   8 -
+>  tools/perf/arch/xtensa/entry/syscalls/Kbuild  |   2 -
+>  .../xtensa/entry/syscalls/Makefile.syscalls   |   4 -
+>  .../perf/arch/xtensa/include/syscall_table.h  |   2 -
+>  tools/perf/builtin-trace.c                    | 275 +++++++++++-------
+>  tools/perf/scripts/Makefile.syscalls          |  61 ----
+>  tools/perf/scripts/syscalltbl.sh              |  86 ------
+>  tools/perf/trace/beauty/syscalltbl.sh         | 274 +++++++++++++++++
+>  tools/perf/util/syscalltbl.c                  | 142 ++++-----
+>  tools/perf/util/syscalltbl.h                  |  22 +-
+>  tools/perf/util/thread.c                      |  50 ++++
+>  tools/perf/util/thread.h                      |  14 +-
+>  54 files changed, 598 insertions(+), 506 deletions(-)
+>  delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/alpha/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/arc/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/arc/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/arc/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/arm/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/arm/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/arm/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/arm64/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/csky/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/csky/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/csky/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/loongarch/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/mips/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/mips/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/mips/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/parisc/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/powerpc/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/riscv/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/s390/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/s390/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/s390/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/sh/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/sh/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/sh/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/sparc/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/x86/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/x86/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/x86/include/syscall_table.h
+>  delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Kbuild
+>  delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Makefile.syscalls
+>  delete mode 100644 tools/perf/arch/xtensa/include/syscall_table.h
+>  delete mode 100644 tools/perf/scripts/Makefile.syscalls
+>  delete mode 100755 tools/perf/scripts/syscalltbl.sh
+>  create mode 100755 tools/perf/trace/beauty/syscalltbl.sh
+> 
+> -- 
+> 2.48.1.362.g079036d154-goog
+> 
