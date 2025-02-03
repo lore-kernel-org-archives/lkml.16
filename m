@@ -1,142 +1,164 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B972F205AD0
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E481E205AC3
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 13:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738590658; cv=none; b=oZQ1p160EG8n/1bZcauu+70sYqwy2KhaE5xOhCu7vTOKJ39sbKHWqoWRRp2tMLaPXKNm8PkzAzB9c/6VybK5TMUu+xXW5g3cnVfsMIw7Q8+o3Smh+vz9zXwerAGdXebYZTdNiNSQXhYvcWQIinFGM+DNe8a1uylHox2UiV6vaSM=
+	t=1738590728; cv=none; b=epLCLFRVIUFW1vgvbSEQUsz4sBahL8OMORRWUX7fid9cBOVol8ohu2+YXAWKJEoOTQReMrdlcVx8qyw2LXHNd17Wzo3eBmxyITxqcHu4fZzyQCpdwEvf5M2f1al8TDszaDKh4hr7tP9MbHAChYBXXDKsIWIuo5JNXWNfnICYv90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738590658; c=relaxed/simple;
-	bh=/utc3UxctpVRJmC1Nm8/3vJ/7Oef900YhfJJ0iAdfvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y7l2FuOziuwfyQbZyPfrH2IVDU7uQ+BPRECrCpaniEy5VJURahIdIuVmfrVO6D4rDbVg4KySwduEFk/HLBPtd/9Ib2u9B+wZNR1wTbcTwmWRxkYXz0uHZ4vp948+zPhgJRZzDySNe32T2F69/rvfnTj1BMpl1vyOqllSvxm+u7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HQHt8V/D; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738590728; c=relaxed/simple;
+	bh=zOEa5J0DQ6HrR52RCclALxC8DwegVQqT5KeigVclXS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TakSneTq7vicG3k+egrZ9U6Jzn7Ag9pSisUIDXR7Q/44wPQJicG+F8wldZWyvnebU8bQVx0O8bNPNP3qpHarS7ekwcE/l5+0iX1VAoWx1u+RZPP6aW+QJLWLcOv4UoEaJ5s0POUI+rfMnvmesiD+lx0oFfbXMJhl3eHXwutH/pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=XvjTXOsM; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HQHt8V/D"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5135bnKM014767
-	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 13:50:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	i9dKRVRH0tsWqZoRlMIfUf+WF9bijGx40ODTB/g1OW8=; b=HQHt8V/Do0FmzM8Q
-	AL+iq+m/Dqqe6CtydD3yEFC/haEvp2tpTbqewN7Jw7qNQzH0CTcavB8aQC4TBJt4
-	qg3F/nqRFp7vGUxSipYOstS24T+usrnlNSehM4PC6Ix9Iv2vR9M8uHTrTlKkGxuz
-	yvwYJYqC7QYoh/0mFRkq62C8XW2JgJGJXl3HVwm6AwEkiVpGADHQVWVRgy8N+6VW
-	CyWeTfEfMKHAmjDPaqiaZ81hA4opCeNyW4BDM3eSQx7Ub8/QmQWtTVObZKSeyq0V
-	+KM2BU9cji58blXvJ81QrFQn5IVzLghiE75xvDFfFgldEZfja0/gUJ05PsesqZ8F
-	PFh+/g==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jqtnh8e9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 13:50:55 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7b6e132c31eso20924185a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 05:50:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="XvjTXOsM"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-467bc28277eso37086421cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 05:52:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1738590726; x=1739195526; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mVVIkFEJaT8OVYZXmsLtAPpHN2DcsQyr/t9U6rVjLCg=;
+        b=XvjTXOsME5NJxtt7sw4wAviJUO3M/2vt1FCuN+YhW61xJMppo2F/mYzZJjzDEuwGKW
+         vTbzKRH6aCTqiyRf7Hz+wMjVphgorNKKO0BYHnm1JX/1hcOj9/b5sVZDV87aRT0H0AMe
+         C0qeeviQUZ27JpqI102phEoRRa82yrcNQcENo+2tAhv5EMmY2cuY7PmR20xbmA6O+yJm
+         GGWpWrzsN+5MOZfwodXUVGBqSJQ1cEwbswZvj3+Wu45bwnNtuKnDVjrMYfPsaRFEQCYy
+         NU8eLy+UUz9takN70dvazzkNDTuw+jMmafcl+VClldEUJjJjZUawgUZKTypEyZziJ6ZK
+         WpGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738590655; x=1739195455;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i9dKRVRH0tsWqZoRlMIfUf+WF9bijGx40ODTB/g1OW8=;
-        b=lzS/qtrcD+fqwWElcn48V/Nq8AdthkFMsQo0+VrRfg9X7zy+L590M3p2qMgrayeclB
-         FAEQs3b6mOACdFdSGNnXPQGKxThtSFnpsB7yulImXhklu3vt0oKZj+rxLPuzJ8r/JYWB
-         vzyKiedIZr9vnCLuC77+h93KyIaS0B2+ckbgCOXYMkSbUrTT/4HX4YQo5fZuSC5qLOBr
-         rhz6AUP1BMTfbTJJS0z+ZCH6zn0qnotP7fI9s7qASwVBG3phfonFg6P4mL3eRNSSRmdr
-         d6fwWcrzAZf6C/ldjw88ewixmKEG7SmpKyB3SXzPC7wqvcOr5PWvJAT+1GEHLApDdiKJ
-         jYVw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5bfmlBBKSoWKEMhDN/zXKl2dN0+CP+OneI1ZQW+apxK/CKM+pRHNredQZV9HXxdcqKfTJ8nomN67TER0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoSFa5IMZBvmDHSF5WtBT8zNJJe157cWUC0/KjICwVHzl15zUp
-	Qc6+Bfwg69yP5EKVir7tQGZvGJgup0/0GInmFS+Oi9EjipnewllglgsLJMnCYQUsCujN4V5mm2B
-	D0BDLNpZJ6BsVbCxHJm04r1gK6JXllD9ZtXU2QyZ/I1om69cce+MX/XlFAoHd9TM=
-X-Gm-Gg: ASbGncsWe/G0EIWi0WjLH1QQMU4qm4bO9Z6Np7TdS/y6/xIfFTqvZFYa9E6opr3YG3W
-	GS+yet6GPYoh0mYkx+YBFxWaD6MpVPJrle9IzfEIRDUTvCpOQxuTjp7mLleOCOpQdrgxf4jH/05
-	zW7y4MeYZkjdISic7avaxor2vknWsKe8RCFoUfZyddNilylrKKo1sNJyIhvLp+qDJIPPD1Dgy9I
-	lb3tz+RRIZ8UTjAzaOEoBFyXX+FerG/8yk3P9MHmVyLdmLYZYBBi+V8rkfJd/ol490Wq7Q1T+ix
-	JEjnfzWnhEry+6ZzYAY92NfZWIocTNgw8ZYXVGm8PRpwyn2Y6rBFrqxrnWE=
-X-Received: by 2002:a05:620a:198c:b0:7b6:d26e:9d76 with SMTP id af79cd13be357-7bffcd9d8c0mr1246576585a.14.1738590654957;
-        Mon, 03 Feb 2025 05:50:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEY6jvMc+LTupwBqTCiNsviQpArJF4m3TtQX8HBbARSwDbXva4ZNsyY1mUxcrQtNhsMgtu6jA==
-X-Received: by 2002:a05:620a:198c:b0:7b6:d26e:9d76 with SMTP id af79cd13be357-7bffcd9d8c0mr1246575285a.14.1738590654639;
-        Mon, 03 Feb 2025 05:50:54 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a3244csm759209066b.146.2025.02.03.05.50.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 05:50:54 -0800 (PST)
-Message-ID: <a6fe746c-c5e2-4c39-afa8-46b225256cb9@oss.qualcomm.com>
-Date: Mon, 3 Feb 2025 14:50:52 +0100
+        d=1e100.net; s=20230601; t=1738590726; x=1739195526;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mVVIkFEJaT8OVYZXmsLtAPpHN2DcsQyr/t9U6rVjLCg=;
+        b=j/UkgmxCcGfnqZNj3mesBvW6vc8+176gxyY52WFMoft8ZLmjhEFMT8udb+8emO+MZf
+         /LqU237TJTJZw8jp61KvqTYLwhzJPoIBIEfnj+WXFLSHX9IwX/dzw06HlI1mDzY4/zQG
+         /3APqwtb4Vbk9uPcfl49z5lPsehppSKFRunH6q6afg/S9aaGI2hQ9mt4XC7YE055PXG4
+         Nq54b8IG2IURlgrPqPbVtl9u9LwCNuzO+jEtx3XINcV2Hyh9PeN1kEwR5/jk0k5G+6W4
+         nP2afFpetCfIHMEDLPUQCyeNHtDItDeZRnWlSHt3S5gIYPi6K+y28qgbYbioijXPEjyn
+         DI3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXsgVxXb+SiTL+zIQkMR6rp326tuNLI4fBAycEilr1alL1rrR8EzZAIMg4wOkrEfRo7p76zJsBWV0ZJiz0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQPR63S9ajSzi9/+/4PgRc4JoSiIHsid6v46VEpaZ7XONU59/M
+	fMESPEFkLNe+2X1aB+Q3Q6vL1DBJ8hI4cRndxUF4eBG04waFQaU8J9aE3LiEULA=
+X-Gm-Gg: ASbGnct7QgWBUl6EGRJBEwZo1wnfPndwUX4Urg/l4ZhM+QLp+GaUU5MDmSAq3CcVHRz
+	9oUmfyzxaF/F2YYHTGSCvN/VujC1V9kM6c1xPWtcYvp+v+QPgE3JlYivSN8XO5BWeCKpgJd+g7p
+	qK0x3XXrp6ZecTluDebJqNYClTNpyf++1PsKdWMmmXy112VT+LdBxyrsAweXfDzBZP4pT+NWRF2
+	QcVY0txjG1+IM6f6546/uUbvYkIzjpEPJDswY7uKGPcUz6HGHZ20t4+HVW3lksHqfYU05aK028C
+	XEiuSBQCRs7CL7LmLc5tFgw=
+X-Google-Smtp-Source: AGHT+IG1DREDrqF3xYxNZzwm1ndtBiVa4OQybfLg4yQAt6D5mkHaEPMmuoTDFccTftQIjA1j5K+MmQ==
+X-Received: by 2002:a05:622a:2d4:b0:46c:78f2:cd1f with SMTP id d75a77b69052e-46fd0b68875mr301532491cf.37.1738590725644;
+        Mon, 03 Feb 2025 05:52:05 -0800 (PST)
+Received: from sunil-laptop ([103.97.166.196])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf18a42bsm48670911cf.76.2025.02.03.05.51.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 05:52:05 -0800 (PST)
+Date: Mon, 3 Feb 2025 19:21:50 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 12/17] ACPI: property: Add support for nargs_prop
+ in acpi_fwnode_get_reference_args()
+Message-ID: <Z6DJ9kmNx4JoqRg-@sunil-laptop>
+References: <20250203084906.681418-1-apatel@ventanamicro.com>
+ <20250203084906.681418-13-apatel@ventanamicro.com>
+ <Z6CPvteWv89Xo70j@smile.fi.intel.com>
+ <20250203105840.GH3713119@black.fi.intel.com>
+ <Z6C1cg3cqik8ZxvU@sunil-laptop>
+ <20250203123658.GI3713119@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/6] arm64: dts: qcom: qrb2210-rb1: add Bluetooth
- support
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Rob Herring
- <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
-        Rocky Liao <quic_rjliao@quicinc.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20250202-rb1-bt-v3-0-6797a4467ced@linaro.org>
- <20250202-rb1-bt-v3-6-6797a4467ced@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250202-rb1-bt-v3-6-6797a4467ced@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: d2I4RERPRpyhjn7fTciMz_zToID9zDAq
-X-Proofpoint-ORIG-GUID: d2I4RERPRpyhjn7fTciMz_zToID9zDAq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- priorityscore=1501 impostorscore=0 spamscore=0 suspectscore=0 adultscore=0
- mlxscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502030102
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203123658.GI3713119@black.fi.intel.com>
 
-On 2.02.2025 1:16 PM, Dmitry Baryshkov wrote:
-> Add support for the onboard WCN3950 BT/WiFi chip. Corresponding firmware
-> has been merged to linux-firmware and should be available in the next
-> release.
+On Mon, Feb 03, 2025 at 02:36:58PM +0200, Mika Westerberg wrote:
+> On Mon, Feb 03, 2025 at 05:54:18PM +0530, Sunil V L wrote:
+> > On Mon, Feb 03, 2025 at 12:58:40PM +0200, Mika Westerberg wrote:
+> > > On Mon, Feb 03, 2025 at 11:43:26AM +0200, Andy Shevchenko wrote:
+> > > > On Mon, Feb 03, 2025 at 02:19:01PM +0530, Anup Patel wrote:
+> > > > > From: Sunil V L <sunilvl@ventanamicro.com>
+> > > > > 
+> > > > > fwnode_get_reference_args() which is common for both DT and ACPI passes
+> > > > > a property name like #mbox-cells which needs to be fetched from the
+> > > > > reference node to determine the number of arguments needed for the
+> > > > > property. However, the ACPI version of this function doesn't support
+> > > > > this and simply ignores the parameter passed from the wrapper function.
+> > > > > Add support for dynamically finding number of arguments by reading the
+> > > > > nargs property value. Update the callers to pass extra parameter.
+> > > > 
+> > > > I don't like this (implementation).
+> > > 
+> > > Agree.
+> > > 
+> > > > It seems that we basically have two parameters which values are duplicating
+> > > > each other. This is error prone API and confusing in the cases when both are
+> > > > defined. If you want property, add a new API that takes const char *nargs
+> > > > and relies on the property be present.
+> > > 
+> > > Also this is not really needed for ACPI case because it has types so it can
+> > > distinguish references from integer. Having separate property for this just
+> > > makes things more complex than they need to be IMHO.
+> > 
+> > Thanks! Andy and Mika for your kind feedback. I agree that having both
+> > property name and nargs is confusing and also ACPI would not need
+> > nargs_prop. In fact, I think ACPI doesn't need even nargs integer value
+> > as well from the caller since all integers after the reference are
+> > counted as arguments.  However, the issue is acpi_get_ref_args() assumes
+> > that caller passes valid num_args. But typically the common
+> > fwnode_property_get_reference_args() doesn't usually pass both valid
+> > values. So, should fwnode_property_get_reference_args() pass both
+> > nargs_prop (for DT) and nargs (for ACPI). Or do you mean it is better to
+> > remove the check for num_args in the loop inside acpi_get_ref_args()
+> > function?
 > 
-> Bluetooth: hci0: setting up wcn399x
-> Bluetooth: hci0: QCA Product ID   :0x0000000f
-> Bluetooth: hci0: QCA SOC Version  :0x40070120
-> Bluetooth: hci0: QCA ROM Version  :0x00000102
-> Bluetooth: hci0: QCA Patch Version:0x00000001
-> Bluetooth: hci0: QCA controller version 0x01200102
-> Bluetooth: hci0: QCA Downloading qca/cmbtfw12.tlv
-> Bluetooth: hci0: QCA Downloading qca/cmnv12.bin
-> Bluetooth: hci0: QCA setup on UART is completed
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
+> Can you show an example of a case you are trying to solve with this? So far
+> we have been able to go with the current implementation so why this is
+> needed now?
 
-[...]
+Basically one can call fwnode_property_get_reference_args()
+irrespective of DT/ACPI. The case we are trying is like below.
 
-> +&uart3 {
-> +	/delete-property/ interrupts;
-> +	interrupts-extended = <&intc GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-> +			      <&tlmm 11 IRQ_TYPE_LEVEL_HIGH>;
-> +	pinctrl-0 = <&uart3_default>;
-> +	pinctrl-1 = <&uart3_sleep>;
-> +	pinctrl-names = "default", "sleep";
-> +	status = "okay";
+if (fwnode_property_get_reference_args(dev->fwnode, "mboxes",
+					       "#mbox-cells", 0, index, &fwspec)) {
+...
+}
 
-As you're going to resend, please add a newline before status
+As you can see this works for DT since OF interface handles
+"#mbox-cells". But since nargs is passed as 0, it won't work for ACPI
+due to the reason I mentioned earlier.
 
-Konrad
+Mandating to pass both "#mbox-cell" and valid nargs count looks
+redundant to me.
+
+Thanks,
+Sunil 
