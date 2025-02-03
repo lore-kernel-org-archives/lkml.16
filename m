@@ -1,368 +1,349 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C5A1482F2;
-	Mon,  3 Feb 2025 05:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5303596F
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 05:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738561439; cv=none; b=OYf3x1NAtHVJrxUtIkgCsr+K8hcF2oIsjjrbRVIZC7MhmLLO5qeQTNfsGSXxXbT2aWXwlgLw1SjimpJZngXYvTWw5u7jBFUqXtnbQlmKZuACNz15v496+XdsqQv3iCbuzUXsyW8Gwfs8dbeNN9K/IXEq+OAIsofYQxmYWWNKyz0=
+	t=1738561649; cv=none; b=dEPuDSTr0hSj41TCjXTKWwabgLaeLNUAs+sf1M6X+PLvv8K9ji+jlAdtH5EXTN6g+B2YmzSdEHJSiAzCgIzRX7PSuoPiIvX3dVFE9m26lLO6EuAueMKG9kUKyzjVAJ6B4mrffoiseumi4ebqBjzHoccUA6qPmdJFcj2lW7cVwK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738561439; c=relaxed/simple;
-	bh=JKJdGs6JgFpjyEGjOifXDCzUUE5ylMlAtufiOaUv9So=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QcMHX0qg2Q4aBbM80E/U6sT/EvYbOZ8bMuHo19U7nUME3oENFyJp+UL2luVrm0g0c8m1i1a/nGUUDYRMCA6WS/1bX5HN4HW4X9BWyx3FI74JgDFG78M+mjqxkfv4jbfWysHFrH3/xiLlTc+fCBuqaVJgg/x0TKOb1FCcGzfhlOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B2R0BW/2; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738561649; c=relaxed/simple;
+	bh=8iuATC6mBwkndZhwf/Jq4v5L3igbHn7zqmcXv11SFXw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r77l2MCKvG07CPwqdmc7FZr81gyPzUkhfbifboqtGF5kBCYzGln0N3xEEYsEPUqIjUxDqTnXxmVustL/ZIhY6mT2ZyJ6NA6/ctSZ0+8BEnmW97y5a86tA/k68s1wo0OYL0mf+bMLylL+CvzBrtMj61l5SQZeAU5s/9iYznuhNnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=L9ukuxxH; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2R0BW/2"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2167141dfa1so67692805ad.1;
-        Sun, 02 Feb 2025 21:43:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="L9ukuxxH"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2efd81c7ca4so5025647a91.2
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 21:47:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738561436; x=1739166236; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738561647; x=1739166447; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rf/ShRyvxTN8+33G5lApFqsieby0UFmnabOeDI9FQLs=;
-        b=B2R0BW/2LT6vHJQ1xGkEoKcNC7p+VYtlFUqnSmXVJJcjx8TJjKD3XWN/lGyz1uz3su
-         1yuG4UjRKmaqZYxLTGle/us3I2LNXBADEkHY/MHttHjaNuHTrOYdK6AIEewPp1YVHqk3
-         Nb3G8LqXBu8UpyWnOcBfB8Kf05Bo26G1lryc1RvL5REP+ZmTC9P2nrun032STxXJ3wbC
-         UyXYFBvKsVCn8PF7BuNuW8JjZTI6HiiGtrauC47nHbP59eZON/yEmlhub58xCeDXS5Yr
-         dMPGS77ftyVmsx2WFDYscRrE+2e0scR0A22j1Q5nE1hgh9sF6TuoC3VBAgnrfpvAkxwb
-         iUgA==
+        bh=7zD86D1VfcMORlm//b5KGShjw5URyyiGtxp7Nsfy5qU=;
+        b=L9ukuxxHUq+9BefHsnLGOcXLBb/CRMDVBKIElmhgzLRSTEq6ebkrGO44S9gIvMh3TR
+         lai4nTCsB8hTCSTC0CIkaN6VsY41MxDdfJ2iQQTNx5Vd/34aAKAYuD5eAr0eIkYfEQ8f
+         IkuDW/FItfHuttVpJIoUjNpZskSFGKIw8TiztGeFj3R1t/ZpwzqfKEHRr2mWxi58xt09
+         1qwZWebwtDenMmWPvXEc0jlD13k4Um/khTIwU/a5/HsFooxsruF74aZ36SloGiC3UVgA
+         4fBVZCuFqupuMsASS4ridvMOw9Ffka+URVGWFwC3n3gfWbdjqZH2LsS/aWjjPhTJVoXv
+         jXbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738561436; x=1739166236;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1738561647; x=1739166447;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rf/ShRyvxTN8+33G5lApFqsieby0UFmnabOeDI9FQLs=;
-        b=Ej0pPuwoLe/0CGnMPVkhYUvRtA+I8vQ3XxCbAe6CjWOERm7SIWTkII4LdcZUyVNlBh
-         m1KaSWgomKHOZNiCiLCcV8nKDPUDbr7WG/0EjTOhAVrjrqLl9FBGmm5FucQiCi3GN2aG
-         qxybls24EZYfMKlIGxrKVTm2Xz3aaR79hfK0tzjTqPY0P/oduWzvUGPLM8LhTF11lliB
-         VkV2N1m/YgHAyHa193QIQ9frV8RcXGxsJhhgqq55o2pl8VomuGdzAntqoG1WyJ/DjJ1/
-         lbzfTeP35gDXxS6W42b4M9NeidsL7/dSCGqwslELIxYFAiKGaj5399QldrkR2sjBgUAP
-         JL8g==
-X-Forwarded-Encrypted: i=1; AJvYcCU2Hq3SwjI0cmNjgwoh4NVPONJ49HKw6iKZUQluQvANHqJx32UROFTRFlwfBVJiIp3J1eZ/FuWr4pt+X8Aw@vger.kernel.org, AJvYcCVWfj3ceyC05J4g6ZVaOnUfArOu70hPC9kgPGxsrnZ0A8Uuk6l6q/+bAEEXP38NfAShX4/D7kGX@vger.kernel.org, AJvYcCWJQsHy/UGtf5azZGTmaV7r8/RcBBAuqOgAvE3D7uGyFxhKf9dtQbO/+qe3LBKWqpuuxfb/mqOq+fca@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxih58qfgWvd87C37E3J7hhEJU+OHVsOrrP482VcvkvUiL+O4YX
-	qPpjh66wqHkjWCVk/e4PMZi5eAGytwGzW6ALNeJWJo1kk6DmiScF
-X-Gm-Gg: ASbGncuEYo1LNzm1SP4/r0YWt+erU5pp8zVvEZRC0chAf9aq08cTx4dCE6bkKJpzZiw
-	k/ztTWu7HhyQLw+efuao/hiH35RHLC0QSGAe6U+gN1B5jDY83+Nn3QkNqmsgHGNIdWc2BAnUoiy
-	BGZHIV+niP8SVZy9JJX8vMFX7GG8yFAjLqB05DqxqJ5tLjxIUiHOKcj7FcXBnxLyk5xYiW045lc
-	93TU4Vst/hmLva6kn3kjY5Tf2lE4uAB/tvL9SV+sA8BRmD5eOswohNHkI17psUhvPAg7knQrgvX
-	eaLKtMt1uRwFdqJfaR7kCuA74AQGGCUzzCkO3CADhmqvuLxav1eNhqcu
-X-Google-Smtp-Source: AGHT+IEFZ/36yBGHunOCtMy0HzmagZccJHEJhSVPNJSjo1bf8v5C2SzsrkRY+0DkSsg96GNkpYmziQ==
-X-Received: by 2002:a17:902:c40e:b0:216:6ef9:60d with SMTP id d9443c01a7336-21edd86e506mr222878405ad.23.1738561436434;
-        Sun, 02 Feb 2025 21:43:56 -0800 (PST)
-Received: from yclu-ubuntu.. (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32ea5fesm66894555ad.132.2025.02.02.21.43.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 21:43:56 -0800 (PST)
-From: Joey Lu <a0987203069@gmail.com>
-To: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	mcoquelin.stm32@gmail.com,
-	richardcochran@gmail.com
-Cc: alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com,
-	ychuang3@nuvoton.com,
-	schung@nuvoton.com,
-	yclu4@nuvoton.com,
-	peppe.cavallaro@st.com,
-	linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openbmc@lists.ozlabs.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	Joey Lu <a0987203069@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH net-next v8 3/3] net: stmmac: dwmac-nuvoton: Add dwmac glue for Nuvoton MA35 family
-Date: Mon,  3 Feb 2025 13:42:00 +0800
-Message-Id: <20250203054200.21977-4-a0987203069@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250203054200.21977-1-a0987203069@gmail.com>
-References: <20250203054200.21977-1-a0987203069@gmail.com>
+        bh=7zD86D1VfcMORlm//b5KGShjw5URyyiGtxp7Nsfy5qU=;
+        b=fLSptGh2QlTE28b365nPKUQBpd0oVBbQQ1roFu+axo07+MHkeQWhc0HDevYyR95KHA
+         uVMB9N/EM5AZnksnvB7405SF41J9SGYVEcLhKS5fvkON7uCQkosmwpvi02lCMfRYQiD2
+         RtBZ+yejqRwxiv1NFPDb5wxcQxEfGZamUJftDaOEPQCt2TzlwSsMpbEdb+DyIJtygfyW
+         IqXCOMMxnl3WqzGNmDSdP7ue8yQmGaxxu98YlT8faI6g2p/EdL16Mf1bwUWM9jEu8IbA
+         UxrjStPmTRcks9/44ANRoryKdshhYulot/7G864Iyzx76iQUYBcLFbkhJwAeI8iZNfVc
+         M3Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgXaLfWEiFoTSd0f0DcpJAW6ht8SqSjLCAIshbGHJiEcXUkEOZu/D5vk7pzFYUYj9pjfm5H6/o7WVqGzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzfxpk3uNcwzqy0ge6XRasosC0bX5mL0cd83QUgr9CFrhVDTTj9
+	gO90fYRMT74YJyajz7HVkXbxe5v22tjWyyo8tCdwAlg1lLC5SY+BDGW9+aNGjuUEsqVKxb/MkoS
+	oNrGKWGXe33xwR6zCkKmNaNSUDt8f9KApOKdNtA==
+X-Gm-Gg: ASbGncvbrrIeOvc+EBwFfiQdg25k4Zb3BS5n0AUyft3Aa5GiA3ymyftEoLIs0YCr9Nb
+	fYvlB/RhfqRiJ8DYkZ1Jh+AQrXwmWHeHFugHpAS7w978DHvxfcA3ZLkbL7o5jfsGzWpN295iB3V
+	U9tJpHUKm16Ix6MXqIsXKaW5zytH98Hl4=
+X-Google-Smtp-Source: AGHT+IFFJxtXD0g0LZKi4bOQIoY5kVJrYvNnq4/J9dmmZ8ZZBFZjkX4We03FuHI28jNVJLIjreKCNpf7936JKqVEUMg=
+X-Received: by 2002:a05:6a00:2a09:b0:730:1da:d0e with SMTP id
+ d2e1a72fcca58-73001da0d56mr12800194b3a.18.1738561646541; Sun, 02 Feb 2025
+ 21:47:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250109222109.567031-5-irogers@google.com> <Z4F3qxFaYnMTtPw7@google.com>
+ <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
+ <Z4WNT_UX9eMD_txf@google.com> <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
+ <Z4f3fDXemAMpBNMS@google.com> <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
+ <Z5qjwRG5jX9zAGtf@google.com> <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
+ <Z51RxQslsfSrW2ub@google.com>
+In-Reply-To: <Z51RxQslsfSrW2ub@google.com>
+From: Atish Kumar Patra <atishp@rivosinc.com>
+Date: Sun, 2 Feb 2025 21:47:15 -0800
+X-Gm-Features: AWEUYZnen_hhIu5FGpUUyAAJOeLV972bIGAtyP8fXMZPlMm2eJCIDGj4aAf8-bQ
+Message-ID: <CAHBxVyEMFrtEVOmehJaMLqxnNXuy-qXtmt+Mb5NT3-3NV0SbhA@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support for Gigabit Ethernet on Nuvoton MA35 series using dwmac driver.
+On Fri, Jan 31, 2025 at 2:42=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Wed, Jan 29, 2025 at 10:12:14PM -0800, Atish Kumar Patra wrote:
+> > On Wed, Jan 29, 2025 at 1:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > On Wed, Jan 15, 2025 at 01:20:32PM -0800, Ian Rogers wrote:
+> > > > On Wed, Jan 15, 2025 at 9:59=E2=80=AFAM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > >
+> > > > > > On Mon, Jan 13, 2025 at 2:51=E2=80=AFPM Ian Rogers <irogers@goo=
+gle.com> wrote:
+> > > > > > > There was an explicit, and reviewed by Jiri and Arnaldo, inte=
+nt with
+> > > > > > > the hybrid work that using a legacy event with a hybrid PMU, =
+even
+> > > > > > > though the PMU doesn't advertise through json or sysfs the le=
+gacy
+> > > > > > > event, the perf tool supports it.
+> > > > >
+> > > > > I thought legacy events on hybrid were converted to PMU events.
+> > > >
+> > > > No, when BIG.little was created nothing changed in perf events but
+> > > > when Intel did hybrid they wanted to make the hybrid CPUs (atom and
+> > > > performance) appear as if they were one type. The PMU event encodin=
+gs
+> > > > vary a lot for this on Intel, ARM has standards for the encoding.
+> > > > Intel extended the legacy format to take a PMU type id:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/include/uapi/linux/perf_event.h?h=3Dperf-tools-next#n41
+> > > > "EEEEEEEE: PMU type ID"
+> > > > that is in the top 32-bits of the config.
+> > >
+> > > Oh right, I forgot the extended type thing.  Then we can keep the leg=
+acy
+> > > encoding with it on hybrid systems when users give well-known names (=
+w/o
+> > > PMU) for legacy event.
+> > >
+> > > >
+> > > > > > >
+> > > > > > > Making it so that events without PMUs are only legacy events =
+just
+> > > > > > > doesn't work. There are far too many existing uses of non-leg=
+acy
+> > > > > > > events without PMU, the metrics contain 100s of examples.
+> > > > >
+> > > > > That's unfortunate.  It'd be nice if metrics were written with PM=
+U
+> > > > > names.
+> > > >
+> > > > But then we'd end up with things like on Intel:
+> > > > UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD
+> > > > becoming:
+> > > > uncore_cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
+> > > > or just:
+> > > > cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD/
+> > > > As a user the first works for me and doesn't have any ambiguity ove=
+r
+> > > > PMUs as the event name already encodes the PMU. AMD similarly place
+> > > > the part of a pipeline into event names. Were we to break everybody=
+ by
+> > > > requiring the PMU we'd also need to explain which PMU to use. Sites
+> > > > with event lists (like https://perfmon-events.intel.com/) don't
+> > > > explain the PMU and it'd be messy as on Intel you have a CHA PMU fo=
+r
+> > > > server chips but a CBOX on client chips, etc.
+> > >
+> > > While I prefer having PMU names in the JSON events/metrics, it may no=
+t
+> > > be pratical to change them all.  Probably we can allow them without P=
+MU
+> > > and hope that they have unique prefixes.
+> > >
+> > > >
+> > > > > I have a question.  What if an event name in a metric matches to
+> > > > > multiple unrelated PMUs?
+> > > >
+> > > > The metric may break or we'd aggregate the unrelated counts togethe=
+r.
+> > >
+> > > Ok, then they should use unique names.
+> > >
+> > >
+> > > > Take a metric like IPC as "instructions/cycles", that metric should
+> > > > work on a hybrid system as they have instructions and cycles. If yo=
+u
+> > > > used an event for instructions like inst_retired.any then maybe the
+> > > > metric will fail on one kind of core that didn't have that event. N=
+ow
+> > >
+> > > The metrics is for specific CPU model then the vendor should be
+> > > responsible to provide accurate metrics using approapriate PMU/events
+> > > IMHO.
+> > >
+> > >
+> > > > if we have accelerators advertising instructions and cycles events,=
+ we
+> > > > should be able to compute the metric for the accelerator. What coul=
+d
+> > > > happen today is that the accelerator will have a cpumask of a singl=
+e
+> > > > CPU, we could aggregate the accelerator counter into the CPU event
+> > > > with the same CPU as the cpumask, we'd end up with a weird quasi CP=
+U
+> > > > and accelerator IPC metric for that CPU. What should happen is that=
+ we
+> > > > get an IPC for the accelerator and IPC for each hybrid core
+> > > > independently, but the way we handle evsels, CPUs, PMUs is not real=
+ly
+> > > > set up for that. Hopefully getting a set of PMUs into the evsel wil=
+l
+> > > > clear that up. Assuming all of that is cleared up, is it wrong if t=
+he
+> > > > IPC metric is computed for the accelerator if it was originally
+> > > > written as a CPU metric? Not really. Could there be metrics where t=
+hat
+> > > > is the case?
+> > >
+> > > Yes, I think there should be separate metrics for the accelerators.
+> > >
+> > >
+> > > > Probably, and specifying PMUs in the event names would be
+> > > > a fix. There have also been proposals that we restrict the PMUs for
+> > > > certain metrics. As event names are currently so distinct it isn't =
+a
+> > > > problem we've faced yet and it is not clear it is a problem other t=
+han
+> > > > highlighting tech debt in areas of the tool like aggregation.
+> > > >
+> > > > > > >
+> > > > > > > Prior to switching json/sysfs to being the priority when a PM=
+U is
+> > > > > > > specified, it was the case that all encodings were the same, =
+with or
+> > > > > > > without a PMU.
+> > > > > > >
+> > > > > > > I don't think there is anything natural about assuming things=
+ about
+> > > > > > > event names. Take cycles, cpu-cycles and cpu_cycles:
+> > > > > > >  - cycles on x86 is only encoded via a legacy event;
+> > > > > > >  - cpu-cycles on Intel exists as a sysfs event, but cpu-cycle=
+s is also
+> > > > > > > a legacy event name;
+> > > > > > >  - cpu_cycles exists as a sysfs event on ARM but doesn't have=
+ a
+> > > > > > > corresponding legacy event name.
+> > > > >
+> > > > > I think the behavior should be:
+> > > > >
+> > > > >   cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > > >   cpu-cycles -> PERF_COUNT_HW_CPU_CYCLES
+> > > > >   cpu_cycles -> no legacy -> sysfs or json
+> > > > >   cpu/cycles/ -> sysfs or json
+> > > > >   cpu/cpu-cycles/ -> sysfs or json
+> > > >
+> > > > So I disagree as if you add a PMU to an event name the encoding
+> > > > shouldn't change:
+> > > > 1) This historically was perf's behavior.
+> > >
+> > > Well.. I'm not sure about the history.  I believe the logic I said ab=
+ove
+> > > is the historic and (I think) right behavior.
+> > >
+> > > > 2) Different event encodings can have different behaviors (broken i=
+n
+> > > > some notable cases).
+> > >
+> > > Yep, let's make it clear.
+> > >
+> > > > 3) Intuitively what wildcarding does is try to open "*/event/" wher=
+e *
+> > > > is every possible PMU name. Having different event encodings is
+> > > > breaking that intuition it could also break situations where you tr=
+y
+> > > > to assert equivalence based on type/config.
+> > >
+> > > While I don't like the wildcard matching, I think it doesn't matter a=
+s
+> > > long as we keep the above behavior.  If it can find a legacy name, th=
+en
+> > > go with it, done.  If not, try all PMUs as if it's given with PMU nam=
+e
+> > > in the event.
+> > >
+> > > > 4) The legacy encodings were (are?) broken on ARM Apple M? CPUs,
+> > > > that's why the priority was changed.
+> > >
+> > > I guess that why they use cpu_cycles.
+> > >
+> > > > 5) RISC-V would like the tool tackle the legacy to config mapping
+> > > > challenge, rather than the PMU driver, given the potential diversit=
+y
+> > > > of hardware implementations.
+> > >
+> > > I hope they can find a better solution. :)
+> > >
+> >
+> > Sorry for reposing. Gmail converted it to html for some reason.
+> >
+> > I have posted the latest support here.
+> > https://lore.kernel.org/kvm/20250127-counter_delegation-v3-12-64894d7e1=
+6d5@rivosinc.com/T/
+> >
+> > As of now, we have adopted a hybrid approach where a vendor can decide
+> > whether to encode the legacy events
+> > in the json or in the driver (if this series is merged). In absence of
+> > that, every vendor has to define it in the driver.
+> > We will deal with the fall out of the exploding driver when the
+> > situation arrives.
+>
+> I don't know how hard it'd be cause I'm not familiar with RISC-V.  But
+> basically you only need to maintain 9 legacy encodings (PERF_COUNT_HW_*)
+> and a few dozen combinations of supported cache events (PERF_COUNT_HW_
+> CACHE_*) for each vendor.  All others can go to json anyway.
+>
+That's what I did in the series posted above.
 
-The driver has been tested on the NuMaker-HMI-MA35D1-S1 development board,
-and the log is attached below. For more information about the SoCs,
-please refer to the MA35D1 series datasheet.
+The infrastructure:
+https://lore.kernel.org/kvm/20250127-counter_delegation-v3-12-64894d7e16d5@=
+rivosinc.com/T/#m2bcb3bbf267f9131c45cc55e3dffd45c31859f34
 
-[    0.000000] Machine model: Nuvoton MA35D1-SOM
-...
-[    1.836386] nuvoton-dwmac 40120000.ethernet: IRQ eth_wake_irq not found
-[    1.843039] nuvoton-dwmac 40120000.ethernet: IRQ eth_lpi not found
-[    1.849304] nuvoton-dwmac 40120000.ethernet: IRQ sfty not found
-[    1.856331] nuvoton-dwmac 40120000.ethernet: User ID: 0x10, Synopsys ID: 0x37
-[    1.863532] nuvoton-dwmac 40120000.ethernet:         DWMAC1000
-[    1.868750] nuvoton-dwmac 40120000.ethernet: DMA HW capability register supported
-[    1.876190] nuvoton-dwmac 40120000.ethernet: RX Checksum Offload Engine supported
-[    1.883696] nuvoton-dwmac 40120000.ethernet: COE Type 2
-[    1.888903] nuvoton-dwmac 40120000.ethernet: TX Checksum insertion supported
-[    1.895912] nuvoton-dwmac 40120000.ethernet: Enhanced/Alternate descriptors
-[    1.902846] nuvoton-dwmac 40120000.ethernet: Enabled extended descriptors
-[    1.909598] nuvoton-dwmac 40120000.ethernet: Ring mode enabled
-[    1.915406] nuvoton-dwmac 40120000.ethernet: Enable RX Mitigation via HW Watchdog Timer
-[    2.540881] nuvoton-dwmac 40130000.ethernet: IRQ eth_wake_irq not found
-[    2.547463] nuvoton-dwmac 40130000.ethernet: IRQ eth_lpi not found
-[    2.553626] nuvoton-dwmac 40130000.ethernet: IRQ sfty not found
-[    2.560015] nuvoton-dwmac 40130000.ethernet: User ID: 0x10, Synopsys ID: 0x37
-[    2.567116] nuvoton-dwmac 40130000.ethernet:         DWMAC1000
-[    2.572300] nuvoton-dwmac 40130000.ethernet: DMA HW capability register supported
-[    2.579747] nuvoton-dwmac 40130000.ethernet: RX Checksum Offload Engine supported
-[    2.587198] nuvoton-dwmac 40130000.ethernet: COE Type 2
-[    2.592395] nuvoton-dwmac 40130000.ethernet: TX Checksum insertion supported
-[    2.599418] nuvoton-dwmac 40130000.ethernet: Enhanced/Alternate descriptors
-[    2.606351] nuvoton-dwmac 40130000.ethernet: Enabled extended descriptors
-[    2.613109] nuvoton-dwmac 40130000.ethernet: Ring mode enabled
-[    2.618918] nuvoton-dwmac 40130000.ethernet: Enable RX Mitigation via HW Watchdog Timer
+Example of qemu event encoding:
+https://lore.kernel.org/kvm/20250127-counter_delegation-v3-12-64894d7e16d5@=
+rivosinc.com/T/#m51985fb0c4e323bc037da32a19b7d85d92d0d864
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Joey Lu <a0987203069@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/Kconfig   |  12 ++
- drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
- .../ethernet/stmicro/stmmac/dwmac-nuvoton.c   | 182 ++++++++++++++++++
- 3 files changed, 195 insertions(+)
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-nuvoton.c
+Please let us know if you see any issues with this approach.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-index 4cc85a36a1ab..f083a0e97b75 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-+++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-@@ -121,6 +121,18 @@ config DWMAC_MESON
- 	  the stmmac device driver. This driver is used for Meson6,
- 	  Meson8, Meson8b and GXBB SoCs.
- 
-+config DWMAC_NUVOTON
-+	tristate "Nuvoton MA35 dwmac support"
-+	default ARCH_MA35
-+	depends on OF && (ARCH_MA35 || COMPILE_TEST)
-+	select MFD_SYSCON
-+	help
-+	  Support for Ethernet controller on Nuvoton MA35 series SoC.
-+
-+	  This selects the Nuvoton MA35 series SoC glue layer support
-+	  for the stmmac device driver. The nuvoton-dwmac driver is
-+	  used for MA35 series SoCs.
-+
- config DWMAC_QCOM_ETHQOS
- 	tristate "Qualcomm ETHQOS support"
- 	default ARCH_QCOM
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index b26f0e79c2b3..48e25b85ea06 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-+++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-@@ -19,6 +19,7 @@ obj-$(CONFIG_DWMAC_IPQ806X)	+= dwmac-ipq806x.o
- obj-$(CONFIG_DWMAC_LPC18XX)	+= dwmac-lpc18xx.o
- obj-$(CONFIG_DWMAC_MEDIATEK)	+= dwmac-mediatek.o
- obj-$(CONFIG_DWMAC_MESON)	+= dwmac-meson.o dwmac-meson8b.o
-+obj-$(CONFIG_DWMAC_NUVOTON)	+= dwmac-nuvoton.o
- obj-$(CONFIG_DWMAC_QCOM_ETHQOS)	+= dwmac-qcom-ethqos.o
- obj-$(CONFIG_DWMAC_ROCKCHIP)	+= dwmac-rk.o
- obj-$(CONFIG_DWMAC_RZN1)	+= dwmac-rzn1.o
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-nuvoton.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-nuvoton.c
-new file mode 100644
-index 000000000000..588e2f234c5b
---- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-nuvoton.c
-@@ -0,0 +1,182 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Nuvoton DWMAC specific glue layer
-+ *
-+ * Copyright (C) 2025 Nuvoton Technology Corp.
-+ *
-+ * Author: Joey Lu <a0987203069@gmail.com>
-+ */
-+
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_device.h>
-+#include <linux/of_net.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/stmmac.h>
-+
-+#include "stmmac.h"
-+#include "stmmac_platform.h"
-+
-+#define NVT_REG_SYS_GMAC0MISCR  0x108
-+#define NVT_REG_SYS_GMAC1MISCR  0x10C
-+
-+#define NVT_MISCR_RMII          BIT(0)
-+
-+/* Two thousand picoseconds are evenly mapped to a 4-bit field,
-+ * resulting in each step being 2000/15 picoseconds.
-+ */
-+#define NVT_PATH_DELAY_STEP     134
-+#define NVT_TX_DELAY_MASK       GENMASK(19, 16)
-+#define NVT_RX_DELAY_MASK       GENMASK(23, 20)
-+
-+struct nvt_priv_data {
-+	struct platform_device *pdev;
-+	struct regmap *regmap;
-+};
-+
-+static struct nvt_priv_data *
-+nvt_gmac_setup(struct platform_device *pdev, struct plat_stmmacenet_data *plat)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct nvt_priv_data *bsp_priv;
-+	phy_interface_t phy_mode;
-+	u32 macid, arg, reg;
-+	u32 tx_delay_step;
-+	u32 rx_delay_step;
-+	u32 miscr;
-+
-+	bsp_priv = devm_kzalloc(dev, sizeof(*bsp_priv), GFP_KERNEL);
-+	if (!bsp_priv)
-+		return ERR_PTR(-ENOMEM);
-+
-+	bsp_priv->regmap =
-+		syscon_regmap_lookup_by_phandle_args(dev->of_node, "nuvoton,sys", 1, &macid);
-+	if (IS_ERR(bsp_priv->regmap)) {
-+		dev_err_probe(dev, PTR_ERR(bsp_priv->regmap), "Failed to get sys register\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+	if (macid > 1) {
-+		dev_err_probe(dev, -EINVAL, "Invalid sys arguments\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (of_property_read_u32(dev->of_node, "tx-internal-delay-ps", &arg)) {
-+		tx_delay_step = 0;
-+	} else {
-+		if (arg <= 2000) {
-+			tx_delay_step = (arg == 2000) ? 0xf : (arg / NVT_PATH_DELAY_STEP);
-+			dev_dbg(dev, "Set Tx path delay to 0x%x\n", tx_delay_step);
-+		} else {
-+			dev_err(dev, "Invalid Tx path delay argument.\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+	}
-+	if (of_property_read_u32(dev->of_node, "rx-internal-delay-ps", &arg)) {
-+		rx_delay_step = 0;
-+	} else {
-+		if (arg <= 2000) {
-+			rx_delay_step = (arg == 2000) ? 0xf : (arg / NVT_PATH_DELAY_STEP);
-+			dev_dbg(dev, "Set Rx path delay to 0x%x\n", rx_delay_step);
-+		} else {
-+			dev_err(dev, "Invalid Rx path delay argument.\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+	}
-+
-+	miscr = (macid == 0) ? NVT_REG_SYS_GMAC0MISCR : NVT_REG_SYS_GMAC1MISCR;
-+	regmap_read(bsp_priv->regmap, miscr, &reg);
-+	reg &= ~(NVT_TX_DELAY_MASK | NVT_RX_DELAY_MASK);
-+
-+	if (of_get_phy_mode(pdev->dev.of_node, &phy_mode)) {
-+		dev_err(dev, "missing phy mode property\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	switch (phy_mode) {
-+	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		reg &= ~NVT_MISCR_RMII;
-+		break;
-+	case PHY_INTERFACE_MODE_RMII:
-+		reg |= NVT_MISCR_RMII;
-+		break;
-+	default:
-+		dev_err(dev, "Unsupported phy-mode (%d)\n", phy_mode);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (!(reg & NVT_MISCR_RMII)) {
-+		reg |= FIELD_PREP(NVT_TX_DELAY_MASK, tx_delay_step);
-+		reg |= FIELD_PREP(NVT_RX_DELAY_MASK, rx_delay_step);
-+	}
-+
-+	regmap_write(bsp_priv->regmap, miscr, reg);
-+
-+	bsp_priv->pdev = pdev;
-+
-+	return bsp_priv;
-+}
-+
-+static int nvt_gmac_probe(struct platform_device *pdev)
-+{
-+	struct plat_stmmacenet_data *plat_dat;
-+	struct stmmac_resources stmmac_res;
-+	struct nvt_priv_data *priv_data;
-+	int ret;
-+
-+	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
-+	if (ret)
-+		return ret;
-+
-+	plat_dat = devm_stmmac_probe_config_dt(pdev, stmmac_res.mac);
-+	if (IS_ERR(plat_dat))
-+		return PTR_ERR(plat_dat);
-+
-+	/* Nuvoton DWMAC configs */
-+	plat_dat->has_gmac = 1;
-+	plat_dat->tx_fifo_size = 2048;
-+	plat_dat->rx_fifo_size = 4096;
-+	plat_dat->multicast_filter_bins = 0;
-+	plat_dat->unicast_filter_entries = 8;
-+	plat_dat->flags &= ~STMMAC_FLAG_USE_PHY_WOL;
-+
-+	priv_data = nvt_gmac_setup(pdev, plat_dat);
-+	if (IS_ERR(priv_data))
-+		return PTR_ERR(priv_data);
-+
-+	ret = stmmac_pltfr_probe(pdev, plat_dat, &stmmac_res);
-+	if (ret)
-+		return ret;
-+
-+	/* The PMT flag is determined by the RWK property.
-+	 * However, our hardware is configured to support only MGK.
-+	 * This is an override on PMT to enable WoL capability.
-+	 */
-+	plat_dat->pmt = 1;
-+	device_set_wakeup_capable(&pdev->dev, 1);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id nvt_dwmac_match[] = {
-+	{ .compatible = "nuvoton,ma35d1-dwmac"},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, nvt_dwmac_match);
-+
-+static struct platform_driver nvt_dwmac_driver = {
-+	.probe  = nvt_gmac_probe,
-+	.remove = stmmac_pltfr_remove,
-+	.driver = {
-+		.name           = "nuvoton-dwmac",
-+		.pm		= &stmmac_pltfr_pm_ops,
-+		.of_match_table = nvt_dwmac_match,
-+	},
-+};
-+module_platform_driver(nvt_dwmac_driver);
-+
-+MODULE_AUTHOR("Joey Lu <a0987203069@gmail.com>");
-+MODULE_DESCRIPTION("Nuvoton DWMAC specific glue layer");
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
-
+> I think this is what all other archs (including x86) do.
+>
+> Thanks,
+> Namhyung
+>
+> >
+> > If a vendor chooses to define in both places, driver encoding will
+> > take precedence.
+> > I have tried to describe the scheme in the cover letter. Please let me
+> > know if I should clarify more.
+> >
+> > > >
+> > > > To this end we hosted RISC-V's perf people at Google and they
+> > > > expressed that their preference was what this series does, and they
+> > > > expressed this directly to you.
+> > > >
+> > > > I don't think there would be an issue in this area if it wasn't for
+> > > > Neoverse and Linus - that's why the revert happened. This change in
+> > > > behavior was proposed by Arnaldo:
+> > > > https://lore.kernel.org/lkml/ZlY0F_lmB37g10OK@x1/
+> > > > and has tags from Intel, ARM and Rivos (RISC-V). I intend to carry =
+it
+> > > > in Google's tree.
+> > >
+> > > Maybe it's because of Linus.  But anyway it reminds me of behaviors t=
+hat
+> > > need to be discussed.  And we can (and should) improve things always.
+> > >
+> > > Thanks,
+> > > Namhyung
+> > >
