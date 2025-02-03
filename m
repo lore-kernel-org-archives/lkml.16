@@ -1,112 +1,126 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5A520ADFA;
-	Mon,  3 Feb 2025 14:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DD020767D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593296; cv=none; b=BYAJfOKd/jbOqgjed6qXgNSTRnWAMLSh0tJY5Bcy53JyW6ZpVMVnve/R6tpUJOPQNvCLJvQDLTJ6x7fNCmqmy2YrWofxcJ+ZYpTS3XoSm0vlZsCbsiz07q244HVgPPjREI90G/2sdVjEIv65KeMEOT0JgUH9XYlmDWA7KCcEYxM=
+	t=1738593351; cv=none; b=ckCmXTHkjw+RUFz+LMuf9m0DSZwJ+gG8+RMrIN1JuatF4oJ/hmcer2ogqAMHryDuR89PwGbGIGBgcnaZjofUlcjDb9kCVSxafu6Z1LVgrOgSJxSvYMyzCYcrHBS78Uzrtjp/nCYrzLSo+HCDcQlloqDwSO0mTupC9e+BeI0k/t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593296; c=relaxed/simple;
-	bh=1E3pxPAJYhWiMdzSHrs517J4qDoMDIW+VKdv+Dv3IZo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Nrl3tjZ7ooq27cAIfklBmMBZEcxpv0jPxEeBgOuSFcPQTP+HzJjytFgOdQpqU4yr50EcxmmWEvQvvR6WSuaYrmY6wBRtp3xiqV7mhNiuTfjCkVsU2rkM1ujEv+j55ANnJxA+BbWmgTHhNdVBYkxvVnjT1XzajoJaAev6/eadyZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jakemoroni.com; spf=pass smtp.mailfrom=jakemoroni.com; dkim=pass (2048-bit key) header.d=jakemoroni.com header.i=@jakemoroni.com header.b=TAYuZSXV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ePwkN892; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jakemoroni.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jakemoroni.com
+	s=arc-20240116; t=1738593351; c=relaxed/simple;
+	bh=UMLRPwjkBIoSYPP66uyn6s4hEzukRly/9LjGv5JzQqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oF4HLasSFIxE+7KB1WGvAooB2zRRDM4nLuZmaSPpJwue2Ozar6N4xTXMJ6HYo1EkbwizFSitHaaDCFcv1i6r0h0Xa6kengfgmrpJsqyBdbeyXf2d3xKiCBExcnyKtn6Sbm4iAAQGB/j4UEtv82FuITjf2l8fQncniKZbuKEdnoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rEjJuSgm; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jakemoroni.com header.i=@jakemoroni.com header.b="TAYuZSXV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ePwkN892"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 16E7B1140127;
-	Mon,  3 Feb 2025 09:34:52 -0500 (EST)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-02.internal (MEProxy); Mon, 03 Feb 2025 09:34:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jakemoroni.com;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
-	 t=1738593291; x=1738679691; bh=1E3pxPAJYhWiMdzSHrs517J4qDoMDIW+
-	VKdv+Dv3IZo=; b=TAYuZSXVFCbB4BnrA2KtTjkhMaqaVPkm9P+wbAz3XAcaZVff
-	FgEIpVIlZ89UTHJ/wLfzQhtw2oJ39bTiiwj93FCN0Xj2WYbNrOFpExcP0/DGkTk5
-	nUf/S2juw91wuBzUvwOdkchQAsoYt53Q9vZ9Yxf8VUQ0w7DoEMguiQgkQ3PqrhxJ
-	qzvSScn9rxOzbp6PmdpcXx5G6X4hSj9BHeqcmEBwuyiWnN/Zl2eR4NKxgmcCwzBI
-	LwWLE3vokoPgLamQM7+mtP/zdvZ01Mr0Ycro+SqEb6XmljnigHWrWyQY382ZXdV2
-	hGRORriikJxEx16tgYl/FmfpplRInpu1J7LDFQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738593291; x=
-	1738679691; bh=1E3pxPAJYhWiMdzSHrs517J4qDoMDIW+VKdv+Dv3IZo=; b=e
-	PwkN892jOXvpNCc7D4O8zYC0nlDS7r7GdzPi3ZnRvpEEfG2Fiqc7XqORDe8IL5wi
-	u/O8GzpYn2Yci1IJsZ3MzncklP1XqqSC+BrHn7BoIVhfAV3ZFKVFhArkyxwbucaI
-	+mGImWClRtmGrX5AXq05OohKrDOF6dHnkWezn2KRceBEz9bBC5DUCs6Ko08paNyt
-	38tLPLSZeNq+KxNIPHRtm/ACelAwzfxeHVJ1WA5je2VeRZkMomuFDVjICPKYCSBz
-	X1suqRMHVxj0h7bFdPhz9Ovkl5IpjkkgggkSF0yvo6G6wYtl8wvvQ/A5tqi0Nrio
-	pxIR546xUBAR4qkoMrJLw==
-X-ME-Sender: <xms:C9SgZ6afau2eqdoLUlLJKNofjIs-qolj3wuIaKdQCc457FmR7JeUtA>
-    <xme:C9SgZ9Y500perdaVOjFyU6CVU_dG7rtMpNBVqRtRNAfkYe3aZoWghJXQRt1ZMozk5
-    Hy5yemWNIe3A6-tzg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeekhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdflrggtohgsucfurdcuofhorhhonhhifdcuoehmrghilhesjhgrkh
-    gvmhhorhhonhhirdgtohhmqeenucggtffrrghtthgvrhhnpefghedvhfdtfeeggfduhfev
-    ieelvedvjeduvdehteetvddvhffgkeejtddvkefgvdenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghilhesjhgrkhgvmhhorhhonhhirdgt
-    ohhmpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
-    gurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivght
-    sehgohhoghhlvgdrtghomhdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughr
-    vgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopehirhhushhskhhikhhhse
-    hmrghrvhgvlhhlrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtgho
-    mhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:C9SgZ088jn7DwNBZRLaxkaJtQR4HVfx49suGcFud0FA6Un5SZIn3HQ>
-    <xmx:C9SgZ8oTdgwOm19Ipj1ezQ1Q6aGjpc9DZRvCyLiZvtI8kwmThYFvRA>
-    <xmx:C9SgZ1qtiQomgtbGobm8XYpQpsRIgDrfQHlYQmDyzxArL_l4nMPYMA>
-    <xmx:C9SgZ6RHPIqsEgKHhh7d1gOgfsMk5YHrJ2EULdOwsPf4rypOZsFsmw>
-    <xmx:C9SgZ5fWEGounURrBt0xMewrFY15fSj-iWTjFT6PwZEFOuORVQ_g8VPn>
-Feedback-ID: i17014242:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 4BC423020083; Mon,  3 Feb 2025 09:34:51 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rEjJuSgm"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5439a6179a7so4747722e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:35:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738593347; x=1739198147; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=q/CBL2MqSqojMhTBmJBlsXjTebcqv/OWdhdx1LIiXsQ=;
+        b=rEjJuSgmJ4JvyWt44g5rkpN0mOhPBhfsePrFF5kiF1gqlyeyMbMWDLS11Mq7Pnyh9p
+         0e98X7nIU7ORc4rPz4PsjzMKCLjrE6qXWPVcUMr1k3lxJlxDMup9NJoJr8DYgaK8+LeY
+         Mx1Hsm4jclRk6nDHGc31/uhQrcvb5AD5INusQ1cYDy2cowZS0EXf3ZeC/kzrekSMK4ca
+         P6UVHSj23QPT2SxsQH7NVJuV5ch3PxwC0XeBDROv8DC+t51ZisWlUYLHFyBbg+vsWOj8
+         L2oDyjJxGOojuweu4Nle1H3gJ3ikUAqvXjCXBtNt6n+wtpoAW/dY+iSGhVAZlcL4+dLn
+         uVyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738593347; x=1739198147;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q/CBL2MqSqojMhTBmJBlsXjTebcqv/OWdhdx1LIiXsQ=;
+        b=ksg/Dv3OBYfdJVksL//9/LL7EySrlo1vG2muy+SNvvcfh4ezcjbUtK2XabuJTnmYnh
+         Zl26PEw0b/A1vpISGQWo3wdwnYShAuOXf/OlOcPOvUiHvyEtQFUf3pXxF0cZ/iTKBxVK
+         1dzTnLyD89la39RKqWoTfFGU8c9EtG+W0QNHQiZLHnp2nS1ipR4bH7IxaE5I34tP2Hsl
+         kRhasavtw1GqP6liQ/MIm2zGwvO1ag52IaGBvn206m4qI8pTlHLSL1edVqJaQNIba0gS
+         0zNYPEtJC/3rglMzilbYzmxYC4LOG9n+g9oz0h2Nf2lnxKA+PvAh+2xpic3itaOHxM+3
+         1bZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWlZdot5l1QeZtb/GDHQLWNdqtiPuhd5S94ewQEbuONqpsRfWTuZ0lV+h/B6v72DfymaJgA584xVhUMXuE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOLY9z4iUodTnC7HX/ps343S2u97R7WE4k5RbsyX2rDoeQ7uJ5
+	2bS6GCRv6I8syj0wOxryDER/dDs2Ss2/c1WdIr/Z2R5SSTdhaRvnmx6QS3xBC7k=
+X-Gm-Gg: ASbGncujPvNPmk4h68yxoEv6Hm/AbeI+NaaLuR6t+BXAPtSW2+JRBdNWI9o6oPdygbo
+	/if2tj6sh3b2kgtzc8OCmoSHQn+np0FFFDYbF1nUmNzL3cmoB0WQJiiwc/n6EjJ9WWcwFoVKQFD
+	XixNr9Y3VPjzr27fAWGOuEloMtpmoja4ZylT4IHVqzqqGNhYyW3YyRRNW+tQ6BYQzC88V7yQn3g
+	3yvQOuKhIhGGvNlyNwJOQGcz9qBnDtw1cYlamMND3O4nNqVsYgy9c5qdmwkkFPT4KEhO3j0Hl/L
+	4/1CJNt7iKgkl5Cmnn5Z6Qz5AGvayKDrDxzqUf5oFPbKhkRhlwujLn6yz34UOnB8eQxccWQ=
+X-Google-Smtp-Source: AGHT+IHmpsMOUXj9J7uJNG7xObWsutT5JkdY7XQTqCfqYOO3ezVejDnIR+luTef92RNP0eR3hf/euA==
+X-Received: by 2002:a05:6512:32c9:b0:542:7ff6:73c4 with SMTP id 2adb3069b0e04-543f0edde38mr3901410e87.1.1738593345964;
+        Mon, 03 Feb 2025 06:35:45 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a3097f27sm14979041fa.45.2025.02.03.06.35.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 06:35:44 -0800 (PST)
+Date: Mon, 3 Feb 2025 16:35:42 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG1 against
+ clock driver
+Message-ID: <7srflbpb72amuky33bv2etyuo2wcmrcmrlc6sknx37gzp6v6s2@qpxelvzoo6gd>
+References: <20250131-drm-msm-phy-pll-cfg-reg-v1-0-3b99efeb2e8d@linaro.org>
+ <20250131-drm-msm-phy-pll-cfg-reg-v1-2-3b99efeb2e8d@linaro.org>
+ <p3ybn4zsbipks2mzve5uybow3s5baydpmevuzfk7twejnk4cp2@3ljzapngbe65>
+ <2c10caef-09b3-472b-9d1b-4d35083576e7@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 03 Feb 2025 09:34:30 -0500
-From: "Jacob S. Moroni" <mail@jakemoroni.com>
-To: "Simon Horman" <horms@kernel.org>
-Cc: "Igor Russkikh" <irusskikh@marvell.com>,
- "Andrew Lunn" <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <fc757ba1-1f34-4a13-b7fd-e3dee7fd0a16@app.fastmail.com>
-In-Reply-To: <20250203100236.GB234677@kernel.org>
-References: <20250202220921.13384-2-mail@jakemoroni.com>
- <20250203100236.GB234677@kernel.org>
-Subject: Re: [PATCH net] net: atlantic: fix warning during hot unplug
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2c10caef-09b3-472b-9d1b-4d35083576e7@linaro.org>
 
-Hello,
+On Mon, Feb 03, 2025 at 12:19:04PM +0100, Krzysztof Kozlowski wrote:
+> On 31/01/2025 17:25, Dmitry Baryshkov wrote:
+> >>  
+> >> -static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
+> >> +static void dsi_pll_cmn_clk_cfg1_update(struct dsi_pll_7nm *pll, u32 mask,
+> >> +					u32 val)
+> >>  {
+> >> +	unsigned long flags;
+> >>  	u32 data;
+> >>  
+> >> +	spin_lock_irqsave(&pll->pclk_mux_lock, flags);
+> >>  	data = readl(pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+> >> -	writel(data & ~BIT(5), pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+> >> +	data &= ~mask;
+> >> +	data |= val & mask;
+> >> +
+> >> +	writel(data, pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+> >> +	spin_unlock_irqrestore(&pll->pclk_mux_lock, flags);
+> >> +}
+> >> +
+> >> +static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
+> >> +{
+> >> +	dsi_pll_cmn_clk_cfg1_update(pll, BIT(5), 0);
+> > 
+> > PLease add these bits to the corresponding XML file (here and later on)
+> 
+> 
+> I need some more input from you - I don't know which XML you talk about.
+> Do you think about:
+> drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
 
-Thanks for the feedback.
+Yes
 
-> This hunk, and the removal of the err_exit label, seem to be more
-> clean-up than addressing the bug described in the patch description.
-> I don't think they belong in this patch. But could be candidates for
-> a follow-up patch targeted at net-next.
+> and others alike? But doesn't it have only register offsets, not field
+> offsets?
 
-Makes sense. I'll send some follow up patches to clean these up.
+It can, see for example the mdp5.xml, you can add <bitfield> under the
+<reg> node. Be sure to install python3-lxml and enable
+CONFIG_DRM_MSM_VALIDATE_XML if you are modifying those files.
 
-Thanks,
-Jake
+-- 
+With best wishes
+Dmitry
