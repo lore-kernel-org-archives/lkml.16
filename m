@@ -1,103 +1,144 @@
-Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF1C211290
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 21:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D14720FA8E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 21:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738618647; cv=none; b=R7TqyPfhkLfyZM90ci+ydj/zgl2uSEXT86mJTKAyqmPrYNktFdRo8GkXzArJ8flv5PJla6AyaU0EK4UP6bWdgZ4Jn+IFHUmjsGvoZw7+QPe/TeT8+EpEWjBiFSWVDlAOIe7QD3OmRtkt7L5NeTGJrVKAnng01tvhdQEbkvOPpnk=
+	t=1738618711; cv=none; b=iS7/bjemNcp7DPmOsU8msIYJvdzvCGvUTyeeNvy/zEKYRhNk+1bQndb8GL0aJlGTc/WwwkPsDf5AzdLhgiyx2SvYJUEBGz9Rod1VuvU1XzFynOwUbNju09yJtNA+2up/fveXiTRGbhpCTX0cKiBBYEVrEm19+DnavZysJ9e9NyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738618647; c=relaxed/simple;
-	bh=QLnx4/Rgy7zQOoI/TasPwiI6+hjEJs/e68fuOcK9rGs=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=GfU9c5uTcbxuR7SfyLMFK0PY0JuBj8EfcjHzI2FsZLI0wTx3GyeQMvhg2qhGZDi+n5NsO0dO6vbeYspNRpz0cQ6yghhKpZwtdpQ5yq31rGnc4QjC09+doO5PL2a/QgbypG2YDnZHUXoaXUxDvT0DfnfLEv1Bw0LIZBkNd9bvHCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qmDEtDXn; arc=none smtp.client-ip=209.85.166.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1738618711; c=relaxed/simple;
+	bh=iLtmW/QXoPhA9E6GXUmkV7fRKcwHIBJyK5IwnF8CQAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=XHnW0JzMo2qp5O2d38YuZw6G5lARhL/spQIzeFegCh6n8+aLCno/hZ7XBwgX/hvnt36ZrOqJZTXM2UDeGNHnE4ibEpdVogxaXfaAX+vJoRhrKxuPqeaZh4nuytgFr4WdvU/SMc94+rS2TCAKi8cvU6LL+ooRRLGUePuxUOHTjOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YDQbl2Ch; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qmDEtDXn"
-Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-847500c9b9aso762763939f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 13:37:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738618645; x=1739223445; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XEqP/YEsjQP6HXPcAZ+OLL0SnqZRyU2wi8fLU4Seg48=;
-        b=qmDEtDXnc+drZ2rBsx5VwzDTo8GAidumBDsj/exrwP3oPPPzqsVXCuGF68aWe3gD+9
-         fzEtf1YGvJojJQm6s9piBShclKbrI+4Jgs6yCx65MwpwhX5+dVpgfCWWVppr6fdpRsCo
-         RvX2A9Q2z5mplQVC1RKXwMyBzd2Hya9FENjOS/qMpJqcodTv41OfSqA6J0RrzH1dsgAH
-         IC572ulqisdDqw6RsKjq9T03zRi8lA37nIQLIcF85+S5qpQfUzeR1MlNsuCW910R3iEY
-         BNZhhqwPV09n/lrMSAkB/BgVgOwAELzePUlvyo5s/UoXcjwQht8jFSgy2GItQ8b1fBG3
-         qwHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738618645; x=1739223445;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XEqP/YEsjQP6HXPcAZ+OLL0SnqZRyU2wi8fLU4Seg48=;
-        b=T1OW5mj5+E3Ao/Fg1BCxnKpHGTRii8newATy0Zd/DOWk1BQAwaomX41neoNWmiCvZd
-         KNPy556Ko7iZDcnUUo/dUiIDHmML2A3AlGooBR3augRARnzmpWx0eU5iOztyo9z0vEiY
-         vBtxMwTfbRtbWb7bXDLs/RoLKdhwuZjzIIlujZnKcNBmUrSFilzBhMm1AxbtQntcWuf+
-         IinesHiKCvDUH/i1NcVmOd7PLnhUazRMSxq6q6Zb0TgI8osNIXa4t6vWkwjkM9m+bk6q
-         umwOBxd6KHpdiIvZ/3WaA7lNUuyQPZ1RVESW6LYBbaFaVIOqZjg0cKKYrq9PPz5qDH+o
-         ztsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbR4Yd0cFPRryw7sPSOq8xTEyRVvNjw8J6qXk9toAlEYicNtE0G9+3uEYJBgW2VLhKhbE3L0+E0N1YE1k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTcKixKCXnOCQt+6rLKFOuleSDHG+SKIVHTuvYHUa7IWggdbxn
-	G7ufPek6guBBK5g27tB+5RMipttxmTVgL0FFdph9XgYnI1majP/vwye+KFsHyCPJXYOQpsV/VLz
-	NhSbpL5KPwGANNnxIpd841g==
-X-Google-Smtp-Source: AGHT+IFzEQXFVr/GsJOoiYsXrEqAdOToUP7ubJ3+EUez4554ouloGovsV2x1HVo9oXN98kh3qBpaq5S0IrbbEWoKkA==
-X-Received: from ilbby19.prod.google.com ([2002:a05:6e02:2613:b0:3cf:c127:d037])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a92:cd83:0:b0:3cf:b571:c08c with SMTP id e9e14a558f8ab-3cffe3d1bc2mr218960215ab.3.1738618645230;
- Mon, 03 Feb 2025 13:37:25 -0800 (PST)
-Date: Mon, 03 Feb 2025 21:37:24 +0000
-In-Reply-To: <gsntzfj91fbs.fsf@coltonlewis-kvm.c.googlers.com> (message from
- Colton Lewis on Wed, 29 Jan 2025 21:27:03 +0000)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YDQbl2Ch"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738618709; x=1770154709;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=iLtmW/QXoPhA9E6GXUmkV7fRKcwHIBJyK5IwnF8CQAY=;
+  b=YDQbl2Ch67SGcBuotgpGz+EDf9vTj4d6jBWNEltHPY0pmD5SZy/S6RUw
+   gSaYxiqfGD+ti3Caxmpnc9SvUFYP0RB0gQCpJoeZZCpAMn14ewlnpo1sC
+   SHtkqIiMcj2EnHIss9r8+K7+NtwqFdtqctix9V84jfrIwrZGyXhGOlPvY
+   rbdn7ln/LcNxqq42EVpR8ybUPcRsiNYwAXxnNwGUhjeyNvVOxRUMACvzh
+   wDgeK9DB6E9HsyECFSMRerEMY1Ks4cNZmJ/S5BXqsvCQMqHXpBNZO15g6
+   5/Nr9hCLsd+k0ZAsJTZmtQDbWbCBofE0gXFoMLNAvQDqF9nBGjOoQQCjp
+   A==;
+X-CSE-ConnectionGUID: 1ecYVECqTdW4CkTpCYNdbA==
+X-CSE-MsgGUID: RKBsRo/LSc6MGzmfyEeb9g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39006788"
+X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
+   d="scan'208";a="39006788"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 13:38:28 -0800
+X-CSE-ConnectionGUID: P4EoKDcYR9mSP5wDxkAF8g==
+X-CSE-MsgGUID: a7+yhwkjQ6GT1n3AxAhSlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
+   d="scan'208";a="141277580"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 03 Feb 2025 13:38:27 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tf49A-000rYF-2n;
+	Mon, 03 Feb 2025 21:38:24 +0000
+Date: Tue, 4 Feb 2025 05:37:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Joerg Roedel <jroedel@suse.de>
+Subject: include/linux/kern_levels.h:5:25: warning: '%s' directive argument
+ is null
+Message-ID: <202502040544.apNgCoCw-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntwme61zhn.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [RFC PATCH 1/4] perf: arm_pmuv3: Introduce module param to
- partition the PMU
-From: Colton Lewis <coltonlewis@google.com>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: maz@kernel.org, kvm@vger.kernel.org, linux@armlinux.org.uk, 
-	catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
-	mark.rutland@arm.com, pbonzini@redhat.com, shuah@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kvmarm@lists.linux.dev, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Colton Lewis <coltonlewis@google.com> writes:
+Hi Hans,
 
-> Marc Zyngier <maz@kernel.org> writes:
+FYI, the error/warning still remains.
 
->> On Tue, 28 Jan 2025 22:08:27 +0000,
->> Colton Lewis <coltonlewis@google.com> wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   f286757b644c226b6b31779da95a4fa7ab245ef5
+commit: 59833696442c674acbbd297772ba89e7ad8c753d iommu/vt-d: dmar: replace WARN_TAINT with pr_warn + add_taint
+date:   4 years, 11 months ago
+config: x86_64-randconfig-161-20230920 (https://download.01.org/0day-ci/archive/20250204/202502040544.apNgCoCw-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250204/202502040544.apNgCoCw-lkp@intel.com/reproduce)
 
->>> >> +	bitmap_set(cpu_pmu->cntr_mask, 0, pmcr_n);
->>> >> +
->>> >> +	if (reserved_guest_counters > 0 && reserved_guest_counters <
->>> pmcr_n) {
->>> >> +		cpu_pmu->hpmn = reserved_guest_counters;
->>> >> +		cpu_pmu->partitioned = true;
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502040544.apNgCoCw-lkp@intel.com/
 
->>> > Isn't this going to completely explode on a kernel running at EL1?
+All warnings (new ones prefixed by >>):
 
->>> Trying to access an EL2 register at EL1 can do that. I'll add the
->>> appropriate hypercalls.
+   In file included from include/linux/printk.h:7,
+                    from include/linux/kernel.h:15,
+                    from include/asm-generic/bug.h:19,
+                    from arch/x86/include/asm/bug.h:83,
+                    from include/linux/bug.h:5,
+                    from include/linux/jump_label.h:250,
+                    from arch/x86/include/asm/string_64.h:6,
+                    from arch/x86/include/asm/string.h:5,
+                    from include/linux/string.h:20,
+                    from include/linux/uuid.h:12,
+                    from include/linux/mod_devicetable.h:13,
+                    from include/linux/pci.h:27,
+                    from drivers/iommu/dmar.c:19:
+   drivers/iommu/dmar.c: In function 'dmar_parse_one_andd':
+>> include/linux/kern_levels.h:5:25: warning: '%s' directive argument is null [-Wformat-overflow=]
+       5 | #define KERN_SOH        "\001"          /* ASCII Start Of Header */
+         |                         ^~~~~~
+   include/linux/kern_levels.h:12:25: note: in expansion of macro 'KERN_SOH'
+      12 | #define KERN_WARNING    KERN_SOH "4"    /* warning conditions */
+         |                         ^~~~~~~~
+   include/linux/printk.h:306:16: note: in expansion of macro 'KERN_WARNING'
+     306 |         printk(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
+         |                ^~~~~~~~~~~~
+   drivers/iommu/dmar.c:444:17: note: in expansion of macro 'pr_warn'
+     444 |                 pr_warn(FW_BUG
+         |                 ^~~~~~~
+   drivers/iommu/dmar.c: In function 'warn_invalid_dmar':
+>> include/linux/kern_levels.h:5:25: warning: '%s' directive argument is null [-Wformat-overflow=]
+       5 | #define KERN_SOH        "\001"          /* ASCII Start Of Header */
+         |                         ^~~~~~
+   include/linux/printk.h:356:24: note: in definition of macro 'printk_once'
+     356 |                 printk(fmt, ##__VA_ARGS__);                     \
+         |                        ^~~
+   include/linux/kern_levels.h:12:25: note: in expansion of macro 'KERN_SOH'
+      12 | #define KERN_WARNING    KERN_SOH "4"    /* warning conditions */
+         |                         ^~~~~~~~
+   include/linux/printk.h:387:21: note: in expansion of macro 'KERN_WARNING'
+     387 |         printk_once(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
+         |                     ^~~~~~~~~~~~
+   drivers/iommu/dmar.c:832:9: note: in expansion of macro 'pr_warn_once'
+     832 |         pr_warn_once(FW_BUG
+         |         ^~~~~~~~~~~~
 
-Ooohh. Making this work at EL1 is much more complicated than adding the
-hypercall to write MDCR because once HPMN takes effect, the upper range
-of counters that the host will use is only writable at EL2. That means
-using any register related to any counter in the upper range would also
-require a hypercall. The only way around that would be to avoid using
-this feature in the host entirely and only enable it when we load a
-guest.
 
-I know we don't like feature discrepencies between VHE and nVHE mode,
-but Oliver thinks it might be justified here to have PMU partitioning be
-VHE-only.
+vim +5 include/linux/kern_levels.h
+
+314ba3520e513a Joe Perches 2012-07-30  4  
+04d2c8c83d0e3a Joe Perches 2012-07-30 @5  #define KERN_SOH	"\001"		/* ASCII Start Of Header */
+04d2c8c83d0e3a Joe Perches 2012-07-30  6  #define KERN_SOH_ASCII	'\001'
+04d2c8c83d0e3a Joe Perches 2012-07-30  7  
+
+:::::: The code at line 5 was first introduced by commit
+:::::: 04d2c8c83d0e3ac5f78aeede51babb3236200112 printk: convert the format for KERN_<LEVEL> to a 2 byte pattern
+
+:::::: TO: Joe Perches <joe@perches.com>
+:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
