@@ -1,244 +1,293 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880D61FCCFB
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FEA1FFC60;
+	Mon,  3 Feb 2025 09:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738573525; cv=none; b=DxPK1RCw07xmn6+YNomJ4zim7cxkAgufxjrcUT4Yqp3LUzPn2+qm3uaKYoPf0j2WTtUGzxRPwzi+S2mZ9LmZuy4xOjlsEktygjzhA0pcxymd8u5jBNS4SvzHF8zqFzvuABF8XD5dFMGuu++7DP8SJDK6eyZURNy5u34B2e9d17M=
+	t=1738573530; cv=none; b=C2BXmQt8cZ41KOYWOZ9KAZTiLzJskh7wRmAorWzSXpexWIFywlWY6g2cdoY821E4zgq8+Hk00y92NSSOPfZ+plPQKDQGK3Q78kIERYpBfr8At0hvxaPvbnwWDk13j+EQkS5LDipkNw1gh4CmbTvI+ELaZu31m3vbLdQtMaD4huE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738573525; c=relaxed/simple;
-	bh=0beenbYykTgMp3pQ+/qj7Qr6Pu0i8oBOXhCtcerZC5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mVwbFRUf036KRwVG0Id+DShbJGw48McWIJSPm9fRyDowet2glVOLo0ZB4j/KnJ0JjGQMc9/7bOynpTKwIMROG+iqOPmqBvXr43IW9EChxksU+cKvM0+L+FpuCRWgH95ODolXmuz4Rqqau9ETVlV+jv9TVdvT88O+N1y40A7BvNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WQGLOoVz; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738573530; c=relaxed/simple;
+	bh=io6sXt7iIEpqclAN5udDVtDQPsKQqT7YCXVo80AmeIk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AFUgl10Vr+uf2PG685b5w5pVFshppzguRoYhgcmZrE3vh2fKnBR62c5AI1Ku9YQ51Bw4aLGmynM+WXY+dkCzg6RPqi7/u/WsXWcUFl5ZErZAcrIyHyMHXiKZ+yxJGHuKFFjdkWfTxBb6IogFCKu+rG6yICyEY0Lx4MSATe9p8qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tu8Hh9hb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M1mKAq5B; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQGLOoVz"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4361815b96cso27626305e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 01:05:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738573521; x=1739178321; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0beenbYykTgMp3pQ+/qj7Qr6Pu0i8oBOXhCtcerZC5c=;
-        b=WQGLOoVzlFgqTobm8PZej+O1VYqhrxntvqzuRL9PhNHmvcIrXER0UFD0mHbvOIEeBE
-         ILxcgTlDvvb7VMUA3MlqG6CjPxltY45AqJZcCNMzHcfj2o73/whXg0mlBy1i4oLArudJ
-         zLhFbCFcexnen9CvJyWnBDQxXin58OLhV8Y00rVxQjwj+OM/ScIsgFTbKakmCEtZm8m2
-         /m7bFI3Ux5oR6W0ao2u/AE7YmdrwjyuzWzgQW280ZFjebQoYaIFTRcAK/ecturfSUoC4
-         qpCnWXLKPzLwsYZg9BloG4PYxQXKV0+mf02fkn4DYloSblvLDEw+qeAg7BFtHo7qeDnI
-         84rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738573521; x=1739178321;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0beenbYykTgMp3pQ+/qj7Qr6Pu0i8oBOXhCtcerZC5c=;
-        b=EAluBX3XJXVUOR19O0Vl6SI2ImwQNwrSJe9ldhWRQCh+fkO0099nVuDhQB9/WVAp8j
-         z8mhnsRtGe2MdeLQZluWVRJZQQWpHfFFQR1JKAFkAKBUwrdXaOZ3uzocJjVqqErU7WSi
-         PwGXtJubuOzERLxBiq8VKG4hGp3uvWHqA+b66djm+2u6aIdIt69IcYs+SGwy+eZ2Z0gO
-         gUEwRmB//Eq6qhs3wSbf3FZOg7VPZqbo1n6vapHj0SiwRwuQrxvYnaFfrg/kihIpWt13
-         H96DRrADvi65EBjbf+xkiq7GmzHbSDlBUdUEf1wvhFvE/k+QNRy9IO8iJhvAEwGAtLiZ
-         7NHw==
-X-Gm-Message-State: AOJu0YwDJ4+nqeyi2xnylvGOjyzcEEiNnap7XNJaUwh9I0pHDKV7gSGo
-	PeQAOw5PoytQ8T8V1FnpJgo8EmmjQ5j2gn+MLClVpeIanPfUCmiv
-X-Gm-Gg: ASbGncv37imsXiXsujCRQwN9iC/ZjBfqoFFviASNn5oAgH9XQIJ+WaaMo9In8e+dRiM
-	VIrWPfo198Inmx3gMk7sGKbqhxd++jxkSDxXu6pcbrtIXCUPnooemHQjTM7TrCLjMHFkK4sb3ui
-	2+4mzl5J/18kPoswMcn1S3j1WIf2qfiJ41AHCbrQpeyh9ZAXXl6SPfOBiZxrRLpQ/AVikw7mcJG
-	F20feT4za1UgJkFBFQ9qSvNOronweTW5mnFZ4CdtXbgufyn8ECPLBZyhJzTzCnXqeiqyaPWA4Ls
-	fRniuwQOPPJNn4Iy
-X-Google-Smtp-Source: AGHT+IE6gxn55yZy2Z47rpZ+vSyenHE4aXEvc6e6Pk1WMs0UwJgnCaEXq6Ejaux9WMrIE78Z9gaJ6w==
-X-Received: by 2002:a05:600c:190e:b0:434:f2f4:4c07 with SMTP id 5b1f17b1804b1-438dc3c820bmr186887475e9.15.1738573519960;
-        Mon, 03 Feb 2025 01:05:19 -0800 (PST)
-Received: from Red ([2a01:cb1d:894:1200:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-38c5c1cf853sm11992565f8f.84.2025.02.03.01.05.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 01:05:19 -0800 (PST)
-Date: Mon, 3 Feb 2025 10:05:17 +0100
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
-	robin.murphy@arm.com, iommu@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org
-Subject: iommu: flood of ahci 0000:e6:00.0: AMD-Vi: Event logged
- [IO_PAGE_FAULT domain=0x0055 address=0xa14a4000 flags=0x0070]
-Message-ID: <Z6CGzUSV7llweytQ@Red>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tu8Hh9hb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M1mKAq5B"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738573526;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wWWpuwHkmHsBX34pcGl1jvCG52qLLh0La3Bmm84Eboo=;
+	b=tu8Hh9hbsWetkIDgzcpH2nG14ZI8nV2lcq3oKrs+KHbFh8KtE4qTpI38Igq94jhAvFsFQj
+	3yY9SX6JdKiD8tVe2lUU9LRtsvnnjdn1JhlJXI2mhmuz8+sLGmg738B9CYWqJu3GcKAmBR
+	eAZBHmf/DNUJNQ4HU3P4/HKvBWjUi8TdvgzhWp8BgOqw/UWfqmIFX4Ii8DQWyiZRkNMGxo
+	XnDY1pvwSsJZetB95mma2AdKtOTPOicddBbhqUJKIL7EuaTezJuUX5Ac44BaK7XUGYnMqr
+	qMdTdJVpXfOXIriZL4wt6wd6AqBXU45ogl118Na0xqoUU0pDPq51ih4XZk2scA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738573526;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wWWpuwHkmHsBX34pcGl1jvCG52qLLh0La3Bmm84Eboo=;
+	b=M1mKAq5BEsyd2vw89rzEqIJlchsRF4h8bG5ZOfxZUaEDBVmgPocf4eab2VMqxI3symVNg2
+	4ntxneSBMmqJbIAA==
+Date: Mon, 03 Feb 2025 10:05:17 +0100
+Subject: [PATCH 16/16] selftests: vDSO: vdso_standalone_test_x86: Switch to
+ nolibc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250203-parse_vdso-nolibc-v1-16-9cb6268d77be@linutronix.de>
+References: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
+In-Reply-To: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
+To: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>, 
+ Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <ndesaulniers@google.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, llvm@lists.linux.dev, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738573516; l=6263;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=io6sXt7iIEpqclAN5udDVtDQPsKQqT7YCXVo80AmeIk=;
+ b=GwjI5bSquW7zdPwOw/ObHOwJd3uaE2TURfhr6wXyXJSxHF8582pBDftmeCnGijOcc4+cOJsgI
+ vZbb5XCvvLxC6Hni87Pvz2ilsFxfk0A2G8pgIDBOlJWWLW/J36zx9Uk
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Hello
+vdso_standalone_test_x86 provides its own ASM syscall wrappers and
+_start() implementation. The in-tree nolibc library already provides
+this functionality for multiple architectures. By making use of nolibc,
+the standalone testcase can be built from the exact same codebase as the
+non-standalone version.
 
-I have a supermicro server which is flooded of kernel message:
-ahci 0000:e6:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0055 address=0xa14a4000 flags=0x0070]
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ tools/testing/selftests/vDSO/Makefile              |   8 +-
+ .../selftests/vDSO/vdso_standalone_test_x86.c      | 168 +--------------------
+ 2 files changed, 7 insertions(+), 169 deletions(-)
 
-The server works perfectly anyway.
-It happens with official ubuntu kernel vmlinuz-6.8.0-51-generic.
-I tried also a custom 6.12.6, same problem.
+diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
+index bc8ca186fb877dc11740c37f1e07e45e84c2ae92..12a0614b9fd4983deffe5d6a7cfa06ba8d92a516 100644
+--- a/tools/testing/selftests/vDSO/Makefile
++++ b/tools/testing/selftests/vDSO/Makefile
+@@ -22,13 +22,17 @@ include ../lib.mk
+ 
+ CFLAGS += $(TOOLS_INCLUDES)
+ 
++CFLAGS_NOLIBC := -nostdlib -nostdinc -ffreestanding -fno-asynchronous-unwind-tables \
++		 -fno-stack-protector -include $(top_srcdir)/tools/include/nolibc/nolibc.h \
++		 -I$(top_srcdir)/tools/include/nolibc/ $(KHDR_INCLUDES)
++
+ $(OUTPUT)/vdso_test_gettimeofday: parse_vdso.c vdso_test_gettimeofday.c
+ $(OUTPUT)/vdso_test_getcpu: parse_vdso.c vdso_test_getcpu.c
+ $(OUTPUT)/vdso_test_abi: parse_vdso.c vdso_test_abi.c
+ $(OUTPUT)/vdso_test_clock_getres: vdso_test_clock_getres.c
+ 
+-$(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c
+-$(OUTPUT)/vdso_standalone_test_x86: CFLAGS +=-nostdlib -fno-asynchronous-unwind-tables -fno-stack-protector
++$(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c | headers
++$(OUTPUT)/vdso_standalone_test_x86: CFLAGS:=$(CFLAGS_NOLIBC) $(CFLAGS)
+ 
+ $(OUTPUT)/vdso_test_correctness: vdso_test_correctness.c
+ $(OUTPUT)/vdso_test_correctness: LDFLAGS += -ldl
+diff --git a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
+deleted file mode 100644
+index 500608f89c66b5747e3d845ebc54e4c3a35b6ccd..0000000000000000000000000000000000000000
+--- a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
++++ /dev/null
+@@ -1,167 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * vdso_test.c: Sample code to test parse_vdso.c on x86
+- * Copyright (c) 2011-2014 Andy Lutomirski
+- *
+- * You can amuse yourself by compiling with:
+- * gcc -std=gnu99 -nostdlib
+- *     -Os -fno-asynchronous-unwind-tables -flto -lgcc_s
+- *      vdso_standalone_test_x86.c parse_vdso.c
+- * to generate a small binary.  On x86_64, you can omit -lgcc_s
+- * if you want the binary to be completely standalone.
+- */
+-
+-#include <sys/syscall.h>
+-#include <sys/time.h>
+-#include <unistd.h>
+-#include <stdint.h>
+-#include <linux/auxvec.h>
+-
+-#include "parse_vdso.h"
+-
+-/* We need some libc functions... */
+-int strcmp(const char *a, const char *b)
+-{
+-	/* This implementation is buggy: it never returns -1. */
+-	while (*a || *b) {
+-		if (*a != *b)
+-			return 1;
+-		if (*a == 0 || *b == 0)
+-			return 1;
+-		a++;
+-		b++;
+-	}
+-
+-	return 0;
+-}
+-
+-/*
+- * The clang build needs this, although gcc does not.
+- * Stolen from lib/string.c.
+- */
+-void *memcpy(void *dest, const void *src, size_t count)
+-{
+-	char *tmp = dest;
+-	const char *s = src;
+-
+-	while (count--)
+-		*tmp++ = *s++;
+-	return dest;
+-}
+-
+-/* ...and two syscalls.  This is x86-specific. */
+-static inline long x86_syscall3(long nr, long a0, long a1, long a2)
+-{
+-	long ret;
+-#ifdef __x86_64__
+-	asm volatile ("syscall" : "=a" (ret) : "a" (nr),
+-		      "D" (a0), "S" (a1), "d" (a2) :
+-		      "cc", "memory", "rcx",
+-		      "r8", "r9", "r10", "r11" );
+-#else
+-	asm volatile ("int $0x80" : "=a" (ret) : "a" (nr),
+-		      "b" (a0), "c" (a1), "d" (a2) :
+-		      "cc", "memory" );
+-#endif
+-	return ret;
+-}
+-
+-static inline long linux_write(int fd, const void *data, size_t len)
+-{
+-	return x86_syscall3(__NR_write, fd, (long)data, (long)len);
+-}
+-
+-static inline void linux_exit(int code)
+-{
+-	x86_syscall3(__NR_exit, code, 0, 0);
+-}
+-
+-void to_base10(char *lastdig, time_t n)
+-{
+-	while (n) {
+-		*lastdig = (n % 10) + '0';
+-		n /= 10;
+-		lastdig--;
+-	}
+-}
+-
+-unsigned long getauxval(const unsigned long *auxv, unsigned long type)
+-{
+-	unsigned long ret;
+-
+-	if (!auxv)
+-		return 0;
+-
+-	while (1) {
+-		if (!auxv[0] && !auxv[1]) {
+-			ret = 0;
+-			break;
+-		}
+-
+-		if (auxv[0] == type) {
+-			ret = auxv[1];
+-			break;
+-		}
+-
+-		auxv += 2;
+-	}
+-
+-	return ret;
+-}
+-
+-void c_main(void **stack)
+-{
+-	/* Parse the stack */
+-	long argc = (long)*stack;
+-	stack += argc + 2;
+-
+-	/* Now we're pointing at the environment.  Skip it. */
+-	while(*stack)
+-		stack++;
+-	stack++;
+-
+-	/* Now we're pointing at auxv.  Initialize the vDSO parser. */
+-	vdso_init_from_sysinfo_ehdr(getauxval((unsigned long *)stack, AT_SYSINFO_EHDR));
+-
+-	/* Find gettimeofday. */
+-	typedef long (*gtod_t)(struct timeval *tv, struct timezone *tz);
+-	gtod_t gtod = (gtod_t)vdso_sym("LINUX_2.6", "__vdso_gettimeofday");
+-
+-	if (!gtod)
+-		linux_exit(1);
+-
+-	struct timeval tv;
+-	long ret = gtod(&tv, 0);
+-
+-	if (ret == 0) {
+-		char buf[] = "The time is                     .000000\n";
+-		to_base10(buf + 31, tv.tv_sec);
+-		to_base10(buf + 38, tv.tv_usec);
+-		linux_write(1, buf, sizeof(buf) - 1);
+-	} else {
+-		linux_exit(ret);
+-	}
+-
+-	linux_exit(0);
+-}
+-
+-/*
+- * This is the real entry point.  It passes the initial stack into
+- * the C entry point.
+- */
+-asm (
+-	".text\n"
+-	".global _start\n"
+-	".type _start,@function\n"
+-	"_start:\n\t"
+-#ifdef __x86_64__
+-	"mov %rsp,%rdi\n\t"
+-	"and $-16,%rsp\n\t"
+-	"sub $8,%rsp\n\t"
+-	"jmp c_main"
+-#else
+-	"push %esp\n\t"
+-	"call c_main\n\t"
+-	"int $3"
+-#endif
+-	);
+diff --git a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
+new file mode 120000
+index 0000000000000000000000000000000000000000..4d3d96f1e440c965474681a6f35375a60b3921be
+--- /dev/null
++++ b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
+@@ -0,0 +1 @@
++vdso_test_gettimeofday.c
+\ No newline at end of file
 
-I tried to update bios, no change.
-I tried iommu=soft, no change.
-
-I dont know what to do next.
-
-Regards
-
-for d in /sys/kernel/iommu_groups/*/devices/*; do n=${d#*/iommu_groups/*}; n=${n%%/*}; printf 'IOMMU group %s ' "$n"; lspci -nns "${d##*/}"; done
-IOMMU group 0 60:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 100 c2:00.0 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD/ATI] Device [1002:14a1]
-IOMMU group 101 c3:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Vega 20 [Radeon VII] [1002:66af] (rev c1)
-IOMMU group 102 c3:00.1 Audio device [0403]: Advanced Micro Devices, Inc. [AMD/ATI] Vega 20 HDMI Audio [Radeon VII] [1002:ab20]
-IOMMU group 103 c5:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Function [1022:148a]
-IOMMU group 104 c5:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 105 c6:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Reserved SPP [1022:1485]
-IOMMU group 106 c6:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 107 a0:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 108 a0:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 109 a0:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 10 60:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 110 a0:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 111 a0:05.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 112 a0:07.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 113 a0:07.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 114 a0:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 115 a0:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 116 a1:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Function [1022:148a]
-IOMMU group 117 a1:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 118 a2:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Reserved SPP [1022:1485]
-IOMMU group 119 a2:00.1 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Cryptographic Coprocessor PSPCPP [1022:1486]
-IOMMU group 11 61:00.0 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device [1022:14c7]
-IOMMU group 120 a2:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 121 a2:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Starship USB 3.0 Host Controller [1022:148c]
-IOMMU group 122 80:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 123 80:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 124 80:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 125 80:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 126 80:05.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 127 80:07.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 128 80:07.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 129 80:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 12 62:00.0 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD/ATI] Device [1002:14c8]
-IOMMU group 130 80:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 131 81:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Function [1022:148a]
-IOMMU group 132 81:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 133 82:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Reserved SPP [1022:1485]
-IOMMU group 134 82:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 135 82:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Starship USB 3.0 Host Controller [1022:148c]
-IOMMU group 13 63:00.0 Display controller [0380]: Advanced Micro Devices, Inc. [AMD/ATI] Aldebaran [1002:740f] (rev 02)
-IOMMU group 14 64:00.0 PCI bridge [0604]: ASPEED Technology, Inc. AST1150 PCI-to-PCI Bridge [1a03:1150] (rev 04)
-IOMMU group 14 65:00.0 VGA compatible controller [0300]: ASPEED Technology, Inc. ASPEED Graphics Family [1a03:2000] (rev 41)
-IOMMU group 15 66:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Function [1022:148a]
-IOMMU group 16 66:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 17 67:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Reserved SPP [1022:1485]
-IOMMU group 18 67:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 19 40:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 1 60:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 20 40:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 21 40:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 22 40:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 23 40:05.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 24 40:07.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 25 40:07.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 26 40:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 27 40:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 28 41:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Function [1022:148a]
-IOMMU group 29 41:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 2 60:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 30 42:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Reserved SPP [1022:1485]
-IOMMU group 31 42:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 32 20:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 33 20:01.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse GPP Bridge [1022:1483]
-IOMMU group 34 20:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 35 20:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 36 20:03.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse GPP Bridge [1022:1483]
-IOMMU group 37 20:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 38 20:05.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 39 20:07.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 3 60:03.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse GPP Bridge [1022:1483]
-IOMMU group 40 20:07.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 41 20:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 42 20:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 43 22:00.0 Ethernet controller [0200]: Broadcom Inc. and subsidiaries BCM57416 NetXtreme-E Dual-Media 10G RDMA Ethernet Controller [14e4:16d8] (rev 01)
-IOMMU group 43 22:00.1 Ethernet controller [0200]: Broadcom Inc. and subsidiaries BCM57416 NetXtreme-E Dual-Media 10G RDMA Ethernet Controller [14e4:16d8] (rev 01)
-IOMMU group 44 23:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Function [1022:148a]
-IOMMU group 45 23:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 46 24:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Reserved SPP [1022:1485]
-IOMMU group 47 24:00.1 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Cryptographic Coprocessor PSPCPP [1022:1486]
-IOMMU group 48 24:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 49 24:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Starship USB 3.0 Host Controller [1022:148c]
-IOMMU group 4 60:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 50 00:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 51 00:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 52 00:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 53 00:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 54 00:05.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 55 00:07.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 56 00:07.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 57 00:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 58 00:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 59 00:14.0 SMBus [0c05]: Advanced Micro Devices, Inc. [AMD] FCH SMBus Controller [1022:790b] (rev 61)
-IOMMU group 59 00:14.3 ISA bridge [0601]: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge [1022:790e] (rev 51)
-IOMMU group 5 60:05.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 60 00:18.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 0 [1022:1650]
-IOMMU group 60 00:18.1 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 1 [1022:1651]
-IOMMU group 60 00:18.2 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 2 [1022:1652]
-IOMMU group 60 00:18.3 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 3 [1022:1653]
-IOMMU group 60 00:18.4 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 4 [1022:1654]
-IOMMU group 60 00:18.5 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 5 [1022:1655]
-IOMMU group 60 00:18.6 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 6 [1022:1656]
-IOMMU group 60 00:18.7 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 7 [1022:1657]
-IOMMU group 61 00:19.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 0 [1022:1650]
-IOMMU group 61 00:19.1 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 1 [1022:1651]
-IOMMU group 61 00:19.2 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 2 [1022:1652]
-IOMMU group 61 00:19.3 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 3 [1022:1653]
-IOMMU group 61 00:19.4 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 4 [1022:1654]
-IOMMU group 61 00:19.5 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 5 [1022:1655]
-IOMMU group 61 00:19.6 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 6 [1022:1656]
-IOMMU group 61 00:19.7 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Milan Data Fabric; Function 7 [1022:1657]
-IOMMU group 62 01:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Function [1022:148a]
-IOMMU group 63 01:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 64 02:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Reserved SPP [1022:1485]
-IOMMU group 65 02:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 66 02:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Starship USB 3.0 Host Controller [1022:148c]
-IOMMU group 67 e0:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 68 e0:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 69 e0:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 6 60:05.2 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship PCIe GPP Bridge [1:0] [1022:149a]
-IOMMU group 70 e0:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 71 e0:05.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 72 e0:05.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship PCIe GPP Bridge [1:0] [1022:149a]
-IOMMU group 73 e0:07.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 74 e0:07.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 75 e0:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 76 e0:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 77 e1:00.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
-IOMMU group 78 e2:01.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
-IOMMU group 79 e2:02.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
-IOMMU group 7 60:07.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 80 e2:03.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
-IOMMU group 81 e4:00.0 Ethernet controller [0200]: Intel Corporation I350 Gigabit Network Connection [8086:1521] (rev 01)
-IOMMU group 82 e4:00.1 Ethernet controller [0200]: Intel Corporation I350 Gigabit Network Connection [8086:1521] (rev 01)
-IOMMU group 83 e6:00.0 SATA controller [0106]: Marvell Technology Group Ltd. 88SE9230 PCIe 2.0 x2 4-port SATA 6 Gb/s RAID Controller [1b4b:9230] (rev 11)
-IOMMU group 84 e7:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Function [1022:148a]
-IOMMU group 85 e7:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 86 e8:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Reserved SPP [1022:1485]
-IOMMU group 87 e8:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PTDMA [1022:1498]
-IOMMU group 88 c0:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 89 c0:01.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse GPP Bridge [1022:1483]
-IOMMU group 8 60:07.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 90 c0:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 91 c0:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 92 c0:03.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse GPP Bridge [1022:1483]
-IOMMU group 93 c0:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 94 c0:05.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 95 c0:07.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 96 c0:07.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 97 c0:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
-IOMMU group 98 c0:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse Internal PCIe GPP Bridge 0 to bus[E:B] [1022:1484]
-IOMMU group 99 c1:00.0 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD/ATI] Device [1002:14a0] (rev c1)
-IOMMU group 9 60:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Starship/Matisse PCIe Dummy Host Bridge [1022:1482]
+-- 
+2.48.1
 
