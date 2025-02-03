@@ -1,151 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928A320ADE4;
-	Mon,  3 Feb 2025 16:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAC620ADEA;
+	Mon,  3 Feb 2025 16:27:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738600061; cv=none; b=TVwSyEQhiAXayF4xMHsW3xMR1rVR8772k3ekblhQlkmqKGE42FV6z/cjzoxAYfba34cz3XvdhRDkBwUnEjTZbdbux1ybfo8d/6pV4CurTTAhsrQeVvyBbiUi2aKClt4ienmi9bY/pe8O8lGTe2feeb1MM+Wn042ePZw+GdwAXJk=
+	t=1738600070; cv=none; b=oV5tIB/vMmS5UXXHmkdfl5b3ja5yHCZRS9CIGVGa1LfbL30gQ8LDPf7NAgNbQ1um30hApcWbFGqYq++c1aRjo6zQH3Z0pRKZl4EBWWw2Lgzq4gKOE4FK7ZGXZwu/bYM+SZwvWcTfOmpVWPUGeIJf36+S2q5mNHR6EC1lhZIpZFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738600061; c=relaxed/simple;
-	bh=o6AbJFplz+yW3+X1hMiZzcVvdGfavQSPrFmogFQoF5M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=N0thtxXUT4iSA//0ArOW4PMvxgW8wxhBvCIvwVrNjAyWWJWz8h+Iiv97eHoPNNpcIwZeViVSEN+MwEWXqxAHPQhm91nFDVqUa8SMa0UPUXDlFD/VxgxwAOtipEtA7KM2OctSfxhNYOVb4ysjgudVN/kKp+rAeiQEKBTx6Cqe0ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqH2YGW5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738600070; c=relaxed/simple;
+	bh=rgHM/p0hUnCDBMBm3G2zStxhJ9RTxF5vG/Ix46XgKSM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=n9Vcwjw9VvhVpd87HXHoS0A/E3jdpKCH1pNnSK6YxrCNi/pf1uEtiUbWGZKUa3UaMOff5LlFeKwpQHgBPGQ0sN2b7cw3S3YZF6wwnwIvOw/P5RPQIwCC/ZBeVCn1xk0udq+TWIsmYfldZWl5+ZOvQURq7JV8H2YX3s1YMu9G3Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Izkd5CRs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqH2YGW5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD3A9C4CED2;
-	Mon,  3 Feb 2025 16:27:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Izkd5CRs"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6B71FC4CED2;
+	Mon,  3 Feb 2025 16:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738600061;
-	bh=o6AbJFplz+yW3+X1hMiZzcVvdGfavQSPrFmogFQoF5M=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=nqH2YGW53EEYChZcHqiIE1OHMuGeK2TaXEeYm7mRzLaCy7z+tuZPDFRI/kHoCCeZ8
-	 q3kYQ5SuxGHcnphpqyo7VjbM9EYrjpd4xqZ+5LmAQQPvUtWW2f69ZByixRhrJlBruE
-	 x2IibJ/Mo+W3l8R8ffeyp4JHThb48LzIF8uCiQWKKFEx24bluN8IGy1nHKDlm7Sf8e
-	 OJsVgkcAIEwAas3/VVc6fS92nUbvJxulW6wv1/O9k3yLOzCEpFL5EkR3r7GHqzSvhs
-	 gSyzp3MEGq7nSq2DR353ctSy9CxN5LTZTGT9JidF9bmNR2p4PfCGtTSoMmgOR8UeNY
-	 ccUEkDcPVmKkQ==
-Message-ID: <f7551daa-cce5-47b3-873f-21b9c5026ed2@kernel.org>
-Date: Mon, 3 Feb 2025 17:27:32 +0100
+	s=k20201202; t=1738600070;
+	bh=rgHM/p0hUnCDBMBm3G2zStxhJ9RTxF5vG/Ix46XgKSM=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=Izkd5CRs7Lrs1CiY3YvFGGp875cfk1oyaBvJCQ7qvD1EqII66Yy+D1WQTwNgnAtkr
+	 pyyyj3qNwwwZ/kA2/09hUnTMYe+uFuxNdBC84w9b3o1Sr9UVra1nOP/53QNV75tfx9
+	 E8kvSYK16A0gCCHEro2MsmWqsszjGzjgugEF4rqW1fsGGxykJr6EI2n7zulk6T3i6Z
+	 uXoQXAdbsLlWEa+doQr16OaZ+eSKD8F5zoyt2y5XfJqQmcju1oVG7+rl7J+mInBep6
+	 9+M3+/AgNrTEp6ZadAr5AzXvCzOhYExdNRNFhqtFHIVaI7ZXT9ex3B83R/IDPujhPg
+	 dAqyfM9QvX0Ww==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D71C02192;
+	Mon,  3 Feb 2025 16:27:50 +0000 (UTC)
+From: Tobias Sperling via B4 Relay <devnull+tobias.sperling.softing.com@kernel.org>
+Subject: [PATCH v2 0/2] Support for TI ADS7128 and ADS7138 ADCs
+Date: Mon, 03 Feb 2025 17:27:33 +0100
+Message-Id: <20250203-adc_ml-v2-0-8a597660c395@softing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/7] arm64: dts: qcom: ipq9574: Reorder reg and
- reg-names
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Varadarajan Narayanan <quic_varada@quicinc.com>, bhelgaas@google.com,
- lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
- kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
- p.zabel@pengutronix.de, dmitry.baryshkov@linaro.org,
- quic_nsekar@quicinc.com, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
-References: <20250122063411.3503097-1-quic_varada@quicinc.com>
- <20250122063411.3503097-5-quic_varada@quicinc.com>
- <e697cc99-e96b-4e84-8b70-23c5ef015a0d@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <e697cc99-e96b-4e84-8b70-23c5ef015a0d@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHbuoGcC/2XMQQrCMBCF4auUWRvJDFqrK+8hRdpk0g7YpiQlK
+ CV3N3br8n88vg0iB+EIt2qDwEmi+LkEHSowYzcPrMSWBtJ0QiRSnTXP6aUsGm5qbs49GSjnJbC
+ T9w492tKjxNWHz+4m/K1/REKllb7UV0eMfW/wHr1bZR6Oxk/Q5py/toQNIZ4AAAA=
+X-Change-ID: 20241122-adc_ml-d1ce86e85b2c
+To: Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Tobias Sperling <tobias.sperling@softing.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.15-dev-355e8
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738600069; l=2626;
+ i=tobias.sperling@softing.com; s=20241122; h=from:subject:message-id;
+ bh=rgHM/p0hUnCDBMBm3G2zStxhJ9RTxF5vG/Ix46XgKSM=;
+ b=tNHR2Rfgc+XYhNaJ/oNv0PzrzHHSj8QdbBiKI6u8GC/UpVXMCcZoEAD2Ca67k3z5QFauPQ4Bx
+ ahyGgtWmEuqCwy3b5vMq2/669INPikt4p5U9QnkedJtoBF9QI7jSxi9
+X-Developer-Key: i=tobias.sperling@softing.com; a=ed25519;
+ pk=v7hgaMHsrA9ul4UXkBVUuwusS9PF3uHW/CC+gABI65E=
+X-Endpoint-Received: by B4 Relay for tobias.sperling@softing.com/20241122
+ with auth_id=281
+X-Original-From: Tobias Sperling <tobias.sperling@softing.com>
+Reply-To: tobias.sperling@softing.com
 
-On 27/01/2025 11:33, Konrad Dybcio wrote:
-> On 22.01.2025 7:34 AM, Varadarajan Narayanan wrote:
->> The 'reg' & 'reg-names' constraints used in the bindings and dtsi
->> are different resulting in dt_bindings_check errors. Re-order
->> them to address following errors.
->>
->> 	arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pcie@20000000: reg-names:0: 'parf' was expected
->>
->> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
->> ---
->>  arch/arm64/boot/dts/qcom/ipq9574.dtsi | 52 +++++++++++++++++----------
->>  1 file changed, 34 insertions(+), 18 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> index 942290028972..d27c55c7f6e4 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> @@ -876,12 +876,16 @@ frame@b128000 {
->>  
->>  		pcie1: pcie@10000000 {
->>  			compatible = "qcom,pcie-ipq9574";
->> -			reg =  <0x10000000 0xf1d>,
->> -			       <0x10000f20 0xa8>,
->> -			       <0x10001000 0x1000>,
->> -			       <0x000f8000 0x4000>,
->> -			       <0x10100000 0x1000>;
->> -			reg-names = "dbi", "elbi", "atu", "parf", "config";
->> +			reg = <0x000f8000 0x4000>,
->> +			      <0x10000000 0xf1d>,
->> +			      <0x10000f20 0xa8>,
->> +			      <0x10001000 0x1000>,
->> +			      <0x10100000 0x1000>;
-> 
-> The unit address (the one after '@' in the node definition) is supposed to
-> match the first 'reg' entry. So you need to update that and reorder the
-> nodes accordingly.
-> 
-> Krzysztof, is this acceptable to pick up given the reg entries are being
-> shuffled around?
+This patch series adds support for Texas Instruments ADS7128 and
+ADS7138, which are 12-bit, 8 channel analog-to-digital converters (ADCs)
+with build-in digital window comparator (DWC), using the I2C interface.
 
-Uh, no, this leads to warnings.
+The driver exposes the interfaces to read the raw values, as well as the
+minimum and maximum value for each channel. In addition several settings
+can be configured, like the DWC, sampling frequency or an averaging
+filter/oversampling. Interrupts triggered by the DWC, if configured, are
+then exposed as IIO events.
 
-BTW, I really hope tools were being used to spot that, not maintainers
-like you or me.
+ADS7128 differs in the addition of further hardware features, like a
+root-mean-square (RMS) and a zero-crossing-detect (ZCD) module, which
+are not yet supported by the driver.
 
-But this is anyway old patchset whose newer version was rejected. There
-is just to many wrong things happening in the process - now one more:
-not running standard tests on this.
+Regarding the I2C interface the chips using opcodes to define the way
+how the registeres are accessed, like single or multiple register(s)
+read/write or setting/clearing only bits.
+
+---
+Changes in v1 (to patch series without b4):
+- dt-bindings: Extended description
+
+Changes in v2:
+- Improved commit messages.
+- dt-bindings: drop info about what driver supports, make 'avdd-supply'
+  optional.
+- General rework of driver regarding indentation and code style.
+- General code improvements to make code shorter and improve
+  readability, like remove 'goto's, order of declarations, ...
+- Use kernel macros and functions, like FIELD_*, guard(), ...
+- Rework i2c functions to return 0 in case of success and use
+  i2c_master_send() if possible.
+- Use struct for chip data instead of enum.
+- Add comment to what the lock is used for and make sure it's used in
+  these cases.
+- Use read_avail of iio_info and extend to return also the available
+  values for OSR.
+- Rework to only accept values of the availability list.
+- Use devm_* if possible and therefore drop 'remove' callback.
+- Rebase to kernel 6.13 and adjust to API changes.
+- Link to v1:
+  https://lore.kernel.org/r/20241122-adc_ml-v1-0-0769f2e1bbc1@softing.com
+
+Signed-off-by: Tobias Sperling <tobias.sperling@softing.com>
+
+---
+Tobias Sperling (2):
+      dt-bindings: iio: adc: Introduce ADS7138
+      iio: adc: Add driver for ADS7128 / ADS7138
+
+ .../devicetree/bindings/iio/adc/ti,ads7138.yaml    |  62 ++
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/ti-ads7138.c                       | 755 +++++++++++++++++++++
+ 4 files changed, 828 insertions(+)
+---
+base-commit: 05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
+change-id: 20241122-adc_ml-d1ce86e85b2c
 
 Best regards,
-Krzysztof
+-- 
+Tobias Sperling <tobias.sperling@softing.com>
+
+
