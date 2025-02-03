@@ -1,149 +1,194 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875AB1D6DDD
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D701DACB1
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 19:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738611683; cv=none; b=EbLFuvTVmNyXu7zY8OQmTMo8wKdB4IWRJ2HD4DCjCmBHEuEg9KXNbNLY764jxWYaVJN5prKah3GTal6KGvNC3EpuH1DW7RK0T50WwK4C/Av0wPsDPSyFVVjE40dT6TLOMgFK7E6vT4HguM+Qmpt8mPWJKQ1Khz9WS0Vqua5XLkA=
+	t=1738611684; cv=none; b=EOQZ5uuFuMgXrOb2PZHuxH1nURFnYL3yqabo+4M7MaAyBbQdz1ZBQvtJLFTQjPotWcxyWHqw4Z3YmB85naMk0IS7lmoUfjxlMXTWqW1SUZx4tIpcIlv1oJUN+tj7AAKwferFbw+eO5hHo3w9EqjS1vWbQVAma0md+z1P+dCWYTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738611683; c=relaxed/simple;
-	bh=C2rIhJCYgLZHofyOC36e6wr55qi2ZJaXCF/8/4URIVU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uUBqRRLkjsV+e0juys1qH+FIGuZzHR+zK2oQlxG7JmjBvBnmb7ygljWXY893485HrA5iRWnxPrAmKnLucD+fJIysRs9aJUKQLoF6o63mVeB390R9u89ZAx5cU0BSADkM8GAFxbkpmBKsv8sw05gI+gsWuHqEBPCV3QHK08mkdTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=t95rlNLP; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1738611684; c=relaxed/simple;
+	bh=bmzPo8fjt8JOhc/1bHrIPMZFP8Y2muFcWZy4Ysux2lU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=tFtVe+7ShiZ0PvoLg1XT3nFyIX0evbcExxkiUru19aOAeCZWUlPlgt04zJvq8Ihb17lH9W6wcYPmR8bAS/oyFDXg9qXxkLkyCe3NbEgGkvHsk2vjqai1ekfj6JUWpwW3I6E/qSyJ0S9mQ9ctMRXhKAxCjxYJA70/F+rq1+Kovig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cu5lf5Lt; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="t95rlNLP"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-723442fd88aso1283682a34.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:41:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cu5lf5Lt"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ee5616e986so13253778a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 11:41:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738611680; x=1739216480; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YppiSqGC2tFNDurF8FBbMGB85ESIBegHPAFelTZuV6s=;
-        b=t95rlNLPrbcBv9Uo/BeuNrGH7LEFgSm0RBN/ZxjmrJtb5Np2kE5m6WbXJsi8u9z6D+
-         F10scF65mSetwwq/AuuRmA1QNRKnRG+Wzed3+Y383VmGXn469RBhH8k3VmklufMqRcPo
-         dBc88EWRdLRgiwFK7oG9+0lcAuFH/USuewrVF87Ig+EueBcDtmWgsw2QdpTBwABJYWMl
-         UGirutvDx4qGFfURCxG155LyQWV2ejbv2FBV+PvSr4DhQeunenVqUtxGpz36X8tV41gv
-         e85W/nwZ2qf6GZCPwh89d9QEJUBHVKcDutW1BHgi62Z/bVIS7AYfAZApj3IyzXbbPY+5
-         cu8w==
+        d=google.com; s=20230601; t=1738611682; x=1739216482; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VJXV2LQY26MqizxcjQXhtNRXXOMRYW+qm0imDYwsMvw=;
+        b=Cu5lf5LtLxTxa/GXdUK7k6HYS89RYuoTJsSXOUkd1YWJ1CRns2Dv24VD+GQC1WCdx9
+         SU/Dmie28f+2sAhXWZhXxNfhQTba8j3FGJbf96LsPhRKbGH1iDICxGvhcBBartou1FN8
+         n2+8NNevuM+X2ijWyYLMKT+VJhaZnATrPzkphxXMZ2w0uALjmDj2qwuW6z/y3RlUyh98
+         4JYUuARYARwHpGq6q7gwg5k9ZGHdkII6Le8jJGPxvB3gE6tNxzeFt16qTZ2vqQV76zP5
+         37HyhsOyz4Tz+uanh+iSJRpX4vlqOAo/atRHozWIyUBynEKAWn880gOZt0ovSlavlBWW
+         llIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738611680; x=1739216480;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YppiSqGC2tFNDurF8FBbMGB85ESIBegHPAFelTZuV6s=;
-        b=b5hY25JXA6KLzlXhb3rYE+NXwO3fOTIXsM1dnL060G38YpPLOM2rO/T0PfLWa3Aeiv
-         WMG5WI3UwKm3JGQmuKfMvu+8nGUa7uIPV94e1ESdwieu6dJSbLFK8hMXMrKNkF4T8O+/
-         Twg/qryXKjPzhl2GnBXcGbRftMogPpgU+ooZbl3WF2lE6Grxyf2nuM4pmgGEt5qDuMFc
-         cjY9On8NdM9V3iLPZMnmCVKd3yEGcf+MAexp75Ye85Lh1rP4F/Rj0XPL8zunpOCaRAZB
-         rVSQDjb4wy6iQXltWlptv1NVVtzBgkvmiHKWpzMu+m0dJYpy3z023iAKn4IDCw/Q7jtD
-         K/Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSAlIdI8JZ2fQ+6KZNwcD2Ap9A1p3q7XggNRnoQUcVBS/0iITiGIF8wdqJ3XY9ZRPCksPY/iMvsfwGIlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVdK+z/MH/rWzWPgckm1obfGiEoLyTutQnC8ZvJqwbngcksD3H
-	glWYzq79/kitxS0Hde4Xp1QQJAP8NsJvuaDe5ug6oBm8EhmXdzI4ZF2abbp3xKQ=
-X-Gm-Gg: ASbGncuUWgLgk19C1kPDNKhQ85MwtD9nz8Tp0Xtjl//CUb7ZDKy+I1Uk+AKUaJpOQQU
-	yIweutMRTkbyOXc73wjG0gRW4bOa8Aln9BpHynrxTr2BKjRuT1bd/GEqcEZ8bbTT8QlQWPfY5nY
-	0BXUBc2emlj8c+A14VAkOmCIC0a9DeFp9ZSy+mat1mkrL8jcnVT4cCDxccXXlzkUvmsbipj9ccM
-	HypKlGFeMfSien4eTD1MMd8cwJGi+lAzxIKCSRgiD0Pz+0HkO+RxQwks2YvHR1fE7uZDiB+D3Yu
-	G+YoNMB4EsuU0re4pBoNYny8L9uk9axcpTbj2fwzjysmWSY8ctY2
-X-Google-Smtp-Source: AGHT+IEQz7OUSD6AXEJ8r5qtD8jUHGuAC+qm8pf8qvOq6RQJOACIueUVlB1z2UcBizH91IDpylQdnA==
-X-Received: by 2002:a05:6830:6887:b0:71e:57b5:2251 with SMTP id 46e09a7af769-72656763fe0mr13740128a34.11.1738611680379;
-        Mon, 03 Feb 2025 11:41:20 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc22514e0bsm1951705eaf.29.2025.02.03.11.41.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 11:41:19 -0800 (PST)
-Message-ID: <322c34f8-a920-41d1-b77c-09537554ad04@baylibre.com>
-Date: Mon, 3 Feb 2025 13:41:18 -0600
+        d=1e100.net; s=20230601; t=1738611682; x=1739216482;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VJXV2LQY26MqizxcjQXhtNRXXOMRYW+qm0imDYwsMvw=;
+        b=rruSbcszxqPkn7f9j3AD5RjmBR0JRJp1f1E/o7KebDmKWk572avJgRaTdi4gPFK4vz
+         sWk1Eh43NNocigfCYrTvX50zG6pgXQ52rKIyZm3UEiN56MmK5jNiz/Bmmxeg69A2l50p
+         8ncF4N17Ewdxf3LuJvwA040JkV5DC+UrXYbV9y5RrJ2dgmEtz1pibSQLq6mGYdFFDlJU
+         NJqNWB45uWtHPrVIwIlyi8/KcZCmOGjuuIjxNnTes/B8FKGXPS4rEvu5qhEVD+/Ikyo5
+         6oeos/T1wfm2G55XwjmmEgn127cvw3dZOEI9HKjvgY0BEbWDSWXp5wH5k0EUN2RukiT+
+         Y1nQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVddK+QA/PWa8qBYH3gRIN+IqO0TxzM4LBHEaN8nAA15z4cXgQpASxhRz2+EDujEbMCfYijmc7W/xabzWI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGP8rH3ZcDXHBvgkKjyxycjc13hxkfWy5EVheg9kq0UGJAvXfq
+	XCfasafvUQrXn2B9yewXndguM/2HwEjyEGcU5E/x5bxaClIbktmAZyGweA+8nfWJF18blLB33/n
+	xZA==
+X-Google-Smtp-Source: AGHT+IGcEY16oN3aex7QCo8rxntT+v0xmLo7K0x8S2drWCxpjUutztQRaAT/c6jmhnfhVhYFkmYgpyMZlK8=
+X-Received: from pjtu5.prod.google.com ([2002:a17:90a:c885:b0:2ee:3128:390f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b88:b0:2f8:34df:564e
+ with SMTP id 98e67ed59e1d1-2f83abf3506mr38263640a91.14.1738611682399; Mon, 03
+ Feb 2025 11:41:22 -0800 (PST)
+Date: Mon, 3 Feb 2025 11:41:20 -0800
+In-Reply-To: <CADH9ctAzffvDByS1s2PJoD63On-b+pCnCmER4Nf4Zc=62vkbMA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] Documentation: ABI: IIO: Re-add
- sysfs-bus-iio-adc-ad4130
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: cosmin.tanislav@analog.com, jic23@kernel.org, lars@metafoo.de,
- granquet@baylibre.com, u.kleine-koenig@baylibre.com,
- marcelo.schmitt1@gmail.com
-References: <cover.1738608986.git.marcelo.schmitt@analog.com>
- <0d73303f2bca3312ccf2abfeb2c654c228fa7f60.1738608986.git.marcelo.schmitt@analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <0d73303f2bca3312ccf2abfeb2c654c228fa7f60.1738608986.git.marcelo.schmitt@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <CABgObfZrTyft-3vqMz5w0ZiAhp-v6c32brgftynZGJO8OafrdA@mail.gmail.com>
+ <CADH9ctBYp-LMbW4hm3+QwNoXvAc5ryVeB0L1jLY0uDWSe3vbag@mail.gmail.com>
+ <b1ddb439-9e28-4a58-ba86-0395bfc081e0@redhat.com> <CADH9ctCFYtNfhn3SSp2jp0fzxu6s_X1A+wBNnzvHZVb8qXPk=g@mail.gmail.com>
+ <CADH9ctB0YSYqC_Vj2nP20vMO_gN--KsqOBOu8sfHDrkZJV6pmw@mail.gmail.com>
+ <Z2IXvsM0olS5GvbR@google.com> <CABgObfadZZ5sXYB0xR5OcLDw_eVUmXTOTFSWkVpkgiCJmNnFRQ@mail.gmail.com>
+ <CADH9ctAGt_VriKA7Ch1L9U+xud-6M54GzaPOM_2sSA780TpAYw@mail.gmail.com>
+ <CABgObfb3Ttfg6H+_RpNQGSYKw9BLEwx3+EysXdL-wbpd1pkGHQ@mail.gmail.com> <CADH9ctAzffvDByS1s2PJoD63On-b+pCnCmER4Nf4Zc=62vkbMA@mail.gmail.com>
+Message-ID: <Z6Eb4PfmmHWFTR9A@google.com>
+Subject: Re: [PATCH 2/3] KVM: x86: Add support for VMware guest specific hypercalls
+From: Sean Christopherson <seanjc@google.com>
+To: Doug Covelli <doug.covelli@broadcom.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Zack Rusin <zack.rusin@broadcom.com>, 
+	kvm <kvm@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "the arch/x86 maintainers" <x86@kernel.org>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuah@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
+	Joel Stanley <joel@jms.id.au>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/3/25 1:11 PM, Marcelo Schmitt wrote:
-> The ad4130 driver exports in_voltageY-voltageZ_filter_mode and
-> in_voltage-voltage_filter_mode_available attributes to user space. A
-> previous patch merged the documentation for those attributes with the
-> documentation for filter_type/filter_type_available into sysfs-bus-iio.
-> Filter mode and filter type refer to the same feature which is the digital
-> filter applied over ADC samples. However, since datasheets use the term
-> `filter type` and ad4130 driver is the only one using filter_mode,
-> deprecate the filter_mode ABI in favor of filter_type and keep the docs
-> separate to avoid confusion and intricate attribute descriptions.
-> 
+On Mon, Feb 03, 2025, Doug Covelli wrote:
+> On Mon, Feb 3, 2025 at 1:22=E2=80=AFPM Paolo Bonzini <pbonzini@redhat.com=
+> wrote:
+> >
+> > On Mon, Feb 3, 2025 at 5:35=E2=80=AFPM Doug Covelli <doug.covelli@broad=
+com.com> wrote:
+> > > OK.  It seems like fully embracing the in-kernel APIC is the way to g=
+o
+> > > especially considering it really simplifies using KVM's support for n=
+ested
+> > > virtualization.  Speaking of nested virtualization we have been worki=
+ng on
+> > > adding support for that and would like to propose a couple of changes=
+:
+> > >
+> > > - Add an option for L0 to handle backdoor accesses from CPL3 code run=
+ning in L2.
+> > > On a #GP nested_vmx_l0_wants_exit can check if this option is enabled=
+ and KVM
+> > > can handle the #GP like it would if it had been from L1 (exit to user=
+level iff
+> > > it is a backdoor access otherwwise deliver the fault to L2).  When co=
+mbined with
+> > > enable_vmware_backdoor this will allow L0 to optionally handle backdo=
+or accesses
+> > > from CPL3 code running in L2.  This is needed for cases such as runni=
+ng VMware
+> > > tools in a Windows VM with VBS enabled.  For other cases such as runn=
+ing tools
+> > > in a Windows VM in an ESX VM we still want L1 to handle the backdoor =
+accesses
+> > > from L2.
+> >
+> > I think this makes sense and could be an argument to KVM_ENABLE_CAP.
+> >
+> > > - Extend KVM_EXIT_MEMORY_FAULT for permission faults (e.g the guest a=
+ttempting
+> > > to write to a page that has been protected by userlevel calling mprot=
+ect).  This
+> > > is useful for cases where we want synchronous detection of guest writ=
+es such as
+> > > lazy snapshots (dirty page tracking is no good for this case).  Curre=
+ntly
+> > > permission faults result in KVM_RUN returning EFAULT which we handle =
+by
+> > > interpreting the instruction as we do not know the guest physical add=
+ress
+> > > associated with the fault.
+> >
+> > Yes, this makes sense too, though you might want to look into
+> > userfaultfd as well.
+> >
+> > We had something planned using attributes, but I don't see any issue
+> > extending it to EFAULT. Maybe it would have to be yet another
+> > KVM_ENABLE_CAP; considering that it would break your existing code,
+> > there might be someone else in the wild doing it.
+>=20
+> It looks like KVM_EXIT_MEMORY_FAULT was implemented in such a way that it
+> won't break existing code:
+>=20
+> Note! KVM_EXIT_MEMORY_FAULT is unique among all KVM exit reasons in
+> that it accompanies a return code of =E2=80=98-1=E2=80=99, not =E2=80=980=
+=E2=80=99! errno will always
+> be set to EFAULT or EHWPOISON when KVM exits with
+> KVM_EXIT_MEMORY_FAULT, userspace should assume kvm_run.exit_reason is
+> stale/undefined for all other error numbers.
+>=20
+> That being said we could certainly make this opt-in if that is preferable=
+.
 
+-EFAULT isn't the problem, KVM not being able to return useful information =
+in
+all situations is the issue.  Specifically, "guest" accesses that are emula=
+ted
+by KVM are problematic, because the -EFAULT from e.g. __kvm_write_guest_pag=
+e()
+is disconnected from the code that actually kicks out to userspace.  In tha=
+t
+case, userspace will get KVM_EXIT_MMIO, not -EFAULT.  There are more proble=
+ms
+beyond KVM_EXIT_MMIO vs. -EFAULT, e.g. instructions that perform multiple m=
+emory
+accesses, "failures" that are squashed and never propagated to userspace (P=
+V
+features tend to do this), page splits, etc.
 
-> The digital filter helps shape the noise rejection bandwidth and is
-> supposed to be adjusted according to the signal of interest. Depending on
-> the particular ADC design, the digital filter configuration may have an
-> impact on the output data rate (ODR) (which is equivalent to the sampling
-> frequency for SAR ADCs - `sampling_frequency` ABI), 3dB cutoff frequency of
-> the filter (`_low_pass_3db_frequency` attributes), or settling time.
-> 
-> Digital filters are a common feature among sigma-delta ADCs and
-> IIO drivers set digital filters according to different attributes.
-> ad4130 and ad7779 filter options are supported through dedicated
-> filter_mode/filter_type attributes in sysfs.
-> ad7768-1 and ad7173 set the sinc filters according to the
-> sampling_frequency attribute. No filter_type attribute.
-> ad7124 sets the digital filter according to a filter_low_pass_3db_frequency
-> attribute so it doesn't export filter type attributes to user space.
+In general, I don't expect most KVM access to guest memory to Just Work, as=
+ I
+doubt KVM will behave as you want.
 
-These last two paragraphs seems a bit excessive and could be dropped.
+We spent a lot of time trying to sort out a viable approach in the context =
+of the
+USERFAULT_ON_MISSING series[1], and ultimately gave up (ignoring that we po=
+stponed
+the entire series)[2], because we decided that fully solving KVM accesses w=
+ould
+require an absurd amount of effort and churn, and wasn't at all necessary f=
+or the
+userfault use case.
 
-> 
-> Fixes: 01bb12922b60 ("Documentation: ABI: added filter mode doc in sysfs-bus-iio")
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio       |  1 -
->  .../ABI/testing/sysfs-bus-iio-adc-ad4130      | 20 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  3 files changed, 21 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-ad4130
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index ff9cc09360dc..e4fd99c92d81 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -2277,7 +2277,6 @@ Description:
->  		representing the sensor unique ID number.
->  
->  What:		/sys/bus/iio/devices/iio:deviceX/filter_type_available
-> -What:		/sys/bus/iio/devices/iio:deviceX/in_voltage-voltage_filter_mode_available
+What exactly needs to happen on "synchronous detection of guest writes"?  O=
+ne
+idea (which may be horribly flawed as I have put *very* little thought into=
+ it)
+would be to implement a module (or KVM extension) that utilizes KVM's "exte=
+rnal"
+write-tracking APIs to get the synchronous notifications (see
+arch/x86/include/asm/kvm_page_track.h).
 
-Instead of removing the line, I think we need to replace it with:
-
-/sys/bus/iio/devices/iio:deviceX/in_voltage-voltage_filter_type_available
-
-(change mode to type)
-
-This attribute is used in the previous patch.
-
-
->  KernelVersion:	6.1
->  Contact:	linux-iio@vger.kernel.org
->  Description:
-With those changes...
-
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+[1] https://lore.kernel.org/all/ZIn6VQSebTRN1jtX@google.com
+[2] https://lore.kernel.org/all/ZR88w9W62qsZDro-@google.com
