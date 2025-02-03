@@ -1,154 +1,150 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC332046A3
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F19209681
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738595548; cv=none; b=i1KmuVYumFafX3800ou5C1W4DQH+RPn7wo/Fqmi4UT1QTJ/SKnPSG5KQCJopIQzlsip7A37eDFCOT600cjWbTzUYN7IiMI77UzBR/VPjdCmDHaTEU3S4tWeVIzvgKjd4JnKRkBWshF0MPg3tUqlXBbD38xSmaiZeHi1MKa6VArI=
+	t=1738595565; cv=none; b=JTYFzLajL+IXAU49JhFVlBi0ygxHt/rti5MjMDO3jHx4PTVSNbyHAS4ArSWS3V40J4oSrRbwz3p1+j390UMD0es/EIDFKx+JdfjbYeeU5IZXyxDDhuDZoDuiM9Socf80VC44NeTCTBc80bNrFB3+Whcalx8Wiy72pXq0gxvDtL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738595548; c=relaxed/simple;
-	bh=De3tZJ+i6RyFMLShSETS1a0kwp/lElizeBd6vf1Kk1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=efwwVNYpNPyGB/dMYSOKTConDzQ7+o7XbL6LR6ZI7ec3wk4Z8cIuh/Ky7FdCpbCD6/DaellJeYLWF/Kj+Mbjza+0N4TQL2T+frWpEHWdGByAmC93Ugfx83srh1o1OBDdn2pyU1fbF8EkEBtYYwyXZMZHpGBPw9T0r7dSd3hKXbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=Wr+bly4O; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1738595565; c=relaxed/simple;
+	bh=QJ300niobqIFiI3csSxFfvfTdEuWrdu9pQBxtS8cszA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rRiXttqScyvCgHjcp/fKLhxVHrlza3P5MRqKbrmXw5YUSKMrl6X5nAr4m48vGM47tKi/YYVLhcq+njkEATu7irI6DV0gjJomz4avqQmsCX7x/0xsdoDsS3z9lOck5C4A+7qW+Pr/yjin5mg5qO8ky56CNvV7m0oZVPtL5uthKHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fnU3ASqh; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="Wr+bly4O"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4678cd314b6so42347101cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 07:12:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1738595546; x=1739200346; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0uRjRCoiTmQxPaUbLc8rVKhXS5CF+EA4SHG9IAe/UnA=;
-        b=Wr+bly4OQKwdMoHg9Y0qe9L40TIko1GsFSUrkq2tX3li1sVXyzTNUvoF2QRYp1oqYU
-         N4yt/UwTmaiSY+6i5iE6ScjQG/r3rkvhRHLnQ8d2yH3sewm8gMtsP86dRLbjnHus+H0/
-         qDOq57vh3wFkq2TC0S+Zb6ySrOGUpP1lpNIqFv1bIkBpZeyqvFVfVjnAq/OXtj/8Khjy
-         9txacgMhzIoRZDgSoWu/jDv3TI0k8aCJUd8ZdJnXkKk4mYYyx6iW51LBSYYcNYtFrg7F
-         GkOOdzxsDnhXenaIrRA3Vt2o/sPyXzNqoq0rvRLtVdCB1TZLv7J1ysGZarggReTvDp6H
-         TGbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738595546; x=1739200346;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0uRjRCoiTmQxPaUbLc8rVKhXS5CF+EA4SHG9IAe/UnA=;
-        b=Hxp8uQtlaQgo2l2h4v/KEEJwJ5DMGk0/0vv6tfOTZbzrbYrUOwxlubQa0zbcV3YPpD
-         owTMatFqc9fEmKPUrso5Yhth6Adj0Tcb6Jd5Z2YlSAHozX6d+CxNBVVrGwjQCNHtfT/w
-         hE7q2U6aNgJsF+OSYmwSQuQ7f2L3bPf9kVMhfkNUGsO3ACXRTJTIb2DzJJe4AV094RcG
-         PVb3of96UhCFiY4nx6tvCmAcyNQXYa9UqtvZIByT0aCulds447J+ei0vuxTznjKYEPDO
-         6jn+2cgUaZhYxGRRhLCZCrrxSqCJuqyqWjeFWrOp5TbJ5B9R5jzFZ0tPMBKk19LVl/i9
-         QDmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCfFctqEF+P64FczCqJ1M0VQdidRAKk+rmuhzQ/alv70HrjqWHrL14BvOkh2+J+ZGRiOqT8yaKKBgiSLg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJsneTwRDYKtXOfCU9okaaCZMCH0jR1dyAL8ZG3jrChxVuMqN1
-	zhsXJHKrWxhxWx9fLOWGDZU1rTqrIaGzUVo1GSWK4s2+xRj6XwgQ6njFbFS1yA==
-X-Gm-Gg: ASbGncvPHmW9aIxhRVzJfpdxMLewyXxMRaTyLKetgDDxN6Fp9uajD9/qbbtcYSrOyD0
-	I/Hia0piP7g15uG36108QKWDQ0+nqI9OlG5BXNXqznDuUah84l79Ztnw/R+OI+bQDvv5qYSYDhr
-	H6GuXLKI0mxNVkilers4hpoAmbbL0rqnwDGVqJgDgu+lNaU8n0oBvbbK2EmErTQVjZjMSU7CPNS
-	cLWoIdJzgfrD3PniMmDwdFcE7q+qQ+skIXMyT1S9ERfIUKEzcvN6TxeO1DTJr2+Pb/ZJBuEFq6/
-	ZY3fZf5zX2zr2NO4+IH5GneFjrELMkZIWw==
-X-Google-Smtp-Source: AGHT+IHyUL2x0qBbG+DgG0G3rjDNRAFJ94tx2vEQWzKX0Qbs1ZMr7OqI1ExwtF+LFOaQezc0ZvX8xA==
-X-Received: by 2002:a05:622a:13d4:b0:467:57c8:ca31 with SMTP id d75a77b69052e-46fd0ba39dfmr318463241cf.46.1738595545561;
-        Mon, 03 Feb 2025 07:12:25 -0800 (PST)
-Received: from rowland.harvard.edu ([140.247.181.15])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46ff30fc6fesm33943751cf.27.2025.02.03.07.12.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 07:12:25 -0800 (PST)
-Date: Mon, 3 Feb 2025 10:12:23 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] USB: core: Enable root_hub's remote wakeup for wakeup
- sources
-Message-ID: <61fecc0b-d5ac-4fcb-aca7-aa84d8219493@rowland.harvard.edu>
-References: <20250131100630.342995-1-chenhuacai@loongson.cn>
- <2f583e59-5322-4cac-aaaf-02163084c32c@rowland.harvard.edu>
- <CAAhV-H7Dt1bEo8qcwfVfcjTOgXSKW71D19k3+418J6CtV3pVsQ@mail.gmail.com>
- <fbe4a6c4-f8ba-4b5b-b20f-9a2598934c42@rowland.harvard.edu>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fnU3ASqh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738595564; x=1770131564;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=QJ300niobqIFiI3csSxFfvfTdEuWrdu9pQBxtS8cszA=;
+  b=fnU3ASqhjtnu/t8YRRF47UNEA8OdMgfMje+eFJvUYUtOJI06qvg6VRCg
+   oWDoD8feI6E+KCL+mTAxHN3bNrEO92MeR5tMmKpbmUMBo6y5ew8Ml7dZl
+   tUvGmTnjuDmckAu7iv4YupbVZBgaRyTUZRawQUbwL1OY/irW/SBpiopP8
+   iN2ginCYyxTwM2W3kU7QOpjiSoV41f04f4omreQPqtyxkylRHD3S5G7Eh
+   j0WSKYKUMcGP35rRFpRKehDaA8QMpowdkmOjMPq95aGENqjkzeoe5nkh4
+   ROIH2uykHHiopePMrw044z/DGr3Sa8FFK32AcO2oNiB4HaKb4sC6ir+zK
+   g==;
+X-CSE-ConnectionGUID: uSoEmKVORjWBskPkmfc6cA==
+X-CSE-MsgGUID: IjW3/mQyTbuktWcRQYAPJQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39193095"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="39193095"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 07:12:44 -0800
+X-CSE-ConnectionGUID: DATGrZqfSQmGUbZJAdgdzA==
+X-CSE-MsgGUID: fiGRLCrvQpCPTD1NjIjqVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="110204598"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 03 Feb 2025 07:12:41 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tey7r-000r5V-0H;
+	Mon, 03 Feb 2025 15:12:39 +0000
+Date: Mon, 3 Feb 2025 23:11:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sagi Grimberg <sagi@grimberg.me>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Keith Busch <kbusch@kernel.org>,
+	Chaitanya Kulkarni <kch@nvidia.com>, Christoph Hellwig <hch@lst.de>
+Subject: drivers/nvme/host/tcp.c:1578: warning: Function parameter or struct
+ member 'queue' not described in 'nvme_tcp_set_queue_io_cpu'
+Message-ID: <202502032315.Rlhp9d3Y-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fbe4a6c4-f8ba-4b5b-b20f-9a2598934c42@rowland.harvard.edu>
 
-On Sat, Feb 01, 2025 at 11:55:03AM -0500, Alan Stern wrote:
-> On Sat, Feb 01, 2025 at 02:42:43PM +0800, Huacai Chen wrote:
-> > Hi, Alan,
-> > 
-> > On Fri, Jan 31, 2025 at 11:17 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > >
-> > > On Fri, Jan 31, 2025 at 06:06:30PM +0800, Huacai Chen wrote:
-> > > > Now we only enable the remote wakeup function for the USB wakeup source
-> > > > itself at usb_port_suspend(). But on pre-XHCI controllers this is not
-> > > > enough to enable the S3 wakeup function for USB keyboards,
-> > >
-> > > Why do you say this?  It was enough on my system with an EHCI/UHCI
-> > > controller when I wrote that code.  What hardware do you have that isn't
-> > > working?
-> > >
-> > > >  so we also
-> > > > enable the root_hub's remote wakeup (and disable it on error). Frankly
-> > > > this is unnecessary for XHCI, but enable it unconditionally make code
-> > > > simple and seems harmless.
-> > >
-> > > This does not make sense.  For hubs (including root hubs), enabling
-> > > remote wakeup means that the hub will generate a wakeup request when
-> > > there is a connect, disconnect, or over-current change.  That's not what
-> > > you want to do, is it?  And it has nothing to do with how the hub
-> > > handles wakeup requests received from downstream devices.
-> > >
-> > > You need to explain what's going on here in much more detail.  What
-> > > exactly is going wrong, and why?  What is the hardware actually doing,
-> > > as compared to what we expect it to do?
-> > OK, let me tell a long story:
-> > 
-> > At first, someone reported that on Loongson platform we cannot wake up
-> > S3 with a USB keyboard, but no problem on x86. At that time we thought
-> > this was a platform-specific problem.
-> > 
-> > After that we have done many experiments, then we found that if the
-> > keyboard is connected to a XHCI controller, it can wake up, but cannot
-> > wake up if it is connected to a non-XHCI controller, no matter on x86
-> > or on Loongson. We are not familiar with USB protocol, this is just
-> > observed from experiments.
-> > 
-> > You are probably right that enabling remote wakeup on a hub means it
-> > can generate wakeup requests rather than forward downstream devices'
-> > requests. But from experiments we found that if we enable the "wakeup"
-> > knob of the root_hub via sysfs, then a keyboard becomes able to wake
-> > up S3 (for non-XHCI controllers). So we guess that the enablement also
-> > enables forwarding. So maybe this is an implementation-specific
-> > problem (but most implementations have problems)?
-> > 
-> > This patch itself just emulates the enablement of root_hub's remote
-> > wakeup automatically (then we needn't operate on sysfs).
-> 
-> I'll run some experiments on my system.  Maybe you're right about the 
-> problem, but your proposed solution looks wrong.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   2014c95afecee3e76ca4a56956a936e23283f05b
+commit: 32193789878c259e39b97bd0c0f2f0ccbe5cb8a8 nvme-tcp: Fix I/O queue cpu spreading for multiple controllers
+date:   3 weeks ago
+config: alpha-randconfig-p001-20211207 (https://download.01.org/0day-ci/archive/20250203/202502032315.Rlhp9d3Y-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250203/202502032315.Rlhp9d3Y-lkp@intel.com/reproduce)
 
-I just tried running the experiment on my system.  I enabled wakeup for 
-the mouse device, made sure it was disabled for the intermediate hub and 
-the root hub, and made sure it was enabled for the host controller.  
-(Those last three are the default settings.)  Then I put the system in 
-S3 suspend by writing "mem" to /sys/power/state, and when the system was 
-asleep I pressed one of the mouse buttons -- and the system woke up.  
-This was done under a 6.12.10 kernel, with an EHCI host controller, not 
-xHCI.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502032315.Rlhp9d3Y-lkp@intel.com/
 
-So it seems like something is wrong with your system in particular, not 
-the core USB code in general.  What type of host controller is your 
-mouse attached to?  Have you tested whether the mouse is able to wake up 
-from runtime suspend, as opposed to S3 suspend?
+All warnings (new ones prefixed by >>):
 
-Alan Stern
+>> drivers/nvme/host/tcp.c:1578: warning: Function parameter or struct member 'queue' not described in 'nvme_tcp_set_queue_io_cpu'
+>> drivers/nvme/host/tcp.c:1578: warning: expecting prototype for Track the number of queues assigned to each cpu using a global per(). Prototype was for nvme_tcp_set_queue_io_cpu() instead
+
+
+vim +1578 drivers/nvme/host/tcp.c
+
+40510a639ec08db Sagi Grimberg 2020-02-25  1567  
+32193789878c259 Sagi Grimberg 2025-01-04  1568  /**
+32193789878c259 Sagi Grimberg 2025-01-04  1569   * Track the number of queues assigned to each cpu using a global per-cpu
+32193789878c259 Sagi Grimberg 2025-01-04  1570   * counter and select the least used cpu from the mq_map. Our goal is to spread
+32193789878c259 Sagi Grimberg 2025-01-04  1571   * different controllers I/O threads across different cpu cores.
+32193789878c259 Sagi Grimberg 2025-01-04  1572   *
+32193789878c259 Sagi Grimberg 2025-01-04  1573   * Note that the accounting is not 100% perfect, but we don't need to be, we're
+32193789878c259 Sagi Grimberg 2025-01-04  1574   * simply putting our best effort to select the best candidate cpu core that we
+32193789878c259 Sagi Grimberg 2025-01-04  1575   * find at any given point.
+32193789878c259 Sagi Grimberg 2025-01-04  1576   */
+40510a639ec08db Sagi Grimberg 2020-02-25  1577  static void nvme_tcp_set_queue_io_cpu(struct nvme_tcp_queue *queue)
+40510a639ec08db Sagi Grimberg 2020-02-25 @1578  {
+40510a639ec08db Sagi Grimberg 2020-02-25  1579  	struct nvme_tcp_ctrl *ctrl = queue->ctrl;
+32193789878c259 Sagi Grimberg 2025-01-04  1580  	struct blk_mq_tag_set *set = &ctrl->tag_set;
+32193789878c259 Sagi Grimberg 2025-01-04  1581  	int qid = nvme_tcp_queue_id(queue) - 1;
+32193789878c259 Sagi Grimberg 2025-01-04  1582  	unsigned int *mq_map = NULL;
+32193789878c259 Sagi Grimberg 2025-01-04  1583  	int cpu, min_queues = INT_MAX, io_cpu;
+32193789878c259 Sagi Grimberg 2025-01-04  1584  
+32193789878c259 Sagi Grimberg 2025-01-04  1585  	if (wq_unbound)
+32193789878c259 Sagi Grimberg 2025-01-04  1586  		goto out;
+40510a639ec08db Sagi Grimberg 2020-02-25  1587  
+40510a639ec08db Sagi Grimberg 2020-02-25  1588  	if (nvme_tcp_default_queue(queue))
+32193789878c259 Sagi Grimberg 2025-01-04  1589  		mq_map = set->map[HCTX_TYPE_DEFAULT].mq_map;
+40510a639ec08db Sagi Grimberg 2020-02-25  1590  	else if (nvme_tcp_read_queue(queue))
+32193789878c259 Sagi Grimberg 2025-01-04  1591  		mq_map = set->map[HCTX_TYPE_READ].mq_map;
+40510a639ec08db Sagi Grimberg 2020-02-25  1592  	else if (nvme_tcp_poll_queue(queue))
+32193789878c259 Sagi Grimberg 2025-01-04  1593  		mq_map = set->map[HCTX_TYPE_POLL].mq_map;
+32193789878c259 Sagi Grimberg 2025-01-04  1594  
+32193789878c259 Sagi Grimberg 2025-01-04  1595  	if (WARN_ON(!mq_map))
+32193789878c259 Sagi Grimberg 2025-01-04  1596  		goto out;
+32193789878c259 Sagi Grimberg 2025-01-04  1597  
+32193789878c259 Sagi Grimberg 2025-01-04  1598  	/* Search for the least used cpu from the mq_map */
+32193789878c259 Sagi Grimberg 2025-01-04  1599  	io_cpu = WORK_CPU_UNBOUND;
+32193789878c259 Sagi Grimberg 2025-01-04  1600  	for_each_online_cpu(cpu) {
+32193789878c259 Sagi Grimberg 2025-01-04  1601  		int num_queues = atomic_read(&nvme_tcp_cpu_queues[cpu]);
+32193789878c259 Sagi Grimberg 2025-01-04  1602  
+32193789878c259 Sagi Grimberg 2025-01-04  1603  		if (mq_map[cpu] != qid)
+32193789878c259 Sagi Grimberg 2025-01-04  1604  			continue;
+32193789878c259 Sagi Grimberg 2025-01-04  1605  		if (num_queues < min_queues) {
+32193789878c259 Sagi Grimberg 2025-01-04  1606  			io_cpu = cpu;
+32193789878c259 Sagi Grimberg 2025-01-04  1607  			min_queues = num_queues;
+32193789878c259 Sagi Grimberg 2025-01-04  1608  		}
+32193789878c259 Sagi Grimberg 2025-01-04  1609  	}
+32193789878c259 Sagi Grimberg 2025-01-04  1610  	if (io_cpu != WORK_CPU_UNBOUND) {
+32193789878c259 Sagi Grimberg 2025-01-04  1611  		queue->io_cpu = io_cpu;
+32193789878c259 Sagi Grimberg 2025-01-04  1612  		atomic_inc(&nvme_tcp_cpu_queues[io_cpu]);
+32193789878c259 Sagi Grimberg 2025-01-04  1613  		set_bit(NVME_TCP_Q_IO_CPU_SET, &queue->flags);
+32193789878c259 Sagi Grimberg 2025-01-04  1614  	}
+32193789878c259 Sagi Grimberg 2025-01-04  1615  out:
+32193789878c259 Sagi Grimberg 2025-01-04  1616  	dev_dbg(ctrl->ctrl.device, "queue %d: using cpu %d\n",
+32193789878c259 Sagi Grimberg 2025-01-04  1617  		qid, queue->io_cpu);
+40510a639ec08db Sagi Grimberg 2020-02-25  1618  }
+40510a639ec08db Sagi Grimberg 2020-02-25  1619  
+
+:::::: The code at line 1578 was first introduced by commit
+:::::: 40510a639ec08db81d5ff9c79856baf9dda94748 nvme-tcp: optimize queue io_cpu assignment for multiple queue maps
+
+:::::: TO: Sagi Grimberg <sagi@grimberg.me>
+:::::: CC: Keith Busch <kbusch@kernel.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
