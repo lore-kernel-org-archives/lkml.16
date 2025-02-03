@@ -1,72 +1,151 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AB2204C04
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF622080FD
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738596125; cv=none; b=Trt50XMv6HP+l6bqmXQAnCm9f7dFsr8aX8TqzVoGwdhpMoNvx7fQG8CY/meA5xgqhItjZYUb6omFWAuhRZ5xSPaOCw/8pCccgBGwhKYCczLCoCrNqXetQBPAr9CcV8X55bTp44pUwDp7/7/qgZXOfC72yYbK7cgekPQEERLIxFs=
+	t=1738596163; cv=none; b=O8WJnnDAwumRkile3dr7ADC/CGiW4Nfx+BxFCjqCC9GJ+1LvWKluEoTrCOH8FrkL68i4ZO6fHzewfokgTfP4xjEBPfY5msDgtd0u9P69+NumIq30iMhAeMrcrt2yMdM3VAg5dhKT0ArkvxBmXnNjbZDETbMLruBIBenLjBMFpyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738596125; c=relaxed/simple;
-	bh=PLJsOnrrWE0gFq5S1NRzXE7wamN1He+uUIH1bIeFatQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=HKr4/44kU+JVQQcI7Cz0ukexm8+sWQCGiyVIBUClNdA7mH1ogEvNDMCR7qbaN2/pgJWW8JGc8wmLaj5YzwRxq8HRFOODN5DFxZ3FbEGHIEin4wLIzzC+EldVD5eefIGYJFQY2JeJGLESyo95rS+Hz88DqnZvpa4OPClOPTYL59Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3a9c9b37244so85607785ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 07:22:03 -0800 (PST)
+	s=arc-20240116; t=1738596163; c=relaxed/simple;
+	bh=s8T40ATQi5ozZFq3mLiRG0r8Wyc9sfTkDVrpD+sYS2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ebmn1GR+UHq04MZ77uOsuz0+HTB6nU8+Ss0CR2qGiyEAe8dWHcoW/rYokKPNL7+RfhhNSBajt6qOPAAqU5dAXcXWddYJapdGOUs2djNqmtg64EZZOzQkVn7XTCYsmg2W6p/FfS32snsLRHuMn8oao+RNd2HRtEaCp/4iHjRso0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VHyvM+0m; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VHyvM+0m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738596160;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IPyZM1t4JHDpUYVyrdVFxb2Um0jbsvrzJI4R8XaR9uA=;
+	b=VHyvM+0mxz8D1ToLZ+kPH28eqf+f/XA7CMpuYVl/43+wuLo8X8mTYXxnKBYB7KIdij8eFp
+	FzdcyEJsrqqYo5Vl7CWd/OkYnrpIxFr8+OwfJGNTfXtJiY/fEEG2epEGo6jOzKyHVqTWZy
+	PgUzDhentl0a0H1RwQYBD0+fi8mu570=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-214-DI7g-pWPPyyrF7L19qssuQ-1; Mon, 03 Feb 2025 10:22:39 -0500
+X-MC-Unique: DI7g-pWPPyyrF7L19qssuQ-1
+X-Mimecast-MFC-AGG-ID: DI7g-pWPPyyrF7L19qssuQ
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-385fdff9db5so1895418f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 07:22:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738596123; x=1739200923;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BboPUz3qniofjQR3sUVFLqvfOcdsv3T85/crzeliSZg=;
-        b=Ze2AjB/pXqzKBwLLXU7OFxeX5YO1lPzx2rVXcZUNeDFwNrxdj3mr4Bs+sF6uTPS59x
-         I+vdoqDUM/fRJeysb7mEqYD5F2U9gMX4LS8U5OQ09d0yH55hTfOatp773HymzlterlYc
-         8/1EERscVZZIrLrFWrJZXrLQ/RbP8LplaJEzPk59eJpUBHIJc54tZpJiYo7DZaz3JSEP
-         67FrEUCyzHYLUn/3x4jhLUXdzuIdy/evqRXgjQ3D/qrxLMJfG66LdwToIAYQixVGj7D7
-         oFj4PZQ7C4Sq8VxNapLXXT4l+Y5KNlIwTw4oh9RE9uqMGyBlgz39ATJyCe4Fw8edE0Xk
-         lb7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVu3Hfid3sWxDV3xXRFQgAiqTNcR+8mqE+7owD97EIMtHJEzhtisebnBAfD4ap6Wo1tTFIO8yADmBCzx0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSnyYnrHkyqsH7TfiQwUnDiHvqQbMEgRcrFh+K7pTgckWuVrvq
-	wxY2xgLw9tiDREMzHLfAY0/0fTCqyLonfnxa39Y3u83/Az7sCjGVcH1h5SmvHmXnHLFPQmzcjjm
-	ZW2QiWYFErgw92aG+7ojMR5OrTHNcvz+2xgnHUeMTvtOFHD6HZoy5K70=
-X-Google-Smtp-Source: AGHT+IHIAE6dQgufRkmxRv7Zy1wNZiIlMfiWGyg7o95+lbxFTQ2EgYJK0bxKDDP61LDIgyZ/1ZpFfBZ6m5RVCrI6yD54sFseRlxG
+        d=1e100.net; s=20230601; t=1738596158; x=1739200958;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IPyZM1t4JHDpUYVyrdVFxb2Um0jbsvrzJI4R8XaR9uA=;
+        b=c+bV2RraB+98MxUeeNInBa46ZvMhlIzI5SSi5NWtPZMs+67/caN4Ko4Nk9PSO/HpcT
+         lZadHprR5dSyIJD4ocf2ycRXQ63t8TvHGE+2fBGpQR0s58Jj3LktMMiPXBU5Cbuma0ou
+         1nlN3XpZIGhGPNUILzm6gBwyN6a7yExQ+4EcWhktDTomaT5X6cjWTIAIiIYHQ8gupg77
+         IRSFgyvNixs8xZnaQ+ElAJmxvMsi6hRZobit9jU0+3cgt/xTyiaTCkbD7WT4mixxBZrg
+         6j42a81t197HjS9xkMNP8PUpiN6OEkYGW575yZo+BBdbETAnSiEdEqZ5zwaRNIX0dV12
+         e99Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVANHzN4k6AK/TtEw8vu9Nmva8XPPydFs3JnRgUXMh1aPojfoTlnZHDvigtZjeQEmp4qEmUpFWyBv/jT9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2PPHk+fJrG5CGvn8pkQYFEKIAv45cLxObLg2hEnDRFJHvtX+A
+	f8bUVttb1QOQF3gl4cDL87aGUgfmhnSSB6FHBwaBZPXASZzSN6qXHGktl6YmDSJPvHdkKj5Ix2X
+	S8xHgjFXLkZ2m+kXY929Btmkls8GLc2/sQqn4Rjv2Yo4DLLoYy273UZf5h161vg==
+X-Gm-Gg: ASbGncvNTaA49uOuqvLJVotr/diutqHcnzINsKKJw/8yHzuZ61XroSj8EZHIggvgiqz
+	LgVMfutoal8MLzLf8zOY8AtnsSxdpchfnMD7JCrWbeFC3CIzzGZygee9/rukvrHZe4YZMpxMzrS
+	0hZ0k8qOo0qBKZ60MwFX/u2/aW7PNteRdj7t/AqP2MduItth0/PntxjhcNE/lfGZ2s7J4US2Nf2
+	4J/qXo1GVfb+UpPJi1cay5JkrYHyeLFJ3A/t7IlgW2nAQnAWzZcmvPQkqu8izDDG0Iv/W5RzSB9
+	AFKNBZTt7+AyehQ3O0c2CFlXGzxztp2ZiH8updKuz40bLxxnqRux
+X-Received: by 2002:a05:6000:4011:b0:385:e8b0:df13 with SMTP id ffacd0b85a97d-38c52095e20mr20768480f8f.40.1738596158375;
+        Mon, 03 Feb 2025 07:22:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFU8GdTGi8sB7oRmFhV909MaP4kFCPPAe8WiAnv6V5VuMzr3T7UiP99xHMB2JJSil2uW9p+BA==
+X-Received: by 2002:a05:6000:4011:b0:385:e8b0:df13 with SMTP id ffacd0b85a97d-38c52095e20mr20768432f8f.40.1738596157876;
+        Mon, 03 Feb 2025 07:22:37 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23de772sm157161035e9.13.2025.02.03.07.22.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 07:22:37 -0800 (PST)
+Date: Mon, 3 Feb 2025 16:22:36 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, "Michael S . Tsirkin"
+ <mst@redhat.com>, Shiju Jose <shiju.jose@huawei.com>,
+ <qemu-arm@nongnu.org>, <qemu-devel@nongnu.org>, Philippe =?UTF-8?B?TWF0?=
+ =?UTF-8?B?aGlldS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
+ <anisinha@redhat.com>, Cleber Rosa <crosa@redhat.com>, Dongjiu Geng
+ <gengdongjiu1@gmail.com>, Eduardo Habkost <eduardo@habkost.net>, Eric Blake
+ <eblake@redhat.com>, John Snow <jsnow@redhat.com>, Marcel Apfelbaum
+ <marcel.apfelbaum@gmail.com>, "Markus Armbruster" <armbru@redhat.com>,
+ Michael Roth <michael.roth@amd.com>, "Paolo Bonzini" <pbonzini@redhat.com>,
+ Peter Maydell <peter.maydell@linaro.org>, Shannon Zhao
+ <shannon.zhaosl@gmail.com>, Yanan Wang <wangyanan55@huawei.com>, Zhao Liu
+ <zhao1.liu@intel.com>, <kvm@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/14] Change ghes to use HEST-based offsets and add
+ support for error inject
+Message-ID: <20250203162236.7d5872ff@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20250203110934.000038d8@huawei.com>
+References: <cover.1738345063.git.mchehab+huawei@kernel.org>
+	<20250203110934.000038d8@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1aa7:b0:3cf:b2ed:7e3b with SMTP id
- e9e14a558f8ab-3cffe3f68dbmr187392905ab.10.1738596122982; Mon, 03 Feb 2025
- 07:22:02 -0800 (PST)
-Date: Mon, 03 Feb 2025 07:22:02 -0800
-In-Reply-To: <20250203124959.114591-1-aha310510@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a0df1a.050a0220.163cdc.0046.GAE@google.com>
-Subject: Re: [syzbot] [net?] general protection fault in add_wait_queue
-From: syzbot <syzbot+9d55b199192a4be7d02c@syzkaller.appspotmail.com>
-To: aha310510@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Mon, 3 Feb 2025 11:09:34 +0000
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+> On Fri, 31 Jan 2025 18:42:41 +0100
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> 
+> > Now that the ghes preparation patches were merged, let's add support
+> > for error injection.
+> > 
+> > On this series, the first 6 patches chang to the math used to calculate offsets at HEST
+> > table and hardware_error firmware file, together with its migration code. Migration tested
+> > with both latest QEMU released kernel and upstream, on both directions.
+> > 
+> > The next patches add a new QAPI to allow injecting GHESv2 errors, and a script using such QAPI
+> >    to inject ARM Processor Error records.
+> > 
+> > If I'm counting well, this is the 19th submission of my error inject patches.  
+> 
+> Looks good to me. All remaining trivial things are in the category
+> of things to consider only if you are doing another spin.  The code
+> ends up how I'd like it at the end of the series anyway, just
+> a question of the precise path to that state!
 
-Reported-by: syzbot+9d55b199192a4be7d02c@syzkaller.appspotmail.com
-Tested-by: syzbot+9d55b199192a4be7d02c@syzkaller.appspotmail.com
+if you look at series as a whole it's more or less fine (I guess you
+and me got used to it)
 
-Tested on:
+however if you take it patch by patch (as if you've never seen it)
+ordering is messed up (the same would apply to everyone after a while
+when it's forgotten)
 
-commit:         2014c95a Linux 6.14-rc1
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=165c9764580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b93160eda29d3321
-dashboard link: https://syzkaller.appspot.com/bug?extid=9d55b199192a4be7d02c
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=170b43df980000
+So I'd strongly suggest to restructure the series (especially 2-6/14).
+re sum up my comments wrt ordering:
 
-Note: testing is done by a robot and is best-effort only.
+0  add testcase for HEST table with current HEST as expected blob
+   (currently missing), so that we can be sure that we haven't messed
+   existing tables during refactoring.
+1. Introduce use_hest_addr (disabled) for now so we could place all
+   legacy code to !use_hest_addr branch
+2. then patches that do the part of switching to HEST addr lookup,
+    * ged lookup (preferably at the place it should end up eventually)
+    * legacy bios_linker/fwcfg fencing patches
+    * on top of that new hest bios_linker/fwcfg ones
+    * and then the rest 
+    (everything that belongs to the 2nd error source should _not_ be a part of that)
+3. add 2nd error source incl. necessary tests procedures introduce
+   and update DSDT/HEST
+
+
+
+> 
+> Jonathan
+> 
+
