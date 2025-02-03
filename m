@@ -1,64 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.sysgo.com (mail.sysgo.com [159.69.174.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4252557C;
-	Mon,  3 Feb 2025 07:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5C22557C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 07:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.174.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738568211; cv=none; b=WO4/sg4Gf85SKxDbOfe2DBW5agyJPWF5HUTd8lTkk7cRGDLcJHS7UVNpAL4fHj+OgQGSsPj+2EjJuw3kOaZgtaBlPGxfNNumsYfvUqXxCIz8YI31JIFBXy7d5DlFETryfhef4aDR5tbe6deNVV9ssgv4MSivPL73rw5z6gCAGro=
+	t=1738568344; cv=none; b=GZ478L/0cVOdcrcgizm6j3CnIaUh5VKpXaS6o3HjgANQFEsHQIznER7IyDZtQ7yE1WpHLEvBlD/5Gqu99SMwlYDoldl54EcNhy2/bFIMJ4Wv8bP6FsSauB3pId6lNwgRzn2fU1RbQc0BKYK4oSUOdMqnUQH0DqO9IbKXRrM3oh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738568211; c=relaxed/simple;
-	bh=Hg5sCKmDMIH5N6S7Afmz4ils8tiC2ujQXPYqn/6TxTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hf/05mfUApmC0T58db6E5p+79F4XWescQs2qDbx1u0j4Vs/GxKhJu4RDWqaGfa6qUYEZbu6bfrFrn5WkkAUv93GBvNjNzMkisvr2s9jAS/Bzl/0d6g6g4aEzPMn5G4gm5AKSfjkIOW4Eziw0QBfj7f1axrQfzuhIW7GQI9ZD6pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qaf1MwRP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738568344; c=relaxed/simple;
+	bh=CrunVFMierOZmosYpli1kFuhs1QzBegjKdQNawGyhlA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j+AGflqObAjug0X+7yW9Ula/Mv3ir/xg39bKzleMXMz4O1izkiUYqW+nQ5ZysKJkH0rEOqecjN+ZS7iZkKLX3Zmu0TqvuF3lwFd64VBOwQNKW50jHdri5oWQgQk367vzJI2g3xvezcJgEY6Sdm8cdReciGcfbh14is7ig3KbWss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sysgo.com; spf=pass smtp.mailfrom=sysgo.com; dkim=pass (2048-bit key) header.d=sysgo.com header.i=@sysgo.com header.b=j0BP/YFR; arc=none smtp.client-ip=159.69.174.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sysgo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sysgo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qaf1MwRP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6202FC4CEE2;
-	Mon,  3 Feb 2025 07:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738568211;
-	bh=Hg5sCKmDMIH5N6S7Afmz4ils8tiC2ujQXPYqn/6TxTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qaf1MwRPb0ZMDY1sKLNjGOwcQ00rVSm9VQ4mTNcfI8WfUDPF4tGZIzKqLCHOiR6J8
-	 0vuGr3+qHsg7NQTOs4JTfc28zkjkgNo7wbCjBer7qMtvbRC7RClWJW/s1ivKRJ6tw2
-	 Hl7/wtd9Fc7Nm1wMIZslfI2NkWwH+Qm6tGNH4sJLrcQ0TrZMbksufeInsnPZCKpmRQ
-	 B4y9SpxjOLIKiBrPDpWTXHEKMZdkXicdI+9+OINTmCLNsHZxUDkf8ELOlyB67G+eMH
-	 fQMDwxYDmXSrzUBy6tvt6JnEKbHOXhOCqNHtYJVzqGPNjCl0JRyW56Zgsc6DOiao93
-	 FWiIoPrsrwYMg==
-Date: Mon, 3 Feb 2025 08:36:47 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Alexey Minnekhanov <alexeymin@postmarketos.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: clock: gcc-sdm660: Add missing SDCC
- resets
-Message-ID: <20250203-bright-copper-tuatara-6d9eb9@krzk-bin>
-References: <20250203063427.358327-1-alexeymin@postmarketos.org>
- <20250203063427.358327-2-alexeymin@postmarketos.org>
+	dkim=pass (2048-bit key) header.d=sysgo.com header.i=@sysgo.com header.b="j0BP/YFR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sysgo.com;
+	s=k1; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:
+	From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:
+	References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:
+	List-Owner:List-Archive; bh=nsNWHqUwrijQ2Ji+F5XCPCp/StkkqtUxtdRojXqtqE4=; b=j
+	0BP/YFRcTHHA1+3u85CqnVFBCeIxVB6olArcugLHoDK/nyDkNVfZxiJ13Qge2qdmiKd/Tqa1YIlzK
+	atyw1RtZOnCsOxzSVivIY97kLW0dRdt5agGxos3euuTRjsr6OP0eGA70lDt7bDwUfUhNthPwpkJx3
+	fCtlFbpVRvubHfJZXfY0OCftn6rkWo9DoUmqYzx57K8M5Wl7UkCoF4ZfrH/EX7aFQdnOz68kaFIHK
+	cLlAOxZQg35wbZbOAJIGUDc7ZpUPHhkLpDwdA10aa7p1ELkKj9tngcPAmwgNBwwSWa6kZjm4X73qd
+	P25NTd3upiSIOmVGmILcuvbHZ8NP/Nw1Q==;
+Received: from lantia.sysgo.com ([172.20.1.5]:53486)
+	by mail.sysgo.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <david.engraf@sysgo.com>)
+	id 1ter0d-000000003od-14Dg;
+	Mon, 03 Feb 2025 08:36:43 +0100
+From: David Engraf <david.engraf@sysgo.com>
+To: jpoimboe@kernel.org,
+	peterz@infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	David Engraf <david.engraf@sysgo.com>
+Subject: [PATCH] objtool: Hide unnecessary compiler error message
+Date: Mon,  3 Feb 2025 08:36:10 +0100
+Message-ID: <20250203073610.206000-1-david.engraf@sysgo.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250203063427.358327-2-alexeymin@postmarketos.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 03, 2025 at 09:34:24AM +0300, Alexey Minnekhanov wrote:
-> Add resets for eMMC/SD card blocks that were missed during initial
-> driver submission.
-> 
-> Signed-off-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
-> ---
+The check for using old libelf prints an error message when libelf.h is
+not available but does not abort. This may confuse so hide the compiler
+error message.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: David Engraf <david.engraf@sysgo.com>
+---
+ tools/objtool/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
-Krzysztof
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index f56e277275341..38609e3612ba1 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -37,7 +37,7 @@ OBJTOOL_CFLAGS := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBE
+ OBJTOOL_LDFLAGS := $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+ 
+ # Allow old libelf to be used:
+-elfshdr := $(shell echo '$(pound)include <libelf.h>' | $(HOSTCC) $(OBJTOOL_CFLAGS) -x c -E - | grep elf_getshdr)
++elfshdr := $(shell echo '$(pound)include <libelf.h>' | $(HOSTCC) $(OBJTOOL_CFLAGS) -x c -E - 2>/dev/null | grep elf_getshdr)
+ OBJTOOL_CFLAGS += $(if $(elfshdr),,-DLIBELF_USE_DEPRECATED)
+ 
+ # Always want host compilation.
+-- 
+2.43.0
 
