@@ -1,40 +1,72 @@
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34171FC0F9;
-	Mon,  3 Feb 2025 14:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996FC205ADA
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738592059; cv=none; b=C/QGSyDjZ+z8PIVtMInKL322aqRSSAreo/ginjobkcgaKDW/UG2fx4lfBmfeBN3Q4iPvEVA39U7sgUSbBUhK3EXFEaR0L0/41YXzEua+yFP5KXjDvEs2nhEYIvN0B1mwpY6ghZcOlfuwaEoMzowQ48wrQNBEGpuTZAclLZxeD3A=
+	t=1738592085; cv=none; b=tydmw1orQ2bhqAJMoO91vekfOBj/4Qpdd6Y49i4P1NVpjCuDUlvILJa4r7sf2ca5ijCofXhJ6k4Ibs9DvboJPQjYAh16f/h1Z6+faFL3f56TDDXUy+Vb/IBaWqAuu4CTrKGYwqUwFedgnzvHE005pVeZ+uS3Sg94VWu5OP/5J7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738592059; c=relaxed/simple;
-	bh=60PMMt2ExM2Ko6ripWDDCg+Nj5o/tLdlrm2phlbWfM8=;
+	s=arc-20240116; t=1738592085; c=relaxed/simple;
+	bh=GLS47vtT3nuOUmU+wF1U4f2z06P/ZzFU5ppHdYrIRl8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Trxg9GnhwX+yTk2lS60PeG/lf0xuCMeC+aCb+IRAWTrF21rMU5AITbo8BTM0BnK9qBro3Lfhq1ps+9Qf3DM/70tqERjqtmvIkcFYottI0hyo2G5Px+5RjToGO1rXwPqaqrYVpV9M6WZEh8h458LXVI/76wzruRbQBeNlZxAjWEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=xHSaImGT; arc=none smtp.client-ip=212.63.210.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
+	 In-Reply-To:Content-Type; b=FGU5ROFdGAYRCDVJIEy594AKcB8pNTC6D/kqcyNRnuJamzw6qzOdjT0XKVnEu3Mx+BPZS+qA9/nuWp194ltOyCTpIoxuadUMrbiuXdxsekFFwnGG/J0DvODUJx1RoDwrl60mqz1XO1J3FNIImo5eRqmzJNaE3GG06o6AtKGtxio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oUPDIv0o; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="xHSaImGT"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: lina@asahilina.net)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id 39E9743472;
-	Mon,  3 Feb 2025 14:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
-	s=default; t=1738592054;
-	bh=60PMMt2ExM2Ko6ripWDDCg+Nj5o/tLdlrm2phlbWfM8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=xHSaImGTYTcNonN6pj2/sTcYh2NeEPD9BbFFmu9rqiSIAolqlsGXWqnZhc3an3vNY
-	 y1dF92upsKAQAFz1afjPHoHyNJ7RjAuw/LGQSolrIpWRtNx7ZCiMq7ldMvRjx1GZpd
-	 jV2+pk/aMnio/xvJ21+n1jkcXAMSRen8AiPbBg6H2m/x1ioZYOHDLTBW2BTvX5B7HW
-	 JhEPJBEJ/OYq8kO5huxBx9Kjiy+VqMF0chaVjoqhXC3DmbJ8blpqbhO5yQiLGqz8U2
-	 lK5XCgQxFBERo5lcdI6lrLu73r/A5QwODhZ1pnRHM2lA1PenmWzaRa8YB+Qsdv7Ka+
-	 bi0fcMfRApL4w==
-Message-ID: <697188e5-0718-433e-943e-14ccb9bb59f4@asahilina.net>
-Date: Mon, 3 Feb 2025 23:14:12 +0900
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oUPDIv0o"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513BUUdE003900
+	for <linux-kernel@vger.kernel.org>; Mon, 3 Feb 2025 14:14:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9ed5FD2P7X9YaTZMReMsjptBhvML/e4p1WW07sHSBxs=; b=oUPDIv0oh0BYT43o
+	UuO+W6eMj3rOly1MESJtG+RA4e4gOETUhWvJ5luYP/69cHcjCmkvaz9RPb7ziOFl
+	yMDOGS7/yuVrTCp8pdzYLatfsSnZ4gJbB7M5ddXXrF88EeWk3jMkSO/sxOM1hwU9
+	SP93oBaAPQ/v38IF0k58iOCgBdU9B32gB6Ni76RJ/TZ4i5MgBmR/KgGJqvIw4frn
+	3IiRWTKP6/US4VK+A848MfXMB8ipn9Bp2Ep3RR28beNNlJjvChnoBQa3F4SUV1h2
+	5nhIciqCL1cMlzuaVYvQKuu4raquZpU9zWL8ex/oKku8R323xzo6fMRUpjuYXcbk
+	szGnrA==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jw03gjjr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 14:14:43 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7b6f85325c3so58809685a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:14:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738592082; x=1739196882;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9ed5FD2P7X9YaTZMReMsjptBhvML/e4p1WW07sHSBxs=;
+        b=BLnfAnVE4P0/ofBcBmTbysY4Cu4uGmdjqstWgXYR6HSsDA78WnDJhtDW+rAOcr3V+L
+         0OHT/L7ccr4DuMZWuJIZAunCLeYhKCo9JqhkDzbgJg1Kgio9zoKksGwysDKWp8KGJ+c6
+         U59kbjsob28FOSSVnejBAkWOEjNHtn2bOmNlH2lAyNecs0IcwenovFY2Z54Mgy3G6i30
+         Wr/kHHo9W3R2YBfUAK6u53mZYCWk7z90TME9IlF58yz3x05zjKdCfmvrnCuhjpkBCDra
+         yVHtqSn3ZrfxvvMLia86uk13Rl9YhwjSknzUGxc4AlWHVXhB8BfxCBbM5Z7kgfL99DMp
+         3wAA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7LORvFiJ65pntBRxOfABTKGy0wPojbWX7eiN8y1WROPkOe6aMXuSwrF2GE+7//HdU+QSLMKqrg1gK3pw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGPibBCMQOt8oOTw8agCsZFZZQn23dFB0xoaSNdHHvzU/uAaIK
+	6s9l4f4v9kdysCJnrfeRMVJnOdUKyNPSEPPmd2UY8kMkZkwMdgTPD8+TaTe3Qtrhe7uT+QELX4m
+	gsTPvBj3PCSIRBQby/ysZSclzH161ncjmBex+UukomrjNfES5jWQOKmjzGky0W1Y=
+X-Gm-Gg: ASbGncsTNzfzZHj0piRm8Ro5VwTbmcZsgZK46YcI0yc7Jgl3Y8rsWn6oyOXH/b1CkXo
+	DTT7A/sMlomQ7Moi64h3LREskPm4+H3bnYvNojoKPGVx4GamGiTFOz7iMCqhQZ72WS3XXiElsey
+	luVcrskL5z6gEL6MkXLIGIqFCqARmm1pg+ZsdBwn+SG84lnBk5wPSq9MhZKetJCYVCCr3BEOflN
+	UG7Hky71Yb82pKpvJhC5ihVJ8TEUqORlhZfyopDl16Sr6F3S4tikYYlSIe89y4NRZsEVE18y2TH
+	VYeb1KTlbRZb0c9X/ZkJ6BixAjGNfAKS/vbWMRK1uaFOqiRwnZnND+tnu4E=
+X-Received: by 2002:a05:620a:2686:b0:7b6:d65f:cb6a with SMTP id af79cd13be357-7bffcd8b180mr1181508985a.12.1738592082312;
+        Mon, 03 Feb 2025 06:14:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGH1738FSuy+pc3rDZ0plUoVJ+oWo3QVzECxej0AWdMRUeWLLFwJpYf/Ff6igbrOhSMl69Frg==
+X-Received: by 2002:a05:620a:2686:b0:7b6:d65f:cb6a with SMTP id af79cd13be357-7bffcd8b180mr1181507085a.12.1738592081987;
+        Mon, 03 Feb 2025 06:14:41 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47cf899sm761968566b.44.2025.02.03.06.14.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 06:14:41 -0800 (PST)
+Message-ID: <19a83d67-7e1a-495b-8dff-e1d2ba05b878@oss.qualcomm.com>
+Date: Mon, 3 Feb 2025 15:14:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,185 +74,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/3] rust: io: mem: add a generic iomem abstraction
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.mco, benno.lossin@proton.me, a.hindborg@kernel.org,
- tmgross@umich.edu, gregkh@linuxfoundation.org, rafael@kernel.org,
- dakr@kernel.org, boris.brezillon@collabora.com, robh@kernel.org,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250130220529.665896-1-daniel.almeida@collabora.com>
- <20250130220529.665896-3-daniel.almeida@collabora.com>
- <b5538fda-1926-4280-8e46-e0ff299a4f72@asahilina.net>
- <CAH5fLgjf4VArJ21DaAY9SP+AF4k+706naR+UfcVFx3S9aJfmJQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: qcom: qcs615: Add clock nodes for
+ multimedia clock
+To: Taniya Das <quic_tdas@quicinc.com>,
+        Bjorn Andersson
+ <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250119-qcs615-mm-v2-dt-nodes-v2-0-c46ab4080989@quicinc.com>
+ <20250119-qcs615-mm-v2-dt-nodes-v2-1-c46ab4080989@quicinc.com>
 Content-Language: en-US
-From: Asahi Lina <lina@asahilina.net>
-In-Reply-To: <CAH5fLgjf4VArJ21DaAY9SP+AF4k+706naR+UfcVFx3S9aJfmJQ@mail.gmail.com>
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250119-qcs615-mm-v2-dt-nodes-v2-1-c46ab4080989@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: vmfFYxaH34hl0XznYc8-Is3Ij22SiyCe
+X-Proofpoint-ORIG-GUID: vmfFYxaH34hl0XznYc8-Is3Ij22SiyCe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1015 spamscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502030104
 
-
-
-On 2/3/25 6:26 PM, Alice Ryhl wrote:
-> On Sun, Feb 2, 2025 at 11:45 PM Asahi Lina <lina@asahilina.net> wrote:
->>
->>
->>
->> On 1/31/25 7:05 AM, Daniel Almeida wrote:
->>> Add a generic iomem abstraction to safely read and write ioremapped
->>> regions.
->>>
->>> The reads and writes are done through IoRaw, and are thus checked either
->>> at compile-time, if the size of the region is known at that point, or at
->>> runtime otherwise.
->>>
->>> Non-exclusive access to the underlying memory region is made possible to
->>> cater to cases where overlapped regions are unavoidable.
->>>
->>> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
->>> ---
->>>  rust/kernel/io.rs     |   1 +
->>>  rust/kernel/io/mem.rs | 125 ++++++++++++++++++++++++++++++++++++++++++
->>>  2 files changed, 126 insertions(+)
->>>  create mode 100644 rust/kernel/io/mem.rs
->>>
->>> diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
->>> index 566d8b177e01..9ce3482b5ecd 100644
->>> --- a/rust/kernel/io.rs
->>> +++ b/rust/kernel/io.rs
->>> @@ -7,6 +7,7 @@
->>>  use crate::error::{code::EINVAL, Result};
->>>  use crate::{bindings, build_assert};
->>>
->>> +pub mod mem;
->>>  pub mod resource;
->>>
->>>  /// Raw representation of an MMIO region.
->>> diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
->>> new file mode 100644
->>> index 000000000000..f87433ed858e
->>> --- /dev/null
->>> +++ b/rust/kernel/io/mem.rs
->>> @@ -0,0 +1,125 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +
->>> +//! Generic memory-mapped IO.
->>> +
->>> +use core::ops::Deref;
->>> +
->>> +use crate::device::Device;
->>> +use crate::devres::Devres;
->>> +use crate::io::resource::Region;
->>> +use crate::io::resource::Resource;
->>> +use crate::io::Io;
->>> +use crate::io::IoRaw;
->>> +use crate::prelude::*;
->>> +
->>> +/// An exclusive memory-mapped IO region.
->>> +///
->>> +/// # Invariants
->>> +///
->>> +/// - ExclusiveIoMem has exclusive access to the underlying `iomem`.
->>> +pub struct ExclusiveIoMem<const SIZE: usize> {
->>> +    /// The region abstraction. This represents exclusive access to the
->>> +    /// range represented by the underlying `iomem`.
->>> +    ///
->>> +    /// It's placed first to ensure that the region is released before it is
->>> +    /// unmapped as a result of the drop order.
->>> +    #[allow(dead_code)]
->>> +    region: Region,
->>> +    /// The underlying `IoMem` instance.
->>> +    iomem: IoMem<SIZE>,
->>> +}
->>> +
->>> +impl<const SIZE: usize> ExclusiveIoMem<SIZE> {
->>> +    /// Creates a new `ExclusiveIoMem` instance.
->>> +    pub(crate) fn ioremap(resource: &Resource) -> Result<Self> {
->>> +        let iomem = IoMem::ioremap(resource)?;
->>> +
->>> +        let start = resource.start();
->>> +        let size = resource.size();
->>> +        let name = resource.name();
->>> +
->>> +        let region = resource
->>> +            .request_mem_region(start, size, name)
->>> +            .ok_or(EBUSY)?;
->>> +
->>> +        let iomem = ExclusiveIoMem { iomem, region };
->>> +
->>> +        Ok(iomem)
->>> +    }
->>> +
->>> +    pub(crate) fn new(resource: &Resource, device: &Device) -> Result<Devres<Self>> {
->>> +        let iomem = Self::ioremap(resource)?;
->>> +        let devres = Devres::new(device, iomem, GFP_KERNEL)?;
->>> +
->>> +        Ok(devres)
->>> +    }
->>> +}
->>> +
->>> +impl<const SIZE: usize> Deref for ExclusiveIoMem<SIZE> {
->>> +    type Target = Io<SIZE>;
->>> +
->>> +    fn deref(&self) -> &Self::Target {
->>> +        &*self.iomem
->>> +    }
->>> +}
->>> +
->>> +/// A generic memory-mapped IO region.
->>> +///
->>> +/// Accesses to the underlying region is checked either at compile time, if the
->>> +/// region's size is known at that point, or at runtime otherwise.
->>> +///
->>> +/// # Invariants
->>> +///
->>> +/// `IoMem` always holds an `IoRaw` inststance that holds a valid pointer to the
->>> +/// start of the I/O memory mapped region.
->>> +pub struct IoMem<const SIZE: usize = 0> {
->>> +    io: IoRaw<SIZE>,
->>> +}
->>> +
->>> +impl<const SIZE: usize> IoMem<SIZE> {
->>> +    fn ioremap(resource: &Resource) -> Result<Self> {
->>> +        let size = resource.size();
->>> +        if size == 0 {
->>> +            return Err(EINVAL);
->>> +        }
->>> +
->>> +        let res_start = resource.start();
->>> +
->>> +        // SAFETY:
->>> +        // - `res_start` and `size` are read from a presumably valid `struct resource`.
->>> +        // - `size` is known not to be zero at this point.
->>> +        let addr = unsafe { bindings::ioremap(res_start, size as kernel::ffi::c_ulong) };
->>
->> This does not work for all platforms. Some, like Apple platforms,
->> require ioremap_np(). You should check for the
->> `IORESOURCE_MEM_NONPOSTED` resource flag and use the appropriate
->> function, like this (from an older spin of this code):
->>
->> https://github.com/AsahiLinux/linux/blob/fce34c83f1dca5b10cc2c866fd8832a362de7974/rust/kernel/io_mem.rs#L166C36-L166C70
+On 19.01.2025 1:00 PM, Taniya Das wrote:
+> Add support for video, camera, display and gpu clock controller nodes
+> for QCS615 platform.
 > 
-> Hmm. Is detecting this based on the flag the right approach? On the C
-> side, they use different methods and I wonder if we should do the
-> same?
+> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs615.dtsi | 51 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+> index f4abfad474ea62dea13d05eb874530947e1e8d3e..9d537019437c5202c4d398eecd0ce2a991083175 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+> @@ -3,7 +3,11 @@
+>   * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
+>   */
+>  
+> +#include <dt-bindings/clock/qcom,qcs615-camcc.h>
+> +#include <dt-bindings/clock/qcom,qcs615-dispcc.h>
+>  #include <dt-bindings/clock/qcom,qcs615-gcc.h>
+> +#include <dt-bindings/clock/qcom,qcs615-gpucc.h>
+> +#include <dt-bindings/clock/qcom,qcs615-videocc.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/dma/qcom-gpi.h>
+>  #include <dt-bindings/interconnect/qcom,icc.h>
+> @@ -1418,6 +1422,18 @@ data-pins {
+>  			};
+>  		};
+>  
+> +		gpucc: clock-controller@5090000 {
+> +			compatible = "qcom,qcs615-gpucc";
+> +			reg = <0 0x05090000 0 0x9000>;
+> +
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
+> +				 <&gcc GPLL0>;
 
-ioremap() vs. ioremap_np() exist because the second one was added for
-Apple platforms, and we need both because ioremap() is required for
-external PCI devices and ioremap_np() for internal SoC devices, but no
-driver calls ioremap_np() directly. If you look at drivers/of/address.c
-and lib/devres.c, you'll see they do the same thing to decide which one
-to call. The code in drivers/base/platform.c hooks up the platform
-methods together with devres, and the code in drivers/of/platform.c sets
-up OF devices as platform devices with the OF resource code, which sets
-the flag as needed.
+This would normally be GCC_GPU_GPLL0_(DIV_)CLK_SRC, is this intentional?
 
-Therefore, that any driver that uses any of the high-level ioremap
-wrappers that go through `struct resource` automatically gets the
-ioremap()/ioremap_np() handling (platform drivers get ioremap_np() on
-Apple platforms, everything else including PCI drivers get ioremap()).
-The Rust side should do the same thing.
-
-~~ Lina
-
+Konrad
