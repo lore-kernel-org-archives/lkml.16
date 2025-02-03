@@ -1,108 +1,115 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E77111A8;
-	Mon,  3 Feb 2025 14:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B870205ADD
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738591223; cv=none; b=gEikXXitnNalYeXrTKy6c7yhQJuM0uZ2l+5aEoYufELwsG8BhSS/9G79McYWHasbnSHHSq1ccbITV+kWgXkbn9/gtf5xfXFmxbc347MLR+YFd4mCncTSuYho1KFegWtaaKXAsyqw/W0wjrzXKwKgiKlYmuvogOUP0AN4B/JC3kY=
+	t=1738591239; cv=none; b=tlcdD+p+dyxIXejafJeS2lTYCdqpDny+BBOOb9z/QdtlEL72klJ+aNRAvwCmefcoq+yXX5NfbEt+4GkGcChME5ciN1gK8+19Q3tK90v/k5/Y/kmiw2prVRudBiWJQN3VDhtsep4eHWkQqczak3buSH+JY4nBd4T8FtkeRgw0o6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738591223; c=relaxed/simple;
-	bh=sFw6a6CBGX3CJQLHB6uvFLA/efvDiB+a7slUqjZU1do=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FLkvKfn/30+jNWc5Z7OF2unHUzQYeus9KZicEq5HPSHrQYlozmZ3y4Cr/1vfa/jqvl2+ZdyENaL0vBPtAWbk9itGatcjgp4dxpjSL6xlYwaiAivBRS4dUNYy7FATKLblgW79DYyb0EH3WBJXLUy6AjS03YAOWyAFtOyjRv1BYRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VdoNMsdA; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738591239; c=relaxed/simple;
+	bh=YEBc9w8PsnWAIH0OCO/5q9BJSPFXkTLscni1Aov5z9A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=stFEMskPr7+0aBFxenPOrXlWiZsoX1JOHYAfCa/uzoOq/Q7XDotYSEfipzOkYmTw0iY+5RH1hDI+FzukStqTWU7ZShH8RXYEau1eJ6VJ53UKeybvACu7u3Rkdof3horDbaHJRc/oACXyl2vzV1onCdgV4YGUM9NeIhVZ+vUS2cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V9V84eji; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VdoNMsdA"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-218c8aca5f1so87388375ad.0;
-        Mon, 03 Feb 2025 06:00:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V9V84eji"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6f6ae4846c7so24630567b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:00:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738591221; x=1739196021; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pj0X7gimYNbIdGaKy+0N9jNbkyEy+n6mQW8Dp8j+2Cs=;
-        b=VdoNMsdAmErNn3DqsJxbmDjre4uMlDsigErsqncEI8XPIzHTPdNrusdfhqnsIk0Oi2
-         +qerCwnunKYao9TiCIJCmVZul0t0p2l+ny4fzRxygcvxz4ejEZDxrTQkBqVHa+ZrT7Ko
-         tKb+UlREnEfMhUsrZNIZBhlAqe6q4SUgAeLWr1ZNB+3Q+///ZbNoAa8GFMC0QxZFg6Uo
-         W+QQbygxZzB1eXvXGn3X4uiXWHwv95zqo5zZqXZRGASsEv2ScYb4Ejma71oxPKN/g7GV
-         fcWeW54ua8d58DPtVfspQ8+Idm83+xFiY9yTyWEqJkFAbwsqQg8W3PPp6uPwXnRFaWNT
-         gnPQ==
+        d=linaro.org; s=google; t=1738591236; x=1739196036; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y3ZAg9pl88KjIvs5mS1f1EZymy0dyDgkN4GT1M3eKZY=;
+        b=V9V84eji9P0HdcWV65pg2VDRgL/ECXM/J3o0xCoJb+98/pWGKI8rmPrjBzlqhwNVlV
+         m+IQRGRUBT2/BKK1IblkVojJGo3u2oLoucIEhnsY2uGRQBiR30eqHJwDLJDkO5H69TEc
+         RFWAn91/KBOM1pDeu0tFpS8lCIPKFkxM6oOnxVGWD79uKuRYi3xbXaDo6wHfB2eie/sE
+         v8EGbHywSl9nVjIBs5RLqX2HrRvhYjSKkkX6ziKpviwCf1QZnsDjKOOy2F3tvGyrUSxd
+         maGkyCQqhdqXRzP1uiyWUJSkuTB5GFbwxmw0aXIZ1u4uMRsSWIp1TrhVLsVZsqvf2Q5w
+         Pz2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738591221; x=1739196021;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pj0X7gimYNbIdGaKy+0N9jNbkyEy+n6mQW8Dp8j+2Cs=;
-        b=vYnQUtPzGMApZBWD//EV57s8N9uq1tkqIJ5BT/KrwAp8HiIXBI7mu5eZ8xlao2tjBD
-         Ll6lvuiJXgdeSZvPFQcCNl/bb6hRw1+UhA7uLwI/w2fvuOi4F01ZiAhaAyeRn5+tUZ9W
-         bMKbGAVQH3m924vIBAaSFA1wJHzE/YUMESvl5VTsQOAiY0VP7xr0HlvbArCTcNI+LYjg
-         0PMW0JofO9d1YLhjHHgXyBHy/MmImRCHplirZzVpiExzEg6wAzI4OE/Uo0irZBR4QyVV
-         jHYfGO3QOt92lXGPhChIioV8fSrKbWywtLos3pCrCuCyTXRvb8XU67f7bSZd37PTS1eh
-         Ro+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVASC0I9yp1BAONQy+idNpkKR5WFqbTpRwe/skxnzu3oxIpWJgHouvAt03FyZ+cgMUIh3poclqWGCypCcY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPohzWbwyZTYYmAwDfAeX/9TB193UETlOC6bAfSHWQXkijcY/7
-	+TWcRF/PeqFhbZ9Er4RwcprlDmzOSqOHrvvSPMCiEFnL1Dv5p1bsiPP5j9Wn
-X-Gm-Gg: ASbGncsKiXolMGGJWv3GPqj5zp3twGwapyVLHl0NZAZ25c4ipphDXD6SIU/fqCD6ug/
-	A9P+RE7xSmH5WB6cFsgKioe9iJim9YgPGlcChv/HMq4JeQH/5ZJQxVnNGvUfPgXeWjTigFSRZEH
-	F8fkF2Jq2jIjIF6JPRxtxiQxDM+FMDqbAV29RjJUEAR3Ls72Q62yEvLissw4GI1LzHhUZcHtuC8
-	6H9AiaMKBCub3dioBQY9M+4EdaGP85JlckW5hDFHxHDIybZVutzPoP005tgUCbQfNerqF2p3Wzl
-	RrUyEnNOZSAWJGrm
-X-Google-Smtp-Source: AGHT+IHC4ljZnye2fYYzTrG8E2a6wT/HWcfxGLvpeyBRdqSi9lFX7cnVJl5DGUArJZzCX+u4II6hAQ==
-X-Received: by 2002:a17:903:40c9:b0:216:73f0:ef63 with SMTP id d9443c01a7336-21dd7e38f8cmr343177275ad.49.1738591220788;
-        Mon, 03 Feb 2025 06:00:20 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:bc03:a12b:a196:21f1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de33200e7sm76750375ad.240.2025.02.03.06.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 06:00:20 -0800 (PST)
-Date: Mon, 3 Feb 2025 06:00:18 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Marian Flor <marian.flor@posteo.net>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] gpio_keys.c: Send also event when EV_ABS axis button
- is released
-Message-ID: <Z6DL8v9hzkzfH3is@google.com>
-References: <717e71d6-5114-45ff-aa6b-0bb4a68b6261@posteo.net>
+        d=1e100.net; s=20230601; t=1738591236; x=1739196036;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y3ZAg9pl88KjIvs5mS1f1EZymy0dyDgkN4GT1M3eKZY=;
+        b=GZMONGkZ8EB3oP74JMA3uJVVff5++saAWZ/iij3SnvjjZVWw/5f7TOlX0tYfU8tJGi
+         MluaLbx/vVoDgtMAWS0djUUsy6FJVyLQD1RrgMT/m1xP3uJoaY8/CVFYYjia29dsiBZG
+         s/7Kf1SvrkbTRIl/SyOwQbxSShjuT0ZRkO8e7IZdNAie9A49kCX+pqwWUBQPK+NOAPYy
+         UURzuyC+mysoNjGuVtWPWzW1ilryfucZvpPKtSnH2EOhIBl50Pn2wTYVTmWRwEuQt06c
+         XeY4wm75xuhz9wgCGi6FD94FCeZkqbiApKSWgi1vMkvLvq/WOlg/s57KlaA1T9QGYN3N
+         zpAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXnYiuoEEXmNn1tNlRVkUe24oyx3U8N19VpTyd1mGUG3DrFMYMf/uF82HbuG208ekhm+Q8vJjf7O7vsCU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7/aUbqWPoKCoJ3p5oOTRR960XYAZVUj4/YrmVQHwT9Q6f1Ys4
+	xRUMQdX5MfG3BDMj9i8yifvUhW09bSJ2jvNDnc+TqfpaFHoGFe/N7WpjVHY9kePxQXL8fOrGtPQ
+	MpFh+awwMSB5NZuEywObkiF6r9yp6uBoctPd0lQ==
+X-Gm-Gg: ASbGnctadQPlcQM109GMtRIFdRZ/iWa6P2UDTk7purTNPPRfN7aGaicswIHVnV0HwwF
+	Oy60rgZt0S5mys36GejJS7KkjXt4RHpzE+U6OzPRf150A+eTd10PbIYoR/+VhQXpmGBTBRQ==
+X-Google-Smtp-Source: AGHT+IHuL252vql+MeLPa1il2bPxNj6ynbBWo3mzurFA8SbfqbWEn52CWFCkQZHR2nMMtJaAFqXqFRxN0N0x3eiX1YU=
+X-Received: by 2002:a05:690c:6486:b0:6f6:c8fc:61b1 with SMTP id
+ 00721157ae682-6f7a83fe138mr161266737b3.28.1738591234763; Mon, 03 Feb 2025
+ 06:00:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <717e71d6-5114-45ff-aa6b-0bb4a68b6261@posteo.net>
+References: <20250202-rb1-bt-v3-0-6797a4467ced@linaro.org> <20250202-rb1-bt-v3-4-6797a4467ced@linaro.org>
+ <d5e1e6ae-b773-4ec8-a66b-2e1830827164@oss.qualcomm.com>
+In-Reply-To: <d5e1e6ae-b773-4ec8-a66b-2e1830827164@oss.qualcomm.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 3 Feb 2025 16:00:26 +0200
+X-Gm-Features: AWEUYZmz1ECIXn-mrFsqggOTDVeuYLmbYaHev8MsZuEQbvNP_yfferj5PUkoYTw
+Message-ID: <CAA8EJppMVzuRLLakNJd4M9MRbW5P-0x=rTf1p9kj0zj88SOOGA@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] arm64: dts: qcom: qcm2290: fix (some) of QUP interconnects
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Rocky Liao <quic_rjliao@quicinc.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Marian,
+On Mon, 3 Feb 2025 at 15:50, Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+> On 2.02.2025 1:16 PM, Dmitry Baryshkov wrote:
+> > While adding interconnect support for the QCM2290 platform some of them
+> > got the c&p error, rogue MASTER_APPSS_PROC for the config_noc
+> > interconnect. Turn that into SLAVE_QUP_0 as expected.
+> >
+> > Fixes: 5b970ff0193d ("arm64: dts: qcom: qcm2290: Hook up interconnects")
+> > Reported-by: Konrad Dybcio <konradybcio@kernel.org>
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/qcm2290.dtsi | 16 ++++++++--------
+> >  1 file changed, 8 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
+> > index f0746123e594d5ce5cc314c956eaca11556a9211..6e3e57dd02612f3568f07f1e198028413f463c69 100644
+> > --- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
+> > @@ -1073,7 +1073,7 @@ spi0: spi@4a80000 {
+> >                               interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
+> >                                                &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
+> >                                               <&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
+> > -                                              &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
+> > +                                              &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
+>
+> Still incorrect, this should be &qup_virt SLAVE_QUP_CORE_0
 
-On Sat, Feb 01, 2025 at 04:20:15PM +0000, Marian Flor wrote:
-> The input EV_ABS does not emit an event when the axis button is
-> released.  It appears to libevdev as held, even when the axis
-> button is physically released.  This behavior is also opposing
-> to the devicetree documentation for gpio-keys.  Change the code
-> to additionally emit a zero valued event on axis button release.
+Hmm, why? qup_virt has its own path. I think this one (using CNOC)
+matches the usage on other platforms.
 
-This unfortunately will not work: if you have several GPIOs with
-progression of values, such as:
+>
+> Konrad
 
-GPIO1: EV_ABS/ABS_X/0
-GPIO2: EV_ABS/ABS_X/1
-GPIO3: EV_ABS/ABS_X/2
-GPIO4: EV_ABS/ABS_X/3
 
-You do not want the values to bounce to 0 as they transition from let's
-say 1->2.
-
-The "return to 0 as resting point" behavior was originally only supposed
-to be valid for the polled variant of gpio keys, but commit fbfb9a60d5d0
-("dt-bindings: input: Convert gpio-keys bindings to schema") changed it
-without updating the driver. It was an oversight.
-
-To properly implement this behavior you need to scan all other GPIOs
-with the same type and code and see if any of them are still active.
-
-Thanks.
 
 -- 
+With best wishes
 Dmitry
