@@ -1,99 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4728F4502F;
-	Mon,  3 Feb 2025 06:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 680EA7D07D;
+	Mon,  3 Feb 2025 06:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738564689; cv=none; b=ZVU7vUCmqjkLWHL9rn3/+7RPYGnLa431+rQukCDURbqB6kEWbL1/eyHQkZT5tKepFu06JrBHxfLoF4axixMO65egiTmhJxIJlkKpUnlYl/5t40watls0gWy0gzTPJvk2kzoE9nrApnvqxxiYNFdBAqEtTrjLavB36bUJ0LhzxNw=
+	t=1738564726; cv=none; b=Clg6IsH0y9MGdc62w0nrRHgHUy6Q0NgRGJYt8zgyeVhPXvHjoEdQasDQd/hSi9vYPDxvGAhSPShu/QcNEKRI32j5UGwA7+ldIwKwqZ66ZlI2ES0ck9OFz1zmMXi1ghCsmufhwXWfM+MnDPfo9SRQBeey4qK4eOD5EnuF4X5B7FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738564689; c=relaxed/simple;
-	bh=4ZAGAaI9Vpn3TPg4K2QrvEklxrVNZBoiXZohN6WtLQg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NcTXEenLrH3c+3t1CIR/iHzPqvl7ijfQ50Cmr6Gv4MeXrlH/AzFH2ZULWi/JUfBd5LgKNmE0eUngI6p3FqcvZzqM3ZwP1/7nEaMvZjID/B9XhIZcWs2vvvu54lEoB5NP9mUaC1YrejELU3itGJGL9GXqgDaBTG6Lw/djs5dlBBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DkNGtS3Q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DkNGtS3Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBCBBC4CEE2;
-	Mon,  3 Feb 2025 06:38:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738564688;
-	bh=4ZAGAaI9Vpn3TPg4K2QrvEklxrVNZBoiXZohN6WtLQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DkNGtS3QZHpyMACWuq6EfWWUCl66GD3eyZJXyD/78av3l/dHqp7YiUBBznGpsmA10
-	 pOuuBb+OXmXgg7sZhF30TScA+nD2+TgTgNMXDH8a2OhQwaOkeJ+Tw2AGDm+fZa55Pg
-	 RnGEa70bMbqNYFWFqRyH0q1rCvfbaipv/bX7BW1c=
-Date: Mon, 3 Feb 2025 07:37:08 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Cc: broonie@kernel.org, rafael@kernel.org, dakr@kernel.org,
-	mazziesaccount@gmail.com, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] regmap-irq: Add missing kfree()
-Message-ID: <2025020351-cornfield-affix-8cf4@gregkh>
-References: <20250202200512.24490-1-jiashengjiangcool@gmail.com>
+	s=arc-20240116; t=1738564726; c=relaxed/simple;
+	bh=KBq44VxD0mtvsZUAYhFY7MMb8UXLSNUlwTI4ITmj+/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ggdrQXg7G/My3LdoQfOoILvSd6TEviFZA0HdoROBJhNeoiX+z8HJX+PVF6PgiEgMcV39xy3Kuc1qJZGvOL5YyaOVLi3pKpKQKezZVszPAO3uHWwv+iYpTWeykU5AqTxNx/03eaMbcJXRKN+uMEKdXLLL+MWRTExhSlMha92b0W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8FC21476;
+	Sun,  2 Feb 2025 22:39:06 -0800 (PST)
+Received: from [10.162.16.79] (unknown [10.162.16.79])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 187F73F63F;
+	Sun,  2 Feb 2025 22:38:37 -0800 (PST)
+Message-ID: <8584f5cc-70b0-46a0-9582-8d7b4d491ba6@arm.com>
+Date: Mon, 3 Feb 2025 12:08:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250202200512.24490-1-jiashengjiangcool@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 03/11] perf: arm_pmuv3: Don't disable counter in
+ armv8pmu_enable_event()
+To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-3-1c1300802385@kernel.org>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250202-arm-brbe-v19-v19-3-1c1300802385@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 02, 2025 at 08:05:12PM +0000, Jiasheng Jiang wrote:
-> Add kfree() for "d->main_status_buf" in the error-handling path to prevent
-> a memory leak.
+On 2/3/25 06:12, Rob Herring (Arm) wrote:
+> From: Mark Rutland <mark.rutland@arm.com>
 > 
-> Fixes: a2d21848d921 ("regmap: regmap-irq: Add main status register support")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+> Currently armv8pmu_enable_event() starts by disabling the event counter
+> it has been asked to enable. This should not be necessary as the counter
+> (and the PMU as a whole) should not be active when
+> armv8pmu_enable_event() is called.
+Makes sense.
+
+> 
+> Remove the redundant call to armv8pmu_disable_event_counter(). At the
+> same time, remove the comment immeditately above as everything it says
+
+s/immeditately/immediately
+
+> is obvious from the function names below.
+
+But should this comment drop change be folded into the next patch which
+exclusively drops all obviously redundant disable/enable comments.
+
+> 
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  drivers/base/regmap/regmap-irq.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/perf/arm_pmuv3.c | 5 -----
+>  1 file changed, 5 deletions(-)
 > 
-> diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
-> index 0bcd81389a29..b73ab3cda781 100644
-> --- a/drivers/base/regmap/regmap-irq.c
-> +++ b/drivers/base/regmap/regmap-irq.c
-> @@ -906,6 +906,7 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
->  	kfree(d->wake_buf);
->  	kfree(d->mask_buf_def);
->  	kfree(d->mask_buf);
-> +	kfree(d->main_status_buf);
->  	kfree(d->status_buf);
->  	kfree(d->status_reg_buf);
->  	if (d->config_buf) {
-> -- 
-> 2.25.1
+> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+> index 9ebc950559c0..5406b9ca591a 100644
+> --- a/drivers/perf/arm_pmuv3.c
+> +++ b/drivers/perf/arm_pmuv3.c
+> @@ -795,11 +795,6 @@ static void armv8pmu_enable_user_access(struct arm_pmu *cpu_pmu)
+>  
+>  static void armv8pmu_enable_event(struct perf_event *event)
+>  {
+> -	/*
+> -	 * Enable counter and interrupt, and set the counter to count
+> -	 * the event that we're interested in.
+> -	 */
+> -	armv8pmu_disable_event_counter(event);
+>  	armv8pmu_write_event_type(event);
+>  	armv8pmu_enable_event_irq(event);
+>  	armv8pmu_enable_event_counter(event);
 > 
-> 
 
-Hi,
+Otherwise LGTM.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- This looks like a new version of a previously submitted patch, but you
-  did not list below the --- line any changes from the previous version.
-  Please read the section entitled "The canonical patch format" in the
-  kernel file, Documentation/process/submitting-patches.rst for what
-  needs to be done here to properly describe this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
