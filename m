@@ -1,107 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BC11D86F2;
-	Mon,  3 Feb 2025 10:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB862A1A4;
+	Mon,  3 Feb 2025 10:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738579740; cv=none; b=rGQT8u5qnA+dosMivj6aXvqAcXJfQNXT3i2pygGEVkqmHx0FBHqxS/aPBS43MGZCnxiFhK6JeChFpt9w7/RpsqqYzoIabMqvBcD7UMPuaTgZMVFQyIS54cOlCZt02G35OsKY83peJratD8bPhBDTmPbfEqTZTkcvvPcpEeiI7Go=
+	t=1738579793; cv=none; b=KylqTXfz6Dy8dTyydaGcHA2oUS69Q6azoGa4q8SKmyVphiWb8TfMqjXvpgYoYzb9+ayMH2Nlc6qp5n2GllJBsVUnihFTR2GpjhNAuI1VfzlpZYDsxs/wuXk8W8PsPhkHLp1p/SY+BfCCgLlDldN81jar8AN6ANIs/iYoa/zShKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738579740; c=relaxed/simple;
-	bh=f4uow+fYeSiEslYkO6Slx22QkpFezU9sppdHSfnIJWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WHoZ16opOkXrFafD7FTw/Q452ayImIPtDXmc4B+VQn5CRtuWD7z7Lb8Ou7mEZxhmPD/42PEmZakBiyAhQ/XCha+GNcvxtULrgsHtyepIhLUob5UyXsHoZKuw5iqdISfuLVPk9n/NMU7hKfidOI5YQnyecEI2B30of1A35FsZRXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFzHO2u6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738579793; c=relaxed/simple;
+	bh=7oVhhZQKCHkHXsubLE6xk7AH31b8QAolyV+ctY0SHgI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=e2vS/cjCFPgQf0ndSn/z5NC3ZGr39dd8sAXBI9wByGgYmAyJyDlrzm9S7uX1zyM1YMirfDNdnOqJPgZp6len7VYE0xkBI8iV91rfm1dbsJuPzmN7c7U/Tg0wgAgh/sK1vOntT88q65CN81zxShjY4mTtQ/JZag5biASnJ6X6+48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=nmnLYEFV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=n92hLo4u; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFzHO2u6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7708EC4CED2;
-	Mon,  3 Feb 2025 10:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738579739;
-	bh=f4uow+fYeSiEslYkO6Slx22QkpFezU9sppdHSfnIJWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UFzHO2u6PQ3XLrTmekV7QC9D89rsT/l68RSX4thXupXEpQEVyqno1D55IrLnzvVk4
-	 fogvt4n8q/zmax63lHlpd9DpuGwYs/X97noKPaiu9y+Fks4In1M7APrSfOwoAgSIMt
-	 dWsbwRg3G9fhUXrEg8HZ6CO5sKThS7uWPrKtVQxESxFf0H5vps3/CYS1S57xi8xQxW
-	 XyiuK+R+I+0nkHE4cS3/NQwo6TfRwwJ+PjKwMhGJsSfRV2750e2Lp/EarARwaCEwQP
-	 yWJ0n2p1+JmqqHxs+eU3Ogd9bvIpQ8ghXN0GYif+9lF/TwDNGBB05q4tWZeGqaZKf8
-	 TIla9lw+tY50A==
-Date: Mon, 3 Feb 2025 10:48:55 +0000
-From: Simon Horman <horms@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	matttbe@kernel.org
-Subject: Re: [PATCH RFC net-next] netconsole: selftest: Add test for
- fragmented messages
-Message-ID: <20250203104855.GC234677@kernel.org>
-References: <20250131-netcons_frag_msgs-v1-1-0de83bf2a7e6@debian.org>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="nmnLYEFV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="n92hLo4u"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.phl.internal (Postfix) with ESMTP id 531A213801C5;
+	Mon,  3 Feb 2025 05:49:49 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Mon, 03 Feb 2025 05:49:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738579789;
+	 x=1738666189; bh=eVAqD0M+j8wVB/yXi1HIVGDMXVj1K/8lSzL/kjBzYnE=; b=
+	nmnLYEFV99Pg8eaekRUj2mBRCdcsiFTrl09psUDoohI0OMRNKpBuPVQg7B8niwS2
+	gNLBSJmrN8KFjCY7kD5SZ1U+LHi5MzMLq35dPWvVoTVrkK0O7Zsz8g1sUA7RSbzY
+	vryq+W94x3xMsw3H1LGIODfcJSQZunm8uzFMQ3iUCv5hDYQunIYdb2MoJNrmAxDT
+	r2NOmvGDq/WmWVDQEZ8YaaiRIN4dOHGbTLcXEVUPQoSzvVkHfufGYmqErCPxt1f5
+	5k9bxWQB6eO6KgijSxLFs2pRyCSjKzYg8fW7sElhlSOKiGyVX2CidD7dSRN/C8lz
+	gds+HfYlyo59DTYid5K1jA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738579789; x=
+	1738666189; bh=eVAqD0M+j8wVB/yXi1HIVGDMXVj1K/8lSzL/kjBzYnE=; b=n
+	92hLo4uGH/PZsBpoKSJ3NGSU8gPtSWuIahWxz5e+ntgiwQ8YlKg2wRxpnyK0Dwmw
+	HbeoVDSEI6Yqf3BmOtg+dHME2ER8PiidaNq1hUcZirzTJ8S2zLZVeHuyNSULZ6pT
+	df9DyAbWnsVmFY5RosbN3JEN3ddQcAi6bYPFjq8GCO4qEd7N4QfEQtLNZXEmcNG5
+	czOfhMu5HcRD3ysF7ZlMSDZpVt1aePo0BSNmIZxC7hzO7AcvBZMlbxBl0STflR0v
+	Nu4OS6MqqixTRj1koxNRClboVbs0nvHtQFB6drqsqWq2v2ueixBLL5DawBmax/VZ
+	N/yB2H6a7uFcenBQ4oJPQ==
+X-ME-Sender: <xms:TJ-gZ3X2oM9YCkIC3vNxP-FI1t3qT20VBejiwu1YMVJA9UUmXyh-rA>
+    <xme:TJ-gZ_kpyPa5PMOZbt3FI6-rvxAAccCUDk1c6YLkvqibEWiLJkHWwQc_dVS0_ocyl
+    166Fmu3PPGilXrT7HA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeeflecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeh
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguvghllhgvrhesghhmgidruggvpd
+    hrtghpthhtohepjhgrmhgvshdrsghothhtohhmlhgvhieshhgrnhhsvghnphgrrhhtnhgv
+    rhhshhhiphdrtghomhdprhgtphhtthhopehjuhhlihgrnhesohhuthgvrhdqlhhimhhith
+    hsrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgrrhhishgtsehvghgvrhdrkhgvrh
+    hnvghlrdhorhhg
+X-ME-Proxy: <xmx:TZ-gZzbt23_rRaM66-ySbco5AVQFukqti5TA6EKnlnoyeW_BEEVzUw>
+    <xmx:TZ-gZyXwbc5X-a9Bz-3peJjzoLRG40c6isQmCWCC6CU6-AUlXkQJEQ>
+    <xmx:TZ-gZxlC8F5F7VonBsdWe5DTAD-sSf2MVt2ThgJm_QtTHn5CMjFqsQ>
+    <xmx:TZ-gZ_c2oWVE0tcO9YxXTfB4NZgxWfHuP1IKlmlHNFRlcgZUo811zA>
+    <xmx:TZ-gZ6C2prXrFr8fhoXQz98YjTZmtyzrrL4ym9uX8el2SqHYzuV3fcHW>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id DCD362220072; Mon,  3 Feb 2025 05:49:48 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250131-netcons_frag_msgs-v1-1-0de83bf2a7e6@debian.org>
+Date: Mon, 03 Feb 2025 11:49:28 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Julian Vetter" <julian@outer-limits.org>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Helge Deller" <deller@gmx.de>
+Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <93870187-086a-4536-9c7e-992f3bd7ecf7@app.fastmail.com>
+In-Reply-To: <65e57211-7983-477a-af94-1bdab57574b4@outer-limits.org>
+References: <20250130134825.2646380-1-julian@outer-limits.org>
+ <543bd0f6-b25d-48b4-8039-496b8ddd10ce@app.fastmail.com>
+ <65e57211-7983-477a-af94-1bdab57574b4@outer-limits.org>
+Subject: Re: [PATCH] parisc: Remove memcpy_fromio
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 31, 2025 at 04:39:38AM -0800, Breno Leitao wrote:
-> Add a new selftest to verify netconsole's handling of messages that
-> exceed the packet size limit and require fragmentation. The test sends
-> messages with varying sizes and userdata, validating that:
->=20
-> 1. Large messages are correctly fragmented and reassembled
-> 2. Userdata fields are properly preserved across fragments
-> 3. Messages work correctly with and without kernel release version
->    appending
->=20
-> The test creates a networking environment using netdevsim, sends
-> messages through /dev/kmsg, and verifies the received fragments maintain
-> message integrity.
->=20
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+On Mon, Feb 3, 2025, at 11:21, Julian Vetter wrote:
+> On 1/31/25 08:28, Arnd Bergmann wrote:
+>> Those functions have been unchanged since before the git
+>> history and there are some comments that I don't find helpful.
+>> One thing they do is to deal with unaligned memory buffers,
+>> which the generic ones don't, but that could be easily added
+>> using get_unaligned/put_unaligned, expecting the compiler
+>> to optimize the memory side of the transfer.
+>
+> I'm not sure what you suggest. Do you mean adding 
+> get_unaligned/put_unaligned in the generic include/asm-generic/io.h 
+> functions, or just adding get_unaligned/put_unaligned to the body of the 
+> parisc specific functions? Instead of all the "switch... case 0x2..." code?
 
-=2E..
+I meant adding put_unaligned/get_unaligned like this:
 
-> +# Validate the message, which has two messages glued together.
-> +# unwrap them to make sure all the characters were transmitted.
-> +# File will look like the following:
-> +#   13,468,514729715,-,ncfrag=3D0/1135;MSG1=3DMSG2=3DMSG3=3DMSG4=3DMSG5=
-=3DMSG6=3DMSG7=3DMSG8=3DMSG9=3DMSG10=3DMSG11=3DMSG12=3DMSG13=3DMSG14=3DMSG1=
-5=3DMSG16=3DMSG17=3DMSG18=3DMSG19=3DMSG20=3DMSG21=3DMSG22=3DMSG23=3DMSG24=
-=3DMSG25=3DMSG26=3DMSG27=3DMSG28=3DMSG29=3DMSG30=3DMSG31=3DMSG32=3DMSG33=3D=
-MSG34=3DMSG35=3DMSG36=3DMSG37=3DMSG38=3DMSG39=3DMSG40=3DMSG41=3DMSG42=3DMSG=
-43=3DMSG44=3DMSG45=3DMSG46=3DMSG47=3DMSG48=3DMSG49=3DMSG50=3DMSG51=3DMSG52=
-=3DMSG53=3DMSG54=3DMSG55=3DMSG56=3DMSG57=3DMSG58=3DMSG59=3DMSG60=3DMSG61=3D=
-MSG62=3DMSG63=3DMSG64=3DMSG65=3DMSG66=3DMSG67=3DMSG68=3DMSG69=3DMSG70=3DMSG=
-71=3DMSG72=3DMSG73=3DMSG74=3DMSG75=3DMSG76=3DMSG77=3DMSG78=3DMSG79=3DMSG80=
-=3DMSG81=3DMSG82=3DMSG83=3DMSG84=3DMSG85=3DMSG86=3DMSG87=3DMSG88=3DMSG89=3D=
-MSG90=3DMSG91=3DMSG92=3DMSG93=3DMSG94=3DMSG95=3DMSG96=3DMSG97=3DMSG98=3DMSG=
-99=3DMSG100=3DMSG101=3DMSG102=3DMSG103=3DMSG104=3DMSG105=3DMSG106=3DMSG107=
-=3DMSG108=3DMSG109=3DMSG110=3DMSG111=3DMSG112=3DMSG113=3DMSG114=3DMSG115=3D=
-MSG116=3DMSG117=3DMSG118=3DMSG119=3DMSG120=3DMSG121=3DMSG122=3DMSG123=3DMSG=
-124=3DMSG125=3DMSG126=3DMSG127=3DMSG128=3DMSG129=3DMSG130=3DMSG131=3DMSG132=
-=3DMSG133=3DMSG134=3DMSG135=3DMSG136=3DMSG137=3DMSG138=3DMSG139=3DMSG140=3D=
-MSG141=3DMSG142=3DMSG143=3DMSG144=3DMSG145=3DMSG146=3DMSG147=3DMSG148=3DMSG=
-149=3DMSG150=3D: netcons_nzmJQ
-> +#    key=3D1-2-13,468,514729715,-,ncfrag=3D967/1135;3-4-5-6-7-8-9-10-11-=
-12-13-14-15-16-17-18-19-20-21-22-23-24-25-26-27-28-29-30-31-32-33-34-35-36-=
-37-38-39-40-41-42-43-44-45-46-47-48-49-50-51-52-53-54-55-56-57-58-59-60-
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -422,7 +422,8 @@ static inline void readsw(const volatile void __iomem *addr, void *buffer,
+ 
+                do {
+                        u16 x = __raw_readw(addr);
+-                       *buf++ = x;
++                       put_unaligned(x, buf);
++                       buf++;
+                } while (--count);
+        }
+ }
 
-Hi Breno,
+This has no effect on architectures that can handle unaligned
+load/store on memory, and should behave the same way as the
+parisc code otherwise. On powerpc and possibly others, there
+needs to be a barrier (eieio() on powerpc) inside of the loop,
+according to Segher's earlier comments.
 
-I appreciate there is a value in providing the literal data.
-But as the data is based mostly of arithmetic sequences
-perhaps it would be nicer to express this in a more succinct way.
-
-Regardless, this patch looks good to me.
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
-=2E..
+     Arnd
