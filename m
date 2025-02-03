@@ -1,55 +1,55 @@
 Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C132D204C0C
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 12:15:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C144F204C3C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 12:15:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738584924; cv=none; b=ngpynVPd6dS2ZlywyURZqWoniTVGvqGIuFAo+VzwMa9MZPj/d8ftZClv2A30mAaTe5+sHvEUE9iQ+4I5eRvTa2XF0BlcKPLF8tW0noYrV3cAtzln8u4eqVg7DuopMjfejZVAg7V0HstN9on0D4H/MZLizWMxd7rolR1nvEi5G7g=
+	t=1738584927; cv=none; b=PAehHDB7Z78JC6guF7uV991CToePwU8Sa8BmLlwLF7MaWEp2QFe8QdWpbSiatfGxafXztgn7sLKwIb3r5wKxuRKgH1MGE08G3Cu2YMzlgMX9O77qDhpMbVAZkR1wvo6QbTV5VqzC8201RaGXxRqNV9mcSRJETmLj+8sX5+dFJOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738584924; c=relaxed/simple;
-	bh=4KqYDSUVevSLVAAHd54nWgHt2kwwb2fi92Kf30lYrZA=;
+	s=arc-20240116; t=1738584927; c=relaxed/simple;
+	bh=ACsxo5nqWOfFud7GSbyxer8izfkYzgJ6Pryyu1sTy1I=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iKD8RTE+Q/ETMs3AouT+oPzkIT4VfZKEH9z310vqP7yiTy0qJe5pSXfQ8ZBmpbP9Aasfe4my3dVJoThUGGf1d7qP0c4Uzrga3NRb+xWK2+8J+gD0oTSw0ZxyvBVs+OGhNnelc/q7p/fyp0JmM7xrrTJ+Y0No+V51bl7bcTUszt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kr7d0Zpw; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=C6f1UxzTHqZFKgr/L8BTku2SYNOTcEfP7BEoRLJ/qfU8iKPW5d2vd/uDWWsCC6Le7W49TBFqRkgZ6irtUwEEDQR/9Wcz/OLOUUXLr2IhTmzzJiV7/YjyRAbFTVJ4C9C+y/B+hacbS4z0MLMaV0KGFbqEGyIyDCVA0P74DyKH1Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MQJqJ6dE; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kr7d0Zpw"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4362153dcd6so21013935e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 04:15:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MQJqJ6dE"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4361b090d23so21079185e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 04:15:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738584921; x=1739189721; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738584923; x=1739189723; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=agGGNAI6dzqkGe48/M6YrHXUKPC4ck0xMNLxp3OFHVg=;
-        b=Kr7d0ZpwSm0xDobeRnH5OJVkkXqP0jnuOV8ZmUy4yYJmwQJ5YcA+RUOUwmvKIvs6Cu
-         2f/C5BxqPmxYEiJYDz+gU0OjYpgFQSTaeXE3GHWxchwj0OLWTuf6zJaPPOt3UYwu/ovy
-         7Nkx8EksY0046Qm4h0sly3UKN9gJcoxF7QGFPswmYKK+ylNor8+4kxrWWLbKngcxReCg
-         8TqFw2GSwcDo5mm4F1R5Ql4Uqhh0wd4kPj7Rc6zQ7jOfvzYNKHAxM1tDqs1eU1za8gxj
-         pAPymEclGnz3FipZm7s8XOJdVa3Afbv5UVPshjTTAfF7VzT2oCjRVXawqhpEdP9zTuXw
-         6qww==
+        bh=6wKw9Mczsy3GQd6f513sHnBPndDv3PUBzx6N+4yBSao=;
+        b=MQJqJ6dExfCsOCrTdiPN/ieZA8/Tz6p63iYsRJeQcHQFLQ45CNCGPEHtBCurzgPiZo
+         D2rfIU6if3WUdhRlpaJ9x7k60rWYssE6QcwYims6cUCt+wWQ9lIiP3BYyKFKLLSUXAvQ
+         qsU/+bpcvktrTZZ5Ux6g4kS8scG18zdvjYtyVBE9+Xq41IhV3No74VZttFYzw6AgcVwY
+         kXaHUry+xUSzUpqXf73znmuWf9QepOJuEaiVVk2uP0i8oyUDwr7qVRCcFZM5DkiAPVPr
+         icNJKXFKVajVcCBQ1tZfT3qr7x4Eg4T8VhaPAsFPhg5zBANmgdSw6IhPLpbhDlv207Yu
+         rn/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738584921; x=1739189721;
+        d=1e100.net; s=20230601; t=1738584923; x=1739189723;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=agGGNAI6dzqkGe48/M6YrHXUKPC4ck0xMNLxp3OFHVg=;
-        b=XnbkJnd2S3cl5FQUvJw5xxgX/hq+OShd6w26ySmlTEwyu32ccdClyI4w79cJZMSTEe
-         6PrbK/oa3OYI3t3FPlChCdK6V571v+QhN6RjtsJwEPQN29YGqXpY0tGRVQL5Ld6NmOhN
-         mPsXJlozulqog65NcaME5HgrcjRD1Lq2ExErvJivwAM4WMXAcKpBCtsAXePN5L/qdkLp
-         jJQ33oP9YsN4ascYV6hBFwcmRkiqS4NO04C0RuymrhCJgATCqFNfV+x9apaUp80XBZAD
-         WFVDeKeYRqM/iyZau3BV3k5TPrRcG+vnSlFnmMof25XV5GdyrQn4wBSK+jSzUc3bs3ig
-         GX7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUrClWWgJ6JAtjJ8GGWWtAhW2F90p0qyKxdDyvbtXnOe9xnz55dMddDKxAfKfl5NjxsBWJpsDdLFj0IHx8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJNtK2OsZPovL+b6HWQBPGeQt0ljR+Pcub18T5PVsBdNrmdmN5
-	JK6bDiRHUGqT14PtufaWYOoA5dUksbw5bex6ArV1PYP8RjNzgjUv4RM7SWV05zMd3FM0nTZbDIq
-	SUc6KqruNxOnv+A==
-X-Google-Smtp-Source: AGHT+IFE3v7o7/Sz3pTYj30D1OhHhtCVRBlS00wbtCjNS9IpojFNCzjRXbNgbN2xRkNUtsN78KvI86exjL/4/EU=
-X-Received: from wmgg2.prod.google.com ([2002:a05:600d:2:b0:434:a7ab:5eea])
+        bh=6wKw9Mczsy3GQd6f513sHnBPndDv3PUBzx6N+4yBSao=;
+        b=m2unuGwwy+rpDdFdh1sUcopjWoXfW8qkbP/kTGklhE77bMrNXWtUz+2KQF/y5yYLmo
+         WbP9zU93p+bvtcXSuoijfl2T6pcI1oNaPsWTX3an9TBihnI4/HG9XZImR8ZmJwzF/rQU
+         6UzK585e4JayKhhkfzCQfCZsLnydt0CoNYRELvM4hdGRiDt8RJjhupHCQsq0/HBMWdjs
+         wraAFU0r64lw3rKiDgVX9M48KWLK/0AYlazpSfwQDfVyIiV60BcPtJsJc+YrhurEZi4B
+         LyMYO6EcBOiYN7Y582QyvPbqOWu/tm52pZNXQyu7p//rX+bA5s9oxadSbI+muaeGCip6
+         b8JA==
+X-Forwarded-Encrypted: i=1; AJvYcCXpRenQsHisjKooLnewxnI3t2a/vzUdGwqqHtfY/LkhPAwFk52HVvjmQngpNf1nMaYEHZcZDKjg3LHlrMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCj57icqMOv6csT98AFEP8HjoBgE2PDKpE8TMqi9dgnfaXacy3
+	/GC5UmzVsE27+tQNdrgogJmbaHcP7aa5fROKuzbof13n4231RVKW6tnCWQDAaDnpa4C3IKUvZmx
+	27RTI8v8Se2hMRw==
+X-Google-Smtp-Source: AGHT+IGCacv+6M717acz2TK1/3JVC+EAq8qtKNOoyAR0vAmx15aLEyGhA+8TxKSJtahX9auTkLFiUsit2j20Pw8=
+X-Received: from wmbay23.prod.google.com ([2002:a05:600c:1e17:b0:434:f299:5633])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:198b:b0:434:a468:4a57 with SMTP id 5b1f17b1804b1-438dc428740mr163084545e9.26.1738584921017;
- Mon, 03 Feb 2025 04:15:21 -0800 (PST)
-Date: Mon, 03 Feb 2025 12:14:39 +0000
+ 2002:a05:600c:3c89:b0:434:a7e7:a1ca with SMTP id 5b1f17b1804b1-438dc40ffaamr172046805e9.20.1738584923172;
+ Mon, 03 Feb 2025 04:15:23 -0800 (PST)
+Date: Mon, 03 Feb 2025 12:14:40 +0000
 In-Reply-To: <20250203-vma-v13-0-2b998268a396@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,22 +59,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250203-vma-v13-0-2b998268a396@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4110; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=4KqYDSUVevSLVAAHd54nWgHt2kwwb2fi92Kf30lYrZA=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnoLNLTSZ879yrBzzjRp+x2lwRObccwq8BnrIWd
- lf69cZ88PeJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ6CzSwAKCRAEWL7uWMY5
- Rm5ND/9PWT1+Eh/dfNIY7NIkFk6+Vbw7I0kgRvqoHU1ZGmP6M+gJ8foSrPKQZqPleKcy7VGrBV+
- xj9vOknJIzKNFILLuZE+BQjkcqJckAVx2VnWb+9Ow2q7nDrCa7cC914vve8qWv+6JFMvq6PqIyt
- 5/J875aL+HC1hE41ROziRZQWZZCwq7KW5n1Jn/CqrXkSfsIrBse+DFUhhp3JNGj55YQ9BzJ5ZdQ
- LKyXDblmpmH/npz8Sqx0/Ea0UuDEM0+MEYHzZ1XUjzJzwBjoO6eSuQBHyxCppe1CgarpUzRABWj
- 6f0ZsGQTIJbWK2IzLmYW++OoqjZZBghXwEM/uKfw/L6znFM6f1SMFwVG8OonHtPzKHdSPYZ+cUo
- 0BJor8b1WM/bhTiUvmWJlAclvh/NlrkoRvPrFHgs6RK3S3G4AC49XeIUzKyjA7h7x5sEV9/c7VX
- npGgaAfRUCrcrFd2Ba8zf7ctDYAS7JwPrBe3friwZvgJPpHcHs/mJ2Hsy3qQERz1HFBJCAA6+iq
- SqQ/Co+NxC4gMDJLQhKtexo6uuB4JJvSlDOGKTCkCa/UYE+YYkDozLx9k91TAbPQxTvLQHxLJxP
- +ZfsAY3m+RZ36I+d4hnDCouPrz0VkieyDtcs1aZ226wR/2fx7WmRm0X/EMFPmtbLonr2DAQm5va E2EB41wG9r8vPDQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3164; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=ACsxo5nqWOfFud7GSbyxer8izfkYzgJ6Pryyu1sTy1I=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnoLNL4o53AT5ZPycfgR+LVXykH5mUGeHNBJb86
+ PLfYDNydpeJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ6CzSwAKCRAEWL7uWMY5
+ RiVkEACBiFS6xSL3eKzx6Ld9VzUml20GBqlKuHKgONIlsSMzAChjH+2qe05ePtG6sKfXIaQR9sZ
+ 6iur0KMizrFbW7s66SOtt+cdm+p6Vnn6Jm+IoPzZqOMNZeAEbr7OHiO74Bg/ebwRHevUyCUQ7g+
+ 1l9CNSBR4la/6gY0ZZYVN/a9EqbCiwpXB6MppK0IOlZblODbko3NbpbCvd9+EMKcVf8M1pYnNgm
+ rgZPCBrAeH2hb9hh1AhYJmD+iWtkVbFNtgkK8crLJahPfED5mGv3ezMmgO7XcZbsAvZh01mp5hb
+ F+v1g99IzTWvWxgDmujStn9sSgS9lG1wRX0LAtY6MejBJZRZ+EZAnyjKvg42G626oq+Rw+S957Q
+ LcOW34tMJGTKNF3PKuMoBzb6OFeeft3zZ3DBhDsJPG0mIX0YiJbYN5+ZGGO41yjBFghFja2Q+ZI
+ W1BUhho9nvX97vcq/7OTzmWvx+aZ3p3Mlm70hNHAyWxqmhZ3lk5EmOKI9JOLSiLGz8aQiTqyPXy
+ UNcZwUe/jh40mxP+WzrKbG/d+lx2DkhWKl1djkyMfavqjFB2zNF/B62kXjxJlrgEvOe0SCy11NM
+ 2JBX2r9rPWoOIL4kLE5W6/emdo/nTlXLmInzZsmBNXGaTikC3bgIBqBIb/VbRetmQY0g1JXVL1Z 9+Xz+7ht6LLxR/g==
 X-Mailer: b4 0.13.0
-Message-ID: <20250203-vma-v13-4-2b998268a396@google.com>
-Subject: [PATCH v13 4/8] mm: rust: add lock_vma_under_rcu
+Message-ID: <20250203-vma-v13-5-2b998268a396@google.com>
+Subject: [PATCH v13 5/8] mm: rust: add mmput_async support
 From: Alice Ryhl <aliceryhl@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
 	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
@@ -89,122 +89,89 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
 	Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Currently, the binder driver always uses the mmap lock to make changes
-to its vma. Because the mmap lock is global to the process, this can
-involve significant contention. However, the kernel has a feature called
-per-vma locks, which can significantly reduce contention. For example,
-you can take a vma lock in parallel with an mmap write lock. This is
-important because contention on the mmap lock has been a long-term
-recurring challenge for the Binder driver.
+Adds an MmWithUserAsync type that uses mmput_async when dropped but is
+otherwise identical to MmWithUser. This has to be done using a separate
+type because the thing we are changing is the destructor.
 
-This patch introduces support for using `lock_vma_under_rcu` from Rust.
-The Rust Binder driver will be able to use this to reduce contention on
-the mmap lock.
+Rust Binder needs this to avoid a certain deadlock. See commit
+9a9ab0d96362 ("binder: fix race between mmput() and do_exit()") for
+details. It's also needed in the shrinker to avoid cleaning up the mm in
+the shrinker's context.
 
-Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Reviewed-by: Jann Horn <jannh@google.com>
 Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com> (for mm bits)
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/helpers/mm.c |  5 +++++
- rust/kernel/mm.rs | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 65 insertions(+)
+ rust/kernel/mm.rs | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/rust/helpers/mm.c b/rust/helpers/mm.c
-index 7b72eb065a3e..81b510c96fd2 100644
---- a/rust/helpers/mm.c
-+++ b/rust/helpers/mm.c
-@@ -43,3 +43,8 @@ struct vm_area_struct *rust_helper_vma_lookup(struct mm_struct *mm,
- {
- 	return vma_lookup(mm, addr);
- }
-+
-+void rust_helper_vma_end_read(struct vm_area_struct *vma)
-+{
-+	vma_end_read(vma);
-+}
 diff --git a/rust/kernel/mm.rs b/rust/kernel/mm.rs
-index bd6ff40f106f..88167c0cbd93 100644
+index 88167c0cbd93..1c43e51c9cca 100644
 --- a/rust/kernel/mm.rs
 +++ b/rust/kernel/mm.rs
-@@ -18,6 +18,7 @@
- use core::{ops::Deref, ptr::NonNull};
- 
- pub mod virt;
-+use virt::VmAreaRef;
- 
- /// A wrapper for the kernel's `struct mm_struct`.
- ///
-@@ -160,6 +161,36 @@ pub unsafe fn from_raw<'a>(ptr: *const bindings::mm_struct) -> &'a MmWithUser {
-         unsafe { &*ptr.cast() }
-     }
- 
-+    /// Attempt to access a vma using the vma read lock.
-+    ///
-+    /// This is an optimistic trylock operation, so it may fail if there is contention. In that
-+    /// case, you should fall back to taking the mmap read lock.
-+    ///
-+    /// When per-vma locks are disabled, this always returns `None`.
-+    #[inline]
-+    pub fn lock_vma_under_rcu(&self, vma_addr: usize) -> Option<VmaReadGuard<'_>> {
-+        #[cfg(CONFIG_PER_VMA_LOCK)]
-+        {
-+            // SAFETY: Calling `bindings::lock_vma_under_rcu` is always okay given an mm where
-+            // `mm_users` is non-zero.
-+            let vma = unsafe { bindings::lock_vma_under_rcu(self.as_raw(), vma_addr) };
-+            if !vma.is_null() {
-+                return Some(VmaReadGuard {
-+                    // SAFETY: If `lock_vma_under_rcu` returns a non-null ptr, then it points at a
-+                    // valid vma. The vma is stable for as long as the vma read lock is held.
-+                    vma: unsafe { VmAreaRef::from_raw(vma) },
-+                    _nts: NotThreadSafe,
-+                });
-+            }
-+        }
-+
-+        // Silence warnings about unused variables.
-+        #[cfg(not(CONFIG_PER_VMA_LOCK))]
-+        let _ = vma_addr;
-+
-+        None
-+    }
-+
-     /// Lock the mmap read lock.
-     #[inline]
-     pub fn mmap_read_lock(&self) -> MmapReadGuard<'_> {
-@@ -228,3 +259,32 @@ fn drop(&mut self) {
-         unsafe { bindings::mmap_read_unlock(self.mm.as_raw()) };
+@@ -110,6 +110,48 @@ fn deref(&self) -> &Mm {
      }
  }
-+
-+/// A guard for the vma read lock.
+ 
++/// A wrapper for the kernel's `struct mm_struct`.
++///
++/// This type is identical to `MmWithUser` except that it uses `mmput_async` when dropping a
++/// refcount. This means that the destructor of `ARef<MmWithUserAsync>` is safe to call in atomic
++/// context.
 +///
 +/// # Invariants
 +///
-+/// This `VmaReadGuard` guard owns the vma read lock.
-+pub struct VmaReadGuard<'a> {
-+    vma: &'a VmAreaRef,
-+    // `vma_end_read` must be called on the same thread as where the lock was taken
-+    _nts: NotThreadSafe,
++/// Values of this type are always refcounted using `mmget`. The value of `mm_users` is non-zero.
++#[repr(transparent)]
++pub struct MmWithUserAsync {
++    mm: MmWithUser,
 +}
 +
-+// Make all `VmAreaRef` methods available on `VmaReadGuard`.
-+impl Deref for VmaReadGuard<'_> {
-+    type Target = VmAreaRef;
++// SAFETY: It is safe to call `mmput_async` on another thread than where `mmget` was called.
++unsafe impl Send for MmWithUserAsync {}
++// SAFETY: All methods on `MmWithUserAsync` can be called in parallel from several threads.
++unsafe impl Sync for MmWithUserAsync {}
 +
-+    #[inline]
-+    fn deref(&self) -> &VmAreaRef {
-+        self.vma
++// SAFETY: By the type invariants, this type is always refcounted.
++unsafe impl AlwaysRefCounted for MmWithUserAsync {
++    fn inc_ref(&self) {
++        // SAFETY: The pointer is valid since self is a reference.
++        unsafe { bindings::mmget(self.as_raw()) };
++    }
++
++    unsafe fn dec_ref(obj: NonNull<Self>) {
++        // SAFETY: The caller is giving up their refcount.
++        unsafe { bindings::mmput_async(obj.cast().as_ptr()) };
 +    }
 +}
 +
-+impl Drop for VmaReadGuard<'_> {
++// Make all `MmWithUser` methods available on `MmWithUserAsync`.
++impl Deref for MmWithUserAsync {
++    type Target = MmWithUser;
++
 +    #[inline]
-+    fn drop(&mut self) {
-+        // SAFETY: We hold the read lock by the type invariants.
-+        unsafe { bindings::vma_end_read(self.vma.as_ptr()) };
++    fn deref(&self) -> &MmWithUser {
++        &self.mm
 +    }
 +}
++
+ // These methods are safe to call even if `mm_users` is zero.
+ impl Mm {
+     /// Returns a raw pointer to the inner `mm_struct`.
+@@ -161,6 +203,13 @@ pub unsafe fn from_raw<'a>(ptr: *const bindings::mm_struct) -> &'a MmWithUser {
+         unsafe { &*ptr.cast() }
+     }
+ 
++    /// Use `mmput_async` when dropping this refcount.
++    #[inline]
++    pub fn into_mmput_async(me: ARef<MmWithUser>) -> ARef<MmWithUserAsync> {
++        // SAFETY: The layouts and invariants are compatible.
++        unsafe { ARef::from_raw(ARef::into_raw(me).cast()) }
++    }
++
+     /// Attempt to access a vma using the vma read lock.
+     ///
+     /// This is an optimistic trylock operation, so it may fail if there is contention. In that
 
 -- 
 2.48.1.362.g079036d154-goog
