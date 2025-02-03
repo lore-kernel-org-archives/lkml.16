@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849F11FF603;
-	Mon,  3 Feb 2025 09:05:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085831FFC4A;
+	Mon,  3 Feb 2025 09:05:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738573526; cv=none; b=pbvcnD8UWeUBkCYYAXRMdfBjPdzXUwMjF5ErwqTaID68m2U+2NutIXLRG+x6AtLVCoG4hCwY7P+weWsBoAp5ZCzY1CFs6aL5yAz8rV0R0yYU94SfZK/ehqWbGQSJJuqCA6CeubKSKeEn/mkWSG9Vj7qE0R/qO0CNTtNYn9Bdzho=
+	t=1738573528; cv=none; b=Stdz6w+/4z7YGuCwZFPO3I4+dBAvGZTNHoSnQo3SlPzFE2uBWCN+OzvDON93fA6e8IJ45X/zQZbYY8i7Z/cNCdkltbK0eyu2XX0J6t6HFCl982mdMp3kgARlD+4j/q9epBfxruGX5UnAHK+nrnbKbEp1jtC56Gb/jpV/FtgMspE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738573526; c=relaxed/simple;
-	bh=C3WrIXo4pF6mfQdzvKKu1BjqdXgy4M3jnZi0dZUjrCw=;
+	s=arc-20240116; t=1738573528; c=relaxed/simple;
+	bh=NpOQuxLd7KblcjFPnaDO5YLxwLL0GxVqW0hZLzvIMGU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fiq8ICBr8eSOx4cvgHEfIZpLejuqMxxfAs/HH01avRZ/Sr7F+j3b4bV0nIdMnD3awr++Zf4KxJeDneRjeY00I3W94VR3hKujb9oixKj04v+4HInhOo60M1yphUQB33lNicNcmnYULq5Gd38aSBBt33C6s+0tgBoUMVHdX8P3NMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sMnBRWh5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xwTeEsva; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=cb4EKfCTw+HyzJVWgIxCd0/Cta500iJrcgNBwXSYdxgUTxH53ftZXENdfalQE0DIfV7f8PaQCRyW0jP3JCph1mvLvGQjwbXQv88aKGzcMX0bNiPqCw9kBr75EXBR7KXNkMgWBRmgjnRGSnnm3PC15CuGFyeS6drcRuYsN0jooTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QKMTSHwC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ANpDWJuI; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sMnBRWh5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xwTeEsva"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QKMTSHwC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ANpDWJuI"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738573523;
+	s=2020; t=1738573524;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cRuD5hbVHSSw/8cljIctKIY+Y3ZkYhQFJxv3Eq1eG8c=;
-	b=sMnBRWh5Odu/hj5HZMTeDDMsDUsT1NHGleJvFt0LCBuMV7COMniMpGez18OWPxAgA6u7MG
-	X0LXW4hxnmeKSs+3ZS06zwWpivEevPl5q1Zs/Ya0kd488hSx/EEhmi7yHMsnNIiCwDGmaT
-	kn9Si5Bv8TDq1iZJavb5pT6bGqInyMMEyGzSDgRWhz/pGJPALzRuGx0oNjCRgdFOGB+Fye
-	3ZO72L3jxvwcioTkFQJOdPNG0U9D6Q9ZN81917whURIBSyDbVvtJNzT5V+SVrV9dFXmrFr
-	xBVd7BbtrVaWa0v0+QLcNs2f/AI8LyAG+ppaVAdglfVjOqtR1P3okLxGNmmBSw==
+	bh=MOyFPIEiH7gm2OvTiVE+dNl/7Ao4pkwSxETN6MXhZOM=;
+	b=QKMTSHwCQSP1GFrALXRUd1pr+I0o1ken7IFPwr5hwCqzVi5W6OAH6JEzSoS++jlQNCQqtQ
+	00KSRzsq/zQbFz9eJiGM3N3QvBCwPu9xXoRt28OcagWfzRCpaeaFZ3lgKiQlXeFj/fbf1V
+	DPF7gANzIcMfKhFc2IHT7o0pWk+tdhx0OvkmPAAajMUw7iyIP9rD491lyrpvnpz12e2kNo
+	mrEdWAM30mWVtaHFrSFuuYdSsHHzA0+kM1USqBmE0DX7S5NbFBX1eZFxGsJZSTaefZfjfx
+	OfXPqMO4W6RgERpxeK/11QmwDNm6Drfs2txWKiz7gd/vZ4KAtd64gHVgVl9GPQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738573523;
+	s=2020e; t=1738573524;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cRuD5hbVHSSw/8cljIctKIY+Y3ZkYhQFJxv3Eq1eG8c=;
-	b=xwTeEsvab709zFyQI9k93t/nyI1n1BCLhqfH7Pd7esKStlGj7syuEBBF5uT3Oi1q45FpGe
-	RtCosuKtkd5H1GBA==
-Date: Mon, 03 Feb 2025 10:05:10 +0100
-Subject: [PATCH 09/16] selftests: vDSO: vdso_standalone_test_x86: Use
- vdso_init_form_sysinfo_ehdr
+	bh=MOyFPIEiH7gm2OvTiVE+dNl/7Ao4pkwSxETN6MXhZOM=;
+	b=ANpDWJuIpNr8cNesKHQJBMRYvjmuj39qzxjgbY6Dw12se5Zf4/l2uhcKpcUNWox9CHNc4z
+	qdBmoii2TPSVlHAw==
+Date: Mon, 03 Feb 2025 10:05:12 +0100
+Subject: [PATCH 11/16] selftests: vDSO: parse_vdso: Use UAPI headers
+ instead of libc headers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250203-parse_vdso-nolibc-v1-9-9cb6268d77be@linutronix.de>
+Message-Id: <20250203-parse_vdso-nolibc-v1-11-9cb6268d77be@linutronix.de>
 References: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
 In-Reply-To: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
 To: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>, 
@@ -62,82 +62,51 @@ To: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  linux-kselftest@vger.kernel.org, llvm@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738573516; l=1895;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738573516; l=1432;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=C3WrIXo4pF6mfQdzvKKu1BjqdXgy4M3jnZi0dZUjrCw=;
- b=vqn4AilDy7ubG5y+C+hp2FjcC5G15khR+tILwCvaP1GUME4dr3rv0qNjecgSBJ09SsGUhU9Ln
- 6sEIXscGBezCysoRDXLnNFoAbxqVNBfjeEVRJkZdbJVF7MPnQxvFLvX
+ bh=NpOQuxLd7KblcjFPnaDO5YLxwLL0GxVqW0hZLzvIMGU=;
+ b=EVrIy1GANEM6B5AcEyRo8lV/ac+2X2NNYAMOZ2NnAil0mfCdvESkLcjnYXyGzAHMomYPMYrjZ
+ 9nl+mXfJMzCCzL46iUgHOKGLJ7oGfv2ZDai+6a470OId6MfhWN/AzaG
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-vdso_standalone_test_x86 is the only user of vdso_init_from_auxv().
-Instead of combining the parsing the aux vector with the parsing of the
-vDSO, split them apart into getauxval() and the regular
-vdso_init_from_sysinfo_ehdr().
-
-The implementation of getauxval() is taken from
-tools/include/nolibc/stdlib.h.
+To allow the usage of parse_vdso.c together with a limited libc like
+nolibc, use the kernels own elf.h and auxvec.h headers.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-
 ---
-All of this code will be deleted later again.
----
- .../selftests/vDSO/vdso_standalone_test_x86.c      | 27 +++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ tools/testing/selftests/vDSO/Makefile     | 3 +++
+ tools/testing/selftests/vDSO/parse_vdso.c | 3 ++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-index 644915862af8883131e5defd336f1bd80736fc0f..500608f89c66b5747e3d845ebc54e4c3a35b6ccd 100644
---- a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-+++ b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-@@ -15,6 +15,7 @@
- #include <sys/time.h>
- #include <unistd.h>
+diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
+index 1cf14a8da43803249f72fe1b09689c8834806986..bc8ca186fb877dc11740c37f1e07e45e84c2ae92 100644
+--- a/tools/testing/selftests/vDSO/Makefile
++++ b/tools/testing/selftests/vDSO/Makefile
+@@ -19,6 +19,9 @@ LDLIBS += -lgcc_s
+ endif
+ 
+ include ../lib.mk
++
++CFLAGS += $(TOOLS_INCLUDES)
++
+ $(OUTPUT)/vdso_test_gettimeofday: parse_vdso.c vdso_test_gettimeofday.c
+ $(OUTPUT)/vdso_test_getcpu: parse_vdso.c vdso_test_getcpu.c
+ $(OUTPUT)/vdso_test_abi: parse_vdso.c vdso_test_abi.c
+diff --git a/tools/testing/selftests/vDSO/parse_vdso.c b/tools/testing/selftests/vDSO/parse_vdso.c
+index 3638fe605e80ca41b29d43c6ac452964eef35d56..200c534cc70e2c2381fce3be5c0ebe4cb5675e84 100644
+--- a/tools/testing/selftests/vDSO/parse_vdso.c
++++ b/tools/testing/selftests/vDSO/parse_vdso.c
+@@ -19,7 +19,8 @@
  #include <stdint.h>
+ #include <string.h>
+ #include <limits.h>
+-#include <elf.h>
 +#include <linux/auxvec.h>
++#include <linux/elf.h>
  
  #include "parse_vdso.h"
  
-@@ -84,6 +85,30 @@ void to_base10(char *lastdig, time_t n)
- 	}
- }
- 
-+unsigned long getauxval(const unsigned long *auxv, unsigned long type)
-+{
-+	unsigned long ret;
-+
-+	if (!auxv)
-+		return 0;
-+
-+	while (1) {
-+		if (!auxv[0] && !auxv[1]) {
-+			ret = 0;
-+			break;
-+		}
-+
-+		if (auxv[0] == type) {
-+			ret = auxv[1];
-+			break;
-+		}
-+
-+		auxv += 2;
-+	}
-+
-+	return ret;
-+}
-+
- void c_main(void **stack)
- {
- 	/* Parse the stack */
-@@ -96,7 +121,7 @@ void c_main(void **stack)
- 	stack++;
- 
- 	/* Now we're pointing at auxv.  Initialize the vDSO parser. */
--	vdso_init_from_auxv((void *)stack);
-+	vdso_init_from_sysinfo_ehdr(getauxval((unsigned long *)stack, AT_SYSINFO_EHDR));
- 
- 	/* Find gettimeofday. */
- 	typedef long (*gtod_t)(struct timeval *tv, struct timezone *tz);
 
 -- 
 2.48.1
