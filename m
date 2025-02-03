@@ -1,55 +1,45 @@
-Received: from mail.w1.fi (mail.w1.fi [212.71.239.96])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E4E1E0DB3;
-	Mon,  3 Feb 2025 10:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.71.239.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BC11D86F2;
+	Mon,  3 Feb 2025 10:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738579726; cv=none; b=eT0Jl0zxO5dvOgfBSCRnHdol9l1CYdHwowrE8UH6EhKXw5D6BgVqM7gZH/mvPow81+ei1GgBL9tzU0Ox5oZ3Nl3tqRIFQHBRqiPufxBe+OobzsrMhnq+7AcNpBUnF2ZiT/5bqVWI0MZWXmi9R4zshcQkl1M6J6XomBXrNO6LzNs=
+	t=1738579740; cv=none; b=rGQT8u5qnA+dosMivj6aXvqAcXJfQNXT3i2pygGEVkqmHx0FBHqxS/aPBS43MGZCnxiFhK6JeChFpt9w7/RpsqqYzoIabMqvBcD7UMPuaTgZMVFQyIS54cOlCZt02G35OsKY83peJratD8bPhBDTmPbfEqTZTkcvvPcpEeiI7Go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738579726; c=relaxed/simple;
-	bh=sekvpPexvmQdy0Fo/779D+igUWcBh5Z432CGAD709/4=;
+	s=arc-20240116; t=1738579740; c=relaxed/simple;
+	bh=f4uow+fYeSiEslYkO6Slx22QkpFezU9sppdHSfnIJWM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HqsskBe6KOf34XW9ju+uSHiAgeiZBgC+dGpSdPzOUZHlS7gHKgVFhKU1ej1RcmIDtKcllpxEdCWJD5hheusAZH1uIbrYyh4P9OPE7Z9ZFjPcrcORNccYT2cGxUbbGCae/wNpzdLKZ/ylGGYBiw0piMAeXkQqlYSudNNhV9UMf8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=w1.fi; spf=pass smtp.mailfrom=w1.fi; dkim=pass (2048-bit key) header.d=w1.fi header.i=@w1.fi header.b=l4bcrekQ; arc=none smtp.client-ip=212.71.239.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=w1.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w1.fi
+	 Content-Type:Content-Disposition:In-Reply-To; b=WHoZ16opOkXrFafD7FTw/Q452ayImIPtDXmc4B+VQn5CRtuWD7z7Lb8Ou7mEZxhmPD/42PEmZakBiyAhQ/XCha+GNcvxtULrgsHtyepIhLUob5UyXsHoZKuw5iqdISfuLVPk9n/NMU7hKfidOI5YQnyecEI2B30of1A35FsZRXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFzHO2u6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w1.fi header.i=@w1.fi header.b="l4bcrekQ"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.w1.fi (Postfix) with ESMTP id C893B11C71;
-	Mon,  3 Feb 2025 10:40:51 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at w1.fi
-Received: from mail.w1.fi ([127.0.0.1])
-	by localhost (mail.w1.fi [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 2RbUdEjGWDZt; Mon,  3 Feb 2025 10:40:28 +0000 (UTC)
-Received: by jm (sSMTP sendmail emulation); Mon, 03 Feb 2025 12:40:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=w1.fi; s=default;
-	t=1738579228; bh=sekvpPexvmQdy0Fo/779D+igUWcBh5Z432CGAD709/4=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFzHO2u6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7708EC4CED2;
+	Mon,  3 Feb 2025 10:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738579739;
+	bh=f4uow+fYeSiEslYkO6Slx22QkpFezU9sppdHSfnIJWM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l4bcrekQPWct+AGMZbOjcLHUDG387g3wQunDTgva3o8//qiTDLefZnCqPAbX2YQ5R
-	 44QmJWCG6RrK5NB9pShdZz5d7QPIOidVzunxcVpN52FUiuQGqoms2S2TQyoMU1sC3b
-	 /BJu8FWvllimcEfK8YLT+Fa7pKtbiQkUk5oB6CpRAH1fKanojGX3Qx1hnf+Yz0HAzi
-	 Qor1X2k96QI57j0EqPKKuKLHrQrd7lriu3AFKAI7VB5L1emx68wECNmKhj+NlnyLZ4
-	 qolaL311IMIa/JAO7XfEashgnw0lAt6XkJRp9cy7lMBmjm6ss7JPm+VYEvEXM5BFaL
-	 VlPgvbhH9TjTg==
-Date: Mon, 3 Feb 2025 12:40:26 +0200
-From: Jouni Malinen <j@w1.fi>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>,
-	lvc-project@linuxtesting.org, Michael Wu <flamingice@sourmilk.net>,
-	linux-wireless@vger.kernel.org,
-	"John W. Linville" <linville@tuxdriver.com>,
-	linux-kernel@vger.kernel.org,
-	syzbot+2e5c1e55b9e5c28a3da7@syzkaller.appspotmail.com
-Subject: Re: [lvc-project] [PATCH] wifi: nl80211: override all other flags if
- MONITOR_FLAG_COOK_FRAMES is set
-Message-ID: <Z6CdGnGnFJ8OuWyT@w1.fi>
-References: <20250130123432.4534-1-v.shevtsov@mt-integration.ru>
- <14c5edc71a74049c49d51960249b0aefc77208be.camel@sipsolutions.net>
- <fhgill32gd3ugmd23oxnyvvqqfd3feu4zv3ecrkubeyqhwnb2h@pkflwiezmsp2>
- <49fe46c6a158873cdc6593b0d5630b62a59ed059.camel@sipsolutions.net>
+	b=UFzHO2u6PQ3XLrTmekV7QC9D89rsT/l68RSX4thXupXEpQEVyqno1D55IrLnzvVk4
+	 fogvt4n8q/zmax63lHlpd9DpuGwYs/X97noKPaiu9y+Fks4In1M7APrSfOwoAgSIMt
+	 dWsbwRg3G9fhUXrEg8HZ6CO5sKThS7uWPrKtVQxESxFf0H5vps3/CYS1S57xi8xQxW
+	 XyiuK+R+I+0nkHE4cS3/NQwo6TfRwwJ+PjKwMhGJsSfRV2750e2Lp/EarARwaCEwQP
+	 yWJ0n2p1+JmqqHxs+eU3Ogd9bvIpQ8ghXN0GYif+9lF/TwDNGBB05q4tWZeGqaZKf8
+	 TIla9lw+tY50A==
+Date: Mon, 3 Feb 2025 10:48:55 +0000
+From: Simon Horman <horms@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	matttbe@kernel.org
+Subject: Re: [PATCH RFC net-next] netconsole: selftest: Add test for
+ fragmented messages
+Message-ID: <20250203104855.GC234677@kernel.org>
+References: <20250131-netcons_frag_msgs-v1-1-0de83bf2a7e6@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,45 +48,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <49fe46c6a158873cdc6593b0d5630b62a59ed059.camel@sipsolutions.net>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250131-netcons_frag_msgs-v1-1-0de83bf2a7e6@debian.org>
 
-On Thu, Jan 30, 2025 at 10:13:14PM +0100, Johannes Berg wrote:
-> On Thu, 2025-01-30 at 22:23 +0300, Fedor Pchelkin wrote:
-> > Wouldn't it break existing userspace, especially in context of systems
-> > running old stable kernels where the patch is also needed?
-> > 
-> > There is still some usage of this flag in hostap [1].
-> 
-> Theoretically, but I just commented on that here:
-> 
-> https://lore.kernel.org/r/a49e58998553c45953a30243ad1957c06ce6db8c.camel@sipsolutions.net
-> 
-> tl;dr: only ancient hostapd versions will actually _use_ it, and they
-> have to fall into a relatively narrow range (April 2009 - Dec 2011.)
+On Fri, Jan 31, 2025 at 04:39:38AM -0800, Breno Leitao wrote:
+> Add a new selftest to verify netconsole's handling of messages that
+> exceed the packet size limit and require fragmentation. The test sends
+> messages with varying sizes and userdata, validating that:
+>=20
+> 1. Large messages are correctly fragmented and reassembled
+> 2. Userdata fields are properly preserved across fragments
+> 3. Messages work correctly with and without kernel release version
+>    appending
+>=20
+> The test creates a networking environment using netdevsim, sends
+> messages through /dev/kmsg, and verifies the received fragments maintain
+> message integrity.
+>=20
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-How did you determine that commit a11241fa1149 ("nl80211: Use nl80211
-for mgmt TX/RX in AP mode") ends this use? Support for monitor mode
-interface is still in hostap.git and it is even tested as part of the
-hwsim test cases.. Both hostapd and wpa_supplicant can still be
-configured to use the monitor interface.
+=2E..
 
-It would be another question to ask whether there is any good reason to
-use this anymore now that a better approach has been available for 13
-years and the answer to that is likely "no". Anyway, this is a kernel
-interface that has a user even in the current snapshot of user space
-programs. If we are about to break that use, it would make sense to
-first remove such users. I don't think I would really care about this
-anymore and it would be nice to get rid of all that unlikely to be used
-much, if at all, code.
+> +# Validate the message, which has two messages glued together.
+> +# unwrap them to make sure all the characters were transmitted.
+> +# File will look like the following:
+> +#   13,468,514729715,-,ncfrag=3D0/1135;MSG1=3DMSG2=3DMSG3=3DMSG4=3DMSG5=
+=3DMSG6=3DMSG7=3DMSG8=3DMSG9=3DMSG10=3DMSG11=3DMSG12=3DMSG13=3DMSG14=3DMSG1=
+5=3DMSG16=3DMSG17=3DMSG18=3DMSG19=3DMSG20=3DMSG21=3DMSG22=3DMSG23=3DMSG24=
+=3DMSG25=3DMSG26=3DMSG27=3DMSG28=3DMSG29=3DMSG30=3DMSG31=3DMSG32=3DMSG33=3D=
+MSG34=3DMSG35=3DMSG36=3DMSG37=3DMSG38=3DMSG39=3DMSG40=3DMSG41=3DMSG42=3DMSG=
+43=3DMSG44=3DMSG45=3DMSG46=3DMSG47=3DMSG48=3DMSG49=3DMSG50=3DMSG51=3DMSG52=
+=3DMSG53=3DMSG54=3DMSG55=3DMSG56=3DMSG57=3DMSG58=3DMSG59=3DMSG60=3DMSG61=3D=
+MSG62=3DMSG63=3DMSG64=3DMSG65=3DMSG66=3DMSG67=3DMSG68=3DMSG69=3DMSG70=3DMSG=
+71=3DMSG72=3DMSG73=3DMSG74=3DMSG75=3DMSG76=3DMSG77=3DMSG78=3DMSG79=3DMSG80=
+=3DMSG81=3DMSG82=3DMSG83=3DMSG84=3DMSG85=3DMSG86=3DMSG87=3DMSG88=3DMSG89=3D=
+MSG90=3DMSG91=3DMSG92=3DMSG93=3DMSG94=3DMSG95=3DMSG96=3DMSG97=3DMSG98=3DMSG=
+99=3DMSG100=3DMSG101=3DMSG102=3DMSG103=3DMSG104=3DMSG105=3DMSG106=3DMSG107=
+=3DMSG108=3DMSG109=3DMSG110=3DMSG111=3DMSG112=3DMSG113=3DMSG114=3DMSG115=3D=
+MSG116=3DMSG117=3DMSG118=3DMSG119=3DMSG120=3DMSG121=3DMSG122=3DMSG123=3DMSG=
+124=3DMSG125=3DMSG126=3DMSG127=3DMSG128=3DMSG129=3DMSG130=3DMSG131=3DMSG132=
+=3DMSG133=3DMSG134=3DMSG135=3DMSG136=3DMSG137=3DMSG138=3DMSG139=3DMSG140=3D=
+MSG141=3DMSG142=3DMSG143=3DMSG144=3DMSG145=3DMSG146=3DMSG147=3DMSG148=3DMSG=
+149=3DMSG150=3D: netcons_nzmJQ
+> +#    key=3D1-2-13,468,514729715,-,ncfrag=3D967/1135;3-4-5-6-7-8-9-10-11-=
+12-13-14-15-16-17-18-19-20-21-22-23-24-25-26-27-28-29-30-31-32-33-34-35-36-=
+37-38-39-40-41-42-43-44-45-46-47-48-49-50-51-52-53-54-55-56-57-58-59-60-
 
-> > Or your suggestion is to explicitly reject setting MONITOR_FLAG_COOK_FRAMES
-> > only when it is passed combined with some other flags which it is
-> > incompatible with?
-> 
-> Yes.
+Hi Breno,
 
-Though, this seems to imply that the case used by hostapd/wpa_supplicant
-would not be broken.
+I appreciate there is a value in providing the literal data.
+But as the data is based mostly of arithmetic sequences
+perhaps it would be nicer to express this in a more succinct way.
 
--- 
-Jouni Malinen                                            PGP id EFC895FA
+Regardless, this patch looks good to me.
+
+Reviewed-by: Simon Horman <horms@kernel.org>
+
+=2E..
