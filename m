@@ -1,118 +1,120 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204D42147FD
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6A8214804;
+	Mon,  3 Feb 2025 08:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738570389; cv=none; b=hn314ytxq4XMc0dVHeRtn6BOuCA5e+QoUOTUvvjPNfa3SuEYfxzWrfHir6D13DcDt383wCHBIc1GWAvHf6OzoMa7u/EQRGE6aECu55oPG3QQnsYqlV7UzYbubRi29Lzvjftjae+1jITF6D+/Z37x0WePL27eO/Q92buFtx4EtRM=
+	t=1738570389; cv=none; b=TETwKEB1nISTF0DsYT4Di6g1sQZx0MMHDrjAmAMDSKl2WZ3HiY6Mc2710Ht9dHBMl+G4spsB8lUhKiBVglRGZwM2aOqQ90Q3Kib3jz1QCA8s7/6RAoRzW31+5k/jQo9LIP3AgFFNUKzHnbIIrW9Ivd61ANx5fFowo9AFl1LUtV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738570389; c=relaxed/simple;
-	bh=8BzrjfzW6hMDq8JMBmAHvHJ/8jbUh41Fukiv4MAQV0g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iV265j6OrAwzw3uMyyfT1mEB8yfEc8o85obEvWPn3rRgDBeQp+KLWJjF3PfLL2aeagG7GnzibArG5RyqpX/E61Ep8Hssp6wRe5UffukORE/nVDNz2t0is0eruf3YeUxU0oTMYYyr/wA6ln9uWvDqzj4N2DDEcit3VjzYT1/qPto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=i3apWOqL; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	bh=RhWzIvVzjz9HhvApiDZwgIdo+3OGCNdkFOq/M9NU0cs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=sfaOHPt3WZ3lZ+PQZJbDPaC1+mmk7qwQgv3vCwhxFp8NA54wXJ0xW3XpZMMeprC6llaQArmDLWuktT4EaHmejbl7IpOwTqyjZIRVhl1LjoMg77ivAaaP9HHSUTOvtY7GGX/ElIhPALwGUtm2o2NojXq4ejDxRQPnzJUTVQfnzkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KMFKo7nJ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="i3apWOqL"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-385e27c75f4so3414408f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:13:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738570385; x=1739175185; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2IIA2EevMgnUnT2y0Tcftlgxz2rZdSe6sO6t8T4gDhc=;
-        b=i3apWOqLHYC6bL1RzMegFXJE7HYUYkRMcGjbc90X9vOytR7yAWZxhKFnu6pjVbUb59
-         JdocnU8BZZbfxuyxu9WMB/QBikj2BDJjt8dhXeqKy+ztRVfLejhJiU2BnHxVHbYgE82+
-         asDluLlVVwMVUGL0daoY0HSiyJAj+LINHn43NvO0UUdiDlHfoP5DKo/2JEvmE8ymgzyr
-         Xx5OnLRx2RBbBBi1RWQyEVD93Yv9fj/qichojPCL0f/+Gru0mdEwxwx00UbTGgjJMUTr
-         bfSDXCagosr/BeMCs+R1UrWSXFztVusqTOqMqY7CfpxO26FTZ4tAQ1ubKlaSIhC0gsKF
-         yO8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738570385; x=1739175185;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2IIA2EevMgnUnT2y0Tcftlgxz2rZdSe6sO6t8T4gDhc=;
-        b=sxomc+/lhDHIK2j1qiIymgXKTUJRwRk2H/66w0pTp23HF++/dNhPSukd8I866K4tJO
-         TmPNxzDm/0+ywh1eiG2IYzdxo/B2fFd/18xxI83JfBWUWbNvZaV5fXG24kpUnLWK10M3
-         5Gm0OboCNaNnZr5KkumLEjfXs9SYtJudUEsgBh3Plmuy/yadTffXoJwE5Sb6zbCT6zCU
-         J0v3AF9+66X46EhVG1fw/T2nQaZW1w3xQNMnedi5Ve6basTMNdi+eGFmBf+ZVUFjtTSS
-         o4N6f4Ano7+sc3+xWlnXaBC3P/l9E11ZqakmGdocqNlDRXI0GOiAJKZ3d26SyTZdoAz0
-         Wb+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWRTqFAgyoyMFRy1R70aRnQsj2lRnlriGkfkB4ZxhwRSWqPgwdcZ1rbaZQPRWAGwGCLtYtFT0NkAIAnIvM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ/hp8HKbUB2U4ciCasyySt/H7o0wA8hFrgY/Bpegn10zMSasY
-	npMh94th2ZrBhdc3KkglaxaJHMZx4Ai31x86NvzVMWT8x/C2ux0kuTHMnlqByLI=
-X-Gm-Gg: ASbGncsI6fd/PB33wdHMOiRcqEn+k9O/xU5NTm7SIbLAk3on1xLG2ELjhUL8AmCHYPn
-	YWMyntLk9izgWbcbggPHnVqhjVjFx1lP9635o3haViqj9Mk+UieBtnbUNbXcda2moC6vxRA0jRp
-	agLr2M45WeDMBTOMoFAEMTTy2SRUBnF/UXNZHfaB9sl8z4lgcYUN9W8gWFXw+UJiUHzsUdK2Qn8
-	+RVmK+KHkpRJOCFfSUnja3+tuWCl/7WGpVllCbM+Pc1HiIMl1/zn0EEwk2oI8chTwDzC8FqcT3s
-	z0P9RgyvVg8lMw==
-X-Google-Smtp-Source: AGHT+IF3lNNZmS2B9T8gXfcE5kd5EuOjnSuh3iWUdY1d50Algj3kP3sHpQaRcW0lvgZf4+fEDGkUsw==
-X-Received: by 2002:a05:6000:18a9:b0:385:df6d:6fc7 with SMTP id ffacd0b85a97d-38c51b5efb4mr18533137f8f.25.1738570385202;
-        Mon, 03 Feb 2025 00:13:05 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:62d7:938e:c76:df44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b574fsm12019825f8f.70.2025.02.03.00.13.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 00:13:03 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Nandor Han <nandor.han@ge.com>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	patches@opensource.cirrus.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2] gpio: Use str_enable_disable-like helpers
-Date: Mon,  3 Feb 2025 09:13:02 +0100
-Message-ID: <173857038027.20723.17081473974273068659.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250114191438.857656-1-krzysztof.kozlowski@linaro.org>
-References: <20250114191438.857656-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KMFKo7nJ"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5135Nw1m000327;
+	Mon, 3 Feb 2025 08:11:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=WrS82mIqgeb
+	uY3RQ3iTW+rel4V7Y00FB9f2nHQzJ3Yw=; b=KMFKo7nJtjpKbJ/aLJ6uhdrDg+h
+	HTD7naZ1DLssfFycO0OKlKqYoBCEHRtTOJZYuKxYK0C6FoZnWqdvUx4ABTrjlhZO
+	b4QlPOdlqB8Eo+a7uHNRw2QeO9NR4WlwWvXakXM9aNf4iJS3k0NiFZ2ZiL2iXS3C
+	s+9oY0qIXFh76Aa7FdYv5h63NKi4/5XHRZ538uUEomKXac7XSpxI3+wd3jrKDFHc
+	L6NtLFtmRq39T0ITe+dsL6XbVPS8ujqysMgl5Hicv+ueF8x4a3itKcSs3zTYUghP
+	w0pxoXd37xRuAKMphBGOyEJ8ZK4hSh/ljQqRu8bKLvNnhtRcodR5VYadZ6g==
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44jqm40b2a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 08:11:53 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5138Berk026412;
+	Mon, 3 Feb 2025 08:11:51 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 44hcpkshmc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 08:11:51 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5138Boqc026473;
+	Mon, 3 Feb 2025 08:11:50 GMT
+Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 5138Bo0U026458
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 08:11:50 +0000
+Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 393357)
+	id 9C73C40BFE; Mon,  3 Feb 2025 16:11:49 +0800 (CST)
+From: Ziqi Chen <quic_ziqichen@quicinc.com>
+To: quic_cang@quicinc.com, bvanassche@acm.org, mani@kernel.org,
+        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
+        martin.petersen@oracle.com, quic_ziqichen@quicinc.com,
+        quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
+        quic_rampraka@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Peter Wang <peter.wang@mediatek.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andrew Halaney <ahalaney@redhat.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 6/8] scsi: ufs: core: Check if scaling up is required when disable clkscale
+Date: Mon,  3 Feb 2025 16:11:07 +0800
+Message-Id: <20250203081109.1614395-7-quic_ziqichen@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
+References: <20250203081109.1614395-1-quic_ziqichen@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Mp0REY4w97gDa6U6HFv3Yj2Rf35izQIB
+X-Proofpoint-ORIG-GUID: Mp0REY4w97gDa6U6HFv3Yj2Rf35izQIB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_03,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ spamscore=0 malwarescore=0 priorityscore=1501 suspectscore=0 adultscore=0
+ clxscore=1015 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=988 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502030065
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+When disabling clkscale via the clkscale_enable sysfs entry, UFS driver
+shall perform scaling up once regardless. Check if scaling up is required
+or not first to avoid repetitive work.
 
+Co-developed-by: Can Guo <quic_cang@quicinc.com>
+Signed-off-by: Can Guo <quic_cang@quicinc.com>
+Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+---
+ drivers/ufs/core/ufshcd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On Tue, 14 Jan 2025 20:14:38 +0100, Krzysztof Kozlowski wrote:
-> Replace ternary (condition ? "enable" : "disable") syntax with helpers
-> from string_choices.h because:
-> 1. Simple function call with one argument is easier to read.  Ternary
->    operator has three arguments and with wrapping might lead to quite
->    long code.
-> 2. Is slightly shorter thus also easier to read.
-> 3. It brings uniformity in the text - same string.
-> 4. Allows deduping by the linker, which results in a smaller binary
->    file.
-> 
-> [...]
-
-Applied, thanks!
-
-[1/1] gpio: Use str_enable_disable-like helpers
-      commit: de454ac4fc5a117a4264e8bdf60fca58021574b1
-
-Best regards,
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index ebab897080a6..bd93119a177d 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -1777,6 +1777,10 @@ static ssize_t ufshcd_clkscale_enable_store(struct device *dev,
+ 	freq = clki->max_freq;
+ 
+ 	ufshcd_suspend_clkscaling(hba);
++
++	if (!ufshcd_is_devfreq_scaling_required(hba, freq, true))
++		goto out_rel;
++
+ 	err = ufshcd_devfreq_scale(hba, freq, true);
+ 	if (err)
+ 		dev_err(hba->dev, "%s: failed to scale clocks up %d\n",
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.34.1
+
