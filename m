@@ -1,90 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-70.smtpout.orange.fr [193.252.22.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5281FC118;
-	Mon,  3 Feb 2025 13:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DAC20551A;
+	Mon,  3 Feb 2025 13:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738589883; cv=none; b=oO7qyE7YK3C6sjF2h7UXXEI9dRDpS1D0R4wMPjRjvHHPE5B6D2UDw6rx6IOtpquY/aUnyfkcwAToA0yCYRKw4wjQfzz0uqRfn3Bngjd2qoJBLeUB4p2CCDb4B2lLtxQZJalZpxG9nGPSFcRcYNxtgLFuR3XIlpp9UXAEm487qvs=
+	t=1738589916; cv=none; b=C8AYm79wvMPc/83kQbnKigvTQ0zz+U4UIiD7qMOK007Mm6WMZD3kevDYkjEawY+aJtppNjs5Y4aHnP6lZ0ujc4sE+gj5ichl2Czr2+Knf7Vv6rY5XqzWNHhGaf0ER7QiObdndCPU+AOPlDcAUf03+s4QFYAzhiZvHqZd0ffci18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738589883; c=relaxed/simple;
-	bh=RpQJf107msvPI8K23FYZ020hoAFNcjii+xY2AIj5tno=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JreF5Z0ziKWca4+lqka+jbIvr/XCjY8loP4u2cc1Xfk2q3/5jkSO4EWXP3l7e9aN5N347LPfAenyDbWfW5oobQLV935gXwoMHARCdw+an7McJImgEWyP8IEoCh3dXgN3WyWMuz+vpyyAimxdW9JYhNxAaIk70R7XJAr6xFlDpJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ENl+XAHH; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738589916; c=relaxed/simple;
+	bh=vxVOoUrEMpOIpnFj54sWmKsuUYbIQUlu2hobKUo1VJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Et+6QpfO6QkU+//3kYTchf99MV8z+fIBfDQUjZVmYauJGrqnpmOIL3njGgRov7ecIZrPWnDK18cD5AohXk2BGR61RQ3J3lYNQ7gpO6xH7mrzEV4f1w4RjCVze78RPFEiZO66VftUOzpkmNiwuNnLulXhWsj3j+128H/Udjy/TwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=XwYwJD9q; arc=none smtp.client-ip=193.252.22.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ENl+XAHH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738589882; x=1770125882;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=RpQJf107msvPI8K23FYZ020hoAFNcjii+xY2AIj5tno=;
-  b=ENl+XAHH1gtcT/tAQX1uGLCwmnyuZEmQXncNmNpPknaClAl1cH2A3enu
-   JwRpqayLRzqp6Zm6JBlaUjbvR6wbQ1koSCAzXwC5POO/BD9xreqV0QWUK
-   +/I0mRPwPTNh/FsprbmfdLlzHVORLBBUsb+2rYTjKTt4Dgys69BA5v4CJ
-   NmInY4UdoPXVlFpLyWODQp98QS66MBkzOWZ8y2vMNwcSeTsYtYHYY83YQ
-   7MKs8hmrKrrNiuCgeM1e2qnGbkQElVanRxdGstjObF6ad9tQDcbC3Y1Xj
-   4OeUnBiXRvZrykzE32mZsr9GoyxLdGrQwTV2QJmVlkfx9ahK86rufLoYo
-   Q==;
-X-CSE-ConnectionGUID: Xm3L2eUETXqWix/BKSe3CQ==
-X-CSE-MsgGUID: mbT0x1pdQYOiK2qjn83vRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="26682746"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="26682746"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:38:01 -0800
-X-CSE-ConnectionGUID: aYa5Lzs+RqW8J99zgCJIJw==
-X-CSE-MsgGUID: Mt6Dgkb9RYm7g8q3tIQGCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="115325231"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.194])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:37:59 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: vadimp@nvidia.com, hdegoede@redhat.com, 
- Xiangrong Li <xiangrongl@nvidia.com>
-Cc: davthompson@nvidia.com, asmaa@nvidia.com, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250124144655.48564-1-xiangrongl@nvidia.com>
-References: <20250124144655.48564-1-xiangrongl@nvidia.com>
-Subject: Re: [PATCH v3] mlxbf-bootctl: Support sysfs entries for RTC
- battery status
-Message-Id: <173858987431.2591.10028148817647304373.b4-ty@linux.intel.com>
-Date: Mon, 03 Feb 2025 15:37:54 +0200
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="XwYwJD9q"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id ewd2tOy0dEoZKewdIt5Ip4; Mon, 03 Feb 2025 14:37:19 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1738589839;
+	bh=/g4W8zsNjOkB4DJtFhM/WsfKs6gE5EsQ2w79HWI72oI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=XwYwJD9qo2zk974igNaK7YRqOSOeQpGfDoLCz5WdqzVZVaQCeXRz5fRwVtek4nccr
+	 IIPachRHSkoVTOEAWF+Q1RzHqSOorzh7zXI195lPeh6rI9NWNNeXuWFRvNezWJTw3p
+	 PujsqHiaXsnhXn4ml0tu+soSLAwHQx/2ykUaxgbrj/FrCgmqj2lH181uuMut8tBYuy
+	 aja0FJrJQgnw/6NiWOYkVZxNTWgTqVbG3qy26HXJ2+cOUzaAglixyIojvdf5gfQ1kK
+	 saeXLw4BQa+dsq1UxBUW8SPV6tQMuEPXP5HvV9PLKQ6hwtsv5+NhzubCQc+XQUYX3M
+	 ZF/4/IEW0rvcw==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 03 Feb 2025 14:37:19 +0100
+X-ME-IP: 124.33.176.97
+Message-ID: <45920591-e1d6-4337-a906-35bb5319836c@wanadoo.fr>
+Date: Mon, 3 Feb 2025 22:36:43 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
+ field_{prep,get}() helpers
+To: Johannes Berg <johannes@sipsolutions.net>,
+ Yury Norov <yury.norov@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, qat-linux@intel.com,
+ linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+ linux-iio@vger.kernel.org, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S . Miller" <davem@davemloft.net>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela
+ <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>
+References: <cover.1738329458.git.geert+renesas@glider.be>
+ <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
+ <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr> <Z5-xMUqrDuaE8Eo_@thinkpad>
+ <74cab7d1ec31e7531cdda0f1eb47acdebd5c8d3f.camel@sipsolutions.net>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <74cab7d1ec31e7531cdda0f1eb47acdebd5c8d3f.camel@sipsolutions.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
 
-On Fri, 24 Jan 2025 14:46:55 +0000, Xiangrong Li wrote:
-
-> This patch extends the mlxbf-bootctl driver's sysfs entries
-> to support read access for the board's RTC battery status.
-> A successful read from this attribute returns the status of
-> the board's RTC battery. The RTC battery status register is
-> also cleared upon successful read operation.
+On 03/02/2025 at 16:44, Johannes Berg wrote:
+> On Sun, 2025-02-02 at 12:53 -0500, Yury Norov wrote:
+>>
+>>> Instead of creating another variant for
+>>> non-constant bitfields, wouldn't it be better to make the existing macro
+>>> accept both?
+>>
+>> Yes, it would definitely be better IMO.
 > 
+> On the flip side, there have been discussions in the past (though I
+> think not all, if any, on the list(s)) about the argument order. Since
+> the value is typically not a constant, requiring the mask to be a
+> constant has ensured that the argument order isn't as easily mixed up as
+> otherwise.
+
+If this is a concern, then it can be checked with:
+
+  BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask) &&
+                   __builtin_constant_p(_val),
+                   _pfx "mask is not constant");
+
+It means that we forbid FIELD_PREP(non_const_mask, const_val) but allow
+any other combination.
+
+> With a non-constant mask there can also be no validation that the mask
+> is contiguous etc.
 > 
-> [...]
+> Now that doesn't imply a strong objection - personally I've come to
+> prefer the lower-case typed versions anyway - but something to keep in
+> mind when doing this.
+> 
+> However, the suggested change to BUILD_BUG_ON_NOT_POWER_OF_2 almost
+> certainly shouldn't be done for the same reason - not compiling for non-
+> constant values is [IMHO] part of the API contract for that macro. This
+> can be important for the same reasons.
+
+Your point is fair enough. But I do not see this as a killer argument.
+We can instead just add below helper:
+
+  BUILD_BUG_ON_STATICALLY_NOT_POWER_OF_2()
+
+But, for the same reason why I would rather not have both the
+FIELD_{PREP,GET}() and the field_{prep,get}(), I would also rather not
+have a BUILD_BUG_ON_NOT_POWER_OF_2() and a
+BUILD_BUG_ON_STATICALLY_NOT_POWER_OF_2().
+
+If your concern is the wording of the contract, the description can just
+be updated.
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/1] mlxbf-bootctl: Support sysfs entries for RTC battery status
-      commit: 5d40a8577559250029ff571de38ffcbc226a63d7
-
---
- i.
+Yours sincerely,
+Vincent Mailhol
 
