@@ -1,41 +1,34 @@
 Received: from freeshell.de (freeshell.de [116.202.128.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28575482CD;
-	Mon,  3 Feb 2025 01:42:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCC56136;
+	Mon,  3 Feb 2025 01:51:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.128.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738546934; cv=none; b=SFD7O+VLpYcrOzqvMcXp8JQ8Zrh5JCYoPbP+JiqdpwsufXm5wN3AVSwSbeHAMye4vIfqFymA7JV78PrIFb32w3FXMvRSa7mITdcLIQNhRiaedeawDJ4Rndf3L/8uVmjpGAUjOl+OwBQpykW0eoiXfyI1tRZKrs+Fu1MG21aR1Qg=
+	t=1738547507; cv=none; b=HXv9oSjwrsc+e1tNjklIDJQ48c0ZqPBiR0Aekc80zcJIq+kOxB0FmLq5Zfxqar3UBgOay4RTeYgqcv99jU332adkTk+IYgz5Gi3qrzUaExAlwU4KQXVTPc22XcFHjeHgGyRm/utb1ZsXmO/ree5+d3XJAiow7yt+sejV5jrOstc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738546934; c=relaxed/simple;
-	bh=hbILJRhOajjQvdIDuiAXO7pNMPa0AFHUFzVGGjg7iaA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dF8BnvOaIFO1+vRu8w/reMjDqLcgs+Sx3zkOwWitJ6kiQem9l9Gan+51FiSvf5Py4DnoSNKEM3bBI6/W4jNklXaAV11hUWODGw29zMGP48sCNob4mk3noKGx/3mxiJG1Fcl6dQzJLgUZlBPQ9D8U6BFdeNwRN+VU1z+xFaxnYUQ=
+	s=arc-20240116; t=1738547507; c=relaxed/simple;
+	bh=yyavM60DxR6SYYgvBwO70UChJbDUQ0j1pOFNYqME7HY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h4077nnrNd6V7+6sBp+s1PWbDI6xdQr8HvC15HkAsODLDAxPcEkm2GBpvK1X0asDZsSLsS4ZpF06mx+Ye422D/PXk9G4ZqmuWF/0MG1ixEbmNPZBSJCCWxw4l0CCjIYW7xYVm77QGUI81g/PmfZ5wtj7oyV7cIP9Ku+jmAHgkG4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de; spf=pass smtp.mailfrom=freeshell.de; arc=none smtp.client-ip=116.202.128.144
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freeshell.de
 Received: from hay.lan. (unknown [IPv6:2605:59c0:20f3:a400:6ecf:39ff:fe00:8375])
 	(Authenticated sender: e)
-	by freeshell.de (Postfix) with ESMTPSA id 4128BB2C1529;
-	Mon,  3 Feb 2025 02:42:08 +0100 (CET)
+	by freeshell.de (Postfix) with ESMTPSA id B841EB2232DD;
+	Mon,  3 Feb 2025 02:41:35 +0100 (CET)
 From: E Shattow <e@freeshell.de>
-To: Emil Renner Berthing <kernel@esmil.dk>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
+To: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>
 Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	E Shattow <e@freeshell.de>
-Subject: [PATCH v2 5/5] riscv: dts: starfive: jh7110-common: bootph-pre-ram hinting needed by boot  loader
-Date: Sun,  2 Feb 2025 17:37:11 -0800
-Message-ID: <20250203013730.269558-6-e@freeshell.de>
+Subject: [PATCH v2 0/5] riscv: dts: starfive: jh7110-common: Sync downstream U-Boot changes
+Date: Sun,  2 Feb 2025 17:37:06 -0800
+Message-ID: <20250203013730.269558-1-e@freeshell.de>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250203013730.269558-1-e@freeshell.de>
-References: <20250203013730.269558-1-e@freeshell.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,73 +37,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add bootph-pre-ram hinting to jh7110-common.dtsi:
-  - i2c5_pins and i2c-pins subnode for connection to eeprom
-  - eeprom node
-  - qspi flash configuration subnode
-  - memory node
-  - uart0 for serial console
+U-Boot boot loader has adopted using the Linux dt-rebasing tree for dts
+with StarFive VisionFive2 board target (and related JH7110 common boards).
+Sync the minimum changes from jh7110-common.dtsi needed for boot so these
+can be dropped from U-Boot.
 
-  With this the U-Boot SPL secondary program loader may drop such
-  overrides when using dt-rebasing with JH7110 OF_UPSTREAM board targets.
+Changes since v1:
+  Do not set unused eeprom label.
+  Do not set no-op zero-value assigned-clock-rates, adjust commit message.
 
-Signed-off-by: E Shattow <e@freeshell.de>
----
- arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+E Shattow (5):
+  riscv: dts: starfive: jh7110-common: replace syscrg clock assignments
+  riscv: dts: starfive: jh7110-common: qspi flash setting read-delay 2
+    cycles max 100MHz
+  riscv: dts: starfive: jh7110-common: assign 24MHz clock-frequency to
+    uart0
+  riscv: dts: starfive: jh7110-common: add eeprom node to i2c5
+  riscv: dts: starfive: jh7110-common: bootph-pre-ram hinting needed by
+    boot  loader
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-index 30c5f3487c8b..c9e7ae59ee7c 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-@@ -28,6 +28,7 @@ chosen {
- 	memory@40000000 {
- 		device_type = "memory";
- 		reg = <0x0 0x40000000 0x1 0x0>;
-+		bootph-pre-ram;
- 	};
- 
- 	gpio-restart {
-@@ -247,6 +248,7 @@ emmc_vdd: aldo4 {
- 	};
- 
- 	eeprom@50 {
-+		bootph-pre-ram;
- 		compatible = "atmel,24c04";
- 		reg = <0x50>;
- 		pagesize = <16>;
-@@ -323,6 +325,7 @@ &qspi {
- 	nor_flash: flash@0 {
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
-+		bootph-pre-ram;
- 		cdns,read-delay = <2>;
- 		spi-max-frequency = <100000000>;
- 		cdns,tshsl-ns = <1>;
-@@ -405,6 +408,7 @@ GPOEN_SYS_I2C2_DATA,
- 	};
- 
- 	i2c5_pins: i2c5-0 {
-+		bootph-pre-ram;
- 		i2c-pins {
- 			pinmux = <GPIOMUX(19, GPOUT_LOW,
- 					      GPOEN_SYS_I2C5_CLK,
-@@ -413,6 +417,7 @@ GPI_SYS_I2C5_CLK)>,
- 					      GPOEN_SYS_I2C5_DATA,
- 					      GPI_SYS_I2C5_DATA)>;
- 			bias-disable; /* external pull-up */
-+			bootph-pre-ram;
- 			input-enable;
- 			input-schmitt-enable;
- 		};
-@@ -641,6 +646,7 @@ GPOEN_DISABLE,
- };
- 
- &uart0 {
-+	bootph-pre-ram;
- 	clock-frequency = <24000000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins>;
+ .../boot/dts/starfive/jh7110-common.dtsi      | 28 +++++++++++++++----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
+
+
+base-commit: 708d55db3edbe2ccf88d94b5f2e2b404bc0ba37c
 -- 
 2.47.2
 
