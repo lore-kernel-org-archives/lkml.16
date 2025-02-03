@@ -1,296 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08D510E0
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 06:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5AE9BA34;
+	Mon,  3 Feb 2025 06:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738562650; cv=none; b=e5M0ETX5gG6z5qe8vI8TdFgWO7NPTRPgdAjHo/yDmrqSl+n7mJtK/W+/3ljxAxqiudnR5tWG6wEIpzr040A/5YAch82zJiFY8vfII1DNt6skI2pUc7NnbLzrkwXDUtCtM6dOlgDnbFodSI8POlaO9+XBfC8NZHjaMMhmcagA1ms=
+	t=1738562674; cv=none; b=CjT/+u3zf7JAjLOdGvoEVjCu13QPPtTfs3ziEsbDoGUJ2+kYD1U0377SuCXGa1niyPzJnpxQevu2/OtGc6k5RgZtslUm+Txrg3Lf48250bBYZmV+NmBH98Ji/tBr/P2ZpHTfhuvnecT0dOe3XBhF1mbL7p8iyc/8N4s0Ocnylxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738562650; c=relaxed/simple;
-	bh=durgU11lQ4dYcx2HLXEoqa0U7u7LZGRE+AdiLMGRBdo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=u57gvpu31ai7cStd+bYRQBOAMTz1tEPTXxLDTe6mdANM43JJkHlxfiG88gtE/leDBBL+5KkM8USpNHy9ogSM1RkAnRx1ZXHGZiWlZVI3Dn8edgrP0bdsE6Yxazoub1rP4rOsoWOLTjwr046Cfi7l81vh82fcdssBpkq7V0JSqvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r1ma00Ee; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1ma00Ee"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F21E5C4CEE2;
-	Mon,  3 Feb 2025 06:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738562650;
-	bh=durgU11lQ4dYcx2HLXEoqa0U7u7LZGRE+AdiLMGRBdo=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=r1ma00EeevTn4DlJ1qGNErTeu8FOxNw37X7EQB88WfHduYi/PQ5jNY/LSnFITvxSn
-	 0eoh5g+iMOVvyfREePh+6HGLP0OiQy5Jx6gH+Wy/QsBjzFLffreyoFPzkzDCiFMpK/
-	 8ReYIh5zTaKTtYy9f/MSSsEBKX03tjxZazTo1rkYHbiv6f6TQb97XvlLqE0gYqFkPU
-	 kIiZzjailYhncLEYN2c2h3p+VbIZ+PDJfNTlD4Y5Bl5h4+FQsVzNkoC7C/M/V5gDHm
-	 jdo+unShSwYRP/dSPzh5duPr+tRFxegJqwuAin3nAVai1eWRrNuNhZfObejDIn2yZt
-	 6z46Z+1HusrYQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE45DC02193;
-	Mon,  3 Feb 2025 06:04:09 +0000 (UTC)
-From: Hermes Wu via B4 Relay <devnull+Hermes.wu.ite.com.tw@kernel.org>
-Date: Mon, 03 Feb 2025 14:04:30 +0800
-Subject: [PATCH v2] drm/bridge: it6505: support hdmi_codec_ops for audio
- stream setup
+	s=arc-20240116; t=1738562674; c=relaxed/simple;
+	bh=w1IKu0BfJ+ZZ+MghaLy9rJoVvE/lYu9W/92oo9jaNXo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mQOnzVojbLXUmfsUNp3CIkN/2mnAx2h3acpo4TEG2I4lh1vBKIybB8I9kmOzTddnoXh0+1fmcoQ0I4/+pRxnKixeE5jDLZZgOPWxYvEDh5ern3CPYrygo7F5OM2pqxbt9PNuZgG56rPbErH610Y++s7QrHiWRqvz68eWluODWcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E39C1476;
+	Sun,  2 Feb 2025 22:04:56 -0800 (PST)
+Received: from [10.162.16.79] (unknown [10.162.16.79])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EF0F3F63F;
+	Sun,  2 Feb 2025 22:04:27 -0800 (PST)
+Message-ID: <5bcc9ffb-62a0-4b98-9b41-9cf1786751a6@arm.com>
+Date: Mon, 3 Feb 2025 11:34:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 02/11] perf: arm_pmu: Don't disable counter in
+ armpmu_add()
+To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-2-1c1300802385@kernel.org>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250202-arm-brbe-v19-v19-2-1c1300802385@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-add-audio-codec-v2-1-5c8cd72ee5bb@ite.com.tw>
-X-B4-Tracking: v=1; b=H4sIAG1coGcC/2WNyw6CMBBFf8XM2iFMQR6u/A/Dok4HmYXUtIgaw
- r9biTuX5yT33AWiBJUIx90CQWaN6scEZr8DHux4FVSXGExuDjlRidY5tA+nHtk7YWy4dWWdV8Z
- WDGl1D9Lrayueu8SDxsmH93Yw09f+Wob+WjMhoRR9X9Ol4Ibak06Ssb9l0xO6dV0/ZVx3Qa8AA
- AA=
-X-Change-ID: 20250114-add-audio-codec-8c9d47062a6c
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: treapking@chromium.org, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, Pet.Weng@ite.com.tw, Kenneth.Hung@ite.com.tw, 
- Hermes Wu <Hermes.wu@ite.com.tw>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738562676; l=7353;
- i=Hermes.wu@ite.com.tw; s=20241230; h=from:subject:message-id;
- bh=lqZfEfNoydFlPCDKtWPfpO3fwht+N1S5cJwdQJmO1+c=;
- b=/MzEvq2dYLYQujk9oTXPpGxAGAKJzh9XakdQCtNdueKsw5sorux3J1fj0smHHNszs/dZ0EGMC
- jhApGPXTMH+D4G73sNuDwl4tneMGRDapt8DjbHNQZnYfQeVM708gVV/
-X-Developer-Key: i=Hermes.wu@ite.com.tw; a=ed25519;
- pk=qho5Dawp2WWj9CGyjtJ6/Y10xH8odjRdS6SXDaDAerU=
-X-Endpoint-Received: by B4 Relay for Hermes.wu@ite.com.tw/20241230 with
- auth_id=310
-X-Original-From: Hermes Wu <Hermes.wu@ite.com.tw>
-Reply-To: Hermes.wu@ite.com.tw
-
-From: Hermes Wu <Hermes.wu@ite.com.tw>
-
-For supporting audio form I2S to DP audio data sub stream.
-Add hdmi_audio callbacks to drm_bridge_funcs for the
-HDMI codec framework. The DRM_BRIDGE_OP_HDMI flag in bridge.ops
-must be set, and hdmi_write_infoframe and hdmi_clear_infoframe
-are necessary for the drm_bridge_connector to enable the HDMI codec.
-
-Signed-off-by: Hermes Wu <Hermes.wu@ite.com.tw>
----
-Changes in v2:
-- Use DRM HDMI codec framewrok for audio stream setup.
-- Link to v1: https://lore.kernel.org/r/20250121-add-audio-codec-v1-1-e3ff71b3c819@ite.com.tw
----
- drivers/gpu/drm/bridge/ite-it6505.c | 151 +++++++++++++++++++++++++++++++-----
- 1 file changed, 132 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
-index 88ef76a37fe6accacdd343839ff2569b31b18ceb..361e2412b8e8f040cf4254479b60588d99e8c99a 100644
---- a/drivers/gpu/drm/bridge/ite-it6505.c
-+++ b/drivers/gpu/drm/bridge/ite-it6505.c
-@@ -1414,32 +1414,43 @@ static void it6505_variable_config(struct it6505 *it6505)
- 	memset(it6505->bksvs, 0, sizeof(it6505->bksvs));
- }
- 
-+static int it6505_write_avi_infoframe(struct it6505 *it6505,
-+				      const u8 *buffer, size_t len)
-+{
-+	struct device *dev = it6505->dev;
-+
-+	if (len - HDMI_INFOFRAME_HEADER_SIZE > 13) {
-+		DRM_DEV_DEBUG_DRIVER(dev, "AVI size fail %d", len);
-+		return -EINVAL;
-+	}
-+
-+	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT, 0);
-+	regmap_bulk_write(it6505->regmap, REG_AVI_INFO_DB1,
-+			  buffer + HDMI_INFOFRAME_HEADER_SIZE,
-+			  len - HDMI_INFOFRAME_HEADER_SIZE);
-+
-+	it6505_write(it6505, REG_AVI_INFO_SUM, buffer[3]);
-+	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT,
-+			EN_AVI_PKT);
-+
-+	return 0;
-+}
-+
- static int it6505_send_video_infoframe(struct it6505 *it6505,
- 				       struct hdmi_avi_infoframe *frame)
- {
- 	u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AVI_INFOFRAME_SIZE];
--	int err;
-+	int err, length;
- 	struct device *dev = it6505->dev;
- 
--	err = hdmi_avi_infoframe_pack(frame, buffer, sizeof(buffer));
--	if (err < 0) {
--		dev_err(dev, "Failed to pack AVI infoframe: %d", err);
--		return err;
-+	length = hdmi_avi_infoframe_pack(frame, buffer, sizeof(buffer));
-+	if (length < 0) {
-+		dev_err(dev, "Failed to pack AVI infoframe: %d", length);
-+		return length;
- 	}
- 
--	err = it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT, 0x00);
--	if (err)
--		return err;
--
--	err = regmap_bulk_write(it6505->regmap, REG_AVI_INFO_DB1,
--				buffer + HDMI_INFOFRAME_HEADER_SIZE,
--				frame->length);
--	if (err)
--		return err;
--
--	err = it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT,
--			      EN_AVI_PKT);
--	if (err)
-+	err = it6505_write_avi_infoframe(it6505, buffer, length);
-+	if (err < 0)
- 		return err;
- 
- 	return 0;
-@@ -1625,6 +1636,18 @@ static void it6505_enable_audio_infoframe(struct it6505 *it6505)
- 			EN_AUD_CTRL_PKT);
- }
- 
-+static void it6505_write_audio_infoframe(struct it6505 *it6505,
-+					 const u8 *buffer, size_t len)
-+{
-+	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AUD_PKT, 0);
-+	regmap_bulk_write(it6505->regmap, REG_AUD_INFOFRAM_DB1,
-+			  buffer + HDMI_INFOFRAME_HEADER_SIZE,
-+			  4);
-+	it6505_write(it6505, REG_AUD_INFOFRAM_SUM, buffer[3]);
-+	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AUD_PKT,
-+			EN_AUD_PKT);
-+}
-+
- static void it6505_disable_audio(struct it6505 *it6505)
- {
- 	it6505_set_bits(it6505, REG_DATA_MUTE_CTRL, EN_AUD_MUTE, EN_AUD_MUTE);
-@@ -3302,6 +3325,85 @@ static const struct drm_edid *it6505_bridge_edid_read(struct drm_bridge *bridge,
- 	return drm_edid_dup(it6505->cached_edid);
- }
- 
-+static int it6505_bridge_hdmi_audio_startup(struct drm_connector *connector,
-+					    struct drm_bridge *bridge)
-+{
-+	struct it6505 *it6505 = bridge_to_it6505(bridge);
-+	struct device *dev = it6505->dev;
-+
-+	if (!it6505->powered || it6505->enable_drv_hold)
-+		return -EIO;
-+
-+	DRM_DEV_DEBUG_DRIVER(dev, "Audio enable");
-+	it6505_enable_audio(it6505);
-+
-+	return 0;
-+}
-+
-+static int it6505_bridge_hdmi_audio_prepare(struct drm_connector *connector,
-+					    struct drm_bridge *bridge,
-+					    struct hdmi_codec_daifmt *fmt,
-+					    struct hdmi_codec_params *hparms)
-+{
-+	struct it6505 *it6505 = bridge_to_it6505(bridge);
-+
-+	return it6505_audio_setup_hw_params(it6505, hparms);
-+}
-+
-+static void it6505_bridge_hdmi_audio_shutdown(struct drm_connector *connector,
-+					      struct drm_bridge *bridge)
-+{
-+	struct it6505 *it6505 = bridge_to_it6505(bridge);
-+
-+	if (it6505->powered && !it6505->enable_drv_hold)
-+		it6505_disable_audio(it6505);
-+}
-+
-+static int it6505_bridge_hdmi_clear_infoframe(struct drm_bridge *bridge,
-+					      enum hdmi_infoframe_type type)
-+{
-+	struct it6505 *it6505 = bridge_to_it6505(bridge);
-+	struct device *dev = it6505->dev;
-+
-+	switch (type) {
-+	case HDMI_INFOFRAME_TYPE_AUDIO:
-+		it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AUD_PKT, 0);
-+		break;
-+
-+	case HDMI_INFOFRAME_TYPE_AVI:
-+		it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_AVI_PKT, 0);
-+		break;
-+	default:
-+		dev_dbg(dev, "unsupported HDMI infoframe 0x%x\n", type);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int it6505_bridge_hdmi_write_infoframe(struct drm_bridge *bridge,
-+					      enum hdmi_infoframe_type type,
-+					      const u8 *buffer, size_t len)
-+{
-+	struct it6505 *it6505 = bridge_to_it6505(bridge);
-+	struct device *dev = it6505->dev;
-+
-+	switch (type) {
-+	case HDMI_INFOFRAME_TYPE_AUDIO:
-+		it6505_write_audio_infoframe(it6505, buffer, len);
-+		break;
-+
-+	case HDMI_INFOFRAME_TYPE_AVI:
-+		it6505_write_avi_infoframe(it6505, buffer, len);
-+		break;
-+	default:
-+		dev_dbg(dev, "unsupported HDMI infoframe 0x%x\n", type);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
- static const struct drm_bridge_funcs it6505_bridge_funcs = {
- 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-@@ -3315,6 +3417,12 @@ static const struct drm_bridge_funcs it6505_bridge_funcs = {
- 	.atomic_post_disable = it6505_bridge_atomic_post_disable,
- 	.detect = it6505_bridge_detect,
- 	.edid_read = it6505_bridge_edid_read,
-+	.hdmi_audio_startup = it6505_bridge_hdmi_audio_startup,
-+	.hdmi_audio_prepare = it6505_bridge_hdmi_audio_prepare,
-+	.hdmi_audio_shutdown = it6505_bridge_hdmi_audio_shutdown,
-+	.hdmi_clear_infoframe = it6505_bridge_hdmi_clear_infoframe,
-+	.hdmi_write_infoframe = it6505_bridge_hdmi_write_infoframe,
-+
- };
- 
- static __maybe_unused int it6505_bridge_resume(struct device *dev)
-@@ -3700,7 +3808,12 @@ static int it6505_i2c_probe(struct i2c_client *client)
- 	it6505->bridge.funcs = &it6505_bridge_funcs;
- 	it6505->bridge.type = DRM_MODE_CONNECTOR_DisplayPort;
- 	it6505->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID |
--			     DRM_BRIDGE_OP_HPD;
-+			     DRM_BRIDGE_OP_HPD | DRM_BRIDGE_OP_HDMI;
-+	it6505->bridge.vendor = "iTE";
-+	it6505->bridge.product = "IT6505";
-+	it6505->bridge.hdmi_audio_dev = dev;
-+	it6505->bridge.hdmi_audio_max_i2s_playback_channels = 2;
-+	it6505->bridge.hdmi_audio_dai_port = 1;
- 	drm_bridge_add(&it6505->bridge);
- 
- 	return 0;
-
----
-base-commit: fe003bcb69f7bff9ff2b30b659b004dbafe52907
-change-id: 20250114-add-audio-codec-8c9d47062a6c
-
-Best regards,
--- 
-Hermes Wu <Hermes.wu@ite.com.tw>
 
 
+
+On 2/3/25 06:12, Rob Herring (Arm) wrote:
+> From: Mark Rutland <mark.rutland@arm.com>
+> 
+> Currently armpmu_add() tries to handle a newly-allocated counter having
+> a stale associated event, but this should not be possible, and if this
+
+A stale associated event ? Does that mean hw_events->events[idx] still
+points to a valid event even though counter idx has already been freed
+up and allocated to a new event.
+
+> were to happen the current mitigation is insufficient and potentially
+> expensive. It would be better to warn if we encounter the impossible
+> case.
+
+Makes sense.
+
+> 
+> Calls to pmu::add() and pmu::del() are serialized by the core perf code,
+> and armpmu_del() clears the relevant slot in pmu_hw_events::events[]
+> before clearing the bit in pmu_hw_events::used_mask such that the
+> counter can be reallocated. Thus when armpmu_add() allocates a counter
+> index from pmu_hw_events::used_mask, it should not be possible to observe
+> a stale even in pmu_hw_events::events[] unless either
+> pmu_hw_events::used_mask or pmu_hw_events::events[] have been corrupted.
+> 
+> If this were to happen, we'd end up with two events with the same
+> event->hw.idx, which would clash with each other during reprogramming,
+> deletion, etc, and produce bogus results. Add a WARN_ON_ONCE() for this
+> case so that we can detect if this ever occurs in practice.
+
+Agreed.
+
+> 
+> That possiblity aside, there's no need to call arm_pmu::disable(event)
+
+s/possiblity/possibility
+
+> for the new event. The PMU reset code initialises the counter in a
+> disabled state, and armpmu_del() will disable the counter before it can
+> be reused. Remove the redundant disable.
+> 
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  drivers/perf/arm_pmu.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 398cce3d76fc..2f33e69a8caf 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -342,12 +342,10 @@ armpmu_add(struct perf_event *event, int flags)
+>  	if (idx < 0)
+>  		return idx;
+>  
+> -	/*
+> -	 * If there is an event in the counter we are going to use then make
+> -	 * sure it is disabled.
+> -	 */
+> +	/* The newly-allocated counter should be empty */
+
+Should this comment also include what happens when two events some how end
+up using the same 'event->hw.idx' as mentioned in the commit message, just
+to make things clearer.
+
+> +	WARN_ON_ONCE(hw_events->events[idx]);
+> +
+>  	event->hw.idx = idx;
+> -	armpmu->disable(event);
+>  	hw_events->events[idx] = event;
+>  
+>  	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
+> 
+
+Otherwise LGTM.
+
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
