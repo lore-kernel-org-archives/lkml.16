@@ -1,151 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF622080FD
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 15:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A87E204C04;
+	Mon,  3 Feb 2025 15:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738596163; cv=none; b=O8WJnnDAwumRkile3dr7ADC/CGiW4Nfx+BxFCjqCC9GJ+1LvWKluEoTrCOH8FrkL68i4ZO6fHzewfokgTfP4xjEBPfY5msDgtd0u9P69+NumIq30iMhAeMrcrt2yMdM3VAg5dhKT0ArkvxBmXnNjbZDETbMLruBIBenLjBMFpyM=
+	t=1738596324; cv=none; b=o5tEo6osVfiQoijFNi0l3wsA2B3+8m846W7VA6m7WKFj9TgRrAisKaHqQISPHrBUv2JOHTzLzEGYaQaIvRZQhbVP9hAHA9fuV74d3Sj02Py7l7nZS7LkDU94ClwojTQs+LTrdarHkk9E0rpYhqLpIG1N1caANiNLklCNsIrgFWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738596163; c=relaxed/simple;
-	bh=s8T40ATQi5ozZFq3mLiRG0r8Wyc9sfTkDVrpD+sYS2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ebmn1GR+UHq04MZ77uOsuz0+HTB6nU8+Ss0CR2qGiyEAe8dWHcoW/rYokKPNL7+RfhhNSBajt6qOPAAqU5dAXcXWddYJapdGOUs2djNqmtg64EZZOzQkVn7XTCYsmg2W6p/FfS32snsLRHuMn8oao+RNd2HRtEaCp/4iHjRso0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VHyvM+0m; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VHyvM+0m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738596160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IPyZM1t4JHDpUYVyrdVFxb2Um0jbsvrzJI4R8XaR9uA=;
-	b=VHyvM+0mxz8D1ToLZ+kPH28eqf+f/XA7CMpuYVl/43+wuLo8X8mTYXxnKBYB7KIdij8eFp
-	FzdcyEJsrqqYo5Vl7CWd/OkYnrpIxFr8+OwfJGNTfXtJiY/fEEG2epEGo6jOzKyHVqTWZy
-	PgUzDhentl0a0H1RwQYBD0+fi8mu570=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-214-DI7g-pWPPyyrF7L19qssuQ-1; Mon, 03 Feb 2025 10:22:39 -0500
-X-MC-Unique: DI7g-pWPPyyrF7L19qssuQ-1
-X-Mimecast-MFC-AGG-ID: DI7g-pWPPyyrF7L19qssuQ
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-385fdff9db5so1895418f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 07:22:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738596158; x=1739200958;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IPyZM1t4JHDpUYVyrdVFxb2Um0jbsvrzJI4R8XaR9uA=;
-        b=c+bV2RraB+98MxUeeNInBa46ZvMhlIzI5SSi5NWtPZMs+67/caN4Ko4Nk9PSO/HpcT
-         lZadHprR5dSyIJD4ocf2ycRXQ63t8TvHGE+2fBGpQR0s58Jj3LktMMiPXBU5Cbuma0ou
-         1nlN3XpZIGhGPNUILzm6gBwyN6a7yExQ+4EcWhktDTomaT5X6cjWTIAIiIYHQ8gupg77
-         IRSFgyvNixs8xZnaQ+ElAJmxvMsi6hRZobit9jU0+3cgt/xTyiaTCkbD7WT4mixxBZrg
-         6j42a81t197HjS9xkMNP8PUpiN6OEkYGW575yZo+BBdbETAnSiEdEqZ5zwaRNIX0dV12
-         e99Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVANHzN4k6AK/TtEw8vu9Nmva8XPPydFs3JnRgUXMh1aPojfoTlnZHDvigtZjeQEmp4qEmUpFWyBv/jT9E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2PPHk+fJrG5CGvn8pkQYFEKIAv45cLxObLg2hEnDRFJHvtX+A
-	f8bUVttb1QOQF3gl4cDL87aGUgfmhnSSB6FHBwaBZPXASZzSN6qXHGktl6YmDSJPvHdkKj5Ix2X
-	S8xHgjFXLkZ2m+kXY929Btmkls8GLc2/sQqn4Rjv2Yo4DLLoYy273UZf5h161vg==
-X-Gm-Gg: ASbGncvNTaA49uOuqvLJVotr/diutqHcnzINsKKJw/8yHzuZ61XroSj8EZHIggvgiqz
-	LgVMfutoal8MLzLf8zOY8AtnsSxdpchfnMD7JCrWbeFC3CIzzGZygee9/rukvrHZe4YZMpxMzrS
-	0hZ0k8qOo0qBKZ60MwFX/u2/aW7PNteRdj7t/AqP2MduItth0/PntxjhcNE/lfGZ2s7J4US2Nf2
-	4J/qXo1GVfb+UpPJi1cay5JkrYHyeLFJ3A/t7IlgW2nAQnAWzZcmvPQkqu8izDDG0Iv/W5RzSB9
-	AFKNBZTt7+AyehQ3O0c2CFlXGzxztp2ZiH8updKuz40bLxxnqRux
-X-Received: by 2002:a05:6000:4011:b0:385:e8b0:df13 with SMTP id ffacd0b85a97d-38c52095e20mr20768480f8f.40.1738596158375;
-        Mon, 03 Feb 2025 07:22:38 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFU8GdTGi8sB7oRmFhV909MaP4kFCPPAe8WiAnv6V5VuMzr3T7UiP99xHMB2JJSil2uW9p+BA==
-X-Received: by 2002:a05:6000:4011:b0:385:e8b0:df13 with SMTP id ffacd0b85a97d-38c52095e20mr20768432f8f.40.1738596157876;
-        Mon, 03 Feb 2025 07:22:37 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23de772sm157161035e9.13.2025.02.03.07.22.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 07:22:37 -0800 (PST)
-Date: Mon, 3 Feb 2025 16:22:36 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, "Michael S . Tsirkin"
- <mst@redhat.com>, Shiju Jose <shiju.jose@huawei.com>,
- <qemu-arm@nongnu.org>, <qemu-devel@nongnu.org>, Philippe =?UTF-8?B?TWF0?=
- =?UTF-8?B?aGlldS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
- <anisinha@redhat.com>, Cleber Rosa <crosa@redhat.com>, Dongjiu Geng
- <gengdongjiu1@gmail.com>, Eduardo Habkost <eduardo@habkost.net>, Eric Blake
- <eblake@redhat.com>, John Snow <jsnow@redhat.com>, Marcel Apfelbaum
- <marcel.apfelbaum@gmail.com>, "Markus Armbruster" <armbru@redhat.com>,
- Michael Roth <michael.roth@amd.com>, "Paolo Bonzini" <pbonzini@redhat.com>,
- Peter Maydell <peter.maydell@linaro.org>, Shannon Zhao
- <shannon.zhaosl@gmail.com>, Yanan Wang <wangyanan55@huawei.com>, Zhao Liu
- <zhao1.liu@intel.com>, <kvm@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 00/14] Change ghes to use HEST-based offsets and add
- support for error inject
-Message-ID: <20250203162236.7d5872ff@imammedo.users.ipa.redhat.com>
-In-Reply-To: <20250203110934.000038d8@huawei.com>
-References: <cover.1738345063.git.mchehab+huawei@kernel.org>
-	<20250203110934.000038d8@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1738596324; c=relaxed/simple;
+	bh=LHx2jv3DzF/zEliW+d9kmeskkTFn+kWCn6Wl6XkI4Yg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Yqd1aSN7rWvxbuecKCIrGNTRVJwNZhf5YAH05BQOsaVmEwcLZsCM1PiEc5BeFSeUzykl4GrNRrXZEKz+/c0evtOkXihdPaw4397W+kUfGI8yuJNLklTV8CbZQvRGIOl8vqgwDiDz3lBR849N9SY7Replh/XxG3rDOp3bAuQlxUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ymqy25m0Yz6D8xn;
+	Mon,  3 Feb 2025 23:23:06 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id AE733140B63;
+	Mon,  3 Feb 2025 23:25:19 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 3 Feb
+ 2025 16:25:19 +0100
+Date: Mon, 3 Feb 2025 15:25:17 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Miclaus, Antoniu" <Antoniu.Miclaus@analog.com>
+CC: David Lechner <dlechner@baylibre.com>, "jic23@kernel.org"
+	<jic23@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "linux-iio@vger.kernel.org"
+	<linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>, "Sa, Nuno" <Nuno.Sa@analog.com>, "Angelo
+ Dureghello" <adureghello@baylibre.com>
+Subject: Re: [PATCH v11 5/8] iio: adc: adi-axi-adc: set data format
+Message-ID: <20250203152517.000028ca@huawei.com>
+In-Reply-To: <CY4PR03MB33993EE62F4E1B3939F213B29BF52@CY4PR03MB3399.namprd03.prod.outlook.com>
+References: <20250127105726.6314-1-antoniu.miclaus@analog.com>
+	<20250127105726.6314-6-antoniu.miclaus@analog.com>
+	<08d8e97d-752d-4fa7-95f0-d828ef80f7b8@baylibre.com>
+	<CY4PR03MB33993EE62F4E1B3939F213B29BF52@CY4PR03MB3399.namprd03.prod.outlook.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 3 Feb 2025 11:09:34 +0000
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On Mon, 3 Feb 2025 11:02:58 +0000
+"Miclaus, Antoniu" <Antoniu.Miclaus@analog.com> wrote:
 
-> On Fri, 31 Jan 2025 18:42:41 +0100
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> 
-> > Now that the ghes preparation patches were merged, let's add support
-> > for error injection.
+>  
+> > On 1/27/25 4:57 AM, Antoniu Miclaus wrote:  
+> > > Add support for selecting the data format within the AXI ADC ip.
+> > >
+> > > Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> > > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> > > ---
+> > > no changes in v11.
+> > >  drivers/iio/adc/adi-axi-adc.c | 46  
+> > +++++++++++++++++++++++++++++++++++  
+> > >  1 file changed, 46 insertions(+)
+> > >
+> > > diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
+> > > index d2e1dc63775c..3c213ca5ff8e 100644
+> > > --- a/drivers/iio/adc/adi-axi-adc.c
+> > > +++ b/drivers/iio/adc/adi-axi-adc.c
+> > > @@ -45,6 +45,12 @@
+> > >  #define ADI_AXI_ADC_REG_CTRL			0x0044
+> > >  #define    ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
+> > >
+> > > +#define ADI_AXI_ADC_REG_CNTRL_3			0x004c
+> > > +#define   AD485X_CNTRL_3_PACKET_FORMAT_MSK	GENMASK(1, 0)
+> > > +#define   AD485X_PACKET_FORMAT_20BIT		0x0
+> > > +#define   AD485X_PACKET_FORMAT_24BIT		0x1
+> > > +#define   AD485X_PACKET_FORMAT_32BIT		0x2
+> > > +
+> > >  #define ADI_AXI_ADC_REG_DRP_STATUS		0x0074
+> > >  #define   ADI_AXI_ADC_DRP_LOCKED		BIT(17)
+> > >
+> > > @@ -312,6 +318,45 @@ static int axi_adc_interface_type_get(struct  
+> > iio_backend *back,  
+> > >  	return 0;
+> > >  }
+> > >
+> > > +static int axi_adc_data_size_set(struct iio_backend *back, unsigned int size)
+> > > +{
+> > > +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+> > > +	unsigned int val;
+> > > +
+> > > +	switch (size) {
+> > > +	/*
+> > > +	 * There are two different variants of the AXI AD485X IP block, a 16-bit
+> > > +	 * and a 20-bit variant.
+> > > +	 * The 0x0 value (AD485X_PACKET_FORMAT_20BIT) is corresponding  
+> > also to  
+> > > +	 * the 16-bit variant of the IP block.
+> > > +	 */
+> > > +	case 16:
+> > > +	case 20:
+> > > +		val = AD485X_PACKET_FORMAT_20BIT;
+> > > +		break;
+> > > +	case 24:
+> > > +		val = AD485X_PACKET_FORMAT_24BIT;
+> > > +		break;
+> > > +	/*
+> > > +	 * The 0x2 (AD485X_PACKET_FORMAT_32BIT) corresponds only to  
+> > the 20-bit  
+> > > +	 * variant of the IP block. Setting this value properly is ensured by
+> > > +	 * the upper layers of the drivers calling the axi-adc functions.
+> > > +	 * Also, for 16-bit IP block, the 0x2  
+> > (AD485X_PACKET_FORMAT_32BIT)  
+> > > +	 * value is handled as maximum size available which is 24-bit for this
+> > > +	 * configuration.
+> > > +	 */
+> > > +	case 32:
+> > > +		val = AD485X_PACKET_FORMAT_32BIT;
+> > > +		break;
+> > > +	default:
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	return regmap_update_bits(st->regmap,  
+> > ADI_AXI_ADC_REG_CNTRL_3,  
+> > > +				  AD485X_CNTRL_3_PACKET_FORMAT_MSK,
+> > > +  
+> > FIELD_PREP(AD485X_CNTRL_3_PACKET_FORMAT_MSK, val));  
+> > > +}
+> > > +
+> > >  static struct iio_buffer *axi_adc_request_buffer(struct iio_backend *back,
+> > >  						 struct iio_dev *indio_dev)
+> > >  {
+> > > @@ -360,6 +405,7 @@ static const struct iio_backend_ops adi_axi_adc_ops  
+> > = {  
+> > >  	.test_pattern_set = axi_adc_test_pattern_set,
+> > >  	.chan_status = axi_adc_chan_status,
+> > >  	.interface_type_get = axi_adc_interface_type_get,
+> > > +	.data_size_set = axi_adc_data_size_set,
+> > >  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
+> > >  	.debugfs_print_chan_status =  
+> > iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),  
+> > >  };  
 > > 
-> > On this series, the first 6 patches chang to the math used to calculate offsets at HEST
-> > table and hardware_error firmware file, together with its migration code. Migration tested
-> > with both latest QEMU released kernel and upstream, on both directions.
+> > Why was [1] not addressed?
 > > 
-> > The next patches add a new QAPI to allow injecting GHESv2 errors, and a script using such QAPI
-> >    to inject ARM Processor Error records.
-> > 
-> > If I'm counting well, this is the 19th submission of my error inject patches.  
+> > [1]: https://urldefense.com/v3/__https://lore.kernel.org/linux-
+> > iio/9c262f599fb9b42feac99cfb541723a0a6f50e6b.camel@gmail.com/__;!!A
+> > 3Ni8CS0y2Y!6uVytAwWUCsEazOUTACecMQkbMuHBF95sbla50CbTUFkZkyxS
+> > -S7jMOCczpoyKCjtAKvMOyrt0ukYwcXC_l5q60$  
 > 
-> Looks good to me. All remaining trivial things are in the category
-> of things to consider only if you are doing another spin.  The code
-> ends up how I'd like it at the end of the series anyway, just
-> a question of the precise path to that state!
+> Indeed it was not addressed. I remained with the impression that adding part prefix
+> in the macro definitions was enough. I will add the compatible string support.
+> Although I have a question in order to minimize the number of versions to be sent
+> In the future. Should I add a separate patch for the compatible support (which
+> will not add value independently) or should I include it in this patch which adds
+> custom function for data format for the AD485x IP core?
 
-if you look at series as a whole it's more or less fine (I guess you
-and me got used to it)
+Binding docs update needs to be a separate patch.
 
-however if you take it patch by patch (as if you've never seen it)
-ordering is messed up (the same would apply to everyone after a while
-when it's forgotten)
+Also, we should probably only set axi_adc_data_size_set in iio_backend_ops for
+that ID.  So you'll need to pick from two copies of adi_axi_adc_ops
+which probably means two iio_backend_info structures.
+That data_size_set callback should not be set for cases that don't use it
+(so the generic IP if I understand this correctly).
 
-So I'd strongly suggest to restructure the series (especially 2-6/14).
-re sum up my comments wrt ordering:
+Similar to that part of:
+https://lore.kernel.org/all/20250129-wip-bl-ad7606_add_backend_sw_mode-v3-7-c3aec77c0ab7@baylibre.com/
 
-0  add testcase for HEST table with current HEST as expected blob
-   (currently missing), so that we can be sure that we haven't messed
-   existing tables during refactoring.
-1. Introduce use_hest_addr (disabled) for now so we could place all
-   legacy code to !use_hest_addr branch
-2. then patches that do the part of switching to HEST addr lookup,
-    * ged lookup (preferably at the place it should end up eventually)
-    * legacy bios_linker/fwcfg fencing patches
-    * on top of that new hest bios_linker/fwcfg ones
-    * and then the rest 
-    (everything that belongs to the 2nd error source should _not_ be a part of that)
-3. add 2nd error source incl. necessary tests procedures introduce
-   and update DSDT/HEST
+Hmm. This is looking like a messy merge.
 
+Angelo, Antoniu,
 
+Please figure out between you an order to the series so who is going to have
+to rebase.  If this one goes first, may be worth pulling part of
+patch 6 from Angelo's set to introduce struct axi_adc_info with what
+this patch needs (just the backend_info pointer and maybe version?)
 
-> 
-> Jonathan
-> 
+Thanks,
+
+Jonathan
 
