@@ -1,138 +1,272 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6317A1F94D
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 08:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A02F21F94D;
+	Mon,  3 Feb 2025 08:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738571467; cv=none; b=aKzi8zTKmkIt8KeZ6k0KnvFsCxugVMBmTqq0EbQkCfRx7cayEsJG2GgNyPS+82YgGUzsM5WqcgPBtrvSNV22J/LhoqxtDv8jIEGdEQ1XmmKNlEVLOsUZmYZqY831h9NFg/Xglesjnz/u+s9ucR+xOKr9g3hGqN+6u1BkLL6AnCA=
+	t=1738571541; cv=none; b=om51ZVWj2t0uJEEFsn+HM4J2xSDSG88bygEI3vRYnUYHchbFNMPBSYPEvdVp8wBgMMnHohs7dX2cUmBUkVsSTMWGzEoMWW7KjTzpbNrFTmYU8c7jMpvQWjBxyCDSz45tzNx4zAo40rbj0ZBgcbTcaFHn9sVxsQdPL9MXDepHX30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738571467; c=relaxed/simple;
-	bh=ZMEZssbSRxYyiNQmI8fY3mVdZizQXr/9pFOem9fRWvU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=A+/u2yeMBwR3xFhGc9gUSrCTknesRQH/AtmUijXXkKsSjeZGCVC/F68GOTtn2GEvtySQpdmygSW9XfBqh5cyNLogGMMApTTUwJabZDdAJC0ZDOBAM0dpuRVaarfJ6n6gE11oHOzvLv7JzyDslSacoD3uKmnHec67ZPogviuIQu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3cfba354f79so96784105ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 00:31:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738571464; x=1739176264;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aJi/4D3kncdnmHdMy5b9QFb5vCyijtWKZEKOQbh/JP8=;
-        b=vdkA/ASXwI1mnWMtPdxW9vp7uQd4LMPLwtkzqV2YJMsvRaqbZ7Z83CWIxxWP3KjGAd
-         8Wtnn1uO9vEdUqYHBAdJh1bySQYBGXsYg2lKZl0v8nv7TsDzyuNOjxeYV4Z9VPEbmEpm
-         NHaPbw7pcklysCVRbxuHndbu3asE9iVPFkL5B1dyqrae5q2GCeAYOrO2zVIrOPkhnD8n
-         TsskeLc/cfmnZss4dEXf2Do4plIaCbE8IuHXPcq4Blt8b+NDkqDiLJifja7LIkIHczOH
-         2QigGMjY+BDbo3BhkqQFuZYi3NsKJ8LuknB7goXT/NzVoqUkTKjKqsKC2IK7rnoTrqlg
-         XcDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVHhYhhaijjR3vvdt1WKZWw4oVDD7nqs+DeEBJy4X1523ArpuBPGkmk47y5JkDAQrgRX2yD103vv/ydkQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCFDRmKGJy/pOBdVP5zzFWIzCRPDsPlf9Fmf4I1ymqkz/QEZkx
-	lryIbrmqG/DkfgfkwQ2Xu5Uimh2IehZ7fDbv9zzDBei6CrxUop17X3aSFIU6DZOQBTEAaB3b542
-	zHz1sioOxlobDMR1mNZsYPRIfUoq3slQjRvATFoaT8lrpH4DM3oBL+mg=
-X-Google-Smtp-Source: AGHT+IEVnQm7i657aBNthABxVrEFNpUGJkk8IqQ1mmRPdFKXccaXZ/RtbnEawC8tG1m5hrm/Lc4HKl0lfuYPKWU0dzwtt0745sm6
+	s=arc-20240116; t=1738571541; c=relaxed/simple;
+	bh=3+3RAwViEqsWkdP0MdfPJrDpU36Pp/mqkxlq6zwpUP0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S4ufodb7haPC9A+W2X9NOLkRTViJ1Ysjc55mY3zmMo7OkiVLPk56HC1L2NxFoYsZY9OKuCUuLpTdFLQvHDRMLoiu+KE8Bgy1IWM4FupwX4Q3shMteHelYSelUNYaujeFj2G9yOwemZhjYwS3No+VY1cGHpFfRE4Yjq0N48Vov4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5977C1476;
+	Mon,  3 Feb 2025 00:32:43 -0800 (PST)
+Received: from [10.162.16.79] (unknown [10.162.16.79])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEA233F63F;
+	Mon,  3 Feb 2025 00:32:13 -0800 (PST)
+Message-ID: <a68b37ac-4f2e-4267-bc23-58136be26271@arm.com>
+Date: Mon, 3 Feb 2025 14:02:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b4c:b0:3cf:ce7c:b8b1 with SMTP id
- e9e14a558f8ab-3cffe447945mr229359905ab.18.1738571464567; Mon, 03 Feb 2025
- 00:31:04 -0800 (PST)
-Date: Mon, 03 Feb 2025 00:31:04 -0800
-In-Reply-To: <20250203080449.1988-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a07ec8.050a0220.d7c5a.0084.GAE@google.com>
-Subject: Re: [syzbot] [net?] possible deadlock in do_ipv6_setsockopt (4)
-From: syzbot <syzbot+3433b5cb8b2b70933f8d@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-possible deadlock in smc_pnet_find_ism_resource
-
-============================================
-WARNING: possible recursive locking detected
-6.13.0-syzkaller-09685-gc2933b2befe2-dirty #0 Not tainted
---------------------------------------------
-syz.0.16/6653 is trying to acquire lock:
-ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: pnet_find_base_ndev net/smc/smc_pnet.c:945 [inline]
-ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: smc_pnet_find_ism_by_pnetid net/smc/smc_pnet.c:1101 [inline]
-ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: smc_pnet_find_ism_resource+0xe1/0x510 net/smc/smc_pnet.c:1152
-
-but task is already holding lock:
-ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: smc_connect+0xb2/0xde0 net/smc/af_smc.c:1646
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(rtnl_mutex);
-  lock(rtnl_mutex);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-2 locks held by syz.0.16/6653:
- #0: ffffffff8fcbf088 (rtnl_mutex){+.+.}-{4:4}, at: smc_connect+0xb2/0xde0 net/smc/af_smc.c:1646
- #1: ffff88806d868258 (sk_lock-AF_INET6){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1624 [inline]
- #1: ffff88806d868258 (sk_lock-AF_INET6){+.+.}-{0:0}, at: smc_connect+0xbc/0xde0 net/smc/af_smc.c:1647
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 6653 Comm: syz.0.16 Not tainted 6.13.0-syzkaller-09685-gc2933b2befe2-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_deadlock_bug+0x483/0x620 kernel/locking/lockdep.c:3039
- check_deadlock kernel/locking/lockdep.c:3091 [inline]
- validate_chain+0x15e2/0x5920 kernel/locking/lockdep.c:3893
- __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
- __mutex_lock_common kernel/locking/mutex.c:585 [inline]
- __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
- pnet_find_base_ndev net/smc/smc_pnet.c:945 [inline]
- smc_pnet_find_ism_by_pnetid net/smc/smc_pnet.c:1101 [inline]
- smc_pnet_find_ism_resource+0xe1/0x510 net/smc/smc_pnet.c:1152
- smc_find_ism_device net/smc/af_smc.c:1011 [inline]
- smc_find_proposal_devices net/smc/af_smc.c:1096 [inline]
- __smc_connect+0x391/0x1910 net/smc/af_smc.c:1526
- smc_connect+0x872/0xde0 net/smc/af_smc.c:1699
- __sys_connect_file net/socket.c:2040 [inline]
- __sys_connect+0x288/0x2d0 net/socket.c:2059
- __do_sys_connect net/socket.c:2065 [inline]
- __se_sys_connect net/socket.c:2062 [inline]
- __x64_sys_connect+0x7a/0x90 net/socket.c:2062
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbdb618cda9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fbdb7056038 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: ffffffffffffffda RBX: 00007fbdb63a5fa0 RCX: 00007fbdb618cda9
-RDX: 000000000000001c RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 00007fbdb620e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fbdb63a5fa0 R15: 00007fff45686908
- </TASK>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 08/11] arm64/sysreg: Add BRBE registers and fields
+To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev, Mark Brown <broonie@kernel.org>
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-8-1c1300802385@kernel.org>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250202-arm-brbe-v19-v19-8-1c1300802385@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-Tested on:
 
-commit:         c2933b2b Merge tag 'net-6.14-rc1' of git://git.kernel...
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17c65724580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
-dashboard link: https://syzkaller.appspot.com/bug?extid=3433b5cb8b2b70933f8d
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=13691764580000
+On 2/3/25 06:13, Rob Herring (Arm) wrote:
+> From: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+> This patch adds definitions related to the Branch Record Buffer Extension
+> (BRBE) as per ARM DDI 0487K.a. These will be used by KVM and a BRBE driver
+> in subsequent patches.
+> 
+> Some existing BRBE definitions in asm/sysreg.h are replaced with equivalent
+> generated definitions.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Reviewed-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+> v19:
+> - split BRBINF.CC field into mantissa and exponent
+> ---
+>  arch/arm64/include/asm/sysreg.h |  17 ++----
+>  arch/arm64/tools/sysreg         | 132 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 138 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index 05ea5223d2d5..a8257e13f8f1 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -198,16 +198,8 @@
+>  #define SYS_DBGVCR32_EL2		sys_reg(2, 4, 0, 7, 0)
+>  
+>  #define SYS_BRBINF_EL1(n)		sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 0))
+> -#define SYS_BRBINFINJ_EL1		sys_reg(2, 1, 9, 1, 0)
+>  #define SYS_BRBSRC_EL1(n)		sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 1))
+> -#define SYS_BRBSRCINJ_EL1		sys_reg(2, 1, 9, 1, 1)
+>  #define SYS_BRBTGT_EL1(n)		sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 2))
+> -#define SYS_BRBTGTINJ_EL1		sys_reg(2, 1, 9, 1, 2)
+> -#define SYS_BRBTS_EL1			sys_reg(2, 1, 9, 0, 2)
+> -
+> -#define SYS_BRBCR_EL1			sys_reg(2, 1, 9, 0, 0)
+> -#define SYS_BRBFCR_EL1			sys_reg(2, 1, 9, 0, 1)
+> -#define SYS_BRBIDR0_EL1			sys_reg(2, 1, 9, 2, 0)
+>  
+>  #define SYS_TRCITECR_EL1		sys_reg(3, 0, 1, 2, 3)
+>  #define SYS_TRCACATR(m)			sys_reg(2, 1, 2, ((m & 7) << 1), (2 | (m >> 3)))
+> @@ -273,8 +265,6 @@
+>  /* ETM */
+>  #define SYS_TRCOSLAR			sys_reg(2, 1, 1, 0, 4)
+>  
+> -#define SYS_BRBCR_EL2			sys_reg(2, 4, 9, 0, 0)
+> -
+>  #define SYS_MIDR_EL1			sys_reg(3, 0, 0, 0, 0)
+>  #define SYS_MPIDR_EL1			sys_reg(3, 0, 0, 0, 5)
+>  #define SYS_REVIDR_EL1			sys_reg(3, 0, 0, 0, 6)
+> @@ -610,7 +600,6 @@
+>  #define SYS_CNTHV_CVAL_EL2		sys_reg(3, 4, 14, 3, 2)
+>  
+>  /* VHE encodings for architectural EL0/1 system registers */
+> -#define SYS_BRBCR_EL12			sys_reg(2, 5, 9, 0, 0)
+>  #define SYS_SCTLR_EL12			sys_reg(3, 5, 1, 0, 0)
+>  #define SYS_CPACR_EL12			sys_reg(3, 5, 1, 0, 2)
+>  #define SYS_SCTLR2_EL12			sys_reg(3, 5, 1, 0, 3)
+> @@ -821,6 +810,12 @@
+>  #define OP_COSP_RCTX			sys_insn(1, 3, 7, 3, 6)
+>  #define OP_CPP_RCTX			sys_insn(1, 3, 7, 3, 7)
+>  
+> +/*
+> + * BRBE Instructions
+> + */
+> +#define BRB_IALL_INSN	__emit_inst(0xd5000000 | OP_BRB_IALL | (0x1f))
+> +#define BRB_INJ_INSN	__emit_inst(0xd5000000 | OP_BRB_INJ  | (0x1f))
+> +
+>  /* Common SCTLR_ELx flags. */
+>  #define SCTLR_ELx_ENTP2	(BIT(60))
+>  #define SCTLR_ELx_DSSBS	(BIT(44))
+> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+> index 762ee084b37c..c0943579977a 100644
+> --- a/arch/arm64/tools/sysreg
+> +++ b/arch/arm64/tools/sysreg
+> @@ -1038,6 +1038,138 @@ UnsignedEnum	3:0	MTEPERM
+>  EndEnum
+>  EndSysreg
+>  
+> +
+> +SysregFields BRBINFx_EL1
+> +Res0	63:47
+> +Field	46	CCU
+> +Field	45:40	CC_EXP
+> +Field	39:32	CC_MANT
+> +Res0	31:18
+> +Field	17	LASTFAILED
+> +Field	16	T
+> +Res0	15:14
+> +Enum	13:8		TYPE
+> +	0b000000	DIRECT_UNCOND
+> +	0b000001	INDIRECT
+> +	0b000010	DIRECT_LINK
+> +	0b000011	INDIRECT_LINK
+> +	0b000101	RET
+> +	0b000111	ERET
+> +	0b001000	DIRECT_COND
+> +	0b100001	DEBUG_HALT
+> +	0b100010	CALL
+> +	0b100011	TRAP
+> +	0b100100	SERROR
+> +	0b100110	INSN_DEBUG
+> +	0b100111	DATA_DEBUG
+> +	0b101010	ALIGN_FAULT
+> +	0b101011	INSN_FAULT
+> +	0b101100	DATA_FAULT
+> +	0b101110	IRQ
+> +	0b101111	FIQ
+> +	0b110000	IMPDEF_TRAP_EL3
+> +	0b111001	DEBUG_EXIT
+> +EndEnum
+> +Enum	7:6	EL
+> +	0b00	EL0
+> +	0b01	EL1
+> +	0b10	EL2
+> +	0b11	EL3
+> +EndEnum
+> +Field	5	MPRED
+> +Res0	4:2
+> +Enum	1:0	VALID
+> +	0b00	NONE
+> +	0b01	TARGET
+> +	0b10	SOURCE
+> +	0b11	FULL
+> +EndEnum
+> +EndSysregFields
+> +
+> +SysregFields	BRBCR_ELx
+> +Res0	63:24
+> +Field	23 	EXCEPTION
+> +Field	22 	ERTN
+> +Res0	21:10
+> +Field	9	FZPSS
+> +Field	8 	FZP
+> +Res0	7
+> +Enum	6:5	TS
+> +	0b01	VIRTUAL
+> +	0b10	GUEST_PHYSICAL
+> +	0b11	PHYSICAL
+> +EndEnum
+> +Field	4	MPRED
+> +Field	3	CC
+> +Res0	2
+> +Field	1	ExBRE
+> +Field	0	E0BRE
+> +EndSysregFields
+> +
+> +Sysreg	BRBCR_EL1	2	1	9	0	0
+> +Fields	BRBCR_ELx
+> +EndSysreg
+> +
+> +Sysreg	BRBFCR_EL1	2	1	9	0	1
+> +Res0	63:30
+> +Enum	29:28	BANK
+> +	0b00	BANK_0
+> +	0b01	BANK_1
+> +EndEnum
+> +Res0	27:23
+> +Field	22	CONDDIR
+> +Field	21	DIRCALL
+> +Field	20	INDCALL
+> +Field	19	RTN
+> +Field	18	INDIRECT
+> +Field	17	DIRECT
+> +Field	16	EnI
+> +Res0	15:8
+> +Field	7	PAUSED
+> +Field	6	LASTFAILED
+> +Res0	5:0
+> +EndSysreg
+> +
+> +Sysreg	BRBTS_EL1	2	1	9	0	2
+> +Field	63:0	TS
+> +EndSysreg
+> +
+> +Sysreg	BRBINFINJ_EL1	2	1	9	1	0
+> +Fields BRBINFx_EL1
+> +EndSysreg
+> +
+> +Sysreg	BRBSRCINJ_EL1	2	1	9	1	1
+> +Field	63:0 ADDRESS
+> +EndSysreg
+> +
+> +Sysreg	BRBTGTINJ_EL1	2	1	9	1	2
+> +Field	63:0 ADDRESS
+> +EndSysreg
+> +
+> +Sysreg	BRBIDR0_EL1	2	1	9	2	0
+> +Res0	63:16
+> +Enum	15:12	CC
+> +	0b0101	20_BIT
+> +EndEnum
+> +Enum	11:8	FORMAT
+> +	0b0000	FORMAT_0
+> +EndEnum
+> +Enum	7:0		NUMREC
+> +	0b00001000	8
+> +	0b00010000	16
+> +	0b00100000	32
+> +	0b01000000	64
+> +EndEnum
+> +EndSysreg
+> +
+> +Sysreg	BRBCR_EL2	2	4	9	0	0
+> +Fields	BRBCR_ELx
+> +EndSysreg
+> +
+> +Sysreg	BRBCR_EL12	2	5	9	0	0
+> +Fields	BRBCR_ELx
+> +EndSysreg
+> +
+>  Sysreg	ID_AA64ZFR0_EL1	3	0	0	4	4
+>  Res0	63:60
+>  UnsignedEnum	59:56	F64MM
+> 
 
+LGTM.
+
+The only thing that changed from V18 - BRBINF_EL1's CC[45:32] field has been
+split into CC_EXP[45:40] and CC_MANT[39:32].
