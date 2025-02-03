@@ -1,107 +1,104 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBF41D86C3;
-	Mon,  3 Feb 2025 07:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5211C695;
+	Mon,  3 Feb 2025 07:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738568683; cv=none; b=d4OeZ2MhM/TckPGXCMnSkBjYUxgNjYUZgZ3EztGHbwxNQd6eauZRp+Q5AcoJd6P9+Sr6iRGVYyMjqyWrlHCrlMKWvT9KH1OCzcv0isc6XkPFVh1DL8R4Btc7wASI9uJN8iMuahG5sNHWJcX30LH4VXdI6aTSQQLjtd6mjMpkIho=
+	t=1738568974; cv=none; b=hTTDk7YVj/s5fBTJ8zuofjgYgV0cPUCSMJrKq/Ec4NI1U3ocU39gjkgjFngulNp1H6qbK8hG+bm5v0zSisW7Q1P5aS3s06HtWhcoiiuGbMXJTxVsdwHYE7/EYfA+PLkgH7sGsr9NZd0T0IxAToOPY2/bg8N+x7AbaqygbPxkyIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738568683; c=relaxed/simple;
-	bh=x1beuisn9wdEKP1QdS1UhUe3+GT+LqGgI15rKS+Adds=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PBS2W+TN9NlQUKii18bmNWAbfkPBQpDxslQpEHeQp9R60UqvcvZmNqQqIMIWRffTblPrQG1vKLU4+2UP2bERaMJPCfcVatVfKnh6Nlz2Q50PpxLdjr+BixYxcJkHPaiAkeGB7877gCvVexgexycPSjaNtRrIO0gWhpUivML+/AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=mRvKnnWs; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1738568974; c=relaxed/simple;
+	bh=UWOdnQSXCQCUpLex2fFMN2HU0ExUKNaMCm3aZTAkfxc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n9tcf4+1ZPxkcXziggLQb9zJQ7fTjx47tKPE5fclkUmfm27ukabtkcMleUoJ1r3VzlMIzlZBBkyIZprpHuby05oU70xX9llvNcr9T2iKKzxGIJcsRN92nwQb1upT8FlExFvvUeQ6fjrjU1A5wqEnt5oloQ+J9HGtusTJEVU5oT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nIESzpK1; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="mRvKnnWs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=x1beuisn9wdEKP1QdS1UhUe3+GT+LqGgI15rKS+Adds=;
-	t=1738568681; x=1739778281; b=mRvKnnWso7bumZit+yviqahz/44SggGsn0LU225JzCFCnWw
-	qkExAMOaXIxp9bIgjunoUdpGVPXuqaSpv6kKrcwJ22yC89lKYgaUf8r5naJrAAAh4uPi1GsG4ML6l
-	Bf4IeLdDPUx7i7vW+7d+uoSuG7PeJgajncxQQczZwRL6T68UKKpSBbrb2cMIh9hNpcDJSak/dcJ98
-	Ounk7o4ivaH0UXjG3gCeNc0LUBfysnYlK1C4Q8SDEbTw25DCm67kkUUSI1me78ACOpYCYUTs6jc77
-	O2XNSB4qygsj3h82m/1sqpafeLlUH1wb8LjgegC/oLGHGfFBpcTnyhY/OFtBi+Xg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1ter7q-00000001RTp-38Nc;
-	Mon, 03 Feb 2025 08:44:11 +0100
-Message-ID: <74cab7d1ec31e7531cdda0f1eb47acdebd5c8d3f.camel@sipsolutions.net>
-Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
- field_{prep,get}() helpers
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Yury Norov <yury.norov@gmail.com>, Vincent Mailhol
-	 <mailhol.vincent@wanadoo.fr>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org,
- 	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, qat-linux@intel.com,
- linux-gpio@vger.kernel.org, 	linux-aspeed@lists.ozlabs.org,
- linux-iio@vger.kernel.org, 	linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, Michael Turquette	 <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Nicolas Ferre	
- <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>,  Claudiu Beznea
- <claudiu.beznea@tuxon.dev>, Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
- Herbert Xu	 <herbert@gondor.apana.org.au>, "David S . Miller"
- <davem@davemloft.net>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,  Andrew Jeffery
- <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, Jonathan Cameron
- <jic23@kernel.org>,  Lars-Peter Clausen	 <lars@metafoo.de>, Jacky Huang
- <ychuang3@nuvoton.com>, Shan-Chun Hung	 <schung@nuvoton.com>, Rasmus
- Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Jakub Kicinski <kuba@kernel.org>, Alex Elder
- <elder@ieee.org>
-Date: Mon, 03 Feb 2025 08:44:06 +0100
-In-Reply-To: <Z5-xMUqrDuaE8Eo_@thinkpad>
-References: <cover.1738329458.git.geert+renesas@glider.be>
-	 <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
-	 <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
-	 <Z5-xMUqrDuaE8Eo_@thinkpad>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nIESzpK1"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5137nKm82978540
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Feb 2025 01:49:20 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738568960;
+	bh=0ixPdjMr9uhbk9uqgulbTw/c2bwsozG2r58q5xC4kRE=;
+	h=From:To:CC:Subject:Date;
+	b=nIESzpK1RM1OAEphFOgCcsXaOkTCscsp6oWROrFxk3c4pRhJe/J2H+MZQMemZEi5K
+	 tmDyoACbuMOcCmQ5gXUDjdpgSSw6cN18MjJNyDeAePUGOSmXYcMWqfu/OaKu4nrpdO
+	 S+YuNXjAoVLqvcDbK6Cwa1Bmun6LcSnac0BXW0oQ=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5137nK2C008081
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 3 Feb 2025 01:49:20 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
+ Feb 2025 01:49:19 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 3 Feb 2025 01:49:19 -0600
+Received: from abhilash-HP.dhcp.ti.com (abhilash-hp.dhcp.ti.com [172.24.227.115])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5137nHIi114856;
+	Mon, 3 Feb 2025 01:49:17 -0600
+From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>
+CC: <vaishnav.a@ti.com>, <u-kumar1@ti.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <y-abhilashchandra@ti.com>
+Subject: [PATCH] dmaengine: ti: k3-udma: Use cap_mask directly from dma_device structure instead of a local copy
+Date: Mon, 3 Feb 2025 13:19:15 +0530
+Message-ID: <20250203074915.3634508-1-y-abhilashchandra@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Sun, 2025-02-02 at 12:53 -0500, Yury Norov wrote:
->=20
-> > Instead of creating another variant for
-> > non-constant bitfields, wouldn't it be better to make the existing macr=
-o
-> > accept both?
->=20
-> Yes, it would definitely be better IMO.
+Currently, a local dma_cap_mask_t variable is used to store device
+cap_mask within udma_of_xlate(). However, the DMA_PRIVATE flag in
+the device cap_mask can get cleared when the last channel is released.
+This can happen right after storing the cap_mask locally in
+udma_of_xlate(), and subsequent dma_request_channel() can fail due to
+mismatch in the cap_mask. Fix this by removing the local dma_cap_mask_t
+variable and directly using the one from the dma_device structure.
 
-On the flip side, there have been discussions in the past (though I
-think not all, if any, on the list(s)) about the argument order. Since
-the value is typically not a constant, requiring the mask to be a
-constant has ensured that the argument order isn't as easily mixed up as
-otherwise.
+Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
+Cc: stable@vger.kernel.org
+Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+---
+RFC: https://lore.kernel.org/all/20250117121728.203452-1-y-abhilashchandra@ti.com/ 
 
-With a non-constant mask there can also be no validation that the mask
-is contiguous etc.
+ drivers/dma/ti/k3-udma.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Now that doesn't imply a strong objection - personally I've come to
-prefer the lower-case typed versions anyway - but something to keep in
-mind when doing this.
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 7ed1956b4642..c775a2284e86 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -4246,7 +4246,6 @@ static struct dma_chan *udma_of_xlate(struct of_phandle_args *dma_spec,
+ 				      struct of_dma *ofdma)
+ {
+ 	struct udma_dev *ud = ofdma->of_dma_data;
+-	dma_cap_mask_t mask = ud->ddev.cap_mask;
+ 	struct udma_filter_param filter_param;
+ 	struct dma_chan *chan;
+ 
+@@ -4278,7 +4277,7 @@ static struct dma_chan *udma_of_xlate(struct of_phandle_args *dma_spec,
+ 		}
+ 	}
+ 
+-	chan = __dma_request_channel(&mask, udma_dma_filter_fn, &filter_param,
++	chan = __dma_request_channel(&ud->ddev.cap_mask, udma_dma_filter_fn, &filter_param,
+ 				     ofdma->of_node);
+ 	if (!chan) {
+ 		dev_err(ud->dev, "get channel fail in %s.\n", __func__);
+-- 
+2.34.1
 
-However, the suggested change to BUILD_BUG_ON_NOT_POWER_OF_2 almost
-certainly shouldn't be done for the same reason - not compiling for non-
-constant values is [IMHO] part of the API contract for that macro. This
-can be important for the same reasons.
-
-(Obviously, doing that change now doesn't invalidate existing code, but
-it does remove checks that may have been intended to be present in the
-code.)
-
-johannes
