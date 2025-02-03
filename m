@@ -1,116 +1,111 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C45D38FB9
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 04:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 674C32111;
+	Mon,  3 Feb 2025 05:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738558633; cv=none; b=VG4/6CoQ1V+2gc8XX/jntI9tVjFSK1vKP0iTVpOpNZwreSk5Jh2a3V8A0UDh6gTKeFAZ80BeyGq5WJJOAnzxoZpMlfU08dtt7Xc+Z59QlXQslQe28rDZlOIBduyaZgaY2wfGHZMcv3duZ4dfwMz+zRCD/fsHMUJ9sE0p5hL+O9M=
+	t=1738559327; cv=none; b=tNdMxvPGlFbmKRABB5bDpLNz1+TLcl+iEmlV8D31+TtZUZ0XWXE8P6MzaIlNXakMSz0F7z4jmDkBw+IU1vEGbsL8k8MPqaPUgs+USODIzi46XQWpBNQ+4oyMDuXWpQl/8ioZErspcgUj1oq0WLhCQui2VOdZUjYVIF9dT6CZz8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738558633; c=relaxed/simple;
-	bh=1b7PXCAjicBWEXfGN57G80d0iaDT13wM7LEca/iaZ6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q9gMwkiCTXO1cv3eR8aETHFOPSjO1SYW7RPG+Xsej2TquCLVeBs/5ET8E0EKOYjIOBXT/U957GmeKCDNuvfcQKjmjaZMDn9l8fMXlU87y7z6ymSrQSB0jnkv6omqv4WmNBvOcz55br8df06tMXzZRWEwFrr0Dx6eP56ZoEkcWTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kHUNaAjt; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kHUNaAjt"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21bc1512a63so74744515ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 20:57:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738558631; x=1739163431; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VJjq60zXnUHHajG0I4v7Z4ikwINYuM0Qsned8Y7REbc=;
-        b=kHUNaAjto9d38/5wfM4CFL3ehkd2/Tndoandu87EEs3M7tD708af3yX7ahpTL2Kv25
-         zO6WzPUuTnVQKKww219gsbsP9BoIrzpvQ9VbR2f5uLxr8VCkLqAwiQOUDXwTmLDO5lQV
-         2Rp9W9xgsrn++oSeUoTYye0VfutzkG/TDgcuQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738558631; x=1739163431;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VJjq60zXnUHHajG0I4v7Z4ikwINYuM0Qsned8Y7REbc=;
-        b=SHbGQSSO2LEB2TcAoOqYflr9jwhQJVJtG1ibA3QrtxHwDAM2QF2qTcxYYrXoGT4+Q/
-         IozCGHWjGi8IZsoqWXBY2rEiURTBGIdERMmw5tnSGrAlNNMhVFXzN8YfrS4MihGM4kNi
-         s0v6FDL1XE0mrI5piu07xoTJz842Sqt6Zs9I587PHLkrl5F/ecGyEUYpTZ3uLTHxxQ1m
-         k47jThkUvpULFHRDk86ycYWWD1IF/fi07SNFGq6XEd94ms3E96OhW4p+deKqmvoB4rxc
-         u6qPzExvct+UZDE4s5/mHDwWvDtv3uCCflJAchZeOg1NY1CeboA1vpm6vlgZxLfHi9un
-         RTmg==
-X-Forwarded-Encrypted: i=1; AJvYcCWBCu1GYezZWAujtTdFlZ6Sxa2ZynhUKErMxJp1Ykio3ktQLccQSEOCRpDEVQ/S10Tq3v2owo9glvovmyY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP8LGpZguvawijDaD2CClaH0RJaOGf6kNGJgtjtVlbY7C3Vg2z
-	7BLh9/eiJTQS6Nzxg81J4uzb4b5fBGUS45lcHasCztV3j8uIFMEze42xOa68Ow==
-X-Gm-Gg: ASbGncvv7g2qEpdVE7OAiraph8JOKbcgj3pryaE/Gvi8s8VTH2w2nxn63F+vEG+rpZ8
-	xWrNOlx/p7Gum0o/GPyyeMP5pmCLnX2mUAosxOlvfMC+jogkW9QqjHxwD5duYGAu41VT9OQexmv
-	U/LqTbWoP4inwkZYn0MBzN2R3GpOtfGAWV12F4Gfd0JbljJ+e7d8hyreEkMnGGsrNbdkklEIkeT
-	wHTjk6y0fsn34Q9HUll9aS2Xj7UUxpT35hm2GleBQdFU34ITcvMTv1fwb0r5g4fyFnbSfEITz+Y
-	zCTMEKpK9sQSb+eT
-X-Google-Smtp-Source: AGHT+IH9dd9ZAzS3baGwhKzff/ZE0OHYuRzYcLQN7WhWJZWpjKHAWQ9qIm7HZ6YPSjw2kbuJx7KEmA==
-X-Received: by 2002:a17:903:98c:b0:21a:8839:4f4d with SMTP id d9443c01a7336-21dd7c46868mr280232625ad.6.1738558630731;
-        Sun, 02 Feb 2025 20:57:10 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:f3c0:b0:250f:9437])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3320ec8sm66544515ad.248.2025.02.02.20.57.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 20:57:10 -0800 (PST)
-Date: Mon, 3 Feb 2025 13:57:05 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
+	s=arc-20240116; t=1738559327; c=relaxed/simple;
+	bh=+lwb1KgF3v7GHTKBatPBaO6Yb7mN9vK0auG6ZVMw0Ow=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oSx+WwIrYfhut7kIRlD5ReSslBQtFOtS6eMlSxnDTUQgxS81h3Lcb24/2X+4YG8w3SL1SrNMQZGIIx5ceVfHw/eMP5CWhXhknd1K/uJD1IJKrnyd1wroP6ARz7IEG6z8pwX/Q6Qusz45u1I8CJj4phclw6lE7UUyfzrvPihmbxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15DD41476;
+	Sun,  2 Feb 2025 21:09:08 -0800 (PST)
+Received: from a077893.blr.arm.com (unknown [10.162.16.79])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 80C423F5A1;
+	Sun,  2 Feb 2025 21:08:39 -0800 (PST)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mark Brown <robh@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Eric Auger <eric.auger@redhat.com>,
+	kvmarm@lists.linux.dev,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 12/17] zsmalloc: factor out pool locking helpers
-Message-ID: <bsgm7xz6ffw32o55mrh3l36zn66muf4bttduu7kbxk4apwmk3f@zwtaktkdb5tj>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-13-senozhatsky@chromium.org>
- <Z5zwcPBAY7JaVW6Z@google.com>
+Subject: [PATCH V2 0/7] arm64/boot: Enable EL2 requirements for FEAT_PMUv3p9
+Date: Mon,  3 Feb 2025 10:38:21 +0530
+Message-Id: <20250203050828.1049370-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z5zwcPBAY7JaVW6Z@google.com>
+Content-Transfer-Encoding: 8bit
 
-On (25/01/31 15:46), Yosry Ahmed wrote:
-> > +static void pool_write_unlock(struct zs_pool *pool)
-> > +{
-> > +	write_unlock(&pool->lock);
-> > +}
-> > +
-> > +static void pool_write_lock(struct zs_pool *pool)
-> > +{
-> > +	write_lock(&pool->lock);
-> > +}
-> > +
-> > +static void pool_read_unlock(struct zs_pool *pool)
-> > +{
-> > +	read_unlock(&pool->lock);
-> > +}
-> > +
-> > +static void pool_read_lock(struct zs_pool *pool)
-> > +{
-> > +	read_lock(&pool->lock);
-> > +}
-> > +
-> > +static bool pool_lock_is_contended(struct zs_pool *pool)
-> > +{
-> > +	return rwlock_is_contended(&pool->lock);
-> > +}
-> > +
-> >  static inline void zpdesc_set_first(struct zpdesc *zpdesc)
-> >  {
-> >  	SetPagePrivate(zpdesc_page(zpdesc));
-> > @@ -290,7 +315,7 @@ static bool ZsHugePage(struct zspage *zspage)
-> >  	return zspage->huge;
-> >  }
-> >  
-> > -static void migrate_lock_init(struct zspage *zspage);
-> > +static void lock_init(struct zspage *zspage);
-> 
-> Seems like this change slipped in here, with a s/migrate_lock/lock
-> replacement if I have to make a guess :P
+This series adds fine grained trap control in EL2 required for FEAT_PMUv3p9
+registers like PMICNTR_EL0, PMICFILTR_EL0, and PMUACR_EL1 which are already
+being used in the kernel. This is required to prevent their EL1 access trap
+into EL2.
 
-Look, it compiles!  :P
+PMZR_EL0 register trap control i.e HDFGWTR2_EL2.nPMZR_EL0 remains unchanged
+for now as it does not get accessed in the kernel, and there is no plan for
+its access from user space.
+
+I have taken the liberty to pick up all the review tags for patches related
+to tools sysreg update from the KVM FGT2 V2 patch series posted earlier.
+
+https://lore.kernel.org/all/20241210055311.780688-1-anshuman.khandual@arm.com/
+
+Rob had earler mentioned about FEAT_FGT2 based trap control requirement for
+FEAT_PMUv3p9 registers that are currently being used in kernel. The context
+can be found here.
+
+https://lore.kernel.org/all/20241216234251.GA629562-robh@kernel.org/
+
+This series is based on v6.14-rc1
+
+Changes in V2:
+
+- Rebased on v6.14-rc1
+- Updated tools sysreg patches with latest DDI0601 2024-12 definitions
+- Updated document version as DDI0601 2024-12 in all commit messages
+- Added latest tags from Rob Herring for the last patch
+
+Changes in V1:
+
+https://lore.kernel.org/all/20241220072240.1003352-1-anshuman.khandual@arm.com/
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Brown <robh@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Eric Auger <eric.auger@redhat.com>
+Cc: kvmarm@lists.linux.dev
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+
+Anshuman Khandual (7):
+  arm64/sysreg: Update register fields for ID_AA64MMFR0_EL1
+  arm64/sysreg: Add register fields for HDFGRTR2_EL2
+  arm64/sysreg: Add register fields for HDFGWTR2_EL2
+  arm64/sysreg: Add register fields for HFGITR2_EL2
+  arm64/sysreg: Add register fields for HFGRTR2_EL2
+  arm64/sysreg: Add register fields for HFGWTR2_EL2
+  arm64/boot: Enable EL2 requirements for FEAT_PMUv3p9
+
+ Documentation/arch/arm64/booting.rst |  18 +++++
+ arch/arm64/include/asm/el2_setup.h   |  25 +++++++
+ arch/arm64/tools/sysreg              | 103 +++++++++++++++++++++++++++
+ 3 files changed, 146 insertions(+)
+
+-- 
+2.25.1
+
