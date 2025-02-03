@@ -1,88 +1,118 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2F525A630
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 02:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9E51C695
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 02:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738551430; cv=none; b=qPohPQW/aZfKz111DGhlouvCqhS8PUAOBDT2yWr9Q5tvMSa+KJZ8Z+gaAP80Py4hx5/lxpR+tCyDfez0rikUKdAG/wHbEGjd+FXltWk872twxsPaXhWaKifjgSE+ILX5GwD0o2zuAKMIbtCfXs8V8ktyVbHQae01yrvlAJ+aC9k=
+	t=1738551457; cv=none; b=i9QA7d4iklT0m4Z47kFOheJCujSmXlWCP2kZC00Mm4EnjXirX2TysA8Ws04IydW+KD2W/Y3o1C5w7D4vPPG14jR9QNs8v+xU12yQWaXTUl7FVB6AGK4gDTRbHWDd1fPsg8PQLzOimP+b6sa0qzmTTiHHlHxIDh0nd2AfX0EtyjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738551430; c=relaxed/simple;
-	bh=2PJ+HfT6jxBjaYedQuRdTS1BWxFPh1IRQorcDWQ3NdI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pm+TRP77I3utBMNoMUreaf5IK47Q39Rf4VqVZlEbgA1hKCuXSPJ3iZgSwCk3zQQROaMQZxrVRo9fkAOSQBU5RxIV9hxVjgVq+XhQ5XaHbI99Il2Yo0j90TnsiUbgm4z+XxskWeowveogOZnfaOxc5w0v9wystD5ddUoxxPNB/Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=keaaDwqB; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1738551457; c=relaxed/simple;
+	bh=oEzDFs1lxpookL+pSDttPzyMf9uEHyCcLd3F2ZMJli4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WhPoqVc/2NKjqRtCt8Bx39fMvibGAVfsvtxObkiESyGQnmoybZcZj4EtY3UJi6hhE1/7MVPnw+fZgvbVb3PCZK7uk56gl3ogoPXcuwYwHYUoKavm098CHDXnolcabuFC+0m3igSGsRw+P2Kw0Ux7hRK5JKBLhWZbHNLZ4o7ld34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LiHhL4C1; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="keaaDwqB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LiHhL4C1"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so7480a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2025 18:57:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1738551418;
-	bh=/M3u/UfzPn7K2j1tUy85ouRPJtHFLSPO1KCwoEDBz08=;
-	h=From:Date:Subject:To:Cc;
-	b=keaaDwqBcwuRr2sI322cGvM6QhW3T8VZUIxniSpkWNFtHxvEYmOnJqsDXFQTvVwij
-	 TV62XwwNM8Lny3y/GlktCxB2By33Y+iKiDyxrqh09BD3xef6UI5VFwY26s3weL4xaJ
-	 qrMrMhFX3YY9SHuv9T+JdhQrw/eV/nirx005KyFZBSSF+gTXotW0xcKu4itLfs2vuU
-	 8HXubwBXbJvZyBaO+s/GWRpfUvE8RdHjK87epWug2CxO+pQZABSg3tvZxx46F0G6J9
-	 64ZkKgFyBgnnAmohCv4wDPnkyP8flCNPAeAng42WH6+STBsZ+Fcgxm3nCgrbnQb5Dg
-	 ctkVcjJ6ugq3w==
-Received: from [127.0.1.1] (58-7-156-140.dyn.iinet.net.au [58.7.156.140])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id C2762703FB;
-	Mon,  3 Feb 2025 10:56:55 +0800 (AWST)
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-Date: Mon, 03 Feb 2025 13:26:31 +1030
-Subject: [PATCH] MAINTAINERS: Mark Andrew as M: for ASPEED MACHINE SUPPORT
+        d=google.com; s=20230601; t=1738551454; x=1739156254; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oEzDFs1lxpookL+pSDttPzyMf9uEHyCcLd3F2ZMJli4=;
+        b=LiHhL4C1xEtPLUL2L8pFkxwTc+m0bdUz+efikqYCcJpzZhdr770N+oO4ZQFEb6mf1E
+         JFynIOYiYXunfH1C9/sLv9xT9Me9Mw0xDFIcZUxZ2JRMqB5Me8ArxX6/3ctdmr+VC+WS
+         eI8upoP+YGYN0o41SsI79+mTek96ddiqbz+pWi41BOrdlagW+Kj7sHHmOHRjXLVMXCic
+         wfkNrNSOqNgrWaAM9DiXYMKP12/EYceQY3ikZfm1GcVfXDAG1DLueAGpg/6g49pAzP7X
+         jR/BI9uysI9pI3CMJRFCU2xKzRfZNHksQp4geKS67D4Fy95+u4tPnzhNeCsfvrkQG84A
+         N47Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738551454; x=1739156254;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oEzDFs1lxpookL+pSDttPzyMf9uEHyCcLd3F2ZMJli4=;
+        b=thNd7j0hQF5lESTIeLRoMhPkRbdoJkl5JEl66gkLoH9rDpe1A6hlI0qC8lSs0fIbE1
+         NrUL+ktRvLeJrE6rkGLuPJvHPHMsODKQxcmYkUmjDXAnCWYJmC9r9U3S6HiVYUnn7Ue8
+         AQhKt2zcoPwbmYvHqrz6AOpXbjgODDyqtHyuGfU6H7slCulYpBX6iWQbgBSqGevyGbzM
+         IBXqXmAruwTUkxmWWEbJwJKmM9CtTxNosBwsHN7EoSrhViqo9EJEiXt5BRfP3auh53Pw
+         YGlsci5KzpZgAKYINtKloOo859KVK28Yx7yUwxr9eV1A0gtBNOIwT15lNLZqW2O+h6I7
+         4mSg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+/yDe4G3iVq93KiQal5xAye43ebMVpTf5jdGAWdX9wGHu/KkccErVDJMykcmMrW0TVFlrsyQTj6lwrwU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKbBH2p70RCftyxQuYgWA0oMKcKPqNLmkvBTTWIVX0WFmGOqlz
+	iAVkGtF6Vqb2TxX+4DYdRSezWESO4NuoGO52cDCcKTPiXl/0OND3eLe9ypIDZRmeuDtdSJ8PW45
+	ThMXERYUPLqVv7D8BmX5vhPqNmIOPG0+o0l3+
+X-Gm-Gg: ASbGncvvCt3GAPLcZRxueZAMra5gqpOzabqzMI7RKoz86n5Ge2yWs9W0Doq4DMNT8/Y
+	TUBe2jzi8GvUaj3zKdgOroIWwL9aoqJHrmj31cRxDE+Vzsh3NmGRLIx8kiQrPZALI1LVQjmkli7
+	Rah4SOXpOVTV5yAPzf7xQyAMBNujA=
+X-Google-Smtp-Source: AGHT+IF7JrZuT9VadDGHDwYrpNWOiZxVM7fVQSarJ5BK/L8psYHiK1IzNqfvJ3STqS/R022ep8JftZGoUuEqEBxsRbg=
+X-Received: by 2002:a50:d79c:0:b0:5d4:428e:e99f with SMTP id
+ 4fb4d7f45d1cf-5dc91ce776emr89869a12.3.1738551453987; Sun, 02 Feb 2025
+ 18:57:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250203-aspeed-maintainer-v1-1-60bc3a5f0a7c@codeconstruct.com.au>
-X-B4-Tracking: v=1; b=H4sIAF4woGcC/x2MOwqAMBAFryJbG4jrp/AqYpG4T93CKImIIN7dY
- DHFFDMPJURFor54KOLSpHvIUpUFTasLC4xKdmLLrWVbG5cOQMzmNJwZRCMi3oNZXNNR7o6IWe/
- /OYzv+wGLOVJiYwAAAA==
-X-Change-ID: 20250203-aspeed-maintainer-dddbbe22da46
-To: joel@jms.id.au, linux-aspeed@lists.ozlabs.org, arnd@arndb.de, 
- soc@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Andrew Jeffery <andrew@codeconstruct.com.au>
-X-Mailer: b4 0.14.2
+References: <20250117145145.3093352-1-guanyulin@google.com>
+ <943a7b09-8e77-4813-810a-18fea0e61482@linux.dev> <CAOuDEK3aip9SLCUPOzpVPwx-O4rmF-+sQrF4GJasGPBzV=qJdg@mail.gmail.com>
+ <e5b1c3bf-4457-4859-92fc-785f7d6037fa@linux.dev>
+In-Reply-To: <e5b1c3bf-4457-4859-92fc-785f7d6037fa@linux.dev>
+From: Guan-Yu Lin <guanyulin@google.com>
+Date: Mon, 3 Feb 2025 10:57:00 +0800
+X-Gm-Features: AWEUYZmglGYEOfj-nWE4mZnVnlY9CRf3vG5h3Gw3rFrIW4r9R0jI5e-8yCDJ_6o
+Message-ID: <CAOuDEK2u509kNjyL6qm27QgvtoCscRcsLixW=W8ABz2NF8A-tw@mail.gmail.com>
+Subject: Re: [PATCH v9 0/5] Support system sleep with offloaded usb transfers
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+Cc: gregkh@linuxfoundation.org, Thinh.Nguyen@synopsys.com, 
+	mathias.nyman@intel.com, stern@rowland.harvard.edu, perex@perex.cz, 
+	tiwai@suse.com, sumit.garg@linaro.org, kekrby@gmail.com, oneukum@suse.com, 
+	ricardo@marliere.net, lijiayi@kylinos.cn, quic_jjohnson@quicinc.com, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From discussion in [1] and in-person with Joel, flip my entry from R:
-to M:.
+On Tue, Jan 28, 2025 at 11:22=E2=80=AFPM Pierre-Louis Bossart
+<pierre-louis.bossart@linux.dev> wrote:
+>
+> I am not following, sorry.
+>
+> Is the desired outcome to
+>
+> a) prevent the system from entering S3 if there is an active USB audio of=
+floaded stream?
+>
+> or b) allow offloaded transactions even when the system is in S3?
+>
+>
+> which is it?
+>
+> a) would be rather interesting, but currently we don't have any such beha=
+vior supported. When the system enters S3 all audio stops. The stream will =
+resume when the system goes back to S0. Do we really want the battery to dr=
+ain in S3?
+>
+> b) seems rather complicated, once the on-going DMA transfers complete the=
+n who's going to refill buffers for the USB offloaded streams? Allowing the=
+ lowest level to operate even in S3 is only a small part of the puzzle, som=
+eone's got to provide data at some point. Unless the data is generated also=
+ by a side DSP having access to mass storage or wireless interfaces?
 
-Link: https://lore.kernel.org/all/CACPK8Xe8yZLXzEQPp=1D2f0TsKA7hBZG=pHHW6U51FMpp_BiRQ@mail.gmail.com/ [1]
-Cc: Joel Stanley <joel@jms.id.au>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: soc@lists.linux.dev
-Cc: linux-aspeed@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the question, the intent of our proposal should be (b), to
+allow offloaded transactions even when the system is in S3.
+In our design, the DSP wakes the system before the buffers are fully
+drained. This patchset enables the USB controller for offloaded
+transfers during system suspend (S3). To be precise, this patchset
+focuses solely on enabling the USB controller in S3 and does not
+include other necessary components for continuous offloaded USB
+transfers. I'll revise the commit message/cover letter to reflect
+this.Thanks for highlighting the potential ambiguity.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa06545e2861abe46ea7029f9b4d3628e..305e5530560e53c10f0b610fa7b4456ca78fdfc2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2285,7 +2285,7 @@ F:	drivers/irqchip/irq-aspeed-i2c-ic.c
- 
- ARM/ASPEED MACHINE SUPPORT
- M:	Joel Stanley <joel@jms.id.au>
--R:	Andrew Jeffery <andrew@codeconstruct.com.au>
-+M:	Andrew Jeffery <andrew@codeconstruct.com.au>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
- S:	Supported
-
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250203-aspeed-maintainer-dddbbe22da46
-
-Best regards,
--- 
-Andrew Jeffery <andrew@codeconstruct.com.au>
-
+Regards,
+Guan-Yu
