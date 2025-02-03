@@ -1,106 +1,92 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E661FBE9B;
-	Mon,  3 Feb 2025 09:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CB745016
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 09:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738574111; cv=none; b=DopNcpT0fF0NH7ltgoOlYP7+ifpOquTR03xJ9yGss1s1KW6lj2OcwPBKNQ3SVxRMh/csVx0HetFaK91L3Mn5mFtva7m1IEV0nEO1LcqYys09jZtGDXdO6XNyjZ7TkmNX+2H4utVVSxcwh5IbO1mYWs+N9u9GY33KpGdLh53Huk4=
+	t=1738574161; cv=none; b=Be0hO+EmM/Ub1RH8aSXG/ECPrDA1BmnhgAM8NAcff15er/16g06wehKJM54Czk9A13ulO3IAP6fFFyCGhut5IBEGbaFtODKNcgv7+LxK2J09NuHZLGH15jPh+hfBKcBFzrWhH0LaDAIQku0ostVPhMG/1Kves5BLOEbMyeyh0h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738574111; c=relaxed/simple;
-	bh=cDGwd9F3vu/yJ9NwuWgpMuCzkamBCXWD8i5xbrJpX3g=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=AOc9f/M0oYnUQ7t/pj/JRC31k4wBk/M3Jn/tBVKxtQTKfCYfQmUtaCqYQmDwaeVn1GkQ1J2KPzMA+f14K+jFVSGt2EtNCF7nR5gsbbA/XsAjxiFGihQusU00AE9ru5b094PEtk1/Xaf0b7vVjfnxZw9k0/bNW38xToeT7yZyIwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KlYvH6HC; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738574161; c=relaxed/simple;
+	bh=jQKOQDrOOGLR72qeT84RWujKcDniGLNpWyPi4ZhyUNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dI6Ky5T1c6TgoRDDO10mmwcQlACbRXr5J/781lce4137GZbOyfNCT81TuwN5ARt6k3MAPgD+UrCCD75pR6LyNs7QL0a9KjsfU0BM+bFIoTbk7+JgHbXeQKtrGnaFSO46bNWHlH5K8WfBjO/TC7XS+2fRZCr88TWaKx/hA/Ka42M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=peRwc725; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlYvH6HC"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso895393266b.3;
-        Mon, 03 Feb 2025 01:15:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738574108; x=1739178908; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yyY2KTX4ajf0Wd2Gq/MW3zJXe3vlFQMKEuCyzvgML0g=;
-        b=KlYvH6HC8vG0d545AoTL5rY9IQa24MUQYpVLGFj4jiBqdKhmSmBGvxlj0/290UKtpD
-         gVXBISGSHrE0/UiSXEjUO8ytmygM5cc9sheVqxcLPUEX6avUJdBoE8WkdhO4jxSobdEu
-         HNwzga6pCysRqZW1Sl+E+3tSrnrWs6sBlkLSIGOglicuQfRmPvlwtp0b/IUO2n9FYDnf
-         9ER0h2CKhImYDhJ/cdjOvfJyo5N7/DAi5z+kgAZ3m5hjYjsG3clgr/wmY+gYUCnYHk/T
-         WsfCxdjbWzwNSu3MOULhEx9bfGTvNYvDTV7iPUkfejg8g5dOCK+eY/kysNzxTt0Niw76
-         Ve5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738574108; x=1739178908;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yyY2KTX4ajf0Wd2Gq/MW3zJXe3vlFQMKEuCyzvgML0g=;
-        b=IIsBlFQdt0j7eye90VcK0Q2euqYDt89eNjfigFqE11nJoqcWnKDwHVPTmywKxKJkFe
-         w/50OYNBfVV5zgdaK1qMj2xjEgcOIXwpbG9cVsB/35RD1P91Zk+08jZBw5Vmx1oukLIu
-         +PkVcDPYwgkybSG3AZgQz5cfBnavQlEOsbg9pDWx6TCvdUnSPOysJuP4kFFi+tXD+HnW
-         Krcu7h/NbNjkMZHSqFLZRqsA6PaDH+A44uTLEm3Lz/4j4zkMF19nZdpFQVvpJFp//GHc
-         lC7z605QSr+ZQBd5RMJyMXlBXv8utiZMRkfydmO/i147QMEGw/Hc9AmBjM7JkUdB4Sla
-         ctUg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6POFWsGSceAMTgfu4vATgrxy2qUp6CDM9XZose3pWH3uDGRyk5wDjXc+cBUJVUKvQu11Egq5x1jFwW3Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwekgrvL3u/gHkdLxverN0kjROtkDeSPltjyhT1nyDoFM/s/fYA
-	gSDFSjELsYmeFaCYRSUngWrSr7YwCzr6sUZsP7JKNGyMPEeqMNXz
-X-Gm-Gg: ASbGnctWh/27oQFH8O/7IvByJILOv1nCzIdxW3pRwCwWimHtYrPoVo5nOUmI7jzPADr
-	VQZkFpai5b7hEE+EiSa+dYiLvTtUyCj5bhDA73YFEYCcgVdxGlldp1fkbbqC0lVdzTpRCDgTibB
-	5bZWdcz9GP5gvf7ySEGEvteKANxCv5UuEl+e+t1OxPPHcXk4Pauia8Q1KWOE35Au1iMHBE525Qa
-	5ya0q1IGhsNdzRiZ46Am2FdQa+QKzvyMp2tH+wKzWfLMIEKBWxaH6QoUCzlrB/vYxfmzXpOM0p5
-	dKEXOiVS0AOy7489YgJxBM0oJrkTfps8VJcBk6KU2nMD+KG0
-X-Google-Smtp-Source: AGHT+IErdjRd5tOdImm54WCRak0jSoF9BvxjL+WRRBLNF3ddCLqd+WuycTRaXE73HLybmqfj0um4dA==
-X-Received: by 2002:a17:907:1c16:b0:aab:c78c:a7ed with SMTP id a640c23a62f3a-ab6cfe12c99mr2555066166b.49.1738574107585;
-        Mon, 03 Feb 2025 01:15:07 -0800 (PST)
-Received: from [192.168.14.180] (54-240-197-239.amazon.com. [54.240.197.239])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a320d5sm723391266b.149.2025.02.03.01.15.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 01:15:07 -0800 (PST)
-From: Paul Durrant <xadimgnik@gmail.com>
-X-Google-Original-From: Paul Durrant <paul@xen.org>
-Message-ID: <2f4752d5-63ec-4e7f-bb7a-a97eecfdfb18@xen.org>
-Date: Mon, 3 Feb 2025 09:15:06 +0000
+	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="peRwc725"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
+	s=key1; t=1738574157;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AdYSrp7Ifw9Djz6sdTXRJ3gQa8DUAzacW2HnJguzAfk=;
+	b=peRwc725+ZmRWNy7SYQ3ZOXQJPF5KwBLb6LFIQ4vY9Ok0YZ5/Vy/flKJqtq4xv9hVPn5mH
+	7p1qE2k3oMjoa6+Uq9zO1P2jZdrsZbMyn5pvrJnzxAxWfqauNhFfdsMnGCHbvjVvUe+mSG
+	kOT+cRg5S0y54Pi9LFf3tyybk9NmmQMgbrXXVxUimy5qAwRllOWsqqcUVuwcBVsdkRTTfb
+	uJwLpdRJIrzAK7jPxcx31lU8lq3w5xD1+Obdk52V466qNx577INMpPQnrZ/5WmzFnBIyIp
+	niFeT2LFqLG3Dy5rgLduEpQnLw50d1Yy0Cz/eiou8g6lTVL7jubCdhHe87B3ow==
+From: Ferass El Hafidi <funderscore@postmarketos.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-amlogic@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	funderscore@postmarketos.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Artur Weber <aweber.kernel@gmail.com>,
+	Karl Chan <exxxxkc@getgoogleoff.me>,
+	Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH v3 1/2] dt-bindings: arm: amlogic: add S805Y and Mi TV Stick
+Date: Mon,  3 Feb 2025 09:14:52 +0000
+Message-ID: <20250203091453.15751-2-funderscore@postmarketos.org>
+In-Reply-To: <20250203091453.15751-1-funderscore@postmarketos.org>
+References: <20250203091453.15751-1-funderscore@postmarketos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: paul@xen.org
-Subject: Re: [PATCH 3/5] KVM: x86/xen: Consult kvm_xen_enabled when checking
- for Xen MSR writes
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzbot+cdeaeec70992eca2d920@syzkaller.appspotmail.com,
- Joao Martins <joao.m.martins@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>
-References: <20250201011400.669483-1-seanjc@google.com>
- <20250201011400.669483-4-seanjc@google.com>
-Content-Language: en-US
-Organization: Xen Project
-In-Reply-To: <20250201011400.669483-4-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 01/02/2025 01:13, Sean Christopherson wrote:
-> Query kvm_xen_enabled when detecting writes to the Xen hypercall page MSR
-> so that the check is optimized away in the likely scenario that Xen isn't
-> enabled for the VM.
-> 
-> Deliberately open code the check instead of using kvm_xen_msr_enabled() in
-> order to avoid a double load of xen_hvm_config.msr (which is admittedly
-> rather pointless given the widespread lack of READ_ONCE() usage on the
-> plethora of vCPU-scoped accesses to kvm->arch.xen state).
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/kvm/xen.h | 3 +++
->   1 file changed, 3 insertions(+)
-> 
+Add support for the Amlogic S805Y SoC and the Xiaomi Mi TV Stick (aka.
+xiaomi-aquaman).  The S805Y is very similar to the S805X, with just a
+few minor differences.
 
-Reviewed-by: Paul Durrant <paul@xen.org>
+Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
+---
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 0647851ae..3403362e0 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -73,6 +73,13 @@ properties:
+           - const: amlogic,s805x
+           - const: amlogic,meson-gxl
+ 
++      - description: Boards with the Amlogic Meson GXL S805Y SoC
++        items:
++          - enum:
++              - xiaomi,aquaman
++          - const: amlogic,s805y
++          - const: amlogic,meson-gxl
++
+       - description: Boards with the Amlogic Meson GXL S905W SoC
+         items:
+           - enum:
+-- 
+2.47.1
+
