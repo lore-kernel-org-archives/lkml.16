@@ -1,159 +1,86 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75E920CCDA
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC8020A5F3
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 17:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738603244; cv=none; b=SQ04oQh7K4ueAM3xwS8XlRo4cHthkjy72hn997iyzO18cDfc+9vXMxTaEfmXJ7jeVXiYsrYKCmiv4+DW6e2w5GBIfdALEfvo+z+5jUSh0a1wA9sug08Je0YGEty5MmHp1PuLvPboKYJNl4DgF2edKtKuvPM+VtYUGUOJAkTre4k=
+	t=1738603257; cv=none; b=mSrKpHDxdz4T3g/SYK+DDlfu7rqZaUqQLe1/7TS51QqwwPd8dYuBkkvvmtGgP25FM5aZwx7NQ20s3I9cGsc7v4XlzMCyEzi4mKg3ujMpChav85v3Ot4Om/mA5mR+x+2/U9+IuAT8m32RW+cATW+kn9SzyK2TVV8cmlOZl5WZ6jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738603244; c=relaxed/simple;
-	bh=3xP1IvjSWBYoWzpo8OmosTBSRyAsu4KF9MunuP19acw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KCy9h8Ims8hn2RHqz79B+hASKYRpX84M1awpltLh33jri5ytxevQxfyc4nj4STWwN+3KsbKANcxpuQLDFkw/0xJm/80AAR5VDf6OQMGW3TvKInxSbsZmfUGqc9UZwrE+ELKHeJNJ52ev8qXiW1GURypybfnYaHQoZZ5/+GkYs1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uy/7deBN; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738603257; c=relaxed/simple;
+	bh=n3RbJZylO787qTWZAKdwolLcAFAHnPKhoSSc8zdAD28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KV/Jm0SkPRUro4ikFJavVAHN7yBUk1ZkcwPp+hciNevcwTr4gnoQ4Qc0JvrG5NKMqwyJ1d0kkNMIzuYbUV0KqvoriYBEBeC+mY9WVHQ41pqTz0d3rFsJpAwBE79ZPjTmPLoanx+0XKqB0iuW7YLGU7beaDEd+NwnGw/KFc2Svh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TxqqtLOe; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uy/7deBN"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3ce82195aa0so374105ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 09:20:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738603242; x=1739208042; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GAo66MeJPG41OMCLB4xovTFK9mZU/N+qHwtpMW9VlfU=;
-        b=uy/7deBNIGH6xff6UtxXZxBMS0UZ2xaEQ4S/ARa3tCwm9IRy8s7E/FSHIUvZUzrIAw
-         DPHTyX3czsRzN7krV2FCwM0o3CRee0I1dE+E5kxwzisHDQsW3uMIxzEwWBqpXb5F+iAr
-         1o69YLJ7aadelbAj8dpfdYCMMDFGIh6TOqAdoyeEGo/ndK3V1FyKDrDXn2gKVeR6veOM
-         rp2tUtOv6GURaoXzsQKl1aqaRG3xUFxgUoyXBamJDN4S57OQdCWwSArPCxM1hyq4Vn6n
-         CtBGyZCenkZyJMM7wRgS9Hk0QoWN1UfeGSBW2zqiN7Pajves1T/+IPLP66qVFf/pcaqD
-         Y8zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738603242; x=1739208042;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GAo66MeJPG41OMCLB4xovTFK9mZU/N+qHwtpMW9VlfU=;
-        b=aOCZY1JaYUX2CWAWINpoIcG2ywdJqcDOaZM9vDsiXiUMIvUVFvHJ0jYPkrluy1qiDq
-         qonFmXZ/1QctcVIORNJksQfVLng9zA/ZpE6zu/igA6/wclMvBSMQ/FK8qbSLx5ALQuNO
-         qrxckJHCJKNwspJ8pi6hUF54RozGpSGwtvazIx2pycqohYcQ9ddbDDI/Mrn4esd/Q7o3
-         KzD4gJM6IKJa16jS/Opv8Wjv/ydo4n8HNTHL9JeOUgk7nX3cUKD/eo9bQLLLjb2HX7qk
-         4D7mqvhgm474+FfiLDi3fw93UWmpk1qS17ufHD/NicVug7QnfzsuxTVPlnr9jHQzJYA3
-         YuMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdt76lNmb7ILn9lYe858TeGiN7SyrJRbUuHnb58FzM9zQy84NB5Ge1wKi31MoIhCs93MCHjuVmu0XVXIU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya0h+cZOMwyC0+QbevuXd8tsPPhjXUK4jY3bFsx+53i9kZ9eTi
-	IMZIJjRxpv9PDhBfyVgUrYThX0xKjE182hjz03mduK15cZhQ+HBluZMM4+cBj7l4W+aRppA5QgP
-	7B39RApeKL1plwOJlQrnWBG+RNp80t0llo5+q
-X-Gm-Gg: ASbGncsvzoKU5vQMkTpIE0yPMOE9uEF4sHBOe//BprEPRKVK8SZa18P8gdUy6ZTohnf
-	JXMjcj/BWHHE0kvMh1Y3zxGSEHjd6hq4qw5VMcpPpF4fw6NxYfDuRUDHBTJllukEnmViN7/JIZj
-	+0GzOxj+si1k1esH4vElxVkkA=
-X-Google-Smtp-Source: AGHT+IEDTaSTgDB3XaZzRvmDNVy0dyF+FRY4l/I0bO093GEzFS7ah5J9eJBNgklT1LHjNbeayephmHaJMb0xFAvkHZ0=
-X-Received: by 2002:a05:6e02:12e9:b0:3ce:471b:1ae4 with SMTP id
- e9e14a558f8ab-3d03eea05d3mr390285ab.5.1738603241707; Mon, 03 Feb 2025
- 09:20:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TxqqtLOe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738603255; x=1770139255;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=n3RbJZylO787qTWZAKdwolLcAFAHnPKhoSSc8zdAD28=;
+  b=TxqqtLOepzhRQFds6ARcZdsUDjE7zkNge3pE4IHciHk1fpUEjjCzrUCf
+   GxDd2gHayz0rVN/ODn+sGCrRalrqTLwEO9WzYwNeMNSm0VBRLMtUkU8Pw
+   DycCsTL8wbz5KgAQ5ukPuSgQcq7WEHrznG0uAO6XKYZTUhNqwBXBmRRLX
+   Ul0QEYQLpxw7CqMT49ST5al2fo6eNF2Xn4J5IxwFPdw4HNiqo/Cpbnauf
+   lbPFzMIGXqCY8sgoBd3arAzJ5EJv/+slJYUQoH4r4L1yjUXXZN4MMLiG9
+   fjkF8lH7TmGAv4K0sffwZuF2akJdo4UIO2WUtmujgRmOe7DNwGLndQRWH
+   g==;
+X-CSE-ConnectionGUID: sTLXg/shQSidkrTqsSLeGw==
+X-CSE-MsgGUID: xbaFGZwgREu034oXfTfseg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="49361214"
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="49361214"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 09:20:54 -0800
+X-CSE-ConnectionGUID: b/E38t/ASIKJ8HOCJE+eUg==
+X-CSE-MsgGUID: ULHW+cdtQtG4Fa8hBG51zQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="147553531"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 09:20:53 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tf07u-00000007toN-3vZg;
+	Mon, 03 Feb 2025 19:20:50 +0200
+Date: Mon, 3 Feb 2025 19:20:50 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: g@thinkpad, linux-kernel@vger.kernel.org,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v1 1/1] bitmap: Align documentation between
+ bitmap_gather() and bitmap_scatter()
+Message-ID: <Z6D68pt6IF8y8NmS@smile.fi.intel.com>
+References: <20250203121919.3184930-1-andriy.shevchenko@linux.intel.com>
+ <Z6D2aLzVwNh-jhc6@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129193037.573431-1-irogers@google.com> <f500ef21-5c87-4c60-8453-d98ee637a60c@app.fastmail.com>
-In-Reply-To: <f500ef21-5c87-4c60-8453-d98ee637a60c@app.fastmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 3 Feb 2025 09:20:30 -0800
-X-Gm-Features: AWEUYZnNKh34RX7hctk5o6IG1sjeytGUFhAy-xCa5ENY2IXz5w8NpUhwDPHndLw
-Message-ID: <CAP-5=fVJHV=JgR_FR91V6zcVnLXnakdoiNP4Y5j-+X72r2STmQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf symbol: Add rust v0 demangling support
-To: Daniel Xu <dxu@dxuuu.xyz>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6D2aLzVwNh-jhc6@thinkpad>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Jan 30, 2025 at 11:35=E2=80=AFAM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> Hi Ian,
->
-> Thanks so much for working on this!
->
-> Only did a quick skim. Seems like it'd be nice to reuse the official
-> demangler now that we know about it. Will be interesting to
-> see how that gets packaged for distros.
+On Mon, Feb 03, 2025 at 12:01:37PM -0500, Yury Norov wrote:
+> Hi Andy,
+> 
+> On Mon, Feb 03, 2025 at 02:19:19PM +0200, Andy Shevchenko wrote:
+> > First of all, the bitmap_scatter() mistakenly refers to itself for
+> 
+> It seems there's no 2nd concern. So I removed the 'First of all' part
+> and applied in bitmap-for-next.
 
-I think the best solution is to use the official demangler but in
-general we'd like fewer rather than more library dependencies. For
-example your initial comments were to work to make the coupling with
-capstone and LLVM disassemblers more loose via dlopen:
-https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com/
+Thank you!
 
-Thinking through the options (note I'm not doing Rust things and so my
-level of skin in the game is minimal):
-1) stay as we are - well this is a mess as there is no v0 support and
-the legacy support comes from libbfd/libiberty.
-2) option (1) plus this change cleaned up - there's still the mess
-with the legacy support, which is probably more important given v0
-isn't widely adopted.
-3) wait for the official demangler to be packaged as a library and
-depend upon it, add testing from here - solves legacy and v0 issues,
-but brings in an extra library dependency to the build. Timeline not
-clear.
-4) "contribute"/copy-paste the official demangler into perf tree and
-do like (3). Perhaps remove the forked file when a dependable library
-exists (there's some precedent for this with how libtraceevent was in
-and then removed from the linux tree) - solves the timeline, not great
-to fork the official demangler, so far not heard from the author Ariel
-Ben-Yehuda and I would strongly prefer they contribute rather than I
-copy-paste it.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-For (3) and (4) it is probably a good idea to engage the Rust folks in:
-https://github.com/rust-lang/rust/issues/60705
 
-Having broken Rust demangling seems like a high priority issue for the
-perf tool.
-
-[snip]
-> On Wed, Jan 29, 2025, at 11:30 AM, Ian Rogers wrote:
-> > +char *rust_v0_bdemangle_sym(const char *str)
->
-> Typo? Extra `b`.
-
-Ack. Will fix it but let's figure out if this code is even a plan.
-
-[snip[
-> > +     if (demangled) {
-> > +             /* Legacy rust demangling input is already C++ demangled.=
- */
-> > +             if (rust_is_mangled(demangled))
-> > +                     rust_demangle_sym(demangled);
->
-> In util/demangle-rust.c, I see:
->
->      * INPUT:
->      *     sym: symbol that has been through BFD-demangling
->
-> Perhaps double check that cxxabi is sufficient and update the comment?
-
-I've not tested this change beyond making it pass the tests the change
-contains, that are based on the v0 specification's examples. I believe
-this/legacy may be working as most C++ implies libstdc++ which I
-believe uses libiberty in cxxabi, so BFD demangling. Given the
-popularity of libstdc++ I imagine things like LLVM's libcxx will try
-to be compatible. Perhaps if there are examples of legacy Rust symbols
-we can add a test?
-
-Thanks,
-Ian
