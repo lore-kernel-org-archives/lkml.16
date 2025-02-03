@@ -1,40 +1,33 @@
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36A92063CA;
-	Mon,  3 Feb 2025 14:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527DF2063FF;
+	Mon,  3 Feb 2025 14:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738592247; cv=none; b=aCwPvunngxZztGyHTgirVWRCQp7l/fjqF2LF2zNOmY1IQnaF55+ODhp9TGT/WsLRWJVTUbiRri3pTLmkszfUlpQJzQmQKbs7N65TA1ZXa1WLFK70twikvuPO1/NZ0YlqgvgVmiOAHm7rjAYRxU9IeZmctXwvJqqR7gum5vgCjuI=
+	t=1738592266; cv=none; b=foS7zsL3RpCZwN0k9eA4BSGBR0r3wx1VY+mrTyN6Do7oy9QDWJd/Hp0nPYVa+WtiT0IkdQE8DnLMFoLxYTzAmzmqSzBk1OROkmvGGO2+ntl0Sw61mKpEOFaV716RT0L3CpqNjoGWNs1yoiw3EIYEH0G0/IkBZiVECz3AGpyx4tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738592247; c=relaxed/simple;
-	bh=AmGoZl5uDwcwLndFyztdoPMsH68hsq6tadtWQvGFhGE=;
+	s=arc-20240116; t=1738592266; c=relaxed/simple;
+	bh=WEMJmTtnA4mpvCmOd4uLa3P4g//2FnQ5h6vgLeQzscc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pARhvYEbZF0gEM+A1wUtg28Ns47c5F6DJrP7lyyDHdCZeIkiLhA4qWpxhreja+PhsIyr4utt6bREtBt8MsQq+JutO00CvSDUx/r7aPyYmxE4XYM8R7dQyB3sqlN/duu44UPfHGOQona3LK63N86AxpLU0AJLU4wJE6cIyUOn4gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=Azvd4dao; arc=none smtp.client-ip=212.63.210.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
+	 In-Reply-To:Content-Type; b=TePpM2Pbo+rFuGguWEH1vwpVuq7V2votAYtVvAKq3NErrwiak57ht06QG3OZpDvZ8gzesr/sMs0uMMJB8SsOQ8TY3liMhxAOD1InB8TM8tk9tKW70kfJyxUikIyWdLGw1MSFCfyDyWip/uyksk9/YkWvjDtQ8ftGfhmtU0fxMio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUMN8pLj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="Azvd4dao"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: lina@asahilina.net)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id E1E03434C6;
-	Mon,  3 Feb 2025 14:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
-	s=default; t=1738592242;
-	bh=AmGoZl5uDwcwLndFyztdoPMsH68hsq6tadtWQvGFhGE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Azvd4daotMO0D6BBbypa++H//1buV1K3m4rrFlo+0WeseC31eQRFmovi6PaTFnGQo
-	 EOVnlONb+d3ypGuEFRrZMByQNLvY6vCo4MzVzEBN3OSbk6D8yRjxPynhZomgHwVogM
-	 1oOYaqR/ZxkQS8NgK5B8WK88LLC4kxQyNo5d/ktUMIEvZUNDCw9bMcvX2j9XXLX9bV
-	 I9b339HgVjBkHVAm9AEHmqkyqzZYpiqTpaGg7EAxrvrmCyq6Pv+KB/sTZaTNEs6nb9
-	 prFrfS6Qu567MGDJDw/IHNyEcfzpNd3YO28D/38QNOyozsCzJ2OHOQazZ1FG4b8T3f
-	 uhlkcsN5hm48w==
-Message-ID: <def0ac4e-6ec3-4f91-a3e6-02ce931c46f3@asahilina.net>
-Date: Mon, 3 Feb 2025 23:17:20 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUMN8pLj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B523C4CED2;
+	Mon,  3 Feb 2025 14:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738592265;
+	bh=WEMJmTtnA4mpvCmOd4uLa3P4g//2FnQ5h6vgLeQzscc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fUMN8pLjQexgBOamrlL300s+V4jdD/p/f/0d6XyGN3qf4NwvxsOP14zt7/Qg41JXd
+	 zcXpwMjN/TxE5tkMfz6F8N2gvXKSvxQMGgMQ7z1H65HDBBUK4UGKN2XYTyrXGVXJ3o
+	 sIB0Hi1JacMWEJKyUVZrcLiaMR2btWvQ5G8DgFJ3GQ1xoID9yLGVBL7lzaA6cHOIX9
+	 9l2OeA4yzAQz2oDRnbFSd13D4IDn76a5IJmVnE7lnnJj1NKyQ1GRcHQUxpoTgKZZEu
+	 yxQO69OTV8LC7cmG9lKJSJgdHYMg7OV3jaMDsSUC58kid6qYqOoGMJqbGz+dg6NS5S
+	 CmGFWR/9J4asQ==
+Message-ID: <17b3c33c-d277-4a28-b6c8-4852d373b450@kernel.org>
+Date: Mon, 3 Feb 2025 15:17:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,99 +35,104 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] rust: types: Add Ownable/Owned types
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Jann Horn <jannh@google.com>, Matthew Wilcox <willy@infradead.org>,
- Paolo Bonzini <pbonzini@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
- Wedson Almeida Filho <wedsonaf@gmail.com>,
- Valentin Obst <kernel@valentinobst.de>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- asahi@lists.linux.dev
-References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
- <20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net>
- <CAH5fLggscATtCgQwCYSms77oSFOMkjTscRDqAOZsSgoHsOoPQw@mail.gmail.com>
+Subject: Re: [PATCH 2/6] dt-bindings: phy: qcom,qmp-pcie: Drop reset number
+ constraints
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250125-topic-x1p4_dts-v1-0-02659a08b044@oss.qualcomm.com>
+ <20250125-topic-x1p4_dts-v1-2-02659a08b044@oss.qualcomm.com>
+ <20250127-hungry-bald-groundhog-4f7d4b@krzk-bin>
+ <96c4af07-6adb-470a-8cbf-784bb544ff76@oss.qualcomm.com>
+ <0ec25b21-9a1d-4c4a-ae52-6bd1c3018f4c@kernel.org>
+ <3ee057ab-927c-4eac-a933-a14a5849d66c@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Asahi Lina <lina@asahilina.net>
-In-Reply-To: <CAH5fLggscATtCgQwCYSms77oSFOMkjTscRDqAOZsSgoHsOoPQw@mail.gmail.com>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <3ee057ab-927c-4eac-a933-a14a5849d66c@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
-
-On 2/3/25 6:13 PM, Alice Ryhl wrote:
-> On Sun, Feb 2, 2025 at 2:06 PM Asahi Lina <lina@asahilina.net> wrote:
+On 03/02/2025 14:03, Konrad Dybcio wrote:
+> On 2.02.2025 3:35 PM, Krzysztof Kozlowski wrote:
+>> On 01/02/2025 16:56, Konrad Dybcio wrote:
+>>> On 27.01.2025 9:26 AM, Krzysztof Kozlowski wrote:
+>>>> On Sat, Jan 25, 2025 at 04:31:18AM +0100, Konrad Dybcio wrote:
+>>>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>>>
+>>>>> (Almost?) all QMP PHYs come with both a "full reset" ("phy") and a
+>>>>> "retain certain registers" one ("phy_nocsr").
+>>>>>
+>>>>> Drop the maxItems=1 constraint for resets and reset_names as we go
+>>>>> ahead and straighten out the DT usage. After that's done (which
+>>>>> will involve modifying some clock drivers etc.), we may set
+>>>>> *min*Items to 2, bar some possible exceptions.
+>>>>
+>>>> You drop minItems now, so that's a bit confusing. If all devices have
+>>>> two resets, just change in top-level resets the minItems -> 2 now and
+>>>> mention that it does not affect the ABI, because Linux will support
+>>>> missing reset and it describes the hardware more accurately.
+>>>
+>>> This will generate a ton of warnings and resolving them may take an
+>>> additional cycle, as I'd need to get things merged through clk too,
+>>> so I thought this is a good transitional solution
 >>
->> By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
->> C FFI) type that *may* be owned by Rust, but need not be. Unlike
->> AlwaysRefCounted, this mechanism expects the reference to be unique
->> within Rust, and does not allow cloning.
->>
->> Conceptually, this is similar to a KBox<T>, except that it delegates
->> resource management to the T instead of using a generic allocator.
->>
->> Signed-off-by: Asahi Lina <lina@asahilina.net>
+>> I still don't understand why existing devices now get 1 reset, while
+>> previously they had minItems:2.
 > 
-> Overall LGTM.
+> Hm, right..
 > 
->> +/// A subtrait of Ownable that asserts that an `Owned<T>` Rust reference is not only unique
->> +/// within Rust and keeps the `T` alive, but also guarantees that the C code follows the
->> +/// usual mutable reference requirements. That is, the kernel will never mutate the
->> +/// `T` (excluding internal mutability that follows the usual rules) while Rust owns it.
->> +///
->> +/// When this type is implemented for an [`Ownable`] type, it allows `Owned<T>` to be
->> +/// dereferenced into a &mut T.
->> +///
->> +/// # Safety
->> +///
->> +/// Implementers must ensure that the kernel never mutates the underlying type while
->> +/// Rust owns it.
->> +pub unsafe trait OwnableMut: Ownable {}
-> 
-> Giving out mutable references allows users to call core::mem::swap on
-> the object. We must require that this is allowed.
+> Would it make sense to just remove the else: branch?
 
-Hmm, yeah. I don't use this yet, and I'm not sure if it makes much sense
-with that caveat. I'll drop it for v2.
+Yes, I guess that's what you want to achieve here.
 
-> 
->> +impl<T: Ownable> Owned<T> {
->> +    /// Creates a new instance of [`Owned`].
->> +    ///
->> +    /// It takes over ownership of the underlying object.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// Callers must ensure that the underlying object is acquired and can be considered owned by
->> +    /// Rust.
->> +    pub(crate) unsafe fn from_raw(ptr: NonNull<T>) -> Self {
->> +        // INVARIANT: The safety requirements guarantee that the new instance now owns the
->> +        // reference.
->> +        Self {
->> +            ptr,
->> +            _p: PhantomData,
->> +        }
->> +    }
->> +
->> +    /// Consumes the `Owned`, returning a raw pointer.
->> +    ///
->> +    /// This function does not actually relinquish ownership of the object.
->> +    /// After calling this function, the caller is responsible for ownership previously managed
->> +    /// by the `Owned`.
->> +    #[allow(dead_code)]
->> +    pub(crate) fn into_raw(me: Self) -> NonNull<T> {
-> 
-> I would just make these methods public, like the ARef ones. Then you
-> can drop the #[allow(dead_code)] annotation.
-
-Does it make sense to ever have drivers doing this? I feel like these
-methods should be limited to the kernel crate.
-
-~~ Lina
-
+Best regards,
+Krzysztof
