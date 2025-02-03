@@ -1,127 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C9A204C04;
-	Mon,  3 Feb 2025 15:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9075C3595E;
+	Mon,  3 Feb 2025 15:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738596362; cv=none; b=QQGgqSCFQFxVw7qMeqzC4I2DhghYETExUATEjrtVb3ylsME7bsKZAj7iMz+NuyGb5NLV5dYadotDsT4XfTzfe6Zm9Ubge6cBJw0thoLCBgaGmdGC1AGZZ7cJJzbVWSIREGdneo3fR3Ixpe85FxCJClFRLYrX715IrH+q02IhlUY=
+	t=1738596468; cv=none; b=dXqN95Sud6fx7LGWp0aaH9zOxn9FUytbd4Bj2mNCHeA5/AuSDs2Zu5mYcBTpB60MVqtN1KMfTRlWkTojyONU+dpigaB+M5YKhenuUsQcRby3PgyKNlk0ZSDYdtyNEf4a36ji+DXk+/1vZeKtQFXDb1dfdSEyiyLdnpBdYsQKIq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738596362; c=relaxed/simple;
-	bh=I9J//zaTMkgQl1PQBe/KCkPtbJtu1NQ1QIDIsizyG4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sLRnk6exoMo8gboq693+qTSm+xng+s5vvQSeka9BonhfbqS5XHxyxPKai0JrDSKSL21g0aXjrJCb24iM79Z+sgv9UMQgA6zZNyNSJKV0XYL7xAWPOjdO/neZe1DJIXNYCHxNgx9y40bo4sxTNK9xlEYawe1oRzvvUfOL3inNHZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CvM/Es2i; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CvM/Es2i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0E43C4CED2;
-	Mon,  3 Feb 2025 15:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738596362;
-	bh=I9J//zaTMkgQl1PQBe/KCkPtbJtu1NQ1QIDIsizyG4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CvM/Es2it1v/17q9LLvh68nzNiPbCVMRmTysEhmn0dX2k7mNK2bYm5NVUU4ci1O+f
-	 W3fLl4KhpBcmgYnVRr7uIXnS4gpaYSc8hmYON1rfJJBU5wMlcxW3H13huTsIWuRbzC
-	 rvrn+kDt0/8Tem/q66caiehlv+VTivDojFw/5xtw=
-Date: Mon, 3 Feb 2025 16:25:58 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: nb@tipi-net.de
-Cc: Mathias Nyman <mathias.nyman@intel.com>,
-	Ben Hutchings <ben@decadent.org.uk>, n.buchwitz@kunbus.com,
-	l.sanfilippo@kunbus.com, stable@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: xhci: Restore Renesas uPD72020x support in xhci-pci
-Message-ID: <2025020336-filled-hardiness-e9f2@gregkh>
-References: <20250203120026.2010567-1-nb@tipi-net.de>
- <2025020307-charity-snowfield-c975@gregkh>
- <5965e4219781df26f733a2e93bed9f37@tipi-net.de>
+	s=arc-20240116; t=1738596468; c=relaxed/simple;
+	bh=PkjBNBV7LR60VQqTVqvZrqT54nwB5Lgcu6zTZPUfQgw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hAjx0bG5tMz2oHtQ0KiREGqthDDN8DNtwEPpO65E5IpjmgckoKxtjBQay3d58GawHDFfTrHAaHpm7AmInl84fUnVsidi2iMoFgWsi05SpShYtJEU0iP2NRF2K2+bvgcNqe6d204C1DsMxy2vfxAThuv5B8BBounFxZ+hrRLhzbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ymr0n1Y37z6D91w;
+	Mon,  3 Feb 2025 23:25:29 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1F8DC140B55;
+	Mon,  3 Feb 2025 23:27:42 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 3 Feb
+ 2025 16:27:41 +0100
+Date: Mon, 3 Feb 2025 15:27:40 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: Antoni Pokusinski <apokusinski01@gmail.com>, <jic23@kernel.org>,
+	<lars@metafoo.de>, <linux-kernel@vger.kernel.org>,
+	<linux-iio@vger.kernel.org>
+Subject: Re: [PATCH] iio: magnetometer: si7210: fix magnetic field
+ measurement scale
+Message-ID: <20250203152740.0000085e@huawei.com>
+In-Reply-To: <Z6CLw5h5EwDGanl-@smile.fi.intel.com>
+References: <20250202100709.143411-1-apokusinski01@gmail.com>
+	<Z6CLw5h5EwDGanl-@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5965e4219781df26f733a2e93bed9f37@tipi-net.de>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, Feb 03, 2025 at 02:00:55PM +0100, nb@tipi-net.de wrote:
-> On 3.2.2025 13:46, Greg Kroah-Hartman wrote:
-> > On Mon, Feb 03, 2025 at 01:00:26PM +0100, nb@tipi-net.de wrote:
-> > > From: Nicolai Buchwitz <nb@tipi-net.de>
-> > > 
-> > > Before commit 25f51b76f90f1 ("xhci-pci: Make xhci-pci-renesas a proper
-> > > modular driver"), the xhci-pci driver handled the Renesas uPD72020x
-> > > USB3
-> > > PHY and only utilized features of xhci-pci-renesas when no external
-> > > firmware EEPROM was attached. This allowed devices with a valid
-> > > firmware
-> > > stored in EEPROM to function without requiring xhci-pci-renesas.
-> > > 
-> > > That commit changed the behavior, making xhci-pci-renesas
-> > > responsible for
-> > > handling these devices entirely, even when firmware was already
-> > > present
-> > > in EEPROM. As a result, unnecessary warnings about missing firmware
-> > > files
-> > > appeared, and more critically, USB functionality broke whens
-> > > CONFIG_USB_XHCI_PCI_RENESAS was not enabled—despite previously
-> > > workings
-> > > without it.
-> > > 
-> > > Fix this by ensuring that devices are only handed over to
-> > > xhci-pci-renesas
-> > > if the config option is enabled. Otherwise, restore the original
-> > > behavior
-> > > and handle them as standard xhci-pci devices.
-> > > 
-> > > Signed-off-by: Nicolai Buchwitz <nb@tipi-net.de>
-> > > Fixes: 25f51b76f90f ("xhci-pci: Make xhci-pci-renesas a proper
-> > > modular driver")
-> > > ---
-> > >  drivers/usb/host/xhci-pci.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> > > index 2d1e205c14c60..4ce80d8ac603e 100644
-> > > --- a/drivers/usb/host/xhci-pci.c
-> > > +++ b/drivers/usb/host/xhci-pci.c
-> > > @@ -654,9 +654,11 @@ int xhci_pci_common_probe(struct pci_dev *dev,
-> > > const struct pci_device_id *id)
-> > >  EXPORT_SYMBOL_NS_GPL(xhci_pci_common_probe, "xhci");
-> > > 
-> > >  static const struct pci_device_id pci_ids_reject[] = {
-> > > +#if IS_ENABLED(CONFIG_USB_XHCI_PCI_RENESAS)
-> > >  	/* handled by xhci-pci-renesas */
-> > >  	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, 0x0014) },
-> > >  	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, 0x0015) },
-> > > +#endif
-> > >  	{ /* end: all zeroes */ }
-> > >  };
+On Mon, 3 Feb 2025 11:26:27 +0200
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+
+> On Sun, Feb 02, 2025 at 11:07:10AM +0100, Antoni Pokusinski wrote:
+> > Applying the current scale value to the raw magnetic field measurements
+> > gives the result in mT.
 > > 
-> > Have you seen:
-> > 	https://lore.kernel.org/r/20250128104529.58a79bfc@foxbook
-> > ?
-> Hi Greg.
+> > Fix the scale by increasing it 10 times, so that the final result after
+> > applying the scale is in Gauss.  
 > 
-> Thanks, I must have overlooked Michal's patch when I initially stumbled over
-> the issue.
-> > 
-> > Which one is correct?
+> No objections against this change, just wondering since these are
+> the ABI changes (correct?) how should we really handle them in case
+> some of the user space stuff already relies on 'bad' values?
 > 
-> I guess both, as Michal is implementing the same slightly different.
-> 
-> My approach was to to keep the changes less invasive as possible and thus
-> make it possible to use pci_ids_reject[] for further exceptions in the
-> xhci-pci driver. In Michael's patch the list is specifically used for
-> blacklisting the Renesas devices and cannot easily be expanded for other
-> controllers. Either approach is fine with me, so lets move the discussion to
-> the patch which came first.
+If it's broken wrt to the published ABI (and hence what other sensors
+are exporting) then not a whole lot we can do other than
+backport the fix.  This is one of the few cases where ABI backwards
+compatibility comes second :(
 
-Ok, can you test Michael's patch and respond with a tested-by if it
-works for you?
+Jonathan
 
-thanks,
 
-greg k-h
