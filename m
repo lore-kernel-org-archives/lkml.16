@@ -1,241 +1,137 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazolkn19013072.outbound.protection.outlook.com [52.103.20.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B36B20E6FC;
-	Mon,  3 Feb 2025 21:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738616888; cv=fail; b=UPkhQ/frIpW3Yx6BejI5o53Wws5I9QrlwM3uN8ukr2+Ezc6TYKCJn/44y6HhzI77RezuLJFuODvs2EYELljAtcp4Y91AFOkdkUvBO8T8vqhxsjq4iIjj+WBdCMhveFOpUMlaTvOEgpAykr0scKT/rbKRFOMXmCrrywR0oCnFWOI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738616888; c=relaxed/simple;
-	bh=COM2f8L5mqN8dZwprX9Z8CsDho9ougvfnSUasBSFvzg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=l+kdQhn3LtdwsIPNz8nhjV3NpYLnj+sswf0sDJ8KWeH4mqoyahwQxiHpW2p90HqHup/odyAiGv/atfSmct20kf83xoAnai1tlZy/deGoZu5RFqK/hXo1R8MpJ6ZOdqgddCMj7ddd/X2x2fn5LTyHU6QWluORznUyEUQjoRsej5w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=a4JOxh4V; arc=fail smtp.client-ip=52.103.20.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8944B20E71F;
+	Mon,  3 Feb 2025 21:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738617089; cv=none; b=hho95BNhQs169EtaSpfRV2EIVWbrUB8xdzkyN5NxgpXQOEHc6Tboui7vMgsNFDULCXqjcNCLcyuihSOK42zfyVKsxZhBut8uzkd/vLAb9vk3e+EtGJf6c7Fb5YOBdeUafA/woCgy7acOb1dEUadJvFfN97q7eYFIzIHrEsuLQBk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738617089; c=relaxed/simple;
+	bh=PvG6MO/qhDtrP6JnR5pm9tuiX3EWXEjBNvdJoxGVQ5w=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=LyHTn3CQekVfo3Flfn1hP+miROmH8yNdxxr605RLUIzUDMEAICqn4lIGWI+3Ct4068ifQhlmf5YFMM9kRjlcqSVnXC9mbGOA6yF3vHz3BQWGeGd2BlyQ30wa0BIprepXhTcluHBCA5PDZtmxxuww/FwTgU6xTsgR/YJZXNoYkMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fdn90Aor; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="a4JOxh4V"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ifIudDrNePMYK0/XMZwv6GqzQGUDLu0ygpOxYlDUy7xSGOaO/NNjJNLt5BHOW8RZwk+2OVKOMOmqSH7PysD4gy3ZReamDuHm0eeGGBJXxfFiCXvvO+GPcOOd9dIF+63ix8yU5tDswxXLg0xg/KNjbYd+3ZoDLyDnRTmklVZsba1dPsMk4NMBnHQEpbqh+aTA31WE5gA/vXYjGx5bPHwts1StH7ASRO8i7KjDgIRuIv/nZIz8lLh/xfudfnsjNZw3ycBEphdx7IPJyjiWksodjtRNpSPsEPiCZ0yd1PFNLO9IpS1wdBOoL6uuKbEtT8/4Kfcd280gkqzOQJ675pRqVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gaTSkavKU6kgGX8If6zQ1RoB09357SLRHQ0nq5qhORs=;
- b=n2P6KZA6OHlrfm3f2QIgdj7YeTaiNv32pd8LrlbzAVECyLyhSLhykHw+fWcgUfjmHxleBGTdMmIyNCJQHPtZBWPrqcK5tEIFgCujAvKZGn3pYS1Fjjqz/KKmM3HT3y4azOscj4DLylFnuPLk+mkzQFSRl6t7GrbWbWMjBEbmQgPYNtBXynui0T0RrvX0h4A6LvkHrdsnVuzXSNr0vsz5CTS13ybC+XOeVdoghb255Iff5hO9bUgXnxHhZvmjQv901lKX58V+qtFr+8BFlUJqaW45tAvE5i7Np0yFuB7csHx4ApS9aINeKDsGbD+DubfsHfqFEBJEatMGdlC2KQVo+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gaTSkavKU6kgGX8If6zQ1RoB09357SLRHQ0nq5qhORs=;
- b=a4JOxh4VNAw0mF7aghRFSoi8HDtiWeN6HzvViA9rIrjaikrnrtzeNYQbQf4Sj+oFuhR8JnAoIXesnYFYGamYr4udBzZjzDeBNCQZE85iZrW89yIERZefDJSoAtNo+6+cuutiTrV+/Sy8vlCWx1tTupBXO6SpkESXHp7bKfQUvy4QNmfm2atWaGixkSLTioBLlWhhTpkN0SE+7uXnRQBsDsAEPAM2ViDDiC9NrdX4mMd2NovXxZ6D/MP3vhFVCbv7VDe5rTL+6OqihDNkvrpkiAh3lx09Igw6S3qww58DWqsgYBElo342F5nOEdXTLMN+D/hvMkc0a0lbxLMuAbXWPg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by LV3PR02MB10125.namprd02.prod.outlook.com (2603:10b6:408:1a6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Mon, 3 Feb
- 2025 21:08:04 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8398.021; Mon, 3 Feb 2025
- 21:08:04 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Thomas Tai <thomas.tai@oracle.com>, "mhkelley58@gmail.com"
-	<mhkelley58@gmail.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
-	<decui@microsoft.com>, "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
-	"javierm@redhat.com" <javierm@redhat.com>, Helge Deller <deller@gmx.de>,
-	"daniel@ffwll.ch" <daniel@ffwll.ch>, "airlied@gmail.com" <airlied@gmail.com>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>
-CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or
- executing kexec
-Thread-Topic: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or
- executing kexec
-Thread-Index: AdtzQ0vu6eNj8snBS+OSvfShEIJEjQABFnwAAALyBRAAANwVQADJ+eeA
-Date: Mon, 3 Feb 2025 21:08:04 +0000
-Message-ID:
- <SN6PR02MB415777C53A930259A54E213ED4F52@SN6PR02MB4157.namprd02.prod.outlook.com>
-References:
- <BLAPR10MB521793485093FDB448F7B2E5FDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
- <BLAPR10MB521780F7C93DC013E2E031BDFDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
- <SN6PR02MB415732CABA59155898531226D4E92@SN6PR02MB4157.namprd02.prod.outlook.com>
- <BLAPR10MB521743AC3C146116D8F6BCACFDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
-In-Reply-To:
- <BLAPR10MB521743AC3C146116D8F6BCACFDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|LV3PR02MB10125:EE_
-x-ms-office365-filtering-correlation-id: 2b42be25-1c7a-45e6-f0b9-08dd4496d976
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|15080799006|8062599003|8060799006|19110799003|3412199025|440099028|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?gvPph19mAAEkwcUpKNCMjpjRQNyjoTN/w/AxEGzdFEBmqZXY5bXnCIHMmJuv?=
- =?us-ascii?Q?tGidY/D/K/lRpemCpqpQmWga3xrQalneqZpHvWvobzcE8Oae6tRwICdcYR8g?=
- =?us-ascii?Q?/aLX9IqnAFWTrm8a/1PikGtXMu+9xJv79UbG3vWQjgz2Wmk9Zh5YmCIgEQbp?=
- =?us-ascii?Q?GkGiCcKiOp/SnyRNdcOSe09im38e55mfzkOOF13iqB5YZBC3O//XhtXGX6V2?=
- =?us-ascii?Q?GSQSlKPY2XAaxcFwjNr+LfrJbSZ8tGKQyYDF1CXtDVtjT/VnxvCq8n7BJvgo?=
- =?us-ascii?Q?yRkJTmY+Okm//CsAvIv8M4CPb8PlhNqDoI6JRvEnDP9Go57yOEsLJ+B1mNc2?=
- =?us-ascii?Q?ppr4/zHUkTT8VjRunLbRnpFSAtXhimAKpFPy0596VNNcr+X8osPOv0s6rJAx?=
- =?us-ascii?Q?uXNK05qvIVdryMFDIjvwr/GRcTVLSjS1r5kVd9X81XtCnkCvGx/3H72KZEq6?=
- =?us-ascii?Q?FG33T44jQAX34sVtiir6Q2SlXLJcVYk88lHTrftKljiZDWTPXEZ0to07R4Pc?=
- =?us-ascii?Q?7e/S7UChayRR21ZWIO3VxkLghJCsZxVODNy0xq7cLWE74+6dEdaJrkGVbleL?=
- =?us-ascii?Q?cKqpxx+1EV1yJIeS4/eRkdGVjIz1qAeDu0oIj0hFD7G3fzWm0PcdVYwZ94O1?=
- =?us-ascii?Q?envXuGX8pqdwi7vWyq2kGKBRvQXRg240GQYcyXr8AOgmMZJOZh7rr2hqVoGN?=
- =?us-ascii?Q?4t83GB6bCaICiZ2ouDc9F2bkg+LFa5xH3as8sAN1NcuqIrBtpUjhFZshB6F8?=
- =?us-ascii?Q?TbHkhW0FwlE2PWfXA6f+SD1yQmBIn7dkM1vPO1WsTP3KD5o7SGvCMMy830pe?=
- =?us-ascii?Q?Eb+bKbOS216t7KIWSKb0qxfErYPWonddjor/lmnDkFjgmFOEWnc5sgmyTYgt?=
- =?us-ascii?Q?NLghTQ8FaueUaSHfI2TC7Y4HcgKjD9//WYhqoskbvLAELfpxETDqzPc5Idn7?=
- =?us-ascii?Q?qbAgRlSoaug9nfm0vWw92suRugb/WY3cJhkSig8Epiasv3caczvlX9WpbY/F?=
- =?us-ascii?Q?V6cqZI/U5FcH7eGRJc+A6S8MtMSTSOsDFWMH7r1iSd9doU4=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?zE6ESDGkpGma96hoJ0sprkf7VXK5nPi3vAkewht/GfF5S5TXaLA9MN9KCoC+?=
- =?us-ascii?Q?tmmM321B2BJefYRO3Q0+H3zwAGuk3WMWxj1UzJmDVEufTXMcjbFlEQE4IX3e?=
- =?us-ascii?Q?wrHxYk45fPMfD7Wk7f9zOOfhMeBK8+5lj8LuCk/QSBdRxxJbGwEa7L29Vwf6?=
- =?us-ascii?Q?JkdcjpnQrPK8WJGaXuY7J2SN67YWywVYV4BTEJRJGpQ0XMljN47hgStPouCH?=
- =?us-ascii?Q?q6MsvIDzK4O7Uc5H9yU2zNN4rDlJOWlWqYphch28/KQSd/7xfdzJ9+iXETNS?=
- =?us-ascii?Q?Z27aEeKSXWrJR6sO9wn+2+tz6WUg+0ARL0Uki2BgUVFwKmhBFR2kwo0KnUvo?=
- =?us-ascii?Q?nzAkbNSL1nPT3eIaZ7TNAdv6qaeF2vp+0qBhuPzdKYe7hC21glGAFvqukllY?=
- =?us-ascii?Q?cvCANDYqK0LD9L9fY3lhdtbxFemZdt6EByxltbaUO4uJg/3T9GGNlyVlhSau?=
- =?us-ascii?Q?6oj1eGmWeFC/YHAotM5MLAz+qDMtER2NIvz6bx4D93O+kiigY5DNfn6RSafn?=
- =?us-ascii?Q?79glbXIC/9R5xgVDJx7C5LyoRA9ijNRUdgiBwj/obAkEPUbBMfaJWA7tM4Nn?=
- =?us-ascii?Q?MUkDLetDsXi90yrZjCZt+EHtUsfGyF+/dTsMDGWkUNPUq8QJ0oF9gkoe0kkw?=
- =?us-ascii?Q?78+P3G9q1LIG4REyGnUWsXPuYd08sOMw1KK2FJUpwoCcowa7MbTsrW67Zfbh?=
- =?us-ascii?Q?PqURnC7OeemOuoie9N9EaptGrlZBzAZ8gOonDO/k4WAeOY0Og/kWetYt1we0?=
- =?us-ascii?Q?RvZyOGUcr0KFKkbXAI4H/aLlGtA317q3u+IeoYNQz8Rt7eKlndLdIJZIzvo/?=
- =?us-ascii?Q?xB8uKZemqcd00IUz6sCWBoAgoFatSbctpDkoRDZB+i6G7xroNTOa+vVq1Hy4?=
- =?us-ascii?Q?JRsSuqqq+jSmo5Ig3RL4q6sgvq4pUyS+esXyujmmqhVt41cb9lEpXg/GFy+B?=
- =?us-ascii?Q?/GW5c9b7FwcZ3N+wq/7AKMQMd+TSB4K7d9l0G6E4DLo0IJ+sQcSXZJUfwPA/?=
- =?us-ascii?Q?Kf4mmvsQKlp94zbGuWGEiyqiq+JNuqKzNKetgPyQtVkO5dlfYJHv5NkePUBK?=
- =?us-ascii?Q?p6jDpQsgBdAuQYlj8+10iTSifRmERP8q8L33V3L/OkG+Ff2hb4tEfXVPv1GV?=
- =?us-ascii?Q?LW2gdaTtv1wY+4ovzXMJTtfRtpjsAYTpaxjg9uMQPCZwrBJO4S7qCScSTWiu?=
- =?us-ascii?Q?P2xDiTCEudzZM+5Dpdq2MjftdaX1/osDt/lGHVq7A4Zya5qnh9fNCiWkqIM?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fdn90Aor"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-438a39e659cso33908945e9.2;
+        Mon, 03 Feb 2025 13:11:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738617086; x=1739221886; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U08NDyZ7FYenbFVd8FtukZUWJzCXtCq/5zQsyVifqpk=;
+        b=Fdn90AorEIRQgQu2JS7Z2vJRXg6Wg5Qqeaj4WDKrbL6rxt/s5Bzo5JoitiQJ7/yNSH
+         w4fQIEjHVLlEcigtQMvCLEK/mjXf8defN4MV1pFKYQCtC4uJek7F9ohQsE5aETFWFFTB
+         vON1NOLaPpM4AJ9m/JSR2FvX2YaEZwdGZsgsWdm5lJJ10WDodl9tYsEVBSzTYx7usC8Z
+         Lv27J65pO/+42yrgGCbtSQbaxN3ZLQx8PxDk8J3OWfio5QE6lGn9ID7tdUcyLJvshy84
+         Z648oP+ZNa2STuEch5f6cMjXEOuDsqL2m9V+ed9eqd2FSLFiJfFfBGA/3bcOAsJ6Usuf
+         v+8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738617086; x=1739221886;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=U08NDyZ7FYenbFVd8FtukZUWJzCXtCq/5zQsyVifqpk=;
+        b=rX0dD/MvehGllU695chli+kX50x5MzwIyKqwM2LECCM3+cX1N/u5rGOCrSUJQp/Mak
+         hMweQPRPYQz4Hs0LBXPUeblK/xrCWoJ4jE8MOg+Fbz/77oShyUuivgCVK7F137H9AAW3
+         lL0U6k97Irn8M3B9UqAXB/hWZ4sxxL/AhpfAQRGdJ8eR3MUTmjoDW0wAiyXkFSJzAVrc
+         SB4eDufRL4Io/ACT7/G6lWYSqk2SqAJ+slXeSzjDa0DLYewBR7mXFOfs4g37HsPOiXDU
+         HxE6jouqRXCZ6zJO7S7TCU2cnBIfXn8PbfMFEPiDQ4jy9KR1o+T5H3zThvmP7olN29En
+         jEmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVOqfRQNsBGDAmAzGOLUhOCWWjMGslyH0Z1HGdH/dzDHiD4YSTiVJqVH1Tln7T6g6/W0G2K/6gCGodHxg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcgdXe9nSYAVpCp7W/4SoBPRDG7hkjml0EneLoS9VmkApmmxMi
+	eTskIBVtHYTGFWwf2zp7qDa4Q8xvHE3y7FrUqPjKcR+2xLayP2U/
+X-Gm-Gg: ASbGncs7xaEM9BMfemBPly8axAMFqK3NsPfs7IFJ9Qzv0Ski8w70kGNO9z1q3mbtiio
+	VzboOhmGMTBIc3tPhwbiW/bCjxtvF5e0i0Cdx7sOmo1LMSLIm4Y+4YWhlb4KP9AdYBGqfx3vjp0
+	djPKQxq3McQYo/ShDCzgZnB9ZvZvSv3z1IFzudfkluyFtrZfStn238SpPUR4EH/y0xg42MzHaLB
+	2UH693J+Fcb0IscDdBAkvMmVzKwDfzvTIq/HD74qcP+pjwPJbrFfxx5bz9O7eRJq4jgJqR7YTDc
+	xqYH8wKQ5oxfd4HztICXIhWHgs6uvqfSdI+Bjg8SYaIFOI44qheHDPRfisyXgokyOyGB6MKT8su
+	OnX9uDyAlbCcRXZidL368C8uU/l9APF9SXBQ=
+X-Google-Smtp-Source: AGHT+IGOdduessC+T9RGvthi3zkJCrym4amTRb2PUZ27wAtWRzxm//tlbWzN5SfZsNnwXOPoLhBoGw==
+X-Received: by 2002:a05:600c:3583:b0:42c:bb96:340e with SMTP id 5b1f17b1804b1-438dc4349dbmr201383455e9.31.1738617085308;
+        Mon, 03 Feb 2025 13:11:25 -0800 (PST)
+Received: from localhost (2a02-8389-41cf-e200-f011-fc60-ef85-7f8c.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:f011:fc60:ef85:7f8c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c139f15sm13956899f8f.59.2025.02.03.13.11.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 13:11:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b42be25-1c7a-45e6-f0b9-08dd4496d976
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2025 21:08:04.0691
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR02MB10125
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 03 Feb 2025 22:11:22 +0100
+Message-Id: <D7J4BHL127FC.NVE7SPPOFKOU@gmail.com>
+Cc: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Shuah
+ Khan" <skhan@linuxfoundation.org>
+To: "Karan Sanghavi" <karansanghvi98@gmail.com>, "Jonathan Cameron"
+ <jic23@kernel.org>, "Lars-Peter Clausen" <lars@metafoo.de>
+From: "Javier Carrasco" <javier.carrasco.cruz@gmail.com>
+Subject: Re: [PATCH v2] iio: light: Add check for array bounds in
+ veml6075_read_int_time_ms
+X-Mailer: aerc 0.18.2
+References: <Z6DpZDJPDtiDzxDU@Emma>
+In-Reply-To: <Z6DpZDJPDtiDzxDU@Emma>
 
-From: Thomas Tai <thomas.tai@oracle.com> Sent: Thursday, January 30, 2025 1=
-2:44 PM
->=20
-> > -----Original Message-----
-> > From: Michael Kelley <mhklinux@outlook.com>
-> > Sent: Thursday, January 30, 2025 3:20 PM
-> > To: Thomas Tai <thomas.tai@oracle.com>; mhkelley58@gmail.com;
-> > haiyangz@microsoft.com; wei.liu@kernel.org; decui@microsoft.com;
-> > drawat.floss@gmail.com; javierm@redhat.com; Helge Deller
-> > <deller@gmx.de>; daniel@ffwll.ch; airlied@gmail.com;
-> > tzimmermann@suse.de
-> > Cc: dri-devel@lists.freedesktop.org; linux-fbdev@vger.kernel.org; linux=
--
-> > kernel@vger.kernel.org; linux-hyperv@vger.kernel.org
-> > Subject: RE: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or
-> > executing kexec
-> >
-> > From: Thomas Tai <thomas.tai@oracle.com> Sent: Thursday, January 30,
-> > 2025 10:50 AM
-> > >
-> > > Sorry for the typo in the subject title. It should have been 'hyperv_=
-fb soft lockup on
-> > > Azure Gen2 VM when taking kdump or executing kexec'
-> > >
-> > > Thomas
-> > >
-> > > >
-> > > > Hi Michael,
-> > > >
-> > > > We see an issue with the mainline kernel on the Azure Gen 2 VM when
-> > > > trying to induce a kernel panic with sysrq commands. The VM would h=
-ang
-> > > > with soft lockup. A similar issue happens when executing kexec on t=
-he VM.
-> > > > This issue is seen only with Gen2 VMs(with UEFI boot). Gen1 VMs wit=
-h bios
-> > > > boot are fine.
-> > > >
-> > > > git bisect identifies the issue is cased by the commit 20ee2ae8c589=
-9
-> > > > ("fbdev/hyperv_fb: Fix logic error for Gen2 VMs in hvfb_getmem()" )=
-.
-> > > > However, reverting the commit would cause the frame buffer not to w=
-ork
-> > > > on the Gen2 VM.
-> > > >
-> > > > Do you have any hints on what caused this issue?
-> > > >
-> > > > To reproduce the issue with kdump:
-> > > > - Install mainline kernel on an Azure Gen 2 VM and trigger a kdump
-> > > > - echo 1 > /proc/sys/kernel/sysrq
-> > > > - echo c > /proc/sysrq-trigger
-> > > >
-> > > > To reproduce the issue with executing kexec:
-> > > > - Install mainline kernel on Azure Gen 2 VM and use kexec
-> > > > - sudo kexec -l /boot/vmlinuz --initrd=3D/boot/initramfs.img --comm=
-and-
-> > > > line=3D"$( cat /proc/cmdline )"
-> > > > - sudo kexec -e
-> > > >
-> > > > Thank you,
-> > > > Thomas
-> >
-> > I will take a look, but it might be early next week before I can do so.
-> >
->=20
-> Thank you, Michael for your help!
->=20
-> > It looks like your soft lockup log below is from the kdump kernel (or t=
-he newly
-> > kexec'ed kernel). Can you confirm? Also, this looks like a subset of th=
-e full log.
->=20
-> Yes, the soft lockup log below is from the kdump kernel.
->=20
-> > Do you have the full serial console log that you could email to me?  Se=
-eing
-> > everything might be helpful. Of course, I'll try to repro the problem m=
-yself
-> > as well.
->=20
-> I have attached the complete bootup and kdump kernel log.
->=20
-> File: bootup_and_kdump.log
-> Line 1 ... 984 (bootup log)
-> Line 990       (kdump kernel booting up)
-> Line 1351      (soft lockup)
->=20
-> Thank you,
-> Thomas
->=20
+On Mon Feb 3, 2025 at 5:05 PM CET, Karan Sanghavi wrote:
+> The array contains only 5 elements, but the index calculated by
+> veml6075_read_int_time_index can range from 0 to 7,
+> which could lead to out-of-bounds access. The check prevents this issue.
+>
+> Coverity Issue
+> CID 1574309: (#1 of 1): Out-of-bounds read (OVERRUN)
+> overrun-local: Overrunning array veml6075_it_ms of 5 4-byte
+> elements at element index 7 (byte offset 31) using
+> index int_index (which evaluates to 7)
+>
 
-I have reproduced the problem in an Azure VM running Oracle Linux
-9.4 with the 6.13.0 kernel. Interestingly, the problem does not occur
-in a VM running on a locally installed Hyper-V with Ubuntu 20.04 and
-the 6.13.0 kernel. There are several differences in the two
-environments:  the version of Hyper-V, the VM configuration, the Linux
-distro, and the .config file used to build the 6.13.0 kernel. I'll try to
-figure out what make the difference, and then the root cause.
+Hi Karan,
 
-Michael
+You have dropped the Fixes: tag, please add it again.
+
+> Signed-off-by: Karan Sanghavi <karansanghvi98@gmail.com>
+> ---
+>  drivers/iio/light/veml6075.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/iio/light/veml6075.c b/drivers/iio/light/veml6075.c
+> index 05d4c0e9015d..21de193ca09d 100644
+> --- a/drivers/iio/light/veml6075.c
+> +++ b/drivers/iio/light/veml6075.c
+> @@ -210,8 +210,8 @@ static int veml6075_read_int_time_ms(struct veml6075_=
+data *data, int *val)
+>
+>  	guard(mutex)(&data->lock);
+>  	int_index =3D veml6075_read_int_time_index(data);
+> -	if (int_index < 0)
+> -		return int_index;
+> +	if (int_index < 0 || int_index >=3D ARRAY_SIZE(veml6075_it_ms))
+> +		return -EINVAL;
+
+This approach modifies the original error codes that regmap_read() could
+return, which are not always -EINVAL. You could check the index within
+veml6075_read_int_time_index(), return -EINVAL, and this section would
+stay as it is. There is another call to the function in the driver, but
+the same approach would work there as well without modifications.
+
+>
+>  	*val =3D veml6075_it_ms[int_index];
+>
+
+I would also like to remind you that giving some reasonable time between
+versions might let others review your patch. I am the maintainer of this
+driver, but no matter how many iterations we go through, the final
+decision is made by more qualified users i.e. subsystem maintainers. It
+would be nice if we could save them from a bunch of versions in a short
+period of time.
+
+Apart from what I pointed out, the patch looks better now. Thanks!
+
+Best regards,
+Javier Carrasco
