@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D46B20A5C8;
-	Mon,  3 Feb 2025 15:37:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4329A208995;
+	Mon,  3 Feb 2025 15:37:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738597029; cv=none; b=YER1qjWbxA/JJ24q7aA3mlba+xCRvPWhGox/cVZn7ymh3EaDXDjcNjsQ7QKXKT4Qt1p4+bmr+NU7vbbE7wLrs+hE4u+dPOXMpzd5McAXaH0/+0b52JdE2JM/Vu0VW7s4TnrRIAJMol52qWprCH/59F4klGRssyXbhunEeU5j35c=
+	t=1738597031; cv=none; b=l7ImUPm5RbBq2scRBpfbzz5lMjr56ywqe/gR09KNeQH4im3bp2roxNaIaLDQ7UwWjyfgzG6zi+Ne9PVMHG4xMSBJ30BZmMOKTAYRrnAEEsJUIdM9GhXz3JO83NKXOKrjkCq6dgubgleOXlpurOy+kQ0136mhRmz3Wi3zlC2W4OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738597029; c=relaxed/simple;
-	bh=sfylPJubRQa0RsghaJs13B2uvS7uCwVTb+ajboSxtWM=;
+	s=arc-20240116; t=1738597031; c=relaxed/simple;
+	bh=zxuCVc3egPezHDqToqET5g5++zkJ6jbKo4UuMIaT+WQ=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=OyXIR7qzJUYdbaWV4daWyj7nSmEwBsE3G0HHqwl4fmBQL3Rk4kIhKB+YKhoEtdtkOJyYYr72TH/Pc/qAjdAEW2Kg43TA6OtJizNSQEDF5hlZGkhEB86596BWMiVAfts+82UBj0oIQWE3du+cLA9kWNeWf3SVN/9iRNfTUW/hylA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YCK/gJmV; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=c1Wf49OnMFoI/eXEyONtTSSVEkZgw2y3+X0gxB/lj418//3HTq58uW/qGisOv/mfeMotNooOtZd5R9GvrCuf/kUXk23hI6t/jAnPJg0Iy5xOVMOQD6NN4rhQ+pJn3f5WJ26uNl253joQDXLgt5L36slEkSOZLTG3/Su0AXASmzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IN275eiC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YCK/gJmV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25DD6C4CEEA;
-	Mon,  3 Feb 2025 15:37:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IN275eiC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91200C4CED2;
+	Mon,  3 Feb 2025 15:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738597029;
-	bh=sfylPJubRQa0RsghaJs13B2uvS7uCwVTb+ajboSxtWM=;
+	s=k20201202; t=1738597030;
+	bh=zxuCVc3egPezHDqToqET5g5++zkJ6jbKo4UuMIaT+WQ=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=YCK/gJmVBhifud6DyjAyqCdAxRrF7cHgL4t8K3otG7aGJNb8BezDkPAWV52oWm96i
-	 NP8kEmTjdvlHphyAE9zaUzZxdaUbb8mfZTwrhkexfx1qF30I5RqPZKJVPYwSIxLo/G
-	 MO5HSCjKAINSSNM3R1jICWiHJeR9Imgy6rb3JVdcUc1wIjgrpI0DiZeIIXEqe0D9Wu
-	 PQQ4GvxWrz1oFigbTwmeLKJPB6qYUKyIMdUJHtpyzcJJruHcYvyymBnjb0EP00jC/6
-	 3VyaWDBUPXzeCILbG5vlhI9FDggngsZWP9QSbQARAZ/J92MHKBZCNUakrRuGTeVRrW
-	 LodTL9/akGChg==
-Date: Mon, 03 Feb 2025 09:37:08 -0600
+	b=IN275eiCLwwUJezABuTmgS/US0CW0NZ1G/NPDhDwL0OEXm9WFnsDHjXtv3CUH1K/m
+	 gnLsaN11HXs/h+hRoYeIBYDx5d1K2Muckr4/8MK7KYcKT8DNAvdxQ0lS673B9Q31af
+	 9mYoDVPwUB5n6Jpys8Ad5YoevQXO6zg+F95xCEN8lQKLfB+3/HtWXwTTybFP84jZQy
+	 SxDr1iRDQwF3ls3f/aDfoyvmQLMTSGnJZMxk6Iad3TjfBMmfinoCNHRLiGRL4aWrJ9
+	 CvpyxtkZg1F87bHwO+tHTkBibNedX7Mktf1+Qd/xhp+Gh3l/7/Ff1hsTZfdheqhila
+	 lxdB+s965rIEg==
+Date: Mon, 03 Feb 2025 09:37:09 -0600
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,85 +36,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Christian Hewitt <christianshewitt@gmail.com>, 
- Kevin Hilman <khilman@baylibre.com>, Artur Weber <aweber.kernel@gmail.com>, 
- Karl Chan <exxxxkc@getgoogleoff.me>, devicetree@vger.kernel.org, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- ~postmarketos/upstreaming@lists.sr.ht, linux-amlogic@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-To: Ferass El Hafidi <funderscore@postmarketos.org>
-In-Reply-To: <20250203091453.15751-1-funderscore@postmarketos.org>
-References: <20250203091453.15751-1-funderscore@postmarketos.org>
-Message-Id: <173859694815.2601688.2854626525832601939.robh@kernel.org>
-Subject: Re: [PATCH v3 0/2] Add support for Xiaomi Mi TV Stick
+Cc: linus.walleij@linaro.org, netdev@vger.kernel.org, 
+ openipmi-developer@lists.sourceforge.net, minyard@acm.org, brgl@bgdev.pl, 
+ linux-kernel@vger.kernel.org, andrew@codeconstruct.com.au, 
+ edumazet@google.com, davem@davemloft.net, andrew+netdev@lunn.ch, 
+ joel@jms.id.au, conor+dt@kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, eajames@linux.ibm.com, 
+ krzk+dt@kernel.org, kuba@kernel.org, pabeni@redhat.com, 
+ linux-aspeed@lists.ozlabs.org
+To: Ninad Palsule <ninad@linux.ibm.com>
+In-Reply-To: <20250203144422.269948-1-ninad@linux.ibm.com>
+References: <20250203144422.269948-1-ninad@linux.ibm.com>
+Message-Id: <173859694889.2601726.10618336219726193824.robh@kernel.org>
+Subject: Re: [PATCH v7 0/9] DTS updates for system1 BMC
 
 
-On Mon, 03 Feb 2025 09:14:51 +0000, Ferass El Hafidi wrote:
-> This patch series aims to add initial support for the Xiaomi Mi TV
-> Stick.
+On Mon, 03 Feb 2025 08:44:10 -0600, Ninad Palsule wrote:
+> Hello,
 > 
-> Xiaomi Mi TV Stick is a small Amlogic-based Android TV stick released in
-> 2020, and known as `xiaomi-aquaman` internally (in the downstream kernel,
-> u-boot, ...)
-> Its specifications are as follows:
->  * Amlogic S805Y SoC (believed to be mostly identical to S805X)
->  * 8 GB eMMC
->  * 1 GB of RAM
->  * Android TV 9, upgradable to Android TV 10
+> Please review the patch set version 7.
 > 
-> There are multiple variants:
->  * 1. Green PCB, manufactured in 2020, known UART pinout (helpfully
->    labeled on the board)
->  * 2. Blue PCB, not much documentation about it, presumably manufactured
->    between 2021 and 2023
->  * 3. Green PCB, manufactured in 2023, known UART pinout, some layout
->    changes compared to the 2020 variant
+> V7:
+> ---
+>   - Updated pattern in the ast2400-gpio.yaml
+>   - Dropped "dt-bindings: net: faraday,ftgmac100" patch sending it
+>     separately.
 > 
-> Among these variants, there are many boards using multiple different
-> Wi-Fi chips.  Supporting all of them is out of scope for this patch
-> series.
+> V6:
+> ---
+>   - Fixed dt_binding_check errors for ipmb-dev.yaml
+>   - Changed the hog parsing pattern in ast2400-gpio
 > 
-> As of the time of writing this has only been tested on the 3rd variant.
-> It is believed that software-wise all three work mostly the same (if we
-> don't count Wi-Fi), but testing on the other variants would still be
-> appreciated.
+> V5:
+> ---
+>   - Improved IPBM device documentation.
+>   - Added the hog parsing in ast2400-gpio
 > 
-> The devicetree is based on the Amlogic P241 DTS.
+> V4:
+> ---
+>   - Removed "Add RGMII support" patch as it needs some work from the
+>     driver side.
+>   - Improved IPBM device documentation.
+>   - There is a new warning in CHECK_DTBS which are false positive so
+>     ignored them.
+>     arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dtb: gpio@1e780000: 'hog-0', 'hog-1', 'hog-2', 'hog-3' do not match any of the regexes: 'pinctrl-[0-9]+'
 > 
-> Changes since v2 [1]:
->  * fix SoB/From mismatch
+> V3:
+> ---
+>   - Fixed dt_binding_check warnings in ipmb-dev.yaml
+>   - Updated title and description in ipmb-dev.yaml file.
+>   - Updated i2c-protocol description in ipmb-dev.yaml file.
 > 
-> Changes since v1 [2]:
->  * remove useless nodes: cvbs-connector, ethmac, internal_phy, ir
->  * add `amlogic,s805y` DT binding section
->  * add S805Y dtsi: meson-gxl-s805y.dtsi
->  * adjust DT `model` to "Xiaomi Mi TV Stick (Aquaman)"
->  * explain the changes being done a bit more in the commit message for
->    the DT patch
->  * drop `clocks` and `clock-names` from pwm_ef (background: [3])
->  * change sound `model` to "XIAOMI-AQUAMAN"
+> V2:
+> ---
+>   Fixed CHECK_DTBS errors by
+>     - Using generic node names
+>     - Documenting phy-mode rgmii-rxid in ftgmac100.yaml
+>     - Adding binding documentation for IPMB device interface
 > 
-> [1]: https://lore.kernel.org/all/20250201193044.28856-1-funderscore@postmarketos.org/
-> [2]: https://lore.kernel.org/all/20250131200319.19996-1-funderscore@postmarketos.org/
-> [3]: https://lore.kernel.org/linux-amlogic/20241227212514.1376682-1-martin.blumenstingl@googlemail.com/
+> NINAD PALSULE (6):
+>   ARM: dts: aspeed: system1: Add IPMB device
+>   ARM: dts: aspeed: system1: Add GPIO line name
+>   ARM: dts: aspeed: system1: Reduce sgpio speed
+>   ARM: dts: aspeed: system1: Update LED gpio name
+>   ARM: dts: aspeed: system1: Remove VRs max8952
+>   ARM: dts: aspeed: system1: Mark GPIO line high/low
 > 
-> Ferass El Hafidi (2):
->   dt-bindings: arm: amlogic: add S805Y and Mi TV Stick
->   arm64: dts: amlogic: add support for xiaomi-aquaman/Mi TV Stick
+> Ninad Palsule (3):
+>   bindings: ipmi: Add binding for IPMB device intf
+>   dt-bindings: gpio: ast2400-gpio: Add hogs parsing
+>   ARM: dts: aspeed: system1: Disable gpio pull down
 > 
->  .../devicetree/bindings/arm/amlogic.yaml      |   7 +
->  arch/arm64/boot/dts/amlogic/Makefile          |   1 +
->  .../meson-gxl-s805y-xiaomi-aquaman.dts        | 288 ++++++++++++++++++
->  .../boot/dts/amlogic/meson-gxl-s805y.dtsi     |  10 +
->  4 files changed, 306 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dts
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s805y.dtsi
+>  .../bindings/gpio/aspeed,ast2400-gpio.yaml    |   6 +
+>  .../devicetree/bindings/ipmi/ipmb-dev.yaml    |  56 +++++++
+>  .../dts/aspeed/aspeed-bmc-ibm-system1.dts     | 139 +++++++++++-------
+>  3 files changed, 147 insertions(+), 54 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ipmi/ipmb-dev.yaml
 > 
 > --
-> 2.47.1
+> 2.43.0
 > 
 > 
 > 
@@ -134,10 +134,43 @@ make sure dt-schema is up to date:
   pip3 install dtschema --upgrade
 
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/amlogic/' for 20250203091453.15751-1-funderscore@postmarketos.org:
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for 20250203144422.269948-1-ninad@linux.ibm.com:
 
-arch/arm64/boot/dts/amlogic/meson-gxl-s805y-xiaomi-aquaman.dtb: phy@78000: 'vbus-supply' does not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/phy/amlogic,meson-gxl-usb2-phy.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-opp-palmetto.dtb: gpio@1e780000: 'pin_func_mode0', 'pin_func_mode1', 'pin_func_mode2', 'pin_gpio_a0', 'pin_gpio_a1', 'pin_gpio_b1', 'pin_gpio_b2', 'pin_gpio_b7', 'pin_gpio_d1', 'pin_gpio_f1', 'pin_gpio_f4', 'pin_gpio_f5', 'pin_gpio_f7', 'pin_gpio_g3', 'pin_gpio_g4', 'pin_gpio_g5', 'pin_gpio_h0', 'pin_gpio_h1', 'pin_gpio_h2', 'pin_gpio_h7' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-opp-romulus.dtb: gpio@1e780000: 'nic_func_mode0', 'nic_func_mode1', 'seq_cont' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-delta-ahe50dc.dtb: gpio@1e780000: 'doom-guardrail' does not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-opp-lanyang.dtb: gpio@1e780000: 'pin_gpio_aa6', 'pin_gpio_aa7', 'pin_gpio_ab0', 'pin_gpio_b0', 'pin_gpio_b5', 'pin_gpio_h5', 'pin_gpio_z2' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-bytedance-g220a.dtb: gpio@1e780000: 'pin_gpio_b6', 'pin_gpio_i3' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-everest.dtb: gpio@1e780000: 'usb_power' does not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-bytedance-g220a.dtb: /ahb/apb/bus@1e78a000/interrupt-controller@0: failed to match any schema with compatible: ['aspeed,ast2500-i2c-ic']
+arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-e3c246d4i.dtb: gpio@1e780000: 'bmc-ready' does not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-ampere-mtjade.dtb: gpio@1e780000: 'bmc-ready' does not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-rainier.dtb: gpio@1e780000: 'i2c3_mux_oe_n', 'usb_power' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-rainier-1s4u.dtb: gpio@1e780000: 'i2c3_mux_oe_n', 'usb_power' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-rainier-4u.dtb: gpio@1e780000: 'i2c3_mux_oe_n', 'usb_power' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-bonnell.dtb: gpio@1e780000: 'usb_power' does not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-opp-nicole.dtb: gpio@1e780000: 'func_mode0', 'func_mode1', 'func_mode2', 'ncsi_cfg', 'seq_cont' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-lenovo-hr855xg2.dtb: gpio@1e780000: 'pin_gpio_a1', 'pin_gpio_a3', 'pin_gpio_aa0', 'pin_gpio_aa4', 'pin_gpio_ab3', 'pin_gpio_ac6', 'pin_gpio_b5', 'pin_gpio_b7', 'pin_gpio_e0', 'pin_gpio_e2', 'pin_gpio_e5', 'pin_gpio_e6', 'pin_gpio_f0', 'pin_gpio_f1', 'pin_gpio_f2', 'pin_gpio_f3', 'pin_gpio_f4', 'pin_gpio_f6', 'pin_gpio_g7', 'pin_gpio_h6', 'pin_gpio_i3', 'pin_gpio_j1', 'pin_gpio_j2', 'pin_gpio_j3', 'pin_gpio_l0', 'pin_gpio_l1', 'pin_gpio_l4', 'pin_gpio_l5', 'pin_gpio_r6', 'pin_gpio_r7', 'pin_gpio_s1', 'pin_gpio_s2', 'pin_gpio_s6', 'pin_gpio_z3' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-lenovo-hr630.dtb: gpio@1e780000: 'pin_gpio_aa0', 'pin_gpio_aa5', 'pin_gpio_b5', 'pin_gpio_f0', 'pin_gpio_f3', 'pin_gpio_f4', 'pin_gpio_f5', 'pin_gpio_g4', 'pin_gpio_g7', 'pin_gpio_h2', 'pin_gpio_h3', 'pin_gpio_i3', 'pin_gpio_j2', 'pin_gpio_j3', 'pin_gpio_s2', 'pin_gpio_s4', 'pin_gpio_s6', 'pin_gpio_y0', 'pin_gpio_y1', 'pin_gpio_z0', 'pin_gpio_z2', 'pin_gpio_z3', 'pin_gpio_z7' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-opp-zaius.dtb: gpio@1e780000: 'line_bmc_i2c2_sw_rst_n', 'line_bmc_i2c5_sw_rst_n', 'line_iso_u146_en', 'ncsi_mux_en_n' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-arm-stardragon4800-rep2.dtb: gpio@1e780000: 'pin_gpio_c7', 'pin_gpio_d1' do not match any of the regexes: '-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
 
 
 
