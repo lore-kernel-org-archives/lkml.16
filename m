@@ -1,90 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6142320101A;
-	Mon,  3 Feb 2025 10:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBF21F9F70
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 10:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738579232; cv=none; b=H5/P5PXticwq61jpdzq23ij+8JjAKsY780L2IZAruZyMBOhQk2pDWtRzieA5BxqYSEw1lRVg2bL85kH1KTJVCDnrwBVaXbkoQaFWzG8/Yi7friZjJmcPap4x4UkkKvv3DYketkfPD3dE/zvtK8ihYZuXc3/C1Va7M0Mr8tNQKVI=
+	t=1738579248; cv=none; b=H/oERdhcXZWSwmDQYgAoUkxlttLvp5uF02WTuYftjE35DA7wUNOj8zxbLaBQRhbOimAIQdtGTvcJk3YD8hWpoacBnX89VHca5rbDDZMiazENtxoVOo1w+EQE8Su6dG7FxZr6peiS6G0R+23Asoa3KKUTtgfWcyGsFFLp8uBlKGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738579232; c=relaxed/simple;
-	bh=qnslBWaZeqQQpwo++gsxeqSnYoVVmXUnGg9io0rc32w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8cERXfpV3XWA5WGoDhzjXgtZHROdlaDDQxp+sJ1K8ix6RAfpHmvCpaU3zM5bSM4kRcbL03Z4ejxEF+mM2twNUZDVWA6sE8qjV3azv3YzScLZePptCed7GGwXma8YZdg+Ac83g79vgDkX9EnSCp/kncNv6KqduXDKkjIbsBTDk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gM+Fjjto; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738579248; c=relaxed/simple;
+	bh=png5agelIomCEjZc9R4rrRACrhCMfaGf/cOa626XFX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cwbUoNp7N29mutmyWEwZnat6gGcy+HUhY0bAGHO/1c7Ls/jk+dMTiyYccjhzqSzF55Bfo3GXZsEAZYlQFfvhjEkyvTiFRiAStPiyYMdMNmSiCIOdLUMlUCwF404ssgi7nG+I/OdpmRS+3DdmxleItXfg/kN3Lunwmxn7K4mVBeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NWEEUBAy; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gM+Fjjto"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738579231; x=1770115231;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qnslBWaZeqQQpwo++gsxeqSnYoVVmXUnGg9io0rc32w=;
-  b=gM+FjjtoV6B0llJOepB9E7TOA8da11Z8O+gcGsH8NVkwD5OhRJ2xKQWV
-   S+pMPXpmoRZ3V2IlmRZpVAEdEzcQyW79SLoeGx386zocHyWvQzYWQAc89
-   TIQEqvr8Dc2Q63Ft8tLZ8VawkPNQZOU4zj0Eenf+/tJFvsv+95kOniQj1
-   ZB4Ku527Ulx1aM2Hw0qFXBoHoELh/K3j3GaxGiVSo2fJW3F4OpxN8ctCU
-   sOVKoo27roNvdp0zxPFcprgQasF5AX40JJn3KslrLdJP0WeVYFGzV0yJi
-   Qx0SxFc7B0HvHzfBzwwIrvG5ZdXGQQ1rrYpqV5xJWWnNBuGerBMXMCvhH
-   Q==;
-X-CSE-ConnectionGUID: iI0hg5t8QZikAur2h9eYqA==
-X-CSE-MsgGUID: UhhuajpTR9STAszyXGGHlw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="50454088"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="50454088"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 02:40:30 -0800
-X-CSE-ConnectionGUID: KtBXeEhdTSmO3z2kcycosA==
-X-CSE-MsgGUID: xtRZ+1+ySPeFMY1rCkZGSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="110822347"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 02:40:26 -0800
-Date: Mon, 3 Feb 2025 12:40:23 +0200
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
-	lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-	jic23@kernel.org, przemyslaw.kitszel@intel.com,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 12/20] regulator: cros-ec: use devm_kmemdup_array()
-Message-ID: <Z6CdF2OQQcP76_bi@black.fi.intel.com>
-References: <20250203080902.1864382-1-raag.jadav@intel.com>
- <20250203080902.1864382-13-raag.jadav@intel.com>
- <Z6CRjgG7y7YOiGpV@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NWEEUBAy"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38632b8ae71so3610423f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 02:40:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738579244; x=1739184044; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HqYW+hN2Y2KDZOoWXSdQn18bREqQvJTWRQyb/yrvcoE=;
+        b=NWEEUBAyOJYNcd+HAv5ENs+9WEW6L/oEn0fEY7Cn8cJHj3NehDmr0MJtcACNkjoWaR
+         RMAB6nqOQKEoPVlvTuxdbBDF9qKfXf5diPItwKJ4E1CqGRefMsc040saqqrswdOUNcyw
+         Ok3qRaoM1bBm9tbIYEXej7+0osDuzsmIgb9fmEbRvzeMPrUtw218QD3y3aHqpvH3KAgo
+         JNY5rFCi9wLw8QMKfuZcYxHqPKXcHt0RYI6BafLwwKytIJMrZFlIR7DqXKRiuVRz+FBa
+         nWC6m3fu9mLUMygoNr835TTkN/eZizk4+skWSmN+BlfKlnpZj+e6rd8KF7/YiVKwFGkS
+         gFNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738579244; x=1739184044;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HqYW+hN2Y2KDZOoWXSdQn18bREqQvJTWRQyb/yrvcoE=;
+        b=nsr6qc7rtZasprEuwo2k2ZIm5mlkyxKIke+oN+lGvtXzJSPF0RqsoDGIm66AfSGDj2
+         oOY0UZOF2EF++nqwt+JyCHXtkYh7+TdvOypi0w6Lsx/gMX7R2295iuUqSppStctAGlCA
+         hYe3SrMG9stB95YibYBJi72een3Gx4mo6gfTs9C11v7jzUHpE9R5yZXsEXZ1+A4X8acA
+         sP0cp3tBApgam7GxmWvQ9px2CmpT2d9gI64li8DJCEJFO7EywTYNvBzXJ/JDOb4wevtm
+         z5YwmMTUdm3IiHsSyObsjG8DM7uCEgmA36vr2WR9NpdBjWlKZq3gCTrlxkd1S422lQzm
+         c8Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsyGW+/oWcbeZ/ABfayNRjTeJ28Ra4rZfYdIaxhDpGkAusvEO8xJdFRA/VynEEaJXG8Im3bWl1tPpiWqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw/jRG3Tb9Zx9X+K01Zpdtn6Oqu/TFsO0X3yi8cLgW7D0ptCJG
+	ft1tz/FQXikprcEPyhPo7G+T2O6WN5HJ2xYebx+kVahDj3rq1AifrvVRUy3rd3w=
+X-Gm-Gg: ASbGncv6p7y1YkiFxNMzSl88bjvlrvL0AvfAByZwlvXbn4m2eNt4cC48Kz0bjjKztTj
+	otPvpHzK4ltC4XTPZxTL5/3niOTlFKLb62wpvR5Dvnn0IOedJz0bYjEjCpGmZyS2k9yCow+X6WN
+	JEmDehr0c8q83mq4U7lfj/fB9wbPk/oHsU9nQUXmmxOI4bPQ0ypQitK7EFdEbB9+F4Ucnip6CBd
+	qzB93PSSKfTnrm6yrMbuE8KP+dDB0PZTN53NKQiab7zR4YBlKzVl6MymdRvtmUK7pUdaN+M86PZ
+	3hMSYlYifCd/YpRtxu2a81d4Ig==
+X-Google-Smtp-Source: AGHT+IGOMd7k6IiFZ/qRr89XaNMzuLGbCX4OtGntn53AQk5HgByLIRtP1twYFWrJFYieIbOY46NAuw==
+X-Received: by 2002:a5d:5846:0:b0:38a:2658:bbc7 with SMTP id ffacd0b85a97d-38c51b5f3d9mr16615608f8f.29.1738579244326;
+        Mon, 03 Feb 2025 02:40:44 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.107])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cf555sm12549296f8f.97.2025.02.03.02.40.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 02:40:43 -0800 (PST)
+Message-ID: <8c96613d-9952-45aa-bff4-3a4570de976b@linaro.org>
+Date: Mon, 3 Feb 2025 10:40:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6CRjgG7y7YOiGpV@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] arm64/sysreg: Sort sysreg by encoding
+To: linux-arm-kernel@lists.infradead.org, robh@kernel.org,
+ broonie@kernel.org, maz@kernel.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Oliver Upton <oliver.upton@linux.dev>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ James Morse <james.morse@arm.com>, linux-kernel@vger.kernel.org
+References: <20250115162600.2153226-1-james.clark@linaro.org>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250115162600.2153226-1-james.clark@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 11:51:10AM +0200, Andy Shevchenko wrote:
-> On Mon, Feb 03, 2025 at 01:38:54PM +0530, Raag Jadav wrote:
-> > Convert to use devm_kmemdup_array() which is more robust.
-> 
-> ...
-> 
-> >  	data->voltages_mV =
-> > -		devm_kmemdup(dev, resp.voltages_mv,
-> > -			     sizeof(u16) * data->num_voltages, GFP_KERNEL);
-> > +		devm_kmemdup_array(dev, resp.voltages_mv, data->num_voltages,
-> > +				   sizeof(u16), GFP_KERNEL);
-> 
-> Wondering if this can be sizeof(*data->voltages_mV) that makes code robust
-> against type changes.
 
-True, but I opted for a blind treewide conversion that is consistent with
-existing driver conventions. Perhaps a better place for it is a separate
-filewide series?
 
-Raag
+On 15/01/2025 4:25 pm, James Clark wrote:
+> A few small fixes and then sort and ensure sysreg remains sorted due to
+> the discussion here [1].
+> 
+> Applies to next-20250115 for the review but I can repost after rc1.
+> 
+> Changes since v1:
+> 
+>    * Use same matching mechanism for both opening and closing tokens so
+>      also collapse those commits to 1. This now allows trailing
+>      whitespace on closing tokens which may have been hard to spot (Marc)
+> 
+> [1]: https://lore.kernel.org/all/996c7843-7f51-49a0-9122-e688e37f9902@sirena.org.uk/
+> 
+> James Clark (4):
+>    arm64/sysreg: Fix unbalanced closing block
+>    arm64/sysreg: Enforce whole word match for open/close tokens
+>    arm64/sysreg: Sort sysreg by encoding
+>    arm64/sysreg: Enforce sorting
+> 
+>   arch/arm64/tools/gen-sysreg.awk |   38 +-
+>   arch/arm64/tools/sysreg         | 1010 +++++++++++++++----------------
+>   2 files changed, 529 insertions(+), 519 deletions(-)
+> 
+
+Gentle ping just to say this still applies cleanly to v6.14-rc1
+
