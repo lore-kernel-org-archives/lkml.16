@@ -1,65 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421EE204F85;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D9D204F8C;
 	Mon,  3 Feb 2025 12:48:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738586905; cv=none; b=ZvjfcawQekHvjcy2dOsrn4ikk0+EqUz91Nrlc64ZGdOeA9FZEWyDCN9AZmqatOBTTr6HBVDn46m59h2oQZozxtiTflFnld9zryILDsK1aqKY+G0L8niepI1Ty+L993eFPFqRSmS9sAK62xQN9A4uKwxb2vyxaZkqhPjbEwiRquU=
+	t=1738586905; cv=none; b=dj9KFaAKzQ7T1kRO6tIOoIyNPFtq2z5tv3sUr5Ed76SkS0/3DVavTkqzTkG2CmE/3sY/e6UlvhZgxUqcLFVkxHC8WwRir9OD1+Lzi03mPQFzvl7WuERSbkDTK1w7jvrMOta7v553uBps6k6xOgqRvN1MWXUmXmFjo4qXhYuOzmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738586905; c=relaxed/simple;
-	bh=I57nZrOe/XGH2HJ5MimuEi4DfkxoICraiHHOG62nSM8=;
+	bh=SqBPxJkrb6ETKFTLXVZHFq1UJXDq0NCO+5xLFDQMzE0=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=c2/F+CPK5Ai7T8f2hrZ4KZ8gDIe4QNtPhSFoqXyd2ikigCLKokcUZSUJWHgppGHMjdNBc4zBK8WBh02MvxRpHsp1bodxf+FnzOTVvUlWQ9xRJn3BeNVQB7QZ5fRkUpiwv4E6SbZ2CYFbJm/BD59mzjNduCIp+lYW5Nn2FKyU6C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cFrJEpEu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=59Rz0R22; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=ACRNb3AfsMaHT30lQ9y4VQB4fKnNxiB59IZigPZo54+7elA0HR45EPssgjWDCF2rK8JuWzZyGLIEamb7EBiHNGZItDf85yBCndpeUJRBTfTtxAXr9jwo2Te4DiloVBC/v+BQA0YovuPqCTL0VsdJAehhaHmY+A2cfWLrmW5Hi2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2kvmTlOz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0dMlU4rB; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cFrJEpEu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="59Rz0R22"
-Date: Mon, 03 Feb 2025 12:48:19 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2kvmTlOz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0dMlU4rB"
+Date: Mon, 03 Feb 2025 12:48:20 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738586899;
+	s=2020; t=1738586901;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4hdRM1hbk0mUWoPKFRFl45Qo9r4GgPBE1dWgwurZeck=;
-	b=cFrJEpEunH/NUSumGwopyGHy1iDjdh8Ojiy4hZ51yB1MoUpEyeFIe7qjw55LjpFcdZm817
-	4PjBuqhcch4BbObLSeBmmDnrrG/Kg8FXJ3j6jP5wraKuv/rMk3jHzpXnKUXo1LlJzGCm22
-	D6CJ1MOus/S3ZcsZnK+wvMCXntlPZsura5F8lSDcJyWGN2TPWVKDXxX0uXNRZ2KmflvWIC
-	Qj643Ig6GlDjzeR2uQwni5D+PpXr06uvL4KIzVpofCFkp93pbQtHSlVQjhPBrW09v155GS
-	xnR/y1oJmNrZwukTidwpw8lXeNHYpkzL99/Swo5cOpg0JdoBpqveECu16OUsnw==
+	bh=ygulU40BbxrTKuhnwVZ0yk1ptKVvi8uMsUam4ORMcdQ=;
+	b=2kvmTlOzOOCEIMlh0Ap6V+SmKlFdL70pMxXko5bq+W6fW6jHfmyQh+HgQEBSHhw4csZrAD
+	p0JDAHxBDqZ+RVcj+wssrAMldtShwuXou6Qklb2kP9qJVXSsm5XHbhFfOqLds9jwV0HsMJ
+	i4wdGt1XQqbTg4A/pGhyvx+4p0Q6Ns59X2SBnarceByqj55pES2oB2rUC11wyy2iMA8Gqv
+	wFfiTglEpLuzgzD2JFu4Xv9XhannKmInsYtw4Y+8pPvKMFl51lhsu0R22vyskaH0jMgU7O
+	F62eApz8sxs+mwrwpLX6jqxoHqaFan7h87acyGr98YtKe8AihsWjWQLR5Idoaw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738586899;
+	s=2020e; t=1738586901;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4hdRM1hbk0mUWoPKFRFl45Qo9r4GgPBE1dWgwurZeck=;
-	b=59Rz0R22mUe8V0/PwDqWShLk0GDWqZbwNjht3lfQLbjmiYhBZLMpBtLFuoTTWbAMK+Wxc6
-	KS56jCV4CHGmwbCQ==
+	bh=ygulU40BbxrTKuhnwVZ0yk1ptKVvi8uMsUam4ORMcdQ=;
+	b=0dMlU4rBpyge+jq0gsIzCGRxD0I10BKFQxdQbQPqC5MmN2FqngtYsdBWVX3D9UWXmZBngJ
+	R/+4JcslNQf5qiDw==
 From: "tip-bot2 for Ravi Bangoria" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/amd/ibs: Don't allow freq mode event creation
- through ->config interface
+Subject: [tip: perf/core] perf/amd/ibs: Remove pointless sample period check
 Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>,
  Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250115054438.1021-6-ravi.bangoria@amd.com>
-References: <20250115054438.1021-6-ravi.bangoria@amd.com>
+In-Reply-To: <20250115054438.1021-3-ravi.bangoria@amd.com>
+References: <20250115054438.1021-3-ravi.bangoria@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173858689925.10177.10452300443051134355.tip-bot2@tip-bot2>
+Message-ID: <173858690058.10177.11171001068661803463.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,51 +68,61 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     e1e7844ced88f9558a48579390a7d4eaac6a28eb
-Gitweb:        https://git.kernel.org/tip/e1e7844ced88f9558a48579390a7d4eaac6a28eb
+Commit-ID:     88c7bcad71c83f52f24108dedcecae0d18dbc627
+Gitweb:        https://git.kernel.org/tip/88c7bcad71c83f52f24108dedcecae0d18dbc627
 Author:        Ravi Bangoria <ravi.bangoria@amd.com>
-AuthorDate:    Wed, 15 Jan 2025 05:44:34 
+AuthorDate:    Wed, 15 Jan 2025 05:44:31 
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 03 Feb 2025 11:46:05 +01:00
+CommitterDate: Mon, 03 Feb 2025 11:46:04 +01:00
 
-perf/amd/ibs: Don't allow freq mode event creation through ->config interface
+perf/amd/ibs: Remove pointless sample period check
 
-Most perf_event_attr->config bits directly maps to IBS_{FETCH|OP}_CTL
-MSR. Since the sample period is programmed in these control registers,
-IBS PMU driver allows opening an IBS event by setting sample period
-value directly in perf_event_attr->config instead of using explicit
-perf_event_attr->sample_period interface.
+Valid perf event sample period value for IBS PMUs (Fetch and Op both)
+is limited to multiple of 0x10. perf_ibs_init() has this check:
 
-However, this logic is not applicable for freq mode events since the
-semantics of control register fields are applicable only to fixed
-sample period whereas the freq mode event adjusts sample period after
-each and every sample. Currently, IBS driver (unintentionally) allows
-creating freq mode event via ->config interface, which is semantically
-wrong as well as detrimental because it can be misused to bypass
-perf_event_max_sample_rate checks.
+  if (!event->attr.sample_freq && hwc->sample_period & 0x0f)
+          return -EINVAL;
 
-Don't allow freq mode event creation through perf_event_attr->config
-interface.
+But it's broken since hwc->sample_period will always be 0 when
+event->attr.sample_freq is 0 (irrespective of event->attr.freq value.)
+
+One option to fix this is to change the condition:
+
+  - if (!event->attr.sample_freq && hwc->sample_period & 0x0f)
+  + if (!event->attr.freq && hwc->sample_period & 0x0f)
+
+However, that will break all userspace tools which have been using IBS
+event with sample_period not multiple of 0x10.
+
+Another option is to remove the condition altogether and mask lower
+nibble _silently_, same as what current code is inadvertently doing.
+I'm preferring this approach as it keeps the existing behavior.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/r/20250115054438.1021-6-ravi.bangoria@amd.com
+Link: https://lkml.kernel.org/r/20250115054438.1021-3-ravi.bangoria@amd.com
 ---
- arch/x86/events/amd/ibs.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/events/amd/ibs.c |  9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index d9c84f1..3e7ca1e 100644
+index 4ca8006..bd8919e 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -315,6 +315,9 @@ static int perf_ibs_init(struct perf_event *event)
- 	} else {
- 		u64 period = 0;
- 
-+		if (event->attr.freq)
-+			return -EINVAL;
+@@ -307,13 +307,8 @@ static int perf_ibs_init(struct perf_event *event)
+ 		if (config & perf_ibs->cnt_mask)
+ 			/* raw max_cnt may not be set */
+ 			return -EINVAL;
+-		if (!event->attr.sample_freq && hwc->sample_period & 0x0f)
+-			/*
+-			 * lower 4 bits can not be set in ibs max cnt,
+-			 * but allowing it in case we adjust the
+-			 * sample period to set a frequency.
+-			 */
+-			return -EINVAL;
 +
- 		if (perf_ibs == &perf_ibs_op) {
- 			period = (config & IBS_OP_MAX_CNT) << 4;
- 			if (ibs_caps & IBS_CAPS_OPCNTEXT)
++		/* Silently mask off lower nibble. IBS hw mandates it. */
+ 		hwc->sample_period &= ~0x0FULL;
+ 		if (!hwc->sample_period)
+ 			hwc->sample_period = 0x10;
