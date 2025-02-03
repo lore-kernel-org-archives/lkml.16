@@ -1,356 +1,190 @@
-Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840EC211499
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 23:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A525212B3A;
+	Mon,  3 Feb 2025 23:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738623766; cv=none; b=sGSRbdcXSqxyjVGrvF9gJGK1reh+ZFN3nkYYKLojqu/ihtOXhY7x6i3CKRWEqghVNkIGNj49eyrvsVnGQTiOmXp0OFt/TH627hv0aO+Kblkz8iquSyr56mOHZPdgIJ1bq4rDiGn1/S4r2fXzphdTp0D/hKT8OL5kysTIy7RLafQ=
+	t=1738623784; cv=none; b=vEA8A3OEjyA0p/kxYFOvcV5Fn6kPAhaFL/k62HdeWXdmPtqcCun8OKjJk5ekZ0uvlbXe0p+vLvVNKF6kxWuh7VzBRo6edMcBRESgL/9LZziGVhJpfya8roBnbyx4S8qe8gOzttY84YVc4yMOWXCLtmiyXshX8NfP7+KszA4S7D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738623766; c=relaxed/simple;
-	bh=Q+iPl49UU0AvdpV59GquMjusOlZaViuHVDbDTurGm9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=exz9DoCfM4dQcl0JkpYJkqMxnSSFoYQPCTRoSRulZsVxfs5C2uiejd5UiRGe0zNsVR5ikCOuj6vJQ+SPZitxinJZXYj304HhRKimzgNbqhRQcf78r6YArAimJdUVVSJIb80snnD9cRd0VMhTjv9Io3BMDTJ9/fCtiFoJAdgZMkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Dd222FKo; arc=none smtp.client-ip=209.85.216.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738623784; c=relaxed/simple;
+	bh=EjOexnXMgQJzxYHOLu3OeempPRS8bOp4JLgbpD0HMsk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wslg4hCULt/oM0BqXghHibx0L8DAlI2sYJs+34P+d1Fuuv3EOnejZXV8wICIbyCbjG5djEIkY5+qY+uHTYeouypt/4m9j6GMuJcy4mIkZCzHqAWn/31k1zkVc5pT8t2MeiVoMcP4540MhpMNMX3aTqhPYFeVBUTVADs7zFezm9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NZ21Lo7M; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Dd222FKo"
-Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-2f43d17b0e3so8302564a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 15:02:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZ21Lo7M"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5d0d32cd31aso7102368a12.0;
+        Mon, 03 Feb 2025 15:02:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738623760; x=1739228560; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mlSZOZfwKYccscHiA8mCvG85W1nYtxF2uCQLvRSMURg=;
-        b=Dd222FKoWIe8gx1MTxjkKbNLoEKLkI4xkv/tjglpiU/FoDwg7OktmWDkHrNsVHhaXd
-         urkmdRBbzWvROMrpNPMmwLmv5TPe2gGwtDh7P8UxIy7Rsf1YHGo8uukg/RaEe4ycIzPP
-         QjtGPvVffsQtwlONCWRbwwZf6PVcQatnLg7iAllA2i3TJN6KCPs8mGiKhTcwkHEde1IK
-         D83bHBllwOWaT44vjBIXf4qELrs8L4wzMiToRdSeaOMIS2jrM7aIM7g9MPoOKPo7nod6
-         joiYQstXUm6Lx54VaeMLHGePFzGBdgIa61ZYj8A+BHBEIB65WUoJxeojYZdosGds2E2R
-         hpAQ==
+        d=gmail.com; s=20230601; t=1738623776; x=1739228576; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JBdmQ5wtRHJ8W3Dokaw4p9hk2ntwY4Hw01yfpGgGPh4=;
+        b=NZ21Lo7MAVI7/0nJ6I3NyNLWbZxoJ2fXWlrubAlHF/vBTZJfX3LOa0TPeoNMuySG9u
+         0D2LjDGPRj9ZZeJlxbLZ1OQ2A9yzVkKkhuI/8vOW7jrU65p9Ljy2tJeMIKFoEi3i1WIX
+         9PVRffVDSpztjCJGcetiem3o+7ZHPOfzLpKOIAwbaZ/1xoF3IuYl4U89ZO3RxZAjfXZY
+         Cj5jGfCHKCwRStEIyJnLktTxKd9cUYSRb+vhpkKbG/F9HqGxp3Ro7qIQJ6l8Rp/Zy83O
+         sW9shQVScNIDnYbQSdY8Cha+XcL2eAFGqKMkpfxRsaSW15n03yWzjrxcx/cLfpgMwm2Y
+         ek/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738623760; x=1739228560;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mlSZOZfwKYccscHiA8mCvG85W1nYtxF2uCQLvRSMURg=;
-        b=YRJ/tKb3TFbTMVvE4mK83om/ChJ37Ess72XDl3UZDvjt6bNTP08Nv7/K4Ft3wGRG0W
-         +aP2xjDUq62KazEt5fPloQ6TBtLoy1IE6Gg0JJjxKGC0NJzgr9vxZWboiwzR23FPKX4X
-         6H8bIQwg0AalH+VGcmfe1nDZo06IWdIqiqggXoIRmvu+NVk/HAYADbZ4KD9x1XddtHk3
-         gaSLABupqVh0GY5D6Apyg5wx4Ixcu1rHUPUfkCLQKClDhGVHTkNf7LEVmV0biaKT45HO
-         AqwF/lOT+oexulBQCB7TJdF89lGA7op/YyNmpGBUs34+fqRrJ4mFeWndmhU0PXwWcNAa
-         TCGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvwZIoUIm28h1FGJveUPvSisPVzyPSLEJxXn5fXsxwScH/d8J93jnrXZmqBjF0/iZvdI1kg6jEYkmsgR4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzM6vuIfKVNL6NlnlHYoR81BjMiWUYR89mNMQYM1u5KgTDcHgrq
-	cMBdAqnve2WLp+hn3CKfWjsSmMLYNPoB/GEWtIBzczN/RYYzld+Joeqt7cvajrA=
-X-Gm-Gg: ASbGncvUScT9LmKXuhgDSwHS9zXACoeU50Vtkm2l1j6YvcLe+2/nyd97urf/JYexRBu
-	jDbvG4zmdNBgGSBEghoQfeMFkhXKsEVlmWnqsWPUKyCEbdnJv9mn1sHWB93amI9P5pG1g93TQNd
-	BCOCU/0WnfFj3YglnYAskjcNbq9sYLMcdwmjc410TRelYh0qfW7TXcPAgciXOOccWWFi5BR8uLb
-	K6Fwm6kz/Qh7uBoWPKsFLzh4Q+LYk5oPeBCVgINxa83JdrjrcXzwVJvWwyFR4q0isCWkcdfK5Gk
-	9J4TEz5eJWs=
-X-Google-Smtp-Source: AGHT+IHVmCZ8M1HoH0RNab91JXVoT4R3jnAicYRidYc+9QjQ5Apn2RrVQw3Ur/bkgiLbrVxSa0JAIA==
-X-Received: by 2002:a17:90b:2742:b0:2ee:b4d4:69 with SMTP id 98e67ed59e1d1-2f83ac87677mr33404517a91.35.1738623760388;
-        Mon, 03 Feb 2025 15:02:40 -0800 (PST)
-Received: from ghost ([2601:647:6700:64d0:4f63:f9d5:2cbd:2947])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f848acacadsm9535576a91.41.2025.02.03.15.02.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 15:02:39 -0800 (PST)
-Date: Mon, 3 Feb 2025 15:02:36 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Guo Ren <guoren@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>,
-	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v1 0/7] perf: Support multiple system call tables in the
- build
-Message-ID: <Z6FLDHz6V5L-HGR7@ghost>
-References: <20250201071455.718247-1-irogers@google.com>
- <Z6EStkn-YZ8zaO7u@ghost>
- <CAP-5=fXRz_8CKNz4Fr-=0yhKbf_QE2ND+PPykSAO5p8wcUz7xA@mail.gmail.com>
- <Z6EVwaOVYaKtaK1j@ghost>
- <CAP-5=fX1hCNWWmGJPKYxj93S=zM1-eRucqzb4WW5fB_sZBCRLg@mail.gmail.com>
- <Z6Eh1QLuqTbUKLCc@ghost>
- <CAP-5=fXZr8L4Z=Lb28QDZF8cbv2eJJEHSb0H9zcqSOB9cn5-9g@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1738623776; x=1739228576;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JBdmQ5wtRHJ8W3Dokaw4p9hk2ntwY4Hw01yfpGgGPh4=;
+        b=gabDpctxJM7qvUP9QAcrOxt2XdmpRXpVoVMOAMg1Z1QG9vKfafp5SwbW7W4gbIZdFM
+         Qyc2OTu7+Mk8PBRDzytJGv7HU/6uDNjIRFnUB7w0KBWxbIYgie3rn+9bhd93edONzHhv
+         SpbWP8OmMVl3OcjGWf6Yb+d+lK7xwl5Vao0FviEnNNngUS04mNblMFclZaC2BFjuPmQg
+         lCyVkLamAZGbuBEHCCFj4GdrSJvHSOLCZOs/xE9w5FZ/3cIoGV3KVn1P0ZR5HxyIzSgd
+         v/E9EoKCRJgeD2iY+oPwPRdpCnG6eRsEbvJsrd7qmh9ja44OJfJQgb6ALbi6XwIDdlR/
+         rseg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2sJH2Mpvo1u6SBOT15JTHKkHa3Sf+fxzEDESGROL8If1iiH25xBfLpK3JjDKggz4px9hTg2OiAda5@vger.kernel.org, AJvYcCXQ4lvwSvFw7RE1lN18NZEO3s6pcypSEyOslgZvGPbv8kubaa0j/jFci3qhZaBlZpoFQ40EF3EF9r9Tx6yBdg==@vger.kernel.org, AJvYcCXW/ecjcjqpCAVF+3hmlnNkYcH7/B3Lb9nBBA4Oul+d9CCLzN56kPI0y9PfHAEdU4mBkvtXJ8LImQr6LFUg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyq/E2VJS6ot8UPCnvfCRXHvT0kLKPDGTtU00Rljfefod3AeXDt
+	r90ts7hbZSnm6tgR+qksSugxdkFy+x6kSGiJqr6kZe/AE+DoHuj7rR01ae5HMhCyQ8b/KHPav3f
+	klCKSIGceCnAQsSZcwh0Q+CLmJgg=
+X-Gm-Gg: ASbGncs2HlrfKIrTK9edlUW7JKzOnMVLUaSa6NmydlGk/uYgu5bFFiNM/R4P31zED1u
+	7t7ypIchcTRxaXvYRvzF73CzxYE0YsuqsjKbJGf1VtxWxPveyaVZJfnzjAGabHgfLxZXSZu8k
+X-Google-Smtp-Source: AGHT+IGgP4sJZkbGL8t2nWMqhmaVSSoUQdeHG+eSyBSt3KQAtZyiCq3bIwAca8RXUKXL88AmRHbSP8gtBq5IrmNLFpA=
+X-Received: by 2002:a05:6402:a001:b0:5dc:7374:261d with SMTP id
+ 4fb4d7f45d1cf-5dc737427bfmr36454533a12.7.1738623775777; Mon, 03 Feb 2025
+ 15:02:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXZr8L4Z=Lb28QDZF8cbv2eJJEHSb0H9zcqSOB9cn5-9g@mail.gmail.com>
+References: <20250114215350.gkc2e2kcovj43hk7@pali> <CAN05THSXjmVtvYdFLB67kKOwGN5jsAiihtX57G=HT7fBb62yEw@mail.gmail.com>
+ <20250114235547.ncqaqcslerandjwf@pali> <20250114235925.GC3561231@frogsfrogsfrogs>
+ <CAOQ4uxjj3XUNh6p3LLp_4YCJQ+cQHu7dj8uM3gCiU61L3CQRpA@mail.gmail.com>
+ <20250117173900.GN3557553@frogsfrogsfrogs> <CAOQ4uxhh1LDz5zXzqFENPhJ9k851AL3E7Xc2d7pSVVYX4Fu9Jw@mail.gmail.com>
+ <20250117185947.ylums2dhmo3j6hol@pali> <20250202152343.ahy4hnzbfuzreirz@pali>
+ <CAOQ4uxgjbHTyQ53u=abWhyQ81ATL4cqSeWKDfOjz-EaR0NGmug@mail.gmail.com> <20250203221955.bgvlkp273o3wnzmf@pali>
+In-Reply-To: <20250203221955.bgvlkp273o3wnzmf@pali>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 4 Feb 2025 00:02:44 +0100
+X-Gm-Features: AWEUYZnOwZ4U1beNz39Ac2tUKLBO7cnKL8_kgLUmUrLVb43HdIN1Xm7feEx8ftQ
+Message-ID: <CAOQ4uxhkB6oTJm7DvQxFbxkQ1u_KMUFEL0eWKVYf39hnuYrnfQ@mail.gmail.com>
+Subject: Re: Immutable vs read-only for Windows compatibility
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, ronnie sahlberg <ronniesahlberg@gmail.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Steve French <sfrench@samba.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2025 at 12:54:59PM -0800, Ian Rogers wrote:
-> On Mon, Feb 3, 2025 at 12:06 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> >
-> > On Mon, Feb 03, 2025 at 11:39:01AM -0800, Ian Rogers wrote:
-> > > On Mon, Feb 3, 2025 at 11:15 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> > > >
-> > > > On Mon, Feb 03, 2025 at 11:10:49AM -0800, Ian Rogers wrote:
-> > > > > On Mon, Feb 3, 2025 at 11:02 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> > > > > >
-> > > > > > On Fri, Jan 31, 2025 at 11:14:48PM -0800, Ian Rogers wrote:
-> > > > > > > This work builds on the clean up of system call tables and removal of
-> > > > > > > libaudit by Charlie Jenkins <charlie@rivosinc.com>.
-> > > > > > >
-> > > > > > > The system call table in perf trace is used to map system call numbers
-> > > > > > > to names and vice versa. Prior to these changes, a single table
-> > > > > > > matching the perf binary's build was present. The table would be
-> > > > > > > incorrect if tracing say a 32-bit binary from a 64-bit version of
-> > > > > > > perf, the names and numbers wouldn't match.
-> > > > > > >
-> > > > > > > Change the build so that a single system call file is built and the
-> > > > > > > potentially multiple tables are identifiable from the ELF machine type
-> > > > > > > of the process being examined. To determine the ELF machine type, the
-> > > > > > > executable's header is read from /proc/pid/exe with fallbacks to using
-> > > > > > > the perf's binary type when unknown.
-> > > > > > >
-> > > > > > > Remove some runtime types used by the system call tables and make
-> > > > > > > equivalents generated at build time.
-> > > > > >
-> > > > > > Our approaches are very different but I sent out a patch to do this a
-> > > > > > couple of weeks ago [1].
-> > > > > >
-> > > > > > Did you look at that and decide you didn't like the approach?
-> > > > >
-> > > > > Missing link?
-> > > >
-> > > > Whoops here is the link:
-> > > >
-> > > > https://lore.kernel.org/all/20250114-perf_syscall_arch_runtime-v1-1-5b304e408e11@rivosinc.com/
+On Mon, Feb 3, 2025 at 11:20=E2=80=AFPM Pali Roh=C3=A1r <pali@kernel.org> w=
+rote:
+>
+> On Monday 03 February 2025 22:59:46 Amir Goldstein wrote:
+> > On Sun, Feb 2, 2025 at 4:23=E2=80=AFPM Pali Roh=C3=A1r <pali@kernel.org=
+> wrote:
+> > > And there is still unresolved issue with FILE_ATTRIBUTE_READONLY.
+> > > Its meaning is similar to existing Linux FS_IMMUTABLE_FL, just
+> > > FILE_ATTRIBUTE_READONLY does not require root / CAP_LINUX_IMMUTABLE.
 > > >
-> > > I agree it is similar and progress, I think I prefer my changes :-)
+> > > I think that for proper support, to enforce FILE_ATTRIBUTE_READONLY
+> > > functionality, it is needed to introduce new flag e.g.
+> > > FS_IMMUTABLE_FL_USER to allow setting / clearing it also for normal
+> > > users without CAP_LINUX_IMMUTABLE. Otherwise it would be unsuitable f=
+or
+> > > any SMB client, SMB server or any application which would like to use
+> > > it, for example wine.
 > > >
-> > > Anything in the arch directories is only going to be built given a
-> > > Makefile SRCARCH:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/arch/Build?h=perf-tools-next#n2
-> > > which means if we want the system call tables for say ARM on x86-64 we
-> > > need to reinvent the build - this isn't a problem today but perhaps
-> > > something to consider if we wanted a cross-architecture perf trace
-> > > record. I'd like to do away entirely with the arch directory for this
-> > > kind of reason. For example, if we run perf on a user space emulator
-> > > (say a testing set up) and it sees AMD data fabric PMUs, logic for
-> > > those PMUs currently lives in the arch directory for x86 and likely
-> > > wasn't even built into the perf tool. We should be able to identify
-> > > PMUs and act accordingly based on their names. In the case of the
-> > > overloaded "cpu" PMU we can identify it with the CPUID. The less code
-> > > in arch and the fewer architecture ifdefs, the better things should
-> > > work cross-architecture, in testing scenarios, etc. We also win by
-> > > getting code coverage without, for example, having to build and test
-> > > on csky or super H.
+> > > Just to note that FreeBSD has two immutable flags SF_IMMUTABLE and
+> > > UF_IMMUTABLE, one settable only by superuser and second for owner.
 > > >
-> > > Your changes are using the string for the architecture name. I think
-> > > that string is something we should get rid of:
-> > > https://lore.kernel.org/lkml/CAP-5=fX2BtFzhGLCSqO1QszqfX=HT8RrTdG_5Ttp5Gw4seSstA@mail.gmail.com/
-> > > but there's no reason we couldn't clean that up on top of your change.
+> > > Any opinion?
 > >
-> > Yes that part is not ideal.
+> > For filesystems that already support FILE_ATTRIBUTE_READONLY,
+> > can't you just set S_IMMUTABLE on the inode and vfs will do the correct
+> > enforcement?
 > >
-> > >
-> > > The build with lots of separate Build/Makefiles is something of a pain
-> > > to port/maintain in a bazel version of the build I maintain at Google
-> > > (happy to open source if anyone cares). In these changes you just run
-> > > a big script and get a big header file out the end, which largely
-> > > matches the other perf trace beauty things we build.
-> >
-> > Fair enough! I wanted to mimic how the kernel was building the syscall
-> > tables as closely as possible, it's convenient to have cohesion.
-> 
-> I think it makes sense in the kernel, as the built binary doesn't have
-> cross-platform concerns. This is probably also the reason why the perf
-> tool has an arch directory. Let me know what you think is the right
-> direction for the perf tool syscall table code.
+> > The vfs does not control if and how S_IMMUTABLE is set by filesystems,
+> > so if you want to remove this vfs flag without CAP_LINUX_IMMUTABLE
+> > in smb client, there is nothing stopping you (I think).
+>
+> Function fileattr_set_prepare() checks for CAP_LINUX_IMMUTABLE when
+> trying to change FS_IMMUTABLE_FL bit. This function is called from
+> ioctl(FS_IOC_SETFLAGS) and also from ioctl(FS_IOC_FSSETXATTR).
+> And when function fileattr_set_prepare() fails then .fileattr_set
+> callback is not called at all. So I think that it is not possible to
+> remove the IMMUTABLE flag from userspace without capability for smb
+> client.
+>
 
-I am hesitant about moving all of the arch-specific syscall generation
-flags into a single file. There is currently a really clean separation
-between the architectures and it's possible to generate all of the
-syscall tables for all of the architecutures based on the paths to the
-syscall table. What causes the arch directory to be a pain for Bazel? I
-guess I am mostly confused why it makes sense to change the kernel
-Makefiles in order to accomidate a rewrite of the build system in Bazel
-that isn't planned to be used upstream.
+You did not understand what I meant.
 
-- Charlie
+You cannot relax the CAP_LINUX_IMMUTABLE for setting FS_IMMUTABLE_FL
+and there is no reason that you will need to relax it.
 
-> 
-> > What is the usecase for the bazel version?
-> 
-> I'm sure there's more info in:
-> https://bazel.build/
-> but the main thing is having hermetic and reproducible builds. The
-> main problem with open sourcing would be dealing with external
-> repositories, test set up, etc. Tbh, hermetic builds are a challenge
-> as things like lex and yacc will vary the C code they generate based
-> on the platform they run on. Bazel has plans to change the world so
-> maybe this could be more of a thing in the future.
-> 
-> Fwiw, I did push changes into the perf tree so that man page building
-> was reproducible:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/tools/perf/Documentation?h=perf-tools-next&id=d586ac10ce56b2381b8e1d8ed74660c1b2b8ab0d
-> The man pages used to reflect the date/time they were built, but now
-> reflect the date the of the commit of the file being built:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/Documentation/Makefile?h=perf-tools-next#n255
-> 
-> Thanks,
-> Ian
-> 
-> > - Charlie
+The vfs does NOT enforce permissions according to FS_IMMUTABLE_FL
+The vfs enforces permissions according to the S_IMMUTABLE in-memory
+inode flag.
+
+There is no generic vfs code that sets S_IMMUTABLE inode flags, its
+the filesystems that translate the on-disk FS_IMMUTABLE_FL to
+in-memory S_IMMUTABLE inode flag.
+
+So if a filesystem already has an internal DOSATTRIB flags set, this
+filesystem can set the in-memory S_IMMUTABLE inode flag according
+to its knowledge of the DOSATTRIB_READONLY flag and the
+CAP_LINUX_IMMUTABLE rules do not apply to the DOSATTRIB_READONLY
+flag, which is NOT the same as the FS_IMMUTABLE_FL flag.
+
+> And it would not solve this problem for local filesystems (ntfs or ext4)
+> when Samba server or wine would want to set this bit.
+>
+
+The Samba server would use the FS_IOC_FS[GS]ETXATTR ioctl
+API to get/set dosattrib, something like this:
+
+struct fsxattr fsxattr;
+ret =3D ioctl_get_fsxattr(fd, &fsxattr);
+if (!ret && fsxattr.fsx_xflags & FS_XFLAG_HASDOSATTR) {
+    fsxattr.fsx_dosattr |=3D FS_DOSATTRIB_READONLY;
+    ret =3D ioctl_set_fsxattr(fd, &fsxattr);
+}
+
+For ntfs/ext4, you will need to implement on-disk support for
+set/get the dosattrib flags.
+
+I can certainly not change the meaning of existing on-disk
+flag of FS_IMMUTABLE_FL to a flag that can be removed
+without CAP_LINUX_IMMUTABLE. that changes the meaning
+of the flag.
+
+If ext4 maintainers agrees, you may be able to reuse some
+old unused on-disk flags (e.g.  EXT4_UNRM_FL) as storage
+place for FS_DOSATTRIB_READONLY, but that would be
+quite hackish.
+
+> > How about tackling this one small step at a time, not in that order
+> > necessarily:
 > >
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > > >
-> > > > > The patches generating a syscall(_32|_64)?.h landed. These changes
-> > > > > take your changes and make it so that we just run the script once
-> > > > > building a header file for all architectures. On x86 we then have the
-> > > > > tables be guarded by ifdefs on i386 and x86-64. Then rather than the
-> > > > > table just matching the host architecture the ELF machine is used for
-> > > > > the executable running.
-> > > > >
-> > > > > Thanks,
-> > > > > Ian
-> > > > >
-> > > > > > - Charlie
-> > > > > >
-> > > > > > >
-> > > > > > > Ian Rogers (7):
-> > > > > > >   perf syscalltble: Remove syscall_table.h
-> > > > > > >   perf trace: Reorganize syscalls
-> > > > > > >   perf syscalltbl: Remove struct syscalltbl
-> > > > > > >   perf thread: Add support for reading the e_machine type for a thread
-> > > > > > >   perf trace beauty: Add syscalltbl.sh generating all system call tables
-> > > > > > >   perf syscalltbl: Use lookup table containing multiple architectures
-> > > > > > >   perf build: Remove Makefile.syscalls
-> > > > > > >
-> > > > > > >  tools/perf/Makefile.perf                      |  10 +-
-> > > > > > >  tools/perf/arch/alpha/entry/syscalls/Kbuild   |   2 -
-> > > > > > >  .../alpha/entry/syscalls/Makefile.syscalls    |   5 -
-> > > > > > >  tools/perf/arch/alpha/include/syscall_table.h |   2 -
-> > > > > > >  tools/perf/arch/arc/entry/syscalls/Kbuild     |   2 -
-> > > > > > >  .../arch/arc/entry/syscalls/Makefile.syscalls |   3 -
-> > > > > > >  tools/perf/arch/arc/include/syscall_table.h   |   2 -
-> > > > > > >  tools/perf/arch/arm/entry/syscalls/Kbuild     |   4 -
-> > > > > > >  .../arch/arm/entry/syscalls/Makefile.syscalls |   2 -
-> > > > > > >  tools/perf/arch/arm/include/syscall_table.h   |   2 -
-> > > > > > >  tools/perf/arch/arm64/entry/syscalls/Kbuild   |   3 -
-> > > > > > >  .../arm64/entry/syscalls/Makefile.syscalls    |   6 -
-> > > > > > >  tools/perf/arch/arm64/include/syscall_table.h |   8 -
-> > > > > > >  tools/perf/arch/csky/entry/syscalls/Kbuild    |   2 -
-> > > > > > >  .../csky/entry/syscalls/Makefile.syscalls     |   3 -
-> > > > > > >  tools/perf/arch/csky/include/syscall_table.h  |   2 -
-> > > > > > >  .../perf/arch/loongarch/entry/syscalls/Kbuild |   2 -
-> > > > > > >  .../entry/syscalls/Makefile.syscalls          |   3 -
-> > > > > > >  .../arch/loongarch/include/syscall_table.h    |   2 -
-> > > > > > >  tools/perf/arch/mips/entry/syscalls/Kbuild    |   2 -
-> > > > > > >  .../mips/entry/syscalls/Makefile.syscalls     |   5 -
-> > > > > > >  tools/perf/arch/mips/include/syscall_table.h  |   2 -
-> > > > > > >  tools/perf/arch/parisc/entry/syscalls/Kbuild  |   3 -
-> > > > > > >  .../parisc/entry/syscalls/Makefile.syscalls   |   6 -
-> > > > > > >  .../perf/arch/parisc/include/syscall_table.h  |   8 -
-> > > > > > >  tools/perf/arch/powerpc/entry/syscalls/Kbuild |   3 -
-> > > > > > >  .../powerpc/entry/syscalls/Makefile.syscalls  |   6 -
-> > > > > > >  .../perf/arch/powerpc/include/syscall_table.h |   8 -
-> > > > > > >  tools/perf/arch/riscv/entry/syscalls/Kbuild   |   2 -
-> > > > > > >  .../riscv/entry/syscalls/Makefile.syscalls    |   4 -
-> > > > > > >  tools/perf/arch/riscv/include/syscall_table.h |   8 -
-> > > > > > >  tools/perf/arch/s390/entry/syscalls/Kbuild    |   2 -
-> > > > > > >  .../s390/entry/syscalls/Makefile.syscalls     |   5 -
-> > > > > > >  tools/perf/arch/s390/include/syscall_table.h  |   2 -
-> > > > > > >  tools/perf/arch/sh/entry/syscalls/Kbuild      |   2 -
-> > > > > > >  .../arch/sh/entry/syscalls/Makefile.syscalls  |   4 -
-> > > > > > >  tools/perf/arch/sh/include/syscall_table.h    |   2 -
-> > > > > > >  tools/perf/arch/sparc/entry/syscalls/Kbuild   |   3 -
-> > > > > > >  .../sparc/entry/syscalls/Makefile.syscalls    |   5 -
-> > > > > > >  tools/perf/arch/sparc/include/syscall_table.h |   8 -
-> > > > > > >  tools/perf/arch/x86/entry/syscalls/Kbuild     |   3 -
-> > > > > > >  .../arch/x86/entry/syscalls/Makefile.syscalls |   6 -
-> > > > > > >  tools/perf/arch/x86/include/syscall_table.h   |   8 -
-> > > > > > >  tools/perf/arch/xtensa/entry/syscalls/Kbuild  |   2 -
-> > > > > > >  .../xtensa/entry/syscalls/Makefile.syscalls   |   4 -
-> > > > > > >  .../perf/arch/xtensa/include/syscall_table.h  |   2 -
-> > > > > > >  tools/perf/builtin-trace.c                    | 275 +++++++++++-------
-> > > > > > >  tools/perf/scripts/Makefile.syscalls          |  61 ----
-> > > > > > >  tools/perf/scripts/syscalltbl.sh              |  86 ------
-> > > > > > >  tools/perf/trace/beauty/syscalltbl.sh         | 274 +++++++++++++++++
-> > > > > > >  tools/perf/util/syscalltbl.c                  | 142 ++++-----
-> > > > > > >  tools/perf/util/syscalltbl.h                  |  22 +-
-> > > > > > >  tools/perf/util/thread.c                      |  50 ++++
-> > > > > > >  tools/perf/util/thread.h                      |  14 +-
-> > > > > > >  54 files changed, 598 insertions(+), 506 deletions(-)
-> > > > > > >  delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/alpha/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/alpha/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/arc/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/arc/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/arc/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/arm/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/arm/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/arm/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/arm64/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/arm64/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/csky/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/csky/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/csky/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/loongarch/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/loongarch/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/mips/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/mips/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/mips/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/parisc/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/parisc/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/powerpc/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/powerpc/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/riscv/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/riscv/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/s390/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/s390/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/s390/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/sh/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/sh/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/sh/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/sparc/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/sparc/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/x86/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/x86/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/x86/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Kbuild
-> > > > > > >  delete mode 100644 tools/perf/arch/xtensa/entry/syscalls/Makefile.syscalls
-> > > > > > >  delete mode 100644 tools/perf/arch/xtensa/include/syscall_table.h
-> > > > > > >  delete mode 100644 tools/perf/scripts/Makefile.syscalls
-> > > > > > >  delete mode 100755 tools/perf/scripts/syscalltbl.sh
-> > > > > > >  create mode 100755 tools/perf/trace/beauty/syscalltbl.sh
-> > > > > > >
-> > > > > > > --
-> > > > > > > 2.48.1.362.g079036d154-goog
-> > > > > > >
+> > 1. Implement the standard API with FS_IOC_FS[GS]ETXATTR ioctl
+> >     and with statx to get/set some non-controversial dosattrib flags on
+> >     ntfs/smb/vfat
+> > 2. Wire some interesting dosattrib flags (e.g. compr/enrypt) to local
+> >     filesystems that already support storing those bits
+> > 3. Wire network servers (e.g. Samba) to use the generic API if supporte=
+d
+> > 4. Add on-disk support for storing the dosattrib flags to more local fs
+> > 5. Update S_IMMUTABLE inode flag if either FS_XFLAG_IMMUTABLE
+> >     or FS_DOSATTRIB_READONLY are set on the file
+> >
+> > Thoughts?
+> >
+
+Anything wrong with the plan above?
+It seems that you are looking for shortcuts and I don't think that
+it is a good way to make progress.
+
+Thanks,
+Amir.
