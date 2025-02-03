@@ -1,209 +1,187 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCE321148B
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 23:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738623684; cv=none; b=OMeAajpo7Dg1GWyKH9cJXoRXoiFRzCpe6JvcseyUWDWGAIw2xqjnpdOPA8KTVMa2FQMjUyLYUX7LY8h99cqSo5T7VYXGIO0uG/8u0Kd0n1lhInAn5tignV+tGtjMBxmd+jl+ujPqbLTfIYI04Hw1Elek9GqwFD7HbL2Ll78WdKY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738623684; c=relaxed/simple;
-	bh=JX6YgyI3XB5KZmwCC3kBcbBo+cVpHlL6lsPqGTgoxeA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EPacwnsQXRmM+IGTqE+vuF3/TOO58S6W2X9NbFLSPJrHPTFEAsKZdeEOoLQdpbbUgyu+O39xNRT29KkfgdBb5fygS/sIqmKHX4yMoQ5nlc2SoxSjTPYUKkfFk48Q7+Qr2K/FTgQk/XBGSZeJIC/tEQb8jrLGCK48J/IL4kzJMDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=TR1u7KMd; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E07202C4A;
+	Mon,  3 Feb 2025 23:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738623719; cv=fail; b=eGZ61nkOHHw/uGZaJVn+aBZFmBugXJ4RouwRvrlWoNJqynF4d/4iHXqbGGxtSvGmmCD45OCy9wULV0O8l/pNvZt3umzkYoIC3oZUD3O6KbZyR/+WhB8sSPx6NAZJ7am3GBSx4wBmtaneFqKTZwnsOaOy6ecKzfOvhAVA0PZwa54=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738623719; c=relaxed/simple;
+	bh=ISRdmCZNL/tuzW3df4u9qakTdmvqdkcWW7D2i9Bjo3o=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=bY8QWVbNnpviEixmGhRRxqqjGGDqBpLUA7O20EXehWeq5MxEVIoyAqwhBSuHOeSUYqwU7IpxsmJK6yCD3myxi6yW/7NlPvSSxY0+SUvPdAUqp/cESV5KBriQFY9lcq1VJNZBWUso53vsvCsWsdnfWF+K5q+cKRzxK6nqFNpCwnM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Bs3r79WR; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=sWA4jXPK; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="TR1u7KMd"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-29f7b5fbc9aso1283116fac.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 15:01:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Bs3r79WR";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="sWA4jXPK"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513JMr4A004430;
+	Mon, 3 Feb 2025 23:00:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=tGesSGnCyAUey8ec7M
+	lTa4cjzYRzDatYMu5AaDoAP48=; b=Bs3r79WRmY4+0wG5u27hA5bXVIh5xW1z9O
+	hYQtqy6z9twAPxMzytFG5Y4KZLDXnLaX/ui+KZcvmbX+p646ca3eTcYoRq46CKD3
+	Ank2QKRCOYzb3IC1so86C1VOoxNvNRhKsMEFUqVEUNw7WtDyOafrXlpwJKkAZEQ8
+	cn7CEXVBBbEEhrzE5ud5OH2k9QEBUjRrY2uDX5HAjCK/nFYFIJ4VBRvOFmlOEW7F
+	5hyjz7wuvsEa6lI2KxaAc30K23tNmPgNpDZNl8I6Uua4WOZQ4bHxgSnSbRrJFGZL
+	rVLAijmByrWHnuv6GNcV/ji4qeERKPYwh0215P8dmogqeO8EPJSQ==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44hh73kmm6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 03 Feb 2025 23:00:54 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 513LbdQZ038932;
+	Mon, 3 Feb 2025 23:00:50 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44j8e70nfy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 03 Feb 2025 23:00:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=A3UFOVo2wOH0LPrA8Qe3GQnyeWKWktg8c1l+wGBr/mhre/KneQaPzwhg1utXw3l5jhGtQGD47Azh5WTx2q6Evq2gmTmqbtXiXdNlQU/Q+pUwBnqu1HaTlV2JDHcF1nw2FrtzJZaR99m1+ef22w2iVOmIErqS0GL9/Bd+Utgm8TxPVaAWaGePSj48czInURgabrlaH9lVYToIUM2pVklLkVvrIreQ1a9iPZkOmJO0g8hd3ugDHWqvBPwEdxjK5zDP5j+pXqPbSfsjoTD66ak520xjR2lNe1Y5WX0OAz+0k+nikukGwNUrUHdYZf8ErvHaeNjwFjvweU5ZY90uH3ys+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tGesSGnCyAUey8ec7MlTa4cjzYRzDatYMu5AaDoAP48=;
+ b=g2yi81SVOH7k3BluL2lh1DfWbo/8cSkee5C4UHCIcqBkYxwiOx6VGPnNd1tz5xov1mw+lPQMCqRSydIU+b+h/bLMCzn+MforvsCgTHyPx+ea+OGQMWRBKprmWT2KuCWv813yE5SAzr2ODoHexOGq3t57Isd5xpcfUtiOZSaek56rzdsUvc6hbk4q/tutN6lrQUSkvC+NStGM8njUZGMCOROvNIjf4GimtWARgPtu522kG8Er318/mNAgXPMy/O5C6tmhNRQzl7iiOD8KwTEhZtLfknQ1HnmvRl5f2B+EQsOREWS4q3GRhI5V/IrOaYqxK7/FzlPSOdZ4kaOEiGVVgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738623681; x=1739228481; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q48N32/BZzAOoxhPyz3+9vdM39rBTv/9Tu2+c8AC5Nc=;
-        b=TR1u7KMdbhzMYP9oF0mbItwasEVKnR3dcvon5gwbwTryxzXJxf/p6WhbNNPjyf2MA1
-         cHEtllG4Z+HxCbHULwOmw3NXlrVOIAr83ucKd2YW9E8p1LnWCjwu7C9TMeZzmHZDQV4n
-         qVmtqIOD8nSAdF52CtzDHMo8fQD8nh7RGVyH3VzqlMHToDtQzpATsiA3VWLF+6gEiL9j
-         GyJRtYBLNLzFvw8n4re2GJwr2Zga+nv1JJDQoHan2UjMwEvhFLxWYx9DqrrQs4PO+8g+
-         kMUg1dFTXHUzuhwn8dZHFXDSwlyjt8fMFcEWCVVQhPKhS1d4BDtzq3Jc+KNAxoNe32IF
-         I6uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738623681; x=1739228481;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q48N32/BZzAOoxhPyz3+9vdM39rBTv/9Tu2+c8AC5Nc=;
-        b=RyqwqpNQnO+AG6bDxz0OXk7ePs5xv+nlDxsT/zNS46xQudED24DANrXGBbRavQIPl5
-         3w4VbW/JmSwjidOkMd1KZEvYfme4sgGcGaaqSHR2dpV51J0q1T2fwGfGUndlgnFFnavz
-         iilHr6J9C/8WYcOyXbWjOkafdk0Aa/Ej1uDe8iNZHSXCG00YMqbo/UiMOgmZKg7CfNFt
-         fOKWQHL8IWMW8YV8074+rF2yIli4wy6zzhO6h7r1BjNHBB5GaGfTxrnq4xskTt79to3o
-         mv5FHaWdmk/tm7Ka5HeOeDD4Kx15+7Be9xL+R0pg67tGAnLQrcspOZG8rbzQJJErvCRU
-         ql4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVi9C0kNn24yjcR9EoN+E5G/WRX3Vq89Uck4xqgg+bBbLzfrWpGPmuJ6XRlPtts9thioGyrVJNhFj4wQvY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9GDbElpS7CSwMbmMRISCkNVS/rUCQJ3LjnwwLbhtGXkqx1cyy
-	imOIejX0DHgxBsa0DhNxotFP1BBi27d5K0w5UpriKOZKnjGTpL7vIGHpVghk3cVQ8RIil1EnmXo
-	4
-X-Gm-Gg: ASbGncvauI2JF6U1rzUYJ6zQSJGtOO00ImyJnuyiZdPmN7f3Dd2K1LR5elnK+r8CTQ4
-	S+Xtkwf0MZ1kdJ83l2LuyBUrmFVsiD+88PC+GLb9+Mc619/13d6iiIrNyS3dmENFCt8Ns5szzpd
-	0y7INoBETfIpUjFPdPsatp/M7EQxl5enXv+4e0Sua3iL+iOQHt4nBPSHY0VR78Gu6tLygOIVk9h
-	K817+BzdevPPxPEUQVVz03D8nXueT37x9cy91mk+XzNbyYOYOsIL0D8q8mfYWbQqI6ynyg2Rxb1
-	T0qtaEBPpu3OCXVB8LCJ0TLlw8uOHO9Dg1e4mwHI+NBHEvnuoOFe
-X-Google-Smtp-Source: AGHT+IFvQHZNew9RMVh3oMkAV8tgG3NqgZ2zFveyRCk4EzbOqbrzrj7jrDhOfm9blPA9OWsKbsUncQ==
-X-Received: by 2002:a05:6870:3127:b0:29e:55ae:6170 with SMTP id 586e51a60fabf-2b32f26ff66mr16402322fac.29.1738623681468;
-        Mon, 03 Feb 2025 15:01:21 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b356196935sm3599125fac.17.2025.02.03.15.01.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 15:01:20 -0800 (PST)
-Message-ID: <9f209ff0-e56c-47a1-8df0-603d30d36ccb@baylibre.com>
-Date: Mon, 3 Feb 2025 17:01:18 -0600
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tGesSGnCyAUey8ec7MlTa4cjzYRzDatYMu5AaDoAP48=;
+ b=sWA4jXPKTqKWumK4fUt/BhNGJ9n+W0dbqPfn5aeoKKmpE84Phq0LtysHNmB+8x9UTqXy/k47/PNVIaoTaZic/z1+nNKc7PfSXvD4SnRbWde3Kpt+2i5kBElkZkrierShFYUD1UdJVxEZLfmJhCLlV9TIqVotsWGSnGRrBwHeo+4=
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
+ by DS7PR10MB5182.namprd10.prod.outlook.com (2603:10b6:5:38f::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Mon, 3 Feb
+ 2025 23:00:47 +0000
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf%4]) with mapi id 15.20.8398.025; Mon, 3 Feb 2025
+ 23:00:47 +0000
+To: linux@treblig.org
+Cc: sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
+        suganath-prabu.subramani@broadcom.com,
+        MPT-FusionLinux.pdl@broadcom.com,
+        James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: mpt3sas: Remove unused config functions
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20250127002851.113711-1-linux@treblig.org> (linux@treblig.org's
+	message of "Mon, 27 Jan 2025 00:28:51 +0000")
+Organization: Oracle Corporation
+Message-ID: <yq14j1ahbwf.fsf@ca-mkp.ca.oracle.com>
+References: <20250127002851.113711-1-linux@treblig.org>
+Date: Mon, 03 Feb 2025 18:00:46 -0500
+Content-Type: text/plain
+X-ClientProxiedBy: BN0PR10CA0015.namprd10.prod.outlook.com
+ (2603:10b6:408:143::33) To CH0PR10MB5338.namprd10.prod.outlook.com
+ (2603:10b6:610:cb::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] docs: iio: add AD7191
-To: Alisa-Dariana Roman <alisadariana@gmail.com>,
- "Rob Herring (Arm)" <robh@kernel.org>,
- Alisa-Dariana Roman <alisa.roman@analog.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Ramona Gradinariu <ramona.bolboaca13@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>
-References: <20250203133254.313106-1-alisa.roman@analog.com>
- <20250203133254.313106-4-alisa.roman@analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250203133254.313106-4-alisa.roman@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|DS7PR10MB5182:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36017c37-3861-417b-0719-08dd44a698b1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?AKgk770mVLqPcJ69rGe78eWv4+grWiWIe/HUIEbvIwVvblygETg2VWBWgAtt?=
+ =?us-ascii?Q?OwHqVAzm8IRc5ZdGG2hzz4QPCfpyjvNAlrVymrh4J7KZOegwACiG8RkeLdnd?=
+ =?us-ascii?Q?5g6i9xYnUzyF52nfxmAXG7v80DMXv8Ycqzr6OCf6TqyoRltUgzZ+BEe1TC90?=
+ =?us-ascii?Q?KO7T78Qq2Ii2BZu2edeFuobKTayx9oKs6pv5owL417CT1Lu0Qvg+viGI+iKk?=
+ =?us-ascii?Q?S+B4XZ/GxS1hQ8ccXJrLXHkRS1x0zgaqlRTVeW+O+lcSYhJOUAFqMeE4Etke?=
+ =?us-ascii?Q?Eq1NQWe12Lj0SORvE8e8JSUIXem/4MXf396tYxYjqfHdS4n9FmAGpBa+HfHS?=
+ =?us-ascii?Q?uN9g9OWXNGopcnZgWi+MuKvHJ9UozkyqmgCF9TAbYu4KIMPAm9NRYX9pDWKK?=
+ =?us-ascii?Q?YOe7JiUSgwrOL3VDUABpZRGnXCcXTuoNlzi6cVNBHM2u23B71DF8suj9jgON?=
+ =?us-ascii?Q?uEVu7sv5uhRqIVxsbL3x4AvynqSqA7IzBJXP6lY7e+EMUmk7H5v/UZ404axr?=
+ =?us-ascii?Q?LPwd8rfZ/DsCu+WQC+XWEZl2CNxo0igdx7rnbQtXnC6cAGYN7i0FpdlYGvkA?=
+ =?us-ascii?Q?gUDadTh1YK8FteYSRra2sycSKi98PVpBw+bQFVRBvYtD9fKBQ12jYWayC8D1?=
+ =?us-ascii?Q?lrJ/SFloAla90pTxTJ5HD8EB5QSC5BpaO5ZNkQJZfsw1iUzRGBTUF53wR80i?=
+ =?us-ascii?Q?eFrr7JPidpZc+YUpY7sEAfk3G2jT9kKPetvbhmv4C+8l+EgzDVv+wzgHC8G6?=
+ =?us-ascii?Q?HWNS7JA/htwrpIEDhRTbWkQDmSywczZE/yd6In7EPgqKMzNHd3RoOwCxa1vA?=
+ =?us-ascii?Q?AI6HNuQkiAd67Cb/v98ughd1Gtd/g2cO4HS74Aqha5L5+J3QWZdbeyIja5I9?=
+ =?us-ascii?Q?jkzVYYs3lAshRgEQleS078tZzbyKVkgl7snD3pORFiAQpTn1NRnGiOlH/krZ?=
+ =?us-ascii?Q?GnEw5L//zwcAGr7dJItwICUiR2HTP+lRl3SKAB95Zu0aMd90tzfTXn8APhIL?=
+ =?us-ascii?Q?taz4y96BpsSMYZNnRUrG3KK3HWlf6cBw/rfeBAPfLS/fE5G3lx9QWXwgJbiE?=
+ =?us-ascii?Q?HsU0Y9dU7Qy/MB2GyadBCne0WIKhH+K9SzRDRZtYUCQuYlaMmg9JcezIK2Ay?=
+ =?us-ascii?Q?hondN1WplEVC2zSkNKDNy/DfOiiWZtQTg4TGhExYhdjBa2OHvm34Nlbht2t7?=
+ =?us-ascii?Q?mIoZ6sw8CemCGHVgBTihiEUY4oK0A4UrUEmXDn5Ho7/lb+lOH1eaqft/+fES?=
+ =?us-ascii?Q?IcgU7ztm1UETDk5Uve5sZ6+Uh4qfLPtLFRUh7dqgCejo0iUmZ0Qr4hG/JZNy?=
+ =?us-ascii?Q?OOdhsggLkg4rDs8bU2e8pVNvmm/e9jOejI8gCnDUVN1zxPdoS7EpyqnpE5pR?=
+ =?us-ascii?Q?r4Jd4oRoPnMSSHiKbbQAADH0KbWh?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?LLqqKrO2toskQ7Pkm69ewSD3CO9Cl6Mes6b9INphx9KBVb+PqvVfztVoVOdg?=
+ =?us-ascii?Q?WzHuD8i17Vn8/btlVXEjWa/uWt9Fd685ZJyIaObJ0cnsb43S4wkEB7257wPH?=
+ =?us-ascii?Q?T8YpLzlr4m7WHCjUEu5RTi3wayF4Eaz0JHYGcVOHkdwG5fMX/WNDy8WQz0CO?=
+ =?us-ascii?Q?xyeS2LP89A0b79S8vCT1gBtef9hyYpra3CGCAHRHC4+TAamAPeGgEWU94TUk?=
+ =?us-ascii?Q?L9EinhlKaH8+uuvE/5BoUPpFV88zdeDGDsu6LryBw3ckrDTgbRhrohjEFDYI?=
+ =?us-ascii?Q?fupAliK1GCqF2XqLn5fHvEknEmvkORPm+CLK+HH5ghpmnw3YfxV14RjcjrvA?=
+ =?us-ascii?Q?UANq04qn5Y7GRwYSlpxO41OLWM9TKOuBrbioQ31VobqIjgAChrkHvHLXFR0y?=
+ =?us-ascii?Q?ewuqCpW+yHCxpz/I2hp/+BNyLFkInf508K1PzKfXFYHWhgZQNSskaLxdDrM5?=
+ =?us-ascii?Q?t26FGvM7Yq2T9iEKKoTZIOqKah1CR4tJAVYILRvFh1DSOXK9x+KtMaZuNo8b?=
+ =?us-ascii?Q?EVDYDRoFASXHfOw6WSdxxB1pmchGZ8ZJWmJ9elIC/a6mGjW738rVZ1QICdbi?=
+ =?us-ascii?Q?6IFzgXPr6Caq3FLrqwSoXCVjTGpnBzOeY5adl1ANe0IBxVL9fdUbA3/4gM13?=
+ =?us-ascii?Q?Pd8BmF1dQyJvpOsPkdSKaMdAfiV48yJfYYq1iNd1iuQlC8/ZnHVXlo9uYtp5?=
+ =?us-ascii?Q?Y+IkIBr//isY2UQbO+fS14lfhNWM+0qYRLHzKbL98hhtn8kFi6t6CFLt+siX?=
+ =?us-ascii?Q?w4WCy3SPqvTn0Np+1U0uUfkG4WonkEehGOtVkYFAj1635npd4HtRywTuwd1k?=
+ =?us-ascii?Q?j1mwsZRPSl8hORkcOLGd+rwtFZJlN8K9/zjAMMan1HP3SnUuubsjENESyVW5?=
+ =?us-ascii?Q?HXG9U2Fy7CSZFKdd0HVnK2gwq7T38ncVuxOm2b+EY2HMTZ1uSD00g7eJStE2?=
+ =?us-ascii?Q?sahWjgYCbY6s89xYypVydTKn/nYx80osenKznbJEblZ/fxXEMzt9gSUDjxVF?=
+ =?us-ascii?Q?c4RRXv+2/FuVMzScVmkecW4hzbd3Qgx0Cyw/+izMnoq0CekJILULQ7jZzS/1?=
+ =?us-ascii?Q?CZI32IswcDekJEIsEdcgYh4cUaGQrGy/jUN4j8gEJ6E806SKpC7GR660W3/o?=
+ =?us-ascii?Q?fOEtVkptiSppGl7n/8oFMCoJgEXOx8ExFHqwLEtZtF18mZNGrqOB13k0r9Ya?=
+ =?us-ascii?Q?BR1JViPDOVa+VE82wOzba4uV8F47hg7HlhsgcGx5igyzJJI5ck6ZOMrfDeFb?=
+ =?us-ascii?Q?q5jBExVa3+9wm/HT3W0eiHBDxBewI0mBhjvQuYVAbRXMIida1YYQmUhw8mHx?=
+ =?us-ascii?Q?6Bdxzl+2w2eJacr5Wdutlg3LXN7O6W4phCRjY+nYAgXsRX0Kj6nhFB9Hd7qN?=
+ =?us-ascii?Q?hVi/CuxXohGbcExzW2mJy9mGoTMbYdH5+gcDlRmQtPQYgI5+bncwV+9hnurT?=
+ =?us-ascii?Q?YcB5a+zA0k/6D+75jZyYLnFnUTbk7QQ+h8Ucr1oAthIWBRja8COsMfv/HQur?=
+ =?us-ascii?Q?DwYbkVzY/ynAo0EHpuaOL5AxuSGiQWu6MfRmC3iRbmWnmsw/ezRw3eyYWGG5?=
+ =?us-ascii?Q?TbQd7SEN1hlfiMLYUnJY0L/FhBqMH+4z+cNmHFHuFzsOw0rd3Cu+UPH9aLlC?=
+ =?us-ascii?Q?VA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	j16RmAwcvavqG7AIH3BuVTDiRLrR1uaeGkX0TQjeiNp3wTQXUdyaAo6Lyp0gOLtqhIIS9vtisTdaFgi27oL+jLNhKLQhqtKFcOL7tuRc7huJvdj7TK3tbRrhci/dwH5Pml0YOdMB/+6tdIzcewxaWPPVFTrJJHs6lOel80FsXvUCv6cp6X0XwOMXwPtybBefoz3j0B6FpkddRvnHABVHS9CAhugQHVzLaD4YXbgrNC/bkyPThXba6A4CRkzY4RZlmFxPrdcYLcS3DhGkyuoLYeMrFlEwfJsnAX6cZgR/kwuj11X2I/DPMOjpE9l+vxY127o0/Abw7JXZuAHEYZGnmWBYOg3NGwXLv5AqiTVkkjr2oRv1zWU4VHEylXw1oR4tSyXlTo7rWycpbb8Zaqv9cHzfNtidSKmB/0u+opAKzgMNiWqeWyRiCOrYy/7o4QShwup0ye87p21e+CyNS9VCz5FFA22RGYpOdL58JzgBtt0Tv9YxRZMNkU9aHtJ5LUKutIBp5ZsNpkF9vjML3sTYG64VfRcTo7peWtcdwbxF3w/71UnTqXisgXF6HOxvy9Xx4906ov5Ly0p+B7luBF28NT27sidwV4trjUzKC01mixs=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36017c37-3861-417b-0719-08dd44a698b1
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 23:00:47.4555
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YaRjZqjjvDtzTUGeYGV+Uu3fBkjx9ts8G4IQ3FBc86GGUGTyLo+yTtfPPiU4GY9pjd/J4e2RDzaq5Gsictzk/QrYX21ByrgV4mB3kQGUNyU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5182
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_10,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=909
+ phishscore=0 adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2501170000 definitions=main-2502030168
+X-Proofpoint-ORIG-GUID: 7pNRWMf5LHvBsYKg8eOx5ycyUGxFKfPc
+X-Proofpoint-GUID: 7pNRWMf5LHvBsYKg8eOx5ycyUGxFKfPc
 
-On 2/3/25 7:31 AM, Alisa-Dariana Roman wrote:
-> Add documentation for AD7191 driver.
-> 
-> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
-> ---
->  Documentation/iio/ad7191.rst | 250 +++++++++++++++++++++++++++++++++++
->  Documentation/iio/index.rst  |   1 +
->  2 files changed, 251 insertions(+)
->  create mode 100644 Documentation/iio/ad7191.rst
-> 
-> diff --git a/Documentation/iio/ad7191.rst b/Documentation/iio/ad7191.rst
-> new file mode 100644
-> index 000000000000..b55f3c13e45a
-> --- /dev/null
-> +++ b/Documentation/iio/ad7191.rst
-> @@ -0,0 +1,250 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +==============
-> +AD7191 driver
-> +==============
-> +
-> +Device driver for Analog Devices AD7191 ADC.
-> +
-> +==================
-> +Supported devices
-> +==================
-> +
-> +* `AD7191 <https://www.analog.com/AD7191>`_
-> +
-> +The AD7191 is a high precision, low noise, 24-bit Σ-Δ ADC with integrated PGA.
-> +It features two differential input channels, an internal temperature sensor, and
-> +configurable sampling rates.
-> +
-> +=====================
-> +Device Configuration
-> +=====================
-> +
 
-I would call this section the `Devicetree/wiring` section since devicetree has
-to do with how the chip is wired up.
+> mpt3sas_config_get_manufacturing_pg7() and
+> mpt3sas_config_get_sas_device_pg1() were added as part of 2012's
+> commit f92363d12359 ("[SCSI] mpt3sas: add new driver supporting 12GB SAS")
+> but haven't been used.
 
-The existing `Device Tree Bindings` section at the end pretty much just repeats
-the DT bindings .yml doc, so we could drop that section from this doc.
+Applied to 6.15/scsi-staging, thanks!
 
-What you have written in this section already covers it very well.
-
-> +--------------------
-> +Pin Configuration
-> +--------------------
-
-I think it looks the nicest when the --- exactly line up with the text and I
-think that is the usual kernel style as well.
-
-Example:
-
------------------
-Pin Configuration
------------------
-
-Same applies to the rest of the doc.
-
-
-> +===================
-> +Device Attributes
-> +===================
-
-There isn't really anything unusual about attributes on this chip compared to
-typical ADCs, so I would be OK if we left out this section. If we do keep it
-though, I think we should write out the full attribute name since some are
-separate, some shared_by_type and some shared_by_all, so they have different
-prefixes.
-
-> +
-> +The AD7191 provides several attributes through the IIO sysfs interface:
-> +
-> +-----------------------------------
-> +Voltage Input Differential Channels
-> +-----------------------------------
-> +
-> ++-------------------+----------------------------------------------------------+
-> +| Attribute         | Description                                              |
-> ++===================+==========================================================+
-> +| raw               | Raw ADC output value                                     |
-> ++-------------------+----------------------------------------------------------+
-> +| scale             | Scale factor to convert raw value to voltage             |
-> ++-------------------+----------------------------------------------------------+
-> +| offset            | Voltage offset                                           |
-> ++-------------------+----------------------------------------------------------+
-> +| sampling_frequency| Current sampling frequency setting                       |
-> ++-------------------+----------------------------------------------------------+
-> +
-> +--------------------
-> +Temperature Sensor
-> +--------------------
-> +
-> ++-------------------+----------------------------------------------------------+
-> +| Attribute         | Description                                              |
-> ++===================+==========================================================+
-> +| raw               | Raw temperature sensor output value                      |
-> ++-------------------+----------------------------------------------------------+
-> +| scale             | Scale factor to convert raw value to temperature         |
-> ++-------------------+----------------------------------------------------------+
-> +| offset            | Temperature calibration offset                           |
-> ++-------------------+----------------------------------------------------------+
-> +
-> +--------------------
-> +Available Attributes
-> +--------------------
-> +
-> +The following attributes show available configuration options:
-> +
-> +- sampling_frequency_available: List of supported sampling frequencies
-> +- scale_available: List of supported scale factors (based on PGA settings)
-> +
-
-One of these days, we should probably write a generic page on the common
-attributes raw/scale/offset and somewhat common sampling_frequency/
-oversampling_ratio (probably a few more that I'm forgetting). :-)
+-- 
+Martin K. Petersen	Oracle Linux Engineering
