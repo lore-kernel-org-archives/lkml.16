@@ -1,145 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A9A20E028
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 18:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE5720A5CB;
+	Mon,  3 Feb 2025 18:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738606925; cv=none; b=F/L09GLBRY/jczhRXkksiSGlmziWrcx8i5LwyUSTP9qUGmfPJht7Cp2WDba1NCE8kuD8CDKXg4v70yrjf6298xoUy8fu78wfVE8St/npV+0AyMjVIOQ9v74i9x/+KQFd1E4eZIaBrYAInxqXOGm60Rj6MVkmykvZ/oy4GCcihHw=
+	t=1738606960; cv=none; b=p0ifF9zQP0uCCJgyP/XdIWNtuy61fOO02TlKejUOzxb5fKvLPtfRcUU2aXNAuj+OwNqyzvebAEwxfSiuwNYPkBm1tyb2jh6iwLdyi3TDfci8sb4YbBmaYtg2+Ja54FT7nx7XNd68nLroKXK8YrMCjtSbMq3x4jeu8vJr3RVqUv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738606925; c=relaxed/simple;
-	bh=28LdHPYUIggbRJom5lYWWfHr3ToftE4xYha+OX3oJpA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PU6zUrCj/TGl6vgVbx/BF2n+3YTmCYOyna/1rC4aaMzDdFUEi5OZKY90LsmCNmq1pMPL79TRe9CXoMNUFcNZlsoG75AebGnKqo2WBzCFdWt+JQqBdzyISL2U9AnFE9zErsAQnSTU3zc6EHToIH70J1tmBhcdXom98BmJ1cgClik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EoSSEJ2S; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738606960; c=relaxed/simple;
+	bh=MLfHjGPlNx2XOeebs3XwJXqzZ2mDyKsEiAPXHin4Mkg=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=mCOCF5KHJwMd6Kao1cRJf4C7bg1NgwKqEuha+11tUR2MMUaTJDJYpStQpBjI6oMtriMQm5XOg25Z4iVr7T7QGdRbXbR80lpPuEt2raRQHwQWilPYENHSX6EXHc4BOXNH+yRWrhBK5B1aYNr0iPBjXgl41LuXjRleZF+gtxJjC/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGLLsUZK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EoSSEJ2S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738606922;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=w2nlFOMn1lH29kDa2Jrx7xgjpzbwJvO/qQCiLXJ/5Xg=;
-	b=EoSSEJ2SzGb4FRZN48UE6TAw1Eu032cp8ZzfQAUy9JOX0G9A48938zEg9DHKzt2S4vBLi3
-	lAiT/xGIcklvr1ngE9qcL7mAGeOBAQEtHGvJOo94DNNjG541LM38KiI/+km44uq3yCr+hm
-	FCZa7gYtFc1FM8EoiJHmbybAH10FHIo=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-422-v1dHouQIPYq0DS6_PzJUXA-1; Mon, 03 Feb 2025 13:22:00 -0500
-X-MC-Unique: v1dHouQIPYq0DS6_PzJUXA-1
-X-Mimecast-MFC-AGG-ID: v1dHouQIPYq0DS6_PzJUXA
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43628594d34so24661605e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 10:22:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738606919; x=1739211719;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w2nlFOMn1lH29kDa2Jrx7xgjpzbwJvO/qQCiLXJ/5Xg=;
-        b=VUd27s3gwfwzwjXbc2g/MtIe8E24yLX8EmkA8saDG0XFOy/xMFTADXpfn6yaoIyetH
-         Pnlf+BV/hSgLzPsONHbNcQT0sAwNI+P5fiYOD6NkLdAfRDJLxzro/CUQ/1cHqm8BwEj8
-         86RA19X7nDr0Qi1R4xK3AFCJDqXIvRcSdx7tfa01OCGq6T4bMuH0cBfEitMxJ8qKga/W
-         enSKshW7k0bcJtVdhrGQVABYjmfweeH5n8iS2C9yR46DGjw9Ubqr0UI5gXQ2QFHSIiCt
-         HDTPs0spm0pTR+3c+S6ZifQpE8FVm7NVM0sJy/LZzof/I7jksPKooXvu1yBFp0Rxf69u
-         tHPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWO7mKsEpR4uXU9nWSZGB+96Lf6mAKyRvPX5cNRpDpEnWomH2zWgpSQgct8qe6OYyjfket1Eqe8HRhmORI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww388t1/kvTZz78eExO0judmKBbyXg6lusBuBSVA/IqjAk7JeF
-	uteKV0sKwtNKAwzW15Tp9RAofQqVWJFyYmb+0CGcNkHjrjTXgv1pVHNl0acHpUZgvc5H0C/eAkP
-	ViDHhA47K6aQI/3EGSBFQOmKJfeRJf8Czaw7HKcNqfOHQ0n/K+84HpA2ibPtmWQQZef5hW6IVCv
-	74cHSAGGoJE/FavEY+xfhRWHlM5DlyO4eraRJS
-X-Gm-Gg: ASbGncvvQdvR72plASe+rc7YT4Nroqj/lOkg2o9TgFN3RNYclW6V0a+b//sFiosIJVW
-	IYUfPgeP3MjtkzJUHCs0lr3XrSJCq53A+w2wW1fgORn1a1faWU70FZ8kCS3sA
-X-Received: by 2002:a05:600c:35d3:b0:438:d9f1:f5cc with SMTP id 5b1f17b1804b1-438dc3c3983mr208354615e9.8.1738606919487;
-        Mon, 03 Feb 2025 10:21:59 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHz7WFFlkh702aL2lV+rs/ZKODFLjI/rvxvV7aVp0t9rlFGn4otyohrTVaegFBxoOtK19Bv6wDrLLCiUaiWHss=
-X-Received: by 2002:a05:600c:35d3:b0:438:d9f1:f5cc with SMTP id
- 5b1f17b1804b1-438dc3c3983mr208354385e9.8.1738606919110; Mon, 03 Feb 2025
- 10:21:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGLLsUZK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66A56C4CED2;
+	Mon,  3 Feb 2025 18:22:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738606959;
+	bh=MLfHjGPlNx2XOeebs3XwJXqzZ2mDyKsEiAPXHin4Mkg=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=nGLLsUZKzIG8sDAtB87jzBfEnL/vEnLwdxMSm2idX5wsBrPASb2UcZDkQP+skp2gr
+	 GYHvYFIHEJdK6wMQaa50//yeFQtZf0yBJDyvu428KdB29fp/VGLAvG2O4i9LtAs7TN
+	 qXm9j/+xUkYx2FyE/1D1xVsbLpYGEY9+HFIYNMwj6IgvMUvhy7ag5PC0/b00YjVK5N
+	 rzTabd0MsKhtgUXqdpfbY13WGvjCPBfX3jtysBgAT0C3psONF6STt5nfhheAPki8ZO
+	 YMetKYBktUBys4zYaWsZfb6HeLNZyZHtgQiLCTgxTq6uzoLceC+wQroD+lzuTtIVhl
+	 gLs6QCY93CR4Q==
+Date: Mon, 03 Feb 2025 12:22:38 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADH9ctD1uf_yBA3NXNQu7TJa_TPhLRN=0YZ3j2gGhgmaFRdCFg@mail.gmail.com>
- <c3026876-8061-4ab2-9321-97cc05bad510@redhat.com> <CADH9ctBivnvP1tNcatLKzd8EDz8Oo6X65660j8ccxYzk3aFzCA@mail.gmail.com>
- <CABgObfZEyCQMiq6CKBOE7pAVzUDkWjqT2cgfbwjW-RseH8VkLw@mail.gmail.com>
- <CADH9ctA_C1dAOus1K+wOH_SOKTb=-X1sVawt5R=dkH1iGt8QUg@mail.gmail.com>
- <CABgObfZrTyft-3vqMz5w0ZiAhp-v6c32brgftynZGJO8OafrdA@mail.gmail.com>
- <CADH9ctBYp-LMbW4hm3+QwNoXvAc5ryVeB0L1jLY0uDWSe3vbag@mail.gmail.com>
- <b1ddb439-9e28-4a58-ba86-0395bfc081e0@redhat.com> <CADH9ctCFYtNfhn3SSp2jp0fzxu6s_X1A+wBNnzvHZVb8qXPk=g@mail.gmail.com>
- <CADH9ctB0YSYqC_Vj2nP20vMO_gN--KsqOBOu8sfHDrkZJV6pmw@mail.gmail.com>
- <Z2IXvsM0olS5GvbR@google.com> <CABgObfadZZ5sXYB0xR5OcLDw_eVUmXTOTFSWkVpkgiCJmNnFRQ@mail.gmail.com>
- <CADH9ctAGt_VriKA7Ch1L9U+xud-6M54GzaPOM_2sSA780TpAYw@mail.gmail.com>
-In-Reply-To: <CADH9ctAGt_VriKA7Ch1L9U+xud-6M54GzaPOM_2sSA780TpAYw@mail.gmail.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Mon, 3 Feb 2025 19:21:47 +0100
-X-Gm-Features: AWEUYZkfTYWUXYOngTDyrNZ6kf3UUSURUuAlnD5-9-ZGJoFpmKmFYKS0QywhxK0
-Message-ID: <CABgObfb3Ttfg6H+_RpNQGSYKw9BLEwx3+EysXdL-wbpd1pkGHQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] KVM: x86: Add support for VMware guest specific hypercalls
-To: Doug Covelli <doug.covelli@broadcom.com>
-Cc: Sean Christopherson <seanjc@google.com>, Zack Rusin <zack.rusin@broadcom.com>, 
-	kvm <kvm@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "the arch/x86 maintainers" <x86@kernel.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuah@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
-	Joel Stanley <joel@jms.id.au>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, krzk+dt@kernel.org, rwalton@cmlmicro.com, 
+ tiwai@suse.com, linux-sound@vger.kernel.org, conor+dt@kernel.org, 
+ linux-kernel@vger.kernel.org, perex@perex.cz, broonie@kernel.org, 
+ lgirdwood@gmail.com
+To: Nikola Jelic <nikola.jelic83@gmail.com>
+In-Reply-To: <20250203170117.12004-1-nikola.jelic83@gmail.com>
+References: <20250203170117.12004-1-nikola.jelic83@gmail.com>
+Message-Id: <173860695834.3345744.14339902002864391293.robh@kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: dt-bindings: Add cmx655 codec
 
-On Mon, Feb 3, 2025 at 5:35=E2=80=AFPM Doug Covelli <doug.covelli@broadcom.=
-com> wrote:
-> OK.  It seems like fully embracing the in-kernel APIC is the way to go
-> especially considering it really simplifies using KVM's support for neste=
-d
-> virtualization.  Speaking of nested virtualization we have been working o=
-n
-> adding support for that and would like to propose a couple of changes:
->
-> - Add an option for L0 to handle backdoor accesses from CPL3 code running=
- in L2.
-> On a #GP nested_vmx_l0_wants_exit can check if this option is enabled and=
- KVM
-> can handle the #GP like it would if it had been from L1 (exit to userleve=
-l iff
-> it is a backdoor access otherwwise deliver the fault to L2).  When combin=
-ed with
-> enable_vmware_backdoor this will allow L0 to optionally handle backdoor a=
-ccesses
-> from CPL3 code running in L2.  This is needed for cases such as running V=
-Mware
-> tools in a Windows VM with VBS enabled.  For other cases such as running =
-tools
-> in a Windows VM in an ESX VM we still want L1 to handle the backdoor acce=
-sses
-> from L2.
 
-I think this makes sense and could be an argument to KVM_ENABLE_CAP.
+On Mon, 03 Feb 2025 18:01:16 +0100, Nikola Jelic wrote:
+> Signed-off-by: Nikola Jelic <nikola.jelic83@gmail.com>
+> ---
+>  .../bindings/sound/cml,cmx655d.yaml           | 79 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  2 files changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/cml,cmx655d.yaml
+> 
 
-> - Extend KVM_EXIT_MEMORY_FAULT for permission faults (e.g the guest attem=
-pting
-> to write to a page that has been protected by userlevel calling mprotect)=
-.  This
-> is useful for cases where we want synchronous detection of guest writes s=
-uch as
-> lazy snapshots (dirty page tracking is no good for this case).  Currently
-> permission faults result in KVM_RUN returning EFAULT which we handle by
-> interpreting the instruction as we do not know the guest physical address
-> associated with the fault.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Yes, this makes sense too, though you might want to look into
-userfaultfd as well.
+yamllint warnings/errors:
 
-We had something planned using attributes, but I don't see any issue
-extending it to EFAULT. Maybe it would have to be yet another
-KVM_ENABLE_CAP; considering that it would break your existing code,
-there might be someone else in the wild doing it.
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/cml,cmx655d.yaml: pinctr-0: missing type definition
+Documentation/devicetree/bindings/sound/cml,cmx655d.example.dts:28.27-39.15: Warning (unit_address_vs_reg): /example-0/i2c/cmx655: node has a reg or ranges property, but no unit name
+Documentation/devicetree/bindings/sound/cml,cmx655d.example.dts:28.27-39.15: Warning (i2c_bus_reg): /example-0/i2c/cmx655: I2C bus unit address format error, expected "54"
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/cml,cmx655d.example.dtb: cmx655: 'cmx655,classd-oc-reset-attempts' does not match any of the regexes: '^#.*', '^(at25|bm|devbus|dmacap|dsa|exynos|fsi[ab]|gpio-fan|gpio-key|gpio|gpmc|hdmi|i2c-gpio),.*', '^(keypad|m25p|max8952|max8997|max8998|mpmc),.*', '^(pinctrl-single|#pinctrl-single|PowerPC),.*', '^(pl022|pxa-mmc|rcar_sound|rotary-encoder|s5m8767|sdhci),.*', '^(simple-audio-card|st-plgpio|st-spics|ts),.*', '^100ask,.*', '^70mai,.*', '^8dev,.*', '^GEFanuc,.*', '^IBM,.*', '^ORCL,.*', '^SUNW,.*', '^[a-zA-Z0-9#_][a-zA-Z0-9+\\-._@]{0,63}$', '^[a-zA-Z0-9+\\-._]*@[0-9a-zA-Z,]*$', '^abb,.*', '^abilis,.*', '^abracon,.*', '^abt,.*', '^acbel,.*', '^acelink,.*', '^acer,.*', '^acme,.*', '^actions,.*', '^active-semi,.*', '^ad,.*', '^adafruit,.*', '^adapteva,.*', '^adaptrum,.*', '^adh,.*', '^adi,.*', '^adieng,.*', '^admatec,.*', '^advantech,.*', '^aeroflexgaisler,.*', '^aesop,.*', '^airoha,.*', '^al,.*', '^alcatel,.*', '^aldec,.*', '^alfa-network,.*', '^allegro,.*', '^allegromicro,.*', '^alliedvision,.*', '^allo,.*', '^allwinner,.*', '^alphascale,.*', '^alps,.*', '^alt,.*', '^altr,.*', '^amarula,.*', '^amazon,.*', '^amcc,.*', '^amd,.*', '^amediatech,.*', '^amlogic,.*', '^ampere,.*', '^amphenol,.*', '^ampire,.*', '^ams,.*', '^amstaos,.*', '^analogix,.*', '^anbernic,.*', '^andestech,.*', '^anvo,.*', '^aosong,.*', '^apm,.*', '^apple,.*', '^aptina,.*', '^arasan,.*', '^archermind,.*', '^arcom,.*', '^arctic,.*', '^arcx,.*', '^aries,.*', '^arm,.*', '^armadeus,.*', '^armsom,.*', '^arrow,.*', '^artesyn,.*', '^asahi-kasei,.*', '^asc,.*', '^asix,.*', '^aspeed,.*', '^asrock,.*', '^asteralabs,.*', '^asus,.*', '^atheros,.*', '^atlas,.*', '^atmel,.*', '^auo,.*', '^auvidea,.*', '^avago,.*', '^avia,.*', '^avic,.*', '^avnet,.*', '^awinic,.*', '^axentia,.*', '^axis,.*', '^azoteq,.*', '^azw,.*', '^baikal,.*', '^bananapi,.*', '^beacon,.*', '^beagle,.*', '^belling,.*', '^bhf,.*', '^bigtreetech,.*', '^bitmain,.*', '^blaize,.*', '^blutek,.*', '^boe,.*', '^bosch,.*', '^boundary,.*', '^brcm,.*', '^broadmobi,.*', '^bsh,.*', '^bticino,.*', '^buffalo,.*', '^bur,.*', '^bytedance,.*', '^calamp,.*', '^calao,.*', '^calaosystems,.*', '^calxeda,.*', '^cameo,.*', '^canaan,.*', '^caninos,.*', '^capella,.*', '^cascoda,.*', '^catalyst,.*', '^cavium,.*', '^cct,.*', '^cdns,.*', '^cdtech,.*', '^cellwise,.*', '^ceva,.*', '^chargebyte,.*', '^checkpoint,.*', '^chefree,.*', '^chipidea,.*', '^chipone,.*', '^chipspark,.*', '^chongzhou,.*', '^chrontel,.*', '^chrp,.*', '^chunghwa,.*', '^chuwi,.*', '^ciaa,.*', '^cirrus,.*', '^cisco,.*', '^clockwork,.*', '^cloos,.*', '^cloudengines,.*', '^cml,.*', '^cnm,.*', '^cnxt,.*', '^colorfly,.*', '^compulab,.*', '^comvetia,.*', '^congatec,.*', '^coolpi,.*', '^coreriver,.*', '^corpro,.*', '^cortina,.*', '^cosmic,.*', '^crane,.*', '^creative,.*', '^crystalfontz,.*', '^csky,.*', '^csq,.*', '^ctera,.*', '^ctu,.*', '^cubietech,.*', '^cudy,.*', '^cui,.*', '^cypress,.*', '^cyx,.*', '^cznic,.*', '^dallas,.*', '^dataimage,.*', '^davicom,.*', '^deepcomputing,.*', '^dell,.*', '^delta,.*', '^densitron,.*', '^denx,.*', '^devantech,.*', '^dfi,.*', '^dfrobot,.*', '^dh,.*', '^difrnce,.*', '^digi,.*', '^digilent,.*', '^dimonoff,.*', '^diodes,.*', '^dioo,.*', '^dlc,.*', '^dlg,.*', '^dlink,.*', '^dmo,.*', '^domintech,.*', '^dongwoon,.*', '^dptechnics,.*', '^dragino,.*', '^dream,.*', '^ds,.*', '^dserve,.*', '^dynaimage,.*', '^ea,.*', '^ebang,.*', '^ebbg,.*', '^ebs-systart,.*', '^ebv,.*', '^eckelmann,.*', '^edgeble,.*', '^edimax,.*', '^edt,.*', '^ees,.*', '^eeti,.*', '^einfochips,.*', '^eink,.*', '^elan,.*', '^element14,.*', '^elgin,.*', '^elida,.*', '^elimo,.*', '^elpida,.*', '^embedfire,.*', '^embest,.*', '^emcraft,.*', '^emlid,.*', '^emmicro,.*', '^empire-electronix,.*', '^emtrion,.*', '^enclustra,.*', '^endless,.*', '^ene,.*', '^energymicro,.*', '^engicam,.*', '^engleder,.*', '^epcos,.*', '^epfl,.*', '^epson,.*', '^esp,.*', '^est,.*', '^ettus,.*', '^eukrea,.*', '^everest,.*', '^everspin,.*', '^evervision,.*', '^exar,.*', '^excito,.*', '^exegin,.*', '^ezchip,.*', '^facebook,.*', '^fairchild,.*', '^fairphone,.*', '^faraday,.*', '^fascontek,.*', '^fastrax,.*', '^fcs,.*', '^feixin,.*', '^feiyang,.*', '^fii,.*', '^firefly,.*', '^focaltech,.*', '^forlinx,.*', '^freebox,.*', '^freecom,.*', '^frida,.*', '^friendlyarm,.*', '^fsl,.*', '^fujitsu,.*', '^fxtec,.*', '^galaxycore,.*', '^gameforce,.*', '^gardena,.*', '^gateway,.*', '^gateworks,.*', '^gcw,.*', '^ge,.*', '^geekbuying,.*', '^gef,.*', '^gehc,.*', '^gemei,.*', '^gemtek,.*', '^genesys,.*', '^genexis,.*', '^geniatech,.*', '^giantec,.*', '^giantplus,.*', '^glinet,.*', '^globalscale,.*', '^globaltop,.*', '^gmt,.*', '^goldelico,.*', '^goodix,.*', '^google,.*', '^goramo,.*', '^gplus,.*', '^grinn,.*', '^grmn,.*', '^gumstix,.*', '^gw,.*', '^hannstar,.*', '^haochuangyi,.*', '^haoyu,.*', '^hardkernel,.*', '^hechuang,.*', '^hideep,.*', '^himax,.*', '^hirschmann,.*', '^hisi,.*', '^hisilicon,.*', '^hit,.*', '^hitex,.*', '^holt,.*', '^holtek,.*', '^honestar,.*', '^honeywell,.*', '^hoperf,.*', '^hoperun,.*', '^hp,.*', '^hpe,.*', '^hsg,.*', '^htc,.*', '^huawei,.*', '^hugsun,.*', '^hwacom,.*', '^hxt,.*', '^hycon,.*', '^hydis,.*', '^hynitron,.*', '^hynix,.*', '^hyundai,.*', '^i2se,.*', '^ibm,.*', '^icplus,.*', '^idt,.*', '^iei,.*', '^ifi,.*', '^ilitek,.*', '^imagis,.*', '^img,.*', '^imi,.*', '^inanbo,.*', '^incircuit,.*', '^indiedroid,.*', '^inet-tek,.*', '^infineon,.*', '^inforce,.*', '^ingenic,.*', '^ingrasys,.*', '^injoinic,.*', '^innocomm,.*', '^innolux,.*', '^inside-secure,.*', '^insignal,.*', '^inspur,.*', '^intel,.*', '^intercontrol,.*', '^invensense,.*', '^inventec,.*', '^inversepath,.*', '^iom,.*', '^irondevice,.*', '^isee,.*', '^isil,.*', '^issi,.*', '^ite,.*', '^itead,.*', '^itian,.*', '^ivo,.*', '^iwave,.*', '^jadard,.*', '^jasonic,.*', '^jdi,.*', '^jedec,.*', '^jenson,.*', '^jesurun,.*', '^jethome,.*', '^jianda,.*', '^jide,.*', '^joz,.*', '^kam,.*', '^karo,.*', '^keithkoep,.*', '^keymile,.*', '^khadas,.*', '^kiebackpeter,.*', '^kinetic,.*', '^kingdisplay,.*', '^kingnovel,.*', '^kionix,.*', '^kobo,.*', '^kobol,.*', '^koe,.*', '^kontron,.*', '^kosagi,.*', '^kvg,.*', '^kyo,.*', '^lacie,.*', '^laird,.*', '^lamobo,.*', '^lantiq,.*', '^lattice,.*', '^lckfb,.*', '^lctech,.*', '^leadtek,.*', '^leez,.*', '^lego,.*', '^lemaker,.*', '^lenovo,.*', '^lg,.*', '^lgphilips,.*', '^libretech,.*', '^licheepi,.*', '^linaro,.*', '^lincolntech,.*', '^lineartechnology,.*', '^linksprite,.*', '^linksys,.*', '^linutronix,.*', '^linux,.*', '^linx,.*', '^liteon,.*', '^litex,.*', '^lltc,.*', '^logicpd,.*', '^logictechno,.*', '^longcheer,.*', '^lontium,.*', '^loongmasses,.*', '^loongson,.*', '^lsi,.*', '^lunzn,.*', '^luxul,.*', '^lwn,.*', '^lxa,.*', '^m5stack,.*', '^macnica,.*', '^mantix,.*', '^mapleboard,.*', '^marantec,.*', '^marvell,.*', '^maxbotix,.*', '^maxim,.*', '^maxlinear,.*', '^mbvl,.*', '^mcube,.*', '^meas,.*', '^mecer,.*', '^mediatek,.*', '^megachips,.*', '^mele,.*', '^melexis,.*', '^melfas,.*', '^mellanox,.*', '^memsensing,.*', '^memsic,.*', '^menlo,.*', '^mentor,.*', '^meraki,.*', '^merrii,.*', '^methode,.*', '^micrel,.*', '^microchip,.*', '^microcrystal,.*', '^micron,.*', '^microsoft,.*', '^microsys,.*', '^microtips,.*', '^mikroe,.*', '^mikrotik,.*', '^milkv,.*', '^miniand,.*', '^minix,.*', '^mips,.*', '^miramems,.*', '^mitsubishi,.*', '^mitsumi,.*', '^mixel,.*', '^miyoo,.*', '^mntre,.*', '^mobileye,.*', '^modtronix,.*', '^moortec,.*', '^mosaixtech,.*', '^motorcomm,.*', '^motorola,.*', '^moxa,.*', '^mpl,.*', '^mps,.*', '^mqmaker,.*', '^mrvl,.*', '^mscc,.*', '^msi,.*', '^mstar,.*', '^mti,.*', '^multi-inno,.*', '^mundoreader,.*', '^murata,.*', '^mxic,.*', '^mxicy,.*', '^myir,.*', '^national,.*', '^neardi,.*', '^nec,.*', '^neofidelity,.*', '^neonode,.*', '^netgear,.*', '^netlogic,.*', '^netron-dy,.*', '^netronix,.*', '^netxeon,.*', '^neweast,.*', '^newhaven,.*', '^newvision,.*', '^nexbox,.*', '^nextthing,.*', '^ni,.*', '^nintendo,.*', '^nlt,.*', '^nokia,.*', '^nordic,.*', '^nothing,.*', '^novatek,.*', '^novtech,.*', '^numonyx,.*', '^nutsboard,.*', '^nuvoton,.*', '^nvd,.*', '^nvidia,.*', '^nxp,.*', '^oceanic,.*', '^ocs,.*', '^oct,.*', '^okaya,.*', '^oki,.*', '^olimex,.*', '^olpc,.*', '^oneplus,.*', '^onie,.*', '^onion,.*', '^onnn,.*', '^ontat,.*', '^opalkelly,.*', '^openailab,.*', '^opencores,.*', '^openembed,.*', '^openpandora,.*', '^openrisc,.*', '^openwrt,.*', '^option,.*', '^oranth,.*', '^orisetech,.*', '^ortustech,.*', '^osddisplays,.*', '^osmc,.*', '^ouya,.*', '^overkiz,.*', '^ovti,.*', '^oxsemi,.*', '^ozzmaker,.*', '^panasonic,.*', '^parade,.*', '^parallax,.*', '^pda,.*', '^pericom,.*', '^pervasive,.*', '^phicomm,.*', '^phytec,.*', '^picochip,.*', '^pine64,.*', '^pineriver,.*', '^pixcir,.*', '^plantower,.*', '^plathome,.*', '^plda,.*', '^plx,.*', '^ply,.*', '^pni,.*', '^pocketbook,.*', '^polaroid,.*', '^polyhex,.*', '^portwell,.*', '^poslab,.*', '^pov,.*', '^powertip,.*', '^powervr,.*', '^powkiddy,.*', '^primeview,.*', '^primux,.*', '^probox2,.*', '^prt,.*', '^pulsedlight,.*', '^purism,.*', '^puya,.*', '^qca,.*', '^qcom,.*', '^qemu,.*', '^qi,.*', '^qiaodian,.*', '^qihua,.*', '^qishenglong,.*', '^qnap,.*', '^quanta,.*', '^radxa,.*', '^raidsonic,.*', '^ralink,.*', '^ramtron,.*', '^raspberrypi,.*', '^raydium,.*', '^rda,.*', '^realtek,.*', '^relfor,.*', '^remarkable,.*', '^renesas,.*', '^rervision,.*', '^revotics,.*', '^rex,.*', '^richtek,.*', '^ricoh,.*', '^rikomagic,.*', '^riot,.*', '^riscv,.*', '^rockchip,.*', '^rocktech,.*', '^rohm,.*', '^ronbo,.*', '^roofull,.*', '^roseapplepi,.*', '^rve,.*', '^saef,.*', '^samsung,.*', '^samtec,.*', '^sancloud,.*', '^sandisk,.*', '^satoz,.*', '^sbs,.*', '^schindler,.*', '^schneider,.*', '^sciosense,.*', '^seagate,.*', '^seeed,.*', '^seirobotics,.*', '^semtech,.*', '^senseair,.*', '^sensirion,.*', '^sensortek,.*', '^sercomm,.*', '^sff,.*', '^sgd,.*', '^sgmicro,.*', '^sgx,.*', '^sharp,.*', '^shift,.*', '^shimafuji,.*', '^shineworld,.*', '^shiratech,.*', '^si-en,.*', '^si-linux,.*', '^siemens,.*', '^sifive,.*', '^siflower,.*', '^sigma,.*', '^sii,.*', '^sil,.*', '^silabs,.*', '^silan,.*', '^silead,.*', '^silergy,.*', '^silex-insight,.*', '^siliconfile,.*', '^siliconmitus,.*', '^silvaco,.*', '^simtek,.*', '^sinlinx,.*', '^sinovoip,.*', '^sinowealth,.*', '^sipeed,.*', '^sirf,.*', '^sis,.*', '^sitronix,.*', '^skov,.*', '^skyworks,.*', '^smartlabs,.*', '^smartrg,.*', '^smi,.*', '^smsc,.*', '^snps,.*', '^sochip,.*', '^socionext,.*', '^solidrun,.*', '^solomon,.*', '^sony,.*', '^sophgo,.*', '^sourceparts,.*', '^spacemit,.*', '^spansion,.*', '^sparkfun,.*', '^spinalhdl,.*', '^sprd,.*', '^square,.*', '^ssi,.*', '^sst,.*', '^sstar,.*', '^st,.*', '^st-ericsson,.*', '^starfive,.*', '^starry,.*', '^startek,.*', '^starterkit,.*', '^ste,.*', '^stericsson,.*', '^storlink,.*', '^storm,.*', '^storopack,.*', '^summit,.*', '^sunchip,.*', '^sundance,.*', '^sunplus,.*', '^supermicro,.*', '^swir,.*', '^syna,.*', '^synology,.*', '^synopsys,.*', '^tbs,.*', '^tbs-biometrics,.*', '^tcg,.*', '^tcl,.*', '^tcs,.*', '^tdo,.*', '^team-source-display,.*', '^technexion,.*', '^technologic,.*', '^techstar,.*', '^techwell,.*', '^teejet,.*', '^teltonika,.*', '^tempo,.*', '^terasic,.*', '^tesla,.*', '^test,.*', '^tfc,.*', '^thead,.*', '^thine,.*', '^thingyjp,.*', '^thundercomm,.*', '^thwc,.*', '^ti,.*', '^tianma,.*', '^tlm,.*', '^tmt,.*', '^topeet,.*', '^topic,.*', '^topland,.*', '^toppoly,.*', '^topwise,.*', '^toradex,.*', '^toshiba,.*', '^toumaz,.*', '^tpk,.*', '^tplink,.*', '^tpo,.*', '^tq,.*', '^transpeed,.*', '^traverse,.*', '^tronfy,.*', '^tronsmart,.*', '^truly,.*', '^tsd,.*', '^turing,.*', '^tyan,.*', '^tyhx,.*', '^u-blox,.*', '^u-boot,.*', '^ubnt,.*', '^ucrobotics,.*', '^udoo,.*', '^ufispace,.*', '^ugoos,.*', '^uni-t,.*', '^uniwest,.*', '^upisemi,.*', '^urt,.*', '^usi,.*', '^usr,.*', '^utoo,.*', '^v3,.*', '^vaisala,.*', '^vamrs,.*', '^variscite,.*', '^vdl,.*', '^vertexcom,.*', '^via,.*', '^vialab,.*', '^vicor,.*', '^videostrong,.*', '^virtio,.*', '^virtual,.*', '^vishay,.*', '^visionox,.*', '^vitesse,.*', '^vivante,.*', '^vivax,.*', '^vocore,.*', '^voipac,.*', '^voltafield,.*', '^vot,.*', '^vscom,.*', '^vxt,.*', '^wacom,.*', '^wanchanglong,.*', '^wand,.*', '^waveshare,.*', '^wd,.*', '^we,.*', '^welltech,.*', '^wetek,.*', '^wexler,.*', '^whwave,.*', '^wi2wi,.*', '^widora,.*', '^wiligear,.*', '^willsemi,.*', '^winbond,.*', '^wingtech,.*', '^winlink,.*', '^winstar,.*', '^wirelesstag,.*', '^wits,.*', '^wlf,.*', '^wm,.*', '^wobo,.*', '^wolfvision,.*', '^x-powers,.*', '^xen,.*', '^xes,.*', '^xiaomi,.*', '^xillybus,.*', '^xingbangda,.*', '^xinpeng,.*', '^xiphera,.*', '^xlnx,.*', '^xnano,.*', '^xunlong,.*', '^xylon,.*', '^yadro,.*', '^yamaha,.*', '^yes-optoelectronics,.*', '^yic,.*', '^yiming,.*', '^ylm,.*', '^yna,.*', '^yones-toptech,.*', '^ys,.*', '^ysoft,.*', '^zarlink,.*', '^zealz,.*', '^zeitec,.*', '^zidoo,.*', '^zii,.*', '^zinitix,.*', '^zkmagic,.*', '^zte,.*', '^zyxel,.*', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/vendor-prefixes.yaml#
 
-Paolo
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250203170117.12004-1-nikola.jelic83@gmail.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
