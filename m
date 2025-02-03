@@ -1,152 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8A62C859;
-	Mon,  3 Feb 2025 20:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0332D339A1
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 20:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738612801; cv=none; b=KxZPbwj4u3zWOoTZlkQcVNT9V6E+PvsnERYp+flllVGKyD0YWQbINh/pTh9eK3f6siQHree4iDPgJ3kbpeZvqfXBgLdJq2ZkypickbbAWRMabVC2RC2jzNNik0BlgjN1LW6M5faBzEHl/wJs6rsdW3DzJ7h/+K8mzoVZLXSIxR4=
+	t=1738612992; cv=none; b=RwvWkqxxZnONhlRQB8BZC+h2oprUxB9YjsGfCvwZQ5IzkVydQTyEIxIxyb4cl5YlMIyQ9JNxtjHRWgLuirBAr5LBQQp7Z/V9tEXyJl0q30ZVtBGYjYdaHbcLKPTcNKslHwYNKOqtrUJkzbuuzx6+oH9nIZw1FeSIlFL5e+1bZp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738612801; c=relaxed/simple;
-	bh=8DyhvIJF6DSx5+OopDaU2BEOqUyGUVSWVwCXDYw+TdY=;
+	s=arc-20240116; t=1738612992; c=relaxed/simple;
+	bh=CK/MKv7rjvdIWFJRpj1ZzWC/UHYYkT90B5IHPvXpe6Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iMf8tAUfqKQNrHdEBq/oezJ5bTozy6hKCupi0cPGAXfwaMmcAsS2ojsvqzyUBXjBTH4YhOyyeJ3+5XxixTgCjtjHNa55TWNsUy0Y6dfO8ycx9cfRbeQlczcUd3mti2hvmfzT5IqrLVH3mXPDgFiJXXsfwMMoEb9lwqM6MQL+aB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSoH8pm2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gbxfqmvLt1tjUNlWFb0GAPIS2GB4AM1ZFrOYet9qC1zx2BoYyYGPnrBOsIycqi6pVwKPxmJky6Sic5Lhd2DIZu2Hc3QAv9K9ybLdL1SZdmDsBT6+UdMNoTGDdTw8FVJ6SfPtJR1r6U4oHSGO5VP44visYJ9cQ6UbEFrhUUMpy9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bCMeqSRo; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSoH8pm2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A99BC4CED2;
-	Mon,  3 Feb 2025 20:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738612800;
-	bh=8DyhvIJF6DSx5+OopDaU2BEOqUyGUVSWVwCXDYw+TdY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NSoH8pm2LQEU5jZUs08TTx+3CvW1lttl3ZV13sJffJ4DuYY+RSVu8UikSwWuQdN1W
-	 TM2DvMlfD7xsZKxxNQP6xQZnKHtMEMNIbauu7h1Rsnq/RRl0uWq82Q7MWYsrRUBah8
-	 n9PSUDXXHanGbTBB5OFKG/vf1kiDNIGNvM8+Wygyk8KWn1xnrXsfso8oXJJZtXH+A8
-	 eedt0dVZd7Qe/a5IRJe+cS3FwolRHl3TK6Ck2Is4V5JjcGd66vdnH1OtjY/1/qN0KK
-	 R5LDx1T/MXTA6GQFy06vzpdOk+8zoCO322U8CahYnODHA9JCceg9ZxX8njJF/3HB2x
-	 +aCq0mzCYE7Rg==
-Date: Mon, 3 Feb 2025 11:59:58 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bcachefs docs: SubmittingPatches.rst
-Message-ID: <20250203195958.GB134490@frogsfrogsfrogs>
-References: <20250201175834.686165-1-kent.overstreet@linux.dev>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bCMeqSRo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738612989;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DYdlEIiMuZGB2s7NaGPidtgM+7FBuJkKnef7C2LdTpU=;
+	b=bCMeqSRoZXIsLfuLdJ7ZlJrDaDnhwE1BW5/jXuggFaKXuTdpf+iduZDMA5PhyRpTGhp2Wb
+	1kDslKpC3XRJMHvSH32UzVjZlaOZJFd8cz4Aw1G9B7zJGaYzb2UCUIyUAK4ts64r4xBVqv
+	wu78XIU+Oe7a8jmNghiI+Wet6wUGE/E=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-147-tsUddE3HMUqiq6MKQfSz1w-1; Mon,
+ 03 Feb 2025 15:03:06 -0500
+X-MC-Unique: tsUddE3HMUqiq6MKQfSz1w-1
+X-Mimecast-MFC-AGG-ID: tsUddE3HMUqiq6MKQfSz1w
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 603E0180035F;
+	Mon,  3 Feb 2025 20:03:04 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.72])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 61AD318008C0;
+	Mon,  3 Feb 2025 20:03:01 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon,  3 Feb 2025 21:02:38 +0100 (CET)
+Date: Mon, 3 Feb 2025 21:02:34 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: ebiederm@xmission.com, brauner@kernel.org, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] pid: perform free_pid() calls outside of
+ tasklist_lock
+Message-ID: <20250203200233.GE1003@redhat.com>
+References: <20250201163106.28912-1-mjguzik@gmail.com>
+ <20250201163106.28912-6-mjguzik@gmail.com>
+ <20250203184908.GD1003@redhat.com>
+ <CAGudoHF5zTjxsCsbVjAHjhtsyRgNWFfbRA4W7TYQY76dDOWSHQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250201175834.686165-1-kent.overstreet@linux.dev>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGudoHF5zTjxsCsbVjAHjhtsyRgNWFfbRA4W7TYQY76dDOWSHQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Sat, Feb 01, 2025 at 12:58:34PM -0500, Kent Overstreet wrote:
-> Add an (initial?) patch submission checklist, focusing mainly on
-> testing.
+On 02/03, Mateusz Guzik wrote:
+>
+> On Mon, Feb 3, 2025 at 7:49 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > To avoid the confusion, my question and a note are absolutely offtopic.
+> >
+> > On 02/01, Mateusz Guzik wrote:
+> > >
+> > > @@ -1085,6 +1085,7 @@ SYSCALL_DEFINE2(setpgid, pid_t, pid, pid_t, pgid)
+> > >  {
+> > >       struct task_struct *p;
+> > >       struct task_struct *group_leader = current->group_leader;
+> > > +     struct pid *pids[PIDTYPE_MAX] = { 0 };
+> >
+> > Could you remind me why
+> >
+> >         struct pid *pids[PIDTYPE_MAX] = {};
+> >
+> > is not right? I seem to knew it some time before, but can't recall...
+> >
 > 
-> Yes, all patches must be tested, and that starts (but does not end) with
-> the patch author.
-> 
-> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> ---
->  .../bcachefs/SubmittingPatches.rst            | 76 +++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/filesystems/bcachefs/SubmittingPatches.rst
+> as far as I know this is merely a matter of convention, fwiw a naive grep:
+> $ git grep '= { }' | wc -l
+> 1273
+> $ git grep '= { 0 }' | wc -l
+> 2031
+> $ git grep '= {}' | wc -l
+> 5626
 
-You might want to link to this in MAINTAINERS with:
+OK... but I still have a vague feeling that it was explained somewhere
+that '{ 0 }' should be preferred... Nevermind.
 
-P:      Documentation/filesystems/bcachefs/SubmittingPatches.rst
+> that said i can change it to whatever you see fit
 
---D
+No, please do whatever looks better to you.
 
-> 
-> diff --git a/Documentation/filesystems/bcachefs/SubmittingPatches.rst b/Documentation/filesystems/bcachefs/SubmittingPatches.rst
-> new file mode 100644
-> index 000000000000..5e4615620c4a
-> --- /dev/null
-> +++ b/Documentation/filesystems/bcachefs/SubmittingPatches.rst
-> @@ -0,0 +1,76 @@
-> +Submitting patches to bcachefs:
-> +===============================
-> +
-> +Patches must be tested before being submitted, either with the xfstests suite
-> +[0], or the full bcachefs test suite in ktest [1], depending on what's being
-> +touched. Note that ktest wraps xfstests and will be an easier method to running
-> +it for most users; it includes single-command wrappers for all the mainstream
-> +in-kernel local filesystems.
-> +
-> +Patches will undergo more testing after being merged (including
-> +lockdep/kasan/preempt/etc. variants), these are not generally required to be
-> +run by the submitter - but do put some thought into what you're changing and
-> +which tests might be relevant, e.g. are you dealing with tricky memory layout
-> +work? kasan, are you doing locking work? then lockdep; and ktest includes
-> +single-command variants for the debug build types you'll most likely need.
-> +
-> +The exception to this rule is incomplete WIP/RFC patches: if you're working on
-> +something nontrivial, it's encouraged to send out a WIP patch to let people
-> +know what you're doing and make sure you're on the right track. Just make sure
-> +it includes a brief note as to what's done and what's incomplete, to avoid
-> +confusion.
-> +
-> +Rigorous checkpatch.pl adherence is not required (many of its warnings are
-> +considered out of date), but try not to deviate too much without reason.
-> +
-> +Focus on writing code that reads well and is organized well; code should be
-> +aesthetically pleasing.
-> +
-> +CI:
-> +===
-> +
-> +Instead of running your tests locally, when running the full test suite it's
-> +prefereable to let a server farm do it in parallel, and then have the results
-> +in a nice test dashboard (which can tell you which failures are new, and
-> +presents results in a git log view, avoiding the need for most bisecting).
-> +
-> +That exists [2], and community members may request an account. If you work for
-> +a big tech company, you'll need to help out with server costs to get access -
-> +but the CI is not restricted to running bcachefs tests: it runs any ktest test
-> +(which generally makes it easy to wrap other tests that can run in qemu).
-> +
-> +Other things to think about:
-> +============================
-> +
-> +- How will we debug this code? Is there sufficient introspection to diagnose
-> +  when something starts acting wonky on a user machine?
-> +
-> +- Does it make the codebase more or less of a mess? Can we also try to do some
-> +  organizing, too?
-> +
-> +- Do new tests need to be written? New assertions? How do we know and verify
-> +  that the code is correct, and what happens if something goes wrong?
-> +
-> +- Does it need to be performance tested? Should we add new peformance counters?
-> +
-> +- If it's a new on disk format feature - have upgrades and downgrades been
-> +  tested? (Automated tests exists but aren't in the CI, due to the hassle of
-> +  disk image management; coordinate to have them run.)
-> +
-> +Mailing list, IRC:
-> +==================
-> +
-> +Patches should hit the list [3], but much discussion and code review happens on
-> +IRC as well [4]; many people appreciate the more conversational approach and
-> +quicker feedback.
-> +
-> +Additionally, we have a lively user community doing excellent QA work, which
-> +exists primarily on IRC. Please make use of that resource; user feedback is
-> +important for any nontrivial feature, and documenting it in commit messages
-> +would be a good idea.
-> +
-> +[0]: git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
-> +[1]: https://evilpiepirate.org/git/ktest.git/
-> +[2]: https://evilpiepirate.org/~testdashboard/ci/
-> +[3]: linux-bcachefs@vger.kernel.org
-> +[4]: irc.oftc.net#bcache, #bcachefs-dev
-> -- 
-> 2.45.2
-> 
-> 
+Oleg.
+
