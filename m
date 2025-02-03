@@ -1,422 +1,125 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fallback24.i.mail.ru (fallback24.i.mail.ru [79.137.243.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08B5202F9F;
-	Mon,  3 Feb 2025 11:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937342036F6;
+	Mon,  3 Feb 2025 11:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738583055; cv=none; b=Qo3eXbPFWbWLG0px0l//GeMvCoUgsy5b1WESwFtIYkpyV/9f6+54wq/xbjCErxK6ESlflKv0NmgkT/qjg+i85V6ObvLmmyyMiTUVSF9a+kmz/LTKV85oZO66xBSwvYRiT870rX0yir6k1Kb2+OhHabKi0vyTgtSMYBTqXqu4jO8=
+	t=1738583063; cv=none; b=L38fSSTrfZYw5Lgn7LPAU8Jgps7OClh+snSeOGbPhi90uDy5lI2WNn5NtIEq7RB+dBqn7F/2NrZ7K84Tcu6wW3z6NBXj19zK0IGiLaRM9wfTYrdYlu2AKRmrVMLPOzYHRQnh/4Whqywtxfi0ZlT+CaJTBL1D3n6SjL+9giLTRtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738583055; c=relaxed/simple;
-	bh=6tzJrD5mSzuNYxORYax8OVYGxYUSWLkSUsidhKKgbNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hKtbgsWIM+gH4dMJA1qDvpPZ1NMm3j3X6wz11jxvke6vdDtQIeu54s6McORmlnPE+pPATp3Nt1YkuGVkWATSgdk/NaSY1iNzn0QFgPrMrKZG9nwXiRINpyaJv9Cyo8cCMl9rigRQlyXvLd1vpHaW7f6K02gdZwbkNTaTmqMCe0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XAfUhuiF; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738583063; c=relaxed/simple;
+	bh=lRmmcSwQSLlWjTBhSGXKNd4O+5nRrJChEzvEfWDtUYQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q9+jjVrXFRhEwc5fpHgth1W3y/5/cU2INzromnK4ngg3aa85bZDMgfNBD5vftSwDRNoqClmsgVN8DiZM8V5aqfRS+toeyPtI5fBKjbGppz9sOFCracEkNJgVyNmxgA3xrscgDxZrAhaFPBi/cF/4Q8FsOtMJgUvNhhueXmc6V/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=VeFvPa/J; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=HtjqxV9q; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=N7C3Ud/9; arc=none smtp.client-ip=79.137.243.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAfUhuiF"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e2460c6f05so5114016d6.3;
-        Mon, 03 Feb 2025 03:44:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738583053; x=1739187853; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QDcJOcAQ7/z4bSXnl3Bhpx8hTztOtzMmlwKWRyxLYnI=;
-        b=XAfUhuiFQ5YhgTx8DReo0WcacG9In1zJuKdwcFFOfu0MuJRm2rqx4n8ZtYkz82BcaO
-         jeda0Vjtc6sMXECrMKyTxntAbjgFC3Bpqv565JhqoHLsmEmysuZhtUaeW/mfTdmcKbLQ
-         Bkuou3dGn+PIoNMKORxbwLaT4PmAc/fL2hGR4ukVzCQvN9GNqMBjSipnqlzpHKy+tEpq
-         g2kJOtaIqk0C6huGHB3Jc6wBDBQHKPGYURVm9e0MmxlUc9bapWiB7hiV5I4B/PuWjgPD
-         3vv9WbnBDJLwAEjf4DRy6F3EmHrxBP2YjVPnAcY/lS+cbXuN5TwFOmAhksESzzIH5enx
-         qZcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738583053; x=1739187853;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QDcJOcAQ7/z4bSXnl3Bhpx8hTztOtzMmlwKWRyxLYnI=;
-        b=SuiLHjg4yppAHqraioau2QpfkxgkmPcTTuPvrnvhWsMiYY9IXBa6+oY0x9I9jS1FuG
-         PhYQAOBpqsEErWkCjpVEtPV+bhSc4O3SsPUD1zh1UDuPag1U3PhL945CZvI4M6Z+iNzA
-         mb12eUlhoAkvhHHLFG9u9Wh50Cu1jBy4wSKCg3GHbeCTDncsJQixQIXeaHI/QyrRXk3r
-         wSod/PLCjU8Qp41D1TJMtJyHAIv9KgLp+ggvDUcp0uTRgXa+FZCetDYUiY/EAA9qzkwR
-         kfNbzsUJaKJmbGEmbA/vw/KjMF0B5s5P1jMvN3YPXetDfYId2yQkyHcNJCkGUcPDIhKh
-         q6OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5UeR/7giwEbDZifhQZi+h3pwbDMNo7GC3vbUEytW2jhuG3dYrl/mB9AWP5aPgkaKwuCFLfBPh0mD5/lky@vger.kernel.org, AJvYcCVbd2Fcjv/xgdWf/wFqIbsXs0G3mq94scK1UOoEjNuaV2l7jpjvAma/GYxu96cfQpjSXWLvDPT4bbjT@vger.kernel.org, AJvYcCVlXM9m2YaQ63HlARFnuJnDQbuGmudVvwevrDZSpA6sPpqzO5jHIzDcoV/LkWcPaSzS2OCDF/8nU1L+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNSSBfApQZKpDtSch65qayXii/HMEywb8f4k/zl+l+sEIx/Vh2
-	TOmnRvy0/ZgVE9ZqG9upgaYqdKuxU904yjof/xj6UL1jvb2amFAd
-X-Gm-Gg: ASbGncsE1XGVKy+a5eGBZmRjzhbZQKQoDziXSHrmdqIK43gRS4TjYDVkhh5Mr2uflUA
-	R5bI1/N0WVRU7wJW3kSFjG+zuKOuzs5lOdttxWcZDEg9PxVxz/pwlwd938A8yZWT5h6Cpv8u2dh
-	uBy06+/sIfqQg2KuTBf+nUMJTXMGjOZEt8vfWv6vXN9oai4tGfj3fxXTqMlpE85NGZDW7nJtYpH
-	RXNZ74eSSzYAOglt+gND2xiQhMvEE0KE/mc8+SHF5P1P0TSEbUsww0U8yKbQ5QNivpxg7+7EkJv
-	0RbcjAbUjz5Vq6Sw8ur+0HvHeQlb5nsHarmb
-X-Google-Smtp-Source: AGHT+IFxYzzBLOUEW8haIBn/YXFKvo7N65xF7zaR9VokPcT1gQi18uX90fqrOTDQSGRchkB1YnWHIg==
-X-Received: by 2002:a05:620a:248e:b0:7be:3d23:c2f5 with SMTP id af79cd13be357-7bffccdfc5fmr1038653685a.4.1738583052449;
-        Mon, 03 Feb 2025 03:44:12 -0800 (PST)
-Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a905581sm518924385a.77.2025.02.03.03.44.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 03:44:11 -0800 (PST)
-Date: Mon, 3 Feb 2025 08:44:06 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
-	648eedbee0e7702eda10034531de4611597cd9f2.camel@gmail.com,
-	David Lechner <dlechner@baylibre.com>,
-	Jonathan Santos <Jonathan.Santos@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v2 07/16] iio: adc: ad7768-1: convert driver to use regmap
-Message-ID: <Z6CsBsDLdiWCrQwk@JSANTO12-L01.ad.analog.com>
-Reply-To: 20250130163234.000021e9@huawei.com
-References: <cover.1737985435.git.Jonathan.Santos@analog.com>
- <0968f9cfc55c5ac80492a88bbe95fc8ff7208fa5.1737985435.git.Jonathan.Santos@analog.com>
- <9b8204f2-107a-477e-a822-c1649af12d02@baylibre.com>
- <648eedbee0e7702eda10034531de4611597cd9f2.camel@gmail.com>
- <Z5jtx6QaSMxBXoyk@JSANTO12-L01.ad.analog.com>
- <80d444cbed3d30cf24b4d40e129caf6b1ebe358d.camel@gmail.com>
- <20250130163234.000021e9@huawei.com>
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="VeFvPa/J";
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="HtjqxV9q";
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="N7C3Ud/9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
+	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=EnxPxT5vtDruZ/NPrlKxrC9OxvknZLrngn0EhS4XUms=;
+	t=1738583061;x=1738673061; 
+	b=VeFvPa/JtxQS2i8sHzyk+LD0rBjC+mlKzikqhvapSpKEhoCXYQULvqDLZl/Onmo9a7rkjGagWGKB6ikkdmwJjnqbvtwtX+jSMyZTHb5vN7OzF6Kl7wgRHjKFsea316JOd4rQrFi1Iv4ft39YR/Ak/Cr5m2+7zRpVRw/ysyjQoGU=;
+Received: from [10.113.90.174] (port=42962 helo=send239.i.mail.ru)
+	by fallback24.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
+	id 1teuPz-004z85-4c; Mon, 03 Feb 2025 14:15:07 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive:X-Cloud-Ids;
+	bh=EnxPxT5vtDruZ/NPrlKxrC9OxvknZLrngn0EhS4XUms=; t=1738581307; x=1738671307; 
+	b=HtjqxV9qrZd+Mnee6tkAIc/yRt0R6HExWTx+GPyLWq4F/X6ojy1+hpML69BrfvZKpCPPWgml8QW
+	TKVWpNkR407ZVG4JfaItF3ygIz4A/OVuQvaln6gbnabH9E0xS6yoqqQLaq/fIicLFdII2dUO8xYGk
+	0xCUbcbgCyKxaRGHRjg=;
+Received: from [10.113.228.228] (port=37220 helo=send149.i.mail.ru)
+	by exim-fallback-5fbdbdcb77-zt58w with esmtp (envelope-from <danila@jiaxyga.com>)
+	id 1teuPm-00000000MOX-3YHQ; Mon, 03 Feb 2025 14:14:55 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
+	X-Cloud-Ids:Disposition-Notification-To;
+	bh=EnxPxT5vtDruZ/NPrlKxrC9OxvknZLrngn0EhS4XUms=; t=1738581294; x=1738671294; 
+	b=N7C3Ud/9rcTZ4Nz1LETpNVpBkInEakdJ+72wVT3Bdftu+vNUnyuVP8mpJQ8SlI5ngkeFeIzRfEK
+	//iQKn24gnP+xOBoDzLPgDF+EjJWSbtGzZb33yBlA2KOE2UHgIhTzI72CaXsMpXp3xapw/02ejbL0
+	N29SSCQddTZE047stS4=;
+Received: by exim-smtp-6d97ff8cf4-hcpzs with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1teuPY-00000000A0H-0FXI; Mon, 03 Feb 2025 14:14:40 +0300
+From: Danila Tikhonov <danila@jiaxyga.com>
+To: brgl@bgdev.pl,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andersson@kernel.org,
+	konradybcio@kernel.org
+Cc: linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux@mainlining.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Danila Tikhonov <danila@jiaxyga.com>
+Subject: [PATCH 2/4] dt-bindings: eeprom: at24: Add compatible for Puya P24C64F
+Date: Mon,  3 Feb 2025 14:14:27 +0300
+Message-ID: <20250203111429.22062-3-danila@jiaxyga.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250203111429.22062-1-danila@jiaxyga.com>
+References: <20250203111429.22062-1-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250130163234.000021e9@huawei.com>
+X-Mailru-Src: smtp
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD985D89FF3B425BBEF60198EBAA7A2E64509B496FF1DBC87B0CD62213F67905E7A3BDC368C6A300B83BC5D9AA61015533C001A85456285550520DE98A5765A13B4DDDE7B70B5F5C79F
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7EC0B1A4921CAE631EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006371895637A5F0B45FF8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D865E1688E63056053EE9DB705B7A98D04615A749510838473CC7F00164DA146DAFE8445B8C89999728AA50765F7900637CA37C9946A8B9E41389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8CE135D2742255B35F6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947CB5C78E0E843E24DA2D242C3BD2E3F4C64AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C3CC06CF5CFB199D65BA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CF3D321E7403792E342EB15956EA79C166A417C69337E82CC275ECD9A6C639B01B78DA827A17800CE7CD707F342D9BDC98731C566533BA786AA5CC5B56E945C8DA
+X-C1DE0DAB: 0D63561A33F958A51222D4D9B4DC879E5002B1117B3ED6964C3022313EAB1D66A13BD6A4B0E00B96823CB91A9FED034534781492E4B8EEAD3C056C6FCE5AFF8EC79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF9541AB894E9710C914F4E6E73EC71EFBA5348D6463FA7942A41F01F1CBC1758AA5CD7B9A90500322D5D9813428A63F6C850F444C7084155537F80B1A62BB60B5ECEC49429DEBAC77E4FDFA4A036B0C3902C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojODHyJtLJ2QhlY9whZWMOPA==
+X-Mailru-Sender: 9EB879F2C80682A0D0AE6A344B45275F3916920A183BFB23ED188C5D0CCD93D443F3301FB1F67CDE2C7F7CBDA59D0CF92C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
+X-Mailru-Src: fallback
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B4A84B4964F946E17EB1A91FC540E416C1BDB3A1FA17F234B6049FFFDB7839CE9E5FC588583EA33AA19D429A2CD6813808334F49636038C00711D85D0413F53AEB9EE9ED8B18403888
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5+wYjsrrSY/u6NqYXWMR0/V85CnFjCYTu9APdQH0PvpnP5qz8aO2mjTJzjHGC4ogvVuzB3zfVUBtENeZ6b5av1fnCBE34JUDkWdM6QxE+Ga5d8voMtmXfSqgmQqKELHYk7RFuIOw5Q1i
+X-Mras: Ok
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B4A84B4964F946E17EB1A91FC540E416C12D8BAB617684C85D049FFFDB7839CE9E5FC588583EA33AA1FEDDEFFF60698890A9701EDC308499845A8D9CC8EE20FB4A
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5+wYjsrrSY/u6NqYXWMR0/V85CnFjCYTu9APdQH0PvpnP5qz8aO2mjTJzjHGC4ogvVuzB3zfVUBtENeZ6b5av1fnCBE34JUDkWdM6QxE+Ga5d8voMtmXfSocPAboFA1B25zUdJfQ/bjz
+X-Mailru-MI: 20000000000000800
+X-Mras: Ok
 
-On 01/30, Jonathan Cameron wrote:
-> On Tue, 28 Jan 2025 15:09:36 +0000
-> Nuno Sá <noname.nuno@gmail.com> wrote:
-> 
-> > On Tue, 2025-01-28 at 11:46 -0300, Jonathan Santos wrote:
-> > > On 01/28, Nuno Sá wrote:  
-> > > > On Mon, 2025-01-27 at 19:29 -0600, David Lechner wrote:  
-> > > > > On 1/27/25 9:12 AM, Jonathan Santos wrote:  
-> > > > > > Convert the AD7768-1 driver to use the regmap API for register
-> > > > > > access. This change simplifies and standardizes register interactions,
-> > > > > > reducing code duplication and improving maintainability.
-> > > > > > 
-> > > > > > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> > > > > > ---
-> > > > > > v2 Changes:
-> > > > > > * New patch in v2.
-> > > > > > ---
-> > > > > >  drivers/iio/adc/ad7768-1.c | 82 +++++++++++++++++++++++++++-----------
-> > > > > >  1 file changed, 58 insertions(+), 24 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> > > > > > index 95ba89435652..fb8d6fae5f8a 100644
-> > > > > > --- a/drivers/iio/adc/ad7768-1.c
-> > > > > > +++ b/drivers/iio/adc/ad7768-1.c
-> > > > > > @@ -12,6 +12,7 @@
-> > > > > >  #include <linux/gpio/consumer.h>
-> > > > > >  #include <linux/kernel.h>
-> > > > > >  #include <linux/module.h>
-> > > > > > +#include <linux/regmap.h>
-> > > > > >  #include <linux/regulator/consumer.h>
-> > > > > >  #include <linux/sysfs.h>
-> > > > > >  #include <linux/spi/spi.h>
-> > > > > > @@ -153,6 +154,7 @@ static const struct iio_chan_spec ad7768_channels[]
-> > > > > > = {
-> > > > > >  
-> > > > > >  struct ad7768_state {
-> > > > > >  	struct spi_device *spi;
-> > > > > > +	struct regmap *regmap;
-> > > > > >  	struct regulator *vref;
-> > > > > >  	struct mutex lock;
-> > > > > >  	struct clk *mclk;
-> > > > > > @@ -176,12 +178,17 @@ struct ad7768_state {
-> > > > > >  	} data __aligned(IIO_DMA_MINALIGN);
-> > > > > >  };
-> > > > > >  
-> > > > > > -static int ad7768_spi_reg_read(struct ad7768_state *st, unsigned int
-> > > > > > addr,
-> > > > > > -			       unsigned int len)
-> > > > > > +static int ad7768_spi_reg_read(void *context, unsigned int addr,
-> > > > > > +			       unsigned int *val)
-> > > > > >  {
-> > > > > > -	unsigned int shift;
-> > > > > > +	struct iio_dev *dev = context;
-> > > > > > +	struct ad7768_state *st;
-> > > > > > +	unsigned int shift, len;
-> > > > > >  	int ret;
-> > > > > >  
-> > > > > > +	st = iio_priv(dev);  
-> > > > > 
-> > > > > This can be combined with the variable declaration.
-> > > > >   
-> > > > > > +	/* Regular value size is 1 Byte, but 3 Bytes for ADC data */  
-> > > > > 
-> > > > > Probably not currently needed but COEFF_DATA register is also 3 bytes.
-> > > > >   
-> > > > > > +	len = (addr == AD7768_REG_ADC_DATA) ? 3 : 1;
-> > > > > >  	shift = 32 - (8 * len);
-> > > > > >  	st->data.d8[0] = AD7768_RD_FLAG_MSK(addr);
-> > > > > >  
-> > > > > > @@ -190,13 +197,19 @@ static int ad7768_spi_reg_read(struct ad7768_state
-> > > > > > *st, unsigned int addr,
-> > > > > >  	if (ret < 0)
-> > > > > >  		return ret;
-> > > > > >  
-> > > > > > -	return (be32_to_cpu(st->data.d32) >> shift);
-> > > > > > +	*val = be32_to_cpu(st->data.d32) >> shift;
-> > > > > > +
-> > > > > > +	return 0;
-> > > > > >  }
-> > > > > >  
-> > > > > > -static int ad7768_spi_reg_write(struct ad7768_state *st,
-> > > > > > +static int ad7768_spi_reg_write(void *context,
-> > > > > >  				unsigned int addr,
-> > > > > >  				unsigned int val)
-> > > > > >  {
-> > > > > > +	struct iio_dev *dev = context;
-> > > > > > +	struct ad7768_state *st;
-> > > > > > +
-> > > > > > +	st = iio_priv(dev);
-> > > > > >  	st->data.d8[0] = AD7768_WR_FLAG_MSK(addr);
-> > > > > >  	st->data.d8[1] = val & 0xFF;
-> > > > > >  
-> > > > > > @@ -206,16 +219,16 @@ static int ad7768_spi_reg_write(struct
-> > > > > > ad7768_state
-> > > > > > *st,
-> > > > > >  static int ad7768_set_mode(struct ad7768_state *st,
-> > > > > >  			   enum ad7768_conv_mode mode)
-> > > > > >  {
-> > > > > > -	int regval;
-> > > > > > +	int regval, ret;
-> > > > > >  
-> > > > > > -	regval = ad7768_spi_reg_read(st, AD7768_REG_CONVERSION, 1);
-> > > > > > -	if (regval < 0)
-> > > > > > -		return regval;
-> > > > > > +	ret = regmap_read(st->regmap, AD7768_REG_CONVERSION, &regval);
-> > > > > > +	if (ret)
-> > > > > > +		return ret;
-> > > > > >  
-> > > > > >  	regval &= ~AD7768_CONV_MODE_MSK;
-> > > > > >  	regval |= AD7768_CONV_MODE(mode);
-> > > > > >  
-> > > > > > -	return ad7768_spi_reg_write(st, AD7768_REG_CONVERSION, regval);
-> > > > > > +	return regmap_write(st->regmap, AD7768_REG_CONVERSION, regval);
-> > > > > >  }
-> > > > > >  
-> > > > > >  static int ad7768_scan_direct(struct iio_dev *indio_dev)
-> > > > > > @@ -234,9 +247,10 @@ static int ad7768_scan_direct(struct iio_dev
-> > > > > > *indio_dev)
-> > > > > >  	if (!ret)
-> > > > > >  		return -ETIMEDOUT;
-> > > > > >  
-> > > > > > -	readval = ad7768_spi_reg_read(st, AD7768_REG_ADC_DATA, 3);
-> > > > > > -	if (readval < 0)
-> > > > > > -		return readval;
-> > > > > > +	ret = regmap_read(st->regmap, AD7768_REG_ADC_DATA, &readval);
-> > > > > > +	if (ret)
-> > > > > > +		return ret;
-> > > > > > +
-> > > > > >  	/*
-> > > > > >  	 * Any SPI configuration of the AD7768-1 can only be
-> > > > > >  	 * performed in continuous conversion mode.
-> > > > > > @@ -258,13 +272,11 @@ static int ad7768_reg_access(struct iio_dev
-> > > > > > *indio_dev,
-> > > > > >  
-> > > > > >  	mutex_lock(&st->lock);
-> > > > > >  	if (readval) {
-> > > > > > -		ret = ad7768_spi_reg_read(st, reg, 1);
-> > > > > > -		if (ret < 0)
-> > > > > > +		ret = regmap_read(st->regmap, reg, readval);
-> > > > > > +		if (ret)
-> > > > > >  			goto err_unlock;  
-> > > > > 
-> > > > > Can drop the if and goto.
-> > > > >   
-> > > > > > -		*readval = ret;
-> > > > > > -		ret = 0;
-> > > > > >  	} else {
-> > > > > > -		ret = ad7768_spi_reg_write(st, reg, writeval);
-> > > > > > +		ret = regmap_write(st->regmap, reg, writeval);
-> > > > > >  	}
-> > > > > >  err_unlock:
-> > > > > >  	mutex_unlock(&st->lock);
-> > > > > > @@ -283,7 +295,7 @@ static int ad7768_set_dig_fil(struct ad7768_state
-> > > > > > *st,
-> > > > > >  	else
-> > > > > >  		mode = AD7768_DIG_FIL_DEC_RATE(dec_rate);
-> > > > > >  
-> > > > > > -	ret = ad7768_spi_reg_write(st, AD7768_REG_DIGITAL_FILTER,
-> > > > > > mode);
-> > > > > > +	ret = regmap_write(st->regmap, AD7768_REG_DIGITAL_FILTER,
-> > > > > > mode);
-> > > > > >  	if (ret < 0)
-> > > > > >  		return ret;
-> > > > > >  
-> > > > > > @@ -320,7 +332,7 @@ static int ad7768_set_freq(struct ad7768_state *st,
-> > > > > >  	 */
-> > > > > >  	pwr_mode = AD7768_PWR_MCLK_DIV(ad7768_clk_config[idx].mclk_div)
-> > > > > > |
-> > > > > >  		   AD7768_PWR_PWRMODE(ad7768_clk_config[idx].pwrmode);
-> > > > > > -	ret = ad7768_spi_reg_write(st, AD7768_REG_POWER_CLOCK,
-> > > > > > pwr_mode);
-> > > > > > +	ret = regmap_write(st->regmap, AD7768_REG_POWER_CLOCK,
-> > > > > > pwr_mode);
-> > > > > >  	if (ret < 0)
-> > > > > >  		return ret;
-> > > > > >  
-> > > > > > @@ -447,11 +459,11 @@ static int ad7768_setup(struct ad7768_state *st)
-> > > > > >  	 * to 10. When the sequence is detected, the reset occurs.
-> > > > > >  	 * See the datasheet, page 70.
-> > > > > >  	 */
-> > > > > > -	ret = ad7768_spi_reg_write(st, AD7768_REG_SYNC_RESET, 0x3);
-> > > > > > +	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x3);
-> > > > > >  	if (ret)
-> > > > > >  		return ret;
-> > > > > >  
-> > > > > > -	ret = ad7768_spi_reg_write(st, AD7768_REG_SYNC_RESET, 0x2);
-> > > > > > +	ret = regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x2);
-> > > > > >  	if (ret)
-> > > > > >  		return ret;
-> > > > > >  
-> > > > > > @@ -509,18 +521,19 @@ static int ad7768_buffer_postenable(struct iio_dev
-> > > > > > *indio_dev)
-> > > > > >  	 * continuous read mode. Subsequent data reads do not require
-> > > > > > an
-> > > > > >  	 * initial 8-bit write to query the ADC_DATA register.
-> > > > > >  	 */
-> > > > > > -	return ad7768_spi_reg_write(st, AD7768_REG_INTERFACE_FORMAT,
-> > > > > > 0x01);
-> > > > > > +	return regmap_write(st->regmap, AD7768_REG_INTERFACE_FORMAT,
-> > > > > > 0x01);
-> > > > > >  }
-> > > > > >  
-> > > > > >  static int ad7768_buffer_predisable(struct iio_dev *indio_dev)
-> > > > > >  {
-> > > > > >  	struct ad7768_state *st = iio_priv(indio_dev);
-> > > > > > +	unsigned int regval;  
-> > > > > 
-> > > > > Intention could be more clear by calling this "unused". Otherwise, it can
-> > > > > look
-> > > > > like a bug if you don't fully understand what the comment below means.
-> > > > >   
-> > > > > >  
-> > > > > >  	/*
-> > > > > >  	 * To exit continuous read mode, perform a single read of the
-> > > > > > ADC_DATA
-> > > > > >  	 * reg (0x2C), which allows further configuration of the
-> > > > > > device.
-> > > > > >  	 */
-> > > > > > -	return ad7768_spi_reg_read(st, AD7768_REG_ADC_DATA, 3);
-> > > > > > +	return regmap_read(st->regmap, AD7768_REG_ADC_DATA, &regval);
-> > > > > >  }
-> > > > > >  
-> > > > > >  static const struct iio_buffer_setup_ops ad7768_buffer_ops = {
-> > > > > > @@ -563,6 +576,20 @@ static int ad7768_set_channel_label(struct iio_dev
-> > > > > > *indio_dev,
-> > > > > >  	return 0;
-> > > > > >  }
-> > > > > >  
-> > > > > > +static const struct regmap_bus ad7768_regmap_bus = {
-> > > > > > +	.reg_write = ad7768_spi_reg_write,
-> > > > > > +	.reg_read = ad7768_spi_reg_read,
-> > > > > > +	.reg_format_endian_default = REGMAP_ENDIAN_BIG,
-> > > > > > +	.val_format_endian_default = REGMAP_ENDIAN_BIG,  
-> > > > > 
-> > > > > The bus read function is calling be32_to_cpu(), so we probably want to
-> > > > > remove
-> > > > > that or change the default here.
-> > > > >   
-> > > > > > +};
-> > > > > > +
-> > > > > > +static const struct regmap_config ad7768_regmap_config = {
-> > > > > > +	.name = "ad7768-1",
-> > > > > > +	.reg_bits = 8,
-> > > > > > +	.val_bits = 8,  
-> > > > > 
-> > > > > Should this be 24 since the largest registers are 24-bit?
-> > > > > 
-> > > > > Another option could be to just use a regular spi_*() API for that
-> > > > > register
-> > > > > instead of regmap_*() and avoid trying to do something that regmap doesn't
-> > > > > really handle.
-> > > > > 
-> > > > > Or we could possibly use regmap_bulk_read(), but that feels a bit hacky
-> > > > > too
-> > > > > since it isn't actually how that function was intended to be used.
-> > > > >   
-> > > > 
-> > > > Hmm I might be missing something but looking at the register map, It seems
-> > > > we do
-> > > > have 8bit registers? We do have values that span multiple registers (3 for
-> > > > the
-> > > > 24bit values) and regmap_bulk_read() should actually fit right? I mean,
-> > > > looking
-> > > > at the docs:
-> > > > 
-> > > > "regmap_bulk_read() - Read multiple sequential registers from the device"
-> > > >   
-> > > 
-> > > Isn't regmap_bulk_*() for reading a value spread in sequential registers,
-> > > like the offset calibration (registers 0x22, 0x23 and 0x24, 8 bits value
-> > > for each reg)? For the ADC data (0x2C) we have a 24 bits value in only one
-> > > register, so I beleive this does not apply.
-> > >   
-> > 
-> > Ah got it. I failed to see that. Yeah, in that case you're right... it won't
-> > work out of the box.
-> > 
-> > > > But I do agree that what we have right now does not make much sense. If we
-> > > > need
-> > > > to do
-> > > > 
-> > > > len = (addr == AD7768_REG_ADC_DATA) ? 3 : 1;
-> > > > 
-> > > > for supporting regmap, then I have to question using it. Also note that we
-> > > > have
-> > > > things like gain and offset that are also 3 bytes which means that our
-> > > > custom
-> > > > read would need to become more questionable if we add support for it.
-> > > >   
-> > > 
-> > > For those cases the regmap_bulk_*() works.
-> > >   
-> > > > Jonathan, did you tried to use plain regmap (without the custom bus)?
-> > > > Assuming
-> > > > bulk reads work, I'm not seeing an apparent reason for the custom bus... I
-> > > > would
-> > > > also suspect that if bulk reads don't work out of the box, providing a
-> > > > regmap
-> > > > cache would make it work but relying on implementation details is not a very
-> > > > good practice.
-> > > >   
-> > > 
-> > > Yes, i tried and only works for the register with 8-bits value. David
-> > > suggested using regular spi_*() functions for the unsual registers with
-> > > 24-bits value, such as the ADC data (0x2C). That is the only way of
-> > > having the default spi bus interface using regmap. Otherwise we should
-> > > drop the regmap.   
-> > 
-> > Yeah, might be better to do plain spi for the unusual registers rather than the
-> > custom bus. But no strong feelings on my side...
-> I'm not keen on a mix or on a regmap that handles the size under the hood.
-> I think this quirk should be obvious.
-> 
-> Can we do two regmap, one for each of the register size?  We have other
-> drivers taking that approach and I'm not sure if it was ruled out for
-> this one.
-> 
-> Jonathan
-> 
+Add the compatible for another 64Kb EEPROM from Puya.
 
-Yes, it makes sense a regmap for each register size, if everyone agrees.
-I will try this here.
+Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+---
+ Documentation/devicetree/bindings/eeprom/at24.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> > 
-> > - Nuno Sá
-> > >   
-> > 
-> > 
-> > 
-> 
+diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
+index c9e4afbdc448..e7496ece8ae9 100644
+--- a/Documentation/devicetree/bindings/eeprom/at24.yaml
++++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+@@ -130,7 +130,9 @@ properties:
+           - const: giantec,gt24c32a
+           - const: atmel,24c32
+       - items:
+-          - const: onnn,n24s64b
++          - enum:
++              - onnn,n24s64b
++              - puya,p24c64f
+           - const: atmel,24c64
+       - items:
+           - enum:
+-- 
+2.48.1
+
