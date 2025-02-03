@@ -1,587 +1,122 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C53C213E63
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBC0213E87
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 14:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593083; cv=none; b=UKzwNHXNIMcX8TryZgBvB/1YWV7ZqlP/VMHPX3ScUULOavzuUKaqVJTtXQqErF1ELV7htiu9p0rTMJOmpRoPniaHm9yzBlAsXoGpjbNww4VKUF8n+JYn7dKr4PSiejy0eejPJFaowrk3r10yqRcqrPrv7V3cPZbPOBvDKIlpt3I=
+	t=1738593086; cv=none; b=KZLFYbAtinC3AGF6K/F3Yf3aREA71Gv2L0nrTJCIbvRL1OqwjSNOQ3hZIoI16kODLCeQCId0uZD4ERwLbQ3myE5KF0fgba99u4otD/M/eGd3miBM3Q34g0aiv4eMtKNrBZ1XD/zB8iPBiAhRWbi+64EXTQUDHimHN1yXIR70Oy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593083; c=relaxed/simple;
-	bh=iJsxMyrUKyCOzq8hxen/NY+PR5ybH/IG/OEPeQuHY5w=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T8HRDiWWYLs/SN7xmtY4fHcpjXHwihsSJvRz9ayDv/HwxOlCxJgth31QVmCBs9gDNqx19E+5oatyadzHZ4Mnw0f7KaIGME+2KCIwbpWNVUI0Tc9nAYSwfK1nbHry/QtexaDTPQFvNBB6nQ43/tp+VncrZphCs81ZvRiK8IKLIlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BDqyR14C; arc=none smtp.client-ip=209.85.208.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+	s=arc-20240116; t=1738593086; c=relaxed/simple;
+	bh=DQrineTon4oBDwNOMF4wAf5CmVWaPXA6hctLTPhSRGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OeUu2LRRu1Zm0bJ1lNJvwSI0bqo/b9Sy7DVJSntg/oTOXX3UOuSQH6Mb0SIqL+5AOmDlhhC3XYZzAJ5YBFZwKA1GV6/FE/U45BYCJvASix3YqFp6zDipzbnF1c/y6F5t/NGkav55bsz/YFmw974DYZ9uxfKuZ43Qt/iJG+RvNm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zb+GY5TI; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BDqyR14C"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5d3c284eba0so6903710a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:31:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zb+GY5TI"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-3043e84c687so38518311fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 06:31:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738593079; x=1739197879; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WeY1dSDUeR2lhfNia4EFpJfj5uFzlkTN7t+nTGk1XfA=;
-        b=BDqyR14CyKVQ9mjoyWRP928KrLZNdrMSiSzUqdL1xlJqw8J61uzfy4pztZQxsF1Rt8
-         89gNSZB9xZ4xhGZ1gdWXj2vcqcYd9vWKOF2/iUdLVRWsxBaidfIuyYETASt1gMRLqKyz
-         4SA2VHVF4doAA5ry9oyvkLCe1XTv3sk2ewcUW/kfrLchlPkLvk9InkpWpRe7OCXwufl6
-         BpQduq8MqWEycKjnwavweCubGKK8egvVpXvfZm70OjtfHfTGvjTVXujg8qPEDGDS9ZLt
-         W7CRX2cOZ7W2/3J9VAWyaSy4g9RjSQzrIw2VzpdMT8pqd9RtU2/kzfIuhSHc7G9C1AkU
-         BRzA==
+        d=linaro.org; s=google; t=1738593083; x=1739197883; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TVDFcnyLh4wiaaDr8pcIi9tA5w30/ZdPI8YjayS2Hzg=;
+        b=zb+GY5TIhM2nbK06gYj/ZNfnr2LTdO2txfz9X/A5chWrBFx2IU1ezNk9jPmQmSTxtv
+         R8r9XlKzhmL0FqqVP8KgiDOZ4RLYBz6RTKPYeiaWb4MQ65p43NrBNtWzDB9vZ3um+ISA
+         v179MO1PyEWcugimeTGIjyZQUFThabrzPgOpClQRrliD7Nd8xCZ3Yrvvkr9VBdnHjW72
+         nNJJpFzuBSqn+TNQ7YfsG6BRHAjiEz6rhXeSWzNWIoL/woNu3puY+Ra10miLTNAwnj8/
+         CD+i/kr9EHmNkfWqMre4Ja4JCl5z6jA7CetlwjY1GZr3w1qtdY44jFRrfS605EjY8TaS
+         FQoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738593079; x=1739197879;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WeY1dSDUeR2lhfNia4EFpJfj5uFzlkTN7t+nTGk1XfA=;
-        b=XCUi+W8ezsQLXU/klugyxRqXnivMrqhV/66WK6lKvfIs617BwqTgR3rKyMe5pXSVzh
-         KuxK8zjqfKnEn15c5pfkY92UPz0GyLKiZFTNJ/hcNfp6hIMdMiwzyJaWA9nhc/pnu/Lk
-         Ojth+N1M1zuAq+8FhpXpzKzAj4iCl0n/0NZqL5PDWjNxc8ls1e5MCaAx9IFxSgsmFiQd
-         9FVGFbCHXcDej8NIukbxzHG2wdG78iS+61vrS8KepxMetvGppQk/jpF3sDmyGnxpcY0T
-         9gbYuZq5ugpK6noqnEhAKrDsN2cv6SwKmdH2f37+UcdBl/fq4vetAT4alFOcuVyTr3PY
-         AFVw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXNFGOpffJPmIPkXoJeccsJiTKEvwsIdE3Ca5OQ+8E7mRFnmNpVHd9034qQNqVw9hinaO9cHviao35ULI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu5hHYY1uyx9Ww/tkbj/4JZg8NhDsq/ibxkI3hQd2M1FnDVj2D
-	6Yp3c/AS6VvDdc67BJtGQIpM5BtN1m3vHjDbpvMRt4fALj3uHSvpHxla9UXqi2ILtqfCcB8LG4C
-	ZxUgzng==
-X-Google-Smtp-Source: AGHT+IElNDG6xdPzhk42iC9LdAsT+UakqaDTTQOuVyJgAdICpS6fS5Y4KL1DNtHacCxGEcHz1gS7aRmm+zFn
-X-Received: from edzf3.prod.google.com ([2002:a05:6402:1943:b0:5dc:73f4:56df])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:3217:b0:5db:da94:6e7e
- with SMTP id 4fb4d7f45d1cf-5dc5efebfa2mr25606972a12.24.1738593078820; Mon, 03
- Feb 2025 06:31:18 -0800 (PST)
-Date: Mon,  3 Feb 2025 15:30:40 +0100
-In-Reply-To: <cover.1738592865.git.dvyukov@google.com>
+        d=1e100.net; s=20230601; t=1738593083; x=1739197883;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TVDFcnyLh4wiaaDr8pcIi9tA5w30/ZdPI8YjayS2Hzg=;
+        b=Xbp5tRusGm3z1H1Gkwnc99QC/9YK/DPf8sLj0QpgVf+L5FwOjYvJMqroPniBjDHbEh
+         D9Nev4yqvYr4/AC4F6baPZvDMa5WlOb7gKTmXb9W/cVaFHOyyxPpCQHLW+RIOavCvDV2
+         4aSuUcN+KIz1VZmZUkZBw2AexAHGoaFbLQDig4wMM7sw8VfgZNSa6zMVl5QjGMRSOLmu
+         PFmNPyAqT23aQUDLkf2HsJna9W6ZZfCr7B0IM7RTiljBKiQyUown/wslJhRk5zDc1qT3
+         Uwv95pkaBiYkYqMYiYIuwnXv7xo3Ecw7wFNF9riQTXXnEcvRZcRNXbnPb1RFlXNO2G3/
+         adfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjyFOuUZzMyg/4VosrYE9jFNTRs6FaVNSWCdgKKVd4sAPGcmZfTeLQcwkPiPu3qAHJn2FBwKlYB4hIADE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywtw+ROXB4wAXfois97fpe/RiX7waOZqO5AOTm7CJcSrgtKua+p
+	HHnEvBOfSSkXFsMSNVqp02jp6Kld6+ihrqGM8LLg9KJptwxbJFT1TPIUpuqVKIc=
+X-Gm-Gg: ASbGncuXpxpzfb7ECixkLdj+wVBqEDF+jUtgw/JooV0gO0d+KPEGj6HdTpedSioKWCt
+	cFqv1N+W0wagmKLA4015iwOBwnsDGhfsPn/QakV9nZjrFbzm2D1P91BYhvItlA4wsNBNnnxPVua
+	jOUK5+J/cai4heahhLxnRKjrEtC5R3CzZMU4WkZ+yp9KooaHdeLz6TfUKYiomQMldZ/wjeO56OK
+	z+zO0f0bFrOCmB+jtsCzCSvzA7ws5dZIEcniKA8TfilBNaBICbOFPa8Ml0MAAEB+GlMaMuWmhQB
+	l6mLtM8OR3R6qvMDZIfOowNCxR9e+HnP1fqqZDagVws5d8LUm71EI/AVf1230wVweT4fE3Q=
+X-Google-Smtp-Source: AGHT+IHUghVJimpcvkNuryRp2QSiMsGJ5k9kaBv83gYo738k+5t/tc8gK88ES/UIqhPDyfIJKtVIKA==
+X-Received: by 2002:a05:651c:508:b0:300:33b1:f0cc with SMTP id 38308e7fff4ca-307968fcfb9mr89069701fa.34.1738593082745;
+        Mon, 03 Feb 2025 06:31:22 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a33f7cd2sm14901271fa.65.2025.02.03.06.31.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 06:31:21 -0800 (PST)
+Date: Mon, 3 Feb 2025 16:31:19 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Rocky Liao <quic_rjliao@quicinc.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] arm64: dts: qcom: qrb2210-rb1: add Bluetooth
+ support
+Message-ID: <ajojztm3jr6iciwqhlbc7xnndlhrq6z7z6bvbbnb7sjlybqjqq@e6sdxcjolmd3>
+References: <20250202-rb1-bt-v3-0-6797a4467ced@linaro.org>
+ <20250202-rb1-bt-v3-6-6797a4467ced@linaro.org>
+ <a6fe746c-c5e2-4c39-afa8-46b225256cb9@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1738592865.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <b6703af9059c22f0ce280993063a0d395d381b33.1738592865.git.dvyukov@google.com>
-Subject: [PATCH v3 5/8] perf report: Add latency output field
-From: Dmitry Vyukov <dvyukov@google.com>
-To: namhyung@kernel.org, irogers@google.com, acme@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6fe746c-c5e2-4c39-afa8-46b225256cb9@oss.qualcomm.com>
 
-Latency output field is similar to overhead, but represents overhead for
-latency rather than CPU consumption. It's re-scaled from overhead by dividing
-weight by the current parallelism level at the time of the sample.
-It effectively models profiling with 1 sample taken per unit of wall-clock
-time rather than unit of CPU time.
+On Mon, Feb 03, 2025 at 02:50:52PM +0100, Konrad Dybcio wrote:
+> On 2.02.2025 1:16 PM, Dmitry Baryshkov wrote:
+> > Add support for the onboard WCN3950 BT/WiFi chip. Corresponding firmware
+> > has been merged to linux-firmware and should be available in the next
+> > release.
+> > 
+> > Bluetooth: hci0: setting up wcn399x
+> > Bluetooth: hci0: QCA Product ID   :0x0000000f
+> > Bluetooth: hci0: QCA SOC Version  :0x40070120
+> > Bluetooth: hci0: QCA ROM Version  :0x00000102
+> > Bluetooth: hci0: QCA Patch Version:0x00000001
+> > Bluetooth: hci0: QCA controller version 0x01200102
+> > Bluetooth: hci0: QCA Downloading qca/cmbtfw12.tlv
+> > Bluetooth: hci0: QCA Downloading qca/cmnv12.bin
+> > Bluetooth: hci0: QCA setup on UART is completed
+> > 
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> 
+> [...]
+> 
+> > +&uart3 {
+> > +	/delete-property/ interrupts;
+> > +	interrupts-extended = <&intc GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
+> > +			      <&tlmm 11 IRQ_TYPE_LEVEL_HIGH>;
+> > +	pinctrl-0 = <&uart3_default>;
+> > +	pinctrl-1 = <&uart3_sleep>;
+> > +	pinctrl-names = "default", "sleep";
+> > +	status = "okay";
+> 
+> As you're going to resend, please add a newline before status
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- tools/perf/ui/browsers/hists.c  | 27 ++++++++++------
- tools/perf/ui/hist.c            | 29 ++++++++++-------
- tools/perf/util/addr_location.h |  2 ++
- tools/perf/util/event.c         |  6 ++++
- tools/perf/util/events_stats.h  |  2 ++
- tools/perf/util/hist.c          | 55 ++++++++++++++++++++++++---------
- tools/perf/util/hist.h          | 12 +++++++
- tools/perf/util/sort.c          |  2 ++
- 8 files changed, 100 insertions(+), 35 deletions(-)
+I thought I added it, but it seems it got lost during the plane landing.
+Do you want me to resend it?
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 49ba82bf33918..35c10509b797f 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -1226,7 +1226,7 @@ int __hpp__slsmg_color_printf(struct perf_hpp *hpp, const char *fmt, ...)
- 	return ret;
- }
- 
--#define __HPP_COLOR_PERCENT_FN(_type, _field)				\
-+#define __HPP_COLOR_PERCENT_FN(_type, _field, _fmttype)			\
- static u64 __hpp_get_##_field(struct hist_entry *he)			\
- {									\
- 	return he->stat._field;						\
-@@ -1238,10 +1238,10 @@ hist_browser__hpp_color_##_type(struct perf_hpp_fmt *fmt,		\
- 				struct hist_entry *he)			\
- {									\
- 	return hpp__fmt(fmt, hpp, he, __hpp_get_##_field, " %*.2f%%",	\
--			__hpp__slsmg_color_printf, true);		\
-+			__hpp__slsmg_color_printf, _fmttype);		\
- }
- 
--#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field)			\
-+#define __HPP_COLOR_ACC_PERCENT_FN(_type, _field, _fmttype)		\
- static u64 __hpp_get_acc_##_field(struct hist_entry *he)		\
- {									\
- 	return he->stat_acc->_field;					\
-@@ -1262,15 +1262,18 @@ hist_browser__hpp_color_##_type(struct perf_hpp_fmt *fmt,		\
- 		return ret;						\
- 	}								\
- 	return hpp__fmt(fmt, hpp, he, __hpp_get_acc_##_field,		\
--			" %*.2f%%", __hpp__slsmg_color_printf, true);	\
-+			" %*.2f%%", __hpp__slsmg_color_printf,		\
-+			_fmttype);					\
- }
- 
--__HPP_COLOR_PERCENT_FN(overhead, period)
--__HPP_COLOR_PERCENT_FN(overhead_sys, period_sys)
--__HPP_COLOR_PERCENT_FN(overhead_us, period_us)
--__HPP_COLOR_PERCENT_FN(overhead_guest_sys, period_guest_sys)
--__HPP_COLOR_PERCENT_FN(overhead_guest_us, period_guest_us)
--__HPP_COLOR_ACC_PERCENT_FN(overhead_acc, period)
-+__HPP_COLOR_PERCENT_FN(overhead, period, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_PERCENT_FN(latency, latency, PERF_HPP_FMT_TYPE__LATENCY)
-+__HPP_COLOR_PERCENT_FN(overhead_sys, period_sys, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_PERCENT_FN(overhead_us, period_us, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_PERCENT_FN(overhead_guest_sys, period_guest_sys, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_PERCENT_FN(overhead_guest_us, period_guest_us, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_ACC_PERCENT_FN(overhead_acc, period, PERF_HPP_FMT_TYPE__PERCENT)
-+__HPP_COLOR_ACC_PERCENT_FN(latency_acc, latency, PERF_HPP_FMT_TYPE__LATENCY)
- 
- #undef __HPP_COLOR_PERCENT_FN
- #undef __HPP_COLOR_ACC_PERCENT_FN
-@@ -1279,6 +1282,8 @@ void hist_browser__init_hpp(void)
- {
- 	perf_hpp__format[PERF_HPP__OVERHEAD].color =
- 				hist_browser__hpp_color_overhead;
-+	perf_hpp__format[PERF_HPP__LATENCY].color =
-+				hist_browser__hpp_color_latency;
- 	perf_hpp__format[PERF_HPP__OVERHEAD_SYS].color =
- 				hist_browser__hpp_color_overhead_sys;
- 	perf_hpp__format[PERF_HPP__OVERHEAD_US].color =
-@@ -1289,6 +1294,8 @@ void hist_browser__init_hpp(void)
- 				hist_browser__hpp_color_overhead_guest_us;
- 	perf_hpp__format[PERF_HPP__OVERHEAD_ACC].color =
- 				hist_browser__hpp_color_overhead_acc;
-+	perf_hpp__format[PERF_HPP__LATENCY_ACC].color =
-+				hist_browser__hpp_color_latency_acc;
- 
- 	res_sample_init();
- }
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index 34fda1d5eccb4..22e31d835301e 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -27,9 +27,10 @@ static int __hpp__fmt_print(struct perf_hpp *hpp, struct hists *hists, u64 val,
- 			    int nr_samples, const char *fmt, int len,
- 			    hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
- {
--	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
-+	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT || fmtype == PERF_HPP_FMT_TYPE__LATENCY) {
- 		double percent = 0.0;
--		u64 total = hists__total_period(hists);
-+		u64 total = fmtype == PERF_HPP_FMT_TYPE__PERCENT ? hists__total_period(hists) :
-+			hists__total_latency(hists);
- 
- 		if (total)
- 			percent = 100.0 * val / total;
-@@ -128,7 +129,7 @@ int hpp__fmt(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 				  print_fn, fmtype);
- 	}
- 
--	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT)
-+	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT || fmtype == PERF_HPP_FMT_TYPE__LATENCY)
- 		len -= 2; /* 2 for a space and a % sign */
- 	else
- 		len -= 1;
-@@ -472,11 +473,13 @@ __HPP_ENTRY_AVERAGE_FN(_type, _field)					\
- __HPP_SORT_AVERAGE_FN(_type, _field)
- 
- HPP_PERCENT_FNS(overhead, period)
-+HPP_PERCENT_FNS(latency, latency)
- HPP_PERCENT_FNS(overhead_sys, period_sys)
- HPP_PERCENT_FNS(overhead_us, period_us)
- HPP_PERCENT_FNS(overhead_guest_sys, period_guest_sys)
- HPP_PERCENT_FNS(overhead_guest_us, period_guest_us)
- HPP_PERCENT_ACC_FNS(overhead_acc, period)
-+HPP_PERCENT_ACC_FNS(latency_acc, latency)
- 
- HPP_RAW_FNS(samples, nr_events)
- HPP_RAW_FNS(period, period)
-@@ -548,11 +551,13 @@ static bool hpp__equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
- 
- struct perf_hpp_fmt perf_hpp__format[] = {
- 	HPP__COLOR_PRINT_FNS("Overhead", overhead, OVERHEAD),
-+	HPP__COLOR_PRINT_FNS("Latency", latency, LATENCY),
- 	HPP__COLOR_PRINT_FNS("sys", overhead_sys, OVERHEAD_SYS),
- 	HPP__COLOR_PRINT_FNS("usr", overhead_us, OVERHEAD_US),
- 	HPP__COLOR_PRINT_FNS("guest sys", overhead_guest_sys, OVERHEAD_GUEST_SYS),
- 	HPP__COLOR_PRINT_FNS("guest usr", overhead_guest_us, OVERHEAD_GUEST_US),
- 	HPP__COLOR_ACC_PRINT_FNS("Children", overhead_acc, OVERHEAD_ACC),
-+	HPP__COLOR_ACC_PRINT_FNS("Latency", latency_acc, LATENCY_ACC),
- 	HPP__PRINT_FNS("Samples", samples, SAMPLES),
- 	HPP__PRINT_FNS("Period", period, PERIOD),
- 	HPP__PRINT_FNS("Weight1", weight1, WEIGHT1),
-@@ -601,6 +606,11 @@ static void fmt_free(struct perf_hpp_fmt *fmt)
- 		fmt->free(fmt);
- }
- 
-+static bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
-+{
-+	return a->equal && a->equal(a, b);
-+}
-+
- void perf_hpp__init(void)
- {
- 	int i;
-@@ -671,30 +681,26 @@ static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
- 
- void perf_hpp__cancel_cumulate(void)
- {
--	struct perf_hpp_fmt *fmt, *acc, *ovh, *tmp;
-+	struct perf_hpp_fmt *fmt, *acc, *ovh, *acc_lat, *tmp;
- 
- 	if (is_strict_order(field_order))
- 		return;
- 
- 	ovh = &perf_hpp__format[PERF_HPP__OVERHEAD];
- 	acc = &perf_hpp__format[PERF_HPP__OVERHEAD_ACC];
-+	acc_lat = &perf_hpp__format[PERF_HPP__LATENCY_ACC];
- 
- 	perf_hpp_list__for_each_format_safe(&perf_hpp_list, fmt, tmp) {
--		if (acc->equal(acc, fmt)) {
-+		if (fmt_equal(acc, fmt) || fmt_equal(acc_lat, fmt)) {
- 			perf_hpp__column_unregister(fmt);
- 			continue;
- 		}
- 
--		if (ovh->equal(ovh, fmt))
-+		if (fmt_equal(ovh, fmt))
- 			fmt->name = "Overhead";
- 	}
- }
- 
--static bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
--{
--	return a->equal && a->equal(a, b);
--}
--
- void perf_hpp__setup_output_field(struct perf_hpp_list *list)
- {
- 	struct perf_hpp_fmt *fmt;
-@@ -819,6 +825,7 @@ void perf_hpp__reset_width(struct perf_hpp_fmt *fmt, struct hists *hists)
- 
- 	switch (fmt->idx) {
- 	case PERF_HPP__OVERHEAD:
-+	case PERF_HPP__LATENCY:
- 	case PERF_HPP__OVERHEAD_SYS:
- 	case PERF_HPP__OVERHEAD_US:
- 	case PERF_HPP__OVERHEAD_ACC:
-diff --git a/tools/perf/util/addr_location.h b/tools/perf/util/addr_location.h
-index f83d74e370b2f..663e9a55d8ed3 100644
---- a/tools/perf/util/addr_location.h
-+++ b/tools/perf/util/addr_location.h
-@@ -24,6 +24,8 @@ struct addr_location {
- 	s32	      socket;
- 	/* Same as machine.parallelism but within [1, nr_cpus]. */
- 	int	      parallelism;
-+	/* See he_stat.latency. */
-+	u64	      latency;
- };
- 
- void addr_location__init(struct addr_location *al);
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index bea9698e0c6bf..36e576f141473 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -771,6 +771,12 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
- 	al->parallelism = min(max(machine->parallelism, 1), machine__nr_cpus_avail(machine));
- 	if (test_bit(al->parallelism, symbol_conf.parallelism_filter))
- 		al->filtered |= (1 << HIST_FILTER__PARALLELISM);
-+	/*
-+	 * Multiply it by some const to avoid precision loss or dealing
-+	 * with floats. The multiplier does not matter otherwise since
-+	 * we only print it as percents.
-+	 */
-+	al->latency = sample->period * 1000 / al->parallelism;
- 
- 	if (al->map) {
- 		if (symbol_conf.dso_list &&
-diff --git a/tools/perf/util/events_stats.h b/tools/perf/util/events_stats.h
-index eabd7913c3092..dcff697ed2529 100644
---- a/tools/perf/util/events_stats.h
-+++ b/tools/perf/util/events_stats.h
-@@ -57,6 +57,8 @@ struct events_stats {
- struct hists_stats {
- 	u64 total_period;
- 	u64 total_non_filtered_period;
-+	u64 total_latency;
-+	u64 total_non_filtered_latency;
- 	u32 nr_samples;
- 	u32 nr_non_filtered_samples;
- 	u32 nr_lost_samples;
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 446342246f5ee..a29324e33ed04 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -305,9 +305,10 @@ static long hist_time(unsigned long htime)
- 	return htime;
- }
- 
--static void he_stat__add_period(struct he_stat *he_stat, u64 period)
-+static void he_stat__add_period(struct he_stat *he_stat, u64 period, u64 latency)
- {
- 	he_stat->period		+= period;
-+	he_stat->latency	+= latency;
- 	he_stat->nr_events	+= 1;
- }
- 
-@@ -322,6 +323,7 @@ static void he_stat__add_stat(struct he_stat *dest, struct he_stat *src)
- 	dest->weight2		+= src->weight2;
- 	dest->weight3		+= src->weight3;
- 	dest->nr_events		+= src->nr_events;
-+	dest->latency		+= src->latency;
- }
- 
- static void he_stat__decay(struct he_stat *he_stat)
-@@ -331,6 +333,7 @@ static void he_stat__decay(struct he_stat *he_stat)
- 	he_stat->weight1 = (he_stat->weight1 * 7) / 8;
- 	he_stat->weight2 = (he_stat->weight2 * 7) / 8;
- 	he_stat->weight3 = (he_stat->weight3 * 7) / 8;
-+	he_stat->latency = (he_stat->latency * 7) / 8;
- }
- 
- static void hists__delete_entry(struct hists *hists, struct hist_entry *he);
-@@ -338,7 +341,7 @@ static void hists__delete_entry(struct hists *hists, struct hist_entry *he);
- static bool hists__decay_entry(struct hists *hists, struct hist_entry *he)
- {
- 	u64 prev_period = he->stat.period;
--	u64 diff;
-+	u64 prev_latency = he->stat.latency;
- 
- 	if (prev_period == 0)
- 		return true;
-@@ -348,12 +351,16 @@ static bool hists__decay_entry(struct hists *hists, struct hist_entry *he)
- 		he_stat__decay(he->stat_acc);
- 	decay_callchain(he->callchain);
- 
--	diff = prev_period - he->stat.period;
--
- 	if (!he->depth) {
--		hists->stats.total_period -= diff;
--		if (!he->filtered)
--			hists->stats.total_non_filtered_period -= diff;
-+		u64 period_diff = prev_period - he->stat.period;
-+		u64 latency_diff = prev_latency - he->stat.latency;
-+
-+		hists->stats.total_period -= period_diff;
-+		hists->stats.total_latency -= latency_diff;
-+		if (!he->filtered) {
-+			hists->stats.total_non_filtered_period -= period_diff;
-+			hists->stats.total_non_filtered_latency -= latency_diff;
-+		}
- 	}
- 
- 	if (!he->leaf) {
-@@ -368,7 +375,7 @@ static bool hists__decay_entry(struct hists *hists, struct hist_entry *he)
- 		}
- 	}
- 
--	return he->stat.period == 0;
-+	return he->stat.period == 0 && he->stat.latency == 0;
- }
- 
- static void hists__delete_entry(struct hists *hists, struct hist_entry *he)
-@@ -594,14 +601,17 @@ static filter_mask_t symbol__parent_filter(const struct symbol *parent)
- 	return 0;
- }
- 
--static void hist_entry__add_callchain_period(struct hist_entry *he, u64 period)
-+static void hist_entry__add_callchain_period(struct hist_entry *he, u64 period, u64 latency)
- {
- 	if (!hist_entry__has_callchains(he) || !symbol_conf.use_callchain)
- 		return;
- 
- 	he->hists->callchain_period += period;
--	if (!he->filtered)
-+	he->hists->callchain_latency += latency;
-+	if (!he->filtered) {
- 		he->hists->callchain_non_filtered_period += period;
-+		he->hists->callchain_non_filtered_latency += latency;
-+	}
- }
- 
- static struct hist_entry *hists__findnew_entry(struct hists *hists,
-@@ -614,6 +624,7 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 	struct hist_entry *he;
- 	int64_t cmp;
- 	u64 period = entry->stat.period;
-+	u64 latency = entry->stat.latency;
- 	bool leftmost = true;
- 
- 	p = &hists->entries_in->rb_root.rb_node;
-@@ -632,10 +643,10 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 		if (!cmp) {
- 			if (sample_self) {
- 				he_stat__add_stat(&he->stat, &entry->stat);
--				hist_entry__add_callchain_period(he, period);
-+				hist_entry__add_callchain_period(he, period, latency);
- 			}
- 			if (symbol_conf.cumulate_callchain)
--				he_stat__add_period(he->stat_acc, period);
-+				he_stat__add_period(he->stat_acc, period, latency);
- 
- 			block_info__delete(entry->block_info);
- 
-@@ -672,7 +683,7 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 		return NULL;
- 
- 	if (sample_self)
--		hist_entry__add_callchain_period(he, period);
-+		hist_entry__add_callchain_period(he, period, latency);
- 	hists->nr_entries++;
- 
- 	rb_link_node(&he->rb_node_in, parent, p);
-@@ -751,6 +762,7 @@ __hists__add_entry(struct hists *hists,
- 			.weight1 = sample->weight,
- 			.weight2 = sample->ins_lat,
- 			.weight3 = sample->p_stage_cyc,
-+			.latency = al->latency,
- 		},
- 		.parent = sym_parent,
- 		.filtered = symbol__parent_filter(sym_parent) | al->filtered,
-@@ -1768,12 +1780,14 @@ static void hists__reset_filter_stats(struct hists *hists)
- {
- 	hists->nr_non_filtered_entries = 0;
- 	hists->stats.total_non_filtered_period = 0;
-+	hists->stats.total_non_filtered_latency = 0;
- }
- 
- void hists__reset_stats(struct hists *hists)
- {
- 	hists->nr_entries = 0;
- 	hists->stats.total_period = 0;
-+	hists->stats.total_latency = 0;
- 
- 	hists__reset_filter_stats(hists);
- }
-@@ -1782,6 +1796,7 @@ static void hists__inc_filter_stats(struct hists *hists, struct hist_entry *h)
- {
- 	hists->nr_non_filtered_entries++;
- 	hists->stats.total_non_filtered_period += h->stat.period;
-+	hists->stats.total_non_filtered_latency += h->stat.latency;
- }
- 
- void hists__inc_stats(struct hists *hists, struct hist_entry *h)
-@@ -1791,6 +1806,7 @@ void hists__inc_stats(struct hists *hists, struct hist_entry *h)
- 
- 	hists->nr_entries++;
- 	hists->stats.total_period += h->stat.period;
-+	hists->stats.total_latency += h->stat.latency;
- }
- 
- static void hierarchy_recalc_total_periods(struct hists *hists)
-@@ -1802,6 +1818,8 @@ static void hierarchy_recalc_total_periods(struct hists *hists)
- 
- 	hists->stats.total_period = 0;
- 	hists->stats.total_non_filtered_period = 0;
-+	hists->stats.total_latency = 0;
-+	hists->stats.total_non_filtered_latency = 0;
- 
- 	/*
- 	 * recalculate total period using top-level entries only
-@@ -1813,8 +1831,11 @@ static void hierarchy_recalc_total_periods(struct hists *hists)
- 		node = rb_next(node);
- 
- 		hists->stats.total_period += he->stat.period;
--		if (!he->filtered)
-+		hists->stats.total_latency += he->stat.latency;
-+		if (!he->filtered) {
- 			hists->stats.total_non_filtered_period += he->stat.period;
-+			hists->stats.total_non_filtered_latency += he->stat.latency;
-+		}
- 	}
- }
- 
-@@ -2791,6 +2812,12 @@ u64 hists__total_period(struct hists *hists)
- 		hists->stats.total_period;
- }
- 
-+u64 hists__total_latency(struct hists *hists)
-+{
-+	return symbol_conf.filter_relative ? hists->stats.total_non_filtered_latency :
-+		hists->stats.total_latency;
-+}
-+
- int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool show_freq)
- {
- 	char unit;
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index c2236e0d89f2a..91159f16c60b2 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -109,6 +109,8 @@ struct hists {
- 	u64			nr_non_filtered_entries;
- 	u64			callchain_period;
- 	u64			callchain_non_filtered_period;
-+	u64			callchain_latency;
-+	u64			callchain_non_filtered_latency;
- 	struct thread		*thread_filter;
- 	const struct dso	*dso_filter;
- 	const char		*uid_filter_str;
-@@ -170,6 +172,12 @@ struct res_sample {
- 
- struct he_stat {
- 	u64			period;
-+	/*
-+	 * Period re-scaled from CPU time to wall-clock time (divided by the
-+	 * parallelism at the time of the sample). This represents effect of
-+	 * the event on latency rather than CPU consumption.
-+	 */
-+	u64			latency;
- 	u64			period_sys;
- 	u64			period_us;
- 	u64			period_guest_sys;
-@@ -374,6 +382,7 @@ void hists__output_recalc_col_len(struct hists *hists, int max_rows);
- struct hist_entry *hists__get_entry(struct hists *hists, int idx);
- 
- u64 hists__total_period(struct hists *hists);
-+u64 hists__total_latency(struct hists *hists);
- void hists__reset_stats(struct hists *hists);
- void hists__inc_stats(struct hists *hists, struct hist_entry *h);
- void hists__inc_nr_events(struct hists *hists);
-@@ -555,11 +564,13 @@ extern struct perf_hpp_fmt perf_hpp__format[];
- enum {
- 	/* Matches perf_hpp__format array. */
- 	PERF_HPP__OVERHEAD,
-+	PERF_HPP__LATENCY,
- 	PERF_HPP__OVERHEAD_SYS,
- 	PERF_HPP__OVERHEAD_US,
- 	PERF_HPP__OVERHEAD_GUEST_SYS,
- 	PERF_HPP__OVERHEAD_GUEST_US,
- 	PERF_HPP__OVERHEAD_ACC,
-+	PERF_HPP__LATENCY_ACC,
- 	PERF_HPP__SAMPLES,
- 	PERF_HPP__PERIOD,
- 	PERF_HPP__WEIGHT1,
-@@ -615,6 +626,7 @@ void hists__reset_column_width(struct hists *hists);
- enum perf_hpp_fmt_type {
- 	PERF_HPP_FMT_TYPE__RAW,
- 	PERF_HPP_FMT_TYPE__PERCENT,
-+	PERF_HPP_FMT_TYPE__LATENCY,
- 	PERF_HPP_FMT_TYPE__AVERAGE,
- };
- 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 3055496358ebb..bc4c3acfe7552 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2628,11 +2628,13 @@ struct hpp_dimension {
- 
- static struct hpp_dimension hpp_sort_dimensions[] = {
- 	DIM(PERF_HPP__OVERHEAD, "overhead"),
-+	DIM(PERF_HPP__LATENCY, "latency"),
- 	DIM(PERF_HPP__OVERHEAD_SYS, "overhead_sys"),
- 	DIM(PERF_HPP__OVERHEAD_US, "overhead_us"),
- 	DIM(PERF_HPP__OVERHEAD_GUEST_SYS, "overhead_guest_sys"),
- 	DIM(PERF_HPP__OVERHEAD_GUEST_US, "overhead_guest_us"),
- 	DIM(PERF_HPP__OVERHEAD_ACC, "overhead_children"),
-+	DIM(PERF_HPP__LATENCY_ACC, "latency_children"),
- 	DIM(PERF_HPP__SAMPLES, "sample"),
- 	DIM(PERF_HPP__PERIOD, "period"),
- 	DIM(PERF_HPP__WEIGHT1, "weight1"),
 -- 
-2.48.1.362.g079036d154-goog
-
+With best wishes
+Dmitry
