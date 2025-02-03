@@ -1,126 +1,93 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB9F288B1;
-	Mon,  3 Feb 2025 12:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D65204C06
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Feb 2025 12:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738586592; cv=none; b=FOCou0HmTraexQn1GZQIzZGl1cPAC8CilPUWVsKUwYwB+MhGitwYYFAx/CUUfV8IVsm016RYZujc7HUVrAy3gJfDFEIpoFmG5tr/42dsIPZ9F0AwEwQYwbZVTB1F48wrWpET3ejDnb2wKN6f6ztqG+32OAPrV6JSdyURmlt7vDM=
+	t=1738586734; cv=none; b=ETPa8nUaRXFLVdvBWfilEZr5azFQKaR7LDCq92ZhpUbbM1RXr1JzlHHE+/wl1Kw0Lby/idDnQ/DZYRMFykBK1O2/Bnr3GMNFzl2cGzrc7fNujYkCbZD/5H2t0RKfwNa6aT4AgJd9mL2vVQ0+HNy71huHpWGq4EXk1E54SG969Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738586592; c=relaxed/simple;
-	bh=uMZAKkK5D25aJDOgeTK29oJ/eAUOhtihM+XgpzmQZL8=;
+	s=arc-20240116; t=1738586734; c=relaxed/simple;
+	bh=JcKUnVRFhfPWaD36cL9IKQUCv5Wo87ZOqrEyuwlx9+M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EXvuNeqI+Hjy6kvSEOT2wH2fOHICaZv14nRBvDZ1odNtNjprb0L1EjTFedV4ERJfty2KNnU12CKbByLNSr4Rk3QTH47F9oBqnZV005Ri6IrPrMjN6vWGEqhVcQBDY5ynNdAfwv/A5QGJMmOaTlpHPCOJdaXAmMaPps339ZCdyxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jbK2OVVP; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bNXW4WPn41yoGEM6dGCT2mEHdG5GqWj9k/9k6MU3UtyQIU8sTZH6A7FsW/GKSxXA7usiDkKsZbjmiJvO70Dr4Z46cc9asLRQOfBw4zwBcZAaPii1hXi+KSmw7eXOIJ8HWZirTJzxkU5cNyxAsQa3BsDxg61ARDPAkSKqN26Ixdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kIphV+Uf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbK2OVVP"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2165448243fso79435975ad.1;
-        Mon, 03 Feb 2025 04:43:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738586590; x=1739191390; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=odL74vy7Rutoy0JWwQwhB4Miwo0z1XxrQgmH3YoA8dQ=;
-        b=jbK2OVVPTKL/YFNd4kKrpUNJ3vdGzW9+iIC5eXuaxe3JSsdGptrva0/mtKVTisNBmA
-         6q4RBG1IdMfcHMNLZWfzEBTLi9W57ztoqk1IMFsAJGhXXEg7DSN1lyugZj5ZOGL+JKnO
-         JjxNvAL4PfDxc9SfWPhad+KkurtSRo+KwU+BqaubcDk/tc4dKtSPLw6EuPIfJEmi1e88
-         6EiiLr9o0vTLlDy3HSfSrw9PaB9SnUiGma7LnuwJGe4CySJP8A8n0JaNNnsxgJrLfsfM
-         eqHam5FZsFaabBmpFkrA800pBxLTc6TsJuZjxyK6jr8qSvVeTxesOuXGIgkaB6Mn5W2I
-         Xg7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738586590; x=1739191390;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=odL74vy7Rutoy0JWwQwhB4Miwo0z1XxrQgmH3YoA8dQ=;
-        b=KcXsXLuf43MlZ9wcwUwO/9a9Qa2kx+42jC9yYLR9dDJ/Ophys6OZ+DuZqG7XFeAfkb
-         qWuDW5uq3PW2vhreyKReRwkx4L9HTv964q+KMphxi3avH3D3atbroC5O3Qm+u35FgRxq
-         rhtjWqaCopZ871ipBPmJGVD/fGxzrtlh84mpDdK+D61tB4f8+kXMjUnBlc/dpIrErA47
-         qUuahn6H96/RO681cF2hGlXjL06d+B0uOxfvm1cYeF7LlZ5zonj/SaFZgpnRx/2BxX/o
-         h5wBTqDPQr9jTr+xfasN3F5tHz1zzcn/0bdyC30pgZvL3dBNZVUuLGRbMj6CqiJ8pVyl
-         uTRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUU6bIKIRRLQdRf0LSuNaXFgXuysV8jfOTQJD5knZ/zmx+QTIzLsZel6NG7n4E/GJ18nB3ipO8IYF1n@vger.kernel.org, AJvYcCWoKVAfv2+97aqPzo2+jbwtoWaCfuyDZhLiLZD9+QuYsLA1Af0tAiTGQkoYN4cYqHUC+W5y6eqYhofiQdc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2p1Z336X6+BqjMfc/vTjNVJYn8SuyWHnVTvoAuLB3cwoDb3ma
-	5En5k7R+68jTY5w/Krg2wIlIUgm4idtln6IqmoZM8cTc4JSfAuwe
-X-Gm-Gg: ASbGncvUO5k0dZitpEUcBhuitXrIcvseu7YCRcjP5WEbRr+7fDAO7yPYAVclHatwA4s
-	wH+W7gsB+MpBfgoTEIQttinAgL4VNHckG+uUaIK/MqqN1ZvdDXMj6SVUZD0uK3RwSB+BKXfX2uP
-	+xrumANh7OSTfthSSTnRlnUXJiYKnFxONXhnvSxhwu/58tVwxGl3KC8wyb8gpB7Mns/A6vSVG9i
-	cnSN0NRrj1+zDGNVxdH3wwn1f5KJGKUZjqVtHOTVbpymRE/rpQ8i+rHcb0c/s1mkHyX4kLb5Lv8
-	6HWdg7ySjr1cEg==
-X-Google-Smtp-Source: AGHT+IFgwkDsBKX3XhPHR05JLdZ4GbPgqRKDeXuUSgRSm+zQTjLCWOHwmD3T933uH5AYrluhLcIQtQ==
-X-Received: by 2002:a17:902:db09:b0:216:6f1e:5799 with SMTP id d9443c01a7336-21dd7deef93mr365520295ad.35.1738586589479;
-        Mon, 03 Feb 2025 04:43:09 -0800 (PST)
-Received: from ubuntu ([175.141.178.229])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bfc0ddbsm11132302a91.45.2025.02.03.04.43.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 04:43:09 -0800 (PST)
-Date: Mon, 3 Feb 2025 12:43:04 +0000
-From: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: andreas.noever@gmail.com, michael.jamet@intel.com, 
-	YehezkelShB@gmail.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] thunderbolt: Disable Gen 4 Recovery on Asymmetric
- Transitions
-Message-ID: <gdojzsdm6kmg6kdoubhg3h6ebedyjswwzofdzxhfcbbdl3gsy2@wqpqcdukpn4h>
-References: <20250131014406.28645-1-rahimi.mhmmd@gmail.com>
- <20250131014406.28645-4-rahimi.mhmmd@gmail.com>
- <20250203084224.GE3713119@black.fi.intel.com>
- <wxgsteiuto6qivnfttzuyw6jijs6ypcq4oyepqr6zbjgeez3ac@flvlpzswuyco>
- <20250203123944.GJ3713119@black.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kIphV+Uf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC344C4CEE0;
+	Mon,  3 Feb 2025 12:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738586733;
+	bh=JcKUnVRFhfPWaD36cL9IKQUCv5Wo87ZOqrEyuwlx9+M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kIphV+UftcbLoqbIt+vFzwoiogm8+pnwz0ImB69UL36YOLSjxQCGdK5UM5W6tvR3K
+	 qOtjMlgXIThtajedx+v5iRSJbhSjYCP1hyOIQhhMD+wEqn0A/5xwHojlCafFytrHGB
+	 zxiwfhe68jME0iBZ7LMRs+HFMgg/bMQDpZVt+RQCY6Jl1drD765sCIaxRqLAswF6JS
+	 tGXAd9XCzb9ByAegGZ8UEuZSxbEeCkTiPDwXUbZyvJZaCG71olCeUx326JTvHWwGnS
+	 1Zsik4mRrw2bDeAAXIf974IuHdOuVv1szDvc6t2Ue9563X+XUG3K8zt8ktj2T3sVrZ
+	 B7Ty4MIOn6xxw==
+Date: Mon, 3 Feb 2025 12:45:27 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	DRI mailing list <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v3 1/1] regmap: Synchronize cache for the page selector
+Message-ID: <849eca29-4f03-4fb2-bd1f-747ce42f4c5f@sirena.org.uk>
+References: <Z4ppo8wV3nicOfAQ@smile.fi.intel.com>
+ <8a7581e4-6422-4d77-8027-02df0d7da489@samsung.com>
+ <Z4qTQ9ypkX6iS1Pl@smile.fi.intel.com>
+ <42fe4488-0ff2-4b92-ae11-cce1664a7176@samsung.com>
+ <Z4-hMdUUTeQHN5W_@smile.fi.intel.com>
+ <6b4cba29-786c-4999-ac1d-27b3e4cea6f8@samsung.com>
+ <Z5kJLrE6xOzOKaeb@smile.fi.intel.com>
+ <Z5pESDSekep9ChAN@smile.fi.intel.com>
+ <eyjsejpx7klztr4k7xmrvceosfykyozs736kycdnf5uur5by43@5i5x7tsuxtpg>
+ <Z6CKGu7URC1iGOVO@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kIw/jZ2k8nynFeV2"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250203123944.GJ3713119@black.fi.intel.com>
+In-Reply-To: <Z6CKGu7URC1iGOVO@smile.fi.intel.com>
+X-Cookie: May your camel be as swift as the wind.
 
-Hello again.
 
-On Mon, Feb 03, 2025 at 02:39:44PM GMT, Mika Westerberg wrote:
-> Hi,
-> 
-> On Mon, Feb 03, 2025 at 12:25:21PM +0000, Mohammad Rahimi wrote:
-> > Hello.
-> > 
-> > On Mon, Feb 03, 2025 at 10:42:24AM GMT, Mika Westerberg wrote:
-> > > Hi,
-> > > 
-> > > On Fri, Jan 31, 2025 at 01:41:27AM +0000, Mohammad Rahimi wrote:
-> > > > Updates the Connection Manager to disable the Gen 4 Link Recovery
-> > > > flow before transitioning from a Symmetric Link to an Asymmetric
-> > > > Link, as specified in recent changes to the USB4 v2 specification.
-> > > > 
-> > > > According to the "USB4 2.0 ENGINEERING CHANGE NOTICE FORM"
-> > > > published in September 2024, the rationale for this change is:
-> > > > 
-> > > >   "Since the default value of the Target Asymmetric Link might be
-> > > >   different than Symmetric Link and Gen 4 Link Recovery flow checks
-> > > >   this field to make sure it matched the actual Negotiated Link Width,
-> > > >   we’re removing the condition for a Disconnect in the Gen 4 Link
-> > > >   Recovery flow when Target Asymmetric Link doesn’t match the actual
-> > > >   Link width and adding a Connection Manager note to Disable Gen 4 Link
-> > > >   Recovery flow before doing Asymmetric Transitions."
-> > > > 
-> > > > Signed-off-by: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
-> > > 
-> > > I did some minor modifications and applied to thunderbolt.git/next. Please
-> > > let me know if I missed something.
-> > > 
-> > 
-> > Looks great. Just one question:
-> > 
-> > In tb_configure_asym(), if tb_switch_set_link_width() fails, we won’t restore
-> > the link recovery status. Is that okay?
-> 
-> Good question :) Looking at the ECR, does it actually say anywhere that the
-> CM should needs to re-enable it? I'm thinking that we could just disable it
-> and be done with it?
+--kIw/jZ2k8nynFeV2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Right. Thanks for clearing that up.
+On Mon, Feb 03, 2025 at 11:19:22AM +0200, Andy Shevchenko wrote:
+
+> Thank you, guys, for reporting an testing, but it seems the simple problem
+> to solve requires a lot of changes to be done without regressions
+> (this fix on fix makes a regression to those who have cache enabled), which
+> means that for now I propose to revert it (or drop) if possible, Mark,
+> what is your preference?
+
+I dropped it a while ago, it's not in mainline.
+
+--kIw/jZ2k8nynFeV2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmegumYACgkQJNaLcl1U
+h9CI1Af/YUQZ/OvbLSPHBblbvWjcYRs/36TUcERL58yy+RZLvmccKwfXstl6CZxe
+/8jDnW9rbwNP4/s7OC0Sz5MBlLyaJlnvr3/hiYcC6ybOpqYGFx3DwI/HQGBxSYah
+4DNfH/NgnMWCkeCW2hoQHEmPbQ+kzIAPMbToMgZIo2k4buqcL9Avq2ITo5FwsEpu
+2aN2ZRmmfIZ9X1I/2BbNqq0l6/8IBMiVs12CEyeb5PfbfSGNra564aL5VtyoqKIT
+Mhx58Qdxk/fUknj7FnnFh8o3pYKTkqY4BLN9fPD1spvIKLXszA1wCASHSeZ+VS9F
+QapzrA6XxMys3x/MsaJqpcuWMK9gDQ==
+=oT4u
+-----END PGP SIGNATURE-----
+
+--kIw/jZ2k8nynFeV2--
