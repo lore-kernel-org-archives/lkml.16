@@ -1,35 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA1F212B0B;
-	Mon,  3 Feb 2025 19:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E2020E03A;
+	Mon,  3 Feb 2025 19:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738610134; cv=none; b=hws/hB+Wu9hm9wRhcDS2E0iFJO38gh4JEyb9d+EqiaqO40LAq0zcmWwfoXeb6ucITiGhl+Uyz1gRryduuWAWwy6bBD/tEcF6rwsW8vWtJVGdutsfTrmcBV7eoPlTFFrGu1MAcX+clPwe67vrkfLYmbJfZUeeG1VD0PFh5acUyIk=
+	t=1738610134; cv=none; b=kKcVnEHCtN2JJDMMvlWfG7D7CxakT3dNp02jBdAWc6SuASnPWDetT7bP6WFzSIM0SrSvoL1YyPYUJrTQG45aaTXNenWwlLdqWqkBl0nRngiEBY53W3f+Ilch5J8mgl3u5fNGbBERx6wCWvHxQyal15LrelWJLxTbBw81MB55RGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738610134; c=relaxed/simple;
-	bh=amXpXM2dMijrA0MtGiAiusiXv5glXfKEr2kGBt5Mf5I=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=pxx8SiJP2KQJ+OtAy8ona4r3x1+l63DGj0AY2cexrrIsXunGnQaPyT7XBf5cwy4WFUQVOT1TGYB9sVTbhb62GkdfWtaX48qhpJI22j6Cu8ZunO6Z72wxkfRxXhydwSFTwt3DuUNNic2LFuP7xjo1z715GHzuxjI51sUv6yfxdJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orq8j9IL; arc=none smtp.client-ip=10.30.226.201
+	bh=d+uS1eRC4uv8qsZyfw2IqkLl0y5gISjVkWAiQ1IdAaU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=byS7Z3SfbwmjIVMjZ7/vQyLPH2n8kq39OoUo90fI5k/+bNpaTk1NGwimGOZKCft9EoTtJyQjGy19hEJw7EFf7mkv5AfZzuavDvFnCt3H1IEwyTr4dlYQAP2HBoeiUQLEGzDNJYHTDPgrD142oRGBFawUrNhQYYB23cJKVyNxpyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LYAHESxf; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orq8j9IL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24813C4CEE3;
-	Mon,  3 Feb 2025 19:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738610134;
-	bh=amXpXM2dMijrA0MtGiAiusiXv5glXfKEr2kGBt5Mf5I=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=orq8j9IL4sJCwffHeQkMqQ1LIzj3bLY8D/nrO4mnXrEndAU5xhvp1AnN+MPsSWfAS
-	 IZvgG2Nw7sRKZfvdeBoU24R2M3mICG80BdgzQG5I/Uk/HAB63MWT6zBpw0p2oEMxlG
-	 E8a7k3yyvNeN7d09N1SQvXMuDzOc5RDhdiwzRZt1Onqk/9We/Jy6PWS/UhHcfOEo+8
-	 iErOqSj3NkZautMbNrY1aUZ+ZDSjaK42026+wZ4WVZ1YTR/W1+OjLgplV9vpJrYA1W
-	 bbv7Zo/NVVNEU9Q1bbcgG36BP63LfRm1tbxQAfzJ1eXk+ut+Untsl+R6vGED961E9B
-	 wK9dQCBP2xa1Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 710BB380AA67;
-	Mon,  3 Feb 2025 19:16:02 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LYAHESxf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738610133; x=1770146133;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=d+uS1eRC4uv8qsZyfw2IqkLl0y5gISjVkWAiQ1IdAaU=;
+  b=LYAHESxfaQ2EBQzFFhQXnvSrZSNd/n5N/p7p9nMHhicObyC1P5IXWioo
+   GdlXBW2FkXSQe5rQuz52yGCNG8jJjfRzGRg79avoWG2ThXEVsQw3TFxvT
+   nlIwXfUP0u0ZAmFJq1kiujXm8eqcpaiscy7ilHfMQOdMjrBYChZow/DMV
+   ZYoPu7KLERFeBGo+00jye4AqJw4cjtyOFQGJyvrQeyXxUFErqA9I3qoI6
+   faY4mFCs7yBPWn70X85tfPLFg9jb4JYJDM21xto+JaPx/ovN/TpfifnyF
+   9KuwChj4h8NuEmeBsSIjSw5MxAws34dr0fag8KGWjVfEo/scE3x5x2GYR
+   Q==;
+X-CSE-ConnectionGUID: JBwQ4cliRHaiEbt0CiFJsg==
+X-CSE-MsgGUID: n3Z292rJTwmlmCWftAoGnQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="43043119"
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="43043119"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 11:15:30 -0800
+X-CSE-ConnectionGUID: O1XQPjtoSwmwyfT1n0vA2A==
+X-CSE-MsgGUID: 8QqbGjarSZe1lLH1JTmVMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="110266548"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 03 Feb 2025 11:15:27 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id C5D47164; Mon, 03 Feb 2025 21:15:25 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Felipe Balbi <balbi@kernel.org>,
+	linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ferry Toth <fntoth@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/3] dt-bindings: usb: dwc3: Add a property to reserve endpoints
+Date: Mon,  3 Feb 2025 21:10:53 +0200
+Message-ID: <20250203191524.3730346-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20250203191524.3730346-1-andriy.shevchenko@linux.intel.com>
+References: <20250203191524.3730346-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,45 +70,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/2] Microchip CoreI2C driver fixes
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <173861016099.3409359.8425752210633125446.git-patchwork-notify@kernel.org>
-Date: Mon, 03 Feb 2025 19:16:00 +0000
-References: <20241218-steadier-corridor-0c0a0ce58ca2@spud>
-In-Reply-To: <20241218-steadier-corridor-0c0a0ce58ca2@spud>
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-riscv@lists.infradead.org, linux-i2c@vger.kernel.org,
- conor.dooley@microchip.com, daire.mcnamara@microchip.com,
- andi.shyti@kernel.org, wsa@kernel.org, linux-kernel@vger.kernel.org
 
-Hello:
+Some of the endpoints may be reserved by hardware for different purposes,
+e.g., tracing control and output. This is the case, for instance, on
+Intel Merrifield and Moorefield platforms that reserve a few and USB driver
+may not use them for the regular transfers. Add the respective bindings.
 
-This series was applied to riscv/linux.git (fixes)
-by Andi Shyti <andi.shyti@kernel.org>:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ .../devicetree/bindings/usb/snps,dwc3-common.yaml     | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-On Wed, 18 Dec 2024 12:07:39 +0000 you wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> Yo,
-> 
-> Here's a v2 with one of the minor items pointed out by Andi resolved and
-> a new patch for an issue fixed in the months since v1, plus some minor
-> checkpatch things that I seem to have missed on v1. On v1 there was
-> unresolved discussion with Wolfram, but it has been two months without a
-> response so I am sending this v2 in an attempt to make progress.
-> 
-> [...]
-
-Here is the summary with links:
-  - [v2,1/2] i2c: microchip-core: actually use repeated sends
-    https://git.kernel.org/riscv/c/9a8f9320d67b
-  - [v2,2/2] i2c: microchip-core: fix "ghost" detections
-    https://git.kernel.org/riscv/c/49e1f0fd0d4c
-
-You are awesome, thank you!
+diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
+index c956053fd036..71249b6ba616 100644
+--- a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
++++ b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
+@@ -65,6 +65,17 @@ properties:
+       mode.
+     type: boolean
+ 
++  snps,reserved-endpoints:
++    description:
++      Reserve endpoints for other needs, e.g, for tracing control and output.
++      When set, the driver will avoid using them for the regular USB transfers.
++    $ref: /schemas/types.yaml#/definitions/uint8-array
++    minItems: 1
++    maxItems: 30
++    items:
++      minimum: 2
++      maximum: 31
++
+   snps,dis-start-transfer-quirk:
+     description:
+       When set, disable isoc START TRANSFER command failure SW work-around
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0.rc1.1336.g36b5255a03ac
 
