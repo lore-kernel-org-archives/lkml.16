@@ -1,96 +1,76 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 680EA7D07D;
-	Mon,  3 Feb 2025 06:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647454502F;
+	Mon,  3 Feb 2025 06:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738564726; cv=none; b=Clg6IsH0y9MGdc62w0nrRHgHUy6Q0NgRGJYt8zgyeVhPXvHjoEdQasDQd/hSi9vYPDxvGAhSPShu/QcNEKRI32j5UGwA7+ldIwKwqZ66ZlI2ES0ck9OFz1zmMXi1ghCsmufhwXWfM+MnDPfo9SRQBeey4qK4eOD5EnuF4X5B7FA=
+	t=1738564802; cv=none; b=jn08ErFmY4ZVFxH8S5ogR0QFmlJ9d+SoNrHdTWLYXXbMWssGmGdrJh9s8aUfSKZMVpeL1CmpDUddG75YEECseShfesNHei7lkfa3uK/3XUZL05TJiuEABsGD7Rb0dWBeSwY1xETLeGOeDN9Eq681yOgo3NHwfAsh5eowkF8L2Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738564726; c=relaxed/simple;
-	bh=KBq44VxD0mtvsZUAYhFY7MMb8UXLSNUlwTI4ITmj+/U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ggdrQXg7G/My3LdoQfOoILvSd6TEviFZA0HdoROBJhNeoiX+z8HJX+PVF6PgiEgMcV39xy3Kuc1qJZGvOL5YyaOVLi3pKpKQKezZVszPAO3uHWwv+iYpTWeykU5AqTxNx/03eaMbcJXRKN+uMEKdXLLL+MWRTExhSlMha92b0W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8FC21476;
-	Sun,  2 Feb 2025 22:39:06 -0800 (PST)
-Received: from [10.162.16.79] (unknown [10.162.16.79])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 187F73F63F;
-	Sun,  2 Feb 2025 22:38:37 -0800 (PST)
-Message-ID: <8584f5cc-70b0-46a0-9582-8d7b4d491ba6@arm.com>
-Date: Mon, 3 Feb 2025 12:08:35 +0530
+	s=arc-20240116; t=1738564802; c=relaxed/simple;
+	bh=0NIW1OmAfq0yBW8lzkZJLh8Kz5Zpes6kvYzJJBWxpEw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D5cLFzZjdH1QVjyWh6cDCAIfCX+s3UpeXtYcSWULNfjeyXdwhji08X65BBJ69lf0VeESlblKIQrR34Wf83KTQV6AT9szijSNf34eyjUeXP+0OOBz7YzDt20Ef3XQZ1yQMq0H33NCnmHV/GpB7C7gnx0YRKFyTH3iw8WnGzIZCnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4O4yMjZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4O4yMjZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29213C4CEE2;
+	Mon,  3 Feb 2025 06:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738564801;
+	bh=0NIW1OmAfq0yBW8lzkZJLh8Kz5Zpes6kvYzJJBWxpEw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Q4O4yMjZu0+eYD0JK7biZWR2K0u/2E8n5nkaKeYlkaL6gSkoALlF29FKggJ2ON4gX
+	 Wcu4zBUOpWncFxdgRbebLW5OqopJKRJGC3TgWABJQlnSmKloR3aj3YuAcddogm+YRb
+	 WhdmAoBuB4CfeE4ariIPVk7vQ6QANZaxZxVLUwwDFnjvKmzQABba5gay4mnRBG8Q4n
+	 p1nVQ6xHsjwi80dqxw5cG3+lgLaWmrCAnEBKQBmBOEy2mFHK7/yLtONCJ3xGwcloRg
+	 Ib7e6c14Ho4iWC9Z3q7Ke5Z2PHYlxTDadLSZwc4Fzy8J55d76o/OWfEPcY2w0QfMra
+	 hLGNoJgCajmHQ==
+From: "Naveen N Rao (AMD)" <naveen@kernel.org>
+To: <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>
+Subject: [PATCH v2 0/2] KVM: SVM: Add support for 4096 vcpus with x2AVIC
+Date: Mon,  3 Feb 2025 12:07:44 +0530
+Message-ID: <cover.1738563890.git.naveen@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 03/11] perf: arm_pmuv3: Don't disable counter in
- armv8pmu_enable_event()
-To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvmarm@lists.linux.dev
-References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
- <20250202-arm-brbe-v19-v19-3-1c1300802385@kernel.org>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250202-arm-brbe-v19-v19-3-1c1300802385@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/3/25 06:12, Rob Herring (Arm) wrote:
-> From: Mark Rutland <mark.rutland@arm.com>
-> 
-> Currently armv8pmu_enable_event() starts by disabling the event counter
-> it has been asked to enable. This should not be necessary as the counter
-> (and the PMU as a whole) should not be active when
-> armv8pmu_enable_event() is called.
-Makes sense.
+Patch 1 adds support for up to 4096 vcpus with x2AVIC, and is unchanged 
+since v1:
+http://lkml.kernel.org/r/20241008171156.11972-1-suravee.suthikulpanit@amd.com
 
-> 
-> Remove the redundant call to armv8pmu_disable_event_counter(). At the
-> same time, remove the comment immeditately above as everything it says
+Patch 2 is new and limits the value that is programmed into 
+AVIC_PHYSICAL_MAX_INDEX in the VMCB based on the max APIC ID indicated 
+by the VMM.
 
-s/immeditately/immediately
 
-> is obvious from the function names below.
+- Naveen
 
-But should this comment drop change be folded into the next patch which
-exclusively drops all obviously redundant disable/enable comments.
 
-> 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  drivers/perf/arm_pmuv3.c | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index 9ebc950559c0..5406b9ca591a 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
-> @@ -795,11 +795,6 @@ static void armv8pmu_enable_user_access(struct arm_pmu *cpu_pmu)
->  
->  static void armv8pmu_enable_event(struct perf_event *event)
->  {
-> -	/*
-> -	 * Enable counter and interrupt, and set the counter to count
-> -	 * the event that we're interested in.
-> -	 */
-> -	armv8pmu_disable_event_counter(event);
->  	armv8pmu_write_event_type(event);
->  	armv8pmu_enable_event_irq(event);
->  	armv8pmu_enable_event_counter(event);
-> 
+Naveen N Rao (AMD) (1):
+  KVM: SVM: Limit AVIC physical max index based on configured
+    max_vcpu_ids
 
-Otherwise LGTM.
+Suravee Suthikulpanit (1):
+  KVM: SVM: Increase X2AVIC limit to 4096 vcpus
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+ arch/x86/include/asm/svm.h |  4 ++
+ arch/x86/kvm/svm/avic.c    | 82 ++++++++++++++++++++++++++++----------
+ arch/x86/kvm/svm/svm.c     |  6 +++
+ arch/x86/kvm/svm/svm.h     |  1 +
+ 4 files changed, 73 insertions(+), 20 deletions(-)
+
+
+base-commit: eb723766b1030a23c38adf2348b7c3d1409d11f0
+-- 
+2.48.1
+
