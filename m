@@ -1,157 +1,90 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8B821323B;
-	Tue,  4 Feb 2025 14:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB972135D1
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738679975; cv=none; b=T4BEKwa6XKn5f5MYPMThZwDXekUmydgMBLfF636a9YJO7gEBVpTTPratZsZAUaxB3OuZGawXu8qqru+1omGpZIc6Ft7eUU706mivk0yHoSTEe4OQPX/eZRVdCdF685HidvraAjv9CKCJ5SMUPqFVN5tRdhEZ55HRrImIPSDBI9Y=
+	t=1738679984; cv=none; b=gPNFR/eAFIRS8fkHeGKfbyjFANlFqXgs9oWzyhkcYJFNJwN4mPrj2xSUVOk2ytQh7fE8Qv3ae8WNmoz8MlxpUJw2V8z0ppaGHUb+iYbD8TDKWxdNgsAWH5of+/7gNJ+Tv0NioRT3xez+7KxX8DptEH3s75u/8hn9nz8CTN00M38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738679975; c=relaxed/simple;
-	bh=Ul7vuVjk0tJdv9W7QCQCkdt1AV8p/rA8see/wdF2iY4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uiaXvbJoleICeRuv9+Fftj2icBghmjXC7q4qsTgWl155e8bD42x6QT8fxCNAJlnheaiA25KSqNCy0VX627ysRpS9s4CRSEN4WDvLrIHJAemezboMWHxm0MN0h5M6faRZUwfDjxWperK9NadE+mWETp7LLMyImXJx8nmyAAOJqJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HZHgFwDq; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738679984; c=relaxed/simple;
+	bh=NK6U2eAdcsCFFLkWKaca2nbec36RdO4wjEij8v3CPvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d3HQ0ImhfGFIryt6+ZgkKYWD+8vceCJQg3lysp9QJX/fheGupGKByanaGHP/I7WvA1wBzbEj8wP6Tedb+mM0ssGRiWt7rokLCbVYPrCxKbRY7shhBynjOqKPp8F7q/Le13AiNkdGQGGYZpnyRdaYFA3IVU6rU2c31rL0bTuqDlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NXPxSULO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZHgFwDq"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21670dce0a7so117670495ad.1;
-        Tue, 04 Feb 2025 06:39:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738679972; x=1739284772; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=tx+Bjgi8wA7mlSIk+aE6ZfY+yz7jaFoTfW2mAfd1fGI=;
-        b=HZHgFwDqvC5LL3o7+ETfn5ebq5FR76IpfTEh6BY9aqR+tnVaFlacrcmcK4yY0HCwSr
-         Zn/G2wEIMIp5oSbXfQ1nd/L3U0e4X6vdGZrWxRctv/tHQDSrPL0Q4Yvcf5we7Y1WPV9C
-         pzeqmiqLmwyh6prV+jBlAj5GkxEHVt8RbibCeeMeyMWiMwYqWBR3Zhi+3S8+k9mM6Z14
-         cGLsi0y51qQdkZ7QnoQHe6eaY4nYns1nXwwbYarVGrJKN1kvZ+260/NTm6mFpoyMLgjr
-         /CUiqpYLawdeemNvudWXP8iU39LG2J3+0b9ea/TCyC15sqf6FCMjKuZ/GkX8qGWRx0nv
-         ES4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738679972; x=1739284772;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tx+Bjgi8wA7mlSIk+aE6ZfY+yz7jaFoTfW2mAfd1fGI=;
-        b=RtOxfh1JL6wx26zIbW5+ZwjBvqiqhxvojsMUZ/WAJWm4aXVXNMa2NxkKkHzHPji7bX
-         ENU0dP7ACOj2LpbTr/jeVRO+2l7JzcdTzfCHoXICwQ+XB5IXPk5IzM3tHr9dc8aj0WvW
-         5P8He18vxLCM3c8Z9Le81uWLsOMk1/AWt/KB5nEHhmL5X3qkE7CmjqT83IJmFwhj7GXn
-         gPFxvUHgYrL+lUsBazn8CwU5wzprdShMB+4VOuwvHSJ8+VDghKbbDzd3tZPemn4TFj29
-         ZP9DLZSDDab1vbsrS5UvvbMfmb6CmweSuK/583iV8Erm29kkl5vq2+1eCnrScdTbwBYO
-         vA3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUoQmd67bkXlfDrA2y6OjWeFuIMZwsZPx0v1GGlOMqxiXiXxlQ28HNirJwaV9GPRJpn9BwwHB35duHkNmc=@vger.kernel.org, AJvYcCV94vtFjR9oMdpp3tFb100dy/vUW0yvnC/s84f4htfniAo46q690oqAU/NAuhlOFDiEcu+q3TRTeeqH@vger.kernel.org, AJvYcCW+oD9lrX2zvK2zhZd6KI7MacB1dhaFtOsulsB/NYAkjeJDEIvtR8mNffo9VoqVNyDuotEvjekya9Q=@vger.kernel.org, AJvYcCW6SAxX4FwsuMMuNFSCdcXJYPsUhM0wOSeowUWYykAf6hXOWs5dGFptuYLWCAfNfkNVyEDby5n4XmvjHIUz@vger.kernel.org, AJvYcCWMRMgKCArAi8sTbm+AnTJJj0qJpvdY8gvobmoo9blD0BzSNx3SEdlO2FwfIjhce4MCrfKI2hCURo+ErgE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOG7srq7gD7cd9KTzNSeb3iKRcQ2l2toloLrI67/crTm8U4lhR
-	R5iXbTOaHoGBY9sNgQymprJQZCB//Xze9/uGqLgeTbxHoof6ABhi
-X-Gm-Gg: ASbGnculg1OzF2GcRf/fvjU/loS6+5V399IxrEUB+12B2y3hswNKUBr/pOPbe7JQJPm
-	qZ+nLY26l65q2EO14iKt9z/jsg8hj9P7ezTsfvetxVyFgRVSZCHzrv2v0j3OgR6Q959of4FsUpQ
-	mCB31NEkCN75NR4kbJzpSjqcic790VU4/WAKbfnj06V10xqCjunFLLRAcyMNe4f45OdirWgZ/Kl
-	AWZDUR7UBDSMokRI3SIKFbiqYRh2q3HCkr7rwZfYFHOd5CXLlNbWrcLhDkJ09OaL6HqDomIZLWY
-	1T2NZe8YYJNauc4qU1H79k99yOG0FDDYVyY1JvqnbpRHRKsJHjurgzUe5aIObdvl
-X-Google-Smtp-Source: AGHT+IGkGAZRdhCjfdECHrWAM9MD6v36XY808HIWferzRLR2zZj+9PXX00kKoUEZKVMpjZEe1nIWqg==
-X-Received: by 2002:a17:902:e80e:b0:215:30d1:36fa with SMTP id d9443c01a7336-21dd7dcb183mr384586555ad.39.1738679972477;
-        Tue, 04 Feb 2025 06:39:32 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f06e72c27sm13591925ad.114.2025.02.04.06.39.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 06:39:31 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <1b32dfcb-5966-495a-ad48-903650888ee9@roeck-us.net>
-Date: Tue, 4 Feb 2025 06:39:29 -0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NXPxSULO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738679980;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sQWJz8pfF5VlA3eUj44/2CtOhMxwtbJLSsIHRwy6GfU=;
+	b=NXPxSULOv4Y/zF4JqKRUHPDxk1rwXa9MwUE40RqTa2287bVX0/94ZnOzhOSSDH9V7RnFk0
+	w110N3CvYF758puXuHud4sbBl3MeehNSuxVJ/J0y0jgBgwa7h00sdYOW6AI7JLymYPCq4T
+	KRsn6q5hcvShYUCiqLLSgl7G9oCi8Oo=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-1-iVU-Q94ANmmGe9zTuvdGkQ-1; Tue,
+ 04 Feb 2025 09:39:39 -0500
+X-MC-Unique: iVU-Q94ANmmGe9zTuvdGkQ-1
+X-Mimecast-MFC-AGG-ID: iVU-Q94ANmmGe9zTuvdGkQ
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 46A971955DD0;
+	Tue,  4 Feb 2025 14:39:37 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.214])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A02CF1800358;
+	Tue,  4 Feb 2025 14:39:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  4 Feb 2025 15:39:10 +0100 (CET)
+Date: Tue, 4 Feb 2025 15:39:05 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	David Howells <dhowells@redhat.com>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
+	Oliver Sang <oliver.sang@intel.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pipe: don't update {a,c,m}time for anonymous pipes
+Message-ID: <20250204143904.GC6031@redhat.com>
+References: <20250204132153.GA20921@redhat.com>
+ <CAGudoHGptAB1C+vKpfoYo+S9tU2Ow2LWbQeyHKwBpzy9Xh_b=w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: Fix spelling and grammatical issues
-To: Purva Yeshi <purvayeshi550@gmail.com>, jikos@kernel.org,
- bentiss@kernel.org, corbet@lwn.net, jdelvare@suse.com
-Cc: skhan@linuxfoundation.org, linux-usb@vger.kernel.org,
- linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-References: <20250204134806.28218-1-purvayeshi550@gmail.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250204134806.28218-1-purvayeshi550@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGudoHGptAB1C+vKpfoYo+S9tU2Ow2LWbQeyHKwBpzy9Xh_b=w@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 2/4/25 05:48, Purva Yeshi wrote:
-> Fix several spelling and grammatical errors across multiple
-> documentation files.
-> 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> ---
->   Documentation/hid/hiddev.rst                | 4 ++--
->   Documentation/hid/intel-ish-hid.rst         | 2 +-
->   Documentation/hid/uhid.rst                  | 2 +-
->   Documentation/hwmon/abituguru-datasheet.rst | 8 ++++----
->   Documentation/hwmon/abituguru.rst           | 2 +-
->   5 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/hid/hiddev.rst b/Documentation/hid/hiddev.rst
-> index 9b82c7f896aa..073485f84793 100644
-> --- a/Documentation/hid/hiddev.rst
-> +++ b/Documentation/hid/hiddev.rst
-> @@ -15,10 +15,10 @@ To support these disparate requirements, the Linux USB system provides
->   HID events to two separate interfaces:
->   * the input subsystem, which converts HID events into normal input
->   device interfaces (such as keyboard, mouse and joystick) and a
-> -normalised event interface - see Documentation/input/input.rst
-> +normalized event interface - see Documentation/input/input.rst
+On 02/04, Mateusz Guzik wrote:
+>
+> > +       if (ret > 0 && !is_pipe_inode(file_inode(filp))) {
+>
+> Total nit in case there is a v2:
+>
+> ret is typically > 0 and most of the time this is going to be an
+> anonymous pipe, so I would swap these conditions around.
+>
+> A not nit is that "is_pipe_inode" is imo misleading -- a named pipe
+> inode is also a pipe inode. How about "is_anon_pipe"?
 
-Is US spelling now mandated in the Linux kernel ?
+OK, I'll wait for other reviews and send v2 with the changes you suggest.
 
-Either case, this should be  multiple patches, at least one per subsystem
-or even better one per driver.
-
-Guenter
+Oleg.
 
