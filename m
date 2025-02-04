@@ -1,403 +1,597 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5FA219A8E;
-	Tue,  4 Feb 2025 21:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFE02036FD
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 21:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738704595; cv=none; b=TlBk8JoQ1+3u419Uv2zu35eu3zwsQBLU64Rfj4lOUXyxIUkEM4Lx/DtihvNtqmwifvkASwE+rDzxu6NfbMb9hjVBdwRdSSIXIDc3ymhd16AlB4/RANuz3xB3TZ5/X5zq4jV4+g3QE5n78SVK2rg2LzYfjjyyGMBqtswzgCqv/+4=
+	t=1738704714; cv=none; b=lhoEe76fZ7H4rEL4KBIu9w36IDCifBnAveVX0qYIyNb1aG+syhgwpVP8UMWl6KtcU8Ro2X7EOnaBRbNwa7P7T9ttR+2Kt/k6VlImof7ZZS+vqH2ZPdvpoEUNwR9aDKAz8lSzRCBQ+mexwo2I3GXw1m2FhhLKdfVutwHJVPGnRtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738704595; c=relaxed/simple;
-	bh=z6Sy2v5meitt/Q/R4K69ZxJ9qL6cAFTeUxvT5eK+lMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WA6n0PYO1XYybVBCVLDL17CiM27hNMskJWwb6JjVPALzl7GUj0OUjE/AYIRs0+pgQtKOhYIomcjWdcFE0R82eONHzfQP0nmmhtdzW/qZ/6PzjACSXkxgWbv9Vx/74K7400AvsW15l2S4+H8K2LHG+J8CcHh9zmuLnF4RgLiVk5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MM169voD; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738704714; c=relaxed/simple;
+	bh=4PgO2JDZDmFpkzm+YcaLkEKhzIgqLZPZbVkr9gMXoWw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=kM5Zid1uhtz2W+iC39stNnqcVbzWcdIqdHCqLlJI39qG/W+XTx0ZuaLLzwnGGIUuDQhQn43cxaF6PxDaxlAOoe1O+xv9QnY8o6Q6Skd61QgDB0mYlF2BCpNQqx2zK+wGrGiryGnc1AdsImZZWcI0ISS9cm8fmNCwu7D6SUlYMSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jeroendb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HbgTAPCC; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jeroendb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MM169voD"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514IwOHa014923;
-	Tue, 4 Feb 2025 21:29:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7VPQ4zYmyFcd0qIyaLgvNKJIGeJ0A6M+v/OBqmCMApI=; b=MM169voDGlAbsoNW
-	EmFbC9V80dMw22JymdlKnrUIlQztsQ07W7jVkq1oCSptyYx7zdULBZPACmJ+JYUG
-	s95jFE2iHGAfraA0JLmDfyXpPfDSdcowMw3DazJlU2bOo5zxV4Nk/fUKCj2QuOQU
-	xAH9Xhzd82drNHQOkXywlsMQcQ8cVCoabM6WXzIr0SPiT9YvAwaeI8ALkBh0Cm8f
-	O7upgyg2c5WCQU7Iq29J/TXCYXJ5uoOenYrNT7Xf3CmMoVsUfLB8IpPlbugbbvJ8
-	v7L3Bnvk0m4wlI/JT/7VSN05obbIPQqAz9dUmVj7Ugu4wSQQ+/kEjMEFdwOYQkKg
-	4hkeUg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44krmyg9j4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 21:29:35 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 514LTYKp007630
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Feb 2025 21:29:34 GMT
-Received: from [10.134.70.212] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Feb 2025
- 13:29:33 -0800
-Message-ID: <a69b7265-7a11-4dcb-b642-8a589770af6e@quicinc.com>
-Date: Tue, 4 Feb 2025 13:29:23 -0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HbgTAPCC"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-21f09d89718so14733705ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 13:31:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738704711; x=1739309511; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EFkwgyb5BuJX+usrePYvrQhplJIen5/ak4VjfBuAK7s=;
+        b=HbgTAPCCtad3V6O1fZAdRZ6BNtHawMaqh6DtVdMAQahiqDgsigxcB/mtYjREoPzNcg
+         7FO68c2WvT2Ot+1/bRvLyEWX9cQ8/gANP1mV1w2md4jbW9DVYRerD6VIFf2mSw31wpR6
+         IvrovMmqGcqSH/jwBtxlCvTMIs0sa9PJj1Cpv67IkMFT0K7pa7ErG1b29tjV7Cd0HRbE
+         zEwxV8Gvkcg3YXxS3DsbgOEzW30ulsuYUR6qCofgQSqiXMf8mzEO9j6FTdbXMH4Aoz5e
+         NgT5bcq3hlHC0l5EY6+goOtVpXBTNZ6bTO6k5FaHGEq15/d9vpFEM4/wodZ1Z+oMNFvH
+         iJ2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738704711; x=1739309511;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EFkwgyb5BuJX+usrePYvrQhplJIen5/ak4VjfBuAK7s=;
+        b=lH+qaMhoDJbQUrWFaoMmG603x8Ae2VF6DazZqi+iOOWMyV5cnBOwY2dGnyakPdpwRg
+         xb5eOTGbEm0qcVSxNpUX+5oNQE8qMC+HN9U5Yo00oHHfX2pDq2ZARBVllEQHFCU045H4
+         Ev1gqYNpPcEAtP+WgHxRV/9QJ/luXGrLXEebS7CuGLigIMw6SDYLnV+htwOOeDuRnIOH
+         AOrsK7UfTB8Om+vKXdE69rT2MHrmkRnGCB7uzFcz5hgczg+pFkEPn68O6AZJrwA6Ymn5
+         ifgel392jQTtfZ/kzDzMaxMv4EHUllBcSrCBScmeHOwgHq9QJZkpuHGspeO62Eqb22mP
+         oyRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUiCkjjtDT5xgQHDG1lBErYiuTUscXFdlv1LjTW33SiH3HdYYMvcy2A4idCp1ndRfa8dImEMomt9PElXrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDHKhpk7Nr4ajaZoT90C0ifkTOKbaPj9gy+R0N19yIc9o6ievl
+	sTN8eTJrCtpBSH8nhFfsrHKcQ3hmLtSieBmBMpOwpL5ik88z2ToBXswSiIHC9wOeZtT25UW3j3p
+	OYycDNVOuAA==
+X-Google-Smtp-Source: AGHT+IGTHqGz5CcupDUeSXfjtOEk7P9lR3OQh80lrd2rVsUgvzrm2apzh8gkPPz+FxlD8Svs5aHZZdkYd+mjyA==
+X-Received: from pgbcv3.prod.google.com ([2002:a05:6a02:4203:b0:7fe:ffa9:4e54])
+ (user=jeroendb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a20:6f09:b0:1e8:bd15:6819 with SMTP id adf61e73a8af0-1ede88461d2mr530588637.22.1738704711639;
+ Tue, 04 Feb 2025 13:31:51 -0800 (PST)
+Date: Tue,  4 Feb 2025 13:31:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/14] drm/msm/dpu: Reserve resources for CWB
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Rob Clark <robdclark@gmail.com>, <quic_abhinavk@quicinc.com>,
-        Sean Paul
-	<sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        "David
- Airlie" <airlied@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Simona Vetter <simona@ffwll.ch>,
-        Simona Vetter <simona.vetter@ffwll.ch>, <quic_ebharadw@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Rob Clark
-	<robdclark@chromium.org>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?=
-	<ville.syrjala@linux.intel.com>
-References: <20250128-concurrent-wb-v5-0-6464ca5360df@quicinc.com>
- <20250128-concurrent-wb-v5-7-6464ca5360df@quicinc.com>
- <2cc6pp6okhanqv5ndzm32aomgbhidgmvukc4lptrapgpl4utp4@gornklf5hhzp>
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <2cc6pp6okhanqv5ndzm32aomgbhidgmvukc4lptrapgpl4utp4@gornklf5hhzp>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: oH2Q9ICRl_9qvwXV7-0RvQ9ptocB3awT
-X-Proofpoint-ORIG-GUID: oH2Q9ICRl_9qvwXV7-0RvQ9ptocB3awT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_09,2025-02-04_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
- suspectscore=0 clxscore=1015 adultscore=0 lowpriorityscore=0 spamscore=0
- bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040159
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250204213121.14195-1-jeroendb@google.com>
+Subject: [PATCH net-next v2] gve: Add RSS cache for non RSS device option scenario
+From: Jeroen de Borst <jeroendb@google.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, jeroendb@google.com, pkaligineedi@google.com, 
+	shailend@google.com, andrew+netdev@lunn.ch, willemb@google.com, 
+	hramamurthy@google.com, ziweixiao@google.com, horms@kernel.org, 
+	linux-kernel@vger.kernel.org, Jeroen de Borst <jeroend@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+From: Ziwei Xiao <ziweixiao@google.com>
 
+Not all the devices have the capability for the driver to query for the
+registered RSS configuration. The driver can discover this by checking
+the relevant device option during setup. If it cannot, the driver needs
+to store the RSS config cache and directly return such cache when
+queried by the ethtool. RSS config is inited when driver probes. Also the
+default RSS config will be adjusted when there is RX queue count change.
 
-On 1/29/2025 2:11 PM, Dmitry Baryshkov wrote:
-> On Tue, Jan 28, 2025 at 07:20:39PM -0800, Jessica Zhang wrote:
->> Add support for RM to reserve dedicated CWB PINGPONGs and CWB muxes
->>
->> For concurrent writeback, even-indexed CWB muxes must be assigned to
->> even-indexed LMs and odd-indexed CWB muxes for odd-indexed LMs. The same
->> even/odd rule applies for dedicated CWB PINGPONGs.
->>
->> Track the CWB muxes in the global state and add a CWB-specific helper to
->> reserve the correct CWB muxes and dedicated PINGPONGs following the
->> even/odd rule.
->>
->> Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
->>
->> ---
->> Changes in v5:
->> - Allocate CWB muxes first then allocate PINGPONG block based on CWB mux
->>    index
->> - Corrected comment doc on odd/even rule
->> ---
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 34 ++++++++++--
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h |  2 +
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h     |  1 +
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c      | 82 +++++++++++++++++++++++++++++
->>   4 files changed, 115 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> index 99db194f5d095e83ac72f2830814e649a25918ef..17bd9762f56a392e8e9e8d7c897dcb6e06bccbb3 100644
->> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> @@ -2,7 +2,7 @@
->>   /*
->>    * Copyright (C) 2013 Red Hat
->>    * Copyright (c) 2014-2018, 2020-2021 The Linux Foundation. All rights reserved.
->> - * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
->> + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
->>    *
->>    * Author: Rob Clark <robdclark@gmail.com>
->>    */
->> @@ -28,6 +28,7 @@
->>   #include "dpu_hw_dsc.h"
->>   #include "dpu_hw_merge3d.h"
->>   #include "dpu_hw_cdm.h"
->> +#include "dpu_hw_cwb.h"
->>   #include "dpu_formats.h"
->>   #include "dpu_encoder_phys.h"
->>   #include "dpu_crtc.h"
->> @@ -133,6 +134,9 @@ enum dpu_enc_rc_states {
->>    * @cur_slave:		As above but for the slave encoder.
->>    * @hw_pp:		Handle to the pingpong blocks used for the display. No.
->>    *			pingpong blocks can be different than num_phys_encs.
->> + * @hw_cwb:		Handle to the CWB muxes used for concurrent writeback
->> + *			display. Number of CWB muxes can be different than
->> + *			num_phys_encs.
->>    * @hw_dsc:		Handle to the DSC blocks used for the display.
->>    * @dsc_mask:		Bitmask of used DSC blocks.
->>    * @intfs_swapped:	Whether or not the phys_enc interfaces have been swapped
->> @@ -177,6 +181,7 @@ struct dpu_encoder_virt {
->>   	struct dpu_encoder_phys *cur_master;
->>   	struct dpu_encoder_phys *cur_slave;
->>   	struct dpu_hw_pingpong *hw_pp[MAX_CHANNELS_PER_ENC];
->> +	struct dpu_hw_cwb *hw_cwb[MAX_CHANNELS_PER_ENC];
->>   	struct dpu_hw_dsc *hw_dsc[MAX_CHANNELS_PER_ENC];
->>   
->>   	unsigned int dsc_mask;
->> @@ -1137,7 +1142,10 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
->>   	struct dpu_hw_blk *hw_pp[MAX_CHANNELS_PER_ENC];
->>   	struct dpu_hw_blk *hw_ctl[MAX_CHANNELS_PER_ENC];
->>   	struct dpu_hw_blk *hw_dsc[MAX_CHANNELS_PER_ENC];
->> +	struct dpu_hw_blk *hw_cwb[MAX_CHANNELS_PER_ENC];
->>   	int num_ctl, num_pp, num_dsc;
->> +	int num_cwb = 0;
->> +	bool is_cwb_encoder;
->>   	unsigned int dsc_mask = 0;
->>   	int i;
->>   
->> @@ -1151,6 +1159,8 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
->>   
->>   	priv = drm_enc->dev->dev_private;
->>   	dpu_kms = to_dpu_kms(priv->kms);
->> +	is_cwb_encoder = drm_crtc_in_clone_mode(crtc_state) &&
->> +			dpu_enc->disp_info.intf_type == INTF_WB;
->>   
->>   	global_state = dpu_kms_get_existing_global_state(dpu_kms);
->>   	if (IS_ERR_OR_NULL(global_state)) {
->> @@ -1161,9 +1171,25 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
->>   	trace_dpu_enc_mode_set(DRMID(drm_enc));
->>   
->>   	/* Query resource that have been reserved in atomic check step. */
->> -	num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
->> -		drm_enc->crtc, DPU_HW_BLK_PINGPONG, hw_pp,
->> -		ARRAY_SIZE(hw_pp));
->> +	if (is_cwb_encoder) {
->> +		num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
->> +						       drm_enc->crtc,
->> +						       DPU_HW_BLK_DCWB_PINGPONG,
->> +						       hw_pp, ARRAY_SIZE(hw_pp));
->> +		num_cwb = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
->> +						       drm_enc->crtc,
->> +						       DPU_HW_BLK_CWB,
->> +						       hw_cwb, ARRAY_SIZE(hw_cwb));
->> +	} else {
->> +		num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
->> +						       drm_enc->crtc,
->> +						       DPU_HW_BLK_PINGPONG, hw_pp,
->> +						       ARRAY_SIZE(hw_pp));
->> +	}
->> +
->> +	for (i = 0; i < num_cwb; i++)
->> +		dpu_enc->hw_cwb[i] = to_dpu_hw_cwb(hw_cwb[i]);
->> +
->>   	num_ctl = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
->>   		drm_enc->crtc, DPU_HW_BLK_CTL, hw_ctl, ARRAY_SIZE(hw_ctl));
->>   
->> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
->> index ba7bb05efe9b8cac01a908e53121117e130f91ec..8d820cd1b5545d247515763039b341184e814e32 100644
->> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
->> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
->> @@ -77,12 +77,14 @@ enum dpu_hw_blk_type {
->>   	DPU_HW_BLK_LM,
->>   	DPU_HW_BLK_CTL,
->>   	DPU_HW_BLK_PINGPONG,
->> +	DPU_HW_BLK_DCWB_PINGPONG,
->>   	DPU_HW_BLK_INTF,
->>   	DPU_HW_BLK_WB,
->>   	DPU_HW_BLK_DSPP,
->>   	DPU_HW_BLK_MERGE_3D,
->>   	DPU_HW_BLK_DSC,
->>   	DPU_HW_BLK_CDM,
->> +	DPU_HW_BLK_CWB,
->>   	DPU_HW_BLK_MAX,
->>   };
->>   
->> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
->> index 54ef6cfa2485a8a3886bd26b7ec3692d037dc35e..a57ec2ec106083e8f93578e4307e8b13ae549c08 100644
->> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
->> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
->> @@ -132,6 +132,7 @@ struct dpu_global_state {
->>   	uint32_t cdm_to_crtc_id;
->>   
->>   	uint32_t sspp_to_crtc_id[SSPP_MAX - SSPP_NONE];
->> +	uint32_t cwb_to_crtc_id[CWB_MAX - CWB_0];
->>   };
->>   
->>   struct dpu_global_state
->> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
->> index dca3107d1e8265a864ac62d6b845d6cb966965ed..2d5cf97a75913d51b2568ce85ec0c79a4a34deb4 100644
->> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
->> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
->> @@ -233,6 +233,54 @@ static int _dpu_rm_get_lm_peer(struct dpu_rm *rm, int primary_idx)
->>   	return -EINVAL;
->>   }
->>   
->> +static int _dpu_rm_reserve_cwb_mux_and_pingpongs(struct dpu_rm *rm,
->> +						 struct dpu_global_state *global_state,
->> +						 uint32_t crtc_id,
->> +						 struct msm_display_topology *topology)
->> +{
->> +	int num_cwb_mux = topology->num_lm, cwb_mux_count = 0;
->> +	int cwb_pp_start_idx = PINGPONG_CWB_0 - PINGPONG_0;
->> +	int cwb_pp_idx[MAX_BLOCKS];
->> +	int cwb_mux_idx[MAX_BLOCKS];
->> +
->> +	/*
->> +	 * Reserve additional dedicated CWB PINGPONG blocks and muxes for each
->> +	 * mixer
->> +	 *
->> +	 * TODO: add support reserving resources for platforms with no
->> +	 *       PINGPONG_CWB
->> +	 */
->> +	for (int i = 0; i < ARRAY_SIZE(rm->mixer_blks) &&
->> +	     cwb_mux_count < num_cwb_mux; i++) {
->> +		for (int j = 0; j < ARRAY_SIZE(rm->cwb_blks); j++) {
->> +			/*
->> +			 * Odd LMs must be assigned to odd CWB muxes and even
->> +			 * LMs with even CWB muxes
->> +			 */
->> +			if (reserved_by_other(global_state->cwb_to_crtc_id, j, crtc_id) ||
->> +			    i % 2 != j % 2)
-> 
-> Should't it be a loop over allocated LMs with the check that
-> lm[i]->idx % 2 != j % 2 ?
-> Otherwise you are looping over some random LMs and trying to match CWB
-> indices against them.
+At this point, only keys of GVE_RSS_KEY_SIZE and indirection tables of
+GVE_RSS_INDIR_SIZE are supported.
 
-Hi Dmitry,
+Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
+Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Praveen Kaligineedi <pkaligineedi@google.com>
+Signed-off-by: Jeroen de Borst <jeroend@google.com>
+---
+Changes in v2:
+ - Change to initialize RSS config when the driver is up instead of
+   doing that when the user setting the RSS.(Jakub Kicinski)
+ - Use NL_SET_ERR_MSG_MOD to log errors when there is extack
+   available.(Jakub Kicinski)
+ - Use ethtool_rxfh_indir_default to set default RSS indir
+   table.(Jakub Kicinski)
+ - Adjust the default RSS config when there is RX queue count change to
+   ensure the default RSS config is correct.
 
-The RM array idx are based of the hw block ids [1] so there isn't much 
-difference using i and lm[i]->id.
+ drivers/net/ethernet/google/gve/gve.h         | 16 +++-
+ drivers/net/ethernet/google/gve/gve_adminq.c  | 64 ++++++++++---
+ drivers/net/ethernet/google/gve/gve_ethtool.c | 60 ++++++++++--
+ drivers/net/ethernet/google/gve/gve_main.c    | 92 ++++++++++++++++++-
+ 4 files changed, 209 insertions(+), 23 deletions(-)
 
-Thanks,
-
-Jessica Zhang
-
-[1] 
-https://elixir.bootlin.com/linux/v6.13.1/source/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c#L74
-
-> 
->> +				continue;
->> +
->> +			cwb_mux_idx[cwb_mux_count] = j;
->> +			cwb_pp_idx[cwb_mux_count] = j + cwb_pp_start_idx;
->> +			cwb_mux_count++;
->> +			break;
->> +		}
->> +	}
->> +
->> +	if (cwb_mux_count != num_cwb_mux) {
->> +		DPU_ERROR("Unable to reserve all CWB PINGPONGs\n");
->> +		return -ENAVAIL;
->> +	}
->> +
->> +	for (int i = 0; i < cwb_mux_count; i++) {
->> +		global_state->pingpong_to_crtc_id[cwb_pp_idx[i]] = crtc_id;
->> +		global_state->cwb_to_crtc_id[cwb_mux_idx[i]] = crtc_id;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   /**
->>    * _dpu_rm_check_lm_and_get_connected_blks - check if proposed layer mixer meets
->>    *	proposed use case requirements, incl. hardwired dependent blocks like
->> @@ -623,6 +671,12 @@ static int _dpu_rm_make_reservation(
->>   		return ret;
->>   	}
->>   
->> +	if (topology->cwb_enabled) {
->> +		ret = _dpu_rm_reserve_cwb_mux_and_pingpongs(rm, global_state,
->> +							    crtc_id, topology);
->> +		if (ret)
->> +			return ret;
->> +	}
->>   
->>   	ret = _dpu_rm_reserve_ctls(rm, global_state, crtc_id,
->>   			topology);
->> @@ -680,6 +734,8 @@ void dpu_rm_release(struct dpu_global_state *global_state,
->>   	_dpu_rm_clear_mapping(global_state->dspp_to_crtc_id,
->>   			ARRAY_SIZE(global_state->dspp_to_crtc_id), crtc_id);
->>   	_dpu_rm_clear_mapping(&global_state->cdm_to_crtc_id, 1, crtc_id);
->> +	_dpu_rm_clear_mapping(global_state->cwb_to_crtc_id,
->> +			ARRAY_SIZE(global_state->cwb_to_crtc_id), crtc_id);
->>   }
->>   
->>   /**
->> @@ -824,6 +880,7 @@ int dpu_rm_get_assigned_resources(struct dpu_rm *rm,
->>   
->>   	switch (type) {
->>   	case DPU_HW_BLK_PINGPONG:
->> +	case DPU_HW_BLK_DCWB_PINGPONG:
->>   		hw_blks = rm->pingpong_blks;
->>   		hw_to_crtc_id = global_state->pingpong_to_crtc_id;
->>   		max_blks = ARRAY_SIZE(rm->pingpong_blks);
->> @@ -853,6 +910,11 @@ int dpu_rm_get_assigned_resources(struct dpu_rm *rm,
->>   		hw_to_crtc_id = &global_state->cdm_to_crtc_id;
->>   		max_blks = 1;
->>   		break;
->> +	case DPU_HW_BLK_CWB:
->> +		hw_blks = rm->cwb_blks;
->> +		hw_to_crtc_id = global_state->cwb_to_crtc_id;
->> +		max_blks = ARRAY_SIZE(rm->cwb_blks);
->> +		break;
->>   	default:
->>   		DPU_ERROR("blk type %d not managed by rm\n", type);
->>   		return 0;
->> @@ -863,6 +925,20 @@ int dpu_rm_get_assigned_resources(struct dpu_rm *rm,
->>   		if (hw_to_crtc_id[i] != crtc_id)
->>   			continue;
->>   
->> +		if (type == DPU_HW_BLK_PINGPONG) {
->> +			struct dpu_hw_pingpong *pp = to_dpu_hw_pingpong(hw_blks[i]);
->> +
->> +			if (pp->idx >= PINGPONG_CWB_0)
->> +				continue;
->> +		}
->> +
->> +		if (type == DPU_HW_BLK_DCWB_PINGPONG) {
->> +			struct dpu_hw_pingpong *pp = to_dpu_hw_pingpong(hw_blks[i]);
->> +
->> +			if (pp->idx < PINGPONG_CWB_0)
->> +				continue;
->> +		}
->> +
->>   		if (num_blks == blks_size) {
->>   			DPU_ERROR("More than %d resources assigned to crtc %d\n",
->>   				  blks_size, crtc_id);
->> @@ -945,4 +1021,10 @@ void dpu_rm_print_state(struct drm_printer *p,
->>   		dpu_rm_print_state_helper(p, rm->hw_sspp[i] ? &rm->hw_sspp[i]->base : NULL,
->>   					  global_state->sspp_to_crtc_id[i]);
->>   	drm_puts(p, "\n");
->> +
->> +	drm_puts(p, "\tcwb=");
->> +	for (i = 0; i < ARRAY_SIZE(global_state->cwb_to_crtc_id); i++)
->> +		dpu_rm_print_state_helper(p, rm->cwb_blks[i],
->> +					  global_state->cwb_to_crtc_id[i]);
->> +	drm_puts(p, "\n");
->>   }
->>
->> -- 
->> 2.34.1
->>
-> 
-> -- 
-> With best wishes
-> Dmitry
+diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
+index 8167cc5fb0df..8e1e706c6f5e 100644
+--- a/drivers/net/ethernet/google/gve/gve.h
++++ b/drivers/net/ethernet/google/gve/gve.h
+@@ -68,6 +68,9 @@
+ #define GVE_FLOW_RULE_IDS_CACHE_SIZE \
+ 	(GVE_ADMINQ_BUFFER_SIZE / sizeof(((struct gve_adminq_queried_flow_rule *)0)->location))
+ 
++#define GVE_RSS_KEY_SIZE	40
++#define GVE_RSS_INDIR_SIZE	128
++
+ #define GVE_XDP_ACTIONS 5
+ 
+ #define GVE_GQ_TX_MIN_PKT_DESC_BYTES 182
+@@ -672,6 +675,7 @@ struct gve_rx_alloc_rings_cfg {
+ 	u16 packet_buffer_size;
+ 	bool raw_addressing;
+ 	bool enable_header_split;
++	bool reset_rss;
+ 
+ 	/* Allocated resources are returned here */
+ 	struct gve_rx_ring *rx;
+@@ -722,6 +726,11 @@ struct gve_flow_rules_cache {
+ 	u32 rule_ids_cache_num;
+ };
+ 
++struct gve_rss_config {
++	u8 *hash_key;
++	u32 *hash_lut;
++};
++
+ struct gve_priv {
+ 	struct net_device *dev;
+ 	struct gve_tx_ring *tx; /* array of tx_cfg.num_queues */
+@@ -842,6 +851,8 @@ struct gve_priv {
+ 
+ 	u16 rss_key_size;
+ 	u16 rss_lut_size;
++	bool cache_rss_config;
++	struct gve_rss_config rss_config;
+ };
+ 
+ enum gve_service_task_flags_bit {
+@@ -1210,13 +1221,16 @@ int gve_adjust_config(struct gve_priv *priv,
+ 		      struct gve_rx_alloc_rings_cfg *rx_alloc_cfg);
+ int gve_adjust_queues(struct gve_priv *priv,
+ 		      struct gve_queue_config new_rx_config,
+-		      struct gve_queue_config new_tx_config);
++		      struct gve_queue_config new_tx_config,
++		      bool reset_rss);
+ /* flow steering rule */
+ int gve_get_flow_rule_entry(struct gve_priv *priv, struct ethtool_rxnfc *cmd);
+ int gve_get_flow_rule_ids(struct gve_priv *priv, struct ethtool_rxnfc *cmd, u32 *rule_locs);
+ int gve_add_flow_rule(struct gve_priv *priv, struct ethtool_rxnfc *cmd);
+ int gve_del_flow_rule(struct gve_priv *priv, struct ethtool_rxnfc *cmd);
+ int gve_flow_rules_reset(struct gve_priv *priv);
++/* RSS config */
++int gve_init_rss_config(struct gve_priv *priv, u16 num_queues);
+ /* report stats handling */
+ void gve_handle_report_stats(struct gve_priv *priv);
+ /* exported by ethtool.c */
+diff --git a/drivers/net/ethernet/google/gve/gve_adminq.c b/drivers/net/ethernet/google/gve/gve_adminq.c
+index aa7d723011d0..a9ae094456cb 100644
+--- a/drivers/net/ethernet/google/gve/gve_adminq.c
++++ b/drivers/net/ethernet/google/gve/gve_adminq.c
+@@ -885,6 +885,15 @@ static void gve_set_default_desc_cnt(struct gve_priv *priv,
+ 	priv->min_rx_desc_cnt = priv->rx_desc_cnt;
+ }
+ 
++static void gve_set_default_rss_sizes(struct gve_priv *priv)
++{
++	if (!gve_is_gqi(priv)) {
++		priv->rss_key_size = GVE_RSS_KEY_SIZE;
++		priv->rss_lut_size = GVE_RSS_INDIR_SIZE;
++		priv->cache_rss_config = true;
++	}
++}
++
+ static void gve_enable_supported_features(struct gve_priv *priv,
+ 					  u32 supported_features_mask,
+ 					  const struct gve_device_option_jumbo_frames
+@@ -968,6 +977,10 @@ static void gve_enable_supported_features(struct gve_priv *priv,
+ 			be16_to_cpu(dev_op_rss_config->hash_key_size);
+ 		priv->rss_lut_size =
+ 			be16_to_cpu(dev_op_rss_config->hash_lut_size);
++		priv->cache_rss_config = false;
++		dev_dbg(&priv->pdev->dev,
++			"RSS device option enabled with key size of %u, lut size of %u.\n",
++			priv->rss_key_size, priv->rss_lut_size);
+ 	}
+ }
+ 
+@@ -1052,6 +1065,8 @@ int gve_adminq_describe_device(struct gve_priv *priv)
+ 	/* set default descriptor counts */
+ 	gve_set_default_desc_cnt(priv, descriptor);
+ 
++	gve_set_default_rss_sizes(priv);
++
+ 	/* DQO supports LRO. */
+ 	if (!gve_is_gqi(priv))
+ 		priv->dev->hw_features |= NETIF_F_LRO;
+@@ -1276,8 +1291,9 @@ int gve_adminq_reset_flow_rules(struct gve_priv *priv)
+ 
+ int gve_adminq_configure_rss(struct gve_priv *priv, struct ethtool_rxfh_param *rxfh)
+ {
++	const u32 *hash_lut_to_config = NULL;
++	const u8 *hash_key_to_config = NULL;
+ 	dma_addr_t lut_bus = 0, key_bus = 0;
+-	u16 key_size = 0, lut_size = 0;
+ 	union gve_adminq_command cmd;
+ 	__be32 *lut = NULL;
+ 	u8 hash_alg = 0;
+@@ -1287,7 +1303,7 @@ int gve_adminq_configure_rss(struct gve_priv *priv, struct ethtool_rxfh_param *r
+ 
+ 	switch (rxfh->hfunc) {
+ 	case ETH_RSS_HASH_NO_CHANGE:
+-		break;
++		fallthrough;
+ 	case ETH_RSS_HASH_TOP:
+ 		hash_alg = ETH_RSS_HASH_TOP;
+ 		break;
+@@ -1296,27 +1312,44 @@ int gve_adminq_configure_rss(struct gve_priv *priv, struct ethtool_rxfh_param *r
+ 	}
+ 
+ 	if (rxfh->indir) {
+-		lut_size = priv->rss_lut_size;
++		if (rxfh->indir_size != priv->rss_lut_size)
++			return -EINVAL;
++
++		hash_lut_to_config = rxfh->indir;
++	} else if (priv->cache_rss_config) {
++		hash_lut_to_config = priv->rss_config.hash_lut;
++	}
++
++	if (hash_lut_to_config) {
+ 		lut = dma_alloc_coherent(&priv->pdev->dev,
+-					 lut_size * sizeof(*lut),
++					 priv->rss_lut_size * sizeof(*lut),
+ 					 &lut_bus, GFP_KERNEL);
+ 		if (!lut)
+ 			return -ENOMEM;
+ 
+ 		for (i = 0; i < priv->rss_lut_size; i++)
+-			lut[i] = cpu_to_be32(rxfh->indir[i]);
++			lut[i] = cpu_to_be32(hash_lut_to_config[i]);
+ 	}
+ 
+ 	if (rxfh->key) {
+-		key_size = priv->rss_key_size;
++		if (rxfh->key_size != priv->rss_key_size)
++			return -EINVAL;
++
++		hash_key_to_config = rxfh->key;
++	} else if (priv->cache_rss_config) {
++		hash_key_to_config = priv->rss_config.hash_key;
++	}
++
++	if (hash_key_to_config) {
+ 		key = dma_alloc_coherent(&priv->pdev->dev,
+-					 key_size, &key_bus, GFP_KERNEL);
++					 priv->rss_key_size,
++					 &key_bus, GFP_KERNEL);
+ 		if (!key) {
+ 			err = -ENOMEM;
+ 			goto out;
+ 		}
+ 
+-		memcpy(key, rxfh->key, key_size);
++		memcpy(key, hash_key_to_config, priv->rss_key_size);
+ 	}
+ 
+ 	/* Zero-valued fields in the cmd.configure_rss instruct the device to
+@@ -1330,8 +1363,10 @@ int gve_adminq_configure_rss(struct gve_priv *priv, struct ethtool_rxfh_param *r
+ 					  BIT(GVE_RSS_HASH_TCPV6) |
+ 					  BIT(GVE_RSS_HASH_UDPV6)),
+ 		.hash_alg = hash_alg,
+-		.hash_key_size = cpu_to_be16(key_size),
+-		.hash_lut_size = cpu_to_be16(lut_size),
++		.hash_key_size =
++			cpu_to_be16((key_bus) ? priv->rss_key_size : 0),
++		.hash_lut_size =
++			cpu_to_be16((lut_bus) ? priv->rss_lut_size : 0),
+ 		.hash_key_addr = cpu_to_be64(key_bus),
+ 		.hash_lut_addr = cpu_to_be64(lut_bus),
+ 	};
+@@ -1341,11 +1376,11 @@ int gve_adminq_configure_rss(struct gve_priv *priv, struct ethtool_rxfh_param *r
+ out:
+ 	if (lut)
+ 		dma_free_coherent(&priv->pdev->dev,
+-				  lut_size * sizeof(*lut),
++				  priv->rss_lut_size * sizeof(*lut),
+ 				  lut, lut_bus);
+ 	if (key)
+ 		dma_free_coherent(&priv->pdev->dev,
+-				  key_size, key, key_bus);
++				  priv->rss_key_size, key, key_bus);
+ 	return err;
+ }
+ 
+@@ -1449,12 +1484,15 @@ static int gve_adminq_process_rss_query(struct gve_priv *priv,
+ 	rxfh->hfunc = descriptor->hash_alg;
+ 
+ 	rss_info_addr = (void *)(descriptor + 1);
+-	if (rxfh->key)
++	if (rxfh->key) {
++		rxfh->key_size = priv->rss_key_size;
+ 		memcpy(rxfh->key, rss_info_addr, priv->rss_key_size);
++	}
+ 
+ 	rss_info_addr += priv->rss_key_size;
+ 	lut = (__be32 *)rss_info_addr;
+ 	if (rxfh->indir) {
++		rxfh->indir_size = priv->rss_lut_size;
+ 		for (i = 0; i < priv->rss_lut_size; i++)
+ 			rxfh->indir[i] = be32_to_cpu(lut[i]);
+ 	}
+diff --git a/drivers/net/ethernet/google/gve/gve_ethtool.c b/drivers/net/ethernet/google/gve/gve_ethtool.c
+index bdfc6e77b2af..efcafc607b2a 100644
+--- a/drivers/net/ethernet/google/gve/gve_ethtool.c
++++ b/drivers/net/ethernet/google/gve/gve_ethtool.c
+@@ -482,6 +482,7 @@ static int gve_set_channels(struct net_device *netdev,
+ 	struct ethtool_channels old_settings;
+ 	int new_tx = cmd->tx_count;
+ 	int new_rx = cmd->rx_count;
++	bool reset_rss;
+ 
+ 	gve_get_channels(netdev, &old_settings);
+ 
+@@ -498,16 +499,14 @@ static int gve_set_channels(struct net_device *netdev,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!netif_running(netdev)) {
+-		priv->tx_cfg.num_queues = new_tx;
+-		priv->rx_cfg.num_queues = new_rx;
+-		return 0;
+-	}
++	if (new_rx != priv->rx_cfg.num_queues &&
++	    priv->cache_rss_config && !netif_is_rxfh_configured(netdev))
++		reset_rss = true;
+ 
+ 	new_tx_cfg.num_queues = new_tx;
+ 	new_rx_cfg.num_queues = new_rx;
+ 
+-	return gve_adjust_queues(priv, new_rx_cfg, new_tx_cfg);
++	return gve_adjust_queues(priv, new_rx_cfg, new_tx_cfg, reset_rss);
+ }
+ 
+ static void gve_get_ringparam(struct net_device *netdev,
+@@ -855,6 +854,25 @@ static u32 gve_get_rxfh_indir_size(struct net_device *netdev)
+ 	return priv->rss_lut_size;
+ }
+ 
++static void gve_get_rss_config_cache(struct gve_priv *priv,
++				     struct ethtool_rxfh_param *rxfh)
++{
++	struct gve_rss_config *rss_config = &priv->rss_config;
++
++	rxfh->hfunc = ETH_RSS_HASH_TOP;
++
++	if (rxfh->key) {
++		rxfh->key_size = priv->rss_key_size;
++		memcpy(rxfh->key, rss_config->hash_key, priv->rss_key_size);
++	}
++
++	if (rxfh->indir) {
++		rxfh->indir_size = priv->rss_lut_size;
++		memcpy(rxfh->indir, rss_config->hash_lut,
++		       priv->rss_lut_size * sizeof(*rxfh->indir));
++	}
++}
++
+ static int gve_get_rxfh(struct net_device *netdev, struct ethtool_rxfh_param *rxfh)
+ {
+ 	struct gve_priv *priv = netdev_priv(netdev);
+@@ -862,18 +880,46 @@ static int gve_get_rxfh(struct net_device *netdev, struct ethtool_rxfh_param *rx
+ 	if (!priv->rss_key_size || !priv->rss_lut_size)
+ 		return -EOPNOTSUPP;
+ 
++	if (priv->cache_rss_config) {
++		gve_get_rss_config_cache(priv, rxfh);
++		return 0;
++	}
++
+ 	return gve_adminq_query_rss_config(priv, rxfh);
+ }
+ 
++static void gve_set_rss_config_cache(struct gve_priv *priv,
++				     struct ethtool_rxfh_param *rxfh)
++{
++	struct gve_rss_config *rss_config = &priv->rss_config;
++
++	if (rxfh->key)
++		memcpy(rss_config->hash_key, rxfh->key, priv->rss_key_size);
++
++	if (rxfh->indir)
++		memcpy(rss_config->hash_lut, rxfh->indir,
++		       priv->rss_lut_size * sizeof(*rxfh->indir));
++}
++
+ static int gve_set_rxfh(struct net_device *netdev, struct ethtool_rxfh_param *rxfh,
+ 			struct netlink_ext_ack *extack)
+ {
+ 	struct gve_priv *priv = netdev_priv(netdev);
++	int err;
+ 
+ 	if (!priv->rss_key_size || !priv->rss_lut_size)
+ 		return -EOPNOTSUPP;
+ 
+-	return gve_adminq_configure_rss(priv, rxfh);
++	err = gve_adminq_configure_rss(priv, rxfh);
++	if (err) {
++		NL_SET_ERR_MSG_MOD(extack, "Fail to configure RSS config\n");
++		return err;
++	}
++
++	if (priv->cache_rss_config)
++		gve_set_rss_config_cache(priv, rxfh);
++
++	return 0;
+ }
+ 
+ const struct ethtool_ops gve_ethtool_ops = {
+diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
+index 533e659b15b3..d726a4d39b45 100644
+--- a/drivers/net/ethernet/google/gve/gve_main.c
++++ b/drivers/net/ethernet/google/gve/gve_main.c
+@@ -184,6 +184,49 @@ static void gve_free_flow_rule_caches(struct gve_priv *priv)
+ 	flow_rules_cache->rules_cache = NULL;
+ }
+ 
++static int gve_alloc_rss_config_cache(struct gve_priv *priv)
++{
++	struct gve_rss_config *rss_config = &priv->rss_config;
++	int err = 0;
++
++	if (!priv->cache_rss_config)
++		return 0;
++
++	rss_config->hash_key = kcalloc(priv->rss_key_size,
++				       sizeof(rss_config->hash_key[0]),
++				       GFP_KERNEL);
++	if (!rss_config->hash_key) {
++		dev_err(&priv->pdev->dev, "Cannot alloc rss key cache\n");
++		return -ENOMEM;
++	}
++
++	rss_config->hash_lut = kcalloc(priv->rss_lut_size,
++				       sizeof(rss_config->hash_lut[0]),
++				       GFP_KERNEL);
++	if (!rss_config->hash_lut) {
++		dev_err(&priv->pdev->dev, "Cannot alloc rss lut cache\n");
++		err = -ENOMEM;
++		goto free_rss_key_cache;
++	}
++
++	return 0;
++
++free_rss_key_cache:
++	kfree(rss_config->hash_key);
++	rss_config->hash_key = NULL;
++	return err;
++}
++
++static void gve_free_rss_config_cache(struct gve_priv *priv)
++{
++	struct gve_rss_config *rss_config = &priv->rss_config;
++
++	kfree(rss_config->hash_key);
++	kfree(rss_config->hash_lut);
++
++	memset(rss_config, 0, sizeof(*rss_config));
++}
++
+ static int gve_alloc_counter_array(struct gve_priv *priv)
+ {
+ 	priv->counter_array =
+@@ -575,9 +618,12 @@ static int gve_setup_device_resources(struct gve_priv *priv)
+ 	err = gve_alloc_flow_rule_caches(priv);
+ 	if (err)
+ 		return err;
+-	err = gve_alloc_counter_array(priv);
++	err = gve_alloc_rss_config_cache(priv);
+ 	if (err)
+ 		goto abort_with_flow_rule_caches;
++	err = gve_alloc_counter_array(priv);
++	if (err)
++		goto abort_with_rss_config_cache;
+ 	err = gve_alloc_notify_blocks(priv);
+ 	if (err)
+ 		goto abort_with_counter;
+@@ -611,6 +657,12 @@ static int gve_setup_device_resources(struct gve_priv *priv)
+ 		}
+ 	}
+ 
++	err = gve_init_rss_config(priv, priv->rx_cfg.num_queues);
++	if (err) {
++		dev_err(&priv->pdev->dev, "Failed to init RSS config");
++		goto abort_with_ptype_lut;
++	}
++
+ 	err = gve_adminq_report_stats(priv, priv->stats_report_len,
+ 				      priv->stats_report_bus,
+ 				      GVE_STATS_REPORT_TIMER_PERIOD);
+@@ -629,6 +681,8 @@ static int gve_setup_device_resources(struct gve_priv *priv)
+ 	gve_free_notify_blocks(priv);
+ abort_with_counter:
+ 	gve_free_counter_array(priv);
++abort_with_rss_config_cache:
++	gve_free_rss_config_cache(priv);
+ abort_with_flow_rule_caches:
+ 	gve_free_flow_rule_caches(priv);
+ 
+@@ -669,6 +723,7 @@ static void gve_teardown_device_resources(struct gve_priv *priv)
+ 	priv->ptype_lut_dqo = NULL;
+ 
+ 	gve_free_flow_rule_caches(priv);
++	gve_free_rss_config_cache(priv);
+ 	gve_free_counter_array(priv);
+ 	gve_free_notify_blocks(priv);
+ 	gve_free_stats_report(priv);
+@@ -1390,6 +1445,12 @@ static int gve_queues_start(struct gve_priv *priv,
+ 	if (err)
+ 		goto stop_and_free_rings;
+ 
++	if (rx_alloc_cfg->reset_rss) {
++		err = gve_init_rss_config(priv, priv->rx_cfg.num_queues);
++		if (err)
++			goto reset;
++	}
++
+ 	err = gve_register_qpls(priv);
+ 	if (err)
+ 		goto reset;
+@@ -1786,6 +1847,26 @@ static int gve_xdp(struct net_device *dev, struct netdev_bpf *xdp)
+ 	}
+ }
+ 
++int gve_init_rss_config(struct gve_priv *priv, u16 num_queues)
++{
++	struct gve_rss_config *rss_config = &priv->rss_config;
++	struct ethtool_rxfh_param rxfh;
++	u16 i;
++
++	if (!priv->cache_rss_config)
++		return 0;
++
++	for (i = 0; i < priv->rss_lut_size; i++)
++		rss_config->hash_lut[i] =
++			ethtool_rxfh_indir_default(i, num_queues);
++
++	netdev_rss_key_fill(rss_config->hash_key, priv->rss_key_size);
++
++	rxfh.hfunc = ETH_RSS_HASH_TOP;
++
++	return gve_adminq_configure_rss(priv, &rxfh);
++}
++
+ int gve_flow_rules_reset(struct gve_priv *priv)
+ {
+ 	if (!priv->max_flow_rules)
+@@ -1834,7 +1915,8 @@ int gve_adjust_config(struct gve_priv *priv,
+ 
+ int gve_adjust_queues(struct gve_priv *priv,
+ 		      struct gve_queue_config new_rx_config,
+-		      struct gve_queue_config new_tx_config)
++		      struct gve_queue_config new_tx_config,
++		      bool reset_rss)
+ {
+ 	struct gve_tx_alloc_rings_cfg tx_alloc_cfg = {0};
+ 	struct gve_rx_alloc_rings_cfg rx_alloc_cfg = {0};
+@@ -1847,6 +1929,7 @@ int gve_adjust_queues(struct gve_priv *priv,
+ 	tx_alloc_cfg.qcfg = &new_tx_config;
+ 	rx_alloc_cfg.qcfg_tx = &new_tx_config;
+ 	rx_alloc_cfg.qcfg = &new_rx_config;
++	rx_alloc_cfg.reset_rss = reset_rss;
+ 	tx_alloc_cfg.num_rings = new_tx_config.num_queues;
+ 
+ 	/* Add dedicated XDP TX queues if enabled. */
+@@ -1858,6 +1941,11 @@ int gve_adjust_queues(struct gve_priv *priv,
+ 		return err;
+ 	}
+ 	/* Set the config for the next up. */
++	if (reset_rss) {
++		err = gve_init_rss_config(priv, new_rx_config.num_queues);
++		if (err)
++			return err;
++	}
+ 	priv->tx_cfg = new_tx_config;
+ 	priv->rx_cfg = new_rx_config;
+ 
+-- 
+2.48.1.362.g079036d154-goog
 
