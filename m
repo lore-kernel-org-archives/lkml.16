@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F89D78F5B
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7DB13A265
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:28:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738632506; cv=none; b=M8q+CYmGlPsZMa5bORp+8R8eNMtq8ytbggtGnLo1XE0Lbalsv3wrifWPqzlAV8MLr4wjwbOMKTFz+TAb231JSCvGCiHnMGuXiSbF6jdNKaq88wP7Co61loLSf2cjaUshsPCkEE0QTZ0wW9s7t4p53f5zRWteZ4QACq/WhGebPW8=
+	t=1738632508; cv=none; b=leDOKwLnKXR3WHNxPuICDH+B6TTVtH7XTRJjEKghlRw7hjTMQYkH2YrV1MQjXguCrYJJNhbjk6aeC2b1npfz7HceRnomwQDiryWyYUT/qdFRINFzQ6w3x01L02/5tk6T0dLw+jk6A9JLalggQVq13XBEi4dd+6nkt0jATs4ZT8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738632506; c=relaxed/simple;
-	bh=zRDb8IOYGvmlXWuVKT5AYO2bgAWZILWEV5h6yMwNaSU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hfC0D2X8odEiL3KwVPi3XADZSdBhFsIR3gvJ+3VNrumEJJChVMsNpbJwQBNyBhi5KqFdVyLCetZQK3XWNBXVTSUw1xKk15k7NMj+anYHHWgb3EQQ4XzJghMj0YrDrZ4kf7sqcLP7jQwwHVd0/WbPlDCscKlWZvVyLoC5FJfuOmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6WT0SlC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738632508; c=relaxed/simple;
+	bh=psfIx+WTCVEKKF13dXpL3qIBLXlTnhiIzjy/QG/PPbE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=m2wODqBCQUA5EfkCrPNz5DTfd/WGX1hu6jEx/TucKG+CVkIav5kvJ4M3o2D4+vch7LdMTUg/mPb8gHjmSJj5k2rMADiZAnNPCQwdmXYYHyP0SmTYK76lc0UOWDbCoi6hc/Zxrt4Yr8WQ51Gsmf5grfOr4lR7156SG9Z9z9QvYeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2q6U+ED; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6WT0SlC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDD86C4CEE0;
-	Tue,  4 Feb 2025 01:28:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2q6U+ED"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEE8EC4CEE5;
+	Tue,  4 Feb 2025 01:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738632505;
-	bh=zRDb8IOYGvmlXWuVKT5AYO2bgAWZILWEV5h6yMwNaSU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=H6WT0SlCNkTE2TL3CSWKa74bNMQaABQltk4ugPu7I82Cqk8Zm5019mb4B+o6JmPxw
-	 T1NCmyBqItGKMbqdlp61APCYjE3PJUc12+HjEeD7HkjMS3xF/7sBFaYtQYzVAmcj8c
-	 07ccJqfP35y854Ozcr4f/8eOUyqbFVcDFZoTLc2xsM6hbqxF8QWrpK6Q1Zssc8PeXZ
-	 ud29tkm51IEfdOj9IsZjpmoHyUtTts/PYd8eTHI0Jk66foZ9VOsdGWGEyaFxkpArex
-	 dm8Dj1UoiJPe3YdTTWVCqUyDarxD/I1nouPoV0JNRHC2AQOeKo3rnW48YMczk9eNUy
-	 IfMvIkdRNuXNw==
+	s=k20201202; t=1738632507;
+	bh=psfIx+WTCVEKKF13dXpL3qIBLXlTnhiIzjy/QG/PPbE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=l2q6U+EDVBgdqeZGC6BBkBbbb4BIlPKoVysiNE71bWWHUFJtQdOb/unPmkjGDyX9F
+	 47bI+3IhESjJBgQsMixqa29wKkql7R7fD5nYeGyoUaZGLsTcNy7xbDLpisapbaRR1S
+	 S0PyYLBC94gutTNWZOb3nLvaLfulMJoprhmdTErT5mjRlzVl2Xz7rVQkNazkBnh2n4
+	 g1AaQ5b1kNPCuwew8GVSqJ0SqKSFCX46JhHvqxgrM68TfbkUW2iuKUA2HrtpLkvfk4
+	 tNS3qVj6zMTfqLErznSC2wuJTJ28vkLHX7v7xdRXcmYZgkIO5L7x3WIjRBmHppei8d
+	 /Pn+7BPTw0Gjg==
 From: carlos.bilbao@kernel.org
 To: apw@canonical.com,
 	joe@perches.com,
@@ -33,10 +34,12 @@ To: apw@canonical.com,
 Cc: bilbao@vt.edu,
 	linux-kernel@vger.kernel.org,
 	Carlos Bilbao <carlos.bilbao@kernel.org>
-Subject: [PATCH 0/1] checkpatch: add --branch option to check commits in current branch
-Date: Mon,  3 Feb 2025 19:28:21 -0600
-Message-ID: <20250204012822.1379477-1-carlos.bilbao@kernel.org>
+Subject: [PATCH 1/1] checkpatch: add --branch option to check commits in current branch
+Date: Mon,  3 Feb 2025 19:28:22 -0600
+Message-ID: <20250204012822.1379477-2-carlos.bilbao@kernel.org>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250204012822.1379477-1-carlos.bilbao@kernel.org>
+References: <20250204012822.1379477-1-carlos.bilbao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,65 +50,113 @@ Content-Transfer-Encoding: 8bit
 
 From: Carlos Bilbao <carlos.bilbao@kernel.org>
 
-I thought it would help to add an option --branch in checkpatch.pl to
-check multiple commits within a branch. In my experience, after creating
-a new experimental branch, I often need to generate multiple patches and
-run the script on each one individually. If there's an issue, I've to go
-back, which IMHO is little tedious. That's why I think this option may
-help reduce manual work. Below are some tests on the expected behavior.
+Add a new option --branch in checkpatch.pl that checks all commits made
+in the current branch since it diverged from its upstream branch. If no
+explicit branch is found, it prompts the user to specify, defaulting to
+'master' otherwise.
 
-No new commits since upstream:
+Signed-off-by: Carlos Bilbao <carlos.bilbao@kernel.org>
+---
+ scripts/checkpatch.pl | 68 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
-$ git checkout -b up-to-date
-$ git branch --set-upstream-to=check_branch up-to-date
-$ ./scripts/checkpatch.pl --branch
-Using as upstream branch: check_branch
-No commits found between check_branch and up-to-date. Exiting.
-
-With two new commits:
-
-$ git commit --allow-empty -m "Commit 1"
-$ git commit --allow-empty -m "Commit 2"
-$ ./scripts/checkpatch.pl --branch
-Using as upstream branch: check_branch
-Checking 2 commits...
-ERROR: Does not appear to be a unified-diff format patch
-
-As edge case, with unconfigured upstream:
-
-18:54 [linux][check_branch ?]$ git branch
-* check_branch
-  docs-next
-18:54 [linux][check_branch ?]$ ./scripts/checkpatch.pl --branch
-No explicit upstream branch found in reflog, trying git branch -vv.
-No upstream branch found. Would you like to specify one? [y/n] n
-Using as upstream branch: master
-No commits found between master and check_branch. Exiting.
-
-but if the user is willing to help:
-
-18:54 [linux][check_branch ?]$ ./scripts/checkpatch.pl --branch
-No explicit upstream branch found in reflog, trying git branch -vv.
-No upstream branch found. Would you like to specify one? [y/n] y
-Please enter: docs-next
-Using as upstream branch: docs-next
-Checking 1 commits...
-WARNING: Missing commit description - Add an appropriate one
-
-ERROR: Missing Signed-off-by: line(s)
-
-total: 1 errors, 1 warnings, 89 lines checked
-
-NOTE: For some of the reported defects, checkpatch may be able to
-      mechanically convert to the typical style using --fix or --fix-inplace.
-
-Commit 90dd5899dfd3 ("test") has style problems, please review.
-
-NOTE: If any of the errors are false positives, please report
-      them to the maintainer, see CHECKPATCH in MAINTAINERS.
-18:54 [linux][check_branch ?]$
-
-
-Carlos:
-  checkpatch: add --branch option to check commits in current branch
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index f7087dda9ac9..1f929fcf298d 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -73,6 +73,7 @@ my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANC
+ # git output parsing needs US English output, so first set backtick child process LANGUAGE
+ my $git_command ='export LANGUAGE=en_US.UTF-8; git';
+ my $tabsize = 8;
++my $branch;
+ my ${CONFIG_} = "CONFIG_";
+ 
+ my %maybe_linker_symbol; # for externs in c exceptions, when seen in *vmlinux.lds.h
+@@ -142,6 +143,10 @@ Options:
+                              is a terminal ('auto'). Default is 'auto'.
+   --kconfig-prefix=WORD      use WORD as a prefix for Kconfig symbols (default
+                              ${CONFIG_})
++  --branch                   This option checks all commits made in the
++                             current branch since it diverged from its
++                             parent branch. If no explicit upstream branch
++                             is found, it will try with 'master'.
+   -h, --help, --version      display this help and exit
+ 
+ When FILE is - read standard input.
+@@ -329,10 +334,73 @@ GetOptions(
+ 	'no-color'	=> \$color,	#keep old behaviors of -nocolor
+ 	'nocolor'	=> \$color,	#keep old behaviors of -nocolor
+ 	'kconfig-prefix=s'	=> \${CONFIG_},
++	'branch'	=> \$branch,
+ 	'h|help'	=> \$help,
+ 	'version'	=> \$help
+ ) or $help = 2;
+ 
++if ($branch) {
++
++	my $result = 0;
++	$branch = `git rev-parse --abbrev-ref HEAD 2>/dev/null`;
++
++	my $upstream_branch = `git rev-parse --abbrev-ref --symbolic-full-name \@{u} 2>/dev/null`;
++
++	chomp($branch);
++	chomp($upstream_branch);
++
++	if (!$upstream_branch) {
++		print "No explicit upstream branch found in reflog, trying git branch -vv.\n";
++		my @branches = `git branch -vv`;
++
++		foreach my $branch_info (@branches) {
++			if ($branch_info =~ /\s*$branch\s+\S+\s+\[.*\]$/) {
++				if ($branch_info =~ /\[([^\]]+)\]/) {
++					$upstream_branch = $1;
++					last;
++				}
++			}
++		}
++
++		if (!$upstream_branch) {
++			print "No upstream branch found. Would you like to specify one? [y/n] ";
++			my $response = <STDIN>;
++			chomp($response);
++
++			if (lc($response) eq 'n'){
++				$upstream_branch = 'master';
++			}
++			else {
++				print "Please enter: ";
++				$upstream_branch = <STDIN>;
++				chomp($upstream_branch);
++			}
++		}
++	}
++
++	print "Using as upstream branch: $upstream_branch\n";
++
++	my @commits = `git rev-list $upstream_branch..$branch 2>/dev/null`;
++
++	if (!$commits[0]) {
++		print "No commits found between $upstream_branch and $branch. Exiting.\n";
++		exit(0);
++	}
++
++	print "Checking " . scalar(@commits) . " commits...\n";
++
++	foreach my $commit (@commits) {
++		chomp($commit);
++		$result = system("perl $0 --git $commit @ARGV");
++
++		if ($result != 0) {
++			exit($result);
++		}
++	}
++
++	exit($result);
++}
++
+ if ($user_codespellfile) {
+ 	# Use the user provided codespell file unconditionally
+ 	$codespellfile = $user_codespellfile;
+-- 
+2.43.5
 
