@@ -1,65 +1,63 @@
-Received: from mail3-164.sinamail.sina.com.cn (mail3-164.sinamail.sina.com.cn [202.108.3.164])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF87535948
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 00:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38A722611
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 00:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738629903; cv=none; b=MaP2UF4JwSfmEKXWmacYx72wOKTujw3TzeMggFXgVPhaWmQUgBR0+rSuOA6SKk8xhjO7a0HLWnqYoDm24MMA/nZzuvbPyy+h4Yz76mcnLbFcGb+eHEdb8tJASy144Cpk/oOjSRoEPSQiOoyM2gz1ZC6pr1Atcji/7/QDcZ9cfIo=
+	t=1738629918; cv=none; b=ruy/sviCSeU3+ZjK/tq6NdoFtOJV6aSbQo5EH3urHHvyLHLmcgtg5S2YISt8uvMNXgk/Dt1o0HtvGjLl7+2adGEkWLU6Lde0Yv3BNYsO806qTDbDkAUjFXyvHuRnzrAczcGWiYfh8BHXSKrtB+Iec1jmHFAzuYndUVSqX4ITVlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738629903; c=relaxed/simple;
-	bh=xKj1h+EVOB9aJrgyau7IxTBYU+V85ESof7deeIpiP+Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qXDXPCwiHZGnEHQNgmxp/6mOd7LEdgszlB7KmLHyjTj+4vR57OEgtNxADh0+iDEkqLppZwsTlbPYAZhTWLPnwooUC85MM9PHFnav5HRjE1IzuLYDXHlCPGwl37DqZHsKbF/R057SyoC2RkKm0COH+40JvFZ0JSAn3YfbHlAie0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=202.108.3.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.56.205])
-	by sina.com (10.182.253.24) with ESMTP
-	id 67A162FF00005C24; Tue, 4 Feb 2025 08:44:49 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 4121001048608
-X-SMAIL-UIID: EA067141246E4D818D6FEFC793F663A8-20250204-084449-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+ac826dbeecf212c395a0@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [input?] [usb?] KASAN: slab-use-after-free Read in corsair_void_status_work_handler
-Date: Tue,  4 Feb 2025 08:44:34 +0800
-Message-ID: <20250204004435.2084-1-hdanton@sina.com>
-In-Reply-To: <67a12543.050a0220.d7c5a.00a9.GAE@google.com>
-References: 
+	s=arc-20240116; t=1738629918; c=relaxed/simple;
+	bh=A0rjhvSOiZUmnfOLb7upCNUVXijGJrOY4TISM58dlck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QmFT2fzPtT9Ihvlpx2qt8A2YYpVcATwSNaliiuMIyr6hQpGOJdSV3a2Qny2am3+cePL6aXDUQfyHthvoo1WkufhKbNkroSz+/ecaj1ETPMgF037Z9PeOxLNS4hiU6ra6BzpYDl+OPtOydCUO5ihOI3f5DsftoLKCLBYFl8SDMqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DP5jN4EE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DP5jN4EE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8E88C4CEE0;
+	Tue,  4 Feb 2025 00:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738629916;
+	bh=A0rjhvSOiZUmnfOLb7upCNUVXijGJrOY4TISM58dlck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DP5jN4EElTHLOJDlkekMRlGP9tBXVvLQFPsNxdq798lTDoM4Zk5r6V69NIBJnwpA2
+	 oOBLV6m6bXntXtCGPVxlLfAfTOzn6j5ayeL+gPp3f0Js9l+RgmFn+8WLG5mET2SgB5
+	 faZKJDb6pJUdslQTJmBRG6r8E4DqdSTg3ezv4cU35Co8LQs8aMxyd1/yH2rfVHgBUi
+	 osoMqsVpKEkpKJTLSr0ER8v3dk3TPUBmHHqM/PARw78LDDZ3+BX6afWckHPKtaOYex
+	 a/dh5+zOBuzuyC7PthJyn6s0aslaUYYCmfCXm/qCkPfBxCLdvbytSDXHROCOfHgY2k
+	 JK4QTi4KEgDgQ==
+Date: Tue, 4 Feb 2025 01:45:13 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] kthread: Return the assigned value rather than 0
+Message-ID: <Z6FjGV1-CxE12f8L@pavilion.home>
+References: <20250203164855.3699026-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250203164855.3699026-1-andriy.shevchenko@linux.intel.com>
 
-On Mon, 03 Feb 2025 12:21:23 -0800
-> syzbot has found a reproducer for the following issue on:
+Le Mon, Feb 03, 2025 at 06:48:55PM +0200, Andy Shevchenko a écrit :
+> Recently introduced kthread_affine_preferred() has a bug that the value
+> of ret variable set but not used. This breaks the compilation with error
+> (assume default CONFIG_WERROR=y and `make W=1` to run the build):
 > 
-> HEAD commit:    2014c95afece Linux 6.14-rc1
-> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17e26eb0580000
+> kernel/kthread.c:862:6: error: variable 'ret' set but not used [-Werror,-Wunused-but-set-variable]
+> 
+> Fixes: 4d13f4304fa4 ("kthread: Implement preferred affinity")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-#syz test
+Thanks but I already have it queued there:
 
---- x/drivers/hid/hid-corsair-void.c
-+++ y/drivers/hid/hid-corsair-void.c
-@@ -726,6 +726,7 @@ static void corsair_void_remove(struct h
- 	if (drvdata->battery)
- 		power_supply_unregister(drvdata->battery);
- 
-+	cancel_delayed_work_sync(&drvdata->delayed_status_work);
- 	cancel_delayed_work_sync(&drvdata->delayed_firmware_work);
- 	sysfs_remove_group(&hid_dev->dev.kobj, &corsair_void_attr_group);
- }
---
+https://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git/commit/?h=kthread/fixes&id=1b0332a42656b798bea867631d739de023633ec6
+
+I'll do a pull request shortly.
+
+Thanks!
