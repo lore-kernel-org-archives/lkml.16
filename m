@@ -1,122 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E653C78F4A;
-	Tue,  4 Feb 2025 18:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1658E2165E8
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738692987; cv=none; b=GOBZze1WZI3PIzEbFbFM/DYs5wS918Ag0bphjsUIegPU2cRWGXF7QZLYA16T0OOvVdijAIqVAg9TXogc24RSrloiAJPdvX5yuJZHIZtUEiZqVda9waJSj3SpnvwQJosn0FhWIPq/4eEedUmmbNJ3ioMlSD8YjWREMJZQAAjO/Aw=
+	t=1738693051; cv=none; b=i8JVuGnMvRrA5XXzMzkWEZLE3QSACnCatenQauB5/XaOC44Xx9X/XdtQjuNiWqCLtktPdLiHZPmPTpmp7KbNhvK5/keIHxAfFp7teg/OLaWxUXR+9G+KpigPqJ+Zyuaz95P3rqP9jYtLkmfvj4tGpmaNZ/acHQAGT46zSSab9KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738692987; c=relaxed/simple;
-	bh=dmGkjt2zNEiAgl6N9re2M4LE4xSbtASeqzfY0ChaYqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FUQK+nUX6aEnjMMY4J51O8TOFIYacoo+TEOPWIyD0q9bIZ2g25L9Gpv//iP2MKZwhVaERF5hpfx9ktfbq/MYrmrfhVzIddEB+MhBRkB0pbSUJAzsDxnKce1buonurc8f1bVQRWgZdHa7k84C4jZiZuyOwlQlY4YINQRVf2QxP98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2rbyC2b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738693051; c=relaxed/simple;
+	bh=pWaBP0CVleItpcklVYbBi++6w91KDe9zBdArHRpRrWw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QpvwmENUWQ/y88FibwaPMy5xDlbHqyjTbVngf15CI5QPw4AUzNSp7PWdQHaz4aZ8hBByXCyJ24G5OIPCuSfIreuyXvjbVK05tXcTKDsI/byWYYyQ52bkdot7/EI/iDF6r/X5vGdlr9N7KzWRUUwBX+kdsXnLX5mrM9SC59gVoJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MGdX0wjR; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2rbyC2b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64F21C4CEDF;
-	Tue,  4 Feb 2025 18:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738692986;
-	bh=dmGkjt2zNEiAgl6N9re2M4LE4xSbtASeqzfY0ChaYqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b2rbyC2bZq476y9HKzgTYiM2Xc1LS8wT5IY0iDXZoAcPwDZPvoNEugkvA6mcOCNB8
-	 RJ4fLX4BkO4ZhXkOnsLWZHSLB0yjPddBnC9mywKlMKda6THJ8ZdKfZi/oM++vwZVnL
-	 VaWoSxz4foT3b68sy1qtAGjpHbIQ5SvKXVCF7DaTj/lse75FmzkkpeTvevyfIQUxE0
-	 LNQ3hxtMUS+OBadhM+AAsSQlmOSexS0z5ykGzKQ+ryp1F2bdWVJVlS2+gZcfTr7Z+1
-	 24MRpJZw0YgOCJh25zJ9zH0Ya2wtFhzIqaLkuDAX6wXjCcCN6jVaC7IUod/8hn8ZyK
-	 5JoNKYf4VU/cQ==
-Date: Tue, 4 Feb 2025 18:16:17 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Basharath Hussain Khaja <basharath@couthit.com>
-Cc: danishanwar <danishanwar@ti.com>, rogerq <rogerq@kernel.org>,
-	andrew+netdev <andrew+netdev@lunn.ch>, davem <davem@davemloft.net>,
-	edumazet <edumazet@google.com>, kuba <kuba@kernel.org>,
-	pabeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
-	krzk+dt <krzk+dt@kernel.org>, conor+dt <conor+dt@kernel.org>,
-	nm <nm@ti.com>, ssantosh <ssantosh@kernel.org>,
-	tony <tony@atomide.com>, richardcochran <richardcochran@gmail.com>,
-	parvathi <parvathi@couthit.com>, schnelle <schnelle@linux.ibm.com>,
-	rdunlap <rdunlap@infradead.org>, diogo ivo <diogo.ivo@siemens.com>,
-	m-karicheri2 <m-karicheri2@ti.com>, horms <horms@kernel.org>,
-	jacob e keller <jacob.e.keller@intel.com>,
-	m-malladi <m-malladi@ti.com>,
-	javier carrasco cruz <javier.carrasco.cruz@gmail.com>,
-	afd <afd@ti.com>, s-anna <s-anna@ti.com>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	netdev <netdev@vger.kernel.org>,
-	devicetree <devicetree@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-omap <linux-omap@vger.kernel.org>,
-	pratheesh <pratheesh@ti.com>, prajith <prajith@ti.com>,
-	vigneshr <vigneshr@ti.com>, praneeth <praneeth@ti.com>,
-	srk <srk@ti.com>, rogerq <rogerq@ti.com>,
-	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>,
-	mohan <mohan@couthit.com>
-Subject: Re: [RFC v2 PATCH 01/10] dt-bindings: net: ti: Adds DUAL-EMAC mode
- support on PRU-ICSS2 for AM57xx SOCs
-Message-ID: <20250204-mutilated-throwing-59cabf18f187@spud>
-References: <20250124122353.1457174-1-basharath@couthit.com>
- <20250124122353.1457174-2-basharath@couthit.com>
- <20250124-reoccupy-music-3803c753f8af@spud>
- <504387436.449923.1738127812232.JavaMail.zimbra@couthit.local>
- <20250129-vowed-dingbat-cfb5c5b8ede4@spud>
- <2028988664.494856.1738585795471.JavaMail.zimbra@couthit.local>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MGdX0wjR"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so16055ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 10:17:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738693049; x=1739297849; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o3UvNoN7gqpsLO22STOhC2pxClv5CftaFh/u/6+uCJk=;
+        b=MGdX0wjRCBWUCfm7WlqnxIHuW3MU9MiFDJ24A5nAQ9qo2q73qhHowpsJ/NQSlZ1Rc8
+         4Pu3/biL/EkyL2urfCSQtUj6hOlMYowQtGZhxSWCW+TrQ//bFdN9j/W1hUj0n6hMMZq/
+         8dUBVjEe1oSkAHMRKL6XVIKKVAFBF8XjN02PfaEu+gkMxMmD+AV/c7KwWGMuVrgJ+y05
+         jiDFmKJrmewJEXsIKAIrBBNjacTdAi4XA+SbT3Hr9nOOtmYns8pKTBbaVdNXJWajUAfn
+         6BkOuiX42ZfjSvIqX5fMsxDVsE/eqFWHISlNOI8eNjxV8TA1yhSiqm/fjU/9ziJCh1Cs
+         OFDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738693049; x=1739297849;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o3UvNoN7gqpsLO22STOhC2pxClv5CftaFh/u/6+uCJk=;
+        b=AEVy5hFs+Z2sqztopVKXmih8+CHNj+yQmmkU8CAKIuyQt0eIr2dq5tmb59GH9Cg5A4
+         4xZlMb7lGREw8Bmb+dvjehwG+sRIX27VTQPMgX1iMSRs+DcVOU5hiK7pm8nyRI6DSAS3
+         qBJREzA69a+IiOL4gHgI4T9vwRWm8VUUoMvsOcoa6HiYzXrECQOv/1OMaghMZuxKqrRZ
+         ED0iVqJkNrzWCmOePF/q6oqwo96xadEexdS2A8VUnhv+g/vDn9Zwns1h7J9B8FxfMb0q
+         ZEPvNbO4y1aETRp6WBkG6mxvhR7tAneA/5mj82TTg+u0vGCZh1j1Ook032BePRGxsDKL
+         Mc5g==
+X-Forwarded-Encrypted: i=1; AJvYcCV02zujc5cZWvqJ2E2b5a8Ehxgtk3G5FWTriW6MxB0XCySMu5CO1gex3ZJEOBaJwqI3/oQDeq5F/c0WPGE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiGEPcuyy5eDgwQn+IqpqgcIhVhCO+si4rB2srPTyjZjS9jCvP
+	IlTOU0sEV2YdQslNWKp45aZZG8A6asmb21XjpvqUAZPS/jVXbJlXo2P7iRmwCX6HeCMfcw+OHjO
+	iEfwed8f8yWBVsUws/kYsIq8VuGu5vuib1b95
+X-Gm-Gg: ASbGnctFryxnCBDbIRNpamXhUSunhMzgs4zCy0kG4duHUNFoWsUF/ADBMKZiZuPh+sw
+	HSo5szr+ZbpcrZ6+OKcNw/9dmgrPlMcfg+CwcrXW9vbt1HiFhJwGv9RWsf2JOCgzZLJa0M8QDMA
+	Z6tMlGCSc+i7fbpSW4Cl4HtF8=
+X-Google-Smtp-Source: AGHT+IFSb6p+y33pvkXVKpplGE3ncyZOropQ02NFuyiOGkQJgIOV4Fnl+vR4vOLwj59ExMNx49afv7Vgb7F1KNqUL2g=
+X-Received: by 2002:a92:c544:0:b0:3ce:3873:48d4 with SMTP id
+ e9e14a558f8ab-3d03fbc113dmr4328295ab.4.1738693048936; Tue, 04 Feb 2025
+ 10:17:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="K8COnd4nDaIlA8yU"
-Content-Disposition: inline
-In-Reply-To: <2028988664.494856.1738585795471.JavaMail.zimbra@couthit.local>
-
-
---K8COnd4nDaIlA8yU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <2025020304-chip-trench-4e56@gregkh> <CAP-5=fXwprvLc3ubPmAuyUaTL2aD1frqL+RHJzkp8oe5z85oRw@mail.gmail.com>
+ <2025020444-chivalry-wanting-7f0c@gregkh>
+In-Reply-To: <2025020444-chivalry-wanting-7f0c@gregkh>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Feb 2025 10:17:17 -0800
+X-Gm-Features: AWEUYZkf_zL-nqp7mLrmVj3RIJAOBqhUHw3vAZ2mCHhPzzWvQTYIBpDsD-wJCns
+Message-ID: <CAP-5=fUk3DB4orma=vM=+cKrztsRqHVhvvPk+py+G+9w9sOdqg@mail.gmail.com>
+Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own location
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2025 at 05:59:55PM +0530, Basharath Hussain Khaja wrote:
-> >> >> +    $ref: /schemas/types.yaml#/definitions/phandle
-> >> >> +    description:
-> >> >> +      phandle to Enhanced Capture (eCAP) event for ICSS
-> >> >=20
-> >> > Why do you need phandles for these things, can they not be looked up=
- by
-> >> > compatible? (e.g. multiple devices on one SoC).
-> >> >=20
-> >>=20
-> >> ecap is another peripheral similar to IEP in ICSSM/ICSSG. We have crea=
-ted a
-> >> separate driver for possible reuse with ICSSG in future.
-> >=20
-> > That's not an answer to my question.
-> >=20
->=20
-> We can use compatible if we have only one instance of a peripheral in the=
- SOC.=20
-> On the AM57x SOC we have two identical ICSS instances(ICSS1 and ICSS2). S=
-o we=20
-> use phandles to differentiate between the two instances. Currently this p=
-atch=20
-> series adds support for ICSS2 instance on the AM57x SOC. Support for ICSS=
-1 instance=20
-> will be added in subsequent patches.
+On Mon, Feb 3, 2025 at 11:05=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Feb 03, 2025 at 11:44:13AM -0800, Ian Rogers wrote:
+> > On Mon, Feb 3, 2025 at 11:25=E2=80=AFAM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+[snip]
+> > > Note, if you all don't like "pmu_bus" for the name, that's fine, plea=
+se
+> > > let me know and I can rename it to something else, but it should be
+> > > something to get these objects out of the root sysfs directory.
+> >
+> > Excuse my ignorance, does the event_source bus already provide a
+> > similar solution?
+> > ```
+> > $ ls /sys/bus/event_source/devices
+> > breakpoint   i915       msr         uncore_arb     uncore_cbox_3
+> > uncore_cbox_7              uprobe
+> > cpu          intel_bts  power       uncore_cbox_0  uncore_cbox_4  uncor=
+e_clock
+> > cstate_core  intel_pt   software    uncore_cbox_1  uncore_cbox_5
+> > uncore_imc_free_running_0
+> > cstate_pkg   kprobe     tracepoint  uncore_cbox_2  uncore_cbox_6
+> > uncore_imc_free_running_1
+> > $ ls /sys/devices
+> > breakpoint   intel_pt     platform    uncore_arb     uncore_cbox_5
+> >          uprobe
+> > cpu          isa          pnp0        uncore_cbox_0  uncore_cbox_6
+> >          virtual
+> > cstate_core  kprobe       power       uncore_cbox_1  uncore_cbox_7
+> > cstate_pkg   LNXSYSTM:00  software    uncore_cbox_2  uncore_clock
+> > i915         msr          system      uncore_cbox_3  uncore_imc_free_ru=
+nning_0
+> > intel_bts    pci0000:00   tracepoint  uncore_cbox_4  uncore_imc_free_ru=
+nning_1
+> > ```
+>
+> Those are the exact same device structures :)
+>
+> Look at /sys/bus/event_source/devices/ those are symlinks back to
+> /sys/devices.  In other words, that's the exact same structures, and
+> the mess in /sys/devices/ with these event devices is what I am trying
+> to clean up.
 
-Cool, that's an acceptance answer, thanks.
+Thanks! Again my ignorance, why do we need pmu_bus? Could the symlinks
+in event_source be the actual devices? Perhaps for temporary
+compatibility some symlinks could be placed in /sys/devices?
 
---K8COnd4nDaIlA8yU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6JZcQAKCRB4tDGHoIJi
-0gnAAQC1oGfhZbnFSM/mPgMlsOYSL9Jy1uxEojT2QLRGkF15CQEA9H2GXROw3Fk2
-eXUwUknLlmzd/8uguMbvTucbVOMokgs=
-=3zMy
------END PGP SIGNATURE-----
-
---K8COnd4nDaIlA8yU--
+Thanks,
+Ian
