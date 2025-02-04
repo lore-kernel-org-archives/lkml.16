@@ -1,94 +1,145 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54D6207651
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 08:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AA1206F37
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 08:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738659135; cv=none; b=ht5nRvfETYT+Z4XSFgBcLqMru6jMlsCGjYcu9zmomnI2vr9/b+SpimZDw3HYJmjOEimaFpfBDo66d12q4nns/5wINcLoD140fEYTalMfKTZB+Y9LQqEj6Pi88EadD8sjHE0z2JH11e6vJTLmp56to1rz7ykIkJG+HNODvC2oW9I=
+	t=1738659155; cv=none; b=RSn1GfhXHpSDcwP+A0ULcGKFUhgsBNWwdBHRWMHiLi0eRpOAfmFI12wJnsIOGuruv0yWRmMv7Wy8rxCOUcKPQ6npukUpvNWoM4EgnEFMlopXcDAOnMv6GFanulPTuN0RpR+aAYWcsf3IwgpnFmtevUGFO+B4OmuirbRCds29VCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738659135; c=relaxed/simple;
-	bh=PbjBMZYNHM9ajceRmzPLYGlK5wlVSkB9W9iBW1unRUg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=s55DFyN0PZG0KocwCWJ8vBcQlWmYHuiOgrDZr312Hj+omaBxrr46+gYlS132nZkckkSHTz0bO4C3gKKebkf0rdoYSr5g7mVuOmQEXAE7OV87EQjnI0N00clPQVvvuH98wNZDqfUoGDTaoEvdt/BEjbHLKN1wERxPjOzwme9GIpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CQhVTIUp; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1738659155; c=relaxed/simple;
+	bh=HutRJSMeJRnt/VeA6fBVfyfIzPoRWNej7hPpS/LJnd8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BgPoThFH+RgpLYQiNfyMSX7AnwpE3BTsGAAfAsqBDjhSt77SF9JU/lZ1PrRTTcpFdCbcSfDmp6jG8RMVkuOo1lH6zHeCPZgZySekY0qNZIIL2pCZ2BM6HY9jvvfybUzkzWrjp2AoNGDvX6d/hoGn2Ylz2aDWEKuSppDAINNgbsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QhySt0hM; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CQhVTIUp"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F41EB442B3;
-	Tue,  4 Feb 2025 08:52:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738659131;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XCJgg4AxjCLLIhlCJHUT1wm3A4fyWpj7moZQ1vUBeKM=;
-	b=CQhVTIUpT1iD4slXEq8+F7TwwMIyssGYNCE6f4Xzgj1muc+NXXkYRs6PFHlIGfKSj7IJXb
-	TCNgXONLBq2QogEfeK9gxTuSI7iaWqHPoZcgF2c8zeMAIupHDH24UoNZDK+hc+YKtuUCkx
-	apwoFzNasnXE0+NWQ1vEZPFv1/Lw3+4FOOCeg0WgV//TgiRe8clOCVR6ZTMxlqq3fyn82L
-	+0eXx8sJhIiFsQvrAa4wpcdHYM53lgbk5lc843u8pdu3y4S3ym607iBVZ+Pyds/QuLJr2A
-	9kKXJNTrrb0S9wcZgR/eVN9XQJFzEHifOYqYCvfgb09KXPoQ+6N14uR44LGpnQ==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Tue, 04 Feb 2025 09:51:59 +0100
-Subject: [PATCH v4 2/2] drm/atomic-helper: improve CRTC enabled/connectors
- mismatch logging message
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QhySt0hM"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-303548a9361so39282511fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 00:52:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738659152; x=1739263952; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HutRJSMeJRnt/VeA6fBVfyfIzPoRWNej7hPpS/LJnd8=;
+        b=QhySt0hMEJ0xvBA2+3D7NGwSBvsVzp33uDy7u2SBmZWVPuA/oVJKLlEyrFPUaMBEfa
+         xYGbBZCPgniM2k7OgdysO0kkVCgiDDElacQMcmi3VTrEeYZiKVOj9RfKjIdxJzv3gtUB
+         hQi4DbDpbG7I9V70l+ZxsMvRk8z02OtAnKx2vhIUnTY7UUkXtO1Oa3boVysr3xybcyqH
+         KRZ5lG8b8oRI4vacsT1F1TCtFwLEs8E67a9NHol6nqP6Z3bH7y2U2bbd6L5GOs7Kt/JA
+         ZaodQoPoTB4qzCaFPqSXjysyyU3lLuulcf2gyMHqDtVlVWhpFYG5+8SCJO9soFJeHpBP
+         wQFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738659152; x=1739263952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HutRJSMeJRnt/VeA6fBVfyfIzPoRWNej7hPpS/LJnd8=;
+        b=kdfZ19EbnyqJMMiLqmXgv8FPLI8TRYPfA0utAiN/yZZlmgBShiRlf/cPqsxg56rlWZ
+         OIgul1n3Jd4ZTw7msihurxJwgyZ6FfWipYLTfZE98pLVK+aW2tT2k2w1E2VL7MLRxVEp
+         uKHui1pLJnDhva/moEhwd408C0PhZMRFakVBS1wPfdHZiNLnt+2AwfXJOgGWBnCWUYxw
+         yJk6wHoTtOoOCMWjCblqmpQuQcEd+2KaDYo9EPC9lmwFoWs6QzB4Cz5ycLomnIzAjh6E
+         +PMKIjPUkSVeJQ7i8RRfBFN/nGRnk539iOHf6sIKKKoFMqlRbJ27HIqKMj0JAq5v5b7w
+         wLZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXcuTwXaC+qeI2IjjO7aItlycaJn+gr/Rv2puJUjEpQQTLk8ERb+5k870JF/KS0X61vtCUWd0Rm97HGUyI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5p000IoKDbRyfs93vdk2EWyC6vfRqRcI4O3nevcT4e12cMZSq
+	f68CxSep4PeuQk7ZZpDqC/GRr9pH92eW+8EzYQofTET83j6/ZHfh8jVm0n0kyg/IbNWObq3wrGO
+	6Bd35hIfziTRJO7Q24UhiiDttwac4ogUfxq8dGQ==
+X-Gm-Gg: ASbGncsBm9ZmIl/L/+4jAia1Nz7uHyvdssBfiSR01rP11MxCkSCyf8t+ccs9D7neHbZ
+	el2jXtV4GO3leIooMM+PWea9Z10FaDKUXffuJnAqbyx5B5WvNX/G8Exm8vx0m4LgYi2YYQoq9ZD
+	P48iS7rmeh9hCo9NjcZaWzLPJI8HX4
+X-Google-Smtp-Source: AGHT+IF3lsa7S5YwWpfcQVRJJ5PSQIykvInkMIj9GBvAH9xqe0CZdk0yaxGhiayetNv5EouQr4rP2NIVzzgLrFTtrHU=
+X-Received: by 2002:a2e:a90d:0:b0:300:15d9:c625 with SMTP id
+ 38308e7fff4ca-3079684af3emr90981231fa.14.1738659151822; Tue, 04 Feb 2025
+ 00:52:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-drm-small-improvements-v4-2-d6bbc92f12f1@bootlin.com>
-References: <20250204-drm-small-improvements-v4-0-d6bbc92f12f1@bootlin.com>
-In-Reply-To: <20250204-drm-small-improvements-v4-0-d6bbc92f12f1@bootlin.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Jani Nikula <jani.nikula@linux.intel.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Louis Chauvet <louis.chauvet@bootlin.com>, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieeiuedvffetgfeuudelheeutefggfejieettdetteekueeuueeukeevvedvueevnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemvdhftdgsmeeludgssgemughfiegumegtugefudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemvdhftdgsmeeludgssgemughfiegumegtugefuddphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhouhhishdrtghhrghuvhgvthessghoo
- hhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjrghnihdrnhhikhhulhgrsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
+References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
+ <CAMRc=MdwQL8dWU5zF5fp+KUbC2RA2Q264by8HGXMg2k1rxhsTA@mail.gmail.com>
+ <9931433b-5cde-4819-ac96-eea4f1f0f1f2@baylibre.com> <CAMRc=McEdcDs01BAKN5vg9POg_xxJBY1k8bfgiDN60C1-e_jow@mail.gmail.com>
+ <072be5a9-e0fb-4073-85b3-4a8efcafae09@baylibre.com> <CAMRc=Meq_Gfhcjzx0vCL0JPzfnOcijFgB6AuqtsqgGn1eOTMVg@mail.gmail.com>
+ <CAHp75Ve+iwrm8dx49+6C7xFJgTQrh3XumKVzKvnYY=00J-j43A@mail.gmail.com> <b1c35782-f717-4fe5-8a00-7f13b341b5dd@baylibre.com>
+In-Reply-To: <b1c35782-f717-4fe5-8a00-7f13b341b5dd@baylibre.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 4 Feb 2025 09:52:20 +0100
+X-Gm-Features: AWEUYZkoSkw9yp224bcw4kgu34MNb3lBM2F-Kpo3dstTt1XbKUZR_n5bPczpQE0
+Message-ID: <CAMRc=MdzeY7p8O2ovJ-Z9u-KzqfeEG7BxRvKHBHPrsFYDFAryA@mail.gmail.com>
+Subject: Re: [PATCH 00/13] gpiolib: add gpiods_set_array_value_cansleep
+To: David Lechner <dlechner@baylibre.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This message reports a mismatch between new_crtc_state->enable and
-has_connectors, which should be either both true or both false. However it
-does not mention which one is true and which is false, which can be useful
-for debugging. Add the value of both avriables to the log message.
+On Mon, Feb 3, 2025 at 11:39=E2=80=AFPM David Lechner <dlechner@baylibre.co=
+m> wrote:
+>
+> On 2/1/25 1:47 PM, Andy Shevchenko wrote:
+> > On Sat, Feb 1, 2025 at 6:22=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.=
+pl> wrote:
+> >> On Sat, Feb 1, 2025 at 5:17=E2=80=AFPM David Lechner <dlechner@baylibr=
+e.com> wrote:
+> >>> On 2/1/25 10:14 AM, Bartosz Golaszewski wrote:
+> >>>> On Sat, Feb 1, 2025 at 5:09=E2=80=AFPM David Lechner <dlechner@bayli=
+bre.com> wrote:
+> >>>>> On 2/1/25 4:36 AM, Bartosz Golaszewski wrote:
+> >
+> > ...
+> >
+> >>>>>> This looks good to me except for one thing: the function prefix. I=
+ would
+> >>>>>> really appreciate it if we could stay within the existing gpiod_ n=
+amespace and
+> >>>>>> not add a new one in the form of gpiods_.
+> >>>>>>
+> >>>>>> Maybe: gpiod_multiple_set_ or gpiod_collected_set...?
+> >>>>>
+> >>>>> I was waiting for someone to complain about the naming. ;-)
+> >>>>>
+> >>>>> I was going for as short as possible, but OK, the most obvious pref=
+ix to me
+> >>>>> would be `gpio_descs_...` (to match the first parameter). Any objec=
+tions to
+> >>>>> that?
+> >>>>
+> >>>> Yes, objection! As far as any exported interfaces go: in my book
+> >>>> "gpio_" is the prefix for legacy symbols we want to go away and
+> >>>> "gpiod_" is the prefix for current, descriptor-based API. Anything
+> >>>> else is a no-go. I prefer a longer name that starts with gpiod_ over
+> >>>> anything that's shorter but doesn't.
+> >>>
+> >>> Oops, that was a typo. I meant to write gpiod_descs_.
+> >>
+> >> Eh... the D in gpioD already stands for "GPIO Descriptor" but if
+> >> there's no better option in your opinion than I guess I can live with
+> >> that.
+> >
+> > gpiod_set_many_value_cansleep() ?
+> >
+>
+> OK, taking all these suggestions into consideration along with having rec=
+ently
+> come across regmap_multi_reg_write(), I think I'll go with:
+>
+> gpiod_multi_set_value_cansleep()
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Acked-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
----
- drivers/gpu/drm/drm_atomic_helper.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Sounds good.
 
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index 5186d2114a503701e228e382cc45180b0c578d0c..8ed186ddaeafae8295696eb11ace58777a5d9e43 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -666,8 +666,9 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
- 		}
- 
- 		if (new_crtc_state->enable != has_connectors) {
--			drm_dbg_atomic(dev, "[CRTC:%d:%s] enabled/connectors mismatch\n",
--				       crtc->base.id, crtc->name);
-+			drm_dbg_atomic(dev, "[CRTC:%d:%s] enabled/connectors mismatch (%d/%d)\n",
-+				       crtc->base.id, crtc->name,
-+				       new_crtc_state->enable, has_connectors);
- 
- 			return -EINVAL;
- 		}
-
--- 
-2.34.1
-
+Bart
