@@ -1,312 +1,249 @@
-Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3572F25A624;
-	Tue,  4 Feb 2025 04:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FFF86358
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 04:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738644381; cv=none; b=gSTJG6YFa4WMHX8Q7WNSXIPZykh0KwPnAsmcnfDOZ81hOtRY5nTJJRoP84vPnls6whMYQo12Q3alr481gSnTggJEAnnFK/6zWmLUs9d9wh5PJ7HBY9jw8bAVY0tA+fwrqItSjvwYjBg10NK1Rre1uCRAA9HFHw6CmHjwybIhQPg=
+	t=1738645103; cv=none; b=R+pHOHE0zgSAcDZZMJKW5F1Dzh5AhLs7S8Rvs8YVaXN0IdtpRyU/EAhVNLeMRemelEtQKZ8QzRno0muAdm+TXbmk9FjLojFScjJVWVYC845H959E5qG8xen+3/VLQbClhJkYJUDPLZKUErBQSq5ZTFpdKLGxXCWxNYIlbN9UKVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738644381; c=relaxed/simple;
-	bh=3zy0L8jyvmOgTgcv1niUmquwu7TF0/oDLJMYtvZPfZc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=clAvEEf90k0rjFaKBZvR5PxBNYV/PyDTXa6XGqrFbRAe//oMZ+UHeXyPNp+NqdCnPhjKMLkZl3QZaHaMljrEXpH9ExA9yWu+aQ9+0SRuZfn0MYwJgxS1xQWRi5bkYYhQw88Qak1n+B4VLGiafn4PO65RwsObIy1OGNgR8fIEcf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aa.jp.fujitsu.com; spf=pass smtp.mailfrom=aa.jp.fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=LAM19UO5; arc=none smtp.client-ip=139.138.36.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aa.jp.fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aa.jp.fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="LAM19UO5"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1738644378; x=1770180378;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3zy0L8jyvmOgTgcv1niUmquwu7TF0/oDLJMYtvZPfZc=;
-  b=LAM19UO531eRarvtKdvfUH248qt1PqpITfkqsBtJhUBRYojdGExD0m5/
-   0Hou5jTR046migdV2c6WmybR8JLceDI6UgLcf3sTNKLpyQS0TqFeo7vj7
-   qLjLoRVRHy6M+ZuztBN/f2bxm0Tk93cc875QB3CRUD5BDm0wiR24AzZ1P
-   P3/2dL1J39Tpwaby4FBgwKcr3t97JNcB3CV6HL2A2cvk/h2jAaOwQgQqg
-   Q1vPL6rccIu936ZogWV18ahYaEgCrHAYY6+cYbxOtdXIKkbM7R8SruJ7g
-   FQjqyrd9wqZdhb0OQmeu7PpHUw8pRuwKbCrZiGd6zSC8eBG9+9QEsUFSu
-   g==;
-X-CSE-ConnectionGUID: UvTg7nlMRti3MEVBt98JXw==
-X-CSE-MsgGUID: EPWekPqRTbuuJnLsL5+RTA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="177172089"
-X-IronPort-AV: E=Sophos;i="6.13,257,1732546800"; 
-   d="scan'208";a="177172089"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 13:45:06 +0900
-Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 3EB54D500C;
-	Tue,  4 Feb 2025 13:45:04 +0900 (JST)
-Received: from yto-om4.fujitsu.com (yto-om4.o.css.fujitsu.com [10.128.89.165])
-	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 18BD3D3F29;
-	Tue,  4 Feb 2025 13:45:04 +0900 (JST)
-Received: from sm-x86-mem01.ssoft.mng.com (sm-x86-stp01.soft.fujitsu.com [10.124.178.20])
-	by yto-om4.fujitsu.com (Postfix) with ESMTP id B920540054BEE;
-	Tue,  4 Feb 2025 13:45:03 +0900 (JST)
-From: Toshiyuki Sato <fj6611ie@aa.jp.fujitsu.com>
-To: Russell King <linux@armlinux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	fj6611ie@aa.jp.fujitsu.com
-Subject: [PATCH v3] serial: amba-pl011: Implement nbcon console
-Date: Tue,  4 Feb 2025 04:44:28 +0000
-Message-Id: <20250204044428.2191983-1-fj6611ie@aa.jp.fujitsu.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1738645103; c=relaxed/simple;
+	bh=G1EgxgX+1PfFR5EJpl4hO73q8tCS6ZL7rhmMQsG20Kc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ORNH+eeXQtWH9URc6R26CHtM7O1Y/bZvnGia26Kz1RglZt+/sBd1ZjjjWOUP7lOTdSP8EWxpx94WdHDks5eX44u+XPbaxpQSwpla4TIEzcXi2l+VbdpAibCeeZmiodo+tFs+AbO9Zt7+c2ZDVYY0mEGiWP8J/jREsIGJmsTewvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ce51b2fcc6so83090345ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 20:58:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738645101; x=1739249901;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=On4R0ZV9u038S94jycGnQwl7wQWHdHDWNgRaWI1twuY=;
+        b=BWRbh78X7axldpOMYV9u66cqoWFS8mld3XLdmSNEzJFV+fPS+TNHmbEXTvNlMpgomH
+         eYgnoxCPbKiWLj1w26PHRyDPUkYt6SjUQjYJ4TiZLnSf/Wzb+UFanayNa5x2PFWkVMYu
+         Ke77UaP9ifRo4iMYZN86e9R8eZTMATjqbmWUwt43qn6EQKJcSXt6JoOQzOWODPrydpFs
+         buQJls/WzEy84ZL06NWQYev/kma+tYv1VmszWlmkwlC0t2UYwaeKHomG9n5jJsshjne+
+         eRwflt4qW4BuUTp4iJGYIYEjnHEK3eYIPHF+MWsZ+gzHJAapB9Z/1sy0u6YeKgUS8pfk
+         4Y4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUsIpDjD54xkEwaZ/X7q2Njgaik7X6atcoRo1Yx0awXU32bh1mGDkFNJeIXiWBc0S31ooxKt83xxVInUV0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeQZ0CsymKg6FaBoXFw3xdjCLgSH5e41CRRgsQybEL7zvzNHoz
+	PhMN3GZo9zy55s+OkrDl9RSNZ+qkQ/1D5qGnWe5MJFsxx6TyXRH6FwOpV5zwLmHcLldDXp5JF0I
+	F4ptt+Zp9WqKcJ7YOsZNHgJxr4cN+i+gZCzKGKjIFxmRnNvM7kXyyzrQ=
+X-Google-Smtp-Source: AGHT+IGawzDBe6wlupi2kkUwqwRQPNA9xSDyOiADB+VMF3aywfeu7fIl0UZrBgqmcPLbDlFVvGZtt09SPa/+PVMc2gJFR2cf+D2s
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1fc2:b0:3ce:78ab:dcd1 with SMTP id
+ e9e14a558f8ab-3cffe4a7bf1mr216246095ab.19.1738645101174; Mon, 03 Feb 2025
+ 20:58:21 -0800 (PST)
+Date: Mon, 03 Feb 2025 20:58:21 -0800
+In-Reply-To: <67453555.050a0220.21d33d.0008.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a19e6d.050a0220.d7c5a.00ae.GAE@google.com>
+Subject: Re: [syzbot] [mm?] KASAN: slab-use-after-free Read in folio_evictable (3)
+From: syzbot <syzbot+4c7590f1cee06597e43a@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, eadavis@qq.com, hdanton@sina.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com, willy@infradead.org, yuzhao@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-Implement the callbacks required for an NBCON console [0] on the
-amba-pl011 console driver.
+syzbot has found a reproducer for the following issue on:
 
-Referred to the NBCON implementation work for 8250 [1] and imx [2].
+HEAD commit:    0de63bb7d919 Merge tag 'pull-fix' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14c39d18580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
+dashboard link: https://syzkaller.appspot.com/bug?extid=4c7590f1cee06597e43a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1640eeb0580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13aa23df980000
 
-The normal-priority write_thread checks for console ownership
-each time a character is printed.
-write_atomic holds the console ownership until the entire string
-is printed.
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0de63bb7.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1142009a30a7/vmlinux-0de63bb7.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/5d9e46a8998d/bzImage-0de63bb7.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/07d8a470b3fc/mount_0.gz
 
-UART register operations are protected from other contexts by
-uart_port_lock, except for a final flush(nbcon_atomic_flush_unsafe)
-on panic.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4c7590f1cee06597e43a@syzkaller.appspotmail.com
 
-The patch has been verified to correctly handle the output and
-competition of messages with different priorities and flushing
-panic message to console after nmi panic using ARM64 QEMU and
-a physical machine(A64FX).
+==================================================================
+BUG: KASAN: slab-use-after-free in instrument_atomic_read include/linux/instrumented.h:68 [inline]
+BUG: KASAN: slab-use-after-free in _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
+BUG: KASAN: slab-use-after-free in mapping_unevictable include/linux/pagemap.h:269 [inline]
+BUG: KASAN: slab-use-after-free in folio_evictable+0xe3/0x250 mm/internal.h:437
+Read of size 8 at addr ffff888054e45e30 by task kswapd0/79
 
-Stress testing was conducted on a physical machine(A64FX).
-The results are as follows:
+CPU: 0 UID: 0 PID: 79 Comm: kswapd0 Not tainted 6.14.0-rc1-syzkaller-00020-g0de63bb7d919 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:378 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:489
+ kasan_report+0x143/0x180 mm/kasan/report.c:602
+ kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+ instrument_atomic_read include/linux/instrumented.h:68 [inline]
+ _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
+ mapping_unevictable include/linux/pagemap.h:269 [inline]
+ folio_evictable+0xe3/0x250 mm/internal.h:437
+ sort_folio mm/vmscan.c:4398 [inline]
+ scan_folios mm/vmscan.c:4524 [inline]
+ isolate_folios mm/vmscan.c:4619 [inline]
+ evict_folios+0x1a99/0x56a0 mm/vmscan.c:4648
+ try_to_shrink_lruvec+0x713/0x9b0 mm/vmscan.c:4821
+ shrink_one+0x3b9/0x850 mm/vmscan.c:4866
+ shrink_many mm/vmscan.c:4929 [inline]
+ lru_gen_shrink_node mm/vmscan.c:5007 [inline]
+ shrink_node+0x37c5/0x3e50 mm/vmscan.c:5978
+ kswapd_shrink_node mm/vmscan.c:6807 [inline]
+ balance_pgdat mm/vmscan.c:6999 [inline]
+ kswapd+0x20f3/0x3b10 mm/vmscan.c:7264
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
 
-- The output speed and volume of messages using the NBCON console were
-  comparable to the legacy console (data suggests a slight improvement).
+Allocated by task 5481:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ unpoison_slab_object mm/kasan/common.c:319 [inline]
+ __kasan_slab_alloc+0x66/0x80 mm/kasan/common.c:345
+ kasan_slab_alloc include/linux/kasan.h:250 [inline]
+ slab_post_alloc_hook mm/slub.c:4115 [inline]
+ slab_alloc_node mm/slub.c:4164 [inline]
+ kmem_cache_alloc_noprof+0x1d9/0x380 mm/slub.c:4171
+ gfs2_glock_get+0x309/0x1010 fs/gfs2/glock.c:1178
+ gfs2_inode_lookup+0x2a3/0xc90 fs/gfs2/inode.c:135
+ gfs2_dir_search+0x229/0x2f0 fs/gfs2/dir.c:1667
+ gfs2_lookupi+0x461/0x5e0 fs/gfs2/inode.c:340
+ gfs2_jindex_hold fs/gfs2/ops_fstype.c:587 [inline]
+ init_journal+0x5fa/0x2410 fs/gfs2/ops_fstype.c:729
+ init_inodes+0xdc/0x320 fs/gfs2/ops_fstype.c:864
+ gfs2_fill_super+0x1bd1/0x24d0 fs/gfs2/ops_fstype.c:1249
+ get_tree_bdev_flags+0x48c/0x5c0 fs/super.c:1636
+ gfs2_get_tree+0x54/0x220 fs/gfs2/ops_fstype.c:1330
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1814
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3560
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4088
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-- When inducing a panic (sysrq-triggered or NMI) under heavy contention
-  on the serial console output,
-  the legacy console resulted in the loss of some or all crash messages.
-  However, using the NBCON console, no message loss occurred.
+Freed by task 16:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2353 [inline]
+ slab_free mm/slub.c:4609 [inline]
+ kmem_cache_free+0x195/0x410 mm/slub.c:4711
+ rcu_do_batch kernel/rcu/tree.c:2546 [inline]
+ rcu_core+0xaaa/0x17a0 kernel/rcu/tree.c:2802
+ handle_softirqs+0x2d4/0x9b0 kernel/softirq.c:561
+ run_ksoftirqd+0xca/0x130 kernel/softirq.c:950
+ smpboot_thread_fn+0x544/0xa30 kernel/smpboot.c:164
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
 
-This testing referenced the NBCON console work for 8250 [3].
+Last potentially related work creation:
+ kasan_save_stack+0x3f/0x60 mm/kasan/common.c:47
+ kasan_record_aux_stack+0xaa/0xc0 mm/kasan/generic.c:548
+ __call_rcu_common kernel/rcu/tree.c:3065 [inline]
+ call_rcu+0x168/0xac0 kernel/rcu/tree.c:3172
+ __gfs2_glock_free+0xda0/0xef0 fs/gfs2/glock.c:172
+ gfs2_glock_free+0x3c/0xb0 fs/gfs2/glock.c:178
+ process_one_work kernel/workqueue.c:3236 [inline]
+ process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
 
-[0] https://lore.kernel.org/all/ZuRRTbapH0DCj334@pathway.suse.cz/
-[1] https://lore.kernel.org/all/20240913140538.221708-1-john.ogness@linutronix.de/T/
-[2] https://lore.kernel.org/linux-arm-kernel/20240913-serial-imx-nbcon-v3-1-4c627302335b@geanix.com/T/
-[3] https://lore.kernel.org/lkml/ZsdoD6PomBRsB-ow@debarbos-thinkpadt14sgen2i.remote.csb/#t
+Second to last potentially related work creation:
+ kasan_save_stack+0x3f/0x60 mm/kasan/common.c:47
+ kasan_record_aux_stack+0xaa/0xc0 mm/kasan/generic.c:548
+ insert_work+0x3e/0x330 kernel/workqueue.c:2183
+ __queue_work+0xc8b/0xf50 kernel/workqueue.c:2339
+ queue_delayed_work_on+0x1ca/0x390 kernel/workqueue.c:2559
+ queue_delayed_work include/linux/workqueue.h:677 [inline]
+ gfs2_glock_queue_work fs/gfs2/glock.c:250 [inline]
+ do_xmote+0xaf8/0x1250 fs/gfs2/glock.c:832
+ glock_work_func+0x343/0x5c0 fs/gfs2/glock.c:1090
+ process_one_work kernel/workqueue.c:3236 [inline]
+ process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
 
-Signed-off-by: Toshiyuki Sato <fj6611ie@aa.jp.fujitsu.com>
+The buggy address belongs to the object at ffff888054e45a68
+ which belongs to the cache gfs2_glock(aspace) of size 1224
+The buggy address is located 968 bytes inside of
+ freed 1224-byte region [ffff888054e45a68, ffff888054e45f30)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x54e44
+head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x4fff00000000040(head|node=1|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 04fff00000000040 ffff88801f75e3c0 dead000000000122 0000000000000000
+raw: 0000000000000000 00000000800c000c 00000000f5000000 0000000000000000
+head: 04fff00000000040 ffff88801f75e3c0 dead000000000122 0000000000000000
+head: 0000000000000000 00000000800c000c 00000000f5000000 0000000000000000
+head: 04fff00000000002 ffffea0001539101 ffffffffffffffff 0000000000000000
+head: 0000000000000004 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 2, migratetype Unmovable, gfp_mask 0xd2040(__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5429, tgid 5429 (syz-executor294), ts 123398815759, free_ts 0
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1551
+ prep_new_page mm/page_alloc.c:1559 [inline]
+ get_page_from_freelist+0x365c/0x37a0 mm/page_alloc.c:3477
+ __alloc_frozen_pages_noprof+0x292/0x710 mm/page_alloc.c:4739
+ alloc_pages_mpol+0x311/0x660 mm/mempolicy.c:2270
+ alloc_slab_page mm/slub.c:2423 [inline]
+ allocate_slab+0x8f/0x3a0 mm/slub.c:2587
+ new_slab mm/slub.c:2640 [inline]
+ ___slab_alloc+0xc27/0x14a0 mm/slub.c:3826
+ __slab_alloc+0x58/0xa0 mm/slub.c:3916
+ __slab_alloc_node mm/slub.c:3991 [inline]
+ slab_alloc_node mm/slub.c:4152 [inline]
+ kmem_cache_alloc_noprof+0x268/0x380 mm/slub.c:4171
+ gfs2_glock_get+0x309/0x1010 fs/gfs2/glock.c:1178
+ gfs2_inode_lookup+0x2a3/0xc90 fs/gfs2/inode.c:135
+ gfs2_lookup_root fs/gfs2/ops_fstype.c:440 [inline]
+ init_sb+0xa2a/0x1270 fs/gfs2/ops_fstype.c:507
+ gfs2_fill_super+0x19b3/0x24d0 fs/gfs2/ops_fstype.c:1216
+ get_tree_bdev_flags+0x48c/0x5c0 fs/super.c:1636
+ gfs2_get_tree+0x54/0x220 fs/gfs2/ops_fstype.c:1330
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1814
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3560
+page_owner free stack trace missing
+
+Memory state around the buggy address:
+ ffff888054e45d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888054e45d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888054e45e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                     ^
+ ffff888054e45e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888054e45f00: fb fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
 ---
-This patch removes the legacy console code.
-Please comment if you have any concerns.
-
-Changes in v3:
-- Add stress test results to patch comments.
-- based on tty-next branch
-  https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git
-v2: https://lore.kernel.org/all/20250115052749.3205675-1-fj6611ie@aa.jp.fujitsu.com/
-
-Changes in v2:
-- Remove the module parameter used to switch between legacy and NBCON.
-- Remove codes for legacy console.
-- Fix build errors detected by the test robot.
-- based on 6.13-rc7
-v1: https://lore.kernel.org/all/20250108004730.2302996-1-fj6611ie@aa.jp.fujitsu.com/
-
-Thanks Greg for the comment.
----
- drivers/tty/serial/amba-pl011.c | 143 ++++++++++++++++++++++----------
- 1 file changed, 97 insertions(+), 46 deletions(-)
-
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 04212c823..9a9a1d630 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -272,6 +272,7 @@ struct uart_amba_port {
- 	enum pl011_rs485_tx_state	rs485_tx_state;
- 	struct hrtimer		trigger_start_tx;
- 	struct hrtimer		trigger_stop_tx;
-+	bool			console_line_ended;
- #ifdef CONFIG_DMA_ENGINE
- 	/* DMA stuff */
- 	unsigned int		dmacr;		/* dma control reg */
-@@ -2366,50 +2367,7 @@ static void pl011_console_putchar(struct uart_port *port, unsigned char ch)
- 	while (pl011_read(uap, REG_FR) & UART01x_FR_TXFF)
- 		cpu_relax();
- 	pl011_write(ch, uap, REG_DR);
--}
--
--static void
--pl011_console_write(struct console *co, const char *s, unsigned int count)
--{
--	struct uart_amba_port *uap = amba_ports[co->index];
--	unsigned int old_cr = 0, new_cr;
--	unsigned long flags;
--	int locked = 1;
--
--	clk_enable(uap->clk);
--
--	if (oops_in_progress)
--		locked = uart_port_trylock_irqsave(&uap->port, &flags);
--	else
--		uart_port_lock_irqsave(&uap->port, &flags);
--
--	/*
--	 *	First save the CR then disable the interrupts
--	 */
--	if (!uap->vendor->always_enabled) {
--		old_cr = pl011_read(uap, REG_CR);
--		new_cr = old_cr & ~UART011_CR_CTSEN;
--		new_cr |= UART01x_CR_UARTEN | UART011_CR_TXE;
--		pl011_write(new_cr, uap, REG_CR);
--	}
--
--	uart_console_write(&uap->port, s, count, pl011_console_putchar);
--
--	/*
--	 *	Finally, wait for transmitter to become empty and restore the
--	 *	TCR. Allow feature register bits to be inverted to work around
--	 *	errata.
--	 */
--	while ((pl011_read(uap, REG_FR) ^ uap->vendor->inv_fr)
--						& uap->vendor->fr_busy)
--		cpu_relax();
--	if (!uap->vendor->always_enabled)
--		pl011_write(old_cr, uap, REG_CR);
--
--	if (locked)
--		uart_port_unlock_irqrestore(&uap->port, flags);
--
--	clk_disable(uap->clk);
-+	uap->console_line_ended = (ch == '\n');
- }
- 
- static void pl011_console_get_options(struct uart_amba_port *uap, int *baud,
-@@ -2472,6 +2430,8 @@ static int pl011_console_setup(struct console *co, char *options)
- 	if (ret)
- 		return ret;
- 
-+	uap->console_line_ended = true;
-+
- 	if (dev_get_platdata(uap->port.dev)) {
- 		struct amba_pl011_data *plat;
- 
-@@ -2555,14 +2515,105 @@ static int pl011_console_match(struct console *co, char *name, int idx,
- 	return -ENODEV;
- }
- 
-+static void
-+pl011_console_write_atomic(struct console *co, struct nbcon_write_context *wctxt)
-+{
-+	struct uart_amba_port *uap = amba_ports[co->index];
-+	unsigned int old_cr = 0;
-+
-+	if (!nbcon_enter_unsafe(wctxt))
-+		return;
-+
-+	clk_enable(uap->clk);
-+
-+	if (!uap->vendor->always_enabled) {
-+		old_cr = pl011_read(uap, REG_CR);
-+		pl011_write((old_cr & ~UART011_CR_CTSEN) | (UART01x_CR_UARTEN | UART011_CR_TXE),
-+				uap, REG_CR);
-+	}
-+
-+	if (!uap->console_line_ended)
-+		uart_console_write(&uap->port, "\n", 1, pl011_console_putchar);
-+	uart_console_write(&uap->port, wctxt->outbuf, wctxt->len, pl011_console_putchar);
-+
-+	while ((pl011_read(uap, REG_FR) ^ uap->vendor->inv_fr) & uap->vendor->fr_busy)
-+		cpu_relax();
-+
-+	if (!uap->vendor->always_enabled)
-+		pl011_write(old_cr, uap, REG_CR);
-+
-+	clk_disable(uap->clk);
-+
-+	nbcon_exit_unsafe(wctxt);
-+}
-+
-+static void
-+pl011_console_write_thread(struct console *co, struct nbcon_write_context *wctxt)
-+{
-+	struct uart_amba_port *uap = amba_ports[co->index];
-+	unsigned int old_cr = 0;
-+
-+	if (!nbcon_enter_unsafe(wctxt))
-+		return;
-+
-+	clk_enable(uap->clk);
-+
-+	if (!uap->vendor->always_enabled) {
-+		old_cr = pl011_read(uap, REG_CR);
-+		pl011_write((old_cr & ~UART011_CR_CTSEN) | (UART01x_CR_UARTEN | UART011_CR_TXE),
-+				uap, REG_CR);
-+	}
-+
-+	if (nbcon_exit_unsafe(wctxt)) {
-+		int i;
-+		unsigned int len = READ_ONCE(wctxt->len);
-+
-+		for (i = 0; i < len; i++) {
-+			if (!nbcon_enter_unsafe(wctxt))
-+				break;
-+			uart_console_write(&uap->port, wctxt->outbuf + i, 1, pl011_console_putchar);
-+			if (!nbcon_exit_unsafe(wctxt))
-+				break;
-+		}
-+	}
-+
-+	while (!nbcon_enter_unsafe(wctxt))
-+		nbcon_reacquire_nobuf(wctxt);
-+
-+	while ((pl011_read(uap, REG_FR) ^ uap->vendor->inv_fr) & uap->vendor->fr_busy)
-+		cpu_relax();
-+
-+	if (!uap->vendor->always_enabled)
-+		pl011_write(old_cr, uap, REG_CR);
-+
-+	clk_disable(uap->clk);
-+
-+	nbcon_exit_unsafe(wctxt);
-+}
-+
-+static void
-+pl011_console_device_lock(struct console *co, unsigned long *flags)
-+{
-+	__uart_port_lock_irqsave(&amba_ports[co->index]->port, flags);
-+}
-+
-+static void
-+pl011_console_device_unlock(struct console *co, unsigned long flags)
-+{
-+	__uart_port_unlock_irqrestore(&amba_ports[co->index]->port, flags);
-+}
-+
- static struct uart_driver amba_reg;
- static struct console amba_console = {
- 	.name		= "ttyAMA",
--	.write		= pl011_console_write,
- 	.device		= uart_console_device,
- 	.setup		= pl011_console_setup,
- 	.match		= pl011_console_match,
--	.flags		= CON_PRINTBUFFER | CON_ANYTIME,
-+	.write_atomic	= pl011_console_write_atomic,
-+	.write_thread	= pl011_console_write_thread,
-+	.device_lock	= pl011_console_device_lock,
-+	.device_unlock	= pl011_console_device_unlock,
-+	.flags		= CON_PRINTBUFFER | CON_ANYTIME | CON_NBCON,
- 	.index		= -1,
- 	.data		= &amba_reg,
- };
-
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
--- 
-2.34.1
-
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
