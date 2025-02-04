@@ -1,44 +1,42 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44DC3BBC1;
-	Tue,  4 Feb 2025 01:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F89D78F5B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738632326; cv=none; b=sxJqvWuFFrkpXbV2e6tLyCBnix0I3iKwyP+ywFGa6h/RYIlpWqr0XO6+Rgyb7l4NMWprU2sxwFTzSjbIM8E3gyei0URrXXnvv3j1GglH1tdrBZZX/RRjo23eR8QYlhL8n/572aV3DclWbHkUuFm9Ti9cR6Hs3ohY+8XyDQM6Xkw=
+	t=1738632506; cv=none; b=M8q+CYmGlPsZMa5bORp+8R8eNMtq8ytbggtGnLo1XE0Lbalsv3wrifWPqzlAV8MLr4wjwbOMKTFz+TAb231JSCvGCiHnMGuXiSbF6jdNKaq88wP7Co61loLSf2cjaUshsPCkEE0QTZ0wW9s7t4p53f5zRWteZ4QACq/WhGebPW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738632326; c=relaxed/simple;
-	bh=fuYIapzo7q+Y+EmF18p2XpIoz5LCXXhWBhYZS0d3MSM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=to6egABVvJYqOp6yfBliCeXKuoREeBUUwfOpxkLuh2E6XfNN1mV7ka2Co4GsC6b+hKdI+PdzcoIxZZHz3No9p5LBIzFcXWk1/foCewrAcnE18fTZqztsb1jvaYofxIMr64V0iLbw9PKCVe/YNrNmR4qV/MF1+2E+sYW6lZP9kkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=lhUlg8rx; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1738632506; c=relaxed/simple;
+	bh=zRDb8IOYGvmlXWuVKT5AYO2bgAWZILWEV5h6yMwNaSU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hfC0D2X8odEiL3KwVPi3XADZSdBhFsIR3gvJ+3VNrumEJJChVMsNpbJwQBNyBhi5KqFdVyLCetZQK3XWNBXVTSUw1xKk15k7NMj+anYHHWgb3EQQ4XzJghMj0YrDrZ4kf7sqcLP7jQwwHVd0/WbPlDCscKlWZvVyLoC5FJfuOmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6WT0SlC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="lhUlg8rx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=3okuBbqTLDNlW8g7GCyvjkszQB62i6TRc8dfHbos6PI=; b=lhUlg8rxXdl3JHZH
-	0R3iAfzrYGPePcf7pkTl8uJCM77giH0Pneh72TDQAC4fQKUL9zsPpXcs8H+5s8dWpXbKEha5bPCB/
-	+QJFrIPd8AOwDBPDVVSt5pD1l6PjxIhLqqZRRu/zO57Dt9s9MkKLB8OCtTZ014w7ao7pnTYJsWWc9
-	2X84MpMViuxVQyOlIhBvFpbnOtUlA3Wug08kR/SVtzpC0G5gBeahVUup76d8HJVNA1BGlx7ePTUir
-	VcI33kWBLOvY0Wgvt2jB2AiR7rHBRzySQ1YyiiAeg8WqSqjQkpF7L9xuRnRGO659+Mthss8RGAyAd
-	T64Ty38t8gbDAMveYw==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1tf7gf-00DQ0b-0m;
-	Tue, 04 Feb 2025 01:25:13 +0000
-From: linux@treblig.org
-To: briannorris@chromium.org,
-	francesco@dolcini.it,
-	kvalo@kernel.org,
-	linux-wireless@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] mwifiex: Remove unused mwifiex_uap_del_sta_data
-Date: Tue,  4 Feb 2025 01:25:12 +0000
-Message-ID: <20250204012512.390209-1-linux@treblig.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6WT0SlC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDD86C4CEE0;
+	Tue,  4 Feb 2025 01:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738632505;
+	bh=zRDb8IOYGvmlXWuVKT5AYO2bgAWZILWEV5h6yMwNaSU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=H6WT0SlCNkTE2TL3CSWKa74bNMQaABQltk4ugPu7I82Cqk8Zm5019mb4B+o6JmPxw
+	 T1NCmyBqItGKMbqdlp61APCYjE3PJUc12+HjEeD7HkjMS3xF/7sBFaYtQYzVAmcj8c
+	 07ccJqfP35y854Ozcr4f/8eOUyqbFVcDFZoTLc2xsM6hbqxF8QWrpK6Q1Zssc8PeXZ
+	 ud29tkm51IEfdOj9IsZjpmoHyUtTts/PYd8eTHI0Jk66foZ9VOsdGWGEyaFxkpArex
+	 dm8Dj1UoiJPe3YdTTWVCqUyDarxD/I1nouPoV0JNRHC2AQOeKo3rnW48YMczk9eNUy
+	 IfMvIkdRNuXNw==
+From: carlos.bilbao@kernel.org
+To: apw@canonical.com,
+	joe@perches.com,
+	dwaipayanray1@gmail.com,
+	lukas.bulwahn@gmail.com
+Cc: bilbao@vt.edu,
+	linux-kernel@vger.kernel.org,
+	Carlos Bilbao <carlos.bilbao@kernel.org>
+Subject: [PATCH 0/1] checkpatch: add --branch option to check commits in current branch
+Date: Mon,  3 Feb 2025 19:28:21 -0600
+Message-ID: <20250204012822.1379477-1-carlos.bilbao@kernel.org>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,57 +45,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+From: Carlos Bilbao <carlos.bilbao@kernel.org>
 
-The last use of mwifiex_uap_del_sta_data() was removed in 2014 by
-commit dda9ddeb2638 ("mwifiex: do not delete station entries in del_sta
-handler")
+I thought it would help to add an option --branch in checkpatch.pl to
+check multiple commits within a branch. In my experience, after creating
+a new experimental branch, I often need to generate multiple patches and
+run the script on each one individually. If there's an issue, I've to go
+back, which IMHO is little tedious. That's why I think this option may
+help reduce manual work. Below are some tests on the expected behavior.
 
-Remove it.
+No new commits since upstream:
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/net/wireless/marvell/mwifiex/main.h      |  2 --
- drivers/net/wireless/marvell/mwifiex/uap_event.c | 16 ----------------
- 2 files changed, 18 deletions(-)
+$ git checkout -b up-to-date
+$ git branch --set-upstream-to=check_branch up-to-date
+$ ./scripts/checkpatch.pl --branch
+Using as upstream branch: check_branch
+No commits found between check_branch and up-to-date. Exiting.
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/net/wireless/marvell/mwifiex/main.h
-index 0674dcf7a537..0e6eff72e54b 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.h
-+++ b/drivers/net/wireless/marvell/mwifiex/main.h
-@@ -1571,8 +1571,6 @@ void mwifiex_uap_set_channel(struct mwifiex_private *priv,
- 			     struct cfg80211_chan_def chandef);
- int mwifiex_config_start_uap(struct mwifiex_private *priv,
- 			     struct mwifiex_uap_bss_param *bss_cfg);
--void mwifiex_uap_del_sta_data(struct mwifiex_private *priv,
--			      struct mwifiex_sta_node *node);
- 
- void mwifiex_config_uap_11d(struct mwifiex_private *priv,
- 			    struct cfg80211_beacon_data *beacon_data);
-diff --git a/drivers/net/wireless/marvell/mwifiex/uap_event.c b/drivers/net/wireless/marvell/mwifiex/uap_event.c
-index 58ef5020a46a..245cb99a3daa 100644
---- a/drivers/net/wireless/marvell/mwifiex/uap_event.c
-+++ b/drivers/net/wireless/marvell/mwifiex/uap_event.c
-@@ -325,19 +325,3 @@ int mwifiex_process_uap_event(struct mwifiex_private *priv)
- 
- 	return 0;
- }
--
--/* This function deletes station entry from associated station list.
-- * Also if both AP and STA are 11n enabled, RxReorder tables and TxBA stream
-- * tables created for this station are deleted.
-- */
--void mwifiex_uap_del_sta_data(struct mwifiex_private *priv,
--			      struct mwifiex_sta_node *node)
--{
--	if (priv->ap_11n_enabled && node->is_11n_enabled) {
--		mwifiex_11n_del_rx_reorder_tbl_by_ta(priv, node->mac_addr);
--		mwifiex_del_tx_ba_stream_tbl_by_ra(priv, node->mac_addr);
--	}
--	mwifiex_del_sta_entry(priv, node->mac_addr);
--
--	return;
--}
--- 
-2.48.1
+With two new commits:
+
+$ git commit --allow-empty -m "Commit 1"
+$ git commit --allow-empty -m "Commit 2"
+$ ./scripts/checkpatch.pl --branch
+Using as upstream branch: check_branch
+Checking 2 commits...
+ERROR: Does not appear to be a unified-diff format patch
+
+As edge case, with unconfigured upstream:
+
+18:54 [linux][check_branch ?]$ git branch
+* check_branch
+  docs-next
+18:54 [linux][check_branch ?]$ ./scripts/checkpatch.pl --branch
+No explicit upstream branch found in reflog, trying git branch -vv.
+No upstream branch found. Would you like to specify one? [y/n] n
+Using as upstream branch: master
+No commits found between master and check_branch. Exiting.
+
+but if the user is willing to help:
+
+18:54 [linux][check_branch ?]$ ./scripts/checkpatch.pl --branch
+No explicit upstream branch found in reflog, trying git branch -vv.
+No upstream branch found. Would you like to specify one? [y/n] y
+Please enter: docs-next
+Using as upstream branch: docs-next
+Checking 1 commits...
+WARNING: Missing commit description - Add an appropriate one
+
+ERROR: Missing Signed-off-by: line(s)
+
+total: 1 errors, 1 warnings, 89 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplace.
+
+Commit 90dd5899dfd3 ("test") has style problems, please review.
+
+NOTE: If any of the errors are false positives, please report
+      them to the maintainer, see CHECKPATCH in MAINTAINERS.
+18:54 [linux][check_branch ?]$
+
+
+Carlos:
+  checkpatch: add --branch option to check commits in current branch
 
