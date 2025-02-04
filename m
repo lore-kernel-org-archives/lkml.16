@@ -1,81 +1,150 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3B62153D3
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4130917BEBF;
+	Tue,  4 Feb 2025 16:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738687527; cv=none; b=ttpehyTnwFpq7MNTmxdWnlqfhKxmzBi9Alc8ECzE+US1BUXizlAD/I1EDT6FWHO144dG7SWYvp2KOXJuc/4tAyzM/cjLZCQN4aLNArEJSmTwxR0rwG545ee6wJUHZqw5XXmxIIaVbWB2O+wINCMEdueFo+qe3DD7Wd4tB1aHsb8=
+	t=1738687538; cv=none; b=uDqAnOwD1c4nrZcwYxs6ciSursUqLuNyeuvyqhpQ45u89HXCyPv5ZcQSoMyBRSdLCapExyU83P194hF68Zp2FDeaznK/jV2EGKojNi5dXAGXKHwHIdADGdpON3uVNNgB1s6NQd+/IJu74Wv1+pJKM4guju2jGCv0H0YXFfwG+PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738687527; c=relaxed/simple;
-	bh=nwmDxd2uSaPokJjA3sJT5MmKYDY9FRk+jRoqk8Y6Jtk=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=gKDM2mDL3p1qSEyFLmvo9g+UDkJ8rwEZi6+ckNKfMBJsgXlq+Sx8HlR8dno0040YUVyoIkmhpQiR8RBiYjsGHuIbrQCIa3p51WmkS114Or1NRv4shEtIY+K0r4Zn/b7XvAmv5dvkE0Lk/nytzOFF3s3gkMU6L+Hwd7uoIQ5mUZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tqYvYvRj; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738687538; c=relaxed/simple;
+	bh=UbhOxZiqrETevcfz6PoIcX6N+DtmOII92Z+RrlGk0Cg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aUrsySAIIihtdEkepbA5NfAIOs4CjMHvcXu9Aouil+DzRunOhO0abXpGr4g2OwS//BOjlPmWKX49hBib/zPMxpg5xCN0O07P8j7xoat3Ki3HKOJL/pnDr7fYbmEGvU8vfAec7yx+oGv+epG/NCYvAoytBG88K1vrS7ZyiogapPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I0ws8ySX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tqYvYvRj"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738687508;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uPj2aPmzXzjw2UjtRCGDrvhA0v4l8hdBVukLvYb8lf4=;
-	b=tqYvYvRjhm9iCJ6+rvNHX2CjirPwR5Hy+bbyFMge2S9D8/X/nHz7R3gaGuD7R3kdRC589L
-	d0wgTZ+zfd8Wtb2nJjaRl6khR7OIjMAM3TC+mJHru9JYmPaEmviSXGPSXj18qdFj2FhGif
-	qmBaIJA3whpgvv8c8fRJUnxZ0sCe16c=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I0ws8ySX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3057CC4CEDF;
+	Tue,  4 Feb 2025 16:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738687537;
+	bh=UbhOxZiqrETevcfz6PoIcX6N+DtmOII92Z+RrlGk0Cg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I0ws8ySXbVJi4z6MWVoQdREXoi1DnEHADrKRiq0yo5uTE+AaPVpsoNRh7ncG51FMQ
+	 cXj6LFtQwoCyEE54zxekn/eAe2LEkre7bavTstEg1UpVZo0cTCKfCTLDNQ4x4GABTa
+	 67dIby/cn5Eta/+U+/AwrBcVt7pHRaE5M6zv3YlFhuuX1fW4YIiZT4pFG0kM9SH8/6
+	 R5b8Ssw7/BzyDqdkoE5N3w1ah6fEuMp0iZczdB8y4gMpBt3uwTNLWmmJ4yhjGbd+nY
+	 VetBmnmlYDU6Elai9mUydO47QADGg69TvtMbFHP96tGh8ma1hs/33hQIXm73LtkmYD
+	 3UVXK3dBwqEeQ==
+Date: Tue, 4 Feb 2025 17:45:33 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] statmount: add a new supported_mask field
+Message-ID: <20250204-keimzelle-reibt-84877b62936c@brauner>
+References: <20250203-statmount-v1-1-871fa7e61f69@kernel.org>
+ <20250204-stengel-lodern-8e6ce624cf77@brauner>
+ <8d07cfbab7b1d70b6fc381ad065d55773f73d93f.camel@kernel.org>
+ <20250204-vintage-sozusagen-33df0d66bd6c@brauner>
+ <3a139a0cca7772935dbc7e376d19547191143ce5.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
-Subject: Re: [RESEND PATCH v2] params: Annotate struct module_param_attrs with
- __counted_by()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <20250114214956.915982-2-thorsten.blum@linux.dev>
-Date: Tue, 4 Feb 2025 17:44:55 +0100
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Luis Chamberlain <mcgrof@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <CBE23F82-A597-4DC5-A297-26F8DEFA07B0@linux.dev>
-References: <20250114214956.915982-2-thorsten.blum@linux.dev>
-To: Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3a139a0cca7772935dbc7e376d19547191143ce5.camel@kernel.org>
 
-On 14. Jan 2025, at 22:49, Thorsten Blum wrote:
-> Add the __counted_by compiler attribute to the flexible array member
-> attrs to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
+On Tue, Feb 04, 2025 at 10:57:39AM -0500, Jeff Layton wrote:
+> On Tue, 2025-02-04 at 16:09 +0100, Christian Brauner wrote:
+> > On Tue, Feb 04, 2025 at 07:28:20AM -0500, Jeff Layton wrote:
+> > > On Tue, 2025-02-04 at 12:07 +0100, Christian Brauner wrote:
+> > > > On Mon, Feb 03, 2025 at 12:09:48PM -0500, Jeff Layton wrote:
+> > > > > Some of the fields in the statmount() reply can be optional. If the
+> > > > > kernel has nothing to emit in that field, then it doesn't set the flag
+> > > > > in the reply. This presents a problem: There is currently no way to
+> > > > > know what mask flags the kernel supports since you can't always count on
+> > > > > them being in the reply.
+> > > > > 
+> > > > > Add a new STATMOUNT_SUPPORTED_MASK flag and field that the kernel can
+> > > > > set in the reply. Userland can use this to determine if the fields it
+> > > > > requires from the kernel are supported. This also gives us a way to
+> > > > > deprecate fields in the future, if that should become necessary.
+> > > > > 
+> > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > > ---
+> > > > > I ran into this problem recently. We have a variety of kernels running
+> > > > > that have varying levels of support of statmount(), and I need to be
+> > > > > able to fall back to /proc scraping if support for everything isn't
+> > > > > present. This is difficult currently since statmount() doesn't set the
+> > > > > flag in the return mask if the field is empty.
+> > > > > ---
+> > > > >  fs/namespace.c             | 18 ++++++++++++++++++
+> > > > >  include/uapi/linux/mount.h |  4 +++-
+> > > > >  2 files changed, 21 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/fs/namespace.c b/fs/namespace.c
+> > > > > index a3ed3f2980cbae6238cda09874e2dac146080eb6..7ec5fc436c4ff300507c4ed71a757f5d75a4d520 100644
+> > > > > --- a/fs/namespace.c
+> > > > > +++ b/fs/namespace.c
+> > > > > @@ -5317,6 +5317,21 @@ static int grab_requested_root(struct mnt_namespace *ns, struct path *root)
+> > > > >  	return 0;
+> > > > >  }
+> > > > >  
+> > > > > +/* This must be updated whenever a new flag is added */
+> > > > > +#define STATMOUNT_SUPPORTED (STATMOUNT_SB_BASIC | \
+> > > > > +			     STATMOUNT_MNT_BASIC | \
+> > > > > +			     STATMOUNT_PROPAGATE_FROM | \
+> > > > > +			     STATMOUNT_MNT_ROOT | \
+> > > > > +			     STATMOUNT_MNT_POINT | \
+> > > > > +			     STATMOUNT_FS_TYPE | \
+> > > > > +			     STATMOUNT_MNT_NS_ID | \
+> > > > > +			     STATMOUNT_MNT_OPTS | \
+> > > > > +			     STATMOUNT_FS_SUBTYPE | \
+> > > > > +			     STATMOUNT_SB_SOURCE | \
+> > > > > +			     STATMOUNT_OPT_ARRAY | \
+> > > > > +			     STATMOUNT_OPT_SEC_ARRAY | \
+> > > > > +			     STATMOUNT_SUPPORTED_MASK)
+> > > > 
+> > > > Hm, do we need a separate bit for STATMOUNT_SUPPORTED_MASK? Afaiu, this
+> > > > is more of a convenience thing but then maybe we just do:
+> > > > 
+> > > > #define STATMOUNT_SUPPORTED_MASK STATMOUNT_MNT_BASIC
+> > > > 
+> > > > and be done with it?
+> > > > 
+> > > > Otherwise I think it is worth having support for this.
+> > > > 
+> > > 
+> > > Are you suggesting that we should just add the ->supported_mask field
+> > > without a declaring a bit for it? If so, how would that work on old
+> > > kernels? You'd never know if you could trust the contents of that field
+> > > since the return mask wouldn't indicate any difference.
+> > 
+> > What I didn't realize because I hadn't read carefully enough in your
+> > patch was that STATMOUNT_SUPPORTED_MASK is raised in ->mask and only
+> > then is ->supported_mask filled in.
+> > 
+> > My thinking had been that ->supported_mask will simply always be filled
+> > in by the kernel going forward. Which is arguably not ideal but would
+> > work:
+> > 
+> > So the kernel guarantees since the introduction of statmount() that when
+> > we copy out to userspace that anything the kernel doesn't know will be
+> > copied back zeroed. So any unknown fields are zero.
+> > 
+> > (1) Say userspace passes a struct statmount with ->supported_mask to the
+> >     kernel - even if it has put garbage in there or intentionally raised
+> >     valid flags in there - the old kernel will copy over this and set it
+> >     to zero.
+> > 
+> > (2) If you're on a new kernel but pass an old struct the kernel will
+> >     fill in ->supported_mask. Imho, that's fine. Userspace simply will
+> >     not know about it.
+> > 
+> > But we can leave the explicit request in!
+> > 
 > 
-> Increment num before adding a new param_attribute to the attrs array and
-> adjust the array index accordingly. Increment num immediately after the
-> first reallocation such that the reallocation for the NULL terminator
-> only needs to add 1 (instead of 2) to mk->mp->num.
 > 
-> Use struct_size() instead of manually calculating the size for the
-> reallocation.
+> I can respin without STATMOUNT_SUPPORTED_MASK. I was thinking it left
+> that part of the return buffer untouched, but if it's zeroed, then that
+> works as well.
 > 
-> Use krealloc_array() for the additional NULL terminator.
+> If you see a supported_mask of 0, you know the kernel didn't fill it in
+> (since it should at least support _something_). That'll need to be
+> carefully documented though.
 
-Hi, could someone please take another look at this?
-
-It was already applied to modules-next in August 2024, but dropped
-shortly after because of a Clang issue:
-
-https://lore.kernel.org/all/20241029140036.577804-1-kernel@jfarr.cc
-
-The Clang issue has been fixed for a while and this patch could be
-applied again.
-
-Thanks,
-Thorsten
+It's probably easier for userspace if that flag must be specifically raised.
