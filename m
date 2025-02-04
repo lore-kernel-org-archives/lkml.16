@@ -1,85 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587742040B3;
-	Tue,  4 Feb 2025 19:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23141217711
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738697300; cv=none; b=QVsymst8dt/QvzeMt48UXH7+D1uVsaC0tUG05Txi8mcrfXz7zfDruv0lABVYicEnql23eX+VrhIBBr0CvcaGXcNBLw0PHdHkSBbsrI2JEATYZkvUf5iVKlJGan8r3jjO0pYY0L60gTENqlyobxr/iPajYs8rfQ72hV8gC612o1A=
+	t=1738697381; cv=none; b=sztFMZP8Vucl+omzBw9iSXxqH9gvd2hqytlc8qYKbGfoZXLfb33GPpBrSJfWgqx/QVHknoS7htivFS4NNf7K7KLnMcSqhnjXPSM2KqrOd/nVUmhRl/ebsmG5EGy8a1bAaEk2pCUPUQPlrklF4uzmlATODS5/T6+0T6sk9VLEvpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738697300; c=relaxed/simple;
-	bh=payM3Lv0i2tFvtWvDl+mDAKVdtJ2xzD5z915sZ87mYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eusaGo3g3n86/jy+WjjCjn2h3FjxMFueL3bvOlwlQS6q7GITEmEvDjKbsNgcjE+hj7I8H2Ss6YGXCBds2eCFymX7u0mDvtQgCjJaw20WYkAqimSssF82LVvbqy7LqGLT7UZP/fGEhEEl8lCaSZjIqyv9M4kmKbM9F+wUdGn7ILU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JlBxqcOv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738697381; c=relaxed/simple;
+	bh=jR8glNKTcRvWQFyYWzpmeeHHaLx4f7ObdoeaqwwhgrA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=q0R2C8O6d+EIAtsPo3tb+PNQe0ZC9Fv0L/8OK1FaNZby00TGmX7X+doac2rahxYEEXOFAOQAuTWRSEi05giF/h0czSuum07tqOf6ag+zA1ofDih2hP3A+Bcbb5OLtW7wvn5z/4/07qkVIpOCcKcCTOhGqcyvVjWtEL5nOZAhyzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ONWNoLGI; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JlBxqcOv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CD53C4CEDF;
-	Tue,  4 Feb 2025 19:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738697299;
-	bh=payM3Lv0i2tFvtWvDl+mDAKVdtJ2xzD5z915sZ87mYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JlBxqcOvfeSKjGTyrXHq2OUXcbNTe7hFhrMrHfk2gMRrSHXyVv01XMrWEVwUFFrj0
-	 IRONpv9NOGWvsgRhCuyYaB/cGcpNML15JDbRoR5WWuwqSX2E8xII3dZPg2a92osys7
-	 yoPvTrpxCLGiyG9xbXL1ODndgIPRgSJp4zge2DI8bHvj5FwEE9fVstdSLxN7K3BD+G
-	 5wXKNXjp1v+Xtg8wVBj2YMNBuMfD2S1JcB+CBy+JyNaB18JIbJl7tkd685xMZDaLiw
-	 9KTJ9D3Kv9wah1hSom4WKjnfVWI1m+livcPswyoQMyOhFGjpW33lfHAipZ4U6HnH+n
-	 a18+G+46kmu1g==
-Date: Tue, 4 Feb 2025 19:28:15 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Michal Simek <michal.simek@amd.com>
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com,
-	git@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: soc: Add new VN-X board description
- based on Versal NET
-Message-ID: <20250204-vitally-catering-7006a7c6c1df@spud>
-References: <cover.1738657826.git.michal.simek@amd.com>
- <6e4486141cf9b1d36b03624cc73621b2e3bba894.1738657826.git.michal.simek@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONWNoLGI"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef9204f898so11208541a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:29:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738697379; x=1739302179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5e8UEnGVo+4lDc1cH0GoOuL8F0MUw58BGLx/3p+5fdQ=;
+        b=ONWNoLGImy11X7wp005j3c0b3AXhnDVQAu9PRZCfl4/Hoz7uc3Bgi4E/aFM/exO727
+         gTQwYXCSe1OPEwPw9KP6ZpUarjAhqpXjbujXYzsEoBVNRIDCQX+TpapGaFZOfTFSDk7N
+         BXyEFfsh5Mz3YQV9vTYRKpL/FlHaT5EEXh3yr4bZRd3Gsf2AJyKfK6X4R0yfg1aEzPeF
+         UA3Yut+cT5/O3Sc5e4louBnyGBuKa7yQUEQiAYtwv/StnOFI3wBPst0MM/xBkLduOzMP
+         8ZduMrKyh6qZSdrqHLroL91d8MeCxC8dEB0EH2XO5FnaaBo9yWmochVH+p4xUkjtHQL1
+         /7rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738697379; x=1739302179;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5e8UEnGVo+4lDc1cH0GoOuL8F0MUw58BGLx/3p+5fdQ=;
+        b=gi4bLXdofemXt3SUhxj6OEf/hHYBXPEtWexoHp8i4slF2qLwdRzMEwvIJOJdoxJDGa
+         uY9LHP2PqKAwMTC2JZsfGjoKMPv+ZhdHxE+CiUcIjrnSFarnbP0uycVFHfcTDwAfjzqZ
+         tTNokPL0DlwnIn55Yfes2K1LJ529ZRaFTVYddyvX9mbAl8qUyJ9l73qEiQ0gukQtePKF
+         XNBa8j9VQY/W0nfoXbFTWBT83VUQ6v1TYZQIwx4q1ujZDdmWHCwdN5KChz5EzVW+ERWe
+         AzqAbU9Sp0TxpAd0L/1JrUxb0oyoyAxRnO97uruUiwsDYvKiKmWj4Kb3Pc90UZmdRqc3
+         DSjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUi/m4l62HEVhLzLLV4EzlyZl1S48LBIix84UuyRL+Vr/67yTD8nMqC2TVlj3tNNes1neuzjjpM1yfPl6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKhPvli4sj2bPhR47zWHVSOgZgBUV5b4J7fRbrn8Z5Jg6ZxFwu
+	e5axl2A1cUUjAaeiJlVqRCLZODmiFaWt5zeBRNjElcd2B5MLfyjbJrNtNRFMQM5zpJsSKfl5anf
+	PSw==
+X-Google-Smtp-Source: AGHT+IF+/fBR5/RvgfgkW+k0iOimknqvbfTCdp56sFN5T8R+lSkm/qjT6GD7VseImBDz4jdwECu7ieLsEjc=
+X-Received: from pjbsw5.prod.google.com ([2002:a17:90b:2c85:b0:2d3:d4ca:5fb0])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5245:b0:2ee:ab29:1a65
+ with SMTP id 98e67ed59e1d1-2f83abb4f94mr39965711a91.4.1738697379406; Tue, 04
+ Feb 2025 11:29:39 -0800 (PST)
+Date: Tue, 4 Feb 2025 11:29:38 -0800
+In-Reply-To: <85r04e5821.fsf@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rihF7DvlGIW5aR1L"
-Content-Disposition: inline
-In-Reply-To: <6e4486141cf9b1d36b03624cc73621b2e3bba894.1738657826.git.michal.simek@amd.com>
-
-
---rihF7DvlGIW5aR1L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+References: <20250201021718.699411-1-seanjc@google.com> <20250201021718.699411-7-seanjc@google.com>
+ <85r04e5821.fsf@amd.com>
+Message-ID: <Z6JqopU5LkDIZPq6@google.com>
+Subject: Re: [PATCH 06/16] x86/tdx: Override PV calibration routines with
+ CPUID-based calibration
+From: Sean Christopherson <seanjc@google.com>
+To: Nikunj A Dadhania <nikunj@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	linux-coco@lists.linux.dev, virtualization@lists.linux.dev, 
+	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com, 
+	kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 04, 2025 at 09:30:32AM +0100, Michal Simek wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+On Tue, Feb 04, 2025, Nikunj A Dadhania wrote:
+> Sean Christopherson <seanjc@google.com> writes:
 >=20
-> The Versal NET (Networked Adaptive Compute Acceleration Platform) from
-> AMD/Xilinx is a next-generation adaptive platform designed for high
-> performance computing, networking, and AI acceleration. It is part of the
-> Versal ACAP (Adaptive Compute Acceleration Platform) family.
+> > When running as a TDX guest, explicitly override the TSC frequency
+> > calibration routine with CPUID-based calibration instead of potentially
+> > relying on a hypervisor-controlled PV routine.  For TDX guests, CPUID.0=
+x15
+> > is always emulated by the TDX-Module, i.e. the information from CPUID i=
+s
+> > more trustworthy than the information provided by the hypervisor.
+> >
+> > To maintain backwards compatibility with TDX guest kernels that use nat=
+ive
+> > calibration, and because it's the least awful option, retain
+> > native_calibrate_tsc()'s stuffing of the local APIC bus period using th=
+e
+> > core crystal frequency.  While it's entirely possible for the hyperviso=
+r
+> > to emulate the APIC timer at a different frequency than the core crysta=
+l
+> > frequency, the commonly accepted interpretation of Intel's SDM is that =
+APIC
+> > timer runs at the core crystal frequency when that latter is enumerated=
+ via
+> > CPUID:
+> >
+> >   The APIC timer frequency will be the processor=E2=80=99s bus clock or=
+ core
+> >   crystal clock frequency (when TSC/core crystal clock ratio is enumera=
+ted
+> >   in CPUID leaf 0x15).
+> >
+> > If the hypervisor is malicious and deliberately runs the APIC timer at =
+the
+> > wrong frequency, nothing would stop the hypervisor from modifying the
+> > frequency at any time, i.e. attempting to manually calibrate the freque=
+ncy
+> > out of paranoia would be futile.
+> >
+> > Deliberately leave the CPU frequency calibration routine as is, since t=
+he
+> > TDX-Module doesn't provide any guarantees with respect to CPUID.0x16.
 >=20
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> Does TDX use kvmclock?
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+A TDX guest can.  That's up to the host (expose kvmclock) and the guest (en=
+able
+kvmclock).
 
---rihF7DvlGIW5aR1L
-Content-Type: application/pgp-signature; name="signature.asc"
+> If yes, kvmclock would have registered the CPU frequency calibration rout=
+ine:
+>=20
+> 	tsc_register_calibration_routines(kvm_get_tsc_khz, kvm_get_cpu_khz,
+>  					  tsc_properties);
+>=20
+> so TDX will use kvm_get_cpu_khz(), which will either use CPUID.0x16 or
+> PV clock, is this on the expected line ?
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6JqTwAKCRB4tDGHoIJi
-0g4uAP9NqvqiRCTrc4sSRsD1Ar/ITRdkdCG5QK+HJofHimbPaAD9GQoMS2RdTGPX
-WUyBpEzXaR1CSHZCIk4qZYHnkiM2/wQ=
-=gypN
------END PGP SIGNATURE-----
-
---rihF7DvlGIW5aR1L--
+What do you mean by "is this on the expected line"?  If you are asking "is =
+this
+intended", then the answer is "yes, working as intended".  As above, the TD=
+X-Module
+doesn't emulate CPUID.0x16, so no matter what, the guest is relying on the =
+untrusted
+hypervisor to get the CPU frequency.  If someone thinks that TDX guests sho=
+uld
+assume the CPU runs as the same frequency as the TSC, a la SNP's Secure TSC=
+, then
+they are welcome to propose such a change.
