@@ -1,122 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CB018A6D4;
-	Tue,  4 Feb 2025 17:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A2614A0B5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738691351; cv=none; b=m9yIz34yBF1I0faHJkcqn/drglsr5oK+x2d+vQv6IIKdSj2QlNaf8JsncHOp74t8E6l1WT20YPFvEH2ho3m/x7+7gW7nfIjCEHD8xNu5IwoVZVFJJINuCjyBUj5wfvrvC7JUfSF1faVKA017LUPps/vPO7y7WVIy108fvvqSs/s=
+	t=1738691409; cv=none; b=ALDZVdfCM2DYg05ic50s0jPLdx7UnDxRCtlvEPZa37Ws91YHNqqND5yPDSfOZmGJ0gni6IKgGR0j7FeqEnNfByPB3emDBl9v5jZtslPqKrFuMwuDXIN7VDwpdyk3bUzBxggNnR2aa2Cjpih8TrMaom6vysbhbR+h00vKeJ3jhyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738691351; c=relaxed/simple;
-	bh=rXAK34OphyEItP6/+639hQrb7zlf+ZgtdRAQ99Mc1xA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jbil56Qpa7lm5WI5VC8XceXzYoanEF55L51EtDFH27KgcKEnxO5GsP636RyrG8yvsnhThu3U8inzjDXvGKkZtQf6YCA6AKHdYJT+unlpvGirSVPOlmOQRw/CKctfPueKUc7r/uTbEx0NyAYO6jDzqYMZXMD36IKdKEgaYMN42aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHtnS5Kt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738691409; c=relaxed/simple;
+	bh=e9lXk2KILvMrWAeBCb5anAWINuB4KplwAt5cSr6oTpY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KYwtJdd6JAUtyNI1dm/xgcDtXrQlV9rOfHTC2muTcqomz4NmqedhYYhsHriWQLAzo9o92pEWzO6j78YyJaHbcwxfbPeKiQvJ7QRQgqFGPjJof3952d4I/rcfrSfxGWlWFHi4PvIUFetLbBPTSa8vt/WpHAJSn/6twxmf1NO1xFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i/ALBM7K; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHtnS5Kt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5820C4CEDF;
-	Tue,  4 Feb 2025 17:49:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738691351;
-	bh=rXAK34OphyEItP6/+639hQrb7zlf+ZgtdRAQ99Mc1xA=;
-	h=From:Date:Subject:To:Cc:From;
-	b=SHtnS5KtsZ/GOENUm5oQLadqfIxf887yWaCuZngDsiv7/CyDO9QC34fijUzxSRrVQ
-	 kngZDnCH3unbXVxFTR1GxMquyEiACyFsVKrPj4yeLVPUlnNETP0mXxW7iswjxU3KlW
-	 /McoIFOGzYDLIuIXTUiRu4dlzQ7HXgW8WB1z+iTtn18pR6AMMLGsxZzC/x9kHfcIOh
-	 T3da3wf/qvYrWehDk8r5wVS0UMofLrV8hFynf+w7TTf+PY99/jrik4Y1hsfVmA6kxR
-	 tytim7CxgxFzQeV/FTL/cQmo6RQkZsCG7Olaw14EdKN/pSFujkGTkWP4PuNtNbF9jn
-	 0fogOD/mQ/kAQ==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Tue, 04 Feb 2025 10:48:55 -0700
-Subject: [PATCH v2] arm64: Handle .ARM.attributes section in linker scripts
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i/ALBM7K"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3a814c54742so170625ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:50:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738691407; x=1739296207; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dXY9WAEJPwalZKXt5PSHz3ksNwPYvzUFx1AjklywXew=;
+        b=i/ALBM7K6FhY5d7da18+TZszr6w1j9tEETgzo6fe3gJaR9JdUU2OG+FCHpafCegYaG
+         OeAZDIVyn8lkB3VJ63X7atHdodE/xgYHX+ObTZ7PeRdApyMy0sw+lQOuc4FGklMt7yIN
+         8SvdEN4B0y7JeQ/fvWGGHqa/kksDcmuZYVIUhGHp3eVML9V4ZAbu/vb5Cq7S2hTQyQSq
+         6xWQypeckvs5DYlbo09fFy7D5XZBFy2whgmbXofeKyX+KwTt2VyuA4pFS1V7jaw+TWUc
+         O+gkWZVW6ThbNJ21kz2bUUu46NCeZAnI+iGptVHb3HQQWPZxGuLl2LcjfSANcj68aHjz
+         bARg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738691407; x=1739296207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dXY9WAEJPwalZKXt5PSHz3ksNwPYvzUFx1AjklywXew=;
+        b=C89y6TRwsooJWyjJHSAmx2pfB38kcKDrrOOfN+I9fFL1eObz8tSrVP2Db7cLlYj3o3
+         D92cxX2mUej5NfqvolFUezKhOPn5+hGGA7pee4idkWoYi49SA0cYCFC0PhHyeM7QVfCz
+         nleoyUFZk31T1mDXRx4ZZO2K9nuCet/6a9cPJ6Urxqg1pk68EirH6p0U93Anssep6wXh
+         sjTJug+lTZbPDMhOOLLoWGhYl/rI6WaOQMp1qyzqueuu3NAIQkIbAxQXbZrjsNaPgBfH
+         ZL68AEwZE36qbbKAuUr7MC5TZ6VxUqtjAZ9Htg+MzaCfUunl2KC7n6HfH/OGuRrkkB6N
+         zggg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwDtEqpc3qqwpNGhPX7QZsaO9XR/naiCaoiPs3BJDAn54t9R+/l2A3/p432bRGWaFsY/8PAT2MiaNvOCQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOtFnijRRePeAoc1P1b00Z2dvmP1nxxc1Z/I/ZulzIZyGbtau7
+	wJWeJdj0iWtC0c1TVHds3AE3kyYZknLf+YCty1brdGcjH4n0TN/8b5IPu5Xjr9+XsfSkfuWF8+I
+	IOwKOpj1ca4vwrZBN/jIn/sADS0ACQuw1jjjv
+X-Gm-Gg: ASbGnct3fcEGx15o1PTadnn7r+HaNyp3oR3eIpnCEbsgXzGXenarmp/z9AA1TZWitVM
+	bHhMAfzyTgiUHd1xIMEzXtGxZMz1/BNgL7UV1VayCfH4wiNVbsGQOSB/CT/UlOQ1R4FoS+FG5Xq
+	qdXj60uDoLRELkbFzKBnwMiSM=
+X-Google-Smtp-Source: AGHT+IFTRfRedM8Hrqvn//iHW8JZF0D7oHcsYTwMHHSYCjttPyU6Am1/z8FDdTDsPZAay61ZfVic2tlmrAYU86w24no=
+X-Received: by 2002:a05:6e02:1985:b0:3a7:c721:57e2 with SMTP id
+ e9e14a558f8ab-3d040f65d20mr3285835ab.21.1738691406906; Tue, 04 Feb 2025
+ 09:50:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-arm64-handle-arm-attributes-in-linker-script-v2-1-d684097f5554@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAZTomcC/5WNyw6CMBBFf4V07Rj6AB8r/8OwKGWAiVjItBIN4
- d8tJH6Ay3NPcs8iAjJhENdsEYwzBRp9AnXIhOut7xCoSSxUropcKg2Wn6WBpJoBNwAbI1P9ihi
- APAzkH8gQHNMU4awsoiq01NaJdDkxtvTec/cqcU8hjvzZ67Pc1l/I/BeaJUg4GamLunStNpdbk
- h6H48idqNZ1/QLKQtx56QAAAA==
-X-Change-ID: 20250123-arm64-handle-arm-attributes-in-linker-script-82aee25313ac
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, stable@vger.kernel.org, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2567; i=nathan@kernel.org;
- h=from:subject:message-id; bh=rXAK34OphyEItP6/+639hQrb7zlf+ZgtdRAQ99Mc1xA=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDOmLgkVPWnK9OzmvIvdskY3O/JnndpzanxPoV98gZS8Uo
- c038eCCjlIWBjEuBlkxRZbqx6rHDQ3nnGW8cWoSzBxWJpAhDFycAjARhamMDB0LlsU8eMydZMf/
- Jz9cUGOBxqbSa3cXLD0levu1rdbunX8ZGTa3exwvDM59N3HSnji5A3vPGxt9M9++e3fGg5o/iss
- j7dkA
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+References: <2025020304-chip-trench-4e56@gregkh> <87pljyyx68.fsf@ubik.fi.intel.com>
+ <2025020426-spool-refreeze-2870@gregkh> <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com>
+ <2025020408-apron-fled-d29e@gregkh> <6edcf7f8-d496-524e-2250-49284dfb55e4@maine.edu>
+ <2025020447-gyration-wireless-f7da@gregkh>
+In-Reply-To: <2025020447-gyration-wireless-f7da@gregkh>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Feb 2025 09:49:55 -0800
+X-Gm-Features: AWEUYZk3nRfzq951X9O4C_tXcKqwof2dziDIaNme5_Y_gVu_IZvGD-ODLAPYLVs
+Message-ID: <CAP-5=fWT5J0svFsA-jqvE4P=NnTdrsKPF9x6JHkUEDp-vBd_1w@mail.gmail.com>
+Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own location
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephane Eranian <eranian@google.com>, 
+	Vince Weaver <vincent.weaver@maine.edu>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A recent LLVM commit [1] started generating an .ARM.attributes section
-similar to the one that exists for 32-bit, which results in orphan
-section warnings (or errors if CONFIG_WERROR is enabled) from the linker
-because it is not handled in the arm64 linker scripts.
+On Tue, Feb 4, 2025 at 9:12=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Feb 04, 2025 at 11:41:38AM -0500, Vince Weaver wrote:
+> > On Tue, 4 Feb 2025, Greg Kroah-Hartman wrote:
+> >
+> > >
+> > > It seems that the majority of the perf code IS looking in the correct
+> > > place, just mem-events.c seemed wrong.
+> >
+> > I hate to tell you, but other places in userspace are depending on the
+> > current setup.  libpfm4, used by PAPI, is looking directly in /sys/devi=
+ces
+> > for pmus and will break with the changes you are planning.
+>
+> Then that too needs to be fixed, sorry.  Again, devices can, and will,
+> move around in /sys/devices/ you can never hard-code any paths there.
+> Any userspace code must ALWAYS be able to handle that, that's a sysfs
+> requirement.
+>
+> And do you have a link to the source for that code?  Good news is that
+> if the code is fixed in userspace, it will work for any kernel (old or
+> new).
 
-  ld.lld: error: arch/arm64/kernel/vdso/vgettimeofday.o:(.ARM.attributes) is being placed in '.ARM.attributes'
-  ld.lld: error: arch/arm64/kernel/vdso/vgetrandom.o:(.ARM.attributes) is being placed in '.ARM.attributes'
++Stephane Eranian
 
-  ld.lld: error: vmlinux.a(lib/vsprintf.o):(.ARM.attributes) is being placed in '.ARM.attributes'
-  ld.lld: error: vmlinux.a(lib/win_minmax.o):(.ARM.attributes) is being placed in '.ARM.attributes'
-  ld.lld: error: vmlinux.a(lib/xarray.o):(.ARM.attributes) is being placed in '.ARM.attributes'
+I see use of /sys/devices in at least:
+https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/lib/pfmlib_perf_e=
+vent_pmu.c
+I imagine it isn't a big job to clean it up.
 
-Discard the new sections in the necessary linker scripts to resolve the
-warnings, as the kernel and vDSO do not need to retain it, similar to
-the .note.gnu.property section.
-
-Cc: stable@vger.kernel.org
-Fixes: b3e5d80d0c48 ("arm64/build: Warn on orphan section placement")
-Link: https://github.com/llvm/llvm-project/commit/ee99c4d4845db66c4daa2373352133f4b237c942 [1]
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
-Changes in v2:
-- Discard the section instead of adding it to the final artifacts to
-  mirror the .note.gnu.property section handling (Will).
-- Link to v1: https://lore.kernel.org/r/20250124-arm64-handle-arm-attributes-in-linker-script-v1-1-74135b6cf349@kernel.org
----
- arch/arm64/kernel/vdso/vdso.lds.S | 1 +
- arch/arm64/kernel/vmlinux.lds.S   | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/arch/arm64/kernel/vdso/vdso.lds.S b/arch/arm64/kernel/vdso/vdso.lds.S
-index 4ec32e86a8da..8095fef66209 100644
---- a/arch/arm64/kernel/vdso/vdso.lds.S
-+++ b/arch/arm64/kernel/vdso/vdso.lds.S
-@@ -80,6 +80,7 @@ SECTIONS
- 		*(.data .data.* .gnu.linkonce.d.* .sdata*)
- 		*(.bss .sbss .dynbss .dynsbss)
- 		*(.eh_frame .eh_frame_hdr)
-+		*(.ARM.attributes)
- 	}
- }
- 
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index f84c71f04d9e..e73326bd3ff7 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -162,6 +162,7 @@ SECTIONS
- 	/DISCARD/ : {
- 		*(.interp .dynamic)
- 		*(.dynsym .dynstr .hash .gnu.hash)
-+		*(.ARM.attributes)
- 	}
- 
- 	. = KIMAGE_VADDR;
-
----
-base-commit: 1dd3393696efba1598aa7692939bba99d0cffae3
-change-id: 20250123-arm64-handle-arm-attributes-in-linker-script-82aee25313ac
-
-Best regards,
--- 
-Nathan Chancellor <nathan@kernel.org>
-
+Thanks,
+Ian
