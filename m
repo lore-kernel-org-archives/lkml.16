@@ -1,196 +1,167 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A71F214208
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2385211A16;
+	Tue,  4 Feb 2025 15:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738681558; cv=none; b=R1lr9o4WDwFyoamEbTiL0tvXf1DrHg0dxevS5TJTVTwYa+6VuXga7dkpZ4lh9BgOSkku1BOzoSkvSd5tg1EHL88y53xgi1eOvAcY92IufOEdRmfz6Z7DGQi+zRC3q3e2gD9oz5WNEM0rrESKahnJWI35/UD6LDOLg4wmw5zcIu0=
+	t=1738681761; cv=none; b=Dnuwjb/FVhyjCLq+P4H0Hr55bKa98Y1l7VfgKGlTSTM6e1wN9J2yFPusaHSRSTkQ0dV311G6lH5qiatQN+9/BFzFaVsdUoj/Li4adTfvqPQ4dAr3TH7pD6PIKpI1cQSuiecJF1rE9iNLqfU9rGhlIOgpEyx9OZ+7qUJZ76HWjdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738681558; c=relaxed/simple;
-	bh=LgNx0+fDnKASTp8x1zfs0QGMK+VYYrWDjs3xdXfOBUI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=u5tbSnOHw6Fa5a14i4oTUU2AVwelFAbJeq8I71o3PHfPdiJzUPFoqDNe0xLYQ0TyVM8Q9gvFUL1GC1qWXF1gSOnDnUjc6WDydP1ILIqqgntD+uZn2wSeH1ZBdygthjjsE1S2Q30BidDftZWwJSxf73kIHvcdi6esXgQ/X/w9yJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dtyRX4Xx; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738681761; c=relaxed/simple;
+	bh=vJQirPz2zrsaDTidXpRb7uQj3ny0kPR4nSnOhACLsks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=g8ohvlhYicYgB1zIvqyqO/OevPvz11p++dVkjMlFlOwxYpj+UWCjlXK7b1Od4sl3+xT+o2rdn5ghA4k6lGNpi5Vkc/nRm6lcwzbbS5DWHFenLTqGsGu9wGbUQ+D0OdZUY6IvfJcXm1nf/TyafwMg1xJqmydHcKepoIrNDUtqeIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k7ectYCn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dtyRX4Xx"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4364a37a1d7so56913165e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:05:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738681554; x=1739286354; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6uoHeoAH7U5NCxnZILdDHxMpNV/SysSvNvz/L9W1pYA=;
-        b=dtyRX4Xxge6f5sSOb+HteIGU+U5V8heOltFiSNvnVgwRizM25s9c8rc+fxB9rSDCXk
-         IdfW8aQsp4d6tnaF140JG4YeOBYQNKDTkx9N4EhSrTD9WSsXpJuYlh8jw1puoFaedrUW
-         RcNHlqsdmh03CJTPUiINfCbbyo9Y8ms84IE/wICLPJlGgP6ymOjjhcVM7Q/aKT02gSyI
-         /ySerEyCDRIsKb84Fp5LLtmYGrGJHdEzOuNr6jnofMYVGy1/GhpKtlA9Cy1a3aPkO5Wd
-         WbjMBkjReHbOiuwoytHZ5nvq2+ce0FNZgNraNhfSfGB/4iApK1k+g5O9bDqBqpfdypAu
-         rHfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738681554; x=1739286354;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6uoHeoAH7U5NCxnZILdDHxMpNV/SysSvNvz/L9W1pYA=;
-        b=GQIlKsBHzNZiLNyAMaqAHezVfnoScpj465J+yl4ZfyqMoNS/bxyRmbwp5C/oYV23TY
-         Arcaid9TKFmq0SOWAMQukVK1cyvvW5JJesU0Wy20hNqgiXcawH3vgVmqALBwao52VPXB
-         NdP3VGz4OVHO/nAxFKeiBrK+H8Bsgw/fJ6POae8EfkFUtihXFsfdqxbvg6C5/bs64BbH
-         RS/HV4HaDz5m1uGZd2jA0faKKov2tQ4qDbwffd/pJUOGACpRwC8VnAe9oTWxRyys8Axo
-         HHidAb31xTlkpcv9oKhmfo+vwAgZbP5uyldbkLNMck2mlrm+J90GDeyzGfxleafhNLSo
-         cfTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXEpardbkQiaYGC8nY+hwFsBI4UQVHMarG7tXkQlFqm2YmgSYgZ78GXX09WwPIdgH/APjnpILvFHjQ5ezg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyn1+iXOFZzSK8CnHD/BOakhjyukwoRqgGM3+BzUGDjVZwExOIH
-	SHHHH4+y0vOO7tuqTOQ3z2eg7HvT/uyxxrxTexYIbmyPLp5BXMSJDEDASOv9rR4YaCk64r+V29V
-	o14mWdqHJ2vZYtSqqhA2gdada45I4Bkkg2qwQ
-X-Gm-Gg: ASbGncvqxUfnGLOCESguM6pmaJwPr0EhcO865RpWrgZrHqKBvLd5JSoKzH39PMjQzqn
-	OQMhI9luXLK5X93+RQuzplFhmqKJD+nASbGW2ugak4BouLLauPYntuBmn8KuWlzaw43+VCVmo1x
-	pxXqRaHTBIGhC/2BKhU2AMCfufxw==
-X-Google-Smtp-Source: AGHT+IFCNjH/V9P/Lg+ufbLepR71wOHfKTGoMwPDfuParFiZ8STiGxTr/Z3uh2hphaB4DIojQ500u5f0LwM9KxR09+Q=
-X-Received: by 2002:a05:600c:1c1e:b0:432:7c08:d0ff with SMTP id
- 5b1f17b1804b1-438dc40b8e6mr210901225e9.23.1738681553649; Tue, 04 Feb 2025
- 07:05:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k7ectYCn"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514F1cVF027843;
+	Tue, 4 Feb 2025 15:09:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	aiqvT4CSxV+Y1Xj5RpTcxKKoXwgayPPWzfl5g49Tt9E=; b=k7ectYCn12SyS+to
+	6O9krGER7US9pK2IqUxI2bksG753kPMp3ThAiVM7/a4wbkglo6coPH1KY03rx8zH
+	WrwKIKw1h8utq5cCzxYRzp6ai1J7iR9s+y+oFZCcjzit7mzIfFCqIQy2OrJc7xOf
+	zmUHZyaiL9K5Euy8Dg+DeOqSRnU6Dx4RtSm5EihWrsRkWTXc2uzgDCUzMT5sXrvY
+	IQyO2PRBo0fD2iUhSZG/hwlP55Bnb5IKgQJRLZeNtYGR+5Nnz10jWrCYwZBRdZqO
+	DZdhFw5DMbp4pzENSghcvw8pYytl7Il1yyn1opyY0IMSwQ2pj5pAqigIpcH7sHSH
+	MJkz0Q==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44kfaj0xr9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 15:09:07 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 514F97Ke002016
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 4 Feb 2025 15:09:07 GMT
+Received: from [10.216.21.39] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Feb 2025
+ 07:08:59 -0800
+Message-ID: <812c4f61-724c-cee8-b7c9-a799ade0631c@quicinc.com>
+Date: Tue, 4 Feb 2025 20:38:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203-vma-v13-0-2b998268a396@google.com> <20250203-vma-v13-2-2b998268a396@google.com>
- <r5xkc2i3tk4za3xkrrvbeqto4kf5l425ursytc3n6tmcy2gylb@eusudybb5dqa>
- <CAH5fLgj00hRAEBvNc8RR8iBwKQ2okDqmWWQ+kqmNkr9mOjfU0w@mail.gmail.com> <ymjkf2l2otosunrs3e3mmsj2wr3tvrfmgl4aav5dcpm3gtdulh@dzz4njdwkspc>
-In-Reply-To: <ymjkf2l2otosunrs3e3mmsj2wr3tvrfmgl4aav5dcpm3gtdulh@dzz4njdwkspc>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 4 Feb 2025 16:05:41 +0100
-X-Gm-Features: AWEUYZkL94U6cCe6csQSLh-rnC1NVTtoJ_Iv8CKpRx6GMPpdxyIltoAvX5ckcwA
-Message-ID: <CAH5fLggd75BvB6VXPjR=_jxn1u7kOfix2rynvMHU4CeUUDHnVA@mail.gmail.com>
-Subject: Re: [PATCH v13 2/8] mm: rust: add vm_area_struct methods that require
- read access
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	John Hubbard <jhubbard@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	rust-for-linux@vger.kernel.org
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [RFC PATCH v10 1/2] media: iris: introduce helper module to
+ select video driver
+Content-Language: en-US
+To: Johan Hovold <johan@kernel.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>
+CC: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzk@kernel.org>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>, <mchehab@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <p.zabel@pengutronix.de>,
+        <hverkuil@xs4all.nl>, <sebastian.fricke@collabora.com>,
+        <bryan.odonoghue@linaro.org>, <neil.armstrong@linaro.org>,
+        <nicolas@ndufresne.ca>, <u.kleine-koenig@baylibre.com>,
+        <stefan.schmidt@linaro.org>, <lujianhua000@gmail.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <krzysztof.kozlowski@linaro.org>
+References: <20250128080429.3911091-1-quic_dikshita@quicinc.com>
+ <20250128080429.3911091-2-quic_dikshita@quicinc.com>
+ <5070e1f1-914b-4654-88ef-3566e3eee9ca@kernel.org>
+ <f1344e49-61b6-4115-ae88-55b4a3cfed28@quicinc.com>
+ <Z6B822-6UTxQfX46@hovoldconsulting.com>
+ <tqbm672pi223ipcw7btiemlb745weeeiy4gnazzeghozhq2emj@wppbkms6hir5>
+ <Z6HehbKL88LW1lxC@hovoldconsulting.com>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <Z6HehbKL88LW1lxC@hovoldconsulting.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: kvkJmilPxoQGSEHkXYxNWZZmgPnU9-O4
+X-Proofpoint-GUID: kvkJmilPxoQGSEHkXYxNWZZmgPnU9-O4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_07,2025-02-04_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 malwarescore=0 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502040117
 
-On Tue, Feb 4, 2025 at 3:55=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracle=
-.com> wrote:
->
-> * Alice Ryhl <aliceryhl@google.com> [250204 07:45]:
-> > On Mon, Feb 3, 2025 at 4:44=E2=80=AFPM Liam R. Howlett <Liam.Howlett@or=
-acle.com> wrote:
-> > >
-> ...
->
-> > > >
-> > > > +impl<'a> MmapReadGuard<'a> {
-> > > > +    /// Look up a vma at the given address.
-> > > > +    #[inline]
-> > > > +    pub fn vma_lookup(&self, vma_addr: usize) -> Option<&virt::VmA=
-reaRef> {
-> > > > +        // SAFETY: We hold a reference to the mm, so the pointer m=
-ust be valid. Any value is okay
-> > > > +        // for `vma_addr`.
-> > >
-> > > Is this true?  In C we hold a reference to the mm and the vma can sti=
-ll
-> > > go away.  We get safety from the locking on the C side.
-> >
-> > Notice that this function is in the `impl MmapReadGuard` block. This
-> > implies that you *must* hold the mmap read guard to call this
-> > function.
-> >
-> > The safety comment should probably be updated to mention that we hold t=
-he guard.
->
-> Thanks.
->
-> Does it imply you must hold the lock or does it enforce that the lock is
-> held?
 
-Not sure what distinction you're asking about. To obtain a
-MmapReadGuard object, you need to call the `mmap_read_lock` function,
-which locks the mmap lock and returns an MmapReadGuard. When the
-MmapReadGuard object goes out of scope, its destructor runs which
-unlocks the lock. You can only call this method given a reference to a
-MmapReadGuard, so you can only call it after calling mmap_read_lock
-and before its destructor runs.
+On 2/4/2025 3:01 PM, Johan Hovold wrote:
+> On Mon, Feb 03, 2025 at 05:16:50PM +0200, Dmitry Baryshkov wrote:
+>> On Mon, Feb 03, 2025 at 09:22:51AM +0100, Johan Hovold wrote:
+>>> On Fri, Jan 31, 2025 at 10:44:28AM -0800, Abhinav Kumar wrote:
+> 
+>>>> Solution: If the user prefers iris driver and iris driver has not probed 
+>>>> yet, and if venus tries to probe ahead of iris we keep -EDEFERing till 
+>>>> iris probes and succeeds. Vice-versa when the preference is venus as well.
+>>>
+>>> This sounds wrong too.
+>>>
+>>> Look, first you guys need to explain *why* you want to have two drivers
+>>> for the same hardware (not just to me, in the commit message and cover
+>>> letter).
+>>>
+>>> That's something that really should never be the case and would need to
+>>> be motivated properly.
+>>
+>> I think it has been written several time (not sure about this commit):
+>> to provide a way for a migration path _while_ people are working on Iris
+>> features. Being able to A/B test Venus and Iris drivers and to report
+>> possible regressions or lack of those on the common platforms supported
+>> by those (sm8250 at this moment).
+> 
+> You don't need a module parameter for that.
+> 
+> And we're still waiting to hear the answers to all of Hans' questions. I
+> still haven't seen anyone explaining why any of this is needed. You
+> could have just continued letting Venus support 8250 so presumably there
+> is some benefit in using Iris instead. Which? And is that potential
+> benefit important enough to not just wait until Iris is up to par
+> feature wise?
+They are documented in this RFC [1] as comments, and would be added in v10 as we
+conclude the ongoing discussion to handle 2 drivers during the transition phase.
 
-> > > > +        let vma =3D unsafe { bindings::vma_lookup(self.mm.as_raw()=
-, vma_addr) };
-> > > > +
-> > > > +        if vma.is_null() {
-> > > > +            None
-> > > > +        } else {
-> > > > +            // SAFETY: We just checked that a vma was found, so th=
-e pointer is valid. Furthermore,
-> > > > +            // the returned area will borrow from this read lock g=
-uard, so it can only be used
-> > > > +            // while the mmap read lock is still held.
-> > >
-> > > So We have complicated the locking of the vmas with rcu and per-vma
-> > > locking recently.  We are now able to look up and use a vma under the
-> > > rcu read lock.  Does this translate to rust model?
-> > >
-> > > I believe this is true in recent version of binder as well?
-> >
-> > Yes. The safety requirements of VmAreaRef is that you must hold the
-> > mmap read lock *or* the vma read lock while you have a VmAreaRef
-> > reference. This particular method achieves that requirement by holding
-> > the mmap read lock. But there is also a Rust lock_vma_under_rcu(), see
-> > patch 4 for that.
->
-> Right, okay.  Thanks.  You can get the reference by only holding the rcu
-> read lock, but you should hold the vma lock to ensure that the vma
-> itself (and not just the pointer) is safe to use.
+[1]
+https://patchwork.kernel.org/project/linux-media/patch/20250128080429.3911091-2-quic_dikshita@quicinc.com/
 
-Hmm... To modify the vma, you must hold the mmap *and* vma write lock,
-so holding the mmap read lock prevents mutations? Is the mmap read
-lock not enough to read from the vma?
-
-> > > > +        // SAFETY: The caller ensures that the invariants are sati=
-sfied for the duration of 'a.
-> > > > +        unsafe { &*vma.cast() }
-> > > > +    }
-> > > > +
-> > > > +    /// Returns a raw pointer to this area.
-> > > > +    #[inline]
-> > > > +    pub fn as_ptr(&self) -> *mut bindings::vm_area_struct {
-> > > > +        self.vma.get()
-> > > > +    }
-> > > > +
-> > > > +    /// Access the underlying `mm_struct`.
-> > > > +    #[inline]
-> > > > +    pub fn mm(&self) -> &MmWithUser {
-> > > > +        // SAFETY: By the type invariants, this `vm_area_struct` i=
-s valid and we hold the mmap/vma
-> > > > +        // read lock or stronger. This implies that the underlying=
- mm has a non-zero value of
-> > > > +        // `mm_users`.
-> > >
-> > > Again, I'm not sure this statement still holds as it once did?
-> >
-> > If it's possible to hold the mmap/vma read lock for a vma that is part
-> > of an mm whose mm_users count has dropped to zero, then it is
-> > incorrect for us to have this method.
->
-> The non-zero statement is fine.  After re-reading it, I think this is
-> accurate.
-
-Okay, thanks!
-
-> Thanks for taking the time to explain things.
-
-Of course!
-
-Alice
+Regards,
+Vikash
+> 
+> I'm sure you have some answers, but you need to provide them as part of
+> the series.
+> 
+>>> Second, if the reasons for keeping both drivers are deemed justifiable,
+>>> you need to come up with mechanism for only binding one of them.
+>>>
+>>> I already told you that module parameters is not the way to go here (and
+>>> the msm drm driver's abuse of module parameters is not a good precedent
+>>> here).
+>>>
+>>> If this is a transitional thing (which it must be), then just add a
+>>> Kconfig symbol to determine which driver should probe. That's good
+>>> enough for evaluating whatever needs to be evaluated, and doesn't
+>>> depend on adding anti-patterns like module parameters (and helper
+>>> modules for them).
+>>
+>> No, Kconfig complicates A/B testing. What you usually want to do is to
+>> boot a kernel, then go over a bunch of files testing that they work with
+>> both drivers. Kconfig implies booting abother kernel, etc.
+> 
+> No, I'm pretty sure you'd even want to reboot in between so as not to
+> rely on state left behind by the other driver.
+> 
+> Unbinding and rebinding drivers is not part of any normal work flow
+> expect possibly during development. And a developer can easily compare
+> Venus and Iris for 8250 without a module parameter too.
+> 
+> Johan
