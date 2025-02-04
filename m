@@ -1,78 +1,89 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CF2206F02;
-	Tue,  4 Feb 2025 09:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C323207A14;
+	Tue,  4 Feb 2025 09:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660814; cv=none; b=n4L2JUOlV8q/JqrgKOgt/nJIU8Bq5eiMAOVgvSQ+1wavyQ0zPvziDlsCpll9S7IhM3uQU7DfRa6HvZ1tjefLtm02T6vj9MfRV7gNcunUFSyTbkC5XpYd/I1xQ2jkV5NtZ5lH/1H/2CrMe1C2I8AUFhle6i/9K6KhS83KvhZuazs=
+	t=1738660828; cv=none; b=iIHsPe618EmQABQCr66bJP8TNuNeJT65VBA3V4aEBGNcyPlQcZOFqTPjlgkIN36+zVGnYVT4c3Hw8W+GNvJ2gEwhl5fV41+GqmBEthnApXy53LZlfF5t0ecotTLsu4uC+QPKhydbYxolgJdeUAVaEoISs5+gEY1ZOV1oQFBXx20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660814; c=relaxed/simple;
-	bh=BFGsbaTSvbMUMC4bFEn2tx2w2G4O/Nh9tSKKhTzYN7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V/dJhF7TlLoLvPXOUjXlbWHmmiINuuMsDUonZdexqr3vTEV8R1nrwz5lMqdkt28b6T8unt6fmUROSTKscHsTQEbB6uX0V1JQ0C0tEZhyeHLOwKfiX+Ck3SeWdrkND/P78dzXlPSq0myfrJannkYuMJlC2pvYR7wsYn2W+ExX6SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 1D38F100FBF8B;
-	Tue,  4 Feb 2025 10:14:11 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id E2D10495661; Tue,  4 Feb 2025 10:14:10 +0100 (CET)
-Date: Tue, 4 Feb 2025 10:14:10 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Feng Tang <feng.tang@linux.alibaba.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonthan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: Disable PCIE hotplug interrupts early when msi
- is disabled
-Message-ID: <Z6HaYkIKLXji_EO7@wunner.de>
-References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
- <20250204053758.6025-2-feng.tang@linux.alibaba.com>
+	s=arc-20240116; t=1738660828; c=relaxed/simple;
+	bh=rauOalsmd53sQxTxWW+uFzWBgqNaCYhWVzouMA54tTg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PTs3GNmmTDKxZkSlQYy4JJUXk/2bQ2K8QVk4MIySdmYyykcPso7UrH1yYTBgk68sq+OyGq+6bauTEN+tmH2k2AZsl1Llv936tEuScuviGG3zKPKr9J6+qL5Lgdk+grTb6foHXKzKdqNgT0ArgRQMfF8ACQRy5E6R+xCXf/jsfaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lJ41Dndb; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lJ41Dndb"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DF3AD42CCD;
+	Tue,  4 Feb 2025 09:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738660819;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rauOalsmd53sQxTxWW+uFzWBgqNaCYhWVzouMA54tTg=;
+	b=lJ41DndbhSwaKVTS9QcQq8lKiruEm45BV3yrs1ZR0Y8qpvjzNkhgbENBF2P6XUUkkW/4Yl
+	maveDONaBpvr4ypfy7kXlHClI+PaLdSNM0l9JmzGwRi3AWiUV0wx/3WYUMI9j/NUdhyFo0
+	LuFxREbXDl8OwRqQ7hhJxA6QmaUL2qD6DzCV21eYDb4qWFEU0BwPPKpUZ1FXD1vu3cAB5C
+	CRPDqWXhrRXauyMPNBAZ1L5JeK3w1iF7IJlt76ZpRxQIxw0O/SeB9FoBn8VgjUe+nAhbgT
+	7OfGPfHBusjszCYT60w2yb0UqQQU5IDbge2GZFKeYi8heAXMok9axBXUK7GjfA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: "Rabara, Niravkumar L" <niravkumar.l.rabara@intel.com>
+Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  "linux@treblig.org" <linux@treblig.org>,  Shen Lichuan
+ <shenlichuan@vivo.com>,  Jinjie Ruan <ruanjinjie@huawei.com>,
+  "u.kleine-koenig@baylibre.com" <u.kleine-koenig@baylibre.com>,
+  "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+  "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] mtd: rawnand: cadence: support deferred prob
+ when DMA is not ready
+In-Reply-To: <BL3PR11MB6532451B44E7C5D82F5EC4AFA2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
+	(Niravkumar L. Rabara's message of "Tue, 4 Feb 2025 07:48:57 +0000")
+References: <20250116032154.3976447-1-niravkumar.l.rabara@intel.com>
+	<20250116032154.3976447-2-niravkumar.l.rabara@intel.com>
+	<87plkgpk8k.fsf@bootlin.com>
+	<BL3PR11MB653276DFD3339ADAADC70CCFA2EE2@BL3PR11MB6532.namprd11.prod.outlook.com>
+	<874j1i0wfq.fsf@bootlin.com>
+	<BL3PR11MB65321B556C59C995DC05C70AA2E92@BL3PR11MB6532.namprd11.prod.outlook.com>
+	<87msf8z5uu.fsf@bootlin.com>
+	<BL3PR11MB6532451B44E7C5D82F5EC4AFA2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 04 Feb 2025 10:20:17 +0100
+Message-ID: <87o6zi83se.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204053758.6025-2-feng.tang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddufecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepteehkeelvddvheehtdefkedtjeeutedthfegudekgeefleetkeettdekiefftdeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepnhhirhgrvhhkuhhmrghrrdhlrdhrrggsrghrrgesihhnthgvlhdrtghomhdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhinhhugiesthhrvggslhhighdrohhrghdprhgtphhtthhopehshhgvnhhlihgthhhurghnsehvihhvo
+ hdrtghomhdprhgtphhtthhopehruhgrnhhjihhnjhhivgeshhhurgifvghirdgtohhmpdhrtghpthhtohepuhdrkhhlvghinhgvqdhkohgvnhhighessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Tue, Feb 04, 2025 at 01:37:58PM +0800, Feng Tang wrote:
-> There was a irq storm bug when testing "pci=nomsi" case, and the root
-> cause is: 'nomsi' will disable MSI and let devices and root ports use
-> legacy INTX inerrupt, and likely make several devices/ports share one
-> interrupt. In the failure case, BIOS doesn't disable the PCIE hotplug
-> interrupts, and  actually asserts the command-complete interrupt.
-> As MSI is disabled, ACPI initialization code will not enumerate root
-> port's PCIE hotplug capability, and pciehp service driver wont' be
-> enabled for the root port to handle that interrupt, later on when it is
-> shared and enabled by other device driver like NVME or NIC, the "nobody
-> care irq storm" happens.
-> 
-> So disable the pcie hotplug CCIE/HPIE interrupt in early boot phase when
-> MSI is not enbaled.
+Hello,
 
-So I think this issue should go away if disabling the interrupt
-by portdrv is no longer conditional on
+> My apologies for the confusion.
+> Slave DMA terminology used in cadence nand controller bindings and
+> driver is indeed confusing.=20=20
+>
+> To answer your question it is,=20
+> 1 - External DMA (Generic DMA controller).
+>
+> Nand controller IP do not have embedded DMA controller (2 - peripheral DM=
+A).=20
+>
+> FYR, how external DMA is used.=20
+> https://elixir.bootlin.com/linux/v6.13.1/source/drivers/mtd/nand/raw/cade=
+nce-nand-controller.c#L1962
 
-  (pcie_ports_native || host->native_pcie_hotplug)
+In this case we should have a dmas property (and perhaps dma-names), no?
 
-like I've just proposed here:
-
-  https://lore.kernel.org/r/Z6HYuBDP6uvE1Sf4@wunner.de/
-
-... in which case this patch won't be necessary.  Can you confirm that?
-
-You can split the change I've proposed into two patches if you like.
-
-Thanks,
-
-Lukas
+Miqu=C3=A8l
