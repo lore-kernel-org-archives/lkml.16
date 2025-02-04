@@ -1,156 +1,135 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935022139BF
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BB5213E6D;
+	Tue,  4 Feb 2025 14:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738680298; cv=none; b=OOOEOy/XO421LB3l/sJT52rItdL+hAWqSH3CtEgq7mz+Yh+gsIoUoXNWrIwxYWtBzl2X4N5DRdSwXfLV7yXButKZ7B1UHMzTRQ2Q/lIEoRooPLHjfT9IK2PSf2i/OjtH9Nve/nJTastWWDbD9VPHhnjPgwsJirigq0qECPFqbig=
+	t=1738680303; cv=none; b=WwvYA9iY/a/MFPqAhkhyB8w8r0iP9THAxUNqz95ZIGT19nXedfnjzo/AxfVADGXJBrzQFSswoMZsPGYB+xJAi76iMWzSNpBhfMuUgx85BIiZnuOpqybL/6xwj1ocIDEyDf4HedppLk7cCcuZ3qUWBaHGp1rP9rX8xtBJ0CMQZu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738680298; c=relaxed/simple;
-	bh=9teYJwqqzM5RFJ+8dP6uj/h5FosolVaZCmXIUOJI1Bo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cgRy3TETAqPB3refBwjSHKSL1LpPGVogjLfGTSxH+Br2ywi59TwqRSG79hQ5nbX65BMQMZAevVaHkISW1wGgQwdU6o0X1Zo/fitPMbzPIymUeutq0Y4GFpprwrolY61WR7uzWm7f8tlf0SL0ipvlzcVrQr5Uw+Tzftvs0diqMcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=t7eY0/8b; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="t7eY0/8b"
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 995063F84C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738680293;
-	bh=zxOwQXHcqsZg1DYdwRGnMofNXrezdocUt5b4vJLNAf0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=t7eY0/8bvTmqDpKFScHTzNpLCK9bTeneM/WKN+2lPmpKZXYwB/tBPoUsRYbLExqRB
-	 XoOeyJ5H/BM9tNL+xDgQ3X+xPjvDs6QzzJ8tWRkGsHuCqnJfUwSnwnScvPRezHaeg+
-	 fzc1XxiKTVZzIapTpgTo0w0DbTsH4AZigFa7zD0i9/Hz3GE6o25YFEv06Bsvry/GC5
-	 G6j+GPa5F/GCpDopJ0lYA9gS2UUBlGLgHA4/mQdT4YHvTOQpul3+nOwFpJIv2GDJjl
-	 o7GM0AcAfzRBuCgKjv2N0orG4C9LAKI4xiBnM1aoLzXayBmT3bj33fpOK9W8sdl0wh
-	 iUqPfLcGOSvRA==
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-216311faa51so105109825ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 06:44:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738680292; x=1739285092;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zxOwQXHcqsZg1DYdwRGnMofNXrezdocUt5b4vJLNAf0=;
-        b=E4KwYKCgJoCrZV/xZSnj/O6RayjunABfMm3kaDav1fUHdnz7X58P/4LpNXWiag+wu0
-         R9ZHhxOJE4rFiMfYXnwrnkoF9Em0aua+IT6eVe6KGzSXROIubbhGW8cDE25VS+xGlsMT
-         ePJ0VixlLoh6AREKQMx3rnplbWuKmT9A+f9ZhB+/jGLjDJLs88kio2Aemp6HrfxEWRi8
-         Ua+TFsJhfTu9XtxjwQz9Q6RdgLTTV/DzHc0/m3CmQBDxqpfRxOuxx/w/N1nV+DzLy/vW
-         rHxtmiyDlRv/BqfIo0CTEC46YWRGh/RfJGzAK1CekBgUSllp63mnTzg/Qh15cbHXtTkF
-         pjSw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5ZUDPbKfOsPS73h8qL6YjkqYVF3b4b75he1IlHlg3IfsO75cLSxg1BOPYQj7RVrH6+jqNwjPBCKgrUs4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP5yqeGG1jqDyr84mgGcYLFMalddsfZ0OBtSPFr9JV8Dlht2f1
-	wi75T0w/HgO1j8puymHaWVf09IScids957n0rMG2GrJCEkyCI0TFuKTzamXnWd5lerfGLYy9QKR
-	/WmP5/dkVLVPwB1IED6SVhCMlx1dneLBb9tE0jYaRdV2aKXsxtPb/QtcFxNP4/ZBrY+ZMjZnkaG
-	ohLA==
-X-Gm-Gg: ASbGncsbEhF5s+B1EQWzlr3KtaqzDxjizKrd2cLnReH16aPlYRzAns+59pkJftBY+st
-	yY5k9loLauRNfJ7li3p8Hr0djj3QQLxgo1pEWJ+wWm0JnfpwT8Ez5rcsEnCIFE9JagLOYN7MTMm
-	FPGTXQSR95I2blm8us7wNjhhVPRdNcWX4Is5TYlaBowv47aAOL59mylVnK8ob4HY7RmAbUXs+j+
-	i6WbNxSDsWYjKtD3GDGUy7PHNhH5Ydb19O6kOU3aLK4VXf3r6kBs0siYlEx2RfE7mJ7dEib8DDk
-	CKNurlo=
-X-Received: by 2002:a17:902:da84:b0:216:2aec:2d54 with SMTP id d9443c01a7336-21f01c3d2b7mr48082605ad.8.1738680291404;
-        Tue, 04 Feb 2025 06:44:51 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEZHYpYZXJFrqgUlIWj+UgazrfCD8t7GMWpQI06MDxwE31jOCPjjfMtRmeJX0yv+O42j2I+eg==
-X-Received: by 2002:a17:902:da84:b0:216:2aec:2d54 with SMTP id d9443c01a7336-21f01c3d2b7mr48082305ad.8.1738680291046;
-        Tue, 04 Feb 2025 06:44:51 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:45f0:d4ba:baba:a275])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de33000ebsm97243265ad.159.2025.02.04.06.44.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 06:44:50 -0800 (PST)
-Date: Tue, 4 Feb 2025 23:44:49 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/10] gpio: aggregator: add read-only 'dev_name'
- configfs attribute
-Message-ID: <rejcrhomapkfyho55bedlfo5cqqly2opzkkym44mqqpsofzjmc@pylnreerkpcc>
-References: <20250203031213.399914-1-koichiro.den@canonical.com>
- <20250203031213.399914-4-koichiro.den@canonical.com>
- <CAMRc=McftUKH_DNvsJPjBP1MMSo94CCXxT+ffoR5F_H=OegBvg@mail.gmail.com>
+	s=arc-20240116; t=1738680303; c=relaxed/simple;
+	bh=Al09zTPmds8XPTTGdnYx2Vrxx4rrbmGm90vzgpxyLzg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ae8oEdo++9yhb8ixpn66zFDEhNrOK00Z6XyYO723ywXsge4fFD+xy9KYs+wrL9VyhjBaMiEPaTB5n16GDRdTyPcfj7ciQ/KMGMHAYxXHCDPgsIOgh5zFzYaB5xxzEzQbP20Rz0sLZvZE0Gs64HJjjkZsrrPTyKQGhqxsf9Eyggg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YnR2Z2DCnz6J9yR;
+	Tue,  4 Feb 2025 22:44:06 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1EECF140B55;
+	Tue,  4 Feb 2025 22:44:59 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Feb
+ 2025 15:44:58 +0100
+Date: Tue, 4 Feb 2025 14:44:57 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+CC: <prabhakar.mahadev-lad.rj@bp.renesas.com>, <jic23@kernel.org>,
+	<lars@metafoo.de>, <ulf.hansson@linaro.org>, <linux-iio@vger.kernel.org>,
+	<linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Claudiu
+ Beznea" <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v2 1/2] iio: adc: rzg2l_adc: Drop
+ devm_pm_runtime_enable()
+Message-ID: <20250204144457.00000248@huawei.com>
+In-Reply-To: <427572c8-72b7-41fa-b065-fcb398a30779@tuxon.dev>
+References: <20250117114540.289248-1-claudiu.beznea.uj@bp.renesas.com>
+	<20250117114540.289248-2-claudiu.beznea.uj@bp.renesas.com>
+	<427572c8-72b7-41fa-b065-fcb398a30779@tuxon.dev>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McftUKH_DNvsJPjBP1MMSo94CCXxT+ffoR5F_H=OegBvg@mail.gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, Feb 04, 2025 at 01:49:22PM GMT, Bartosz Golaszewski wrote:
-> On Mon, Feb 3, 2025 at 4:12 AM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> > Add a read-only 'dev_name' attribute to configfs interface, which
-> > exposes the platform bus device name. Users can easily identify which
-> > gpiochip<N> has been created as follows:
-> >
-> > $ cat /sys/kernel/config/gpio-aggregator/<aggregator-name>/dev_name
-> >   gpio-aggregator.0
-> > $ ls -d /sys/devices/platform/gpio-aggregator.0/gpiochip*
-> >   gpiochip3
-> >
-> > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> > ---
-> >  drivers/gpio/gpio-aggregator.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >
-> > diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-> > index c63cf3067ce7..76d3a8677308 100644
-> > --- a/drivers/gpio/gpio-aggregator.c
-> > +++ b/drivers/gpio/gpio-aggregator.c
-> > @@ -732,6 +732,23 @@ static struct configfs_attribute *gpio_aggr_line_attrs[] = {
-> >         NULL
-> >  };
-> >
-> > +static ssize_t
-> > +gpio_aggr_device_dev_name_show(struct config_item *item, char *page)
-> > +{
-> > +       struct gpio_aggregator *aggr = to_gpio_aggregator(item);
-> > +       struct platform_device *pdev;
-> > +
-> > +       guard(mutex)(&aggr->lock);
-> > +
-> > +       pdev = aggr->pdev;
-> > +       if (pdev)
-> > +               return sprintf(page, "%s\n", dev_name(&pdev->dev));
-> > +
-> > +       return sprintf(page, "%s.%d\n", DRV_NAME, aggr->id);
-> > +}
-> > +
-> > +CONFIGFS_ATTR_RO(gpio_aggr_device_, dev_name);
-> > +
-> >  static ssize_t
-> >  gpio_aggr_device_live_show(struct config_item *item, char *page)
-> >  {
-> > @@ -781,6 +798,7 @@ gpio_aggr_device_live_store(struct config_item *item, const char *page,
-> >  CONFIGFS_ATTR(gpio_aggr_device_, live);
-> >
-> >  static struct configfs_attribute *gpio_aggr_device_attrs[] = {
-> > +       &gpio_aggr_device_attr_dev_name,
-> >         &gpio_aggr_device_attr_live,
-> >         NULL
-> >  };
-> > --
-> > 2.45.2
-> >
+On Tue, 4 Feb 2025 14:25:38 +0200
+Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+
+> Hi, Jonathan,
 > 
-> I don't understand why this isn't part of the previous patch?
-
-I just separated it to keep the previous one minimal as possible :)
-Ok, I'll squash it.
-
-Koichiro
-
+> On 17.01.2025 13:45, Claudiu wrote:
+> > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > 
+> > On all systems where the rzg2l_adc driver is used, the ADC clocks are part
+> > of a PM domain. The code that implements the PM domains support is in
+> > drivers/clk/renesas/rzg2l-cpg.c, the functions of interest for this commit
+> > being rzg2l_cpg_attach_dev() and rzg2l_cpg_deattach_dev(). The PM
+> > domains support is registered with GENPD_FLAG_PM_CLK which, according to
+> > the documentation, instructs genpd to use the PM clk framework while
+> > powering on/off attached devices.
+> > 
+> > During probe, the ADC device is attached to the PM domain
+> > controlling the ADC clocks. Similarly, during removal, the ADC device is
+> > detached from the PM domain.
+> > 
+> > The detachment call stack is as follows:
+> > 
+> > device_driver_detach() ->
+> >   device_release_driver_internal() ->
+> >     __device_release_driver() ->
+> >       device_remove() ->
+> >         platform_remove() ->
+> >           dev_pm_domain_detach()
+> > 
+> > During driver unbind, after the ADC device is detached from its PM domain,
+> > the device_unbind_cleanup() function is called, which subsequently invokes
+> > devres_release_all(). This function handles devres resource cleanup.
+> > 
+> > If runtime PM is enabled via devm_pm_runtime_enable(), the cleanup process
+> > triggers the action or reset function for disabling runtime PM. This
+> > function is pm_runtime_disable_action(), which leads to the following call
+> > stack of interest when called:
+> > 
+> > pm_runtime_disable_action() ->
+> >   pm_runtime_dont_use_autosuspend() ->
+> >     __pm_runtime_use_autosuspend() ->
+> >       update_autosuspend() ->
+> >         rpm_idle()
+> > 
+> > The rpm_idle() function attempts to runtime resume the ADC device. However,
+> > at the point it is called, the ADC device is no longer part of the PM
+> > domain (which manages the ADC clocks). Since the rzg2l_adc runtime PM
+> > APIs directly modifies hardware registers, the
+> > rzg2l_adc_pm_runtime_resume() function is invoked without the ADC clocks
+> > being enabled. This is because the PM domain no longer resumes along with
+> > the ADC device. As a result, this leads to system aborts.
+> > 
+> > Drop the devres API for runtime PM enable along with the other devres APIs
+> > after it (devm_request_irq(), devm_register_iio_device()).
+> > 
+> > Fixes: 89ee8174e8c8 ("iio: adc: rzg2l_adc: Simplify the runtime PM code")
+> > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > ---  
 > 
-> Bart
+> As of my understanding, currently there is is no conclusion from the
+> discussion at [1]. If it's not too early in the discussion, can you please
+> let me know how would you prefer to go forward for fixing this driver?
+> 
+
+Quickest might be to propose a patch similar to the one for i2c that thread
+references. Post that as an RFC and see if Greg KH or anyone else shoots it
+down? Also verify it fixes what you see here of course!
+
+It was on my list to do, but quite a few other things on that list so
+if you have time that would be great.
+
+Thanks,
+
+Jonathan
+
+> Thank you,
+> Claudiu
+> 
+> [1]
+> https://lore.kernel.org/all/20250103140042.1619703-2-claudiu.beznea.uj@bp.renesas.com/
+> 
+
