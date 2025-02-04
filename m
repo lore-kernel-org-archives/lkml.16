@@ -1,75 +1,46 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3EB78F33
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 11:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD39820C000;
+	Tue,  4 Feb 2025 11:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738667748; cv=none; b=UyD0ivDeUN40Ltvrcr//OZMbi5dhyWC6WYAzuEjKxaZ9dBXz8XKQehlnje8mNxMtWrq8BJJjvs26btivTVUe37yPPJ6R3qURVO2SQPknP7XF4FiAyVwKUd0yToiiraYTZIrRF00fZOXa0v2wqPsEym9V35nLvC6OPKgcyQi+8AQ=
+	t=1738667749; cv=none; b=SAUGWU1RKixXWqxaE+yMFbCGUzijbDXcYUjg6bKhRG4cm4gTF4qiXmRZyDNd59DxbuuhauHiYm964Al8z0sP6h/XH7SgZZZeZO+hOHsHXnF2S9ccmekf2mnZsU3fy5EHcqbJDD+XWH9jr1f6ZYO/ICPfGcGJqf0pLzLWcLP3ZQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738667748; c=relaxed/simple;
-	bh=f/dJVHZaoNM4Tcl0bBtr9zQW1v91cU0Px9ZAW/4Q6OY=;
+	s=arc-20240116; t=1738667749; c=relaxed/simple;
+	bh=foF5/Wox8o8Vj4aKouN9RTcWHNUEL2b3SgpKataU7sI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XkLDhsTltno0FM4wRGMyM1Xh1vaNmZW81YODkzGZcyAC6nRil+7j7KT/bZ7bUVUfPvrHcoxX22DNRrBZtKgBaL5XePGbyZXqmXGMPbO5C0h97Rim733mOPRBjJ+mq/qJetUDtwfMRjJLbbpN1ZKz73jzhGM9zaEC9r4hdZ0HIIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=OfNMwVSw; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=J/WBJDMeunylNXTGnVii+/uHo4Ejkeu9cRbBcxXM5P0tkbqZiaiVV3jZZ/XMtLir31GIzJcJE7PhvahAKSokJcJDcQVevPc2DesRww9lCMCYuRjSSVpfDZKh1bwauzQD2mSGhHx3K9KQUf7il2KL3ynYf+RmYHTFatjkB9S3zwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uooEPmfC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="OfNMwVSw"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436345cc17bso40326445e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 03:15:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1738667745; x=1739272545; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s2SfD4Gn61MFQawkBcj2q/218D2jiOKMHITzYwMlqEs=;
-        b=OfNMwVSw+CiVwb+PLwJgGY4lqzhPwLOSGVpEoEM34ZyWNoe0ovexrDbneC7WHI8rZ6
-         s6/0d+Qyd3m1A70sISDvTTwkU7+qErcg3b2PmfI7u3u//ZKhNTxLhOlXpTGlyk01IsWB
-         2eMNfJhF5JozKGqgN/nSBtSbiMiRaUItIk+7g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738667745; x=1739272545;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s2SfD4Gn61MFQawkBcj2q/218D2jiOKMHITzYwMlqEs=;
-        b=CyjBuVyfVBJH8Yj5xRoosP7UOhpBNfkexaI3MhynC79XItk18zFxo8375+/ZeNDEQn
-         gzlnufPJW1vkjvo7aVTsAYaOj7J1kmX0ugkKCsdB+g+8ID+N5A/uNOljDErM0/i54TAG
-         Ut8+6fuiQdxH201DrncJgJnwMAv0TCGU+F60i8yZ58tzmYAn5DwqNYxIJJvSBc0/cMoJ
-         3yWQxxLz38hy/Q22ulXS4tmOyKaNjUcqagI6Lpk6oQw42n1OeasLIFap02Es+x4G+ykB
-         4JvCAS4s12RmNnb3emWHwxgUm6HKnS5TDw1svMxni0wCMQ7NgrKrp7sxqLgi0e/7mXIw
-         Os/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVG7G4uJVRqWPZvloOBUyXIe3C/+SJEtsvPctazu313gxDpNpS9fG1ZjK70qHbWdioTDYtOqcBWgyl/BEM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvu2Kgqa7S/3xmdAPaHBL8g1pDSEZEPZic71UoY0WcVty4xWDb
-	V5TrhbdfKHDif2zBSjufSFFTDpGsgeQTNJNvqySHgwproh/OAED5vhbGSK6a5js=
-X-Gm-Gg: ASbGncuS+hABHVZB+mhfATfc/uYZjmtAVWAEoIn5z4mcvMeZlbEI5WJijS//JiH33No
-	+aIzRyatugFm9diRK9rk/wQZ69IZl43qLIUWiWMw++HBWZq4YancTfWpZNuUseXwD6X8kjjrgl4
-	TZHrNwvbv228WZK2n0UNyAA/XzBvLUg5t2nIHJ13C2nJJDiWan5hpSHoXnFemDYTRvIqQj4A1xO
-	5ZIbra0HXu73E8aGVwAtU/fkQZvBvlGOizv0XFsDo5a54i5qT+8hgU8AkFatinFLvQ4zNwIAu58
-	JTB0FXGVuYa3sYgav35COt3rNtw=
-X-Google-Smtp-Source: AGHT+IEhi3bvOg4+34PKysGfB6hzTPcUQgampsEPyThrWoRpNZx+SHoGK/R2iUfFL+AtOAeSuipPlA==
-X-Received: by 2002:a5d:5f82:0:b0:385:f060:b7fc with SMTP id ffacd0b85a97d-38c51960052mr23268766f8f.25.1738667744860;
-        Tue, 04 Feb 2025 03:15:44 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e245efbcsm183097995e9.33.2025.02.04.03.15.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 03:15:44 -0800 (PST)
-Date: Tue, 4 Feb 2025 12:15:42 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] drm/tests: hdmi: Remove redundant assignments
-Message-ID: <Z6H23pkOfcQb8-PP@phenom.ffwll.local>
-Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250129-test-kunit-v2-0-fe59c43805d5@kernel.org>
- <20250129-test-kunit-v2-2-fe59c43805d5@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uooEPmfC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B788EC4CEE4;
+	Tue,  4 Feb 2025 11:15:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738667748;
+	bh=foF5/Wox8o8Vj4aKouN9RTcWHNUEL2b3SgpKataU7sI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uooEPmfCusttpDyHJEg608Hc5ugHIrXaIDxVUjoPRVpMfCZwHQZg339udcElSMLlX
+	 Q8HF2g/2mu58RtwnjcNIE53uY3EoVZD9sd1nZqivO5Isy8eod9dt+g094xdFdkG32p
+	 VdPuV8Gaa8LDFoKyU/ox88Fi7WfN1LUXRGsqax8ly9IbZERod6b1zRFdD2qTdHrbGq
+	 wU54ldJbRNbH3n0ZsGuAiEypZmgYImqsT9HEYCe2qq5GzRB6URqb2QPkS4AV4JwfAS
+	 M0pR0fJ2wCpijucganac21/HHPirlT9cya3URl1yXsbwlm3eZi9tXKm+zevPEMfUTr
+	 JBBfOGAzrNBqw==
+Date: Tue, 4 Feb 2025 16:36:14 +0530
+From: Naveen N Rao <naveen@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, 
+	Vasant Hegde <vasant.hegde@amd.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 3/3] KVM: x86: Decouple APICv activation state from
+ apicv_inhibit_reasons
+Message-ID: <uroh6wvlhfj4whlf2ull4iob6k7nr4igeplcfvax7nksav6mtf@ek5ja23dkjtn>
+References: <cover.1738595289.git.naveen@kernel.org>
+ <405a98c2f21b9fe73eddbc35c80b60d6523db70c.1738595289.git.naveen@kernel.org>
+ <Z6EOxxZA9XLdXvrA@google.com>
+ <60cef3e4-8e94-4cf1-92ae-34089e78a82d@redhat.com>
+ <Z6FVaLOsPqmAPNWu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,79 +49,176 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250129-test-kunit-v2-2-fe59c43805d5@kernel.org>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+In-Reply-To: <Z6FVaLOsPqmAPNWu@google.com>
 
-On Wed, Jan 29, 2025 at 03:21:54PM +0100, Maxime Ripard wrote:
-> Some tests have the drm pointer assigned multiple times to the same
-> value. Drop the redundant assignments.
+On Mon, Feb 03, 2025 at 03:46:48PM -0800, Sean Christopherson wrote:
+> On Mon, Feb 03, 2025, Paolo Bonzini wrote:
+> > On 2/3/25 19:45, Sean Christopherson wrote:
+> > > Unless there's a very, very good reason to support a use case that generates
+> > > ExtInts during boot, but _only_ during boot, and otherwise doesn't have any APICv
+> > > ihibits, I'm leaning towards making SVM's IRQ window inhibit sticky, i.e. never
+> > > clear it.
+> > 
+> > BIOS tends to use PIT, so that may be too much.  With respect to Naveen's report
+> > of contention on apicv_update_lock, I would go with the sticky-bit idea but apply
+> > it to APICV_INHIBIT_REASON_PIT_REINJ.
 > 
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> That won't work, at least not with yet more changes, because KVM creates the
+> in-kernel PIT with reinjection enabled by default.  The stick-bit idea is that
+> if a bit is set and can never be cleared, then there's no need to track new
+> updates.  Since userspace needs to explicitly disable reinjection, the inhibit
+> can't be sticky.
+> 
+> I assume We could fudge around that easily enough by deferring the inhibit until
+> a vCPU is created (or run?), but piggybacking PIT_REINJ won't help the userspace
+> I/O APIC case.
 
-Reviewed-by: Simona Vetter <simona.vetter@ffwll.ch>
+As a separate change, I have been testing a patch that moves the 
+PIT_REINJ inhibit from PIT creation to the point at which the guest 
+actually programs it so that default guest configurations can utilize 
+AVIC:
 
-> ---
->  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> index e814b538c46c4d342604436beca64ac0bdb31526..32e0477deb45c1481a7d23bb6e6a74de52845d1c 100644
-> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> @@ -479,11 +479,10 @@ static void drm_test_check_broadcast_rgb_auto_cea_mode_vic_1(struct kunit *test)
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
->  
->  	mode = drm_kunit_display_mode_from_cea_vic(test, drm, 1);
->  	KUNIT_ASSERT_NOT_NULL(test, mode);
->  
-> -	drm = &priv->drm;
->  	crtc = priv->crtc;
->  	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
->  	KUNIT_ASSERT_EQ(test, ret, 0);
->  
->  	state = drm_kunit_helper_atomic_state_alloc(test, drm, ctx);
-> @@ -593,11 +592,10 @@ static void drm_test_check_broadcast_rgb_full_cea_mode_vic_1(struct kunit *test)
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
->  
->  	mode = drm_kunit_display_mode_from_cea_vic(test, drm, 1);
->  	KUNIT_ASSERT_NOT_NULL(test, mode);
->  
-> -	drm = &priv->drm;
->  	crtc = priv->crtc;
->  	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
->  	KUNIT_ASSERT_EQ(test, ret, 0);
->  
->  	state = drm_kunit_helper_atomic_state_alloc(test, drm, ctx);
-> @@ -709,11 +707,10 @@ static void drm_test_check_broadcast_rgb_limited_cea_mode_vic_1(struct kunit *te
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
->  
->  	mode = drm_kunit_display_mode_from_cea_vic(test, drm, 1);
->  	KUNIT_ASSERT_NOT_NULL(test, mode);
->  
-> -	drm = &priv->drm;
->  	crtc = priv->crtc;
->  	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
->  	KUNIT_ASSERT_EQ(test, ret, 0);
->  
->  	state = drm_kunit_helper_atomic_state_alloc(test, drm, ctx);
-> @@ -1311,11 +1308,10 @@ static void drm_test_check_output_bpc_format_vic_1(struct kunit *test)
->  	 * Thus, we have to calculate the rate by hand.
->  	 */
->  	rate = mode->clock * 1500;
->  	KUNIT_ASSERT_LT(test, rate, info->max_tmds_clock * 1000);
->  
-> -	drm = &priv->drm;
->  	crtc = priv->crtc;
->  	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
->  	KUNIT_EXPECT_EQ(test, ret, 0);
->  
->  	conn_state = conn->state;
-> 
-> -- 
-> 2.47.1
-> 
+diff --git a/arch/x86/kvm/i8254.c b/arch/x86/kvm/i8254.c
+index cd57a517d04a..8f959de7ff32 100644
+--- a/arch/x86/kvm/i8254.c
++++ b/arch/x86/kvm/i8254.c
+@@ -235,6 +235,7 @@ static void destroy_pit_timer(struct kvm_pit *pit)
+ {
+        hrtimer_cancel(&pit->pit_state.timer);
+        kthread_flush_work(&pit->expired);
++       kvm_clear_apicv_inhibit(pit->kvm, APICV_INHIBIT_REASON_PIT_REINJ);
+ }
+ 
+ static void pit_do_work(struct kthread_work *work)
+@@ -296,22 +297,12 @@ void kvm_pit_set_reinject(struct kvm_pit *pit, bool reinject)
+        if (atomic_read(&ps->reinject) == reinject)
+                return;
+ 
+-       /*
+-        * AMD SVM AVIC accelerates EOI write and does not trap.
+-        * This cause in-kernel PIT re-inject mode to fail
+-        * since it checks ps->irq_ack before kvm_set_irq()
+-        * and relies on the ack notifier to timely queue
+-        * the pt->worker work iterm and reinject the missed tick.
+-        * So, deactivate APICv when PIT is in reinject mode.
+-        */
+        if (reinject) {
+-               kvm_set_apicv_inhibit(kvm, APICV_INHIBIT_REASON_PIT_REINJ);
+                /* The initial state is preserved while ps->reinject == 0. */
+                kvm_pit_reset_reinject(pit);
+                kvm_register_irq_ack_notifier(kvm, &ps->irq_ack_notifier);
+                kvm_register_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
+        } else {
+-               kvm_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_PIT_REINJ);
+                kvm_unregister_irq_ack_notifier(kvm, &ps->irq_ack_notifier);
+                kvm_unregister_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
+        }
+@@ -358,6 +349,16 @@ static void create_pit_timer(struct kvm_pit *pit, u32 val, int is_period)
+                }
+        }
+ 
++       /*
++        * AMD SVM AVIC accelerates EOI write and does not trap. This causes
++        * in-kernel PIT re-inject mode to fail since it checks ps->irq_ack
++        * before kvm_set_irq() and relies on the ack notifier to timely queue
++        * the pt->worker work item and reinject the missed tick. So,
++        * deactivate APICv when PIT is in reinject mode, but only when the
++        * timer is actually armed.
++        */
++       kvm_set_apicv_inhibit(kvm, APICV_INHIBIT_REASON_PIT_REINJ);
++
+        hrtimer_start(&ps->timer, ktime_add_ns(ktime_get(), interval),
+                      HRTIMER_MODE_ABS);
+ }
 
--- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+
+Is that reasonable?
+
+If it is, or if we choose to delay PIT_REINJ inhibit to vcpu creation time, 
+then making PT_REINJ or IRQWIN inhibits sticky will prevent AVIC from being 
+enabled later on. I can see in my tests that BIOS (both seabios and edk2) 
+programs the PIT though Linux guest itself doesn't (unless -no-hpet is used).  
+The above change will allow AVIC to be used in Linux guests even when a PIT is 
+present.
+
+> 
+> > I don't love adding another inhibit reason but, together, these two should
+> > remove the contention on apicv_update_lock.  Another idea could be to move
+> > IRQWIN to per-vCPU reason but Maxim tells me that it's not so easy.
+> 
+> Oh, yeah, that reminds me of the other reason I would vote for a sticky flag:
+> if inhibition really is toggling rapidly, performance is going to be quite bad
+> because inhibiting APICv requires (a) zapping APIC SPTEs and (b) serializing
+> writers if multiple vCPUs trigger the 0=>1 transition.
+> 
+> And there's some amount of serialization even if there's only a single writer,
+> as KVM kicks all vCPUs to toggle APICv (and again to flush TLBs, if necessary).
+> 
+> Hmm, something doesn't add up.  Naveen's changelog says:
+> 
+>   KVM additionally inhibits AVIC for requesting a IRQ window every time it has
+>   to inject external interrupts resulting in a barrage of inhibits being set and
+>   cleared. This shows significant performance degradation compared to AVIC being
+>   disabled, due to high contention on apicv_update_lock.
+> 
+> But if this is a "real world" use case where the only source of ExtInt is the
+> PIT, and kernels typically only wire up the PIT to the BSP, why is there
+> contention on apicv_update_lock?  APICv isn't actually being toggled, so readers
+> blocking writers to handle KVM_REQ_APICV_UPDATE shouldn't be a problem.
+> 
+> Naveen, do you know why there's a contention on apicv_update_lock?  Are multiple
+> vCPUs actually trying to inject ExtInt?
+
+Apologies for the confusion, I should probably have said "device 
+interrupts" (sorry, I'm still trying to get my terminology right). I 
+have described the test scenario in the cover letter, but to add more 
+details: the test involves two guests on the same host (using network 
+tap devices with vhost and mq) with one guest running netperf TCP_RR to 
+the other guest. Trimmed qemu command:
+
+qemu-system-x86_64 -machine q35,accel=kvm,kernel-irqchip=on \
+  -smp 16,cores=8,threads=2 -cpu host,topoext=on,x2apic=on -m 32G \
+  -drive file=~/ubuntu_vm1.img,if=virtio,format=qcow2 \
+  -netdev tap,id=v0,br=virbr0,script=~/qemu-ifup,downscript=~/qemu-ifdown,vhost=on,queues=16 \
+  -device virtio-net-pci,netdev=v0,mac=52:54:00:12:34:11,mq=on,vectors=34
+
+So, not a real world workload per se, though there may be use cases for guests 
+having to handle large number of packets.
+
+You're right -- APICv isn't actually being toggled, but IRQWIN inhibit is 
+constantly being set and cleared while trying to inject device interrupts into 
+the guests. The places where we set/clear IRQWIN inhibit has comments 
+indicating that it is only required for ExtINT, though that's not actually the 
+case here.
+
+What is actually happening is that since the PIT is in reinject mode, APICv is 
+not active in the guest. When that happens, kvm_cpu_has_injectable_intr() 
+returns true when any interrupt is pending:
+
+    /*
+     * check if there is injectable interrupt:
+     * when virtual interrupt delivery enabled,
+     * interrupt from apic will handled by hardware,
+     * we don't need to check it here.
+     */
+    int kvm_cpu_has_injectable_intr(struct kvm_vcpu *v)
+    {
+	    if (kvm_cpu_has_extint(v))
+		    return 1;
+
+	    if (!is_guest_mode(v) && kvm_vcpu_apicv_active(v))
+		    return 0;
+
+	    return kvm_apic_has_interrupt(v) != -1; /* LAPIC */
+    }
+
+The second if condition fails since APICv is not active. So, 
+kvm_check_and_inject_events() calls enable_irq_window() to request for an IRQ 
+window to inject those interrupts. That results in all vCPUs trying to acquire 
+apicv_update_lock for updating the inhibit reason, though APICv state itself 
+isn't changing and we are not requesting for KVM_REQ_APICV_UPDATE.
+
+
+Thanks,
+Naveen
+
