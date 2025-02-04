@@ -1,137 +1,177 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FF61DDC23
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 06:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8558013212A;
+	Tue,  4 Feb 2025 06:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738650931; cv=none; b=miotaNmUpFSKexywv6wDQOnfK1Sxt4RFo+V//0XwK48ndRUdLYyCzaj3NLBT0cJJSAxr9BZygHAEmSJo7+SZocgx5/TkpaHjFfkmb/ig/MYB8pReQjnFyfX+mLgF5Egx9+qGiMFjvi4exDewYaGDFLS7s4OqDCWNnMkfWjOisAs=
+	t=1738650978; cv=none; b=F1ozsssUsrhd0AlWuJwwAzhrIJJo687PV1E0TReEC/mSqL2LU14glzR0SN/yovCc3zFlwpOJZ+ZAjGbyhzoT3Pf4xefcW7MMcJxpqsVVMvWwbmGesCj3d3pgTqCo9MPO9OVkHQu3bAK7QCZkaPA5ZCaf552hHCMzXDyxRVkrLZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738650931; c=relaxed/simple;
-	bh=L4IPFLUZXPgCzGDRwvYzbZVZH31xHwtQ3BWg+rkmdck=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SeCdNZ8lb9EfhMsU8f7Ja4gstt+WNgRn21ehPxnB2TOF58MX72veDuHnUc62BFkSEdJK2qVW/080ZN2whseosMbaXlEte2jGWQlre6Z6uiiZBrEP1PY2VleuYdQN9zYFpjxnu7wGlHv0M2Q0v5cjM35ENDWeQPhkA5PKJdNZ0Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=TyGt/mYd; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738650978; c=relaxed/simple;
+	bh=AoPZffDxKXgAYnlcQCovRARbXMgktVy5zIEqbFmvgqE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c6ZGpVWEplh1mx/1y/LH8yidkh3W0YcOU3c3o76OHlb3bIT3DTm6Pa4hm/mpqeBrR7QzIZXPjKa+pB37IdvoPuBYjPC/kiKT0skHSCDApfQjgbLzn6ihSzR0L3zcrtaQmjAekw01j38WXF4VruOu/Cug5UbOTDlJNdsAOU4qs3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmesWUIz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="TyGt/mYd"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f9b91dff71so903656a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 22:35:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738650928; x=1739255728; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NMHiHPDNCUJ48N5qcuZlI6iRMY6kpg7JJf8A3gbeaKQ=;
-        b=TyGt/mYdwBkYF02/SBxoWhiPVXjlUnmcaU9iZ+l1BHQ9uuYAwHlsX78BzEAGQGOA/z
-         KCeQS3lg3Io8+F2q3UB4TtvSbd3IFaS9hIgkVeiDBW6ShZRc1+NJT4EVj90/sX+QqgMl
-         5mvLwLMZ20fR5UB7ouvnnUM6jTcXPihjUAAo0xdUJAJkSRaxEULp0jdOSg7tma+SdyJE
-         SG75ZXJhW5mjJM2/0I6Z+kc3xdqNf+SOZknTI7fvjQUL9Ka9VkhPxu9pGbCYQP3awEf0
-         2yIE2xvKyLwb1+F3wLWAydbfvhmF1pRsMWoDKo6j2vynBtHP05WQ9x2vD4j4NxeN+ReW
-         Sm+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738650928; x=1739255728;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NMHiHPDNCUJ48N5qcuZlI6iRMY6kpg7JJf8A3gbeaKQ=;
-        b=Lsb6zgoT+S3F7zW+RnUI8neiEs3X8zlEe6sMv+8LGvRY3mFVJKwqvhwYbH3x1DGjQ8
-         dUGOcX9vAO0LFrOQNtmpsQx4gbWhtn4XsouGDWfFPOZt2eCCgKJYOrVCVjjJNV9gr0fz
-         HTxiy76+czvmdnSS5MIyd5CsLlFcGDOlcVTOfGOvGBOgM9d/hjEPbRF8mkhYsIrvHP6e
-         cmLaQRFJ45WyEwXBtpvmf2kK+iV6UasYMiNj/C5iZmNh8Pb37Rg33b2fPo6TWqu+s1uQ
-         qBfFy6mr1qsb8C2qR4a8qCoa/0MXn2VukO9ajLYHKG/MI1/oFDc9vHMOZomUwmPbLHfP
-         0pDA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkaittuKh+H8u4fT2UsgwVfa7a43aHB6d90966Msg0dcRVGud+YCDfSNUW9kXztWP/v4zVDUJ/1Qa7Vjs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoA9GVBe0lNLA2XZiPMSjxsiAHvCKNG4jOCkAnuuI7jNxzQwxB
-	Q2Ou48xpcWgZCyOtvyyXa9nFgu+s/cXtRCJ9YjPkFw3eWBeS0vSu9+J2vjXzVB6+Hal1IkqNfCA
-	Ms2mi46DreFcuBhqRbwSat8Sji0f3CnFs4Emohw==
-X-Gm-Gg: ASbGncvhGci2Rvl0EJfKSjsH2fRZUCqjH3ntm03Ml/GavOrytr2h16j0a+kMGF1Dl4h
-	zTyAzrDrGG2EguxQ9gR7cAx/iR7KKkL3XrLwPTdmyxTUNdHQTtmCexFxGOq0YnXuD3ycXi7vSLS
-	M=
-X-Google-Smtp-Source: AGHT+IFG/yEpW4K/pBHBk3/3BqLXGkFedpykl/V/VPy5N/H80JyAnUu1lUWvkGlaAAzc1oYTPiZqDlNAWdxjP6mgSAs=
-X-Received: by 2002:a05:6a00:2d8e:b0:725:cfa3:bc76 with SMTP id
- d2e1a72fcca58-72fd0bce05cmr36986225b3a.4.1738650928448; Mon, 03 Feb 2025
- 22:35:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmesWUIz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2FC5C4CEDF;
+	Tue,  4 Feb 2025 06:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738650978;
+	bh=AoPZffDxKXgAYnlcQCovRARbXMgktVy5zIEqbFmvgqE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FmesWUIztCVgHs01aJq5nV1qSuwJawTsW6KqDSdGxfhEfhrSDS+f32SAjxB4SA3pz
+	 EynFBJLOf6fT+9BHnEKjMmi/DNPNokAjM0EXvTDgDicLkZrSjyBF1YAwyS5ttJAsBP
+	 AKs59S9TuYQ8COtxg6DSTYrpKrtcrdaGKDiPDHO9LSuCRFn6nelAswD6mGzF3/mNSd
+	 a9CV/naIamDgeaVtS9AKe9a9F6sd1TnQSWVD2LMbKtSMfLfSFjEIdGtEwuk3GywutA
+	 HXD13HJ46aHitKCeEW/O4oQlKHYIjvP2f08qDmi5KNJGveTTF+JBenRHTHkQZqmEdZ
+	 eaCADCY1zKDlQ==
+Message-ID: <48ad8f05-a90b-499d-9e73-8e5ff032824a@kernel.org>
+Date: Tue, 4 Feb 2025 07:36:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127-counter_delegation-v3-0-64894d7e16d5@rivosinc.com>
- <20250127-counter_delegation-v3-9-64894d7e16d5@rivosinc.com> <20250128-jubilance-mosaic-e3a81199aec8@spud>
-In-Reply-To: <20250128-jubilance-mosaic-e3a81199aec8@spud>
-From: Atish Kumar Patra <atishp@rivosinc.com>
-Date: Mon, 3 Feb 2025 22:35:18 -0800
-X-Gm-Features: AWEUYZmuaq61PKoOBoJPiVshD43YM3UyPResBSMNdOEGC5qC9mJGFE-MKtc9ZW4
-Message-ID: <CAHBxVyFVYwQ=aiB+RBrQNMQiu4K4uzPgyz8Tn=dUjeN8KKd=sw@mail.gmail.com>
-Subject: Re: [PATCH v3 09/21] RISC-V: Add Smcntrpmf extension parsing
-To: Conor Dooley <conor@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mtd: Add check and kfree() for kcalloc()
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Cc: gmpy.liaowx@gmail.com, kees@kernel.org, linux-kernel@vger.kernel.org,
+ linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com, richard@nod.at,
+ vigneshr@ti.com, stable@vger.kernel.org
+References: <30ad77af-4a7b-4a15-9c0b-b0c70d9e1643@wanadoo.fr>
+ <20250204023323.14213-1-jiashengjiangcool@gmail.com>
+ <e41d9378-e5e5-478d-bead-aa50a9f79d4d@wanadoo.fr>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ xsFNBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
+ rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
+ rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
+ i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
+ wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
+ ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
+ cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
+ 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
+ w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
+ YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABzSFKaXJpIFNsYWJ5
+ IDxqaXJpc2xhYnlAa2VybmVsLm9yZz7CwXcEEwEIACEFAlW3RUwCGwMFCwkIBwIGFQgJCgsC
+ BBYCAwECHgECF4AACgkQvSWxBAa0cEnVTg//TQpdIAr8Tn0VAeUjdVIH9XCFw+cPSU+zMSCH
+ eCZoA/N6gitEcnvHoFVVM7b3hK2HgoFUNbmYC0RdcSc80pOF5gCnACSP9XWHGWzeKCARRcQR
+ 4s5YD8I4VV5hqXcKo2DFAtIOVbHDW+0okOzcecdasCakUTr7s2fXz97uuoc2gIBB7bmHUGAH
+ XQXHvdnCLjDjR+eJN+zrtbqZKYSfj89s/ZHn5Slug6w8qOPT1sVNGG+eWPlc5s7XYhT9z66E
+ l5C0rG35JE4PhC+tl7BaE5IwjJlBMHf/cMJxNHAYoQ1hWQCKOfMDQ6bsEr++kGUCbHkrEFwD
+ UVA72iLnnnlZCMevwE4hc0zVhseWhPc/KMYObU1sDGqaCesRLkE3tiE7X2cikmj/qH0CoMWe
+ gjnwnQ2qVJcaPSzJ4QITvchEQ+tbuVAyvn9H+9MkdT7b7b2OaqYsUP8rn/2k1Td5zknUz7iF
+ oJ0Z9wPTl6tDfF8phaMIPISYrhceVOIoL+rWfaikhBulZTIT5ihieY9nQOw6vhOfWkYvv0Dl
+ o4GRnb2ybPQpfEs7WtetOsUgiUbfljTgILFw3CsPW8JESOGQc0Pv8ieznIighqPPFz9g+zSu
+ Ss/rpcsqag5n9rQp/H3WW5zKUpeYcKGaPDp/vSUovMcjp8USIhzBBrmI7UWAtuedG9prjqfO
+ wU0ETpLnhgEQAM+cDWLL+Wvc9cLhA2OXZ/gMmu7NbYKjfth1UyOuBd5emIO+d4RfFM02XFTI
+ t4MxwhAryhsKQQcA4iQNldkbyeviYrPKWjLTjRXT5cD2lpWzr+Jx7mX7InV5JOz1Qq+P+nJW
+ YIBjUKhI03ux89p58CYil24Zpyn2F5cX7U+inY8lJIBwLPBnc9Z0An/DVnUOD+0wIcYVnZAK
+ DiIXODkGqTg3fhZwbbi+KAhtHPFM2fGw2VTUf62IHzV+eBSnamzPOBc1XsJYKRo3FHNeLuS8
+ f4wUe7bWb9O66PPFK/RkeqNX6akkFBf9VfrZ1rTEKAyJ2uqf1EI1olYnENk4+00IBa+BavGQ
+ 8UW9dGW3nbPrfuOV5UUvbnsSQwj67pSdrBQqilr5N/5H9z7VCDQ0dhuJNtvDSlTf2iUFBqgk
+ 3smln31PUYiVPrMP0V4ja0i9qtO/TB01rTfTyXTRtqz53qO5dGsYiliJO5aUmh8swVpotgK4
+ /57h3zGsaXO9PGgnnAdqeKVITaFTLY1ISg+Ptb4KoliiOjrBMmQUSJVtkUXMrCMCeuPDGHo7
+ 39Xc75lcHlGuM3yEB//htKjyprbLeLf1y4xPyTeeF5zg/0ztRZNKZicgEmxyUNBHHnBKHQxz
+ 1j+mzH0HjZZtXjGu2KLJ18G07q0fpz2ZPk2D53Ww39VNI/J9ABEBAAHCwV8EGAECAAkFAk6S
+ 54YCGwwACgkQvSWxBAa0cEk3tRAAgO+DFpbyIa4RlnfpcW17AfnpZi9VR5+zr496n2jH/1ld
+ wRO/S+QNSA8qdABqMb9WI4BNaoANgcg0AS429Mq0taaWKkAjkkGAT7mD1Q5PiLr06Y/+Kzdr
+ 90eUVneqM2TUQQbK+Kh7JwmGVrRGNqQrDk+gRNvKnGwFNeTkTKtJ0P8jYd7P1gZb9Fwj9YLx
+ jhn/sVIhNmEBLBoI7PL+9fbILqJPHgAwW35rpnq4f/EYTykbk1sa13Tav6btJ+4QOgbcezWI
+ wZ5w/JVfEJW9JXp3BFAVzRQ5nVrrLDAJZ8Y5ioWcm99JtSIIxXxt9FJaGc1Bgsi5K/+dyTKL
+ wLMJgiBzbVx8G+fCJJ9YtlNOPWhbKPlrQ8+AY52Aagi9WNhe6XfJdh5g6ptiOILm330mkR4g
+ W6nEgZVyIyTq3ekOuruftWL99qpP5zi+eNrMmLRQx9iecDNgFr342R9bTDlb1TLuRb+/tJ98
+ f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
+ DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
+ S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
+In-Reply-To: <e41d9378-e5e5-478d-bead-aa50a9f79d4d@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 28, 2025 at 10:11=E2=80=AFAM Conor Dooley <conor@kernel.org> wr=
-ote:
->
-> On Mon, Jan 27, 2025 at 08:59:50PM -0800, Atish Patra wrote:
-> > Smcntrpmf extension allows M-mode to enable privilege mode filtering
-> > for cycle/instret counters. However, the cyclecfg/instretcfg CSRs are
-> > only available only in Ssccfg only Smcntrpmf is present.
-> >
-> > That's why, kernel needs to detect presence of Smcntrpmf extension and
-> > enable privilege mode filtering for cycle/instret counters.
-> >
-> > Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> > ---
-> >  arch/riscv/include/asm/hwcap.h | 1 +
-> >  arch/riscv/kernel/cpufeature.c | 1 +
-> >  2 files changed, 2 insertions(+)
-> >
-> > diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hw=
-cap.h
-> > index 2f5ef1dee7ac..42b34e2f80e8 100644
-> > --- a/arch/riscv/include/asm/hwcap.h
-> > +++ b/arch/riscv/include/asm/hwcap.h
-> > @@ -104,6 +104,7 @@
-> >  #define RISCV_ISA_EXT_SMCSRIND               95
-> >  #define RISCV_ISA_EXT_SSCCFG            96
-> >  #define RISCV_ISA_EXT_SMCDELEG          97
-> > +#define RISCV_ISA_EXT_SMCNTRPMF         98
-> >
-> >  #define RISCV_ISA_EXT_XLINUXENVCFG   127
-> >
-> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeat=
-ure.c
-> > index b584aa2d5bc3..ec068c9130e5 100644
-> > --- a/arch/riscv/kernel/cpufeature.c
-> > +++ b/arch/riscv/kernel/cpufeature.c
-> > @@ -394,6 +394,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =3D=
- {
-> >       __RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
-> >       __RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinux=
-envcfg_exts),
-> >       __RISCV_ISA_EXT_DATA(smstateen, RISCV_ISA_EXT_SMSTATEEN),
-> > +     __RISCV_ISA_EXT_DATA(smcntrpmf, RISCV_ISA_EXT_SMCNTRPMF),
-> >       __RISCV_ISA_EXT_DATA(smcsrind, RISCV_ISA_EXT_SMCSRIND),
->
-> Isn't the order here wrong?
->  * 3. Standard supervisor-level extensions (starting with 'S') must be li=
-sted
->  *    after standard unprivileged extensions.  If multiple supervisor-lev=
-el
->  *    extensions are listed, they must be ordered alphabetically.
+On 04. 02. 25, 7:17, Christophe JAILLET wrote:
+> Le 04/02/2025 à 03:33, Jiasheng Jiang a écrit :
+>> Add a check for kcalloc() to ensure successful allocation.
+>> Moreover, add kfree() in the error-handling path to prevent memory leaks.
+>>
+>> Fixes: 78c08247b9d3 ("mtd: Support kmsg dumper based on pstore/blk")
+>> Cc: <stable@vger.kernel.org> # v5.10+
+>> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+>> ---
+>> Changelog:
+>>
+>> v1 -> v2:
+>>
+>> 1. Remove redundant logging.
+>> 2. Add kfree() in the error-handling path.
+>> ---
+>>   drivers/mtd/mtdpstore.c | 19 ++++++++++++++++++-
+>>   1 file changed, 18 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
+>> index 7ac8ac901306..2d8e330dd215 100644
+>> --- a/drivers/mtd/mtdpstore.c
+>> +++ b/drivers/mtd/mtdpstore.c
+>> @@ -418,10 +418,17 @@ static void mtdpstore_notify_add(struct mtd_info 
+>> *mtd)
+>>       longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->kmsg_size));
+>>       cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+>> +    if (!cxt->rmmap)
+>> +        goto end;
+> 
+> Nitpick: Could be a direct return.
+> 
+>> +
+>>       cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+>> +    if (!cxt->usedmap)
+>> +        goto free_rmmap;
+>>       longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
+>>       cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+>> +    if (!cxt->badmap)
+>> +        goto free_usedmap;
+>>       /* just support dmesg right now */
+>>       cxt->dev.flags = PSTORE_FLAGS_DMESG;
+>> @@ -435,10 +442,20 @@ static void mtdpstore_notify_add(struct mtd_info 
+>> *mtd)
+>>       if (ret) {
+>>           dev_err(&mtd->dev, "mtd%d register to psblk failed\n",
+>>                   mtd->index);
+>> -        return;
+>> +        goto free_badmap;
+>>       }
+>>       cxt->mtd = mtd;
+>>       dev_info(&mtd->dev, "Attached to MTD device %d\n", mtd->index);
+>> +    goto end;
+> 
+> Mater of taste, but I think that having an explicit return here would be 
+> clearer that a goto end;
 
-Yeah. Fixed it. Thanks for catching.
+Yes, drop the whole end.
+
+>> +free_badmap:
+>> +    kfree(cxt->badmap);
+>> +free_usedmap:
+>> +    kfree(cxt->usedmap);
+>> +free_rmmap:
+>> +    kfree(cxt->rmmap);
+> 
+> I think that in all these paths, you should also have
+>      cxt->XXXmap = NULL;
+> after the kfree().
+> 
+> otherwise when mtdpstore_notify_remove() is called, you could have a 
+> double free.
+
+Right, and this is already a problem for failing 
+register_pstore_device() in _add() -- there is unconditional 
+unregister_pstore_device() in _remove(). Should _remove() check cxt->mtd 
+first?
+
+thanks,
+-- 
+js
+suse labs
+
