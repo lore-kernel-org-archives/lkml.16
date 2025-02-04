@@ -1,108 +1,72 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7391F537E5
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E80D537E5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738633017; cv=none; b=FKofOFFTQEfDcFlE8s0FiRoigkGmz2Hz8noTi0VTuUvdQF8/cUwnA4HAUhtQ030ol3ao5LhetTRar496cU976KvaeKpxuQI9pYM9tOZ/pS98bwudlMsvullUV0r3lr+MIwf28p5776JXJG4Yey6xh2YS7buIDl/SBO8v6kk/xTU=
+	t=1738633024; cv=none; b=FNAHC3uEMpsqeqNFwigIDOSHbIRMC78tQlTa0ZqRV0oRwpOYT2NX6q60OGKDXvHsoJxbkj7X7wF7aJSCHwdUZnHDw2nwkzRRittfj8+VlRa4RsNqRLzq5PHYt0wcVIpierAlNuqejnrWGS2krM+Ov2btBbrTi16TNJw3eBOegrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738633017; c=relaxed/simple;
-	bh=gQJg4Yjqg4bWR3kSEamLIlUZAPB4Qx9PFeNNXZoa5lQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I4zVsnsrdY9K2ZnPEc3EL3WgdJZnWfr26P9i13QCCA5uoGH0jNNK64f8d/7UML1c1h6EpK5WY7w0Bv1GMuGQ1bW/F5KLK6/RN9VAd2OvqCVbiYPEyo75dg0Vtpl+sFCuQhPTcBaLLyDm7LvhSK8Ts1ZwTAtwxhHOoHtsZaWQ/Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q+2EgQi6; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q+2EgQi6"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6f6c90b51c3so29978867b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 17:36:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738633014; x=1739237814; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ROq+7dop8/gAZioS6LiNRBVOkjkfWTu5NLRN5pWfuk0=;
-        b=q+2EgQi6ngOhd4dLGCCZZJVm7WJXXDCun1z5h9NY3FuXQ0rx8cBL1P91MVKMVwmCxB
-         poI3bD+LBjaAdFdMtqySnVkHOC3JzOxRc3p0/d/wD+9PCZjRGLGftv2kOC1G6eFcMhfB
-         vv9p6QeohdaNIKh46lO7NTBqjBgLWwYsffZWOC3UWTj8r0yvzKKDtUBHd/PHv8d68KMK
-         DRxlGfEKXTSKbVRw0dXTUgnzP64bDKAsW+IC/6kuJo5hIyvQE3YhJXc6oytriWT3ssND
-         F3xTKM9/69I/SE/xKu2IX+ETX4ONQZ+m/eqLJGrg1Oa9+Poyw5oE4TVKDHxtAZ5c+uLG
-         FNWQ==
+	s=arc-20240116; t=1738633024; c=relaxed/simple;
+	bh=IhGxqZONKoKFeV8HRltf5K9dNfvC9ihGNQQ29H1FBI0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=lCiV+QJfewy+WlAjYZE7wcHri0m3G3GGQYFf0Z2osGgKaAKBPOjGJrtsxMn2I0MWjLI8i+FzZkTTD2MPqmxPQX7Hep2cw8mZ51+2Cm9lYuWksBVTYyOLClYfqguK1Ruo6hIL6Db8yCbZxCKNytsbQBQOKhnjou3u2aUoL3nCfiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3cfb2d37dbdso36001085ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 17:37:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738633014; x=1739237814;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ROq+7dop8/gAZioS6LiNRBVOkjkfWTu5NLRN5pWfuk0=;
-        b=Dk+zlWzp1i3xxmxzqUAhqj94Ck7idr7ucy4Mk0WH74kF5drj7tXydT9v0mapTBBFnU
-         dLhTM1paFEXgWVeSPV0PCjghzC0PaJ5kLGkFaQmCiE0LctzL3VYRETM1mTyuzldSKuvu
-         em3Zo4AcDC7iQfNm97l0taRpmWwXMiYA7f8qDg90nZKJBqayuhOFKLWsxlu+zuy1T2AE
-         sPd5q7cUqkFriXkeq7W22d6l7NLlWVLOvnLMLaeZCnPfjBGbv9sHnbK0A2FjbIUCrFdG
-         x7co0qF2psLnHi7LHxIiyjicd31bgpqly02TqOmDTRM49jJ8JrJ4NyTYUPrWMHhnW8yf
-         4GEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxCc2jxz8yC0T/FfQMQGyTRIt0CF8sXfblNgAyicB5JQ7ZaBF65s8nrCer2RFn3TOj34RPeN0rG16dDVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyU6/EHrcWC2LNVUYJPfKxx/Ei4j/X2Ntqe5a46hoZ/zS4zNZ+3
-	EcgO9g7pAdZ/9vbQ4k43ZRHzB5fr9DDvu1dAKnGPfusRCj5c3m4TATmWgYFYsrfLqU0sTDnpsgw
-	ZsnGy6wvbzoVHfv/6Q/fDIzZ6wxpneu9hDkojqw==
-X-Gm-Gg: ASbGncso9+wCA9XNkURK6XJs42oDVBQzq390Og41B2V5HOTjmRYk8nLC6/PRAzXhDcL
-	k8ES2FKj06ksqfUacCosw6XKEGy+jmPt8RNZNIpl12XsTVaEEieE1vgtC8yC9oddsMVwO4P7dP7
-	jbuLEeObm5T1njnK33vI+Psa0mssmv
-X-Google-Smtp-Source: AGHT+IEndGqJLe3lRomYw81FxRc4rJi4daHHHTKmvJkj4axffR2/iXurAfxujNYq1cogoGYH72n70X+vXXmF4hJGdBY=
-X-Received: by 2002:a05:690c:c99:b0:6f6:7ef2:fe74 with SMTP id
- 00721157ae682-6f7a8426a5dmr180536937b3.32.1738633014293; Mon, 03 Feb 2025
- 17:36:54 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738633021; x=1739237821;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ct9LFzZoWBCSTWklB5EsgWQ3PeezlKDIpCmyS3iVoWA=;
+        b=nY9BU7Q9qnK43xb2Aqo1NfaPczLDwFTuRS0o1VsaCwZ+qG+QLKXTyB5/YeQCbsweAT
+         w2aMcpiYW8EsFQlP76B33PguaDj4Td6XEsy66oIDaKKfcwfiYoQab6FJxZHb/gOQBHZG
+         z9IR+F2X5Nu+dkPiGXnBJj1NSoasEiNCS8hBGjBuQH5LmdOvw7KrEGg4qP/BtGfBtFzj
+         rdZhk8e2w5+Hf6KRZsKX/A1Iaqxk3xM5LWekm7y/CbfixRDdaFah2pUqwVD7fmGTdCLt
+         79dp4Q+reZn1k07CfhA/1GmaXZMokqB262O8Rm0oZ0dOlvbEykcwX7RaMiPGlQTF7jYh
+         yXZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHaUxl29pIMKWaUvkdb8aImPmLH6bi4cZB/7ibm+PydlRVjFBDlJLciW2rqCO/oQ6rl+Ef2CDiMYwS8Qw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIYbs+AWr1B4u6KyNl+pFvcdh22JEKZcSa3JPIxICnhvdWMvHP
+	C/ewcA07LJVlj3KKcS01ZXmZpG6ux9tn73gaaI9ixgfm+EGzZLdrCSqNE4/pQU+uV0qFFo7QGP9
+	pxQtUlwDHOiWglG01QBetbm2j0BHpNe4G4gpc0t0rpTUHsvpPdIYOlUk=
+X-Google-Smtp-Source: AGHT+IGTUOyszyZKb8JmDjNqnG+BCLsP5ITMYyPA5ATLhNsdrHR2fP7F07HVq2x9Te5iiFd3HvT24XA+gJLNbfzuxOn64p/LzRTk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
- <20250113-sm8750_ufs_master-v1-2-b3774120eb8c@quicinc.com>
- <vry7yib4jtvyc5baruetqb2msy4j4ityv2s6z5smrz6rqjfb5l@xoharscfhz5n> <6873e397-dbc0-4c30-8c08-a65ee7cd6e01@quicinc.com>
-In-Reply-To: <6873e397-dbc0-4c30-8c08-a65ee7cd6e01@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 4 Feb 2025 03:36:42 +0200
-X-Gm-Features: AWEUYZlF9xRy7fPmY8vHPfUe0fIEvkxweH_j9r0Xv-PAz5SBxJgUbog5Km9Pvw4
-Message-ID: <CAA8EJprjxMtkefY+90cLGVgz-bDf=VXnaa0eH4ESAC6nf5vrLA@mail.gmail.com>
-Subject: Re: [PATCH 2/5] phy: qcom-qmp-ufs: Add PHY Configuration support for SM8750
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: Melody Olvera <quic_molvera@quicinc.com>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, 
-	Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>, Trilok Soni <quic_tsoni@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, Manish Pandey <quic_mapa@quicinc.com>
+X-Received: by 2002:a05:6e02:1c2d:b0:3d0:2a04:1ce2 with SMTP id
+ e9e14a558f8ab-3d02a041d7cmr69631675ab.16.1738633021443; Mon, 03 Feb 2025
+ 17:37:01 -0800 (PST)
+Date: Mon, 03 Feb 2025 17:37:01 -0800
+In-Reply-To: <20250204004435.2084-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a16f3d.050a0220.163cdc.005d.GAE@google.com>
+Subject: Re: [syzbot] [input?] [usb?] KASAN: slab-use-after-free Read in corsair_void_status_work_handler
+From: syzbot <syzbot+ac826dbeecf212c395a0@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
-On Mon, 3 Feb 2025 at 10:03, Nitin Rawat <quic_nitirawa@quicinc.com> wrote:
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Your email client has corrupted all quotation levels. Please fix its
-configuration so that you can not compose HTML email. Or switch to a
-normal text-based email client like Mutt or Gnus.
+Reported-by: syzbot+ac826dbeecf212c395a0@syzkaller.appspotmail.com
+Tested-by: syzbot+ac826dbeecf212c395a0@syzkaller.appspotmail.com
 
-No additional comments can be provided to this email.
+Tested on:
 
->
->
-> On 1/14/2025 4:19 PM, Dmitry Baryshkov wrote:
->
-> On Mon, Jan 13, 2025 at 01:46:25PM -0800, Melody Olvera wrote:
->
-> From: Nitin Rawat <quic_nitirawa@quicinc.com>
->
-> Add SM8750 specific register layout and table configs. The serdes
-> TX RX register offset has changed for SM8750 and hence keep UFS
-> specific serdes offsets in a dedicated header file.
+commit:         9682c35f usb: typec: thunderbolt: Remove IS_ERR check ..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=13ba9d18580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ed7570f7f6046a71
+dashboard link: https://syzkaller.appspot.com/bug?extid=ac826dbeecf212c395a0
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17ebb764580000
 
--- 
-With best wishes
-Dmitry
+Note: testing is done by a robot and is best-effort only.
