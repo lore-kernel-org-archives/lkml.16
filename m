@@ -1,86 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF22219A99;
-	Tue,  4 Feb 2025 19:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DE7219A8F;
+	Tue,  4 Feb 2025 19:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738698656; cv=none; b=HQ4DnLaNdR6YKUIJCyxJlIQL8jv5YF9YStHJRGsaYgM29uBxufjqxtY5gTP/1PlJkTeu7iziMZ1XrNZl2oCxRmQomv456njybriRoO/gJDlffLPLQcNqmECLKREwXJz49IKpGsGZ/i2s6RV+gfSwHJ9xQvdwkQrsMFpD9FQ1rcc=
+	t=1738698672; cv=none; b=Do8iy0yjulfrIZQdDebAcrkM8seh+RdhT/V8o/VgrpXfBcG5yBMGiAjDbBU4b7cqTJ6lRiXoY3beV8qBEo4GtgctWlR5waDnTtKODqwJ/jMFmyJEhT2OMob9hBXXTeYhGMQl1Cl4mmXFH6LTotBc6G3bAcl2H9QPATxBSQqiT70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738698656; c=relaxed/simple;
-	bh=OovqO4nAjWOkKvXwDjcwT1vMzMriW/bXOE7S1Gw6O+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KEJnLBPEIpmx0lxO4iaZLLHaM/+qv/96T2Yhzq1RlXqbUDvp9ctYk9Ii3S0yZ/bhAoa/CKKWUIR/qPHpj4MnNhD9ya8AP6e46YHlL6ni32HmydiqPrJ44jna7kx45qdB4xauxCQ3XVbG9Aja3i25AP2j4e3ddCKhlkdDcmWn0mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iLMplIup; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738698672; c=relaxed/simple;
+	bh=IIkygejv8o1VEEOv0U4aJpEYwdsKoRowOAaClBAnKbo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LlhVYBoV43TYs55h6i704PhUIVDn7b7BwWHzPVuhShb6viM3d66kOwHQPkADSLPtZVW6sWyZNq7S4ynF0fSilDmt6djkRldYy6lY/7Chd5EGcufNmwTzNi5xWk/1iItDgewzGtp3MqQmfnNDNZV93KE57ivIvivspUZZvpuP6fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DCibuPLY; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iLMplIup"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6C01C4CEDF;
-	Tue,  4 Feb 2025 19:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738698654;
-	bh=OovqO4nAjWOkKvXwDjcwT1vMzMriW/bXOE7S1Gw6O+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iLMplIupfkQeXhR/6mGPWqq+yyfUrrfa/Dhm8GeTPtvcNTypY0baYC3du/bYLFkMq
-	 JlBGgSe3lzm8NMO7p7Db3M1lh6SP/njwz8Rk2hJSv0Fnx+zqi78KD5tApr7S8MOVjV
-	 fTcwbqydRI6iPE1a3bnNDWu62vtvgc/vHJLv1l7dHEilmV30w/9CZo6F1jv3a5lquY
-	 8N2CfRM5qnuRtT0M+8XGiXpM+4tK13M0HsZN6B08ceM8NyerXXtK+BnvguM8zfdpcz
-	 JyxaF0Q6llIdohmT1go+a+qN+XNoT9UYmu3Wj+IMRCStb/8rfaEZXPljYLrPLAma2L
-	 7eMX0z+f8e4dg==
-Date: Tue, 4 Feb 2025 19:50:49 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Mahesh Rao <mahesh.rao@intel.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Wu Hao <hao.wu@intel.com>, Ho Yin <adrian.ho.yin.ng@altera.com>,
-	Niravkumar L Rabara <nirav.rabara@altera.com>,
-	linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Mahesh Rao <mahesh.rao@altera.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: firmware: stratix10: Convert to
- json-schema
-Message-ID: <20250204-quintuple-chowder-59109fa8ff55@spud>
-References: <20250204-socfpga_sip_svc_misc-v3-0-697f7f153cfa@intel.com>
- <20250204-socfpga_sip_svc_misc-v3-2-697f7f153cfa@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCibuPLY"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5d9837f201aso279878a12.0;
+        Tue, 04 Feb 2025 11:51:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738698669; x=1739303469; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lm/8cNmFPwaAsP/EOFcLh7PHJxrshjVHa1Fi7jhwkbE=;
+        b=DCibuPLYhE189WzXeVIjH2kbQPTFs/bMkJRxtABQsxcrrjLELC1+qzCma1xHu/kW0v
+         FLR4ODXzG9dESyCW7ZBrz2XLcv/0tj0vTBp6rl4sS9bLAEWqV2B2Vh5kFNJi77OgtQC4
+         gWX9gPn/oZ050K0DzFm6AXB0oaP+US/ZmFzkMO3GodDqHVk+tReufTsWoxUXFEi+tTQl
+         ef5OHIC3+NlcGWKELnX8FS19nd8/zSWrxkzVAZ/APN77wwRK5HDwaL4KzJLMC+Zj413x
+         nrhbdz8gBl1PwBzd5/abXlOK9iefvxFlqeJLDSiBq9c/LlfdlYZYoQji3PKB03LlNT06
+         HSxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738698669; x=1739303469;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lm/8cNmFPwaAsP/EOFcLh7PHJxrshjVHa1Fi7jhwkbE=;
+        b=HLeaapKfyN4Bc9qxHJ/lV0AfrwbVZ7XFNekgeR1AHkichW6EacbUjONSMfC1HB2Iqv
+         0a5+aESBJzW6aSXgvHmz320yRlyA5l/vhVJhGhsfUMbsL7EBSg8Xkk+RoAF+HTMdMklH
+         N568VIMEF7kMWbfp2R6/8zjt/5dtLmWWZmt82biULmZEpOKI+PM3drWf64TnsD2zNKTG
+         Z6RsfLuJcP+oYkS7ijg5KVxjVFN1nGkLjfqb6W3A32bEsB++SkWjj4T7aeIuGEuqsrfA
+         9vA1fVtsGvWwxDCpNOPAbt+vFkmBKClKlsY/0W3uQmuWTt7XgwkX+tn4BbLfB/rbuEcr
+         UsfA==
+X-Forwarded-Encrypted: i=1; AJvYcCXU+oI0AaVH7+57mH9j7CFP+fnsoDt2f0SPeNZuPS69RVeUjWFbRITJNRUlBhU9/Z//lDkHyYtG@vger.kernel.org, AJvYcCXb2mNEhLCx7SZO8vKk8deS1Mlf41oItvkRqUytsCZNX2Oy5gIH5jn+xEIireBU/s9pPrujhiKL6oq8FhM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOrJPHXnW1B3LbRnDMZVLWRc9wPhPdnaufJFe4vQg+hwJQbw7N
+	mRebZmP+ZpbFb3ssFI04QQl7KYIFYzuqAVAV2l1pTifL2UPJlzj7
+X-Gm-Gg: ASbGncuGhG5ijs82K0LT81nRl6ViSTrzIdUYibabRGSynsZR6CUZ3iHPFohx791GCbH
+	/mHVc23pzbx9VsHlM/YslXSXZjAvP2G+R9n/4zndFCyorA3kgqmWxGjcJQM/WmydVPHKQxOG2H7
+	dF6YDYeXC1FH9+1tQENHQAggDqrsGm2zIry/fC/0udS/HYS9KO9QVqdpwELQXZuGoPK1L+suPCE
+	8RaQIbE4G5jDXskshhwiWc+THXvOoEkf8hGSe1cNGrPY1+JfxeF9rF3tU1TXCQYpDnDjLhNW72T
+	Q32K92l/STuWANIJg7CAvuQJrGV+2hc2oFIcmi2aI/E5WmlcMTSvfC1Au3JsiQWQUMspinNT3q7
+	sLcykBdet/qSQdJxWG7D70R5kOwoQ7AWJ
+X-Google-Smtp-Source: AGHT+IGtJLT1Gfat47VQW9jxAieSXNW5v+/XNxFf+87Kq2AKKUyg+QjIZxFw4TmACP3MZXethPM2wg==
+X-Received: by 2002:a17:907:7b8c:b0:ab6:cdc2:3417 with SMTP id a640c23a62f3a-ab748435262mr486068466b.15.1738698669216;
+        Tue, 04 Feb 2025 11:51:09 -0800 (PST)
+Received: from corebook.localdomain (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc724d9de2sm10074894a12.81.2025.02.04.11.51.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 11:51:08 -0800 (PST)
+From: Eric Woudstra <ericwouds@gmail.com>
+To: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	"Frank Wunderlich" <frank-w@public-files.de>,
+	Daniel Golle <daniel@makrotopia.org>
+Cc: netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Eric Woudstra <ericwouds@gmail.com>
+Subject: [RFC PATCH v1 net-next 0/3] flow offload teardown when layer 2 roaming
+Date: Tue,  4 Feb 2025 20:50:27 +0100
+Message-ID: <20250204195030.46765-1-ericwouds@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Ae6c9eOCQf7+ch1f"
-Content-Disposition: inline
-In-Reply-To: <20250204-socfpga_sip_svc_misc-v3-2-697f7f153cfa@intel.com>
+Content-Transfer-Encoding: 8bit
 
+In case of a bridge in the forward-fastpath or bridge-fastpath the fdb is
+used to create the tuple. In case of roaming at layer 2 level, for example
+802.11r, the destination device is changed in the fdb. The destination
+device of a direct transmitting tuple is no longer valid and traffic is
+send to the wrong destination. Also the hardware offloaded fastpath is not
+valid anymore.
 
---Ae6c9eOCQf7+ch1f
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This flowentry needs to be torn down asap. Also make sure that the flow
+entry is not being used, when marked for teardown.
 
-On Tue, Feb 04, 2025 at 08:58:06PM +0800, Mahesh Rao wrote:
-> Convert intel,stratix10-svc service layer devicetree
-> binding file from freeform format to json-schema.
->=20
-> Also added DT binding for optional stratix10-soc
-> FPGA manager child node.
->=20
-> Signed-off-by: Mahesh Rao <mahesh.rao@intel.com>
+This patch-set depends on patch-set: "PATCH v5 bridge-fastpath and related
+improvements" only for applying the patch correctly, but it is not a
+functional requirement.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Eric Woudstra (3):
+  netfilter: flow: Add bridge_vid member
+  netfilter: nf_flow_table_core: teardown direct xmit when destination
+    changed
+  netfilter: nf_flow_table_ip: don't follow fastpath when marked
+    teardown
 
---Ae6c9eOCQf7+ch1f
-Content-Type: application/pgp-signature; name="signature.asc"
+ include/net/netfilter/nf_flow_table.h |  2 +
+ net/netfilter/nf_flow_table_core.c    | 66 +++++++++++++++++++++++++++
+ net/netfilter/nf_flow_table_ip.c      |  6 +++
+ net/netfilter/nft_flow_offload.c      |  4 ++
+ 4 files changed, 78 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.47.1
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6JvmQAKCRB4tDGHoIJi
-0hv6AQDL2BEpLLZYLr/aAh35VzjJvX3Y4W9xo3ASawXP3GbtYgEA4kiZaLP9Xi25
-tsTICtC7lMaQBTK4FWfj9Vd6F0otfw8=
-=vsa7
------END PGP SIGNATURE-----
-
---Ae6c9eOCQf7+ch1f--
