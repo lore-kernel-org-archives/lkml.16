@@ -1,119 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAD11FAC5C;
-	Tue,  4 Feb 2025 22:20:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557601FAC5C;
+	Tue,  4 Feb 2025 22:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738707616; cv=none; b=VmA6iuxAns6hFutlAdYSrOQLnmoWTmBRt9fVkPSjRnm67/M0X07jfjmhPon7kd9PJpXyW+f+0cA3XaVNztJlX6fpIlv3SRWMBUackyt7mLYQeGgj91QPmxCcAKqoToMyxo5g3/vXaciOTYxf+TM4NKIA2aJdXW0XZI65NWqMZGs=
+	t=1738707621; cv=none; b=dw1+R/uDgLrc4GNr7BTBaThNJu5FLJELq+y6GeXh2gyb7jwC+Zw8MeLNLcpr1s1EXlZhyIz4cm2a/hSO4gTNUyHG6ZOtKm+pxX6JZlG5gYNJoPm1Z7pSm9GfEAS6RS/n0tYxKGInQUoqzYWRc2MMd8MSmPX1cWWu0O/UNK5o31k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738707616; c=relaxed/simple;
-	bh=Ofg3xhSGKHnj2+K7N2sYVNrGu7WKXnhEyI2OiZYqCyc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ic50P48sHlAibuz8bCEL32WaICv6MPXdWsQtCurfZL2eYA1Cs9Z4XBi2x6sKhaG4xBueeuObWCWZkO1TuOYed5v0JBYX583DsiJxf3y18HUeIeM8t8fsVGEZBeLfRvNiiDbBCfxDGdeWxaykv3XtaSzzeUYn4MEXjnpY0Icz0x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1FNfi3Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738707621; c=relaxed/simple;
+	bh=p+3BhT2PElmTLnZdi7Jk/dsHXLSTDRcbipJPsT9en6E=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=IX1+eQ34GJHOcMs59ZwpKYa4MlL6qrCc87BgRiqPEUtKiKS4ymiqHG71I0sw5i+jz5hwVScYp/3Pu+t9nrOIGefBsVAETjkXNmqsDajsKLk4FL8xO+3VypDDNmJBi4oyCiXwNDMGNbcMWXBEdJdjsvyJSpTaY2q2yY/uZEvIIuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=phv1x3Jf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1FNfi3Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D374C4CEDF;
-	Tue,  4 Feb 2025 22:20:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="phv1x3Jf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 330EEC4CEDF;
+	Tue,  4 Feb 2025 22:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738707615;
-	bh=Ofg3xhSGKHnj2+K7N2sYVNrGu7WKXnhEyI2OiZYqCyc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=o1FNfi3QM3KcNkDfnxZMfJf6s8wyRBoc3vFV5N7u+VdLJj0RQ4shLisPwnGhufeKN
-	 VROKlmxbQ87OvueEbA3MIfFSO9uhJMr/X4999SXIIYqkj6nAlHdK9Ha5vmAXDgiBC0
-	 Chd1cmGMchTnhttGTDnTwM5uchOg3vhm0l4cszz4uiZlM4L9TxvE4ptX78D6wgw1SK
-	 tkcVjDwY1onpNGQAtUqiwXi91q8SM2uOe6OqUwMs3lnohC3FaATXPVAYDuvEYM2q2k
-	 wm1SNcSPmLMR7YFrbf3B4ODGbJONS8FWmrH/gtKzK3L4CJALm9J8GJx+nxkWo1dn9G
-	 rAXb2wSOHM/MA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 04 Feb 2025 23:19:53 +0100
-Subject: [PATCH net] selftests: mptcp: connect: -f: no reconnect
+	s=k20201202; t=1738707621;
+	bh=p+3BhT2PElmTLnZdi7Jk/dsHXLSTDRcbipJPsT9en6E=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=phv1x3Jf6hU82bSYHUjiiv5iSUi9owUMgeLNCU+VX2Fo4MjxNDlqvAmS8g6WN2U1Q
+	 +Ra8bkRYOC8oCdFzLANjeNH7CGgawDQ1Os2nMyW4TdQPlZjgab6h8NkF9E1wRfviMg
+	 TxF5J33tJFrU1UjPqBVXE2GHj7p9ODGi4qZFC0pqNv4Ehl5k40TeYiR8HNIocVq4j0
+	 cY3YzMrjj63/7m/vv7MO+PjICQDMH7NxdSxfK2FORp0dDDriqbj8yo8sF/H1DHYNhx
+	 wukeAHT4VpY9NUBU3eBntLjdhCyeFZUU29j8yG6yVDKq6JT5KWFzbIRa7REo0DTqMz
+	 Zu98U90l6bwfw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE4D9380AA7E;
+	Tue,  4 Feb 2025 22:20:49 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-net-mptcp-sft-conn-f-v1-1-6b470c72fffa@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAIiSomcC/x3MQQqAIBBA0avErBtQsYKuEi3KxppFk6hEIN09a
- fkX7xdIFJkSjE2BSDcnvqSGbhtwxyI7IW+1wSjTKaMsCmU8Q3YBk8/oLhH0uGmnrRnsuvQ9VBo
- ieX7+7QRVwPy+H1RNVetrAAAA
-X-Change-ID: 20250204-net-mptcp-sft-conn-f-d1c14274ba66
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2021; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Ofg3xhSGKHnj2+K7N2sYVNrGu7WKXnhEyI2OiZYqCyc=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnopKYLQZU4YyKbSKz5pUlq54AT8014h2s72eXB
- o75Fr0Jql6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ6KSmAAKCRD2t4JPQmmg
- c7JvD/9g08zZZi2rntY2iKHW6N+QUbZgSWYgSl+dIqRo3CjhD1LsKTxoupIfaU6EL+JQj/UBlJD
- 1p7EW6tjd/98J4hsI5vSyt+5NS5VYlMvCrvSez+QxRh/Ne//X2uwXXoA8AOQoFDaq2/o8WOh7F0
- 3Ib9uR6urG/kpRoQ9VxHHIfXl8Z499uRvJWtzX5eopvZU8xLlURVSkxjIHZ9mq0BdQTIOZip0Pt
- ecs88Eh49YksLdi0WrSfKrNEngRcuAuUGNOus0O6MXMKnqtisR35H1Hc2BYxMvZOB3Aghm48OcD
- 2U1pMF6dYGyUh+avYkfsrY8/N3W3gwwC+BYsz7hzDOeMvtTXjvCHNThwxjN0Ge4VLNJI7WyVxAS
- Ra91FDb1JrhJaXC1K27iKdM+9uTht63YDlcU7lGpscc9WnCzaORWSK0rRKRzS3HTH59jOn0XTjA
- 3w5tKK5UH5t90wTQMbfbyAgPkl+lzkaRa/5n8RVeN+r/90QG9xDzDMEyiWbbOLnxl1ICZSiBWLu
- nMd/nlLtRKa47Gv/Qm+0VZrt53Gl8v+ejzGOd5d2PBNlF2cvYRJtozLZRrpzN2szJC+uqzG/Tx6
- N2QRcK9GTjwf2F2OJJCVvRF/gD8sE/qk2Gc9ngMUU+pXPTmG+SQU34yTrw+eSfNxwqmtfyZihBy
- Yzncvbtwc6VSdFQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net/mlx5: Remove unused mlx5dr_domain_sync
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173870764825.165851.79407350191519708.git-patchwork-notify@kernel.org>
+Date: Tue, 04 Feb 2025 22:20:48 +0000
+References: <20250203185958.204794-1-linux@treblig.org>
+In-Reply-To: <20250203185958.204794-1-linux@treblig.org>
+To: Dr. David Alan Gilbert <linux@treblig.org>
+Cc: leon@kernel.org, saeedm@nvidia.com, tariqt@nvidia.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
 
-The '-f' parameter is there to force the kernel to emit MPTCP FASTCLOSE
-by closing the connection with unread bytes in the receive queue.
+Hello:
 
-The xdisconnect() helper was used to stop the connection, but it does
-more than that: it will shut it down, then wait before reconnecting to
-the same address. This causes the mptcp_join's "fastclose test" to fail
-all the time.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-This failure is due to a recent change, with commit 218cc166321f
-("selftests: mptcp: avoid spurious errors on disconnect"), but that went
-unnoticed because the test is currently ignored. The recent modification
-only shown an existing issue: xdisconnect() doesn't need to be used
-here, only the shutdown() part is needed.
+On Mon,  3 Feb 2025 18:59:58 +0000 you wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> mlx5dr_domain_sync() was added in 2019 by
+> commit 70605ea545e8 ("net/mlx5: DR, Expose APIs for direct rule managing")
+> but hasn't been used.
+> 
+> Remove it.
+> 
+> [...]
 
-Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
-Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
- - The failure was not clearly visible on NIPA, because the results for
-   the two impacted sub-tests are currently ignored (unstable). Still,
-   it looks important to fix that, as this will help when the tests will
-   be improved not to be unstable any more.
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Here is the summary with links:
+  - [net-next] net/mlx5: Remove unused mlx5dr_domain_sync
+    https://git.kernel.org/netdev/net-next/c/15c51f17bdc4
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 414addef9a4514c489ecd09249143fe0ce2af649..d240d02fa443a1cd802f0e705ab36db5c22063a8 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -1302,7 +1302,7 @@ int main_loop(void)
- 		return ret;
- 
- 	if (cfg_truncate > 0) {
--		xdisconnect(fd);
-+		shutdown(fd, SHUT_WR);
- 	} else if (--cfg_repeat > 0) {
- 		xdisconnect(fd);
- 
-
----
-base-commit: 4241a702e0d0c2ca9364cfac08dbf134264962de
-change-id: 20250204-net-mptcp-sft-conn-f-d1c14274ba66
-
-Best regards,
+You are awesome, thank you!
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
