@@ -1,87 +1,142 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6325F209668;
-	Tue,  4 Feb 2025 10:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DF7208989
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738664883; cv=none; b=Z72MS3S6B5D8/Hk+9HAZFNZhRu41mvAzEy+WKgPp+5s0DxMt9iNolQK2I9FN90SrquBxReiz2asZWOWTp/Nt/M+JngkQmuhtiFStZzuWBivzDAlzfKbiROcZ7t3GMS5BhTmI8+JG3HB2YGIFYr/ZVe+/Vb5As2zg8OvNLdN8XnA=
+	t=1738664962; cv=none; b=dyjUPKmuoXzJv2Ppd7USf3YPHm16mVcflLW9OrJ2TsrX4GwLC4RVKw1DY/Ie7NeOBsk81lFAJaAN7bDfca3XhCv8dMMMlAQKWYvJo4XSBlPgU/uGihq8/2BkQAk1w4tHNGF/DrZt6MtH9xp+O5Bn+i0/epuf/QA/JtAvreJRpmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738664883; c=relaxed/simple;
-	bh=GDNJ1opNuOF8/5BeQvbQ2T7pyojBtKcNZzF3uVADj2s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AJ/dskSJAelwSDfhSGVmqU61LN85w6TShT1pCHSwCsm+m+l4ExlPhlONECnwayj/7YKnFXaI37eHowXmMxp03Dprg8CLnja969RaiaPxVY2ZepfaBGjT+24xnZmr/oARMq88+3rLH6TmPc6mdKlmyXMLJtnBgoUorOXBsPrOr6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YrLz3rM9; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738664962; c=relaxed/simple;
+	bh=rl2itgJRoXg5B61icDyM6OxezwRO95fU8KG7QF5eCgo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H4fjjeCYyB+E373zxIpKnX0eoPsRIkJwFBc+66u436159oOhUMs5Lw+ZJ4Vxn1nrKa1vr05mEeo8yNBjjGklUrBjAR5m4ruw2ZzdRHLnxG5d1jLIYMwncTtM4guYAPo5eJe8mNP/fcOSUYyfiVmR9BVz9cpTsU7TUsvOb0dOvck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=KsZGBgNH; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrLz3rM9"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-303548a933aso46125931fa.3;
-        Tue, 04 Feb 2025 02:28:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KsZGBgNH"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38db10ab86cso21677f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 02:29:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738664879; x=1739269679; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GDNJ1opNuOF8/5BeQvbQ2T7pyojBtKcNZzF3uVADj2s=;
-        b=YrLz3rM9tP72BJYKE97RdcJoIKKxqvXe1R4JCXGLTtWmsIKWobE56rEjpaH+mFapdt
-         ePm3ofF3QNfIXQ40joOi0I510Vc0nYDuSDlhD7Gghac1BU8aWAzInjpwAQiMP4mEpvf6
-         PNDNsA8zLL+KdYim+3iWhN0K8gQmIyFGfmAkYiYKG6hhdBTay8YqZRANUZZ/cTrWrwJC
-         Fbe1TWmPIg6a6Pi7w0biGuEIcwqHfSulwteLXmQ9YjkxNZYlVzUyagUygBiVzDxIZyn3
-         uUQl+IVcX5S3c+KF3+C0nGSrNdRYPiWr4Hby5PCXmyRqoanu1duara/dOKk9BkChnTSE
-         jOHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738664879; x=1739269679;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=ffwll.ch; s=google; t=1738664959; x=1739269759; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GDNJ1opNuOF8/5BeQvbQ2T7pyojBtKcNZzF3uVADj2s=;
-        b=tXbBcj9Vg9oEfotzOgA+PBrvxtKcaYGo44K/XWRm762JwZNIOiE1JPyZ7S97nyZUlo
-         l1g7njIAy78wYDjYpagwITRAg71EB5upzXmcffAywCIkbb8UJWKI8vLCC/ubV94AULFU
-         agqaRXi4uBaL5PeUQpi5drPKGk8daUCzQ4eNqnQJUSKFBGubUDVOlWPgTtggQuhqGFkl
-         sf8HWCqXKMN+FkdDNKiJhIsHy+gvX4xEw1H2+uevi6gzKewkFi/7/xlXOcXS6WTII6LA
-         HG1JcPjVTgkIwMkXn0K62Oo+YAWKE93F6JlwaHnyg846l/5xFTxxVp3cM1wEOKB575t9
-         KPiw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZiZWbyrqmiTGOYRZ4kVqonyQnE5zOv8QkGRjFSLaFT57C6xEVt0wCnNtOKVBoFIjCLLNyEbTChpB4vC4=@vger.kernel.org, AJvYcCXeDJR7JjQjc3iszD4gA4vo+1U1/pTqFCDy1Rch5BCh/XKFTvSRE59PRsUq6Ba3txcVznr/E5HXoEJp8uVm8CPP@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvFabNxQLxASvKmpTHIIOS80PQ4BEIdhaWodvrHQ24xbA3ctV5
-	29/iGVNyzKkYpZCCS530T23k6WVy2+zpjot7d1G5+3DdLWf4siOzvehG8zD5eiHxLvEeUHmX/Ww
-	PCsId2dp9VbamlrAN6jTuT7831aU=
-X-Gm-Gg: ASbGncv67t+WXcTpQnsks3TehcdUFSUb1YwXhkF0UoCcWE87+ddKbGJupnMbAo54+Af
-	uDTE3SiUX0dzgZFQWFZhz7t++NF+SNvUolAyQfq5z7Wtxc7tDIfXJCntzDxFixddBXMa5iLitgn
-	o3RJTbL9GY8o6tk9VRNf6JEP851KA/7iM=
-X-Google-Smtp-Source: AGHT+IF3y+pQToRsuKmXjgdJJwSNNFZ/slj7amq2JiOinNvuwZAZ5tItYwjL00wD3TYbhu0I2c6sf7W1tOo5I+/7t6Q=
-X-Received: by 2002:a2e:b889:0:b0:300:3307:389d with SMTP id
- 38308e7fff4ca-30796856d8bmr86432751fa.19.1738664879156; Tue, 04 Feb 2025
- 02:27:59 -0800 (PST)
+        bh=uTYKk2hp5ZkC/HKiCXz2/2xF3prSkAzoF86kxm9Tnc4=;
+        b=KsZGBgNH1geAGeeN82+6TBYEJ9lND+ZfBRxHCQv0lhgIOLvkRlSOCKSNUCi0OwK+X3
+         8iRXZmvYd5z5gMyrNZODusRm/q7Bch/BV92TgjB+F8+LROfCHwKLtCEeax96UYDdbkQv
+         oz9yl5Qriv9twdsb+n8wqnFE9iKA20PiCGsnc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738664959; x=1739269759;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uTYKk2hp5ZkC/HKiCXz2/2xF3prSkAzoF86kxm9Tnc4=;
+        b=EaYAMzXjcXWuPy2/72G26OhoMpqJYue8jGDtK++klrrIvPWsVCGrBYIqsrSJYZbw2v
+         QzJ4bUprsUIjV8pHX3yT93KmA/3N4nsUQc5HAueX9UJa0s5V1Q9DCCJTo6ANFkpg2ph5
+         B+wBGQhkCIhAuT6VOKqvSUTj2ubJ6a6CsTN96eHn3FDiJC1iwD+5OJtEiEFxAT1rRG1s
+         6JXASRPE0a9yrduUzt1/3eCXN3XZmMB7uRO4RaY4JgEjkvcJ3MTMD3BxXmTxVpEMZH+g
+         RRM7NdXWNTztfwzWzf4VPf1pMDqjPxdIIfUAwU58ypZId/+4/jAIj7hKTb4vgs5J543K
+         8UuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVCG2Dzbm58UMWFxFnKiePuDR5s2tk90BpLlbN2b0PU3sp7Je3uDSuqDD5RxBOWAAaa18ZwPL7IFOB24W4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzekw3Eknseq6a+/ScMDici7jbkTyxoKiwJhzWHMbAeQfc6MeF3
+	9uGXWhGwxDDSIMzK8bPiuPcgtxPxr/w+wmaU/U4WUNAUnppmfS8+6SwuhJW/0g5/NMoX9TcLzuE
+	I
+X-Gm-Gg: ASbGncvvIUoqqNJqOX9U0lfIPklGgVALtmiSOBQzaCjVhfwfLj8nxNX08WswDkIgjt8
+	NhfEtBzS+PgrDzAGgNZRDRa6AehwzWd9y/lZxRDnDGS5AJc7MGQ1c7g5wS+XuwZPGTT58T/P+yK
+	qIglsu5nlPRzgiO84Z71rVWZfjwD1sy5lXoOwndaDGPgNhlN2qb8NGQX1ITHBURmkf3TNyHrLmS
+	9foBUmmHMi6KlAqYN72SRP4IcfqfKB2q3wq+gOSu6sAptsiFrfHh3JizhVJXmm+QOFt6c7IG7Hs
+	nUbogy6XZGqg3umw+5W1xPwTbCQ=
+X-Google-Smtp-Source: AGHT+IH0ABG3sbko57fw07W4SD47FSfJVdSGiS6f5kcfoCJiNKM78OfezLJxwCUa2AYLSFcDarZ8QQ==
+X-Received: by 2002:a5d:6d09:0:b0:385:fae7:fe50 with SMTP id ffacd0b85a97d-38c5209128bmr19595106f8f.42.1738664958647;
+        Tue, 04 Feb 2025 02:29:18 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1016a1sm15414535f8f.21.2025.02.04.02.29.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 02:29:18 -0800 (PST)
+Date: Tue, 4 Feb 2025 11:29:15 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Louis Chauvet <louis.chauvet@bootlin.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] DRM: small improvements
+Message-ID: <Z6Hr-2rYhL96TgB0@phenom.ffwll.local>
+Mail-Followup-To: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Louis Chauvet <louis.chauvet@bootlin.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250204-drm-small-improvements-v4-0-d6bbc92f12f1@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203-scanf-kunit-convert-v2-1-277a618d804e@gmail.com> <Z6HSFvvgxFVGDQeI@pathway.suse.cz>
-In-Reply-To: <Z6HSFvvgxFVGDQeI@pathway.suse.cz>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 4 Feb 2025 05:27:23 -0500
-X-Gm-Features: AWEUYZn3u7sGMarORTNVHRVQrUotRQwagiBBrkddQ1Yn4s_Xa6EU08cWyPe5tSA
-Message-ID: <CAJ-ks9mfmM-SzkEiJsKL56jSuyXzLrKd4XHgRnp63C9AYcDoAA@mail.gmail.com>
-Subject: Re: [PATCH v2] scanf: convert self-test to KUnit
-To: Petr Mladek <pmladek@suse.com>
-Cc: David Gow <davidgow@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204-drm-small-improvements-v4-0-d6bbc92f12f1@bootlin.com>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
-Oops, meant to address this in the last reply.
+On Tue, Feb 04, 2025 at 09:51:57AM +0100, Luca Ceresoli wrote:
+> This series brings small improvements to the DRM documentation and logging.
+> 
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-On Tue, Feb 4, 2025 at 3:39=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
-:
->
-> Should this go via the printk tree, please?
-> Or is David going to take it via the kunit tree?
+I've seen these fly by a few times ... is there no one at bootlin with
+drm-misc commit rights who can push these for you? That's how I at least
+expected these to land a few revisions ago.
 
-Going via printk would be my preference.
+Cheers, Sima
+
+> ---
+> Changes in v4:
+> - Removed pathches 3 and 4 because the added warning has false positives
+>   when cleaning up a connector in the init error path
+> - Updated acked-by tags
+> - Link to v3: https://lore.kernel.org/r/20241111-drm-small-improvements-v3-0-a9f576111b41@bootlin.com
+> 
+> Changes in v3:
+> - patch 3: various fixes suggested by Jani Nikula and kernel test robot
+> - Updated reviewed-by tags
+> - Link to v2: https://lore.kernel.org/r/20241106-drm-small-improvements-v2-0-f6e2aef86719@bootlin.com
+> 
+> Changes in v2:
+> - Added patches 3 and 4
+> - Updated reviewed-by tags
+> - Link to v1: https://lore.kernel.org/r/20241018-drm-small-improvements-v1-0-cc316e1a98c9@bootlin.com
+> 
+> ---
+> Luca Ceresoli (2):
+>       drm/drm_mode_object: fix typo in kerneldoc
+>       drm/atomic-helper: improve CRTC enabled/connectors mismatch logging message
+> 
+>  drivers/gpu/drm/drm_atomic_helper.c | 5 +++--
+>  include/drm/drm_mode_object.h       | 2 +-
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> ---
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> change-id: 20241018-drm-small-improvements-1d104cc10280
+> 
+> Best regards,
+> -- 
+> Luca Ceresoli <luca.ceresoli@bootlin.com>
+> 
+
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
