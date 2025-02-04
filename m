@@ -1,166 +1,90 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A29215058
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEDF2147F7;
+	Tue,  4 Feb 2025 16:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738685052; cv=none; b=kXTX9X5OYTlNx0bjE+r/XjRIiguTeu/OufgWiLyqKgTkyaZ5S22A2EJV+0aef9DPduwNdrgJZ/0+tQzi1GRJJjvZjFJq+BJqAbPTM1hkUGAckHyP8ArOJtMyHSr3nI6Q2HoooadOkk0dhq9Pa/xYGaqDD1RVvAwThdWnXxRDeUk=
+	t=1738685106; cv=none; b=mfljcpKbzDLMQdxtbgI4NQgVENTshTr4veAwVWH3+oq6DrBI2iQMxglXrupyqsFeVjmoqh86gQyNS4hm4wonegicFsDWDs7tWlQbdX4Bt6QTzBXwMC1Q4Pt4iFhJzQZ46sUSrHirjjDCiaJAE0MIAKb/omH18ls0f35TQC4YLi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738685052; c=relaxed/simple;
-	bh=bKm2zrSZMDS55/PulBVvNyZhtDXdsceOimQUO3Sqlrg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g7bt0DSDIoHAnOuu4NXVxRpaov6MnLP8m7xsKU7uP9OAXvdqwBJBbQRNZ603z/aobzKK9LJjsn85L8yE4RKOTL+6BzwTslC8UoawhGffbaZatXhgjQVqoN92zPk9o15Phy64f6mmqY0xhf+94ZmJwwd0FzT78L0RdUGbr0r893I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vtNwbyXS; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738685106; c=relaxed/simple;
+	bh=5Ftg2etPT379GFpPIDw35S1UtArOZ/VXVn3JYr30GVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kxTTktacSHraN5jHMvVICK6z/+rTpKsPl+XxLXkUS0vHbTkWv5mDncvzuwbbczgPyfLuc/sFXi2FTanSN91gaEsB7YDLlIVzeXy3/EdUl1uKvEZsWTkY9l1Xqar/S1FXFhdovNtHYBQJJuXanKcRGZRmQozx/0kbNCz0Dz2+eXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xemi6QOf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vtNwbyXS"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e53c9035003so5133635276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 08:04:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738685049; x=1739289849; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WANx9O2MqxxPgH7NFbnRWmJ+E0+Q02JDckfqFnbdozU=;
-        b=vtNwbyXSGLzxafsyMNIQrOJ1EVCuk85uLeAy7Rg3D34DlFrWQIblnCb6nyZThVwAn6
-         zbcppfOmCrCh9oIeqUFVo02E3INUwb+kl0uxUe0q6/ARf96gi8GhA6o+cjNbdbnwNWMk
-         KKqRfwEtM0JgBqQ6+ITBEFyI3IyWCmPRle4EndMYLA6wr/gsd5fublLpYictl4FU7mFh
-         d99o3umU1dnbbTm8N+6vkyoSyGmXFGId3yCjNFHtublmgVt6COdKHeYl5pwfGOiNBsHQ
-         RPOwrVKTrdl/f6ZZRrf/pPm6lU5mV+Gm7YiL291iV+myyBFNVFizwHODKm8U0l04AtqP
-         7x0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738685049; x=1739289849;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WANx9O2MqxxPgH7NFbnRWmJ+E0+Q02JDckfqFnbdozU=;
-        b=q35u5I15O6CyDyUIH0/k67oEAF1dncszWswWezszdyopKm0//kM31EMbFsrBTPKge+
-         QxIyOg1j9+M8BpySe6ZpV3lydmnkQ+sADOgusq/I1GUbpi1CTZ20YatWay1vHmPin0ee
-         x4QKoFEJBWS07ByVG7r6zKs0c36Ari+SpsYULMyQdDdk1yxcb9ZRfpOHuEGQ44v2wNwO
-         N6P6E7DgztfuTHFFgMLNtWl6dHfcI4NgmJL1+NMNbt76Ud+UaCtQxKZUs/uCoJNUh8hC
-         UVCKgd1NLH7Nt+IGEia79iwFM2xIaI1V9BrOo0AX2+AKnAVO5PjBBHc9lFHIXEmA6bhT
-         PZGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVljo0DnxJLfcwHaWqRb/BfLb04VcSNSpe8BFkfG8OoE4eI2tqCSaGgkBxbCixRxQZosx2NbzgrB+a7ddI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOe6HCBOX+afAwu0ff4Lwl1V6iJcnBKhgVgZACpp54sxkIiETi
-	rVj+FQKhqaqojjMj0ElifK+vKL29F5eDVxhltHiFUStxc7N/7DwLj2SeqIvR9UUYrBSHeDNUhHX
-	y+gefPbu1eIRFc35tiOosOXokbth/HcEb6NMe5Q==
-X-Gm-Gg: ASbGncu4SZe2npV34cLOtk9Ydz2qnnREQQsq4EwUnlkTbYDaC7y8ovDz4LzgJG0nB9J
-	DcC9QxVpYNwza4nfZVkkNUiFEF65SZHvRbQXtu11nQhDbOuvfcUn/hblekitA3WZIGfls701ffA
-	==
-X-Google-Smtp-Source: AGHT+IE4idesVJbfBpDU0f7s2AN3M6p3s6pKSMPlvXAD9e1BxdSCSWbd9pa0w12jqplFp2SmbkOk0RlJN0wo/OSTDWs=
-X-Received: by 2002:a05:6902:2804:b0:e5a:e8e8:b1c3 with SMTP id
- 3f1490d57ef6-e5ae8e8b2f3mr10122299276.9.1738685049136; Tue, 04 Feb 2025
- 08:04:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xemi6QOf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE734C4CEDF;
+	Tue,  4 Feb 2025 16:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738685105;
+	bh=5Ftg2etPT379GFpPIDw35S1UtArOZ/VXVn3JYr30GVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xemi6QOf74CkswMFfsUuXpPkrkXTR87Ogrpu4pWvsPmHb7aTiqB6C1GELwAVWwGGg
+	 6WDMDEEiq8z+QQZgUUaekdhP0qzuUKii3EUaA9QmD7IHXv6stAbjUtGpzbAY9p7Vwu
+	 izNpvuRe7mw3VtOpHDJshwBT/bZKziqGiTvddP0mqIs4LAX0JPygs8JiifHSLQEWKR
+	 9Agc8bYODKI3pJGBIyoEDg3i23hWnM+C5laeY99qtsFFvwsgXHkZkAuxLBokRlKVS0
+	 m7/2BJ9GtG9ufR4gA8Yr8XMFATvq3pe4r1VKqGTztWAt3za2GvO+PhlMriR8KLKTVU
+	 a8zpsSPL3wLDQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tfLQD-000000000Z8-3mGz;
+	Tue, 04 Feb 2025 17:05:09 +0100
+Date: Tue, 4 Feb 2025 17:05:09 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Dikshita Agarwal <quic_dikshita@quicinc.com>, mchehab@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, p.zabel@pengutronix.de,
+	hverkuil@xs4all.nl, sebastian.fricke@collabora.com,
+	bryan.odonoghue@linaro.org, neil.armstrong@linaro.org,
+	nicolas@ndufresne.ca, u.kleine-koenig@baylibre.com,
+	stefan.schmidt@linaro.org, lujianhua000@gmail.com,
+	linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	krzysztof.kozlowski@linaro.org
+Subject: Re: [RFC PATCH v10 1/2] media: iris: introduce helper module to
+ select video driver
+Message-ID: <Z6I6tUa9W0jBbfqf@hovoldconsulting.com>
+References: <20250128080429.3911091-1-quic_dikshita@quicinc.com>
+ <20250128080429.3911091-2-quic_dikshita@quicinc.com>
+ <5070e1f1-914b-4654-88ef-3566e3eee9ca@kernel.org>
+ <f1344e49-61b6-4115-ae88-55b4a3cfed28@quicinc.com>
+ <Z6B822-6UTxQfX46@hovoldconsulting.com>
+ <tqbm672pi223ipcw7btiemlb745weeeiy4gnazzeghozhq2emj@wppbkms6hir5>
+ <Z6HehbKL88LW1lxC@hovoldconsulting.com>
+ <812c4f61-724c-cee8-b7c9-a799ade0631c@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250126050309.7243-1-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20250126050309.7243-1-manivannan.sadhasivam@linaro.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 4 Feb 2025 17:03:33 +0100
-X-Gm-Features: AWEUYZmE6knt90eWxfiurrcN4EWivox7DsLcZz8vXGHj-AjGXDsgLjGwDSxuXJc
-Message-ID: <CAPDyKFqfJmpFvNgjj3P3+vmiSooiU4sr=dnVuBfXOijPdcbt-A@mail.gmail.com>
-Subject: Re: [PATCH] nvme-pci: Use NVME_QUIRK_SIMPLE_SUSPEND for Qualcomm
- Snapdragon 8cx Gen 3 platforms
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me, 
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	andersson@kernel.org, konradybcio@kernel.org, rafael@kernel.org, 
-	helgaas@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <812c4f61-724c-cee8-b7c9-a799ade0631c@quicinc.com>
 
-On Sun, 26 Jan 2025 at 06:03, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On these platforms, power to the PCIe bus is not retained if the SoC enters
-> its own deep low power state called, CX power collapse state during system
-> suspend. Once the SoC resumes after going through CX power collapse, all
-> the PCIe bus state will be lost. So the NVMe devices on these platforms
-> won't resume properly, rendering the machines useless until forcefully
-> restarted by the users.
->
-> To workaround this issue, the PCIe controller driver is keeping a minimal
-> vote on the PCIe-MEM interconnect path in its system suspend callback
-> current currently. While this gives a working system suspend, it also
-> results in increased power consumption during suspend as the SoC never
-> enters its low power state. So with this change, the workaround can finally
-> be removed.
->
-> Also it should be noted that the actual fix to this issue lies in the
-> PCI/PM core. But currently there is no such fix exist as of now and the
-> consensus to reach it is also taking a lot of time.
->
-> So use this quirk to allow users to save battery life on these platforms
-> until the PCI/PM core comes up with an API that tells the PCI client
-> drivers when to turn off the devices.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Tue, Feb 04, 2025 at 08:38:56PM +0530, Vikash Garodia wrote:
+> On 2/4/2025 3:01 PM, Johan Hovold wrote:
 
-FWIW, feel free to add:
+> > And we're still waiting to hear the answers to all of Hans' questions. I
+> > still haven't seen anyone explaining why any of this is needed. You
+> > could have just continued letting Venus support 8250 so presumably there
+> > is some benefit in using Iris instead. Which? And is that potential
+> > benefit important enough to not just wait until Iris is up to par
+> > feature wise?
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> They are documented in this RFC [1] as comments, and would be added in v10 as we
+> conclude the ongoing discussion to handle 2 drivers during the transition phase.
 
-> ---
->
-> Hi,
->
-> I'm sending this patch as there seems to be no consensus so far (as been
-> discussed in this thread [1]) in coming up with a PCI/PM API that tells the
-> client drivers when to safely turn off the devices. Since coming up with these
-> kind of generic APIs are bound to take time (I do intend to pursue), it makes
-> sense to allow these platforms to make use of the existing
+Ah, I forgot about the comment. Most of that should probably go in the
+cover letter and commit messages of v10 instead (and with a more
+condensed comment in the code), but it does indeed seem to provide some
+answers.
 
-In whatever form you intend to continue to try to move this forward,
-feel free to keep me in the loop. I am interested and will try to
-provide as much feedback as I possibly can.
+> [1]
+> https://patchwork.kernel.org/project/linux-media/patch/20250128080429.3911091-2-quic_dikshita@quicinc.com/
 
-I can also keep an eye for a conference where we can bring this up
-again, last time we discussed this was in LPC in Richmond 2023, I
-think. It looks like we have some more data for discussion now, but
-let's see how far we can get on LKML.
-
-> NVME_QUIRK_SIMPLE_SUSPEND quirk in the meantime. Once such API is upstreamed and
-> used in this driver, this quirk can be reverted.
->
-> It should be noted that this CX power collapse issue only exist on the platforms
-> based on the Qcom Snapdragon 8cx Gen 3 SoC. On other platforms, it is a more of
-> a policy decision to decide whether to shutdown the devices or not. And these
-> other platforms can wait for the generic API to be made available by the PCI/PM
-> core.
->
-> [1] https://lore.kernel.org/linux-pci/20241118082344.8146-1-manivannan.sadhasivam@linaro.org
->
->  drivers/nvme/host/pci.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> index e2634f437f33..c52dced952a1 100644
-> --- a/drivers/nvme/host/pci.c
-> +++ b/drivers/nvme/host/pci.c
-> @@ -3162,6 +3162,16 @@ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
->         if (dmi_match(DMI_BOARD_NAME, "LXKT-ZXEG-N6"))
->                 return NVME_QUIRK_NO_APST;
->
-> +       /*
-> +        * Qualcomm Snapdragon 8cx Gen 3 (SC8280XP) platforms doesn't retain
-> +        * power to the PCIe bus after entering low power CX power collapse
-> +        * state during system suspend. So shutdown the NVMe devices to have a
-> +        * working system suspend on these platforms.
-> +        */
-> +       if (dmi_match(DMI_PRODUCT_FAMILY, "SCP_MAKENA") ||
-> +           dmi_match(DMI_PRODUCT_FAMILY, "ThinkPad X13s Gen 1"))
-> +               return NVME_QUIRK_SIMPLE_SUSPEND;
-> +
->         return 0;
->  }
->
-> --
-> 2.25.1
->
-
-Kind regards
-Uffe
+Johan
