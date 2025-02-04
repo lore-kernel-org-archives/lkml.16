@@ -1,98 +1,113 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792A7205502;
-	Tue,  4 Feb 2025 09:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EEA207A19;
+	Tue,  4 Feb 2025 09:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661148; cv=none; b=leGZshF8XxKPqYvnfHhkaB6Dqt8Sd8SVtQruWhpiEpAo2o9hC/mg8nG0lpniwaxe1jMqWA1Q9ocGIDg44UpQlEzbAg1FcPkD45KrH68Iy1OrLjIwjhwURCB3vtgLgWMd8/FNBprBRWb386Zt50/i83OaRqaGMtxIOz2SlbkzXDs=
+	t=1738661167; cv=none; b=O7BlSVUvruYoT2lM4yJV1r8RJH6HDwKfl4yCAVfdx2KZHAC1imVr/lxuwa5zFzVo+faObpRmMsLfVsKswyVScTr3X+BdMeXt0bP8DmDUFC2GKTEpOzEdOiVUavB59g3jwh5ioFbdJETVRirViXxLV3CANXUu10sjwPH33TSuC/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661148; c=relaxed/simple;
-	bh=e7BXgZvYNO2Yfm1uDqi9dZspKT2AusgjGFCVrIZ/Y7g=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=usGYPX4Y3FHHAS0Y8pcXBAEyyVhh1JQvSTNJXnqH+N9M9Mf7tGx6PkNN3G30cCMVpNIgWEunkbPVaTfZN28Zqittk2y2WSlE5vebIkSUmza0QAjrK0cL0BymBqF+6cITXlUiG81TlJe02pnHdQGmbmYsyrzKvD+EPJIZ9dRYajY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YnHwS3R9mz6D9b5;
-	Tue,  4 Feb 2025 17:23:20 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7744C140B3C;
-	Tue,  4 Feb 2025 17:25:34 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Feb
- 2025 10:25:33 +0100
-Date: Tue, 4 Feb 2025 09:25:32 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich
-	<dakr@kernel.org>, Lyude Paul <lyude@redhat.com>, Alexander Lobakin
-	<aleksander.lobakin@intel.com>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>, "Mark
- Brown" <broonie@kernel.org>, =?ISO-8859-1?Q?Ma=EDra?= Canal
-	<mairacanal@riseup.net>, Robin Murphy <robin.murphy@arm.com>, Simona Vetter
-	<simona.vetter@ffwll.ch>, Zijun Hu <quic_zijuhu@quicinc.com>,
-	<linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-	<rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 1/3] driver core: add a faux bus for use when a simple
- device/bus is needed
-Message-ID: <20250204092532.000001ca@huawei.com>
-In-Reply-To: <2025020326-backer-vendetta-7094@gregkh>
-References: <2025020324-thermal-quilt-1bae@gregkh>
-	<2025020326-backer-vendetta-7094@gregkh>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738661167; c=relaxed/simple;
+	bh=331X12ABmtKtadCN0VISYt/VT6Fe3g4NktVCXvB5x0M=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=nXgR8cAGpWEjmSS4Hci3oqF6uCx6+NLYWNDaQF+mi6K23R5ZUSMUQJSmQHXWfrLXA7PabhVTFsCkeGDFhxnhWUDp1g6UgcpgjkdDxjgn08S6ukYktBB0fxeZ1nR87fiLUM8jZQJcuMzR5HLx0QS3JbcEKb6xiw6jsRzgIiAUbt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VtS+W+uJ; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VtS+W+uJ"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab39f84cbf1so988800766b.3;
+        Tue, 04 Feb 2025 01:26:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738661163; x=1739265963; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eZepQE8ATxhdhl2/9eNZi/ijc5MSv3CHMhMwgnFtZgo=;
+        b=VtS+W+uJWqncbjUiq8cBr55i3eAsZv/LoNU9mzOVhytbuxJlUSk6B1pf4KbTse7OGL
+         q5smVGfLvpTvq39FQRO41Dn9uoYRnnmwRumq7aDpwNGv5MhodN/90t5ZJOX/sY0BtMeL
+         LZdCcQz9QjNiX2zW8JLhGCRzPj3kyBPe74QEg+166AzyKuiCjnrif24yQm/jVCKlqlV0
+         7iDqMcgWBdvxgB9CGpfcQ8Q69LsbPvRw0j+VNPgDA9+jxD0jn9mRtxr9yGT9T/4ooJV9
+         zZcUolOyiRwpB3kDSjES8ZoKoifdvmHGyypfYWsxStaq3iajyahhZHcWncnNSEvipZxY
+         Hl1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738661163; x=1739265963;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eZepQE8ATxhdhl2/9eNZi/ijc5MSv3CHMhMwgnFtZgo=;
+        b=VRW5b+6o9iAU97Nvs9chPN3rVzroJI8Wzvw6fjFWOSj/ZPdjFlKtRhFUFDczpW2eQd
+         3iOS/dP7pss7G+h/qL1rJRYc1qHEvEmtMvLi+1JaMQ/047E2IhFHbrlFLkQ6NpqaYIJo
+         b81VnXScpQuV7SiOctCSVFVp+tPnFD+LbJoqz++iRqsbW3ieE+NZbgm9NkRfZwi8mOm0
+         spDO5dZ5MbFIBBak0KV0qQLP8WuLHW4ZWsrDL8D8RV4B6m0g0HV0To62oF+TzGog1HbP
+         /x5bFhfkAbQvw+5+l18iFvC8wJ0TFKIFO79R8UQDno3n+8LMBGxBfreSapRxmJOlfW3g
+         48Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmKfKOkRHLFWhQFg6c9bjojUSaJ+3XIDwac68I/hninJf29BcWwvWbREQxQqU8AW1tNrGpvot9bZCqGoU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1LgC96X65YMC62LR6a9mazEYbDIiiq5de8D/ZLlqnVvFRmZh9
+	9L4E/dFlbzmRt2das3iwZcc21CdBlWAYuXZXeCIwEGekTOUgi1J/
+X-Gm-Gg: ASbGnctySS4zYPt96ZgL2jam2TXoCmrMl+5Pi5834fr8WbgYv7+rwfR6+XTtw6R3zyl
+	V4T1oxvV4kTfie8PeFXezl2Duzjgjcq/vA7+B9PJDMS/bmdnhApbVPJFkzoHCHIrrlbntRw6hJG
+	OJj8PZVGTb+u7J5P5LlukZ0W0XOqIFvc76JDTyYlZgkQWrTqnqAntFx+pfwPK2e86aPXmFy7wRi
+	wjSj2W4SKbaXZlPkjXU7tJcNKNkAd10PO+4FR50oE0m5Ein+J6YOj/D0nNXj7plxj2TwweHIidl
+	YwUp6uKibAo4nzBU2fUj/MlAccy9JE8l93wGWX4evmv4YNs=
+X-Google-Smtp-Source: AGHT+IHea567Tc9kQT3q3eSxLmJX9qtB2Hl24o51Jk9ZOWjMhNbOukk4ehLZB3YlafJ7jFl6r5Y4Bw==
+X-Received: by 2002:a17:907:72c4:b0:aa6:5eae:7ed6 with SMTP id a640c23a62f3a-ab6cfce8dbbmr2576618066b.13.1738661163361;
+        Tue, 04 Feb 2025 01:26:03 -0800 (PST)
+Received: from [192.168.20.51] (54-240-197-238.amazon.com. [54.240.197.238])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab706ce9a53sm634409766b.72.2025.02.04.01.26.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 01:26:03 -0800 (PST)
+From: Paul Durrant <xadimgnik@gmail.com>
+X-Google-Original-From: Paul Durrant <paul@xen.org>
+Message-ID: <99ad4b92-7598-4ee3-92da-60efb87d08f1@xen.org>
+Date: Tue, 4 Feb 2025 09:26:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Reply-To: paul@xen.org
+Subject: Re: [PATCH v2 05/11] KVM: x86/xen: Use guest's copy of pvclock when
+ starting timer
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzbot+352e553a86e0d75f5120@syzkaller.appspotmail.com,
+ Paul Durrant <pdurrant@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20250201013827.680235-1-seanjc@google.com>
+ <20250201013827.680235-6-seanjc@google.com>
+Content-Language: en-US
+Organization: Xen Project
+In-Reply-To: <20250201013827.680235-6-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon,  3 Feb 2025 15:25:17 +0100
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> Many drivers abuse the platform driver/bus system as it provides a
-> simple way to create and bind a device to a driver-specific set of
-> probe/release functions.  Instead of doing that, and wasting all of the
-> memory associated with a platform device, here is a "faux" bus that
-> can be used instead.
+On 01/02/2025 01:38, Sean Christopherson wrote:
+> Use the guest's copy of its pvclock when starting a Xen timer, as KVM's
+> reference copy may not be up-to-date, i.e. may yield a false positive of
+> sorts.  In the unlikely scenario that the guest is starting a Xen timer
+> and has used a Xen pvclock in the past, but has since but turned it "off",
+> then vcpu->arch.hv_clock may be stale, as KVM's reference copy is updated
+> if and only if at least one pvclock is enabled.
 > 
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Furthermore, vcpu->arch.hv_clock is currently used by three different
+> pvclocks: kvmclock, Xen, and Xen compat.  While it's extremely unlikely a
+> guest would ever enable multiple pvclocks, effectively sharing KVM's
+> reference clock could yield very weird behavior.  Using the guest's active
+> Xen pvclock instead of KVM's reference will allow dropping KVM's
+> reference copy.
+> 
+> Fixes: 451a707813ae ("KVM: x86/xen: improve accuracy of Xen timers")
+> Cc: Paul Durrant <pdurrant@amazon.com>
+> Cc: David Woodhouse <dwmw@amazon.co.uk>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/xen.c | 65 ++++++++++++++++++++++++++++++++++++++++++----
+>   1 file changed, 60 insertions(+), 5 deletions(-)
+> 
 
-Nice. One trivial thing inline.
-
-
-> diff --git a/drivers/base/faux.c b/drivers/base/faux.c
-> new file mode 100644
-> index 000000000000..0eba89a5cd57
-> --- /dev/null
-> +++ b/drivers/base/faux.c
-> @@ -0,0 +1,189 @@
-
-
-> +int __init faux_bus_init(void)
-> +{
-> +	int error;
-> +
-> +	error = device_register(&faux_bus_root);
-> +	if (error) {
-> +		put_device(&faux_bus_root);
-> +		return error;
-> +	}
-> +
-> +	error =  bus_register(&faux_bus_type);
-
-Odd bonus space after = 
-
-> +	if (error)
-> +		device_unregister(&faux_bus_root);
-> +
-> +	return error;
-> +}
+Reviewed-by: Paul Durrant <paul@xen.org>
