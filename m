@@ -1,194 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C941FC118;
-	Tue,  4 Feb 2025 06:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87E5203719
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 06:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738649526; cv=none; b=TGIWVoc4pq6H0DE0rr562hO11Paj/CQPfmOo5Ig1BXSrFI2vG31U7zJbYPQW8D6BCx3hgGOnodGxx15V1JAlyNktGnDnoNEccmgNtrYOfiZ8tUqfYTjinPCzz35nmH24ce0AAMQhi8ZdpR1W17pet7YXvLbiEack0Q+jyk/GaKo=
+	t=1738649536; cv=none; b=KaoK6N9mTUu8tn2FwWlIKdh28egG4aYPmRHU5xWFdwJXt6RN+seXq80E6gnpxOpUxW0/mNvdGJKPZ3Xa3KWQV5Wze23mrtCDoO6MUKCcjqsALyBfdXc/ispMjgAmw+ddoDPhc9DL8KN1SUiH67Abc25a/MPPF54dZ6gEMCV0IPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738649526; c=relaxed/simple;
-	bh=82UEmrGcqIRTD9c+4ZQMVIZ2fp+t3hC55QdfOJWinGY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HRbQxifIgoyuPP5YxEMX2DYvr2coFC/ubDuXdkVZ0XLY93XPKci+k375uIaky18/5M8QEsJW8DgdZKW/B2k3a94UHCzAAwk5/xfFMX9Hod5Ms0DOCgkaMK1WsKNdBfWMhE/R1TR6vbsR63ke/w9z6ZTqBH/SJI6JlCeKBzc6w/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SYDottw4; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SYDottw4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738649525; x=1770185525;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=82UEmrGcqIRTD9c+4ZQMVIZ2fp+t3hC55QdfOJWinGY=;
-  b=SYDottw4S+SsHIDYbVEXD24y8RPOJNXZrCZLy6jkBUJ10q0IBAnjtnxY
-   1SGMrJ3D2wkqnCrdqR7EJ57tlKyfmduGJRBdh46bxQDaHmoE26Y9V3S7f
-   HYNkoeULsE6GWdFVrhHBTUqhSu6V0CV7FVkAHPvI5O2X+vWdZRQUidXMu
-   lI1ZWXW2G7qrVAiXuULX3sCOkKRXrC83GuN7cnSNXZMuP0fJIZsIhGf8b
-   Sg2mTmTU772hj18JvS6xhJwGcaaDUn/FSpG0psGCiojgvvZbqVmHRE8Ki
-   v0tpGTo/KhaU5qlCriIsLATpWe99SCL1FikwIQVYM8sUWua1RDNoKYdOV
-   w==;
-X-CSE-ConnectionGUID: Z1/10hnzSr6ix+p4A2Oj2w==
-X-CSE-MsgGUID: 6S3MDnFcSEGTJqX69pT9cA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50579728"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="50579728"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:12:04 -0800
-X-CSE-ConnectionGUID: J0CzH2+rTdKGCS3vuxO4GQ==
-X-CSE-MsgGUID: 0KWbPcpmSpSgk9rDWTyr/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="110279224"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.227.39])
-  by orviesa009.jf.intel.com with ESMTP; 03 Feb 2025 22:11:57 -0800
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To: Simon Horman <horms@kernel.org>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Serge Semin <fancer.lancer@gmail.com>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next v6 6/7] stmmac: intel: interface switching support for EHL platform
-Date: Tue,  4 Feb 2025 14:10:19 +0800
-Message-Id: <20250204061020.1199124-7-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
-References: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
+	s=arc-20240116; t=1738649536; c=relaxed/simple;
+	bh=NRNC/SfbsPeODy6wGi7M72ozq3yOc1C+pIH3B9J2lzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c79YyFOhHkQ5PAJ9B6dhT3oTELeBnKN5NngghS8cE8XJrv9C7XH6WuafPWiKcddzMWRpI6ZYBSMOvAHNGCIrLbDZl09p1uDBRyA14HZzOKue9lLdEMFvHINz4uK7TocXj3z8Snkg7uQGDPYGcGRekT8y7Isv9PVTNgEr4zf3w50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 4A82C68AFE; Tue,  4 Feb 2025 07:12:09 +0100 (CET)
+Date: Tue, 4 Feb 2025 07:12:08 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Bruno Gravato <bgravato@gmail.com>
+Cc: Stefan <linux-kernel@simg.de>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Keith Busch <kbusch@kernel.org>, Adrian Huang <ahuang12@lenovo.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of
+ AsRock X600M-STX + Ryzen 8700G
+Message-ID: <20250204061208.GA29300@lst.de>
+References: <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com> <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info> <20250117080507.GA25953@lst.de> <f81bb87a-c181-4973-be05-f7df84133a46@leemhuis.info> <10e39c88-4667-4c61-b3eb-3dd7ee3074c3@leemhuis.info> <20250128074133.GA22435@lst.de> <379bba80-df0f-44c5-a15e-fd4393c52b8f@simg.de> <Z5jTKTfKUeLm4uJT@gallifrey> <e01fdde0-4760-487d-af0e-2aecf9d7ade2@simg.de> <CAOBLbT8V5DkuXzzgp2dPOZkGomqiLa_cdC=e=uWBtcWpP7L=Ww@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOBLbT8V5DkuXzzgp2dPOZkGomqiLa_cdC=e=uWBtcWpP7L=Ww@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-The intel_config_serdes function was provided to handle interface mode
-changes for the ADL-N platform.
+On Sun, Feb 02, 2025 at 08:32:31AM +0000, Bruno Gravato wrote:
+> In my tests I was using real data: a backup of my files.
+> 
+> On one such test I copied over 300K files, variables sizes and types
+> totalling about 60GB. A bit over 20 files got corrupted.
+> I tried copying the files over the network (ethernet) using rsync/ssh.
+> I also tried restoring the files using restic (over ssh as well). And
+> I also tried copying the files locally from a SATA disk. In all cases
+> I got similar results with some files being corrupted.
+> The destination nvme disk was using btrfs and running btrfs scrub
+> after the copy detects quite a few checksum errors.
 
-The Modphy register lane was provided to configure the serdes when
-changing interface modes.
+So you used various different data sources, and the desintation was
+always the nvme device in the suspect slot.
 
-Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 19 ++++++++++++++++---
- .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  4 ++++
- 2 files changed, 20 insertions(+), 3 deletions(-)
+> I analyzed some of those corrupted files and one of them happened to
+> be a text file (linux kernel source code).
+> A big portion of the text was replaced with text from another file in
+> the same directory (being text made it easy to find where it came
+> from).
+> So this was a contiguous block of text that was overwritten with a
+> contiguous block of text from another file.
+> If I remember correctly the other file was not corrupted (so the
+> blocks weren't swapped). It looked like a certain block of text was
+> written twice: on the correct file and on another file in the same
+> directory.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-index 347dd75bcdcd..de561a00f902 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-@@ -725,6 +725,8 @@ static int intel_mgbe_common_data(struct pci_dev *pdev,
- static int ehl_common_data(struct pci_dev *pdev,
- 			   struct plat_stmmacenet_data *plat)
- {
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
- 	plat->rx_queues_to_use = 8;
- 	plat->tx_queues_to_use = 8;
- 	plat->flags |= STMMAC_FLAG_USE_PHY_WOL;
-@@ -740,19 +742,24 @@ static int ehl_common_data(struct pci_dev *pdev,
- 	plat->safety_feat_cfg->prtyen = 0;
- 	plat->safety_feat_cfg->tmouten = 0;
- 
-+	intel_priv->tsn_lane_registers = ehl_tsn_lane_registers;
-+	intel_priv->max_tsn_lane_registers = ARRAY_SIZE(ehl_tsn_lane_registers);
-+
- 	return intel_mgbe_common_data(pdev, plat);
- }
- 
- static int ehl_sgmii_data(struct pci_dev *pdev,
- 			  struct plat_stmmacenet_data *plat)
- {
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
- 	plat->bus_id = 1;
- 	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
--	plat->speed_mode_2500 = intel_speed_mode_2500;
- 	plat->serdes_powerup = intel_serdes_powerup;
- 	plat->serdes_powerdown = intel_serdes_powerdown;
- 	plat->config_serdes = intel_config_serdes;
- 	plat->clk_ptp_rate = 204800000;
-+	intel_priv->pid_modphy = PID_MODPHY3;
- 
- 	return ehl_common_data(pdev, plat);
- }
-@@ -806,11 +813,14 @@ static struct stmmac_pci_info ehl_pse0_rgmii1g_info = {
- static int ehl_pse0_sgmii1g_data(struct pci_dev *pdev,
- 				 struct plat_stmmacenet_data *plat)
- {
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
- 	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
--	plat->speed_mode_2500 = intel_speed_mode_2500;
- 	plat->serdes_powerup = intel_serdes_powerup;
- 	plat->serdes_powerdown = intel_serdes_powerdown;
- 	plat->config_serdes = intel_config_serdes;
-+	intel_priv->pid_modphy = PID_MODPHY1;
-+
- 	return ehl_pse0_common_data(pdev, plat);
- }
- 
-@@ -848,11 +858,14 @@ static struct stmmac_pci_info ehl_pse1_rgmii1g_info = {
- static int ehl_pse1_sgmii1g_data(struct pci_dev *pdev,
- 				 struct plat_stmmacenet_data *plat)
- {
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
- 	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
--	plat->speed_mode_2500 = intel_speed_mode_2500;
- 	plat->serdes_powerup = intel_serdes_powerup;
- 	plat->serdes_powerdown = intel_serdes_powerdown;
- 	plat->config_serdes = intel_config_serdes;
-+	intel_priv->pid_modphy = PID_MODPHY1;
-+
- 	return ehl_pse1_common_data(pdev, plat);
- }
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-index 79c35ba969ea..093eed977ab0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-@@ -123,6 +123,10 @@ static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
- 	{ PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G },
- 	{}
- };
-+
-+static const int ehl_tsn_lane_registers[] = {7, 8, 9, 10, 11};
-+#else
-+static const int ehl_tsn_lane_registers[] = {};
- #endif /* CONFIG_INTEL_PMC_IPC */
- 
- #endif /* __DWMAC_INTEL_H__ */
--- 
-2.34.1
+That's a very interesting pattern.
+
+> I also got some jpeg images corrupted. I was able to open and view
+> (partially) those images and it looked like a portion of the image was
+> repeated in a different part of it), so blocks of the same file were
+> probably duplicated and overwritten within itself.
+> 
+> The blocks being overwritten seemed to be different sizes on different files.
+
+This does sound like a fairly common pattern due to SSD FTL issues,
+but I still don't want to rule out swiotlb, which due to the bucketing
+could maybe also lead to these, but I can't really see how.  But the
+fact that the affected systems seem to be using swiotlb despite no
+good reason for them to do so still leaves me puzzled.
 
