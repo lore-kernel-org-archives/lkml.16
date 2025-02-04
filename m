@@ -1,70 +1,206 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A0025A629
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BA986321;
+	Tue,  4 Feb 2025 01:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738631646; cv=none; b=UMnWen9Zr6GfKIjA2jjsCREZXdzoJf2CbhN00k4ngJ7hiEza6Vg2bYDx085Q7LswD+SJRP91qnUllltD4wEu9ROTF2KDlogdjcLjd2QJ9DnqapPMfQci8qhRbLPNQMSpEcoiLeZdFLWn5DIRbfQ9otJ0xTaZ9bEVoWlY2A6QrY0=
+	t=1738631795; cv=none; b=WQoHe5ze/YA4t0Iai2YlNcDCwCfVz5u9rE6QuQLODRUE5Hpwxt2J0GIKCPh0EyCZIxgTDCWFBF0Ap23utw+MiE4QdCbQHKPYXF2Gl2/BW0ZQuSdOy0PJLe7r5V20Z1DkyXFlWBE6reEfb6vH+FyMSRJvBDqxdcZR5hPI7iZh3Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738631646; c=relaxed/simple;
-	bh=It+HF+Z07+bu6CfLi6kaVOqY0reSK+nMzk+40i+BRuE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=gzBN8Qk6JSliwgcQosGQAk7OgFagWysoOOigAoG0GCKPpqtfMY8dcrobHdgxfKAfytpLcrCl15kF2E8mr9LHlrORcr+u/CrN60+CdeW7aMgHeLeW1h38NiiwCm0vLqUKR6m51z7d/VmGh1I1qAWZ5CM8SSy1X6bIdm6K1I8lWgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3cfba354f79so112772055ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 17:14:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738631644; x=1739236444;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DcRqjoY6ciWOalSHnDrdtIEOy4Di3ArQFcclJnvggVY=;
-        b=euVMEWnTz+01eSlAHaCX50gdfLUzAGUKWxi7IXEhH5Fv5g+pRM8RfX5EcLpZHlkUvX
-         7xxzKPz9HmJmmXpO86q5kAUiXSUeCqCSKeioyDGiXsSOPTHjbXxlSZaghCUKKG53HG/F
-         lVFR022fAeny0h2LU+1bxXfqgGIMf89G4x7TFcESzihYl2XR/XMoOIyOWu4TrXxUKIiX
-         ADcvRlFKblns+d14UCNth89xYufiBJOXBc9JPpVcT0TOrzibbI4ky3l+ShBxQKfk1GNe
-         nP98dVSMpCeUAD/K8ckqjlZt3wANoQ8h+qewUygjjLjvjcJklig1FzSwH6TVhrBf1/nd
-         6++g==
-X-Forwarded-Encrypted: i=1; AJvYcCWcq1QeJjbwyybrZk9ib94Wl1YE06PYBUKXuYSeUq2/Cc1DyclMaFCeOKrvNNRD7+iYk29piFBaaRnA3rY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxld47d/mfsusxko5WMGuxXLR4W4Af6hiO7JstHE1R7wd1YXj0h
-	FjBtmt2w7AhXpAmGfW+rNABrAO/OFiC4btz9Iy6uc2SAv+0m5AYrVBTZxoJhmbLoYL/EQYrb0o/
-	yM38nlgodQaKTErS2yXunIOfc1p5zC64F+kTxXqFd3U6BC04VyGKbBnE=
-X-Google-Smtp-Source: AGHT+IEzrl8N8MxWRyq6bFRd3V2wNMACjf4evxFkBVIZL1RwNDFyMd93pUOwCTh7NpkwSWmUsk5IYfhShHQjpeyN4TPSHr2XNK6h
+	s=arc-20240116; t=1738631795; c=relaxed/simple;
+	bh=BKX74RxQvj7KO34dJ9SbmqicVrrf7jXE1/V5pa5N27Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=B2mLy17c13AsMrCtbO99cEHz5vw9YVGvtrWxVjH5ouDJB9w/RFqvYX8jWZIa6rHi2VGfWBbkNUVq/jhnM+r5crYsbwLeZu3gODJ20OVGKnk2lAcU39t9St6kXHvs+mboxNynlPk13u30+BPfwS6vjxx1xNiP8p1ZeOY4bNhxLhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpexNTx1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpexNTx1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E29EC4CEE4;
+	Tue,  4 Feb 2025 01:16:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738631795;
+	bh=BKX74RxQvj7KO34dJ9SbmqicVrrf7jXE1/V5pa5N27Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cpexNTx1OQ4zQ3uouRo6Cf5J3CY2aIIUz+YEyTkoBrV0oMVuJpwBkO/cSfNc802gh
+	 6e5XWN8Li2dOeUBErK4OVIbKtwaprWAjjqZ6tyrW0QGOm/JL9UKkVi98Xcwrorwwxi
+	 hzlEmMU5OQnVUNLe16CCYXG8OjMb2mAfTQ4XG01INzVKJjj5vfr8CXaGvag0xYC0FL
+	 h7WUin52nPzYfjPLWDezWLLaARKhRoAy8y56FEfVSlWwLk5UhtZY7lYvUVDSdV8GJi
+	 RcUtq49rZgTnkV2c9T/0zRnGNitQ2U+BLMkFrepKndzAaf9EbZOGWZwP+pPYWNNRTh
+	 eTsMWFjeSIg1g==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Sasha Levin <sashal@kernel.org>,
+	ntfs3@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.13 2/5] fs/ntfs3: Unify inode corruption marking with _ntfs_bad_inode()
+Date: Mon,  3 Feb 2025 20:16:24 -0500
+Message-Id: <20250204011627.2206261-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250204011627.2206261-1-sashal@kernel.org>
+References: <20250204011627.2206261-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fc3:b0:3cf:bb7d:ac13 with SMTP id
- e9e14a558f8ab-3cffe3a6eb6mr216089255ab.1.1738631644233; Mon, 03 Feb 2025
- 17:14:04 -0800 (PST)
-Date: Mon, 03 Feb 2025 17:14:04 -0800
-In-Reply-To: <tencent_38DDE8DD931974CFDA0DABA5B08DF9927907@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a169dc.050a0220.163cdc.005c.GAE@google.com>
-Subject: Re: [syzbot] [nilfs?] general protection fault in __d_unalias
-From: syzbot <syzbot+ab57f676a518849a8d57@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.1
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 
-syzbot tried to test the proposed patch but the build/boot failed:
+[ Upstream commit 55ad333de0f80bc0caee10c6c27196cdcf8891bb ]
 
-patch is already applied
+Also reworked error handling in a couple of places.
 
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ntfs3/attrib.c  |  4 ++--
+ fs/ntfs3/dir.c     |  2 +-
+ fs/ntfs3/frecord.c | 12 +++++++-----
+ fs/ntfs3/fsntfs.c  |  6 +++++-
+ fs/ntfs3/index.c   |  6 ++----
+ fs/ntfs3/inode.c   |  3 +++
+ 6 files changed, 20 insertions(+), 13 deletions(-)
 
-Tested on:
-
-commit:         0de63bb7 Merge tag 'pull-fix' of git://git.kernel.org/..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
-dashboard link: https://syzkaller.appspot.com/bug?extid=ab57f676a518849a8d57
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=108cf5f8580000
+diff --git a/fs/ntfs3/attrib.c b/fs/ntfs3/attrib.c
+index 795cf8e75d2ea..af94e3737470d 100644
+--- a/fs/ntfs3/attrib.c
++++ b/fs/ntfs3/attrib.c
+@@ -1407,7 +1407,7 @@ int attr_wof_frame_info(struct ntfs_inode *ni, struct ATTRIB *attr,
+ 	 */
+ 	if (!attr->non_res) {
+ 		if (vbo[1] + bytes_per_off > le32_to_cpu(attr->res.data_size)) {
+-			ntfs_inode_err(&ni->vfs_inode, "is corrupted");
++			_ntfs_bad_inode(&ni->vfs_inode);
+ 			return -EINVAL;
+ 		}
+ 		addr = resident_data(attr);
+@@ -2588,7 +2588,7 @@ int attr_force_nonresident(struct ntfs_inode *ni)
+ 
+ 	attr = ni_find_attr(ni, NULL, &le, ATTR_DATA, NULL, 0, NULL, &mi);
+ 	if (!attr) {
+-		ntfs_bad_inode(&ni->vfs_inode, "no data attribute");
++		_ntfs_bad_inode(&ni->vfs_inode);
+ 		return -ENOENT;
+ 	}
+ 
+diff --git a/fs/ntfs3/dir.c b/fs/ntfs3/dir.c
+index fc6a8aa29e3af..b6da80c69ca63 100644
+--- a/fs/ntfs3/dir.c
++++ b/fs/ntfs3/dir.c
+@@ -512,7 +512,7 @@ static int ntfs_readdir(struct file *file, struct dir_context *ctx)
+ 		ctx->pos = pos;
+ 	} else if (err < 0) {
+ 		if (err == -EINVAL)
+-			ntfs_inode_err(dir, "directory corrupted");
++			_ntfs_bad_inode(dir);
+ 		ctx->pos = eod;
+ 	}
+ 
+diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
+index b9d6cb1fb54f4..f66186dbeda9d 100644
+--- a/fs/ntfs3/frecord.c
++++ b/fs/ntfs3/frecord.c
+@@ -148,8 +148,10 @@ int ni_load_mi_ex(struct ntfs_inode *ni, CLST rno, struct mft_inode **mi)
+ 		goto out;
+ 
+ 	err = mi_get(ni->mi.sbi, rno, &r);
+-	if (err)
++	if (err) {
++		_ntfs_bad_inode(&ni->vfs_inode);
+ 		return err;
++	}
+ 
+ 	ni_add_mi(ni, r);
+ 
+@@ -239,8 +241,7 @@ struct ATTRIB *ni_find_attr(struct ntfs_inode *ni, struct ATTRIB *attr,
+ 	return attr;
+ 
+ out:
+-	ntfs_inode_err(&ni->vfs_inode, "failed to parse mft record");
+-	ntfs_set_state(ni->mi.sbi, NTFS_DIRTY_ERROR);
++	_ntfs_bad_inode(&ni->vfs_inode);
+ 	return NULL;
+ }
+ 
+@@ -332,6 +333,7 @@ struct ATTRIB *ni_load_attr(struct ntfs_inode *ni, enum ATTR_TYPE type,
+ 	    vcn <= le64_to_cpu(attr->nres.evcn))
+ 		return attr;
+ 
++	_ntfs_bad_inode(&ni->vfs_inode);
+ 	return NULL;
+ }
+ 
+@@ -1607,8 +1609,8 @@ int ni_delete_all(struct ntfs_inode *ni)
+ 		roff = le16_to_cpu(attr->nres.run_off);
+ 
+ 		if (roff > asize) {
+-			_ntfs_bad_inode(&ni->vfs_inode);
+-			return -EINVAL;
++			/* ni_enum_attr_ex checks this case. */
++			continue;
+ 		}
+ 
+ 		/* run==1 means unpack and deallocate. */
+diff --git a/fs/ntfs3/fsntfs.c b/fs/ntfs3/fsntfs.c
+index 03471bc9371cd..938d351ebac72 100644
+--- a/fs/ntfs3/fsntfs.c
++++ b/fs/ntfs3/fsntfs.c
+@@ -908,7 +908,11 @@ void ntfs_bad_inode(struct inode *inode, const char *hint)
+ 
+ 	ntfs_inode_err(inode, "%s", hint);
+ 	make_bad_inode(inode);
+-	ntfs_set_state(sbi, NTFS_DIRTY_ERROR);
++	/* Avoid recursion if bad inode is $Volume. */
++	if (inode->i_ino != MFT_REC_VOL &&
++	    !(sbi->flags & NTFS_FLAGS_LOG_REPLAYING)) {
++		ntfs_set_state(sbi, NTFS_DIRTY_ERROR);
++	}
+ }
+ 
+ /*
+diff --git a/fs/ntfs3/index.c b/fs/ntfs3/index.c
+index 9089c58a005ce..7eb9fae22f8da 100644
+--- a/fs/ntfs3/index.c
++++ b/fs/ntfs3/index.c
+@@ -1094,8 +1094,7 @@ int indx_read(struct ntfs_index *indx, struct ntfs_inode *ni, CLST vbn,
+ 
+ ok:
+ 	if (!index_buf_check(ib, bytes, &vbn)) {
+-		ntfs_inode_err(&ni->vfs_inode, "directory corrupted");
+-		ntfs_set_state(ni->mi.sbi, NTFS_DIRTY_ERROR);
++		_ntfs_bad_inode(&ni->vfs_inode);
+ 		err = -EINVAL;
+ 		goto out;
+ 	}
+@@ -1117,8 +1116,7 @@ int indx_read(struct ntfs_index *indx, struct ntfs_inode *ni, CLST vbn,
+ 
+ out:
+ 	if (err == -E_NTFS_CORRUPT) {
+-		ntfs_inode_err(&ni->vfs_inode, "directory corrupted");
+-		ntfs_set_state(ni->mi.sbi, NTFS_DIRTY_ERROR);
++		_ntfs_bad_inode(&ni->vfs_inode);
+ 		err = -EINVAL;
+ 	}
+ 
+diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
+index be04d2845bb7b..a1e11228dafd0 100644
+--- a/fs/ntfs3/inode.c
++++ b/fs/ntfs3/inode.c
+@@ -410,6 +410,9 @@ static struct inode *ntfs_read_mft(struct inode *inode,
+ 	if (!std5)
+ 		goto out;
+ 
++	if (is_bad_inode(inode))
++		goto out;
++
+ 	if (!is_match && name) {
+ 		err = -ENOENT;
+ 		goto out;
+-- 
+2.39.5
 
