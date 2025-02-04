@@ -1,245 +1,226 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C1E2054FA;
-	Tue,  4 Feb 2025 10:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EEB207E16
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738663696; cv=none; b=RF+OqNgLYBSBADedvdTsyG6nLXf7dS96mxOkYhkBG35PWNe8p3s+tkIp4kp9yycCqvFfZqWRo/UBanfZW+0vJenCKOVPoG7bdOCpwv8jyodmwUhnQMae68Yl12vZcigxE/0wXBDE4Vaxd1EoNl3HX1XH/sFYe+VhoXNNIaoQKDA=
+	t=1738663706; cv=none; b=ucLqcV/OsA599lR0nsyxouNJABGG8xel10jYY2NwpVDaT8ajKh6qXnCQf1l422CkYA//JUrjG0r209tuhaVaZRr5UwuevvSF47jRinoPUx+yB8YVz967P3/GCykFWQ7TamJUNIG4D8bjSLzSzNNW2bInEAS9yutb4sC/unLFOdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738663696; c=relaxed/simple;
-	bh=isceCHChWGayOfBjFe+bObKOe1E6SM3BNFPrIMvWhEQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eqaNR2VWXUMYw/CBcsEZ0TXzkllYU39rSE1++uCbdURRyQMbTpgmT4s+PXEXiNmLTUYSNrGIlcntBxUZYyZuBguY9TSdn1ArAfgghinhFSijcWG1E9oOUeyCs87HmDN1y92wkePk3TDi+rDGHv/H/GNdQPp+CceQav6iZJCPolY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=o1aCn+w3; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1738663706; c=relaxed/simple;
+	bh=oJ5ilFc6EIBLNd9RD+HALk65hUVaw7xoA7947igedgA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=NTeTeIS0QqOJgCht9Qfq+eTGpZTECW/fJ3qcZwinpoIwgKAUJe0fvzttjtwJDGenSKE96FQKIPZ6Ips8Do3V50PcRKgr2U2qrHtltciJ/8KxL7yElB5DKZjPCidYMmkuidyDn/2WgLt+5WqN/vIxxdLJLFdP2Kqlif/hmZ7g2SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z5kkHwPP; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="o1aCn+w3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1738663691;
-	bh=isceCHChWGayOfBjFe+bObKOe1E6SM3BNFPrIMvWhEQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o1aCn+w3TTXJmN4f9oHab1qZCR+6NoDWOAWPDOJQYyhCp+LZYEvo9MT5OmuAH7RnR
-	 R1M2hRjImW7sV3Oancf1WR26D8b+P5X1TShNTgCBxYGCprFCMXWeI+3z49XZvKpBih
-	 /ULY00QGABhXo1dAgbT3f3+8m47AA/yRjceSYVgE=
-Date: Tue, 4 Feb 2025 11:08:11 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>, Mark Brown <broonie@kernel.org>, 
-	=?utf-8?B?TWHDrXJh?= Canal <mairacanal@riseup.net>, Robin Murphy <robin.murphy@arm.com>, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Zijun Hu <quic_zijuhu@quicinc.com>, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 1/3] driver core: add a faux bus for use when a simple
- device/bus is needed
-Message-ID: <127f992b-1c53-49e1-8939-65b1d086fac5@t-8ch.de>
-References: <2025020324-thermal-quilt-1bae@gregkh>
- <2025020326-backer-vendetta-7094@gregkh>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z5kkHwPP"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38da72cc47bso373740f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 02:08:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738663702; x=1739268502; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2zIjvrO6ssyej4wt8HX0jpMSZoBBUMQv8ogZGOdGu48=;
+        b=z5kkHwPPxBWZ6qiVizcnRGz9z+lwlGYAGZoRI9c9LwEUVME1TgGd5FV888l5NkImdp
+         GeE7EekiaXaj4ES0yXzdxTxCVBfrjbenj8TprCT/sTbXT0XRjxqJO2wRlPcyq2JKsjEy
+         eY3Rz7W+eCqcmkuKz3aOl1hBu1FXMx04yI6sccJZ69ChAfd3f/FPXpLFu44pzCl/ElFR
+         v6WyuyJUzrTbyGN04Am2/ErMeMZG7kh6767udB6IjsXS8/1ji3eR0ZERUEP6UzTF/U+g
+         kZB0qeM/jb3khDrpX4oz2uE2K3ixGBSzeKxnNSywRyegVMAJJuFiKi8fizFYTmVrM5b9
+         JJew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738663702; x=1739268502;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2zIjvrO6ssyej4wt8HX0jpMSZoBBUMQv8ogZGOdGu48=;
+        b=BQNknnxckvIjjf4baxvRZ8HWaWWX9FlE0aI1Kfz9y9Xb+a0IFaTOiqVOsLhrXrVRjj
+         BE4C3fD0EdaMemYSfHo9NWsQ0tg/CzglavZgTAU/Ux3ZFvjapC568PBNHtkU7gUYOQKa
+         HnDJsbznOSNyr2Ng16obsaaA1V4j0uQofJDIi5qwcVVU/Zala5ArknENbiOGctHBrWvN
+         uizxDnNldX93AelML/7tH9FyWwpKsDd/YMwkDWofC7wK6br9qXBDPArxPmMWAWUVjF+3
+         ZqQLeV7hHfMbsFXL3joJzZ38IyQH23sDP3jfAugPj3ZpreguKB8MxafyAqnSFtccJZmc
+         OpuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXxbOqskyY9qmmZoktvva+2m8MO2APyhGZqxU/JOHueCc7bbSVIMwxQ7wx0q1V9GBqBy9EyFUAty+CByGQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwnxauwfeYz8p3nHY+5OSFxVKLHA59ipdfhQqoaV/fVeOMb5Y+
+	Xdg7u73+w7t/iCQy4l2Mx/akIw5gpXB/0eA+A96IUtku6at49rGta5QrP0o9EW0=
+X-Gm-Gg: ASbGncstwrbLMO3fIKHltxDNeR/mLj6XuTpQlqob6cuMezQw3o0vD5sKI3NZhfbOt7J
+	yMNQR0PYhCkKemTM7i4lsZ/Abtd4bdRdXcgKOrtVwa+7nyoqF4cTupcRqSS2TPI0XjNSlUxmg8a
+	IkZIOfvOR2841VJMWu/fg7fT39JGLTs1qEafsbGntmk/3ulpdhOQRfCUFjlQryfm9BOwHM0Imr9
+	jTjJoDMq2aFuW8SUwPKZ7nyGwOYLB2G1FD5EGrjaDnHl/XbXf1mgzCA0RU5rZcGJNSMDTxUQu6j
+	SGAkHA6PofozlH61zZKzGJOV3Tv+uk8iok937LcMEX1sGZzz6ZB70OxztqMfGCxmIFO+
+X-Google-Smtp-Source: AGHT+IGqsAZdQEmVVkbeJpaNL+XAZKTgDkM4NecLCiPVE9Z711OuYUgYNErUH2YK9lvt5Un2fA5dQw==
+X-Received: by 2002:adf:ee8b:0:b0:382:3c7b:9ae with SMTP id ffacd0b85a97d-38c51943ddemr18396963f8f.16.1738663702354;
+        Tue, 04 Feb 2025 02:08:22 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:8db5:d196:bd48:5fbb? ([2a01:e0a:982:cbb0:8db5:d196:bd48:5fbb])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e245f41esm185365745e9.36.2025.02.04.02.08.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 02:08:21 -0800 (PST)
+Message-ID: <7ac9b23a-6138-46ad-8af8-fe283b765565@linaro.org>
+Date: Tue, 4 Feb 2025 11:08:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025020326-backer-vendetta-7094@gregkh>
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] ASoC: qcom: sc8280xp: enable primary mi2s
+To: Luca Weiss <luca.weiss@fairphone.com>,
+ Danila Tikhonov <danila@jiaxyga.com>
+Cc: srinivas.kandagatla@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+ perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux@mainlining.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20250203113857.34728-1-danila@jiaxyga.com>
+ <df4580ff-7b45-4485-9664-4cae731b7c53@linaro.org>
+ <bcb4585e-1426-444a-9112-6cd95a81f8bc@jiaxyga.com>
+ <D7J77FB0GLG2.1SDETF63DWW8Z@fairphone.com>
+ <842284b1-343f-4991-98f4-462f547ad2bc@linaro.org>
+ <D7JKR1YB6PSS.PRWFJ8NDA9BZ@fairphone.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <D7JKR1YB6PSS.PRWFJ8NDA9BZ@fairphone.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2025-02-03 15:25:17+0100, Greg Kroah-Hartman wrote:
-> Many drivers abuse the platform driver/bus system as it provides a
-> simple way to create and bind a device to a driver-specific set of
-> probe/release functions.  Instead of doing that, and wasting all of the
-> memory associated with a platform device, here is a "faux" bus that
-> can be used instead.
+On 04/02/2025 11:04, Luca Weiss wrote:
+> On Tue Feb 4, 2025 at 9:19 AM CET, neil.armstrong wrote:
+>> On 04/02/2025 00:27, Luca Weiss wrote:
+>>> On Mon Feb 3, 2025 at 5:33 PM CET, Danila Tikhonov wrote:
+>>>> On 03/02/2025 17:23, neil.armstrong@linaro.org wrote:
+>>>>> On 03/02/2025 12:38, Danila Tikhonov wrote:
+>>>>>> When using primary mi2s on sc8280xp-compatible SoCs, the correct clock
+>>>>>> needs to get enabled to be able to use the mi2s interface.
+>>>>>>
+>>>>>> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+>>>>>> ---
+>>>>>>     sound/soc/qcom/sc8280xp.c | 13 +++++++++++++
+>>>>>>     1 file changed, 13 insertions(+)
+>>>>>>
+>>>>>> diff --git a/sound/soc/qcom/sc8280xp.c b/sound/soc/qcom/sc8280xp.c
+>>>>>> index 311377317176..03687de1ebb0 100644
+>>>>>> --- a/sound/soc/qcom/sc8280xp.c
+>>>>>> +++ b/sound/soc/qcom/sc8280xp.c
+>>>>>> @@ -14,6 +14,8 @@
+>>>>>>     #include "common.h"
+>>>>>>     #include "sdw.h"
+>>>>>>     +#define MI2S_BCLK_RATE    1536000
+>>>>>> +
+>>>>>>     struct sc8280xp_snd_data {
+>>>>>>         bool stream_prepared[AFE_PORT_MAX];
+>>>>>>         struct snd_soc_card *card;
+>>>>>> @@ -25,13 +27,24 @@ struct sc8280xp_snd_data {
+>>>>>>       static int sc8280xp_snd_init(struct snd_soc_pcm_runtime *rtd)
+>>>>>>     {
+>>>>>> +    unsigned int codec_dai_fmt = SND_SOC_DAIFMT_BC_FC;
+>>>>>> +    unsigned int fmt = SND_SOC_DAIFMT_BP_FP;
+>>>>>>         struct sc8280xp_snd_data *data =
+>>>>>> snd_soc_card_get_drvdata(rtd->card);
+>>>>>> +    struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
+>>>>>>         struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+>>>>>>         struct snd_soc_card *card = rtd->card;
+>>>>>>         struct snd_soc_jack *dp_jack  = NULL;
+>>>>>>         int dp_pcm_id = 0;
+>>>>>>           switch (cpu_dai->id) {
+>>>>>> +    case PRIMARY_MI2S_RX:
+>>>>>> +        codec_dai_fmt |= SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_I2S;
+>>>>>> +        snd_soc_dai_set_sysclk(cpu_dai,
+>>>>>> +            Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT,
+>>>>>> +            MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
+>>>>>
+>>>>> How is this possible ? sc8280xp uses the q6prm clock driver, and
+>>>>> there's no
+>>>>> way this call sets the Q6PRM_LPASS_CLK_ID_PRI_MI2S_IBIT, or I totally
+>>>>> missed
+>>>>> something.
+>>>>>
+>>>>> And prm is neither a dai nor has the set_sysclk callback.
+>>>>>
+>>>>> Neil
+>>>>>
+>>>> Oh, thanks for the answer.
+>>>>
+>>>> This comes from qcm6490 compatibility. Actually it is needed for
+>>>> Nothing Phone (1) and Luca Weiss just suggested me to use
+>>>> qcom,qcm6490-idp-sndcard like do they do it for FP5. (SM7325 is the
+>>>> closest to QCM6490):
+>>>> https://github.com/sc7280-mainline/linux/pull/5#discussion_r1848984788
+>>>> Actually I also think it is a bit incorrect.
+>>>
+>>> For reference, this is coming from this and following:
+>>> https://lore.kernel.org/linux-arm-msm/e8a24709-de96-4d09-ba00-1e084a656c68@kernel.org/
+>>
+>> Sure, but do you use sound/soc/qcom/sc8280xp.c ? it's designed for audioreach
+>> compatible audio architecture (post sm8250).
 > 
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/base/Makefile       |   2 +-
->  drivers/base/base.h         |   1 +
->  drivers/base/faux.c         | 189 ++++++++++++++++++++++++++++++++++++
->  drivers/base/init.c         |   1 +
->  include/linux/device/faux.h |  33 +++++++
->  5 files changed, 225 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/base/faux.c
->  create mode 100644 include/linux/device/faux.h
+> I would've also thought qcm6490-idp and qcm6490-rb3gen2 are
+> pre-audioreach, so sm8250.c would be a better match - but these two
+> devices already use sc8280xp.c driver for some reason?
 
-<snip>
+I think they were added to sc8280xp.c because it has the logic to change
+the card name and some other tweaks for record channels setup,
+but it can be easily added to sm8250.c.
 
-> diff --git a/drivers/base/faux.c b/drivers/base/faux.c
-> new file mode 100644
-> index 000000000000..0eba89a5cd57
-> --- /dev/null
-> +++ b/drivers/base/faux.c
-> @@ -0,0 +1,189 @@
-> +// SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> + * Copyright (c) 2025 The Linux Foundation
-> + *
-> + * A "simple" faux bus that allows devices to be created and added
-> + * automatically to it.  Whenever you need a device that is not "real",
-> + * use this interface instead of even thinking of using a platform device.
-> + *
-> + */
-> +#include <linux/device/faux.h>
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/slab.h>
-> +#include <linux/string.h>
-> +#include "base.h"
-> +
-> +/*
-> + * Internal wrapper structure so we can hold the memory
-> + * for the driver and the name string of the faux device.
-> + */
-> +struct faux_object {
-> +	struct faux_device faux_dev;
-> +	struct device_driver driver;
-> +	const struct faux_driver_ops *faux_ops;
-> +	char name[];
-> +};
-> +#define to_faux_object(x) container_of_const(dev, struct faux_object, faux_dev.dev);
-> +
-> +static struct device faux_bus_root = {
-> +	.init_name	= "faux_bus",
-> +};
-> +
-> +static int faux_match(struct device *dev, const struct device_driver *drv)
-> +{
-> +	struct faux_object *faux_obj = to_faux_object(dev);
-> +
-> +	/* Match is simple, strcmp()! */
-> +	return (strcmp(faux_obj->name, drv->name) == 0);
-> +}
-> +
-> +static int faux_probe(struct device *dev)
-> +{
-> +	struct faux_object *faux_obj = to_faux_object(dev);
-> +	struct faux_device *faux_dev = &faux_obj->faux_dev;
-> +	const struct faux_driver_ops *faux_ops = faux_obj->faux_ops;
-> +	int ret = 0;
-> +
-> +	if (faux_ops && faux_ops->probe)
-> +		ret = faux_ops->probe(faux_dev);
-> +
-> +	return ret;
-> +}
-> +
-> +static void faux_remove(struct device *dev)
-> +{
-> +	struct faux_object *faux_obj = to_faux_object(dev);
-> +	struct faux_device *faux_dev = &faux_obj->faux_dev;
-> +	const struct faux_driver_ops *faux_ops = faux_obj->faux_ops;
-> +
-> +	if (faux_ops && faux_ops->remove)
-> +		faux_ops->remove(faux_dev);
-> +}
-> +
-> +static const struct bus_type faux_bus_type = {
-> +	.name		= "faux_bus",
+Neil
 
-Is the _bus suffix intentional?
-Other busses don't have it.
+> 
+> Maybe someone with more insight on these devices can help clarify this?
+> I'll also need this for qcm6490-fairphone-fp5 soon.
+> 
+> Regards Luca
+> 
+>>
+>> sound/soc/qcom/sm8250.c has already support for PRIMARY_MI2S_RX via
+>> the Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT, and it compatible with the previous
+>> audio architecture (non audioreach).
+>>
+>> Neil
+>>
+>>>
+>>> Regards
+>>> Luca
+>>>
+>>>>
+>>>> ---
+>>>> Regards,
+>>>> Danila
+>>>>>> +        snd_soc_dai_set_fmt(cpu_dai, fmt);
+>>>>>> +        snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
+>>>>>> +        break;
+>>>>>>         case WSA_CODEC_DMA_RX_0:
+>>>>>>         case WSA_CODEC_DMA_RX_1:
+>>>>>>             /*
+>>>>>
+>>>
+> 
 
-> +	.match		= faux_match,
-> +	.probe		= faux_probe,
-> +	.remove		= faux_remove,
-> +};
-> +
-> +static void faux_device_release(struct device *dev)
-> +{
-> +	struct faux_object *faux_obj = to_faux_object(dev);
-> +	struct device_driver *drv = &faux_obj->driver;
-> +
-> +	/*
-> +	 * Now that the device is going away, it has been unbound from the
-> +	 * driver we created for it, so it is safe to unregister the driver from
-> +	 * the system.
-> +	 */
-> +	driver_unregister(drv);
-> +
-> +	kfree(faux_obj);
-> +}
-> +
-> +/**
-> + * __faux_device_create - create and register a faux device and driver
-> + * @name: name of the device and driver we are adding
-> + * @faux_ops: struct faux_driver_ops that the new device will call back into, can be NULL
-> + * @owner: module owner of the device/driver
-> + *
-> + * Create a new faux device and driver, both with the same name, and register
-> + * them in the driver core properly.  The probe() callback of @faux_ops will be
-> + * called with the new device that is created for the caller to do something
-> + * with.
-> + */
-> +struct faux_device *__faux_device_create(const char *name,
-> +					       struct faux_driver_ops *faux_ops,
-
-const
-
-> +					       struct module *owner)
-
-What about attributes?
-
-> +{
-> +	struct device_driver *drv;
-> +	struct device *dev;
-> +	struct faux_object *faux_obj;
-> +	struct faux_device *faux_dev;
-> +	int ret;
-> +
-> +	faux_obj = kzalloc(sizeof(*faux_obj) + strlen(name) + 1, GFP_KERNEL);
-> +	if (!faux_obj)
-> +		return NULL;
-> +
-> +	/* Save off the name of the object into local memory */
-> +	strcpy(faux_obj->name, name);
-> +
-> +	/* Initialize the driver portion and register it with the driver core */
-> +	faux_obj->faux_ops = faux_ops;
-> +	drv = &faux_obj->driver;
-> +
-> +	drv->owner = owner;
-> +	drv->name = faux_obj->name;
-
-Assuming most names are constant, this would be better with kstrdup_const().
-Which is also used by dev_set_name() under the hood.
-
-> +	drv->bus = &faux_bus_type;
-> +	drv->probe_type = PROBE_PREFER_ASYNCHRONOUS;
-> +
-> +	ret = driver_register(drv);
-> +	if (ret) {
-> +		pr_err("%s: driver_register for %s faux driver failed with %d\n",
-> +		       __func__, name, ret);
-> +		kfree(faux_obj);
-> +		return NULL;
-> +	}
-> +
-> +	/* Initialize the device portion and register it with the driver core */
-> +	faux_dev = &faux_obj->faux_dev;
-> +	dev = &faux_dev->dev;
-> +
-> +	device_initialize(dev);
-> +	dev->release = faux_device_release;
-> +	dev->parent = &faux_bus_root;
-> +	dev->bus = &faux_bus_type;
-> +	dev_set_name(dev, "%s", name);
-> +
-> +	ret = device_add(dev);
-> +	if (ret) {
-> +		pr_err("%s: device_add for %s faux device failed with %d\n",
-> +		       __func__, name, ret);
-> +		put_device(dev);
-> +		return NULL;
-> +	}
-> +
-> +	return faux_dev;
-> +}
-> +EXPORT_SYMBOL_GPL(__faux_device_create);
-
-<snip>
