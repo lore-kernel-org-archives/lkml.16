@@ -1,96 +1,137 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A5720A5D0
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A9620A5D0;
+	Tue,  4 Feb 2025 12:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738671790; cv=none; b=cmp4thZ4ZLX/g0O45tmS9zfym5NEr1IpaFalp4ZrkNS0Xtz7qfZMc0mVHfAILe2fQJEUO+f/l3//7FsdnErdrghCwcHKtsVaOlntOSjon3n+7OMveDXREG3XG3OPHhNDsjv/kClZAKvNaWW79taY3/TgsoMkPvdOCAcVbhlR+zo=
+	t=1738671811; cv=none; b=nBsUFidueI8Wk61+XqrAcbWLlmpNnof5aNYDVbW2uWpUPFAztcUw87auAyINaQhQVCg/DkLda1JOcmtQam+GbOPswlvKWKbNzX99KVymQR0fVmWTweZ5IlGGnjZGFVEzyKxmpluXcKYf2SM+Cr9s8WPrtIwf92kAbyig0M0g5hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738671790; c=relaxed/simple;
-	bh=/agiQeXJObC0lGZ42iQ0WTyEcxzrgC5d2xyAvqlIt9A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IU6vPLFeca02tEPJ4Pg3D8Afrwq9G+nuRVoMQAxxSnf0m5y2h4MBx4qQhKI7QGw9K/8uedHNqIaFbBb/8fZ4i66r4m1wOmoUPb3IO/dchG9z+mOuFJIoZo0zOPr3g6O8sRefnUEvqoXOUH4pVLXiK8Lc3Fb6QCgY6cXb/x5O/tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ALtya6TB; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738671811; c=relaxed/simple;
+	bh=dG5tGVtQZTw25dqMdtJ1/zyy7NY53LArQnmaSzSHXlM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EtLNAwN0xG48sfNxt9QeGXVIpaKX+4gjcJPPnAS+rsiMosCLHGG4J5mEqD8T+UoWRWTMmfiXMqm6F115tYl0Rn5ZUWWzv93gA+GkHg5w5xzlPxmaKyS3Oxcwn0fVhDHlqIPs5nwo7x8LFwd4YsAuI+juJYDhvUHWELqOhSU47gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dzKwy/C9; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ALtya6TB"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38dae70f5d9so258038f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 04:23:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738671786; x=1739276586; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=peE9etEk0uyMSucy3ebeGdBeL6jbZ/M2frixZcScfL0=;
-        b=ALtya6TBWINwYYGaZP9lF9+loVlMdkiLcJJl/fQLUsWUz2Hr1Sx0BhfLRoKRQHjqpb
-         HaoGMwxccS1jY1UEvkgA376BdeJtXLQayvIBNXTB84eVMXS4gL+1xCeTb9Ekd+zCyoSS
-         8pnNx0O1JipWDycxyS7L2yBe4cBFRn6Yq5bQl/Gtt23tNFTTr2tkt5VT6jasR4CfFQJM
-         V6i5FkJE1zH4iCAPO44w87TXMEMSFeZPuPVySRWbk5+KQ6NAQwLsSI7yUGFDMpSHnM5E
-         sF8mDmB56frF9w+8io9MwEfa7QPyHOH/fNwJSN9S+mnUheyNQrTAISKY7uuuKs5JmQ5n
-         KpYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738671786; x=1739276586;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=peE9etEk0uyMSucy3ebeGdBeL6jbZ/M2frixZcScfL0=;
-        b=JYnlpbMiBJUSoAK6h5xj9zFFhxvAjzVBFWfzDA8kCsQgdKwKESrGmoa571zXh+6pBD
-         XXma1hXiwFV/TkO70+6/pp6+5oRqdK1Bd18XBs5RVKz9eLmwqW7cWB+2Wtc8gLSGmIvt
-         XNiMK5YUopg/zOXvkSHHbemhuUubIkRAzbG7tieUgkD597wsos2GinxwgfUCEarOAUNU
-         1owrLT5zSv60++6xoilS8LdX0vpSupYS4hTmJ5uiPjJZQZOnUuxrBIk7AyGSMgJUuM8G
-         zFMG+oAr4WxqIUHQqzzefO7BR1VW0Pb4GRsi13vKxX2swbOI+bzN9rLBaF0mW7L8/SSM
-         IncQ==
-X-Gm-Message-State: AOJu0Ywwm+1h6rALxaXGdRUTeOvbsAnbYwwiE9c7y+qgUxupyVo41LI1
-	/r/xsVVig9ZZYw5E3INPzCHCJWD8A2TCLNy4XZodvh0XbVg851G1/2OuPSmdkG0=
-X-Gm-Gg: ASbGnctVm3SS+0f84IABDzinIHEKP5AlThnHu3oOSK6OdfUO3Yiw/O9pAoiTuX0d/f5
-	n4V+sWcdgUJYmGVGtrNLmwlctkd8y4xoDiki1vqZ31RMmceYeDODUCpSfrknh/q8VSa0phH/fF+
-	D69mv+6JooACWX+4WWCudeWFOGjRLmRlLyfqnSiytUzVosMo+0GF4FwzHuoyLORLsaRHClhlPVC
-	NskZey3RmG6I+8xcytGpaoI7sB7O3OWAI3/rvCght7qp++EeD/AbDJBntntFMZBMdG+K49mK7G4
-	Wi/YeVwmOGeVDhxtX84=
-X-Google-Smtp-Source: AGHT+IEsZpkv+zoEjZ5fZ0CWe/ZZPrwA69+nZDfrSwBHHPJ0erFxxcuxLLPaSL+xt9IMkOSxixoFrw==
-X-Received: by 2002:a05:6000:1862:b0:38d:a945:66ea with SMTP id ffacd0b85a97d-38da945673emr1473688f8f.50.1738671786336;
-        Tue, 04 Feb 2025 04:23:06 -0800 (PST)
-Received: from [10.100.51.161] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38da1ca14bcsm4509786f8f.95.2025.02.04.04.23.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 04:23:05 -0800 (PST)
-Message-ID: <c3ff27d7-d205-4d76-8574-ffb8ddd5ca90@suse.com>
-Date: Tue, 4 Feb 2025 13:23:05 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dzKwy/C9"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5145NlQ3008384;
+	Tue, 4 Feb 2025 12:23:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=UJ/Pfi
+	/BfkwkEFANDeCNiXq+lhOSzYk/7Ikhm8IpmLU=; b=dzKwy/C9ik+0HIjNHd8nTE
+	2zQpVD00//xmxf2wXK9XbKi6izU2Mq5Vv8s730Ducof6Ip34iQN6vogG+E6LGQJ0
+	OpNSPWPyCWlk6fesqHMxr54iMLIiQmJh9qALHv7VWDklJCJPEU3X57MFrJo45eE9
+	YbzwpYBbNuAEkq/iN5MHV7V4/iOTvt5okOcJLcQPZ5imXRKyy3klIyl3bhzgfSR/
+	gmlM708D+g/Be8EQcSzM1xrxCrj/tLAGSLQwNm9tRyqLJyqygbbHLZZZkZhCXqKQ
+	9AXUW+kcRynr80GU3vqnT6xmUGphKfEF+WUqBaxwfTPut/upvv9zvt2m3MX7ltUw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kcq7sw41-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 12:23:24 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 514CNOG2024827;
+	Tue, 4 Feb 2025 12:23:24 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kcq7sw3y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 12:23:24 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 514Bda3b016416;
+	Tue, 4 Feb 2025 12:23:23 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44hwxsbmcv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 12:23:23 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 514CNJVT17891722
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Feb 2025 12:23:19 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B085D20542;
+	Tue,  4 Feb 2025 12:23:19 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2E25520544;
+	Tue,  4 Feb 2025 12:23:19 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.171.94.245])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Tue,  4 Feb 2025 12:23:19 +0000 (GMT)
+Date: Tue, 4 Feb 2025 13:23:17 +0100
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank
+ <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Paolo
+ Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: selftests: Fix spelling mistake "initally" ->
+ "initially"
+Message-ID: <20250204132317.67d85b69@p-imbrenda>
+In-Reply-To: <20250204105647.367743-1-colin.i.king@gmail.com>
+References: <20250204105647.367743-1-colin.i.king@gmail.com>
+Organization: IBM
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tests/module: nix-ify
-To: Luis Chamberlain <mcgrof@kernel.org>,
- Joel Granados <joel.granados@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-References: <20250122-jag-nix-ify-v1-1-addb3170f93c@kernel.org>
- <Z5lAD6uyFnyBBJp6@bombadil.infradead.org>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <Z5lAD6uyFnyBBJp6@bombadil.infradead.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: -yyIbkPcCIgxgjB2b6kv5fNBMi9Us86a
+X-Proofpoint-ORIG-GUID: X91T-z-FZSsJTojqkAtvXmRXxkwbzcY3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_05,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ malwarescore=0 impostorscore=0 bulkscore=0 adultscore=0 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502040096
 
-On 1/28/25 21:37, Luis Chamberlain wrote:
-> On Wed, Jan 22, 2025 at 11:33:49AM +0100, Joel Granados wrote:
->> Use "#!/usr/bin/env bash" instead of "#!/bin/bash". This is necessary
->> for nix environments as they only provide /usr/bin/env at the standard
->> location.
->>
->> Signed-off-by: Joel Granados <joel.granados@kernel.org>
+On Tue,  4 Feb 2025 10:56:47 +0000
+Colin Ian King <colin.i.king@gmail.com> wrote:
+
+> There is a spelling mistake in a literal string and in the function
+> test_get_inital_dirty. Fix them.
 > 
-> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+
+> ---
+>  tools/testing/selftests/kvm/s390/cmma_test.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> This can go through the modules tree.
+> diff --git a/tools/testing/selftests/kvm/s390/cmma_test.c b/tools/testing/selftests/kvm/s390/cmma_test.c
+> index e32dd59703a0..85cc8c18d6e7 100644
+> --- a/tools/testing/selftests/kvm/s390/cmma_test.c
+> +++ b/tools/testing/selftests/kvm/s390/cmma_test.c
+> @@ -444,7 +444,7 @@ static void assert_no_pages_cmma_dirty(struct kvm_vm *vm)
+>  			 );
+>  }
+>  
+> -static void test_get_inital_dirty(void)
+> +static void test_get_initial_dirty(void)
+>  {
+>  	struct kvm_vm *vm = create_vm_two_memslots();
+>  	struct kvm_vcpu *vcpu;
+> @@ -651,7 +651,7 @@ struct testdef {
+>  } testlist[] = {
+>  	{ "migration mode and dirty tracking", test_migration_mode },
+>  	{ "GET_CMMA_BITS: basic calls", test_get_cmma_basic },
+> -	{ "GET_CMMA_BITS: all pages are dirty initally", test_get_inital_dirty },
+> +	{ "GET_CMMA_BITS: all pages are dirty initially", test_get_initial_dirty },
+>  	{ "GET_CMMA_BITS: holes are skipped", test_get_skip_holes },
+>  };
+>  
 
-Queued on modules-fixes.
-
--- 
-Thanks,
-Petr
