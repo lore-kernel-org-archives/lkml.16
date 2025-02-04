@@ -1,106 +1,173 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01608218ABD
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 20:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4472520A5DA;
+	Tue,  4 Feb 2025 20:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738700875; cv=none; b=CrvvB/CVGYLFJvGr/SsXjwIauXVxBl+yOX6gckJjgisrd0Phjlwb35aCR1doYIJGQLvxWaBCLQXP3+XjEGmvJThL7V9TOfHcN/4x3H3ssmq7HC+BDMahScYEdt/0jBOAB9wSn6Vnoz7RbVvnTxU3Hli3XFwzBkenE6h9pj6AzGY=
+	t=1738700886; cv=none; b=era8CuNKvhapK+NXnEgsEMKE4zIsvj08iCzJiTaYklCGZWZn+i/Ubc7JG8e6H1Dpzps1Z2zpkgnLviZRmvIBIcNXISuzZLHrgzUR36e+vbwCkB5PiQzzVZLd06kR5coHo5Z4tlA9a18YqcN264NIZMzXIpOrzptZSK7cL4AzoRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738700875; c=relaxed/simple;
-	bh=ZhfAZnDJgHsp4g3A5U2aBrP5viFVs+Efw9vK/2u5x58=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=holCcZVXaHkEQoEsPF5DeGZrgR5hlkfFaVqp3/qrB385ywK99z8iHgI7q4/ns+JbQnfk1W9ZAn1lsHYjL6LdoreZibM7NfXKEtJjlcV/WD9DEQNQpH/0m1nX0HQOaAI/Quf9sFvt5AkeVAlfHNkuyJ/pfirXs2qV3TFOuGq89x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wJPZ2ZR1; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1738700886; c=relaxed/simple;
+	bh=IoRJFhKv/dqAt17nC9B0LKW2UsEDq8Ti3lmnPQiWALY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GIVySLSON8YfBXDgvV8I6Shf9JuQDDhwoqqlGvwAKty9ATlm1kbizSzD/R8rDkU3ZyPPD5nNChU196KzJ142yL9rkUpnnHIXMJIWg4Byz94ZWUCHuk9ld4CkqWLfWwBTFhsuwxseiqYFDeWVfdJwRPyNkNtIjj7l8JYHnARCapQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=b3Cx44XE; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wJPZ2ZR1"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4362bae4d7dso43138135e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 12:27:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738700871; x=1739305671; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+ZeHY/2J2Yuo8dxLF3vbNvohBC3qjQ1SOEuo/Ri1m5w=;
-        b=wJPZ2ZR1ApTBihOxBZbZcl4iaod9O406/8W2yq92BkgCSpeXHFvEIEd1Q73E39rlPD
-         p7zJKRAN3oM2xLsjRzIGTZ2GIAVdm4ddND97dh1WpjX5MciETuv8HOoiKaKyKX6kxyWL
-         CWYDK2hiko/lQQ9+gmTcHE52nQZCH7oHY4r7pwGg4nSZfFlHpqOiiygbxgoEXhVTCawV
-         2UrDW2zCitYRs3Ht3QPyAI8j+COIRsPm+BQv1s2I0FGnUTM0GZKOLwPnEywlPtGt5E/8
-         l6dJedUhf1nP/XvfW3OFBtY+cwHMrUuXQLkfZB8yIwYl7bkDBXu1+mazeQfi0dM9b93Q
-         o4VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738700871; x=1739305671;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+ZeHY/2J2Yuo8dxLF3vbNvohBC3qjQ1SOEuo/Ri1m5w=;
-        b=XBRBgAwIlFh35/9xxH/fxeKbD+Q2cq9Q4Xd7xNxQa3hOdKT67ZqG1gHiAmTWoY+BHL
-         QBKBRRukNY7Tbuxt1wzua7a/jkNwiFv8NtktULCy7BprOIbAy0IxI8pgiS9uBlpl2jq1
-         mCDjvYUy+5zORYu+gwusiLvmyYaQouBN8tce0Z3qh69EFW1D+Ea4xlCsowAQcGU32feR
-         TeGa/A/VkkzZQ3Sm6qI4obMO7MnnYSe9JjOyqVCar59LNSLja3W/zWGyHpKuxpEGIjam
-         PRsP2emmVLx5qx6Fgfw1PzWy+LZ97xADr6Sll2W2VsHCvuO6AsBl48HRt8lyj1rsGNJ0
-         TnPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLal/Ci3Gjn7tAJt1ZP3um9PjL8oBZzJAjdPEkWl7pPPMK/khxy3FfmgJXaMKk0EpM+C9SK790rxcQnfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw88us4fpAlKd3ImZU3hXbqch8nsA1z3S4vAD4i0+oHx2b2UDGJ
-	OqXunjOErMtm52ZhSO5ES/8RBvA/8MrOM65ZZwy0YUf5yjPWwsQkJ14x36UWPGs=
-X-Gm-Gg: ASbGncv3vJCFwnM92fJSk5rXgm3T3dZPSIBH/IVU7mG+tkoVNnKpSxqIa1qNKqKbJdg
-	0GKRHh4EnAt83YfvrgmpbCp9D39Q1S3FmBmxGs+JvGaL01FXBXKWw+paypLio5a74KfW/dYr0u3
-	KmNkem4SV0dRrdumM3X3o+Lx4U41AZuoCS0oPRE4O46My+efh1i25EqO1gwg6TAMIiNVetvW4ZK
-	nN8ko/w+OOGTgqNyrV0Yxw7/qKP2B3onmSO2HgJJBilBT7qA/dElKuTz//+gaIr8Bw09i4aSHTP
-	IinXVeepvVWx5P8=
-X-Google-Smtp-Source: AGHT+IEoYW5pVEP/c4CSgEK9useH3xzBCLlbEG/oukqupf8k+442HpqGKOGL5DkBe0Nx4uPAzc6nNA==
-X-Received: by 2002:a05:600c:1994:b0:434:9fac:b158 with SMTP id 5b1f17b1804b1-4390d42ccfbmr299195e9.1.1738700870983;
-        Tue, 04 Feb 2025 12:27:50 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4fb0:17c9:a494:227f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc6df36sm245420855e9.25.2025.02.04.12.27.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 12:27:50 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: pca953x: Improve interrupt support
-Date: Tue,  4 Feb 2025 21:27:46 +0100
-Message-ID: <173870057719.106350.17999921686110317967.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240606033102.2271916-1-mark.tomlinson@alliedtelesis.co.nz>
-References: <20240606033102.2271916-1-mark.tomlinson@alliedtelesis.co.nz>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="b3Cx44XE"
+Received: from [10.17.64.67] (unknown [131.107.1.195])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 754F92054926;
+	Tue,  4 Feb 2025 12:28:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 754F92054926
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738700884;
+	bh=1bt0mVnS0Ir83ngsAvEIbbvQSkHpMuK7XU2Id29OusI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b3Cx44XESQ7Fszl7nZpg8NVa77+6TTN/umnmM13Eo4MLXInKqDEjmJ0fXIz4B7EB1
+	 cp6HHrvsS3AW/32LDzhiqR9RpE3O9e2k9zk6lHZ0vwuQ6vM/IirIBgcsjO6RQH18D4
+	 2qH6muvI6TW5Bci2oOnOUSPTnGkdO5JQb6VIi1s8=
+Message-ID: <aeef2ca5-2538-4487-a501-7eb2925d198b@linux.microsoft.com>
+Date: Tue, 4 Feb 2025 12:28:03 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/7] ima: kexec: skip IMA segment validation after
+ kexec soft reboot
+To: Stefan Berger <stefanb@linux.ibm.com>, zohar@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ James.Bottomley@HansenPartnership.com
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
+ <20250203232033.64123-4-chenste@linux.microsoft.com>
+ <00eeeb8b-cc28-42af-873f-3478cd22fb6e@linux.ibm.com>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <00eeeb8b-cc28-42af-873f-3478cd22fb6e@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 2/4/2025 11:39 AM, Stefan Berger wrote:
+> On 2/3/25 6:20 PM, steven chen wrote:
+>> kexec_calculate_store_digests() calculates and stores the digest of the
+>> segment at kexec_file_load syscall where the IMA segment is also
+>> allocated.  With this series, the IMA segment will be updated with the
+>> measurement log at kexec excute stage when soft reboot is initiated.
+>
+> s/excute/execute
+>
+>> Therefore, it may fail digest verification in verify_sha256_digest()
+>> after kexec soft reboot into the new kernel. Therefore, the digest
+>> calculation/verification of the IMA segment needs to be skipped.
+>>
+>> Skip IMA segment from calculating and storing digest in function
+>
+> Skip the calculation and storing of the digest of the IMA segment in 
+> kexec_calculate_store_digests() so that ...
+>
+>
+>> kexec_calculate_store_digests() so that it is not added to the
+>> 'purgatory_sha_regions'.
+>>
+>> Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
+>> no change is needed in verify_sha256_digest() in this context.
+>>
+>> With this change, the IMA segment is not included in the digest
+>> calculation, storage, and verification.
+>>
+>> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> > --->   include/linux/kexec.h              |  3 +++
+>>   kernel/kexec_file.c                | 23 +++++++++++++++++++++++
+>>   security/integrity/ima/ima_kexec.c |  3 +++
+>>   3 files changed, 29 insertions(+)
+>>
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index f8413ea5c8c8..f3246e881ac8 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -362,6 +362,9 @@ struct kimage {
+>>         phys_addr_t ima_buffer_addr;
+>>       size_t ima_buffer_size;
+>> +
+>> +    unsigned long ima_segment_index;
+>> +    bool is_ima_segment_index_set;
+>>   #endif
+>>         /* Core ELF header buffer */
+>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>> index 3eedb8c226ad..a3370a0dce20 100644
+>> --- a/kernel/kexec_file.c
+>> +++ b/kernel/kexec_file.c
+>> @@ -38,6 +38,22 @@ void set_kexec_sig_enforced(void)
+>>   }
+>>   #endif
+>>   +#ifdef CONFIG_IMA_KEXEC
+>> +static bool check_ima_segment_index(struct kimage *image, int i)
+>> +{
+>> +    if (image->is_ima_segment_index_set &&
+>> +            i == image->ima_segment_index)
+>
+> The 'i =' should be indented under 'image->'.
+>
+> With these nits fixed:
+>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+>
+>> +        return true;
+>> +    else
+>> +        return false;
+>> +}
+>> +#else
+>> +static bool check_ima_segment_index(struct kimage *image, int i)
+>> +{
+>> +    return false;
+>> +}
+>> +#endif
+>> +
+>>   static int kexec_calculate_store_digests(struct kimage *image);
+>>     /* Maximum size in bytes for kernel/initrd files. */
+>> @@ -764,6 +780,13 @@ static int kexec_calculate_store_digests(struct 
+>> kimage *image)
+>>           if (ksegment->kbuf == pi->purgatory_buf)
+>>               continue;
+>>   +        /*
+>> +         * Skip the segment if ima_segment_index is set and matches
+>> +         * the current index
+>> +         */
+>> +        if (check_ima_segment_index(image, i))
+>> +            continue;
+>> +
+>>           ret = crypto_shash_update(desc, ksegment->kbuf,
+>>                         ksegment->bufsz);
+>>           if (ret)
+>> diff --git a/security/integrity/ima/ima_kexec.c 
+>> b/security/integrity/ima/ima_kexec.c
+>> index b60a902460e2..283860d20521 100644
+>> --- a/security/integrity/ima/ima_kexec.c
+>> +++ b/security/integrity/ima/ima_kexec.c
+>> @@ -162,6 +162,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+>>       kbuf.buffer = kexec_buffer;
+>>       kbuf.bufsz = kexec_buffer_size;
+>>       kbuf.memsz = kexec_segment_size;
+>> +    image->is_ima_segment_index_set = false;
+>>       ret = kexec_add_buffer(&kbuf);
+>>       if (ret) {
+>>           pr_err("Error passing over kexec measurement buffer.\n");
+>> @@ -172,6 +173,8 @@ void ima_add_kexec_buffer(struct kimage *image)
+>>       image->ima_buffer_addr = kbuf.mem;
+>>       image->ima_buffer_size = kexec_segment_size;
+>>       image->ima_buffer = kexec_buffer;
+>> +    image->ima_segment_index = image->nr_segments - 1;
+>> +    image->is_ima_segment_index_set = true;
+>>         /*
+>>        * kexec owns kexec_buffer after kexec_add_buffer() is called
 
+Hi Stefan, I will update in next release. Thanks!
 
-On Thu, 06 Jun 2024 15:31:02 +1200, Mark Tomlinson wrote:
-> The GPIO drivers with latch interrupt support (typically types starting
-> with PCAL) have interrupt status registers to determine which particular
-> inputs have caused an interrupt. Unfortunately there is no atomic
-> operation to read these registers and clear the interrupt. Clearing the
-> interrupt is done by reading the input registers.
-> 
-> The code was reading the interrupt status registers, and then reading
-> the input registers. If an input changed between these two events it was
-> lost.
-> 
-> [...]
-
-Queued for fixes. Thanks Andy for taking the time to review it.
-
-[1/1] gpio: pca953x: Improve interrupt support
-      commit: d6179f6c6204f9932aed3a7a2100b4a295dfed9d
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
