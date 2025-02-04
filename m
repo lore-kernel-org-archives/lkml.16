@@ -1,111 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04252080D7;
-	Tue,  4 Feb 2025 10:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FFB13C9D4
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738665484; cv=none; b=ZXwQKnY8kw5UmIMkCETiKCTI62JxShx81fEPHlIs8uvgqmOuWONgySUtNmlqNC8zgwgljUWxBchx1T0QPVPtoXFLi9HdSZbhtDflYTEbAly1HlNMey2dlhgkICU4njtMA9OqAfLb/wqM5MVj9Gqfst/5OmKGrEB/d34kgy+BA2I=
+	t=1738665575; cv=none; b=CJKISsXJpBC5ltpdSAQLahX87UvNRw1EzsmEz1rx4LM+roFXjyEfsC3Lv5FmftkNR0btgiDrOOPDAxboe2tSjA2py4uhW7OxzQTpESNhxUgqlC7jDWJUtfvm9AM9s4Q7mKeMYIvhx2uWNfDdakDKrmuY+HpDqW0tz3r4fH4VeU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738665484; c=relaxed/simple;
-	bh=iv/AVNgfSWY1/Vv/n1fXlzs30Cop06f31QI0gG5veQk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Du1gL+qJvGlmlkHW54n1yTXuX1ldfoArqYU2+wmU4sRaoVpZhGW7spTeGUmrfQgNA+lrNL5fRcJnDNwapNhXafAYRPe9wEZs+/DWd76Bj1cir8NarbznIKj0lcl9OZjl6frC9JKKjEJAZZOfkim8cWpBNGhyBRcp6+c9BYg5IDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QwK9XeCL; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738665575; c=relaxed/simple;
+	bh=bIr9Yc0uqUIeHBf23T13j1uqyZmefpUaE6XGM6Onjjw=;
+	h=From:In-Reply-To:References:Cc:Subject:MIME-Version:Content-Type:
+	 Date:Message-ID; b=TQLFEiCbO13IlIPWxpZ9/NdxsyI5rWgnLPXYoDgCVeJTa5nl7J/1expAFLBSCFjGbAXbGN8Yc/k2IXFj+QMjnMm94F8mDc9968rYu5tTEjQ/M6jJVi3hPBQvf+2xGxK6DqN9XLkN2S68WxdUUUs/qjpjG0J5Zjq/aDqms7+aIbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q00dKVIX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QwK9XeCL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738665482; x=1770201482;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=iv/AVNgfSWY1/Vv/n1fXlzs30Cop06f31QI0gG5veQk=;
-  b=QwK9XeCLYXP2kaZYsOW1smFAvvUGnqJKM/qPuFPaEfaOe4ExF7BhiXzk
-   StTRqKdN1E3TSjDYU3MKIJ1FeAgjxG5jQGbqX9yO+8l69icvfjK+1qyY7
-   +2ybLJEZvTfAjho/C7TIlzkoxRIDS1HriDDQS1a31e6/23T1gEMGj8tmr
-   qBMc49lM2pyLUqjUjttIdq4kM05T0JSwOXW5KnyZ+Zjb38uqRVjPMOQ9K
-   ggOmCoJ6Kx5AMgInQvUrQSrmZFBxXM5RA5SEU5DRffedURLVhbn/wyZer
-   OTYBmrXwIGbk6PkYu9sN2hJlEMeYHEn4B+bIlEiOrCdeov5EgSfUjGbL0
-   g==;
-X-CSE-ConnectionGUID: aO4sMm80TfaeEBXZrEnFnQ==
-X-CSE-MsgGUID: qd3pou4HRi+On37tZ+y1CA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="38888121"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="38888121"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 02:38:02 -0800
-X-CSE-ConnectionGUID: /RIPVWf+SyeoojzmWMxnHQ==
-X-CSE-MsgGUID: jvAVQjluRMuGqmhRlZUcYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111407676"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.75])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 02:37:59 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 4 Feb 2025 12:37:54 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: james@equiv.tech, markpearson@lenovo.com, jorge.lopez2@hp.com, 
-    jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
-    linux-doc@vger.kernel.org
-Subject: Re: [PATCH 4/7] platform/x86: hp-bioscfg: Use wmi_instance_count()
-In-Reply-To: <20250203182322.384883-5-W_Armin@gmx.de>
-Message-ID: <a02aa367-2ce8-ba6d-adc7-b91552566142@linux.intel.com>
-References: <20250203182322.384883-1-W_Armin@gmx.de> <20250203182322.384883-5-W_Armin@gmx.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q00dKVIX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738665572;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iryjKv+xVNCIwWrnKIDrLJIiIagMGEckd2S4eqLOxbE=;
+	b=Q00dKVIXMuWXbABGtA2I67euUVzkWx5idO4aObfW03TVikyJW+K9qbYp1ZH0San5qBPo7K
+	tlIKMgMvF7odtYRgV8R8tavy+pE0/eYQvSJRA0G2oafCUitJc8ONJoSDEfOCJWWEDRdUwA
+	fBey7t2YFzxeI2VY14otA3WrkC+fioA=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-422-6cGD9k6tNJKCI19fy3esiA-1; Tue,
+ 04 Feb 2025 05:39:29 -0500
+X-MC-Unique: 6cGD9k6tNJKCI19fy3esiA-1
+X-Mimecast-MFC-AGG-ID: 6cGD9k6tNJKCI19fy3esiA
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0F01180035E;
+	Tue,  4 Feb 2025 10:39:27 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.92])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 808EB19560AA;
+	Tue,  4 Feb 2025 10:39:24 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20250203110307.7265-2-dhowells@redhat.com>
+References: <20250203110307.7265-2-dhowells@redhat.com> <20250203110307.7265-1-dhowells@redhat.com>
+Cc: dhowells@redhat.com, netdev@vger.kernel.org,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Jakub Kicinski <kuba@kernel.org>,
+    "David S.
+ Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+    linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+    Simon Horman <horms@kernel.org>
+Subject: Re: [PATCH net 1/2] rxrpc: Fix call state set to not include the SERVER_SECURING state
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <529238.1738665563.1@warthog.procyon.org.uk>
+Date: Tue, 04 Feb 2025 10:39:23 +0000
+Message-ID: <529239.1738665563@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Mon, 3 Feb 2025, Armin Wolf wrote:
+Patch 1 is broken and I've removed it from the system.  Patch 2 appears to be
+okay.
 
-> The WMI core already knows the instance count of a WMI guid.
-> Use this information instead of querying all possible instances
-> which is slow and might be unreliable.
-> 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> index 0b277b7e37dd..63c78b4d8258 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> @@ -388,16 +388,13 @@ union acpi_object *hp_get_wmiobj_pointer(int instance_id, const char *guid_strin
->   */
->  int hp_get_instance_count(const char *guid_string)
->  {
-> -	union acpi_object *wmi_obj = NULL;
-> -	int i = 0;
-> +	int ret;
-> 
-> -	do {
-> -		kfree(wmi_obj);
-> -		wmi_obj = hp_get_wmiobj_pointer(i, guid_string);
-> -		i++;
-> -	} while (wmi_obj);
-> +	ret = wmi_instance_count(guid_string);
-> +	if (ret < 0)
-> +		return 0;
-> 
-> -	return i - 1;
-> +	return ret;
->  }
-
-Hi Armin,
-
-While it is the existing way of doing things, I don't like how the error 
-is not properly passed on here. And if the error handling is pushed 
-upwards to the calling sites, then this entire function becomes useless 
-and wmi_instance_count() could be used directly in the callers.
-
--- 
- i.
+David
 
