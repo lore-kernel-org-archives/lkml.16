@@ -1,284 +1,233 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2066.outbound.protection.outlook.com [40.107.237.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA662153E4;
-	Tue,  4 Feb 2025 16:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738687344; cv=none; b=X/wU89ueZLKX+n9I8t2IScGU2GBO3Eh58oGu23L1h4QN7AVPCdweySVzVthoLWL6VThdEkKeWPfOxuaorJBXwnbpfJpUtFsLcX+4kyeLsLB5FRUBnQ4eyPEvfcP2F1TGPttQ42PZVd04QRAIPYOxVjLYT4YjpWGmDApb0/9Vrck=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738687344; c=relaxed/simple;
-	bh=wsijlzgMdoHW4uBDacfOb2+5G542Bpq47cnyb4TwGWQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:Mime-Version; b=cqWoHBPYZzQuYO97mSw5WKLACz5Wuke1gUAp3iOJH8zCConLuS9V0/miuexlBBommstQKhBu5zfD4s/2qmMdMraLPbSAfPHKjPB4mTeqYSMVmKHAjcllUeDFrSXH+PO7ZrxQC4RCPe1NxHVmxGWFBuhcwtYnq+bomla6bqtXTPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=s3Qfw2uq; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290F9201027;
+	Tue,  4 Feb 2025 16:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738687404; cv=fail; b=DGtePgVDI5OiBaVmbXZr8u3j4TzvkVBohkqnkwsflYWU9B/DBHAkcbhM3lu1c95YbbXASlmLV8PcPspWforlIDJsl6Vaq3WSew/QVMqQkE8jk2+im0ZYRL8H1+rsAm2/aFfv2WnZY12DQ+hzZfzfbyMfG1mtYgRhpBrXqjMVAaM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738687404; c=relaxed/simple;
+	bh=r+SvCRBqPa7WxpOXcMZvOI0ZVQw0KW5fhmnZ4oOTxl4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Jklb0mmOH02AXDn+FY64NjQ2ECa6a21yrkTEJo1uaulUj1MoHUWLA7thcq/TWHAsZwszHarllAfWPGNXZZ/HXMtkdpvSbuvamwMoU2w5nZyN5759aHDKJLDaybOv1a4HP6trcRk/gF9q1nhoomrEWZaDLOvHjzEF5sXXy9eeHeU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=piShvIYK; arc=fail smtp.client-ip=40.107.237.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="s3Qfw2uq"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514GEovB023103;
-	Tue, 4 Feb 2025 16:42:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Lsnxs4
-	YYuwcy4ednIOPPvdwcYVW7AaeXTcdlCgi8uJI=; b=s3Qfw2uqHujKVOQsorwMPx
-	FTlDtXqE1ID/TJrm8Bgz/UTc1/t4eKIWRFSbqWEiv6QAKNhLCNWMWOC+wRda8Uat
-	DRpr/bmgmBstkrQ4JD6xdioee2jn1pHfux+4DcdVU+lVbl0syOwc4vIQqvLub1AV
-	3EzuNmEYVQX7EWH10i7SWkbnX/YUwwZO5YEPOA3d//CIxYvmtkzexMJnpiNb9zuZ
-	ca3hRrGgAsT8q/UCIewK+yrFL/O3Khc9KJv/Tt1VUPIZWkS2MoNSmmjFiP7Y90wd
-	LHAS8nX7wRkB86Ng10N5KI1eNiGt1JKvvc3YlIItr3nMJjHkUrzyyx9H4Ln8do3w
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kcq7u7tf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 16:42:00 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 514FZg47016271;
-	Tue, 4 Feb 2025 16:41:59 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44hwxsckh9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 16:41:59 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 514GfwUN22217308
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Feb 2025 16:41:58 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7CDE058055;
-	Tue,  4 Feb 2025 16:41:58 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 000D958059;
-	Tue,  4 Feb 2025 16:41:52 +0000 (GMT)
-Received: from li-34d1fccc-27cd-11b2-a85c-c167793e56f7.ibm.com (unknown [9.171.15.121])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Feb 2025 16:41:52 +0000 (GMT)
-Message-ID: <c9e56c5f54cc33338762c94e9bed7b5a0d5de812.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 2/4] cpufreq: Introduce a more generic way to set
- default per-policy boost flag
-From: Aboorva Devarajan <aboorvad@linux.ibm.com>
-To: Lifeng Zheng <zhenglifeng1@huawei.com>, rafael@kernel.org,
-        viresh.kumar@linaro.org
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, jonathan.cameron@huawei.com,
-        zhanjie9@hisilicon.com, lihuisong@huawei.com, fanghao11@huawei.com,
-        gautam@linux.ibm.com, aboorvad@linux.ibm.com
-Date: Tue, 04 Feb 2025 22:11:50 +0530
-In-Reply-To: <20250117101457.1530653-3-zhenglifeng1@huawei.com>
-References: <20250117101457.1530653-1-zhenglifeng1@huawei.com>
-	 <20250117101457.1530653-3-zhenglifeng1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-26.el8_10) 
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="piShvIYK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QWoYGqKKO6bFah5ARddQeFfud91vk1kzvPFYvgaY1Ds1ANuZgr1PNj7E5ua2jzu8fPbVEUr5riN8Kwvo4kKDFZv1T34ODQBKJySIDC4ILUkmpIHAG9JK0/zgS/gPG/Hqj0xkT2EBDNVr5nLGeuoSnkmdK5II1PF2Ag5NgE+HQPAtuvjISIzN2a2gMFbx9Fk/2UPDfKfRAHqQySvT4IJmWAZ68jRs8bJ+dlj1OWDrEVG9nRvmVlf01IWAAUGJu+jpCZDIjACgFdGtrJ3xthnwiJzS8glk7RB7JNEhq8iKf5kgAcUf/EF/Zm+k/12TFmBgo8hmjb/b4vLSU28jgo0XXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eUsn2r+4B5FatH9WOEQ45nZsONiva90fKDxDNQ7sm6g=;
+ b=WReie1Jp9pMUM/UlvYXWwN9jiS6cw5W1JXtlgny4Js1gIr5H/mgALTh1hMF3HthZvEkM2i54Wqmu34sm9JGSPqHrDf5XfOXvIojLJCBtEWwJtKRb53ztQWH+t4XZ89WP3gEJX4lVdf6fmFacHx4LAQLzd/MPVW9gH1QcQQ8N6CgeHZmu1m6YazIf2uWFzrtpkF4jesJgVKG4OdfW9xxDm3WTlglQnhWbAi3TxqRZ93v64gxa69LuxqoZY42Y53/YQcKRxKFb0CpBV2jDXsfZcoShU/IppAndVdb4nywKgtTEjcWZOcAZIYyxVbEq93qlchEbKuWG91TRujjVYv1ypA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eUsn2r+4B5FatH9WOEQ45nZsONiva90fKDxDNQ7sm6g=;
+ b=piShvIYKndBkHLG3nBLVRx7nVoGeA1BfjmC9TM+txfHFw14yGAMZwVFO48Z0pJjdOqe9qFlYbcwy1KwKL+PEBoRYzTtzVHxFrbJTavwRfNHhxqXSYzjHEAVw6t6hIVdTNRhdTyJneKTYiHPsHtviqc6GsXYn73Kt53vOY9CmdeegpbvE7W2LTBAPjpc4NajS6qFge3xKj3d43cSnAdpe8nc3EqQ39G6Fcf9295fYWWrEMS+MFQVMnoRY1hGoqUcDQg5z6eO+DRt+nwUshSFKTz3YZPGe7yTR81eZCoZF9iJwQiobqQu4DjvIludfogN9K15b2/wiuzq6hfS5rae6wg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM4PR12MB5101.namprd12.prod.outlook.com (2603:10b6:5:390::10)
+ by CH3PR12MB8235.namprd12.prod.outlook.com (2603:10b6:610:120::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Tue, 4 Feb
+ 2025 16:43:16 +0000
+Received: from DM4PR12MB5101.namprd12.prod.outlook.com
+ ([fe80::8a69:5694:f724:868b]) by DM4PR12MB5101.namprd12.prod.outlook.com
+ ([fe80::8a69:5694:f724:868b%3]) with mapi id 15.20.8398.021; Tue, 4 Feb 2025
+ 16:43:16 +0000
+Message-ID: <84382200-e793-4e9a-b25a-8dc43e7a8bd0@nvidia.com>
+Date: Tue, 4 Feb 2025 22:13:09 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dmaengine: tegra210-adma: Fix build error due to
+ 64-by-32 division
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: vkoul@kernel.org, jonathanh@nvidia.com, dmaengine@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, kernel test robot <lkp@intel.com>
+References: <20250116162033.3922252-1-mkumard@nvidia.com>
+ <20250116162033.3922252-2-mkumard@nvidia.com>
+ <dsxaisxdpsxecyna527cifixyurmkgo3cfaiheau5jjdl5qysp@64qquncxdmof>
+Content-Language: en-US
+From: Mohan Kumar D <mkumard@nvidia.com>
+In-Reply-To: <dsxaisxdpsxecyna527cifixyurmkgo3cfaiheau5jjdl5qysp@64qquncxdmof>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA1PR01CA0157.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:71::27) To DM4PR12MB5101.namprd12.prod.outlook.com
+ (2603:10b6:5:390::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: bXPXgGszO0mZJjVHWcNz1aleg5HtmDpS
-X-Proofpoint-ORIG-GUID: bXPXgGszO0mZJjVHWcNz1aleg5HtmDpS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_08,2025-02-04_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
- malwarescore=0 impostorscore=0 bulkscore=0 adultscore=0 clxscore=1011
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040127
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5101:EE_|CH3PR12MB8235:EE_
+X-MS-Office365-Filtering-Correlation-Id: 61e7dedb-5c11-4599-2c52-08dd453b05ad
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VzBMR3NZbWQ0N3VkNmovNnU0T2l1R09uTmRRSFNycER2RzdqM2dSUlQxUmQ4?=
+ =?utf-8?B?QUdrS0w1OXFtaThONnQ2UTVnZ3Q3aXlzdG0yRk16VkFGNjdxSnFFUk9XNklQ?=
+ =?utf-8?B?c1JtWEhpOGFWLzVFQVVERHhua3hleHlGdHhIM2xTZzByaHFZcnIwMjNFZ1R5?=
+ =?utf-8?B?TUZKUHRlSWttTWQ5T3RTZ1JYdGZxa2xEK0MzTlFJQWdCdFV1cFcvSHJCWTFw?=
+ =?utf-8?B?RXVPV3czTlpTZVp1UjVmdlFCN2RsbjBxNlBLdjhrR3ljbnA0bXBjT2Nsb1pX?=
+ =?utf-8?B?ZEUzT1V4TzRWbWNoZ3FXa1dFQ3NPWHVhZFhMRklVWFRicG1ocXlEaC96ZFJI?=
+ =?utf-8?B?M1FFWkZrVGUyWElJd2t1YkkzdWo4RnE0M1A2VXRFbFUzbzNhWTRrLzJIdVJh?=
+ =?utf-8?B?aFhtQkNjZ3U0YWlxRWpxUkowVWxVZmtkSE1oNW5wR1R5ZFNUN3RSbHN3Tk5z?=
+ =?utf-8?B?elBZT2tVdGxISnBTdEkyaFpwM3Y0NU56bUFxSTIyRW85MHhCK0ZZeURUcnAx?=
+ =?utf-8?B?MGRRS3RnK3NRNHdFbWhjRjErVVRhTmpIdmQrd1F0MmRxcVZjS2NST3lWdXd1?=
+ =?utf-8?B?VFFhbG9wVm4rRnFLc3hFUng2WThDYWozSWNYSHZDUFp2dE9lVGJZQ0d1Mjl5?=
+ =?utf-8?B?aWxXVlU5Z2JUN2F0K0hRa1pYS3F4WFBUYUNrTlltaE01Q29aSDVUQWl2c2pk?=
+ =?utf-8?B?ZzhXN2lwRXM5dEI5ZllSUG1HcVRTUnZ6c2JHR1p2ZHUrTnRKSGNLYUtjQXZ3?=
+ =?utf-8?B?ZTRNOVJmaDRkMS9Xa1BUcHYvTGNKaWovY3F5Qm0yaURNRFdxcWpGQ1B0eG9G?=
+ =?utf-8?B?MFFUNnVkeDVaVW5XTDhLVEdIZWNRVEFaRGwyYWQwUGN3WERKSjF1Y2hHM211?=
+ =?utf-8?B?NHJXYS9xM1pPY0tkNi9wNTJ0WUdQbHpoQkh6MVZIMy9uYWJEdWdTK1NaNlFo?=
+ =?utf-8?B?b3FmZDlpQW4xaUxPUGRhVExVVFNpRjlPSFQ1dCtlb1c1dzNrRXMyRHVQWUI4?=
+ =?utf-8?B?UVpualZrNUdIODB1ZEhwUlJVemJlUm9NbnNLQVRGdDNCWmdBOStraGtjNHFy?=
+ =?utf-8?B?enY3M01LNkJHaHdKQ3dmRzBOVHc2NDVldU5xd3hvOWN0cStHQ1o4RDIzdkZK?=
+ =?utf-8?B?cGluMFVOYnl2QTV4SjlQU0t1YUhxVk9UQW8vK0RVOXdlZ1JWYUFIMXVVT2VX?=
+ =?utf-8?B?amxDTStWTGlyMzQ1OFF0UlpsY2NZZVpHZVNRMzRoYWxxS1dzQ0dKbEZrMHQr?=
+ =?utf-8?B?SUUzQncyNHNlNk41eStNOHNodXlLU3gxUjN6b3F6NGx3dEpPNmh1ek9UOFpj?=
+ =?utf-8?B?Ri9vb1JUUFZWTm8yZ0llUFdIdlZ6ckV1ZENGanhoSldRcm5GSjRoNm1mYWhi?=
+ =?utf-8?B?cDIrcWRsRXJHWlYwZGRKR2wrMnV2M3RNb0pvbkY3b3BnYTc5UWF0MUN0aCta?=
+ =?utf-8?B?VHhDektEemxyRmJxVWl6WjdSa3grMTl6N3BVanpLTno3RG1OK0ExalV2djZS?=
+ =?utf-8?B?QUxSZ2xrWFNLWW1LSlg5TnQzd2xYc0ZjeGVRQ25iTmlOdkt1TVlsVTBzNGxr?=
+ =?utf-8?B?MkhZZHUxK0RCV3kwYjhOVVlrTWNmQnY3aXR5eHV5TjJUS0d2SUJtRVZ2aDJH?=
+ =?utf-8?B?V3F6RFh2UXovVC9Xc1JGWk1sN2lJUVhhc21BQXltM2FYTjlhais4d2hNUHFF?=
+ =?utf-8?B?VzV0Qy9UZmFQSnoveGZpTTJxelRMZ0Q0SFg0RThVNlQ2MW1BaS91WHhmdkMr?=
+ =?utf-8?B?V3ZHT3lIL3dwQ29aU290MEtMR3NaTVhzVjYvY3M0QjlvQzZZa1NkdzVzMnRO?=
+ =?utf-8?B?OTBEbkF0MjJ1bitjbnZQNkJSVkRCL3Bvc3RCTEI3RFMwQWlmYTBUMmh6VWxK?=
+ =?utf-8?Q?/Tezl9ZkJ3IEg?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Wi96VEtWTENjN0tPTU0zS3pRQWtESGlSVzNOcEhTYVhqc2ozT2owamNnVm9L?=
+ =?utf-8?B?S0hjUTc0V0FHWE03L1M0aTIrVlkwZ0RtTVMycEorcEhpelhUa1Yrb3pzV09O?=
+ =?utf-8?B?TEcrYzYrVVcyQ0JHTE8wbGVzeUdlcGVJRnNreDlPOVkvTkJPcWw1Zkx4WkhX?=
+ =?utf-8?B?VXMxM0IwazIrT1QvcUVGUWVHeURGVFgrRzk0OTZjVWtaK0Z0ejEya1hXK0Rq?=
+ =?utf-8?B?ak5RdHRLTzlYbDYzZTRFcnMzQ1VVMDlJSVpzc0p3eG9sZENWRWh4SWw4MUlr?=
+ =?utf-8?B?R0lLSlhlVHRXVDkxTmNKRWJEZVBiMnFOSU80K3NZTmlMamVDSDdFZmRPK0J4?=
+ =?utf-8?B?Y2JTYkZVREo0TE5UL0ZIaTVTQXBZckE5OW9YSTc5V1YvamdydmFsSzBjbkRL?=
+ =?utf-8?B?cjZFNzE4c2NnYlMwUjRFNVQ3WDcyb05nN09FRGsycFo4KzJ1ZTJjMFpIcUpG?=
+ =?utf-8?B?K3BuZ3VXZ1NEcVQrSVBHTHN4ZWMzSTQvTFUvR3VEUVR5U0dKcEtDYitVbE1B?=
+ =?utf-8?B?Tzd0bG9yTnhxSmZpTk03U3JvZEc3aCt5U2ZSZVRkbXdxbCtNMGZaaEJGZWo2?=
+ =?utf-8?B?ajJ4YTl1TEoxb1ZPUGt3aXlMZ3RDRHh4QmZHUFREcVJXUlBsTHI3VFIvMzVB?=
+ =?utf-8?B?L1V3TjhjcEV6clZ1ZXE4OFBCUGd4QXZnZmhDMGh1ZXMzeStVS1k3RW9vbmtV?=
+ =?utf-8?B?bmVBMUo1aThCL21ZOVJURXdweFZQYWFBdG10ZnI5anNxTm5MUXdYUVkvRkRO?=
+ =?utf-8?B?R2pIbElxTFg2L2F5U1h4YklnY0lVRjB4SzlpeW0vdGRDdzYzVGlURHgyOFE3?=
+ =?utf-8?B?SElMNndmNHlmYWRKNDFraE90SEpwVGJ3OGxDYUVvMkE5b3B5N0VmNXoxNmVK?=
+ =?utf-8?B?S3BPV1NxZ2xONm5VMVRUcGZCcVlsWnBqVitMRUZHdnN0MlpjYlA5ZG5EYXZ6?=
+ =?utf-8?B?Mmk1MDN3dWhPWXk0c3p6YTJMVmJTUTFaUm1wYnVweWFMY2Z3NWRmN1ZRTk9E?=
+ =?utf-8?B?WEdHclI0NzZSRjdEQ2FlYUJBOFZndlhWa0lxVUJoTS9FZ01DSk1GME9iaFU4?=
+ =?utf-8?B?M2hpYTVHNHlYWkNmeXZuRGVSK3lmK2VOVloyME94dDI3TzJiekN0NXBOankw?=
+ =?utf-8?B?b2xKclcvNTBhY0pWeG8vVU9hbm5LOFZuY2J6SDMxdldzSmg1OFc3cjJUQmhZ?=
+ =?utf-8?B?OGl3M1ZMNFZXUk9WeGFQMU45eTJoZFFxNDZwWElSTlEwSDRWcmxDd3N4Z2lY?=
+ =?utf-8?B?Q291OU40SWxFZFZDZjdNNjBkdzFaQmtqM3pBdHhzbGgxcHJ5Zm9qcGh6cytQ?=
+ =?utf-8?B?S1puWHQ4aHYvUjltM2JaWXVxUDdBaUN6aC9vczlCM2MzV0VxY0FZcEpmai9a?=
+ =?utf-8?B?L0ZEOHR6M2JrVkxVQWlwOXZ3ZjJ6WE9HSTJ5TzhTUVVGWUhmSmVzSGtkektH?=
+ =?utf-8?B?L1lJTGkzMlFEVFZCR2Z0NTh1M0NNczBiVFBYWktZZlFvVUVjaTJ3SkdQVDBF?=
+ =?utf-8?B?Zmx1b1g5ejFJbzZWL2RzaFBoTTQreWV6aVZuSDZCSW14MGhHbnpQWG85OVJE?=
+ =?utf-8?B?enJvbHhBaHA1YSsvZHNlOEZHblFPVHZDNEZ4SnBqVlo0b2VkY3VUcFU1S0Yy?=
+ =?utf-8?B?LzZPL2dWcFZOV2NZaFhsU1R0aUtqWmdKb0JJdkRvdmNhY0JFN3dBcGt4Smd2?=
+ =?utf-8?B?ZGNFNDVmWWlCL0gycWhyQytrOW5ITzJiNVQ0bnRWaGFKOGNrQk9wcEFaUzYv?=
+ =?utf-8?B?SlBUb0hIbURrMXBybFZBK1piTEZqMEVXdDErWGxlSmthaFBtOVgwMUFNanUx?=
+ =?utf-8?B?R1ViK2JDN2doamZmTXI5TzgxcGYvT1ZSdklLaWpuak5MaG9JSUt3aStHdjJa?=
+ =?utf-8?B?L1ZyRFZzcmlnZjF6RHBLUzBIVVV4N3ZEOFVLYkwyYklJUW1yTy81dFBDenMz?=
+ =?utf-8?B?bUNKVCtmdklEbStRMmh3L2l1TVpSQ05mdTJGMEYyZkxXYWFidGJYVlJhL05w?=
+ =?utf-8?B?SzRuVEl3Umk2LzNqeEt3TG9DNldDeVZRVUsycmcvc25hWG4wS3VRalVCaWlY?=
+ =?utf-8?B?SUlGbVJ0a3U5emdkYUZJd1R4SEdrMy8wQ0ZsSFJsYmhoV3JQUDdWa1dIUlJD?=
+ =?utf-8?Q?xCwXCCEA+lH/p7m1VXAGXX1yp?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61e7dedb-5c11-4599-2c52-08dd453b05ad
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 16:43:16.0690
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WFhDu6XNXvevnqOsCn979PRJaH+IU8K3kQR3DCbSfbyFXVgA2DK7L+2SyjqblPsm5hDWznPbCc+HfJJha5Bi5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8235
 
-On Fri, 2025-01-17 at 18:14 +0800, Lifeng Zheng wrote:
 
-> In cpufreq_online() of cpufreq.c, the per-policy boost flag is already set
-> to mirror the cpufreq_driver boost during init but using freq_table to
-> judge if the policy has boost frequency. There are two drawbacks to this
-> approach:
-> 
-> 1. It doesn't work for the cpufreq drivers that do not use a frequency
-> table. For now, acpi-cpufreq and amd-pstate have to enable boost in policy
-> initialization. And cppc_cpufreq never set policy to boost when going
-> online no matter what the cpufreq_driver boost flag is.
-> 
-> 2. If the cpu goes offline when cpufreq_driver boost enabled and then goes
-> online when cpufreq_driver boost disabled, the per-policy boost flag will
-> unreasonably remain true.
-> 
-> Running set_boost at the end of the online process is a more generic way
-> for all cpufreq drivers.
-> 
-> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
-> ---
->  drivers/cpufreq/cpufreq.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 5882d7f5e3c1..5a3566c2eb8d 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -1409,10 +1409,6 @@ static int cpufreq_online(unsigned int cpu)
->  			goto out_free_policy;
->  		}
->  
-> -		/* Let the per-policy boost flag mirror the cpufreq_driver boost during init */
-> -		if (cpufreq_boost_enabled() && policy_has_boost_freq(policy))
-> -			policy->boost_enabled = true;
-> -
->  		/*
->  		 * The initialization has succeeded and the policy is online.
->  		 * If there is a problem with its frequency table, take it
-> @@ -1573,6 +1569,18 @@ static int cpufreq_online(unsigned int cpu)
->  	if (new_policy && cpufreq_thermal_control_enabled(cpufreq_driver))
->  		policy->cdev = of_cpufreq_cooling_register(policy);
->  
-> +	/* Let the per-policy boost flag mirror the cpufreq_driver boost during init */
-> +	if (policy->boost_enabled != cpufreq_boost_enabled()) {
-> +		policy->boost_enabled = cpufreq_boost_enabled();
-> +		ret = cpufreq_driver->set_boost(policy, policy->boost_enabled);
-> +		if (ret) {
-> +			/* If the set_boost fails, the online operation is not affected */
-> +			pr_info("%s: CPU%d: Cannot %s BOOST\n", __func__, policy->cpu,
-> +				policy->boost_enabled ? "enable" : "disable");
-> +			policy->boost_enabled = !policy->boost_enabled;
-> +		}
-> +	}
-> +
->  	pr_debug("initialization complete\n");
->  
->  
-> 	return 0;
-
-Hi,
-
-This patch causes a boot-time crash on PowerNV (Power9-baremetal systems) when WoF
-(Workload Optimized Frequency - boost) is enabled, starting from v6.14-rc1.
-
-The crash happens due to null pointer dereference of the `set_boost` function.
-
-`set_boost` is only assigned after the cpufreq driver is registered on PowerNV
-as below, 
-
-Initialization Flow: (powernv_cpufreq_init -> cpufreq_enable_boost_support -> 
-                      initializes set_boost).
-
-However, with this patch, `set_boost` is invoked in `cpufreq_register_driver`
-before it is initialized.
-
-Access Flow:         (powernv_cpufreq_init -> cpufreq_register_driver -> cpufreq_online -> 
-                      attempts to access cpufreq_driver->set_boost,
-                      which is still NULL at this point).
-
-This causes a boot-time crash as follows:
-
-[    9.393946][    T1] BUG: Unable to handle kernel instruction fetch (NULL pointer?)
-[    9.393946][    T1] BUG: Unable to handle kernel instruction fetch (NULL pointer?)
-[    9.396285][    T1] Faulting instruction address: 0x00000000
-[    9.396285][    T1] Faulting instruction address: 0x00000000
-[    9.398545][    T1] Oops: Kernel access of bad area, sig: 7 [#1]
-[    9.398545][    T1] Oops: Kernel access of bad area, sig: 7 [#1]
-[    9.398804][    T1] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA PowerNV
-[    9.398804][    T1] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA PowerNV
-[    9.400114][    T1] Modules linked in:
-[    9.400114][    T1] Modules linked in:
-[    9.400283][    T1] CPU: 19 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc1-dirty #23
-[    9.400283][    T1] CPU: 19 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc1-dirty #23
-[    9.400605][    T1] Hardware name: 0000000000000000 POWER9 0x4e1202 opal:v6.6-111-gd362ae4f-root-dirty-157d5e1 PowerNV
-[    9.400605][    T1] Hardware name: 0000000000000000 POWER9 0x4e1202 opal:v6.6-111-gd362ae4f-root-dirty-157d5e1 PowerNV
-[    9.403093][    T1] NIP:  0000000000000000 LR: c000000000f7a574 CTR: 0000000000000000
-[    9.403093][    T1] NIP:  0000000000000000 LR: c000000000f7a574 CTR: 0000000000000000
-[    9.404397][    T1] REGS: c00020000419f680 TRAP: 0400   Not tainted  (6.14.0-rc1-dirty)
-[    9.404397][    T1] REGS: c00020000419f680 TRAP: 0400   Not tainted  (6.14.0-rc1-dirty)
-[    9.407771][    T1] MSR:  9000000002089033 <SF,HV,VEC,EE,ME,IR,DR,RI,LE>  CR: 84000482  XER: 00000000
-[    9.407771][    T1] MSR:  9000000002089033 <SF,HV,VEC,EE,ME,IR,DR,RI,LE>  CR: 84000482  XER: 00000000
-[    9.409191][    T1] CFAR: c000000000f7a570 IRQMASK: 0 
-[    9.409191][    T1] GPR00: c000000000f7a51c c00020000419f920 c000000001ea3200 c00020002455f800 
-[    9.409191][    T1] GPR04: 0000000000000001 0000000000000000 0000000000000001 0000000000000000 
-[    9.409191][    T1] GPR08: 0000000000000000 c000000002a1f280 0000000000000001 0000000000000000 
-[    9.409191][    T1] GPR12: 0000000000000000 c000003ffefe0900 c00000000001101c 0000000000000000 
-[    9.409191][    T1] GPR16: 0000000000000000 0000000000000000 c000000002c20b80 000000000000005a 
-[    9.409191][    T1] GPR20: c00000007ffa0a14 c000000002973200 c000000002c1ff38 c00020002455fc48 
-[    9.409191][    T1] GPR24: c0000000029752f8 c000000002c1ff10 c00020002455fcb8 0000000000000000 
-[    9.409191][    T1] GPR28: c000000002a71be0 0000000000000000 c00020002455f800 c000000002a1f0a0 
-[    9.409191][    T1] CFAR: c000000000f7a570 IRQMASK: 0 
-[    9.409191][    T1] GPR00: c000000000f7a51c c00020000419f920 c000000001ea3200 c00020002455f800 
-[    9.409191][    T1] GPR04: 0000000000000001 0000000000000000 0000000000000001 0000000000000000 
-[    9.409191][    T1] GPR08: 0000000000000000 c000000002a1f280 0000000000000001 0000000000000000 
-[    9.409191][    T1] GPR12: 0000000000000000 c000003ffefe0900 c00000000001101c 0000000000000000 
-[    9.409191][    T1] GPR16: 0000000000000000 0000000000000000 c000000002c20b80 000000000000005a 
-[    9.409191][    T1] GPR20: c00000007ffa0a14 c000000002973200 c000000002c1ff38 c00020002455fc48 
-[    9.409191][    T1] GPR24: c0000000029752f8 c000000002c1ff10 c00020002455fcb8 0000000000000000 
-[    9.409191][    T1] GPR28: c000000002a71be0 0000000000000000 c00020002455f800 c000000002a1f0a0 
-[    9.415226][    T1] NIP [0000000000000000] 0x0
-[    9.415226][    T1] NIP [0000000000000000] 0x0
-[    9.417435][    T1] LR [c000000000f7a574] cpufreq_online+0x440/0xe14
-[    9.417435][    T1] LR [c000000000f7a574] cpufreq_online+0x440/0xe14
-[    9.419701][    T1] Call Trace:
-[    9.419701][    T1] Call Trace:
-[    9.422849][    T1] [c00020000419f920] [c000000000f7a51c] cpufreq_online+0x3e8/0xe14 (unreliable)
-[    9.422849][    T1] [c00020000419f920] [c000000000f7a51c] cpufreq_online+0x3e8/0xe14 (unreliable)
-[    9.430225][    T1] [c00020000419fa00] [c000000000f7b030] cpufreq_add_dev+0xb4/0xd8
-[    9.430225][    T1] [c00020000419fa00] [c000000000f7b030] cpufreq_add_dev+0xb4/0xd8
-[    9.434547][    T1] [c00020000419fa30] [c000000000c89e18] subsys_interface_register+0x18c/0x1d4
-[    9.434547][    T1] [c00020000419fa30] [c000000000c89e18] subsys_interface_register+0x18c/0x1d4
-[    9.440934][    T1] [c00020000419faa0] [c000000000f763a8] cpufreq_register_driver+0x1f0/0x370
-[    9.440934][    T1] [c00020000419faa0] [c000000000f763a8] cpufreq_register_driver+0x1f0/0x370
-[    9.444314][    T1] [c00020000419fb20] [c000000002093340] powernv_cpufreq_init+0x690/0xa10
-[    9.444314][    T1] [c00020000419fb20] [c000000002093340] powernv_cpufreq_init+0x690/0xa10
-[    9.444686][    T1] [c00020000419fc30] [c000000000010cb8] do_one_initcall+0x60/0x2c8
-[    9.444686][    T1] [c00020000419fc30] [c000000000010cb8] do_one_initcall+0x60/0x2c8
-[    9.445024][    T1] [c00020000419fd00] [c0000000020059ec] kernel_init_freeable+0x33c/0x530
-[    9.445024][    T1] [c00020000419fd00] [c0000000020059ec] kernel_init_freeable+0x33c/0x530
-[    9.446375][    T1] [c00020000419fde0] [c000000000011048] kernel_init+0x34/0x26c
-[    9.446375][    T1] [c00020000419fde0] [c000000000011048] kernel_init+0x34/0x26c
-[    9.448684][    T1] [c00020000419fe50] [c00000000000debc] ret_from_kernel_user_thread+0x14/0x1c
-[    9.448684][    T1] [c00020000419fe50] [c00000000000debc] ret_from_kernel_user_thread+0x14/0x1c
-
-[    9.455840][    T1] ---[ end trace 0000000000000000 ]---
-[    9.455840][    T1] ---[ end trace 0000000000000000 ]---
-
-The fix will be to initialize set_boost earlier in powernv_cpufreq_init before calling
-cpufreq_register_driver.
-
-Quickly tried this patch and it resolves the issue:
-
----
-
-diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
-index ae79d909943b..2dd61de34a28 100644
---- a/drivers/cpufreq/powernv-cpufreq.c
-+++ b/drivers/cpufreq/powernv-cpufreq.c
-@@ -1127,8 +1127,10 @@ static int __init powernv_cpufreq_init(void)
-        if (rc)
-                goto out;
- 
--       if (powernv_pstate_info.wof_enabled)
-+       if (powernv_pstate_info.wof_enabled) {
-                powernv_cpufreq_driver.boost_enabled = true;
-+               powernv_cpufreq_driver.set_boost = cpufreq_boost_set_sw;
-+       }
-        else
-                powernv_cpu_freq_attr[SCALING_BOOST_FREQS_ATTR_INDEX] = NULL;
- 
-@@ -1138,9 +1140,6 @@ static int __init powernv_cpufreq_init(void)
-                goto cleanup;
-        }
- 
--       if (powernv_pstate_info.wof_enabled)
--               cpufreq_enable_boost_support();
--
-        register_reboot_notifier(&powernv_cpufreq_reboot_nb);
-        opal_message_notifier_register(OPAL_MSG_OCC, &powernv_cpufreq_opal_nb);
- 
----
-
-I noticed that Viresh is working on a similar patch [1] as part of a broader patchset
-to simplify boost handling, which should also resolve this issue.
-
-Should we merge this patch [1] and related patches since this is causing a crash,
-or submit a separate patch to fix this?
-
-[1]: https://lore.kernel.org/all/9b4af20d5b415f41e866ddd8bde9cf6441c463b8.1737707712.git.viresh.kumar@linaro.org/
-
-Regards,
-Aboorva
-
+On 04-02-2025 21:06, Thierry Reding wrote:
+> On Thu, Jan 16, 2025 at 09:50:32PM +0530, Mohan Kumar D wrote:
+>> Kernel test robot reported the build errors on 32-bit platforms due to
+>> plain 64-by-32 division. Following build erros were reported.
+>>
+>>     "ERROR: modpost: "__udivdi3" [drivers/dma/tegra210-adma.ko] undefined!
+>>      ld: drivers/dma/tegra210-adma.o: in function `tegra_adma_probe':
+>>      tegra210-adma.c:(.text+0x12cf): undefined reference to `__udivdi3'"
+>>
+>> This can be fixed by using lower_32_bits() for the adma address space as
+>> the offset is constrained to the lower 32 bits
+>>
+>> Fixes: 68811c928f88 ("dmaengine: tegra210-adma: Support channel page")
+>> Cc: stable@vger.kernel.org
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Closes: https://lore.kernel.org/oe-kbuild-all/202412250204.GCQhdKe3-lkp@intel.com/
+>> Signed-off-by: Mohan Kumar D <mkumard@nvidia.com>
+>> ---
+>>   drivers/dma/tegra210-adma.c | 14 +++++++++++---
+>>   1 file changed, 11 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+>> index 6896da8ac7ef..258220c9cb50 100644
+>> --- a/drivers/dma/tegra210-adma.c
+>> +++ b/drivers/dma/tegra210-adma.c
+>> @@ -887,7 +887,8 @@ static int tegra_adma_probe(struct platform_device *pdev)
+>>   	const struct tegra_adma_chip_data *cdata;
+>>   	struct tegra_adma *tdma;
+>>   	struct resource *res_page, *res_base;
+>> -	int ret, i, page_no;
+>> +	unsigned int page_no, page_offset;
+>> +	int ret, i;
+>>   
+>>   	cdata = of_device_get_match_data(&pdev->dev);
+>>   	if (!cdata) {
+>> @@ -914,9 +915,16 @@ static int tegra_adma_probe(struct platform_device *pdev)
+>>   
+>>   		res_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "global");
+>>   		if (res_base) {
+>> -			page_no = (res_page->start - res_base->start) / cdata->ch_base_offset;
+>> -			if (page_no <= 0)
+>> +			if (WARN_ON(lower_32_bits(res_page->start) <=
+>> +						lower_32_bits(res_base->start)))
+> Don't we technically also want to check that
+>
+> 	res_page->start <= res_base->start
+>
+> because otherwise people might put in something that's completely out of
+> range? I guess maybe you could argue that the DT is then just broken,
+> but since we're checking anyway, might as well check for all corner
+> cases.
+>
+> Thierry
+ADMA Address range for all Tegra chip falls within 32bit range. Do you 
+think still we need to have this extra check which seems like redundant 
+for now.
+>
+>> +				return -EINVAL;
+>> +
+>> +			page_offset = lower_32_bits(res_page->start) -
+>> +						lower_32_bits(res_base->start);
+>> +			page_no = page_offset / cdata->ch_base_offset;
+>> +			if (page_no == 0)
+>>   				return -EINVAL;
+>> +
+>>   			tdma->ch_page_no = page_no - 1;
+>>   			tdma->base_addr = devm_ioremap_resource(&pdev->dev, res_base);
+>>   			if (IS_ERR(tdma->base_addr))
+>> -- 
+>> 2.25.1
+>>
