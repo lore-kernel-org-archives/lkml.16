@@ -1,109 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68A421420C;
-	Tue,  4 Feb 2025 15:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD56E213E8B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:23:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738682545; cv=none; b=HCCcqHXX1Y9wrfraoNJMmdGqzE9lQKEYABqBxG5xKVjoFMoUAPcTV4CWSGvJsQgABDOJJfmyA2zFa4mIGZT4U5kv5eFqPdBVnDPvM3g6YwYTpQcKviS26HK81wqW5AQwDnxnYq00zb6aA2hNJczc1u25JOyFodGiB3FbCEftSCY=
+	t=1738682583; cv=none; b=B8usltowCGwTpWYFZ9FbpwlqdsIknU2XyxiiVA7RGFGrgu3PNvSUG67RDHw0W32H6u07sIJTQXOzvs5I7PBj9zrWC+onUGpwvjDCcOVJxKDlvnM0rYRfQYosQ/6YWKaFxuL1fOnAZ9zhdeYETtXb3olMOyedHcOxZgn7Bj349Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738682545; c=relaxed/simple;
-	bh=PsrudWJRDvkQscYsRSOQPApkvQux7j85WLmbCr7uriI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K37qo2ZgC9rCDRMvjK0liHoxHhdJhsQOrojPcScNV5XXYYQBk02Z5pH3fzFLIBCZu48oOp/PAydquA6GOGKSfvTLClWsSPZBdPeKYGhjVBA84LrflMFNcHIBEekN7fb1Sy3QgNP2QJQyUa1BcbjsKHoXiOiEGP8bGim11iiat74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1JZvdHZt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738682583; c=relaxed/simple;
+	bh=+QHEmhin9eq4MJnLF2NbF5F6nGIZ7V/TMIa16O5ywCA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TfDMpDaKv9R14NzZnnuDGptyXXCv5nLC6FxqZf4GXCmEW6BnGKD7YOE9l35HK2j/OBrT785ANOE8DPf+rOGiDM6Z4hxbtM83VXsRROx/stFVM05hUYdlN7XAKnDoWp8gT3svKnIQU1K85YjqBAW6mSeYVkXkTfDZHxmwlhAr9pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net; spf=none smtp.mailfrom=ursulin.net; dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b=m1Az6B7D; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ursulin.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1JZvdHZt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1EE4C4CEDF;
-	Tue,  4 Feb 2025 15:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738682545;
-	bh=PsrudWJRDvkQscYsRSOQPApkvQux7j85WLmbCr7uriI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1JZvdHZtT+1ani1o7soRkMc9lTeAb5Q2bKCXD3W1d5DNvVq/vdnO+wgufbQWtDYbN
-	 WloBuzwMfM59aGdFibjiVXikai75hcc6rFCycW8L1dpxciEcQzu19yWM8zCUgAUZsh
-	 KGUxtsQS1NVWGR3GyxBoVL99ZtYWmG+IwIrj4ZNY=
-Date: Tue, 4 Feb 2025 16:21:24 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
- location
-Message-ID: <2025020455-engulf-snowbird-b08d@gregkh>
-References: <2025020304-chip-trench-4e56@gregkh>
- <87pljyyx68.fsf@ubik.fi.intel.com>
- <2025020426-spool-refreeze-2870@gregkh>
- <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b="m1Az6B7D"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4361f796586so67462525e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:23:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ursulin-net.20230601.gappssmtp.com; s=20230601; t=1738682580; x=1739287380; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uHPzkNUrpAio+U5bG1xs4+WPUC/pQ8D7HaWPlsKB46g=;
+        b=m1Az6B7DrrYVvEF8GW2gZiuC9HzKj0MtZZt4c0aci/0vPqbP0luljzwy6MhaTHKxei
+         aV+Osl3+CFweUzlpsfrODTqQgs5fIgPtKq0k0/yevXfm+I320wPsU+UjFMIBWRNPLn7e
+         g2G1Y02Y4zKIy+0q0iZqKrCj/Q7ioumK0T0RwkT1MxO00r78xh2DJlPPFP2MYNkJJ/Sq
+         dV9H+RWqq3vCtBgOFOALvysQ1XCeHsIY/C+3UHcK8oKnaexaP8YXNK1HTi3SaWxYDW6F
+         YSA04R4Ho2ovGbvCcsrxgThW7Lykcu95Uwsde7uNbLpvz45+0Of/C3i+v7AB6AxeGu5F
+         3Igg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738682580; x=1739287380;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uHPzkNUrpAio+U5bG1xs4+WPUC/pQ8D7HaWPlsKB46g=;
+        b=irzdLjk/4GG2QOuDOcMWNUHzikQRF0R3hKwnC70MVa6+T0pCKzH9btUFlWDzL66Smr
+         NurI3TLQYXszQreO0T1FPPuJ3x8otAbFNczmkhsrmcZ3RSJyjnDNKwsmekOAcBMBsgll
+         vTcEqSlPxcDTn7IsyZsbDDn8Dn49X52d1UaIU20nOfa/ybfCFn0v6ij2TBbAx0zKBG5d
+         476A6EOuOmgMa2s8qV0QlEvTfHs0JmJZm1IAMi/OeDhTY8gAlQv5XwoUMOcXPDeHJQHI
+         f6asjmkI4loDUibsh9P++EjdwdzCSNTFWkBXvOpyxErmKMxLMQEMExVmZ7mo7AkYxa03
+         nT6g==
+X-Forwarded-Encrypted: i=1; AJvYcCU2dJ6ZIljrdOwvSYTSZQru87atbucxVBjkHchRJpjsk/S3KLyP/D23n2gOKwB+kSADsXQt45LnVid2aGA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsW3acQYVXxLUZTfde7pvrUHEIvB4C2f6f5Cq9LROke7yj1ByW
+	gIeXqKE2fdrvYqp1ZXDYRSMB7azu6VQnih1Ez17ckxzwQzqhhfQdOiTAqgGe/V4=
+X-Gm-Gg: ASbGncudns1Ws/NguVlNm/PULPVhPaM+TeEIcrUXCyq0sSEtkvRsVNs5lqQrclNYmcS
+	0Nxy8iS1BuQyoIwoWAlTddaTY6OKZilSxs4oGkxT1CYvCQULdzqXqyEKXakFiHXwFXxboIp5FFg
+	rVHBgYWguy5AsHXIVy/CJRAFkh+Io00zAjklg0wmmr7hBzDBBeATjid4LduvzVOO4fC5Yr+S2Gl
+	vJyPjJEyZsj2ZhOMM8CmzrVH4NmPO+NzVebZ0QY5ci/Q82KmUcmU+1+5CLYJpWZt2LqtfXEKdEg
+	/C3DSjJU60kqwxpncVFOZl4UIopVbdE=
+X-Google-Smtp-Source: AGHT+IEntKLHr8j1sa+aY2Ls+kNA4qbxjue7cUKL+PfzPTcK+ezljDd4qdj5+6d5zwUZ+43zkQB0bw==
+X-Received: by 2002:a05:600c:3c82:b0:430:57e8:3c7e with SMTP id 5b1f17b1804b1-438dc4251f2mr231551085e9.28.1738682578837;
+        Tue, 04 Feb 2025 07:22:58 -0800 (PST)
+Received: from [192.168.0.101] ([90.241.98.187])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b5492sm16239592f8f.73.2025.02.04.07.22.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 07:22:58 -0800 (PST)
+Message-ID: <cc3444d8-a354-4332-93e7-0b1a70d3c4ac@ursulin.net>
+Date: Tue, 4 Feb 2025 15:22:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 4/7] drm/sched: cleanup gpu_scheduler trace events
+To: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+ Luben Tuikov <ltuikov89@gmail.com>, Matthew Brost <matthew.brost@intel.com>,
+ Danilo Krummrich <dakr@kernel.org>, Philipp Stanner <pstanner@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+References: <20250131110328.706695-1-pierre-eric.pelloux-prayer@amd.com>
+ <20250131110328.706695-5-pierre-eric.pelloux-prayer@amd.com>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tursulin@ursulin.net>
+In-Reply-To: <20250131110328.706695-5-pierre-eric.pelloux-prayer@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 04, 2025 at 09:06:18AM -0500, Liang, Kan wrote:
+
+On 31/01/2025 11:03, Pierre-Eric Pelloux-Prayer wrote:
+> A fence uniquely identify a job, so this commits updates the places
+> where a kernel pointer was used as an identifier by:
 > 
+>     "fence=%llu:%llu"
 > 
-> On 2025-02-04 5:16 a.m., Greg Kroah-Hartman wrote:
-> > On Tue, Feb 04, 2025 at 09:41:03AM +0200, Alexander Shishkin wrote:
-> >> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> >>
-> >>> In sysfs, for some reason, all pmu devices seem to show up in the "root"
-> >>> of /sys/devices/ making for a confusing mess as these devices are not
-> >>> really at the root of the system at all.
-> >>>
-> >>> Create a fake root devices, "pmu_bus" and place them all under there if
-> >>> they do not already have a parent device set, cleaning up sysfs to look
-> >>> more sane.
-> >>
-> >> Yeah, so what happens to the userspace that uses them via /sys/devices/*
-> >> directly? Even I have scripts that do that.
-> > 
-> > You should never be doing that, as you have no idea what type of devices
-> > are in that location in the tree.  You should be doing what the
-> > documentation says to do, and look in /sys/bus/event_source/devices/
-> > instead.  That didn't change here.
-> >
+> Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+> ---
+>   .../gpu/drm/scheduler/gpu_scheduler_trace.h   | 41 +++++++++++--------
+>   1 file changed, 23 insertions(+), 18 deletions(-)
 > 
-> Not just the script, the /sys/devices/ is also used in the current perf
-> tool. For example,
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/mem-events.c#n192
+> diff --git a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+> index c4ec28540656..3cdd8d8f8021 100644
+> --- a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+> +++ b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+> @@ -36,28 +36,29 @@ DECLARE_EVENT_CLASS(drm_sched_job,
+>   	    TP_PROTO(struct drm_sched_job *sched_job, struct drm_sched_entity *entity),
+>   	    TP_ARGS(sched_job, entity),
+>   	    TP_STRUCT__entry(
+> -			     __field(struct drm_sched_entity *, entity)
+> -			     __field(struct dma_fence *, fence)
+> -			     __string(name, sched_job->sched->name)
+>   			     __field(uint64_t, id)
+> +			     __string(name, sched_job->sched->name)
+>   			     __field(u32, job_count)
+>   			     __field(int, hw_job_count)
+>   			     __string(dev, dev_name(sched_job->sched->dev))
+> +			     __field(uint64_t, fence_context)
+> +			     __field(uint64_t, fence_seqno)
+>   			     ),
+>   
+>   	    TP_fast_assign(
+> -			   __entry->entity = entity;
+>   			   __entry->id = sched_job->id;
+> -			   __entry->fence = &sched_job->s_fence->finished;
+>   			   __assign_str(name);
+>   			   __entry->job_count = spsc_queue_count(&entity->job_queue);
+>   			   __entry->hw_job_count = atomic_read(
+>   				   &sched_job->sched->credit_count);
+>   			   __assign_str(dev);
+> +			   __entry->fence_context = sched_job->s_fence->finished.context;
+> +			   __entry->fence_seqno = sched_job->s_fence->finished.seqno;
+> +
+>   			   ),
+> -	    TP_printk("dev=%s, entity=%p, id=%llu, fence=%p, ring=%s, job count:%u, hw job count:%d",
+> -		      __get_str(dev), __entry->entity, __entry->id,
+> -		      __entry->fence, __get_str(name),
+> +	    TP_printk("dev=%s, id=%llu, fence=%llu:%llu, ring=%s, job count:%u, hw job count:%d",
+> +		      __get_str(dev), __entry->id,
+> +		      __entry->fence_context, __entry->fence_seqno, __get_str(name),
+>   		      __entry->job_count, __entry->hw_job_count)
+>   );
+>   
+> @@ -75,37 +76,41 @@ TRACE_EVENT(drm_sched_process_job,
+>   	    TP_PROTO(struct drm_sched_fence *fence),
+>   	    TP_ARGS(fence),
+>   	    TP_STRUCT__entry(
+> -		    __field(struct dma_fence *, fence)
+> +		    __field(uint64_t, fence_context)
+> +		    __field(uint64_t, fence_seqno)
+>   		    ),
+>   
+>   	    TP_fast_assign(
+> -		    __entry->fence = &fence->finished;
+> +		    __entry->fence_context = fence->finished.context;
+> +		    __entry->fence_seqno = fence->finished.seqno;
+>   		    ),
+> -	    TP_printk("fence=%p signaled", __entry->fence)
+> +	    TP_printk("fence=%llu:%llu signaled",
+> +		      __entry->fence_context, __entry->fence_seqno)
 
-Ugh, it's ignoring the documentation that perf provides for how to find
-these devices.  And it's really really risky to do that, you are
-"assuming" that a subdir called "events" is never in any other type of
-device.
+Any chance to rename this tracepoint while changing things around? For 
+me "process" is not intuitive to what stage it refers so maybe a set of 
+tracepoints like:
 
-I'll submit a patch to fix that.
+drm_sched_job_(wait_)dependenc(y|ies) - more on this in the next patch
+drm_sched_job_queue
+drm_sched_job_run
+drm_sched_job_done
 
-> And the comments and document in the perf tool.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/pmu.c#n39
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/perf-list.txt#n191
+So the naming is standardised.
 
-I'll fix that document and the tools as well.
+>   );
+>   
+>   TRACE_EVENT(drm_sched_job_wait_dep,
+>   	    TP_PROTO(struct drm_sched_job *sched_job, struct dma_fence *fence),
+>   	    TP_ARGS(sched_job, fence),
+>   	    TP_STRUCT__entry(
+> -			     __string(name, sched_job->sched->name)
+> +			     __field(uint64_t, fence_context)
+> +			     __field(uint64_t, fence_seqno)
+>   			     __field(uint64_t, id)
+>   			     __field(struct dma_fence *, fence)
+>   			     __field(uint64_t, ctx)
+> -			     __field(unsigned, seqno)
+> +			     __field(uint64_t, seqno)
+>   			     ),
+>   
+>   	    TP_fast_assign(
+> -			   __assign_str(name);
+> +			   __entry->fence_context = sched_job->s_fence->finished.context;
+> +			   __entry->fence_seqno = sched_job->s_fence->finished.seqno;
+>   			   __entry->id = sched_job->id;
+>   			   __entry->fence = fence;
+>   			   __entry->ctx = fence->context;
+>   			   __entry->seqno = fence->seqno;
+>   			   ),
+> -	    TP_printk("job ring=%s, id=%llu, depends fence=%p, context=%llu, seq=%u",
+> -		      __get_str(name), __entry->id,
+> -		      __entry->fence, __entry->ctx,
+> -		      __entry->seqno)
+> +	    TP_printk("fence=%llu:%llu, id=%llu, dependencies:{fence=%llu:%llu}",
 
-> I think it should bring big impact for the end user, especially when
-> they still use an older perf tool and script.
+Will dependencies ever become a list here? Just wondering if plural and 
+curlies bring anything of value, or if it would be more readable as 
+"fence=%llu:%llu, id=%llu, dependency=%llu:%llu".
 
-perf is tied to the kernel tree, so we should be ok here.  We can also
-take the perf tool fix for all stable kernels as it will be backwards
-compatible.
+Regards,
 
-The idea that somehow "events" are better than any other type of device
-in the system and belong all individually in the root of the device tree
-is a long-standing bug that should be fixed.
+Tvrtko
 
-thanks,
-
-greg k-h
+> +		      __entry->fence_context, __entry->fence_seqno, __entry->id,
+> +		      __entry->ctx, __entry->seqno)
+>   );
+>   
+>   #endif
