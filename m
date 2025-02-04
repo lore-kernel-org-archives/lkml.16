@@ -1,142 +1,201 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D4578F4A;
-	Tue,  4 Feb 2025 18:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BE178F4A;
+	Tue,  4 Feb 2025 18:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738693437; cv=none; b=g4eTTp1OH5HtswBgZZUTl5DYcKtjaeqBF6QRdwH9UV41c/d80lLeAX9UUsc23g1F21nR7KkonZFuYXBW4c10Frd4dIhJvPGuxsCctgi+qPuDb7seSed9OIpFBPOXuZUfmxDSEsRhue9LKlqkxVnw7EyqVqvfV/9TEVqzgR/onPU=
+	t=1738693515; cv=none; b=f9Bs4CPesx7QkYPz6WqeZLlBGChMZOIdnPPTbF6K/I/iTQrqnw5QdhgPqRnDtZzAAQtD+nlhBGV7qcfXP0loU+sfXDrfIZwUXx5sxQJ+mHDim5YAWfErjLEC64CiAd+sbhRr8UV5w/1ycgP3Mniq6o1QqYW9xmCkiRuYW4mpCN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738693437; c=relaxed/simple;
-	bh=jIJQfLnWt//hklNtiZN38RPULNlKpKsyubMrM4kG1l8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E/6H6jDac30J4Ec4ZCW9L0MAsTYWrDc5/yT44xA8f9dV1D7GIzG0YOcetVJz//LKX0t10JKaUlVzHCt0vI5mh7l9j5dnXjusmxtRHvCpM16DHka+9H6YUYJ6bk8X3LGjwJGq2ArDxVeqwXnc3c4wPu92O8FPSU78TIWlMxzR0LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fr+M7JkF; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738693515; c=relaxed/simple;
+	bh=Ih/INvZDCjTqbRdtGwJE97I8DmetNY+nzTtRbY9RI4o=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=qliosSYWZDla5Q6DOOBIpNlheQxC/Xdn8xPTuvSDb5VOFNtgkKF3+0lp9y0Dnypodzpp7hNYeiQCxmbvpe1Wu8tKKivPb0GhKUxtNpfHsEsL+SzxWBCnHL8GlkwrRFmZHYR/fl08o/tVfK+RwoINXL5EZ6DdW94VKp6vH4SBN2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LmZuY1o5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ceduz7hH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fr+M7JkF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738693436; x=1770229436;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jIJQfLnWt//hklNtiZN38RPULNlKpKsyubMrM4kG1l8=;
-  b=fr+M7JkF8F8RHgYVKELcLS0X+m+dEY2zpQRnw60pw7ZoXix60q61ZU8U
-   7Apo5v3+wE2MDhCOhz88pNcAQ1IIw+yrBukvzFCSi2CwXN9sNR/rYDfoU
-   qJF00TIjfq4JfYAE9HgfKYkDJn6/HweJe4pCIoa4S7OW0GafZbyZIzfKf
-   bnLcOpHZoO3hgnJyz8JkIbekVUm2cZwZ6QGRI9c1JkWlLZ5ZSiqvyCvot
-   MFCiChf8Vd+wn300hnylMrf8aAjeANfXe3Y4Qm33Rg7qAVwYl/BHmPTHc
-   jqfpdMWhMr8BmOuRPU/tmhIlUc+DxIyYg9YRKEDG8JkRAplhPoj+GEd5x
-   g==;
-X-CSE-ConnectionGUID: tugKT94tRP6YBqT3bfWHrQ==
-X-CSE-MsgGUID: q2JIvmM9QUKyPaN/6IvVpA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56660306"
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="56660306"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 10:23:55 -0800
-X-CSE-ConnectionGUID: EzYWgQXKQGSZv8KJOPWBBA==
-X-CSE-MsgGUID: TRslo0PORk+3LEC+bN9NYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111109456"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 10:23:55 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id F29D020B5713;
-	Tue,  4 Feb 2025 10:23:52 -0800 (PST)
-Message-ID: <9656a86c-30fb-48d9-9327-920cd449e73a@linux.intel.com>
-Date: Tue, 4 Feb 2025 13:23:51 -0500
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LmZuY1o5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ceduz7hH"
+Date: Tue, 04 Feb 2025 18:25:10 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738693511;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=h9tFbYkezPHVMN3uSKCz+iPyCmPBwmrlGejhZ4UlaJ4=;
+	b=LmZuY1o5H3lZ+7aVcTWR4SWFDChZeRRc+tak0pFP6IA0phCRIZLpQ9UrGdtUi/hY6H1rFn
+	pGRQqvfkhbzYwTIjlkll+3zpvfEqoi9dyY5ukMZpy012atr1XmreRKvJE+LTxXjKzwmrGf
+	Ff6g1Gf73b6CwOmWuHCvOg0C7jPIVJWV4FXfb2EVq5r5OAnjjK84KWtw6kO0DQUsRI1Eao
+	RHnWkRTJCiNM/aGrAYQDRYhm/Id7z9lWV4qNqq7jdAA8PCvKt7lDppHrNJgr64KUNWcopX
+	JkmpxmE0t8BQDkl7XXqWZm223mTrLCFfBTVAwNuEXQjJf/DvmzT7G9RAeXWmhA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738693511;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=h9tFbYkezPHVMN3uSKCz+iPyCmPBwmrlGejhZ4UlaJ4=;
+	b=Ceduz7hHoSEDDTl3EiiaweLv/IhKGkCU7gjWTBWKf4xn46CHuYscztToaZ/Mg2OUW3wICz
+	EeiFsBhxfXv77nBA==
+From: "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/cpu: Fix #define name for Intel CPU model 0x5A
+Cc: Christian Ludloff <ludloff@gmail.com>, Tony Luck <tony.luck@intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
- location
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>
-References: <2025020304-chip-trench-4e56@gregkh>
- <87pljyyx68.fsf@ubik.fi.intel.com> <2025020426-spool-refreeze-2870@gregkh>
- <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com>
- <2025020408-apron-fled-d29e@gregkh>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <2025020408-apron-fled-d29e@gregkh>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <173869351005.10177.15922683716075278539.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the x86/cpu branch of tip:
 
+Commit-ID:     1e66d6cf888fd206a89b8c476b1b28b63faf7fd6
+Gitweb:        https://git.kernel.org/tip/1e66d6cf888fd206a89b8c476b1b28b63faf7fd6
+Author:        Tony Luck <tony.luck@intel.com>
+AuthorDate:    Mon, 07 Oct 2024 09:57:01 -07:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Tue, 04 Feb 2025 10:05:53 -08:00
 
-On 2025-02-04 11:28 a.m., Greg Kroah-Hartman wrote:
-> On Tue, Feb 04, 2025 at 09:06:18AM -0500, Liang, Kan wrote:
->>
->>
->> On 2025-02-04 5:16 a.m., Greg Kroah-Hartman wrote:
->>> On Tue, Feb 04, 2025 at 09:41:03AM +0200, Alexander Shishkin wrote:
->>>> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
->>>>
->>>>> In sysfs, for some reason, all pmu devices seem to show up in the "root"
->>>>> of /sys/devices/ making for a confusing mess as these devices are not
->>>>> really at the root of the system at all.
->>>>>
->>>>> Create a fake root devices, "pmu_bus" and place them all under there if
->>>>> they do not already have a parent device set, cleaning up sysfs to look
->>>>> more sane.
->>>>
->>>> Yeah, so what happens to the userspace that uses them via /sys/devices/*
->>>> directly? Even I have scripts that do that.
->>>
->>> You should never be doing that, as you have no idea what type of devices
->>> are in that location in the tree.  You should be doing what the
->>> documentation says to do, and look in /sys/bus/event_source/devices/
->>> instead.  That didn't change here.
->>>
->>
->> Not just the script, the /sys/devices/ is also used in the current perf
->> tool. For example,
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/mem-events.c#n192
->>
->> And the comments and document in the perf tool.
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/pmu.c#n39
-> 
-> Note, this file looks to work properly, it's just the comment that is
-> incorrect.
-> 
-> Any hints on what perf command or test I should run to verify I did get
-> this all right?
+x86/cpu: Fix #define name for Intel CPU model 0x5A
 
-For the perf tool, "perf test" should be run at minimum.
+This CPU was mistakenly given the name INTEL_ATOM_AIRMONT_MID. But it
+uses a Silvermont core, not Airmont.
 
-> 
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/perf-list.txt#n191
-> 
-> I'll fix that.
-> 
->> I think it should bring big impact for the end user, especially when
->> they still use an older perf tool and script.
-> 
-> It seems that the majority of the perf code IS looking in the correct
-> place, just mem-events.c seemed wrong.
-> 
+Change #define name to INTEL_ATOM_SILVERMONT_MID2
 
-There should be two more.
+Reported-by: Christian Ludloff <ludloff@gmail.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lore.kernel.org/all/20241007165701.19693-1-tony.luck%40intel.com
+---
+ arch/x86/events/intel/core.c                                   | 2 +-
+ arch/x86/include/asm/intel-family.h                            | 2 +-
+ arch/x86/kernel/cpu/common.c                                   | 2 +-
+ arch/x86/kernel/tsc_msr.c                                      | 2 +-
+ drivers/powercap/intel_rapl_common.c                           | 2 +-
+ drivers/staging/media/atomisp/include/linux/atomisp_platform.h | 4 ++--
+ drivers/thermal/intel/intel_tcc.c                              | 2 +-
+ tools/power/x86/turbostat/turbostat.c                          | 2 +-
+ 8 files changed, 9 insertions(+), 9 deletions(-)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/builtin-stat.c#n100
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/x86/util/iostat.c#n35
-
-Thanks,
-Kan
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 7601196..8988054 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -6622,7 +6622,7 @@ __init int intel_pmu_init(void)
+ 	case INTEL_ATOM_SILVERMONT_D:
+ 	case INTEL_ATOM_SILVERMONT_MID:
+ 	case INTEL_ATOM_AIRMONT:
+-	case INTEL_ATOM_AIRMONT_MID:
++	case INTEL_ATOM_SILVERMONT_MID2:
+ 		memcpy(hw_cache_event_ids, slm_hw_cache_event_ids,
+ 			sizeof(hw_cache_event_ids));
+ 		memcpy(hw_cache_extra_regs, slm_hw_cache_extra_regs,
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 6d7b04f..8359113 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -149,9 +149,9 @@
+ #define INTEL_ATOM_SILVERMONT		IFM(6, 0x37) /* Bay Trail, Valleyview */
+ #define INTEL_ATOM_SILVERMONT_D		IFM(6, 0x4D) /* Avaton, Rangely */
+ #define INTEL_ATOM_SILVERMONT_MID	IFM(6, 0x4A) /* Merriefield */
++#define INTEL_ATOM_SILVERMONT_MID2	IFM(6, 0x5A) /* Anniedale */
+ 
+ #define INTEL_ATOM_AIRMONT		IFM(6, 0x4C) /* Cherry Trail, Braswell */
+-#define INTEL_ATOM_AIRMONT_MID		IFM(6, 0x5A) /* Moorefield */
+ #define INTEL_ATOM_AIRMONT_NP		IFM(6, 0x75) /* Lightning Mountain */
+ 
+ #define INTEL_ATOM_GOLDMONT		IFM(6, 0x5C) /* Apollo Lake */
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 7cce91b..76598a9 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1164,7 +1164,7 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
+ 
+ 	VULNWL_INTEL(INTEL_CORE_YONAH,		NO_SSB),
+ 
+-	VULNWL_INTEL(INTEL_ATOM_AIRMONT_MID,	NO_SSB | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT | MSBDS_ONLY),
++	VULNWL_INTEL(INTEL_ATOM_SILVERMONT_MID2,NO_SSB | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT | MSBDS_ONLY),
+ 	VULNWL_INTEL(INTEL_ATOM_AIRMONT_NP,	NO_SSB | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
+ 
+ 	VULNWL_INTEL(INTEL_ATOM_GOLDMONT,	NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO),
+diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
+index deeb028..48e6cc1 100644
+--- a/arch/x86/kernel/tsc_msr.c
++++ b/arch/x86/kernel/tsc_msr.c
+@@ -152,7 +152,7 @@ static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
+ 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT,	&freq_desc_byt),
+ 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID,	&freq_desc_tng),
+ 	X86_MATCH_VFM(INTEL_ATOM_AIRMONT,	&freq_desc_cht),
+-	X86_MATCH_VFM(INTEL_ATOM_AIRMONT_MID,	&freq_desc_ann),
++	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID2,	&freq_desc_ann),
+ 	X86_MATCH_VFM(INTEL_ATOM_AIRMONT_NP,	&freq_desc_lgm),
+ 	{}
+ };
+diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
+index 77d75e1..5ccde39 100644
+--- a/drivers/powercap/intel_rapl_common.c
++++ b/drivers/powercap/intel_rapl_common.c
+@@ -1274,7 +1274,7 @@ static const struct x86_cpu_id rapl_ids[] __initconst = {
+ 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT,	&rapl_defaults_byt),
+ 	X86_MATCH_VFM(INTEL_ATOM_AIRMONT,	&rapl_defaults_cht),
+ 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID, &rapl_defaults_tng),
+-	X86_MATCH_VFM(INTEL_ATOM_AIRMONT_MID,	&rapl_defaults_ann),
++	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID2,&rapl_defaults_ann),
+ 	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT,	&rapl_defaults_core),
+ 	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_PLUS,	&rapl_defaults_core),
+ 	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_D,	&rapl_defaults_core),
+diff --git a/drivers/staging/media/atomisp/include/linux/atomisp_platform.h b/drivers/staging/media/atomisp/include/linux/atomisp_platform.h
+index 0492467..6146555 100644
+--- a/drivers/staging/media/atomisp/include/linux/atomisp_platform.h
++++ b/drivers/staging/media/atomisp/include/linux/atomisp_platform.h
+@@ -172,10 +172,10 @@ void atomisp_unregister_subdev(struct v4l2_subdev *subdev);
+ #define IS_BYT	__IS_SOC(INTEL_ATOM_SILVERMONT)
+ #define IS_CHT	__IS_SOC(INTEL_ATOM_AIRMONT)
+ #define IS_MRFD	__IS_SOC(INTEL_ATOM_SILVERMONT_MID)
+-#define IS_MOFD	__IS_SOC(INTEL_ATOM_AIRMONT_MID)
++#define IS_MOFD	__IS_SOC(INTEL_ATOM_SILVERMONT_MID2)
+ 
+ /* Both CHT and MOFD come with ISP2401 */
+ #define IS_ISP2401 __IS_SOCS(INTEL_ATOM_AIRMONT, \
+-			     INTEL_ATOM_AIRMONT_MID)
++			     INTEL_ATOM_SILVERMONT_MID2)
+ 
+ #endif /* ATOMISP_PLATFORM_H_ */
+diff --git a/drivers/thermal/intel/intel_tcc.c b/drivers/thermal/intel/intel_tcc.c
+index 8174215..b2a615a 100644
+--- a/drivers/thermal/intel/intel_tcc.c
++++ b/drivers/thermal/intel/intel_tcc.c
+@@ -106,7 +106,7 @@ static const struct x86_cpu_id intel_tcc_cpu_ids[] __initconst = {
+ 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_D,		&temp_broadwell),
+ 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID,	&temp_broadwell),
+ 	X86_MATCH_VFM(INTEL_ATOM_AIRMONT,		&temp_broadwell),
+-	X86_MATCH_VFM(INTEL_ATOM_AIRMONT_MID,		&temp_broadwell),
++	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID2,	&temp_broadwell),
+ 	X86_MATCH_VFM(INTEL_ATOM_AIRMONT_NP,		&temp_broadwell),
+ 	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT,		&temp_goldmont),
+ 	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_D,		&temp_goldmont),
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 8d5011a..26057af 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -1056,7 +1056,7 @@ static const struct platform_data turbostat_pdata[] = {
+ 	 * Missing support for
+ 	 * INTEL_ICELAKE
+ 	 * INTEL_ATOM_SILVERMONT_MID
+-	 * INTEL_ATOM_AIRMONT_MID
++	 * INTEL_ATOM_SILVERMONT_MID2
+ 	 * INTEL_ATOM_AIRMONT_NP
+ 	 */
+ 	{ 0, NULL },
