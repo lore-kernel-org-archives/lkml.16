@@ -1,137 +1,121 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A9620A5D0;
-	Tue,  4 Feb 2025 12:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DE520D4ED;
+	Tue,  4 Feb 2025 12:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738671811; cv=none; b=nBsUFidueI8Wk61+XqrAcbWLlmpNnof5aNYDVbW2uWpUPFAztcUw87auAyINaQhQVCg/DkLda1JOcmtQam+GbOPswlvKWKbNzX99KVymQR0fVmWTweZ5IlGGnjZGFVEzyKxmpluXcKYf2SM+Cr9s8WPrtIwf92kAbyig0M0g5hE=
+	t=1738671812; cv=none; b=XVl59rIAyzZkR4kVOuMKRXv71IhogvXHblBTvUof1V9fwxL1L3Q+eMAe0j++H3T0fT+BZYQHloGWt965AeIQCW9Uu66yyes/2+Uh7ye0nRNSkD1gjnIBVHgab+v0VViCEAGiDN4pFAgLyujRN4dZlqCd1PLppvPpjs6mmqH7S2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738671811; c=relaxed/simple;
-	bh=dG5tGVtQZTw25dqMdtJ1/zyy7NY53LArQnmaSzSHXlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EtLNAwN0xG48sfNxt9QeGXVIpaKX+4gjcJPPnAS+rsiMosCLHGG4J5mEqD8T+UoWRWTMmfiXMqm6F115tYl0Rn5ZUWWzv93gA+GkHg5w5xzlPxmaKyS3Oxcwn0fVhDHlqIPs5nwo7x8LFwd4YsAuI+juJYDhvUHWELqOhSU47gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dzKwy/C9; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738671812; c=relaxed/simple;
+	bh=1AwBVmhsE6RjZNivDIyJD1c+DOs2FE3JauK+zQhNYbo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AT9Ekr9HvhfLGS+Huh8lG1BSkBDp9CtVlRpK1KLdUx54gQmleTpPHNGhfPam9+dKacTWo6NJDwlUrCMZ7hwpjuBYq7MDIAuL5SjEK/Q6A8xp8X4VBoWt/VDy2t7KX71V/NuzOhXa4ZylkphM4DDQMbKqWLT1wo+MigBlHD4YTdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SMfrjbyT; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dzKwy/C9"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5145NlQ3008384;
-	Tue, 4 Feb 2025 12:23:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=UJ/Pfi
-	/BfkwkEFANDeCNiXq+lhOSzYk/7Ikhm8IpmLU=; b=dzKwy/C9ik+0HIjNHd8nTE
-	2zQpVD00//xmxf2wXK9XbKi6izU2Mq5Vv8s730Ducof6Ip34iQN6vogG+E6LGQJ0
-	OpNSPWPyCWlk6fesqHMxr54iMLIiQmJh9qALHv7VWDklJCJPEU3X57MFrJo45eE9
-	YbzwpYBbNuAEkq/iN5MHV7V4/iOTvt5okOcJLcQPZ5imXRKyy3klIyl3bhzgfSR/
-	gmlM708D+g/Be8EQcSzM1xrxCrj/tLAGSLQwNm9tRyqLJyqygbbHLZZZkZhCXqKQ
-	9AXUW+kcRynr80GU3vqnT6xmUGphKfEF+WUqBaxwfTPut/upvv9zvt2m3MX7ltUw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kcq7sw41-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 12:23:24 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 514CNOG2024827;
-	Tue, 4 Feb 2025 12:23:24 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kcq7sw3y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 12:23:24 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 514Bda3b016416;
-	Tue, 4 Feb 2025 12:23:23 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44hwxsbmcv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 12:23:23 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 514CNJVT17891722
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Feb 2025 12:23:19 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B085D20542;
-	Tue,  4 Feb 2025 12:23:19 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2E25520544;
-	Tue,  4 Feb 2025 12:23:19 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.171.94.245])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Tue,  4 Feb 2025 12:23:19 +0000 (GMT)
-Date: Tue, 4 Feb 2025 13:23:17 +0100
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank
- <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Paolo
- Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: selftests: Fix spelling mistake "initally" ->
- "initially"
-Message-ID: <20250204132317.67d85b69@p-imbrenda>
-In-Reply-To: <20250204105647.367743-1-colin.i.king@gmail.com>
-References: <20250204105647.367743-1-colin.i.king@gmail.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMfrjbyT"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dca451f922so4278083a12.2;
+        Tue, 04 Feb 2025 04:23:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738671808; x=1739276608; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:reply-to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6JW6nXgkGnw+4YwH5C7jTt8bg63lJJkPHEUKmMZ4igM=;
+        b=SMfrjbyTaSjqHQfUz05REEJqyzfebMUuJ2gBJY1bRwd+GoLkJ4R+v8Mtreh42rL6nh
+         sspbQREbKTCBUB9gMC888r1/gAgNTeWKsgSbJMLSak8H7hUeCIxi+w3+JQnMz/CAP3gw
+         mGhd9/+CvfX8pKvpa0vrFgZc1f/4c7Qaiigw2GqGVN98eEw6tq8M4Zz/1aSakjMXe52B
+         81zUqtITQMGgCzGwk4eKDxFe745jefT7caTygfOodrehEuXZ53b6hebQu1l7FDJ6xrDh
+         Jy8TppNItJzZ+Y3g8HxMRlhtUppCZhYrZYmm3UFFrYeppUCLyRU5FogrYLGVWneEdoml
+         Ru2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738671808; x=1739276608;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:reply-to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6JW6nXgkGnw+4YwH5C7jTt8bg63lJJkPHEUKmMZ4igM=;
+        b=TRz10F3xdmqF391kMdLWD8KtdDMYkJ0ZkIhyAs1aD3zL3Dbd8k848nstgOwhn1LBve
+         It2AN6yNXFetcD7UtNQHGIAPyA9WTCrD3SqcXulqaaghZ/3cTUyQnw6XE8q7KgLg4TyW
+         +f31/MYBR3iH1P1vVxr/z+3PKyXTrXnbp88qnVgyUpJ2PddmrmWDTONCzgm2nv6nVBwM
+         ax0x4dSRii2jEl9zj1Mmb2L3uQyrZXhelnN/NxLbTLONhf0vnE4undRtVNokSWAaFjUq
+         lUVLR8ak1KAfsDIVMgDuMtpLa9Eni85LBq8sHTYbyWKen8uYB1oJeBrbfZvBi27MhLKm
+         +n0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUBeJst4E9ofKJd6OaqBZE49+f86LAQ97+yQeQMZ1T1i6gtXRQzjwFKNopFZrZgzP2Esiu7zjMGZe8=@vger.kernel.org, AJvYcCUxIhP7iCy3PY51m3flRg3Z9Njjp7fUNovq1CXPCWCFEbqnC5zKgv01RB6TqF2gYznU+cTztgORPaL7FaFQ@vger.kernel.org, AJvYcCWSkOCX92GL8dvYzZaAAqxvRWg2ZqSEVaW+rLL2xid5Y4WY/WqcSAjtPneMEZ0aP4a5NVUC4x1NRao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxAKdfqSvA5/+GYTeKqe/7//zecsE6p/1co6nzIfw602vY20GO
+	Q36Zp/XCSeIzntkHrvnjy5AXLkob3sWgB93Hj7pMjm2ckQ0DqtSs
+X-Gm-Gg: ASbGncsJr86XRmCfYUJMwMywazOGDNHhXinMEaO3//BQTuIzHuGJ8LV/+B2Y6qFnc6I
+	IvxSr29BxmVODLqCbffddrWpnNiFidu6b9PoYieN0s0NaBjvvKCbU5iw4M1zKrYJYPtvytkAygW
+	WRYLEuHNRxfwkLE5lal8nQ7grYYdIMpujihWP7C32XRqialDcmNs706m2hFaSOTudzxfiqN3gLN
+	QRDMTrzYiTf0jrFwV0I7XzWChTg6L0dB3ZRvEnDsASfsadbKLseiqtPR+30TqiFHLqX3mL5ItA0
+	Cvwn9Op8IwE6HYQOgDqYHHyHX0HMT3V0pkieUtflHN1QMA==
+X-Google-Smtp-Source: AGHT+IErkO44neLieHc6hwPzIGiBDdT4ITuB44WevvVWTsjc7SP/HSFfpELM4neDw/ug1OjRMfoI5Q==
+X-Received: by 2002:a05:6402:e96:b0:5dc:7464:2228 with SMTP id 4fb4d7f45d1cf-5dc7464261cmr21034232a12.2.1738671808162;
+        Tue, 04 Feb 2025 04:23:28 -0800 (PST)
+Received: from abityuts-desk1.ger.corp.intel.com ([134.191.196.181])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc723e4ceasm9184143a12.21.2025.02.04.04.23.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 04:23:27 -0800 (PST)
+Message-ID: <e9188365425d2a4c0dfa7cfa2b17ad3d9fcf2735.camel@gmail.com>
+Subject: Re: [PATCH] intel_idle: introduce 'use_acpi_cst' module parameter
+From: Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To: David Arcari <darcari@redhat.com>, linux-pm@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>, Jacob Pan
+ <jacob.jun.pan@linux.intel.com>,  Len Brown <lenb@kernel.org>, Prarit
+ Bhargava <prarit@redhat.com>, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Date: Tue, 04 Feb 2025 14:23:24 +0200
+In-Reply-To: <20250128141139.2033088-1-darcari@redhat.com>
+References: <20250128141139.2033088-1-darcari@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -yyIbkPcCIgxgjB2b6kv5fNBMi9Us86a
-X-Proofpoint-ORIG-GUID: X91T-z-FZSsJTojqkAtvXmRXxkwbzcY3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_05,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
- malwarescore=0 impostorscore=0 bulkscore=0 adultscore=0 clxscore=1011
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040096
 
-On Tue,  4 Feb 2025 10:56:47 +0000
-Colin Ian King <colin.i.king@gmail.com> wrote:
+Hi David,
 
-> There is a spelling mistake in a literal string and in the function
-> test_get_inital_dirty. Fix them.
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+On Tue, 2025-01-28 at 09:11 -0500, David Arcari wrote:
 
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> +The ``use_acpi_cst`` module parameter (recognized by ``intel_idle`` if t=
+he
+> +kernel has been configured with ACPI support) can be set to make the dri=
+ver
+> +ignore the per cpu idle states in lieu of ACPI idle states. ``use_acpi_c=
+st``
+> +has no effect if ``no_acpi`` is set).
 
-> ---
->  tools/testing/selftests/kvm/s390/cmma_test.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/s390/cmma_test.c b/tools/testing/selftests/kvm/s390/cmma_test.c
-> index e32dd59703a0..85cc8c18d6e7 100644
-> --- a/tools/testing/selftests/kvm/s390/cmma_test.c
-> +++ b/tools/testing/selftests/kvm/s390/cmma_test.c
-> @@ -444,7 +444,7 @@ static void assert_no_pages_cmma_dirty(struct kvm_vm *vm)
->  			 );
->  }
->  
-> -static void test_get_inital_dirty(void)
-> +static void test_get_initial_dirty(void)
->  {
->  	struct kvm_vm *vm = create_vm_two_memslots();
->  	struct kvm_vcpu *vcpu;
-> @@ -651,7 +651,7 @@ struct testdef {
->  } testlist[] = {
->  	{ "migration mode and dirty tracking", test_migration_mode },
->  	{ "GET_CMMA_BITS: basic calls", test_get_cmma_basic },
-> -	{ "GET_CMMA_BITS: all pages are dirty initally", test_get_inital_dirty },
-> +	{ "GET_CMMA_BITS: all pages are dirty initially", test_get_initial_dirty },
->  	{ "GET_CMMA_BITS: holes are skipped", test_get_skip_holes },
->  };
->  
+With this change, there will be three parameters:
 
+* no_acpi
+* use_acpi
+* use_acpi_cst
+
+I would like to make the naming as intuitive as possible. We do not rename =
+the
+first 2, but for the 3rd one, I think "force_acpi" would be a better name. =
+Or
+perhaps "no_native"?
+
+* no_acpi - Do not use ACPI at all. Only native mode is available, no ACPI =
+mode.
+* use_acpi - No-op in ACPI mode, consult ACPI tables for C-states on/off
+  status in native mode.
+* force_acpi (or no_native?) - Work only in ACPI mode, no native mode avail=
+able
+  (ignore all custom tables).
+
+Additionally, I think we should enhance the documentation for 'no_acpi' and
+'use_acpi' while we're at it. Otherwise, it is hard to distinguish between =
+these
+three options. Would you consider another patch that improves the documenta=
+tion
+for 'no_acpi' and 'use_acpi', and then adds the third parameter?
+
+Thanks, Artem!
