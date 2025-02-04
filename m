@@ -1,84 +1,81 @@
 Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F4F153828
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:11:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B97219A97
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738696276; cv=none; b=Z+LUZ7ONSmOtIyd6+O/kJY1NGAy3/I116DPz24Z9LIcA15HN7qy285KsoLpRpGXRkzEshIvXHEzTGNd8XmtV82dvaF9nevlZzz2OI5X+F3iwitXV6JPIpmlHcbWe/D+MJ/w8ONFJv/MPR5rr5AQMTxx7//B2/BXc3kQ/DH83n7o=
+	t=1738696281; cv=none; b=KUL7YUDVZE4dHTQ4BQx5FRAbRJUtaHcSdJSWrDaFZ+XiulYExMujQ0VEAk6ok57W1vyRSDgbO5dkASf+GwJyk3DLB+NkkoY/P+SVntxX5s/g3UzOQipvW/kc7SPcWOO3HqeE2IAqS8liu5AzBJkR0xyKHZ41GRkKu/gSG8aTU1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738696276; c=relaxed/simple;
-	bh=0fuYrIsqllSYzLcHkJwRY4bJmN7f0RR3V+7BnwkqZU8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I/c0JlGKduUqRCbUhWGPQCTTWhwOs8nelgkZQg8T6Am9/E0dKDV8fTpQnavjdEgDkFERjqgQ/1k1PYet4CBlMxtpkkppTwqS5izMbkWXMkAm5EmABqABg2GfDp3OC+gkQhESKhztJY5SeMF74EfcdkaP+MHRguvbDKYDULikq2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=p2iNy5Wu; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1738696281; c=relaxed/simple;
+	bh=fgvav/VSEIHUhdT3806VLJC6JLGbBXBOxRebuhnQQjI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=udCiNiSPvNCjZoWsNPIPXyw05QOnmgM96Fk0g/DeZCDxvYsPUWLwS01BCSO7CStgyTLaMhyU8wv4V51WBaMJqvHAUEtRR4Rg5exjsh8C9kfVaRlxK3/kGtCgrva8yqA1kAMkJRl6mJ+ALm49KTq+93A7fp1wt5/7S2aRFkVJgJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=OQWImNpN; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="p2iNy5Wu"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-218c8aca5f1so24445955ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:11:13 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="OQWImNpN"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21654fdd5daso104710225ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:11:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1738696273; x=1739301073; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=f6v2PFnPWGVlwpnR5q4crYxZDb82PXI2M6sV6qpxfa4=;
-        b=p2iNy5WuLXL7dHihh847affEbdk5jw/XsmMqHzVKEeg58Taq2ilrheA+kep6UOex1C
-         3fzqB7rMwZs820NvP1WwDqN9HeD5/3ExVn3TUh9mHjae6bMXvoE8CorbfPt+FYD2RHB+
-         cFnL4nkHXDUb/ThnD9Uh/NUBUQB+sKeWPLwKw=
+        d=fastly.com; s=google; t=1738696279; x=1739301079; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ei3U9MNfcrzrg5+3o/MWatj/iskGcRz4y7XoQJ1XwqM=;
+        b=OQWImNpNhViTmOEBUaszmLwtXp5zOCoHastSl5nYsGF+bA+9jEgqXOb5g+eSe1OL4S
+         +rr8MWb73du0gRKwU+2kr/h/3td1m4SM1YwNIjZr34G8IjdJ/tvRDznjQQFGcOq6W32D
+         ECS+9WxWfO8NJbeTbShHDIQ9RsmvXI48iBmWk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738696273; x=1739301073;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f6v2PFnPWGVlwpnR5q4crYxZDb82PXI2M6sV6qpxfa4=;
-        b=a8BtUVD4PgwMb833o9bRhDpUdkmjvsb/4dS3b+WGaGK1P1X77iEN6GcZFX6ejKecMP
-         Kye6V1tIxCcrZ9EHyfnLBxweai2MUi5itXRsQP/P+f2MhLrh2VO4nvaIihLnPmP2JebH
-         WGFIhI2Zd8tugo0CFjgMjZkpYzEkLGK5FgiiF8OyBuaG3oV6dCkItHtzo/jZrYH6p7LJ
-         qX8Rb3uVUCs+MbbQC8u7t3RUAycrUOhp6IHD/n46SYft00ZQXTZApJm12CTjpamsIhSv
-         HbPrKd2bSULr437+JrFTDHje5RJozJ+ry+EdxcxihmYa0Tn+xDPgXIqEwZwjwTdd4STb
-         lyhg==
-X-Forwarded-Encrypted: i=1; AJvYcCV61InFVyE1kQ/JXnpktQduIlzfkDt5fdzGPD5M9o63zYPqMZBLskvPR0l83zt22mO0/dyxZxQ/P7Zr264=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu0SqE3d5IlIS0CnnRJQgFs0KpONTiPSsJrojap0TzuKcE4jVo
-	pjFvfj6PON5d1PjFBAYeopLDxW/nsdbrMP20SP9TSymNplt9EE2eqlvwGhtSvR4=
-X-Gm-Gg: ASbGnctKl06exlB6ygYcQn8NDiKvB1eoXHq+sNwvKDBRjxthS5ZBozjwfobkQnZXex+
-	BmD94bo9ILmt2lTlMuw737nLcFWvQQywDS2KHgSNEVtrOYgijOkSf8AOEWee/TfLK5UvTagPdqV
-	YPPGTFhmC8eSV+tP6vpRS9c1dNgnXuKry5mSOcmdSbiRVjYjNvpfBvcpzzb8m4FlN4yCzjsXAOP
-	xjyYhsQ7DlPnwZY5HYMMAt7hn8A1XGalo6K2B1rhvDimhwPcrjIM3zNLXm/JUT0XGwcmDFzuUtX
-	cQbomtUKB1abBFe1Q2CeAeA=
-X-Google-Smtp-Source: AGHT+IHanqXpzFtreEkBCacmTKic/+ySduWwGEttNxARnmGyeReqSJRYRr1Lcw0ZgAN2NJKjdJwsaA==
-X-Received: by 2002:a17:902:e747:b0:219:cdf1:a0b8 with SMTP id d9443c01a7336-21dd7d7ccaamr366849085ad.30.1738696272708;
-        Tue, 04 Feb 2025 11:11:12 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738696279; x=1739301079;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ei3U9MNfcrzrg5+3o/MWatj/iskGcRz4y7XoQJ1XwqM=;
+        b=JEwTteSShmgXRGbBLzOgHJ4KZ0Q1FAmIK8uGs4jCuUuXiXO7sNUkLp4TxQRG/yrF3L
+         sHOJhU+3ArGyjRejyo3S9UJueIXd5TyXQx/DXiMNWGNjCjNsstkV0VXMiYwXamf52nBM
+         53Hm3/nQmdSkmHAlCaW1s5II54D3medxoYP/4RyE9ZYDDQ0fQ3OJsVbMeV/EEGg4kIBh
+         C3IAKctXfZt3h3MkbxMw/NWF7XT9whql64WSQY4bhV2Gz5ZY9idJ4kF7kZ1X72+YAGpg
+         rvk3+G39lMo+XZm6YoAGKwKQ+ll3ijN/KC/f++rEliueCDdvMJJoPyuxnwYu2pw71fp9
+         hQLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWILYSHGbEs2egd/8k4113k7uQkmHk/UPMCZ5GvZP6Dfc3Ub5L5ckI8H/YgLxFidbVj9tiUxnMrR/DTRbc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJqHffCS4WM2JXJFUJpexBETtq5JrISAY1Zkbi4lxNeQNF+4VC
+	bQq9Et1DHejwW286huGvAG0HpDIzM+/U5r1CtD8/huqIYMuNhRaqBPqBFkfQn60=
+X-Gm-Gg: ASbGncsN/zhJCxkRbgbho3PsiANEdI6+SKnGeX91PBYIOK4V9ciHDlwY7BojOR+O25P
+	TAikObpwv5wDEXsBJTpksNgzlGpurX3B1qIevN+/XuY1+jgWeEqsPeuADfkmm/R7Y2wY3w0z7YF
+	9RrSDdl9xirvKa4Ooh7tCs88ZgxY4miGTz4lfTH+hlcKuOUBURzqQeVrJuIraAYbMcbn6TfRTo1
+	woshV6Mc0DBrRKE9S44BWJ6w0gCfEx8T/FjXBAZKZOaC1lJRaNnO0koOrUa/dqtth8w7g5cnsXA
+	USd+vKRmcXPj3h3UxkdvOiY=
+X-Google-Smtp-Source: AGHT+IFDh9gs6Xfs+/RVL/J/t2NGVsuVNJafDRrtG3U1S6uJvHYeab0nLFKvV5EhsD7qlxJ2kf73GA==
+X-Received: by 2002:a17:902:cecd:b0:21e:ff31:531 with SMTP id d9443c01a7336-21eff31073fmr77506595ad.22.1738696278887;
+        Tue, 04 Feb 2025 11:11:18 -0800 (PST)
 Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32ea5f1sm100749785ad.130.2025.02.04.11.11.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32ea5f1sm100749785ad.130.2025.02.04.11.11.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 11:11:12 -0800 (PST)
+        Tue, 04 Feb 2025 11:11:18 -0800 (PST)
 From: Joe Damato <jdamato@fastly.com>
 To: netdev@vger.kernel.org
 Cc: kuba@kernel.org,
 	Joe Damato <jdamato@fastly.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	bpf@vger.kernel.org (open list:XDP (eXpress Data Path):Keyword:(?:\b|_)xdp(?:\b|_)),
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Daniel Jurgens <danielj@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
 	Donald Hunter <donald.hunter@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
-	Martin Karsten <mkarsten@uwaterloo.ca>,
-	Mina Almasry <almasrymina@google.com>,
 	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
 	Simon Horman <horms@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
 	Stanislav Fomichev <sdf@fomichev.me>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Subject: [PATCH net-next v3 0/2] netdevgenl: Add an xsk attribute to queues
-Date: Tue,  4 Feb 2025 19:10:46 +0000
-Message-ID: <20250204191108.161046-1-jdamato@fastly.com>
+	Mina Almasry <almasrymina@google.com>,
+	Daniel Jurgens <danielj@nvidia.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v3 1/2] netdev-genl: Add an XSK attribute to queues
+Date: Tue,  4 Feb 2025 19:10:47 +0000
+Message-ID: <20250204191108.161046-2-jdamato@fastly.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250204191108.161046-1-jdamato@fastly.com>
+References: <20250204191108.161046-1-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,63 +84,152 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Greetings:
+Expose a new per-queue nest attribute, xsk, which will be present for
+queues that are being used for AF_XDP. If the queue is not being used for
+AF_XDP, the nest will not be present.
 
-Welcome to v3. No functional changes, see changelog below.
+In the future, this attribute can be extended to include more data about
+XSK as it is needed.
 
-This is an attempt to followup on something Jakub asked me about [1],
-adding an xsk attribute to queues and more clearly documenting which
-queues are linked to NAPIs...
+Signed-off-by: Joe Damato <jdamato@fastly.com>
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+---
+ v2:
+   - Patch adjusted to include an attribute, xsk, which is an empty nest
+     and exposed for queues which have a pool.
 
-After the RFC [2], Jakub suggested creating an empty nest for queues
-which have a pool, so I've adjusted this version to work that way.
+ Documentation/netlink/specs/netdev.yaml | 13 ++++++++++++-
+ include/uapi/linux/netdev.h             |  6 ++++++
+ net/core/netdev-genl.c                  | 11 +++++++++++
+ tools/include/uapi/linux/netdev.h       |  6 ++++++
+ 4 files changed, 35 insertions(+), 1 deletion(-)
 
-The nest can be extended in the future to express attributes about XSK
-as needed. Queues which are not used for AF_XDP do not have the xsk
-attribute present.
-
-I've run the included test on:
-  - my mlx5 machine (via NETIF=)
-  - without setting NETIF
-
-And the test seems to pass in both cases.
-
-Thanks,
-Joe
-
-[1]: https://lore.kernel.org/netdev/20250113143109.60afa59a@kernel.org/
-[2]: https://lore.kernel.org/netdev/20250129172431.65773-1-jdamato@fastly.com/
-
-v3:
-  - Change comment format in patch 2 to avoid kdoc warnings. No other
-    changes.
-
-v2: https://lore.kernel.org/all/20250203185828.19334-1-jdamato@fastly.com/
-  - Switched from RFC to actual submission now that net-next is open
-  - Adjusted patch 1 to include an empty nest as suggested by Jakub
-  - Adjusted patch 2 to update the test based on changes to patch 1, and
-    to incorporate some Python feedback from Jakub :)
-
-rfc: https://lore.kernel.org/netdev/20250129172431.65773-1-jdamato@fastly.com/
-
-Joe Damato (2):
-  netdev-genl: Add an XSK attribute to queues
-  selftests: drv-net: Test queue xsk attribute
-
- Documentation/netlink/specs/netdev.yaml       | 13 ++-
- include/uapi/linux/netdev.h                   |  6 ++
- net/core/netdev-genl.c                        | 11 +++
- tools/include/uapi/linux/netdev.h             |  6 ++
- .../testing/selftests/drivers/net/.gitignore  |  2 +
- tools/testing/selftests/drivers/net/Makefile  |  3 +
- tools/testing/selftests/drivers/net/queues.py | 35 +++++++-
- .../selftests/drivers/net/xdp_helper.c        | 89 +++++++++++++++++++
- 8 files changed, 162 insertions(+), 3 deletions(-)
- create mode 100644 tools/testing/selftests/drivers/net/.gitignore
- create mode 100644 tools/testing/selftests/drivers/net/xdp_helper.c
-
-
-base-commit: c2933b2befe25309f4c5cfbea0ca80909735fd76
+diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/netlink/specs/netdev.yaml
+index cbb544bd6c84..4c3eda5ba754 100644
+--- a/Documentation/netlink/specs/netdev.yaml
++++ b/Documentation/netlink/specs/netdev.yaml
+@@ -268,6 +268,9 @@ attribute-sets:
+         doc: The timeout, in nanoseconds, of how long to suspend irq
+              processing, if event polling finds events
+         type: uint
++  -
++    name: xsk-info
++    attributes: []
+   -
+     name: queue
+     attributes:
+@@ -286,6 +289,9 @@ attribute-sets:
+       -
+         name: type
+         doc: Queue type as rx, tx. Each queue type defines a separate ID space.
++             XDP TX queues allocated in the kernel are not linked to NAPIs and
++             thus not listed. AF_XDP queues will have more information set in
++             the xsk attribute.
+         type: u32
+         enum: queue-type
+       -
+@@ -296,7 +302,11 @@ attribute-sets:
+         name: dmabuf
+         doc: ID of the dmabuf attached to this queue, if any.
+         type: u32
+-
++      -
++        name: xsk
++        doc: XSK information for this queue, if any.
++        type: nest
++        nested-attributes: xsk-info
+   -
+     name: qstats
+     doc: |
+@@ -637,6 +647,7 @@ operations:
+             - napi-id
+             - ifindex
+             - dmabuf
++            - xsk
+       dump:
+         request:
+           attributes:
+diff --git a/include/uapi/linux/netdev.h b/include/uapi/linux/netdev.h
+index e4be227d3ad6..46bdb0b67a39 100644
+--- a/include/uapi/linux/netdev.h
++++ b/include/uapi/linux/netdev.h
+@@ -130,12 +130,18 @@ enum {
+ 	NETDEV_A_NAPI_MAX = (__NETDEV_A_NAPI_MAX - 1)
+ };
+ 
++enum {
++	__NETDEV_A_XSK_INFO_MAX,
++	NETDEV_A_XSK_INFO_MAX = (__NETDEV_A_XSK_INFO_MAX - 1)
++};
++
+ enum {
+ 	NETDEV_A_QUEUE_ID = 1,
+ 	NETDEV_A_QUEUE_IFINDEX,
+ 	NETDEV_A_QUEUE_TYPE,
+ 	NETDEV_A_QUEUE_NAPI_ID,
+ 	NETDEV_A_QUEUE_DMABUF,
++	NETDEV_A_QUEUE_XSK,
+ 
+ 	__NETDEV_A_QUEUE_MAX,
+ 	NETDEV_A_QUEUE_MAX = (__NETDEV_A_QUEUE_MAX - 1)
+diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
+index 715f85c6b62e..efaccfb6438e 100644
+--- a/net/core/netdev-genl.c
++++ b/net/core/netdev-genl.c
+@@ -371,6 +371,7 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
+ 	struct net_devmem_dmabuf_binding *binding;
+ 	struct netdev_rx_queue *rxq;
+ 	struct netdev_queue *txq;
++	struct nlattr *nest;
+ 	void *hdr;
+ 
+ 	hdr = genlmsg_iput(rsp, info);
+@@ -394,12 +395,22 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
+ 		    nla_put_u32(rsp, NETDEV_A_QUEUE_DMABUF, binding->id))
+ 			goto nla_put_failure;
+ 
++		if (rxq->pool) {
++			nest = nla_nest_start(rsp, NETDEV_A_QUEUE_XSK);
++			nla_nest_end(rsp, nest);
++		}
++
+ 		break;
+ 	case NETDEV_QUEUE_TYPE_TX:
+ 		txq = netdev_get_tx_queue(netdev, q_idx);
+ 		if (txq->napi && nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
+ 					     txq->napi->napi_id))
+ 			goto nla_put_failure;
++
++		if (txq->pool) {
++			nest = nla_nest_start(rsp, NETDEV_A_QUEUE_XSK);
++			nla_nest_end(rsp, nest);
++		}
+ 	}
+ 
+ 	genlmsg_end(rsp, hdr);
+diff --git a/tools/include/uapi/linux/netdev.h b/tools/include/uapi/linux/netdev.h
+index e4be227d3ad6..46bdb0b67a39 100644
+--- a/tools/include/uapi/linux/netdev.h
++++ b/tools/include/uapi/linux/netdev.h
+@@ -130,12 +130,18 @@ enum {
+ 	NETDEV_A_NAPI_MAX = (__NETDEV_A_NAPI_MAX - 1)
+ };
+ 
++enum {
++	__NETDEV_A_XSK_INFO_MAX,
++	NETDEV_A_XSK_INFO_MAX = (__NETDEV_A_XSK_INFO_MAX - 1)
++};
++
+ enum {
+ 	NETDEV_A_QUEUE_ID = 1,
+ 	NETDEV_A_QUEUE_IFINDEX,
+ 	NETDEV_A_QUEUE_TYPE,
+ 	NETDEV_A_QUEUE_NAPI_ID,
+ 	NETDEV_A_QUEUE_DMABUF,
++	NETDEV_A_QUEUE_XSK,
+ 
+ 	__NETDEV_A_QUEUE_MAX,
+ 	NETDEV_A_QUEUE_MAX = (__NETDEV_A_QUEUE_MAX - 1)
 -- 
 2.43.0
 
