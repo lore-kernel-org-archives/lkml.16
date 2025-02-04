@@ -1,146 +1,114 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145A9216609
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB04F215F7F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738691026; cv=none; b=CL+S5IAvK3xCnElDt7fQzNB7hn3DKxTCL3KNd4UMYtcd6109qpW0idqErVYvmYCpyyl4gbS00SQxsRNYMwFuSW+nzbIe8ffu1wO7HYoZTf4Enn7OxArKQTarNYiDn6ZUUqyamdkH8MeT9B/pY52y0E6YuORks+NzUYqkV1dc5nc=
+	t=1738691102; cv=none; b=J9PFRxjfMfo9PlBsUJjaNvbrYWIQbs7KZFCN2GLFG4W1Kd4ELvuZ8MJEPNCcRAQyRX6C/UGcdFe5l4zn7s9V23G+xlHAveTjXMKVHv8/j2IcMUcvdtlOkYb1opsyYPQHziau1Ku5U+670cnYU3SgaZG6FcBhxqOhvmDUJEgOIXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738691026; c=relaxed/simple;
-	bh=RI516KF8KlF5wuxKhvy14BxpgtxjsqHgb9vmRE+RH8o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tKN9q8wsbanhBs8UY2IKPEEYR6bKgg6taI2ks3ic43Ukp5NJOP64MhKUBR282Jfa/gjxRVUBPe8L0K2FespAjOMLbzEpBYWxNqK+gy5pWkM/SlEdQOxlh3DbdvLOGJDwYhnMfD+aJPGeQzR4A0kJtFW1pjlJjV6DbRYg5QCl52Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JgSiuWpb; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738691102; c=relaxed/simple;
+	bh=h2/YGk8VZ37fpLjVEucFjFjkFTBQFTSrdvXH3Dn6gIs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bu1++EXlipNpJdX5t/05AQtqMF9Kh1ZeUHfnB5U+7v+kDAatnD5I1BhYxTHfiMTcjv4ijTDT3D6auxHCI7KEuZDJgXwrmN+QnoITsj53BrvzRFZXDRSaQssFtKAOvS7AhEt7hM6e3RVinGYVkyQGutPlPVIwhE6/Bz0CtJ7N5FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KXIWKy+u; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JgSiuWpb"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-467abce2ef9so334661cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:43:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738691024; x=1739295824; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EmE2lFz8a65MIXFo9x5Yc1zrZ1Lc4zxxKH4CPUa2jU4=;
-        b=JgSiuWpb+YML86EJyQ2/R0EZyW8W5JETWLI3LrOJ51FIvCEAwwIly+HFiTpAgCePJA
-         vm6MXrMO2k0MWYXUSlPiUeULVXSXaWBKabT6P6wjtDNJyWj3UF1F/e8Svc4k47mA2Iea
-         72dGJmmXDbhk+9kBDG3FbVX68ayh5oCoUnIvdznsGVdcb0bHcZfgFjqMNwuTVWiraD+Y
-         E+L0xHWR8k/VC5+Ntv8XEWw1KkasaMOEKGWYWThxtAqzcQS8cofSTFW3bmb+UdE4aTmw
-         /Xtd2TRLIvikBUVr0qyfgqii6Wegi88qm8OrswFl+5LJWokLzp827YroXGaSlM6YaV3b
-         EhEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738691024; x=1739295824;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EmE2lFz8a65MIXFo9x5Yc1zrZ1Lc4zxxKH4CPUa2jU4=;
-        b=CYYRR/xjY5ypYDfo5KU/YYHKnSZe5FNispK6OTyynkcGVGFbrPtQV6dB0TZuKvCwgv
-         wqxjOPPB21JCd+wAD3KJF8ZB88LFp6OdCLcUcftIpiZ0yXj8rKvNwW/U57aS/190ZXYS
-         K4UplH4Bs+/XFj2lAB+VRnYXthhqtUWZGeJkp3tn9RzrGoUMXaYPcND2zG58ryEy8aUv
-         9iKZ0nvJ32fpqChoZHdbfBViKEfwTWEMqA+1/RnPOTE/+L7j214zpzTr2jeBwtfQadSX
-         X00NljKJb/LH//lrYZKB15mc1vkZmgrIZLxo9ESlMpjNozAta3mgOTgmIQS1hmj8B8ry
-         RB9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVTbl8v9BuS6dUX4LlYldD2ZRCDAXLKwMJrz+kMi5QDaDb6vGA0+IJZpmsyVNqBYRAqvyvP6VtCEzACeWs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT6ozW3ruoualy270onrHCwuvLQ9Di9DxmFUTY457O2q13rAu8
-	z7p/yXHASdwyP+H5v3q2+FSCdvKNaVNbeplV3xgDa8TeBlTE2fYpNSqVqlincwao14pfruIg3pz
-	DQTt4NR+/FHon28Pt+WA3uiAa+j7hekaC3HEj
-X-Gm-Gg: ASbGncubrg6BTfUs2sHokerCrYsIwzOixzBhWrx3YrLLF4Blgap21lMrLP+1Co5GM0m
-	LA5uB7+63Rd7h7FXT4RUbKWjQb9nkFEHNEBZcNKnZZyWZE1+aqSfz3lMy8HuxOmsNcoa+SipH70
-	5grq72zae50Q0X1DpiVCWxa4Id0aU=
-X-Google-Smtp-Source: AGHT+IEakkqdUEODQS4oUhl0P6nM6vpIAMS/AXypUyD79wEUNQXqWMLpkJCIqWEzIzpizWIXImCaCf1Qfn+0Gv6ysdI=
-X-Received: by 2002:a05:622a:4296:b0:466:9af1:5a35 with SMTP id
- d75a77b69052e-4701901f667mr4483511cf.10.1738691023583; Tue, 04 Feb 2025
- 09:43:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KXIWKy+u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1738691097;
+	bh=h2/YGk8VZ37fpLjVEucFjFjkFTBQFTSrdvXH3Dn6gIs=;
+	h=From:Date:Subject:To:Cc:From;
+	b=KXIWKy+unJTR2OsMm11t/yA64BOeI3hA1ZTIJoNUomwzekdUEliMmTMLgQ0Ff1e2s
+	 82FnPlyOCqTcCwv7bjc3VaoGSg+/8ebHW4O2PIBOxz0q3ECAE3feS2xESDHAdNOAfI
+	 /8uoMK2QNfCYgtCJrlhduSBeunbONZ2ko2dqj6TVTzPNoNwTRVr85nkyRew0tbptUp
+	 U2EzHmdqVxjcO+q0cOhv3ZiAbC0ekdrtQg6gC1Ed/tBEXIfnIC1VA1zj2eGB4uGvGA
+	 ANufh/IQgYkViBgYfr2IvPdSKYk+Mi34C/fqDlsJPmwcnA5peU4qsIEZHw6iDj/X+1
+	 CRYHMImr2NLHg==
+Received: from localhost (unknown [188.27.43.189])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id A528C17E0FDF;
+	Tue,  4 Feb 2025 18:44:57 +0100 (CET)
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Date: Tue, 04 Feb 2025 19:44:38 +0200
+Subject: [PATCH v2] drm/bridge: dw-hdmi: Sync comment block with actual bus
+ formats order
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738268370.git.lorenzo.stoakes@oracle.com>
- <20250204-joggen-buddeln-29e5ca75abb7@brauner> <7a8a1719-466f-4e10-b1eb-9e9e1ef8ad52@lucifer.local>
-In-Reply-To: <7a8a1719-466f-4e10-b1eb-9e9e1ef8ad52@lucifer.local>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 4 Feb 2025 09:43:31 -0800
-X-Gm-Features: AWEUYZl7RlmyhEU99QQ-tyghSf0sZ-KKDjjpT9EgshNSpko_7zG64QXhfE_k9kk
-Message-ID: <CAJuCfpEUusRt_ss7RtxRPP9q_LRwi+Lw+SOq32EUA58s3JOx1A@mail.gmail.com>
-Subject: Re: [PATCH v7 0/6] introduce PIDFD_SELF* sentinels
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, pedro.falcato@gmail.com, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Oliver Sang <oliver.sang@intel.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Koutny <mkoutny@suse.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Elliott Hughes <enh@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250204-dw-hdmi-bus-fmt-order-v2-1-d0aaeb7a697a@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAAVSomcC/4WNQQ6CMBBFr0Jm7Zi2CgZX3sOw6NBWJgFKpogaw
+ t2tXMDle8l/f4XkhX2Ca7GC+IUTxzGDORTQdnZ8eGSXGYwyZ61PCt0LOzcw0jNhGGaM4rzgJVS
+ OSkcmKAt5O4kP/N679yZzx2mO8tlvFv2z/4qLRo2lVlQGqqiu1a2NfW8pij22cYBm27YvavKhM
+ L4AAAA=
+X-Change-ID: 20241130-dw-hdmi-bus-fmt-order-7f6db5db2f0a
+To: Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
 
-On Tue, Feb 4, 2025 at 2:01=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> On Tue, Feb 04, 2025 at 10:46:35AM +0100, Christian Brauner wrote:
-> > On Thu, 30 Jan 2025 20:40:25 +0000, Lorenzo Stoakes wrote:
-> > > If you wish to utilise a pidfd interface to refer to the current proc=
-ess or
-> > > thread it is rather cumbersome, requiring something like:
-> > >
-> > >     int pidfd =3D pidfd_open(getpid(), 0 or PIDFD_THREAD);
-> > >
-> > >     ...
-> > >
-> > > [...]
-> >
-> > Updated merge message. I've slightly rearranged pidfd_send_signal() so
-> > we don't have to call CLASS(fd, f)(pidfd) unconditionally anymore.
->
-> Sounds good and thank you! Glad to get this in :)
+Commit d3d6b1bf85ae ("drm: bridge: dw_hdmi: fix preference of RGB modes
+over YUV420") changed the order of the output bus formats, but missed to
+update accordingly the "Possible output formats" comment section above
+dw_hdmi_bridge_atomic_get_output_bus_fmts().
 
-Sorry, a bit late to the party...
+Fix the misleading comment block and a context related typo.
 
-We were discussing MADV_GUARD_INSTALL use with Android Bionic team and
-the possibility of caching pidfd_open() result for reuse when
-installing multiple guards, however doing that in libraries would pose
-issues as we can't predict the user behavior, which can fork() in
-between such calls. That would be an additional reason why having
-these sentinels is beneficial.
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+---
+Changes in v2:
+- Reverted the changes related to "Default 8bit RGB fallback" (Neil)
+- Updated slightly the commit subject and description
+- Link to v1: https://lore.kernel.org/r/20241130-dw-hdmi-bus-fmt-order-v1-1-510b5fb6b990@collabora.com
+---
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index 996733ed2c004c83a989cb8da54d8b630d9f2c02..d1256c82de96a43211af64ad70848cd18d5044e5 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -2621,6 +2621,7 @@ static int dw_hdmi_connector_create(struct dw_hdmi *hdmi)
+  * - MEDIA_BUS_FMT_UYYVYY12_0_5X36,
+  * - MEDIA_BUS_FMT_UYYVYY10_0_5X30,
+  * - MEDIA_BUS_FMT_UYYVYY8_0_5X24,
++ * - MEDIA_BUS_FMT_RGB888_1X24,
+  * - MEDIA_BUS_FMT_YUV16_1X48,
+  * - MEDIA_BUS_FMT_RGB161616_1X48,
+  * - MEDIA_BUS_FMT_UYVY12_1X24,
+@@ -2631,7 +2632,6 @@ static int dw_hdmi_connector_create(struct dw_hdmi *hdmi)
+  * - MEDIA_BUS_FMT_RGB101010_1X30,
+  * - MEDIA_BUS_FMT_UYVY8_1X16,
+  * - MEDIA_BUS_FMT_YUV8_1X24,
+- * - MEDIA_BUS_FMT_RGB888_1X24,
+  */
+ 
+ /* Can return a maximum of 11 possible output formats for a mode/connector */
+@@ -2669,7 +2669,7 @@ static u32 *dw_hdmi_bridge_atomic_get_output_bus_fmts(struct drm_bridge *bridge,
+ 	}
+ 
+ 	/*
+-	 * If the current mode enforces 4:2:0, force the output but format
++	 * If the current mode enforces 4:2:0, force the output bus format
+ 	 * to 4:2:0 and do not add the YUV422/444/RGB formats
+ 	 */
+ 	if (conn->ycbcr_420_allowed &&
 
->
-> >
-> > ---
-> >
-> > Applied to the vfs-6.15.pidfs branch of the vfs/vfs.git tree.
-> > Patches in the vfs-6.15.pidfs branch should appear in linux-next soon.
-> >
-> > Please report any outstanding bugs that were missed during review in a
-> > new review to the original patch series allowing us to drop it.
-> >
-> > It's encouraged to provide Acked-bys and Reviewed-bys even though the
-> > patch has now been applied. If possible patch trailers will be updated.
-> >
-> > Note that commit hashes shown below are subject to change due to rebase=
-,
-> > trailer updates or similar. If in doubt, please check the listed branch=
-.
-> >
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-> > branch: vfs-6.15.pidfs
-> >
-> > [1/6] pidfd: add PIDFD_SELF* sentinels to refer to own thread/process
-> >       https://git.kernel.org/vfs/vfs/c/e6e4ed42f8d8
-> > [2/6] selftests/pidfd: add missing system header imcludes to pidfd test=
-s
-> >       https://git.kernel.org/vfs/vfs/c/c9f04f4a251d
-> > [3/6] tools: testing: separate out wait_for_pid() into helper header
-> >       https://git.kernel.org/vfs/vfs/c/fb67fe44116e
-> > [4/6] selftests: pidfd: add pidfd.h UAPI wrapper
-> >       https://git.kernel.org/vfs/vfs/c/ac331e56724d
-> > [5/6] selftests: pidfd: add tests for PIDFD_SELF_*
-> >       https://git.kernel.org/vfs/vfs/c/881a3515c191
-> > [6/6] selftests/mm: use PIDFD_SELF in guard pages test
-> >       https://git.kernel.org/vfs/vfs/c/b4703f056f42
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20241130-dw-hdmi-bus-fmt-order-7f6db5db2f0a
+
