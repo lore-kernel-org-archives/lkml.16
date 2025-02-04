@@ -1,125 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC0E2165F0;
-	Tue,  4 Feb 2025 17:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD72216E15
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738691813; cv=none; b=Q4a3WnpC56Hwnw3GT9ArRzwimuX8oMwY7DCvSoRMSbw7PBMV0/dEYBysEzd5pk2xY5xdWupHQdH9m/MBqY+E4MgxOuxT2tUaay6fGCGyRWf4Ec+2raXVVa6+0jff1xGW5h73aE0AOePM3/bAddqrFRxc2BkUoAGWeZJUqS1S7l4=
+	t=1738691816; cv=none; b=N5sOw+OmygplVH9MDt/HEDYrCncuJcNuENDsuNN/8V32LqvGcO1Z/ZXiHeDQs+NaGzhnImWjl51XG4lKBtBhVSyhdo/DaqrH0shFCWQi9ROPKwVcTzwtKsgoHzQFnoMZWXqK2FzPmOZA20IdLI48e/fbQsCdHp2T+kxk3t33M6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738691813; c=relaxed/simple;
-	bh=os+3hBxBBvZezLXRRos7W5BQlNdLgSoMdG5iBvwTTRM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dI6kD1yj974nTBB6sjC4nxJzMhdQrKczjDgDKz3rVvpy/pG1vDn+N/H3HGmPg7daRXLNPjs2t7ReXKBJeIZLvJpVU+EzUUdREIWCN+2KBlnRv2rtI9hZB+GRoZ8o5YX5Aw6uNgeLbEHfi2FKjsPuZ0qHsBzGWU+ZOyzgoBYBl9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OZFqwf+O; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738691816; c=relaxed/simple;
+	bh=6MfNKqlPY66LdRK1s+sv6ABSkmpyUD/zuxH8o4il5yE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i4e9Oi2biK91WBdfA+YJIhWTnEYw5B52Q7tE4O13+lwTYD1IMfb8DZ1FxYe0taq54Xdvd0pzYodOtl/4xtgLOeRWdayI7TUibDDl4dQcIF0qlweePirIk7Uwf8l49EUXgHBCrZq4ce3Ok9F3N3wtM5qwYbhC/d4j/dpr8gR/hC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i6x9NV9P; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OZFqwf+O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738691811; x=1770227811;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=os+3hBxBBvZezLXRRos7W5BQlNdLgSoMdG5iBvwTTRM=;
-  b=OZFqwf+OWkgjQM3O3d4LpYSy1bCXaH0abPHv0gP4trx9VdGBL5n4/Tcj
-   ltLmiX8sjIauSr16t6rI74TCyu9DF6rl2WnGZTxiRK3UOSoe3NXvkGJ4R
-   bXGXHsjWg4niATFzHanXsWYFEDQc+K4M5RzJkC91QB5MIs7o04nRzC+64
-   ht4ujLwUyiIWq8wTVekp3MO9qkEjqvLncabpWM24JOcCnj8KOyxvI7QLs
-   e+sWK8jNIrCl795ir9yzd7oHm+cow2Frm75avpTqiOVQVn9PimHxwMxci
-   dr17Kvp3AJtiYmu3f2x5Wcde51OXNB0HRd90VkLEJCmzNdJf/qYmz8fIZ
-   g==;
-X-CSE-ConnectionGUID: Qbm+CRdXT+W5b1Kla2NWUw==
-X-CSE-MsgGUID: y9gWv2RcRk2GD/yLLS6fYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56657268"
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="56657268"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:56:51 -0800
-X-CSE-ConnectionGUID: 3I++Kc1oSS6VMNUhqHqqkA==
-X-CSE-MsgGUID: heL3TJtuRy6mXJxsokqWaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="111243209"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 04 Feb 2025 09:56:49 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 814EC353; Tue, 04 Feb 2025 19:56:47 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] gpiolib: Deduplicate gpiod_direction_input_nonotify() call
-Date: Tue,  4 Feb 2025 19:56:46 +0200
-Message-ID: <20250204175646.150577-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i6x9NV9P"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so12575ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:56:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738691814; x=1739296614; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6MfNKqlPY66LdRK1s+sv6ABSkmpyUD/zuxH8o4il5yE=;
+        b=i6x9NV9PZxC/hxVZZp1y3iN0ax1w9CIJ68O47lGfKS7vJLkmiGnoiP3h4B1OC9MExR
+         jP1RucHlwzMd0THbuzCV4hbuH0TqDhygkLW7zLYQWBhLUfeMOSjAho0MJRUG74UwDsrl
+         PmZ5KdTx1WLdm0mGiHULJS1Lk0uvoeWw4RQ0GRk1XSRVeH4a2fSGD2kkCSIIC0CGtzUU
+         FnQJ1Lo3imk2KGdhe6ocTLs8yzWLG8kNnSEazoFWA/1hZNhFGfH6okSR15vljDxILOIr
+         frfbrHOrMWjW/Z59q3YtYU2+XNEHLZNmQRfEfWGca3fssok5+0xvdCAaK1FblnEqyWNg
+         vswA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738691814; x=1739296614;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6MfNKqlPY66LdRK1s+sv6ABSkmpyUD/zuxH8o4il5yE=;
+        b=c1DARbcrRO+e3DBGyMPq16NTgwnK7a3RO16FnALpJktn1Y6W5g/wG+IbRHNukL/m/p
+         yjSQbEdPN3w2mnlwG/F4oIjjTVbyub/BX1zZJXXKuAo2qQVikXSKlI6eaypqhloa4Lp7
+         8IEjPUWs1ih0gaEahFKAOoJSwTcUFRhD1F91IvwoQDtvRPgciQ1I2m5t6nBNNKy+0P6l
+         9l5ygtZA83k9IzZP8yvmJEGZzU6qH6cdwaotFt9GTR//6iB80CFfrbNfloWCaX001TY9
+         XkX6OT1zjzq/8qKew72anzz1x174XtitSXxmajOlccQXDenGi+xVYwtAJ74NO+/kNvXR
+         PUIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWSvVaDbI+1Q40hGeoHrJG5fkDG59ESx9M2HOfgGL9ijBQLIN4zl29KEvfmWbB3dmnY0QDV9MIme5LxcyE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0HKqPmE+zmwlVjtREIeAiOxURr39ooX73PrML0JoksnX4D5T/
+	bacw2UR9oNuEVYZhcpZ66C/rPRhXD5t/M2uPmcHA2DkeSuDHZ7ezpgWfxhYvBxXxJDeD69qAiep
+	VL3CyS/KicSBppBShjdDgYBsqhGZA3Bs+N7n7
+X-Gm-Gg: ASbGnctdfTGsgJiT8Mx1861aE21cbiKH3E4LyVwcMnUo5Jq8TTXRQ09oCr/cD1ZOsJq
+	78KHebSguv7p/+XIrzx6X+oUML/6T9ogaHfWSCS9vj/tFphjuEqFmO1sE0LvZa/dViIWhvSc9o2
+	CWFjD+v4S4xwPpR1u4BGPaBZU=
+X-Google-Smtp-Source: AGHT+IG1acNH4dX8Vb0s5oxx9ddSfzVUNv/AaN82ZPUmm9fX6OxCbLVTvL2daR2maEwM0AH0L4ztS+4bA7GtmkxfApc=
+X-Received: by 2002:a05:6e02:1566:b0:3a7:c9eb:accc with SMTP id
+ e9e14a558f8ab-3d03fbfd550mr4313095ab.14.1738691814257; Tue, 04 Feb 2025
+ 09:56:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241215181220.754822-1-howardchu95@gmail.com>
+ <Z2CJW0vFT005gmIe@google.com> <CAH0uvogp4GB6ZkB=79wCNVtOhsGw-aofzGmW6nPc--b=g-D9OQ@mail.gmail.com>
+ <CA+JHD92xXH=6K0-imdObf+dw3=B0uiGdFH16DO3ArdHv3r1Zzg@mail.gmail.com>
+In-Reply-To: <CA+JHD92xXH=6K0-imdObf+dw3=B0uiGdFH16DO3ArdHv3r1Zzg@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Feb 2025 09:56:43 -0800
+X-Gm-Features: AWEUYZmt0EhyS_vNxi6_NAMLvcI8PJ4wAkE-Tn2ZgXvM9XCRHXIsR_7itjC3TSI
+Message-ID: <CAP-5=fXRBssmhBZDTbk0=0_qzo6R6f5Kg4BGnE9M1AA2viR3=Q@mail.gmail.com>
+Subject: Re: [PATCH v14 00/10] perf record --off-cpu: Dump off-cpu samples directly
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Deduplicate gpiod_direction_input_nonotify() call in
-gpiod_direction_output_nonotify() when emulating open-drain
-or open-source behaviour. It also aligns the error check
-approaches in set_output_value and set_output_flag labels.
+On Mon, Dec 16, 2024 at 12:55=E2=80=AFPM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Now it's my turn.. ;-)
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+Perhaps this could land?
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index efad5e2f9a9e..bf0b67f41e2e 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2872,19 +2872,15 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
- 		if (!ret)
- 			goto set_output_value;
- 		/* Emulate open drain by not actively driving the line high */
--		if (value) {
--			ret = gpiod_direction_input_nonotify(desc);
-+		if (value)
- 			goto set_output_flag;
--		}
- 	} else if (test_bit(FLAG_OPEN_SOURCE, &flags)) {
- 		ret = gpio_set_config(desc, PIN_CONFIG_DRIVE_OPEN_SOURCE);
- 		if (!ret)
- 			goto set_output_value;
- 		/* Emulate open source by not actively driving the line low */
--		if (!value) {
--			ret = gpiod_direction_input_nonotify(desc);
-+		if (!value)
- 			goto set_output_flag;
--		}
- 	} else {
- 		gpio_set_config(desc, PIN_CONFIG_DRIVE_PUSH_PULL);
- 	}
-@@ -2896,15 +2892,17 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
- 	return gpiod_direction_output_raw_commit(desc, value);
- 
- set_output_flag:
-+	ret = gpiod_direction_input_nonotify(desc);
-+	if (ret)
-+		return ret;
- 	/*
- 	 * When emulating open-source or open-drain functionalities by not
- 	 * actively driving the line (setting mode to input) we still need to
- 	 * set the IS_OUT flag or otherwise we won't be able to set the line
- 	 * value anymore.
- 	 */
--	if (ret == 0)
--		set_bit(FLAG_IS_OUT, &desc->flags);
--	return ret;
-+	set_bit(FLAG_IS_OUT, &desc->flags);
-+	return 0;
- }
- 
- /**
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+Thanks,
+Ian
 
+> On Mon, Dec 16, 2024, 5:49=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
+wrote:
+>>
+>> Hello Namhyung,
+>>
+[snip]
+>> On Mon, Dec 16, 2024 at 12:11=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+>> > Thanks for your work and the persistence.
+>>
+>> I think you misspelled 'procrastination' :). All jokes aside, thank
+>> you for the reviews=E2=80=94it=E2=80=99s much harder on your side.
+>>
+>> >
+>> > Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+>> >
+>> > Thanks,
+>> > Namhyung
