@@ -1,216 +1,123 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E02A25A620;
-	Tue,  4 Feb 2025 12:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D5F20CCC3;
+	Tue,  4 Feb 2025 12:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738672780; cv=none; b=j7pIUMrN3g+0nwrOh41TvHdCFfYwyPSx15NjUbep8aqHUhKjjJJ8JgHQWeU+X83KqExhspPROl6gbAKPyTSAII9SCUuoS+KpMpt/QAd2nT6Ge+8ATQqI+FLJgYWxrzMQOfthoTXnxsGfC8XX+A+4azie06xH4LTU4JuyE43h7ac=
+	t=1738672826; cv=none; b=KaisPynOvPylVfUjDkFdSmjUIAUc73ejbKWefTVG2Pq9S0zBgT60fOIXURB2IN045taGajZoTcUyU/9FoQUNznRb2ps0ZNzdW9hMeVa+dbrYAjLyDs+Y6P49DnqigxhHg82yH1IiYXNLM/XiR/cjh3QQITn+HbxkxCHVv6uK4oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738672780; c=relaxed/simple;
-	bh=C+WW04rOkNf9/3ddJyzFOngTsJFYSfBkPZb9JcPjaO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DcMRvP7zFw46Iqjouff5mNEQOF6AXuTAXQXD1sjrsp2utDW7b5hQ28OpTZWlYbhN/Ac8VEWCSaz+kHCsmjDO5FngUYaiFGdgUY8Y/qzypoBQbDaLQqhBt6FGORSrCjYs8LU4iX/bjkdTZW0RHGo9D+wmn8rYq/240/whwXl/9NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=b7kI/tKT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jWWCZNAH; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1738672826; c=relaxed/simple;
+	bh=sCD3UAqTLlx31/Pe8SSEC1P6gHo0WdI2HK57DyCsFLA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uPkVr/FWb3ACE4ZekxFnMwpHmNeHNHxWFPcRdNgGbZLqINzj8MuDxDQDhS2kEXQ9pdF0O3YRlq/jELy9WOVLgQVKZdImX3kEjfCL4CNdNeNbILLIis7D7RJrOq4h7jX8gu9v2ha7BAhCAlAOzaGmJJpV29bVPXBWl39TdMb7/jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aZy9MkAi; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="b7kI/tKT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jWWCZNAH"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id 27F75138029F;
-	Tue,  4 Feb 2025 07:39:36 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Tue, 04 Feb 2025 07:39:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738672776;
-	 x=1738759176; bh=YbVXoTpDaqORN+HVxnshz48Sy0diKVLvnlQjJs9SqrU=; b=
-	b7kI/tKTx/NZEI0DCACLiXHAf1LmrvyAWzkW0I4xuRubr2f+l2eiEVPjG2nqhxnQ
-	99E2ipMLZfuisPpdKeqGdEcDXP3ScwGBKhbjxR3VkEQGP9HqEIhmkiEpZ8xmIGHY
-	yzppI5KIF88/1yJQdrV6VRLtDTUR+uly9tti9NjaTyUnlGDk8UbfCi1XH/l27zSd
-	kQeHirGo8dQslOSqlmPYx7rJbAKJc6YiNSL9neaU6tTox2oxL2PqVCpSnIBc15n5
-	e1neelWGpC1k2/dqdeiNj0ULqK3CkesLEALC05nhkiurcaM2UoAo6bf4RE2NdeDQ
-	7i7tOIDGurMKkdKtBau5zA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738672776; x=
-	1738759176; bh=YbVXoTpDaqORN+HVxnshz48Sy0diKVLvnlQjJs9SqrU=; b=j
-	WWCZNAHeAGDXUTzkt00/RBGhPbFxP0gnj2GOfFJtb9WT137Dx0kcZ+q49lrtnTX+
-	zFhBwLCgusNr3jBOYPCD4AR8REKBm2wd6kjumIJkdavFSqzYrSzHVSMVQlThcfDA
-	QiJrc1NigdJ9VB8kQ1KvTXUlrxpu4EZOeNLF/5/TUuxQ0tCJEpnVbY1y9WeAhcP0
-	M2poduWy0VcBjPKZYE1OJiTy9nqBwhAenoX6g+kJIFaDnEu1D5hglwMT8Y27W0De
-	6z6eaEaDlm4yoNZ0hev6ObaV9c6fWUqpn1+PKveMyJ3LgkEd+FdI8KWm4JRq06Sq
-	ROodb2sTOHwzcAOvXP6rA==
-X-ME-Sender: <xms:hgqiZ-OcP1J5Th6C_6oiRLRnJmHDLpDY2_RvwtBC8fE5sWA6hNb9gg>
-    <xme:hgqiZ8_aQ-8ahTh2B1b41iOp04o5KDsgS2dzJJOMRPfPcX2gxXmAGcLnxx1Imx9QW
-    pjFJDzS02a4VYSrIJ4>
-X-ME-Received: <xmr:hgqiZ1R8rgaHkKuOzMn01meV8pwlAL8RHnlhazvIytHAh1d1LTQFA5LAQh8BlyYcwswRD6vOLyRI4-d8l4pgARXkEy3h2t0-qw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
-    jeenucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsoh
-    guvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgeqnecuggftrfgrthhtvghrnhephffh
-    ueeuhfdugfetvdeutdfhteekkeejtddtkeefuedtfefghfetkeehiedvfeefnecuffhomh
-    grihhnpedvhedruggvvhdplhhinhhugihtvhdrohhrghenucevlhhushhtvghrufhiiigv
-    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggvrhhluhhnug
-    esrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopeduhedpmhhouggvpehsmhht
-    phhouhhtpdhrtghpthhtoheplhgruhhrvghnthhiuhdrphgrlhgtuhesohhsshdrnhigph
-    drtghomhdprhgtphhtthhopehmtghhvghhrggssehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehsrghkrghrihdrrghilhhusheslhhinhhugidrihhnthgvlhdrtg
-    homhdprhgtphhtthhopehlrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgs
-    ohgrrhgurdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrth
-    hiohhnrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhho
-    rdhorhhg
-X-ME-Proxy: <xmx:hgqiZ-vTUVZD888UlcsSJ4m9w9Fz_wgo0UU_OGwNttKrzGmZ6cdHow>
-    <xmx:hgqiZ2chJKiVamuS32oAfcmmSOxCBKhwDARcis9mMUNml6TqdoDK7A>
-    <xmx:hgqiZy1fP6uFUb8PLwGfD1A0F2sr_wxnNyHkYBoL2sXlaYKvX28scg>
-    <xmx:hgqiZ6-Flw_vuwSCMSm7Gxtv2RfZYA4ShGGfbIXcEqGil29Z2RJWcQ>
-    <xmx:iAqiZy-xmfm8enQJwZC9ER_tNyyPFd9xXPGFafFGI83TVyWdY28qzw-m>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 4 Feb 2025 07:39:34 -0500 (EST)
-Date: Tue, 4 Feb 2025 13:39:25 +0100
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-staging@lists.linux.dev
-Subject: Re: [RFC 00/12] staging: media: max96712: Add support for streams
- and multiple sensors
-Message-ID: <20250204123925.GA3720681@ragnatech.se>
-References: <20250131163408.2019144-1-laurentiu.palcu@oss.nxp.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aZy9MkAi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1738672814;
+	bh=sCD3UAqTLlx31/Pe8SSEC1P6gHo0WdI2HK57DyCsFLA=;
+	h=From:Subject:Date:To:Cc:From;
+	b=aZy9MkAizdhNdDigZnoM4HwqQuIgR7jZ3Cz0mTPmTu/dbuJnFMPG20+QCFJCsqka/
+	 8ZWsXVyTxt4aO4oE1Augpv/OpHCpJfM3ZmaFLvlQ7Lczhq0yokRVhX6iJo/c5z1rxM
+	 HU+PWlG4dnkGQL5S5senHh1b+mubDBTtyQlnqmPadUfyeNWyDozY38F2aOElQrLFEx
+	 q7dv1AFPXQUQF4F9aGaaddhvH5Cla92hoiDPp1Nu60uU00kXTS6D+V/28TtDnzkbHA
+	 kzRNk9Kdn34n26Q4bsSGftIDS4yw2XuWSa30YKuiVon+3HGBTiWi0IWIFw+B8Tc1TF
+	 QroCertfrGhTw==
+Received: from localhost (unknown [188.27.43.189])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 14DA917E0848;
+	Tue,  4 Feb 2025 13:40:14 +0100 (CET)
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Subject: [PATCH v3 0/5] Improve Rockchip VOP2 display modes handling on
+ RK3588 HDMI0
+Date: Tue, 04 Feb 2025 14:40:03 +0200
+Message-Id: <20250204-vop2-hdmi0-disp-modes-v3-0-d71c6a196e58@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250131163408.2019144-1-laurentiu.palcu@oss.nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKMKomcC/4XNywrCMBCF4VcpWRvJpOnNle8hLnKZ2oHWlESCU
+ vrupt0Igrj8D8w3C4sYCCM7FQsLmCiSv+coDwWzg77fkJPLzaSQCgBqnvws+eAmEtxRnPnkHUZ
+ uyg7LGrqmbnuWb+eAPT1393LNPVB8+PDa3yTY1n9iAi64NFZX4Ixqu/Zs/Thq44M+Wj+xTU3yI
+ 0mAX5LMkmrA9pUQgKr6ltZ1fQMvH9NECAEAAA==
+X-Change-ID: 20241116-vop2-hdmi0-disp-modes-b39e3619768f
+To: Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Andy Yan <andy.yan@rock-chips.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ FUKAUMI Naoki <naoki@radxa.com>
+X-Mailer: b4 0.14.2
 
-Hi Laurentiu,
+VOP2 support for RK3588 SoC is currently not capable to handle the full
+range of display modes advertised by the connected screens, e.g. it
+doesn't cope well with non-integer refresh rates like 59.94, 29.97,
+23.98, etc.
 
-Thanks for your work. I'm happy someone with a both GMSL cameras and a 
-max96712 found time to work on this driver.
+There are two HDMI PHYs available on RK3588, each providing a PLL that
+can be used by three out of the four VOP2 video ports as an alternative
+and more accurate pixel clock source. They are able to handle display
+modes up to 4K@60Hz, anything above that, e.g. the maximum supported
+8K@60Hz resolution, is supposed to be handled by the system CRU.
 
-On 2025-01-31 18:33:54 +0200, Laurentiu Palcu wrote:
-> Hi,
-> 
-> This series adds more functionality to the existing max96712 staging
-> driver allowing multiple sensors to be connected through other
-> compatible serializers. I tried to split the changes in smaller logical
-> changes to make them easier to review while not altering the existing
-> VPG functionality but I could squash all of them together if needed.
+There is quite a bit of complexity in downstream driver to handle all
+possible usecases - see [1] for a brief description on how was that
+designed to work.
 
-With this series and it's listed dependencies applied my CI tests using 
-the VPG breaks. The controls to select test-pattern seems to be invalid,
+As for the moment HDMI1 output support [2] is not fully merged upstream,
+the patch series targets HDMI0 only.
 
-    $ yavta --set-control '0x009f0903 0' /dev/v4l-subdev6
-    Device /dev/v4l-subdev6 opened.
-    unable to set control 0x009f0903: Permission denied (13).
-    Unable to get format: Inappropriate ioctl for device (25).
+Additionally, please note that testing any HDMI 2.0 specific modes, e.g.
+4K@60Hz, requires high TMDS clock ratio and scrambling capability [3].
 
-    (/dev/v4l-subdev6 here is max96712 1-0049)
+Thanks,
+Cristian
 
-    $ yavta -c10 --file=/tmp/vin-capture/isp0-checkerboard-#.bin /dev/video0
-    Device /dev/video0 opened.
-    Device `R_Car_VIN' on `platform:e6ef0000.video' (driver 'rcar_vin') supports video, capture, without mplanes.
-    Video format: ABGR32 (34325241) 1920x1080 (stride 7680) field none buffer size 8294400
-    8 buffers requested.
-    length: 8294400 offset: 0 timestamp type/source: mono/EoF
-    Buffer 0/0 mapped at address 0xffffbe5d7000.
-    length: 8294400 offset: 32768 timestamp type/source: mono/EoF
-    Buffer 1/0 mapped at address 0xffffbddee000.
-    length: 8294400 offset: 65536 timestamp type/source: mono/EoF
-    Buffer 2/0 mapped at address 0xffffbd605000.
-    length: 8294400 offset: 98304 timestamp type/source: mono/EoF
-    Buffer 3/0 mapped at address 0xffffbce1c000.
-    length: 8294400 offset: 131072 timestamp type/source: mono/EoF
-    Buffer 4/0 mapped at address 0xffffbc633000.
-    length: 8294400 offset: 163840 timestamp type/source: mono/EoF
-    Buffer 5/0 mapped at address 0xffffbbe4a000.
-    length: 8294400 offset: 196608 timestamp type/source: mono/EoF
-    Buffer 6/0 mapped at address 0xffffbb661000.
-    length: 8294400 offset: 229376 timestamp type/source: mono/EoF
-    Buffer 7/0 mapped at address 0xffffbae78000.
-    Unable to start streaming: Invalid argument (22).
+[1] https://github.com/radxa/kernel/blob/linux-6.1-stan-rkr4.1/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c#L4742
+[2] https://lore.kernel.org/lkml/20241211-rk3588-hdmi1-v2-0-02cdca22ff68@collabora.com/
+[3] https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/-/commits/rk3588-hdmi-bridge-v6.14-rc1
 
-I read in patch 12/12 "The user can also switch over to testing the test 
-pattern by configuring the routes accordingly", but not how to do that 
-to achieve the same functionality as the staging driver. Inspecting the 
-media graph gives little help. Would it be possible to extend the cover 
-letter with this information?
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+---
+Changes in v3:
+- Check the already computed clock instead of mode->crtc_clock in the
+  conditional that triggers the switch to HDMI PHY PLL
+- Rebased series onto v6.14-rc1
+- Link to v2: https://lore.kernel.org/r/20241211-vop2-hdmi0-disp-modes-v2-0-471cf5001e45@collabora.com
 
-To be clear, I don't care about the change in behavior as this driver 
-obviously primary aim should be to  support GMSL2 cameras, not 
-test-pattern generation. It is important for me that it is possible to 
-enable the test pattern generation $somehow at runtime (i.e. no DTS 
-changes). As this is the only method I have to test a bunch of boards.
+Changes in v2:
+- Collected Acked-by tag from Rob and Tested-by from Naoki
+- Rebased series onto v6.13-rc1
+- Link to v1: https://lore.kernel.org/r/20241116-vop2-hdmi0-disp-modes-v1-0-2bca51db4898@collabora.com
 
-It would also be nice if the patterns generated (output frames) as 
-closely as possible would resembles what is generated today. That way I 
-don't have to alter my CI pipelines too much :-)
+---
+Cristian Ciocaltea (5):
+      dt-bindings: display: vop2: Add optional PLL clock properties
+      drm/rockchip: vop2: Drop unnecessary if_pixclk_rate computation
+      drm/rockchip: vop2: Improve display modes handling on RK3588 HDMI0
+      arm64: dts: rockchip: Enable HDMI0 PHY clk provider on RK3588
+      arm64: dts: rockchip: Add HDMI0 PHY PLL clock source to VOP2 on RK3588
 
-> 
-> The series only supports tunneling mode and uses the first MIPI-CSI
-> port. Support for more functionality can be added later, if needed.
-> 
-> I sent the set as a RFC because it depends on Sakari's pending internal
-> pads patch which is needed if we want to have an elegant solution for
-> allowing the user to switch between streaming from sensors or just
-> video pattern generation.
-> 
-> Also, the set depends on my previous series which was not yet merged:
-> https://patchwork.linuxtv.org/project/linux-media/list/?series=14255
-> 
-> Thanks,
-> Laurentiu
-> 
-> Laurentiu Palcu (11):
->   dt-bindings: i2c: maxim,max96712: add a couple of new properties
->   staging: media: max96712: convert to using CCI register access helpers
->   staging: media: max96712: change DT parsing routine
->   staging: media: max96712: add link frequency V4L2 control
->   staging: media: max96712: add I2C mux support
->   staging: media: max96712: add support for streams
->   staging: media: max96712: allow enumerating MBUS codes
->   staging: media: max96712: add set_fmt routine
->   staging: media: max96712: add gpiochip functionality
->   staging: media: max96712: add fsync support
->   staging: media: max96712: allow streaming from connected sensors
-> 
-> Sakari Ailus (1):
->   media: mc: Add INTERNAL pad flag
-> 
->  .../bindings/media/i2c/maxim,max96712.yaml    |   45 +
->  .../media/mediactl/media-types.rst            |    8 +
->  drivers/media/mc/mc-entity.c                  |   10 +-
->  drivers/staging/media/max96712/max96712.c     | 1406 +++++++++++++++--
->  include/uapi/linux/media.h                    |    1 +
->  5 files changed, 1352 insertions(+), 118 deletions(-)
-> 
-> -- 
-> 2.44.1
-> 
+ .../bindings/display/rockchip/rockchip-vop2.yaml   |  4 +++
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi      |  7 +++--
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.c       | 36 +++++++++++++++++++++-
+ 3 files changed, 44 insertions(+), 3 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20241116-vop2-hdmi0-disp-modes-b39e3619768f
 
--- 
-Kind Regards,
-Niklas Söderlund
