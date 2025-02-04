@@ -1,144 +1,119 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C212147F7
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66572147F7
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738685225; cv=none; b=ZCncBCqZJRzLh/eqJj3aBRqfcJsrrkoRKJ7b0kFqzCUlhXCpj5HKRJWK2OqddBascJxFdX4Loag/sKujO27ct4PbNaat1XjM7zcOBYv6wgPvOaMGedbsysz8WLWzqMhJupvtWti+2jXgJbj0+VtAkQH1e/wQ6i5A926uEIXcwNk=
+	t=1738685382; cv=none; b=rFW4N4dNao0fF7Xbc2hlnZLARzxEIokqVUVtRcqMgNcUJKtHVvssa3tzWwbPUXftvoGEABeEutFVK7P91CNgW+XNG0dkVuGzXymWsBpnl1v3NNFpOMxO2uU4KVkKs6BCv4LUl0yKIR/kFaR0wSunR9DxihICxzqoJ6Qu1bUNwkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738685225; c=relaxed/simple;
-	bh=87XElV+ZP9tSZMuwLGTjeSbc2SSgA+OFSMdHTxKMBRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hIun1pA+TU0FJw18Vgh7nbsynubFoYEPb1SINte2UZx8gX7K5Af1Oh8Eap1y2c2uw88pYgYRRSwC188XCH+BZAJT+AIUWtlCnIOpneWB69QCilOGStPdhJdCJAlKTEGVyJ6pL2yEP6SBs9ylBZmAwMMciCibmM7MhoscrY/dHIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fa40nm6a; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738685382; c=relaxed/simple;
+	bh=aWAJWddD23V5WMWQUZcPJWUhrQa3v7d3yFQBjipOJis=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LfiqiorEckUoWHILMdHNUOe/vCQFfrXg7zKgjTPdm7951BSQoi3tcavtXQjLbEbyhs2FEHG04WhAx+s1a3WG5h4Z9QC5EfM+pykkKy93k7T4L47SNyW03GqUPyrTKqa/ir/Pmx5i40oBK6izru2qC2RIouBfLYe9DPFEIjos9ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GnAtKUbG; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fa40nm6a"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-3078fb1fa28so54790341fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 08:07:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738685221; x=1739290021; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QcM0dBP9g39GXdi7mAUq5Bo01wVZTt8edmUCGV/0Hw8=;
-        b=Fa40nm6ak3mRYHUzAmfjOUUCosz+w82WaToiKQjvl6vpHZLG9/srhYTLUjMB6mfyHI
-         h91AYU6yg2y8tUX/TLjIA2x3sRXio+6RWGlbv5n8oqFkdV85JrknnVX1c3SvRGggnhdZ
-         cP4BEaG4in8MQOQrSnc3HdFVhFmvvS4xLwZ6wt9zN1PTZpqDrAJxrDWx5IPJa2LkH7ac
-         38vtfCF8ECmYIFNrKlNzCJga14Yr9OekkDrsdlKxuIfwIRrRXWnzwTeVUDEN0GQrQo3x
-         b6s6arE0CuIinwzPhVgaxb/L1/Y/DkFWFTuqhXXp95RSerYf5e/spBtC+dsCFTUAMX+f
-         pngA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738685221; x=1739290021;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QcM0dBP9g39GXdi7mAUq5Bo01wVZTt8edmUCGV/0Hw8=;
-        b=H9P1YwqG9F6rX7L8aOTss8MHRzVHhsZHctHoWKZNHx9ZxDShIE9XgfuTnBDNnliqPW
-         BZnmR+tHxMPrsVD3p+i+kuUnAM5m7hLmUKI2KWz14Di8umBrEoJHmx7l0rMXL/RGOIu6
-         oxlo5HRdypyDCYf2YzIgcoR2zl4VQPfQnG8YCTiEyg1Bx3OvLNdHYrUXCJo/h9XYC/ml
-         whND/nlU8gIaJVa//zPKV9+5VtKPxh9XTWRG2gXpKmIEJpdz/YqgiqcRD4MStk5DSzxz
-         3hR9BpWAj5w1n0aRnyKZXR615Wd6NU11Y/+WiJhZ1qCRZgaamsRIiGnFMjhuUNtbijt6
-         hbjg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0rnI1cr/+dCltWvOPi+/vWu23Y+MaJy/yJN3uZ3kGczZrrkqQBIGNS2U8zgI/uouU4q/TC9f4GSYlNMk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyYUNlRSVaPCPUoyfbrVJRh3VAnqde6UaFAr65B55tqzdHO+MZ
-	DJaDZPlZBcHNR5JVad2qVxewkYS79Klem2TOj0GSvlc7ZGDy/X5+dy4hspG0t4Q=
-X-Gm-Gg: ASbGnctuoJ78p/5QwhsWL36WxRag6sk0NwdhNDLyucNcK1mGWsVM9AesYMKTRoY/eEn
-	Z4fc5r6Vabv6G2a7CN1pIppydBDpOAB+UhNnv9v7S39RRciBDjGr4JRlxpC5DjkSOI3mJSapcyO
-	TTJ5QEPJEVy5UWjeINmU1AuPkr0DTLfc91bEpw+7tSDXb/l3oOAy6IZT5j+jfdPifzHkZLdAJoR
-	g/t78boJowTm2fuyjfSmFn5yVNCXBtZs5uA0FRjlQzEmiYK+oA5JpB54M9ITKb9RKbbGBZUKkQY
-	sZNdiZV8ROhneNBiPhDftcXCvfKHrtyFWmBCKTXKkoIsPcGOa9xANsWH6r41XU4I91jg8pM=
-X-Google-Smtp-Source: AGHT+IEiaDM/fV1OOyZrYGn4JSpNEJKdHLwZhH84L9MO8D7AIbye89bpe0ENwwrU/i4TaJWy2LjXDA==
-X-Received: by 2002:a05:651c:220e:b0:300:3a15:8f2a with SMTP id 38308e7fff4ca-3079680fbc2mr88609331fa.2.1738685220999;
-        Tue, 04 Feb 2025 08:07:00 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a33f77casm18969821fa.81.2025.02.04.08.06.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 08:06:59 -0800 (PST)
-Date: Tue, 4 Feb 2025 18:06:57 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] drm/msm/dsi/phy: Define PHY_CMN_CLK_CFG[01]
- bitfields and simplify saving
-Message-ID: <rjjaanthmbb5fer53ffu2evxohyusj4me2db5r4jnxy2wt7dxk@a6r2a5ddxoxq>
-References: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
- <20250203-drm-msm-phy-pll-cfg-reg-v2-4-862b136c5d22@linaro.org>
- <hhedgfdbqpbv7s6iegtoztmznqdqn7bdumik7dm5xtsfsj6uwp@3jz422fhchcn>
- <ef1f91e4-aec4-41e8-b842-52d3f91e82bb@linaro.org>
- <dtenajcyhcrejiiadcfmpz3h3cg3l2rkio55625umao6gl3q3k@asy2ecfz37ps>
- <30518b66-71c5-43ed-a770-e3ecbfdb1f58@linaro.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GnAtKUbG"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 514G9PpQ3181568
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Feb 2025 10:09:25 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738685365;
+	bh=YepnJQGmn/vtJnIc7O1s+wtpIlCdhAyRFoIqFH0wSSA=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=GnAtKUbGtyyr3/jl4HDq+CAQHBSengrJEQxd1hkeF7KH4WR2vpIeoekislzjci+/q
+	 82rJ9LYYlO1YACtgnNMo5mCFjQIjyMTRn6CxoNTdKNm3NuWRTvBqyQgdJZAV7e2Rye
+	 ihKrkAK4zrBKYr1UBGluLyHff3w5QkGDHHFy4WTQ=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 514G9PiG029212
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 4 Feb 2025 10:09:25 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
+ Feb 2025 10:09:24 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 4 Feb 2025 10:09:25 -0600
+Received: from lcpd911.dhcp.ti.com (lcpd911.dhcp.ti.com [172.24.227.226])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 514G9Lrg073384;
+	Tue, 4 Feb 2025 10:09:22 -0600
+From: Dhruva Gole <d-gole@ti.com>
+To: Frederic Weisbecker <frederic@kernel.org>,
+        Andrew Morton
+	<akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>
+CC: Chen Yu <yu.c.chen@intel.com>, <linux-kernel@vger.kernel.org>,
+        Kees Cook
+	<kees@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+        Dhruva Gole
+	<d-gole@ti.com>
+Subject: [PATCH V2] kthread: Fix build warning variable 'ret' set but not used
+Date: Tue, 4 Feb 2025 21:39:21 +0530
+Message-ID: <20250204160921.377178-1-d-gole@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250204090838.214647-1-d-gole@ti.com>
+References: <20250204090838.214647-1-d-gole@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <30518b66-71c5-43ed-a770-e3ecbfdb1f58@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Feb 04, 2025 at 04:48:43PM +0100, Krzysztof Kozlowski wrote:
-> On 04/02/2025 15:28, Dmitry Baryshkov wrote:
-> >>>>  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c          | 31 ++++++++++++----------
-> >>>>  .../gpu/drm/msm/registers/display/dsi_phy_7nm.xml  | 12 +++++++--
-> >>>>  2 files changed, 27 insertions(+), 16 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> >>>> index 926fd8e3330b2cdfc69d1e0e5d3930abae77b7d8..b61e75a01e1b69f33548ff0adefc5c92980a15d7 100644
-> >>>> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> >>>> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> >>>> @@ -67,8 +67,7 @@ struct dsi_pll_config {
-> >>>>  
-> >>>>  struct pll_7nm_cached_state {
-> >>>>  	unsigned long vco_rate;
-> >>>> -	u8 bit_clk_div;
-> >>>> -	u8 pix_clk_div;
-> >>>> +	u8 clk_div;
-> >>>>  	u8 pll_out_div;
-> >>>>  	u8 pll_mux;
-> >>>>  };
-> >>>> @@ -401,12 +400,12 @@ static void dsi_pll_cmn_clk_cfg1_update(struct dsi_pll_7nm *pll, u32 mask,
-> >>>>  
-> >>>>  static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
-> >>>>  {
-> >>>> -	dsi_pll_cmn_clk_cfg1_update(pll, BIT(5), 0);
-> >>>> +	dsi_pll_cmn_clk_cfg1_update(pll, DSI_7nm_PHY_CMN_CLK_CFG1_CLK_EN, 0);
-> >>>>  }
-> >>>>  
-> >>>>  static void dsi_pll_enable_global_clk(struct dsi_pll_7nm *pll)
-> >>>>  {
-> >>>> -	u32 cfg_1 = BIT(5) | BIT(4);
-> >>>> +	u32 cfg_1 = DSI_7nm_PHY_CMN_CLK_CFG1_CLK_EN | DSI_7nm_PHY_CMN_CLK_CFG1_CLK_EN_SEL;
-> >>>>  
-> >>>>  	writel(0x04, pll->phy->base + REG_DSI_7nm_PHY_CMN_CTRL_3);
-> >>>>  	dsi_pll_cmn_clk_cfg1_update(pll, cfg_1, cfg_1);
-> >>>> @@ -572,15 +571,17 @@ static void dsi_7nm_pll_save_state(struct msm_dsi_phy *phy)
-> >>>>  	cached->pll_out_div &= 0x3;
-> >>>>  
-> >>>>  	cmn_clk_cfg0 = readl(phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG0);
-> >>>> -	cached->bit_clk_div = cmn_clk_cfg0 & 0xf;
-> >>>> -	cached->pix_clk_div = (cmn_clk_cfg0 & 0xf0) >> 4;
-> >>>> +	cached->clk_div = cmn_clk_cfg0 & (DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_3_0__MASK |
-> >>>> +					  DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_7_4__MASK);
-> >>>
-> >>> Could you rather store these two fields separately by using FIELD_GET?
-> >>
-> >> So make the code again more complicated? OK.
-> > 
-> > It was already there, bit_clk_div and pix_clk_div.
-> 
-> 
-> Yes and I (believe) simplified it. It is subjective, so I don't mind
-> going back to two fields, as you asked.
+Fix the following build time warning in kthread:
 
-I'd prefer it this way, thank you.
+   kernel/kthread.c: In function 'kthread_affine_preferred':
+>> kernel/kthread.c:861:13: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+     861 |         int ret;
+         |             ^~~
 
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202501301528.t0cZVbnq-lkp@intel.com/
+Signed-off-by: Dhruva Gole <d-gole@ti.com>
+---
+Link to v1:
+https://lore.kernel.org/lkml/20250204090838.214647-1-d-gole@ti.com/
+
+Changelog:
+- Use ret value toward the end return as per Kees' suggestion
+
+---
+
+ kernel/kthread.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index 4005b13ebd7f..5dc5b0d7238e 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -859,7 +859,7 @@ int kthread_affine_preferred(struct task_struct *p, const struct cpumask *mask)
+ 	struct kthread *kthread = to_kthread(p);
+ 	cpumask_var_t affinity;
+ 	unsigned long flags;
+-	int ret;
++	int ret = 0;
+ 
+ 	if (!wait_task_inactive(p, TASK_UNINTERRUPTIBLE) || kthread->started) {
+ 		WARN_ON(1);
+@@ -892,7 +892,7 @@ int kthread_affine_preferred(struct task_struct *p, const struct cpumask *mask)
+ out:
+ 	free_cpumask_var(affinity);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ /*
+
+base-commit: 40b8e93e17bff4a4e0cc129e04f9fdf5daa5397e
 -- 
-With best wishes
-Dmitry
+2.34.1
+
