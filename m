@@ -1,112 +1,97 @@
-Received: from common.ash.relay.mailchannels.net (common.ash.relay.mailchannels.net [23.83.222.38])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479FD13A258;
-	Tue,  4 Feb 2025 09:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.38
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738662951; cv=pass; b=VNoDfOTukyvhTiYltFg08Sw1Z+aWZdCijuLCm8KkLRWK2Rm0sPXGbBwbyKAZ8Y30z+3V5kRlc0oda5vp3tJbWY+ESQOet78ljpKvF8QSWlE9uz9FfQAU9oSKiPuFYyOyjFBPd+31M5zhRpZLy229mo9tgGNGmi9Lb1XDMOBMBek=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738662951; c=relaxed/simple;
-	bh=leCM//w8m7SIGivS0wwRw7YlTdHUZPVYAQ52is56yZE=;
-	h=Message-ID:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Date; b=J1C8HNnscgYcK5eREMMU8eZgq4D+vaNJlar0lH49kNQovAINoWO/g0j21KOb6q0CtGZVhU5jdG3zaoWsar2idN+tT6Z8NNGu2FE8prpHECCHLek/O0sHT4SOTQdsbN/HNX0unZxYPACX2TZKhywF3NcqBSON3m+QIzjb4gK1p98=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=dQ8p8nQ4; arc=pass smtp.client-ip=23.83.222.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069F2207A00;
+	Tue,  4 Feb 2025 09:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738663031; cv=none; b=UZFF9zjzG3roIDAP3bElt+K6UpIbMe525lcRk08djNMT9Sk4HHRhEZI+4J+nUOXrImjueNl4glCKp/FwkwxlnbjAxkkR/yh0Uh8/PUxEfgaP5d3qDMeA3O9TD9ly2dYEP8ksY/8Nnpf5+8nmS0k1wDN2WmpuUq5L2XBxHgP96Qs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738663031; c=relaxed/simple;
+	bh=CRAuX3gIwh55u1WP0B5HC9FHvESNBJhpwidHcqoiZTo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tf7qhi+R76z0smG8XDqFnfNl6A/40ZLkL2ZgH0lvW7SZule24vTBP12Ud9WHjleXar5+NSm2aKk+TkgAIT+L63hmD2sIrW2P25a+38AvXjUNfLluoF9NdLbyoc6wn6i70z4JuXHOieImGkQoldWnxuqRRIqbwxezvDWlSRSP5p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mkM6M7NF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="dQ8p8nQ4"
-X-Sender-Id: hostingeremail|x-authuser|chester.a.unal@arinc9.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 614E88C3422;
-	Tue,  4 Feb 2025 09:48:31 +0000 (UTC)
-Received: from fr-int-smtpout9.hostinger.io (100-122-225-139.trex-nlb.outbound.svc.cluster.local [100.122.225.139])
-	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id A419B8C19D5;
-	Tue,  4 Feb 2025 09:48:23 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738662511; a=rsa-sha256;
-	cv=none;
-	b=ko83ZFeJZCLnfCNv8oLWWhlRyLlzi0S5YK41WCDB0nKycAAb4ZGNeCHd2k7Q+gMYT8fQy/
-	E3kYSa9/WC4+Nm2LIg57h6c0lMvAJRMxALuLNvbg9yRrWMOXEWTHJw7b2bl2HgV0Aw18g8
-	qZAyXdOA+PFBqNnF5P7LewBFikSsw1S3v45ubhPtGxyFbhpjp/YJhnCty75x+iNl7nLxsZ
-	YjRCrgNVPyvnvhI00oz78Hv/LOTyRATZ9pPhUb1+NoYlnDdcsZ9v0L0ScdbHxS5sk9vvKv
-	7KMFVKXh/4cvzyTqVB7R9zvzNkvdeEQS7pzJeiSvQoqXCp5GWOSY/0sfTl7nqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1738662511;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=dmUwV1+lkQOftGoMtu4xLI3tP41KkWphDDQnQXVrr6k=;
-	b=RRBoAm1LDbyKoK8e2rSN/1vAJIDb2XckyysnmkAy1D0rpiwqwtCoj2BfCwMob28GhZOHod
-	mCvK39dX0PVenyzy/TXJRIGbpRqKuLFp6y3rAL3DOf6L9uh3AxieeGl3KVi8CtpdvTEYCo
-	P+Ng1Hkl26s04dgvYRNNZoNQNEbuh0Gr0mZTZ/eRTyq3TEg5GSZcFnQj/fcXmKYxXuS2pE
-	TUwbohgBiQUFrNeYnJqbvXFYwtPSLxbHVPvTxc6H4smuNPhMTLnWzHzdooTInaIPNGgfxl
-	FVnEbmXmPTsZZRTzP02+agUbw0JXgULd6X2v3Y+k3z58LVxdXCkJwvjfP2pxsA==
-ARC-Authentication-Results: i=1;
-	rspamd-854f7f575d-2jbtq;
-	auth=pass smtp.auth=hostingeremail smtp.mailfrom=chester.a.unal@arinc9.com
-X-Sender-Id: hostingeremail|x-authuser|chester.a.unal@arinc9.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostingeremail|x-authuser|chester.a.unal@arinc9.com
-X-MailChannels-Auth-Id: hostingeremail
-X-Turn-Hook: 36a03b8123b2479a_1738662511257_1804304046
-X-MC-Loop-Signature: 1738662511257:883016486
-X-MC-Ingress-Time: 1738662511256
-Received: from fr-int-smtpout9.hostinger.io (fr-int-smtpout9.hostinger.io
- [89.116.146.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.122.225.139 (trex/7.0.2);
-	Tue, 04 Feb 2025 09:48:31 +0000
-Message-ID: <55228e28-9370-4eca-8ea9-cc836a066254@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com;
-	s=hostingermail-a; t=1738662501;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dmUwV1+lkQOftGoMtu4xLI3tP41KkWphDDQnQXVrr6k=;
-	b=dQ8p8nQ4zNtwbeWCLAgFD2mJ4ZKSE5vPtWGmXv3xFEGxRIeowT0pJhoXNZRLifJ0nQbwwO
-	ieFaTGjhr+A9E8n0u7K41hxphVBNZ73HzE+HkFBfqn4OJoUstmhi0+h/ladVfCSbHXzocN
-	z2wSihbR8UNpYABN8bElt2HoVgkn6q/CqeOSZSXJKFgkrgxh8UgTmKnAoEOaVu65IHjUeU
-	YUC22wDx8w5qFIuUBdTOviofFlZo4TYl87uEr1iL+rXOlqAN4i+ilaEYZkzegeMDI3AfXE
-	N5CYE7groeWOKfXYorhxrXb7nXyiPgz3CfPDPbaoot2zdb4Rb3bDJnN66lAyCQ==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkM6M7NF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78593C4CEDF;
+	Tue,  4 Feb 2025 09:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738663029;
+	bh=CRAuX3gIwh55u1WP0B5HC9FHvESNBJhpwidHcqoiZTo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=mkM6M7NFudRwSzbMcKB6KnE4KXa/A/oU03Oo7Lbbq1hHXGqqffcBJyYf3hrpGCEKT
+	 ZsfGehCarZ8kPSt97rj8reRNLYoN1FxomrQf6PpPA3rlD1whmlTRDPPfbQe8wkovAP
+	 HmeMva8TrZ86NPYo1hRLg4LVQJoGIW0fhCAIPoVp4NV3FA3tF9UOp/ielbzuKFKqr2
+	 KD0DJM73yKHMKsC8qshQlHkLSYg1fHQtRNAXn5Yw2lIV0PQT8LhqL9CT++hiIJzQre
+	 tAqHWn5zAmhW+q8rme7fCrV3oXpkwa3sAJuvmflgRXu1CQSUYdajnCEcvx5BzIOoT2
+	 DfCKyZNmQ5Kkw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Tamir Duberstein" <tamird@gmail.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
+ <anna-maria@linutronix.de>,  "Frederic Weisbecker" <frederic@kernel.org>,
+  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Lyude Paul" <lyude@redhat.com>,  "Guangbo Cui" <2407018371@qq.com>,
+  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel Almeida"
+ <daniel.almeida@collabora.com>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 03/14] rust: sync: add `Arc::as_ptr`
+In-Reply-To: <CAJ-ks9=gKET-yaTkqta2TfTaxe031yKqnUHNXFjjJH_AYF2oqw@mail.gmail.com>
+ (Tamir
+	Duberstein's message of "Mon, 03 Feb 2025 17:46:42 -0500")
+References: <20250110-hrtimer-v3-v6-12-rc2-v6-0-f71d50f16482@kernel.org>
+	<20250110-hrtimer-v3-v6-12-rc2-v6-3-f71d50f16482@kernel.org>
+	<3zUeHP9VQ7ZaBieXue_fQ_8V8tcTW1nc83OQA7ehwV7itvlpzwF5DHHmyqTU70UzpXhUKWoDtueUb2fsFQdyUA==@protonmail.internalid>
+	<CAJ-ks9mygX61B=FOgQegs3uReBHDju2cs6eFRohjNEX_GPwAjQ@mail.gmail.com>
+	<8734hid0qh.fsf@kernel.org>
+	<MrCmM4idAc3dwMug-_ZigRHpTNLBv1zJ4QAZNWxrhLwmEesH1CGZwPAolimUVnWKLTXSbcxevmAWDDLQ7mQw0g==@protonmail.internalid>
+	<CAJ-ks9=gKET-yaTkqta2TfTaxe031yKqnUHNXFjjJH_AYF2oqw@mail.gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 04 Feb 2025 10:56:55 +0100
+Message-ID: <87r04ejamw.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] USB: serial: option: add MeiG Smart SLM828
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- dwayne Du Preez <dwayne.dupreez@xpedite-tech.com>,
- Alexander Scholten <alexander.scholten@xpedite-tech.com>,
- Zenon van Deventer <zenon@xpedite-tech.com>
-References: <20250124-for-johan-meig-slm828-v2-1-6b4cd3f6344f@arinc9.com>
- <6e2c4db7-1325-473b-9999-2b1ada418119@arinc9.com>
- <Z6Hfx4KBeVHCNQVS@hovoldconsulting.com>
-Content-Language: en-US
-From: "Chester A. Unal" <chester.a.unal@arinc9.com>
-In-Reply-To: <Z6Hfx4KBeVHCNQVS@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Tue, 04 Feb 2025 09:48:18 +0000 (UTC)
-X-CM-Envelope: MS4xfK8s6hRN5GvcZHLwc9C1QdII8ajxror0DIA13KNqBwq/xqgth+3+M7vawk5dr3Lv5mgP+l0d2bRQWEN6fT06Hs4onf1jgLYvCb/g7sXtaXJJ0DY/kp1y Xa+aRL+n6BoPSjZbqnixnr1WqRW6GOmCAKlPtp+EvjGfcOJMyy65/uLgmVy9zb+wIUwm+N0F7HjuDn6RGfk6VOiUn1eltSwpbOS0j2+VQYp425KXxg14EZqW TsYYXmkhrhKWLJUTYa0t95uDjYBGO6mcqudzV9Mk266Gv2D94AL+MI/YQIppXqaDkAikY3A3Ryl3f97Rzjm8JnOtrFtirjcy9G905yHSx5+ldwDl+FL5GyjG sQImDIyPwMkjM8swyZjdRUdpVt0izw05Jg0dhZdO6O5DXCmJmQ6RStlXnL36EMML08kbHBCb5aQ6TIX7qMLQfwshMer2LQbQPr6lmGIajEMyZkrNU4U=
-X-CM-Analysis: v=2.4 cv=PMNd+uqC c=1 sm=1 tr=0 ts=67a1e265 a=xK2r8zoKF9vSrBIo2YuqYg==:117 a=xK2r8zoKF9vSrBIo2YuqYg==:17 a=IkcTkHD0fZMA:10 a=A6Sy_z46XarSiW2s0hoA:9 a=QEXdDO2ut3YA:10
-X-AuthUser: chester.a.unal@arinc9.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 04/02/2025 09:37, Johan Hovold wrote:
-> On Tue, Feb 04, 2025 at 09:15:02AM +0000, Chester A. Unal wrote:
-> 
->> A reminder for this patch to be applied.
-> 
-> You submitted the patch during the merge window which ended two days
-> ago. It's still in my queue, don't worry.
+"Tamir Duberstein" <tamird@gmail.com> writes:
 
-Thanks a lot for keeping an eye on it, Johan. Keep up the good work!
+> On Thu, Jan 16, 2025 at 2:23=E2=80=AFPM Andreas Hindborg <a.hindborg@kern=
+el.org> wrote:
+>>
+>> "Tamir Duberstein" <tamird@gmail.com> writes:
+>>
+>> > On Fri, Jan 10, 2025 at 3:19=E2=80=AFPM Andreas Hindborg <a.hindborg@k=
+ernel.org> wrote:
+>> >>
+>> >> Add a method to get a pointer to the data contained in an `Arc`.
+>> >>
+>> >> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>> >
+>> > Can this mention why it is needed?
+>>
+>> I can add that after the cut. It is for impleminting `HrTimerPointer`
+>> for `Arc`.
+>
+> The broader question is: why do we need to implement `/HrTimerPointer
+> ` for `Arc`? Even broader is: why do we need to use raw pointers so
+> much?
 
-Chester A.
+The C APIs work with raw pointers. One important detail here is that the
+consumers of the Rust APIs will never work with raw pointers. That is
+all encapsulated within the abstractions.
+
+
+Best regards,
+Andreas Hindborg
+
+
