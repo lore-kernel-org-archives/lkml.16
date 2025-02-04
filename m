@@ -1,373 +1,175 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A451754B;
-	Tue,  4 Feb 2025 07:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBA61754B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 07:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738654412; cv=none; b=knGnGEDCLCj/T4q14ke0QgjVSWlNY843yajJZgso93Pk8+NNCh4fCm/qCqOj7QI3fT8QF6tStJekn10KjRsKltVkw5t6wZwEe468FbEkd+w02sCEGJQ8/G2n74OicBr2KyLicIPe3pJzIH3FfLq3zjMBsM7XbhZuyTaE4AsC2+w=
+	t=1738654471; cv=none; b=hR/+WZijtNrd4N/QgmmVTrNy0QOrf43YARnYfSAjiWwh7hOT00UcrQgUBfTlbMpM5jsHsEQFsvA9w3Ley4nhdHEKF+dEu3cvyeJGHeQoYAONd9SvAOUdyxTDA2TWQB5jCSH5o4SeuSObT3vOmZzniqyErH3tDaDC4kwH0BxmRro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738654412; c=relaxed/simple;
-	bh=KqQNTguRXGM3DPJTgpTj4k28aUGNH1q7NYOFESPcec4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XLSiCy10aEXVTieVaE5A4P7OvzC2h95u8f7wBNvL8iPcooTtoHIIT3TCXZ0RNHRYz1QDjM7Gw+TSzmI9//uQKauGXcGNfSvukblI8gY+x9+pCTX6ewNFrJTRp3fbrgl7m+VLwYWd9CLKNJgFdOpp6lQvjdM6BBDw4gxmYbVTr8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=jlX6wFII; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1738654471; c=relaxed/simple;
+	bh=cl8ZT91z9S2tpe4krwwQNNz+rzfjEqha0MrzcdBk87M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kP14onf/yyYB5Rh0Yoirnp8fBQ82cQBMYr8cCnzVuEP6sd5MzZGfIH7m9/+BUxsFZqiQ844mCniUdkW1SxpOa0tPOdFCY81qcwOO/oQrnM0ubLr84sz/TCPJkIgQAHBz25UfkKpsRQY38dW7MHqt9AskQ+eatHA/LCKHBfXxyD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kAlX9YGL; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="jlX6wFII"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5147Pq9g023359;
-	Tue, 4 Feb 2025 08:32:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	ayrgWfVjcWQXv9my/XME+x74kxMbqnbfoWa2qB4A7Rk=; b=jlX6wFII/Z0bp4vi
-	oyXid84QFlXTmsGF0omWA31DA2Yv+SptP0ZwORC6QEBIh9scCfJwzIbhxl6atABs
-	6T83iHgsdpeosP55g+bcQjkiOKXHapAtswtLvoyynx/2nKJhJgKWYkTd3dbJ5/7w
-	1LgfGoiL3GNN+CGKLjyssfA79YEnQJj7Kq9Tlo+Iz39NA8Eiv1K0misBbRdQkOaP
-	42y0LVzVs1m75xfOqehQEweKE92XS+Td1lLi3hpr4G3FdYd+oBZstnrE88o0VCnZ
-	vmcgOhlbZGt3rxBBlLJYCqw+uuTAYKhnOPhgHoXfwNaXgaxFY5YEVbRMjpi7dJQv
-	eMhHyA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44jw1tubau-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 08:32:49 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A058B40055;
-	Tue,  4 Feb 2025 08:31:26 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6BFBD2EB03B;
-	Tue,  4 Feb 2025 08:29:59 +0100 (CET)
-Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Feb
- 2025 08:29:58 +0100
-Message-ID: <9073411a-38aa-4f82-95f5-474b0c3efed7@foss.st.com>
-Date: Tue, 4 Feb 2025 08:29:57 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kAlX9YGL"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21628b3fe7dso95947535ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 23:34:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738654468; x=1739259268; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=orjpaukFM37/+hASeec/fvQ2v80Tt5itf/oXBVJGIZU=;
+        b=kAlX9YGLgwOXeBgAFlD9qZBE7SsYdg8UsQSxf8mW0pbSdqt9IdjYPnS5fNtFlL0d3K
+         QwyrLpA35JSqUudFmXaNeEZX9ZLuleBk36YdLhQvworDnGbbTu0YMx73oAcXBb0uNJN4
+         6IMhi2n2ksv/zjxjOBu7vfsMGd7d4bMHpQDKV1DPTa9vy4Hz2Rbe/ZUooAcAAkQUaugr
+         PANvozS8d/aPi3r2MHzqc+4u9SQtyxKyuXchihckmliqqQcAQ3HJJaEROJq8h8lfMZ5b
+         IwrMoQKVlozI0kByzu4aP4vcuWaEhslv7f0zH4Qf72FQapBN/7h7KuoHFOiEPxGNkbde
+         VCyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738654468; x=1739259268;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=orjpaukFM37/+hASeec/fvQ2v80Tt5itf/oXBVJGIZU=;
+        b=XF2ssxie88gmmAbWxqiwAXO0JoSAZOEBq+hMNmdYpkDqPXSNHuESs3u/Slyl79uzll
+         SrMz9yLu2ZwFDhko5ZztEv3S6tQ93ns8FduKcZkfi79MEMVRjXkv+hhMM8fk5yhCvVMh
+         1AeqsLgzOzULe5F1ciD8JSqOk/evG6CbYByDymMBxAVs+bxEqqqfpTYfCgrmYNoPyuH2
+         KadlN6loIk6lEYpA4wmanpBoydRmSq8qi1TU0hvPBYofhlcdkY30dX1YfDW82RtXkXAF
+         yRL1nYHiPhouuOnBv5WyPC3GsThlgNE0VsNy5Q7v0zejJSviN6EY7SLJdEl92Gir9TZV
+         Crmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgor0ADB9Zr+/WqPUaDih4DQoPNruUmzRi1GAd01MZYV6LL4xI7n/LYTiYWddWd2i23RmK9vEzvKLlECw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEDs6ycqPqFTa73A2YK5TpY+wM0UL5XEjF6tCHTpdFRDs8Txe+
+	BBG2GnsDlqGUZbLXQBNtkbyCC7oAtm4iDTGw5YR4I4vgCrVMVN81nCCfOyr148s=
+X-Gm-Gg: ASbGncsTYP9TiJBTAHf+upeCeLHK7Rkuh0niiD8SraqVMc6xebxCTtD+Zd/qWyHAMhe
+	EG9AX8P/B483XSjWyN6RU97zM3+LyCRPvjeJr3XZXROi5AHsTskySHB2UxILd4wWvQoQyDfALkz
+	FM7yprGR6qIcTV5saH4cyJhoAeQ+V/RuCzNvQxQGH+FWinvDifoQ6TAH9fT4z+/wGsMxmsBPwLH
+	tmd4EaVfNuzT+1l7ZcFqpwLcmQAEj5x0qSi45h+epAQPKWmQvbeLXVt1DCt8mDfvKAIm0fQBofq
+	yaU8Za8Tvnoij5yc
+X-Google-Smtp-Source: AGHT+IH7iRztA6y9IjznIKh/2zF04c+yLjm/3BTLuBiqf/u/s9hr0MUSVaQHHQhZkJm6tpZj+s6tVw==
+X-Received: by 2002:a17:902:d4cb:b0:215:a434:b6ad with SMTP id d9443c01a7336-21dd7ddde1bmr392541465ad.33.1738654468133;
+        Mon, 03 Feb 2025 23:34:28 -0800 (PST)
+Received: from sumit-X1.. ([223.178.208.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32eb97csm88569225ad.123.2025.02.03.23.34.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 23:34:27 -0800 (PST)
+From: Sumit Garg <sumit.garg@linaro.org>
+To: jens.wiklander@linaro.org,
+	arnd@arndb.de
+Cc: op-tee@lists.trustedfirmware.org,
+	jerome.forissier@linaro.org,
+	dannenberg@ti.com,
+	javier@javigon.com,
+	linux-kernel@vger.kernel.org,
+	Sumit Garg <sumit.garg@linaro.org>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] tee: optee: Fix supplicant wait loop
+Date: Tue,  4 Feb 2025 13:04:18 +0530
+Message-ID: <20250204073418.491016-1-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/9] dt-bindings: memory-controllers: Add STM32 Octo
- Memory Manager controller
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <christophe.kerello@foss.st.com>
-References: <20250128081731.2284457-1-patrice.chotard@foss.st.com>
- <20250128081731.2284457-4-patrice.chotard@foss.st.com>
- <20250129-hilarious-glittering-mustang-fb5471@krzk-bin>
- <3660580d-72eb-45ca-8240-55557e334e37@foss.st.com>
- <951e4d16-2bb2-44b1-99e7-dd28349f20aa@kernel.org>
- <02b947e3-dd5c-4ee8-bd65-5775923fe33f@foss.st.com>
- <899675e8-4c2e-4ff2-a6af-854e0ec29bb6@kernel.org>
- <6ed4fa56-e7ee-4b6b-951b-61a92be5c6c2@foss.st.com>
- <6a639549-f8c8-4e36-8cfe-839f247780bb@kernel.org>
-Content-Language: en-US
-From: Patrice CHOTARD <patrice.chotard@foss.st.com>
-In-Reply-To: <6a639549-f8c8-4e36-8cfe-839f247780bb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_03,2025-01-31_02,2024-11-22_01
+Content-Transfer-Encoding: 8bit
 
+OP-TEE supplicant is a user-space daemon and it's possible for it
+be hung or crashed or killed in the middle of processing an OP-TEE
+RPC call. It becomes more complicated when there is incorrect shutdown
+ordering of the supplicant process vs the OP-TEE client application which
+can eventually lead to system hang-up waiting for the closure of the
+client application.
 
+Allow the client process waiting in kernel for supplicant response to
+be killed rather than indefinitely waiting in an unkillable state. Also,
+a normal uninterruptible wait should not have resulted in the hung-task
+watchdog getting triggered, but the endless loop would.
 
-On 2/3/25 12:40, Krzysztof Kozlowski wrote:
-> On 03/02/2025 11:46, Patrice CHOTARD wrote:
->>
->>
->> On 1/30/25 16:09, Krzysztof Kozlowski wrote:
->>> On 30/01/2025 14:32, Patrice CHOTARD wrote:
->>>>
->>>>
->>>> On 1/30/25 13:12, Krzysztof Kozlowski wrote:
->>>>> On 30/01/2025 09:57, Patrice CHOTARD wrote:
->>>>>>
->>>>>>
->>>>>> On 1/29/25 08:52, Krzysztof Kozlowski wrote:
->>>>>>> On Tue, Jan 28, 2025 at 09:17:25AM +0100, patrice.chotard@foss.st.com wrote:
->>>>>>>> From: Patrice Chotard <patrice.chotard@foss.st.com>
->>>>>>>>
->>>>>>>> Add bindings for STM32 Octo Memory Manager (OMM) controller.
->>>>>>>>
->>>>>>>> OMM manages:
->>>>>>>>   - the muxing between 2 OSPI busses and 2 output ports.
->>>>>>>>     There are 4 possible muxing configurations:
->>>>>>>>       - direct mode (no multiplexing): OSPI1 output is on port 1 and OSPI2
->>>>>>>>         output is on port 2
->>>>>>>>       - OSPI1 and OSPI2 are multiplexed over the same output port 1
->>>>>>>>       - swapped mode (no multiplexing), OSPI1 output is on port 2,
->>>>>>>>         OSPI2 output is on port 1
->>>>>>>>       - OSPI1 and OSPI2 are multiplexed over the same output port 2
->>>>>>>>   - the split of the memory area shared between the 2 OSPI instances.
->>>>>>>>   - chip select selection override.
->>>>>>>>   - the time between 2 transactions in multiplexed mode.
->>>>>>>>
->>>>>>>> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
->>>>>>>> ---
->>>>>>>>  .../memory-controllers/st,stm32-omm.yaml      | 190 ++++++++++++++++++
->>>>>>>>  1 file changed, 190 insertions(+)
->>>>>>>>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
->>>>>>>>
->>>>>>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml b/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
->>>>>>>> new file mode 100644
->>>>>>>> index 000000000000..7e0b150e0005
->>>>>>>> --- /dev/null
->>>>>>>> +++ b/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
->>>>>>>
->>>>>>>
->>>>>>> Filename as compatible, so st,stm32mp25-omm.yaml
->>>>>>>
->>>>>>> You already received this comment.
->>>>>>
->>>>>> Sorry, i missed this update
->>>>>>
->>>>>>>
->>>>>>>> @@ -0,0 +1,190 @@
->>>>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>>>>> +%YAML 1.2
->>>>>>>> +---
->>>>>>>> +$id: http://devicetree.org/schemas/memory-controllers/st,stm32-omm.yaml#
->>>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>>>>> +
->>>>>>>> +title: STM32 Octo Memory Manager (OMM)
->>>>>>>> +
->>>>>>>> +maintainers:
->>>>>>>> +  - Patrice Chotard <patrice.chotard@foss.st.com>
->>>>>>>> +
->>>>>>>> +description: |
->>>>>>>> +  The STM32 Octo Memory Manager is a low-level interface that enables an
->>>>>>>> +  efficient OCTOSPI pin assignment with a full I/O matrix (before alternate
->>>>>>>> +  function map) and multiplex of single/dual/quad/octal 		SPI interfaces over
->>>>>>>> +  the same bus. It Supports up to:
->>>>>>>> +    - Two single/dual/quad/octal SPI interfaces
->>>>>>>> +    - Two ports for pin assignment
->>>>>>>> +
->>>>>>>> +properties:
->>>>>>>> +  compatible:
->>>>>>>> +    const: st,stm32mp25-omm
->>>>>>>> +
->>>>>>>> +  "#address-cells":
->>>>>>>> +    const: 2
->>>>>>>> +
->>>>>>>> +  "#size-cells":
->>>>>>>> +    const: 1
->>>>>>>> +
->>>>>>>> +  ranges:
->>>>>>>> +    description: |
->>>>>>>> +      Reflects the memory layout with four integer values per OSPI instance.
->>>>>>>> +      Format:
->>>>>>>> +      <chip-select> 0 <registers base address> <size>
->>>>>>>
->>>>>>> Do you always have two children? If so, this should have maxItems.
->>>>>>
->>>>>> No, we can have one child.
->>>>>
->>>>> For the same SoC? How? You put the spi@ in the soc, so I don't
->>>>> understand how one child is possible.
->>>>
->>>> Yes for the same SoC, in DTSI file, the both OCTOSPI child are declared 
->>>> but are disabled by default.
->>>
->>> But the child node is there anyway so are the ranges.
->>
->> if both child are disabled, omm-manager should be disabled as well, 
->> omm-manager alone makes no sense.
-> 
-> 
-> Yes, it is obvious, but how is this related?
+This fixes issues observed during system reboot/shutdown when supplicant
+got hung for some reason or gets crashed/killed which lead to client
+getting hung in an unkillable state. It in turn lead to system being in
+hung up state requiring hard power off/on to recover.
 
-As described in the commit message, OMM manages the muxing of the 2 OSPI buses 
-(its 2 child), that's the relation.
+Fixes: 4fb0a5eb364d ("tee: add OP-TEE driver")
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
 
-Do you want i add this directly in yaml file ?
+Changes in v3:
+- Use mutex_lock() instead of mutex_lock_killable().
+- Update commit message to incorporate Arnd's feedback.
 
-> 
->>
->>>
->>>>
->>>> In the DTS board file, 0,1 or 2 OCTOSPI instance can be enabled depending of the board design.
->>>>
->>>> In our case, on stm32mp257f-ev1 board, one SPI-NOR is soldered on PCB, so only one OCTOSPI 
->>>> instance is needed and enabled.
->>>>
->>>> Internally we got validation boards with several memory devices connected to OCTOSPI1 and 
->>>> OCTOSPI2, in this case, both OCTOSPI instance are needed and enabled.
->>>
->>> I could imagine that you would not want to have unused reserved ranges,
->>> so that one indeed is flexible, I agree.
->>>
->>>>
->>>>>
->>>>>>
->>>>>>>
->>>>>>>> +
->>>>>>>> +  reg:
->>>>>>>> +    items:
->>>>>>>> +      - description: OMM registers
->>>>>>>> +      - description: OMM memory map area
->>>>>>>> +
->>>>>>>> +  reg-names:
->>>>>>>> +    items:
->>>>>>>> +      - const: regs
->>>>>>>> +      - const: memory_map
->>>>>>>> +
->>>>>>>> +  memory-region:
->>>>>>>> +    description: Phandle to node describing memory-map region to used.
->>>>>>>> +    minItems: 1
->>>>>>>> +    maxItems: 2
->>>>>>>
->>>>>>> List the items with description instead with optional minItems. Why is
->>>>>>> this flexible in number of items?
->>>>>>
->>>>>> If only one child (OCTOSPI instance), only one memory-region is needed.
->>>>>
->>>>> Which is not possible... look at your DTSI.
->>>>
->>>> It's possible. if one OCTOSPI is used (the second one is kept disabled), only
->>>> one memory-region is needed.
->>>
->>> Ack.
->>>
->>>>
->>>>>
->>>>>>
->>>>>> Another update, i will reintroduce "memory-region-names:" which was 
->>>>>> wrongly removed in V2, i have forgotten one particular case.
->>>>>>
->>>>>> We need memory-region-names in case only one OCTOSPI instance is 
->>>>>> used. If it's OCTOCPI2 and the whole memory-map region
->>>>>> is dedicated to OCTOSPI2 (OCTOSPI1 unmapped, OCTOSPI2 (256 Mbytes)
->>>>>>
->>>>>> We need to know to which OCTOSPI instance the memory region is associated
->>>>>> with, in order to check "st,syscfg-amcr" 's value which must be coherent 
->>>>>> with memory region declared.
->>>>>>
->>>>>> so i will add :
->>>>>>
->>>>>>   memory-region-names:
->>>>>>     description: |
->>>>>>       OCTOSPI instance's name to which memory region is associated
->>>>>>     items:
->>>>>>       - const: ospi1
->>>>>>       - const: ospi2
->>>>>>
->>>>>
->>>>> I don't think this matches what you are saying to us. Let's talk about
->>>>> the hardware which is directly represented by DTS/DTSI. You always have
->>>>> two instances.
->>>>>
->>>>>
->>>>
->>>> We have 2 instances, but both not always enabled.
->>>> In case only one is enabled, only one memory-region-names is needed.
->>>>
->>>> We must know to which OCTCOSPI the memory-region makes reference to, in order
->>>> to configure and/or check the memory region split configuration. That' swhy 
->>>> the memory-regions-names must specify if it's the OCTOSPI1 or OCTOSPI2 instance.
->>>
->>> Well, in that case two comments.
->>> 1. Above syntax does not allow you to skip one item. You would need:
->>> items:
->>>   enum: [ospi1, ospi2]
->>> minItems: 1
->>> maxItems: 2
->>>
->>
->> ok
->>
->>> 2. But this points to other problem. From the omm-manager node point of
->>> view, you should define all the resources regardless whether the child
->>> is enabled or not. You do not skip some part of 'reg' if child is
->>> missing. Do not skip interrupts, access controllers, clocks etc.
->>> If some resource is to be skipped, it means that it belongs to the
->>> child, not to the parent, IMO.
->>
->> I didn't get your point. 
->>
->> The resource declared in omm-manager's node pnly belongs to omm-manager
->> (reg/clocks/resets/access-controllers/st,syscfg-amcr/power-domains), regardless 
->> there are 1 or 2 children. None of them can be skipped.
-> 
-> That's not true, you skip ranges and memory region.
+Changes in v2:
+- Switch to killable wait instead as suggested by Arnd instead
+  of supplicant timeout. It atleast allow the client to wait for
+  supplicant in killable state which in turn allows system to reboot
+  or shutdown gracefully.
 
-If i have correctly understood, you want a constraint on range and memory-regions properties ?
-Is it what you expect ?
+ drivers/tee/optee/supp.c | 35 ++++++++---------------------------
+ 1 file changed, 8 insertions(+), 27 deletions(-)
 
-  ranges:
-    description: |
-      Reflects the memory layout with four integer values per OSPI instance.
-      Format:
-      <chip-select> 0 <registers base address> <size>
-    minItems: 1
-    maxItems: 2
+diff --git a/drivers/tee/optee/supp.c b/drivers/tee/optee/supp.c
+index 322a543b8c27..d0f397c90242 100644
+--- a/drivers/tee/optee/supp.c
++++ b/drivers/tee/optee/supp.c
+@@ -80,7 +80,6 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_params,
+ 	struct optee *optee = tee_get_drvdata(ctx->teedev);
+ 	struct optee_supp *supp = &optee->supp;
+ 	struct optee_supp_req *req;
+-	bool interruptable;
+ 	u32 ret;
+ 
+ 	/*
+@@ -111,36 +110,18 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_params,
+ 	/*
+ 	 * Wait for supplicant to process and return result, once we've
+ 	 * returned from wait_for_completion(&req->c) successfully we have
+-	 * exclusive access again.
++	 * exclusive access again. Allow the wait to be killable such that
++	 * the wait doesn't turn into an indefinite state if the supplicant
++	 * gets hung for some reason.
+ 	 */
+-	while (wait_for_completion_interruptible(&req->c)) {
++	if (wait_for_completion_killable(&req->c)) {
+ 		mutex_lock(&supp->mutex);
+-		interruptable = !supp->ctx;
+-		if (interruptable) {
+-			/*
+-			 * There's no supplicant available and since the
+-			 * supp->mutex currently is held none can
+-			 * become available until the mutex released
+-			 * again.
+-			 *
+-			 * Interrupting an RPC to supplicant is only
+-			 * allowed as a way of slightly improving the user
+-			 * experience in case the supplicant hasn't been
+-			 * started yet. During normal operation the supplicant
+-			 * will serve all requests in a timely manner and
+-			 * interrupting then wouldn't make sense.
+-			 */
+-			if (req->in_queue) {
+-				list_del(&req->link);
+-				req->in_queue = false;
+-			}
++		if (req->in_queue) {
++			list_del(&req->link);
++			req->in_queue = false;
+ 		}
+ 		mutex_unlock(&supp->mutex);
+-
+-		if (interruptable) {
+-			req->ret = TEEC_ERROR_COMMUNICATION;
+-			break;
+-		}
++		req->ret = TEEC_ERROR_COMMUNICATION;
+ 	}
+ 
+ 	ret = req->ret;
+-- 
+2.43.0
 
-  memory-region-names:
-    description: |
-      OCTOSPI instance's name to which memory region is associated
-    items:
-      enum: [ospi1, ospi2]
-    minItems: 1
-    maxItems: 2
-
-
-Thanks
-Patrice
-
-
-> 
->>
->> If omm-manager has no child enabled, omm-manager must be disabled as well in DT.
-> 
-> That's not what we talk about. We do not talk about enabled or disabled.
-> We talk about being there in the first place.
-> 
->>
->>> Therefore memory-region looks like child's property.
->>>
->>> Imagine different case: runtime loaded overlay. In your setup, you probe
->>> omm-manager with one memory-region and one child. Then someone loads
->>> overlay enabling the second child, second SPI.
->>>
->>> That's of course imaginary case, but shows the concept how the parent
->>> would work.
->>>
->>> It's the same with other buses in the kernel. You can load overlay with
->>> any new child and the parent should not get new properties.
->>>
->>
->> In case of runtime loaded overlay, if a second child is added with an associated 
->> memory-region, omm-manager must be unbind/bind to :
->>   _ check the added child's access rights.
->>   _ take into account the added child's memory-region configuration (to set 
->>     the syscfg-amcr register accordingly) 
-> 
-> That's driver part, we talk about bindings and DTS.
-> 
-> 
-> 
-> Best regards,
-> Krzysztof
