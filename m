@@ -1,143 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927AC21B1B4
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 23:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0C721C17E
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 23:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738710388; cv=none; b=i9d4cduIyRkIropv6DD97Z7LrgwEhHG22ttBErldpPFRz+g4YxQ6VUcyb6Y8KPM29//Dsqb3Kxy6GN3K9ZGirewYOOhJ348eFx8Slt/yv6YNEaTtTa8ywoXlX1mpBq62U/FCSQGdVe0jLqDUjJ5Tar63cBZO3sl1VTkfRfk7+VQ=
+	t=1738710601; cv=none; b=UvUOqYXmt9/LNtg2umoaN5M215oD19HXJHuwRtMlDKEm8gtMBYIClArpW1RlhTK5SoaGrb4Uqhe7fuPmKh+pQvsAfYEUvV3V24D6GI8yme22JtoTsfHqUQRFl+N44iBcvi33skVo3hDAWZk0zrpKTwfc8oGCYYtLZep7OfmFtWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738710388; c=relaxed/simple;
-	bh=qEkY7XxGkCEF3AQi0Io9Bkec/bioDvlbYZUzk1M5kXA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FOTb4kXaPdN6wltTr3KzTWOPDqfSvvqKHBSvOfOmArib+7Yo0wimn5V92IgN4t7Rb7y7GnULDimk5aR4cU6ob7Pl+mtbthOETO5NtNjr8MPlB6GE/tFcfzKpi4hIKnPJS52K5A3N9uss1ZKVy4PhseUV4hDZAvtIFv3f1wYXMh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d/p6R/IX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738710601; c=relaxed/simple;
+	bh=Tr3yoOpc+aUCZ3WR1eWrKlLDLn/mpgv5+47ZSyVt7t8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MbQqjYB2tyAt7cQBXqvFWE13jHCizRluP4bagDhFMWrrT8nbC+Z0OBi22XuTVPGehk4Jntlqh4bC67cVN3XSjcEL9hoN2+9o+JOaugTTcmarFTfcCOuesgbzCg2QymfwjZQdRQRD1lQP7LFupRGQ0uXU4Sj/5PEN2fuxZir60wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QDsM5Ufp; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d/p6R/IX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738710385;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DELYEXA2VKqOYRUxHLcWM9e56mfc29fREdOPg/Pa7pY=;
-	b=d/p6R/IXV7KVigHwchgIKdshcSq7SjWohP67H5ASthOY6HhVJ4L2Y8vGhJEba4RQ9aS2RI
-	FmmFhEZi1DcchzG8B32TQl4bbG9K/gF7x4DWq8CHYgYfrm4bGbIkyxQrADWEnhH9+dxLHq
-	zrGodL1paBORzlIS84xnvQYnUdcSbCw=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-647-sov7j0r1Pdq9ABy25wv7FA-1; Tue,
- 04 Feb 2025 18:06:19 -0500
-X-MC-Unique: sov7j0r1Pdq9ABy25wv7FA-1
-X-Mimecast-MFC-AGG-ID: sov7j0r1Pdq9ABy25wv7FA
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 07AB11955DCB;
-	Tue,  4 Feb 2025 23:06:18 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.92])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2D2E630001BE;
-	Tue,  4 Feb 2025 23:06:14 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: netdev@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-afs@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH net v2 2/2] rxrpc: Fix race in call state changing vs recvmsg()
-Date: Tue,  4 Feb 2025 23:05:54 +0000
-Message-ID: <20250204230558.712536-3-dhowells@redhat.com>
-In-Reply-To: <20250204230558.712536-1-dhowells@redhat.com>
-References: <20250204230558.712536-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QDsM5Ufp"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-53f22fd6887so6140618e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 15:09:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738710598; x=1739315398; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nqBH/92bU047lJT992e74kfygOOu+glyfbvkM1AfW+Q=;
+        b=QDsM5UfpdxAyGgE2FYVLIN8nf9V5Z30h7QcjTZoP/dMtVISI+XB827PJKC5+xkSBba
+         LPSSO5yI1L0v02QQnT3rEecRyoBN90cyCpjsP8jevKebwJVYLMi4QgkmY0fzrwh0qu++
+         VBFFTOU+9ltk3fxKT47sSH/+fjFmCEU7rio/TySY3xUPqe97cKzBOUk6pUKBZ3DRRMwf
+         f/KZdjguRlawqz7z1DGAck37ra/KdKo+9wPvmfhXPO+Whh2FpEAVmmAhwSvAlmamx9qj
+         4Zi8RPG7rEYOsH9O2Q83XbLNKg8hbgpfm2fQSITd2sq3WJPqHd/tLWq3UQCiP45JjtPX
+         PbDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738710598; x=1739315398;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nqBH/92bU047lJT992e74kfygOOu+glyfbvkM1AfW+Q=;
+        b=YF48auLYdR+tFCQCXVA+BPtg4J9jB9jVpXFNJMJ455W0M1QoaKs/lccIVycrRkiSpB
+         lTsAiGKoOOnX2Icx+tIUE3r1b0TQFk+a8VN/vaJV5VL7Vt3OGYiKAkMjWifhNIO2Oytn
+         N6xfO9WEQ4oxv18IleguoHQX0te/ZlYsD0n9BRys4D0jO4ePqz0KPa+MOQNDcyiQk0TK
+         6VrhwUk4JV0RTY9R9qrVw3vvv6wtI1Wx/LgiUgB3XJONlAhLIcL3N+YhGDG78URV9Uqe
+         Gbp1cfjrPQYaSHWDNyVj7yZkq/n3kCRyqR7rgp4ZKPmpdhKbqbdhzjdJah2phe0E9atX
+         qjPg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/fVUYC/O5AGE65Vpjbz78v64ezpd4i7h1qRnJdhDHCoyNo/MTRjAxP6g9hsz6OeniqVRQzqYfuzexyEU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjlWKN4v3yxr1flmIoSFc/EAM4L7lr1zBb9dvgBMgf14LDyw55
+	xPD94rxFRKM27xvEN84bdQLD0bvlcbpJ6UYRaaytAk8dnEO5zftIEivUwokalGQ=
+X-Gm-Gg: ASbGncv1vyCdTO8TjpRhb5gY7AvgrEnlWM93HhTJiAbI5nlwZrOge1bdYgaifnlHVJ7
+	AzPriniWnui7TFParPViam7S88sOZ2CHkl8hjYaeT6ALEw662F7i4JSRxR3G6ebZc0PbK31qh9G
+	LCEA481gCKFBhV0lV+xCCYnOQI3w4uUadFTBxIUrHxNNkc1WJX8gBl2mFmUnwT5PQYNDeZOF35o
+	ys/jrXqfzXFb360qxq9RS7tlFxJBicWwCFs4fqHDk6bmu4wDMA73ZS2F6y828ZNHLYpSQ8J3Wyd
+	xSak3143vHtLBdIUUT7rV7AbkpStIdCoNYGM/MQzHe6dM3WGug+LbeYDhdZuaMdRcNPm0Ss=
+X-Google-Smtp-Source: AGHT+IEELZ8FSvbCFuNEq7BY3WyOIESWb6FMG5glo4rOY4FFUtqeWFyPekF53qhtLY38H7lEzdqSXA==
+X-Received: by 2002:a05:6512:b97:b0:540:1b07:e033 with SMTP id 2adb3069b0e04-54405a6a714mr169956e87.45.1738710597714;
+        Tue, 04 Feb 2025 15:09:57 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebe0fda2sm1735053e87.65.2025.02.04.15.09.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 15:09:56 -0800 (PST)
+Date: Wed, 5 Feb 2025 01:09:53 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Dikshita Agarwal <quic_dikshita@quicinc.com>, 
+	quic_vgarodia@quicinc.com, mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	p.zabel@pengutronix.de, hverkuil@xs4all.nl, sebastian.fricke@collabora.com, 
+	bryan.odonoghue@linaro.org, neil.armstrong@linaro.org, nicolas@ndufresne.ca, 
+	u.kleine-koenig@baylibre.com, stefan.schmidt@linaro.org, lujianhua000@gmail.com, 
+	linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, krzysztof.kozlowski@linaro.org
+Subject: Re: [RFC PATCH v10 1/2] media: iris: introduce helper module to
+ select video driver
+Message-ID: <ilqfs6miq55ahyxjnhniv4k654vstfugmpswo5wld2ncgxxcx3@vsbr4bdl7y64>
+References: <20250128080429.3911091-1-quic_dikshita@quicinc.com>
+ <20250128080429.3911091-2-quic_dikshita@quicinc.com>
+ <5070e1f1-914b-4654-88ef-3566e3eee9ca@kernel.org>
+ <f1344e49-61b6-4115-ae88-55b4a3cfed28@quicinc.com>
+ <Z6B822-6UTxQfX46@hovoldconsulting.com>
+ <tqbm672pi223ipcw7btiemlb745weeeiy4gnazzeghozhq2emj@wppbkms6hir5>
+ <Z6HehbKL88LW1lxC@hovoldconsulting.com>
+ <hpcf7olw3ody7ns4ibdeoc5qrkmh3fgeqbhjd4eqwfuanevzoa@plenabtrjqi5>
+ <Z6I5nx2Wt3bbBmSI@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6I5nx2Wt3bbBmSI@hovoldconsulting.com>
 
-There's a race in between the rxrpc I/O thread recording the end of the
-receive phase of a call and recvmsg() examining the state of the call to
-determine whether it has completed.
+On Tue, Feb 04, 2025 at 05:00:31PM +0100, Johan Hovold wrote:
+> On Tue, Feb 04, 2025 at 04:55:58PM +0200, Dmitry Baryshkov wrote:
+> > On Tue, Feb 04, 2025 at 10:31:49AM +0100, Johan Hovold wrote:
+> > > On Mon, Feb 03, 2025 at 05:16:50PM +0200, Dmitry Baryshkov wrote:
+> > > > On Mon, Feb 03, 2025 at 09:22:51AM +0100, Johan Hovold wrote:
+> > > > > On Fri, Jan 31, 2025 at 10:44:28AM -0800, Abhinav Kumar wrote:
+> 
+> > > And we're still waiting to hear the answers to all of Hans' questions. I
+> > > still haven't seen anyone explaining why any of this is needed. You
+> > > could have just continued letting Venus support 8250 so presumably there
+> > > is some benefit in using Iris instead. Which? And is that potential
+> > > benefit important enough to not just wait until Iris is up to par
+> > > feature wise?
+> > 
+> > Because that's exactly opposite of what Iris developers are trying to
+> > do: SM8250 and SM8550 belong to two different generations of the FW
+> > interface. By supporting both of them in the Iris driver the developers
+> > can verify that the internal driver abstractions are good enough. It has
+> > been discussed in one of the threads (or in telcos) related to the first
+> > iterations of this driver. We definitely don't want to end up in Venus
+> > situation, where the abstractions were added afterwards and in some
+> > cases they are not the best ones.
+> 
+> Ok, but as I've said a number of times already, information like this
+> needs to be included in the cover letter and commit message of what is
+> posted to the list.
+> 
+> Maintainers and reviewers obviously have no idea what you discussed in
+> some internal teleconference and can't be expected to remember or dig
+> this out from some old email thread either.
+> 
+> > The plan is to use sm8250 as a "bridge" between two drivers, verifying
+> > that they are on par during development, then drop sm8250 from Venus
+> > driver. Then move sc7280 support too, drop all HFD_VERSION_6XX support
+> > from Venus, cleanup the remnants.
+> 
+> Ok, but venus would still remain for some older hardware? It's just the
+> "hfi gen1" ones that would move to the iris eventually?
 
-The problem is that call->_state records the I/O thread's view of the call,
-not the application's view (which may lag), so that alone is not
-sufficient.  To this end, the application also checks whether there is
-anything left in call->recvmsg_queue for it to pick up.  The call must be
-in state RXRPC_CALL_COMPLETE and the recvmsg_queue empty for the call to be
-considered fully complete.
+Yes. At least for the foreseable future. Nobody has explored an option
+of moving older hardware to the Iris driver.
 
-In rxrpc_input_queue_data(), the latest skbuff is added to the queue and
-then, if it was marked as LAST_PACKET, the state is advanced...  But this
-is two separate operations with no locking around them.
+> 
+> > I think most of that information should have been a part of the main
+> > Iris series. If it is not, please comment there, so that those commit
+> > messages can be updated.
+> 
+> Unfortunately it was not, which I also pointed in my comments to the
+> Iris series.
+> 
+> > > I'm sure you have some answers, but you need to provide them as part of
+> > > the series.
+> 
+> > > Unbinding and rebinding drivers is not part of any normal work flow
+> > > expect possibly during development. And a developer can easily compare
+> > > Venus and Iris for 8250 without a module parameter too.
+> > 
+> > Yes, we are talking about development. And yes, modparam helps. If you'd
+> > like to do two separate kernel builds, that's fine.
+> 
+> Please just motivate why you think this is needed as part of the
+> submission. And make sure that the implementation is sane (e.g. not some
+> random probe defer indefinitely thing).
+> 
+> Like I said, having two drivers for the same hardware is normally not
+> something that is acceptable, and this would need to be a transitional
+> thing as we both agree. One way to guarantee that is to not expose it to
+> regular users until it is ready (e.g. a Kconfig hidden behind
+> CONFIG_EXPERT or similar). Otherwise, I fear you'll end up supporting
+> both forever (with at least one of them bitrotting behind that module
+> parameter over time).
 
-As a consequence, the lack of locking means that sendmsg() can jump into
-the gap on a service call and attempt to send the reply - but then get
-rejected because the I/O thread hasn't advanced the state yet.
+I think I'm fine with hiding IRIS behind CONFIG_EXPERT, might be a good
+idea.
 
-Simply flipping the order in which things are done isn't an option as that
-impacts the client side, causing the checks in rxrpc_kernel_check_life() as
-to whether the call is still alive to race instead.
-
-Fix this by moving the update of call->_state inside the skb queue
-spinlocked section where the packet is queued on the I/O thread side.
-
-rxrpc's recvmsg() will then automatically sync against this because it has
-to take the call->recvmsg_queue spinlock in order to dequeue the last
-packet.
-
-rxrpc's sendmsg() doesn't need amending as the app shouldn't be calling it
-to send a reply until recvmsg() indicates it has returned all of the
-request.
-
-Fixes: 93368b6bd58a ("rxrpc: Move call state changes from recvmsg to I/O thread")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Simon Horman <horms@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: netdev@vger.kernel.org
----
- net/rxrpc/input.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index 4a152f3c831f..9047ba13bd31 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -448,11 +448,19 @@ static void rxrpc_input_queue_data(struct rxrpc_call *call, struct sk_buff *skb,
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
- 	bool last = sp->hdr.flags & RXRPC_LAST_PACKET;
- 
--	skb_queue_tail(&call->recvmsg_queue, skb);
-+	spin_lock_irq(&call->recvmsg_queue.lock);
-+
-+	__skb_queue_tail(&call->recvmsg_queue, skb);
- 	rxrpc_input_update_ack_window(call, window, wtop);
- 	trace_rxrpc_receive(call, last ? why + 1 : why, sp->hdr.serial, sp->hdr.seq);
- 	if (last)
-+		/* Change the state inside the lock so that recvmsg syncs
-+		 * correctly with it and using sendmsg() to send a reply
-+		 * doesn't race.
-+		 */
- 		rxrpc_end_rx_phase(call, sp->hdr.serial);
-+
-+	spin_unlock_irq(&call->recvmsg_queue.lock);
- }
- 
- /*
-
+-- 
+With best wishes
+Dmitry
