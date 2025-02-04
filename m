@@ -1,76 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324B520370B;
-	Tue,  4 Feb 2025 19:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08D81547D8;
+	Tue,  4 Feb 2025 19:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738698899; cv=none; b=JqCod+qm8CvdUO+SEwuTLBhCaFHh94HlnTTyP0Aikdy/iUGM9r4IGoohBvj7kD1o+eeuqQdZRcBqZfIwlzL82GGMPPy0vxcHEQeUgMqchd7SZfCbtsZORJMrvE7UG4R79WPZC6JWjOzno56p/Fdp6eyqz8jKEAJCwsb6Ie9Bfqk=
+	t=1738698968; cv=none; b=Qc8LSkE0r6giKTAELFyH0T+6i3qKobxNG5opl2Gd1rA62QepD6Rv9C6ps1GTBWqFCTsAVwamI3W7exBwdZGoTdjNDKQ6yOqJ3iuvBbz0BoCTo2ddt2HXnXtxMsCIq+wZGXAO0DRh3jnu8vWBXu2NWNh5mEsrBTriUlBKqlk+UF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738698899; c=relaxed/simple;
-	bh=uRKxy03qDmELmv7F+dYS75uSo7cXy9zLdsTgSqupSRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CvSfWUPq6LkiuZkif+WotRtVN6NdtCR/SD5LNSS/n90icNryustzcuRsVXwE2JKvQ85E+6vvNHlt9qrT8srMTEFENCP+QTXIpGuVbRtBgHWFY7eN6h5++hpfxrd1+UuKM7Nr2wI2N7er7Rf4k5OaDk0sopzsBChd8ggr7vaMV/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adI0UEcP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adI0UEcP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B1AC4CEDF;
-	Tue,  4 Feb 2025 19:54:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738698898;
-	bh=uRKxy03qDmELmv7F+dYS75uSo7cXy9zLdsTgSqupSRM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=adI0UEcPSZV9Hl6eJzbMFQ/fyVbiT3XdRGhzg3dlQxvKT3PaSUwncxe8HT3npSYmZ
-	 OOg0klGWK4yV5K6zbYaas4mf3vg/XMYNfF2Rp+WT0ImVluTXVCO62855SHkdOEtm0N
-	 BArHbxg+Xv46fEbsPILhrcWwAvRblgIIvT0Rv2bBlkh8/KYOl4pRfR7O58zhW6Mlbs
-	 0uZ82Z0nn/5Z827Kypl6I7kwdzvuiO/+nGdpzvoPupYeoUCkZru99UHyo6bPZLST3B
-	 V4LyVwprVL5QolCVx+gwis5sNUnXSo1V6klSXXCx9WR3U5ETHe2b8Ojub/2dN94pFi
-	 dSN/INuKC6xwg==
-Date: Tue, 4 Feb 2025 11:54:56 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org, x86@kernel.org,
-	linux-block@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Keith Busch <kbusch@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2 00/11] CRC64 library rework and x86 CRC optimization
-Message-ID: <20250204195456.GA1385@sol.localdomain>
-References: <20250130035130.180676-1-ebiggers@kernel.org>
+	s=arc-20240116; t=1738698968; c=relaxed/simple;
+	bh=aI9ZF1XsSaAHZMRa+wJn3AAK8KCwn394QBaR32V7BUQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jyP18QIcxDp3cesbmNyqkKaIdWmygoQCdzF19bWz75CnlLgQ2I4Tyku1YFj6x+og7ni+nT2EtZY6jpPayMf3p2eQ+7rqDw2FehNvdxc9X5O/h0KgdP167dX5nKyvbY3PRIY/0DX33lcOktP0/j79V3Gl9ewz8BBPeiGPI62KfeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-844e10ef3cfso412626739f.2;
+        Tue, 04 Feb 2025 11:56:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738698966; x=1739303766;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=swmAYw4M/WeTjADPtUccgFgxLP9bW9FlyGrjKCzqSbc=;
+        b=juuitPWPsxXb0JKWGpHEC1Ne9aHvXLIpRbbR0PZqi3EWwG4kg6vl+LhY+vVDz9o4mq
+         /5DIcwqnCWrW4d3zSb19R2Nl+3FoL55KNX4wBY133tqjnyHd8PrTLbG/OxvmM6LWqhZI
+         tlITB43tFCINsYpPX0BsIQsv9ovFnLl8voqQblPk1Nj/yRMv6LkFqNithcBUWkhiKNIk
+         tI5xjU1RvTxUpD6PLuZGaT6/o3kH/N3cRmtg2N8Zg4sOZymy+z/HkC0r5XBGUfcfIn3x
+         2h7MBCJ0JM6C2h/61+U5diut493b7oL1yiujYoXM9Gl9XtIz+MjJzaAPCHp3dLyjwGJp
+         B7nA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/h7QN6c8anBUKMAzMezAEVC1FEpbD5nsupT67AJQhZEbVYaD0oJrNRKAxqePIrath/v0og3+LRCiLtQrEIEFN3TKIZQ==@vger.kernel.org, AJvYcCU88rADsASVRGnLsVsxxCanAqZdfb2qdvHBLrfF4WPWqChTNANa7E8DZ7Sy4YeDXp1EZ6f51Tz8cFf4rzXs@vger.kernel.org, AJvYcCUBnHrmgWQzu4QqQLRYOJIecKlT2z+4eldNS8OYQjtFxBeymWN9AK1QgBJp6Deie6126cZ+d0TY1Co=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfaIfUOlybTxSrpvlw2gW+1OSZbxaxuoD/3fTxctQDsWNhNTBH
+	AOfAFXDWIXpruojnt5Kv2ehjkuTfViwqmmFmWayq/WPLdXvg5xfWe2/1/vyEF8U=
+X-Gm-Gg: ASbGnctjm34/AB+k7+ka40JZI58YA3R5E2cyXtC7WLdipJmM5AfUogzE8228Wm2Cas/
+	phK4CPSnrbZgw1YRgMGSCMSSg5xoGp6nVcS5mey5fiAoS4NBvfJSuOK1+SZuqRcJd/2ymuJW8EY
+	HdmAUhxNYR3jfFXvR6sODo3juRye4s2x1n7PyvUNQQTErNFn458tCAhQpRxH1yEANxbw3HF6YQK
+	hqKyXYVnioyBJ6GaPg4tQdC9F67Y4kRm8Zrv8NEmbSgic5s7MPlmjSXodhIcf9o6RtNSNBWB07W
+	uKCCBGR1juXpaAEbnUi2EWvDj389N1YBWg4WzWvXEdV+hqh5Eh24Jo3g3mDA
+X-Google-Smtp-Source: AGHT+IEVNW3vyhYJXf152VA7WyXzzMcqwgVnLYJKtOgtogLM8acDSAs1y+KqNdxPsGV0dKxuhDcenQ==
+X-Received: by 2002:a05:6e02:2208:b0:3d0:443d:a5a4 with SMTP id e9e14a558f8ab-3d04f47995emr2295205ab.2.1738698965751;
+        Tue, 04 Feb 2025 11:56:05 -0800 (PST)
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com. [209.85.166.174])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d00a4fd469sm30251585ab.13.2025.02.04.11.56.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 11:56:05 -0800 (PST)
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d03d2bd7d2so10753925ab.0;
+        Tue, 04 Feb 2025 11:56:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUOZhoeWQut2Hqmjd1U/muZFnPZFBamq1KTlFjbfyU7Av70Rq0UbRc+O0///47994/p0w5siOuz/nQRPJd0@vger.kernel.org, AJvYcCWO956BF6U82FlpNRYpDe5hUyswuUoIiS1tX1XhfG5WXtmT3zO/kVVDX0eGLI0cwVxo40Z0wXnSwmg=@vger.kernel.org, AJvYcCWSrJCFZZzDEgigbA4NW/9dgDOSy2IeIdku2zuCFjb3FXI9+BvB7H/iObVgP0HBt1VccjH+Oh3f/jtJ9hGLnJOsx8miZw==@vger.kernel.org
+X-Received: by 2002:a05:6e02:10:b0:3d0:11ff:a782 with SMTP id
+ e9e14a558f8ab-3d04f5c68b7mr1789565ab.9.1738698965370; Tue, 04 Feb 2025
+ 11:56:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250130035130.180676-1-ebiggers@kernel.org>
+References: <20250201105450.193450-1-josh@joshuagrisham.com> <a22ecdd5-a2a5-4f6b-0a1a-e1bc115dc01f@linux.intel.com>
+In-Reply-To: <a22ecdd5-a2a5-4f6b-0a1a-e1bc115dc01f@linux.intel.com>
+From: Joshua Grisham <josh@joshuagrisham.com>
+Date: Tue, 4 Feb 2025 20:55:53 +0100
+X-Gmail-Original-Message-ID: <CAMF+KeZ+XdAxVtSw5aMZ9O=J4AFeyVozduV+PYZSNLHaG=SOww@mail.gmail.com>
+X-Gm-Features: AWEUYZnCPWsyTDh1EkwfhqdVw5W-kUnp97vaM0_G4cUrpfkIuxfLbaJOb9gfyTQ
+Message-ID: <CAMF+KeZ+XdAxVtSw5aMZ9O=J4AFeyVozduV+PYZSNLHaG=SOww@mail.gmail.com>
+Subject: Re: [PATCH v10] platform/x86: samsung-galaxybook: Add
+ samsung-galaxybook driver
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: W_Armin@gmx.de, thomas@t-8ch.de, kuurtb@gmail.com, 
+	Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
+	linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 29, 2025 at 07:51:19PM -0800, Eric Biggers wrote:
-> This patchset applies to commit 72deda0abee6e7 and is also available at:
-> 
->     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git crc-x86-v2
-> 
-> This is the next major set of CRC library improvements, targeting 6.15.
-> 
-> Patches 1-5 rework the CRC64 library along the lines of what I did for
-> CRC32 and CRC-T10DIF in 6.14.  They add direct support for
-> architecture-specific optimizations, fix the naming of the NVME CRC64
-> variant, and eliminate a pointless use of the crypto API.
-> 
-> Patches 6-10 replace the existing x86 PCLMULQDQ optimized CRC code with
-> new code that is shared among the different CRC variants and also adds
-> VPCLMULQDQ support, greatly improving performance on recent CPUs.
-> Patch 11 wires up the same optimization to crc64_be() and crc64_nvme()
-> (a.k.a. the old "crc64_rocksoft") which previously were unoptimized,
-> improving the performance of those CRC functions by as much as 100x.
-> crc64_be is used by bcachefs, and crc64_nvme is used by blk-integrity.
+Den m=C3=A5n 3 feb. 2025 kl 16:02 skrev Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com>:
+>
+> On Sat, 1 Feb 2025, Joshua Grisham wrote:
+>
+> > Add a new driver for Samsung Galaxy Book series notebook devices with t=
+he
+> > following features:
+> >
+> > - Keyboard backlight control
+> > - Battery hook for installing power supply extension to add charge
+> >   control end threshold
+> > - Controller for Samsung's performance modes using the platform profile
+> >   interface
+> > - Adds firmware-attributes to control various system features
+> > - Handles various hotkeys and notifications
+> >
+> > Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
+> > Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+>
+> I've applied this to review-ilpo-next.
+>
+> Thanks a lot to all who have taken time to help in getting this into
+> shape!
+>
+> --
+>  i.
 
-Applied patches 1-5 to
-https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=crc-next
+Thank you Ilpo!
 
-I'm still working a bit on the x86 assembly and am planning to do a v3 for
-patches 6-11.
+Agreed completely and special thanks to Armin, Thomas, and Kurt for
+all of the extra time, help, and guidance along the way!
 
-- Eric
+Best regards,
+Joshua
