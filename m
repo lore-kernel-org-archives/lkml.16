@@ -1,137 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8A621A449;
-	Tue,  4 Feb 2025 22:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C16125A623
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 22:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738706518; cv=none; b=LVstRVTUIfYPbVeS91BSw9ypJhGJafZQPzEymDyT9KaXeNLlG66NL6t3XAwAdkB3lD9b8d28rixZz5yFgtzZLYMBF13PW56VViJq6SU9t3x6eWckMoBb42IuBQhYN3Wy2m33MXMSArey+/NCYFrvbzHgFrRZaQ987SBwLAc94fw=
+	t=1738706752; cv=none; b=nA7J3AzptLb7N6kZ3SAW6ByelzVItwIYeE3gj7Gn1cHKBgM9NKGcPpEKlgXE9m+G6cGT9IQ/VjecS2dc30fWGsoUl8qc/+9qJ6jrq3JlIPsFR0u1QLEuQYebwDYWD7LCTSrLd95AGJzM9ngQjLap05BMS1+blkHSPgHIVAGsdn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738706518; c=relaxed/simple;
-	bh=lbPHclbARFkQmvsu0zJqrdw8H+4xG9Vq8ZiG/BDW7Jo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=c2EcO/yKPn1u8zy4BaPeGI6CBXmKlDn4N/+yw+x60ymM2MHWDDtpuN1X7i6892W3AMc0A87UQDyxdqYSzNiXrmv7kdrs7eX/Tzp28ZJL7PdyoX+YLAGLS1dmXqL8eDYuv4235T/9k63k9rKOdPvgKgfJjWOFhEE6K0joJVME4Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SdO8o5t8; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738706752; c=relaxed/simple;
+	bh=AdiCSBVxOlqqPu63Ecqn2BMpitnFHB0e8Nufu41CaSY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=f57tQjhm+FrL6ZymsBGVByygqlU8m/3hDY2ykRm9s10bCqgF7ariSccwpJE2mF2x6NWfiOnSs+U9pzfynehfyymYaznUe8rjivCtViWy6drfGR3O5oLLrQqmlFRvzawtRe8kHMXn/51bF94EM2xyczn22JWjymhs8CGan+4j+yI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=k0Lk2dt5; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SdO8o5t8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738706517; x=1770242517;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=lbPHclbARFkQmvsu0zJqrdw8H+4xG9Vq8ZiG/BDW7Jo=;
-  b=SdO8o5t8l25nWlUS7nRVK96gD06y5ImWdrlIRyj6biZZVYr2V8sVqGuL
-   Tn9Iomr8JyF3p3eZimWCMD10jwov8R20ndKXh7cdvyAPG0SDufnBFZtcn
-   Ycq8+jF2K8gWtTv8jK/wcxlRUEDsMdfaFNm0vROumUvkTWMaZzKAyua38
-   B2MDNmE3eD+iip6J+dwF7xNsNOZ+QX21Qyhrs/MQoTo2vn8F3CRxP9RKl
-   lhLjJETaIfqsBFbXhhesBfZwgBB8zWYrMoCeu8VOfT2qrfVYbASSyjlMj
-   hsIrFiugFuMFTFoysx2bML+DtydZrQJem8CBYOH8Ly18Fax5pZ+Pn5+ka
-   w==;
-X-CSE-ConnectionGUID: etr2uh17TgG7yOsIH2xKXQ==
-X-CSE-MsgGUID: ASXSxsQJR/a2AsWhJhjDLQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39517117"
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="39517117"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 14:01:55 -0800
-X-CSE-ConnectionGUID: NAx9oX9yRyOex+aeBj7lDg==
-X-CSE-MsgGUID: DNsEcHZsSNySIyoK+sYkqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="111263801"
-Received: from lfiedoro-mobl.ger.corp.intel.com (HELO [10.245.246.144]) ([10.245.246.144])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 14:01:28 -0800
-Message-ID: <60b7e29853cb33d45d10101e494c7ddbe6a5abd6.camel@linux.intel.com>
-Subject: Re: [RFC 1/5] mm/hmm: HMM API to enable P2P DMA for device private
- pages
-From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com, lyude@redhat.com,
- 	dakr@redhat.com, airlied@gmail.com, simona@ffwll.ch, leon@kernel.org, 
-	jglisse@redhat.com, akpm@linux-foundation.org, GalShalom@nvidia.com, 
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-mm@kvack.org, 	linux-tegra@vger.kernel.org
-Date: Tue, 04 Feb 2025 23:01:25 +0100
-In-Reply-To: <20250204191601.GK2296753@ziepe.ca>
-References: <20250129134757.GA2120662@ziepe.ca>
-	 <Z5tZc0OQukfZEr3H@phenom.ffwll.local> <20250130132317.GG2120662@ziepe.ca>
-	 <Z5ukSNjvmQcXsZTm@phenom.ffwll.local> <20250130174217.GA2296753@ziepe.ca>
-	 <Z50BbuUQWIaDPRzK@phenom.ffwll.local> <20250203150805.GC2296753@ziepe.ca>
-	 <7b7a15fb1f59acc60393eb01cefddf4dc1f32c00.camel@linux.intel.com>
-	 <20250204132615.GI2296753@ziepe.ca>
-	 <3e96aef8009be69858a69d3e49a2bd7fc7d06f5f.camel@linux.intel.com>
-	 <20250204191601.GK2296753@ziepe.ca>
-Organization: Intel Sweden AB, Registration Number: 556189-6027
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="k0Lk2dt5"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514Fmw5l029853
+	for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2025 16:05:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=kvudDYNA6wlrXTEXWyFY+dUGifGX+rW9X2OSemddMtI=; b=
+	k0Lk2dt5Qs4DXNpEMJzqEj1oHDrbswsowjau75vxjg66bfwdO0qy0D+mZTxhgkCH
+	ZfI389NJX0VySQ7rFAPjEoey0Aq9ZxVSlLsTX/aka4szIYeIJkJEz6ehWShqnwfx
+	dMh4I/lcHqtem/NI0yH4+SZ2hdz9E/WudbfgtiCvhuVh5xlyRP9ZowpzcDFmi/jO
+	VmchrbHc0a3wVwR6LDdME3zPzGtCSGP8kLNbtXt7jVdACRrK+YRvUH3RXjepdn4O
+	DB0nZHnUmjj2K8IncqT5GKhvSn1KTH2Vug3q0PP1dvk1jaAj6J/uGx5leZlT7Kr6
+	gbUCXGCdYhsRUh9Bn6lJlg==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 44hhw53m1h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 16:05:50 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 4 Feb
+ 2025 22:05:48 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Tue, 4 Feb 2025 22:05:48 +0000
+Received: from [141.131.145.81] (ftrev.ad.cirrus.com [141.131.145.81])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 2B0C5820248;
+	Tue,  4 Feb 2025 22:05:47 +0000 (UTC)
+Message-ID: <3cf81195-80e2-4506-9c16-12998a42984a@opensource.cirrus.com>
+Date: Tue, 4 Feb 2025 16:05:46 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] firmware: cs_dsp: Add ability to load multiple
+ coefficient files
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+CC: Simon Trimmer <simont@opensource.cirrus.com>,
+        Richard Fitzgerald
+	<rf@opensource.cirrus.com>,
+        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>
+References: <20250131195639.1784933-1-ftreven@opensource.cirrus.com>
+ <20250131195639.1784933-4-ftreven@opensource.cirrus.com>
+ <Z6Hnp7ipO5s1+auC@opensource.cirrus.com>
+Content-Language: en-US
+From: Fredrik Treven <ftreven@opensource.cirrus.com>
+In-Reply-To: <Z6Hnp7ipO5s1+auC@opensource.cirrus.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: IxOfeaLxWBUzrJhYvINpgKn4xSTSEZgi
+X-Authority-Analysis: v=2.4 cv=W/3CVQWk c=1 sm=1 tr=0 ts=67a28f3e cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=G8G4Rjoq71L23QwWqRcA:9 a=QEXdDO2ut3YA:10
+ a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-GUID: IxOfeaLxWBUzrJhYvINpgKn4xSTSEZgi
+X-Proofpoint-Spam-Reason: safe
 
-On Tue, 2025-02-04 at 15:16 -0400, Jason Gunthorpe wrote:
-> On Tue, Feb 04, 2025 at 03:29:48PM +0100, Thomas Hellstr=C3=B6m wrote:
-> > On Tue, 2025-02-04 at 09:26 -0400, Jason Gunthorpe wrote:
-> > > On Tue, Feb 04, 2025 at 10:32:32AM +0100, Thomas Hellstr=C3=B6m wrote=
-:
-> > > >=20
-> > >=20
-> > > > 1) Existing users would never use the callback. They can still
-> > > > rely
-> > > > on
-> > > > the owner check, only if that fails we check for callback
-> > > > existence.
-> > > > 2) By simply caching the result from the last checked
-> > > > dev_pagemap,
-> > > > most
-> > > > callback calls could typically be eliminated.
-> > >=20
-> > > But then you are not in the locked region so your cache is racy
-> > > and
-> > > invalid.
-> >=20
-> > I'm not sure I follow? If a device private pfn handed back to the
-> > caller is dependent on dev_pagemap A having a fast interconnect to
-> > the
-> > client, then subsequent pfns in the same hmm_range_fault() call
-> > must be
-> > able to make the same assumption (pagemap A having a fast
-> > interconnect), else the whole result is invalid?
->=20
-> But what is the receiver going to do with this device private page?
-> Relock it again and check again if it is actually OK? Yuk.
+On 2/4/25 04:10, Charles Keepax wrote:
+> On Fri, Jan 31, 2025 at 01:56:34PM -0600, Fred Treven wrote:
+>> Add cs_dsp_power_up_multiple() which accepts an array of
+>> cs_dsp_coeff_desc firmware-filename pairs to load.
+>>
+>> This enables the user to load more than one tuning file
+>> along with the associated firmware.
+>>
+>> Change cs_dsp_power_up() to make use of the new function
+>> with a single coefficient file.
+>>
+>> Signed-off-by: Fred Treven <ftreven@opensource.cirrus.com>
+>> ---
+> 
+> Can't say I love loading multiple bin files, feels like a tooling
+> issue, but I understand you guys have become fairly dependent on
+> it and the fallout isn't too bad in the code so:
+> 
+> Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> 
+> Thanks,
+> Charles
 
-I'm still lost as to what would be the possible race-condition that
-can't be handled in the usual way using mmu invalidations + notifier
-seqno bump? Is it the fast interconnect being taken down?
+I agree, and it is technically possible to combine the bin files into one.
+We have strongly suggested doing this to consumers of this driver, but
+they are adamantly against it, sighting the fact that they want to
+maintain the coefficient files separately on a per-algorithm basis.
 
-/Thomas
-
-
->=20
-> > > > 3) As mentioned before, a callback call would typically always
-> > > > be
-> > > > followed by either migration to ram or a page-table update.
-> > > > Compared to
-> > > > these, the callback overhead would IMO be unnoticeable.
-> > >=20
-> > > Why? Surely the normal case should be a callback saying the
-> > > memory
-> > > can
-> > > be accessed?
-> >=20
-> > Sure, but at least on the xe driver, that means page-table
-> > repopulation
-> > since the hmm_range_fault() typically originated from a page-fault.
->=20
-> Yes, I expect all hmm_range_fault()'s to be on page fault paths, and
-> we'd like it to be as fast as we can in the CPU present case..
->=20
-> Jason
-
+Thanks for your understanding,
+Fred
