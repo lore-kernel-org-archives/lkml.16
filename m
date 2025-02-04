@@ -1,189 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184111FC118;
-	Tue,  4 Feb 2025 06:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749C11FFC75;
+	Tue,  4 Feb 2025 06:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738649535; cv=none; b=dDLnB9bNN3FL1EPLhBz2IkrnDiilS8yDLk8Ng+J7NAC9675TvCERRNz+tvjQNn0VpyENsVe25u+KJAdybQ+XD1SlXFMNlRYv565sDeE6RCsCIat5txXdbFW22vz50efE81CcaPxaxALQzGXRP16mOcHQq4z3KX/bGY0lRsHnFME=
+	t=1738649580; cv=none; b=oWw6lEgrFG7Y17AcG+owqXOT0mXmmKwREIr4j0VkLq0ZCBUVA0xreIdKUweIsg1gzTUJH+7AM3dALGSatEOgX9YcB+5bGDK325WdyleSPdYiNQw3+L6nS5pE/T+yWGoNa2Jr8NE+nX2jpz93vkL7iDV0Wliw5zq3FAWzP9enZVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738649535; c=relaxed/simple;
-	bh=W5Mb/B6A83zl1/Y0M78kvYdb8/k9rXB+WieYOqYQnF4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A9M7Qa0dBbcaSDUaqAyCklIQ/JVIGgkf2fYypMNKK07l2p85wouk0n7jSU4SuUKD7wxW4KOl1DRsu5cukK02Gk3ZTcX82eDEnfUtraWjKiL0dQiMy687bJXwPunYGMsQzkuH2XMU9HpvGJMqBGS9AT5l8s/8UWBakjeKV2RWO68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VYU7S09W; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1738649580; c=relaxed/simple;
+	bh=Dhv3SRrHpLrLEKz3V+145BCuQEnuBa4gIZEwCDoN8/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uLcPvFPUeLarJYUj4aQlJdQroi8DAJBdmJ5k2phTvqxJxhaUW3/6Yx0uB12AmSwin/JoqgpCeNv1UHEDS+qhBAKydi2tZtt9ZsGPIEW/2CC4x7beAo+Tnwz/L7cDNk+TqZAV33ZVAAgflcjPnAO3s6LQ5g19HdAcNW2t4HLBSQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lAEjk6k4; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VYU7S09W"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lAEjk6k4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738649534; x=1770185534;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=W5Mb/B6A83zl1/Y0M78kvYdb8/k9rXB+WieYOqYQnF4=;
-  b=VYU7S09WpYUICXOz+p3pXEPXoM77A9k4N8XNU3BZiUjaT3cQI2bYu2S8
-   qxpS46GghtPvw6ysgRrn21VH/v05TVXsETgoqU5xI4vzfE5ljX4dl7yup
-   cxHKaQ4UvzVp1qrtE8xZDPTivbY+Bw8mEFnKTcHxxHYr98Ek8Lji4Gqi9
-   pyzyMmy6fYXafHEaPGz6TJUFQtHmDT97WpAEo2AF3DwVwmFU44uou3DRa
-   twUPRXYPF8tUSzFk9LBsBJzUMdhTSble8qfPbIz2g5ZBR7rLNCtp0MA4O
-   FWuxGHFfkl7hk4aOo6HW4eRZhngOFZ6XWMJI1UyK6dpK4RXt8yslEqPo7
-   g==;
-X-CSE-ConnectionGUID: eJLBu0L5R+q76CYADrIsaQ==
-X-CSE-MsgGUID: mB0hWYKQThy5Vg26Komfog==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50579743"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="50579743"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:12:13 -0800
-X-CSE-ConnectionGUID: +NRpEiNBSn+simhqIS2LrA==
-X-CSE-MsgGUID: f5GJdTAlSKKBVCLLmj9gyQ==
+  t=1738649578; x=1770185578;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Dhv3SRrHpLrLEKz3V+145BCuQEnuBa4gIZEwCDoN8/4=;
+  b=lAEjk6k4ku57jx1r6wNB4t3WtIPDqBm7/G2NSvOtu4IOgrF4oiGkITar
+   ZqVPaL3Gs3XoRReolflIs7qc++eSNhYWjPyrkT76zZAemwat6z6m78Bwm
+   KtFMnUn1PjBPbTljq0f6Qc5VVcqavF7kCAfPP7xa+TfKogle3zcMzJzPO
+   pavaVQYATMk96RGOYz5MtonPORbtt6y8BSCaIPlPamA1vKi+pCMCKACnT
+   9xIOPxCEOCVXEg30aQBiB9HOTah/GeCWcCtGDpL7sSJ+9kd0y6cQOz9hA
+   Sb5Xu8g+NedWu5DTH64yaRs+WgIFedwn/9KTe4sMyr5wi3pvh80msgXnv
+   Q==;
+X-CSE-ConnectionGUID: mkFuB8pDQQKV3CSs9SL++A==
+X-CSE-MsgGUID: zPQK+9sUT+aRdd/pgpwxPw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="49812965"
+X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
+   d="scan'208";a="49812965"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:12:57 -0800
+X-CSE-ConnectionGUID: pUEZjYQMQFOvutZG/29oIA==
+X-CSE-MsgGUID: CQJAhstLRE+hJtPENz1Jvw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="110279244"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.227.39])
-  by orviesa009.jf.intel.com with ESMTP; 03 Feb 2025 22:12:06 -0800
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To: Simon Horman <horms@kernel.org>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
+   d="scan'208";a="111049364"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:12:54 -0800
+Date: Tue, 4 Feb 2025 07:09:23 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
+	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Serge Semin <fancer.lancer@gmail.com>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next v6 7/7] stmmac: intel: interface switching support for ADL-N platform
-Date: Tue,  4 Feb 2025 14:10:20 +0800
-Message-Id: <20250204061020.1199124-8-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
-References: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] net/mlx5e: Avoid a hundred
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <Z6GvE4su2/m9e+Ev@mev-dev.igk.intel.com>
+References: <Z6GCJY8G9EzASrwQ@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6GCJY8G9EzASrwQ@kspp>
 
-The intel_config_serdes function was provided to handle interface mode
-changes for the ADL-N platform.
+On Tue, Feb 04, 2025 at 01:27:41PM +1030, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of other structs, we use the `struct_group_tagged()` helper
+> to create a new tagged `struct mlx5e_umr_wqe_hdr`. This structure
+> groups together all the members of the flexible `struct mlx5e_umr_wqe`
+> except the flexible array.
+> 
+> As a result, the array is effectively separated from the rest of the
+> members without modifying the memory layout of the flexible structure.
+> We then change the type of the middle struct member currently causing
+> trouble from `struct mlx5e_umr_wqe` to `struct mlx5e_umr_wqe_hdr`.
+> 
+> We also want to ensure that when new members need to be added to the
+> flexible structure, they are always included within the newly created
+> tagged struct. For this, we use `static_assert()`. This ensures that the
+> memory layout for both the flexible structure and the new tagged struct
+> is the same after any changes.
+> 
+> This approach avoids having to implement `struct mlx5e_umr_wqe_hdr` as
+> a completely separate structure, thus preventing having to maintain two
+> independent but basically identical structures, closing the door to
+> potential bugs in the future.
+> 
+> We also use `container_of()` whenever we need to retrieve a pointer to
+> the flexible structure, through which we can access the flexible-array
+> member, if necessary.
+> 
+> So, with these changes, fix 124 of the following warnings:
+> 
+> drivers/net/ethernet/mellanox/mlx5/core/en.h:664:48: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/en.h      | 13 +++++++++----
+>  drivers/net/ethernet/mellanox/mlx5/core/en_main.c |  4 +++-
+>  2 files changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+> index 979fc56205e1..c30c64eb346f 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+> @@ -233,15 +233,20 @@ struct mlx5e_rx_wqe_cyc {
+>  };
+>  
+>  struct mlx5e_umr_wqe {
+> -	struct mlx5_wqe_ctrl_seg       ctrl;
+> -	struct mlx5_wqe_umr_ctrl_seg   uctrl;
+> -	struct mlx5_mkey_seg           mkc;
+> +	/* New members MUST be added within the struct_group() macro below. */
+> +	struct_group_tagged(mlx5e_umr_wqe_hdr, hdr,
+> +		struct mlx5_wqe_ctrl_seg       ctrl;
+> +		struct mlx5_wqe_umr_ctrl_seg   uctrl;
+> +		struct mlx5_mkey_seg           mkc;
+> +	);
+>  	union {
+>  		DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
+>  		DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
+>  		DECLARE_FLEX_ARRAY(struct mlx5_ksm, inline_ksms);
+>  	};
+>  };
+> +static_assert(offsetof(struct mlx5e_umr_wqe, inline_mtts) == sizeof(struct mlx5e_umr_wqe_hdr),
+> +	      "struct member likely outside of struct_group_tagged()");
+>  
+>  enum mlx5e_priv_flag {
+>  	MLX5E_PFLAG_RX_CQE_BASED_MODER,
+> @@ -660,7 +665,7 @@ struct mlx5e_rq {
+>  		} wqe;
+>  		struct {
+>  			struct mlx5_wq_ll      wq;
+> -			struct mlx5e_umr_wqe   umr_wqe;
+> +			struct mlx5e_umr_wqe_hdr umr_wqe;
+>  			struct mlx5e_mpw_info *info;
+>  			mlx5e_fp_skb_from_cqe_mpwrq skb_from_cqe_mpwrq;
+>  			__be32                 umr_mkey_be;
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> index bd41b75d246e..4ff4ff2342cf 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> @@ -373,6 +373,8 @@ static void mlx5e_rq_shampo_hd_info_free(struct mlx5e_rq *rq)
+>  
+>  static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
+>  {
+> +	struct mlx5e_umr_wqe *umr_wqe =
+> +		container_of(&rq->mpwqe.umr_wqe, struct mlx5e_umr_wqe, hdr);
+>  	int wq_sz = mlx5_wq_ll_get_size(&rq->mpwqe.wq);
+>  	size_t alloc_size;
+>  
+> @@ -393,7 +395,7 @@ static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
+>  		bitmap_fill(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
+>  	}
+>  
+> -	mlx5e_build_umr_wqe(rq, rq->icosq, &rq->mpwqe.umr_wqe);
+> +	mlx5e_build_umr_wqe(rq, rq->icosq, umr_wqe);
+>  
+>  	return 0;
 
-The Modphy register lane was provided to configure the serdes when
-changing interface modes.
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
-Signed-off-by: Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>
-Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 47 ++++++++++++++++++-
- .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  2 +
- 2 files changed, 48 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-index de561a00f902..b5180cf303e2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-@@ -951,6 +951,51 @@ static int adls_sgmii_phy1_data(struct pci_dev *pdev,
- static struct stmmac_pci_info adls_sgmii1g_phy1_info = {
- 	.setup = adls_sgmii_phy1_data,
- };
-+
-+static int adln_common_data(struct pci_dev *pdev,
-+			    struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->rx_queues_to_use = 6;
-+	plat->tx_queues_to_use = 4;
-+	plat->clk_ptp_rate = 204800000;
-+
-+	plat->safety_feat_cfg->tsoee = 1;
-+	plat->safety_feat_cfg->mrxpee = 0;
-+	plat->safety_feat_cfg->mestee = 1;
-+	plat->safety_feat_cfg->mrxee = 1;
-+	plat->safety_feat_cfg->mtxee = 1;
-+	plat->safety_feat_cfg->epsi = 0;
-+	plat->safety_feat_cfg->edpp = 0;
-+	plat->safety_feat_cfg->prtyen = 0;
-+	plat->safety_feat_cfg->tmouten = 0;
-+
-+	intel_priv->tsn_lane_registers = adln_tsn_lane_registers;
-+	intel_priv->max_tsn_lane_registers = ARRAY_SIZE(adln_tsn_lane_registers);
-+
-+	return intel_mgbe_common_data(pdev, plat);
-+}
-+
-+static int adln_sgmii_phy0_data(struct pci_dev *pdev,
-+				struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->bus_id = 1;
-+	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
-+	plat->serdes_powerup = intel_serdes_powerup;
-+	plat->serdes_powerdown = intel_serdes_powerdown;
-+	plat->config_serdes = intel_config_serdes;
-+	intel_priv->pid_modphy = PID_MODPHY1;
-+
-+	return adln_common_data(pdev, plat);
-+}
-+
-+static struct stmmac_pci_info adln_sgmii1g_phy0_info = {
-+	.setup = adln_sgmii_phy0_data,
-+};
-+
- static const struct stmmac_pci_func_data galileo_stmmac_func_data[] = {
- 	{
- 		.func = 6,
-@@ -1333,7 +1378,7 @@ static const struct pci_device_id intel_eth_pci_id_table[] = {
- 	{ PCI_DEVICE_DATA(INTEL, TGLH_SGMII1G_1, &tgl_sgmii1g_phy1_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_0, &adls_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_1, &adls_sgmii1g_phy1_info) },
--	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &tgl_sgmii1g_phy0_info) },
-+	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &adln_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, RPLP_SGMII1G, &tgl_sgmii1g_phy0_info) },
- 	{}
- };
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-index 093eed977ab0..2c6b50958988 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-@@ -124,8 +124,10 @@ static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
- 	{}
- };
- 
-+static const int adln_tsn_lane_registers[] = {6};
- static const int ehl_tsn_lane_registers[] = {7, 8, 9, 10, 11};
- #else
-+static const int adln_tsn_lane_registers[] = {};
- static const int ehl_tsn_lane_registers[] = {};
- #endif /* CONFIG_INTEL_PMC_IPC */
- 
--- 
-2.34.1
-
+>  }
+> -- 
+> 2.43.0
