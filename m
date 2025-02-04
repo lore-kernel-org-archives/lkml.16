@@ -1,175 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE722080FD
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC51020550A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738663206; cv=none; b=dHGubl53GJW7P5UvxktEtSX7I0rCRB0JuV1CsI8X2lCrU/p/WoAvVVmtF9I1SI2JTKMMgRbX0/0RMH6S125yOnIHHSrBI+5PSAE40zygwCQ5/TZK2cDFWpK6OatRZwwc/R4068WyEnAFosSptJPIpLgBqHrT3LbjWn5Be14ok/Q=
+	t=1738663332; cv=none; b=pAUdoE1h0clHCySpEcvCShA+8NDCKrcHw5NL7vh+Z4nonT55RNG0hs2Vt95uDQo5pUVr3ybldoyNATedbYrn+5u9WEiAVltpKLFwAU9tx6k4tqDWNUk74XjkegTnkha9q8T16sGz0GmlxPXnNq5j3mNLg/lT3pIkdi+QuhnAMzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738663206; c=relaxed/simple;
-	bh=13yYCdlqzP0i/IMnvVFj2IM29vtkaVbgxxGjD98q0uk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kbUv6S8SSfa7r/DCG7WMNxW7gJAcxUddKFYh1VvruRgQ3F7wrf5Lf7R9U8lxFPFvfRyGm0eBwesjiL0NX/xwhovJeBXzOulnPNw6KlPPbxJjNA81WakJrOFtYvXnJ0nU+Z72gMXGWQabZGkYD2pQcn3V0wM2auqlMGcupBslpG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e0vtwYCk; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738663332; c=relaxed/simple;
+	bh=rs6r8CwLrd0Tx3iUQWSkDUKnHU/WdCTr2Cy4KQpmB2o=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=P8WPXV5CR+ys+kWV08Om4p0hLtDwhBVFC1D8eeBNctVX2o4kL8UqwVenCs4LOPvIlbIfVEqLJ8ztuly69xaS5oPpzD0GGAo90+1OWqaAWAxsDEIZF2N4gtVn0p59ZQO3lWHOk6pV9Q+EeWPPHpTNnHHWigQvZLTqZHAXYq+a3Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xkY4qYHl; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e0vtwYCk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738663203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zgeNydwTSVAcIR1ERMtZzBL7x3bZ2CBWxaGQ1arPFzQ=;
-	b=e0vtwYCkpOGR8m9MsCv6B/4gyKpbBHFaINEQ82b7ZAxpJU7/TDt9OYOOAmSBHtcaauuT9I
-	ibz7Wbfow0Bo4Qf6/J+QKviAgbCyF99GVf4fvz+vO3dC0l4wMfSklJHp4pTVmdsGXZ9G3O
-	uHzIvyGqxrlWYdFYQpmo465UF2UKgeQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-574-R1ia3UQWNye0Xgo7YQVhsQ-1; Tue, 04 Feb 2025 05:00:01 -0500
-X-MC-Unique: R1ia3UQWNye0Xgo7YQVhsQ-1
-X-Mimecast-MFC-AGG-ID: R1ia3UQWNye0Xgo7YQVhsQ
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-438e4e9a53fso40723345e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 02:00:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xkY4qYHl"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-ab6d6a9bda9so512742566b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 02:02:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738663329; x=1739268129; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R3VK9KPfRS9ADIKsKEkEJDj658krGSJ2N1FxBZpZz/c=;
+        b=xkY4qYHlJXbVw0OOAPHPLRI4N3kePjExQvdb72Y5ozj6rNiJKtye0P35Vancl8RzON
+         i5Y0CiTC86RI1qOwHn6Ldl5BdSQEGlCUx8utjJPZv9CaZTalTwMdqiT2CnZLO1HuARK8
+         IQTI0Du6TDmrrAGbtu63mxkCREA/SFwVd8GMaOBdsAXFgK7SUJVZ4L1/TwyUdEvWgNkR
+         H4lSO3fUtwoicBslL/AD/Vph4AnyUa/6c/YbOn9jefm2unaRJlthr8SfpZDJmkBv6jQb
+         HPwsA9mPcfD6qh44AXvb0qlnu+Hpv2FQdmC+bZf5fovPUrsk71y8xkf8yWrv3XxqlSze
+         qKVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738663200; x=1739268000;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zgeNydwTSVAcIR1ERMtZzBL7x3bZ2CBWxaGQ1arPFzQ=;
-        b=lLNoPDmOeXENrOLE/nkX/Qn/zIWX6iUakEQSC//inbTaSAwzMX7YM4rawqMZWgYu17
-         TYPHP6sGHE/q6WtI15MOcH7udJw0l8lqmZwoxi/Az45oDsdYcg4K2G0nBfnN6I64uvBi
-         I+NQwcVLF408z0ffTLw0HxTr6DJhEwMrpfhwk9ijtPe+o/nP3zOQ2upoHMJl0aBDBzWs
-         YZM9Es8O8UYhEXRF+e/0tumZFOCQgO37O53rRXTWup06b9Z1MI9NRqIYaJJwtEUXr34r
-         sT9W999dwpRKOHvKxl+zA/F1UuzGBFZCQjfAw7f8zuxr/IMmP8a2A1vHkjkPTXeK4S8v
-         oABA==
-X-Forwarded-Encrypted: i=1; AJvYcCX5/hYnFwxAoF+WOSbgFBF8Sj5bFH9eBPXuWWxtBPwpVUdJr0bBiZnXfgzEOWZLnOLQ0Jw5t3RgVXiUO/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRGtTpxwXPq2KlO+Ax9jLmUNcDiNhTXyniv8MMmlL2KxSDDZc0
-	tfYbetNYIqNUMXcG4jiNM0pbMlTOB/yaP5b4LCYcmt97BbD0TREl/qk6e4xjKEWeTZhhdU1/ScM
-	YGwUNAKuTjg2/QfvyWs5pqxgZvLTfUe+eEwnF2d0l9iqY7HGb9Vr/bznmb1t66g==
-X-Gm-Gg: ASbGncv264kSKaREi7VUEetrmIGcp/mQAbfJPZEk8jaojffNBqRV5+IfbWkRyYGDi4X
-	gy9T9KuCDg3bMhqQoX4cDxk3o6Jr9WdniIxM/VOtfE7ro6Hy9cKs98gbI3ckEwqWFIYTQwblt87
-	darxeyoqf8Fpnoh5n+MINZE7IL7A6Q78vZyV23bQaIEEhpQ1h0eYvqIuGFZDo9CDQez/+OIMOPz
-	x5CKsu/gukCrmhWUhv6QpQDGleUSW9XsxINvA0kNRfBfBwo7qB0sY9jLcPktdPYgbYlAZvwjQ1G
-	36v0/ysffQ==
-X-Received: by 2002:a05:6000:1a8c:b0:38c:5bb2:b932 with SMTP id ffacd0b85a97d-38c5bb2bc01mr15890535f8f.3.1738663200396;
-        Tue, 04 Feb 2025 02:00:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHip7X4zS0O52PMEjczmtT0iNBH7IEeL8QYtKHFPjqYHRGplFJ791FYs65FAXVNjmO63CfRDA==
-X-Received: by 2002:a05:6000:1a8c:b0:38c:5bb2:b932 with SMTP id ffacd0b85a97d-38c5bb2bc01mr15890363f8f.3.1738663199563;
-        Tue, 04 Feb 2025 01:59:59 -0800 (PST)
-Received: from sgarzare-redhat ([185.121.209.52])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc6df51sm223944825e9.30.2025.02.04.01.59.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 01:59:59 -0800 (PST)
-Date: Tue, 4 Feb 2025 10:59:55 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: syzbot <syzbot+9d55b199192a4be7d02c@syzkaller.appspotmail.com>, 
-	davem@davemloft.net, edumazet@google.com, eperezma@redhat.com, horms@kernel.org, 
-	jasowang@redhat.com, kuba@kernel.org, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mst@redhat.com, netdev@vger.kernel.org, pabeni@redhat.com, 
-	stefanha@redhat.com, syzkaller-bugs@googlegroups.com, virtualization@lists.linux.dev, 
-	xuanzhuo@linux.alibaba.com
-Subject: Re: [syzbot] [net?] general protection fault in add_wait_queue
-Message-ID: <6fonjxxkozzmv7huzavck5nsfivx3nsyyicthulg5aiyrmjpql@o7pexllumdxt>
-References: <67a09300.050a0220.d7c5a.008b.GAE@google.com>
- <2483d8c1-961e-4a7f-9ce7-ffd21a380c70@rbox.co>
+        d=1e100.net; s=20230601; t=1738663329; x=1739268129;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R3VK9KPfRS9ADIKsKEkEJDj658krGSJ2N1FxBZpZz/c=;
+        b=H1z9DQmE3E7SN3s1hjWV8D65o9oydVPZU96YnO2KqN4RTnlZXeoVGObXh8Bm3oWZHN
+         HW+TQqtbkubLvviWQ+GQIcFb9jYl7FhbgbtkgFBpvuGYATWOFSaiFHI8hXGxy7ms7qxB
+         LEMrzVg+i7mzaY3Y3nt8cG0jOd2DZEIQZD9PIJIpjgs0wVWkCallhp/8Ywn7r75B3fEp
+         DUUKNOoRjzfCdi8m498+HTg1gLuWY33mGANttzNHaeclrYWDzF/V76n5u23m2e7EWG5A
+         Q0tf82Ddp2cxlrfsX1vPGNlD2f8nJDnio05CP+oo/FqTUIMRo/ap8S9JqMjuxtuCCE5Z
+         q9gw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLigt70OpV7gnkr0JtyukOtsfJ1IS9p3LcBZnnpsovmlCeD/WvgHDusKLJyVRxvERdZYOVRVPH31StE5Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQx+bYNBLd8Rvx1+YWYt4dvS1CQTjBAEz8e1vNbiGpw784Rqdf
+	Po3nH4IoA7Eu4k/mpTHR3TigBhLgiSvrQQQTFlgrpnhhu1DBmhIAou4I4wMxhuobzIBw3sSzmbZ
+	FcZhKFw==
+X-Google-Smtp-Source: AGHT+IElMyTrr4qYdFWMMlVNSEGR0ZkNHi4Yomz2MjuhwLpcA5rv3gjSfCpET9evIBxb/j6WvHIkH5r9aF7h
+X-Received: from edbin8.prod.google.com ([2002:a05:6402:2088:b0:5d8:8209:8769])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:6d1f:b0:ab6:f06b:4a26
+ with SMTP id a640c23a62f3a-ab6f06b4c6fmr2158765466b.34.1738663328970; Tue, 04
+ Feb 2025 02:02:08 -0800 (PST)
+Date: Tue,  4 Feb 2025 11:01:34 +0100
+In-Reply-To: <20240802061318.2140081-4-aruna.ramakrishna@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <2483d8c1-961e-4a7f-9ce7-ffd21a380c70@rbox.co>
+Mime-Version: 1.0
+References: <20240802061318.2140081-4-aruna.ramakrishna@oracle.com>
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250204100134.1843654-1-dvyukov@google.com>
+Subject: [PATCH v8 3/5] x86/pkeys: Update PKRU to enable all pkeys before XSAVE
+From: Dmitry Vyukov <dvyukov@google.com>
+To: aruna.ramakrishna@oracle.com, mathieu.desnoyers@efficios.com, 
+	peterz@infradead.org, paulmck@kernel.org, boqun.feng@gmail.com
+Cc: dave.hansen@linux.intel.com, jannh@google.com, jeffxu@chromium.org, 
+	jorgelo@chromium.org, keescook@chromium.org, keith.lucas@oracle.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mingo@kernel.org, 
+	rick.p.edgecombe@intel.com, sroettger@google.com, tglx@linutronix.de, 
+	x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 04, 2025 at 01:38:50AM +0100, Michal Luczaj wrote:
->On 2/3/25 10:57, syzbot wrote:
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    c2933b2befe2 Merge tag 'net-6.14-rc1' of git://git.kernel...
->> git tree:       net-next
->> console output: https://syzkaller.appspot.com/x/log.txt?x=16f676b0580000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
->> dashboard link: https://syzkaller.appspot.com/bug?extid=9d55b199192a4be7d02c
->> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13300b24580000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12418518580000
->>
->> Downloadable assets:
->> disk image: https://storage.googleapis.com/syzbot-assets/c7667ae12603/disk-c2933b2b.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/944ca63002c1/vmlinux-c2933b2b.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/30748115bf0b/bzImage-c2933b2b.xz
->>
->> The issue was bisected to:
->>
->> commit fcdd2242c0231032fc84e1404315c245ae56322a
->> Author: Michal Luczaj <mhal@rbox.co>
->> Date:   Tue Jan 28 13:15:27 2025 +0000
->>
->>     vsock: Keep the binding until socket destruction
->
->syzbot is correct (thanks), bisected commit introduced a regression.
->
->sock_orphan(sk) is being called without taking into consideration that it
->does `sk->sk_wq = NULL`. Later, if SO_LINGER is set, sk->sk_wq gets
->dereferenced in virtio_transport_wait_close().
->
->Repro, as shown by syzbot, is simply
->from socket import *
->lis = socket(AF_VSOCK, SOCK_STREAM)
->lis.bind((1, 1234)) # VMADDR_CID_LOCAL
->lis.listen()
->s = socket(AF_VSOCK, SOCK_STREAM)
->s.setsockopt(SOL_SOCKET, SO_LINGER, (1<<32) | 1)
->s.connect(lis.getsockname())
->s.close()
->
->A way of fixing this is to put sock_orphan(sk) back where it was before the
->breaking patch and instead explicitly flip just the SOCK_DEAD bit, i.e.
->
->diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->index 075695173648..06250bb9afe2 100644
->--- a/net/vmw_vsock/af_vsock.c
->+++ b/net/vmw_vsock/af_vsock.c
->@@ -824,13 +824,14 @@ static void __vsock_release(struct sock *sk, int level)
-> 	 */
-> 	lock_sock_nested(sk, level);
->
->-	sock_orphan(sk);
->+	sock_set_flag(sk, SOCK_DEAD);
->
-> 	if (vsk->transport)
-> 		vsk->transport->release(vsk);
-> 	else if (sock_type_connectible(sk->sk_type))
-> 		vsock_remove_sock(vsk);
->
->+	sock_orphan(sk);
-> 	sk->sk_shutdown = SHUTDOWN_MASK;
->
-> 	skb_queue_purge(&sk->sk_receive_queue);
->
->I'm not sure this is the most elegant code (sock_orphan(sk) sets SOCK_DEAD
->on a socket that is already SOCK_DEAD), but here it goes:
->https://lore.kernel.org/netdev/20250204-vsock-linger-nullderef-v1-0-6eb1760fa93e@rbox.co/
+Re commit 70044df250d022572e26cd301bddf75eac1fe50e:
+https://lore.kernel.org/all/20240802061318.2140081-4-aruna.ramakrishna@oracle.com/
 
-What about the fix proposed here:
-https://lore.kernel.org/lkml/20250203124959.114591-1-aha310510@gmail.com/
+> If the alternate signal stack is protected by a different pkey than the
+> current execution stack, copying xsave data to the sigaltstack will fail
+> if its pkey is not enabled in the PKRU register.
+> 
+> We do not know which pkey was used by the application for the altstack,
+> so enable all pkeys before xsave.
+> 
+> But this updated PKRU value is also pushed onto the sigframe, which
+> means the register value restored from sigcontext will be different from
+> the user-defined one, which is unexpected. Fix that by overwriting the
+> PKRU value on the sigframe with the original, user-defined PKRU.
 
->
->One more note: man socket(7) says lingering also happens on shutdown().
->Should vsock follow that?
+Hi,
 
-Good point, I think so.
-IMHO we should handle both of them in af_vsock.c if it's possible, but 
-maybe we need a bit of refactoring.
+This unfortunatly seems to be broken for rseq user-space writes.
+If the signal is caused by rseq struct being inaccessible due to PKEYs,
+we try to write to rseq again at setup_rt_frame->rseq_signal_deliver,
+which happens _before_ sig_prepare_pkru and won't succeed
+(PKEY is still inaccessible, hard kills the process).
+Any PKEY sandbox would want to restict untrusted access to rseq
+as well (otherwise allows easy sandbox escapes).
 
-Anyway, net-next material, right?
+If we do sig_prepare_pkru before rseq_signal_deliver (and generally
+before any copy_to_userpace), then user-space handler gets SIGSEGV
+and could unregister rseq and retry.
 
-Stefano
+However, I am not sure if it's the best solution performance-
+and complexity-wise (for user-space). A better solution may be to
+change __rseq_handle_notify_resume to temporary switch to default
+PKEY if user accesses fail.
+Rseq is similar to signals in this respect. Since rseq updates
+happen asynchronously with respect to user-space control flow,
+if a program uses rseq and ever makes rseq inaccessible with PKEYs,
+it's in trouble and will be randomly killed.
+Since rseq updates are asynchronous as signals, they shouldn't
+assume PKEY is set to default value that allows access
+to rseq descriptor.
+
+Thoughts?
+
+
+
+
 
