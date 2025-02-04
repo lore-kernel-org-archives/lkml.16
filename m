@@ -1,402 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E78015689A;
-	Tue,  4 Feb 2025 03:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F453232
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 03:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738640624; cv=none; b=r9MTPSlXUSLuk0GeISJdmwn1g/zxYCDeAj5trMAwSaEiDa7pe3S0sUzrnCDO/EmLBrIZncKf05gftuiNnU/lkYoDjkmfxueAyRpGszq9L4lb7EypBRv/ywTFyWZ+SLBpU1njamFfq0L+/DZhQOLRF3q+RODOcfzsGLG9Nm+G1Ro=
+	t=1738641015; cv=none; b=HrBwyTKFCee4XUcAIfsijHr+rrFYnXNbo9XGOmhUNRsLByxtil9wX0CO1KBzXDA4/V9sFEqJ03+OdLVmeizXu72M5PQNMw1TBKKurhp0t4Cxn1lhq7b7Y2t00cB6oMnYuuiQe8pZA7ff1j8NWkZi6p/lVaKhFDK/u9+qDPQBDr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738640624; c=relaxed/simple;
-	bh=g1a5XHjEnvGgZeINOx+dFk4oLItaQ7cT+dRbSxa897k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=o9Mcjr9rOoKCKYc+a7XdIfxhwR0PQ5CH6k8zINOyLWcr/Z7JSMedlWzbdMOT4wNqGtRN1RV0udZ/+DykwedE/V5hUozVcg3+jYkaBlkh2FlJr4rEbJpA4Q6SCc2x4qn+BlPAFL+QyiVjjhv7AMqEvcu7V2HOfDfHsgbXwb/QtQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VjXW2jT7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738641015; c=relaxed/simple;
+	bh=/J7cIas1HGco0YRW7/SL4qbc6QxVYq8cWz3oXrao9aM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=laxP5j09hDbJ6ryOU62xL0lU2XbmD8H6T2itwXBD86Q2vdSNKOWlnim5oOpHt5R4jpufJRWDbdBbpL5Ed/YTC2yBiTE0+SdBOmFicJ4oHAKxDSOvlrNyxzbcMbcZ2yvPIcBT86yis9ENwj1CL2h5AbbKSupIRcfbevSt6/D2aJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=fail (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=Hw+Dsas0 reason="key not found in DNS"; arc=none smtp.client-ip=60.251.196.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjXW2jT7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F303DC4CEDF;
-	Tue,  4 Feb 2025 03:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738640623;
-	bh=g1a5XHjEnvGgZeINOx+dFk4oLItaQ7cT+dRbSxa897k=;
-	h=Date:From:To:Cc:Subject:From;
-	b=VjXW2jT73HfIKhRMQ3Ap5Q+0WCTB4//zehVzcCh3chPxwe6cyOho9jfNaMH2n4cRM
-	 3QfE4y8uhE9H4vGadRk34FwejD8sV95ZMwh41lE3uCoVxCweqf0Ab5GvnwPe7ZdEF6
-	 WU1w6R0mpu05TELnXsWEnF0PgYhTrv9gFZMRsTeOe3c+4i2Y9t9rJODt0P5XMfxvo6
-	 d/ZMztvXDgyrWox3vQdrgmRxCjKIMHqOFHC96Rn2DMV1ssCQMg3ajTbLaXG4fN5ZmL
-	 yIGwa/m5LnRv/caDBlR41YjCA/vOojyfQkn8iuZ99zQcPYL+yufqZukH4nyOqEeIMD
-	 OeqQ1FRRgC21w==
-Date: Tue, 4 Feb 2025 14:13:37 +1030
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>
-Cc: linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] fs: hpfs: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z6GM6WIg8f0Ql30E@kspp>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="Hw+Dsas0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=ite.com.tw; s=dkim;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=/J7cIas1HGco0YRW7/SL4qbc6QxVYq8cWz3oXrao9aM=;
+  b=Hw+Dsas0aFwYx7amNMK5U4J72ZPQOaN41BZh0oeQsc+LW7bynM20R4ru
+   H0K9MhFtQ1VxcQvxocShT+DoY5WC1Va9bVv9peoO6WnHBYLpMu5VdyB7Q
+   CNyRop0aet1m3KsQrYf3r3rTxpyP9xHvx9hQeXK3CsN0oSvt77dT7M6wp
+   3TeN0Oro8Ni4dLJEfh6VECDCOoSiJNzBx79eWoEDWSiJ31wf2Zp19DIwG
+   u9W5S0IfmmS9h0sO7pGCpT5EulHgsOQrbINrWwKoYYWMyBLkWax5AFLaM
+   O6N/HBZFP9ecFTZUgUkHNN6otu76TdJPRyXMnFP1KLUc6C2T5p6MLkdoe
+   Q==;
+X-CSE-ConnectionGUID: i+w2UxiJQuKZvl2aw0PJMA==
+X-CSE-MsgGUID: Nyw5nd4LTlaZUstjUlMzAQ==
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 04 Feb 2025 11:48:58 +0800
+Received: from tpemail1.internal.ite.com.tw (TPEMAIL1.internal.ite.com.tw [192.168.15.58])
+	by mse.ite.com.tw with ESMTP id 5143mrAq027569;
+	Tue, 4 Feb 2025 11:48:53 +0800 (GMT-8)
+	(envelope-from Hermes.Wu@ite.com.tw)
+Received: from TPEMAIL1.internal.ite.com.tw (192.168.15.58) by
+ TPEMAIL1.internal.ite.com.tw (192.168.15.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 4 Feb 2025 11:48:53 +0800
+Received: from TPEMAIL1.internal.ite.com.tw ([fe80::dd6d:92:8773:b68]) by
+ TPEMAIL1.internal.ite.com.tw ([fe80::dd6d:92:8773:b68%6]) with mapi id
+ 15.01.2507.039; Tue, 4 Feb 2025 11:48:53 +0800
+From: <Hermes.Wu@ite.com.tw>
+To: <dmitry.baryshkov@linaro.org>
+CC: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
+        <simona@ffwll.ch>, <treapking@chromium.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <Pet.Weng@ite.com.tw>, <Kenneth.Hung@ite.com.tw>
+Subject: RE: [PATCH v2] drm/bridge: it6505: support hdmi_codec_ops for audio
+ stream setup
+Thread-Topic: [PATCH v2] drm/bridge: it6505: support hdmi_codec_ops for audio
+ stream setup
+Thread-Index: AQHbdmEKbm7uQExC0kmYaMg4KgT7rrM2gX5Q
+Date: Tue, 4 Feb 2025 03:48:53 +0000
+Message-ID: <9742a55aa51a461a9d5b9352db0f3c39@ite.com.tw>
+References: <20250203-add-audio-codec-v2-1-5c8cd72ee5bb@ite.com.tw>
+ <btzdguakskos2gogmwjkz6zoquiut63kmirvdsh4yjoqqvzpin@um4hcrlnecxh>
+In-Reply-To: <btzdguakskos2gogmwjkz6zoquiut63kmirvdsh4yjoqqvzpin@um4hcrlnecxh>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tm-snts-smtp: 06B62E4786F1321005586930291F7350252F0166575A3DFAF25EFA990C0AF6492002:8
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MAIL:mse.ite.com.tw 5143mrAq027569
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
-
-So, in order to avoid ending up with a flexible-array member in the
-middle of other structs, we use the `struct_group_tagged()` helper
-to create a new tagged `struct bplus_header_fixed`. This structure
-groups together all the members of the flexible `struct bplus_header`
-except the flexible array.
-
-As a result, the array is effectively separated from the rest of the
-members without modifying the memory layout of the flexible structure.
-We then change the type of the middle struct member currently causing
-trouble from `struct bplus_header` to `struct bplus_header_fixed`.
-
-We also want to ensure that when new members need to be added to the
-flexible structure, they are always included within the newly created
-tagged struct. For this, we use `static_assert()`. This ensures that the
-memory layout for both the flexible structure and the new tagged struct
-is the same after any changes.
-
-This approach avoids having to implement `struct bplus_header_fixed`
-as a completely separate structure, thus preventing having to maintain
-two independent but basically identical structures, closing the door
-to potential bugs in the future.
-
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure, through which we can access the flexible-array
-member, if necessary.
-
-So, with these changes, fix 26 of the following warnings:
-fs/hpfs/hpfs.h:456:23: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/hpfs/hpfs.h:498:23: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/hpfs/anode.c | 47 ++++++++++++++++++++++++++---------------------
- fs/hpfs/ea.c    |  2 +-
- fs/hpfs/file.c  |  4 +++-
- fs/hpfs/hpfs.h  | 30 +++++++++++++++++-------------
- fs/hpfs/map.c   | 11 +++++++----
- 5 files changed, 54 insertions(+), 40 deletions(-)
-
-diff --git a/fs/hpfs/anode.c b/fs/hpfs/anode.c
-index c14c9a035ee0..c691e521a023 100644
---- a/fs/hpfs/anode.c
-+++ b/fs/hpfs/anode.c
-@@ -9,6 +9,10 @@
- 
- #include "hpfs_fn.h"
- 
-+#define anode_btree	container_of(&anode->btree, struct bplus_header, __hdr)
-+#define ranode_btree	container_of(&ranode->btree, struct bplus_header, __hdr)
-+#define fnode_btree	container_of(&fnode->btree, struct bplus_header, __hdr)
-+
- /* Find a sector in allocation tree */
- 
- secno hpfs_bplus_lookup(struct super_block *s, struct inode *inode,
-@@ -27,7 +31,7 @@ secno hpfs_bplus_lookup(struct super_block *s, struct inode *inode,
- 				a = le32_to_cpu(btree->u.internal[i].down);
- 				brelse(bh);
- 				if (!(anode = hpfs_map_anode(s, a, &bh))) return -1;
--				btree = &anode->btree;
-+				btree = anode_btree;
- 				goto go_down;
- 			}
- 		hpfs_error(s, "sector %08x not found in internal anode %08x", sec, a);
-@@ -69,12 +73,13 @@ secno hpfs_add_sector_to_btree(struct super_block *s, secno node, int fnod, unsi
- 	int n;
- 	unsigned fs;
- 	int c1, c2 = 0;
-+
- 	if (fnod) {
- 		if (!(fnode = hpfs_map_fnode(s, node, &bh))) return -1;
--		btree = &fnode->btree;
-+		btree = fnode_btree;
- 	} else {
- 		if (!(anode = hpfs_map_anode(s, node, &bh))) return -1;
--		btree = &anode->btree;
-+		btree = anode_btree;
- 	}
- 	a = node;
- 	go_down:
-@@ -91,7 +96,7 @@ secno hpfs_add_sector_to_btree(struct super_block *s, secno node, int fnod, unsi
- 		if (hpfs_sb(s)->sb_chk)
- 			if (hpfs_stop_cycles(s, a, &c1, &c2, "hpfs_add_sector_to_btree #1")) return -1;
- 		if (!(anode = hpfs_map_anode(s, a, &bh))) return -1;
--		btree = &anode->btree;
-+		btree = anode_btree;
- 		goto go_down;
- 	}
- 	if (n >= 0) {
-@@ -151,7 +156,7 @@ secno hpfs_add_sector_to_btree(struct super_block *s, secno node, int fnod, unsi
- 		}
- 		brelse(bh);
- 		bh = bh1;
--		btree = &anode->btree;
-+		btree = anode_btree;
- 	}
- 	btree->n_free_nodes--; n = btree->n_used_nodes++;
- 	le16_add_cpu(&btree->first_free, 12);
-@@ -168,10 +173,10 @@ secno hpfs_add_sector_to_btree(struct super_block *s, secno node, int fnod, unsi
- 			if (hpfs_stop_cycles(s, up, &c1, &c2, "hpfs_add_sector_to_btree #2")) return -1;
- 		if (up != node || !fnod) {
- 			if (!(anode = hpfs_map_anode(s, up, &bh))) return -1;
--			btree = &anode->btree;
-+			btree = anode_btree;
- 		} else {
- 			if (!(fnode = hpfs_map_fnode(s, up, &bh))) return -1;
--			btree = &fnode->btree;
-+			btree = fnode_btree;
- 		}
- 		if (btree->n_free_nodes) {
- 			btree->n_free_nodes--; n = btree->n_used_nodes++;
-@@ -206,8 +211,8 @@ secno hpfs_add_sector_to_btree(struct super_block *s, secno node, int fnod, unsi
- 			anode->btree.n_used_nodes = 1;
- 			anode->btree.n_free_nodes = 59;
- 			anode->btree.first_free = cpu_to_le16(16);
--			anode->btree.u.internal[0].down = cpu_to_le32(a);
--			anode->btree.u.internal[0].file_secno = cpu_to_le32(-1);
-+			anode_btree->u.internal[0].down = cpu_to_le32(a);
-+			anode_btree->u.internal[0].file_secno = cpu_to_le32(-1);
- 			mark_buffer_dirty(bh);
- 			brelse(bh);
- 			if ((anode = hpfs_map_anode(s, a, &bh))) {
-@@ -229,20 +234,20 @@ secno hpfs_add_sector_to_btree(struct super_block *s, secno node, int fnod, unsi
- 			brelse(bh2);
- 			return -1;
- 		}
--		btree = &anode->btree;
-+		btree = anode_btree;
- 	} else {
- 		if (!(fnode = hpfs_map_fnode(s, node, &bh))) {
- 			brelse(bh2);
- 			return -1;
- 		}
--		btree = &fnode->btree;
-+		btree = fnode_btree;
- 	}
- 	ranode->up = cpu_to_le32(node);
- 	memcpy(&ranode->btree, btree, le16_to_cpu(btree->first_free));
- 	if (fnod)
- 		ranode->btree.flags |= BP_fnode_parent;
--	ranode->btree.n_free_nodes = (bp_internal(&ranode->btree) ? 60 : 40) - ranode->btree.n_used_nodes;
--	if (bp_internal(&ranode->btree)) for (n = 0; n < ranode->btree.n_used_nodes; n++) {
-+	ranode_btree->n_free_nodes = (bp_internal(ranode_btree) ? 60 : 40) - ranode_btree->n_used_nodes;
-+	if (bp_internal(ranode_btree)) for (n = 0; n < ranode_btree->n_used_nodes; n++) {
- 		struct anode *unode;
- 		if ((unode = hpfs_map_anode(s, le32_to_cpu(ranode->u.internal[n].down), &bh1))) {
- 			unode->up = cpu_to_le32(ra);
-@@ -291,7 +296,7 @@ void hpfs_remove_btree(struct super_block *s, struct bplus_header *btree)
- 			if (hpfs_stop_cycles(s, ano, &d1, &d2, "hpfs_remove_btree #1"))
- 				return;
- 		if (!(anode = hpfs_map_anode(s, ano, &bh))) return;
--		btree1 = &anode->btree;
-+		btree1 = anode_btree;
- 		level++;
- 		pos = 0;
- 	}
-@@ -307,7 +312,7 @@ void hpfs_remove_btree(struct super_block *s, struct bplus_header *btree)
- 	ano = le32_to_cpu(anode->up);
- 	if (--level) {
- 		if (!(anode = hpfs_map_anode(s, ano, &bh))) return;
--		btree1 = &anode->btree;
-+		btree1 = anode_btree;
- 	} else btree1 = btree;
- 	for (i = 0; i < btree1->n_used_nodes; i++) {
- 		if (le32_to_cpu(btree1->u.internal[i].down) == oano) {
-@@ -332,7 +337,7 @@ static secno anode_lookup(struct super_block *s, anode_secno a, unsigned sec)
- 	struct anode *anode;
- 	struct buffer_head *bh;
- 	if (!(anode = hpfs_map_anode(s, a, &bh))) return -1;
--	return hpfs_bplus_lookup(s, NULL, &anode->btree, sec, bh);
-+	return hpfs_bplus_lookup(s, NULL, anode_btree, sec, bh);
- }
- 
- int hpfs_ea_read(struct super_block *s, secno a, int ano, unsigned pos,
-@@ -388,7 +393,7 @@ void hpfs_ea_remove(struct super_block *s, secno a, int ano, unsigned len)
- 	struct buffer_head *bh;
- 	if (ano) {
- 		if (!(anode = hpfs_map_anode(s, a, &bh))) return;
--		hpfs_remove_btree(s, &anode->btree);
-+		hpfs_remove_btree(s, anode_btree);
- 		brelse(bh);
- 		hpfs_free_sectors(s, a, 1);
- 	} else hpfs_free_sectors(s, a, (len + 511) >> 9);
-@@ -407,10 +412,10 @@ void hpfs_truncate_btree(struct super_block *s, secno f, int fno, unsigned secs)
- 	int c1, c2 = 0;
- 	if (fno) {
- 		if (!(fnode = hpfs_map_fnode(s, f, &bh))) return;
--		btree = &fnode->btree;
-+		btree = fnode_btree;
- 	} else {
- 		if (!(anode = hpfs_map_anode(s, f, &bh))) return;
--		btree = &anode->btree;
-+		btree = anode_btree;
- 	}
- 	if (!secs) {
- 		hpfs_remove_btree(s, btree);
-@@ -448,7 +453,7 @@ void hpfs_truncate_btree(struct super_block *s, secno f, int fno, unsigned secs)
- 			if (hpfs_stop_cycles(s, node, &c1, &c2, "hpfs_truncate_btree"))
- 				return;
- 		if (!(anode = hpfs_map_anode(s, node, &bh))) return;
--		btree = &anode->btree;
-+		btree = anode_btree;
- 	}	
- 	nodes = btree->n_used_nodes + btree->n_free_nodes;
- 	for (i = 0; i < btree->n_used_nodes; i++)
-@@ -485,7 +490,7 @@ void hpfs_remove_fnode(struct super_block *s, fnode_secno fno)
- 	struct extended_attribute *ea;
- 	struct extended_attribute *ea_end;
- 	if (!(fnode = hpfs_map_fnode(s, fno, &bh))) return;
--	if (!fnode_is_dir(fnode)) hpfs_remove_btree(s, &fnode->btree);
-+	if (!fnode_is_dir(fnode)) hpfs_remove_btree(s, fnode_btree);
- 	else hpfs_remove_dtree(s, le32_to_cpu(fnode->u.external[0].disk_secno));
- 	ea_end = fnode_end_ea(fnode);
- 	for (ea = fnode_ea(fnode); ea < ea_end; ea = next_ea(ea))
-diff --git a/fs/hpfs/ea.c b/fs/hpfs/ea.c
-index 102ba18e561f..206e069053fb 100644
---- a/fs/hpfs/ea.c
-+++ b/fs/hpfs/ea.c
-@@ -41,7 +41,7 @@ void hpfs_ea_ext_remove(struct super_block *s, secno a, int ano, unsigned len)
- 		struct buffer_head *bh;
- 		struct anode *anode;
- 		if ((anode = hpfs_map_anode(s, a, &bh))) {
--			hpfs_remove_btree(s, &anode->btree);
-+			hpfs_remove_btree(s, container_of(&anode->btree, struct bplus_header, __hdr));
- 			brelse(bh);
- 			hpfs_free_sectors(s, a, 1);
- 		}
-diff --git a/fs/hpfs/file.c b/fs/hpfs/file.c
-index 449a3fc1b8d9..0f15ad7cbf6e 100644
---- a/fs/hpfs/file.c
-+++ b/fs/hpfs/file.c
-@@ -51,7 +51,9 @@ static secno hpfs_bmap(struct inode *inode, unsigned file_secno, unsigned *n_sec
- 		return hpfs_inode->i_disk_sec + n;
- 	}
- 	if (!(fnode = hpfs_map_fnode(inode->i_sb, inode->i_ino, &bh))) return 0;
--	disk_secno = hpfs_bplus_lookup(inode->i_sb, inode, &fnode->btree, file_secno, bh);
-+	disk_secno = hpfs_bplus_lookup(inode->i_sb, inode,
-+				       container_of(&fnode->btree, struct bplus_header, __hdr),
-+				       file_secno, bh);
- 	if (disk_secno == -1) return 0;
- 	if (hpfs_chk_sectors(inode->i_sb, disk_secno, 1, "bmap")) return 0;
- 	n = file_secno - hpfs_inode->i_file_sec;
-diff --git a/fs/hpfs/hpfs.h b/fs/hpfs/hpfs.h
-index 281dec8f636b..430b960dcf12 100644
---- a/fs/hpfs/hpfs.h
-+++ b/fs/hpfs/hpfs.h
-@@ -396,25 +396,29 @@ enum {
- };
- struct bplus_header
- {
--  u8 flags;				/* bit 0 - high bit of first free entry offset
-+	struct_group_tagged(bplus_header_fixed, __hdr,
-+		u8 flags;		/* bit 0 - high bit of first free entry offset
- 					   bit 5 - we're pointed to by an fnode,
- 					   the data btree or some ea or the
- 					   main ea bootage pointer ea_secno
- 					   bit 6 - suggest binary search (unused)
- 					   bit 7 - 1 -> (internal) tree of anodes
- 						   0 -> (leaf) list of extents */
--  u8 fill[3];
--  u8 n_free_nodes;			/* free nodes in following array */
--  u8 n_used_nodes;			/* used nodes in following array */
--  __le16 first_free;			/* offset from start of header to
-+		u8 fill[3];
-+		u8 n_free_nodes;	/* free nodes in following array */
-+		u8 n_used_nodes;	/* used nodes in following array */
-+		__le16 first_free;	/* offset from start of header to
- 					   first free node in array */
--  union {
--	/* (internal) 2-word entries giving subtree pointers */
--	DECLARE_FLEX_ARRAY(struct bplus_internal_node, internal);
--	/* (external) 3-word entries giving sector runs */
--	DECLARE_FLEX_ARRAY(struct bplus_leaf_node, external);
--  } u;
-+	);
-+	union {
-+		/* (internal) 2-word entries giving subtree pointers */
-+		DECLARE_FLEX_ARRAY(struct bplus_internal_node, internal);
-+		/* (external) 3-word entries giving sector runs */
-+		DECLARE_FLEX_ARRAY(struct bplus_leaf_node, external);
-+	} u;
- };
-+static_assert(offsetof(struct bplus_header, u.internal) == sizeof(struct bplus_header_fixed),
-+	      "struct member likely outside of __struct_group()");
- 
- static inline bool bp_internal(struct bplus_header *bp)
- {
-@@ -453,7 +457,7 @@ struct fnode
-   __le16 flags;				/* bit 1 set -> ea_secno is an anode */
- 					/* bit 8 set -> directory.  first & only extent
- 					   points to dnode. */
--  struct bplus_header btree;		/* b+ tree, 8 extents or 12 subtrees */
-+  struct bplus_header_fixed btree;	/* b+ tree, 8 extents or 12 subtrees */
-   union {
-     struct bplus_leaf_node external[8];
-     struct bplus_internal_node internal[12];
-@@ -495,7 +499,7 @@ struct anode
-   __le32 self;				/* pointer to this anode */
-   __le32 up;				/* parent anode or fnode */
- 
--  struct bplus_header btree;		/* b+tree, 40 extents or 60 subtrees */
-+  struct bplus_header_fixed btree;	/* b+tree, 40 extents or 60 subtrees */
-   union {
-     struct bplus_leaf_node external[40];
-     struct bplus_internal_node internal[60];
-diff --git a/fs/hpfs/map.c b/fs/hpfs/map.c
-index ecd9fccd1663..4171c08693a6 100644
---- a/fs/hpfs/map.c
-+++ b/fs/hpfs/map.c
-@@ -9,6 +9,9 @@
- 
- #include "hpfs_fn.h"
- 
-+#define anode_btree	container_of(&anode->btree, struct bplus_header, __hdr)
-+#define fnode_btree	container_of(&fnode->btree, struct bplus_header, __hdr)
-+
- __le32 *hpfs_map_dnode_bitmap(struct super_block *s, struct quad_buffer_head *qbh)
- {
- 	return hpfs_map_4sectors(s, hpfs_sb(s)->sb_dmap, qbh, 0);
-@@ -178,14 +181,14 @@ struct fnode *hpfs_map_fnode(struct super_block *s, ino_t ino, struct buffer_hea
- 			}
- 			if (!fnode_is_dir(fnode)) {
- 				if ((unsigned)fnode->btree.n_used_nodes + (unsigned)fnode->btree.n_free_nodes !=
--				    (bp_internal(&fnode->btree) ? 12 : 8)) {
-+				    (bp_internal(fnode_btree) ? 12 : 8)) {
- 					hpfs_error(s,
- 					   "bad number of nodes in fnode %08lx",
- 					    (unsigned long)ino);
- 					goto bail;
- 				}
- 				if (le16_to_cpu(fnode->btree.first_free) !=
--				    8 + fnode->btree.n_used_nodes * (bp_internal(&fnode->btree) ? 8 : 12)) {
-+				    8 + fnode->btree.n_used_nodes * (bp_internal(fnode_btree) ? 8 : 12)) {
- 					hpfs_error(s,
- 					    "bad first_free pointer in fnode %08lx",
- 					    (unsigned long)ino);
-@@ -233,12 +236,12 @@ struct anode *hpfs_map_anode(struct super_block *s, anode_secno ano, struct buff
- 				goto bail;
- 			}
- 			if ((unsigned)anode->btree.n_used_nodes + (unsigned)anode->btree.n_free_nodes !=
--			    (bp_internal(&anode->btree) ? 60 : 40)) {
-+			    (bp_internal(anode_btree) ? 60 : 40)) {
- 				hpfs_error(s, "bad number of nodes in anode %08x", ano);
- 				goto bail;
- 			}
- 			if (le16_to_cpu(anode->btree.first_free) !=
--			    8 + anode->btree.n_used_nodes * (bp_internal(&anode->btree) ? 8 : 12)) {
-+			    8 + anode->btree.n_used_nodes * (bp_internal(anode_btree) ? 8 : 12)) {
- 				hpfs_error(s, "bad first_free pointer in anode %08x", ano);
- 				goto bail;
- 			}
--- 
-2.43.0
-
+SGkNCj4NCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IERtaXRyeSBCYXJ5c2hr
+b3YgPGRtaXRyeS5iYXJ5c2hrb3ZAbGluYXJvLm9yZz4gDQo+U2VudDogVHVlc2RheSwgRmVicnVh
+cnkgNCwgMjAyNSAxOjI4IEFNDQo+VG86IEhlcm1lcyBXdSAop2Sozqe7KSA8SGVybWVzLld1QGl0
+ZS5jb20udHc+DQo+Q2M6IEFuZHJ6ZWogSGFqZGEgPGFuZHJ6ZWouaGFqZGFAaW50ZWwuY29tPjsg
+TmVpbCBBcm1zdHJvbmcgPG5laWwuYXJtc3Ryb25nQGxpbmFyby5vcmc+OyBSb2JlcnQgRm9zcyA8
+cmZvc3NAa2VybmVsLm9yZz47IExhdXJlbnQgUGluY2hhcnQgPExhdXJlbnQucGluY2hhcnRAaWRl
+YXNvbmJvYXJkLmNvbT47IEpvbmFzIEthcmxtYW4gPGpvbmFzQGt3aWJvby5zZT47IEplcm5laiBT
+a3JhYmVjIDxqZXJuZWouc2tyYWJlY0BnbWFpbC5jb20+OyBNYWFydGVuIExhbmtob3JzdCA8bWFh
+cnRlbi5sYW5raG9yc3RAbGludXguaW50ZWwuY29tPjsgTWF4aW1lIFJpcGFyZCA8bXJpcGFyZEBr
+ZXJuZWwub3JnPjsgVGhvbWFzIFppbW1lcm1hbm4gPHR6aW1tZXJtYW5uQHN1c2UuZGU+OyBEYXZp
+ZCBBaXJsaWUgPGFpcmxpZWRAZ21haWwuY29tPjsgU2ltb25hIFZldHRlciA8c2ltb25hQGZmd2xs
+LmNoPjsgdHJlYXBraW5nQGNocm9taXVtLm9yZzsgZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgUGV0IFdlbmcgKK/Opcmq4ikgPFBl
+dC5XZW5nQGl0ZS5jb20udHc+OyBLZW5uZXRoIEh1bmcgKKx4rmGt2ykgPEtlbm5ldGguSHVuZ0Bp
+dGUuY29tLnR3Pg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJdIGRybS9icmlkZ2U6IGl0NjUwNTog
+c3VwcG9ydCBoZG1pX2NvZGVjX29wcyBmb3IgYXVkaW8gc3RyZWFtIHNldHVwDQo+DQo+T24gTW9u
+LCBGZWIgMDMsIDIwMjUgYXQgMDI6MDQ6MzBQTSArMDgwMCwgSGVybWVzIFd1IHZpYSBCNCBSZWxh
+eSB3cm90ZToNCj4+IEZyb206IEhlcm1lcyBXdSA8SGVybWVzLnd1QGl0ZS5jb20udHc+DQo+PiAN
+Cj4+IEZvciBzdXBwb3J0aW5nIGF1ZGlvIGZvcm0gSTJTIHRvIERQIGF1ZGlvIGRhdGEgc3ViIHN0
+cmVhbS4NCj4+IEFkZCBoZG1pX2F1ZGlvIGNhbGxiYWNrcyB0byBkcm1fYnJpZGdlX2Z1bmNzIGZv
+ciB0aGUgSERNSSBjb2RlYyANCj4+IGZyYW1ld29yay4gVGhlIERSTV9CUklER0VfT1BfSERNSSBm
+bGFnIGluIGJyaWRnZS5vcHMgbXVzdCBiZSBzZXQsIGFuZCANCj4+IGhkbWlfd3JpdGVfaW5mb2Zy
+YW1lIGFuZCBoZG1pX2NsZWFyX2luZm9mcmFtZSBhcmUgbmVjZXNzYXJ5IGZvciB0aGUgDQo+PiBk
+cm1fYnJpZGdlX2Nvbm5lY3RvciB0byBlbmFibGUgdGhlIEhETUkgY29kZWMuDQo+DQo+UGxlYXNl
+IHNwbGl0IHRoaXMgaW50byB0d28gY29tbWl0czogb25lIGFkZGluZyBPUF9IRE1JLCBzZWNvbmQg
+b25lIGFkZGluZyBhdWRpbyBzdXBwb3J0Lg0KDQpUaGlzIHdpbGwgbmVlZCBzZW5kIHBhdGNoZXMg
+d2l0aCBjb3ZlciBsZXR0ZXIsIHNob3VsZCBJIGtlZXAgcGF0Y2ggdmVyc2lvbiBvciByZXNldCBp
+dD8gDQoNCj4+IA0KPj4gU2lnbmVkLW9mZi1ieTogSGVybWVzIFd1IDxIZXJtZXMud3VAaXRlLmNv
+bS50dz4NCj4+IC0tLQ0KPj4gQ2hhbmdlcyBpbiB2MjoNCj4+IC0gVXNlIERSTSBIRE1JIGNvZGVj
+IGZyYW1ld3JvayBmb3IgYXVkaW8gc3RyZWFtIHNldHVwLg0KPj4gLSBMaW5rIHRvIHYxOiANCj4+
+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvMjAyNTAxMjEtYWRkLWF1ZGlvLWNvZGVjLXYxLTEt
+ZTNmZjcxYjNjODE5QGkNCj4+IHRlLmNvbS50dw0KPj4gLS0tDQo+PiAgZHJpdmVycy9ncHUvZHJt
+L2JyaWRnZS9pdGUtaXQ2NTA1LmMgfCAxNTEgDQo+PiArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrLS0tLS0NCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTMyIGluc2VydGlvbnMoKyksIDE5IGRl
+bGV0aW9ucygtKQ0KPj4gDQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9p
+dGUtaXQ2NTA1LmMgDQo+PiBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvaXRlLWl0NjUwNS5jDQo+
+PiBpbmRleCANCj4+IDg4ZWY3NmEzN2ZlNmFjY2FjZGQzNDM4MzlmZjI1NjliMzFiMThjZWIuLjM2
+MWUyNDEyYjhlOGYwNDBjZjQyNTQ0NzliNjANCj4+IDU4OGQ5OWU4Yzk5YSAxMDA2NDQNCj4+IC0t
+LSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvaXRlLWl0NjUwNS5jDQo+PiArKysgYi9kcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL2l0ZS1pdDY1MDUuYw0KPj4gQEAgLTE0MTQsMzIgKzE0MTQsNDMgQEAg
+c3RhdGljIHZvaWQgaXQ2NTA1X3ZhcmlhYmxlX2NvbmZpZyhzdHJ1Y3QgaXQ2NTA1ICppdDY1MDUp
+DQo+PiAgCW1lbXNldChpdDY1MDUtPmJrc3ZzLCAwLCBzaXplb2YoaXQ2NTA1LT5ia3N2cykpOyAg
+fQ0KPj4gIA0KPj4gK3N0YXRpYyBpbnQgaXQ2NTA1X3dyaXRlX2F2aV9pbmZvZnJhbWUoc3RydWN0
+IGl0NjUwNSAqaXQ2NTA1LA0KPj4gKwkJCQkgICAgICBjb25zdCB1OCAqYnVmZmVyLCBzaXplX3Qg
+bGVuKSB7DQo+PiArCXN0cnVjdCBkZXZpY2UgKmRldiA9IGl0NjUwNS0+ZGV2Ow0KPj4gKw0KPj4g
+KwlpZiAobGVuIC0gSERNSV9JTkZPRlJBTUVfSEVBREVSX1NJWkUgPiAxMykgew0KPj4gKwkJRFJN
+X0RFVl9ERUJVR19EUklWRVIoZGV2LCAiQVZJIHNpemUgZmFpbCAlZCIsIGxlbik7DQo+PiArCQly
+ZXR1cm4gLUVJTlZBTDsNCj4+ICsJfQ0KPj4gKw0KPj4gKwlpdDY1MDVfc2V0X2JpdHMoaXQ2NTA1
+LCBSRUdfSU5GT0ZSQU1FX0NUUkwsIEVOX0FWSV9QS1QsIDApOw0KPj4gKwlyZWdtYXBfYnVsa193
+cml0ZShpdDY1MDUtPnJlZ21hcCwgUkVHX0FWSV9JTkZPX0RCMSwNCj4+ICsJCQkgIGJ1ZmZlciAr
+IEhETUlfSU5GT0ZSQU1FX0hFQURFUl9TSVpFLA0KPj4gKwkJCSAgbGVuIC0gSERNSV9JTkZPRlJB
+TUVfSEVBREVSX1NJWkUpOw0KPj4gKw0KPj4gKwlpdDY1MDVfd3JpdGUoaXQ2NTA1LCBSRUdfQVZJ
+X0lORk9fU1VNLCBidWZmZXJbM10pOw0KPj4gKwlpdDY1MDVfc2V0X2JpdHMoaXQ2NTA1LCBSRUdf
+SU5GT0ZSQU1FX0NUUkwsIEVOX0FWSV9QS1QsDQo+PiArCQkJRU5fQVZJX1BLVCk7DQo+PiArDQo+
+PiArCXJldHVybiAwOw0KPj4gK30NCj4+ICsNCj4+ICBzdGF0aWMgaW50IGl0NjUwNV9zZW5kX3Zp
+ZGVvX2luZm9mcmFtZShzdHJ1Y3QgaXQ2NTA1ICppdDY1MDUsDQo+PiAgCQkJCSAgICAgICBzdHJ1
+Y3QgaGRtaV9hdmlfaW5mb2ZyYW1lICpmcmFtZSkgIHsNCj4+ICAJdTggYnVmZmVyW0hETUlfSU5G
+T0ZSQU1FX0hFQURFUl9TSVpFICsgSERNSV9BVklfSU5GT0ZSQU1FX1NJWkVdOw0KPj4gLQlpbnQg
+ZXJyOw0KPj4gKwlpbnQgZXJyLCBsZW5ndGg7DQo+PiAgCXN0cnVjdCBkZXZpY2UgKmRldiA9IGl0
+NjUwNS0+ZGV2Ow0KPj4gIA0KPj4gLQllcnIgPSBoZG1pX2F2aV9pbmZvZnJhbWVfcGFjayhmcmFt
+ZSwgYnVmZmVyLCBzaXplb2YoYnVmZmVyKSk7DQo+PiAtCWlmIChlcnIgPCAwKSB7DQo+PiAtCQlk
+ZXZfZXJyKGRldiwgIkZhaWxlZCB0byBwYWNrIEFWSSBpbmZvZnJhbWU6ICVkIiwgZXJyKTsNCj4+
+IC0JCXJldHVybiBlcnI7DQo+PiArCWxlbmd0aCA9IGhkbWlfYXZpX2luZm9mcmFtZV9wYWNrKGZy
+YW1lLCBidWZmZXIsIHNpemVvZihidWZmZXIpKTsNCj4+ICsJaWYgKGxlbmd0aCA8IDApIHsNCj4+
+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHBhY2sgQVZJIGluZm9mcmFtZTogJWQiLCBsZW5n
+dGgpOw0KPj4gKwkJcmV0dXJuIGxlbmd0aDsNCj4+ICAJfQ0KPj4gIA0KPj4gLQllcnIgPSBpdDY1
+MDVfc2V0X2JpdHMoaXQ2NTA1LCBSRUdfSU5GT0ZSQU1FX0NUUkwsIEVOX0FWSV9QS1QsIDB4MDAp
+Ow0KPj4gLQlpZiAoZXJyKQ0KPj4gLQkJcmV0dXJuIGVycjsNCj4+IC0NCj4+IC0JZXJyID0gcmVn
+bWFwX2J1bGtfd3JpdGUoaXQ2NTA1LT5yZWdtYXAsIFJFR19BVklfSU5GT19EQjEsDQo+PiAtCQkJ
+CWJ1ZmZlciArIEhETUlfSU5GT0ZSQU1FX0hFQURFUl9TSVpFLA0KPj4gLQkJCQlmcmFtZS0+bGVu
+Z3RoKTsNCj4+IC0JaWYgKGVycikNCj4+IC0JCXJldHVybiBlcnI7DQo+PiAtDQo+PiAtCWVyciA9
+IGl0NjUwNV9zZXRfYml0cyhpdDY1MDUsIFJFR19JTkZPRlJBTUVfQ1RSTCwgRU5fQVZJX1BLVCwN
+Cj4+IC0JCQkgICAgICBFTl9BVklfUEtUKTsNCj4+IC0JaWYgKGVycikNCj4+ICsJZXJyID0gaXQ2
+NTA1X3dyaXRlX2F2aV9pbmZvZnJhbWUoaXQ2NTA1LCBidWZmZXIsIGxlbmd0aCk7DQo+DQo+WW91
+IG11c3RuJ3QgdG8gZG8gdGhpcy4gUGxlYXNlIGluc3RlYWQgY2FsbA0KPmRybV9hdG9taWNfaGVs
+cGVyX2Nvbm5lY3Rvcl9oZG1pX3VwZGF0ZV9pbmZvZnJhbWVzKCkgZnJvbSB5b3VyIC5hdG9taWNf
+ZW5hYmxlIGluc3RlYWQuDQo+DQo+PiArCWlmIChlcnIgPCAwKQ0KPj4gIAkJcmV0dXJuIGVycjsN
+Cj4+ICANCj4+ICAJcmV0dXJuIDA7DQo+PiBAQCAtMTYyNSw2ICsxNjM2LDE4IEBAIHN0YXRpYyB2
+b2lkIGl0NjUwNV9lbmFibGVfYXVkaW9faW5mb2ZyYW1lKHN0cnVjdCBpdDY1MDUgKml0NjUwNSkN
+Cj4+ICAJCQlFTl9BVURfQ1RSTF9QS1QpOw0KPj4gIH0NCj4+ICANCj4+ICtzdGF0aWMgdm9pZCBp
+dDY1MDVfd3JpdGVfYXVkaW9faW5mb2ZyYW1lKHN0cnVjdCBpdDY1MDUgKml0NjUwNSwNCj4+ICsJ
+CQkJCSBjb25zdCB1OCAqYnVmZmVyLCBzaXplX3QgbGVuKQ0KPj4gK3sNCj4+ICsJaXQ2NTA1X3Nl
+dF9iaXRzKGl0NjUwNSwgUkVHX0lORk9GUkFNRV9DVFJMLCBFTl9BVURfUEtULCAwKTsNCj4+ICsJ
+cmVnbWFwX2J1bGtfd3JpdGUoaXQ2NTA1LT5yZWdtYXAsIFJFR19BVURfSU5GT0ZSQU1fREIxLA0K
+Pj4gKwkJCSAgYnVmZmVyICsgSERNSV9JTkZPRlJBTUVfSEVBREVSX1NJWkUsDQo+PiArCQkJICA0
+KTsNCj4+ICsJaXQ2NTA1X3dyaXRlKGl0NjUwNSwgUkVHX0FVRF9JTkZPRlJBTV9TVU0sIGJ1ZmZl
+clszXSk7DQo+PiArCWl0NjUwNV9zZXRfYml0cyhpdDY1MDUsIFJFR19JTkZPRlJBTUVfQ1RSTCwg
+RU5fQVVEX1BLVCwNCj4+ICsJCQlFTl9BVURfUEtUKTsNCj4+ICt9DQo+PiArDQo+PiAgc3RhdGlj
+IHZvaWQgaXQ2NTA1X2Rpc2FibGVfYXVkaW8oc3RydWN0IGl0NjUwNSAqaXQ2NTA1KSAgew0KPj4g
+IAlpdDY1MDVfc2V0X2JpdHMoaXQ2NTA1LCBSRUdfREFUQV9NVVRFX0NUUkwsIEVOX0FVRF9NVVRF
+LCANCj4+IEVOX0FVRF9NVVRFKTsgQEAgLTMzMDIsNiArMzMyNSw4NSBAQCBzdGF0aWMgY29uc3Qg
+c3RydWN0IGRybV9lZGlkICppdDY1MDVfYnJpZGdlX2VkaWRfcmVhZChzdHJ1Y3QgZHJtX2JyaWRn
+ZSAqYnJpZGdlLA0KPj4gIAlyZXR1cm4gZHJtX2VkaWRfZHVwKGl0NjUwNS0+Y2FjaGVkX2VkaWQp
+Ow0KPj4gIH0NCj4+ICANCj4+ICtzdGF0aWMgaW50IGl0NjUwNV9icmlkZ2VfaGRtaV9hdWRpb19z
+dGFydHVwKHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IsDQo+PiArCQkJCQkgICAgc3Ry
+dWN0IGRybV9icmlkZ2UgKmJyaWRnZSkNCj4+ICt7DQo+PiArCXN0cnVjdCBpdDY1MDUgKml0NjUw
+NSA9IGJyaWRnZV90b19pdDY1MDUoYnJpZGdlKTsNCj4+ICsJc3RydWN0IGRldmljZSAqZGV2ID0g
+aXQ2NTA1LT5kZXY7DQo+PiArDQo+PiArCWlmICghaXQ2NTA1LT5wb3dlcmVkIHx8IGl0NjUwNS0+
+ZW5hYmxlX2Rydl9ob2xkKQ0KPj4gKwkJcmV0dXJuIC1FSU87DQo+PiArDQo+PiArCURSTV9ERVZf
+REVCVUdfRFJJVkVSKGRldiwgIkF1ZGlvIGVuYWJsZSIpOw0KPj4gKwlpdDY1MDVfZW5hYmxlX2F1
+ZGlvKGl0NjUwNSk7DQo+PiArDQo+PiArCXJldHVybiAwOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0
+aWMgaW50IGl0NjUwNV9icmlkZ2VfaGRtaV9hdWRpb19wcmVwYXJlKHN0cnVjdCBkcm1fY29ubmVj
+dG9yICpjb25uZWN0b3IsDQo+PiArCQkJCQkgICAgc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSwN
+Cj4+ICsJCQkJCSAgICBzdHJ1Y3QgaGRtaV9jb2RlY19kYWlmbXQgKmZtdCwNCj4+ICsJCQkJCSAg
+ICBzdHJ1Y3QgaGRtaV9jb2RlY19wYXJhbXMgKmhwYXJtcykgew0KPj4gKwlzdHJ1Y3QgaXQ2NTA1
+ICppdDY1MDUgPSBicmlkZ2VfdG9faXQ2NTA1KGJyaWRnZSk7DQo+PiArDQo+PiArCXJldHVybiBp
+dDY1MDVfYXVkaW9fc2V0dXBfaHdfcGFyYW1zKGl0NjUwNSwgaHBhcm1zKTsgfQ0KPj4gKw0KPj4g
+K3N0YXRpYyB2b2lkIGl0NjUwNV9icmlkZ2VfaGRtaV9hdWRpb19zaHV0ZG93bihzdHJ1Y3QgZHJt
+X2Nvbm5lY3RvciAqY29ubmVjdG9yLA0KPj4gKwkJCQkJICAgICAgc3RydWN0IGRybV9icmlkZ2Ug
+KmJyaWRnZSkgew0KPj4gKwlzdHJ1Y3QgaXQ2NTA1ICppdDY1MDUgPSBicmlkZ2VfdG9faXQ2NTA1
+KGJyaWRnZSk7DQo+PiArDQo+PiArCWlmIChpdDY1MDUtPnBvd2VyZWQgJiYgIWl0NjUwNS0+ZW5h
+YmxlX2Rydl9ob2xkKQ0KPj4gKwkJaXQ2NTA1X2Rpc2FibGVfYXVkaW8oaXQ2NTA1KTsNCj4+ICt9
+DQo+PiArDQo+PiArc3RhdGljIGludCBpdDY1MDVfYnJpZGdlX2hkbWlfY2xlYXJfaW5mb2ZyYW1l
+KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsDQo+PiArCQkJCQkgICAgICBlbnVtIGhkbWlfaW5m
+b2ZyYW1lX3R5cGUgdHlwZSkgew0KPj4gKwlzdHJ1Y3QgaXQ2NTA1ICppdDY1MDUgPSBicmlkZ2Vf
+dG9faXQ2NTA1KGJyaWRnZSk7DQo+PiArCXN0cnVjdCBkZXZpY2UgKmRldiA9IGl0NjUwNS0+ZGV2
+Ow0KPj4gKw0KPj4gKwlzd2l0Y2ggKHR5cGUpIHsNCj4+ICsJY2FzZSBIRE1JX0lORk9GUkFNRV9U
+WVBFX0FVRElPOg0KPj4gKwkJaXQ2NTA1X3NldF9iaXRzKGl0NjUwNSwgUkVHX0lORk9GUkFNRV9D
+VFJMLCBFTl9BVURfUEtULCAwKTsNCj4+ICsJCWJyZWFrOw0KPj4gKw0KPj4gKwljYXNlIEhETUlf
+SU5GT0ZSQU1FX1RZUEVfQVZJOg0KPj4gKwkJaXQ2NTA1X3NldF9iaXRzKGl0NjUwNSwgUkVHX0lO
+Rk9GUkFNRV9DVFJMLCBFTl9BVklfUEtULCAwKTsNCj4+ICsJCWJyZWFrOw0KPg0KPkFyZSBTUEQg
+LyBWZW5kb3IgSW5mb0ZyYW1lcyBub3Qgc3VwcG9ydGVkIGJ5IHRoZSBIVz8NCj4NCj4+ICsJZGVm
+YXVsdDoNCj4+ICsJCWRldl9kYmcoZGV2LCAidW5zdXBwb3J0ZWQgSERNSSBpbmZvZnJhbWUgMHgl
+eFxuIiwgdHlwZSk7DQo+PiArCQlicmVhazsNCj4+ICsJfQ0KPj4gKw0KPj4gKwlyZXR1cm4gMDsN
+Cj4+ICt9DQo+PiArDQo+PiArc3RhdGljIGludCBpdDY1MDVfYnJpZGdlX2hkbWlfd3JpdGVfaW5m
+b2ZyYW1lKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsDQo+PiArCQkJCQkgICAgICBlbnVtIGhk
+bWlfaW5mb2ZyYW1lX3R5cGUgdHlwZSwNCj4+ICsJCQkJCSAgICAgIGNvbnN0IHU4ICpidWZmZXIs
+IHNpemVfdCBsZW4pIHsNCj4+ICsJc3RydWN0IGl0NjUwNSAqaXQ2NTA1ID0gYnJpZGdlX3RvX2l0
+NjUwNShicmlkZ2UpOw0KPj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBpdDY1MDUtPmRldjsNCj4+
+ICsNCj4+ICsJc3dpdGNoICh0eXBlKSB7DQo+PiArCWNhc2UgSERNSV9JTkZPRlJBTUVfVFlQRV9B
+VURJTzoNCj4+ICsJCWl0NjUwNV93cml0ZV9hdWRpb19pbmZvZnJhbWUoaXQ2NTA1LCBidWZmZXIs
+IGxlbik7DQo+PiArCQlicmVhazsNCj4+ICsNCj4+ICsJY2FzZSBIRE1JX0lORk9GUkFNRV9UWVBF
+X0FWSToNCj4+ICsJCWl0NjUwNV93cml0ZV9hdmlfaW5mb2ZyYW1lKGl0NjUwNSwgYnVmZmVyLCBs
+ZW4pOw0KPj4gKwkJYnJlYWs7DQo+PiArCWRlZmF1bHQ6DQo+PiArCQlkZXZfZGJnKGRldiwgInVu
+c3VwcG9ydGVkIEhETUkgaW5mb2ZyYW1lIDB4JXhcbiIsIHR5cGUpOw0KPj4gKwkJYnJlYWs7DQo+
+PiArCX0NCj4+ICsNCj4+ICsJcmV0dXJuIDA7DQo+PiArfQ0KPg0KPlBsZWFzZSBncm91cCBmdW5j
+dGlvbnMgbG9naWNhbGx5LCBieSBoYXZpbmcgYWxsIEluZm9GcmFtZSBmdW5jdGlvbnMgbmV4dCB0
+byBlYWNoIG90aGVyLg0KPg0KPj4gKw0KPj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2JyaWRn
+ZV9mdW5jcyBpdDY1MDVfYnJpZGdlX2Z1bmNzID0gew0KPj4gIAkuYXRvbWljX2R1cGxpY2F0ZV9z
+dGF0ZSA9IGRybV9hdG9taWNfaGVscGVyX2JyaWRnZV9kdXBsaWNhdGVfc3RhdGUsDQo+PiAgCS5h
+dG9taWNfZGVzdHJveV9zdGF0ZSA9IGRybV9hdG9taWNfaGVscGVyX2JyaWRnZV9kZXN0cm95X3N0
+YXRlLA0KPj4gQEAgLTMzMTUsNiArMzQxNywxMiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9i
+cmlkZ2VfZnVuY3MgaXQ2NTA1X2JyaWRnZV9mdW5jcyA9IHsNCj4+ICAJLmF0b21pY19wb3N0X2Rp
+c2FibGUgPSBpdDY1MDVfYnJpZGdlX2F0b21pY19wb3N0X2Rpc2FibGUsDQo+PiAgCS5kZXRlY3Qg
+PSBpdDY1MDVfYnJpZGdlX2RldGVjdCwNCj4+ICAJLmVkaWRfcmVhZCA9IGl0NjUwNV9icmlkZ2Vf
+ZWRpZF9yZWFkLA0KPj4gKwkuaGRtaV9hdWRpb19zdGFydHVwID0gaXQ2NTA1X2JyaWRnZV9oZG1p
+X2F1ZGlvX3N0YXJ0dXAsDQo+PiArCS5oZG1pX2F1ZGlvX3ByZXBhcmUgPSBpdDY1MDVfYnJpZGdl
+X2hkbWlfYXVkaW9fcHJlcGFyZSwNCj4+ICsJLmhkbWlfYXVkaW9fc2h1dGRvd24gPSBpdDY1MDVf
+YnJpZGdlX2hkbWlfYXVkaW9fc2h1dGRvd24sDQo+PiArCS5oZG1pX2NsZWFyX2luZm9mcmFtZSA9
+IGl0NjUwNV9icmlkZ2VfaGRtaV9jbGVhcl9pbmZvZnJhbWUsDQo+PiArCS5oZG1pX3dyaXRlX2lu
+Zm9mcmFtZSA9IGl0NjUwNV9icmlkZ2VfaGRtaV93cml0ZV9pbmZvZnJhbWUsDQo+DQo+Tm8gLmhk
+bWlfdG1kc19jaGFyX3JhdGVfdmFsaWQ/DQo+DQo+PiArDQo+PiAgfTsNCj4+ICANCj4+ICBzdGF0
+aWMgX19tYXliZV91bnVzZWQgaW50IGl0NjUwNV9icmlkZ2VfcmVzdW1lKHN0cnVjdCBkZXZpY2Ug
+KmRldikgQEAgDQo+PiAtMzcwMCw3ICszODA4LDEyIEBAIHN0YXRpYyBpbnQgaXQ2NTA1X2kyY19w
+cm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQ0KPj4gIAlpdDY1MDUtPmJyaWRnZS5mdW5j
+cyA9ICZpdDY1MDVfYnJpZGdlX2Z1bmNzOw0KPj4gIAlpdDY1MDUtPmJyaWRnZS50eXBlID0gRFJN
+X01PREVfQ09OTkVDVE9SX0Rpc3BsYXlQb3J0Ow0KPj4gIAlpdDY1MDUtPmJyaWRnZS5vcHMgPSBE
+Uk1fQlJJREdFX09QX0RFVEVDVCB8IERSTV9CUklER0VfT1BfRURJRCB8DQo+PiAtCQkJICAgICBE
+Uk1fQlJJREdFX09QX0hQRDsNCj4+ICsJCQkgICAgIERSTV9CUklER0VfT1BfSFBEIHwgRFJNX0JS
+SURHRV9PUF9IRE1JOw0KPj4gKwlpdDY1MDUtPmJyaWRnZS52ZW5kb3IgPSAiaVRFIjsNCj4+ICsJ
+aXQ2NTA1LT5icmlkZ2UucHJvZHVjdCA9ICJJVDY1MDUiOw0KPj4gKwlpdDY1MDUtPmJyaWRnZS5o
+ZG1pX2F1ZGlvX2RldiA9IGRldjsNCj4+ICsJaXQ2NTA1LT5icmlkZ2UuaGRtaV9hdWRpb19tYXhf
+aTJzX3BsYXliYWNrX2NoYW5uZWxzID0gMjsNCj4+ICsJaXQ2NTA1LT5icmlkZ2UuaGRtaV9hdWRp
+b19kYWlfcG9ydCA9IDE7DQo+PiAgCWRybV9icmlkZ2VfYWRkKCZpdDY1MDUtPmJyaWRnZSk7DQo+
+PiAgDQo+PiAgCXJldHVybiAwOw0KPj4gDQo+PiAtLS0NCj4+IGJhc2UtY29tbWl0OiBmZTAwM2Jj
+YjY5ZjdiZmY5ZmYyYjMwYjY1OWIwMDRkYmFmZTUyOTA3DQo+PiBjaGFuZ2UtaWQ6IDIwMjUwMTE0
+LWFkZC1hdWRpby1jb2RlYy04YzlkNDcwNjJhNmMNCj4+IA0KPj4gQmVzdCByZWdhcmRzLA0KPj4g
+LS0NCj4+IEhlcm1lcyBXdSA8SGVybWVzLnd1QGl0ZS5jb20udHc+DQo+PiANCj4+IA0KPg0KPi0t
+DQo+V2l0aCBiZXN0IHdpc2hlcw0KPkRtaXRyeQ0KPg0KDQpCUiwNCkhlcm1lcw0K
