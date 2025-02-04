@@ -1,106 +1,112 @@
-Received: from mail.crpt.ru (mail.crpt.ru [91.236.205.1])
+Received: from common.ash.relay.mailchannels.net (common.ash.relay.mailchannels.net [23.83.222.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E0D13A258;
-	Tue,  4 Feb 2025 09:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.236.205.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738662879; cv=none; b=CaXLfu9rOjax5GBwjIcB4UEKToBJVBy6z0bdxHPcfBQkWBC0Opiy9HorZkoMSlc1DIQx9ULnycfuOuLLJjX3JYzW48pdQO9S7xERaTWjMfpZ/Cdz+F8idfhzGxYv+PEZwHOo2/9Fni5Mo/it4zR5MfkroECQvOmwW6igWhQZ2Oo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738662879; c=relaxed/simple;
-	bh=2Yo0f8FwCYleUENX3Qi2dldmdHuWItSh7PgfZpXIbhI=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=mlVbAHKx7gdZ6upz0HJ6ZNmoitsw3upJmMb0OGu6Q70FsKiUGHaFhIjkw2HH2+NZA+GvC2ZUQBaSBWIaPPndiVIVZZkRBgXK3UzFcj4u1ny/TyDV3nzj16+tziSJ3kS331yh/0NVqsp3ux1yshopY4a9phDVn6q1KfLc79rJ7rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=DXvtOGFc; arc=none smtp.client-ip=91.236.205.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479FD13A258;
+	Tue,  4 Feb 2025 09:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738662951; cv=pass; b=VNoDfOTukyvhTiYltFg08Sw1Z+aWZdCijuLCm8KkLRWK2Rm0sPXGbBwbyKAZ8Y30z+3V5kRlc0oda5vp3tJbWY+ESQOet78ljpKvF8QSWlE9uz9FfQAU9oSKiPuFYyOyjFBPd+31M5zhRpZLy229mo9tgGNGmi9Lb1XDMOBMBek=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738662951; c=relaxed/simple;
+	bh=leCM//w8m7SIGivS0wwRw7YlTdHUZPVYAQ52is56yZE=;
+	h=Message-ID:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Date; b=J1C8HNnscgYcK5eREMMU8eZgq4D+vaNJlar0lH49kNQovAINoWO/g0j21KOb6q0CtGZVhU5jdG3zaoWsar2idN+tT6Z8NNGu2FE8prpHECCHLek/O0sHT4SOTQdsbN/HNX0unZxYPACX2TZKhywF3NcqBSON3m+QIzjb4gK1p98=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=dQ8p8nQ4; arc=pass smtp.client-ip=23.83.222.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="DXvtOGFc"
-Received: from mail.crpt.ru ([192.168.60.3])
-	by mail.crpt.ru  with ESMTP id 5149s9bs019526-5149s9bu019526
-	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
-	Tue, 4 Feb 2025 12:54:09 +0300
-Received: from EX2.crpt.local (192.168.60.4) by ex1.crpt.local (192.168.60.3)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 4 Feb
- 2025 12:54:09 +0300
-Received: from EX2.crpt.local ([192.168.60.4]) by EX2.crpt.local
- ([192.168.60.4]) with mapi id 15.01.2507.044; Tue, 4 Feb 2025 12:54:09 +0300
-From: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>
-To: Jean Delvare <jdelvare@suse.com>
-CC: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>, Guenter Roeck
-	<linux@roeck-us.net>, "linux-hwmon@vger.kernel.org"
-	<linux-hwmon@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "lvc-project@linuxtesting.org"
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH v2] hwmon: (xgene-hwmon) use appropriate type for the latency
- value
-Thread-Topic: [PATCH v2] hwmon: (xgene-hwmon) use appropriate type for the
- latency value
-Thread-Index: AQHbduq8jpf+a24QrUGeePF9PvB51A==
-Date: Tue, 4 Feb 2025 09:54:08 +0000
-Message-ID: <20250204095400.95013-1-a.vatoropin@crpt.ru>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-kse-serverinfo: EX1.crpt.local, 9
-x-kse-antivirus-interceptor-info: scan successful
-x-kse-antivirus-info: Clean, bases: 2/3/2025 11:17:00 PM
-x-kse-attachment-filter-triggered-rules: Clean
-x-kse-attachment-filter-triggered-filters: Clean
-x-kse-bulkmessagesfiltering-scan-result: protection disabled
-Content-Type: text/plain; charset="koi8-r"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="dQ8p8nQ4"
+X-Sender-Id: hostingeremail|x-authuser|chester.a.unal@arinc9.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 614E88C3422;
+	Tue,  4 Feb 2025 09:48:31 +0000 (UTC)
+Received: from fr-int-smtpout9.hostinger.io (100-122-225-139.trex-nlb.outbound.svc.cluster.local [100.122.225.139])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id A419B8C19D5;
+	Tue,  4 Feb 2025 09:48:23 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738662511; a=rsa-sha256;
+	cv=none;
+	b=ko83ZFeJZCLnfCNv8oLWWhlRyLlzi0S5YK41WCDB0nKycAAb4ZGNeCHd2k7Q+gMYT8fQy/
+	E3kYSa9/WC4+Nm2LIg57h6c0lMvAJRMxALuLNvbg9yRrWMOXEWTHJw7b2bl2HgV0Aw18g8
+	qZAyXdOA+PFBqNnF5P7LewBFikSsw1S3v45ubhPtGxyFbhpjp/YJhnCty75x+iNl7nLxsZ
+	YjRCrgNVPyvnvhI00oz78Hv/LOTyRATZ9pPhUb1+NoYlnDdcsZ9v0L0ScdbHxS5sk9vvKv
+	7KMFVKXh/4cvzyTqVB7R9zvzNkvdeEQS7pzJeiSvQoqXCp5GWOSY/0sfTl7nqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1738662511;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=dmUwV1+lkQOftGoMtu4xLI3tP41KkWphDDQnQXVrr6k=;
+	b=RRBoAm1LDbyKoK8e2rSN/1vAJIDb2XckyysnmkAy1D0rpiwqwtCoj2BfCwMob28GhZOHod
+	mCvK39dX0PVenyzy/TXJRIGbpRqKuLFp6y3rAL3DOf6L9uh3AxieeGl3KVi8CtpdvTEYCo
+	P+Ng1Hkl26s04dgvYRNNZoNQNEbuh0Gr0mZTZ/eRTyq3TEg5GSZcFnQj/fcXmKYxXuS2pE
+	TUwbohgBiQUFrNeYnJqbvXFYwtPSLxbHVPvTxc6H4smuNPhMTLnWzHzdooTInaIPNGgfxl
+	FVnEbmXmPTsZZRTzP02+agUbw0JXgULd6X2v3Y+k3z58LVxdXCkJwvjfP2pxsA==
+ARC-Authentication-Results: i=1;
+	rspamd-854f7f575d-2jbtq;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=chester.a.unal@arinc9.com
+X-Sender-Id: hostingeremail|x-authuser|chester.a.unal@arinc9.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|chester.a.unal@arinc9.com
+X-MailChannels-Auth-Id: hostingeremail
+X-Turn-Hook: 36a03b8123b2479a_1738662511257_1804304046
+X-MC-Loop-Signature: 1738662511257:883016486
+X-MC-Ingress-Time: 1738662511256
+Received: from fr-int-smtpout9.hostinger.io (fr-int-smtpout9.hostinger.io
+ [89.116.146.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.122.225.139 (trex/7.0.2);
+	Tue, 04 Feb 2025 09:48:31 +0000
+Message-ID: <55228e28-9370-4eca-8ea9-cc836a066254@arinc9.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com;
+	s=hostingermail-a; t=1738662501;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dmUwV1+lkQOftGoMtu4xLI3tP41KkWphDDQnQXVrr6k=;
+	b=dQ8p8nQ4zNtwbeWCLAgFD2mJ4ZKSE5vPtWGmXv3xFEGxRIeowT0pJhoXNZRLifJ0nQbwwO
+	ieFaTGjhr+A9E8n0u7K41hxphVBNZ73HzE+HkFBfqn4OJoUstmhi0+h/ladVfCSbHXzocN
+	z2wSihbR8UNpYABN8bElt2HoVgkn6q/CqeOSZSXJKFgkrgxh8UgTmKnAoEOaVu65IHjUeU
+	YUC22wDx8w5qFIuUBdTOviofFlZo4TYl87uEr1iL+rXOlqAN4i+ilaEYZkzegeMDI3AfXE
+	N5CYE7groeWOKfXYorhxrXb7nXyiPgz3CfPDPbaoot2zdb4Rb3bDJnN66lAyCQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-FEAS-Client-IP: 192.168.60.3
-X-FE-Policy-ID: 2:4:0:SYSTEM
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=crpt.ru; c=relaxed/relaxed;
- h=from:to:cc:subject:date:message-id:content-type:mime-version;
- bh=Ns/S9zdLekX4uFaTfuRRtehKlOR68bAUTwpbDYs0F9Q=;
- b=DXvtOGFcI/iCiCiJjN71h2tp3LTF9RStzbc98nIvg2SjeTDBPgQz7E60laFSMn9JDaPIC9SZCDsz
-	kv3w6VOCZJWLRZFvwwnnlvYBLvktAnT2fUByZ5u6aZ08bo3itK8h48/FE4LzWnhvZJTYX5+y3LqC
-	mVWc3f5QMWYf230FVHCi94Nxb/A5xYZF2xDUHGSgQdOQMGzK4IO4+y5fKvaxlzXExj7QmQEcVDA1
-	GWiqRxCk6KaFY7xEUzdqrJM1ompke1ygok8nnIWy+ogTV8dvR0a7UeJeddNIoGSxmmGaiey5X8EM
-	1sNBmNMbuPB0Hl65K0o7mjb9TBak0G0Qc29kow==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] USB: serial: option: add MeiG Smart SLM828
+To: Johan Hovold <johan@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dwayne Du Preez <dwayne.dupreez@xpedite-tech.com>,
+ Alexander Scholten <alexander.scholten@xpedite-tech.com>,
+ Zenon van Deventer <zenon@xpedite-tech.com>
+References: <20250124-for-johan-meig-slm828-v2-1-6b4cd3f6344f@arinc9.com>
+ <6e2c4db7-1325-473b-9999-2b1ada418119@arinc9.com>
+ <Z6Hfx4KBeVHCNQVS@hovoldconsulting.com>
+Content-Language: en-US
+From: "Chester A. Unal" <chester.a.unal@arinc9.com>
+In-Reply-To: <Z6Hfx4KBeVHCNQVS@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Tue, 04 Feb 2025 09:48:18 +0000 (UTC)
+X-CM-Envelope: MS4xfK8s6hRN5GvcZHLwc9C1QdII8ajxror0DIA13KNqBwq/xqgth+3+M7vawk5dr3Lv5mgP+l0d2bRQWEN6fT06Hs4onf1jgLYvCb/g7sXtaXJJ0DY/kp1y Xa+aRL+n6BoPSjZbqnixnr1WqRW6GOmCAKlPtp+EvjGfcOJMyy65/uLgmVy9zb+wIUwm+N0F7HjuDn6RGfk6VOiUn1eltSwpbOS0j2+VQYp425KXxg14EZqW TsYYXmkhrhKWLJUTYa0t95uDjYBGO6mcqudzV9Mk266Gv2D94AL+MI/YQIppXqaDkAikY3A3Ryl3f97Rzjm8JnOtrFtirjcy9G905yHSx5+ldwDl+FL5GyjG sQImDIyPwMkjM8swyZjdRUdpVt0izw05Jg0dhZdO6O5DXCmJmQ6RStlXnL36EMML08kbHBCb5aQ6TIX7qMLQfwshMer2LQbQPr6lmGIajEMyZkrNU4U=
+X-CM-Analysis: v=2.4 cv=PMNd+uqC c=1 sm=1 tr=0 ts=67a1e265 a=xK2r8zoKF9vSrBIo2YuqYg==:117 a=xK2r8zoKF9vSrBIo2YuqYg==:17 a=IkcTkHD0fZMA:10 a=A6Sy_z46XarSiW2s0hoA:9 a=QEXdDO2ut3YA:10
+X-AuthUser: chester.a.unal@arinc9.com
 
-From: Andrey Vatoropin <a.vatoropin@crpt.ru>
+On 04/02/2025 09:37, Johan Hovold wrote:
+> On Tue, Feb 04, 2025 at 09:15:02AM +0000, Chester A. Unal wrote:
+> 
+>> A reminder for this patch to be applied.
+> 
+> You submitted the patch during the merge window which ended two days
+> ago. It's still in my queue, don't worry.
 
-The expression PCC_NUM_RETRIES * pcc_chan->latency is currently being
-evaluated using 32-bit arithmetic.
+Thanks a lot for keeping an eye on it, Johan. Keep up the good work!
 
-Since a value of type 'u64' is used to store the eventual result,
-and this result is later sent to the function usecs_to_jiffies with=20
-input parameter unsigned int, the current data type is too wide to=20
-store the value of ctx->usecs_lat.
-
-Change the data type of "usecs_lat" to a more suitable (narrower) type.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
----
-v1->v2: rework the patch by utilizing more appropriate data types for
-the variables in question as Guenter Roeck noticed.
- drivers/hwmon/xgene-hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
-index 1e3bd129a922..72ba569dde1c 100644
---- a/drivers/hwmon/xgene-hwmon.c
-+++ b/drivers/hwmon/xgene-hwmon.c
-@@ -105,7 +105,7 @@ struct xgene_hwmon_dev {
-=20
- 	phys_addr_t		comm_base_addr;
- 	void			*pcc_comm_addr;
--	u64			usecs_lat;
-+	unsigned int		usecs_lat;
- };
-=20
- /*
---=20
-2.43.0=
+Chester A.
