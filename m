@@ -1,67 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7F1219A91;
-	Tue,  4 Feb 2025 19:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6742010F5;
+	Tue,  4 Feb 2025 19:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738695753; cv=none; b=GSbuddIainKl7tndEkEtKDBABY2FPs2V7x2jXt5LV5z1W208eVu09LEA/Tb9m3Y6U7UDwIAykfE4brF+uHgY7L355p3kg7FHVi9lxVtFBq0f4fqlQrlsNqDr3KuJU+xPp8drMggxraQIN/cnzV3ZiyjYktGGqlmZoD9P0VHDbLM=
+	t=1738695849; cv=none; b=lWkTUoXcc3jWQMxV4rIiwyc+hykNFhb1Gb/zZq73aODXorv1ZPshD4LQhRmNgXXo6DyrtjHkAufoaJhNZrv21DBUFgIjJlFshai9JgaaDojZ6mjpL/13GYjEedf/cgwh0KQIiWWxDruXFAw1zkolIWH4+OwEKJlo+zq0BpsDPlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738695753; c=relaxed/simple;
-	bh=sEL+RL9bkM7/DYpMbQAOmXoxyvdc786QUWh+3yHBmgM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gLVY7+AEzQjPWkYrwQ70K8Jp9T90+S5adRvGgkIfenE/MycMDHP0eUMABLQMOgqoMGtzCKwoAcu0Guh7myBFE7Sc/4JfYm+VO96kzWeCJhBGefeKgLhOPCv9/zAIujZzVIN8ePxCD2qzU+KnvvmOGjjfoW0/0Sy5p4I5vA7vKCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HM+ah0Ho; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738695849; c=relaxed/simple;
+	bh=vLKZJx+AgyLJXaJHRLLCgq9rmOcspj/T/NX5fhccKKI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p0EXr+9IH+DXRc5ZrM08JPi2o7pjdYpsLAPNLRzCep5quORbx0F/UhXyuc8X9cQr5xD//NcSMLygwDX0jhyyRaGdH5gnMl/8r1aYVHb9ZgMrSrqDWFNXeS1UN9LevmBnpJjYIzlM0QXbv5NVhJnGdA/Yz4e+uR39sJrX1I78oH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tgwQPr6r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HM+ah0Ho"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738695751; x=1770231751;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=sEL+RL9bkM7/DYpMbQAOmXoxyvdc786QUWh+3yHBmgM=;
-  b=HM+ah0Ho797Lagod/htwM71eE+LbJ4FgccnmL2OF2h3sZb7l9Y8nTzz0
-   /SBBrQ7P6PDq7/BcdEebN+NMPRRreKKkaYF5CXL41CgGa7hkZUTDDCdTT
-   HgirnGvz9sf59/LtsUtK0EbN52udvJva5z8cAghilsf81h1dMbbgIcfKI
-   LTYB/JqPhCiVUvecLOXCsYMf31bigrCaJo6iClyMeqhoSrhlcF7W/5GW6
-   53SeHzFWgDCjCCbcoG5RvA+//FXBdrHusZqCgM7BHq8iuoTxT5lsKV4KA
-   PmxdCTQ2htgmSy/KkyJXyy84HWXuHHThAqNgibwIhlmuL4EWC0HgUiGSo
-   w==;
-X-CSE-ConnectionGUID: ThjemqG5SNmPvVwtRyqNbQ==
-X-CSE-MsgGUID: Yw0SA+6XSBeTG0kHgVCl2Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39501850"
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="39501850"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 11:02:25 -0800
-X-CSE-ConnectionGUID: nGF7aZEGT7K8/BO1l5r56w==
-X-CSE-MsgGUID: mdzd++rxT+CrQizee1bvKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="141542480"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 04 Feb 2025 11:02:22 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 8F6C4D2; Tue, 04 Feb 2025 21:02:20 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Srinivas Neeli <srinivas.neeli@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/2] gpio: xilinx: Use better bitmap APIs where appropriate
-Date: Tue,  4 Feb 2025 21:00:47 +0200
-Message-ID: <20250204190218.243537-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20250204190218.243537-1-andriy.shevchenko@linux.intel.com>
-References: <20250204190218.243537-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tgwQPr6r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0FE0C4CEDF;
+	Tue,  4 Feb 2025 19:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738695849;
+	bh=vLKZJx+AgyLJXaJHRLLCgq9rmOcspj/T/NX5fhccKKI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tgwQPr6rAKMG633eVhOt/k8xyb6UvXSuNnd3Sf4nsZ8dxU19GUblTtd1egZduAtj9
+	 L73Pm9hTiP3PeBcjY1IH0zK+1lPELMgYw+VtPWKFLyZZ59Cp2iy6pde9IugYf08r/0
+	 lT02Y7sA/GCKVCY2EUxqTcZpK8XttOwZMXhF6ePD6PgE5E+By9ekiCKHcEmYxrfXHH
+	 IlYL9LONrHzYHCMaJhdqKdwcWNs/6U+loVM5seOTFHvopk02xRLfzIdBGJSFXLxZ+y
+	 HGTUMv+2SxpI5Bu8wrOBkJemxtFuHEh6LjcxS/7qITdW3PiuPmWWN58WLIKfRqoPV2
+	 2IK3/kn/sOvBw==
+From: Danilo Krummrich <dakr@kernel.org>
+To: airlied@gmail.com,
+	simona@ffwll.ch,
+	corbet@lwn.net,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	ajanulgu@redhat.com,
+	lyude@redhat.com,
+	pstanner@redhat.com,
+	zhiw@nvidia.com,
+	cjia@nvidia.com,
+	jhubbard@nvidia.com,
+	bskeggs@nvidia.com,
+	acurrid@nvidia.com
+Cc: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dri-devel@lists.freedesktop.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nouveau@lists.freedesktop.org,
+	rust-for-linux@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH v2 1/2] gpu: nova-core: add initial driver stub
+Date: Tue,  4 Feb 2025 20:03:11 +0100
+Message-ID: <20250204190400.2550-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,224 +67,465 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are bitmap_gather() and bitmap_scatter() that are factually
-simplified version of the APIs used in the driver. Use them where
-appropriate.
+Add the initial nova-core driver stub.
 
-While at it, replace bitmap_bitremap() with find_nth_bit()
-for the sake of simplification.
+nova-core is intended to serve as a common base for nova-drm (the
+corresponding DRM driver) and the vGPU manager VFIO driver, serving as a
+hard- and firmware abstraction layer for GSP-based NVIDIA GPUs.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+The Nova project, including nova-core and nova-drm, in the long term,
+is intended to serve as the successor of Nouveau for all GSP-based GPUs.
+
+The motivation for both, starting a successor project for Nouveau and
+doing so using the Rust programming language, is documented in detail
+through a previous post on the mailing list [1], an LWN article [2] and a
+talk from LPC '24.
+
+In order to avoid the chicken and egg problem to require a user to
+upstream Rust abstractions, but at the same time require the Rust
+abstractions to implement the driver, nova-core kicks off as a driver
+stub and is subsequently developed upstream.
+
+Link: https://lore.kernel.org/dri-devel/Zfsj0_tb-0-tNrJy@cassiopeiae/T/#u [1]
+Link: https://lwn.net/Articles/990736/ [2]
+Link: https://youtu.be/3Igmx28B3BQ?si=sBdSEer4tAPKGpOs [3]
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- drivers/gpio/gpio-xilinx.c | 68 +++++++++++++++-----------------------
- 1 file changed, 27 insertions(+), 41 deletions(-)
+Changes in v2:
+  - Fix module name in Kconfig description. (John)
+  - Expand Kconfig description a bit. (John)
+  - Expand name for PCI BAR0 region.
+  - Do not store / print boot0 raw register value. (John)
+  - Rename CardType to Architecture, rename enum names to represent the
+    architecture name and adjust enum values according to the register
+    definition. (John)
+  - Add an abstraction for register accesses.
+  - Print chipset, architecture and revision.
+  - Load bootloader firmware. (Timur)
+---
+ MAINTAINERS                        |  10 ++
+ drivers/gpu/Makefile               |   1 +
+ drivers/gpu/nova-core/Kconfig      |  14 +++
+ drivers/gpu/nova-core/Makefile     |   3 +
+ drivers/gpu/nova-core/driver.rs    |  47 ++++++++
+ drivers/gpu/nova-core/gpu.rs       | 187 +++++++++++++++++++++++++++++
+ drivers/gpu/nova-core/nova_core.rs |  15 +++
+ drivers/gpu/nova-core/regs.rs      |  60 +++++++++
+ drivers/video/Kconfig              |   1 +
+ 9 files changed, 338 insertions(+)
+ create mode 100644 drivers/gpu/nova-core/Kconfig
+ create mode 100644 drivers/gpu/nova-core/Makefile
+ create mode 100644 drivers/gpu/nova-core/driver.rs
+ create mode 100644 drivers/gpu/nova-core/gpu.rs
+ create mode 100644 drivers/gpu/nova-core/nova_core.rs
+ create mode 100644 drivers/gpu/nova-core/regs.rs
 
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index 792d94c49077..1ff527ccf6c7 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -45,8 +45,7 @@
-  * struct xgpio_instance - Stores information about GPIO device
-  * @gc: GPIO chip
-  * @regs: register block
-- * @hw_map: GPIO pin mapping on hardware side
-- * @sw_map: GPIO pin mapping on software side
-+ * @map: GPIO pin mapping on hardware side
-  * @state: GPIO write state shadow register
-  * @last_irq_read: GPIO read state register from last interrupt
-  * @dir: GPIO direction shadow register
-@@ -60,8 +59,7 @@
- struct xgpio_instance {
- 	struct gpio_chip gc;
- 	void __iomem *regs;
--	DECLARE_BITMAP(hw_map, 64);
--	DECLARE_BITMAP(sw_map, 64);
-+	DECLARE_BITMAP(map, 64);
- 	DECLARE_BITMAP(state, 64);
- 	DECLARE_BITMAP(last_irq_read, 64);
- 	DECLARE_BITMAP(dir, 64);
-@@ -73,16 +71,6 @@ struct xgpio_instance {
- 	struct clk *clk;
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d1086e53a317..f7ddca7de0ef 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7446,6 +7446,16 @@ T:	git https://gitlab.freedesktop.org/drm/nouveau.git
+ F:	drivers/gpu/drm/nouveau/
+ F:	include/uapi/drm/nouveau_drm.h
  
--static inline int xgpio_from_bit(struct xgpio_instance *chip, int bit)
--{
--	return bitmap_bitremap(bit, chip->hw_map, chip->sw_map, 64);
--}
--
--static inline int xgpio_to_bit(struct xgpio_instance *chip, int gpio)
--{
--	return bitmap_bitremap(gpio, chip->sw_map, chip->hw_map, 64);
--}
--
- static inline u32 xgpio_get_value32(const unsigned long *map, int bit)
- {
- 	const size_t index = BIT_WORD(bit);
-@@ -128,7 +116,8 @@ static void xgpio_write_ch(struct xgpio_instance *chip, int reg, int bit, unsign
++CORE DRIVER FOR NVIDIA GPUS [RUST]
++M:	Danilo Krummrich <dakr@kernel.org>
++L:	nouveau@lists.freedesktop.org
++S:	Supported
++Q:	https://patchwork.freedesktop.org/project/nouveau/
++B:	https://gitlab.freedesktop.org/drm/nova/-/issues
++C:	irc://irc.oftc.net/nouveau
++T:	git https://gitlab.freedesktop.org/drm/nova.git nova-next
++F:	drivers/gpu/nova-core/
++
+ DRM DRIVER FOR OLIMEX LCD-OLINUXINO PANELS
+ M:	Stefan Mavrodiev <stefan@olimex.com>
+ S:	Maintained
+diff --git a/drivers/gpu/Makefile b/drivers/gpu/Makefile
+index 8997f0096545..36a54d456630 100644
+--- a/drivers/gpu/Makefile
++++ b/drivers/gpu/Makefile
+@@ -5,3 +5,4 @@
+ obj-y			+= host1x/ drm/ vga/
+ obj-$(CONFIG_IMX_IPUV3_CORE)	+= ipu-v3/
+ obj-$(CONFIG_TRACE_GPU_MEM)		+= trace/
++obj-$(CONFIG_NOVA_CORE)		+= nova-core/
+diff --git a/drivers/gpu/nova-core/Kconfig b/drivers/gpu/nova-core/Kconfig
+new file mode 100644
+index 000000000000..ad0c06756516
+--- /dev/null
++++ b/drivers/gpu/nova-core/Kconfig
+@@ -0,0 +1,14 @@
++config NOVA_CORE
++	tristate "Nova Core GPU driver"
++	depends on PCI
++	depends on RUST
++	depends on RUST_FW_LOADER_ABSTRACTIONS
++	default n
++	help
++	  Choose this if you want to build the Nova Core driver for Nvidia
++	  GPUs based on the GPU System Processor (GSP). This is true for Turing
++	  and later GPUs.
++
++	  This driver is work in progress and may not be functional.
++
++	  If M is selected, the module will be called nova_core.
+diff --git a/drivers/gpu/nova-core/Makefile b/drivers/gpu/nova-core/Makefile
+new file mode 100644
+index 000000000000..2d78c50126e1
+--- /dev/null
++++ b/drivers/gpu/nova-core/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++
++obj-$(CONFIG_NOVA_CORE) += nova_core.o
+diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
+new file mode 100644
+index 000000000000..63c19f140fbd
+--- /dev/null
++++ b/drivers/gpu/nova-core/driver.rs
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: GPL-2.0
++
++use kernel::{bindings, c_str, pci, prelude::*};
++
++use crate::gpu::Gpu;
++
++#[pin_data]
++pub(crate) struct NovaCore {
++    #[pin]
++    pub(crate) gpu: Gpu,
++}
++
++const BAR0_SIZE: usize = 8;
++pub(crate) type Bar0 = pci::Bar<BAR0_SIZE>;
++
++kernel::pci_device_table!(
++    PCI_TABLE,
++    MODULE_PCI_TABLE,
++    <NovaCore as pci::Driver>::IdInfo,
++    [(
++        pci::DeviceId::from_id(bindings::PCI_VENDOR_ID_NVIDIA, bindings::PCI_ANY_ID as _),
++        ()
++    )]
++);
++
++impl pci::Driver for NovaCore {
++    type IdInfo = ();
++    const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
++
++    fn probe(pdev: &mut pci::Device, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
++        dev_dbg!(pdev.as_ref(), "Probe Nova Core GPU driver.\n");
++
++        pdev.enable_device_mem()?;
++        pdev.set_master();
++
++        let bar = pdev.iomap_region_sized::<BAR0_SIZE>(0, c_str!("nova-core/bar0"))?;
++
++        let this = KBox::pin_init(
++            try_pin_init!(Self {
++                gpu <- Gpu::new(pdev, bar)?,
++            }),
++            GFP_KERNEL,
++        )?;
++
++        Ok(this)
++    }
++}
+diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
+new file mode 100644
+index 000000000000..be260a8ffe46
+--- /dev/null
++++ b/drivers/gpu/nova-core/gpu.rs
+@@ -0,0 +1,187 @@
++// SPDX-License-Identifier: GPL-2.0
++
++use kernel::{
++    device, devres::Devres, error::code::*, firmware, fmt, pci, prelude::*, str::CString,
++};
++
++use crate::driver::Bar0;
++use crate::regs;
++use core::fmt;
++
++/// Enum representation of the GPU chipset.
++#[derive(fmt::Debug)]
++pub(crate) enum Chipset {
++    TU102 = 0x162,
++    TU104 = 0x164,
++    TU106 = 0x166,
++    TU117 = 0x167,
++    TU116 = 0x168,
++    GA102 = 0x172,
++    GA103 = 0x173,
++    GA104 = 0x174,
++    GA106 = 0x176,
++    GA107 = 0x177,
++    AD102 = 0x192,
++    AD103 = 0x193,
++    AD104 = 0x194,
++    AD106 = 0x196,
++    AD107 = 0x197,
++}
++
++/// Enum representation of the GPU generation.
++#[derive(fmt::Debug)]
++pub(crate) enum Architecture {
++    Turing = 0x16,
++    Ampere = 0x17,
++    Ada = 0x19,
++}
++
++pub(crate) struct Revision {
++    major: u8,
++    minor: u8,
++}
++
++/// Structure holding the metadata of the GPU.
++pub(crate) struct Spec {
++    chipset: Chipset,
++    arch: Architecture,
++    /// The revision of the chipset.
++    revision: Revision,
++}
++
++/// Structure encapsulating the firmware blobs required for the GPU to operate.
++#[allow(dead_code)]
++pub(crate) struct Firmware {
++    booter_load: firmware::Firmware,
++    booter_unload: firmware::Firmware,
++    bootloader: firmware::Firmware,
++    gsp: firmware::Firmware,
++}
++
++/// Structure holding the resources required to operate the GPU.
++#[allow(dead_code)]
++#[pin_data]
++pub(crate) struct Gpu {
++    spec: Spec,
++    /// MMIO mapping of PCI BAR 0
++    bar: Devres<Bar0>,
++    fw: Firmware,
++}
++
++// TODO replace with something like derive(FromPrimitive)
++impl Chipset {
++    fn from_u32(value: u32) -> Option<Chipset> {
++        match value {
++            0x162 => Some(Chipset::TU102),
++            0x164 => Some(Chipset::TU104),
++            0x166 => Some(Chipset::TU106),
++            0x167 => Some(Chipset::TU117),
++            0x168 => Some(Chipset::TU116),
++            0x172 => Some(Chipset::GA102),
++            0x173 => Some(Chipset::GA103),
++            0x174 => Some(Chipset::GA104),
++            0x176 => Some(Chipset::GA106),
++            0x177 => Some(Chipset::GA107),
++            0x192 => Some(Chipset::AD102),
++            0x193 => Some(Chipset::AD103),
++            0x194 => Some(Chipset::AD104),
++            0x196 => Some(Chipset::AD106),
++            0x197 => Some(Chipset::AD107),
++            _ => None,
++        }
++    }
++}
++
++// TODO:
++// - replace with something like derive(FromPrimitive)
++// - consider to store within Chipset, if arbitrary_enum_discriminant becomes stable
++impl Architecture {
++    fn from_u32(value: u32) -> Option<Architecture> {
++        match value {
++            0x16 => Some(Architecture::Turing),
++            0x17 => Some(Architecture::Ampere),
++            0x19 => Some(Architecture::Ada),
++            _ => None,
++        }
++    }
++}
++
++impl Revision {
++    fn new(major: u8, minor: u8) -> Self {
++        Self { major, minor }
++    }
++}
++
++impl fmt::Display for Revision {
++    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
++        write!(f, "{:x}.{:x}", self.major, self.minor)
++    }
++}
++
++impl Spec {
++    fn new(bar: &Devres<Bar0>) -> Result<Spec> {
++        let bar = bar.try_access().ok_or(ENXIO)?;
++        let boot0 = regs::Boot0::read(&bar);
++
++        let Some(chipset) = Chipset::from_u32(boot0.chipset()) else {
++            return Err(ENODEV);
++        };
++
++        let Some(arch) = Architecture::from_u32(boot0.arch()) else {
++            return Err(ENODEV);
++        };
++
++        let revision = Revision::new(boot0.major_rev(), boot0.minor_rev());
++
++        Ok(Self {
++            arch,
++            chipset,
++            revision,
++        })
++    }
++}
++
++impl Firmware {
++    fn new(dev: &device::Device, spec: &Spec, ver: &str) -> Result<Firmware> {
++        let mut chip_name = CString::try_from_fmt(fmt!("{:?}", spec.chipset))?;
++        chip_name.make_ascii_lowercase();
++
++        let fw_booter_load_path =
++            CString::try_from_fmt(fmt!("nvidia/{}/gsp/booter_load-{}.bin", &*chip_name, ver))?;
++        let fw_booter_unload_path =
++            CString::try_from_fmt(fmt!("nvidia/{}/gsp/booter_unload-{}.bin", &*chip_name, ver))?;
++        let fw_bootloader_path =
++            CString::try_from_fmt(fmt!("nvidia/{}/gsp/bootloader-{}.bin", &*chip_name, ver))?;
++        let fw_gsp_path =
++            CString::try_from_fmt(fmt!("nvidia/{}/gsp/gsp-{}.bin", &*chip_name, ver))?;
++
++        let booter_load = firmware::Firmware::request(&fw_booter_load_path, dev)?;
++        let booter_unload = firmware::Firmware::request(&fw_booter_unload_path, dev)?;
++        let bootloader = firmware::Firmware::request(&fw_bootloader_path, dev)?;
++        let gsp = firmware::Firmware::request(&fw_gsp_path, dev)?;
++
++        Ok(Firmware {
++            booter_load,
++            booter_unload,
++            bootloader,
++            gsp,
++        })
++    }
++}
++
++impl Gpu {
++    pub(crate) fn new(pdev: &pci::Device, bar: Devres<Bar0>) -> Result<impl PinInit<Self>> {
++        let spec = Spec::new(&bar)?;
++        let fw = Firmware::new(pdev.as_ref(), &spec, "535.113.01")?;
++
++        dev_info!(
++            pdev.as_ref(),
++            "NVIDIA (Chipset: {:?}, Architecture: {:?}, Revision: {})\n",
++            spec.chipset,
++            spec.arch,
++            spec.revision
++        );
++
++        Ok(pin_init!(Self { spec, bar, fw }))
++    }
++}
+diff --git a/drivers/gpu/nova-core/nova_core.rs b/drivers/gpu/nova-core/nova_core.rs
+new file mode 100644
+index 000000000000..5d0230042793
+--- /dev/null
++++ b/drivers/gpu/nova-core/nova_core.rs
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Nova Core GPU Driver
++
++mod driver;
++mod gpu;
++mod regs;
++
++kernel::module_pci_driver! {
++    type: driver::NovaCore,
++    name: "NovaCore",
++    author: "Danilo Krummrich",
++    description: "Nova Core GPU driver",
++    license: "GPL v2",
++}
+diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
+new file mode 100644
+index 000000000000..65b46f8a67d3
+--- /dev/null
++++ b/drivers/gpu/nova-core/regs.rs
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: GPL-2.0
++
++use crate::driver::Bar0;
++use kernel::revocable::RevocableGuard;
++
++// TODO
++//
++// Create register definitions via generic macros. See task "Generic register abstraction" in
++// Documentation/gpu/nova/core/todo.rst.
++
++const BOOT0_OFFSET: usize = 0x00000000;
++
++// 3:0
++const BOOT0_MINOR_REV_SHIFT: u8 = 0;
++const BOOT0_MINOR_REV_MASK: u32 = 0x0000000f;
++
++// 7:4
++const BOOT0_MAJOR_REV_SHIFT: u8 = 4;
++const BOOT0_MAJOR_REV_MASK: u32 = 0x000000f0;
++
++// 23:20
++const BOOT0_IMPL_SHIFT: u8 = 20;
++const BOOT0_IMPL_MASK: u32 = 0x00f00000;
++
++// 28:24
++const BOOT0_ARCH_SHIFT: u8 = 24;
++const BOOT0_ARCH_MASK: u32 = 0x1f000000;
++
++// 28:20 - Combine BOOT0_IMPL and BOOT0_ARCH to a new virtual register field.
++const BOOT0_CHIPSET_SHIFT: u8 = BOOT0_IMPL_SHIFT;
++const BOOT0_CHIPSET_MASK: u32 = BOOT0_IMPL_MASK | BOOT0_ARCH_MASK;
++
++pub(crate) struct Boot0(u32);
++
++impl Boot0 {
++    #[inline]
++    pub(crate) fn read(bar: &RevocableGuard<'_, Bar0>) -> Self {
++        Self(bar.readl(BOOT0_OFFSET))
++    }
++
++    #[inline]
++    pub(crate) fn chipset(&self) -> u32 {
++        (self.0 & BOOT0_CHIPSET_MASK) >> BOOT0_CHIPSET_SHIFT
++    }
++
++    #[inline]
++    pub(crate) fn arch(&self) -> u32 {
++        (self.0 & BOOT0_ARCH_MASK) >> BOOT0_ARCH_SHIFT
++    }
++
++    #[inline]
++    pub(crate) fn minor_rev(&self) -> u8 {
++        ((self.0 & BOOT0_MINOR_REV_MASK) >> BOOT0_MINOR_REV_SHIFT) as u8
++    }
++
++    #[inline]
++    pub(crate) fn major_rev(&self) -> u8 {
++        ((self.0 & BOOT0_MAJOR_REV_MASK) >> BOOT0_MAJOR_REV_SHIFT) as u8
++    }
++}
+diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
+index 44c9ef1435a2..5df981920a94 100644
+--- a/drivers/video/Kconfig
++++ b/drivers/video/Kconfig
+@@ -39,6 +39,7 @@ source "drivers/gpu/vga/Kconfig"
  
- static void xgpio_read_ch_all(struct xgpio_instance *chip, int reg, unsigned long *a)
- {
--	int bit, lastbit = xgpio_to_bit(chip, chip->gc.ngpio - 1);
-+	unsigned long lastbit = find_nth_bit(chip->map, 64, chip->gc.ngpio - 1);
-+	int bit;
+ source "drivers/gpu/host1x/Kconfig"
+ source "drivers/gpu/ipu-v3/Kconfig"
++source "drivers/gpu/nova-core/Kconfig"
  
- 	for (bit = 0; bit <= lastbit ; bit += 32)
- 		xgpio_read_ch(chip, reg, bit, a);
-@@ -136,7 +125,8 @@ static void xgpio_read_ch_all(struct xgpio_instance *chip, int reg, unsigned lon
+ source "drivers/gpu/drm/Kconfig"
  
- static void xgpio_write_ch_all(struct xgpio_instance *chip, int reg, unsigned long *a)
- {
--	int bit, lastbit = xgpio_to_bit(chip, chip->gc.ngpio - 1);
-+	unsigned long lastbit = find_nth_bit(chip->map, 64, chip->gc.ngpio - 1);
-+	int bit;
- 
- 	for (bit = 0; bit <= lastbit ; bit += 32)
- 		xgpio_write_ch(chip, reg, bit, a);
-@@ -156,7 +146,7 @@ static void xgpio_write_ch_all(struct xgpio_instance *chip, int reg, unsigned lo
- static int xgpio_get(struct gpio_chip *gc, unsigned int gpio)
- {
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
--	int bit = xgpio_to_bit(chip, gpio);
-+	unsigned long bit = find_nth_bit(chip->map, 64, gpio);
- 	DECLARE_BITMAP(state, 64);
- 
- 	xgpio_read_ch(chip, XGPIO_DATA_OFFSET, bit, state);
-@@ -177,7 +167,7 @@ static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- {
- 	unsigned long flags;
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
--	int bit = xgpio_to_bit(chip, gpio);
-+	unsigned long bit = find_nth_bit(chip->map, 64, gpio);
- 
- 	raw_spin_lock_irqsave(&chip->gpio_lock, flags);
- 
-@@ -207,8 +197,8 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 	unsigned long flags;
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
- 
--	bitmap_remap(hw_mask, mask, chip->sw_map, chip->hw_map, 64);
--	bitmap_remap(hw_bits, bits, chip->sw_map, chip->hw_map, 64);
-+	bitmap_scatter(hw_mask, mask, chip->map, 64);
-+	bitmap_scatter(hw_bits, bits, chip->map, 64);
- 
- 	raw_spin_lock_irqsave(&chip->gpio_lock, flags);
- 
-@@ -234,7 +224,7 @@ static int xgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
- {
- 	unsigned long flags;
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
--	int bit = xgpio_to_bit(chip, gpio);
-+	unsigned long bit = find_nth_bit(chip->map, 64, gpio);
- 
- 	raw_spin_lock_irqsave(&chip->gpio_lock, flags);
- 
-@@ -263,7 +253,7 @@ static int xgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- {
- 	unsigned long flags;
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
--	int bit = xgpio_to_bit(chip, gpio);
-+	unsigned long bit = find_nth_bit(chip->map, 64, gpio);
- 
- 	raw_spin_lock_irqsave(&chip->gpio_lock, flags);
- 
-@@ -395,7 +385,7 @@ static void xgpio_irq_mask(struct irq_data *irq_data)
- 	unsigned long flags;
- 	struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
- 	int irq_offset = irqd_to_hwirq(irq_data);
--	int bit = xgpio_to_bit(chip, irq_offset);
-+	unsigned long bit = find_nth_bit(chip->map, 64, irq_offset);
- 	u32 mask = BIT(bit / 32), temp;
- 
- 	raw_spin_lock_irqsave(&chip->gpio_lock, flags);
-@@ -422,7 +412,7 @@ static void xgpio_irq_unmask(struct irq_data *irq_data)
- 	unsigned long flags;
- 	struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
- 	int irq_offset = irqd_to_hwirq(irq_data);
--	int bit = xgpio_to_bit(chip, irq_offset);
-+	unsigned long bit = find_nth_bit(chip->map, 64, irq_offset);
- 	u32 old_enable = xgpio_get_value32(chip->enable, bit);
- 	u32 mask = BIT(bit / 32), val;
- 
-@@ -462,7 +452,7 @@ static int xgpio_set_irq_type(struct irq_data *irq_data, unsigned int type)
- {
- 	struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
- 	int irq_offset = irqd_to_hwirq(irq_data);
--	int bit = xgpio_to_bit(chip, irq_offset);
-+	unsigned long bit = find_nth_bit(chip->map, 64, irq_offset);
- 
- 	/*
- 	 * The Xilinx GPIO hardware provides a single interrupt status
-@@ -502,10 +492,10 @@ static void xgpio_irqhandler(struct irq_desc *desc)
- 	struct irq_chip *irqchip = irq_desc_get_chip(desc);
- 	DECLARE_BITMAP(rising, 64);
- 	DECLARE_BITMAP(falling, 64);
--	DECLARE_BITMAP(all, 64);
-+	DECLARE_BITMAP(hw, 64);
-+	DECLARE_BITMAP(sw, 64);
- 	int irq_offset;
- 	u32 status;
--	u32 bit;
- 
- 	status = xgpio_readreg(chip->regs + XGPIO_IPISR_OFFSET);
- 	xgpio_writereg(chip->regs + XGPIO_IPISR_OFFSET, status);
-@@ -514,29 +504,28 @@ static void xgpio_irqhandler(struct irq_desc *desc)
- 
- 	raw_spin_lock(&chip->gpio_lock);
- 
--	xgpio_read_ch_all(chip, XGPIO_DATA_OFFSET, all);
-+	xgpio_read_ch_all(chip, XGPIO_DATA_OFFSET, hw);
- 
- 	bitmap_complement(rising, chip->last_irq_read, 64);
--	bitmap_and(rising, rising, all, 64);
-+	bitmap_and(rising, rising, hw, 64);
- 	bitmap_and(rising, rising, chip->enable, 64);
- 	bitmap_and(rising, rising, chip->rising_edge, 64);
- 
--	bitmap_complement(falling, all, 64);
-+	bitmap_complement(falling, hw, 64);
- 	bitmap_and(falling, falling, chip->last_irq_read, 64);
- 	bitmap_and(falling, falling, chip->enable, 64);
- 	bitmap_and(falling, falling, chip->falling_edge, 64);
- 
--	bitmap_copy(chip->last_irq_read, all, 64);
--	bitmap_or(all, rising, falling, 64);
-+	bitmap_copy(chip->last_irq_read, hw, 64);
-+	bitmap_or(hw, rising, falling, 64);
- 
- 	raw_spin_unlock(&chip->gpio_lock);
- 
- 	dev_dbg(gc->parent, "IRQ rising %*pb falling %*pb\n", 64, rising, 64, falling);
- 
--	for_each_set_bit(bit, all, 64) {
--		irq_offset = xgpio_from_bit(chip, bit);
-+	bitmap_gather(sw, hw, chip->map, 64);
-+	for_each_set_bit(irq_offset, sw, 64)
- 		generic_handle_domain_irq(gc->irq.domain, irq_offset);
--	}
- 
- 	chained_irq_exit(irqchip, desc);
- }
-@@ -613,17 +602,14 @@ static int xgpio_probe(struct platform_device *pdev)
- 	if (width[1] > 32)
- 		return -EINVAL;
- 
--	/* Setup software pin mapping */
--	bitmap_set(chip->sw_map, 0, width[0] + width[1]);
--
- 	/* Setup hardware pin mapping */
--	bitmap_set(chip->hw_map,  0, width[0]);
--	bitmap_set(chip->hw_map, 32, width[1]);
-+	bitmap_set(chip->map,  0, width[0]);
-+	bitmap_set(chip->map, 32, width[1]);
- 
- 	raw_spin_lock_init(&chip->gpio_lock);
- 
- 	chip->gc.base = -1;
--	chip->gc.ngpio = bitmap_weight(chip->hw_map, 64);
-+	chip->gc.ngpio = bitmap_weight(chip->map, 64);
- 	chip->gc.parent = dev;
- 	chip->gc.direction_input = xgpio_dir_in;
- 	chip->gc.direction_output = xgpio_dir_out;
+
+base-commit: 69b8923f5003664e3ffef102e73333edfa2abdcf
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.48.1
 
