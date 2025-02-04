@@ -1,197 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDC7215F7E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BCE215F7F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738689998; cv=none; b=OL29q9Vflz81FZ7Yz00JYVlP9XVhwm2onurVuUhgmNQUzwBmklA7NWMiWgXx/gPafFywnTX6cTFMF0KsH4ZOibPIVc14Am/3OylFTwS7gf1+bEp5Y2/mgCDKjinD5MKZffIu4q/iz+Xo5kkidac3xN2ZHxv9Na/koQPkrtOSau0=
+	t=1738690076; cv=none; b=cjTt+bkbI0CS115f1wzG/TWkWvAC2/ddx5mpL04i2QNWDW/ArSdlUQVHm5WiNMqD3cLjCbUaCIWmUgjaixAP1nwsJE7mvRJ/q14vUB5czkay+Nukv/3HPhEg06DfcPQFM7X7BYUxPCQHt2S+uZN85fp7AY3OjF3H0BpkyyZaw7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738689998; c=relaxed/simple;
-	bh=jo9s4dPfmEh1UEHVJ50SN5q/Rpg7UveVw/RHXf3QBsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CULpdw8S05exHjQ8heGNyLznbxS+RoElBSpoUo2DOHkN/XMHIX8DjHp94CPtxOmIbY9UWDJMXhvc0XS9FeoteaX7QgEX4LC88l8w/A9enm+94lg//FJDGjoMUMyg/pwjwFrkQO7mBxrdwVOpTVDSUFNuvO04MYAI+r4kZn2cWUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a7jG49jK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738690076; c=relaxed/simple;
+	bh=V4uv66MK680ClXu6f6Ker2AP5D+vs5LU4+W5Eqq9fDQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CehyNp+pqDF4ZoPlV9hezi3fXqbXU3pXVZeTv+2Lken4VsnJUtt2gKlyBpjxIYiBUzwpstkK/zEDYwHbCVwJE131rxKUll++AF4C2/lBK4cgNKpARq4TmpPqUzT3W1tDgpIq97Y79wYnVUmE2UL0TZyix8axOdnRCfB+ccQKAJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OftOmaUJ; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a7jG49jK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738689995;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WVogKbewYjMvHSQkRZSoFRhJNaP8hk7j/RDWKx3KnXk=;
-	b=a7jG49jKm6UL2BmDlVzJJ7gTJ67osnqQRoRgLoHLtRDMUhVw1+rFQaHj2HzpFxlYCjuvcI
-	vqfsSjYXsWbNUowaNQlYqSgQkOdwwdUy3aIpKV/o80Mt7coIcFOzH1Db6PZ1dmQG++Ny86
-	TzOY1E5rJ4TXESG2qbMfE8xovPyhORA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-463-PZO81EI6PTayP5unJe1OKg-1; Tue, 04 Feb 2025 12:26:33 -0500
-X-MC-Unique: PZO81EI6PTayP5unJe1OKg-1
-X-Mimecast-MFC-AGG-ID: PZO81EI6PTayP5unJe1OKg
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-436723bf7ffso50093145e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:26:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738689992; x=1739294792;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OftOmaUJ"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2163affd184so138515ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:27:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738690074; x=1739294874; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WVogKbewYjMvHSQkRZSoFRhJNaP8hk7j/RDWKx3KnXk=;
-        b=JXGv8dG4uwEJxjNYnDY87hw60OwH6NoMFu9NDGu4C8n/d+bSpUeH1oAHGnEQxXoyCO
-         6J9vya9q9PQXd2VKY4jpcC03Gb4e2/Xp5FFqb6MYmhdAmsNusNj81bHru6T7NgFKL4vi
-         cO6HaYHxBrnnLoOXKAcyQgvYqYyS/WzsDaRo+EGxggytJMDS0hcc/PcUOCbTNbevfmd7
-         N2b3dQEFBq/g5rUpflOWcBHtn8DObOiNgnxJkf6k3G09vAekCx5qxkmv48oiGTzz2Ylw
-         8Vf83CNeJDsNJUVaaJGZgtnAmgwWUzCPdJMXTYuY5nzPLMMcFpCzi/e0kiOfAmSCKpM5
-         t3HA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6xjm0AlYDenLRjQAMzCXJfujvt+7W89GCg0rpcBtxWCm2ifF0lyVgskTguhhJ0y+lX0TVhD6Qd4C1Vn0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylkrP4sAV0ZeLD5EvdqrhokHPLkyXP6lZMa1wcNwrhkDyBSpMc
-	i+qxMrJ1/sm6txN/hdx1vzhfTziKtHt1PuHcYPZ256gQ4UG8TkQrZUYA+HdB1FYHlgssdzbkDz4
-	lk5MlIelr7J1yJYNDbdZpgiVkyVbgb2Z4Ax93zLnGKubltVQQnY+XIgS526KJpA==
-X-Gm-Gg: ASbGnct5q10cyVhMxG/nsCv7JJtx7G8gOncLjLeodmRoUpGDhr0YB/f7ANTyZdeDfAA
-	udFq1BFq4Wp4Eoqj8IjwvO0MW9qRRZ3bg1k/KqcLizS4qIVtWyT7iV6AMFjpX6ZIRABnEuKK8HG
-	qoxEwAyI2mSimUc+Um0eXFZh3jFXEaniSzYMkdo+get5I94QxtUIq3sFAfKhB0leFPTmP+h2tSh
-	4xO1uOv37g77+YV/wAbzOU8BvgVcsXedpQ3SkIBYkV6579Fa3Ck4tNMfBRp3e5eQ8X5FM0CTpdn
-	KV/wdkG5kUUMSJEVlBNp7T5bM0H09vDWFn11
-X-Received: by 2002:a05:600c:28f:b0:436:6460:e67a with SMTP id 5b1f17b1804b1-438e0cc040dmr219123595e9.25.1738689992461;
-        Tue, 04 Feb 2025 09:26:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFvabuIQF4OfK967ju9TEg//uSG0zchIovSt7Zu7H1ZKyMQPh1RGVvpPzm36OjgNZk+BycJTg==
-X-Received: by 2002:a05:600c:28f:b0:436:6460:e67a with SMTP id 5b1f17b1804b1-438e0cc040dmr219123395e9.25.1738689992067;
-        Tue, 04 Feb 2025 09:26:32 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.128.176])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43907f19247sm17218635e9.1.2025.02.04.09.26.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 09:26:31 -0800 (PST)
-Date: Tue, 4 Feb 2025 18:26:29 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thierry Reding <treding@nvidia.com>, Waiman Long <longman@redhat.com>,
-	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Aashish Sharma <shraash@google.com>,
-	Shin Kawamura <kawasin@google.com>,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
- for hotplug
-Message-ID: <Z6JNxUYJUX1fGew4@jlelli-thinkpadt14gen4.remote.csb>
-References: <ba51a43f-796d-4b79-808a-b8185905638a@nvidia.com>
- <Z4FAhF5Nvx2N_Zu6@jlelli-thinkpadt14gen4.remote.csb>
- <5d7e5c02-00ee-4891-a8cf-09abe3e089e1@nvidia.com>
- <Z4TdofljoDdyq9Vb@jlelli-thinkpadt14gen4.remote.csb>
- <e9f527c0-4530-42ad-8cc9-cb04aa3d94b7@nvidia.com>
- <Z4ZuaeGssJ-9RQA2@jlelli-thinkpadt14gen4.remote.csb>
- <Z4fd_6M2vhSMSR0i@jlelli-thinkpadt14gen4.remote.csb>
- <aebb2c29-2224-4d14-94e0-7a495923b401@nvidia.com>
- <Z4kr7xq7tysrKGoR@jlelli-thinkpadt14gen4.remote.csb>
- <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
+        bh=rfuayBjlRpeNZsUXyFm5cOwCbpbAk9szfdT3xIhInHw=;
+        b=OftOmaUJrSf6tTIWxvgCdnZPkkJuuhxPCe5Lf/UTIRn9nq3TTaVAmc4uVZTNqLTW4n
+         VcwpswN4g8JyfIyqWObrF4TpF4tLPo0hC3Bz89YaDcdwa/LcUrAigg016lMxWrB0t8nR
+         AXYpDuLlXq2QCnKuj4X8wICSmZPbIwnlf9aKllME7CWIMCXvi4/P28iMEbDsGGAQ1nSN
+         L5qnKeUCWe2i4WHHfXWqiw/AA+bQwv2Iud4UEiuMVo6Ab2Efo+JTHmHTaL27XogA/BmW
+         X1xXst6mDWUXaCAYHNXCVUNjfW/girinU2noXsXSMNAUf4/xjn5i+gZ2JCMc2EqVYEcn
+         8I0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738690074; x=1739294874;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rfuayBjlRpeNZsUXyFm5cOwCbpbAk9szfdT3xIhInHw=;
+        b=L4Hwj2KHrhFqA1YK1VB9o09bIly5fAjXSIT2c8NsnbPrnFRfCImjX/n6HQQzK6yNWS
+         ojQM9NJj3V1k0LYy99YkZ1bCfrLjim2KDWWA3JUmuyQomhdqXtzta2jIgurz7C/oTzOp
+         nDOnH81eWNSElIpGCmjJVIWnVq5a/TeqCK/WJHhIY1qtPlrlzH/s1fQS0iAz74v/+Ror
+         2nVv0BIkRGcOAt631x/RvLwS6NGyam5hlVMMuUWTt0WpDc/wsKFvhSkndd7+M7L9a8Wv
+         P3FflqiKnudNHxCrshrLcaKFflQq3rjj3REJMIzzG4LwDRS773KpveVZqcAikaDuvMEx
+         g/rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHf9FRq0h44J0dDFKJfdehGEPVdDE3WG23MqeuSPqQgO2tdIDLTjAuvLe//31hVqBXsv6ch5jSr4y6yfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRYDhk3Qc8UaPNnJniOOom22r4Ws/Zo0KnjFtKiT6rKGY2afPq
+	J14EZZl+8sOR1M20DTdiV07BRyjieHjoo0r8h32nvziuUC1wxEJBtFnfXp0rCWDDelp84+p+vvS
+	yvl38btvSgjI+hkbP9FenDDNMZQIK8cvyqqkM
+X-Gm-Gg: ASbGncumzODVNXVnCOka+bqnQVoVyx8sb8Y363gjQyzc/XiRbgBRkYp9EA17MZqFnKS
+	1kUjHb8dmMgTdbzDVFvRc8yA4hCsEgVn8NicPCEaApaiN5sDr05CuDhCKY1XS3u46+AA6DHUn
+X-Google-Smtp-Source: AGHT+IE6dDHOUbSqrO0D169k4b7qsYEqIapGMMKqj/OrRCHutVQk4Tk9SbBciNiSXSLiP161vvVY/cJhza5i3Kply9Y=
+X-Received: by 2002:a17:903:1a2f:b0:216:2839:145 with SMTP id
+ d9443c01a7336-21f03afd716mr2749705ad.1.1738690073656; Tue, 04 Feb 2025
+ 09:27:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
+References: <20250203223916.1064540-1-almasrymina@google.com> <a97c4278-ea08-4693-a394-8654f1168fea@redhat.com>
+In-Reply-To: <a97c4278-ea08-4693-a394-8654f1168fea@redhat.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 4 Feb 2025 09:27:40 -0800
+X-Gm-Features: AWEUYZmyHp3Gf6q5ty9WsLiNHfSw5QJWVWhu7wvqA18o91D3NGgPmvSyJ9NXuus
+Message-ID: <CAHS8izNZrKVXSXxL3JG3BuZdho2OQZp=nhLuVCrLZjJD1R0EPg@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 0/6] Device memory TCP TX
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski <kuba@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	Neal Cardwell <ncardwell@google.com>, David Ahern <dsahern@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
+	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jon,
+On Tue, Feb 4, 2025 at 4:32=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wrot=
+e:
+>
+> On 2/3/25 11:39 PM, Mina Almasry wrote:
+> > The TX path had been dropped from the Device Memory TCP patch series
+> > post RFCv1 [1], to make that series slightly easier to review. This
+> > series rebases the implementation of the TX path on top of the
+> > net_iov/netmem framework agreed upon and merged. The motivation for
+> > the feature is thoroughly described in the docs & cover letter of the
+> > original proposal, so I don't repeat the lengthy descriptions here, but
+> > they are available in [1].
+> >
+> > Sending this series as RFC as the winder closure is immenient. I plan o=
+n
+> > reposting as non-RFC once the tree re-opens, addressing any feedback
+> > I receive in the meantime.
+>
+> I guess you should drop this paragraph.
+>
+> > Full outline on usage of the TX path is detailed in the documentation
+> > added in the first patch.
+> >
+> > Test example is available via the kselftest included in the series as w=
+ell.
+> >
+> > The series is relatively small, as the TX path for this feature largely
+> > piggybacks on the existing MSG_ZEROCOPY implementation.
+>
+> It looks like no additional device level support is required. That is
+> IMHO so good up to suspicious level :)
+>
 
-On 03/02/25 11:01, Jon Hunter wrote:
-> Hi Juri,
-> 
-> On 16/01/2025 15:55, Juri Lelli wrote:
-> > On 16/01/25 13:14, Jon Hunter wrote:
-> > > 
-> > > On 15/01/2025 16:10, Juri Lelli wrote:
-> > > > On 14/01/25 15:02, Juri Lelli wrote:
-> > > > > On 14/01/25 13:52, Jon Hunter wrote:
-> > > > > > 
-> > > > > > On 13/01/2025 09:32, Juri Lelli wrote:
-> > > > > > > On 10/01/25 18:40, Jon Hunter wrote:
-> > > > > > > 
-> > > > > > > ...
-> > > > > > > 
-> > > > > > > > With the above I see the following ...
-> > > > > > > > 
-> > > > > > > > [   53.919672] dl_bw_manage: cpu=5 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4
-> > > > > > > > [   53.930608] dl_bw_manage: cpu=4 cap=2048 fair_server_bw=52428 total_bw=157284 dl_bw_cpus=3
-> > > > > > > > [   53.941601] dl_bw_manage: cpu=3 cap=1024 fair_server_bw=52428 total_bw=104856 dl_bw_cpus=2
-> > > > > > > 
-> > > > > > > So far so good.
-> > > > > > > 
-> > > > > > > > [   53.952186] dl_bw_manage: cpu=2 cap=1024 fair_server_bw=52428 total_bw=576708 dl_bw_cpus=2
-> > > > > > > 
-> > > > > > > But, this above doesn't sound right.
-> > > > > > > 
-> > > > > > > > [   53.962938] dl_bw_manage: cpu=1 cap=0 fair_server_bw=52428 total_bw=576708 dl_bw_cpus=1
-> > > > > > > > [   53.971068] Error taking CPU1 down: -16
-> > > > > > > > [   53.974912] Non-boot CPUs are not disabled
-> > > > > > > 
-> > > > > > > What is the topology of your board?
-> > > > > > > 
-> > > > > > > Are you using any cpuset configuration for partitioning CPUs?
-> > > > > > 
-> > > > > > 
-> > > > > > I just noticed that by default we do boot this board with 'isolcpus=1-2'. I
-> > > > > > see that this is a deprecated cmdline argument now and I must admit I don't
-> > > > > > know the history of this for this specific board. It is quite old now.
-> > > > > > 
-> > > > > > Thierry, I am curious if you have this set for Tegra186 or not? Looks like
-> > > > > > our BSP (r35 based) sets this by default.
-> > > > > > 
-> > > > > > I did try removing this and that does appear to fix it.
-> > > > > 
-> > > > > OK, good.
-> > > > > 
-> > > > > > Juri, let me know your thoughts.
-> > > > > 
-> > > > > Thanks for the additional info. I guess I could now try to repro using
-> > > > > isolcpus at boot on systems I have access to (to possibly understand
-> > > > > what the underlying problem is).
-> > > > 
-> > > > I think the problem lies in the def_root_domain accounting of dl_servers
-> > > > (which isolated cpus remains attached to).
-> > > > 
-> > > > Came up with the following, of which I'm not yet fully convinced, but
-> > > > could you please try it out on top of the debug patch and see how it
-> > > > does with the original failing setup using isolcpus?
-> > > 
-> > > 
-> > > Thanks I added the change, but suspend is still failing with this ...
-> > 
-> > Thanks!
-> > 
-> > > [  210.595431] dl_bw_manage: cpu=5 cap=3072 fair_server_bw=52428 total_bw=209712 dl_bw_cpus=4
-> > > [  210.606269] dl_bw_manage: cpu=4 cap=2048 fair_server_bw=52428 total_bw=157284 dl_bw_cpus=3
-> > > [  210.617281] dl_bw_manage: cpu=3 cap=1024 fair_server_bw=52428 total_bw=104856 dl_bw_cpus=2
-> > > [  210.627205] dl_bw_manage: cpu=2 cap=1024 fair_server_bw=52428 total_bw=262140 dl_bw_cpus=2
-> > > [  210.637752] dl_bw_manage: cpu=1 cap=0 fair_server_bw=52428 total_bw=262140 dl_bw_cpus=1
-> >                                                                            ^
-> > Different than before but still not what I expected. Looks like there
-> > are conditions/path I currently cannot replicate on my setup, so more
-> > thinking. Unfortunately I will be out traveling next week, so this
-> > might required a bit of time.
-> 
-> 
-> I see that this is now in the mainline and our board is still failing to
-> suspend. Let me know if there is anything else you need me to test.
+It is correct no additional device level support is required. I don't
+have any local changes to my driver to make this work. I think Stan
+on-list was able to run the TX path (he commented on fixes to the test
+but didn't say it doesn't work :D) and one other person was able to
+run it offlist.
 
-I've been trying to repro on my side. Since I don't have access to
-boards like yours, I tried to come up with something based on qemu/kvm,
-essentially a 6 CPUs virtualized environment with isolcpus=1,2. But,
-offlining of CPU 1 and 2 works as expected with my proposed fix, so I am
-back at wondering what might be different in your case.
+> > Patch Overview:
+> > ---------------
+> >
+> > 1. Documentation & tests to give high level overview of the feature
+> >    being added.
+> >
+> > 2. Add netmem refcounting needed for the TX path.
+> >
+> > 3. Devmem TX netlink API.
+> >
+> > 4. Devmem TX net stack implementation.
+>
+> It looks like even the above section needs some update.
+>
 
+Ah, I usually keep the original cover letter untouched and put the
+updates under the version labels. Looks like you expect the full cover
+letter to be updated. Will do. Thanks for looking.
+
+
+--=20
+Thanks,
+Mina
