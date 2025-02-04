@@ -1,95 +1,88 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25DF207A00
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D46E206F17
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661250; cv=none; b=VALbHO63vkEV0hgvQb/RjQbm/h0QiX0q86ZsXdBbQ8wOJc6ys5i0tDK2OhEErq0lrIe4NHsiiy1NKrI5D4Lg3GOt5pb1ePyrI1s2oS88J0Y8f0lglPDdUSZmBOKgky8fKGi6aX1mhXUy9BfaakA2JFjYw6jo/ZOqug72dkIdB0M=
+	t=1738661296; cv=none; b=qFrZyORUsss+j3D2XcTtDkPHYWPE6XW5ajw9tSeQFP6d1wujbU974gXfQ6cujgkxFV0t9w2umicedLcihT/aD08//NLBvpVKRF7D2LXVYlKBhZsshzyEIgsscbJDQFrZOKH4pvzYIZgyh0gxgYqu1rtz2tcJFSVX61l9Akm8X28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661250; c=relaxed/simple;
-	bh=JU3Lm+iYLfayKfGR+P1EVlzHSM9OleQsodwCVlE5320=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KMuJNTz0sDuz05K2/Xc+VYF4/XmZP5uXbmdqtqzorAH1Hw1TEjCIu5UGktE4RplyyNXAd0wTHBDtkHZT/mR54qyNuRxVmm25hbQalATWkBIOnJHWqazP0+hCl2cI5AD+OvtsIQGAHW4aEdbvy+nx3F9fQgCJLGTFpKMnwqLPbQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=J525MZqW; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738661296; c=relaxed/simple;
+	bh=65JVhxdXQGsMohzOnNWRBzY67jDzX0XfRFA5pfUh9no=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=R8NQQnKKs809oGPFmMJmZj/URCF41MqdIWVO3AHLjwYv8gziWSAGhd5gJYK5ZTDeADLoXQgFBtbZU54WMzHXwHKOFyc/a0MwPpgMLbzZ+XwEzQ1ZDiJwN81lYEkr40wMWNl8Q98cL9TFaRwVZVYRh9mddb2ufCyj5clPi7srkfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mCGhPS0D; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A1r3nAQJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J525MZqW"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5149QlEW3192342
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 4 Feb 2025 03:26:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738661207;
-	bh=UmhLG8fj2RQNDb83VwTcmt6NK6fdTtqXuVcY3Pwy504=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=J525MZqWVtgMPiAybEYSXaTk7nnHSHeq/+Hme4xm0AvV78yXeKrNZ5tIq+b1cVMy3
-	 G95PvpqtQaqYGXzoU9DN3HLfqQRm5DOpFJSQZ9BJo3RKu/5l+A6SJjnOzePhJkrL5s
-	 93MHb3w2wQxgT/PKb8GdwYT9Og8x51NmN6hxPzCw=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5149QlIC085742;
-	Tue, 4 Feb 2025 03:26:47 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
- Feb 2025 03:26:46 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 4 Feb 2025 03:26:46 -0600
-Received: from localhost (lcpd911.dhcp.ti.com [172.24.227.226])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5149Qj5V034419;
-	Tue, 4 Feb 2025 03:26:46 -0600
-Date: Tue, 4 Feb 2025 14:56:45 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: Vaishnav Achath <vaishnav.a@ti.com>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <quic_bjorande@quicinc.com>,
-        <geert+renesas@glider.be>, <krzysztof.kozlowski@linaro.org>,
-        <dmitry.baryshkov@linaro.org>, <arnd@arndb.de>,
-        <nfraprado@collabora.com>, <ebiggers@google.com>, <ardb@kernel.org>,
-        <nm@ti.com>, <vigneshr@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <nfrayer@baylibre.com>,
-        <glaroque@baylibre.com>, <tglx@linutronix.de>, <u-kumar1@ti.com>
-Subject: Re: [PATCH v2] arm64: defconfig: Enable TISCI Interrupt Router and
- Aggregator
-Message-ID: <20250204092645.cnu4lnzac7n2dtwx@lcpd911>
-References: <20250203150801.2399555-1-vaishnav.a@ti.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mCGhPS0D";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A1r3nAQJ"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738661292;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IxUhzMpZbBLI24vAgo0RXEQvd0b3kP29hyIxwVLwatQ=;
+	b=mCGhPS0DHUwuRWQm44gBhIszb1e72y/U7MORY7e66FXUq8YfBscCibIJBeEuKpwLftqM8l
+	G+OkrEUa7O4vwTxbVRfpXNlMgEKmrc79ZU0m/vlE+y5DPAFaNcv8rk0nF5yO2RaYPT/Z2t
+	JoQ8MkcwIJyuG1SemB8Yxc3x+5HJlBylEvoCzTIc+q8IRnc2LA2/eXJtZRg+5ptfqUyP9F
+	RDMNarbt+REFMqA/GlLMwTHLF893O3yDYRGVXSvErl00k3BqmV8EowThZTH46F3dIR5m6d
+	Fkcv9rDEoey8/f3oerIy6TyoiNt8EgQjQJwlK0mzxvQEMh/m/VHnzL/JcpN65g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738661292;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IxUhzMpZbBLI24vAgo0RXEQvd0b3kP29hyIxwVLwatQ=;
+	b=A1r3nAQJfG/G6wJiuEXiKyr4CHoP6qmmv5LtlQPq/j+V1yTRs7ebuXhDYIcbs90Nf2BW+Y
+	F5Ik50dM03CFevDA==
+To: Peter Zijlstra <peterz@infradead.org>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, =?utf-8?Q?Andr=C3=A9?= Almeida
+ <andrealmeid@igalia.com>,
+ Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Valentin Schneider <vschneid@redhat.com>, Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v8 03/15] futex: Add basic infrastructure for local task
+ local hash.
+In-Reply-To: <20250204084135.GN7145@noisy.programming.kicks-ass.net>
+References: <20250203135935.440018-1-bigeasy@linutronix.de>
+ <20250203135935.440018-4-bigeasy@linutronix.de>
+ <20250203144101.GL7145@noisy.programming.kicks-ass.net>
+ <20250203155251.cAKJlgIZ@linutronix.de>
+ <20250204084135.GN7145@noisy.programming.kicks-ass.net>
+Date: Tue, 04 Feb 2025 10:28:11 +0100
+Message-ID: <87ldumnjo4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250203150801.2399555-1-vaishnav.a@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain
 
-On Feb 03, 2025 at 20:38:01 +0530, Vaishnav Achath wrote:
-> Enable TISCI Interrupt Router and Interrupt Aggregator drivers.
-> These IPs are found in all TI K3 SoCs like J721E, AM62X and is required
-> for core functionality like DMA, GPIO Interrupts which is necessary
-> during boot, thus make them built-in.
-> 
-> bloat-o-meter summary on vmlinux:
-> 	add/remove: 460/1 grow/shrink: 4/0 up/down: 162483/-8 (162475)
-> 	...
-> 	Total: Before=31615984, After=31778459, chg +0.51%
-> 
-> Fixes: 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
-> Fixes: b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
-> 
-> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
-> ---
+On Tue, Feb 04 2025 at 09:41, Peter Zijlstra wrote:
+> On Mon, Feb 03, 2025 at 04:52:51PM +0100, Sebastian Andrzej Siewior wrote:
+>> On 2025-02-03 15:41:01 [+0100], Peter Zijlstra wrote:
+>> > Notably, I'm also still thikning about all that pending FUTEX2_NUMA
+>> > stuff.
+>> 
+>> With local-hash there is still room for FUTEX2_NUMA?
+>
+> Yes, single process can span multiple nodes, and then you still get the
+> cross node contention issues.
 
-Tested this for basic boot on TI K3 AM625-SK with next-20250204.
-Tested-by: Dhruva Gole <d-gole@ti.com>
+This is strictly about process private futexes, while FUTEX2_NUMA covers
+both shared and private futexes and helps to avoid the hash collision
+and resulting contention problems which are caused by the current global
+hash.
 
-Also,
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
+With the private futex seperation you obviously get the cross node
+memory access problems, but not the general contention issues which
+FUTEX2_NUMA tries to address.
 
--- 
-Best regards,
-Dhruva Gole
-Texas Instruments Incorporated
+Thanks,
+
+        tglx
+
