@@ -1,114 +1,100 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB04F215F7F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E9D1537C3;
+	Tue,  4 Feb 2025 17:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738691102; cv=none; b=J9PFRxjfMfo9PlBsUJjaNvbrYWIQbs7KZFCN2GLFG4W1Kd4ELvuZ8MJEPNCcRAQyRX6C/UGcdFe5l4zn7s9V23G+xlHAveTjXMKVHv8/j2IcMUcvdtlOkYb1opsyYPQHziau1Ku5U+670cnYU3SgaZG6FcBhxqOhvmDUJEgOIXQ=
+	t=1738691113; cv=none; b=az1kZBl/UUTodrO1BLhclDoh/OnEvTdj4GFrtpvfqlq6r8IH0j4zoqV5QkgwFKjPF41hJowd/9Uh+85DVrSHe7jQfmBYxbkKkUWlIAHHqKSd6EaDw7+4z7uOmjUolPdetUxpj4RhlnOCrg/Yi1PumjyPLnTW5j1ClvDzw+WyfXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738691102; c=relaxed/simple;
-	bh=h2/YGk8VZ37fpLjVEucFjFjkFTBQFTSrdvXH3Dn6gIs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bu1++EXlipNpJdX5t/05AQtqMF9Kh1ZeUHfnB5U+7v+kDAatnD5I1BhYxTHfiMTcjv4ijTDT3D6auxHCI7KEuZDJgXwrmN+QnoITsj53BrvzRFZXDRSaQssFtKAOvS7AhEt7hM6e3RVinGYVkyQGutPlPVIwhE6/Bz0CtJ7N5FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KXIWKy+u; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1738691113; c=relaxed/simple;
+	bh=1fpGWk6mcJocAb/EGYVT3NiN/ozuxcKfoYEQ/m8hVfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OKKIM4kkF4FpvYQhtR28w/uYSaprVCS7ISgnocNUAd4FVhtf85KxYHX05qH0UWl181/grCbX1qP9IjoPboefizm8hAe3Tb40e6I3rLVKg7F4AhVn7GLt01NqTr3i7kwL5YoRxm//MOMFr26nyH+89DddRoe69S5gK4l405Mytgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aub9vdNR; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KXIWKy+u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1738691097;
-	bh=h2/YGk8VZ37fpLjVEucFjFjkFTBQFTSrdvXH3Dn6gIs=;
-	h=From:Date:Subject:To:Cc:From;
-	b=KXIWKy+unJTR2OsMm11t/yA64BOeI3hA1ZTIJoNUomwzekdUEliMmTMLgQ0Ff1e2s
-	 82FnPlyOCqTcCwv7bjc3VaoGSg+/8ebHW4O2PIBOxz0q3ECAE3feS2xESDHAdNOAfI
-	 /8uoMK2QNfCYgtCJrlhduSBeunbONZ2ko2dqj6TVTzPNoNwTRVr85nkyRew0tbptUp
-	 U2EzHmdqVxjcO+q0cOhv3ZiAbC0ekdrtQg6gC1Ed/tBEXIfnIC1VA1zj2eGB4uGvGA
-	 ANufh/IQgYkViBgYfr2IvPdSKYk+Mi34C/fqDlsJPmwcnA5peU4qsIEZHw6iDj/X+1
-	 CRYHMImr2NLHg==
-Received: from localhost (unknown [188.27.43.189])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id A528C17E0FDF;
-	Tue,  4 Feb 2025 18:44:57 +0100 (CET)
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Tue, 04 Feb 2025 19:44:38 +0200
-Subject: [PATCH v2] drm/bridge: dw-hdmi: Sync comment block with actual bus
- formats order
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aub9vdNR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738691112; x=1770227112;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1fpGWk6mcJocAb/EGYVT3NiN/ozuxcKfoYEQ/m8hVfU=;
+  b=aub9vdNRH25mX7rxkgdoJC+FtNbhwmbpXcKf5I5K8ncqwJltqwkKx1P9
+   91SD3pnyMw8QD70Q1j/AN+rYnGkwR0T/Ed6WjSo55Lzhx1UBE1neVazr3
+   C+1N4/yr2mmFa+wR9S1ldv1VNCZSB9BwZoekdN1nmU2k6o9CCLQ2TNBJi
+   tN+QWtlCCQt95/itYnQCnoEk8wtyevOiti6GSNi+/SCOuYKuLyEpB4UHT
+   1/jQ7C1qxJvTLcGDS7stDFI4r5mK7tJmWGEXtNElQ/boG+3eQXtWuwcye
+   +R0k1yHOsdEs7NJUSSKJ3n34GogggjebsRiQIoNz4BKQTGYofHCye0bbf
+   g==;
+X-CSE-ConnectionGUID: ENaLIiOTTtWBE5nTqgY7PQ==
+X-CSE-MsgGUID: nT+/b6hlTp2APu4HXMtHEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56656273"
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="56656273"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:45:11 -0800
+X-CSE-ConnectionGUID: MV74HgZMSmu9/X1xXcp4IQ==
+X-CSE-MsgGUID: 9ieNoHT7TsKGKxBMxnGQlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="141526270"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 04 Feb 2025 09:45:09 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id A96A5353; Tue, 04 Feb 2025 19:45:07 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Mark Lord <mlord@pobox.com>
+Subject: [PATCH v1 1/1] spi: pxa2xx: Fix regression when toggling chip select on LPSS devices
+Date: Tue,  4 Feb 2025 19:45:06 +0200
+Message-ID: <20250204174506.149978-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-dw-hdmi-bus-fmt-order-v2-1-d0aaeb7a697a@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAAVSomcC/4WNQQ6CMBBFr0Jm7Zi2CgZX3sOw6NBWJgFKpogaw
- t2tXMDle8l/f4XkhX2Ca7GC+IUTxzGDORTQdnZ8eGSXGYwyZ61PCt0LOzcw0jNhGGaM4rzgJVS
- OSkcmKAt5O4kP/N679yZzx2mO8tlvFv2z/4qLRo2lVlQGqqiu1a2NfW8pij22cYBm27YvavKhM
- L4AAAA=
-X-Change-ID: 20241130-dw-hdmi-bus-fmt-order-7f6db5db2f0a
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-Commit d3d6b1bf85ae ("drm: bridge: dw_hdmi: fix preference of RGB modes
-over YUV420") changed the order of the output bus formats, but missed to
-update accordingly the "Possible output formats" comment section above
-dw_hdmi_bridge_atomic_get_output_bus_fmts().
+From: Mark Lord <mlord@pobox.com>
 
-Fix the misleading comment block and a context related typo.
+The commit 78b435c9044a ("spi: pxa2xx: Introduce __lpss_ssp_update_priv()
+helper") broke speaker output on my ASUS UX5304MA laptop. The problem is
+in inverted value that got written in the private register.
 
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Simple bug, simple fix.
+
+Fixes: 78b435c9044a ("spi: pxa2xx: Introduce __lpss_ssp_update_priv() helper")
+Signed-off-by: Mark Lord <mlord@pobox.com>
+Tested-by: Mark Lord <mlord@pobox.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-Changes in v2:
-- Reverted the changes related to "Default 8bit RGB fallback" (Neil)
-- Updated slightly the commit subject and description
-- Link to v1: https://lore.kernel.org/r/20241130-dw-hdmi-bus-fmt-order-v1-1-510b5fb6b990@collabora.com
----
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 996733ed2c004c83a989cb8da54d8b630d9f2c02..d1256c82de96a43211af64ad70848cd18d5044e5 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -2621,6 +2621,7 @@ static int dw_hdmi_connector_create(struct dw_hdmi *hdmi)
-  * - MEDIA_BUS_FMT_UYYVYY12_0_5X36,
-  * - MEDIA_BUS_FMT_UYYVYY10_0_5X30,
-  * - MEDIA_BUS_FMT_UYYVYY8_0_5X24,
-+ * - MEDIA_BUS_FMT_RGB888_1X24,
-  * - MEDIA_BUS_FMT_YUV16_1X48,
-  * - MEDIA_BUS_FMT_RGB161616_1X48,
-  * - MEDIA_BUS_FMT_UYVY12_1X24,
-@@ -2631,7 +2632,6 @@ static int dw_hdmi_connector_create(struct dw_hdmi *hdmi)
-  * - MEDIA_BUS_FMT_RGB101010_1X30,
-  * - MEDIA_BUS_FMT_UYVY8_1X16,
-  * - MEDIA_BUS_FMT_YUV8_1X24,
-- * - MEDIA_BUS_FMT_RGB888_1X24,
-  */
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 5f9cac41baff..06711a62fa3d 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -399,7 +399,7 @@ static void lpss_ssp_cs_control(struct spi_device *spi, bool enable)
+ 		lpss_ssp_select_cs(spi, config);
  
- /* Can return a maximum of 11 possible output formats for a mode/connector */
-@@ -2669,7 +2669,7 @@ static u32 *dw_hdmi_bridge_atomic_get_output_bus_fmts(struct drm_bridge *bridge,
- 	}
- 
- 	/*
--	 * If the current mode enforces 4:2:0, force the output but format
-+	 * If the current mode enforces 4:2:0, force the output bus format
- 	 * to 4:2:0 and do not add the YUV422/444/RGB formats
- 	 */
- 	if (conn->ycbcr_420_allowed &&
-
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20241130-dw-hdmi-bus-fmt-order-7f6db5db2f0a
+ 	mask = LPSS_CS_CONTROL_CS_HIGH;
+-	__lpss_ssp_update_priv(drv_data, config->reg_cs_ctrl, mask, enable ? mask : 0);
++	__lpss_ssp_update_priv(drv_data, config->reg_cs_ctrl, mask, enable ? 0 : mask);
+ 	if (config->cs_clk_stays_gated) {
+ 		/*
+ 		 * Changing CS alone when dynamic clock gating is on won't
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
