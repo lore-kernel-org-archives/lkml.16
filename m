@@ -1,127 +1,155 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D20F218ABD
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 20:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C573204589;
+	Tue,  4 Feb 2025 20:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738700096; cv=none; b=euQmHFjEU4eUHyqVFS2cwDyUbDKWPf3NPgwPF9z8uKyOQocJ9hJjQumpzy+tUkzAqiVxVx+ck9vceh3ktDAvMthizCNxzPODOjw9w1bif75p4yKpdYPFQ3UHbPvY2UgxUn9GytkTmG5unjtmb65Uvx8KyKdrzIAbs6L1sTcrjCI=
+	t=1738700159; cv=none; b=ugn+O9QZMpucRoULPueldHvp+1aHp0diBvSoeaJwrbLtmlZhh+7+SO+ULdjs5Ay7z7vhukaVYrHyyS9rvKQSmBr7Ioo6gUrKRHRh6iXP41zsfG5bjXTXlI2mtdlX9XcQlwwp5z7tDT7RCMgP0BbYfqYXSEVb9SzmB+rotvP7nj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738700096; c=relaxed/simple;
-	bh=nurUDXp2o4MyvC3A0GkMdYpyppUckZpuZWdZNoV48dk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fhSIVm8yYH+A+uAKQvMSYLa8OCWLr/IgewLshfYYpeWWXfypZbmBvPj6GuLYD8PJwBUMljBDZa9V9IjG1Wnx9GMETn/dkcvW0eaeZprhtLMPWukIMJdwrsLy5MCbx0q3O6lCy8F1cc5QrYv3WZN7o7Qva/7Zm/8AStna3+rjymk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=j+bv7sTF; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1738700159; c=relaxed/simple;
+	bh=hcpGyDqUv/eSlKfr3GPwEttx+UOda14QMrCSTb26h48=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fyuj/jRl3l88I72y1kBW8JNWHUddNZOhOWg/gpDfRt8VOkKmNtWj+C/7nVdR4c++uuIen6kcLxvjCMlbaK6zA9QZEYkSA6OVSRodsmDkgkN9xLfjnHinf8Yihzhf4J+ve6SFBInCX7AIHlYsx/0wpvNSBHXPSCzKWMD1oocSq7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f2Al9XE6; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="j+bv7sTF"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 97F032C0504;
-	Wed,  5 Feb 2025 09:14:50 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1738700090;
-	bh=nurUDXp2o4MyvC3A0GkMdYpyppUckZpuZWdZNoV48dk=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=j+bv7sTFl3xyS2iPOJ7LZgGQavE8W4YOZZ2LwjJH7D7kFAI/WWY1ktWFn6VSJk/6q
-	 RcUAiOjKwH6gmtF0R9lxPOtmRP3+eFnVdZP5FxmJSnPQYZP4sjtIIvULwefJuB6Dv3
-	 zOTGDYxbDZMPfYtnqq4DDJw2wSbYGJ6zyGumXzOErgPIxVDNOHRoNU4F1DrIyMcQbe
-	 EsClpNdJKP5d5wT1Rexjy1jLrh6/UN29vqDpTzcM+xo8/R7W3PPfimtp2ojX+e5dkR
-	 JbOGjSxfLf6px3NwLcs82dS6B1tWgWqXfp3Qrd1kRDeU1SxxaPoFqdd1R+AI39MXvE
-	 hQa1gv8hU5xcA==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B67a2753a0001>; Wed, 05 Feb 2025 09:14:50 +1300
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 5 Feb 2025 09:14:50 +1300
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1544.014; Wed, 5 Feb 2025 09:14:50 +1300
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: "lee@kernel.org" <lee@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
-	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "tsbogend@alpha.franken.de"
-	<tsbogend@alpha.franken.de>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>, "sander@svanheule.net"
-	<sander@svanheule.net>, "daniel@makrotopia.org" <daniel@makrotopia.org>,
-	"markus.stockhausen@gmx.de" <markus.stockhausen@gmx.de>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH net-next v6 1/6] dt-bindings: mfd: Add switch to RTL9300
-Thread-Topic: [PATCH net-next v6 1/6] dt-bindings: mfd: Add switch to RTL9300
-Thread-Index: AQHbdrFNdM+zCo+02kyxGj8ZSMB8nrM18P+AgADKkoA=
-Date: Tue, 4 Feb 2025 20:14:50 +0000
-Message-ID: <3087ea19-8c2a-47c8-adbe-d05009c6f07b@alliedtelesis.co.nz>
-References: <20250204030249.1965444-1-chris.packham@alliedtelesis.co.nz>
- <20250204030249.1965444-2-chris.packham@alliedtelesis.co.nz>
- <20250204-eccentric-deer-of-felicity-02b7ee@krzk-bin>
-In-Reply-To: <20250204-eccentric-deer-of-felicity-02b7ee@krzk-bin>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FF262CAB6F67264C92EB4994F80E6A84@alliedtelesis.co.nz>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2Al9XE6"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2f9d17ac130so1102364a91.3;
+        Tue, 04 Feb 2025 12:15:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738700157; x=1739304957; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HDo14UWXJJhikq+DLyV4VOaNI1GvjMImjjxkh0rzydg=;
+        b=f2Al9XE65iFejgX1zoaw3D08ZHyGN+XhU5YW1YzF8s9NNAz1DUpCN5NG0natGLpngH
+         wJ+R08gBP2oOSuouyGyj/CB76Soze5pXGfDIlr4x2whHJy27V2CoZLGodXuVhhT4Ccsa
+         o5l/NA5/ZDR5R0jWVGrKOo28KNvKEmzUSbmCFwtISi5sBJFm39hkqsF4vc2IPveD28os
+         kMeIDdddTvAJeqHPMK9CYoR8EzsQTW14qbA+0Ke+NkPlahsQXHfR7JMTg6OnH1DN80AW
+         WjNgY4nW/fkimFS6h9goYcMSn3QGWToN/eKRWdzPqgVn1jOhFNpBoI0UBfQ2e+gGEhsu
+         2Wug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738700157; x=1739304957;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HDo14UWXJJhikq+DLyV4VOaNI1GvjMImjjxkh0rzydg=;
+        b=ni9Gwm+oCTiWOiWONpYWc0Rh2wTX5YE+SKDSvmZuu/qO9rg+GIcfVIOCTjue+NuOUb
+         bwTMHtdYQxdds/8K8nocVLtRxPkdJfL3SwevO93Zfw2THKM0zIUeuxnKaYboqCS8Ra6A
+         SK78Iw8zgLZJGoP51pBqmjyrdTczT7k6o6jbolsNo/XRs8q2qzGnoub617/4AxCUK/LM
+         gUHGjvjXyAQ/WH+X2DZFV2FcmjJhrl1SoASKvCwBREmPJrOxieV+IheOWrOfkpPORPjV
+         Fx28/9+xlBDtRGjHoIc8X/UVsNh4hyOgCMb/k6lbUzvNo3UyiFMnx4ajI/H4AfZn4kNs
+         7y0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWpxiaBivGTfPA4QvVrXgK3lhWp2qiu95g/1uwfX/20ylg9OeiPBajX+eWKRwWP8buqElIK6H2FBorS3Zg=@vger.kernel.org, AJvYcCX297pxyVlxtWJQ9YbIWOL+ETgcpwTPsrRwlp/qY6gSA8VMn8HoxqymsKcAhMFOeZ+j0t6Dc+tUEAXf409Q@vger.kernel.org, AJvYcCX5LN3pDtgEdCL6vIGVOKsjmWzoq4WxOb4I4GAmT0JTHUCEcXIhFgjdcVuDKfVJEYjybfVKrMX30GGd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzF4IhyxH5WiJEKmA0TiwtTdhDHgo8mIYez0IRLZlQ+Yj9I9DUZ
+	2CXWRcWPyUI1JQ8BmL58aFFH6AxNZRv9KDL9ZKBmmmgs/FGP7GUj1xYZTpIFAt6utc8YvU28gwV
+	kq6zNilHwjSDzws3kp2D814oZTqQ=
+X-Gm-Gg: ASbGncv0rXc7ZUSzrWk6mCpOxRiPPAKWAEpWKmxknPP7OZ5UhsZcZva7ljU66iD2+oI
+	tKVtYmdMyu0iIii1K/2SUzT2iFmqBSUf1mOT/NOhAewVUfW6eT4iuIGmY5qouEON0J2cQbQ80
+X-Google-Smtp-Source: AGHT+IFpUn4ty+hTBTAscWBy/P6n51/jgfEImKVtStudLd6LSKIl/9ac2I1XNzbeRalZoB0WUHUyHWRLIpYi1FKnBlE=
+X-Received: by 2002:a17:90b:5289:b0:2ee:8008:b583 with SMTP id
+ 98e67ed59e1d1-2f9e0792e11mr153173a91.16.1738700156925; Tue, 04 Feb 2025
+ 12:15:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=QNvLRRLL c=1 sm=1 tr=0 ts=67a2753a a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=0d4TXYnWXBS5P1Ol6EEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
+References: <20250203-converge-secs-to-jiffies-part-two-v2-0-d7058a01fd0e@linux.microsoft.com>
+ <20250203-converge-secs-to-jiffies-part-two-v2-2-d7058a01fd0e@linux.microsoft.com>
+In-Reply-To: <20250203-converge-secs-to-jiffies-part-two-v2-2-d7058a01fd0e@linux.microsoft.com>
+From: Ilya Dryomov <idryomov@gmail.com>
+Date: Tue, 4 Feb 2025 21:15:45 +0100
+X-Gm-Features: AWEUYZmez9Mpz0-SYRI0bR38UXb1Ekbuss658D4anHnBb41KwIIcd5IfJG1eviU
+Message-ID: <CAOi1vP8djn-cpTMv+qVO4-cK9GD7vousoNEg8hOQ2fTU5t+NOg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] rbd: convert timeouts to secs_to_jiffies()
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Julia Lawall <Julia.Lawall@inria.fr>, 
+	Nicolas Palix <nicolas.palix@imag.fr>, Dongsheng Yang <dongsheng.yang@easystack.cn>, 
+	Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>, cocci@inria.fr, 
+	linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org, 
+	linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgS3J6eXN6dG9mLA0KDQpPbiAwNC8wMi8yMDI1IDIxOjA5LCBLcnp5c3p0b2YgS296bG93c2tp
-IHdyb3RlOg0KPiBPbiBUdWUsIEZlYiAwNCwgMjAyNSBhdCAwNDowMjo0NFBNICsxMzAwLCBDaHJp
-cyBQYWNraGFtIHdyb3RlOg0KPj4gQWRkIGJpbmRpbmdzIGZvciB0aGUgZXRoZXJuZXQtc3dpdGNo
-IHBvcnRpb24gb2YgdGhlIFJUTDkzMDAuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGFj
-a2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KPj4gLS0tDQo+Pg0KPj4g
-Tm90ZXM6DQo+PiAgICAgIENoYW5nZXMgaW4gdjY6DQo+PiAgICAgIC0gTmV3DQo+PiAgICAgIC0g
-SSdkIGxpa2UgdG8gZW5mb3JjZSB0aGUgcHJvcGVydHkgYmVpbmcgImV0aGVybmV0LXBvcnRzIiBi
-dXQgSSBzZWUgdGhlDQo+PiAgICAgICAgZ2VuZXJpYyBiaW5kaW5nIGFsbG93cyAicG9ydHMiIGFz
-IHdlbGwuIENhbiBJIGp1c3QgYWRkIGV0aGVybmV0LXBvcnRzOg0KPj4gICAgICAgIHR5cGU6IG9i
-amVjdCBoZXJlIG9yIGRvZXMgYnkgZHJpdmVyIG5lZWQgdG8gaGFuZGxlIGJvdGggInBvcnRzIiBh
-bmQNCj4+ICAgICAgICAiZXRoZXJuZXQtcG9ydHMiIChJIHNlZSBzb21lIGRvIGFuZCBzb21lIGRv
-bid0KS4NCj4+DQo+PiAgIC4uLi9iaW5kaW5ncy9tZmQvcmVhbHRlayxydGw5MzAxLXN3aXRjaC55
-YW1sICAgICB8IDE2ICsrKysrKysrKysrKysrKy0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDE1IGlu
-c2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yZWFsdGVrLHJ0bDkzMDEtc3dpdGNoLnlhbWwg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3JlYWx0ZWsscnRsOTMwMS1z
-d2l0Y2gueWFtbA0KPj4gaW5kZXggZjA1MzMwM2FiMWU2Li5jYjU0YWJkYTVlNmEgMTAwNjQ0DQo+
-PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3JlYWx0ZWsscnRs
-OTMwMS1zd2l0Y2gueWFtbA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL21mZC9yZWFsdGVrLHJ0bDkzMDEtc3dpdGNoLnlhbWwNCj4+IEBAIC0xNCw2ICsxNCw4IEBA
-IGRlc2NyaXB0aW9uOg0KPj4gICAgIG51bWJlciBvZiBkaWZmZXJlbnQgcGVyaXBoZXJhbHMgYXJl
-IGFjY2Vzc2VkIHRocm91Z2ggYSBjb21tb24gcmVnaXN0ZXIgYmxvY2ssDQo+PiAgICAgcmVwcmVz
-ZW50ZWQgaGVyZSBhcyBhIHN5c2NvbiBub2RlLg0KPj4gICANCj4+ICskcmVmOiAvc2NoZW1hcy9u
-ZXQvZXRoZXJuZXQtc3dpdGNoLnlhbWwjDQo+PiArDQo+PiAgIHByb3BlcnRpZXM6DQo+PiAgICAg
-Y29tcGF0aWJsZToNCj4+ICAgICAgIGl0ZW1zOg0KPj4gQEAgLTQ1LDcgKzQ3LDcgQEAgcmVxdWly
-ZWQ6DQo+PiAgICAgLSBjb21wYXRpYmxlDQo+PiAgICAgLSByZWcNCj4+ICAgDQo+IEkgZG9uJ3Qg
-Z2V0IHdoeSB0aGlzIGRldmljZSByZWNlaXZlcyBub3cgY2hpbGRyZW4gd2l0aG91dCBhZGRyZXNz
-ZXMuDQo+IEVpdGhlciB5b3VyIGNoaWxkcmVuIGhhdmUgJ3JlZycgb3IgdGhleSBkbyBub3QuIE1p
-eGluZyBpcyBhIHNpZ24gb2YgYQ0KPiBtZXNzLCBsaWtlIHRoaXMgd2FzIG5ldmVyIGFjdHVhbGx5
-IHNpbXBsZS1tZmQuDQo+DQo+IFlvdSB3b3VsZCBnZXQgdGhpcyBjb21tZW50IGlmIHlvdSBwb3N0
-ZWQgY29tcGxldGUgc2NoZW1hIHRoZSBmaXJzdCB0aW1lLg0KDQpZZXMgZmFpciBlbm91Z2guIEkg
-dGhpbmsgSSBlcnJlZCB0b28gZmFyIG9uIHRoZSBzaWRlIG9mIHRyeWluZyB0byBzZW5kIA0Kc21h
-bGwgY2h1bmtzIChhbmQgYWxzbyBub3Qgd2FudGluZyB0byBjb21taXQgdG8gYSBiaW5kaW5nIGJl
-Zm9yZSBJIGhhZCANCndvcmtpbmcgZHJpdmVycykuDQoNClNvIGhvdyBkbyB3ZSBtb3ZlIGZvcndh
-cmQ/IFRoZXJlJ3Mgb25lIG1vcmUgcGF0Y2ggSSBoYXZlbid0IHNlbnQgeWV0IA0KdGhhdCBhZGRz
-IGludGVycnVwdHMgZm9yIHRoZSBzd2l0Y2ggYmxvY2suIEJ1dCBvdGhlciB0aGFuIHRoYXQgSSB0
-aGluayANCndoYXQgSSBoYXZlIG5vdyBjb3ZlcnMgYWxsIG9mIHRoZSBtYWpvciBjb21wb25lbnRz
-IGluIHRoaXMgY2hpcC4NCg0KVGhlcmUncyBvbmx5IG9uZSBpbi10cmVlIGJvYXJkIHRoYXQgdXNl
-cyB0aGlzIGFuZCBJJ20gdGhlIG1haW50YWluZXIgb2YgDQppdCBzbyB3aXRoZHJhd2luZyB0aGUg
-bWZkIGJpbmRpbmcgYW5kIHJlcGxhY2luZyBpdCB3aXRoIHNvbWV0aGluZyBlbHNlIA0KaXMgbm90
-IG91dCBvZiB0aGUgcXVlc3Rpb24uIFRoZXJlIG1heSBiZSBzb21lIGNvbXBsYWludHMgZnJvbSBt
-YWtlIA0KZHRic19jaGVjayB3aGlsZSB3ZSBnZXQgdGhpcyBzb3J0ZWQgYnV0IGhvcGVmdWxseSB3
-ZSBjYW4gZ2V0IHRoYXQgZG9uZSBzb29uLg0KDQo=
+On Tue, Feb 4, 2025 at 12:50=E2=80=AFAM Easwar Hariharan
+<eahariha@linux.microsoft.com> wrote:
+>
+> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
+> secs_to_jiffies().  As the value here is a multiple of 1000, use
+> secs_to_jiffies() instead of msecs_to_jiffies to avoid the multiplication=
+.
+>
+> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci wit=
+h
+> the following Coccinelle rules:
+>
+> @depends on patch@ expression E; @@
+>
+> -msecs_to_jiffies(E * 1000)
+> +secs_to_jiffies(E)
+>
+> @depends on patch@ expression E; @@
+>
+> -msecs_to_jiffies(E * MSEC_PER_SEC)
+> +secs_to_jiffies(E)
+>
+> While here, remove the no-longer necessary check for range since there's
+> no multiplication involved.
+>
+> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+> ---
+>  drivers/block/rbd.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+> index faafd7ff43d6ef53110ab3663cc7ac322214cc8c..41207133e21e9203192adf3b9=
+2390818e8fa5a58 100644
+> --- a/drivers/block/rbd.c
+> +++ b/drivers/block/rbd.c
+> @@ -108,7 +108,7 @@ static int atomic_dec_return_safe(atomic_t *v)
+>  #define RBD_OBJ_PREFIX_LEN_MAX 64
+>
+>  #define RBD_NOTIFY_TIMEOUT     5       /* seconds */
+> -#define RBD_RETRY_DELAY                msecs_to_jiffies(1000)
+> +#define RBD_RETRY_DELAY                secs_to_jiffies(1)
+>
+>  /* Feature bits */
+>
+> @@ -4162,7 +4162,7 @@ static void rbd_acquire_lock(struct work_struct *wo=
+rk)
+>                 dout("%s rbd_dev %p requeuing lock_dwork\n", __func__,
+>                      rbd_dev);
+>                 mod_delayed_work(rbd_dev->task_wq, &rbd_dev->lock_dwork,
+> -                   msecs_to_jiffies(2 * RBD_NOTIFY_TIMEOUT * MSEC_PER_SE=
+C));
+> +                   secs_to_jiffies(2 * RBD_NOTIFY_TIMEOUT));
+>         }
+>  }
+>
+> @@ -6283,9 +6283,7 @@ static int rbd_parse_param(struct fs_parameter *par=
+am,
+>                 break;
+>         case Opt_lock_timeout:
+>                 /* 0 is "wait forever" (i.e. infinite timeout) */
+> -               if (result.uint_32 > INT_MAX / 1000)
+> -                       goto out_of_range;
+> -               opt->lock_timeout =3D msecs_to_jiffies(result.uint_32 * 1=
+000);
+> +               opt->lock_timeout =3D secs_to_jiffies(result.uint_32);
+>                 break;
+>         case Opt_pool_ns:
+>                 kfree(pctx->spec->pool_ns);
+>
+> --
+> 2.43.0
+>
+
+Acked-by: Ilya Dryomov <idryomov@gmail.com>
+
+Thanks,
+
+                Ilya
