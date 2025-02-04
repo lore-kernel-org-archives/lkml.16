@@ -1,291 +1,184 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05olkn2070.outbound.protection.outlook.com [40.92.91.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C5C2063F3;
-	Tue,  4 Feb 2025 23:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.91.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738712120; cv=fail; b=CKS9he9BTMHPU76WHYFpuqGXDRCHL8OAa7vaAWqiSBoT/hT4ljh0mCeFxG3sBcXSRHW+PfzlU0ciF9fjF5SoU+4pMVM8LAs459LDnEpaa7c/oKjWI6nNClrU9BrVckXzSl22YiuxfP/0GVJe6fu2NK3AKj3UAfdVjZwGtn6PKOc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738712120; c=relaxed/simple;
-	bh=0/OuRWs7fDsU74EsnbV342xaBfBiR7cdi2VdxgDqB8U=;
-	h=Message-ID:Date:To:Cc:From:Subject:Content-Type:MIME-Version; b=HpG7XmX8WoEvYzW/OdFt0OyLTTasfpN3fzNdclDp2EDJDF+hX5G58DmYW6kWs/BUibyHNvwv57IO/66NPGdzGBn7LNJX88DfQGF5MlmM55E92tTSwb8zZ2AjIIDAWvppq8luJIJdXqEMKbEgsozo1anjBN86UhMxX7ezNRtLFko=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ZMzeuNw6; arc=fail smtp.client-ip=40.92.91.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EBE20C034
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 23:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738712199; cv=none; b=Bqg9KEYv9ybcHmr8fEQjAmUVrdOGz5B7vWdqHt5K7MSTZpKFqnDKPq5yw9jQaHHzb4UzQoWOdD1sdMyh+Avau1smTHzidKL8MJyQrj2Y5b2DDIHCINjvLAhjsFQ/o52LvuPxsGG0Ik/YAGeHUOelKRc4hgpHLM2/VBLxAo0GC3E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738712199; c=relaxed/simple;
+	bh=QjEre/G3BLqcrCF5wreFajQVoRGv9unmtvDg4S23UQU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=mByg9/mOFZaSzS0IyY3YbdTDr0px/oIEFLS70oN+5uOhHVh0tvIsAyAh3gMXIvThhvccB8B5A7wVCl8DMoXQMA7EGV2iRDYI7s2ie9uCbNkXgd9cJUveWxW658zg8jpEJ7K03USqe6ISYUJCwTQOGt3K1YJ5MabymJDAtjfawfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com; spf=pass smtp.mailfrom=jrtc27.com; dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b=Pxq14T6q; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jrtc27.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ZMzeuNw6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RSnhz5M2VIoLB3ITicrzmnU2T7syM8mohdTnD+LkUZrlXIba8+wNic+InaPZfUAezSZutKXvGM+c2tfWRRigD1d66jgv6yfKQQvUhpRG5snhUqUR5sh4MLN2YHD+XNo5WVdGJnRzLSvuOsBsC69TenGJgsTDzJK5rTnPMLHz2Q7KqwGqcAJD9dvtIeasRzC4WHGVc2cNZDBk6AF5+IZ2p0AbzkninzgWkwEOgMqBcTt9cKdK8DRojy9tWeAKoDzjizW1YlvY8z3+D5LgskdwYBgrAWKMc47xB++RQdMOYQn0xCWRu/8nmi2s5rPk3Q/kTbffrhvVU6qs3NxYSYfa0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NA/ikNo1xW/j73evuEieazwd34fv8aWI+kQo0bEGgb0=;
- b=LOATJqu/01K8Rm/bYx8KFDw8XBPgp/hy1ILlSPgGti48Z8LT6HHmDipXdFaB0zdwq6pSuXYZNfB4AEbY8bvejXSDfK0RX5InTGagbBV7aNnJxoo4KKexgmUzVBwFMbIaIjjx7tNZMsmGT01bW5mI9iT+misLQ9AbbxEXi3ZQaPOirmexmCHwG1+JdTRkprnXHTbL248vi2tr/7Gsq2xBo576cehzFXA7kGGrRD9s9iqhDh0w/theSILooFt41wJ9Lbgk6G8XmnW1Ey0HvNA/f3uR7hWZ5ZwPoEAojoX+8CcZRytpDmth2ZplLG9ppXXY5+bhYYVlIavV6wS2tiOnQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NA/ikNo1xW/j73evuEieazwd34fv8aWI+kQo0bEGgb0=;
- b=ZMzeuNw68CCjTK4idSfjt8ePotw+R1T8NCeP7KaNrjmGi0Tsj+1rHQp/7/RGYxZFtY1iHaejGXwwXhu5fmp/tia2/K93+doUDl00PLmO/x2eHevvutTl+A4RwkgjJZMla16/xfVfk7xdml0p4bvUr/4a01h3lwROcBN3EL/9YedGN+ewUilx+SKQVJx9AAk2OVh9FnEsT3gngjyC178ZpIdWQ/5fnOsFQ545hoNaG3osNoK+IRwRtEfygjVZJcgLG8haRrauGLlsEgF6UcQWIAFfTblCYi9ZmVK8nZt47p3/txDXIAUksG52b9PsS5P/j0Bjke6C4c7PedPk6yAE5A==
-Received: from AM6PR03MB5080.eurprd03.prod.outlook.com (2603:10a6:20b:90::20)
- by AS8PR03MB9676.eurprd03.prod.outlook.com (2603:10a6:20b:61f::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Tue, 4 Feb
- 2025 23:35:15 +0000
-Received: from AM6PR03MB5080.eurprd03.prod.outlook.com
- ([fe80::a16:9eb8:6868:f6d8]) by AM6PR03MB5080.eurprd03.prod.outlook.com
- ([fe80::a16:9eb8:6868:f6d8%4]) with mapi id 15.20.8398.021; Tue, 4 Feb 2025
- 23:35:15 +0000
-Message-ID:
- <AM6PR03MB5080392CC36DB66E8EA202DE99F42@AM6PR03MB5080.eurprd03.prod.outlook.com>
-Date: Tue, 4 Feb 2025 23:35:08 +0000
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, memxor@gmail.com, snorcht@gmail.com,
- brauner@kernel.org
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-From: Juntong Deng <juntong.deng@outlook.com>
-Subject: [RFC] bpf: Rethinking BPF safety, BPF open-coded iterators, and
- possible improvements (runtime protection)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P123CA0041.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600::29)
- To AM6PR03MB5080.eurprd03.prod.outlook.com (2603:10a6:20b:90::20)
-X-Microsoft-Original-Message-ID:
- <27bdae12-c016-483c-879e-9b7f846921fe@outlook.com>
+	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="Pxq14T6q"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-385f06d0c8eso3362689f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 15:36:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jrtc27.com; s=gmail.jrtc27.user; t=1738712196; x=1739316996; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QjEre/G3BLqcrCF5wreFajQVoRGv9unmtvDg4S23UQU=;
+        b=Pxq14T6qk7wHnCKc8K8smJ8lKDbvd5HZIJQAy4wZws/37SBi5T81I4WPYeFnDoDPDA
+         b27wDaPlImy2bIR5tWFoMGvGFXeKVeEfyUMDBgTKfscvnfLBhsAH7mdvpnYOah6ZJ0P3
+         BCNF4SYQwIlKwB8OeNDobvgJ3/U0HhXQBM4vnuET8y7VhcAenEMzh+W/glWWQIC1jT0A
+         pY4+MNfHEB+MS6qu7P9lZ28/idUer6ygbT9kCCtEHm5bFtuY1cabP8gatpTpRa7TBZjr
+         x6FZTmO0QQWgcgohdPSQQ4BPp1ZHGBNrqXT6J+pK9K6Wq3+1F+V7ZxWrnTARgXvfhtBt
+         kpNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738712196; x=1739316996;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QjEre/G3BLqcrCF5wreFajQVoRGv9unmtvDg4S23UQU=;
+        b=MUku5jESyzVCWFmg/mwSxKMzdaRkq81CfOIUORqSRuxJBiagP5fPz3tL9CdfMpGwBi
+         +PUx84Wj7aA4FT0zAtX/tdI8/Uit57urzqCh+s0tagXJ2mHvAX5pPMR5l50urM3vkn3M
+         dD5GG0cPvT4itvnyAjWG7mY5eDRxgE6yEcNNOzF//P+Tu1+VgxCisCQn5F0rDYsK9qiL
+         RClxfiYU8cvsv4nlucRIbILDLhtp0nyetNxiG1bTctLu39BIg2FkkxBILToaposKQkbs
+         oibhse5KMvBBs7mqfMm2YtL36WnEd/eWCJtAzRbF/Cj5s4RiT4EF072tfUUKJwkwbeRK
+         xVEA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7Fly7TIDYLpnrpZAoBbycLS1LwDJXgIElspR+semtpiFrKptx6pOc0nSUPjs9Z3IILBmLQyFwnb6Y1zI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3QICD+gIGkoRBupYNCXv0AsIg6q0m8x5DyZWwFnxHCuq/qqF8
+	RDhjbx0vZDpfZFud00SszEsIZOtKVu60Ai9Mh9E6qOQy3+N9lPERHyWoIsZ6YoI=
+X-Gm-Gg: ASbGnct2pXJqsFpMwISTJXWuf6drZRKBQm+hJgM62y23TyM5JclBRuAOyIR3QAH2WCN
+	k2aSOu6GpuHGzDOU7zFOqutJ0XbUJW+2LqiQDPuHOY3a36oV+uvcP+8thZZV6XYwCte67QjpB6J
+	iFFe4QWNjflYQGkGyTbE5B4FRNq1pK/99ujf/YQUUJy3y4zTve0H5hMHqNzW73TGYGZGqv9rP7d
+	qNFI+Nj2zw0slyGkVVpcVsLWlK7bQFPcTJj8Wi15/AgQAxnKjM5LXeFCbvwZjEvV4sRGxO78h18
+	Jf2w7PWLiRb54bn8K7ib6N4i7nfZ
+X-Google-Smtp-Source: AGHT+IEbYs1SnazTxli1ivvCCDO1Cn9LUrxieFBceKbd6w0ve1uSZrVLlYscY7LZ+tYIHGaLpjoemg==
+X-Received: by 2002:a5d:4c47:0:b0:38b:dc3d:e4be with SMTP id ffacd0b85a97d-38db49214e3mr355994f8f.51.1738712196024;
+        Tue, 04 Feb 2025 15:36:36 -0800 (PST)
+Received: from smtpclient.apple ([131.111.5.201])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec369sm16900115f8f.8.2025.02.04.15.36.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2025 15:36:35 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR03MB5080:EE_|AS8PR03MB9676:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0acc132f-39de-428a-bebc-08dd4574933b
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|15080799006|461199028|5062599005|6090799003|5072599009|8060799006|19110799003|56899033|1602099012|10035399004|440099028|4302099013|3412199025|41001999003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T1hxaEh2MENJOEUxVnViUm5qbUZneGM4enp3V2dpclIra3dsVHhRUzVUVi9h?=
- =?utf-8?B?REdOT0UrbHRnZHR2U1RiYmdXV0hFSElxUEZIdTgrTkswMHdNTVBtemw5TEph?=
- =?utf-8?B?Zlc2WnM2MXRLclNjSG82My8xVHVhQit5MkpVV0paa3JTR2hoUU1WRmV5NnBY?=
- =?utf-8?B?eHRPUU9qTVY0THA5QTd1QWJEaUg2QWtMajdwMlkva25reWRaM05NM3JhaGFB?=
- =?utf-8?B?a1k0R0pnbmk0ZUc4VlgwdTNxa2xxNVYza25NTTJQUG5NOVJxZmgxR2pyS2tn?=
- =?utf-8?B?ZjdyUENMdjlRMVNMSUVlbW5TeVdEVVZrQm5LNjcvZEwveEV5eFl1Zy9JVEVY?=
- =?utf-8?B?NUlJU2ZQZHBTbGVJMUhlbWpoVXdXNFhaQ0pnTk9teWU2ZnlQcm9EU3BiY0Jo?=
- =?utf-8?B?cGxCUEN2aEFMWVdYYkJTb1RJYjVUUnV3TlZWMG1RcXRoMG0xMEI0UXFkVVJt?=
- =?utf-8?B?NGthVGczbG1VTWlENGZHYXBkUVdlOXFHcC9FN1VSMlFtT0ZDZWYvWnFvbEhz?=
- =?utf-8?B?RmkvUThObmpkV0podVpkV2xuNzZOWk90NytTNHFhZmI2aDZ4ZStpQ0VYbHc1?=
- =?utf-8?B?b0FGNmdSSGlsVDlNdXVZa3FpTGdZTWRMdXl5YWV6cklmeThtSEhoU2RKcFFp?=
- =?utf-8?B?SDYvdHUxTk1VbjFxcDI0QlMwUmFhcnJ2Nm45Z2ZWMDhuZzBuOTBmdkNJVG1l?=
- =?utf-8?B?QlhGa3ZhM3ZGbzZrRWt2V1dmRUNsR1Z4bWdKWUplUENkdnNKRWhTWjBhSThU?=
- =?utf-8?B?RzNBVGpqUnFzWC9lbGRkUCt1YSthSGNqSERpQkRkTldBVlllT0xCM0Y5Q0VM?=
- =?utf-8?B?dkVFNUtnTThVSGJJSjlYMElPR1Zabi96WmVYRW85c2Z1bWxzaGtXZkFEM20r?=
- =?utf-8?B?Rkc0c2ErTGpiek9oTm03U3hmTXV3UnBORFQzQVpjaDB6ckUyRFF2amhMMktL?=
- =?utf-8?B?Q2FLYUVBSHFyeWtKYWp0M09mcEFndkpSUm5GNExLNC91WDY5MDlZMTNUT2JN?=
- =?utf-8?B?bE96a0hjeUcvNWE0dG9qcmptbjJjZEVSVmh1SE1QaUJZMFRZQmJtNzJzb01n?=
- =?utf-8?B?V3RELzZkR3BVQys5ZUxreEVPbzd6aGlmaEdPT2RQQWFMQVYvdGlaVWJyaWsx?=
- =?utf-8?B?Z1RzcURkY09sa3pEWmFPT1JOeXAwNVdHNlQ3Q3NGSm9JN0thQXlpemJHa3Zy?=
- =?utf-8?B?Q2psK3Q1WHN3M0NZSElGbUxNQ3J3c3dGNUhtTytJTWZ4MkNlcGtPeXEyUU5O?=
- =?utf-8?B?d1B0V3hVdWJjRVJVeUszd3R6MkZmNSt3QkdJZDNDWUhOWm5DNytzRlJ5d1cz?=
- =?utf-8?B?Y2l3cWdYQkd6anVLRFFrV1ZWY3h3eUk4bkxmOXM1Z0VGOVFhc1EzTjZnSXhJ?=
- =?utf-8?B?ZWpSWngza1o4bG9DalpvQmhlcExMNkt3dTZ1MG9HRzRDRE5WSDh1Rnp6aEtv?=
- =?utf-8?B?QnpDRUltY0RxeUpGTlA1SGFwWHFKc24xY054Q0hrUGV3YWIrUExWanY4dER0?=
- =?utf-8?B?RVNYV2dqamhQMWhJVnNrWEJmRUVBK2JHMWlCUUhtTk9ETW9xNjlEU0t6U3Nj?=
- =?utf-8?B?YUlEQlNnNlBkQ2pqdm91TkFGVnJNeDBOQWtGckYwaGc3RnZ6NWFFZ1doWk9F?=
- =?utf-8?B?VmFZV3VoaGNvREhOdXN4Rzc4N29nRGxldFlRRkRNVkF1dWRHZGtaTGRaTVFY?=
- =?utf-8?Q?e39Cxr4QEzf0aAOzu4zz?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VXpNdldiK04yNWl2aW5MWVVBbDN2OUwvT2VVRFAvck5TTXlKNDBnbGQrRzF0?=
- =?utf-8?B?SVhUdU44T01DOU9BQUlYcG1pVGp4bkllZGdzNGl0SDVmTnZsTkhkWGdHeDM4?=
- =?utf-8?B?Z1M1ZGhaeXNCWDY0QVNTeHk2VVkvcENEcDhVMkN6aGNON3pWaGFQdzk0T0pR?=
- =?utf-8?B?ZWIzaGI0ditTWWdKb1IrZWpCUTQvWUZrMlZXSkgrUG9tMWFpeVBTcHozcG9Q?=
- =?utf-8?B?UjdJbUNML21PRm5QY09CZjBjUTg4aGROZXpGOHphR3RrS25yc0tqZGsyYjVo?=
- =?utf-8?B?d3JOT3VrWUdLaWJBWjdNQytFc090WFdKTXNHOWh6QnRQSThLZ3hVZWxpem5x?=
- =?utf-8?B?dWhHWTMzenpuSVFvK0JERUxBODl4NTdMZU5oSFl5dGx5UkZIOG9CNFpqdGpW?=
- =?utf-8?B?bXJoSVJHRndWdWVQcEt5c1ZPL0RLa2tOaVhJaDB5TW1iRGhINVIvU2NwSEJZ?=
- =?utf-8?B?WUhkQzB4MXRxNWdNeXNyNmhKWENsTUhpVlhUT1k0Wkx1RU0yMHk5RHV5Z0Zw?=
- =?utf-8?B?R1ZVanUrL2hSTnJ4d1hOenpLUjJXRWFMVmFpcEhpT2g3RVNTOGhFOXo4T0xq?=
- =?utf-8?B?NUtTTnlNZWM5S3p4RWc2TklueGtNY1B2WFNCSHcwVS95MjAvQmlrZzhDYTdE?=
- =?utf-8?B?TXVxU3FYV1pjWXZRaXhobGcrRzdUVVhhT1J3cTVEN3JHTVRXQXFHUGtKaHU3?=
- =?utf-8?B?Z0VyN3pWczhpMk1XVC9va0hJRklOK216ZmtZSDg0c1kvb1FFd0RodTNRd3dD?=
- =?utf-8?B?V1pVV3JnSHFUakJvUEpDQXlScEQ1U003UERJak5HL3FWZXZPWWpzR2Fub09K?=
- =?utf-8?B?aGNRZWRDTVdmU3ZkaEFPZWxnM2o3Q0dMUTZGalNLMmtGOEd6SFRiVk5IaVox?=
- =?utf-8?B?eXZvSkF1WjBuUDFHL1duLys4d1RiQzluQTdpV0FyOFlpU09qOTBCeUh6ejY4?=
- =?utf-8?B?a25CVG1QVGhzVjRkU3hjakp0YmhEQzVQdUNrbXkyZ1V1cVR1VDBJMVZCcVFU?=
- =?utf-8?B?N1ZlbHNIUWFIQTJQc2dSdmNGeHlnL2phYWhuQlZVT1NGMTYzU1pyY2RJckJy?=
- =?utf-8?B?ZlFNd1J1NWNCL0JESGxEMWgvV2o4YnphRS9SL2lNakFzYU11cUNqb1I4ZkpL?=
- =?utf-8?B?dGZBZWljdm1vbUJwT1RjcWMxTWZYYmRCVlBKOHdsbXhtNm45cHpzRU1nWFZx?=
- =?utf-8?B?R0hlZU5TZ1pqQzFHRUhiTXdMeEZsSDNsUGQrTE9FVTNqSTRra1JhemFBMXZC?=
- =?utf-8?B?VXNyZ1ZGOXRtS0hCb2pLWU45WHU2S3ZtSkpObGxFSFVEeVlWMVdOTnJSS1Ns?=
- =?utf-8?B?cXBjcWpDWTZjdnJKM1FucDZjdUZ2SkJlNWRZSm9Qa2hNRUttVElVK1MwaTZI?=
- =?utf-8?B?VHlRMkFodHdXSzZMdXRrTHlWQWNvREd5ZkFqMVYxeCtVdGxwbmpUVjVLTEo3?=
- =?utf-8?B?SDVramY1VXNLazBua3ZtME1BZ3h0RU45dFNzUXd3TWd1aGwvNGZZdFdYYTJx?=
- =?utf-8?B?WmFmVHcxb1hTUUx0em5OVGlYSDE5emZrRFR6enZlOXRoTTdST281WFJQZ0wv?=
- =?utf-8?B?UXV5Q3h0MzdPZjg3azRlT2tEcmlwaHlEUXZQc2V4UGRoWXNpMk1lRTFhMVBp?=
- =?utf-8?B?WTFhYzAxNlo1cXdiNEw1SjFPYnJVbXIrZEFBZ0ZlS0Y4aHd3R2FwV3llV0M5?=
- =?utf-8?Q?zeyr9LCHYAfhFRGpV+xi?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0acc132f-39de-428a-bebc-08dd4574933b
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5080.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 23:35:14.8912
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR03MB9676
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH 00/15] kasan: x86: arm64: risc-v: KASAN tag-based mode for
+ x86
+From: Jessica Clarke <jrtc27@jrtc27.com>
+In-Reply-To: <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org>
+Date: Tue, 4 Feb 2025 23:36:23 +0000
+Cc: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+ luto@kernel.org,
+ xin@zytor.com,
+ kirill.shutemov@linux.intel.com,
+ palmer@dabbelt.com,
+ tj@kernel.org,
+ andreyknvl@gmail.com,
+ brgerst@gmail.com,
+ ardb@kernel.org,
+ dave.hansen@linux.intel.com,
+ jgross@suse.com,
+ will@kernel.org,
+ akpm@linux-foundation.org,
+ arnd@arndb.de,
+ corbet@lwn.net,
+ dvyukov@google.com,
+ richard.weiyang@gmail.com,
+ ytcoode@gmail.com,
+ tglx@linutronix.de,
+ hpa@zytor.com,
+ seanjc@google.com,
+ paul.walmsley@sifive.com,
+ aou@eecs.berkeley.edu,
+ justinstitt@google.com,
+ jason.andryuk@amd.com,
+ glider@google.com,
+ ubizjak@gmail.com,
+ jannh@google.com,
+ bhe@redhat.com,
+ vincenzo.frascino@arm.com,
+ rafael.j.wysocki@intel.com,
+ ndesaulniers@google.com,
+ mingo@redhat.com,
+ catalin.marinas@arm.com,
+ junichi.nomura@nec.com,
+ nathan@kernel.org,
+ ryabinin.a.a@gmail.com,
+ dennis@kernel.org,
+ bp@alien8.de,
+ kevinloughlin@google.com,
+ morbo@google.com,
+ dan.j.williams@intel.com,
+ julian.stecklina@cyberus-technology.de,
+ peterz@infradead.org,
+ kees@kernel.org,
+ kasan-dev@googlegroups.com,
+ x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org,
+ llvm@lists.linux.dev,
+ linux-doc@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0BDD645A-3BBE-4A85-9098-257B281A3BA0@jrtc27.com>
+References: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
+ <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org>
+To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
 
-This discussion comes from the patch series open-coded BPF file
-iterator, which was Nack-ed and thus ended [0].
+On 4 Feb 2025, at 18:58, Christoph Lameter (Ampere) <cl@gentwo.org> =
+wrote:
+> ARM64 supports MTE which is hardware support for tagging 16 byte =
+granules
+> and verification of tags in pointers all in hardware and on some =
+platforms
+> with *no* performance penalty since the tag is stored in the ECC areas =
+of
+> DRAM and verified at the same time as the ECC.
+>=20
+> Could we get support for that? This would allow us to enable tag =
+checking
+> in production systems without performance penalty and no memory =
+overhead.
 
-Thanks for the feedback from Christian, Linus, and Al, all very helpful.
+It=E2=80=99s not =E2=80=9Cno performance penalty=E2=80=9D, there is a =
+cost to tracking the MTE
+tags for checking. In asynchronous (or asymmetric) mode that=E2=80=99s =
+not too
+bad, but in synchronous mode there is a significant overhead even with
+ECC. Normally on a store, once you=E2=80=99ve translated it and have the =
+data,
+you can buffer it up and defer the actual write until some time later.
+If you hit in the L1 cache then that will probably be quite soon, but
+if you miss then you have to wait for the data to come back from lower
+levels of the hierarchy, potentially all the way out to DRAM. Or if you
+have a write-around cache then you just send it out to the next level
+when it=E2=80=99s ready. But now, if you have synchronous MTE, you =
+cannot
+retire your store instruction until you know what the tag for the
+location you=E2=80=99re storing to is; effectively you have to wait =
+until you
+can do the full cache lookup, and potentially miss, until it can
+retire. This puts pressure on the various microarchitectural structures
+that track instructions as they get executed, as instructions are now
+in flight for longer. Yes, it may well be that it is quicker for the
+memory controller to get the tags from ECC bits than via some other
+means, but you=E2=80=99re already paying many many cycles at that point, =
+with
+the relevant store being stuck unable to retire (and thus every
+instruction after it in the instruction stream) that whole time, and no
+write allocate or write around schemes can help you, because you
+fundamentally have to wait for the tags to be read before you know if
+the instruction is going to trap.
 
-The problems encountered in this patch series may also be encountered in
-other BPF open-coded iterators to be added in the future, or in other
-BPF usage scenarios.
+Now, you can choose to not use synchronous mode due to that overhead,
+but that=E2=80=99s nuance that isn=E2=80=99t considered by your reply =
+here and has some
+consequences.
 
-So maybe this is a good opportunity for us to discuss all of this and
-rethink BPF safety, BPF open coded iterators, and possible improvements.
+Jess
 
-[0]: 
-https://lore.kernel.org/bpf/AM6PR03MB50801990BD93BFA2297A123599EC2@AM6PR03MB5080.eurprd03.prod.outlook.com/T/#t
-
-What do we expect from BPF safety?
-----------------------------------
-
-Christian points out the important fact that BPF programs can hold
-references for a long time and cause weird issues.
-
-This is an inherent flaw in BPF. Since the addition of bpf_loop and
-BPF open-code iterators, the myth that BPF is "absolutely" safe has
-been broken.
-
-The BPF verifier is a static verifier and has no way of knowing how
-long a BPF program will actually run.
-
-For example, the following BPF program can freeze your computer, but
-can pass the BPF verifier smoothly.
-
-SEC("raw_tp/sched_switch")
-int BPF_PROG(on_switch)
-{
-	struct bpf_iter_num it;
-	int *v;
-	bpf_iter_num_new(&it, 0, 100000);
-	while ((v = bpf_iter_num_next(&it))) {
-		struct bpf_iter_num it2;
-		bpf_iter_num_new(&it2, 0, 100000);
-		while ((v = bpf_iter_num_next(&it2))) {
-			bpf_printk("BPF Bomb\n");
-		}
-		bpf_iter_num_destroy(&it2);
-	}
-	bpf_iter_num_destroy(&it);
-	return 0;
-}
-
-This BPF program runs a huge loop at each schedule.
-
-bpf_iter_num_new is a common iterator that we can use in almost any
-context, including LSM, sched-ext, tracing, etc.
-
-We can run large, long loops on any critical code path and freeze the
-system, since the BPF verifier has no way of knowing how long the
-iteration will run.
-
-The BPF verifier can guarantee that the BPF program will end, but this
-end time may be in the very distant future, which may cause the system
-to freeze, hold references (KF_ACQUIRE) for a long time, and hold locks
-(bpf_spin_lock) for a long time.
-
-If we still believe that BPF can be used safely in scenarios such as
-LSM, sched-ext, tracing, etc., users are sensible and will not write
-long-running dangerous BPF programs to get themselves into trouble,
-and BPF programs can exit in a limited short time.
-
-Then holding references or holding locks in BPF programs doesn't seem
-to be a problem?
-
-But this is obviously an idealistic assumption and we have to face the
-worst-case scenario.
-
-This brings us back to the question at the beginning, what do we expect
-from BPF safety?
-
-If we need stronger safety, then we may need something beyond static
-(possible improvements section).
-
-What do we expect from BPF and BPF open coded iterators?
---------------------------------------------------------
-
-Would we expect BPF programs to have flexible access to more information
-in the kernel?
-
-Would we expect to have more BPF open-coded iterators allowing BPF
-programs to iterate through various data structures in the kernel?
-
-What are the boundaries of what we expect BPF to be able to do?
-
-If we expect BPF programs to access more objects in the kernel, then
-temporarily holding object references is almost inevitable, whether
-during iteration or not.
-
-Of course, there may be risks, but maybe those risks can be solved by
-improving BPF?
-
-I have always believed that BPF has the potential to obtain information
-in the kernel in a flexible, scalable, safe, and portable way.
-
-Possible improvements (runtime protection)
-------------------------------------------
-
-The inability of the BPF verifier to detect long running loops perhaps
-indicates the limitations of the purely static checking approach, and
-determining the running time of dynamically sized iterations by static
-checking seems impossible.
-
-We may need some additional dynamic (runtime) protection mechanisms.
-
-Maybe a possible improvement would be to implement a simple runtime held
-resources record. We pair acquire and release, lock and unlock kfuncs,
-and insert some code in these functions (perhaps via macros) to record
-runtime state information (such as the type of reference/lock, and the
-memory address of the corresponding object/lock).
-
-After the BPF program runs out of time, the program is forced to be
-killed and resources held are automatically released based on the
-reference/lock type and address to avoid impact on the overall system,
-and return the error to the BPF userspace program.
-
-The timeout can be different in different contexts or holding different
-references/locks (For example, in a tracing context the timeout may be
-very short).
-
-I am not sure that adding runtime protection is worth it, since the
-efforts of BPF so far have been to do all the safety checking before the
-program runs, but static checking cannot solve all the problems.
-
-If the BPF community is interested in this, maybe we can try
-something new.
-
-At the end
-----------
-
-Any discussion is welcome.
-
-I hope this discussion helps us clarify what we can expect from BPF in
-the future, and what flaws BPF currently has.
-
-This may help us more easily decide which features should be added to
-BPF and which should not, or what improvements should be made to BPF
-to help us apply BPF to more scenarios in the future.
-
-Many thanks.
