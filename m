@@ -1,88 +1,107 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D46E206F17
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0DD206F17;
+	Tue,  4 Feb 2025 09:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661296; cv=none; b=qFrZyORUsss+j3D2XcTtDkPHYWPE6XW5ajw9tSeQFP6d1wujbU974gXfQ6cujgkxFV0t9w2umicedLcihT/aD08//NLBvpVKRF7D2LXVYlKBhZsshzyEIgsscbJDQFrZOKH4pvzYIZgyh0gxgYqu1rtz2tcJFSVX61l9Akm8X28=
+	t=1738661327; cv=none; b=p2IAtESzm2QDn8C8YtsXc6oLvJfiX7N/9bop9A7VwxVMF7nzeR+y8OaFB/RfnmlXMMpbzSOFJN27BmLNpm4/ZvlaioyzSrh9SC6S925Et3HcRux0k02zIXcp1P8yDA56vt1Xiv3cPviBXETMm2mjQxJkF08I8xcYhnifj6IBjrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661296; c=relaxed/simple;
-	bh=65JVhxdXQGsMohzOnNWRBzY67jDzX0XfRFA5pfUh9no=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=R8NQQnKKs809oGPFmMJmZj/URCF41MqdIWVO3AHLjwYv8gziWSAGhd5gJYK5ZTDeADLoXQgFBtbZU54WMzHXwHKOFyc/a0MwPpgMLbzZ+XwEzQ1ZDiJwN81lYEkr40wMWNl8Q98cL9TFaRwVZVYRh9mddb2ufCyj5clPi7srkfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mCGhPS0D; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A1r3nAQJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738661327; c=relaxed/simple;
+	bh=VnS31rylgHiREySqv8HKPVWOHC16dcRlvpLngN8T+54=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=h7ojvxKOG+IqmH32GidrQht2VY1vNeKGd5hafQXsZw8n6i28AOfkCITkmas/Rh/zUuTxS/wjV5bqUuARNshhjCg1gNnWNZsQWmeASgDhMW3RbZyRvwFXdtzbU826LtnpHM6S6kxnup5kWod0B9a+UVb4t1I5268AH9ckkSi2rVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V5b3DVGS; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mCGhPS0D";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A1r3nAQJ"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738661292;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IxUhzMpZbBLI24vAgo0RXEQvd0b3kP29hyIxwVLwatQ=;
-	b=mCGhPS0DHUwuRWQm44gBhIszb1e72y/U7MORY7e66FXUq8YfBscCibIJBeEuKpwLftqM8l
-	G+OkrEUa7O4vwTxbVRfpXNlMgEKmrc79ZU0m/vlE+y5DPAFaNcv8rk0nF5yO2RaYPT/Z2t
-	JoQ8MkcwIJyuG1SemB8Yxc3x+5HJlBylEvoCzTIc+q8IRnc2LA2/eXJtZRg+5ptfqUyP9F
-	RDMNarbt+REFMqA/GlLMwTHLF893O3yDYRGVXSvErl00k3BqmV8EowThZTH46F3dIR5m6d
-	Fkcv9rDEoey8/f3oerIy6TyoiNt8EgQjQJwlK0mzxvQEMh/m/VHnzL/JcpN65g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738661292;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IxUhzMpZbBLI24vAgo0RXEQvd0b3kP29hyIxwVLwatQ=;
-	b=A1r3nAQJfG/G6wJiuEXiKyr4CHoP6qmmv5LtlQPq/j+V1yTRs7ebuXhDYIcbs90Nf2BW+Y
-	F5Ik50dM03CFevDA==
-To: Peter Zijlstra <peterz@infradead.org>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, =?utf-8?Q?Andr=C3=A9?= Almeida
- <andrealmeid@igalia.com>,
- Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>, Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v8 03/15] futex: Add basic infrastructure for local task
- local hash.
-In-Reply-To: <20250204084135.GN7145@noisy.programming.kicks-ass.net>
-References: <20250203135935.440018-1-bigeasy@linutronix.de>
- <20250203135935.440018-4-bigeasy@linutronix.de>
- <20250203144101.GL7145@noisy.programming.kicks-ass.net>
- <20250203155251.cAKJlgIZ@linutronix.de>
- <20250204084135.GN7145@noisy.programming.kicks-ass.net>
-Date: Tue, 04 Feb 2025 10:28:11 +0100
-Message-ID: <87ldumnjo4.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5b3DVGS"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ab70043cd05so826101766b.0;
+        Tue, 04 Feb 2025 01:28:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738661324; x=1739266124; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XTwc9Th5siWMiTD7kn0j7u1V80IUDrClcubkNNtYRvo=;
+        b=V5b3DVGSV3Fh56CUfpEPRj1AxXVlkF2xgH5pvMEN6WNdrNh+/WiF4iOCSrA1cIr1fw
+         dm/UFN+DbE9ETtOe5goxb5TW6Jg3ayq+SYNo0w39yk0JJlfvaWMmulKN+nAonCrQno0+
+         DHC7CvpRxDeGRIFexKJfQPVfv37h1EVNsK6xj2FIuTOYegU5vfAA+MDwqMH1qnLa1F94
+         hgBvPUwQ7/LVpN8SehYJhLEB0It0CaXoE5y2mLr+WqBsG0php5mMPcCwU3OhITJUSfep
+         tw86DmfA7WWe/OSpmzu3YhEKQ0nup0XkwdF+Ze+Qn8ALrjN3DuN1VgI+PxTXEv8s8O1M
+         7AOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738661324; x=1739266124;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XTwc9Th5siWMiTD7kn0j7u1V80IUDrClcubkNNtYRvo=;
+        b=AMpIhahALvRqWCQ/96tyqwSkNRNA/+8WqPznHW1A9D7iQXMtMr1HH72vUJg+ID8+XA
+         eGGn8dtqG0PbiFeWOz7PSBjxdc73dPtc1g+9Gciv1q8UCzSJTAmgU9s1kAZC3zuQmwBN
+         23mCTZzybJ4evbPWBJOioMpTZt6SH4CI/NDvpGVBIigxhOwEdWt1cXZFL8GO7t+CWSm+
+         RZdfEBdbhVx30Fdqz5llm4XwUkV191/P5U3ukywX4H6Uk2RkBJso2EA73A6bLQr+Z3N7
+         4Ee+NgGOGuylKTEYfERa/S+zUXcIsRLLPExQtzjBmtlJOsgAuB3FwRY7jVEUZx26Tl1q
+         oDcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsOs+BVPj4AUuPvznyhBhcziuCQtYehX2zFM61MfLCA0l6sNemNY2Q70fzYu35KEYoT/IQ251B+BJ8NL0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPX6RJKCs9tFR9QXejBiSio1QdjtOsMMUwuAibbNVid6u5aAyp
+	ajruJDSgXwThHwVI8k7cl0GPERYXKVCQTFho386o1wNl4bL+QUDkEZF3v9Vxi5M=
+X-Gm-Gg: ASbGnctGz0Xvtt/aVUHqPZ5TjD1VZEczQh2FNlroT97Hl5d9qZIxfWD9TmfDqoyykJ1
+	/EaR7T30Oc1dHSIC6Ori0A08i2Q7Zze3Iw9XUz/kYyZlQlbbhYemDjpSq+mEps83kVVQ1n7yPnL
+	FG13w1TzIGfcgy6Dj48gxMdCaoxalSDS39Y8OC9kdYuxNxks7UOedVHW2V7kTMPlVa4qN/vLhSa
+	JJkHqeGahD5uz1MUOWNLNjEoiL8c6fFqCN1Neghw0a7p3dS8G8AtGs2xRJ1RrNmrTGqOtw5jPCL
+	/NS+CvnjxyyywuRvFVCrv8iXYvXcPFMtGVF+ZgLW/8cqcnQ=
+X-Google-Smtp-Source: AGHT+IFLBtYophIm6tAO2aFSfswyWwr/aSH+r86kCltIEVfR3E92Fg2lpP+VlbBSyBgC7qImjOtqeA==
+X-Received: by 2002:a17:907:940f:b0:ab7:1012:3ccb with SMTP id a640c23a62f3a-ab710123dd0mr1177789666b.14.1738661323862;
+        Tue, 04 Feb 2025 01:28:43 -0800 (PST)
+Received: from [192.168.20.51] (54-240-197-238.amazon.com. [54.240.197.238])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ffd42sm903597866b.95.2025.02.04.01.28.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 01:28:43 -0800 (PST)
+From: Paul Durrant <xadimgnik@gmail.com>
+X-Google-Original-From: Paul Durrant <paul@xen.org>
+Message-ID: <e82ad865-8c04-404a-94e4-d9d7e5c10717@xen.org>
+Date: Tue, 4 Feb 2025 09:28:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Reply-To: paul@xen.org
+Subject: Re: [PATCH v2 06/11] KVM: x86: Don't bleed PVCLOCK_GUEST_STOPPED
+ across PV clocks
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzbot+352e553a86e0d75f5120@syzkaller.appspotmail.com,
+ Paul Durrant <pdurrant@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20250201013827.680235-1-seanjc@google.com>
+ <20250201013827.680235-7-seanjc@google.com>
+Content-Language: en-US
+Organization: Xen Project
+In-Reply-To: <20250201013827.680235-7-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 04 2025 at 09:41, Peter Zijlstra wrote:
-> On Mon, Feb 03, 2025 at 04:52:51PM +0100, Sebastian Andrzej Siewior wrote:
->> On 2025-02-03 15:41:01 [+0100], Peter Zijlstra wrote:
->> > Notably, I'm also still thikning about all that pending FUTEX2_NUMA
->> > stuff.
->> 
->> With local-hash there is still room for FUTEX2_NUMA?
->
-> Yes, single process can span multiple nodes, and then you still get the
-> cross node contention issues.
+On 01/02/2025 01:38, Sean Christopherson wrote:
+> When updating a specific PV clock, make a full copy of KVM's reference
+> copy/cache so that PVCLOCK_GUEST_STOPPED doesn't bleed across clocks.
+> E.g. in the unlikely scenario the guest has enabled both kvmclock and Xen
+> PV clock, a dangling GUEST_STOPPED in kvmclock would bleed into Xen PV
+> clock.
+> 
+> Using a local copy of the pvclock structure also sets the stage for
+> eliminating the per-vCPU copy/cache (only the TSC frequency information
+> actually "needs" to be cached/persisted).
+> 
+> Fixes: aa096aa0a05f ("KVM: x86/xen: setup pvclock updates")
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/x86.c | 13 ++++++++-----
+>   1 file changed, 8 insertions(+), 5 deletions(-)
+> 
 
-This is strictly about process private futexes, while FUTEX2_NUMA covers
-both shared and private futexes and helps to avoid the hash collision
-and resulting contention problems which are caused by the current global
-hash.
-
-With the private futex seperation you obviously get the cross node
-memory access problems, but not the general contention issues which
-FUTEX2_NUMA tries to address.
-
-Thanks,
-
-        tglx
-
+Reviewed-by: Paul Durrant <paul@xen.org>
