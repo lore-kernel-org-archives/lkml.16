@@ -1,83 +1,123 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED76211A0A;
-	Tue,  4 Feb 2025 18:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A220C216E2A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738693061; cv=none; b=u7wVz/LqU8BUMbmEKIPl7w9lrEuzSe3qMz2zRpW5NfFBKemOjxp7ZURm+Duj2lwGiiyhbJa/KeVEeGgCsKkDClBlu1CzdHfnzwbDkA9zw+ANmi8jiuMZnfB2mt4k8P6eFc2XlqHexoM+OIq8Ln+zFuMdFMwUql/E+GNJSTZIoMg=
+	t=1738693164; cv=none; b=fkSgJiKr8Wz02/gZ1zIeTbyjpPwOJSF7mmgRdNaCVrwQvClL9aRL+9KulE/RPgxMh23yuq+oKk4vIJdhD6KFiCR2UVJjUBG9FeYYzt42x/pp+ulM5zU4jr9HHCOceGJhrVwKKQYQ88aHYaLqrFusCWyc+8gHft9Pm960N34SKCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738693061; c=relaxed/simple;
-	bh=22HW7+XMxKFHo+/mgAG8vFkQ7pc97tPqNxUhKaWnrMY=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=srTgDyv+oABul/pvTCuDtvy4E2WeeJieEKDK2QbqinFk13NqPRES+7rHHpVVjPdrIpkGgeEbYnWIIKYkgsERPp8Iz/F4IWAxyorJLfSHs1D3dSCEmJekuw9UukKlkGQOTjnUwoYSegT1XOMi5jngw1EcrMz535WPhab6a0a9WLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=ceYszPlh; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1738693164; c=relaxed/simple;
+	bh=TCqqBaH/6DxhhY4LxUIZxLWTUzfo7FZ0g9lCT/VEHVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uanknPLnM3vxnsAcFsLIQjqrMkaZ7Cx7BXlJu9TyRwNRtqB5THSDYfJnwBUCn1RTpWyzIv0ZLJ2KgbViszSE3jSmgYevf1c5nQShdanTcHt6lqum7oulSIq/x66dO8oVE0Xws6QQCBJ93vU/7FaAQvYW4jeElXED47izhNyiVq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=QLuSB3Cp; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="ceYszPlh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:To:From:Subject:Message-ID:Sender:
-	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=22HW7+XMxKFHo+/mgAG8vFkQ7pc97tPqNxUhKaWnrMY=;
-	t=1738693059; x=1739902659; b=ceYszPlhqkMuxN6NllJDVHMbEZMkTQzz4xgOCf6P/ALyoMl
-	ecg9njnF44ujllqJ4zKU96uxR8Vyd4b8RDOob+HHRpzHMZwFJ/tY8rfB4rebrIf1WD7z1d9ryDFJh
-	wG1BOxXvOXuW8XRTpufHctvTY+GRVaP1SnQdnXbEIp6Eue1A8ECkSoYYz/1sHY49yaREN4aLv5An0
-	X/Du2yvlDSrLRA6f5DpVg0Id6trR7R3X5BckuDPI6jqNxFYhWm/NeKk6sfpnrUbGTWeGfjAk+alyp
-	gtb+TsOAEHDxEQnwUoEYLaDBsWGIn/ppxwfOApyHgKIp/Ggjr1TakTy5Sajl6+9w==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tfNUH-00000002sDY-46kF;
-	Tue, 04 Feb 2025 19:17:30 +0100
-Message-ID: <553df4d7ddadb0580a2c35fcf8d5b8c3aca69449.camel@sipsolutions.net>
-Subject: Re: [PATCH v4 1/1] exec: seal system mappings
-From: Johannes Berg <johannes@sipsolutions.net>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Kees Cook
- <kees@kernel.org>, 	jeffxu@chromium.org, akpm@linux-foundation.org,
- keescook@chromium.org, 	jannh@google.com, torvalds@linux-foundation.org,
- adhemerval.zanella@linaro.org, 	oleg@redhat.com,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com,
- ojeda@kernel.org, 	adobriyan@gmail.com, anna-maria@linutronix.de,
- mark.rutland@arm.com, 	linus.walleij@linaro.org, Jason@zx2c4.com,
- deller@gmx.de, rdunlap@infradead.org, 	davem@davemloft.net, hch@lst.de,
- peterx@redhat.com, hca@linux.ibm.com, 	f.fainelli@gmail.com,
- gerg@kernel.org, dave.hansen@linux.intel.com, 	mingo@kernel.org,
- ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
-	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com,
- 	groeck@chromium.org, mpe@ellerman.id.au, Vlastimil Babka <vbabka@suse.cz>,
-  Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrei Vagin
- <avagin@gmail.com>, Dmitry Safonov <0x7f454c46@gmail.com>,  Mike Rapoport
- <mike.rapoport@gmail.com>, Alexander Mikhalitsyn
- <aleksandr.mikhalitsyn@canonical.com>
-Date: Tue, 04 Feb 2025 19:17:28 +0100
-In-Reply-To: <htdv44tqzi4jl2b7dwutsdwnh4tgrxq6xdvumi5wwu3hnh7sgw@tfwlal74ukx6>
-References: <20241125202021.3684919-1-jeffxu@google.com>
-	 <20241125202021.3684919-2-jeffxu@google.com>
-	 <202412171248.409B10D@keescook>
-	 <htdv44tqzi4jl2b7dwutsdwnh4tgrxq6xdvumi5wwu3hnh7sgw@tfwlal74ukx6>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="QLuSB3Cp"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 3ECD4240101
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:19:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738693152; bh=TCqqBaH/6DxhhY4LxUIZxLWTUzfo7FZ0g9lCT/VEHVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=QLuSB3Cp5wmxvy0AcnxYAbea4vAVqLHQ2qWlm36gLR16yyS9Z6v9YRiCvyp4j4gn5
+	 LgZDTviocjTkkrBZfKjqIX7HKrKmbEgZd5usiMBwfyowuAzH7n9ya5rw+1WcRG1Oim
+	 61l/YRbLQ/MuqjUeCkWoQ1kkGDN+vaSKCCpYDwnidKomCYAjqhFy+gkv+aXN4VknA6
+	 SHTFc7qSWaWjKRuglfENNnh6zyhAw0zuaTMO+sMLjEjkDm5sMj/UWLXt8eIducymRH
+	 jcDEMinpzWrqCDL2LTwSNhNU1eiDWLfNxb9bwY4wxFJwO7H3iV26supD7Xr4Uco5Zq
+	 7tomMw0Ep2Izg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YnWpc4lyZz6tw4;
+	Tue,  4 Feb 2025 19:19:03 +0100 (CET)
+Date: Tue,  4 Feb 2025 18:19:03 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Rob Herring <robh@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 5/9] dt-bindings: dma: Convert fsl,elo*-dma bindings to
+ YAML
+Message-ID: <Z6JaFxfwC0tAB4uQ@probook>
+References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
+ <20250126-ppcyaml-v1-5-50649f51c3dd@posteo.net>
+ <20250127044735.GD3106458-robh@kernel.org>
+ <Z5zYGdZU-IXwIuR6@probook>
+ <CAL_JsqJAX1QbXvG16NV2g6DGece6KiG_V-uyKQQLA618Oq9miw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqJAX1QbXvG16NV2g6DGece6KiG_V-uyKQQLA618Oq9miw@mail.gmail.com>
 
-On Fri, 2025-01-03 at 15:48 -0500, Liam R. Howlett wrote:
->=20
-> So we have at least two userspace uses that this will breaks: checkpoint
-> restore and now gVisor, but who knows what else?
+On Fri, Jan 31, 2025 at 04:16:07PM -0600, Rob Herring wrote:
+> On Fri, Jan 31, 2025 at 8:03 AM J. Neuschäfer <j.ne@posteo.net> wrote:
+> >
+> > On Sun, Jan 26, 2025 at 10:47:35PM -0600, Rob Herring wrote:
+> > > On Sun, Jan 26, 2025 at 07:59:00PM +0100, J. Neuschäfer wrote:
+> > > > The devicetree bindings for Freescale DMA engines have so far existed as
+> > > > a text file. This patch converts them to YAML, and specifies all the
+> > > > compatible strings currently in use in arch/powerpc/boot/dts.
+> > > >
+> > > > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > > > ---
+> > > >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 129 +++++++++++++
+> > > >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 105 +++++++++++
+> > > >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 120 ++++++++++++
+> > > >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+> > > >  4 files changed, 354 insertions(+), 204 deletions(-)
+> > [...]
+> > > > +patternProperties:
+> > > > +  "^dma-channel@.*$":
+> > > > +    type: object
+> > >
+> > >        additionalProperties: false
+> >
+> > I'll add it.
+> >
+> > > (The tools should have highlighted this)
+> >
+> > With dtschema 2024.11 installed, "make dt_binding_check
+> > DT_SCHEMA_FILES=fsl,elo-dma.yaml" does not highlight this.
+> 
+> Actually, it's the top-level 'addtionalProperties: true' that disables
+> the check here. That should be false as well.
 
-I believe we previously pointed out it might also break running the
-ARCH=3Dum kernel:
+Noted. This did indeed help me find more errors.
 
-https://lore.kernel.org/all/2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@=
-sipsolutions.net/
 
-johannes
+Best regards,
+J. Neuschäfer
