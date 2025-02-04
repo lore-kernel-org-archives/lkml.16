@@ -1,191 +1,168 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8184E214801
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C142216604
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738681172; cv=none; b=hTI24GQXbtEPRMiNiwgLGBn0o/a2EBHhmol4tXcTAT+Ncd00el8jPEPKdUdY0bQvVt4z/5r1aqv4T9h/VziOB11GnK8f0YruG0u+qIUxIjpyvWJc/Jzakuv2MwlNpa+GyXXToFsithmknKQj38NeP7QloVV8zC/P66RH7ndx3c4=
+	t=1738681174; cv=none; b=gMk2SuPPFWKjaRYJSbsMCMJ9Q08gssfwS87kbzrHnvS2IupA31Z35Bs3lXGE46ApyRlFIwKn4X1rRMznTl0W5d36rJzXX8x1hXdkgJA0pAzdAoSjXFqro5uRpOOnnNIUmkN6bEIukkHjxmJBUAsGIc1Lcc9G6X1D+ALxPgoFZNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738681172; c=relaxed/simple;
-	bh=KWQ4BG3za9QufMezrdbyMAgIcWYZGzuv+UP/bPj7EE4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VjrljK/SUI2fzGjRhHiEasLfPEEKc+KGhxEtk0OqR2MznQI64vq9v54Q8G/VnVjz1L/2IqkK7l7ffTCcKHk/aTaXOCVT1tO1ZdOX/44sv21svRklqOEXJUdvu2yBmO5dfQcaLZKTSdTEKp4stJ9Sca8vnsX8jD9rnw3Mb1ep5OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OXQmRbUe; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738681174; c=relaxed/simple;
+	bh=tFfKlGt5RgPkNRrTsf4WzrnPOiwCyYjT9iW7xh93qcc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OMOE+2Mmr4MstOwDa2zAvR1j8GIAe2xxJm3z1widCiPZwz8dA2KeHnpaRlp/qlr7mODMk1XtqL6z58CywbF2hZpTEuFG82OUzcjty1FyVlPhGgqbE2X/1KfPMy6sEAv8RtJDBF0VQzhAiWYG5vfzkzh7UiU01n9bxm7xy9hPXaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nX+1MVXm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OXQmRbUe"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-53e3a37ae07so6364767e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 06:59:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738681168; x=1739285968; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=t1DYlp7BOgCsO/bvivOkdwsvShb36ZFFcwsQF/5DCtw=;
-        b=OXQmRbUevyIMbv/s1yr9i9rQchDDc7qJ2hGP72sdA8jx2zTqcoGQuSMhbYS0/S5GLL
-         e5jwxQsSUF9HIhS5wGr0ignmOWr/G49rpxUJtQonGLalESeFRY/ubEPvrm4XmgrLQKQO
-         wjSNfQM7qvjZ0dBmcC7YxT3qnQLYfSQ7EQfMHpk6+LHsA6qV8E+W1g3+DLKmwhnix4Ui
-         vIK2dhLVBtHnw78NRy87HHvu9nA+NYol5lOXcfsasSlcV658DYyLsLvqERRjCMaaxnrJ
-         EpzIekiLMPSs6iY1zvK+8Bg9lE2JRaieDzZ/2VFWpcLcVfehoIMC70VOpsFu04/Ut/go
-         +Gow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738681168; x=1739285968;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t1DYlp7BOgCsO/bvivOkdwsvShb36ZFFcwsQF/5DCtw=;
-        b=vMl3dpYoo+RDGoH2xfyD1xf2pT5DWC31xceE4kz5r3tIF/d3UVie19u2El+D0tPAYK
-         bqwIpfbZN65q6yC50IvBQ3+u9BTaC75bpC5jkyeSWXehEZWJ/pP9jv7Fmg7sw4UTzkf3
-         nQ/0tzhq11L61Ai3uSWRs5UO0+VbZ+zBZ3C+cbKvcNwC1A/2aCzx+9XFmpm8zX+pfRRV
-         e72tc1L3vTgeJBr8MJZSLdjmFVLrAgnCVI4Xf59MlYnrfOYhFB9gyP/yOx7yIYby1Vlj
-         jL5UfTeyCKt6NxsDDpwJF5iXQNdYKTVVVp1rZb4PUwSjRdgLm5qulpQI9YRpKXUdI+uN
-         gmNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnRK0jsINT1SwV2zXziUFtUOGayS2j3J4Ak0cnxJ8yN7mW1SZqzHOtbaUpfB/1IxjS6vYIFsz019ZaKLE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn5jgwrO4WY23WG1fA1jkOxs8kw6Gp406AJksZNs6k7hAdQ3y9
-	rW5huqTEhiuqg8uW9gTfGtDgn2uj4O0EZSB9TDGPJ72ysfjg5ev3p+raEYPy1Tc=
-X-Gm-Gg: ASbGncsHRUtbl3oIwvUahVN9J89DEtLgEvT5vY2apsA5tD6P0Z7pvm+wfcq8kB5l2IX
-	OYNuTVjVBFCbj8MmNcAJfUhpFUsl5D6hZtdnaJ7g8vEa1RNf0quknwCjJnAC45yw2vyw8/ZGnRX
-	L4tBT1XNYrmzGpPZpO7VZ6chKaG9yxOjUcpylMEz2AK9aTdy0UVN4vVBc0SCR14Zya4dxXXcVhu
-	C80jC65Nkv20cwJFN+QA8yxOxwI4WTlNLmDfP6dmJTe0DtL6OBlJz1tfwHK5KaGsWjATJIowBVo
-	b//xVQs5WWa1LY9HArQeSA2HyNsrg6INE9gvkf4+1y3XCUP59rict6JMvjb+Fu2RIdKEWQc=
-X-Google-Smtp-Source: AGHT+IE7b+udRsOmYgAUchqywxLPloRDcPecM5jIJa9qMOD6OPTAHNII/xMHMBXskhTGDDkZ3IE7zA==
-X-Received: by 2002:ac2:48a1:0:b0:542:9883:26f with SMTP id 2adb3069b0e04-543e4c3a1demr7204191e87.50.1738681168494;
-        Tue, 04 Feb 2025 06:59:28 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebe0f8f5sm1636690e87.58.2025.02.04.06.59.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 06:59:27 -0800 (PST)
-Date: Tue, 4 Feb 2025 16:59:25 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Wesley Cheng <quic_wcheng@quicinc.com>
-Cc: Melody Olvera <quic_molvera@quicinc.com>, 
-	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>, 
-	Trilok Soni <quic_tsoni@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/7] phy: qcom: qmp-combo: Add new PHY sequences for
- SM8750
-Message-ID: <ofaioilki5qxdq2x5fpbpuk6mid6i6slpyqzwol4e2s4cwdwsf@lgpqy2zil4j6>
-References: <20250113-sm8750_usb_master-v1-0-09afe1dc2524@quicinc.com>
- <20250113-sm8750_usb_master-v1-4-09afe1dc2524@quicinc.com>
- <tcm2hn7rpzaazntp5r7ag466ynacexnke43e6ypm4q5mrrlkdb@nem3gzib2l2v>
- <0ec95cca-45ed-4805-8ebd-03563d55627e@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nX+1MVXm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E16CC4CEDF;
+	Tue,  4 Feb 2025 14:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738681173;
+	bh=tFfKlGt5RgPkNRrTsf4WzrnPOiwCyYjT9iW7xh93qcc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=nX+1MVXm+faCKMAvWUz3Tvqu8fcmR/WZUwfCfQT42XCPwcpFVPL84HHcS1VRCHeeC
+	 V3yfpOPzK4XkloJ7nB/L+Wzj4n+pKCJZQzGYfr8ZGOYibZfLU5XJAQyxuUgYO+HOCV
+	 pQQQ8Zf5Cqf3ivAcNiaJcozHGc+AvNn4iJVvhsyn06DPG2s+CL7R07Y+VqIBFlkhWr
+	 3pEkkqGSq305J7d86NM5ZJc/QBOUVpeKY83Rz3gbB4retR7NCmtNzCZkOu6uQ4fmdD
+	 A2xl5nKRRY9vUAgojhkxicXv/eUy/MyME3w0DQ7AJy6b6VPW7KqpgRyXvGrh0rtF7i
+	 CvwOeiIZa8AGQ==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Tue, 04 Feb 2025 15:57:45 +0100
+Subject: [PATCH v2 17/35] drm/atomic-helper: Change parameter name of
+ drm_atomic_helper_commit_modeset_enables()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0ec95cca-45ed-4805-8ebd-03563d55627e@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250204-bridge-connector-v2-17-35dd6c834e08@kernel.org>
+References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
+In-Reply-To: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4126; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=tFfKlGt5RgPkNRrTsf4WzrnPOiwCyYjT9iW7xh93qcc=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOmLtD788A//MGfdwzD7vd9Pv3nAo7Pc7W5sz/RDev/3y
+ u8u9F+o0zGVhUGYk0FWTJHliUzY6eXti6sc7Ff+gJnDygQyhIGLUwAmklfE2LDV2NavuOh3L59i
+ nHtwc+HzRz8mMtQEKbHMnrzjefiz3HOHn8psUm18yb+xyCswYqbFYsY6c7eSm5yX92yTyHP6rLq
+ epdXwJ2e+ZkoBy+1rd96emre9jdvymkvcqTuLDl69ukV/ldclAA==
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-On Mon, Feb 03, 2025 at 07:31:29PM -0800, Wesley Cheng wrote:
-> 
-> On 1/14/2025 2:23 AM, Dmitry Baryshkov wrote:
-> > On Mon, Jan 13, 2025 at 01:52:10PM -0800, Melody Olvera wrote:
-> >> From: Wesley Cheng <quic_wcheng@quicinc.com>
-> >>
-> >> Add new register offsets and PHY values for SM8750. Some of the previous
-> >> definitions can be leveraged from older PHY versions as offsets within
-> >> registers have not changed. This also updates the PHY sequence that is
-> >> recommended after running hardware characterization.
-> >>
-> >> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
-> >> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
-> >> ---
-> >>  drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 198 ++++++++++++++++++++++++++++++
-> >>  1 file changed, 198 insertions(+)
-> >>
-> >> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> >> index b09fa00e9fe7db8d97b7179ee15d3f07fe578b0c..823a60029ea6acbd1f0f8c7d27aaa58de39ed758 100644
-> >> --- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> >> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> >> @@ -1471,6 +1471,139 @@ static const struct qmp_phy_init_tbl x1e80100_usb43dp_pcs_tbl[] = {
-> >>  	QMP_PHY_INIT_CFG(QPHY_V6_N4_PCS_EQ_CONFIG5, 0x10),
-> >>  };
-> >>  
-> >> +static const struct qmp_phy_init_tbl sm8750_usb3_serdes_tbl[] = {
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_SSC_STEP_SIZE1_MODE1, 0xc0),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_SSC_STEP_SIZE2_MODE1, 0x01),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_CP_CTRL_MODE1, 0x02),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_RCTRL_MODE1, 0x16),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_CCTRL_MODE1, 0x36),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_CORECLK_DIV_MODE1, 0x04),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_LOCK_CMP1_MODE1, 0x16),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_LOCK_CMP2_MODE1, 0x41),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_DEC_START_MODE1, 0x41),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_DEC_START_MSB_MODE1, 0x00),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_DIV_FRAC_START1_MODE1, 0x55),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_DIV_FRAC_START2_MODE1, 0x75),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_DIV_FRAC_START3_MODE1, 0x01),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_HSCLK_SEL_1, 0x01),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_VCO_TUNE1_MODE1, 0x25),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_VCO_TUNE2_MODE1, 0x02),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE1_MODE1, 0x5c),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE2_MODE1, 0x0f),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE1_MODE0, 0x5c),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_BIN_VCOCAL_CMP_CODE2_MODE0, 0x0f),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_SSC_STEP_SIZE1_MODE0, 0xc0),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_SSC_STEP_SIZE2_MODE0, 0x01),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_CP_CTRL_MODE0, 0x02),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_RCTRL_MODE0, 0x16),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_CCTRL_MODE0, 0x36),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_LOCK_CMP1_MODE0, 0x08),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_LOCK_CMP2_MODE0, 0x1a),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_DEC_START_MODE0, 0x41),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_DEC_START_MSB_MODE0, 0x00),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_DIV_FRAC_START1_MODE0, 0x55),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_DIV_FRAC_START2_MODE0, 0x75),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_DIV_FRAC_START3_MODE0, 0x01),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_VCO_TUNE1_MODE0, 0x25),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_VCO_TUNE2_MODE0, 0x02),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_BG_TIMER, 0x0a),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_SSC_EN_CENTER, 0x01),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_SSC_PER1, 0x62),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_SSC_PER2, 0x02),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_SYSCLK_BUF_ENABLE, 0x0c),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_SYSCLK_EN_SEL, 0x1a),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_LOCK_CMP_CFG, 0x14),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_VCO_TUNE_MAP, 0x04),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_CORE_CLK_EN, 0x20),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_CMN_CONFIG_1, 0x16),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_AUTO_GAIN_ADJ_CTRL_1, 0xb6),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_AUTO_GAIN_ADJ_CTRL_2, 0x4a),
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_AUTO_GAIN_ADJ_CTRL_3, 0x36),
-> > The only difference from sm8550_usb3_serdes_tbl, it has 0x37 here.
-> Not sure what the suggestion is here.  I think in general I would want to have a separate table for each chipset, considering that settings may change/evolve.  Currently, if you're asking to re-use the sm8550 table to avoid re-defining this sequence, I think it'll be confusing to folks when they refer to this SOC's PHY settings.
+drm_atomic_helper_commit_modeset_enables() enables all outputs affected
+by a new commit. It takes the drm_atomic_state being committed as a
+parameter.
 
+However, that parameter name is called (and documented) as old_state,
+which is pretty confusing. Let's rename that variable as state.
 
-No suggestion, merely a question if both tables are correct or not.
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+ drivers/gpu/drm/drm_atomic_helper.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-> >> +	QMP_PHY_INIT_CFG(QSERDES_V6_COM_ADDITIONAL_MISC, 0x0c),
-> >> +};
-> >> +
-> > [...]
-> >
-> >> @@ -1781,6 +1914,22 @@ static const struct qmp_combo_offsets qmp_combo_offsets_v5 = {
-> >>  	.dp_dp_phy	= 0x2200,
-> >>  };
-> >>  
-> >> +static const struct qmp_combo_offsets qmp_combo_offsets_v8 = {
-> > Why is it v8? Is the actual PHY also v8 rather than v6?
-> Yes, actual QMP PHY major rev is v8.  If we want to, I can generate a separate v8 based header files if that is better.  However, most of the offsets for the registers we're taking advantage of in the actual driver has the same offsets as previous revisions.
-
-If all registers of a particular set (QSERDE, TX/RX, PCS) are the same,
-then it should be fine to reuse those (although it creates some
-questions). If the majority is the same, but there are some differences,
-please create new header file. It is definitely easier to verify that
-the patch is correct if every piece has the same version.
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index 9f3cf5df0dd810e3725bf44a02a9574f676f17de..b95e30dee1b4e2ba8991affd1e280a7a36171afd 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -1474,11 +1474,11 @@ static void drm_atomic_helper_commit_writebacks(struct drm_device *dev,
+ }
+ 
+ /**
+  * drm_atomic_helper_commit_modeset_enables - modeset commit to enable outputs
+  * @dev: DRM device
+- * @old_state: atomic state object with old state structures
++ * @state: atomic state object being committed
+  *
+  * This function enables all the outputs with the new configuration which had to
+  * be turned off for the update.
+  *
+  * For compatibility with legacy CRTC helpers this should be called after
+@@ -1486,20 +1486,20 @@ static void drm_atomic_helper_commit_writebacks(struct drm_device *dev,
+  * does. But drivers with different needs can group the modeset commits together
+  * and do the plane commits at the end. This is useful for drivers doing runtime
+  * PM since planes updates then only happen when the CRTC is actually enabled.
+  */
+ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+-					      struct drm_atomic_state *old_state)
++					      struct drm_atomic_state *state)
+ {
+ 	struct drm_crtc *crtc;
+ 	struct drm_crtc_state *old_crtc_state;
+ 	struct drm_crtc_state *new_crtc_state;
+ 	struct drm_connector *connector;
+ 	struct drm_connector_state *new_conn_state;
+ 	int i;
+ 
+-	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
++	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
+ 		const struct drm_crtc_helper_funcs *funcs;
+ 
+ 		/* Need to filter out CRTCs where only planes change. */
+ 		if (!drm_atomic_crtc_needs_modeset(new_crtc_state))
+ 			continue;
+@@ -1511,17 +1511,17 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+ 
+ 		if (new_crtc_state->enable) {
+ 			drm_dbg_atomic(dev, "enabling [CRTC:%d:%s]\n",
+ 				       crtc->base.id, crtc->name);
+ 			if (funcs->atomic_enable)
+-				funcs->atomic_enable(crtc, old_state);
++				funcs->atomic_enable(crtc, state);
+ 			else if (funcs->commit)
+ 				funcs->commit(crtc);
+ 		}
+ 	}
+ 
+-	for_each_new_connector_in_state(old_state, connector, new_conn_state, i) {
++	for_each_new_connector_in_state(state, connector, new_conn_state, i) {
+ 		const struct drm_encoder_helper_funcs *funcs;
+ 		struct drm_encoder *encoder;
+ 		struct drm_bridge *bridge;
+ 
+ 		if (!new_conn_state->best_encoder)
+@@ -1540,25 +1540,25 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+ 		/*
+ 		 * Each encoder has at most one connector (since we always steal
+ 		 * it away), so we won't call enable hooks twice.
+ 		 */
+ 		bridge = drm_bridge_chain_get_first_bridge(encoder);
+-		drm_atomic_bridge_chain_pre_enable(bridge, old_state);
++		drm_atomic_bridge_chain_pre_enable(bridge, state);
+ 
+ 		if (funcs) {
+ 			if (funcs->atomic_enable)
+-				funcs->atomic_enable(encoder, old_state);
++				funcs->atomic_enable(encoder, state);
+ 			else if (funcs->enable)
+ 				funcs->enable(encoder);
+ 			else if (funcs->commit)
+ 				funcs->commit(encoder);
+ 		}
+ 
+-		drm_atomic_bridge_chain_enable(bridge, old_state);
++		drm_atomic_bridge_chain_enable(bridge, state);
+ 	}
+ 
+-	drm_atomic_helper_commit_writebacks(dev, old_state);
++	drm_atomic_helper_commit_writebacks(dev, state);
+ }
+ EXPORT_SYMBOL(drm_atomic_helper_commit_modeset_enables);
+ 
+ /*
+  * For atomic updates which touch just a single CRTC, calculate the time of the
 
 -- 
-With best wishes
-Dmitry
+2.48.0
+
