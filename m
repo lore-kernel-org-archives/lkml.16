@@ -1,50 +1,40 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869102045BA;
-	Tue,  4 Feb 2025 21:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EC7219A9D;
+	Tue,  4 Feb 2025 21:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738703121; cv=none; b=smtQufMyBfXA/OQi4IfA24m+64t4rXoXqvghsTQY9Exc4IZduSWH0hFUd7BZyNYPE8TxEMkno2kodZdlyIriy7v4jFtH8W2iimZ7IuV07YhuMchUwf6XoChmCzXwmP/WD4gqBI0VlkIbEAEn9Uz1AlJqb475qonU9Q6OrWLftbk=
+	t=1738703216; cv=none; b=d622NfCCn3dsYu44FWxIgkn3D4Yp2N60cWwa6a905jqcNIjatAsZdDAca0xJEOLgVe9NvfjyjsJi9IBeV0EEpmOKA8W2lUP7SjXNxpljnVovHWHNrzRyhBZrhtHpfg+x7g9kFZK5T9DSUBzKPsdS50vGi//wej1kavZHt6PaIuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738703121; c=relaxed/simple;
-	bh=cTEE1FYq21KfXTOwWnzEdtVlwskDuVhdFB7haDFkklE=;
+	s=arc-20240116; t=1738703216; c=relaxed/simple;
+	bh=8DugBiHoDzMEGaiCF2WwLN7Xt+vqraKjgG0mZTqC2/A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I3LGDYVOOqYw4640cCtYz6PTJc0iMoi5bW5f5gtvG53FSUwn3PS3u86lwfkgfxdXal4foZiWWOYhixpBa+9VOwljDCH3IHrY+5DUPs6OobjMRXi1isfXqY5XtPDPfEPf0qADJnk8ALktooTF+CRVoASCXmBG59+o2rJccSUNbjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K7SLrg0/; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=WgGE8BioYGf7ECnqtFXdOy1Xb3Bn3K07o5BtMZKOvbZPQYr+dFtLDjXvw1Volwam9HwaG6F4mUZkDBr81ntKA/kx/OzTO7DJvFIOzzxJtOkKAitJR8gaXDC6RipnSiZnxUO1FI8H7KxdB06MeUz1lDrIaPo/BATWgbPpVb+Fxvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=beVoZfv1; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K7SLrg0/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738703120; x=1770239120;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cTEE1FYq21KfXTOwWnzEdtVlwskDuVhdFB7haDFkklE=;
-  b=K7SLrg0/HGdwYCHnCHB3JCZdjbzlE/zypyKjFmtLQbKRklm5w1Npmkz5
-   zpRVV8aYQNh998rC1SaR+42moB0HxpkvbGl6VVL7Tafex/BpE7hpntCyn
-   LFCaC1PRk44vqlFPeoWJwB4/cnT6YoplcNQ79xC94DLJ1vofpGJ3h1zwA
-   1nzpgQ5GdkO1GjoaKjKJJxOKioTYhdjSU8ZZd/Fu6PUDp5DyUjrKAb4PS
-   8J7j3DnwWhde7Pk+Sy1T0jHe4J24ZnSoORjgqaz3NYiY8Q4tNHhDH0RiH
-   NJxh690fzPdEmE/g+ZwK6Kd0yPfw9o6uyn8fbtdoKNYsV05y3OHt4tlbg
-   Q==;
-X-CSE-ConnectionGUID: f/KeJ9BAT3ehMQNEL/Uq2g==
-X-CSE-MsgGUID: XK6MQ509T7+k5qg05EekJA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="26849382"
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="26849382"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 13:05:18 -0800
-X-CSE-ConnectionGUID: 9dF2FT5NRFWiRHULia/eYQ==
-X-CSE-MsgGUID: L8qAtL/DQqe33Kcw+D4mcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115895089"
-Received: from jdoman-mobl3.amr.corp.intel.com (HELO [10.125.110.55]) ([10.125.110.55])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 13:05:17 -0800
-Message-ID: <fb30574a-d238-424c-a464-0f7a5707c46a@intel.com>
-Date: Tue, 4 Feb 2025 13:05:18 -0800
+	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="beVoZfv1"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: lina@asahilina.net)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 9F97E432A7;
+	Tue,  4 Feb 2025 21:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
+	s=default; t=1738703210;
+	bh=8DugBiHoDzMEGaiCF2WwLN7Xt+vqraKjgG0mZTqC2/A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=beVoZfv1eX7cgWksLeQY6iqfb2ojQaltElKTFMTeC9tEcMUZzmwYNuJUU6/JolOMi
+	 DuQjuPgVMPEzCJkEwJnhTPB9I0QRx4qop1ukZfi5vhun35taHBZspQo/AeW3mCg90g
+	 /iYUFiNPYCvnpWWkjY+kgR7A0BEtUDgrMQI3DaCqr4/YppknKzUU3s29LfaMFGHRtw
+	 VROPV4+DI2lZDQ64tYZbCJFZl+fIEIyX0s14xsNKBmvkZXNkY2kRezaAOqo85c/2FA
+	 PCKDi5Hqn4/b18PpnY4HRRv0zyG9OrzLF0i3yeGf/ZOedmvh0Z7JpMZXZMv+ipXwC5
+	 2h5DEdH5d299g==
+Message-ID: <2a513c3e-818c-4040-b3d3-7835861bab4f@asahilina.net>
+Date: Wed, 5 Feb 2025 06:06:46 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,93 +42,143 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/15] kasan: x86: arm64: risc-v: KASAN tag-based mode for
- x86
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>,
- Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-Cc: luto@kernel.org, xin@zytor.com, kirill.shutemov@linux.intel.com,
- palmer@dabbelt.com, tj@kernel.org, andreyknvl@gmail.com, brgerst@gmail.com,
- ardb@kernel.org, dave.hansen@linux.intel.com, jgross@suse.com,
- will@kernel.org, akpm@linux-foundation.org, arnd@arndb.de, corbet@lwn.net,
- dvyukov@google.com, richard.weiyang@gmail.com, ytcoode@gmail.com,
- tglx@linutronix.de, hpa@zytor.com, seanjc@google.com,
- paul.walmsley@sifive.com, aou@eecs.berkeley.edu, justinstitt@google.com,
- jason.andryuk@amd.com, glider@google.com, ubizjak@gmail.com,
- jannh@google.com, bhe@redhat.com, vincenzo.frascino@arm.com,
- rafael.j.wysocki@intel.com, ndesaulniers@google.com, mingo@redhat.com,
- catalin.marinas@arm.com, junichi.nomura@nec.com, nathan@kernel.org,
- ryabinin.a.a@gmail.com, dennis@kernel.org, bp@alien8.de,
- kevinloughlin@google.com, morbo@google.com, dan.j.williams@intel.com,
- julian.stecklina@cyberus-technology.de, peterz@infradead.org,
- kees@kernel.org, kasan-dev@googlegroups.com, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
- linux-doc@vger.kernel.org
-References: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
- <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH 0/6] rust: page: Support borrowing `struct page` and
+ physaddr conversion
+To: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Jann Horn <jannh@google.com>,
+ Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, Wedson Almeida Filho
+ <wedsonaf@gmail.com>, Valentin Obst <kernel@valentinobst.de>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ asahi@lists.linux.dev, Oscar Salvador <osalvador@suse.de>,
+ Muchun Song <muchun.song@linux.dev>
+References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
+ <Z6CTLB2NggwYafi9@phenom.ffwll.local>
+ <41ca3445-80cd-43c1-8f9e-634c195c9187@asahilina.net>
+ <37A0729B-A711-4D45-B9F0-328FDB9ADD28@nvidia.com>
+ <0e19e1c3-293b-4740-93f3-2c410893288b@redhat.com>
+ <82047858-480a-45e3-b826-3a46fbebe842@asahilina.net>
+ <f1498b22-0bc1-489a-8c2c-35aa48c7fe7d@redhat.com>
+ <1e9ae833-4293-4e48-83b2-c0af36cb3fdc@asahilina.net>
+ <026c1a0c-e53a-4a5e-92da-6e4f18ce0fee@redhat.com>
+ <cc1cd991-1871-4929-851e-d9672a45dcf0@asahilina.net>
+ <6bcd3315-a0f9-463c-ab97-a43736f9b4f4@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org>
+From: Asahi Lina <lina@asahilina.net>
+In-Reply-To: <6bcd3315-a0f9-463c-ab97-a43736f9b4f4@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/4/25 10:58, Christoph Lameter (Ampere) wrote:
-> ARM64 supports MTE which is hardware support for tagging 16 byte granules
-> and verification of tags in pointers all in hardware and on some platforms
-> with *no* performance penalty since the tag is stored in the ECC areas of
-> DRAM and verified at the same time as the ECC.
+
+
+On 2/5/25 5:10 AM, David Hildenbrand wrote:
+> On 04.02.25 18:59, Asahi Lina wrote:
+>> On 2/4/25 11:38 PM, David Hildenbrand wrote:
+>>>>>> If the answer is "no" then that's fine. It's still an unsafe function
+>>>>>> and we need to document in the safety section that it should only be
+>>>>>> used for memory that is either known to be allocated and pinned and
+>>>>>> will
+>>>>>> not be freed while the `struct page` is borrowed, or memory that is
+>>>>>> reserved and not owned by the buddy allocator, so in practice correct
+>>>>>> use would not be racy with memory hot-remove anyway.
+>>>>>>
+>>>>>> This is already the case for the drm/asahi use case, where the pfns
+>>>>>> looked up will only ever be one of:
+>>>>>>
+>>>>>> - GEM objects that are mapped to the GPU and whose physical pages are
+>>>>>> therefore pinned (and the VM is locked while this happens so the
+>>>>>> objects
+>>>>>> cannot become unpinned out from under the running code),
+>>>>>
+>>>>> How exactly are these pages pinned/obtained?
+>>>>
+>>>> Under the hood it's shmem. For pinning, it winds up at
+>>>> `drm_gem_get_pages()`, which I think does a `shmem_read_folio_gfp()` on
+>>>> a mapping set as unevictable.
+>>>
+>>> Thanks. So we grab another folio reference via shmem_read_folio_gfp()-
+>>>> shmem_get_folio_gfp().
+>>>
+>>> Hm, I wonder if we might end up holding folios residing in ZONE_MOVABLE/
+>>> MIGRATE_CMA longer than we should.
+>>>
+>>> Compared to memfd_pin_folios(), which simulates FOLL_LONGTERM and makes
+>>> sure to migrate pages out of ZONE_MOVABLE/MIGRATE_CMA.
+>>>
+>>> But that's a different discussion, just pointing it out, maybe I'm
+>>> missing something :)
+>>
+>> I think this is a little over my head. Though I only just realized that
+>> we seem to be keeping the GEM objects pinned forever, even after unmap,
+>> in the drm-shmem core API (I see no drm-shmem entry point that would
+>> allow the sgt to be freed and its corresponding pages ref to be dropped,
+>> other than a purge of purgeable objects or final destruction of the
+>> object). I'll poke around since this feels wrong, I thought we were
+>> supposed to be able to have shrinker support for swapping out whole GPU
+>> VMs in the modern GPU MM model, but I guess there's no implementation of
+>> that for gem-shmem drivers yet...?
 > 
-> Could we get support for that? This would allow us to enable tag checking
-> in production systems without performance penalty and no memory overhead.
+> I recall that shrinker as well, ... or at least a discussion around it.
+> 
+> [...]
+> 
+>>>
+>>> If it's only for crash dumps etc. that might even be opt-in, it makes
+>>> the whole thing a lot less scary. Maybe this could be opt-in somewhere,
+>>> to "unlock" this interface? Just an idea.
+>>
+>> Just to make sure we're on the same page, I don't think there's anything
+>> to unlock in the Rust abstraction side (this series). At the end of the
+>> day, if nothing else, the unchecked interface (which the regular
+>> non-crash page table management code uses for performance) will let you
+>> use any pfn you want, it's up to documentation and human review to
+>> specify how it should be used by drivers. What Rust gives us here is the
+>> mandatory `unsafe {}`, so any attempts to use this API will necessarily
+>> stick out during review as potentially dangerous code that needs extra
+>> scrutiny.
+>>
+>> For the client driver itself, I could gate the devcoredump stuff behind
+>> a module parameter or something... but I don't think it's really worth
+>> it. We don't have a way to reboot the firmware or recover from this
+>> condition (platform limitations), so end users are stuck rebooting to
+>> get back a usable machine anyway. If something goes wrong in the
+>> crashdump code and the machine oopses or locks up worse... it doesn't
+>> really make much of a difference for normal end users. I don't think
+>> this will ever really happen given the constraints I described, but if
+>> somehow it does (some other bug somewhere?), well... the machine was
+>> already in an unrecoverable state anyway.
+>>
+>> It would be nice to have userspace tooling deployed by default that
+>> saves off the devcoredump somewhere, so we can have a chance at
+>> debugging hard-to-hit firmware crashes... if it's opt-in, it would only
+>> really be useful for developers and CI machines.
+> 
+> Is this something that possibly kdump can save or analyze? Because that
+> is our default "oops, kernel crashed, let's dump the old content so we
+> can dump it" mechanism on production systems.
 
-At least on the Intel side, there's no trajectory for doing something
-like the MTE architecture for memory tagging. The DRAM "ECC" area is in
-very high demand and if anything things are moving away from using ECC
-"bits" for anything other than actual ECC. Even the MKTME+integrity
-(used for TDX) metadata is probably going to find a new home at some point.
+kdump does not work on Apple ARM systems because kexec is broken and
+cannot be fully fixed, due to multiple platform/firmware limitations. A
+very limited version of kexec might work well enough for kdump, but I
+don't think anyone has looked into making that work yet...
 
-This shouldn't be a surprise to anyone on cc here. If it is, you should
-probably be reaching out to Intel over your normal channels.
+> but ... I am not familiar with devcoredump. So I don't know when/how it
+> runs, and if the source system is still alive (and remains alive --  in
+> contrast to a kernel crash).
+
+Devcoredump just makes the dump available via /sys so it can be
+collected by the user. The system is still alive, the GPU is just dead
+and all future GPU job submissions fail. You can still SSH in or (at
+least in theory, if enough moving parts are graceful about it) VT-switch
+to a TTY. The display controller is not part of the GPU, it is separate
+hardware.
+
+~~ Lina
+
