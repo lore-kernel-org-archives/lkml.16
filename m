@@ -1,205 +1,270 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A872153E4
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA2B212D9C;
+	Tue,  4 Feb 2025 13:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738677025; cv=none; b=FN8PTsP9usmAp9ADl8A/Y/T+gEdukEPC8Muu74Iz7HkEGsSgSWYUSWZytr3mr0wM2RGIZaGbD4B8EGOtT7z7PoIAMOwmAQfDoVlwjKrtZMeAlOPf4dN4Kh6COAgY2IT/9dctaJ6B5dyHttEhDSufpi2nv8cLEnCdreR5b56jgR8=
+	t=1738677092; cv=none; b=QKf6WVsWD2SZq9LQYktA8AUe75ZTMiNRc8UbeJw7IE+Sd+RKNIuret93pueIhY1uMotzD6bISLy3GiLF4EzHnnkG3nrD/8zv8hhumrWjmSCBwJUv+hV4fbYN0HpEQvEcGRxmTrW8C5HcFZGk9HqyR/aT756COaZL7flc1m5v2us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738677025; c=relaxed/simple;
-	bh=KQrHl1sVsBaikf66vAoZZaT32Pyd8VH88q2Rv7WQbtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VZrem/y1YBhHUDML0SNsklrWitXq0uJhpuYa+iUc9cXYGc0sS3aS8sjdlMAU+AgO32mklBqp+UgKyII+NqTV3vpfcBjPDSH6scBsx5gefHmFRCHxG+oG/8mVtvzsgSC0hAplcF7JC4du4DBn4JUhWCFEGk/Qq8rlV/LMJO56LUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tv7uULo8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738677092; c=relaxed/simple;
+	bh=EdqK4dOG44KVkikAD2uMFzkLSnKvEM9Ta4/c9MzsVM0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GuwxPLgZLKStXkuIJYS1z4ahPDsiZDdR40E2zdpq/YTDUYlO5EfFDloLznYQn+A6IaMuoR5L+ZwDxrLu1gXmsCGPEBl83RSy5ahsQ62xed46sDakKkoYbz0EBRfwVs3lerv0ivmP7KD36JGSn6b/TRfcxKXsVeDHP+tLZORpEgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UHUoDwel; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tv7uULo8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738677022;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XKMgvQGVrzexnrv8PP0ZzFB+P2Djy/yCdTw3DnANvA0=;
-	b=Tv7uULo8aYn1qjE0a4KTw3h3SaKz3nkvCo8vt3kVl9nj3p2GWSiNqV1Gvy0dliYaFH+SEA
-	yy+vGd9mhRZZfbqd4JL3Z0NufliK0o0YefucK5+cywec071h87Chp/rlE6p+judnZIG3/F
-	v1H/wPIx0Qt12AI5DHkfRbnPJk02I48=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-369-oNYkt3OUNgycnNaUHE3eYg-1; Tue,
- 04 Feb 2025 08:50:20 -0500
-X-MC-Unique: oNYkt3OUNgycnNaUHE3eYg-1
-X-Mimecast-MFC-AGG-ID: oNYkt3OUNgycnNaUHE3eYg
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9949C1800373;
-	Tue,  4 Feb 2025 13:50:18 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.214])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4C05518008C8;
-	Tue,  4 Feb 2025 13:50:14 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  4 Feb 2025 14:49:52 +0100 (CET)
-Date: Tue, 4 Feb 2025 14:49:46 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Manfred Spraul <manfred@colorfullife.com>,
-	Christian Brauner <brauner@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
- full
-Message-ID: <20250204134821.GB6031@redhat.com>
-References: <20250102140715.GA7091@redhat.com>
- <3170d16e-eb67-4db8-a327-eb8188397fdb@amd.com>
- <CAHk-=wioaHG2P0KH=1zP0Zy=CcQb_JxZrksSS2+-FwcptHtntw@mail.gmail.com>
- <20250202170131.GA6507@redhat.com>
- <7ace642f-e269-49ad-9d32-53c7ffa00681@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHUoDwel"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2161eb94cceso69564565ad.2;
+        Tue, 04 Feb 2025 05:51:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738677090; x=1739281890; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9Mrwk9eioiRgkG7loHAuR4qrjcX/aCvJsTaZ/T9ZIX8=;
+        b=UHUoDwelIXDvNc50fedWYyTX+h6nQ1Rs8hO9s1LKxlebZLK8TGuwSBgVBO4v7zYy7Z
+         A6kWlkB5ksl/HPMEGbm0mpAqJN6DjXWc4FjFBiczQtGmGrNUV+hUTgFGxrgz4jraDHfI
+         rvmfMuqcxhBkJDQ+ADRSgulBNw5cUGElctDnbn+K9kuquO/3kL6qw6mBVC0nEOo8ne/9
+         le2KuyrdzAkC4TT7EghsiPxqIMdsTPFEVvj/ncx/c2lZZ+zTX/DvJnRbV+JkHjsQ60P6
+         7n5teOCU5TizmR8nweQgXEghUl7hsw6kV9TtnHebplZ11LZxgSCufOsH9frtecNFMom6
+         J8AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738677090; x=1739281890;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Mrwk9eioiRgkG7loHAuR4qrjcX/aCvJsTaZ/T9ZIX8=;
+        b=X93TBynRUT56wlWcUgHpVxq8qzd5KBSRhvE22TjmwHPNAXn43Qv2JqqxKlP0VPKGrX
+         7IxvfMCUrMEDv09qyOUv5jdGs8+h8yUopzAmBDmkoVRo/qDAijoIkOr5wYpKTOb2pdbZ
+         FyYl77Q4P6hMyZ3fAp/hG9ECPsCv5WrUCC6xo0IfMPjB/GDCgsc3u1bmSlO+ytYuNe2n
+         9/ITuounRSAfsDArCEuWHD1jITkjcN/AJHLajYZoQmvNDctosawmYhP5Ff4np9ps27wj
+         fw0E86TfajIIc3tdR1ZPCZKFy8RbtdzRaKOFD8vJxkrwhxZsvbAe0XaVq0jk2mxe4ogr
+         FhTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6pSjBdPF64nkFG3xHwlPeLttCRhYifXmsHsr6k1m5znQRTepPokOQtuydXkG+3lIR5Eev27IizLUqdx8=@vger.kernel.org, AJvYcCUNvil1moEiuCUSJVnOy15PBy0ToW9xQglPjCXYE/H3qzqhE91QTQS37d3C99P/q/LgPwKIf8hB@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPizQxHPQuD6bBkKrSQnsH/FLxUjshMPJTn2L0dObfpgkw0YNm
+	UBlhgI/wIpFFoH9eReRvgEWvgZ710xPqGpuxew3Oq41ypGHX/3RQ
+X-Gm-Gg: ASbGnctM21WUOfm4J/4+DsOBo+Ho08CN05dR7K+knGmxsZSRSmq4+KNS1a/CeSYixqq
+	4aVJOSJvFjttNF+v6N542tmR8P9mP8c3n6Q/O4PiF1H5nXhTvvJdAJHXFAo6ka2myfYS7xfnjBV
+	bJWxc8RY6dXz4eJWGvLubXvtoZ3SdKk4F4NiGSbf5YJpqUoVuwDxTTjjJ4PtKY9f0wEaurF+bdx
+	ntV+ZESBX5hPClTQYxpo6VBZV1/AljzkXsYpmC/5gzfYOOXfV+41INoJpExNJyrmpsrnhT9LD0z
+	NNLYzGJ5tHH45D6F5bBO2Rp6+Zy3EokOYWP7zN88uf6iGZuLU7OVUjAG5JKyGbu8YA9WrUHDOay
+	ZaC8=
+X-Google-Smtp-Source: AGHT+IGvL8j5c0FdSCQXSFe1hSU7qHBctpcOZKZDQ5a5qQlBPy8PmY+fTSKGr+v9njBvTp7goQB5mw==
+X-Received: by 2002:a17:903:2444:b0:212:1ebf:9a03 with SMTP id d9443c01a7336-21dd7c3c86amr410177335ad.2.1738677089668;
+        Tue, 04 Feb 2025 05:51:29 -0800 (PST)
+Received: from ?IPV6:2409:8a55:301b:e120:3936:dcf4:dc64:c1b9? ([2409:8a55:301b:e120:3936:dcf4:dc64:c1b9])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de33000ebsm96266855ad.159.2025.02.04.05.51.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 05:51:29 -0800 (PST)
+Message-ID: <72f388e8-adef-4ecc-812d-a1d19c801df5@gmail.com>
+Date: Tue, 4 Feb 2025 21:51:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7ace642f-e269-49ad-9d32-53c7ffa00681@amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v7 2/8] page_pool: fix timing for checking and
+ disabling napi_local
+To: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+ Yunsheng Lin <linyunsheng@huawei.com>, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com
+Cc: zhangkun09@huawei.com, liuyonglong@huawei.com, fanghaiqing@huawei.com,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250110130703.3814407-1-linyunsheng@huawei.com>
+ <20250110130703.3814407-3-linyunsheng@huawei.com> <87sepqhe3n.fsf@toke.dk>
+ <5059df11-a85b-4404-8c24-a9ccd76924f3@gmail.com> <87plkhn2x7.fsf@toke.dk>
+ <2aa84c61-6531-4f17-89e5-101f46ef00d0@huawei.com> <8734h8qgmz.fsf@toke.dk>
+ <84282526-6229-41c7-8f6b-5f2c500dcd8e@gmail.com> <874j1kpdwo.fsf@toke.dk>
+Content-Language: en-US
+From: Yunsheng Lin <yunshenglin0825@gmail.com>
+In-Reply-To: <874j1kpdwo.fsf@toke.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 02/03, K Prateek Nayak wrote:
->
-> With the below patch on mainline, I see more improvements for a
-> modified version of sched-messaging (sched-messaging is same as
-> hackbench as you noted on the parallel thread) that uses
-> pipe2(O_NOATIME)
+On 1/27/2025 9:47 PM, Toke Høiland-Jørgensen wrote:
+> Yunsheng Lin <yunshenglin0825@gmail.com> writes:
+> 
+>> On 1/25/2025 1:13 AM, Toke Høiland-Jørgensen wrote:
+>>> Yunsheng Lin <linyunsheng@huawei.com> writes:
+>>>
+>>>>> So I really don't see a way for this race to happen with correct usage
+>>>>> of the page_pool and NAPI APIs, which means there's no reason to make
+>>>>> the change you are proposing here.
+>>>>
+>>>> I looked at one driver setting pp->napi, it seems the bnxt driver doesn't
+>>>> seems to call page_pool_disable_direct_recycling() when unloading, see
+>>>> bnxt_half_close_nic(), page_pool_disable_direct_recycling() seems to be
+>>>> only called for the new queue_mgmt API:
+>>>>
+>>>> /* rtnl_lock held, this call can only be made after a previous successful
+>>>>    * call to bnxt_half_open_nic().
+>>>>    */
+>>>> void bnxt_half_close_nic(struct bnxt *bp)
+>>>> {
+>>>> 	bnxt_hwrm_resource_free(bp, false, true);
+>>>> 	bnxt_del_napi(bp);       *----call napi del and rcu sync----*
+>>>> 	bnxt_free_skbs(bp);
+>>>> 	bnxt_free_mem(bp, true); *------call page_pool_destroy()----*
+>>>> 	clear_bit(BNXT_STATE_HALF_OPEN, &bp->state);
+>>>> }
+>>>>
+>>>> Even if there is a page_pool_disable_direct_recycling() called between
+>>>> bnxt_del_napi() and bnxt_free_mem(), the timing window still exist as
+>>>> rcu sync need to be called after page_pool_disable_direct_recycling(),
+>>>> it seems some refactor is needed for bnxt driver to reuse the rcu sync
+>>>> from the NAPI API, in order to avoid calling the rcu sync for
+>>>> page_pool_destroy().
+>>>
+>>> Well, I would consider that usage buggy. A page pool object is created
+>>> with a reference to the napi struct; so the page pool should also be
+>>> destroyed (clearing its reference) before the napi memory is freed. I
+>>> guess this is not really documented anywhere, but it's pretty standard
+>>> practice to free objects in the opposite order of their creation.
+>>
+>> I am not so familiar with rule about the creation API of NAPI, but the
+>> implementation of bnxt driver can have reference of 'struct napi' before
+>> calling netif_napi_add(), see below:
+>>
+>> static int __bnxt_open_nic(struct bnxt *bp, bool irq_re_init, bool
+>> link_re_init)
+>> {
+>> 	.......
+>> 	rc = bnxt_alloc_mem(bp, irq_re_init);     *create page_pool*
+>> 	if (rc) {
+>> 		netdev_err(bp->dev, "bnxt_alloc_mem err: %x\n", rc);
+>> 		goto open_err_free_mem;
+>> 	}
+>>
+>> 	if (irq_re_init) {
+>> 		bnxt_init_napi(bp);                *netif_napi_add*
+>> 		rc = bnxt_request_irq(bp);
+>> 		if (rc) {
+>> 			netdev_err(bp->dev, "bnxt_request_irq err: %x\n", rc);
+>> 			goto open_err_irq;
+>> 		}
+>> 	}
+>>
+>> 	.....
+>> }
+> 
+> Regardless of the initialisation error, the fact that bnxt frees the
+> NAPI memory before calling page_pool_destroy() is a driver bug. Mina has
+> a suggestion for a warning to catch such bugs over in this thread:
+> 
+> https://lore.kernel.org/r/CAHS8izOv=tUiuzha6NFq1-ZurLGz9Jdi78jb3ey4ExVJirMprA@mail.gmail.com
 
-Thanks,
+Thanks for the reminder.
+As the main problem is about adding a rcu sync between
+page_pool_disable_direct_recycling() and page_pool_destroy(), I am
+really doubtful that a warning can be added to catch such bugs if
+page_pool_destroy() does not use an explicit rcu sync and rely on
+the rcu sync from napi del API.
 
-> The original regression is still noticeable despite the improvements
-> but if folks believe this is a corner case with the original changes
-> exhibited by sched-messaging, I'll just continue further testing with
-> the new baseline.
+> 
+>>> So no, I don't think this is something that should be fixed on the page
+>>> pool side (and certainly not by adding another synchronize_rcu() call
+>>> per queue!); rather, we should fix the drivers that get this wrong (and
+>>> probably document the requirement a bit better).
+>>
+>> Even if timing problem of checking and disabling napi_local should not
+>> be fixed on the page_pool side, do we have some common understanding
+>> about fixing the DMA API misuse problem on the page_pool side?
+>> If yes, do we have some common understanding about some mechanism
+>> like synchronize_rcu() might be still needed on the page_pool side?
+> 
+> I have not reviewed the rest of your patch set, I only looked at this
+> patch. I see you posted v8 without addressing Jesper's ask for a
+> conceptual description of your design. I am not going to review a
+> 600-something line patch series without such a description to go by, so
+> please address that first.
 
-I still don't know if we should worry or not... But if we want to try
-to improve the wake_writer logic, then I think it makes sense to cleanup
-this code first.
+I thought what Jesper'ask was mainly about why hijacking the page->pp
+pointer.
+I summarized the discussion in [1] as below, please let me know if that
+addresses your concern too.
 
-IMO the (untested) patch below makes sense regardless, I am going to send
-it after I grep fs/splice.c a bit more.
+"By using the 'struct page_pool_item' referenced by page->pp_item,
+page_pool is not only able to keep track of the inflight page to do dma
+unmmaping when page_pool_destroy() is called if some pages are still
+handled in networking stack, and networking stack is also able to find
+the page_pool owning the page when returning pages back into page_pool.
 
-a194dfe6e6f6f ("pipe: Rearrange sequence in pipe_write() to preallocate slot")
-changed pipe_write() to increment pipe->head in advance.  IIUC to avoid the
-race with the post_one_notification()-like code which can add another buffer
-under pipe->rd_wait.lock without pipe->mutex.
+struct page_pool_item {
+	unsigned long state;
+	
+	union {
+		netmem_ref pp_netmem;
+		struct llist_node lentry;
+	};
+};
 
-This is no longer necessary after c73be61cede ("pipe: Add general notification
-queue support"), pipe_write() checks pipe_has_watch_queue() and returns -EXDEV
-at the start. And can't help in any case, pipe_write() no longer takes this
-spinlock.
+When a page is added to the page_pool, an item is deleted from
+pool->hold_items and set the 'pp_netmem' pointing to that page and set
+'state' accordingly in order to keep track of that page, refill from
+pool->release_items when pool->hold_items is empty or use the item from
+pool->slow_items when fast items run out.
 
-Change pipe_write() to call copy_page_from_iter() first and do nothing if it
-fails. This way pipe_write() can't add a zero-sized bufer and we can simplify
-pipe_read() which currently has to handle this very unlikely case.
+When a page is released from the page_pool, it is able to tell which
+page_pool this page belongs to by using the below functions:
 
-Oleg.
+static inline struct page_pool_item_block *
+page_pool_item_to_block(struct page_pool_item *item)
+{
+	return (struct page_pool_item_block *)((unsigned long)item & PAGE_MASK);
+}
 
-diff --git a/fs/pipe.c b/fs/pipe.c
-index baaa8c0817f1..0816070a5e7a 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -312,6 +312,7 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
- 			size_t written;
- 			int error;
- 
-+			WARN_ON_ONCE(chars == 0);
- 			if (chars > total_len) {
- 				if (buf->flags & PIPE_BUF_FLAG_WHOLE) {
- 					if (ret == 0)
-@@ -365,29 +366,9 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
- 			break;
- 		}
- 		mutex_unlock(&pipe->mutex);
--
- 		/*
- 		 * We only get here if we didn't actually read anything.
- 		 *
--		 * However, we could have seen (and removed) a zero-sized
--		 * pipe buffer, and might have made space in the buffers
--		 * that way.
--		 *
--		 * You can't make zero-sized pipe buffers by doing an empty
--		 * write (not even in packet mode), but they can happen if
--		 * the writer gets an EFAULT when trying to fill a buffer
--		 * that already got allocated and inserted in the buffer
--		 * array.
--		 *
--		 * So we still need to wake up any pending writers in the
--		 * _very_ unlikely case that the pipe was full, but we got
--		 * no data.
--		 */
--		if (unlikely(wake_writer))
--			wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM);
--		kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
--
--		/*
- 		 * But because we didn't read anything, at this point we can
- 		 * just return directly with -ERESTARTSYS if we're interrupted,
- 		 * since we've done any required wakeups and there's no need
-@@ -396,7 +377,6 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
- 		if (wait_event_interruptible_exclusive(pipe->rd_wait, pipe_readable(pipe)) < 0)
- 			return -ERESTARTSYS;
- 
--		wake_writer = false;
- 		wake_next_reader = true;
- 		mutex_lock(&pipe->mutex);
- 	}
-@@ -524,31 +504,25 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 				pipe->tmp_page = page;
- 			}
- 
--			/* Allocate a slot in the ring in advance and attach an
--			 * empty buffer.  If we fault or otherwise fail to use
--			 * it, either the reader will consume it or it'll still
--			 * be there for the next write.
--			 */
--			pipe->head = head + 1;
-+			copied = copy_page_from_iter(page, 0, PAGE_SIZE, from);
-+			if (unlikely(copied < PAGE_SIZE && iov_iter_count(from))) {
-+				if (!ret)
-+					ret = -EFAULT;
-+				break;
-+			}
- 
-+			pipe->head = head + 1;
-+			pipe->tmp_page = NULL;
- 			/* Insert it into the buffer array */
- 			buf = &pipe->bufs[head & mask];
- 			buf->page = page;
- 			buf->ops = &anon_pipe_buf_ops;
- 			buf->offset = 0;
--			buf->len = 0;
- 			if (is_packetized(filp))
- 				buf->flags = PIPE_BUF_FLAG_PACKET;
- 			else
- 				buf->flags = PIPE_BUF_FLAG_CAN_MERGE;
--			pipe->tmp_page = NULL;
- 
--			copied = copy_page_from_iter(page, 0, PAGE_SIZE, from);
--			if (unlikely(copied < PAGE_SIZE && iov_iter_count(from))) {
--				if (!ret)
--					ret = -EFAULT;
--				break;
--			}
- 			ret += copied;
- 			buf->len = copied;
- 
+static inline struct page_pool *page_pool_get_pp(struct page *page)
+{
+	/* The size of item_block is always PAGE_SIZE, the address of item_block
+	 * for a specific item can be calculated using 'item & PAGE_MASK', so
+	 * that we can find the page_pool object it belongs to.
+	 */
+	return page_pool_item_to_block(page->pp_item)->pp;
+  }
+
+and after clearing the pp_item->state', the item for the released page
+is added back to pool->release_items so that it can be reused for new
+pages or just free it when it is from the pool->slow_items.
+
+When page_pool_destroy() is called, pp_item->state is used to tell if a 
+specific item is being used/dma mapped or not by scanning all the item 
+blocks in pool->item_blocks, then pp_item->netmem can be used to do the
+dma unmmaping if the corresponding inflight page is dma mapped."
+
+1. 
+https://lore.kernel.org/all/2b5a58f3-d67a-4bf7-921a-033326958ac6@huawei.com/
+
+> 
+>> If yes, it may be better to focus on discussing how to avoid calling rcu
+>> sync for each queue mentioned in [1].
+> 
+> Regardless of whether a synchronize_rcu() is needed in the final design
+> (and again, note that I don't have an opinion on this before reviewing
+> the whole series), this patch should be dropped from the series. The bug
+> it is purporting to fix is a driver API misuse and should be fixed in
+> the drivers, cf the above.
+
+I am still a little doubltful it is a driver API misuse problem yet as
+I am not true if page_pool_destroy() can depend on the rcu sync from
+napi del API for all cases. Even if it is, this driver API misuse
+problem seems to only exist after page_pool NAPI recycling feature/API
+is added, which might mean some refactoring needed from the driver side
+to support page_pool NAPI recycling.
+
+Anyway, it seems to make sense to drop this patch from the series for
+better forward progressing for the dma misuse problem as they are not
+really related.
+
+> 
+> -Toke
+> 
 
