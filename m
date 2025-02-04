@@ -1,96 +1,184 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5587D20C00D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 23:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3E721C190
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 23:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738712461; cv=none; b=I5yDUB+SJ8OyNkBqcMvbz9NPt0C6cdwHo0JAAGvEOnS6TLZVBWTFxAu88WChi8nQHsEQKKYeZeJQHulRVTYTTJZ6gRhRuMxRJVNpYbPhTpq0dbIbT1WJtHWIQV1aPkmFYXAY8XxVZZV1iSwh/a77S24/r5Qb+dWLbM/NgbaNENw=
+	t=1738713016; cv=none; b=FYu0RRoiMxEW1nP+z3cmT+/XznjkBfdnBnA/YWkovLs/4L8tFuI7Cs47QpYlJxZvnj+c07mpvK3y3SjARJ4cZQeNTHOCAgOGjho+OVKtnCap9Zjm6iwvcNrv8+mjcMo/FbbA77r5Jq29oUkHimgSc1liBAWPrLvcNGw73uoUwhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738712461; c=relaxed/simple;
-	bh=xNWF85pDr4+xBoLRlJq3hULFJcv9TwBGp0re49+DjQg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GMNPE5DFDVYfp4nIG7kgsfv5ESPqEVQ/PwZGnUOpxUOt6t1dZumDVbtY2M5BGHt7PTJ1XLPMrbHghtX4hrvWGx7R2yoROKtw6OBdcVJ8RS7NOnfOm8qJt0Z+yunDg3wfhIUmYAXe8GrddVK2FhlJYDsah/RPqxwCROazRZMxgjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OjG4DoLK; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738713016; c=relaxed/simple;
+	bh=QjEre/G3BLqcrCF5wreFajQVoRGv9unmtvDg4S23UQU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=byON8coDmOjLMSB/T7n9gdVJDBo/VGawps+Tj1V9rfF670dDrYsmo85cpF7zgNltKfILlGLB6Kzj7VSBm2JzNAdBhpx6IcNW48V1YYrpf8bIaTJHjOVEoqkVXdnEWU9R6JISbKsNsO6srAFym2MOfKwxRanFdQbRKzULxLLFemY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com; spf=pass smtp.mailfrom=jrtc27.com; dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b=UzXYeZj5; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jrtc27.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OjG4DoLK"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54025432becso6477118e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 15:40:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="UzXYeZj5"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38632b8ae71so5167111f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 15:50:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738712457; x=1739317257; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IXlvd/4s277O8sJg1sChY2UAj1tE+2LPMkXAQD6QJOg=;
-        b=OjG4DoLKeqHmwtpSXkYzsoDBCEojK6938gWN8BXUoiFVxDE0gO6hQS2R7NoTEHKNCb
-         Qd/cogzesxvq9xGPjXCe1qsfJu6wCbFHT32QMzpTH/CiCl+6mL2Pqcfke/1ygqrTh9kh
-         MvZfkbuDv2CAE74zFIPzKTfeWPtIdZvU/8m7d1dOdJGnwVCXsulqS1HwP43Df0Zxs/gk
-         ecJpkeyZVwxpZIeVTss6yo+b8KHKxQeA9gVW9JN9ARFT+VjiqyHJnzCnPAT8BBHAW1xK
-         fMPAJqK2X8gS8anxY+AoDf9c3xA2JG85pOdOQ9cyqSmU8AbGlDqF4Nxniv+jEnaVQKVp
-         tWJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738712457; x=1739317257;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=jrtc27.com; s=gmail.jrtc27.user; t=1738713013; x=1739317813; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IXlvd/4s277O8sJg1sChY2UAj1tE+2LPMkXAQD6QJOg=;
-        b=dpUnl0qiZF1RjfZ7nM+YS3HDUdI/0SvYaMJsO2DnZ88pFbLI485BFEjXeJ1cZ6a0uu
-         Ludp823mD/CfgOSdsDvhz3+T92yHAAFtytoqYRG1TEGWWSzE7QvQWY/p9etEEfwEFEYt
-         fYyR30ENMe8p8Y6nFlt0odggODcgCOSAcqhamk7D8wNUAbRY0Gc2zAwmThEN03YcYa9P
-         YJySxIqBUWeSp7WRtR3wqSmECR5SjbksgfpCay/ulCy9qeCchUqQiNvYE3yXnge36V3I
-         YF+DsYFOt8knKhBTjSD+TjZHm5hPftNqc3XYr3uBaACe4sjCEPccNkJgEWLFJ5BuSAvs
-         TZAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmVkJXmS1zoBnltJQFQwHWdp7ECSZBpV942/6JcM1zQNzkBE63HgGQ7GN3pCB7hnv/6it5ToZKQ/unkVo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwByv6iBTnItIVe23g9a9WrkeEBxSL0E1LYVyRX9gZuQP7ml4MQ
-	DzQfpHS48YIuYLhq1J9hVaTwKWsA/Fb3hgfQXOITCSrq2xUFCf3Q6ywoDMMHDGE=
-X-Gm-Gg: ASbGncuqz0nNWlyJO+mI8hjKwHt9C2c8prMS98uzIoWhmRhEQI96uyccej0ZwQOyxKD
-	a/c4Zq7qI61oNQITTXU6BwfryQwibITnbXIH1J5vw7Oq8cljkiwDJbW+7dYkTy0MW0Wp0xcRO0e
-	/4Gw+hrOx7K1Sspe5gXC9mYvoxKl3S9VIcrTk1+LiJr3b1IPzrrsQQIEz3eehEgfwT7UNXrlAbZ
-	+ppHlBFLalFqmJQUt0mT7r9oJH5LjDlhmGU311HOMYD2PEFUrSdOsTe9UI6enFxlf0z+Gj+8uG+
-	ypCsJ/WQcNMPBrQCwLJwdaGHtRMiFF+KgQy/sCod+oen+ZTAwaRoxq2ZIQAp5OXBWlbiDbI=
-X-Google-Smtp-Source: AGHT+IHEzXTAlRuX8+IIVfXALHdW/BAW9a8mxr7wK4XkIPEw/mvPumPoh0/pqNfSCsa9c8jsyssN5g==
-X-Received: by 2002:a05:6512:1189:b0:540:22e0:1f63 with SMTP id 2adb3069b0e04-54405a1075bmr142615e87.19.1738712457347;
-        Tue, 04 Feb 2025 15:40:57 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebeb0993sm1694460e87.132.2025.02.04.15.40.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 15:40:55 -0800 (PST)
-Date: Wed, 5 Feb 2025 01:40:53 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Akhil P Oommen <quic_akhilpo@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] nvmem: core: fix bit offsets of more than one byte
-Message-ID: <tgttk4pxzgsv4g2r5k44k2mtbh27cbpwth4xuj2okulucodei3@7g4gotk6z3cl>
-References: <20250109-sar2130p-nvmem-v4-0-633739fe5f11@linaro.org>
- <20250109-sar2130p-nvmem-v4-1-633739fe5f11@linaro.org>
+        bh=QjEre/G3BLqcrCF5wreFajQVoRGv9unmtvDg4S23UQU=;
+        b=UzXYeZj5U/eRryQtpDYt8HO9BC2qZgSpK3+EH7ziAkBkDRko2n0qZRbrvRkW1WETbA
+         D9SpKWBZXNF7wZdYVbnxuN7rVLZVXxCLcUwcCNPFFrFlbYK5ksd9+/4/64iqwdQItr33
+         H16GfhLBdyy6YoeCTJWZYcPyFGHR4PKt28r9U8v0cEjbPQjgX6i2P2aOr3QemPW2Z5tC
+         QuFv2QZ6By9hKNTPy3ecELe/LQavKPEFBx6l1sNJUbXr091H0POuBL8+mEO6blli4x0X
+         Kr+FEo82n5PwfeRFAkbrbWvgpVF2+WZOI+BNTopwZ1SrS2BB6ZMOFmEXPJA4fjE2KP2G
+         1tpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738713013; x=1739317813;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QjEre/G3BLqcrCF5wreFajQVoRGv9unmtvDg4S23UQU=;
+        b=U+IW5G6A1ih8agJObAtRCxd+5kE8xc/OiORkV0cwjBg+zNzCU5M9lsX71wCsbrG8W8
+         1KjZAUk2ubJGIX6fPr/ENsp9noofUH7DbTM2fZyPhtzrATcXtseissh9xtw7481Vmv+z
+         CWeHdpIb4YH82Kf954FFzoBIz8F8a0sNdslkKydoPZ8jrax9JJMjVZ+DC1Ql6O2PTMcn
+         ysd3dMu7oY0q8VPy/N9Om1kAT7NhrH9+AanPuP9K7a5uabKb0UUftXYpK7XtEq5eBjNX
+         VPXlVWRCcyIROMCqQCCSkaK99ok/84aSPF5JRNO0JP9Cqsx9VTXe3+ImHYXWApKkfQsw
+         2q0A==
+X-Forwarded-Encrypted: i=1; AJvYcCV4t6XoZKeL+afnpADRoRpdVErT/uuezR+1HB5dCypOdeGc9qxq7U8eaJViKiP3RpSwNrWoYy5Lp17RWxc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuDxzB4oOZK1WGYYil0BSNg3VmlonZ6XY4P7RltkUm1ZpUoLsZ
+	C/rv7K/waYr4l+FzMJWjY04RFaKLqIEEojMeD7ghQ77jDiCnaY88llUuU+7MmU0=
+X-Gm-Gg: ASbGncu7KXAWagmWetjhFGlK9KE1/g6yP5F3WI1zNmGY5aZnHF7JxsGw9Ik730FXpBD
+	tL/W+F68pwCkEP9MhlD2i1lFFBI1MYdGqa/CwjKb/0qL0mKoM9Vmqabuo0rroBPbIdI/vWEG12n
+	Q/xs5S/nPeRmVgtoO2mYfFrrjdFh95EbKbYMpzaW+7veGX5AamwyDC4FKNkvrB/eSpb0tTlWMHa
+	3vnQ+zY+Ig2sI+wI4XjgA8SRNYPJf6Qy0HYar+HG6vLtnzVYoyb4vPrVEjg/uwRPk0sZmKImXiM
+	vXq4dn6BePA6V7S2nGsLD2W1Tph+
+X-Google-Smtp-Source: AGHT+IEypTIpZh6mfBdWNl0Yo6S1z/L0NXKr61jortReoHSuVGBqrXhoBHP93m2FnFAjaJ4GCP4WRQ==
+X-Received: by 2002:a5d:5f56:0:b0:385:df43:2179 with SMTP id ffacd0b85a97d-38db48bccf9mr352139f8f.17.1738713011907;
+        Tue, 04 Feb 2025 15:50:11 -0800 (PST)
+Received: from smtpclient.apple ([131.111.5.201])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cee41sm16885326f8f.81.2025.02.04.15.50.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2025 15:50:10 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250109-sar2130p-nvmem-v4-1-633739fe5f11@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH 00/15] kasan: x86: arm64: risc-v: KASAN tag-based mode for
+ x86
+From: Jessica Clarke <jrtc27@jrtc27.com>
+In-Reply-To: <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org>
+Date: Tue, 4 Feb 2025 23:36:23 +0000
+Cc: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+ luto@kernel.org,
+ xin@zytor.com,
+ kirill.shutemov@linux.intel.com,
+ palmer@dabbelt.com,
+ tj@kernel.org,
+ andreyknvl@gmail.com,
+ brgerst@gmail.com,
+ ardb@kernel.org,
+ dave.hansen@linux.intel.com,
+ jgross@suse.com,
+ will@kernel.org,
+ akpm@linux-foundation.org,
+ arnd@arndb.de,
+ corbet@lwn.net,
+ dvyukov@google.com,
+ richard.weiyang@gmail.com,
+ ytcoode@gmail.com,
+ tglx@linutronix.de,
+ hpa@zytor.com,
+ seanjc@google.com,
+ paul.walmsley@sifive.com,
+ aou@eecs.berkeley.edu,
+ justinstitt@google.com,
+ jason.andryuk@amd.com,
+ glider@google.com,
+ ubizjak@gmail.com,
+ jannh@google.com,
+ bhe@redhat.com,
+ vincenzo.frascino@arm.com,
+ rafael.j.wysocki@intel.com,
+ ndesaulniers@google.com,
+ mingo@redhat.com,
+ catalin.marinas@arm.com,
+ junichi.nomura@nec.com,
+ nathan@kernel.org,
+ ryabinin.a.a@gmail.com,
+ dennis@kernel.org,
+ bp@alien8.de,
+ kevinloughlin@google.com,
+ morbo@google.com,
+ dan.j.williams@intel.com,
+ julian.stecklina@cyberus-technology.de,
+ peterz@infradead.org,
+ kees@kernel.org,
+ kasan-dev@googlegroups.com,
+ x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org,
+ llvm@lists.linux.dev,
+ linux-doc@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F974BA79-80D8-4414-9DFD-1EEF9395143C@jrtc27.com>
+References: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
+ <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org>
+To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
 
-On Thu, Jan 09, 2025 at 06:35:45AM +0200, Dmitry Baryshkov wrote:
-> If the NVMEM specifies a stride to access data, reading particular cell
-> might require bit offset that is bigger than one byte. Rework NVMEM core
-> code to support bit offsets of more than 8 bits.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/nvmem/core.c | 24 +++++++++++++++++-------
->  1 file changed, 17 insertions(+), 7 deletions(-)
+On 4 Feb 2025, at 18:58, Christoph Lameter (Ampere) <cl@gentwo.org> =
+wrote:
+> ARM64 supports MTE which is hardware support for tagging 16 byte =
+granules
+> and verification of tags in pointers all in hardware and on some =
+platforms
+> with *no* performance penalty since the tag is stored in the ECC areas =
+of
+> DRAM and verified at the same time as the ECC.
+>=20
+> Could we get support for that? This would allow us to enable tag =
+checking
+> in production systems without performance penalty and no memory =
+overhead.
 
-Srinivas, it has been almost a month ago, we are past the merge window.
-Could you please review the patchset? I'd like to understand if we need
-to spend more time on it or if it is fine.
+It=E2=80=99s not =E2=80=9Cno performance penalty=E2=80=9D, there is a =
+cost to tracking the MTE
+tags for checking. In asynchronous (or asymmetric) mode that=E2=80=99s =
+not too
+bad, but in synchronous mode there is a significant overhead even with
+ECC. Normally on a store, once you=E2=80=99ve translated it and have the =
+data,
+you can buffer it up and defer the actual write until some time later.
+If you hit in the L1 cache then that will probably be quite soon, but
+if you miss then you have to wait for the data to come back from lower
+levels of the hierarchy, potentially all the way out to DRAM. Or if you
+have a write-around cache then you just send it out to the next level
+when it=E2=80=99s ready. But now, if you have synchronous MTE, you =
+cannot
+retire your store instruction until you know what the tag for the
+location you=E2=80=99re storing to is; effectively you have to wait =
+until you
+can do the full cache lookup, and potentially miss, until it can
+retire. This puts pressure on the various microarchitectural structures
+that track instructions as they get executed, as instructions are now
+in flight for longer. Yes, it may well be that it is quicker for the
+memory controller to get the tags from ECC bits than via some other
+means, but you=E2=80=99re already paying many many cycles at that point, =
+with
+the relevant store being stuck unable to retire (and thus every
+instruction after it in the instruction stream) that whole time, and no
+write allocate or write around schemes can help you, because you
+fundamentally have to wait for the tags to be read before you know if
+the instruction is going to trap.
 
--- 
-With best wishes
-Dmitry
+Now, you can choose to not use synchronous mode due to that overhead,
+but that=E2=80=99s nuance that isn=E2=80=99t considered by your reply =
+here and has some
+consequences.
+
+Jess
+
