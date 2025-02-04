@@ -1,48 +1,65 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A4520C46D;
-	Tue,  4 Feb 2025 15:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F2D2144D4
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738683954; cv=none; b=WGwcIFNZpbuckt9NATN718rPiJ7Iv3N+2/fCod9s1jMNEsGm7b38frca/mwfTEJfGWs1EyswKg9Dw5ev+ABtxSdyrMLFIrEb1otiOyT0G8SqtQfA+UmWwe3UfH7YsrffzDr6bTiMpv7gBreasxVaHnYHYmF1vs573y3pqsZxulw=
+	t=1738683971; cv=none; b=On3W/CGK2k9lUVUeK2xhTFu0UFleWAx7vnceWSB+/uPAM2lPkHZU6xxoOPS1m/BRxjVMNow3M9/sgubaI+NBef+uzBEeQRvY4JB9NgWQ9MygMUghk1L+fD67liEs9x8FElOfcVgKq3x7p34Owk1D/3g4fhz+OnKI+3d2EqZSt1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738683954; c=relaxed/simple;
-	bh=C07sUUck6kA/CVKnuzDizMhHTlBqmB/a72rcHwwatnI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kMZulOv455d8+No3pC0Be3VJ2SnUMQEcyIuH8ueYbSVgV44mQT+5CQM4bFtJO6jaIW2ZEOX+D9FKQPCFIdaIzjbIw3TF1Epvjdq0m+32GgqARUJg3I2Unl+k8ioGDhbJtGBZQTKjHc2niL+IEdIoYuOOU39BHt6OID45A8jiaZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D4IRfwTl; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738683971; c=relaxed/simple;
+	bh=iqM7MMpJNyOaVie7Y5SBgOqBm+Q8ljR8LiH3qct7tys=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T8Q6jgC8N/sbpIxsbDzA0Pk1WV7486tqT9NLwIjMdPlSHt/fXwdROV+/LvaEf77wGsXMbJdENr7F4/lWxucieAYith+A9wT6B7TTZQLAokXWSEzv0UI67rBuO5hMYxfjl9gsb2RUiuuXHAds/o/U1GiXR0xFgNqinZcMQFRwK9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S6ZpCAnE; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D4IRfwTl"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514E1bbS032324;
-	Tue, 4 Feb 2025 15:45:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	SmzpwdylyuXyz1bRPWE37WvAaaUec0zu4cZfeZzC9No=; b=D4IRfwTlCpceS1ir
-	/ODZ50ZkWM3TlEvxhhfguPE6L8mpoBNvNuF7udR0gB7k2Wz4OWjyPuOxuh4+KAt/
-	2vGTclvQiuqE3FjbKGkLNoZMvQHhOlHIU1Cyh/ubQYpjDJs2pe9M3osT9pwRZbpD
-	RX+qvSiWPMSiL438iw8VNnEd0xW3iL718R0Eqmy5E234svJk2sXNDTnuM+jQgzY1
-	kGH0rRtIudMKTBK0WCgr5d6TkebUgj7Uzo93q1sAMsJG+H80sgY6yGkQ8foBVHm1
-	7WJIEzmNtn2y7AcuwX8wGAu7vm/3L+DuflAzQldp44Tw5v4v31jv2DCytXJzKons
-	gDWKzw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44km9wg8p4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 15:45:47 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 514Fjlim026799
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Feb 2025 15:45:47 GMT
-Received: from [10.216.42.141] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Feb 2025
- 07:45:43 -0800
-Message-ID: <fe48c265-11e7-42ed-98e5-e55f89ca4021@quicinc.com>
-Date: Tue, 4 Feb 2025 21:15:39 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S6ZpCAnE"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43616bf3358so7302555e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:46:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738683968; x=1739288768; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=8VDsh+thrrBkA4ryOkMm1ux54Rb9IUk/Q1coP2a2u8M=;
+        b=S6ZpCAnEw6HiZkBZns4fS9tvYgdqH9Jl5aga69xKr3rk5sRhQpekX2SIxZSNTF3glP
+         4vy9lnJSDWHiP+Kv7Sybmm0FB3/6Up+yVln5CK9h08qN9AnC78tXZNmVH9SRflldccKc
+         GAKoQIimt+OnAzeYB9G3IgF2BA1lg6e+Ner7T40k/HXQaakM2epV1nbgB0KPw1Eirprv
+         J+3MZwvmzk/MkgnspYudxYbdHVYxQKE178TzT+shxC/0PWBG5OVPiFPvjrlLd0CPYj7+
+         y2g6shi/y3+2sS04lgYJt++XQX3GEYc0MmvW2ZLz4C+LXNOfY/+IkUcwcOtMIQq36JzW
+         scWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738683968; x=1739288768;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8VDsh+thrrBkA4ryOkMm1ux54Rb9IUk/Q1coP2a2u8M=;
+        b=WhyIaQe+Q8ROKG5lGRNCHFFHXrwSqfIVpqQAC8TJ5bDoTi0zztF+fAho1U+KEHBsj7
+         S0rVtQyBN4AjAFkzPtT4G0WwzC9Ow4+qVkSZ60tDgyvEGIuC34SZAhgpkXcQff1gDDgu
+         wsLMCsPUhwB+QGqpwc30DB4qHfsxgmHIVQ5daaJjN+OvnHsVCJeXGLTgTxhSCtl1Wh+6
+         034S5nkEOwMSuwf2myE5HHKp1FoXwmjS4xddcr2VxvQ3g84jDn4VH2q8/bfbyBbrNBhN
+         0DlBdBsRM1fh4YpHSELh0diKcwAtVIM+MEGbw6r4AWMgJm1LDPzcLg7wdE7tP0E/qU1g
+         hCbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZDxi1DA+fRcPeFMVHnsOf2u62yXYqsWeB+EFnb1OtU0HdOFSX7t3zoazioVcBySz1pGlrPNpHHupvIvs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4O66XUUNDIKonfWdVIy4dyXDdKoC00Z4lNBWus5XgEqxRnBOM
+	TMxESCTzldOjAlmzC21WTwMFkHErKxFp/nv+JL3QbvKZb1ec1NCBMKqIXG/CODI=
+X-Gm-Gg: ASbGncvS++p2hND6M3Y3WuVRNK0VeDOFeKCIkOeCagdrPnwWbyPDA1TXkLfTiXaBKMd
+	Vc4bDRKKVnfipsSed8zOa8FIPK61C7xOvyK5zUrml7OBqDNhgySt3j2Bbnud8JcUIkoKUo5qq8h
+	kbP6f4zP5gheUyh1hs6EtxfmuQZODmjhnwtZhb+h7mFsEpuDEYVvSDvjKhl3j9IRQQZsFJbp3kh
+	FqKg7sv2gd4u09e5r0NBm7B/xBtAWpFn5uzESAsv/SLmRv9azkBJLvYtnlYBkYdhE+RtZpFpUhc
+	HovLVqh3X1yP9yMOMymuX8F654pIZiF/HLk=
+X-Google-Smtp-Source: AGHT+IF/8Y4CiuuRVb7XUvn4YXoFmIVvEj0+wakfJm9mjoxXU19MUcLzDqSusKkvwT8fX8F3IUisuw==
+X-Received: by 2002:a05:6000:2c8:b0:385:e10a:4d9f with SMTP id ffacd0b85a97d-38da4d75ce6mr1142148f8f.0.1738683967786;
+        Tue, 04 Feb 2025 07:46:07 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.144])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec02bsm16388163f8f.13.2025.02.04.07.46.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 07:46:06 -0800 (PST)
+Message-ID: <2e96ae62-3114-4c7b-bea7-27f6e2009634@linaro.org>
+Date: Tue, 4 Feb 2025 16:46:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,396 +67,166 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/13] wifi: ath12k: add AHB driver support for IPQ5332
-To: Krzysztof Kozlowski <krzk@kernel.org>, <ath12k@lists.infradead.org>
-CC: <linux-wireless@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Jeff Johnson <jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Balamurugan S
-	<quic_bselvara@quicinc.com>,
-        P Praneesh <quic_ppranees@quicinc.com>
-References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
- <20250130043508.1885026-9-quic_rajkbhag@quicinc.com>
- <0f3efa0c-b5e0-44e4-850a-d63b0beeb0b8@kernel.org>
+Subject: Re: [PATCH v2 2/4] drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG1 against
+ clock driver
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
+ <20250203-drm-msm-phy-pll-cfg-reg-v2-2-862b136c5d22@linaro.org>
+ <u4qho7u2nu2x6qxkfxpeakotmbdgoha3e5csmsamaanlxziiif@22kzxupzibj7>
+ <12275e11-eadc-48be-b8c3-9463cdf92698@linaro.org>
+ <vfqfbpxc3zrerrb2hyis6h4kgk7aqfljwb7sxlduwlkqprmodg@rjjfsgwr5c6j>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-In-Reply-To: <0f3efa0c-b5e0-44e4-850a-d63b0beeb0b8@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <vfqfbpxc3zrerrb2hyis6h4kgk7aqfljwb7sxlduwlkqprmodg@rjjfsgwr5c6j>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Ns-NDlIQ4sr6ec7ZOrAiM70Z0xGM_EPY
-X-Proofpoint-GUID: Ns-NDlIQ4sr6ec7ZOrAiM70Z0xGM_EPY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_07,2025-02-04_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 phishscore=0 impostorscore=0
- malwarescore=0 adultscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040122
 
-On 1/30/2025 1:27 PM, Krzysztof Kozlowski wrote:
-> On 30/01/2025 05:35, Raj Kumar Bhagat wrote:
->> +static int ath12k_ahb_clock_init(struct ath12k_base *ab)
->> +{
->> +	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
->> +	int ret;
->> +
->> +	ab_ahb->xo_clk = devm_clk_get(ab->dev, "xo");
->> +	if (IS_ERR_OR_NULL(ab_ahb->xo_clk)) {
+On 04/02/2025 15:26, Dmitry Baryshkov wrote:
+> On Tue, Feb 04, 2025 at 10:21:25AM +0100, Krzysztof Kozlowski wrote:
+>> On 03/02/2025 18:41, Dmitry Baryshkov wrote:
+>>> On Mon, Feb 03, 2025 at 06:29:19PM +0100, Krzysztof Kozlowski wrote:
+>>>> PHY_CMN_CLK_CFG1 register is updated by the PHY driver and by a mux
+>>>> clock from Common Clock Framework:
+>>>> devm_clk_hw_register_mux_parent_hws().  There could be a path leading to
+>>>> concurrent and conflicting updates between PHY driver and clock
+>>>> framework, e.g. changing the mux and enabling PLL clocks.
+>>>>
+>>>> Add dedicated spinlock to be sure all PHY_CMN_CLK_CFG1 updates are
+>>>> synchronized.
+>>>>
+>>>> Fixes: 1ef7c99d145c ("drm/msm/dsi: add support for 7nm DSI PHY/PLL")
+>>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>>
+>>>> ---
+>>>>
+>>>> Changes in v2:
+>>>> 1. Store BIT(4) and BIT(5) in local var in dsi_pll_enable_global_clk()
+>>>> ---
+>>>>  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 35 +++++++++++++++++++------------
+>>>>  1 file changed, 22 insertions(+), 13 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+>>>> index c164f845653816291ad96c863257f75462ef58e7..e26f53f7cde8f0f6419a633f5d39784dc2e5bb98 100644
+>>>> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+>>>> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+>>>> @@ -83,6 +83,9 @@ struct dsi_pll_7nm {
+>>>>  	/* protects REG_DSI_7nm_PHY_CMN_CLK_CFG0 register */
+>>>>  	spinlock_t postdiv_lock;
+>>>>  
+>>>> +	/* protects REG_DSI_7nm_PHY_CMN_CLK_CFG1 register */
+>>>> +	spinlock_t pclk_mux_lock;
+>>>> +
+>>>>  	struct pll_7nm_cached_state cached_state;
+>>>>  
+>>>>  	struct dsi_pll_7nm *slave;
+>>>> @@ -381,22 +384,32 @@ static void dsi_pll_cmn_clk_cfg0_write(struct dsi_pll_7nm *pll, u32 val)
+>>>>  	spin_unlock_irqrestore(&pll->postdiv_lock, flags);
+>>>>  }
+>>>>  
+>>>> -static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
+>>>> +static void dsi_pll_cmn_clk_cfg1_update(struct dsi_pll_7nm *pll, u32 mask,
+>>>> +					u32 val)
+>>>>  {
+>>>> +	unsigned long flags;
+>>>>  	u32 data;
+>>>>  
+>>>> +	spin_lock_irqsave(&pll->pclk_mux_lock, flags);
+>>>>  	data = readl(pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+>>>> -	writel(data & ~BIT(5), pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+>>>> +	data &= ~mask;
+>>>> +	data |= val & mask;
+>>>> +
+>>>> +	writel(data, pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+>>>> +	spin_unlock_irqrestore(&pll->pclk_mux_lock, flags);
+>>>> +}
+>>>> +
+>>>> +static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
+>>>> +{
+>>>> +	dsi_pll_cmn_clk_cfg1_update(pll, BIT(5), 0);
+>>>>  }
+>>>>  
+>>>>  static void dsi_pll_enable_global_clk(struct dsi_pll_7nm *pll)
+>>>>  {
+>>>> -	u32 data;
+>>>> +	u32 cfg_1 = BIT(5) | BIT(4);
+>>>
+>>> Please define these two bits too.
+>>
+>> Why? They were not defined before. This only moving existing code.
 > 
-> No, you are not supposed to use IS_ERR_OR_NULL(). That's indication of bug.
-> 
->> +		ret = ab_ahb->xo_clk ? PTR_ERR(ab_ahb->xo_clk) : -ENODEV;
-> 
-> I don't understand this. It's the third time you are reimplementing
-> standard code in some odd way, different than all other drivers.
-> 
-> Read the description of this function. Can clk_get return NULL? Of
-> course not. This is so overcomplicated for no reason, I wonder if it is
-> actually buggy here.
-> 
+> Previously it was just a bit magic. Currently you are adding them as
 
-My bad, will update in next version.
+No, previous code:
 
-> 
->> +		return dev_err_probe(&ab->pdev->dev, ret, "failed to get xo clock\n");
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void ath12k_ahb_clock_deinit(struct ath12k_base *ab)
->> +{
->> +	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
->> +
->> +	devm_clk_put(ab->dev, ab_ahb->xo_clk);
->> +	ab_ahb->xo_clk = NULL;
->> +}
->> +
->> +static int ath12k_ahb_clock_enable(struct ath12k_base *ab)
->> +{
->> +	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
->> +	int ret;
->> +
->> +	if (IS_ERR_OR_NULL(ab_ahb->xo_clk)) {
->> +		ath12k_err(ab, "clock is not initialized\n");
-> 
-> NAK.
-> 
-> Sorry, this code makes no sense. This is some random code. This code
-> cannot be executed before probe. If it can: your driver is buggy, so fix
-> your driver.
-> 
-> After the probe(), this is never NULL as an error. Either you have here
-> valid pointer or you failed the probe.
-> 
-> This driver fails on basics of driver probing.
-> 
+writel(data | BIT(5) | BIT(4), pll->phy->base +
+REG_DSI_7nm_PHY_CMN_CLK_CFG1);
 
-Will remove the above code in next version.
+This is a mask and update in the same time, because:
+	(data & (BIT(5) | BIT(4)) | BIT(5) | BIT(4)
+is just redudant.
 
->> +		return -EIO;
->> +	}
->> +
->> +	ret = clk_prepare_enable(ab_ahb->xo_clk);
->> +	if (ret) {
->> +		ath12k_err(ab, "failed to enable gcc_xo_clk: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void ath12k_ahb_clock_disable(struct ath12k_base *ab)
->> +{
->> +	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
->> +
->> +	clk_disable_unprepare(ab_ahb->xo_clk);
-> 
-> Don't create such wrappers for single clock. Does not help.
-> 
+I did not do any logical change, I did not add any mask or field.
+Everything was already there.
 
-Sure, will remove the wrapper.
 
->> +}
->> +
->> +static int ath12k_ahb_resource_init(struct ath12k_base *ab)
->> +{
->> +	struct platform_device *pdev = ab->pdev;
->> +	struct resource *mem_res;
->> +	int ret;
->> +
->> +	ab->mem = devm_platform_get_and_ioremap_resource(pdev, 0, &mem_res);
->> +	if (IS_ERR(ab->mem)) {
->> +		ret = dev_err_probe(&pdev->dev, PTR_ERR(ab->mem), "ioremap error\n");
->> +		goto out;
->> +	}
->> +
->> +	ab->mem_len = resource_size(mem_res);
->> +
->> +	if (ab->hw_params->ce_remap) {
->> +		const struct ce_remap *ce_remap = ab->hw_params->ce_remap;
->> +		/* CE register space is moved out of WCSS and the space is not
->> +		 * contiguous, hence remapping the CE registers to a new space
->> +		 * for accessing them.
->> +		 */
->> +		ab->mem_ce = ioremap(ce_remap->base, ce_remap->size);
->> +		if (IS_ERR(ab->mem_ce)) {
->> +			dev_err(&pdev->dev, "ce ioremap error\n");
->> +			ret = -ENOMEM;
->> +			goto err_mem_unmap;
->> +		}
->> +		ab->ce_remap = true;
->> +		ab->ce_remap_base_addr = HAL_IPQ5332_CE_WFSS_REG_BASE;
->> +	}
->> +
->> +	ret = ath12k_ahb_clock_init(ab);
->> +	if (ret)
->> +		goto err_mem_ce_unmap;
->> +
->> +	ret =  ath12k_ahb_clock_enable(ab);
->> +	if (ret)
->> +		goto err_clock_deinit;
->> +
->> +	return 0;
->> +
->> +err_clock_deinit:
->> +	ath12k_ahb_clock_deinit(ab);
->> +
->> +err_mem_ce_unmap:
->> +	if (ab->hw_params->ce_remap)
->> +		iounmap(ab->mem_ce);
->> +
->> +err_mem_unmap:
->> +	ab->mem_ce = NULL;
->> +	devm_iounmap(ab->dev, ab->mem);
->> +
->> +out:
->> +	ab->mem = NULL;
->> +	return ret;
->> +}
->> +
->> +static void ath12k_ahb_resource_deinit(struct ath12k_base *ab)
->> +{
->> +	if (ab->mem)
->> +		devm_iounmap(ab->dev, ab->mem);
->> +
->> +	if (ab->mem_ce)
->> +		iounmap(ab->mem_ce);
->> +
->> +	ab->mem = NULL;
->> +	ab->mem_ce = NULL;
->> +
->> +	ath12k_ahb_clock_disable(ab);
->> +	ath12k_ahb_clock_deinit(ab);
->> +}
->> +
->> +static enum ath12k_hw_rev ath12k_ahb_get_hw_rev(struct platform_device *pdev)
->> +{
->> +	const struct of_device_id *of_id;
->> +
->> +	of_id = of_match_device(ath12k_ahb_of_match, &pdev->dev);
->> +	if (!of_id) {
->> +		dev_err(&pdev->dev, "Failed to find matching device tree id\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	return (enum ath12k_hw_rev)of_id->data;
-> 
-> You just open-coded of_device_get_match_data().
-> 
+> masks. I want to know if BIT(4) and BIT(5) are parts of the same
+> bitfield (2 bits wide) or if they define two different bits.
 
-Thanks, will use of_device_get_match_data() in next version.
+While in general you are right, it does not matter for this fix. If this
+are separate bitfields - fix is correct. If this is one bitfield - fix
+is still correct. You could claim that if this was one bitfield, using
+2xBIT() is not logical, but this was there already, so again my fix is
+only fixing and keeping entire logic or inconsistencies intact.
 
->> +}
->> +
->> +static int ath12k_ahb_probe(struct platform_device *pdev)
->> +{
->> +	struct ath12k_base *ab;
->> +	const struct ath12k_hif_ops *hif_ops;
->> +	struct device_node *mem_node;
->> +	enum ath12k_hw_rev hw_rev;
->> +	u32 addr;
->> +	int ret;
->> +
->> +	hw_rev = ath12k_ahb_get_hw_rev(pdev);
->> +	switch (hw_rev) {
->> +	case ATH12K_HW_IPQ5332_HW10:
->> +		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
->> +		break;
->> +	default:
->> +		return -EOPNOTSUPP;
->> +	}
->> +
->> +	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Failed to set 32-bit coherent dma\n");
->> +		return ret;
->> +	}
->> +
->> +	ab = ath12k_core_alloc(&pdev->dev, sizeof(struct ath12k_ahb),
->> +			       ATH12K_BUS_AHB);
->> +	if (!ab) {
->> +		dev_err(&pdev->dev, "failed to allocate ath12k base\n");
-> 
-> No, driver never prints allocation errors. You are duplicating existing
-> core printk.
-> 
-
-Thanks, will remove this error print.
-
-> 
->> +		return -ENOMEM;
->> +	}
->> +
->> +	ab->hif.ops = hif_ops;
->> +	ab->pdev = pdev;
->> +	ab->hw_rev = hw_rev;
->> +	platform_set_drvdata(pdev, ab);
->> +
->> +	/* Set fixed_mem_region to true for platforms that support fixed memory
->> +	 * reservation from DT. If memory is reserved from DT for FW, ath12k driver
->> +	 * need not to allocate memory.
->> +	 */
->> +	if (!of_property_read_u32(ab->dev->of_node, "memory-region", &addr)) {
->> +		set_bit(ATH12K_FLAG_FIXED_MEM_REGION, &ab->dev_flags);
->> +
->> +		/* If the platform supports fixed memory, then it should define/
->> +		 * reserve MLO global memory in DT to support Multi Link Operation
->> +		 * (IEEE 802.11be).
->> +		 * If MLO global memory is not reserved in fixed memory mode, then
->> +		 * MLO cannot be supported.
->> +		 */
->> +		mem_node = ath12k_core_get_reserved_mem_by_name(ab, "mlo-global-mem");
->> +		if (!mem_node)
->> +			ab->single_chip_mlo_supp = false;
->> +		else
->> +			of_node_put(mem_node);
->> +	}
->> +
->> +	ret = ath12k_core_pre_init(ab);
->> +	if (ret)
->> +		goto err_core_free;
->> +
->> +	ret = ath12k_ahb_resource_init(ab);
->> +	if (ret)
->> +		goto err_core_free;
->> +
->> +	ret = ath12k_hal_srng_init(ab);
->> +	if (ret)
->> +		goto err_resource_deinit;
->> +
->> +	ret = ath12k_ce_alloc_pipes(ab);
->> +	if (ret) {
->> +		ath12k_err(ab, "failed to allocate ce pipes: %d\n", ret);
->> +		goto err_hal_srng_deinit;
->> +	}
->> +
->> +	ath12k_ahb_init_qmi_ce_config(ab);
->> +
->> +	ret = ath12k_ahb_config_irq(ab);
->> +	if (ret) {
->> +		ath12k_err(ab, "failed to configure irq: %d\n", ret);
->> +		goto err_ce_free;
->> +	}
->> +
->> +	ret = ath12k_core_init(ab);
->> +	if (ret) {
->> +		ath12k_err(ab, "failed to init core: %d\n", ret);
->> +		goto err_ce_free;
->> +	}
->> +
->> +	return 0;
->> +
->> +err_ce_free:
->> +	ath12k_ce_free_pipes(ab);
->> +
->> +err_hal_srng_deinit:
->> +	ath12k_hal_srng_deinit(ab);
->> +
->> +err_resource_deinit:
->> +	ath12k_ahb_resource_deinit(ab);
->> +
->> +err_core_free:
->> +	ath12k_core_free(ab);
->> +	platform_set_drvdata(pdev, NULL);
->> +
->> +	return ret;
->> +}
->> +
->> +static void ath12k_ahb_remove_prepare(struct ath12k_base *ab)
->> +{
->> +	unsigned long left;
->> +
->> +	if (test_bit(ATH12K_FLAG_RECOVERY, &ab->dev_flags)) {
->> +		left = wait_for_completion_timeout(&ab->driver_recovery,
->> +						   ATH12K_AHB_RECOVERY_TIMEOUT);
->> +		if (!left)
->> +			ath12k_warn(ab, "failed to receive recovery response completion\n");
->> +	}
->> +
->> +	set_bit(ATH12K_FLAG_UNREGISTERING, &ab->dev_flags);
->> +	cancel_work_sync(&ab->restart_work);
->> +	cancel_work_sync(&ab->qmi.event_work);
->> +}
->> +
->> +static void ath12k_ahb_free_resources(struct ath12k_base *ab)
->> +{
->> +	struct platform_device *pdev = ab->pdev;
->> +
->> +	ath12k_hal_srng_deinit(ab);
->> +	ath12k_ce_free_pipes(ab);
->> +	ath12k_ahb_resource_deinit(ab);
->> +	ath12k_core_free(ab);
->> +	platform_set_drvdata(pdev, NULL);
->> +}
->> +
->> +static void ath12k_ahb_remove(struct platform_device *pdev)
->> +{
->> +	struct ath12k_base *ab = platform_get_drvdata(pdev);
->> +
->> +	if (test_bit(ATH12K_FLAG_QMI_FAIL, &ab->dev_flags)) {
->> +		ath12k_qmi_deinit_service(ab);
->> +		goto qmi_fail;
->> +	}
->> +
->> +	ath12k_ahb_remove_prepare(ab);
->> +	ath12k_core_deinit(ab);
->> +
->> +qmi_fail:
->> +	ath12k_ahb_free_resources(ab);
->> +}
->> +
->> +static void ath12k_ahb_shutdown(struct platform_device *pdev)
->> +{
->> +	struct ath12k_base *ab = platform_get_drvdata(pdev);
->> +
->> +	/* platform shutdown() & remove() are mutually exclusive.
->> +	 * remove() is invoked during rmmod & shutdown() during
->> +	 * system reboot/shutdown.
->> +	 */
-> 
-> You should rather explain why you cannot use one callback for both. Why
-> this has to be duplicated?
-> 
->> +	ath12k_ahb_remove_prepare(ab);
->> +
->> +	if (!(test_bit(ATH12K_FLAG_REGISTERED, &ab->dev_flags)))
->> +		goto free_resources;
->> +
->> +	ath12k_core_deinit(ab);
-> 
-> And why this is actually different order than remove().
-> 
-
-The .shutdown() is not required for IPQ5332 wifi. In the next version
-will remove the shutdown callback.
+Best regards,
+Krzysztof
