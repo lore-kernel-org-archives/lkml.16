@@ -1,116 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4937205E3B;
-	Tue,  4 Feb 2025 07:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81832063D8
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 07:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738655616; cv=none; b=NiU77AKPZApPtJ30d15ksqlKpKBIRIoeXqrcryZrDPnwgaTtff/6PWtXtfrdYFLIzPSn+vFyeSMfUpWjtsM3FFQIVpwCGFJpMX8Vr+McmxHFhs+7r00gJraBnusDRPLu8j6vhnsvmR+dsj9EzK6/KGP95il16ueE3RLreRi0ogQ=
+	t=1738655667; cv=none; b=AVJSODu+wmLWCx2H+rYUitKU2OUnyxbmaEAffXz3AJ6e28sHJP7I8SJm9vsLzLzWn2Sae9Nqf5aOK2uTgK7BMUq2P0EfT334E5Tm976F/rw85NEfl1+ftDb7jXY5/9+bKh+TMdoD/UDgK4E8XEB5c0NG0umuBGWyP5WSIWUa1io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738655616; c=relaxed/simple;
-	bh=6li0nTXDpwk/xunVkZoNszRwoScOYPjfrU33f4c3TUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FwKebiVnEuxx/hkguxyAeXp1wLRHiuQoKAMWfy1wAUB5I9Hn4Nl4ci/6PlfyCVzAENBE7owpJ7pR7lgG10CAZMmkdGZN8xozVcNJ966UONLYQhgPW31hE3ejTcBBCGLuwGnjPtu7zFOgPEtCnpveyLl9wxBEZ8PfsNR02y7OiT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVB0S9ZK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738655667; c=relaxed/simple;
+	bh=1xcyd4xbQQnsJ0VVxdhkgbe++71P2EFh7Yknlb+8V9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MeZgNb0oexPdC2FzHKht9zpPRf57iHTTqbDZECOVOnbc2HIkqpdTWF8yw8M8yCt6ieZWZr9aylaie+vIMxHXeE1Pg6URUNhmunD8StoykKahoDmWBCaeov2qoe8pwgG1zzjy2q565LnSvqwdJxReGIv9RKa8uxkXPPSbZyWI6Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=KRCuTI/W; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVB0S9ZK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E3ACC4CEDF;
-	Tue,  4 Feb 2025 07:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738655616;
-	bh=6li0nTXDpwk/xunVkZoNszRwoScOYPjfrU33f4c3TUE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iVB0S9ZKvWsh0nnWGNUyCbUj1z6czoHkbsSj87qk/KUT+H+n+FB2Z8ib/rxnbXlRf
-	 C8uXYHu0ZmHq2Gx08/lnDeeRW/avcHvA1czjjuDYhcpIblZ2uVgHZK4VZE0Icf/9yp
-	 llYW+L5kqgyvQOVQIllIR4+doRsLiYhCMNOUezFYUi+cJnjtovGVKe46k9kejtGn8r
-	 zhIDUMxEcWHjLD3g18hKIaq3mTd9LZmm7SPLSDUkOI1cWp7/IfdFMFbyZAFpeistmH
-	 6jbmEl0FjuLWavjlbAT+KrDIx+QmeXyJcVxkPkVJAtwKWgIUXsXpAEjyAvQddOEnBU
-	 sbkpvkBQYLA9g==
-Message-ID: <339ea40f-6bc7-42ad-a5c2-f57b3be8cc39@kernel.org>
-Date: Tue, 4 Feb 2025 08:53:31 +0100
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="KRCuTI/W"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7b6eeff1fdfso479464285a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 23:54:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1738655664; x=1739260464; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q9z54JtaeX5gSz2dbf+6FdDKOtIHT059atUvBQkTIU4=;
+        b=KRCuTI/WtQwoQfkTc3d04cyFllPW2MeWpH5VlVe/9JZmFOu6z+89qE1qvcc0oq7Uvq
+         idu6WY5AkguPEN9DJuDl84wSuWCNV55s+ttgzb7KaRSMhS7xThR8fWwnuC6ZJ3NF23gG
+         57SGrcPg3HEmGEzL/oHYrvJdlkxktMbEOacwlefjH7XCtkFBkQiSWZdLf2o6jcRTYuMq
+         +8n2NwhSJ+0xD7fxS6Q/9dbTHXj1sEbYxIGho+uP2aGtq2yNSDdlNlE3MskveiJmxUEE
+         rUIlCpIy5p8kgurquWjXjJDQnTeM4KWqxfJSPvTm4p1rZ4jw4ZQsFe+mn1bxpZyGgbUT
+         FymQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738655664; x=1739260464;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q9z54JtaeX5gSz2dbf+6FdDKOtIHT059atUvBQkTIU4=;
+        b=Ski+DpSZeB1GH95LwRV9TCoXTrZnQp3G5bBpBbpeba2H4IURarqQZvqRl9z7+pCOtt
+         RqU1StFrEH4KBK7JEkL6ekyt1UW/V9ZcxMkExfmwt243/blo+IaQDA1MK46oy47WLbqD
+         n6N/J0TAckbKJi/bF5As3W+4SvJeFquCl6AfxRGO0wc17voBDa6Q+PJc+KuEaxByrl3w
+         nvNDrtw7JzcAEQgz3c/gIsoxkyIYzZuPQTe4aPqyVZcHwSCshdOVBmYSkLMrENBHc82P
+         EF41i1UmxFz9zEyeHGecIdpAlV0KCxJHbRHtZghirkgBFfbEg57j1+LJWkyPEbjVQAx4
+         tovw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4/JwqXTtcbna6mbZhmZd4OGz9s5Id7PaYE0bT2UoZaZ5lJI0Hgm59ysggC/53jtd3jebDwZcUxSpGcx0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCltCKc8mXDTPE4QqQ5xEK+CIBtE4BNf+YPm9fDJ/xmW6ZtmlM
+	2bJctmo8fDETx3C8TbWKLgakcCwVMCkNMMjbrwzZaJ+Ho+mIQ8JdGAhWa0Cb+Es=
+X-Gm-Gg: ASbGnctJ4k3wBq7UCL8vGC3PLHXMWir+7m93JgB2qTfC2un2JmUu2sTPVXf6H3dgTNX
+	S8Cfje0CoWmdJ6WDPq4FvP/K3KxvFZnvbYJnIr2JfmNNAHF4yXQEouTnb0smvWI1H/ATz8dZFJ9
+	FCwJrUgk6cTvxZeFpv6mdYALqffT8a/ABLpkRILj4gfUItfU1+chf69yz8q47YFaTVStF18C2Tu
+	WL85ZCU0Osmsy+I/2Qnvw5xY1FsgfOYsnMTU8/OtflOIwWKdWYclVD5NpEIzj8PULB7uGjD0J2b
+	h2MftDkosvxVu4Ze4i7YKqf2GaVGzP1KJOYFOUoCvLbkjfWhJBPOtY4=
+X-Google-Smtp-Source: AGHT+IHnQYtrMWCiX8smMX+KNobk2NbP0fzLkqVqwBS3IWCPax1EIsVPqU/PPsh/vQevjqw+kgDNzg==
+X-Received: by 2002:a05:620a:688d:b0:7b6:da92:fcdd with SMTP id af79cd13be357-7bffcce1d45mr3575797185a.15.1738655663645;
+        Mon, 03 Feb 2025 23:54:23 -0800 (PST)
+Received: from anup-ubuntu-vm.localdomain ([103.97.166.196])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8d05ddsm613373185a.39.2025.02.03.23.54.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 23:54:22 -0800 (PST)
+From: Anup Patel <apatel@ventanamicro.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Anup Patel <anup@brainfault.org>,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	Anup Patel <apatel@ventanamicro.com>
+Subject: [PATCH v3 00/10] RISC-V IMSIC driver improvements
+Date: Tue,  4 Feb 2025 13:23:55 +0530
+Message-ID: <20250204075405.824721-1-apatel@ventanamicro.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Add chip ID for Exynos7870 SoC
-To: Kaustabh Chakraborty <kauschluss@disroot.org>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250204-exynos7870-chipid-v1-0-0bf2db08e621@disroot.org>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250204-exynos7870-chipid-v1-0-0bf2db08e621@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 03/02/2025 21:32, Kaustabh Chakraborty wrote:
-> This patch series is a part of Exynos7870 upstreaming.
-> 
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
-> Kaustabh Chakraborty (2):
->       dt-bindings: hwinfo: samsung,exynos-chipid: add exynos7870-chipid compatible
->       soc: samsung: exynos-chipid: add support for exynos7870
-> 
->  Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml | 1 +
->  drivers/soc/samsung/exynos-chipid.c                                 | 1 +
->  2 files changed, 2 insertions(+)
+This series is based on recent discussion on LKML:
+https://lore.kernel.org/lkml/20241114161845.502027-18-ajones@ventanamicro.com/
 
-When I asked to split, I said per subsystem. Soc is one subsystem.
-Everything targeting SoC should be in one patchset. get_maintainers.pl
-tells the name of the subsystem and its maintainers.
+It primarily focuses on moving to RISC-V IMSIC driver use common MSI
+lib and GENERIC_PENDING_IRQ.
 
-If there is going to be resend/new version, combine patchsets for soc
-into one patchset (just like the example I gave last time).
+PATCH1: Fix for handling non-atomic MSI updates
+PATCH2 & PATCH3: Preparatory patches
+PATCH4: Main patch which updates IMSIC driver to use MSI lib
+PATCH5: Preparatory patch for moving to GENERIC_PENDING_IRQ
+PATCH6 to PATCH10: Patches use GENERIC_PENDING_IRQ in IMSIC driver
 
-Best regards,
-Krzysztof
+These patches can also be found in the riscv_imsic_imp_v3 branch at:
+https://github.com/avpatel/linux.git
+
+Changes since v2:
+ - Rebased upon Linux-6.14-rc1
+ - Dropped PATCH5 of v2 series since that patch is already merged
+
+Changes since v1:
+ - Changed series subject
+ - Expand this series to use GENERIC_PENDING_IRQ in IMSIC driver
+
+Andrew Jones (1):
+  irqchip/riscv-imsic: Set irq_set_affinity for IMSIC base
+
+Anup Patel (7):
+  irqchip/riscv-imsic: Handle non-atomic MSI updates for device
+  genirq: Introduce common irq_force_complete_move() implementation
+  RISC-V: Enable GENERIC_PENDING_IRQ and GENERIC_PENDING_IRQ_CHIPFLAGS
+  irqchip/riscv-imsic: Separate next and previous pointers in IMSIC
+    vector
+  irqchip/riscv-imsic: Implement irq_force_complete_move() for IMSIC
+  irqchip/riscv-imsic: Replace hwirq with irq in the IMSIC vector
+  irqchip/riscv-imsic: Use IRQCHIP_MOVE_DEFERRED flag for PCI devices
+
+Thomas Gleixner (2):
+  irqchip/irq-msi-lib: Optionally set default irq_eoi/irq_ack
+  irqchip/riscv-imsic: Move to common MSI lib
+
+ arch/riscv/Kconfig                         |   2 +
+ drivers/irqchip/Kconfig                    |   8 +-
+ drivers/irqchip/irq-gic-v2m.c              |   1 +
+ drivers/irqchip/irq-imx-mu-msi.c           |   1 +
+ drivers/irqchip/irq-msi-lib.c              |  11 +-
+ drivers/irqchip/irq-mvebu-gicp.c           |   1 +
+ drivers/irqchip/irq-mvebu-odmi.c           |   1 +
+ drivers/irqchip/irq-mvebu-sei.c            |   1 +
+ drivers/irqchip/irq-riscv-imsic-early.c    |  14 +-
+ drivers/irqchip/irq-riscv-imsic-platform.c | 177 +++++++++------------
+ drivers/irqchip/irq-riscv-imsic-state.c    | 127 ++++++++++-----
+ drivers/irqchip/irq-riscv-imsic-state.h    |  12 +-
+ include/linux/irq.h                        |   5 +
+ include/linux/msi.h                        |  11 ++
+ kernel/irq/migration.c                     |   9 ++
+ 15 files changed, 224 insertions(+), 157 deletions(-)
+
+-- 
+2.43.0
+
