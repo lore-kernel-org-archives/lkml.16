@@ -1,115 +1,108 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2FBF203710;
-	Tue,  4 Feb 2025 21:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5B421A43A;
+	Tue,  4 Feb 2025 21:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738703282; cv=none; b=RSMzFX9IKbYFAiYH6pcU2Rg2yfcYVATtXQfJaNR0QpZWofT7AShfQ1C7XXn88Ylcn94TPYIhXcbwVR6ajdfOd33qh0eGj+7kpvxdnr0jKmCF7ddO1CzoiddzkcxzCoJ9Z44gyNP+q6MIwPfmkTqycWlMMD17+ulnSNvzAUJhs7c=
+	t=1738703310; cv=none; b=s1WnDih1jtHOPE9Ou9B2cwWN/wL0jCB9TbjEySETL/YP1zeA3sr3/wEMqtgDsW2bfokwf/6s2Ghv7uCyyvuOzRLuBQmgBEuq3+hxX4z0YMe694YS4ClTj6e2/wmrgL8wP3Ubdev4jTMQlHvC1+GUBGBAUhRjNGCv8AkIlvNPwMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738703282; c=relaxed/simple;
-	bh=rcaNZChfd2ZD9HBStRHvsVmpa1eIpRh3TeQHU/UJrV4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gu0XmAHRlbGNfiUjFD2y8jmjtFeylxgC/8KFV3iRYummjiik0cZMM6zD5XSqWU+6AcKo7OZzkGCesUTWuVObrlt9mQRTwqQJj4FR8bOlxBcA0gvyQtzZKdmGvuzImJxnT9BsaALtgIka1v35zKajPOxdZt/eZhD6klI09Zl0zaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id C624392009C; Tue,  4 Feb 2025 22:07:56 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id C01D792009B;
-	Tue,  4 Feb 2025 21:07:56 +0000 (GMT)
-Date: Tue, 4 Feb 2025 21:07:56 +0000 (GMT)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Julian Vetter <julian@outer-limits.org>
-cc: Arnd Bergmann <arnd@arndb.de>, 
-    Richard Henderson <richard.henderson@linaro.org>, 
-    Matt Turner <mattst88@gmail.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-    Linus Walleij <linus.walleij@linaro.org>, 
-    Al Viro <viro@zeniv.linux.org.uk>, linux-alpha@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] alpha: Remove IO memcpy and memset
-In-Reply-To: <20250203141800.69126-1-julian@outer-limits.org>
-Message-ID: <alpine.DEB.2.21.2502042056540.41663@angie.orcam.me.uk>
-References: <20250203141800.69126-1-julian@outer-limits.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1738703310; c=relaxed/simple;
+	bh=gVu0/OU66wDhI5WrK8fkD90mnoCdFZJ9acV8nvKiCb4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dj6Dr+BRVaUwZTA10YJ47eG50UPMTCrotXqNKC0BllefaNDUR3qM7P3nyZCGRbJs2XIqvB4A7b6ZtlWe/rA8kZgYGjU+RIsQnh3AWf+2pD4ZMMjHnLCek+HenlWSuHqlOVEkFFUlm5dekWbmhm4vOiudqpoxjoFCjQEZ42jk6ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Dv5z6qVW; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Dv5z6qVW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1738703304;
+	bh=gVu0/OU66wDhI5WrK8fkD90mnoCdFZJ9acV8nvKiCb4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dv5z6qVWmdkOOVUdpgXz2bBitwe7aZ6Dbdw+NLqejMNeubS3o0VPxrQ8Vz+x/wLD3
+	 zCW9adnlaVmp3ar2Z17uZfGjDiZT+03rsIRvutaKn7KjiMwQTAJS8dHgrDXsIyN8WM
+	 WtfKcyPvXDWxaLXLfpyK2MV/XNzqUIAcT2626hns=
+Date: Tue, 4 Feb 2025 22:08:23 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Christian Heusel <christian@heusel.eu>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Arnd Bergmann <arnd@arndb.de>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Fabian =?utf-8?Q?Gr=C3=BCnbichler?= <f.gruenbichler@proxmox.com>, 
+	Arnout Engelen <arnout@bzzt.net>, Mattia Rizzolo <mattia@mapreri.org>, 
+	kpcyrd <kpcyrd@archlinux.org>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] module: Introduce hash-based integrity checking
+Message-ID: <1686ea9d-ad36-4a2d-9427-70cd74e64300@t-8ch.de>
+References: <20250120-module-hashes-v2-0-ba1184e27b7f@weissschuh.net>
+ <62c93d58-2e27-4304-a6ad-36aa932f18ac@heusel.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <62c93d58-2e27-4304-a6ad-36aa932f18ac@heusel.eu>
 
-On Mon, 3 Feb 2025, Julian Vetter wrote:
+On 2025-02-03 14:14:41+0100, Christian Heusel wrote:
+> Hey Thomas,
+> 
+> On 25/01/20 06:44PM, Thomas Weißschuh wrote:
+> > Thomas Weißschuh (6):
+> >       kbuild: add stamp file for vmlinux BTF data
+> >       module: Make module loading policy usable without MODULE_SIG
+> >       module: Move integrity checks into dedicated function
+> >       module: Move lockdown check into generic module loader
+> >       lockdown: Make the relationship to MODULE_SIG a dependency
+> >       module: Introduce hash-based integrity checking
+> 
+> thanks for working on this!
+> 
+> I had a look at this patch series together with kpcyrd over the weekend
+> and we were able to verify that this indeed allows one to get a
+> reproducible kernel image with the toolchain on Arch Linux (if the patch
+> you mentioned in your cover letter is also applied), which is of course
+> great news! :)
 
-> Recently a new IO memcpy and memset was added in libs/iomem_copy.c. So,
-                                                      ^
- This has to be lib/iomem_copy.c.
+Great!
+FYI the BTF patch shouldn't be necessary anymore with pahole 1.29.
 
-> remove the alpha specific implementations and use the one from the lib.
+> We also found a major issues with it, as adding it on top of the v6.13
+> kernel and setting the needed config options while removing modules
+> signatures made the kernel unable to load any module while also not
+> printing any error for the failure, therefore resulting in an early boot
+> failure on my machine.
+> 
+> Do you have any clue what could be going wrong here or what we could
+> investigate? I have pushed my build config into [this repository][0] and
+> also uploaded a prebuilt version (signed with my packager key)
+> [here][1] (you can therefore just install it via "sudo pacman -U
+> <link>").
 
- You're dropping the memory barriers, which the generic code doesn't have, 
-so should we agree to switch to the generic version it has to be confirmed 
-what the right course of action is:
+I would guess the issue is the usage of INSTALL_MOD_STRIP.
 
-1. Use wrapper calls with memory barriers.
+What are the contents of .tmp_module_hashes.c ?
+Do they match the hashes from the build directory and package?
+You can also enable CONFIG_MODULE_DEBUG and '#define DEBUG' in
+kernel/module/hashes.c
 
-2. Add memory barriers to generic code.
+> Happy to test more stuff, feel free to CC me on any further revision /
+> thread on this!
 
-3. Conclude that dropping is correct and adjust the callers where 
-   applicable.
+Will do!
 
-4. Something else maybe.
+> Cheers,
+> Christian
+> 
+> [0]: https://gitlab.archlinux.org/gromit/linux-mainline-repro-test
+> [1]: https://pkgbuild.com/~gromit/linux-bisection-kernels/linux-mainline-6.13-1.2-x86_64.pkg.tar.zst
 
-See below for the actual places.
 
-> diff --git a/arch/alpha/kernel/io.c b/arch/alpha/kernel/io.c
-> index c28035d6d1e6..0d24a6ad682c 100644
-> --- a/arch/alpha/kernel/io.c
-> +++ b/arch/alpha/kernel/io.c
-> @@ -476,177 +476,6 @@ void outsl(unsigned long port, const void *src, unsigned long count)
->  EXPORT_SYMBOL(iowrite32_rep);
->  EXPORT_SYMBOL(outsl);
->  
-> -
-> -/*
-> - * Copy data from IO memory space to "real" memory space.
-> - * This needs to be optimized.
-> - */
-> -void memcpy_fromio(void *to, const volatile void __iomem *from, long count)
-> -{
-[...]
-> -	while (count > 0) {
-> -		*(u8 *) to = __raw_readb(from);
-> -		count--;
-> -		to++;
-> -		from++;
-> -	}
-> -	mb();
-
- Here...
-
-> -void memcpy_toio(volatile void __iomem *to, const void *from, long count)
-> -{
-[...]
-> -	while (count > 0) {
-> -		__raw_writeb(*(const u8 *) from, to);
-> -		count--;
-> -		to++;
-> -		from++;
-> -	}
-> -	mb();
-
-... here...
-
-> -void _memset_c_io(volatile void __iomem *to, unsigned long c, long count)
-> -{
-[...]
-> -	/* And finally, one last byte.. */
-> -	if (count) {
-> -		__raw_writeb(c, to);
-> -	}
-> -	mb();
-
-... and here.
-
-  Maciej
