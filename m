@@ -1,98 +1,164 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3423206F02;
-	Tue,  4 Feb 2025 09:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5134207A37;
+	Tue,  4 Feb 2025 09:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661615; cv=none; b=q/O4IbnkcgBgEHNu7yrZHfA7hLIJlCUC/2gyQSkA8WY1xdIJdQYKyVn8a+yaTejXHd1+gXJwRUpScBIiePthUsPRfIU0qjB9nyfc3c1N1CBYd54dcNlaaXohRKbphcqJKm6mJW0sbaCVGUyIEjAEs+6IRf/GO41xbQaIQqv6T7o=
+	t=1738661644; cv=none; b=geKlIzDFOKi+9a+c2L0Rd7sUwQ0eK3QxeNx8ce5ZmnysANiqs1aVwQAkCQdOZ+IYEgatM+INi4WDzoGOQJflXDGb+Gy7kcSw+BVG/svw9TJg3zXh1aZbVo6ss5xl1DkAmT/Z2VcPTqyNQVjye6+xUrV0Fx1HYn2oOqIIQm3WuHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661615; c=relaxed/simple;
-	bh=kL1ZVwGgPYCVz7/hsjgoJWKryi1olR2r5z3Lp/ZDCn8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XKfsYnRadOHQF0wMZi4ybWRwJIJJET7+wSnJ2H16ylJjkoU58z9Let2/dg6Nfx8Mqt+OM2bQDRxwso0nhw/4wkaFDF0HGLYA9rlF1MyovjUfQa071e9Ik/BWpLwisv0Oj7z8L3eLdYcGyoCGxRv69oKs9RvbD3hibscNb0asjk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JksJW8Db; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1738661644; c=relaxed/simple;
+	bh=LvSf9ZnzGgZU8csMghgohPs+RUVEvG6gXl5psnx3fgg=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=VcZ9CIriSbB8NS7A7AFrUoVNLFhSoqJiEwCTLdHDWcH0yRKbNHzDZPev06RNYuoi4AOkiMEpKZrUNmJoglf8Lh8FJc4oMzk1mx14XJjWICwqJDH9Q6+s4Kw3x1+Y+tModopcBOoMyCsl6rApgbWk3bKvKWuTql8RMgqos+r5P8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RpnaCvnT; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JksJW8Db"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21628b3fe7dso97563785ad.3;
-        Tue, 04 Feb 2025 01:33:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RpnaCvnT"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5dc89df7eccso6420200a12.3;
+        Tue, 04 Feb 2025 01:34:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738661613; x=1739266413; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FDg5knq0PI6dEKzdt3HMdaKML0oINsP0xAnFJWZrPVE=;
-        b=JksJW8DbdRaDiZYKdwerhNksE5w6rCCWvLvd1+kTJg9EBtVUvRfMp1tiJkiPkug9Bt
-         JtcbE9RGOpG5Mp2BJaBO2Vxl/kYf/BRkW/s72R28LVCCwCnzrWA3AqnnrqfLRzIL4dqZ
-         hHssTD1XCEVWxF6FKyTQHM5Uf2+wcBCl+Xy4njM+/ERBywcuaXrq9VbVOtLA4cjTu3V2
-         owW6D1H0Mm/+wIdLuEFtIOv6Q6AdTu/zlPtYb1INb2XvvCaSCqgL7Tr20v1RafWrZxPi
-         5EG/Hwl6wPaNX8SE4RT94aSRdnEAfeAQ/LQ3vSHjeKXyipYZwhnlyyYMJqmUveU15QvQ
-         FSBw==
+        d=gmail.com; s=20230601; t=1738661641; x=1739266441; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6am5li9qHjYilVlqklWDH6xn57EjftSUlFntEeX3OrA=;
+        b=RpnaCvnTIl6HB6eQqaTVljZ8KpVRFSJqJ6nF0Bgu6aJnAm4OKJepHRQBRqet+utSqr
+         YF9elMvn6C1JiM1SAFvWpALRlJNgh4Ut0msu+njsU0tzyUBwEIvOf7M3Rfud9QYNvExK
+         MtFAQ8g0mpC/nLcazm2CLGGzRisQ0LMEKvn24gJAvhFfufOdRqhHSkUwkB7410Gur2fF
+         fM6UYloqeOjvXRmc8MXDC/DQmqtlZj93kJ9ywjyYC/7aKAPQmIxSsinHIq781opBI7sN
+         ksuS458/TPQ3UjjkEWhIE8Lvd7CcTHTJPt+dxepvVxTwfvAE3HuIK8A1vi9BQiJIBJd/
+         z53g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738661613; x=1739266413;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FDg5knq0PI6dEKzdt3HMdaKML0oINsP0xAnFJWZrPVE=;
-        b=k6GY6oNrw/n/ozPpfdZrAIFS1h2uVbcOjWd32RzyBR6qFxQ7toHhuKuMC4de4/hD/F
-         gaEWXrs8xaCAh3juay1wK/+Dqd+NV5UuXyIJozQlifbNsMdE5EdWqV1locLRT9kUSeDx
-         IYlQ1rbhGZsgYIQZY7ip1n0XPWl6tSBBnMTXAC1EU8MnZeqoEWbMKGgejjjmJPLOhhsR
-         MxY62eDvojivP/Q2e6F4Blf+y/gQ1v1VpUbRMowPuyNDK7j6DgdsgFY9Y8mF8RwMWT/B
-         lGRYuXrdt1ZPm8h9IBvBIl7eelTqIu+9E2PgxBbRLYVQ8+oQfXViU78K6WnmCR/iS6Qr
-         VKFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWe1dush53+bTo6MOSCsi1KbOqSFNUnVNHdM1wOoaQ2j7Cw5Q0M6Mb4UYGsFJoaU7IX/6vH5uFElBQkwU0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJXeC/05EHz6SzkCMVjecWusEFKYbJW16qXVxnI13Y5MNfmkio
-	HYNQM3/r30hAFD9TRMUqctZjV3Crtvy2N20GjxZPdDQmOQRFUrFKUTXLRNPo
-X-Gm-Gg: ASbGnctbGw0E59mfC5BN7rw0QQH/SoCy69zQHvcPHjatoAz/Mew/3tMotobuFNbU2SK
-	lani3TAOLWT6lyxuJmVBR9kmZbtgmqDFcWHDN1+tcjilhSGwZeMzQF/uHabD35cQwPU3rIK/6yY
-	CEkz4vG2E3P1uLd1QiJFpUsqcc0FKnhIqnu8TzzLvLYZpWTdSsNxP1zUhwnJwin4vGU62fwJW75
-	9MGB8iIk1QPIisUM962mJ5IGGFvwNbbvAPXucXlL1DAmzkLVBlisqqAn3hzpZrz+hitwpkubdmU
-	daEw47iFQaS+YmuWoNRpp3OzP2Pbea5uPtk=
-X-Google-Smtp-Source: AGHT+IEXtBFJu+UAlleKMByNx9uhwr/nD3xwpzuxZ/yWWovff12Wtio174nHqb0eYKgo5PNsxTOHMg==
-X-Received: by 2002:a17:903:228e:b0:216:59ed:1ab0 with SMTP id d9443c01a7336-21dd7d736d9mr346344235ad.27.1738661612933;
-        Tue, 04 Feb 2025 01:33:32 -0800 (PST)
-Received: from vaxr-BM6660-BM6360.. ([2001:288:7001:2703:dc5d:87af:eca4:905a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31ef08esm90455545ad.13.2025.02.04.01.33.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 01:33:32 -0800 (PST)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: corbet@lwn.net,
-	skhan@linuxfoundation.org
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [PATCH] mm: pgtable: Fix grammar error
-Date: Tue,  4 Feb 2025 17:33:26 +0800
-Message-ID: <20250204093326.206007-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1738661641; x=1739266441;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6am5li9qHjYilVlqklWDH6xn57EjftSUlFntEeX3OrA=;
+        b=V1bgM4sH9V08oK967ifr7nohD2EsXozszm+yut5zvGrKnt56TWuFaKOLdkSFeSgV9D
+         epem12i4WitBw9I2NOw4a0eYxIqubzGznSlqdd4F27P1stBFfh+Icto0eJb/VuKbXWxr
+         NvngIJja162XVIimnEkn8YIh6e6myREIZFqVEOk9TeMN/VxM5LCZwrtBVxAdRVbF+JAQ
+         ZFDt3SZx7ZrcOoAudow24U2/6u04LK2cfcD8Or39/30JF8KTpcRXFy7mAPlFFhFkrinq
+         diUQlPxUiOT894xGMMJt04UfBiKsxOmzrUo4bdQIXmcn29yrlWNyHCu2dapvGXrRcvj9
+         O5iA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDmp6EHsO+zdUkXvZ9kJ+ufxZ1anuBduIBOzpxfV9cZZzE89ceXQ0bXgLVyVsvsVCahq5RUi7ZOcmzWRY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0BnHMOxaDNk6eud+iYP7j2xLaWQBVAG6tdY99wX/CwXzQJtIH
+	BvxeSp+0YImOebr/JS56sJ8F8kTMzsOTb8m+DJfzqPdyQw/B+yf7
+X-Gm-Gg: ASbGnct2NJW7SfXAuLZIjfGZKxL60yKPO3EdOdG8BqIHyccyU/GY1KcRt/tulJUoTfv
+	iqmHN7N1/7zekrfRBeSr2w1iS5hbqwHu+kW8U+5xUu0KIgpx6+QoXv4y13DOSnSM9pHvdTDJFxi
+	BaDDUWVLjaaboqEUpDR4HubDDeC6YmCOMhbuLgCVlk/bn8HD4BPcB5i3vGUxQVmAbgak6tIxwvm
+	b9pO8lmbp53rJPykPMoqUlwdJCiO92B+kihxbH66MWElihouFrPxGifv77lj2U+wSWN1m6KDvSa
+	16O9cz7G2htsambfnam781Xqrpl690JwxSyzF60ognKwP6Y=
+X-Google-Smtp-Source: AGHT+IGdGm6xfeJ1W8YgLtKygV4IfY0oCXzO6NAUIGZr8awA9dow4wzhv9LO02MQHpuFQwMYtPttog==
+X-Received: by 2002:a17:907:6d18:b0:ab7:b30:42ed with SMTP id a640c23a62f3a-ab70b3042f7mr1456160466b.0.1738661640684;
+        Tue, 04 Feb 2025 01:34:00 -0800 (PST)
+Received: from [192.168.20.51] (54-240-197-238.amazon.com. [54.240.197.238])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47ceadfsm897724666b.51.2025.02.04.01.33.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 01:34:00 -0800 (PST)
+From: Paul Durrant <xadimgnik@gmail.com>
+X-Google-Original-From: Paul Durrant <paul@xen.org>
+Message-ID: <792ae6f4-903f-41b2-a0f2-369d92a1fc3f@xen.org>
+Date: Tue, 4 Feb 2025 09:33:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Reply-To: paul@xen.org
+Subject: Re: [PATCH v2 08/11] KVM: x86: Pass reference pvclock as a param to
+ kvm_setup_guest_pvclock()
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzbot+352e553a86e0d75f5120@syzkaller.appspotmail.com,
+ Paul Durrant <pdurrant@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20250201013827.680235-1-seanjc@google.com>
+ <20250201013827.680235-9-seanjc@google.com>
+Content-Language: en-US
+Organization: Xen Project
+In-Reply-To: <20250201013827.680235-9-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Fix "due high contention" to "due to high contention".
+On 01/02/2025 01:38, Sean Christopherson wrote:
+> Pass the reference pvclock structure that's used to setup each individual
+> pvclock as a parameter to kvm_setup_guest_pvclock() as a preparatory step
+> toward removing kvm_vcpu_arch.hv_clock.
+> 
+> No functional change intended.
+> 
+> Reviewed-by: Paul Durrant <paul@xen.org>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/x86.c | 14 +++++++-------
+>   1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 5f3ad13a8ac7..06d27b3cc207 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3116,17 +3116,17 @@ u64 get_kvmclock_ns(struct kvm *kvm)
+>   	return data.clock;
+>   }
+>   
+> -static void kvm_setup_guest_pvclock(struct kvm_vcpu *v,
+> +static void kvm_setup_guest_pvclock(struct pvclock_vcpu_time_info *ref_hv_clock,
+> +				    struct kvm_vcpu *vcpu,
 
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
----
- Documentation/mm/split_page_table_lock.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So, here 'v' becomes 'vcpu'
 
-diff --git a/Documentation/mm/split_page_table_lock.rst b/Documentation/mm/split_page_table_lock.rst
-index e4f6972eb..ced47a23e 100644
---- a/Documentation/mm/split_page_table_lock.rst
-+++ b/Documentation/mm/split_page_table_lock.rst
-@@ -4,7 +4,7 @@ Split page table lock
- 
- Originally, mm->page_table_lock spinlock protected all page tables of the
- mm_struct. But this approach leads to poor page fault scalability of
--multi-threaded applications due high contention on the lock. To improve
-+multi-threaded applications due to high contention on the lock. To improve
- scalability, split page table lock was introduced.
- 
- With split page table lock we have separate per-table lock to serialize
--- 
-2.43.0
+>   				    struct gfn_to_pfn_cache *gpc,
+>   				    unsigned int offset,
+>   				    bool force_tsc_unstable)
+>   {
+> -	struct kvm_vcpu_arch *vcpu = &v->arch;
+>   	struct pvclock_vcpu_time_info *guest_hv_clock;
+>   	struct pvclock_vcpu_time_info hv_clock;
+>   	unsigned long flags;
+>   
+> -	memcpy(&hv_clock, &vcpu->hv_clock, sizeof(hv_clock));
+> +	memcpy(&hv_clock, ref_hv_clock, sizeof(hv_clock));
+>   
+>   	read_lock_irqsave(&gpc->lock, flags);
+>   	while (!kvm_gpc_check(gpc, offset + sizeof(*guest_hv_clock))) {
+> @@ -3165,7 +3165,7 @@ static void kvm_setup_guest_pvclock(struct kvm_vcpu *v,
+>   	kvm_gpc_mark_dirty_in_slot(gpc);
+>   	read_unlock_irqrestore(&gpc->lock, flags);
+>   
+> -	trace_kvm_pvclock_update(v->vcpu_id, &hv_clock);
+> +	trace_kvm_pvclock_update(vcpu->vcpu_id, &hv_clock);
+>   }
+>   
+>   static int kvm_guest_time_update(struct kvm_vcpu *v)
+> @@ -3272,18 +3272,18 @@ static int kvm_guest_time_update(struct kvm_vcpu *v)
+>   			vcpu->hv_clock.flags |= PVCLOCK_GUEST_STOPPED;
+>   			vcpu->pvclock_set_guest_stopped_request = false;
+>   		}
+> -		kvm_setup_guest_pvclock(v, &vcpu->pv_time, 0, false);
+> +		kvm_setup_guest_pvclock(&vcpu->hv_clock, v, &vcpu->pv_time, 0, false);
+
+Yet here an below you still use 'v'. Does this actually compile?
+
+>   
+>   		vcpu->hv_clock.flags &= ~PVCLOCK_GUEST_STOPPED;
+>   	}
+>   
+>   #ifdef CONFIG_KVM_XEN
+>   	if (vcpu->xen.vcpu_info_cache.active)
+> -		kvm_setup_guest_pvclock(v, &vcpu->xen.vcpu_info_cache,
+> +		kvm_setup_guest_pvclock(&vcpu->hv_clock, v, &vcpu->xen.vcpu_info_cache,
+>   					offsetof(struct compat_vcpu_info, time),
+>   					xen_pvclock_tsc_unstable);
+>   	if (vcpu->xen.vcpu_time_info_cache.active)
+> -		kvm_setup_guest_pvclock(v, &vcpu->xen.vcpu_time_info_cache, 0,
+> +		kvm_setup_guest_pvclock(&vcpu->hv_clock, v, &vcpu->xen.vcpu_time_info_cache, 0,
+>   					xen_pvclock_tsc_unstable);
+>   #endif
+>   	kvm_hv_setup_tsc_page(v->kvm, &vcpu->hv_clock);
 
