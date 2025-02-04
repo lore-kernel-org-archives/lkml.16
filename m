@@ -1,55 +1,55 @@
-Received: from mail-vs1-f73.google.com (mail-vs1-f73.google.com [209.85.217.73])
+Received: from mail-vk1-f202.google.com (mail-vk1-f202.google.com [209.85.221.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0649F5684
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 00:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55C770825
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 00:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738629659; cv=none; b=YMWKEby8DTSnHtxEziT20ArOMuxwjrwr78igBtJtvCJihwCmi7vnLJ4QobwhVbTD8wOheFAYhGkzuB3tCc5Wwy8wfD/EkCWYSY05epHckAyqH3CQKSSICwIhZNnfP3SZuxytB+/v6v+0csFdIndR57sQmroOLxQQoQA5Ez2p5GA=
+	t=1738629660; cv=none; b=T91HCgNMDaaKmn8VRkC0/GDNR0kBST62RvHW9ti0Hpjfc6phfDTGaRMD7VU9QuqgMaYVLc4WbsEhujdDdPpSYmPt4HKwuPlJcyuHpsYaN3Cu5VisYZ05GypJOseAa904S4JERWV2EN6QOTKEQ4G9TpL7Knc2TmsZPXmVkZ1ACyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738629659; c=relaxed/simple;
-	bh=BgGA7ROTPL0sIEgMvRuiQa9cabWE/8+IjXJZdJHbfGw=;
+	s=arc-20240116; t=1738629660; c=relaxed/simple;
+	bh=d6Z0Qr4CTc08P9WkJMHZwVj8gKSLjMo2tlv6iVU7it0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ttMsLqijHsuK9d25BEXTX80Gm6Q3yTzxNNY3JGJI88uWjOJx+dzqUP8p1Rz3F06txBsWhNVQzc3voIsrKTGI0jVLzBAGlQYEI2k8pkZo4p5nm1NQGqQpTeaW6oJ32ViVSN+U8oE0ZO4lKgFNdFGSfS2y4YBJdTCal/mAzCJs2YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mwNdEXKj; arc=none smtp.client-ip=209.85.217.73
+	 To:Cc:Content-Type; b=r9LW8P8ZSMauVcI98OsY5jMwxDyU8f/o4jNQw+qQr2jDKA2YLDntEGxck/VvTHZpNNw2v3ZWuXbgu3jcBzmYDVd96AKIoJ5y5+Nt39XoPgsEl+fwUGTwQ/7cXSoJkyxuSLWQbbTB6nbbjzi6vJi7DMBBge65qhcC1mVdg/oM8Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DTg5c4IK; arc=none smtp.client-ip=209.85.221.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mwNdEXKj"
-Received: by mail-vs1-f73.google.com with SMTP id ada2fe7eead31-4aff4bc545dso469046137.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 16:40:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DTg5c4IK"
+Received: by mail-vk1-f202.google.com with SMTP id 71dfb90a1353d-51604d32337so1006754e0c.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 16:40:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20230601; t=1738629657; x=1739234457; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p6K1OVMuQTd658Umax8NEjVCXyrHg3jp4bgkmGXf6oM=;
-        b=mwNdEXKjyUKZPytD7GrhMD/ZXFhxYtlElMZJRr1CsvM43MP6T4omE+tuyu4DW662Rw
-         WYJDUqZsl3Z76oGOBibpa56oOejJbnTxJDR8D6Cq72MIKg2zHLL0lLT03+9cKlvnYlKO
-         0d36kDpThzUoxYvuwdWh9nHKKYfPjjGDahJoDF8cIeoyl8cJ16Yhdqj19CryqK+n28p9
-         CxMRWBnwvZYESjSZtka/8Okt5lbERVbCEnMGc3TBFRzaCYpKvAhv3t0m5C3Ul5/J7IE9
-         NN3exiCWTBEtgg7IvaxBrTSTcxJiY9k8bF+CDDDk6KfJyZFyuMrcxOtk98WHDLSUgAQc
-         FaGw==
+        bh=Z8EVTlPHi7Mb2Te93qLO1p412b+GgWZ4HCCPa7QLCB4=;
+        b=DTg5c4IK4uqeuKtprc8dCv/TZ7A4uurNkQMARBgJxO+sjnAeHiw8rFBELPn6xJP5uC
+         xgJfetwG8KkHjqgLqiwIKmMJria6QEul1ClGwcQ3fPKRFbqo8xIfN8WUK5NkGLGBpmXd
+         9IVxv/pkg0IeWlG9S5kp04FDegDFP4FlD9eebRcu7p+uSU8x6THomfAV9aVzDT08bWJ1
+         6xsOo0TDwPuqVx3NRUNjKXgR8ObT1AGkb9Wdp7Xxp7U1JMJVZQW5Pq/qiWCxB/m53djr
+         2TFRspj9z/Pw23JuoJZDv3s5Oav9LvjH46cxLrHPJut+nKDZ0qSt48U5VyTbres1KwFE
+         3CtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1738629657; x=1739234457;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p6K1OVMuQTd658Umax8NEjVCXyrHg3jp4bgkmGXf6oM=;
-        b=K1HTpdKRvfDTWgctft5IXvd3FEB45XsDxfat9H5q1NqCHxCKazWgzMaoNGdkv7jAi+
-         M89VhZzRbROEKT8XIG/c2wO36bXFqLw9OE+KOYR5gh8iORdgCGyhX+e7gv64DWw+RJyo
-         GOr5SflhS2gvHjj5KrUQC1Ej0kZBW48d5sedYQtjnMLtAeWqtmLA+lFRQ4al/O8AR0pU
-         5i9ivpHJKkgdVyJINjYkaMpyJ4tvbxXYBgUIgms97+kUgHFrUdFSCgzoOTkfGdUmcVCr
-         IQha9wrjdxjBe+9DrG35szXhIgv8NQ6bB3YCSzrgE5SBrBotZHLI6XQN9szw9NO3r3QC
-         JWPw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2xhoyySizr0I2f6H5QtOH2u8dGDgJNdRqdxCn2yDDFvVhO8c5NC2yDn+RY06r2Ng7G9iFr+CdjAd+Zo4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEdteX9b6npWfGfGu8xeLq4oda52kLJsLP4Ua8dZ5SN2ftHxwP
-	8OBJiy6ncSnUW9MPPvCfAoJmvXSEUOmNwKoMQWxk4Hhol3sAIW7kvxmoqSzg3OlI7i2d35MRbLS
-	SSW2+WV24fJuaqVviCQ==
-X-Google-Smtp-Source: AGHT+IG7mZazUgI6zXPd8PxKR1PwQ9GiCLBimHc3vVCrmcoMwEafOmvY7s+h7RDaMlvDg6+p4+ggaHz+iPCzJVV7
-X-Received: from vsqd6.prod.google.com ([2002:a05:6102:406:b0:4ba:d75:c698])
+        bh=Z8EVTlPHi7Mb2Te93qLO1p412b+GgWZ4HCCPa7QLCB4=;
+        b=uhoHTu1YviyZ/+pvNZCfgSRAqCvWvK1WEYRlTzdTHTBrc92IUNES86XVK+6Lg4b9pA
+         rxhkBOMx56jL9FcT2JSkm6lf5mX4DeQqYCIm20DUBVx367CNFDik78S4c9Gkfr3yBXod
+         NMTXnbnvHMsqX+BzeMGYVe2Pa+z0oVn0Ckn7CXbRfr8RK86wBLHSCTA31nsBoe0Mh3J3
+         yHATKlE2TpWSo5G1ski+Wd52w7K1U+svU6gmuECe2h9vTUpK+Q6P4ULlzSB0YocHFW9R
+         6mJH+93fcg8WElLQeQosPRilCkeFVxCvRvUv2V/EQNzpmg6akVZ835ycRs620exzoFTI
+         Hm1g==
+X-Forwarded-Encrypted: i=1; AJvYcCU/8EDSHE56AxWnqRuc9BK0iAkwEv4J3LPTOcOAo9hyxmpFxo1ddbsCg/mzvRF050QPx9lZdViBC4bXDVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ/BrMQMVcnxeKU+Pb8PoVAK3P9/rLZyiytsmdyO1WAfwTZlaO
+	WKRMmcs3dJxnsQzqCmDobCjp6V5gHKUH1nz5ue31mGplFqdLcAxEVQPH550z4GLqO1g+wg+GnFm
+	3/YA47Ud2xbPhJc/HbQ==
+X-Google-Smtp-Source: AGHT+IGHq940BRezUkVwlNOCiT1XgwqRxT3qyHCt+hNVEw0Fg5bWPvg40CR+xh2gIgoPsc7fxthizhVN+hgnsK9w
+X-Received: from vsbid8.prod.google.com ([2002:a05:6102:4bc8:b0:4af:ed99:8589])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6102:504b:b0:4b1:1b33:eb0f with SMTP id ada2fe7eead31-4b9a526c5f9mr19288103137.24.1738629656799;
- Mon, 03 Feb 2025 16:40:56 -0800 (PST)
-Date: Tue,  4 Feb 2025 00:40:29 +0000
+ 2002:a05:6102:c0f:b0:4af:c519:4e86 with SMTP id ada2fe7eead31-4b9a4ec4902mr18110648137.1.1738629657558;
+ Mon, 03 Feb 2025 16:40:57 -0800 (PST)
+Date: Tue,  4 Feb 2025 00:40:30 +0000
 In-Reply-To: <20250204004038.1680123-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250204004038.1680123-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250204004038.1680123-3-jthoughton@google.com>
-Subject: [PATCH v9 02/11] KVM: Add lockless memslot walk to KVM
+Message-ID: <20250204004038.1680123-4-jthoughton@google.com>
+Subject: [PATCH v9 03/11] KVM: x86/mmu: Factor out spte atomic bit clearing routine
 From: James Houghton <jthoughton@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
@@ -70,111 +70,48 @@ Cc: David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-It is possible to correctly do aging without taking the KVM MMU lock;
-this option allows such architectures to do so. Architectures that
-select CONFIG_KVM_MMU_NOTIFIER_AGING_LOCKLESS are responsible for
-correctness.
+This new function, tdp_mmu_clear_spte_bits_atomic(), will be used in a
+follow-up patch to enable lockless Accessed bit clearing.
 
-Suggested-by: Yu Zhao <yuzhao@google.com>
 Signed-off-by: James Houghton <jthoughton@google.com>
-Reviewed-by: David Matlack <dmatlack@google.com>
+Acked-by: Yu Zhao <yuzhao@google.com>
 ---
- include/linux/kvm_host.h |  1 +
- virt/kvm/Kconfig         |  2 ++
- virt/kvm/kvm_main.c      | 24 +++++++++++++++++-------
- 3 files changed, 20 insertions(+), 7 deletions(-)
+ arch/x86/kvm/mmu/tdp_iter.h | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index f34f4cfaa513..c28a6aa1f2ed 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -267,6 +267,7 @@ struct kvm_gfn_range {
- 	union kvm_mmu_notifier_arg arg;
- 	enum kvm_gfn_range_filter attr_filter;
- 	bool may_block;
-+	bool lockless;
- };
- bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range);
- bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
-diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-index 54e959e7d68f..9356f4e4e255 100644
---- a/virt/kvm/Kconfig
-+++ b/virt/kvm/Kconfig
-@@ -102,6 +102,8 @@ config KVM_GENERIC_MMU_NOTIFIER
+diff --git a/arch/x86/kvm/mmu/tdp_iter.h b/arch/x86/kvm/mmu/tdp_iter.h
+index 047b78333653..9135b035fa40 100644
+--- a/arch/x86/kvm/mmu/tdp_iter.h
++++ b/arch/x86/kvm/mmu/tdp_iter.h
+@@ -25,6 +25,13 @@ static inline u64 kvm_tdp_mmu_write_spte_atomic(tdp_ptep_t sptep, u64 new_spte)
+ 	return xchg(rcu_dereference(sptep), new_spte);
+ }
  
- config KVM_ELIDE_TLB_FLUSH_IF_YOUNG
-        depends on KVM_GENERIC_MMU_NOTIFIER
++static inline u64 tdp_mmu_clear_spte_bits_atomic(tdp_ptep_t sptep, u64 mask)
++{
++	atomic64_t *sptep_atomic = (atomic64_t *)rcu_dereference(sptep);
 +
-+config KVM_MMU_NOTIFIER_AGING_LOCKLESS
-        bool
- 
- config KVM_GENERIC_MEMORY_ATTRIBUTES
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 1bd49770506a..4734ae9e8a54 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -517,6 +517,7 @@ struct kvm_mmu_notifier_range {
- 	on_lock_fn_t on_lock;
- 	bool flush_on_ret;
- 	bool may_block;
-+	bool lockless;
- };
- 
- /*
-@@ -571,6 +572,10 @@ static __always_inline kvm_mn_ret_t kvm_handle_hva_range(struct kvm *kvm,
- 			 IS_KVM_NULL_FN(range->handler)))
- 		return r;
- 
-+	/* on_lock will never be called for lockless walks */
-+	if (WARN_ON_ONCE(range->lockless && !IS_KVM_NULL_FN(range->on_lock)))
-+		return r;
++	return (u64)atomic64_fetch_and(~mask, sptep_atomic);
++}
 +
- 	idx = srcu_read_lock(&kvm->srcu);
- 
- 	for (i = 0; i < kvm_arch_nr_memslot_as_ids(kvm); i++) {
-@@ -607,15 +612,18 @@ static __always_inline kvm_mn_ret_t kvm_handle_hva_range(struct kvm *kvm,
- 			gfn_range.start = hva_to_gfn_memslot(hva_start, slot);
- 			gfn_range.end = hva_to_gfn_memslot(hva_end + PAGE_SIZE - 1, slot);
- 			gfn_range.slot = slot;
-+			gfn_range.lockless = range->lockless;
- 
- 			if (!r.found_memslot) {
- 				r.found_memslot = true;
--				KVM_MMU_LOCK(kvm);
--				if (!IS_KVM_NULL_FN(range->on_lock))
--					range->on_lock(kvm);
+ static inline void __kvm_tdp_mmu_write_spte(tdp_ptep_t sptep, u64 new_spte)
+ {
+ 	KVM_MMU_WARN_ON(is_ept_ve_possible(new_spte));
+@@ -63,12 +70,8 @@ static inline u64 kvm_tdp_mmu_write_spte(tdp_ptep_t sptep, u64 old_spte,
+ static inline u64 tdp_mmu_clear_spte_bits(tdp_ptep_t sptep, u64 old_spte,
+ 					  u64 mask, int level)
+ {
+-	atomic64_t *sptep_atomic;
 -
--				if (IS_KVM_NULL_FN(range->handler))
--					goto mmu_unlock;
-+				if (!range->lockless) {
-+					KVM_MMU_LOCK(kvm);
-+					if (!IS_KVM_NULL_FN(range->on_lock))
-+						range->on_lock(kvm);
-+
-+					if (IS_KVM_NULL_FN(range->handler))
-+						goto mmu_unlock;
-+				}
- 			}
- 			r.ret |= range->handler(kvm, &gfn_range);
- 		}
-@@ -625,7 +633,7 @@ static __always_inline kvm_mn_ret_t kvm_handle_hva_range(struct kvm *kvm,
- 		kvm_flush_remote_tlbs(kvm);
+-	if (kvm_tdp_mmu_spte_need_atomic_write(old_spte, level)) {
+-		sptep_atomic = (atomic64_t *)rcu_dereference(sptep);
+-		return (u64)atomic64_fetch_and(~mask, sptep_atomic);
+-	}
++	if (kvm_tdp_mmu_spte_need_atomic_write(old_spte, level))
++		return tdp_mmu_clear_spte_bits_atomic(sptep, mask);
  
- mmu_unlock:
--	if (r.found_memslot)
-+	if (r.found_memslot && !range->lockless)
- 		KVM_MMU_UNLOCK(kvm);
- 
- 	srcu_read_unlock(&kvm->srcu, idx);
-@@ -647,6 +655,8 @@ static __always_inline int kvm_age_hva_range(struct mmu_notifier *mn,
- 		.on_lock	= (void *)kvm_null_fn,
- 		.flush_on_ret	= flush_on_ret,
- 		.may_block	= false,
-+		.lockless	=
-+			IS_ENABLED(CONFIG_KVM_MMU_NOTIFIER_AGING_LOCKLESS),
- 	};
- 
- 	return kvm_handle_hva_range(kvm, &range).ret;
+ 	__kvm_tdp_mmu_write_spte(sptep, old_spte & ~mask);
+ 	return old_spte;
 -- 
 2.48.1.362.g079036d154-goog
 
