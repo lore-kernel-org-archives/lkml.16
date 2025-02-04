@@ -1,228 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B5D25A642;
-	Tue,  4 Feb 2025 03:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DBB25A642;
+	Tue,  4 Feb 2025 03:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738639015; cv=none; b=jvLuz/YvNgMU67qA67MOgrOP9LRkHZGBPYW/KH0uTPwIuGo19ZAb54uQfK8RuQkm2RmAIkgQRRpKe+j2NmHWOV9YOwsr3AEztpHdn15aBng9IV0LwijQZEnl/K/BlnPZ4/Eop8FKTW06ilGop2UZNerMCX8XQmCLwejp6SEenYc=
+	t=1738639077; cv=none; b=stFQU1oB4sOo3impbBsO6BVdqmtEHIIW7iLbvMWJxvRYiM1MiVr96hB8JPRHluDJgr/QnoanMo/Xfc1U947b6SIUzaxrGtXFp1I/giD0aeFvonWHAnQ2SGvbXxOBEj9guj1n2G+SQ9mN3HXD4MtDK+HnQdhk4C+0XnliJxjOrI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738639015; c=relaxed/simple;
-	bh=8yZPNqS5d98IriYN09CKCfWNzhvpa+wDnKjXpV8RWdE=;
+	s=arc-20240116; t=1738639077; c=relaxed/simple;
+	bh=oQmqnX1vMsdL26/Sj0ggkmLweLyaggnCmK+4HX6xhS4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jaHE61wvykN3yTE6diNEl0qTVtsDsxL26TK/gZJuNEcplE7JeS6KlHbQa40kt8SVUhzmZJdoxrJzc6aAp8VoWN3GPhqRdEzEZuwAdTWmH1znFtR3ZhTMo2WtOuTzKF31KsY/Fh0kN3Pv7KMyw3Rydo+eRXPdOg4LRE8cGsIznzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRNr4Vbj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XGESfctzZCd3LZTZwf6R44SA0bFZkE/WILG7fL8c41ydrlm3ZPKkxOxDXH1ayTzd7hHuvnVTLh9ysZKlhuLbSNU+FLVVRvXcWp9hPd2eIBPx5JFEBU6w5zzurZJHwRNBy9phnefIZ50eKeMx3ZvjN9TRW5jNm7xw6A9G0FmIV7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g10+NeRY; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRNr4Vbj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9938AC4CEE0;
-	Tue,  4 Feb 2025 03:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738639015;
-	bh=8yZPNqS5d98IriYN09CKCfWNzhvpa+wDnKjXpV8RWdE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eRNr4VbjKnQo/twao6kw7WtVfBagU96Y4/MWczcP8o+G81plu2dmWczzxb2zg4PAA
-	 TwknuZlIC1ZZe74usS1lWAR6elOhKRowffNgEm2CbUZFf2m5CTE5GJlcihxJlfieoH
-	 Onlt3ZTOCbDxVqrwj+EdCB5JjzEjtaHMcqM3ohiMzeacWQcDaEMr0h8f5OXtLi9OcK
-	 wCc58kWaj2fMRHMrzHANcE4AgZThePJA90YUNTTZef41SgFc8uqnsh9JLEUGg9uHMv
-	 LMUTcQ8j/PvUQ1aJQF7NsJ2WzgUsDG3iaedihyn530VhVD/araXI2MqPSWZkTHSstr
-	 ZWUHsX+VPT5FA==
-Date: Mon, 3 Feb 2025 19:16:53 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] perf trace: Add more tests for BTF-augmented perf
- trace
-Message-ID: <Z6GGpcTMvw5z6A5V@google.com>
-References: <20241215190712.787847-1-howardchu95@gmail.com>
- <Z2CGdi5xpJy6C6sv@google.com>
- <Z2mzzytPOpjF0Hxe@x1>
- <Z2m8qzyLdm1BEYuF@x1>
- <CAH0uvoga29=0iF69A5uHN+nbB458LeW+WDWHNnoQV4msVm9zDQ@mail.gmail.com>
- <Z4U343yQUDF3H7qs@x1>
- <Z4vyvNChyXZx33xf@google.com>
- <CAH0uvoiRTnT-=EeK1z6BajB9RE5F=f2S4e5a5ygo8kebyKyCqw@mail.gmail.com>
- <Z5LWkMPTu6mUtdJ-@google.com>
- <CAH0uvoit+6nhADW_d61VcaSE17Wp5DH7BtUVjQdT=kU9rMqaaA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g10+NeRY"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21631789fcdso80217555ad.1;
+        Mon, 03 Feb 2025 19:17:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738639075; x=1739243875; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=m9iUMCX2C7oQF8m71KELy1Ls84UETZKEN4RnBwVVdcM=;
+        b=g10+NeRYYXw5PfI42MdgLm51QEv39SyPbr9Y71LALaFx8WlRCpvxiONIGNwBfiV+X0
+         MC08QUF43MAzF2cEryz01AtVCkEf1pR11QwKscPg96bI5K0d3fniAkdbZGfMYj3xeqBs
+         V1FZT694UJ3Gh9ULkAcKFNIIX0vI7jFpa2kJm8xNEiLgEGvCz3ixcAW7Czy4B5Di6otx
+         sjQ7/agbgWKojoyQset/uV4pGPu88TNpgkh2ASCgpZJnTyKxN7e8/SH4fL7IbWvpaLG7
+         PeP2BdCmxdJJ3NxGrj3sLJUlQJYoFOTYuBXba7T7BEsOZWG9JSwjMWbxsG0N8ayby0R1
+         Qvwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738639075; x=1739243875;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m9iUMCX2C7oQF8m71KELy1Ls84UETZKEN4RnBwVVdcM=;
+        b=Gy8HVdZqnJ46hTeMPo+nCFunodJ232f2sJpMMxgtrxKzGHx6HL07g31OrPG8zrCoxc
+         tjDZEvKypOKWtxQM0drte0hA4DYvTVSSbFw3Lj7p2zQMG0eBfnYZAicoM8BbTKPqZscw
+         mTBB2C4TKYKFedoH6v7XYnRHe9Sb9E0PweQohABAh0++DIghch4jdC3nr/igd3i4Fn8b
+         R7h4vcmhQEam6/h1o+cCzm1js95CdY0TPE1F5ppSDX+S8QeE39e5qfm/g4IXhPRMj+59
+         ugjzzcqB/y5LxPrvtF9juwRaH34FoCPFNtVKXuDK74thO1mRdeyIVY9CbT8kimYncitk
+         Ml/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXpvfJv9XrASTFBPJgla7mkjaK4nkvqwBPXcBx5MGOThs0s+u+sVpT316BDXfPACDbvrr9dUdupXH5pxNY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwChu7ar7u99u9dIk3oxehLJbeo33RlUxFeoLw35iFBitrpuJC
+	5yAs2f/Jox6ZBoQcsLS15s6whnlto2vbxR6Fg/0A8CX4TY9EAirD
+X-Gm-Gg: ASbGncvR0kuxLaVCH4j8JEvtfvtQ4C8VVlGmg56xH6GWOZYXGFNlF+zd8WRP3+eKfSl
+	YGbD9vgjlU6eoUAoASYufHg+nicDoPDaj2zdCWarzLi2YiribDFQf+Q/3eD2mkF0oa8UxdEWgZ/
+	emkg2SEI6DlJYFpch0Wi5fdfbkx4KFX6aqEZLpbIqZ8pHM+WKTy63Ah1yxQ5s8fFoYt9yqTUh9U
+	yz78+rYZRAQx5pDlSFzLVBnaDwk/jYdYUWhDkx8Ckze4BrfoBGW7mJn4FO3wdITMbuD1xgy6eTb
+	SxYAu9BqCnL/U/Q=
+X-Google-Smtp-Source: AGHT+IEOQ4l1+0gNWPgwePYCg04LFtGZeL/PCR/SxdNj30enmmO/H+Xf2sufgBGuvAjA3jk7PgArfA==
+X-Received: by 2002:a17:903:11cd:b0:216:84f0:e33c with SMTP id d9443c01a7336-21f01d137edmr19952205ad.20.1738639073666;
+        Mon, 03 Feb 2025 19:17:53 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f0225f31csm3776365ad.39.2025.02.03.19.17.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 19:17:52 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 823F84209E79; Tue, 04 Feb 2025 10:17:50 +0700 (WIB)
+Date: Tue, 4 Feb 2025 10:17:50 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: rsworktech@outlook.com, Andrii Nakryiko <andrii@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next] bpf: Add comment about helper freeze
+Message-ID: <Z6GG3t4N_Heg4tPU@archie.me>
+References: <20250204-bpf-helper-freeze-v1-1-46efd9ff20dc@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZWP0/47uozAhcX1F"
+Content-Disposition: inline
+In-Reply-To: <20250204-bpf-helper-freeze-v1-1-46efd9ff20dc@outlook.com>
+
+
+--ZWP0/47uozAhcX1F
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH0uvoit+6nhADW_d61VcaSE17Wp5DH7BtUVjQdT=kU9rMqaaA@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 31, 2025 at 04:14:09PM -0800, Howard Chu wrote:
-> Hello Namhyung,
-> 
-> Sorry for somehow missing this reply...
-> 
-> On Thu, Jan 23, 2025 at 3:53 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Tue, Jan 21, 2025 at 04:19:35PM -0800, Howard Chu wrote:
-> > > Hello Namhyung,
-> > >
-> > > On Sat, Jan 18, 2025 at 10:28 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > On Mon, Jan 13, 2025 at 12:57:23PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > On Fri, Jan 10, 2025 at 04:52:08PM -0800, Howard Chu wrote:
-> > > > > > Hello Arnaldo,
-> > > > > >
-> > > > > > On Mon, Dec 23, 2024 at 11:40 AM Arnaldo Carvalho de Melo
-> > > > > > <acme@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Mon, Dec 23, 2024 at 04:02:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > > > > On Mon, Dec 16, 2024 at 11:58:46AM -0800, Namhyung Kim wrote:
-> > > > > > > > > On Sun, Dec 15, 2024 at 11:07:09AM -0800, Howard Chu wrote:
-> > > > > > > > > > Changes in v4:
-> > > > > > > > > >  - Use if -f to check the existence of vmlinux BTF, and exit if it
-> > > > > > > > > >    doesn't, so trace_test_string will not overwrite $err, and keep
-> > > > > > > > > >    running the test.
-> > > > > > > > > >
-> > > > > > > > > > Changes in v3:
-> > > > > > > > > >  - Add vmlinux BTF check, and skip the tests if it doesn't exist
-> > > > > > > > > >
-> > > > > > > > > > v1, v2:
-> > > > > > > > > >
-> > > > > > > > > > The previous version of the perf trace BTF general augmentation tests
-> > > > > > > > > > didn't pass Shellcheck (thanks to Arnaldo Carvalho de Melo
-> > > > > > > > > > <acme@kernel.org> for pointing this out), this version uses bash instead
-> > > > > > > > > > of POSIX shell to pass Shellcheck.
-> > > > > > > > > >
-> > > > > > > > > > This patch series also adds documentation for the new option
-> > > > > > > > > > --force-btf, which is used in the tests.
-> > > > > > > > > >
-> > > > > > > > > > Link: https://lore.kernel.org/linux-perf-users/Zt9yiQq-n-W6I274@x1/
-> > > > > > > > > >
-> > > > > > > > > > Howard Chu (2):
-> > > > > > > > > >   perf trace: Add tests for BTF general augmentation
-> > > > > > > > > >   perf docs: Add documentation for --force-btf option
-> > > > > > > > >
-> > > > > > > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > > > > > > >
-> > > > > > > > Thanks, applied to perf-tools-next,
-> > > > > > >
-> > > > > > > It fails when running in parallel mode, sometimes:
-> > > > > > >
-> > > > > > > 109: perf trace BTF general tests                                    : FAILED!
-> > > > > > >
-> > > > > > > Then:
-> > > > > > >
-> > > > > > > root@number:~# perf stat --null -r 10 perf test "BTF general"
-> > > > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > > > 109: perf trace BTF general tests                                    : FAILED!
-> > > > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > > > 109: perf trace BTF general tests                                    : FAILED!
-> > > > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > > > 109: perf trace BTF general tests                                    : Ok
-> > > > > > >
-> > > > > > >  Performance counter stats for 'perf test BTF general' (10 runs):
-> > > > > > >
-> > > > > > >              2.148 +- 0.293 seconds time elapsed  ( +- 13.63% )
-> > > > > > >
-> > > > > > > root@number:~#
-> > > > > > >
-> > > > > > >
-> > > > > > > So its not just when running in paralell, anyway, its merged, we can go
-> > > > > > > on from what we got there.
-> > > > > >
-> > > > > > It never fails on my machine, I think the reason is my machine is not
-> > > > > > fully-loaded. Can you please run
-> > > > > > ```
-> > > > > > perf stat --null -r 10 perf test -vv "BTF general"
-> > > > > > ```
-> > > > > > And provide the output?
-> > > > >
-> > > > > root@number:~# grep -m1 'model name' /proc/cpuinfo
-> > > > > model name    : Intel(R) Core(TM) i7-14700K
-> > > > > root@number:~#
-> > > > >
-> > > > > root@number:~# perf stat --null -r 10 perf test -vv "BTF general"
-> > > > > 106: perf trace BTF general tests:
-> > > > > --- start ---
-> > > > > test child forked, pid 47824
-> > > > > Checking if vmlinux BTF exists
-> > > > > Testing perf trace's string augmentation
-> > > > > String augmentation test failed
-> > > > > ---- end(-1) ----
-> > > > > 106: perf trace BTF general tests                                    : FAILED!
-> > > > > 106: perf trace BTF general tests:
-> > > > > --- start ---
-> > > > > test child forked, pid 47842
-> > > > > Checking if vmlinux BTF exists
-> > > > > Testing perf trace's string augmentation
-> > > > > String augmentation test failed
-> > > > > ---- end(-1) ----
-> > > > > 106: perf trace BTF general tests                                    : FAILED!
-> > > > > ...
-> > > >
-> > > > I also see the failure on not fully-loaded machines (both Intel and
-> > > > AMD).
-> > > >
-> > > >   $ sudo ./perf test -v BTF
-> > > >   --- start ---
-> > > >   test child forked, pid 525025
-> > > >   Checking if vmlinux BTF exists
-> > > >   Testing perf trace's string augmentation
-> > > >   String augmentation test failed
-> > > >   ---- end(-1) ----
-> > > >   106: perf trace BTF general tests                                    : FAILED!
-> > > >
-> > > > Thanks,
-> > > > Namhyung
-> > > >
-> > >
-> > > Just wondering, did you and Arnaldo apply this patch:
-> > > https://lore.kernel.org/linux-perf-users/20241213023047.541218-1-howardchu95@gmail.com/
-> >
-> > I don't think we applied it, will add to perf-tools.
-> >
-> > >
-> > > This seems to solve the problem for me...
-> >
-> > But I'm not sure if it fixes the problem.  IIUC the patch fixes the
-> > loading problem.
-> 
-> Yes. However, if the machine is unable to load the BPF program, the
-> error message will be:
-> 
-> perf $ sudo ./perf test general -v
-> --- start ---
-> test child forked, pid 173990
-> Checking if vmlinux BTF exists
-> Testing perf trace's string augmentation
-> String augmentation test failed
-> ---- end(-1) ----
-> 106: perf trace BTF general tests                                    : FAILED!
-> 
-> Which is indistinguishable from an actual string augmentation error
-> that has a string mismatch...
+On Tue, Feb 04, 2025 at 10:00:21AM +0800, Levi Zim via B4 Relay wrote:
+> -	/* */
+> +	/* This helper list is effectively frozen. If you are trying to	\
+> +	 * add a new helper, you should add a kfunc instead which has	\
+> +	 * less stability guarantees. See Documentation/bpf/kfuncs.rst	\
+> +	 */
+> =20
 
-Ok, that's not good.
+The wording looks good, thanks!
 
-> 
-> > And for some reason, I don't see the problem any more.
-> > But I remember this sometimes happened in the past.
-> 
-> Do you mean that perf trace breaks occasionally? This sounds urgent.
-> Could you please provide me with your kernel version and Clang
-> version? Thank you very much! :)
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-Yep, sometimes it works and sometimes it failed to load the BPF.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-The kernel version of this laptop is v6.10.11 and clang version is
-16.0.6.
+--ZWP0/47uozAhcX1F
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Namhyung
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ6GG2gAKCRD2uYlJVVFO
+o272AQDceVI1bUC3ePm58LCNWojwYH+3nVgfsw9jZUvAf4pNjAEA8ceMxwepSdkx
+hcsy8qRtOV0Ao9YSYPPhlWPqsXVHNwQ=
+=qdKn
+-----END PGP SIGNATURE-----
+
+--ZWP0/47uozAhcX1F--
