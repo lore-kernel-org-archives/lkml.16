@@ -1,141 +1,115 @@
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609C020371A;
-	Tue,  4 Feb 2025 09:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CDC20371A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660191; cv=none; b=cqDh90sLKcFBbzq5MJFT0Uh8bNZiwoWexrAFQyLHWmIKaJu3lvovhDk/vxp13bu8mCsCiWJzXxiOiPLKs97anDq9MK0vHl7DpHO/D9EHJdP5xBo/Kom/3RcDTFJB9kr004fiQe6K7Taamn7gc3i8VxwRDVx/Pmm9V4zExZxEYqA=
+	t=1738660359; cv=none; b=Pkh42ItnWjmdGhF6xAdTZLqgcco9amFaShaaToxW/FaHMZH+iirLfjki71W2f8aQZBe/1tzh3m4uisiYwiUtWyWRcKcWJyKqhF+nsGgbUBiJkTOGs8K9n0qTHY9O3p2g6+71f7uAzkMj8Tzt4ZH4bY7x5TnCAtqfvHYO2QA//xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660191; c=relaxed/simple;
-	bh=ldm5rA90FbHZ9erUip5pRsh/zyKUrvNrnX2gFJ3ZMkw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y3lHMGBlb144YgqCnoRRDGtpoKx/GYQnbj9kB3aGeWFGVTnxv5/Iyun+h6UOoRsfj9m3vcf7IqOHLhq+DFQ1bPAxvYE+1GWQMyN61edZkaV42zBNyblNYBj4Meb4vfRTM2r8NdMEeNMSKuXqWb4vvwLkL9t9Y8rxFkQRGBTbrrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=v04ZZrjn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iL6UT1eR; arc=none smtp.client-ip=202.12.124.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+	s=arc-20240116; t=1738660359; c=relaxed/simple;
+	bh=lOmPfU/eGVZYXYoZjIKS38Xdl1n45B66FHiHc6aVvxk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CXqUZgNvoFIK+IjpCJIt3rJSuWfEPttno+0U7VvH/IHYgRUM0nEwH7wCfJAc7N6/tMpsdnaFoh8vw/Csrl+OUHjP+Ry5YXoF2FWzCtaLxhZnYR/P8WHtCp1JCQ/75Mj5UFoR+NhiY/BdROXEfCbHfuHZeV3DabAc+IsPk0LvwtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FzzwQ68n; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="v04ZZrjn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iL6UT1eR"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 0DBF925401CB;
-	Tue,  4 Feb 2025 04:09:48 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Tue, 04 Feb 2025 04:09:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1738660187; x=1738746587; bh=XZj/3L15Zh
-	JDphoA3SD15pg6OoRb/NWpiUa3moUl3Kk=; b=v04ZZrjn6Rsnl3ivfR0PYx5B+C
-	gpbvoThDhWkSv7mWI4Qe3TUN8ssc28EyYdL+ifX4MZSD5Gs0peKpK3yQdKuGROEb
-	0Bi5Ig6rNGdSQlnlgcYntc5QiI8ytm/6r93T0CN5E217Jl48lFhJVyp6LcghNo3b
-	giSZAqPHCKLc7fkGUntA2oUtVs2FHS2B6QdOyVFKEozlktzB6tDGHnjjdok92JCv
-	AxOnKivyXShDdxSrq+kw/p/PCd+XqJEgob/THNe3I5NCZT4HwsqWMKsKWwkIW9rH
-	z9UhoVwIDI4R0PHwuinY4+PTbZ/XQNXjSR0rmeBtEptgouryQ+FFV/BNs9QQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1738660187; x=1738746587; bh=XZj/3L15ZhJDphoA3SD15pg6OoRb/NWpiUa
-	3moUl3Kk=; b=iL6UT1eRtA6auWC4tjEYI8noQCnKTjjLY0uPUS7cR6tHo2pjz6M
-	PkqdDFgUJZoA3lihEfCHK3O9XTjva8gYwNN9ZjiPniCDEsgZY173aGVz/nCrGoBM
-	2cWgS7yseOnFVkga09WWVe5S3FEBqnaKGdrUIxxZJ85bdEs/osTd7wugk/fjA48k
-	1ek6RTH3O8+EMyJJvSQ7oQP+GgnZkP7sJ0AYMK36MSt0/qF1UWj9it9OtM6emljc
-	sR7CmPRmC+oPic+6SKVu6cO6i5QneAcH65j/jjT6pzLktaZLGL0pzNAT751NiNyl
-	AKwxxnaikGB3ZK68y6KJuV/VN5DMLhwakcw==
-X-ME-Sender: <xms:WtmhZ9R5MyIwoZwvApJeK57TfqWIu3LtAsA_hV7Y_QREWpDMtkKdGQ>
-    <xme:WtmhZ2xzxT5mltaU-rQJyejNwBP3Q7XaDfg4MwPN4PLuFb9JZw5AKcEQpGfgD6kPa
-    ss4zjZ9eFS9pqtiSg>
-X-ME-Received: <xmr:WtmhZy2FtSa1mIhqIzvNxOuzM8Z8n6Tgf-vYwZb7mIyRf7xpVq3PbEA3H3LXuCxnzHJ-K8e_rSKnb5v4cW72en-pd8pyOzosJh5FuFZsD_vLsA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdduvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculd
-    ejtddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtvdenucfhrhhomhep
-    ffgrnhhivghlucgiuhcuoegugihusegugihuuhhurdighiiiqeenucggtffrrghtthgvrh
-    hnpedvfeekteduudefieegtdehfeffkeeuudekheduffduffffgfegiedttefgvdfhvden
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihuse
-    gugihuuhhurdighiiipdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopegurg
-    hnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopegrnhgurhhiiheskhgv
-    rhhnvghlrdhorhhgpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhgpdhrtghpth
-    htohepjhhohhhnrdhfrghsthgrsggvnhgusehgmhgrihhlrdgtohhmpdhrtghpthhtohep
-    mhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepshhonhhgsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopeihohhnghhhohhnghdrshhonhhgsehlihhnuhig
-    rdguvghvpdhrtghpthhtohepkhhpshhinhhghheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:WtmhZ1COT6EQKOwe7Qx_EhE8EiVX6Bnl1_1a3U4esBQKyqeZYbnfQQ>
-    <xmx:WtmhZ2g8v_ZwQjCM0sgrBoXIuWYSxG88aL0oL5j67kj9Zu4uFoGVxQ>
-    <xmx:WtmhZ5rEeEDMai9nuyyD8O6hpdDwiYkr0lD3ep1Zi3AmZDSFQCvqLA>
-    <xmx:WtmhZxijozAM17brIJdC8fsZ9aNN5kLa2gCnK5G93iEe8EnpzWOXdw>
-    <xmx:W9mhZ9QGjDdp-h2YE4RS0Nl2rHfHd6LEfKADF_ar-EbyhjjQryXYgSEK>
-Feedback-ID: i6a694271:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 4 Feb 2025 04:09:45 -0500 (EST)
-Date: Tue, 4 Feb 2025 02:09:43 -0700
-From: Daniel Xu <dxu@dxuuu.xyz>
-To: Eduard Zingerman <eddyz87@gmail.com>
-Cc: daniel@iogearbox.net, andrii@kernel.org, ast@kernel.org, 
-	john.fastabend@gmail.com, martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev, 
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, mhartmay@linux.ibm.com, 
-	iii@linux.ibm.com
-Subject: Re: [PATCH bpf-next 1/3] bpf: verifier: Do not extract constant map
- keys for irrelevant maps
-Message-ID: <3kzwzsfyghdogwv2jghmkamzierq64l6zgozo3urja5fenzcqg@7yplvj3x3oqp>
-References: <cover.1738439839.git.dxu@dxuuu.xyz>
- <ebbf8edf871a6543425b75bb659400221bd28275.1738439839.git.dxu@dxuuu.xyz>
- <084abedc8ec36ffe77f97531c0bcebc291547415.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FzzwQ68n"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-71e1158fe3eso2944903a34.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 01:12:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738660356; x=1739265156; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lOmPfU/eGVZYXYoZjIKS38Xdl1n45B66FHiHc6aVvxk=;
+        b=FzzwQ68nLank24TxLUu1tzh/2YiXTBDD/qQ39SifFW5TioVHPG1Su/8AZ4DQ25mZVF
+         pqYEALoZJcV0Ci7wwi+wpRTvTuxFPfe0+TL7IgdvUYCVFrNxNgJvOgZBKuvui7uOB3Hh
+         mRnRX2q89L+cwiAzZRoxIYzmHIeJYnJf3eMczLMTr1LS+B9vjbf3Et7MtBy8/b5Br9+4
+         rQr6VRAKQN6gEoPbvz+Ad+fZ8b7adma3TDFswESnXfkxadQK/eUcoRhkRHzr3RBGeUPk
+         32qHAV7LVYumbE2P/6Tj7BcK7mHiAmr8wq6YOsG9WIn4wbqp+OH4TpGChcfuQiZMPu22
+         BaNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738660356; x=1739265156;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lOmPfU/eGVZYXYoZjIKS38Xdl1n45B66FHiHc6aVvxk=;
+        b=bOwsY7cEerIxI4sv6lBNrqoaWBHP9L5NrjgXhyxvS2D+nSWcbj7OXes6DkAxrak0WE
+         QY5kUrMsgh8Eq9eyhTY9S0rJ8jkqnJuahPUo5dsICaxxKA+8TPH9zEzmif9ky2NSfNr2
+         RS64YqLVaqTd0xC5iliNa5lanQWYGJDIsxSPCv9R6yQAq4ublXX/Ov2rEuvcnvrmsLI7
+         zMO/axn0DzPWn9aQftpb6RQAK47VZzZW0Khi7RaGzaSmnb7kNiTZp0Tr9NRuSv+eLkIx
+         cwTtyJ2ZuEXarz89XtansJZDHz358j0pyhummDMkAvlZmhF1vQonwhMA+WFOiV3Nmj1L
+         1ieA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPHqnCGWDImJcEg3/r2a13GgB2JfxLSiP3ONz9FjR3p4RZltbZ9zp+vjMGQ2hYIF+wqH5zzTazyi0hXaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygg54/FrsmPhga+HI69FBsS4EmPYhivqotVw3cCFZPRsB3x8eX
+	nAoGeyZpEY0eiseeCuxmVqFulEYWqjGSNI6RzdahuiFcb8NU+mpZaQZJ+WGt+olC9hAzySlD4OH
+	Ab/OIiiBI0kjsRKMxUsCY/JJt4Su9J3cKxRnEFA==
+X-Gm-Gg: ASbGncsdBo3kQR1R+1M2hHeYtipNaSELHsFxHG0uizFPiFIaWpPLa3UAzVMPSkThsto
+	GiyLZ1DlvKpeetJ8LWBzagfQyZ+46ITfDBGLQIMxc/Xs2yjBb3KeaSXxPhTVrn/lDFejsglKulw
+	==
+X-Google-Smtp-Source: AGHT+IGaBtWiKIGnTwJFrQeBl34glJPVbOx58PH1j6rhPNeD9c1tAu04EaLX9zcvsa1rWGTAMV8NY2NzowwhK+UlT4A=
+X-Received: by 2002:a05:6830:925:b0:71d:f6d3:9fd2 with SMTP id
+ 46e09a7af769-726568f1915mr14303629a34.24.1738660351634; Tue, 04 Feb 2025
+ 01:12:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <084abedc8ec36ffe77f97531c0bcebc291547415.camel@gmail.com>
+References: <20250204073418.491016-1-sumit.garg@linaro.org> <60cd3fcc-5d21-4b98-9a81-f5fbec2099fc@app.fastmail.com>
+In-Reply-To: <60cd3fcc-5d21-4b98-9a81-f5fbec2099fc@app.fastmail.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Tue, 4 Feb 2025 10:12:20 +0100
+X-Gm-Features: AWEUYZmX7hyL7KTGLrWQk_2I6kQWMPU905QHsNtMHpKEdVFr8ey35q3rQRoHbC4
+Message-ID: <CAHUa44EnCdjEfevuFa4rdTykiD1fjU9+GbVq=TSOPaFz1sZpDA@mail.gmail.com>
+Subject: Re: [PATCH v3] tee: optee: Fix supplicant wait loop
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sumit Garg <sumit.garg@linaro.org>, op-tee@lists.trustedfirmware.org, 
+	Jerome Forissier <jerome.forissier@linaro.org>, dannenberg@ti.com, javier@javigon.com, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2025 at 10:45:35AM -0800, Eduard Zingerman wrote:
-> On Sat, 2025-02-01 at 12:58 -0700, Daniel Xu wrote:
-> > Previously, we were trying to extract constant map keys for all
-> > bpf_map_lookup_elem(), regardless of map type. This is an issue if the
-> > map has a u64 key and the value is very high, as it can be interpreted
-> > as a negative signed value. This in turn is treated as an error value by
-> > check_func_arg() which causes a valid program to be incorrectly
-> > rejected.
-> > 
-> > Fix by only extracting constant map keys for relevant maps. See next
-> > commit for an example via selftest.
-> > 
-> > Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-> > Reported-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> > Tested-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-> > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> 
-> Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-> 
-> Nit:
->   would be good if commit message said something along the lines:
->   ... the fix works because nullness elision is only allowed for
->       {PERCPU_}ARRAY maps, and keys for these are within u32 range ...
+On Tue, Feb 4, 2025 at 8:45=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Tue, Feb 4, 2025, at 08:34, Sumit Garg wrote:
+> > OP-TEE supplicant is a user-space daemon and it's possible for it
+> > be hung or crashed or killed in the middle of processing an OP-TEE
+> > RPC call. It becomes more complicated when there is incorrect shutdown
+> > ordering of the supplicant process vs the OP-TEE client application whi=
+ch
+> > can eventually lead to system hang-up waiting for the closure of the
+> > client application.
+> >
+> > Allow the client process waiting in kernel for supplicant response to
+> > be killed rather than indefinitely waiting in an unkillable state. Also=
+,
+> > a normal uninterruptible wait should not have resulted in the hung-task
+> > watchdog getting triggered, but the endless loop would.
+> >
+> > This fixes issues observed during system reboot/shutdown when supplican=
+t
+> > got hung for some reason or gets crashed/killed which lead to client
+> > getting hung in an unkillable state. It in turn lead to system being in
+> > hung up state requiring hard power off/on to recover.
+> >
+> > Fixes: 4fb0a5eb364d ("tee: add OP-TEE driver")
+> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > Cc: <stable@vger.kernel.org>
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-Ack. I can respin if necessary. Otherwise, here's the edited commit msg:
+Reviewed-by: Jens Wiklander <jens.wiklander@linaro.org>
 
-    bpf: verifier: Do not extract constant map keys for irrelevant maps
+>
+> Jens, I assume you'll pick it up and send me a pull request, but
+> I can also pick it up directly if you have nothing else.
 
-    Previously, we were trying to extract constant map keys for all
-    bpf_map_lookup_elem(), regardless of map type. This is an issue if the
-    map has a u64 key and the value is very high, as it can be interpreted
-    as a negative signed value. This in turn is treated as an error value by
-    check_func_arg() which causes a valid program to be incorrectly
-    rejected.
+I have nothing else, please pick up this directly.
 
-    Fix by only extracting constant map keys for relevant maps. This fix
-    works because nullness elision is only allowed for {PERCPU_}ARRAY maps,
-    and keys for these are within u32 range. See next commit for an example
-    via selftest.
-
-    Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-    Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-    Reported-by: Ilya Leoshkevich <iii@linux.ibm.com>
-    Tested-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+Thanks,
+Jens
