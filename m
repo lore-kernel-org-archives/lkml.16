@@ -1,102 +1,87 @@
 Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5EC1DC745
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:17:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDBE206F3A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:19:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738671426; cv=none; b=B1iNkQnqm6V/RSjz3JoJ518voybt3w0uAlDM3h4MOHw8fZ+0D1wzgcg53sWdwAQO1xwygDzsagZ6jdC++XJyIC3GNmwJzrxuEHhhkADp6lQZs4P8PdjfbQ7F2ov+6hpLdu018EpO7zsG0lKd/Y1H3NWddFfvG4pERslMUA/kDnY=
+	t=1738671559; cv=none; b=gcUv34ihTgmkNSR0hqvKa36faJbjnzjWVL5d2hQMUp4/jXLIbf+3c+NqWldmgOAj+PPobaR5i4qkp0pqjsEs+ZyXiaexgmnoxQUkI0gj1jDngTWJXDpD3kvzpBH+NOmu8wLM6v9BMKviRAIsppZgZu4ZrC7WkG1dGzOx3Y3cX/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738671426; c=relaxed/simple;
-	bh=1DsnRCD9MC1WNlpE3vjA8aL51Bl2gKT8bWu2APVPL18=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ba04AdcJxbzAIURCGtBDhTCtzbNG2mxzRJ2hnddY41QZZ7OWW0CUB+UWCmaqRLNfJAjUXxr98o7Epdl2pkik8OTtWdPq43B5n6dWT78lMu1HcB6WjnEFNKiMOyP69TDemB6H2ZJ11epmw5aASjAC3kQE4vdKjDEx5LZkGm97q9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Xe3Qk0Kr; arc=none smtp.client-ip=209.85.218.44
+	s=arc-20240116; t=1738671559; c=relaxed/simple;
+	bh=Mr0FuXr8a4wpJsAAWx1cd2vNdWLqxjiJMd773NZ3+ck=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=aMKAAeN86yRX2vHB3GmRFOSRGwBW/2Sca0BpUiQLqQ62r976AZSY8Pm4wRbaX4ffwYgzGc6inJG7QDxV0i0tbAmMH9UJGu7CLTAauTL5356ISoKONu4TwOoYoUvB3mokGIVHFslyboFZH/sDuaqBM0ZhNAaGYt3t/9gW4/8c+wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=M6S5Plhq; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Xe3Qk0Kr"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so1029889766b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 04:17:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="M6S5Plhq"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaec111762bso597494666b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 04:19:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738671422; x=1739276222; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZvhNBQWKlCvAqcbBDr5tv0EzdkUSClpqTtdtVXuZUac=;
-        b=Xe3Qk0Kr0HP36Qm1W5eKVq8IHDeCaSQYliBW8DvNQZSzRiXW3g28mxcIwdtCUmEQfb
-         h/F9hYQQjqOLVHR0HaM4Z7Zx5O6xnWBDOikKmkkMImXfWzq83whRS6+YFb7DcCcK2vAa
-         oZgwIDCDY+GEkObFWXwlVt5C+GqcNwsvuTMnnd0rWGNFBEa0/PbODsY8PbYcHrS1ah1o
-         CVaUHOkL0f7h/Nb6me4IDHjbNIyZkW6LWam+hVGD35XhCqM+2GJxNILNl+whltEzUW+N
-         IyyndLxh8A0LdEjCJLwOFmUq0ct1Onbkjy1s1HQb3fKCYSucNWG5dXLGfjYMWZRYWv4S
-         kwvw==
+        d=suse.com; s=google; t=1738671555; x=1739276355; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UsezKdeSKwYZj2Gc71tZVnHA/twO8FklaekB/V9xp+Y=;
+        b=M6S5PlhqzSLAn2A2XRvJuZHKz7Kg6UiEfwfJxjK8nzm5zOLzA/ZApZSDjay4D9QEMi
+         6+XY5YfCU6fB1NLWdW+VkIFxx09Pd2kPCJ5bEolzjDz2ppIMrILQt+lZkx0mp58uNXQO
+         xh7mTG63XeQEKAXLRgaG9PURtlPJubS7o6+VTInVcM0bIaEPFd5c8j/ZcY0oHqlc7gTc
+         KyyFR5EVSn+LU6qRJRrr70h2gDOPdMPHEFpAdji8b9Z6utYXHDRVgdD5h/KNiHHL8j3y
+         mf6iNfJb7qQvIb9jZbX3LXP+myBKnXP4wqDjCDJSFP3rB/iYyaPhi3iGoVEHBAUI3jrS
+         9pOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738671422; x=1739276222;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1738671555; x=1739276355;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZvhNBQWKlCvAqcbBDr5tv0EzdkUSClpqTtdtVXuZUac=;
-        b=PippZdnbPKmuwhd8u3fkTWwokbMtQJiTm7m2Gnvf8BJAcBq1R9V96BSnSqWd9Qw2a3
-         rCuvY/Ko/IQXBJl56c/Inoxih/XhT6G2L3X4nlsFaKUHwnNfJjbMADtD0x1Re+CdnMmb
-         2LMXp/uPrirSv/7q/BcTh0r3768HaNTrm1ZskeO3Y0HefysJEeWSpEwbKfLk7XMAgy8q
-         v1zkfnzs+BHHxrpVoo8M+WTyk8lyRH4E86VnvxikSeZkgnbaH430Rcef9MSES8YY/IxY
-         gzAxvvcATHWSa4CrlvBkTZ0L5sIbYus4UEuQ0rocbPzQrop8ynB82eUyEDqqo1g+XO6b
-         Zzig==
-X-Forwarded-Encrypted: i=1; AJvYcCUcjJ6NJqSF6gJwdfviAGR3NOPPpmVtgR22ABW7TKy1av//sbkDYQYfw1YiFEeYMXfN6oz03fsogPTUmHo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwDFifo/KYXtOfaf5RpOvqI7GqyWmYeJx88Y9tJQ1tly/KcSI4
-	XGJBXiTD8j9fqxbVM3+xFaZriS6mrlLQq6+tXNwrTZ1YHza8RT3YZ7d+PN6iYl0=
-X-Gm-Gg: ASbGnctGOtg+mH/bcfRl5/1v/1ZtRlspjJGs+WOjLAY1jmqoyOfFkGz8vH3hc1FFLT5
-	s6DrfIRSbGS7FRv2EE7RvDneUmXPoWFM9MWQQ6zakeowXQ96Ly5L4S3IIUJUpCDAT9RqmfFhCA2
-	txOA1zg+Bnoeo6RTs2MeO0M70Ef4Ta193Ty9pTYmFKtp75QBf4YznykJPg4fd02A9pZQcgj9m+V
-	fx2TeGBRvNrbeTQ8PFOzvCBd3ieJOtc/eOXA1NwZ69Iwo6XwRjNQgiqNWgupglKpCZ/6lzXkDIU
-	LtYkf0AreV8byS4XwQ==
-X-Google-Smtp-Source: AGHT+IH2G8hYYAkJwoDrdGcDA8/rdA98WX6XXA5JkrXP0w9WRYZajDa9VQmXcTXz1ys2KVFC33ecFA==
-X-Received: by 2002:a17:906:d54c:b0:ab6:edd6:a812 with SMTP id a640c23a62f3a-ab6edd6a8camr2102928166b.24.1738671422169;
-        Tue, 04 Feb 2025 04:17:02 -0800 (PST)
+        bh=UsezKdeSKwYZj2Gc71tZVnHA/twO8FklaekB/V9xp+Y=;
+        b=h6DCqlxaITc8Hk3vrwOI/Ix+byIzOLKuBSHl3PUKy4ZE0irOu8mG3WxI/loq9KEDoL
+         QpUGguymV74RrWFBF8FxJM5xZN3fPcdx+g8cukHVPZP5xOvnbqFiEfpJLF1Mp5RvJ3q9
+         Qq23+n8/o0EVsF9H/iOn+bukFI+xKfqRdBwFtmPnoNcIPqJXsFqrJOTAwX9tvF/32SKS
+         i5/iOnHPm2Tf1e3L3P+aCm9WSh2XeiktXgXF0bv+QsWns0uDCFEMoZP+JuxwGbx5StOI
+         d0E+0is5WZecz//eQRIdqEwWFVljCE4nTQNcyxGTLUHkeWTp3f9E8FLaotAUbjH7/c16
+         c9Fg==
+X-Gm-Message-State: AOJu0YzNWBwkdveYzx0FkDJmTUh/8xs/86MNHIXucMY843ipG92Ob4UO
+	uxgw8wAjzhfewtUhXhh1m/eexeK0CYh1I8uCNayC4v0vkIxwuAUdLZuK5dQKmw0=
+X-Gm-Gg: ASbGncsdRt62gxAcp0u/lh1gx+8pAr+sTbtbI5q+sSfJrW6708kjoucPo3aunWXYxIV
+	yd3LeDb3vTaxJ7LgCo8XoAsFpKaheh1LooJtjIU4JKVis1leZbyC4VYndRESUfRNFy6/tUluQQr
+	/XRob2sKTn3yg079XFJN8VRFEaNqogXz/AV7qCfpENvs+9VNS5lkxT/b5xvPjYTkb9IVg4OVG15
+	IoSQxdR0gK/xanfaMrcSwbct4nmmPXlnS66C65lS+/dv2l1YbGAVMPVZHB4TY9WJokW7XB1Yo2p
+	uihBLG794AAbLgN1og==
+X-Google-Smtp-Source: AGHT+IEwqcYpYQX3qCjOOLIQKrrBSa5mgJ0AY6GyMzMPuN6SNgZMqvRW2Tw8lzVKFa0aqMaH3AapFQ==
+X-Received: by 2002:a17:907:9691:b0:ab6:dbd2:df78 with SMTP id a640c23a62f3a-ab6dbd2e39dmr2863868866b.35.1738671555490;
+        Tue, 04 Feb 2025 04:19:15 -0800 (PST)
 Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47f1e23sm906290566b.82.2025.02.04.04.17.01
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a320ebsm911008566b.154.2025.02.04.04.19.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 04:17:01 -0800 (PST)
-Date: Tue, 4 Feb 2025 13:17:00 +0100
+        Tue, 04 Feb 2025 04:19:15 -0800 (PST)
+Date: Tue, 4 Feb 2025 13:19:13 +0100
 From: Petr Mladek <pmladek@suse.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: David Gow <davidgow@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] scanf: convert self-test to KUnit
-Message-ID: <Z6IFPAuCz0_vDdB4@pathway.suse.cz>
-References: <20250203-scanf-kunit-convert-v2-1-277a618d804e@gmail.com>
- <Z6HSFvvgxFVGDQeI@pathway.suse.cz>
- <CAJ-ks9mfmM-SzkEiJsKL56jSuyXzLrKd4XHgRnp63C9AYcDoAA@mail.gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: [GIT PULL] livepatching for 6.14-rc2
+Message-ID: <Z6IFwZwdjFGvpYMP@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ-ks9mfmM-SzkEiJsKL56jSuyXzLrKd4XHgRnp63C9AYcDoAA@mail.gmail.com>
 
-On Tue 2025-02-04 05:27:23, Tamir Duberstein wrote:
-> Oops, meant to address this in the last reply.
-> 
-> On Tue, Feb 4, 2025 at 3:39 AM Petr Mladek <pmladek@suse.com> wrote:
-> >
-> > Should this go via the printk tree, please?
-> > Or is David going to take it via the kunit tree?
-> 
-> Going via printk would be my preference.
+Hi Linus,
 
-I am fine with it. I assume that you are going to send v3 with
-the updated Makefile. Well, let's wait a bit for more potential
-feedback.
+please pull a simple fixup of livepatching selftests from
 
-Best Regards,
-Petr
+  git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git tags/livepatching-for-6.14-rc2
+
+==============================
+
+- Fix livepatching selftests for util-linux-2.40.x.
+
+----------------------------------------------------------------
+Madhavan Srinivasan (1):
+      selftests: livepatch: handle PRINTK_CALLER in check_result()
+
+ tools/testing/selftests/livepatch/functions.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
