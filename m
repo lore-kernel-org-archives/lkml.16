@@ -1,48 +1,33 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED95E25A655;
-	Tue,  4 Feb 2025 06:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D04913B29B;
+	Tue,  4 Feb 2025 06:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738650538; cv=none; b=JGiHqKXoNsiEvqs9jIvqikJFT+9mw8aVzOUcVhG7yEGmRl9kbrFuRtJsHA1rtDHoR5zvublOJhZBkwVtJuUhYYPluRgxFKqvO+iDpBGWHaHfbR9R23XkI41uHZHYhPRTz6nnS0nTykZbtu9rJuSA9NUN6vazBF9xuZtI+D7ixzI=
+	t=1738650727; cv=none; b=FA7/g05wQ6HTm4r4Q/kpWw6uYRn2gbdZ9DlG9SNcZspwof/nwym0iV1a09p19EG5dzvs1lk1e/TSCp4JiZaIPVv7hrnerHoO+an/ZquIouXSZJ3QYRsRcnBemHVts+lMR+op40rJVpTKPt9pl72iQIg6cdu5kOq2f8U8NBlaas0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738650538; c=relaxed/simple;
-	bh=Dqn57KPeZHxLv4sYXabrO0zuW/2UdonbxL7YbLPQmiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=QpWj374Afh7h1n/13l5w+UuJnO3mqEd/4ooLp95qCTHZRs8e2BxHPnSJDoLq+ICZirQYza4NQQ2C2wkEDDDxl/GBjPRBLwMLDP9W+ELAuk6p1XmGIOvqD2/rWnPcvhPo4z1YmCYe1/WDpXGhkU1RVU6/XPrq8AmWwz4bdcfxvEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ix3T/+eO; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738650727; c=relaxed/simple;
+	bh=0tIXBDruVfmh73EZENZUCflgMLVdRl0gwnOofOd2CuE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sGhGDYwFWT/6ITprKAiMbTCdKaKEMZjb3/scBabBAD6QqrKdmlEtUcLLWe+87eTaLVwH8j0P4YRml1+Wija5JKta3AblmlNZGT1zxxhKqLpaNScSCJxdy58Y4AZMwm7SpkuqF7bCDd+pMf3ErjorM4oGAniU+P1Gjp/z1WFlxio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6zskoaO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ix3T/+eO"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5141aNFs003771;
-	Tue, 4 Feb 2025 06:28:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Poa3aqsD9Vd5Zi+ir9FLHytRK+1RHlmIkI4PXgUyVKU=; b=Ix3T/+eOjTelPdow
-	TdWSeK0NjkOlOiOdNL+w6KhaqdMo/jaXeikWlyW8kFdhJH6T4v11kuUvSNoJ6T2C
-	h0UBeWa4I7cFBydObyMdQD1sfX8UfoDdoWSAa+rYCDFM8dNC/ED3DGKjyinSeHEF
-	0zv/tcqYN4Vus91YO//ZSN928f+icssiZeLOASAQXpc1Bc3orOzOeANhqKMfFXRw
-	WcOTuk0SyDDQusgdxRdgZEWMp/WCILQjnyoVTczKO+pJVLzgwbif4p4p0sh/4P0Q
-	Iahr78rId4mOykh3CzNwkNrVzHjFFujONL3oTskpfLUOEpkS4I6C4OlCH21+8olq
-	PRxmHQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44k9cn0gh6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 06:28:52 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5146SpeB023620
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Feb 2025 06:28:51 GMT
-Received: from [10.216.35.77] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Feb 2025
- 22:28:45 -0800
-Message-ID: <7031f2da-36bb-4655-a4df-fa85c99e6eb4@quicinc.com>
-Date: Tue, 4 Feb 2025 11:58:42 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6zskoaO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8344C4CEDF;
+	Tue,  4 Feb 2025 06:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738650726;
+	bh=0tIXBDruVfmh73EZENZUCflgMLVdRl0gwnOofOd2CuE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=e6zskoaO9xYfDgISpyEpntGf1/iqH7gsOmqupnPzI8tKSO8JUJCTkjnpcgyLKgBJv
+	 2lXx1cEAQ5jA3jsLOQBAXWFS7jfyk0DNJ2QtKvjlBYjfn3W88EqssRLkjBm3T5fvmb
+	 cmtabgn0TegOuW2RPNZhSp3OinRuFl8R4N4ZFnjllVM+9oPbmDB45daktrVibKI0XH
+	 m6/g2e7ZhuJLfNh+K1xgcoUieEOaCyavxyplSVw7j83dDoj4cDst79DlK/dtv+K3JH
+	 Ig3WjBaMUZuPDuBbh+7Md1HpE/zeYs5SMlveUCrJjMFA4Yhuvw8PTgEb/VWt/XYvKS
+	 Vg17KVxQXwikA==
+Message-ID: <73a5e3f3-3a39-4ca5-87a0-5f67c25281f0@kernel.org>
+Date: Tue, 4 Feb 2025 07:32:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,97 +35,131 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] clk: qcom: apss-ipq5424: Add ipq5424 apss clock
- controller
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andersson@kernel.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <konradybcio@kernel.org>,
-        <rafael@kernel.org>, <viresh.kumar@linaro.org>, <ilia.lin@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>
-References: <20250127093128.2611247-1-quic_srichara@quicinc.com>
- <20250127093128.2611247-3-quic_srichara@quicinc.com>
- <47f7553d-74a2-4da0-a64c-cc49a2170efb@oss.qualcomm.com>
- <123a324c-561a-4081-be43-8d8ed0662acc@quicinc.com>
- <6c8bb178-1758-4b73-bbaf-8572dc1216d3@oss.qualcomm.com>
+Subject: Re: [PATCH v2] mtd: Add check and kfree() for kcalloc()
+To: Jiasheng Jiang <jiashengjiangcool@gmail.com>,
+ christophe.jaillet@wanadoo.fr
+Cc: gmpy.liaowx@gmail.com, kees@kernel.org, linux-kernel@vger.kernel.org,
+ linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com, richard@nod.at,
+ vigneshr@ti.com, stable@vger.kernel.org
+References: <30ad77af-4a7b-4a15-9c0b-b0c70d9e1643@wanadoo.fr>
+ <20250204023323.14213-1-jiashengjiangcool@gmail.com>
 Content-Language: en-US
-From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <6c8bb178-1758-4b73-bbaf-8572dc1216d3@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: G66RT-xuFG8CsmYLyVRQpd6xlsfrBNfF
-X-Proofpoint-ORIG-GUID: G66RT-xuFG8CsmYLyVRQpd6xlsfrBNfF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_03,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- spamscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 phishscore=0
- suspectscore=0 priorityscore=1501 adultscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040050
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250204023323.14213-1-jiashengjiangcool@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-
-On 2/1/2025 8:55 PM, Konrad Dybcio wrote:
-> On 30.01.2025 11:03 AM, Sricharan Ramabadhran wrote:
->>
->>
->> On 1/28/2025 5:29 PM, Konrad Dybcio wrote:
->>> On 27.01.2025 10:31 AM, Sricharan R wrote:
->>>> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>>>
->>>> CPU on Qualcomm ipq5424 is clocked by huayra PLL with RCG support.
->>>> Add support for the APSS PLL, RCG and clock enable for ipq5424.
->>>> The PLL, RCG register space are clubbed. Hence adding new APSS driver
->>>> for both PLL and RCG/CBC control. Also the L3 cache has a separate pll
->>>> and needs to be scaled along with the CPU.
->>>>
->>>> Co-developed-by: Md Sadre Alam <quic_mdalam@quicinc.com>
->>>> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
->>>> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>>> ---
+On 04. 02. 25, 3:33, Jiasheng Jiang wrote:
+> Add a check for kcalloc() to ensure successful allocation.
+> Moreover, add kfree() in the error-handling path to prevent memory leaks.
 > 
-> [...]
+> Fixes: 78c08247b9d3 ("mtd: Support kmsg dumper based on pstore/blk")
+> Cc: <stable@vger.kernel.org> # v5.10+
+> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+> ---
+> Changelog:
 > 
->>>> +    clk_alpha_pll_configure(&ipq5424_l3_pll, regmap, &l3_pll_config);
->>>> +
->>>> +    clk_alpha_pll_configure(&ipq5424_apss_pll, regmap, &apss_pll_config);
->>>> +
->>>> +    ret = qcom_cc_really_probe(dev, &apss_ipq5424_desc, regmap);
->>>> +    if (ret)
->>>> +        return ret;
->>>> +
->>>> +    dev_dbg(&pdev->dev, "Registered APSS & L3 clock provider\n");
->>>> +
->>>> +    apss_ipq5424_cfg->dev = dev;
->>>> +    apss_ipq5424_cfg->hw = &apss_silver_clk_src.clkr.hw;
->>>> +    apss_ipq5424_cfg->cpu_clk_notifier.notifier_call = cpu_clk_notifier_fn;
->>>> +
->>>> +    apss_ipq5424_cfg->l3_clk = clk_hw_get_clk(&l3_core_clk.clkr.hw, "l3_clk");
->>>> +    if (IS_ERR(apss_ipq5424_cfg->l3_clk)) {
->>>> +        dev_err(&pdev->dev, "Failed to get L3 clk, %ld\n",
->>>> +            PTR_ERR(apss_ipq5424_cfg->l3_clk));
->>>> +        return PTR_ERR(apss_ipq5424_cfg->l3_clk);
->>>> +    }
->>>
->>> Now that you'll use OPP, you can drop all this getting.. maybe even the
->>> apss_ipq5424_cfg struct could be let go
->>
->> ok, is the suggestion here to use devm_pm_opp_set_config ?
+> v1 -> v2:
 > 
-> Since what you tried to do here is binding CPU and L3 frequencies together,
-> yeah, we can just scale two clocks from OPP.
+> 1. Remove redundant logging.
+> 2. Add kfree() in the error-handling path.
+> ---
+>   drivers/mtd/mtdpstore.c | 19 ++++++++++++++++++-
+>   1 file changed, 18 insertions(+), 1 deletion(-)
 > 
-> On some newer platforms using the epss-l3 driver, or on msm8996 with a more
-> complex setup, we expose the L3 voter as an interconnect, but here it would
-> seem that we directly control the clock that feeds it.
+> diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
+> index 7ac8ac901306..2d8e330dd215 100644
+> --- a/drivers/mtd/mtdpstore.c
+> +++ b/drivers/mtd/mtdpstore.c
+> @@ -418,10 +418,17 @@ static void mtdpstore_notify_add(struct mtd_info *mtd)
+>   
+>   	longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->kmsg_size));
+>   	cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +	if (!cxt->rmmap)
+> +		goto end;
+> +
+>   	cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +	if (!cxt->usedmap)
+> +		goto free_rmmap;
+>   
+>   	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
+>   	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +	if (!cxt->badmap)
+> +		goto free_usedmap;
 
-ok, will update and check.
+Could you add a single 'if' for all of them here instead? And goto 
+single free.
 
-Regards,
-Sricharan
+>   	/* just support dmesg right now */
+>   	cxt->dev.flags = PSTORE_FLAGS_DMESG;
+> @@ -435,10 +442,20 @@ static void mtdpstore_notify_add(struct mtd_info *mtd)
+>   	if (ret) {
+>   		dev_err(&mtd->dev, "mtd%d register to psblk failed\n",
+>   				mtd->index);
+> -		return;
+> +		goto free_badmap;
+>   	}
+>   	cxt->mtd = mtd;
+>   	dev_info(&mtd->dev, "Attached to MTD device %d\n", mtd->index);
+> +	goto end;
+> +
+
+And:
+
+free:
+> +	kfree(cxt->badmap);
+> +	kfree(cxt->usedmap);
+> +	kfree(cxt->rmmap);
+
+And NULL them as Christophe suggests.
+
+>   }
+>   
+>   static int mtdpstore_flush_removed_do(struct mtdpstore_context *cxt,
+
+-- 
+js
+suse labs
+
