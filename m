@@ -1,114 +1,125 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D901AA786;
-	Tue,  4 Feb 2025 09:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EB718784A;
+	Tue,  4 Feb 2025 09:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661481; cv=none; b=gY0Jcsfu8DUNhO6Bj0Y7GZCna7GaEq6vJGurEl9qJCxdYdBu2G0zJDC40mt1Ql2iDBa+z1FM6rllmdLG4/CK9AP+x+zdEu247fYZN1aLz0s9WIM2crIwTlRwNV7DZT8Vml26mc4Dc7bwBIr7O+AzbxX608NM7vLa48Y7P4surqc=
+	t=1738661506; cv=none; b=kvYOKGvId6BDAxj84Ua4xerwhWMhk60PdymVkl2X41y5kXw6edVw/UxB25qXNxRmBHBdJaTwEC3Nsy75x4UpPLtO2wdRT2idUN4jQk59zvvO7j54m6V+aDQOaFglyeFjxzbOgvz/xnXTgvcqNLNzpkbKMJZfPegpPaTYK6FTRh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661481; c=relaxed/simple;
-	bh=NQR7Ll+NekyiRmYB0dYQI7LlK8OJ+yHTgBGiynUw8jc=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=CNSUW/FMcfH7layuoLhF6nOiOj7fdkJL3x0MbGS9moPnlyQWDqqR0kJnwvQEO9x64lFJqOF//+6QkYR6tWMrWpv9bvDIcfCEWjOyhyOQiER3ONFXVQyKdVrz8rE9B8UnwsCfcyTdRXYrDi5WDrWulevUXZpLmM32SzPl8AZbNf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RagYRsU9; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738661506; c=relaxed/simple;
+	bh=OfSjjEDlFSr4Tneahj5ga67WISKYtolfFhaQOy1EYi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8f0DHhvWDthCp5JCthvmdDAobVfR4ReSC5vV3syPJU7+LFbZyfVwQNaR1+7s3wN//FiUYDy0sdbV2V0KuM0eyrgL3R02c6z9n/pTJH8bJZ+arB5+c3a6eZoxj2e+Q6w/+BWJWdR4DQoheGvJaWLypGg5Q9GDBZSLsNngv/sZsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=naZ5rfyq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RagYRsU9"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5db689a87cbso10603606a12.3;
-        Tue, 04 Feb 2025 01:31:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738661478; x=1739266278; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OkZHG2ey6TpGUua65UBTciC20mI0hZJdW9qjfgIkfmQ=;
-        b=RagYRsU9b1hEx+5geTeOgpOBNUuYwmocBSvZVlA/uZKMPhKI6h8kT2ph4RYsEi0gAM
-         S047wqOigLZgJuC0fWrZURNsFKNWNF4chujY8LpXd5BnL73jz04GeSmk4RNMKbRoFEaa
-         HUjbusLfIAeNTkUSSFb6u0Zq9W5gbRuo//6TVa8St3H1CFvNSletpZEjSiNwj+RW6h2m
-         W3VxMEIPRxu5fwFerNTYzhkvsifR04AlvZb8D0pf1Mia+H4TdKFoLURwqF45nBFEiQlP
-         +5/jUwgwe/P/HXo+w9R2pgKZGmeNsEwR8aroIz1Mvo8/2zYFVzgQVeym9PmusSZzacv9
-         9Rmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738661478; x=1739266278;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OkZHG2ey6TpGUua65UBTciC20mI0hZJdW9qjfgIkfmQ=;
-        b=XQD4iEWLWiX3VxCPQB8RmBCSmOk7lQi2bgQdsyKMgzDZpiAuBGzSfy0Q3i0L9cVp6e
-         4xKHehMJ4MpERtYTKrGBWjJCs1JSjRhiFrLxWtM/oLxi8Agm+63TRg+dnW6Z/zlgwSNi
-         9qLpb5N1tUGjOfaOJJTXfRXGKE8Ywuz9uro0vKdtgS/oHuKMDO4Wo3z68/vpFaxCQYFl
-         Ydjheasj8saemTyRC6LFN8ycxLzYbl0gV3eAqx0q8JPDtosJJKqgTTVz3hCyrS9n08kk
-         ECG48Qf0ah7DNzMy2FFDsWyk29FAvj7x9XYU+jA08g/E3e4uDhUM2paONHbNlYYRRPya
-         Oy7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWCa6aDT6jSQlYHVNQVWS/5oImmA/7LWX3Khke52+WIJHnSYHhi/gLYTrYPgDg/8bUbfSzxlqfINWejtlI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzwu0CRHTYCwMcDmEjhzWRECgzRNttcJrT9RRD/WAL85HvcWnOm
-	PIGBgQNgx0Tt4/Nx0W9sUU2Ln3c+5XH7JtvBNZQ9iUCwQjlgY7LT
-X-Gm-Gg: ASbGnctapVzfW/o4j9I3UvNj2z0cIi4UQpxkQtEppPDtm2Fx0uZOPXxNoz0fnGKoquD
-	Y+r7JT3R8mo8IwxPWq0uIkQp9QQyiBDs6nVpfUZwkIVscymNewzg7Nf11cncXtbW0lnm5PcQOwO
-	BZIsZuuWyVH+oNDXPP1w99mtSQNOyI0REh44xYApv/bWUpNX7ypSRhyAJnghSSPtdteW7eNKbgk
-	nVmHIXcRKYCKbPBbLuLZv665uwvE2aDfUwIYDPUkv+1SQVSRth1KXTlo59l6kwEJybFMOJWKtQD
-	ocR+OunHsr8Kq9I4ZLfky4BcQBhJtHTGe5gOFvhwTigy6iY=
-X-Google-Smtp-Source: AGHT+IH6ELlubR+Pez3MZgDaePcbFoAMCS4gU9kWQm4zbWh57l4L+uVB8wBwWUDUE3ZWjO6Xh9/20w==
-X-Received: by 2002:a05:6402:5019:b0:5dc:7fbe:72ff with SMTP id 4fb4d7f45d1cf-5dc7fcdb6bemr18969610a12.2.1738661478029;
-        Tue, 04 Feb 2025 01:31:18 -0800 (PST)
-Received: from [192.168.20.51] (54-240-197-238.amazon.com. [54.240.197.238])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc7240487csm9012982a12.34.2025.02.04.01.31.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 01:31:17 -0800 (PST)
-From: Paul Durrant <xadimgnik@gmail.com>
-X-Google-Original-From: Paul Durrant <paul@xen.org>
-Message-ID: <8038e5c0-d0dc-4582-b076-3d514656af1e@xen.org>
-Date: Tue, 4 Feb 2025 09:31:16 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="naZ5rfyq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09319C4CEDF;
+	Tue,  4 Feb 2025 09:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738661506;
+	bh=OfSjjEDlFSr4Tneahj5ga67WISKYtolfFhaQOy1EYi4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=naZ5rfyq28gAWLr188rgx5miMbHlHkuCkziSEWNewm6RwitUzyD41N6Wu+BnEKt/b
+	 qv5pjxYxf4iH0kwOGcsuIVR87YhfWLEEKVE7vHLgTc1bl7k1dz4OwpInw9NlH60TEW
+	 xt0EbVp6YaA52S4IKYelN+aL62lbDM0W6oAEvxC1USqcsN4cOw3wUy2RPzoswA/GBv
+	 R7VxUSW0UXcVi3qnQH0gZzR8H+QCOYvUZeRqev7UmSTgRTs12MvbU4q/5EF/1VjUuf
+	 Ur9pSmUdxw4eFzlXF7F7alwicNJfiIAYt7h4+vCXfVROc7RbhzOK66cNrKQLw1kXfn
+	 zeYU6rN7gYNgg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tfFHZ-000000007wi-1X0q;
+	Tue, 04 Feb 2025 10:31:50 +0100
+Date: Tue, 4 Feb 2025 10:31:49 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Dikshita Agarwal <quic_dikshita@quicinc.com>,
+	quic_vgarodia@quicinc.com, mchehab@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, p.zabel@pengutronix.de, hverkuil@xs4all.nl,
+	sebastian.fricke@collabora.com, bryan.odonoghue@linaro.org,
+	neil.armstrong@linaro.org, nicolas@ndufresne.ca,
+	u.kleine-koenig@baylibre.com, stefan.schmidt@linaro.org,
+	lujianhua000@gmail.com, linux-arm-msm@vger.kernel.org,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, krzysztof.kozlowski@linaro.org
+Subject: Re: [RFC PATCH v10 1/2] media: iris: introduce helper module to
+ select video driver
+Message-ID: <Z6HehbKL88LW1lxC@hovoldconsulting.com>
+References: <20250128080429.3911091-1-quic_dikshita@quicinc.com>
+ <20250128080429.3911091-2-quic_dikshita@quicinc.com>
+ <5070e1f1-914b-4654-88ef-3566e3eee9ca@kernel.org>
+ <f1344e49-61b6-4115-ae88-55b4a3cfed28@quicinc.com>
+ <Z6B822-6UTxQfX46@hovoldconsulting.com>
+ <tqbm672pi223ipcw7btiemlb745weeeiy4gnazzeghozhq2emj@wppbkms6hir5>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: paul@xen.org
-Subject: Re: [PATCH v2 07/11] KVM: x86: Set PVCLOCK_GUEST_STOPPED only for
- kvmclock, not for Xen PV clock
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzbot+352e553a86e0d75f5120@syzkaller.appspotmail.com,
- Paul Durrant <pdurrant@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>,
- Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20250201013827.680235-1-seanjc@google.com>
- <20250201013827.680235-8-seanjc@google.com>
-Content-Language: en-US
-Organization: Xen Project
-In-Reply-To: <20250201013827.680235-8-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tqbm672pi223ipcw7btiemlb745weeeiy4gnazzeghozhq2emj@wppbkms6hir5>
 
-On 01/02/2025 01:38, Sean Christopherson wrote:
-> Handle "guest stopped" propagation only for kvmclock, as the flag is set
-> if and only if kvmclock is "active", i.e. can only be set for Xen PV clock
-> if kvmclock *and* Xen PV clock are in-use by the guest, which creates very
-> bizarre behavior for the guest.
-> 
-> Simply restrict the flag to kvmclock, e.g. instead of trying to handle
-> Xen PV clock, as propagation of PVCLOCK_GUEST_STOPPED was unintentionally
-> added during a refactoring, and while Xen proper defines
-> XEN_PVCLOCK_GUEST_STOPPED, there's no evidence that Xen guests actually
-> support the flag.
-> 
-> Check and clear pvclock_set_guest_stopped_request if and only if kvmclock
-> is active to preserve the original behavior, i.e. keep the flag pending
-> if kvmclock happens to be disabled when KVM processes the initial request.
-> 
-> Fixes: aa096aa0a05f ("KVM: x86/xen: setup pvclock updates")
-> Cc: Paul Durrant <pdurrant@amazon.com>
-> Cc: David Woodhouse <dwmw@amazon.co.uk>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/kvm/x86.c | 19 ++++++++++---------
->   1 file changed, 10 insertions(+), 9 deletions(-)
-> 
+On Mon, Feb 03, 2025 at 05:16:50PM +0200, Dmitry Baryshkov wrote:
+> On Mon, Feb 03, 2025 at 09:22:51AM +0100, Johan Hovold wrote:
+> > On Fri, Jan 31, 2025 at 10:44:28AM -0800, Abhinav Kumar wrote:
 
-Reviewed-by: Paul Durrant <paul@xen.org>
+> > > Solution: If the user prefers iris driver and iris driver has not probed 
+> > > yet, and if venus tries to probe ahead of iris we keep -EDEFERing till 
+> > > iris probes and succeeds. Vice-versa when the preference is venus as well.
+> > 
+> > This sounds wrong too.
+> > 
+> > Look, first you guys need to explain *why* you want to have two drivers
+> > for the same hardware (not just to me, in the commit message and cover
+> > letter).
+> >
+> > That's something that really should never be the case and would need to
+> > be motivated properly.
+> 
+> I think it has been written several time (not sure about this commit):
+> to provide a way for a migration path _while_ people are working on Iris
+> features. Being able to A/B test Venus and Iris drivers and to report
+> possible regressions or lack of those on the common platforms supported
+> by those (sm8250 at this moment).
+
+You don't need a module parameter for that.
+
+And we're still waiting to hear the answers to all of Hans' questions. I
+still haven't seen anyone explaining why any of this is needed. You
+could have just continued letting Venus support 8250 so presumably there
+is some benefit in using Iris instead. Which? And is that potential
+benefit important enough to not just wait until Iris is up to par
+feature wise?
+
+I'm sure you have some answers, but you need to provide them as part of
+the series.
+
+> > Second, if the reasons for keeping both drivers are deemed justifiable,
+> > you need to come up with mechanism for only binding one of them.
+> > 
+> > I already told you that module parameters is not the way to go here (and
+> > the msm drm driver's abuse of module parameters is not a good precedent
+> > here).
+> > 
+> > If this is a transitional thing (which it must be), then just add a
+> > Kconfig symbol to determine which driver should probe. That's good
+> > enough for evaluating whatever needs to be evaluated, and doesn't
+> > depend on adding anti-patterns like module parameters (and helper
+> > modules for them).
+> 
+> No, Kconfig complicates A/B testing. What you usually want to do is to
+> boot a kernel, then go over a bunch of files testing that they work with
+> both drivers. Kconfig implies booting abother kernel, etc.
+
+No, I'm pretty sure you'd even want to reboot in between so as not to
+rely on state left behind by the other driver.
+
+Unbinding and rebinding drivers is not part of any normal work flow
+expect possibly during development. And a developer can easily compare
+Venus and Iris for 8250 without a module parameter too.
+
+Johan
