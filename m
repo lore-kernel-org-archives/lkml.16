@@ -1,115 +1,142 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CDC20371A
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDDB20371A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660359; cv=none; b=Pkh42ItnWjmdGhF6xAdTZLqgcco9amFaShaaToxW/FaHMZH+iirLfjki71W2f8aQZBe/1tzh3m4uisiYwiUtWyWRcKcWJyKqhF+nsGgbUBiJkTOGs8K9n0qTHY9O3p2g6+71f7uAzkMj8Tzt4ZH4bY7x5TnCAtqfvHYO2QA//xw=
+	t=1738660393; cv=none; b=i1qdspowFKeE4jL0uKaZmcsIRGXzzSuSGAQbxVHBdPKONN+UcqnkWqpUYLiJOxyPNWdAbGrxggs7MoAe2/Wfq3qNFStl/6nbsQe9NghCExVCu0n89qVpt4bLEce/6h2ALXvVe2lLBCL0HKb3w7BeAQz+udtLKa9PPa1/+c2cq7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660359; c=relaxed/simple;
-	bh=lOmPfU/eGVZYXYoZjIKS38Xdl1n45B66FHiHc6aVvxk=;
+	s=arc-20240116; t=1738660393; c=relaxed/simple;
+	bh=Zj7E2MeqphGb/FoGa7alLHmNq9sT8LOGDhFNQC0kVjI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CXqUZgNvoFIK+IjpCJIt3rJSuWfEPttno+0U7VvH/IHYgRUM0nEwH7wCfJAc7N6/tMpsdnaFoh8vw/Csrl+OUHjP+Ry5YXoF2FWzCtaLxhZnYR/P8WHtCp1JCQ/75Mj5UFoR+NhiY/BdROXEfCbHfuHZeV3DabAc+IsPk0LvwtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FzzwQ68n; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=vAUVVmJjrNRvm0aBwlLJqfWOLMDY4zDYGNV/IB7F54tlBSUF+MfjRwQH9kabMDvprY4dFf3QuTc4lrdM3991qJh8dWheI8EJkfACGuZLEhytOvNSPwL8B70NJR6w0H1XDb5XkY2cXHeZ7sTQQ57YO52VUJ9qpkIRO9hSuvzeB90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9r9Sj+y; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FzzwQ68n"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-71e1158fe3eso2944903a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 01:12:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9r9Sj+y"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2f9cd9601b8so221452a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 01:13:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738660356; x=1739265156; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lOmPfU/eGVZYXYoZjIKS38Xdl1n45B66FHiHc6aVvxk=;
-        b=FzzwQ68nLank24TxLUu1tzh/2YiXTBDD/qQ39SifFW5TioVHPG1Su/8AZ4DQ25mZVF
-         pqYEALoZJcV0Ci7wwi+wpRTvTuxFPfe0+TL7IgdvUYCVFrNxNgJvOgZBKuvui7uOB3Hh
-         mRnRX2q89L+cwiAzZRoxIYzmHIeJYnJf3eMczLMTr1LS+B9vjbf3Et7MtBy8/b5Br9+4
-         rQr6VRAKQN6gEoPbvz+Ad+fZ8b7adma3TDFswESnXfkxadQK/eUcoRhkRHzr3RBGeUPk
-         32qHAV7LVYumbE2P/6Tj7BcK7mHiAmr8wq6YOsG9WIn4wbqp+OH4TpGChcfuQiZMPu22
-         BaNw==
+        d=gmail.com; s=20230601; t=1738660391; x=1739265191; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+AHMI1n0um1Uc2f0ky1zL1PO/sMw1al2b0gfWEzKF20=;
+        b=W9r9Sj+yyBsqYDBXCX1i/6uXJbY0vLZRtlN11E+7Xt9gUGz8DKpbQhY+d63mUp+joh
+         xF/pYY0tJsSSzjZg2eQNcx20vnhX7BxYS1a4Wk8PDmxwtE/9RUqnTQSAyK64pmmXOJgo
+         5qIOOWvVEPtJcbzl1ZcZ5JEaRyswwX4FeL4lasGyokUEWfSoFnlZsT9TT/fSODs9+PQp
+         X7g3volBzpnKPPksOFcDo6aWGtuKiXvmYuCBqNAsYbpNZg+/YQkC0t79Uu29Le8cnFhW
+         BFA7kkjY7V/Ux/KJJ1KcJ/pwqOSOsvp2RmJ0BsE7dxDBE560LuHWpGADg2HWjkUU/2SN
+         xdCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738660356; x=1739265156;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lOmPfU/eGVZYXYoZjIKS38Xdl1n45B66FHiHc6aVvxk=;
-        b=bOwsY7cEerIxI4sv6lBNrqoaWBHP9L5NrjgXhyxvS2D+nSWcbj7OXes6DkAxrak0WE
-         QY5kUrMsgh8Eq9eyhTY9S0rJ8jkqnJuahPUo5dsICaxxKA+8TPH9zEzmif9ky2NSfNr2
-         RS64YqLVaqTd0xC5iliNa5lanQWYGJDIsxSPCv9R6yQAq4ublXX/Ov2rEuvcnvrmsLI7
-         zMO/axn0DzPWn9aQftpb6RQAK47VZzZW0Khi7RaGzaSmnb7kNiTZp0Tr9NRuSv+eLkIx
-         cwTtyJ2ZuEXarz89XtansJZDHz358j0pyhummDMkAvlZmhF1vQonwhMA+WFOiV3Nmj1L
-         1ieA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPHqnCGWDImJcEg3/r2a13GgB2JfxLSiP3ONz9FjR3p4RZltbZ9zp+vjMGQ2hYIF+wqH5zzTazyi0hXaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygg54/FrsmPhga+HI69FBsS4EmPYhivqotVw3cCFZPRsB3x8eX
-	nAoGeyZpEY0eiseeCuxmVqFulEYWqjGSNI6RzdahuiFcb8NU+mpZaQZJ+WGt+olC9hAzySlD4OH
-	Ab/OIiiBI0kjsRKMxUsCY/JJt4Su9J3cKxRnEFA==
-X-Gm-Gg: ASbGncsdBo3kQR1R+1M2hHeYtipNaSELHsFxHG0uizFPiFIaWpPLa3UAzVMPSkThsto
-	GiyLZ1DlvKpeetJ8LWBzagfQyZ+46ITfDBGLQIMxc/Xs2yjBb3KeaSXxPhTVrn/lDFejsglKulw
-	==
-X-Google-Smtp-Source: AGHT+IGaBtWiKIGnTwJFrQeBl34glJPVbOx58PH1j6rhPNeD9c1tAu04EaLX9zcvsa1rWGTAMV8NY2NzowwhK+UlT4A=
-X-Received: by 2002:a05:6830:925:b0:71d:f6d3:9fd2 with SMTP id
- 46e09a7af769-726568f1915mr14303629a34.24.1738660351634; Tue, 04 Feb 2025
- 01:12:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738660391; x=1739265191;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+AHMI1n0um1Uc2f0ky1zL1PO/sMw1al2b0gfWEzKF20=;
+        b=qDaVhx5xdbFQ9snUkFTBLNdM/+7jJLXNtVy5lSqejpJk2AMwK1iU2krwCIhkZDkZPp
+         0a4kXKGCnmEkoPre0CZ8HxmK/Xj7Xc61I1YCBqIWg8U6IeRdbFJLI5Hi0HWXREVh5V7N
+         2BGeXmw1KtPF7/b1tX0OuLtnCYR3xcPxAL0oI37O+E2AmQzey79VjnSdF20tsPdRQJ7H
+         n8y/uMUlqPZUYcphgqQrerHTTSwCFPcjIpBzP7I3ipXbD4JTeAr2Fr7gWyfV3QcwzQoy
+         d0ePO2Xnf2hS4gWWhUGebgh2Z0/W4A1agSceBq1BE2QkR2bMmNhDgD68zekjwdHHZZ+R
+         qXAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkbIdyA2Br5EjY2MnJpeN1YcBLYwdUsk4Ngl91wPur9eaqckQM5iqjCmUvlEerfJRyFP7zqSbP3KzQYiE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzsl29gtAvdZ+GFJ2nYUxu+031E9US+8yX/MTfK7PI1ysuX4Qx+
+	RQ+DU6kSjaR1Ujlcm4/FO7c75ataa+yhmSO4liVd2b8JgitKE3QOvlMvjnBkcCzDM7vu57wEagj
+	sQOGWVqDWRBtCo0uWFz/TIoB4X+0=
+X-Gm-Gg: ASbGncsQxg3YH2FJRpdM2BNB6h1JZySgbeMlYLyFJ5svafPH8jg18f/DevbjFiGCbr0
+	Cog5JCpkFckqM7hLAXMGKt9JZ6UGoFuamGVDbuLViMGVZ+AE+sJy/YuBLFo5Z1G/OmRk3Pvycsy
+	efZRcCtRE5DWzvpiuRC3snCz1Moqo=
+X-Google-Smtp-Source: AGHT+IEjr+5p9ULMzoc/xpn7zcsHmFh9pQft0Sd8GQkkXIpsHHX4xJoLdzK+6o4pH/qlQ/u3VVH/AFYlbacH5FUEJZE=
+X-Received: by 2002:a17:90b:51cc:b0:2ea:498d:809f with SMTP id
+ 98e67ed59e1d1-2f83ac5e467mr32092446a91.26.1738660391086; Tue, 04 Feb 2025
+ 01:13:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204073418.491016-1-sumit.garg@linaro.org> <60cd3fcc-5d21-4b98-9a81-f5fbec2099fc@app.fastmail.com>
-In-Reply-To: <60cd3fcc-5d21-4b98-9a81-f5fbec2099fc@app.fastmail.com>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Tue, 4 Feb 2025 10:12:20 +0100
-X-Gm-Features: AWEUYZmX7hyL7KTGLrWQk_2I6kQWMPU905QHsNtMHpKEdVFr8ey35q3rQRoHbC4
-Message-ID: <CAHUa44EnCdjEfevuFa4rdTykiD1fjU9+GbVq=TSOPaFz1sZpDA@mail.gmail.com>
-Subject: Re: [PATCH v3] tee: optee: Fix supplicant wait loop
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sumit Garg <sumit.garg@linaro.org>, op-tee@lists.trustedfirmware.org, 
-	Jerome Forissier <jerome.forissier@linaro.org>, dannenberg@ti.com, javier@javigon.com, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com>
+ <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info> <20250117080507.GA25953@lst.de>
+ <f81bb87a-c181-4973-be05-f7df84133a46@leemhuis.info> <10e39c88-4667-4c61-b3eb-3dd7ee3074c3@leemhuis.info>
+ <20250128074133.GA22435@lst.de> <379bba80-df0f-44c5-a15e-fd4393c52b8f@simg.de>
+ <Z5jTKTfKUeLm4uJT@gallifrey> <e01fdde0-4760-487d-af0e-2aecf9d7ade2@simg.de>
+ <CAOBLbT8V5DkuXzzgp2dPOZkGomqiLa_cdC=e=uWBtcWpP7L=Ww@mail.gmail.com> <20250204061208.GA29300@lst.de>
+In-Reply-To: <20250204061208.GA29300@lst.de>
+From: Bruno Gravato <bgravato@gmail.com>
+Date: Tue, 4 Feb 2025 09:12:54 +0000
+X-Gm-Features: AWEUYZklsTO1DdX17XI0s3UrJDzPBR2NguTIOGWaQniEHqaiG2AWZWpwapwJWK0
+Message-ID: <CAOBLbT_kn+5H-+RYM1UOAkxhfJnpqKMNv9_d_Ys9CgY_=TcdsA@mail.gmail.com>
+Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of AsRock
+ X600M-STX + Ryzen 8700G
+To: Christoph Hellwig <hch@lst.de>
+Cc: Stefan <linux-kernel@simg.de>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Thorsten Leemhuis <linux@leemhuis.info>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Keith Busch <kbusch@kernel.org>, Adrian Huang <ahuang12@lenovo.com>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, linux-nvme@lists.infradead.org, 
+	Jens Axboe <axboe@fb.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
+	LKML <linux-kernel@vger.kernel.org>, bugzilla-daemon@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 4, 2025 at 8:45=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote:
+On Tue, 4 Feb 2025 at 06:12, Christoph Hellwig wrote:
 >
-> On Tue, Feb 4, 2025, at 08:34, Sumit Garg wrote:
-> > OP-TEE supplicant is a user-space daemon and it's possible for it
-> > be hung or crashed or killed in the middle of processing an OP-TEE
-> > RPC call. It becomes more complicated when there is incorrect shutdown
-> > ordering of the supplicant process vs the OP-TEE client application whi=
-ch
-> > can eventually lead to system hang-up waiting for the closure of the
-> > client application.
+> On Sun, Feb 02, 2025 at 08:32:31AM +0000, Bruno Gravato wrote:
+> > In my tests I was using real data: a backup of my files.
 > >
-> > Allow the client process waiting in kernel for supplicant response to
-> > be killed rather than indefinitely waiting in an unkillable state. Also=
-,
-> > a normal uninterruptible wait should not have resulted in the hung-task
-> > watchdog getting triggered, but the endless loop would.
-> >
-> > This fixes issues observed during system reboot/shutdown when supplican=
-t
-> > got hung for some reason or gets crashed/killed which lead to client
-> > getting hung in an unkillable state. It in turn lead to system being in
-> > hung up state requiring hard power off/on to recover.
-> >
-> > Fixes: 4fb0a5eb364d ("tee: add OP-TEE driver")
-> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > Cc: <stable@vger.kernel.org>
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > On one such test I copied over 300K files, variables sizes and types
+> > totalling about 60GB. A bit over 20 files got corrupted.
+> > I tried copying the files over the network (ethernet) using rsync/ssh.
+> > I also tried restoring the files using restic (over ssh as well). And
+> > I also tried copying the files locally from a SATA disk. In all cases
+> > I got similar results with some files being corrupted.
+> > The destination nvme disk was using btrfs and running btrfs scrub
+> > after the copy detects quite a few checksum errors.
 >
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-
-Reviewed-by: Jens Wiklander <jens.wiklander@linaro.org>
-
+> So you used various different data sources, and the desintation was
+> always the nvme device in the suspect slot.
 >
-> Jens, I assume you'll pick it up and send me a pull request, but
-> I can also pick it up directly if you have nothing else.
 
-I have nothing else, please pick up this directly.
+Yes, regardless of the data source, the destination was always a
+single nvme disk on the main M.2 nvme slot, with the secondary M.2
+nvme slot empty.
+I tried 3 different disks (WD, Crucial and Solidigm) with similar results.
+If I put any of those disks on the secondary M.2 slot (with the main
+slot empty) the problem doesn't occur.
+The one that intrigues me most is if I put 2 nvme disks in, occupying
+both M.2 slots, the problem doesn't occur either.
+The secondary slot must be empty for the issue to happen.
 
-Thanks,
-Jens
+I didn't try using the main M.2 slot as source instead of target, to
+see if the problem also occurs on reading as well.
+I could try that if you think it's worth testing.
+
+
+> > I analyzed some of those corrupted files and one of them happened to
+> > be a text file (linux kernel source code).
+> > A big portion of the text was replaced with text from another file in
+> > the same directory (being text made it easy to find where it came
+> > from).
+> > So this was a contiguous block of text that was overwritten with a
+> > contiguous block of text from another file.
+> > If I remember correctly the other file was not corrupted (so the
+> > blocks weren't swapped). It looked like a certain block of text was
+> > written twice: on the correct file and on another file in the same
+> > directory.
+>
+> That's a very interesting pattern.
+>
+> > I also got some jpeg images corrupted. I was able to open and view
+> > (partially) those images and it looked like a portion of the image was
+> > repeated in a different part of it), so blocks of the same file were
+> > probably duplicated and overwritten within itself.
+> >
+> > The blocks being overwritten seemed to be different sizes on different files.
+>
+> This does sound like a fairly common pattern due to SSD FTL issues,
+> but I still don't want to rule out swiotlb, which due to the bucketing
+> could maybe also lead to these, but I can't really see how.  But the
+> fact that the affected systems seem to be using swiotlb despite no
+> good reason for them to do so still leaves me puzzled.
+>
