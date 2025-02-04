@@ -1,68 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC742153CF
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA52215170;
+	Tue,  4 Feb 2025 16:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738686519; cv=none; b=e6KpnhGfsKmJ61wF9JyoA7+7DdNplKY+eL7zv5S9yTbsC0+ucZdszfxJ8IUinVUIShH/1vRS7gPvP8xBTN5uJaULaoureg/k6qbWL2WDQJzBVHf/3LctUCgHS7MCmNRWsPLPFxEcp8DJjo13dMo6QI7agaagPdwvpNuNitL5qe4=
+	t=1738686581; cv=none; b=h5GNioEt0IaMYTVMdtn9sQaXRJb2PDTQ6LgVO8QVxevC3LC0NL46YL/x1IvfG5ILnCqkveOyv0vHn/U5gfvfPYFmiMxwJ1s01DMh6v/em9WPOas6xXHsvmjmkLm3bzJCvJ7KDWH46rR79P9D1KSN754uy5Ly7pvWBsYCbhse9mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738686519; c=relaxed/simple;
-	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ip6Sfy8qRQLLm7wtwf2SK9iDTYufQDrPBiG06Mfqepc5b2JBBBC9YCN6jpI4QD6xSJg/iRL58/YATeBdO1Z9Vpk75685y2iO2ycdzoM5UFntaZYkV5sWr2GDhTzCdWDETHEzdFSfB3wPEgvdC2hpfzQ1/ctzuY/d7jMzrSMG1w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PYf7GfMo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738686581; c=relaxed/simple;
+	bh=Qs6e0KJlL+rHWKqr6JOBVAvvD5sz4CzA9l65oUAebTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2TSjsU/T2/dE3CkJ+NAzFer0tRQnLg5cDNdloNNS+QmkTabtUjFpJWdpcIMW+AazBR8S/h0mdvRybbAZAlhDXd2HWdKI9qugcgaEj9LfEmAm9Qjr1NZ2bTSycdY7nUXAd2XB3PyRZyuC1wkc//G21UDLwDsXR/DCTDiz3W/AzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JdBUBIq2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PYf7GfMo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738686516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
-	b=PYf7GfMoNgGJXukG1Dd7xi1IvXOqDZW+Y3fQCxk0AtidZHnjwfFG7iXkw86hB8lejctpYU
-	OqkxZJIqgDEIVl6QOKkKyea7JmRMgaXcpmomoh0UkQ+6MkQORKqA9F6ZueLLd8Cv9WJFzZ
-	aAV/mf0j/G+CiHFKBw3EbHGPuFiGY+U=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-139-zmZ2R7rEPyiJPfSgrDE-UA-1; Tue,
- 04 Feb 2025 11:28:33 -0500
-X-MC-Unique: zmZ2R7rEPyiJPfSgrDE-UA-1
-X-Mimecast-MFC-AGG-ID: zmZ2R7rEPyiJPfSgrDE-UA
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 51EEE1801F1C;
-	Tue,  4 Feb 2025 16:28:32 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7D959195608E;
-	Tue,  4 Feb 2025 16:28:31 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH] KVM: x86/mmu: Ensure NX huge page recovery thread is alive before waking
-Date: Tue,  4 Feb 2025 11:28:29 -0500
-Message-ID: <20250204162829.253475-1-pbonzini@redhat.com>
-In-Reply-To: <20250124234623.3609069-1-seanjc@google.com>
-References: 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JdBUBIq2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17810C4CEE8;
+	Tue,  4 Feb 2025 16:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738686580;
+	bh=Qs6e0KJlL+rHWKqr6JOBVAvvD5sz4CzA9l65oUAebTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JdBUBIq2xMKlpcYxMCmcKUd8j1Xq6x+z+tYS1Ajbxt/YfVapIZXoDhF+iiNxkpWA/
+	 7RdPXRapN18qMjALO09/YSt9NZBvTyHpBFUsT9YIk9oL65epwkfwZPOsheVyOQqGSY
+	 goNCRj4deYMxVLxFJmJb/jAXmLG44wXfsGUFTJrq/JWFkoL5NLkIvvfOrUfWPvE9hK
+	 B1+I1FKLgtRQsVOlRerK33LV11JwmXezP4Rc3sKRMzNx/MRLdPQGl+lJaB55d0VEL+
+	 hgzbWmQypQ56XtjWEgnBXxcAw/BSYHHSYhN1jAUisrCepGafrZcgKUOvquOVi0x1iB
+	 165DdMvrdH+2A==
+Date: Tue, 4 Feb 2025 16:29:38 +0000
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 0/2 v6] add ioctl/sysfs to donate file-backed pages
+Message-ID: <Z6JAcsAOCCWp-y66@google.com>
+References: <20250117164350.2419840-1-jaegeuk@kernel.org>
+ <Z4qb9Pv-mEQZrrXc@casper.infradead.org>
+ <Z4qmF2n2pzuHqad_@google.com>
+ <Z4qpurL9YeCHk5v2@casper.infradead.org>
+ <Z4q_cd5qNRjqSG8i@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z4q_cd5qNRjqSG8i@google.com>
 
-Queued, thanks.
+On 01/17, Jaegeuk Kim wrote:
+> On 01/17, Matthew Wilcox wrote:
+> > On Fri, Jan 17, 2025 at 06:48:55PM +0000, Jaegeuk Kim wrote:
+> > > > I don't understand how this is different from MADV_COLD.  Please
+> > > > explain.
+> > > 
+> > > MADV_COLD is a vma range, while this is a file range. So, it's more close to
+> > > fadvise(POSIX_FADV_DONTNEED) which tries to reclaim the file-backed pages
+> > > at the time when it's called. The idea is to keep the hints only, and try to
+> > > reclaim all later when admin expects system memory pressure soon.
+> > 
+> > So you're saying you want POSIX_FADV_COLD?
+> 
+> Yeah, the intention looks similar like marking it cold and paging out later.
 
-Paolo
-
-
+Kindly ping, for the feedback on the direction. If there's demand for something
+generalized api, I'm happy to explore.
