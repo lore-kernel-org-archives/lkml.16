@@ -1,171 +1,175 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC85121323A;
-	Tue,  4 Feb 2025 18:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74EE4216E2C;
+	Tue,  4 Feb 2025 18:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738692711; cv=none; b=ddBzC/tHmN88tcibKuHp5viIeO2SQaProZ44/2F9yC7DG9RQlRXRwqDiqsntzk4FJUEIUYyNw13TKlTGzazCJ5wfv4gf4rZ3s9HoENQ3Zy+lCVWTYjlopBT6Aucei0F7/3vDHx0qg8nMM8cvyej2RG43KomJB1uwET0TbLFzHL0=
+	t=1738692711; cv=none; b=S49nd/GvwakZ+A14LS9124QKo1sf/7U9ovlKlp2uFR0maDvoXyFY6++NMqNilRAVj0QCRiOmsM3tkidutgVgAqJ2Ex3NiWhif+/sLT1PE2sHAq2JLPjKFtVWMNEbSK9S+t2ZocXsvdnTTgjQFvAgU3ERUZFzCLZTGIYVNZFGwNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738692711; c=relaxed/simple;
-	bh=KS3ZmcpIOz9v7pJkkCKbwjtA1JRgKahjeTsxL/WsKA8=;
-	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
-	 Content-Type:Subject; b=Hdi8kmrjBsj5V5NEdyiQQfOTIcShZKxc8dK08Sj9QNbyQxbx8MBaQDRXMCPqBHWTuchiaJYvpaw0+mrVLbLqme1aL4qFkYG4AdWqFF3u0rf700fMHW8y6zhHD/sAOuNFpQyyY8csqQmqJJtgLLeRxRQEufoH9mrdu/ZNujmFfxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=ZIcFteER; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+	bh=lZohJvru0wEAeyjk9++6ixRpPfyvCVVloXV+qroa98o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KWmoSoodnm1KBNaDg0zxo9CDqDOWkaJ80HqpduOT/v0nYvbq/ScCw2yQpsySeZMP7Xu/hGVj54moVfSa/HmSPkiQGVPHiSO9pIzujpjoUcZ5fq4ZdIvdCsRPRBNe5lkjq1nAQMhOobA1mqbjypbc1vxvGKyzDfMq8cx4nQZbf74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oEz92f3f; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="ZIcFteER"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
-	:Date:subject:date:message-id:reply-to;
-	bh=YTF+w0WkN8/brmYU7JARPGRsoEigeKQVOQIogVMPd9c=; b=ZIcFteERixfmdRSY5Z4iDkGbg2
-	KtzSuoJglZUpDIdX9WUr+OzYgHzCDHvfzWmD5B2wbaZdQLL4hjxDiE2tZ0KiT/jVXeXMTxANKn3/x
-	d0Nx/pTfJ7ZrqlGTc+TxdYdfm+Nei9804mQ1esonpDXGRzTOVnZ082KASKqTdwP6LgKg=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:38586 helo=pettiford.lan)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1tfN04-0007MX-Go; Tue, 04 Feb 2025 12:46:17 -0500
-Date: Tue, 4 Feb 2025 12:46:15 -0500
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: neil.armstrong@linaro.org
-Cc: Jagan Teki <jagan@edgeble.ai>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Linus Walleij <linus.walleij@linaro.org>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>, stable@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Message-Id: <20250204124615.4d7a308633a15fc17b2215cb@hugovil.com>
-In-Reply-To: <16bd6bc2-8f10-4b99-9903-6e9f0f8778d8@linaro.org>
-References: <20240927135306.857617-1-hugo@hugovil.com>
-	<f9b0cc53-00ae-4390-9ff9-1dac0c0804ba@linaro.org>
-	<20240930110537.dbbd51824c2bb68506e2f678@hugovil.com>
-	<16bd6bc2-8f10-4b99-9903-6e9f0f8778d8@linaro.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oEz92f3f"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=I1Z6vtjWwNt9llagECDSFKTWccFi8I5yGC2RHidsKD4=; b=oEz92f3fyA0Ss/NdcE97bUjLj7
+	OAkmAJz6Lm0uLTBPZ6NxPswyu24HgtJT3+lIvNB1KDfju9+OckM+zZ0bvj48Di2E9Qs26rkxXs+P0
+	D1ixidxJdxeV3lz+IEYoxAx246oSyeP7DBLmBywGESvSw2BL2ie+W0nUAqzkojYTVSJAk1Kr8ztjZ
+	nJGbJHJPFDyLijvKrNvcYxuBYz6PwgWMMGKzyK4mCyNotBk+elhrjdmPiXkvl2fb/QU439pBevdGi
+	n/eGJbtd5v6HkYkk/+RYUtcrevhJjHHwJwdjCzFwe9y+k6ICPVCcqAuCpzLCR64y/Dkrg9bxu0MMI
+	ARAa7TXg==;
+Received: from [50.53.2.24] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfNOj-0000000GNKa-0CSH;
+	Tue, 04 Feb 2025 18:11:45 +0000
+Message-ID: <460e7278-440d-47a1-bbf3-7b7fbbe2f20d@infradead.org>
+Date: Tue, 4 Feb 2025 10:11:40 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs: Fix spelling and grammatical issues
+To: Purva Yeshi <purvayeshi550@gmail.com>, jikos@kernel.org,
+ bentiss@kernel.org, corbet@lwn.net, jdelvare@suse.com, linux@roeck-us.net
+Cc: skhan@linuxfoundation.org, linux-usb@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+References: <20250204134806.28218-1-purvayeshi550@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250204134806.28218-1-purvayeshi550@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -1.9 NICE_REPLY_A Looks like a legit reply (A)
-Subject: Re: [PATCH] drm: panel: jd9365da-h3: fix reset signal polarity
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-On Mon, 30 Sep 2024 18:24:44 +0200
-neil.armstrong@linaro.org wrote:
 
-> On 30/09/2024 17:05, Hugo Villeneuve wrote:
-> > On Mon, 30 Sep 2024 16:38:14 +0200
-> > Neil Armstrong <neil.armstrong@linaro.org> wrote:
-> > 
-> >> Hi,
-> >>
-> >> On 27/09/2024 15:53, Hugo Villeneuve wrote:
-> >>> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> >>>
-> >>> In jadard_prepare() a reset pulse is generated with the following
-> >>> statements (delays ommited for clarity):
-> >>>
-> >>>       gpiod_set_value(jadard->reset, 1); --> Deassert reset
-> >>>       gpiod_set_value(jadard->reset, 0); --> Assert reset for 10ms
-> >>>       gpiod_set_value(jadard->reset, 1); --> Deassert reset
-> >>>
-> >>> However, specifying second argument of "0" to gpiod_set_value() means to
-> >>> deassert the GPIO, and "1" means to assert it. If the reset signal is
-> >>> defined as GPIO_ACTIVE_LOW in the DTS, the above statements will
-> >>> incorrectly generate the reset pulse (inverted) and leave it asserted
-> >>> (LOW) at the end of jadard_prepare().
-> >>
-> >> Did you check the polarity in DTS of _all_ users of this driver ?
-> > 
-> > Hi Neil,
-> > I confirmed that no in-tree DTS is referencing this driver. I did a
-> > search of all the compatible strings defined in the
-> > "jadard,jd9365da-h3.yaml" file. I also did the same on Debian code
-> > search.
+
+On 2/4/25 5:48 AM, Purva Yeshi wrote:
+> Fix several spelling and grammatical errors across multiple
+> documentation files.
 > 
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> ---
+>  Documentation/hid/hiddev.rst                | 4 ++--
+>  Documentation/hid/intel-ish-hid.rst         | 2 +-
+>  Documentation/hid/uhid.rst                  | 2 +-
+>  Documentation/hwmon/abituguru-datasheet.rst | 8 ++++----
+>  Documentation/hwmon/abituguru.rst           | 2 +-
+>  5 files changed, 9 insertions(+), 9 deletions(-)
 > 
-> OK then:
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> diff --git a/Documentation/hid/hiddev.rst b/Documentation/hid/hiddev.rst
+> index 9b82c7f896aa..073485f84793 100644
+> --- a/Documentation/hid/hiddev.rst
+> +++ b/Documentation/hid/hiddev.rst
+> @@ -15,10 +15,10 @@ To support these disparate requirements, the Linux USB system provides
+>  HID events to two separate interfaces:
+>  * the input subsystem, which converts HID events into normal input
+>  device interfaces (such as keyboard, mouse and joystick) and a
+> -normalised event interface - see Documentation/input/input.rst
+> +normalized event interface - see Documentation/input/input.rst
+>  * the hiddev interface, which provides fairly raw HID events
+>  
+> -The data flow for a HID event produced by a device is something like
+> +The data flow for an HID event produced by a device is something like
 
-Hi Neil,
-it seems this patch was never applied/picked-up?
+Not needed IMO, since I think ("say") the word "hid" when I see HID.
 
-Hugo.
+>  the following::
+>  
+>   usb.c ---> hid-core.c  ----> hid-input.c ----> [keyboard/mouse/joystick/event]
+> diff --git a/Documentation/hid/intel-ish-hid.rst b/Documentation/hid/intel-ish-hid.rst
+> index 2adc174fb576..fdabf6ec60db 100644
+> --- a/Documentation/hid/intel-ish-hid.rst
+> +++ b/Documentation/hid/intel-ish-hid.rst
+> @@ -21,7 +21,7 @@ mainly use HID over I2C or USB. But ISH doesn't use either I2C or USB.
+>  Overview
+>  ========
+>  
+> -Using a analogy with a usbhid implementation, the ISH follows a similar model
+> +Using an analogy with a usbhid implementation, the ISH follows a similar model
+>  for a very high speed communication::
+>  
+>  	-----------------		----------------------
+> diff --git a/Documentation/hid/uhid.rst b/Documentation/hid/uhid.rst
+> index 2243a6b75914..2681038cd526 100644
+> --- a/Documentation/hid/uhid.rst
+> +++ b/Documentation/hid/uhid.rst
+> @@ -106,7 +106,7 @@ UHID_INPUT2:
+>  
+>  UHID_GET_REPORT_REPLY:
+>    If you receive a UHID_GET_REPORT request you must answer with this request.
+> -  You  must copy the "id" field from the request into the answer. Set the "err"
+> +  You must copy the "id" field from the request into the answer. Set the "err"
 
+That part of the patch is OK but just not worth the effort IMHO.
 
-> 
-> > 
-> > Hugo.
-> > 
-> > 
-> >>
-> >> Neil
-> >>
-> >>>
-> >>> Fix reset behavior by inverting gpiod_set_value() second argument
-> >>> in jadard_prepare(). Also modify second argument to devm_gpiod_get()
-> >>> in jadard_dsi_probe() to assert the reset when probing.
-> >>>
-> >>> Do not modify it in jadard_unprepare() as it is already properly
-> >>> asserted with "1", which seems to be the intended behavior.
-> >>>
-> >>> Fixes: 6b818c533dd8 ("drm: panel: Add Jadard JD9365DA-H3 DSI panel")
-> >>> Cc: <stable@vger.kernel.org>
-> >>> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> >>> ---
-> >>>    drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c | 8 ++++----
-> >>>    1 file changed, 4 insertions(+), 4 deletions(-)
-> >>>
-> >>> diff --git a/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c b/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
-> >>> index 44897e5218a69..6fec99cf4d935 100644
-> >>> --- a/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
-> >>> +++ b/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
-> >>> @@ -110,13 +110,13 @@ static int jadard_prepare(struct drm_panel *panel)
-> >>>    	if (jadard->desc->lp11_to_reset_delay_ms)
-> >>>    		msleep(jadard->desc->lp11_to_reset_delay_ms);
-> >>>    
-> >>> -	gpiod_set_value(jadard->reset, 1);
-> >>> +	gpiod_set_value(jadard->reset, 0);
-> >>>    	msleep(5);
-> >>>    
-> >>> -	gpiod_set_value(jadard->reset, 0);
-> >>> +	gpiod_set_value(jadard->reset, 1);
-> >>>    	msleep(10);
-> >>>    
-> >>> -	gpiod_set_value(jadard->reset, 1);
-> >>> +	gpiod_set_value(jadard->reset, 0);
-> >>>    	msleep(130);
-> >>>    
-> >>>    	ret = jadard->desc->init(jadard);
-> >>> @@ -1131,7 +1131,7 @@ static int jadard_dsi_probe(struct mipi_dsi_device *dsi)
-> >>>    	dsi->format = desc->format;
-> >>>    	dsi->lanes = desc->lanes;
-> >>>    
-> >>> -	jadard->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> >>> +	jadard->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-> >>>    	if (IS_ERR(jadard->reset)) {
-> >>>    		DRM_DEV_ERROR(&dsi->dev, "failed to get our reset GPIO\n");
-> >>>    		return PTR_ERR(jadard->reset);
-> >>>
-> >>> base-commit: 18ba6034468e7949a9e2c2cf28e2e123b4fe7a50
-> >>
-> >>
-> > 
-> > 
-> 
-> 
+>    field to 0 if no error occurred or to EIO if an I/O error occurred.
+>    If "err" is 0 then you should fill the buffer of the answer with the results
+>    of the GET_REPORT request and set "size" correspondingly.
+> diff --git a/Documentation/hwmon/abituguru-datasheet.rst b/Documentation/hwmon/abituguru-datasheet.rst
+> index 0cd61471d2a2..8c55874061d4 100644
+> --- a/Documentation/hwmon/abituguru-datasheet.rst
+> +++ b/Documentation/hwmon/abituguru-datasheet.rst
+> @@ -6,9 +6,9 @@ First of all, what I know about uGuru is no fact based on any help, hints or
+>  datasheet from Abit. The data I have got on uGuru have I assembled through
+>  my weak knowledge in "backwards engineering".
+>  And just for the record, you may have noticed uGuru isn't a chip developed by
+> -Abit, as they claim it to be. It's really just an microprocessor (uC) created by
+> +Abit, as they claim it to be. It's really just a microprocessor (uC) created by
+>  Winbond (W83L950D). And no, reading the manual for this specific uC or
+> -mailing  Windbond for help won't give any useful data about uGuru, as it is
+> +mailing  Winbond for help won't give any useful data about uGuru, as it is
 
+          ^^ 2 spaces there also.
+
+>  the program inside the uC that is responding to calls.
+>  
+>  Olle Sandberg <ollebull@gmail.com>, 2005-05-25
+> @@ -35,7 +35,7 @@ As far as known the uGuru is always placed at and using the (ISA) I/O-ports
+>  ports are holding for detection. We will refer to 0xE0 as CMD (command-port)
+>  and 0xE4 as DATA because Abit refers to them with these names.
+>  
+> -If DATA holds 0x00 or 0x08 and CMD holds 0x00 or 0xAC an uGuru could be
+> +If DATA holds 0x00 or 0x08 and CMD holds 0x00 or 0xAC a uGuru could be
+>  present. We have to check for two different values at data-port, because
+>  after a reboot uGuru will hold 0x00 here, but if the driver is removed and
+>  later on attached again data-port will hold 0x08, more about this later.
+> @@ -46,7 +46,7 @@ have to test CMD for two different values. On these uGuru's DATA will initially
+>  hold 0x09 and will only hold 0x08 after reading CMD first, so CMD must be read
+>  first!
+>  
+> -To be really sure an uGuru is present a test read of one or more register
+> +To be really sure a uGuru is present a test read of one or more register
+>  sets should be done.
+>  
+>  
+> diff --git a/Documentation/hwmon/abituguru.rst b/Documentation/hwmon/abituguru.rst
+> index cfda60b757ce..4a5ee16b1048 100644
+> --- a/Documentation/hwmon/abituguru.rst
+> +++ b/Documentation/hwmon/abituguru.rst
+> @@ -40,7 +40,7 @@ Supported chips:
+>  
+>  .. [2]  There is a separate abituguru3 driver for these motherboards,
+>  	the abituguru (without the 3 !) driver will not work on these
+> -	motherboards (and visa versa)!
+> +	motherboards (and vice versa)!
+
+Ack.
+
+>  
+>  Authors:
+>  	- Hans de Goede <j.w.r.degoede@hhs.nl>,
 
 -- 
-Hugo Villeneuve
+~Randy
+
