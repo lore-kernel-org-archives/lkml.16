@@ -1,129 +1,122 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5302421323A
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B88378F4A;
+	Tue,  4 Feb 2025 18:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738692864; cv=none; b=A3f/oJ8UzwjKORRD8gZt2YUC09q1TxNvYF05Y4ozwXZ2Ac5skBBmn7FFXNpD2Osl/0zc6CO087d1JXwVfjv+Qi2FPHctkhKXVz3UmSoi6Db8hgkGvx0oB7CSNnIoPBAIq+LCQhaKbNIuzXNGMzxC14lrB6uko0qZRQutFBshecg=
+	t=1738692962; cv=none; b=YN+KP1UzcRT5v2/nmAY/Uq02BdtkO0ls0B/bUZ7b+jPI0wLhs53HQX/pY+W5otSJkd30KCaNLCTqbODiTUHr8j56lF+GrHY2zsICzDfV474An4tysd0FfoFpJY4tiHQ51/6JSYRRFabljQ3BQbRmn5ccSOe5BJaPclBkYQ4dAY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738692864; c=relaxed/simple;
-	bh=hnCyUxNPspxILeKTH+nIkMmS/BlUT3xra+gnnJkUAR0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kwtVy6zQsu0FHcb7QfPHslwGCrhVCEmzGr922/FqesB5cFlHQTTAQFZw+05W7kdJiE7ZbjHj++Q/7KmXDXp5Uh0BNtgMVGtQ/tG7fbsUu0us+hY6mLuQ1iD7TVPqSo8I02U29CjfzUHlgD4yZV8dyHQs+MdXGxO/SPedqOGzhbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L7rEHWNU; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738692962; c=relaxed/simple;
+	bh=SFlZmlOmwT2nlW8hyicRQhNsH7DoMqiXu2vKaE6u6sY=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=jEoZvXIG/2ciFdcW6C7CgTLMoceSVGh4bZ3Zz2QmK5Hp8Dt+tWSNVS3qVSXDwf70BqKj4RO4oinhAXndhDFM0VZaX1XpbP2RUDnGEUWeqTzYpJgko91KhHmYQvjCoZgboq1c6vGWYERBZQhCdSVzxfbKoumVTJNgGK9qqC+j2Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ErP86Tfz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C9Q5VT5o; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L7rEHWNU"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-467896541e1so352681cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 10:14:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738692862; x=1739297662; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NT8D/ASvroySCOIUqc+sWLUBAVfNqfn5SXuV0Op8oME=;
-        b=L7rEHWNUGBDtrC9JzFnxjxMH6sXCTLuxVZFMRYb2G4X9XtN1RSB4qz4FgXTu/kVe9B
-         0asDAPPIoUQ/G/ERe+MsXslxeW1M+jTPfuiQejJWNdZrzivMiLYNUPtAquVxZ+x9CfWg
-         NwF2GeGth+b99DvYP67x7zR8d7ynLEZP1Q76o/9rhZ5x1CeuFxvMZoB1v8VJS83vudLb
-         x2qS7cfUhLKqr0zvc9s6dpcrV9/hXRn89gqwRRmGcJimACNTHb4ADqBZfHj+icJQla2i
-         9xAQHRU4gk6ylPtl8nk8umjG952AI9rjx+xWirj8ejHy8sw5Gop5bbNq6dQo0HcefMsq
-         bvww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738692862; x=1739297662;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NT8D/ASvroySCOIUqc+sWLUBAVfNqfn5SXuV0Op8oME=;
-        b=lrR8ZExkt4Xh62Kcw82Hb5bKQcwiINFssOt7ZuRtFhuNdftF/e6qG+F6Q+ThixaFH+
-         nrbOHUVM+BMkfGXsH7CWjCPeF7Ty146zUsuALNg81mNYKp01jo/96kGghBacXbtT9vbI
-         e0ZOKyc98Dbid7rH+p0Q3OLPOUfibtLFhb2E8SOMEEtXhaxjHyCFzO4AFPAv3q9RT8r+
-         mhwvVdGzOHOglCX7J4VUgg4ep6h/LHKTg8PcY5G7Yva+UIi35Y3K4/BoRXdN2ox5IejQ
-         i7w6yFg2ozaBnqFkjtkfHod9sbWCKcF2V8j700/BdQS77lZiSR3fs8JzSLm5va6fSmlD
-         pYlA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/peRe44cIUnE3THs5qbKcwleqprOrmzhWcDRnjI+8iWL3KDH5cpizXi7ZUx71vb/fgcfTS293xfua+Ok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtT2sv8vbyU7b/267Qipc0HoSMhnZZ9/6iaK+DFbpQUiw5rsAa
-	8Z6vuo3KIRTW/6HYA2jq5fbYI/sYSppkTOHhgxLfk6+3nIaFh2LhFFq3iM9N9d2Gfw7uGdMPGuE
-	Cf1vNpt6J1EooGb/ZS6lmfjGXPlKf2z55saID
-X-Gm-Gg: ASbGncutYaZM1Ka1qYak3sApYW0HyW85Yqe26N80GPgnu5UzF3EIZ/4fybuPz0GoY/z
-	nDyPtwnfWeJnOXxsKnC1FEfk0uxmWCpVqCIMkUCdeObE0eyhOWywNHPNqjfBW7gf+nBXNSgpWL+
-	U2r7Q+a07cYMx5JvcknPKjbFS1gq0=
-X-Google-Smtp-Source: AGHT+IEa8EF3C+YHh8oZA7uFjt7+K2oPsJl2Mr0RZipOfR+N7UZXzleg+vqdkoHPNT/b3Uym/WPIFDlXOM7/ddZ2/GQ=
-X-Received: by 2002:ac8:58c2:0:b0:465:c590:ed18 with SMTP id
- d75a77b69052e-4701ab47861mr3818331cf.9.1738692861900; Tue, 04 Feb 2025
- 10:14:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ErP86Tfz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C9Q5VT5o"
+Date: Tue, 04 Feb 2025 18:15:53 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738692958;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=09mZG3QvtaPMaeEMUYTFhm4jYSe7Ocgg9ZIVlsFmEJQ=;
+	b=ErP86TfzXHw2LSe5zL62ox+PjQiw36aQjXiCdwy9Yd9MPg0BhpDxVr6/rvrjjoAte6GTGO
+	8BjFFAFUDhVThmsGP0SqvddTY7ygSKOnc2UX7B8BHjcMvZ05WlEx2fl2NM8DnrTgrMODC0
+	xvWtAU6gTePNEMCQHdfgy+Wgt6dbQPpizHF16I62XUnrlqzgpbtR3RoTOljKnrU3hfUgiQ
+	FrilG1IvoEcWqfSgCs1x5YOuRqgwdTFCUJRXh/AyNJCWe3BNKoDseStClNer1JY8Ys5bg0
+	6h5nXopjTis+dIhT/vcxrwnU5x49R1b+ubQgcCjt3H1j/PZIaqSzFpntgZknuA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738692958;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=09mZG3QvtaPMaeEMUYTFhm4jYSe7Ocgg9ZIVlsFmEJQ=;
+	b=C9Q5VT5opXUNyHg8RGL2mm0ekDRoXR34QZOFbDsnl6pqVWsNmkA/JSocrJwGunKBOekwkb
+	T7/H9NPeAkHrHzBQ==
+From: "tip-bot2 for Thorsten Blum" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/misc] x86/mtrr: Use str_enabled_disabled() helper in
+ print_mtrr_state()
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Thorsten Blum <thorsten.blum@linux.dev>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201231803.2661189-1-surenb@google.com> <20250201231803.2661189-3-surenb@google.com>
- <uz6j7wba2gk2wfn6foxs7v3wqdi5kwqnbolcdp3g7kzkw53a56@t7cyo3nyp2oa>
-In-Reply-To: <uz6j7wba2gk2wfn6foxs7v3wqdi5kwqnbolcdp3g7kzkw53a56@t7cyo3nyp2oa>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 4 Feb 2025 10:14:10 -0800
-X-Gm-Features: AWEUYZlMAX96jgJPDOCW65ebrkqnWSx56hEvpAm8q11zGEvqTSZ7NeWFSDeqdLs
-Message-ID: <CAJuCfpF8qyEA9sfh9-kkiNdPVCJegD7affA3HJeUtgTeqxW-aQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] alloc_tag: uninline code gated by
- mem_alloc_profiling_key in page allocator
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, vbabka@suse.cz, 
-	rostedt@goodmis.org, peterz@infradead.org, yuzhao@google.com, 
-	minchan@google.com, souravpanda@google.com, pasha.tatashin@soleen.com, 
-	00107082@163.com, quic_zhenhuah@quicinc.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <173869295414.10177.6949720988870543292.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 3, 2025 at 4:47=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.dev=
-> wrote:
->
-> On Sat, Feb 01, 2025 at 03:18:02PM -0800, Suren Baghdasaryan wrote:
-> > When a sizable code section is protected by a disabled static key, that
-> > code gets into the instruction cache even though it's not executed and
-> > consumes the cache, increasing cache misses. This can be remedied by
-> > moving such code into a separate uninlined function.
-> > On a Pixel6 phone, page allocation profiling overhead measured with
-> > CONFIG_MEM_ALLOC_PROFILING=3Dy and profiling disabled is:
-> >
-> >              baseline             modified
-> > Big core     4.93%                1.53%
-> > Medium core  4.39%                1.41%
-> > Little core  1.02%                0.36%
-> >
-> > This improvement comes at the expense of the configuration when profili=
-ng
-> > gets enabled, since there is now an additional function call. The overh=
-ead
-> > from this additional call on Pixel6 is:
-> >
-> > Big core     0.24%
-> > Middle core  0.63%
-> > Little core  1.1%
-> >
-> > However this is negligible when compared with the overall overhead of t=
-he
-> > memory allocation profiling when it is enabled.
-> > On x86 this patch does not make noticeable difference because the overh=
-ead
-> > with mem_alloc_profiling_key disabled is much lower (under 1%) to start
-> > with, so any improvement is less visible and hard to distinguish from t=
-he
-> > noise. The overhead from additional call when profiling is enabled is a=
-lso
-> > within noise levels.
-> >
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
->
-> Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
->
-> One question: Is there any plan to enable MEM_ALLOC_PROFILING by default
-> in future?
+The following commit has been merged into the x86/misc branch of tip:
 
-It's left up to each distribution. In Android Common Kernel we are
-enabling it with CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=3Dn and
-allow vendors to enable it using kernel command line parameters.
+Commit-ID:     e3cd85963a20d2b92e77046a8d9f0777815f1f71
+Gitweb:        https://git.kernel.org/tip/e3cd85963a20d2b92e77046a8d9f0777815f1f71
+Author:        Thorsten Blum <thorsten.blum@linux.dev>
+AuthorDate:    Fri, 17 Jan 2025 15:48:59 +01:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Tue, 04 Feb 2025 09:59:40 -08:00
 
->
+x86/mtrr: Use str_enabled_disabled() helper in print_mtrr_state()
+
+Remove hard-coded strings by using the str_enabled_disabled() helper
+function.
+
+Suggested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lore.kernel.org/all/20250117144900.171684-2-thorsten.blum%40linux.dev
+---
+ arch/x86/kernel/cpu/mtrr/generic.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtrr/generic.c
+index 2fdfda2..6be3cad 100644
+--- a/arch/x86/kernel/cpu/mtrr/generic.c
++++ b/arch/x86/kernel/cpu/mtrr/generic.c
+@@ -9,6 +9,7 @@
+ #include <linux/io.h>
+ #include <linux/mm.h>
+ #include <linux/cc_platform.h>
++#include <linux/string_choices.h>
+ #include <asm/processor-flags.h>
+ #include <asm/cacheinfo.h>
+ #include <asm/cpufeature.h>
+@@ -646,10 +647,10 @@ static void __init print_mtrr_state(void)
+ 	pr_info("MTRR default type: %s\n",
+ 		mtrr_attrib_to_str(mtrr_state.def_type));
+ 	if (mtrr_state.have_fixed) {
+-		pr_info("MTRR fixed ranges %sabled:\n",
+-			((mtrr_state.enabled & MTRR_STATE_MTRR_ENABLED) &&
+-			 (mtrr_state.enabled & MTRR_STATE_MTRR_FIXED_ENABLED)) ?
+-			 "en" : "dis");
++		pr_info("MTRR fixed ranges %s:\n",
++			str_enabled_disabled(
++			 (mtrr_state.enabled & MTRR_STATE_MTRR_ENABLED) &&
++			 (mtrr_state.enabled & MTRR_STATE_MTRR_FIXED_ENABLED)));
+ 		print_fixed(0x00000, 0x10000, mtrr_state.fixed_ranges + 0);
+ 		for (i = 0; i < 2; ++i)
+ 			print_fixed(0x80000 + i * 0x20000, 0x04000,
+@@ -661,8 +662,8 @@ static void __init print_mtrr_state(void)
+ 		/* tail */
+ 		print_fixed_last();
+ 	}
+-	pr_info("MTRR variable ranges %sabled:\n",
+-		mtrr_state.enabled & MTRR_STATE_MTRR_ENABLED ? "en" : "dis");
++	pr_info("MTRR variable ranges %s:\n",
++		str_enabled_disabled(mtrr_state.enabled & MTRR_STATE_MTRR_ENABLED));
+ 	high_width = (boot_cpu_data.x86_phys_bits - (32 - PAGE_SHIFT) + 3) / 4;
+ 
+ 	for (i = 0; i < num_var_ranges; ++i) {
