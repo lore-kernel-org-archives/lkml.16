@@ -1,104 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8592066D4;
-	Tue,  4 Feb 2025 11:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0B214A4F0;
+	Tue,  4 Feb 2025 11:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738668681; cv=none; b=Y2G1dCa3Ip74zCqGzHhAObQPTfMmahqKZCRgiM+o3oaBVDGdWudoz3HFLeWWjaKgg4DdRBrTQsDl9aC5cvT0I1IoqNFuWHHO1imX41LfHvCUVzsKoHFjOi/cf5mKLN//1kUd+OtX6PSwrbxqoz6kesZW2f79CAWclVGo0rCbzC0=
+	t=1738668707; cv=none; b=SvwgR3L+ysgLW6+UUCNzlepqUwpIEMbFARGjT+8bQ1AvAlAmqiiMRl9GJJlc3toGswxEuJ7r9u9d9WVoExRUg0qZ9uaqHQypgaIrAqgsHc3JefMmzXauLae3HJrbu1efAExdhuCz+e5kN+drSjCnmykMIRPLopDzJ6nOKIhnUkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738668681; c=relaxed/simple;
-	bh=7XmKudr6uck87icOCprn9YsjKpC5QJOurnBP8lQrfBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eRvQT8v2Ho2CczjY9U9Rq/PAO6sBRU29vmaV4rL9KU3UbuT6992WHIv738EbfC+wzQlIA6vu8SLsUPVBI8KdLZTax0cTP+eZytyzcx1nBdfVyukPemQoUOS4kB1GtUIgbTLtssFCGW3JcrV5oHGDyMwF9vVG9zQ5oXquAKq6w2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMx5ck2W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738668707; c=relaxed/simple;
+	bh=UilKA/GCwKXN1/JS4HWOL1WdCcqsazQphEXmaBIxL/8=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=uNtFDZHhOTubqKEjdu+IBaq7giF7tYF39ri3sajvozMH1UeDxxtG9t8xHLiO0d4xVhoO1swI4xRq0kGv0n6gato1fQr2HhJuHwPQNmbhf3j6Z6o+AP2jl6ecB3x3x+mMEV1W1kZEhjrvI7okldDuOnf472jdve4gNt4iYTDW+vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=V8PQztR5; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMx5ck2W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B93C4CEE2;
-	Tue,  4 Feb 2025 11:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738668680;
-	bh=7XmKudr6uck87icOCprn9YsjKpC5QJOurnBP8lQrfBE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tMx5ck2W0ACKRYwLdhJu9+dYZUUMWtxPa+Lc6KzbA+nRE7Sp/E/jaLUTxAsaUMoZI
-	 bbNuj/TGBH1tuKbwA0bemLZMehOFe7BRJhEpPZfzZ59W4Aib65kB/R71j06yPXyYtt
-	 EAc1NNEhoAdgxGbqsfu+dXm79ugwaLNeRixcZr3MaLEz5wPXaJkm9AmWpfNEaqxegc
-	 p/BQ5RI5Zuem+Q7Rtlw+mVe4pIIPNi9EXJigTUgoOCHb1TLkXiUMN7JFUkYpPjCrYx
-	 F4BJNjq+lB8XYz0JHM5kXqr78Ik2sBeGJpYHcz+HtYo3YaJJNx2wAsqeUpXoyfd7Te
-	 ryS1gLGtcGklg==
-Date: Tue, 4 Feb 2025 11:31:15 +0000
-From: Will Deacon <will@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: 1534428646@qq.com, catalin.marinas@arm.com, mark.rutland@arm.com,
-	kristina.martsenko@arm.com, liaochang1@huawei.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] arm64: kprobe: fix an error in single stepping support
-Message-ID: <20250204113114.GC893@willie-the-truck>
-References: <tencent_9DCAEBDF4D9BCDB4687B502DB6B608E4FB0A@qq.com>
- <Z4oNbOGSluJlwpvg@e129823.arm.com>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="V8PQztR5"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z4oNbOGSluJlwpvg@e129823.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1738668702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0rFwU8+gCEjDdXJtEJfGflM5ucC0PAuf7opUByCC9nM=;
+	b=V8PQztR5xcJdnhXb4kJEvkq8L/EIFTdhE5YQjOhV1UqtTYumzFEtWd6AezT8UZMulpnXjk
+	vax9g1O9TR3hOF2aR86zTeBi+AyTtf3MtF7FGzjR6Z9HQQZZkprdi5yxSrcNDbweuIf2b/
+	fq1tve4eEhOA4mkUdh7qMaaLD+i7/o5LmGVtbVCE9KpH5I0todAJaozzCKbIHqEInYWxjd
+	B3qjTUyQXiG3enkpoMZ7QvG7StKum8kePuYDWS9EafIi6PlaDVWIcgWdmMXjBNKC+qlycc
+	uAefijPS4eZ9Fr96/Oy1st1ZIzLag2VXPazfEOwtipFru4V4U9iwXgs0WPH9rA==
+Date: Tue, 04 Feb 2025 12:31:42 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Quentin Schulz <foss+kernel@0leil.net>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Jagan
+ Teki <jagan@edgeble.ai>, Niklas Cassel <cassel@kernel.org>, Michael Riesch
+ <michael.riesch@wolfvision.net>, Jonas Karlman <jonas@kwiboo.se>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Quentin
+ Schulz <quentin.schulz@cherry.de>, Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 4/4] arm64: dts: rockchip: minimal support for Pre-ICT
+ tester adapter for RK3588 Jaguar
+In-Reply-To: <20250131-pre-ict-jaguar-v4-4-c971e2852e8d@cherry.de>
+References: <20250131-pre-ict-jaguar-v4-0-c971e2852e8d@cherry.de>
+ <20250131-pre-ict-jaguar-v4-4-c971e2852e8d@cherry.de>
+Message-ID: <4306ab9764cc5ae5f89e1b71e18aa037@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Fri, Jan 17, 2025 at 07:57:32AM +0000, Yeoreum Yun wrote:
-> > It is obvious a conflict between the code and the comment.
-> > The function aarch64_insn_is_steppable is used to check if a mrs
-> > instruction can be safe in single-stepping environment, in the
-> > comment it says only reading DAIF bits by mrs is safe in
-> > single-stepping environment, and other mrs instructions are not. So
-> > aarch64_insn_is_steppable should returen "TRUE" if the mrs instruction
-> > being single stepped is reading DAIF bits.
-> >
-> > And have verified using a kprobe kernel module which reads the DAIF bits by
-> > function arch_local_irq_save with offset setting to 0x4, confirmed that
-> > without this modification, it encounters
-> > "kprobe_init: register_kprobe failed, returned -22" error while inserting
-> > the kprobe kernel module. and with this modification, it can read the DAIF
-> > bits in single-stepping environment.
-> >
-> > Fixes: 2dd0e8d2d2a1 ("arm64: Kprobes with single stepping support")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Yiren Xie <1534428646@qq.com>
-> > ---
-> >  arch/arm64/kernel/probes/decode-insn.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
-> > index 6438bf62e753..22383eb1c22c 100644
-> > --- a/arch/arm64/kernel/probes/decode-insn.c
-> > +++ b/arch/arm64/kernel/probes/decode-insn.c
-> > @@ -40,7 +40,7 @@ static bool __kprobes aarch64_insn_is_steppable(u32 insn)
-> >  		 */
-> >  		if (aarch64_insn_is_mrs(insn))
-> >  			return aarch64_insn_extract_system_reg(insn)
-> > -			     != AARCH64_INSN_SPCLREG_DAIF;
-> > +			     == AARCH64_INSN_SPCLREG_DAIF;
-> >
-> >  		/*
-> >  		 * The HINT instruction is steppable only if it is in whitelist
-> > --
-> > 2.34.1
-> >
+On 2025-01-31 11:40, Quentin Schulz wrote:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
 > 
-> Thanks to correct me. yes the comments seem conflict.
+> The Pre-ICT tester adapter connects to RK3588 Jaguar SBC through its
+> proprietary Mezzanine connector.
 > 
-> However, I couldn't agree to this change.
-> As I mention in last, when single-step runs, all DAIF bits set,
-> so, the result of reading DAIF is different between before install kprobe and after.
-> Also, I think reading some sys_reg in single-step seems ok (i.e. SYS_MIDR_EL1).
+> It exposes a PCIe Gen2 1x M.2 connector and two proprietary camera
+> connectors. Support for the latter will come once the rest of the 
+> camera
+> stack is supported.
 > 
-> Therefore, allowing only install kprobe on DAIF reading doesn't seem
-> correct.
+> Additionally, the adapter loops some GPIOs together as well as route
+> some GPIOs to power rails.
+> 
+> This adapter is used for manufacturing RK3588 Jaguar to be able to test
+> the Mezzanine connector is properly soldered.
+> 
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+>  arch/arm64/boot/dts/rockchip/Makefile              |   4 +
+>  .../dts/rockchip/rk3588-jaguar-pre-ict-tester.dtso | 171 
+> +++++++++++++++++++++
+>  2 files changed, 175 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile
+> b/arch/arm64/boot/dts/rockchip/Makefile
+> index
+> ebcd16ce976ebe56a98d9685228980cd1f2f180a..a09b9c0060f8ecde582ad39f0f3e27047a31ec9c
+> 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -185,6 +185,10 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) +=
+> rk3588-edgeble-neu6a-wifi.dtb
+>  rk3588-edgeble-neu6a-wifi-dtbs := rk3588-edgeble-neu6a-io.dtb \
+>  	rk3588-edgeble-neu6a-wifi.dtbo
+> 
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-jaguar-pre-ict-tester.dtb
+> +rk3588-jaguar-pre-ict-tester-dtbs := rk3588-jaguar.dtb \
+> +	rk3588-jaguar-pre-ict-tester.dtbo
+> +
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-pcie-ep.dtb
+>  rk3588-rock-5b-pcie-ep-dtbs := rk3588-rock-5b.dtb \
+>  	rk3588-rock-5b-pcie-ep.dtbo
 
-Right, the code seems ok. I think we should just remove the comment
-instead.
+Obviously, virtually the same comments [*] I made on the patch 3/4
+from this series apply here as well.
 
-Will
+[*] 
+https://lore.kernel.org/linux-rockchip/77b5d0efa6e56bb391575aeeb4d1be80@manjaro.org/
