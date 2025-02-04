@@ -1,202 +1,177 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8521FFC7F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7972080FD
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738663446; cv=none; b=C8Y5P+zRFT0mT0oSVl/rt1iM4NEmhWVnLeizPApaZuzolf6UqLW+lA2AF9nvaDCbJ/z2c2/yLd/h78OR1Y5Rv7JvuDGjy5QIhWa0XqIXc9j03pHj/tJLDoRnjFu3agjeLXLYc0cESxoYVW7HLMChAfCK9XbrJHFJgm9YyzCF7ts=
+	t=1738663462; cv=none; b=Ys0CmPnrVS9N4PMG5UQO3uMiEmQIR4VXmaCio6eVAKLwYatz3T+/1zlhSLvJxkBWiG0XHoicyxyDDILYohtAzhsuP05PtuKswTXbFl91JTp82UDdrvZB57UZCjN4V+fmI3OYGAVRVfcqBvxe9HW4vMSMeKrTB7LA6hPPitIoE5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738663446; c=relaxed/simple;
-	bh=FzgyHT9jrbXQXJVlFEZ0/ooOFZK+eNEdP1AxmZZsRug=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=CTKZ+z1OYMRV1GbW9NYECfAuWeYmKUe4Ep6dI7Yqmfi3nTZUqoLzDn13GnioID3JyFAkNFOZfbMP2E+XHZVdrCs+ApxykVGtfDHoAvJZD6M5Y/81TzVrZ17TpMA66UgSlQ2EHXjDRrqVswcS0N5VoYhxy85Zuy/OQLiYSS8Hxh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=pIU29/YK; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1738663462; c=relaxed/simple;
+	bh=mUDPToLx4m1t4OQh7RaNx1yOyqPbXSxV/uwU5GCkTBY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pcsLbnmwE9pSnLbla2KbLjGI1IeNVFNtu3y9USjotjxc5f8KQpnEd6CsPWWS6tpkqi6CJs+gxKOYbA25dqf2MbuTkY3oOEeNsDbG1IUdbqht2sZkM/7W5Kz9xHNNuuPr215oC8VL31GfHx+n6DjD8SNbS9N9QnQEwHfPpWSoz2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z2AIqTi7; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="pIU29/YK"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4361f796586so62304765e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 02:04:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1738663442; x=1739268242; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OtZe2ir+7kEXz6rq6Gkp5T3tCNxsiNE10GMYYDGHKmk=;
-        b=pIU29/YKFvtpBytd5VpF2p4X7Mfn4NaCeYnvzNlUmbeLbJYT4BSjp1wAfPHgJ/fRbo
-         aG4slNoQFKC2pyoWjxSRyUGWZL5OgvqpdaYVGxniNjubc+Yt9LatTocpVtgG4Ulj2ki4
-         UarDUg+i+LhYAjhNOKr97nrYLBABmoBEt5AqyoyS1hxp6zU7JNzAqZGFQArc/hzh5/N6
-         dTqp6iVAjKcYM8zwC4ruLoqCcTCT2FFP+3JASdE7vgJ7Gmo7s1eGoEA4LzaZdW1DGJYa
-         58Ucp0F88xXRuKAQabFPUyd2A40Rpup+p5ppqBjV+liWtETrZf0kdN5+JeDIaJkPyDm5
-         aLXA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z2AIqTi7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738663458;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r7QifqPZ9eDjVzOXnGpRwU072WD973YhoUOHzvFP/XY=;
+	b=Z2AIqTi7o1UcLFvVpjzXXwhP+5A0kStJNcmcUm4ly7MqhC4BIeghdtw66pIp8aU8CecT7M
+	LIkd6a53hfLCMRSLRJ1uLbrLOAEbqw70+k5VGSEIHQV+DUfHGcSsgkJzTmzTC+mRSihg2z
+	tXPZXyaNsdKCE55o/Y00g7IAm2F+/Rk=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-65-VXR7rLGANnWPZUSGUSZxaw-1; Tue, 04 Feb 2025 05:04:17 -0500
+X-MC-Unique: VXR7rLGANnWPZUSGUSZxaw-1
+X-Mimecast-MFC-AGG-ID: VXR7rLGANnWPZUSGUSZxaw
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-6f2b3f1eb8cso50272707b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 02:04:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738663442; x=1739268242;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=OtZe2ir+7kEXz6rq6Gkp5T3tCNxsiNE10GMYYDGHKmk=;
-        b=eS8cmot8qPLOLkvSBoTiyiDZunzMktr54F43MWcRh1SPUC+X+4tq1pCZezlRTmJfPT
-         AJI2JEsKAMVcIvALARRZerSrFx/ee2kGILaO+UPIvVU2aCZAVFXOMxXMWCiMicEDCBo0
-         tGm1+yP8xxKAS/JMrJs7SXHTOYeYDkUJq1QEWXz4Si+TUaL1DB9nPutTduaumtMdiocM
-         NBYqO5PQO9moTPzeyzWqVjHk7P0UYx9GCFMPGfvdCvpmc12pojyzhhR/cT+oPMhY4JIr
-         IkWstpL5ixm2V9Yi74YHWop+RU66G9Anokw3cNl/KaO45XG/5x1WR7RABbX0H3rhRt3I
-         bi2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCURyXdZzneSsCtOvjg2PykwjNwmt2MnGBltqLAoAKgq9XBJFGwMdKP8ex2tHUtKakGzoZPFKad4roMQsT0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuDfFE6vTQvpIgFfehTLpn6qM4KXGx7r+hwavqCtk8OONIr/xl
-	U563e/pa0nGhwGTLC5pxfW11soPhvGOK8MDOvx4wRj6ZLJXenWRGR0aKrEuFzeE=
-X-Gm-Gg: ASbGncvlpwoddZAJrx3dYu2unYY0zAwc1BnBqaJkEqruc2PDuoN0+Fb98PGECY3sEj6
-	GNlfcXE93rEsNn3DOB/FYQQb1Wp28tBXuASfcHBZ04IdDuzmamxrfqzssvEs3JfhYRmrk74GEKE
-	zgiJO7oNnf6RpklUhdvJM4VTXDl9aBfE/fmVAlPlBNNrEFXOOWHl2hWEhQyLlObE9oCMKgvqK+c
-	h8AtFnE5/Qhp6dAAiJQht4ifcqtAtZiWRXeYc94wDC32ivCkCPAYeiEPm8LlNbAISsb07rqwyn3
-	KddGSxYs2cVro+awazFctAk=
-X-Google-Smtp-Source: AGHT+IGVXH+Mb2lrYsUc7UoobTqoCN8FlHlh/PM2xgXfqoRoYMzaOTJGLuoVwWgGv12sGGazNZZcLw==
-X-Received: by 2002:a7b:c314:0:b0:439:90f:ba9d with SMTP id 5b1f17b1804b1-439090fbd1dmr9554185e9.8.1738663441773;
-        Tue, 04 Feb 2025 02:04:01 -0800 (PST)
-Received: from localhost ([2a02:a03f:6bc3:6b01:62c7:350e:556e:d0f0])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43907f19247sm10047355e9.1.2025.02.04.02.04.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 02:04:01 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738663457; x=1739268257;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r7QifqPZ9eDjVzOXnGpRwU072WD973YhoUOHzvFP/XY=;
+        b=X/vr5zWC2UL+nqW0FWCrkC4ST0cPBmtiYiJXVwRAWl8pG5ahXCOmEWNzi1nzIiELTC
+         u6M1KjQnZd572kry7BBrfOtdTqmD27VBj3TOaNi/FSQiOJ75jR5Wb+KFK+lWinpHR3rQ
+         qGYL/Ah4q44RkjaeJGi/n2nYewHbNHXbdJJYyp2N4HmC7dtEGnClb2P6/KQQ3CWsCS8V
+         mu/dyUqyWSGicKIwgyWHE39ttXAvlYSD3Osohy0IS/ebku6JLjWipFbvUHeFLUoizTGQ
+         NoXwHNe4Z6XcBhXxuHOMktNPSUaylX+1px9vCbMwhtheqVhmjbs1JhxvaobHc0C+fNiO
+         9zhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVyl70oHxXV5sly73qY62+5GFTbByyW72+jzR62CMm6AHYn6AxHNv77YTOjx2xtB43601IHIWm0iIGUnrk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEgAOo/qOWyAn8w8hYjoRX/jdCvOtvSDbcpmaiOf0KZO8v8jQ1
+	aDKR/db/PiFLHJWljk1qo5tXJGKyk5BIVOzWKiIt30jvFcsGqTV1xVQsV4f05RQUZ4dJi9+pgim
+	xz/mVImy1pIt+ZEQZB4JCV8jzIPKEPYcAPSieQ/acoAzT+xNwvsDqiS5gHO7kLqLAqFYqTtdyhQ
+	b/DXZtX4NPYbkbkYdG1GfJv8YpEJpXZfiu4T5z
+X-Gm-Gg: ASbGncuG6D4ZKCsZp8WzS5YMwq+uPSSO8nIbU8zB1iiypDmnGygJtElbcLWCeHqUuZp
+	8qmZV4FPoG7IR4G6ddxcN+Z7yBtTZyEPA3DTLElEzX9l+1swNZVULYuipTgsmjTM=
+X-Received: by 2002:a05:690c:c99:b0:6f6:7ef2:fe74 with SMTP id 00721157ae682-6f7a8426a5dmr187992767b3.32.1738663457125;
+        Tue, 04 Feb 2025 02:04:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGObxnJlWUNYcPLXX3gTTHlz8ygcPRSBCSw4ZNWGPq56uQbjLmdeK3NSXxsGvATRJ7AZmu/F90tI28ywSsg0b4=
+X-Received: by 2002:a05:690c:c99:b0:6f6:7ef2:fe74 with SMTP id
+ 00721157ae682-6f7a8426a5dmr187992617b3.32.1738663456785; Tue, 04 Feb 2025
+ 02:04:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 04 Feb 2025 11:04:00 +0100
-Message-Id: <D7JKR1YB6PSS.PRWFJ8NDA9BZ@fairphone.com>
-To: <neil.armstrong@linaro.org>, "Danila Tikhonov" <danila@jiaxyga.com>
-Cc: <srinivas.kandagatla@linaro.org>, <lgirdwood@gmail.com>,
- <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
- <linux-sound@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux@mainlining.org>,
- <~postmarketos/upstreaming@lists.sr.ht>
-Subject: Re: [PATCH] ASoC: qcom: sc8280xp: enable primary mi2s
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250203113857.34728-1-danila@jiaxyga.com>
- <df4580ff-7b45-4485-9664-4cae731b7c53@linaro.org>
- <bcb4585e-1426-444a-9112-6cd95a81f8bc@jiaxyga.com>
- <D7J77FB0GLG2.1SDETF63DWW8Z@fairphone.com>
- <842284b1-343f-4991-98f4-462f547ad2bc@linaro.org>
-In-Reply-To: <842284b1-343f-4991-98f4-462f547ad2bc@linaro.org>
+MIME-Version: 1.0
+References: <67a09300.050a0220.d7c5a.008b.GAE@google.com> <2483d8c1-961e-4a7f-9ce7-ffd21a380c70@rbox.co>
+ <6fonjxxkozzmv7huzavck5nsfivx3nsyyicthulg5aiyrmjpql@o7pexllumdxt>
+In-Reply-To: <6fonjxxkozzmv7huzavck5nsfivx3nsyyicthulg5aiyrmjpql@o7pexllumdxt>
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Tue, 4 Feb 2025 11:04:04 +0100
+X-Gm-Features: AWEUYZkRpQsQ3lL4HaavFbVzIcqyxyzO3RF8AiDQcOZb6x_hIpX856jwrL1eacs
+Message-ID: <CAGxU2F7CgVHUuPPATBzXw20fR1Z+MVpsJvgRO=kMFV1nis49SQ@mail.gmail.com>
+Subject: Re: [syzbot] [net?] general protection fault in add_wait_queue
+To: Michal Luczaj <mhal@rbox.co>
+Cc: syzbot <syzbot+9d55b199192a4be7d02c@syzkaller.appspotmail.com>, 
+	davem@davemloft.net, edumazet@google.com, eperezma@redhat.com, 
+	horms@kernel.org, jasowang@redhat.com, kuba@kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mst@redhat.com, netdev@vger.kernel.org, 
+	pabeni@redhat.com, stefanha@redhat.com, syzkaller-bugs@googlegroups.com, 
+	virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue Feb 4, 2025 at 9:19 AM CET, neil.armstrong wrote:
-> On 04/02/2025 00:27, Luca Weiss wrote:
->> On Mon Feb 3, 2025 at 5:33 PM CET, Danila Tikhonov wrote:
->>> On 03/02/2025 17:23, neil.armstrong@linaro.org wrote:
->>>> On 03/02/2025 12:38, Danila Tikhonov wrote:
->>>>> When using primary mi2s on sc8280xp-compatible SoCs, the correct cloc=
-k
->>>>> needs to get enabled to be able to use the mi2s interface.
->>>>>
->>>>> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
->>>>> ---
->>>>>  =C2=A0 sound/soc/qcom/sc8280xp.c | 13 +++++++++++++
->>>>>  =C2=A0 1 file changed, 13 insertions(+)
->>>>>
->>>>> diff --git a/sound/soc/qcom/sc8280xp.c b/sound/soc/qcom/sc8280xp.c
->>>>> index 311377317176..03687de1ebb0 100644
->>>>> --- a/sound/soc/qcom/sc8280xp.c
->>>>> +++ b/sound/soc/qcom/sc8280xp.c
->>>>> @@ -14,6 +14,8 @@
->>>>>  =C2=A0 #include "common.h"
->>>>>  =C2=A0 #include "sdw.h"
->>>>>  =C2=A0 +#define MI2S_BCLK_RATE=C2=A0=C2=A0=C2=A0 1536000
->>>>> +
->>>>>  =C2=A0 struct sc8280xp_snd_data {
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool stream_prepared[AFE_PORT_MAX];
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct snd_soc_card *card;
->>>>> @@ -25,13 +27,24 @@ struct sc8280xp_snd_data {
->>>>>  =C2=A0 =C2=A0 static int sc8280xp_snd_init(struct snd_soc_pcm_runtim=
-e *rtd)
->>>>>  =C2=A0 {
->>>>> +=C2=A0=C2=A0=C2=A0 unsigned int codec_dai_fmt =3D SND_SOC_DAIFMT_BC_=
-FC;
->>>>> +=C2=A0=C2=A0=C2=A0 unsigned int fmt =3D SND_SOC_DAIFMT_BP_FP;
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct sc8280xp_snd_data *data =3D
->>>>> snd_soc_card_get_drvdata(rtd->card);
->>>>> +=C2=A0=C2=A0=C2=A0 struct snd_soc_dai *codec_dai =3D snd_soc_rtd_to_=
-codec(rtd, 0);
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct snd_soc_dai *cpu_dai =3D snd_s=
-oc_rtd_to_cpu(rtd, 0);
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct snd_soc_card *card =3D rtd->ca=
-rd;
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct snd_soc_jack *dp_jack=C2=A0 =
-=3D NULL;
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int dp_pcm_id =3D 0;
->>>>>  =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 switch (cpu_dai->id) {
->>>>> +=C2=A0=C2=A0=C2=A0 case PRIMARY_MI2S_RX:
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 codec_dai_fmt |=3D SND_SO=
-C_DAIFMT_NB_NF | SND_SOC_DAIFMT_I2S;
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 snd_soc_dai_set_sysclk(cp=
-u_dai,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Q=
-6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 M=
-I2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
->>>>
->>>> How is this possible ? sc8280xp uses the q6prm clock driver, and
->>>> there's no
->>>> way this call sets the Q6PRM_LPASS_CLK_ID_PRI_MI2S_IBIT, or I totally
->>>> missed
->>>> something.
->>>>
->>>> And prm is neither a dai nor has the set_sysclk callback.
->>>>
->>>> Neil
->>>>
->>> Oh, thanks for the answer.
->>>
->>> This comes from qcm6490 compatibility. Actually it is needed for
->>> Nothing Phone (1) and Luca Weiss just suggested me to use
->>> qcom,qcm6490-idp-sndcard like do they do it for FP5. (SM7325 is the
->>> closest to QCM6490):
->>> https://github.com/sc7280-mainline/linux/pull/5#discussion_r1848984788
->>> Actually I also think it is a bit incorrect.
->>=20
->> For reference, this is coming from this and following:
->> https://lore.kernel.org/linux-arm-msm/e8a24709-de96-4d09-ba00-1e084a656c=
-68@kernel.org/
+On Tue, 4 Feb 2025 at 10:59, Stefano Garzarella <sgarzare@redhat.com> wrote:
 >
-> Sure, but do you use sound/soc/qcom/sc8280xp.c ? it's designed for audior=
-each
-> compatible audio architecture (post sm8250).
+> On Tue, Feb 04, 2025 at 01:38:50AM +0100, Michal Luczaj wrote:
+> >On 2/3/25 10:57, syzbot wrote:
+> >> Hello,
+> >>
+> >> syzbot found the following issue on:
+> >>
+> >> HEAD commit:    c2933b2befe2 Merge tag 'net-6.14-rc1' of git://git.kernel...
+> >> git tree:       net-next
+> >> console output: https://syzkaller.appspot.com/x/log.txt?x=16f676b0580000
+> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
+> >> dashboard link: https://syzkaller.appspot.com/bug?extid=9d55b199192a4be7d02c
+> >> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13300b24580000
+> >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12418518580000
+> >>
+> >> Downloadable assets:
+> >> disk image: https://storage.googleapis.com/syzbot-assets/c7667ae12603/disk-c2933b2b.raw.xz
+> >> vmlinux: https://storage.googleapis.com/syzbot-assets/944ca63002c1/vmlinux-c2933b2b.xz
+> >> kernel image: https://storage.googleapis.com/syzbot-assets/30748115bf0b/bzImage-c2933b2b.xz
+> >>
+> >> The issue was bisected to:
+> >>
+> >> commit fcdd2242c0231032fc84e1404315c245ae56322a
+> >> Author: Michal Luczaj <mhal@rbox.co>
+> >> Date:   Tue Jan 28 13:15:27 2025 +0000
+> >>
+> >>     vsock: Keep the binding until socket destruction
+> >
+> >syzbot is correct (thanks), bisected commit introduced a regression.
+> >
+> >sock_orphan(sk) is being called without taking into consideration that it
+> >does `sk->sk_wq = NULL`. Later, if SO_LINGER is set, sk->sk_wq gets
+> >dereferenced in virtio_transport_wait_close().
+> >
+> >Repro, as shown by syzbot, is simply
+> >from socket import *
+> >lis = socket(AF_VSOCK, SOCK_STREAM)
+> >lis.bind((1, 1234)) # VMADDR_CID_LOCAL
+> >lis.listen()
+> >s = socket(AF_VSOCK, SOCK_STREAM)
+> >s.setsockopt(SOL_SOCKET, SO_LINGER, (1<<32) | 1)
+> >s.connect(lis.getsockname())
+> >s.close()
+> >
+> >A way of fixing this is to put sock_orphan(sk) back where it was before the
+> >breaking patch and instead explicitly flip just the SOCK_DEAD bit, i.e.
+> >
+> >diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> >index 075695173648..06250bb9afe2 100644
+> >--- a/net/vmw_vsock/af_vsock.c
+> >+++ b/net/vmw_vsock/af_vsock.c
+> >@@ -824,13 +824,14 @@ static void __vsock_release(struct sock *sk, int level)
+> >        */
+> >       lock_sock_nested(sk, level);
+> >
+> >-      sock_orphan(sk);
+> >+      sock_set_flag(sk, SOCK_DEAD);
+> >
+> >       if (vsk->transport)
+> >               vsk->transport->release(vsk);
+> >       else if (sock_type_connectible(sk->sk_type))
+> >               vsock_remove_sock(vsk);
+> >
+> >+      sock_orphan(sk);
+> >       sk->sk_shutdown = SHUTDOWN_MASK;
+> >
+> >       skb_queue_purge(&sk->sk_receive_queue);
+> >
+> >I'm not sure this is the most elegant code (sock_orphan(sk) sets SOCK_DEAD
+> >on a socket that is already SOCK_DEAD), but here it goes:
+> >https://lore.kernel.org/netdev/20250204-vsock-linger-nullderef-v1-0-6eb1760fa93e@rbox.co/
+>
+> What about the fix proposed here:
+> https://lore.kernel.org/lkml/20250203124959.114591-1-aha310510@gmail.com/
 
-I would've also thought qcm6490-idp and qcm6490-rb3gen2 are
-pre-audioreach, so sm8250.c would be a better match - but these two
-devices already use sc8280xp.c driver for some reason?
+mmm, nope, that one will completely bypass the lingering, right?
 
-Maybe someone with more insight on these devices can help clarify this?
-I'll also need this for qcm6490-fairphone-fp5 soon.
-
-Regards Luca
+Stefano
 
 >
-> sound/soc/qcom/sm8250.c has already support for PRIMARY_MI2S_RX via
-> the Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT, and it compatible with the previous
-> audio architecture (non audioreach).
+> >
+> >One more note: man socket(7) says lingering also happens on shutdown().
+> >Should vsock follow that?
 >
-> Neil
+> Good point, I think so.
+> IMHO we should handle both of them in af_vsock.c if it's possible, but
+> maybe we need a bit of refactoring.
 >
->>=20
->> Regards
->> Luca
->>=20
->>>
->>> ---
->>> Regards,
->>> Danila
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 snd_soc_dai_set_fmt(cpu_d=
-ai, fmt);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 snd_soc_dai_set_fmt(codec=
-_dai, codec_dai_fmt);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case WSA_CODEC_DMA_RX_0:
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case WSA_CODEC_DMA_RX_1:
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>>
->>=20
+> Anyway, net-next material, right?
+>
+> Stefano
 
