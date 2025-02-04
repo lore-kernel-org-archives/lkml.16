@@ -1,94 +1,79 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694AD219A72;
-	Tue,  4 Feb 2025 19:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28422045A8;
+	Tue,  4 Feb 2025 19:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738698374; cv=none; b=XlisrkMeFwjQpG6qDBNYz35v5sH3z4LzMt1P9WPNuIeR2mE8z7iWAju+SBC3w4fUZ8bb6QfBFuaEBLicmfQbJY+K4PEBWPqPjlfmxEgjv+L5EmicS/m84VpifwKMNoVGQ8/P7Y7YKEotsm3XM8JIKUUJdFMHotlcla2XOUa5+U0=
+	t=1738698411; cv=none; b=KIQcTUWZChOZzsN5l6KVYSZzlkhRVSTHzKXnzDz7EODrhj8FisypJuLL3TrbUEbuQnEjws66dDC8ivUbjzUtU+flMvUHP2oLFMmhe1rK6bUlxV3Xc52iGbqqz3B8MAI+PwEnq19UCga5FnLLSG6ZhxyRqsSW8v5u9Pvi4E2YogA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738698374; c=relaxed/simple;
-	bh=r06Ys/KsS4X0Vszu9md9b4R25aJZJCzPxRdr0nQj3y4=;
+	s=arc-20240116; t=1738698411; c=relaxed/simple;
+	bh=sXid/J3qZBjcfg0RqWr6jcSgu94Ix6LoKEM0fp/erdM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zk+/qAYjM25ITy4svkh/THwwL41UYLKlX6amnazRQyhvBfNM/BuBwr7pTXGIBRb41MNR2JJy8f9zFjnclyeKWsKDOBMmIao2sM7I4SUbOWa6ZIp0eoNcvg7ndiJxGPnF6Bjc1saq/p8+Gd1KjYfNEq98ngvJsbjQ3tUg/RmwMTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=3buDB5fG; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=U+5Pp9QRsV6RHK9UaYqXOTDnNKRINm9/qR/wwUIs8Yy9MYNsJoM0o9Ya3Eey0g++oGLg55N2+fP296xO9nOj7M8/GPo1Axq8KM8tCCiuZMiWYdBPHY0dLr5Mo+AhP7flK+lzSIUEXk9Cr4pRQrVwP7R9FLaaUcX6IvGUrjS6GVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsyMArj6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3buDB5fG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ouyIGRoRHutzUz66Y2cHQcMvqZJWhjqRJ8fahRg0FpI=; b=3buDB5fGFmO2PF9Z2zP1t/uh4G
-	hEEbKntHnP7+fUZcZt1zxz1yOjr7WwWBjGaq/sKNZ3hq+keI5t9mh5LkNKu7fN8lO0ebNgldJmmr1
-	7b21bZoJOjYuheY/s2UaY74VMsQjY9rWxUeVbKatxBifYOayRrSN4s/PMbD6q1YeEbng=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tfOrm-00AxD1-Vs; Tue, 04 Feb 2025 20:45:50 +0100
-Date: Tue, 4 Feb 2025 20:45:50 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Chen-Yu Tsai <wens@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Steven Price <steven.price@arm.com>, Chen-Yu Tsai <wens@csie.org>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH netdev] net: stmmac: dwmac-rk: Provide FIFO sizes for
- DWMAC 1000
-Message-ID: <ed89be56-b616-4a14-aab2-294fddd89dae@lunn.ch>
-References: <20250204161359.3335241-1-wens@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsyMArj6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70E93C4CEDF;
+	Tue,  4 Feb 2025 19:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738698410;
+	bh=sXid/J3qZBjcfg0RqWr6jcSgu94Ix6LoKEM0fp/erdM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tsyMArj6/mMtWVOZ+WTeXl/rPdQ5XfqnLAOcXNWyq/x9qInfLVkp5d/KXb6m9Mtga
+	 orTf8cnsncBRRgvqWgMnR0KNbaHhwtekirlq8yzlgHMI/ZP24zeZr2y4jNtOORn+GO
+	 MyHRxjwF5mONk7whytUs5wWMTEcKI/iigg51Ba5qymaQfZgrlLGfkuOJB4WjXXBOGu
+	 Q0v+D06LKTebZO0WojTuUD4H/XgLcms8/7id0kHFy4cnvdFZd/yyTz4avadyCmg0jR
+	 1QTnWzLsdHN8dHbPNkmkR7e3d8oLwEwWopPpyqePdZyPYZlgtNN9Mpe5D1FKq9LJ4k
+	 IW9alerFZ4yIw==
+Date: Tue, 4 Feb 2025 19:46:46 +0000
+From: Conor Dooley <conor@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Robert Marko <robert.marko@sartura.hr>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] marvell: DT root compatible fixes
+Message-ID: <20250204-headfirst-evergreen-ec92900ee782@spud>
+References: <20250131-dt-marvell-fixes-v1-0-55f9f6acd4b1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="x5UnwaTJWdRGDlJX"
+Content-Disposition: inline
+In-Reply-To: <20250131-dt-marvell-fixes-v1-0-55f9f6acd4b1@kernel.org>
+
+
+--x5UnwaTJWdRGDlJX
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250204161359.3335241-1-wens@kernel.org>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 12:13:59AM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
-> 
-> The DWMAC 1000 DMA capabilities register does not provide actual
-> FIFO sizes, nor does the driver really care. If they are not
-> provided via some other means, the driver will work fine, only
-> disallowing changing the MTU setting.
-> 
-> The recent commit 8865d22656b4 ("net: stmmac: Specify hardware
-> capability value when FIFO size isn't specified") changed this by
-> requiring the FIFO sizes to be provided, breaking devices that were
-> working just fine.
-> 
-> Provide the FIFO sizes through the driver's platform data, to not
-> only fix the breakage, but also enable MTU changes. The FIFO sizes
-> are confirmed to be the same across RK3288, RK3328, RK3399 and PX30,
-> based on their respective manuals. It is likely that Rockchip
-> synthesized their DWMAC 1000 with the same parameters on all their
-> chips that have it.
-> 
-> Fixes: eaf4fac47807 ("net: stmmac: Do not accept invalid MTU values")
-> Fixes: 8865d22656b4 ("net: stmmac: Specify hardware capability value when FIFO size isn't specified")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
-> The reason for stable inclusion is not to fix the device breakage
-> (which only broke in v6.14-rc1), but to provide the values so that MTU
-> changes can work in older kernels.
+On Fri, Jan 31, 2025 at 03:08:24PM -0600, Rob Herring (Arm) wrote:
+> This series adds some missing root node compatibles and fixes some=20
+> errors in dts files for the root node compatibles.
+>=20
+> Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
 
-Allowing the MTU to be changed is probably classed as a new feature,
-not bug fix.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-I _think_ this also allows flow control, which again is a new feature.
+--x5UnwaTJWdRGDlJX
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Please submit to net-next.
+-----BEGIN PGP SIGNATURE-----
 
-	Andrew
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6JupgAKCRB4tDGHoIJi
+0s1SAP983MbztBx9JW7mBOtkH1RQR6fb//Ogubt4WA6KjWQuJgD+PsBZmZQOqJHm
+IKTDZ/R+p+gKllClHDwNHhRp81SUBgA=
+=tCWb
+-----END PGP SIGNATURE-----
+
+--x5UnwaTJWdRGDlJX--
