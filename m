@@ -1,117 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2741D188583;
-	Tue,  4 Feb 2025 16:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9057D2153C0;
+	Tue,  4 Feb 2025 16:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738686175; cv=none; b=M2w4n6EHPgN3f072dR46Ok07NXrpQf33tBf4F7FNm4DyRwCqbfgpsZypVf3rfVURi+o79qGIxklLw8Xrqa8zoTNNfgSusJ7ODEXPr0lnRTzI1QXPr+nK83ZHRg5veOain5ZkOwTFEiWIUczqGoZIGykHTOrRne0ncZZIgVvmjds=
+	t=1738686266; cv=none; b=hKXPSEzYCzJse6sCD/PokviGBzw4mpADqOskc5SbmMfoBGdmittyItQWrab3MidcCzLzn+u6EO9/LnlGtrQRp3JOwBW6Yrb+lPB+oEj7sqmpExtwgg5qR+cPqVirp9fMfQu+o/xAFQ7GyDNMOQKS8QZ8Vh0cA+p0+nPyDjkZsEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738686175; c=relaxed/simple;
-	bh=3KpIyangA6PEtye0Ld8RUAFMhnSs7WIDzCNzrAOqBxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T5CrVjJ/FJEoF93MdfSIBrN9bHw40IKMlI1+/YQhGnuuDZnu+x5CyKlVFO3hXTRzDHjJZHkZPg1Qu75JCDr+M0R0yLF2gFhf9atc8JBY1z2t6NIVytF/WdjIciJok1tur2+KN4o9GJRxZe/bfgFnFxUwtKYF0WrJQ3wNdBRDtEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSlRTa8s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738686266; c=relaxed/simple;
+	bh=KUxFX+4f0Aizw7Mg85WPdNi8c0DEahMb6LLBmtuIvak=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r/deK8PmCT9ymmPHHsWbN94bHYs+eRk8mzPi9Badn3rHw27QVyaDUhokymhSl47I84KPvQ9ewU9Qi3VO3XQG0s8XeB370xHFqssnDSFutPpJ6erUDNth/8iQgAeIvb0Tut5ZaGgaxxBg7XYf3X3iit6ZHOl5fwnIfMF5gEOpbRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UKdvq97d; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSlRTa8s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DA7C4CEDF;
-	Tue,  4 Feb 2025 16:22:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738686174;
-	bh=3KpIyangA6PEtye0Ld8RUAFMhnSs7WIDzCNzrAOqBxc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lSlRTa8ssyBKpLmDlLO96dxLI9S/XOvge8hf7HsR170E3N4mPsmom/XrPPiT3xfWE
-	 i1Q3LQ7kuLItYCn7Epf/9U17fKtsL5ifaCL+2RKC5W+Q10t13Vcg2G46difH/4VEI6
-	 ilQTlBUEFKAt4vF4BfPGCaLiYkh7APgwSynxDbqNzrz8txUiA+M70Hm0U+rQHFreDI
-	 yHW3B4M0FTA0yKmwtRVk1efogp3ySiZ8p2xQt9EKphHq07sNWB1WaEljOAkPi67Tmg
-	 QjOjS9XiBo3Mv4sGRJbuTOlBUVCDMOCHa2hnHBdYln05MtFfZZRMjYe8mm10VdhJnF
-	 JtMKBWL57/+1Q==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tfLhT-0000000012r-2Vfi;
-	Tue, 04 Feb 2025 17:22:59 +0100
-Date: Tue, 4 Feb 2025 17:22:59 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-	Vikash Garodia <quic_vgarodia@quicinc.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sebastian Fricke <sebastian.fricke@collabora.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Nicolas Dufresne <nicolas@ndufresne.ca>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Jianhua Lu <lujianhua000@gmail.com>,
-	Stefan Schmidt <stefan.schmidt@linaro.org>,
-	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH v9 27/28] media: iris: enable video driver probe of
- SM8250 SoC
-Message-ID: <Z6I-4w8R5Hk1QYgG@hovoldconsulting.com>
-References: <20241212-qcom-video-iris-v9-27-e8c2c6bd4041@quicinc.com>
- <Z3_nCPk_g8znto4A@hovoldconsulting.com>
- <64f8bebd-35e1-c743-b212-e1a3292bade2@quicinc.com>
- <Z4EuiPEw8mvDQ2gv@hovoldconsulting.com>
- <24334fb8-4d83-eb06-aee3-dfe1f8e4937b@quicinc.com>
- <552972B8-1ACA-4243-A8E3-8F48DAF39C5C@linaro.org>
- <Z6CApNuSlPGvVL2k@hovoldconsulting.com>
- <fhqlt5xsz7yyrbnvhnovt66gzldjjbitpeznlvxztobdxmjnuw@d4avd5fq3muh>
- <Z6HjbXZsR9QmXxKy@hovoldconsulting.com>
- <uc2rve7hqf4mmvobinaxzf5qncglysfeg2lbxmxvxapsewhgxh@2ppf757u352g>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKdvq97d"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f9cd8ecbceso1077839a91.0;
+        Tue, 04 Feb 2025 08:24:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738686264; x=1739291064; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K89iMvYVIaxnJ+fqwfSq5htV0qyp5rhqJml9Bv4LRmc=;
+        b=UKdvq97dkT/DoIfphkQIqSa8yc15NEwA1f58iV5Sxy+AOti5NKy369bxYXhXMAHiVh
+         mOhCU57k3GOK5pJ/7kbOuh00KTBHn0BqJMmbKzLkMtCSYuq2gl0yhSvx8l+2UVag3ioa
+         2WOP061o3L1mE2gSA46EXMbYFOej+vrT2Gs30LzWYWghQvOHjbDx5r9FsYZIiWhAhUKW
+         lz2EES/OCj7x6fWi+8qmXXc1TSHfJoosiV7KQyUioq6Jfjd03BxZCZi3nf3ZEt5BKgIm
+         g9PorHZzOuR4H+uO6FeaVVwSa2D4chRQp45LrRzHRU8VaxDZfn/qBaq7kre5UmJ8dArJ
+         2sNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738686264; x=1739291064;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K89iMvYVIaxnJ+fqwfSq5htV0qyp5rhqJml9Bv4LRmc=;
+        b=its0WVME2/7s+3qa2weo9qlX5vL33T35mfWdEUJEZUIRIh/IyLwgkBxd6/IbtdMm7c
+         RJDWsFtVBgL1Gy/E/vVuakN/BjpJdBTIeOpR6dWgr63QlYtuy3g+fEia6W4gn5XtddmI
+         QcFh4EhLZVXraSvUly6Px0ji9Lu0kiENKPYLAAPP2EiJyVbK1iPR/UZnlugQZv9ygs5r
+         hLYFqBVlevhK6ecVx+IjHsbOCzx2TMuGKU0M4t1WoTwnOwDXzg9ErMUIaaM5zyeF9vyx
+         5x3/vQnNtJeqzJoRV7St+FQ9IS/Kp1TSHU2WwjDlMTkIJsbxs+epjBqkfQNjmgq9YiWC
+         pqAA==
+X-Forwarded-Encrypted: i=1; AJvYcCXP6EXfWHZbiGZO5s3Hqb2k9lhIUkBZlj6HsTdU1T4cKQCJanEwcaCFBu8CXqKCHHlFr+h0zXMdBAJ7Og4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1ZBun925Iho+eyMv77Kfz2TObs58S7SwqmNXYikqy229CW3J1
+	uKHcg07pPOiwxV8BPxflJNSai6qgIXnAq+Ancc6qJ80j4+MDA4vrerUBCypu
+X-Gm-Gg: ASbGncuOA6vG9P+xCak6Kn7jn4CW+8pRBXHrCf8Yk3rNnlfjjAg9IiU3O56P9ih+X0F
+	qrQ8xYhIKvGUjcMuPzNHF4JpoQY/nYSsPwFMg2Dh/bIe5+ETOVtkHkgp+IbX7IHxTHUBpPF/LRR
+	DZsgc5uV/mfXG9Wg0bOIuD531lerDajZsPtMUaarS/rpl0vnrKLEBvdzULh8nHkyqk0y2O3MzE5
+	sp3do9m3yium7OGxBr2AFOK2DIX8oJw/w7EfGrKmqLYWCOOVIP76M7a/NZBtJqSuv9ggFMZB8RW
+	5acADcQU04BT7Zk1WAIajY0x+9+mP46kmVgwmQ==
+X-Google-Smtp-Source: AGHT+IE+t9Q0e0NTv5Lqu9aYMx1Bpc7GcxHoh0GazGwA8Lf1cfTs4FCqTeCL17FslcTvdiqqyyq8iw==
+X-Received: by 2002:a17:90b:2c8c:b0:2ea:712d:9a82 with SMTP id 98e67ed59e1d1-2f83ac81fbamr38733712a91.29.1738686263628;
+        Tue, 04 Feb 2025 08:24:23 -0800 (PST)
+Received: from localhost.localdomain ([2405:201:5c08:585d:6eb6:f5fb:b572:c7c7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bc97d3dsm13797897a91.7.2025.02.04.08.24.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 08:24:23 -0800 (PST)
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+To: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: linux-kernel-mentees@lists.linux.dev,
+	skhan@linuxfoundation.org,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: [PATCH] selftests: net: fix grammar in reuseaddr_ports_exhausted.c log message
+Date: Tue,  4 Feb 2025 21:54:00 +0530
+Message-ID: <20250204162400.2295-1-pranav.tyagi03@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <uc2rve7hqf4mmvobinaxzf5qncglysfeg2lbxmxvxapsewhgxh@2ppf757u352g>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 04, 2025 at 05:35:26PM +0200, Dmitry Baryshkov wrote:
-> On Tue, Feb 04, 2025 at 10:52:45AM +0100, Johan Hovold wrote:
+This patch fixes a grammatical error in a test log message in
+reuseaddr_ports_exhausted.c for better clarity as a part of lfx
+application tasks
 
-> > That's just not true. The rule is to not have two drivers for the same
-> > hardware (even if we very rarely have accepted some well-motivated
-> > exceptions).
-> > 
-> > I understand that you may have an unorthodox view of this as you work on
-> > the MSM DRM driver, but hiding incomplete and broken code behind module
-> > parameters so that you can game the upstreaming process (e.g. like you
-> > did for the eDP PSR feature) is simply not a model that anyone should
-> > follow.
-> 
-> Let me point you the aic7xxx story, we had, if my memory is correct,
-> three drivers working with the same hardware at some point, during
-> transition period.
+Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+---
+ tools/testing/selftests/net/reuseaddr_ports_exhausted.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-As I also mentioned, there have been exceptions to the rule.
+diff --git a/tools/testing/selftests/net/reuseaddr_ports_exhausted.c b/tools/testing/selftests/net/reuseaddr_ports_exhausted.c
+index 066efd30e294..7b9bf8a7bbe1 100644
+--- a/tools/testing/selftests/net/reuseaddr_ports_exhausted.c
++++ b/tools/testing/selftests/net/reuseaddr_ports_exhausted.c
+@@ -112,7 +112,7 @@ TEST(reuseaddr_ports_exhausted_reusable_same_euid)
+ 		ASSERT_NE(-1, fd[0]) TH_LOG("failed to bind.");
+ 
+ 		if (opts->reuseport[0] && opts->reuseport[1]) {
+-			EXPECT_EQ(-1, fd[1]) TH_LOG("should fail to bind because both sockets succeed to be listened.");
++			EXPECT_EQ(-1, fd[1]) TH_LOG("should fail to bind because both sockets successfully listened.");
+ 		} else {
+ 			EXPECT_NE(-1, fd[1]) TH_LOG("should succeed to bind to connect to different destinations.");
+ 		}
+-- 
+2.47.1
 
-> Regarding eDP PSR. It wasn't my implementation, so that's not correct
-> comparison.
-
-Sure, but that module parameter is still there two years later, the
-functionality is still incomplete and from what I've heard has since
-also bitrotted (psr_enabled).
-
-Done right and enabled by default this feature would have been very
-useful giving, for example, users of the X13s a 2 h battery boost.
-Instead, as expected, no one cares about fixing the code after it was
-"mainlined" or runs the bits that did work often enough to detect when
-it breaks further. Everyone loses.
-
-> MDP5 -> DPU migration is mine and yes, it is implemented in
-> this way as we can trigger CI jobs having a single kernel, as developers
-> we can switch between MDP5 and DPU drivers in a quick way, etc.
-
-I don't know the backstory there, but at least the commit message didn't
-mention anything about a plan to transition from one to the other.
-
-Johan
