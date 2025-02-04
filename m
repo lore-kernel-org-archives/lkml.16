@@ -1,131 +1,246 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D16E419ADA4
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 05:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBBA18EAD
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 05:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738645962; cv=none; b=O4N2TvRAUY9zPVLQaBvOpVAIKc2ljx62kGlHht7J6WA8fhWM01XK5xeoc4odlAJOZ50MQjeDZConRdW8eLaBO9ariIL277jv/l8VhTSfTuMUGtkEePyeMnPEBrBEBQjAdHNJfGrz/3Ag3YT60gn9zhEQU92B1uwnPDzCjIZM3gY=
+	t=1738646361; cv=none; b=Gdv49xRS6CQJNZQe7tFTp/+a4PBVs5lcopmGl8MEg37SsNScpROoDgDd4BlwVtg9fpGY8wHBV7uP8Xce5pOpaO7tEP7HqFxzK6wa07O0BguRdS8u9ekY6BIeJ63OSWI/AM/eWhXH0Q889NCxIK3vNoWAkrRbpzW7lr/Op8svBJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738645962; c=relaxed/simple;
-	bh=YeYpsYoxhAxaVbEQdPteRQD1B7aZzetuB2dmUJL1ZJM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UJTDvAO+nPaFmp7Y7bXfCx+xVR4cCxAlrYIi3U9P7Upb5ocYbYO5O1HDJTNMj7VaZuv3/xTJE+RNIVIywj92QlKF+kENcYZRaemTJxbnhlhdY8aIA+6w3MdJaP9ZgccsFy+09PwkFkc40RwU2URV69bsRpcolBuZjW8WtS0LkqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rNdYXA3x; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738646361; c=relaxed/simple;
+	bh=BabUlG1w/Uvvkr2rQLq7gACTxHOaGwHILz0sPBL6caM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jzFnRDUX7wqR96DKt3nB0594ziqD3kjemnCuL91jUz5skSUi83LfzYWTIol+ppo8kzEz0T+6Lgh1/ArKWvo36k9aWORA1yllmLDv/gDf/yyFfpT2x/RgU33EtjQEFaaYS7ogjf2VIqnit3RIcIuSZzYNPR9Rua2j9bt5lKSzmWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aLAvFNQz; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rNdYXA3x"
-Received: from thinkpad-p16sg1.corp.microsoft.com (unknown [20.236.10.163])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4BC93205493F;
-	Mon,  3 Feb 2025 21:12:40 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4BC93205493F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738645960;
-	bh=i1PcuCPypNqoRYTgrcu15A8bGKxxWYW+PFQ5/jXDbyc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rNdYXA3xgoL0Mc8nz/JhXFytEBdJ7yqR+o4hzR01NF6chOSEiEM2Dc0PMplKaH1Xs
-	 0ih3SImi13UluxBT3xA4JNKT02QvizlwqPyUp9ibx64Ns2PZpLKPJpkCSwK2A1fmi0
-	 eNjvsjlDNcb6GC0dbwLQYhquQdWrH1l+a+CRQYXc=
-From: Shyam Saini <shyamsaini@linux.microsoft.com>
-To: linux@rasmusvillemoes.dk
-Cc: code@tyhicks.com,
-	linux-kernel@vger.kernel.org,
-	mcgrof@kernel.org,
-	frkaya@linux.microsoft.com,
-	vijayb@linux.microsoft.com,
-	petr.pavlu@suse.com,
-	linux@weissschuh.net
-Subject: [RFC] Revert "kernel/params.c: defer most of param_sysfs_init() to late_initcall time"
-Date: Mon,  3 Feb 2025 21:12:31 -0800
-Message-Id: <20250204051231.1601897-1-shyamsaini@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <87tt9btbht.fsf@prevas.dk>
-References: <87tt9btbht.fsf@prevas.dk>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aLAvFNQz"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5d96944401dso8508859a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 21:19:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738646357; x=1739251157; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cS2AXbCrkcZlckwxkcxg8BiUzkM+wUQxwhyu5eBVRB0=;
+        b=aLAvFNQzXnMv0M8R5q1/B3epLL75kDFhgRnAuRfGKjyCPNdm8mZBPIxUhTCOOyFAEI
+         DI8omkNTpYd8VFVgBoHE+Vgfc3qaRlJqQZkA9+EJ1AW8uvV/9leQWOdleJaGfjKTfl9W
+         dirmadVCsxDe3ufI3/4ehRCArRpJMna5oTr4GEmidepxyc1YMUL+J1akzlZpUiFyFFuY
+         S9xMasGZ1jg2A/p4l3c0RlTI8zCDrtioLdE3mqTlBQxGwXAus+mZgO8hydR4g7uiatUN
+         kFuXQQNTx+aLmjCSb3kwfOMo80l8R65I9L1INKMh7Hn4yR2bVSHlxaJDEjxWUIOHHkod
+         1mQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738646357; x=1739251157;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cS2AXbCrkcZlckwxkcxg8BiUzkM+wUQxwhyu5eBVRB0=;
+        b=P0/TzAkx4zDwuYJFZhRCv0/x7ZBPYaiyxwYOnlnIDdhQP3ll2jO2FNhlRjTXm19wOA
+         cZgtgMLBRkvV+wfUxVFh9sn9o2Le/rtVxeenc+mPqszAcBVShxp9sjGYpNn8k27xmQ7p
+         G7DoTAzB6q0MwrfOVLeHopYrVPTvHUaZMJLPeZQ6kLM1cAcbfKvCoGQNpVFrA9lIJwD4
+         A5wBSjVudFm60SWcepVNxiwifDxmjkOoExqJToZI/Id0MO8Vz+iXwUfEJIwk0Ek9jT7e
+         SJNzEUxljIPad/dBPan00GuF1G5f6xk+aDFeC88vcW+U/GvY3ZqZsC2eM9ZW/eKDcRBf
+         UAnA==
+X-Forwarded-Encrypted: i=1; AJvYcCXEwoieZhH8IJ0rEEsxn/0xKLqeBcpp5ERRMhIL4DiSLoxgwAqyW9pAUjCtmnuBeKUlT6ctu+8rf9aC4NM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyK+VzutMNCMUequg1iuoVr3nD7Jl4QWMWZyKK+GXllSfL++vnS
+	8Gtg1qRR95Jm7IYVEVVQw1gmobo81inpmvRzB+0vLf1But/AAjf4YfUvqWbU/MVNlS5G5ZLPkll
+	KAQ+sVWoXR2KtzJGlH1mbjvIrqJdifa0Xc+lf
+X-Gm-Gg: ASbGnctFAgKYS/Nbw2dn6bs6es9R9r87X9NswbI/haE2nGQJkTj6cAC7Seq/71HEYWx
+	7Hfqz4Cbn/HNd5r+Rlldysc1XVPdDraZyb+oR0VJyS1GYZf1Z12Hgco6xP4P6waPArMFU3g==
+X-Google-Smtp-Source: AGHT+IGwlrudS8Cf+HkidGhPIZvHUYp1aGwZJdpOTBhkKupt9M9lb2SkVVUevfi5j63KzTzojlqTAk1nnvA1SpvTSY8=
+X-Received: by 2002:a05:6402:90c:b0:5d0:d84c:abb3 with SMTP id
+ 4fb4d7f45d1cf-5dc5efebf52mr22770552a12.26.1738646357018; Mon, 03 Feb 2025
+ 21:19:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <SY8P300MB0421FF8BC82A17CA7A892675A1F42@SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM>
+In-Reply-To: <SY8P300MB0421FF8BC82A17CA7A892675A1F42@SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 4 Feb 2025 06:19:06 +0100
+X-Gm-Features: AWEUYZn57D_FZdrpb5sZek8UfwoK-Do5rEL6z936qAXW2KYP4UvN03gO4gUpbq4
+Message-ID: <CANn89i+NLXpzsCCT=aJDji9Bkq34-bMBzu4vuPRnoCdL+VhOdQ@mail.gmail.com>
+Subject: Re: general protection fault in __fib6_drop_pcpu_from [CVE-2024-40905
+ Incomplete fix]
+To: YAN KANG <kangyan91@outlook.com>
+Cc: "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"syzkaller@googlegroups.com" <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rasmus,
+On Tue, Feb 4, 2025 at 5:27=E2=80=AFAM YAN KANG <kangyan91@outlook.com> wro=
+te:
+>
+> Dear developers and maintainers,
+>
+> I found a new kernel UAF  bug titiled "general protection fault in __fib6=
+_drop_pcpu_from" while using modified syzkaller fuzzing tool. I Itested it =
+on the latest Linux upstream version (6.13.0-rc1), and it was able to be tr=
+iggered many times .
+>
+>
+> After preliminary analysis, I found CVE-2024-40905 vlunerability maybe fi=
+xed incomplete.
+> https://lore.kernel.org/linux-cve-announce/2024071208-CVE-2024-40905-44f9=
+@gregkh/T/
+> I am sure that this security patch is apply to linux 6.13.
+>
+>
 
-> On Thu, Jan 30 2025, Shyam Saini <shyamsaini@linux.microsoft.com> wrote:
-> 
-> > This reverts commit 96a1a2412acba8c057c041833641d9b7dbf52170,
-> > as it breaks the creation of /sys/module/<built-in-module>/drivers.
-> >
-> > The reverted commit changed the initcall order for
-> > param_sysfs_builtin() from subsys_initcall() to late_initcall(),
-> > which impacts the module_kset list and its population.
-> >
-> > Drivers which are initialized from subsys_initcall() or any other
-> > higher precedence initcall couldn't find the related kobject entry
-> > in the module_kset list because module_kset is not fully populated
-> > at this point due to the reverted change. As a consequence,
-> > module_add_driver() returns early without calling make_driver_name().
-> > Therefore, /sys/module/<built-in-module>/drivers is never created.
-> >
-> > This breaks user-space applications for eg: DPDK, which expect
-> > /sys/module/vfio_pci/drivers/pci:vfio-pci/new_id to be present.
-> >
-> 
-> :(
-> 
-> Unfortunately, the init time saved by the mentioned commit is important
-> for some boards, and reverting that commit now will mean that some of
-> those boards may spuriously fail to boot due to random timing and the
-> external watchdog firing.
-> 
-> I wonder why this has taken 2+ years to be noticed?
+Yes, I have syzbot reports pointing to the issue.
 
-Unfortunately, we couldn't detect it earlier, sorry about that.
-I am fairly suprised no one else reported this issue.
+Do you have a fix already ?
 
-> Since the problem is that /sys/module/vfio_pci is not (yet) created as a side
-> effect of version_sysfs_builtin() and/or param_sysfs_builtin(), both of
-> which use locate_module_kobject() to lookup-or-create that, maybe the
-> code in module_add_driver() could be reworked to use that.
-> 
-> It's of course not entirely trivial, as locate_module_kobject() is
-> currently __init and static, but that should be fixable if we want to go
-> that route. Maybe it should be refactored a little to be callable from
-> the builtin-module branch of module_add_driver(), but ignoring that,
-> something like
-> 
-> diff --git a/drivers/base/module.c b/drivers/base/module.c
-> index 5bc71bea883a..6b32c5fec283 100644
-> --- a/drivers/base/module.c
-> +++ b/drivers/base/module.c
-> @@ -42,16 +42,13 @@ int module_add_driver(struct module *mod, const struct device_driver *drv)
->  	if (mod)
->  		mk = &mod->mkobj;
->  	else if (drv->mod_name) {
-> -		struct kobject *mkobj;
-> -
->  		/* Lookup built-in module entry in /sys/modules */
-> -		mkobj = kset_find_obj(module_kset, drv->mod_name);
-> -		if (mkobj) {
-> -			mk = container_of(mkobj, struct module_kobject, kobj);
-> +		mk = locate_module_kobject(drv->mod_name);
-> +		if (mk) {
->  			/* remember our module structure */
->  			drv->p->mkobj = mk;
-> -			/* kset_find_obj took a reference */
-> -			kobject_put(mkobj);
-> +			/* locate_module_kobject took a reference */
-> +			kobject_put(&mk->mkobj);
->  		}
->  	}
->  
-> It also seems to me that if a module has neither a MODULE_VERSION nor
-> any module parameters, /sys/module/<modname> wouldn't be created as part
-> of that param_sysfs_builtin(), regardless of commit 96a1a2412acb. So
-> relying on that sysfs directory existing seems to be a little fragile;
-> IOW I do think that module_add_driver() should itself ensure that the
-> module_kobject exists.
+I have been waiting, because I think the bug is caused by a per-cpu
+data mangling,
+not necessarily in network layers.
 
-I have reworked this patch as per your suggestions, will send it shortly.
+Unfortunately, KASAN does not have per-cpu data support I think.
 
-Thanks,
-Shyam
+> In function __fib6_drop_pcpu_from  (/net/ipv6/ip6_fib.c)
+> crashing code:
+> ppcpu_rt =3D per_cpu_ptr(fib6_nh->rt6i_pcpu, cpu); //fib6_nh->rt6i_pcpu i=
+s dangling
+> pcpu_rt =3D READ_ONCE(*ppcpu_rt); // Crash here
+>
+> rootcause of concurrent-UAF:
+> The crash occurs because fib6_nh->rt6i_pcpu is accessed after being freed=
+.
+> The problematic code path appears to be:
+> void fib6_nh_release(struct fib6_nh *fib6_nh)  (/net/ipv6/route.c)
+> {
+>        =E2=80=A6=E2=80=A6
+>         fib6_nh_release_dsts(fib6_nh);   //pcpu_rt =3D xchg(ppcpu_rt, NUL=
+L);
+>         free_percpu(fib6_nh->rt6i_pcpu);
+>        // MISSING: fib6_nh->rt6i_pcpu =3D NULL;
+>
+> After free_percpu() is called, rt6i_pcpu becomes a dangling pointer. Subs=
+equent accesses to it in __fib6_drop_pcpu_from() via per_cpu_ptr() will tri=
+gger use-after-free.
+>
+> If you fix this issue, please add the following tag to the commit:
+> Reported-by: yan kang <kangyan91@outlook.com>
+> Reported-by: yue sun <samsun1006219@gmail.com
+>
+>
+> I hope it helps.
+> Best regards
+> yan kang
+>
+> Kernel crash log is listed below.
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> crash log
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> batman_adv: batadv0: Removing interface: batadv_slave_1
+> veth1_macvtap: left promiscuous mode
+> veth0_macvtap: left promiscuous mode
+> veth1_vlan: left promiscuous mode
+> veth0_vlan: left promiscuous mode
+> Oops: general protection fault, probably for non-canonical address 0xdfff=
+fc0000000012: 0000 [#1] PREEMPT SMP KASAN NOPTI
+> KASAN: null-ptr-deref in range [0x0000000000000090-0x0000000000000097]
+> CPU: 0 UID: 0 PID: 11 Comm: kworker/u8:0 Not tainted 6.13.0-rc1-00003-gd4=
+774759e15b-dirty #87
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/0=
+1/2014
+> Workqueue: netns cleanup_net
+> RIP: 0010:__fib6_drop_pcpu_from.part.0+0x18e/0x570 net/ipv6/ip6_fib.c:980
+> Code: c2 48 c1 ea 03 80 3c 2a 00 0f 85 8a 03 00 00 4c 8b 38 4d 85 ff 74 2=
+e e8 80 0c ca f7 49 8d bf 90 00 00 00 48 89 f8 48 c1 e8 03 <80> 3c 28 00 0f=
+ 85 7c 03 00 00 49 8b 87 90 00 00 00 48 3b 04 24 0f
+> RSP: 0018:ffffc900000defb8 EFLAGS: 00010207
+> RAX: 0000000000000012 RBX: 0000000000000000 RCX: 1ffffffff1b0cb7c
+> RDX: ffff88801cee2500 RSI: ffffffff89ceb460 RDI: 0000000000000096
+> RBP: dffffc0000000000 R08: 0000000000000000 R09: fffffbfff2d8a198
+> R10: 0000000000000000 R11: 0000000000000000 R12: fffffbfff1b0cc71
+> R13: ffff88810669a8c8 R14: ffffed1020cd3524 R15: 0000000000000006
+> FS:  0000000000000000(0000) GS:ffff888062800000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f6eecc57000 CR3: 0000000024d02000 CR4: 0000000000752ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
+> PKRU: 55555554
+> Call Trace:
+>  <TASK>
+>  __fib6_drop_pcpu_from net/ipv6/ip6_fib.c:1023 [inline]
+>  fib6_drop_pcpu_from net/ipv6/ip6_fib.c:1024 [inline]
+>  fib6_purge_rt+0x888/0xa80 net/ipv6/ip6_fib.c:1035
+>  fib6_del_route net/ipv6/ip6_fib.c:1995 [inline]
+>  fib6_del+0xa63/0x17f0 net/ipv6/ip6_fib.c:2040
+>  fib6_clean_node+0x3a1/0x5d0 net/ipv6/ip6_fib.c:2202
+>  fib6_walk_continue+0x450/0x860 net/ipv6/ip6_fib.c:2124
+>  fib6_walk+0x182/0x370 net/ipv6/ip6_fib.c:2172
+>  fib6_clean_tree+0xdb/0x120 net/ipv6/ip6_fib.c:2252
+>  __fib6_clean_all+0x105/0x2d0 net/ipv6/ip6_fib.c:2268
+>  rt6_sync_down_dev net/ipv6/route.c:4908 [inline]
+>  rt6_disable_ip+0x80a/0xa10 net/ipv6/route.c:4913
+>  addrconf_ifdown.isra.0+0x12e/0x1ba0 net/ipv6/addrconf.c:3877
+>  addrconf_notify+0x109/0x1a60 net/ipv6/addrconf.c:3800
+>  notifier_call_chain+0xba/0x450 kernel/notifier.c:85
+>  call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:1996
+>  call_netdevice_notifiers_extack net/core/dev.c:2034 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2048 [inline]
+>  dev_close_many+0x33d/0x690 net/core/dev.c:1589
+>  unregister_netdevice_many_notify+0x47a/0x1d30 net/core/dev.c:11494
+>  unregister_netdevice_many net/core/dev.c:11584 [inline]
+>  default_device_exit_batch+0x740/0x980 net/core/dev.c:12067
+>  ops_exit_list+0x128/0x180 net/core/net_namespace.c:177
+>  cleanup_net+0x5b3/0xb60 net/core/net_namespace.c:632
+>  process_one_work+0x99f/0x1bb0 kernel/workqueue.c:3229
+>  process_scheduled_works kernel/workqueue.c:3310 [inline]
+>  worker_thread+0x66e/0xe80 kernel/workqueue.c:3391
+>  kthread+0x2c7/0x3b0 kernel/kthread.c:389
+>  ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+>  </TASK>
+> Modules linked in:
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:__fib6_drop_pcpu_from.part.0+0x18e/0x570 net/ipv6/ip6_fib.c:980
+> Code: c2 48 c1 ea 03 80 3c 2a 00 0f 85 8a 03 00 00 4c 8b 38 4d 85 ff 74 2=
+e e8 80 0c ca f7 49 8d bf 90 00 00 00 48 89 f8 48 c1 e8 03 <80> 3c 28 00 0f=
+ 85 7c 03 00 00 49 8b 87 90 00 00 00 48 3b 04 24 0f
+> RSP: 0018:ffffc900000defb8 EFLAGS: 00010207
+> RAX: 0000000000000012 RBX: 0000000000000000 RCX: 1ffffffff1b0cb7c
+> RDX: ffff88801cee2500 RSI: ffffffff89ceb460 RDI: 0000000000000096
+> RBP: dffffc0000000000 R08: 0000000000000000 R09: fffffbfff2d8a198
+> R10: 0000000000000000 R11: 0000000000000000 R12: fffffbfff1b0cc71
+> R13: ffff88810669a8c8 R14: ffffed1020cd3524 R15: 0000000000000006
+> FS:  0000000000000000(0000) GS:ffff888062800000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f6eecc57000 CR3: 0000000024d02000 CR4: 0000000000752ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
+> PKRU: 55555554
+> ----------------
+> Code disassembly (best guess), 1 bytes skipped:
+>    0:   48 c1 ea 03             shr    $0x3,%rdx
+>    4:   80 3c 2a 00             cmpb   $0x0,(%rdx,%rbp,1)
+>    8:   0f 85 8a 03 00 00       jne    0x398
+>    e:   4c 8b 38                mov    (%rax),%r15
+>   11:   4d 85 ff                test   %r15,%r15
+>   14:   74 2e                   je     0x44
+>   16:   e8 80 0c ca f7          call   0xf7ca0c9b
+>   1b:   49 8d bf 90 00 00 00    lea    0x90(%r15),%rdi
+>   22:   48 89 f8                mov    %rdi,%rax
+>   25:   48 c1 e8 03             shr    $0x3,%rax
+> * 29:   80 3c 28 00             cmpb   $0x0,(%rax,%rbp,1) <-- trapping in=
+struction
+>   2d:   0f 85 7c 03 00 00       jne    0x3af
+>   33:   49 8b 87 90 00 00 00    mov    0x90(%r15),%rax
+>   3a:   48 3b 04 24             cmp    (%rsp),%rax
+>   3e:   0f                      .byte 0xf
