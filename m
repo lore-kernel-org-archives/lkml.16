@@ -1,109 +1,187 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330D119C54B;
-	Tue,  4 Feb 2025 09:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD9B143C5D;
+	Tue,  4 Feb 2025 09:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738662107; cv=none; b=dtl99/B87/XNCwpGCdG5YnJdHyrq/C6dNkNoPW9Ur8uLWsMti6zXxKePXpJ+3oURwRCsnGWQv6RZP7VI3qEubStGIxbU3WX85T9+HsMcWZMmNQ5kr9uYLdUiFRfPh0mSocy/XLb5smRUTWbygHGmmOxVdX6kiELSWyAbIKhrn7o=
+	t=1738662244; cv=none; b=Aqoqm2Wwdjy5sUoRFOYRnHo+MUD5129/RsXgscFv3FVJtxDc7bOlMz8WhZ2w7PFa+ZWJQ2CIO7hRiRbjaXsEHFK1rJRt8gsR6rAk7Sae+wUvW/GfF5oD2MxlsE4VC5bn3eBehguTSes+pm9Xzc1vUlxGVoVf8y/so0DFqcnwG6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738662107; c=relaxed/simple;
-	bh=hmDF/89UGFdHZOQdLxKg7A6Ve4yC4JgSL47ZunD8KSY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cDfsR2qR4ad5p6+JXo7kaaFhczCvaRyPbcYSs7iB9hY0WdmFy/PJLOI3vMiwDsuVmxFqAbxwyljclD1jyf6tcfGUIRvm3mvW3U7HsMTRpF4OLkeD47dyespg9gh1o+cKr/ikN6hTuu5jA7MhHfTG9Xj96Tm7OZzPD1kXJeMTW4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Af7vOTZB; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1738662244; c=relaxed/simple;
+	bh=wDHC1KEHF8DQWAcUfnfxCywjfzzoTefVOSXvL3BKXuI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AcrtesOrnp5pkKF4eBra7TCfclus2BsfVgSr8ymEidN5VC1ArdNyFIUar9n/apSPWmAOiVwwzZIvMm6jzKLiV5iGf8a+9WdD+RPO22NE64jxU0BfUWoMb870C3d3oMecXy8QYso0otRgmsJIGES8iQRgmlt4d8d1JOIprJvGc2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=GKZMqyk1; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Af7vOTZB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1738662086; x=1739266886; i=w_armin@gmx.de;
-	bh=hmDF/89UGFdHZOQdLxKg7A6Ve4yC4JgSL47ZunD8KSY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Af7vOTZB3lttaz7BnG+m/qhQlgy+6XhWQJdSIuXW2kknv6jQBpOFyasU8FqJxPj+
-	 eHD3DXP2R4pqgpHOOe9869geKIZHJrRRuriTWtHsSeuAVc+ykX+J8SKNjcEmIc7dl
-	 1qmy09O919IZHxhCB+Me0pWI8dPzzZjKdtae541CZe4iCX3PiPzLao99FJCQUxw3C
-	 tr78v2TlJ71VhWxUJttg2FyUaUfsm8AswVVDd6yKzQWW41LtYXNbNQDfjWRvtftO3
-	 udv7kBxGEOGcdlsh4zC45HTeunT6E9OOgnDEIvaE83PNnJbO0N2ugHvYEVrOU+zm1
-	 WdmdcJN70XVX9c221Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([91.14.238.232]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MFKGP-1tclXb22cD-00Gd8h; Tue, 04
- Feb 2025 10:41:26 +0100
-Message-ID: <e14ca038-e9fa-445d-a26c-de91d99fbd24@gmx.de>
-Date: Tue, 4 Feb 2025 10:41:23 +0100
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="GKZMqyk1"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 5CC10A0031;
+	Tue,  4 Feb 2025 10:44:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=Arq9TziV6dw9WdFzvtYF
+	lrk4miTqYDr7Y/tlevZbNFA=; b=GKZMqyk1lK5CbdOtG5i53YSr5Rzx7xoiaK6R
+	HqIUkDuZPd9Co2B7sdhdUCWAaNFkHKbe8mYDRBc81hLBtHuLm6JG7LVLcoU/XUIO
+	dibOt40w0B2CL7O3QHutDawmPcgHBRaF21KEUe1T5I7nf7mQ/Af0MpQRfPpWBY2L
+	Pn9BCSfPPSjpaI/DG69uhR+20wiicbjE8oIDSfFCD4/fLrta1tXuzoc9EPN8YVai
+	7HZO9++OzNKhzBwcCdF4RqKZTVmnDuInpXW37GOkXWW5n1QqqM0mP+TvFvDvrICe
+	t77IgdbAE0zlmTe+uMRVvE9a95nOTS0TaZi1ELTub5UuqAd1ja93a7KDXhfUvKeQ
+	dYP1kKFOFN/VBSUKI6pFLCrxhdClBxBNUcfTOSJ0DZCC2huBozBy1DDus+8oUqzV
+	Nk0SBQcuuh86TdMCB9CJBvv28emZ+9jVFZNn1Y2rI2O5F/oJN9QxCxKeF2YyJxaA
+	5cJYiFCGdrKpXyeWxclxrGIL9MgK4foHp+ODd6llFCfO3CA4L/3TFAIiPro9wpEL
+	3imD/xXUxVxhVtVIH1srmw9iCjxOXygB5jDdOb6e/qvV1EOKOyWVI9Q5hhrCKQ0T
+	AMsIwrpSJtGlE/ObmflV1Sy6tYqykDCGb/XB8s8uT0pSLaGNarElal8OuJjlFztu
+	Cj7TkUE=
+From: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>
+To: Laurent Badel <laurentbadel@eaton.com>, Jakub Kicinski <kuba@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>, =?UTF-8?q?Cs=C3=B3k=C3=A1s=20Bence?=
+	<csokas.bence@prolan.hu>, <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Ahmad Fatoum <a.fatoum@pengutronix.de>, Simon Horman <horms@kernel.org>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>, Jacob Keller
+	<jacob.e.keller@intel.com>, Wei Fang <wei.fang@nxp.com>, Shenwei Wang
+	<shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Andrew Lunn
+	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH net v3] net: fec: Refactor MAC reset to function
+Date: Tue, 4 Feb 2025 10:37:54 +0100
+Message-ID: <20250204093756.253642-2-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250122163935.213313-2-csokas.bence@prolan.hu>
+References:
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] hwmon: (hp-wmi-sensors) Use the WMI bus API when
- accessing sensors
-To: Guenter Roeck <linux@roeck-us.net>, james@equiv.tech,
- markpearson@lenovo.com, jorge.lopez2@hp.com
-Cc: jdelvare@suse.com, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- corbet@lwn.net, linux-doc@vger.kernel.org
-References: <20250203182322.384883-1-W_Armin@gmx.de>
- <20250203182322.384883-2-W_Armin@gmx.de>
- <0266e0b1-43fb-473b-995d-bb92662505c0@roeck-us.net>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <0266e0b1-43fb-473b-995d-bb92662505c0@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:BK3HowZ6nOqAceZkqq/8+FkRoAINgf+3zJLWGY7e8AvVCxWWuZi
- KTg77SgZzNuvj6g1FD2B4WK0gRcbvL7Ty7ZWH0R41ixUpmdLmFFQBwRU68N+7sa/mtcwbjX
- SgziYqUtEeLt2AGUxXLEEZ9pivfZxy8aZSE/fS6xxgwzoIzURCY13nW0UhJYl8w/8Wc92f2
- QenH9EXpjd6hm0JW/1UxQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HBVKY/kMOA0=;kIV38TsmmZZUPu1R6id+wR1nCNY
- 1/q4Yr6jPM3qT+XoNa1KNNfsF3MGyrOPzJXrHX7J1bPXjEv8vICUcEG7q+Q7inhgjuzZ8LdXk
- MjA44z29HNS6RhTN9HitpvnY7PLaFa/bUdMheg6xQtMacO3vTrVlgRwUZkKug8bX6cjR4zfNT
- v9PR9imdIOFVH5OcxzcWDSGlkYdWSlt/FEKlJczWox4zTHxrXpwf/9FmV9OOW88m05qAlYcMh
- GRQx0HLm0lEktt6ArlElg/Du3DdsjTEyWTqpA2dbhXBLwhHVBRRKejR4rBr7vfnZHrfyPM4Ej
- rslSj3SowX8N54eSJXpGYNxt76DnhXjhDi5OESieXV3ppwGCu4f2fAv/H6QUXjLpTHW1UL5IM
- Qul41eMMDlpEPx1EA4ENmJyom0Hy1tIGgtFlcVqr7NKLKvwcy1tFOrLOnv9CRAnF3B175I44K
- lIM254w89suEsCYKHF0htAaiBweLVdEKF4DHcF+HAuwe0+s7Fwzy3UIawBFNzBJXoJJioLRVo
- MQt2XDCNJOaXtci9h+tsnHZrLq/p5VC6TjGwdboM1nAm1NZaB49P9zdY0y2uOjSG6QOekjB7A
- 7MyVC17bOMmtyBLvyzMH44RUeBTMgfNKl6avI6qBI7InMJWynsRjjUtsI2USiEy42TSCx+xKX
- wzJdAJsVx69f75Z3+76lgNeAmXRdRxEcisgOU0pRNw7lDhItIqRhbj+i2w51qHjvG/eryhQFE
- D6li4TOASHxESZEB59auK1/Ip/l0/h8U1E4UQWKOq5QsCVHKvyXOjhsMi2v4KBjPCFTFdGZa4
- GYLT+0tlUXbNGnrGq5Vl6ozTwvN0t5G9/IX/wkl/Df30HY69T26WeBPUdWgBieBeXRXCDPohC
- NOzGboepy1v/QcwKyi61TUv2zHnp5msC8kvWti8ne1AB4mQXQa9+WzORzcbsWSbmyWl/RgMFF
- ho0K4pnTfvj4epOt5cYKjmfGaZV5WBrxczfDBkEMC+piTX+2mPMORK6J7YWsk2L+V/X3MAWpv
- mcITkE0nBrgEPoiAW4kjZUEQIfYm6j8sVSZzmBH4SKbnmt/dGE6lN0ab8Aiam8SPQnUZQ5cuY
- FmD/N6rYYZ88lO0CWkMK52aLolmwN03a5nlh0goLOMNS3kdVFG0K0xOTvV13FvAX4X/SXTCag
- UfpXLJGb2gDC/FsQNyFMotjjyE1bXKk4MGAcxhVNyveBCG2Y8xAsngbUQKKmg2UQFNqiYvfJC
- nUCIAe4RVt48rSkrchRNUzuJrwLRIteoa7AR+EAjOS5t1Iv45gwFf+T//BgUn8VaKmv4+PC/V
- sT4gRZKjydcjVy3yAJNuaHZpJglcu6KHVZD2btacJLw8KY=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1738662239;VERSION=7985;MC=507896856;ID=198007;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29ACD94852667366
 
-Am 04.02.25 um 02:18 schrieb Guenter Roeck:
+The core is reset both in `fec_restart()` (called on link-up) and
+`fec_stop()` (going to sleep, driver remove etc.). These two functions
+had their separate implementations, which was at first only a register
+write and a `udelay()` (and the accompanying block comment). However,
+since then we got soft-reset (MAC disable) and Wake-on-LAN support, which
+meant that these implementations diverged, often causing bugs.
 
-> On 2/3/25 10:23, Armin Wolf wrote:
->> Since the driver already binds to HP_WMI_NUMERIC_SENSOR_GUID, using
->> wmidev_block_query() allows for faster sensor access.
->>
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
->
-> ... assuming the series will be applied together. Please let me know
-> if this patch should be applied through hwmon.
->
-> Guenter
+For instance, as of now, `fec_stop()` does not check for
+`FEC_QUIRK_NO_HARD_RESET`, meaning the MII/RMII mode is cleared on eg.
+a PM power-down event; and `fec_restart()` missed the refactor renaming
+the "magic" constant `1` to `FEC_ECR_RESET`.
 
-Hi,
+To harmonize current implementations, and eliminate this source of
+potential future bugs, refactor implementation to a common function.
 
-i would like to have this patch merged through the pdx86 tree.
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Fixes: c730ab423bfa ("net: fec: Fix temporary RMII clock reset on link up")
+Fixes: ff049886671c ("net: fec: Refactor: #define magic constants")
+Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
+---
 
-Thanks,
-Armin Wolf
+Notes:
+    Recommended options for this patch:
+    `--color-moved --color-moved-ws=allow-indentation-change`
+    Changes in v2:
+    * collect Michal's tag
+    * reformat message to 75 cols
+    * fix missing `u32 val`
+    Changes in v3:
+    * rename parameter to `allow_wol`
+    Changes in v3:
+    * clarify message
+    * collect Jacob's tag
+    * rebased onto c2933b2befe2
+
+ drivers/net/ethernet/freescale/fec_main.c | 52 +++++++++++------------
+ 1 file changed, 25 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index f7c4ce8e9a26..a86cfebedaa8 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1093,6 +1093,29 @@ static void fec_enet_enable_ring(struct net_device *ndev)
+ 	}
+ }
+ 
++/* Whack a reset.  We should wait for this.
++ * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
++ * instead of reset MAC itself.
++ */
++static void fec_ctrl_reset(struct fec_enet_private *fep, bool allow_wol)
++{
++	u32 val;
++
++	if (!allow_wol || !(fep->wol_flag & FEC_WOL_FLAG_SLEEP_ON)) {
++		if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES ||
++		    ((fep->quirks & FEC_QUIRK_NO_HARD_RESET) && fep->link)) {
++			writel(0, fep->hwp + FEC_ECNTRL);
++		} else {
++			writel(FEC_ECR_RESET, fep->hwp + FEC_ECNTRL);
++			udelay(10);
++		}
++	} else {
++		val = readl(fep->hwp + FEC_ECNTRL);
++		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
++		writel(val, fep->hwp + FEC_ECNTRL);
++	}
++}
++
+ /*
+  * This function is called to start or restart the FEC during a link
+  * change, transmit timeout, or to reconfigure the FEC.  The network
+@@ -1109,17 +1132,7 @@ fec_restart(struct net_device *ndev)
+ 	if (fep->bufdesc_ex)
+ 		fec_ptp_save_state(fep);
+ 
+-	/* Whack a reset.  We should wait for this.
+-	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
+-	 * instead of reset MAC itself.
+-	 */
+-	if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES ||
+-	    ((fep->quirks & FEC_QUIRK_NO_HARD_RESET) && fep->link)) {
+-		writel(0, fep->hwp + FEC_ECNTRL);
+-	} else {
+-		writel(1, fep->hwp + FEC_ECNTRL);
+-		udelay(10);
+-	}
++	fec_ctrl_reset(fep, false);
+ 
+ 	/*
+ 	 * enet-mac reset will reset mac address registers too,
+@@ -1373,22 +1386,7 @@ fec_stop(struct net_device *ndev)
+ 	if (fep->bufdesc_ex)
+ 		fec_ptp_save_state(fep);
+ 
+-	/* Whack a reset.  We should wait for this.
+-	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
+-	 * instead of reset MAC itself.
+-	 */
+-	if (!(fep->wol_flag & FEC_WOL_FLAG_SLEEP_ON)) {
+-		if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES) {
+-			writel(0, fep->hwp + FEC_ECNTRL);
+-		} else {
+-			writel(FEC_ECR_RESET, fep->hwp + FEC_ECNTRL);
+-			udelay(10);
+-		}
+-	} else {
+-		val = readl(fep->hwp + FEC_ECNTRL);
+-		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
+-		writel(val, fep->hwp + FEC_ECNTRL);
+-	}
++	fec_ctrl_reset(fep, true);
+ 	writel(fep->phy_speed, fep->hwp + FEC_MII_SPEED);
+ 	writel(FEC_DEFAULT_IMASK, fep->hwp + FEC_IMASK);
+ 
+-- 
+2.48.1
+
 
