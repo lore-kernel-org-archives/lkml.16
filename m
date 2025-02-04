@@ -1,110 +1,174 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08D81547D8;
-	Tue,  4 Feb 2025 19:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E23158558
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738698968; cv=none; b=Qc8LSkE0r6giKTAELFyH0T+6i3qKobxNG5opl2Gd1rA62QepD6Rv9C6ps1GTBWqFCTsAVwamI3W7exBwdZGoTdjNDKQ6yOqJ3iuvBbz0BoCTo2ddt2HXnXtxMsCIq+wZGXAO0DRh3jnu8vWBXu2NWNh5mEsrBTriUlBKqlk+UF0=
+	t=1738699040; cv=none; b=NLF0a05J3LKzkcx3DuGgkCN0C+klnE64HCtyGOdzRGH2H+FxgygRiv5tT5cRMWJIHasXHaqeZ8NHj0gctoKsoSbAdxIL2DDGWfSFpIuoH5f7ZPTm7AZLMksa4+dwsoEhJGX3b/ktDAUU0tNscvvhN3th1APfNnksLV+6E3OMv64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738698968; c=relaxed/simple;
-	bh=aI9ZF1XsSaAHZMRa+wJn3AAK8KCwn394QBaR32V7BUQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jyP18QIcxDp3cesbmNyqkKaIdWmygoQCdzF19bWz75CnlLgQ2I4Tyku1YFj6x+og7ni+nT2EtZY6jpPayMf3p2eQ+7rqDw2FehNvdxc9X5O/h0KgdP167dX5nKyvbY3PRIY/0DX33lcOktP0/j79V3Gl9ewz8BBPeiGPI62KfeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-844e10ef3cfso412626739f.2;
-        Tue, 04 Feb 2025 11:56:06 -0800 (PST)
+	s=arc-20240116; t=1738699040; c=relaxed/simple;
+	bh=iOVyrLDdjhClqri6WHcNTlHR5a0RTnuE85GltSUcA+A=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Y1YAZxiKKoRSWy9iRbGou8m5Wm4MgZnl/wcmgmYWuyBCd+1Gxlt2wRPSe8SJicMx/GJDMsrkc8TRqx3ZT0fzxJwdpuZKS6o+HVf3c21ELt75WJsqB6jpIHaUqoYX5nzeHRdq6hKBuPma9btjqXdzhuirLI5Rm3Nwpq4t5xDoILk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3epTRhzh; arc=none smtp.client-ip=209.85.166.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3epTRhzh"
+Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-3cfba1ca53bso40592555ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:57:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738699038; x=1739303838; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=x3nz+sLxzv+mI2fev0uHpyDdU92jr9O5Wy0bm9zvTf8=;
+        b=3epTRhzhF6LrAGcWFz2nSMB1PHgxZRvz9YJPFXKTrGA11UM2DRtQUbCS0kU/eer8Qm
+         Fcf6ZmEjBHg/PFxh9lBoIaTjvAcw64UtVzGhX9sYZs0Yt2Rpe3OL2zWTYGetDLznC7qg
+         nVMrEHz8L5oFybiXteZxeXgz5/zj4zCm7kUEzdvC7vq+UGpwBW3mJ95Uo+94x/1lH3k3
+         AjVMfpCds4hIn+OVo/X0rmRk0mwCXHoBNOS4j9YgdnwvYzzgA86joFYk8Ib97gHK745E
+         MFgQpxTNTS0AnNM457fmn3Iz9RgqXeNCdVQNXjfVUw2CeKsSkelEH2qyWLNlSr/aC+4m
+         nmlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738698966; x=1739303766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=swmAYw4M/WeTjADPtUccgFgxLP9bW9FlyGrjKCzqSbc=;
-        b=juuitPWPsxXb0JKWGpHEC1Ne9aHvXLIpRbbR0PZqi3EWwG4kg6vl+LhY+vVDz9o4mq
-         /5DIcwqnCWrW4d3zSb19R2Nl+3FoL55KNX4wBY133tqjnyHd8PrTLbG/OxvmM6LWqhZI
-         tlITB43tFCINsYpPX0BsIQsv9ovFnLl8voqQblPk1Nj/yRMv6LkFqNithcBUWkhiKNIk
-         tI5xjU1RvTxUpD6PLuZGaT6/o3kH/N3cRmtg2N8Zg4sOZymy+z/HkC0r5XBGUfcfIn3x
-         2h7MBCJ0JM6C2h/61+U5diut493b7oL1yiujYoXM9Gl9XtIz+MjJzaAPCHp3dLyjwGJp
-         B7nA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/h7QN6c8anBUKMAzMezAEVC1FEpbD5nsupT67AJQhZEbVYaD0oJrNRKAxqePIrath/v0og3+LRCiLtQrEIEFN3TKIZQ==@vger.kernel.org, AJvYcCU88rADsASVRGnLsVsxxCanAqZdfb2qdvHBLrfF4WPWqChTNANa7E8DZ7Sy4YeDXp1EZ6f51Tz8cFf4rzXs@vger.kernel.org, AJvYcCUBnHrmgWQzu4QqQLRYOJIecKlT2z+4eldNS8OYQjtFxBeymWN9AK1QgBJp6Deie6126cZ+d0TY1Co=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfaIfUOlybTxSrpvlw2gW+1OSZbxaxuoD/3fTxctQDsWNhNTBH
-	AOfAFXDWIXpruojnt5Kv2ehjkuTfViwqmmFmWayq/WPLdXvg5xfWe2/1/vyEF8U=
-X-Gm-Gg: ASbGnctjm34/AB+k7+ka40JZI58YA3R5E2cyXtC7WLdipJmM5AfUogzE8228Wm2Cas/
-	phK4CPSnrbZgw1YRgMGSCMSSg5xoGp6nVcS5mey5fiAoS4NBvfJSuOK1+SZuqRcJd/2ymuJW8EY
-	HdmAUhxNYR3jfFXvR6sODo3juRye4s2x1n7PyvUNQQTErNFn458tCAhQpRxH1yEANxbw3HF6YQK
-	hqKyXYVnioyBJ6GaPg4tQdC9F67Y4kRm8Zrv8NEmbSgic5s7MPlmjSXodhIcf9o6RtNSNBWB07W
-	uKCCBGR1juXpaAEbnUi2EWvDj389N1YBWg4WzWvXEdV+hqh5Eh24Jo3g3mDA
-X-Google-Smtp-Source: AGHT+IEVNW3vyhYJXf152VA7WyXzzMcqwgVnLYJKtOgtogLM8acDSAs1y+KqNdxPsGV0dKxuhDcenQ==
-X-Received: by 2002:a05:6e02:2208:b0:3d0:443d:a5a4 with SMTP id e9e14a558f8ab-3d04f47995emr2295205ab.2.1738698965751;
-        Tue, 04 Feb 2025 11:56:05 -0800 (PST)
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com. [209.85.166.174])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d00a4fd469sm30251585ab.13.2025.02.04.11.56.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 11:56:05 -0800 (PST)
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d03d2bd7d2so10753925ab.0;
-        Tue, 04 Feb 2025 11:56:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUOZhoeWQut2Hqmjd1U/muZFnPZFBamq1KTlFjbfyU7Av70Rq0UbRc+O0///47994/p0w5siOuz/nQRPJd0@vger.kernel.org, AJvYcCWO956BF6U82FlpNRYpDe5hUyswuUoIiS1tX1XhfG5WXtmT3zO/kVVDX0eGLI0cwVxo40Z0wXnSwmg=@vger.kernel.org, AJvYcCWSrJCFZZzDEgigbA4NW/9dgDOSy2IeIdku2zuCFjb3FXI9+BvB7H/iObVgP0HBt1VccjH+Oh3f/jtJ9hGLnJOsx8miZw==@vger.kernel.org
-X-Received: by 2002:a05:6e02:10:b0:3d0:11ff:a782 with SMTP id
- e9e14a558f8ab-3d04f5c68b7mr1789565ab.9.1738698965370; Tue, 04 Feb 2025
- 11:56:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738699038; x=1739303838;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x3nz+sLxzv+mI2fev0uHpyDdU92jr9O5Wy0bm9zvTf8=;
+        b=F5oNPU84lArZ+kQhXSNILSaJIdXuSP0WC/5vtvZqv++zIuoD23mtgsjyHFOHZNGKQT
+         pc29HEFUY2HRVZ+lWfQzGjThYJ34bePKDvXh0Ouod7P0hy8rKt8iE2moeE1vfYzmTfu3
+         37M4HI7dUtUMW65K+fedsMClRvTl/3ytBaLgNStKRZ2SjHcoTd5neMMLRPiCn+aRVzOU
+         MgFzYUEBHwsc4RAYNRqp6rbFIG8rX6XXuax38N4Dep6o1qSl9f0HB4gofYFzEkDrSlUP
+         x+UJBCg1qonZ+AWPTiADITFsFyqsRbeH61Adgt3EUMaAhbwpe3sD4S8U5iSTQ8ij08mB
+         Qq9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWVOOwexnLRwMInw5WLtS/Ok/zbYirCxBlOM7R8un7o7eF9vfHdZz7vJLquFVc+z11XLi3nd2vapx7iXPA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS+Z+T+D7+zLlRrwMy9KsSjyms3NmqwmOVcXxnqYgWaKWXTqOh
+	RJTPwiPV2SpUn4HN+PbV9zanluTFiTQgAg5WXMTmid8HHcjdyWWHO/SigbRTNvL2B4qB5Da3xPs
+	rB0NS9NKVAer+Y1CwO8hOXg==
+X-Google-Smtp-Source: AGHT+IFCbd5TbwVMrhJK2bcQCyfCgg4ls4jmx2Zok6lCN7ChS3uIDAMydUcwYx7x9fORmL8hc1+yBurzn+Nb2fztvw==
+X-Received: from ilbcr10.prod.google.com ([2002:a05:6e02:3a8a:b0:3ce:8bff:8b9d])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6e02:1746:b0:3d0:24c0:bd37 with SMTP id e9e14a558f8ab-3d04f459238mr1943175ab.11.1738699038254;
+ Tue, 04 Feb 2025 11:57:18 -0800 (PST)
+Date: Tue,  4 Feb 2025 19:57:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250201105450.193450-1-josh@joshuagrisham.com> <a22ecdd5-a2a5-4f6b-0a1a-e1bc115dc01f@linux.intel.com>
-In-Reply-To: <a22ecdd5-a2a5-4f6b-0a1a-e1bc115dc01f@linux.intel.com>
-From: Joshua Grisham <josh@joshuagrisham.com>
-Date: Tue, 4 Feb 2025 20:55:53 +0100
-X-Gmail-Original-Message-ID: <CAMF+KeZ+XdAxVtSw5aMZ9O=J4AFeyVozduV+PYZSNLHaG=SOww@mail.gmail.com>
-X-Gm-Features: AWEUYZnCPWsyTDh1EkwfhqdVw5W-kUnp97vaM0_G4cUrpfkIuxfLbaJOb9gfyTQ
-Message-ID: <CAMF+KeZ+XdAxVtSw5aMZ9O=J4AFeyVozduV+PYZSNLHaG=SOww@mail.gmail.com>
-Subject: Re: [PATCH v10] platform/x86: samsung-galaxybook: Add
- samsung-galaxybook driver
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: W_Armin@gmx.de, thomas@t-8ch.de, kuurtb@gmail.com, 
-	Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
-	linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250204195708.1703531-1-coltonlewis@google.com>
+Subject: [PATCH 1/2] perf: arm_pmuv3: Remove cyclical dependency with kvm_host.h
+From: Colton Lewis <coltonlewis@google.com>
+To: kvm@vger.kernel.org
+Cc: Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kvmarm@lists.linux.dev, Colton Lewis <coltonlewis@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Den m=C3=A5n 3 feb. 2025 kl 16:02 skrev Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com>:
->
-> On Sat, 1 Feb 2025, Joshua Grisham wrote:
->
-> > Add a new driver for Samsung Galaxy Book series notebook devices with t=
-he
-> > following features:
-> >
-> > - Keyboard backlight control
-> > - Battery hook for installing power supply extension to add charge
-> >   control end threshold
-> > - Controller for Samsung's performance modes using the platform profile
-> >   interface
-> > - Adds firmware-attributes to control various system features
-> > - Handles various hotkeys and notifications
-> >
-> > Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
-> > Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->
-> I've applied this to review-ilpo-next.
->
-> Thanks a lot to all who have taken time to help in getting this into
-> shape!
->
-> --
->  i.
+asm/kvm_host.h includes asm/arm_pmu.h which includes perf/arm_pmuv3.h
+which includes asm/arm_pmuv3.h which includes asm/kvm_host.h This
+causes confusing compilation problems when trying to use anything in
+the chain.
 
-Thank you Ilpo!
+Break the cycle by taking asm/kvm_host.h out of asm/arm_pmuv3.h
+because asm/kvm_host.h is huge and we only need a few functions from
+it. Move the required declarations to asm/arm_pmuv3.h.
 
-Agreed completely and special thanks to Armin, Thomas, and Kurt for
-all of the extra time, help, and guidance along the way!
+Signed-off-by: Colton Lewis <coltonlewis@google.com>
+---
+ arch/arm64/include/asm/arm_pmuv3.h | 24 ++++++++++++++++++++++--
+ arch/arm64/include/asm/kvm_host.h  | 18 ------------------
+ include/kvm/arm_pmu.h              |  1 -
+ 3 files changed, 22 insertions(+), 21 deletions(-)
 
-Best regards,
-Joshua
+diff --git a/arch/arm64/include/asm/arm_pmuv3.h b/arch/arm64/include/asm/arm_pmuv3.h
+index 8a777dec8d88..89fd6abb7da6 100644
+--- a/arch/arm64/include/asm/arm_pmuv3.h
++++ b/arch/arm64/include/asm/arm_pmuv3.h
+@@ -6,11 +6,31 @@
+ #ifndef __ASM_PMUV3_H
+ #define __ASM_PMUV3_H
+ 
+-#include <asm/kvm_host.h>
+-
+ #include <asm/cpufeature.h>
+ #include <asm/sysreg.h>
+ 
++#include <linux/perf_event.h>
++
++#ifdef CONFIG_KVM
++void kvm_set_pmu_events(u64 set, struct perf_event_attr *attr);
++void kvm_clr_pmu_events(u64 clr);
++bool kvm_set_pmuserenr(u64 val);
++#else
++static inline void kvm_set_pmu_events(u64 set, struct perf_event_attr *attr) {}
++static inline void kvm_clr_pmu_events(u64 clr) {}
++static inline bool kvm_set_pmuserenr(u64 val)
++{
++	return false;
++}
++#endif
++
++static inline bool kvm_pmu_counter_deferred(struct perf_event_attr *attr)
++{
++	return (!has_vhe() && attr->exclude_host);
++}
++
++void kvm_vcpu_pmu_resync_el0(void);
++
+ #define RETURN_READ_PMEVCNTRN(n) \
+ 	return read_sysreg(pmevcntr##n##_el0)
+ static inline unsigned long read_pmevcntrn(int n)
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index e18e9244d17a..3eeb762944c9 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -1362,28 +1362,10 @@ void kvm_arch_vcpu_ctxflush_fp(struct kvm_vcpu *vcpu);
+ void kvm_arch_vcpu_ctxsync_fp(struct kvm_vcpu *vcpu);
+ void kvm_arch_vcpu_put_fp(struct kvm_vcpu *vcpu);
+ 
+-static inline bool kvm_pmu_counter_deferred(struct perf_event_attr *attr)
+-{
+-	return (!has_vhe() && attr->exclude_host);
+-}
+-
+ /* Flags for host debug state */
+ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu);
+ void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu);
+ 
+-#ifdef CONFIG_KVM
+-void kvm_set_pmu_events(u64 set, struct perf_event_attr *attr);
+-void kvm_clr_pmu_events(u64 clr);
+-bool kvm_set_pmuserenr(u64 val);
+-#else
+-static inline void kvm_set_pmu_events(u64 set, struct perf_event_attr *attr) {}
+-static inline void kvm_clr_pmu_events(u64 clr) {}
+-static inline bool kvm_set_pmuserenr(u64 val)
+-{
+-	return false;
+-}
+-#endif
+-
+ void kvm_vcpu_load_vhe(struct kvm_vcpu *vcpu);
+ void kvm_vcpu_put_vhe(struct kvm_vcpu *vcpu);
+ 
+diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
+index 147bd3ee4f7b..2c78b1b1a9bb 100644
+--- a/include/kvm/arm_pmu.h
++++ b/include/kvm/arm_pmu.h
+@@ -74,7 +74,6 @@ int kvm_arm_pmu_v3_enable(struct kvm_vcpu *vcpu);
+ struct kvm_pmu_events *kvm_get_pmu_events(void);
+ void kvm_vcpu_pmu_restore_guest(struct kvm_vcpu *vcpu);
+ void kvm_vcpu_pmu_restore_host(struct kvm_vcpu *vcpu);
+-void kvm_vcpu_pmu_resync_el0(void);
+ 
+ #define kvm_vcpu_has_pmu(vcpu)					\
+ 	(vcpu_has_feature(vcpu, KVM_ARM_VCPU_PMU_V3))
+
+base-commit: 5bc55a333a2f7316b58edc7573e8e893f7acb532
+-- 
+2.48.1.362.g079036d154-goog
+
