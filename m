@@ -1,341 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B1318EB0;
-	Tue,  4 Feb 2025 15:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738682178; cv=fail; b=GD//385NJ7CSdPRx4rFlopizwJmqAvDej0gHGCjcvR/99YYpSY8NxfDROyTkX6FHQ5wm+cVC7G0m2G8vCs6eM2tv2wYszW7Y2TA/ernuoo1UVgtM2YAYiOHdnAeKdLEonrbLDdFKuLHcCNrarPxHd8AY9hOVvEtrIiEC/nI04TA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738682178; c=relaxed/simple;
-	bh=omtGwBDWeP3AaZqMcqlCF0QXj4oH8vXLjbxyl+EfNLE=;
-	h=Subject:To:CC:References:From:Message-ID:Date:In-Reply-To:
-	 Content-Type:MIME-Version; b=EMphO/xxPnXAGDuBVSLttxvBmysl1rxFPFhM5HmtPL+nO6w/1Wk7ebQyxtIvPHrgVAgDs/dQp3CedvzgLHXwnDOBs32hYUCydF5xOpj4DjX+dwSiY2Kpb61aWPGUWH5FY36AxS4guK53jDbXqdU6Ssw+tTiIuZDuYXvbOCcLz48=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=glb1J8+d; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEAA212D7A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738682201; cv=none; b=cmBsQ/Ln724GtH3Ld3gADLIqJBJSuR++7dLcEgopDpPr3VPU3I+UG3EbX3tBMflHJM05rWMbAVbdWHbRoiaZVtadX6LQmkpKPaSELfrNnpgKlHhQ89vpsYCkagVvEkazLlHhjK6NSWHp3/MwZy/Ijb+xrJMyJSFNhD+O6RazKc8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738682201; c=relaxed/simple;
+	bh=d2Q6lXTYW3wyATxt8SL0Uz5iNqgRs2KXi4XYvExqdgI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Jy8BxQRaj/LeuXCn7ZknzO8QM7cVqTNlizRLL+9vIdhye5boqu6LUSlum4H3I1zggXn8DedQLrC96OFCs5XxMaprLSq1eyGWf0Bv7wXZHfRb9ZbD6WySj4vZttK2qIZIa6pswZviXhVQecAUi68uda7f7rQxQ6NSRB9v9mGNTOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NDODuhSA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="glb1J8+d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738682177; x=1770218177;
-  h=subject:to:cc:references:from:message-id:date:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=omtGwBDWeP3AaZqMcqlCF0QXj4oH8vXLjbxyl+EfNLE=;
-  b=glb1J8+d5xxLwWXjwJvr0e1CQqB4576X8B9OlFqOuUp/leXYZwGXd08K
-   3SB9nea7yD264wWNevnB6MlTjdzfqcjrl3HF3n3nZfNPTY8Yw57HmhnTg
-   zwGFYy02m4n11mV5JW0EWUHcBomggqMqrtajOqxwDjhNIGGbQCWNjQ0iN
-   E8Mnpu3zglaIMH+pKeq37FsAR2ofKLuK/erFcSFosy0YjOzxlyS6AZHzZ
-   3TGiLs4yAP0D6JR4zG1Y105Z52KQHt1GcCtm+3iHBVAwV0JyYQw2M+/Ob
-   6l1FnUqVc75fdfc/sWwB+5dshOI8Ew9/lBfK8HBpK7vDM5ljPK4r9SRuq
-   A==;
-X-CSE-ConnectionGUID: mUq6JjGqRYeqgohZjxLX8w==
-X-CSE-MsgGUID: v55S/WLURkS52OahEvEAzQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="42050749"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="42050749"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 07:16:16 -0800
-X-CSE-ConnectionGUID: dqTpBsktQ96+Fr7P5FCdwA==
-X-CSE-MsgGUID: /Rlp7qjERouEwj4edDyL3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111069295"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Feb 2025 07:16:12 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 4 Feb 2025 07:16:11 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Tue, 4 Feb 2025 07:16:11 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 4 Feb 2025 07:16:11 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u+tChFORYfLkbm9hyYMO+0oZDjBNVUwz91Gu5e2lwl1mXTnNHgzujz4jPa8NCi7fuaIDBvZKsJxb2Q8uYLbZrYkwBrqlXv/qiEm1m43rOQl5RsJ14ERy7vV1MkaMXaoCSaMcePBPu/t6CX34X/3ReIkvfZf1+kRaUI2QUShekBUsx++9/pV8Yn/opQnau0YFgC1ojalncQXsvTyZIcSfGaINnWz9abO5IZrFOyZveBFsNSIWuAO86SF1kGKjGK2A7tcZkaptvw1NbFV9qaRxwFVKnykWbEkpfRpa7hZoWycpUAQzuwOqllqHP1k4Dfwo9ALyYBsSe39FG7rAdTphNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OEqb3ApmF9NkMkCGO+ONVMgksURf7KAouFAug1CmJRE=;
- b=GVaR3eu3M3/eXuN67r+8csvZ2X62B4yvScejT0v7GCGBug7XDQrTpTyMhAmwq5XWmtktkfNYavakdw+XG/qActbL5B1JapEy1Th77NETO3DCA6nzA9LtvdDqrYcfVCOy3Ttxgsu9Ipn//cUBdo3ovzG3Jz19HNyA9fHavGyL0ym3PM02qIIAwbEiHOA7NhJdIKicTMCOVyiWKMtXGgKZBAwSJwd0zx4U9JHvLk3HPWvYwRpBZxPXSJrxzkNFcY133dKRoGDcZBB5hsOY5rKQ/ntZ5lxFOLehIpzAEGeCZW4AIHZvoSdKDYl2Z8pPL6CtdyXiYthtBckb/GkrqsFWQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH0PR11MB5949.namprd11.prod.outlook.com (2603:10b6:510:144::6)
- by SJ0PR11MB5939.namprd11.prod.outlook.com (2603:10b6:a03:42e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Tue, 4 Feb
- 2025 15:16:09 +0000
-Received: from PH0PR11MB5949.namprd11.prod.outlook.com
- ([fe80::1c5d:e556:f779:e861]) by PH0PR11MB5949.namprd11.prod.outlook.com
- ([fe80::1c5d:e556:f779:e861%3]) with mapi id 15.20.8398.021; Tue, 4 Feb 2025
- 15:16:08 +0000
-Subject: Re: [Intel-wired-lan] [PATCH] net: e1000e: convert to
- ndo_hwtstamp_get() and ndo_hwtstamp_set()
-To: Piotr Wejman <piotrwejman90@gmail.com>
-CC: Tony Nguyen <anthony.l.nguyen@intel.com>, Przemek Kitszel
-	<przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250202170839.47375-1-piotrwejman90@gmail.com>
-From: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
-Message-ID: <efd253a9-c630-654a-dfed-bd1094a8c380@intel.com>
-Date: Tue, 4 Feb 2025 17:16:02 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
-In-Reply-To: <20250202170839.47375-1-piotrwejman90@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TL2P290CA0010.ISRP290.PROD.OUTLOOK.COM (2603:1096:950:2::8)
- To PH0PR11MB5949.namprd11.prod.outlook.com (2603:10b6:510:144::6)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NDODuhSA"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5149BuwU006732;
+	Tue, 4 Feb 2025 15:16:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	BV92Osq6Yf4bGuJQ2OUcnHKxHNVRgDh8ERHA6WUJTTc=; b=NDODuhSAY/xmZ0Er
+	Vzr7W6RB5th+Zh9aL2InuFuk3gDL2ljkUOADkGFCYjo/2S3pgYwYxUzlk9bWYtSF
+	K9XXq7dMGo4taZQllAq8uVh2d7Pj7J2DZgud/CysZNXggkjPX0jUjnkr7ntciVI8
+	2Pbw3NKVzvrv4Ougguidek5K2+PEMZRzKVqBa+iWoeNQwLBXIDYJTncE1k8THpmA
+	rLDu5m/la4TEI7InyLg9Ay/TlSPQv341sBg2D6+NZ0H28muv6TPLgfHeeyIuX+l1
+	nqSOdb7QzBuFwQXFZxvWQrf9TP2NdJlymfkby1qAStVuMQLXnpaEL8ld7/dXtwVy
+	g/epqQ==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44kg1yrv4w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 15:16:09 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 514FG8oE007947
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 4 Feb 2025 15:16:08 GMT
+Received: from [10.216.45.46] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Feb 2025
+ 07:16:03 -0800
+Message-ID: <d5b5e501-1f5d-4c13-8895-48f473283f87@quicinc.com>
+Date: Tue, 4 Feb 2025 20:45:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR11MB5949:EE_|SJ0PR11MB5939:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3b5be28f-f840-457f-141a-08dd452eda1d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?aGN5eDlROEpjSTkzcFlCSmZueE0vN3hvM25IWGtnakhwUjloSlFuanU1WXZY?=
- =?utf-8?B?MTdibWJJNEk5ZDg3ck1rM3hTeVR4ODRxZDVwb2V6cTV3M0xidjlGVzFpckMw?=
- =?utf-8?B?Y2Q2U21GbVoycVJiNDI5TVV3ZEIyME12dm8vV2pZcjBJbUtvL1RFN2kwMmtE?=
- =?utf-8?B?dVZpVVFVUUR3Mm1pQ25pZ1ZIMGxLWlRPdkF1TjJVLzNXemlveTd4dkhnNkNy?=
- =?utf-8?B?Uy81cVZlUWcwdXBtejVMM1UrNmtoQVFHUEptM2puT0dDeCtkKzJKUmNkK0VF?=
- =?utf-8?B?Mm1lbGxzb2Eva3lPeWZ0TkE3d2dtd0hGYkxBcFRKTmJEUm1pWEMxYU13V2Ny?=
- =?utf-8?B?bzEvNVo4a0pBaW1vc0QzTUZaUkZlbFFna0thZlcvT1daUU11OGVzVDlWakRa?=
- =?utf-8?B?WUlrRXY0Y3NFd2FMb2RxZTRyeldFbVJ6T2tGN1MyNnQ3UzNLc254M3ZTQzQ4?=
- =?utf-8?B?eE9aYUxZK2ZnaDgvckJrSm56dkJDU1IxN3FuQ3RjVFRacjVxTTZPa1NLQ2py?=
- =?utf-8?B?SmwwaEUrTnQzSUxpTjlvUmlsMDJmeUtscFFTeW9kbkl2N29ydlllYmVUdHUz?=
- =?utf-8?B?QXVxRGduajVWZ0ZEY0J1cGs2N2VXdlg3b094eEJEQ1pNWkp5Lzl2MzdUcE01?=
- =?utf-8?B?enNGaERvSzlsUGdZcWs2K05wbG4wWkFJaU0raE00N2JzWFJkRmVWQTJUN25n?=
- =?utf-8?B?Y1dPQ3NBdkI1RlM5UVB2eU1xSEdJeHE3Zm9pTGlaUjJXQVVtTHBwTm1jZGNs?=
- =?utf-8?B?eGpqL3EwdFF3eWIvK2FFTjBUYjNHUnZWbXNGUGFVNlhkTGJkQktOL0tOVmVu?=
- =?utf-8?B?RmxkM0JhazRZVmROUHNBTklkbG85azFMR2FTZkY1MGFHNDNlZTZvcHBJUlJ0?=
- =?utf-8?B?WDh1YkJqU0p3WCtsblRLTmRLbXJOTllLNDQ4OHQ4WEdYR0JIc2JQbUNjZ25t?=
- =?utf-8?B?Q05jVEVtd2Q3dlNuYkZNNVltSU9EZEQ0VmFOY3NrZ3NnbnB0OERWSC9YLzFR?=
- =?utf-8?B?ZjlVSDFTa2dHVHpaMGR1bFNVbXE2N0tQYm5FTjdJUldpSTdtZjdCSk9TNTFr?=
- =?utf-8?B?U0lRQ2ltNEk4aVgzTElCUHBxc1BCdjhWbGdqNWFEVm9UaGVzU3pMVFRsVGFK?=
- =?utf-8?B?Y1RwRytjSWI4cmQ4WDhsQlQ1OVpLalpxdHhEakx1bmlvNWcxV1FpQmY2U0xj?=
- =?utf-8?B?OXJLYkNXTW91VmsyWkFUMm9lYWVWcGFsWTh3ZkplMW1URG9NNStXQW01eUFD?=
- =?utf-8?B?Yitkb3dIczdtWHF6NXRrSGVMWkdtV2RoWFlSUU55Q3lRd0IxMmhpM3IzYzQ1?=
- =?utf-8?B?aU15RWhoMUtobkpZcXpJTG9LVlhzb1FkSEp2cUI4RDU2UDRhMjh0cUUwc3pn?=
- =?utf-8?B?Q3lwZmp3ZlVYMVlBUXNUZzFsRk51OWxyUDBNcFZvWHZqdjFUcWJLbjY3dTlZ?=
- =?utf-8?B?V0FTVFV3Y2tpdmlyTXBYazQ0em1zWGhiSUdnMGE1ek1OemZkdkxNUGVoc1NG?=
- =?utf-8?B?eE4zS3BRd0p1Rng5Rlh0dkRDMlBPck0wNWt5aGJjQUM5cWE5ZVlaK21JS3Jj?=
- =?utf-8?B?eVQ1end5QTV0VnpOUzlUNHBJWVRlbkNjMUhqNEF4STE1MUROV2c4WUJybWJG?=
- =?utf-8?B?U2J2Wloya2Q3aEpBR0VKdW5vYmFheU1TeW5BTUZnUVIweHRVQkpBZU5CRDQ2?=
- =?utf-8?B?dEYwMGp0emJncmpqcGxiL0FSMGlwcmV2V0dwOGpvdDQxT1A4enZiM2c0bDAw?=
- =?utf-8?B?QUJVQ2dscG9rVWNwekZ6WGhqVUU2ZU0wOHdIZndqcVFzb0FOU21kd3dEK1ZW?=
- =?utf-8?B?VnpPY092eWwxYU9FL1JzRjd6ekZpUHA2OE02WkdXQlNDdUNkV3RwQ04xb0ZO?=
- =?utf-8?Q?WnfW/GV6pQ9p4?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5949.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dU5VUjRGaFRRTlZqZ3ZwUi9SLzVqcFJXM3pZVmlIeWFRb3JwMEhkZWowQWhm?=
- =?utf-8?B?QzFubHl5OCtHaDlUSjNnNmtvbTFYazZBZE9SWU1VSUJnYURyNnJNclp3VkFn?=
- =?utf-8?B?Q3dxMDdmQkJMTDdlWDdxdUZ1MWJEeXZmT0F5MytXeWY4YSs3b0lXd0Y1YmY2?=
- =?utf-8?B?V2FyL3J3THdwMGdtdnpZemgralFqSDQxeXhBZ0I5RlRnbHJ4WTFGaC9kM3FH?=
- =?utf-8?B?UUovdm5rQ29hNkdXY1hKY1d0bm8zWVBKdkRleEYzZGp1N1VZNUI0eDZYZGUv?=
- =?utf-8?B?a094K2dydFdtcmFjcUR4Z1VxUVd3b21iRFhrZFBybXllaUFpVUpHb2RqN1h2?=
- =?utf-8?B?UlRhcDZjQzlwMVNaWGdVZThlcG9nNS9VMXdpMnRzRTRXUTROZURuUlNqWWQy?=
- =?utf-8?B?VXczS2xDdnY4bkl0TDV3R3pXUXFZeFpyMzBZSWx4YW15dEVzSkNjbE1BQXhF?=
- =?utf-8?B?d04za0ZYVzZwcldsZ3hNbWQzNHdDTmRhUC9kRWlaS0tkWnk1TmRzN0hRdVg2?=
- =?utf-8?B?Z2krM0Vxb0pJN2hHdVhZajVwOEFFT2d3Q0R6bDBiRTU4Zkxrd2k4TkF5T2dP?=
- =?utf-8?B?cWR0djZWdmZkQmpTYUx0cEFsaCt0TG14ZzJYNk55NHg0UXRpaldoS1F5Q3BD?=
- =?utf-8?B?Q0pzSWNHYld1NDdrb2Z4YkNQN3hPbThVTnMvaHFmR3VuMmZpQmpZTm9iU3pB?=
- =?utf-8?B?ZStLZ0tWa1YvVWxveW92WFQwZFdmTlpuUDNNVHNJSWdRVzZoRHJnQmw2eGxM?=
- =?utf-8?B?ODN1OFkzS2s5V3VXS1p2bzZJaitCUHhObU52ZnhyNXR3dXByN2IzYmE4cXRa?=
- =?utf-8?B?Z2NUSnQybDBsTjlndEZjdmVHYit0eWlscUIrdnM0bHpoRTFISVkyaFM0aDdI?=
- =?utf-8?B?VnRPOXhwWjZRU0VhOVkyNE1PM1gyUEtWTElPSXY3TjhMTW1uamVFK1JmeFFu?=
- =?utf-8?B?SU55K3ZSYXlmT05WdnNrSlVBS0oxMmxpSVo1VmRoaHpKVkN5eTVDSDM3UG0r?=
- =?utf-8?B?M0JLMjRFV3NHTmFLNjZhelkrVHQ4dEJ4eXpGbk9sS0s0dmxuS0h3MklWZmVr?=
- =?utf-8?B?QU43TnJ6Q1VUNEFJZFBWMmFGdHQvYXMzcnVRMjN6RmtWdHBvOEJUODdBRkdI?=
- =?utf-8?B?RXozOVNabjNSYk5jT3Q5NVhhNDE1Kyt0dkJiQnc2dXVxNHpGd3ZHeUJ6cmk3?=
- =?utf-8?B?NXZYWmZhUk9HbW9QUnlwRnROb29QNk1jSTFxRnAraWZpdFE3KzNrL2srVDND?=
- =?utf-8?B?enloWTFFY05HblRUaVFGejRzeFhqZjZkZDdCZjFrWklhelRQN1UwT1BzSWFu?=
- =?utf-8?B?TUI3SUtZL0JxUG55WkJkOVMxVjN0Skw1MzdCemRnZnI0MEJ0ZGFpQ0NlZTlt?=
- =?utf-8?B?c0FLN1FVQ2FrNGt5L3o2SDNQL3NYWFRkVGYvVDR1ZkZrV09HbzdEMWMvK1Fq?=
- =?utf-8?B?VVh3cFRjZHEwSC9WRVlBTDhWKzlMYmNlYjcwSkprTExhMXFEYjNoQ3NlUWM4?=
- =?utf-8?B?Z0tZYTVjeFN0QWRISG1lQWJ6cy9hcFBzRWd6UlZkM09tdzhjSDNGY3NRVUdp?=
- =?utf-8?B?a1EzQ3VNbSt4NkNSRlpkU3ppOXpUWW1WZUY1bmp0UkdPbzRxcE1jQkxNNXpw?=
- =?utf-8?B?cjJVVE92aUdrY0JidTVsZjkzZnc0U2QveWdjbTBLVU5YQzIrdE5JMk1pQnc2?=
- =?utf-8?B?U25zZXM1T2VlNm0xakQ4SDFEbjBXRHBHYjVLT3EwNEFiN0NCUnhzR00yMXlJ?=
- =?utf-8?B?b0Jyb3lkUkhTbGJwSGFiOTJmZEIrbm9qNTl6emk1OGhjZlcyT3lLL0xYcXR3?=
- =?utf-8?B?eWJiTEJ2Z0NKektvcEFNTUFSSDhJa2lsMVBRZjlGdVRRSnpsQVlhV0dzc0pB?=
- =?utf-8?B?aUJSUmtsQXg0bENnT3pKMG1jOVNnOS9kNDBsR0VQaDFIcUtwVUE1b1ZEdzkw?=
- =?utf-8?B?Y1BMREU5UTRlS0dMZitDSDhEd3V5K0x1VjA0MjFXcjFOYkRxQVNVUE9sMjcr?=
- =?utf-8?B?UmxwWjZac1BQQUN4NkdpYW9JNFNHb3oydUljNUNoQldqeG91ZWcybjFMUVd3?=
- =?utf-8?B?K29uUmplRW03WWRkTmFXeWRtU1RlbkpMeVlEZU9jWEp0d0tSU2VaZzRMMzQy?=
- =?utf-8?B?K3d4RDlFZUJGQ3BTZVFMZ01PdzNtOHZSM2FpT0hTTWtYTVFBYzdXVjBDWGJn?=
- =?utf-8?B?VEE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b5be28f-f840-457f-141a-08dd452eda1d
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5949.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 15:16:08.8240
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YgDs2DlfXHjYUV6SLtqoraqWr8RjInLoy8reXu2nmo1OFH1zhG5cZHvNWajhLGPNwFV4iH+cE1IaE4AdogTGtsPLErCLZNkC/y79RpWVr7o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5939
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] i3c: Remove the const qualifier from i2c_msg
+ pointer in i2c_xfers API
+To: Billy Tsai <billy_tsai@aspeedtech.com>, <alexandre.belloni@bootlin.com>,
+        <pgaj@cadence.com>, <miquel.raynal@bootlin.com>,
+        <conor.culhane@silvaco.com>, <aniketmaurya@google.com>,
+        <Shyam-sundar.S-k@amd.com>, <jarkko.nikula@linux.intel.com>,
+        <wsa+renesas@sang-engineering.com>, <xiaopei01@kylinos.cn>,
+        <Guruvendra.Punugupati@amd.com>, <linux-i3c@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250121110756.214714-1-billy_tsai@aspeedtech.com>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <20250121110756.214714-1-billy_tsai@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: anrQXYwG6pT68Z4AWlvkOP_jnPRv-OiM
+X-Proofpoint-GUID: anrQXYwG6pT68Z4AWlvkOP_jnPRv-OiM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_07,2025-02-04_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 impostorscore=0 spamscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502040118
 
+Looks good to me.
 
-
-On 2/2/2025 7:08 PM, Piotr Wejman wrote:
-> Update the driver to the new hw timestamping API. >
-> Signed-off-by: Piotr Wejman <piotrwejman90@gmail.com>
+On 1/21/2025 4:37 PM, Billy Tsai wrote:
+> The change is necessary to enable the use of the
+> `i2c_get_dma_safe_msg_buf()` API, which requires a non-const
+> `struct i2c_msg *` to operate. The `i2c_get_dma_safe_msg_buf()` function
+> ensures safe handling of I2C messages when using DMA, making it essential
+> for scenarios where DMA transfers are involved. By removing the `const`
+> qualifier, this patch allows drivers to prepare and manage DMA-safe
+> buffers directly.
+> 
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+Acked-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
 > ---
->   drivers/net/ethernet/intel/e1000e/e1000.h  |  2 +-
->   drivers/net/ethernet/intel/e1000e/netdev.c | 52 ++++++++--------------
->   2 files changed, 20 insertions(+), 34 deletions(-)
+>   drivers/i3c/master/dw-i3c-master.c     | 2 +-
+>   drivers/i3c/master/i3c-master-cdns.c   | 2 +-
+>   drivers/i3c/master/mipi-i3c-hci/core.c | 2 +-
+>   drivers/i3c/master/svc-i3c-master.c    | 2 +-
+>   include/linux/i3c/master.h             | 2 +-
+>   5 files changed, 5 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/intel/e1000e/e1000.h b/drivers/net/ethernet/intel/e1000e/e1000.h
-> index ba9c19e6994c..952898151565 100644
-> --- a/drivers/net/ethernet/intel/e1000e/e1000.h
-> +++ b/drivers/net/ethernet/intel/e1000e/e1000.h
-> @@ -319,7 +319,7 @@ struct e1000_adapter {
->   	u16 tx_ring_count;
->   	u16 rx_ring_count;
->   
-> -	struct hwtstamp_config hwtstamp_config;
-> +	struct kernel_hwtstamp_config hwtstamp_config;
->   	struct delayed_work systim_overflow_work;
->   	struct sk_buff *tx_hwtstamp_skb;
->   	unsigned long tx_hwtstamp_start;
-> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-> index 286155efcedf..15f0794afddd 100644
-> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
-> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-> @@ -3587,7 +3587,7 @@ s32 e1000e_get_base_timinca(struct e1000_adapter *adapter, u32 *timinca)
->    * exception of "all V2 events regardless of level 2 or 4".
->    **/
->   static int e1000e_config_hwtstamp(struct e1000_adapter *adapter,
-> -				  struct hwtstamp_config *config)
-> +				  struct kernel_hwtstamp_config *config)
->   {
->   	struct e1000_hw *hw = &adapter->hw;
->   	u32 tsync_tx_ctl = E1000_TSYNCTXCTL_ENABLED;
-> @@ -6140,7 +6140,8 @@ static int e1000_mii_ioctl(struct net_device *netdev, struct ifreq *ifr,
->   /**
->    * e1000e_hwtstamp_set - control hardware time stamping
->    * @netdev: network interface device structure
-> - * @ifr: interface request
-> + * @config: timestamp configuration
-> + * @extack: netlink extended ACK report
->    *
->    * Outgoing time stamping can be enabled and disabled. Play nice and
->    * disable it when requested, although it shouldn't cause any overhead
-> @@ -6153,20 +6154,18 @@ static int e1000_mii_ioctl(struct net_device *netdev, struct ifreq *ifr,
->    * specified. Matching the kind of event packet is not supported, with the
->    * exception of "all V2 events regardless of level 2 or 4".
->    **/
-> -static int e1000e_hwtstamp_set(struct net_device *netdev, struct ifreq *ifr)
-> +static int e1000e_hwtstamp_set(struct net_device *netdev,
-> +			       struct kernel_hwtstamp_config *config,
-> +			       struct netlink_ext_ack *extack)
->   {
->   	struct e1000_adapter *adapter = netdev_priv(netdev);
-> -	struct hwtstamp_config config;
->   	int ret_val;
->   
-> -	if (copy_from_user(&config, ifr->ifr_data, sizeof(config)))
-> -		return -EFAULT;
-> -
-> -	ret_val = e1000e_config_hwtstamp(adapter, &config);
-> +	ret_val = e1000e_config_hwtstamp(adapter, config);
->   	if (ret_val)
->   		return ret_val;
->   
-> -	switch (config.rx_filter) {
-> +	switch (config->rx_filter) {
->   	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
->   	case HWTSTAMP_FILTER_PTP_V2_L2_SYNC:
->   	case HWTSTAMP_FILTER_PTP_V2_SYNC:
-> @@ -6178,38 +6177,23 @@ static int e1000e_hwtstamp_set(struct net_device *netdev, struct ifreq *ifr)
->   		 * by hardware so notify the caller the requested packets plus
->   		 * some others are time stamped.
->   		 */
-> -		config.rx_filter = HWTSTAMP_FILTER_SOME;
-> +		config->rx_filter = HWTSTAMP_FILTER_SOME;
->   		break;
->   	default:
->   		break;
->   	}
->   
-> -	return copy_to_user(ifr->ifr_data, &config,
-> -			    sizeof(config)) ? -EFAULT : 0;
-> +	return 0;
+> diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
+> index d09ea5b6467c..54c7d86997d5 100644
+> --- a/drivers/i3c/master/dw-i3c-master.c
+> +++ b/drivers/i3c/master/dw-i3c-master.c
+> @@ -1079,7 +1079,7 @@ static void dw_i3c_master_detach_i3c_dev(struct i3c_dev_desc *dev)
 >   }
 >   
-> -static int e1000e_hwtstamp_get(struct net_device *netdev, struct ifreq *ifr)
-> +static int e1000e_hwtstamp_get(struct net_device *netdev,
-> +			       struct kernel_hwtstamp_config *kernel_config)
+>   static int dw_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
+> -				   const struct i2c_msg *i2c_xfers,
+> +				   struct i2c_msg *i2c_xfers,
+>   				   int i2c_nxfers)
 >   {
->   	struct e1000_adapter *adapter = netdev_priv(netdev);
->   
-> -	return copy_to_user(ifr->ifr_data, &adapter->hwtstamp_config,
-> -			    sizeof(adapter->hwtstamp_config)) ? -EFAULT : 0;
-> -}
-> +	*kernel_config = adapter->hwtstamp_config;
->   
-> -static int e1000_ioctl(struct net_device *netdev, struct ifreq *ifr, int cmd)
-> -{
-> -	switch (cmd) {
-> -	case SIOCGMIIPHY:
-> -	case SIOCGMIIREG:
-> -	case SIOCSMIIREG:
-> -		return e1000_mii_ioctl(netdev, ifr, cmd);
-> -	case SIOCSHWTSTAMP:
-> -		return e1000e_hwtstamp_set(netdev, ifr);
-> -	case SIOCGHWTSTAMP:
-> -		return e1000e_hwtstamp_get(netdev, ifr);
-> -	default:
-> -		return -EOPNOTSUPP;
-> -	}
-> +	return 0;
+>   	struct dw_i3c_i2c_dev_data *data = i2c_dev_get_master_data(dev);
+> diff --git a/drivers/i3c/master/i3c-master-cdns.c b/drivers/i3c/master/i3c-master-cdns.c
+> index 8d69a34986d9..c9e4c129454c 100644
+> --- a/drivers/i3c/master/i3c-master-cdns.c
+> +++ b/drivers/i3c/master/i3c-master-cdns.c
+> @@ -813,7 +813,7 @@ static int cdns_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
 >   }
 >   
->   static int e1000_init_phy_wakeup(struct e1000_adapter *adapter, u32 wufc)
-> @@ -7337,7 +7321,7 @@ static const struct net_device_ops e1000e_netdev_ops = {
->   	.ndo_set_rx_mode	= e1000e_set_rx_mode,
->   	.ndo_set_mac_address	= e1000_set_mac,
->   	.ndo_change_mtu		= e1000_change_mtu,
-> -	.ndo_eth_ioctl		= e1000_ioctl,
-> +	.ndo_eth_ioctl		= e1000_mii_ioctl,
-
-Now that you removed e1000_ioctl there is no reason to call this 
-function e1000_mii_ioctl.
-
-Please rename it to e1000_ioctl.
-
->   	.ndo_tx_timeout		= e1000_tx_timeout,
->   	.ndo_validate_addr	= eth_validate_addr,
+>   static int cdns_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
+> -				     const struct i2c_msg *xfers, int nxfers)
+> +				     struct i2c_msg *xfers, int nxfers)
+>   {
+>   	struct i3c_master_controller *m = i2c_dev_get_master(dev);
+>   	struct cdns_i3c_master *master = to_cdns_i3c_master(m);
+> diff --git a/drivers/i3c/master/mipi-i3c-hci/core.c b/drivers/i3c/master/mipi-i3c-hci/core.c
+> index e6e482a259b4..a408feac3e9e 100644
+> --- a/drivers/i3c/master/mipi-i3c-hci/core.c
+> +++ b/drivers/i3c/master/mipi-i3c-hci/core.c
+> @@ -367,7 +367,7 @@ static int i3c_hci_priv_xfers(struct i3c_dev_desc *dev,
+>   }
 >   
-> @@ -7346,9 +7330,11 @@ static const struct net_device_ops e1000e_netdev_ops = {
->   #ifdef CONFIG_NET_POLL_CONTROLLER
->   	.ndo_poll_controller	= e1000_netpoll,
->   #endif
-> -	.ndo_set_features = e1000_set_features,
-> -	.ndo_fix_features = e1000_fix_features,
-> +	.ndo_set_features	= e1000_set_features,
-> +	.ndo_fix_features	= e1000_fix_features,
->   	.ndo_features_check	= passthru_features_check,
-> +	.ndo_hwtstamp_get	= e1000e_hwtstamp_get,
-> +	.ndo_hwtstamp_set	= e1000e_hwtstamp_set,
->   };
+>   static int i3c_hci_i2c_xfers(struct i2c_dev_desc *dev,
+> -			     const struct i2c_msg *i2c_xfers, int nxfers)
+> +			     struct i2c_msg *i2c_xfers, int nxfers)
+>   {
+>   	struct i3c_master_controller *m = i2c_dev_get_master(dev);
+>   	struct i3c_hci *hci = to_i3c_hci(m);
+> diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+> index c1ee3828e7ee..24bd701b5de0 100644
+> --- a/drivers/i3c/master/svc-i3c-master.c
+> +++ b/drivers/i3c/master/svc-i3c-master.c
+> @@ -1584,7 +1584,7 @@ static int svc_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
+>   }
 >   
->   /**
-> 
+>   static int svc_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
+> -				    const struct i2c_msg *xfers,
+> +				    struct i2c_msg *xfers,
+>   				    int nxfers)
+>   {
+>   	struct i3c_master_controller *m = i2c_dev_get_master(dev);
+> diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+> index 12d532b012c5..c67922ece617 100644
+> --- a/include/linux/i3c/master.h
+> +++ b/include/linux/i3c/master.h
+> @@ -475,7 +475,7 @@ struct i3c_master_controller_ops {
+>   	int (*attach_i2c_dev)(struct i2c_dev_desc *dev);
+>   	void (*detach_i2c_dev)(struct i2c_dev_desc *dev);
+>   	int (*i2c_xfers)(struct i2c_dev_desc *dev,
+> -			 const struct i2c_msg *xfers, int nxfers);
+> +			 struct i2c_msg *xfers, int nxfers);
+>   	int (*request_ibi)(struct i3c_dev_desc *dev,
+>   			   const struct i3c_ibi_setup *req);
+>   	void (*free_ibi)(struct i3c_dev_desc *dev);
+
