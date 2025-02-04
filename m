@@ -1,72 +1,98 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E80D537E5
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7FA25A640
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738633024; cv=none; b=FNAHC3uEMpsqeqNFwigIDOSHbIRMC78tQlTa0ZqRV0oRwpOYT2NX6q60OGKDXvHsoJxbkj7X7wF7aJSCHwdUZnHDw2nwkzRRittfj8+VlRa4RsNqRLzq5PHYt0wcVIpierAlNuqejnrWGS2krM+Ov2btBbrTi16TNJw3eBOegrc=
+	t=1738633890; cv=none; b=A0UGq3mgk1RiSXJ80GZa3fVBrb5cDufNdrato/qVwp2WNdgL2JSdB0YKjqd50XzAoHVPnfmY2/uDo2ZqaRxA/z1zV7UsMQQ5IsKgdAAoDhyLfDLiJvvLeJhXY6QI5XWWjignbUTo1pOlCaAlpVYiSMAerJYX/0762D6CGwZxOkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738633024; c=relaxed/simple;
-	bh=IhGxqZONKoKFeV8HRltf5K9dNfvC9ihGNQQ29H1FBI0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=lCiV+QJfewy+WlAjYZE7wcHri0m3G3GGQYFf0Z2osGgKaAKBPOjGJrtsxMn2I0MWjLI8i+FzZkTTD2MPqmxPQX7Hep2cw8mZ51+2Cm9lYuWksBVTYyOLClYfqguK1Ruo6hIL6Db8yCbZxCKNytsbQBQOKhnjou3u2aUoL3nCfiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3cfb2d37dbdso36001085ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 17:37:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738633021; x=1739237821;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ct9LFzZoWBCSTWklB5EsgWQ3PeezlKDIpCmyS3iVoWA=;
-        b=nY9BU7Q9qnK43xb2Aqo1NfaPczLDwFTuRS0o1VsaCwZ+qG+QLKXTyB5/YeQCbsweAT
-         w2aMcpiYW8EsFQlP76B33PguaDj4Td6XEsy66oIDaKKfcwfiYoQab6FJxZHb/gOQBHZG
-         z9IR+F2X5Nu+dkPiGXnBJj1NSoasEiNCS8hBGjBuQH5LmdOvw7KrEGg4qP/BtGfBtFzj
-         rdZhk8e2w5+Hf6KRZsKX/A1Iaqxk3xM5LWekm7y/CbfixRDdaFah2pUqwVD7fmGTdCLt
-         79dp4Q+reZn1k07CfhA/1GmaXZMokqB262O8Rm0oZ0dOlvbEykcwX7RaMiPGlQTF7jYh
-         yXZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHaUxl29pIMKWaUvkdb8aImPmLH6bi4cZB/7ibm+PydlRVjFBDlJLciW2rqCO/oQ6rl+Ef2CDiMYwS8Qw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIYbs+AWr1B4u6KyNl+pFvcdh22JEKZcSa3JPIxICnhvdWMvHP
-	C/ewcA07LJVlj3KKcS01ZXmZpG6ux9tn73gaaI9ixgfm+EGzZLdrCSqNE4/pQU+uV0qFFo7QGP9
-	pxQtUlwDHOiWglG01QBetbm2j0BHpNe4G4gpc0t0rpTUHsvpPdIYOlUk=
-X-Google-Smtp-Source: AGHT+IGTUOyszyZKb8JmDjNqnG+BCLsP5ITMYyPA5ATLhNsdrHR2fP7F07HVq2x9Te5iiFd3HvT24XA+gJLNbfzuxOn64p/LzRTk
+	s=arc-20240116; t=1738633890; c=relaxed/simple;
+	bh=Qv8I10e6NzpV/XOLKMWGOAmu84bftLnx0mtmOcpehJo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=r4n1HhLVgCjN4xEvvggBoDP8AEcrsSACphxZYuI2Y1fR1lmhNs50bLwfzFjw9KZNF5yfL8EuKRWZcLrlxZkwLUEtj+MjLDu9tZ6Z+uRF4gVed7im4VhiQ3Ociim92ycRYnBcvPO9/yT9mcl+x9x5V7xNFlSDKnbTuGVdpayTZJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=G2Tu4S9P; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="G2Tu4S9P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB2BDC4CEE0;
+	Tue,  4 Feb 2025 01:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1738633889;
+	bh=Qv8I10e6NzpV/XOLKMWGOAmu84bftLnx0mtmOcpehJo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=G2Tu4S9PDsRV1y2QSs0A47NdpX2OyQCk10H29Jlp/tb1fOtX8Pe8HexFJWHSSyPK/
+	 k33Iz/CbX8bXfQ011Ta/G3HgNwFLuf5U1f2r5DvFDdJixxBtFvagX5EgY2pPn05158
+	 gInq7+3iBgMMSAF9rXrfwfFPv6/8pVuy2cLp4oYI=
+Date: Mon, 3 Feb 2025 17:51:28 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, ebiederm@xmission.com,
+ oleg@redhat.com, brauner@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] exit: hoist get_pid() in release_task() outside
+ of tasklist_lock
+Message-Id: <20250203175128.80319b42c9739f0d420080a4@linux-foundation.org>
+In-Reply-To: <CAGudoHE4vTUQtSnp01ziqCXVm_qw9sBYnKe2Gbwp6Kz5NOp3Gw@mail.gmail.com>
+References: <20250201163106.28912-1-mjguzik@gmail.com>
+	<20250201163106.28912-3-mjguzik@gmail.com>
+	<eqoac7dyanvez62nc5ge3lfxxxbjcln3k6nrz4tkrg67v55sdb@sosx2sguy5f6>
+	<CAGudoHGXR-vnYm-wMs5c8EE448UeuEps3ecrf_g22Mw=9oQtLQ@mail.gmail.com>
+	<2f3gjvg6zwp2xpkhb2e36ux2resnjdtxuinbbgnr57jdqesrm6@oau2dgx63fxy>
+	<CAGudoHE4vTUQtSnp01ziqCXVm_qw9sBYnKe2Gbwp6Kz5NOp3Gw@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c2d:b0:3d0:2a04:1ce2 with SMTP id
- e9e14a558f8ab-3d02a041d7cmr69631675ab.16.1738633021443; Mon, 03 Feb 2025
- 17:37:01 -0800 (PST)
-Date: Mon, 03 Feb 2025 17:37:01 -0800
-In-Reply-To: <20250204004435.2084-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a16f3d.050a0220.163cdc.005d.GAE@google.com>
-Subject: Re: [syzbot] [input?] [usb?] KASAN: slab-use-after-free Read in corsair_void_status_work_handler
-From: syzbot <syzbot+ac826dbeecf212c395a0@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On Mon, 3 Feb 2025 21:22:31 +0100 Mateusz Guzik <mjguzik@gmail.com> wrote:
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+> On Mon, Feb 3, 2025 at 9:14 PM Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
+> >
+> > * Mateusz Guzik <mjguzik@gmail.com> [250203 14:36]:
+> > > On Mon, Feb 3, 2025 at 8:27 PM Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
+> > > >
+> > > > * Mateusz Guzik <mjguzik@gmail.com> [250201 11:31]:
+> > > > > Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+> > > >
+> > > > Change log is a bit sparse?  I get that the subject spells out what is
+> > > > done, but anything to say here at all?  Reduces lock contention by
+> > > > reducing lock time or something?  Maybe even some numbers you have in
+> > > > the cover letter?
+> > > >
+> > >
+> > > I did not measure this bit *specifically*.
+> > >
+> > > As one can expect get_pid issues an atomic and that's slow. And since
+> > > it can happen *prior* to taking the global lock it seems like an
+> > > obvious little nit to sort out.
+> > >
+> > > I would argue the change is self-explanatory given the cover-letter.
+> >
+> > But when you git blame on the file, you will not see that cover letter.
+> 
+> if this lands, I presume it is going to go through Andrew who uses
+> tooling pulling in the cover letter for each commit
 
-Reported-by: syzbot+ac826dbeecf212c395a0@syzkaller.appspotmail.com
-Tested-by: syzbot+ac826dbeecf212c395a0@syzkaller.appspotmail.com
+No, I copy the [0/n] description into the [1/n] changelog only.
 
-Tested on:
+> but i'm not going to argue this bit, just provide with a commit
+> message which you think works and I'll use it
 
-commit:         9682c35f usb: typec: thunderbolt: Remove IS_ERR check ..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=13ba9d18580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ed7570f7f6046a71
-dashboard link: https://syzkaller.appspot.com/bug?extid=ac826dbeecf212c395a0
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=17ebb764580000
+It's rather irregular to ask Liam to explain your patch!
 
-Note: testing is done by a robot and is best-effort only.
+The Subject: describes what the patch does (which was obvious from the
+code anyway) but the changelog fails to explain *why* the change was
+made.  You've explained "why" adequately within this discussion so I
+suggest you condense those words into this patch's changelog.
+
+
+General muse: if a reviewer asks questions regarding a patch then we
+should treat those questions as bug reports against the changelogs and
+code comments: required information is missing.  So please let's go
+through reviewer questions as we prepare the next revision of a
+patchset and make sure that all those questions are fully answered,
