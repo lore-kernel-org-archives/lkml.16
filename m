@@ -1,135 +1,182 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD04021323A
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DC913AA20;
+	Tue,  4 Feb 2025 14:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738680443; cv=none; b=FwqJ6jqP3A16OokOC7Fn5EwgCv6NHcUs1LZbajOH6AMjcp+UQc6eWG/if2wDaJ9tRUHCSbAuNkyTg9iyVhPw2ScO7FH6+0e0bQKtot4EC2schwjh7A9mmTpzWTg+1KxtwTL8iqsQQO3vztNXK4up2/hGmlC8t+1Di24mx6kDols=
+	t=1738680459; cv=none; b=pVwsXjZebRbap9bUgNPomgvyr2hTIhmFX2+12zCZnCd+zGTH3lbk8r3gfz4wFXx+eae0OXFnRMF1py0FLBGCwWS0kBV7LAv3AWmjCgbB+LUjo9TZlZfIF09xrE6Gbq4FA/I0CniAgv9RBQB6XJnMskW/WEtNxuJsffRpUUcbAWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738680443; c=relaxed/simple;
-	bh=9sSUvA2pf9s68H5xIKqnGcIqBfggQlWyoUWMwKLVlPQ=;
+	s=arc-20240116; t=1738680459; c=relaxed/simple;
+	bh=VWE7rYiS1H09bpLtw4nxJsxCXrvC2b05homXc0eVsOU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j8PM444azWf6DA511kmb/PeqVrGHHlTzRUfwF/71Hq2xCcfi3b5QBzpRh+jT+Nz3zNdZJXn+8BnoRhgkl6kFoKyzw04dDtIOCVOQN9Wv0ttoZLGnxyccPrgBW8w2mIwxy+X35kft/k3k64lNXXTMVBZZgOOdvKE+fHgfaacGcnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=qh0XkdRg; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=iSoYLSyMt8Ig5yN0eF7GmH6ClI+T2c26XB3VZCcBdJP1SH1/vqSTaNEnedhVgHFINykhg1sNeFJS3tS770iOtrNYMmZ067taNHLkS9FjG7681Kd8XBuzEXnuLz0/JmZHBZY+yAjbSnKhtYb2OGlwPciOGudJJRwO8aPnjyWrDxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SlphlIOE; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="qh0XkdRg"
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id CD3D23F2F0
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738680435;
-	bh=n3EGoN50SBFmj+V3N+sn2G/FlvdwJ5OvZq5vVoZVOtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=qh0XkdRgasojQT3dkdOweElhc2EfqcAUGRJ5yFCxpR7iJxLXpkqnspKk3lm08bWnv
-	 tvRPlXSM2RpB56BP4kA2ehbFVIH/beexGjmmgwRBj4d3EYW8zEY/xJTwCtjY8z8RzR
-	 1PW7cPDZ5jxoWzDqaBFwxEJWqdqDvV/rc9qEGN39aicnhYhnszmq+VgsKAOK6AGBfu
-	 nAEuYckRfBf8D2B7xFvomlFoh9JEESMkKNQCzAzJ8oWApgf900Vq3CHGI4UdDXQvvC
-	 E62x+O25KSZEgYE4lPeG7/LGRlkourlbWH8PsqAMAWM5Oo/XcLhBHPBJvhu8yMx1HT
-	 z2QogobxgmyQQ==
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-21effc75088so19100895ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 06:47:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlphlIOE"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6dd1962a75bso43965986d6.3;
+        Tue, 04 Feb 2025 06:47:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738680457; x=1739285257; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ClBeI/UpQwbjzinpxgVI81L53zhkDK+0fCWLCZc+ZLk=;
+        b=SlphlIOEFU035yoT5NcowYdOhW1p1xof5bEKVBWcQzeJMi2J666Gpb7wANZo369yXD
+         DQd2kyjLpWtLRrGWQUsMfzKKrKgkyqzLKdypYZMtToL6R6hyK8kqbrJjrumOvPGGBIr+
+         rMul/Ev6lqQgeBbuPmpx1V2NLasm4zAoF/70vxpksVoR8q5lg8u37+CvllOB2SggxcWF
+         srGmZ5Who69nAKbioesTrKh3WISThrAv8clJKf/4YgblPALc/3etxT3+vJhJIyjGsJ08
+         zsLXAEVVh75SCrBONieA0q2F1nR/0vbAcZq+pixmZuMdwcFdwAeu1cmpp4Xi8VG6kh+R
+         InZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738680434; x=1739285234;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n3EGoN50SBFmj+V3N+sn2G/FlvdwJ5OvZq5vVoZVOtU=;
-        b=YS1GqMxJ+RmP2V+9ja0rnsWQpiDQD8h6+gMFiC+LjkEwLdYtD3H5A0kbF7vEDhx4zZ
-         9+3Io16LA2VE+JRrBFmjKng6w8SXaRCdeWjEBvF2MncmIvCqyvbKYnwSZgNCdHDwCf4G
-         iMeoVWOPqJhS5Q+kSyH3byC/T5RsqMmndREG85KrPQcMz5uNrwXAuqkE2AvAODwuP6q7
-         OBNuC77Mq0LVUXmNE5r4I6l9grZA+3LzWERihRUkihC5axE4SmkgJKlit825DWyEFn9j
-         j2km3MJvOJIJhqoT5Eka2Rx83EhI2cbKi4Ap/rqWi2JW9Vnit0bIOZDXOj+ysa4y7ERE
-         9dig==
-X-Forwarded-Encrypted: i=1; AJvYcCUsNP2FUKPvzRkZrQPREzXiX2tgzXJOHonef+xJ1sLl/Vf6bG1xvCMZDo5791WJF1u2dy72o/zPTnDRihI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEX+ntLdQbVBGnosOYP/uyPzFjwiZn3bvbzS7cb+Cr0SybLwl3
-	trhmrv0B23eat1ogfvyV/Uq+XFyylpjf3Dg9d2AAUE/x43rdxRI+bxWtL2RoKALE2J6L8znVkIy
-	kp0K50QNDLHy7lwcefcl5HLIv5fPzAK6+jAMJDThhiWa8XlfbMlShTtvTZGSnGGpJ6e9geypsFJ
-	m7MS/6EF7PEw==
-X-Gm-Gg: ASbGncssifcg37OJlZw6kYXk1HzjX32tzNUQHnBfciiIAuISbj5RilGcMpymOYKlXWO
-	o7al4Jm+fS9ZC36XQAKenFG+SPv5/KT7JYOByl8j+S8fqtCngRcNn8vIaIOdVxt20d/NAKo3xXn
-	hi/7pPu98RCpeixR+jYrhQrCtae0omWMlfUL0CV/MOBAWiODA2mvp4tKiTk3h94iR7ENpkDnDBr
-	NOnTq/Fu3SXL40E/RiT+fJNKeXD5vU7aZdObYYJwcKbjw6WdtWOpi+3obxYkQ31ayTjeBIpOk2S
-	r22v1S8=
-X-Received: by 2002:a05:6a21:3399:b0:1e1:a094:f20e with SMTP id adf61e73a8af0-1ed7a5f06e6mr38741354637.17.1738680434211;
-        Tue, 04 Feb 2025 06:47:14 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE1EH4i9UWmswnm5lEyNNQ8DxaVfhJd/Qske9LY23x30Up5+/d5qYK4fAT8keB6BiGvn+0GGA==
-X-Received: by 2002:a05:6a21:3399:b0:1e1:a094:f20e with SMTP id adf61e73a8af0-1ed7a5f06e6mr38741322637.17.1738680433910;
-        Tue, 04 Feb 2025 06:47:13 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:45f0:d4ba:baba:a275])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe653a9basm10550590b3a.78.2025.02.04.06.47.13
+        d=1e100.net; s=20230601; t=1738680457; x=1739285257;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ClBeI/UpQwbjzinpxgVI81L53zhkDK+0fCWLCZc+ZLk=;
+        b=iOKG+EfR3qKPv5Dr/55vZn7u4wCXkNx7a8gJQ9IamCzSnV5dOrLGqVOGeDNAr+V6uq
+         33HIi347iPEMAM/bSpV6EDN6ReuJnfmhV7JTvbK5maEazy1dpPdTvUBbhZYnxO8ayEtR
+         T9d+3efMkHt/OMKgF3pjVlCIJMoukAq5dq7N3WWgkB91yEiJwrrJybjsE3PfYon0+8xu
+         3TKfTtlp36JaKfi05XoLzD0bJt8baS/U5/X8mKl2XsGJrYt7ZW/572L9ChMHriW0h1GL
+         DhTRIB9vBn8jJYDFtowuhaJpI9RiBW76nQVp0KxdiUdkJBU2NY8HVVEW6NFU0vvZasqT
+         PuBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGbDfsMGnaks9rlXHED1nU4l1W1Pdf62iDbGMoP6Fawep6et616yYvkyLQS1WpPqslgCFF8oxv8DZMaWw=@vger.kernel.org, AJvYcCXZhbhHJUb85l8F+0AFuP15zRKHSjfDQrWQhfovUpL/nMjzsUfvE1oK5hAitGzxOd2rtyd74KhkdWicoKj4gYM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9Hm7EbIBHA0UM51itqTBhbCO8dy9Z0gqDiOnU/bbBbM8m+UkN
+	QDghjYS1+aMlS4Nh76hSWhcnEw29BAn6SpFBPpgLV1aook+o0psJ
+X-Gm-Gg: ASbGnctD8QFZVP3cPKInbuv/i2Dp2lTMJOwGqhPTCzzXlfBmQVBOQ4mc5IZ7iKcQRH4
+	9LrcvoX3pHQA9vZXK7nsjrRN6g6QbCtHjV6ix2XRelPjRguMXuwuG2IV+e8PB7QHNLrXGusvQnQ
+	yWlbUGD9dBBTf1dsLPwYzRnfp6jwTsImlqrtfdaAvycHbBvCSIWbMM16DlFHZruiXZWwmxmX2Y7
+	WFhDET4KJASjS+P5eZe8mt0Sz+uG7wIBQwggiYcWjCKpjXffCiHYr75nCaYViP6vp717HegKeK8
+	K5QhoiTGBOL1AANV8wdrIbF55imFZhD/uFIx2K+RCY6GYFtarm39XBHpVITaaZXTtUJvRpkXu76
+	BqhY9jw==
+X-Google-Smtp-Source: AGHT+IGw2/GHQEvQ/LM3LAhpdh7BKctHnFItfqxE9BlbTD4YrC3GxsUswJyWgyvI5jKUoE2TuJsgEw==
+X-Received: by 2002:a05:6214:62e:b0:6d8:850a:4d69 with SMTP id 6a1803df08f44-6e243bf360cmr330398186d6.1.1738680456806;
+        Tue, 04 Feb 2025 06:47:36 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e2547f2c78sm62678596d6.6.2025.02.04.06.47.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 06:47:13 -0800 (PST)
-Date: Tue, 4 Feb 2025 23:47:11 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] gpio: aggregator: expoose aggregator created
- via legacy sysfs to configfs
-Message-ID: <dm3enfd2hlhktozbax44h73qo3bw6bj6sqru62hi5pglv7fn6w@buve3k4oyfv5>
-References: <20250203031213.399914-1-koichiro.den@canonical.com>
- <20250203031213.399914-9-koichiro.den@canonical.com>
- <CAMRc=MdQuQnmqFravDfvcoN_TUXgfZnJh5UxdRuYhECfmvAhGw@mail.gmail.com>
+        Tue, 04 Feb 2025 06:47:36 -0800 (PST)
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 5B2D81200043;
+	Tue,  4 Feb 2025 09:47:35 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Tue, 04 Feb 2025 09:47:35 -0500
+X-ME-Sender: <xms:hyiiZ9bGV0Kqdiw3U0Zb5vt3EZAKFzyN2NpoBbzuGidIN6LN9vCozg>
+    <xme:hyiiZ0YJQkXiu1dvFMEnJKMjWSBEf1xu8QtJQaoKPKSd3suKQl1j1xRFqA_mp7dtt
+    mevHEjDBaEHS5Xuyw>
+X-ME-Received: <xmr:hyiiZ_8uWwljP3hTcDUeKiZIJCGHmAwUoNzE1krY0X58RJej66rhhcK-bQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdektdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhepiedtueffgeeitedvudeuveeiveduudeitdei
+    vefgvefhhfekheduudekhfekfeegnecuffhomhgrihhnpeguohgtshdrrhhsnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgv
+    shhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehhe
+    ehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+    pdhnsggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprg
+    hlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepohhjvggurgeskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtg
+    hpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthht
+    ohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhh
+    hinhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtmhhgrhhoshhssehu
+    mhhitghhrdgvughupdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorh
+    hgpdhrtghpthhtohepmhhinhhgohesrhgvughhrghtrdgtohhm
+X-ME-Proxy: <xmx:hyiiZ7qIA6JuebY-wnPCDbaXzUYFwDOWbFfVeSIONGNT5DO3w9JOHA>
+    <xmx:hyiiZ4oXFLyz_d094FYQ0IpCDRtFREP2mBDHcwoQ0iVJ9HhiUHeJQg>
+    <xmx:hyiiZxSe0gF8K-xM_jyBN8gz989f3cOf_JDQkO5svJS5CYXtt4AR0A>
+    <xmx:hyiiZwrYwIXWVI68EHmhPM2XnMDqhxahxDxCRwJefe5l0Do6O4o1EA>
+    <xmx:hyiiZx7FHROtzGP_ivpsRsXFBTJ-DPzWM2J8Fyd6U9D_q_FAr33aHzcP>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 4 Feb 2025 09:47:34 -0500 (EST)
+Date: Tue, 4 Feb 2025 06:47:33 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: sync: add accessor for the lock behind a given
+ guard
+Message-ID: <Z6IohVx6DEV4a6cK@Mac.home>
+References: <20250130-guard-get-lock-v1-1-8ed87899920a@google.com>
+ <Z5ubrUcSuaTtj_wW@tardis.local>
+ <CAH5fLgiTG8nNRdb2=3PdZN=2Bg=KLGy4hvrae+E0jcOeCTBpjw@mail.gmail.com>
+ <Z5uzbW2j9fUBt-3H@boqun-archlinux>
+ <CAH5fLggDna0E9MtarHDxoS=w3zp-2HipASOLGfYFzTg8fxUu2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdQuQnmqFravDfvcoN_TUXgfZnJh5UxdRuYhECfmvAhGw@mail.gmail.com>
+In-Reply-To: <CAH5fLggDna0E9MtarHDxoS=w3zp-2HipASOLGfYFzTg8fxUu2A@mail.gmail.com>
 
-On Tue, Feb 04, 2025 at 02:12:33PM GMT, Bartosz Golaszewski wrote:
-> On Mon, Feb 3, 2025 at 4:12 AM Koichiro Den <koichiro.den@canonical.com> wrote:
+On Tue, Feb 04, 2025 at 02:39:33PM +0100, Alice Ryhl wrote:
+[...]
+> > > > How about we name this as `lock_ref()` or something else, because
+> > > > `lock()` itself is already used by `Lock` for the lock *operation*, and
+> > > > this is just an accessor, I would like we don't confuse code readers
+> > > > when they see code like "let b = a.lock()".
+> > >
+> > > The usual name for this operation in userspace is "mutex".
+> > > https://docs.rs/lock_api/0.4.12/lock_api/struct.MutexGuard.html#method.mutex
+> > >
+> > > But since our code is generic over many lock types, I went for "lock".
+> > > But I guess it could make sense to rename it.
+> > >
 > >
-> > Expose settings for aggregators created using the sysfs 'new_device'
-> > interface to configfs. Once written to 'new_device', an "_auto.<N>" path
+> > Got it. The good thing about the naming of lock_api is that the name
+> > "mutex" is not used for other purpose, while "lock" is a bit different.
+> >
+> > > > Moreover, if the only usage
+> > > > of this is for asserting the right lock, maybe we can instead add an:
+> > > >
+> > > >     pub fn assert_lock_associated(&self, lock_ptr: *const Lock<T, B>)
+> > >
+> > > I guess, though there is precedent for having a method that gets the
+> > > underlying lock, so I think it makes sense. If we had an assertion, it
+> >
+> > I don't disagree, but I just feel we should be careful about introducing
+> > two "lock()" that one is an operation and the other is an accessor.
+> >
+> > > would probably take an &Lock<T,B>.
+> > >
+> >
+> > How about:
+> >
+> >     impl<T, B: Backend> Lock<T, B> {
+> >         pub fn assert_held_then<O>(
+> >             &self, proof: &Guard<'_, T, B>, f: FnOnce() -> O
+> >         ) -> O {
+> >             <assert `proof` is associated with `&self`>
+> >             f()
+> >         }
+> >     }
+> >
+> > In this way, not only we can assert the correct lock is held, but we can
+> > also guarantee `f()` is called with the lock held. Thoughts?
 > 
-> I would prefer this to be called "_sysfs.<N>" as it's not really
-> "automatic" - the user did create this, just with a different
-> interface.
-
-Makes sense, I'll change it in v3.
-
-Thanks,
-Koichiro
-
+> I need mutable access to the guard during the function, though? I
+> don't think a closure is helpful in this case.
 > 
-> > appears in the configfs regardless of whether the probe succeeds.
-> > Consequently, users can no longer use that prefix for custom GPIO
-> > aggregator names. The 'live' attribute changes to 1 when the probe
-> > succeeds and the GPIO forwarder is instantiated.
-> >
-> > Note that the aggregator device created via sysfs is asynchrnous, i.e.
-> > writing into 'new_device' returns without waiting for probe completion,
-> > and the probe may succeed, fail, or eventually succeed via deferred
-> > probe. Thus, the 'live' attribute may change from 0 to 1 asynchronously
-> > without notice. So, editting key/offset/name while it's waiting for
-> > deferred probe is prohibited.
-> >
-> > The configfs auto-generation relies on create_default_group(), which
-> > inherently prohibits rmdir(2). To align with the limitation, this commit
-> > also prohibits mkdir(2) for them. When users want to change the number
-> > of lines for an aggregator initialized via 'new_device', they need to
-> > tear down the device using 'delete_device' and reconfigure it from
-> > scratch. This does not break previous behaviour; users of legacy sysfs
-> > interface simply gain additional almost read-only configfs exposure.
-> >
-> > Still, users can write into 'live' attribute to toggle the device unless
-> > it's waiting for deferred probe. So once probe succeeds, they can
-> > deactivate it in the same manner as the devices initialized via
-> > configfs.
-> >
-> > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> > ---
+> How about I rename to `lock_ref()` instead?
 > 
-> Bart
+
+That would work for me, thanks!
+
+Regards,
+Boqun
+
+> Alice
