@@ -1,144 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD56320F082;
-	Tue,  4 Feb 2025 13:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2371206F23;
+	Tue,  4 Feb 2025 13:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738677127; cv=none; b=hJnhYdQrp41xsAYR78vyjwAbAbUpB0qeG134IJUrLWYxmVQLQa7oRoNQ+e1TVj6nAyIUrfetT322HHExF8wFrNs1JAqIVn0TkQ7sOJB7Dcb+uhnnBVdcaG8zx2DeIymVJ11frJAdHZz8auLiBvMALqwIX/hZDdjw3rvTurFcSPA=
+	t=1738677355; cv=none; b=X0pHvO0xZPnKLOzMeEdt4GlS5GAQmQENLx/6EgGFrRIkzSOGneF1NO1tHfbcUINPy8/brzHrWbqJIkVNuZtP5MNTHiELsgHeQJMTDZienEh66PuZjwmO3hWouzgErkBaCMCW5Xjq7RDOEx+kxP8AfsVV4nA9RSF0OWEug+a7ffQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738677127; c=relaxed/simple;
-	bh=hID8WMBLMfeNex2lw7neHRzziXNYlPbmFHtmRj1zX70=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JALvq2dC2q24wlSzONqPIrWsUrDGG/kY4l+/awsj9dJjfDH8KSYoIXCiBvg/RN2U/R3HjcCu5cX4hPhDrWahL0eAfN3EDBeAEd+/fQTy8MLy7bX33eBBUqgW92zlP00AagjHIWSkE4s5+FLRKBxIud/RPcxJOaBJ+uohG4ABa4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lqQYMe2x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738677355; c=relaxed/simple;
+	bh=EQUSXlFr3njl5PP9Kzw658twDaEAGGl3qA9IHHP+oso=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oKY+bOg5yGW5mIO2oghFOmgPnDgRM/12dWGsjTgWzERilQjRkx8c6Gubru8Tof7P922jbPM+tBpnL9BggsMyBWGN6tsTPdaL82hyp73AiEyLxl2tvxzYirw35MvZEIMxnuFVMd7HJuvedjg9B4zDWCqHmYiOcpGtPIzM9dr68Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=BxQz//+0; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lqQYMe2x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DDCEC4CEDF;
-	Tue,  4 Feb 2025 13:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738677127;
-	bh=hID8WMBLMfeNex2lw7neHRzziXNYlPbmFHtmRj1zX70=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lqQYMe2x4S93kKMyeDC03NhIRPdTRFlbjLLX0Vt17LSbNyFtgRnvshtBKfQZsZ4NE
-	 OQ90Lg3wmqW4tW4L2vKKkomygLljUlF8aepxko24d+sGmh9EE4mx6Wj9zNKJGdz52T
-	 tY6ZxzavNh1ugt+XMmd9kPmWl2DUaDurUIMVjlts=
-Date: Tue, 4 Feb 2025 14:52:03 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Salvatore Bonaccorso <carnil@debian.org>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Parth Pancholi <parth105105@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Parth Pancholi <parth.pancholi@toradex.com>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: Re: [PATCH v2] kbuild: switch from lz4c to lz4 for compression
-Message-ID: <2025020457-nanny-reward-06bd@gregkh>
-References: <20241114145645.563356-1-parth105105@gmail.com>
- <2024111442-yeast-flail-fcea@gregkh>
- <20241115083940.GA3971@francesco-nb>
- <2024111541-antiquity-footpath-e221@gregkh>
- <ZzcYLAFqTSlFm2uF@gaggiata.pivistrello.it>
- <CAK7LNAS0VzqcKDz_1ds5qJcASqxVizE3kkdRk1Yiidch9KMxEQ@mail.gmail.com>
- <Z580LZIi2iXGzSv5@eldamar.lan>
- <CAK7LNARFfUexOjoBsr385ECC61k-oNzefRZtTtNhdGV01r-iXg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="BxQz//+0"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A9324CDB;
+	Tue,  4 Feb 2025 14:54:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1738677279;
+	bh=EQUSXlFr3njl5PP9Kzw658twDaEAGGl3qA9IHHP+oso=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BxQz//+0Y76vAOQxeOg7tY6S3bD1oRK6+Lx/j/6HLXP8V2FlwKsRykcZzHiEaGjLx
+	 raSBFCKI2PCgcEa68I1Y6fx3ZQ/EJ6TWgjeeJJeCkjjUPibTshQAVY6rTdGbtZm9W3
+	 ncNd3wt4Aw1KlaPAOUXHRWxAc6qfGNmqnZG6oxNw=
+Message-ID: <eb8883f2-fc34-44f5-90a9-f4b14f0c45f2@ideasonboard.com>
+Date: Tue, 4 Feb 2025 15:55:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK7LNARFfUexOjoBsr385ECC61k-oNzefRZtTtNhdGV01r-iXg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: ti,am65x-dss: Add support
+ for AM62L DSS
+To: Devarsh Thakkar <devarsht@ti.com>
+Cc: praneeth@ti.com, vigneshr@ti.com, aradhya.bhatia@linux.dev,
+ s-jain1@ti.com, r-donadkar@ti.com, j-choudhary@ti.com, h-shenoy@ti.com,
+ jyri.sarha@iki.fi, airlied@gmail.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
+ simona@ffwll.ch, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+References: <20250204061552.3720261-1-devarsht@ti.com>
+ <20250204061552.3720261-2-devarsht@ti.com>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20250204061552.3720261-2-devarsht@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 11:44:50AM +0900, Masahiro Yamada wrote:
-> On Sun, Feb 2, 2025 at 6:00 PM Salvatore Bonaccorso <carnil@debian.org> wrote:
-> >
-> > Hi Greg, hi Yamada,
-> >
-> > On Sat, Nov 16, 2024 at 04:51:48PM +0900, Masahiro Yamada wrote:
-> > > On Fri, Nov 15, 2024 at 6:45 PM Francesco Dolcini <francesco@dolcini.it> wrote:
-> > > >
-> > > > On Fri, Nov 15, 2024 at 10:22:13AM +0100, Greg KH wrote:
-> > > > > On Fri, Nov 15, 2024 at 09:39:40AM +0100, Francesco Dolcini wrote:
-> > > > > > On Thu, Nov 14, 2024 at 05:02:01PM +0100, Greg KH wrote:
-> > > > > > > On Thu, Nov 14, 2024 at 03:56:44PM +0100, Parth Pancholi wrote:
-> > > > > > > > From: Parth Pancholi <parth.pancholi@toradex.com>
-> > > > > > > >
-> > > > > > > > Replace lz4c with lz4 for kernel image compression.
-> > > > > > > > Although lz4 and lz4c are functionally similar, lz4c has been deprecated
-> > > > > > > > upstream since 2018. Since as early as Ubuntu 16.04 and Fedora 25, lz4
-> > > > > > > > and lz4c have been packaged together, making it safe to update the
-> > > > > > > > requirement from lz4c to lz4.
-> > > > > > > >
-> > > > > > > > Consequently, some distributions and build systems, such as OpenEmbedded,
-> > > > > > > > have fully transitioned to using lz4. OpenEmbedded core adopted this
-> > > > > > > > change in commit fe167e082cbd ("bitbake.conf: require lz4 instead of
-> > > > > > > > lz4c"), causing compatibility issues when building the mainline kernel
-> > > > > > > > in the latest OpenEmbedded environment, as seen in the errors below.
-> > > > > > > >
-> > > > > > > > This change also updates the LZ4 compression commands to make it backward
-> > > > > > > > compatible by replacing stdin and stdout with the '-' option, due to some
-> > > > > > > > unclear reason, the stdout keyword does not work for lz4 and '-' works for
-> > > > > > > > both. In addition, this modifies the legacy '-c1' with '-9' which is also
-> > > > > > > > compatible with both. This fixes the mainline kernel build failures with
-> > > > > > > > the latest master OpenEmbedded builds associated with the mentioned
-> > > > > > > > compatibility issues.
-> > > > > > > >
-> > > > > > > > LZ4     arch/arm/boot/compressed/piggy_data
-> > > > > > > > /bin/sh: 1: lz4c: not found
-> > > > > > > > ...
-> > > > > > > > ...
-> > > > > > > > ERROR: oe_runmake failed
-> > > > > > > >
-> > > > > > > > Cc: stable@vger.kernel.org
-> > > > > > >
-> > > > > > > What bug does this resolve that it needs to be backported to stable
-> > > > > > > kernels?
-> > > > > >
-> > > > > > This is not solving any existing actual bug, and therefore there is no
-> > > > > > fixes tag.
-> > > > > >
-> > > > > > The issue here is that the kernel build system is using lz4c, that is
-> > > > > > deprecated since 2018, and now distributions are actively moving away from it.
-> > > > > >
-> > > > > > openSUSE Tumbleweed and OE already removed it, so you would not be able
-> > > > > > to compile a stable kernel on such distribution when using lz4 unless we
-> > > > > > backport such a patch.
-> > > > > >
-> > > > > > Everything should be properly documented in the commit message already.
-> > > > > >
-> > > > > > My understanding is that something like that would be a reason for
-> > > > > > backporting to stable, if my understanding is not correct we'll remove
-> > > > > > the cc:stable and send a v3.
-> > > > >
-> > > > > Please read:
-> > > > >     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> > > > > for what meets stable kernel requirements.  I don't think that this
-> > > > > patch is that.
-> > > >
-> > > > Greg, ack.
-> > > >
-> > > > Masahiro, can you please let me know if we should send a v3 with the stable
-> > > > tag removed or you can remove it yourself when applying?
-> > > >
-> > >
-> > > I applied this with the stable tag removed.
-> > > Thanks.
-> > >
-> > > (I guess someone may want to backport this eventually,
-> > > as such distros cannot build stable kernels with ld4 compression.)
-> >
-> > Yes please :)
+Hi,
+
+On 04/02/2025 08:15, Devarsh Thakkar wrote:
+> The DSS controller on TI's AM62L SoC is an update from that on TI's
+> AM625/AM65x/AM62A7 SoC. The AM62L DSS [1] only supports a single display
+> pipeline using a single overlay manager, single video port and a single
+> video lite pipeline which does not support scaling.
 > 
-> Agree.
-> This should be back-ported.
+> The output of video port is routed to SoC boundary via DPI interface and
+> the DPI signals from the video port are also routed to DSI Tx controller
+> present within the SoC.
+> 
+> [1]: Section 11.7 (Display Subsystem and Peripherals)
+> Link : https://www.ti.com/lit/pdf/sprujb4
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
+> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+> ---
+> - Add Reviewed-by
+> - s/ti,am62l,dss/ti,am62l-dss
+> 
+> NOTE: This patch needs to be applied on top of AM62A dt-binding fix:
+> https://lore.kernel.org/all/20250203155431.2174170-1-devarsht@ti.com/
+> 
+>   .../bindings/display/ti/ti,am65x-dss.yaml     | 25 ++++++++++++++++++-
+>   1 file changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> index 31c4ffcb599c..f82e9a84e8a8 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> @@ -12,18 +12,29 @@ maintainers:
+>     - Tomi Valkeinen <tomi.valkeinen@ti.com>
+>   
+>   description: |
+> -  The AM625 and AM65x TI Keystone Display SubSystem with two output
+> +  The AM625 and AM65x TI Keystone Display SubSystem has two output
+>     ports and two video planes. In AM65x DSS, the first video port
+>     supports 1 OLDI TX and in AM625 DSS, the first video port output is
+>     internally routed to 2 OLDI TXes. The second video port supports DPI
+>     format. The first plane is full video plane with all features and the
+>     second is a "lite plane" without scaling support.
+> +  The AM62A7 display subsystem has a single output port supporting DPI format
+> +  although similar to AM625 and AM65x Socs, it has two video planes where first
+> +  is full video plane with all features and second is a video "lite" plane which
+> +  does not support scaling.
 
-Ok, now queued up, thanks.
+The part above doesn't belong into "add AM62L" patch. It's also quite 
+confusing. "although similar to..."? Maybe drop the text "although 
+similar to AM625 and AM65x Socs, ", and start a new sentence from "it"?
 
-greg k-h
+For the AM62L parts:
+
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+
+  Tomi
+
+> +  The AM62L display subsystem also has a single output port which supports DPI
+> +  format but it only supports single video "lite plane" which does not support
+> +  scaling. The output port is routed to SoC boundary via DPI interface and same
+> +  DPI signals are also routed internally to DSI Tx controller present within the
+> +  SoC. Due to clocking limitations only one of the interface i.e. either DSI or
+> +  DPI can be used at once.
+>   
+>   properties:
+>     compatible:
+>       enum:
+>         - ti,am625-dss
+>         - ti,am62a7-dss
+> +      - ti,am62l-dss
+>         - ti,am65x-dss
+>   
+>     reg:
+> @@ -91,6 +102,8 @@ properties:
+>             For AM625 DSS, the internal DPI output port node from video
+>             port 1.
+>             For AM62A7 DSS, the port is tied off inside the SoC.
+> +          For AM62L DSS, the DSS DPI output port node from video port 1
+> +          or DSI Tx controller node connected to video port 1.
+>   
+>         port@1:
+>           $ref: /schemas/graph.yaml#/properties/port
+> @@ -123,6 +136,16 @@ allOf:
+>           ports:
+>             properties:
+>               port@0: false
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: ti,am62l-dss
+> +    then:
+> +      properties:
+> +        ports:
+> +          properties:
+> +            port@1: false
+>   
+>   required:
+>     - compatible
+
