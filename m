@@ -1,38 +1,39 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611702080C1;
-	Tue,  4 Feb 2025 09:29:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8CD207A19;
+	Tue,  4 Feb 2025 09:29:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661369; cv=none; b=VSDCbmcZAB0y09KJK8F5UoFOf+mYbMIuF+bsGnsqKGw5kEVJY710LrFgbEJUpaD50Sb9bB2BykgXWqkdU7JXN5KJ4mX1gyO/tTDg9q0ObJVUKs0+frkl34JMr9bgw9TZvNefOejhfIu3TSn30k4Q63nPwd6bUi2axbEq7wdtILY=
+	t=1738661371; cv=none; b=m2m1uRY6GXCHW6ddzpvDHZQSdV62JI7kXr7yWMW5pgXeiLhR54gFZpJrbM3koVS4z8vIHFZxMKHzdjDTefYwYIbICfJKxxip2woNFcy2UHvZq4VSsh+LlqusZu1eqtlHT+pKYWKAeX+7b1gUi7+yRyVS3pT/wWf6XCQzknVr4dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661369; c=relaxed/simple;
-	bh=kOHgtMJQnzKTtOt9UOB8BLauX2P0LGwAyEj/Qx4o4sk=;
+	s=arc-20240116; t=1738661371; c=relaxed/simple;
+	bh=uwleHELCDxefzsTrKEyvJkFzG4zqH/uU5XUDcbB2FYk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fRQH03vJb0zptHRpiDx0ARnyqoX7l3xjdHDEq0tQnWVV3UjJ4AABjpvvdypH9hRUJ7YUNjmNqnFQJ4gugilVGlQbU7Rb8IkXawzbmkMiWhEbiszoAqX8oNKQEDIBjMMXEUWhnD/SsXEkTbyjZFASC7Vya1ABpymGFT01P1DphoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YSpyImKx; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=YY0OgAsFNCYKgoQ0GW9EK6wtzh5ZpUIM9T+q9rfFMU5i5fTAnGJiIO6VsgDTH8AWlgjinz9N/y73LI+UAZUcAPss6/D/l/hSqPklgZvwfzJB0+3KgLDYhNEcAn4bx25wS43Shqfm7gXUQdD1WZJ4zxO3vkEg6n0bCMp6Kx7U6uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Acp/vsSd; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YSpyImKx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 09EFC44369;
-	Tue,  4 Feb 2025 09:29:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Acp/vsSd"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A49884435C;
+	Tue,  4 Feb 2025 09:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738661365;
+	t=1738661360;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ug2eWia+k3UQyHA7NujRxo07jigzgpiMJPEbVVCS7B4=;
-	b=YSpyImKxu6JERshcVkkasyeV01jsVqToCjQBHbSHfpP2RCrDec7CczudFx9TOhEE2cVBUP
-	2WQtA0RmLZTaj54aqWEHgxMhpICjMdPn0/RK9dWOAx3EA1AOwZN5YzrwI+SsUwPx7r6Qsi
-	hk1eI7lQF0JdflgExq8DkNGTtIbqUAwuiy6Epd1XR1IOdhAPRKKJdJFLNnSAIocrBHKvN2
-	OS/uyjufdWGBZICDt/4bgTTt7fBjSF6u4fuqKPfchlEyHgSOi9YdSPnpuaHLJ6EpW6h3YS
-	/PvWSznN/gXMeE2lBwLLUcgT3LnTGe/uVNzR0/F4RLClASQeEOgUdjakYIc/tQ==
+	bh=FEupvcbyFP1FMX7h0RUYEpOlmfghhLcT2eYt5M/AdM8=;
+	b=Acp/vsSdyGQ5NyG1+C9q1SEEM9EIT/+2kQW5RjZflrgSQXdweWunvKZZZ/1TjPEhTc4d/x
+	8VQ/ZwWt5T1kNdTNtckIPcpUueYuLorVkAZFLZsoSzPVV95JTU1/wv8ZmPD4lxzTcur8rB
+	AjQFdRyPHe1FQVWN0TWO5rjkQLRF3oExurzhQo7eyEsd2OyOY8uHtJGvCheLve9mf5uN1D
+	+Kfrg5MQhlZgOUoYsfL0tKWoAv7/NduSZl+TQNEd8N/6dAaCb64xoVi1z1hMqYh2IM5Uq+
+	bTv0P7AyPQxGY7NE4w7euLGs1GHgB9rkTNYa14bq5lqRNApww//t82lLpYTE+Q==
 From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Tue, 04 Feb 2025 10:29:16 +0100
-Subject: [PATCH v7 5/9] i2c: move ATR alias pool to a separate struct
+Date: Tue, 04 Feb 2025 10:29:12 +0100
+Subject: [PATCH v7 1/9] dt-bindings: misc: Describe TI FPC202 dual port
+ controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-fpc202-v7-5-78b4b8a35cf1@bootlin.com>
+Message-Id: <20250204-fpc202-v7-1-78b4b8a35cf1@bootlin.com>
 References: <20250204-fpc202-v7-0-78b4b8a35cf1@bootlin.com>
 In-Reply-To: <20250204-fpc202-v7-0-78b4b8a35cf1@bootlin.com>
 To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
@@ -59,348 +60,150 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
  Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Romain Gantois <romain.gantois@bootlin.com>
+ Romain Gantois <romain.gantois@bootlin.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdduhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeftohhmrghinhcuifgrnhhtohhishcuoehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeelieefteelffeuheevtdetkefhfffhteffkefgtefhkeevudeutdeugfffheegnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepfeenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrudefngdpmhgrihhlfhhrohhmpehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopeguvghrvghkrdhkihgvrhhnrghnsegrmhgurdgtohhmpdhrtghpthhtohepthhomhhirdhvrghlkhgvihhnvghns
- ehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopegurhgrghgrnhdrtghvvghtihgtsegrmhgurdgtohhmpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughirdhshhihthhisehkvghrnhgvlhdrohhrgh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdduhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeftohhmrghinhcuifgrnhhtohhishcuoehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieethfejleejueduleffveejleefkeeiheffffefkefgtedtiedvvddtfeetgefhnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddufegnpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggvrhgvkhdrkhhivghrnhgrnhesrghmugdrtghom
+ hdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepughrrghgrghnrdgtvhgvthhitgesrghmugdrtghomhdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhg
 X-GND-Sasl: romain.gantois@bootlin.com
 
-Each I2C address translator (ATR) has a pool of client aliases which can be
-used as translation targets. Some ATRs have a single alias pool shared by
-all downstream channels, while others have a separate alias pool for each
-channel. Currently, this alias pool is represented by the "aliases",
-"num_aliases", and "use_mask" fields of struct i2c_atr.
+The FPC202 dual port controller serves as a low speed signal aggregator for
+common port types, notably SFP. It provides access to I2C and low-speed
+GPIO signals of a downstream device through a single upstream control
+interface.
 
-In preparation for adding per-channel alias pool support, move the
-"aliases", "num_aliases", "use_mask" and associated lock to a new struct
-called "struct alias_pool".
+Up to two logical I2C addresses can be accessed on each of the FPC202's
+ports. The port controller acts as an I2C translator (ATR). It converts
+addresses of incoming and outgoing I2C transactions. One use case of this
+is accessing two SFP modules at logical address 0x50 from the same upstream
+I2C controller, using two different client aliases.
 
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
 ---
- drivers/i2c/i2c-atr.c | 172 +++++++++++++++++++++++++++++++-------------------
- 1 file changed, 107 insertions(+), 65 deletions(-)
+ .../devicetree/bindings/misc/ti,fpc202.yaml        | 94 ++++++++++++++++++++++
+ MAINTAINERS                                        |  6 ++
+ 2 files changed, 100 insertions(+)
 
-diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
-index 118fd7d764dce51de587e274ef452e031ccff52d..e9c6b85e3e4a4ff84fdf9ad139f05fdceb441120 100644
---- a/drivers/i2c/i2c-atr.c
-+++ b/drivers/i2c/i2c-atr.c
-@@ -34,6 +34,23 @@ struct i2c_atr_alias_pair {
- 	u16 alias;
- };
- 
-+/**
-+ * struct i2c_atr_alias_pool - Pool of client aliases available for an ATR.
-+ * @size:     Total number of aliases
-+ *
-+ * @lock:     Lock protecting @aliases and @use_mask
-+ * @aliases:  Array of aliases, must hold exactly @size elements
-+ * @use_mask: Mask of used aliases
-+ */
-+struct i2c_atr_alias_pool {
-+	size_t size;
+diff --git a/Documentation/devicetree/bindings/misc/ti,fpc202.yaml b/Documentation/devicetree/bindings/misc/ti,fpc202.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..a8cb10f2d0df3fa5224f95f6f87467a8bce253bc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/ti,fpc202.yaml
+@@ -0,0 +1,94 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/misc/ti,fpc202.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	/* Protects aliases and use_mask */
-+	spinlock_t lock;
-+	u16 *aliases;
-+	unsigned long *use_mask;
-+};
++title: TI FPC202 dual port controller with expanded IOs
 +
- /**
-  * struct i2c_atr_chan - Data for a channel.
-  * @adap:            The &struct i2c_adapter for the channel
-@@ -67,10 +84,7 @@ struct i2c_atr_chan {
-  * @algo:      The &struct i2c_algorithm for adapters
-  * @lock:      Lock for the I2C bus segment (see &struct i2c_lock_operations)
-  * @max_adapters: Maximum number of adapters this I2C ATR can have
-- * @num_aliases: Number of aliases in the aliases array
-- * @aliases:   The aliases array
-- * @alias_mask_lock: Lock protecting alias_use_mask
-- * @alias_use_mask: Bitmask for used aliases in aliases array
-+ * @alias_pool: Pool of available client aliases
-  * @i2c_nb:    Notifier for remote client add & del events
-  * @adapter:   Array of adapters
-  */
-@@ -86,17 +100,54 @@ struct i2c_atr {
- 	struct mutex lock;
- 	int max_adapters;
- 
--	size_t num_aliases;
--	const u16 *aliases;
--	/* Protects alias_use_mask */
--	spinlock_t alias_mask_lock;
--	unsigned long *alias_use_mask;
-+	struct i2c_atr_alias_pool *alias_pool;
- 
- 	struct notifier_block i2c_nb;
- 
- 	struct i2c_adapter *adapter[] __counted_by(max_adapters);
- };
- 
-+static struct i2c_atr_alias_pool *i2c_atr_alloc_alias_pool(size_t num_aliases)
-+{
-+	struct i2c_atr_alias_pool *alias_pool;
-+	int ret;
++maintainers:
++  - Romain Gantois <romain.gantois@bootlin.com>
 +
-+	alias_pool = kzalloc(sizeof(*alias_pool), GFP_KERNEL);
-+	if (!alias_pool)
-+		return ERR_PTR(-ENOMEM);
++allOf:
++  - $ref: /schemas/i2c/i2c-atr.yaml#
 +
-+	alias_pool->size = num_aliases;
++properties:
++  compatible:
++    const: ti,fpc202
 +
-+	alias_pool->aliases = kcalloc(num_aliases, sizeof(*alias_pool->aliases), GFP_KERNEL);
-+	if (!alias_pool->aliases) {
-+		ret = -ENOMEM;
-+		goto err_free_alias_pool;
-+	}
++  reg:
++    maxItems: 1
 +
-+	alias_pool->use_mask = bitmap_zalloc(num_aliases, GFP_KERNEL);
-+	if (!alias_pool->use_mask) {
-+		ret = -ENOMEM;
-+		goto err_free_aliases;
-+	}
++  gpio-controller: true
 +
-+	spin_lock_init(&alias_pool->lock);
++  "#gpio-cells":
++    const: 2
 +
-+	return alias_pool;
++  enable-gpios:
++    description:
++      Specifier for the GPIO connected to the EN pin.
++    maxItems: 1
 +
-+err_free_aliases:
-+	kfree(alias_pool->aliases);
-+err_free_alias_pool:
-+	kfree(alias_pool);
-+	return ERR_PTR(ret);
-+}
++  '#address-cells':
++    const: 1
 +
-+static void i2c_atr_free_alias_pool(struct i2c_atr_alias_pool *alias_pool)
-+{
-+	bitmap_free(alias_pool->use_mask);
-+	kfree(alias_pool->aliases);
-+	kfree(alias_pool);
-+}
++  '#size-cells':
++    const: 0
 +
- static struct i2c_atr_alias_pair *
- i2c_atr_find_mapping_by_addr(const struct list_head *list, u16 phys_addr)
- {
-@@ -259,44 +310,42 @@ static const struct i2c_lock_operations i2c_atr_lock_ops = {
- 	.unlock_bus =  i2c_atr_unlock_bus,
- };
- 
--static int i2c_atr_reserve_alias(struct i2c_atr *atr)
-+static int i2c_atr_reserve_alias(struct i2c_atr_alias_pool *alias_pool)
- {
- 	unsigned long idx;
-+	u16 alias;
- 
--	spin_lock(&atr->alias_mask_lock);
-+	spin_lock(&alias_pool->lock);
- 
--	idx = find_first_zero_bit(atr->alias_use_mask, atr->num_aliases);
--	if (idx >= atr->num_aliases) {
--		spin_unlock(&atr->alias_mask_lock);
--		dev_err(atr->dev, "failed to find a free alias\n");
-+	idx = find_first_zero_bit(alias_pool->use_mask, alias_pool->size);
-+	if (idx >= alias_pool->size) {
-+		spin_unlock(&alias_pool->lock);
- 		return -EBUSY;
- 	}
- 
--	set_bit(idx, atr->alias_use_mask);
-+	set_bit(idx, alias_pool->use_mask);
- 
--	spin_unlock(&atr->alias_mask_lock);
-+	alias = alias_pool->aliases[idx];
- 
--	return atr->aliases[idx];
-+	spin_unlock(&alias_pool->lock);
-+	return alias;
- }
- 
--static void i2c_atr_release_alias(struct i2c_atr *atr, u16 alias)
-+static void i2c_atr_release_alias(struct i2c_atr_alias_pool *alias_pool, u16 alias)
- {
- 	unsigned int idx;
- 
--	spin_lock(&atr->alias_mask_lock);
-+	spin_lock(&alias_pool->lock);
- 
--	for (idx = 0; idx < atr->num_aliases; ++idx) {
--		if (atr->aliases[idx] == alias) {
--			clear_bit(idx, atr->alias_use_mask);
--			spin_unlock(&atr->alias_mask_lock);
-+	for (idx = 0; idx < alias_pool->size; ++idx) {
-+		if (alias_pool->aliases[idx] == alias) {
-+			clear_bit(idx, alias_pool->use_mask);
-+			spin_unlock(&alias_pool->lock);
- 			return;
- 		}
- 	}
- 
--	spin_unlock(&atr->alias_mask_lock);
--
--	 /* This should never happen */
--	dev_warn(atr->dev, "Unable to find mapped alias\n");
-+	spin_unlock(&alias_pool->lock);
- }
- 
- static int i2c_atr_attach_addr(struct i2c_adapter *adapter,
-@@ -308,9 +357,11 @@ static int i2c_atr_attach_addr(struct i2c_adapter *adapter,
- 	u16 alias;
- 	int ret;
- 
--	ret = i2c_atr_reserve_alias(atr);
--	if (ret < 0)
-+	ret = i2c_atr_reserve_alias(atr->alias_pool);
-+	if (ret < 0) {
-+		dev_err(atr->dev, "failed to find a free alias\n");
- 		return ret;
-+	}
- 
- 	alias = ret;
- 
-@@ -336,7 +387,7 @@ static int i2c_atr_attach_addr(struct i2c_adapter *adapter,
- err_free:
- 	kfree(c2a);
- err_release_alias:
--	i2c_atr_release_alias(atr, alias);
-+	i2c_atr_release_alias(atr->alias_pool, alias);
- 
- 	return ret;
- }
-@@ -357,7 +408,7 @@ static void i2c_atr_detach_addr(struct i2c_adapter *adapter,
- 		return;
- 	}
- 
--	i2c_atr_release_alias(atr, c2a->alias);
-+	i2c_atr_release_alias(atr->alias_pool, c2a->alias);
- 
- 	dev_dbg(atr->dev,
- 		"chan%u: detached alias 0x%02x from addr 0x%02x\n",
-@@ -411,12 +462,11 @@ static int i2c_atr_bus_notifier_call(struct notifier_block *nb,
- 
- static int i2c_atr_parse_alias_pool(struct i2c_atr *atr)
- {
-+	struct i2c_atr_alias_pool *alias_pool;
- 	struct device *dev = atr->dev;
--	unsigned long *alias_use_mask;
- 	size_t num_aliases;
- 	unsigned int i;
- 	u32 *aliases32;
--	u16 *aliases16;
- 	int ret;
- 
- 	ret = fwnode_property_count_u32(dev_fwnode(dev), "i2c-alias-pool");
-@@ -428,12 +478,23 @@ static int i2c_atr_parse_alias_pool(struct i2c_atr *atr)
- 
- 	num_aliases = ret;
- 
--	if (!num_aliases)
-+	alias_pool = i2c_atr_alloc_alias_pool(num_aliases);
-+	if (IS_ERR(alias_pool)) {
-+		ret = PTR_ERR(alias_pool);
-+		dev_err(dev, "Failed to allocate alias pool, err %d\n", ret);
-+		return ret;
-+	}
++patternProperties:
++  "^i2c@[0-1]$":
++    $ref: /schemas/i2c/i2c-controller.yaml#
++    description: Downstream device ports 0 and 1
 +
-+	atr->alias_pool = alias_pool;
++    properties:
++      reg:
++        maxItems: 1
++        description:
++          Downstream port ID
 +
-+	if (!alias_pool->size)
- 		return 0;
++    required:
++      - "#address-cells"
++      - "#size-cells"
++      - reg
++
++    unevaluatedProperties: false
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++  - "#address-cells"
++  - "#size-cells"
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        i2c-atr@f {
++            compatible = "ti,fpc202";
++            reg = <0xf>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            gpio-controller;
++            #gpio-cells = <2>;
++
++            i2c@0 {
++                #address-cells = <1>;
++                #size-cells = <0>;
++                reg = <0>;
++            };
++
++            i2c@1 {
++                #address-cells = <1>;
++                #size-cells = <0>;
++                reg = <1>;
++            };
++        };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 896a307fa06545e2861abe46ea7029f9b4d3628e..4bb13de2b8ebad5180e2bde607dac40f35c51782 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -23709,6 +23709,12 @@ F:	drivers/misc/tifm*
+ F:	drivers/mmc/host/tifm_sd.c
+ F:	include/linux/tifm.h
  
- 	aliases32 = kcalloc(num_aliases, sizeof(*aliases32), GFP_KERNEL);
--	if (!aliases32)
--		return -ENOMEM;
-+	if (!aliases32) {
-+		ret = -ENOMEM;
-+		goto err_free_alias_pool;
-+	}
- 
- 	ret = fwnode_property_read_u32_array(dev_fwnode(dev), "i2c-alias-pool",
- 					     aliases32, num_aliases);
-@@ -443,43 +504,27 @@ static int i2c_atr_parse_alias_pool(struct i2c_atr *atr)
- 		goto err_free_aliases32;
- 	}
- 
--	aliases16 = kcalloc(num_aliases, sizeof(*aliases16), GFP_KERNEL);
--	if (!aliases16) {
--		ret = -ENOMEM;
--		goto err_free_aliases32;
--	}
--
- 	for (i = 0; i < num_aliases; i++) {
- 		if (!(aliases32[i] & 0xffff0000)) {
--			aliases16[i] = aliases32[i];
-+			alias_pool->aliases[i] = aliases32[i];
- 			continue;
- 		}
- 
- 		dev_err(dev, "Failed to parse 'i2c-alias-pool' property: I2C flags are not supported\n");
- 		ret = -EINVAL;
--		goto err_free_aliases16;
--	}
--
--	alias_use_mask = bitmap_zalloc(num_aliases, GFP_KERNEL);
--	if (!alias_use_mask) {
--		ret = -ENOMEM;
--		goto err_free_aliases16;
-+		goto err_free_aliases32;
- 	}
- 
- 	kfree(aliases32);
- 
--	atr->num_aliases = num_aliases;
--	atr->aliases = aliases16;
--	atr->alias_use_mask = alias_use_mask;
--
--	dev_dbg(dev, "i2c-alias-pool has %zu aliases", atr->num_aliases);
-+	dev_dbg(dev, "i2c-alias-pool has %zu aliases\n", alias_pool->size);
- 
- 	return 0;
- 
--err_free_aliases16:
--	kfree(aliases16);
- err_free_aliases32:
- 	kfree(aliases32);
-+err_free_alias_pool:
-+	i2c_atr_free_alias_pool(alias_pool);
- 	return ret;
- }
- 
-@@ -500,7 +545,6 @@ struct i2c_atr *i2c_atr_new(struct i2c_adapter *parent, struct device *dev,
- 		return ERR_PTR(-ENOMEM);
- 
- 	mutex_init(&atr->lock);
--	spin_lock_init(&atr->alias_mask_lock);
- 
- 	atr->parent = parent;
- 	atr->dev = dev;
-@@ -520,13 +564,12 @@ struct i2c_atr *i2c_atr_new(struct i2c_adapter *parent, struct device *dev,
- 	atr->i2c_nb.notifier_call = i2c_atr_bus_notifier_call;
- 	ret = bus_register_notifier(&i2c_bus_type, &atr->i2c_nb);
- 	if (ret)
--		goto err_free_aliases;
-+		goto err_free_alias_pool;
- 
- 	return atr;
- 
--err_free_aliases:
--	bitmap_free(atr->alias_use_mask);
--	kfree(atr->aliases);
-+err_free_alias_pool:
-+	i2c_atr_free_alias_pool(atr->alias_pool);
- err_destroy_mutex:
- 	mutex_destroy(&atr->lock);
- 	kfree(atr);
-@@ -543,8 +586,7 @@ void i2c_atr_delete(struct i2c_atr *atr)
- 		WARN_ON(atr->adapter[i]);
- 
- 	bus_unregister_notifier(&i2c_bus_type, &atr->i2c_nb);
--	bitmap_free(atr->alias_use_mask);
--	kfree(atr->aliases);
-+	i2c_atr_free_alias_pool(atr->alias_pool);
- 	mutex_destroy(&atr->lock);
- 	kfree(atr);
- }
++TI FPC202 DUAL PORT CONTROLLER
++M:	Romain Gantois <romain.gantois@bootlin.com>
++L:	linux-kernel@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/misc/ti,fpc202.yaml
++
+ TI FPD-LINK DRIVERS
+ M:	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+ L:	linux-media@vger.kernel.org
 
 -- 
 2.47.1
