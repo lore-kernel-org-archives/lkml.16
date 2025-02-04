@@ -1,198 +1,194 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2371206F23;
-	Tue,  4 Feb 2025 13:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B97211A0F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738677355; cv=none; b=X0pHvO0xZPnKLOzMeEdt4GlS5GAQmQENLx/6EgGFrRIkzSOGneF1NO1tHfbcUINPy8/brzHrWbqJIkVNuZtP5MNTHiELsgHeQJMTDZienEh66PuZjwmO3hWouzgErkBaCMCW5Xjq7RDOEx+kxP8AfsVV4nA9RSF0OWEug+a7ffQ=
+	t=1738677397; cv=none; b=cMraKcWTIKt8b2DehOLHalWaJIkDPatACOGYAdY4ERLh8ydR4zE3HhD+yOn+EmbXL83iDgH5vDryiH6h2YKO2I+KyC/Rz7Wjq268/cNXzL5FlOmjsozlgCG+1BkZTgeBChC8svUgr4O5vfE0G5xz6KMWXevXnRpq03dzbt3Z9MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738677355; c=relaxed/simple;
-	bh=EQUSXlFr3njl5PP9Kzw658twDaEAGGl3qA9IHHP+oso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oKY+bOg5yGW5mIO2oghFOmgPnDgRM/12dWGsjTgWzERilQjRkx8c6Gubru8Tof7P922jbPM+tBpnL9BggsMyBWGN6tsTPdaL82hyp73AiEyLxl2tvxzYirw35MvZEIMxnuFVMd7HJuvedjg9B4zDWCqHmYiOcpGtPIzM9dr68Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=BxQz//+0; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1738677397; c=relaxed/simple;
+	bh=MA05jaFSLZfUedsFN65m6VbXQIjYAu102gxjryuOpUY=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=UMroqe9p4Xap/ZBxy3pO9zYAFp4yNHEWiMYC6VOHjqVPGZspUZ9S0SNy+eZxBfkgchkJ1bylbgeE8owscp3ii3fcjDkDRgzYGsPWUcsDc2tIVj3FydYlc96j6WD0lEpOGKXFPp6n3O1Ap80MLcYhzuJshOxCEGzn0B5kxxbcF7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nq+o1xBN; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="BxQz//+0"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A9324CDB;
-	Tue,  4 Feb 2025 14:54:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1738677279;
-	bh=EQUSXlFr3njl5PP9Kzw658twDaEAGGl3qA9IHHP+oso=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BxQz//+0Y76vAOQxeOg7tY6S3bD1oRK6+Lx/j/6HLXP8V2FlwKsRykcZzHiEaGjLx
-	 raSBFCKI2PCgcEa68I1Y6fx3ZQ/EJ6TWgjeeJJeCkjjUPibTshQAVY6rTdGbtZm9W3
-	 ncNd3wt4Aw1KlaPAOUXHRWxAc6qfGNmqnZG6oxNw=
-Message-ID: <eb8883f2-fc34-44f5-90a9-f4b14f0c45f2@ideasonboard.com>
-Date: Tue, 4 Feb 2025 15:55:47 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nq+o1xBN"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250204135631epoutp0367b80bcb1a6c31d68b74316c37c27d3c~hBeAuyQIg1888618886epoutp03g
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:56:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250204135631epoutp0367b80bcb1a6c31d68b74316c37c27d3c~hBeAuyQIg1888618886epoutp03g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1738677391;
+	bh=vzeBvSxuLukopUf6enF/gSvN1gMI6DZKQm8HjnQpzrc=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=nq+o1xBNalg8aGvQbuJRB1CK7QdJQOQqaiu0rUoj2VyRqPCZrAlFP9K6g3yKPUGYE
+	 awY0BD+2t30zK8wContXHaLKOgyjT8r3r4BQ4mB7/OUks0h4tVBo9b6PijZFasSagD
+	 lBsscWBVm54fy8cHyV62YerCnrfIedB+rkndW23Q=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20250204135630epcas5p1e25e570b0224871f7b08586f3d356d8f~hBeABjTLG2007020070epcas5p1n;
+	Tue,  4 Feb 2025 13:56:30 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.182]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4YnPzc6cKdz4x9Pp; Tue,  4 Feb
+	2025 13:56:28 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D4.DE.20052.C8C12A76; Tue,  4 Feb 2025 22:56:28 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250204135628epcas5p1d9a702b1f790f493b229d796de0be232~hBd9sKJus2007020070epcas5p1k;
+	Tue,  4 Feb 2025 13:56:28 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250204135628epsmtrp2915142de6ed6ccd079105e5b0ec24a48~hBd9rOd0B1868618686epsmtrp2Y;
+	Tue,  4 Feb 2025 13:56:28 +0000 (GMT)
+X-AuditID: b6c32a49-3fffd70000004e54-f1-67a21c8c05e6
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	EF.E0.18949.C8C12A76; Tue,  4 Feb 2025 22:56:28 +0900 (KST)
+Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250204135625epsmtip1901feabdd5d886cfab64aee2b4f762d1~hBd65p09d1515215152epsmtip1R;
+	Tue,  4 Feb 2025 13:56:25 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: "'Selvarasu Ganesan'" <selvarasu.g@samsung.com>,
+	<gregkh@linuxfoundation.org>, <m.grzeschik@pengutronix.de>,
+	<kees@kernel.org>, <abdul.rahim@myyahoo.com>, <quic_jjohnson@quicinc.com>,
+	<quic_linyyuan@quicinc.com>, <linux-usb@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Cc: <thiagu.r@samsung.com>, <jh0801.jung@samsung.com>,
+	<dh10.jung@samsung.com>, <naushad@samsung.com>, <akash.m5@samsung.com>,
+	<rc93.raju@samsung.com>, <taehyun.cho@samsung.com>,
+	<hongpooh.kim@samsung.com>, <eomji.oh@samsung.com>,
+	<shijie.cai@samsung.com>, <stable@vger.kernel.org>
+In-Reply-To: <20250118060134.927-1-selvarasu.g@samsung.com>
+Subject: RE: [PATCH v2] usb: gadget: f_midi: Fixing wMaxPacketSize exceeded
+ issue during MIDI bind retries
+Date: Tue, 4 Feb 2025 19:26:21 +0530
+Message-ID: <079801db770c$9610fc10$c232f430$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: ti,am65x-dss: Add support
- for AM62L DSS
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: praneeth@ti.com, vigneshr@ti.com, aradhya.bhatia@linux.dev,
- s-jain1@ti.com, r-donadkar@ti.com, j-choudhary@ti.com, h-shenoy@ti.com,
- jyri.sarha@iki.fi, airlied@gmail.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
- simona@ffwll.ch, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-References: <20250204061552.3720261-1-devarsht@ti.com>
- <20250204061552.3720261-2-devarsht@ti.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250204061552.3720261-2-devarsht@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQKAq9PyrC3Jr3SNnCEbU5tom0LBzwIRS5/Xsdw2SkA=
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKJsWRmVeSWpSXmKPExsWy7bCmhm6PzKJ0g7939C2mT9vIavHm6ipW
+	izsLpjFZnFq+kMmiefF6NotJe7ayWNx9+IPFYt3b86wWl3fNYbNYtKyV2WJL2xUmi09H/7Na
+	NG65y2qx7vomRotVnXNYLI4s/8hkcfn7TmaLBRsfMVpMOihqsaK5ldlBxGPTqk42j/1z17B7
+	HHtxnN2j/6+Bx8Q9dR59W1YxenzeJBfAHpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCo
+	a2hpYa6kkJeYm2qr5OIToOuWmQP0jpJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWn
+	wKRArzgxt7g0L10vL7XEytDAwMgUqDAhO+PPgyNsBetEKxZs6GdrYPwm2MXIySEhYCLxYtV+
+	1i5GLg4hgd2MEjcmbmOGcD4xSjxtuwyV+cYoMXHubmaYlrYfL6Gq9jJKbDnbywThvARqudnK
+	AlLFJqArsWNxGxtIQkRgDpPEszmLwWYxCyxkkvj1aTk7SBWngLXE/TfNjCC2sECORNOEw2A2
+	i4CKxP1Zn1hBbF4BS4nOfT0sELagxMmZT8BsZgFtiWULX0PdpCDx8+kysHoRASuJNdcbmSBq
+	xCVeHj3CDrJYQuA/h8TBg3+hGlwkjj5YxQphC0u8Or6FHcKWkvj8bi8bhF0tsX7DPBYIu4NR
+	onF7DYRtL7Hz0U2gOAfQAk2J9bv0IXbxSfT+fsIEEpYQ4JXoaBOCqFaVaH53FWqKtMTE7m6o
+	rR4Sx7d0sUxgVJyF5LNZSD6bheSDWQjLFjCyrGKUTC0ozk1PLTYtMMxLLYdHeXJ+7iZGcHrX
+	8tzBePfBB71DjEwcjIcYJTiYlUR4T29fkC7Em5JYWZValB9fVJqTWnyI0RQY3BOZpUST84EZ
+	Jq8k3tDE0sDEzMzMxNLYzFBJnLd5Z0u6kEB6YklqdmpqQWoRTB8TB6dUA1OFwjnhWdM7BdZu
+	i9zMM6e26KfkhKlzfv3sXKrUu3Jbhs7jZu/nyxTFtyYm/RF8/MWYb7LYQwexG1+0r3n/OzXx
+	4VEjkXan9zvSVhxnbWeIn7P2v8KJ4tbOw1NS7GovBiSUMPaE3c1aer3R6Tl7QcOvRwpbgwIL
+	7py3nd2vzxO2czuHaGqc+KeeqcdYVMxE7zKs4TVx+Vder/bma5qWW4rsL8u2KWWTlm2UUZjR
+	tS1GVnVpyKWss/OKXjTZGpzt32cffvRtf+Li/8u2dFcvPW4t7DLH1mlGXNXG5QkR7h2xay8n
+	1Ah/3LRwp/yWGqdtu6I3JR43CHZVn36kZMbbyJpnH5oEpaZ8vHUk41+W/30lluKMREMt5qLi
+	RAAQUSOOeAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsWy7bCSnG6PzKJ0g0VP2SymT9vIavHm6ipW
+	izsLpjFZnFq+kMmiefF6NotJe7ayWNx9+IPFYt3b86wWl3fNYbNYtKyV2WJL2xUmi09H/7Na
+	NG65y2qx7vomRotVnXNYLI4s/8hkcfn7TmaLBRsfMVpMOihqsaK5ldlBxGPTqk42j/1z17B7
+	HHtxnN2j/6+Bx8Q9dR59W1YxenzeJBfAHsVlk5Kak1mWWqRvl8CVsXrnKsaC3yIVJ79PZW9g
+	3CnYxcjJISFgItH24yUziC0ksJtR4tu0JIi4tMT1jRPYIWxhiZX/ngPZXEA1zxklVm2/CZZg
+	E9CV2LG4jQ0kISKwhEnieWMnM4jDLLCWSWLb3aXMEC09jBL7bt4Aa+EUsJa4/6aZEcQWFsiS
+	uDF/HROIzSKgInF/1idWEJtXwFKic18PC4QtKHFy5hMwm1lAW6L3YSsjjL1s4WtmiPsUJH4+
+	XQbWKyJgJbHmeiMTRI24xMujR9gnMArPQjJqFpJRs5CMmoWkZQEjyypGydSC4tz03GLDAqO8
+	1HK94sTc4tK8dL3k/NxNjOAY19Lawbhn1Qe9Q4xMHIyHGCU4mJVEeE9vX5AuxJuSWFmVWpQf
+	X1Sak1p8iFGag0VJnPfb694UIYH0xJLU7NTUgtQimCwTB6dUA9PavgvHima0hc/7e4+rbq9d
+	f1GpWszRNTOnPl+8cfPbXef8qpWmv5uQcElH/HU5r8/pjEnLDAsbj0ce6bNYVX898uCH+Og7
+	rkE2wmE5hVHK3ztM9z5UYN17+tJf1suljVrO8rmFs2Iz2nXe//ywqKT9qImz0h5lc1stlykx
+	h0rdb76IuRvaPbl1v/++elfjz67cfDbXT2RwLe6WqnO98LPoZH9jlct0JelTwgXiuTr8sXba
+	c+S2f7+VsNRdXMduXVDtm9/n5XP1PL6GMGe7bHjGZTSvRNN3z6JyGRuVpRYX//H/PikhrJnG
+	O6F96cTLC1fWeq/4zlaYs+nLzAnyW4s+nZ71uDAvaPvrtYbKLkosxRmJhlrMRcWJACadUN5g
+	AwAA
+X-CMS-MailID: 20250204135628epcas5p1d9a702b1f790f493b229d796de0be232
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250118060207epcas5p3913957a1c5ec9b029f1d4953f6b29751
+References: <CGME20250118060207epcas5p3913957a1c5ec9b029f1d4953f6b29751@epcas5p3.samsung.com>
+	<20250118060134.927-1-selvarasu.g@samsung.com>
 
-Hi,
+Hello Selvarasu,
 
-On 04/02/2025 08:15, Devarsh Thakkar wrote:
-> The DSS controller on TI's AM62L SoC is an update from that on TI's
-> AM625/AM65x/AM62A7 SoC. The AM62L DSS [1] only supports a single display
-> pipeline using a single overlay manager, single video port and a single
-> video lite pipeline which does not support scaling.
-> 
-> The output of video port is routed to SoC boundary via DPI interface and
-> the DPI signals from the video port are also routed to DSI Tx controller
-> present within the SoC.
-> 
-> [1]: Section 11.7 (Display Subsystem and Peripherals)
-> Link : https://www.ti.com/lit/pdf/sprujb4
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
-> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+> -----Original Message-----
+> From: Selvarasu Ganesan <selvarasu.g=40samsung.com>
+> Sent: Saturday, January 18, 2025 11:32 AM
+> To: gregkh=40linuxfoundation.org; m.grzeschik=40pengutronix.de;
+> kees=40kernel.org; abdul.rahim=40myyahoo.com; quic_jjohnson=40quicinc.com=
+;
+> quic_linyyuan=40quicinc.com; linux-usb=40vger.kernel.org; linux-
+> kernel=40vger.kernel.org
+> Cc: alim.akhtar=40samsung.com; thiagu.r=40samsung.com;
+> jh0801.jung=40samsung.com; dh10.jung=40samsung.com;
+> naushad=40samsung.com; akash.m5=40samsung.com;
+> rc93.raju=40samsung.com; taehyun.cho=40samsung.com;
+> hongpooh.kim=40samsung.com; eomji.oh=40samsung.com;
+> shijie.cai=40samsung.com; Selvarasu Ganesan <selvarasu.g=40samsung.com>;
+> stable=40vger.kernel.org
+> Subject: =5BPATCH v2=5D usb: gadget: f_midi: Fixing wMaxPacketSize exceed=
+ed
+> issue during MIDI bind retries
+>=20
+> The current implementation sets the wMaxPacketSize of bulk in/out
+> endpoints to 1024 bytes at the end of the f_midi_bind function. However, =
+in
+> cases where there is a failure in the first midi bind attempt, consider
+> rebinding. This scenario may encounter an f_midi_bind issue due to the
+> previous bind setting the bulk endpoint's wMaxPacketSize to 1024 bytes,
+> which exceeds the ep->maxpacket_limit where configured dwc3 TX/RX
+> FIFO's maxpacket size of 512 bytes for IN/OUT endpoints in support HS
+> speed only.
+>=20
+> Here the term =22rebind=22 in this context refers to attempting to bind t=
+he MIDI
+> function a second time in certain scenarios. The situations where rebindi=
+ng is
+> considered include:
+>=20
+>  * When there is a failure in the first UDC write attempt, which may be
+>    caused by other functions bind along with MIDI.
+>  * Runtime composition change : Example : MIDI,ADB to MIDI. Or MIDI to
+>    MIDI,ADB.
+>=20
+> This commit addresses this issue by resetting the wMaxPacketSize before
+> endpoint claim. And here there is no need to reset all values in the usb
+> endpoint descriptor structure, as all members except wMaxPacketSize and
+> bEndpointAddress have predefined values.
+>=20
+> This ensures that restores the endpoint to its expected configuration, an=
+d
+> preventing conflicts with value of ep->maxpacket_limit. It also aligns wi=
+th the
+> approach used in other function drivers, which treat endpoint descriptors=
+ as
+> if they were full speed before endpoint claim.
+>=20
+> Fixes: 46decc82ffd5 (=22usb: gadget: unconditionally allocate hs/ss descr=
+iptor in
+> bind operation=22)
+> Cc: stable=40vger.kernel.org
+> Signed-off-by: Selvarasu Ganesan <selvarasu.g=40samsung.com>
 > ---
-> - Add Reviewed-by
-> - s/ti,am62l,dss/ti,am62l-dss
-> 
-> NOTE: This patch needs to be applied on top of AM62A dt-binding fix:
-> https://lore.kernel.org/all/20250203155431.2174170-1-devarsht@ti.com/
-> 
->   .../bindings/display/ti/ti,am65x-dss.yaml     | 25 ++++++++++++++++++-
->   1 file changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-> index 31c4ffcb599c..f82e9a84e8a8 100644
-> --- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-> +++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-> @@ -12,18 +12,29 @@ maintainers:
->     - Tomi Valkeinen <tomi.valkeinen@ti.com>
->   
->   description: |
-> -  The AM625 and AM65x TI Keystone Display SubSystem with two output
-> +  The AM625 and AM65x TI Keystone Display SubSystem has two output
->     ports and two video planes. In AM65x DSS, the first video port
->     supports 1 OLDI TX and in AM625 DSS, the first video port output is
->     internally routed to 2 OLDI TXes. The second video port supports DPI
->     format. The first plane is full video plane with all features and the
->     second is a "lite plane" without scaling support.
-> +  The AM62A7 display subsystem has a single output port supporting DPI format
-> +  although similar to AM625 and AM65x Socs, it has two video planes where first
-> +  is full video plane with all features and second is a video "lite" plane which
-> +  does not support scaling.
+Reviewed-by: Alim Akhtar <alim.akhtar=40samsung.com>
 
-The part above doesn't belong into "add AM62L" patch. It's also quite 
-confusing. "although similar to..."? Maybe drop the text "although 
-similar to AM625 and AM65x Socs, ", and start a new sentence from "it"?
+=5BSnip=5D
+> 2.17.1
 
-For the AM62L parts:
-
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-
-  Tomi
-
-> +  The AM62L display subsystem also has a single output port which supports DPI
-> +  format but it only supports single video "lite plane" which does not support
-> +  scaling. The output port is routed to SoC boundary via DPI interface and same
-> +  DPI signals are also routed internally to DSI Tx controller present within the
-> +  SoC. Due to clocking limitations only one of the interface i.e. either DSI or
-> +  DPI can be used at once.
->   
->   properties:
->     compatible:
->       enum:
->         - ti,am625-dss
->         - ti,am62a7-dss
-> +      - ti,am62l-dss
->         - ti,am65x-dss
->   
->     reg:
-> @@ -91,6 +102,8 @@ properties:
->             For AM625 DSS, the internal DPI output port node from video
->             port 1.
->             For AM62A7 DSS, the port is tied off inside the SoC.
-> +          For AM62L DSS, the DSS DPI output port node from video port 1
-> +          or DSI Tx controller node connected to video port 1.
->   
->         port@1:
->           $ref: /schemas/graph.yaml#/properties/port
-> @@ -123,6 +136,16 @@ allOf:
->           ports:
->             properties:
->               port@0: false
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: ti,am62l-dss
-> +    then:
-> +      properties:
-> +        ports:
-> +          properties:
-> +            port@1: false
->   
->   required:
->     - compatible
 
