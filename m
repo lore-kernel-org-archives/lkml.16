@@ -1,149 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651C714AD20;
-	Tue,  4 Feb 2025 03:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFA9185B72
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 03:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738638225; cv=none; b=LJgwz4cRPVNMymt7w2mJY6FkTYg/ih3JGFP+EH3FWW3saIkWmNjiSY2T/cKm2si1LcR+ycBAacMqDGxqr3Uu3RZCKXIVvxqUZrnKzNJnNZLsUtm3tRirIUbERr59wTXadvTzYiyEnm3bivxN1hSx4gIeoLs0F9vLY6jU5dZctJ0=
+	t=1738638227; cv=none; b=m4viWXuxNy7LdFyc8wQnUR9blRDB4Vs9ASWy0x0PfpIXZ2FbyVBtWtdelSVyZWv/u//0f+SAAEmfezySYRLKuYDO9qz3wmxMBWwLHN3+Lt6Qanezh0dW+RlYIu+8q7cOJGcRSABTBJLiNdcVVe6ixAbbJc7GHDYk950Mc3jDYa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738638225; c=relaxed/simple;
-	bh=zfB93JeM7MiYyZSDcH+Cv62cIp0qVV5wlF6CFxF1K18=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=eoHO131zES5aG6T3E0F/N6pqtPPP/vbXLnLugyokXY/qcMdsg6ohz/RVCbjoFNTywGcbvo7d2K9vNEIOMHal7w1/ojXFVRVRlHWpRME5J9C+FY8FEo6/wHAotYXVxbj/t6EPIBOLWDxUfhJxJChvHvflyBfHKV72GndVMxLAF9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkwJURUI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738638227; c=relaxed/simple;
+	bh=ayBIXbeoO+bcNseOdW5iN3U/7YIqlyA3LzBqND89pXY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=djN8Kzead9W524rVzsrKTRAkupfBQncuVsx/9TApJLrbGfCMVlNKnDgC+gQXf+66nMpe8Zk2ph12JMWGbNniGkvLNZaX2tXouheS7MmpcxePr1ns3LCK+H/fc0sUU1rRvvfRsX+dqd0ZrS77eZrMOBMurKtBTxzQTr22l/6M9CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=iSG+MrxL; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkwJURUI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322B7C4CEE0;
-	Tue,  4 Feb 2025 03:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738638224;
-	bh=zfB93JeM7MiYyZSDcH+Cv62cIp0qVV5wlF6CFxF1K18=;
-	h=Date:From:To:Cc:Subject:From;
-	b=CkwJURUI28A9HkD3AJVyabrekuC939zg3Z/0a4mA95JiCLvxBk3jOwJi8KXYT+4Ge
-	 x/pQKjlbJLCMz7nvIiqVEgfxhb1exR/wthN/l6owOa7xG93iyWdbOILNYlEi+YJ27X
-	 6QOONtrPNxrETRW5XsvXAOV5dPkygHvqEtSHVU9votsedau7dBYeZEWgj2tOlK6rG5
-	 xWDkIy1jP3K/IvtzYaHj/NfjqMlziVLJzDzBdoZn2gJLduCp9sWy/vJUk1wzGmM4uP
-	 wHZShmNwGxwdiFf8/ZFKL50Eo0QhFI9RoW06gB9FHXv1wMLLwwfjdrfbKr9AS1RO9M
-	 gfKwJnmsYtQBQ==
-Date: Tue, 4 Feb 2025 13:33:36 +1030
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [RESEND PATCH][next] fs: nfs: acl: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z6GDiLZo5u4CqxBr@kspp>
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="iSG+MrxL"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6E8BD2C022F;
+	Tue,  4 Feb 2025 16:03:44 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1738638224;
+	bh=q84Fy4g6qKHM8sKjt/XoJeIMA8/NoGzGazA/6/MaXwA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iSG+MrxLfdqn+GYIMMnd4jlkCi8X4eOYIlQsLrP3X+12sr4tDOxCVgIke874X+OJ6
+	 W/42nWmJSTKZ1qXTBf/U7pL04vR8gfT7IzHBoNk9gbcOJQV7DL5IIqp+tKXlbs1wuI
+	 9y+mFAI/9mB26DlFu+9dw43GIhWE4q7P9/fIqgHCsLMLlAf6t/0HMUfROvCmWH3zDl
+	 UcpJkU6jIQzXLLsNkKQjz7K0cjVFQTCI8jr9pukAYaA9aTeA14Isg3WtE3Cv+IkGW+
+	 UhPPLGnb+HAswvfFJ5f/n0rLEkw0HbxanapIxUuVtkVpdoz6U48L3xEnmXCLX33ggi
+	 uiejDVBnW08SA==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B67a183900000>; Tue, 04 Feb 2025 16:03:44 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+	by pat.atlnz.lc (Postfix) with ESMTP id 3473213EE36;
+	Tue,  4 Feb 2025 16:03:44 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+	id 300082804B6; Tue,  4 Feb 2025 16:03:44 +1300 (NZDT)
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: lee@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	tsbogend@alpha.franken.de,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk,
+	sander@svanheule.net,
+	daniel@makrotopia.org,
+	markus.stockhausen@gmx.de
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH net-next v6 6/6] mips: dts: cameo-rtl9302c: Add switch block
+Date: Tue,  4 Feb 2025 16:02:49 +1300
+Message-ID: <20250204030249.1965444-7-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250204030249.1965444-1-chris.packham@alliedtelesis.co.nz>
+References: <20250204030249.1965444-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=QNvLRRLL c=1 sm=1 tr=0 ts=67a18390 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=T2h4t0Lz3GQA:10 a=FnvEQtqmOLBUJeBfsr8A:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Add the switch port and phys to the cameo-rtl9302c-2x-rtl8224-2xge
+board.
 
-So, in order to avoid ending up with a flexible-array member in the
-middle of other structs, we use the `struct_group_tagged()` helper
-to create a new tagged `struct posix_acl_hdr`. This structure
-groups together all the members of the flexible `struct posix_acl`
-except the flexible array.
-
-As a result, the array is effectively separated from the rest of the
-members without modifying the memory layout of the flexible structure.
-We then change the type of the middle struct member currently causing
-trouble from `struct posix_acl` to `struct posix_acl_hdr`.
-
-We also want to ensure that when new members need to be added to the
-flexible structure, they are always included within the newly created
-tagged struct. For this, we use `static_assert()`. This ensures that the
-memory layout for both the flexible structure and the new tagged struct
-is the same after any changes.
-
-This approach avoids having to implement `struct posix_acl_hdr` as a
-completely separate structure, thus preventing having to maintain two
-independent but basically identical structures, closing the door to
-potential bugs in the future.
-
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure, through which we can access the flexible-array
-member, if necessary.
-
-So, with these changes, fix the following warning:
-
-fs/nfs_common/nfsacl.c:45:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- fs/nfs_common/nfsacl.c    |  8 +++++---
- include/linux/posix_acl.h | 11 ++++++++---
- 2 files changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
-index ea382b75b26c..e2eaac14fd8e 100644
---- a/fs/nfs_common/nfsacl.c
-+++ b/fs/nfs_common/nfsacl.c
-@@ -42,7 +42,7 @@ struct nfsacl_encode_desc {
+Notes:
+    Changes in v6:
+    - New. This is needed to comply with the updated bindings. It could
+      possibly be split to add the ports then the PHYs. Technically the
+      ports are the required property that dtbs_check will complain about
+      but it didn't seem worth separating out the PHYs.
+
+ .../cameo-rtl9302c-2x-rtl8224-2xge.dts        | 96 +++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+
+diff --git a/arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dt=
+s b/arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dts
+index 6789bf374044..28ab2442b37a 100644
+--- a/arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dts
++++ b/arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dts
+@@ -71,3 +71,99 @@ partition@1180000 {
+ 		};
+ 	};
  };
- 
- struct nfsacl_simple_acl {
--	struct posix_acl acl;
-+	struct posix_acl_hdr acl;
- 	struct posix_acl_entry ace[4];
- };
- 
-@@ -112,7 +112,8 @@ int nfsacl_encode(struct xdr_buf *buf, unsigned int base, struct inode *inode,
- 	    xdr_encode_word(buf, base, entries))
- 		return -EINVAL;
- 	if (encode_entries && acl && acl->a_count == 3) {
--		struct posix_acl *acl2 = &aclbuf.acl;
-+		struct posix_acl *acl2 =
-+			container_of(&aclbuf.acl, struct posix_acl, hdr);
- 
- 		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
- 		 * invoked in contexts where a memory allocation failure is
-@@ -177,7 +178,8 @@ bool nfs_stream_encode_acl(struct xdr_stream *xdr, struct inode *inode,
- 		return false;
- 
- 	if (encode_entries && acl && acl->a_count == 3) {
--		struct posix_acl *acl2 = &aclbuf.acl;
-+		struct posix_acl *acl2 =
-+			container_of(&aclbuf.acl, struct posix_acl, hdr);
- 
- 		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
- 		 * invoked in contexts where a memory allocation failure is
-diff --git a/include/linux/posix_acl.h b/include/linux/posix_acl.h
-index e2d47eb1a7f3..62d497763e25 100644
---- a/include/linux/posix_acl.h
-+++ b/include/linux/posix_acl.h
-@@ -27,11 +27,16 @@ struct posix_acl_entry {
- };
- 
- struct posix_acl {
--	refcount_t		a_refcount;
--	unsigned int		a_count;
--	struct rcu_head		a_rcu;
-+	/* New members MUST be added within the struct_group() macro below. */
-+	struct_group_tagged(posix_acl_hdr, hdr,
-+		refcount_t		a_refcount;
-+		unsigned int		a_count;
-+		struct rcu_head		a_rcu;
-+	);
- 	struct posix_acl_entry	a_entries[] __counted_by(a_count);
- };
-+static_assert(offsetof(struct posix_acl, a_entries) == sizeof(struct posix_acl_hdr),
-+	      "struct member likely outside of struct_group_tagged()");
- 
- #define FOREACH_ACL_ENTRY(pa, acl, pe) \
- 	for(pa=(acl)->a_entries, pe=pa+(acl)->a_count; pa<pe; pa++)
--- 
-2.43.0
++
++&mdio0 {
++	/* External RTL8224 */
++	phy0: ethernet-phy@0 {
++		reg =3D <0>;
++		compatible =3D "ethernet-phy-ieee802.3-c45";
++	};
++	phy1: ethernet-phy@1 {
++		reg =3D <1>;
++		compatible =3D "ethernet-phy-ieee802.3-c45";
++	};
++	phy2: ethernet-phy@2 {
++		reg =3D <2>;
++		compatible =3D "ethernet-phy-ieee802.3-c45";
++	};
++	phy3: ethernet-phy@3 {
++		reg =3D <3>;
++		compatible =3D "ethernet-phy-ieee802.3-c45";
++	};
++};
++
++&mdio1 {
++	/* External RTL8224 */
++	phy4: ethernet-phy@0 {
++		reg =3D <0>;
++		compatible =3D "ethernet-phy-ieee802.3-c45";
++	};
++	phy5: ethernet-phy@1 {
++		reg =3D <1>;
++		compatible =3D "ethernet-phy-ieee802.3-c45";
++	};
++	phy6: ethernet-phy@2 {
++		reg =3D <2>;
++		compatible =3D "ethernet-phy-ieee802.3-c45";
++	};
++	phy7: ethernet-phy@3 {
++		reg =3D <3>;
++		compatible =3D "ethernet-phy-ieee802.3-c45";
++	};
++};
++
++&switch0 {
++	ports {
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++
++		port@0 {
++			reg =3D <0>;
++			phy-handle =3D <&phy0>;
++			phy-mode =3D "usxgmii";
++		};
++		port@1 {
++			reg =3D <1>;
++			phy-handle =3D <&phy1>;
++			phy-mode =3D "usxgmii";
++		};
++		port@2 {
++			reg =3D <2>;
++			phy-handle =3D <&phy2>;
++			phy-mode =3D "usxgmii";
++		};
++		port@3 {
++			reg =3D <3>;
++			phy-handle =3D <&phy3>;
++			phy-mode =3D "usxgmii";
++		};
++		port@16 {
++			reg =3D <16>;
++			phy-handle =3D <&phy4>;
++			phy-mode =3D "usxgmii";
++		};
++		port@17 {
++			reg =3D <17>;
++			phy-handle =3D <&phy5>;
++			phy-mode =3D "usxgmii";
++		};
++		port@18 {
++			reg =3D <18>;
++			phy-handle =3D <&phy6>;
++			phy-mode =3D "usxgmii";
++		};
++		port@19 {
++			reg =3D <19>;
++			phy-handle =3D <&phy7>;
++			phy-mode =3D "usxgmii";
++		};
++		port@24{
++			reg =3D <24>;
++			phy-mode =3D "10gbase-r";
++		};
++		port@25{
++			reg =3D <25>;
++			phy-mode =3D "10gbase-r";
++		};
++	};
++};
+--=20
+2.48.1
 
