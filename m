@@ -1,216 +1,154 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BA42165E8
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E94B213E81
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738693767; cv=none; b=GysRriqVloKmEhYdXgScG6hhJ7qGEFDubIjh32oa1LItYIWilaKE/HZvIEoBeP22d8dfg9mFXIeoDbW6NKoIafwIROVULYw+xZjT6YTbNc2Uw7Tdood3ED7BQL6PbQCrlmZFXNK49ale4q+BBP1E2wtJ8IysFDYJf526Qa9n67I=
+	t=1738693957; cv=none; b=DlKmn2qzCsRgKzyzEHvAghUrT+jK4sdixFiOdJ5Xavftrkn7YcKUzBWt/wbZUG2Px28OLNRBiLzfvAomZr5dnxKIMfY06yGg+qjOzusViqDtW2uJA3Ge6a3Jdvmskbcf87ZBE+6HQfWY6zRbWBrb5PhW9PdC1PTBG7oUff5lwrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738693767; c=relaxed/simple;
-	bh=YnAK2fA0OmEe/sIg9fxsXd7XWgn/nEQdWhUJr78kOKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TnsQnlsEgcQTX+UG1McVzRKvJa/PHmuRhDjj4nAcbN2NrVjXkxgmQcMXmA9zs8HOl+FMIx4ltPFGMs8WCluR4OCStKajnL3XiHJbUCiZLGgesgGt7ckpLc5CVIjFz9IAbEUS8y6dwg9v5NUVp06l1YdrHJVmDXYowsEXFV7v4jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=gATzOHhl; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738693957; c=relaxed/simple;
+	bh=xODQit6uCyf4BHOUHzlpnmvPH+m6KEWI7kEV2tYKTKA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tjj1B7/pHX/vu+h3muHQ8FaUPlDBIeR+8bT7rsSwwyla+bp//IT/k7zxehOV8ssQCZmfKO5vPDXkvmcVo0NxP0h9u+9XsUiIbPQv670MXAjIGADurDJkn1BbWhEfTze19AUfmf0Bjem9YDOoxW8jVABaTT77B63jCJHp5vh4K7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MHchEZNn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="gATzOHhl"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3ce87d31480so18321145ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 10:29:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738693764; x=1739298564; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NEPN7BQJIS/NgUdVABl5RKuZM8r7yMxe9P6rzBs6nCI=;
-        b=gATzOHhl15f9h3zaAYF0byoKfFBAcr9ueGEfwmkTUqBFycIcS/TwJOterWcr4vtxAs
-         vYiUCF236C+9P2Ix08ckFerw9NcKmXdp3jS5EmtJpcxFEmJu0wjQsfK38uzethH/NCa/
-         sm4KqtEFpku++DJp+bhaZe6qI0KnZRdLhjY4DzZe0RM1QrO5Oo/VzzQfdamYxSFvmetV
-         sZaB3h0FTLp00dm+HUsokSZwCS3TyQf4EU6s/aEh2g/H+e3zIDhN8td6z7kcdJeAH0PR
-         s6mS5cKItEsM6VNTVIE84l26WKpH04i3QOfU38Bh0aQEw5Wi6+Oh/t3GTSPyPJdKYKZS
-         ohZw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MHchEZNn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738693955;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/wOAl5xAh2GGBxVsErS9v9Tjb+O3mJNAwDX/dH5vXFY=;
+	b=MHchEZNnBYihA+g+lKmN13OLuirVHRU3BmNMaCHamZGmVFNZdAWg0ElkFMAJ1xVqQnPQGT
+	JDpwFS5IVyW3+6CjjVWYDZiOgh7oIfexZ4M8cG//YMrgsySosl4PlWpBWvR5ITKMgaUcvn
+	zlyiOk2oiy7WKuQT1GPbyPk3t0YVna0=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-290-BmvNeY-TO26W3EN6KI3XzQ-1; Tue, 04 Feb 2025 13:32:32 -0500
+X-MC-Unique: BmvNeY-TO26W3EN6KI3XzQ-1
+X-Mimecast-MFC-AGG-ID: BmvNeY-TO26W3EN6KI3XzQ
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38c5dcb33a5so3913807f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 10:32:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738693764; x=1739298564;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1738693951; x=1739298751;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NEPN7BQJIS/NgUdVABl5RKuZM8r7yMxe9P6rzBs6nCI=;
-        b=CzokvQHSoUDrHl2gzKepsQSro5SUvuTJ9fvLJOmNxDeDLthHWdFtbQB2TSQgCy5yIw
-         BvYOxhj1MvTANOqQ8eqiGXxUDoojd3BlkzZPzOE8U4Wgp2Dtnb9V5uTaGf2g7iCDRwy5
-         IsvCZrATH/9vut3fwmhNzmidEWwR4KDNueFxvFkqEngrcUdWPIwc+w0YnPpwbvT+1U6r
-         6eYtiMBsGd2lxfu+SlZ3t5O3QfkD7ejognMTFZJQfPn0C+VTL+BTZGq5Vmcf0OUuVLbH
-         C+JZ9LqKnnkCgITnDGjzUwsba8XOJAn7M29JL5fJlGp2VX+1jmU6/Eyl4YRLBkp5xyrV
-         TAfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVk2+3eCw9+5i2kaKMpDBXkfuWcCDleOESw4hQx3QNFmoRDIyGwZ7uOD2LCGhNvkt4R8YlorIQsIFx3fdM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7VSeiEDV8ue8RRTPKqfsV94v9XAD91mT7uS4PcsaCV/jeG9+t
-	+86tKYT1wihO4ukleCzdMoq6YRgxBQC5nge9hnHi+SlODGaPtbOp7NqfKkRf7do=
-X-Gm-Gg: ASbGncuNSj/I86Rek1Br6OqNi7zsVOwZaQZb2XR2yuENabu6vMp8uLgaFjyg3bRPae/
-	f98g9UPP20a/ZrtUB0wuGet8e0H4hEqSStfA5RDly80a+6rhL5Bg/7dycV+qz0ytMp+kSUQ278S
-	Fs1QW+paY+O/DXujZJroTY7dEFFZeHsyTLzpgiugY7ZlgcUQIMa6Ai6Npuo63d9WjxbdjeAJK8Y
-	Jjax/toVxQu4d3vXCHV+SuW75GR7Ap2MGL5RAvKa/68DpdH9pHZAFq9+Czic9+W++WpGNwQd2ck
-	MmzFCw==
-X-Google-Smtp-Source: AGHT+IFbEoBr+a4SvrTbADFqhAkrC2SHJ4FukkyjQjHcwGP861IkITZWGwtN5GxQ+yTOHFoL8NSXOQ==
-X-Received: by 2002:a05:6e02:18cf:b0:3cf:c7d3:e4b with SMTP id e9e14a558f8ab-3cffe6b7e26mr278996965ab.21.1738693764665;
-        Tue, 04 Feb 2025 10:29:24 -0800 (PST)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ec7458e67esm2842974173.16.2025.02.04.10.29.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 10:29:23 -0800 (PST)
-Date: Tue, 4 Feb 2025 10:29:21 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] kbuild: Use --strip-unneeded with INSTALL_MOD_STRIP
-Message-ID: <Z6JcgeDmt63MupyW@ghost>
-References: <20250122-strip_unneeded-v1-1-ac29a726cb41@rivosinc.com>
- <20250131035245.GA47826@ax162>
- <Z5xzkwwZAWRRLCdj@ghost>
- <CAK7LNAR=1sNs+hOW8gL=7xOs=gHLToTAnAUTF1SizroYoui8sg@mail.gmail.com>
- <Z51BpVEkmVCg7gTX@ghost>
- <CAK7LNATs=c4J7mR69ec3scPqw6PK4SKTs-ixrQM_eRiz=EhS8A@mail.gmail.com>
+        bh=/wOAl5xAh2GGBxVsErS9v9Tjb+O3mJNAwDX/dH5vXFY=;
+        b=XYApb5FESdPZp1LbU5dvIggdk97BMI8HtdviBR/HqQzqIz+EDQfYDAYxMuZ2C0DhF9
+         acaeYI/PlRhhZhOd6eZZ0WUByFJ16H/BHTZvPG+la1pVMvpoAWarTYeLrm6W0SGoNmS7
+         EbRx3ir4Y1wK5DKFBgIampDIXF0bBxMbl9r3c0u7BjRW+7BVjDh9jzxxxuocT49Rqemd
+         q1cnMEzcLtcJmtPR/Xe3ve7MumiQW3oo5HNvnwGNVjZgzI4zftr+jtw4QKsjmQbQen0H
+         31tWxnA/sDytACnaKVWzm2irXgp4bFHTyGsh7bPd2Q2zLhC+UYaf/xYjP7CghuGEZxpP
+         QyXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVaJZhvxg/RFRli1vjqhMtObjmHsRavPnmIrA6VwL7UWuwzQv/yeIv+hxZnUdvM83MHkbp4+yNWZmfWDJE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/6wIQ5HHnczyCwRCg1EHpP+EfwwiHEUBdCQtM3Nmyc9DdhSqg
+	RTAcPRJicBL4fbk+npBUT9NSTQ8UME+XhR5PBhNxtDNhYb3RQqf6W0dDNtGx+vx/YqUOXpn1JJc
+	np07Zp/tiNvmIjYh732RmWcpwqJHx1xdToeP8rDjt78phE1j4BAqWWSqPb+fnOg==
+X-Gm-Gg: ASbGncuASpXoUCRCpI/rclEFfxMUl4X0SFSlH/pT7CZI0kUNrd95NrI5s9aN0etxJL0
+	cDhmrO/juHBukuYNvNjh/oP0wJ2g4kkRVqnA/JMvMbud7LH3HUsX16dV/+7nt33IffvDoru6Os9
+	eFiy1mbSmwh9/pxZ5boWyY0i/wppFEeDnODwxrcjhfoX/KCC2jltReLlWlemoFjSbD5ey/DuIli
+	A1ZV1vqJVk6YJzXm3eVCtFW/zqdcYOxG6lUZk+oWewW4sCIIwTEqCfuabOfU/0leFRrAog3iyJj
+	EmzS5fJtOn+oTc8o70TF+jI26MkuRVhPKg4=
+X-Received: by 2002:a5d:584e:0:b0:38a:8b00:6908 with SMTP id ffacd0b85a97d-38c520b0b23mr23613470f8f.54.1738693950906;
+        Tue, 04 Feb 2025 10:32:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFD/Vu5xJexoTki9KN1frdyawMdJlGIYRVOCgdaZ1pwR1o9hVUkrti8bPAifEmhLPHuA8ZQBg==
+X-Received: by 2002:a5d:584e:0:b0:38a:8b00:6908 with SMTP id ffacd0b85a97d-38c520b0b23mr23613436f8f.54.1738693950460;
+        Tue, 04 Feb 2025 10:32:30 -0800 (PST)
+Received: from [192.168.88.253] (146-241-41-201.dyn.eolo.it. [146.241.41.201])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c12247esm17079089f8f.53.2025.02.04.10.32.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 10:32:29 -0800 (PST)
+Message-ID: <60550f27-ea6a-4165-8eaa-a730d02a5ddc@redhat.com>
+Date: Tue, 4 Feb 2025 19:32:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 0/6] Device memory TCP TX
+To: Stanislav Fomichev <stfomichev@gmail.com>,
+ Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski <kuba@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Neal Cardwell <ncardwell@google.com>,
+ David Ahern <dsahern@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Stefan Hajnoczi <stefanha@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk,
+ Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>,
+ Pedro Tammela <pctammela@mojatatu.com>,
+ Samiullah Khawaja <skhawaja@google.com>
+References: <20250203223916.1064540-1-almasrymina@google.com>
+ <a97c4278-ea08-4693-a394-8654f1168fea@redhat.com>
+ <CAHS8izNZrKVXSXxL3JG3BuZdho2OQZp=nhLuVCrLZjJD1R0EPg@mail.gmail.com>
+ <Z6JXFRUobi-w73D0@mini-arch>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <Z6JXFRUobi-w73D0@mini-arch>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK7LNATs=c4J7mR69ec3scPqw6PK4SKTs-ixrQM_eRiz=EhS8A@mail.gmail.com>
 
-On Tue, Feb 04, 2025 at 01:04:26PM +0900, Masahiro Yamada wrote:
-> On Sat, Feb 1, 2025 at 6:33 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> >
-> > On Sat, Feb 01, 2025 at 12:10:02AM +0900, Masahiro Yamada wrote:
-> > > On Fri, Jan 31, 2025 at 3:54 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> > > >
-> > > > On Thu, Jan 30, 2025 at 08:52:45PM -0700, Nathan Chancellor wrote:
-> > > > > On Wed, Jan 22, 2025 at 07:17:26PM -0800, Charlie Jenkins wrote:
-> > > > > > On riscv, kernel modules end up with a significant number of local
-> > > > > > symbols. This becomes apparent when compiling modules with debug symbols
-> > > > > > enabled. Using amdgpu.ko as an example of a large module, on riscv the
-> > > > > > size is 754MB (no stripping), 53MB (--strip-debug), and 21MB
-> > > > > > (--strip-unneeded). ON x86, amdgpu.ko is 482MB (no stripping), 21MB
-> > > > > > (--strip-debug), and 20MB (--strip-unneeded).
-> > > > > >
-> > > > > > Use --strip-unneeded instead of --strip-debug to strip modules so
-> > > > > > decrease the size of the resulting modules. This is particularly
-> > > > > > relevant for riscv, but also marginally aids other architectures.
-> > > > > >
-> > > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > > > >
-> > > > > Is there any sort of regression risk with this patch? If so, another
-> > > > > option may be to give another level to INSTALL_MOD_STRIP like 2 so that
-> > > > > INSTALL_MOD_STRIP=1 continues to behave as before but people can easily
-> > > > > opt into this option. No strong opinion because I am not sure but was
-> > > > > not sure if it was considered.
-> > > >
-> > > > I do not believe this would cause regressions. The description on gnu
-> > > > strip is:
-> > > >
-> > > > "Remove all symbols that are not needed for relocation processing in
-> > > > addition to debugging symbols and sections stripped by --strip-debug."
-> > > >
-> > > > The description on llvm-strip is:
-> > > >
-> > > > "Remove from the output all local or undefined symbols that are not
-> > > > required by relocations. Also remove all debug sections."
-> > > >
-> > > > gnu strip --strip-unneeded strips slightly more aggressively but it does
-> > > > not appear this causes any issues.
-> > > >
-> > > > >
-> > > > > Regardless:
-> > > > >
-> > > > > Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> > > >
-> > > > Thanks!
-> > > >
-> > >
-> > >
-> > > It is true --strip-unneeded drops a lot of compiler-generated symbols, but
-> > > it also drops real symbols that originate in the source code.
-> > >
-> > > So, this would give user-visible changes for kallsyms at least.
-> >
-> > Adding INSTALL_MOD_STRIP="--strip-unneeded" would be sufficient for
-> > riscv. However, this has the downside that riscv will require different
-> > flags than other architectures to get reasonably sized modules.
+On 2/4/25 7:06 PM, Stanislav Fomichev wrote:
+> On 02/04, Mina Almasry wrote:
+>> On Tue, Feb 4, 2025 at 4:32 AM Paolo Abeni <pabeni@redhat.com> wrote:
+>>>
+>>> On 2/3/25 11:39 PM, Mina Almasry wrote:
+>>>> The TX path had been dropped from the Device Memory TCP patch series
+>>>> post RFCv1 [1], to make that series slightly easier to review. This
+>>>> series rebases the implementation of the TX path on top of the
+>>>> net_iov/netmem framework agreed upon and merged. The motivation for
+>>>> the feature is thoroughly described in the docs & cover letter of the
+>>>> original proposal, so I don't repeat the lengthy descriptions here, but
+>>>> they are available in [1].
+>>>>
+>>>> Sending this series as RFC as the winder closure is immenient. I plan on
+>>>> reposting as non-RFC once the tree re-opens, addressing any feedback
+>>>> I receive in the meantime.
+>>>
+>>> I guess you should drop this paragraph.
+>>>
+>>>> Full outline on usage of the TX path is detailed in the documentation
+>>>> added in the first patch.
+>>>>
+>>>> Test example is available via the kselftest included in the series as well.
+>>>>
+>>>> The series is relatively small, as the TX path for this feature largely
+>>>> piggybacks on the existing MSG_ZEROCOPY implementation.
+>>>
+>>> It looks like no additional device level support is required. That is
+>>> IMHO so good up to suspicious level :)
+>>>
+>>
+>> It is correct no additional device level support is required. I don't
+>> have any local changes to my driver to make this work. I think Stan
+>> on-list was able to run the TX path (he commented on fixes to the test
+>> but didn't say it doesn't work :D) and one other person was able to
+>> run it offlist.
 > 
-> You can use INSTALL_MOD_STRIP=--strip-unneeded for all architecture if you like.
-> 
-> I assume this is a riscv issue. Specifically, riscv gcc.
-> With LLVM=1, I see much smaller riscv modules using INSTALL_MOD_STRIP=1.
-> 
-> --strip-unneeded is needlessly aggressive for other architectures,
-> and I do not see a good reason to change the default.
+> For BRCM I had shared this: https://lore.kernel.org/netdev/ZxAfWHk3aRWl-F31@mini-arch/
+> I have similar internal patch for mlx5 (will share after RX part gets
+> in). I agree that it seems like gve_unmap_packet needs some work to be more
+> careful to not unmap NIOVs (if you were testing against gve).
 
-Yes it is primarily an issue with riscv GCC. I was hoping for something
-more standardized so that other people using riscv GCC wouldn't
-encounter this. Would it be reasonable to add this flag by default only
-for the riscv architecture, or do you think it's just better to leave it
-up to the user's choice?
+What happen if an user try to use devmem TX on a device not really
+supporting it? Silent data corruption?
 
-- Charlie
+Don't we need some way for the device to opt-in (or opt-out) and avoid
+such issues?
 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> >
-> > I believe these symbols are only useful for debugging, is there a
-> > usecase for them to be available when the user has modules compiled with
-> > INSTALL_MOD_STRIP=1?
-> >
-> > - Charlie
-> >
-> > >
-> > >
-> > > $ riscv64-linux-gnu-nm  -n
-> > > /tmp/strip-unneeded/lib/modules/6.13.0-09760-g69e858e0b8b2/kernel/drivers/gpu/drm/amd/amdgpu/amdgpu.ko
-> > >  > /tmp/symbol-with-strip-unneeded
-> > > $ riscv64-linux-gnu-nm  -n
-> > > /tmp/strip-debug/lib/modules/6.13.0-09760-g69e858e0b8b2/kernel/drivers/gpu/drm/amd/amdgpu/amdgpu.ko
-> > >  > /tmp/symbol-with-strip-debug
-> > >
-> > > $  diff -u /tmp/symbol-with-strip-debug  /tmp/symbol-with-strip-unneeded
-> > >  [ snip ]
-> > >  00000000001676cc t uvd_v6_0_ring_test_ring
-> > >  0000000000167802 t uvd_v6_0_ring_emit_pipeline_sync
-> > >  0000000000167a02 t uvd_v6_0_ring_emit_fence
-> > > -0000000000167b58 r CSWTCH.2
-> > > -0000000000167b68 r abm_settings
-> > > -0000000000167b80 r abm_config
-> > > -0000000000167b90 r min_reduction_table_v_2_2
-> > > -0000000000167ba0 r max_reduction_table_v_2_2
-> > > -0000000000167bb0 r min_reduction_table
-> > > -0000000000167bc0 r max_reduction_table
-> > > -0000000000167bd0 r custom_backlight_curve0
-> > >  0000000000167c38 r abm_settings_config2
-> > >  0000000000167c70 r abm_settings_config1
-> > >  0000000000167ca8 r abm_settings_config0
-> > >
-> > >
-> > >
-> > >
-> > > --
-> > > Best Regards
-> > > Masahiro Yamada
-> 
-> 
-> 
-> --
-> Best Regards
-> Masahiro Yamada
+/P
+
