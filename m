@@ -1,195 +1,142 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F174A78F4F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0873586321
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 02:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738634323; cv=none; b=GOYxL4GwhuiiOX0NaE73K9rf5kNACEtZJLQH/YQQnwB6POSs+jr3XF1PIFKMLMUCiYMOCq8AlF8vlDjL+cZweKVlNyyu+mnFMBIh0l8nQEiJ8OWA3nv0MDZHbsBsPy33+apHfnQxrapiGD8JSZUI9AvR9s+dtjf/i+u7ndC2JVY=
+	t=1738634414; cv=none; b=E/A/MyBGGdvvmw3cveoFK3+mNH8PWEpqShxEjkvH3yUIfa6/8k+aWAbqaOcwQFdOZrA5c3yg4la5ApvCxLIvmfKWF/c2TgrwYXYRC/HeysBm8RxrdP40ThmPU7Xgu0xA5T3sGQQsUmHIdgB9AsegMW4uvht3tkb2plh8laen+2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738634323; c=relaxed/simple;
-	bh=av7mIowXw/9z91sfKm94CO7sTInESQe4v382zCXM7Ts=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lMv6agZqIx8SNqdyopr5GOcrJ/aQy5qPrgcALFMhZDRAT6liLykzdTAudwItRVoTbZT0ibEN+avKYHVyJUV4XPxXMJTgFZ0ADRE5i69KshlsqSYqqCLAnOfls9ALn8ECZijiwrdjiMQw+RmT8CwWVHeNp45bqQxsE2VaJ7eOHrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mtAKU1Ug; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738634414; c=relaxed/simple;
+	bh=LcUOXjH8eIbcE3PKBSEu/PpFrNnBo1CT9+chUuHKUB8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GdP4vxKsAOfm+FQ58spF2iJqLeouwM9+8QChG9ZHoKBXw9xU+HUr5WbLcNVB9HG3R57q9qQUI3u6ObUPqENOvyg/n1WSJLBos4ANlRVo7W6xOX/QIn/Uiq+mBNackHu7CvxarmZwZ29NImDFcfZWK0WaY7Wwtqx2zv+0ZYBKCHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wb/tz8x+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mtAKU1Ug"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso25275ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 17:58:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738634321; x=1739239121; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=av7mIowXw/9z91sfKm94CO7sTInESQe4v382zCXM7Ts=;
-        b=mtAKU1UgSOOZExjLzjUxapaYHRwOwLMpCjFzkA9qekqT17beIJqEQQ9d9vEIGGESqd
-         eel/jnewKQB+Pr01kDu0Y4WmZpgmjoeRBFeNONW6BiLDDAENupeJ0l/kqcZnZspGZFO+
-         P8fh9VHYLU0oqEq/K2VbBTRsL4lfzT8LRQuCVfb3F7nBRhPxGduESwvOxbyAJ/bxYrqJ
-         AyG0wjhhEqagcxIv5ctYAhLSkixMNbazgjWk7lqkqG3H4L/N9JG+G+z15hAMAKxTIFvs
-         v03+fBZksaUwAUvQobHV4lWAlqNvVAuHnPdnCUgaTs3ixOUWjjdiLt3SkCtk4dFGTgLK
-         8XRA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wb/tz8x+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738634411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0LGY+6/g3x0XBxaXTlefV2q5SDTNkHreDKjZyKb49XA=;
+	b=Wb/tz8x+yHAngp8qzKpyYzDlO83vJw1j5naIgiZ174X1PZj97yrj1EV6v4mXto5yucSg6s
+	bAqgsBzoqJ9jiGHupR78pIc+3QXfum4GhAviftth5qTGBPY3JM1+JfGDXCwT1yoUsiuNNO
+	p8+W0L7JCsR7iuymbVrh6uuQS5Hvc5A=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-643-3KXDQAQnNr2J_4rHsjUlwg-1; Mon, 03 Feb 2025 21:00:10 -0500
+X-MC-Unique: 3KXDQAQnNr2J_4rHsjUlwg-1
+X-Mimecast-MFC-AGG-ID: 3KXDQAQnNr2J_4rHsjUlwg
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6d8e6046f0fso78948356d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 18:00:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738634321; x=1739239121;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=av7mIowXw/9z91sfKm94CO7sTInESQe4v382zCXM7Ts=;
-        b=l7/OApzl3GmhiZRDsRGj48Yu82BzTiQJk5gWEPNK3pCrutEFm72jVRwQueHYTAwVCg
-         MurHiGAGSzWO7tlJ9qpSgS54CPWbG01Oi9E/aYgLSRvhTcbovu4GHXqfBWI4IbOkMPPs
-         fbFlS/7Wo24ETyK/17RRGEwGr2YsxvowVMMyzJDS5enEawjcCOVxjgFrJwhYGTHksO3u
-         F4DDm+Pog0epHJNidooRKkbNvFzKgjkLc/OGZ546KpNfqFrH+/3acwuB7xNV2A4bYxaQ
-         tyBBsa0tDIBdPBzu/MP2Ni45h1HyjAy/Sq/AKOdZQkwjWq3sCwyPuPFnQmo6RLl68m89
-         LS9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUGnVY8U3DzcY+pUdHcxmHXB9bLk7mBf2QN4g8FPR5QSgC9FUbXdKrNRbyV562SHRvBODUCYbqjzmV1dw8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXGel5DMo5NphwgmcLZXhUHc9mwCWzj6E6cyQWTvbMtqu527Lw
-	ZNQZkv+z0eGw5G9TsRu+LuLyq9fqpqwJq8pCo5G22sxTZEvpyzC8gqPeegq5QLhjQXLsvPVS5ur
-	m5HFVRDsgTwM1mpBycNvUYPtQGQK/KdqLssS1
-X-Gm-Gg: ASbGncsIk569tOOLbC/B5XUjcNilqehv0CrHx/2T3QLV7WqYA5osd/O7lPmO3KV29B4
-	1bKjXboy/Gnxd5xyajvnHuPeWkbd7ZpbfSMkT/Ta2nedsgOVor/jDPw89dSHm7iiVrKjn6QITFA
-	==
-X-Google-Smtp-Source: AGHT+IFSTGGsIToVAem8d3RPstMMmOgQL91UDPwPQKGKwSo9BvPHGLa6a2hOvXGKifufQ1ktwWV2laPTQRiNavnNF4g=
-X-Received: by 2002:a05:6e02:1546:b0:3cf:c825:cc6b with SMTP id
- e9e14a558f8ab-3d03fbc14ebmr1570415ab.10.1738634320753; Mon, 03 Feb 2025
- 17:58:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738634410; x=1739239210;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0LGY+6/g3x0XBxaXTlefV2q5SDTNkHreDKjZyKb49XA=;
+        b=RpIW7mGldDmID22MMVmJAr1H1W9UrfD2Iw4X8yVzjmbUmcGzTXXi07UrttpD9a/oPL
+         Utc5FpsjcZyDjWaejPKjs8d1dZ2o06Vf57yJwOu9iSAeY6ox4NjaMeO2KTnTyNM3kmWw
+         K89JZXLL5M2vET6YVS5OZwPq5hPMBmiJ42Zg9tL0ar3BeAfZUze3WV7BzkYSpZ/C5lSo
+         zLXWt8X7fXJOM+Kxm7Puyq2V4pniWk+8i+yMPKtbjFqkDrQfbARkMxg2nc3nTyp2sBSM
+         8qUCa6Y08FuFRHsCVt38I7wGF4MuK2uG/ZGJmahwCtHp0gBftAg7IxEAkfcg2G3A98FE
+         0udg==
+X-Forwarded-Encrypted: i=1; AJvYcCXBzQnbItBWh5Njp0wU1CN3CnRz4IoGQ5nWOG6T15jyLVCfNt5sgJ2hXKGd7TFe4GhUSbHpg7hB8TGZ/pc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSQ433EnW1+nU7oCc6OL57Kb4/8aDMfUwFYnSZP00vVeZlATKV
+	u4Z96SRH2AoCKR9/bLruRWh1E8+qlnrAzUTvm7J9TnAtUXCpz8DbJgLNSx3LNnaHWv92twt48WH
+	uUgVPTg5NfaLVNSwtHX0PbdETgQaJm2fW7oxZRkBCjk5qlJyZMFezGZ289AMqug==
+X-Gm-Gg: ASbGnct2va4QHJWoHWIkq9aaYGu9xa3QlEnhjLiThc7f2otAjQ4rrNVorViLOBuCFd3
+	1hr/L7AZjyvJ5NncoJ3n+KzWLGFmVoJ+XiYDfbaqMAG3ZEVrGzA2DmFYmOPyLPWPeiDPdI/utAL
+	ozQO5s7fdB/FddsdVyljJi+GZeJcx1zXU3fvaDDqg7zlu98MZrHVlP0AwPQ/E+ZtZftFwe/IF6n
+	xuqFysGkuVdE+Pgz8SQ2I5NcowXNWZdAHVMok9itWiigvjguGwrxDhVbWvos/hrUzazRzozWALm
+	D7q6
+X-Received: by 2002:a0c:aa10:0:b0:6e2:4b52:ee21 with SMTP id 6a1803df08f44-6e24b52ef3amr229229196d6.9.1738634408541;
+        Mon, 03 Feb 2025 18:00:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHCeGl8IrpYydYNSTiAGp5mqvo57QRPgrWXedi9jJu3JucaqYaIT8IzzEz1g678fg0vmKpFjg==
+X-Received: by 2002:a0c:aa10:0:b0:6e2:4b52:ee21 with SMTP id 6a1803df08f44-6e24b52ef3amr229228146d6.9.1738634406610;
+        Mon, 03 Feb 2025 18:00:06 -0800 (PST)
+Received: from starship ([2607:fea8:fc01:8d8d:6adb:55ff:feaa:b156])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e25495e831sm57070446d6.123.2025.02.03.18.00.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 18:00:06 -0800 (PST)
+Message-ID: <30fc469b5b2ec5e2d6703979a0d09ad0a9df29e1.camel@redhat.com>
+Subject: Re: [PATCH 2/3] KVM: x86: Remove use of apicv_update_lock when
+ toggling guest debug state
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: "Naveen N Rao (AMD)" <naveen@kernel.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>,  Suravee Suthikulpanit
+ <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>
+Date: Mon, 03 Feb 2025 21:00:05 -0500
+In-Reply-To: <dc6cf3403e29c0296926e3bd8f0d4e87b67f4600.1738595289.git.naveen@kernel.org>
+References: <cover.1738595289.git.naveen@kernel.org>
+	 <dc6cf3403e29c0296926e3bd8f0d4e87b67f4600.1738595289.git.naveen@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201071455.718247-1-irogers@google.com> <Z6EStkn-YZ8zaO7u@ghost>
- <CAP-5=fXRz_8CKNz4Fr-=0yhKbf_QE2ND+PPykSAO5p8wcUz7xA@mail.gmail.com>
- <Z6EVwaOVYaKtaK1j@ghost> <CAP-5=fX1hCNWWmGJPKYxj93S=zM1-eRucqzb4WW5fB_sZBCRLg@mail.gmail.com>
- <Z6Eh1QLuqTbUKLCc@ghost> <CAP-5=fXZr8L4Z=Lb28QDZF8cbv2eJJEHSb0H9zcqSOB9cn5-9g@mail.gmail.com>
- <Z6FLDHz6V5L-HGR7@ghost>
-In-Reply-To: <Z6FLDHz6V5L-HGR7@ghost>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 3 Feb 2025 17:58:29 -0800
-X-Gm-Features: AWEUYZl4VPDQDYEEJe2b_m05PnnWBufqWLrhyYXjVGpczvYgfi2M8V9it8-CAj4
-Message-ID: <CAP-5=fVk6N=FVXsJ9xRJZhYSh2sbmUkEPr5HqRd-pR7mbGts+w@mail.gmail.com>
-Subject: Re: [PATCH v1 0/7] perf: Support multiple system call tables in the build
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>, 
-	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 3, 2025 at 3:02=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.co=
-m> wrote:
-> On Mon, Feb 03, 2025 at 12:54:59PM -0800, Ian Rogers wrote:
-[snip]
-> > I think it makes sense in the kernel, as the built binary doesn't have
-> > cross-platform concerns. This is probably also the reason why the perf
-> > tool has an arch directory. Let me know what you think is the right
-> > direction for the perf tool syscall table code.
->
-> I am hesitant about moving all of the arch-specific syscall generation
-> flags into a single file.
+On Mon, 2025-02-03 at 22:33 +0530, Naveen N Rao (AMD) wrote:
+> apicv_update_lock is not required when querying the state of guest
+> debug in all the vcpus. Remove usage of the same, and switch to
+> kvm_set_or_clear_apicv_inhibit() helper to simplify the code.
 
-In these changes I had a single file to build up a mapping from ELF
-machine to syscall table in an array and I wanted to keep the logic to
-build the array alongside the logic to build up the components of the
-array - so the ifdefs were visually the same. As the scope is a single
-file and the variables are static, this can give useful C compiler
-"unused definition" warnings. You can trick the linker to give similar
-warnings at the scope of a file, so this isn't a deal breaker.
+It might be worth to mention that the reason why the lock is not needed,
+is because kvm_vcpu_ioctl from which this function is called takes 'vcpu->mutex'
+and thus concurrent execution of this function is not really possible.
 
-> There is currently a really clean separation
-> between the architectures and it's possible to generate all of the
-> syscall tables for all of the architecutures based on the paths to the
-> syscall table.
+Besides this:
 
-This doesn't happen currently as the build of the arch directory is to
-add in $(SRCARCH) only. So
-tools/perf/arch/arm64/entry/syscalls/Makefile.syscalls will only be
-included into the build if SRCARCH=3D=3Darm64. As I've said I'm against
-the idea of the arch directory as it nearly always causes cross
-platform problems - not an issue in a Linux kernel build. We recently
-eliminated dwarf-regs for this reason (and hopefully fixing up cross
-platform disassembly issues as a consequence):
-https://lore.kernel.org/all/20241108234606.429459-1-irogers@google.com/
-We could have the syscall table logic not under arch and generate
-multiple files, but we'd be adding extra logic to pull things apart to
-then pull things back together again, which feels like unnecessary
-complexity.
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
-It seems in your changes the Kbuild and Makefile.syscalls are running
-in the arch directory - this feels like a lot of peculiar and
-separated build logic for just iterating over a bunch of arch
-directory names and calling a shell function on them - albeit with
-some arch specific parameters. There's also an extra C helper
-executable in your code. I kind of like that I get a single header
-that is the same across all architectures and with no more build
-system requirements than to support ifdefs - in fact the ifdefs are
-just there to keep the code size down there is a #define to make them
-all have no effect. I hear your "clean separation" but I also think
-separation across files can make things harder to read, state is in >1
-place. I've tried to cleanly separate within the script.
+Best regards,
+	Maxim Levitsky
 
-I do think there is some tech debt in both changes. My:
-```
-#if defined(ALL_SYSCALLTBL) || defined(__riscv)
-#if __BITS_PER_LONG !=3D 64
-EOF
-build_tables "$tools_dir/scripts/syscall.tbl" "$outfile"
-common,32,riscv,memfd_secret EM_RISCV
-echo "#else" >> "$outfile"
-build_tables "$tools_dir/scripts/syscall.tbl" "$outfile"
-common,64,riscv,rlimit,memfd_secret EM_RISC
-V
-cat >> "$outfile" <<EOF
-#endif //__BITS_PER_LONG !=3D 64
-```
-means the perf binary word size determines the syscall table support.
-This is because the e_machine in the ELF header isn't unique in these
-two cases and having both tables would have no effect. You've moved
-this into the env arch name handling, but I think having >1 way to
-encode a binary type is suboptimal. There are some ELF flag ABI bits
-that resolve disassembler things on csky, so perhaps a resolution is
-to pass ELF flags along with the machine type. I'm not clear in your
-change how "32_riscv" is generated to solve the same problem. Imo,
-it'd kind of be nice not to introduce notions like "64_arm64" as we
-seem to be always mapping/normalizing/... these different notions and
-they feel inherently brittle.
+> 
+> Signed-off-by: Naveen N Rao (AMD) <naveen@kernel.org>
+> ---
+>  arch/x86/kvm/x86.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index b2d9a16fd4d3..11235e91ae90 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -12038,19 +12038,14 @@ static void kvm_arch_vcpu_guestdbg_update_apicv_inhibit(struct kvm *kvm)
+>  	struct kvm_vcpu *vcpu;
+>  	unsigned long i;
+>  
+> -	if (!enable_apicv)
+> -		return;
+> -
+> -	down_write(&kvm->arch.apicv_update_lock);
+> -
+>  	kvm_for_each_vcpu(i, vcpu, kvm) {
+>  		if (vcpu->guest_debug & KVM_GUESTDBG_BLOCKIRQ) {
+>  			set = true;
+>  			break;
+>  		}
+>  	}
+> -	__kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_BLOCKIRQ, set);
+> -	up_write(&kvm->arch.apicv_update_lock);
+> +
+> +	kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_BLOCKIRQ, set);
+>  }
+>  
+>  int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
 
-> What causes the arch directory to be a pain for Bazel? I
-> guess I am mostly confused why it makes sense to change the kernel
-> Makefiles in order to accomidate a rewrite of the build system in Bazel
-> that isn't planned to be used upstream.
 
-It's just software and so the issues are resolvable, ie I don't think
-bazel should be determining what happens upstream - it motivates me to
-some extent. For the bazel build I need to match the Makefile behavior
-with bits of script called genrule, the scope and quantity of these
-increase with the arch directory model, extra executables to have in
-the build etc. I also imagine cross platform stuff will add
-complexity, like mapping blaze's notions of machine type to those
-introduced in your change. It is all a lot of stuff and I think what's
-in these changes keeps things about as simple as they can be. It'd be
-nice to integrate the best features of both changes and I think some
-of the e_machine stuff here can be added onto your change to get the
-i386/x86-64 case to work. I'm not sold on the complexity of the build
-in your changes though, multiple files, Kbuild and Makefile.syscalls,
-the arch directory not optionally being built, helper executables.
-Ultimately it is the same shell logic in both changes, and your
-previous work laid out all the ground work for this (I'm very grateful
-for it :-) ).
 
-Thanks,
-Ian
+
