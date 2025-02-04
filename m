@@ -1,201 +1,120 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BE178F4A;
-	Tue,  4 Feb 2025 18:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1139078F4A;
+	Tue,  4 Feb 2025 18:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738693515; cv=none; b=f9Bs4CPesx7QkYPz6WqeZLlBGChMZOIdnPPTbF6K/I/iTQrqnw5QdhgPqRnDtZzAAQtD+nlhBGV7qcfXP0loU+sfXDrfIZwUXx5sxQJ+mHDim5YAWfErjLEC64CiAd+sbhRr8UV5w/1ycgP3Mniq6o1QqYW9xmCkiRuYW4mpCN0=
+	t=1738693575; cv=none; b=Lwewy2w7Tbu20pqK2Ct1b+Toj95TVd/yj3GATnPlfvdCB0QSVVg0CTtrWNPuV2TITi0guYn+CZD3oVolZ3oxCcSsPMnCC/nlicm4vo4HRjAlCpqFibdCa7N5haZd8DaHDgGJpwLFcVzCnktqOPEscorvO49kQMleiq9H1Edt5vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738693515; c=relaxed/simple;
-	bh=Ih/INvZDCjTqbRdtGwJE97I8DmetNY+nzTtRbY9RI4o=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=qliosSYWZDla5Q6DOOBIpNlheQxC/Xdn8xPTuvSDb5VOFNtgkKF3+0lp9y0Dnypodzpp7hNYeiQCxmbvpe1Wu8tKKivPb0GhKUxtNpfHsEsL+SzxWBCnHL8GlkwrRFmZHYR/fl08o/tVfK+RwoINXL5EZ6DdW94VKp6vH4SBN2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LmZuY1o5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ceduz7hH; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738693575; c=relaxed/simple;
+	bh=+zZo88fWMpzareMBHzUEcmJzdCa2kVu4nmgqRmPiips=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q6yX9gI48IXAYbpHMjc9DvzfolM63wOPZ6flNc6wGlymZ+hyv7Mdia62CQMfg6HyDfVgbmqO37JsLZ6oB/q+dgQ9kPE0oKLqcq6cTK6v8o9rkuIGhm89CBySOSf9FaPkrw5l3GgjWm+mdWkxXnd3HWWy+1vKJ70zsrmdb4WhhlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWd7zb5p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LmZuY1o5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ceduz7hH"
-Date: Tue, 04 Feb 2025 18:25:10 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738693511;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=h9tFbYkezPHVMN3uSKCz+iPyCmPBwmrlGejhZ4UlaJ4=;
-	b=LmZuY1o5H3lZ+7aVcTWR4SWFDChZeRRc+tak0pFP6IA0phCRIZLpQ9UrGdtUi/hY6H1rFn
-	pGRQqvfkhbzYwTIjlkll+3zpvfEqoi9dyY5ukMZpy012atr1XmreRKvJE+LTxXjKzwmrGf
-	Ff6g1Gf73b6CwOmWuHCvOg0C7jPIVJWV4FXfb2EVq5r5OAnjjK84KWtw6kO0DQUsRI1Eao
-	RHnWkRTJCiNM/aGrAYQDRYhm/Id7z9lWV4qNqq7jdAA8PCvKt7lDppHrNJgr64KUNWcopX
-	JkmpxmE0t8BQDkl7XXqWZm223mTrLCFfBTVAwNuEXQjJf/DvmzT7G9RAeXWmhA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738693511;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=h9tFbYkezPHVMN3uSKCz+iPyCmPBwmrlGejhZ4UlaJ4=;
-	b=Ceduz7hHoSEDDTl3EiiaweLv/IhKGkCU7gjWTBWKf4xn46CHuYscztToaZ/Mg2OUW3wICz
-	EeiFsBhxfXv77nBA==
-From: "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu: Fix #define name for Intel CPU model 0x5A
-Cc: Christian Ludloff <ludloff@gmail.com>, Tony Luck <tony.luck@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWd7zb5p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 492C9C4CEDF;
+	Tue,  4 Feb 2025 18:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738693574;
+	bh=+zZo88fWMpzareMBHzUEcmJzdCa2kVu4nmgqRmPiips=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nWd7zb5pERZeeR8FjBnNkTvN7O7NZTSAhetJB7P3UxTHIoSsul3eR4zZ8MGNZb6Wb
+	 bHzYPX3er6N0iz8LaoUCtEHJ7LDDSLQyCTTj+ncCu6UvyWLbDGd/HOIhJbTMwqkbQh
+	 aLuB3LYuEA6EuoGHCScxC2EF4Wq0sFiP6DVx+nd76Isw5axx/5yHWqJSP5zV/+BNKQ
+	 SNNCEH0z8ncisSl2ZHLGhShmcUzYRDzGy3FiWdS5Rh8x4e5aJMpk/jbUOnpd1HgMTY
+	 89cmA1jC2Ixdl9s86wxIlYOHd1jRtNzsLL0wIwCOBmA4/Yss/sWo+8284Gi9mTXRwg
+	 q8EdK4OD/MS0A==
+Date: Tue, 4 Feb 2025 10:26:09 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Indu Bhagat <indu.bhagat@oracle.com>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
+ .sframe headers
+Message-ID: <20250204182609.ouiy7ppng3rscfpo@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
+ <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
+ <20250124192159.ypvqwoqjvhasamev@jpoimboe>
+ <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
+ <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
+ <20250129020249.owmklacvuvss7z7n@jpoimboe>
+ <CAEf4BzYvrAAJv0+2FceJfizRURUsWxUBzRL-VOquM+VtAe-goA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173869351005.10177.15922683716075278539.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYvrAAJv0+2FceJfizRURUsWxUBzRL-VOquM+VtAe-goA@mail.gmail.com>
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Wed, Jan 29, 2025 at 04:02:34PM -0800, Andrii Nakryiko wrote:
+> On Tue, Jan 28, 2025 at 6:02 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> I'm not sure about this chunked lookup approach for arbitrary user
+> space applications. Those executable sections can be a) big and b)
+> discontiguous. E.g., one of the production binaries I looked at. Here
+> are its three main executable sections:
+> 
+> ...
+>   [17] .bolt.org.text    PROGBITS         000000000b00e640  0ae0d640
+>        0000000011ad621c  0000000000000000  AX       0     0     64
+> ...
+>   [48] .text             PROGBITS         000000001e600000  1ce00000
+>        0000000000775dd8  0000000000000000  AX       0     0     2097152
+>   [49] .text.cold        PROGBITS         000000001ed75e00  1d575e00
+>        00000000007d3271  0000000000000000  AX       0     0     64
+> ...
+> 
+> Total text size is about 300MB:
+> >>> 0x0000000000775dd8 + 0x00000000007d3271 + 0x0000000011ad621c
+> 312603237
+> 
+> Section #17 ends at:
+> 
+> >>> hex(0x0000000011ad621c + 0x000000000b00e640)
+> '0x1cae485c'
+> 
+> While .text starts at 000000001e600000, so we have a gap of ~28MB:
+> 
+> >>> 0x000000001e600000 - 0x1cae485c
+> 28424100
+> 
+> So unless we do something more clever to support multiple
+> discontiguous chunks, this seems like a bad fit for user space.
 
-Commit-ID:     1e66d6cf888fd206a89b8c476b1b28b63faf7fd6
-Gitweb:        https://git.kernel.org/tip/1e66d6cf888fd206a89b8c476b1b28b63faf7fd6
-Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Mon, 07 Oct 2024 09:57:01 -07:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Tue, 04 Feb 2025 10:05:53 -08:00
+Nothing clever needed, we could just have multiple sframe sections, each
+one with a pointer to its text segment.  That would also have the
+benefit of allowing the sframe data to be much more compact for the
+noncontiguous cases.
 
-x86/cpu: Fix #define name for Intel CPU model 0x5A
+> I think having all this just binary searchable is already a big win
+> anyways and should be plenty fast, no?
 
-This CPU was mistakenly given the name INTEL_ATOM_AIRMONT_MID. But it
-uses a Silvermont core, not Airmont.
+Sframe is trying to compete with frame pointers which are MUCH faster.
+3-4x faster in my testing, not including the page faults (which tend to
+only affect performance in the very beginning).
 
-Change #define name to INTEL_ATOM_SILVERMONT_MID2
-
-Reported-by: Christian Ludloff <ludloff@gmail.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/all/20241007165701.19693-1-tony.luck%40intel.com
----
- arch/x86/events/intel/core.c                                   | 2 +-
- arch/x86/include/asm/intel-family.h                            | 2 +-
- arch/x86/kernel/cpu/common.c                                   | 2 +-
- arch/x86/kernel/tsc_msr.c                                      | 2 +-
- drivers/powercap/intel_rapl_common.c                           | 2 +-
- drivers/staging/media/atomisp/include/linux/atomisp_platform.h | 4 ++--
- drivers/thermal/intel/intel_tcc.c                              | 2 +-
- tools/power/x86/turbostat/turbostat.c                          | 2 +-
- 8 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 7601196..8988054 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -6622,7 +6622,7 @@ __init int intel_pmu_init(void)
- 	case INTEL_ATOM_SILVERMONT_D:
- 	case INTEL_ATOM_SILVERMONT_MID:
- 	case INTEL_ATOM_AIRMONT:
--	case INTEL_ATOM_AIRMONT_MID:
-+	case INTEL_ATOM_SILVERMONT_MID2:
- 		memcpy(hw_cache_event_ids, slm_hw_cache_event_ids,
- 			sizeof(hw_cache_event_ids));
- 		memcpy(hw_cache_extra_regs, slm_hw_cache_extra_regs,
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 6d7b04f..8359113 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -149,9 +149,9 @@
- #define INTEL_ATOM_SILVERMONT		IFM(6, 0x37) /* Bay Trail, Valleyview */
- #define INTEL_ATOM_SILVERMONT_D		IFM(6, 0x4D) /* Avaton, Rangely */
- #define INTEL_ATOM_SILVERMONT_MID	IFM(6, 0x4A) /* Merriefield */
-+#define INTEL_ATOM_SILVERMONT_MID2	IFM(6, 0x5A) /* Anniedale */
- 
- #define INTEL_ATOM_AIRMONT		IFM(6, 0x4C) /* Cherry Trail, Braswell */
--#define INTEL_ATOM_AIRMONT_MID		IFM(6, 0x5A) /* Moorefield */
- #define INTEL_ATOM_AIRMONT_NP		IFM(6, 0x75) /* Lightning Mountain */
- 
- #define INTEL_ATOM_GOLDMONT		IFM(6, 0x5C) /* Apollo Lake */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 7cce91b..76598a9 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1164,7 +1164,7 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
- 
- 	VULNWL_INTEL(INTEL_CORE_YONAH,		NO_SSB),
- 
--	VULNWL_INTEL(INTEL_ATOM_AIRMONT_MID,	NO_SSB | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT | MSBDS_ONLY),
-+	VULNWL_INTEL(INTEL_ATOM_SILVERMONT_MID2,NO_SSB | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT | MSBDS_ONLY),
- 	VULNWL_INTEL(INTEL_ATOM_AIRMONT_NP,	NO_SSB | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT),
- 
- 	VULNWL_INTEL(INTEL_ATOM_GOLDMONT,	NO_MDS | NO_L1TF | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO),
-diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
-index deeb028..48e6cc1 100644
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -152,7 +152,7 @@ static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
- 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT,	&freq_desc_byt),
- 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID,	&freq_desc_tng),
- 	X86_MATCH_VFM(INTEL_ATOM_AIRMONT,	&freq_desc_cht),
--	X86_MATCH_VFM(INTEL_ATOM_AIRMONT_MID,	&freq_desc_ann),
-+	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID2,	&freq_desc_ann),
- 	X86_MATCH_VFM(INTEL_ATOM_AIRMONT_NP,	&freq_desc_lgm),
- 	{}
- };
-diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
-index 77d75e1..5ccde39 100644
---- a/drivers/powercap/intel_rapl_common.c
-+++ b/drivers/powercap/intel_rapl_common.c
-@@ -1274,7 +1274,7 @@ static const struct x86_cpu_id rapl_ids[] __initconst = {
- 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT,	&rapl_defaults_byt),
- 	X86_MATCH_VFM(INTEL_ATOM_AIRMONT,	&rapl_defaults_cht),
- 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID, &rapl_defaults_tng),
--	X86_MATCH_VFM(INTEL_ATOM_AIRMONT_MID,	&rapl_defaults_ann),
-+	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID2,&rapl_defaults_ann),
- 	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT,	&rapl_defaults_core),
- 	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_PLUS,	&rapl_defaults_core),
- 	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_D,	&rapl_defaults_core),
-diff --git a/drivers/staging/media/atomisp/include/linux/atomisp_platform.h b/drivers/staging/media/atomisp/include/linux/atomisp_platform.h
-index 0492467..6146555 100644
---- a/drivers/staging/media/atomisp/include/linux/atomisp_platform.h
-+++ b/drivers/staging/media/atomisp/include/linux/atomisp_platform.h
-@@ -172,10 +172,10 @@ void atomisp_unregister_subdev(struct v4l2_subdev *subdev);
- #define IS_BYT	__IS_SOC(INTEL_ATOM_SILVERMONT)
- #define IS_CHT	__IS_SOC(INTEL_ATOM_AIRMONT)
- #define IS_MRFD	__IS_SOC(INTEL_ATOM_SILVERMONT_MID)
--#define IS_MOFD	__IS_SOC(INTEL_ATOM_AIRMONT_MID)
-+#define IS_MOFD	__IS_SOC(INTEL_ATOM_SILVERMONT_MID2)
- 
- /* Both CHT and MOFD come with ISP2401 */
- #define IS_ISP2401 __IS_SOCS(INTEL_ATOM_AIRMONT, \
--			     INTEL_ATOM_AIRMONT_MID)
-+			     INTEL_ATOM_SILVERMONT_MID2)
- 
- #endif /* ATOMISP_PLATFORM_H_ */
-diff --git a/drivers/thermal/intel/intel_tcc.c b/drivers/thermal/intel/intel_tcc.c
-index 8174215..b2a615a 100644
---- a/drivers/thermal/intel/intel_tcc.c
-+++ b/drivers/thermal/intel/intel_tcc.c
-@@ -106,7 +106,7 @@ static const struct x86_cpu_id intel_tcc_cpu_ids[] __initconst = {
- 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_D,		&temp_broadwell),
- 	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID,	&temp_broadwell),
- 	X86_MATCH_VFM(INTEL_ATOM_AIRMONT,		&temp_broadwell),
--	X86_MATCH_VFM(INTEL_ATOM_AIRMONT_MID,		&temp_broadwell),
-+	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID2,	&temp_broadwell),
- 	X86_MATCH_VFM(INTEL_ATOM_AIRMONT_NP,		&temp_broadwell),
- 	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT,		&temp_goldmont),
- 	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_D,		&temp_goldmont),
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 8d5011a..26057af 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -1056,7 +1056,7 @@ static const struct platform_data turbostat_pdata[] = {
- 	 * Missing support for
- 	 * INTEL_ICELAKE
- 	 * INTEL_ATOM_SILVERMONT_MID
--	 * INTEL_ATOM_AIRMONT_MID
-+	 * INTEL_ATOM_SILVERMONT_MID2
- 	 * INTEL_ATOM_AIRMONT_NP
- 	 */
- 	{ 0, NULL },
+-- 
+Josh
