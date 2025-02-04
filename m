@@ -1,197 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6D12165E8;
-	Tue,  4 Feb 2025 17:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB982165E8
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738690519; cv=none; b=dFXOvvHKGENHWZ9ZQ7hszbmLg2My8fJCK2DT+sc/Ug9n9/6yZ3vIA92hBmyvrL9L7VNABtm0Vl2rHc9hZlmgqAtbI2iCF3TMZl95Mlb5lfg7KE7hqfooybMKZZZaXy5GPXAvZ6LFh7VchKaG2u++5MM3yojEHWXRHAh/1QKS3hg=
+	t=1738690527; cv=none; b=XV03xa4WEzviUWWU0MeuFXlXkYgzokPfchZtf/NMhCVMDTy/rZyDVty3eKsF+FGTNQHhHrkteauredPwsAYvaSwNOAMPifMYdo3pisZgVD+Rj3AV03UCrhC5/DaltWvMEdvuNBnvlXgSYqhsI3nk8sDMs3bCMSEg1ctqHLIZ974=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738690519; c=relaxed/simple;
-	bh=edAJD92hFjQk8fjbvzxioatc9um2IkZNk+/tzcDM8p4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PeOta3Pc6o9wAgKOGopkSqWOiLsKs0IORo6axEEinJJS7FvS/hAHNFQhUI7VLBlnjiLaHPDD6DsuTQt10p4YUZHVpUIGlODwUiKHog7G/rXAEEmrX90qU1bDhdF21syhz3bNaAlwj1Ogr5mPhRf4BA0fwV66nBgp1qQepD4Gr/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dsm4X8Hk; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738690527; c=relaxed/simple;
+	bh=zCHNKGA6MIC6IBXzZGco0x6H0vkuSlEA7G+5gjB5WwU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QkggQFklhHxue/v02sI0xj0Bhm3F7qkZlpCS+xpUlSZklRZbLgrwFCo2LUPyssfTXZ79otZgbdwtky9672wTLAKxhUC1Epai4VbHBVxfnS9Zp4ZAOtRDz5XNgIe4Giw8n94l6I16zyzxst3QRKc5808U5KAulPwFeszvkM9HPlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d4+rhr9N; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dsm4X8Hk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738690517; x=1770226517;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=edAJD92hFjQk8fjbvzxioatc9um2IkZNk+/tzcDM8p4=;
-  b=dsm4X8HkmGZRRVndEXeUODKR1LloYDT5lxd9vQYXP+3Kc3U3zXOoP1aM
-   7E0poUQovfpoB/WkFF4HBz3rr2QyGRj1Hk7WAMbMBvAuoDXMs41qEu52r
-   4HBZWNllNenWQlao8MwX8gMBIwEiuVjnONP5SRmAJaxKdqyaDUxmLuzKQ
-   VBzl1cIupxsmB6kzY28oVS8inSoFDfGSXQrFatvp3qeQb2ioS9bTgl3fu
-   jB5rA9oLRdcMehRSiBKmajUijPqcFLuoii7LjRayTuYge9jruLubMiU2k
-   SpdUjAi4ZZGHTO0tEDAd8Uv3SToG4pDitcfFBsu9npDcAsahyzCN32rzm
-   g==;
-X-CSE-ConnectionGUID: K0LzWR/FTyqTOJl3jkXdAw==
-X-CSE-MsgGUID: euzW0rMrRhCdGdt4lrLVag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38930452"
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="38930452"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:35:14 -0800
-X-CSE-ConnectionGUID: GXavZLsESKizsbio/E/Srw==
-X-CSE-MsgGUID: e0b52Ax9SOSm68zuxVJ9gQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147866342"
-Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.244.61])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:35:02 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: luto@kernel.org,
-	xin@zytor.com,
-	kirill.shutemov@linux.intel.com,
-	palmer@dabbelt.com,
-	tj@kernel.org,
-	andreyknvl@gmail.com,
-	brgerst@gmail.com,
-	ardb@kernel.org,
-	dave.hansen@linux.intel.com,
-	jgross@suse.com,
-	will@kernel.org,
-	akpm@linux-foundation.org,
-	arnd@arndb.de,
-	corbet@lwn.net,
-	maciej.wieczor-retman@intel.com,
-	dvyukov@google.com,
-	richard.weiyang@gmail.com,
-	ytcoode@gmail.com,
-	tglx@linutronix.de,
-	hpa@zytor.com,
-	seanjc@google.com,
-	paul.walmsley@sifive.com,
-	aou@eecs.berkeley.edu,
-	justinstitt@google.com,
-	jason.andryuk@amd.com,
-	glider@google.com,
-	ubizjak@gmail.com,
-	jannh@google.com,
-	bhe@redhat.com,
-	vincenzo.frascino@arm.com,
-	rafael.j.wysocki@intel.com,
-	ndesaulniers@google.com,
-	mingo@redhat.com,
-	catalin.marinas@arm.com,
-	junichi.nomura@nec.com,
-	nathan@kernel.org,
-	ryabinin.a.a@gmail.com,
-	dennis@kernel.org,
-	bp@alien8.de,
-	kevinloughlin@google.com,
-	morbo@google.com,
-	dan.j.williams@intel.com,
-	julian.stecklina@cyberus-technology.de,
-	peterz@infradead.org,
-	cl@linux.com,
-	kees@kernel.org
-Cc: kasan-dev@googlegroups.com,
-	x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	llvm@lists.linux.dev,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 03/15] kasan: Vmalloc dense tag-based mode support
-Date: Tue,  4 Feb 2025 18:33:44 +0100
-Message-ID: <a8cfb5d8d93ba48fd5f2defcccac5d758ecd7f39.1738686764.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
-References: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d4+rhr9N"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f032484d4so156215ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:35:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738690525; x=1739295325; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=84XRGI+7lwmGL6GUPwbtH7AhjEYYUVi2GeiyJJ7VXBw=;
+        b=d4+rhr9N7zikIW+KEMZg+mcQTPWn3C3oVbh7IFjp/+E3N9ZO0Vz+GYDjAEb5GoVIDe
+         MzagfKV8ddXD5kBdfbj6vBRUbchPhacBWeKxTQL5c9FamSDkBny5X9kPdpOwBzVsvpNS
+         wvOzTCnf3rKtYIMtnZbmEbKcZMM7/x6kcTtBWXUbFPSV0zS1pjqmaDthXOzCpqfwp0kT
+         3fSZzjsGH1j+XMtop7Q9oBvGHDEv3xBzkZJSLiYAXylwl+UCktgVt/UcHaPDP6AmId3d
+         RaXsirVOZLD96J21TOH5q6jPlGIhOPCwhr04nxwfou3hBJKUgJ+PkZjv3MPSv45GRiT9
+         6WSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738690525; x=1739295325;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=84XRGI+7lwmGL6GUPwbtH7AhjEYYUVi2GeiyJJ7VXBw=;
+        b=BquVUjZrKJ9CPBI0MmfWG5sAOmOzVioqWcoJUq+I6X0x63g6O3NNwyUVJEnmVQQi0z
+         kLiy/Zhuv5GbKMCToUNdST3YFLfs/MALlQn1mp0NiEV4yBYofJaZK/64nEJJa90zxtTC
+         QrwfTgSj7OwrOZAIE+Tpx+H5jKPeX0QtsDM7AM/a5IzqhggamjBNG8DFd45sAys8I2+c
+         L2tWTzNXeVdWWHmhsfe6W8mLgFGyUnXg1E+WYO8NwMNd9OjdZ5RPJYXyGmhkuVLNB20M
+         dEGdYqCjmNf0co5Mg6Wb8PseFxIfUq2rGG6/D+ZyzOJJ5/ZZdA9E4zIGpt3kPtlFWKJp
+         17tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNAuII6J7fRY0qPjdSj5MAE/G3xkHOoOFOiX3vAZDfXj5415hPSfuuOYu/Kh+RSuLFz35rXAu5je1onQU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxbl+9hJ1OzLNt0grPUfsFS+mzwW1QsQh+xZWMN5x810+8o5RpY
+	h70NMQ8KKqjOYQpDCbvCART5D2U0a8EbdA+LqINYqfkQCzgdCusCx6ECXFixbn1WgA/LowFpvhL
+	jZR5tNi8/HxWJ1bN7guI5O1Wf5pOXVmPHtQOq
+X-Gm-Gg: ASbGncuOnxaQhEtDiw3HsJkdApW2lrdjHhsCGNJc7B5WeOej5/FrpqoWAai1f3neSDN
+	HDw9ZTip5eN72v95+W9UE3paKnaLXXibl1zyh8jaLw0YSEcDn8g9Q+v1aYU+oGCVUPiywQyu7
+X-Google-Smtp-Source: AGHT+IHg8SF867Yy+z2GXbKry2r0iDmWlZunHewA79883dWtyyKDj6PGknuUr+EeJwHqGa1SQwzcF0gj8w2TziRSjaE=
+X-Received: by 2002:a17:902:d9ce:b0:215:7ced:9d67 with SMTP id
+ d9443c01a7336-21f005bbe36mr3250755ad.24.1738690524517; Tue, 04 Feb 2025
+ 09:35:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250203223916.1064540-1-almasrymina@google.com>
+ <20250203223916.1064540-3-almasrymina@google.com> <c8dd0458-b0a9-4342-a022-487e73542381@redhat.com>
+In-Reply-To: <c8dd0458-b0a9-4342-a022-487e73542381@redhat.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 4 Feb 2025 09:35:11 -0800
+X-Gm-Features: AWEUYZn1moYHmrXoVYPPn5psMSRlqxODAnsNkR2q6mSq4IS5EB-8iProLqujYec
+Message-ID: <CAHS8izOnrWdPPhVaCFT4f3Vz=YkHyJ5KgnAbuxfR5u-ffkbUxA@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 2/6] selftests: ncdevmem: Implement devmem TCP TX
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski <kuba@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	Neal Cardwell <ncardwell@google.com>, David Ahern <dsahern@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
+	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-To use KASAN with the vmalloc allocator multiple functions are
-implemented that deal with full pages of memory. Many of these functions
-are hardcoded to deal with byte aligned shadow memory regions by using
-__memset().
+On Tue, Feb 4, 2025 at 4:29=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wrot=
+e:
+>
+> On 2/3/25 11:39 PM, Mina Almasry wrote:
+> > Add support for devmem TX in ncdevmem.
+> >
+> > This is a combination of the ncdevmem from the devmem TCP series RFCv1
+> > which included the TX path, and work by Stan to include the netlink API
+> > and refactored on top of his generic memory_provider support.
+> >
+> > Signed-off-by: Mina Almasry <almasrymina@google.com>
+> > Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+>
+> Usually the self-tests are included towards the end of the series, to
+> help reviewers building-up on previous patches knowledge.
+>
 
-With the introduction of the dense mode, tags won't necessarily occupy
-whole bytes of shadow memory if the previously allocated memory wasn't
-aligned to 32 bytes - which is the coverage of one shadow byte.
+I noticed reviewers like to go over docs + selftests in my previous
+series so I thought I'd put them in the beginning. Looks like the
+gambit was not welcome. I'll move the selftests to the end. May also
+move the docs to the end as is customary as well.
 
-Change __memset() calls to kasan_poison(). With dense tag-based mode
-enabled that will take care of any unaligned tags in shadow memory.
+> >  .../selftests/drivers/net/hw/ncdevmem.c       | 300 +++++++++++++++++-
+> >  1 file changed, 289 insertions(+), 11 deletions(-)
+>
+> Why devmem.py is not touched? AFAICS the test currently run ncdevmem
+> only in server (rx) mode, so the tx path is not actually exercised ?!?
+>
 
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
- mm/kasan/kasan.h  |  2 +-
- mm/kasan/shadow.c | 14 ++++++--------
- 2 files changed, 7 insertions(+), 9 deletions(-)
+Yeah, to be honest I have a collection of local bash scripts that
+invoke ncdevmem in different ways for my testing, and I have docs on
+top of ncdevmem.c of how to test; I don't use devmem.py. I was going
+to look at adding test cases to devmem.py as a follow up, if it's OK
+with you, and Stan offered as well on an earlier revision. If not no
+problem, I can address in this series. The only issue is that I have
+some legwork to enable devmem.py on my test setup/distro, but the meat
+of the tests is already included and passing in this series (when
+invoked manually).
 
-diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-index d29bd0e65020..a56aadd51485 100644
---- a/mm/kasan/kasan.h
-+++ b/mm/kasan/kasan.h
-@@ -135,7 +135,7 @@ static inline bool kasan_requires_meta(void)
- 
- #define KASAN_GRANULE_MASK	(KASAN_GRANULE_SIZE - 1)
- 
--#define KASAN_MEMORY_PER_SHADOW_PAGE	(KASAN_GRANULE_SIZE << PAGE_SHIFT)
-+#define KASAN_MEMORY_PER_SHADOW_PAGE	(KASAN_SHADOW_SCALE_SIZE << PAGE_SHIFT)
- 
- #ifdef CONFIG_KASAN_GENERIC
- #define KASAN_PAGE_FREE		0xFF  /* freed page */
-diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
-index 368503f54b87..94f51046e6ae 100644
---- a/mm/kasan/shadow.c
-+++ b/mm/kasan/shadow.c
-@@ -332,7 +332,7 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
- 	if (!page)
- 		return -ENOMEM;
- 
--	__memset((void *)page, KASAN_VMALLOC_INVALID, PAGE_SIZE);
-+	kasan_poison((void *)page, PAGE_SIZE, KASAN_VMALLOC_INVALID, false);
- 	pte = pfn_pte(PFN_DOWN(__pa(page)), PAGE_KERNEL);
- 
- 	spin_lock(&init_mm.page_table_lock);
-@@ -357,9 +357,6 @@ int kasan_populate_vmalloc(unsigned long addr, unsigned long size)
- 	if (!is_vmalloc_or_module_addr((void *)addr))
- 		return 0;
- 
--	shadow_start = (unsigned long)kasan_mem_to_shadow((void *)addr);
--	shadow_end = (unsigned long)kasan_mem_to_shadow((void *)addr + size);
--
- 	/*
- 	 * User Mode Linux maps enough shadow memory for all of virtual memory
- 	 * at boot, so doesn't need to allocate more on vmalloc, just clear it.
-@@ -368,12 +365,12 @@ int kasan_populate_vmalloc(unsigned long addr, unsigned long size)
- 	 * reason.
- 	 */
- 	if (IS_ENABLED(CONFIG_UML)) {
--		__memset((void *)shadow_start, KASAN_VMALLOC_INVALID, shadow_end - shadow_start);
-+		kasan_poison((void *)addr, size, KASAN_VMALLOC_INVALID, false);
- 		return 0;
- 	}
- 
--	shadow_start = PAGE_ALIGN_DOWN(shadow_start);
--	shadow_end = PAGE_ALIGN(shadow_end);
-+	shadow_start = PAGE_ALIGN_DOWN((unsigned long)kasan_mem_to_shadow((void *)addr));
-+	shadow_end = PAGE_ALIGN((unsigned long)kasan_mem_to_shadow((void *)addr + size));
- 
- 	ret = apply_to_page_range(&init_mm, shadow_start,
- 				  shadow_end - shadow_start,
-@@ -546,7 +543,8 @@ void kasan_release_vmalloc(unsigned long start, unsigned long end,
- 	if (shadow_end > shadow_start) {
- 		size = shadow_end - shadow_start;
- 		if (IS_ENABLED(CONFIG_UML)) {
--			__memset(shadow_start, KASAN_SHADOW_INIT, shadow_end - shadow_start);
-+			kasan_poison((void *)region_start, region_start - region_end,
-+				     KASAN_VMALLOC_INVALID, false);
- 			return;
- 		}
- 		apply_to_existing_page_range(&init_mm,
--- 
-2.47.1
-
+--
+Thanks,
+Mina
