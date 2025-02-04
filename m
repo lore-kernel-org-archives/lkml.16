@@ -1,163 +1,235 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A564212D6F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DE821127D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738674275; cv=none; b=P8SRnohY95pm5vGwho1T8cV4x29YpRxwhzXcQy2BRHqpfAbgjM+/9fzQdOZToBdk5jLnNZ9L85W2aIx0apo4UQ+t2z165qCgi/EvgzCBBX82b/RB2wtmwY3BEP2g+HTGmqgNPEmCkrtGFDB7SBGvdztNbzSOI8Em+zvoFVkhujY=
+	t=1738674321; cv=none; b=Lz692Z2leCTlbRxpYdxOrDUycRHZovR5vdvPTpa/pFfEnurmbDchGdoMGREOzbH60JIGS3uK3s5JSL0bGUCJ8R6zicMWMfwpjUGDzl7gBmT4IBppUYcjkO9Yrx7lSIXoZhQKGHu+4XiCtNKN03g2v/x8WxgnWV81KLx8zkwJVNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738674275; c=relaxed/simple;
-	bh=Rgc/f+Wcmo8qz72B+3oz5Ap1lo4OkJi0UE2cbc/5xAc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rm826P0vi9eACHay7lOeMS+ad71sxNoFV4BQ5j0WKBDDsSXQvwC6DwHlXzf+pIab+MSTFfkZeP+gPri9xvjiOuSPewNrD9gNjLY7NvAumZHwZ31VUQCWQRMMD/1vbjkO1YCIJeoU4wYR3ujzS+h+je5URZqfyM56rPd7qa7EcfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ef5Cj+a8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738674321; c=relaxed/simple;
+	bh=i+1q8Zzgvh2Mh3R1+FitBJPqR1dPHazu3ddiTGqitQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=htMEEYCVTRO2LDtNUxTsR2/2bHUCeb5kymvXP1iSt2d4UxbtiUCwV7Ly8Lk0xLt4lr1KVA2n5qIKq9m95+DctjMgqn+1TvUc6b6ZIStxw000ROUM0sIPZp9j8brlgoRegwwC350MJ2AfC+5vIF0r54hb2qobK7fuy3mWVBKhi7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=P4ElE6Np; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ef5Cj+a8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738674272;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pppECrInPH/W14Lxcxk1t62QVheAxKn/rN+YSPe7sKs=;
-	b=Ef5Cj+a8B7xEuFhTNTifX4XzhA0y1c6yGd0RtkA8dv4Iv7aU3/1L2Ymd7eYLCglqxJJfOD
-	3cl/8NWYBohhzD9tHpWiNVUPIWXTduV3qxX9paOr2LBhT4kJCiWLKrq18fq7JpDTO208XR
-	w6jC78KCQDI1g5hOfQFsQ3S5zcfLjcU=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-617-beMGqTf9OEmqxPjXcUGd7g-1; Tue, 04 Feb 2025 08:04:31 -0500
-X-MC-Unique: beMGqTf9OEmqxPjXcUGd7g-1
-X-Mimecast-MFC-AGG-ID: beMGqTf9OEmqxPjXcUGd7g
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7b6e6cf6742so1597702485a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 05:04:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="P4ElE6Np"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab698eae2d9so1109227866b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 05:05:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1738674317; x=1739279117; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3oOyfmyvxD2JRjb/GBBLy3vJNh6/Dw/oGTe4zC+nKbk=;
+        b=P4ElE6Np9zbljPbka/Z0X9bUA/VL9va5WQZt4+NqxyhO4U5D7f7MXQ2jy5sDvE82el
+         ym3EbSibw8A1jSj/QC3Ejxfew8A/7t7oDJIdcaQPqlw0YfrllrjadvpqvSfO+9TuO97H
+         obPsVwhcQg31L/YlG+vYr7aLBlMJzn7vQJzNdHu3PnIPDrNJmQzF7XdhKaiB6mHUpUup
+         KdZKyo/vN9/QDKh+jhQzBT9gABgMQ8JuZRh8CqnHXov+d8xWlgiBMJn1lOZL8lOFRJgv
+         xQ/KSY3LLmjJaIQ2HRSlbUteO15uB7U6zIhLnHwuHp4ZK7uAyfbw3zyTDmhHpoHtFQq+
+         SZ9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738674270; x=1739279070;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1738674317; x=1739279117;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pppECrInPH/W14Lxcxk1t62QVheAxKn/rN+YSPe7sKs=;
-        b=mXJNbzKH0H3odd0kJLnPhqKVjKc/WCO5drZdXpupORfRdBOxlV5ZwYx0BydiAVlb9d
-         v67rYY7INK5/sCzOlBaj4pmS19HnPKYASkI05l6K3ZyELlyVJzNfLV/LkPhJt0Chbma3
-         9prx+iJEopfak6seZNxOtHp2EKjALXns+iN8SPU//8tE8hZzBV/OpugEV2uFJbjF96Xr
-         bhsKsCjNAfmPU0q0iTJqB36biEB0DSZHcMiF0XO6Gwg1LV4aQflujs3Smdz+E6OMqRcA
-         D7jsfoBj5JOVrCd2v8OeU5FStNu+GUuFuuelX/FA2kXapnLEq6WGOWLMMY0b5FHCQZtA
-         kTmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXVNF46hSG0nKuo5DN2xjSX7WYgpoMFK3wVU6SAvFcX3wwt9c8qySiz2LDOkla3jYmlFfyzyUCtNvsA2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyhh1I4UDWUe3c+VXXDo62LuYw0hbVjBNPO4RtzPxZyKRipr3Oz
-	YAxECaiY9LBQOUjp3aL5in4iNvsdXhQD5I5N0jU2kZfyfprrbneHiRpoQqAu/2VXEn14QnyS1VQ
-	Fhb6jX/5Mk8QGBC+nQp1e7w3nXG7et45po4mNwjLYPRzkE9/T4i6HN1ogWO00EA==
-X-Gm-Gg: ASbGncuqrkcHEkEx7XnFyUaQgU1vvFmluoBbm32oY6YfPCPHc+VVoFBeO1ZCW90v7xO
-	tkLj24HD42SP2a0Ck1OWi2n8elzCRPNxi127FbJ8Mg7tZVsFF3N4HAqRH+O+kPnAjwI5mo1tTGx
-	9x6qtvVYRmZPLLpufENgsSRIuQ37/Mn10pisCqhQwDD5tGOwqn/dE9V4t/h3Nb6GO83jqTaHt4l
-	f16Qv2RZggEwlv3JT3fcwqbXMsfT49tPlAEGfaRTKvkM0gmeFL9VkfuZNNq0X7fxxIzFZjy4KuN
-	pvk=
-X-Received: by 2002:a05:620a:488f:b0:7bf:f916:faf3 with SMTP id af79cd13be357-7bffccbfe12mr4155344785a.8.1738674270546;
-        Tue, 04 Feb 2025 05:04:30 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFtDnf7KDOCUoIHnD6D3YYqYvSaIGGXyxEBh30BXHxvtFSgHTGtciLQnkmGdYC3a2+SLIAjBg==
-X-Received: by 2002:a05:620a:488f:b0:7bf:f916:faf3 with SMTP id af79cd13be357-7bffccbfe12mr4155328385a.8.1738674269355;
-        Tue, 04 Feb 2025 05:04:29 -0800 (PST)
-Received: from [10.26.1.93] ([66.187.232.136])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8c8fafsm634050085a.26.2025.02.04.05.04.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 05:04:28 -0800 (PST)
-Message-ID: <b50ade64-21ea-4420-a7ec-5e17ea7f6af7@redhat.com>
-Date: Tue, 4 Feb 2025 08:04:27 -0500
+        bh=3oOyfmyvxD2JRjb/GBBLy3vJNh6/Dw/oGTe4zC+nKbk=;
+        b=K4zdJ93QplTyvZCxB2UHqHSZfmRV9Ewapt7vJnm9gkxStaNQ/GKBxCK6X+Pnc3hUEw
+         jVYDTM2zUvQl0JR7HZp20qkx017aJPfDhGaZIpQmGczE33ZrMKGJ7wPSEgaDoBUcnMtE
+         uNafqqTnq+Q45HM5UTiywjG8einXZxbpR4kdMUwUebj8peaMFwoS85kI1SBSzK/OkeT2
+         ITPjllYKOW8hVKTTv8AGXiQKZ2pDwEtbTyMKaKc4/iqxlmqHTfGBN8+fLopowWrZXQZb
+         rVdjEG4lRx6xV5nehd4jR7f6Awazfnwj/Z1J3cC+WDffeee/FsJT0O0T911De5WkrYCA
+         S/Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnNin09ky9j//Q5uRhk9TzqFYZlQD/SE9+W/ptRiVPG1K7YvARX0exYY72qxQPGtBddQ/C/yrzmDLGT+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsDQyWa7WpkMUbpyq9+Ivt3WwbYgMkWiVg2aj1pFDVt37blnXg
+	iYBs0xa9kK4cJAL9ltjwrkDQ6pvmsdqGuWeMESrQ+F+pBGggyVDuwpk3jNSOt9k=
+X-Gm-Gg: ASbGnctYBQ56wgUD98wRjipYZ8htpPcL1Z4qPX0+CqWzs0q+tyOMppno6ZJ1YC9MVA4
+	27Vlx+LzOlDzlyGmX5cYHwxtjuFGrtI/SQc2fbqeD5eJJ2sko4Db4Tb/ckCNe5XvhD94ktIvwgR
+	SEIoKHXNE0bgf+a6eMfajKs/CxWNP6tX9D3bexhNfPKAbPhkW7Ko5SV0fwe5/+xxYwWEDKfWD3j
+	wZlrj0Iwn+9yhGAfoLf/gUiRNiMHJz6K2RPoc1jEwDYW4PtzVOAL8a7X7h3G4iKSA9JbqkL+QEy
+	K6Fa5L7ZS6+6tgRj9Q==
+X-Google-Smtp-Source: AGHT+IGBl7i7nXlso9tbhlV1G/QjiiNegMs2sz3oHixQqd+gL/Zatt/iwtDjc84jpzxmYuC601DOjA==
+X-Received: by 2002:a17:906:6a24:b0:aa6:aa8e:c89c with SMTP id a640c23a62f3a-ab6cfda42fbmr3356237366b.39.1738674317098;
+        Tue, 04 Feb 2025 05:05:17 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ff269sm914164166b.118.2025.02.04.05.05.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 05:05:16 -0800 (PST)
+Date: Tue, 4 Feb 2025 14:05:15 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: Miroslav Benes <mbenes@suse.cz>, jpoimboe@kernel.org, jikos@kernel.org,
+	joe.lawrence@redhat.com, live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
+Message-ID: <Z6IQi4wpph0dnSD7@pathway.suse.cz>
+References: <20250127063526.76687-1-laoar.shao@gmail.com>
+ <Z5eOIQ4tDJr8N4UR@pathway.suse.cz>
+ <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
+ <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz>
+ <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] intel_idle: introduce 'use_acpi_cst' module parameter
-To: David Arcari <darcari@redhat.com>, dedekind1@gmail.com,
- linux-pm@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
- Jacob Pan <jacob.jun.pan@linux.intel.com>, Len Brown <lenb@kernel.org>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250128141139.2033088-1-darcari@redhat.com>
- <e9188365425d2a4c0dfa7cfa2b17ad3d9fcf2735.camel@gmail.com>
- <afbe2137-398b-4053-93e7-2a03aeb32220@redhat.com>
-Content-Language: en-US
-From: Prarit Bhargava <prarit@redhat.com>
-In-Reply-To: <afbe2137-398b-4053-93e7-2a03aeb32220@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
 
-On 2/4/25 7:52 AM, David Arcari wrote:
+On Mon 2025-02-03 17:44:52, Yafang Shao wrote:
+> On Fri, Jan 31, 2025 at 9:18 PM Miroslav Benes <mbenes@suse.cz> wrote:
+> >
+> > > >
+> > > >   + What exactly is meant by frequent replacements (busy loop?, once a minute?)
+> > >
+> > > The script:
+> > >
+> > > #!/bin/bash
+> > > while true; do
+> > >         yum install -y ./kernel-livepatch-6.1.12-0.x86_64.rpm
+> > >         ./apply_livepatch_61.sh # it will sleep 5s
+> > >         yum erase -y kernel-livepatch-6.1.12-0.x86_64
+> > >         yum install -y ./kernel-livepatch-6.1.6-0.x86_64.rpm
+> > >         ./apply_livepatch_61.sh  # it will sleep 5s
+> > > done
+> >
+> > A live patch application is a slowpath. It is expected not to run
+> > frequently (in a relative sense).
 > 
-> Hi Artem,
-> 
-> On 2/4/25 7:23 AM, Artem Bityutskiy wrote:
->> Hi David,
->>
->> On Tue, 2025-01-28 at 09:11 -0500, David Arcari wrote:
->>
->>> +The ``use_acpi_cst`` module parameter (recognized by ``intel_idle`` 
->>> if the
->>> +kernel has been configured with ACPI support) can be set to make the 
->>> driver
->>> +ignore the per cpu idle states in lieu of ACPI idle states. 
->>> ``use_acpi_cst``
->>> +has no effect if ``no_acpi`` is set).
->>
->> With this change, there will be three parameters:
->>
->> * no_acpi
->> * use_acpi
->> * use_acpi_cst
->>
->> I would like to make the naming as intuitive as possible. We do not 
->> rename the
->> first 2, but for the 3rd one, I think "force_acpi" would be a better 
->> name. Or
->> perhaps "no_native"?
-> 
-> The problem with force_acpi is it is very similar to force_use_acpi 
-> which is what intel_idle.c uses internally:
-> 
+> The frequency isn’t the main concern here; _scalability_ is the key issue.
+> Running livepatches once per day (a relatively low frequency) across all of our
+> production servers (hundreds of thousands) isn’t feasible. Instead, we need to
+> periodically run tests on a subset of test servers.
 
-Given that @Artem is suggesting we change the names of things -- perhaps 
-we should fix "force_use_acpi" as well?
+I am confused. The original problem was a system crash when
+livepatching do_exit() function, see
+https://lore.kernel.org/r/CALOAHbA9WHPjeZKUcUkwULagQjTMfqAdAg+akqPzbZ7Byc=qrw@mail.gmail.com
 
-P.
+The rcu watchdog warning was first mentioned in this patchset.
+Do you see rcu watchdog warning in production or just
+with this artificial test, please?
 
-> drivers/idle/intel_idle.c:module_param_named(use_acpi, force_use_acpi, 
-> bool, 0444);
-> 
-> That said, I am not attached to the 'use_acpi_cst' parameter name.
-> 
->>
->> * no_acpi - Do not use ACPI at all. Only native mode is available, no 
->> ACPI mode.
->> * use_acpi - No-op in ACPI mode, consult ACPI tables for C-states on/off
->>    status in native mode.
->> * force_acpi (or no_native?) - Work only in ACPI mode, no native mode 
->> available
->>    (ignore all custom tables).
->>
->> Additionally, I think we should enhance the documentation for 
->> 'no_acpi' and
->> 'use_acpi' while we're at it. Otherwise, it is hard to distinguish 
->> between these
->> three options. Would you consider another patch that improves the 
->> documentation
->> for 'no_acpi' and 'use_acpi', and then adds the third parameter?
-> 
-> I'm happy to resubmit. I guess I could use 'no_native' for the new 
-> parameter and then update the documentation as you suggest above.
-> 
-> Does that work?
-> 
->>
->> Thanks, Artem!
->>
-> 
-> Best,
-> -DA
-> 
 
+> > If you stress it like this, it is quite
+> > expected that it will have an impact. Especially on a large busy system.
+> 
+> It seems you agree that the current atomic-replace process lacks scalability.
+> When deploying a livepatch across a large fleet of servers, it’s impossible to
+> ensure that the servers are idle, as their workloads are constantly varying and
+> are not deterministic.
+
+Do you see the scalability problem in production, please?
+And could you prove that it was caused by livepatching, please?
+
+
+> The challenges are very different when managing 1K servers versus 1M servers.
+> Similarly, the issues differ significantly between patching a single
+> function and
+> patching 100 functions, especially when some of those functions are critical.
+> That’s what scalability is all about.
+> 
+> Since we transitioned from the old livepatch mode to the new
+> atomic-replace mode,
+
+What do you mean with the old livepatch mode, please?
+
+Did you allow to install more livepatches in parallel?
+What was the motivation to switch to the atomic replace, please?
+
+> our SREs have consistently reported that one or more servers become
+> stalled during
+> the upgrade (replacement).
+
+What is SRE, please?
+Could you please show some log from a production system?
+
+
+> > > > > Other potential risks may also arise
+> > > > >   due to inconsistencies or race conditions during transitions.
+> > > >
+> > > > What inconsistencies and race conditions you have in mind, please?
+> > >
+> > > I have explained it at
+> > > https://lore.kernel.org/live-patching/Z5DHQG4geRsuIflc@pathway.suse.cz/T/#m5058583fa64d95ef7ac9525a6a8af8ca865bf354
+> > >
+> > >  klp_ftrace_handler
+> > >       if (unlikely(func->transition)) {
+> > >           WARN_ON_ONCE(patch_state == KLP_UNDEFINED);
+> > >   }
+> > >
+> > > Why is WARN_ON_ONCE() placed here? What issues have we encountered in the past
+> > > that led to the decision to add this warning?
+> >
+> > A safety measure for something which really should not happen.
+> 
+> Unfortunately, this issue occurs during my stress tests.
+
+I am confused. Do you see the above WARN_ON_ONCE() during your
+stress test? Could you please provide a log?
+
+> > > > The main advantage of the atomic replace is simplify the maintenance
+> > > > and debugging.
+> > >
+> > > Is it worth the high overhead on production servers?
+> >
+> > Yes, because the overhead once a live patch is applied is negligible.
+> 
+> If you’re managing a large fleet of servers, this issue is far from negligible.
+> 
+> >
+> > > Can you provide examples of companies that use atomic replacement at
+> > > scale in their production environments?
+> >
+> > At least SUSE uses it as a solution for its customers. No many problems
+> > have been reported since we started ~10 years ago.
+> 
+> Perhaps we’re running different workloads.
+> Going back to the original purpose of livepatching: is it designed to address
+> security vulnerabilities, or to deploy new features?
+
+We (SUSE) use livepatches only for fixing CVEs and serious bugs.
+
+
+> If it’s the latter, then there’s definitely a lot of room for improvement.
+
+You might be right. I am just not sure whether the hybrid mode would
+be the right solution.
+
+If you have problems with the atomic replace then you might stop using
+it completely and just install more livepatches in parallel.
+
+
+My view:
+
+More livepatches installed in parallel are more prone to
+inconsistencies. A good example is the thread about introducing
+stack order sysfs interface, see
+https://lore.kernel.org/all/AAD198C9-210E-4E31-8FD7-270C39A974A8@gmail.com/
+
+The atomic replace helps to keep the livepatched functions consistent.
+
+The hybrid model would allow to install more livepatches in parallel except
+that one livepatch could be replaced atomically. It would create even
+more scenarios than allowing all livepatches in parallel.
+
+What would be the rules, please?
+
+Which functionality will be livepatched by the atomic replace, please?
+
+Which functionality will be handled by the extra non-replaceable
+livepatches, please?
+
+How would you keep the livepatches consistent, please?
+
+How would you manage dependencies between livepatches, please?
+
+What is the advantage of the hybrid model over allowing
+all livepatches in parallel, please?
+
+Best Regards,
+Petr
