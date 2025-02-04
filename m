@@ -1,165 +1,165 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DDC216380
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70619212D83
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738697241; cv=none; b=IQPqit2SWehtgb3tzx23XbYTTn0/ntnabsEhoVEDtRRUZJzqQ/x99YIDNL6fZFHyhr+gLs3plszOy5UuM5DOSWt7iEbuhGN8b0/2i0iHDNSarc9b2/OYGUzd66csFDfM3JENHWaI7recFeM5I3T0CrDhCqFFIMvFYTzhfquQj20=
+	t=1738697266; cv=none; b=c83NhnALX360ViLoGIXpUbAhKkzUeTtIid8gw3GtYGmJpiLEHYqL46CK5FIZo3/rnxX3mD9ewv3Ut+TstYq+qUhJARnt0Fi12Mxjn6KSVPnCIE4qyxTjznxyRWmnclcIFG9dFiwAuEhFnSkDcvx553xgueR+dAS7riL7VxfEAyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738697241; c=relaxed/simple;
-	bh=zPxLiOkXtzGsjn+GwakusEDM0bh+sGQcblbpxtQvUQw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EASqvDoUaWprt+OEM4nMBKm+ZaImynUDoeU0KGNsL4TIwwLuw1Wz2GAyFSHfSCvUdThHounW1mQLJQcZH1z53c9f2CaNyEXOnUvG/a9682A3F94fsnpjhinRPYWq+bz9ZfyVsVlzvLz2rEKvWorhbpZuk9T6E/yjTkyjp8Vm1bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4aff620b232so1825959137.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:27:17 -0800 (PST)
+	s=arc-20240116; t=1738697266; c=relaxed/simple;
+	bh=CvYBgsQQ2sB2qTH/ispwYnc1GT/UJnN//HUW4OU8uMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WcjLTesvOzWSbQ7mCJDTlWj4w6JKJZjA5ru/Fi9YSTngdcEBg2kkxShhGAR6lIR9IDqWoFBTm91xH94EtaIXQJFZ2Q543lBWuSny9T/RQMTtsYQ8Y9F5aaP27cxvgyp9AWupxuXVkFwnkeg75jOezmAk1npyZHWEnQCo/ThqdzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=YT6TKoqJ; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="YT6TKoqJ"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21f08b44937so12638325ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:27:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1738697264; x=1739302064; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8iOEoCrXIGW4Q927eer0s+nYHhVWh5aiFKVXEGf2lEo=;
+        b=YT6TKoqJ7WsNaU+ANvUyl/P7tTsIpeZaq9xNB6t7fFXo8U4f/ivhuojjWKtYtUZTkY
+         9SUfuxys4+rnRJ9KFDTJBsIWkjCZ1vdpJPGJ8RC2TPjIBNZ5zmluauJHRELBK4ePGuOl
+         kvuoU1APaQ2N+lGzVexTIPtQeL966q2z29lys=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738697236; x=1739302036;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zw3b78cuhWs6gaHyyCJx1BQab0LmoernGKdWe4nH8fo=;
-        b=Y3oKYXQMRezbhPQX9xGJCrXrA1k2F2NMTgPxfe/hZ5nFHbNw2/l7fnh3Gam6In04Fp
-         iY4bCn8etYYkUhkat1psE/j4SJa3sXuGPv5etvQ/iWZni6PvW4255kRbKtfFwvtPPU2e
-         IM3rI5bwrhv0WoyqSwhhfHcQblHG/UAZgdPuI4i75caHK5YOlZjViJ573X+QEklOGIzQ
-         XW+PHAvH5dHnZcToT56+j1n5d4vQQdke/jRzmiNbx4nyaWbh7AKpNkWNOL8uBYIAY+O0
-         4Bd4Zw0iT0ShJcv/mtW/S28FhUfZX/LFTxuy+2EV3qGEYrgb1Yx/YnNEkVR8kDd3aK5T
-         ObLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWw56wyjH2HZl/JSnE98EP6MXSmaVi0lMUbzL8i6tUABb4Jnq2EhFDN/mXRN5ENgQs4UFWmctuHTcVVKEE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTknaEjRTYmfuJSU4XJZXWev1LgKojI0oTLiU9F6fnrl4HyRJA
-	hzRWVgqfNcj1espZSCKHDdPvubccGBRcVnapuwx7KV1+DZy305JfaVj+leQw
-X-Gm-Gg: ASbGncsauiJlQM787jGox7B2Ph2kSx7F3RlCAExo3V61KqGfXm4dlzYoitLWVU2vuMD
-	n9aZB1LQDwtkaj/xNup+PJg39f+AB2lMpVM2CNgX1+JsmX3bR20GPi77aO+J65cB9/TAXBuGT/2
-	TBA6EwzSSNhBu8nQcy+hfLQkwDxLHOXaLxqci2wDIKb+Qbql94CqyxhXPDwcZebTnR/eLeLTXq3
-	K+slTR6Y8zvdqO1OzVh9g9MYT6ihU+SoyTT6RNoyUtfkZEpkDU+ttFSggv5fSWxSKEmwn1IWs4H
-	vPYgPDeVVWqDgT1r3rpKgVNZPgaO03YBv5goOTb4Yw557yedtpwJPg==
-X-Google-Smtp-Source: AGHT+IEaYXr9gZPJ+a01X/GWUdLjOr0XT0AbB1HQO3PQ/9kTSZ9XB+wc61/mT4oAMyAv4TQt98fMCw==
-X-Received: by 2002:a05:6102:54a6:b0:4af:d487:45ef with SMTP id ada2fe7eead31-4ba470aae1fmr331346137.5.1738697236280;
-        Tue, 04 Feb 2025 11:27:16 -0800 (PST)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866941da06asm2053944241.23.2025.02.04.11.27.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 11:27:16 -0800 (PST)
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-8622c3be2f4so1669870241.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:27:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUC7khjxluSS+MePahnDBm9le5Ui+56V3V0pKTlMM3ZtTgp//dX9d6Joytlq3x0/8Z8bXWqCJH+IXh7vgg=@vger.kernel.org
-X-Received: by 2002:a05:6102:3306:b0:4af:fc14:f138 with SMTP id
- ada2fe7eead31-4ba478b3694mr307261137.7.1738697235724; Tue, 04 Feb 2025
- 11:27:15 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738697264; x=1739302064;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8iOEoCrXIGW4Q927eer0s+nYHhVWh5aiFKVXEGf2lEo=;
+        b=s/gR4Psm+6sxmR3L1ZtY0gBBL7YHTQeDDuU04GtJHWghvkDPP4+jdEQujmDg2mrmo0
+         a7vDN/FhKHoO4b6dCtCMfExXrcoLgqxlXyJUW4kiQubSwZBIAaOqxnSPFauFrzS9Mq9e
+         UZhx5dfquRF0/B4lRQlqU/3emwhsTiECxiZuGfG3dtolLyvz8jJBVhOQ1elaU364KRBC
+         rMOKodYKY3trxC+QWuoUEDiAXa1PE7JszRO6NXvRWUsXoIZIm9KK+A6rc/0NiFbq78uh
+         zjmjZYqs2zvQX1JPim59tbKkKrOKuC7ZQl5emiJ96kDFVZ5YQAvNx7MkrOVcXGUnNQZ1
+         b9bg==
+X-Forwarded-Encrypted: i=1; AJvYcCXc63+fN7Z5i03pRRHHvTFYRTUa/x9kTT/QQ3gQSNc2j+d6QmFOH6FrnVH41j5BLkg0ROnmSJ2Ne1TQMwU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRzfsAeOuKWKti55+fDhjRfYkSCKswouVMzMatOIwVUPa0+hd4
+	t1iToKvLQmZoia+UpREOjQvNC3i1chauFgzdWCOvUqYGgbfDFzGTnNWtBMQxTD+TbitF1UYovG/
+	G
+X-Gm-Gg: ASbGncuu3regOwXhpdgAIfO/Dbgp1LRy4ReWRoEAv31kBKCbNvRi7qNNqzCUDr0j0ur
+	KObLRU2L4oj6pFj3sQkubam46SpIgj3TxF5rYAig6Y6zzQO70pzKYUrNPDblq+82Mt3BXaEexc0
+	ovHkqDnDg4D0/tH/OX3hkZNCuyJ0LFeqaRzETwlVAHzwRhNgnz+53Unn71QTifSRR+epWD80dLI
+	wWCIp/yk+ulEUjoEubPWAppunBHanBrfpDdBEUHZ93NBrEFdFYxwz10U9HH4doLAbU2bCiq291k
+	RdmdXQKjw0VQR4cwB7zS8XY=
+X-Google-Smtp-Source: AGHT+IE+7dWcfNLhQTOMhd0Vsf5ukouIeilZjFgIDC26Ks2ade1xUAcue6WYJyYElM16Cq1HmnYHfA==
+X-Received: by 2002:a17:903:2406:b0:215:8dd3:536a with SMTP id d9443c01a7336-21f17e2a49fmr393235ad.4.1738697263622;
+        Tue, 04 Feb 2025 11:27:43 -0800 (PST)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de331ddfdsm99261345ad.210.2025.02.04.11.27.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 11:27:43 -0800 (PST)
+From: Joe Damato <jdamato@fastly.com>
+To: netdev@vger.kernel.org
+Cc: pabeni@redhat.com,
+	edumazet@google.com,
+	sridhar.samudrala@intel.com,
+	Joe Damato <jdamato@fastly.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Mina Almasry <almasrymina@google.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v3] netdev-genl: Elide napi_id when not present
+Date: Tue,  4 Feb 2025 19:27:21 +0000
+Message-ID: <20250204192724.199209-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204-coldfire-spurious-irq-v1-1-b8f28855f690@yoseli.org>
-In-Reply-To: <20250204-coldfire-spurious-irq-v1-1-b8f28855f690@yoseli.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 4 Feb 2025 20:27:03 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXkq57WjUPeg3kTsgi-YSw23qV-gK4gVxymOSKGGTDuQQ@mail.gmail.com>
-X-Gm-Features: AWEUYZlQlNmj76XCoOTX0pCM3TvZkeXSJsqQ37Clwjit-zuQeYs4pDamYCinouQ
-Message-ID: <CAMuHMdXkq57WjUPeg3kTsgi-YSw23qV-gK4gVxymOSKGGTDuQQ@mail.gmail.com>
-Subject: Re: [PATCH] m68k: coldfire: Prevent spurious interrupts when masking IMR
-To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-Cc: Greg Ungerer <gerg@linux-m68k.org>, linux-m68k@lists.linux-m68k.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Jean-Michel,
+There are at least two cases where napi_id may not present and the
+napi_id should be elided:
 
-On Tue, 4 Feb 2025 at 19:38, Jean-Michel Hautbois
-<jeanmichel.hautbois@yoseli.org> wrote:
-> The ColdFire interrupt controller can generate spurious interrupts if an
-> interrupt source is masked in the IMR while the CPU interrupt priority
-> mask (SR[I]) is set lower than the interrupt level.
->
-> The reference manual states:
->
-> To avoid this situation for interrupts sources with levels 1-6, first
-> write a higher level interrupt mask to the status register, before
-> setting the mask in the IMR or the module=E2=80=99s interrupt mask regist=
-er.
-> After the mask is set, return the interrupt mask in the status register
-> to its previous value.
->
-> It can be tested like this:
-> - Prepare a iperf3 server on the coldfire target (iperf3 -s -D)
-> - Start a high priority cyclictest:
->     cyclictest --secaligned -m -p 99 -i 2500 -q
-> - Start iperf3 -c $COLDFIRE_IP -t 0
->
-> After a few seconds the dmesg may display:
-> [   84.784301] irq 24, desc: dbc502da, depth: 1, count: 0, unhandled: 0
-> [   84.784455] ->handle_irq():  0ba0aca3, handle_bad_irq+0x0/0x1e0
-> [   84.784610] ->irq_data.chip(): c6779d4f, 0x41652544
-> [   84.784719] ->action(): 00000000
-> [   84.784770] unexpected IRQ trap at vector 18
->
-> With this patch, I never saw it in a few hours testing.
->
-> Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+1. Queues could be created, but napi_enable may not have been called
+   yet. In this case, there may be a NAPI but it may not have an ID and
+   output of a napi_id should be elided.
 
-Thanks for your patch!
+2. TX-only NAPIs currently do not have NAPI IDs. If a TX queue happens
+   to be linked with a TX-only NAPI, elide the NAPI ID from the netlink
+   output as a NAPI ID of 0 is not useful for users.
 
-> --- a/arch/m68k/coldfire/intc-simr.c
-> +++ b/arch/m68k/coldfire/intc-simr.c
-> @@ -58,6 +58,14 @@ static inline unsigned int irq2ebit(unsigned int irq)
->
->  #endif
->
-> +static inline void intc_irq_setlevel(unsigned long level)
-> +{
-> +       asm volatile ("move.w %0,%%sr"
-> +                     : /* no outputs */
-> +                     : "d" (0x2000 | ((level) << 8))
-> +                     : "memory");
-> +}
-> +
->  /*
->   *     There maybe one, two or three interrupt control units, each has 6=
-4
->   *     interrupts. If there is no second or third unit then MCFINTC1_* o=
-r
-> @@ -67,13 +75,17 @@ static inline unsigned int irq2ebit(unsigned int irq)
->  static void intc_irq_mask(struct irq_data *d)
->  {
->         unsigned int irq =3D d->irq - MCFINT_VECBASE;
-> +       unsigned long flags =3D arch_local_save_flags();
->
-> +       intc_irq_setlevel(7);
+Signed-off-by: Joe Damato <jdamato@fastly.com>
+---
+ v3:
+  - Took Eric's suggested patch to refactor the code to use helpers,
+    which improves the code quality significantly.
 
-Can't all of the above just be replaced by
+ v2: https://lore.kernel.org/netdev/20250203191714.155526-1-jdamato@fastly.com/
+   - Updated to elide NAPI IDs for RX queues which may have not called
+     napi_enable yet.
 
-    unsigned long flags =3D arch_local_irq_save();
+ rfc: https://lore.kernel.org/lkml/20250128163038.429864-1-jdamato@fastly.com/
 
->         if (MCFINTC2_SIMR && (irq > 127))
->                 __raw_writeb(irq - 128, MCFINTC2_SIMR);
->         else if (MCFINTC1_SIMR && (irq > 63))
->                 __raw_writeb(irq - 64, MCFINTC1_SIMR);
->         else
->                 __raw_writeb(irq, MCFINTC0_SIMR);
-> +
-> +       arch_local_irq_restore(flags);
->  }
->
->  static void intc_irq_unmask(struct irq_data *d)
->
+ include/net/busy_poll.h |  5 +++++
+ net/core/netdev-genl.c  | 13 +++++++++----
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-Gr{oetje,eeting}s,
+diff --git a/include/net/busy_poll.h b/include/net/busy_poll.h
+index c39a426ebf52..741fa7754700 100644
+--- a/include/net/busy_poll.h
++++ b/include/net/busy_poll.h
+@@ -24,6 +24,11 @@
+  */
+ #define MIN_NAPI_ID ((unsigned int)(NR_CPUS + 1))
+ 
++static inline bool napi_id_valid(unsigned int napi_id)
++{
++	return napi_id >= MIN_NAPI_ID;
++}
++
+ #define BUSY_POLL_BUDGET 8
+ 
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
+index 715f85c6b62e..5aa3ed870b2c 100644
+--- a/net/core/netdev-genl.c
++++ b/net/core/netdev-genl.c
+@@ -364,6 +364,13 @@ int netdev_nl_napi_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return err;
+ }
+ 
++static int nla_put_napi_id(struct sk_buff *skb, const struct napi_struct *napi)
++{
++	if (napi && napi_id_valid(napi->napi_id))
++		return nla_put_u32(skb, NETDEV_A_QUEUE_NAPI_ID, napi->napi_id);
++	return 0;
++}
++
+ static int
+ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
+ 			 u32 q_idx, u32 q_type, const struct genl_info *info)
+@@ -385,8 +392,7 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
+ 	switch (q_type) {
+ 	case NETDEV_QUEUE_TYPE_RX:
+ 		rxq = __netif_get_rx_queue(netdev, q_idx);
+-		if (rxq->napi && nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
+-					     rxq->napi->napi_id))
++		if (nla_put_napi_id(rsp, rxq->napi))
+ 			goto nla_put_failure;
+ 
+ 		binding = rxq->mp_params.mp_priv;
+@@ -397,8 +403,7 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
+ 		break;
+ 	case NETDEV_QUEUE_TYPE_TX:
+ 		txq = netdev_get_tx_queue(netdev, q_idx);
+-		if (txq->napi && nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
+-					     txq->napi->napi_id))
++		if (nla_put_napi_id(rsp, rxq->napi))
+ 			goto nla_put_failure;
+ 	}
+ 
 
-                        Geert
+base-commit: c2933b2befe25309f4c5cfbea0ca80909735fd76
+-- 
+2.43.0
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
