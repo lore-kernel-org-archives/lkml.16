@@ -1,203 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC56C86349;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9258D8634C;
 	Tue,  4 Feb 2025 01:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738631808; cv=none; b=JAtg0a9raGHeg2g06P81SA8HqeG3jHYVLAaiPPfSan/WrMyWwCIZOva3av974RQgtgdtrfet5c2/8LXJp1Hz+xVGPqefTVvq5JCI96lLEXi4TQY/QaDIDLwnKQibwsB99NEEKL1JDzuFxMJGJwzHpLfMJ5uMDDEUwsiQJH4mWVA=
+	t=1738631810; cv=none; b=EXInpSEYtZ0CaWHnUnEOLB6vbMudnuSGfmX7f2EEiDPxNs/7k7xG85vjjNi0WzhAv+odDGw0rlMtbaXeByr8XtoUMPuR+ecQmoYuupxnQAsxutQHwUxRm2FS67PLGeSBzxX1AvpPEFv4o/f+gbUjYWa5HorunsBAcj64Rk/iOtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738631808; c=relaxed/simple;
-	bh=TusPbK6U6mxyzxl6/yI/szj2/noBuUatiCCqLXwl234=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nou4/DdZpdAsZuNTOWWNJ8vkj8r3B9iYoR4J/ih8ha08l8execG97TjCZK5204MTTzFJ7n+qf+9Is9jymB549GLuFowS93Mo8bRiyD7bP+A3nUAEn+dWdeiKHXur+GiTRiIVAdJqwfxkF8DjNa5RK0b7ZsVFJzV4AeAiCpXXWwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsRlqnBz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738631810; c=relaxed/simple;
+	bh=t6mY+iSXbWxpAaStUvD4LRTVCQsFg5NAG/4wmeLZslo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bej4H7kJoMBfoYPaR/uYstfGRz3/zVfR0P9JtKFSbxdKXtQ2Jw2zLALky2ae+pU0kO/06FqM5f5iqzydgPdrcfxMh1uCIUmZaeGefuZjlYRha0TL/E1RzsgQlzyRCSXVwEXVy883PYdvVHg4cvnJiPPlLIp1MbZWs1eDB3XTa0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SnRc65Eg; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsRlqnBz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81118C4CEE7;
-	Tue,  4 Feb 2025 01:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738631808;
-	bh=TusPbK6U6mxyzxl6/yI/szj2/noBuUatiCCqLXwl234=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZsRlqnBzuzNIhU3gGCni2eIGajAsOus980/v/n83NaWXnxMjpbPvRSTU4dspiO70+
-	 DUDQJsYrAR9otsaQFr4gBdzst5JIG/v6kzNa3GauPBKm1CjtukiAW8/w8beNWD4M9y
-	 K7PJRKNaQQ9AXEbVy9O0xtKoz2JvQsQMwu0WUPVAauUfnoVDpz7cd+pHCT12LqnP9q
-	 06ZjRtSBOMnps9pXkMbULS42S8JG6FB0aMpOqb/S36eWfFJSCMoJJt8UvtNRubPHQa
-	 aNOy4WxqVgSwVpQgg+IxGkG0RIckapIOTUSUIkqFt2g5duNAKY/a5t/5O4955yhlW/
-	 ar0UYx4NhHTlw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Sasha Levin <sashal@kernel.org>,
-	ntfs3@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 1/4] fs/ntfs3: Unify inode corruption marking with _ntfs_bad_inode()
-Date: Mon,  3 Feb 2025 20:16:39 -0500
-Message-Id: <20250204011643.2206417-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SnRc65Eg"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5141Ggds3125061
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Feb 2025 19:16:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738631802;
+	bh=FzsZM9TUUpmiRCyEJvbukX43XE9qo95ptUNKugsisgI=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=SnRc65EgWj4EW18wdHgHo/9dlaw4rrjXWSdE4B9ImSis0VSLn4nuePjhelZFp+GGE
+	 wC5N9otTo903FIXFqC7/nxc2eNyB/4do1LQAthDkCKiosFHG2IypsAERX/CNEsgSf8
+	 QoYhUE8ZDzNVEnj7s8qV0D3vBlGpXNqYrU5tZtNc=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5141GgFK055077
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 3 Feb 2025 19:16:42 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
+ Feb 2025 19:16:42 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 3 Feb 2025 19:16:42 -0600
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5141GfAW024451;
+	Mon, 3 Feb 2025 19:16:42 -0600
+From: Judith Mendez <jm@ti.com>
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>,
+        Hari Nagalla
+	<hnagalla@ti.com>
+Subject: [PATCH v3 8/9] arm64: dts: ti: k3-am62a7-sk: Reserve main_timer2 for C7x DSP
+Date: Mon, 3 Feb 2025 19:16:40 -0600
+Message-ID: <20250204011641.1523561-9-jm@ti.com>
+X-Mailer: git-send-email 2.48.0
+In-Reply-To: <20250204011641.1523561-1-jm@ti.com>
+References: <20250204011641.1523561-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.12
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+From: Hari Nagalla <hnagalla@ti.com>
 
-[ Upstream commit 55ad333de0f80bc0caee10c6c27196cdcf8891bb ]
+C7x DSP uses main_timer2, so mark it as reserved in linux DT.
 
-Also reworked error handling in a couple of places.
-
-Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+Signed-off-by: Judith Mendez <jm@ti.com>
 ---
- fs/ntfs3/attrib.c  |  4 ++--
- fs/ntfs3/dir.c     |  2 +-
- fs/ntfs3/frecord.c | 12 +++++++-----
- fs/ntfs3/fsntfs.c  |  6 +++++-
- fs/ntfs3/index.c   |  6 ++----
- fs/ntfs3/inode.c   |  3 +++
- 6 files changed, 20 insertions(+), 13 deletions(-)
+Changes since v2:
+- No change
+---
+ arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/ntfs3/attrib.c b/fs/ntfs3/attrib.c
-index 8d789b017fa9b..da1a9312e61a0 100644
---- a/fs/ntfs3/attrib.c
-+++ b/fs/ntfs3/attrib.c
-@@ -1406,7 +1406,7 @@ int attr_wof_frame_info(struct ntfs_inode *ni, struct ATTRIB *attr,
- 	 */
- 	if (!attr->non_res) {
- 		if (vbo[1] + bytes_per_off > le32_to_cpu(attr->res.data_size)) {
--			ntfs_inode_err(&ni->vfs_inode, "is corrupted");
-+			_ntfs_bad_inode(&ni->vfs_inode);
- 			return -EINVAL;
- 		}
- 		addr = resident_data(attr);
-@@ -2587,7 +2587,7 @@ int attr_force_nonresident(struct ntfs_inode *ni)
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+index eaffbab093cc1..f03b06b7de51d 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+@@ -679,6 +679,11 @@ &main_uart1 {
+ 	status = "reserved";
+ };
  
- 	attr = ni_find_attr(ni, NULL, &le, ATTR_DATA, NULL, 0, NULL, &mi);
- 	if (!attr) {
--		ntfs_bad_inode(&ni->vfs_inode, "no data attribute");
-+		_ntfs_bad_inode(&ni->vfs_inode);
- 		return -ENOENT;
- 	}
- 
-diff --git a/fs/ntfs3/dir.c b/fs/ntfs3/dir.c
-index fc6a8aa29e3af..b6da80c69ca63 100644
---- a/fs/ntfs3/dir.c
-+++ b/fs/ntfs3/dir.c
-@@ -512,7 +512,7 @@ static int ntfs_readdir(struct file *file, struct dir_context *ctx)
- 		ctx->pos = pos;
- 	} else if (err < 0) {
- 		if (err == -EINVAL)
--			ntfs_inode_err(dir, "directory corrupted");
-+			_ntfs_bad_inode(dir);
- 		ctx->pos = eod;
- 	}
- 
-diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
-index c33e818b3164c..175662acd5eaf 100644
---- a/fs/ntfs3/frecord.c
-+++ b/fs/ntfs3/frecord.c
-@@ -148,8 +148,10 @@ int ni_load_mi_ex(struct ntfs_inode *ni, CLST rno, struct mft_inode **mi)
- 		goto out;
- 
- 	err = mi_get(ni->mi.sbi, rno, &r);
--	if (err)
-+	if (err) {
-+		_ntfs_bad_inode(&ni->vfs_inode);
- 		return err;
-+	}
- 
- 	ni_add_mi(ni, r);
- 
-@@ -238,8 +240,7 @@ struct ATTRIB *ni_find_attr(struct ntfs_inode *ni, struct ATTRIB *attr,
- 	return attr;
- 
- out:
--	ntfs_inode_err(&ni->vfs_inode, "failed to parse mft record");
--	ntfs_set_state(ni->mi.sbi, NTFS_DIRTY_ERROR);
-+	_ntfs_bad_inode(&ni->vfs_inode);
- 	return NULL;
- }
- 
-@@ -330,6 +331,7 @@ struct ATTRIB *ni_load_attr(struct ntfs_inode *ni, enum ATTR_TYPE type,
- 	    vcn <= le64_to_cpu(attr->nres.evcn))
- 		return attr;
- 
-+	_ntfs_bad_inode(&ni->vfs_inode);
- 	return NULL;
- }
- 
-@@ -1604,8 +1606,8 @@ int ni_delete_all(struct ntfs_inode *ni)
- 		roff = le16_to_cpu(attr->nres.run_off);
- 
- 		if (roff > asize) {
--			_ntfs_bad_inode(&ni->vfs_inode);
--			return -EINVAL;
-+			/* ni_enum_attr_ex checks this case. */
-+			continue;
- 		}
- 
- 		/* run==1 means unpack and deallocate. */
-diff --git a/fs/ntfs3/fsntfs.c b/fs/ntfs3/fsntfs.c
-index 0fa636038b4e4..6c73e93afb478 100644
---- a/fs/ntfs3/fsntfs.c
-+++ b/fs/ntfs3/fsntfs.c
-@@ -908,7 +908,11 @@ void ntfs_bad_inode(struct inode *inode, const char *hint)
- 
- 	ntfs_inode_err(inode, "%s", hint);
- 	make_bad_inode(inode);
--	ntfs_set_state(sbi, NTFS_DIRTY_ERROR);
-+	/* Avoid recursion if bad inode is $Volume. */
-+	if (inode->i_ino != MFT_REC_VOL &&
-+	    !(sbi->flags & NTFS_FLAGS_LOG_REPLAYING)) {
-+		ntfs_set_state(sbi, NTFS_DIRTY_ERROR);
-+	}
- }
- 
- /*
-diff --git a/fs/ntfs3/index.c b/fs/ntfs3/index.c
-index 9089c58a005ce..7eb9fae22f8da 100644
---- a/fs/ntfs3/index.c
-+++ b/fs/ntfs3/index.c
-@@ -1094,8 +1094,7 @@ int indx_read(struct ntfs_index *indx, struct ntfs_inode *ni, CLST vbn,
- 
- ok:
- 	if (!index_buf_check(ib, bytes, &vbn)) {
--		ntfs_inode_err(&ni->vfs_inode, "directory corrupted");
--		ntfs_set_state(ni->mi.sbi, NTFS_DIRTY_ERROR);
-+		_ntfs_bad_inode(&ni->vfs_inode);
- 		err = -EINVAL;
- 		goto out;
- 	}
-@@ -1117,8 +1116,7 @@ int indx_read(struct ntfs_index *indx, struct ntfs_inode *ni, CLST vbn,
- 
- out:
- 	if (err == -E_NTFS_CORRUPT) {
--		ntfs_inode_err(&ni->vfs_inode, "directory corrupted");
--		ntfs_set_state(ni->mi.sbi, NTFS_DIRTY_ERROR);
-+		_ntfs_bad_inode(&ni->vfs_inode);
- 		err = -EINVAL;
- 	}
- 
-diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
-index be04d2845bb7b..a1e11228dafd0 100644
---- a/fs/ntfs3/inode.c
-+++ b/fs/ntfs3/inode.c
-@@ -410,6 +410,9 @@ static struct inode *ntfs_read_mft(struct inode *inode,
- 	if (!std5)
- 		goto out;
- 
-+	if (is_bad_inode(inode))
-+		goto out;
++/* main_timer2 is used by C7x DSP */
++&main_timer2 {
++	status = "reserved";
++};
 +
- 	if (!is_match && name) {
- 		err = -ENOENT;
- 		goto out;
+ &usbss0 {
+ 	status = "okay";
+ 	ti,vbus-divider;
 -- 
-2.39.5
+2.48.0
 
