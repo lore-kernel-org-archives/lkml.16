@@ -1,149 +1,207 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130EF215170
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85222215170;
+	Tue,  4 Feb 2025 16:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738685125; cv=none; b=iwCcXpir+6qiaKkjhe48Bgx3pkOeD1BIN588SM34G73afPuRGQJ1q5BvponqOvnxvT+GdlHyTHp8pmozAocxAjyzfuza6AwjBgFt2SihAWqIIruT/wQIKVaMq6qa10X+kH24YDgqsYokgiXnPf1FV+Bk3apTX1mB5NldA+JIndw=
+	t=1738685132; cv=none; b=a2yoNhbSm3EzAEyGzQN94RPYNFG60C/N+6tQEwTJNI/sGu1wVX5BVvsav0SptbI+OUFDx5X5cWJsPOXmKfiL11BtIcNyHK11ug9BBt+CLmb9GOHDf70uyBBlkG8M2+JYqhMCCXWmCJye5qsNkaDnmMgdJ3AYAP+X+j3MRn57OyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738685125; c=relaxed/simple;
-	bh=9S/Jsl9iZrO+/Bup4Wa899HOJVXQVIorM6lS3gKkxpg=;
+	s=arc-20240116; t=1738685132; c=relaxed/simple;
+	bh=OCx239IGh68nwsquoNZ7VjPkxBUsFQuyTB7CSMQBMNo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mQgt3294QD8zz+2YsejapRPn8VtrnpaS096Eh3kDHl2yjCDdGJKQbnQqBsZ9WizLvE6NWx5SZusvvlNGAYzLSea0R7Fep65yM6kEn0fDgJ4tm3SdKxhjQ0WZD0WuCo2S/T0YjwIHORvmQtQofwrRYWS+si5pFy82DBJ+gTGgAyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yo29/5VJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=WPJyXCB5dvyUFSLOCOg6hCil/c+fEgxm+JCf9ntemAIKQlnBnPLvNDDFySwm5o1n3YKPJbvkMeWM88d5hml5u1ROW7Ow96x9ufbffC1t/idspbPx0dlTAOlN1cA3mPdNB2el0bLHnP6btz8H9wsoXOkpg1/SlrylLGc4r6Tm2HU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r33CR2ly; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yo29/5VJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738685122;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9S/Jsl9iZrO+/Bup4Wa899HOJVXQVIorM6lS3gKkxpg=;
-	b=Yo29/5VJUkJFDOFkDIbzmnuqmDMuOMaL/iTU/GAuNGAUUlx0tQADPHmUqv780icGK8cDAT
-	MCus7k47XuF3VoKYMwEVJZcz0F0lmgFeBdMyo+rV0g3s60pyqqP6uchcblmiBGpZyzNoha
-	6q8oCgSB+0VkSgBtpECO4PcBi8Vy28U=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-658-uQOU2zDmOBmwONWaEYx9Ow-1; Tue, 04 Feb 2025 11:05:20 -0500
-X-MC-Unique: uQOU2zDmOBmwONWaEYx9Ow-1
-X-Mimecast-MFC-AGG-ID: uQOU2zDmOBmwONWaEYx9Ow
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4361a8fc3bdso29190675e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 08:05:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738685119; x=1739289919;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9S/Jsl9iZrO+/Bup4Wa899HOJVXQVIorM6lS3gKkxpg=;
-        b=hYAaPw9sCgp69UAtpN9U37xZuWTKisqhrSAWENIvVEgM4WDSVokp21VRePn8Q+R790
-         H77rC9uOFdZLRRIKa5OAfZ8DJuIE5kRpUi5xCbyxPi2xgYhuy6OPMSt35E/VOkPMfsoL
-         RxEP1XhuFsantWauT2o3DeaamwSMArPZo5x3sYxm8RN+c5rVOrfyBPAngrU7X2uA4DaK
-         el8MW/7Uzk3EW8CrXakfORzKR5/3Ot2fqGyhtIyWVFuuFW78g0csXYYlPbUOvNARcPIA
-         XBFU1erhvBTd6zrzPmMkUWKljF4X6fgSOo/osaWKjf27dSHfmnO32IoODyqg8fKm2Np0
-         32RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+8vz9O2OD6Kfgg/F3FIWwYpQIIJZI17dsZ3dfx/6yNTrVXgOWrrq0TW1WAIGNivVc/uHXTnG7bzKkZ4A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVlsCmyeUc9s116j4AZAgfIpYMcCDJjWZegxO6fVuEbqsNcWQz
-	xsCUSDZ989bg+jN11BByq8e28HZF7vqkJz1xpmvoUsJRT6qGS20cuSISS9rX9F5s9ACdNYIMljj
-	edv5Z2PdrhUslHeMoc1wrfchZu/0qq4wSVkOb/zrR/PPWdIWraUesSB+D/U5ramVI5ZnX8etTEQ
-	tWexfOqfsYASW4uIn1tEYoqgrmys5yk2YOfX4Q
-X-Gm-Gg: ASbGncvnwzTtBmlwCebP4KvKVX1aca+WkBDtClvo9zIdtDbS29z3z4wLNgcHOlBjsg9
-	knOyvIoSNlZy/LrHtheJX7Indzt99IuH1rG1onAfukbximjiVlwfOhYt2H0lP
-X-Received: by 2002:a05:6000:1869:b0:38d:af20:5f25 with SMTP id ffacd0b85a97d-38daf206192mr1976757f8f.29.1738685118860;
-        Tue, 04 Feb 2025 08:05:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEwaWzXVak280B85ArrjCFrUz02WwwEtsT242TiysJbuk+XtRUVzfEto4aIoAc0mUfIQAQs1mQgLIMWq94LkmM=
-X-Received: by 2002:a05:6000:1869:b0:38d:af20:5f25 with SMTP id
- ffacd0b85a97d-38daf206192mr1976690f8f.29.1738685118379; Tue, 04 Feb 2025
- 08:05:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r33CR2ly"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67274C4CEE6;
+	Tue,  4 Feb 2025 16:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738685132;
+	bh=OCx239IGh68nwsquoNZ7VjPkxBUsFQuyTB7CSMQBMNo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=r33CR2lybrTsdcDjY2Xw8XQ3gcwWucNtBSS+XOjyrQuR1N+mK34QExRJdtssGX7BA
+	 Izb7c1m3BKqVsIWPOfeyWXVP5IxibkUOpd87E6jWl5CRVY03rZW9EfJ3jR/fro/0R4
+	 c7UAqzIpyjRYyLUisytVm4PdYoDSgti/KGG0Q2LRrxr5timppb5OPMAo8z6l9OqpHt
+	 T/cPrEIAoQOtzuh2PQKmUKIjNDRkO5EwV1D/m9orm7JLJiNN7CcH362o8R3Mi2kf/o
+	 f5s41IijR27VnLEiQbdE91ry0gfB4xySi1Mm8/BsW/br+RcG3d0rLGsFzg4IAY5ik7
+	 RZxr7JCnmKo0g==
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-71e3005916aso1429645a34.2;
+        Tue, 04 Feb 2025 08:05:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU8EVhR4x6J4wNFeEJf28v4U4nJJrqvqi44prILMfyZhF7uKPhEhWQIrYi9nEGXYZnxGcXgRN9uFJs=@vger.kernel.org, AJvYcCUy2StnOO8FKiLRpgGRsGeMm6An+8LGWm1Zimzq70rbKoBjGVI/TyW8mLEnNRTaEPwd5WeK36h84ylvoi4=@vger.kernel.org, AJvYcCWKkfb3tK6TcYinfhshHKOzA+9fkPyqjprMq0RxuYR8Iv0pE6G+3Fuopb3JBsMsV93FKFt7oo/clBok@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDnkV9JuC5NLYi19R/xOl5AyausvQesUscAIN4HYNM30kzSS7D
+	o0xhtqlXwlRLhJXAxOgZx3C23vgLWX/dCE8WhsVgtiRWobDncXTfQtDJdp21siNRW+Lm4s3BJFB
+	BZ20xoKrgCD4zgDQSbHOkYGL+DL0=
+X-Google-Smtp-Source: AGHT+IEsZ2eZgax5bljmcu3QeYpQBxJJGuPrxmGrR5IsY/dDc66Wpzviavvj+rsdVsXuSy4TnbvsrwkvidUyThA+nyc=
+X-Received: by 2002:a05:6830:7309:b0:718:615:462d with SMTP id
+ 46e09a7af769-72656781c5amr17940139a34.13.1738685131592; Tue, 04 Feb 2025
+ 08:05:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250124163741.101568-1-pbonzini@redhat.com> <CAHk-=wg4Wm4x9GoUk6M8BhLsrhLj4+n8jA2Kg8XUQF=kxgNL9g@mail.gmail.com>
- <20250126142034.GA28135@redhat.com> <CAHk-=wiOSyfW3sgccrfVtanZGUSnjFidSbaP3tg9wapydb-u6g@mail.gmail.com>
- <20250126185354.GB28135@redhat.com> <CAHk-=wiA7wzJ9TLMbC6vfer+0F6S91XghxrdKGawO6uMQCfjtQ@mail.gmail.com>
- <20250127140947.GA22160@redhat.com> <CABgObfaar9uOx7t6vR0pqk6gU-yNOHX3=R1UHY4mbVwRX_wPkA@mail.gmail.com>
- <20250204-liehen-einmal-af13a3c66a61@brauner>
-In-Reply-To: <20250204-liehen-einmal-af13a3c66a61@brauner>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Tue, 4 Feb 2025 17:05:06 +0100
-X-Gm-Features: AWEUYZm64mwKLg6NjahAsD5Hi2sO80t05w3PJ4Q7RlO6xle2aHkFrCzoMQbba_M
-Message-ID: <CABgObfaBizrwP6mh82U20Y0h9OwYa6OFn7QBspcGKak2r+5kUw@mail.gmail.com>
-Subject: Re: [GIT PULL] KVM changes for Linux 6.14
-To: Christian Brauner <brauner@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org
+References: <CAJZ5v0iKmynOQ5vKSQbg1J_FmavwZE-nRONovOZ0mpMVauheWg@mail.gmail.com>
+ <CAJZ5v0i=yBSFW82E=s=mx7ztVzmnoUwbxkDRnYyDztAWK9VcsQ@mail.gmail.com>
+ <9aa469fd-da5b-70fc-147e-dd4a50cf5af6@linux.intel.com> <CAJZ5v0j157A=v6S8X4+QXRrmUfk2uN5DkRJ5RXd4e4o3hVucqg@mail.gmail.com>
+ <f903a3fb-5f5a-0bc9-92cf-34d151d234dc@linux.intel.com>
+In-Reply-To: <f903a3fb-5f5a-0bc9-92cf-34d151d234dc@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 4 Feb 2025 17:05:20 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gq2Nm18ChtXn09cv-jDA9JU9jRtuSOU=Q_j3+p-Z87Tw@mail.gmail.com>
+X-Gm-Features: AWEUYZk0DdoO7j37JzSu40CQglN7fLNs5fT4Y7EUBV2Hvue3yyNBtbBcOGUsy58
+Message-ID: <CAJZ5v0gq2Nm18ChtXn09cv-jDA9JU9jRtuSOU=Q_j3+p-Z87Tw@mail.gmail.com>
+Subject: Re: [Regression in 6.14-rc1] System suspend/resume broken by PCI
+ commit 1db806ec06b7c
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Jian-Hong Pan <jhp@endlessos.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Linux PM <linux-pm@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	"Thorsten Leemhuis (regressions address)" <regressions@leemhuis.info>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 4, 2025 at 3:19=E2=80=AFPM Christian Brauner <brauner@kernel.or=
-g> wrote:
+On Tue, Feb 4, 2025 at 4:54=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
 >
-> On Mon, Jan 27, 2025 at 04:15:01PM +0100, Paolo Bonzini wrote:
-> > On Mon, Jan 27, 2025 at 3:10=E2=80=AFPM Oleg Nesterov <oleg@redhat.com>=
- wrote:
-> > > On 01/26, Linus Torvalds wrote:
-> > > > On Sun, 26 Jan 2025 at 10:54, Oleg Nesterov <oleg@redhat.com> wrote=
-:
+> On Tue, 4 Feb 2025, Rafael J. Wysocki wrote:
+>
+> > Hi Ilpo,
+> >
+> > On Tue, Feb 4, 2025 at 8:48=E2=80=AFAM Ilpo J=C3=A4rvinen
+> > <ilpo.jarvinen@linux.intel.com> wrote:
+> > >
+> > > On Mon, 3 Feb 2025, Rafael J. Wysocki wrote:
+> > >
+> > > > On Mon, Feb 3, 2025 at 9:12=E2=80=AFPM Rafael J. Wysocki <rafael@ke=
+rnel.org> wrote:
 > > > > >
-> > > > > I don't think we even need to detect the /proc/self/ or /proc/sel=
-f-thread/
-> > > > > case, next_tid() can just check same_thread_group,
+> > > > > Hi,
+> > >
+> > > Hi Rafael,
+> > >
+> > > > > The following commit:
+> > > > >
+> > > > > commit 1db806ec06b7c6e08e8af57088da067963ddf117
+> > > > > Author: Jian-Hong Pan <jhp@endlessos.org>
+> > > > > Date:   Fri Nov 15 15:22:02 2024 +0800
+> > > > >
+> > > > >    PCI/ASPM: Save parent L1SS config in pci_save_aspm_l1ss_state(=
+)
+> > > > >
+> > > > >    After 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability=
+ for
+> > > > >    suspend/resume"), pci_save_aspm_l1ss_state(dev) saves the L1SS=
+ state for
+> > > > >    "dev", and pci_restore_aspm_l1ss_state(dev) restores the state=
+ for both
+> > > > >    "dev" and its parent.
+> > > > >
+> > > > >    The problem is that unless pci_save_state() has been used in s=
+ome other
+> > > > >    path and has already saved the parent L1SS state, we will rest=
+ore junk to
+> > > > >    the parent, which means the L1 Substates likely won't work cor=
+rectly.
+> > > > >
+> > > > >    Save the L1SS config for both the device and its parent in
+> > > > >    pci_save_aspm_l1ss_state().  When restoring, we need both beca=
+use L1SS must
+> > > > >    be enabled at the parent (the Downstream Port) before being en=
+abled at the
+> > > > >    child (the Upstream Port).
+> > > > >
+> > > > >    Link: https://lore.kernel.org/r/20241115072200.37509-3-jhp@end=
+lessos.org
+> > > > >    Fixes: 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capabilit=
+y for
+> > > > > suspend/resume")
+> > > > >    Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+> > > > >    Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.co=
+m>
+> > > > >    Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> > > > >    [bhelgaas: parallel save/restore structure, simplify commit lo=
+g, patch at
+> > > > >    https://lore.kernel.org/r/20241212230340.GA3267194@bhelgaas]
+> > > > >    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > > >    Tested-by: Jian-Hong Pan <jhp@endlessos.org> # Asus B1400CEAE
+> > > > >
+> > > > > broke system suspend/resume on my Dell XPS13 9360.  It doesn't ev=
+en
+> > > > > pass suspend/resume testing after "echo devices > /sys/power/pm_t=
+est".
+> > > > >
+> > > > > It looks like PCIe links are all down during resume after the abo=
+ve
+> > > > > commit, but it is rather hard to collect any data in that state.
+> > > > >
+> > > > > Reverting the above commit on top of 6.14-rc1 makes things work a=
+gain,
+> > > > > no problem.
+> > > > >
+> > > > > I'm unsure what exactly the problem is ATM, but I'm going to chec=
+k a
+> > > > > couple of theories.
 > > > >
-> > > > That was my thinking yes.
+> > > > The attached change makes it work again, FWIW, but moving the
+> > > > parent->l1ss check alone below the pdev l1ss saving doesn't help.
 > > > >
-> > > > If we exclude them from /proc/*/task entirely, I'd worry that it wo=
-uld
-> > > > hide it from some management tool and be used for nefarious purpose=
-s
+> > > > So it is either the parent check against NULL or the
+> > > > pcie_downstream_port(pdev) one that breaks it.  I guess the former,
+> > > > but I'll test it tomorrow.
 > > >
-> > > Agreed,
-> > >
-> > > > (even if they then show up elsewhere that the tool wouldn't look at=
-).
-> > >
-> > > Even if we move them from /proc/*/task to /proc ?
+> > > Neither of those is the root cause
 > >
-> > Indeed---as long as they show up somewhere, it's not worse than it
-> > used to be. The reason why I'd prefer them to stay in /proc/*/task is
-> > that moving them away at least partly negates the benefits of the
-> > "workers are children of the starter" model. For example it
-> > complicates measuring their cost within the process that runs the VM.
-> > Maybe it's more of a romantic thing than a real practical issue,
-> > because in the real world resource accounting for VMs is done via
-> > cgroups. But unlike the lazy creation in KVM, which is overall pretty
-> > self-contained, I am afraid the ugliness in procfs would be much worse
-> > compared to the benefit, if there's a benefit at all.
+> > Well, not quite.
 > >
-> > > Perhaps, I honestly do not know what will/can confuse userspace more.
+> > > but it's bit hard to see from the code
+> > > itself because the parent->saved_state check your test patch also rem=
+oved
 > >
-> > At the very least, marking workers as "Kthread: 1" makes sense and
-> > should not cause too much confusion. I wouldn't go beyond that unless
-> > we get more reports of similar issues, and I'm not even sure how
-> > common it is for userspace libraries to check for single-threadedness.
+> > My patch hasn't removed that check.
 >
-> Sorry, just saw this thread now.
+> Ah, I'm sorry, I read too quickly and assumed the first checks were just
+> moved to where the parent->state_saved check is, replacing it.
 >
-> What if we did what Linus suggests and hide (odd) user workers from
-> /proc/<pid>/task/* but also added /proc/<pid>/workers/*. The latter
-> would only list the workers that got spawned by the kernel for that
-> particular task? This would acknowledge their somewhat special status
-> and allow userspace to still detect them as "Hey, I didn't actually
-> spawn those, they got shoved into my workload by the kernel for me.".
+> > Besides, suspend/resume works on my system without commit
+> > 1db806ec06b7c6e0 and the parent->saved_state only affects the parent,
+> > so it clearly cannot be the culprit here.
+> >
+> > > looks very logical on a glance (but that's the problematic line).
+> > >
+> > > The fix is already here with the explanation:
+> > >
+> > > https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen=
+@linux.intel.com/T/#u
+> >
+> > So it turns out that the minimum fux that works here is what I posted.
+> > That is, the upfront pcie_downstream_port(pdev) check needs to be
+> > dropped and the !parent check needs to be moved after saving the
+> > pdev's state.
+> >
+> > IOW, it looks like on this platform, it is necessary to save the l1ss
+> > state for a Root Port.
+>
+> The restore side, though, does also contains that pcie_downstream_port()
+> so nothing would be restored.
+>
+> Could a downstream component attempt to restore L1SS config while never
+> having called the save beforehand? In such case your patch would make som=
+e
+> meaningful difference which could explain the outcome.
 
-Wouldn't the workers then disappear completely from ps, top or other
-tools that look at /proc/$PID/task? That seems a bit too underhanded
-towards userspace...
+Interestingly enough, removing the parent->saved_state check alone
+does help too.
 
-Paolo
+What appears to happen is that after adding the upfront
+pcie_downstream_port(pdev) and !parent checks, it is now necessary to
+save the L1SS state of the parent along the L1SS state of the child,
+because it will not be saved otherwise.
 
-> (Another (ugly) alternative would be to abuse prctl() and have workloads
-> opt-in to hiding user workers from /proc/<pid>/task/.)
+I'm assuming that the fix mentioned above is on its way to the
+mainline, so problem solved.
 
+Thanks!
