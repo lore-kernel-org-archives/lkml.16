@@ -1,209 +1,160 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2FE20D508
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F46020CCF0
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738671189; cv=none; b=DEAKX81MWD3Kw+c3FQHOumjpzTMss0och2hvuc1sWuWFC5lncLj/1B8eRQ9Yuva4wBKz2eAKmObc15c5OVqRjCQ3vHGBl+YcDEdcg+nTKBfT+YfmoXcbhhogLAxUh2Z4MEFn4QHXrFuJ/YwR9a6rR0Xg1Wjp1BKwCajWy/0/SPo=
+	t=1738671347; cv=none; b=G/rsTp/Zj5ACpvVRIzpImPc4z2lMY7oILpIeIuBLjCmnhTzMO8eYNOfMfPQAH91IrPSDtO7qHG/+NJ+xE09w5vjsOERqQyRav5zsNT8lqznRBBaKIhacSleA7uon8OplKo+5x2mEh5GRkAYmjlJgWtp8jnPYGyhNNb9gMgAP+28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738671189; c=relaxed/simple;
-	bh=1ChJVMwytVdbYvt/4/qb5G3b6WARxrARCtulIVtaHZU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bejeOwGwwCvFiFwfqmm/EEytQFcNNPbHxNpemEGlp0tUsy22BocPA5rLwMADwPUunlXBRz0MqCCP1RQfbVNCqN3k97erkS9mikn05T+CSoA7IzqKYzMyEsqo5juf+QpGY4apaGlqd+zD6vG4gag6oPkmrnEeLP408DmDy/4sIC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ksum3pjv; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738671347; c=relaxed/simple;
+	bh=XhIT+5be0aQXVhwv9QulCCNPuCzXKuKQuv2PR3ezl7U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xdi/yfLoiKYWJS3wAZTxk3aS0VHpaE9j4CuEzazjvqq+Sc9X7lkzaCrOvN8NjCbaflFCdIo4x+q8RMQEfwO5ZtVXvVo3io8AOjS3yHTeAX4jikfcN4QwXSWszbFqbob4NPjKCbf5jXhzB+CpbYuOhKwwSqAWMuqqNGUvspwA0fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QE75jh3Q; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ksum3pjv"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5d90a5581fcso10041491a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 04:13:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738671185; x=1739275985; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bRRnjWlfIVm6w/pghY+MVcet6bWLZj7mP0DYoi0BL1c=;
-        b=Ksum3pjvBEzrIZ+lnQ+aYc7Y8+FYEmjEgZxU+l9/VRAtgVnuIYZOKneKq9WfM40gmr
-         mcRi4a6RwU4qAWLfwdyEjzYacBCwUFtCOOLAPCZXXdVDeg4pjoUkY/84Cjo5WUCKDMM9
-         sVKhgZQey42FendZB5HGksm1pR1AEG5RwcQJTlcfQNHyzobVHCBhXjiedeJ0di3AlC0T
-         5LImAgAw+cDuaWQJuBHKhwRU7+Feep11yk/+XWE9nk+LcI/J5RrXnDi8UbAzzYO2dNRh
-         GosLVqeJI91VELX4mHwEB/xVw7J4Y+Ig7bvGCVAU8uj3ux8khkHDG5UlVwwUY32SBZdn
-         HQEQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QE75jh3Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738671344;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VUvkUC7Qb2mF5GiMgDLACey09zZYlr7i7/mTZlGsGks=;
+	b=QE75jh3Q5eWgElEPWQ6oTG9lZOCOdbZg0Yv1JpVTYegsfL/ZxLlEAuXlJUYIYgZE4ezBdb
+	RwBLFfb/ATLvoKRiziHDjgT/Qo6cKQTvn0KgZsyBxg9Gfb0Psm8f38IUj/Iw0eaAr//i6k
+	JesCX4haJGJl5KNpqh7P9H2HhVi5oYs=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-421-Rkdhv2QaN3S2HzhIIEPtxA-1; Tue, 04 Feb 2025 07:15:43 -0500
+X-MC-Unique: Rkdhv2QaN3S2HzhIIEPtxA-1
+X-Mimecast-MFC-AGG-ID: Rkdhv2QaN3S2HzhIIEPtxA
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4362b9c1641so27522275e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 04:15:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738671185; x=1739275985;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bRRnjWlfIVm6w/pghY+MVcet6bWLZj7mP0DYoi0BL1c=;
-        b=FDpiWuYPuYFzJg5mVSXhmV87Elq2COxC68k8lksf+wsYERBUYm5mivpvmIqVP7D2hR
-         ytUyBl9zAcdHmxwsRKsumDR8ZIFasLFu2KfCH7N7K1fVqZT2CbGtJV4gH7EZtPV5bcbz
-         PHAmyO43ZtPhMGwImI4oTf9kqhXxRWBAL9TkepNwnzv/fzNarfmlj+LtZLHeIAS1Gcgb
-         Ke/CbjacwYk196ZWFJxgGWWx1T3ShuyIb5Xc3whcfSmeNuk/GpnSaLSZPvGxCJVBDHOv
-         CQ9yLSpT3gKGVg8J+w04m4UV6t9VP0CUEHhhS6HiDv8bsI1o992Rv47Sbva4hFdJ+AaQ
-         WjMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPA5Uddjw4EodZg9IjCVMOH8bdPUFCINCsh26cO5Ju9HJJMdlRjsrwaiFQ4Z+B9yhant5FNWY13gkqsQ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDA4gIYV5oyfgTUOwGHw6mqPwNasbZPQimMdsN/BCBDtTR3yAi
-	ILR42FbBmukiTHx6O/g1uWPFbl8yta6zcbj2UlkaR2s7Ua7HFbNRvZc1TPQzpz65rlTjDs1MNoB
-	wx6u/1t6A+ocOZtHRLNwVgzeXMl8=
-X-Gm-Gg: ASbGncvvL6x12RdMO3rrOHprBiBSbszfpXpvyFMlTWHD1QGYEJwKVJPSC8eMRMp5RTO
-	cylFXGth3wHbr/jHCMm41liEKr9B51zRooYB2FG8WMpmt3vKuI8fEEcx3BK+WDTVu7R/eDlM=
-X-Google-Smtp-Source: AGHT+IE8Pb8E8/DVhgn/1Bnw4b6MVo2ceJNIa27kOu65bnvqFs44utskf4y0UnDllMDniLmc/WtPM98e2H1LcdkVUhE=
-X-Received: by 2002:a05:6402:26c9:b0:5d4:1ac2:277f with SMTP id
- 4fb4d7f45d1cf-5dc5efc1b98mr28418744a12.9.1738671185148; Tue, 04 Feb 2025
- 04:13:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738671342; x=1739276142;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VUvkUC7Qb2mF5GiMgDLACey09zZYlr7i7/mTZlGsGks=;
+        b=quyvcTRl1KobvS3S8S+gtxjUhUMx02RtfQQl66PMcZhL8eqxwpQe8S9Bx0YO1/nS7L
+         dVhE2a4DVs3fM7pnRVsgZs7YuX6XsN1dGmpReBxik4rUI8nIX+m2eWVWkKpE05TJh02i
+         NxS+HJ4ii+M3SYaTVMFEDjgsoUmVhj3qwlgO76X0TYDgeCDQvBtsoskwmNKuxL7C+Hab
+         p7JKqyaIAiLQHhWKhtkaOSWztQInlFCBfUD4lk3F23zG3fqiZEhdisQ8y9VnM3p9ZRuA
+         6vRT2zUVwew7cOoHtntDIby78t2n9MtWqUhDTzV95Fic7TRpNxx6oIz7zmuftmW6coHH
+         mOnA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgWdjodjI+hvkDI9t9IS602/tQfnNkki2yS+C4fLYt1sSH71w3G8vFf50cZXkiKgifXOEmyPUwRflHKc0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGXEsW5dLWpv0qfbGdSJaVV+TBArVrD/r6tSDk5uEnYnU67LvO
+	UeMDmCzxvgUv3faz3YotCRo31sziGdNgt9kPml2Ux+Yd47LCOvW0ChQ74zznnkFtd+nB9EeNTsV
+	DTrZ/cJp7PCtPvGHWNxoWjZQX7mXQ24yVSXBk2xkgrvHNbxuZlVh+WBMYZwfV6GFL34sZkQ==
+X-Gm-Gg: ASbGncvG5Vg8k4hsTlFqqJovaixs1An956Do51GRG03DuRhp/tGKw0JuLEx8kSplJhv
+	/OZE3+1ehl+6Qpp1I6nW0ibZLtUAQXc6OazuMdr98+H4QEIPFZevkFNvuH+1gV9J9MT7SmBywCb
+	dVAKLth7sitWGDfHH4NOcQEusesw9XSMxXotsS2PZAId0Q/SGjj5gX/4EsWDdkbrKVuVhJIEZaN
+	OWnlo+d9yxi9t2nLs/397P/Tl99uxzwpS5oDc5vcCn7cUHw3Ws0FWae4L1cLeezmlyu2Uz55EgF
+	ITjGYa0iVbP8Mq1FBSXostcMYbpgNMk9P5o=
+X-Received: by 2002:a05:600c:4f55:b0:436:51bb:7a43 with SMTP id 5b1f17b1804b1-438dc3ab675mr242755305e9.5.1738671342074;
+        Tue, 04 Feb 2025 04:15:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH4tQ5q9E6Yxu+JN4mWimlvj7yjOo3f8Z7rh6yaBUL8ZjGCY5yo/S+gH10TnPYvFIU94EeRnw==
+X-Received: by 2002:a05:600c:4f55:b0:436:51bb:7a43 with SMTP id 5b1f17b1804b1-438dc3ab675mr242754885e9.5.1738671341707;
+        Tue, 04 Feb 2025 04:15:41 -0800 (PST)
+Received: from [192.168.88.253] (146-241-41-201.dyn.eolo.it. [146.241.41.201])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23d48b3sm197508285e9.5.2025.02.04.04.15.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 04:15:41 -0800 (PST)
+Message-ID: <09a0caba-db29-4100-a46d-b104b282ea0a@redhat.com>
+Date: Tue, 4 Feb 2025 13:15:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250201163106.28912-1-mjguzik@gmail.com> <20250201163106.28912-4-mjguzik@gmail.com>
- <20250203180623.GC1003@redhat.com> <CAGudoHEWJqJf4mhcs1+Oes3qK1zFOYnb8Dnkj0aQD52yjMO=ZQ@mail.gmail.com>
- <20250204112236.GA6031@redhat.com>
-In-Reply-To: <20250204112236.GA6031@redhat.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Tue, 4 Feb 2025 13:12:53 +0100
-X-Gm-Features: AWEUYZnWBw_jz5cDO1GIBMTrxH4MbqQJVNL_mw_DqrYzHljSZD2TA5sT15JmnPA
-Message-ID: <CAGudoHFgb1YB79vrHsF4SCsqFmhUEQKDAxweAGwFUt=s4A5aNw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] exit: postpone tty_kref_put() until after
- tasklist_lock is dropped
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: ebiederm@xmission.com, brauner@kernel.org, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 5/6] net: devmem: Implement TX path
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvm@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-kselftest@vger.kernel.org
+Cc: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski
+ <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Neal Cardwell <ncardwell@google.com>, David Ahern <dsahern@kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk,
+ Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>,
+ Pedro Tammela <pctammela@mojatatu.com>,
+ Samiullah Khawaja <skhawaja@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
+References: <20250203223916.1064540-1-almasrymina@google.com>
+ <20250203223916.1064540-6-almasrymina@google.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250203223916.1064540-6-almasrymina@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 4, 2025 at 12:23=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 02/03, Mateusz Guzik wrote:
-> >
-> > On Mon, Feb 3, 2025 at 7:07=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> =
-wrote:
-> > >
-> > > On 02/01, Mateusz Guzik wrote:
-> > > >
-> > > > Instead of smuggling the tty pointer directly, use a struct so that=
- more
-> > > > things can be added later.
-> > >
-> > > I am not sure this particular change worth the effort, but I won't ar=
-gue.
-> > > I'd like to know what Eric thinks.
-> > >
-> >
-> > it trivially whacks an atomic from an area protected by a global lock
->
-> Yes, but I am not sure this can make a noticeable difference... Let
-> me repeat, I am not really arguing, I leave this to you and Eric.
-> The patch looks correct and I have already acked it. Just it looks
-> "less obvious" to me than other changes in this series.
+On 2/3/25 11:39 PM, Mina Almasry wrote:
+> Augment dmabuf binding to be able to handle TX. Additional to all the RX
+> binding, we also create tx_vec needed for the TX path.
+> 
+> Provide API for sendmsg to be able to send dmabufs bound to this device:
+> 
+> - Provide a new dmabuf_tx_cmsg which includes the dmabuf to send from.
+> - MSG_ZEROCOPY with SCM_DEVMEM_DMABUF cmsg indicates send from dma-buf.
+> 
+> Devmem is uncopyable, so piggyback off the existing MSG_ZEROCOPY
+> implementation, while disabling instances where MSG_ZEROCOPY falls back
+> to copying.
+> 
+> We additionally pipe the binding down to the new
+> zerocopy_fill_skb_from_devmem which fills a TX skb with net_iov netmems
+> instead of the traditional page netmems.
+> 
+> We also special case skb_frag_dma_map to return the dma-address of these
+> dmabuf net_iovs instead of attempting to map pages.
+> 
+> Based on work by Stanislav Fomichev <sdf@fomichev.me>. A lot of the meat
+> of the implementation came from devmem TCP RFC v1[1], which included the
+> TX path, but Stan did all the rebasing on top of netmem/net_iov.
+> 
+> Cc: Stanislav Fomichev <sdf@fomichev.me>
+> Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
 
-Reducing lock hold time is basic multicore hygiene, doubly so for global lo=
-cks.
+Very minor nit: you unexpectedly leaved a lot of empty lines after the SoB.
 
-Atomics are notoriously slow even if cache-hot.
+[...]
+@@ -240,13 +249,23 @@ net_devmem_bind_dmabuf(struct net_device *dev,
+unsigned int dmabuf_fd,
+>  	 * binding can be much more flexible than that. We may be able to
+>  	 * allocate MTU sized chunks here. Leave that for future work...
+>  	 */
+> -	binding->chunk_pool =
+> -		gen_pool_create(PAGE_SHIFT, dev_to_node(&dev->dev));
+> +	binding->chunk_pool = gen_pool_create(PAGE_SHIFT,
+> +					      dev_to_node(&dev->dev));
+>  	if (!binding->chunk_pool) {
+>  		err = -ENOMEM;
+>  		goto err_unmap;
+>  	}
+>  
+> +	if (direction == DMA_TO_DEVICE) {
+> +		binding->tx_vec = kvmalloc_array(dmabuf->size / PAGE_SIZE,
+> +						 sizeof(struct net_iov *),
+> +						 GFP_KERNEL);
+> +		if (!binding->tx_vec) {
+> +			err = -ENOMEM;
+> +			goto err_free_chunks;
 
-I agree this change in isolation is not a big deal, but there are
-several other "not a big deal"s in the area which will add up if
-sorted out.
+It looks like the later error paths (in the for_each_sgtable_dma_sg()
+loop) could happen even for 'direction == DMA_TO_DEVICE', so I guess an
+additional error label is needed to clean tx_vec on such paths.
 
-Given the triviality of the change as far as complexity goes, I would
-argue that's a routine patch not warranting much of a discussion
-(modulo the new struct, for that see below).
+/P
 
->
-> And even if we do this, I am not sure we need the new
-> "struct release_task_post", it seems we can simply move
-> tty_kref_put() from __exit_signal() to release_task(), see the
-> patch at the end.
->
-> Nobody can touch signal->tty after the group leader passes __exit_signal(=
-),
-> if nothing else lock_task_sighand() can't succeed.
->
-
-I wanted to keep "whack the tty" logic intact in order reduce any discussio=
-n. ;)
-
-This brings me to the release_task_post struct.
-
-Suppose the tty thing does not get patched at all or gets patched the
-way you are proposing here.
-
-I still need a way to handle the pidmap stuff. Suppose to that end a
-pid array gets passed directly.
-
-Some time later another thing might pop up which gets determined
-within the lock and wants to return the state to clean up after the
-unlock. Then someone will need to add a mechanism of the same sort I'm
-adding here. iow I'm future-proofing this and tty just happens to be
-the first (even if not necessary) consumer. iow preferably the struct
-(or an equivalent) would still be there without tty stuff.
-
-Given the nature of the change there is a lot of opinionated
-handwaving possible and "happy to change" vs "feel free to ignore" is
-not a productive discussion, thus I would like to clarify: my primary
-interest is to whack the pidmap thing out of tasklist_lock-protected
-area and this bit I'm going to argue about. Everything else is minor
-touch ups which I can drop without much resistance (I'll note though
-there is more I can submit in the area later :P), but if you genuinely
-want something changed, it would be best explicitly say it.
-
-As is, given the prior ack, I intend to submit v4 with minor touch ups.
-
-> But again, feel free to ignore.
->
-> Oleg.
->
-> --- x/kernel/exit.c
-> +++ x/kernel/exit.c
-> @@ -146,7 +146,6 @@ static void __exit_signal(struct task_st
->         struct signal_struct *sig =3D tsk->signal;
->         bool group_dead =3D thread_group_leader(tsk);
->         struct sighand_struct *sighand;
-> -       struct tty_struct *tty;
->         u64 utime, stime;
->
->         sighand =3D rcu_dereference_check(tsk->sighand,
-> @@ -159,10 +158,7 @@ static void __exit_signal(struct task_st
->                 posix_cpu_timers_exit_group(tsk);
->  #endif
->
-> -       if (group_dead) {
-> -               tty =3D sig->tty;
-> -               sig->tty =3D NULL;
-> -       } else {
-> +       if (!group_dead) {
->                 /*
->                  * If there is any task waiting for the group exit
->                  * then notify it:
-> @@ -210,10 +206,8 @@ static void __exit_signal(struct task_st
->
->         __cleanup_sighand(sighand);
->         clear_tsk_thread_flag(tsk, TIF_SIGPENDING);
-> -       if (group_dead) {
-> +       if (group_dead)
->                 flush_sigqueue(&sig->shared_pending);
-> -               tty_kref_put(tty);
-> -       }
->  }
->
->  static void delayed_put_task_struct(struct rcu_head *rhp)
-> @@ -279,6 +273,10 @@ repeat:
->         proc_flush_pid(thread_pid);
->         put_pid(thread_pid);
->         release_thread(p);
-> +
-> +       if (p =3D=3D leader)
-> +               tty_kref_put(p->signal->tty);
-> +
->         put_task_struct_rcu_user(p);
->
->         p =3D leader;
->
-
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
