@@ -1,174 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749C11FFC75;
-	Tue,  4 Feb 2025 06:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB9425A655;
+	Tue,  4 Feb 2025 06:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738649580; cv=none; b=oWw6lEgrFG7Y17AcG+owqXOT0mXmmKwREIr4j0VkLq0ZCBUVA0xreIdKUweIsg1gzTUJH+7AM3dALGSatEOgX9YcB+5bGDK325WdyleSPdYiNQw3+L6nS5pE/T+yWGoNa2Jr8NE+nX2jpz93vkL7iDV0Wliw5zq3FAWzP9enZVA=
+	t=1738649787; cv=none; b=BtsnMIChyR6gm6JX08zuE5bPjC6Ju6LqS/YCdqalr2ENPKpvmdC0QH2KUJbS/C+c7BAFCuE0ISGDlhXxrVk1KZvIfu6f21rahaMJJGD/vPkcu4IlzlzZjU/py6LjU1uywbK/lE4F3KFFUkD5doZiZReYtAMVT0wxp3LqNNaGS+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738649580; c=relaxed/simple;
-	bh=Dhv3SRrHpLrLEKz3V+145BCuQEnuBa4gIZEwCDoN8/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uLcPvFPUeLarJYUj4aQlJdQroi8DAJBdmJ5k2phTvqxJxhaUW3/6Yx0uB12AmSwin/JoqgpCeNv1UHEDS+qhBAKydi2tZtt9ZsGPIEW/2CC4x7beAo+Tnwz/L7cDNk+TqZAV33ZVAAgflcjPnAO3s6LQ5g19HdAcNW2t4HLBSQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lAEjk6k4; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738649787; c=relaxed/simple;
+	bh=jC9fSNpEyIpBklKfMTPS44SCyXmWkFNlOaCz+9aWDX0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ktwGUTAWAB1rDBCqt7tdgwqwpSU5mEh1eFhdjNLng/p8tTcNeZds78z2nYMlf0D2DYRJgKMU8U8CvjweUDuh3EfizmH2XIBcfUAdYFuqtjal6k6iXPCHT1EkWjFNNvZGjJgPuifVWRIl/vtGD+E6y+GsYsZD4iN+PJefkfuc8tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BgIdmKc6; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lAEjk6k4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738649578; x=1770185578;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Dhv3SRrHpLrLEKz3V+145BCuQEnuBa4gIZEwCDoN8/4=;
-  b=lAEjk6k4ku57jx1r6wNB4t3WtIPDqBm7/G2NSvOtu4IOgrF4oiGkITar
-   ZqVPaL3Gs3XoRReolflIs7qc++eSNhYWjPyrkT76zZAemwat6z6m78Bwm
-   KtFMnUn1PjBPbTljq0f6Qc5VVcqavF7kCAfPP7xa+TfKogle3zcMzJzPO
-   pavaVQYATMk96RGOYz5MtonPORbtt6y8BSCaIPlPamA1vKi+pCMCKACnT
-   9xIOPxCEOCVXEg30aQBiB9HOTah/GeCWcCtGDpL7sSJ+9kd0y6cQOz9hA
-   Sb5Xu8g+NedWu5DTH64yaRs+WgIFedwn/9KTe4sMyr5wi3pvh80msgXnv
-   Q==;
-X-CSE-ConnectionGUID: mkFuB8pDQQKV3CSs9SL++A==
-X-CSE-MsgGUID: zPQK+9sUT+aRdd/pgpwxPw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="49812965"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="49812965"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:12:57 -0800
-X-CSE-ConnectionGUID: pUEZjYQMQFOvutZG/29oIA==
-X-CSE-MsgGUID: CQJAhstLRE+hJtPENz1Jvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="111049364"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:12:54 -0800
-Date: Tue, 4 Feb 2025 07:09:23 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] net/mlx5e: Avoid a hundred
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z6GvE4su2/m9e+Ev@mev-dev.igk.intel.com>
-References: <Z6GCJY8G9EzASrwQ@kspp>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BgIdmKc6"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5146Ft9n2282131
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Feb 2025 00:15:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738649755;
+	bh=iPtH4Nx71CfaLqe6GeiuXzY+1Zw6a8dLsu6iB2wlAKI=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=BgIdmKc6K6ZMzG15RLmlzDF4xWV/LahPzTtPK2wZTCAfPYOvdrkKHRqs0KyqFMcth
+	 LH4aPIxqgwRYEO0qbo7jH58+haSRE0rdC+kU9RY+mySlWNnrzsNZ8TkwqJiQr8xq/F
+	 7KJ7yCZlRz/nPVOcz0q88r3xB2tqJkyzGsABsxsA=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5146FtHj023292
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 4 Feb 2025 00:15:55 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
+ Feb 2025 00:15:55 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 4 Feb 2025 00:15:55 -0600
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5146Fscu075222;
+	Tue, 4 Feb 2025 00:15:54 -0600
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
+        <airlied@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>,
+        <dri-devel@lists.freedesktop.org>, <simona@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
+        <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
+        <h-shenoy@ti.com>, <devarsht@ti.com>
+Subject: [PATCH v2 1/2] dt-bindings: display: ti,am65x-dss: Add support for AM62L DSS
+Date: Tue, 4 Feb 2025 11:45:51 +0530
+Message-ID: <20250204061552.3720261-2-devarsht@ti.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20250204061552.3720261-1-devarsht@ti.com>
+References: <20250204061552.3720261-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6GCJY8G9EzASrwQ@kspp>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Feb 04, 2025 at 01:27:41PM +1030, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> So, in order to avoid ending up with a flexible-array member in the
-> middle of other structs, we use the `struct_group_tagged()` helper
-> to create a new tagged `struct mlx5e_umr_wqe_hdr`. This structure
-> groups together all the members of the flexible `struct mlx5e_umr_wqe`
-> except the flexible array.
-> 
-> As a result, the array is effectively separated from the rest of the
-> members without modifying the memory layout of the flexible structure.
-> We then change the type of the middle struct member currently causing
-> trouble from `struct mlx5e_umr_wqe` to `struct mlx5e_umr_wqe_hdr`.
-> 
-> We also want to ensure that when new members need to be added to the
-> flexible structure, they are always included within the newly created
-> tagged struct. For this, we use `static_assert()`. This ensures that the
-> memory layout for both the flexible structure and the new tagged struct
-> is the same after any changes.
-> 
-> This approach avoids having to implement `struct mlx5e_umr_wqe_hdr` as
-> a completely separate structure, thus preventing having to maintain two
-> independent but basically identical structures, closing the door to
-> potential bugs in the future.
-> 
-> We also use `container_of()` whenever we need to retrieve a pointer to
-> the flexible structure, through which we can access the flexible-array
-> member, if necessary.
-> 
-> So, with these changes, fix 124 of the following warnings:
-> 
-> drivers/net/ethernet/mellanox/mlx5/core/en.h:664:48: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/en.h      | 13 +++++++++----
->  drivers/net/ethernet/mellanox/mlx5/core/en_main.c |  4 +++-
->  2 files changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> index 979fc56205e1..c30c64eb346f 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> @@ -233,15 +233,20 @@ struct mlx5e_rx_wqe_cyc {
->  };
->  
->  struct mlx5e_umr_wqe {
-> -	struct mlx5_wqe_ctrl_seg       ctrl;
-> -	struct mlx5_wqe_umr_ctrl_seg   uctrl;
-> -	struct mlx5_mkey_seg           mkc;
-> +	/* New members MUST be added within the struct_group() macro below. */
-> +	struct_group_tagged(mlx5e_umr_wqe_hdr, hdr,
-> +		struct mlx5_wqe_ctrl_seg       ctrl;
-> +		struct mlx5_wqe_umr_ctrl_seg   uctrl;
-> +		struct mlx5_mkey_seg           mkc;
-> +	);
->  	union {
->  		DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
->  		DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
->  		DECLARE_FLEX_ARRAY(struct mlx5_ksm, inline_ksms);
->  	};
->  };
-> +static_assert(offsetof(struct mlx5e_umr_wqe, inline_mtts) == sizeof(struct mlx5e_umr_wqe_hdr),
-> +	      "struct member likely outside of struct_group_tagged()");
->  
->  enum mlx5e_priv_flag {
->  	MLX5E_PFLAG_RX_CQE_BASED_MODER,
-> @@ -660,7 +665,7 @@ struct mlx5e_rq {
->  		} wqe;
->  		struct {
->  			struct mlx5_wq_ll      wq;
-> -			struct mlx5e_umr_wqe   umr_wqe;
-> +			struct mlx5e_umr_wqe_hdr umr_wqe;
->  			struct mlx5e_mpw_info *info;
->  			mlx5e_fp_skb_from_cqe_mpwrq skb_from_cqe_mpwrq;
->  			__be32                 umr_mkey_be;
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> index bd41b75d246e..4ff4ff2342cf 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> @@ -373,6 +373,8 @@ static void mlx5e_rq_shampo_hd_info_free(struct mlx5e_rq *rq)
->  
->  static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
->  {
-> +	struct mlx5e_umr_wqe *umr_wqe =
-> +		container_of(&rq->mpwqe.umr_wqe, struct mlx5e_umr_wqe, hdr);
->  	int wq_sz = mlx5_wq_ll_get_size(&rq->mpwqe.wq);
->  	size_t alloc_size;
->  
-> @@ -393,7 +395,7 @@ static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
->  		bitmap_fill(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
->  	}
->  
-> -	mlx5e_build_umr_wqe(rq, rq->icosq, &rq->mpwqe.umr_wqe);
-> +	mlx5e_build_umr_wqe(rq, rq->icosq, umr_wqe);
->  
->  	return 0;
+The DSS controller on TI's AM62L SoC is an update from that on TI's
+AM625/AM65x/AM62A7 SoC. The AM62L DSS [1] only supports a single display
+pipeline using a single overlay manager, single video port and a single
+video lite pipeline which does not support scaling.
 
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+The output of video port is routed to SoC boundary via DPI interface and
+the DPI signals from the video port are also routed to DSI Tx controller
+present within the SoC.
 
->  }
-> -- 
-> 2.43.0
+[1]: Section 11.7 (Display Subsystem and Peripherals)
+Link : https://www.ti.com/lit/pdf/sprujb4
+
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+---
+- Add Reviewed-by
+- s/ti,am62l,dss/ti,am62l-dss
+
+NOTE: This patch needs to be applied on top of AM62A dt-binding fix: 
+https://lore.kernel.org/all/20250203155431.2174170-1-devarsht@ti.com/ 
+
+ .../bindings/display/ti/ti,am65x-dss.yaml     | 25 ++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+index 31c4ffcb599c..f82e9a84e8a8 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
++++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+@@ -12,18 +12,29 @@ maintainers:
+   - Tomi Valkeinen <tomi.valkeinen@ti.com>
+ 
+ description: |
+-  The AM625 and AM65x TI Keystone Display SubSystem with two output
++  The AM625 and AM65x TI Keystone Display SubSystem has two output
+   ports and two video planes. In AM65x DSS, the first video port
+   supports 1 OLDI TX and in AM625 DSS, the first video port output is
+   internally routed to 2 OLDI TXes. The second video port supports DPI
+   format. The first plane is full video plane with all features and the
+   second is a "lite plane" without scaling support.
++  The AM62A7 display subsystem has a single output port supporting DPI format
++  although similar to AM625 and AM65x Socs, it has two video planes where first
++  is full video plane with all features and second is a video "lite" plane which
++  does not support scaling.
++  The AM62L display subsystem also has a single output port which supports DPI
++  format but it only supports single video "lite plane" which does not support
++  scaling. The output port is routed to SoC boundary via DPI interface and same
++  DPI signals are also routed internally to DSI Tx controller present within the
++  SoC. Due to clocking limitations only one of the interface i.e. either DSI or
++  DPI can be used at once.
+ 
+ properties:
+   compatible:
+     enum:
+       - ti,am625-dss
+       - ti,am62a7-dss
++      - ti,am62l-dss
+       - ti,am65x-dss
+ 
+   reg:
+@@ -91,6 +102,8 @@ properties:
+           For AM625 DSS, the internal DPI output port node from video
+           port 1.
+           For AM62A7 DSS, the port is tied off inside the SoC.
++          For AM62L DSS, the DSS DPI output port node from video port 1
++          or DSI Tx controller node connected to video port 1.
+ 
+       port@1:
+         $ref: /schemas/graph.yaml#/properties/port
+@@ -123,6 +136,16 @@ allOf:
+         ports:
+           properties:
+             port@0: false
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: ti,am62l-dss
++    then:
++      properties:
++        ports:
++          properties:
++            port@1: false
+ 
+ required:
+   - compatible
+-- 
+2.39.1
+
