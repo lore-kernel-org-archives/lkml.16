@@ -1,74 +1,57 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBA61754B
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 07:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DA2204088;
+	Tue,  4 Feb 2025 07:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738654471; cv=none; b=hR/+WZijtNrd4N/QgmmVTrNy0QOrf43YARnYfSAjiWwh7hOT00UcrQgUBfTlbMpM5jsHsEQFsvA9w3Ley4nhdHEKF+dEu3cvyeJGHeQoYAONd9SvAOUdyxTDA2TWQB5jCSH5o4SeuSObT3vOmZzniqyErH3tDaDC4kwH0BxmRro=
+	t=1738654517; cv=none; b=XLOgxamqlXpehijkBNd4TgIPsScpLrdos8uEOsKC/xT/UqPe4aDkONN/W+b/QnWryLUZ6y2OKOMquuOcpHjEJLbV05PxtIcTVKN1fdIynvZCi/k37GjnJRZH8L0DoDt/eINxJPSpqnLX7iR+rP2q8u/sQbq2ebslahTN78lh7SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738654471; c=relaxed/simple;
-	bh=cl8ZT91z9S2tpe4krwwQNNz+rzfjEqha0MrzcdBk87M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kP14onf/yyYB5Rh0Yoirnp8fBQ82cQBMYr8cCnzVuEP6sd5MzZGfIH7m9/+BUxsFZqiQ844mCniUdkW1SxpOa0tPOdFCY81qcwOO/oQrnM0ubLr84sz/TCPJkIgQAHBz25UfkKpsRQY38dW7MHqt9AskQ+eatHA/LCKHBfXxyD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kAlX9YGL; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738654517; c=relaxed/simple;
+	bh=PHlzqRj1sngGJYA76SXKxZ8DZkGZFysxquQ/bui3h7M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Pyo+xsKrHV0fqeYgRgvcpg84/Y06qlOC/I9QpFgEs2nXNoeTTcpUdkGF8siubOVnkzcYRFpzxcObtHfXRWuRsGqJ10awisAXIn9LgHYXE6LS5oTE4PZEdcicfExBFIJSJD60v/QZ5HfYcr61+k0eYu/CkFlqXtjhSLBtjsWV08M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JTVi+tqK; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kAlX9YGL"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21628b3fe7dso95947535ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 23:34:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738654468; x=1739259268; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=orjpaukFM37/+hASeec/fvQ2v80Tt5itf/oXBVJGIZU=;
-        b=kAlX9YGLgwOXeBgAFlD9qZBE7SsYdg8UsQSxf8mW0pbSdqt9IdjYPnS5fNtFlL0d3K
-         QwyrLpA35JSqUudFmXaNeEZX9ZLuleBk36YdLhQvworDnGbbTu0YMx73oAcXBb0uNJN4
-         6IMhi2n2ksv/zjxjOBu7vfsMGd7d4bMHpQDKV1DPTa9vy4Hz2Rbe/ZUooAcAAkQUaugr
-         PANvozS8d/aPi3r2MHzqc+4u9SQtyxKyuXchihckmliqqQcAQ3HJJaEROJq8h8lfMZ5b
-         IwrMoQKVlozI0kByzu4aP4vcuWaEhslv7f0zH4Qf72FQapBN/7h7KuoHFOiEPxGNkbde
-         VCyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738654468; x=1739259268;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=orjpaukFM37/+hASeec/fvQ2v80Tt5itf/oXBVJGIZU=;
-        b=XF2ssxie88gmmAbWxqiwAXO0JoSAZOEBq+hMNmdYpkDqPXSNHuESs3u/Slyl79uzll
-         SrMz9yLu2ZwFDhko5ZztEv3S6tQ93ns8FduKcZkfi79MEMVRjXkv+hhMM8fk5yhCvVMh
-         1AeqsLgzOzULe5F1ciD8JSqOk/evG6CbYByDymMBxAVs+bxEqqqfpTYfCgrmYNoPyuH2
-         KadlN6loIk6lEYpA4wmanpBoydRmSq8qi1TU0hvPBYofhlcdkY30dX1YfDW82RtXkXAF
-         yRL1nYHiPhouuOnBv5WyPC3GsThlgNE0VsNy5Q7v0zejJSviN6EY7SLJdEl92Gir9TZV
-         Crmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgor0ADB9Zr+/WqPUaDih4DQoPNruUmzRi1GAd01MZYV6LL4xI7n/LYTiYWddWd2i23RmK9vEzvKLlECw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEDs6ycqPqFTa73A2YK5TpY+wM0UL5XEjF6tCHTpdFRDs8Txe+
-	BBG2GnsDlqGUZbLXQBNtkbyCC7oAtm4iDTGw5YR4I4vgCrVMVN81nCCfOyr148s=
-X-Gm-Gg: ASbGncsTYP9TiJBTAHf+upeCeLHK7Rkuh0niiD8SraqVMc6xebxCTtD+Zd/qWyHAMhe
-	EG9AX8P/B483XSjWyN6RU97zM3+LyCRPvjeJr3XZXROi5AHsTskySHB2UxILd4wWvQoQyDfALkz
-	FM7yprGR6qIcTV5saH4cyJhoAeQ+V/RuCzNvQxQGH+FWinvDifoQ6TAH9fT4z+/wGsMxmsBPwLH
-	tmd4EaVfNuzT+1l7ZcFqpwLcmQAEj5x0qSi45h+epAQPKWmQvbeLXVt1DCt8mDfvKAIm0fQBofq
-	yaU8Za8Tvnoij5yc
-X-Google-Smtp-Source: AGHT+IH7iRztA6y9IjznIKh/2zF04c+yLjm/3BTLuBiqf/u/s9hr0MUSVaQHHQhZkJm6tpZj+s6tVw==
-X-Received: by 2002:a17:902:d4cb:b0:215:a434:b6ad with SMTP id d9443c01a7336-21dd7ddde1bmr392541465ad.33.1738654468133;
-        Mon, 03 Feb 2025 23:34:28 -0800 (PST)
-Received: from sumit-X1.. ([223.178.208.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32eb97csm88569225ad.123.2025.02.03.23.34.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 23:34:27 -0800 (PST)
-From: Sumit Garg <sumit.garg@linaro.org>
-To: jens.wiklander@linaro.org,
-	arnd@arndb.de
-Cc: op-tee@lists.trustedfirmware.org,
-	jerome.forissier@linaro.org,
-	dannenberg@ti.com,
-	javier@javigon.com,
-	linux-kernel@vger.kernel.org,
-	Sumit Garg <sumit.garg@linaro.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] tee: optee: Fix supplicant wait loop
-Date: Tue,  4 Feb 2025 13:04:18 +0530
-Message-ID: <20250204073418.491016-1-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JTVi+tqK"
+Received: by mail.gandi.net (Postfix) with ESMTPA id AA63D433D9;
+	Tue,  4 Feb 2025 07:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738654513;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bhuw/cTd1RZnZuhDVYg+ubS8tMPFFPrwAHU5ngfd3FU=;
+	b=JTVi+tqKGMr5UCO/Luigw5FedhD8NaCKpjxmqsF1wsdUAUOlLyeMPolXLc9acteuGxTG9z
+	jvS0tEJdAOxQGzgJw2NkbcZA7wFcxm3r/Be0RP7dJTq4YINWeHtjTjVxL9JNaM8t+6pujU
+	R+Wa3INSBPBKmthKSJoBolBS0PqhVVCQeruaNRcCjxJW5rm/JDQTSR/fD5MATjjWqxdzUQ
+	hN5nlICBetYkFRX+j4c8C1BI0HbjZoOB6JFJd4YN6Ru+3+6opyDM6ajlOrhpriAhCN21d9
+	7HesHQXsH+yom7vtbNxnVILzF07let1yRFpDus0qjelzTZR3Gw7uWACQQmvYBA==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lizhi Hou <lizhi.hou@amd.com>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v7 1/5] driver core: Introduce device_{add,remove}_of_node()
+Date: Tue,  4 Feb 2025 08:34:56 +0100
+Message-ID: <20250204073501.278248-2-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250204073501.278248-1-herve.codina@bootlin.com>
+References: <20250204073501.278248-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,100 +59,115 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleelvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehffeigfejueelueeuffelueefgfelhfejhfehieegudekteeiledttdfhffekffenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopehsrghrrghvrghnrghksehgohhoghhlvgdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhiiihhihdrhhhouhesrghmugdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: herve.codina@bootlin.com
 
-OP-TEE supplicant is a user-space daemon and it's possible for it
-be hung or crashed or killed in the middle of processing an OP-TEE
-RPC call. It becomes more complicated when there is incorrect shutdown
-ordering of the supplicant process vs the OP-TEE client application which
-can eventually lead to system hang-up waiting for the closure of the
-client application.
+An of_node can be set to a device using device_set_node().
+This function cannot prevent any of_node and/or fwnode overwrites.
 
-Allow the client process waiting in kernel for supplicant response to
-be killed rather than indefinitely waiting in an unkillable state. Also,
-a normal uninterruptible wait should not have resulted in the hung-task
-watchdog getting triggered, but the endless loop would.
+When adding an of_node on an already present device, the following
+operations need to be done:
+- Attach the of_node if no of_node were already attached
+- Attach the of_node as a fwnode if no fwnode were already attached
 
-This fixes issues observed during system reboot/shutdown when supplicant
-got hung for some reason or gets crashed/killed which lead to client
-getting hung in an unkillable state. It in turn lead to system being in
-hung up state requiring hard power off/on to recover.
+This is the purpose of device_add_of_node().
+device_remove_of_node() reverts the operations done by
+device_add_of_node().
 
-Fixes: 4fb0a5eb364d ("tee: add OP-TEE driver")
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
+ drivers/base/core.c    | 61 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/device.h |  2 ++
+ 2 files changed, 63 insertions(+)
 
-Changes in v3:
-- Use mutex_lock() instead of mutex_lock_killable().
-- Update commit message to incorporate Arnd's feedback.
-
-Changes in v2:
-- Switch to killable wait instead as suggested by Arnd instead
-  of supplicant timeout. It atleast allow the client to wait for
-  supplicant in killable state which in turn allows system to reboot
-  or shutdown gracefully.
-
- drivers/tee/optee/supp.c | 35 ++++++++---------------------------
- 1 file changed, 8 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/tee/optee/supp.c b/drivers/tee/optee/supp.c
-index 322a543b8c27..d0f397c90242 100644
---- a/drivers/tee/optee/supp.c
-+++ b/drivers/tee/optee/supp.c
-@@ -80,7 +80,6 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_params,
- 	struct optee *optee = tee_get_drvdata(ctx->teedev);
- 	struct optee_supp *supp = &optee->supp;
- 	struct optee_supp_req *req;
--	bool interruptable;
- 	u32 ret;
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 5a1f05198114..d1b044af64de 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -5170,6 +5170,67 @@ void set_secondary_fwnode(struct device *dev, struct fwnode_handle *fwnode)
+ }
+ EXPORT_SYMBOL_GPL(set_secondary_fwnode);
  
- 	/*
-@@ -111,36 +110,18 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_params,
- 	/*
- 	 * Wait for supplicant to process and return result, once we've
- 	 * returned from wait_for_completion(&req->c) successfully we have
--	 * exclusive access again.
-+	 * exclusive access again. Allow the wait to be killable such that
-+	 * the wait doesn't turn into an indefinite state if the supplicant
-+	 * gets hung for some reason.
- 	 */
--	while (wait_for_completion_interruptible(&req->c)) {
-+	if (wait_for_completion_killable(&req->c)) {
- 		mutex_lock(&supp->mutex);
--		interruptable = !supp->ctx;
--		if (interruptable) {
--			/*
--			 * There's no supplicant available and since the
--			 * supp->mutex currently is held none can
--			 * become available until the mutex released
--			 * again.
--			 *
--			 * Interrupting an RPC to supplicant is only
--			 * allowed as a way of slightly improving the user
--			 * experience in case the supplicant hasn't been
--			 * started yet. During normal operation the supplicant
--			 * will serve all requests in a timely manner and
--			 * interrupting then wouldn't make sense.
--			 */
--			if (req->in_queue) {
--				list_del(&req->link);
--				req->in_queue = false;
--			}
-+		if (req->in_queue) {
-+			list_del(&req->link);
-+			req->in_queue = false;
- 		}
- 		mutex_unlock(&supp->mutex);
--
--		if (interruptable) {
--			req->ret = TEEC_ERROR_COMMUNICATION;
--			break;
--		}
-+		req->ret = TEEC_ERROR_COMMUNICATION;
- 	}
++/**
++ * device_remove_of_node - Remove an of_node from a device
++ * @dev: device whose device-tree node is being removed
++ */
++void device_remove_of_node(struct device *dev)
++{
++	dev = get_device(dev);
++	if (!dev)
++		return;
++
++	if (!dev->of_node)
++		goto end;
++
++	if (dev->fwnode == of_fwnode_handle(dev->of_node))
++		dev->fwnode = NULL;
++
++	of_node_put(dev->of_node);
++	dev->of_node = NULL;
++
++end:
++	put_device(dev);
++}
++EXPORT_SYMBOL_GPL(device_remove_of_node);
++
++/**
++ * device_add_of_node - Add an of_node to an existing device
++ * @dev: device whose device-tree node is being added
++ * @of_node: of_node to add
++ *
++ * Return: 0 on success or error code on failure.
++ */
++int device_add_of_node(struct device *dev, struct device_node *of_node)
++{
++	int ret;
++
++	if (!of_node)
++		return -EINVAL;
++
++	dev = get_device(dev);
++	if (!dev)
++		return -EINVAL;
++
++	if (dev->of_node) {
++		dev_err(dev, "Cannot replace node %pOF with %pOF\n",
++			dev->of_node, of_node);
++		ret = -EBUSY;
++		goto end;
++	}
++
++	dev->of_node = of_node_get(of_node);
++
++	if (!dev->fwnode)
++		dev->fwnode = of_fwnode_handle(of_node);
++
++	ret = 0;
++end:
++	put_device(dev);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(device_add_of_node);
++
+ /**
+  * device_set_of_node_from_dev - reuse device-tree node of another device
+  * @dev: device whose device-tree node is being set
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 80a5b3268986..1244e5892292 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -1191,6 +1191,8 @@ int device_online(struct device *dev);
+ void set_primary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
+ void set_secondary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
+ void device_set_node(struct device *dev, struct fwnode_handle *fwnode);
++int device_add_of_node(struct device *dev, struct device_node *of_node);
++void device_remove_of_node(struct device *dev);
+ void device_set_of_node_from_dev(struct device *dev, const struct device *dev2);
  
- 	ret = req->ret;
+ static inline struct device_node *dev_of_node(struct device *dev)
 -- 
-2.43.0
+2.47.1
 
