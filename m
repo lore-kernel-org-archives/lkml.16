@@ -1,15 +1,16 @@
 Received: from mblankhorst.nl (lankhorst.se [141.105.120.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E886C2116FD
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:21:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EAB212D61
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:21:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.105.120.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738675311; cv=none; b=PGLOlX/33svzFW0dWucLugMu6bNC3sZj5rwl/TLvgX0ahxtWjjNxC5rxYZK2rteLQl5IpLhZ0c65GrVp+Dg5LAQREHHbnv71qjMmo9Y0CsVwMi01BMRvSJNBa3fVBUNxXDnEJUu9wosu9LKhgfMfSqtULKKwePrW9BSpO4ixGL0=
+	t=1738675312; cv=none; b=CNvUPCmzvfh/BClD3d50WXLtoLPhVJpsF5GKZcRdlme+6Je9GTbtHfidZNWEzR/wPJ/wY4MaCYqThdu92QdbTCl3iD0iX8XBmIwGMtcMQEE7HHOv+mDowadBzMWVutjMJbZd/sg20geIVBW63qT2SkDu5goAAdGkaDzpCBLztyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738675311; c=relaxed/simple;
-	bh=OGL5Pl5O2Qewji1ZgFysi5+ZTrlwu+X/F65eQj20hsE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PM19lChRXcEbbHEUB7oAeo/TMP2FNYmc4DO2IG7TIgeAZMDFliFs22lTwABjmEMigscc69EgTH3lT440b0sF00Zxmp1avv2d6H1tFenafQoZt3Rsvi+RnvAhavdGxqpQYOi/tZacUGnprv25K/SAjGCVk5PYid2y/Syv7Mb6k+I=
+	s=arc-20240116; t=1738675312; c=relaxed/simple;
+	bh=ChNBBi6t65G47K6zr5IQAZcyh9DX/f8S0PxWsg3rbRU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N7LAZEvmEQNLW5WzkvMRtZ2gahTnp2wUj1BmhdbwzFHRp4rUPuf8Qp6yIGfGvhlM8X4BiFV8NF56K8GIrG6LobBQG6safgOvH6+a0SIPeduYOj+a5OA2it/9FPGCfpDM5Vgh5cKXvXfdwePF1W30UETgfMXbExXTa81kF+x5/mg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se; spf=none smtp.mailfrom=mblankhorst.nl; arc=none smtp.client-ip=141.105.120.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mblankhorst.nl
@@ -24,10 +25,12 @@ Cc: dri-devel@lists.freedesktop.org,
 	Will Deacon <will@kernel.org>,
 	Waiman Long <longman@redhat.com>,
 	Boqun Feng <boqun.feng@gmail.com>
-Subject: [PATCH-resent-to-correct-ml 0/8] drm/xe: Convert xe_force_wake calls to guard helpers.
-Date: Tue,  4 Feb 2025 14:22:29 +0100
-Message-ID: <20250204132238.162608-1-dev@lankhorst.se>
+Subject: [PATCH-resent-to-correct-ml 4/8] drm/xe: Add xe_force_wake_get_all
+Date: Tue,  4 Feb 2025 14:22:33 +0100
+Message-ID: <20250204132238.162608-5-dev@lankhorst.se>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250204132238.162608-1-dev@lankhorst.se>
+References: <20250204132238.162608-1-dev@lankhorst.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,84 +39,183 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Ignore my previous series please, it should have been sent to intel-xe, was sent to intel-gfx.
+For most usecases, we want to get all the forcewakes, and failing to
+grab any is similar to failure to grab all.
 
-Instead of all this repetition of
+This makes the next patch to add cond guards a lot easier.
 
-{
-	unsigned fw_ref;
+Signed-off-by: Maarten Lankhorst <dev@lankhorst.se>
+---
+ drivers/gpu/drm/xe/xe_force_wake.c | 110 ++++++++++++++++++++---------
+ drivers/gpu/drm/xe/xe_force_wake.h |   2 +
+ 2 files changed, 77 insertions(+), 35 deletions(-)
 
-	fw_ref = xe_force_wake_get(fw, domain);
-	if (!xe_force_wake_ref_has_domain(..))
-		return -ETIMEDOUT;
-
-	...
-
-out:
-	xe_force_wake_put(fw_ref);
-	return ret;
-}
-
-I thought I would look at how to replace it with the guard helpers.
-It is easy, but it required some minor fixes to make DEFINE_LOCK_GUARD_1
-work with extra init arguments.
-
-So I changed the function signature slightly to make the first optional argument
-a struct member (current behavior), and any additional argument goes to the init
-call.
-
-This replaces the previous code with
-{
-	scoped_cond_guard(xe_force_wake_get, return -ETIMEDOUT, fw, domain) {
-		....
-
-		return ret;
-	}
-}
-
-I' ve thought also of playing with this:
-{
-	CLASS(xe_force_wake_get, fw_ref)(fw, domain);
-	if (!fw_ref.lock))
-		return -ETIMEDOUT;
-
-	...
-	return ret;
-}
-
-I'm just fearing that the scoped_cond_guard makes it imposssible to get this
-wrong, while in the second example it's not clear that it can fail, and that
-you have to check.
-
-Let me know what you think!
-Feedback welcome for the header change as well, should probably go into the locking tree..
-
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-
-Maarten Lankhorst (8):
-  header/cleanup.h: Add _init_args to DEFINE_LOCK_GUARD_1(_COND)
-  drm/xe/gt: Unify xe_hw_fence_irq_finish() calls.
-  drm/xe: Add scoped guards for xe_force_wake
-  drm/xe: Add xe_force_wake_get_all
-  drm/xe/coredump: Use guard helpers for xe_force_wake.
-  drm/xe/gsc: Use guard helper for xe_gsc_print_info.
-  drm/xe/vram: Use xe_force_wake guard helper
-  drm/xe/gt: Convert to xe_force_wake guard helpers
-
- drivers/gpu/drm/xe/xe_devcoredump.c |  36 ++---
- drivers/gpu/drm/xe/xe_force_wake.c  | 161 ++++++++++++++----
- drivers/gpu/drm/xe/xe_force_wake.h  |  17 ++
- drivers/gpu/drm/xe/xe_gsc.c         |  22 +--
- drivers/gpu/drm/xe/xe_gt.c          | 243 ++++++++++------------------
- drivers/gpu/drm/xe/xe_vram.c        |  45 +++---
- include/linux/cleanup.h             |  30 ++--
- 7 files changed, 293 insertions(+), 261 deletions(-)
-
+diff --git a/drivers/gpu/drm/xe/xe_force_wake.c b/drivers/gpu/drm/xe/xe_force_wake.c
+index 805c19f6de9e7..cc00d5de8f0ae 100644
+--- a/drivers/gpu/drm/xe/xe_force_wake.c
++++ b/drivers/gpu/drm/xe/xe_force_wake.c
+@@ -211,27 +211,36 @@ static int domain_sleep_wait(struct xe_gt *gt,
+ 					 (ffs(tmp__) - 1))) && \
+ 					 domain__->reg_ctl.addr)
+ 
+-/**
+- * xe_force_wake_get() : Increase the domain refcount
+- * @fw: struct xe_force_wake
+- * @domains: forcewake domains to get refcount on
+- *
+- * This function wakes up @domains if they are asleep and takes references.
+- * If requested domain is XE_FORCEWAKE_ALL then only applicable/initialized
+- * domains will be considered for refcount and it is a caller responsibility
+- * to check returned ref if it includes any specific domain by using
+- * xe_force_wake_ref_has_domain() function. Caller must call
+- * xe_force_wake_put() function to decrease incremented refcounts.
+- *
+- * Return: opaque reference to woken domains or zero if none of requested
+- * domains were awake.
+- */
+-unsigned int __must_check xe_force_wake_get(struct xe_force_wake *fw,
+-					    enum xe_force_wake_domains domains)
++static void __xe_force_wake_put_inner(struct xe_force_wake *fw,
++				      unsigned int fw_ref, unsigned int *ack_fail)
++{
++	struct xe_gt *gt = fw->gt;
++	struct xe_force_wake_domain *domain;
++	unsigned int tmp, sleep = 0;
++
++	for_each_fw_domain_masked(domain, fw_ref, fw, tmp) {
++		xe_gt_assert(gt, domain->ref);
++
++		if (!--domain->ref) {
++			sleep |= BIT(domain->id);
++			domain_sleep(gt, domain);
++		}
++	}
++	for_each_fw_domain_masked(domain, sleep, fw, tmp) {
++		if (domain_sleep_wait(gt, domain) == 0)
++			fw->awake_domains &= ~BIT(domain->id);
++		else
++			*ack_fail |= BIT(domain->id);
++	}
++}
++
++static int __must_check __xe_force_wake_get(struct xe_force_wake *fw,
++					    enum xe_force_wake_domains domains,
++					    bool all_or_nothing)
+ {
+ 	struct xe_gt *gt = fw->gt;
+ 	struct xe_force_wake_domain *domain;
+-	unsigned int ref_incr = 0, awake_rqst = 0, awake_failed = 0;
++	unsigned int ref_incr = 0, awake_rqst = 0, awake_failed = 0, sleep_failed = 0;
+ 	unsigned int tmp, ref_rqst;
+ 	unsigned long flags;
+ 
+@@ -257,6 +266,12 @@ unsigned int __must_check xe_force_wake_get(struct xe_force_wake *fw,
+ 		}
+ 	}
+ 	ref_incr &= ~awake_failed;
++
++	if (all_or_nothing && awake_failed && ref_incr) {
++		__xe_force_wake_put_inner(fw, ref_incr, &sleep_failed);
++		ref_incr = 0;
++	}
++
+ 	spin_unlock_irqrestore(&fw->lock, flags);
+ 
+ 	xe_gt_WARN(gt, awake_failed, "Forcewake domain%s %#x failed to acknowledge awake request\n",
+@@ -268,6 +283,46 @@ unsigned int __must_check xe_force_wake_get(struct xe_force_wake *fw,
+ 	return ref_incr;
+ }
+ 
++/**
++ * xe_force_wake_get() : Increase the domain refcount
++ * @fw: struct xe_force_wake
++ * @domains: forcewake domains to get refcount on
++ *
++ * This function wakes up @domains if they are asleep and takes references.
++ * If requested domain is XE_FORCEWAKE_ALL then only applicable/initialized
++ * domains will be considered for refcount and it is a caller responsibility
++ * to check returned ref if it includes any specific domain by using
++ * xe_force_wake_ref_has_domain() function. Caller must call
++ * xe_force_wake_put() function to decrease incremented refcounts.
++ *
++ * Return: opaque reference to woken domains or zero if none of requested
++ * domains were awake.
++ */
++unsigned int __must_check xe_force_wake_get(struct xe_force_wake *fw,
++					    enum xe_force_wake_domains domains)
++{
++	return __xe_force_wake_get(fw, domains, false);
++}
++
++/**
++  * xe_force_wake_get_all() : Increase the domain refcount
++  * @fw: struct xe_force_wake
++  * @domains: forcewake domains to get refcount on
++  *
++  * This function wakes up @domains if they are asleep and takes references.
++  * Unlike xe_force_wake_get(), this function fails if any of the domains
++  * could not be woken up. It's all or nothing. This makes it always safe
++  * to check for 0 only.
++  *
++  * Return: opaque reference to woken domains or zero if not all of the requested
++  * domains could be woken up.
++  */
++unsigned int __must_check xe_force_wake_get_all(struct xe_force_wake *fw,
++						enum xe_force_wake_domains domains)
++{
++	return __xe_force_wake_get(fw, domains, true);
++}
++
+ /**
+  * xe_force_wake_put - Decrement the refcount and put domain to sleep if refcount becomes 0
+  * @fw: Pointer to the force wake structure
+@@ -281,10 +336,8 @@ unsigned int __must_check xe_force_wake_get(struct xe_force_wake *fw,
+ void xe_force_wake_put(struct xe_force_wake *fw, unsigned int fw_ref)
+ {
+ 	struct xe_gt *gt = fw->gt;
+-	struct xe_force_wake_domain *domain;
+-	unsigned int tmp, sleep = 0;
+ 	unsigned long flags;
+-	int ack_fail = 0;
++	unsigned int ack_fail = 0;
+ 
+ 	/*
+ 	 * Avoid unnecessary lock and unlock when the function is called
+@@ -297,20 +350,7 @@ void xe_force_wake_put(struct xe_force_wake *fw, unsigned int fw_ref)
+ 		fw_ref = fw->initialized_domains;
+ 
+ 	spin_lock_irqsave(&fw->lock, flags);
+-	for_each_fw_domain_masked(domain, fw_ref, fw, tmp) {
+-		xe_gt_assert(gt, domain->ref);
+-
+-		if (!--domain->ref) {
+-			sleep |= BIT(domain->id);
+-			domain_sleep(gt, domain);
+-		}
+-	}
+-	for_each_fw_domain_masked(domain, sleep, fw, tmp) {
+-		if (domain_sleep_wait(gt, domain) == 0)
+-			fw->awake_domains &= ~BIT(domain->id);
+-		else
+-			ack_fail |= BIT(domain->id);
+-	}
++	__xe_force_wake_put_inner(fw, fw_ref, &ack_fail);
+ 	spin_unlock_irqrestore(&fw->lock, flags);
+ 
+ 	xe_gt_WARN(gt, ack_fail, "Forcewake domain%s %#x failed to acknowledge sleep request\n",
+diff --git a/drivers/gpu/drm/xe/xe_force_wake.h b/drivers/gpu/drm/xe/xe_force_wake.h
+index 0fb1baae0a3a3..7102547260f67 100644
+--- a/drivers/gpu/drm/xe/xe_force_wake.h
++++ b/drivers/gpu/drm/xe/xe_force_wake.h
+@@ -19,6 +19,8 @@ void xe_force_wake_init_engines(struct xe_gt *gt,
+ 				struct xe_force_wake *fw);
+ unsigned int __must_check xe_force_wake_get(struct xe_force_wake *fw,
+ 					    enum xe_force_wake_domains domains);
++unsigned int __must_check xe_force_wake_get_all(struct xe_force_wake *fw,
++						enum xe_force_wake_domains domains);
+ void xe_force_wake_put(struct xe_force_wake *fw, unsigned int fw_ref);
+ 
+ static inline int
 -- 
 2.47.1
 
