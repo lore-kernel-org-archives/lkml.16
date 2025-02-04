@@ -1,357 +1,223 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4E8202C36
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 06:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2842E202C34;
+	Tue,  4 Feb 2025 06:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738652308; cv=none; b=MYzVHd9iSE8sKBeKNTgLVqD/zQPKo8PBFPr/0J5zVqjDRZsCKP9iDp9UEAI5oI2yWTpW9hgTCrbKOkKkZkOIjSzzXVL6ZMcMeQIkKJy9ekkEkdvzMQpVi01Asaaircc3eeEokB1atc1uNLO72xo9/e0chxTIGrfvplmskFrmwho=
+	t=1738652322; cv=none; b=QgDK5jwTNfFB46sd2unbPWayWWL5Ge4a9ishrxxN3rMD7DtNXfKNqEvlIKgArCkyK3s4D6IuESYdjpucnCO151Jl2s9/rQNOQOngk7dbAaUd2swKcYjl9bU0G7JrGV6XC4g5HkynLEJWkQ92Iyyr80anMp+1s8arrdH1u7pwgGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738652308; c=relaxed/simple;
-	bh=96HgJQVXEtnEWvGQaz3WHV5fyZYlxatEwWd2O8eUxTE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RU0R/e+/tSjHBmiwSkW0O/AqNW51gKDaquwI23YhyJmDppr1UTb0oAMSQHO8z/v2A39n/gHQe8P0rxbr7+buZd7bk36D+jFuuoJsEwaRY/JMGazoT1Lti6NKAwAqeiOldrOO4NwT3WX8t1jnW5yv07mxwi/zA0yjTjMqm/LtSo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LOvLPeGt; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738652322; c=relaxed/simple;
+	bh=uYYn3yWenve6vSHmsNALgGhHM4uN2l/TES2qIuxFWD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bE9xv5iA42MFrCFY6E9MpCIP2GKci6iUJKeT2crfKgLph5XZo4QDlhawWh9bJq9MReFXKUbeG85D5lCoJmli1WuTl29KH0cdnMPB380Od0hf5WJ7IBq4YOgCaLnOZMqJ4RmGUqIQip3ZI/AszrojC0yaNW/vr3OK1/AwzIfaCz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fz91ovJN; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOvLPeGt"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-723442fd88aso1403136a34.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 22:58:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738652305; x=1739257105; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a65k5SXteKyuZ7RWFZV+p3mgGeMzOMzhhd+ce8eWs20=;
-        b=LOvLPeGtw7Md2U4eLvSWslh5sLI+aG7xJDQrvHCYjbh0YUl+HAKK9QeaEAC0lUVvWU
-         GrPIfvBBmHkcVp+0OA33djl3zn+i4hw7WnGRN55ygmKMNH/mY3sGbm45oq9Byf5Hx3xB
-         65Uw3Qw9AigcNVn+VI2C4GjPyG/7CWnwwoKTMmsFkEvehVz6JPXJhPAsJWcsb1LeH88l
-         m1AdYBZVfYigbjyljX68JsqY2+rVaEGe5ADFSTRyfyuR30fNKaFwD4651E0lrP1G3Sxh
-         4vGPEzKoTvYjh67Z6e5DhrOzfxKUKpcEfcTbtltCkYAMU/AGvmumviYzIwzU74DlVE21
-         PPGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738652305; x=1739257105;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a65k5SXteKyuZ7RWFZV+p3mgGeMzOMzhhd+ce8eWs20=;
-        b=uxGl008uQTR0BL7Z+d0A75copNbiUfw+lkdeOC802Qb9rMod05vPYbrImNDsXeNCYT
-         Rqh5P8bUGP1bYJrII04zP0eMFxeB8XEAOTaj3sjteiwyA95WuwVpVtp0U2xpzGPfDvEw
-         TB4VU1BLkJ+fe3mPpvnenkKoz2cZIv2BHwaBQrY0Hmne06gTwJ5aw9mHVSVcah2Oc1kO
-         Xm7WYoEOz6/jxe68NsN4SwUJ8oQ4Y/24uVqPcmRKcu4FEFcKm+HfuqOnvyXVcEomFe5i
-         qVEW8F67YbhtnFreZP5p3ushs/Mh0FylBJaWWJgk2xjuX+st/NEO7KDFPqIuiZs5Cd1Z
-         VghQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKVvKzEP7WTQiq+OVJ6U8yfMdn7SXKyRSVWcNCevm2XmE0H8hCNjg5DQlV7oQnNrcOawOUUwTllMO1u14=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAbgD+zxwRtuZgk77q+SXTPMVIxXUrHHfd3NM5l0sQg6cwfTRV
-	cbg9uvTLVCXfCfMjqHwl3HksG0tcM1PhDPn7tLWHgcfF4oNIx8gP
-X-Gm-Gg: ASbGncsj0n+j84sT7DjeXMjpuBiAZhBy+aH9I8Sqe0mMKV7lEfq/BSgJIBEx1/vlF+z
-	Ew71rbvmWCcAmzZv4vYs7RH0Nnz6qUNCIGQht/3PqClW7imhRi3jYWYIlugVHhWoMfHyVD4jTxF
-	7WPU6BY9fYf39WCIk2G52WZFoumYXvMfx0r+ODaV5Ku1aa2GylDH6bxtIbO/sPDzo38dfcWPCBa
-	2dOhknKl4G4FQFGsyMr+T4Oi5SdJmgAEubkvu6wy5nV43hXxYUMBOIITgVswQUJaFp1a3GY6iWE
-	gQZpGKONbL4ac3GEMjbls9MeKJUaLMr59aSoxcFi/6xy5pchGTOJZWeeGz1hsI3o3rTiTW+73Px
-	X
-X-Google-Smtp-Source: AGHT+IHFvSdICYcWLZNF1kSu8yn1yGi/SdtEjNcRIwBz65TqXYEOxSVtPbF5IH6eNl0ZTzAu2RIC2Q==
-X-Received: by 2002:a05:6830:370b:b0:71e:223c:1789 with SMTP id 46e09a7af769-7265678521emr17539000a34.16.1738652305498;
-        Mon, 03 Feb 2025 22:58:25 -0800 (PST)
-Received: from DESKTOP-GL3U3CJ (162-207-94-177.lightspeed.irvnca.sbcglobal.net. [162.207.94.177])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726617cc389sm3214721a34.23.2025.02.03.22.58.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 22:58:24 -0800 (PST)
-From: Ian To <onlyian4981@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ian To <onlyian4981@gmail.com>
-Subject: [PATCH 3/4] staging: rtl8723bs: Remove unnecessary parentheses
-Date: Mon,  3 Feb 2025 22:57:21 -0800
-Message-ID: <3163c1de16443eddce6ab5cd31a891e0ce00c344.1738651582.git.onlyian4981@gmail.com>
-X-Mailer: git-send-email 2.45.3
-In-Reply-To: <cover.1738651582.git.onlyian4981@gmail.com>
-References: <cover.1738651582.git.onlyian4981@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fz91ovJN"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5145O0hI008510;
+	Tue, 4 Feb 2025 06:58:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=htx4Rv
+	+keElb9RwgJr3QR/rdU3QPcKXTK9WVFcQ5974=; b=fz91ovJNKs4Nam2Fg7puYW
+	dqOoqgoOXZmfrg8KtAsfnYVtbj1oMOhpfKy25qjjgve8En+FfYUN7FWGE5h0UXfQ
+	1/tJkv4RfxF+4RK/roWiALFIuYv37ROZaoSyLH+oPLVk6Lo8nKxR/RPF3VLRBh4r
+	6751SgzmbMq2rSw5lx/FSHeNObbGZ6tPj0SGkvZthLwiFqHDEdUx5NI8J9df7UMD
+	19Yj7sZu/uflw6MTN3vHOoR6AybRkv6z/m69cbVKUWJ4HIFWwa8kf68LZRzHOOK0
+	MB80XneahhkkDZEoZ11BW5UdQF9VRmTFLlzXSGhftlwJ3YspC09Y3LQgjwdWubhQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kcq7rc1a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 06:58:13 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5146wCbo014943;
+	Tue, 4 Feb 2025 06:58:12 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kcq7rc14-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 06:58:12 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5145Sr5Q021486;
+	Tue, 4 Feb 2025 06:58:11 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j0n19vtw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 06:58:11 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5146wAar19726652
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Feb 2025 06:58:10 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ED6E320043;
+	Tue,  4 Feb 2025 06:58:09 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D846320040;
+	Tue,  4 Feb 2025 06:58:00 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.43.126.219])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  4 Feb 2025 06:58:00 +0000 (GMT)
+Date: Tue, 4 Feb 2025 12:27:52 +0530
+From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, Network Development <netdev@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>,
+        Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+        Simon Horman <horms@kernel.org>, Song Liu <song@kernel.org>,
+        Yonghong Song <yonghong.song@linux.dev>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>
+Subject: Re: [PATCH] bpf: Fix mix-up of 4096 and page size.
+Message-ID: <Z6G6cBP2YPmNyk+s@linux.ibm.com>
+References: <20250122183720.1411176-1-skb99@linux.ibm.com>
+ <CAADnVQJcmyMmxPfSaKgqMiCDZP=Pe8-Jf7NnEdfgxejvZr+44g@mail.gmail.com>
+ <332c50f5-3c68-4fce-8bb3-161f76f2119c@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <332c50f5-3c68-4fce-8bb3-161f76f2119c@intel.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: B2V72CNMvNzNWjZ3BlCbLSCPbtFf9ZaM
+X-Proofpoint-ORIG-GUID: EMBRkge-YUeRwsg-y_FrW5b1pY3uSvVs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_03,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ malwarescore=0 impostorscore=0 bulkscore=0 adultscore=0 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502040051
 
-Unnecessary parentheses were present and removed
+On Tue, Jan 28, 2025 at 04:03:11PM +0100, Alexander Lobakin wrote:
+> From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Date: Thu, 23 Jan 2025 21:14:04 -0800
+> 
+> > On Wed, Jan 22, 2025 at 10:38 AM Saket Kumar Bhaskar
+> > <skb99@linux.ibm.com> wrote:
+> >>
+> >> For platforms on powerpc architecture with a default page size greater
+> >> than 4096, there was an inconsistency in fragment size calculation.
+> >> This caused the BPF selftest xdp_adjust_tail/xdp_adjust_frags_tail_grow
+> >> to fail on powerpc.
+> >>
+> >> The issue occurred because the fragment buffer size in
+> >> bpf_prog_test_run_xdp() was set to 4096, while the actual data size in
+> >> the fragment within the shared skb was checked against PAGE_SIZE
+> >> (65536 on powerpc) in min_t, causing it to exceed 4096 and be set
+> >> accordingly. This discrepancy led to an overflow when
+> >> bpf_xdp_frags_increase_tail() checked for tailroom, as skb_frag_size(frag)
+> >> could be greater than rxq->frag_size (when PAGE_SIZE > 4096).
+> >>
+> >> This commit updates the page size references to 4096 to ensure consistency
+> >> and prevent overflow issues in fragment size calculations.
+> > 
+> > This isn't right. Please fix the selftest instead.
+> 
+> It's not _that_ easy, I had tried in the past. Anyway, this patch is
+> *not* a good "solution".
+> 
+> If you (Saket) really want to fix this, both test_run and the selftest
+> must be in sync, so you need to (both are arch-dependent): 1) get the
+> correct PAGE_SIZE; 2) calculate the correct tailroom in userspace (which
+> depends on sizeof(shinfo) and SKB_DATA_ALIGN -> SMP_CACHE_BYTES).
+> 
+> > 
+> > pw-bot: cr
+> 
+> Thanks,
+> Olek
+There is a mixup in kernel b/w 4096 and PAGE_SIZE and all selftest seem
+to be based on 4096 as the size, so I changed the PAGE_SIZE to 4096,
+but if we have to use PAGE_SIZE we need this change in kernel.
+In place of PAGE_SIZE 4096 was used here:
 
-Signed-off-by: Ian To <onlyian4981@gmail.com>
----
- .../staging/rtl8723bs/core/rtw_wlan_util.c    | 68 +++++++++----------
- 1 file changed, 34 insertions(+), 34 deletions(-)
+diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+index 501ec4249..6b7fddfbb 100644
+--- a/net/bpf/test_run.c
++++ b/net/bpf/test_run.c
+@@ -1251,7 +1251,7 @@ int bpf_prog_test_run_xdp(struct bpf_prog *prog, const union bpf_attr *kattr,
+                headroom -= ctx->data;
+        }
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-index 7929e93c23ac..dfe036cd4ef7 100644
---- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-@@ -381,7 +381,7 @@ int is_client_associated_to_ap(struct adapter *padapter)
- 		return _FAIL;
- 
- 	pmlmeext = &padapter->mlmeextpriv;
--	pmlmeinfo = &(pmlmeext->mlmext_info);
-+	pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	if ((pmlmeinfo->state & WIFI_FW_ASSOC_SUCCESS) &&
- 	    ((pmlmeinfo->state & 0x03) == WIFI_FW_STATION_STATE))
-@@ -393,7 +393,7 @@ int is_client_associated_to_ap(struct adapter *padapter)
- int is_client_associated_to_ibss(struct adapter *padapter)
- {
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	if ((pmlmeinfo->state & WIFI_FW_ASSOC_SUCCESS) &&
- 	    ((pmlmeinfo->state & 0x03) == WIFI_FW_ADHOC_STATE))
-@@ -406,7 +406,7 @@ int is_IBSS_empty(struct adapter *padapter)
- {
- 	unsigned int i;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	for (i = IBSS_START_MAC_ID; i < NUM_STA; i++) {
- 		if (pmlmeinfo->FW_sta_info[i].status == 1)
-@@ -510,7 +510,7 @@ void clear_cam_cache(struct adapter *adapter, u8 id)
- 
- 	spin_lock_bh(&cam_ctl->lock);
- 
--	memset(&(dvobj->cam_cache[id]), 0, sizeof(struct cam_entry_cache));
-+	memset(&dvobj->cam_cache[id], 0, sizeof(struct cam_entry_cache));
- 
- 	spin_unlock_bh(&cam_ctl->lock);
- }
-@@ -660,7 +660,7 @@ int allocate_fw_sta_entry(struct adapter *padapter)
- {
- 	unsigned int mac_id;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	for (mac_id = IBSS_START_MAC_ID; mac_id < NUM_STA; mac_id++) {
- 		if (pmlmeinfo->FW_sta_info[mac_id].status == 0) {
-@@ -676,7 +676,7 @@ int allocate_fw_sta_entry(struct adapter *padapter)
- void flush_all_cam_entry(struct adapter *padapter)
- {
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	invalidate_cam_all(padapter);
- 	/* clear default key related key search setting */
-@@ -688,19 +688,19 @@ void flush_all_cam_entry(struct adapter *padapter)
- int WMM_param_handler(struct adapter *padapter, struct ndis_80211_var_ie *pIE)
- {
- 	/* struct registry_priv *pregpriv = &padapter->registrypriv; */
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	if (pmlmepriv->qospriv.qos_option == 0) {
- 		pmlmeinfo->WMM_enable = 0;
- 		return false;
- 	}
- 
--	if (!memcmp(&(pmlmeinfo->WMM_param), (pIE->data + 6), sizeof(struct WMM_para_element)))
-+	if (!memcmp(&pmlmeinfo->WMM_param, (pIE->data + 6), sizeof(struct WMM_para_element)))
- 		return false;
- 	else
--		memcpy(&(pmlmeinfo->WMM_param), (pIE->data + 6), sizeof(struct WMM_para_element));
-+		memcpy(&pmlmeinfo->WMM_param, (pIE->data + 6), sizeof(struct WMM_para_element));
- 
- 	pmlmeinfo->WMM_enable = 1;
- 	return true;
-@@ -740,7 +740,7 @@ void WMMOnAssocRsp(struct adapter *padapter)
- 	u32 acParm, i;
- 	u32 edca[4], inx[4];
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
- 	struct registry_priv *pregpriv = &padapter->registrypriv;
- 
-@@ -841,9 +841,9 @@ static void bwmode_update_check(struct adapter *padapter, struct ndis_80211_var_
- 	unsigned char  new_bwmode;
- 	unsigned char  new_ch_offset;
- 	struct HT_info_element	 *pHT_info;
--	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
- 	struct ht_priv *phtpriv = &pmlmepriv->htpriv;
- 	u8 cbw40_enable = 0;
-@@ -903,7 +903,7 @@ static void bwmode_update_check(struct adapter *padapter, struct ndis_80211_var_
- 
- 	if (true == pmlmeinfo->bwmode_updated) {
- 		struct sta_info *psta;
--		struct wlan_bssid_ex	*cur_network = &(pmlmeinfo->network);
-+		struct wlan_bssid_ex *cur_network = &pmlmeinfo->network;
- 		struct sta_priv *pstapriv = &padapter->stapriv;
- 
- 		/* set_channel_bwmode(padapter, pmlmeext->cur_channel, pmlmeext->cur_ch_offset, pmlmeext->cur_bwmode); */
-@@ -933,7 +933,7 @@ void HT_caps_handler(struct adapter *padapter, struct ndis_80211_var_ie *pIE)
- 	u8 max_AMPDU_len, min_MPDU_spacing;
- 	u8 cur_ldpc_cap = 0, cur_stbc_cap = 0;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 	struct ht_priv *phtpriv = &pmlmepriv->htpriv;
- 
-@@ -996,7 +996,7 @@ void HT_caps_handler(struct adapter *padapter, struct ndis_80211_var_ie *pIE)
- void HT_info_handler(struct adapter *padapter, struct ndis_80211_var_ie *pIE)
- {
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 	struct ht_priv *phtpriv = &pmlmepriv->htpriv;
- 
-@@ -1010,7 +1010,7 @@ void HT_info_handler(struct adapter *padapter, struct ndis_80211_var_ie *pIE)
- 		return;
- 
- 	pmlmeinfo->HT_info_enable = 1;
--	memcpy(&(pmlmeinfo->HT_info), pIE->data, pIE->length);
-+	memcpy(&pmlmeinfo->HT_info, pIE->data, pIE->length);
- }
- 
- void HTOnAssocRsp(struct adapter *padapter)
-@@ -1019,7 +1019,7 @@ void HTOnAssocRsp(struct adapter *padapter)
- 	unsigned char min_MPDU_spacing;
- 	/* struct registry_priv  *pregpriv = &padapter->registrypriv; */
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	if ((pmlmeinfo->HT_info_enable) && (pmlmeinfo->HT_caps_enable)) {
- 		pmlmeinfo->HT_enable = 1;
-@@ -1046,20 +1046,20 @@ void HTOnAssocRsp(struct adapter *padapter)
- void ERP_IE_handler(struct adapter *padapter, struct ndis_80211_var_ie *pIE)
- {
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	if (pIE->length > 1)
- 		return;
- 
- 	pmlmeinfo->ERP_enable = 1;
--	memcpy(&(pmlmeinfo->ERP_IE), pIE->data, pIE->length);
-+	memcpy(&pmlmeinfo->ERP_IE, pIE->data, pIE->length);
- }
- 
- void VCS_update(struct adapter *padapter, struct sta_info *psta)
- {
- 	struct registry_priv  *pregpriv = &padapter->registrypriv;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	switch (pregpriv->vrtl_carrier_sense) {/* 0:off 1:on 2:auto */
- 	case 0: /* off */
-@@ -1114,7 +1114,7 @@ int rtw_check_bcn_info(struct adapter *Adapter, u8 *pframe, u32 packet_len)
- 	unsigned int len;
- 	unsigned char *p;
- 	unsigned short	val16, subtype;
--	struct wlan_network *cur_network = &(Adapter->mlmepriv.cur_network);
-+	struct wlan_network *cur_network = &Adapter->mlmepriv.cur_network;
- 	/* u8 wpa_ie[255], rsn_ie[255]; */
- 	u16 wpa_len = 0, rsn_len = 0;
- 	u8 encryp_protocol = 0;
-@@ -1336,8 +1336,8 @@ unsigned int is_ap_in_tkip(struct adapter *padapter)
- 	u32 i;
- 	struct ndis_80211_var_ie *pIE;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
--	struct wlan_bssid_ex		*cur_network = &(pmlmeinfo->network);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
-+	struct wlan_bssid_ex *cur_network = &pmlmeinfo->network;
- 
- 	if (rtw_get_capability((struct wlan_bssid_ex *)cur_network) & WLAN_CAPABILITY_PRIVACY) {
- 		for (i = sizeof(struct ndis_802_11_fix_ie); i < pmlmeinfo->network.ie_length;) {
-@@ -1373,7 +1373,7 @@ int support_short_GI(struct adapter *padapter, struct HT_caps_element *pHT_caps,
- {
- 	unsigned char bit_offset;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	if (!(pmlmeinfo->HT_enable))
- 		return _FAIL;
-@@ -1482,7 +1482,7 @@ unsigned char check_assoc_AP(u8 *pframe, uint len)
- void update_IOT_info(struct adapter *padapter)
- {
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	switch (pmlmeinfo->assoc_AP_vendor) {
- 	case HT_IOT_PEER_MARVELL:
-@@ -1512,7 +1512,7 @@ void update_IOT_info(struct adapter *padapter)
- void update_capinfo(struct adapter *Adapter, u16 updateCap)
- {
- 	struct mlme_ext_priv *pmlmeext = &Adapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 	bool		ShortPreamble;
- 
- 	/*  Check preamble mode, 2005.01.06, by rcnjko. */
-@@ -1564,8 +1564,8 @@ void update_wireless_mode(struct adapter *padapter)
- 	int network_type = 0;
- 	u32 SIFS_Timer;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
--	struct wlan_bssid_ex *cur_network = &(pmlmeinfo->network);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
-+	struct wlan_bssid_ex *cur_network = &pmlmeinfo->network;
- 	unsigned char *rate = cur_network->supported_rates;
- 
- 	if ((pmlmeinfo->HT_info_enable) && (pmlmeinfo->HT_caps_enable))
-@@ -1588,7 +1588,7 @@ void update_wireless_mode(struct adapter *padapter)
- 
- 	SetHwReg8723BS(padapter, HW_VAR_RESP_SIFS,  (u8 *)&SIFS_Timer);
- 
--	SetHwReg8723BS(padapter, HW_VAR_WIRELESS_MODE,  (u8 *)&(pmlmeext->cur_wireless_mode));
-+	SetHwReg8723BS(padapter, HW_VAR_WIRELESS_MODE,  (u8 *)&pmlmeext->cur_wireless_mode);
- 
- 	if (pmlmeext->cur_wireless_mode & WIRELESS_11B)
- 		update_mgnt_tx_rate(padapter, IEEE80211_CCK_RATE_1MB);
-@@ -1613,8 +1613,8 @@ int update_sta_support_rate(struct adapter *padapter, u8 *pvar_ie, uint var_ie_l
- 	unsigned int	ie_len;
- 	struct ndis_80211_var_ie *pIE;
- 	int	supportRateNum = 0;
--	struct mlme_ext_priv *pmlmeext = &(padapter->mlmeextpriv);
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, WLAN_EID_SUPP_RATES, &ie_len, var_ie_len);
- 	if (!pIE)
-@@ -1640,7 +1640,7 @@ void process_addba_req(struct adapter *padapter, u8 *paddba_req, u8 *addr)
- 	struct sta_priv *pstapriv = &padapter->stapriv;
- 	struct ADDBA_request *preq = (struct ADDBA_request *)paddba_req;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	psta = rtw_get_stainfo(pstapriv, addr);
- 
-@@ -1683,7 +1683,7 @@ void adaptive_early_32k(struct mlme_ext_priv *pmlmeext, u8 *pframe, uint len)
- 	__le32 *pbuf;
- 	u64 tsf = 0;
- 	u32 delay_ms;
--	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
-+	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
- 
- 	pmlmeext->bcn_cnt++;
- 
--- 
-2.45.3
+-       max_data_sz = 4096 - headroom - tailroom;
++       max_data_sz = PAGE_SIZE - headroom - tailroom;
+        if (size > max_data_sz) {
+                /* disallow live data mode for jumbo frames */
+                if (do_live)
 
+Assuming that change in kernel we should also update the selftest to 
+64K page size for ppc64:
+
+diff --git a/tools/testing/selftests/bpf/prog_tests/xdp_adjust_tail.c b/tools/testing/selftests/bpf/prog_tests/xdp_adjust_tail.c
+index 53d6ad8c2..037142e21 100644
+--- a/tools/testing/selftests/bpf/prog_tests/xdp_adjust_tail.c
++++ b/tools/testing/selftests/bpf/prog_tests/xdp_adjust_tail.c
+@@ -226,7 +226,7 @@ static void test_xdp_adjust_frags_tail_grow(void)
+
+        prog_fd = bpf_program__fd(prog);
+
+-       buf = malloc(16384);
++       buf = malloc(262144);
+        if (!ASSERT_OK_PTR(buf, "alloc buf 16Kb"))
+                goto out;
+
+@@ -254,12 +254,12 @@ static void test_xdp_adjust_frags_tail_grow(void)
+                ASSERT_EQ(buf[i], 1, "9Kb+10b-untouched");
+
+        /* Test a too large grow */
+-       memset(buf, 1, 16384);
+-       exp_size = 9001;
++       memset(buf, 1, 262144);
++       exp_size = 132001;
+
+        topts.data_in = topts.data_out = buf;
+-       topts.data_size_in = 9001;
+-       topts.data_size_out = 16384;
++       topts.data_size_in = 132001;
++       topts.data_size_out = 262144;
+        err = bpf_prog_test_run_opts(prog_fd, &topts);
+
+        ASSERT_OK(err, "9Kb+10b");
+
+diff --git a/tools/testing/selftests/bpf/progs/test_xdp_adjust_tail_grow.c b/tools/testing/selftests/bpf/progs/test_xdp_adjust_tail_grow.c
+index 81bb38d72..40a0c5469 100644
+--- a/tools/testing/selftests/bpf/progs/test_xdp_adjust_tail_grow.c
++++ b/tools/testing/selftests/bpf/progs/test_xdp_adjust_tail_grow.c
+@@ -27,8 +27,8 @@ int _xdp_adjust_tail_grow(struct xdp_md *xdp)
+                offset = 4096 - 256 - tailroom - data_len;
+        } else if (data_len == 9000) {
+                offset = 10;
+-       } else if (data_len == 9001) {
+-               offset = 4096;
++       } else if (data_len == 132001) {
++               offset = 65536;
+        } else {
+                return XDP_ABORTED; /* No matching test */
+        }
+
+The above change is intended for feedback. The date_len and other 
+values in the test cases can be adjusted to be based on the page 
+size, rather than being hard-coded, to ensure compatibility with 
+different page sizes.
+
+Thanks,
+Saket
