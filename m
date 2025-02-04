@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C032163AA;
-	Tue,  4 Feb 2025 17:35:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A8F216383;
+	Tue,  4 Feb 2025 17:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738690552; cv=none; b=fyKulo3BXULFyX1gfz+vYUFiXej4JB096Dvk7ISRMI82IngcO4ZZJbDp3gbbsL311CKsLUP/i6Md43cT+XKLShrR8MOs3STo6w8OmLTK6E2/JPRllpMmB+2+14ThqsRZtyMy6cmcdqbC582022jydI7T1aP6KLhDkYELxvCjgjU=
+	t=1738690564; cv=none; b=T1xBSkZuW3GDYY6bHly2wGeIT69LHgICrJ4Zl6/Uo3S4vEcT7HrgruKuMtcEGEOroGoQMmSf592Odior9coUYA5YQ4nAbplSt2YKRP/Dh+uz7zs1HusMOHiyGSfneubH9orcwW9qGgnPtGE8pLDj4WudRjJqsz/CPgt16csYtCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738690552; c=relaxed/simple;
-	bh=GgxfVN861pKW86Az0//GU2BTNPe6s6rSZNyJJoV8Pn4=;
+	s=arc-20240116; t=1738690564; c=relaxed/simple;
+	bh=PewXt3mq2ZzovNzL7I8Fp3xpOP5/pryHgDbcA5gr/7A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WHmdLjdoo0GBqcVj9T30H0Cky5OniuZiuhCcKoVF7bQCUg7xS1/4dzcrdxHX4515xLHEt6Xm5wEQFQ14oCSSfuY7qxTCNE3v1AW7gM11IQsKuX7odtQ3j+cE5DQt5wrfsDKOsuvjKbHrJ3Ql53s3SzePmImnPgoLZtXmaw6Vhrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jVrYBjQh; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version; b=lQ2NtiQTHbDK32UbAV9LGkWgYhnBu+Y8txmqCsMtx0/dniYLHBpTIYe7htmZFv5mj7G/63dxa26TLMFJHQIggilcRqUpA0TaiKsidD58WngZvZAneYsTgYkRDk4WqHQxHxwJ8BcV9dSPoFXq/uVl9928q8J9824lAPhZpnmkwvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jWwCojzY; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jVrYBjQh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jWwCojzY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738690551; x=1770226551;
+  t=1738690562; x=1770226562;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=GgxfVN861pKW86Az0//GU2BTNPe6s6rSZNyJJoV8Pn4=;
-  b=jVrYBjQhO2QmuAwBzqwkPwrrzPU5Nwr4rnCsPXzPE3azWzRnsV67F5cE
-   qNaKF77o2/MmWr94b1YMv4AcIUFwBJ534hDfJR/2DskqfHhFNoDehhdpX
-   mWEhUhIbGxgFXSwt75w0F7bhUk+0/ET4eLWXewymsvIYOCG/bmzJAlO0m
-   w+IyyhKVsrDy9S9K5UTe4J6Gi3d+Z+kFtbdZCQu2A6BehBIdrxNTLVC1j
-   GMcXqKzSy4l5bVvz2kwUoW1XBKV6HG53eqSypQstIEht+w2kTSMfuf8lp
-   TfZD7LaUD1OOyrZDye0efbG5oEuStbEk8Paq4DI6elvgaAIcTAG1cn0d8
-   g==;
-X-CSE-ConnectionGUID: aQ3yqOPmRuSPJyPVNNbHFA==
-X-CSE-MsgGUID: uyTPCFycSHKblo6IJDVjlQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38930640"
+  bh=PewXt3mq2ZzovNzL7I8Fp3xpOP5/pryHgDbcA5gr/7A=;
+  b=jWwCojzYdr/+UtD3oziggohUdthZQHHTjWF/Sxw8vrndR08tKcZrrlB/
+   eHDvmqTsx80M5qj3DNc2uNiflBoQ/b4eXEPT9u/Sndd47JJTf5fYxmeVR
+   ovT65YY5xMer9vS3bP9sqGJeEhHa4TIh2LrSGfGLtxw7wOnpomrowCuUD
+   9w21fw44JakFSn37Es9KzlN8rYanpfPL9vaFTVioCFyYazKZGTzW55zBR
+   F5O4Q6Pm1ppGsRnC+6UnfwTcKeIaE4ZAcG/1GGrK/6NC4c6lG2sJcGrEG
+   HH6p20dMuuSGaq/tiSOYzLz4Q1IaZTsItmVZBrr96mzA9WyoKKBjRzt+p
+   w==;
+X-CSE-ConnectionGUID: fW3P6L61TpGZ0fae9ArqHg==
+X-CSE-MsgGUID: 4vtfLn6TRzSQAGKjC9Icww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38930679"
 X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="38930640"
+   d="scan'208";a="38930679"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:35:50 -0800
-X-CSE-ConnectionGUID: EjCbNRnNQ/eG0RktDBjJIQ==
-X-CSE-MsgGUID: zLXQup0VQWiJeXH9lbUyzw==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:36:02 -0800
+X-CSE-ConnectionGUID: PpX6VWM3RaGBO1JoNfSfGA==
+X-CSE-MsgGUID: vYDFTil1TqeMDIrSmNQ1tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147866602"
+   d="scan'208";a="147866647"
 Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.244.61])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:35:38 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:35:50 -0800
 From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
 To: luto@kernel.org,
 	xin@zytor.com,
@@ -98,9 +98,9 @@ Cc: kasan-dev@googlegroups.com,
 	linux-mm@kvack.org,
 	llvm@lists.linux.dev,
 	linux-doc@vger.kernel.org
-Subject: [PATCH 06/15] x86: Reset tag for virtual to physical address conversions
-Date: Tue,  4 Feb 2025 18:33:47 +0100
-Message-ID: <80aa9a4c633502b5330c40f8b2d4da705dca92e7.1738686764.git.maciej.wieczor-retman@intel.com>
+Subject: [PATCH 07/15] mm: Pcpu chunk address tag reset
+Date: Tue,  4 Feb 2025 18:33:48 +0100
+Message-ID: <e7e04692866d02e6d3b32bb43b998e5d17092ba4.1738686764.git.maciej.wieczor-retman@intel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
 References: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
@@ -112,96 +112,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Any place where pointer arithmetic is used to convert a virtual address
-into a physical one can raise errors if the virtual address is tagged.
+The problem presented here is related to NUMA systems and tag-based
+KASAN mode. Getting to it can be explained in the following points:
 
-Reset the pointer's tag by sign extending the tag bits in macros that do
-pointer arithmetic in address conversions. There will be no change in
-compiled code with KASAN disabled since the compiler will optimize the
-__tag_reset() out.
+	1. A new chunk is created with pcpu_create_chunk() and
+	   vm_structs are allocated. On systems with one NUMA node only
+	   one is allocated, but with more NUMA nodes at least a second
+	   one will be allocated too.
+
+	2. chunk->base_addr is assigned the modified value of
+	   vms[0]->addr and thus inherits the tag of this allocated
+	   structure.
+
+	3. In pcpu_alloc() for each possible cpu pcpu_chunk_addr() is
+	   executed which calculates per cpu pointers that correspond to
+	   the vms structure addresses. The calculations are based on
+	   adding an offset from a table to chunk->base_addr.
+
+Here the problem presents itself since for addresses based on vms[1] and
+up, the tag will be different than the ones based on vms[0] (base_addr).
+The tag mismatch happens and an error is reported.
+
+Reset the base_addr tag, since it will disable tag checks for pointers
+derived arithmetically from base_addr that would inherit its tag.
 
 Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
 ---
- arch/x86/include/asm/page.h    | 17 +++++++++++++----
- arch/x86/include/asm/page_64.h |  2 +-
- arch/x86/mm/physaddr.c         |  1 +
- 3 files changed, 15 insertions(+), 5 deletions(-)
+ mm/percpu-vm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
-index 1b93ff80b43b..09c3914d8ce4 100644
---- a/arch/x86/include/asm/page.h
-+++ b/arch/x86/include/asm/page.h
-@@ -7,6 +7,7 @@
- #ifdef __KERNEL__
+diff --git a/mm/percpu-vm.c b/mm/percpu-vm.c
+index cd69caf6aa8d..e13750d804f7 100644
+--- a/mm/percpu-vm.c
++++ b/mm/percpu-vm.c
+@@ -347,7 +347,7 @@ static struct pcpu_chunk *pcpu_create_chunk(gfp_t gfp)
+ 	}
  
- #include <asm/page_types.h>
-+#include <asm/kasan.h>
+ 	chunk->data = vms;
+-	chunk->base_addr = vms[0]->addr - pcpu_group_offsets[0];
++	chunk->base_addr = kasan_reset_tag(vms[0]->addr) - pcpu_group_offsets[0];
  
- #ifdef CONFIG_X86_64
- #include <asm/page_64.h>
-@@ -41,7 +42,7 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
- #define __pa(x)		__phys_addr((unsigned long)(x))
- #endif
- 
--#define __pa_nodebug(x)	__phys_addr_nodebug((unsigned long)(x))
-+#define __pa_nodebug(x)	__phys_addr_nodebug((unsigned long)(__tag_reset(x)))
- /* __pa_symbol should be used for C visible symbols.
-    This seems to be the official gcc blessed way to do such arithmetic. */
- /*
-@@ -65,9 +66,17 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
-  * virt_to_page(kaddr) returns a valid pointer if and only if
-  * virt_addr_valid(kaddr) returns true.
-  */
--#define virt_to_page(kaddr)	pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
-+
-+#ifdef CONFIG_KASAN_SW_TAGS
-+#define page_to_virt(x)	({									\
-+	__typeof__(x) __page = x;								\
-+	void *__addr = __va(page_to_pfn((__typeof__(x))__tag_reset(__page)) << PAGE_SHIFT);	\
-+	(void *)__tag_set((const void *)__addr, page_kasan_tag(__page));			\
-+})
-+#endif
-+#define virt_to_page(kaddr)	pfn_to_page(__pa((void *)__tag_reset(kaddr)) >> PAGE_SHIFT)
- extern bool __virt_addr_valid(unsigned long kaddr);
--#define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long) (kaddr))
-+#define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long)(__tag_reset(kaddr)))
- 
- static __always_inline void *pfn_to_kaddr(unsigned long pfn)
- {
-@@ -81,7 +90,7 @@ static __always_inline u64 __canonical_address(u64 vaddr, u8 vaddr_bits)
- 
- static __always_inline u64 __is_canonical_address(u64 vaddr, u8 vaddr_bits)
- {
--	return __canonical_address(vaddr, vaddr_bits) == vaddr;
-+	return __canonical_address(vaddr, vaddr_bits) == __tag_reset(vaddr);
- }
- 
- #endif	/* __ASSEMBLY__ */
-diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
-index f3d257c45225..6e24aeff36eb 100644
---- a/arch/x86/include/asm/page_64.h
-+++ b/arch/x86/include/asm/page_64.h
-@@ -33,7 +33,7 @@ static __always_inline unsigned long __phys_addr_nodebug(unsigned long x)
- extern unsigned long __phys_addr(unsigned long);
- extern unsigned long __phys_addr_symbol(unsigned long);
- #else
--#define __phys_addr(x)		__phys_addr_nodebug(x)
-+#define __phys_addr(x)		__phys_addr_nodebug(__tag_reset(x))
- #define __phys_addr_symbol(x) \
- 	((unsigned long)(x) - __START_KERNEL_map + phys_base)
- #endif
-diff --git a/arch/x86/mm/physaddr.c b/arch/x86/mm/physaddr.c
-index fc3f3d3e2ef2..7f2b11308245 100644
---- a/arch/x86/mm/physaddr.c
-+++ b/arch/x86/mm/physaddr.c
-@@ -14,6 +14,7 @@
- #ifdef CONFIG_DEBUG_VIRTUAL
- unsigned long __phys_addr(unsigned long x)
- {
-+	x = __tag_reset(x);
- 	unsigned long y = x - __START_KERNEL_map;
- 
- 	/* use the carry flag to determine if x was < __START_KERNEL_map */
+ 	pcpu_stats_chunk_alloc();
+ 	trace_percpu_create_chunk(chunk->base_addr);
 -- 
 2.47.1
 
