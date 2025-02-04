@@ -1,130 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D214F2144A6;
-	Tue,  4 Feb 2025 15:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947EF214217
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738683732; cv=none; b=T489SXt+z+6701oPFRlkZ4Erk86lS4MOK8MauctNenAmk/oZio6LCDB4due6hGRw2a+rKf3QGdWFjZQccJHzFvUjTNj/vzcavgue9+fY1n4Zu9AvkL0TEbyE9CxYjuSZvFpCKPdqVMu/h+gaHwg5CZsfUCAG6HR8zRuhFMsmEuA=
+	t=1738683762; cv=none; b=GS8pHLACGohcoInKkouoYe98PZg50Qz2Pq7yfu1bx9Y65177Y71sTrmD7aSQEtiZwaWLhKggSHUbIEwksqYwe8iDd+NbeLPbwEHlhnP49RnmUzFuY2DwX9R+VpQ2jDwRUu4cm/6KnsIHn5MUzHd23Q8x3/ANYwmK+iD+mfOg5/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738683732; c=relaxed/simple;
-	bh=iVHKGJNjRO35eXVIY4eSlGM1uP60Zox50GhMXKKfrLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dNRgRIfi0lBMO9dN4lXAEhcLoY0uPN18Mxjzeje/ciHoO1wniKZ4dCZURx7kTjLyY7YowaTzR9AyYyxsQn2jjtU8lFtuEdbJmHZzRNd80Mj8JnBhrdeTeiFdGUtcjgC7GSnJ2ie7isvtHs7K8YuwLcJcvuCvWwRXYbhFsz17CZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FAeIHUcT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738683762; c=relaxed/simple;
+	bh=PKhgCI0Zy0bjDtG6fmMXd/y+VHyTFHTVxbURGIl+GJg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UXIcBHBaxsvBPWFIKBteJXR1ntNarUJTepNOIRUlHLyi4exi4T9nNg+Cjn4fcTYsREAuuEPARR9MjmvK+CsvUQF9Iv6ZkryLhwNUPwwoGOYOknFiicJrQAWUhvqz9OB9OzoAgGQa6AkQwrmhIZqeuAdQB2HkrydyQSY4cghJy28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BtJAX/3c; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FAeIHUcT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 289FFC4CEDF;
-	Tue,  4 Feb 2025 15:42:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738683729;
-	bh=iVHKGJNjRO35eXVIY4eSlGM1uP60Zox50GhMXKKfrLI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FAeIHUcTO2HNivd8QQvzocLclEGernvBjSZTFdvZo98nGk4rl1TZr5TMjywkR/51T
-	 EEuUuNLK8P5uK7qPLM248OwS8eTjUWKc1gtthuqo0BQYEjxeT4JX8fzqCEs0faqM5C
-	 PPT/fCHQhAQtog3/x6Og9JDlE7/qbQc+Lq6N1XOxoJCyqFA9JmEI+I8WdnN5k0q5o/
-	 sVH4HLRnnnzWD7fbPJICMINi8Yyw1wKN/S4raEGAIrH4cmwfdnKvZ8Ey9CsGvfCuUd
-	 DwRefgl4aoJENujTh5T+kU0BJX5jDA349E1cyksh60u7YkSOxAwPzyrYcdiPbK0yEY
-	 kMnBOx/mTYuvg==
-Date: Tue, 4 Feb 2025 07:42:06 -0800
-From: Kees Cook <kees@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jakub Jelinek <jakub@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] stackinit: Add union initialization to selftests
-Message-ID: <202502040737.93314491DA@keescook>
-References: <20250127190636.it.745-kees@kernel.org>
- <20250127191031.245214-2-kees@kernel.org>
- <CAMuHMdXW8VbtOAixO7w+aDOG70aZtZ50j1Ybcr8B3eYnRUcrcA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BtJAX/3c"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738683743;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rjgh0NHIE24t3tM5YBjaxn3uiX5S8lp37xeGpZmhvUY=;
+	b=BtJAX/3cIq3u+BCDiQXj3NtfkwBHxtwf+VEg+cij6VVtjPSaaCh22p2LgTAVCBXYGJks0L
+	eoPTTp7d1w3ThlX4LffgJSFdzz59wIN/uUMu5rZiS6CHe30pTysd2wCDjpQufqLxDJx5Bh
+	9yTgrNl4t1y3l4oUNtv/00KscAUZYow=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI: video: Use str_yes_no() helper in acpi_video_bus_add()
+Date: Tue,  4 Feb 2025 16:42:00 +0100
+Message-ID: <20250204154159.3980-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXW8VbtOAixO7w+aDOG70aZtZ50j1Ybcr8B3eYnRUcrcA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Feb 03, 2025 at 03:44:38PM +0100, Geert Uytterhoeven wrote:
-> Hi Kees,
-> 
-> On Mon, 27 Jan 2025 at 20:11, Kees Cook <kees@kernel.org> wrote:
-> > The stack initialization selftests were checking scalars, strings,
-> > and structs, but not unions. Add union tests (which are mostly identical
-> > setup to structs). This catches the recent union initialization behavioral
-> > changes seen in GCC 15. Before GCC 15, this new test passes:
-> >
-> >     ok 18 test_small_start_old_zero
-> >
-> > With GCC 15, it fails:
-> >
-> >     not ok 18 test_small_start_old_zero
-> >
-> > Specifically, a union with a larger member where a smaller member is
-> > initialized with the older "= { 0 }" syntax:
-> >
-> > union test_small_start {
-> >      char one:1;
-> >      char two;
-> >      short three;
-> >      unsigned long four;
-> >      struct big_struct {
-> >              unsigned long array[8];
-> >      } big;
-> > };
-> >
-> > This is a regression in compiler behavior that Linux has depended on.
-> > GCC does not seem likely to fix it, instead suggesting that affected
-> > projects start using -fzero-init-padding-bits=unions:
-> > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=118403
-> >
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> 
-> I ran stackinit_kunit from v6.14-rc1 on m68k under ARAnyM.
-> All small_start tests failed:
-> 
-> KTAP version 1
-> 1..1
->     KTAP version 1
->     # Subtest: stackinit
->     # module: stackinit_kunit
->     1..108
->     ok 1 test_u8_zero
->     ok 2 test_u16_zero
->     ok 3 test_u32_zero
->     ok 4 test_u64_zero
->     ok 5 test_char_array_zero
->     ok 6 test_small_hole_zero
->     ok 7 test_big_hole_zero
->     ok 8 test_trailing_hole_zero
->     ok 9 test_packed_zero
->     ok 10 test_small_hole_old_zero
->     ok 11 test_big_hole_old_zero
->     ok 12 test_trailing_hole_old_zero
->     ok 13 test_packed_old_zero
->     ok 14 test_same_sizes_zero
->     # test_small_start_zero: ASSERTION FAILED at lib/stackinit_kunit.c:428
->     Expected stackinit_range_contains(fill_start, fill_size,
-> target_start, target_size) to be true, but is false
-> 
-> stackframe was not the same between calls!? (fill 32 wide, target offset by -12)
-> [...]
-> m68k-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42
+Remove hard-coded strings by using the str_yes_no() helper function.
 
-Hm, I must have some kind of misunderstanding of m68k's stack layout
-(but only exposed for unions O_o). I will try to get this running in an
-emulator to investigate.
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ drivers/acpi/acpi_video.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
--Kees
-
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index a972831dbd66..efdadc74e3f4 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -27,6 +27,7 @@
+ #include <linux/acpi.h>
+ #include <acpi/video.h>
+ #include <linux/uaccess.h>
++#include <linux/string_choices.h>
+ 
+ #define ACPI_VIDEO_BUS_NAME		"Video Bus"
+ #define ACPI_VIDEO_DEVICE_NAME		"Video Device"
+@@ -2039,9 +2040,9 @@ static int acpi_video_bus_add(struct acpi_device *device)
+ 
+ 	pr_info("%s [%s] (multi-head: %s  rom: %s  post: %s)\n",
+ 	       ACPI_VIDEO_DEVICE_NAME, acpi_device_bid(device),
+-	       video->flags.multihead ? "yes" : "no",
+-	       video->flags.rom ? "yes" : "no",
+-	       video->flags.post ? "yes" : "no");
++	       str_yes_no(video->flags.multihead),
++	       str_yes_no(video->flags.rom),
++	       str_yes_no(video->flags.post));
+ 	mutex_lock(&video_list_lock);
+ 	list_add_tail(&video->entry, &video_bus_head);
+ 	mutex_unlock(&video_list_lock);
 -- 
-Kees Cook
+2.48.1
+
