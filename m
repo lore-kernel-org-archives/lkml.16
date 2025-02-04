@@ -1,107 +1,106 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F951215196;
-	Tue,  4 Feb 2025 16:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B81215196;
+	Tue,  4 Feb 2025 16:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738686314; cv=none; b=h2qW5Qv8yyWfR+vRXGWgMILew9rgwXPhG9OKQGYMZRqZMXXjDr08SK7rLDhq0jqExC/ykXEbSGYO3HdMeLHhdiHl7vfmoKdVJem+iJwB6Db8tv0ukOvpHHfGMp87hNzn/zLgp4ioQEWy/akHlICEkXTak8penhPSwTKMZaxMjhg=
+	t=1738686364; cv=none; b=etaWw7IPUbkwZClwXfVwsXUowcWSz1PwfIaskCs7CDkaKMkobLMwU6b9p5ODkII4SjSSFeNW57SotWtj+aKvTabX2u53R6eg8BEJ6XlRNbM0pyRfSHfS5jWUC9DZjMkdi4XnE9tSB7YX3FWVFhMS0F8wt+3XjReCTpwR8CMNI9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738686314; c=relaxed/simple;
-	bh=3fEAX56iNa+CycfmEtTazJYgTC1eFzflfXs3KGTszjc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MbL7+FjJf9WtP2s3wJh9nXRKmtMTBlRvXPPcRa30PdUBLgdBRy1V0R4cg7gGUdquSePq8IQ3nuqj/FZsO7Dl26xHXk1v3pkL8qHL0IXnv4YrGeW8pXgBhPRNJiC7yPE6m4HN6R+EvnVM8NAQtI47oAydDDCU0mM+5yrOwi+Ha7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l++VE5Ls; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738686364; c=relaxed/simple;
+	bh=L54LXQnOXWaBaK5VCO3A3bjxwgajDXv30wjGTPt+098=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qrCdwDVEA4XGat2GPSvNaUtUqwyE6GEhwYCs8dJ2ppdKlTAYDLMNGNjB4ccECpjtWNME649rPyoYv/kXteMGC5DqSD4sJGeH8h0zgJGJLY83fvsD0hmeqPZIaTiMHqZZZVhw3mMATgcQHRbJe1rdS7Do0zo4zjKoSgSvsnEk+NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2pPWBAh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l++VE5Ls"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-385f06d0c8eso3182654f8f.0;
-        Tue, 04 Feb 2025 08:25:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738686311; x=1739291111; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IA4Yp+yCwxNKEvtY2lHaAdyLql0BmH5cuaPGmjqth1w=;
-        b=l++VE5LsEfesIck4VgABGK9gzK7hMRVwmnyilCBluVgj/K6RL3cjLbgVPYpfQUp0Gy
-         BVCdHpstm4tobLoW4w/I2qb/fV8dREeIYfVDNMf9KZZkmmPsYIn8QccMtNNYXgJwFvD7
-         yC0PWUEDPMSjsSFaFNCT19qVfRJR5M3SQu4FN3HygK4gF8hUHc3C6ylSD6zDGRdu9KCj
-         yHUy7CRoafTZoAdVkkmjDyWsDia9i3B+I3+Mx9rnyUPj8ZNSe7CvpNJY8d3pG0pwf4SI
-         RITomUm3zDBpf2NJ54CJ7aMKbvpuFRlaHOlmpvPTKVi1i1SQ19X6Osel/pr1dr6SJh1v
-         U62w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738686311; x=1739291111;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IA4Yp+yCwxNKEvtY2lHaAdyLql0BmH5cuaPGmjqth1w=;
-        b=Ec21J3FnUpOWLDs2LxjE4UOu+ecQB7x9KJ8PbxP7z9dt3wzJkcvyCkG0fFlKyxfqBN
-         d1spzGDNUjOPIGYbgLBHoWRTKKyIdC/eDjgKjngBYKInRSpht12pqLHPGA/Nzbu6uBgs
-         78cq2rp+d41Dn68e5Cwj38cjvaOPohHY7TXNCYGEENtGTWgMYjN5K5uoE3BYcz90Dc/Y
-         z+SCXUoxCcX4YRuh4IdTP8/xAfMUGYvd6WB6uEV++YYVee61NA8slxiFw7yM2aFOoZcd
-         GOse8aJa0DDnBP2WOpo1JYwnrINJ0NjcRgGxpGi/nzKMjSLevhwEIbmbp1kOTe/OcG2L
-         /vlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXmqPCl8HBfeRZnbtcH2cddH/1Iwbf3Qwngwd4F62Ze8zgNu9kJAhZuGimvWgN3J2KWAlnLPMNUGYvFZU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNAJ0ESA4w8OdPL1htiUnw8m7EX6+Lt2ycg1bAPjUdbQD9xi9l
-	VNK+ALmW8IaO7PprGidmKtRBEGApAaePTWH0DMMZmTDyExi4wNzehKrF4fpW
-X-Gm-Gg: ASbGncu0mxBj3VjkxyiSBVJbmgMgZIrdbWEAsVyQ0ZFdDJUKxSwpu+U/Rpn5nSzxuiE
-	1RNSldH+mOH1NI9jaQDk2Bg7zyZRprcI3vqZ2ZqDjpuMci7bxonEOFBgT9rteiRXZVrnX1oPodD
-	hytvm1PdBHvmuGdgnLx5qyNKvxVc+UhIQn1MBT95NfUtzW9XFKiiBJ9FExV0mmpgtrEDuj1xCEf
-	n7xcExy/7utlxW7+fPHasQ+gv2kkrlaq/We1PTCW3AO4wYGZ76OycB9O0GwPRGukvv5RwAXhnTW
-	gEvPoNlWTWINrEh3
-X-Google-Smtp-Source: AGHT+IGZLPKU2USTsvRL65kiUm/nRtgDWZ1R6LnaZd708LRV2tT4XJVniSk5UK6wn78+DjhPuztQ4Q==
-X-Received: by 2002:a5d:4565:0:b0:385:fd07:85f8 with SMTP id ffacd0b85a97d-38c5197470bmr16556579f8f.29.1738686310622;
-        Tue, 04 Feb 2025 08:25:10 -0800 (PST)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:8399:6015:262f:b375])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc26d6fsm228174525e9.14.2025.02.04.08.25.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 08:25:10 -0800 (PST)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: agordeev@linux.ibm.com,
-	gerald.schaefer@linux.ibm.com,
-	hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	borntraeger@linux.ibm.com,
-	svens@linux.ibm.com
-Cc: linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] s390/mm: Simplify gap clamping in mmap_base() using clamp() 
-Date: Tue,  4 Feb 2025 16:25:08 +0000
-Message-Id: <20250204162508.12335-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2pPWBAh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DA35C4CEDF;
+	Tue,  4 Feb 2025 16:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738686363;
+	bh=L54LXQnOXWaBaK5VCO3A3bjxwgajDXv30wjGTPt+098=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B2pPWBAh1vII7IozOG5m4s4KE4imJgEszqsdtJdsekdCwiDT/t2ls283r81dquCQy
+	 gB1rTpS+CFvmUFelHBeZoYpCEh89ao9CHqq3XOIYDoPOEqj3+CuEcEERLhpzkoyjWB
+	 HUWB5UH+krcTGZNezD1SBnuhzPkUJZ+Gu/SSKlXOzUKJLizTPVox1e2h5VKIKl83Ty
+	 IJFA93WwuupUf57V/AjeGQSPMM9b2fbMA/1a3qU06TSqWQToSwJG8RdikVMJweUYcl
+	 KPRnZC0kmQh2NWWMqLbmehulmnBU4qVT4rtOJHvwmyvOlvTAIkWKDB79cpO+H5cnJ9
+	 XStY6fB0R/a8Q==
+Date: Tue, 4 Feb 2025 16:26:01 +0000
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-mm@kvack.org, linux-api@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 0/2 v8] add ioctl/sysfs to donate file-backed pages
+Message-ID: <Z6I_mb7Y0QSWqtro@google.com>
+References: <20250131222914.1634961-1-jaegeuk@kernel.org>
+ <Z6GqbJxJAsRPQ4uQ@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6GqbJxJAsRPQ4uQ@infradead.org>
 
-mmap_base() has logic to ensure that the variable "gap" stays within the 
-range defined by "gap_min" and "gap_max". Replace this with the clamp() 
-macro to shorten and simplify code.
+On 02/03, Christoph Hellwig wrote:
+> On Fri, Jan 31, 2025 at 10:27:55PM +0000, Jaegeuk Kim wrote:
+> > Note, let me keep improving this patch set, while trying to get some feedbacks
+> > from MM and API folks from [1].
+> 
+> Please actually drive it instead of only interacting once after
+> I told you to.  The feedback is clearly that it is a MM thing, so please
+> drive it forward instead of going back to the hacky file system version.
 
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- arch/s390/mm/mmap.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+I keep saying working in parallel for production. And, no worries, I won't
+merge this to -next until I get the feedback from the MM folks. I was
+waiting for a couple of weeks before bothering them, so will ping there.
 
-diff --git a/arch/s390/mm/mmap.c b/arch/s390/mm/mmap.c
-index 76f376876e0d..a3d3e09a2828 100644
---- a/arch/s390/mm/mmap.c
-+++ b/arch/s390/mm/mmap.c
-@@ -63,11 +63,7 @@ static inline unsigned long mmap_base(unsigned long rnd,
- 	 */
- 	gap_min = SZ_128M;
- 	gap_max = (STACK_TOP / 6) * 5;
--
--	if (gap < gap_min)
--		gap = gap_min;
--	else if (gap > gap_max)
--		gap = gap_max;
-+	gap = clamp(gap, gap_min, gap_max);
- 
- 	return PAGE_ALIGN(STACK_TOP - gap - rnd);
- }
--- 
-2.39.5
-
+> 
+> > 
+> > If users clearly know which file-backed pages to reclaim in system view, they
+> > can use this ioctl() to register in advance and reclaim all at once later.
+> > 
+> > I'd like to propose this API in F2FS only, since
+> > 1) the use-case is quite limited in Android at the moment. Once it's generall
+> > accepted with more use-cases, happy to propose a generic API such as fadvise.
+> > Please chime in, if there's any needs.
+> > 
+> > 2) it's file-backed pages which requires to maintain the list of inode objects.
+> > I'm not sure this fits in MM tho, also happy to listen to any feedback.
+> > 
+> > [1] https://lore.kernel.org/lkml/Z4qmF2n2pzuHqad_@google.com/
+> > 
+> > Change log from v7:
+> >  - change the sysfs entry to reclaim pages in all f2fs mounts
+> > 
+> > Change log from v6:
+> >  - change sysfs entry name to reclaim_caches_kb
+> > 
+> > Jaegeuk Kim (2):
+> >   f2fs: register inodes which is able to donate pages
+> >   f2fs: add a sysfs entry to request donate file-backed pages
+> > 
+> > Jaegeuk Kim (2):
+> >   f2fs: register inodes which is able to donate pages
+> >   f2fs: add a sysfs entry to request donate file-backed pages
+> > 
+> >  Documentation/ABI/testing/sysfs-fs-f2fs |  7 ++
+> >  fs/f2fs/debug.c                         |  3 +
+> >  fs/f2fs/f2fs.h                          | 14 +++-
+> >  fs/f2fs/file.c                          | 60 +++++++++++++++++
+> >  fs/f2fs/inode.c                         | 14 ++++
+> >  fs/f2fs/shrinker.c                      | 90 +++++++++++++++++++++++++
+> >  fs/f2fs/super.c                         |  1 +
+> >  fs/f2fs/sysfs.c                         | 63 +++++++++++++++++
+> >  include/uapi/linux/f2fs.h               |  7 ++
+> >  9 files changed, 258 insertions(+), 1 deletion(-)
+> > 
+> > -- 
+> > 2.48.1.362.g079036d154-goog
+> > 
+> > 
+> ---end quoted text---
