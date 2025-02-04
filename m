@@ -1,89 +1,90 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001223D81;
-	Tue,  4 Feb 2025 06:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6355158524
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 06:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738651994; cv=none; b=hrksCGXjDPA0gC2Ce3c398L5qToPXF6OGCUMaLvc8rORuCGDPrDfNTE2x5gcHigH3jd3zc2wZwE9bZfGk2CCXoO4YgdYliJLlMBDOrcJAxhl9Dg9WR4D8H4eDpbU2Ud+jc1J/Kn+8rEcT7Ok+QAtYQUFvc1z8uAmawP0f7LMsL8=
+	t=1738652294; cv=none; b=Tdxpor0ROwQGWgbHGU3f8JHhQRYbPFCEaLpAal2jr/uqF1u1PGyV5vk/mT0DgvJnWRyklYAXuuMmIcRVU11FYegIqIl4DnfPlvSRAOC2kPcBwYAC3/Trp90UbdqizrKXij0gYuAtK68nKz6fBmCmF+1r+MfDwkDG0EMjbDSq/zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738651994; c=relaxed/simple;
-	bh=e9ndPcbZwm5RuvhZvDZBuPk4IeP+XyR5Pvj0NbdTTec=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UxUWGWRgRuJUfooVKeyikT5bEkb44BBZDLtsSC4upUbRj12+AQi4nEEwPhTPoPoXtiG39xH2uB1ObR3FTrtijEB2miXZHbcEQj8puka4A6FDtSTivfehE5TCa3ytjIFWWaZcFlbhXsz58a46/vmiMBf+FB1SMx9+OsP7iN/cH1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Fj5y1/Bd; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1738652294; c=relaxed/simple;
+	bh=tL/T+gEcI/MPXxHsekGpjQ9f8hZPbdl/K3I9bR50nlU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rJt59TUL0vdjE6Hc4dsOhAORTP9gDzdEq5qQ43jusZJ3Xxp9rD4EMiIMDaxM1htr4Bgo3s63BpeghH28G43t1SRsvsoasZgyQgUM5Uv76bBR/ZqsAbqTEYOHq9HV7u/sQ7RSaJA/27PRPScJqUZm8qf3nZA1JAENVcuitoBFqsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kKj58T/p; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Fj5y1/Bd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1738651982;
-	bh=e9ndPcbZwm5RuvhZvDZBuPk4IeP+XyR5Pvj0NbdTTec=;
-	h=From:Subject:Date:To:Cc:From;
-	b=Fj5y1/BdV0YQzl0M/limq+nrItnNFBRLlaAHWKnYEBgPbS+4IZNeNt4U2k1mFCyJ4
-	 XGLsfAx0maidRV/35vgB/h9aYTqTm66v6wm8IPzmuZGVfrGsLqoRTOpaDijjm49sxy
-	 w8rKBFLaZQMxk2u6lbQAd/scSbKmraa5MFBNGDsU=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: [PATCH v2 0/2] locking/mutex: Mark devm_mutex_init() as
- __must_check
-Date: Tue, 04 Feb 2025 07:52:49 +0100
-Message-Id: <20250204-must_check-devm_mutex_init-v2-0-7b6271c4b7e6@weissschuh.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKj58T/p"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3eb87127854so1078492b6e.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 22:58:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738652292; x=1739257092; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7LEx7Frw8JjvjTg++iYaavH3tdfrNyzCkmo7RQSiQfE=;
+        b=kKj58T/pAP8KCqzeBO5YFiU4rU6p0rJ0HcYQ/8uJyu2DmHwvqKGrW5V/W99u28ATp2
+         cR41QC8uONSkwLSeOqkFXxPGEHuVEwlgotcWAHXEJCHCIYdssf5z2WIYECLMa3q42JV/
+         2vXXdHzUSD+KofF8eR2inHTpfL5L2cLBNWrIh9ObkQsGSy/B+0XBf0H7UhepLwId7bMx
+         8tBg3x4tFHI55S/lyJYBwZfQvO2wRKxqPQmqUGhc+1ZC4E7cgXxpakliE+eOo2LI6zvb
+         6uXROAdt6SjNddLAEXgKkLLsnV0JSdUQcoLkixOBnHX6CCvQcdQwaewyqiLh/8q2eERj
+         WnZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738652292; x=1739257092;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7LEx7Frw8JjvjTg++iYaavH3tdfrNyzCkmo7RQSiQfE=;
+        b=LkhX1tlhYzG3UVn79uNlbV3bGPoevgDoNeearpTvEMb50PpL4ZOfp+5hn3IYtQ7wjr
+         afnTm+cVQlOm3qRvGaMzoBxsT8cu9lgZVy7MguqXR7x10Pwoi1QHVhY/8E2ObnQ+gcvB
+         fuz/4XFGkz714LSCJbISehCMtEUBZxCPYpS7fiM9eTcQFc596AdeypizjVWYlyh7cj/E
+         fHSMiJRvGxJQTudtn228EkuRF0oTQ0uGYpyreARj3LRF6NkwQ1ntoXyKPPQY+iJpuWQG
+         Gz6Ngy5xdnkYbkyKjZqyQYP+2sSN+KQEgh1pC0ST1epS9BM7rY9ekJohn3ixP/4xuFoZ
+         BqfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUF7kF8F6fx1xb29ryhIoA2FD5F57it2W+2RT/gHc+YhKWATsZnrtBWaAVh9m6lVptCQ4fj/QAamwvXZho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI8gZHQWqNPj6nkLAov6Dk6KYD8JGEfJcJ00zRf3hT9Cs+vq6+
+	DsmIrrWBArRFLfHfU6RPoozUr0xD6nJIUyO+X0ro4K4hOQRmdZR4KIdzWqvgkJw=
+X-Gm-Gg: ASbGncuR8/F67t/vmqgAjlhEmxPYaQoffrCtqjFLdFO9IudnQzRUR9oTzpqkKL7rrme
+	Wftl80/dhosiCsMDTQESMuFWNbz8A5RvjH7CJF5Xh1kmN0XJ92owvMYlRBQh4Eb/cOensgc3juN
+	i702KFuOTfVsZGrZ+cEBkbGfv9Ka0L7MtVGClLNu+HNEJkhu0OAAIrMxkpC3qg2L9gHr28v/tAo
+	n6KCTi15nwjtQsiOLahX17axHIJWJQWXvVsrv5wI9LHrpIGiGMIYn5hy1hco3r8IieEm+8NtIe0
+	7ktR6SkdLB/pC4kTe7V+rLgxxUUWwDsxuyvVkKpehkvJlkEp0VMapmIVa/0A5d1NVNRITzm/xAR
+	V
+X-Google-Smtp-Source: AGHT+IH+UQuPTOIDX3XYEd8V1IhA/dflzMYDzCH+I3ySQSxYohtMyVB0hNQEiuB2AvfJWgsTd+5xgA==
+X-Received: by 2002:a05:6808:3c85:b0:3eb:8855:eff7 with SMTP id 5614622812f47-3f323b47f38mr14285691b6e.27.1738652291704;
+        Mon, 03 Feb 2025 22:58:11 -0800 (PST)
+Received: from DESKTOP-GL3U3CJ (162-207-94-177.lightspeed.irvnca.sbcglobal.net. [162.207.94.177])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f333558bacsm2899938b6e.20.2025.02.03.22.58.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 22:58:11 -0800 (PST)
+From: Ian To <onlyian4981@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Ian To <onlyian4981@gmail.com>
+Subject: [PATCH 0/4] Code cleanup patches
+Date: Mon,  3 Feb 2025 22:57:18 -0800
+Message-ID: <cover.1738651582.git.onlyian4981@gmail.com>
+X-Mailer: git-send-email 2.45.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAEG5oWcC/33NQQ6CMBCF4auQWVtDiwq68h6GECiDnRiK6ZSKI
- b27FfduJvln8b0VGB0hwyVbwWEgpsmmULsMtGntHQX1qUHl6iDzQopxZt9og/ohegxjM84el4Y
- seaFbfayKrm+rASEBT4cDLRt+q1MbYj+597YV5Pf7Y9P5xwYppMBTjt257CpdqusLiZm1mc3eo
- oc6xvgBq6/k3skAAAA=
-X-Change-ID: 20241031-must_check-devm_mutex_init-cac583bda8fe
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Pavel Machek <pavel@ucw.cz>, 
- Lee Jones <lee@kernel.org>, 
- Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738651981; l=1043;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=e9ndPcbZwm5RuvhZvDZBuPk4IeP+XyR5Pvj0NbdTTec=;
- b=gb7LykAWGBP7maTIml4gPL18TQZbsN9rUuVRQjeEHiyogkzfHbxrBaxXErfRQiYKfcui7ls/u
- nfW2I89DFoyBJDCccbhZG8Qzvkp1szGqGQeJo7nf+L3Sn4UuAf5say9
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Even if it's not critical, the avoidance of checking the error code
-from devm_mutex_init() call today diminishes the point of using devm
-variant of it. Tomorrow it may even leak something. Enforce all callers
-checking the return value through the compiler.
+Fixes complaints reported by checkpatch present in the staging/rtl8723bs
+module.
 
-The series should go through the locking tree.
+Ian To (4):
+  staging: rtl8723bs: Add missing spaces
+  staging: rtl8723bs: Split up long lines
+  staging: rtl8723bs: Remove unnecessary parentheses
+  staging: rtl8723bs: Format comments
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
-Changes in v2:
-- Rebase on 6.14-rc1
-- Fix up leds-1202 driver
-- Link to v1: https://lore.kernel.org/r/20241202-must_check-devm_mutex_init-v1-1-e60eb97b8c72@weissschuh.net
+ .../staging/rtl8723bs/core/rtw_wlan_util.c    | 175 +++++++++---------
+ 1 file changed, 89 insertions(+), 86 deletions(-)
 
----
-Thomas Weißschuh (2):
-      leds: st1202: Check for error code from devm_mutex_init() call
-      locking/mutex: Mark devm_mutex_init() as __must_check
-
- drivers/leds/leds-st1202.c |  4 +++-
- include/linux/mutex.h      | 17 ++++++++---------
- 2 files changed, 11 insertions(+), 10 deletions(-)
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20241031-must_check-devm_mutex_init-cac583bda8fe
-
-Best regards,
 -- 
-Thomas Weißschuh <linux@weissschuh.net>
+2.45.3
 
