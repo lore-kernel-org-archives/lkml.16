@@ -1,135 +1,213 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD54143C5D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49503143C5D;
+	Tue,  4 Feb 2025 09:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738662570; cv=none; b=qLQx2/WRvm3lDfylehPmYNRwr+GZ5SI1s1hMWKrtBsveW7XLqx+oKvCJy3RFo1RRl0RnDLW0uIdvTSHVBIIXDN3fXbmslMWw/JztWETnWiVQ8vXMSpOv3ob2h5xnCiOTQScZKRSkageH2ew6bvGD51sNDZuFuY2+4N0igTaM7fk=
+	t=1738662606; cv=none; b=tSYUnKrJ/elcbgPTL/xk2mitRa6foAvv3IUO4+L8TwRxzBNA/1DPzKdZk+9tSoiPsYoYaA5QR+B5wYFdXWrM29CenWxBzpXsRw6V3J2eiO0AvSq0WH4O2rO9qiMMuNqgBtUcV3hCWfVNWTKq3EUA46B21ScaVMdjn1Y9aoNcc9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738662570; c=relaxed/simple;
-	bh=xf+b20hBKBD3X1D2s4oZvn2AvY6WgFi0/MgTCjD6A1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ds7KgszRqcC1eZSQwnne6crJAHBNIZ6h+gQbbXQ9fPo0zcrz3P52NrkuVLS67zImw1rebD5IHahS7FjKnLTghckdCL/VTVxOfKCygCf/sZzCyQk0R2a66IYhkrdgky4DTtYsj0xGItnrWShzwMrghsEq7VjWRPj44jjOPPpDsF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=h/tZxtCO; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h/tZxtCO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=GmbUKWkL39aTTx8pNl8hva18Ww/CYiBJpH8AAzZSodQ=; b=h/tZxtCOU5CBo/ns+/z3UXN3bH
-	xu9EEAffGlXl8ZlO17uB9G25gRcol+Cfh6G4H1iC84O9Tqe+h4+iaXibb8lTZ1+QGZidqZdDCOVzG
-	d7OAhUBJtbBs+gC2r285DVVsoATUkuWzg39wTvaUIjmh7iXCh7KhRCIMPK62XymFzJK6YWQLJbzN+
-	i2njpOyqf/VQQFSi5/2cdXkGtV7K5ifaNAmSbUcVUl8G4t/D7aco9+5fLlAdBLrctjjW/ry0HGvWx
-	zq/C3A5rr3p+tVxEkDPqZRUf1ng32W3yKOo2SJsL+lS2H/Ag24OsbM1ti6GCkpopxBQmssIBOVlxS
-	hzR8nMmA==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfFYZ-00000002VZk-451B;
-	Tue, 04 Feb 2025 09:49:24 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id F089B300599; Tue,  4 Feb 2025 10:49:22 +0100 (CET)
-Date: Tue, 4 Feb 2025 10:49:22 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v8 08/15] futex: Prepare for reference counting of the
- process private hash end of operation.
-Message-ID: <20250204094922.GS7145@noisy.programming.kicks-ass.net>
-References: <20250203135935.440018-1-bigeasy@linutronix.de>
- <20250203135935.440018-9-bigeasy@linutronix.de>
+	s=arc-20240116; t=1738662606; c=relaxed/simple;
+	bh=7qbynCn/gy/uw9OtIo6wbbN4xeODM0unKVxt43kSitw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XfZsUUyDwjiIaLoy8LLjgfRoK6JnVNW2eBzYF1+sGeCsDbbzyYh3K7UVRHJg6pP1bkouzbAidMOUaqg/7w1eJuRRprO5uqu6sBVJvfmsAaripqXWwFU7hVKkz7Skzk7USEfu5hfxBcTbbvXnv8lKgV4/P9TdXPQCYWuIhEujptk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4YnJ2k5807z9sRs;
+	Tue,  4 Feb 2025 10:28:46 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 0Voh3-2F0DYF; Tue,  4 Feb 2025 10:28:46 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4YnJ2T73yBz9sSR;
+	Tue,  4 Feb 2025 10:28:33 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id DA8228B765;
+	Tue,  4 Feb 2025 10:28:33 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id fUnL5h2Ji_JM; Tue,  4 Feb 2025 10:28:33 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 1461D8B763;
+	Tue,  4 Feb 2025 10:28:33 +0100 (CET)
+Message-ID: <d0227f33-7b3f-426e-b731-b9a1f17020ed@csgroup.eu>
+Date: Tue, 4 Feb 2025 10:28:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203135935.440018-9-bigeasy@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v1 2/3] include: move
+ lookup_or_create_module_kobject()/to_module* to module.h
+To: Shyam Saini <shyamsaini@linux.microsoft.com>,
+ linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org
+Cc: code@tyhicks.com, linux@rasmusvillemoes.dk, mcgrof@kernel.org,
+ frkaya@linux.microsoft.com, vijayb@linux.microsoft.com, petr.pavlu@suse.com,
+ linux@weissschuh.net, samitolvanen@google.com, da.gomez@samsung.com,
+ gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org
+References: <20250204052222.1611510-1-shyamsaini@linux.microsoft.com>
+ <20250204052222.1611510-3-shyamsaini@linux.microsoft.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250204052222.1611510-3-shyamsaini@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 03, 2025 at 02:59:28PM +0100, Sebastian Andrzej Siewior wrote:
 
-> @@ -555,11 +558,12 @@ struct futex_hash_bucket *futex_q_lock(struct futex_q *q)
->  	return hb;
->  }
->  
-> -void futex_q_unlock(struct futex_hash_bucket *hb)
-> +void futex_q_unlock_put(struct futex_hash_bucket *hb)
->  	__releases(&hb->lock)
->  {
->  	futex_hb_waiters_dec(hb);
->  	spin_unlock(&hb->lock);
-> +	futex_hash_put(hb);
->  }
 
-Here you don't
+Le 04/02/2025 à 06:22, Shyam Saini a écrit :
+> [Vous ne recevez pas souvent de courriers de shyamsaini@linux.microsoft.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> Move the following to module.h to allow common usages:
+>   - lookup_or_create_module_kobject()
+>   - to_module_attr
+>   - to_module_kobject
+> 
+> This makes lookup_or_create_module_kobject() as inline.
 
-> @@ -288,23 +289,29 @@ extern void __futex_unqueue(struct futex_q *q);
->  extern void __futex_queue(struct futex_q *q, struct futex_hash_bucket *hb);
->  extern int futex_unqueue(struct futex_q *q);
->  
-> +static inline void futex_hb_unlock_put(struct futex_hash_bucket *hb)
+Why an inline ? It looks quite big for an inline. Why not just make it 
+global ?
+
+> 
+> Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
+> ---
+>   include/linux/module.h | 39 +++++++++++++++++++++++++++++++++++++++
+>   kernel/params.c        | 39 ---------------------------------------
+>   2 files changed, 39 insertions(+), 39 deletions(-)
+> 
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 12f8a7d4fc1c..ba5f5e6c3927 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -894,8 +894,47 @@ static inline void *module_writable_address(struct module *mod, void *loc)
+>   #endif /* CONFIG_MODULES */
+> 
+>   #ifdef CONFIG_SYSFS
+> +/* sysfs output in /sys/modules/XYZ/parameters/ */
+> +#define to_module_attr(n) container_of_const(n, struct module_attribute, attr)
+> +#define to_module_kobject(n) container_of(n, struct module_kobject, kobj)
+>   extern struct kset *module_kset;
+>   extern const struct kobj_type module_ktype;
+> +
+> +static inline struct module_kobject * __init lookup_or_create_module_kobject(const char *name)
 > +{
-> +	spin_unlock(&hb->lock);
-> +	futex_hash_put(hb);
+> +       struct module_kobject *mk;
+> +       struct kobject *kobj;
+> +       int err;
+> +
+> +       kobj = kset_find_obj(module_kset, name);
+> +       if (kobj) {
+> +               mk = to_module_kobject(kobj);
+
+Would look cleaner without the else. Something like:
+
+	if (kobj)
+		return to_module_kobject(kobj);
+
+	mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
+...
+
+
+> +       } else {
+> +               mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
+> +               BUG_ON(!mk);
+
+Why a BUG_ON() ? Why not just return NULL and let the caller handle the 
+failure ?
+
+> +
+> +               mk->mod = THIS_MODULE;
+> +               mk->kobj.kset = module_kset;
+> +               err = kobject_init_and_add(&mk->kobj, &module_ktype, NULL,
+> +                                          "%s", name);
+> +#ifdef CONFIG_MODULES
+
+This #ifdef is not needed, module_uevent is declared at all time in 
+module.h, IS_ENABLED(CONFIG_MODULES) should be enough.
+
+> +               if (!err)
+> +                       err = sysfs_create_file(&mk->kobj, &module_uevent.attr);
+> +#endif
+> +               if (err) {
+> +                       kobject_put(&mk->kobj);
+> +                       pr_crit("Adding module '%s' to sysfs failed (%d), the system may be unstable.\n",
+> +                               name, err);
+> +                       return NULL;
+> +               }
+> +
+> +               /* So that we hold reference in both cases. */
+> +               kobject_get(&mk->kobj);
+> +       }
+> +
+> +       return mk;
 > +}
 > +
->  /**
-> - * futex_queue() - Enqueue the futex_q on the futex_hash_bucket
-> + * futex_queue_put() - Enqueue the futex_q on the futex_hash_bucket
->   * @q:	The futex_q to enqueue
->   * @hb:	The destination hash bucket
->   *
-> - * The hb->lock must be held by the caller, and is released here. A call to
-> - * futex_queue() is typically paired with exactly one call to futex_unqueue().  The
-> - * exceptions involve the PI related operations, which may use futex_unqueue_pi()
-> - * or nothing if the unqueue is done as part of the wake process and the unqueue
-> - * state is implicit in the state of woken task (see futex_wait_requeue_pi() for
-> - * an example).
-> + * The hb->lock must be held by the caller, and is released here and the reference
-> + * on the hb is dropped. A call to futex_queue_put() is typically paired with
-> + * exactly one call to futex_unqueue(). The exceptions involve the PI related
-> + * operations, which may use futex_unqueue_pi() or nothing if the unqueue is
-> + * done as part of the wake process and the unqueue state is implicit in the
-> + * state of woken task (see futex_wait_requeue_pi() for an example).
->   */
-> -static inline void futex_queue(struct futex_q *q, struct futex_hash_bucket *hb)
-> +static inline void futex_queue_put(struct futex_q *q, struct futex_hash_bucket *hb)
->  	__releases(&hb->lock)
->  {
->  	__futex_queue(q, hb);
-> -	spin_unlock(&hb->lock);
-> +	futex_hb_unlock_put(hb);
->  }
+>   #endif /* CONFIG_SYSFS */
+> 
+>   #define symbol_request(x) try_then_request_module(symbol_get(x), "symbol:" #x)
+> diff --git a/kernel/params.c b/kernel/params.c
+> index 4b43baaf7c83..3c0798b79f76 100644
+> --- a/kernel/params.c
+> +++ b/kernel/params.c
+> @@ -537,10 +537,6 @@ const struct kernel_param_ops param_ops_string = {
+>   };
+>   EXPORT_SYMBOL(param_ops_string);
+> 
+> -/* sysfs output in /sys/modules/XYZ/parameters/ */
+> -#define to_module_attr(n) container_of_const(n, struct module_attribute, attr)
+> -#define to_module_kobject(n) container_of(n, struct module_kobject, kobj)
+> -
+>   struct param_attribute
+>   {
+>          struct module_attribute mattr;
+> @@ -763,41 +759,6 @@ void destroy_params(const struct kernel_param *params, unsigned num)
+>                          params[i].ops->free(params[i].arg);
+>   }
+> 
+> -static struct module_kobject * __init lookup_or_create_module_kobject(const char *name)
+> -{
+> -       struct module_kobject *mk;
+> -       struct kobject *kobj;
+> -       int err;
+> -
+> -       kobj = kset_find_obj(module_kset, name);
+> -       if (kobj) {
+> -               mk = to_module_kobject(kobj);
+> -       } else {
+> -               mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
+> -               BUG_ON(!mk);
+> -
+> -               mk->mod = THIS_MODULE;
+> -               mk->kobj.kset = module_kset;
+> -               err = kobject_init_and_add(&mk->kobj, &module_ktype, NULL,
+> -                                          "%s", name);
+> -#ifdef CONFIG_MODULES
+> -               if (!err)
+> -                       err = sysfs_create_file(&mk->kobj, &module_uevent.attr);
+> -#endif
+> -               if (err) {
+> -                       kobject_put(&mk->kobj);
+> -                       pr_crit("Adding module '%s' to sysfs failed (%d), the system may be unstable.\n",
+> -                               name, err);
+> -                       return NULL;
+> -               }
+> -
+> -               /* So that we hold reference in both cases. */
+> -               kobject_get(&mk->kobj);
+> -       }
+> -
+> -       return mk;
+> -}
+> -
+>   static void __init kernel_add_sysfs_param(const char *name,
+>                                            const struct kernel_param *kparam,
+>                                            unsigned int name_skip)
+> --
+> 2.34.1
+> 
+> 
 
-And here you do.
-
-
-> @@ -380,11 +387,13 @@ double_lock_hb(struct futex_hash_bucket *hb1, struct futex_hash_bucket *hb2)
->  }
->  
->  static inline void
-> -double_unlock_hb(struct futex_hash_bucket *hb1, struct futex_hash_bucket *hb2)
-> +double_unlock_hb_put(struct futex_hash_bucket *hb1, struct futex_hash_bucket *hb2)
->  {
->  	spin_unlock(&hb1->lock);
->  	if (hb1 != hb2)
->  		spin_unlock(&hb2->lock);
-> +	futex_hash_put(hb1);
-> +	futex_hash_put(hb2);
->  }
->  
-
-This seems horribly inconsistent and makes my head hurt. Where are the
-matching gets for double_lock_hb() ?
