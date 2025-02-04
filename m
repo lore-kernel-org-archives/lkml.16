@@ -1,48 +1,44 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8BB3D81;
-	Tue,  4 Feb 2025 05:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186981A76DA;
+	Tue,  4 Feb 2025 05:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738646873; cv=none; b=ZqT9q0mZWbZ7CC5WrqSgUnN09c5EDVLw++hX9qVQP7/+ja2234Tkd6gG/NbKq1RrHHrNdTtrVtEXKLCeswt2OxVNQxfMPNSemqVbX5DkB+3wnB4VqHUiakG/dsTNO6x0A0FyZSi4V2j/Yz7GgGJkHn6qQxu9Pv0sN2J8jfeTAcU=
+	t=1738646964; cv=none; b=M5ycH1fcTxstV1BHaeYGSBgsB1C6KmDBDggqMyD3EArLOYmLEUcbVxHJLE9eapGy8Cmi3rmEtxzT/GJtGDbBzJpPyr9i0X3glcndBnpz4XLKnk/6uGAhHlu43t2q/bWVh4zx8t0JfmnnglUwlMa9o2MYkgPk8Z3sTHC4BXoyL6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738646873; c=relaxed/simple;
-	bh=HBmzJ9uLykcTL/fi/jPzGUcdIklHBtaW7ZrUOgVMk4o=;
+	s=arc-20240116; t=1738646964; c=relaxed/simple;
+	bh=JSVZJky8YAb/dm+iJ2XrDIiSy8BRxQHy5geH9yi46bU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TLXupeGIktckwQzsywQTDG/bYSItezbBgy6DWh4ZsuX7SkZZvdls5crBX2ayNgfUFWOdmKjMmhi5ixBpumBPNnX1M5LKekltU7thooj9yQ7zkIU/u8pDJ/fale4jwjw8bdPQEELhveBlWHlm2PsynAsLfB164tVwZEuIVVZOo4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ifpygeWg; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ifpygeWg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=iOyYuRMP5oEcjkyPYh/a70Gm3BXrAjJ9ffPFJOh+E+Q=; b=ifpygeWgCEBGpoDX83UmOWUnn2
-	pkoQkvGRemGhd6hl+vtdKEmOIg6pIce24WbFExXZnpaEzwxvvJzoKyTPBWrQqNN2sc+4t9gMbec+5
-	YUsWuZeHTqOFjWEH+6iDeD4rOybXLzv7NJheQgqUjrzD9hzTJgemkgXLD0TDWuxj6AnApf49QolTU
-	PTAkCvDwbcXgcMfD++zzkPG3bzon5Uq0RrRX61QyD/ipZ0znPknzYx/FoyC9rbj1ytXV6oh1ISqIx
-	enxwK8og8th5pIbkWdd4ltZUae9t2Bw6vSWjAjFjyXZQBk+guZ5/xXlqXR47W++ynPxJ/dE0+rmmZ
-	F288nSaA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfBTS-0000000HHY8-3XH6;
-	Tue, 04 Feb 2025 05:27:50 +0000
-Date: Mon, 3 Feb 2025 21:27:50 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Shyam Saini <shyamsaini@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
-	code@tyhicks.com, linux@rasmusvillemoes.dk, mcgrof@kernel.org,
-	frkaya@linux.microsoft.com, vijayb@linux.microsoft.com,
-	petr.pavlu@suse.com, linux@weissschuh.net, samitolvanen@google.com,
-	da.gomez@samsung.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	dakr@kernel.org
-Subject: Re: [v1 2/3] include: move
- lookup_or_create_module_kobject()/to_module* to module.h
-Message-ID: <Z6GlVpuR8MaR4XLN@infradead.org>
-References: <20250204052222.1611510-1-shyamsaini@linux.microsoft.com>
- <20250204052222.1611510-3-shyamsaini@linux.microsoft.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=IgNvLDDwprBpPcInWPbIUYis5Tg0Kd75WWOTJUhh/tJapavWdHTfjRkmeLYbbV2jSPU8R1p3bbpVxPWhOLNfDLnsWLA90xhMb8B3ZVyD8wGbHEyxV2EWQwMFNgMwdtL+KULof2sXStMZ2x7kHxBAyue9W1bGmaSuiTiK5Vqz8ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id DDEF768AFE; Tue,  4 Feb 2025 06:29:16 +0100 (CET)
+Date: Tue, 4 Feb 2025 06:29:16 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	daniel.almeida@collabora.com, aliceryhl@google.com,
+	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	open list <linux-kernel@vger.kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
+Message-ID: <20250204052916.GA28741@lst.de>
+References: <Z36X_ZnCmBQBMoZ6@pollux> <20250109080812.GA20431@lst.de> <Z3-NqwAG_96yq8VD@pollux> <20250110083955.GA5395@lst.de> <Z4D5a5NYrAbNxUL6@pollux> <Z4kG5AcVeQKegLnb@pollux> <20250128092334.GA28548@lst.de> <Z5qeoqRZKjiR1YAD@pollux> <20250131075751.GA16720@lst.de> <c3a56770-d483-409a-8586-610ce6a718e7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,32 +47,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250204052222.1611510-3-shyamsaini@linux.microsoft.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <c3a56770-d483-409a-8586-610ce6a718e7@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-> +static inline struct module_kobject * __init lookup_or_create_module_kobject(const char *name)
+On Mon, Feb 03, 2025 at 10:17:22AM +0200, Abdiel Janulgue wrote:
+> I do acknowledge your reservations about the possible maintenance burden 
+> due to the introduction of a rust (or another language) consumer of the 
+> dma-api. But I was hoping that we could arrive at some sort of common 
+> ground?
 
-Crazily unreadable line.
+The common ground is that I have absolutely no interest in helping
+to spread a multi-language code base.  I absolutely support using
+Rust in new codebase, but I do not at all in Linux.
 
-Either way this is not a function that should be inline in a header.
-Both due to sheer size, but also due to what it does and what it pulls
-in.
-
-> +{
-> +	struct module_kobject *mk;
-> +	struct kobject *kobj;
-> +	int err;
-> +
-> +	kobj = kset_find_obj(module_kset, name);
-> +	if (kobj) {
-> +		mk = to_module_kobject(kobj);
-> +	} else {
-
-And I know this is just moving the code, but an ealy return here
-would significanty clean up the function..
-
-> +		mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
-> +		BUG_ON(!mk);
-
-.. and a BUG_ON on allocation failure is a no-go.
+Thank you for your understanding!
 
