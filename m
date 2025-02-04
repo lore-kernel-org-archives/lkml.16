@@ -1,141 +1,221 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F9B216387
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856B521660D;
+	Tue,  4 Feb 2025 13:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738676446; cv=none; b=OoI/H3JKNRCickWoekO0mYFRs1H2Q1xZiO/HIH9pMcl333fmamiiYs6FdSYRv9anBV97Ta/dK0OoWOMMCHakqy2xDLO4tUs0kiKwRnOahfek+x9ho+WVDNkKu8KYRNrbMAF8vcpJJrnN1yfYY0pfDXzKNxW5RmmUuXpatYiEKd0=
+	t=1738676456; cv=none; b=maEA5NRC5WPMbAK39OWUVn62OdliOGp4mzJ1tTjdxZdFeONhNhFUtUcijBfeKDe/8+AReJBbhEW6I4+yHaK9UtyeHjbBkbF56fz5W/ZJGmJ2rJrVMArHFyY0CGv9+5Wr3OXWQudyzhoxP8d5rNignyPVpu8ErxJr6UFByeruexA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738676446; c=relaxed/simple;
-	bh=2g45caf19R559opr5zfeuZzgBir3rNVRdz0p4IMU934=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=npmX1VM1T+4AmRxhYmDFzWMY+2j1q2ShI1DWHYVIFRfWJ6wljhRIAFEskUdpourZO5fClMYT2vPNr17xG7NF28dyVG3xmkX9iNytStasFpvffj3U/TwXMkNq/oqNR2bbwqPuTWciLgLQau0FHq30fuGlY7aG1ldAAqsDnvXyCR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=A3HMiMKf; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1738676456; c=relaxed/simple;
+	bh=DWfZZyNiHrlfTSKF/UZWhyhu1z/qId1iFLKooHKvS2c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a4U8PPCakvNXAXirroX+PLnXNlKQMop/1+8N3R24q5YDVnI1jArtXzL4aCVKOLNXc0lxDXuV0msL/Pk3iOXQPjMw+tdGMcOZWZuYHlBNfIqDqmcGtDH6bU37MSuCe+ni7obnb8rIXxheyvuBRRARze3tuFGhA5/zKcLhpy4xHJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=im+TqnAe; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="A3HMiMKf"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 67535CDB;
-	Tue,  4 Feb 2025 14:39:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1738676371;
-	bh=2g45caf19R559opr5zfeuZzgBir3rNVRdz0p4IMU934=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=A3HMiMKfZZPDUTETBSCOVJZRTqxj7RWfCy3eNe87K9I7mqHdGakdx5eBpiVPOjkaa
-	 Bd4KZsZaGBVyZTNwBYvMRR7VmnAffhUVYCQgqWARHnL7lghBHpknNnYLD/Lhk6Niwa
-	 2dtA+07OHdBMk/jglEH4EeNglBRnjKKkiy8633uk=
-Message-ID: <7ed45555-6005-4ec9-b4cb-08ff109e8246@ideasonboard.com>
-Date: Tue, 4 Feb 2025 15:40:40 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="im+TqnAe"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e5b18d5293aso90185276.0;
+        Tue, 04 Feb 2025 05:40:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738676453; x=1739281253; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ClM3trTgrmbKmLvwXodhqkaYvA9BOpUueVIT9cvEspM=;
+        b=im+TqnAePWgMVro7UCQJ4E2eRi4OkQih9Nx9DbG3l3e+WW5NB44F/xCe0VXKmOmcWP
+         UYYuNg5UKloWnuparlORhydPgqEQ/yOJWcEAG8GHXDb2VIwbWh2hKqLccpieQcc6hS1I
+         cVsBOj9ZzB+X0JH5hU1FZllqsstqvsBw9P50wb0WWqlxK/5VkNNFiU4ZMkcob35nq45K
+         dCrWk2C15qjG+GFyNEIg3VP+EOJhDnpC7C4oUzb5YQbuchESUjYRZgRdHqOrD5qHIgz1
+         EQY3fwxmG/ynkIPfLeabrDURYvkfR/qLWgpvscTxy/OP0BBPdYMw13cmIIbftZT4Dm3u
+         YuRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738676453; x=1739281253;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ClM3trTgrmbKmLvwXodhqkaYvA9BOpUueVIT9cvEspM=;
+        b=ZW10aNtqg9j70leF3jslCeC+wDbNL2inGago45/HPJOw05wCFWovvdnz699y3zvZ2l
+         5rcMF2L5aGd20lxKu5ruArL2OkYnPXaWzC5Zbx330SYFyEEQHMIx+XUWdG8DbjsthEhh
+         GBTP9gl9XJtBpmAWXAf8Ks9uApClHyjmwUFtB+VNEv9s0BKwkPzk9C/kOkxVsPKgQm4N
+         SInbouVi/q9aMnM1n5dKPWPfK4lM1wUnWzx7K19iamCGMicAYo7vEM6sVFPMq+HMH+ii
+         uM55MgMsFFP8VkT5u2ozhDiQU9IZtazELJDwQ7aqO/jnqqRlc5ymMJeX6LRMZyKKoJs4
+         IbDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUj5rkOEE5+P9O9fN82SIH9L2sGvs7I798iarOICSWVDtMNeyfur9imWOeB+4JPd73PkcX7OboJN/cc12Tx@vger.kernel.org, AJvYcCXjKH1DAKUzUFBXxUbLBUrGIam95SjGOsQ3R5TmQHvZqDHsebjfHSTJNLW1AuGtV+C3Ovtb3YZP1jU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBBAF33SmKNfTzoF9o5qeqsjopn6JTkzyLQjbI1mOcv7m9nm0E
+	/iSP53h3aXPdbCYUR1CK7NN81iSUGBi0ZJXfyc9VlZaCXQGOw04ZfNo9ACFpmesyeCdJMJ2Im5t
+	y14rZlG5j9RXfeMClkX2Ht0i74RDXx0LR
+X-Gm-Gg: ASbGncszHyEadlOXE4P49bS7MQEDtcjy6DxE4nhBzfTJTVME+wpOlnCRUWC+hiz/KaD
+	zqD31yKiOD/JhaXIJKlriQyawP+iTd7rudwJEumnmWpW1DHgreKJUvQMQrzeSluMK9f/NEujT
+X-Google-Smtp-Source: AGHT+IGQSkb8yrVXg43IjaZ/x4VRVzF+oV+A6PDQ0N38ImKOiBKWcvv/wEMmUeyD7TYBpCjdjSWbQvQ7MxsKo9yA0P0=
+X-Received: by 2002:a05:6902:2483:b0:e5a:9c77:7419 with SMTP id
+ 3f1490d57ef6-e5b12dc8fb1mr1433477276.0.1738676453282; Tue, 04 Feb 2025
+ 05:40:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 11/13] drm/atomic-helper: Separate out bridge
- pre_enable/post_disable from enable/disable
-To: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Devarsh Thakkar <devarsht@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
- Udit Kumar <u-kumar1@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
- DRI Development List <dri-devel@lists.freedesktop.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-References: <20250126191551.741957-1-aradhya.bhatia@linux.dev>
- <20250126191551.741957-12-aradhya.bhatia@linux.dev>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250126191551.741957-12-aradhya.bhatia@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250128120100.205523-1-l.rubusch@gmail.com> <20250201174818.26dcc646@jic23-huawei>
+In-Reply-To: <20250201174818.26dcc646@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Tue, 4 Feb 2025 14:40:17 +0100
+X-Gm-Features: AWEUYZlQ6QCoIAjG8w5y4RG7CuIa4zGJUAeQiTQDSE5BvDRTWz0a4OEhZPDEQj0
+Message-ID: <CAFXKEHbuJkG1Ptjz03-ZhfLQB6PuYk47BMKKPTN9mFnXsnF3kw@mail.gmail.com>
+Subject: Re: [PATCH v1 00/12] iio: accel: adxl345: add interrupt based sensor events
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, eraretuya@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Jonathan, please find my answers below.
 
-On 26/01/2025 21:15, Aradhya Bhatia wrote:
-> The encoder-bridge ops occur by looping over the new connector states of
-> the display pipelines. The enable sequence runs as follows -
-> 
-> 	- pre_enable(bridge),
-> 	- enable(encoder),
-> 	- enable(bridge),
-> 
-> while the disable sequnce runs as follows -
-> 
-> 	- disable(bridge),
-> 	- disable(encoder),
-> 	- post_disable(bridge).
-> 
-> Separate out the pre_enable(bridge), and the post_disable(bridge)
-> operations into separate functions each.
-> 
-> This patch keeps the sequence same for any singular disaplay pipe, but
-> changes the sequence across multiple display pipelines.
-> 
-> This patch is meant to be an interim patch, to cleanly pave the way for
-> the sequence re-ordering patch, and maintain bisectability in the
-> process.
-> 
-> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-> ---
->   drivers/gpu/drm/drm_atomic_helper.c | 92 +++++++++++++++++++++++++++--
->   1 file changed, 88 insertions(+), 4 deletions(-)
+On Sat, Feb 1, 2025 at 6:48=E2=80=AFPM Jonathan Cameron <jic23@kernel.org> =
+wrote:
+>
+> On Tue, 28 Jan 2025 12:00:48 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > Add several interrupt based sensor detection events:
+> > - single tap
+> > - double tap
+> > - free fall
+> > - activity
+> > - inactivity
+> >
+> > All the needed parameters for each and methods of adjusting them, and
+> > forward a resulting IIO event for each to the IIO channel.
+>
+> So my main feedback here is to be much more reluctant to add new ABI.
+> Anything you add is unused by all existing code and if it is unique
+> to a driver probably never going to be used by anyone other than you.
+>
+> We have a bunch of accelerometers in tree and as they go wrt to events
+> this one isn't even particularly complex.  The existing ABI covers
+> their events reasonably well so take a look at how they do it.  Often
+> it's a case of mapping names for the application of an event (free fall
+> detection, activity detection etc) to what what they are actually detecti=
+ng.
+> Those generalize a lot better across different sensor types.  It's almost
+> always a threshold of some type. The tap / double tap are more complex
+> but we put quite a lot of effort into coming up with a general
+> description a year or so back.  There may new things but most of the
+> ABI is already there.
+>
+Please, understand my patches in "v1" rather as a huge set of questions,
+than a proposal of reinventing the IIO ABI :)
+My intention is actually not to extend/rewrite the ABI. It rather shows my =
+lack
+of knowledge combined with the curiosity of how to actually use the
+(IIO) APIs for
+such implementation. I know this is still tedious, but I'm sure it will bec=
+ome
+better.
 
-With the issue Jayesh pointed out fixed:
+My dilemma was/is the following: I did an initial implementation more simil=
+ar
+to e.g. ADXL380 for such events, and the sca3000.c for the freefall event.
+IMHO the names for the sysfs handles were not at all intuitively mappable t=
+o the
+fields I liked to operate, such as tap duration, window, latent, etc.
+The other alternative I saw, was setting up sysfs myself, IMHO clearer nami=
+ng
+but actually not really using IIO's event_config/event_value.
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Personally, I don't have any preference. If there really is no way to chang=
+e
+naming of the sysfs handles, then it's probably a question of
+documentation. If I
+can make it more intuitive for a user who knows the sensor, but not
+the internals
+of IIO, then I'd prefer to use the names referred and documented in the sen=
+sor's
+datasheet.
 
-  Tomi
+In summary, I see your point. So, I redo this patch set as I did in the ini=
+tial
+approach to show better what I mean. Probably I'm just using it in a wrong =
+way.
+Thank you for the feedback so far, I'll try to use it where it still applie=
+s.
 
+> >
+> > The sensor has further features still not covered:
+> > - g-ranges scaled by different ODRs, especially for activity / inactivi=
+ty
+> >   threshold is not covered so far. There seems to be a particularity wi=
+th
+> >   the ADXL345 as annotated on some analog FAQ.
+> >
+> > - Various thinks like low power, sleep mode, etc. are (still) not cover=
+ed
+> >   here, others (ACDC bit, selftest, etc.) currently are hard coded or n=
+ot
+> >   covered.
+> >
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > ---
+> > Questions:
+> > - Do I need a mutex/lock protection as this is the case e.g. in the ADX=
+L367
+> >   or the ADXL380?
+> >   Actually, I understand those cases as protecting access to the state
+> >   object by different channels, temperature and accelerometer. I'm unsu=
+re
+> >   if this is a correct understanding, where for the ADXL345 there shoul=
+d
+> >   not be any issue. At most, a currently displayed value on sysfs is
+> >   (still) not updated. So, IMHO I can rely on the internal protections =
+in
+> >   regmap no further mutex is needed. Please, can you give me a feedback
+> >   here?
+>
+> If you have an read modify write actions triggered by sysfs writes they
+> can race (not serialization between different file writes).
+> That's why you tend to need the mutex.
+>
+This explains it clearly, ty.
+
+> >
+> > - FIELD_PREP/FIELD_GET: I'd like to use arrays of enum indexed elements
+> >   to allow for more generic function implementation passing just a "typ=
+e"
+> >   field, e.g. at single tap/double tap or activity/inactivity handling.
+> >   When it comes to filtering out bits using FIELD_GET/FIELD_PREP, it sa=
+ys
+> >   that this enum array element is not "const enough". Is there a
+> >   work-around?
+> I don't have it to hand but there is a patch set trying to add non
+> const versions of these that went to my other email.
+>
+> For now just carry a local version as we don't want to end up waiting
+> for that patch to merge.
+
+I understand. I'll do another implementation approach, I'll see. Good to kn=
+ow,
+anyway.
+
+
+> >
+> > Lothar Rubusch (12):
+> >   iio: accel: adxl345: migrate constants to core
+> >   iio: accel: adxl345: reorganize measurement enable
+> >   iio: accel: adxl345: add debug register access
+> >   iio: accel: adxl345: reorganize irq handler
+> >   iio: accel: adxl345: improve access to the interrupt enable register
+> >   iio: accel: adxl345: add single tap feature
+> >   iio: accel: adxl345: show tap status and direction
+> >   iio: accel: adxl345: add double tap feature
+> >   iio: accel: adxl345: add double tap suppress bit
+> >   iio: accel: adxl345: add freefall feature
+> >   iio: accel: adxl345: add activity feature
+> >   iio: accel: adxl345: add inactivity feature
+> >
+> >  drivers/iio/accel/adxl345.h      |   86 ---
+> >  drivers/iio/accel/adxl345_core.c | 1150 ++++++++++++++++++++++++++++--
+> >  2 files changed, 1099 insertions(+), 137 deletions(-)
+> >
+>
