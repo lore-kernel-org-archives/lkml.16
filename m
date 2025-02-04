@@ -1,229 +1,120 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569AA219A9F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 21:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0425D2B9BB
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 21:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738705646; cv=none; b=gFJGdsoASb3jYGzcoczUe3gU3blf1alS1zZ1U3OcINnVTHtMS15d9HNnAQvL1zxbiwFP82PCdnShwKxxJtZi89eMXC27Q60L7n2gbM5qZL+PzpF6DEXI+rDgRlDoYNy7q4rGb6bzjF1qtZjIZ6/6Lf41+/CgnM8Vwwci5LagdWc=
+	t=1738705868; cv=none; b=na7GgqM1OwFbiqX6k5fM9FhI8qg++KFGYE9HBbYBDvH362r5ZI1c6Mb6TN8YB/eUE5evsJA425mKERrW1loEwzEgccyEmREroVnc0DRmh3qmjz1pRHSuIeppvF3Uq+iex4XEJrf6nFpPCVxiCtdwmIKojfdZnZAj41MUCD2m8TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738705646; c=relaxed/simple;
-	bh=hqFrHw4SuAtLqJ59fD6Qavu3B1gXposiTbudKR0gwzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jUx0lcyk8Id/vjYGRdalhE0IArkm3dsOEM4aJLGkHSPvkuTEOdga80e4eTLD2cqPrrPRxPw/I8ke1f4KW4ykC78cFZm//SrY+yv82vr0OGNvbs9xLNSEqIWQwduTfLHKvSF57dSnuHCs9YJpZqVDRiYkzjyFJ6yCuZfS6xVJRW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=qQZ0j6GE; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1738705868; c=relaxed/simple;
+	bh=BLeKoGeLNsNMhd1coglg57y/v+PHncPIYOSj88oZLkw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YS08Wlu7aDcArQbfnGYYL11B0pjVMYHQ/FDod2+OWSaU1C28f863cPnvHE6t0bEfSTj1MHVey1+PejbS9kxEGYwcFn+B7AWc5C7xYDHk+na4HlU84HE/Kv063VPFscoXzHJpRLXeLU5mdBhV0uKbabX4KfBklotLLNecR15MHg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=lMLBIR2B; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="qQZ0j6GE"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id B60DB240103
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 22:47:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1738705641; bh=hqFrHw4SuAtLqJ59fD6Qavu3B1gXposiTbudKR0gwzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=qQZ0j6GEsv4JcDlYj8Q6u9rRWhrn5SRTH1N0uD/ZYP5qA8J/UrP92jd5g6FnOmvVD
-	 W89zfbGd7UFgCDmMzmtJzoAwY//KVPRgk2c5d6g5q0Rus8hT0pmTGBikjS5mG4mwL0
-	 OcIYINsOA5E7lC2zTHSIVEjTYwv6fNZOK3rnQa4NZiaTynWFJlS+VqebRR83oVM0eo
-	 FHgV2NC4k2HvL6b+Ae+AwtD+zxxOkAAZ2TdKt1pFzsS9/1kVUyTteX5csGKN/vTdrt
-	 ewPUNMLJi0gRHPW1twZZgZ1p8yqKZSTTXXD447GewiJw6kXbKgeWfFljHMnNuxkvqc
-	 PdVfx5l9i8phw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YncQq5Wc6z9rxG;
-	Tue,  4 Feb 2025 22:47:14 +0100 (CET)
-Date: Tue,  4 Feb 2025 21:47:14 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Frank Li <Frank.li@nxp.com>
-Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
-	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 5/9] dt-bindings: dma: Convert fsl,elo*-dma bindings to
- YAML
-Message-ID: <Z6KK4vLsFVxMS9pS@probook>
-References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <20250126-ppcyaml-v1-5-50649f51c3dd@posteo.net>
- <Z5qxLxa7z22Fk+Dv@lizhi-Precision-Tower-5810>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="lMLBIR2B"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514FmAVQ022131
+	for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2025 15:51:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=b1RzSsEKe66AujfiZFZmfoJSdJLzI93zD82n+g9csGk=; b=
+	lMLBIR2Brp57Xzy2ID9hGo/07qluiSfZHEBlh2jcG40YQO8BxZSIR2HOXCceC19y
+	yjLLZ2IqvR5Tt59qBGB27OCaq4m2nRVkIESyL3VW/MZEvvvK0l3rsjsLPJ99IL6H
+	iGEnefdaXabUqlKm5/uEVbW0i9yTV6fkqLewmd4B8k24mxWtkJm4HeHwvf45cpLb
+	G0slL7yIwPctbm1eS/pqbr1OiAuQhkJlylDOZtYN17iDPmcCj8UDIv3XTFTmls9a
+	KPGJHN6xMs8W1m/Swx/T+fUVj4WbyQhK9KtotbNoADPRnhzZPp5sMIxL4etQSe8C
+	4PckdjJ7en01c5vEeGMK6A==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44hgwm3pen-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 15:51:03 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 4 Feb
+ 2025 21:51:01 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Tue, 4 Feb 2025 21:51:01 +0000
+Received: from [141.131.145.81] (ftrev.ad.cirrus.com [141.131.145.81])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 235B7820248;
+	Tue,  4 Feb 2025 21:51:01 +0000 (UTC)
+Message-ID: <fa2b3961-8e5d-4d56-9abe-c79a91f961f9@opensource.cirrus.com>
+Date: Tue, 4 Feb 2025 15:51:00 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z5qxLxa7z22Fk+Dv@lizhi-Precision-Tower-5810>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/7] firmware: cs_dsp: Check for valid num_regs in
+ cs_dsp_wseq_multi_write()
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+CC: Simon Trimmer <simont@opensource.cirrus.com>,
+        Richard Fitzgerald
+	<rf@opensource.cirrus.com>,
+        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>
+References: <20250131195639.1784933-1-ftreven@opensource.cirrus.com>
+ <20250131195639.1784933-3-ftreven@opensource.cirrus.com>
+ <Z6HmjEBIOfQYomXc@opensource.cirrus.com>
+From: Fredrik Treven <ftreven@opensource.cirrus.com>
+Content-Language: en-US
+In-Reply-To: <Z6HmjEBIOfQYomXc@opensource.cirrus.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=EPv800ZC c=1 sm=1 tr=0 ts=67a28bc7 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=BfB9XW8-RVDWc0RkeQkA:9 a=QEXdDO2ut3YA:10
+ a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-ORIG-GUID: md0DEQn7mM1D1qiQrBzjikmPI6mUmwCI
+X-Proofpoint-GUID: md0DEQn7mM1D1qiQrBzjikmPI6mUmwCI
+X-Proofpoint-Spam-Reason: safe
 
-On Wed, Jan 29, 2025 at 05:52:31PM -0500, Frank Li wrote:
-> On Sun, Jan 26, 2025 at 07:59:00PM +0100, J. Neuschäfer wrote:
-> > The devicetree bindings for Freescale DMA engines have so far existed as
-> > a text file. This patch converts them to YAML, and specifies all the
-> > compatible strings currently in use in arch/powerpc/boot/dts.
-> >
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > ---
-> >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 129 +++++++++++++
-> >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 105 +++++++++++
-> >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 120 ++++++++++++
-> >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
-> >  4 files changed, 354 insertions(+), 204 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..d1f4978a672c1217c322c27f243470b2de8c99d4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
-> > @@ -0,0 +1,129 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/dma/fsl,elo-dma.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Freescale Elo DMA Controller
-> > +
-> > +maintainers:
-> > +  - J. Neuschäfer <j.ne@posteo.net>
-> > +
-> > +description: |
+On 2/4/25 04:06, Charles Keepax wrote:
+> On Fri, Jan 31, 2025 at 01:56:33PM -0600, Fred Treven wrote:
+>> If a value of 0 or below is passed into cs_dsp_wseq_multi_write()
+>> the function will never enter its for loop.
+>>
+>> Verify that num_regs passed into the function is valid
+>> and throw a user-visible error if not.
+>>
+>> Signed-off-by: Fred Treven <ftreven@opensource.cirrus.com>
+>> ---
+>>   drivers/firmware/cirrus/cs_dsp.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/firmware/cirrus/cs_dsp.c b/drivers/firmware/cirrus/cs_dsp.c
+>> index 56315b0b5583..aacf6960d1ea 100644
+>> --- a/drivers/firmware/cirrus/cs_dsp.c
+>> +++ b/drivers/firmware/cirrus/cs_dsp.c
+>> @@ -3743,6 +3743,11 @@ int cs_dsp_wseq_multi_write(struct cs_dsp *dsp, struct cs_dsp_wseq *wseq,
+>>   {
+>>   	int i, ret;
+>>   
+>> +	if (num_regs <= 0) {
+>> +		cs_dsp_err(dsp, "Invalid number of regs: %d\n", num_regs);
+>> +		return -EINVAL;
+>> +	}
+>> +
 > 
-> needn't | here
-
-Will remove.
-
+> This feels a little defensive, do we really need to check for
+> this? Normally num_regs is going to come from an ARRAY_SIZE or
+> something.
 > 
-> > +  This is a little-endian 4-channel DMA controller, used in Freescale mpc83xx
-> > +  series chips such as mpc8315, mpc8349, mpc8379 etc.
-> > +
-> > +  Note on DMA channel compatible properties: The compatible property must say
-> > +  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
-> 
-> There are not 'fsl,eloplus-dma-channel' under "^dma-channel@.*$". I suggest
-> remove this because 'compatible': items already show such information.
+> Thanks,
+> Charles
 
-Good point, I'll trim this text down.
+I see your point. The reason I wanted to add this, though, was because I fell
+into the trap myself by mistakenly swapping the op_code input and the num_regs
+input.
 
-> > +  driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
-> > +  DMA driver, such as the SSI sound drivers for the MPC8610.  Therefore, any
-> > +  DMA channel that should be used for another driver should not use
-> > +  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel".  For the SSI drivers, for
-> > +  example, the compatible property should be "fsl,ssi-dma-channel".  See
-> > +  ssi.txt for more information.
+It then became very difficult to track down the mistake because there was no
+condition to catch it in place.
 
-I noticed fsl,ssi.txt has been converted to YAML since this text was
-originally written, so I'll make reference to that.
-
-[...]
-> > +examples:
-> > +  - |
-> > +    dma@82a8 {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <1>;
-> > +        compatible = "fsl,mpc8349-dma", "fsl,elo-dma";
-> > +        reg = <0x82a8 4>;
-> 
-> compatible and reg should be first two property.
-
-Will fix.
-
-> 
-> > +        ranges = <0 0x8100 0x1a4>;
-> > +        interrupt-parent = <&ipic>;
-> > +        interrupts = <71 8>;
-> > +        cell-index = <0>;
-> 
-> need space line here.
-
-Will fix.
-
-> > +        dma-channel@0 {
-> > +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> > +            cell-index = <0>;
-> > +            reg = <0 0x80>;
-> > +            interrupt-parent = <&ipic>;
-> > +            interrupts = <71 8>;
-> > +        };
-> 
-> need space line here. check other's example dts
-
-Will fix in all files.
-
-
-[...]
-> > +patternProperties:
-> > +  "^dma-channel@.*$":
-> > +    type: object
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        items:
-> > +          - enum:
-> > +              - fsl,mpc8540-dma-channel
-> > +              - fsl,mpc8541-dma-channel
-> > +              - fsl,mpc8548-dma-channel
-> > +              - fsl,mpc8555-dma-channel
-> > +              - fsl,mpc8560-dma-channel
-> > +              - fsl,mpc8572-dma-channel
-> > +          - const: fsl,eloplus-dma-channel
-> 
-> I think you can merge this fsl,mpc83xx-dma yaml file
-> 
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: fsl,elo-dma
-> +    then:
-> +      patternProperties:
-> +        "^dma-channel@.*$":
-> +          properties:
-> +            compatible:
-> +              items:
-> +                - enum:
-> 			....
-> +    else
-> +      patternProperties:
-> +        "^dma-channel@.*$":
-> +          properties:
-> +            compatible:
-> +              items:
-> +                - enum:
->                         ....
-> +                - const: fsl,eloplus-dma-channel
-
-I suppose that works, but I'm not entirely convinced it would help with
-readability, compared to leaving the three variants separate.
-
-
-Thank you for your review!
+If you feel strongly that I should drop this patch then I am okay with doing so.
 
 Best regards,
-J. Neuschäfer
+Fred
