@@ -1,137 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112A42163AF;
-	Tue,  4 Feb 2025 17:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E192163AA;
+	Tue,  4 Feb 2025 17:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738690613; cv=none; b=nYwPN0rkF+86mlH+92CWhG6Q+p3NkG+APRDbpLQ2GsuyXeIU/S2LeHTIDUb3kgBq/3x9QIrSspEyzwsewXRNph0tp+DLhieUysFY64gHEJKDrQKMIMN0YE75BXdwLbUUVe8elniPKkrCF/vGf3l9uIr3e4qwQfovjSt0rpB96Og=
+	t=1738690627; cv=none; b=suFrfrutL4nderrj8Jsb9vLA8qhUQqFj6gqeuh9FjYps6QhsAvfKLSpzt6Dt2DCqG5AvdwZcq1upS8akU1v2K4MwMLR2yO5Uy1TC/9iWxU7vJxi4rptqU53nbaBuPRDzP/748xDgYtNNXau97AnIi5lxYttF3sMcuLLp3rDJVwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738690613; c=relaxed/simple;
-	bh=pIXT1Hs1aUtzZe3Mmj8B+f4h66p4s3gODDX3GQGG9jk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YjfRffhlrm+/jTZdJsT5vWcxIP3e6AiXlSEPGsGvcXzEMJ6xqMtE0r0LMELcAQRDcGz39psmVwHJ/aEbNIgP9w/7rmQV+K8pLMH9fGbcajKt/TrUApkNl44y6874GWCY6Hi2XF5Aj9R8GXqigkC3fqRZx4TUqLMr/1AXXOyrfE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JqeLuFId; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738690627; c=relaxed/simple;
+	bh=r2iiDiPZOS4/QANoocz7hbq1LBuYUYYysQaiQVX4JUg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nOrfn2Jm7lz9UDUADxwD2UmINo9nSVeM7X2MKF/n0NT/ngwq6Ibb5w3qPCHtCcQBW4FvbvjkzzTD2lF7eaIYieJSsO8M+t8LV+YHcXPihlPKCX5X+w9XHKgpmxGgJbZRb/bqgQz0e2Ym3Fo4hz35dKaCKJhiT4WwOe72YCbYqy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A9DnbX4Z; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JqeLuFId"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A9DnbX4Z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738690612; x=1770226612;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pIXT1Hs1aUtzZe3Mmj8B+f4h66p4s3gODDX3GQGG9jk=;
-  b=JqeLuFIdWOkz9cJWnwzAp6+wUvF8Ptcxk8v0yd4nzz4In2Ema1YQudwX
-   AXJd71UoeRHkdGhY1kIl7XGUFj9q5GMoJNGUazp1NkofHJ3wPE6kzsoE7
-   zIf0CN9pedv4Ph/pY1ObEE/f/ShikONKandcqjZGz15VoXndfQ14k+Juq
-   V31QHYT2Pl8gy7L+fJ4AI7m3eKVJaIcvoL1AMZofyh75rTF4lB3wiPjQ2
-   6ylztqTtmREcCkRdvRqGNyKJycsf+UczP8ZIiHSktHxEdJFzUIjCvVR2l
-   Xm+dGKtkKaP80FbOTgycoG9P03+cnxbpwP7z9qdUMFenJv20XeE9+Aj19
-   Q==;
-X-CSE-ConnectionGUID: yeIKk6AZSz+hacf7Lj7qHA==
-X-CSE-MsgGUID: sIYvCpe4QVmlRDRTgJ2HTA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="64583761"
+  t=1738690626; x=1770226626;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=r2iiDiPZOS4/QANoocz7hbq1LBuYUYYysQaiQVX4JUg=;
+  b=A9DnbX4Z9IwBYz3VpbeJxIgfP3l52T38fvZC/JCnHlJRKN4J+P47wTOG
+   nWu9Pqab15e01pHqHX/3KmwEr8/EL2suF4dYHr3ixz0lwEDlKIjqp/dMw
+   CbltiCEzVwKYJBZ6zIJ17R1KyuOr8hqVbHtmwasZ39cn4Td5J1COGQNJz
+   i7ejcJOxS+W2mK/nUh8UfWloYT1jPRr8Uzwv2A591dzilinxCy5sRU229
+   KJMEmWTTjR5RwrkKbxuFBXBWMR2WzcOWUzA4EvtMHQfDbSz+gsdPP/Xmz
+   QaDvMHhwyMGyerdQHPZp3EYAdkfG1uMweLAumqZYKKQ79/F1kElLn+Qz6
+   A==;
+X-CSE-ConnectionGUID: Jlv3wYWESBmqrrSs8UzHKw==
+X-CSE-MsgGUID: gq2SdZbzRdu//H0avhk1Cw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38931048"
 X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="64583761"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:36:51 -0800
-X-CSE-ConnectionGUID: wCA9AbmgQMu5wOszPK0wRg==
-X-CSE-MsgGUID: fMhha4lFQUKbtEVcr0PRXQ==
+   d="scan'208";a="38931048"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:37:04 -0800
+X-CSE-ConnectionGUID: F7WrZE34TJC30qp8xAUvrQ==
+X-CSE-MsgGUID: 1Ko21FfoQgSOsBU65eanYQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="110494598"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:36:45 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tfMqn-00000008DQ7-3FFR;
-	Tue, 04 Feb 2025 19:36:41 +0200
-Date: Tue, 4 Feb 2025 19:36:41 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 12/17] ACPI: property: Add support for nargs_prop
- in acpi_fwnode_get_reference_args()
-Message-ID: <Z6JQKQnBeB2Z9XQY@smile.fi.intel.com>
-References: <20250203084906.681418-1-apatel@ventanamicro.com>
- <20250203084906.681418-13-apatel@ventanamicro.com>
- <Z6CPvteWv89Xo70j@smile.fi.intel.com>
- <20250203105840.GH3713119@black.fi.intel.com>
- <Z6C1cg3cqik8ZxvU@sunil-laptop>
- <20250203123658.GI3713119@black.fi.intel.com>
- <Z6DJ9kmNx4JoqRg-@sunil-laptop>
- <Z6DVDicVEgmSyGcT@smile.fi.intel.com>
- <Z6DVn8u-2EwMaMR4@smile.fi.intel.com>
- <Z6JHG-nqFWDv-jpE@sunil-laptop>
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="147866985"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.244.61])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:36:51 -0800
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: luto@kernel.org,
+	xin@zytor.com,
+	kirill.shutemov@linux.intel.com,
+	palmer@dabbelt.com,
+	tj@kernel.org,
+	andreyknvl@gmail.com,
+	brgerst@gmail.com,
+	ardb@kernel.org,
+	dave.hansen@linux.intel.com,
+	jgross@suse.com,
+	will@kernel.org,
+	akpm@linux-foundation.org,
+	arnd@arndb.de,
+	corbet@lwn.net,
+	maciej.wieczor-retman@intel.com,
+	dvyukov@google.com,
+	richard.weiyang@gmail.com,
+	ytcoode@gmail.com,
+	tglx@linutronix.de,
+	hpa@zytor.com,
+	seanjc@google.com,
+	paul.walmsley@sifive.com,
+	aou@eecs.berkeley.edu,
+	justinstitt@google.com,
+	jason.andryuk@amd.com,
+	glider@google.com,
+	ubizjak@gmail.com,
+	jannh@google.com,
+	bhe@redhat.com,
+	vincenzo.frascino@arm.com,
+	rafael.j.wysocki@intel.com,
+	ndesaulniers@google.com,
+	mingo@redhat.com,
+	catalin.marinas@arm.com,
+	junichi.nomura@nec.com,
+	nathan@kernel.org,
+	ryabinin.a.a@gmail.com,
+	dennis@kernel.org,
+	bp@alien8.de,
+	kevinloughlin@google.com,
+	morbo@google.com,
+	dan.j.williams@intel.com,
+	julian.stecklina@cyberus-technology.de,
+	peterz@infradead.org,
+	cl@linux.com,
+	kees@kernel.org
+Cc: kasan-dev@googlegroups.com,
+	x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	llvm@lists.linux.dev,
+	linux-doc@vger.kernel.org
+Subject: [PATCH 12/15] x86: Minimal SLAB alignment
+Date: Tue,  4 Feb 2025 18:33:53 +0100
+Message-ID: <162610a0af3e04e2f42872401461b1d62ec78fbd.1738686764.git.maciej.wieczor-retman@intel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
+References: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6JHG-nqFWDv-jpE@sunil-laptop>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 04, 2025 at 10:28:03PM +0530, Sunil V L wrote:
-> On Mon, Feb 03, 2025 at 04:41:35PM +0200, Andy Shevchenko wrote:
-> > > Ah, interesting. The original change that introduces this 3e3119d3088f ("device
-> > > property: Introduce fwnode_property_get_reference_args") hadn't been reviewed
-> > > by Mika or me, that's probably why we are not familiar with.
-> > > 
-> > > Since interface is already established, I would recommend to fix
-> > > this as proposed, i.e. with a new API. This is the way to match
-> > > how OF seems to be doing.
-> > 
-> > For the reference see implementation of of_fwnode_get_reference_args()
-> > 
-> > 	if (nargs_prop)
-> > 		ret = of_parse_phandle_with_args(to_of_node(fwnode), prop,
-> > 						 nargs_prop, index, &of_args);
-> > 	else
-> > 		ret = of_parse_phandle_with_fixed_args(to_of_node(fwnode), prop,
-> > 						       nargs, index, &of_args);
-> > 
-> > 
-> Thanks!. I can do similar. But the change in
-> __acpi_node_get_property_reference() will be still required since that
-> is the place where the actual decoding of AML object is done. That would
-> be similar to __of_parse_phandle_with_args() as well. Hope that is fine.
+Adjust x86 minimal SLAB alignment to match KASAN granularity size. In
+tag-based mode the size changes to 16 bytes so the value needs to be 4.
 
-You don't need that. Split the core part to local static helper that
-takes whatever it needs, but being not visible to anyone outside
-drivers/acpi/property.c. And build the current helper and new visible one
-on the basis of this split. For better reviewing and maintaining you can
-split this approach to two patches: 1) preparatory by splitting a new
-local helper; 2) the introduction of a new API.
+Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+---
+ arch/x86/include/asm/kasan.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
+diff --git a/arch/x86/include/asm/kasan.h b/arch/x86/include/asm/kasan.h
+index 8829337a75fa..f7a8d3763615 100644
+--- a/arch/x86/include/asm/kasan.h
++++ b/arch/x86/include/asm/kasan.h
+@@ -36,6 +36,8 @@
+ 
+ #ifdef CONFIG_KASAN_SW_TAGS
+ 
++#define ARCH_SLAB_MINALIGN (1ULL << KASAN_GRANULE_SHIFT)
++
+ #define __tag_shifted(tag)		FIELD_PREP(GENMASK_ULL(60, 57), tag)
+ #define __tag_reset(addr)		(sign_extend64((u64)(addr), 56))
+ #define __tag_get(addr)			((u8)FIELD_GET(GENMASK_ULL(60, 57), (u64)addr))
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.47.1
 
