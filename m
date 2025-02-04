@@ -1,85 +1,181 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C4C15B0EF;
-	Tue,  4 Feb 2025 04:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BB435947
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 04:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738642078; cv=none; b=HKpd0sXkS+MkASwUrgOC7o4sLM2LAKbVV1Bu2ojO6bQD3xVG9+RCsd0758PcZvsdJRlyixyd4OlDpwTuHTfZUxmnYS6ZWzbFkHlKrDWXYwVg5ylPZ7+s8xcTzO7xNa7H9Oj07RCELjOYAYLtnphF3rcfKnX1+Ek7i8yDa4rC0mk=
+	t=1738642721; cv=none; b=R+5d1gKcho3eHQQt2rIOX7lrzZWV+KhEvbj6jejhG7/ydGHXhyEOfCCf2927emwjBm6BFuqVqziq3YvOnCkgrCfBUJnlIS9h5cs6+omvoOaJyhvVpNxPh5qaKUUhHugoKqRc3ZAxEsWDqv6M2RBFojY2FXRUohrMhkDZy3Slo18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738642078; c=relaxed/simple;
-	bh=WVJKJCXafoZDt2fgMo2hfVB4TrepTpU/rLmSnRwwsmE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QXKWrGRECw6Ck1n3V0aqtVm6WSWAvfOQTOxjCRjI+lC3nW6jEomm9kYQ/6tIkf3ZWDa1DFQv9M3kWj4gBCwp7G/jWkyJgzZFpv1FjevO0TXMBln/+1ckICDZRlP9yp1g4LRVbzSOttK0qge63BHwS4OjmCQrZ5FE4MbBg19eMWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tIoNct5z; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738642721; c=relaxed/simple;
+	bh=8RYsFsyt9XKOqCwg6qJ9SOV8hycqHVsUml8P7H6kN0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wll6C+R/CZmpp+xNit5UIJvcJLMk0gDTTXwzVRQm0mJg3fwruJ2KAGj5DZGfZ3ciKAT+4pNfbm3UMibFJb/u2q9SK9FdFGABZBY71hjhv3b8MNVFPnXRLxO/Q7dWFbtvDwtuEvbhf6b1w+IVA4GBDZVkaAtXdvOoDILranR9J0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ckHZ8DZ1; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tIoNct5z"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51447iLN3082441
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 22:07:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738642064;
-	bh=p5otmGI6O7LQBHDsBHInGlKABWHLbf34yMb/QXQ/q1o=;
-	h=From:To:CC:Subject:Date;
-	b=tIoNct5zTj3F/Q1KaRd+YJJgEb/mxc9nf2MVY66QK7ZFa/A2XUJPalsTAnaBt2HRh
-	 qltKSVCZcTJxRy0g0xt8j6Sx5FbItnTPeJ/vWAuoN7efA++ZGlqmX1OKBuApMJAxtg
-	 V4YxMtgyD4vu1LNwKnAcjFj8VUOsw24B3QxAlqZY=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51447ifX103878
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 3 Feb 2025 22:07:44 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
- Feb 2025 22:07:44 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 3 Feb 2025 22:07:43 -0600
-Received: from LT5CG31242FY.dhcp.ti.com ([10.250.160.127])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51447etc078001;
-	Mon, 3 Feb 2025 22:07:41 -0600
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <baojun.xu@ti.com>, <13564923607@139.com>, <13916275206@139.com>,
-        <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-        Shenghao Ding
-	<shenghao-ding@ti.com>
-Subject: [PATCH v1] MAINTAINERS: remove Kevin Lu from TEXAS INSTRUMENTS AUDIO (ASoC/HDA) DRIVERS
-Date: Tue, 4 Feb 2025 12:07:37 +0800
-Message-ID: <20250204040737.657-1-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ckHZ8DZ1"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7b6ed0de64aso446072685a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 20:18:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1738642719; x=1739247519; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1DvyAG/gibJ4Np4As+DdlCtpsc8Q7r5eOByPQszzk7g=;
+        b=ckHZ8DZ1q3jbYj6f/WhJveGGHgffBtMr7vry6JKPQQSVTFfGB6ivffFF378nYcSrN0
+         0C/FVyMUplPBbGNj9kr4JwBGUe8CJe1Mm7p4FOz7PVH7QThfawbcq13PfzFYqlqRVXyD
+         f51ZJNQdouOem6vYs2v58TjnJR04m2iPER2ygZD4mL+My+FJLgT2Y3P1/GoJ9ojo98Xr
+         IWhwyvgehCOSb1Hvynhe2TKMKlaUKdW1zgNu6heDjgfeO6HdOONFLSN7MT05WJrGmQGy
+         sdIPIrJEbJWhnJ0jiD6ZIvvrH3VwyzR1gscfFGsvS9+DMOoNpKS2ZiFpFghpgu6CreKE
+         yb6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738642719; x=1739247519;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1DvyAG/gibJ4Np4As+DdlCtpsc8Q7r5eOByPQszzk7g=;
+        b=MXCPNarVmgs3rgHfZpCg9gJpba787mJjN5KaxsAaMTzyH1V3N1+NlQ6c0iSxoaLenl
+         sX0JQCGJxzt3m7+o9zQp4bFPHyO7Vo4Z9tdjoILjsUW0tSvqz/2C+bqjernlTukHlCEr
+         qByNPOJRPNsC8YrePYuPgzd+ohLSk8HWYZjvkMxg+CT+jMxP/ZSuYzeCsgnji+ZU1k/W
+         AndNLoxhVDe1ouX/uY+8KYzgpoLJE+v8/ssgtSwOSPrBiZsJyH4Qf+6ebcoBLcJZe2ID
+         L5eD9LGL24W6zc5DWFRmr5xiB9+RDHeFYUapXlYJng2Uhrp/IaVCvVfs6vsVKrsR35vY
+         b/dA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnGiGk0CSTRGjpWbCWnmDtbGXimhGS2LIMqb1QXr9Ya+Ry+J6nZ9s/P69R767gVHjG4rNjLSs8GrKnBVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxV7M+Ydzi545eVjWhaBbWTXF1zqkTtvWc3iss40XvR2ekynkHV
+	dqI7p4Y7wT+Qd1eB6aYRUOUhy38oqSKw06c+EfslrR+sBipNQiksZ3sn0Sgtr6Y=
+X-Gm-Gg: ASbGncvxSbc5C4Lxezvqy00mfa/dJ+Mc/42IxhtsR5nKQKApd5gjnzS9aDXQqVtYpCA
+	sgKOkZv9DDBeDjOs0HHj/F2H009Qn0cbiqcIq2BZ1pc+kEYk16eopTvBsDyCbpiqvbDRgwOeghB
+	kM9zCnMY+qrUsCZx0bs5fV3IEsI28xd8GQU2pAtufr7L1Jx2exWX0E2rCIMV73b0eSKqV5PmZZN
+	CNUTyzPxRyv6AeNJhZEqM1qLjChdPRy366NrKRsBLUEBJ2FgCM+IxA+/oHHjuxuYzvM+cibFMyW
+	s6MAICsB3zWOpyroMkbDK84=
+X-Google-Smtp-Source: AGHT+IE0f4QugKabfRRSBRleOS2KB1pvcyWkZ6UoqvN4crpYoZxJOEqx3b/6o3pkY3LuZEm1BmbQlA==
+X-Received: by 2002:a05:620a:3d84:b0:7b1:ab32:b71e with SMTP id af79cd13be357-7c02eb7da0bmr280078885a.0.1738642719178;
+        Mon, 03 Feb 2025 20:18:39 -0800 (PST)
+Received: from sunil-laptop ([103.97.166.196])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a90571csm597775385a.83.2025.02.03.20.18.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 20:18:37 -0800 (PST)
+Date: Tue, 4 Feb 2025 09:48:22 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Anup Patel <apatel@ventanamicro.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 16/17] irqchip/riscv-rpmi-sysmsi: Add ACPI support
+Message-ID: <Z6GVDuhNyjFQ4OKT@sunil-laptop>
+References: <20250203084906.681418-1-apatel@ventanamicro.com>
+ <20250203084906.681418-17-apatel@ventanamicro.com>
+ <Z6COlL_5n2AfRADL@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6COlL_5n2AfRADL@smile.fi.intel.com>
 
-Due to internal re-org, Kevin Lu has no longer maintained audio driver.
+On Mon, Feb 03, 2025 at 11:38:28AM +0200, Andy Shevchenko wrote:
+> On Mon, Feb 03, 2025 at 02:19:05PM +0530, Anup Patel wrote:
+> > From: Sunil V L <sunilvl@ventanamicro.com>
+> > 
+> > Add ACPI support for the RISC-V RPMI system MSI based irqchip driver.
+> 
+> ...
+> 
+> > +	if (!is_of_node(dev->fwnode)) {
+> 
+> Please, use dev_fwnode(),
+> 
+> But why do you need this? Can't the below simply become a no-op without
+> this check?
+> 
+> > +		rc = riscv_acpi_get_gsi_info(dev->fwnode, &priv->gsi_base, &id,
+> 
+> Ditto.
+> 
+> > +					     &priv->nr_irqs, NULL);
+> > +		if (rc) {
+> > +			dev_err(dev, "failed to find GSI mapping\n");
+> > +			return rc;
+> > +		}
+> > +	}
+> 
+> ...
+> 
+> >  		 * then we need to set it explicitly before using any platform
+> >  		 * MSI functions.
+> >  		 */
+> > -		if (is_of_node(dev->fwnode))
+> > +		if (is_of_node(dev->fwnode)) {
+> >  			of_msi_configure(dev, to_of_node(dev->fwnode));
+> > +		} else {
+> > +			struct irq_domain *msi_domain;
+> > +
+> > +			msi_domain = irq_find_matching_fwnode(imsic_acpi_get_fwnode(dev),
+> > +							      DOMAIN_BUS_PLATFORM_MSI);
+> 
+> > +			if (msi_domain)
+> 
+> Hmm... The OF case above assumes this check is not needed. Why is it special
+> otherwise?
+> 
+> > +				dev_set_msi_domain(dev, msi_domain);
+> > +		}
+> >  
+> >  		if (!dev_get_msi_domain(dev))
+> 
+> Even here you have a check for NULL, so I believe the conditional is simply
+> redundant.
+> 
+> ...
+> 
+> > +#ifdef CONFIG_ACPI
+> 
+> > +	if (!acpi_disabled)
+> 
+> Why?
+> 
+> > +		acpi_dev_clear_dependencies(ACPI_COMPANION(dev));
+> > +#endif
+> 
+> ...
+> 
+> > +#ifdef CONFIG_ACPI
+> 
+> Drop this ugly ifdeffery along with ACPI_PTR(). They are more harmful than
+> useful.
+> 
+> ...
+> 
+> > +static const struct acpi_device_id acpi_rpmi_sysmsi_match[] = {
+> > +	{ "RSCV0006", 0 },
+> 
+> Drop ', 0' part as it may be converted to a pointer in the future.
+> 
+Thanks!. Let me address your comments in next revision.
 
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa065..bc0bf402818d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23370,7 +23370,6 @@ F:	sound/soc/ti/
- 
- TEXAS INSTRUMENTS AUDIO (ASoC/HDA) DRIVERS
- M:	Shenghao Ding <shenghao-ding@ti.com>
--M:	Kevin Lu <kevin-lu@ti.com>
- M:	Baojun Xu <baojun.xu@ti.com>
- L:	linux-sound@vger.kernel.org
- S:	Maintained
--- 
-2.34.1
-
+Thanks,
+Sunil
