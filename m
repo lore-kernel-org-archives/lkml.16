@@ -1,108 +1,63 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902172139D2
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D00213E62;
+	Tue,  4 Feb 2025 14:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738680304; cv=none; b=Nc2a4FuO/EYREOS7Pt8TtagogzGz4HS8D7z0HgKhBSn7h9JQ9eFff1WSIXNcp0ni96CB+X7aLtraE40DEKq1y6mxXJUdN19Da/doYBnCHls2Dc7G8aVSu++gwfCO4irfguMKYWYQ95hqAIHZSlONGuHP5GVe7G6qsrekToi9Wkg=
+	t=1738680319; cv=none; b=l95hNJSoJq9G3cmo9WSfMlQTwB5GOzhw0g1ov5TUU0YI3xG4rzUbCBScxOD/HZKbMoBswOtUCqIbTKLMFhfyrbY5Bw8Avic6xOdKH6T9pmQaVcGaW7JC5kgRyQfv2nZjURyjvHWptPJO9MR0HXb90itvFMS8r/ExoU3mENEbQjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738680304; c=relaxed/simple;
-	bh=KIX3TwRLxYtFkZjDaZ8C+2k2oYRqaUHDzb3xK5t6zJI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a5J/jDN0PcvWjJiSdVNiUrMhIpFuwiYi9HN5WCaYRhL38CqmKHa8GhVVxt4SsltvqlJUzT2hPnagPMkKZ5YSF2FhzsWkKuTN/s5mSle3A45IPTO84xnD78zzerbnsEsVYvYPC3Zs08/gUTYW6Ml4wAFX5VzpcAUE3fI6yChcQfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=crJayInO; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738680319; c=relaxed/simple;
+	bh=yYu4q3NJ1sq1PaSg3xqU5VewCbNfnhDtZNgXMokhAMs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qx7gVveSj0JzxFKH6VelYzBvvnxVsAhVtjJsYaHWJqbd/AG9RgVb1bZBMmCBuysBLBfbm+ClxoZWowd4uohKqZZChtKa2+TzwG13XqXYsToAwnpIw9/ThU6wsF84t2hmGbszEhRfDDC+/8wqP9nNrKns4MMv8vkOa/YXtzRXflI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VFP6qEwO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crJayInO"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2161eb94cceso71106725ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 06:45:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738680302; x=1739285102; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MSGeoKPogDK2+Dcry6JtEMxeM1/AHJMA9LHzIxtXejE=;
-        b=crJayInOdHVBZubtcLT777vmpg//3sZRgj9kSQXB9uYf/0QSJV9AnkTsGXXC74+ZPA
-         bwE43Xs5hoaXF6MBnjtqGoFHq44Gty5FbMqagKXBE3wb8f5DfnD0gz4mV4Xg6oa+zoLn
-         xVcyiacMtPgrRQCOFMEcBuFM+rTgrtU9C/yhM2zGdZJ6FBRkp9BnKx20SGiXBq8gyPm1
-         ZKWBA/eyFC1CLoiMnKR9MGu0SW8LUuisizCgcNf3gb11e3gcQbW9XclT0YdshuQlEhIN
-         kFTrdJaNQHTIguMFofaMb8thDD1qSZ09vs14AMu6ww/z6Js9MJ3bXlDI/kA0mkFEnM4I
-         NxDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738680302; x=1739285102;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MSGeoKPogDK2+Dcry6JtEMxeM1/AHJMA9LHzIxtXejE=;
-        b=bRoIFJEU/RhAZLjRfl/BzkLjFCeXeeExOJWpqYg/szAbsHNlxtr1vHwV7WYf2UqGbd
-         0vIhX0DVdjogPhUhBFVN/gLpSf0+NunX6C4DqhPHgDwX1rqHLPIuZlpZ8fNAUtAXxm+Y
-         Z0ARxhhnkAAG2g6QnaeHReysIBfNNhqWZEzBke8H0A7ndMPSZci18lK2MIXLryE3Sd9Z
-         c714s9SZrgESYvjAhc8WNK4I+Z/o0GVTkg/EIhA1oVfn1BtUaJcinScGz/2vayIZSaee
-         tnlvKFj/QSXEOFv4ZdF4feKZqarJEWvkgOoZiKgQc4UGWQoyZvX0DUqyWXj2+ejfHuTY
-         ouqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWqa95UWsHi4pSZb7YN6FyaNwbUO80NTEd/GoHrNZCduS+z2vI1j3XLP3y0suHZxYmDhOfcI58bmma3XXQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzK0jNkEjHbBJjBa8m79YIJaHnLJPcvPLebGn22q6eQZztkpSoS
-	UYXRZqd/Pg7R8OgySJEcYlDX/5Kz6W8O19fBXMAKnFJZ+A8G1fOC
-X-Gm-Gg: ASbGncvz706o1eU/uV44RzbX6wCNZgUs6aw8bMlFxt4DkLPxK7SwyC2Z3t4KOqvA7dD
-	MZS/s+XY2nCxSQPewUDg00hCiqrwhzkID4xWDe0FFc3+8HrLu7LhUXsm0lmN/tKjilfeAS0jeZX
-	w+BMVUVkISNJ+aZ04phyB6URDj68EDC2sPGD7ZvnHswfCWIRcXKBjHMFjV7Qt6rK/nU+nokpug2
-	JE7kdyckP/jH6Zx8j3ZR8hDXCtp7jYfISZth57x1WEVC03rb46LkGfzE4iwknwRWICt7kSLPLOz
-	PrNc7KbfW3oIRAyN2CghC6xC2+439oWX/axPCDiMelJC
-X-Google-Smtp-Source: AGHT+IH49mXcq79A3PaAW55Foprl6imsisqBeFob8nMXBnLPq6AAz4svlOy2jJJqR2RlcNUdKrMcIA==
-X-Received: by 2002:a17:902:ce09:b0:217:9172:2ce1 with SMTP id d9443c01a7336-21dd7d64c77mr460371755ad.22.1738680301702;
-        Tue, 04 Feb 2025 06:45:01 -0800 (PST)
-Received: from DESKTOP-B5TBVBT.localdomain ([175.117.51.71])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f086ff35csm12607495ad.118.2025.02.04.06.44.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 06:45:01 -0800 (PST)
-From: Yohan Joung <jyh429@gmail.com>
-X-Google-Original-From: Yohan Joung <yohan.joung@sk.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org,
-	daeho43@gmail.com
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Yohan Joung <yohan.joung@sk.com>
-Subject: [PATCH] f2fs: fix to ensure queued discard commands are properly issued
-Date: Tue,  4 Feb 2025 23:44:52 +0900
-Message-Id: <20250204144452.1333-1-yohan.joung@sk.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VFP6qEwO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 067E0C4CEDF;
+	Tue,  4 Feb 2025 14:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738680319;
+	bh=yYu4q3NJ1sq1PaSg3xqU5VewCbNfnhDtZNgXMokhAMs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VFP6qEwO+epTHBmeev/4cxUizjbcbhfUsFHMFpE7qpmkPBKdqozVF4lYVpkMDGudd
+	 MEJAl5UqiOJQ1+5noMcgzd3Vcj20rNlYTwDehAKSXOY+cI9YpP2C2knq/p1Vyk9yXD
+	 Uqk/PB4sEnA5bpXSjKD//UlT1lV3M83BS5S9FD9hyHwyszCmxo/bdsqY9spkHkzSiL
+	 RiUjSPiuUYhG1Si8b5xvxfBTeTlbhsMVCc2yKSx2FHWQAoG6EqCzh3pe+5zF/6Tg/8
+	 Pjwn6rgBcSxF6W+AURV4TcfqN0ExXz4a54rd0B+4KFpR8o1p1qBkYplELUSNvoPuD7
+	 N9YrKJKjwsZXw==
+Date: Tue, 4 Feb 2025 14:45:13 +0000
+From: Simon Horman <horms@kernel.org>
+To: Peter Seiderer <ps.report@gmx.net>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, Nam Cao <namcao@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Artem Chernyshev <artem.chernyshev@red-soft.ru>
+Subject: Re: [PATCH net-next v3 07/10] net: pktgen: fix access outside of
+ user given buffer in pktgen_thread_write()
+Message-ID: <20250204144513.GK234677@kernel.org>
+References: <20250203170201.1661703-1-ps.report@gmx.net>
+ <20250203170201.1661703-8-ps.report@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203170201.1661703-8-ps.report@gmx.net>
 
-F2FS zone storage requires discard and reset zone for each conventional,
-zoned device.
-In the current configuration, Discard granularity is set to the zone
-size but queuing is inserted into the pend list with a maximum size of the
-segment size As a result queued commands cannot be issued.
-so we are restorting discard granularity to its original state
+On Mon, Feb 03, 2025 at 06:01:58PM +0100, Peter Seiderer wrote:
+> Honour the user given buffer size for the strn_len() calls (otherwise
+> strn_len() will access memory outside of the user given buffer).
+> 
+> Signed-off-by: Peter Seiderer <ps.report@gmx.net>
 
-Signed-off-by: Yohan Joung <yohan.joung@sk.com>
----
- fs/f2fs/segment.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index c282e8a0a2ec..03ef835588cf 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2320,10 +2320,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
- 	dcc->discard_granularity = DEFAULT_DISCARD_GRANULARITY;
- 	dcc->max_ordered_discard = DEFAULT_MAX_ORDERED_DISCARD_GRANULARITY;
- 	dcc->discard_io_aware = DPOLICY_IO_AWARE_ENABLE;
--	if (F2FS_OPTION(sbi).discard_unit == DISCARD_UNIT_SEGMENT)
--		dcc->discard_granularity = BLKS_PER_SEG(sbi);
--	else if (F2FS_OPTION(sbi).discard_unit == DISCARD_UNIT_SECTION)
--		dcc->discard_granularity = BLKS_PER_SEC(sbi);
-+	dcc->discard_granularity = BLKS_PER_SEG(sbi);
- 
- 	INIT_LIST_HEAD(&dcc->entry_list);
- 	for (i = 0; i < MAX_PLIST_NUM; i++)
--- 
-2.25.1
+Reviewed-by: Simon Horman <horms@kernel.org>
 
