@@ -1,249 +1,346 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2045.outbound.protection.outlook.com [40.107.95.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FFF86358
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 04:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738645103; cv=none; b=R+pHOHE0zgSAcDZZMJKW5F1Dzh5AhLs7S8Rvs8YVaXN0IdtpRyU/EAhVNLeMRemelEtQKZ8QzRno0muAdm+TXbmk9FjLojFScjJVWVYC845H959E5qG8xen+3/VLQbClhJkYJUDPLZKUErBQSq5ZTFpdKLGxXCWxNYIlbN9UKVg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738645103; c=relaxed/simple;
-	bh=G1EgxgX+1PfFR5EJpl4hO73q8tCS6ZL7rhmMQsG20Kc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ORNH+eeXQtWH9URc6R26CHtM7O1Y/bZvnGia26Kz1RglZt+/sBd1ZjjjWOUP7lOTdSP8EWxpx94WdHDks5eX44u+XPbaxpQSwpla4TIEzcXi2l+VbdpAibCeeZmiodo+tFs+AbO9Zt7+c2ZDVYY0mEGiWP8J/jREsIGJmsTewvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ce51b2fcc6so83090345ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 20:58:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738645101; x=1739249901;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=On4R0ZV9u038S94jycGnQwl7wQWHdHDWNgRaWI1twuY=;
-        b=BWRbh78X7axldpOMYV9u66cqoWFS8mld3XLdmSNEzJFV+fPS+TNHmbEXTvNlMpgomH
-         eYgnoxCPbKiWLj1w26PHRyDPUkYt6SjUQjYJ4TiZLnSf/Wzb+UFanayNa5x2PFWkVMYu
-         Ke77UaP9ifRo4iMYZN86e9R8eZTMATjqbmWUwt43qn6EQKJcSXt6JoOQzOWODPrydpFs
-         buQJls/WzEy84ZL06NWQYev/kma+tYv1VmszWlmkwlC0t2UYwaeKHomG9n5jJsshjne+
-         eRwflt4qW4BuUTp4iJGYIYEjnHEK3eYIPHF+MWsZ+gzHJAapB9Z/1sy0u6YeKgUS8pfk
-         4Y4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUsIpDjD54xkEwaZ/X7q2Njgaik7X6atcoRo1Yx0awXU32bh1mGDkFNJeIXiWBc0S31ooxKt83xxVInUV0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeQZ0CsymKg6FaBoXFw3xdjCLgSH5e41CRRgsQybEL7zvzNHoz
-	PhMN3GZo9zy55s+OkrDl9RSNZ+qkQ/1D5qGnWe5MJFsxx6TyXRH6FwOpV5zwLmHcLldDXp5JF0I
-	F4ptt+Zp9WqKcJ7YOsZNHgJxr4cN+i+gZCzKGKjIFxmRnNvM7kXyyzrQ=
-X-Google-Smtp-Source: AGHT+IGawzDBe6wlupi2kkUwqwRQPNA9xSDyOiADB+VMF3aywfeu7fIl0UZrBgqmcPLbDlFVvGZtt09SPa/+PVMc2gJFR2cf+D2s
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E8C2A1CF
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 05:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738645316; cv=fail; b=GM9YBhpkUtu0AM51u10vpLp880shbaRY/7bXZM002odv9G0UHDn7I5iOR/XMk5T4QMFM6Ttolp77EMmO3LpbVpySU87QDUROIX+3xoybysEoYrzI8vqbnBPleD5Od/Pmp6rCdhyyo6eAmBB4tNrNNDRm856D3fdkbSzAk4Wguvs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738645316; c=relaxed/simple;
+	bh=cJlJrY3gmJ1TLGlfl2CXbi2N3ZhGG4GgiFZphXHupr8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IuRfEuZ0gQsYGHDYjnidsv1M4NBOXETZ2s3VeZmNZSHzVW16768xuF7yKwJs8Xfg7m1aUMji4ARqII+nsCZnwBlFFKk+L/PfF73vmKZHSQyKqORwI7mzcyWD5s8+S+YGNf0QAeZ2poiu6HVHusB5If1Xv3JCgRSqUyJIa2Lw0Ik=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=R/+ADdMT; arc=fail smtp.client-ip=40.107.95.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="R/+ADdMT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JTA1QjdXum9a2ZwDRBeaSZhWUOBjCNhxCtMlGBU+pohkCNz8XyDHNy0bLairJR8MpmNmeF5+2MNcAZYFN8grHKrWa3NivuhdQakS0rNfRO6lykhd+GbZOgSsRqDQXzokWg+ncybQ489dvbZrmcEL5SWXlVub30T8BE0JLvHI5h1CpGtX5Ytq/APIBcn3h/tymkIZf4X7wnXejPeVYCwXTZJAKinCM+tEc4n6VkwEmqiU0U85Z2kEr8YrxTH73psfwk7lkDu/iHqv/Y1UUh29YwmMZU4VhJJUMecHuTwec3fuhZr2O0vd3C/zFQn0IZEWyvhtAQTK4dW+9fibUDOk8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=o5eLIfYH2xuUOcIVegJLr+6HPrpeiWktKNhTpxuKzqs=;
+ b=NrVJ8skGrVXuvFyso+lj6idK4vjWBtn9US1Uh1mKDvfMUc7UtbE4V2p4tOQVK4I0tQknvdGUUltBDqC9PHlTImEunK5ocm86AHLi/aCuuEyfjj9cuO8xVERmvJoP6w2KDlyzkZW/B0++XxD66+RT50kVlJlS53/AK0AC2HsLnNLYxF6DGLpTQU7RGlKe1UnRZ0WuJEcJk7yGsPcLardIyX5Em0o10nYrVbyFetIDPO2sSUnkWgGQ3zQqx2x8Ldp0feW+ppe1NozjIem8fdJvSN+0AlzqzhAwDHeHoGzAeSWleZvLowdQSATJiFSUR07Q5jEJ1Gwlzk8EnOLAdVUbHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o5eLIfYH2xuUOcIVegJLr+6HPrpeiWktKNhTpxuKzqs=;
+ b=R/+ADdMTcTtAtMvErvSF9m8oIUbVH0x20HXBmZTW8Y+0BwImNFIRihl/FAuQT0023D2ghEI31o6QtaL9YB3fNV2x8WzIu8YiGST7H4QCP4rss4utEOFPmaoHGq22ZbAi3APNQCoX67B7dQhbilTvOoSke9Ys7TlA+IVkel0GBVgtw+0u63Pv0M35b2yvfnh213zihPiV96wHEluvqQ9nyzIZDTroW2MKJSiOX7JU5dzh5tA735+aDVEyiKoDuZc4FlE4JUIiiIkycxxDDNhmbp4bxtXIBr7kP6uzdSgXhUjtgdtOg0R1ThbAt+MZ1zlv77La82c5+/r1mBhPsZBHfA==
+Received: from SA1P222CA0019.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:22c::20)
+ by MW5PR12MB5683.namprd12.prod.outlook.com (2603:10b6:303:1a0::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Tue, 4 Feb
+ 2025 05:01:51 +0000
+Received: from SN1PEPF000397B1.namprd05.prod.outlook.com
+ (2603:10b6:806:22c:cafe::c7) by SA1P222CA0019.outlook.office365.com
+ (2603:10b6:806:22c::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.24 via Frontend Transport; Tue,
+ 4 Feb 2025 05:01:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SN1PEPF000397B1.mail.protection.outlook.com (10.167.248.55) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8398.14 via Frontend Transport; Tue, 4 Feb 2025 05:01:50 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 3 Feb 2025
+ 21:01:45 -0800
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 3 Feb 2025 21:01:44 -0800
+Received: from Asurada-Nvidia.nvidia.com (10.127.8.12) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Mon, 3 Feb 2025 21:01:44 -0800
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: <jgg@nvidia.com>, <kevin.tian@intel.com>
+CC: <eric.auger@redhat.com>, <baolu.lu@linux.intel.com>, <yi.l.liu@intel.com>,
+	<patches@lists.linux.dev>, <joro@8bytes.org>, <will@kernel.org>,
+	<robin.murphy@arm.com>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 1/2] iommufd: Make attach_handle generic than fault specific
+Date: Mon, 3 Feb 2025 21:00:54 -0800
+Message-ID: <32687df01c02291d89986a9fca897bbbe2b10987.1738645017.git.nicolinc@nvidia.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1738645017.git.nicolinc@nvidia.com>
+References: <cover.1738645017.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fc2:b0:3ce:78ab:dcd1 with SMTP id
- e9e14a558f8ab-3cffe4a7bf1mr216246095ab.19.1738645101174; Mon, 03 Feb 2025
- 20:58:21 -0800 (PST)
-Date: Mon, 03 Feb 2025 20:58:21 -0800
-In-Reply-To: <67453555.050a0220.21d33d.0008.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a19e6d.050a0220.d7c5a.00ae.GAE@google.com>
-Subject: Re: [syzbot] [mm?] KASAN: slab-use-after-free Read in folio_evictable (3)
-From: syzbot <syzbot+4c7590f1cee06597e43a@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, eadavis@qq.com, hdanton@sina.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	syzkaller-bugs@googlegroups.com, willy@infradead.org, yuzhao@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B1:EE_|MW5PR12MB5683:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54bda743-64b8-4725-7b81-08dd44d9094b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Du0in3Yxt6OIxMWVmnMCYwzqfmNLK3jEwd3POKJHSP/FHpuAM1986zvi1+xf?=
+ =?us-ascii?Q?v4+2aFdJ1bTXEeVCpSdJhNL7xL/M686En5Ks5KNYgze7i/PfE6kLWQencxAx?=
+ =?us-ascii?Q?raoTwk10snNpikWx87d7ZguQ4yKnjludaErHHrTm44I3/q//bIxUIHBYVT8a?=
+ =?us-ascii?Q?iBCC7jHkPGDUldfOx25451wnuWbxV7eHNtyU6ZXmypuKPctJmkzD+XUTJJdZ?=
+ =?us-ascii?Q?Fiki7km8Wlnv1/XQbBGebMARr/h8gxJZ3zjg/IYrEKlhr4UEJupwujMSZpeU?=
+ =?us-ascii?Q?Gbee6Jdf+BLjMN+N/V9ez45ZJrC7ktXqRIBdMiYgDQa7wm5epXBRRssmCUmI?=
+ =?us-ascii?Q?MiUBYxUob+DC/ut5znREIe+YWwJCNs5pJBfU5KLzd/gqKo/eGJdPjvUzMSZm?=
+ =?us-ascii?Q?ZaGOAl4G8xyBleWJfnz9TorIM4G4y1EUTDw7Zt1N/o74ivsMCZ7lNsRlfPNJ?=
+ =?us-ascii?Q?rNB7/vgPBoapRGfSINSpb4JNuO86WE+k9d7RFEEaKtBLn/PA5y0C0Yw9jp0f?=
+ =?us-ascii?Q?dgOIVcZRuKHI6tByR6MKNei4QdjCGn/SJCYUteuzfkg8PQWiuTXIn3N/wKEd?=
+ =?us-ascii?Q?OrPQz0i6g0d6X3eopllD1+HJz8VZkDqxv2MvkV+KTIQ3l28/zFSkCtq6Egjx?=
+ =?us-ascii?Q?YgziAbGt7fYoGag/pTfUdhvBQYHN84Fod1Vm6z7/ME0SdFEWL5sqWuiREU9G?=
+ =?us-ascii?Q?uDUPycuY1JEV+ddzq1TkxrF02X++56RSN4YKJTSRN7vUT+sMKmVVfGY34a+n?=
+ =?us-ascii?Q?e1sZjUQ8NLUjdHMAuj0ii9iN9gd8oanDPjbfWC4TND8ZMb5Ys9x92/67LW5O?=
+ =?us-ascii?Q?UBuFSx7NyZUGm95xUdPqf3LBCahijhICdaEf8H3qstcGb6HuFFsmjEfaW5TL?=
+ =?us-ascii?Q?3Sm8ybXD+JrQTo4P1F4XlJnUMguhQdlfRrRVOzE3zSIks3YCzxzDawA3wtdJ?=
+ =?us-ascii?Q?X3qjVM+zoC/FuX8HCHkrbCZsCD2ccNa9Xv0tVQ7Zo4N8EDg+ESVcbSdb8WPz?=
+ =?us-ascii?Q?XyXm0IPyoCTaYjftgFCtYfA3qc+5T5ivSO+/8shEE9J023+mUKyP4Js7ULYk?=
+ =?us-ascii?Q?zFnQfGW4OLpNVCiwQsrMxe5PFqo0u4AkkPPlASDBCqDbsGxoKQF/kpj4bWn7?=
+ =?us-ascii?Q?aJ2Ckf+oQN55pj2LAoz7dknN7Yq8eTzEaNmR++HGOm/5uKOWx8kjBIkHmXWj?=
+ =?us-ascii?Q?r58EHbsavBOVZtP52raLNC/JlttZ68USzZAzAvndk5oTiSJzuvHiuwqfYmQo?=
+ =?us-ascii?Q?njvn3qfsE9ng0l+AxoWPmGKQGwfGR5aRe457hcX9isC3dZZFzsQE6E5Xwc4f?=
+ =?us-ascii?Q?O5sorgJUwT92uBiBJ5FlnRx+4jo+lHvPBMXuR6KcjWe5HP4yIcRJ4Ilt78W/?=
+ =?us-ascii?Q?79igUUeDkVn1lCmTj4xB/YRT0asw3hWBTPqQ0u/HokOja4roqpDHkQhOeItx?=
+ =?us-ascii?Q?X+g5CPxdcg3Ji/Qnrc5C2NNIgt4sH4kJQXS6VzEMaK/bSU+PaGukh/kTpD3t?=
+ =?us-ascii?Q?2HUg0Jhd+40Lki8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 05:01:50.9605
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54bda743-64b8-4725-7b81-08dd44d9094b
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000397B1.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5683
 
-syzbot has found a reproducer for the following issue on:
+"attach_handle" was added exclusively for the iommufd_fault_iopf_handler()
+used by IOPF/PRI use cases. Now, both the MSI and PASID series require to
+reuse the attach_handle for non-fault cases.
 
-HEAD commit:    0de63bb7d919 Merge tag 'pull-fix' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14c39d18580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
-dashboard link: https://syzkaller.appspot.com/bug?extid=4c7590f1cee06597e43a
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1640eeb0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13aa23df980000
+Add a set of new attach/detach/replace helpers that does the attach_handle
+allocation/releasing/replacement in the common path and also handles those
+fault specific routines such as iopf enabling/disabling and auto response.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0de63bb7.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1142009a30a7/vmlinux-0de63bb7.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/5d9e46a8998d/bzImage-0de63bb7.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/07d8a470b3fc/mount_0.gz
+This covers both non-fault and fault cases in a clean way, replacing those
+inline helpers in the header. The following patch will clean up those old
+helpers in the fault.c file.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4c7590f1cee06597e43a@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-use-after-free in instrument_atomic_read include/linux/instrumented.h:68 [inline]
-BUG: KASAN: slab-use-after-free in _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
-BUG: KASAN: slab-use-after-free in mapping_unevictable include/linux/pagemap.h:269 [inline]
-BUG: KASAN: slab-use-after-free in folio_evictable+0xe3/0x250 mm/internal.h:437
-Read of size 8 at addr ffff888054e45e30 by task kswapd0/79
-
-CPU: 0 UID: 0 PID: 79 Comm: kswapd0 Not tainted 6.14.0-rc1-syzkaller-00020-g0de63bb7d919 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:489
- kasan_report+0x143/0x180 mm/kasan/report.c:602
- kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
- instrument_atomic_read include/linux/instrumented.h:68 [inline]
- _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
- mapping_unevictable include/linux/pagemap.h:269 [inline]
- folio_evictable+0xe3/0x250 mm/internal.h:437
- sort_folio mm/vmscan.c:4398 [inline]
- scan_folios mm/vmscan.c:4524 [inline]
- isolate_folios mm/vmscan.c:4619 [inline]
- evict_folios+0x1a99/0x56a0 mm/vmscan.c:4648
- try_to_shrink_lruvec+0x713/0x9b0 mm/vmscan.c:4821
- shrink_one+0x3b9/0x850 mm/vmscan.c:4866
- shrink_many mm/vmscan.c:4929 [inline]
- lru_gen_shrink_node mm/vmscan.c:5007 [inline]
- shrink_node+0x37c5/0x3e50 mm/vmscan.c:5978
- kswapd_shrink_node mm/vmscan.c:6807 [inline]
- balance_pgdat mm/vmscan.c:6999 [inline]
- kswapd+0x20f3/0x3b10 mm/vmscan.c:7264
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-Allocated by task 5481:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- unpoison_slab_object mm/kasan/common.c:319 [inline]
- __kasan_slab_alloc+0x66/0x80 mm/kasan/common.c:345
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4115 [inline]
- slab_alloc_node mm/slub.c:4164 [inline]
- kmem_cache_alloc_noprof+0x1d9/0x380 mm/slub.c:4171
- gfs2_glock_get+0x309/0x1010 fs/gfs2/glock.c:1178
- gfs2_inode_lookup+0x2a3/0xc90 fs/gfs2/inode.c:135
- gfs2_dir_search+0x229/0x2f0 fs/gfs2/dir.c:1667
- gfs2_lookupi+0x461/0x5e0 fs/gfs2/inode.c:340
- gfs2_jindex_hold fs/gfs2/ops_fstype.c:587 [inline]
- init_journal+0x5fa/0x2410 fs/gfs2/ops_fstype.c:729
- init_inodes+0xdc/0x320 fs/gfs2/ops_fstype.c:864
- gfs2_fill_super+0x1bd1/0x24d0 fs/gfs2/ops_fstype.c:1249
- get_tree_bdev_flags+0x48c/0x5c0 fs/super.c:1636
- gfs2_get_tree+0x54/0x220 fs/gfs2/ops_fstype.c:1330
- vfs_get_tree+0x90/0x2b0 fs/super.c:1814
- do_new_mount+0x2be/0xb40 fs/namespace.c:3560
- do_mount fs/namespace.c:3900 [inline]
- __do_sys_mount fs/namespace.c:4111 [inline]
- __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4088
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 16:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2353 [inline]
- slab_free mm/slub.c:4609 [inline]
- kmem_cache_free+0x195/0x410 mm/slub.c:4711
- rcu_do_batch kernel/rcu/tree.c:2546 [inline]
- rcu_core+0xaaa/0x17a0 kernel/rcu/tree.c:2802
- handle_softirqs+0x2d4/0x9b0 kernel/softirq.c:561
- run_ksoftirqd+0xca/0x130 kernel/softirq.c:950
- smpboot_thread_fn+0x544/0xa30 kernel/smpboot.c:164
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Last potentially related work creation:
- kasan_save_stack+0x3f/0x60 mm/kasan/common.c:47
- kasan_record_aux_stack+0xaa/0xc0 mm/kasan/generic.c:548
- __call_rcu_common kernel/rcu/tree.c:3065 [inline]
- call_rcu+0x168/0xac0 kernel/rcu/tree.c:3172
- __gfs2_glock_free+0xda0/0xef0 fs/gfs2/glock.c:172
- gfs2_glock_free+0x3c/0xb0 fs/gfs2/glock.c:178
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
- worker_thread+0x870/0xd30 kernel/workqueue.c:3398
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Second to last potentially related work creation:
- kasan_save_stack+0x3f/0x60 mm/kasan/common.c:47
- kasan_record_aux_stack+0xaa/0xc0 mm/kasan/generic.c:548
- insert_work+0x3e/0x330 kernel/workqueue.c:2183
- __queue_work+0xc8b/0xf50 kernel/workqueue.c:2339
- queue_delayed_work_on+0x1ca/0x390 kernel/workqueue.c:2559
- queue_delayed_work include/linux/workqueue.h:677 [inline]
- gfs2_glock_queue_work fs/gfs2/glock.c:250 [inline]
- do_xmote+0xaf8/0x1250 fs/gfs2/glock.c:832
- glock_work_func+0x343/0x5c0 fs/gfs2/glock.c:1090
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
- worker_thread+0x870/0xd30 kernel/workqueue.c:3398
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-The buggy address belongs to the object at ffff888054e45a68
- which belongs to the cache gfs2_glock(aspace) of size 1224
-The buggy address is located 968 bytes inside of
- freed 1224-byte region [ffff888054e45a68, ffff888054e45f30)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x54e44
-head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0x4fff00000000040(head|node=1|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 04fff00000000040 ffff88801f75e3c0 dead000000000122 0000000000000000
-raw: 0000000000000000 00000000800c000c 00000000f5000000 0000000000000000
-head: 04fff00000000040 ffff88801f75e3c0 dead000000000122 0000000000000000
-head: 0000000000000000 00000000800c000c 00000000f5000000 0000000000000000
-head: 04fff00000000002 ffffea0001539101 ffffffffffffffff 0000000000000000
-head: 0000000000000004 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 2, migratetype Unmovable, gfp_mask 0xd2040(__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5429, tgid 5429 (syz-executor294), ts 123398815759, free_ts 0
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1551
- prep_new_page mm/page_alloc.c:1559 [inline]
- get_page_from_freelist+0x365c/0x37a0 mm/page_alloc.c:3477
- __alloc_frozen_pages_noprof+0x292/0x710 mm/page_alloc.c:4739
- alloc_pages_mpol+0x311/0x660 mm/mempolicy.c:2270
- alloc_slab_page mm/slub.c:2423 [inline]
- allocate_slab+0x8f/0x3a0 mm/slub.c:2587
- new_slab mm/slub.c:2640 [inline]
- ___slab_alloc+0xc27/0x14a0 mm/slub.c:3826
- __slab_alloc+0x58/0xa0 mm/slub.c:3916
- __slab_alloc_node mm/slub.c:3991 [inline]
- slab_alloc_node mm/slub.c:4152 [inline]
- kmem_cache_alloc_noprof+0x268/0x380 mm/slub.c:4171
- gfs2_glock_get+0x309/0x1010 fs/gfs2/glock.c:1178
- gfs2_inode_lookup+0x2a3/0xc90 fs/gfs2/inode.c:135
- gfs2_lookup_root fs/gfs2/ops_fstype.c:440 [inline]
- init_sb+0xa2a/0x1270 fs/gfs2/ops_fstype.c:507
- gfs2_fill_super+0x19b3/0x24d0 fs/gfs2/ops_fstype.c:1216
- get_tree_bdev_flags+0x48c/0x5c0 fs/super.c:1636
- gfs2_get_tree+0x54/0x220 fs/gfs2/ops_fstype.c:1330
- vfs_get_tree+0x90/0x2b0 fs/super.c:1814
- do_new_mount+0x2be/0xb40 fs/namespace.c:3560
-page_owner free stack trace missing
-
-Memory state around the buggy address:
- ffff888054e45d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888054e45d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888054e45e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                     ^
- ffff888054e45e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888054e45f00: fb fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
+Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+ drivers/iommu/iommufd/iommufd_private.h |  33 +-------
+ drivers/iommu/iommufd/device.c          | 101 ++++++++++++++++++++++++
+ drivers/iommu/iommufd/fault.c           |   8 +-
+ 3 files changed, 109 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
+index 0b1bafc7fd99..02fe1ada97cc 100644
+--- a/drivers/iommu/iommufd/iommufd_private.h
++++ b/drivers/iommu/iommufd/iommufd_private.h
+@@ -504,35 +504,10 @@ int iommufd_fault_domain_replace_dev(struct iommufd_device *idev,
+ 				     struct iommufd_hw_pagetable *hwpt,
+ 				     struct iommufd_hw_pagetable *old);
+ 
+-static inline int iommufd_hwpt_attach_device(struct iommufd_hw_pagetable *hwpt,
+-					     struct iommufd_device *idev)
+-{
+-	if (hwpt->fault)
+-		return iommufd_fault_domain_attach_dev(hwpt, idev);
+-
+-	return iommu_attach_group(hwpt->domain, idev->igroup->group);
+-}
+-
+-static inline void iommufd_hwpt_detach_device(struct iommufd_hw_pagetable *hwpt,
+-					      struct iommufd_device *idev)
+-{
+-	if (hwpt->fault) {
+-		iommufd_fault_domain_detach_dev(hwpt, idev);
+-		return;
+-	}
+-
+-	iommu_detach_group(hwpt->domain, idev->igroup->group);
+-}
+-
+-static inline int iommufd_hwpt_replace_device(struct iommufd_device *idev,
+-					      struct iommufd_hw_pagetable *hwpt,
+-					      struct iommufd_hw_pagetable *old)
+-{
+-	if (old->fault || hwpt->fault)
+-		return iommufd_fault_domain_replace_dev(idev, hwpt, old);
+-
+-	return iommu_group_replace_domain(idev->igroup->group, hwpt->domain);
+-}
++int iommufd_fault_iopf_enable(struct iommufd_device *idev);
++void iommufd_fault_iopf_disable(struct iommufd_device *idev);
++void iommufd_auto_response_faults(struct iommufd_hw_pagetable *hwpt,
++				  struct iommufd_attach_handle *handle);
+ 
+ static inline struct iommufd_viommu *
+ iommufd_get_viommu(struct iommufd_ucmd *ucmd, u32 id)
+diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
+index dfd0898fb6c1..360ba3ed8545 100644
+--- a/drivers/iommu/iommufd/device.c
++++ b/drivers/iommu/iommufd/device.c
+@@ -352,6 +352,107 @@ iommufd_device_attach_reserved_iova(struct iommufd_device *idev,
+ 	return 0;
+ }
+ 
++/* The device attach/detach/replace helpers for attach_handle */
++
++static int iommufd_hwpt_attach_device(struct iommufd_hw_pagetable *hwpt,
++				      struct iommufd_device *idev)
++{
++	struct iommufd_attach_handle *handle;
++	int rc;
++
++	handle = kzalloc(sizeof(*handle), GFP_KERNEL);
++	if (!handle)
++		return -ENOMEM;
++
++	if (hwpt->fault) {
++		rc = iommufd_fault_iopf_enable(idev);
++		if (rc)
++			goto out_free_handle;
++	}
++
++	handle->idev = idev;
++	rc = iommu_attach_group_handle(hwpt->domain, idev->igroup->group,
++				       &handle->handle);
++	if (rc)
++		goto out_disable_iopf;
++
++	return 0;
++
++out_disable_iopf:
++	if (hwpt->fault)
++		iommufd_fault_iopf_disable(idev);
++out_free_handle:
++	kfree(handle);
++	return rc;
++}
++
++static struct iommufd_attach_handle *
++iommufd_device_get_attach_handle(struct iommufd_device *idev)
++{
++	struct iommu_attach_handle *handle;
++
++	handle =
++		iommu_attach_handle_get(idev->igroup->group, IOMMU_NO_PASID, 0);
++	if (IS_ERR(handle))
++		return NULL;
++	return to_iommufd_handle(handle);
++}
++
++static void iommufd_hwpt_detach_device(struct iommufd_hw_pagetable *hwpt,
++				       struct iommufd_device *idev)
++{
++	struct iommufd_attach_handle *handle;
++
++	handle = iommufd_device_get_attach_handle(idev);
++	iommu_detach_group_handle(hwpt->domain, idev->igroup->group);
++	if (hwpt->fault) {
++		iommufd_auto_response_faults(hwpt, handle);
++		iommufd_fault_iopf_disable(idev);
++	}
++	kfree(handle);
++}
++
++static int iommufd_hwpt_replace_device(struct iommufd_device *idev,
++				       struct iommufd_hw_pagetable *hwpt,
++				       struct iommufd_hw_pagetable *old)
++{
++	struct iommufd_attach_handle *handle, *old_handle =
++		iommufd_device_get_attach_handle(idev);
++	int rc;
++
++	handle = kzalloc(sizeof(*handle), GFP_KERNEL);
++	if (!handle)
++		return -ENOMEM;
++
++	if (hwpt->fault && !old->fault) {
++		rc = iommufd_fault_iopf_enable(idev);
++		if (rc)
++			goto out_free_handle;
++	}
++
++	handle->idev = idev;
++	rc = iommu_replace_group_handle(idev->igroup->group, hwpt->domain,
++					&handle->handle);
++	if (rc)
++		goto out_disable_iopf;
++
++	if (old->fault) {
++		iommufd_auto_response_faults(hwpt, old_handle);
++		if (!hwpt->fault)
++			iommufd_fault_iopf_disable(idev);
++	}
++	kfree(old_handle);
++
++	return 0;
++
++out_disable_iopf:
++	if (hwpt->fault && !old->fault)
++		iommufd_fault_iopf_disable(idev);
++out_free_handle:
++	kfree(handle);
++	return rc;
++}
++
+ int iommufd_hw_pagetable_attach(struct iommufd_hw_pagetable *hwpt,
+ 				struct iommufd_device *idev)
+ {
+diff --git a/drivers/iommu/iommufd/fault.c b/drivers/iommu/iommufd/fault.c
+index d9a937450e55..cb844e6799d4 100644
+--- a/drivers/iommu/iommufd/fault.c
++++ b/drivers/iommu/iommufd/fault.c
+@@ -17,7 +17,7 @@
+ #include "../iommu-priv.h"
+ #include "iommufd_private.h"
+ 
+-static int iommufd_fault_iopf_enable(struct iommufd_device *idev)
++int iommufd_fault_iopf_enable(struct iommufd_device *idev)
+ {
+ 	struct device *dev = idev->dev;
+ 	int ret;
+@@ -50,7 +50,7 @@ static int iommufd_fault_iopf_enable(struct iommufd_device *idev)
+ 	return ret;
+ }
+ 
+-static void iommufd_fault_iopf_disable(struct iommufd_device *idev)
++void iommufd_fault_iopf_disable(struct iommufd_device *idev)
+ {
+ 	mutex_lock(&idev->iopf_lock);
+ 	if (!WARN_ON(idev->iopf_enabled == 0)) {
+@@ -98,8 +98,8 @@ int iommufd_fault_domain_attach_dev(struct iommufd_hw_pagetable *hwpt,
+ 	return ret;
+ }
+ 
+-static void iommufd_auto_response_faults(struct iommufd_hw_pagetable *hwpt,
+-					 struct iommufd_attach_handle *handle)
++void iommufd_auto_response_faults(struct iommufd_hw_pagetable *hwpt,
++				  struct iommufd_attach_handle *handle)
+ {
+ 	struct iommufd_fault *fault = hwpt->fault;
+ 	struct iopf_group *group, *next;
+-- 
+2.43.0
+
