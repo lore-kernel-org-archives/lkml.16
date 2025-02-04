@@ -1,86 +1,48 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE7E224AE0;
-	Tue,  4 Feb 2025 19:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BE51547D8
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738698678; cv=none; b=Y5RRiaDTccy8zPQfmcPx782jtXhyfksor1NccW8q9mVkSpNk/+FOM7UZPeJimE64IDAC+cRJrURDKYoj/tOtdyYwAQyu4BdeJ/im9jgOzDGZvsJv7sjPK6fpcUx9PXrZ85UFSUWsMSiyRTILmZN4N5fAVgjnMEV7ehXNYEqM+6o=
+	t=1738698828; cv=none; b=OMlH55tQenjRggVsmmG79RUzwtksbzeYi3NyT7L96qjC6yOcl/87WLml1kRmjoZa95we8fEEvflAxq0DYYNhAoXmnjCZXJL27GSvn5S/xuzzsfQWetAXnZvAOUyayNI79z2WO6GykVP019+jUPPI2kJviBTwASfJP+3IUi0wmZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738698678; c=relaxed/simple;
-	bh=2PoSot17IPgvGrwZQaLK7OB047ZHzlEQm5SMVbwJSC0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PWUQBEgzgg6uD8oyadomEF+2EEbdlt7qPq2P034JaPFyIo/lDCGbpNEDnGkA9PD0ut+e+qvCa0IoRLrsyGrTv2SJFXxqB/dMe4VZRQsY/OUUkzjBK5i1hYF7L9F3lMTejE3nHhJgNGS2FxnWBS8x7MaRsVL1DdVrjc5kpTEQ9sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hhSBazyO; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738698828; c=relaxed/simple;
+	bh=YE7iLCsVMIkRgrPseqapZzwyo9OsMGafX9hSn73e1LY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GQ0kjsquwUAFOulGtTQevOc8pqeMD7FxWr+3Om92n8NCxKL/HxV6Tto8ttvLb1QIiL6gswoIuOVyn0znzo+jZBq5yU6RNHmab4FjyHWRpH8sIruo2CNRw1cLiis2Pie4d/gOViIzFdFiAFEiaqVfkaZ4DxI+yIyM1ua48Sl1wxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuIiVLu2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hhSBazyO"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5dc7eba78e6so11473618a12.3;
-        Tue, 04 Feb 2025 11:51:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738698673; x=1739303473; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x3zGgQftF1kIqFcOzW0oJY2LAeldvT+ZF1lgB5sAD0U=;
-        b=hhSBazyOqacEijGUxAe0LCr3W0LKITkxiNlQcSfU7e9PMoNXu+nIXpkiXpRH4xiufT
-         Wr4Nl1gKmG4BszZ3lnr95YCW8s3WFg65rzRp+/YQYWfy1ic94WxJMwkE0R0PnzywwVEN
-         40lOdaIY+IUbSbkIXPhcHt2sH4t2c5A1iOWIn6yBHULDm/Y3KWzstaKbqfSz9dEIaPRP
-         CuxbYIydiud2nVte59j6agVOpx2ORRyQIuB2Z+Tbp7/80R5GKjVkcbhgUcUCv5h1dNQs
-         u9iLiL9qDCHAzRV7nbhYYzG9sPFg9daKNdUSQBj/QBL0P8sb14cmzVhSOtHOiQI7CzYm
-         1RBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738698673; x=1739303473;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x3zGgQftF1kIqFcOzW0oJY2LAeldvT+ZF1lgB5sAD0U=;
-        b=Rm0xpYsPcOY7Gu/zGYxjobJQc1eAWSLvtqOWMUknIq1u47q4o6oM4wPhJn/J94HDoQ
-         PYdUWV4yH2GN5O8938wYPwyzMzpepxHkOR93f0C70c8WU2dysi1xGFpPnmO1TG5ngJ8O
-         /3Ni9KBUpBcQVs1gt16+OG56WjK5bdbXw2qnMqJJ0tdzXCTj5WCfYW49OTphSnZhaf9b
-         4v6bhSNO0Jpd7vufzfAON9peQvZaf4qjh0bkQxh/8RrZAl6VxAFGrrwOZJxeLml9VAum
-         X/Pdbf+drPSB1h4DOfS5/J68NqURPT9vc89+9fXJKssG/3yj9+9c8mBc+IR/S/yHWuoI
-         uZeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsAaX1Mir3cZzEBd4mIIek8rNMTP1gpNJwnyWl8Ms+18o26NcT79/DuE8q5rZXVChgfhQnGYzq@vger.kernel.org, AJvYcCXtkV4BToMuvkzSMymtoFT8VQfH+RDzGN2R8OiSecd2Dnn24BpQwOLMZxsH6dR4blJIBPGqZBfUIkADVCI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygWjprDd65WvRqMrlhhxQP/ibg+f9uGEQ5VXpsOeidhdq1jGYW
-	drj7YeV3Ef6luHYh3hB5frJdrReaoSfmclOmxm274cbOIHKrR4ta
-X-Gm-Gg: ASbGncs3ueRImFZ1mz4VXz533ID9/7OcQLm0674zVFmrOEs9EULTQajuNs5omS3vCET
-	Y9HGsrB3nkgeeFU4M3Mh7fp6lXL/algqxW04iCgDoOwWgIYtd4B6oaGWzvQU5ucvs/MNrtNt9ZJ
-	akmKSUpiE8rErhs/yYM6LR3GGuAZLEcuIWJGV+IxWTcM7zI60uUTwy/T2NMCDibH6XufiQ2c814
-	PenKP0wyjUcsmGMBNqBHqzmBLOkNrNgUSrhn0soN4o6rpVXWNR1vXzw4LMEANhoxoTL7xJK+Wte
-	Cca5VFOpIuhdlOeNivL+dF2n8llY3YJbg/NzY2i2kwysYDCfxYOLSmSTtp+t1diUCLiNRio0jDo
-	vfkJVhvNKSuu0QKr0iLf+9Y3JihItU0rK
-X-Google-Smtp-Source: AGHT+IE1cdz3QZi6aI+tu6CPKVmHIyjStvTV0f6+YD4twlTG6cziZ2eM+8EllzapzGBoL/nwwCR35w==
-X-Received: by 2002:a05:6402:234d:b0:5dc:4f4:74c3 with SMTP id 4fb4d7f45d1cf-5dcdb71ff84mr262477a12.4.1738698673469;
-        Tue, 04 Feb 2025 11:51:13 -0800 (PST)
-Received: from corebook.localdomain (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc724d9de2sm10074894a12.81.2025.02.04.11.51.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 11:51:13 -0800 (PST)
-From: Eric Woudstra <ericwouds@gmail.com>
-To: Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	"Frank Wunderlich" <frank-w@public-files.de>,
-	Daniel Golle <daniel@makrotopia.org>
-Cc: netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuIiVLu2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78770C4CEDF;
+	Tue,  4 Feb 2025 19:53:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738698827;
+	bh=YE7iLCsVMIkRgrPseqapZzwyo9OsMGafX9hSn73e1LY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HuIiVLu2PXRDvemu9WId344WZtFX8wSPlWNOiXQy305xuk9fxJUcrmg7rdIWzHOA8
+	 a5gtwgiQlAEUcSqzMk8jxdF2oBsGKjK4I47N8vpHL2hU74dKdrDCE5OlN5roQzhGx5
+	 PauTbEezbxmGiXCkX8ojJV0Ril2jsDqINSWrt3VJCPDg+7zYLfej2fkOpXWmdiPZDY
+	 cseCFoFUE+oab6OGbbHYSDh38EuaXVBAIbsoLDZ1kdb4kGIrSI9FXDzRfe0GqpO7vf
+	 DxFmsrUuJxNpP198ZfoHmA8uBZcp57Kh5jY6BkzvXSf/p3MFy7u59zd2vUq/9fRC5L
+	 eBGmxUk0xXQNA==
+From: SeongJae Park <sj@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
 	linux-kernel@vger.kernel.org,
-	Eric Woudstra <ericwouds@gmail.com>
-Subject: [RFC PATCH v1 net-next 3/3] netfilter: nf_flow_table_ip: don't follow fastpath when marked teardown
-Date: Tue,  4 Feb 2025 20:50:30 +0100
-Message-ID: <20250204195030.46765-4-ericwouds@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250204195030.46765-1-ericwouds@gmail.com>
-References: <20250204195030.46765-1-ericwouds@gmail.com>
+	linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 4/4] mm/madvise: remove redundant mmap_lock operations from process_madvise()
+Date: Tue,  4 Feb 2025 11:53:43 -0800
+Message-Id: <20250204195343.16500-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <5fc4e100-70d3-44c1-99f7-f8a5a6a0ba65@lucifer.local>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,41 +51,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When a flow is marked for teardown, because the destination is not valid
-any more, the software fastpath may still be in effect and traffic is
-still send to the wrong destination. Change the ip/ipv6 hooks to not use
-the software fastpath for a flow that is marked to be teared down and let
-the packet continue along the normal path.
+On Fri, 31 Jan 2025 17:51:45 +0000 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
----
- net/netfilter/nf_flow_table_ip.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> On Fri, Jan 31, 2025 at 12:47:24PM -0500, Liam R. Howlett wrote:
+> > * Davidlohr Bueso <dave@stgolabs.net> [250131 12:31]:
+> > > On Fri, 31 Jan 2025, Lorenzo Stoakes wrote:
+> > >
+> > > > On Thu, Jan 16, 2025 at 05:30:58PM -0800, SeongJae Park wrote:
+> > > > > Optimize redundant mmap lock operations from process_madvise() by
+> > > > > directly doing the mmap locking first, and then the remaining works for
+> > > > > all ranges in the loop.
+> > > > >
+> > > > > Signed-off-by: SeongJae Park <sj@kernel.org>
+> > > >
+> > > > I wonder if this might increase lock contention because now all of the
+> > > > vector operations will hold the relevant mm lock without releasing after
+> > > > each operation?
+> > >
+> > > That was exactly my concern. While afaict the numbers presented in v1
+> > > are quite nice, this is ultimately a micro-benchmark, where no other
+> > > unrelated threads are impacted by these new hold times.
+> >
+> > Indeed, I was also concerned about this scenario.
+> >
+> > But this method does have the added advantage of keeping the vma space
+> > in the same state as it was expected during the initial call - although
+> > the race does still exist on looking vs acting on the data.  This would
+> > just remove the intermediate changes.
+> >
+> > >
+> > > > Probably it's ok given limited size of iov,
 
-diff --git a/net/netfilter/nf_flow_table_ip.c b/net/netfilter/nf_flow_table_ip.c
-index b9292eb40907..84a8fe7b7b5d 100644
---- a/net/netfilter/nf_flow_table_ip.c
-+++ b/net/netfilter/nf_flow_table_ip.c
-@@ -543,6 +543,9 @@ nf_flow_offload_ip_hook(void *priv, struct sk_buff *skb,
- 	dir = tuplehash->tuple.dir;
- 	flow = container_of(tuplehash, struct flow_offload, tuplehash[dir]);
- 
-+	if (test_bit(NF_FLOW_TEARDOWN, &flow->flags))
-+		return NF_ACCEPT;
-+
- 	switch (tuplehash->tuple.xmit_type) {
- 	case FLOW_OFFLOAD_XMIT_NEIGH:
- 		rt = dst_rtable(tuplehash->tuple.dst_cache);
-@@ -841,6 +844,9 @@ nf_flow_offload_ipv6_hook(void *priv, struct sk_buff *skb,
- 	dir = tuplehash->tuple.dir;
- 	flow = container_of(tuplehash, struct flow_offload, tuplehash[dir]);
- 
-+	if (test_bit(NF_FLOW_TEARDOWN, &flow->flags))
-+		return NF_ACCEPT;
-+
- 	switch (tuplehash->tuple.xmit_type) {
- 	case FLOW_OFFLOAD_XMIT_NEIGH:
- 		rt = dst_rt6_info(tuplehash->tuple.dst_cache);
--- 
-2.47.1
+I think so.  Also, users could adjust the batching size for their workloads.
 
+> > > > but maybe in future we'd want
+> > > > to set a limit on the ranges before we drop/reacquire lock?
+> > >
+> > > imo, this should best be done in the same patch/series. Maybe extend
+> > > the benchmark to use IOV_MAX and find a sweet spot?
+> >
+> > Are you worried this is over-engineering for a problem that may never be
+> > an issue, or is there a particular usecase you have in mind?
+> >
+> > It is probably worth investigating, and maybe a potential usecase would
+> > help with the targeted sweet spot?
+
+I think the sweet spot may depend on the workload and the advice type.  So
+selection of the benchmark will be important.  Do you have a benchmark in your
+mind?  My humble microbenchmark[1] does only single-thread usage performance
+evaluation, so may not be appropriate to be used here.  I actually do the
+evaluation with batching size up to the IOV_MAX (1024), but show no clear
+evidence of the sweet spot.
+
+> >
+> 
+> Keep in mind process_madvise() is not limited by IOV_MAX, which can be rather
+> high, but rather UIO_FASTIOV, which is limited to 8 entries.
+
+process_madvise() indeed have iovec array of UIO_FASTIOV size, namely iovstack.
+But, if I understood the code correctly, iostack is used only for a fast path
+that the user requested advicing less than UIO_FASTIOV regions.
+
+I actually confirmed I can make the loop itrate 1024 times, using my
+microbenchmark[1].  My step for the check was running the program with
+'eval_pmadv $((4*1024*1024)) $((4*1024)) $((4*1024*1024))' command, and
+counting the number of the itration of the vector_madvise() main loop using
+printk().  Please let me know if I'm missing something.
+
+> 
+> (Some have been surprised by this limitation...!)
+> 
+> So I think at this point scaling isn't a huge issue, I raise it because in
+> future we may want to increase this limit, at which point we should think about
+> it, which is why I sort of hand-waved it away a bit.
+
+I personally think this may still not be a huge issue, especially given the
+fact that users can test and tune the limit.  But I'd like to hear more
+opinions if available.
+
+[1] https://github.com/sjp38/eval_proc_madvise/blob/master/eval_pmadv.c
+
+
+Thanks,
+SJ
+
+> 
+> > Thanks,
+> > Liam
+> >
+> 
