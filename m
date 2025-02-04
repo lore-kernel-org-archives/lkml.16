@@ -1,107 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD29815689A;
-	Tue,  4 Feb 2025 03:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC5A15689A;
+	Tue,  4 Feb 2025 03:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738640541; cv=none; b=X8jZ0SimTtvQa2rQwqTR6gQHczUB3JDmMlhrTAdfISo47+EHZnixCTLSiNWyOG1VcDjpk7Er/3+GQdATEirt8vJ5CMG/CzlLOScZD3A02/jW9zigfq49dvBcH9TH0lt5oFBxkkGKomQpv6X6kqyFbN/EqM9arJhNtQIg2vVpG0o=
+	t=1738640603; cv=none; b=csfjFz/cIjGfBOIrVNAeB+WSL+KGA81GNzP2nD1x0A1vwcA5LvYdWolbjxniyDS6GL8XlRxW8QkFeOhqF44CDTbwqnhkBWHZyWXz1J45+ZdY4UDwYI8AMWuJSFPYaERFsIKwYKI5JjAbYvC9k+KlBCkXYM5qMGHYAezELOUJqek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738640541; c=relaxed/simple;
-	bh=5CHz9yyeZs0EA8QG0X+vsnfv5KE42hIvyG3YFhIufZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iaAZnZJl3ai83eHm9Cw1OuBA8B5l1wDPoVEQm67+bkdamVDO4OHT4Wfdbia9A5Z+6Cax6Lfa+mgpWs+MRcaGFv2s4RY/dn8CtxmCN0OZeJE3JVAAmsrmi/GtJ/xvRXv4ErFihUE0S3oBIJm3NbEa0TDJ1ocQ+5gWeR/28mPEWbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V6/hZ3Tl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738640603; c=relaxed/simple;
+	bh=ToAtU8U8ya+XHoeO3XNmrlkp4dyLKZzbpPN5r/Wq9c4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lNTKewu1Jycq1+FNtU7VsyJ9xR9Y5T8Q/BNRRCR+CIMSkVZeCRSU/IUGCofnKe4REqjpUkTnLpg9hSLlg+GjIJmFTj7N0C09unZKN4crZRD6iA34rtKf9JVwA6DdbTVg1dpNdkybCu+ElpuSdU6NpTpwSvsFRtD5UGoI0IhXS5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JrkRnDrp; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V6/hZ3Tl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8EE3C4CEDF;
-	Tue,  4 Feb 2025 03:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738640541;
-	bh=5CHz9yyeZs0EA8QG0X+vsnfv5KE42hIvyG3YFhIufZk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V6/hZ3Tl/MkO1zyYAiF2wZzbxY/FeNv/Il9nShI9sBMBTD8+GYJLxOXTgj7kF75XM
-	 jTTKfnmaGPIIT56yH/hsuwcSB69t0GPKiC+6KtMrYXLzkAgZYrSqMGAqsOjbVW+4rd
-	 IO7g/7sFRcpLqTwU6uNGHvHyFvqKJ5ueHH3oEqs7ymYNil5BwnKkvaOwSulbeoWWMV
-	 3PLrJvx0kZ2n7nkji7GwLMs6iN8fFyTywrpfb+HzYesoTYMPfVcUAugjUG4ajfTatR
-	 3kQ3tio3uMqrAvHD/LUHukrvopXQX6UQr47wGFyDt3C2haoM4T7Odz6450OiMx2Pzx
-	 RiI4ldXF/XbkA==
-Date: Mon, 3 Feb 2025 19:42:19 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	acme@kernel.org, linux-s390@vger.kernel.org, james.clark@linaro.org,
-	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-	hca@linux.ibm.com, Kan Liang <kan.liang@linux.intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH 2/2 v3] perf test: Change event in perf test 114 perf
- record test subtest test_leader_sampling
-Message-ID: <Z6GMmxKvXd0-fd_-@google.com>
-References: <20250131102756.4185235-1-tmricht@linux.ibm.com>
- <20250131102756.4185235-3-tmricht@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrkRnDrp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738640601; x=1770176601;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=ToAtU8U8ya+XHoeO3XNmrlkp4dyLKZzbpPN5r/Wq9c4=;
+  b=JrkRnDrp0c2J2E74mKNokK5yRBZ0wWlvdtyiQLIDk5LB8m/9ynRsvp3o
+   tHpUBVOLlv1+5LCgckO0MvJYtUXkHoI5Ce3zlWXWwRB+y3hirShWwjnOY
+   PKbaFbAv5y/f3fCYW2QsAEHHEn3m3nFTNQbOmCgWKY7Or3BYtp29xGw8F
+   Rvt7vOopt1PbFBudzk30X9hzusd+LLCfa13HexwbOzKeBoKn6LEp3geU0
+   iwfyTFBJDddyvGs7i7e0wsMyXLfzlsHvNV4aenQuyV3+qpBylIwnIPRFa
+   0pErjZMcraRagtMicBMSZFOeruiZuhStMsM/Svl8Qr5izuMAwuoShSh/9
+   w==;
+X-CSE-ConnectionGUID: WHJzpYBBSCypeYIl/LAx6w==
+X-CSE-MsgGUID: UeZS7ikETyC2GBZ3kQEn0Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="49408366"
+X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
+   d="scan'208";a="49408366"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 19:43:21 -0800
+X-CSE-ConnectionGUID: FYnDBlLpStW7Fy0o7g4oYg==
+X-CSE-MsgGUID: mNtssUBgTVeyTlbPHnJKAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
+   d="scan'208";a="110363701"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 19:43:18 -0800
+Message-ID: <f5b4881928e3395eee9b6e6a4fb89f3d605cfd2e.camel@linux.intel.com>
+Subject: Re: [PATCH] tools/power/x86/intel-speed-select: Prefix header
+ search path with sysroot
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Khem Raj <raj.khem@gmail.com>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Len Brown <len.brown@intel.com>
+Date: Mon, 03 Feb 2025 19:43:17 -0800
+In-Reply-To: <20250129033932.2576077-1-raj.khem@gmail.com>
+References: <20250129033932.2576077-1-raj.khem@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250131102756.4185235-3-tmricht@linux.ibm.com>
 
-Add Kan and Dapeng to CC.
+On Tue, 2025-01-28 at 19:39 -0800, Khem Raj wrote:
+> This helps when using a cross-compiler for building intel-speed-
+> select,
+> currently, its hardcoded to pick libnl3 headers from build host which
+> may
+> not be same as build target when cross compiling.
+>=20
+> cc -print-sysroot will print nothing if compiler is configured
+> without
+> a sysroot and result in same string as it is now.
+>=20
+> Fixes errors with gcc configured with host include poisoning e.g.
+>=20
+> cc1: error: include location "/usr/include/libnl3" is unsafe for
+> cross-compilation [-Werror=3Dpoison-system-directories]
+>=20
+> Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: Len Brown <len.brown@intel.com>
 
-Thanks,
-Namhyung
+Thanks. will take for the next release.
 
+-Srinivas
 
-On Fri, Jan 31, 2025 at 11:27:56AM +0100, Thomas Richter wrote:
-> On s390 the event instructions can not be used for recording.
-> This event is only supported by perf stat.
-> 
-> Change the event from instructions to cycles in
-> subtest test_leader_sampling.
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Suggested-by: James Clark <james.clark@linaro.org>
-> Reviewed-by: James Clark <james.clark@linaro.org>
 > ---
->  tools/perf/tests/shell/record.sh | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index fe2d05bcbb1f..ba8d873d3ca7 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -231,7 +231,7 @@ test_cgroup() {
->  
->  test_leader_sampling() {
->    echo "Basic leader sampling test"
-> -  if ! perf record -o "${perfdata}" -e "{instructions,instructions}:Su" -- \
-> +  if ! perf record -o "${perfdata}" -e "{cycles,cycles}:Su" -- \
->      perf test -w brstack 2> /dev/null
->    then
->      echo "Leader sampling [Failed record]"
-> @@ -243,15 +243,15 @@ test_leader_sampling() {
->    while IFS= read -r line
->    do
->      # Check if the two instruction counts are equal in each record
-> -    instructions=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="instructions:") print $(i-1)}')
-> -    if [ $(($index%2)) -ne 0 ] && [ ${instructions}x != ${prev_instructions}x ]
-> +    cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
-> +    if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
->      then
-> -      echo "Leader sampling [Failed inconsistent instructions count]"
-> +      echo "Leader sampling [Failed inconsistent cycles count]"
->        err=1
->        return
->      fi
->      index=$(($index+1))
-> -    prev_instructions=$instructions
-> +    prev_cycles=$cycles
->    done < $script_output
->    echo "Basic leader sampling test [Success]"
->  }
-> -- 
-> 2.48.1
-> 
+> =C2=A0tools/power/x86/intel-speed-select/Makefile | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/tools/power/x86/intel-speed-select/Makefile
+> b/tools/power/x86/intel-speed-select/Makefile
+> index 7221f2f55e8b..8d3a02a20f3d 100644
+> --- a/tools/power/x86/intel-speed-select/Makefile
+> +++ b/tools/power/x86/intel-speed-select/Makefile
+> @@ -13,7 +13,7 @@ endif
+> =C2=A0# Do not use make's built-in rules
+> =C2=A0# (this improves performance and avoids hard-to-debug behaviour);
+> =C2=A0MAKEFLAGS +=3D -r
+> -override CFLAGS +=3D -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include -
+> I/usr/include/libnl3
+> +override CFLAGS +=3D -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include -
+> I$(shell $(CC) -print-sysroot)/usr/include/libnl3
+> =C2=A0override LDFLAGS +=3D -lnl-genl-3 -lnl-3
+> =C2=A0
+> =C2=A0ALL_TARGETS :=3D intel-speed-select
+
