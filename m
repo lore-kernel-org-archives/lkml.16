@@ -1,139 +1,181 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57F120AF8D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A56520CCE1
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738673673; cv=none; b=dzPLuUeIGd27q8v3L186m+I+wfVIg4nAxmozgGBCVwpHj8XkEd0rgwdEdYuJFo4H37g8NMODYhZOzNa4GlkVK8ZAiXUQP8kMA/RNUUPffHL84lX5bmu9LwiiUn0nSpvlQtIr+5BA5tUr0gywLpLsilBScjai+e0tcZA618Jfa94=
+	t=1738673714; cv=none; b=dQwMM36/wCLURepDXmA0wnLirBZTW3XCqN+ZFb9/H4EV7SXahPyGWZWaioO7w5JHhaStmGEYxGR5at+U5P8/RcnJ//s9xzgVR9c3vUX2KL6Ezj3H9w79W8FIcsjSsKijN2z2YsJo+zXdb+y5kQdLuKx39JtmgLv2pt4zPBNoxdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738673673; c=relaxed/simple;
-	bh=ynSUJ63SuLhCXyf2usS1JVLKxrhDuZv8kV79M/Jon+I=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=JS6Dl4R1T/JI53Np9iqTozOITpHA+fPhdd5ba7x3f7EMU8jov/M7bdShKNq+QiSkQCum3hDZbFW94IEp2MUuX79COVo+GOsQAkyhdoZYFzECl4PUMFkuqtKLEs1gyr6MdCbOXZZa8vqtmZszCvKsTtDlALQnuBYDmHp5eyp7DrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=LxDLjHsZ; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1738673714; c=relaxed/simple;
+	bh=zGL9epENRNO7rvIHohYlhRMg7cx1KKq80o7dktun6zo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QnR52HHaY5A201BoN32EVGRg6eIbgQerj+yvYaXaG+NDNAKsSyxi6ZuADCduEsOPD7xgiitdFd2HnYOnrLdm7fffKnOLGZhOZEZ9JW1x0Bk+sd5db44TJjXOH1ULj7rEJe6j0pqjMV54e5u3BgWEq2QIchSisuGUXgqry/emig4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gQBBbAwG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="LxDLjHsZ"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4363ae65100so64788455e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 04:54:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738673669; x=1739278469; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fSDieL9GBtvsQS7Ye0zV4eVocVG/YaV0pHO+Q0/Wne4=;
-        b=LxDLjHsZPwDJHzkD+Eim7w5Zmh4tZJddvIc26w2ntrXWaPAcPVrs9D+/dkx4bgJvIH
-         Tqlv/kNkn840rWVSTbjF+yDxbg882vYfVskYls3e+MMo+K82eFSG46lIhSs9fKocNzae
-         m78PVoCyZs7WZUUHPSTCUoV8FVX38o9hN5m0yrNB6c3mLIDdGCNK95oU/LXr43LxrUqe
-         aWmBdXsAgSACZJLm/A1vzQcziT7VzJVKvQVONOZgbg0o7eP3v9kaSPaRrh2wK3ZUYnMK
-         YoI8Y3phTWWXT2L+qWhFE1LqB88TPEgttiAA+V1PIQZ7T8VLbE+o8j7CG2mpZRDuKxvZ
-         oRcg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gQBBbAwG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738673711;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=twPDg30fIiJNLDt2SiVRKkvqJ/64dc+oeH98LcXpjks=;
+	b=gQBBbAwGK3Lrsik53QJyxNdghbg2qd0FnEv4Hc/NKVxC6zGCoTMc/aHJghETMFJenA7kCk
+	GSwLku7xc+8fKKKZESb3teec9WPtvqCTSO+CaI3fv5PVRd/7RUhn0P8KZnjcUIqAFEuFks
+	xy6v2syZSk9rdaXDlDbeqrciXbDDmvE=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-491-gtpbzuZROFaLpmvAFXER1w-1; Tue, 04 Feb 2025 07:55:10 -0500
+X-MC-Unique: gtpbzuZROFaLpmvAFXER1w-1
+X-Mimecast-MFC-AGG-ID: gtpbzuZROFaLpmvAFXER1w
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6d88d56beb7so51607116d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 04:55:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738673669; x=1739278469;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fSDieL9GBtvsQS7Ye0zV4eVocVG/YaV0pHO+Q0/Wne4=;
-        b=qTEAHEYGlSydIeVuKB8+7cvBcb/pB8BXRMZWdAry2d0g3XKEwP8ezA6U3u6QGIiday
-         qGnvEhpN9bnN7nM+vveZQKFuFg5oiFGgNoN/kmcYhXqvs7iVm2+14a/b6Fvhk+vBzBcf
-         1u3bE6TqdvrXhB/piXYckiRK7AA6EEdlw88WQeSQ8Q5qCGJPOglwzUDaxitOb7hpHIEs
-         oVEEH9NV9fVq/lQrCDDYuayeE15OvcnrUTdRzLlSH/8GdGVWAIRjAZ8CQDftZPTaDyAx
-         dalZHUimxSFPjs71OEYnhPilVFDjBrzOTdFx/qwUTSOwShijuUstV7CJBO8A+kRJNDUW
-         s1MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHwMqAN06dUOmc+oCMWxjODMlNjEBTyb1YOXeU5OrIEV3Gj993ZSnTpybD69a1tg4Y1kMFlt+V5Pyabgs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWf2k0+Zz6t+cthI7mTvbMqPm8oU8MBkAvqpxWiKglTIHvuSup
-	8tDALcOoatPFrfmn6fa4O8J6jzDQPtorXE/oMt54lBoMDEuCuuYgGtGrjR43nko=
-X-Gm-Gg: ASbGncvW0d6+gSr5wEKJk10PiR4cCWbEROCDgWDiwnmygM6Zk9bvWv1cI11I7+KDlqw
-	FLdYOd/xicdnsEC4ioGjSb0RxmYm+qtu+u6QKBM+49smTyZtszLwwP3ooTH2u/frzt5l/RubGAm
-	sdqJ3/M6+L8+tbs2g/OL+uJZ0c945kqJvMrR3U62voD71mgr1DL/yhbIx8kT4biX7nwS1JGbwhV
-	gLj150Wj1QlHKIvmqQawa39akmcBNY2L+T+T2PVh1me65LmjckNYtS+vCPhNtObbpUEu2VUIngi
-	i/YpCuzETo1X01jd0drH9FDxmVmUQMVNYT/+NnIET5aSW4AfzoFxgG8kaLOwrqDIFpFSLA==
-X-Google-Smtp-Source: AGHT+IFouneBDH4lcmisK2CqC0lJVk1uEkk/8hKiuwfY//uH+O/ijh/ARezQ4p0atRjAsVemu/oJlw==
-X-Received: by 2002:a05:600c:3d05:b0:436:18d0:aa6e with SMTP id 5b1f17b1804b1-438dc3ab518mr293284155e9.5.1738673668943;
-        Tue, 04 Feb 2025 04:54:28 -0800 (PST)
-Received: from localhost (amontpellier-556-1-148-206.w109-210.abo.wanadoo.fr. [109.210.4.206])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390692a66esm14765885e9.0.2025.02.04.04.54.28
+        d=1e100.net; s=20230601; t=1738673709; x=1739278509;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=twPDg30fIiJNLDt2SiVRKkvqJ/64dc+oeH98LcXpjks=;
+        b=cju6BefBzVBSAjDT9d4kn6HKIkQ5plpsQo7IpbtQOEcBhqYZIX36+op/iZrTw/M5Sc
+         m0BgWPxOkk51cJn9xUMuvoOIT6HqTYgbjVrDOa+7KQsdcvgM6BawAR290Yxd+OAOnceE
+         YKjRy/97tn22/1N8u1jN2ZcqaquKwGvXObLmzOOWJH5eko6QcscEw8WDNK0o1YMfeSsC
+         +ai33mL+OkIY2RVVniptA8Ktj+MMJopPlr+rm2rZzTZf+Ui3wKmzLIwbZ1FevpcSOa/V
+         PTNLCBbUkIzufHSLXszCYtBtecOpdreA0hu+AYXaR9uJOiacdeGS7AOH1K9LfDNptz3Z
+         M9Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjGU8p2QAkPzL6QHQuIiP+iFYS7ZONZq/QBOAowXfBYBGMeNLtmSDB9AvCt/ozlXi+A5YEb188Svg4XKw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU1HDiicO3YopXOCoI8/v1E0/JrEWOjYDg8uD5pkmL7I7gzkc/
+	QEqDDsDpCOt1U1zptjpdththiAWjKmOB7Di/GKy7a74GQnx98hSSgeBXMgh79ioWIGu1lgRiI58
+	iiP/etjcgRJhOk4psYB5s9AYRdPWoAqoQKMhMizj2ycT9f4t2JWPQ6QcknGtwSQ==
+X-Gm-Gg: ASbGncupnrvhMDFMJqqia5Fh3WNVmOJ6Vqni8mu8p6sAfpioQOc9ftr1tetQ90x6iTl
+	Z+1IsmZ9PynVYjfU8UlLDkcp7ZVsTDeYkJmG9U8MA4GdC5GIW8ACxIWmT93Dy689dGP36eK6QzL
+	BaykzJLXR3+OnL62UvVu+NhQynmTy9krDFqvzhgGr99sokB3o+Z3E47/BNsxUyhE5rMPnKPFRWF
+	yDYJekR/kS16HHFMffGCd4JR2WYgiSNvzD5UcS85m7l0EyXCh9QyxQ9OgrNSPl9aphmoaqUpwnp
+	q0PExzcNMACmu2kA3iaoWUPGNeZ0pdNVbqtJbL5Zr3ZN1KpBDzOZ
+X-Received: by 2002:a05:6214:1c0b:b0:6d9:2e46:dc35 with SMTP id 6a1803df08f44-6e243bf84c3mr422214746d6.25.1738673709632;
+        Tue, 04 Feb 2025 04:55:09 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF1a38N2TZdISEECvq/s7iOToAmmfm3GmVQAMYB+u0Kmi1Pw+6Ta7PfZF01eEC876vzaXAEXA==
+X-Received: by 2002:a05:6214:1c0b:b0:6d9:2e46:dc35 with SMTP id 6a1803df08f44-6e243bf84c3mr422214216d6.25.1738673709310;
+        Tue, 04 Feb 2025 04:55:09 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254814029sm61998046d6.29.2025.02.04.04.55.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 04:54:28 -0800 (PST)
+        Tue, 04 Feb 2025 04:55:08 -0800 (PST)
+Message-ID: <cb087202-3a64-428c-bba2-196a3612e5ff@redhat.com>
+Date: Tue, 4 Feb 2025 13:55:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Reply-To: eric.auger@redhat.com
+Subject: Re: [PATCH RFCv2 00/13] iommu: Add MSI mapping support with nested
+ SMMU
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+ Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>,
+ "kevin.tian@intel.com" <kevin.tian@intel.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "maz@kernel.org"
+ <maz@kernel.org>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+ "joro@8bytes.org" <joro@8bytes.org>, "shuah@kernel.org" <shuah@kernel.org>,
+ "reinette.chatre@intel.com" <reinette.chatre@intel.com>,
+ "yebin (H)" <yebin10@huawei.com>,
+ "apatel@ventanamicro.com" <apatel@ventanamicro.com>,
+ "shivamurthy.shastri@linutronix.de" <shivamurthy.shastri@linutronix.de>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "anna-maria@linutronix.de" <anna-maria@linutronix.de>,
+ "yury.norov@gmail.com" <yury.norov@gmail.com>,
+ "nipun.gupta@amd.com" <nipun.gupta@amd.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+ "patches@lists.linux.dev" <patches@lists.linux.dev>,
+ "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+ "mdf@kernel.org" <mdf@kernel.org>, "mshavit@google.com"
+ <mshavit@google.com>, "smostafa@google.com" <smostafa@google.com>,
+ "ddutile@redhat.com" <ddutile@redhat.com>
+References: <cover.1736550979.git.nicolinc@nvidia.com>
+ <4946ea266bdc4b1e8796dee1b228bd8f@huawei.com>
+ <20250123132432.GJ5556@nvidia.com>
+ <de6b9dc1-dedd-4a3d-9db7-cb4b8e281697@redhat.com>
+ <20250129150454.GH5556@nvidia.com>
+ <8e4c21b5-3b79-4f0b-b920-59b825c2fb81@redhat.com>
+ <20250129201307.GJ5556@nvidia.com>
+From: Eric Auger <eric.auger@redhat.com>
+In-Reply-To: <20250129201307.GJ5556@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 04 Feb 2025 13:54:27 +0100
-Message-Id: <D7JODK8W4W9W.3OO4GRGNDU5ZX@baylibre.com>
-To: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
-Cc: "Lars-Peter Clausen" <lars@metafoo.de>, "Michael Hennerich"
- <Michael.Hennerich@analog.com>, =?utf-8?q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, "Jonathan Cameron" <jic23@kernel.org>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
- <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v3 2/6] iio: adc: ad4030: add driver for ad4030-24
-From: "Esteban Blanc" <eblanc@baylibre.com>
-X-Mailer: aerc 0.18.2
-References: <20250130-eblanc-ad4630_v1-v3-0-052e8c2d897d@baylibre.com>
- <20250130-eblanc-ad4630_v1-v3-2-052e8c2d897d@baylibre.com>
- <20250131181437.00000097@huawei.com>
-In-Reply-To: <20250131181437.00000097@huawei.com>
+Content-Transfer-Encoding: 7bit
 
-On Fri Jan 31, 2025 at 7:14 PM CET, Jonathan Cameron wrote:
-> On Thu, 30 Jan 2025 12:08:26 +0100
-> Esteban Blanc <eblanc@baylibre.com> wrote:
->
-> > This adds a new driver for the Analog Devices INC. AD4030-24 ADC.
-> >=20
-> > The driver implements basic support for the AD4030-24 1 channel
-> > differential ADC with hardware gain and offset control.
-> >=20
-> > Signed-off-by: Esteban Blanc <eblanc@baylibre.com>
-> Hi Esteban,
->
-> Just one thing in here that actually matters. Question about scaling of
-> the common channel.  The others I could tidy up whilst applying if
-> nothing much else comes up.
->
-> Jonathan
->
->
-> > +static int ad4030_get_chan_scale(struct iio_dev *indio_dev,
-> > +				 struct iio_chan_spec const *chan,
-> > +				 int *val,
-> > +				 int *val2)
-> > +{
-> > +	struct ad4030_state *st =3D iio_priv(indio_dev);
-> > +
-> > +	if (chan->differential) {
-> > +		*val =3D (st->vref_uv * 2) / MILLI;
-> > +		*val2 =3D st->chip->precision_bits;
-> > +		return IIO_VAL_FRACTIONAL_LOG2;
-> > +	}
-> > +
-> > +	*val =3D st->vref_uv / 256;
->
-> This is a bit non obvious.
-> A comment on this scaling might be good to have.
-> Particularly the lack of / MILLI
-> (I think that's a bug?)
+Hi Jason,
 
-Yes I think that should be:
-``
-*val =3D st->vref_uv / MILLI;
-*val2 =3D 8;
-return IIO_VAL_FRACTIONAL_LOG2;
-``
 
-So I guess that requires a V4. I will address the other comments there.
+On 1/29/25 9:13 PM, Jason Gunthorpe wrote:
+> On Wed, Jan 29, 2025 at 06:46:20PM +0100, Eric Auger wrote:
+>>>>> This missing peice is cleaning up the ITS mapping to allow for
+>>>>> multiple ITS pages. I've imagined that kvm would someone give iommufd
+>>>>> a FD that holds the specific ITS pages instead of the
+>>>>> IOMMU_OPTION_SW_MSI_START/SIZE flow.
+>>>> That's what I don't get: at the moment you only pass the gIOVA. With
+>>>> technique 2, how can you build the nested mapping, ie.
+>>>>
+>>>>          S1           S2
+>>>> gIOVA    ->    gDB    ->    hDB
+>>>>
+>>>> without passing the full gIOVA/gDB S1 mapping to the host?
+>>> The nested S2 mapping is already setup before the VM boots:
+>>>
+>>>  - The VMM puts the ITS page (hDB) into the S2 at a fixed address (gDB)
+>> Ah OK. Your gDB has nothing to do with the actual S1 guest gDB,
+>> right?
+> I'm not totally sure what you mean by gDB? The above diagram suggests
+> it is the ITS page address in the S2? Ie the guest physical address of
+> the ITS.
+Yes this is what I meant, ie. the guest ITS doorbell GPA
+>
+> Within the VM, when it goes to call iommu_dma_prepare_msi(), it will
+> provide the gDB adress as the phys_addr_t msi_addr.
+>
+> This happens because the GIC driver will have been informed of the ITS
+> page at the gDB address, and it will use
+> iommu_dma_prepare_msi(). Exactly the same as bare metal.
 
-Thanks for your time,
+understood this is the standard MSI binding scheme.
+>
+>> It is computed in iommufd_sw_msi_get_map() from the sw_msi_start pool.
+>> Is that correct?
+> Yes, for a single ITS page it will reliably be put at sw_msi_start.
+> Since the VMM can provide sw_msi_start through the OPTION, the VMM can
+> place the ITS page where it wants and then program the ACPI to tell
+> the VM to call iommu_dma_prepare_msi(). (don't use this flow, it
+> doesn't work for multi ITS, for testing only)
+OK so you need to set host sw_msi_start to the guest doorbell GPA which
+is currently set, in qemu, at
+GITS_TRANSLATER 0x08080000 + 0x10000
 
---=20
-Esteban "Skallwar" Blanc
-BayLibre
+In my original integration, I passed pairs of S1 gIOVA/gDB used by the
+guest and this gDB was directly reused for mapping hDB.
+
+I think I get it now.
+
+Eric
+>
+>> https://lore.kernel.org/all/20210411111228.14386-9-eric.auger@redhat.com/
+>> I was passing both the gIOVA and the "true" gDB Eric
+> If I understand this right, it still had the hypervisor dynamically
+> setting up the S2, here it is pre-set and static?
+>
+> Jason
+>
 
