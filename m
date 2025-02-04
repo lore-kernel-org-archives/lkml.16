@@ -1,64 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6641509BD;
-	Tue,  4 Feb 2025 18:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CD41547D8
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:58:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738695418; cv=none; b=b9XMcO/XTir7Siu5Mz1vgr1OJzY1msubEGqGPDUIeYD6+EGYXYJWpQusHOMUb1DLq8TzA6i2KPwOk/Flrx1+5V0hW1Yl9fxc1t1bgPDU6xFrNErFuJDI+grY4XXI0agOIIPyj5tTMebtW0Ay6hgjWnE6hLPuYfXt3xdYde6b68c=
+	t=1738695528; cv=none; b=IUFOKgUyfjDzrIbW6/9UwlTg6EwOSilz1/vALo6Q70NejzbIiXxur7HnDDU/epNdOviOYXwLlUsvNJAsC3jIfERi3WU2EAPLLu3ckEX8Vq/ibEl9RyE7E2n6dv2StaFifZc3PD7kAGNUK/7AE7izRF5HTNRpTBJq9JwXjjgwqLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738695418; c=relaxed/simple;
-	bh=+xlWDqA1nktIztC11TUlrCC7pQTndNouzw5baByuO/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2OhQCi46nZrs2SWRoXWNU8P7LC57tJ5a2nuY+cMp6vP/TIJ0DeqcOmAekQqIVb/CIyprskmSeIz1oirmSyusJUt/ExxYyRCxv3IMUImB25tR7qbkMLwt2qNn3Jm+EY8J5jCRoTqfbLrRr2Q2/CO6lHugbPl5zphbiHxjtd+4oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SC1coa+x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738695528; c=relaxed/simple;
+	bh=0L5bryRXiPggJfKO3hVYa1P/qcyKedAdEoWCu8CBI2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UoKhRMX/goYI5DR9H3MSi+dTo5q5/tXQNW1w/MYFcG7bB7VHE3sfwDQGEri9a/pKt5773E5zMDdnd5wmPF+FRvch3xrwzz8KDeo8XW3KeT/kxr2AAQLNZGW6YR1K3/Xml5hZBdZoB4iTZ2TiZ9jc1YM5BziT8F7gcCHDkt91iM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIzml+NZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SC1coa+x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68C39C4CEDF;
-	Tue,  4 Feb 2025 18:56:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIzml+NZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12502C4CEDF;
+	Tue,  4 Feb 2025 18:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738695417;
-	bh=+xlWDqA1nktIztC11TUlrCC7pQTndNouzw5baByuO/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SC1coa+xa1wViaQHjAzIsR7pvYfAcoh9lEYTOxbZ2oEoiR/uvXrmWQIP2rKTFXVkJ
-	 2hXeUFPLlWADm/MXPZLj4OUugt2CaBReKR5Mb/bEFRvF8tzsqrGA4bYOT+j3xyvVOs
-	 c8y4+K9W50C4GWUu1rVVbjWcC0W/tS+Zsuh0Hb9eMc1QuUdruj16+URqkkoPrCp5kU
-	 DwhhtH26xTW3T6Ui0W0KFncfC13rvzFqBHqY2tcqA/7hA02oT49MbG9g+C303moIVR
-	 3FLx3uwZ5k8gqFwJiMbjXHFIC52w0eaCT7+0NTHRYbq5tPCeVLvXORG6roCdzfZo/1
-	 J7FtICqOV6eTg==
-Date: Tue, 4 Feb 2025 19:56:49 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Timur Tabi <ttabi@nvidia.com>
-Cc: "corbet@lwn.net" <corbet@lwn.net>,
-	"ajanulgu@redhat.com" <ajanulgu@redhat.com>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"simona@ffwll.ch" <simona@ffwll.ch>,
-	"lyude@redhat.com" <lyude@redhat.com>, Zhi Wang <zhiw@nvidia.com>,
-	"airlied@gmail.com" <airlied@gmail.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	Ben Skeggs <bskeggs@nvidia.com>,
-	"mripard@kernel.org" <mripard@kernel.org>,
-	Neo Jia <cjia@nvidia.com>, Andy Currid <acurrid@nvidia.com>,
-	"pstanner@redhat.com" <pstanner@redhat.com>,
-	"tmgross@umich.edu" <tmgross@umich.edu>,
-	"benno.lossin@proton.me" <benno.lossin@proton.me>,
-	"nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-	"gary@garyguo.net" <gary@garyguo.net>,
-	"a.hindborg@kernel.org" <a.hindborg@kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"bjorn3_gh@protonmail.com" <bjorn3_gh@protonmail.com>,
-	"boqun.feng@gmail.com" <boqun.feng@gmail.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"alex.gaynor@gmail.com" <alex.gaynor@gmail.com>,
-	"aliceryhl@google.com" <aliceryhl@google.com>,
-	"ojeda@kernel.org" <ojeda@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 1/2] gpu: nova-core: add initial driver stub
-Message-ID: <Z6Ji8XrBtrXvdZZY@cassiopeiae>
-References: <20250131220432.17717-1-dakr@kernel.org>
- <2d521b9d57338927a176118587dca545f5e4f170.camel@nvidia.com>
+	s=k20201202; t=1738695527;
+	bh=0L5bryRXiPggJfKO3hVYa1P/qcyKedAdEoWCu8CBI2E=;
+	h=Date:From:To:Cc:Subject:From;
+	b=jIzml+NZJqQFWxZsuDvuIQmOtWKlfCnn/FTS4hQfx8eAmQcAGvKub6HLUdL7x26Az
+	 9kjG4NQJ2OrU3t1BGHc7CHW3P/rChBw2DCybbOwTrwMwg49z+wNOaaRZCPM8qRxs2b
+	 WbgwhEIXwxWq8wuPe0iHnZwZfWq6t6Zji/kmFQ8Itnw85M9QVPNXmX/2xF0lqT/ZhX
+	 DVynD3rN0omDz+N8ARvk8A0PsuQWDwDlg/s6+8vPPvJm+sO2IOCqTUcGo1dv1e6g0U
+	 ZOzaWDyLyt/hnVx4IEKvSrCHgi2Gwc5h8D6SkLDJoHiYZEmUa3BGRXt6bceZtuvoUp
+	 gyHVjpq+lm7Ow==
+Date: Tue, 4 Feb 2025 19:58:44 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [GIT PULL] kthreads fixes for v6.14-rc2
+Message-ID: <Z6JjZMdbDoAX_AVW@pavilion.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,17 +40,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2d521b9d57338927a176118587dca545f5e4f170.camel@nvidia.com>
 
-On Tue, Feb 04, 2025 at 06:42:46PM +0000, Timur Tabi wrote:
-> On Fri, 2025-01-31 at 23:04 +0100, Danilo Krummrich wrote:
-> > +/// Structure encapsulating the firmware blobs required for the GPU to operate.
-> > +#[allow(dead_code)]
-> > +pub(crate) struct Firmware {
-> > +    booter_load: firmware::Firmware,
-> > +    booter_unload: firmware::Firmware,
-> > +    gsp: firmware::Firmware,
-> 
-> What about the bootloader?
+Linus,
 
-Gonna add it.
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git tags/kthreads-fixes-2025-02-04
+
+for you to fetch changes up to 1b0332a42656b798bea867631d739de023633ec6:
+
+  kthread: Fix return value on kzalloc() failure in kthread_affine_preferred() (2025-02-04 01:42:27 +0100)
+
+----------------------------------------------------------------
+Fixes for kthreads
+
+- Properly handle return value when allocation fails for the preferred
+  affinity.
+
+----------------------------------------------------------------
+Yu-Chun Lin (1):
+      kthread: Fix return value on kzalloc() failure in kthread_affine_preferred()
+
+ kernel/kthread.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
