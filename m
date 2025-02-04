@@ -1,97 +1,161 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAB32C181;
-	Tue,  4 Feb 2025 16:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A592C181;
+	Tue,  4 Feb 2025 16:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738686648; cv=none; b=OYb3xU0EuUY9dIouBWQSrllhQlqtkz7oUpjboeV6YpZIxGElUT9Fj//GDaqGr/zlCz6Cv6diEHV/cxjzCZyO7LZ74P/IW9jvvkyyI0pgid8U+2OKkP7Lbb6pZyIdwzCfd5guYgTj2WcjRcX+q3V8GMRJtuqbUcgaoJq9U/guOrY=
+	t=1738686854; cv=none; b=NhQCjGagG+L2S6FNXpzLtirWXMVDuxiu8dlzxvmTIFMBcXYPPutpDDEcmvY2F+ssJ0q99dM+VdVJzXZs3EwXLPy/fJUBjDK8UOOWg9nwy7uWyS1HJKuz+SRoUdWaqTw+x9z1bJ3EHuIjxKsRIfJ6N8vB27zX35PyCkwndayO7VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738686648; c=relaxed/simple;
-	bh=opT0EkNK045NqLULfxBak/mtFGh/D/EUUcxWawHwc08=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ryy3+dkkMcfsbRUxbUZt55XGwEemt71hodLBqyq+henmFQBTNXaUp4c/FLZHyKTr0wah2mSwWJcX8lqOo3N28b2wY6QrYDojMyviXoNPZo1sqIBflMvOTQAjqFPwjvjdMIiS8fbd6JrlgH6sQVkL54UJZKJWIRRh3Kpiv+iBlV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bAm8wG9D; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738686854; c=relaxed/simple;
+	bh=8wM8PxwKt5hE+jlTkkgMtUmjK9tWRW7I0AK5GtpiFs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dAsy9KBtyxCeUO+HMR7Bqy8hcUojopPcRNrGC4I5O/hvhofOudVD/ouL6dE5DGHbVE2zyNPTbpksfKSzdFfjfYYFCyhq6gsDiiWfptPgKg23ppN09FsgCFRITusOBjBimLUQ0ylfflO5A2voPgUBPAy4hztmKxASOHy++tBO/QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IcVKUsUX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=63JlAPBo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bAm8wG9D"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab7430e27b2so300153666b.3;
-        Tue, 04 Feb 2025 08:30:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738686644; x=1739291444; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:reply-to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=opT0EkNK045NqLULfxBak/mtFGh/D/EUUcxWawHwc08=;
-        b=bAm8wG9DctJrbfa/3W5srXK7dIJWb2HLbk+eb0BffYNnXSBBqgD+B9Q3MVQU6dJo4p
-         N4j4B+uYh7Qhuo3H0/1hRHqPlyeROEc0wrVNkmx9JrHO+ztsdckCeStiyLLHBNtKa/XV
-         s3kcRgrSdVbnvUwrF0eohr3cb3U88HNtZplARuOfaVOHdJgoDliRVMIbQyKG1pXDZdEt
-         u4vxeuKtbsev3rleHveMnqv1SbekWIc23FpB0QdNZ/CjBO2SzsVYCWQF2EJOMYGiCWKZ
-         mzY2ZLUw8seI7na+QYo4St2uP30jzeBYt+uMY2//kWJCOmQs5DH9AWPsz1K9ZaI6mU+r
-         lSuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738686644; x=1739291444;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:reply-to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=opT0EkNK045NqLULfxBak/mtFGh/D/EUUcxWawHwc08=;
-        b=RDoZhXWrLst4a7LQ1rrP0JdGH5hNAawavmTUBDE0sMxNaKBJxM2k/gELe2ga3O5A5X
-         U5XN/on+mU68fma9vFNBXFPzJxYYn+ls8e09UYezLd03QExccxOadqPRwRuEljPTko9j
-         rIqMgdVE6aok7LmVtMC3CzJLz6VSMnP6d74WD73uoFWhGhrkPpB46N4AUI3p254XHkHv
-         i01XZ+LeIMT4zcH6xcEDtqzxYIpMpyoa9VGgSTr5aSVoE1qd+vaGfq+y2gK1PRispmlu
-         XF8B1ityKjhIpSaUEcwTrh7K+C7EJqJVrD9uXnI3lQJlWNYBYP10169gdE1xMIKUcMjn
-         +LOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwgwtP2Jshpmj711pqT4NtZz13dv9f2/tviCaTaO0xPEk33Jmqe72KAvulrbd5gMZdz7fn3/O4QFo=@vger.kernel.org, AJvYcCWxq0Kf902YN8ctdyBBBLVCkW1sibBM6jQbpvDkNutsihhZNLKlsvo91fHgAeiUhunnjUV7iPnBqPksEgiH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOMBMaQCBzlcaE2hVxEhdYLsBRBhjQncAVKkq0AdagO8/e5LIl
-	AXVk4FdKOnZY0ygIqn8jQ9O+8VMXZtQfCgk+P03f0537NF9/OZbd
-X-Gm-Gg: ASbGncvyYlXj07iKRpTkGy4k0qbdYXoHvLRES/h4cLP5OxoZC0ErsgN8gidcXofpuUj
-	MtibQVKRSUChwIsbn+VWC4o/spFwnT7vz7cRbn/d4wLCBoQfXN4UsU5xmIcO0Slab3tsweCgSyU
-	QA9LHbdFqyU4dMmcxneCK6NQOdpfaeyqFX/dzOLf9lnDcTOgkoDRXPM96qTHgBhgp4a3tzcM1ik
-	BKFi47xuD3lgcWhvjDOsRa2i2VB4VMYIFUa6LBomdaIPgCCWd3JsIjC/YGvdFYdcT7cyVD7TJuO
-	UWfCiDTXImLkTXtVs20WP2MBjXgblNhJZLEH0IusZmGDOQ==
-X-Google-Smtp-Source: AGHT+IH61lE3K2Fe9bMptU65qQ5bSKC+NWM5L/H3ek6n1KHXY/vGtfhDxAqTVSPrx61q1nj+NCzpxg==
-X-Received: by 2002:a17:907:3d8d:b0:ab6:ef33:402 with SMTP id a640c23a62f3a-ab6ef330424mr2468214666b.18.1738686644242;
-        Tue, 04 Feb 2025 08:30:44 -0800 (PST)
-Received: from abityuts-desk1.ger.corp.intel.com ([134.191.196.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6ff1bdbadsm762747266b.62.2025.02.04.08.30.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 08:30:43 -0800 (PST)
-Message-ID: <c3f03a5837e191c5371593ac0a0e3c56e4204567.camel@gmail.com>
-Subject: Re: [PATCH] intel_idle: introduce 'use_acpi_cst' module parameter
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Reply-To: dedekind1@gmail.com
-To: "Rafael J. Wysocki" <rafael@kernel.org>, David Arcari
- <darcari@redhat.com>
-Cc: linux-pm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Len Brown
-	 <lenb@kernel.org>, Prarit Bhargava <prarit@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 04 Feb 2025 18:30:41 +0200
-In-Reply-To: <CAJZ5v0hp8f3Xjb7bkDR_+RYfTE1ck=qop_QMZ3+z4w7T0VS66g@mail.gmail.com>
-References: <20250128141139.2033088-1-darcari@redhat.com>
-	 <e9188365425d2a4c0dfa7cfa2b17ad3d9fcf2735.camel@gmail.com>
-	 <afbe2137-398b-4053-93e7-2a03aeb32220@redhat.com>
-	 <CAJZ5v0hp8f3Xjb7bkDR_+RYfTE1ck=qop_QMZ3+z4w7T0VS66g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IcVKUsUX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="63JlAPBo"
+Date: Tue, 4 Feb 2025 17:34:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738686850;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8HGciwVaWiFVnQeEkwNMUZx49RscaD3a80RktSJSXkg=;
+	b=IcVKUsUXDca+vxSShEkbfSeIlMQVyGINIw5msWzlyTFIvAUGNGdWzH02CyZL0l10VjWSRo
+	fQXc5uLPJRSiPaYhY5Y4bpHxHjHeJdQ4/1kx8UhoYQ6I2MaaTIycOXF1la7sQB9BAj1dDB
+	6rB0SAuF/3j//N5fblYrYlWRU0cBrKo5YbeADEw8huQMsIjDmHHjNCV/D71uqcxfGo4hrv
+	qbnPAbriEAc/kt2zMKGXbfX12hE3S1bzgk7YN++uF+SBOhepcpd3owhOUioWVAmOM2g0VY
+	UkUw5TaYDoAP3O9V7xDrXfk5jsM+4SfqcoroW4ASmE+94ryiHAfIdyj7R7XdlA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738686850;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8HGciwVaWiFVnQeEkwNMUZx49RscaD3a80RktSJSXkg=;
+	b=63JlAPBoJsCVTNn1j7wtylBauOQjPgAbpLfGlp9g4ZPcoZ/gSJLTkahj1+/hWT4PNTn25m
+	5PanF0lpkX8P1bDg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org, Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
+ core_initcall()
+Message-ID: <20250204163409.ueObHFje@linutronix.de>
+References: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
+ <20250130185320.1651910-4-paulmck@kernel.org>
+ <20250204102611.OVuHn9rS@linutronix.de>
+ <ff2ed5ba-52f4-4e82-ac0c-6e6a7013d86e@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ff2ed5ba-52f4-4e82-ac0c-6e6a7013d86e@paulmck-laptop>
 
-On Tue, 2025-02-04 at 16:21 +0100, Rafael J. Wysocki wrote:
-> But it could be something like "prefer_acpi" as far as I'm concerned.
+On 2025-02-04 03:51:48 [-0800], Paul E. McKenney wrote:
+> On Tue, Feb 04, 2025 at 11:26:11AM +0100, Sebastian Andrzej Siewior wrote:
+> > On 2025-01-30 10:53:19 [-0800], Paul E. McKenney wrote:
+> > > The timer and hrtimer softirq processing has moved to dedicated threads
+> > > for kernels built with CONFIG_IRQ_FORCED_THREADING=y.  This results in
+> > > timers not expiring until later in early boot, which in turn causes the
+> > > RCU Tasks self-tests to hang in kernels built with CONFIG_PROVE_RCU=y,
+> > > which further causes the entire kernel to hang.  One fix would be to
+> > > make timers work during this time, but there are no known users of RCU
+> > > Tasks grace periods during that time, so no justification for the added
+> > > complexity.  Not yet, anyway.
+> > > 
+> > > This commit therefore moves the call to rcu_init_tasks_generic() from
+> > > kernel_init_freeable() to a core_initcall().  This works because the
+> > > timer and hrtimer kthreads are created at early_initcall() time.
+> > 
+> > Fixes: 49a17639508c3 ("softirq: Use a dedicated thread for timer wakeups on PREEMPT_RT.")
+> > ?
+> 
+> Quite possibly...  I freely confess that I was more focused on the fix
+> than on the bug's origin.  Would you be willing to try this commit and
+> its predecessor?
 
-When I see "prefer_acpi", my intuition tells that it is just a preference:
-"prefer ACPI, but may be native too". But I understood that the patch is ab=
-out
-"only ACPI and never native".
+Yes. Just verified.
+Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-The reasons I suggested "no_native":
-* Sort of consistent with "no_acpi"
-* Suggests that native won't work.
+> > I played with it and I can reproduce the issue with !RT + threadirqs but
+> > not with RT (which implies threadirqs).
+> > Is there anything in RT that avoids the problem?
+> 
+> Not that I know of, but then again I did not try it.  To your point,
+
+The change looks fine.
+
+> I do need to make a -rt rcutorture scenario.  TREE03 has been intended to
+> approximate this, and it uses the following Kconfig options:
+> 
+> ------------------------------------------------------------------------
+> 
+> CONFIG_SMP=y
+> CONFIG_NR_CPUS=16
+> CONFIG_PREEMPT_NONE=n
+> CONFIG_PREEMPT_VOLUNTARY=n
+> CONFIG_PREEMPT=y
+> #CHECK#CONFIG_PREEMPT_RCU=y
+> CONFIG_HZ_PERIODIC=y
+> CONFIG_NO_HZ_IDLE=n
+> CONFIG_NO_HZ_FULL=n
+> CONFIG_RCU_TRACE=y
+> CONFIG_HOTPLUG_CPU=y
+> CONFIG_RCU_FANOUT=2
+> CONFIG_RCU_FANOUT_LEAF=2
+> CONFIG_RCU_NOCB_CPU=n
+> CONFIG_DEBUG_LOCK_ALLOC=n
+> CONFIG_RCU_BOOST=y
+> CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
+> CONFIG_RCU_EXPERT=y
+
+You could enable CONFIG_PREEMPT_RT ;)
+CONFIG_PREEMPT_LAZY is probably also set a lot.
+
+That should be it.
+
+> ------------------------------------------------------------------------
+> 
+> And the following kernel-boot parameters:
+> 
+> ------------------------------------------------------------------------
+> 
+> rcutorture.onoff_interval=200 rcutorture.onoff_holdoff=30
+> rcutree.gp_preinit_delay=12
+> rcutree.gp_init_delay=3
+> rcutree.gp_cleanup_delay=3
+> rcutree.kthread_prio=2
+> threadirqs
+> rcutree.use_softirq=0
+> rcutorture.preempt_duration=10
+> 
+> ------------------------------------------------------------------------
+> 
+> Some of these are for RCU's benefit, but what should I change to more
+> closely approximate a typical real-time deployment?
+
+See above.
+
+> > Thank you for debugging and the patch. 
+> 
+> And to you for digging into it!
 
 Thanks.
+
+> 							Thanx, Paul
+
+Sebastian
