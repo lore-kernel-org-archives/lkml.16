@@ -1,76 +1,77 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E81B207669
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 08:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154DC207646
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 08:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738659058; cv=none; b=ggBLkTPeK+1f8oP5HkNarWw6+dQWjGgTKQYBaHYgroE1AbCdu0LgHIgOteMjWUxyUuZZ9bljSNj+sasoiJNQuWcOXGml3Q4RaiDMr4s9JZFmU0h9e0kyoIeOJfgNtyu/EQZuaT+JKxBrWmhv5jN2mbgYLQ9HSCMlOPOZwf2Zo4U=
+	t=1738659059; cv=none; b=u+E71kgWp2+xU0H0W9oeo7Dr9z0CRtXZ22ULFyGQvl9gEOlw/po0kFW9Bj1TEjruhTbAN1X7CDyZl5Dy6FigFdv0GPvH4zJfDzJ9hfgNsyX1DnyeMQEELpsvN1SVUuuq4jwHcEk/LX5evx6H7rinMSWrXdYJmJtll7m0EZEXh0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738659058; c=relaxed/simple;
-	bh=kqmMsjbCNiclb8j5uBxumVvyp3UHeWEC2xIcNL1SHNE=;
+	s=arc-20240116; t=1738659059; c=relaxed/simple;
+	bh=1Ycwyt/5fAWWZEZs5FhLsYPnTHEm+vCc2lxvvceXYOk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=N1bC72L9NZ7rgt5C2D5tKH3Y444XBSkFDoX1oR+7cDRgSxCKWAAC/1SGVtrWPTHR5MEDVWgUVsJsnZBQhhTrAzkGL5ljXk/KyY45SFtysVeB0sFTe/j7jJ7Q1pLK+uMsL79wZdvtnlhS4VX1kwzNqGAQFBNpD0jDSrgK3nYdBGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G3NVP4Bk; arc=none smtp.client-ip=209.85.128.49
+	 MIME-Version:Content-Type; b=hiXQjo4xSxkVgoG7H0/P1c/WK5m3omXgg+T78bHSEiflmwO+f5PVFkUr3L3cW6U1/gzNNoGLn8JQXYUZG4kJSTKy+mMmc65IwlyWIk+gl/NrpALuTIyxVU5O0wxX6ms5J9vZmDgS8fP+XSZF3A37hKiH9gQBLr7oVVu2qLzoY78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=px5PMI1D; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G3NVP4Bk"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4361e82e3c3so8053825e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 00:50:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="px5PMI1D"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-385db79aafbso257542f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 00:50:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738659054; x=1739263854; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1738659056; x=1739263856; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9SL4WrTFt01P5kb4nbA+mR/wAIuzdlMsYyVAk52AYWQ=;
-        b=G3NVP4Bk/vFi4d9MZxtyx+0yInbv5O3cVWBtJvGMBI2MhNo6C17PteyJSGezzqNbbi
-         U9YtRzwE8e8ZTjFO6b4mSSDKMbA1wtoJzJ9duJ3QXmaxKfiDICxedOeLp4jfFSycNJ5e
-         kn6bDBH65MSFzP8YZ01i0dBsxtt9dkZIdSnM7HZiWXSCs/QZIsFlOTRmVtE7We7v4xZJ
-         /SzYjbG212KorzFCV1ZHHJUUlBIvQ4sPE42Ie47Px8q1AXkxjNikwwv/oFSpy2NHTITT
-         pAUHKvqgHQ7qnP8XcVH6ggC9tQ3jWFAeBhcmEcsQArMsm4Wju/jZ9dEuxLcxgyLtO7rj
-         gPHA==
+        bh=Jpjq4HH/L303d8hbOgy1GctH27ZSA0LF9W5MJwsB/1w=;
+        b=px5PMI1D1bBb/KE/SH9gipn3mCjgEDIFxG268ZBW/1oNMfeJKhRHHbQS8A9LbCn+jD
+         jDw5wd57uzraXDeriXJzv8X/pYd41A66TS878md36497UTYzzzPTjqBbqJN5SsGhdafC
+         ndwiArqBuOAKyJc3skE1ffjc1iVg3PEpnmsbUp2BfsNOKOgiMU2tRsgGlXiEw5/UGPTZ
+         9esqPdgoAr0tTz5ib8VfoGIpbD+r7ufkxvFBid5CyKh4ho32dAR48bt/Kz5UdlWmXHRo
+         iMMropXEeuEug1BRn7qcryKJLIOCol9YXST6UHy31a9Mmang7F3lEuZ7tdfifdIgzQq7
+         SH4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738659054; x=1739263854;
+        d=1e100.net; s=20230601; t=1738659056; x=1739263856;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9SL4WrTFt01P5kb4nbA+mR/wAIuzdlMsYyVAk52AYWQ=;
-        b=pnSH7Xxz8/iQjPIbrE56TimpDefv88j8BdJMzpaxrYPDHZGN39hIK5MdE36A7PFv/m
-         zFLnI7DDXL5f+Zowq3SPZC9CEyoyZ3j9qv99VP+pBvOonDdB5G/s+fAuOUj7EYN+Bpf9
-         O0f4J1Wxcdov5ziwEKRV0mlBkkGbEMpsyNkp9Ykwlq1ATOunXaIN62dBOPIwXZrvR+nw
-         LqoIF+wVytyJhotPV9D9Tsun/y3kR1mMDTtgx1mrKp3p6fcH0/Qvy9PawP913Oqf2I5f
-         veKvC8Hn0vrgFa0+1fLxialcVWeZgbgTDs/tATxorkx+rQ8gLPifd3Ds7m5SixU2Fwju
-         gFeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWl7bDDVVOLXGQEgrbsTCK2Ilb9FLXWZxn6/jd290SouKm5kWLPfToNs+hwPdXFUg8/gPo/o0UN7+hi6BA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ0Otwku9r17RwRoJE2z+swFyZzgjYT9yK4NpYnittPA5/1Kpb
-	1HRyNLdpWVIAAsDJRRHInvQxYiBES1XPfztBMYSNyBFVojzV6MDKKK2yQiAcJ1s=
-X-Gm-Gg: ASbGncsqWnmCzaEK7/Tczq6BzmHVQTc0YFtqz1CExGat+9plhvzm2nLbEPUPGtYh/bB
-	ujWMKrV8Z/TguoLu/EdnOhs7SsAudUxVTSk2YCkqZMFe74qUwCmO3jI4VE8S+uizpL5HfyMs1/D
-	HVNCmMVlX3ftJZNCjgfOTTRhxgvG5/VbR31hrpSBliVtWyX/C+OkJt2KRunUomKe0UEWTheniBJ
-	5yF40pj7s16ZLjjht9JHp2kQJyden7Ip0XSpB8xgs+f3CnWZeA/K/1MAmq9v1v4TBz8GQNRkchl
-	AZZ9hCNkdJfENBNZ7aoZW6uM7RmWsN0=
-X-Google-Smtp-Source: AGHT+IEiM4BEwyj9kJjGaATYMGTVdtTyQJ6Gai0nJrlUHfZWE9a3z3Pca5QvAuf1g0u3xA6mvsDd9A==
-X-Received: by 2002:a05:6000:2a9:b0:38a:69a9:af95 with SMTP id ffacd0b85a97d-38da4e1c7a1mr784380f8f.7.1738659054614;
-        Tue, 04 Feb 2025 00:50:54 -0800 (PST)
+        bh=Jpjq4HH/L303d8hbOgy1GctH27ZSA0LF9W5MJwsB/1w=;
+        b=qxGvfNv2Av46+5wGeJhVrLIXehtW/QZERzjg1UUJ9SsL8fT6oLUNkl7ok2Fgr3LCm3
+         qfDrO/q+l+IBbhYqEkjv0n0zur6BpuRXFqv0sA1KzSlZz5LfhCI+z3ysSaezuRj9fwce
+         MV52TyF2ko1aiUNRFRaXTH0rsS9SZoedWu45Mth6wosmlZyVS68X30ePmA5kEaUCq0sN
+         4YZyR9ObESuxEl/FnMXVSfObcDtT1aPZKWcl+2tBPZhsgMHRlZNap2b2N5bnam5nS6jv
+         vgyN1Vp0MSI2230o2WUkA2djSj5t6Aov4/vX0kDrbUrKusYr91oOUdOcUViXrzgoB/1A
+         9m1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWKXmpRwqCYalqBxm2ar9OBraeVe0ozbBITpm9Sxc0zaDmuKZioh207j9TOlfKlq0NanhJmf2rV8+n9H5I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRnVsSn/IMnk+WeEo2ECefDQ3gGUK9Ss49cnCJgru7oDCEHLgv
+	OFsq8P8AQKvNv2ysklKRFKmhch8EoYkL7e8J7VmLA6Fo86L+sZYVQbe13lzyQqU=
+X-Gm-Gg: ASbGncsnnvTAuOFdnlDJadSe6eXhKf9GFk0WYI7US937zY7ihVPob35aeh25fWK5Wel
+	FOj0jZgNo36pGME7i2x1eHDEvmKbu3xYmRKnYl4slDstIStno6kVvvwT8JT7+qmEcnUnQiMLbns
+	lfUx327A8zwGHMY16tF9i13PvoBl/fgzYy6Xn1E+WUPB9y4XQgdDlS2k2tBLP0+30+qEKZFGD1P
+	4pnT/xP8XBLRzzNDyIZtXVsxDaoCmMi43Iai6pKYufd8yws4v6mk7QkFN5ikbk9kTBgCFMyS4gp
+	zPlL29vsHFPl5XBJNUhtQ0mPnXzMYOw=
+X-Google-Smtp-Source: AGHT+IHdiae6H+/UVJL8cfd8QClyqaqjeHMTsfDKILCpxZ9f0zfpd+1iofPbuWssQnGq4TD+3TOuRA==
+X-Received: by 2002:a05:6000:188e:b0:38a:615c:8266 with SMTP id ffacd0b85a97d-38c5a4ac5e1mr6208751f8f.1.1738659056201;
+        Tue, 04 Feb 2025 00:50:56 -0800 (PST)
 Received: from [127.0.1.1] ([178.197.218.144])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38daf27bbf5sm503066f8f.48.2025.02.04.00.50.53
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38daf27bbf5sm503066f8f.48.2025.02.04.00.50.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 00:50:54 -0800 (PST)
+        Tue, 04 Feb 2025 00:50:55 -0800 (PST)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- tudor.ambarus@linaro.org, andre.draszik@linaro.org, kernel-team@android.com, 
- willmcvicker@google.com, stable@vger.kernel.org
-In-Reply-To: <20250106-contrib-pg-pinctrl_gsacore_disable-v1-1-d3fc88a48aed@linaro.org>
-References: <20250106-contrib-pg-pinctrl_gsacore_disable-v1-1-d3fc88a48aed@linaro.org>
-Subject: Re: [PATCH] arm64: dts: exynos: gs101: disable pinctrl_gsacore
- node
-Message-Id: <173865905338.26600.2847324274342938346.b4-ty@linaro.org>
-Date: Tue, 04 Feb 2025 09:50:53 +0100
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+In-Reply-To: <20250117-gs101-simplefb-v4-0-a5b90ca2f917@linaro.org>
+References: <20250117-gs101-simplefb-v4-0-a5b90ca2f917@linaro.org>
+Subject: Re: [PATCH v4 0/4] Google Pixel 6 (simple) framebuffer support
+Message-Id: <173865905488.26600.14592491106010269073.b4-ty@linaro.org>
+Date: Tue, 04 Feb 2025 09:50:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,24 +79,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.14.2
 
 
-On Mon, 06 Jan 2025 14:57:46 +0000, Peter Griffin wrote:
-> gsacore registers are not accessible from normal world.
+On Fri, 17 Jan 2025 17:09:53 +0000, André Draszik wrote:
+> This series enables simple framebuffer support on Google Pixel 6 and
+> Pixel 6 Pro.
 > 
-> Disable this node, so that the suspend/resume callbacks
-> in the pinctrl driver don't cause a Serror attempting to
-> access the registers.
-> 
+> Even if simple-framebuffer is deprecated and DRM should be used
+> instead, having it available in DT is beneficial for several reasons at
+> this point in time (the phone uses an OLED display):
+> * energy consumption goes down significantly, as it changes from white
+>   (as left by bootloader) to black (linux console), and we generally
+>   don't run out of battery anymore when plugged into a USB port
+> * less of a burn-in effect I assume
+> * phone stays cooler due to reduced energy consumption by display
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: exynos: gs101: disable pinctrl_gsacore node
-      https://git.kernel.org/krzk/linux/c/168e24966f10ff635b0ec9728aa71833bf850ee5
+[1/4] dt-bindings: arm: google: add gs101-raven
+      https://git.kernel.org/krzk/linux/c/2f88cffbfe61a9e257aa6d9cf03e1b9567cfc910
+[2/4] arm64: dts: exynos: gs101-oriole: configure simple-framebuffer
+      https://git.kernel.org/krzk/linux/c/befbb62c61a5f5ef547355f2f726a0926916a12c
+[3/4] arm64: dts: exynos: gs101-oriole: move common Pixel6 & 6Pro parts into a .dtsi
+      https://git.kernel.org/krzk/linux/c/58dbafb73173a944657c4a0d480d2cce50bff2bd
+[4/4] arm64: dts: exynos: gs101-raven: add new board file
+      https://git.kernel.org/krzk/linux/c/825c4bfd5c526b6fd18c8ad8503761143c90a142
 
 Best regards,
 -- 
