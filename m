@@ -1,109 +1,163 @@
-Received: from mail-ua1-f73.google.com (mail-ua1-f73.google.com [209.85.222.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDC621C9E0
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 23:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AC520C034;
+	Tue,  4 Feb 2025 23:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738712209; cv=none; b=iNnzWcEhVGYNkVs11M24rBMRn9GqUn8q4NrkIz95EvzFZ7B0YDlV4vQ0r3prE+WONpXk4Pk5JffmiLX4PdEENEoGQ0hutD9hn4/cNklu/PuobZEOmyiSix7gq8LlfVSt75PrC0g+puyUNBsqvxbVrW8lyPzQ5kA0BZr0qvOx1Nk=
+	t=1738712256; cv=none; b=KBVSDnKtIMNM36wIX4OQ5EGwWBFu8C32DaU3ogJGLkiWbUoYOSTh84vFbfOolq2j/2C8GCyYCKkKC82Y6gFp3cG2xeA4wP5L+cKSaycbtnHE8NG8+YUuWdYl8wysD0K+uzN6P+ybUkdCaLpmTm4JmG1jYysTBQElXhG5wpgO28s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738712209; c=relaxed/simple;
-	bh=qpfQTDheYUA9fYCH8Nr2dmrMbuSUIH8GoGeahli4TyA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BelBTtHY1ku94N2QZ7DoODdmB1D3zbFhgwc+2z1r2DzegDo1pSM1kB4U0ZMgwI9HhWKuWzHzYdYg67MU9EOMPgJnA/VylJgwwok4UnsYsnJJdiMJ1GNKaN1b9uFldT0b1lcHpuGHcGIdePp/7jscGRq/3QnFO4oM4fFH201v70o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--royluo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3AixAuJx; arc=none smtp.client-ip=209.85.222.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--royluo.bounces.google.com
+	s=arc-20240116; t=1738712256; c=relaxed/simple;
+	bh=vAY8VLfiDAEQkW2QlXq5vU119DGdr5y1FVx5inPsSCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jiGAocK+tW3qfHabs3f6Ha2Rs8+nOgYgT7Wuj57GR5gdVR3PdtWbchDcwh8F7kdU+DN8uajHrvRaRw7duqZQgKDc9tTARDbzIO4HRtBCgm04vobMckbi2S3qwIZVtrs3YR14XD6PRHpbrR7Y9HfD33Q1K6Wtu2K/Zi39712qYmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VKwivGzI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3AixAuJx"
-Received: by mail-ua1-f73.google.com with SMTP id a1e0cc1a2514c-85c62728546so838902241.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 15:36:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738712207; x=1739317007; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EgtkKatdG0S9Pe613E3mNyAnYsjwJSKIyXvHCOEHLD8=;
-        b=3AixAuJxD34h4yxa5q/NFruN2WwfMVfgXo+h5XYaTBhM1/yQpNTIx4IvdPedAJzgRA
-         6A9To8r1a2kmKDBsk+xzE10/u+NmabNKM87MUNjBFEq7TzrP/B/avp5/P3plOa+yg2yU
-         JTHeSr9dVJ1s1LyI5gx2XJ0VhLgqULEKbDTFaMGkiMnYUjMfmrem2cr/Tyr/8yTHAY9L
-         h/2IIN4Mkd5s26PT7xBlagzKpQZht9+WzMMwQ2F4cabKIeYh7tf4bvmESV73yzR9kiUZ
-         fomqJIEfortX0djyD8B7MI2UC/pbQZAxNHWVwQRgfgKM6Oq/I4MAT7QoqmuvOGvB8QTj
-         74xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738712207; x=1739317007;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EgtkKatdG0S9Pe613E3mNyAnYsjwJSKIyXvHCOEHLD8=;
-        b=Gt7dHL8JHTL848do4WBP7PsCbKMbfbpx1WEI9bhSZYi7FxoIXe8cgSvdobEPVWcats
-         SlKzWw/MJ4Y+ph29xi0Hhd1xgLBsNMN30ohUttjmZ/4F2tOvJOVpS0pweaE8pkWcKW6m
-         blul9nFKyBJe1Z0D7CX4ouzm2U+G1I0zZIQhVlsjDTPBqvGDwThAyW/LPwcZ+4lnH0H/
-         ju3oZoHJQq99BWbyLlv1Ynx21V3HA1xiw9bNaGQB9GjEgsxOjyyMGQN+4N/5MG1iuxpW
-         0WHHx9I6zkdakW54JG3T6XRvN+LXm3HhizmZztpLSvdIrG2oB6+VpHeJUxQCMsaCsErb
-         lVwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZuDHSdTiEarE8id+WuN7/4pDTch3pSjC+fqKLx82RXZLoivOsKz7QMJeT2rfj1hOsEMHJxYUjwuPLmgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSoThmohgf6jRBcx6DeXPhIgqJgg6GNCof29Q58drzRPpQ8k2j
-	NMjbDeMhwVwU3zcQqSRfQ2jC2H3q2wucP3LCXcF0jKQS8hULQYnu6kXud48VLpI0bHlbt8F0lIn
-	mNA==
-X-Google-Smtp-Source: AGHT+IHLmJQMOHisVnRtKMgv2ybXEZeJENK07fK0AuOA8MPyXUxQYl+xPhHPKdpsSt0+Iplrr5S2y+x6ejs=
-X-Received: from vsae9.prod.google.com ([2002:a05:6102:349:b0:4af:e39b:2b2])
- (user=royluo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6102:2b8d:b0:4af:ed5a:b697
- with SMTP id ada2fe7eead31-4ba478e696cmr962885137.13.1738712206734; Tue, 04
- Feb 2025 15:36:46 -0800 (PST)
-Date: Tue,  4 Feb 2025 23:36:42 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VKwivGzI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79B77C4CEDF;
+	Tue,  4 Feb 2025 23:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738712255;
+	bh=vAY8VLfiDAEQkW2QlXq5vU119DGdr5y1FVx5inPsSCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VKwivGzIB7KSq8KgreBnpiCDIjWvwHPgeYknYhX3Kg9ltR4fZRZzNRDG51LxUu/Jc
+	 gVAvk+DnI1G7ghRdVUhcmgy+fSsdLf9bcno5Bv7v7jXBceCtmhzs5AUY1sUDv5nQmH
+	 p4lI5fHO8QVFY2PQ+XVxcFx55XQ94tgxGrBuADzVofn3/QM+FgFH0XGdyWdIxNLj3C
+	 w6M0DUGXhf9Dp9h8DNfP3IoPo9dhQE15o1JgqD6yx88avgOIPGHR1pAuPwJdJIDIKO
+	 cz2nGON1ELjxaDLMl0fywiP1a4s5FWAYHi+4z2zPXVJz8WFNQ9ABzFYk8RdectrZY/
+	 qjS4w3OSQueIA==
+Date: Wed, 5 Feb 2025 08:37:30 +0900
+From: William Breathitt Gray <wbg@kernel.org>
+To: =?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>
+Cc: linux-iio@vger.kernel.org,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org, timestamp@lists.linux.dev,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dipen Patel <dipenp@nvidia.com>, dlechner@baylibre.com
+Subject: Re: [Q] Frequency & duty cycle measurement?
+Message-ID: <Z6KkusvLFPcNvEfl@ishi>
+References: <f2ec8a55-42ad-498a-b793-072444dcb92e@prolan.hu>
+ <Z5efcokgHix-k3lW@ishi>
+ <dffc0f18-799a-4fc7-a6b5-2fa270e1fc58@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250204233642.666991-1-royluo@google.com>
-Subject: [PATCH v2] usb: gadget: core: flush gadget workqueue after device removal
-From: Roy Luo <royluo@google.com>
-To: royluo@google.com, Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	andre.draszik@linaro.org, elder@kernel.org, stern@rowland.harvard.edu, 
-	crwulff@gmail.com, paul@crapouillou.net, jkeeping@inmusicbrands.com, 
-	yuanlinyu@hihonor.com, sumit.garg@linaro.org, balbi@ti.com
-Cc: stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2a9wQicw+mxwAn3v"
+Content-Disposition: inline
+In-Reply-To: <dffc0f18-799a-4fc7-a6b5-2fa270e1fc58@prolan.hu>
 
-device_del() can lead to new work being scheduled in gadget->work
-workqueue. This is observed, for example, with the dwc3 driver with the
-following call stack:
-  device_del()
-    gadget_unbind_driver()
-      usb_gadget_disconnect_locked()
-        dwc3_gadget_pullup()
-	  dwc3_gadget_soft_disconnect()
-	    usb_gadget_set_state()
-	      schedule_work(&gadget->work)
 
-Move flush_work() after device_del() to ensure the workqueue is cleaned
-up.
+--2a9wQicw+mxwAn3v
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 5702f75375aa9 ("usb: gadget: udc-core: move sysfs_notify() to a workqueue")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Roy Luo <royluo@google.com>
----
- drivers/usb/gadget/udc/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Jan 30, 2025 at 02:59:20PM +0100, Cs=F3k=E1s Bence wrote:
+> Hi William,
+>=20
+> On 2025. 01. 27. 16:00, William Breathitt Gray wrote:
+> > If RA and RB are provided as a memory buffer on your device, you can
+> > instead expose them via DEFINE_COUNTER_ARRAY_CAPTURE() such as the
+> > ti-ecap-capture driver does, then perform your userspace computations
+> > by utilizing those respective "capture" array attribute values (via
+> > chrdev like the example above or alternatively via sysfs).
+>=20
+> Thanks for your extensive explanation! With DEFINE_COUNTER_ARRAY_CAPTURE(=
+) I
+> was able to expose RA and RB as
+> `/sys/bus/counter/devices/counter0/count0/capture{0,1}`, and could verify
+> that by replacing `devmem` calls with read()-reopen(), our PoC code still
+> works. Now I want to use the chardev interface, but I couldn't find how to
+> set up the watches appropriately. So far I have:
+>=20
+> 	{
+> 		.component.type =3D COUNTER_COMPONENT_EXTENSION,
+> 		// also tried COUNTER_COMPONENT_COUNT
+> 		.component.scope =3D COUNTER_SCOPE_COUNT,
+> 		.component.parent =3D 0,
+> 		.component.id =3D X, // also tried this instead:
+> 		// .channel =3D X,
+> 		.event =3D COUNTER_EVENT_CAPTURE,
+> 	},
+>=20
+> However, with this, the first read() never comes back.
+>=20
+> Bence
 
-diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
-index a6f46364be65..4b3d5075621a 100644
---- a/drivers/usb/gadget/udc/core.c
-+++ b/drivers/usb/gadget/udc/core.c
-@@ -1543,8 +1543,8 @@ void usb_del_gadget(struct usb_gadget *gadget)
- 
- 	kobject_uevent(&udc->dev.kobj, KOBJ_REMOVE);
- 	sysfs_remove_link(&udc->dev.kobj, "gadget");
--	flush_work(&gadget->work);
- 	device_del(&gadget->dev);
-+	flush_work(&gadget->work);
- 	ida_free(&gadget_id_numbers, gadget->id_number);
- 	cancel_work_sync(&udc->vbus_work);
- 	device_unregister(&udc->dev);
+Hi Bence,
 
-base-commit: f286757b644c226b6b31779da95a4fa7ab245ef5
--- 
-2.48.1.362.g079036d154-goog
+Are you still having trouble with this? Is "X" the
+capture{0,1}_component_id value?
 
+I apologize, the Generic Counter character device interface is
+underdocumented so it can be a bit confusing at first; I'll submit a
+patch improving the documentation later this cycle when I get a chance.
+For now, let's walk through how to create an appropriate Counter watch
+for the capture extension components you have.
+
+The first step is to decide which event we'll monitor and on which
+channel: we want to monitor Capture events so that's
+COUNTER_EVENT_CAPTURE, and we want event channel 0 (n.b. 0 because
+that's the channel parameter value passed to counter_push_event() in the
+driver).
+
+The next step is to choose the components you wish to watch: Count 0's
+capture0 and capture1 extensions. So type is COUNTER_COMPONENT_EXTENSION
+because we want to watch extensions, scope is COUNTER_SCOPE_COUNT
+because we want Count extensions, and parent is 0 because we want
+Count 0's Count extensions.
+
+Finally, we need to set the component id for each extension. You get a
+particular component's id by reading the respective *_component_id sysfs
+attribute: so for capture{0,1} you would read capture{0,1}_component_id
+respectively. These component id values potentially can change with
+future driver updates, so for robustness your userspace application
+should read the respective *_component_id sysfs attribute itself rather
+than hardcoding the component id in the Counter watch.
+
+However, for the sake of simplicity in this example, I'll assume the
+component ids are 42 and 43 respectively for capture0 and capture1. That
+gives us the following two watches:
+
+        {
+                .component.type =3D COUNTER_COMPONENT_EXTENSION,
+                .component.scope =3D COUNTER_SCOPE_COUNT,
+                .component.parent =3D 0,
+                .component.id =3D 42,
+                .event =3D COUNTER_EVENT_CAPTURE,
+                .channel =3D 0,
+        },
+        {
+                .component.type =3D COUNTER_COMPONENT_EXTENSION,
+                .component.scope =3D COUNTER_SCOPE_COUNT,
+                .component.parent =3D 0,
+                .component.id =3D 43,
+                .event =3D COUNTER_EVENT_CAPTURE,
+                .channel =3D 0,
+        },
+
+Does this resolve your chardev read issue? If you're still having
+troubling, just let me know and we can troubleshoot further to figure
+out what's going on.
+
+William Breathitt Gray
+
+--2a9wQicw+mxwAn3v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZ6KkugAKCRC1SFbKvhIj
+KyJaAQCCZ5Mnusdt0BDtO1DMxjwY6w6GX5ZblIIVbjUWAzAvIQD9E7WICJ4aGJSf
+5ohM1mSLRyf1qHJCM1IvPkVSD/qZrwg=
+=2fNK
+-----END PGP SIGNATURE-----
+
+--2a9wQicw+mxwAn3v--
