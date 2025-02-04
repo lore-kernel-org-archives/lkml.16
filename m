@@ -1,16 +1,16 @@
 Received: from mblankhorst.nl (lankhorst.se [141.105.120.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4779218ADB
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:21:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD57A218ACC
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:21:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.105.120.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738675319; cv=none; b=eL4tFMR2kqZ5d0szLzFOqGbsfxA7LtR1LtgMsEcpzUUI8ITJWVG9Nn51tsDq8vDkIvcOsxN3AHPLCf1kjOdxeTtMWun4ACywZtpJ5OSmRb+oFDabIFKF2B9QPNs2t8nxMLe1QLCxbOaFJwqdDZ57evkjyvs3HkqxUDNpGmT6J8w=
+	t=1738675318; cv=none; b=pGkvL6TQTDtvvz5PxyUYr9hXceQKXLlxzLW7m6nL+XCEF9CS4Y9kqXxJ3PUE8iItoQ6yLTrR+VoYM4tzpyMjzomYuucEp5ABsfIphxmBy4wDoUrpq+ZPwmUM+NEKLFEyft4jhumic0D6JM36OBDt5C49hFpIx6Pzu19b0z0q/k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738675319; c=relaxed/simple;
-	bh=lLY7isZ2WSpKh9qUL9fRA9iy+6gQ/Zd09FdN8Dnhj9c=;
+	s=arc-20240116; t=1738675318; c=relaxed/simple;
+	bh=g/FLQZ2IZsKfe3SQKPlerlwe4H9WG7oN+26lrg21qmk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EmgziAKrvMmXvF8MrMrpLtC1a3FkVPeUx9Ag0D8sWVNEM0Gt8Q4CEC0vf8McvdQkg5JERmE4ejbf9+18I502OIXvfaAOJTRgpBFOJxVuWsB2N6Is/fM736zpiC2hVsyOlGsagg7LsMXNOPkl2IsnqmWQirtqNtpi1prMIkM4GnU=
+	 MIME-Version; b=VtUQEx4tJezcvIB2120b3nB9mfCnQWgmu5OG0gYiQceT6vEOZ+KtTQ0uMYgxsjN3oP9P853v6RhdhOD6JW/Byq0JVBoCshewujkYjLZgvGyWKidUJFT1EW7qHoV9LJYq5momRuSGmwiWS8cOe6IXm2Lnx6l+RNs8rf5NYDFBx2o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se; spf=none smtp.mailfrom=mblankhorst.nl; arc=none smtp.client-ip=141.105.120.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mblankhorst.nl
@@ -25,9 +25,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	Will Deacon <will@kernel.org>,
 	Waiman Long <longman@redhat.com>,
 	Boqun Feng <boqun.feng@gmail.com>
-Subject: [PATCH-resent-to-correct-ml 1/8] header/cleanup.h: Add _init_args to DEFINE_LOCK_GUARD_1(_COND)
-Date: Tue,  4 Feb 2025 14:22:30 +0100
-Message-ID: <20250204132238.162608-2-dev@lankhorst.se>
+Subject: [PATCH-resent-to-correct-ml 8/8] drm/xe/gt: Convert to xe_force_wake guard helpers
+Date: Tue,  4 Feb 2025 14:22:37 +0100
+Message-ID: <20250204132238.162608-9-dev@lankhorst.se>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250204132238.162608-1-dev@lankhorst.se>
 References: <20250204132238.162608-1-dev@lankhorst.se>
@@ -39,115 +39,440 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This makes it possible to use the lock guards for guards that need
-extra arguments.
-
-I've been attempting to add a guard to xe_force_wake handling, but that
-required an extra argument specifying the domain. For nested spinlock
-handling, it could also be beneficial to be able to do something like
-this.
-
-For example:
-DEFINE_LOCK_GUARD_1_COND(spinlock_irqsave, _nested,
-			 spin_lock_irqsave_nested(_T->lock, _T->flags, nest),
-			 unsigned nest);
-
-guard(spinlock_irqsave_nested, &lock, SINGLE_DEPTH_NESTING);
-
-The first optional argument in DEFINE_LOCK_GUARD_1 is now used for the struct members,
-the remainder goes to init_args to allow the same usage in the base case..
-
-I'm abusing the preprocessor to add an extra meaning to the first optional
-argument is done by creating a __DO_DEFINE_LOCK_GUARD_1, and passing
-__VA_ARGS__ not ##__VA_ARGS__ to it to ensure _struct_members is empty
-when not passed explicitly.
-
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Maarten Lankhorst <dev@lankhorst.se>
 ---
- include/linux/cleanup.h | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/xe/xe_gt.c | 216 +++++++++++++------------------------
+ 1 file changed, 74 insertions(+), 142 deletions(-)
 
-diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-index ec00e3f7af2b3..dbaf02447f206 100644
---- a/include/linux/cleanup.h
-+++ b/include/linux/cleanup.h
-@@ -349,19 +349,23 @@ _label:									\
-  * locks that don't have a native type (eg. RCU, preempt) or those that need a
-  * 'fat' pointer (eg. spin_lock_irqsave).
-  *
-- * DEFINE_LOCK_GUARD_0(name, lock, unlock, ...)
-- * DEFINE_LOCK_GUARD_1(name, type, lock, unlock, ...)
-- * DEFINE_LOCK_GUARD_1_COND(name, ext, condlock)
-+ * DEFINE_LOCK_GUARD_0(name, lock, unlock, _lock_members...)
-+ * DEFINE_LOCK_GUARD_1(name, type, lock, unlock, (opt)_lock_members, _init_args...)
-+ * DEFINE_LOCK_GUARD_1_COND(name, ext, condlock, _init_args...)
-  *
-  * will result in the following type:
-  *
-  *   typedef struct {
-  *	type *lock;		// 'type := void' for the _0 variant
-- *	__VA_ARGS__;
-+ *	_lock_members;		// use ; as separator to add multiple members
-  *   } class_##name##_t;
-  *
-  * As above, both _lock and _unlock are statements, except this time '_T' will
-  * be a pointer to the above struct.
-+ *
-+ * For DEFINE_LOCK_GUARD_1 and DEFINE_LOCK_GUARD_1_COND, it adds all
-+ * _init_args as local variables available to the lock statement.
-+ * They need to be passed to all guard() functions as extra argument.
+diff --git a/drivers/gpu/drm/xe/xe_gt.c b/drivers/gpu/drm/xe/xe_gt.c
+index 943bab94119fa..c71041087a735 100644
+--- a/drivers/gpu/drm/xe/xe_gt.c
++++ b/drivers/gpu/drm/xe/xe_gt.c
+@@ -98,29 +98,24 @@ void xe_gt_sanitize(struct xe_gt *gt)
+ 
+ static void xe_gt_enable_host_l2_vram(struct xe_gt *gt)
+ {
+-	unsigned int fw_ref;
+ 	u32 reg;
+ 
+ 	if (!XE_WA(gt, 16023588340))
+ 		return;
+ 
+-	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FW_GT);
+-	if (!fw_ref)
+-		return;
++	scoped_guard(xe_force_wake_get, gt_to_fw(gt), XE_FW_GT) {
++		if (!xe_gt_is_media_type(gt)) {
++			reg = xe_gt_mcr_unicast_read_any(gt, XE2_GAMREQSTRM_CTRL);
++			reg |= CG_DIS_CNTLBUS;
++			xe_gt_mcr_multicast_write(gt, XE2_GAMREQSTRM_CTRL, reg);
++		}
+ 
+-	if (!xe_gt_is_media_type(gt)) {
+-		reg = xe_gt_mcr_unicast_read_any(gt, XE2_GAMREQSTRM_CTRL);
+-		reg |= CG_DIS_CNTLBUS;
+-		xe_gt_mcr_multicast_write(gt, XE2_GAMREQSTRM_CTRL, reg);
++		xe_gt_mcr_multicast_write(gt, XEHPC_L3CLOS_MASK(3), 0x3);
+ 	}
+-
+-	xe_gt_mcr_multicast_write(gt, XEHPC_L3CLOS_MASK(3), 0x3);
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+ }
+ 
+ static void xe_gt_disable_host_l2_vram(struct xe_gt *gt)
+ {
+-	unsigned int fw_ref;
+ 	u32 reg;
+ 
+ 	if (!XE_WA(gt, 16023588340))
+@@ -129,15 +124,11 @@ static void xe_gt_disable_host_l2_vram(struct xe_gt *gt)
+ 	if (xe_gt_is_media_type(gt))
+ 		return;
+ 
+-	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FW_GT);
+-	if (!fw_ref)
+-		return;
+-
+-	reg = xe_gt_mcr_unicast_read_any(gt, XE2_GAMREQSTRM_CTRL);
+-	reg &= ~CG_DIS_CNTLBUS;
+-	xe_gt_mcr_multicast_write(gt, XE2_GAMREQSTRM_CTRL, reg);
+-
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
++	scoped_guard(xe_force_wake_get, gt_to_fw(gt), XE_FW_GT) {
++		reg = xe_gt_mcr_unicast_read_any(gt, XE2_GAMREQSTRM_CTRL);
++		reg &= ~CG_DIS_CNTLBUS;
++		xe_gt_mcr_multicast_write(gt, XE2_GAMREQSTRM_CTRL, reg);
++	}
+ }
+ 
+ /**
+@@ -407,17 +398,12 @@ static void dump_pat_on_error(struct xe_gt *gt)
+ 
+ static int gt_fw_domain_init(struct xe_gt *gt)
+ {
+-	unsigned int fw_ref;
+ 	int err;
+ 
+-	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FW_GT);
+-	if (!fw_ref)
+-		return -ETIMEDOUT;
+-
+ 	if (!xe_gt_is_media_type(gt)) {
+ 		err = xe_ggtt_init(gt_to_tile(gt)->mem.ggtt);
+ 		if (err)
+-			goto err_force_wake;
++			goto err_pat;
+ 		if (IS_SRIOV_PF(gt_to_xe(gt)))
+ 			xe_lmtt_init(&gt_to_tile(gt)->sriov.pf.lmtt);
+ 	}
+@@ -430,63 +416,53 @@ static int gt_fw_domain_init(struct xe_gt *gt)
+ 
+ 	err = xe_hw_engines_init_early(gt);
+ 	if (err)
+-		goto err_force_wake;
++		goto err_pat;
+ 
+ 	err = xe_hw_engine_class_sysfs_init(gt);
+ 	if (err)
+-		goto err_force_wake;
++		goto err_pat;
+ 
+ 	/* Initialize CCS mode sysfs after early initialization of HW engines */
+ 	err = xe_gt_ccs_mode_sysfs_init(gt);
+ 	if (err)
+-		goto err_force_wake;
++		goto err_pat;
+ 
+ 	/*
+ 	 * Stash hardware-reported version.  Since this register does not exist
+ 	 * on pre-MTL platforms, reading it there will (correctly) return 0.
+ 	 */
+ 	gt->info.gmdid = xe_mmio_read32(&gt->mmio, GMD_ID);
+-
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+ 	return 0;
+ 
+-err_force_wake:
++err_pat:
+ 	dump_pat_on_error(gt);
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+ 
+ 	return err;
+ }
+ 
+ static int all_fw_domain_init(struct xe_gt *gt)
+ {
+-	unsigned int fw_ref;
+ 	int err;
+ 
+-	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
+-	if (!xe_force_wake_ref_has_domain(fw_ref, XE_FORCEWAKE_ALL)) {
+-		err = -ETIMEDOUT;
+-		goto err_force_wake;
+-	}
+-
+ 	xe_gt_mcr_set_implicit_defaults(gt);
+ 	xe_reg_sr_apply_mmio(&gt->reg_sr, gt);
+ 
+ 	err = xe_gt_clock_init(gt);
+ 	if (err)
+-		goto err_force_wake;
++		return err;
+ 
+ 	xe_mocs_init(gt);
+ 	err = xe_execlist_init(gt);
+ 	if (err)
+-		goto err_force_wake;
++		return err;
+ 
+ 	err = xe_hw_engines_init(gt);
+ 	if (err)
+-		goto err_force_wake;
++		return err;
+ 
+ 	err = xe_uc_init_post_hwconfig(&gt->uc);
+ 	if (err)
+-		goto err_force_wake;
++		return err;
+ 
+ 	if (!xe_gt_is_media_type(gt)) {
+ 		/*
+@@ -497,10 +473,8 @@ static int all_fw_domain_init(struct xe_gt *gt)
+ 
+ 			gt->usm.bb_pool = xe_sa_bo_manager_init(gt_to_tile(gt),
+ 								IS_DGFX(xe) ? SZ_1M : SZ_512K, 16);
+-			if (IS_ERR(gt->usm.bb_pool)) {
+-				err = PTR_ERR(gt->usm.bb_pool);
+-				goto err_force_wake;
+-			}
++			if (IS_ERR(gt->usm.bb_pool))
++				return PTR_ERR(gt->usm.bb_pool);
+ 		}
+ 	}
+ 
+@@ -508,15 +482,13 @@ static int all_fw_domain_init(struct xe_gt *gt)
+ 		struct xe_tile *tile = gt_to_tile(gt);
+ 
+ 		tile->migrate = xe_migrate_init(tile);
+-		if (IS_ERR(tile->migrate)) {
+-			err = PTR_ERR(tile->migrate);
+-			goto err_force_wake;
+-		}
++		if (IS_ERR(tile->migrate))
++			return PTR_ERR(tile->migrate);
+ 	}
+ 
+ 	err = xe_uc_init_hw(&gt->uc);
+ 	if (err)
+-		goto err_force_wake;
++		return err;
+ 
+ 	/* Configure default CCS mode of 1 engine with all resources */
+ 	if (xe_gt_ccs_mode_enabled(gt)) {
+@@ -532,14 +504,7 @@ static int all_fw_domain_init(struct xe_gt *gt)
+ 		xe_gt_sriov_pf_init_hw(gt);
+ 	}
+ 
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+-
+ 	return 0;
+-
+-err_force_wake:
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+-
+-	return err;
+ }
+ 
+ /*
+@@ -548,31 +513,25 @@ static int all_fw_domain_init(struct xe_gt *gt)
   */
+ int xe_gt_init_hwconfig(struct xe_gt *gt)
+ {
+-	unsigned int fw_ref;
+ 	int err;
  
- #define __DEFINE_UNLOCK_GUARD(_name, _type, _unlock, ...)		\
-@@ -381,8 +385,8 @@ static inline void *class_##_name##_lock_ptr(class_##_name##_t *_T)	\
+-	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FW_GT);
+-	if (!fw_ref)
+-		return -ETIMEDOUT;
+-
+-	xe_gt_mcr_init_early(gt);
+-	xe_pat_init(gt);
+-
+-	err = xe_uc_init(&gt->uc);
+-	if (err)
+-		goto out_fw;
++	scoped_cond_guard(xe_force_wake_get, return -ETIMEDOUT, gt_to_fw(gt), XE_FW_GT) {
++		xe_gt_mcr_init_early(gt);
++		xe_pat_init(gt);
+ 
+-	err = xe_uc_init_hwconfig(&gt->uc);
+-	if (err)
+-		goto out_fw;
++		err = xe_uc_init(&gt->uc);
++		if (err)
++			return err;
+ 
+-	xe_gt_topology_init(gt);
+-	xe_gt_mcr_init(gt);
+-	xe_gt_enable_host_l2_vram(gt);
++		err = xe_uc_init_hwconfig(&gt->uc);
++		if (err)
++			return err;
+ 
+-out_fw:
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+-	return err;
++		xe_gt_topology_init(gt);
++		xe_gt_mcr_init(gt);
++		xe_gt_enable_host_l2_vram(gt);
++	}
++	return 0;
  }
  
+ int xe_gt_init(struct xe_gt *gt)
+@@ -597,7 +556,8 @@ int xe_gt_init(struct xe_gt *gt)
+ 	if (err)
+ 		goto err;
  
--#define __DEFINE_LOCK_GUARD_1(_name, _type, _lock)			\
--static inline class_##_name##_t class_##_name##_constructor(_type *l)	\
-+#define __DEFINE_LOCK_GUARD_1(_name, _type, _lock, ...)			\
-+static inline class_##_name##_t class_##_name##_constructor(_type *l, ##__VA_ARGS__)	\
- {									\
- 	class_##_name##_t _t = { .lock = l }, *_T = &_t;		\
- 	_lock;								\
-@@ -398,23 +402,27 @@ static inline class_##_name##_t class_##_name##_constructor(void)	\
- 	return _t;							\
+-	err = gt_fw_domain_init(gt);
++	scoped_cond_guard(xe_force_wake_get, err = -ETIMEDOUT, gt_to_fw(gt), XE_FW_GT)
++		err = gt_fw_domain_init(gt);
+ 	if (err)
+ 		goto err;
+ 
+@@ -611,7 +571,8 @@ int xe_gt_init(struct xe_gt *gt)
+ 
+ 	xe_force_wake_init_engines(gt, gt_to_fw(gt));
+ 
+-	err = all_fw_domain_init(gt);
++	scoped_cond_guard(xe_force_wake_get, err = -ETIMEDOUT, gt_to_fw(gt), XE_FORCEWAKE_ALL)
++		err = all_fw_domain_init(gt);
+ 	if (err)
+ 		goto err;
+ 
+@@ -767,7 +728,6 @@ static int do_gt_restart(struct xe_gt *gt)
+ 
+ static int gt_reset(struct xe_gt *gt)
+ {
+-	unsigned int fw_ref;
+ 	int err;
+ 
+ 	if (xe_device_wedged(gt_to_xe(gt)))
+@@ -788,29 +748,24 @@ static int gt_reset(struct xe_gt *gt)
+ 
+ 	xe_gt_sanitize(gt);
+ 
+-	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
+-	if (!xe_force_wake_ref_has_domain(fw_ref, XE_FORCEWAKE_ALL)) {
+-		err = -ETIMEDOUT;
+-		goto err_out;
+-	}
+-
+-	xe_uc_gucrc_disable(&gt->uc);
+-	xe_uc_stop_prepare(&gt->uc);
+-	xe_gt_pagefault_reset(gt);
++	scoped_cond_guard(xe_force_wake_get, err = -ETIMEDOUT; goto err_out, gt_to_fw(gt), XE_FORCEWAKE_ALL) {
++		xe_uc_gucrc_disable(&gt->uc);
++		xe_uc_stop_prepare(&gt->uc);
++		xe_gt_pagefault_reset(gt);
+ 
+-	xe_uc_stop(&gt->uc);
++		xe_uc_stop(&gt->uc);
+ 
+-	xe_gt_tlb_invalidation_reset(gt);
++		xe_gt_tlb_invalidation_reset(gt);
+ 
+-	err = do_gt_reset(gt);
+-	if (err)
+-		goto err_out;
++		err = do_gt_reset(gt);
++		if (err)
++			goto err_out;
+ 
+-	err = do_gt_restart(gt);
+-	if (err)
+-		goto err_out;
++		err = do_gt_restart(gt);
++		if (err)
++			goto err_out;
++	}
+ 
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+ 	xe_pm_runtime_put(gt_to_xe(gt));
+ 
+ 	xe_gt_info(gt, "reset done\n");
+@@ -818,7 +773,6 @@ static int gt_reset(struct xe_gt *gt)
+ 	return 0;
+ 
+ err_out:
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+ 	XE_WARN_ON(xe_uc_start(&gt->uc));
+ err_fail:
+ 	xe_gt_err(gt, "reset failed (%pe)\n", ERR_PTR(err));
+@@ -850,44 +804,32 @@ void xe_gt_reset_async(struct xe_gt *gt)
+ 
+ void xe_gt_suspend_prepare(struct xe_gt *gt)
+ {
+-	unsigned int fw_ref;
+-
+-	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
++	guard(xe_force_wake)(gt_to_fw(gt), XE_FORCEWAKE_ALL);
+ 
+ 	xe_uc_stop_prepare(&gt->uc);
+-
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
  }
  
--#define DEFINE_LOCK_GUARD_1(_name, _type, _lock, _unlock, ...)		\
-+#define __DO_DEFINE_LOCK_GUARD_1(_name, _type, _lock, _unlock, _lock_members, _init_args...) \
- __DEFINE_CLASS_IS_CONDITIONAL(_name, false);				\
--__DEFINE_UNLOCK_GUARD(_name, _type, _unlock, __VA_ARGS__)		\
--__DEFINE_LOCK_GUARD_1(_name, _type, _lock)
-+__DEFINE_UNLOCK_GUARD(_name, _type, _unlock, _lock_members)		\
-+__DEFINE_LOCK_GUARD_1(_name, _type, _lock, ##_init_args)
-+
-+/* Call __DO_DEFINE_LOCK_GUARD_1 here because of the 2 optional arguments */
-+#define DEFINE_LOCK_GUARD_1(_name, _type, _lock, _unlock, ...)		\
-+	__DO_DEFINE_LOCK_GUARD_1(_name, _type, _lock, _unlock, __VA_ARGS__)
+ int xe_gt_suspend(struct xe_gt *gt)
+ {
+-	unsigned int fw_ref;
+-	int err;
++	int err = -ETIMEDOUT;
  
- #define DEFINE_LOCK_GUARD_0(_name, _lock, _unlock, ...)			\
- __DEFINE_CLASS_IS_CONDITIONAL(_name, false);				\
- __DEFINE_UNLOCK_GUARD(_name, void, _unlock, __VA_ARGS__)		\
- __DEFINE_LOCK_GUARD_0(_name, _lock)
+ 	xe_gt_dbg(gt, "suspending\n");
+ 	xe_gt_sanitize(gt);
  
--#define DEFINE_LOCK_GUARD_1_COND(_name, _ext, _condlock)		\
-+#define DEFINE_LOCK_GUARD_1_COND(_name, _ext, _condlock, ...)		\
- 	__DEFINE_CLASS_IS_CONDITIONAL(_name##_ext, true);		\
- 	EXTEND_CLASS(_name, _ext,					\
- 		     ({ class_##_name##_t _t = { .lock = l }, *_T = &_t;\
- 		        if (_T->lock && !(_condlock)) _T->lock = NULL;	\
- 			_t; }),						\
--		     typeof_member(class_##_name##_t, lock) l)		\
-+		     typeof_member(class_##_name##_t, lock) l, ##__VA_ARGS__)		\
- 	static inline void * class_##_name##_ext##_lock_ptr(class_##_name##_t *_T) \
- 	{ return class_##_name##_lock_ptr(_T); }
+-	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
+-	if (!xe_force_wake_ref_has_domain(fw_ref, XE_FORCEWAKE_ALL))
+-		goto err_msg;
+-
+-	err = xe_uc_suspend(&gt->uc);
+-	if (err)
+-		goto err_force_wake;
+-
+-	xe_gt_idle_disable_pg(gt);
++	scoped_cond_guard(xe_force_wake_get, goto err_msg, gt_to_fw(gt), XE_FORCEWAKE_ALL) {
++		err = xe_uc_suspend(&gt->uc);
++		if (err)
++			goto err_msg;
  
+-	xe_gt_disable_host_l2_vram(gt);
++		xe_gt_idle_disable_pg(gt);
+ 
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
++		xe_gt_disable_host_l2_vram(gt);
++	}
+ 	xe_gt_dbg(gt, "suspended\n");
+ 
+ 	return 0;
+ 
+ err_msg:
+-	err = -ETIMEDOUT;
+-err_force_wake:
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+ 	xe_gt_err(gt, "suspend failed (%pe)\n", ERR_PTR(err));
+ 
+ 	return err;
+@@ -895,11 +837,8 @@ int xe_gt_suspend(struct xe_gt *gt)
+ 
+ void xe_gt_shutdown(struct xe_gt *gt)
+ {
+-	unsigned int fw_ref;
+-
+-	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
++	guard(xe_force_wake)(gt_to_fw(gt), XE_FORCEWAKE_ALL);
+ 	do_gt_reset(gt);
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+ }
+ 
+ /**
+@@ -924,29 +863,22 @@ int xe_gt_sanitize_freq(struct xe_gt *gt)
+ 
+ int xe_gt_resume(struct xe_gt *gt)
+ {
+-	unsigned int fw_ref;
+-	int err;
++	int err = -ETIMEDOUT;
+ 
+ 	xe_gt_dbg(gt, "resuming\n");
+-	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
+-	if (!xe_force_wake_ref_has_domain(fw_ref, XE_FORCEWAKE_ALL))
+-		goto err_msg;
+-
+-	err = do_gt_restart(gt);
+-	if (err)
+-		goto err_force_wake;
++	scoped_cond_guard(xe_force_wake_get, goto err_msg, gt_to_fw(gt), XE_FORCEWAKE_ALL) {
++		err = do_gt_restart(gt);
++		if (err)
++			goto err_msg;
+ 
+-	xe_gt_idle_enable_pg(gt);
++		xe_gt_idle_enable_pg(gt);
++	}
+ 
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+ 	xe_gt_dbg(gt, "resumed\n");
+ 
+ 	return 0;
+ 
+ err_msg:
+-	err = -ETIMEDOUT;
+-err_force_wake:
+-	xe_force_wake_put(gt_to_fw(gt), fw_ref);
+ 	xe_gt_err(gt, "resume failed (%pe)\n", ERR_PTR(err));
+ 
+ 	return err;
 -- 
 2.47.1
 
