@@ -1,125 +1,84 @@
-Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
+Received: from forwardcorp1d.mail.yandex.net (forwardcorp1d.mail.yandex.net [178.154.239.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D97F17C219;
-	Tue,  4 Feb 2025 07:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F41625A625;
+	Tue,  4 Feb 2025 07:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738655128; cv=none; b=EHJ//Q3nlhEKLRP2wxWk0UFy43EshINKkKFCln5DOsDpQsy2yWnyDtXWPXZU0/e+iert+ax/EBkDHnDViGRnShc3oEeM3mm7SlgRZtEs3zrocYk+A7LWpDO1cRheoWEFsASdQg2eqQ6mkRH+wQ2OdZB9iO1AMrbQe5/uQ4ygeak=
+	t=1738655188; cv=none; b=U6pM0lWE6quFW+M9I+5Ii7bAgYXdn5j/GVw8H28FCCiATk9RoYmttNNg2PU9ZQTpJeWXLgSDz1lPEkimu3z0METCEfbQS4806OlLCmJpoDqBKflVqSZJGJlR8PSqEKqWoHnuRs+Y5lbdU/lQkU0l6K1hVRfznIQvMtW9GBi/gPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738655128; c=relaxed/simple;
-	bh=NLp4Ef02iMFlE79EnOuq1UtXSinzztT8NHbPh4O2uPQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=o5EI3v4sIuLzh+3NNq6idpuPQLBdJF7tBgJD320hlSGkPRkbvjwO7y4AezlsWAZtPaP6r/yNP+GftzZEDRMjF9zpW9yDEbZBnwr9xVMpqcaKh/+MnksGjVVArXamJQl9RyAyqTkKFE/Y+vpRkobUF2ocoRhGAuGRkRQBjf1a6Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=qjeMwYFj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TB1PaAug; arc=none smtp.client-ip=202.12.124.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1738655188; c=relaxed/simple;
+	bh=fI2eQKaGs02HzhXgKi8DCztkIdWj0kh0KXHO1cjUDRo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kyJoyqseeP1mej4YxX4Zjtg8gdSmIoMNjhk40g85JeonmsoZPdBg865cdabnGLqryR+dfQjbOOni/f+bNyIK1f+BXv+qMIWhtUnLAxfLjwHJTWI/Ch18L0cQfMovmRhL8PVsFFsKomuhdne4u5Ri4Bgh4v0rELeKVTI1MDxFS/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=j4yyjKpJ; arc=none smtp.client-ip=178.154.239.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="qjeMwYFj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TB1PaAug"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 0A61E25401CD;
-	Tue,  4 Feb 2025 02:45:24 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Tue, 04 Feb 2025 02:45:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738655123;
-	 x=1738741523; bh=NwCcxkyDiW3Ar/Dx3fLdady2zCZ+TYYCBD5Xv5YmYf8=; b=
-	qjeMwYFj3CitIzTqTcF+Uwu0ab01uWc0SRknWyAaZoOd2t9U+IiWoKMh/tEqJVkG
-	fm7BjujchEbq2Y4fNMsblgbH5aTrTm0PXu5kfucRXceP9u4ylxwOvKdecxAWtN8h
-	1CwLG1Zpg4Kgser01dScJMjVNCQPd6AKASF4TVobl29FQTartup8cCTMwPtjFNtT
-	XqEVq4bUguH05KPUU0RanGoC1yNBKwUSR/9dopnCkORLsC7nOIxugu0AwkGFe4Wy
-	D87yTmihrpxLsk+qBTvWRo4aBhJ2tJh2zo5K6VwoxRpqGsjIhDgG8QF7qLbmAe86
-	t7PNzXKLrVtGD8Hr0PUccg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738655123; x=
-	1738741523; bh=NwCcxkyDiW3Ar/Dx3fLdady2zCZ+TYYCBD5Xv5YmYf8=; b=T
-	B1PaAugzl9SjAVpJoUQvkp7Qzc6hXb0lYn0rEJGhaJ156iylTYPmICMCbmvsdELC
-	Uvss/Y23LTnOPq7PTlfnKsnwgJqcWsQLTGaeuouheyc10H8kjiFKIBuhSS8/Wygh
-	eXUVmkUulaOeCLt6JSwz9koVQpVdobBupGO5DBCsROLi7tY0DamKMBcGbKLBQq/M
-	EKkpmEW+WzhfEl0JKJv2iN92eQfcXdvrsygK52IsFLezoECrBeZpNeWUqxmee/Aj
-	Vm+JgJO+r76SN73zvdLR8R2cGBpf4psnQM60SYAFRJBoveS8bgMaYJ2YOAwGYFK6
-	YODuuJ0cGkv/pNHJXjIEA==
-X-ME-Sender: <xms:k8WhZ7i36GXyYZ1mmDD1AfVyRAVbxpqjdpdH7p7-WpQxk7FLUWDcEw>
-    <xme:k8WhZ4Clu66vfHBQAOl9SW7nHUkLzHbfUqRd194CzIZpkez6YCmfhwGi65viAsLM8
-    vEJYENpWao9T9QurcM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleelfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeek
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjrghvihgvrhesjhgrvhhighhonh
-    drtghomhdprhgtphhtthhopehjvghnshdrfihikhhlrghnuggvrheslhhinhgrrhhordho
-    rhhgpdhrtghpthhtohepjhgvrhhomhgvrdhfohhrihhsshhivghrsehlihhnrghrohdroh
-    hrghdprhgtphhtthhopehsuhhmihhtrdhgrghrgheslhhinhgrrhhordhorhhgpdhrtghp
-    thhtohepohhpqdhtvggvsehlihhsthhsrdhtrhhushhtvggufhhirhhmfigrrhgvrdhorh
-    hgpdhrtghpthhtohepuggrnhhnvghnsggvrhhgsehtihdrtghomhdprhgtphhtthhopehl
-    ihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:k8WhZ7HP9oUVrVq6fLZjsn_CKB3ysYc61EJ-E8eBdOBLIR7jtiyC1g>
-    <xmx:k8WhZ4TgvgIVnT457thMAAUEC25Y5Xj2WIixzlLvpi_KKbfVcXWPzQ>
-    <xmx:k8WhZ4z071ZTM0asUGSF7xx0BWHfc2_jEjkuPQTJPj2ccu1eTCaz4Q>
-    <xmx:k8WhZ-6D1_Mbp7jvoLaBbmXy0FMJHngmtu70iqoQK2feeFNopZ5rZw>
-    <xmx:k8WhZ7yPWcVN4TTa_TRYYQiaC9QJEPuIdq4zRJC5QkJn0vtD41syyDDX>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 650652220072; Tue,  4 Feb 2025 02:45:23 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="j4yyjKpJ"
+Received: from mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:3f48:0:640:7695:0])
+	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id C40BD60F2A;
+	Tue,  4 Feb 2025 10:44:36 +0300 (MSK)
+Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:b493::1:2f])
+	by mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id FieXFK2IguQ0-TNYxjnCc;
+	Tue, 04 Feb 2025 10:44:35 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+	s=default; t=1738655075;
+	bh=TyqgI9SrKB5qLDqRd1qPo8pZTyAku+htcku5yB3DMio=;
+	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=j4yyjKpJVRLJiVKIxy+/GvEc7ep3bq5xHL1p1J/d0mXIo6E8W4L5aaMK/DZu63lRf
+	 1oaH228AeB4gGUrz5wOvcgXqww+NWV3ksPCzvdItSQmmN2srp/UyAxrJgBIMQoGwkz
+	 qUJzRdTQdRgmBbmMgQge456nq8Vv95sPBdz51zwk=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-68.klg.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+From: Nikolay Kuratov <kniv@yandex-team.ru>
+To: linux-kernel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	Wen Yang <wenyang@linux.alibaba.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kniv@yandex-team.ru
+Subject: Re: [PATCH] ftrace: Avoid potential division by zero in function_stat_show()
+Date: Tue,  4 Feb 2025 10:43:02 +0300
+Message-Id: <20250204074301.1427497-1-kniv@yandex-team.ru>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250203100603.5c00df0f@gandalf.local.home>
+References: <20250203100603.5c00df0f@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 04 Feb 2025 08:45:03 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Sumit Garg" <sumit.garg@linaro.org>,
- "Jens Wiklander" <jens.wiklander@linaro.org>
-Cc: op-tee@lists.trustedfirmware.org,
- "Jerome Forissier" <jerome.forissier@linaro.org>, dannenberg@ti.com,
- javier@javigon.com, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Message-Id: <60cd3fcc-5d21-4b98-9a81-f5fbec2099fc@app.fastmail.com>
-In-Reply-To: <20250204073418.491016-1-sumit.garg@linaro.org>
-References: <20250204073418.491016-1-sumit.garg@linaro.org>
-Subject: Re: [PATCH v3] tee: optee: Fix supplicant wait loop
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 4, 2025, at 08:34, Sumit Garg wrote:
-> OP-TEE supplicant is a user-space daemon and it's possible for it
-> be hung or crashed or killed in the middle of processing an OP-TEE
-> RPC call. It becomes more complicated when there is incorrect shutdown
-> ordering of the supplicant process vs the OP-TEE client application which
-> can eventually lead to system hang-up waiting for the closure of the
-> client application.
->
-> Allow the client process waiting in kernel for supplicant response to
-> be killed rather than indefinitely waiting in an unkillable state. Also,
-> a normal uninterruptible wait should not have resulted in the hung-task
-> watchdog getting triggered, but the endless loop would.
->
-> This fixes issues observed during system reboot/shutdown when supplicant
-> got hung for some reason or gets crashed/killed which lead to client
-> getting hung in an unkillable state. It in turn lead to system being in
-> hung up state requiring hard power off/on to recover.
->
-> Fixes: 4fb0a5eb364d ("tee: add OP-TEE driver")
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Thank you for the review!
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+`counter > rec->counter` check does not protect us from overflows,
+so this could mislead especially with the comment included.
 
-Jens, I assume you'll pick it up and send me a pull request, but
-I can also pick it up directly if you have nothing else.
+I think we should either eliminate overflows or only protect from zero
+division. To prevent overflows it is wise to split the division into
+three and forget about it. But in 32-bit case overflows will still occur.
 
-     Arnd
+As for zero division protection, maybe this variant even more concise?
+
+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+	seq_puts(m, "    ");
+
+	stddev = 0;
+	unsigned long denom = rec->counter * (rec->counter - 1) * 1000;
+	if (denom) {
+		stddev = rec->counter * rec->time_squared -
+			 rec->time * rec->time;
+		stddev = div64_ul(stddev, denom);
+	}
+
+	trace_seq_init(&s);
+	trace_print_graph_duration(rec->time, &s);
+
+--
+My last attempt to get this email into lore with git-send-email, since
+no luck with mutt. Sorry if you see this message twice or thrice in your
+inbox. It won't happen again.
