@@ -1,88 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7272147F9;
-	Tue,  4 Feb 2025 15:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F023211A24;
+	Tue,  4 Feb 2025 15:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738683014; cv=none; b=J1uA4ouxV8o92N1UXB9e6Op15WtEDwLZGMMcpUUU0qu+xBiZ+NceFxmSv2IXuNF1hD18NH3mhyZpa+3o30VKc3cKn+BMvpTr2EJsxAaDc4UCweOtq20Kfz7vIbcvvBIMG6aRR1YwzWIFqEp36IXtAz9SsIDdAcvUlRMh4uuCf0A=
+	t=1738683074; cv=none; b=uImMnqZ3pOUxd5BwpmmToAlbX9Kcdcv8c4r88BSyczITEH9eM0slWnodph2Z5tjb92QBcVGQYDlC38KhhpbLSQDpGebXVQGedaBw8ZqC7h+e8n4qWfc9S6iUdM7ih5432AWLazx1soHss/xuXlP4jsWnWi4AtgeAdILufU00qng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738683014; c=relaxed/simple;
-	bh=w12EPpGUmvzDudWzppT/O+ACvWWy08Cbo3XC+tGv3iY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GZvmOOkrKGR2+i9/Hlr9Boq6eMQ41tlm6K3U7jvap+Z/Tz/V4npUmtwKsCAN38aQysqM5/0Ydmb+i62mPzZAbJA5fUs2u2GxjyjPg0JlinCjFIEiohg6eY2qtk3uGllLDq+8SvWz+9QnrAQetsLrYTh2G0omlzR/BZMQMpGFGiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxFt1+76; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738683074; c=relaxed/simple;
+	bh=csDB38bmsHlooZZ5ojmW7JJ2wKzH5xmMN0NCWnMLt2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IbCflC7EHgHP1KFLUk0r5X0rWJeKWSfTHrLOCe/zdpWnamTNISWk/3DZUYveGFqPjZOkYAEYYE1V6bRbN5jwvgD48bohqQyXpAmbQ/kAMnG5GCdk13VNiJeXLTJ0i4VOwo+6vZV2lCH+DhVuiD0SVzPeeHAwHmFJ2dMie3aIb8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pW/rqMmx; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxFt1+76"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F517C4CEE2;
-	Tue,  4 Feb 2025 15:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738683014;
-	bh=w12EPpGUmvzDudWzppT/O+ACvWWy08Cbo3XC+tGv3iY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rxFt1+76LToM21A8s0ynlnAIwt78hr6Di4Rj31ycjaxNsQldtEz4HGEKhDCpZBIoU
-	 Xq7Uyz1X4dOfpnShEge2okV+AlHBJXtcWuP46mvOedK7nxngJBLhC9mfqClLlHO4AK
-	 m+iBiNjJZnet6vZuKO6jTDzRyc/CYRlBuu40fbiQTidRQ+FjMq4imH0KziZHiC07Vs
-	 yHXFoZLweaKE9xL0bnUKC6Uai0BGtZPAOhRb+gLgYbIyPKjDVAV9MTomKE5Jk+0r3r
-	 Z1Ki34lpSJDD3f7NpPDeqiev2aYna2qG+7mqi/vzbvodKXpJ1+Z96jQ2BaoarLuvEX
-	 +0olbUxhCUEmw==
-Date: Tue, 4 Feb 2025 07:30:11 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- linux-crypto@vger.kernel.org, qat-linux@intel.com,
- linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
- linux-iio@vger.kernel.org, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery
- <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, Jonathan Cameron
- <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang
- <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>, Yury Norov
- <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Johannes
- Berg <johannes@sipsolutions.net>, Alex Elder <elder@ieee.org>
-Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
- field_{prep,get}() helpers
-Message-ID: <20250204073011.5f6ca125@kernel.org>
-In-Reply-To: <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
-References: <cover.1738329458.git.geert+renesas@glider.be>
-	<1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
-	<e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pW/rqMmx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=yUBMLdid6p8J2t+8TyqgXCNeWZFR2eWp9+2MIB84uUM=; b=pW/rqMmxFYkdQlFK2u4+ErsxWP
+	1mFDlujBrVq2RFV3eAodLz7/q5UBbw8EliGapJlOs+PTtFwEoRVsMaXnZ0qfI40krCQnFTU6g+lDs
+	0S44+5RESQX8KFWglq+LBWlv8HAFxmDvSqk0a+3tdFxnQZkBJd2YpYLUJxYbsrz+QoyhJ933xKrnc
+	3vIFA2CENAeqlz3vN0Xb5dISF/WqhGpaD91kt9PZtEhW5qUhCY9z/lDyqkKzQGqy5Wfohu7y5OQlD
+	ypwQQub3R9I/F4NvWGx0GlY8SqdAqLZsJMxgiHx20aWYZW9lL1HjelJ7rRh5m1DmPSKpY5rLWSRX1
+	e+WijXiQ==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfKt3-0000000GLGl-2NoB;
+	Tue, 04 Feb 2025 15:30:53 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 280653002CE; Tue,  4 Feb 2025 16:30:53 +0100 (CET)
+Date: Tue, 4 Feb 2025 16:30:53 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
+	bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
+	konrad.wilk@oracle.com, jgross@suse.com, andrew.cooper3@citrix.com,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Vineeth Pillai <vineethrp@google.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
+	daniel.wagner@suse.com, joseph.salisbury@oracle.com,
+	broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250204153053.GX7145@noisy.programming.kicks-ass.net>
+References: <20250131225837.972218232@goodmis.org>
+ <20250131225942.365475324@goodmis.org>
+ <20250201115906.GB8256@noisy.programming.kicks-ass.net>
+ <F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
+ <20250201181129.GA34937@noisy.programming.kicks-ass.net>
+ <20250201180617.491ce087@batman.local.home>
+ <20250203084306.GC505@noisy.programming.kicks-ass.net>
+ <20250203114537.6a30c7c0@gandalf.local.home>
+ <20250204091613.GQ7145@noisy.programming.kicks-ass.net>
+ <20250204075100.3fcbfda8@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204075100.3fcbfda8@gandalf.local.home>
 
-On Sun, 2 Feb 2025 17:26:04 +0900 Vincent Mailhol wrote:
-> On 31/01/2025 at 22:46, Geert Uytterhoeven wrote:
-> > The existing FIELD_{GET,PREP}() macros are limited to compile-time
-> > constants.  However, it is very common to prepare or extract bitfield
-> > elements where the bitfield mask is not a compile-time constant.  
+On Tue, Feb 04, 2025 at 07:51:00AM -0500, Steven Rostedt wrote:
+> On Tue, 4 Feb 2025 10:16:13 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> Why is it that the existing FIELD_{GET,PREP}() macros must be limited to
-> compile time constants?
+> > And yes, you can still use the whole 'delay preemption' hint for RT
+> > tasks just fine. Spinlocks isn't the only thing. It can be used to make
+> > any RSEQ section more likely to succeed.
+> > 
+> > 
+> > > Patch 2 changes that to do what you wrote the last time. It has a max wait
+> > > time of 50us.  
+> > 
+> > I'm so confused, WTF do you then need the lazy crap?
+> > 
+> > You're making things needlessly complicated again.
+> 
+> Do we really want to delay an RT task by 50us?
 
-Hard no, some high performance networking drivers use this on 
-the fastpath. We want to make sure that the compiler doesn't
-do anything stupid, and decomposes the masks at build time.
+If you go back and reread that initial thread, you'll find the 50us is
+below the scheduling latency that random test box already had.
 
-The macros work just fine for a *lot* of code:
+I'm sure more modern systems will have a lower number, and slower
+systems will have a larger number, but we got to pick a number :/
 
-$ git grep -E 'FIELD_(PREP|GET)\(' | wc -l
-22407
+I'm fine with making it 20us. Or whatever. Its just a stupid number.
 
-BTW aren't u32_get_bits(), u32_replace_bits() etc. not what 
-you need in the first place? I think people don't know about
-those, with all due respect the way they are coded up looks 
-like an IOCCC submission..
+But yes. If we're going to be doing this, there is absolutely no reason
+not to allow DEADLINE/FIFO threads the same. Misbehaving FIFO is already
+a problem, and we can make DL-CBS enforcement punch through it if we
+have to.
+
+And less retries on the RSEQ for FIFO can equally improve performance.
+
+There is no difference between a 'malicious/broken' userspace consuming
+the entire window in userspace (50us, 20us whatever it will be) and
+doing a system call which we know will cause similar delays because it
+does in-kernel locking.
