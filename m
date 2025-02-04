@@ -1,119 +1,319 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CB5216387
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA6EA153598;
+	Tue,  4 Feb 2025 18:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738692229; cv=none; b=OJA12eB/Tyj0ekvNJpBWvZovHMl5kUw80OZsiA1+x2/+d/Wh80WgCiZq1V+aX/YJ7q9RYVfLq1ghs3Q2qtls26Nz51LaXrdRPulOGBGMhlwVSxvEVYCEEytrUFKFobO/lZHUCsFAezQcGkYEYGMdbRyqqcvBJh+jD8lDILaJ7jg=
+	t=1738692308; cv=none; b=WcBlM1XrDRexDsiUDwawNv3jV9mYAO8DqeP14KDR01VbKoXmvmAPlaqtsWLUC0SyzAoyX3Yg1c1U7/KehsnwSPw05DtHS/6md0IOtDBXm0wfkyKRVfUeqUVuosjnwkCd4CAjXhJWJl7yOYXizjvEEmSqVR/I31fwGg4kld0OLyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738692229; c=relaxed/simple;
-	bh=Oj0oNLn2yL6+fmX5W290/5q7EprAS3GBOQgkRODPBVA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZkGqzc5UT4uGodHZZlKSKIWPvs1NKUw0Z/n1r1EpquYfbRtVxWiZ7IMD0ADv3KOu+4qCYNzstapof93DXq8G9DFuxRfPLQtDGTtKffnDThsYFaDb8CSP8kKbBrhu7eTDvWx4pxQQyJ3/2+fGWc7C+P6K/oQndzngcTtOfrMZUjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DQ+KyDtk; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DQ+KyDtk"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21625b4f978so174945ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 10:03:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738692226; x=1739297026; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hnKb/NxDzwUPz79zbu5N/Xfg9BKIOLMoGS4rXOX07CA=;
-        b=DQ+KyDtkBwZJAhWhAuyRLkhaKlrlprdaumqBBWGb5rYVhJ5zvZFsaw/09i/unlQsJl
-         xQLhazeBVf25SD1PzF4JRfqc5hlzo/54HzTFVPi9gC8BqAb31DxwAFOnxATSJS3oMvbF
-         zwv3Yj39GxnYFh+df101DZeOowd1QWFO2N6CrK8APpNvTfLNIZ8Aoi06R/TH1hmUi2A6
-         lwxA5FRbJaOOHnssKA94tlAuQSBF580Hhp9999NpYT+qgp/vaMOJYOcehm13j7b1EGKR
-         NARGB9W50n9tnEn4s2gQwgafvsvgcuO5wMJEpE24jofmeBT+2YMEVX6EBaXWZvCure5M
-         B/oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738692226; x=1739297026;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hnKb/NxDzwUPz79zbu5N/Xfg9BKIOLMoGS4rXOX07CA=;
-        b=Egkw9e4iqaq0ZblalQBKes8fhzefhunon711yvUKKKveBxT+hq4FG+AcK9SkUA5VbS
-         NbewEWIxZg/E+Ruv41bVtMbvgpDdnvu+7hJKET1evC4vgJsRBvJ0MmWtAjjg/Io6ATuF
-         HMasvAROmGg/85iwA+sGPvmlAuzBuH4hPU8pd84/Eg6GLKHNGTZQGtt65Kg9/Xw/tOhX
-         OjBlIWalIVImCiJsYlFMVNCac/a3C+d0CQtz35e1AhOedwgzq09/FPx/+FstId/O7izB
-         fBqslf14tlhRJn603EsTvHxBGEWfRiFM6ni3mLS0NdgxEKXh51tTWagBSKDpPp+6OipW
-         Gtng==
-X-Forwarded-Encrypted: i=1; AJvYcCWINhA/diBigQh2VJFSpajSzyMNcpG1XnElXeiNflPRnW21wN/LY6BgxD4nB2FoxgSQiwvNQFmERhYNIIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn6MrZz+DCyPK48wyYyQCVwDvtzIG+Qk8Z1g3y8+TIZxJ9EWTk
-	6s0zffSafse2gHumlZJT+m3fkJMclzis5ndf3K50hbXoPz7Okzm7WEgSa/6CNcVvxctSTiuZTjl
-	BRAPso+E12UG05jRun1TxgCtCu3zkGYJymdIY
-X-Gm-Gg: ASbGncsENlrMOnYTwXXCfQZnlyOywH020n55hjI1AL8HhH1/fh02Gv/k3sU/Zdaj7g9
-	dyTSBI/u1leNLifPNQng8lq/esy2MMQbM7txW9pVqWcj/sz1aRROupGJ4Q4F9DB4mgywV077h
-X-Google-Smtp-Source: AGHT+IFGO0WVuOzQMwTOIUL2zNV30YHnBBx/izI8+SQNwu12kEXS3uYQZz8FhcRE8mSTIdjM5HAUSbAmJ4VB9XKoqDo=
-X-Received: by 2002:a17:902:bc8a:b0:215:44af:313b with SMTP id
- d9443c01a7336-21f000c1a2bmr3663845ad.0.1738692225592; Tue, 04 Feb 2025
- 10:03:45 -0800 (PST)
+	s=arc-20240116; t=1738692308; c=relaxed/simple;
+	bh=rPWErur0muffrrd68Q+PJ4Le9SEMJHK5eMUGEmuJyec=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H+sfqkYbjgkFAOU/OTB4P3nKA9nqRYeLIe8k+jcU/K3vZpgKdiuom3EWp/0aeAH6ds33utjVIxIwdo/fqeBX42AOj9dMGCCENOseT8H/A9p2ZygV3hCiEFjqBWGp3vgSX827ckON/FDWrnrSE7cYlHDLLRFa7fvaX0PhsgaLIE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: /W14jKo9SnqoXZ6UVIw52w==
+X-CSE-MsgGUID: s/VAe+AHSGC6FtnWNa5NPQ==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 05 Feb 2025 03:05:03 +0900
+Received: from [10.24.1.103] (unknown [10.24.1.103])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id C83A540065D0;
+	Wed,  5 Feb 2025 03:04:58 +0900 (JST)
+Message-ID: <46ae969b-f24a-42cc-8477-70d9e8f8c057@bp.renesas.com>
+Date: Tue, 4 Feb 2025 18:04:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203223916.1064540-1-almasrymina@google.com>
- <20250203223916.1064540-3-almasrymina@google.com> <c8dd0458-b0a9-4342-a022-487e73542381@redhat.com>
- <CAHS8izOnrWdPPhVaCFT4f3Vz=YkHyJ5KgnAbuxfR5u-ffkbUxA@mail.gmail.com> <71336d4e-6a75-4166-9834-7de310df357e@redhat.com>
-In-Reply-To: <71336d4e-6a75-4166-9834-7de310df357e@redhat.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 4 Feb 2025 10:03:33 -0800
-X-Gm-Features: AWEUYZmiESSMokFwGB0BJqHNhJeqNgHpu960zdUgGcxEH4CFZhDgvoFYnYH4I-E
-Message-ID: <CAHS8izPFe-1tf9Xetc8Znj04x9rKXVchR3DaspRGPDRbSFQFgw@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 2/6] selftests: ncdevmem: Implement devmem TCP TX
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski <kuba@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Neal Cardwell <ncardwell@google.com>, David Ahern <dsahern@kernel.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
-	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/14] serial: sh-sci: Introduced function pointers
+Content-Language: en-GB
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com>
+ <20250129165122.2980-10-thierry.bultel.yh@bp.renesas.com>
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+In-Reply-To: <20250129165122.2980-10-thierry.bultel.yh@bp.renesas.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------x0NxAdUVowxnEZRev3B96Dkd"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------x0NxAdUVowxnEZRev3B96Dkd
+Content-Type: multipart/mixed; boundary="------------eioP0Hm1VW2OG9xKJGS5LRub";
+ protected-headers="v1"
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Message-ID: <46ae969b-f24a-42cc-8477-70d9e8f8c057@bp.renesas.com>
+Subject: Re: [PATCH 09/14] serial: sh-sci: Introduced function pointers
+References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com>
+ <20250129165122.2980-10-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250129165122.2980-10-thierry.bultel.yh@bp.renesas.com>
+
+--------------eioP0Hm1VW2OG9xKJGS5LRub
+Content-Type: multipart/mixed; boundary="------------cRVittwlHBbNPvmnaF1dlDuM"
+
+--------------cRVittwlHBbNPvmnaF1dlDuM
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 4, 2025 at 9:56=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wrot=
-e:
->
-> On 2/4/25 6:35 PM, Mina Almasry wrote:
-> > On Tue, Feb 4, 2025 at 4:29=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> =
-wrote:
-> >>>  .../selftests/drivers/net/hw/ncdevmem.c       | 300 ++++++++++++++++=
-+-
-> >>>  1 file changed, 289 insertions(+), 11 deletions(-)
-> >>
-> >> Why devmem.py is not touched? AFAICS the test currently run ncdevmem
-> >> only in server (rx) mode, so the tx path is not actually exercised ?!?
-> >>
-> >
-> > Yeah, to be honest I have a collection of local bash scripts that
-> > invoke ncdevmem in different ways for my testing, and I have docs on
-> > top of ncdevmem.c of how to test; I don't use devmem.py. I was going
-> > to look at adding test cases to devmem.py as a follow up, if it's OK
-> > with you, and Stan offered as well on an earlier revision. If not no
-> > problem, I can address in this series. The only issue is that I have
-> > some legwork to enable devmem.py on my test setup/distro, but the meat
-> > of the tests is already included and passing in this series (when
-> > invoked manually).
->
-> I think it would be better if you could include at least a very basic
-> test-case for the TX path. More accurate coverage could be a follow-up.
->
+Hi Thierry,
 
-Thanks; will do.
+I've just had time to review the header file changes in this patch
+today.
+
+On 29/01/2025 16:37, Thierry Bultel wrote:
+> The aim here is to prepare support for new sci controllers like
+> the T2H/RSCI whose registers are too much different for being
+> handled in common code.
+>=20
+> This named serial controller also has 32 bits register,
+> so some return types had to be changed.
+>=20
+> The needed generic functions are no longer static, with prototypes
+> defined in sh-sci-common.h so that they can be used from specific
+> implementation in a separate file, to keep this driver as little
+> changed as possible.
+>=20
+> For doing so, a set of 'ops' is added to struct sci_port.
+>=20
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> ---
+>  drivers/tty/serial/sh-sci.c        | 339 +++++++++++++++--------------=
+
+>  drivers/tty/serial/sh-sci_common.h | 178 +++++++++++++++
+>  2 files changed, 349 insertions(+), 168 deletions(-)
+>  create mode 100644 drivers/tty/serial/sh-sci_common.h
+
+[snip]
+
+> diff --git a/drivers/tty/serial/sh-sci_common.h b/drivers/tty/serial/sh=
+-sci_common.h
+> new file mode 100644
+> index 000000000000..cbfacdc1a836
+> --- /dev/null
+> +++ b/drivers/tty/serial/sh-sci_common.h
+> @@ -0,0 +1,178 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef __SH_SCI_COMMON_H__
+> +#define __SH_SCI_COMMON_H__
+> +
+> +#define SCI_MAJOR	204
+> +#define SCI_MINOR_START	8
+> +
+> +#include <linux/serial_core.h>
+> +
+> +enum SCI_CLKS {
+> +	SCI_FCK,		/* Functional Clock */
+> +	SCI_SCK,		/* Optional External Clock */
+> +	SCI_BRG_INT,		/* Optional BRG Internal Clock Source */
+> +	SCI_SCIF_CLK,		/* Optional BRG External Clock Source */
+> +	SCI_NUM_CLKS
+> +};
+> +
+> +/* Offsets into the sci_port->irqs array */
+> +enum {
+> +	SCIx_ERI_IRQ,
+> +	SCIx_RXI_IRQ,
+> +	SCIx_TXI_IRQ,
+> +	SCIx_BRI_IRQ,
+> +	SCIx_DRI_IRQ,
+> +	SCIx_TEI_IRQ,
+> +	SCIx_NR_IRQS,
+> +
+> +	SCIx_MUX_IRQ =3D SCIx_NR_IRQS,	/* special case */
+> +};
+> +
+> +/* Bit x set means sampling rate x + 1 is supported */
+> +#define SCI_SR(x)		BIT((x) - 1)
+> +
+> +extern void sci_release_port(struct uart_port *port);
+> +extern int sci_request_port(struct uart_port *port);
+> +extern void sci_config_port(struct uart_port *port, int flags);
+> +extern int sci_verify_port(struct uart_port *port, struct serial_struc=
+t *ser);
+> +extern void sci_pm(struct uart_port *port, unsigned int state,
+> +		   unsigned int oldstate);
+> +extern void sci_enable_ms(struct uart_port *port);
+> +
+> +#ifdef CONFIG_CONSOLE_POLL
+> +extern int sci_poll_get_char(struct uart_port *port);
+> +extern void sci_poll_put_char(struct uart_port *port, unsigned char c)=
+;
+
+The extern keyword isn't needed for function definitions in header
+files.
+
+> +#endif /* CONFIG_CONSOLE_POLL */
+> +
+> +struct plat_sci_reg {
+> +	u8 offset, size;
+
+Please define struct members on separate lines.
+
+> +};
+> +
+> +/* The actual number of needed registers depends on the sci controller=
+;
+> + * using this value as a max covers both sci and rsci cases
+> + */
+> +#define SCI_NR_REGS 20
+> +
+> +struct sci_port_params_bits {
+> +	unsigned int rxtx_enable;
+> +	unsigned int te_clear;
+> +	unsigned int poll_sent_bits;
+> +};
+> +
+> +struct sci_common_regs {
+> +	unsigned int status;
+> +	unsigned int control;
+> +};
+> +
+> +struct sci_port_params {
+> +	const struct plat_sci_reg regs[SCI_NR_REGS];
+
+I don't see any usage of the regs field of this struct - is it needed?
+If not, can we also get rid of SCI_NR_REGS?
+
+> +	const struct sci_common_regs *common_regs;
+> +	unsigned int fifosize;
+> +	unsigned int overrun_reg;
+> +	unsigned int overrun_mask;
+> +	unsigned int sampling_rate_mask;
+> +	unsigned int error_mask;
+> +	unsigned int error_clear;
+> +	struct sci_port_params_bits param_bits;
+
+It looks like we always initialise param_bits via a `static const struct
+sci_port_params_bits` instance. Is there any reason we copy the contents
+of this into the sci_port_params instance instead of using a pointer?
+
+> +};
+> +
+> +struct sci_port_ops {
+> +	u32 (*read_reg)(struct uart_port *port, int reg);
+> +	void (*write_reg)(struct uart_port *port, int reg, int value);
+> +	void (*clear_SCxSR)(struct uart_port *port, unsigned int mask);
+> +
+> +	void (*transmit_chars)(struct uart_port *port);
+> +	void (*receive_chars)(struct uart_port *port);
+> +
+> +	void (*poll_put_char)(struct uart_port *port, unsigned char c);
+> +
+> +	int (*set_rtrg)(struct uart_port *port, int rx_trig);
+> +	int (*rtrg_enabled)(struct uart_port *port);
+> +
+> +	void (*shutdown_complete)(struct uart_port *port);
+> +
+> +	unsigned int (*get_ctrl_temp)(struct uart_port *port, unsigned int ct=
+rl);
+
+I think we need a better name for this one. ctrl_temp is just the name
+of the value we want to write to the control register in the
+serial_console_write function, the name doesn't give any clue as to its
+intended function.
+
+Perhaps it would be better to define a prepare_console_write operation
+which modifies the control register state and returns the old control
+register state (so that it can later be restored). That would result in
+a little more code duplication but it'd be easier to understand.
+
+> +};
+
+[snipped the rest]
+
+Thanks,
 
 --=20
-Thanks,
-Mina
+Paul Barker
+--------------cRVittwlHBbNPvmnaF1dlDuM
+Content-Type: application/pgp-keys; name="OpenPGP_0x27F4B3459F002257.asc"
+Content-Disposition: attachment; filename="OpenPGP_0x27F4B3459F002257.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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3D
+=3DsIIN
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------cRVittwlHBbNPvmnaF1dlDuM--
+
+--------------eioP0Hm1VW2OG9xKJGS5LRub--
+
+--------------x0NxAdUVowxnEZRev3B96Dkd
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQSiu8gv1Xr0fIw/aoLbaV4Vf/JGvQUCZ6JWyQUDAAAAAAAKCRDbaV4Vf/JGvfeB
+AP97VmLRTev40THQumFlvJDrpXZMjoO2FwHLQ/u8M2tjnQEAnwocJDdjqM1zsGyZXSP47a3N6+B7
+FDDNxnarHgU4kAw=
+=al0R
+-----END PGP SIGNATURE-----
+
+--------------x0NxAdUVowxnEZRev3B96Dkd--
