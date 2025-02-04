@@ -1,106 +1,104 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F621204F94;
-	Tue,  4 Feb 2025 22:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B96821C172;
+	Tue,  4 Feb 2025 22:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738709609; cv=none; b=Trmk8VRjO1uSnFmOsPgnqUvlRNgFggWFNZCBFK3glK6AaedA/zqlWCpgNzRgVM5l6WlIyyHI3yDM6gRaLl5D2SgMlRLouCeIBl4OWEmAlD42shccvijeDHge+x1aIkvn9pib65J+ISFXSwVL0adiu9G2EdiJl2zos5daWRL+VlE=
+	t=1738709639; cv=none; b=AEQlBpwH8X0Jc2/hQt/WEgCEiXYkB+u4PiPKsMAKdcva3IVFB9YsgyxGPRCoVSFnUGmZmlkAWnTbqNPX+N9PY4TGofb96ohfRhPcLuX+fFIjDUc7jF7XnE+qlIY7m2SBjXvGYZe97v1VeDPtEIxQIx9WtHn4dva6I0WxAkVYwQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738709609; c=relaxed/simple;
-	bh=MSRkW2CExr0tVUC2SzMHSlIAyDIbX/p6MVhCG2p/mKw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ve+6Aq8rHIkDIwOSY6Z578N/qNfr3ngOe24pqUu65PcCtrfx9N7+3BXTHtpnV3H8hV1FCwTdm4OnSd/TdgNYg/zegACZmUVaQ5lhDbuKS6lwGjNYO4b/8+fBJFQ86r9XT5lz73tFntaign+PzMCPAHIfSkG+Z3ww5U2C49re9nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=buDx+2EI; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738709639; c=relaxed/simple;
+	bh=UjyVgY4mnk/+RCxUdi7MWPi51mBa6KRkW5x9l1umZxM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iNabUMhqHJHuhhagI7rmdebZJ9tMAzOAsSVTmjQzS5DljxBnP4/NMIEqvxpmMzUQF5tdpZss4CWMbyFvjbrgxFJLWGwKlJzcVU31z++8b8ItJ4LyHXvypQSEtk0zkJCiNoHiP18asez3cqNlwYbKNsl/naQ4m6xRJl1QcY0N4qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SnuBFs4A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="buDx+2EI"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514GEomA028728;
-	Tue, 4 Feb 2025 22:51:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=2FhDku
-	tlFDrUXKpErmzzncgU1ZoP8wGLXswD+EnhQbo=; b=buDx+2EIwON7ki0cbzYcuJ
-	OoacryrPaq0O9pjpC26J6FQwHw0sJ5aOQkcI6Slj5PHhp7HfDMpL0XHwnLU3zsUk
-	kBxg7IqjmQQrIe0eGkn4DNSlvBmP7Pt94OCq1a7wGdANna6hBnJy7e+rygE3ygME
-	XpVpqorVcyhGj6lYNU4Pz9OiN/skVuJFH7jy77plKb8FRHjDm2UdTVgljKR13OhQ
-	qUxk/XkbSEjsILb+aWOJl7UXcAJvcjrhmQ2gPFGfaKAPvPNCnYod7hFXPIQw2TfS
-	xIwNFKymBcMEfreQTE5/jpZPqQdF5R/L6ndcBpaYzVKnaUHGgHEr3OMBiBe1V/AA
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44knqtsww9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 22:51:58 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 514L0Zkr005261;
-	Tue, 4 Feb 2025 22:51:57 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j05jwkxy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 22:51:57 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 514MpvRM6357672
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Feb 2025 22:51:57 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F104B58043;
-	Tue,  4 Feb 2025 22:51:56 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1231658055;
-	Tue,  4 Feb 2025 22:51:56 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Feb 2025 22:51:55 +0000 (GMT)
-Message-ID: <fff34d89-6009-43d1-8033-5c62b812938b@linux.ibm.com>
-Date: Tue, 4 Feb 2025 17:51:55 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SnuBFs4A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8FB8C4CEDF;
+	Tue,  4 Feb 2025 22:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738709639;
+	bh=UjyVgY4mnk/+RCxUdi7MWPi51mBa6KRkW5x9l1umZxM=;
+	h=From:Date:Subject:To:Cc:From;
+	b=SnuBFs4ATEpugBDZiD5cI47gKnHoMEiqP1hPBPywhFtExg03oTUWdwdlejPwpkexf
+	 FMobjw1RbbtWTHq2l70WlrgJOYBOwTxUNTDTiELklsQ0zaM6lU5UzmZemhYp8RKMDg
+	 m/mk2UPGMiCxljJVvA5z69r5KJzrrECHcgGNxHgM4HhM9yHpUirpIuE0r9quwTs+Ic
+	 1INHmP8Y+nsFffydCtsRLdd2kroxk6ZG+ge1MPtBmw0b8aXhPsup3sOxZ+wwUXA4IH
+	 rEXU4gUpdPn7eZUr6v8ZAJr1LfMD5K/uc69xKNnSAR517kJ4CQARkFsjSSnCtXE1BT
+	 ZO1i0AAXb/z+A==
+From: Mark Brown <broonie@kernel.org>
+Date: Tue, 04 Feb 2025 22:53:43 +0000
+Subject: [PATCH] selftests/mm: Fix thuge-gen test name uniqueness
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/7] ima: kexec: skip IMA segment validation after
- kexec soft reboot
-To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com
-References: <20250203232033.64123-1-chenste@linux.microsoft.com>
- <20250203232033.64123-4-chenste@linux.microsoft.com>
- <00eeeb8b-cc28-42af-873f-3478cd22fb6e@linux.ibm.com>
- <aeef2ca5-2538-4487-a501-7eb2925d198b@linux.microsoft.com>
-Content-Language: en-US
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <aeef2ca5-2538-4487-a501-7eb2925d198b@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Z4ncMD1yBBQd530Qu8FeBYpetBqy8kFO
-X-Proofpoint-ORIG-GUID: Z4ncMD1yBBQd530Qu8FeBYpetBqy8kFO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_09,2025-02-04_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
- clxscore=1015 mlxlogscore=857 phishscore=0 malwarescore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040167
+Message-Id: <20250204-kselftest-mm-fix-dups-v1-1-6afe417ef4bb@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAHaaomcC/x2M0QpAQBAAf0X7bOtcx8mvyINYbNzR7ZGSf3d5n
+ KaZB4QCk0CTPRDoYuHdJyjyDIal9zMhj4lBK10qrQyuQtsUSSI6hxPfOJ6HoLJVb+rS2qI2kNo
+ jUHL/t+3e9wOsJvL1ZwAAAA==
+X-Change-ID: 20250204-kselftest-mm-fix-dups-076a48577184
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Shuah Khan <shuah@kernel.org>, 
+ Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-1b0d6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1710; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=UjyVgY4mnk/+RCxUdi7MWPi51mBa6KRkW5x9l1umZxM=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBnopqE8JNsrIpaCLHsb803xkQveAt3pqdMpcA8xjWx
+ FmXmdjqJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ6KahAAKCRAk1otyXVSH0I7yB/
+ 9b1brPz7RgFatdJWcZpnZOaDY/Cqhw0SquS2GMKVC1vMD3Gq9idQgjJSaSGtbrf37k7sMd2/cTR/I7
+ Q/MRHCKnv1+PP6Nm4SpsO4qiPloU/fnSSxfVuDH1yhqp1LyxuxkN9JIAJelYqkeBuYrh2bsCgptSFn
+ CY0wWjxLJ9b4lRlcqeCr7oE9f3UwQpNxrQVDHGcTisz4Gs4VLN2mQ73Hi30b3lCdY3h+Y98Svb3cjc
+ Q7sG8mT9ggitAg599imc4CWBfL+jFmbcnOCinZfdiOuqyObxs4r2jL2afwSaodMs5w56ref6ReO6B3
+ 2yFbNKlsLzIPYOQvQGQw50QdVxT541
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
+The thuge-gen test_mmap() and test_shmget() tests are repeatedly run for a
+variety of sizes but always report the result of their test with the same
+name, meaning that automated sysetms running the tests are unable to
+distinguish between the various tests. Add the supplied sizes to the logged
+test names to distinguish between runs.
 
+Fixes: b38bd9b2c448 ("selftests/mm: thuge-gen: conform to TAP format output")
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ tools/testing/selftests/mm/thuge-gen.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 2/4/25 3:28 PM, steven chen wrote:
-> On 2/4/2025 11:39 AM, Stefan Berger wrote:
->> On 2/3/25 6:20 PM, steven chen wrote:
->
-> 
-> Hi Stefan, I will update in next release. Thanks!
+diff --git a/tools/testing/selftests/mm/thuge-gen.c b/tools/testing/selftests/mm/thuge-gen.c
+index e4370b79b62ffb133056eb843cdd1eaeba6503df..cd5174d735be405220d99ae796a3768f53df6ea4 100644
+--- a/tools/testing/selftests/mm/thuge-gen.c
++++ b/tools/testing/selftests/mm/thuge-gen.c
+@@ -127,7 +127,7 @@ void test_mmap(unsigned long size, unsigned flags)
+ 
+ 	show(size);
+ 	ksft_test_result(size == getpagesize() || (before - after) == NUM_PAGES,
+-			 "%s mmap\n", __func__);
++			 "%s mmap %lu\n", __func__, size);
+ 
+ 	if (munmap(map, size * NUM_PAGES))
+ 		ksft_exit_fail_msg("%s: unmap %s\n", __func__, strerror(errno));
+@@ -165,7 +165,7 @@ void test_shmget(unsigned long size, unsigned flags)
+ 
+ 	show(size);
+ 	ksft_test_result(size == getpagesize() || (before - after) == NUM_PAGES,
+-			 "%s: mmap\n", __func__);
++			 "%s: mmap %lu\n", __func__, size);
+ 	if (shmdt(map))
+ 		ksft_exit_fail_msg("%s: shmdt: %s\n", __func__, strerror(errno));
+ }
 
-You should try to rebase it on 6.14-rc1. There were a few changes.
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250204-kselftest-mm-fix-dups-076a48577184
+
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
