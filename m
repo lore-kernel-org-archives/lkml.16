@@ -1,107 +1,109 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8855F153828;
-	Tue,  4 Feb 2025 19:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31B521767A;
+	Tue,  4 Feb 2025 19:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738696203; cv=none; b=pUowxXrrDqiiN4bDJfokm/wH+Sq9cvKhFpquZrmXoBF/jsDSzMnAIenJvW7CnMxsvu4YN1uvsManfdn06n8diFlgGwSsuO/nGzQih1jBHoW4FZBBe2dpBz4QX970MNQ10UpNZc3iH9DbOPqWav3t6+sE19WfzzDU3DPGm+tZ/Jg=
+	t=1738696222; cv=none; b=oV0Eghkaqw8K1fVfMB7zARaOoixrQ+27eA339OyVjI0wne3K3WJUonQUSpPpGPzl2DYvbMi4fs8eTzW1F2P2BSrfrShZDz5wBl/5NLLQmuc0oWTw8H2nJW+TqjdXJiM627HmTIXP5vzhH0D5t0V5zTGlnaAPBa3B9tN83k5H41Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738696203; c=relaxed/simple;
-	bh=b4lG0grI4DA3hkJUXvapkD8ACE9OrDCTHg9y5xuY66o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=a5FAFcVjr3Kv9WVIGrjz+y+cF6fkPx24Qvc6W6HA/WRNLWIALgKGoCpamu/97WUoAcnuhfX8bsZn9xvITNoVIF++EEEWm0PodYLR8vVCfRsg4NZeCfLq/SWB00kFxdTbD3NfBsLUsyferbZm6+CSPBjsFB34xM6H6gDOv384A2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dUmwDAYB; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738696222; c=relaxed/simple;
+	bh=Zd/gLVjPpiZVgNGhRiKBUZa+V7xvpcsEdefnPBi6Bcs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WjAZshcQbkp9DTmyUuXuEoF1KZ6Zsj6Iq6O5no520wHW/1zEMkVEDEC8lHhKeQSz7+eqbflj/wAjGKsVr5PpfLxIWOzDpo1BhU8CuHu6R9VUyPh17vt/VuIBB/W35TvElJuuciOw1NbhweVNv4Fir3zG+7Zfod6Uj5XTN9WRd7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IYYi2sgQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dUmwDAYB"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 514J9Lb42450620
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Feb 2025 13:09:21 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738696161;
-	bh=9UznfyhxXl/v9zHInozAixapXW1F8apNcxOMuxzIt5Y=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=dUmwDAYBaSKhoQ8VLvB0cE7a6ENYXEl/1lpLNIqCn6vxUWhcjzp/lro3ALTypSU8f
-	 bDyE8uapnM0kqb5Ko0Dda9osNmpRrEDfZxxy4n7CkqoNNomR/+Q3LJ33/n07CNYIXe
-	 wMLVBf4P/eegmZ258V5Exg4aGysDMNdrDi+5A7+o=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 514J9L2k075089
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Feb 2025 13:09:21 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
- Feb 2025 13:09:21 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 4 Feb 2025 13:09:21 -0600
-Received: from [128.247.29.251] (dmz007xyy.dhcp.ti.com [128.247.29.251])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 514J9KRN014651;
-	Tue, 4 Feb 2025 13:09:20 -0600
-Message-ID: <4198b469-f874-431f-a2de-b4ffa2975c08@ti.com>
-Date: Tue, 4 Feb 2025 13:09:20 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYYi2sgQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9098EC4CEDF;
+	Tue,  4 Feb 2025 19:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738696221;
+	bh=Zd/gLVjPpiZVgNGhRiKBUZa+V7xvpcsEdefnPBi6Bcs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IYYi2sgQx2dPS5vxgoBjFdCuoEXXoWnive3CuG+8FDu/hzNtVV/rgQOwgSp2NRVHf
+	 wv3ZnIEBukU53ZuB2BoC5TR1FqqZfETKL/2HrbIo6VYQw5obmXWVO2mtnKwGSwudLu
+	 pH5Zd7X1vW57CHd+lbYj9OtFz4e21JTKC22qB1LoZRsMrP6rQt3hsDfGlyAeOATMwb
+	 K31qgrow8x618TsqnxYGCXKDCae9cUoiV9tiZZonSxVnYflmP5DECWLocTnwZhsjoI
+	 TEqDB7sFT0YjjbIgSE40dh5qdTsXYKixeBPDC4GEnleo1YJ9re4yKZopUgKxUhFgd7
+	 rX0zzc0RCjEYw==
+Date: Tue, 4 Feb 2025 11:10:17 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v4 25/39] unwind_user/sframe: Show file name in debug
+ output
+Message-ID: <20250204191017.iqrew5zgxg7eh4s2@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <7bfb7ffad5fe384fe3dbe6c8ca985f35b98b48bb.1737511963.git.jpoimboe@kernel.org>
+ <c9ba301e-8451-441d-8212-2913a76ff32d@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/5] regulator: dt-bindings: Add TI TPS65214 PMIC
- bindings
-To: Krzysztof Kozlowski <krzk@kernel.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <aaro.koskinen@iki.fi>, <andreas@kemnade.info>,
-        <khilman@baylibre.com>, <rogerq@kernel.org>, <tony@atomide.com>,
-        <lee@kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC: <m-leonard@ti.com>, <praneeth@ti.com>
-References: <20250131221139.342967-1-s-ramamoorthy@ti.com>
- <20250131221139.342967-3-s-ramamoorthy@ti.com>
- <746798a0-1a35-4a3f-aa9b-6edfd724bf10@kernel.org>
-Content-Language: en-US
-From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Organization: PMIC
-In-Reply-To: <746798a0-1a35-4a3f-aa9b-6edfd724bf10@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c9ba301e-8451-441d-8212-2913a76ff32d@linux.ibm.com>
 
-Hi,
+On Thu, Jan 30, 2025 at 05:17:33PM +0100, Jens Remus wrote:
+> On 22.01.2025 03:31, Josh Poimboeuf wrote:
+> > When debugging sframe issues, the error messages aren't all that helpful
+> > without knowing what file a corresponding .sframe section belongs to.
+> > Prefix debug output strings with the file name.
+> > 
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> 
+> > diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
+> 
+> > +static inline void dbg_init(struct sframe_section *sec)
+> > +{
+> > +	struct mm_struct *mm = current->mm;
+> > +	struct vm_area_struct *vma;
+> > +
+> > +	guard(mmap_read_lock)(mm);
+> > +	vma = vma_lookup(mm, sec->sframe_start);
+> > +	if (!vma)
+> > +		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
+> > +	else if (vma->vm_file)
+> > +		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
+> > +	else if (!vma->vm_mm)
+> 
+> This condition does not appear to work for vdso on s390.
 
-On 2/1/25 5:42 AM, Krzysztof Kozlowski wrote:
-> On 31/01/2025 23:11, Shree Ramamoorthy wrote:
->>   
->> @@ -98,6 +102,16 @@ required:
->>   additionalProperties: false
->>   
->>   allOf:
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            const: ti,tps65214
->> +    then:
->> +      properties:
->> +        regulators:
->> +          patternProperties:
->> +            "^ldo[3-4]$": false
-> So now, when you combined these patches, you can easily see that you are
-> duplicating your other "then:" from patch #1. Just combine these into
-> enum. Don't duplicate.
->
-> Best regards,
-> Krzysztof
+I had a fix for this which somehow got dropped:
 
-Thank you for reviewing! I'll add in this feedback, and send a v5 soon pending any other feedback.
-
-
--- 
-Best,
-Shree Ramamoorthy
-PMIC Software Engineer
-
+diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
+index 3bb3c5574aee..045e9c0b16c9 100644
+--- a/kernel/unwind/sframe_debug.h
++++ b/kernel/unwind/sframe_debug.h
+@@ -67,6 +67,10 @@ static inline void dbg_init(struct sframe_section *sec)
+ 		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
+ 	else if (vma->vm_file)
+ 		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
++	else if (vma->vm_ops && vma->vm_ops->name)
++		sec->filename = kstrdup(vma->vm_ops->name(vma), GFP_KERNEL);
++	else if (arch_vma_name(vma))
++		sec->filename = kstrdup(arch_vma_name(vma), GFP_KERNEL);
+ 	else if (!vma->vm_mm)
+ 		sec->filename = kstrdup("(vdso)", GFP_KERNEL);
+ 	else
