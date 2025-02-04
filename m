@@ -1,139 +1,178 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A6025A642;
-	Tue,  4 Feb 2025 03:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB54156237
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 03:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738639492; cv=none; b=Oq39AWsoZEoW8w+XwDNl3HgkPyqzoE/sNrD2X4cg+L7xvQHAvHCSRDg0NKTVwN8fKYPUm01fCg4XuFLmQqgNMIcuT1pzDVVBAUnAmF0UofUO2S8YVWimzj1N4zcJgWVwNYAA2VRbmBkikNiwx4PsnF0iCH83GZXYV2LnLxjqkEQ=
+	t=1738639736; cv=none; b=CSBYT3MGSvsxtzvxaJj8ZWYbGRZXW9GzSUFZgMLggRLH5vG2QHAgY0dczLSDkA7ilcHxZSteB8g9uX1+1mY1V2Xs3rRZGaeUMHcqsqfwpIHWOk2JlQb6jKurDWfpd7G4RucMJJAVf96c96LI4EXGMoR9QS8D4rCnf+Du57NTguE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738639492; c=relaxed/simple;
-	bh=MK/kgsCB755tLqGEF2PsD/FjDQbJHiEt+PB8jn3xK+w=;
+	s=arc-20240116; t=1738639736; c=relaxed/simple;
+	bh=CFY6+1/iZfibT4R4WsfwMdIKrQLWAAC0lZzgGcaBwk8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NXImFRL86+BWHjEIDME7E6XLKIVWUDH1XLDKY1lmDcPe0rOhq6QkfF5gsprLRb5hZWlolNjHJ/VuBvBu7oHb7l9vvkpopmxoMKvJtIgRcUH3Gs2uzZhLBrE/0FbI/d+gEVUw2X4IGrMz7TpopcUzfhTKMf3LTZAWUrbydXhga0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B7D4eArb; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=BpW1byxOvJgiTOfDf/rdRuy/IThisiFSwoStJ/iUSQDCL284MZKW5S11/NpwBvtDNt4rR1gIhs+dR9FAjN8sbiVLIWcQBQVJ2YiW5RJ+1ZCUFvNHDSDT9DAx4O3ZOuvbvT4+f52YXC8Dws4EeN92q47umY/lrSqsoyqoV7d7/KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qPTzYbjv; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7D4eArb"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6f4bc408e49so28857227b3.1;
-        Mon, 03 Feb 2025 19:24:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qPTzYbjv"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-467a3c85e11so32085311cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 19:28:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738639489; x=1739244289; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738639733; x=1739244533; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SHZf3qPAJPMI6pvNtjlUfKmiEdCpztmVl3vR7/P9M6c=;
-        b=B7D4eArbXfOxZU8C+CHgDHl3JJoPAdVlfGB+vVdj/RzCaV/j1UvRwbwsbHVxaVUdrS
-         jz89ojtaZR7de3GPnQ1L0b4ITHIdb24WG56T9DXrs/r00jFjsVcurKxaSC2VW6lw0zJY
-         AGqFBh6/7IpQo5nRxU0TD6HaS562P+wt0Fy5hHiJl03lONT3MTqbhrCEhtEbHWB4TKP9
-         Q7ZBUzAVdkgxIaXFx+iIwQPuAWUBSFJT0IE2y7Qa6gfKDocSEo+wk89t7gYcjKj5j8RS
-         g0xxfGYre2EYzSuobwk03ilgh2MTiQoSjj3HgFg9xeJwtW76w4V8kh/Qv2jEIQj64bkT
-         Ag7g==
+        bh=ypnXRpVd7BRYU9e6tSX+xvv2lBSXpI+Wfpw7I5WJkzk=;
+        b=qPTzYbjv0YPnVXVC9mJTLJrwkO+oetxLStk1RWnchMqkU9PhDL3mmBRqk6aqAbK5L3
+         gw7F2p44lnOjjak1K2TiBfuhelRFRpLNJNpadzOYV9dspLixhXwuzI5vbhMAxhgi5NiX
+         wuI1ZbOEGOXLyD93DDAOI0IA2qXrePGGBFswuvCVx42Hn5Kky66O8x72VVeku9axsF97
+         SZBMooR4K8bSBd+v6WOD2GQoCjvbN7bAhINo1Ods019s1s2Xjy2FrfqS89wGycbr2/qb
+         MRoee5QYCYNW/ka400uOf15MKY+0l6Hus4nN15/+DGoVTY8XW6KV6Q0d3ugmayTnCQQW
+         00Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738639489; x=1739244289;
+        d=1e100.net; s=20230601; t=1738639733; x=1739244533;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SHZf3qPAJPMI6pvNtjlUfKmiEdCpztmVl3vR7/P9M6c=;
-        b=i0aO6V7XceNT3aAAmW40Ryo1jjN3a0ZLQpwgm9pYjrM8PmWwA51CVfRFzENzi9i95h
-         Fwe77ah9Ki9+rmSAP829HfPrVCEx5L36MbKNnA/xDPY1NhlxJvz4Z0mir3slpZCiAdMN
-         PWboxMwLcbPHLLZf+qKE/RxBsHb73+fq+i7Rk85+TsmkexGVYG4hmhC3jgrGMDiF8HjN
-         6ttiRk0qXHDWB/cjiGoL+wTsrjoYJ7ch5YPZWgLR5JUxdbf+8gZnWz7ZmW6Tj5yraJ6E
-         fJNXPW7hCu995obho8DZjoPHKrVbcVl0dswmfYJGvTA0J42oszy2K2ySCs6QoBHxiTcF
-         Bk6A==
-X-Forwarded-Encrypted: i=1; AJvYcCU7AHH5+IpM+tdMyIR4D1PgjJsSmPzvxVQfsgh0rTFVa8KeerOo1WzzcovJbg9ryy2pDEbPxCHipd7h@vger.kernel.org, AJvYcCUjd77M3ubtblhkaEDb3/fts6d9UbNdWTmB1KAhaJFYWoVDTBYUtkUVM4PGk/QvjYAnguAIByUc@vger.kernel.org, AJvYcCVJVySjIEhbWnHGIU4QjJYgKwevDRNph7GNwQW3FgmjOPoZqaHFNuz+5Fx0VAowaqxRrGYK9PUNZcks@vger.kernel.org, AJvYcCVb0R5xL6FPl4m8n+MiKimaMgmhaR/Unjw2zXSdc+Glzb/ysQX9AAdx0T/5zXhcQ6Go4JwO3Qd3uBELdWTj78U=@vger.kernel.org, AJvYcCVkMyaJb9pHPeVjXd75d1eR29LHaO9cSUcZmo9rZO3fiODsWCWTcWlHJi+Krh4/lchHQT6M2nxC9QU=@vger.kernel.org, AJvYcCVqzfC4k2jMuequD/M332EE8roEQ5I1EDDvwSR46GW1tNWLvOx7gtiwOXGdkKDtYZya00Ibz7/v4Wax@vger.kernel.org, AJvYcCVup5E7FeRvg1XERLlllN2r5htZMuK6nBw8+mD+GqxEf0IBflNntEhuILMHCh4ROoY4ZCDgnTnL9KMcOQ==@vger.kernel.org, AJvYcCWWI6KfGnOAXS6GD6OjonhNS0t5vLLhg74gmRfyhpE0TNSTPoO9YyYq1DUhuoenlrAYrzNNCq5UZueMW3M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCYXpX+rTuUwAhXUjWjbKJ7GSqYCfV5LqhQXXW/g+eFWTQLsvE
-	abOncGk23Gwu/1kCOMsZsCHogxxTYNSmaqxvCQFyoj3dHdymuTU7n6DHT69+Fp7XNQ/ePpJwb9l
-	gGv1XtIwsiB+qIDMWJE6QZk8gxk0=
-X-Gm-Gg: ASbGnctYMnVwqjwbaMkr+s8ay0TFIheHjkRuFQ135q+iGg4A+EsDOWj8lcK88Tzw0CS
-	9TYsXgXQCfHKirlihGROF1Gpug9uNnQhQ1S8BRkpdEG65rmVfAdtZUJ7I9u3wHFRNMon751W0gV
-	9ukpnsBKnUNt7WzB0VXdw6UW38yMQhd14=
-X-Google-Smtp-Source: AGHT+IE09Gi3ca8JBdhccV2nmsb+G7Mxn8icbzfNE/93+HrK2OFTG29wJWw2U9CAVzfm42NsDopJBH4rbrMUflKWcRM=
-X-Received: by 2002:a05:690c:9a03:b0:6f7:64a8:e23 with SMTP id
- 00721157ae682-6f7a84246cdmr211542487b3.37.1738639489487; Mon, 03 Feb 2025
- 19:24:49 -0800 (PST)
+        bh=ypnXRpVd7BRYU9e6tSX+xvv2lBSXpI+Wfpw7I5WJkzk=;
+        b=QxD20T/5bAy5kminLvAZELwnJ5+RVHd4mR/8glNnj0mrNaaiSfHtn0gnmThs+Y+Mq8
+         LmAGHJIC+cj8qpuQ6IrEIkpeHgKjlXU/k/IVoQLGES2vPrT79/s6h4DQEvIU5fiU7AP2
+         N/Ge0J9CdDNHiUE/herhyimIGiBbourRhQA6TsD1yeKCx99qXbcE9+PiEoGMceZT5iO4
+         ART4U4uZFLuj+7K6evVksGgWUcy1x+7T1wVk2VeBh79XjIZIGrlEHaoJW7ZIPCURuAgh
+         IJ7ukRmdj7KsqOmn2BrViqzv/80kvpfwjN0qmFS9wW8zv2rAG0Bf+zod2XCmMb3JsdjF
+         Ev1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUa448DG8Rmddc2FR5/MBmRbxAi3HqMYqx5szjbAKNp5Q6xsEqWTRH5HRax+uHu8/QVBNbWTW0uGQ5uNPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxbx+WU4kFsltLuq/ZODp7rNw3o6NzoBAT0EUGRjP7Uf9jM1vmN
+	g3v+DVLuPqGAVcY8+Rf3aqQDmo7s/yri4A7I94ZcX8XcMIiwtM/JsmDTJ5SjbVOM+LBphcf7dsq
+	nqcaPcPGeqwqDb9N8zZtFI+L4BMyDYgL2wP1s
+X-Gm-Gg: ASbGncus2oMdKUAYc9JbNoo987WculkoJf2S88f2GR5HZ8RZOzFa/ojQUIT8MSIfwbJ
+	99q36eh7+L3oyD3PMo+VY7ZEaWAXJtZzZjF12ZotA2aNDbznIepKLILmSHsWYLQ2Rlc4yT7qIec
+	9YRarqkO4fRH2yPw78y3FWsTADxg==
+X-Google-Smtp-Source: AGHT+IG5bOEDDHBdfJysE32rv2Imzn60PeJoxF/B9tX2984Ezu+5ZzfbWrfZIq59LG6nkA3gIiWC1N23lnlu/1Qr4wg=
+X-Received: by 2002:ac8:5993:0:b0:466:9738:22de with SMTP id
+ d75a77b69052e-46fd0b68779mr367277781cf.41.1738639733200; Mon, 03 Feb 2025
+ 19:28:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250123091115.2079802-1-a0282524688@gmail.com>
- <20250123091115.2079802-5-a0282524688@gmail.com> <fc927b75-5862-4ead-a355-a40c27d8307b@wanadoo.fr>
-In-Reply-To: <fc927b75-5862-4ead-a355-a40c27d8307b@wanadoo.fr>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Tue, 4 Feb 2025 11:24:38 +0800
-X-Gm-Features: AWEUYZnEhI9JNxJOh_LDE0_r1vETpiCuUcVdrotMrjh4ge4F6zvwefLgocld9G4
-Message-ID: <CAOoeyxWivAZmZPe92+_LrL-HvMn7Lqs7M4B__JULKqHeJMTioA@mail.gmail.com>
-Subject: Re: [PATCH v6 4/7] can: Add Nuvoton NCT6694 CANFD support
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, tmyu0@nuvoton.com, 
-	lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mkl@pengutronix.de, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com
+References: <20250131225837.972218232@goodmis.org> <20250131225942.365475324@goodmis.org>
+ <20250201115906.GB8256@noisy.programming.kicks-ass.net> <F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
+ <20250201181129.GA34937@noisy.programming.kicks-ass.net> <20250201180617.491ce087@batman.local.home>
+ <20250203084306.GC505@noisy.programming.kicks-ass.net> <20250203114537.6a30c7c0@gandalf.local.home>
+In-Reply-To: <20250203114537.6a30c7c0@gandalf.local.home>
+From: Suleiman Souhlal <suleiman@google.com>
+Date: Tue, 4 Feb 2025 12:28:41 +0900
+X-Gm-Features: AWEUYZmgt56g4D3b3bmbMMZ61mu-kUiNaRXzg0GoHJpisOtcyPReyq-Z10vSKxg
+Message-ID: <CABCjUKA2w9Xip2QDjMRDCWnvmZc52SWbn74-57q52gmpXcT+EA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Ankur Arora <ankur.a.arora@oracle.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-mm@kvack.org, x86@kernel.org, akpm@linux-foundation.org, 
+	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org, 
+	mgorman@suse.de, jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, 
+	boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com, 
+	andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, 
+	Vineeth Pillai <vineethrp@google.com>, Ingo Molnar <mingo@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Clark Williams <clark.williams@gmail.com>, 
+	bigeasy@linutronix.de, daniel.wagner@suse.com, joseph.salisbury@oracle.com, 
+	broonie@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Dear Vincent,
-
-Thank you for reviewing,
-I will address the issues you mentioned in the next patch.
-
-Vincent Mailhol <mailhol.vincent@wanadoo.fr> =E6=96=BC 2025=E5=B9=B41=E6=9C=
-=8826=E6=97=A5 =E9=80=B1=E6=97=A5 =E4=B8=8B=E5=8D=884:47=E5=AF=AB=E9=81=93=
-=EF=BC=9A
+On Tue, Feb 4, 2025 at 1:45=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
 >
-...
-> > +static int nct6694_can_get_clock(struct nct6694_can_priv *priv)
-> > +{
-> > +     struct nct6694_can_information *info;
-> > +     struct nct6694_cmd_header cmd_hd =3D {
+> On Mon, 3 Feb 2025 09:43:06 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> If the variable only has constant initializer, make it static const:
+> > Lazy is not the default, nor even the recommended preemption method at
+> > this time.
 >
->         static const struct nct6694_cmd_header cmd_hd =3D {
+> That's OK. If it is considered to be the default in the future, this can
+> wait.
 >
-> Apply this at other locations in your different modules.
+> >
+> > Lazy will not ever be the only preemption method, full isn't going
+> > anywhere.
 >
-> > +             .mod =3D NCT6694_CAN_MOD,
-> > +             .cmd =3D NCT6694_CAN_INFORMATION,
-> > +             .sel =3D NCT6694_CAN_INFORMATION_SEL,
-> > +             .len =3D cpu_to_le16(sizeof(*info))
-> > +     };
-> > +     int ret, can_clk;
-> > +
-> > +     info =3D kzalloc(sizeof(*info), GFP_KERNEL);
-> > +     if (!info)
-> > +             return -ENOMEM;
-> > +
+> That's fine too, as full preemption has the same issue of preempting
+> kernel mutexes. Full preemption is for something that likely doesn't want
+> this feature anyway.
+>
+> >
+> > Lazy only applies to fair (and whatever bpf things end up using
+> > resched_curr_lazy()).
+>
+> Is that a problem? User spin locks for RT tasks are very dangerous. If an
+> RT task preempts the owner that is of lower priority, it can cause a
+> deadlock (if the two tasks are pinned to the same CPU). Which BTW,
+> Sebastion mentioned in the Stable RT meeting that glibc supplies a
+> pthread_spin_lock() and doesn't have in the man page anything about this
+> possible scenario.
+>
+> >
+> > Lazy works on tick granularity, which is variable per the HZ config, an=
+d
+> > way too long for any of this nonsense.
+>
+> Patch 2 changes that to do what you wrote the last time. It has a max wai=
+t
+> time of 50us.
+>
+> >
+> > So by tying this to lazy, you get something that doesn't actually work
+> > most of the time, and when it works, it has variable and bad behaviour.
+>
+> Um no. If we wait for lazy to become the default behavior, it will work
+> most of the time. And when it does work, it has strict behavior of 50us.
+>
+> >
+> > So yeah, crap.
+>
+> As your rationale was not correct, I will disagree with this being crap.
+>
+>
+> >
+> > This really isn't difficult to understand, and I've told you this
+> > before.
+>
+> And I listened to what you told me before. Patch 2 implements the 50us ma=
+x
+> that you suggested. I separated it out because it made the code simpler t=
+o
+> understand and debug. The change log even mentioned:
+>
+>      For the moment, it lets it run for one more tick (which will be
+>      changed later).
+>
+> That "changed later" is the second patch in this series.
+>
+> With the "this can wait until lazy is default", is because we have an
+> "upstream first" policy. As long as there is some buy-in to the changes, =
+we
+> can go ahead and implement it on our devices. We do not have to wait for =
+it
+> to be accepted. But if there's a strong NAK to the idea, it is much harde=
+r
+> to get it implemented internally.
 
-Excuse me, I would like to confirm, if the variable is constant
-initializer, should the declaration be written as:
-static const struct nct6694_cmd_header cmd_hd =3D {
-    .mod =3D NCT6694_CAN_MOD,
-    .cmd =3D NCT6694_CAN_INFORMATION,
-    .sel =3D NCT6694_CAN_INFORMATION_SEL,
-    .len =3D cpu_to_le16(sizeof(struct nct6694_can_information))
-};
-instead of:
-static const struct nct6694_cmd_header cmd_hd =3D {
-    .mod =3D NCT6694_CAN_MOD,
-    .cmd =3D NCT6694_CAN_INFORMATION,
-    .sel =3D NCT6694_CAN_INFORMATION_SEL,
-    .len =3D cpu_to_le16(sizeof(*info))
-};
-, correct?
+Can you explain why this approach requires PREEMPT_LAZY?
 
-In addition, does this mean that the parameter in nct6694_read_msg()
-and nct6694_write_msg() should be changed to const struct
-nct6694_cmd_header *cmd_hd?
+Could  exit_to_user_mode_loop() be changed to something like the
+following (with maybe some provision to only do it once)?
 
+if ((ti_work & _TIF_NEED_RESCHED) && !rseq_delay_resched())
+    schedule();
 
-Best regards,
-Ming
+I suppose there would also need to be some additional changes to make
+sure full preemption also doesn't preempt, maybe in
+preempt_schedule*().
+
+-- Suleiman
