@@ -1,194 +1,156 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B97211A0F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10CD212FBC;
+	Tue,  4 Feb 2025 13:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738677397; cv=none; b=cMraKcWTIKt8b2DehOLHalWaJIkDPatACOGYAdY4ERLh8ydR4zE3HhD+yOn+EmbXL83iDgH5vDryiH6h2YKO2I+KyC/Rz7Wjq268/cNXzL5FlOmjsozlgCG+1BkZTgeBChC8svUgr4O5vfE0G5xz6KMWXevXnRpq03dzbt3Z9MU=
+	t=1738677439; cv=none; b=jxW/Lc0npN7MK7MpfbMIC417uR+jKITZfhrFv7M9Watm+WS7vMkfu+xAePmeLJnu9XH0fMlOQclDe478pLdcacH6MiGed8wp7hpKiO7CZHctxHn/YvSzijAavZp94X0ppMUp/RQ6ewo02+La+6fAKFzvaYADEtxHjBfs+1HsTt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738677397; c=relaxed/simple;
-	bh=MA05jaFSLZfUedsFN65m6VbXQIjYAu102gxjryuOpUY=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=UMroqe9p4Xap/ZBxy3pO9zYAFp4yNHEWiMYC6VOHjqVPGZspUZ9S0SNy+eZxBfkgchkJ1bylbgeE8owscp3ii3fcjDkDRgzYGsPWUcsDc2tIVj3FydYlc96j6WD0lEpOGKXFPp6n3O1Ap80MLcYhzuJshOxCEGzn0B5kxxbcF7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nq+o1xBN; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1738677439; c=relaxed/simple;
+	bh=7k7oDJf5DbZufBYekhtPBUkxAHwlD36vRQTlqfFevzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YG18p/zvuGUwYEWS3mcyvmL3A/ZO/tbWXxNICQHuYEVesraTWi6CWpGBGCHEFdlBRZXC4h1c3nSwL97V8NG9PcTUFdMvTxPL9jRbBWhU1k35fvXoVbkVp+kWjk1RuI5VTzxKTWXorQ2TdgTDTiMPvKKxW7nTCHZ+Xt0QSc2u2Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BesNMMPV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nq+o1xBN"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250204135631epoutp0367b80bcb1a6c31d68b74316c37c27d3c~hBeAuyQIg1888618886epoutp03g
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:56:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250204135631epoutp0367b80bcb1a6c31d68b74316c37c27d3c~hBeAuyQIg1888618886epoutp03g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1738677391;
-	bh=vzeBvSxuLukopUf6enF/gSvN1gMI6DZKQm8HjnQpzrc=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=nq+o1xBNalg8aGvQbuJRB1CK7QdJQOQqaiu0rUoj2VyRqPCZrAlFP9K6g3yKPUGYE
-	 awY0BD+2t30zK8wContXHaLKOgyjT8r3r4BQ4mB7/OUks0h4tVBo9b6PijZFasSagD
-	 lBsscWBVm54fy8cHyV62YerCnrfIedB+rkndW23Q=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250204135630epcas5p1e25e570b0224871f7b08586f3d356d8f~hBeABjTLG2007020070epcas5p1n;
-	Tue,  4 Feb 2025 13:56:30 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4YnPzc6cKdz4x9Pp; Tue,  4 Feb
-	2025 13:56:28 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D4.DE.20052.C8C12A76; Tue,  4 Feb 2025 22:56:28 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250204135628epcas5p1d9a702b1f790f493b229d796de0be232~hBd9sKJus2007020070epcas5p1k;
-	Tue,  4 Feb 2025 13:56:28 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250204135628epsmtrp2915142de6ed6ccd079105e5b0ec24a48~hBd9rOd0B1868618686epsmtrp2Y;
-	Tue,  4 Feb 2025 13:56:28 +0000 (GMT)
-X-AuditID: b6c32a49-3fffd70000004e54-f1-67a21c8c05e6
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	EF.E0.18949.C8C12A76; Tue,  4 Feb 2025 22:56:28 +0900 (KST)
-Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250204135625epsmtip1901feabdd5d886cfab64aee2b4f762d1~hBd65p09d1515215152epsmtip1R;
-	Tue,  4 Feb 2025 13:56:25 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Selvarasu Ganesan'" <selvarasu.g@samsung.com>,
-	<gregkh@linuxfoundation.org>, <m.grzeschik@pengutronix.de>,
-	<kees@kernel.org>, <abdul.rahim@myyahoo.com>, <quic_jjohnson@quicinc.com>,
-	<quic_linyyuan@quicinc.com>, <linux-usb@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Cc: <thiagu.r@samsung.com>, <jh0801.jung@samsung.com>,
-	<dh10.jung@samsung.com>, <naushad@samsung.com>, <akash.m5@samsung.com>,
-	<rc93.raju@samsung.com>, <taehyun.cho@samsung.com>,
-	<hongpooh.kim@samsung.com>, <eomji.oh@samsung.com>,
-	<shijie.cai@samsung.com>, <stable@vger.kernel.org>
-In-Reply-To: <20250118060134.927-1-selvarasu.g@samsung.com>
-Subject: RE: [PATCH v2] usb: gadget: f_midi: Fixing wMaxPacketSize exceeded
- issue during MIDI bind retries
-Date: Tue, 4 Feb 2025 19:26:21 +0530
-Message-ID: <079801db770c$9610fc10$c232f430$@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BesNMMPV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23DA2C4CEE2;
+	Tue,  4 Feb 2025 13:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738677438;
+	bh=7k7oDJf5DbZufBYekhtPBUkxAHwlD36vRQTlqfFevzc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BesNMMPVujcNaO6cuAWEZyo/CHCAg5PsmIlDuDoKgD26YnfogwxLBR8Ug3BLIfsjo
+	 uT5hu62P6189it89OA2fU1NH/9e+VWT20cU9CebpfuIfDQ4IbZAVxRB40xyA1Nfx4N
+	 su38yWGWm8EKOpv+6AIMwskzSfsZ2XPPXlY7NP9caE8ndywHqFnMCDXisspJ8/VFnm
+	 gHCMoQHOt8o0eTsoNAZ6V7YtvwFGT1Su6Dzbpi6N9QgzCdCV0e2Ud0iPPzoVS+QzPd
+	 Bc7TeJBkOnTPx67Wu7/SfaAu+ZSLGxOGmfBLUaiN6FeI9l/3DTuV0BMbtO6aDakxHI
+	 J7C7hUoSlQsTQ==
+Date: Tue, 4 Feb 2025 14:57:12 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Lyude Paul <lyude@redhat.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] driver core: add a faux bus for use when a simple
+ device/bus is needed
+Message-ID: <Z6IcuEPSO3QwIWzW@pollux>
+References: <2025020421-poster-moisture-534b@gregkh>
+ <2025020424-retrain-recharger-407c@gregkh>
+ <Z6H9g_bvvMf5pPyc@cassiopeiae>
+ <2025020435-earwig-zesty-87ea@gregkh>
+ <Z6ICPc3A5Cy1dgw_@cassiopeiae>
+ <2025020458-overpass-pebbly-f4b9@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKAq9PyrC3Jr3SNnCEbU5tom0LBzwIRS5/Xsdw2SkA=
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKJsWRmVeSWpSXmKPExsWy7bCmhm6PzKJ0g7939C2mT9vIavHm6ipW
-	izsLpjFZnFq+kMmiefF6NotJe7ayWNx9+IPFYt3b86wWl3fNYbNYtKyV2WJL2xUmi09H/7Na
-	NG65y2qx7vomRotVnXNYLI4s/8hkcfn7TmaLBRsfMVpMOihqsaK5ldlBxGPTqk42j/1z17B7
-	HHtxnN2j/6+Bx8Q9dR59W1YxenzeJBfAHpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCo
-	a2hpYa6kkJeYm2qr5OIToOuWmQP0jpJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWn
-	wKRArzgxt7g0L10vL7XEytDAwMgUqDAhO+PPgyNsBetEKxZs6GdrYPwm2MXIySEhYCLxYtV+
-	1i5GLg4hgd2MEjcmbmOGcD4xSjxtuwyV+cYoMXHubmaYlrYfL6Gq9jJKbDnbywThvARqudnK
-	AlLFJqArsWNxGxtIQkRgDpPEszmLwWYxCyxkkvj1aTk7SBWngLXE/TfNjCC2sECORNOEw2A2
-	i4CKxP1Zn1hBbF4BS4nOfT0sELagxMmZT8BsZgFtiWULX0PdpCDx8+kysHoRASuJNdcbmSBq
-	xCVeHj3CDrJYQuA/h8TBg3+hGlwkjj5YxQphC0u8Or6FHcKWkvj8bi8bhF0tsX7DPBYIu4NR
-	onF7DYRtL7Hz0U2gOAfQAk2J9bv0IXbxSfT+fsIEEpYQ4JXoaBOCqFaVaH53FWqKtMTE7m6o
-	rR4Sx7d0sUxgVJyF5LNZSD6bheSDWQjLFjCyrGKUTC0ozk1PLTYtMMxLLYdHeXJ+7iZGcHrX
-	8tzBePfBB71DjEwcjIcYJTiYlUR4T29fkC7Em5JYWZValB9fVJqTWnyI0RQY3BOZpUST84EZ
-	Jq8k3tDE0sDEzMzMxNLYzFBJnLd5Z0u6kEB6YklqdmpqQWoRTB8TB6dUA1OFwjnhWdM7BdZu
-	i9zMM6e26KfkhKlzfv3sXKrUu3Jbhs7jZu/nyxTFtyYm/RF8/MWYb7LYQwexG1+0r3n/OzXx
-	4VEjkXan9zvSVhxnbWeIn7P2v8KJ4tbOw1NS7GovBiSUMPaE3c1aer3R6Tl7QcOvRwpbgwIL
-	7py3nd2vzxO2czuHaGqc+KeeqcdYVMxE7zKs4TVx+Vder/bma5qWW4rsL8u2KWWTlm2UUZjR
-	tS1GVnVpyKWss/OKXjTZGpzt32cffvRtf+Li/8u2dFcvPW4t7DLH1mlGXNXG5QkR7h2xay8n
-	1Ah/3LRwp/yWGqdtu6I3JR43CHZVn36kZMbbyJpnH5oEpaZ8vHUk41+W/30lluKMREMt5qLi
-	RAAQUSOOeAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsWy7bCSnG6PzKJ0g0VP2SymT9vIavHm6ipW
-	izsLpjFZnFq+kMmiefF6NotJe7ayWNx9+IPFYt3b86wWl3fNYbNYtKyV2WJL2xUmi09H/7Na
-	NG65y2qx7vomRotVnXNYLI4s/8hkcfn7TmaLBRsfMVpMOihqsaK5ldlBxGPTqk42j/1z17B7
-	HHtxnN2j/6+Bx8Q9dR59W1YxenzeJBfAHsVlk5Kak1mWWqRvl8CVsXrnKsaC3yIVJ79PZW9g
-	3CnYxcjJISFgItH24yUziC0ksJtR4tu0JIi4tMT1jRPYIWxhiZX/ngPZXEA1zxklVm2/CZZg
-	E9CV2LG4jQ0kISKwhEnieWMnM4jDLLCWSWLb3aXMEC09jBL7bt4Aa+EUsJa4/6aZEcQWFsiS
-	uDF/HROIzSKgInF/1idWEJtXwFKic18PC4QtKHFy5hMwm1lAW6L3YSsjjL1s4WtmiPsUJH4+
-	XQbWKyJgJbHmeiMTRI24xMujR9gnMArPQjJqFpJRs5CMmoWkZQEjyypGydSC4tz03GLDAqO8
-	1HK94sTc4tK8dL3k/NxNjOAY19Lawbhn1Qe9Q4xMHIyHGCU4mJVEeE9vX5AuxJuSWFmVWpQf
-	X1Sak1p8iFGag0VJnPfb694UIYH0xJLU7NTUgtQimCwTB6dUA9PavgvHima0hc/7e4+rbq9d
-	f1GpWszRNTOnPl+8cfPbXef8qpWmv5uQcElH/HU5r8/pjEnLDAsbj0ce6bNYVX898uCH+Og7
-	rkE2wmE5hVHK3ztM9z5UYN17+tJf1suljVrO8rmFs2Iz2nXe//ywqKT9qImz0h5lc1stlykx
-	h0rdb76IuRvaPbl1v/++elfjz67cfDbXT2RwLe6WqnO98LPoZH9jlct0JelTwgXiuTr8sXba
-	c+S2f7+VsNRdXMduXVDtm9/n5XP1PL6GMGe7bHjGZTSvRNN3z6JyGRuVpRYX//H/PikhrJnG
-	O6F96cTLC1fWeq/4zlaYs+nLzAnyW4s+nZ71uDAvaPvrtYbKLkosxRmJhlrMRcWJACadUN5g
-	AwAA
-X-CMS-MailID: 20250204135628epcas5p1d9a702b1f790f493b229d796de0be232
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250118060207epcas5p3913957a1c5ec9b029f1d4953f6b29751
-References: <CGME20250118060207epcas5p3913957a1c5ec9b029f1d4953f6b29751@epcas5p3.samsung.com>
-	<20250118060134.927-1-selvarasu.g@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025020458-overpass-pebbly-f4b9@gregkh>
 
-Hello Selvarasu,
+On Tue, Feb 04, 2025 at 01:55:54PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Feb 04, 2025 at 01:04:13PM +0100, Danilo Krummrich wrote:
+> > On Tue, Feb 04, 2025 at 12:52:34PM +0100, Greg Kroah-Hartman wrote:
+> > > On Tue, Feb 04, 2025 at 12:44:03PM +0100, Danilo Krummrich wrote:
+> > > > On Tue, Feb 04, 2025 at 12:09:13PM +0100, Greg Kroah-Hartman wrote:
+> > > > > Many drivers abuse the platform driver/bus system as it provides a
+> > > > > simple way to create and bind a device to a driver-specific set of
+> > > > > probe/release functions.  Instead of doing that, and wasting all of the
+> > > > > memory associated with a platform device, here is a "faux" bus that
+> > > > > can be used instead.
+> > > > > 
+> > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > ---
+> > > > >  v2: - renamed bus and root device to just "faux" thanks to Thomas
+> > > > >      - removed the one-driver-per-device and now just have one driver
+> > > > >        entirely thanks to Danilo
+> > > > >      - kerneldoc fixups and additions and string handling bounds checks
+> > > > >        hanks to Andy
+> > > > >      - coding style fix thanks to Jonathan
+> > > > >      - tested that the destroy path actually works
+> > > > > 
+> > > > >  drivers/base/Makefile       |   2 +-
+> > > > >  drivers/base/base.h         |   1 +
+> > > > >  drivers/base/faux.c         | 196 ++++++++++++++++++++++++++++++++++++
+> > > > >  drivers/base/init.c         |   1 +
+> > > > >  include/linux/device/faux.h |  31 ++++++
+> > > > >  5 files changed, 230 insertions(+), 1 deletion(-)
+> > > > >  create mode 100644 drivers/base/faux.c
+> > > > >  create mode 100644 include/linux/device/faux.h
+> > > > 
+> > > > I really like it, it's as simply as it can be.
+> > > > 
+> > > > Please find one nit below, otherwise
+> > > > 
+> > > > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> > > > 
+> > > > > 
+> > > > > +/**
+> > > > > + * faux_device_destroy - destroy a faux device
+> > > > > + * @faux_dev: faux device to destroy
+> > > > > + *
+> > > > > + * Unregister and free all memory associated with a faux device that was
+> > > > > + * previously created with a call to faux_device_create().
+> > > > 
+> > > > Can we really claim that this frees all memory? Someone can still have a
+> > > > reference to the underlying struct device, right?
+> > > 
+> > > That "someone" is the person that had the original device pointer passed
+> > > to it, so if that person then calls faux_device_destroy(), yes, that
+> > > should all be properly cleaned up.
+> > > 
+> > > But even if it isn't, the device is destroyed and gone from sysfs, and
+> > > whenever that final final put_device() is called, the memory will then
+> > > be freed by the driver core itself.
+> > 
+> > Oh indeed, the code here is perfectly fine. I just wanted to say that calling
+> > faux_device_destroy() is not a guarantee that "all memory associated with a
+> > faux device" is actually freed, as the kernel-doc comment above says (or at
+> > least implies).
+> > 
+> > So, the concern only was that the comment could be confusing, as in "How can
+> > faux_device_destroy() free the memory, if I still have a separate reference to
+> > this thing?" (which it clearly would not).
+> 
+> Documentation is hard :)
+> 
+> Can you think of some wording here that would explain this better?
+> Something like "after you call this, you can't touch the pointer you
+> passed into here" is what I'm going for.
 
-> -----Original Message-----
-> From: Selvarasu Ganesan <selvarasu.g=40samsung.com>
-> Sent: Saturday, January 18, 2025 11:32 AM
-> To: gregkh=40linuxfoundation.org; m.grzeschik=40pengutronix.de;
-> kees=40kernel.org; abdul.rahim=40myyahoo.com; quic_jjohnson=40quicinc.com=
-;
-> quic_linyyuan=40quicinc.com; linux-usb=40vger.kernel.org; linux-
-> kernel=40vger.kernel.org
-> Cc: alim.akhtar=40samsung.com; thiagu.r=40samsung.com;
-> jh0801.jung=40samsung.com; dh10.jung=40samsung.com;
-> naushad=40samsung.com; akash.m5=40samsung.com;
-> rc93.raju=40samsung.com; taehyun.cho=40samsung.com;
-> hongpooh.kim=40samsung.com; eomji.oh=40samsung.com;
-> shijie.cai=40samsung.com; Selvarasu Ganesan <selvarasu.g=40samsung.com>;
-> stable=40vger.kernel.org
-> Subject: =5BPATCH v2=5D usb: gadget: f_midi: Fixing wMaxPacketSize exceed=
-ed
-> issue during MIDI bind retries
->=20
-> The current implementation sets the wMaxPacketSize of bulk in/out
-> endpoints to 1024 bytes at the end of the f_midi_bind function. However, =
-in
-> cases where there is a failure in the first midi bind attempt, consider
-> rebinding. This scenario may encounter an f_midi_bind issue due to the
-> previous bind setting the bulk endpoint's wMaxPacketSize to 1024 bytes,
-> which exceeds the ep->maxpacket_limit where configured dwc3 TX/RX
-> FIFO's maxpacket size of 512 bytes for IN/OUT endpoints in support HS
-> speed only.
->=20
-> Here the term =22rebind=22 in this context refers to attempting to bind t=
-he MIDI
-> function a second time in certain scenarios. The situations where rebindi=
-ng is
-> considered include:
->=20
->  * When there is a failure in the first UDC write attempt, which may be
->    caused by other functions bind along with MIDI.
->  * Runtime composition change : Example : MIDI,ADB to MIDI. Or MIDI to
->    MIDI,ADB.
->=20
-> This commit addresses this issue by resetting the wMaxPacketSize before
-> endpoint claim. And here there is no need to reset all values in the usb
-> endpoint descriptor structure, as all members except wMaxPacketSize and
-> bEndpointAddress have predefined values.
->=20
-> This ensures that restores the endpoint to its expected configuration, an=
-d
-> preventing conflicts with value of ep->maxpacket_limit. It also aligns wi=
-th the
-> approach used in other function drivers, which treat endpoint descriptors=
- as
-> if they were full speed before endpoint claim.
->=20
-> Fixes: 46decc82ffd5 (=22usb: gadget: unconditionally allocate hs/ss descr=
-iptor in
-> bind operation=22)
-> Cc: stable=40vger.kernel.org
-> Signed-off-by: Selvarasu Ganesan <selvarasu.g=40samsung.com>
-> ---
-Reviewed-by: Alim Akhtar <alim.akhtar=40samsung.com>
+I would probably just say that it drops the initial reference created by
+faux_device_create(), e.g.:
 
-=5BSnip=5D
-> 2.17.1
+"Unregister a faux device and drop the initial reference obtained through
+faux_device_create()."
 
+--
 
+From the formal side of things:
+
+The thing with "can't touch the pointer you passed into here" is that it
+depends on the conditions and on the definition of what it means for a pointer
+to be valid.
+
+Let's say I have another pointer (B) to the device with (of course) a separate
+reference.
+
+Now, when I call faux_device_destroy(A), and given that I know for sure that the
+reference of (B) does out-live this operation, I could also argue that I
+downgraded my strong reference to a weak reference.
+
+So, technically I could still touch the pointer, but formally it probably
+wouldn't be valid anymore.
