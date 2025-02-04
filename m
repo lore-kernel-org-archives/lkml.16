@@ -1,170 +1,117 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9356821638F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E626F166F32;
+	Tue,  4 Feb 2025 18:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738694854; cv=none; b=qpGJrZ2LFZLXMECnHSL6XqPDOuKBox2tRUKhTVqVuzGeIUJsAHMtGtR/NtGj0/SVFQZY2X9m59aoHr4SFUpH05NuEjeMxcxAfMq+WeVg76Xg++gPaxC5jD59oLGh9WWJ7LgxXb1Pp7ul9n43eSvPjdMjvQ/Wg8FynFRIKmHEX/Y=
+	t=1738695085; cv=none; b=KJhIqiiNlcUPaWpipKrW0e/7aUoZdptrnse5m2ellrjpDuLGSL1MfKcp77cNMggBbwyMugAn4kPngFgQrS4e47f7n0+OW97hSsLPLqQVImyJACkxgoDx8r4T5NASukm2kug3jq3l90QNXamvUwm7K6dJPNMd+fPGBFIC5K3cPns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738694854; c=relaxed/simple;
-	bh=v4IGltEbXVCP4a94OCouiBWhgi6qNWTf6k50EQqiHBU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HwPM5C5vtF+X0/2nuJpXDFpRQeiNAcRk2/Fq9qEJagRWhBu/e9ZPUkYc4/p9KpaW5/oTzpNkXL+6jA3695OkX3SX0my3ZqriMChbSTQTFVe1mQhsPIj268rZ8yoGm7OGylFDwT0gm4gsVAO02Nv3bRFsiwFWEflpLqg7xKz8IG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rDWYIKMo; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738695085; c=relaxed/simple;
+	bh=deW8O4qvXwa72p0wEVgLCyS0TJzJuu4g79u6uEqpCZw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lE5LvjRHf3bncOT4UU8yuDUA3wfRFWpeS/hV41oQs1HdKQQhITTPaD72/NhUbz8bIVDOO2e0BKfASX6P/VEDXSFM0eCyFM52C/a+7EDO4DVdJb5xW1SDJXsPUhOLOP6wg0kWV+DptuihyQ9b2910jVEnw9z1XR8hBa2Xl8VaYsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/dQ1b5D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rDWYIKMo"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f032484d4so171205ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 10:47:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738694852; x=1739299652; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v4IGltEbXVCP4a94OCouiBWhgi6qNWTf6k50EQqiHBU=;
-        b=rDWYIKMoZCzlJCwCdBIMg3sLU7PfZEOkLIabj6tvxuxyoOxIRjVsGojF6ICqpim5Pq
-         gAMzEBrgeQ8RfwCtC5xqruDtllhCdZJP9rwTrk+izmTufLQ9ZHTDhU0PkljoXoLxlYrE
-         3zDm4SgkOi+gqeSxP+SLQV6hypjUxStvMWtc1v9CQeshj8Z4dk9v3AqJxwRl3q1ZdH/6
-         oO0wFSxwB0fSgp9ragfDcowwIu64Zc1uMM/a7/9t1DYVg+H1KheXwnX0N6vOJcX0LxXP
-         dDac/cHmuJap+PchRZhyC5TqsMFWvn6rV3PF+UHu4E5h30ObqDEzhmDNNVrJnhblFnfD
-         +RQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738694852; x=1739299652;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v4IGltEbXVCP4a94OCouiBWhgi6qNWTf6k50EQqiHBU=;
-        b=mlcdZWIgAd26SQVlWZIJMcllhbA4ITWqPTtgfoC0g9UekATSpbU0sMkHD/rxbv6YX7
-         OeMeSpulkyilU65a4MJKzIsSqFMdXk4Izv06p3H2JqvDSGiBo9guZkmD4liptS5u9q2i
-         3pvm7bIFjW6uVvWQDl+NtbzL9rvJ2UoLumotr+BH7R3JFzcHSqjtpZ7WHHmUcUOZ9FO6
-         wrR1SXpCTJrTuc8qbDFWpSsAABYc51nGamMFsjs2ODWD35/SSvbbAOb9MAxJXa1Max2I
-         cbJYoE/CvBlWvihZN3SqQoVVx7skO497aEiYyYa1pn1SS6nV4fJjm9n54GFtUWUmlurq
-         1qSg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWmO6KZMab/MEEH1k173HTx7i0eY+hslCCSBwXZ/GWX39yMlGAN527y6yvTcO/RLaBvwa+uhZOWqi3zh0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQrkf0ft5F2TF9XBwqLFFIjUIgwwZKcoaicxfdOkF7+Fw1o3GT
-	lXCvH9ZF8FoOuGMF3F23NOi2Rh44p8CFfurMQm8xTkrSrleJ8sVYOD/ny/CFSYg1lCqWQi5XeTR
-	WHgmcPcH0N2E6RFK79HYlB6MRHbGcWY21Fv/2
-X-Gm-Gg: ASbGncvRxCSAsd9FThS36Z+iFRgkeQ4Lzwm+zoaYSjmAaTQhE3/+yZZD5MY0HdkQsL4
-	aIZFHroMa5Nv/zI3W7ZB+9aMnzAy/iWV5AMRRmtFYhCOWoRMPCFY/0er9MEpu9NIlWvqvlXYW
-X-Google-Smtp-Source: AGHT+IFJdXh8ck83n4rc4Do2Ogq6GGTLEe+osME5dG/SgCsLyieOBoQ0D2ALRntzLsFX8hi9y9QT4/yUf821Olkgy8I=
-X-Received: by 2002:a17:903:2a88:b0:20c:f40e:6ec3 with SMTP id
- d9443c01a7336-21f005bbe24mr3646635ad.22.1738694851632; Tue, 04 Feb 2025
- 10:47:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/dQ1b5D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2AEAC4CEE2;
+	Tue,  4 Feb 2025 18:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738695084;
+	bh=deW8O4qvXwa72p0wEVgLCyS0TJzJuu4g79u6uEqpCZw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H/dQ1b5D6k1cqO7yRjFifKWB+s8o3O5v1DCzn/PXFlT9AHqyEZh3XlAbnARHDs416
+	 ysQf5KnJwU9MgImnsydruqg8kO4rsuqmi/CL6OZD9+sB/Y0+G1IHzGKEEk/aa7La+0
+	 UPcH901/1NZ6yGmJYNd4j917ThEfRJLpTDpmkl/G0FuMQshQraDqI/rSVV4/Ks/1Zp
+	 wivQORXrfj/QKUOkuYewQElpKdom1rC6r6PNKKJ4WfaiGxtlAAhLYOhUEKXdtqEzq1
+	 77BGqGS5icl/vaBiCGDA4zQVp2pKYfH+zvF4VsHRwulEqKPI2LSKWQgmKwDEbuYP8G
+	 Jlpz3Uap7rGBQ==
+Date: Tue, 4 Feb 2025 10:51:21 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
+ .sframe contents
+Message-ID: <20250204185121.jt5ylxsouqi5dyie@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
+ <b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203223916.1064540-1-almasrymina@google.com>
- <a97c4278-ea08-4693-a394-8654f1168fea@redhat.com> <CAHS8izNZrKVXSXxL3JG3BuZdho2OQZp=nhLuVCrLZjJD1R0EPg@mail.gmail.com>
- <Z6JXFRUobi-w73D0@mini-arch> <60550f27-ea6a-4165-8eaa-a730d02a5ddc@redhat.com>
-In-Reply-To: <60550f27-ea6a-4165-8eaa-a730d02a5ddc@redhat.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 4 Feb 2025 10:47:18 -0800
-X-Gm-Features: AWEUYZl2dMuyJ4mkkA_bd8Ob9-LshOFjdqNfCtl85nK7UgZnTkQrQ8j9xNndrX8
-Message-ID: <CAHS8izMkfQpUQQLAkyfn8=YkGS1MhPN4DXbxFM6jzCKLAVhM2A@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 0/6] Device memory TCP TX
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Stanislav Fomichev <stfomichev@gmail.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski <kuba@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Neal Cardwell <ncardwell@google.com>, David Ahern <dsahern@kernel.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
-	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com>
 
-On Tue, Feb 4, 2025 at 10:32=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wro=
-te:
->
-> On 2/4/25 7:06 PM, Stanislav Fomichev wrote:
-> > On 02/04, Mina Almasry wrote:
-> >> On Tue, Feb 4, 2025 at 4:32=E2=80=AFAM Paolo Abeni <pabeni@redhat.com>=
- wrote:
-> >>>
-> >>> On 2/3/25 11:39 PM, Mina Almasry wrote:
-> >>>> The TX path had been dropped from the Device Memory TCP patch series
-> >>>> post RFCv1 [1], to make that series slightly easier to review. This
-> >>>> series rebases the implementation of the TX path on top of the
-> >>>> net_iov/netmem framework agreed upon and merged. The motivation for
-> >>>> the feature is thoroughly described in the docs & cover letter of th=
-e
-> >>>> original proposal, so I don't repeat the lengthy descriptions here, =
-but
-> >>>> they are available in [1].
-> >>>>
-> >>>> Sending this series as RFC as the winder closure is immenient. I pla=
-n on
-> >>>> reposting as non-RFC once the tree re-opens, addressing any feedback
-> >>>> I receive in the meantime.
-> >>>
-> >>> I guess you should drop this paragraph.
-> >>>
-> >>>> Full outline on usage of the TX path is detailed in the documentatio=
-n
-> >>>> added in the first patch.
-> >>>>
-> >>>> Test example is available via the kselftest included in the series a=
-s well.
-> >>>>
-> >>>> The series is relatively small, as the TX path for this feature larg=
-ely
-> >>>> piggybacks on the existing MSG_ZEROCOPY implementation.
-> >>>
-> >>> It looks like no additional device level support is required. That is
-> >>> IMHO so good up to suspicious level :)
-> >>>
-> >>
-> >> It is correct no additional device level support is required. I don't
-> >> have any local changes to my driver to make this work. I think Stan
-> >> on-list was able to run the TX path (he commented on fixes to the test
-> >> but didn't say it doesn't work :D) and one other person was able to
-> >> run it offlist.
-> >
-> > For BRCM I had shared this: https://lore.kernel.org/netdev/ZxAfWHk3aRWl=
--F31@mini-arch/
-> > I have similar internal patch for mlx5 (will share after RX part gets
-> > in). I agree that it seems like gve_unmap_packet needs some work to be =
-more
-> > careful to not unmap NIOVs (if you were testing against gve).
->
-> What happen if an user try to use devmem TX on a device not really
-> supporting it? Silent data corruption?
->
+On Thu, Jan 30, 2025 at 04:47:00PM +0100, Jens Remus wrote:
+> On 22.01.2025 03:31, Josh Poimboeuf wrote:
+> > +struct sframe_fre {
+> > +	unsigned int	size;
+> > +	s32		ip_off;
+> 
+> The IP offset (from function start) in the SFrame V2 FDE is unsigned:
+> 
+> u32 ip_off;
 
-So the tx dma-buf binding netlink API will bind the dma-buf to the
-netdevice. If that fails, the uapi will return failure and devmem tx
-will not be enabled.
+Indeed.
 
-If the dma-binding succeeds, then the device can indeed DMA into the
-dma-addrs in the device. The TX path will dma from the dma-addrs in
-the device just fine and it need not be aware that the dma-addrs are
-coming from a device and not from host memory.
+> > +#define __UNSAFE_GET_USER_INC(to, from, type, label)			\
+> > +({									\
+> > +	type __to;							\
+> > +	unsafe_get_user(__to, (type __user *)from, label);		\
+> > +	from += sizeof(__to);						\
+> > +	to = (typeof(to))__to;							\
+> > +})
+> > +
+> > +#define UNSAFE_GET_USER_INC(to, from, size, label)			\
+> > +({									\
+> > +	switch (size) {							\
+> > +	case 1:								\
+> > +		__UNSAFE_GET_USER_INC(to, from, u8, label);		\
+> > +		break;							\
+> > +	case 2:								\
+> > +		__UNSAFE_GET_USER_INC(to, from, u16, label);		\
+> > +		break;							\
+> > +	case 4:								\
+> > +		__UNSAFE_GET_USER_INC(to, from, u32, label);		\
+> > +		break;							\
+> > +	default:							\
+> > +		return -EFAULT;						\
+> > +	}								\
+> > +})
+> 
+> This does not work for the signed SFrame fields, such as the FRE CFA,
+> RA, and FP offsets, as it does not perform the required sign extension.
+> One option would be to rename to UNSAFE_GET_USER_UNSIGNED_INC() and
+> re-introduce UNSAFE_GET_USER_SIGNED_INC() using s8, s16, and s32.
 
-The only issue that Stan's patches is pointing to, is that the driver
-will likely be passing these dma-buf addresses into dma-mapping APIs
-like dma_unmap_*() and dma_sync_*() functions. Those, AFAIU, will be
-no-ops with dma-buf addresses in most setups, but it's not 100% safe
-to pass those dma-buf addresses to these dma-mapping APIs, so we
-should avoid these calls entirely.
+See the following line in __UNSAFE_GET_USER_INC():
 
-> Don't we need some way for the device to opt-in (or opt-out) and avoid
-> such issues?
->
+	to = (typeof(to))__to;
 
-Yeah, I think likely the driver needs to declare support (i.e. it's
-not using dma-mapping API with dma-buf addresses).
+Does that not do the sign extension?
 
---
-Thanks,
-Mina
+-- 
+Josh
