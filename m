@@ -1,76 +1,37 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0685207A37
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 08:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0804C20765D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 08:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738659062; cv=none; b=Z4W6xr8DyDDhE3Eqrtm4FlMUcDqb970UG5iN0ulNDYN85PpO2N5XDDgUdZ38Ze60+lzxj1um1WNgX0g/LLgPPh905YICbF048UbipLv879IwoDLpvrgcu7EfyX/vYOCjnoQT/C50HFaLcACipWpaAR1r8rJmPWsNOB7Uao7x36U=
+	t=1738659134; cv=none; b=XsjiZfefsyEin5PHPJmprbk5wgE6WeuNVFn35Gor+FNX0ox+kabP2N6DDd7Bi5J9HhC9tSnNhaH4DMD4uWJ75o2vkjXkoWWvffwWnxGDFUXeYiDI8y8KweTMHyQhtrxpFj69Sxi5aKbPBO8o9YmaFSpSyfc5RvcY0bk51gZz+wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738659062; c=relaxed/simple;
-	bh=YPt7gKipaMwkPE8abX4wqOxhxvYT2FdS5FceQVgzPek=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=KgmYNcdnelHUz7aQGbwZ7pGNpmkpbf1pTs+MP4/wdJEGNDznFPJQHI3iX+Int+KSGMhTAGqGuX72VKssEirFLavNvBN44c2XI8FANt/4F1K2+zl+ubMd8Dk4JDOoJ6vq5ZC1tJITDgGjlw9SeHiXwAX3vIoR8meh6xJ0JXELD7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FIFosrYo; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738659134; c=relaxed/simple;
+	bh=CfdrN5KwMDNTn0u864Qi3J5fvFlVoWNlZsoSlpdUyR8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=s8fyD+rDdQcbdFp1uBJeSRiVyWQ0y3NO/a7+z2U1LyPSBhOmTzM640PLWIe8vG7ZgumtAvk8dmpBRJZ1e2C7ELVIpGYiYxE+x04KpcOG3ARH0Dn8GkuRC7wi8boPbfeBfDq5whI175wz+XGeWOfKFyA/7cc6rFIQsBoUN5kOgoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IG+DsLH1; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FIFosrYo"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3862e570832so322203f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 00:50:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738659058; x=1739263858; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zHI4ANQ0svBkpULL9bY+LYyIFtREYaSz2osAbuLLKME=;
-        b=FIFosrYoqaZw9A8jE3nW7g1JYOdhLSC6NHKF0mksHZ1h1PWUuI9pIhCMJ8pb/WEtZR
-         DakFB1M/QOPcpwhVfCi2ukcqrBHUNDHlbMLR1s0/4bkToPFgqTmVkJj1Doz7DndoiKC+
-         hskeiS3dgLm1vh+FRPwoLyZ9XRW+dXYgjB//Rbuw7d4zrNgYkc8iDXCJEJ3F8ssJbUhu
-         W5sbSbI7C5+qC+xvgWgs3/f1Z//EbOikA51rqjtm1MYZacBKDbQaVK/lIL0gpNfjv7r5
-         81f0+4AXmkYzkkzbvgIj1gvE+G/oU/3fWTjcJQhiXIbUcxpO9Y+ozSGj4NnT9wj7kdAl
-         LqNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738659058; x=1739263858;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zHI4ANQ0svBkpULL9bY+LYyIFtREYaSz2osAbuLLKME=;
-        b=K259yXl+H8nUVkd7/jcO2419LcPRafqkLiKscoq9NycBGxynKl8smPdCIiLg4oS6he
-         wU9KLzHMkTH8n6lJ2o3ExdBYjZCl/T62WKO5e1hbBYCcoxJGKCO8Wq1Ui2Ba9KAqZNiI
-         AmlaCDBWcc8H58YP5tFbjWy9SIownA7sOmWxX2t9HIrNvTwWp7ql5IJVjsW6GW7sHDSI
-         NgleEXoub/i9ZrZuXY12UpGKfPE57IWDoHKIrwtyCMR+KDhf8gdwmlIvYCzyNI9WdLNz
-         PPzjkWCfe+pRYqPA03qLAtPAFXHBdqkIzEUU+Pxo8FPutIChdvFsx7i0hTEIEeu4EXnQ
-         6J0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUUzdbfNLqF28QEFllV+duubkOqnEoh29ClbqNYoa8qIOiKqVHBhD7EF/b4c3TryZ6S72/IsbGuaCVRclU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN3ygWx9zzSM7VAO2MaHL/2ZyBI9aj7dxrh/JNbDnENY2L7Oox
-	NDMzXwLjwfLglK9rr+jVctOlpDRBxp/9a1bADUQCpfPeyKws6Z85dTaxoCWriig=
-X-Gm-Gg: ASbGncuBYvvi/f4S4AS3wA/UYAWvfG6tP6KmB7b5UBLb8sHUlMxZN8Wz6jJF0IG63bU
-	Njv5SWfIpabHvFq0Wh0HwL0/VnssSySZcPK10s3Ipe8Eg+NTNc9OXU6ja4O4StS2CZbBPGQVmNd
-	A+2c4Hmaiu/S2yNc/hFuzIEJTdCU2gICxB3wwahtJhKz9JX8X6KzWw8bvEhBDRWt5Vs/cRjf5+s
-	9XyBOYH5r6esggEOqTbYOdQ+S5Ed4HxAehnQTu4L6HvqXmhEYzMS1XIhz20aRxt1r+rtdlpo2Vf
-	8TkLubozjWMc4CY23AbNMYuqkSv7MN8=
-X-Google-Smtp-Source: AGHT+IGO43N3gDtliqfjaHSeEORXODUkak0lfjeeQYTFjCKfZJOWJrPYG7CBCu9P6KNQnJ4ls7UBSw==
-X-Received: by 2002:a05:6000:1f88:b0:385:e374:bee with SMTP id ffacd0b85a97d-38da4e0276emr723050f8f.4.1738659057514;
-        Tue, 04 Feb 2025 00:50:57 -0800 (PST)
-Received: from [127.0.1.1] ([178.197.218.144])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38daf27bbf5sm503066f8f.48.2025.02.04.00.50.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 00:50:57 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, linux-samsung-soc@vger.kernel.org, 
- linux-clk@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250202220425.199146-1-colin.i.king@gmail.com>
-References: <20250202220425.199146-1-colin.i.king@gmail.com>
-Subject: Re: [PATCH][next] clk: samsung: Fix spelling mistake
- "stablization" -> "stabilization"
-Message-Id: <173865905644.26600.17565544065003058616.b4-ty@linaro.org>
-Date: Tue, 04 Feb 2025 09:50:56 +0100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IG+DsLH1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E6CC2442B8;
+	Tue,  4 Feb 2025 08:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738659129;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OkTbcjoIffMaSQaVJKCMVU7fDL9DGYAiY6/3g5tiNHI=;
+	b=IG+DsLH1+RIjKXlAFMQ78qXBwSg/WId94sDWh1ThupraQMnPE/IsLBR0WrKw9/IrJB21Me
+	p6TdC0rNUGFd6eFPIGwlOGV9cEy0FE1kr12T6ZTpfHLbzX4Ns80TcDqnKi9aizk9sLPKb5
+	R00jLP40vLhtx7apA9lK/WtEX5GsQU1qEzKqJIyAAKIOIAP3LgwS6nZF9J4sNS0TQsZLye
+	z0ranEaRbH9OO4N+V8/ukCc2V9d9wGh1XmxOKibKIBKmhsYjeO9OBf1Q8LWLEj1gcMVUa2
+	7ZXavh2Iod7EyFSNzOjISrmFM7qLWll/bgf8vugJqjxyOGWIBbjy06yT2w4fiw==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: [PATCH v4 0/2] DRM: small improvements
+Date: Tue, 04 Feb 2025 09:51:57 +0100
+Message-Id: <20250204-drm-small-improvements-v4-0-d6bbc92f12f1@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,20 +40,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC3VoWcC/4XNwQ6CMAyA4VchOzuzDhzgyfcwHsboZAljZCOLh
+ vDuDi5qIvH4N+3XmQT0BgM5ZzPxGE0wbkhRHDKiOjnckZo2NeGMF8Cgoq23NFjZ99TY0buIFoc
+ pUGiBFUoB4xUj6Xj0qM1jg6+31J0Jk/PP7U+EdfqXjEAZVSoHgSDrStWXxrmpN8NROUtWNPI3B
+ EzsQjxBWiCXqCtRwg8o/4AAdqE8QbLWp1KkraaAb2hZlhfCopNHUAEAAA==
+X-Change-ID: 20241018-drm-small-improvements-1d104cc10280
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Jani Nikula <jani.nikula@linux.intel.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Louis Chauvet <louis.chauvet@bootlin.com>, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
 X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfeiteekkefgtdduveeuffeuffevkeehieduhfefvdfhueekuefhhfdttddvkeefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumedvfhdtsgemledusggsmegufheiugemtggufedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumedvfhdtsgemledusggsmegufheiugemtggufedupdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdprhgtphhtthhop
+ ehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhgrnhhirdhnihhkuhhlrgeslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
+This series brings small improvements to the DRM documentation and logging.
 
-On Sun, 02 Feb 2025 22:04:25 +0000, Colin Ian King wrote:
-> There is a spelling mistake in a pr_err message. Fix it.
-> 
-> 
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+---
+Changes in v4:
+- Removed pathches 3 and 4 because the added warning has false positives
+  when cleaning up a connector in the init error path
+- Updated acked-by tags
+- Link to v3: https://lore.kernel.org/r/20241111-drm-small-improvements-v3-0-a9f576111b41@bootlin.com
 
-Applied, thanks!
+Changes in v3:
+- patch 3: various fixes suggested by Jani Nikula and kernel test robot
+- Updated reviewed-by tags
+- Link to v2: https://lore.kernel.org/r/20241106-drm-small-improvements-v2-0-f6e2aef86719@bootlin.com
 
-[1/1] clk: samsung: Fix spelling mistake "stablization" -> "stabilization"
-      https://git.kernel.org/krzk/linux/c/480b1825d3806d744c589064df4af2bdbe2c7c2a
+Changes in v2:
+- Added patches 3 and 4
+- Updated reviewed-by tags
+- Link to v1: https://lore.kernel.org/r/20241018-drm-small-improvements-v1-0-cc316e1a98c9@bootlin.com
+
+---
+Luca Ceresoli (2):
+      drm/drm_mode_object: fix typo in kerneldoc
+      drm/atomic-helper: improve CRTC enabled/connectors mismatch logging message
+
+ drivers/gpu/drm/drm_atomic_helper.c | 5 +++--
+ include/drm/drm_mode_object.h       | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20241018-drm-small-improvements-1d104cc10280
 
 Best regards,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Luca Ceresoli <luca.ceresoli@bootlin.com>
 
