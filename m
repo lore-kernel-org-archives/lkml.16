@@ -1,117 +1,68 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556E614AD20
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC0B2144BF;
+	Tue,  4 Feb 2025 15:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738683900; cv=none; b=gE6UaFtASIhLIvXCf2tF+yLCihF8OitAHOZKrcXva7SqwX92EXcfvN5SbU/8RXHdJZmkeHB86R97WT2N3AFsQmSnuUOTmaYDMHP0q/wD8TbmmgaOvBbK/KFngKXEka1jVAPOsnMZrgA5106FP8y6yQ1qgVJLQJEI1gTj8+GlGSo=
+	t=1738683907; cv=none; b=lEd3dz2qu+Aq5gk6yuW/e3rn0PGGfT8rKEdB3PSQW8mFLoATzbXPVUYvBUsKXuIkUX/Jt3Jzppt/Ny4GiZIE/h+ORBT/v7IMR82IaSm5jSz+jtfOMJ5Mmjjrn+DWSVq9Es+bNcvJKjzjw/kQAaeaD/0z2+/ARIw3QenDPeKVXiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738683900; c=relaxed/simple;
-	bh=rgEVKtXANon3IaD0uM0+Ko4lmK5t5FOBDBjJATsiX7M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J+AbnNw6z4s3sPwDK3h3lZEUxO7FpKs+zY9aGB6kL9HZodQLukQi1mUql8thocVjmU3fZoq+/Kxt9kSOMHPNrdfvKPtmz+HgNyO7Gq+eSJBG+KlvnIs1uua2pb8B8WCsW9tgQPGSFVjzDC2FaBn3yvzvtKWnrmQFBdQ/SxcZLLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=R2vabdCF; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1738683907; c=relaxed/simple;
+	bh=k59Pucx7IO1kZ1ZApcZ/pGjKHb3nO0inGP7xta2Ya7c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jn6OwymwFT8tw1E6B1crYSKKiHVs3fnflhNhWYqdjra+kaKY4XKqzAZ3XKAZqZ4KrSon6KIJdCM5hx5ZMU4vxyka7yorE9LJxJPzy8WvBwyWFtzEK9yNCymyww8191p46riiuyXZ9mblfVT+gCsaXULxGuCO63PfTGOiv8Rqb54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2d3eqqW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="R2vabdCF"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38daa53a296so397936f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:44:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1738683896; x=1739288696; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m/xeeg2N+iFuLG+YJ1kkoPfP1z5ElS62nkjT6ZIVzps=;
-        b=R2vabdCFKZTkgcy3li/xegJ5B0PnQjC+ReALSBuYgV+rxx8vUHBx4htrdbfqX11s4q
-         pgCYK1BABLg68n+05CVYAZ/syXNBxofGC7Gpnvu89C1sl3c0yXtZhyh192CKaWlPvHth
-         bNG/752tONlbU0psHdY19VzZNGBOsCNJl8cn8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738683896; x=1739288696;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m/xeeg2N+iFuLG+YJ1kkoPfP1z5ElS62nkjT6ZIVzps=;
-        b=dwOoUaS2d8IGsuwdRV5FU/JNouaLgMSNM2RLrpH5W4JiKFzGjhn6cLI+u4zIM0AmZz
-         3VIbkPksFXUmERmN+KScSz9Gni9z0BnRgrlGlvHMehhfen2mzqTxx9FYi6OaXEshflSg
-         3ndlss+quCDt2uCAYeT8sTfjYSivhCyfnh3oyFVgGFaBbjEDZ2vB3W8oVklMkAFEecQ+
-         lg88gBsGvUWMFYLjkqxcGNDBfjUwjMfL8j68+R31LayKWH7z7ZgCRETkzvwDCwapfp0D
-         I1rhmLvC+ON02WH0zVzOhTPB/s5ocaIiKSn7Z7sUftgmnP0EKrCM5BdC3y5TjVnXz6+Q
-         OgxA==
-X-Gm-Message-State: AOJu0Yxi3wmeDvosa9ooBjqrGD2ZJwwDhG/TD/ZXsOETpkUJfAX8HfeB
-	VNmHT82GcVEz4J8aDZg4dBRjBD/a8F5gwnNLm6Qz0gZBprANXFNLaJ/GeLKjmCQgL6+jwkT8uAV
-	R+mQrhk+kgsQgMnBD5yAZKUKjCfhIklNJVqmVFQ==
-X-Gm-Gg: ASbGnct1EcgmoQNEm7ZPtyMIT85MD3veGH8uMlTGMDd712P6VA8IrPbUnk1M5ry9Jwo
-	PJOPsOzoJVVO90r9S+sXa9U/FvZEKB68RQdaXuLDb9zfYMYfOqu2y16JxW329UL8kar4SkCPv
-X-Google-Smtp-Source: AGHT+IG/+br+bEDyiSI68JSyhLnyNlO8ClX8IAKU3C4OB4E0iwAvoSayLWa2IJmvM2z0jlH47gjcu8eYEzOIBFavApY=
-X-Received: by 2002:a5d:5384:0:b0:38a:8ed1:c5c7 with SMTP id
- ffacd0b85a97d-38c520bdb45mr16215972f8f.46.1738683896124; Tue, 04 Feb 2025
- 07:44:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2d3eqqW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E1FC4CEDF;
+	Tue,  4 Feb 2025 15:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738683906;
+	bh=k59Pucx7IO1kZ1ZApcZ/pGjKHb3nO0inGP7xta2Ya7c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=S2d3eqqWOYSC/iQNunwQhq9/m1sZnqUv+85VH1M/dqITUzIHsdRlvGy5fz3/aBHNn
+	 WjGx5aHyXkw6L8iUb077zn7FhAK0urRIXEq/3jVuhLeAM7JKZDQshmOt7gizF/7r4a
+	 /sg8dz4yaGTWy5++yiZeqQw8aWvkrxYwPOYval12vvIY1EKGC2xQr3gXzvdPwtcrIF
+	 rv72rXYcFm43pXJMH1z2y7d067k33xCydXL8t37hsn5Mm9wlFo9rgJu8wMnqHo6IQZ
+	 /D5cTtzlBWlvrApwi3W3B2qe7Av6xosLjuR3D8s2SuO1Eqpax3Liz4Ag3MoO5dAAT0
+	 1Smypf/0ZpiTw==
+Date: Tue, 4 Feb 2025 07:45:04 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: "=?UTF-8?B?Q3PDs2vDoXMs?= Bence" <csokas.bence@prolan.hu>
+Cc: Laurent Badel <laurentbadel@eaton.com>, Andrew Lunn <andrew@lunn.ch>,
+ <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+ Simon Horman <horms@kernel.org>, Michal Swiatkowski
+ <michal.swiatkowski@linux.intel.com>, Jacob Keller
+ <jacob.e.keller@intel.com>, Wei Fang <wei.fang@nxp.com>, Shenwei Wang
+ <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH net v3] net: fec: Refactor MAC reset to function
+Message-ID: <20250204074504.523c794c@kernel.org>
+In-Reply-To: <20250204093756.253642-2-csokas.bence@prolan.hu>
+References: <20250122163935.213313-2-csokas.bence@prolan.hu>
+	<20250204093756.253642-2-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ecce7241-4238-4d86-8e4c-5080937129ce@paulmck-laptop>
- <15D1150A-9B7B-4EB7-91C6-2D881D6F48DA@joelfernandes.org> <861f1dc3-bfc0-4a81-9b78-c8e9995db4cd@paulmck-laptop>
- <CAEXW_YQ4W=upWV_x1woSgq-DJPFXmBjH2pVmUnBVb_n_UKrw7A@mail.gmail.com> <ec293223-2a33-4d2f-b3ca-c011c3d987f3@paulmck-laptop>
-In-Reply-To: <ec293223-2a33-4d2f-b3ca-c011c3d987f3@paulmck-laptop>
-From: Joel Fernandes <joel@joelfernandes.org>
-Date: Tue, 4 Feb 2025 10:44:45 -0500
-X-Gm-Features: AWEUYZnBpj4WXsJzybY10O2T-OryqDjdJ06fVyJSWEDhR1_PaiZCJTjl4Zn9JJU
-Message-ID: <CAEXW_YQXgZANSjo835VfHMqY=z8gaSWQ2bgaWtVd4-3KX0hX8w@mail.gmail.com>
-Subject: Re: [PATCH] rcu: Merge rcu_seq_done_exact() logic into rcu_seq_done()
-To: paulmck@kernel.org
-Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 30, 2025 at 12:56=E2=80=AFAM Paul E. McKenney <paulmck@kernel.o=
-rg> wrote:
-> By "where we were initially", one might reasonably guess that you meant
-> that the initial value and the target are one and the same.  But I suspec=
-t
-> that you are thinking of a third value, the value of the underlying
-> grace-period sequence number at the time of the call to rcu_seq_snap().
-> But you might be thinking of something else entirely.
->
-> > Now we move rcu_seq_done_exact. It has the exact same behavior except
-> > that instead of ULONG_MAX/2, the above situations are shrunk to about
-> > 10 counts from the target. So if target is 28, then the initial
-> > sequence should have been at least 18 to avoid false-positive, but
-> > again it is possible and I certain see in the code that it cannot be
-> > used this way.. (at least so far).. So all we are left with is the
-> > false-negative band of ~2.5 GPs..
->
-> Here, I have the same questions.  As you no doubt guessed.
->
-> > About "what are the consequences of failing to get this right".  I
-> > believe false-positive is unacceptable unless it is maybe debug code -
-> > that can break functionality in code, too short GPs and all that.
-> > However false-negative is OK as long as the usecase can retry later
-> > and can afford to wait. Did I get that much correct?
->
-> Maybe?
->
-> Please look at this on a per-use-case basis.
+On Tue, 4 Feb 2025 10:37:54 +0100 Cs=C3=B3k=C3=A1s, Bence wrote:
+> For instance, as of now, `fec_stop()` does not check for
+> `FEC_QUIRK_NO_HARD_RESET`, meaning the MII/RMII mode is cleared on eg.
+> a PM power-down event; and `fec_restart()` missed the refactor renaming
+> the "magic" constant `1` to `FEC_ECR_RESET`.
 
-Sure. FWIW, I started a world-editable document here. I am planning to
-work on this a bit more before our meeting this week. If others
-knowledgeable like Frederic and others could make edits/comments,
-that'd be welcomed. But I basically summarized this whole thread here:
-https://docs.google.com/document/d/1sFNuGH4U6DFCE8sunbdWMjFhJhb1aG4goOJAnS6=
-c6gQ/edit?usp=3Dsharing
+Laurent responded to v1 saying this was intentional. Please give more
+details on how problem you're seeing and on what platforms. Otherwise
+this is not a fix but refactoring.
 
-My thought is (AFAICS), this patch is still valid and
-rcu_seq_done_exact is a potentially better replacement to
-rcu_seq_done. But famous last words...
-
-thanks,
-
- - Joel
+Please don't post new versions in-reply-to, and add lore links to
+the previous version in the changelog.
+--=20
+pw-bot: cr
