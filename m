@@ -1,219 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BBD204F85;
-	Tue,  4 Feb 2025 19:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF8C78F40
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738696964; cv=none; b=DUDgupFrBdiBf5nI6QyjhEDcZq7CZxAgS7MMv0KBB8zVP8xxsgwOu/5+3EbhNa7KVG0gJefbYRYCUFtXcx0fe8U9F7HeX8cvJgyYXrw0tuEedPDB4XN7gKWnLc2AvBJAP2g/sLiZL/Ba+uM9+6GP7Dk3kOlk/mOfwbBCtIFuASM=
+	t=1738697020; cv=none; b=qngaEup6WS4BIZgonp0LRtQRUziSB7qTUWeDtoRy9ljqQJCGHvF/sTZzIBDmFCnilN66vVLiPKu+llPiJh3fftBEfhKHCRpyWMDslUmw/g/VSMzFk0R3xLIbZkbN+l5/3H4Ti+9fbyir5ujPN/N4JNMIy9LrOuMTAbLQ5Sq/AC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738696964; c=relaxed/simple;
-	bh=JIIYJevLdmFj/UppSjoqdwt4o9oRsJRr08DNrl9bKjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eSvBSgkQHmz9Syl9ORhlz+2nmHIayt5s6JNaxOQHzeYJTXm1rlQwkMKxBLz7upkyNzLjdHNmPxhwAveRtNyPYaFsmgs2Pr4gcbfYRnGQDuB2nc/RKTq/bnU4/MvqOQQiYf2eP4uIJsn8Hv+CX4s6X4upuzPyWIaHgTwLFt+z624=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oiTKmsma; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738697020; c=relaxed/simple;
+	bh=Oxor8wKExkt7gAhD/gJtNC9sIwWG1V1vV3++fquZZDw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ubPpPAu3s6FcF6rAW3ESufNQ6+qNMK4uquHAtj1WqmAsEpdKu2ek8I3SkLo5enz9hZFgoQBwlCxqdtUOOS7ObA41nXP3VchhUJ99tJk9FHGQJLwYQd4vqXldr07p4VSO9x3sHWUsxe8yUnKrzvl6QC3ozsIVXRmfkVXs4e/3meQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XW9xwq9e; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oiTKmsma"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32D1C4CEDF;
-	Tue,  4 Feb 2025 19:22:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738696964;
-	bh=JIIYJevLdmFj/UppSjoqdwt4o9oRsJRr08DNrl9bKjM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oiTKmsmaawtyzK3gFz6SoL3CCBbX2odSetSm8/RtFli99hdpbpEMGz5b45YIz2Lg+
-	 3Y79cu+JjhlDD+sXz341Q6Lhk7gp/U2662fsol5SY/SexMRIK1S3JaEc4tMOWgkJqu
-	 85SkbHnqeZ/jHVL3UtoHdl14znHvI9LacUUVRRXHzPsajkngZ+8TiFgsnYkDwzcz28
-	 gbqZFk3x2CzQE/e5/23LZDZwUPEyu09jG4qDAic5Bq9cg8RRO1oiTMvqt2PW91NgA+
-	 BWfs4iLOJQPUHOgTFbtrwsZRUsje5DMFW/84+OI4Ab3yhhMaTjBRq85LF1j7cAnRbZ
-	 mqHsCzf2E7c0Q==
-Date: Tue, 4 Feb 2025 19:22:39 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Naresh Solanki <naresh.solanki@9elements.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, broonie@kernel.org,
-	Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: hwmon: ir38060: Move & update dt binding
-Message-ID: <20250204-mulled-evaluate-8a690cdfbd4d@spud>
-References: <20250204180306.2755444-1-naresh.solanki@9elements.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XW9xwq9e"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f83e54432dso17012809a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:23:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738697018; x=1739301818; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mU6NEWjLFlBth9JekcNPIXJtuRcysaOik+DY1sDAAPo=;
+        b=XW9xwq9e0h5s9AfzGVXgTVQvjw4wGThsv8XFUE4qVoiGavcc6dTGufdiYN9EQhzuSn
+         awvkeMYvtkbu6Uw09DpjvkayAXqMyPHIvcTlRW2ciqm2hu4dSHhmHQAy2eQHw5IErTyP
+         oVD0IH4fwVcDLrLNOH3duAynrM20y3hdl6eZR0cnGwAZtfeKJlTVWQKjbR7o0T0sCRJq
+         jp3FBvLKfCX/xT0otbX4mDt0G8vliPyiI2SHmkyijZ80jw6RAY7UxZAsedKW1sItL8aS
+         JZpZqH5QeFiPYOPI2zezMrTKP6p4W61j2EnA1RUCVmBLAi848haa+j1sa3IavykUFBCB
+         FXtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738697018; x=1739301818;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mU6NEWjLFlBth9JekcNPIXJtuRcysaOik+DY1sDAAPo=;
+        b=dNiMB243L2DFupNblJA/OBWv/vojU7m38rn3ITmIuCB1pql31+4Uq9wWyHo+ZB5nc1
+         3ZlMU/0rYAZP8Zi1yn9fgqW1LYI/GewKJTOGgucM5hsfcpfNIFJWOwVSHtlABdC+dTCy
+         RNuTuOipG1LtvcmUjs79C7y/uMeHKU5s9psSXd4W6jUDNFiylOgwV+G2nUePwY/mNLky
+         5XEyG8V6AmogeJqRvqW569QL6sYslByngqhqX//3axcbzuOqoUhBQXobEF25PVS9F89E
+         ztSSFhyxGwVc6yiAZbvd4WJv5G1EjZ3OqGZ582AQ500d5cxDqRuU60neyrgi6WvtJoIn
+         Ti3w==
+X-Forwarded-Encrypted: i=1; AJvYcCX5dGkec54voMW1FVyV6hS77Q30m/blO3ZPQxLe0K3dTr1wBkrCD34o5beIaWHK8ZbIDwBpFb/Wd7tZ3pU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxlhzOuMXwYEdtuBWZ83UTnUIxwDK5o3NN5PT4aqeOanj6wqGe
+	ZuTXydV5g/oxV5nf09u6MiCXPAA+rl8Sx6TB30IgWHt28JX3A+er5AmrIlZ7t1cq7UgdWwisnUN
+	vlA==
+X-Google-Smtp-Source: AGHT+IEth4W4eKneJyToCoULIhy1nd7LV+EXAj9+a+XknG5txgwUqYrL0IEC6qEWjMx4Oqa+94Y+2pCo9yU=
+X-Received: from pfbfh3.prod.google.com ([2002:a05:6a00:3903:b0:726:d6e6:a38])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2187:b0:72a:bc54:84f7
+ with SMTP id d2e1a72fcca58-730351428bemr168769b3a.12.1738697018181; Tue, 04
+ Feb 2025 11:23:38 -0800 (PST)
+Date: Tue, 4 Feb 2025 11:23:36 -0800
+In-Reply-To: <6b2d960c-1340-4e91-ad17-0ccadd378a81@xen.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="HYb3Nichi2MrG9QF"
-Content-Disposition: inline
-In-Reply-To: <20250204180306.2755444-1-naresh.solanki@9elements.com>
-
-
---HYb3Nichi2MrG9QF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+References: <20250201013827.680235-1-seanjc@google.com> <20250201013827.680235-9-seanjc@google.com>
+ <792ae6f4-903f-41b2-a0f2-369d92a1fc3f@xen.org> <6b2d960c-1340-4e91-ad17-0ccadd378a81@xen.org>
+Message-ID: <Z6JpOOP1-GpFw7lR@google.com>
+Subject: Re: [PATCH v2 08/11] KVM: x86: Pass reference pvclock as a param to kvm_setup_guest_pvclock()
+From: Sean Christopherson <seanjc@google.com>
+To: paul@xen.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	syzbot+352e553a86e0d75f5120@syzkaller.appspotmail.com, 
+	Paul Durrant <pdurrant@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 04, 2025 at 11:33:03PM +0530, Naresh Solanki wrote:
-> Move dt binding under hwmon/pmbus & align accordingly.
+On Tue, Feb 04, 2025, Paul Durrant wrote:
+> On 04/02/2025 09:33, Paul Durrant wrote:
+> > On 01/02/2025 01:38, Sean Christopherson wrote:
+> > > -static void kvm_setup_guest_pvclock(struct kvm_vcpu *v,
+> > > +static void kvm_setup_guest_pvclock(struct pvclock_vcpu_time_info
+> > > *ref_hv_clock,
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct kvm_vcpu *vcpu,
+> >=20
+> > So, here 'v' becomes 'vcpu'
+> >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct gfn_to_pfn=
+_cache *gpc,
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int offs=
+et,
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool force_tsc_un=
+stable)
+> > > =C2=A0 {
+> > > -=C2=A0=C2=A0=C2=A0 struct kvm_vcpu_arch *vcpu =3D &v->arch;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pvclock_vcpu_time_info *guest_h=
+v_clock;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pvclock_vcpu_time_info hv_clock=
+;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long flags;
+> > > -=C2=A0=C2=A0=C2=A0 memcpy(&hv_clock, &vcpu->hv_clock, sizeof(hv_cloc=
+k));
+> > > +=C2=A0=C2=A0=C2=A0 memcpy(&hv_clock, ref_hv_clock, sizeof(hv_clock))=
+;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 read_lock_irqsave(&gpc->lock, flags);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 while (!kvm_gpc_check(gpc, offset + si=
+zeof(*guest_hv_clock))) {
+
+...
+
+> > > @@ -3272,18 +3272,18 @@ static int kvm_guest_time_update(struct
+> > > kvm_vcpu *v)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 vcpu->hv_clock.flags |=3D PVCLOCK_GUEST_STOPPED;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 vcpu->pvclock_set_guest_stopped_request =3D false;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kvm_setup_guest_pvclock(v=
+, &vcpu->pv_time, 0, false);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kvm_setup_guest_pvclock(&=
+vcpu->hv_clock, v, &vcpu->pv_time,
+> > > 0, false);
+> >=20
+> > Yet here an below you still use 'v'. Does this actually compile?
+> >=20
 >=20
-> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
-> ---
->  .../hwmon/pmbus/infineon,ir38060.yaml         | 61 +++++++++++++++++++
->  .../bindings/regulator/infineon,ir38060.yaml  | 45 --------------
->  2 files changed, 61 insertions(+), 45 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/infineo=
-n,ir38060.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/infineon,=
-ir38060.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir380=
-60.yaml b/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.ya=
-ml
-> new file mode 100644
-> index 000000000000..e1f683846a54
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwmon/pmbus/infineon,ir38060.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Infineon Buck Regulators with PMBUS interfaces
-> +
-> +maintainers:
-> +  - Not Me.
+> Sorry, my misreading of the patch... this is in caller context so no
+> problem. The inconsistent naming was misleading me.
 
-How the hell did this get merged!
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - infineon,ir38060
-> +      - infineon,ir38064
-> +      - infineon,ir38164
-> +      - infineon,ir38263
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  regulators:
-> +    type: object
-> +    description:
-> +      list of regulators provided by this controller.
-
-Can you explain why this change is justified? Your commit message is
-explaining what you're doing but not why it's okay to do.
-
-Cheers,
-Conor.
-
-> +
-> +    properties:
-> +      vout:
-> +        $ref: /schemas/regulator/regulator.yaml#
-> +        type: object
-> +
-> +        unevaluatedProperties: false
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        regulator@34 {
-> +            compatible =3D "infineon,ir38060";
-> +            reg =3D <0x34>;
-> +
-> +            regulators {
-> +                vout {
-> +                    regulator-name =3D "p5v_aux";
-> +                    regulator-min-microvolt =3D <437500>;
-> +                    regulator-max-microvolt =3D <1387500>;
-> +                };
-> +            };
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/regulator/infineon,ir38060=
-=2Eyaml b/Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml
-> deleted file mode 100644
-> index e6ffbc2a2298..000000000000
-> --- a/Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml
-> +++ /dev/null
-> @@ -1,45 +0,0 @@
-> -# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> -%YAML 1.2
-> ----
-> -$id: http://devicetree.org/schemas/regulator/infineon,ir38060.yaml#
-> -$schema: http://devicetree.org/meta-schemas/core.yaml#
-> -
-> -title: Infineon Buck Regulators with PMBUS interfaces
-> -
-> -maintainers:
-> -  - Not Me.
-> -
-> -allOf:
-> -  - $ref: regulator.yaml#
-> -
-> -properties:
-> -  compatible:
-> -    enum:
-> -      - infineon,ir38060
-> -      - infineon,ir38064
-> -      - infineon,ir38164
-> -      - infineon,ir38263
-> -
-> -  reg:
-> -    maxItems: 1
-> -
-> -required:
-> -  - compatible
-> -  - reg
-> -
-> -unevaluatedProperties: false
-> -
-> -examples:
-> -  - |
-> -    i2c {
-> -      #address-cells =3D <1>;
-> -      #size-cells =3D <0>;
-> -
-> -      regulator@34 {
-> -        compatible =3D "infineon,ir38060";
-> -        reg =3D <0x34>;
-> -
-> -        regulator-min-microvolt =3D <437500>;
-> -        regulator-max-microvolt =3D <1387500>;
-> -      };
-> -    };
->=20
-> base-commit: bfbb730c4255e1965d202f48e7aa71baa9a7c65b
-> --=20
-> 2.42.0
->=20
-
---HYb3Nichi2MrG9QF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6Jo/wAKCRB4tDGHoIJi
-0n1LAQCvwcmBoxgsSDIQxYp6veyw89f+ngZJgwza+NLCdV/5GAEAqLOh4I/JlmHW
-myWJFQTOAi+LyrfwSTy4LXwa7z9UVQk=
-=+Bh3
------END PGP SIGNATURE-----
-
---HYb3Nichi2MrG9QF--
+I feel your pain, the use of "vcpu" for kvm_vcpu_arch in kvm_guest_time_upd=
+ate()
+kills me.  I forget if David's rework of kvm_guest_time_update() fixes that=
+ wart.
+If it doesn't, I'll suggest that addition.  The only reason I haven't poste=
+d a
+patch was to avoid a bunch of churn for a rename, but if the function is ge=
+tting
+ripped apart anyways...
