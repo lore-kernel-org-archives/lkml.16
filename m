@@ -1,133 +1,114 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5D51F76CA;
-	Tue,  4 Feb 2025 09:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674EE207675;
+	Tue,  4 Feb 2025 09:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660025; cv=none; b=sL0AbJDbZs/LLPIiIpi/cl83Yk4MOaBlXyPqrIrqBaNdxjx3oQujTvNJ5Sj+H5FhsvxvyqFQPHby7pHv+cr1OOqwPvZAay2xLkv7HLdQKUKVwVKrujNSukA2sHM9S2jUgs3TVTwabQj3lURpvuLgs34y7ARASiWiVDBOmcGDuOM=
+	t=1738660038; cv=none; b=qkKmi2RHw4ddKzta8fNgyYpH75dN4QH8B8NeliCxnlHmEeXjgwhCgupb+5Nz+nrRny2J2nqJzSecMAmzsKCdX3r9qzXoyAyKDmv8DliUOqJuJVxBN4O44xveqSEbsmbbtOw524tcmuo3vItMoP8JsB4DU43vTHazS04DYPscuhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660025; c=relaxed/simple;
-	bh=q+GimL0nMUDGbZMytsKY71lHzXtpVlrnL+bOQ7FZIGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EijZeZWq72EIAzM5ODea1nc/1KTOrsDI4bdBPd9WuMIsQydZO+OGn9UA7/lMZvpSLHziggVDGhNtIngqK4DhKaHXbty19K4AsdtfJm4+Su5nUgSgXT95Ls4B3kBSoyqt9o4HmkuTbf7wf0E5VdKNev9traXWRvW21i33lEtFxtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kvCj+tqF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kvCj+tqF"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5141axeW004786;
-	Tue, 4 Feb 2025 09:06:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	nbnJssJZG3MOTVpEih44BprCyGfRnM+RbClZRhYaWK4=; b=kvCj+tqFzDrlG3jF
-	Tf393bAmOjilXKI0mc8AeJAsIHwF+pFND+bz2ovQvZyqB4f9i/3ycUPZKpeJqq79
-	SiLsSPqZ7cANqdoRy0VN9prW5vrPzu2cv0/lty04M4LnuUjADzaGquk1qZRJefwn
-	tRzkWGe0qvzfdbGOZ24AphjKAMyELOb218AwIhwrsy1Nj3OzoKe3r2k/mULy28DS
-	c+xBTtcuuOX9B0vJ9dK0RR1Jq5dX8KXp7LmaoUzCjE5rgoFT0rGRXBv11zpNeCuE
-	/279bIUaQDlfakDLbBULCnnsx+/UZYx9O5Cd9Qhmtd/Y3el6Ds4gE+6BA4LrvsPl
-	+Vp4Zw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44k9cn0ud4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 09:06:58 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51496vZB017428
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Feb 2025 09:06:57 GMT
-Received: from [10.216.42.141] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Feb 2025
- 01:06:54 -0800
-Message-ID: <c7d9842a-96bf-41aa-8046-52c3e45f90d4@quicinc.com>
-Date: Tue, 4 Feb 2025 14:36:51 +0530
+	s=arc-20240116; t=1738660038; c=relaxed/simple;
+	bh=VvFz76Pt2lcb1LURo9lrIoQWVqRNphfZvk0trxqRUU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gw858rxLWspg5VIHmMNgc8yjDM+4BxQauo1SuCyK4aLDI5wxgDaMzkHmjt0uZfzOjaXZo/UF4fepwS+R4ayZ4L3Zwr9XF0sAMo7DGlo0S7YwKXX0j+s3DBsqZhQJqUqImlYeJmmCsbtDswBYDtSC56jQVmhlAsBqI39aXQxrQXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 9775E280072B2;
+	Tue,  4 Feb 2025 10:07:04 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 764B256A482; Tue,  4 Feb 2025 10:07:04 +0100 (CET)
+Date: Tue, 4 Feb 2025 10:07:04 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Feng Tang <feng.tang@linux.alibaba.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonthan.Cameron@huawei.com>,
+	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
+ hotplug events
+Message-ID: <Z6HYuBDP6uvE1Sf4@wunner.de>
+References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/13] wifi: ath12k: add support for fixed QMI firmware
- memory
-To: Krzysztof Kozlowski <krzk@kernel.org>, <ath12k@lists.infradead.org>
-CC: <linux-wireless@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>,
-        Jeff Johnson <jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
- <20250130043508.1885026-8-quic_rajkbhag@quicinc.com>
- <4c9b512f-59d2-4d96-a899-5af4de2c823e@kernel.org>
- <7d5f7b4c-2a55-41c7-b85c-cb4cd76d553f@quicinc.com>
- <962dc257-f7a6-49c7-b760-a31fd84e7a56@kernel.org>
-Content-Language: en-US
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-In-Reply-To: <962dc257-f7a6-49c7-b760-a31fd84e7a56@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bwnGYCj7eok16Tun1dxNjPyrsV-sb_0N
-X-Proofpoint-ORIG-GUID: bwnGYCj7eok16Tun1dxNjPyrsV-sb_0N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_04,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- spamscore=0 bulkscore=0 mlxlogscore=973 clxscore=1015 phishscore=0
- suspectscore=0 priorityscore=1501 adultscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
 
-On 2/3/2025 3:42 PM, Krzysztof Kozlowski wrote:
-> On 03/02/2025 10:44, Raj Kumar Bhagat wrote:
->> On 1/30/2025 1:16 PM, Krzysztof Kozlowski wrote:
->>> On 30/01/2025 05:35, Raj Kumar Bhagat wrote:
->>>> @@ -2646,6 +2663,136 @@ static int ath12k_qmi_alloc_target_mem_chunk(struct ath12k_base *ab)
->>>>  	return ret;
->>>>  }
->>>>  
->>>> +static int ath12k_qmi_assign_target_mem_chunk(struct ath12k_base *ab)
->>>> +{
->>>> +	struct device_node *mem_node;
->>>> +	struct resource res, m3_res;
->>>> +	u32 bdf_start_addr;
->>>> +	int i, idx, ret;
->>>> +
->>>> +	for (i = 0, idx = 0; i < ab->qmi.mem_seg_count; i++) {
->>>> +		switch (ab->qmi.target_mem[i].type) {
->>>> +		case HOST_DDR_REGION_TYPE:
->>>> +			mem_node = ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
->>>
->>>
->>> Why cannot you use existing API for reserved memory -
->>> of_reserved_mem_lookup()?
->>>
->>
->> The of_reserved_mem_lookup() requires reserved memory node to read the memory and
->> return in the structure "struct reserved_mem".
->>
->> The of_reserved_mem_lookup() would be used after we get the reserved memory node
->> using the API - ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
->>
->> In next version we would use of_reserved_mem_lookup(), Something like below:
->>     mem_node = ath12k_core_get_reserved_mem_by_name(ab, "q6-region");
+On Tue, Feb 04, 2025 at 01:37:57PM +0800, Feng Tang wrote:
+> According to PCIe 6.1 spec, section 6.7.3.2, software need to wait at
+> least 1 second for the command-complete event, before resending the cmd
+> or sending a new cmd.
 > 
-> Then why do you need ath12k_core_get_reserved_mem_by_name() in the first
-> place? Just use of_reserved_mem_lookup() directly. Why do you need to
-> parse phandle before of_reserved_mem_lookup()?
+> Currently get_port_device_capability() sends slot control cmd to disable
+> PCIe hotplug interrupts without waiting for its completion and there was
+> real problem reported for the lack of waiting.
 > 
+> Add the necessary wait to comply with PCIe spec. The waiting logic refers
+> existing pcie_poll_cmd().
+[...]
+> --- a/drivers/pci/pcie/portdrv.c
+> +++ b/drivers/pci/pcie/portdrv.c
+> @@ -230,8 +260,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  		 * Disable hot-plug interrupts in case they have been enabled
+>  		 * by the BIOS and the hot-plug service driver is not loaded.
+>  		 */
+> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> +		pcie_disable_hp_interrupts_early(dev);
+>  	}
 
-Sorry, I'm having difficulty understanding this.
-We have the WiFi node at ab->dev->of_node, but we don't have a node for the reserved-memory
-'q6-region'. The of_reserved_mem_lookup() function requires the device node for 'q6-region'.
+The language of the code comment is a bit confusing in that it
+says the hot-plug driver may not be "loaded".  This sounds like
+it could be modular.  But it can't.  It's always built-in.
 
-Could you please suggest how we can use of_reserved_mem_lookup() without obtaining the
-'q6-region' node first.
+So I think what is really meant here is that the driver may be
+*disabled* in the config, i.e. CONFIG_HOTPLUG_PCI_PCIE=n.
+
+Now if CONFIG_HOTPLUG_PCI_PCIE=n, you don't need to observe the
+Command Completed delay because the hotplug driver won't touch
+the Slot Control register afterwards.  It's not compiled in.
+
+On the other hand if CONFIG_HOTPLUG_PCI_PCIE=y, you don't need
+to disable the CCIE and HPIE interrupt because the hotplug driver
+will handle them.
+
+So I think the proper solution here is to make the write to the
+Slot Control register conditional on CONFIG_HOTPLUG_PCI_PCIE,
+like this:
+
+	if (dev->is_hotplug_bridge &&
+	    (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+-	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM) &&
+-	    (pcie_ports_native || host->native_pcie_hotplug)) {
+-		services |= PCIE_PORT_SERVICE_HP;
++	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM)) {
++		if (pcie_ports_native || host->native_pcie_hotplug)
++			services |= PCIE_PORT_SERVICE_HP;
+
+		/*
+		 * Disable hot-plug interrupts in case they have been enabled
+		 * by the BIOS and the hot-plug service driver is not loaded.
+		 */
+-		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+-			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
++		if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
++			pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
++				  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+	}
+
+The above patch also makes sure the interrupts are quiesced if the
+platform didn't grant hotplug control to OSPM.
+
+Thanks,
+
+Lukas
