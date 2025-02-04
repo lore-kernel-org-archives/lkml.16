@@ -1,99 +1,284 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0B92D057;
-	Tue,  4 Feb 2025 14:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509652D057;
+	Tue,  4 Feb 2025 14:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738679546; cv=none; b=LPkPy9rcz7YFW14TdqhdhR9MWD3luS9nuErujFZb3DkwtbnjSGlzgtanzD/IZ4hdQ4tjTUv5vfTNi4OS9kzqSA6lCA15TTHWhDgr+Bl8QEtbQiYD9kzziodYyDjN2TF/huJ6E6y8H9PG3mdHhPggl/DPDAN0GGPfNCYsVED8ynE=
+	t=1738679592; cv=none; b=Qc2ft1esq9lpfE+sDxILB3oFWhU6ss8rC4YR2mgZQa3AQbKs5ERYXkSGSzQMp96svk3YjEc5cwIEG7yBpLbLLQol4AyWdGaJO+Mys/nJJ7YougyJjGqUOtrKFNWD2SiE+IzG1N29Y8rJXP05fDWCsu1jdzZxgfvZsSPkAvCzWq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738679546; c=relaxed/simple;
-	bh=Euhfoq6TLskk749URRaDQVtHzdaHQ0kVMWrkuF1TOiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pWOWQvLf3XG4+zP9u527HYONtAc+vfpUHDY68Hh8QcjF6sEa+bnPmoFn1JxddVWETyGeIKbha5ppbAaMu3sH5C/zd4sAPhDPbDARnj6NkhIwzzcrt/17zNHow2P3yDleKlWZoJTWYeoArVtmuITAliP4UK3FzGMyLTh7M/1B+dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MStt8VdE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MStt8VdE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB569C4CEDF;
-	Tue,  4 Feb 2025 14:32:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738679545;
-	bh=Euhfoq6TLskk749URRaDQVtHzdaHQ0kVMWrkuF1TOiE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MStt8VdEbhnU3lJQFNILR4VHWyYCuJCm/CRHQGsd39ojT6M3neKzZAU5x+6waMIpX
-	 ecqofxDZdaGWtspwyR78ggfxGeB2pxuRDTdGXjahJYO4XHLEmn2+2ZL5p5XPAIeW9r
-	 //plznm4yIY6evAtoLr/RPWdE75UACnXobpuSNXWNICLTuiuCQLilPGJjDG5LMam9d
-	 PQU1Ec/3jmiZxhzml730YJ6RjktXP1Wl+6/xqwMbOcQVYVR6fZGstE9Fc4kWjduehs
-	 9MgOpBvSk4fsfEYag1G8/7I6mVmz+qPEoAuMTVbYM8UZLoUU7StbrNeJZbT++siohr
-	 60L14ebr+U70w==
-Date: Tue, 4 Feb 2025 14:32:19 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: uJap072421@linux.dev, Quentin Perret <qperret@google.com>,
-	Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Fuad Tabba <tabba@google.com>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Sebastian Ene <sebastianene@google.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 09/18] KVM: arm64: Introduce __pkvm_vcpu_{load,put}()
-Message-ID: <5b73e1ac-a48d-4064-a095-26cd9662f0c1@sirena.org.uk>
-References: <20241218194059.3670226-1-qperret@google.com>
- <20241218194059.3670226-10-qperret@google.com>
- <5ca7588c-7bf2-4352-8661-e4a56a9cd9aa@sirena.org.uk>
- <Z6FO04PZtY8fsJhq@linux.dev>
+	s=arc-20240116; t=1738679592; c=relaxed/simple;
+	bh=3R63IJE4ryM7OJvdDBZ43Xj4Z2vvihHK05SYN6fsRXU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vErRheuOTIxEcSueYoaZ4kYdO1214p+DOHDl6Fl893wbNhyLmcN9vbVE9wrmrwrFfF1Yw1NOIAskyI9p+nZbWGxokwYBKn46UcLiITm6CmDEZbiLmZvQhq/0meCn1oHLVsAjO2n/37XSLCeBOMIhXKoBQyJ+YM4slAvONjyz9gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YnQkt2SxVz6L4vs;
+	Tue,  4 Feb 2025 22:30:30 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B29B1140B67;
+	Tue,  4 Feb 2025 22:33:05 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Feb
+ 2025 15:33:04 +0100
+Date: Tue, 4 Feb 2025 14:33:03 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+CC: Daniel Lezcano <daniel.lezcano@linaro.org>, Claudiu
+	<claudiu.beznea@tuxon.dev>, <rafael@kernel.org>, <rui.zhang@intel.com>,
+	<lukasz.luba@arm.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <geert+renesas@glider.be>, <magnus.damm@gmail.com>,
+	<mturquette@baylibre.com>, <sboyd@kernel.org>, <p.zabel@pengutronix.de>,
+	<linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-clk@vger.kernel.org>, "Claudiu
+ Beznea" <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH 2/6] thermal: of: Export non-devres helper to
+ register/unregister thermal zone
+Message-ID: <20250204143303.0000174a@huawei.com>
+In-Reply-To: <CAPDyKFq40KB6jKapnm0mOkFGB9-7VEGiBhNrVn_2fzrcziq0=Q@mail.gmail.com>
+References: <20250103163805.1775705-1-claudiu.beznea.uj@bp.renesas.com>
+	<20250103163805.1775705-3-claudiu.beznea.uj@bp.renesas.com>
+	<46c8e8ff-ea39-4dbd-a26c-67fcabf4b589@linaro.org>
+	<CAPDyKFq40KB6jKapnm0mOkFGB9-7VEGiBhNrVn_2fzrcziq0=Q@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hZGwqvAiR40zlt9m"
-Content-Disposition: inline
-In-Reply-To: <Z6FO04PZtY8fsJhq@linux.dev>
-X-Cookie: Spelling is a lossed art.
-
-
---hZGwqvAiR40zlt9m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, Feb 03, 2025 at 03:19:03PM -0800, Oliver Upton wrote:
-> On Mon, Feb 03, 2025 at 07:50:44PM +0000, Mark Brown wrote:
+On Wed, 15 Jan 2025 16:42:37 +0100
+Ulf Hansson <ulf.hansson@linaro.org> wrote:
 
-> > Current mainline crashes when running the arch_timer_edge_cases selftest
-> > in pKVM mode on a LibreTech Le Potato board, with a bisection pointing
-> > at this change.  The system dies like this:
-> >=20
-> > # selftests: kvm: arch_timer_edge_cases
-> > [  130.599140] kvm [4518]: nVHE hyp panic at: [<ffff800081102b58>] __kv=
-m_nvhe___vgic_v3_restore_vmcr_aprs+0x8/0x84!
+> On Thu, 9 Jan 2025 at 18:34, Daniel Lezcano <daniel.lezcano@linaro.org> w=
+rote:
+> >
+> >
+> > Ulf,
+> >
+> > can you have a look at this particular patch please ?
+> >
+> > Perhaps this scenario already happened in the past and there is an
+> > alternative to fix it instead of this proposed change =20
+>=20
+> I think the patch makes sense.
+>=20
+> If there is a PM domain that is attached to the device that is
+> managing the clocks for the thermal zone, the detach procedure
+> certainly needs to be well controlled/synchronized.
+>=20
+Does this boil down to the same issue as
+https://lore.kernel.org/linux-iio/20250128105908.0000353b@huawei.com/
+?
 
-> Thanks, fix posted here [*], although as a consequence this machine will
-> stop running KVM in protected mode (which was never meant to work in the
-> first place).
+Just to point out there is another way like is done in i2c:
+https://elixir.bootlin.com/linux/v6.12.6/source/drivers/i2c/i2c-core-base.c=
+#L630
 
-Yeah, I wasn't clear if this was something that was intended to work or
-not - it's all in a constant state of flux.
+Register a devres_release_group() in bus probe() and release it before
+the dev_pm_domain_detach() call.  That keeps the detach procedure well
+controlled and synchronized as it is entirely in control of the driver.
 
---hZGwqvAiR40zlt9m
-Content-Type: application/pgp-signature; name="signature.asc"
+That IIO thread has kind of died out for now though with no resolution
+so far.
 
------BEGIN PGP SIGNATURE-----
+Jonathan
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeiJPMACgkQJNaLcl1U
-h9BDAAf+JAMcfN7yntUjtlLw50z/v5lCegG7EiTtVEvT8kwLbYGS7ld2HEzfNFiK
-rTlpfALF2b81GimdH35TTPRl1FFgPygwCt4j8N1GcXiFif47Q1a3TRwNjb+wJUH1
-Dm/iTV7HxZk7fPqefyEGirTNt6e4f2hkso3/XHVRCsn3BKhPYU2OAUj0CFqzrrd2
-SdGFMZJnRe8QewuZ3g4EpCg9UvuZXjG8Af7u4WrYw+DAceX8dC+Eajct50FX9p5l
-fDoUDAacSMXph9h8tu/dHxpKLNym8nExy1zpuUXu2U4Ckzr4x37HgyqZ1AZOYrij
-hH1WYyL88f6C8+HLlWIotC0pRHV8Nw==
-=H6/6
------END PGP SIGNATURE-----
 
---hZGwqvAiR40zlt9m--
+> >
+> >
+> > On 03/01/2025 17:38, Claudiu wrote: =20
+> > > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > >
+> > > On the Renesas RZ/G3S (and other Renesas SoCs, e.g., RZ/G2{L, LC, UL}=
+),
+> > > clocks are managed through PM domains. These PM domains, registered on
+> > > behalf of the clock controller driver, are configured with
+> > > GENPD_FLAG_PM_CLK. In most of the Renesas drivers used by RZ SoCs, the
+> > > clocks are enabled/disabled using runtime PM APIs.
+> > >
+> > > During probe, devices are attached to the PM domain controlling their
+> > > clocks. Similarly, during removal, devices are detached from the PM d=
+omain.
+> > >
+> > > The detachment call stack is as follows:
+> > >
+> > > device_driver_detach() ->
+> > >    device_release_driver_internal() ->
+> > >      __device_release_driver() ->
+> > >        device_remove() ->
+> > >          platform_remove() ->
+> > >         dev_pm_domain_detach()
+> > >
+> > > In the upcoming Renesas RZ/G3S thermal driver, the
+> > > struct thermal_zone_device_ops::change_mode API is implemented to
+> > > start/stop the thermal sensor unit. Register settings are updated wit=
+hin
+> > > the change_mode API.
+> > >
+> > > In case devres helpers are used for thermal zone register/unregister =
+the
+> > > struct thermal_zone_device_ops::change_mode API is invoked when the
+> > > driver is unbound. The identified call stack is as follows:
+> > >
+> > > device_driver_detach() ->
+> > >    device_release_driver_internal() ->
+> > >      device_unbind_cleanup() ->
+> > >        devres_release_all() ->
+> > >          devm_thermal_of_zone_release() ->
+> > >         thermal_zone_device_disable() ->
+> > >           thermal_zone_device_set_mode() ->
+> > >             rzg3s_thermal_change_mode()
+> > >
+> > > The device_unbind_cleanup() function is called after the thermal devi=
+ce is
+> > > detached from the PM domain (via dev_pm_domain_detach()).
+> > >
+> > > The rzg3s_thermal_change_mode() implementation calls
+> > > pm_runtime_resume_and_get()/pm_runtime_put_autosuspend() before/after
+> > > accessing the registers. However, during the unbind scenario, the
+> > > devm_thermal_of_zone_release() is invoked after dev_pm_domain_detach(=
+).
+> > > Consequently, the clocks are not enabled, as the device is removed fr=
+om
+> > > the PM domain at this time, leading to an Asynchronous SError Interru=
+pt.
+> > > The system cannot be used after this.
+> > >
+> > > Add thermal_of_zone_register()/thermal_of_zone_unregister(). These wi=
+ll
+> > > be used in the upcomming RZ/G3S thermal driver.
+> > >
+> > > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com> =20
+>=20
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+>=20
+> Kind regards
+> Uffe
+>=20
+> > > ---
+> > >   drivers/thermal/thermal_of.c |  8 +++++---
+> > >   include/linux/thermal.h      | 14 ++++++++++++++
+> > >   2 files changed, 19 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/thermal/thermal_of.c b/drivers/thermal/thermal_o=
+f.c
+> > > index fab11b98ca49..8fc35d20db60 100644
+> > > --- a/drivers/thermal/thermal_of.c
+> > > +++ b/drivers/thermal/thermal_of.c
+> > > @@ -329,11 +329,12 @@ static bool thermal_of_should_bind(struct therm=
+al_zone_device *tz,
+> > >    *
+> > >    * @tz: a pointer to the thermal zone structure
+> > >    */
+> > > -static void thermal_of_zone_unregister(struct thermal_zone_device *t=
+z)
+> > > +void thermal_of_zone_unregister(struct thermal_zone_device *tz)
+> > >   {
+> > >       thermal_zone_device_disable(tz);
+> > >       thermal_zone_device_unregister(tz);
+> > >   }
+> > > +EXPORT_SYMBOL_GPL(thermal_of_zone_unregister);
+> > >
+> > >   /**
+> > >    * thermal_of_zone_register - Register a thermal zone with device n=
+ode
+> > > @@ -355,8 +356,8 @@ static void thermal_of_zone_unregister(struct the=
+rmal_zone_device *tz)
+> > >    *  - ENOMEM: if one structure can not be allocated
+> > >    *  - Other negative errors are returned by the underlying called f=
+unctions
+> > >    */
+> > > -static struct thermal_zone_device *thermal_of_zone_register(struct d=
+evice_node *sensor, int id, void *data,
+> > > -                                                         const struc=
+t thermal_zone_device_ops *ops)
+> > > +struct thermal_zone_device *thermal_of_zone_register(struct device_n=
+ode *sensor, int id, void *data,
+> > > +                                                  const struct therm=
+al_zone_device_ops *ops)
+> > >   {
+> > >       struct thermal_zone_device_ops of_ops =3D *ops;
+> > >       struct thermal_zone_device *tz;
+> > > @@ -429,6 +430,7 @@ static struct thermal_zone_device *thermal_of_zon=
+e_register(struct device_node *
+> > >
+> > >       return ERR_PTR(ret);
+> > >   }
+> > > +EXPORT_SYMBOL_GPL(thermal_of_zone_register);
+> > >
+> > >   static void devm_thermal_of_zone_release(struct device *dev, void *=
+res)
+> > >   {
+> > > diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> > > index 69f9bedd0ee8..adbb4092a064 100644
+> > > --- a/include/linux/thermal.h
+> > > +++ b/include/linux/thermal.h
+> > > @@ -195,13 +195,23 @@ struct thermal_zone_params {
+> > >
+> > >   /* Function declarations */
+> > >   #ifdef CONFIG_THERMAL_OF
+> > > +struct thermal_zone_device *thermal_of_zone_register(struct device_n=
+ode *sensor, int id, void *data,
+> > > +                                                  const struct therm=
+al_zone_device_ops *ops);
+> > >   struct thermal_zone_device *devm_thermal_of_zone_register(struct de=
+vice *dev, int id, void *data,
+> > >                                                         const struct =
+thermal_zone_device_ops *ops);
+> > >
+> > > +void thermal_of_zone_unregister(struct thermal_zone_device *tz);
+> > >   void devm_thermal_of_zone_unregister(struct device *dev, struct the=
+rmal_zone_device *tz);
+> > >
+> > >   #else
+> > >
+> > > +static inline
+> > > +struct thermal_zone_device *thermal_of_zone_register(struct device_n=
+ode *sensor, int id, void *data,
+> > > +                                                  const struct therm=
+al_zone_device_ops *ops)
+> > > +{
+> > > +     return ERR_PTR(-ENOTSUPP);
+> > > +}
+> > > +
+> > >   static inline
+> > >   struct thermal_zone_device *devm_thermal_of_zone_register(struct de=
+vice *dev, int id, void *data,
+> > >                                                         const struct =
+thermal_zone_device_ops *ops)
+> > > @@ -209,6 +219,10 @@ struct thermal_zone_device *devm_thermal_of_zone=
+_register(struct device *dev, in
+> > >       return ERR_PTR(-ENOTSUPP);
+> > >   }
+> > >
+> > > +static inline void thermal_of_zone_unregister(struct thermal_zone_de=
+vice *tz)
+> > > +{
+> > > +}
+> > > +
+> > >   static inline void devm_thermal_of_zone_unregister(struct device *d=
+ev,
+> > >                                                  struct thermal_zone_=
+device *tz)
+> > >   { =20
+> >
+> >
+> > --
+> > <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for =
+ARM SoCs
+> >
+> > Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> > <http://twitter.com/#!/linaroorg> Twitter |
+> > <http://www.linaro.org/linaro-blog/> Blog =20
+>=20
+
