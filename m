@@ -1,120 +1,305 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEE6219A67;
-	Tue,  4 Feb 2025 15:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7626219A89
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738681274; cv=none; b=e8pc8+r3q70863ypRNRkgAZ6lCTwT8mAac00H3MZhZ9hS1d4Yipye/3/NKDNWqpKx1mdM+s83xcsZM1UP0i+LUFDWJA5BR+EZNGONXk76NLjmhTJLEXH1+H1szwOGHBWSIwNxwDl/ciwA2SHhxLvgQ3wV2FDt/rhV8P8KQEvbXY=
+	t=1738681274; cv=none; b=G9TRrDrfsvvo1U2E/gvRXngMMSkw5VtenEZVu7FKThkmaZpRwF2jATwIahGxr90F3RDzADbqu4dkvV/77c9f5Dez1Hie3nqzywKDNv4fMQQ+sfSL2y8rIqoK46O8OnY4jLlTel7uojU7UZgm3bN7bixAG8SbO9ZZNfBRbT7sU6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738681274; c=relaxed/simple;
-	bh=5MCWOALGSLukXzxUZIQR/W2l1RUpj6rB3lK4EWLeszc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JY9u9NeEPdGX0yBKHShfaHuZQQZXm2H8ZAN00Ov7VJ1WF47MQb16yz8rTSOsj+dbHvggBjjxOMIE4RKJKf32fJZxgwHTnMQKWQtpqCcvVeJV7Dzz5KucQ9y/Wn46zyIraIfSmmwCRxzjJ57hh6laLDYLLlWURTnH9Fkca8OzbCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=UTfK2JQz; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	bh=nMPrnko8NIXHxK0qBKf1FnCloSLkqwlYjmZ4ZeLx4vM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OQ2j4TlfKECvNCfTpox5MsGagwCGnqMd+wtmX+LJpG1MEqyrbethlLfRBJ/K3m0c4X27ZBUvWCNuxhuGtBOzN0jq3S5K058G6EnBFWaHKBSPuRkBPQuBlRGzAAFt2qtA5FRK33TAUeEORDn4nrzZ1u5KaWSzDxYj531ya/9wZwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vt3avH7j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="UTfK2JQz"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514E1rUE006925;
-	Tue, 4 Feb 2025 10:00:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=eEdP1
-	pbOrQQx/KKRb4w9vCmvJ8dASGnyuZv7Wg7oWYU=; b=UTfK2JQzEcbr+D5ADPXFi
-	m1QALTbqWTh35X07yrFWsKTeXRzHmfdtTum10ZA1kC5A7nt05ZU6mN+t1jU3rvKF
-	BoOa2HOASosjfpymzjQ3PmD/voWhq+bprvjnaXxhO0NShkxFPmVSZud5Ah1wcRAp
-	Zr7hWQgB/oDAF2PxFX9kFYMsen8TB1N8xSQStN97lSiDk+zJhGCKT6gqj/uxqK4T
-	PhBIF2Vmmvyoih1dhPM/hHM4bhQP4RiIdTYMgO/pyPXs5iaurAKbWayydugw+53I
-	eh+vbBZ/+N+f174FXaAcKTfzcWmhqEXL1wJtSb9qXzS+3O78kmV5KtWnQ4qMBHFC
-	A==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44kma3g89b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 10:00:55 -0500 (EST)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 514F0s2O020850
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Feb 2025 10:00:54 -0500
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Tue, 4 Feb 2025 10:00:54 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Tue, 4 Feb 2025 10:00:54 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Tue, 4 Feb 2025 10:00:54 -0500
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 514F0fdr005432;
-	Tue, 4 Feb 2025 10:00:43 -0500
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <cosmin.tanislav@analog.com>, <jic23@kernel.org>, <lars@metafoo.de>,
-        <marcelo.schmitt@analog.com>, <dlechner@baylibre.com>,
-        <granquet@baylibre.com>, <u.kleine-koenig@baylibre.com>,
-        <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v4 1/3] Documentation: ABI: IIO: Add filter_type documentation
-Date: Tue, 4 Feb 2025 12:00:39 -0300
-Message-ID: <a8dbccac909e8d11e7d47561935a5575b1354d3a.1738680728.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1738680728.git.marcelo.schmitt@analog.com>
-References: <cover.1738680728.git.marcelo.schmitt@analog.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vt3avH7j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E94C4CEDF;
+	Tue,  4 Feb 2025 15:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738681274;
+	bh=nMPrnko8NIXHxK0qBKf1FnCloSLkqwlYjmZ4ZeLx4vM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Vt3avH7jXTydpf51MzfbLCcuoIbwhQ14eLF0Eh3PnprJ4MMrbTQ6XfSVNWSKTeg/5
+	 w37tJRaUHlpKAm5cUU3lvX5EjTBUzL0YSC36/Hc0oU2a5oMV6DzrV6p3/tksPKa0JA
+	 udAmqDr8AV+BJNh4TVFYwYz9nEkxkPuS+kPFYOO/s1HYKZocyvU67zPuAtBe1uBZA0
+	 1IMSd/rr94XcQp42PBTOreSYXwSjf5avuCUk58cTNTs5vLuycx+Vs2kaMoZ33dOXJY
+	 iHChbiarf1xqdZ1agcqiOcie3Sd996PWqkIEuU7JUxyXjWYddKRYBVgHA7iq/+e7ha
+	 6wFRGGdlKuIng==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Tue, 04 Feb 2025 15:58:03 +0100
+Subject: [PATCH v2 35/35] drm/bridge: ti-sn65dsi86: Use bridge_state crtc
+ pointer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=Df7tqutW c=1 sm=1 tr=0 ts=67a22ba8 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=T2h4t0Lz3GQA:10 a=gAnH3GRIAAAA:8 a=IpJZQVW2AAAA:8 a=VwQbUJbxAAAA:8 a=5Wjybu8Z64oMUeRhUkIA:9 a=oVHKYsEdi7-vN-J5QA_j:22
- a=IawgGOuG5U0WyFbmm1f5:22
-X-Proofpoint-GUID: bxWUQR8GvJ-wXWPvO-OFtSTIK6T7cvS7
-X-Proofpoint-ORIG-GUID: bxWUQR8GvJ-wXWPvO-OFtSTIK6T7cvS7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_07,2025-02-04_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- spamscore=0 impostorscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 suspectscore=0
- classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040117
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250204-bridge-connector-v2-35-35dd6c834e08@kernel.org>
+References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
+In-Reply-To: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9273; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=nMPrnko8NIXHxK0qBKf1FnCloSLkqwlYjmZ4ZeLx4vM=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOmLtH7MELh96p9x8K0T1tevXNh/7r39B91FcktEQrP23
+ Al1zhEI75jKwiDMySArpsjyRCbs9PL2xVUO9it/wMxhZQIZwsDFKQATmXmDsVa2XTzHKLLH/txC
+ x6Wnly9Vzylz7f0WWa684JDC5aqFS5mToiRW3Ysq3923+vwKu0kX4hkb/kbXKU6/fFrwq9pXVZ3
+ LHH8vzfxi+1TpaexEccn1nz++lrhcF3tr9t9IgVO7Z3vJRHDkAAA=
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-A previous patch added documentation for filter_type_available attributes.
-However, the description for the value attribute (filter_type) was missing.
-Add documentation for filter_type sysfs ABI.
+The TI sn65dsi86 driver follows the drm_encoder->crtc pointer that is
+deprecated and shouldn't be used by atomic drivers.
 
-Fixes: 01bb12922b60 ("Documentation: ABI: added filter mode doc in sysfs-bus-iio")
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+This was due to the fact that we did't have any other alternative to
+retrieve the CRTC pointer. Fortunately, the crtc pointer is now provided
+in the bridge state, so we can move to atomic callbacks and drop that
+deprecated pointer usage.
+
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-bus-iio | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 50 ++++++++++++++++++++++-------------
+ 1 file changed, 32 insertions(+), 18 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index d97c35057a03..ff9cc09360dc 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -2300,6 +2300,14 @@ Description:
- 		* "sinc3+pf3" - Sinc3 + device specific Post Filter 3.
- 		* "sinc3+pf4" - Sinc3 + device specific Post Filter 4.
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index 497e7212d7719a03045d055b7069f9a10c7f3877..590504bd2746fd1f9b78a8203e762d154dfb0bb2 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -242,15 +242,16 @@ static void ti_sn65dsi86_write_u16(struct ti_sn65dsi86 *pdata,
+ 	u8 buf[2] = { val & 0xff, val >> 8 };
  
-+What:		/sys/bus/iio/devices/iio:deviceX/filter_type
-+What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY-voltageZ_filter_type
-+KernelVersion:	6.1
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Specifies which filter type apply to the channel. The possible
-+		values are given by the filter_type_available attribute.
-+
- What:		/sys/.../events/in_proximity_thresh_either_runningperiod
- KernelVersion:	6.6
- Contact:	linux-iio@vger.kernel.org
+ 	regmap_bulk_write(pdata->regmap, reg, buf, ARRAY_SIZE(buf));
+ }
+ 
+-static u32 ti_sn_bridge_get_dsi_freq(struct ti_sn65dsi86 *pdata)
++static u32 ti_sn_bridge_get_dsi_freq(struct ti_sn65dsi86 *pdata,
++				     struct drm_bridge_state *bridge_state)
+ {
+ 	u32 bit_rate_khz, clk_freq_khz;
+ 	struct drm_display_mode *mode =
+-		&pdata->bridge.encoder->crtc->state->adjusted_mode;
++		&bridge_state->crtc->state->adjusted_mode;
+ 
+ 	bit_rate_khz = mode->clock *
+ 			mipi_dsi_pixel_format_to_bpp(pdata->dsi->format);
+ 	clk_freq_khz = bit_rate_khz / (pdata->dsi->lanes * 2);
+ 
+@@ -273,11 +274,12 @@ static const u32 ti_sn_bridge_dsiclk_lut[] = {
+ 	416000000,
+ 	486000000,
+ 	460800000,
+ };
+ 
+-static void ti_sn_bridge_set_refclk_freq(struct ti_sn65dsi86 *pdata)
++static void ti_sn_bridge_set_refclk_freq(struct ti_sn65dsi86 *pdata,
++					 struct drm_bridge_state *bridge_state)
+ {
+ 	int i;
+ 	u32 refclk_rate;
+ 	const u32 *refclk_lut;
+ 	size_t refclk_lut_size;
+@@ -286,11 +288,11 @@ static void ti_sn_bridge_set_refclk_freq(struct ti_sn65dsi86 *pdata)
+ 		refclk_rate = clk_get_rate(pdata->refclk);
+ 		refclk_lut = ti_sn_bridge_refclk_lut;
+ 		refclk_lut_size = ARRAY_SIZE(ti_sn_bridge_refclk_lut);
+ 		clk_prepare_enable(pdata->refclk);
+ 	} else {
+-		refclk_rate = ti_sn_bridge_get_dsi_freq(pdata) * 1000;
++		refclk_rate = ti_sn_bridge_get_dsi_freq(pdata, bridge_state) * 1000;
+ 		refclk_lut = ti_sn_bridge_dsiclk_lut;
+ 		refclk_lut_size = ARRAY_SIZE(ti_sn_bridge_dsiclk_lut);
+ 	}
+ 
+ 	/* for i equals to refclk_lut_size means default frequency */
+@@ -310,16 +312,17 @@ static void ti_sn_bridge_set_refclk_freq(struct ti_sn65dsi86 *pdata)
+ 	 * regardless of its actual sourcing.
+ 	 */
+ 	pdata->pwm_refclk_freq = ti_sn_bridge_refclk_lut[i];
+ }
+ 
+-static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata)
++static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata,
++				      struct drm_bridge_state *bridge_state)
+ {
+ 	mutex_lock(&pdata->comms_mutex);
+ 
+ 	/* configure bridge ref_clk */
+-	ti_sn_bridge_set_refclk_freq(pdata);
++	ti_sn_bridge_set_refclk_freq(pdata, bridge_state);
+ 
+ 	/*
+ 	 * HPD on this bridge chip is a bit useless.  This is an eDP bridge
+ 	 * so the HPD is an internal signal that's only there to signal that
+ 	 * the panel is done powering up.  ...but the bridge chip debounces
+@@ -374,12 +377,15 @@ static int __maybe_unused ti_sn65dsi86_resume(struct device *dev)
+ 	 * panel (including the aux channel) w/out any need for an input clock
+ 	 * so we can do it in resume which lets us read the EDID before
+ 	 * pre_enable(). Without a reference clock we need the MIPI reference
+ 	 * clock so reading early doesn't work.
+ 	 */
+-	if (pdata->refclk)
+-		ti_sn65dsi86_enable_comms(pdata);
++	if (pdata->refclk) {
++		drm_modeset_lock(&pdata->bridge.base.lock, NULL);
++		ti_sn65dsi86_enable_comms(pdata, drm_bridge_get_current_state(&pdata->bridge));
++		drm_modeset_unlock(&pdata->bridge.base.lock);
++	}
+ 
+ 	return ret;
+ }
+ 
+ static int __maybe_unused ti_sn65dsi86_suspend(struct device *dev)
+@@ -821,16 +827,17 @@ static void ti_sn_bridge_atomic_disable(struct drm_bridge *bridge,
+ 
+ 	/* disable video stream */
+ 	regmap_update_bits(pdata->regmap, SN_ENH_FRAME_REG, VSTREAM_ENABLE, 0);
+ }
+ 
+-static void ti_sn_bridge_set_dsi_rate(struct ti_sn65dsi86 *pdata)
++static void ti_sn_bridge_set_dsi_rate(struct ti_sn65dsi86 *pdata,
++				      struct drm_bridge_state *bridge_state)
+ {
+ 	unsigned int bit_rate_mhz, clk_freq_mhz;
+ 	unsigned int val;
+ 	struct drm_display_mode *mode =
+-		&pdata->bridge.encoder->crtc->state->adjusted_mode;
++		&bridge_state->crtc->state->adjusted_mode;
+ 
+ 	/* set DSIA clk frequency */
+ 	bit_rate_mhz = (mode->clock / 1000) *
+ 			mipi_dsi_pixel_format_to_bpp(pdata->dsi->format);
+ 	clk_freq_mhz = bit_rate_mhz / (pdata->dsi->lanes * 2);
+@@ -856,16 +863,18 @@ static unsigned int ti_sn_bridge_get_bpp(struct drm_connector *connector)
+  */
+ static const unsigned int ti_sn_bridge_dp_rate_lut[] = {
+ 	0, 1620, 2160, 2430, 2700, 3240, 4320, 5400
+ };
+ 
+-static int ti_sn_bridge_calc_min_dp_rate_idx(struct ti_sn65dsi86 *pdata, unsigned int bpp)
++static int ti_sn_bridge_calc_min_dp_rate_idx(struct ti_sn65dsi86 *pdata,
++					     struct drm_bridge_state *bridge_state,
++					     unsigned int bpp)
+ {
+ 	unsigned int bit_rate_khz, dp_rate_mhz;
+ 	unsigned int i;
+ 	struct drm_display_mode *mode =
+-		&pdata->bridge.encoder->crtc->state->adjusted_mode;
++		&bridge_state->crtc->state->adjusted_mode;
+ 
+ 	/* Calculate minimum bit rate based on our pixel clock. */
+ 	bit_rate_khz = mode->clock * bpp;
+ 
+ 	/* Calculate minimum DP data rate, taking 80% as per DP spec */
+@@ -960,14 +969,15 @@ static unsigned int ti_sn_bridge_read_valid_rates(struct ti_sn65dsi86 *pdata)
+ 	}
+ 
+ 	return valid_rates;
+ }
+ 
+-static void ti_sn_bridge_set_video_timings(struct ti_sn65dsi86 *pdata)
++static void ti_sn_bridge_set_video_timings(struct ti_sn65dsi86 *pdata,
++					   struct drm_bridge_state *bridge_state)
+ {
+ 	struct drm_display_mode *mode =
+-		&pdata->bridge.encoder->crtc->state->adjusted_mode;
++		&bridge_state->crtc->state->adjusted_mode;
+ 	u8 hsync_polarity = 0, vsync_polarity = 0;
+ 
+ 	if (mode->flags & DRM_MODE_FLAG_NHSYNC)
+ 		hsync_polarity = CHA_HSYNC_POLARITY;
+ 	if (mode->flags & DRM_MODE_FLAG_NVSYNC)
+@@ -1076,19 +1086,21 @@ static int ti_sn_link_training(struct ti_sn65dsi86 *pdata, int dp_rate_idx,
+ 
+ static void ti_sn_bridge_atomic_enable(struct drm_bridge *bridge,
+ 				       struct drm_atomic_state *state)
+ {
+ 	struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
++	struct drm_bridge_state *bridge_state;
+ 	struct drm_connector *connector;
+ 	const char *last_err_str = "No supported DP rate";
+ 	unsigned int valid_rates;
+ 	int dp_rate_idx;
+ 	unsigned int val;
+ 	int ret = -EINVAL;
+ 	int max_dp_lanes;
+ 	unsigned int bpp;
+ 
++	bridge_state = drm_atomic_get_new_bridge_state(state, bridge);
+ 	connector = drm_atomic_get_new_connector_for_encoder(state,
+ 							     bridge->encoder);
+ 	if (!connector) {
+ 		dev_err_ratelimited(pdata->dev, "Could not get the connector\n");
+ 		return;
+@@ -1105,11 +1117,11 @@ static void ti_sn_bridge_atomic_enable(struct drm_bridge *bridge,
+ 	regmap_write(pdata->regmap, SN_LN_ASSIGN_REG, pdata->ln_assign);
+ 	regmap_update_bits(pdata->regmap, SN_ENH_FRAME_REG, LN_POLRS_MASK,
+ 			   pdata->ln_polrs << LN_POLRS_OFFSET);
+ 
+ 	/* set dsi clk frequency value */
+-	ti_sn_bridge_set_dsi_rate(pdata);
++	ti_sn_bridge_set_dsi_rate(pdata, bridge_state);
+ 
+ 	/*
+ 	 * The SN65DSI86 only supports ASSR Display Authentication method and
+ 	 * this method is enabled for eDP panels. An eDP panel must support this
+ 	 * authentication method. We need to enable this method in the eDP panel
+@@ -1140,11 +1152,11 @@ static void ti_sn_bridge_atomic_enable(struct drm_bridge *bridge,
+ 			   val);
+ 
+ 	valid_rates = ti_sn_bridge_read_valid_rates(pdata);
+ 
+ 	/* Train until we run out of rates */
+-	for (dp_rate_idx = ti_sn_bridge_calc_min_dp_rate_idx(pdata, bpp);
++	for (dp_rate_idx = ti_sn_bridge_calc_min_dp_rate_idx(pdata, bridge_state, bpp);
+ 	     dp_rate_idx < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut);
+ 	     dp_rate_idx++) {
+ 		if (!(valid_rates & BIT(dp_rate_idx)))
+ 			continue;
+ 
+@@ -1156,26 +1168,28 @@ static void ti_sn_bridge_atomic_enable(struct drm_bridge *bridge,
+ 		DRM_DEV_ERROR(pdata->dev, "%s (%d)\n", last_err_str, ret);
+ 		return;
+ 	}
+ 
+ 	/* config video parameters */
+-	ti_sn_bridge_set_video_timings(pdata);
++	ti_sn_bridge_set_video_timings(pdata, bridge_state);
+ 
+ 	/* enable video stream */
+ 	regmap_update_bits(pdata->regmap, SN_ENH_FRAME_REG, VSTREAM_ENABLE,
+ 			   VSTREAM_ENABLE);
+ }
+ 
+ static void ti_sn_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+ 					   struct drm_atomic_state *state)
+ {
+ 	struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
++	struct drm_bridge_state *bridge_state =
++		drm_atomic_get_new_bridge_state(state, bridge);
+ 
+ 	pm_runtime_get_sync(pdata->dev);
+ 
+ 	if (!pdata->refclk)
+-		ti_sn65dsi86_enable_comms(pdata);
++		ti_sn65dsi86_enable_comms(pdata, bridge_state);
+ 
+ 	/* td7: min 100 us after enable before DSI data */
+ 	usleep_range(100, 110);
+ }
+ 
+
 -- 
-2.47.2
+2.48.0
 
