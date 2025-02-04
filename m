@@ -1,75 +1,161 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2040.outbound.protection.outlook.com [40.107.212.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21DB205E26;
-	Tue,  4 Feb 2025 09:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661030; cv=none; b=XfScB9Gjsq7Atb1PrXjSlmkdRnLWf+GboEDkIMOhwK4VRTHm1DHXRuSMdYq9r1/L1KnkYYZCRGFx5pCaV1BRZtf0ayCyNqSQio46dCoMVBzRo0LJU8s30o/RTTMxb2LQ9EDlhVW2ME4Dnf+eLPhHQBiGXXKQaM/tF5+mdaa5hN8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661030; c=relaxed/simple;
-	bh=Sk4f8a3ZYm6LNS90zNDrp65XN39AnRMW+m/z8KUDM4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OHR8MYcasGb+E0gy3zua6CaqZTC811HbxzzZCwb3HfDJpVnUMrWYaewqx6MYLPfH1LhRmu0AQmteQ/e9mrSCd8fEA7eqEuOd778Rn3U0hsYR7gDl9vLK8//And4aO6XpRvVYdd7Pu3gFcL7/lbjLEC3TIGSPRUOrqC/fGtE5PCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 9AF27100BA63C;
-	Tue,  4 Feb 2025 10:23:45 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 54DCA4E0704; Tue,  4 Feb 2025 10:23:45 +0100 (CET)
-Date: Tue, 4 Feb 2025 10:23:45 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Feng Tang <feng.tang@linux.alibaba.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonthan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: Disable PCIE hotplug interrupts early when msi
- is disabled
-Message-ID: <Z6HcoUB3i51bzQDs@wunner.de>
-References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
- <20250204053758.6025-2-feng.tang@linux.alibaba.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE576205E26;
+	Tue,  4 Feb 2025 09:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738661067; cv=fail; b=jFDTF7Q4oU/OPvrljtJ/xgsKt8aV8lCVUbWd5/TSolAuvKuJClUY26V/XCKMpcbEOqpUCvuyxZjmqnUvSayYjLpEoIUejRbDS6ujD7YFCMSx58q2qJsyfk7uJCzIQVjyP73DY/DjfQeVYUrjgDofpun8jy8vl4Foz88+nYHr9zc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738661067; c=relaxed/simple;
+	bh=6MkKkRioUn5WRnWFyDOFDmP9efdnWY/Rxr5xTGUSia8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=o0LHdW31stLXFNF+rK2dVgE7BvQrAXl4qDNVO7d7KUDoU+prTNNnKrw6mcZijWUyj8C5CjwvPD8KAyjio9/aKS1ZBAbXvVvl/EnoaeqWc69fdQhu6QEStH9vsWbYv2S3NjRj9OcjeojCmOsLftGc91aFyqSYyCF0Ht3GoUPDHTY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hQ1rqnsH; arc=fail smtp.client-ip=40.107.212.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hQ1rqnsH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mZA4XhVCd6v7h6321j9YrWuc4lwPCWGw5Gq5TKiu4vHtNHWyT20jAObA4PzSbXSisP6s5MTvGkOxgP5Uw5Oi5jz6EuKVMT/YZPlybyzCEL8b7TyRfVh89MyMyOI9BmMf9PNqDq99fIr4ZsJDwFWeJwFa5P0rGXPGNST5XhTiVhEmYJ0jHixn8ZY0WAmrNH7Cxsb61t9E8/Q9uQGJayk9JLrkYOhm8/UAN8Pem52qnTIQSJSuW5Q1Q8ziy6Sju8MLtEDzPhKrIiY4BZznIzjz92FTRAFZ17ecU0b68fc7JkpycuDAeDmbfEDmVO4uOWqwvHN4EW98JjTw01Ja5DrUig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ifQbiIm1cCHj1WbAwQKRihPbrgfFdXQmaGoUO6kfV6M=;
+ b=F0faWhY2uEFIyPR4z/4fVXFDL4tWezG33SOkLzL3mWc4zr5yJIj3ZP9GMHMXxJQBmMxCNxzN8JJjuJ1JEtRNffFHNerB2eQ7LJrDzMR5CdiWpn//PV6RGlEKhsUdp+q/zTrVhIlkHlr780tZjLn/wplnBzR7T6aqT9sMYSmHopfjxEBBt+vGpOvnHsllzraZMM6OQk+9Nx+T4U6Sr6b9NXsfZl5nXIHUdTUaAO+hD3hOSxdld7kGw070mQp2iUmJu9Qheo0InJy/VRAGgX7MeMKlLtKWrcJ68R4umUZ7nUlXUH9DVgmBVIdSC+pGRRqybhpAPCRjF1XT/r8C3CVHdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ifQbiIm1cCHj1WbAwQKRihPbrgfFdXQmaGoUO6kfV6M=;
+ b=hQ1rqnsH08J2qWyOSekIjyf1O6Pt6HBiaGthNodu0LhvZ4MOURa4UbGB+bY+nJrQoCcOr7TnxU4usr842ciIuGRZPen4H666zEm/XHXiuALpZnc8xx8RTG1de0eSbZntKoAhltomg+oooR+M/OoMg5aFd79MifxDglZR3WrOsD2HCPctWy6/uruZWlL6t2sVQ5WAOk4RC+jth0ZwLTrp9JrkCjrx8+SiDjXbxthhFw1ifTRZ3HT6iKhJKtbjAWW0EJMABKGzJkawaU7csgUGKsjxQK2CnF/1hsM7vLNXviK3Yfb/SzB9mPX8Nc1PgFf+peJHXn+utc3hy0W+tbNYBg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SA3PR12MB7901.namprd12.prod.outlook.com (2603:10b6:806:306::12)
+ by MW4PR12MB8612.namprd12.prod.outlook.com (2603:10b6:303:1ec::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.21; Tue, 4 Feb
+ 2025 09:24:22 +0000
+Received: from SA3PR12MB7901.namprd12.prod.outlook.com
+ ([fe80::66fc:f8a2:1bfb:6de8]) by SA3PR12MB7901.namprd12.prod.outlook.com
+ ([fe80::66fc:f8a2:1bfb:6de8%6]) with mapi id 15.20.8398.020; Tue, 4 Feb 2025
+ 09:24:23 +0000
+Date: Tue, 4 Feb 2025 11:24:11 +0200
+From: Ido Schimmel <idosch@nvidia.com>
+To: linux@treblig.org
+Cc: petrm@nvidia.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] mlxsw: spectrum_router: Remove unused functions
+Message-ID: <Z6Hcu4RgM53fS0rr@shredder>
+References: <20250203190141.204951-1-linux@treblig.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203190141.204951-1-linux@treblig.org>
+X-ClientProxiedBy: FR2P281CA0039.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:92::10) To SA3PR12MB7901.namprd12.prod.outlook.com
+ (2603:10b6:806:306::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204053758.6025-2-feng.tang@linux.alibaba.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA3PR12MB7901:EE_|MW4PR12MB8612:EE_
+X-MS-Office365-Filtering-Correlation-Id: b755a513-8363-40d0-8a0c-08dd44fdb617
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?oC6aR3QzcEDIuAG434/cIojE0neTYMb7cr1AIKgEZ8/MQq+Mgf8TLsNXEMAk?=
+ =?us-ascii?Q?MqguFUW+/ucngGwX6OOelD2MABfkLgNKkHhGWWfujIP+tAN3zgRjxAYdonGb?=
+ =?us-ascii?Q?qhM33FYU5HogfDFKKmiGi8uT1K9gm4voxhdnd65U7MVe0Wgrd5daKuh0+VZF?=
+ =?us-ascii?Q?3B02YzUnrwvQZewcUVqlx0WfUGGdsRs4+Ka/tYvV3KLOchGB+HTtSO9GfvjM?=
+ =?us-ascii?Q?qlxX1FqFsI2S5u0KLKtY6EFQ7qwQ0qvt7pI7U50zQKi638LgTTOM9e9d5Qlo?=
+ =?us-ascii?Q?L4sySeJkVjIWiBOjeYHV1HABEupn1WxOWQIS2ifddLVo9ft2nsBSPUDwDc+j?=
+ =?us-ascii?Q?tco0s6He9Xv1xSSSNU5F+zT+pR9UBUjchfbWNegN/fUJVfarpwF6SlPsUHdS?=
+ =?us-ascii?Q?w7JQoRWcFAblmMA9AFBMXZrBh234ez7aotrTWDP20+kzwJ/BnW/yaCDlzywc?=
+ =?us-ascii?Q?2ryrIMiTjHoC9fRZa1pSNXRFbqh6B9z+fd6gIe1FgCauq95Q6pn6qSE1F6HI?=
+ =?us-ascii?Q?TfX0v8xzGahPPylh968vIq3EUC/HqEDoZ4bof0uG6RDnlD+5lY+P9muUdlsV?=
+ =?us-ascii?Q?t8ntLHYV84a7wJdAZpClFqWGAO8z6p8Y6mI1Mnbn1DBymdSKv1pjKz10PI8A?=
+ =?us-ascii?Q?JgSrKjl7Kmid1iY+y3MFIZi2FAPg5+VJK+luv9aENzsmkkU/kl3js/MG2Vdo?=
+ =?us-ascii?Q?gqsDfkTQ/5NKJ7XBcPyDtCQ6lhZ/YDGFlfRS/wz6QTggSONnOavDLGWSDA2l?=
+ =?us-ascii?Q?4AaPExprnh14Rh3tkalHePITTzAaLwwkIgNBEp7xlBi51OPUCJrU1Ii3mfqJ?=
+ =?us-ascii?Q?2ZP8+0+V6mC7WJ+tHURcWSzxGOaA9Hy3e2hM7anuY2w95EUQs4E+cMFA/wtN?=
+ =?us-ascii?Q?MlCvreKyprpD7wABUo+0yJBm74kjn3rDA0HNZFIzItrlzMUWfUR/7F6gTm0h?=
+ =?us-ascii?Q?AwUzraPMqnL8e57JDP/oBOIu7WunguLyVdQz0Cj5sP8ou5dSbcVYtmrUXV8G?=
+ =?us-ascii?Q?+fE5XXUpR99urgpDVhVQzhOpN8BOxeLS1Hen9YoEnv/NkDvwGk4/46m4f7Y+?=
+ =?us-ascii?Q?UjXWJnh514UTJfe611tBJMtZs03lH2t4Pvdnn+lwMyZVrzfj9tUkBW+MqxVm?=
+ =?us-ascii?Q?2ILHto4xIYU7vKe5TXCzrfs6+GZbC9SzUKrTdQkO5ukPtIarrjq1uXYNEunL?=
+ =?us-ascii?Q?WtvPDa4pBxLQxabhIvD0IGvz07AhIeR0BOMTwHfT4yNg0l6WQypoSIbZZFOw?=
+ =?us-ascii?Q?ayVEe9RCgiYs52qruQ2dTi8JNbAvDZ4uCuPZYPLQMOnK7tFMxNSga0VNfccR?=
+ =?us-ascii?Q?rxMz8v6AJXVqEzmCpt2jk8ss4k6KSORsVw1TiHxq8M8xiuUh+DUoD1/1ehna?=
+ =?us-ascii?Q?NVWbOXOMUadXwQ47iUh7TbhQvVZE?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR12MB7901.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Q4ymuDhcgdAuwdR6ucst4VJNU6r2AELjtuQZd99GHa4bGQ9q2IyOEMaZjlh2?=
+ =?us-ascii?Q?hDtNoj3NAYW/Z6MRVgmSr5JKsPK8EIxFit4X4PIr4iEogQuqignpboiuxdtE?=
+ =?us-ascii?Q?3bDwprffkdsnBB0ewMRMwLXtvPy2v0N+qHZCEKN2kH0Y++Su4NxKwGFWQTkI?=
+ =?us-ascii?Q?KQbCbs8qJBSt8U+I78B8+pc+gfcijWGz/ob4y6Jar5WT4tlcoAJK9dy0t/6S?=
+ =?us-ascii?Q?xOiMtKgmpEAP/ChKy+RVAXcpjniZoIP1GvmAvYfpr2ijoip+uh29hlIs/DiG?=
+ =?us-ascii?Q?Bfi5YKl8+IxruIylgKPHk9+ksQO8gcFk6QB7h04iZJJ6kQtWvf1g5sqgWwVP?=
+ =?us-ascii?Q?II5ymCdToyeVDgn9qVwrdUxWAIlrAsS4IccF8T+bivOFcSW06UnX26QmdRRQ?=
+ =?us-ascii?Q?cfaiDCV7ArVXiRml4eNhKt7Dt1Tw7AVV130DDfD4eV0zpP1Z0gZROJz5Ui0Z?=
+ =?us-ascii?Q?ebf3UrhhA/6xG2yzObiE92Q4GSWMtaKDDbsGmTr+r6JvCdPrGDENZP3iinn8?=
+ =?us-ascii?Q?+SsCHwpsAOqrkg5rIOkvUXuA13yQk5T4056YHX0346HJsJKN67ZUw4n/K7+V?=
+ =?us-ascii?Q?egCnd9iq6mvU1HUCsJbpI7Ay5xSrHzblqCTVxl5Lxv2IKg9bI5YfFwCvm3XC?=
+ =?us-ascii?Q?rwA4SWc39UvL3REQknTF9TuAiZOAbVA5yi4nd+idEZRvFBroznBedp0hypuH?=
+ =?us-ascii?Q?Iz1C4Y8WR/b3xtRMXh8H28/CB7W9a14Pg6h6jXYxkbmc0KkIHrwwgT2ldnHl?=
+ =?us-ascii?Q?7EKDuu4933jYD9vugxud/f2wIP8bXMDryL1w8gueM6DlIHa9jyRzld2ozdKA?=
+ =?us-ascii?Q?sjd/hX5QhYsWz77z7a5A2VCh60TJACUV2KuutO5MlEyzPaQGIE58ppv8FRz3?=
+ =?us-ascii?Q?t6pRu3RaWcSBhMweMiFdqphnlcxSOKqnKFKVF7I74TT28I0LYOQPjii02/T4?=
+ =?us-ascii?Q?TSxIbXlkSbIcCjOkouyvU9CU8ZMXLgXyu5UMoIed122rv4fZpBGbZkO+skSo?=
+ =?us-ascii?Q?sm85WO7pZHKYd2YHzbURzOLI0r5wMNxGGx/IDre3doCRW3+eF5nv1hfGup4m?=
+ =?us-ascii?Q?CgT9lWb7ARLyFZXxtKq/ySSvamrcKrWiYZItcEKdC2CxjS3e/lFRmGq1IaGH?=
+ =?us-ascii?Q?/89HoJxDZW+BZjCTPyq5eX7BEH43/JogInYzDrMJiGKtCLvGRJLffOFgKie2?=
+ =?us-ascii?Q?BzD+yQ/eIBWkQfohSAUMhcUUqu8y0mFzmWbiIn0Ks+Cz9QXlNXWzsCwVKn6U?=
+ =?us-ascii?Q?ako1x7qrCgwJAwgAg0L+/UPaDhBuOxzrH58E2Up9zABf0Z1RWCRvDHrfEFtU?=
+ =?us-ascii?Q?ODgNewybNcE950ILFiZ1MPe9jYbxXHENoEJoa5K07I9OoZhASM/DYmjTcoX2?=
+ =?us-ascii?Q?ybvW2q28mcl0iOx1tIINsXKvrSEcs77m1jaaJR9R9drgqqUAISUT2evEi+bS?=
+ =?us-ascii?Q?lSObA8+mIX0sR1AmjSBldYIHWHnFwzakio207/hepUlZfJwpbWA6awr3YeYQ?=
+ =?us-ascii?Q?B38lamdGMavkQLzx6GaKzr5Njbvd+v2eU9QCqh92VFfXTYZivCNzjXJM3HJz?=
+ =?us-ascii?Q?vEFTVT/kybGb2aJP7UU9MBY2KqQT7YZZHAqKE6RR?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b755a513-8363-40d0-8a0c-08dd44fdb617
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR12MB7901.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 09:24:23.0275
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: a0uoigQrpzX5ktnBUcgcMZQGcU/ehjlAPLf8ucs9GL4MhWGSM00bRq9la/1bBXJqQnPiPNiJjzwpTs7/wxk7GQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB8612
 
-On Tue, Feb 04, 2025 at 01:37:58PM +0800, Feng Tang wrote:
-> There was a irq storm bug when testing "pci=nomsi" case, and the root
-> cause is: 'nomsi' will disable MSI and let devices and root ports use
-> legacy INTX inerrupt, and likely make several devices/ports share one
-> interrupt. In the failure case, BIOS doesn't disable the PCIE hotplug
-> interrupts, and  actually asserts the command-complete interrupt.
-> As MSI is disabled, ACPI initialization code will not enumerate root
-> port's PCIE hotplug capability, and pciehp service driver wont' be
-> enabled for the root port to handle that interrupt, later on when it is
-> shared and enabled by other device driver like NVME or NIC, the "nobody
-> care irq storm" happens.
+On Mon, Feb 03, 2025 at 07:01:41PM +0000, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> mlxsw_sp_ipip_lb_ul_vr_id() has been unused since 2020's
+> commit acde33bf7319 ("mlxsw: spectrum_router: Reduce
+> mlxsw_sp_ipip_fib_entry_op_gre4()")
+> 
+> mlxsw_sp_rif_exists() has been unused since 2023's
+> commit 49c3a615d382 ("mlxsw: spectrum_router: Replay MACVLANs when RIF is
+> made")
+> 
+> mlxsw_sp_rif_vid() has been unused since 2023's
+> commit a5b52692e693 ("mlxsw: spectrum_switchdev: Manage RIFs on PVID
+> change")
+> 
+> Remove them.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Is there a section in the PCI Firmware Spec which says ACPI doesn't
-enumerate the hotplug capability if MSI is disabled?
+Reviewed-by: Ido Schimmel <idosch@nvidia.com>
 
-If so, it should be referenced in the commit message.
-
-If not, I'm wondering if it's safe to fiddle with the Slot Control
-register given the platform hasn't granted OSPM control of it.
-
-Of course if this is spec-defined behavior in the nomsi case,
-we could make the write to the Slot Control register conditional
-on that.  But if this turns out to be platform-specific behavior,
-we can't deal with it in generic PCI code but only in a quirk.
-
-Thanks,
-
-Lukas
+Thanks
