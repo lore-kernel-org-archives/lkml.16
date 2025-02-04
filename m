@@ -1,116 +1,78 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2280C205E26;
-	Tue,  4 Feb 2025 09:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CF2206F02;
+	Tue,  4 Feb 2025 09:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660803; cv=none; b=BoOyrQHv1OrXX8vA1TdfGLuUXxJKl3dYEIg54ZsryFMtBcgDHfN7zIthqZM9uoyGlPRa5kMAgTxOIwpeId7DTp7s8iWQaEBVTXZ905totezrlBiaxJWHa9GqermsIDQVLrsVGb69hPxEXJ3On5gHH/bWx4su6NIvmZRt1jDxwZY=
+	t=1738660814; cv=none; b=n4L2JUOlV8q/JqrgKOgt/nJIU8Bq5eiMAOVgvSQ+1wavyQ0zPvziDlsCpll9S7IhM3uQU7DfRa6HvZ1tjefLtm02T6vj9MfRV7gNcunUFSyTbkC5XpYd/I1xQ2jkV5NtZ5lH/1H/2CrMe1C2I8AUFhle6i/9K6KhS83KvhZuazs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660803; c=relaxed/simple;
-	bh=SVDDG3SoH5jvl3YPhLa/GjlbC4VVi5RFTjffna0TPdQ=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ji8wNNNQa8H87aQ496Vu/dh3xbYSGZmBgS/BiUoa3WpkJ8qHTVNkdCGAtw+W6kCKZ22g2J5gGbI6fRB48Lc32nvne98l1y9xyDslpgp5ZN0EzcBinHf6fYYfNWifckTMAP9aIlPp/lmULFCX+UoagqwpGzSsaZtO3i/ZeT8stqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cZrKfSLG; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cZrKfSLG"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dca451f922so3949587a12.2;
-        Tue, 04 Feb 2025 01:20:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738660800; x=1739265600; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=N/dQwnwJeVpC/wcrli/EX5K6+901Md4XabfvKhD3sb8=;
-        b=cZrKfSLGTB9uq/usfCMRWdCwvL0zJDW/85Pb/0hM4BWdf+zJOh79UeoWC1pD1TtzXJ
-         Pz8LSagQyexsjkabD39q+ZAxKeXfR2Nw7QKWKl/ij6molZQOY12TeOXEHQsgTpaQKVGy
-         XSW9Ygk63yGGi9F+5t4FS64KCLrLtsJsrBNxaEqQ3cnYCe48lZisKeDsFf0fl51NK1FT
-         hfvRdqWsL2u4ZRQoJC6BpzHKvM0RDz1eaJna5iFyMSxn5VoFc0mDsmRmTaNTglSrmjAe
-         LUmNkZySV+rYrc44Qh3Syo04P4pbevD69GylVEYCiDYPd4KO1vdGL33jby84tAmYZQV3
-         EN1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738660800; x=1739265600;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N/dQwnwJeVpC/wcrli/EX5K6+901Md4XabfvKhD3sb8=;
-        b=QieyWAi47tsCayQ6jjvlwDqThChfFF/SUdJdJ7Ti0zpg8Y6XTkiSkWOc9J/MfmnPGM
-         1NOhubpdYJn7DdIF/exH9Ka1L10lvj9cJoOABuPBVHHtvrWU56n2fJrS4HCl6Larampx
-         pjUhWWRpdGTBDEFA38utUKcvplcrx37jx31VAKOwRZnWHuPzz3pjtYGHNrDflUVMCevM
-         LHO53PAUAeHFColn2EaN3xq8Q6kZZH2AGaoS5+R/lU2nfNzwyfUwbm9caUFBWM1jwNbs
-         u7kMPzBizc1Dw2KPny1cFqoF42LtrK+v/dw48Zfz5K+FTmF7qOnMxMzzixN6TBKHUB5c
-         iuHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUglrdpwuRmRG6BN3OTE3HoI30aNTjMExMHBjV2yLxWvRqoL/idz1lar/OTh5RiOHsuSiucFiUmtm5uwtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzl/rfqLmAWvimA8lDUwUiSA7C/kRaA6yhYXiurmesDsY18y+vo
-	bGixtpE2Blnx40+6cCS/ITeyu9rsQSpu56CIuBSxrLmxQv95zx6d
-X-Gm-Gg: ASbGncv5ZiFDUd9g0GVbs1VP8wPHLyKrTAnxwz8bE0N+UB5gJgBlOK0OoHyhHcZEmGY
-	h3RtCkknLIb9Oubtd6lDy+ZJWWqctxvx9CuWJvkZ7h/L3o47O3E4gPkEu6MH6qXzqW/Xd+NKJMZ
-	+JrBkV1e69QpIlTU72E8yW8OFsTBvjLSKP2JI+t/d9II+Ydgl72Yy5Xfxr+6bvAKXngIhj9M2p+
-	mWlzBA/Yh0se5/lIgQ5koamH9ytV09SJG0UouOCkL2+LHq6mA/CjtxPvsnh6GK8ePp0J29dI9x2
-	HEx5zH1yW0GzCUeGzfdm5T4Id/qyhs1y8c51Wezlmv8eGyM=
-X-Google-Smtp-Source: AGHT+IF6McnbQh6wFqQPXvb9uNHh9QHuoOtiZLei8IsNNZp+7cCLLk3SZmZx7mzv3d0IIQfqMl399A==
-X-Received: by 2002:a17:907:9726:b0:aa6:b473:8500 with SMTP id a640c23a62f3a-ab6cfda4249mr2785776666b.42.1738660799938;
-        Tue, 04 Feb 2025 01:19:59 -0800 (PST)
-Received: from [192.168.20.51] (54-240-197-238.amazon.com. [54.240.197.238])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47cf9desm904470966b.55.2025.02.04.01.19.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 01:19:59 -0800 (PST)
-From: Paul Durrant <xadimgnik@gmail.com>
-X-Google-Original-From: Paul Durrant <paul@xen.org>
-Message-ID: <acc56a9b-2313-43f8-8acf-9ec39a8538e8@xen.org>
-Date: Tue, 4 Feb 2025 09:19:58 +0000
+	s=arc-20240116; t=1738660814; c=relaxed/simple;
+	bh=BFGsbaTSvbMUMC4bFEn2tx2w2G4O/Nh9tSKKhTzYN7c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V/dJhF7TlLoLvPXOUjXlbWHmmiINuuMsDUonZdexqr3vTEV8R1nrwz5lMqdkt28b6T8unt6fmUROSTKscHsTQEbB6uX0V1JQ0C0tEZhyeHLOwKfiX+Ck3SeWdrkND/P78dzXlPSq0myfrJannkYuMJlC2pvYR7wsYn2W+ExX6SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 1D38F100FBF8B;
+	Tue,  4 Feb 2025 10:14:11 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id E2D10495661; Tue,  4 Feb 2025 10:14:10 +0100 (CET)
+Date: Tue, 4 Feb 2025 10:14:10 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Feng Tang <feng.tang@linux.alibaba.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonthan.Cameron@huawei.com>,
+	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: Disable PCIE hotplug interrupts early when msi
+ is disabled
+Message-ID: <Z6HaYkIKLXji_EO7@wunner.de>
+References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+ <20250204053758.6025-2-feng.tang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: paul@xen.org
-Subject: Re: [PATCH v2 04/11] KVM: x86: Process "guest stopped request" once
- per guest time update
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzbot+352e553a86e0d75f5120@syzkaller.appspotmail.com,
- Paul Durrant <pdurrant@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>,
- Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20250201013827.680235-1-seanjc@google.com>
- <20250201013827.680235-5-seanjc@google.com>
-Content-Language: en-US
-Organization: Xen Project
-In-Reply-To: <20250201013827.680235-5-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204053758.6025-2-feng.tang@linux.alibaba.com>
 
-On 01/02/2025 01:38, Sean Christopherson wrote:
-> Handle "guest stopped" requests once per guest time update in preparation
-> of restoring KVM's historical behavior of setting PVCLOCK_GUEST_STOPPED
-> for kvmclock and only kvmclock.  For now, simply move the code to minimize
-> the probability of an unintentional change in functionally.
+On Tue, Feb 04, 2025 at 01:37:58PM +0800, Feng Tang wrote:
+> There was a irq storm bug when testing "pci=nomsi" case, and the root
+> cause is: 'nomsi' will disable MSI and let devices and root ports use
+> legacy INTX inerrupt, and likely make several devices/ports share one
+> interrupt. In the failure case, BIOS doesn't disable the PCIE hotplug
+> interrupts, and  actually asserts the command-complete interrupt.
+> As MSI is disabled, ACPI initialization code will not enumerate root
+> port's PCIE hotplug capability, and pciehp service driver wont' be
+> enabled for the root port to handle that interrupt, later on when it is
+> shared and enabled by other device driver like NVME or NIC, the "nobody
+> care irq storm" happens.
 > 
-> Note, in practice, all clocks are guaranteed to see the request (or not)
-> even though each PV clock processes the request individual, as KVM holds
-> vcpu->mutex (blocks KVM_KVMCLOCK_CTRL) and it should be impossible for
-> KVM's suspend notifier to run while KVM is handling requests.  And because
-> the helper updates the reference flags, all subsequent PV clock updates
-> will pick up PVCLOCK_GUEST_STOPPED.
-> 
-> Note #2, once PVCLOCK_GUEST_STOPPED is restricted to kvmclock, the
-> horrific #ifdef will go away.
-> 
+> So disable the pcie hotplug CCIE/HPIE interrupt in early boot phase when
+> MSI is not enbaled.
 
-:-)
+So I think this issue should go away if disabling the interrupt
+by portdrv is no longer conditional on
 
-> Cc: Paul Durrant <pdurrant@amazon.com>
-> Cc: David Woodhouse <dwmw@amazon.co.uk>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/kvm/x86.c | 17 ++++++++++++-----
->   1 file changed, 12 insertions(+), 5 deletions(-)
-> 
+  (pcie_ports_native || host->native_pcie_hotplug)
 
-Reviewed-by: Paul Durrant <paul@xen.org>
+like I've just proposed here:
+
+  https://lore.kernel.org/r/Z6HYuBDP6uvE1Sf4@wunner.de/
+
+... in which case this patch won't be necessary.  Can you confirm that?
+
+You can split the change I've proposed into two patches if you like.
+
+Thanks,
+
+Lukas
