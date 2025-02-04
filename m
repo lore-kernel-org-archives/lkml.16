@@ -1,46 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D040113C9D4;
-	Tue,  4 Feb 2025 10:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58069207DF6
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738664497; cv=none; b=u24bfRvFNzDe0iSmpaacEOVZmroYQmxSWO31Us7prc0EpRuqQzEjhE0zwRBZX5FRIJlwvymi9NHoBgQX+K1MMNms63PgCLJr6ec31rXD2w1WA7VIFLwROe3pBCyUJkG+zc9yEgGGJ8ARCrcXeqTEHN8KVFkCf64tMatERbQG/2o=
+	t=1738664516; cv=none; b=PnOBghn/qjw04di1fjs6LffthQEOt4oSHemaPlDGgvveRie0it0D1PKurxREtzGA1o47qKengubwS7SrjUba479qNUsbV7Nnkdp/Yk5dPvIHPICFC7vjY3ol5eGMArGaqBqpZrAcDBdfLZEEMlT662juslD0+HKx8e4+9RY7pJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738664497; c=relaxed/simple;
-	bh=00+kGVXM3LxP5UsF8Zva7PTIxyRVIvkWbjAx/ETBsfU=;
+	s=arc-20240116; t=1738664516; c=relaxed/simple;
+	bh=qyI3vrifarulcFHM37n4RJFrOBtxdeW2iqd7Rto2UOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p5eB2jOujfmm6k1ExcQ4vYQcHlmJBRnpiZklN2xy7IN8odAZchNSIMMDXMMT415/ruKmSjmoje73SfwTKVNzzWK9eVvR9jXg8JdP1VLwGTw4lWmUXMs5R01K6YebdtsENGLD89OSeFEPlB62ISlNtTj4xsljA+Uco9Q3zVNct6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDsZjieZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=vDlr8q6dt+jMw1cBlzYtRApzXKb5cU1wmTt1wlNmPrvXbv0R1c/Cg6kdnCYpaAK1IKKjhkou4hJdDWaZZkHF+buzax8gIcAcrcGH6RL00CfFYxO3f2k4OsIxfURJWr4d3ygDNKUgmduYGb4dq877tHI7DPMWg4onOzO+bjsX8JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=joISANmO; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDsZjieZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B42C4CEDF;
-	Tue,  4 Feb 2025 10:21:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738664497;
-	bh=00+kGVXM3LxP5UsF8Zva7PTIxyRVIvkWbjAx/ETBsfU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hDsZjieZ9IgA7l1DTrf36QSJpjKTG78gmtOmGGfqe4WLB+J7YBYwAsZT8qbuP/s2h
-	 Wgs+YWjo3ihnzFPSGBs7eT1k6eJGDKpAPcL9oLUxq5iVd7MiwSCmNqJALgpFkONq1I
-	 M+56XYpYIkdL/jhv/7KK00h3amizZ9/aAgJu0dohzHk6ABET04R4Ztaolg1SHoAujS
-	 zXRz4lX/O/1ISSJeQ3Ee3PQY43eGGeSDEuxPdOQKa+PQrht8U2urjfo/okhqjJ5BdY
-	 VgHv5MaFWIZx7Uu4OqUrbCZLM/PRDWNRdI7Sw8lyCZZXqAbxnIcPL6tniBukjjxSGp
-	 swaprP1Yzl1Sg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tfG3q-000000000XO-0TeI;
-	Tue, 04 Feb 2025 11:21:42 +0100
-Date: Tue, 4 Feb 2025 11:21:42 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>, konradybcio@kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.13 1/8] soc: qcom: pd-mapper: Add X1P42100
-Message-ID: <Z6HqNgy_jUWwkMnV@hovoldconsulting.com>
-References: <20250126164523.963930-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="joISANmO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=fz9yhlaeOJe8kDvxr+8xVVhpa0M0sP+lsx1wAkcgDao=; b=joISANmOklWBaBtdwcHTcdwHHO
+	2BvX/z9Xko2knSkkSMrt/rS6qFnAfpZg8T9QVTnqQOXdZTXLNZKtBiYpunoWxGVJe/Ks8aEMXeMIA
+	T6vtFgazWnumrg8oUi/qkQxvaeFioK5uSkFknqcNr4lfbM0Ja4eBAHqV3QZBEO5AlIe7aNmQXY+7b
+	emehu1KrxqhFuuP5e2N5jldNFoDHMW7jmgFv4crt9+likmdbMEFAR9rt4nSYmt524afGlztiCcWbv
+	WNXRknTGr4FYnPtoqMJEirGQUpFKYFLGtoK6sttpk+DvzMdSSWzNIp+a6p6aC2NK5HpMzgKa4wsvr
+	B4GVEHtw==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfG3v-00000002YBR-0xH2;
+	Tue, 04 Feb 2025 10:21:47 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 51111300599; Tue,  4 Feb 2025 11:21:46 +0100 (CET)
+Date: Tue, 4 Feb 2025 11:21:46 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v8 13/15] futex: Resize local futex hash table based on
+ number of threads.
+Message-ID: <20250204102146.GT7145@noisy.programming.kicks-ass.net>
+References: <20250203135935.440018-1-bigeasy@linutronix.de>
+ <20250203135935.440018-14-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,41 +56,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250126164523.963930-1-sashal@kernel.org>
+In-Reply-To: <20250203135935.440018-14-bigeasy@linutronix.de>
 
-On Sun, Jan 26, 2025 at 11:45:16AM -0500, Sasha Levin wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Mon, Feb 03, 2025 at 02:59:33PM +0100, Sebastian Andrzej Siewior wrote:
+> Automatically size the local hash based on the number of threads. The
+> logic tries to allocate between 16 and futex_hashsize (the default for
+> the system wide hash bucket) and uses 4 * number-of-threads.
+> On CONFIG_BASE_SMALL configs the suggested size is always 2.
+
+> +	scoped_guard(rcu) {
+> +		threads = get_nr_threads(current);
+
+How about something like:
+
+		threads = min(get_nr_threads(), num_online_cpus())
+
+?
+
+> +		hb_p = rcu_dereference(current->mm->futex_phash);
+> +		if (hb_p)
+> +			current_buckets = hb_p->hash_mask + 1;
+> +	}
+> +
+> +	if (IS_ENABLED(CONFIG_BASE_SMALL)) {
+> +		buckets = 2;
+> +
+
+Or... you just disable the local thing entirely for BASE_SMALL and have
+it fall back to the global hash.
+
+> +	} else {
+> +		/*
+> +		 * The default allocation will remain within
+> +		 *   16 <= threads * 4 <= global hash size
+> +		 */
+> +		buckets = roundup_pow_of_two(4 * threads);
+> +		buckets = max(buckets, 16);
+> +		buckets = min(buckets, futex_hashsize);
+> +	}
+> +	if (current_buckets >= buckets)
+> +		return 0;
+> +
+> +	return futex_hash_allocate(buckets);
+>  }
+>  
+>  static int futex_hash_get_slots(void)
+> -- 
+> 2.47.2
 > 
-> [ Upstream commit e7282bf8a0e9bb8a4cb1be406674ff7bb7b264f2 ]
-> 
-> X1P42100 is a cousin of X1E80100, and hence can make use of the
-> latter's configuration. Do so.
-
-This patch does not have a stable tag and makes no sense to backport as
-support for this platform is not yet even in 6.14-rc1.
-
-So please drop from all stable queues (if it's not too late for that
-now).
- 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Link: https://lore.kernel.org/r/20241221-topic-x1p4_soc-v1-3-55347831d73c@oss.qualcomm.com
-> Signed-off-by: Bjorn Andersson <andersson@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/soc/qcom/qcom_pd_mapper.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/soc/qcom/qcom_pd_mapper.c b/drivers/soc/qcom/qcom_pd_mapper.c
-> index 6e30f08761aa4..50aa54996901f 100644
-> --- a/drivers/soc/qcom/qcom_pd_mapper.c
-> +++ b/drivers/soc/qcom/qcom_pd_mapper.c
-> @@ -561,6 +561,7 @@ static const struct of_device_id qcom_pdm_domains[] __maybe_unused = {
->  	{ .compatible = "qcom,sm8550", .data = sm8550_domains, },
->  	{ .compatible = "qcom,sm8650", .data = sm8550_domains, },
->  	{ .compatible = "qcom,x1e80100", .data = x1e80100_domains, },
-> +	{ .compatible = "qcom,x1p42100", .data = x1e80100_domains, },
->  	{},
->  };
-
-Johan
