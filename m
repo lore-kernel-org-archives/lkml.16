@@ -1,106 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B81215196;
-	Tue,  4 Feb 2025 16:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCDB215196;
+	Tue,  4 Feb 2025 16:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738686364; cv=none; b=etaWw7IPUbkwZClwXfVwsXUowcWSz1PwfIaskCs7CDkaKMkobLMwU6b9p5ODkII4SjSSFeNW57SotWtj+aKvTabX2u53R6eg8BEJ6XlRNbM0pyRfSHfS5jWUC9DZjMkdi4XnE9tSB7YX3FWVFhMS0F8wt+3XjReCTpwR8CMNI9A=
+	t=1738686370; cv=none; b=YKzFFBjZz0fcQpCtMBh1TZMkN0LnHkUadp9vCO8fCPWIyj3L25AqB/d3hUYAXB8deFK8l7G7bDUOPgkK41Q7K/8Dr1O+3pa0CGM5TJKMgo96b1hZ1T4oEKS3yC9UXx38ErR/WvV9xT9sc0mb620GYVS5/mWI5vy44wP+BelhSSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738686364; c=relaxed/simple;
-	bh=L54LXQnOXWaBaK5VCO3A3bjxwgajDXv30wjGTPt+098=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qrCdwDVEA4XGat2GPSvNaUtUqwyE6GEhwYCs8dJ2ppdKlTAYDLMNGNjB4ccECpjtWNME649rPyoYv/kXteMGC5DqSD4sJGeH8h0zgJGJLY83fvsD0hmeqPZIaTiMHqZZZVhw3mMATgcQHRbJe1rdS7Do0zo4zjKoSgSvsnEk+NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2pPWBAh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738686370; c=relaxed/simple;
+	bh=LxTw95Joq9NOwz1ssQz69DMOpY06Qewpmb9G+xXor48=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EEpoHGA5tdvGmYPZ++CERLs4k49oeY/cckcDnwHSTsqeNRnHK/j/1vxOLA7qgVGYQmdD1LOAFB4DfGP9GrI1a/uFUEpsUEB/lHDWvI7EUoDnAF5jeUYo/I8TDR4Z53lw3SBVswnfI746sHThSu6yVDvo+l8g1m2RDymER1EaELU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K3hFmP3H; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2pPWBAh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DA35C4CEDF;
-	Tue,  4 Feb 2025 16:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738686363;
-	bh=L54LXQnOXWaBaK5VCO3A3bjxwgajDXv30wjGTPt+098=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B2pPWBAh1vII7IozOG5m4s4KE4imJgEszqsdtJdsekdCwiDT/t2ls283r81dquCQy
-	 gB1rTpS+CFvmUFelHBeZoYpCEh89ao9CHqq3XOIYDoPOEqj3+CuEcEERLhpzkoyjWB
-	 HUWB5UH+krcTGZNezD1SBnuhzPkUJZ+Gu/SSKlXOzUKJLizTPVox1e2h5VKIKl83Ty
-	 IJFA93WwuupUf57V/AjeGQSPMM9b2fbMA/1a3qU06TSqWQToSwJG8RdikVMJweUYcl
-	 KPRnZC0kmQh2NWWMqLbmehulmnBU4qVT4rtOJHvwmyvOlvTAIkWKDB79cpO+H5cnJ9
-	 XStY6fB0R/a8Q==
-Date: Tue, 4 Feb 2025 16:26:01 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-mm@kvack.org, linux-api@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 0/2 v8] add ioctl/sysfs to donate file-backed pages
-Message-ID: <Z6I_mb7Y0QSWqtro@google.com>
-References: <20250131222914.1634961-1-jaegeuk@kernel.org>
- <Z6GqbJxJAsRPQ4uQ@infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3hFmP3H"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aaeec07b705so976251066b.2;
+        Tue, 04 Feb 2025 08:26:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738686367; x=1739291167; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:reply-to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LxTw95Joq9NOwz1ssQz69DMOpY06Qewpmb9G+xXor48=;
+        b=K3hFmP3HyZbXWfq6RGy8CTjHkAmrFK7BvsRX5XKU/3lqTt15MXZ1JuhTZB9wSpm7BI
+         zkdhhqeEkSJ2kacxp+zmhCmssBz2ha7O0mBbDdSlRQDPM0FD5yUI4WPQfy75vkKiYqBk
+         9sCKh3096dSJLG3zfln/b0p+fzC6oUIzMawj5Jw5pY87HSEVhMBUuxM1Yu5wFrr0pxVQ
+         Xt1UntOJONEH4Z2V38Ma3YNTtEL43lTmztYE30gWR+yBSHonOBG7s2R45Og4Nxt9eHW8
+         4InguSqhEeDo9ZMc7CUb9y/xT6G/g3GePBf8Juf16x3qS99VV7ce7quZjfQOOt5pclnH
+         +cog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738686367; x=1739291167;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:reply-to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LxTw95Joq9NOwz1ssQz69DMOpY06Qewpmb9G+xXor48=;
+        b=i7w5ZnBTLRFD5evKIRLRt4oSrTOm4izhRkxV6VMmeMASBBPKfiTYyMHyyqwQYexj4a
+         IxgqKmApSSkI3SfiwL+uDV+ZUZJ27yvPia4s7bkhUCZLtyEJhluR1g0Zdd7VayVirWNb
+         OZPYtvJRI4iwZYiY2c60Bih5b1tLfqqZC/Dom+ZmFmQ5LtNO2cweRUH1epj8KJQth7QU
+         Y5H07HcZnmoTCe+FwECthofjLrSdYg1i8Ee6k6W1LBZ7/olHCA18DTlqL9WnTSQ5clt0
+         ME8xyB519Jw/r3fy+UKgej1xqsUODFGmrUSPMMTFcqtRvBV5t57cj6JwN8lJw1aKaW3B
+         NaLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBuupOysOf4kTK0dpNEm86bENEG5CP12n+RfIZB8SIjYEqcIHhqOpX89SZ1nCYD9dGQyXHJfbsmxk=@vger.kernel.org, AJvYcCWZ+G78VFiZ9v7lnXjZ+HMTd8g4MuBkRoAYQyNqomtd2gDlUGykp/KlNVBI4qFHpDYAmbWenzIw6fxIg7gt@vger.kernel.org, AJvYcCWjB3pxa+E0Nfpa38S+A5U0lxxHqRKWRdeNkqnriF2gJbzCxuix8WeNTCiZgFaORqtAZiNBegkwjak=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8N3bl0KkWdsbtMsZ4pdedE4fYUnrszbBKQjLn0uHMSgzUolNw
+	T8IFNLtCa8XQnTsh6+wXpH18cH/3sccsER+wRPQ/1L2WCUT+Hixx
+X-Gm-Gg: ASbGncuX2xnkXT8gbdiVr7ed54CXTkMR+ZmC8+Z4gMqr9S4ehXx38dtYUaoMTnxrLSn
+	RHU7DhwjN7K2FDy201+jv8fhnQuOIs/ncx6Y0JivmXrNsWJN+bn55Mf9EvmS9A03zN7EGkirNGS
+	92/5LZDXltofKaUeRUoU4FmAdmmMM1ZSpidmGtFeJdUKgD8ABKGjO7S63gdhTCY+EdsnDoam+Uu
+	ofqhsfjzsxnfNdahqhF4WxGYtrB4Alu6sc78TMT9ci74vBYqEsbG9CYEicPgE0g5TV7yyVoNGJS
+	IIqtLGQb/vp1dUBmNCdoSnZNnSWKHQktygPPE0qjtVQKWA==
+X-Google-Smtp-Source: AGHT+IF/qxZnL8CdvHbhjCd17aP0gWz6HwZtAa27uqB0vv8GcyD52djUOcj4hDSHFe4syb77KiniZg==
+X-Received: by 2002:a17:906:f598:b0:ab7:4641:a72d with SMTP id a640c23a62f3a-ab74641a76cmr604171066b.51.1738686366994;
+        Tue, 04 Feb 2025 08:26:06 -0800 (PST)
+Received: from abityuts-desk1.ger.corp.intel.com ([134.191.196.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a7ea7sm936628466b.5.2025.02.04.08.26.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 08:26:06 -0800 (PST)
+Message-ID: <c894c5009c1fca50d80b1acdaa5e5d033a9ac7bc.camel@gmail.com>
+Subject: Re: [PATCH] intel_idle: introduce 'use_acpi_cst' module parameter
+From: Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To: David Arcari <darcari@redhat.com>, linux-pm@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>, Prarit
+ Bhargava <prarit@redhat.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Tue, 04 Feb 2025 18:26:03 +0200
+In-Reply-To: <afbe2137-398b-4053-93e7-2a03aeb32220@redhat.com>
+References: <20250128141139.2033088-1-darcari@redhat.com>
+	 <e9188365425d2a4c0dfa7cfa2b17ad3d9fcf2735.camel@gmail.com>
+	 <afbe2137-398b-4053-93e7-2a03aeb32220@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6GqbJxJAsRPQ4uQ@infradead.org>
 
-On 02/03, Christoph Hellwig wrote:
-> On Fri, Jan 31, 2025 at 10:27:55PM +0000, Jaegeuk Kim wrote:
-> > Note, let me keep improving this patch set, while trying to get some feedbacks
-> > from MM and API folks from [1].
-> 
-> Please actually drive it instead of only interacting once after
-> I told you to.  The feedback is clearly that it is a MM thing, so please
-> drive it forward instead of going back to the hacky file system version.
+On Tue, 2025-02-04 at 07:52 -0500, David Arcari wrote:
+> I'm happy to resubmit. I guess I could use 'no_native' for the new=20
+> parameter and then update the documentation as you suggest above.
+>=20
+> Does that work?
 
-I keep saying working in parallel for production. And, no worries, I won't
-merge this to -next until I get the feedback from the MM folks. I was
-waiting for a couple of weeks before bothering them, so will ping there.
+I'd suggest to wait for Rafael's response first. Thanks!
 
-> 
-> > 
-> > If users clearly know which file-backed pages to reclaim in system view, they
-> > can use this ioctl() to register in advance and reclaim all at once later.
-> > 
-> > I'd like to propose this API in F2FS only, since
-> > 1) the use-case is quite limited in Android at the moment. Once it's generall
-> > accepted with more use-cases, happy to propose a generic API such as fadvise.
-> > Please chime in, if there's any needs.
-> > 
-> > 2) it's file-backed pages which requires to maintain the list of inode objects.
-> > I'm not sure this fits in MM tho, also happy to listen to any feedback.
-> > 
-> > [1] https://lore.kernel.org/lkml/Z4qmF2n2pzuHqad_@google.com/
-> > 
-> > Change log from v7:
-> >  - change the sysfs entry to reclaim pages in all f2fs mounts
-> > 
-> > Change log from v6:
-> >  - change sysfs entry name to reclaim_caches_kb
-> > 
-> > Jaegeuk Kim (2):
-> >   f2fs: register inodes which is able to donate pages
-> >   f2fs: add a sysfs entry to request donate file-backed pages
-> > 
-> > Jaegeuk Kim (2):
-> >   f2fs: register inodes which is able to donate pages
-> >   f2fs: add a sysfs entry to request donate file-backed pages
-> > 
-> >  Documentation/ABI/testing/sysfs-fs-f2fs |  7 ++
-> >  fs/f2fs/debug.c                         |  3 +
-> >  fs/f2fs/f2fs.h                          | 14 +++-
-> >  fs/f2fs/file.c                          | 60 +++++++++++++++++
-> >  fs/f2fs/inode.c                         | 14 ++++
-> >  fs/f2fs/shrinker.c                      | 90 +++++++++++++++++++++++++
-> >  fs/f2fs/super.c                         |  1 +
-> >  fs/f2fs/sysfs.c                         | 63 +++++++++++++++++
-> >  include/uapi/linux/f2fs.h               |  7 ++
-> >  9 files changed, 258 insertions(+), 1 deletion(-)
-> > 
-> > -- 
-> > 2.48.1.362.g079036d154-goog
-> > 
-> > 
-> ---end quoted text---
+Artem.
+
