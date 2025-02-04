@@ -1,71 +1,71 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E152101B5
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A564212D6F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:04:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738674170; cv=none; b=CyIqNZpWN54f5Hb8+PXJZEt4uRqVP8CFfgz/0MDjOguwGY9kR9EqAmygnCFMbkxSfu771lfENpF8QIl0lPy5756e88IlLmZ49NEK9LXQyj07DUm9QK/iBkcdkiWlNtiG0Z8Vvw5lDq1ooBIrQL+5nT+ea0ommSBda2VgGHBlzaI=
+	t=1738674275; cv=none; b=P8SRnohY95pm5vGwho1T8cV4x29YpRxwhzXcQy2BRHqpfAbgjM+/9fzQdOZToBdk5jLnNZ9L85W2aIx0apo4UQ+t2z165qCgi/EvgzCBBX82b/RB2wtmwY3BEP2g+HTGmqgNPEmCkrtGFDB7SBGvdztNbzSOI8Em+zvoFVkhujY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738674170; c=relaxed/simple;
-	bh=HruZPTj2lCOv31GfDSLcuevE0PQQYGnyfJD0+VmJRQE=;
+	s=arc-20240116; t=1738674275; c=relaxed/simple;
+	bh=Rgc/f+Wcmo8qz72B+3oz5Ap1lo4OkJi0UE2cbc/5xAc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EGfEwyF25YAn2KEgzdWICzen80SHX8Fo9kO5q0VlyZNAPm/KruM6uI7z8qcIwV4h/jIoI498LCnHTEAtHecyzI4zF08tzx2GAk03Q9W7UqXBWlbPjIvQ/GLdWQXF2I/5wrur3upNCzuXQ8mOfyrOUY6BY5bFl+CfZFVCOVQCrV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D00ga4ep; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=rm826P0vi9eACHay7lOeMS+ad71sxNoFV4BQ5j0WKBDDsSXQvwC6DwHlXzf+pIab+MSTFfkZeP+gPri9xvjiOuSPewNrD9gNjLY7NvAumZHwZ31VUQCWQRMMD/1vbjkO1YCIJeoU4wYR3ujzS+h+je5URZqfyM56rPd7qa7EcfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ef5Cj+a8; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D00ga4ep"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ef5Cj+a8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738674167;
+	s=mimecast20190719; t=1738674272;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6ZTsUTGKVtJitTmMrF1V4eCWa6xeaggKQxZaNcEEP78=;
-	b=D00ga4epCm91vpqUmNdQQL7hMqYu528h1DdqrhjPmXKtoHDSa5RUAKJP9s3Exz8L+OOYls
-	fLqmIOEro8iswCnDRU844EfSlgxrEPQsX5yMMiawXLp9+UqYlxVsT9HL6wcGwHyeQouqky
-	jmtZmvcBhWAT6UIbww+BRmQ1ENNz1po=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=pppECrInPH/W14Lxcxk1t62QVheAxKn/rN+YSPe7sKs=;
+	b=Ef5Cj+a8B7xEuFhTNTifX4XzhA0y1c6yGd0RtkA8dv4Iv7aU3/1L2Ymd7eYLCglqxJJfOD
+	3cl/8NWYBohhzD9tHpWiNVUPIWXTduV3qxX9paOr2LBhT4kJCiWLKrq18fq7JpDTO208XR
+	w6jC78KCQDI1g5hOfQFsQ3S5zcfLjcU=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-501-oYmum8KVMUuZHB2QS3nKrw-1; Tue, 04 Feb 2025 08:02:46 -0500
-X-MC-Unique: oYmum8KVMUuZHB2QS3nKrw-1
-X-Mimecast-MFC-AGG-ID: oYmum8KVMUuZHB2QS3nKrw
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38dae3db3bcso351308f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 05:02:46 -0800 (PST)
+ us-mta-617-beMGqTf9OEmqxPjXcUGd7g-1; Tue, 04 Feb 2025 08:04:31 -0500
+X-MC-Unique: beMGqTf9OEmqxPjXcUGd7g-1
+X-Mimecast-MFC-AGG-ID: beMGqTf9OEmqxPjXcUGd7g
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7b6e6cf6742so1597702485a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 05:04:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738674165; x=1739278965;
+        d=1e100.net; s=20230601; t=1738674270; x=1739279070;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ZTsUTGKVtJitTmMrF1V4eCWa6xeaggKQxZaNcEEP78=;
-        b=mIbdeJCpWnlDSZbXT4gdkWBC4KvscUhsDE//+D8VgWP+8s+SE5HFObjNMFIT0V65C1
-         ym7gh6Ix4U1CrEzpzzajSHFKyPn3KjyQFIh7rz6CpM9Fi2nBB+UgVG4LpVI7F1Q7AE0D
-         Jz2KJfxZGLbgCs+IBwSW5XknmUxoJsQJ4dToqUF2Jy6NVqlNypQymBug95wlDTQz4O5z
-         8ivqC+bOcg0hkQbjcWhou6PV2JqJWaHPESKKzPz347aorterFJ661rBLUI2x0kqBDh4p
-         UAhzoVfzgasR3uB+SI34x6z58ZHPaTN0WlAUFGLAJv74P+k3r7QHa0Q0Ap8ogInKSraf
-         BvPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVXvLQ7WUX9ravHcyAPrj9Conxk/YwIyuCcQqgxBaVcrIlPz0mnX1uQspZshBvhBe/w3IM4zRvfNvI57pg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoXlE7CkSgArdlKEDgVwuGKnGqw19xbSZabhN3jRFTk7dDR7fB
-	hICNnxXma4/hW5tEaH8yfKqYfYD7l0kRGFwXgnXeOgfmPaBLBVHqmj3WGJNG+5rWez35rtPFR6V
-	7txpIKovSUbHxIweKnOMtPr3c15+YS7R+QqPw+4dp+bFUzy3zGMKUTMJhaxMYSA==
-X-Gm-Gg: ASbGncuha0L/t7VNxWf3dVE585+2wBa6AabWUyKREapGaJhmNP+5RIBt/G5DjpDs7+2
-	GH5x61uucchrCNxeZOz+xfEJMyZ1QYAWDCHdQvIV+89SMe8ALysk/AAJXDJ0ZvhlJ5CttAbQxpd
-	7z6+qgwiwoOSS54TjtnuQ4BUKS9OSHVZXy4ejM1/rEMlE/uFA6i7XGFMts4Hk5Ub1CwhUZNmZ+g
-	C7SAUxbeuy8x8HNPwNqr6KQoLwHSpRtk3czWGIPXuV8fN2P9IblQtArpB7JeJbFEeax1rQcd6j3
-	CZoPtICdMYeUq58sb0Zwgw1lqGLu2Ppmd0g=
-X-Received: by 2002:a5d:6da2:0:b0:38c:5d21:df15 with SMTP id ffacd0b85a97d-38c5d21e291mr15717716f8f.34.1738674165235;
-        Tue, 04 Feb 2025 05:02:45 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHy9t3up7bVa03IIHhfW6h00FYsjRC8OkGUO8RkaXmCBbcKhty5PI+YRywJ3RP5DQinrXaR0g==
-X-Received: by 2002:a5d:6da2:0:b0:38c:5d21:df15 with SMTP id ffacd0b85a97d-38c5d21e291mr15717631f8f.34.1738674164414;
-        Tue, 04 Feb 2025 05:02:44 -0800 (PST)
-Received: from [192.168.88.253] (146-241-41-201.dyn.eolo.it. [146.241.41.201])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c121951sm15616958f8f.45.2025.02.04.05.02.43
+        bh=pppECrInPH/W14Lxcxk1t62QVheAxKn/rN+YSPe7sKs=;
+        b=mXJNbzKH0H3odd0kJLnPhqKVjKc/WCO5drZdXpupORfRdBOxlV5ZwYx0BydiAVlb9d
+         v67rYY7INK5/sCzOlBaj4pmS19HnPKYASkI05l6K3ZyELlyVJzNfLV/LkPhJt0Chbma3
+         9prx+iJEopfak6seZNxOtHp2EKjALXns+iN8SPU//8tE8hZzBV/OpugEV2uFJbjF96Xr
+         bhsKsCjNAfmPU0q0iTJqB36biEB0DSZHcMiF0XO6Gwg1LV4aQflujs3Smdz+E6OMqRcA
+         D7jsfoBj5JOVrCd2v8OeU5FStNu+GUuFuuelX/FA2kXapnLEq6WGOWLMMY0b5FHCQZtA
+         kTmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXVNF46hSG0nKuo5DN2xjSX7WYgpoMFK3wVU6SAvFcX3wwt9c8qySiz2LDOkla3jYmlFfyzyUCtNvsA2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyhh1I4UDWUe3c+VXXDo62LuYw0hbVjBNPO4RtzPxZyKRipr3Oz
+	YAxECaiY9LBQOUjp3aL5in4iNvsdXhQD5I5N0jU2kZfyfprrbneHiRpoQqAu/2VXEn14QnyS1VQ
+	Fhb6jX/5Mk8QGBC+nQp1e7w3nXG7et45po4mNwjLYPRzkE9/T4i6HN1ogWO00EA==
+X-Gm-Gg: ASbGncuqrkcHEkEx7XnFyUaQgU1vvFmluoBbm32oY6YfPCPHc+VVoFBeO1ZCW90v7xO
+	tkLj24HD42SP2a0Ck1OWi2n8elzCRPNxi127FbJ8Mg7tZVsFF3N4HAqRH+O+kPnAjwI5mo1tTGx
+	9x6qtvVYRmZPLLpufENgsSRIuQ37/Mn10pisCqhQwDD5tGOwqn/dE9V4t/h3Nb6GO83jqTaHt4l
+	f16Qv2RZggEwlv3JT3fcwqbXMsfT49tPlAEGfaRTKvkM0gmeFL9VkfuZNNq0X7fxxIzFZjy4KuN
+	pvk=
+X-Received: by 2002:a05:620a:488f:b0:7bf:f916:faf3 with SMTP id af79cd13be357-7bffccbfe12mr4155344785a.8.1738674270546;
+        Tue, 04 Feb 2025 05:04:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFtDnf7KDOCUoIHnD6D3YYqYvSaIGGXyxEBh30BXHxvtFSgHTGtciLQnkmGdYC3a2+SLIAjBg==
+X-Received: by 2002:a05:620a:488f:b0:7bf:f916:faf3 with SMTP id af79cd13be357-7bffccbfe12mr4155328385a.8.1738674269355;
+        Tue, 04 Feb 2025 05:04:29 -0800 (PST)
+Received: from [10.26.1.93] ([66.187.232.136])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8c8fafsm634050085a.26.2025.02.04.05.04.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 05:02:43 -0800 (PST)
-Message-ID: <3375fb21-c921-4245-a084-738a418f084c@redhat.com>
-Date: Tue, 4 Feb 2025 14:02:42 +0100
+        Tue, 04 Feb 2025 05:04:28 -0800 (PST)
+Message-ID: <b50ade64-21ea-4420-a7ec-5e17ea7f6af7@redhat.com>
+Date: Tue, 4 Feb 2025 08:04:27 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,85 +73,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2] netdev-genl: Elide napi_id when not present
-To: Eric Dumazet <edumazet@google.com>, Joe Damato <jdamato@fastly.com>
-Cc: netdev@vger.kernel.org, kuba@kernel.org,
- "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@kernel.org>,
- Amritha Nambiar <amritha.nambiar@intel.com>,
- Mina Almasry <almasrymina@google.com>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250203191714.155526-1-jdamato@fastly.com>
- <CANn89i+vf5=6f8kuZKCmP66P1LWGmAj06i+NhgqpFLVR8K5bEA@mail.gmail.com>
+Subject: Re: [PATCH] intel_idle: introduce 'use_acpi_cst' module parameter
+To: David Arcari <darcari@redhat.com>, dedekind1@gmail.com,
+ linux-pm@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>, Len Brown <lenb@kernel.org>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250128141139.2033088-1-darcari@redhat.com>
+ <e9188365425d2a4c0dfa7cfa2b17ad3d9fcf2735.camel@gmail.com>
+ <afbe2137-398b-4053-93e7-2a03aeb32220@redhat.com>
 Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <CANn89i+vf5=6f8kuZKCmP66P1LWGmAj06i+NhgqpFLVR8K5bEA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Prarit Bhargava <prarit@redhat.com>
+In-Reply-To: <afbe2137-398b-4053-93e7-2a03aeb32220@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 2/4/25 6:41 AM, Eric Dumazet wrote:
-> On Mon, Feb 3, 2025 at 8:17 PM Joe Damato <jdamato@fastly.com> wrote:
->>
->> There are at least two cases where napi_id may not present and the
->> napi_id should be elided:
->>
->> 1. Queues could be created, but napi_enable may not have been called
->>    yet. In this case, there may be a NAPI but it may not have an ID and
->>    output of a napi_id should be elided.
->>
->> 2. TX-only NAPIs currently do not have NAPI IDs. If a TX queue happens
->>    to be linked with a TX-only NAPI, elide the NAPI ID from the netlink
->>    output as a NAPI ID of 0 is not useful for users.
->>
->> Signed-off-by: Joe Damato <jdamato@fastly.com>
->> ---
->>  v2:
->>    - Updated to elide NAPI IDs for RX queues which may have not called
->>      napi_enable yet.
->>
->>  rfc: https://lore.kernel.org/lkml/20250128163038.429864-1-jdamato@fastly.com/
->>  net/core/netdev-genl.c | 14 ++++++++------
->>  1 file changed, 8 insertions(+), 6 deletions(-)
->>
->> diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
->> index 715f85c6b62e..a97d3b99f6cd 100644
->> --- a/net/core/netdev-genl.c
->> +++ b/net/core/netdev-genl.c
->> @@ -385,9 +385,10 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
->>         switch (q_type) {
->>         case NETDEV_QUEUE_TYPE_RX:
->>                 rxq = __netif_get_rx_queue(netdev, q_idx);
->> -               if (rxq->napi && nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
->> -                                            rxq->napi->napi_id))
->> -                       goto nla_put_failure;
->> +               if (rxq->napi && rxq->napi->napi_id >= MIN_NAPI_ID)
->> +                       if (nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
->> +                                       rxq->napi->napi_id))
->> +                               goto nla_put_failure;
->>
->>                 binding = rxq->mp_params.mp_priv;
->>                 if (binding &&
->> @@ -397,9 +398,10 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
->>                 break;
->>         case NETDEV_QUEUE_TYPE_TX:
->>                 txq = netdev_get_tx_queue(netdev, q_idx);
->> -               if (txq->napi && nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
->> -                                            txq->napi->napi_id))
->> -                       goto nla_put_failure;
->> +               if (txq->napi && txq->napi->napi_id >= MIN_NAPI_ID)
->> +                       if (nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
->> +                                       txq->napi->napi_id))
->> +                               goto nla_put_failure;
->>         }
+On 2/4/25 7:52 AM, David Arcari wrote:
 > 
-> Hi Joe
+> Hi Artem,
 > 
-> This might be time to add helpers, we now have these checks about
-> MIN_NAPI_ID all around the places.
+> On 2/4/25 7:23 AM, Artem Bityutskiy wrote:
+>> Hi David,
+>>
+>> On Tue, 2025-01-28 at 09:11 -0500, David Arcari wrote:
+>>
+>>> +The ``use_acpi_cst`` module parameter (recognized by ``intel_idle`` 
+>>> if the
+>>> +kernel has been configured with ACPI support) can be set to make the 
+>>> driver
+>>> +ignore the per cpu idle states in lieu of ACPI idle states. 
+>>> ``use_acpi_cst``
+>>> +has no effect if ``no_acpi`` is set).
+>>
+>> With this change, there will be three parameters:
+>>
+>> * no_acpi
+>> * use_acpi
+>> * use_acpi_cst
+>>
+>> I would like to make the naming as intuitive as possible. We do not 
+>> rename the
+>> first 2, but for the 3rd one, I think "force_acpi" would be a better 
+>> name. Or
+>> perhaps "no_native"?
+> 
+> The problem with force_acpi is it is very similar to force_use_acpi 
+> which is what intel_idle.c uses internally:
+> 
 
-+1.
+Given that @Artem is suggesting we change the names of things -- perhaps 
+we should fix "force_use_acpi" as well?
 
-IMHO a follow-up patch could additionally replace the existing
-open-coded tests with the new helper.
+P.
 
-/P
+> drivers/idle/intel_idle.c:module_param_named(use_acpi, force_use_acpi, 
+> bool, 0444);
+> 
+> That said, I am not attached to the 'use_acpi_cst' parameter name.
+> 
+>>
+>> * no_acpi - Do not use ACPI at all. Only native mode is available, no 
+>> ACPI mode.
+>> * use_acpi - No-op in ACPI mode, consult ACPI tables for C-states on/off
+>>    status in native mode.
+>> * force_acpi (or no_native?) - Work only in ACPI mode, no native mode 
+>> available
+>>    (ignore all custom tables).
+>>
+>> Additionally, I think we should enhance the documentation for 
+>> 'no_acpi' and
+>> 'use_acpi' while we're at it. Otherwise, it is hard to distinguish 
+>> between these
+>> three options. Would you consider another patch that improves the 
+>> documentation
+>> for 'no_acpi' and 'use_acpi', and then adds the third parameter?
+> 
+> I'm happy to resubmit. I guess I could use 'no_native' for the new 
+> parameter and then update the documentation as you suggest above.
+> 
+> Does that work?
+> 
+>>
+>> Thanks, Artem!
+>>
+> 
+> Best,
+> -DA
+> 
 
