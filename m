@@ -1,94 +1,95 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C86914A0B5
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4DD215F5A;
+	Tue,  4 Feb 2025 17:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738691485; cv=none; b=St7vT+sOgx1ols+RXGm4Zsdc4QKGY6Ny8NhBssifqeqc3Xu/pt0ZRHOPXI3E6KbgPXcCUfJrwVqH6jwFhqrIKUDc2ChLhWwkkUBSp9C2cheFy5IaqNcZrPQigwn5iRI0AJN392HoX7M2sCnj71lBxJDpoNMRHXeAu/5PHHA2lWM=
+	t=1738691719; cv=none; b=LlC1jXKUY7lBZnGAu3rWuh4E5EqNgs1QS8OcN+sD2j+JniRSyzUEGyOEmWJstu2uerJW/eBIHNuqZrmiYYlNpomjp0FLvMMzMj9pd6u94VdG/RqcnOaFFHwyMq8qTXoOT+jAm4NAUhQ2PYTn+YolfDSfZuT2Q7MV4Bj0be7LzOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738691485; c=relaxed/simple;
-	bh=cnVDw3cjiTiITE/daar9Zm40VwWIQl7hZdv7otL4Pqk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cislFlQ1QyDn8RB4IMa6leJsYV6qiih6Qb/90Zoj46LtjbKF7dTVcKnlZoQFSIOMhBQ6xnJUJXHDq6XLbJ5zc+AB0m93y6WoAUgxJxnrCvyCtlTX3/uuCI0TofqxdJ4jP/Xbhn1BqGD6i2kS6SS5AaBfP1yex8xUhiVqp/7mgY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1/jOhPjS; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1738691719; c=relaxed/simple;
+	bh=eKkjbpvmMcUWCmAAn0Q+Qi2GwIWAsBjIOjlZJX/J/t0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EJ7QOe8+4Nid05CiYT5xwA1t/I3kijOvV2vLC8Z2TpFTUGCTPyJwpDQtTZSZC3DTpKVWR0IWnwbmB6sgAfJ4SalvnXkrfnb5r6ivq4AeUgba/y6Ptbc9EJQ8a+0mXCEx5zEFktqk+PGIbFC/2LTzK02ykVB2YljNFARTTykDkFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=RmYK1/HX; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1/jOhPjS"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ee5616e986so16625919a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:51:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738691483; x=1739296283; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HJBCZCZOW0Nr3S2dBf3Ccdi7LHIAyDv3WEEqT47xNDE=;
-        b=1/jOhPjS6pf+W20fb1GcjYdiDWN5HdpE2S0vLirwJfGy718IzH6xtL1W+tmqZPuMaL
-         kzSdZvIcKhMvDAbo/ltGgCYAWxGuaZpUsD4K33WF5CpyrHSTrE64c5CcTv18R7brghkY
-         lV1J3xCNa+svXWgkwt9j5nOyk8kuKj0LPhFN63hTbatz5GKlfFYbCZkXcko6MFWoIqY6
-         5zehV7AN0fcO6yVwCkjPwhoqXjA4YO03cBdCEOhBmWT3JjbD/w825iykT2ErJLx3Qa5z
-         +kYEgnAY7Ruaue6CEUEy30gmpOVamJPC+LJUcQCYCJAvlDvrL5VJcJ9rPOclNRYsM1IE
-         3VyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738691483; x=1739296283;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HJBCZCZOW0Nr3S2dBf3Ccdi7LHIAyDv3WEEqT47xNDE=;
-        b=fb7t3GUPdMjUuOcFCgX9dGLi2dioWESqG2MfM6D5vPqgyerynKwyz7vRi8jXD+Rd95
-         HtcwT23te6X7mT+K5sucXlP83eFgAM1uaR6OpftVotFstM+fwbSTjbPzcwlHCz3OFAo6
-         WetKcMLFJcY5mMWT5gYy5UiTE+d3nysJ8ssd8AZV2MBiZHtDS0AKud62I188NOCIyQh4
-         T0Es9FD76LMFy0Cnh9T8zFmzbUjSCfV7fgdTlON+P2UUR0MxEIU/0p205zMAZqhPjnod
-         wXj7PC7Yf226UQPobaP51b9qFHEPrhhNcmX3bp5hPsfNSaBEkTxICws4i+6fXeUNLEAf
-         p3+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUxtfqu//b8V1CKLtms1rgL5iFVVipzBz4MqR2ph59fdL+gU4cEv0W5qjcHVqXO/WyOH/6swPEyjAoOnHU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWXJN+jnHRGpgGwZZKFaVjunY2FyTpZ/yRRKwC6xcHusAqRpgB
-	rtQJSL+JhHJJ7UVjGPOrZPP4ogl+BOYp3DWtDp1OSuKEblQLM6aH/+loP+if3m3lE9E+UkgIFIU
-	3cw==
-X-Google-Smtp-Source: AGHT+IGfINEwrz7O16xYGuZacZqT3ThJZwrf5SKDT66rhhbm+GLjfpsajy6lPHn6HcWelahD+5PNYyDHyjQ=
-X-Received: from pfbcw7.prod.google.com ([2002:a05:6a00:4507:b0:725:e2fd:dcf9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2e15:b0:727:3cd0:122f
- with SMTP id d2e1a72fcca58-72fd0bf3f5bmr38314134b3a.9.1738691483337; Tue, 04
- Feb 2025 09:51:23 -0800 (PST)
-Date: Tue, 4 Feb 2025 09:51:22 -0800
-In-Reply-To: <a7eb34n6gkwg6kafh7r76tkwtweuflyfoczgxya2k63al2qdoe@phmszu6ilk4w>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="RmYK1/HX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=X+m8Z/jlxHVarmXMBJ9vHq1s4OI5ALJ7QeQ4FYkMmrU=; b=RmYK1/HXwlDsydBS1UzBO8C+Jq
+	ENGfvbKHsqrNMGqu6hid4sknnUEOtrhV2cLRNulN9R8gAIlD70mQw7ovqOuB8JWCo2MalML4lF+Fs
+	G/j3FBcdBgkwi2/SBe4+j9onM+tiq0pzZH1wy7JWHXE/OODxrK9EWlZwWmX+L/TreAHfu1NkMvQab
+	IX4C9SSuyRlrikn1hYTdcoOvVBVYWnhb1zhi52GI8/xbA4iIkLnDh24Iyb72LhxkkON1VCsxn1Gj7
+	MXiLxeWpt+l+a3d9nDfut4bHH34kQF8IRsG5pbJIRSYhsWLUEWW6ulVU/O/oMHJQu5yn5VWB7yRfB
+	oqd/LDgQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33282)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tfN8U-0004Jt-12;
+	Tue, 04 Feb 2025 17:55:00 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tfN8P-0001Zt-2z;
+	Tue, 04 Feb 2025 17:54:53 +0000
+Date: Tue, 4 Feb 2025 17:54:53 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: dimitri.fedrau@liebherr.com
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dimitri Fedrau <dima.fedrau@gmail.com>
+Subject: Re: [PATCH net-next v3 2/3] net: phy: Add helper for getting tx
+ amplitude gain
+Message-ID: <Z6JUbW72_CqCY9Zq@shell.armlinux.org.uk>
+References: <20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com>
+ <20250204-dp83822-tx-swing-v3-2-9798e96500d9@liebherr.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1738595289.git.naveen@kernel.org> <dc6cf3403e29c0296926e3bd8f0d4e87b67f4600.1738595289.git.naveen@kernel.org>
- <30fc469b5b2ec5e2d6703979a0d09ad0a9df29e1.camel@redhat.com> <a7eb34n6gkwg6kafh7r76tkwtweuflyfoczgxya2k63al2qdoe@phmszu6ilk4w>
-Message-ID: <Z6JTmvrkrLpaJ1nw@google.com>
-Subject: Re: [PATCH 2/3] KVM: x86: Remove use of apicv_update_lock when
- toggling guest debug state
-From: Sean Christopherson <seanjc@google.com>
-To: Naveen N Rao <naveen@kernel.org>
-Cc: Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, 
-	Vasant Hegde <vasant.hegde@amd.com>, Vitaly Kuznetsov <vkuznets@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204-dp83822-tx-swing-v3-2-9798e96500d9@liebherr.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Tue, Feb 04, 2025, Naveen N Rao wrote:
-> On Mon, Feb 03, 2025 at 09:00:05PM -0500, Maxim Levitsky wrote:
-> > On Mon, 2025-02-03 at 22:33 +0530, Naveen N Rao (AMD) wrote:
-> > > apicv_update_lock is not required when querying the state of guest
-> > > debug in all the vcpus. Remove usage of the same, and switch to
-> > > kvm_set_or_clear_apicv_inhibit() helper to simplify the code.
-> > 
-> > It might be worth to mention that the reason why the lock is not needed,
-> > is because kvm_vcpu_ioctl from which this function is called takes 'vcpu->mutex'
-> > and thus concurrent execution of this function is not really possible.
-> 
-> Looking at this again, that looks to be a vcpu-specific lock, so I guess 
-> it is possible for multiple vcpus to run this concurrently?
+On Tue, Feb 04, 2025 at 02:09:16PM +0100, Dimitri Fedrau via B4 Relay wrote:
+>  #if IS_ENABLED(CONFIG_OF_MDIO)
+> -static int phy_get_int_delay_property(struct device *dev, const char *name)
+> +static int phy_get_u32_property(struct device *dev, const char *name)
+>  {
+>  	s32 int_delay;
+>  	int ret;
+> @@ -3108,7 +3108,7 @@ static int phy_get_int_delay_property(struct device *dev, const char *name)
+>  	return int_delay;
 
-Correct.
+Hmm. You're changing the name of this function from "int" to "u32", yet
+it still returns "int".
 
-> In reality, this looks to be coming in from a vcpu ioctl from userspace, 
-> so this is probably not being invoked concurrently today.
-> 
-> Regardless, I wonder if moving this to a per-vcpu inhibit might be a 
-> better way to address this.
+What range of values are you expecting to be returned by this function?
+If it's the full range of u32 values, then that overlaps with the error
+range returned by device_property_read_u32().
 
-No, this is a slow path.
+I'm wondering whether it would be better to follow the example set by
+these device_* functions, and pass a pointer for the value to them, and
+just have the return value indicating success/failure.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
