@@ -1,127 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C376221ADD7;
-	Tue,  4 Feb 2025 22:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A4214AD2B;
+	Tue,  4 Feb 2025 22:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738708582; cv=none; b=TcXLgHh3ty9WTfK3B8iVf3de1n0itqzsZs8NyZYIKDjXDMlOnIQmk262fLgTQTv6b8OR/ybtkbm1lcx6H8gluNjYBpr4ojlAeBFXJTPKxcZiTgKHOBwE/4ZQH/pEmJiBt9HfSH2+Z+rwhij6bmAtYSh7k8Hv/vTjzKUBfL5BsTo=
+	t=1738708738; cv=none; b=nNQKg1wYOxCkpCYUkduTlOHcOS73A/bgzZ0o6RXUsqxWUtDo7adVQgj+yC9kFn5npFFdJH0h74hoCf00nMqgmLJROmBWFjsCmCn7noeNKb4e56r9Q7N+ickyUPzwrQQcg6F5lKl+shf3MD0NmZSiZ2y3HIdudQtXtJB5CR/HKHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738708582; c=relaxed/simple;
-	bh=GUyS2ieEh/RbxEBcCpkqFVL7Ad+lb8Bs6CbqQ6XWHu4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PcFZotVOI/i8I9jl9cm5839MhJgmhofmy6efwL+UW7ViIYbAMS7ixVLsXFLD3DyPgwVkJ51qsJVHiJk1xnrV+RBhhKlS85nrl2y7S64pg8zCYYz3UYRPtDl3ASiwiJCT7MDJherP4yCLsKCnUfIAjTZ7AFVxZI5F9URO1QsGW3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2VUPcvw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738708738; c=relaxed/simple;
+	bh=Td08mtUxL+Ct5HUnAge9bgEfYjkHpRDL3veq6FpQh1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=L5pq6lHh7ziccEiKStaUjWIWw1UoV1DonJsKcR0YwNtpY6zdCTBa609Hw9x+A9MErY4NioFrYJCRi2FjoZENGl0wI3258jXzMYj6AOlt2azTLyb+W0KlzhJhOCQlK8IL7Pt6iY3h6OncCNUhepZbtk3qaEVwHn37xdBRnJOfSDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=UOkicxD4; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2VUPcvw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27AACC4CEDF;
-	Tue,  4 Feb 2025 22:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738708582;
-	bh=GUyS2ieEh/RbxEBcCpkqFVL7Ad+lb8Bs6CbqQ6XWHu4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S2VUPcvw2fLsceeQB4PCRAm+46skinz60jUAfR67YgCjgl88FfPEcfP0yq8AiiQ15
-	 W8XYE95A+i/VEJjNRJnszEOqu+miUMxR4RhFIs7NEq7NSmSdV/620npL7kZN5l78dk
-	 kict3oySkzRxb9mTH6Sg0o08mhRcjPP25dfx1Sldl4/kWKOyiXZpaACfvlPHuKodWZ
-	 NIOms2RqhhEuhHCS+2QTCMXHClpSyUXKOI65uZGp5VEXenDdVzYORNh47WOEUiox8Q
-	 KgYi8jXMH4c5gx/X9l/ZczADKXi+1NsFQA1Er/gph8CfcuwDDcwkxFu8Ve86OnmT/r
-	 5EWVuv2zHPBAQ==
-Date: Tue, 4 Feb 2025 14:36:21 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] vfs: sanity check the length passed to
- inode_set_cached_link()
-Message-ID: <20250204223621.GC21791@frogsfrogsfrogs>
-References: <20250204213207.337980-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UOkicxD4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1738708719;
+	bh=0sE/bFHwTZY0AsxoNR6LL6Ttp3qsG/luyeKJ7ONf/2I=;
+	h=Date:From:To:Cc:Subject:From;
+	b=UOkicxD4Nk+gMMSk0Sy0hXBBAJWeSxqR3qvUSYvmI6mb/ss9zDIfv0fPgW89pimfD
+	 Q0x9O12yYqvpYqqRCUtTOPgagRBy9uEkeCFsd+f+ZvaGd2I6QuryKVXZvPTFQ0yJMB
+	 rPOzyhlD+w2ZgwCMcl3YZmNxYTlTkvA3hWlS1+MNWzHSoxG+SSzxMnHB4uEZ8XPICH
+	 JsRm2lXxXGASgbaS2jK+2A08LjyeUYqMDOAe6F0yna5nUPh8C5eZgHOMn6ZuVcYfna
+	 UOBsslG+qvN62cptz5s2+vkZhtcrjuqNMKl78+SG44zYSm1iUjEVqCfOCGBLqfGhfl
+	 Gle/toQsPJi+g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YndZ74tb6z4w2H;
+	Wed,  5 Feb 2025 09:38:39 +1100 (AEDT)
+Date: Wed, 5 Feb 2025 09:38:23 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the vfs-brauner tree with Linus' tree
+Message-ID: <20250205093823.4567f09f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250204213207.337980-1-mjguzik@gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/JQEtaHT+hZ786TKACTAFjBI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, Feb 04, 2025 at 10:32:07PM +0100, Mateusz Guzik wrote:
-> This costs a strlen() call when instatianating a symlink.
-> 
-> Preferably it would be hidden behind VFS_WARN_ON (or compatible), but
-> there is no such facility at the moment. With the facility in place the
-> call can be patched out in production kernels.
-> 
-> In the meantime, since the cost is being paid unconditionally, use the
-> result to a fixup the bad caller.
-> 
-> This is not expected to persist in the long run (tm).
-> 
-> Sample splat:
-> bad length passed for symlink [/tmp/syz-imagegen43743633/file0/file0] (got 131109, expected 37)
-> [rest of WARN blurp goes here]
-> 
-> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-> ---
-> 
-> This has a side effect of working around the panic reported in:
-> https://lore.kernel.org/all/67a1e1f4.050a0220.163cdc.0063.GAE@google.com/
-> 
-> I'm confident this merely exposed a bug in ext4, see:
-> https://lore.kernel.org/all/CAGudoHEv+Diti3r0x9VmF5ixgRVKk4trYnX_skVJNkQoTMaDHg@mail.gmail.com/#t
+--Sig_/JQEtaHT+hZ786TKACTAFjBI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes, ext4 should not continue to load a fast symlink where i_size >
-sizeof(i_data).  I'm a little surprised that nd_terminate_link exists to
-paper over this situation, but the commit adding it (035146851cfa2fe) is
-from 2008 when we were all young and naïve.
+Hi all,
 
-But yes, would be nice to have a CONFIG_VFS_DEBUG behind which to hide
-assertions so that insufficient validation in ext4 will burble up
-through Ted's test infrastructure. ;)
+Today's linux-next merge of the vfs-brauner tree got conflicts in:
 
-That said, I just saw this in ext4_get_link:
+  fs/dcache.c
+  fs/erofs/zdata.c
+  fs/gfs2/quota.c
+  include/linux/lockref.h
 
-	nd_terminate_link(bh->b_data, inode->i_size,
-			  inode->i_sb->s_blocksize - 1);
+between commits:
 
-Which is writing into a buffer head without a transaction?  Granted
-symlink targets in ext4 are written out to disk with the null terminator
-so I guess that's not a big deal.
+  4b193fa75eff ("lockref: remove lockref_put_not_zero")
+  6d2868d5b6fc ("lockref: use bool for false/true returns")
+  25d8060418b4 ("lockref: drop superfluous externs")
+  63440d1c6dd1 ("lockref: add a lockref_init helper")
+  8c32b87c4f88 ("dcache: use lockref_init for d_lockref")
+  6f86f1465b59 ("erofs: use lockref_init for pcl->lockref")
+  3e652eba244c ("gfs2: use lockref_init for qd_lockref")
 
---D
+from Linus' tree (plus further commits affecting these same files in other
+trees) and commits:
 
-> 
-> Nonethelss, should help catch future problems.
-> 
->  include/linux/fs.h | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index be3ad155ec9f..1437a3323731 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -791,6 +791,19 @@ struct inode {
->  
->  static inline void inode_set_cached_link(struct inode *inode, char *link, int linklen)
->  {
-> +	int testlen;
-> +
-> +	/*
-> +	 * TODO: patch it into a debug-only check if relevant macros show up.
-> +	 * In the meantime, since we are suffering strlen even on production kernels
-> +	 * to find the right length, do a fixup if the wrong value got passed.
-> +	 */
-> +	testlen = strlen(link);
-> +	if (testlen != linklen) {
-> +		WARN_ONCE(1, "bad length passed for symlink [%s] (got %d, expected %d)",
-> +			  link, linklen, testlen);
-> +		linklen = testlen;
-> +	}
->  	inode->i_link = link;
->  	inode->i_linklen = linklen;
->  	inode->i_opflags |= IOP_CACHED_LINK;
-> -- 
-> 2.43.0
-> 
-> 
+  74b5da771c89 ("lockref: remove lockref_put_not_zero")
+  57bd981b2db7 ("lockref: use bool for false/true returns")
+  80e2823cbe59 ("lockref: drop superfluous externs")
+  5f0c395edf59 ("lockref: add a lockref_init helper")
+  24706068b7b6 ("dcache: use lockref_init for d_lockref")
+  160a93170d53 ("erofs: use lockref_init for pcl->lockref")
+  0ef3858b15e3 ("gfs2: use lockref_init for qd_lockref")
+
+from the vfs-brauner tree.
+
+I fixed it up (these commits are just duplicates, so I used the former
+vresions of these files) and can carry the fix as necessary. This is now
+fixed as far as linux-next is concerned, but any non trivial conflicts
+should be mentioned to your upstream maintainer when your tree is
+submitted for merging.  You may also want to consider cooperating with
+the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+Please clean up the vfs-brauner tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/JQEtaHT+hZ786TKACTAFjBI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmeilt8ACgkQAVBC80lX
+0GwW0Qf/R4XPvt/edHqlnVrvZzEQlcVQO5awkI7X2vqriYJgEPww2Yg4NFJ4PQuy
+5ulZT8JnQY3gJByVGKQVP5IeGyy0DmqhVvNiMLQW53BCPS0FCCDuy6E1UQedCitZ
+/yPc3+iLiZqoIcLOq0LKNIV+BZjLU33NAke4VDkBgF6zEyxsv0s3x492qP0/Xwor
+nTXDIi6aQHHwekrQRztpMpUt4/koGlJYRqdiU6Msxkp4t/hIMI9kUOrX9yrtaHC6
+6hP548b0xJ59daoMrqNX4iuN6NktPPJXy4W9t6PDMnJn0a+eWnShBPk7yJihLXNW
+alKYNqM+JSdmaVPS33mnojhkLs9IRg==
+=MRL0
+-----END PGP SIGNATURE-----
+
+--Sig_/JQEtaHT+hZ786TKACTAFjBI--
