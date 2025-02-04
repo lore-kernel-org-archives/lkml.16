@@ -1,152 +1,90 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23141217711
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E126C20371F;
+	Tue,  4 Feb 2025 19:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738697381; cv=none; b=sztFMZP8Vucl+omzBw9iSXxqH9gvd2hqytlc8qYKbGfoZXLfb33GPpBrSJfWgqx/QVHknoS7htivFS4NNf7K7KLnMcSqhnjXPSM2KqrOd/nVUmhRl/ebsmG5EGy8a1bAaEk2pCUPUQPlrklF4uzmlATODS5/T6+0T6sk9VLEvpA=
+	t=1738697404; cv=none; b=CK8wjPZmXuAOzDThGZi1p0sSC8vqczCQAo0bV3s/xiABnT/bAR2ABxzvZJlIQj27Qt9JebeMSb+La5JfL2flJL73vvNI7OcuyMYhGXdmM0rVkHtiCHU+HtDpq2Adi/ABIL19c1HeRfuYRLfzkYAjI666MQ3GKzrBOZuVDWfWVf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738697381; c=relaxed/simple;
-	bh=jR8glNKTcRvWQFyYWzpmeeHHaLx4f7ObdoeaqwwhgrA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=q0R2C8O6d+EIAtsPo3tb+PNQe0ZC9Fv0L/8OK1FaNZby00TGmX7X+doac2rahxYEEXOFAOQAuTWRSEi05giF/h0czSuum07tqOf6ag+zA1ofDih2hP3A+Bcbb5OLtW7wvn5z/4/07qkVIpOCcKcCTOhGqcyvVjWtEL5nOZAhyzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ONWNoLGI; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1738697404; c=relaxed/simple;
+	bh=hxElP6ZMp8TmfVNOG45r9dWrj5+/1qB6QlQBTJTNWfU=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=vB7tk7KM6Ai/IqGwz4J8E/HcHHLx1ePaupWiw0I/EIL3tyGHFS6U0c584fS8ki5V2fcURK6SsxdOu8BMLhFsIdDV768EvDRVZ9zTfTkqhCPCqesLxWgNGghRcB9ILsry4fUCSZpO4R6GmnrCPn/FSpTp2Iz9bjYxJocHwtBeDL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=HphrJAQj; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONWNoLGI"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef9204f898so11208541a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:29:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738697379; x=1739302179; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5e8UEnGVo+4lDc1cH0GoOuL8F0MUw58BGLx/3p+5fdQ=;
-        b=ONWNoLGImy11X7wp005j3c0b3AXhnDVQAu9PRZCfl4/Hoz7uc3Bgi4E/aFM/exO727
-         gTQwYXCSe1OPEwPw9KP6ZpUarjAhqpXjbujXYzsEoBVNRIDCQX+TpapGaFZOfTFSDk7N
-         BXyEFfsh5Mz3YQV9vTYRKpL/FlHaT5EEXh3yr4bZRd3Gsf2AJyKfK6X4R0yfg1aEzPeF
-         UA3Yut+cT5/O3Sc5e4louBnyGBuKa7yQUEQiAYtwv/StnOFI3wBPst0MM/xBkLduOzMP
-         8ZduMrKyh6qZSdrqHLroL91d8MeCxC8dEB0EH2XO5FnaaBo9yWmochVH+p4xUkjtHQL1
-         /7rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738697379; x=1739302179;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5e8UEnGVo+4lDc1cH0GoOuL8F0MUw58BGLx/3p+5fdQ=;
-        b=gi4bLXdofemXt3SUhxj6OEf/hHYBXPEtWexoHp8i4slF2qLwdRzMEwvIJOJdoxJDGa
-         uY9LHP2PqKAwMTC2JZsfGjoKMPv+ZhdHxE+CiUcIjrnSFarnbP0uycVFHfcTDwAfjzqZ
-         tTNokPL0DlwnIn55Yfes2K1LJ529ZRaFTVYddyvX9mbAl8qUyJ9l73qEiQ0gukQtePKF
-         XNBa8j9VQY/W0nfoXbFTWBT83VUQ6v1TYZQIwx4q1ujZDdmWHCwdN5KChz5EzVW+ERWe
-         AzqAbU9Sp0TxpAd0L/1JrUxb0oyoyAxRnO97uruUiwsDYvKiKmWj4Kb3Pc90UZmdRqc3
-         DSjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUi/m4l62HEVhLzLLV4EzlyZl1S48LBIix84UuyRL+Vr/67yTD8nMqC2TVlj3tNNes1neuzjjpM1yfPl6E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKhPvli4sj2bPhR47zWHVSOgZgBUV5b4J7fRbrn8Z5Jg6ZxFwu
-	e5axl2A1cUUjAaeiJlVqRCLZODmiFaWt5zeBRNjElcd2B5MLfyjbJrNtNRFMQM5zpJsSKfl5anf
-	PSw==
-X-Google-Smtp-Source: AGHT+IF+/fBR5/RvgfgkW+k0iOimknqvbfTCdp56sFN5T8R+lSkm/qjT6GD7VseImBDz4jdwECu7ieLsEjc=
-X-Received: from pjbsw5.prod.google.com ([2002:a17:90b:2c85:b0:2d3:d4ca:5fb0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5245:b0:2ee:ab29:1a65
- with SMTP id 98e67ed59e1d1-2f83abb4f94mr39965711a91.4.1738697379406; Tue, 04
- Feb 2025 11:29:39 -0800 (PST)
-Date: Tue, 4 Feb 2025 11:29:38 -0800
-In-Reply-To: <85r04e5821.fsf@amd.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="HphrJAQj"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id DB34625B35;
+	Tue,  4 Feb 2025 20:30:00 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id sI-zIj3P_Tsb; Tue,  4 Feb 2025 20:29:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1738697399; bh=hxElP6ZMp8TmfVNOG45r9dWrj5+/1qB6QlQBTJTNWfU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=HphrJAQj4f+5MpePcznZQt9+nPvLQp/jJrxZlgaE+vWtgagKBmJ++NGCWO3C8jTcx
+	 84mxKI0yCgq9o/EOybq1ZhM865i7LUE0BGY36QwCgHFZarxOLxpJTmmLeLYC+BZyRo
+	 LHg7GjVahaP6wKMt9NeaXRGQ14P5f5zZ1Sw+ltVn3KssBDM8RZeD6n5CD6UlUvGA7Z
+	 pJnIuhANa1G+TrG4Am1dACp4iRUtpAnOTMPm1yoLFUdkkze4TkpbjahyUSt615LVKV
+	 DrnP821pFvCLCGmugmmjIjPz7l4qWCW/juXKFP/VEkJ3xP6tiLCrZrmDrVrfOD7b0h
+	 BIRdx3taTP9nw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201021718.699411-1-seanjc@google.com> <20250201021718.699411-7-seanjc@google.com>
- <85r04e5821.fsf@amd.com>
-Message-ID: <Z6JqopU5LkDIZPq6@google.com>
-Subject: Re: [PATCH 06/16] x86/tdx: Override PV calibration routines with
- CPUID-based calibration
-From: Sean Christopherson <seanjc@google.com>
-To: Nikunj A Dadhania <nikunj@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-coco@lists.linux.dev, virtualization@lists.linux.dev, 
-	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com, 
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Date: Tue, 04 Feb 2025 19:29:59 +0000
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, Alim
+ Akhtar <alim.akhtar@samsung.com>, Sergey Lisov <sleirsgoevy@gmail.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Kaustabh
+ Chakraborty <kauschluss@disroot.org>
+Subject: Re: [PATCH 0/2] Add chip ID for Exynos7870 SoC
+In-Reply-To: <339ea40f-6bc7-42ad-a5c2-f57b3be8cc39@kernel.org>
+References: <20250204-exynos7870-chipid-v1-0-0bf2db08e621@disroot.org>
+ <339ea40f-6bc7-42ad-a5c2-f57b3be8cc39@kernel.org>
+Message-ID: <e9d9388d0adacd5599c6c6f5b7f33f87@disroot.org>
+X-Sender: kauschluss@disroot.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 04, 2025, Nikunj A Dadhania wrote:
-> Sean Christopherson <seanjc@google.com> writes:
->=20
-> > When running as a TDX guest, explicitly override the TSC frequency
-> > calibration routine with CPUID-based calibration instead of potentially
-> > relying on a hypervisor-controlled PV routine.  For TDX guests, CPUID.0=
-x15
-> > is always emulated by the TDX-Module, i.e. the information from CPUID i=
-s
-> > more trustworthy than the information provided by the hypervisor.
-> >
-> > To maintain backwards compatibility with TDX guest kernels that use nat=
-ive
-> > calibration, and because it's the least awful option, retain
-> > native_calibrate_tsc()'s stuffing of the local APIC bus period using th=
-e
-> > core crystal frequency.  While it's entirely possible for the hyperviso=
-r
-> > to emulate the APIC timer at a different frequency than the core crysta=
-l
-> > frequency, the commonly accepted interpretation of Intel's SDM is that =
-APIC
-> > timer runs at the core crystal frequency when that latter is enumerated=
- via
-> > CPUID:
-> >
-> >   The APIC timer frequency will be the processor=E2=80=99s bus clock or=
- core
-> >   crystal clock frequency (when TSC/core crystal clock ratio is enumera=
-ted
-> >   in CPUID leaf 0x15).
-> >
-> > If the hypervisor is malicious and deliberately runs the APIC timer at =
-the
-> > wrong frequency, nothing would stop the hypervisor from modifying the
-> > frequency at any time, i.e. attempting to manually calibrate the freque=
-ncy
-> > out of paranoia would be futile.
-> >
-> > Deliberately leave the CPU frequency calibration routine as is, since t=
-he
-> > TDX-Module doesn't provide any guarantees with respect to CPUID.0x16.
->=20
-> Does TDX use kvmclock?
+On 2025-02-04 07:53, Krzysztof Kozlowski wrote:
+> On 03/02/2025 21:32, Kaustabh Chakraborty wrote:
+>> This patch series is a part of Exynos7870 upstreaming.
+>> 
+>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+>> ---
+>> Kaustabh Chakraborty (2):
+>>       dt-bindings: hwinfo: samsung,exynos-chipid: add exynos7870-chipid compatible
+>>       soc: samsung: exynos-chipid: add support for exynos7870
+>> 
+>>  Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml | 1 +
+>>  drivers/soc/samsung/exynos-chipid.c                                 | 1 +
+>>  2 files changed, 2 insertions(+)
+> 
+> When I asked to split, I said per subsystem. Soc is one subsystem.
+> Everything targeting SoC should be in one patchset. get_maintainers.pl
+> tells the name of the subsystem and its maintainers.
+> 
+> If there is going to be resend/new version, combine patchsets for soc
+> into one patchset (just like the example I gave last time).
 
-A TDX guest can.  That's up to the host (expose kvmclock) and the guest (en=
-able
-kvmclock).
+Alright, so I'll move these patches to the one which has the devicetrees.
 
-> If yes, kvmclock would have registered the CPU frequency calibration rout=
-ine:
->=20
-> 	tsc_register_calibration_routines(kvm_get_tsc_khz, kvm_get_cpu_khz,
->  					  tsc_properties);
->=20
-> so TDX will use kvm_get_cpu_khz(), which will either use CPUID.0x16 or
-> PV clock, is this on the expected line ?
+There's also a Documentation/devicetree/bindings/soc/ patch in
+exynos7870-pmu-clocks [1]. The CLKOUT driver uses the compatible declared
+in there, i.e., the CLKOUT driver depends on that commit. So, should it
+stay there? Or...?
 
-What do you mean by "is this on the expected line"?  If you are asking "is =
-this
-intended", then the answer is "yes, working as intended".  As above, the TD=
-X-Module
-doesn't emulate CPUID.0x16, so no matter what, the guest is relying on the =
-untrusted
-hypervisor to get the CPU frequency.  If someone thinks that TDX guests sho=
-uld
-assume the CPU runs as the same frequency as the TSC, a la SNP's Secure TSC=
-, then
-they are welcome to propose such a change.
+[1] https://lore.kernel.org/r/20250204-exynos7870-pmu-clocks-v1-0-a3030ae5bb53@disroot.org
+
+> 
+> Best regards,
+> Krzysztof
