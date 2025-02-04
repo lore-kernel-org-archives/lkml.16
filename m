@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F7D145355;
-	Tue,  4 Feb 2025 01:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911581487ED;
+	Tue,  4 Feb 2025 01:17:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738631838; cv=none; b=apS1GjoDPDWhFxjvrlKriUivvV9oX87YGIRff/lOQoWYoZ38qGRqJ+5vNMbZApm6fJbBne7MXe1SA1JR4lmBmXztU9+qZRH4o/dfY1uUZRcqoWb2OXkjzHHA1I8Kjcfr5Jim+oaUW7kgXwjI96t3egCa65GEWie0kHdjBNPzCmU=
+	t=1738631844; cv=none; b=B8oiAFQxQZyUUdg6p+eiWQherPo19FhCGlhuYz47ePsmyJcB1kA86/nA+ZTvE5/GEAkc5jsMdD5pk7199s33DLfjeC6oa49FWMXwpm0q/q2rx55r2Z0WUf3ijgsUxWkeLHKqNaZ9mwHPhZM2MpkRYS+NZ5rZbzJt/C0ffoN+4pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738631838; c=relaxed/simple;
-	bh=MUQ4+NaqgZEwXW07mwTUR9YMTSPx33+JrXsFymPR8c4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ri8jzg+yfn3kzvlesvdfq7Bx4snqpBj73X2DDNsMKHIcpB4PSJQZh3lf0xDavEHyAEbvTGGc06EvqWTmL59b1SnmPBHVU2+hROfJMdFV/mnAw2oyAIBBQ4Q/z/ItvC/aDW1+WhKHBvI8sCNl1k8gMq/s9mo5f404xib8yOlb/bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7vhuyCN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738631844; c=relaxed/simple;
+	bh=WfV0I2XcMcWq6iqVHClcxb6CZ1GUpZumWWMRKQxTWPo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RAZTXbAS7DKIkSjB2j8Cf6hXHZFq2lofu0nkehr2MRjYnArB1sQcSNsP8GtYsiP7HoZMTq39Q5U1Xp16vvL4gbMcC+24OIt0bHfaa1O5RB8WEOXK046oIlI7GqPdvGweEyKF27tA2hz3HtpxBkqk/bW9lnSx7B3+SucRkS1Ml08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tv4iU+zb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7vhuyCN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C88EC4CEE0;
-	Tue,  4 Feb 2025 01:17:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tv4iU+zb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3231C4CEE0;
+	Tue,  4 Feb 2025 01:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738631838;
-	bh=MUQ4+NaqgZEwXW07mwTUR9YMTSPx33+JrXsFymPR8c4=;
+	s=k20201202; t=1738631844;
+	bh=WfV0I2XcMcWq6iqVHClcxb6CZ1GUpZumWWMRKQxTWPo=;
 	h=From:To:Cc:Subject:Date:From;
-	b=m7vhuyCNL/jJ8/4LTRIZ4hdZdXJiCihSjUaGjGBLAgxGTBoqnFtJhW10WA0T85RhP
-	 cBYMVs7RPerPDmNQiKizoKDZiEIeDR27l67VpdS0S9kaVxVYrQ8qeXHGoVMVWFSSkk
-	 tacO5k2Gf8D8L0VatCQi/jUDGUSG1IQuFju7X4BJ+UMxrH5NJimbOxD2fxJ6HTDeeq
-	 ZKrcprIuynqrHnhMO8FoI3LsLcm4QmoQMrpayLG+J9tpn9pi945EOvJAVFHsM4vIIZ
-	 ECRUNMGC/6PIPDBC9HUFwkAc1eqezhsPW6uWpEgq1tzIi9magXsfpy00t0B/PBEL25
-	 s9kXBvBQZq5ug==
+	b=tv4iU+zbrSlv8yVrjuDbIHRlttiA0Bct6P/BoPU4CUH5gb3FsEL5SPb0OJLaS7YB9
+	 ESTyYmoUI2z+iBJpm//6e+QW8JeoXr3arXWnuihjQ0hh9KUzIp9oAFvuVQjYP0PYAA
+	 gZBAumzd5BWhPcstg8YQyEtSLUdsvWOQ+eXxzkh5qNM4p3m0tF6PbyV5Xyta9LifiA
+	 4a1nGef+fPAUu4m7IRNP7h62oeoJkvK2lX6otR5NP/W0jfZaYA5HtcErV8Wbq7Z205
+	 fwu6fWW3oEaDnlKvR14N7Ea4dZY24Tl3qX7RKBvZ+o5cfJS2t4RKVeSxSuagsZKhHm
+	 UVOE/cBDHI6rQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -37,9 +37,9 @@ Cc: Maksym Planeta <maksym@exostellar.io>,
 	dave.hansen@linux.intel.com,
 	x86@kernel.org,
 	xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 5.15] Grab mm lock before grabbing pt lock
-Date: Mon,  3 Feb 2025 20:17:13 -0500
-Message-Id: <20250204011713.2206595-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10] Grab mm lock before grabbing pt lock
+Date: Mon,  3 Feb 2025 20:17:18 -0500
+Message-Id: <20250204011718.2206631-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.178
+X-stable-base: Linux 5.10.234
 Content-Transfer-Encoding: 8bit
 
 From: Maksym Planeta <maksym@exostellar.io>
@@ -165,7 +165,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-index 3359c23573c50..f737e3af3edcc 100644
+index cf2ade864c302..2fef8ad3f1df9 100644
 --- a/arch/x86/xen/mmu_pv.c
 +++ b/arch/x86/xen/mmu_pv.c
 @@ -762,6 +762,7 @@ void xen_mm_pin_all(void)
