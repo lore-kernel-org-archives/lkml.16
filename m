@@ -1,85 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192241537C3;
-	Tue,  4 Feb 2025 17:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8795814A0B5;
+	Tue,  4 Feb 2025 17:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738691120; cv=none; b=gr3gMx0am509tCyznY+74EMsNMoOpvsXvu5ywAYrw18u10vXJXAqc/Vh+iJHXeLIBKJ8iiQk7As8kGMvxtjZZ2uzhMYIZ4BJ/RcdLYvXbJPVzB8oQczcLKkiTZ2oqIrcTRDvcVbqlSE+qLp2N+nfEsyojmNpgYZB7Pyfsl68e6I=
+	t=1738691293; cv=none; b=PlJ7L6qusZiqvXiVWY0wJb3iqHoBtFgssdEu7dK42KIl0GTtOX+zQsdKvQ2jB2Pd5yn37tdoB3yVRuMvutYaCtLu3Ww+ErBy2pdTIwzjUjVWEKdcVMWl6Yhzquym/0OPXewFJH0oi7X7D2f+X1goSqq3N5fDSLdO8106GiAwLv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738691120; c=relaxed/simple;
-	bh=x2IO+Pjykxnr/uC9RswsA7Eu+lOp2iUnyfap62xp7zE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lwERmFT0w7LZqVaMMXXYZxT8lWT7SLHHqrP75VuUS/yl5EDUgB+fcjPdwisXtUqvdGcxREzPAiwOgYcq8NpkT9ZTcMUlapb3fDl9tfur256CDvspf7x2obuyN5dGapSmZPlVJ32eluTsMAztCLkA292UCxEH8FF5AXtojQZawsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIAOpewg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738691293; c=relaxed/simple;
+	bh=GrtYPHIRxK6ejmdmBjYfylNuez1nnTdyjrxoZB41C18=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K3GWLsqWxf6Uhd0RrRUpr6gLGPKmAHlaXUXFlxVUWWFFp8aUYMiGuQ5xVg+DrpYGoxzypPcKac/JvBqaEfMmp4LQ9XlJR8aFEOuHhgEj2Hkmr8PyJ11ASCpvgCxkH7g4C0b0Z1jKIVd6tzdFBGRRgA5QLkzbrLl2Q1UwSb6v8CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nTlFMg3F; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIAOpewg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B712C4CEDF;
-	Tue,  4 Feb 2025 17:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738691119;
-	bh=x2IO+Pjykxnr/uC9RswsA7Eu+lOp2iUnyfap62xp7zE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YIAOpewgcNpAtB0sfW6L77Clwe9GlmQymUFSkBcZAOTbXKnQdDAWvEd8q7Pct5P/K
-	 W4eo5yIF6xRWDk1YqCZNG32SaW1Lvv7L2i/XMTnHw8GWSKmbKf6ymRsRswXgSIPnQI
-	 M12gsKNdTGUgxZ9lk921i5D8LZfsVmmNy/+0HQSKXySp0kcShDvgd9TKxcf+22oGye
-	 N4hhZqKT6N4PZEYnCVwa8h0lZcKMWgaa4y4cy8fbY6Ufln77RzG179qgKXkV/sjj18
-	 c4Zc/fp/2GrCejbnuLERAjMnqdhefgqOj2iFG3Oz6aTRQ1JqxnXOd9nPln0twy0gN4
-	 nD+Y8ffnBXB7A==
-From: Kees Cook <kees@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] stackinit: Keep selftest union size small on m68k
-Date: Tue,  4 Feb 2025 09:45:13 -0800
-Message-Id: <20250204174509.work.711-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nTlFMg3F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738691291; x=1770227291;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=GrtYPHIRxK6ejmdmBjYfylNuez1nnTdyjrxoZB41C18=;
+  b=nTlFMg3FZ5v/9uMO9ofjWqn3/Gib9lvIiEhGIPqcd2eLbPt7f4GQgQYs
+   sVZNY+PtUQmwH8uUmTsznExZLjDol0am7vzEFiWZkLfX8AsTLtPFEFblC
+   jOKcKT2dNhM+TgQFTf3V9SO8M0LjuJFo+FnZ3ZClL9Wz7Q+hpc2a3t33R
+   SfvJTWUWdOxGHClg+QR/gD1mwy/v5hcPqoyMgMLWnSga4xisuApPU7lTI
+   CyrPQtarRtVxpBiAXlnWaq23CVcZYXusrj/+8vwFnuSbmhle0pq8VnRvh
+   Z0hsGlSwqHvrHTUoM2CMjMBV1wAyAGHuMKvEm7fvMQzJfQl8B/wE/NAEx
+   Q==;
+X-CSE-ConnectionGUID: kSXgKCdJRFCkErm0mGmPaw==
+X-CSE-MsgGUID: XNa+4gKUSZCABx8QwujlQA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56656462"
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="56656462"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:48:11 -0800
+X-CSE-ConnectionGUID: gO76lXoCR02m+tI1+VeYww==
+X-CSE-MsgGUID: oUrDKHvRQsmJ//eVPC7Vnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="141526712"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:48:10 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tfN1r-00000008DdG-0pqA;
+	Tue, 04 Feb 2025 19:48:07 +0200
+Date: Tue, 4 Feb 2025 19:48:06 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Patrick Rudolph <patrick.rudolph@9elements.com>
+Subject: Re: [PATCH v2 00/14] pinctrl: cy8c95x0: Bugfixes and cleanups
+Message-ID: <Z6JS1pLWIAdIYRTv@smile.fi.intel.com>
+References: <20250203131506.3318201-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdYPAa3NYDz4_ch9NG_bno8QfO7g9QTHfDB--XrDRd2NXA@mail.gmail.com>
+ <Z6DToVmi7L7iR07T@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1242; i=kees@kernel.org; h=from:subject:message-id; bh=x2IO+Pjykxnr/uC9RswsA7Eu+lOp2iUnyfap62xp7zE=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmLgjQXvN6W2hJ0X+bnYcG48sR2i6gqvTXd2SnReacyF h44FSHSUcrCIMbFICumyBJk5x7n4vG2Pdx9riLMHFYmkCEMXJwCMJEdCgz/M1Jv1GXk/ctVPHVM NvOk0XPnSKYfXDd3qfz6Mu+/9/zSL4wMT85vP8+/cGGWTMjf5iI+ieIdUoH5IcYC33g7WivMejo 5AQ==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6DToVmi7L7iR07T@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The stack frame on m68k is very sensitive to the size of what needs to
-be stored. Like done for long string testing, reduce the size of the
-large trailing struct in the union initialization testing.
+On Mon, Feb 03, 2025 at 04:33:05PM +0200, Andy Shevchenko wrote:
+> On Mon, Feb 03, 2025 at 02:35:46PM +0100, Linus Walleij wrote:
+> > On Mon, Feb 3, 2025 at 2:15 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > 
+> > > This a set of the bugfixes and cleanups I have collected so far while
+> > > testing the driver on Intel Galileo Gen 1 last year.
+> > >
+> > > Patches 1-2 are kinda important fixes, patch 3 is half-half, it helps
+> > > a lot when debugging, patch 4 is semantically a fix, but can wait.
+> > > The rest is number of refactoring and cleaning up changes.
+> > 
+> > I applied patches 1-4 for fixes since we are early in the rc cycle.
+> 
+> Hmm... But I do not see the first patch from v1 to be applied. I was under
+> impression that you have it somewhere in your local trees and now it seems
+> disappeared. Can you check on your side what happens?
 
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Closes: https://lore.kernel.org/all/CAMuHMdXW8VbtOAixO7w+aDOG70aZtZ50j1Ybcr8B3eYnRUcrcA@mail.gmail.com
-Fixes: e71a29db79da ("stackinit: Add union initialization to selftests")
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- lib/stackinit_kunit.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Okay, now it's there. So far, so good.
 
-diff --git a/lib/stackinit_kunit.c b/lib/stackinit_kunit.c
-index fbe910c9c825..967b345a98fd 100644
---- a/lib/stackinit_kunit.c
-+++ b/lib/stackinit_kunit.c
-@@ -75,8 +75,10 @@ static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
-  */
- #ifdef CONFIG_M68K
- #define FILL_SIZE_STRING		8
-+#define FILL_SIZE_ARRAY			2
- #else
- #define FILL_SIZE_STRING		16
-+#define FILL_SIZE_ARRAY			8
- #endif
- 
- #define INIT_CLONE_SCALAR		/**/
-@@ -345,7 +347,7 @@ union test_small_start {
- 	short three;
- 	unsigned long four;
- 	struct big_struct {
--		unsigned long array[8];
-+		unsigned long array[FILL_SIZE_ARRAY];
- 	} big;
- };
- 
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
