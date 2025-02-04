@@ -1,44 +1,47 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03F4215781
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC86E2153F3
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738687823; cv=none; b=OGg9pnQMvABawBaMKej7cT09K8wxR8CpEZ1ufP8UrSKWQQG9F75rSqL8mxp37Q+01Yu/rL5d8Yi9Pqt6CRB81Eh+vefIIzS8H2JzgRlsTesoW38bkKPC1TwMNqSs0XH0cCxCIshOrMbqOoSzA4ywOihO7LUrpk7l6CVbYdFsuSM=
+	t=1738687880; cv=none; b=ucewH7NtdwoXFLsbTw/vhylhrct049sTY9l+844LLgV9qWesGeuZXrZWVI2Y7mihti6F1kq5yXPPTgVVq68ryMSNGqo6Lwaftvk9AWab8NtEtX5FNMk7qx8eQ6KxfE+w6hzgBvAg9Xbv/MNLCNwjfre6YXd9eugDRPbchLnr4xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738687823; c=relaxed/simple;
-	bh=Sf3PNexg95sapIEeN1jpmuPLmjmuORMj48u5SXvH3zg=;
+	s=arc-20240116; t=1738687880; c=relaxed/simple;
+	bh=qUs5qxq7TlNWEk5AqD2e8U8+LYK0ti0l2GCGHyetHIc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IzD8LJiQVNxkgH1rRTV+gaaqkM4OrvD/o2feVfz/JsMi4PDzzUIPTP8/TYTcntZqPOJcf3Rmvjx0XXfg8NYKOScFmFsyZJRZcX4a5Xi8EZEEVS7lbB112esTRpw42ArWajO/lSEcFsI6/4qruXakqm2vVSqBWJbpmml+N0NOmxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=ss/DdBOu; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=phVCAPnPFM3P19nhv/T5kvRtbOHreLDemI7ZcASPMyyZUb4u9r2r/Vm5fYDTm6+LwKn4e628zd36X/SjdBHN6sPLxMwQSFyMjM4yeB30V4XnS3JXPPhR60HVKVZgqmbC6UMTVvyhHEFp5sdqgOJT5qVTA1Ge3OsoWOjt55/x/4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wFlZUecE; arc=none smtp.client-ip=95.215.58.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ss/DdBOu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1738687815;
-	bh=Sf3PNexg95sapIEeN1jpmuPLmjmuORMj48u5SXvH3zg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ss/DdBOuSN7hk6hl3jkuiofAQMF3jfP8z7cGmp/abgAww20ttNW5Zb42qPZgszyiz
-	 GZ+JUZTuJZIeXALmPFYXZkqtfPt5Mis6HFiXCJ2JYjltUJLaaEdyZrlQdz0ZKMjUqn
-	 3iltZLlGCJi2/QS3hkbm5ovvp5MDJ2xaJ9gRYbM8=
-Date: Tue, 4 Feb 2025 17:50:14 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Billy Tsai <billy_tsai@aspeedtech.com>
-Cc: "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, 
-	"pgaj@cadence.com" <pgaj@cadence.com>, "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, 
-	"conor.culhane@silvaco.com" <conor.culhane@silvaco.com>, "aniketmaurya@google.com" <aniketmaurya@google.com>, 
-	"Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>, "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>, 
-	"wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>, "xiaopei01@kylinos.cn" <xiaopei01@kylinos.cn>, 
-	"Guruvendra.Punugupati@amd.com" <Guruvendra.Punugupati@amd.com>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: [PATCH v2 1/2] i3c: Remove the const qualifier from i2c_msg
- pointer in i2c_xfers API
-Message-ID: <f05fb969-0632-48a6-afcd-c526c8568d4b@t-8ch.de>
-References: <20250204091702.4014466-1-billy_tsai@aspeedtech.com>
- <f9f730b6-4620-49dd-9700-ee18f777045f@t-8ch.de>
- <OSQPR06MB725203E31EBAC2B71A7901E48BF42@OSQPR06MB7252.apcprd06.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wFlZUecE"
+Date: Tue, 4 Feb 2025 08:51:07 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738687874;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2anvafoIZ1StH+i5LxOCWHXeT3UJ7rs0jfPknzu/uUk=;
+	b=wFlZUecEJuyWp+dj1/Tr87HsPFUjVNDdnOvx6vK1RQVn1kPNbzFUg+lcaygeVj0FijX2eY
+	mbR2F22jyypEvrL3coOoVt6Q/2eetPY4BRvo/uCO35Bn3utGU3Pyrz3zUis79MO2kabeLv
+	DrlVLkjIecr/EJb933L7HWX5qiCq8pM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Christian Brauner <christian@brauner.io>, 
+	Shuah Khan <shuah@kernel.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, pedro.falcato@gmail.com, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Oliver Sang <oliver.sang@intel.com>, John Hubbard <jhubbard@nvidia.com>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Koutny <mkoutny@suse.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v7 1/6] pidfd: add PIDFD_SELF* sentinels to refer to own
+ thread/process
+Message-ID: <nw5xnaile4phgaqxf77jhqlguscgicfwsfspgtxeuronrvwqai@xykuanoemqay>
+References: <cover.1738268370.git.lorenzo.stoakes@oracle.com>
+ <24315a16a3d01a548dd45c7515f7d51c767e954e.1738268370.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,38 +50,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <OSQPR06MB725203E31EBAC2B71A7901E48BF42@OSQPR06MB7252.apcprd06.prod.outlook.com>
+In-Reply-To: <24315a16a3d01a548dd45c7515f7d51c767e954e.1738268370.git.lorenzo.stoakes@oracle.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Billy,
-
-On 2025-02-04 10:09:31+0000, Billy Tsai wrote:
-> > On 2025-02-04 17:17:01+0800, Billy Tsai wrote:
-> > > The change is necessary to enable the use of the
-> > > `i2c_get_dma_safe_msg_buf()` API, which requires a non-const
-> > > `struct i2c_msg *` to operate. The `i2c_get_dma_safe_msg_buf()` function
-> > > ensures safe handling of I2C messages when using DMA, making it essential
-> > > for scenarios where DMA transfers are involved. By removing the `const`
-> > > qualifier, this patch allows drivers to prepare and manage DMA-safe
-> > > buffers directly.
+On Thu, Jan 30, 2025 at 08:40:26PM +0000, Lorenzo Stoakes wrote:
+> It is useful to be able to utilise the pidfd mechanism to reference the
+> current thread or process (from a userland point of view - thread group
+> leader from the kernel's point of view).
 > 
-> > This is missing a changelog to v1 of the series.
+> Therefore introduce PIDFD_SELF_THREAD to refer to the current thread, and
+> PIDFD_SELF_THREAD_GROUP to refer to the current thread group leader.
 > 
-> > Also I asked before why it is not possible to change the signature of
-> > i2c_get_dma_safe_msg_buf() to accept 'const struct i2c_msg *' [0].
-> > That looks like the nicer solution to me.
+> For convenience and to avoid confusion from userland's perspective we alias
+> these:
+> 
+> * PIDFD_SELF is an alias for PIDFD_SELF_THREAD - This is nearly always what
+>   the user will want to use, as they would find it surprising if for
+>   instance fd's were unshared()'d and they wanted to invoke pidfd_getfd()
+>   and that failed.
+> 
+> * PIDFD_SELF_PROCESS is an alias for PIDFD_SELF_THREAD_GROUP - Most users
+>   have no concept of thread groups or what a thread group leader is, and
+>   from userland's perspective and nomenclature this is what userland
+>   considers to be a process.
+> 
+> We adjust pidfd_get_task() and the pidfd_send_signal() system call with
+> specific handling for this, implementing this functionality for
+> process_madvise(), process_mrelease() (albeit, using it here wouldn't
+> really make sense) and pidfd_send_signal().
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-> The i2c_get_dma_safe_msg_buf() function has existed for a long time,
-> but I do not know the original reason why it declares struct i2c_msg *
-> without const.
-
-I would guess that nobody ever cared before.
-
-> However, I believe this is because the
-> i2c_put_dma_safe_msg_buf() function modifies the buffer data, so for
-> consistency, it is declared without const.
-
-IMO that's a weak argument.
-Maybe the maintainers have a preference?
-
-
-Thomas
+Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
