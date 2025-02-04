@@ -1,187 +1,177 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD9B143C5D;
-	Tue,  4 Feb 2025 09:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5980189913
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738662244; cv=none; b=Aqoqm2Wwdjy5sUoRFOYRnHo+MUD5129/RsXgscFv3FVJtxDc7bOlMz8WhZ2w7PFa+ZWJQ2CIO7hRiRbjaXsEHFK1rJRt8gsR6rAk7Sae+wUvW/GfF5oD2MxlsE4VC5bn3eBehguTSes+pm9Xzc1vUlxGVoVf8y/so0DFqcnwG6Y=
+	t=1738662391; cv=none; b=YY9OGo1uoQm5A0vu0csyI7v/lo9E8juo5E2rUh+cdOCHoBBEeXbrOCtABqeDFSXT4bHu4jC6ni0xZB+KecIDk1AQCKbzT//4zTeF9vxFAKNzfAvYKt3CR5hesRpotwKHrQoW1NU0yyp5YzYzT9gXzC6J4xx4RD7qmHjvlGHJRCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738662244; c=relaxed/simple;
-	bh=wDHC1KEHF8DQWAcUfnfxCywjfzzoTefVOSXvL3BKXuI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AcrtesOrnp5pkKF4eBra7TCfclus2BsfVgSr8ymEidN5VC1ArdNyFIUar9n/apSPWmAOiVwwzZIvMm6jzKLiV5iGf8a+9WdD+RPO22NE64jxU0BfUWoMb870C3d3oMecXy8QYso0otRgmsJIGES8iQRgmlt4d8d1JOIprJvGc2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=GKZMqyk1; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="GKZMqyk1"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 5CC10A0031;
-	Tue,  4 Feb 2025 10:44:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=Arq9TziV6dw9WdFzvtYF
-	lrk4miTqYDr7Y/tlevZbNFA=; b=GKZMqyk1lK5CbdOtG5i53YSr5Rzx7xoiaK6R
-	HqIUkDuZPd9Co2B7sdhdUCWAaNFkHKbe8mYDRBc81hLBtHuLm6JG7LVLcoU/XUIO
-	dibOt40w0B2CL7O3QHutDawmPcgHBRaF21KEUe1T5I7nf7mQ/Af0MpQRfPpWBY2L
-	Pn9BCSfPPSjpaI/DG69uhR+20wiicbjE8oIDSfFCD4/fLrta1tXuzoc9EPN8YVai
-	7HZO9++OzNKhzBwcCdF4RqKZTVmnDuInpXW37GOkXWW5n1QqqM0mP+TvFvDvrICe
-	t77IgdbAE0zlmTe+uMRVvE9a95nOTS0TaZi1ELTub5UuqAd1ja93a7KDXhfUvKeQ
-	dYP1kKFOFN/VBSUKI6pFLCrxhdClBxBNUcfTOSJ0DZCC2huBozBy1DDus+8oUqzV
-	Nk0SBQcuuh86TdMCB9CJBvv28emZ+9jVFZNn1Y2rI2O5F/oJN9QxCxKeF2YyJxaA
-	5cJYiFCGdrKpXyeWxclxrGIL9MgK4foHp+ODd6llFCfO3CA4L/3TFAIiPro9wpEL
-	3imD/xXUxVxhVtVIH1srmw9iCjxOXygB5jDdOb6e/qvV1EOKOyWVI9Q5hhrCKQ0T
-	AMsIwrpSJtGlE/ObmflV1Sy6tYqykDCGb/XB8s8uT0pSLaGNarElal8OuJjlFztu
-	Cj7TkUE=
-From: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>
-To: Laurent Badel <laurentbadel@eaton.com>, Jakub Kicinski <kuba@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>, =?UTF-8?q?Cs=C3=B3k=C3=A1s=20Bence?=
-	<csokas.bence@prolan.hu>, <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Ahmad Fatoum <a.fatoum@pengutronix.de>, Simon Horman <horms@kernel.org>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>, Jacob Keller
-	<jacob.e.keller@intel.com>, Wei Fang <wei.fang@nxp.com>, Shenwei Wang
-	<shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Andrew Lunn
-	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH net v3] net: fec: Refactor MAC reset to function
-Date: Tue, 4 Feb 2025 10:37:54 +0100
-Message-ID: <20250204093756.253642-2-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250122163935.213313-2-csokas.bence@prolan.hu>
-References:
+	s=arc-20240116; t=1738662391; c=relaxed/simple;
+	bh=TwNDP+00RgGf4vX+sViNbRUp1sqAvulqoCSyRLnSZmA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UtKNLD0feobyQ1psC5PY0341RjRanANEhHFKr9wbUrSBZ1HC8qfFuDGTlzUyuvurvlmLmYRNyxjL7z6S6I8SOHVMIkBQ/H+49d0D5ejZEtEwFNztre1Sqdp65YBD9q1tltm5CebTspK+wTT/L9/9RnfUvEN0BTxKHDMbMPekdXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3cfb2d37dbdso38490255ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 01:46:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738662389; x=1739267189;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wZE+EmsDVH3/iA7xkKOngyxwK7oLNaXw/irVVx8Ze1o=;
+        b=BSkeDiv6B2ePvIJwSDIpAc9DTplTxvCcFRCABfZklqOCvqmMraXil3ffmIPX8P+6gX
+         SvoLc/McIP7bLPnnV6EfKf/UZJtwzpV46GiU6fhR++dTMks7xcH8AXqZhKj7Wmo2RNLy
+         iVKfWpufbGwX3GLp1CecINRDjyHuFcSmcJOkgr88DA6a3t2hq0oCMBgdR6e6li/ANH6m
+         NzJpklmDUo2qEgCC5Hl0HLHVInAc8MRA+gs5SABIYHH34Au+Xx+MiDRbhBu5rDVjjfFz
+         ts+5DJvyRmFtUYljhNiUOSkz+4m9w5mM2pjn5JQ0OptT4U8fSWwy71Ci0F5DLWMUW2/t
+         vm+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXfGm4LkaUfTRSNNPKs6ihrlWRfPAPoY+wIUr7nfPLkOWmO/CfU5eO5AZ6Dr77+jynvG12l4zVrg2kUW9Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1ARpDhZFKuaMaJSyl/DYiDq2/8U4XGd2HmqPQlUh0t5rkuO9o
+	Hjiz9qOaHDV+eT8YD8CRW5RzIo3gbFbK9J2Mk2/lurfqijouPWgWDITHR4/U+GCgvjYPpsmh0R5
+	W/D58LCFfz3sdWI6myFe+fenHVhxoYzf3TMhYFDGuZwdRnGd0ldl3Fcc=
+X-Google-Smtp-Source: AGHT+IGfBkb9X7jQRYB3l44Jn9qXd32Mgl3O/5Z3FsJx3kkyI/TxfbmDUwsUUNE+b72TmVTtOxHviz6OKHqhBBngU7QrxIywQYSp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1c0c:b0:3cf:cc97:c9c6 with SMTP id
+ e9e14a558f8ab-3cffe41a2admr213283495ab.17.1738662388859; Tue, 04 Feb 2025
+ 01:46:28 -0800 (PST)
+Date: Tue, 04 Feb 2025 01:46:28 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
+Subject: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
+From: syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, brauner@kernel.org, gustavoars@kernel.org, 
+	kees@kernel.org, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mjguzik@gmail.com, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1738662239;VERSION=7985;MC=507896856;ID=198007;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29ACD94852667366
 
-The core is reset both in `fec_restart()` (called on link-up) and
-`fec_stop()` (going to sleep, driver remove etc.). These two functions
-had their separate implementations, which was at first only a register
-write and a `udelay()` (and the accompanying block comment). However,
-since then we got soft-reset (MAC disable) and Wake-on-LAN support, which
-meant that these implementations diverged, often causing bugs.
+Hello,
 
-For instance, as of now, `fec_stop()` does not check for
-`FEC_QUIRK_NO_HARD_RESET`, meaning the MII/RMII mode is cleared on eg.
-a PM power-down event; and `fec_restart()` missed the refactor renaming
-the "magic" constant `1` to `FEC_ECR_RESET`.
+syzbot found the following issue on:
 
-To harmonize current implementations, and eliminate this source of
-potential future bugs, refactor implementation to a common function.
+HEAD commit:    69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1258aeb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
+dashboard link: https://syzkaller.appspot.com/bug?extid=48a99e426f29859818c0
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15825724580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1658aeb0580000
 
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Fixes: c730ab423bfa ("net: fec: Fix temporary RMII clock reset on link up")
-Fixes: ff049886671c ("net: fec: Refactor: #define magic constants")
-Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ea84ac864e92/disk-69b8923f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6a465997b4e0/vmlinux-69b8923f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d72b67b2bd15/bzImage-69b8923f.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/7c2919610764/mount_0.gz
+
+The issue was bisected to:
+
+commit bae80473f7b0b25772619e7692019b1549d4a82c
+Author: Mateusz Guzik <mjguzik@gmail.com>
+Date:   Wed Nov 20 11:20:35 2024 +0000
+
+    ext4: use inode_set_cached_link()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1248c3df980000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1148c3df980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1648c3df980000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
+Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
+
+EXT4-fs (loop0): mounted filesystem 00000000-0000-0000-0000-000000000000 r/w without journal. Quota mode: writeback.
+usercopy: Kernel memory exposure attempt detected from SLUB object 'ext4_inode_cache' (offset 0, size 176)!
+------------[ cut here ]------------
+kernel BUG at mm/usercopy.c:102!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 1 UID: 0 PID: 5826 Comm: syz-executor349 Not tainted 6.13.0-syzkaller-09793-g69b8923f5003 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+RIP: 0010:usercopy_abort+0x84/0x90 mm/usercopy.c:102
+Code: 49 89 ce 48 c7 c3 80 5f 18 8c 48 0f 44 de 48 c7 c7 20 5e 18 8c 4c 89 de 48 89 c1 41 52 41 56 53 e8 d1 3a f5 fe 48 83 c4 18 90 <0f> 0b 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc90003fa7c90 EFLAGS: 00010296
+RAX: 000000000000006b RBX: ffffffff8c185f80 RCX: ba71ae4bd9cf0200
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff819f1fbc R09: 1ffff920007f4f2c
+R10: dffffc0000000000 R11: fffff520007f4f2d R12: ffffea0001e70200
+R13: 00000000000000b0 R14: 0000000000000000 R15: 00000000000000b0
+FS:  00005555602a7380(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000066c7e0 CR3: 0000000078aac000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __check_heap_object+0xb1/0x100 mm/slub.c:5818
+ check_heap_object mm/usercopy.c:196 [inline]
+ __check_object_size+0x1da/0x730 mm/usercopy.c:251
+ check_object_size include/linux/thread_info.h:228 [inline]
+ check_copy_size include/linux/thread_info.h:264 [inline]
+ copy_to_user include/linux/uaccess.h:219 [inline]
+ readlink_copy fs/namei.c:5284 [inline]
+ vfs_readlink+0x1cf/0x550 fs/namei.c:5307
+ do_readlinkat+0x249/0x3a0 fs/stat.c:576
+ __do_sys_readlinkat fs/stat.c:593 [inline]
+ __se_sys_readlinkat fs/stat.c:590 [inline]
+ __x64_sys_readlinkat+0x9a/0xb0 fs/stat.c:590
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdaffabc639
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffeb88c4948 EFLAGS: 00000246 ORIG_RAX: 000000000000010b
+RAX: ffffffffffffffda RBX: 0030656c69662f2e RCX: 00007fdaffabc639
+RDX: 00000000200002c0 RSI: 0000000020000240 RDI: 00000000ffffff9c
+RBP: 00007fdaffb30610 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000000000b0 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffeb88c4b18 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:usercopy_abort+0x84/0x90 mm/usercopy.c:102
+Code: 49 89 ce 48 c7 c3 80 5f 18 8c 48 0f 44 de 48 c7 c7 20 5e 18 8c 4c 89 de 48 89 c1 41 52 41 56 53 e8 d1 3a f5 fe 48 83 c4 18 90 <0f> 0b 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc90003fa7c90 EFLAGS: 00010296
+RAX: 000000000000006b RBX: ffffffff8c185f80 RCX: ba71ae4bd9cf0200
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff819f1fbc R09: 1ffff920007f4f2c
+R10: dffffc0000000000 R11: fffff520007f4f2d R12: ffffea0001e70200
+R13: 00000000000000b0 R14: 0000000000000000 R15: 00000000000000b0
+FS:  00005555602a7380(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055dd00353bf8 CR3: 0000000078aac000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Notes:
-    Recommended options for this patch:
-    `--color-moved --color-moved-ws=allow-indentation-change`
-    Changes in v2:
-    * collect Michal's tag
-    * reformat message to 75 cols
-    * fix missing `u32 val`
-    Changes in v3:
-    * rename parameter to `allow_wol`
-    Changes in v3:
-    * clarify message
-    * collect Jacob's tag
-    * rebased onto c2933b2befe2
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
- drivers/net/ethernet/freescale/fec_main.c | 52 +++++++++++------------
- 1 file changed, 25 insertions(+), 27 deletions(-)
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index f7c4ce8e9a26..a86cfebedaa8 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1093,6 +1093,29 @@ static void fec_enet_enable_ring(struct net_device *ndev)
- 	}
- }
- 
-+/* Whack a reset.  We should wait for this.
-+ * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
-+ * instead of reset MAC itself.
-+ */
-+static void fec_ctrl_reset(struct fec_enet_private *fep, bool allow_wol)
-+{
-+	u32 val;
-+
-+	if (!allow_wol || !(fep->wol_flag & FEC_WOL_FLAG_SLEEP_ON)) {
-+		if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES ||
-+		    ((fep->quirks & FEC_QUIRK_NO_HARD_RESET) && fep->link)) {
-+			writel(0, fep->hwp + FEC_ECNTRL);
-+		} else {
-+			writel(FEC_ECR_RESET, fep->hwp + FEC_ECNTRL);
-+			udelay(10);
-+		}
-+	} else {
-+		val = readl(fep->hwp + FEC_ECNTRL);
-+		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
-+		writel(val, fep->hwp + FEC_ECNTRL);
-+	}
-+}
-+
- /*
-  * This function is called to start or restart the FEC during a link
-  * change, transmit timeout, or to reconfigure the FEC.  The network
-@@ -1109,17 +1132,7 @@ fec_restart(struct net_device *ndev)
- 	if (fep->bufdesc_ex)
- 		fec_ptp_save_state(fep);
- 
--	/* Whack a reset.  We should wait for this.
--	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
--	 * instead of reset MAC itself.
--	 */
--	if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES ||
--	    ((fep->quirks & FEC_QUIRK_NO_HARD_RESET) && fep->link)) {
--		writel(0, fep->hwp + FEC_ECNTRL);
--	} else {
--		writel(1, fep->hwp + FEC_ECNTRL);
--		udelay(10);
--	}
-+	fec_ctrl_reset(fep, false);
- 
- 	/*
- 	 * enet-mac reset will reset mac address registers too,
-@@ -1373,22 +1386,7 @@ fec_stop(struct net_device *ndev)
- 	if (fep->bufdesc_ex)
- 		fec_ptp_save_state(fep);
- 
--	/* Whack a reset.  We should wait for this.
--	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
--	 * instead of reset MAC itself.
--	 */
--	if (!(fep->wol_flag & FEC_WOL_FLAG_SLEEP_ON)) {
--		if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES) {
--			writel(0, fep->hwp + FEC_ECNTRL);
--		} else {
--			writel(FEC_ECR_RESET, fep->hwp + FEC_ECNTRL);
--			udelay(10);
--		}
--	} else {
--		val = readl(fep->hwp + FEC_ECNTRL);
--		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
--		writel(val, fep->hwp + FEC_ECNTRL);
--	}
-+	fec_ctrl_reset(fep, true);
- 	writel(fep->phy_speed, fep->hwp + FEC_MII_SPEED);
- 	writel(FEC_DEFAULT_IMASK, fep->hwp + FEC_IMASK);
- 
--- 
-2.48.1
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
