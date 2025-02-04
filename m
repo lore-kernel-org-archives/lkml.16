@@ -1,156 +1,267 @@
 Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5154C25A659
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:33:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23A92C181
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:33:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738683205; cv=none; b=Cr906FgRKqYBCYMArgdGYaHVRAhW9VrPPrPWqLvuSlSHxnjJK/pZ7TVTCc6Xw4rk/HGkjrIYY3biEbzyUsSt7YSbqwNRSsePDrTOwSXmt1sCQ8pJ/hNI46ECmdreAxk1Yb4dML5x8T1IIl/afyv99sAWNEHGzhHtVD7G1KSuvw0=
+	t=1738683204; cv=none; b=bmNJ6DqnPQrurszyqowp+WfSwe0CaiAGVhasf7Fp4JSnOjpCPRbCsaB6BG9V2vsWezySnn+7bBZSHWODz66BvK3afUDvaVkmtsfFgxPBgcho1zpKIKUKeByfmHMfCMPo07znpsiHGYejPnCK8CzqGV++eBBcIpJ5FsmMBZE3skg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738683205; c=relaxed/simple;
-	bh=WRA/WKB/1cX5TzaHrN/TTlXTa6s9rZhFqhteluIY7+E=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ArjfN5rKgQ3NOgwyJYBDCn7hAUv2fInctuppV2bFx1ek6gtBXxLE+0ycHEfQLPlIYv4OYHsKT/xglHgJLC1GvdYXDr6QA4FPlipcCD8+SVpOsCxfUiTJ/+oAsSUqDmolfwTKKVCkZflrzYhhQE97C5/CbYvxebrNwzD5LketWmw=
+	s=arc-20240116; t=1738683204; c=relaxed/simple;
+	bh=8CW9zLu4wYIn1BREHAGadBb4OtY8PtxfVY3BURILpNw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=taHWOSzpG/phkUNP5c8yhCFu1aFVwDL1tpqkYAwXRpvCcqRll9XumCEcXhLPc+JI7cz0TCfyeBEAJMj28WrCmTCux1zcG4h1Bb50IxR2Aj7Lce7itWDKhd2ketP4aYus97tXL+L5Y3GR6kkh7EN9jUguPhAWoXQpdsHxZrmkroQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d04d216bfcso911835ab.2
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3a9d57cff85so120501175ab.2
         for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:33:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1738683202; x=1739288002;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=M9hgVt0Dd3cwy31/EVS6hXGly9CDwHG3tCjvJcgmtDk=;
-        b=uopIadfuTQkASR0NqN53nZhdpQkJkBDPoKdtrZGdBDIfwCMNODxJQqo2lJKI+4BHRw
-         F+o56PN+8v3OwojrjhGWVleUD+Dz2Lei16rttQl2DqLaaO0kKLZco/o3kZTfYXNaNpzP
-         BW0eZermHCV1dwjbP+tjvw1iHYYTats3p+hRvb1nXjHISoFpXLjCDeIemjjk79cKHvYm
-         UCoVk516iIrd8s/SwMc9ZdWZJaB8DpVrMpzGHHKUq6fPmCZRmQTp8HPmzy6MSNP0pvlQ
-         x4+2yv0TcvxoH3g2+2Wit87NcOZri2KWbWsVZmxes5DcvpdrD4XJLLRWmQ1fs09aTIZm
-         WndA==
-X-Forwarded-Encrypted: i=1; AJvYcCVEM6NktcGH30OLkbtsHuoiXC+2C7ypd5EYDjeIR/1LhvtY3CKQqR/c0I4nSzKB0Nj8KxtPKApNkl+Cem4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDHPqZwMfvn9TY4XLR865di3E58AbnXYGgKtWEiUtwAvBMPMZc
-	Uv/cmKpEkY+xngTuWfFBCN5BKj0ymEvCEA6zHYzh+L+szoVA1TLqIu3NGVxmBJxnp/+WLZksgX1
-	Smx6sNJUWKiWsWlfOcv0D6WOhHVgecKShGelF6jI4YBFk5R6ESCbdVZ0=
-X-Google-Smtp-Source: AGHT+IFo0UwLrMpFRAOVkM7R/lQuwAlbFXvVQVfQo3o/ge/i6wfW/Vyy97mNiF1LYm7jpjCZkbgQcw9/TVVKRoHpvUAd+LibQOUX
+        bh=A/XZPSKN0rTUa69hmcUgaY/KUr5mPXR+6fAwUwwxBZs=;
+        b=JuSne7nokZTMGSWiWSc3qmJhiVQku0CAwik2SYeh6r9CnER407lFKvX1NldyfLZ2SV
+         D7OT7VXgaDs/63QqS4XHZOuc4IABotNqD9NiLdvNH+0JLxAHCLRhTX03qRHi383pjtsr
+         jGB1F+Dno5wd/TfEs2ZALRF8k+HpHxAlFVlc4vNBBu0TJm+Zo2Qq2HKvdou5sitk693Z
+         b7BaFhjRSGgxzXiFse1QVeiauhE8ePwilvG/RuaQ51/u8mPeKP5ilg2/jWzYnchHO4gX
+         GXOnjiLMDPWLOlHgQgO8r1ecrdBrpDPAps1UgjXijaOkq3uhioUzNWzI5qn1KaSK6IYc
+         BhCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYzXdgEH0F2cMnOMsaG/5GdxfNox+D4cU3gL0xAq/bgi1MLBi1sHAa9suyfQj7P2p+crwpj4lRtYtRakc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuTGMR/Q/8Hw1GDE7lalSZ0jiZ+Xqt6uL1VxyiY6a0vEuuhtwC
+	B3xfqUQVAI/zuSTqzJGOb9A6xOAwENPxFpjLo1r5lAytfXYf2HYyhg6V9QtxuLywirWIJMaqv/F
+	euN/D80dV8JVRi9bQiSphxey2dKIefq3yUNJTHkBpfQ3b8KTc42C50ZQ=
+X-Google-Smtp-Source: AGHT+IEfJWYNi4dE0UiJv0XIBC2LWjnlwaV7Ui5tLnVgO9JEwqLtiTFf+vsv8yi1w6hI1xe2WDu5zTxYNAgT8iXErmgNHTaBeM0T
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2195:b0:3d0:23f6:2eed with SMTP id
- e9e14a558f8ab-3d023f63111mr93122455ab.11.1738683202135; Tue, 04 Feb 2025
- 07:33:22 -0800 (PST)
-Date: Tue, 04 Feb 2025 07:33:22 -0800
+X-Received: by 2002:a05:6e02:3613:b0:3d0:24c0:bd41 with SMTP id
+ e9e14a558f8ab-3d024c0bf0bmr86301235ab.1.1738683201612; Tue, 04 Feb 2025
+ 07:33:21 -0800 (PST)
+Date: Tue, 04 Feb 2025 07:33:21 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a23342.050a0220.163cdc.006b.GAE@google.com>
-Subject: [syzbot] [bcachefs?] KMSAN: uninit-value in bch2_btree_ptr_v2_validate
-From: syzbot <syzbot+655143dc5f99972b52e6@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <67a23341.050a0220.163cdc.0069.GAE@google.com>
+Subject: [syzbot] [block?] BUG: sleeping function called from invalid context
+ in unmap_mapping_folio
+From: syzbot <syzbot+95f1db35defd8524f1dd@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    0de63bb7d919 Merge tag 'pull-fix' of git://git.kernel.org/..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=110078a4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f20bce78db15972a
-dashboard link: https://syzkaller.appspot.com/bug?extid=655143dc5f99972b52e6
+HEAD commit:    40b8e93e17bf Add linux-next specific files for 20250204
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=11c2a3df980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ec880188a87c6aad
+dashboard link: https://syzkaller.appspot.com/bug?extid=95f1db35defd8524f1dd
 compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c74f64580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c74f64580000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16010df8580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f078a4580000
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b06dbcd0bfdc/disk-0de63bb7.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/bc7060cef2b6/vmlinux-0de63bb7.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3578d0574f33/bzImage-0de63bb7.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/eec1bd50a821/mount_2.gz
+disk image: https://storage.googleapis.com/syzbot-assets/ccdfef06f59f/disk-40b8e93e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b339eaf8dcfd/vmlinux-40b8e93e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ae1a0f1c3c80/bzImage-40b8e93e.xz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+655143dc5f99972b52e6@syzkaller.appspotmail.com
+Reported-by: syzbot+95f1db35defd8524f1dd@syzkaller.appspotmail.com
 
-bucket incorrectly unset in freespace btree
-  u64s 5 type deleted 0:29:0 len 0 ver 0, , continuing
-=====================================================
-BUG: KMSAN: uninit-value in bpos_le fs/bcachefs/bkey.h:113 [inline]
-BUG: KMSAN: uninit-value in bpos_ge fs/bcachefs/bkey.h:125 [inline]
-BUG: KMSAN: uninit-value in bch2_btree_ptr_v2_validate+0x51c/0xb20 fs/bcachefs/extents.c:211
- bpos_le fs/bcachefs/bkey.h:113 [inline]
- bpos_ge fs/bcachefs/bkey.h:125 [inline]
- bch2_btree_ptr_v2_validate+0x51c/0xb20 fs/bcachefs/extents.c:211
- bch2_bkey_val_validate+0x357/0x530 fs/bcachefs/bkey_methods.c:143
- btree_node_bkey_val_validate fs/bcachefs/btree_io.c:838 [inline]
- bset_key_validate fs/bcachefs/btree_io.c:859 [inline]
- validate_bset_keys+0x20e3/0x2350 fs/bcachefs/btree_io.c:942
- validate_bset_for_write+0x2b3/0x410 fs/bcachefs/btree_io.c:1987
- __bch2_btree_node_write+0x53df/0x6830 fs/bcachefs/btree_io.c:2197
- bch2_btree_node_write_trans+0xd7/0x890 fs/bcachefs/btree_io.c:2357
- btree_node_write_if_need fs/bcachefs/btree_io.h:153 [inline]
- btree_update_nodes_written fs/bcachefs/btree_update_interior.c:816 [inline]
- btree_interior_update_work+0x3e3f/0x4820 fs/bcachefs/btree_update_interior.c:844
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xae0/0x1c40 kernel/workqueue.c:3317
- worker_thread+0xea7/0x14f0 kernel/workqueue.c:3398
- kthread+0x6b9/0xef0 kernel/kthread.c:464
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Uninit was stored to memory at:
- memcpy_u64s_small fs/bcachefs/util.h:416 [inline]
- bkey_p_copy fs/bcachefs/bkey.h:40 [inline]
- bch2_sort_keys_keep_unwritten_whiteouts+0x17d1/0x19d0 fs/bcachefs/bkey_sort.c:187
- __bch2_btree_node_write+0x3ae8/0x6830 fs/bcachefs/btree_io.c:2140
- bch2_btree_node_write_trans+0xd7/0x890 fs/bcachefs/btree_io.c:2357
- btree_node_write_if_need fs/bcachefs/btree_io.h:153 [inline]
- btree_update_nodes_written fs/bcachefs/btree_update_interior.c:816 [inline]
- btree_interior_update_work+0x3e3f/0x4820 fs/bcachefs/btree_update_interior.c:844
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xae0/0x1c40 kernel/workqueue.c:3317
- worker_thread+0xea7/0x14f0 kernel/workqueue.c:3398
- kthread+0x6b9/0xef0 kernel/kthread.c:464
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Uninit was created at:
- ___kmalloc_large_node+0x22c/0x370 mm/slub.c:4249
- __kmalloc_large_node_noprof+0x3f/0x1e0 mm/slub.c:4266
- __do_kmalloc_node mm/slub.c:4282 [inline]
- __kmalloc_node_noprof+0xc96/0x1250 mm/slub.c:4300
- __kvmalloc_node_noprof+0xc0/0x2d0 mm/util.c:662
- btree_node_data_alloc fs/bcachefs/btree_cache.c:156 [inline]
- bch2_btree_node_mem_alloc+0xa72/0x2ee0 fs/bcachefs/btree_cache.c:834
- __bch2_btree_node_alloc fs/bcachefs/btree_update_interior.c:304 [inline]
- bch2_btree_reserve_get+0x37f/0x2290 fs/bcachefs/btree_update_interior.c:532
- bch2_btree_update_start+0x1af9/0x2d60 fs/bcachefs/btree_update_interior.c:1230
- bch2_btree_split_leaf+0x120/0xc90 fs/bcachefs/btree_update_interior.c:1851
- bch2_trans_commit_error+0x1c0/0x1d60 fs/bcachefs/btree_trans_commit.c:908
- __bch2_trans_commit+0x1d60/0xd310 fs/bcachefs/btree_trans_commit.c:1085
- bch2_trans_commit fs/bcachefs/btree_update.h:183 [inline]
- bch2_journal_replay+0x3082/0x4d30 fs/bcachefs/recovery.c:373
- bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:226 [inline]
- bch2_run_recovery_passes+0x5a2/0x1160 fs/bcachefs/recovery_passes.c:291
- bch2_fs_recovery+0x489c/0x6230 fs/bcachefs/recovery.c:936
- bch2_fs_start+0x7ca/0xc20 fs/bcachefs/super.c:1030
- bch2_fs_get_tree+0x143a/0x2330 fs/bcachefs/fs.c:2203
- vfs_get_tree+0xb1/0x5a0 fs/super.c:1814
- do_new_mount+0x71f/0x15e0 fs/namespace.c:3560
- path_mount+0x742/0x1f10 fs/namespace.c:3887
- do_mount fs/namespace.c:3900 [inline]
- __do_sys_mount fs/namespace.c:4111 [inline]
- __se_sys_mount+0x71f/0x800 fs/namespace.c:4088
- __x64_sys_mount+0xe4/0x150 fs/namespace.c:4088
- x64_sys_call+0x39bf/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:166
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-CPU: 1 UID: 0 PID: 1092 Comm: kworker/u8:7 Not tainted 6.14.0-rc1-syzkaller-00020-g0de63bb7d919 #0
+BUG: sleeping function called from invalid context at kernel/locking/rwsem.c:1523
+in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 9141, name: syz-executor179
+preempt_count: 0, expected: 0
+RCU nest depth: 1, expected: 0
+2 locks held by syz-executor179/9141:
+ #0: ffff8880260a34c8 (&disk->open_mutex){+.+.}-{4:4}, at: bdev_open+0xf0/0xc50 block/bdev.c:903
+ #1: ffffffff8e938960 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
+ #1: ffffffff8e938960 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
+ #1: ffffffff8e938960 (rcu_read_lock){....}-{1:3}, at: blk_mq_flush_plug_list+0x282/0x1870 block/blk-mq.c:2904
+CPU: 1 UID: 0 PID: 9141 Comm: syz-executor179 Not tainted 6.14.0-rc1-next-20250204-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Workqueue: btree_update btree_interior_update_work
-=====================================================
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ __might_resched+0x5d4/0x780 kernel/sched/core.c:8766
+ down_read+0x8e/0xa40 kernel/locking/rwsem.c:1523
+ i_mmap_lock_read include/linux/fs.h:565 [inline]
+ unmap_mapping_folio+0x284/0x3b0 mm/memory.c:3887
+ folio_unmap_invalidate+0x122/0x510 mm/truncate.c:557
+ folio_end_reclaim_write mm/filemap.c:1609 [inline]
+ folio_end_writeback+0x430/0x560 mm/filemap.c:1642
+ end_bio_bh_io_sync+0xbf/0x120 fs/buffer.c:2766
+ blk_update_request+0x5e5/0x1160 block/blk-mq.c:983
+ blk_mq_end_request+0x3e/0x70 block/blk-mq.c:1145
+ nullb_complete_cmd drivers/block/null_blk/main.c:1354 [inline]
+ null_handle_cmd drivers/block/null_blk/main.c:1405 [inline]
+ null_queue_rq+0xbb1/0xd60 drivers/block/null_blk/main.c:1645
+ null_queue_rqs+0x1e7/0x370 drivers/block/null_blk/main.c:1659
+ __blk_mq_flush_plug_list block/blk-mq.c:2825 [inline]
+ blk_mq_flush_plug_list+0x56a/0x1870 block/blk-mq.c:2904
+ __blk_flush_plug+0x420/0x500 block/blk-core.c:1213
+ blk_finish_plug+0x5e/0x80 block/blk-core.c:1240
+ blkdev_writepages+0xb4/0x100 block/fops.c:460
+ do_writepages+0x35f/0x880 mm/page-writeback.c:2687
+ filemap_fdatawrite_wbc mm/filemap.c:389 [inline]
+ __filemap_fdatawrite_range mm/filemap.c:422 [inline]
+ filemap_write_and_wait_range+0x283/0x3a0 mm/filemap.c:694
+ bdev_disk_changed+0x1f9/0x13f0 block/partitions/core.c:656
+ blkdev_get_whole+0x2d2/0x450 block/bdev.c:706
+ bdev_open+0x2d4/0xc50 block/bdev.c:915
+ bdev_file_open_by_dev+0x1b0/0x220 block/bdev.c:1017
+ disk_scan_partitions+0x1be/0x2b0 block/genhd.c:374
+ blkdev_common_ioctl+0x13cf/0x2460 block/ioctl.c:617
+ blkdev_ioctl+0x4ca/0x6a0 block/ioctl.c:687
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0xf5/0x170 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff8ff244ba9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe3d9b7178 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007ff8ff244ba9
+RDX: 0000000000000000 RSI: 000000000000125f RDI: 0000000000000004
+RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000029a0b
+R13: 00007ffe3d9b719c R14: 00007ffe3d9b71b0 R15: 00007ffe3d9b71a0
+ </TASK>
+
+=============================
+[ BUG: Invalid wait context ]
+6.14.0-rc1-next-20250204-syzkaller #0 Tainted: G        W         
+-----------------------------
+syz-executor179/9141 is trying to lock:
+ffff888023423870 (&mapping->i_mmap_rwsem){++++}-{4:4}, at: i_mmap_lock_read include/linux/fs.h:565 [inline]
+ffff888023423870 (&mapping->i_mmap_rwsem){++++}-{4:4}, at: unmap_mapping_folio+0x284/0x3b0 mm/memory.c:3887
+other info that might help us debug this:
+context-{5:5}
+2 locks held by syz-executor179/9141:
+ #0: ffff8880260a34c8 (&disk->open_mutex){+.+.}-{4:4}, at: bdev_open+0xf0/0xc50 block/bdev.c:903
+ #1: ffffffff8e938960 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
+ #1: ffffffff8e938960 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
+ #1: ffffffff8e938960 (rcu_read_lock){....}-{1:3}, at: blk_mq_flush_plug_list+0x282/0x1870 block/blk-mq.c:2904
+stack backtrace:
+CPU: 1 UID: 0 PID: 9141 Comm: syz-executor179 Tainted: G        W          6.14.0-rc1-next-20250204-syzkaller #0
+Tainted: [W]=WARN
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_lock_invalid_wait_context kernel/locking/lockdep.c:4828 [inline]
+ check_wait_context kernel/locking/lockdep.c:4900 [inline]
+ __lock_acquire+0x15a8/0x2100 kernel/locking/lockdep.c:5178
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ down_read+0xb1/0xa40 kernel/locking/rwsem.c:1524
+ i_mmap_lock_read include/linux/fs.h:565 [inline]
+ unmap_mapping_folio+0x284/0x3b0 mm/memory.c:3887
+ folio_unmap_invalidate+0x122/0x510 mm/truncate.c:557
+ folio_end_reclaim_write mm/filemap.c:1609 [inline]
+ folio_end_writeback+0x430/0x560 mm/filemap.c:1642
+ end_bio_bh_io_sync+0xbf/0x120 fs/buffer.c:2766
+ blk_update_request+0x5e5/0x1160 block/blk-mq.c:983
+ blk_mq_end_request+0x3e/0x70 block/blk-mq.c:1145
+ nullb_complete_cmd drivers/block/null_blk/main.c:1354 [inline]
+ null_handle_cmd drivers/block/null_blk/main.c:1405 [inline]
+ null_queue_rq+0xbb1/0xd60 drivers/block/null_blk/main.c:1645
+ null_queue_rqs+0x1e7/0x370 drivers/block/null_blk/main.c:1659
+ __blk_mq_flush_plug_list block/blk-mq.c:2825 [inline]
+ blk_mq_flush_plug_list+0x56a/0x1870 block/blk-mq.c:2904
+ __blk_flush_plug+0x420/0x500 block/blk-core.c:1213
+ blk_finish_plug+0x5e/0x80 block/blk-core.c:1240
+ blkdev_writepages+0xb4/0x100 block/fops.c:460
+ do_writepages+0x35f/0x880 mm/page-writeback.c:2687
+ filemap_fdatawrite_wbc mm/filemap.c:389 [inline]
+ __filemap_fdatawrite_range mm/filemap.c:422 [inline]
+ filemap_write_and_wait_range+0x283/0x3a0 mm/filemap.c:694
+ bdev_disk_changed+0x1f9/0x13f0 block/partitions/core.c:656
+ blkdev_get_whole+0x2d2/0x450 block/bdev.c:706
+ bdev_open+0x2d4/0xc50 block/bdev.c:915
+ bdev_file_open_by_dev+0x1b0/0x220 block/bdev.c:1017
+ disk_scan_partitions+0x1be/0x2b0 block/genhd.c:374
+ blkdev_common_ioctl+0x13cf/0x2460 block/ioctl.c:617
+ blkdev_ioctl+0x4ca/0x6a0 block/ioctl.c:687
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0xf5/0x170 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff8ff244ba9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe3d9b7178 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007ff8ff244ba9
+RDX: 0000000000000000 RSI: 000000000000125f RDI: 0000000000000004
+RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000029a0b
+R13: 00007ffe3d9b719c R14: 00007ffe3d9b71b0 R15: 00007ffe3d9b71a0
+ </TASK>
+BUG: sleeping function called from invalid context at ./include/linux/mmu_notifier.h:434
+in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 9141, name: syz-executor179
+preempt_count: 0, expected: 0
+RCU nest depth: 1, expected: 0
+INFO: lockdep is turned off.
+CPU: 0 UID: 0 PID: 9141 Comm: syz-executor179 Tainted: G        W          6.14.0-rc1-next-20250204-syzkaller #0
+Tainted: [W]=WARN
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ __might_resched+0x5d4/0x780 kernel/sched/core.c:8766
+ mmu_notifier_invalidate_range_start include/linux/mmu_notifier.h:434 [inline]
+ zap_page_range_single+0x386/0x630 mm/memory.c:2015
+ unmap_mapping_range_vma mm/memory.c:3836 [inline]
+ unmap_mapping_range_tree+0xd7/0x120 mm/memory.c:3853
+ unmap_mapping_folio+0x30e/0x3b0 mm/memory.c:3889
+ folio_unmap_invalidate+0x122/0x510 mm/truncate.c:557
+ folio_end_reclaim_write mm/filemap.c:1609 [inline]
+ folio_end_writeback+0x430/0x560 mm/filemap.c:1642
+ end_bio_bh_io_sync+0xbf/0x120 fs/buffer.c:2766
+ blk_update_request+0x5e5/0x1160 block/blk-mq.c:983
+ blk_mq_end_request+0x3e/0x70 block/blk-mq.c:1145
+ nullb_complete_cmd drivers/block/null_blk/main.c:1354 [inline]
+ null_handle_cmd drivers/block/null_blk/main.c:1405 [inline]
+ null_queue_rq+0xbb1/0xd60 drivers/block/null_blk/main.c:1645
+ null_queue_rqs+0x1e7/0x370 drivers/block/null_blk/main.c:1659
+ __blk_mq_flush_plug_list block/blk-mq.c:2825 [inline]
+ blk_mq_flush_plug_list+0x56a/0x1870 block/blk-mq.c:2904
+ __blk_flush_plug+0x420/0x500 block/blk-core.c:1213
+ blk_finish_plug+0x5e/0x80 block/blk-core.c:1240
+ blkdev_writepages+0xb4/0x100 block/fops.c:460
+ do_writepages+0x35f/0x880 mm/page-writeback.c:2687
+ filemap_fdatawrite_wbc mm/filemap.c:389 [inline]
+ __filemap_fdatawrite_range mm/filemap.c:422 [inline]
+ filemap_write_and_wait_range+0x283/0x3a0 mm/filemap.c:694
+ bdev_disk_changed+0x1f9/0x13f0 block/partitions/core.c:656
+ blkdev_get_whole+0x2d2/0x450 block/bdev.c:706
+ bdev_open+0x2d4/0xc50 block/bdev.c:915
+ bdev_file_open_by_dev+0x1b0/0x220 block/bdev.c:1017
+ disk_scan_partitions+0x1be/0x2b0 block/genhd.c:374
+ blkdev_common_ioctl+0x13cf/0x2460 block/ioctl.c:617
+ blkdev_ioctl+0x4ca/0x6a0 block/ioctl.c:687
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0xf5/0x170 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff8ff244ba9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe3d9b7178 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007ff8ff244ba9
+RDX: 0000000000000000 RSI: 000000000000125f RDI: 0000000000000004
+RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000029a0b
+R13: 00007ffe3d9b719c R14: 00007ffe3d9b71b0 R15: 00007ffe3d9b71a0
+ </TASK>
 
 
 ---
