@@ -1,137 +1,108 @@
-Received: from smtp.smtpout.orange.fr (smtp-81.smtpout.orange.fr [80.12.242.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51D925A655;
-	Tue,  4 Feb 2025 06:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1910A25A655;
+	Tue,  4 Feb 2025 06:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738649956; cv=none; b=N5A3vMnoJvQNLGmDl3WumpkR+8TlTfmTMqk7JNWp+ywmFwfcABZ66i7yTqTi7FdlrnLLcRNSLhRV4onDmz7FzxULUTCjQoPI7i79Wh3U/285Nzs+nhl94hT6EMhDTErGoylyQ7cQkLE/7oWwe+waZukU1FkGbJT0pz1fVqHMqPU=
+	t=1738650019; cv=none; b=sg0kAT4CXv52Y8SxK1b7DeM9veRgY04Jy/PvTKWAnCHY/SkpB5Hxh4XryCXPFmBGP0e/qeX+wI1i+aiqia3Db+RbgRJGaB2Kk5S4t1cxcZ9Z66cYDv7F0n8UAEu4ax7ogJ2C9h3UwOkPzr0qJcS1B+FueJXSgPv1uAOdOHkDJdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738649956; c=relaxed/simple;
-	bh=qVxz4qhhEqrScUAsJhIjKbHH5wmCbfE7VN3wRR73N34=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eup/wZwi/SeYbLnmsq9m0hLGvg/7l3vZKP8wHkbPpNq5c7ndkR7x33Cl3sIWmg88b+qKkfE4fdWROiZ3qYbm6llbj9+E6INM/yObHpWKFLZfwIxLX/NuwfeilDhTcLMLZ8HQKD0quDQ8em8IOkl8Iup7G4VcLGoHzHoAFST9gF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=KNyaa5VZ; arc=none smtp.client-ip=80.12.242.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1738650019; c=relaxed/simple;
+	bh=HkcZscvvD3gCXyz29syjOg7HivyYRZkHBV9qK8IwClI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qvJ32n5kH2bTIMBy/VGuLS1NAxJGWtqoHuKZeT4Uo4lcUG4ToS+QI75o4nSPtQuituBTHdxcpux4FhMZCRqiA71Jrhfdyjp5h/+do9z24VJb68YMXSVUY2Mq8m8K2AVVCuKJo029ar2cbklmakLefvW76wZga0xAs4VylHBLhow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YiwF+bc8; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="KNyaa5VZ"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id fCFwtHY03MBalfCFztJres; Tue, 04 Feb 2025 07:18:01 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1738649881;
-	bh=2rigdcBP5Blbnm80a1gcLyNHTyPctzTAtz4Al0/l+0I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=KNyaa5VZKs96XELNAwL6YcnuQVGssubBs5PudTymcgJmoHVH6zkCHtJe4PexTDKKH
-	 S0mRkXiSHI5Nmtpcnyq88a0dul6gZUTZ6AGuqm624HCxGd0HGCnrAKt7cK25GTPuGT
-	 Cf/DW4V2nRwe71lDMW64vPy4BLe4Vd/ZOsXkB4LRe3ffwveFlXT1q8REyb4wa3RIr/
-	 fhno6I0wmKBoWv6dJKHI5Z8MI356w2u/ZGHM6hP9phxxeEpfJDuU9R6U4cj4Ilr3X+
-	 oWz6aJtA+i6KL4XE1nrPJydfrGx00oGAlpqXKuAwVgVoGsB72IWK5mTc7eWSObccCC
-	 hayXja0UbhPUA==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Tue, 04 Feb 2025 07:18:01 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <e41d9378-e5e5-478d-bead-aa50a9f79d4d@wanadoo.fr>
-Date: Tue, 4 Feb 2025 07:17:55 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YiwF+bc8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738650018; x=1770186018;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HkcZscvvD3gCXyz29syjOg7HivyYRZkHBV9qK8IwClI=;
+  b=YiwF+bc8fty90hNnOU6hfWGGwvj3vYZv1i3fbmoJZXLyWqNUOjbj6Nts
+   TW+14U2/nG6/y44NOlbszQ4FZX6ZCUAfaOlD4CHzDSUCG3tdrSe1+sYH0
+   dZtsnuRvyyqI3yT2RqrUuQhUh6pduj39WTRE4Y69ASHaQANQAJSU8fRoE
+   Rft8TRFYtNMo9bIzphPPrBiw5biqRiFz7koouftdJdQjgPp5CnhMoF7Iw
+   7FAlkdEJUPWA7YVUUr1PR/UsPry/hIT50IzvSP/T2pZMF/RKRZtc6vCie
+   XABj8UAgvSpqKqn9T9dupNF6C8CPjl+34RV1XYuS9+HREKejm5qwpwwZ1
+   w==;
+X-CSE-ConnectionGUID: ZiN7WtePTYawQRPoIPRvvA==
+X-CSE-MsgGUID: rGgwreD2Tc6aiY6Nk6uceA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50580252"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="50580252"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:20:16 -0800
+X-CSE-ConnectionGUID: bVraY+nvRnmI6DT4JpRhIg==
+X-CSE-MsgGUID: G5FdLvNeS8mBz2ueWN9oeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
+   d="scan'208";a="110280685"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:20:14 -0800
+Date: Tue, 4 Feb 2025 07:16:41 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Igor Russkikh <irusskikh@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] net: atlantic: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <Z6GwydOggtMRqYCY@mev-dev.igk.intel.com>
+References: <Z6F3KZVfnAZ2FoJm@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mtd: Add check and kfree() for kcalloc()
-To: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Cc: gmpy.liaowx@gmail.com, kees@kernel.org, linux-kernel@vger.kernel.org,
- linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com, richard@nod.at,
- vigneshr@ti.com, stable@vger.kernel.org
-References: <30ad77af-4a7b-4a15-9c0b-b0c70d9e1643@wanadoo.fr>
- <20250204023323.14213-1-jiashengjiangcool@gmail.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250204023323.14213-1-jiashengjiangcool@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6F3KZVfnAZ2FoJm@kspp>
 
-Le 04/02/2025 à 03:33, Jiasheng Jiang a écrit :
-> Add a check for kcalloc() to ensure successful allocation.
-> Moreover, add kfree() in the error-handling path to prevent memory leaks.
+On Tue, Feb 04, 2025 at 12:40:49PM +1030, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> Fixes: 78c08247b9d3 ("mtd: Support kmsg dumper based on pstore/blk")
-> Cc: <stable@vger.kernel.org> # v5.10+
-> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+> Remove unused flexible-array member `buf` and, with this, fix the following
+> warnings:
+> drivers/net/ethernet/aquantia/atlantic/aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/ethernet/aquantia/atlantic/hw_atl/../aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Suggested-by: Igor Russkikh <irusskikh@marvell.com>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
-> Changelog:
+> Changes in v2:
+>  - Remove unused flex-array member. (Igor)
 > 
-> v1 -> v2:
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/ZrDwoVKH8d6TdVxn@cute/
 > 
-> 1. Remove redundant logging.
-> 2. Add kfree() in the error-handling path.
-> ---
->   drivers/mtd/mtdpstore.c | 19 ++++++++++++++++++-
->   1 file changed, 18 insertions(+), 1 deletion(-)
+>  drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
-> index 7ac8ac901306..2d8e330dd215 100644
-> --- a/drivers/mtd/mtdpstore.c
-> +++ b/drivers/mtd/mtdpstore.c
-> @@ -418,10 +418,17 @@ static void mtdpstore_notify_add(struct mtd_info *mtd)
->   
->   	longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->kmsg_size));
->   	cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-> +	if (!cxt->rmmap)
-> +		goto end;
+> diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
+> index f5901f8e3907..f6b990b7f5b4 100644
+> --- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
+> +++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
+> @@ -226,7 +226,6 @@ struct __packed offload_info {
+>  	struct offload_port_info ports;
+>  	struct offload_ka_info kas;
+>  	struct offload_rr_info rrs;
+> -	u8 buf[];
+>  };
 
-Nitpick: Could be a direct return.
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
-> +
->   	cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-> +	if (!cxt->usedmap)
-> +		goto free_rmmap;
->   
->   	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
->   	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-> +	if (!cxt->badmap)
-> +		goto free_usedmap;
->   
->   	/* just support dmesg right now */
->   	cxt->dev.flags = PSTORE_FLAGS_DMESG;
-> @@ -435,10 +442,20 @@ static void mtdpstore_notify_add(struct mtd_info *mtd)
->   	if (ret) {
->   		dev_err(&mtd->dev, "mtd%d register to psblk failed\n",
->   				mtd->index);
-> -		return;
-> +		goto free_badmap;
->   	}
->   	cxt->mtd = mtd;
->   	dev_info(&mtd->dev, "Attached to MTD device %d\n", mtd->index);
-> +	goto end;
-
-Mater of taste, but I think that having an explicit return here would be 
-clearer that a goto end;
-
-> +
-> +free_badmap:
-> +	kfree(cxt->badmap);
-> +free_usedmap:
-> +	kfree(cxt->usedmap);
-> +free_rmmap:
-> +	kfree(cxt->rmmap);
-
-I think that in all these paths, you should also have
-	cxt->XXXmap = NULL;
-after the kfree().
-
-otherwise when mtdpstore_notify_remove() is called, you could have a 
-double free.
-
-CJ
-
-> +end:
-> +	return;
->   }
->   
->   static int mtdpstore_flush_removed_do(struct mtdpstore_context *cxt,
-
+>  
+>  struct __packed hw_atl_utils_fw_rpc {
+> -- 
+> 2.43.0
+> 
