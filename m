@@ -1,80 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CAB20C494;
-	Tue,  4 Feb 2025 17:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5128F20C494;
+	Tue,  4 Feb 2025 17:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738689130; cv=none; b=YSkHld5BuUOa5SJSSYN3ulJ1XUQEOq1HgzmoFC2sAxxWp7stTZMyi71WdMkrgQxNm1DhLKZgWpG4a9zLfgR9+YsSi+KYR8qUSXFmbvFg9jQ9XjmY64B3QRFC7JZ25MrVEsxcPQjHsPSUvB9tXDrPigU4vhVMNTnYJmXeyXIc/k4=
+	t=1738689145; cv=none; b=Te+pesXs1ergeAk1SDAV50Wy8NE1R+lrCwzu/J4tlYiHFIVABvPFhpoBo5ddXf6mXU92qHVAU/8XbBUPjo4Ic7LgfZfA8pd/lLjJwiFMvS4NFmX1MedaUmSHBAKI12QjctxHKwjf5YhK/uNACUWmd75ofh6Rt5l/sFqR2g7msPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738689130; c=relaxed/simple;
-	bh=yNJVGDNkyLK6lOVSRR5EsvFcIsTNRYoR9X3o1HljH2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qmOxYBdLUJT9vl5dzMCBoZEZMWbgnULti4PSCBjgfjTCWUAsWpObVkpkjGgxN7DCT9UedbW+6470CShULydsnbzgah4RI0ns0jcYSb8rWG1+GSt43wjMibzc6hWoggGRY9wxHmUw24Kgg2QaNwF2UFTWMnNVtOzOszVW+VM2qJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nYPTYucN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738689145; c=relaxed/simple;
+	bh=iR2sbzJAEjLXciWP1jYs6XfoBYVX7safFi1f2dUn82w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Pmx14P6EwiXb8TEjCExLjR6ok/zrVcn3mKgJT+YNnmCgoA4u2XPR0ej1Cxrs0W3b0vY82VrVA1agIVuu8YjLNAMyPd8qgPYN0iAW6EbCqbQcu3UNE6frgZtQyERTxBLGgUPoc9mn8h+IyOzl0Qwd/bdhZo/EhGTm/ZKQOaAWPZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ji5bUV9W; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nYPTYucN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEC4AC4CEDF;
-	Tue,  4 Feb 2025 17:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738689130;
-	bh=yNJVGDNkyLK6lOVSRR5EsvFcIsTNRYoR9X3o1HljH2E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nYPTYucNU13/7E1+heWjaa+BF29s/cOh2rZeO/wdC5Ez2TDv4Ww4a537I1kiW0QUQ
-	 fn/118Vh8b1DVUBYFju9KnxLxjW7/MyImsAf2ZG6F6AmkRsacNURYly/t2J7g1jY2N
-	 F9teiOddJjnVZBsriiPW2SxP1cF0k27zpG4cydyc=
-Date: Tue, 4 Feb 2025 18:12:07 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Vince Weaver <vincent.weaver@maine.edu>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
- location
-Message-ID: <2025020447-gyration-wireless-f7da@gregkh>
-References: <2025020304-chip-trench-4e56@gregkh>
- <87pljyyx68.fsf@ubik.fi.intel.com>
- <2025020426-spool-refreeze-2870@gregkh>
- <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com>
- <2025020408-apron-fled-d29e@gregkh>
- <6edcf7f8-d496-524e-2250-49284dfb55e4@maine.edu>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ji5bUV9W"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 6057C404FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1738689143; bh=TXrO7/oYwpRMBVRgvRl+Am73fMub5NwGVUWMmKWKJxY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ji5bUV9W5KT1nRTq3KFLAaOba+tHcazi+cnuD5Z7oduMytD0qYVS3AylKf++CHR4/
+	 DZxQ8PXdYQuWdcuU/4bXe4Xb9u7eFDe2EwKNZIFAC++PwDFKUE7Nj3QpvCeez7TIBJ
+	 eSSl9KD1pvBWhsW6lAEUoJDxXRvuIAwpA8oWHTr8SkYpeJsk1IfbrhTkcn5xgtzJU0
+	 wgSvT9hJUEUOKfXl/WhTjGJG/xO9viYHZXs+9wSeNeD+1u/mO6QUpJ4FfePAtClgB3
+	 I50tyGoQeZ+kzvjAkJTTXEk2CL8nu1B5ptVJbrxukjLxZdNpy8Sj6fn+7aTCIVeg9X
+	 O+qe/lW/dCeZQ==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 6057C404FA;
+	Tue,  4 Feb 2025 17:12:23 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC v2 18/38] docs: sphinx/kernel_abi: use AbiParser directly
+In-Reply-To: <20250202155652.1652e420@foz.lan>
+References: <cover.1738020236.git.mchehab+huawei@kernel.org>
+ <fb800900352d90a0e501e5d6732e1bea277478f2.1738020236.git.mchehab+huawei@kernel.org>
+ <87lduu7efu.fsf@trenco.lwn.net> <20250129014324.60a8dfce@foz.lan>
+ <20250202155652.1652e420@foz.lan>
+Date: Tue, 04 Feb 2025 10:12:22 -0700
+Message-ID: <878qqlfxc9.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6edcf7f8-d496-524e-2250-49284dfb55e4@maine.edu>
+Content-Type: text/plain
 
-On Tue, Feb 04, 2025 at 11:41:38AM -0500, Vince Weaver wrote:
-> On Tue, 4 Feb 2025, Greg Kroah-Hartman wrote:
-> 
-> > 
-> > It seems that the majority of the perf code IS looking in the correct
-> > place, just mem-events.c seemed wrong.
-> 
-> I hate to tell you, but other places in userspace are depending on the 
-> current setup.  libpfm4, used by PAPI, is looking directly in /sys/devices 
-> for pmus and will break with the changes you are planning.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-Then that too needs to be fixed, sorry.  Again, devices can, and will,
-move around in /sys/devices/ you can never hard-code any paths there.
-Any userspace code must ALWAYS be able to handle that, that's a sysfs
-requirement.
+> Hi Jon,
 
-And do you have a link to the source for that code?  Good news is that
-if the code is fixed in userspace, it will work for any kernel (old or
-new).
+> As I'll be preparing such patches for merge along this week, I'd
+> like to know what do you prefer in terms of directories:
+>
+> 1. Keep it as-is;
+> 2. have a separate library directory for Python modules
+>    (scripts/lib?);
+> 3. place python modules inside scripts/;
+> 4. place python modules inside Documentation/sphinx (IMO a bad
+>    idea);
+> 5. something else
 
-thanks,
+Honestly, I'm not sure.  I do feel that importing out of scripts/ is
+inelegant at best; having a dedicated directory for modules meant to be
+imported would be better.  So maybe scripts/lib?  Or lib/python, though
+that might raise eyebrows elsewhere, dunno.  Pick something you like,
+and we'll give that a try.
 
-greg k-h
+> Btw, I'm considering to also submit later a patchset similar to
+> this one converting kernel-doc to Python. I already started writing
+> something like that (written from the scratch, following as much
+> as possible what we have today on Perl to avoid regressions).
+>
+> I would probably split the code into separate classes to make the code 
+> more readable/maintainable (a base class, a class with rest output,
+> another one with man output, and a few other helper classes).
+
+I definitely approve of the idea - I've pondered doing such a thing, but
+have never come close to finding the time.  It's probably worth looking
+at the rewrite Markus did years ago as a starting point?
+
+Thanks,
+
+jon
