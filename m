@@ -1,163 +1,283 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59323212FB4
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4088A20C014;
+	Tue,  4 Feb 2025 14:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738680509; cv=none; b=iDNMMxvoEtBT9ftIKHZApqjXLyZwndAupXbPUWLcS1dLDKMKtbougGCwChKHdgbpcuBWbSlay77uZcaZcRRwYHd1skdR1ZQzjoBOKveJYpjoKNtxV69/l8EjAQKm2oSHFVwrE7XveSP+IUaR5/AWsyelnAGdqoxMDPA8FYDFpGE=
+	t=1738680538; cv=none; b=HWS9S/hum/yooX/4eL5/j29mPTPM0g0Asq6hTQ99b6tcMHheTGFzxhi//s27mPL5pJUmjijrJU9ctsJwef1GcZs4JDfgn5bd5Q8MkjIGhXff0y5DsuYZpENEbgQnKn+HgIgx+XLz58Iyw7AkD9WHc+rfjW/HZx3/FfGAgrmNfLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738680509; c=relaxed/simple;
-	bh=/HtKUDs6iG0aMvQPHsOvoq2oFUkU1E7/5Sa0Y64kFh8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=FojQxAqtq6Pqg3SniXvonJpwp9hMYydcTn4nrh8WnLGHB/Tlc8f+8V0JBUfU2VgegcTf/UzWIA7LxXOMdWULuolAGMUYEUGW3Gxybsg6rILqMlI9iJMlZvoiGfgFmHcb9M+oC1U05bJve80XCz5z5Ml7Qx69GA02cNakP2Z9TRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-8498a21afc2so359546639f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 06:48:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738680506; x=1739285306;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+J+QfVTHo3s13dpxy0P+U4UQznX8EvvHJpADa02S488=;
-        b=oeY1Zc3Vx9wfNL/reQT5l9YiTHMfTH6050oGq8D7/2hzJb++t3cBoAL26MRSYlle8K
-         3e5P3btudRhgttraIvrzf8iBIWzod8P2KZGkVtMpHlmGP/4Jus5UeY+ULgGMBzge+YVy
-         N0bVzps6dVSprwcjCXh7Kglx6vdbxvKwQvBng+ExNNWATog+WfkmhRfSWhZs4RLYye4H
-         eVqnZKWguhlPQV1L5iPUFgakCpZBW8Lmn7tH1PqwnkWtU3QQSzxf22CaJrNmIWOBDsd3
-         jf/caHYEb+XlgzrpxBL8VuKoFl6HEyJTVEEMrRZtHXD4LDWC4k1AEC1ysuZEneaghYu5
-         1EiA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdwALlKabz9DJOq8mW7iqOvSXWxFvYcruJcR5Upf4FcJ9LoExiyCCNfGvPh+Qm2rA9jFyJYAc6ewH3HBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxU+mhb5Eyj0jJY1bmHajtuu3ZJ2D8/p7K0BqSo6f79xid5Q09
-	AhXYiPEpjfOJDDVbEGgB5jWdaB2Tm7jX+a+t47vZq8YEqBPfqR91B5shVjA7JcA3z4+rdoTeOgm
-	Hpi+xgyCQ1Xnf+afUeEu3XDBw5iU2uyqRYHBK7gACZgfnbHsxQgZ06S8=
-X-Google-Smtp-Source: AGHT+IG7UBAGb6M7fqtMjN5gKkznC7Pbjp/hsRC67bjnpJIjv7aiYIaosw/Up9YHNAVwPYDJPmIXTlbD7SN1e5dHixbc7kbHy3Vx
+	s=arc-20240116; t=1738680538; c=relaxed/simple;
+	bh=8UPki2O89znKK64fQOKi00U1JhOnxcQxvDewxo2cwkA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=c0dxuQhINGMkyBOrCcRm9X4vgTqPvYHfFZbQgMXF90CSQLp9pkkygHRPA9VlEmodXoY2KSd/qvQajEt6rjGvr7KmSoitYNO0RtlLCZ/Y5gL1a9KiG4M1He/QI7QEP0n/l24ZBU3Q2xAPtk0t5sAtx7niGdKyDU8mOLh6T8d8Jk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TvAVUreY; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TvAVUreY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE5EC4CEDF;
+	Tue,  4 Feb 2025 14:48:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738680537;
+	bh=8UPki2O89znKK64fQOKi00U1JhOnxcQxvDewxo2cwkA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=TvAVUreYdkXXN2V15uobIUlY51bO9tIunH5XkK6TDQ4Yajq+E3BHaGvaYHDRW+hq5
+	 2ssRy3p7otaN5x6CtQDtqIPi+fWyCev8ev1/pYDEzUFir2dTWQ8aUP6qO8HuK1y1q5
+	 9FLCA7fHdG1JLl6NgocIOEV0xFgpfEjuArrSoaInFqekTJeyz8dPyUPKAfYySxlAt8
+	 MJwSOnh9zBmp/6FZ480na8uFIDZnmTuKdKFDYhC5E1i/G0HQD/XNAeVBkZMeunANts
+	 HG8DZBEJXW4b86gUPVeLogLgaQYLC0OSXKIb7okrT5+voPxRteZwGYjmvRkIpyvgjH
+	 V+Yxi7RDy477Q==
+Message-ID: <5687dcbf58279aa719224c25c887041d2f5a367e.camel@kernel.org>
+Subject: Re: [PATCH] pipe: don't update {a,c,m}time for anonymous pipes
+From: Jeff Layton <jlayton@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>, Christian Brauner <brauner@kernel.org>,
+  Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Howells <dhowells@redhat.com>, "Gautham R. Shenoy"	
+ <gautham.shenoy@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>, Mateusz
+ Guzik <mjguzik@gmail.com>, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
+ Oliver Sang	 <oliver.sang@intel.com>, Swapnil Sapkal
+ <swapnil.sapkal@amd.com>, WangYuli	 <wangyuli@uniontech.com>,
+ linux-fsdevel@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Tue, 04 Feb 2025 09:48:55 -0500
+In-Reply-To: <20250204132153.GA20921@redhat.com>
+References: <20250204132153.GA20921@redhat.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:fc3:b0:3cf:bbb4:f1e with SMTP id
- e9e14a558f8ab-3d000913316mr153323925ab.7.1738680506432; Tue, 04 Feb 2025
- 06:48:26 -0800 (PST)
-Date: Tue, 04 Feb 2025 06:48:26 -0800
-In-Reply-To: <000000000000cbc8670618a25b24@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a228ba.050a0220.d7c5a.00b9.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in
- skb_queue_purge_reason (2)
-From: syzbot <syzbot+683f8cb11b94b1824c77@syzkaller.appspotmail.com>
-To: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	luiz.dentz@gmail.com, marcel@holtmann.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-syzbot has found a reproducer for the following issue on:
+On Tue, 2025-02-04 at 14:21 +0100, Oleg Nesterov wrote:
+> These numbers are visible in fstat() but hopefully nobody uses this
+> information and file_accessed/file_update_time are not that cheap.
+> Stupid test-case:
+>=20
+> 	#include <stdio.h>
+> 	#include <stdlib.h>
+> 	#include <unistd.h>
+> 	#include <assert.h>
+> 	#include <sys/ioctl.h>
+> 	#include <sys/time.h>
+>=20
+> 	static char buf[17 * 4096];
+> 	static struct timeval TW, TR;
+>=20
+> 	int wr(int fd, int size)
+> 	{
+> 		int c, r;
+> 		struct timeval t0, t1;
+>=20
+> 		gettimeofday(&t0, NULL);
+> 		for (c =3D 0; (r =3D write(fd, buf, size)) > 0; c +=3D r);
+> 		gettimeofday(&t1, NULL);
+> 		timeradd(&TW, &t1, &TW);
+> 		timersub(&TW, &t0, &TW);
+>=20
+> 		return c;
+> 	}
+>=20
+> 	int rd(int fd, int size)
+> 	{
+> 		int c, r;
+> 		struct timeval t0, t1;
+>=20
+> 		gettimeofday(&t0, NULL);
+> 		for (c =3D 0; (r =3D read(fd, buf, size)) > 0; c +=3D r);
+> 		gettimeofday(&t1, NULL);
+> 		timeradd(&TR, &t1, &TR);
+> 		timersub(&TR, &t0, &TR);
+>=20
+> 		return c;
+> 	}
+>=20
+> 	int main(int argc, const char *argv[])
+> 	{
+> 		int fd[2], nb =3D 1, loop, size;
+>=20
+> 		assert(argc =3D=3D 3);
+> 		loop =3D atoi(argv[1]);
+> 		size =3D atoi(argv[2]);
+>=20
+> 		assert(pipe(fd) =3D=3D 0);
+> 		assert(ioctl(fd[0], FIONBIO, &nb) =3D=3D 0);
+> 		assert(ioctl(fd[1], FIONBIO, &nb) =3D=3D 0);
+>=20
+> 		assert(size <=3D sizeof(buf));
+> 		while (loop--)
+> 			assert(wr(fd[1], size) =3D=3D rd(fd[0], size));
+>=20
+> 		struct timeval tt;
+> 		timeradd(&TW, &TR, &tt);
+> 		printf("TW =3D %lu.%03lu TR =3D %lu.%03lu TT =3D %lu.%03lu\n",
+> 			TW.tv_sec, TW.tv_usec/1000,
+> 			TR.tv_sec, TR.tv_usec/1000,
+> 			tt.tv_sec, tt.tv_usec/1000);
+>=20
+> 		return 0;
+> 	}
+>=20
+> Before:
+> 	# for i in 1 2 3; do /host/tmp/test 10000 100; done
+> 	TW =3D 8.047 TR =3D 5.845 TT =3D 13.893
+> 	TW =3D 8.091 TR =3D 5.872 TT =3D 13.963
+> 	TW =3D 8.083 TR =3D 5.885 TT =3D 13.969
+> After:
+> 	# for i in 1 2 3; do /host/tmp/test 10000 100; done
+> 	TW =3D 4.752 TR =3D 4.664 TT =3D 9.416
+> 	TW =3D 4.684 TR =3D 4.608 TT =3D 9.293
+> 	TW =3D 4.736 TR =3D 4.652 TT =3D 9.388
+>=20
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> ---
+>  fs/pipe.c | 21 ++++++++++++++-------
+>  1 file changed, 14 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/fs/pipe.c b/fs/pipe.c
+> index 94b59045ab44..baaa8c0817f1 100644
+> --- a/fs/pipe.c
+> +++ b/fs/pipe.c
+> @@ -247,6 +247,11 @@ static inline unsigned int pipe_update_tail(struct p=
+ipe_inode_info *pipe,
+>  	return tail;
+>  }
+> =20
+> +static inline bool is_pipe_inode(struct inode *inode)
+> +{
+> +	return inode->i_sb->s_magic =3D=3D PIPEFS_MAGIC;
+> +}
+> +
+>  static ssize_t
+>  pipe_read(struct kiocb *iocb, struct iov_iter *to)
+>  {
+> @@ -404,7 +409,7 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
+>  	if (wake_next_reader)
+>  		wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM)=
+;
+>  	kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
+> -	if (ret > 0)
+> +	if (ret > 0 && !is_pipe_inode(file_inode(filp)))
 
-HEAD commit:    40b8e93e17bf Add linux-next specific files for 20250204
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=113d5d18580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ec880188a87c6aad
-dashboard link: https://syzkaller.appspot.com/bug?extid=683f8cb11b94b1824c77
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b7eeb0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f74f64580000
+pipe_read and pipe_write are the read_iter / write_iter ops for pipefs
+inodes. Is there ever a situation where is_pipe_inode() will be false
+here?
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ccdfef06f59f/disk-40b8e93e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b339eaf8dcfd/vmlinux-40b8e93e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ae1a0f1c3c80/bzImage-40b8e93e.xz
+>  		file_accessed(filp);
+>  	return ret;
+>  }
+> @@ -604,11 +609,13 @@ pipe_write(struct kiocb *iocb, struct iov_iter *fro=
+m)
+>  	kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
+>  	if (wake_next_writer)
+>  		wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM=
+);
+> -	if (ret > 0 && sb_start_write_trylock(file_inode(filp)->i_sb)) {
+> -		int err =3D file_update_time(filp);
+> -		if (err)
+> -			ret =3D err;
+> -		sb_end_write(file_inode(filp)->i_sb);
+> +	if (ret > 0 && !is_pipe_inode(file_inode(filp))) {
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+683f8cb11b94b1824c77@syzkaller.appspotmail.com
+Ditto.
 
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
-CPU: 0 UID: 0 PID: 5833 Comm: syz-executor346 Not tainted 6.14.0-rc1-next-20250204-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-RIP: 0010:skb_queue_empty_lockless include/linux/skbuff.h:1887 [inline]
-RIP: 0010:skb_queue_purge_reason+0xaa/0x500 net/core/skbuff.c:3936
-Code: 89 44 24 78 42 c6 44 30 13 f3 e8 81 76 05 f8 48 8d bc 24 b0 00 00 00 ba 48 00 00 00 31 f6 e8 0d f2 6b f8 4d 89 ef 49 c1 ef 03 <43> 80 3c 37 00 74 08 4c 89 ef e8 27 ef 6b f8 49 8b 45 00 4c 39 e8
-RSP: 0018:ffffc90003d17880 EFLAGS: 00010202
-RAX: ffffc90003d17930 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90003d17978
-RBP: ffffc90003d179f0 R08: ffffc90003d17977 R09: 0000000000000000
-R10: ffffc90003d17930 R11: fffff520007a2f2f R12: dffffc0000000000
-R13: 0000000000000008 R14: dffffc0000000000 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055867393d608 CR3: 000000000e738000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- skb_queue_purge include/linux/skbuff.h:3364 [inline]
- mrvl_close+0x8e/0x120 drivers/bluetooth/hci_mrvl.c:100
- hci_uart_tty_close+0x205/0x290 drivers/bluetooth/hci_ldisc.c:557
- tty_ldisc_kill+0xa3/0x1a0 drivers/tty/tty_ldisc.c:613
- tty_ldisc_release+0x1a1/0x200 drivers/tty/tty_ldisc.c:781
- tty_release_struct+0x2b/0xe0 drivers/tty/tty_io.c:1690
- tty_release+0xd06/0x12c0 drivers/tty/tty_io.c:1861
- __fput+0x3e9/0x9f0 fs/file_table.c:448
- task_work_run+0x24f/0x310 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0xa2a/0x28e0 kernel/exit.c:938
- do_group_exit+0x207/0x2c0 kernel/exit.c:1087
- __do_sys_exit_group kernel/exit.c:1098 [inline]
- __se_sys_exit_group kernel/exit.c:1096 [inline]
- __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1096
- x64_sys_call+0x26a8/0x26b0 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f794f6cfc79
-Code: Unable to access opcode bytes at 0x7f794f6cfc4f.
-RSP: 002b:00007fff04322488 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f794f6cfc79
-RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
-RBP: 00007f794f74a270 R08: ffffffffffffffb8 R09: 00007fff043226a8
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f794f74a270
-R13: 0000000000000000 R14: 00007f794f74acc0 R15: 00007f794f6a1a60
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:skb_queue_empty_lockless include/linux/skbuff.h:1887 [inline]
-RIP: 0010:skb_queue_purge_reason+0xaa/0x500 net/core/skbuff.c:3936
-Code: 89 44 24 78 42 c6 44 30 13 f3 e8 81 76 05 f8 48 8d bc 24 b0 00 00 00 ba 48 00 00 00 31 f6 e8 0d f2 6b f8 4d 89 ef 49 c1 ef 03 <43> 80 3c 37 00 74 08 4c 89 ef e8 27 ef 6b f8 49 8b 45 00 4c 39 e8
-RSP: 0018:ffffc90003d17880 EFLAGS: 00010202
-RAX: ffffc90003d17930 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90003d17978
-RBP: ffffc90003d179f0 R08: ffffc90003d17977 R09: 0000000000000000
-R10: ffffc90003d17930 R11: fffff520007a2f2f R12: dffffc0000000000
-R13: 0000000000000008 R14: dffffc0000000000 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055867393d608 CR3: 000000000e738000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	89 44 24 78          	mov    %eax,0x78(%rsp)
-   4:	42 c6 44 30 13 f3    	movb   $0xf3,0x13(%rax,%r14,1)
-   a:	e8 81 76 05 f8       	call   0xf8057690
-   f:	48 8d bc 24 b0 00 00 	lea    0xb0(%rsp),%rdi
-  16:	00
-  17:	ba 48 00 00 00       	mov    $0x48,%edx
-  1c:	31 f6                	xor    %esi,%esi
-  1e:	e8 0d f2 6b f8       	call   0xf86bf230
-  23:	4d 89 ef             	mov    %r13,%r15
-  26:	49 c1 ef 03          	shr    $0x3,%r15
-* 2a:	43 80 3c 37 00       	cmpb   $0x0,(%r15,%r14,1) <-- trapping instruction
-  2f:	74 08                	je     0x39
-  31:	4c 89 ef             	mov    %r13,%rdi
-  34:	e8 27 ef 6b f8       	call   0xf86bef60
-  39:	49 8b 45 00          	mov    0x0(%r13),%rax
-  3d:	4c 39 e8             	cmp    %r13,%rax
+> +		if (sb_start_write_trylock(file_inode(filp)->i_sb)) {
+> +			int err =3D file_update_time(filp);
+> +			if (err)
+> +				ret =3D err;
+> +			sb_end_write(file_inode(filp)->i_sb);
+> +		}
+>  	}
+>  	return ret;
+>  }
+> @@ -1108,7 +1115,7 @@ static void wake_up_partner(struct pipe_inode_info =
+*pipe)
+>  static int fifo_open(struct inode *inode, struct file *filp)
+>  {
+>  	struct pipe_inode_info *pipe;
+> -	bool is_pipe =3D inode->i_sb->s_magic =3D=3D PIPEFS_MAGIC;
+> +	bool is_pipe =3D is_pipe_inode(inode);
 
+Same here: In what case is is_pipe() ever false here?
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+>  	int ret;
+> =20
+>  	filp->f_pipe =3D 0;
+
+--=20
+Jeff Layton <jlayton@kernel.org>
