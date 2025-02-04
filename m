@@ -1,160 +1,169 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DA113A265
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8292537E5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738632513; cv=none; b=XPv3k1g/GqsL1dBOuOcGvLup/HGweRqvIWkpewbt7gpFfDSnvD/QuAWqLl2erBrpFlo1jXpWRxKQtnrJpnsPS0i0OFZDsJDwHHA4yjOPNV5oKw2aOHLYPMi8XPHZVkz7HBUGlsa2zLZ8A6eyr/BgfPTBjHUVW5Fo0M5ctZsW2FQ=
+	t=1738632601; cv=none; b=b4RjWyFdPD77QpXqNZUF3jLezBsGMpG0+NFc9CZSZcExIT9Yhlmpb96iivBqtFDJjhP/A6BRC1Qyy73JGy4JcsJdipxut2TTXGHft97WbwisdcXHi9APRuwvGJWRStrs0YvUuiWIXfH2X3oS1sqKN+wPGUcmYA8pegeAt4MM0fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738632513; c=relaxed/simple;
-	bh=o/048RK8KbfvFNL35mW1RqTvxs6dxfeNWBz91bdQgTc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ng2lG4AVl/uwhMMK4gmaZhjXbnWlhdRMx/bdD43KqRpaf5QVXReFR4jKzTypw06l+bHNRXKrJctCaC9RXBEp5R7gNwJfamwoPi4/FmvcNJu4+ew7HmLX5AbIaqginIJMtOpSK1Bn2nXzoVRXw2Z+BcKzuOWq0XWDFJE4Y3mqQwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=zhh1q7JA; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1738632601; c=relaxed/simple;
+	bh=1CSFQ+ydcdLecFubxFtMF9SlqEvCyjwJEBoso/Dy1DY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rwe9V6qreNR3MLgv6ghuqGIRbrYY9q9+yXmDkoUSrXbE6f7ypL8q+clgNgtKhXSItNpYZaY9VPXd19t7nRzWCDmuKM8QsGzG+Bk5b+K8MKu/Z4Mt0YLb4R5I8iaxFc6GS1PrurRLOtYhgDnEtVOv4ewsm/S2Lgp+QkpRREh+bL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DgSroyYF; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="zhh1q7JA"
-Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
-	by cmsmtp with ESMTPS
-	id f3rPt1tkv1T3hf7jkt1h56; Tue, 04 Feb 2025 01:28:25 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id f7jjtfmCv9zAHf7jjtGalC; Tue, 04 Feb 2025 01:28:23 +0000
-X-Authority-Analysis: v=2.4 cv=HO3FFJtv c=1 sm=1 tr=0 ts=67a16d37
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=3GLQtCDrk5mhnYkuwPoHkA==:17
- a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10 a=QyXUC8HyAAAA:8
- a=VwQbUJbxAAAA:8 a=4kty7C-LuapIIgrfkgcA:9 a=QEXdDO2ut3YA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=1bcZbq5etASTQ/kWDMfEYbte/eHZMRZ/ExU1etRZnzk=; b=zhh1q7JAv+tsaL5IvlC2FnHs7K
-	kKDgPR9JleRzhjGUg4Io4kM5UQwvl0yLZJPOqbfV0lJhGO8aIRNGJhYiXpHln6mxjAxq7Jx2nrS1A
-	m2KobqSFEOybht5GqDgQw6/hDBAsQnroSXdXYouwYMZbhe0g6xhAB5LCx76l8gWtEMFZ/KnCrDsFG
-	jxvrTPJ5mVoMzzyFF+pFyXHj/8jCauBVeAzrwYcGuF4A5FEopMVrnvHuokgpCqTG6ywloG7lHmfoW
-	XDRgtEURECDMzCQH8S6WtYpetBNLvpd9JtDBXBtW7SUlfzOU/jGfXvVW/f8rb81MlV9cvieKeNxEY
-	Xn6gbT2g==;
-Received: from [45.124.203.141] (port=55286 helo=[192.168.0.157])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tf7jh-0027Ze-25;
-	Mon, 03 Feb 2025 19:28:22 -0600
-Message-ID: <82b97884-19a3-4948-8212-d0fd38669ee2@embeddedor.com>
-Date: Tue, 4 Feb 2025 11:58:02 +1030
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DgSroyYF"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-219f6ca9a81so24915ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 17:29:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738632599; x=1739237399; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cgs22GMIvih+rvIPBu4CVSrVFT+Ext8GsAWJW9535gA=;
+        b=DgSroyYFEtUdX23m7XMdf8MQ49UeKKYPWGmKmrQnx83rDVABBzykYDbyQuFqXoEZJG
+         VzCcr90s6aZfb5YUtLOIwTcNi/p/LlsiQZQiO95uMEACqLqc03t4t0OMj3SKCxqEFhVY
+         FgZxhy/HbyiQsS2ukYwGd4eALN4QCzSBMWeADI3t+HNfXMRBjBt0gKdpf9ccuzgHe2NJ
+         T+v99152ke7xaTvAYO96lOWZqLL8nW6Izo3Jlk8miz3IM5V9cpb4pLDZARwEshQloDgs
+         aY8yYS41VTukGh5b7FoINq9FvoKmj3N7SjOPdWVnoohmZRZcwDhLwbu10zfQBFBemBq1
+         zDfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738632599; x=1739237399;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cgs22GMIvih+rvIPBu4CVSrVFT+Ext8GsAWJW9535gA=;
+        b=kg2hqprbgmG8NkuZ5452yEQhw0m5652SLbBPlSmLazF+Om0AQzA9t72mTk2saBTlF4
+         mJGcAUzn+sn7jo5T+FcjRTnz+uGtttVbH6U+vZTVi2Fnp/HUj82e9+bgY8RYaWlpjk5c
+         oFuhQiPzniK3RhUYLpw8mLglay/TDWqaqbk8tJ6qCzSzcmH8hdRaBlaWfjC4VDyqfsPs
+         YpJ71P67rsYHL2HhiKGM5TNTGQCrzhDTxN91tvXKQ+ygmry5n5qZ5BYc3wEn17Xmj7l0
+         O5tCi1UrwblXRkPOTpMg2vF68klTe7tpE+U1iUGr5/WygQQH8qlNOIl94nPCSlUj2pTt
+         X99g==
+X-Forwarded-Encrypted: i=1; AJvYcCU7rsvU1FAlXOpAVf3vFvDEiwHHPukoDTSJCrCgQGxxqBy3TfQHlJu3sQ+TdRw+2AsSh9BZaKV4uu3zhog=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLu2KQSTyVJ319iJyNRjvdbHIX+F2JvHbChytKAHRzvQSc7G70
+	TIxAVBYrnrJgcGa1ChT/ocsxyZeF3jFpObhSy7Efbn6YciL7PBqaBs66G+bREA==
+X-Gm-Gg: ASbGncuoXAvbehmquEL3HIrMTiaKuVMg7Unjch2eW5AFK3P27aYx67iBOugI0jz10NZ
+	pR9ocatQY+kaeh6tVwZycX2xGDwa9v3dElH33VOcVFd/25xYG+gOjrlVruSzLjGE4xL4GnD5Ciy
+	jBH7SuDrPCqTNQIWEg88DHYOHqSm9J/7sBch3zujEDhtrD5nVcpmHNAT0ZBMqoY5N95nXVGbNSr
+	jm7QUI8bEuqltARmIxoQi1Nd26fWiR/SUXrHwedePkIXqMa8+29exyXofcaO6uLb5sBUYB2atVi
+	vYpcuvy++1jgo+iXUlQp9NE326EfsE6ptBXvcEp18AQysIrrOXqXfMc=
+X-Google-Smtp-Source: AGHT+IHWUc7R5dlQvBOepVJMbNATdkSv/zYRIZ13MFf9lk+DkYICE0KTYJsxO5+u8NDbE883OqLPNA==
+X-Received: by 2002:a17:902:bc8a:b0:215:86bf:7e46 with SMTP id d9443c01a7336-21f03b3c62dmr686735ad.7.1738632598666;
+        Mon, 03 Feb 2025 17:29:58 -0800 (PST)
+Received: from google.com (147.141.16.34.bc.googleusercontent.com. [34.16.141.147])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de331fabdsm83432105ad.221.2025.02.03.17.29.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 17:29:58 -0800 (PST)
+Date: Tue, 4 Feb 2025 01:29:53 +0000
+From: Peilin Ye <yepeilin@google.com>
+To: Eduard Zingerman <eddyz87@gmail.com>
+Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bpf@ietf.org,
+	Xu Kuohai <xukuohai@huaweicloud.com>,
+	David Vernet <void@manifault.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
+	Neel Natu <neelnatu@google.com>,
+	Benjamin Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1 7/8] selftests/bpf: Add selftests for
+ load-acquire and store-release instructions
+Message-ID: <Z6FtkchYQjgjdv1x@google.com>
+References: <cover.1737763916.git.yepeilin@google.com>
+ <3f2de7c6e5d2def7bdfb091347c1dacea0915974.1737763916.git.yepeilin@google.com>
+ <131a817f7f2749e78e527a251ca7971588cf62f8.camel@gmail.com>
+ <Z6Ffquq8IORjCqrI@google.com>
+ <dead664fa11ac274db00b509931c533883dd4fdf.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/7] gpio: 74x164: Annotate buffer with __counted_by()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
- <20250203121843.3183991-4-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20250203121843.3183991-4-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.141
-X-Source-L: No
-X-Exim-ID: 1tf7jh-0027Ze-25
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.157]) [45.124.203.141]:55286
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGvuFHjGr/zhSRexww6/tJHn1+ZCIfLLzB0hpLWlniUvEkn+okJ94r0AJRQHsvk7eOCZy2O3qpUeyo1sp/U6K2bnql6rnWbIpnqRg+9aBAArsF353PLf
- t+uPjuyg2D2WHEr9Gf+VA5/LXZ/OpFAev2QaRe/gX741YjkJCHGOkTPzU06ct9YDPNpvdDmk0Ye3cKiXB3zQKRvTd36zo8dBZ5F2lWdslcPG2cXUl3tKV4RK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dead664fa11ac274db00b509931c533883dd4fdf.camel@gmail.com>
 
-
-
-On 03/02/25 22:47, Andy Shevchenko wrote:
-> Add the __counted_by() compiler attribute to the flexible array member
-> volumes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
+On Mon, Feb 03, 2025 at 04:52:52PM -0800, Eduard Zingerman wrote:
+> > > > --- a/tools/testing/selftests/bpf/progs/arena_atomics.c
+> > > > +++ b/tools/testing/selftests/bpf/progs/arena_atomics.c
+> > > [...]
+> > > 
+> > > > +SEC("raw_tp/sys_enter")
+> > > > +int load_acquire(const void *ctx)
+> > > > +{
+> > > > +	if (pid != (bpf_get_current_pid_tgid() >> 32))
+> > > > +		return 0;
+> > > 
+> > > Nit: This check is not needed, since bpf_prog_test_run_opts() is used
+> > >      to run the tests.
+> > 
+> > Could you explain a bit more why it's not needed?
+> > 
+> > I read commit 0f4feacc9155 ("selftests/bpf: Adding pid filtering for
+> > atomics test") which added those 'pid' checks to atomics/ tests.  The
+> > commit message [1] says the purpose was to "make atomics test able to
+> > run in parallel with other tests", which I couldn't understand.
+> > 
+> > How using bpf_prog_test_run_opts() makes those 'pid' checks unnecessary?
+> > 
+> > [1] https://lore.kernel.org/bpf/20211006185619.364369-11-fallentree@fb.com/#r
 > 
-> Use struct_size() instead of manually calculating the number of bytes to
-> allocate the private structure with a buffer.
+> Hi Peilin,
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
---
-Gustavo
-
-> ---
->   drivers/gpio/gpio-74x164.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
+> The entry point for the test looks as follows:
 > 
-> diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
-> index 70c662bbca7b..7844f8a58834 100644
-> --- a/drivers/gpio/gpio-74x164.c
-> +++ b/drivers/gpio/gpio-74x164.c
-> @@ -30,7 +30,7 @@ struct gen_74x164_chip {
->   	 * register at the end of the transfer. So, to have a logical
->   	 * numbering, store the bytes in reverse order.
->   	 */
-> -	u8			buffer[];
-> +	u8			buffer[] __counted_by(registers);
->   };
->   
->   static int __gen_74x164_write_config(struct gen_74x164_chip *chip)
-> @@ -97,6 +97,7 @@ static int gen_74x164_direction_output(struct gpio_chip *gc,
->   
->   static int gen_74x164_probe(struct spi_device *spi)
->   {
-> +	struct device *dev = &spi->dev;
->   	struct gen_74x164_chip *chip;
->   	u32 nregs;
->   	int ret;
-> @@ -116,10 +117,12 @@ static int gen_74x164_probe(struct spi_device *spi)
->   		return -EINVAL;
->   	}
->   
-> -	chip = devm_kzalloc(&spi->dev, sizeof(*chip) + nregs, GFP_KERNEL);
-> +	chip = devm_kzalloc(dev, struct_size(chip, buffer, nregs), GFP_KERNEL);
->   	if (!chip)
->   		return -ENOMEM;
->   
-> +	chip->registers = nregs;
-> +
->   	chip->gpiod_oe = devm_gpiod_get_optional(&spi->dev, "enable",
->   						 GPIOD_OUT_LOW);
->   	if (IS_ERR(chip->gpiod_oe))
-> @@ -133,10 +136,7 @@ static int gen_74x164_probe(struct spi_device *spi)
->   	chip->gpio_chip.set = gen_74x164_set_value;
->   	chip->gpio_chip.set_multiple = gen_74x164_set_multiple;
->   	chip->gpio_chip.base = -1;
-> -
-> -	chip->registers = nregs;
->   	chip->gpio_chip.ngpio = GEN_74X164_NUMBER_GPIOS * chip->registers;
-> -
->   	chip->gpio_chip.can_sleep = true;
->   	chip->gpio_chip.parent = &spi->dev;
->   	chip->gpio_chip.owner = THIS_MODULE;
+>     void test_arena_atomics(void)
+>     {
+>     	...
+>     	skel = arena_atomics__open();
+>     	if (!ASSERT_OK_PTR(skel, "arena atomics skeleton open"))
+>     		return;
+>     
+>     	if (skel->data->skip_tests) { ... }
+>     	err = arena_atomics__load(skel);
+>     	if (!ASSERT_OK(err, "arena atomics skeleton load"))
+>     		return;
+>     	skel->bss->pid = getpid();
+>     
+>     	if (test__start_subtest("add"))
+>     		test_add(skel);
+>             ...
+>     
+>     cleanup:
+>     	arena_atomics__destroy(skel);
+>     }
+> 
+> Note arena_atomics__{open,load} calls but absence of the
+> arena_atomics__attach call. W/o arena_atomics__attach call the
+> programs would not be hooked to the designated extension points,
+> e.g. "raw_tp/sys_enter".
+> 
+> The bpf_prog_test_run_opts() invokes BPF_PROG_TEST_RUN command of the
+> bpf system call, which does not attach the program either,
+> but executes jitted code directly with fake context.
+> (See bpf_prog_ops->test_run callback (method?) and
+>  bpf_prog_test_run_raw_tp()).
+> 
+> Same happens in prog{,_tests}/arena.c: no attachment happens after
+> commit [2]. Commit [1] is unnecessary after [2].
+> 
+> [2] commit 04fcb5f9a104 ("selftests/bpf: Migrate from bpf_prog_test_run")
+
+I see.  Thanks for the quick reply as always!
+
+Peilin Ye
 
