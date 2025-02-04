@@ -1,155 +1,153 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mblankhorst.nl (lankhorst.se [141.105.120.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12ED20CCD2;
-	Tue,  4 Feb 2025 12:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E79525A657
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.105.120.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738673962; cv=none; b=W4WBp3MNfuwjeea97bO0hpGkWY1SkMxhMkLVhECLYCVFo7tfC0PWjIqxHsZUlXqBXB/czGLjNMhpfqDquA/pKfHC4zcUexWshwyxODplNffX8EKqHEJ7oC684B/aFLNkoi5Gu929VXxIwoCP4+9W2Ajsya2oTvfrxZ8G44A5Hd0=
+	t=1738674117; cv=none; b=puDwRu+QBzznj4JgcG24iLUaNF205YG0bjddJf8wGd+OXFYGcjf4IExp3zJm1tPORw8Gq7cb9EMYrAwGE6b25MuuVFkBo1ofaU/cOrPKEgQb2hqtMCxzu8O3b5W4baWJS1vf8UL/4YitX30RRn55juhpdn/GZtRlyav3rLwQo98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738673962; c=relaxed/simple;
-	bh=3Hh2XQY/1a4amJk/a1M5JR3lj03KpXSUbkYezYOzE6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T6lE96ZLEzhgNpp5+u1eLggeqeJYx+gER8AnqZyEikPAa6KBDyvGWCf8P+vbtXxCcAmCKg4j/WCCZXm6598fVa7osX7kC+iI54ahxF/X4/Oz9gPveHN8M2oS/AshH56K3Pwo6GZP33CnkL81P/EEN90YCpaEawflyjtqtseJh30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=axQdsfKS; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axQdsfKS"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2164b1f05caso93121885ad.3;
-        Tue, 04 Feb 2025 04:59:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738673960; x=1739278760; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uLMswBPWS28FbLa5AdxCx/rsraoYZatSFNO8qcs8OEg=;
-        b=axQdsfKSIxcLN1D5GzdMTpfcjwjhMsSSSfJbKJY4PZhVS3i/KiO8BHX5dHqnDnkvzP
-         hOhOKt5wOh923HtWGVMPt6e+zd4wSHmBlbqn6uM2dfm5Sf8sYJlIQ7Os4BIDJ/q9WHqe
-         KpVdEYal4PneACk3Q1MiD4q1/HNAKdkSwCZ7/bpBYv0SFnutWikz53Kq7d2H8rmrgqBD
-         4X3mGNVFfRngYzDZi/tLXTCaJVGPRmVA3CBX8jIqSGaqZ4sWvF4RZfli+myfjst1q0fc
-         QyOTIy12FXOPBWGynGEMoZOGDreo9zylZQF2R6T1EUqqsF2qitd4uIvHh0hYd6h+9SPL
-         8EKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738673960; x=1739278760;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uLMswBPWS28FbLa5AdxCx/rsraoYZatSFNO8qcs8OEg=;
-        b=ZA3uCGGnzk4jGZQm9WW9IpcKvt9ZFHNF1brZgItDhKsOIW+rRQ7YXwoCdsGV525uXW
-         RZCWaVJhY2+g7OXp4ZYiopLzGIvJZM9cqYmMf40+IMmLLTWoXQTiH9Rm2/IIVf6atH7E
-         HYhMW9Uc2MKJNA8LDADdPO5SmxJkxTCrzsvsyjiuWMzW2ym1SWyyR4KyhVeV5C6I5nvL
-         RmNXwEtcUE9/ZODng0MRUtC/J/qJfyA3Gc28VGfjG+MuWukIOPMVDDx4vo6GK7Y93RIB
-         F7vMZCkFUR0yt91rxVcyt+6t+grTr2ABFcndE0TEp6V97nxy7bfNPF0Dl+W36dKeEugd
-         3vEA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKM7KL8S5Bug1XCXN4lIgyrCX+3ifUmFSDBZX7p6d2QyrxTzPsWp17JwQ2pgs3Q47d9yO8KWIXoZg=@vger.kernel.org, AJvYcCW0b5Fw7dL1e8l69MHUcdFV+X7p952azwJxm+eFR8tfcBCy47Uhi5mZe6zHk8NZgfma67vUNG4a82l62Lh8@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF0p0w4nmISn1XktktCd+C4Z3G6Cp4q15dx/SWcPAz8AKjr77k
-	lwFo5B+iafuw9X+Xe20gppkmLBuT6HJwgJdmXHKOortTi2fV0vgS
-X-Gm-Gg: ASbGncuTbUkFFvqvS+6cWWN1qTuAcLxhcJ6kC7PEMS7K2F9CsKWfBIBtjDWvIqCRySR
-	D+I7AD/JJ0tF7aJ9XLWb0JNyf3VdZOQxSfij67n3NezQGM0EOrZRbnV68jJgWxwC4c7uR+0DS7G
-	Umg4VqDWoFGJg3drs/LURr9JXU4HcPRiiO/16F7TLYRTJBWEJJnKANW9u7VJxxtLj9N3Av959eA
-	gwuxQcSqmI8K6sZzJWfagCjIlttfTGzGqoVb7dwxdQebnFqU9KgmDRQ2N/QFp7dfCMoTYwk8rsH
-	BIHSPZ6obDc2EEEhSFp6Dp+ZIA==
-X-Google-Smtp-Source: AGHT+IHE8gLhOia4qIQSjZxI3q0IKSbVDFXuuLhSdp/igsnknqxkocybARimRCyDA8YCk3dDP9vJWg==
-X-Received: by 2002:a05:6a00:1986:b0:72f:d7ce:4ff8 with SMTP id d2e1a72fcca58-72fd7ce505fmr27940160b3a.22.1738673959764;
-        Tue, 04 Feb 2025 04:59:19 -0800 (PST)
-Received: from localhost ([2804:30c:4042:6b00:ec80:71ac:dccc:2753])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631bec8sm10361101b3a.1.2025.02.04.04.59.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 04:59:19 -0800 (PST)
-Date: Tue, 4 Feb 2025 10:00:03 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, cosmin.tanislav@analog.com,
-	jic23@kernel.org, lars@metafoo.de, granquet@baylibre.com,
-	u.kleine-koenig@baylibre.com
-Subject: Re: [PATCH v3 3/3] Documentation: ABI: IIO: Re-add
- sysfs-bus-iio-adc-ad4130
-Message-ID: <Z6IPU2rSg7M4lydK@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1738608986.git.marcelo.schmitt@analog.com>
- <0d73303f2bca3312ccf2abfeb2c654c228fa7f60.1738608986.git.marcelo.schmitt@analog.com>
- <322c34f8-a920-41d1-b77c-09537554ad04@baylibre.com>
+	s=arc-20240116; t=1738674117; c=relaxed/simple;
+	bh=lLY7isZ2WSpKh9qUL9fRA9iy+6gQ/Zd09FdN8Dnhj9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TdkcjEQrIb8zHbJqgLIQK3vkz+EjauB0btPRdGtD49ZjChUcBIIbOCLXDwR6c462lAFa/UlH1agzmnnYI826kFJ1sDTw5rHcMOQpdaP497b04RJIR0PvmR9wVT9RG1to8JT6yUg59ho4pjDdcNzGUopozoaaRqYu83evbn6WI8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se; spf=none smtp.mailfrom=mblankhorst.nl; arc=none smtp.client-ip=141.105.120.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mblankhorst.nl
+From: Maarten Lankhorst <dev@lankhorst.se>
+To: intel-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <dev@lankhorst.se>,
+	Ingo Molnar <mingo@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH 1/8] header/cleanup.h: Add _init_args to DEFINE_LOCK_GUARD_1(_COND)
+Date: Tue,  4 Feb 2025 13:49:02 +0100
+Message-ID: <20250204124909.158315-2-dev@lankhorst.se>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250204124909.158315-1-dev@lankhorst.se>
+References: <20250204124909.158315-1-dev@lankhorst.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <322c34f8-a920-41d1-b77c-09537554ad04@baylibre.com>
+Content-Transfer-Encoding: 8bit
 
-On 02/03, David Lechner wrote:
-> On 2/3/25 1:11 PM, Marcelo Schmitt wrote:
-> > The ad4130 driver exports in_voltageY-voltageZ_filter_mode and
-> > in_voltage-voltage_filter_mode_available attributes to user space. A
-> > previous patch merged the documentation for those attributes with the
-> > documentation for filter_type/filter_type_available into sysfs-bus-iio.
-> > Filter mode and filter type refer to the same feature which is the digital
-> > filter applied over ADC samples. However, since datasheets use the term
-> > `filter type` and ad4130 driver is the only one using filter_mode,
-> > deprecate the filter_mode ABI in favor of filter_type and keep the docs
-> > separate to avoid confusion and intricate attribute descriptions.
-> > 
-> 
-> 
-> > The digital filter helps shape the noise rejection bandwidth and is
-> > supposed to be adjusted according to the signal of interest. Depending on
-> > the particular ADC design, the digital filter configuration may have an
-> > impact on the output data rate (ODR) (which is equivalent to the sampling
-> > frequency for SAR ADCs - `sampling_frequency` ABI), 3dB cutoff frequency of
-> > the filter (`_low_pass_3db_frequency` attributes), or settling time.
-> > 
-> > Digital filters are a common feature among sigma-delta ADCs and
-> > IIO drivers set digital filters according to different attributes.
-> > ad4130 and ad7779 filter options are supported through dedicated
-> > filter_mode/filter_type attributes in sysfs.
-> > ad7768-1 and ad7173 set the sinc filters according to the
-> > sampling_frequency attribute. No filter_type attribute.
-> > ad7124 sets the digital filter according to a filter_low_pass_3db_frequency
-> > attribute so it doesn't export filter type attributes to user space.
-> 
-> These last two paragraphs seems a bit excessive and could be dropped.
-> 
-> > 
-> > Fixes: 01bb12922b60 ("Documentation: ABI: added filter mode doc in sysfs-bus-iio")
-> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-iio       |  1 -
-> >  .../ABI/testing/sysfs-bus-iio-adc-ad4130      | 20 +++++++++++++++++++
-> >  MAINTAINERS                                   |  1 +
-> >  3 files changed, 21 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-ad4130
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> > index ff9cc09360dc..e4fd99c92d81 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-iio
-> > +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> > @@ -2277,7 +2277,6 @@ Description:
-> >  		representing the sensor unique ID number.
-> >  
-> >  What:		/sys/bus/iio/devices/iio:deviceX/filter_type_available
-> > -What:		/sys/bus/iio/devices/iio:deviceX/in_voltage-voltage_filter_mode_available
-> 
-> Instead of removing the line, I think we need to replace it with:
-> 
-> /sys/bus/iio/devices/iio:deviceX/in_voltage-voltage_filter_type_available
-> 
-> (change mode to type)
-> 
-> This attribute is used in the previous patch.
+This makes it possible to use the lock guards for guards that need
+extra arguments.
 
-Ah yes, good catch.
-Will do. And will also reorder the patches so it gets documented before being used.
+I've been attempting to add a guard to xe_force_wake handling, but that
+required an extra argument specifying the domain. For nested spinlock
+handling, it could also be beneficial to be able to do something like
+this.
 
-Thanks,
-Marcelo
+For example:
+DEFINE_LOCK_GUARD_1_COND(spinlock_irqsave, _nested,
+			 spin_lock_irqsave_nested(_T->lock, _T->flags, nest),
+			 unsigned nest);
 
-> 
-> 
-> >  KernelVersion:	6.1
-> >  Contact:	linux-iio@vger.kernel.org
-> >  Description:
-> With those changes...
-> 
-> Reviewed-by: David Lechner <dlechner@baylibre.com>
+guard(spinlock_irqsave_nested, &lock, SINGLE_DEPTH_NESTING);
+
+The first optional argument in DEFINE_LOCK_GUARD_1 is now used for the struct members,
+the remainder goes to init_args to allow the same usage in the base case..
+
+I'm abusing the preprocessor to add an extra meaning to the first optional
+argument is done by creating a __DO_DEFINE_LOCK_GUARD_1, and passing
+__VA_ARGS__ not ##__VA_ARGS__ to it to ensure _struct_members is empty
+when not passed explicitly.
+
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+---
+ include/linux/cleanup.h | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
+
+diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+index ec00e3f7af2b3..dbaf02447f206 100644
+--- a/include/linux/cleanup.h
++++ b/include/linux/cleanup.h
+@@ -349,19 +349,23 @@ _label:									\
+  * locks that don't have a native type (eg. RCU, preempt) or those that need a
+  * 'fat' pointer (eg. spin_lock_irqsave).
+  *
+- * DEFINE_LOCK_GUARD_0(name, lock, unlock, ...)
+- * DEFINE_LOCK_GUARD_1(name, type, lock, unlock, ...)
+- * DEFINE_LOCK_GUARD_1_COND(name, ext, condlock)
++ * DEFINE_LOCK_GUARD_0(name, lock, unlock, _lock_members...)
++ * DEFINE_LOCK_GUARD_1(name, type, lock, unlock, (opt)_lock_members, _init_args...)
++ * DEFINE_LOCK_GUARD_1_COND(name, ext, condlock, _init_args...)
+  *
+  * will result in the following type:
+  *
+  *   typedef struct {
+  *	type *lock;		// 'type := void' for the _0 variant
+- *	__VA_ARGS__;
++ *	_lock_members;		// use ; as separator to add multiple members
+  *   } class_##name##_t;
+  *
+  * As above, both _lock and _unlock are statements, except this time '_T' will
+  * be a pointer to the above struct.
++ *
++ * For DEFINE_LOCK_GUARD_1 and DEFINE_LOCK_GUARD_1_COND, it adds all
++ * _init_args as local variables available to the lock statement.
++ * They need to be passed to all guard() functions as extra argument.
+  */
+ 
+ #define __DEFINE_UNLOCK_GUARD(_name, _type, _unlock, ...)		\
+@@ -381,8 +385,8 @@ static inline void *class_##_name##_lock_ptr(class_##_name##_t *_T)	\
+ }
+ 
+ 
+-#define __DEFINE_LOCK_GUARD_1(_name, _type, _lock)			\
+-static inline class_##_name##_t class_##_name##_constructor(_type *l)	\
++#define __DEFINE_LOCK_GUARD_1(_name, _type, _lock, ...)			\
++static inline class_##_name##_t class_##_name##_constructor(_type *l, ##__VA_ARGS__)	\
+ {									\
+ 	class_##_name##_t _t = { .lock = l }, *_T = &_t;		\
+ 	_lock;								\
+@@ -398,23 +402,27 @@ static inline class_##_name##_t class_##_name##_constructor(void)	\
+ 	return _t;							\
+ }
+ 
+-#define DEFINE_LOCK_GUARD_1(_name, _type, _lock, _unlock, ...)		\
++#define __DO_DEFINE_LOCK_GUARD_1(_name, _type, _lock, _unlock, _lock_members, _init_args...) \
+ __DEFINE_CLASS_IS_CONDITIONAL(_name, false);				\
+-__DEFINE_UNLOCK_GUARD(_name, _type, _unlock, __VA_ARGS__)		\
+-__DEFINE_LOCK_GUARD_1(_name, _type, _lock)
++__DEFINE_UNLOCK_GUARD(_name, _type, _unlock, _lock_members)		\
++__DEFINE_LOCK_GUARD_1(_name, _type, _lock, ##_init_args)
++
++/* Call __DO_DEFINE_LOCK_GUARD_1 here because of the 2 optional arguments */
++#define DEFINE_LOCK_GUARD_1(_name, _type, _lock, _unlock, ...)		\
++	__DO_DEFINE_LOCK_GUARD_1(_name, _type, _lock, _unlock, __VA_ARGS__)
+ 
+ #define DEFINE_LOCK_GUARD_0(_name, _lock, _unlock, ...)			\
+ __DEFINE_CLASS_IS_CONDITIONAL(_name, false);				\
+ __DEFINE_UNLOCK_GUARD(_name, void, _unlock, __VA_ARGS__)		\
+ __DEFINE_LOCK_GUARD_0(_name, _lock)
+ 
+-#define DEFINE_LOCK_GUARD_1_COND(_name, _ext, _condlock)		\
++#define DEFINE_LOCK_GUARD_1_COND(_name, _ext, _condlock, ...)		\
+ 	__DEFINE_CLASS_IS_CONDITIONAL(_name##_ext, true);		\
+ 	EXTEND_CLASS(_name, _ext,					\
+ 		     ({ class_##_name##_t _t = { .lock = l }, *_T = &_t;\
+ 		        if (_T->lock && !(_condlock)) _T->lock = NULL;	\
+ 			_t; }),						\
+-		     typeof_member(class_##_name##_t, lock) l)		\
++		     typeof_member(class_##_name##_t, lock) l, ##__VA_ARGS__)		\
+ 	static inline void * class_##_name##_ext##_lock_ptr(class_##_name##_t *_T) \
+ 	{ return class_##_name##_lock_ptr(_T); }
+ 
+-- 
+2.47.1
+
