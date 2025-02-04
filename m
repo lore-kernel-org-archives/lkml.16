@@ -1,74 +1,107 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A7A1EEA29;
-	Tue,  4 Feb 2025 17:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3FA1EEA29;
+	Tue,  4 Feb 2025 17:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738689845; cv=none; b=buc6sPPLi1GEr2mP+4HhFTS8eQkK6cMKZTjI0eBvGkX3NeD+UfyNhIttTROWvcqiN6uOU4VA9gNp1pniuCz8np8k5/YK2UNcWHdJYC5l/DX12Yd0nFye6xe1kvzm35aGlyOFTKFQbutPzldunnKqOS+grouuz2aisfWDG7cFPxQ=
+	t=1738689935; cv=none; b=FsZH4/ifa9F1bPqEt82eSqnmMXwJvZH+C4J4H/Lp3wy8H7SnJTu0HWVg8iOzgjTzRbo8JUB26Z9kY2XLxelswC/u7mzcwzrtp5OZcrFfhemeuR2Ar/jBRbxU2VbUxSn80KSqksatKPiOTa8JQeVfym4s4QE25O5O066n0aXuAfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738689845; c=relaxed/simple;
-	bh=39pInEh3q1IFmEaa8nOwD01qC77XLpVyeRi7YSRYlBc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZF1IFb6v/H74DBxd6zgLj9yWPMlXPKH4w9mtt8VT/YcV+NA6jYoHsz/KSW40QmBJD5oP6xSQ2YLoqVBbENWoEaOqM+++RXEDmVu6/ztt2CTHAZf3amhXzzPXN4hsDqlNy976HjCYodJdkN+x+j9UPvIMWVUuMfhHM/gn3pexnvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=eprqBJis; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1738689935; c=relaxed/simple;
+	bh=zH2Gb6lbW4QreOVS2zbWuHj8mn1oqVmRVEJtZltrOc4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HniiFzKG0OKo0yXTsVYaC/durc8jOPHLIdXWwDocylZx+zTHgiBVCBB33EymCrlo6OYFaZ2BEckY7GA4V7ko6loAIH17r+82oJ+VwsfoMflLsoCivApoSZptxIDVsKv27iiDBtYEgnGwxxfT5dRrCGT69NbZz73kWKHF47eSd8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=uUEuyash; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=q9Dqca6d; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="eprqBJis"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net EA0DD404FA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1738689841; bh=sp98JhHT/AP4kteBpfNZ7Fqv6VXyNGJmMYxsIur+xP4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=eprqBJisfclCjO9+qOnXjFXpEQ/5zBFN1E8+fCbsJLATaOkFKx9jTzMdnZruvL589
-	 3hqQw+JbzNs8bFZfLX1EpuBQtEgCbiqp89QmaGiQYgHyrlKiLS1kstslXhxjU6Lb57
-	 ASXOgs/eimMeSPzUYkV1HqZRvXsDwwguZTA5smsgNUqvEsQ4Sobkaaeuc6Gx0pdEwV
-	 9cF5u6ujbYjdXmF91ARUd5IIQcNfgFh/v9FZjxk02NiSGRDXaTEp+hku39p+5LBh9U
-	 7IdymOIKDKaT66fuuPJTeiptPF9366uDdUws+kNVwdKPkVanq96Gw11PjBQxygc9sk
-	 Eb0BMTd9nuL+g==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id EA0DD404FA;
-	Tue,  4 Feb 2025 17:24:00 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
- List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Mauro Carvalho Chehab
- <mchehab+huawei@kernel.org>, Akira Yokosawa <akiyks@gmail.com>, Vegard
- Nossum <vegard.nossum@oracle.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 2/6] docs: extensions: don't use utf-8 syntax for
- descriptions
-In-Reply-To: <c9e7d86efa4614e970f5cb42540ee0791d6a7118.1738166451.git.mchehab+huawei@kernel.org>
-References: <cover.1738166451.git.mchehab+huawei@kernel.org>
- <c9e7d86efa4614e970f5cb42540ee0791d6a7118.1738166451.git.mchehab+huawei@kernel.org>
-Date: Tue, 04 Feb 2025 10:24:00 -0700
-Message-ID: <87v7tpei8f.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="uUEuyash";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="q9Dqca6d"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.stl.internal (Postfix) with ESMTP id A3B14114014A;
+	Tue,  4 Feb 2025 12:25:31 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Tue, 04 Feb 2025 12:25:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1738689931; x=1738776331; bh=Cg2avvLJz3fpRvOgBXOJK
+	Zc4BalDp3n/FJStJnxiVWE=; b=uUEuyash3pHxEIb3r+FnHMw92z0rR5YNYir1O
+	4s2roVkimZIgDA8h7utEVM35E3YrFusl2wzizDC/eENQKwSuC+Y/tpw9BOkPaFFa
+	0WBV9AV2cmjyYbT7pSlhTIWImbGA/fevn48wtZKd2qvA5XPP3t87XSP1JRcjB2ed
+	rdE2gMl/fScfKJIYWOn4F7Aed6TLln1dfmws3RFXYQ6r92SSnrlPFx5R3rZG5sx5
+	xkPPedEtrnqTnV1CsK7ELyRLDgv2dkxRUtLXGwcQGi5ytOZdg1vv8GyWarZ6qnre
+	Oey+GeGYX4EGAzsCtVGI/v8HSxfxfpiBryhlZTZnjGyk2MD+w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1738689931; x=1738776331; bh=Cg2avvLJz3fpRvOgBXOJKZc4BalDp3n/FJS
+	tJnxiVWE=; b=q9Dqca6d+3w9ZiaAwHHMLyPRSDm4+AU4VKHoXqPvhPhjm/PlB1i
+	h0mDlmkumLF24yx/jetYYPlf9b4fufPLOVGqmIvaphCsgjdz9e0cp+gng9W1hGe9
+	IZjNrMvvIWc2Y1O5CEZqqxOoNoaCw0nE2Jhz+A+4uQ+ElZqnjVYz+vJ01BbVeeLU
+	+0ANB8/MquHZqSU3ZPrXzaoeaLWycXXazeWQgj7wId8R39RSfxoCgyPxdhr3dENU
+	SNXBEG66KYx8AhYfqmxFiviOxG9mvATaGnUBnKbIVqGhag8SO3CAtz8kfig3fYfU
+	eGohJBn13wY63v510x1zIhRAG7YiuQMeQlA==
+X-ME-Sender: <xms:i02iZzbzl5ebO-Eq3CJP9i4O_a_3jDmLjgvkBQvYu2zEgFrpnhk1eA>
+    <xme:i02iZyYu82HX6xGFiuWMcxo8tJWDKHosEw3EJkpdIs2XEf8scCVT3A7qxyK9FUdgg
+    d3ugFk5hoRMGF_f2g>
+X-ME-Received: <xmr:i02iZ18iaaaN2wozrmCjDRQ0EeDH_yhJV_7BPsFFglRVJobhSNv5RWQgoJAIQyu9pv5BIXdOqQVTOpsdzUEHkQIgMpGlHUiCXt5dFAgvs90bDfi23HP7>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculd
+    ejtddmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepffgr
+    nhhivghlucgiuhcuoegugihusegugihuuhhurdighiiiqeenucggtffrrghtthgvrhhnpe
+    dvgefgtefgleehhfeufeekuddvgfeuvdfhgeeljeduudfffffgteeuudeiieekjeenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugi
+    huuhhurdighiiipdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehlihhnuhigqdhkshgvlhhfthgvshhtsehvghgvrhdrkhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtohepsghpfhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehmhhgrrhhtmhgrhieslhhinhhugidrihgsmhdrtghomhdprhgtphhtthhopehiihhi
+    sehlihhnuhigrdhisghmrdgtohhm
+X-ME-Proxy: <xmx:i02iZ5poHKagSBRNaISwbN2aB6XgLt8QJI2uNjBbJZgLeXQxekSm4Q>
+    <xmx:i02iZ-qpTnZgF6Vi-T4tiJZxgA6-YZ4roFF4k175VEkGJHmX7od9iA>
+    <xmx:i02iZ_QwxRx-a_g1od5RD_TWDkHZUxakqW7qYgruR0WkL0l1ayZpYA>
+    <xmx:i02iZ2qhfpUvaaKhf4SAf5UrCxe9Mk1Uaz3td3hhPrEo4JAsKGD12w>
+    <xmx:i02iZ7CWtGsMp16gd9et3b9FsOj1GB8gaRYXpO2IGoZV_PEQ0CCADFi_>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 4 Feb 2025 12:25:30 -0500 (EST)
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: mhartmay@linux.ibm.com,
+	iii@linux.ibm.com
+Subject: [PATCH bpf-next v2 0/3] bpf: Some fixes for nullness elision
+Date: Tue,  4 Feb 2025 10:25:15 -0700
+Message-ID: <cover.1738689872.git.dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+Two fixes for nullness elision. See commits for more details.
 
-> None of the descriptions at the Sphinx extensions are using
-> non-ascii characters, so no need to place them under u"""
-> notation.
->
-> Also, according with:
-> 	https://docs.python.org/3/deprecations/pending-removal-in-3.16.html
->
-> the 'u' format code is scheduled to be removed in Python 3.16.
->
-> So, let's just use """.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+=== Changelog ===
+Changes from v1:
+* Reword commit message in patch 1
+* Add tags
 
-...plus it's all utf8 by default anyway.  I'm kind of surprised we have
-these, I guess they must be a Python 2 holdover.
+Daniel Xu (3):
+  bpf: verifier: Do not extract constant map keys for irrelevant maps
+  bpf: selftests: Test constant key extraction on irrelevant maps
+  bpf: verifier: Disambiguate get_constant_map_key() errors
 
-jon
+ kernel/bpf/verifier.c                         | 29 ++++++++++++++-----
+ .../bpf/progs/verifier_array_access.c         | 15 ++++++++++
+ 2 files changed, 36 insertions(+), 8 deletions(-)
+
+-- 
+2.47.1
+
