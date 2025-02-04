@@ -1,149 +1,90 @@
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+Received: from mail-yw1-f195.google.com (mail-yw1-f195.google.com [209.85.128.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09285204C3C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 07:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9E42063DB
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 07:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738654983; cv=none; b=t2nS35GEefpT5oKavse9mXUgdfcNmT7erBxuACuUbAtmCeB9p1aWFrzkYXkW6bsBZJpmlWjbWe48XFoPXuvg6hOI6MnNbkBaWSHat7CvLxksc8b517KV9T6DThBn0HgrQpCHMY/XttdumfnkIeaT7kyqRqsvlZBF4jQcckdIW3U=
+	t=1738655088; cv=none; b=Fvxzk8nIkoPG/+41eyybcyumLPmTF14e9DarWxBb79NeG3VyqKH8I/+xn4LIQavELRFG7v5qDRuXNDsy/Q9LbtaP+7yxAgt9UV31lgD7YEITTryfLJLqVNgTSGAB6PS62FWh7vNGoJBQ/4YynKzXxmy+cHa4s97BAfZC0Z1BxbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738654983; c=relaxed/simple;
-	bh=Ka0qrGRUs+mm2RhExoKIJw5tzg6+NfIq5LSKW/zQewg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WGhQJvwWbGGk1aZfDQCSNZ3zSlhvJt0EmdnHxj7wafNmeo39MrDntSgxf3O2mVDrayFzxlRFS1LC3ILg22OfjZ/C15timIQxXmd/YJ+VIVShXxEODKPDyAyf6VqgHTSj7AJbCwjuuZMvoSeX6MpMD02KDiIs2G1NyoC5+goaoGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1738655088; c=relaxed/simple;
+	bh=oe3YIDz7o/JvgH5KNQTz45qsc+uflVhOqAiLwW0pem8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=qdA8enKGaKo7KrHxMY+0nYXKtxWWbTR5R8/dvz0PKLPLOIHtQfQYDq90gy1gSt9cwdLGp3ww4CAcg7zPq8DIGuz40gwpQih0ZU7sdseMVRFyPnFvJqmnBU+b2aWy/aPSDkkN/tDTcEZqGqeDvHstNIE7IdLgh35tnzJVnKdPLH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ol8wr/KN; arc=none smtp.client-ip=209.85.128.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4afe7429d37so1374742137.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 23:43:00 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ol8wr/KN"
+Received: by mail-yw1-f195.google.com with SMTP id 00721157ae682-6f4434b5305so31318027b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 23:44:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738655086; x=1739259886; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oe3YIDz7o/JvgH5KNQTz45qsc+uflVhOqAiLwW0pem8=;
+        b=Ol8wr/KNval9Ty3M63GxlBSuMjU5wh1WLm7SmeT0QcR+VTvSmvyOoF7TYz+34jr8as
+         ua7S4SjVOP7noi49lZx6qrbStggcI4aKLeLfj8YDZZujyA/fgs+0qPpR9DaiFJ8iCPD0
+         vYfVjYlC7nKfTR2pTe0aNJCGII7RQTmLFN4DpbkY7v4a0GWr8NC1DR6asb10h24xu7WZ
+         6Z2pEpJVF/Tlaaq2IBsM4JBXCcmNn36ugjTpbRdjbblr9W189F4WttfdtKrU6HYttWCo
+         7woLu1o+QfnvLYHB8gKK3OJMv9sg6JRhokoPgG8THEvFEHztd6/nDRIliiNrVeSE9JwQ
+         0ceg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738654977; x=1739259777;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S0AMgkZ59v94RZ6z6SKh2pbiqGshBRpTXZyxuIUBs2k=;
-        b=KZEYKzFJCtWOWukVq3tpLC4cUHvJB3VaxognaayhE8omdhikdolL7w6wzD2JEAkoy7
-         gJG5q0sPQtJuBGsR3MEDjkTn62wplV20bUOlKY3rCrSqJvFzu+HumG6H/zePjmIZsm5F
-         2bLPJw4VGz8ftdcbxD0nW+SUn84F4HugISm40jvVFF1wun5nRu0s3yrHpuzhe7KWaxgn
-         5wUEIaUng2Lr6ZfrmnxPtZrIiGU85GOPAx/hf6NvEOFTtA6YpYZ39g27VtrsN89VEVMB
-         9h94MHAFyDUZWxBzN0Xr2E/x7Q8SUkTqwlLrV/ma72GRVNDBU2JrjBZ6StgtFtotR1C0
-         zfJw==
-X-Forwarded-Encrypted: i=1; AJvYcCXu8G9C3FUqMyBB9mmFMBuWszhb8C3Urof9jEu1PSx4YXb4JUnWI5p0Nx6SIcIkDgRNBfYyMN2P8JIv9w4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzbvv0PplabJn7NUQvqZeZXycMYZ+W4jRSOyv+h2CK5hhSp/PcZ
-	c+QMQVHjB72ewh5UkQLpxa6JOP6AVgXINf8B4b27lzURzIlQHVu0uchk7UBW
-X-Gm-Gg: ASbGncs2lbFvbgfvEp1LrPbHmwYSZfO07r16TOZSbUZLRGr41fNs1RwVuuue9GGIiBV
-	RK9mk4xCdDZcf9DgU+MgP/dA524LtGVVoqUCABsdghvFgim4HIhUgtqCPU5Ay7O/OPhwwBthpRm
-	7QpSlgEes5D2zTmCdTdU+ia4DQHpwxhV8Nv2QQrRKvkZ8FAchsz0qpTydO+b4FWE016bf84DIHi
-	sCHFv1hYMt+37wlJM64XwB147kgflCEZobe2t98aCEW/BL9Cz7DLG4SC+VjT1dG1/PHJl0OMuXO
-	JKHjeRAKZSjXIAKAvyqsexoBPAZvIWi7NZAPvHXebsc/sDzCxZbEIg==
-X-Google-Smtp-Source: AGHT+IGdy8uugkYWP26UHi6r+MXgn/Yfof+QZU0Lq0jpAOBzA9FqHwKNPqN43MwuoUhMw+BZoPFtjA==
-X-Received: by 2002:a05:6102:a54:b0:4b4:7cb0:ac58 with SMTP id ada2fe7eead31-4b9a4eb44aemr16016119137.2.1738654977085;
-        Mon, 03 Feb 2025 23:42:57 -0800 (PST)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b9baa18af4sm1866723137.1.2025.02.03.23.42.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 23:42:56 -0800 (PST)
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-85b92397fe2so1192813241.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 23:42:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWD/n5OEm4zwQu27qi5b9rapV3wzGgz4xkZslBA5bw9JeIB1SdnRvie0DwwHh25xRMo3dE5ny/ntDMuf4k=@vger.kernel.org
-X-Received: by 2002:a05:6102:504e:b0:4b2:cc94:1881 with SMTP id
- ada2fe7eead31-4b9a525bca9mr15855668137.21.1738654975532; Mon, 03 Feb 2025
- 23:42:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738655086; x=1739259886;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oe3YIDz7o/JvgH5KNQTz45qsc+uflVhOqAiLwW0pem8=;
+        b=f0YM0g0a6XyvAn5t0DSENb+Qvxpy6hq3KRFmsEwNZRz1ihyeq5E99xa+NnDLDjGA1s
+         Tz925k1Vjhs/oGAIRrEEUOwuH+vXIIChz1H0MFKKvnoIv4f8BmqsxELykkN38gopsahC
+         xJ7WP/b93l5jaTOYZD2PSvX+N68Oj3jTuD+Zqs6vGCsKMTmYSa7Q0asdzEqmE7zi+k3j
+         1WtI4DMVnwqpc3hDDLiVtt2acttp72q2lzLqRoIGNaeuGpGDi9ghnW0x3QFPvQ5rM+iD
+         H5cvKF88WHQh4V6sa/761VJm7C3nNb3C2dcEju1ENbaSuU2M6M6TQoygABqGimCK1GN6
+         3ZrQ==
+X-Gm-Message-State: AOJu0YzF2pTKNACaoTgUKRCcKllbDyVqhNm3g3KNZGK20EPEYjdaGUWB
+	gh4GYpPd/HvblhaGBfw9JDEooDntR5Z2ZQfQnz+5XEQ0bIP1Wn96/uPiwVxBNXn0RuMDvUgLIh6
+	vqM27pJYBV3VrK5jzk+GkhrFvxblV/olj5fk=
+X-Gm-Gg: ASbGncswotq/JwEIb+2fd2ir7fFhaEvSHE90eVEfUcmrURLd/n5tkLLVmaRoFoJa+yP
+	9uJhoO4hKWNjDyi+dGCscNBWI+tTNX/QyO3T8WUa6dAsut5TG857nNnx83F2S+xZW17lEgUkEvI
+	bmo6GhV399QW7V4uBWLm4k/VD9eqywOw==
+X-Google-Smtp-Source: AGHT+IGVSabH9p+NfuxjpmXXxSE/kgJnp1vC8KW/SBjQ4Ml/Dm7+JTHrH6MK8FWr6NLCr+BHRo72G21PiLkfb1n25So=
+X-Received: by 2002:a05:690c:6602:b0:6f6:d01c:af1f with SMTP id
+ 00721157ae682-6f7a834f0c8mr187326467b3.16.1738655085963; Mon, 03 Feb 2025
+ 23:44:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203150801.2399555-1-vaishnav.a@ti.com>
-In-Reply-To: <20250203150801.2399555-1-vaishnav.a@ti.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 4 Feb 2025 08:42:44 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUOMCxfsOrUF3-6PX0ZZ_E2g1SK4bwDqZE=mWiibPFt1A@mail.gmail.com>
-X-Gm-Features: AWEUYZkDgnPf76m_8qyV4BFvYG1jJH4IXxwnablOQ3R27shfCtbF4RxvzCNS7dc
-Message-ID: <CAMuHMdUOMCxfsOrUF3-6PX0ZZ_E2g1SK4bwDqZE=mWiibPFt1A@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: defconfig: Enable TISCI Interrupt Router and Aggregator
-To: Vaishnav Achath <vaishnav.a@ti.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, quic_bjorande@quicinc.com, 
-	geert+renesas@glider.be, krzysztof.kozlowski@linaro.org, 
-	dmitry.baryshkov@linaro.org, arnd@arndb.de, nfraprado@collabora.com, 
-	ebiggers@google.com, ardb@kernel.org, nm@ti.com, vigneshr@ti.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	nfrayer@baylibre.com, glaroque@baylibre.com, tglx@linutronix.de, 
-	u-kumar1@ti.com
+From: Amit <amitchoudhary0523@gmail.com>
+Date: Tue, 4 Feb 2025 13:14:35 +0530
+X-Gm-Features: AWEUYZkyzyH9UR-uksif6_SkzGtW2fDr8LELcL5QaKetOf_iE61NUizYl-_3xmA
+Message-ID: <CAFf+5zhYVsRQGOg5gGbgHP44dFvNxvGVRvU__38oc1B55_kmaA@mail.gmail.com>
+Subject: Developing device drivers is not easy on Linux and that's why many
+ companies don't provide Linux drivers for their hardware.
+To: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Vaishnav,
+Hi,
 
-Thanks for your patch!
+Developing device drivers is not easy on Linux and that's why many
+companies don't provide Linux drivers for their hardware.
 
-On Mon, 3 Feb 2025 at 16:08, Vaishnav Achath <vaishnav.a@ti.com> wrote:
-> Enable TISCI Interrupt Router and Interrupt Aggregator drivers.
-> These IPs are found in all TI K3 SoCs like J721E, AM62X and is required
-> for core functionality like DMA, GPIO Interrupts which is necessary
-> during boot, thus make them built-in.
->
-> bloat-o-meter summary on vmlinux:
->         add/remove: 460/1 grow/shrink: 4/0 up/down: 162483/-8 (162475)
->         ...
->         Total: Before=31615984, After=31778459, chg +0.51%
+I will request Linux kernel device driver experts to make driver
+development very easy on Linux (as easy as developing drivers on
+Windows).
 
-My first thought was: that's a hefty size increase for two rather
-small drivers!  So I enabled these two options in one of my own kernel
-configs, and saw a size increase of only 7872 bytes...
+I don't have the required expertise, so I can't do it myself.
 
-> Fixes: 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
-> Fixes: b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
->
-> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
-> ---
->
-> V1 : https://lore.kernel.org/all/20250119182121.3956546-1-vaishnav.a@ti.com/
->
-> V1->V2:
->         * Add Fixes tag.
->         * Add bloat-o-meter summary to commit message.
->
-> Previously both of these configs were selected for ARCH_K3 in respective
-> Kconfigs, but commit b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
-> and commit 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
-> in dropped this recently without adding those back in arm64
-> defconfig, this causes boot failure in all TI K3 platforms.
->
-> Passing bootlog with configs enabled:
-> https://gist.github.com/vaishnavachath/03d8d3ce0f22219643c2f4d1dd243fd1
->
->  arch/arm64/configs/defconfig | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index cb7da4415599..1f25423de383 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -1551,6 +1551,8 @@ CONFIG_PWM_VISCONTI=m
->  CONFIG_SL28CPLD_INTC=y
->  CONFIG_QCOM_PDC=y
->  CONFIG_QCOM_MPM=y
-> +CONFIG_TI_SCI_INTR_IRQCHIP=y
-> +CONFIG_TI_SCI_INTA_IRQCHIP=y
->  CONFIG_RESET_GPIO=m
->  CONFIG_RESET_IMX7=y
->  CONFIG_RESET_QCOM_AOSS=y
+If you don't like my suggestion, then please ignore my mail.
 
-However, on arm64 defconfig, this has indeed a much bigger impact,
-as it also (re)enables several other drivers that depend on the
-irqchip symbols.
+Please look at this page:
+https://www.zdnet.de/41548848/auswaertiges-amt-wechselt-von-linux-zurueck-zu-windows/
 
-You probably want to mention that in the commit message...
+It mostly says that they are going back to Windows from Linux because
+of high costs of driver development on Linux. And probably the high
+costs come from the fact that they have to hire more than one
+developer for writing drivers on Linux because writing drivers on
+Linux is not easy.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Amit
