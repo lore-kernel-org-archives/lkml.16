@@ -1,169 +1,182 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8292537E5
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F8A86321
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738632601; cv=none; b=b4RjWyFdPD77QpXqNZUF3jLezBsGMpG0+NFc9CZSZcExIT9Yhlmpb96iivBqtFDJjhP/A6BRC1Qyy73JGy4JcsJdipxut2TTXGHft97WbwisdcXHi9APRuwvGJWRStrs0YvUuiWIXfH2X3oS1sqKN+wPGUcmYA8pegeAt4MM0fg=
+	t=1738632621; cv=none; b=k8J8odUyRMYXIzLnRlq6F/6HAqFCdnoj/0obhpvw96Ge2n3u44X7pv1s5XlP01+p042BMR/04MfWZfPm9geFrwXYqpiCLVdcY0AF2HDr4WWlNvkfgz+u+wquzMBNaUYpOhLes9/f5HtFUe3/StynT5idk9aJMBZUL9C9BYqsFkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738632601; c=relaxed/simple;
-	bh=1CSFQ+ydcdLecFubxFtMF9SlqEvCyjwJEBoso/Dy1DY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rwe9V6qreNR3MLgv6ghuqGIRbrYY9q9+yXmDkoUSrXbE6f7ypL8q+clgNgtKhXSItNpYZaY9VPXd19t7nRzWCDmuKM8QsGzG+Bk5b+K8MKu/Z4Mt0YLb4R5I8iaxFc6GS1PrurRLOtYhgDnEtVOv4ewsm/S2Lgp+QkpRREh+bL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DgSroyYF; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738632621; c=relaxed/simple;
+	bh=N6TvDM0nH2INUzLNGVXaAxn7onjgXAPxe6GC5SoRom8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WdkAuC/cUgjepQk2t4VSJsORIbPZaBWi9i2QFjmy2+QEw1pS8qlY1CsuPiIKsXsUS7PsSeFQpzs8WQ2Te/VWb4wnnMO0g9wF1SroKrI32AMbF4tU4tUWgQQI9ekTM19YeIureq7CGQMDuneBrboqTiIGhA2XhKLz3TxualRetFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VbAQW7v9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DgSroyYF"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-219f6ca9a81so24915ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 17:29:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738632599; x=1739237399; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cgs22GMIvih+rvIPBu4CVSrVFT+Ext8GsAWJW9535gA=;
-        b=DgSroyYFEtUdX23m7XMdf8MQ49UeKKYPWGmKmrQnx83rDVABBzykYDbyQuFqXoEZJG
-         VzCcr90s6aZfb5YUtLOIwTcNi/p/LlsiQZQiO95uMEACqLqc03t4t0OMj3SKCxqEFhVY
-         FgZxhy/HbyiQsS2ukYwGd4eALN4QCzSBMWeADI3t+HNfXMRBjBt0gKdpf9ccuzgHe2NJ
-         T+v99152ke7xaTvAYO96lOWZqLL8nW6Izo3Jlk8miz3IM5V9cpb4pLDZARwEshQloDgs
-         aY8yYS41VTukGh5b7FoINq9FvoKmj3N7SjOPdWVnoohmZRZcwDhLwbu10zfQBFBemBq1
-         zDfw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VbAQW7v9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738632618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kEtPGmySAsT90Cn4z+YrK/aQ/5zLEgEGFrzIckWzW40=;
+	b=VbAQW7v9/LOmKaavuVNDltnIonTmlr2Rf/esqtHQ2U+qW95X/261QRCuqXcckH+yKelVpa
+	W/GoJAEJ+Ue28T4F/T6XSLpjLy2ulQGJVJrTr+c/dLl62Tpyg+pKTu0cezPASQ200cSx85
+	8PFPW7jBRI+Cwhz4O1u+QB3l66XbyZE=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-524-jxxra08ZOQiCNCgR54lPtQ-1; Mon, 03 Feb 2025 20:30:15 -0500
+X-MC-Unique: jxxra08ZOQiCNCgR54lPtQ-1
+X-Mimecast-MFC-AGG-ID: jxxra08ZOQiCNCgR54lPtQ
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7b6f943f59dso823157085a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 17:30:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738632599; x=1739237399;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cgs22GMIvih+rvIPBu4CVSrVFT+Ext8GsAWJW9535gA=;
-        b=kg2hqprbgmG8NkuZ5452yEQhw0m5652SLbBPlSmLazF+Om0AQzA9t72mTk2saBTlF4
-         mJGcAUzn+sn7jo5T+FcjRTnz+uGtttVbH6U+vZTVi2Fnp/HUj82e9+bgY8RYaWlpjk5c
-         oFuhQiPzniK3RhUYLpw8mLglay/TDWqaqbk8tJ6qCzSzcmH8hdRaBlaWfjC4VDyqfsPs
-         YpJ71P67rsYHL2HhiKGM5TNTGQCrzhDTxN91tvXKQ+ygmry5n5qZ5BYc3wEn17Xmj7l0
-         O5tCi1UrwblXRkPOTpMg2vF68klTe7tpE+U1iUGr5/WygQQH8qlNOIl94nPCSlUj2pTt
-         X99g==
-X-Forwarded-Encrypted: i=1; AJvYcCU7rsvU1FAlXOpAVf3vFvDEiwHHPukoDTSJCrCgQGxxqBy3TfQHlJu3sQ+TdRw+2AsSh9BZaKV4uu3zhog=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLu2KQSTyVJ319iJyNRjvdbHIX+F2JvHbChytKAHRzvQSc7G70
-	TIxAVBYrnrJgcGa1ChT/ocsxyZeF3jFpObhSy7Efbn6YciL7PBqaBs66G+bREA==
-X-Gm-Gg: ASbGncuoXAvbehmquEL3HIrMTiaKuVMg7Unjch2eW5AFK3P27aYx67iBOugI0jz10NZ
-	pR9ocatQY+kaeh6tVwZycX2xGDwa9v3dElH33VOcVFd/25xYG+gOjrlVruSzLjGE4xL4GnD5Ciy
-	jBH7SuDrPCqTNQIWEg88DHYOHqSm9J/7sBch3zujEDhtrD5nVcpmHNAT0ZBMqoY5N95nXVGbNSr
-	jm7QUI8bEuqltARmIxoQi1Nd26fWiR/SUXrHwedePkIXqMa8+29exyXofcaO6uLb5sBUYB2atVi
-	vYpcuvy++1jgo+iXUlQp9NE326EfsE6ptBXvcEp18AQysIrrOXqXfMc=
-X-Google-Smtp-Source: AGHT+IHWUc7R5dlQvBOepVJMbNATdkSv/zYRIZ13MFf9lk+DkYICE0KTYJsxO5+u8NDbE883OqLPNA==
-X-Received: by 2002:a17:902:bc8a:b0:215:86bf:7e46 with SMTP id d9443c01a7336-21f03b3c62dmr686735ad.7.1738632598666;
-        Mon, 03 Feb 2025 17:29:58 -0800 (PST)
-Received: from google.com (147.141.16.34.bc.googleusercontent.com. [34.16.141.147])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de331fabdsm83432105ad.221.2025.02.03.17.29.57
+        d=1e100.net; s=20230601; t=1738632615; x=1739237415;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kEtPGmySAsT90Cn4z+YrK/aQ/5zLEgEGFrzIckWzW40=;
+        b=kIMsLZLmqmHV8AqWPQuaWhoZY2XYR4ADdmhIvHxBIul/JYXMtY2v/di9p1Yvdn5Pwf
+         YRnTBxKqeT6bgr3l3mmMhcu+DtD8Q/E+OUd9W2RfStxKW6csrue1kFpmNVYBIKs/WidP
+         AGFmLhP5IrZdzq8UOLOytg204x3MPxlK4F+TSirZFiAi0vWLfx3zycjtAo/5eRi/45D9
+         w9+9OfgAyVvbI4TY5jNW4fFAPxti7C/B9IDRGGuXGu4OoNKsbgQEPHEPgQfpsCG8NJxx
+         hcu3iovOVRS31AJ4qasPsc+Zq+1Q7woRKgUCykDlUiOkCK3bA8X4cBor0ZklwCLPunqh
+         4y2w==
+X-Forwarded-Encrypted: i=1; AJvYcCX3T3dV+SmGqdRooffYo4wIABiuvmDJUtpsQxOQOSLStIeF4SUiX2E9BA4T6q3tGGBxWi0KHjjPclXFJiE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbFH+W1qaRRfSdtbcOlbthj7+Cn5EMaCc4ix06S9KWB5qCgddr
+	NR5kX/anaqED8yzd2GZ9R3Y/jqKwl9dr2aZzg4eUQIiESU6BxJWhVFAyd73JtM5QIEHLajZElPs
+	YDZYrHvzfZl6fSpB4qVeUkr1j4VFyPFecX59Qtp7O4AzSNhI0lFrjRpZxDrskxg==
+X-Gm-Gg: ASbGncss5RJDezIl9TZBdogVHvEPgxnoMGe7mYX5zKfbie2EbIx2iPvm5Lehg3H8kJG
+	X57QWVHZePeqGUT1sj+9SRRUTxrF27RngWGZv3RYZAAktAGVfrsLhP2qK4TBkgH32q61N0s4kNt
+	eRkk0rhVIpxXJa6/qAnUHJ7gPT6k0FS1pGBNmcosSq+W6KA+ToMFWGHFPwKZX7ouXS0SUYEsFr+
+	DfxQrlU1Mytw/JpGPcdyXbYdqfWCDN0ijiqWf9l71tjFA6BMNAiwtRLKcLA5VWyy4VRZfyLV4d8
+	DE2+
+X-Received: by 2002:a05:620a:d8d:b0:7b6:d026:293 with SMTP id af79cd13be357-7bffccc5cf2mr3294139285a.9.1738632615179;
+        Mon, 03 Feb 2025 17:30:15 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGlYIWzD9OzwmupzIB0M8wCq/FE/w99pzSNI+Y/G8BzsEVGCc3Nn2YWiDO+Q8F6Zyh0IV6L/g==
+X-Received: by 2002:a05:620a:d8d:b0:7b6:d026:293 with SMTP id af79cd13be357-7bffccc5cf2mr3294135585a.9.1738632614765;
+        Mon, 03 Feb 2025 17:30:14 -0800 (PST)
+Received: from starship ([2607:fea8:fc01:8d8d:6adb:55ff:feaa:b156])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a9205f4sm588926385a.114.2025.02.03.17.30.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 17:29:58 -0800 (PST)
-Date: Tue, 4 Feb 2025 01:29:53 +0000
-From: Peilin Ye <yepeilin@google.com>
-To: Eduard Zingerman <eddyz87@gmail.com>
-Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bpf@ietf.org,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	David Vernet <void@manifault.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
-	Neel Natu <neelnatu@google.com>,
-	Benjamin Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v1 7/8] selftests/bpf: Add selftests for
- load-acquire and store-release instructions
-Message-ID: <Z6FtkchYQjgjdv1x@google.com>
-References: <cover.1737763916.git.yepeilin@google.com>
- <3f2de7c6e5d2def7bdfb091347c1dacea0915974.1737763916.git.yepeilin@google.com>
- <131a817f7f2749e78e527a251ca7971588cf62f8.camel@gmail.com>
- <Z6Ffquq8IORjCqrI@google.com>
- <dead664fa11ac274db00b509931c533883dd4fdf.camel@gmail.com>
+        Mon, 03 Feb 2025 17:30:14 -0800 (PST)
+Message-ID: <dc784d6e4f6c4478fc18e0bc2d5df56af40d0019.camel@redhat.com>
+Subject: Re: [PATCH 1/3] KVM: x86: hyper-v: Convert synic_auto_eoi_used to
+ an atomic
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: "Naveen N Rao (AMD)" <naveen@kernel.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>,  Suravee Suthikulpanit
+ <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>
+Date: Mon, 03 Feb 2025 20:30:13 -0500
+In-Reply-To: <3d8ed6be41358c7635bd4e09ecdfd1bc77ce83df.1738595289.git.naveen@kernel.org>
+References: <cover.1738595289.git.naveen@kernel.org>
+	 <3d8ed6be41358c7635bd4e09ecdfd1bc77ce83df.1738595289.git.naveen@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dead664fa11ac274db00b509931c533883dd4fdf.camel@gmail.com>
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 04:52:52PM -0800, Eduard Zingerman wrote:
-> > > > --- a/tools/testing/selftests/bpf/progs/arena_atomics.c
-> > > > +++ b/tools/testing/selftests/bpf/progs/arena_atomics.c
-> > > [...]
-> > > 
-> > > > +SEC("raw_tp/sys_enter")
-> > > > +int load_acquire(const void *ctx)
-> > > > +{
-> > > > +	if (pid != (bpf_get_current_pid_tgid() >> 32))
-> > > > +		return 0;
-> > > 
-> > > Nit: This check is not needed, since bpf_prog_test_run_opts() is used
-> > >      to run the tests.
-> > 
-> > Could you explain a bit more why it's not needed?
-> > 
-> > I read commit 0f4feacc9155 ("selftests/bpf: Adding pid filtering for
-> > atomics test") which added those 'pid' checks to atomics/ tests.  The
-> > commit message [1] says the purpose was to "make atomics test able to
-> > run in parallel with other tests", which I couldn't understand.
-> > 
-> > How using bpf_prog_test_run_opts() makes those 'pid' checks unnecessary?
-> > 
-> > [1] https://lore.kernel.org/bpf/20211006185619.364369-11-fallentree@fb.com/#r
+On Mon, 2025-02-03 at 22:33 +0530, Naveen N Rao (AMD) wrote:
+> apicv_update_lock is primarily meant for protecting updates to the apicv
+> state, and is not necessary for guarding updates to synic_auto_eoi_used.
+> Convert synic_auto_eoi_used to an atomic and use
+> kvm_set_or_clear_apicv_inhibit() helper to simplify the logic.
 > 
-> Hi Peilin,
+> Signed-off-by: Naveen N Rao (AMD) <naveen@kernel.org>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  7 ++-----
+>  arch/x86/kvm/hyperv.c           | 17 +++++------------
+>  2 files changed, 7 insertions(+), 17 deletions(-)
 > 
-> The entry point for the test looks as follows:
-> 
->     void test_arena_atomics(void)
->     {
->     	...
->     	skel = arena_atomics__open();
->     	if (!ASSERT_OK_PTR(skel, "arena atomics skeleton open"))
->     		return;
->     
->     	if (skel->data->skip_tests) { ... }
->     	err = arena_atomics__load(skel);
->     	if (!ASSERT_OK(err, "arena atomics skeleton load"))
->     		return;
->     	skel->bss->pid = getpid();
->     
->     	if (test__start_subtest("add"))
->     		test_add(skel);
->             ...
->     
->     cleanup:
->     	arena_atomics__destroy(skel);
->     }
-> 
-> Note arena_atomics__{open,load} calls but absence of the
-> arena_atomics__attach call. W/o arena_atomics__attach call the
-> programs would not be hooked to the designated extension points,
-> e.g. "raw_tp/sys_enter".
-> 
-> The bpf_prog_test_run_opts() invokes BPF_PROG_TEST_RUN command of the
-> bpf system call, which does not attach the program either,
-> but executes jitted code directly with fake context.
-> (See bpf_prog_ops->test_run callback (method?) and
->  bpf_prog_test_run_raw_tp()).
-> 
-> Same happens in prog{,_tests}/arena.c: no attachment happens after
-> commit [2]. Commit [1] is unnecessary after [2].
-> 
-> [2] commit 04fcb5f9a104 ("selftests/bpf: Migrate from bpf_prog_test_run")
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 5193c3dfbce1..fb93563714c2 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1150,11 +1150,8 @@ struct kvm_hv {
+>  	/* How many vCPUs have VP index != vCPU index */
+>  	atomic_t num_mismatched_vp_indexes;
+>  
+> -	/*
+> -	 * How many SynICs use 'AutoEOI' feature
+> -	 * (protected by arch.apicv_update_lock)
+> -	 */
+> -	unsigned int synic_auto_eoi_used;
+> +	/* How many SynICs use 'AutoEOI' feature */
+> +	atomic_t synic_auto_eoi_used;
+>  
+>  	struct kvm_hv_syndbg hv_syndbg;
+>  
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index 6a6dd5a84f22..7a4554ea1d16 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -131,25 +131,18 @@ static void synic_update_vector(struct kvm_vcpu_hv_synic *synic,
+>  	if (auto_eoi_old == auto_eoi_new)
+>  		return;
+>  
+> -	if (!enable_apicv)
+> -		return;
+> -
+> -	down_write(&vcpu->kvm->arch.apicv_update_lock);
+> -
+>  	if (auto_eoi_new)
+> -		hv->synic_auto_eoi_used++;
+> +		atomic_inc(&hv->synic_auto_eoi_used);
+>  	else
+> -		hv->synic_auto_eoi_used--;
+> +		atomic_dec(&hv->synic_auto_eoi_used);
+>  
+>  	/*
+>  	 * Inhibit APICv if any vCPU is using SynIC's AutoEOI, which relies on
+>  	 * the hypervisor to manually inject IRQs.
+>  	 */
+> -	__kvm_set_or_clear_apicv_inhibit(vcpu->kvm,
+> -					 APICV_INHIBIT_REASON_HYPERV,
+> -					 !!hv->synic_auto_eoi_used);
+> -
+> -	up_write(&vcpu->kvm->arch.apicv_update_lock);
+> +	kvm_set_or_clear_apicv_inhibit(vcpu->kvm,
+> +				       APICV_INHIBIT_REASON_HYPERV,
+> +				       !!atomic_read(&hv->synic_auto_eoi_used));
 
-I see.  Thanks for the quick reply as always!
+Hi,
 
-Peilin Ye
+This introduces a race, because there is a race window between
+the moment we read hv->synic_auto_eoi_used, and decide to set/clear the inhibit.
+
+After we read hv->synic_auto_eoi_used, but before we call the kvm_set_or_clear_apicv_inhibit,
+other core might also run synic_update_vector and change hv->synic_auto_eoi_used, 
+finish setting the inhibit in kvm_set_or_clear_apicv_inhibit,
+and only then we will call kvm_set_or_clear_apicv_inhibit with the stale value of hv->synic_auto_eoi_used and clear it.
+
+IMHO, knowing that this code is mostly a precaution and that modern windows doesn't use AutoEOI
+(at least when AutoEOI deprecation bit is set), instead of counting, we can unconditionally
+inhibit the APICv when the guest attempts to use AutoEOI once.
+But as usual I won't be surprised that this breaks *some* old and/or odd windows versions.
+
+Best regards,
+	Maxim Levitsky
+
+
+
+
+
+>  }
+>  
+>  static int synic_set_sint(struct kvm_vcpu_hv_synic *synic, int sint,
+
+
+
 
