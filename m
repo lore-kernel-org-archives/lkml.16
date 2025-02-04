@@ -1,83 +1,73 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31598212F83
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E9529CEB;
+	Tue,  4 Feb 2025 13:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738674521; cv=none; b=tdu3q6oFWe9Mv2kwrf3iauGna00+Zb85MwyQBdjHsVCYveRvwgZUqq1fczFk7r5BNk97TjJdprw7eAazVHKL6n8jjxkF5KOj0kL/uzx8REfecAigpDPp+rfWb/Cy0DITSUToo5obI/sdkSFXUuVMRMhZEGxPD2I8nmybAS92WDs=
+	t=1738674552; cv=none; b=lFTRRVTF6mJ6Un0KZAeEcYoExbXDZUqz9E7rM90PHvzndB1rslgGRgawphDQDAZpN57CVX0rALnMWJ54XyfXdnGJhWH7zrgzl/j0Q4tPrfC+tjlUMnOyHFif07aiUAXK3ZEfSG+hDn1m2N+JzgVEMtfSy6hLPPMSq6V0PmgqxaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738674521; c=relaxed/simple;
-	bh=WJYLX+htA6jdaBcQbWXWuHyrEeF40woSzwAmHNiLlJg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CU1MHLp98ufF18++E7A/Nny2ONpxCM/MPuTRkbmuVQ9AfXsaHD2NAJxPPl2fAZHqbsfMdn/omhVuhKXp9InCuImYEfpgJqF3YdgsER0kfe9hKMRUA6pEHMBAS+YJTklEGtRdbR9An7L59fz2atUoZZD346BKAfp7e6y9q+yU9lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4XCkX00g; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l5jNDgfo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738674552; c=relaxed/simple;
+	bh=HeGq3gDkjwQ8sGI5kYcTspmgODrJpr1IBbSirfssk1M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KJtTbrwyyK+YmeBeWIx1/luqB/Tpqbgtmpj+CiVmzz/8GzXnW+kKlM/6gQBsIiMJwnowSSxdKOBlnRD9m+cPAuvYNvygbIz3+031fyEUJvO8rJwrvdvTkYFXtREOx1+pQK/hHCBw4bTHSgie7HCdNpy95fMepn2bkCE15wOEXeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=alIa64Nw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4XCkX00g";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l5jNDgfo"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738674517;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V5DeqBZU1L9QeN9+jSLCKVus5CfdrhjiOwXPQY3ZMZs=;
-	b=4XCkX00gNx2wQJKBGnIkm5Orn7cKaAc/gnIn3rVSJ9P/cbTwnQ/y2YTjbwPByi8sgGthTn
-	h6VDvqD87nlQqv+SsDJPPG7vz3qhlYMdlHHhIf8snhVJ72kLNmfH49PbgSpPCbWWjpFYad
-	yVSiR9T48gxWZSj/+r96aCh3usUiA9yVS7QOdjrIVA7xlOr7vS4V+rQLfw1Yud8IoUZ/m9
-	ezGfQqYAIiO4fjXW5hCOEYm1eCEOURVm0BFOEghdww7bpPVDXp9wU83ZLlVQiHvaRf/0ec
-	1Q/ijZyMac/8zyTHHYh6W+v4Z5i0hLNJGW/lFlRGV+gGGu8gsGScBesa0nw+/Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738674517;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V5DeqBZU1L9QeN9+jSLCKVus5CfdrhjiOwXPQY3ZMZs=;
-	b=l5jNDgfoExDvAIV8gfDzxRuGhJnYeLAIb2W3ik0rpczuqULHv9Mk0dEXvrelr5BiTIAHCX
-	/Mlcexpsp2eNEWCA==
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement
- <gregory.clement@bootlin.com>, Sebastian Hesselbarth
- <sebastian.hesselbarth@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Atish Patra
- <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, Sunil V L
- <sunilvl@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev, Anup Patel
- <apatel@ventanamicro.com>
-Subject: Re: [PATCH v3 01/10] irqchip/riscv-imsic: Handle non-atomic MSI
- updates for device
-In-Reply-To: <20250204075405.824721-2-apatel@ventanamicro.com>
-References: <20250204075405.824721-1-apatel@ventanamicro.com>
- <20250204075405.824721-2-apatel@ventanamicro.com>
-Date: Tue, 04 Feb 2025 14:08:37 +0100
-Message-ID: <87frktoo16.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="alIa64Nw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 942BDC4AF09;
+	Tue,  4 Feb 2025 13:09:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738674551;
+	bh=HeGq3gDkjwQ8sGI5kYcTspmgODrJpr1IBbSirfssk1M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=alIa64NwNAmFXcJu+OgvEsBEmChgnaLwpRL7osb8gWffNi5HH0rZo1apqxh+D6u7E
+	 Zt71Bac9qa72Agt8Zrbtn6D3V647/Ov29t9SYB+BVFpyegWC6n5P29t+f3OxuPGbHJ
+	 E4BXSWXuP6EBeldo9o8i8ndeDhndgpZUGwy0LMf+4QiKE3kNQDT6S27O5gHOEmGBWc
+	 liweYWC7uMp3hRmfKSt4kyRNlWI+JyzMHsqGvBJ0Q61kGaPwfPuyMd+1kb3QTNrP0b
+	 pSMWi1hFf9mGo+aYVV83PCsG1h3M7GCp9Be542zSNXue9qmo8YNgrL9vlDyLmyUHhl
+	 wmmP1U13BV9Vw==
+From: Will Deacon <will@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
+	Yury Khrustalev <yury.khrustalev@arm.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Spickett <David.Spickett@arm.com>
+Subject: Re: [PATCH] arm64/gcs: Fix documentation for HWCAP
+Date: Tue,  4 Feb 2025 13:09:02 +0000
+Message-Id: <173867198667.3989022.94600880351884502.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250124-arm64-gcs-hwcap-doc-v1-1-fa9368b01ca6@kernel.org>
+References: <20250124-arm64-gcs-hwcap-doc-v1-1-fa9368b01ca6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 04 2025 at 13:23, Anup Patel wrote:
-> Device having non-atomic MSI update might see an intermediate
-> state when changing target IMSIC vector from one CPU to another.
->
-> To handle such intermediate device state, update MSI address
-> and MSI data through separate MSI writes to the device.
+On Fri, 24 Jan 2025 17:33:22 +0000, Mark Brown wrote:
+> In one of the renumberings of the GCS hwcap a stray reference to HWCAP2 was
+> left, fix it.
+> 
+> 
 
-As pointed out in the other mail, this intermediate step does not fix
-the issue. It requires that the MSI message write happens on the
-original target CPU so that an interrupt which is raised on that
-intermediate vector can be observed.
+Applied to arm64 (for-next/fixes), thanks!
 
-Thanks,
+[1/1] arm64/gcs: Fix documentation for HWCAP
+      https://git.kernel.org/arm64/c/f64f9dddd1f5
 
-        tglx
+Cheers,
+-- 
+Will
 
-
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
