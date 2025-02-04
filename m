@@ -1,139 +1,175 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FFE21C17B;
-	Tue,  4 Feb 2025 23:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410F521C9EE
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 23:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738711325; cv=none; b=ki4bO6VcA1bfzjCNFYpr/QOvpNVh9M8i97v3VsJmPK8ciqVJTtf353aWsla2sw9qsJwNPxv3fs2wSjQ0MqeRfWyXmilRthfdc/GUm8iTv1/T8lEh1AAMrDLf7Kf8qfPO3qcl0S02yXGQs+ylHQb0saTWZ787OKPyqPz41GLKJGM=
+	t=1738711456; cv=none; b=IPFq8enfkI14aj5wU1LV73i4SOhzSoMfKYzkLoLcVo/6vw8K9HL4ZG/+fKACK+c7HlTOMDYjjZogYeyXJlMIv7FvpAi6XAqr/B2kyqcGyBkqFmhV+IqEESOWB4uzN4UbuflPjelOMW8S3+BqaLJSobqw0rlu8ABY2HfaYKVUawc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738711325; c=relaxed/simple;
-	bh=e2TVzUbRqBCxTVqTlfUdnaIbDJGEbaayIa/i2ReZiNw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uSuH88KAzNajJLxUYkXJP+c136JrCAT4OvlbXNOQJWmp2954EzRP/JYfcIqEzC7rFLwQ8XBpydXnrNEoV7bRNaqFdJiOu2MTQQCJ4ywp/3IKQkp5/0IxMQ3LhJJbzSy1rPqlH+UtLazLeFAj98iL9QRuvjro/R6ucAiFBky54ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=qmATbGk+; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1738711456; c=relaxed/simple;
+	bh=FEX3Vdh+NEZiYfGk1vrrsJOKApKBG+9+aixlZ2R/lW0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gds4jeRbzstXpux33hY9LzL8YnlVS0864c2UR+mpl4T2lfoSMPjpTQquasabot3aWVhmkKJcLEkUhOs6PIqeD077008oBPQZ/99D+A4DEywMvcU/40cwP9xUhDm82ixFnMly0wusAFIbudZh7T6511n05wS3fc+6yy2TWMUyz9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=NIwPyW0u; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="qmATbGk+"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514FmWAQ029190;
-	Tue, 4 Feb 2025 17:19:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=iwVGm2zIZxv30QAxGxxXgudWn5/8W/GZ/AyWJMQKILI=; b=
-	qmATbGk+dCT6TqCrWx5EByS1QmaxM3kGEU55NF+y9IWGYnwWQEMQs2tgFUcCs3yv
-	C+tFM2hN5y7iGZ++PJH2W75G5CB15cKTXOfuXAFV6/hL57rFoZEWsA5SyxKusTJc
-	qXbCkjXLgrMhqIcS18sOghm8ybFO9x6fXdENN/m/AgF2x+X2lUOXVScvmXUvW0QT
-	ibznDUU8fwbFUSvNv9mzN+NkEgBxJK3BQnyzl5hukLb5q2BnBbhnMa20+BXmyYRg
-	q5yP4TloRtDWsfYzApAi3H2he0ft+zLZ9lL+ihG3v0wv49b2qqQy75K7/THv4E6G
-	67XFNc5a8hD6wvXENWUR+A==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 44hhw53pk0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 17:19:32 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 4 Feb
- 2025 23:19:29 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Tue, 4 Feb 2025 23:19:24 +0000
-Received: from ftrev.crystal.cirrus.com (ftrev.ad.cirrus.com [141.131.145.81])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 7CF3F820248;
-	Tue,  4 Feb 2025 23:19:20 +0000 (UTC)
-From: Fred Treven <ftreven@opensource.cirrus.com>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Simon
- Trimmer" <simont@opensource.cirrus.com>,
-        Charles Keepax
-	<ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald
-	<rf@opensource.cirrus.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        James Ogletree <jogletre@opensource.cirrus.com>,
-        Ben Bright
-	<ben.bright@cirrus.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
-	<broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>,
-        David Rhodes <david.rhodes@cirrus.com>,
-        Jeff LaBundy
-	<jeff@labundy.com>, Heiko Stuebner <heiko@sntech.de>,
-        Karel Balej
-	<balejk@matfyz.cz>,
-        Igor Prusov <ivprusov@salutedevices.com>,
-        Jack Yu
-	<jack.yu@realtek.com>,
-        Weidong Wang <wangweidong.a@awinic.com>,
-        Binbin Zhou
-	<zhoubinbin@loongson.cn>,
-        Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
-        "Paul
- Handrigan" <paulha@opensource.cirrus.com>,
-        Masahiro Yamada
-	<masahiroy@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
-        Fred Treven
-	<ftreven@opensource.cirrus.com>
-CC: <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-input@vger.kernel.org>, <linux-sound@vger.kernel.org>
-Subject: [PATCH RESEND 1/7] firmware: cs_dsp: Fix error checking in wseq_write()
-Date: Tue, 4 Feb 2025 17:18:30 -0600
-Message-ID: <20250204231835.2000457-2-ftreven@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250204231835.2000457-1-ftreven@opensource.cirrus.com>
-References: <20250204231835.2000457-1-ftreven@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="NIwPyW0u"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-854a68f5afcso109784039f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 15:24:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738711452; x=1739316252; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7C+mmXcghpctUltjMuPzZT5k+4ILd9aRvVJeIVZ5h7E=;
+        b=NIwPyW0uky7MWvSUA4RrnNlmxM/EWqPpshZxttoVAADQYvbO1fKez3zdMlkX9PhkYD
+         CTJ8uVIWJxJ7+3H6gmYO3lswgiCiktGMZ31AZ0dCBy8zyObMc+zb3FXBBwQbIohuwmiL
+         sg9ATWw4dbquEfcQAv0dx5LlPTt4m8GYEs4fG5mSnf+ynjo02KyG7nTZ+AXtGiivWaBd
+         oQBK7ibjWxaj2ZzmUHVPErbOsg6sf6bG6779s7hUnqak1ifazJqK1x/UL2OI+JmeTKVB
+         J5uopAn9P4bGV+hWWrhFwJb6Lgrt/41Id2uoxvy85xEUG/21O0yfSwA6MENKOLf1iLRy
+         BMdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738711452; x=1739316252;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7C+mmXcghpctUltjMuPzZT5k+4ILd9aRvVJeIVZ5h7E=;
+        b=nNL84jLhQ21xGltZPQ7yMY+9fseSnreIq/vKsgFMDS7BjPOQKHDDeY+g/mUo8pNO7j
+         U78mocQbafo8nSfs7seZ3HSLlNyQZtudysLVPOVAaRH7CciEYMblACUzpXIZpl2JAjFc
+         BpEI74GQfLFJJEuYFe6MUA80CE1cG40DDu6DL05xMv0GuDq/7bEnubrG0GiyHJjuNdZX
+         Iqls9Lk7Qf03OMMoAzw9KuUEqwA7F+Z5aMrlx6IHb/CuKNRvjPP7c8Mm58VfRtZU97E3
+         JoArNxiCxZnyfkoYlqLLQHrzB28Gi4H2IK+92Ng9UEe++2xULVJhm+nrg8RihtOnNthU
+         Q2Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdyZLImHlgR49xpbMhDGNdhlndgiwdA1vUxNU2D1uQiLnYb8/ECHO+NzkraT9E3WhDhkxLki+DXeyv9zI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa/NNlmRdLSvRi7ylEqAmE9IOCLTFDpAK858XwCmJROKjBJEMh
+	Q8roIjTeVqPf/ELn9jAuA4otONfHt2+jml3iTGmDgB0JJH+ciTm0/muDtIENoFw=
+X-Gm-Gg: ASbGnctkElIQYvQqBtze6EwTi9y0ghNOdooTwu7k4PKmwr3CXysUHEd7LlEvuI2U/uC
+	usgnK9VT3MjJQtz5SHX2ynNINt9Rj6bg0lsHQXX1xJovZjgXJwfUVRaT+OY414KmKwRKt2msdOK
+	mBo7hONRTIzGsUsNGz4Qk6u0TWfTGVYcT63g5mX4Q4M04hXIe/5bGUoOSHDESBvEWWOA5vTGKQV
+	67sIHZ98ep9MAXz2g9A+iX7PZ2ZQVC1Y8xbi/DH3loXVvajB9o44yQ3aoOb0/X3MlFF/5RidgiT
+	CTED7A==
+X-Google-Smtp-Source: AGHT+IFk01l67w5flnt7AW1w/8rmtq99wc4nbdFvSpX2xfx/D9I29fUoitlQP4S1XPO0eaV5SdxmsA==
+X-Received: by 2002:a05:6602:3711:b0:83a:a305:d9ee with SMTP id ca18e2360f4ac-854ea515978mr94544239f.12.1738711451927;
+        Tue, 04 Feb 2025 15:24:11 -0800 (PST)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ec7458ed1bsm2990762173.4.2025.02.04.15.24.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 15:24:10 -0800 (PST)
+Date: Tue, 4 Feb 2025 15:24:07 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Quentin Monnet <qmo@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	Linux Power Management <linux-pm@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] tools: Unify top-level quiet infrastructure
+Message-ID: <Z6Khl1rHIAb7wOXw@ghost>
+References: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
+ <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
+ <Z6JdwSsAk1xCiSrn@ghost>
+ <Z6JksXDRh8OSAh-u@google.com>
+ <CAADnVQKmKf6wY3dg+PfAxtrrFWGO7D-m83dEndjWksPfWDt5wQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: LLWwZEzpZPzgeIlQ15q6_d9H5f4dIMCe
-X-Authority-Analysis: v=2.4 cv=W/3CVQWk c=1 sm=1 tr=0 ts=67a2a084 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=b0R_zkI-s6yCh7IOb7YA:9 a=YXXWInSmI4Sqt1AkVdoW:22
-X-Proofpoint-GUID: LLWwZEzpZPzgeIlQ15q6_d9H5f4dIMCe
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <CAADnVQKmKf6wY3dg+PfAxtrrFWGO7D-m83dEndjWksPfWDt5wQ@mail.gmail.com>
 
-cs_dsp_coeff_write_ctrl() may return a non-zero value (1)
-upon success. Change error checking in the write sequencer
-code such that it checks for negative errnos rather than
-any non-zero value when using this function.
+On Tue, Feb 04, 2025 at 11:02:42PM +0000, Alexei Starovoitov wrote:
+> On Tue, Feb 4, 2025 at 7:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > On Tue, Feb 04, 2025 at 10:34:41AM -0800, Charlie Jenkins wrote:
+> > > On Tue, Feb 04, 2025 at 05:18:42PM +0000, Alexei Starovoitov wrote:
+> > > > On Tue, Feb 4, 2025 at 12:10 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > > > >
+> > > > > The quiet infrastructure was moved out of Makefile.build to accomidate
+> > > > > the new syscall table generation scripts in perf. Syscall table
+> > > > > generation wanted to also be able to be quiet, so instead of again
+> > > > > copying the code to set the quiet variables, the code was moved into
+> > > > > Makefile.perf to be used globally. This was not the right solution. It
+> > > > > should have been moved even further upwards in the call chain.
+> > > > > Makefile.include is imported in many files so this seems like a proper
+> > > > > place to put it.
+> > > > >
+> > > > > To:
+> > > > >
+> > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > > ---
+> > > > > Charlie Jenkins (2):
+> > > > >       tools: Unify top-level quiet infrastructure
+> > > > >       tools: Remove redundant quiet setup
+> > > > >
+> > > > >  tools/arch/arm64/tools/Makefile           |  6 -----
+> > > > >  tools/bpf/Makefile                        |  6 -----
+> > > > >  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
+> > > > >  tools/bpf/bpftool/Makefile                |  6 -----
+> > > > >  tools/bpf/resolve_btfids/Makefile         |  2 --
+> > > > >  tools/bpf/runqslower/Makefile             |  5 +---
+> > > > >  tools/build/Makefile                      |  8 +-----
+> > > > >  tools/lib/bpf/Makefile                    | 13 ----------
+> > > >
+> > > > Nack.
+> > > > libbpf and bpftool are synced independently to github
+> > > > and released from there.
+> > > > This change breaks it.
+> >
+> > Sorry, I overlooked this part and merged a change that touched the
+> > common files into the perf tree.
+> >
+> > f2868b1a66d4f40f ("perf tools: Expose quiet/verbose variables in Makefile.perf")
+> >
+> > Unfortunately, it's already in v6.14-rc1.
+> >
+> > >
+> > > Can you explain how it breaks it? Currently bpftool and resolve_btfids
+> > > don't build quietly so this was an attempt to fix that.
+> >
+> > So I think you will need something like this for v6.14.  Again, sorry
+> > about the trouble.
+> 
+> Just revert f2868b1a66d4f40f that created this mess.
 
-Signed-off-by: Fred Treven <ftreven@opensource.cirrus.com>
----
- drivers/firmware/cirrus/cs_dsp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Why are you opposed to unifying this helpers among the various projects
+in tools? Can you explain what about this breaks the Github syncing flow
+and why it cannot be resolved? It doesn't make sense to duplicate "Q="
+in every Makefile anybody ever wants to add to tools just because bpf
+syncing isn't robust.
 
-diff --git a/drivers/firmware/cirrus/cs_dsp.c b/drivers/firmware/cirrus/cs_dsp.c
-index 5365e9a43000..56315b0b5583 100644
---- a/drivers/firmware/cirrus/cs_dsp.c
-+++ b/drivers/firmware/cirrus/cs_dsp.c
-@@ -3702,7 +3702,7 @@ int cs_dsp_wseq_write(struct cs_dsp *dsp, struct cs_dsp_wseq *wseq,
- 
- 		ret = cs_dsp_coeff_write_ctrl(wseq->ctl, op_end->offset / sizeof(u32),
- 					      &op_end->data, sizeof(u32));
--		if (ret)
-+		if (ret < 0)
- 			goto op_new_free;
- 
- 		list_add_tail(&op_new->list, &op_end->list);
-@@ -3710,7 +3710,7 @@ int cs_dsp_wseq_write(struct cs_dsp *dsp, struct cs_dsp_wseq *wseq,
- 
- 	ret = cs_dsp_coeff_write_ctrl(wseq->ctl, op_new->offset / sizeof(u32),
- 				      words, new_op_size);
--	if (ret)
-+	if (ret < 0)
- 		goto op_new_free;
- 
- 	return 0;
--- 
-2.34.1
+- Charlie
 
