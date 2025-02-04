@@ -1,177 +1,135 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5980189913
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD54143C5D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738662391; cv=none; b=YY9OGo1uoQm5A0vu0csyI7v/lo9E8juo5E2rUh+cdOCHoBBEeXbrOCtABqeDFSXT4bHu4jC6ni0xZB+KecIDk1AQCKbzT//4zTeF9vxFAKNzfAvYKt3CR5hesRpotwKHrQoW1NU0yyp5YzYzT9gXzC6J4xx4RD7qmHjvlGHJRCg=
+	t=1738662570; cv=none; b=qLQx2/WRvm3lDfylehPmYNRwr+GZ5SI1s1hMWKrtBsveW7XLqx+oKvCJy3RFo1RRl0RnDLW0uIdvTSHVBIIXDN3fXbmslMWw/JztWETnWiVQ8vXMSpOv3ob2h5xnCiOTQScZKRSkageH2ew6bvGD51sNDZuFuY2+4N0igTaM7fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738662391; c=relaxed/simple;
-	bh=TwNDP+00RgGf4vX+sViNbRUp1sqAvulqoCSyRLnSZmA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UtKNLD0feobyQ1psC5PY0341RjRanANEhHFKr9wbUrSBZ1HC8qfFuDGTlzUyuvurvlmLmYRNyxjL7z6S6I8SOHVMIkBQ/H+49d0D5ejZEtEwFNztre1Sqdp65YBD9q1tltm5CebTspK+wTT/L9/9RnfUvEN0BTxKHDMbMPekdXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3cfb2d37dbdso38490255ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 01:46:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738662389; x=1739267189;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wZE+EmsDVH3/iA7xkKOngyxwK7oLNaXw/irVVx8Ze1o=;
-        b=BSkeDiv6B2ePvIJwSDIpAc9DTplTxvCcFRCABfZklqOCvqmMraXil3ffmIPX8P+6gX
-         SvoLc/McIP7bLPnnV6EfKf/UZJtwzpV46GiU6fhR++dTMks7xcH8AXqZhKj7Wmo2RNLy
-         iVKfWpufbGwX3GLp1CecINRDjyHuFcSmcJOkgr88DA6a3t2hq0oCMBgdR6e6li/ANH6m
-         NzJpklmDUo2qEgCC5Hl0HLHVInAc8MRA+gs5SABIYHH34Au+Xx+MiDRbhBu5rDVjjfFz
-         ts+5DJvyRmFtUYljhNiUOSkz+4m9w5mM2pjn5JQ0OptT4U8fSWwy71Ci0F5DLWMUW2/t
-         vm+g==
-X-Forwarded-Encrypted: i=1; AJvYcCXfGm4LkaUfTRSNNPKs6ihrlWRfPAPoY+wIUr7nfPLkOWmO/CfU5eO5AZ6Dr77+jynvG12l4zVrg2kUW9Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1ARpDhZFKuaMaJSyl/DYiDq2/8U4XGd2HmqPQlUh0t5rkuO9o
-	Hjiz9qOaHDV+eT8YD8CRW5RzIo3gbFbK9J2Mk2/lurfqijouPWgWDITHR4/U+GCgvjYPpsmh0R5
-	W/D58LCFfz3sdWI6myFe+fenHVhxoYzf3TMhYFDGuZwdRnGd0ldl3Fcc=
-X-Google-Smtp-Source: AGHT+IGfBkb9X7jQRYB3l44Jn9qXd32Mgl3O/5Z3FsJx3kkyI/TxfbmDUwsUUNE+b72TmVTtOxHviz6OKHqhBBngU7QrxIywQYSp
+	s=arc-20240116; t=1738662570; c=relaxed/simple;
+	bh=xf+b20hBKBD3X1D2s4oZvn2AvY6WgFi0/MgTCjD6A1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ds7KgszRqcC1eZSQwnne6crJAHBNIZ6h+gQbbXQ9fPo0zcrz3P52NrkuVLS67zImw1rebD5IHahS7FjKnLTghckdCL/VTVxOfKCygCf/sZzCyQk0R2a66IYhkrdgky4DTtYsj0xGItnrWShzwMrghsEq7VjWRPj44jjOPPpDsF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=h/tZxtCO; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h/tZxtCO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=GmbUKWkL39aTTx8pNl8hva18Ww/CYiBJpH8AAzZSodQ=; b=h/tZxtCOU5CBo/ns+/z3UXN3bH
+	xu9EEAffGlXl8ZlO17uB9G25gRcol+Cfh6G4H1iC84O9Tqe+h4+iaXibb8lTZ1+QGZidqZdDCOVzG
+	d7OAhUBJtbBs+gC2r285DVVsoATUkuWzg39wTvaUIjmh7iXCh7KhRCIMPK62XymFzJK6YWQLJbzN+
+	i2njpOyqf/VQQFSi5/2cdXkGtV7K5ifaNAmSbUcVUl8G4t/D7aco9+5fLlAdBLrctjjW/ry0HGvWx
+	zq/C3A5rr3p+tVxEkDPqZRUf1ng32W3yKOo2SJsL+lS2H/Ag24OsbM1ti6GCkpopxBQmssIBOVlxS
+	hzR8nMmA==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfFYZ-00000002VZk-451B;
+	Tue, 04 Feb 2025 09:49:24 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F089B300599; Tue,  4 Feb 2025 10:49:22 +0100 (CET)
+Date: Tue, 4 Feb 2025 10:49:22 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v8 08/15] futex: Prepare for reference counting of the
+ process private hash end of operation.
+Message-ID: <20250204094922.GS7145@noisy.programming.kicks-ass.net>
+References: <20250203135935.440018-1-bigeasy@linutronix.de>
+ <20250203135935.440018-9-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c0c:b0:3cf:cc97:c9c6 with SMTP id
- e9e14a558f8ab-3cffe41a2admr213283495ab.17.1738662388859; Tue, 04 Feb 2025
- 01:46:28 -0800 (PST)
-Date: Tue, 04 Feb 2025 01:46:28 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
-Subject: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
-From: syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, brauner@kernel.org, gustavoars@kernel.org, 
-	kees@kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mjguzik@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203135935.440018-9-bigeasy@linutronix.de>
 
-Hello,
+On Mon, Feb 03, 2025 at 02:59:28PM +0100, Sebastian Andrzej Siewior wrote:
 
-syzbot found the following issue on:
+> @@ -555,11 +558,12 @@ struct futex_hash_bucket *futex_q_lock(struct futex_q *q)
+>  	return hb;
+>  }
+>  
+> -void futex_q_unlock(struct futex_hash_bucket *hb)
+> +void futex_q_unlock_put(struct futex_hash_bucket *hb)
+>  	__releases(&hb->lock)
+>  {
+>  	futex_hb_waiters_dec(hb);
+>  	spin_unlock(&hb->lock);
+> +	futex_hash_put(hb);
+>  }
 
-HEAD commit:    69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=1258aeb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
-dashboard link: https://syzkaller.appspot.com/bug?extid=48a99e426f29859818c0
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15825724580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1658aeb0580000
+Here you don't
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ea84ac864e92/disk-69b8923f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6a465997b4e0/vmlinux-69b8923f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d72b67b2bd15/bzImage-69b8923f.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/7c2919610764/mount_0.gz
+> @@ -288,23 +289,29 @@ extern void __futex_unqueue(struct futex_q *q);
+>  extern void __futex_queue(struct futex_q *q, struct futex_hash_bucket *hb);
+>  extern int futex_unqueue(struct futex_q *q);
+>  
+> +static inline void futex_hb_unlock_put(struct futex_hash_bucket *hb)
+> +{
+> +	spin_unlock(&hb->lock);
+> +	futex_hash_put(hb);
+> +}
+> +
+>  /**
+> - * futex_queue() - Enqueue the futex_q on the futex_hash_bucket
+> + * futex_queue_put() - Enqueue the futex_q on the futex_hash_bucket
+>   * @q:	The futex_q to enqueue
+>   * @hb:	The destination hash bucket
+>   *
+> - * The hb->lock must be held by the caller, and is released here. A call to
+> - * futex_queue() is typically paired with exactly one call to futex_unqueue().  The
+> - * exceptions involve the PI related operations, which may use futex_unqueue_pi()
+> - * or nothing if the unqueue is done as part of the wake process and the unqueue
+> - * state is implicit in the state of woken task (see futex_wait_requeue_pi() for
+> - * an example).
+> + * The hb->lock must be held by the caller, and is released here and the reference
+> + * on the hb is dropped. A call to futex_queue_put() is typically paired with
+> + * exactly one call to futex_unqueue(). The exceptions involve the PI related
+> + * operations, which may use futex_unqueue_pi() or nothing if the unqueue is
+> + * done as part of the wake process and the unqueue state is implicit in the
+> + * state of woken task (see futex_wait_requeue_pi() for an example).
+>   */
+> -static inline void futex_queue(struct futex_q *q, struct futex_hash_bucket *hb)
+> +static inline void futex_queue_put(struct futex_q *q, struct futex_hash_bucket *hb)
+>  	__releases(&hb->lock)
+>  {
+>  	__futex_queue(q, hb);
+> -	spin_unlock(&hb->lock);
+> +	futex_hb_unlock_put(hb);
+>  }
 
-The issue was bisected to:
-
-commit bae80473f7b0b25772619e7692019b1549d4a82c
-Author: Mateusz Guzik <mjguzik@gmail.com>
-Date:   Wed Nov 20 11:20:35 2024 +0000
-
-    ext4: use inode_set_cached_link()
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1248c3df980000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1148c3df980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1648c3df980000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
-Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
-
-EXT4-fs (loop0): mounted filesystem 00000000-0000-0000-0000-000000000000 r/w without journal. Quota mode: writeback.
-usercopy: Kernel memory exposure attempt detected from SLUB object 'ext4_inode_cache' (offset 0, size 176)!
-------------[ cut here ]------------
-kernel BUG at mm/usercopy.c:102!
-Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
-CPU: 1 UID: 0 PID: 5826 Comm: syz-executor349 Not tainted 6.13.0-syzkaller-09793-g69b8923f5003 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-RIP: 0010:usercopy_abort+0x84/0x90 mm/usercopy.c:102
-Code: 49 89 ce 48 c7 c3 80 5f 18 8c 48 0f 44 de 48 c7 c7 20 5e 18 8c 4c 89 de 48 89 c1 41 52 41 56 53 e8 d1 3a f5 fe 48 83 c4 18 90 <0f> 0b 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90
-RSP: 0018:ffffc90003fa7c90 EFLAGS: 00010296
-RAX: 000000000000006b RBX: ffffffff8c185f80 RCX: ba71ae4bd9cf0200
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff819f1fbc R09: 1ffff920007f4f2c
-R10: dffffc0000000000 R11: fffff520007f4f2d R12: ffffea0001e70200
-R13: 00000000000000b0 R14: 0000000000000000 R15: 00000000000000b0
-FS:  00005555602a7380(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000066c7e0 CR3: 0000000078aac000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __check_heap_object+0xb1/0x100 mm/slub.c:5818
- check_heap_object mm/usercopy.c:196 [inline]
- __check_object_size+0x1da/0x730 mm/usercopy.c:251
- check_object_size include/linux/thread_info.h:228 [inline]
- check_copy_size include/linux/thread_info.h:264 [inline]
- copy_to_user include/linux/uaccess.h:219 [inline]
- readlink_copy fs/namei.c:5284 [inline]
- vfs_readlink+0x1cf/0x550 fs/namei.c:5307
- do_readlinkat+0x249/0x3a0 fs/stat.c:576
- __do_sys_readlinkat fs/stat.c:593 [inline]
- __se_sys_readlinkat fs/stat.c:590 [inline]
- __x64_sys_readlinkat+0x9a/0xb0 fs/stat.c:590
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fdaffabc639
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffeb88c4948 EFLAGS: 00000246 ORIG_RAX: 000000000000010b
-RAX: ffffffffffffffda RBX: 0030656c69662f2e RCX: 00007fdaffabc639
-RDX: 00000000200002c0 RSI: 0000000020000240 RDI: 00000000ffffff9c
-RBP: 00007fdaffb30610 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000000000b0 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffeb88c4b18 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:usercopy_abort+0x84/0x90 mm/usercopy.c:102
-Code: 49 89 ce 48 c7 c3 80 5f 18 8c 48 0f 44 de 48 c7 c7 20 5e 18 8c 4c 89 de 48 89 c1 41 52 41 56 53 e8 d1 3a f5 fe 48 83 c4 18 90 <0f> 0b 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90
-RSP: 0018:ffffc90003fa7c90 EFLAGS: 00010296
-RAX: 000000000000006b RBX: ffffffff8c185f80 RCX: ba71ae4bd9cf0200
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff819f1fbc R09: 1ffff920007f4f2c
-R10: dffffc0000000000 R11: fffff520007f4f2d R12: ffffea0001e70200
-R13: 00000000000000b0 R14: 0000000000000000 R15: 00000000000000b0
-FS:  00005555602a7380(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055dd00353bf8 CR3: 0000000078aac000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+And here you do.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> @@ -380,11 +387,13 @@ double_lock_hb(struct futex_hash_bucket *hb1, struct futex_hash_bucket *hb2)
+>  }
+>  
+>  static inline void
+> -double_unlock_hb(struct futex_hash_bucket *hb1, struct futex_hash_bucket *hb2)
+> +double_unlock_hb_put(struct futex_hash_bucket *hb1, struct futex_hash_bucket *hb2)
+>  {
+>  	spin_unlock(&hb1->lock);
+>  	if (hb1 != hb2)
+>  		spin_unlock(&hb2->lock);
+> +	futex_hash_put(hb1);
+> +	futex_hash_put(hb2);
+>  }
+>  
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+This seems horribly inconsistent and makes my head hurt. Where are the
+matching gets for double_lock_hb() ?
