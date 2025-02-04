@@ -1,99 +1,202 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2C71FAC5C;
-	Tue,  4 Feb 2025 22:20:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0DD1FAC5C;
+	Tue,  4 Feb 2025 22:20:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738707606; cv=none; b=rrRUIDrHbKXPR/hP0g5PE11cy6N7nBHJpkoV2GGnk6HH+ht/7hVipHfryPbZOJbMKudfyMLkHyeCM5LsCb/mx/eeiL4O3Upok9XBGnnLetFOw0O2SwzIWuhFvwnZEQ9Hll3A/cTEj7g5APRNEym5GnJ2OemuWYv4eJbduEP15WA=
+	t=1738707611; cv=none; b=WBQbZ1Ta45NuYvFH10341HYmN8e+aatCiQcF2GiL68/LvYD+IAOTRm6XuiWH0n4lvFiGF7NBMJg0fuO61aizG63kYfpA8ymN7e1POq7BfThZJlOLIOBCkoII2yuTIJboFqUTA6n/JaU7o2ATuvyYP8793aoKKu2IO5z3cYCu3E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738707606; c=relaxed/simple;
-	bh=HWUZxbxxlfRII5fR5qoo/z6Lap3FCCYecC2bT8Mxaq0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hieJfz3a5juOy3m2CkqpCQXY7q46922stBncCG3lV/bS4e1fihLb84w9dRgImfxQF4oUVRsHT+AYDn9URy0/vMisxgxZBg5JFtddo1KXXhn/Y7ZBVCIa9ollrOMKmdolT4acm3L0J2U+wgx+e0uBOF/JF2s8O4SVD6AdtrRQ0Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqTxvH8D; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqTxvH8D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D84AC4CEDF;
-	Tue,  4 Feb 2025 22:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738707605;
-	bh=HWUZxbxxlfRII5fR5qoo/z6Lap3FCCYecC2bT8Mxaq0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=YqTxvH8D411ZXFF9tvgxeRyKYi7PgEhyFa2JcaSbP/c+3/ZovvdnSeFvytip6Yd9e
-	 1F5pyFLGUXdv2KB/tq3CF6y3BPUJKMhUF4DO2XmkxI/TCih62hPc7xR/bRegxDfTZI
-	 S0KbREGHA6L1bIF4MAZ/0EuqzDCQ5/J6ET5VUC+0XC9sslz9OiwzeJhr93ox0zPXc+
-	 hGFciiWp3bhfiY9O6fYkzOqrVQ+8uZwa2k3JihY/DhGEn0HOF5WEYg7qNzDdVdh3R1
-	 CB3uQro5xOrUzgBuVPRgCAzkiaouFmVEStBSYuAQmbp4/QeoAiwrm9LPKV9oSPyO1u
-	 CxwXN3Gjd2YGA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE94380AA7E;
-	Tue,  4 Feb 2025 22:20:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1738707611; c=relaxed/simple;
+	bh=amgd8P6BHqREgQt9gXdFnKY9NXQU5F/KhHTeB8hYYHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RQyVtn4lA0hkheX4+oUa0yU8+7l7XhE9evRAfZORv35AWRVUPposUGCFGfqKxFoDrnOuSi7vhCXYJlYHwKNo8Sw9gjty3JD/PElVnsnrzn4pBEcHVXE1ZbPz5L1vkJNn6l7BEaQOczYc8TBbRFrpUptJU5waLpGmXHS92bS15BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B04BBC4CEDF;
+	Tue,  4 Feb 2025 22:20:09 +0000 (UTC)
+Date: Tue, 4 Feb 2025 17:20:45 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Nikolay Kuratov <kniv@yandex-team.ru>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Wen
+ Yang <wenyang@linux.alibaba.com>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] ftrace: Avoid potential division by zero in
+ function_stat_show()
+Message-ID: <20250204172045.3a5d8d01@gandalf.local.home>
+In-Reply-To: <20250204074301.1427497-1-kniv@yandex-team.ru>
+References: <20250203100603.5c00df0f@gandalf.local.home>
+	<20250204074301.1427497-1-kniv@yandex-team.ru>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] net: atlantic: fix warning during hot unplug
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173870763231.165851.17410649919538989009.git-patchwork-notify@kernel.org>
-Date: Tue, 04 Feb 2025 22:20:32 +0000
-References: <20250203143604.24930-3-mail@jakemoroni.com>
-In-Reply-To: <20250203143604.24930-3-mail@jakemoroni.com>
-To: Jacob Moroni <mail@jakemoroni.com>
-Cc: irusskikh@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- Pavel.Belous@aquantia.com, Alexander.Loktionov@aquantia.com,
- Dmitrii.Tarakanov@aquantia.com, vomlehn@texas.net,
- Dmitry.Bezrukov@aquantia.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Tue,  4 Feb 2025 10:43:02 +0300
+Nikolay Kuratov <kniv@yandex-team.ru> wrote:
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Mon,  3 Feb 2025 09:36:05 -0500 you wrote:
-> Firmware deinitialization performs MMIO accesses which are not
-> necessary if the device has already been removed. In some cases,
-> these accesses happen via readx_poll_timeout_atomic which ends up
-> timing out, resulting in a warning at hw_atl2_utils_fw.c:112:
+> Thank you for the review!
 > 
-> [  104.595913] Call Trace:
-> [  104.595915]  <TASK>
-> [  104.595918]  ? show_regs+0x6c/0x80
-> [  104.595923]  ? __warn+0x8d/0x150
-> [  104.595925]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-> [  104.595934]  ? report_bug+0x182/0x1b0
-> [  104.595938]  ? handle_bug+0x6e/0xb0
-> [  104.595940]  ? exc_invalid_op+0x18/0x80
-> [  104.595942]  ? asm_exc_invalid_op+0x1b/0x20
-> [  104.595944]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-> [  104.595952]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-> [  104.595959]  aq_nic_deinit.part.0+0xbd/0xf0 [atlantic]
-> [  104.595964]  aq_nic_deinit+0x17/0x30 [atlantic]
-> [  104.595970]  aq_ndev_close+0x2b/0x40 [atlantic]
-> [  104.595975]  __dev_close_many+0xad/0x160
-> [  104.595978]  dev_close_many+0x99/0x170
-> [  104.595979]  unregister_netdevice_many_notify+0x18b/0xb20
-> [  104.595981]  ? __call_rcu_common+0xcd/0x700
-> [  104.595984]  unregister_netdevice_queue+0xc6/0x110
-> [  104.595986]  unregister_netdev+0x1c/0x30
-> [  104.595988]  aq_pci_remove+0xb1/0xc0 [atlantic]
+> `counter > rec->counter` check does not protect us from overflows,
+> so this could mislead especially with the comment included.
+
+Ah you're right, as there's a big multiplication there.
+
 > 
-> [...]
+> I think we should either eliminate overflows or only protect from zero
+> division. To prevent overflows it is wise to split the division into
+> three and forget about it. But in 32-bit case overflows will still occur.
+> 
+> As for zero division protection, maybe this variant even more concise?
+> 
+> #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> 	seq_puts(m, "    ");
+> 
+> 	stddev = 0;
+> 	unsigned long denom = rec->counter * (rec->counter - 1) * 1000;
 
-Here is the summary with links:
-  - [net,v2] net: atlantic: fix warning during hot unplug
-    https://git.kernel.org/netdev/net/c/028676bb189e
+Actually, if the denom overflows, then this is bogus anyway. We should stop
+calculating if it overflows. That would be if:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+  rec->counter * (rec->counter - 1) * 1000 >= 2^32 or >= 2^64
+
+depending on the architecture. So we can calculate what value rec->counter
+has to be for that to happen. Using the quadratic equation (haven't used
+this since college!), we can figure that out.
+
+  x = rec->counter
+
+  x * (x - 1) * 1000 = (2^32 - 1) // use minus 1 just to be sure
+  x * (x - 1) = (2^32 - 1) / 1000
+  x^2 - x = (2^32 - 1) / 1000
+  x^2 - x - (2^32 - 1) / 1000 = 0
+
+ x = (-b +/- sqrt(b^2 - 4ac)) / 2a
+
+ a = 1
+ b = -1
+ c = -(2^32 - 1) / 1000 = -4294967.295
+
+ x = (-1 +/- sqrt((-1)^2 - 4 * -4294967.295)) / 2
+
+ x = 2071.930 for 32bit
+
+For 64bit we have
+
+ c = -(2^64 - 1) / 1000 = -18446744073709551.615
+
+That makes
+
+  x = 135818790.812
+
+We should stop calculating stddev when rec->counter > 2071 on 32 bit
+and > 135818790 on 64 bit!
+
+Feel free to check my math.
+
+The below patch should fix this.
+
+-- Steve
 
 
+> 	if (denom) {
+> 		stddev = rec->counter * rec->time_squared -
+> 			 rec->time * rec->time;
+> 		stddev = div64_ul(stddev, denom);
+> 	}
+> 
+> 	trace_seq_init(&s);
+> 	trace_print_graph_duration(rec->time, &s);
+> 
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 2e113f8b13a2..ae90443f32af 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -419,10 +419,42 @@ struct ftrace_profile {
+ 	unsigned long			counter;
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	unsigned long long		time;
++	unsigned long long		stddev_time;
+ 	unsigned long long		time_squared;
+ #endif
+ };
+ 
++/*
++ * The calculation for stddev will overflow when the counter
++ * algorithm overflows the long size:
++ *
++ * rec->counter * (rec->counter - 1) * 1000 >= 2^BITS_PER_LONG
++ *
++ * Using the quadratic equation: x = (-b +/- sqrt(b^2 - 4ac)) / 2a
++ * we can figure out what the max rec->counter is before it
++ * overflows.
++ *
++ * x = rec->counter
++ * x * (x - 1) * 1000 = 2^BITS_PER_LONG - 1 // -1 for rounding
++ * x * (x - 1) = (2^BITS_PER_LONG - 1) / 1000
++ * x^2 - x = (2^BITS_PER_LONG - 1) / 1000
++ * x^2 - x - (2^BITS_PER_LONG - 1) / 1000 = 0
++ *
++ * a = 1
++ * b = -1
++ * c = -(2^BITS_PER_LONG - 1) / 1000
++ *
++ * x = (1 +/- sqrt(1 - 4 * -(2^BITS_PER_LONG - 1) / 1000)) / 2
++ *
++ * For 32bit that is: x = 2072.930 (or 2072)
++ * For 64bit that is: x = 135818791.812 (or 135818791)
++ */
++#ifdef CONFIG_64BIT
++# define MAX_STDDEV_COUNTER	135818791
++#else
++# define MAX_STDDEV_COUNTER	2072
++#endif
++
+ struct ftrace_profile_page {
+ 	struct ftrace_profile_page	*next;
+ 	unsigned long			index;
+@@ -566,12 +598,16 @@ static int function_stat_show(struct seq_file *m, void *v)
+ 	if (rec->counter <= 1)
+ 		stddev = 0;
+ 	else {
++		unsigned long counter;
++
++		counter = rec->counter < MAX_STDDEV_COUNTER ? rec->counter :
++			MAX_STDDEV_COUNTER - 1;
+ 		/*
+ 		 * Apply Welford's method:
+ 		 * s^2 = 1 / (n * (n-1)) * (n * \Sum (x_i)^2 - (\Sum x_i)^2)
+ 		 */
+-		stddev = rec->counter * rec->time_squared -
+-			 rec->time * rec->time;
++		stddev = counter * rec->time_squared -
++			 rec->stddev_time * rec->stddev_time;
+ 
+ 		/*
+ 		 * Divide only 1000 for ns^2 -> us^2 conversion.
+@@ -894,7 +930,19 @@ static void profile_graph_return(struct ftrace_graph_ret *trace,
+ 	rec = ftrace_find_profiled_func(stat, trace->func);
+ 	if (rec) {
+ 		rec->time += calltime;
+-		rec->time_squared += calltime * calltime;
++		/*
++		 * This is used to calculate stddev, but the calculation
++		 * uses Apply Welford's method that will multiply
++		 * rec->counter * (rec->counter - 1) and also divide from
++		 * that. The calculation will be bogus if that value overflows
++		 * the long size it is stored in. Stop the calculation
++		 * when the counter hits the point it will overflow.
++		 * The stddev shouldn't change much after that anyway.
++		 */
++		if (rec->counter < MAX_STDDEV_COUNTER) {
++			rec->stddev_time = rec->time;
++			rec->time_squared += calltime * calltime;
++		}
+ 	}
+ 
+  out:
