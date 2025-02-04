@@ -1,151 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4691207E1D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 11:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAC25CDF1;
+	Tue,  4 Feb 2025 11:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738669482; cv=none; b=X6NSrl74xke0Y7mQso5Lz8brr3mLYlSawWy/h4GnBKBbwyrL0DXXnzEHBim0tCdB6kFsmHpbxeB8AQCcbTfNG7BZiW5g3UV3w5FC5q0G1gOgLFCQasgcSEZvEbIqaCqrsJzLR/l9zVly/FjceGb3Hodu6tkyxw4N18kY5Rmngvs=
+	t=1738669596; cv=none; b=C2n/wkZOpibi4tCyqh6GeFrjzXntBV6OZR4Um6YPh0UotxDxowtdfGZzxnxC4TPzOxWiWKXOeWE6AsnX1DjjgbWBIj6cnbwJZtqKsCl7ML9STEUFMW+n6EGMSrXxKFucI+AZF9K8oTz9OwJGtPRM6zqwBrN3X3T0sZWlBaOL8/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738669482; c=relaxed/simple;
-	bh=mN7tslh+i2S6HSh5V2VOg1tYyph90nCPYwFf0QHyu/g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fj0rKJ0SwxGL2xTGYE6Ef6QqT0YwMJkgkbRtLZhxwPvcY+ju4/8E/8TVjn3zthfi/OXfXtK2RQJcLYHXyCedrcoQIBrd0nv4X6HZQzy6wEWbwazg8rWW6YK7p0/X5wKDmnaAHtBbxesVXUxf8BcuYk+8m7I1RB5bCGA5uextRxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aA7eikKr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738669596; c=relaxed/simple;
+	bh=xLOU8a08rHJUOj0tVOcrZH3clFkmrBhh7AUb9i9ZhA8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tWmLc8DXxeZnCL0ScQi87x+eQKqUIKEUi8sNzcNUpzKFfJaTHf1gtKGrgz+tALvAMdr51qsACEntiprpcJ4ZVRxhyP1FSeAVuLBX79ZE9LZj7Ws8UlXsjtAyq6dNira5x3pcO4oXYZE1salrT1OGoYKUs2bxYo0TdfRCtYE5JZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SNCbNeYb; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aA7eikKr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738669479;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s9iIjxxwva3fm5ewtrniN91za3PWyU6iE2xOK2M8hJs=;
-	b=aA7eikKr0O3t/r64cqKRVygGg7iiLC8zbmV9Mc0bM9xvmuzCvbyrdAzK39GvM6/37511yH
-	WHLfNOHfAa0rEpxTLCMiM41g4wun1dsx+z+hy3Bm6UENaqa5+cgeRuxCCoj4swlPC69zwe
-	xGE8WSv7tGgWFSY4gty7YPS7rDsJfeY=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-368-jzUHNizOMpWUfW0zm9q_mQ-1; Tue, 04 Feb 2025 06:44:38 -0500
-X-MC-Unique: jzUHNizOMpWUfW0zm9q_mQ-1
-X-Mimecast-MFC-AGG-ID: jzUHNizOMpWUfW0zm9q_mQ
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2f9c1b95ed9so1891517a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 03:44:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738669477; x=1739274277;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s9iIjxxwva3fm5ewtrniN91za3PWyU6iE2xOK2M8hJs=;
-        b=nw8/xj9NqdEK8sbH4Rgj2Fq2ZYy/jjLWjk0fHgQx59gpdFo1AqvRmhG3xGzsjqBNjX
-         9aFIi1K/rNyFdrseOdkNyRrhHoBKLrYlEIwGnlbW1zZvY44jzPuMT0qayfGKnubpOneB
-         euBRYwUOS9rnTw6xbo74bzTgUbSPa5xJJxCcKhdsJ/pqLwfCooBuL2iyzHRRqb5+XhMn
-         m/pyVItg7SA5xOMyFD89nH/ZFBUq1sIQBzUQpvDpfsVH8Q4Z1r7OcY8qmBDnY3MOejcd
-         ZXm3y0yaDT5PCAb/n0f0dNHz/beTKh1BwWqWSpuyoX6CojEBlZT+ScUx1uFdUh/MsFn8
-         rQtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXv7xYAI4bhGKLOvwRcFpw2xgc5B+cfvsYMuREuDE5EwQHGmSEPpRY9WkGmDpOLY1tlqJpjWn29cCX4vLQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhshduXQOVuNKLkPxHusGsN7DiVWYjuqaS82JMiseusDbkWdRg
-	2u3ehU0cP2W2ulwBAXVAxBqJaODHvENnXf0phqGqr1kj6GwuPQaNeb6wteNu198RfxCUvE0ma4b
-	FTl67Ynd1/9hoZ4Kg+gxNXTTiSNTrPbD9kDLEh5lu1ycNRg5MqBURhJ6GNGHWqss1bi4kJjIKQE
-	upke9APE4sgSk9iK5tz+IGFgrQV86ysf8LsxGM
-X-Gm-Gg: ASbGncs5pAq+3g1liqilNNMut1iRzljLAGVNPYGBGvDguzUdAT5BaBEQOrkfNAVQZd+
-	73HAUTK2fKV23Z5effjt0HBz2ronQuLo5SHf4cEiJc4wY/xj/CR79aZKlW7UTs7wjMMCpSuz2z3
-	cnYOd5P2U3VGLzM4bFF5U4
-X-Received: by 2002:a17:90b:264e:b0:2ee:f80c:6892 with SMTP id 98e67ed59e1d1-2f83abb3532mr35197891a91.3.1738669477476;
-        Tue, 04 Feb 2025 03:44:37 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFT1215YnlE/ZrpMQgdXRPpcUHi+R5LKcJT0ZErl0b04QYANkPy1LfVqSEokWJgpg/IOvaQL+JB/pyKlW4LRIs=
-X-Received: by 2002:a17:90b:264e:b0:2ee:f80c:6892 with SMTP id
- 98e67ed59e1d1-2f83abb3532mr35197867a91.3.1738669477224; Tue, 04 Feb 2025
- 03:44:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SNCbNeYb"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5143SEWH018231;
+	Tue, 4 Feb 2025 10:14:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Idrynv
+	jVwlKjx48J0Gstw5ntaCO7hXDwAHh6RgERaGw=; b=SNCbNeYb+aMI9mDHT5NSka
+	IQKNNz+ygSk11chKsfonnLQlMJzhwdZ0kFPZWoPIgwmyd6FpHTg4NvHeJzRnODUl
+	LwSftsrZ+hTMiCs9nfeWNqO2/ZzP9qDqct3LRy+JgaTR6boxlz6Qmp3gNVGBiHQw
+	W07jbrjBIps3q0zpR7ZLPrPoG07Po5xHCL67x9DWh7Jb9FEXqObEjTIfKHL5Ov8D
+	ejUymbxWv/1MBwojSxZ5GeXS3l5Q/tAh0zkXc53pL/Lanlk8yFMKCPB0PDCEK7xZ
+	bl/jWteTASwYrzzkdtq3MPJpRYKsFcIu1TUWHZbA5V5w9aSqifvSNE8gbT5eEWYg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44k0mtc95c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 10:14:09 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 514A3bse021956;
+	Tue, 4 Feb 2025 10:14:08 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44k0mtc95b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 10:14:08 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5148j8Gq024492;
+	Tue, 4 Feb 2025 10:14:08 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxn2yb3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 10:14:08 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 514AE4NY41091450
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Feb 2025 10:14:04 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 51F9C200B2;
+	Tue,  4 Feb 2025 10:14:04 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B0786200BE;
+	Tue,  4 Feb 2025 10:14:02 +0000 (GMT)
+Received: from [9.171.76.170] (unknown [9.171.76.170])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  4 Feb 2025 10:14:02 +0000 (GMT)
+Message-ID: <0d4bbaba-d05e-48d5-b248-6d915f8d4e18@linux.ibm.com>
+Date: Tue, 4 Feb 2025 11:14:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250117125522.99071-1-lukas.bulwahn@redhat.com> <20250204113614.GD893@willie-the-truck>
-In-Reply-To: <20250204113614.GD893@willie-the-truck>
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-Date: Tue, 4 Feb 2025 12:44:25 +0100
-X-Gm-Features: AWEUYZlGlZEjRarXyn4DMZdt0GYLGOVYedjIdYC8RRdsZP_eC31hKcwXeaYXrKs
-Message-ID: <CAOc5a3O-8wrQq3oNJC+H9ncFt0yxcm4O+QSgPk4QckF6Ak5pGg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: Kconfig: Remove selecting replaced HAVE_FUNCTION_GRAPH_RETVAL
-To: Will Deacon <will@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	linux-arm-kernel@lists.infradead.org, kernel-janitors@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] KVM: selftests: Fix spelling mistake "initally" ->
+ "initially"
+To: Colin Ian King <colin.i.king@gmail.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250204084855.289493-1-colin.i.king@gmail.com>
+Content-Language: en-US
+From: Janosch Frank <frankja@linux.ibm.com>
+Autocrypt: addr=frankja@linux.ibm.com; keydata=
+ xsFNBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
+ qLqYr+qrG3buymJJRD9xkp4mqgasHdB5WR9MhXWKH08EvtvAMkEJLnqxgbqf8td3pCQ2cEpv
+ 15mH49iKSmlTcJ+PvJpGZcq/jE42u9/0YFHhozm8GfQdb9SOI/wBSsOqcXcLTUeAvbdqSBZe
+ zuMRBivJQQI1esD9HuADmxdE7c4AeMlap9MvxvUtWk4ZJ/1Z3swMVCGzZb2Xg/9jZpLsyQzb
+ lDbbTlEeyBACeED7DYLZI3d0SFKeJZ1SUyMmSOcr9zeSh4S4h4w8xgDDGmeDVygBQZa1HaoL
+ Esb8Y4avOYIgYDhgkCh0nol7XQ5i/yKLtnNThubAcxNyryw1xSstnKlxPRoxtqTsxMAiSekk
+ 0m3WJwvwd1s878HrQNK0orWd8BzzlSswzjNfQYLF466JOjHPWFOok9pzRs+ucrs6MUwDJj0S
+ cITWU9Rxb04XyigY4XmZ8dywaxwi2ZVTEg+MD+sPmRrTw+5F+sU83cUstuymF3w1GmyofgsU
+ Z+/ldjToHnq21MNa1wx0lCEipCCyE/8K9B9bg9pUwy5lfx7yORP3JuAUfCYb8DVSHWBPHKNj
+ HTOLb2g2UT65AjZEQE95U2AY9iYm5usMqaWD39pAHfhC09/7NQARAQABzSVKYW5vc2NoIEZy
+ YW5rIDxmcmFua2phQGxpbnV4LmlibS5jb20+wsF3BBMBCAAhBQJbm6Q+AhsjBQsJCAcCBhUI
+ CQoLAgQWAgMBAh4BAheAAAoJEONU5rjiOLn4p9gQALjkdj5euJVI2nNT3/IAxAhQSmRhPEt0
+ AmnCYnuTcHRWPujNr5kqgtyER9+EMQ0ZkX44JU2q7OWxTdSNSAN/5Z7qmOR9JySvDOf4d3mS
+ bMB5zxL9d8SbnSs1uW96H9ZBTlTQnmLfsiM9TetAjSrR8nUmjGhe2YUhJLR1v1LguME+YseT
+ eXnLzIzqqpu311/eYiiIGcmaOjPCE+vFjcXL5oLnGUE73qSYiujwhfPCCUK0850o1fUAYq5p
+ CNBCoKT4OddZR+0itKc/cT6NwEDwdokeg0+rAhxb4Rv5oFO70lziBplEjOxu3dqgIKbHbjza
+ EXTb+mr7VI9O4tTdqrwJo2q9zLqqOfDBi7NDvZFLzaCewhbdEpDYVu6/WxprAY94hY3F4trT
+ rQMHJKQENtF6ZTQc9fcT5I3gAmP+OEvDE5hcTALpWm6Z6SzxO7gEYCnF+qGXqp8sJVrweMub
+ UscyLqHoqdZC2UG4LQ1OJ97nzDpIRe0g6oJ9ZIYHKmfw5jjwH6rASTld5MFWajWdNsqK15k/
+ RZnHAGICKVIBOBsq26m4EsBlfCdt3b/6emuBjUXR1pyjHMz2awWzCq6/6OWs5eANZ0sdosNq
+ dq2v0ULYTazJz2rlCXV89qRa7ukkNwdBSZNEwsD4eEMicj1LSrqWDZMAALw50L4jxaMD7lPL
+ jJbazsFNBFubpD4BEADAcUTRqXF/aY53OSH7IwIK9lFKxIm0IoFkOEh7LMfp7FGzaP7ANrZd
+ cIzhZi38xyOkcaFY+npGEWvko7rlIAn0JpBO4x3hfhmhBD/WSY8LQIFQNNjEm3vzrMo7b9Jb
+ JAqQxfbURY3Dql3GUzeWTG9uaJ00u+EEPlY8zcVShDltIl5PLih20e8xgTnNzx5c110lQSu0
+ iZv2lAE6DM+2bJQTsMSYiwKlwTuv9LI9Chnoo6+tsN55NqyMxYqJgElk3VzlTXSr3+rtSCwf
+ tq2cinETbzxc1XuhIX6pu/aCGnNfuEkM34b7G1D6CPzDMqokNFbyoO6DQ1+fW6c5gctXg/lZ
+ 602iEl4C4rgcr3+EpfoPUWzKeM8JXv5Kpq4YDxhvbitr8Dm8gr38+UKFZKlWLlwhQ56r/zAU
+ v6LIsm11GmFs2/cmgD1bqBTNHHcTWwWtRTLgmnqJbVisMJuYJt4KNPqphTWsPY8SEtbufIlY
+ HXOJ2lqUzOReTrie2u0qcSvGAbSfec9apTFl2Xko/ddqPcZMpKhBiXmY8tJzSPk3+G4tqur4
+ 6TYAm5ouitJsgAR61Cu7s+PNuq/pTLDhK+6/Njmc94NGBcRA4qTuysEGE79vYWP2oIAU4Fv6
+ gqaWHZ4MEI2XTqH8wiwzPdCQPYsSE0fXWiYu7ObeErT6iLSTZGx4rQARAQABwsFfBBgBCAAJ
+ BQJbm6Q+AhsMAAoJEONU5rjiOLn4DDEP/RuyckW65SZcPG4cMfNgWxZF8rVjeVl/9PBfy01K
+ 8R0hajU40bWtXSMiby7j0/dMjz99jN6L+AJHJvrLz4qYRzn2Ys843W+RfXj62Zde4YNBE5SL
+ jJweRCbMWKaJLj6499fctxTyeb9+AMLQS4yRSwHuAZLmAb5AyCW1gBcTWZb8ON5BmWnRqeGm
+ IgC1EvCnHy++aBnHTn0m+zV89BhTLTUal35tcjUFwluBY39R2ux/HNlBO1GY3Z+WYXhBvq7q
+ katThLjaQSmnOrMhzqYmdShP1leFTVbzXUUIYv/GbynO/YrL2gaQpaP1bEUEi8lUAfXJbEWG
+ dnHFkciryi092E8/9j89DJg4mmZqOau7TtUxjRMlBcIliXkzSLUk+QvD4LK1kWievJse4mte
+ FBdkWHfP4BH/+8DxapRcG1UAheSnSRQ5LiO50annOB7oXF+vgKIaie2TBfZxQNGAs3RQ+bga
+ DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
+ Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
+ phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
+In-Reply-To: <20250204084855.289493-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: em9XsPtbBNG-41cqUInX7h-bp2XNK59M
+X-Proofpoint-GUID: jBPwFMkCVtRvGZ9dwh-DSfg7odbrUG2j
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_04,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ mlxlogscore=764 malwarescore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ clxscore=1011 priorityscore=1501 adultscore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502040080
 
-On Tue, Feb 4, 2025 at 12:36=E2=80=AFPM Will Deacon <will@kernel.org> wrote=
-:
->
-> On Fri, Jan 17, 2025 at 07:55:22AM -0500, Lukas Bulwahn wrote:
-> > From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-> >
-> > Commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with ftrace_regs"=
-)
-> > replaces the config HAVE_FUNCTION_GRAPH_RETVAL with the config
-> > HAVE_FUNCTION_GRAPH_FREGS, and it replaces all the select commands in t=
-he
-> > various architecture Kconfig files. In the arm64 architecture, the comm=
-it
-> > adds the 'select HAVE_FUNCTION_GRAPH_FREGS', but misses to remove the
-> > 'select HAVE_FUNCTION_GRAPH_RETVAL', i.e., the select on the replaced
-> > config.
-> >
-> > Remove selecting the replaced config. No functional change, just cleanu=
-p.
-> >
-> > Fixes: a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with ftrace_regs"=
-)
-> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-> > ---
-> >  arch/arm64/Kconfig | 1 -
-> >  1 file changed, 1 deletion(-)
->
-> Hmm. There are still a couple of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL guards
-> kicking around:
->
-> include/linux/ftrace.h:#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-> kernel/trace/fgraph.c:#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
->
-> so it's not clear we can just remove the option from arm64 without
-> breaking ftrace_return_to_handler(). What am I missing?
->
+On 2/4/25 9:48 AM, Colin Ian King wrote:
+> There is a spelling mistake in a literal string. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>   tools/testing/selftests/kvm/s390/cmma_test.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/s390/cmma_test.c b/tools/testing/selftests/kvm/s390/cmma_test.c
+> index e32dd59703a0..7fbbe8b912b6 100644
+> --- a/tools/testing/selftests/kvm/s390/cmma_test.c
+> +++ b/tools/testing/selftests/kvm/s390/cmma_test.c
+> @@ -651,7 +651,7 @@ struct testdef {
+>   } testlist[] = {
+>   	{ "migration mode and dirty tracking", test_migration_mode },
+>   	{ "GET_CMMA_BITS: basic calls", test_get_cmma_basic },
+> -	{ "GET_CMMA_BITS: all pages are dirty initally", test_get_inital_dirty },
+> +	{ "GET_CMMA_BITS: all pages are dirty initially", test_get_inital_dirty },
 
-Will,
-
-I believe you are looking at a tree, which did not include commit
-a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with ftrace_regs") yet.
-
-A quick look:
-
-$ git checkout  a3ed4157b7d8~1
-HEAD is now at 41705c4262aa fgraph: Pass ftrace_regs to entryfunc
-$ grep "CONFIG_HAVE_FUNCTION_GRAPH_RETVAL" . -R
-./include/linux/ftrace.h:#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-./kernel/trace/fgraph.c:#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-
-$ git checkout  a3ed4157b7d8
-Previous HEAD position was 41705c4262aa fgraph: Pass ftrace_regs to entryfu=
-nc
-HEAD is now at a3ed4157b7d8 fgraph: Replace fgraph_ret_regs with ftrace_reg=
-s
-$ grep "CONFIG_HAVE_FUNCTION_GRAPH_RETVAL" . -R
-$
-
-Once commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with
-ftrace_regs") is applied, grepping for
-CONFIG_HAVE_FUNCTION_GRAPH_RETVAL should not have any further use of
-that config.
-
-I was looking at linux-next at the time of writing that patch.
-
-Lukas
-
+Do me a favor and send a v2 that also fixes the function name.
