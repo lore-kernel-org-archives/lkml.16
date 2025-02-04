@@ -1,147 +1,365 @@
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E10720DD52;
-	Tue,  4 Feb 2025 12:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE1120DD79
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738670561; cv=none; b=rIuO1T74fJoMaiZTjhZYPUpslzjHvmeyg/QNt8olMhVH1GlKHHmiMak8d47SkwRTiKB7mMqse22YsMKOKok2rp4QhusTe2QIfR8dDQVRVIUu5Jnj12eFTlgeIdrrMdpjkyX1ctqoXfd/QFWsDoLbicAST4vdu5ABdM3w0zfwJRo=
+	t=1738670583; cv=none; b=ndoBewQ472XVRQK7pU8cFp3JF6x2dSMq/6W7qO+71O57vRiZC6iXtj1kO0++vpMmrPcBBf0nJDgDLalaVQoD8twLhsT45dWjmAhx4L95V6ECNP2uggmQ+xCYASOKTk60/HnvhdwxYC8Hqpyv6QT6N7d4ev3VnGhZNi+A1Y8IXpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738670561; c=relaxed/simple;
-	bh=b+cEoHVefGrCUvtRvpWb7sFAlST2/ywNLw3gR8Yv9uo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OmNcwDQ/tdnBTG/eGR3GijQVBUD74GhlcGZY2p5fZp0FFu1WYo3p2DW5zxMVgprei2JrQv77mff5rXV6GlnRZ/JmmFxyOvoEKrutSjSQkBuctXnaqjAfky/z5X3XXE4T0G5P8czFiIJVlAVCGe0H4acz/Hp/O6d+jdVDQYSDEsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=K/re6qVS; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1738670583; c=relaxed/simple;
+	bh=sd752EQK+hSoJZZ3VpKjrWlEN8E1woEwa398Fj1ykNg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W29NQ1vbJGJhGeTHjiy2RzS+zgwJ0dQBhBuSS74Sq83T+qPVrzKdbof1JvJhw2cLGg4i17myCIvr1WMCZI4hiGTkZX/gKsOTdYDEtA/SqD0qh3mbMxH+vq3tBNrRqAvdDuaLqW0zCtRIQCSQIgenvKlasLrh/c1sJQiaAutJvnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eNXGrz4p; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="K/re6qVS"
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514A4EqG026741;
-	Tue, 4 Feb 2025 04:02:28 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=gfkDFBtHWxTvHgGe0/4/8GZBI
-	RhWCjlf7FzgYmi3TbM=; b=K/re6qVSDi0Nxe9XtXJFQdOm2V4vpacwr4Ku2DPvm
-	elFqGuQGRdg2s/Fa/CS/+OYGsoIRlAOVZhJObsq+MRMRK7hrG5eRxzRnSKNNrvGC
-	2dd8fcL+4Qudt1yz/VNdyOdMOPcDIFNIPMD4TnfbzMPDbnubEFrLkWc2mrhUEjoG
-	WGk8Otf/B3+0oTSo7UEtUyqmGhrdumZjHhI46Ng+qL9eS4AM8HaPnruefFkRh5qk
-	wOxYE216aFG86/OuO38ufmdibGiBHmY0LJCySIzrmgaxjcHHCSfUQ7GEppdxC3UO
-	DaAAp1dMmgyATOidGL3B28+g3m7H2846FeaCQdBpoH+vw==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 44kgtgr5e6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 04:02:28 -0800 (PST)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 4 Feb 2025 04:02:22 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 4 Feb 2025 04:02:22 -0800
-Received: from hyd1403.caveonetworks.com (unknown [10.29.37.84])
-	by maili.marvell.com (Postfix) with SMTP id DDC8E5B6929;
-	Tue,  4 Feb 2025 04:02:16 -0800 (PST)
-Date: Tue, 4 Feb 2025 17:32:16 +0530
-From: Linu Cherian <lcherian@marvell.com>
-To: James Clark <james.clark@linaro.org>
-CC: <suzuki.poulose@arm.com>, <mike.leach@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <coresight@lists.linaro.org>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <corbet@lwn.net>, <devicetree@vger.kernel.org>, <sgoutham@marvell.com>,
-        <gcherian@marvell.com>
-Subject: Re: [PATCH v13 0/8] Coresight for Kernel panic and watchdog reset
-Message-ID: <20250204120216.GB1525185@hyd1403.caveonetworks.com>
-References: <20241216053014.3427909-1-lcherian@marvell.com>
- <da7dcddb-d407-41b2-8343-a0ec21914606@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eNXGrz4p"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-437a92d7b96so54752815e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 04:03:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738670579; x=1739275379; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Lm1f7OfEgAMnPWwSwXhdT5L0CeflR0dthgCr6GhCV78=;
+        b=eNXGrz4p1jeDVWL1PEJhNjYCYwH5U6J532iRUocWhCObuaw7ON6LntWD1mlYxbn9dS
+         whF9qriZ7mYfno2TJIyRW2vU+QLq45+WNvPqBCFjPwz5bHcDYFib7Y/bL+//vpAI9W7v
+         ywx0p2XYHxI4mUU9qckVqOaam1xlkhQ7ZiqRNKcrm3+o2DYgh8viCojuXqhRRrdU/hWH
+         tPXq7MSe8n50+EcLeT88ju4TqzebamUD1lEb2qsP3lMmm8mKD/9DvMKfHqO3dgcKJDgC
+         0FXewv0DObTlnzcdTSDsA2HtBMn9HI4MNFZJr73qRutIjCXLYHKtfTGdLs4lSP2titoP
+         Y62Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738670579; x=1739275379;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lm1f7OfEgAMnPWwSwXhdT5L0CeflR0dthgCr6GhCV78=;
+        b=MpJ1sk4QlFHd5K9qjEguYBrlKFHQ5EDe15PLwIMdz95wg4RowoTl9dOtqGZ86+UbVp
+         ASpjhIBdTmIa+wmiEMb9fxn147dFGnpaMk5JPa3UDDlntKIDgyfunMGvwru+kkwyxvy0
+         2jKJcIcYB8g/AxgXBYZDsQiUf1GfjbEuVwKx3RiLveUGg/jJ28YxG0SYSqqCaiNZJX6H
+         VED1c6XpatT9KXkWZyCKgk4o3FMAHRO3vBg3v2yV22daCKScphsoa8j5fdMD/z25pB/4
+         3r365TUsHLRO3+ArFz9CL/Z9fR+mqw0KiOMI7CMzBRg9Bi+0N9pWd6CxjFvPscuE5UCi
+         0sFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVM//isWNR9XUPqsQ0h8QZsVvsDor4GiVs6jrXaEaWPmq/o9/BAIf0IQwz0C+I9tBvdung6DiCfrz9PVMg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxqvx76Bv8DyGWD9hINhXLiulRBPgJ0FVE2y2rFm8Rl/RKdkZKr
+	ZP0giCOFJU+BCocgtibHfVd+dCqGYBg5ff3VnlFMVhujU+MwB1Tn/s1mqAbQdKs=
+X-Gm-Gg: ASbGncue4M8w/qKsTjMx562krBBKdsHyyrndvk3fa2hRA6oxZ6n59RvE8wrYxPpHgxi
+	cnhZydsmQy8jAgJpYt7B1TzQKBX+DchWSHFnO9SEgePMjyJ2JMqHBBCbeQ0NAZ+S7WGA99J8kQW
+	y7ND2pW2NUK0Br1w8Tt3AZfJOOCkisSMIfNeZ5yja8+bMh8G0emGnYwA+oHrcw6JB2I26hI8tRw
+	efFuCPvThfrTfzV6qYtK/1ErAPJWi1epu1rLARZCml7M6A7q1RAg/gna2RCJeS5W9+52ZG+0T1F
+	vVZRYOrXeW1N2AFfV/geZIQj
+X-Google-Smtp-Source: AGHT+IFNpmw2gpoiWETBy4Xo67o3V5Wg8UfFAcJzqucXT9kmrVYel/4cPyhmyC5e+MRiOEQe62ehJg==
+X-Received: by 2002:a05:600c:cc8:b0:434:fa73:a907 with SMTP id 5b1f17b1804b1-438dc3c8367mr214669535e9.13.1738670578541;
+        Tue, 04 Feb 2025 04:02:58 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.67.70])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e244ecd6sm192272465e9.28.2025.02.04.04.02.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 04:02:57 -0800 (PST)
+Message-ID: <630f630d-241e-45f5-b449-243147fb888b@linaro.org>
+Date: Tue, 4 Feb 2025 12:02:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <da7dcddb-d407-41b2-8343-a0ec21914606@linaro.org>
-X-Proofpoint-ORIG-GUID: -mskbj0b1DmtchRN1I_B1uHBEgpempuX
-X-Proofpoint-GUID: -mskbj0b1DmtchRN1I_B1uHBEgpempuX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_06,2025-01-31_02,2024-11-22_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 11/11] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>
+References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
+ <20250202-arm-brbe-v19-v19-11-1c1300802385@kernel.org>
+ <0415d354-0c44-4fff-b92b-b0f5c9c72b11@linaro.org>
+ <CAL_JsqKTNDQn9omG3g=6Rb4Nwt6hG9Gw7-VXL_fjQeEQmmtJQg@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAL_JsqKTNDQn9omG3g=6Rb4Nwt6hG9Gw7-VXL_fjQeEQmmtJQg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi James,
 
 
-On 2025-01-24 at 17:38:58, James Clark (james.clark@linaro.org) wrote:
+On 03/02/2025 5:58 pm, Rob Herring wrote:
+> On Mon, Feb 3, 2025 at 10:53 AM James Clark <james.clark@linaro.org> wrote:
+>>
+>>
+>>
+>> On 03/02/2025 12:43 am, Rob Herring (Arm) wrote:
+>>> From: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>
+>>> The ARMv9.2 architecture introduces the optional Branch Record Buffer
+>>> Extension (BRBE), which records information about branches as they are
+>>> executed into set of branch record registers. BRBE is similar to x86's
+>>> Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
+>>> (BHRB).
+>>>
+>>> BRBE supports filtering by exception level and can filter just the
+>>> source or target address if excluded to avoid leaking privileged
+>>> addresses. The h/w filter would be sufficient except when there are
+>>> multiple events with disjoint filtering requirements. In this case, BRBE
+>>> is configured with a union of all the events' desired branches, and then
+>>> the recorded branches are filtered based on each event's filter. For
+>>> example, with one event capturing kernel events and another event
+>>> capturing user events, BRBE will be configured to capture both kernel
+>>> and user branches. When handling event overflow, the branch records have
+>>> to be filtered by software to only include kernel or user branch
+>>> addresses for that event. In contrast, x86 simply configures LBR using
+>>> the last installed event which seems broken.
+>>>
+>>> The event and branch exception level filtering are separately
+>>> controlled. On x86, it is possible to request filtering which is
+>>> disjoint (e.g. kernel only event with user only branches). It is also
+>>> possible on x86 to configure branch filter such that no branches are
+>>> ever recorded (e.g. -j save_type). For BRBE, events with mismatched
+>>> exception level filtering or a configuration that will result in no
+>>> samples are rejected. This can be relaxed in the future if such a need
+>>> arises.
+>>>
+>>> The handling of KVM guests is similar to the above. On x86, branch
+>>> recording is always disabled when a guest is running. However,
+>>> requesting branch recording in guests is allowed. The guest events are
+>>> recorded, but the resulting branches are all from the host. For BRBE,
+>>> branch recording is similarly disabled when guest is running. In
+>>> addition, events with branch recording and "exclude_host" set are
+>>> rejected. Requiring "exclude_guest" to be set did not work. The default
+>>> for the perf tool does set "exclude_guest" if no exception level
+>>> options are specified. However, specifying kernel or user defaults to
+>>> including both host and guest. In this case, only host branches are
+>>> recorded.
+>>>
+>>> BRBE can support some additional exception, FIQ, and debug branch
+>>> types, but they are not supported currently. There's no control in the
+>>> perf ABI to enable/disable these branch types, so they could only be
+>>> enabled for the 'any' filter which might be undesired or unexpected.
+>>> The other architectures don't have any support similar events (at least
+>>> with perf). These can be added in the future if there is demand by
+>>> adding additional specific filter types.
+>>>
+>>> BRBE records are invalidated whenever events are reconfigured, a new
+>>> task is scheduled in, or after recording is paused (and the records
+>>> have been recorded for the event). The architecture allows branch
+>>> records to be invalidated by the PE under implementation defined
+>>> conditions. It is expected that these conditions are rare.
+>>>
+>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>> Co-developed-by: Mark Rutland <mark.rutland@arm.com>
+>>> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+>>> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
+>>> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+>>> ---
+>>> v19:
+>>> - Drop saving of branch records when task scheduled out. (Mark)
+>>> - Got rid of added armpmu ops. All BRBE support contained within pmuv3
+>>>     code.
+>>> - Dropped armpmu.num_branch_records as reg_brbidr has same info.
+>>> - Make sched_task() callback actually get called. Enabling requires a
+>>>     call to perf_sched_cb_inc().
+>>> - Fix freeze on overflow for VHE
+>>> - The cycle counter doesn't freeze BRBE on overflow, so avoid assigning
+>>>     it when BRBE is enabled.
+>>> - Drop all the Arm specific exception branches. Not a clear need for
+>>>     them.
+>>> - Simplify enable/disable to avoid RMW and document ISBs needed
+>>> - Fix handling of branch 'cycles' reading. CC field is
+>>>     mantissa/exponent, not an integer.
+>>> - Save BRBFCR and BRBCR settings in event->hw.branch_reg.config and
+>>>     event->hw.extra_reg.config to avoid recalculating the register value
+>>>     each time the event is installed.
+>>> - Rework s/w filtering to better match h/w filtering
+>>> - Reject events with disjoint event filter and branch filter
+>>> - Reject events if exclude_host is set
+>>>
+>>> v18: https://lore.kernel.org/all/20240613061731.3109448-6-anshuman.khandual@arm.com/
+>>> ---
+>>>    drivers/perf/Kconfig         |  11 +
+>>>    drivers/perf/Makefile        |   1 +
+>>>    drivers/perf/arm_brbe.c      | 794 +++++++++++++++++++++++++++++++++++++++++++
+>>>    drivers/perf/arm_brbe.h      |  47 +++
+>>>    drivers/perf/arm_pmu.c       |  15 +-
+>>>    drivers/perf/arm_pmuv3.c     |  87 ++++-
+>>>    include/linux/perf/arm_pmu.h |   8 +
+>>>    7 files changed, 958 insertions(+), 5 deletions(-)
+>>>
+>> [...]
+>>> +bool brbe_branch_attr_valid(struct perf_event *event)
+>>> +{
+>>> +     u64 branch_type = event->attr.branch_sample_type;
+>>> +
+>>> +     /*
+>>> +      * Ensure both perf branch filter allowed and exclude
+>>> +      * masks are always in sync with the generic perf ABI.
+>>> +      */
+>>> +     BUILD_BUG_ON(BRBE_PERF_BRANCH_FILTERS != (PERF_SAMPLE_BRANCH_MAX - 1));
+>>> +
+>>> +     if (branch_type & BRBE_EXCLUDE_BRANCH_FILTERS) {
+>>> +             pr_debug_once("requested branch filter not supported 0x%llx\n", branch_type);
+>>> +             return false;
+>>> +     }
+>>> +
+>>> +     /* Ensure at least 1 branch type is enabled */
+>>> +     if (!(branch_type & BRBE_ALLOWED_BRANCH_TYPES)) {
+>>> +             pr_debug_once("no branch type enabled 0x%llx\n", branch_type);
+>>> +             return false;
+>>> +     }
+>>> +
+>>> +     /*
+>>> +      * No branches are recorded in guests nor nVHE hypervisors, so
+>>> +      * excluding the host or both kernel and user is invalid.
+>>> +      *
+>>> +      * Ideally we'd just require exclude_guest and exclude_hv, but setting
+>>> +      * event filters with perf for kernel or user don't set exclude_guest.
+>>> +      * So effectively, exclude_guest and exclude_hv are ignored.
+>>> +      */
+>>> +     if (event->attr.exclude_host || (event->attr.exclude_user && event->attr.exclude_kernel))
+>>> +             return false;
+>>
+>> Is there a reason to do the pr_debugs for the two cases above, but not
+>> for the remaining ones? Seems like it should be all or nothing.
+> 
+> Shrug. Anshuman wrote the pr_debugs. I wrote this part. Honestly, I
+> don't know why you'd want them only once if they are gated off by
+> debug. I guess since other cases of rejecting events outside this
+> function have pr_debug() we should do the same here.
+> 
+>>> +
+>>> +     /*
+>>> +      * Require that the event filter and branch filter permissions match.
+>>> +      *
+>>> +      * The event and branch permissions can only mismatch if the user set
+>>> +      * at least one of the privilege branch filters in PERF_SAMPLE_BRANCH_PLM_ALL.
+>>> +      * Otherwise, the core will set the branch sample permissions in
+>>> +      * perf_copy_attr().
+>>> +      */
+>>> +     if ((event->attr.exclude_user != !(branch_type & PERF_SAMPLE_BRANCH_USER)) ||
+>>> +         (event->attr.exclude_kernel != !(branch_type & PERF_SAMPLE_BRANCH_KERNEL)) ||
+>>
+>> I don't think this one is right. By default perf_copy_attr() copies the
+>> exclude_ settings into the branch settings so this works, but if the
+>> user sets any _less_ permissive branch setting this fails. For example:
+>>
+>>    # perf record -j any,u -- true
+>>    Error:
+>>    cycles:PH: PMU Hardware or event type doesn't support branch stack
+>>    sampling.
+>>
+>> Here we want the default sampling permissions (exclude_kernel == 0,
+>> exclude_user == 0), but only user branch records, which doesn't match.
+>> It should be allowed because it doesn't include anything that we're not
+>> allowed to see.
+> 
+> I know it is allowed(on x86), but why would we want that? If you do
+> something even more restricted:
+> 
+> perf record -e cycles:k -j any,u -- true
+> 
+> That's allowed on x86 and gives you samples with user addresses. But
+> all the events happened in the kernel. How does that make any sense?
+> 
+> I suppose in your example, we could avoid attaching branch stack on
+> samples from the kernel. However, given how my example works, I'm
+> pretty sure that's not what x86 does.
+> 
+> There's also combinations that are allowed, but record no samples.
+> Though I think that was with guest events. I've gone with reject
+> non-sense combinations as much as possible. We can easily remove those
+> restrictions later if needed. Changing the behavior later (for the
+> same configuration) wouldn't be good.
 > 
 > 
-> On 16/12/2024 5:30 am, Linu Cherian wrote:
-> > This patch series is rebased on coresight-next-v6.12.rc4
-> > 
-> > * Patches 1 & 2 adds support for allocation of trace buffer pages from
-> >    reserved RAM
-> > * Patches 3 & 4 adds support for saving metadata at the time of kernel panic
-> > * Patch 5 adds support for reading trace data captured at the time of panic
-> > * Patches 6 & 7 adds support for disabling coresight blocks at the time of panic
-> > * Patch 8: Gives the full description about this feature as part of documentation
-> > 
-> > v12 is posted here,
-> > https://lore.kernel.org/linux-arm-kernel/20241129084714.3057080-1-lcherian@marvell.com/
-> > 
-> > Changelog from v12:
-> > * Fixed wrong buffer pointer passed to coresigh_insert_barrier_packet
-> > * tmc_read_prepare/unprepare_crashdata need to be called only once and
-> >    hence removed from read path and added to tmc_probe
-> > * tmc_read_prepare_crashdata renamed to tmc_prepare_crashdata and
-> >    avoid taking locks  as its moved to probe function.
-> > * Introduced read status flag, "reading" specific to reserved buffer to keep the
-> >    reserved buffer reading independent of the regular buffer.
-> > * open/release ops for reserved buffer has to take care only about the
-> >    set/unset the "reading" status flag as the reserved buffer is prepared
-> >    during the probe time itself.
-> > * Few other trivial changes
-> > 
+
+Rejecting ones that produce no samples is fair enough, but my example 
+does produce samples. To answer the question "why would we want that?", 
+nothing major, but there are a few small reasons:
+
+  * Perf includes both user and kernel by default, so the shortest
+    command to only gather user branches doesn't work (-j any,u)
+  * The test already checks for branch stack support like this, so old
+    Perf test versions don't work
+  * You might only be optimising userspace, but still interested in the
+    proportion of time spent or particular place in the kernel
+  * Consistency with existing implementations and for people porting
+    existing tools to Arm
+  * It doesn't cost anything to support it (I think we just
+    only check if exclude_* is set rather than !=)
+  * Permissions checks should be handled by the core code so that
+    they're consistent
+  * What's the point of separate branch filters anyway if they always
+    have to match the event filter?
+
+Some of these things could be fixed in Perf, but not in older versions. 
+Even if we can't think of a real use case now, it doesn't sound like the 
+driver should be so restrictive of an option that doesn't do any harm.
+
+>> This also makes the Perf branch test skip because it uses
+>> any,save_type,u to see if BRBE exists.
 > 
-> Hi Linu,
+> Yes, I plan to update that if we keep this behavior.
 > 
-> I tested that decoding a crash dump of ETM1 (trace ID 17) from panic kernel
-> works:
+>>> +         (!is_kernel_in_hyp_mode() &&
+>>> +          (event->attr.exclude_hv != !(branch_type & PERF_SAMPLE_BRANCH_HV))))
+>>> +             return false;
+>>> +
+>>> +     event->hw.branch_reg.config = branch_type_to_brbfcr(event->attr.branch_sample_type);
+>>> +     event->hw.extra_reg.config = branch_type_to_brbcr(event->attr.branch_sample_type);
+>>> +
+>>> +     return true;
+>>> +}
+>>> +
+>> [...]
+>>> +static const int brbe_type_to_perf_type_map[BRBINFx_EL1_TYPE_DEBUG_EXIT + 1][2] = {
+>>> +     [BRBINFx_EL1_TYPE_DIRECT_UNCOND] = { PERF_BR_UNCOND, 0 },
+>>
+>> Does the second field go into 'new_type'? They all seem to be zero so
+>> I'm not sure why new_type isn't ignored instead of having it mapped.
 > 
->   $ ./ptm2human -i cstrace.bin
+> Well, left over from when all the Arm specific types were supported.
+> So yeah, that can be simplified.
 > 
->   ...
->   There is no valid data in the stream of ID 16
->   Decode trace stream of ID 17
->   Syncing the trace stream...
->   Decoding the trace stream...
->   instruction addr at 0x140c9afc, ARM state, secure state,
->   ...
-
-
-Thanks for trying this out.
-
+>>> +     [BRBINFx_EL1_TYPE_INDIRECT] = { PERF_BR_IND, 0 },
+>>> +     [BRBINFx_EL1_TYPE_DIRECT_LINK] = { PERF_BR_CALL, 0 },
+>>> +     [BRBINFx_EL1_TYPE_INDIRECT_LINK] = { PERF_BR_IND_CALL, 0 },
+>>> +     [BRBINFx_EL1_TYPE_RET] = { PERF_BR_RET, 0 },
+>>> +     [BRBINFx_EL1_TYPE_DIRECT_COND] = { PERF_BR_COND, 0 },
+>>> +     [BRBINFx_EL1_TYPE_CALL] = { PERF_BR_CALL, 0 },
+>>> +     [BRBINFx_EL1_TYPE_ERET] = { PERF_BR_ERET, 0 },
+>>> +     [BRBINFx_EL1_TYPE_IRQ] = { PERF_BR_IRQ, 0 },
+>>
+>> How do ones that don't map to anything appear in Perf? For example
+>> BRBINFx_EL1_TYPE_TRAP is missing, and the test that was attached to the
+>> previous versions fails because it doesn't see the trap that jumps to
+>> the kernel, but it does still see the ERET back to userspace:
+>>
+>>     [unknown]/trap_bench+0x20/-/-/-/0/ERET/-
+>>
+>> In older versions we'd also have BRBINFx_EL1_TYPE_TRAP mapping to
+>> PERF_BR_SYSCALL so you could see it go into the kernel before the return:
+>>
+>>     trap_bench+0x1C/[unknown]/-/-/-/0/SYSCALL/-
+>>     [unknown]/trap_bench+0x20/-/-/-/0/ERET/-
 > 
-> I noticed that once in the panic kernel Coresight becomes unusable, and the
-> Perf Coresight tests fail, with no obvious way to reset it other than a cold
-> boot:
+> My read of that was we should see a CALL in this case. Whether SVC
+> generates a TRAP or CALL depends on HFGITR_EL2.SVC_EL0 (table D18-2).
+> I assumed "SVC due to HFGITR_EL2.SVC_EL0" means when SVC_EL0 is set
+> (and set has additional conditions). We have SVC_EL0 cleared, so that
+> should be a CALL. Maybe the FVP has this wrong?
 > 
->  $ perf record -e cs_etm//u -- true
->  $ perf report -D | grep AUX
->  ...
->  AUX data lost 27 times out of 27!
->  ...
-> 
-> I didn't debug it yet. I thought it might be something to do with the RESRV
-> buffer mode, but it doesn't look like that should be the case from the code.
-> Perhaps its the claim tags and coresight_is_claimed_any() lingering, so it's
-> not really an issue that's introduced by this change?
 
+The test is doing this rather than a syscall:
 
-Is that problem reproducible without this series applied ?
+   asm("mrs %0, ID_AA64ISAR0_EL1" : "=r" (val));   /* TRAP + ERET */
 
-Thanks.
-Linu Cherian.
+So I think trap is right. Whether that should be mapped to SYSCALL or 
+some other branch type I don't know, but the point is that it's missing now.
 
-
- 
