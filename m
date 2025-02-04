@@ -1,81 +1,138 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D1221516C;
-	Tue,  4 Feb 2025 17:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAC521516C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738689553; cv=none; b=n/BGsZ83jQA9m1HCNO07e72frQP5EPYNEEX6ytpfWDIk8t2eWqCeC9sspFwQmzRqPLDwiTs2YzdXjc0wFo5KnInQW0DfVjnT1085esYwXgqFYNXaAzlCUlGAaNYQNx3r08PGuk6Rr03GiM54fyW5JyG0RfEHb//unmF0lFpJQLQ=
+	t=1738689577; cv=none; b=QYdgG29NVFPwxRezHD7pfJHr4DISk4bFV1PsBEL85v3Fh+JUMBIxa+ANorTLIc3B8WJXTokbu4C3kUTzamcCAZVDpxSmRLK9p1vXXgPjtK5sxQ7ZPDSZ6rgdPq4Zys6I8q70Bfe19u1GicU6Er4C/IJB2WT1wep5CEP8AZv3IqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738689553; c=relaxed/simple;
-	bh=J86YdbKK8Qv/d40JzMIQMPYunfy8ubwmWUHUH3csaTQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bT2Dwijjo831xa47N8rBpv7Golnk4cOvX+HrvvAcuP6rRRzhq4ylv2Y1n4cNYHcvj7I8ltvv+CRdZ2oBha8NvHqDzQhdvSSkGikvXR8Mjt+imXIL2SozUhdXRUDnVSb5vcmqT9OiAV8Aam4YP8/bwotHpANz97PRnL2W9YowW/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=g13Czhk+; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1738689577; c=relaxed/simple;
+	bh=LKDJ4ld8Cjq0z8KeEL0elDIxvLmnBQuTQLzCRS94aYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V9H3eT/Osjhp64OOrxFIdn9u+cu9ucZNNOw0tsfjOIIwkFLFG7aAhl8YFqWaB18FQsHMihz3sI21QTdqlIGq22xny8MhVYLpvPa7WsQPwFZWduVPcbR9P+s6T6xeQTgmihsBWoUw+6YWqnYfLiblIDUXC+P1q8Rb+zFMjrGXzqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MB/zMxFa; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="g13Czhk+"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 4130A404FA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1738689551; bh=UH7wV2+0vr/I7llWl2n8WcfYM0VnMgjFIAs4Eni4cPw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=g13Czhk+wcRFO7u1OfFvD0QSdYlcKK8oVb5zm2bckJTrrS2On6x+MBJkk/DdNdaER
-	 VCbyDoh8cG20iNILXoHa1HpFeQMTa7B9goC9Jf7+prP1PZ83x6f3LPRbPeQcmBjFN5
-	 s7ImcHjJO2ApvKp4YCBp4jofrHNS0wBvYP6oOJrjwDanxhGYRR9HCVwi7cMGOlk7RK
-	 UeBTh1vw2zk3GefR91WDfZair4yksGYhMaEta1ZAnIuZC5zFr8e9NXhENOOnIuYRha
-	 idB/hLLKG9bj5lL4OZYQjU2S58DOfqvVDOgadrQyvHQ9T4vhgDaxLw2rDmjPYOJLzm
-	 IxlP9qvcjcrFw==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 4130A404FA;
-	Tue,  4 Feb 2025 17:19:11 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
- List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Mauro Carvalho Chehab
- <mchehab+huawei@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC v2 05/38] docs: sphinx/kernel_abi: adjust coding style
-In-Reply-To: <259b07bffa7907ab8e73939dd5d9f025b2f694a8.1738020236.git.mchehab+huawei@kernel.org>
-References: <cover.1738020236.git.mchehab+huawei@kernel.org>
- <259b07bffa7907ab8e73939dd5d9f025b2f694a8.1738020236.git.mchehab+huawei@kernel.org>
-Date: Tue, 04 Feb 2025 10:19:10 -0700
-Message-ID: <87zfj1eigh.fsf@trenco.lwn.net>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MB/zMxFa"
+Date: Tue, 4 Feb 2025 17:19:28 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738689572;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jtvZbfF3IKfSP8jRjX4cOz5aIG33zGLTl/L+bxRlWDY=;
+	b=MB/zMxFaxQ4YvY31K8heB7QUOOfrZxHQr4Dtnppc3tYymcRgOT6eGd5Gc7Qja5MaHW/O64
+	y74Ic1vnxKjG47uqwOZUKogvUEsrhXHgsuz5WVfGSRF6vFtkCvYK/PJepkqdYIe3L3UatW
+	vXweVTJ6s/AHbrWtP+f2ecewmNSslD4=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 14/17] zsmalloc: make zspage lock preemptible
+Message-ID: <Z6JMIKlO9U5P-5gE@google.com>
+References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+ <20250131090658.3386285-15-senozhatsky@chromium.org>
+ <Z5zxlRkdseEJntFk@google.com>
+ <ecuos7w7m35fvzz7xvmvdvfxn7adzdahuulwn2j42mvjoqmlwi@ucel4kqetxg6>
+ <Z6Ew9AWNHacRIfhA@google.com>
+ <lxottj72e7jcqw634qwudpsyqckfrvpmlhra43en4zlrlz4cip@erufv6w4n5j6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <lxottj72e7jcqw634qwudpsyqckfrvpmlhra43en4zlrlz4cip@erufv6w4n5j6>
+X-Migadu-Flow: FLOW_OUT
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+On Tue, Feb 04, 2025 at 03:59:42PM +0900, Sergey Senozhatsky wrote:
+> On (25/02/03 21:11), Yosry Ahmed wrote:
+> > > > We also lose some debugging capabilities as Hilf pointed out in another
+> > > > patch.
+> > > 
+> > > So that zspage lock should have not been a lock, I think, it's a ref-counter
+> > > and it's being used as one
+> > > 
+> > > map()
+> > > {
+> > > 	page->users++;
+> > > }
+> > > 
+> > > unmap()
+> > > {
+> > > 	page->users--;
+> > > }
+> > > 
+> > > migrate()
+> > > {
+> > > 	if (!page->users)
+> > > 		migrate_page();
+> > > }
+> > 
+> > Hmm, but in this case we want migration to block new map/unmap
+> > operations. So a vanilla refcount won't work.
+> 
+> Yeah, correct - migration needs negative values so that map would
+> wait until it's positive (or zero).
+> 
+> > > > Just my 2c.
+> > > 
+> > > Perhaps we can sprinkle some lockdep on it.  For instance:
+> > 
+> > Honestly this looks like more reason to use existing lock primitives to
+> > me. What are the candidates? I assume rw_semaphore, anything else?
+> 
+> Right, rwsem "was" the first choice.
+> 
+> > I guess the main reason you didn't use a rw_semaphore is the extra
+> > memory usage.
+> 
+> sizeof(struct zs_page) change is one thing.  Another thing is that
+> zspage->lock is taken from atomic sections, pretty much everywhere.
+> compaction/migration write-lock it under pool rwlock and class spinlock,
+> but both compaction and migration now EAGAIN if the lock is locked
+> already, so that is sorted out.
+> 
+> The remaining problem is map(), which takes zspage read-lock under pool
+> rwlock.  RFC series (which you hated with passion :P) converted all zsmalloc
+> into preemptible ones because of this - zspage->lock is a nested leaf-lock,
+> so it cannot schedule unless locks it's nested under permit it (needless to
+> say neither rwlock nor spinlock permit it).
 
-So I was looking at applying the obvious fixes from this series, but ...
+Hmm, so we want the lock to be preemtible, but we don't want to use an
+existing preemtible lock because it may be held it from atomic context.
 
-> Make pylint and flake8 happier with this module's coding style
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/sphinx/kernel_abi.py | 28 +++++++++++++---------------
->  1 file changed, 13 insertions(+), 15 deletions(-)
->
-> diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
-> index 8401562cb5d9..a1887b50a900 100644
-> --- a/Documentation/sphinx/kernel_abi.py
-> +++ b/Documentation/sphinx/kernel_abi.py
-> @@ -32,32 +32,30 @@ u"""
->  
->  """
->  
-> -import codecs
->  import os
-> -import subprocess
+I think one problem here is that the lock you are introducing is a
+spinning lock but the lock holder can be preempted. This is why spinning
+locks do not allow preemption. Others waiting for the lock can spin
+waiting for a process that is scheduled out.
 
-This breaks the build, since the module does indeed need the subprocess
-module.
+For example, the compaction/migration code could be sleeping holding the
+write lock, and a map() call would spin waiting for that sleeping task.
 
-jon
+I wonder if there's a way to rework the locking instead to avoid the
+nesting. It seems like sometimes we lock the zspage with the pool lock
+held, sometimes with the class lock held, and sometimes with no lock
+held.
+
+What are the rules here for acquiring the zspage lock? Do we need to
+hold another lock just to make sure the zspage does not go away from
+under us? Can we use RCU or something similar to do that instead?
+
+> 
+> > Seems like it uses ~32 bytes more than rwlock_t on x86_64.
+> > That's per zspage. Depending on how many compressed pages we have
+> > per-zspage this may not be too bad.
+> 
+> So on a 16GB laptop our memory pressure test at peak used approx 1M zspages.
+> That is 32 bytes * 1M ~ 32MB of extra memory use.  Not alarmingly a lot,
+> less than what a single browser tab needs nowadays.  I suppose on 4GB/8GB
+> that will be even smaller (because those device generate less zspages).
+> Numbers are not the main issue, however.
+> 
