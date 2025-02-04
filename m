@@ -1,61 +1,59 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9931F21422A
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3810214228
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738677532; cv=none; b=GwQRba2qldWgDKB66Hr68SYjNnzxgCmEth4VXDfoOLvPQwUuytAJIipP5OHDLg3lLTbzsLISy5Kusw0wfz+Erlrw+SqYhb+ZbBDrtGa3R/zYov7O97fQNRpU09lqiJivS8auez/IDt6+gNWwP52E2zv25NMPwJcu7B/tX1AL/ic=
+	t=1738677532; cv=none; b=oAHzU1r1rk5fSRmvewtiD7hk6Qv+EqGbsVjErWyIwLKqXf23MFLxwO0ZMkrqkjvXaD30PW5s5e2xD8NxLIJcsoqvoOQr1coMLYkjCLYD7oY3CtfabgHX5QmxWKouai2+5AGB9fYF6cRai7WKKmy6nDv0TZU0TAGoX9vsuWVhdBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738677532; c=relaxed/simple;
-	bh=qwNusalsxqdNQhdpk2S5586/XFRiEANFBgaPdBV5M0o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BJl0v5xuEUeKCDs5WMV7KsKZmtn7vQfwI6Dq65/Z/jipAhmMxLFyFq4ZuBiscaDGcPmBCKlc7tdO5D66bzG8DHdN1jVrSFjJbbgWLartJm1TkFLrza+1AplIBSL9C6Kdvi6snRcrIJOZ/fHnQ451K2KZzOx6x9u7ddtlu4wVngI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=boH7aWQ7; arc=none smtp.client-ip=209.85.128.52
+	bh=vumFQcxg92i+S8IdoJ9P4/+0wJ7wlFWLM531RWtV67Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iprxGoMg+8VixijsrGgnpgEI44oAefVArRzkRSbSo5t1qVPh6obgDz6SNn5gZtC/UhOOMpzlEdKUZ6YPfD52Xz03PjoYGeqKiHG16J8Utg830z7mybQb2sCwuePOc3DTdYwgHwWHjbRzuBXofXDrgmDJ15lB8etYBmLA8iN+5sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ghUlhyD2; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="boH7aWQ7"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4363ae65100so65954945e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 05:58:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ghUlhyD2"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43690d4605dso38731265e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 05:58:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738677528; x=1739282328; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b9Mhzic04g3H6M95YhZzI57+VboqPOZ3dYOfhKdSDJs=;
-        b=boH7aWQ7bQMZim1wXmX7I6vCO+ngAxKeBp1qUp9j2z+oarLpSz40LOVbq1YaIbK6U6
-         rNPvPQ4waGaSfzqNN5zVpnxy/NOH5EvUFds/jEwauOhRHxaRzkCHemAF6GTpOwsexX9I
-         jV6hydVbsKG9sC7Jj7sHUNgswTbckRYMVpLBRkSytJ9mxU5J3hyIOxZipEHKiNwVOy3H
-         6acbXMUIuUZg0RX+7GvPvUf8KhN1VRKuC3gtCBhPmHYkmb1wQ4d0qMa/PupLQRGzN4ru
-         OSrcEcE2NHGxBHl7tJMWfBdTZBz5qhgnpnqvsNUQFb96CTAkytANiIrez0krj3tpkbJQ
-         /oBQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5lNAAemnFz11Ss/Yl6lsNy/jAPdpl9qzq8HEHAK9Eyo=;
+        b=ghUlhyD2YDF+tOHKJfCk67aHpdV+kwhk3wXqOXDXW7CrUJcE+8WPjPym4m8/2eQgsH
+         NHBphxtA1c/C3dEAvBObBpQH3TqpeqxTsTNbtP1tqRlcYRhz7VfYqDLrU15bqdafGepy
+         Vsy9B+qQX7BWMBK89ovcyxqEmaBbVLg6eCRlKSHUNZt07Yql6R7hJIlXhSuNYbRTCU+/
+         VWaudmhkZCqJkBk1w0u9u02n2U8A4ENDigfiv+LZU+07hMfsexTVnRohmWk+jUWEOlOo
+         mxOpHIE40zdz7yXaosIGaSJ3siWrwWUqbgxFQ7zgnRirwRbL9HpxnzZvTuB7oNTB7kIo
+         d9yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1738677528; x=1739282328;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b9Mhzic04g3H6M95YhZzI57+VboqPOZ3dYOfhKdSDJs=;
-        b=MVgQ04xWYRrNAm/LoCz1/YpBgCTFZShuJ4dfCpvMU/hKymWogYfz6o0yfD/1SYLREN
-         fYLwyOjQwOF4czAw9Z6ua/QX/vizShhtXbX85gkK29WoDPQOTP5jBtRSsWVE7wi7yXBZ
-         wUuzx3fVW42pdun9UVEu2n4APFYTpEnJ164KhucgzAhnZDoB8ECidmP9fpfKXvu3hiAo
-         rEqAJEp5qxmrsavVFNaHxbrzk+VcyPjyyPzyyIwFlUwERE7SuHj4q3foMI6j6218qmnE
-         4dCQFMa2tYCGl0DXH+M6tbUakOTuoZJljdjEDScO+ToAi3zrkqCYatlsifOcvfcCGS8d
-         VVhQ==
-X-Gm-Message-State: AOJu0YzcozszhI5NSFZ8gcNSHbsSszYo42PD3/3mpnLBEpw/DX67xur2
-	lUdTxB+x5zlWIIjL0xOZmFnilpVLHaJ2SK3jrGc1mgee1B5djYjVhTuQR4hEdNg=
-X-Gm-Gg: ASbGnct9FKAUqDu3zA3BSaAl7dTFgEvAG7AKX5OPxZEoVIQYoJeN34I6OHzx6wjPEmf
-	/ayd0masWHr60WxNt0Q7DjmPS7SV7C/aB80SW6IKyHMvMJ+GPiRBGIkds//uqA0CJU/456CYe5r
-	kXangHfiKF8VuIJ918OEkGrT3pP08XQOd0MQbqvyPl8FUOeQl60Z5WGHn4GRcv+cZbjyoN3B/OS
-	yY9BP0lkt0g61g+g8Z63vdmplkrzeXQKVqNuySNB0lc6g68g8aJg1pBJs6RUHUd9NBHjjCewEK3
-	mUc60ADvMLYelRuKh6OfaMWL7lqCW+FMwSSgCn+pxCMTO5jZeA==
-X-Google-Smtp-Source: AGHT+IG6HYRgSllCm56nuMoAeKWHbxfz6C7lnkj3eQ0dmAHEhCsGlZxEcR573rWapsj44lPvD0/Tgw==
-X-Received: by 2002:a5d:6c65:0:b0:38c:5cd0:ecf3 with SMTP id ffacd0b85a97d-38c5cd0efe3mr19037648f8f.11.1738677528507;
-        Tue, 04 Feb 2025 05:58:48 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5lNAAemnFz11Ss/Yl6lsNy/jAPdpl9qzq8HEHAK9Eyo=;
+        b=fnMhFQdFHZBy4ehMt0IWXa0wgbo3dm3CVcxD2lOCK5RuvjA445yi8tfD6mb7UQ9i6f
+         OF3TeFa+Yb3DYoouWdl8EC5ZF0RexBhDNsvHpEDmnbIgwZ/u90bWXFnGlhrpSkpoMzGQ
+         +h62U/Z9e/zugffVI5EAsHSPAbG10xI/qsfGTmzUiLhxeokbENwnILGCNfkzB7oeOZa/
+         vH+dx4mOJpbMr8YU9tw/bMtR8JoVgUrgPp+N4HD2V6cSBVbDzINa2K/LeIp8YHDWGFzE
+         BUSfCOFmO3EbYwiZVOlTSfBTHRoPEXFdWWk6JNQmDD2lhskG2fGTFkzqIVVyRMiz6LTR
+         e3Tg==
+X-Gm-Message-State: AOJu0YzJ3MyuI6Qs4oycpa93AKwpj7MU+MnSslDpqivm1bDX/xXmzbLS
+	P4IUVGcyv3q9cGJDj1iReDcYCJh9n8W4HSBi1Tw0STEcyUYL6qxhuTY9CZULQwc=
+X-Gm-Gg: ASbGncuY7d23+rLQOLEm5WbxF4C0Zda1ohoWc/xt0wOf1xA9FYNWfGf0IL+NEth+QHo
+	4HPFvLCWE1AJ3hBbDAvh2XSnSuOXwKOV8uKxDvLiqFhVSXUrEBmgA6Z6yTdBl8GERzItukrFLID
+	Far1vzUh26xAjRcCxkEGYKIGS3PMf7UOFvieXi8j0Jac6dkqXnH9fR0OvybxVrj8IZ4KGrth5Sq
+	ZDuBamLZ56N28UtkjDnpic1nUDftatKoN2Iii7Ax4l4iAAE98FLo0soWBsU1FkDk0SYIAlwKjZG
+	2LCxB+zV/laCg7/R3aJe49c0EHxzDZASToU5wIsf8SR5nvXS6Q==
+X-Google-Smtp-Source: AGHT+IGXHHfAhPhRwCObP9XcfKu4Lm1SYHsqXusIjhZHZmXZlEcbCT86S+vSSVyTRag9ggQN10lP9A==
+X-Received: by 2002:a05:600c:1d27:b0:436:5fc9:30ba with SMTP id 5b1f17b1804b1-438dc429771mr235006065e9.29.1738677526370;
+        Tue, 04 Feb 2025 05:58:46 -0800 (PST)
 Received: from arnold.baylibre (88-127-129-70.subs.proxad.net. [88.127.129.70])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-438dcc13146sm224328065e9.4.2025.02.04.05.58.47
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-438dcc13146sm224328065e9.4.2025.02.04.05.58.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 05:58:48 -0800 (PST)
+        Tue, 04 Feb 2025 05:58:45 -0800 (PST)
 From: Corentin Labbe <clabbe@baylibre.com>
 To: gregkh@linuxfoundation.org,
 	johan@kernel.org,
@@ -64,12 +62,10 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-usb@vger.kernel.org,
 	david@ixit.cz,
 	Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v8 2/2] usb: serial: add Martin and myself as maintainers of CH348
-Date: Tue,  4 Feb 2025 13:58:42 +0000
-Message-Id: <20250204135842.3703751-3-clabbe@baylibre.com>
+Subject: [PATCH v8 0/2] usb: serial: add support for CH348
+Date: Tue,  4 Feb 2025 13:58:40 +0000
+Message-Id: <20250204135842.3703751-1-clabbe@baylibre.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250204135842.3703751-1-clabbe@baylibre.com>
-References: <20250204135842.3703751-1-clabbe@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,31 +74,96 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Martin and I did the driver and have hardware to test, set ourselves as
-maintainer of it.
+Hello
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+The CH348 is an octo serial to USB adapter.
+The following patch adds a driver for supporting it.
+Since there is no public datasheet, unfortunatly it remains some magic values.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 481b2dac1716..42558a70dcb0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -24530,6 +24530,12 @@ F:	Documentation/usb/usb-serial.rst
- F:	drivers/usb/serial/
- F:	include/linux/usb/serial.h
- 
-+USB SERIAL DRIVER FOR CH348
-+M:	Corentin Labbe <clabbe@baylibre.com>
-+M:	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+S:	Maintained
-+F:	drivers/usb/serial/ch348.c
-+
- USB SMSC75XX ETHERNET DRIVER
- M:	Steve Glendinning <steve.glendinning@shawell.net>
- L:	netdev@vger.kernel.org
+It was tested with a large range of baud from 1200 to 1500000 and used with
+success in one of our kernel CI testlab.
+
+Regards
+
+Changes since v1:
+- use a data structure for encoding/decoding messages.
+- check if needed endpoints exists
+- fix URB leak in ch348_allocate_status_read error case
+- test for maximum baud rate as stated by datasheet
+
+Changes since v2:
+- specify ch348_rxbuf data length
+- Use correct speed_t dwDTERate instead of __le32
+- test for maximum baud rate supported according to datasheet
+- Use a define for CH348_TX_HDRSIZE
+
+Changes since v3
+- Fixed all reported problem from https://lore.kernel.org/lkml/Y5NDwEakGJbmB6+b@Red/T/#mb6234d0427cfdabf412190565e215995a41482dd
+  Mostly reworked the endpoint mux to be the same than mx_uport
+
+Changes since v4:
+- The V4 was sent against stable and next have ch348_set_termios ktermios
+  parameter const that I forgot to change
+
+Changes since v5:
+- Fixed all reported problem from
++https://lore.kernel.org/lkml/20230106135338.643951-1-clabbe@baylibre.com/T/#m044aab24dfb652ea34aa06f8ef704da9d6a2e036
+- Major change is dropping of all status handling which was unused.
+  It will be probably necessary to bring it back when using GPIO.
+  This will be done when I will finish my next devboard.
+
+Changes since v6:
+- read and print the device version during probe
+- Only request one bulk out channel from usb-serial core
+- Implement status report / interrupt handling
+- Fix buffer->rate calculation / enable support for slow baud rates
+- use a mutex to protect against concurrent writes
+- split write buffers for slow baud rates
+
+Important note, v7 is mostly done from work of Martin Blumenstingl,
+so the changelog was built from https://github.com/xdarklight/ch348/commits/main/
+
+changes since v7:
+- Use standard configuration and interrupt status macros from
+  <linux/serial_reg.h> as suggested by Johan Hovold (thank you)
+- Update logging (avoiding %s to print the function name and
+  rate-limiting logs from ch348_process_status_urb() which may be
+  called a lot) as suggested by Johan Hovold
+- Use usb-serial integration for parsing all endpoint descriptors for
+  us. As result of this usb-serial and ch348_process_read_urb() are
+  now managing the status/interrupt endpoint as well
+- Move processing of the write buffer(s) to a workqueue. ch348 does
+  not allow multiple parallel write URBs (with serial TX data).
+  usb-serial core however tries to always make sure that the buffers
+  are full and sending them back-to-back. This does not work for ch348
+  as it leads to data corruption.
+- Don't use bitfields in struct ch348_status_entry as it's part of an
+  ABI. Thanks to Johan Hovold for pointing this out.
+- Use #defines for magic values and spell out cases as Suggested by
+  Johan Hovold
+- Drop support for baud rates outside the range from the datasheet.
+  Slower and faster baud rates were added with v7. Testing for this was
+  done by connecting two ch348 ports together. However, when using
+  another device these faster and slower baud rates are not applied as
+  discovered and analyzed (with a scope) by Volker Richter (thank you!)
+- Keep the package type around in struct ch348 as it's needed when
+  modem controls and/or GPIOs are implemented.
+
+Again, v8 is a work from Martin, I probably will never finish this work
+without him.
+Great thanks to him again
+
+Corentin Labbe (2):
+  usb: serial: add support for CH348
+  usb: serial: add Martin and myself as maintainers of CH348
+
+ MAINTAINERS                 |   6 +
+ drivers/usb/serial/Kconfig  |   9 +
+ drivers/usb/serial/Makefile |   1 +
+ drivers/usb/serial/ch348.c  | 736 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 752 insertions(+)
+ create mode 100644 drivers/usb/serial/ch348.c
+
 -- 
 2.45.2
 
