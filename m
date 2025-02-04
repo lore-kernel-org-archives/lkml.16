@@ -1,136 +1,143 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960A621507B
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238E42135AC
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738683269; cv=none; b=aLgX2oFbHVYcmrLip/s7zBq5pJ1T/9VIfTwkDNmYSnZLMtKf4G5fmgRwkDnXA6gTT0p5aRhfm1oQC0wcRnWu3a56NkB+PshR/IJfHGdArRaRiFa182hMIXGyxrVALOQs3PDS13txI1XTvxIz0bmo9GMSEYAVNvIgXFVdz3YqFWE=
+	t=1738683333; cv=none; b=IKBeBUFIZ4mI7khf2mVv4OP6d5UeUXobyRmB2sNXHaRmtG9sDIH+basYKwIvcYV0ZGOVniF9JYCHAgiyqqdQOx3MW72RbG5fhB97o1gpseGbPw7lbI5dR5XUrVJqcftcP79+p3V08Ffnb1znVtfuNLDdFYLtr5Q7olgpN/RU13U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738683269; c=relaxed/simple;
-	bh=vFVKqLM12bLppHqtfvlxG0He9/Hds1mXRHtYYyuSE/o=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ljLQ90krv86tRGF60eGmBdo+kkQO5DNHwxlQfJXW9wwooUiSWxHMZU3oSfXGjgA4HqauKWm3C/C7aGe/appsYkxRaM6lf4IHRXtwDfNiws9+laE9MxDlu055YlLuP527pS5gML3BGIPfOWJ8xDRWGgz5ensx/yFMEaDd+H0DOXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3ce81a40f5cso100562905ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:34:27 -0800 (PST)
+	s=arc-20240116; t=1738683333; c=relaxed/simple;
+	bh=DVWVLiFZX3pBISObkfjiwN9Rg1VSfP0CMx9QbuGF9Gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iRCXR94Yerab1eitunCD7zrtaxhV+ZzhOx287dg8BlUFFlzMQDw2jNWaI0n1IvvMV8m/WzkIb4AwPujVpGL39fnffbdRzoF3ws2bCftPJkJPOaDXBO/9TKqroO4K+iRNAXHQI7ypybmE5gwCT+VbRJIez021FGgSHzewcx45RVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FRHDnsg9; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FRHDnsg9"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3061f1e534bso58106241fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:35:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738683329; x=1739288129; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mo0faCQWMQesSAiWhpm/M42GsGQUGBhbD7joezmU+YI=;
+        b=FRHDnsg9MKBV4f9bynE26YGmNgIvZ0f99xhfh9dtV7M34uxUY6s5dQgdhi5V2KIriW
+         4LLi7HhwFXLEHy2F1X405q76BnQLcsBDv84BtlK8TrKZ3MlgCQ+8Tu2mFElMw2+XVRk6
+         b0TuWjzu2Z0AkjsyJkTUESv59kDksXGZOL4FfJhs1MvD/UY8a2leHUR13KBcEPiQeXte
+         Y8pDv4sf7wZFbUsbMgX92xKFZsiqHChchUr0V7f7ZphF2zj+eZd6mDWEA2sH02dc6rFD
+         FFD6sV9dJRMlEcxa9JcjwF6MGfCYikjWJSIAEdDue33Mu4THV5MSX8H/AAH99UrcBsdu
+         tgXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738683266; x=1739288066;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sTyxJH1n+oqeEDYjwt7rZFUHPv1cNoPQYcBLTwj9yNM=;
-        b=Zy80fVc+NoGWOk2lMadDTaOOySw8lj0vNvrxXtktJuvogLLB57wJH5vmF8Ag/0AgW+
-         VeRcUf01h8et2MjCCqz+UqLTwudbsSPMXUcuvrgMmCGS/VHLZUifB6zPsNKVmzg9GgAc
-         IzyAhc6LWARK4YTZXu7A/XipynY62lL79hsZZVVcrKlN9nlgr/p2BIIao9/TW6CceMBe
-         JzH1auAG16AIF4B3zoerz/NaTgNK5ma0nlkAy33ncNXBFjtx30ndX/8xZGrm2zvgenu7
-         dGSQ5AG7vbdZRUkXbRUlbhCYNdFBm+NLcYcSdTIsDlP/p7waaORUU3m8NVNEtFKl/Xp4
-         EjgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8XMKYjwHANcwDRS44J5w+d7XWHsZ1L38ir1huy1xbBQ7uKb8Dh7yGj/j+n0DLUoJoJd/zmHiv9sHMK9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB8Ea3f9sGZKi5x9Ptu1D2A9r0uGIC4B3Rr5aZ+HiqdPObfzOj
-	NbWLUs2iQaR72gqOqa0DTiHycjUZ0byWmK20lDcriPUUknwH50FPPR9FbvvUQoKwOzN73vTbq7P
-	JYGuzlUydFbuTDMvSa3Zbwei6owuhzwRQMv+bz3lxHp1tM3ZdjvzEAXs=
-X-Google-Smtp-Source: AGHT+IE+sxeh4zcmbP0uDKdN/YL35hQL+fHqquCuQWuMS3tm3/AqKWi3uK4P7CEyn51KfuiHrBU//kw8uqzwVHfEtVpnatdlRWgw
+        d=1e100.net; s=20230601; t=1738683329; x=1739288129;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mo0faCQWMQesSAiWhpm/M42GsGQUGBhbD7joezmU+YI=;
+        b=eidbsrnrnOwrq2buzGQRrvKgOmlUNZzVnA3qhtah4iuSa2x4J9dCFLQphzOyoPJTkL
+         tTQfjUD8KWHH6z+NT2kGwGUjzLZ+8lxmwVlcg2Yu739XgMpHiOqUGT2mWYSd+pAeBG14
+         EKWtv5gHt0xsW6K0kLTsEWL8icE777v189gJ50XLAeZtvAwJ64U/JJAHM63S9Sow5Fra
+         sEsCHY9MaVBpg99IB8j3+ow6W6Rgvz3uEUrtM0CTkNJPc4W/bYWSR3ca/vTBkQDCVLY3
+         GNKXcYy0evZb183T7AS2naCqD+/q0XdIvQvkak4QmhFYUghx1vGA7wOngmOHRUP4IH9Q
+         TOkw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYJlWh18/oVKxJW2YMctqF6yXip8V1lSqBpR3NJ4ReUB84LZXYoczSzOEelv4lx348fAWqs/CyiJaszu4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yydg+95zl6lhkWApyayqIZSbAmi6CUiL9CCQ0IFBHnCUSSqDM8j
+	h9NUeKQXGgfLX3jKtabsIdA8LrUhyfWTBOxmjx0nYbKpYcdmfxqo9l8V5QSAaJU=
+X-Gm-Gg: ASbGncs2+MnQlVyHjT06tq7TRmC6blGETap4gQypUs46Nhil0gJ5jtEY+YTE/70cC2E
+	i1jTUyeJbJ1LwS3tbDY/r8xeq2srN+aHJ+ufPEC1UmQa7t9iizgSZsFjzfFmUG1VGq60uzegsBE
+	1IzqPFR1DNL4a+AROT1oogSFMc/ASo03UjacFtdJglk90VRa6cFohQDxVukvA3OMI6a4T1PBXtk
+	mqkvbSLcbACzsghWMpIsAJuHJHziuZb1CDfQPOpMkDmNkR0bCqSdnPTqrH15PWnhwImr9G0CrBA
+	yqcXr/B+iGU8DEuIvWm5g016JE/Zfews2ORBRsBrS4t73my+WWHckP00azuuvVxI5zaH/wQ=
+X-Google-Smtp-Source: AGHT+IGSOdu+12crB/KrJD62kGAd9vR+Tk3cUEAAA23UqBKca/FTqES0sbInnGw1I1bv8/42+SlQng==
+X-Received: by 2002:a2e:9fc5:0:b0:302:22e6:5f8 with SMTP id 38308e7fff4ca-30796878ee0mr112854481fa.22.1738683328930;
+        Tue, 04 Feb 2025 07:35:28 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a33f7747sm18683361fa.76.2025.02.04.07.35.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 07:35:27 -0800 (PST)
+Date: Tue, 4 Feb 2025 17:35:26 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Dikshita Agarwal <quic_dikshita@quicinc.com>, 
+	Vikash Garodia <quic_vgarodia@quicinc.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hverkuil@xs4all.nl>, 
+	Sebastian Fricke <sebastian.fricke@collabora.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Nicolas Dufresne <nicolas@ndufresne.ca>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, Jianhua Lu <lujianhua000@gmail.com>, 
+	Stefan Schmidt <stefan.schmidt@linaro.org>, linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bjorn Andersson <andersson@kernel.org>
+Subject: Re: [PATCH v9 27/28] media: iris: enable video driver probe of
+ SM8250 SoC
+Message-ID: <uc2rve7hqf4mmvobinaxzf5qncglysfeg2lbxmxvxapsewhgxh@2ppf757u352g>
+References: <20241212-qcom-video-iris-v9-0-e8c2c6bd4041@quicinc.com>
+ <20241212-qcom-video-iris-v9-27-e8c2c6bd4041@quicinc.com>
+ <Z3_nCPk_g8znto4A@hovoldconsulting.com>
+ <64f8bebd-35e1-c743-b212-e1a3292bade2@quicinc.com>
+ <Z4EuiPEw8mvDQ2gv@hovoldconsulting.com>
+ <24334fb8-4d83-eb06-aee3-dfe1f8e4937b@quicinc.com>
+ <552972B8-1ACA-4243-A8E3-8F48DAF39C5C@linaro.org>
+ <Z6CApNuSlPGvVL2k@hovoldconsulting.com>
+ <fhqlt5xsz7yyrbnvhnovt66gzldjjbitpeznlvxztobdxmjnuw@d4avd5fq3muh>
+ <Z6HjbXZsR9QmXxKy@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:240b:b0:3d0:443d:a5a4 with SMTP id
- e9e14a558f8ab-3d0443da8bbmr19294865ab.2.1738683266494; Tue, 04 Feb 2025
- 07:34:26 -0800 (PST)
-Date: Tue, 04 Feb 2025 07:34:26 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a23382.050a0220.d7c5a.00bd.GAE@google.com>
-Subject: [syzbot] [mm?] [bcachefs?] UBSAN: shift-out-of-bounds in shmem_add_to_page_cache
-From: syzbot <syzbot+07392c132f11b1758ac3@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, hughd@google.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6HjbXZsR9QmXxKy@hovoldconsulting.com>
 
-Hello,
+On Tue, Feb 04, 2025 at 10:52:45AM +0100, Johan Hovold wrote:
+> On Mon, Feb 03, 2025 at 05:37:28PM +0200, Dmitry Baryshkov wrote:
+> > On Mon, Feb 03, 2025 at 09:39:00AM +0100, Johan Hovold wrote:
+> > > On Fri, Jan 10, 2025 at 08:01:21PM +0200, Dmitry Baryshkov wrote:
+> 
+> > > > Also as venus and iris drivers are not completely
+> > > > equivalent wrt supported platforms, distributions will have to select
+> > > > whether to disable support for older platforms or for new platforms:
+> > > > Kconfig dependency will make it impossible to enable support for both
+> > > > kinds.
+> > > 
+> > > You shouldn't have both enabled. The only reason for keeping support
+> > > for the same hardware in both drivers is that the iris support is
+> > > incomplete and considered experimental. No one should enable that except
+> > > for development and evaluation purposes until the driver is up to par.
+> > > And then you drop support from the old driver along with the config
+> > > option.
+> > 
+> > That's the plan. This modparam is a temporal thing for transition
+> > period. And yes, as a developers / platform enablers we want to be able
+> > to have a quick turnaround between drivers.
+> > 
+> > Please stop forcing your decisions on other people. The Linux kernel and
+> > its development process has always been about providing a possibility,
+> > not a policy.
+> 
+> That's just not true. The rule is to not have two drivers for the same
+> hardware (even if we very rarely have accepted some well-motivated
+> exceptions).
+> 
+> I understand that you may have an unorthodox view of this as you work on
+> the MSM DRM driver, but hiding incomplete and broken code behind module
+> parameters so that you can game the upstreaming process (e.g. like you
+> did for the eDP PSR feature) is simply not a model that anyone should
+> follow.
 
-syzbot found the following issue on:
+Let me point you the aic7xxx story, we had, if my memory is correct,
+three drivers working with the same hardware at some point, during
+transition period.
 
-HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=145b6d18580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
-dashboard link: https://syzkaller.appspot.com/bug?extid=07392c132f11b1758ac3
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160983df980000
+Regarding eDP PSR. It wasn't my implementation, so that's not correct
+comparison. MDP5 -> DPU migration is mine and yes, it is implemented in
+this way as we can trigger CI jobs having a single kernel, as developers
+we can switch between MDP5 and DPU drivers in a quick way, etc.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-69e858e0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a53b888c1f3f/vmlinux-69e858e0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6b5e17edafc0/bzImage-69e858e0.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/dfc78a0e5edb/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+07392c132f11b1758ac3@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in lib/xarray.c:196:22
-shift exponent 66 is too large for 64-bit type 'unsigned long'
-CPU: 0 UID: 0 PID: 5744 Comm: syz.3.50 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- ubsan_epilogue lib/ubsan.c:231 [inline]
- __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:468
- xas_start+0x772/0x7b0 lib/xarray.c:196
- xas_find_conflict+0x14b/0xd20 lib/xarray.c:1430
- shmem_add_to_page_cache+0x81e/0xcc0 mm/shmem.c:889
- shmem_alloc_and_add_folio+0x968/0x1090 mm/shmem.c:1928
- shmem_get_folio_gfp+0x621/0x1840 mm/shmem.c:2522
- shmem_get_folio mm/shmem.c:2628 [inline]
- shmem_write_begin+0x165/0x350 mm/shmem.c:3278
- generic_perform_write+0x346/0x990 mm/filemap.c:4189
- shmem_file_write_iter+0xf9/0x120 mm/shmem.c:3454
- new_sync_write fs/read_write.c:586 [inline]
- vfs_write+0xacf/0xd10 fs/read_write.c:679
- ksys_write+0x18f/0x2b0 fs/read_write.c:731
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f17fe98b85f
-Code: 89 54 24 18 48 89 74 24 10 89 7c 24 08 e8 f9 92 02 00 48 8b 54 24 18 48 8b 74 24 10 41 89 c0 8b 7c 24 08 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 31 44 89 c7 48 89 44 24 08 e8 4c 93 02 00 48
-RSP: 002b:00007f17ff803df0 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000001000000 RCX: 00007f17fe98b85f
-RDX: 0000000001000000 RSI: 00007f17f5600000 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000005939
-R10: 0000000020005b42 R11: 0000000000000293 R12: 0000000000000003
-R13: 00007f17ff803ef0 R14: 00007f17ff803eb0 R15: 00007f17f5600000
- </TASK>
----[ end trace ]---
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+With best wishes
+Dmitry
