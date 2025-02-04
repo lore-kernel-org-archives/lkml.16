@@ -1,161 +1,273 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2040.outbound.protection.outlook.com [40.107.212.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE576205E26;
-	Tue,  4 Feb 2025 09:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661067; cv=fail; b=jFDTF7Q4oU/OPvrljtJ/xgsKt8aV8lCVUbWd5/TSolAuvKuJClUY26V/XCKMpcbEOqpUCvuyxZjmqnUvSayYjLpEoIUejRbDS6ujD7YFCMSx58q2qJsyfk7uJCzIQVjyP73DY/DjfQeVYUrjgDofpun8jy8vl4Foz88+nYHr9zc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661067; c=relaxed/simple;
-	bh=6MkKkRioUn5WRnWFyDOFDmP9efdnWY/Rxr5xTGUSia8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=o0LHdW31stLXFNF+rK2dVgE7BvQrAXl4qDNVO7d7KUDoU+prTNNnKrw6mcZijWUyj8C5CjwvPD8KAyjio9/aKS1ZBAbXvVvl/EnoaeqWc69fdQhu6QEStH9vsWbYv2S3NjRj9OcjeojCmOsLftGc91aFyqSYyCF0Ht3GoUPDHTY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hQ1rqnsH; arc=fail smtp.client-ip=40.107.212.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D72205E26
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738661075; cv=none; b=Dj1XGooJa8SRDkhGfnwfka9CteZNyr6GVr0xJAKY/Ny13v2vsY7M0bWp4L2D5Ku+m7hSavGS8f+mweo/3MTYGCLLO5ZqldJYLDGrY+zzPuF5sAHAsw/KikGjcadZSt0R4wMDQNApiTttrwgnzQs9F9+AIypwdiXZEd6MEjnwJzw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738661075; c=relaxed/simple;
+	bh=cOgr9XEGKuKIJ6fuL8fg+xexeTZ7VDKIaC+bj4hW32w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tTIRR1zg8oHMnGEuAA2Kg+xscwTkGL5oi6Q3I5yTd1sztLqJwfFXg3vV3CuXFic/uOO4b4BwwqV6WSteWwjh3ANPhT+AWPfNmxUV21nYPN0/MYqMCIMkjpRHn9vcVfl2Rj/vkOYar1l24RkTvL2gx5KBnyML5Ee/AVe31wT2Jyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hb5XsqL9; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hQ1rqnsH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mZA4XhVCd6v7h6321j9YrWuc4lwPCWGw5Gq5TKiu4vHtNHWyT20jAObA4PzSbXSisP6s5MTvGkOxgP5Uw5Oi5jz6EuKVMT/YZPlybyzCEL8b7TyRfVh89MyMyOI9BmMf9PNqDq99fIr4ZsJDwFWeJwFa5P0rGXPGNST5XhTiVhEmYJ0jHixn8ZY0WAmrNH7Cxsb61t9E8/Q9uQGJayk9JLrkYOhm8/UAN8Pem52qnTIQSJSuW5Q1Q8ziy6Sju8MLtEDzPhKrIiY4BZznIzjz92FTRAFZ17ecU0b68fc7JkpycuDAeDmbfEDmVO4uOWqwvHN4EW98JjTw01Ja5DrUig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ifQbiIm1cCHj1WbAwQKRihPbrgfFdXQmaGoUO6kfV6M=;
- b=F0faWhY2uEFIyPR4z/4fVXFDL4tWezG33SOkLzL3mWc4zr5yJIj3ZP9GMHMXxJQBmMxCNxzN8JJjuJ1JEtRNffFHNerB2eQ7LJrDzMR5CdiWpn//PV6RGlEKhsUdp+q/zTrVhIlkHlr780tZjLn/wplnBzR7T6aqT9sMYSmHopfjxEBBt+vGpOvnHsllzraZMM6OQk+9Nx+T4U6Sr6b9NXsfZl5nXIHUdTUaAO+hD3hOSxdld7kGw070mQp2iUmJu9Qheo0InJy/VRAGgX7MeMKlLtKWrcJ68R4umUZ7nUlXUH9DVgmBVIdSC+pGRRqybhpAPCRjF1XT/r8C3CVHdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ifQbiIm1cCHj1WbAwQKRihPbrgfFdXQmaGoUO6kfV6M=;
- b=hQ1rqnsH08J2qWyOSekIjyf1O6Pt6HBiaGthNodu0LhvZ4MOURa4UbGB+bY+nJrQoCcOr7TnxU4usr842ciIuGRZPen4H666zEm/XHXiuALpZnc8xx8RTG1de0eSbZntKoAhltomg+oooR+M/OoMg5aFd79MifxDglZR3WrOsD2HCPctWy6/uruZWlL6t2sVQ5WAOk4RC+jth0ZwLTrp9JrkCjrx8+SiDjXbxthhFw1ifTRZ3HT6iKhJKtbjAWW0EJMABKGzJkawaU7csgUGKsjxQK2CnF/1hsM7vLNXviK3Yfb/SzB9mPX8Nc1PgFf+peJHXn+utc3hy0W+tbNYBg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SA3PR12MB7901.namprd12.prod.outlook.com (2603:10b6:806:306::12)
- by MW4PR12MB8612.namprd12.prod.outlook.com (2603:10b6:303:1ec::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.21; Tue, 4 Feb
- 2025 09:24:22 +0000
-Received: from SA3PR12MB7901.namprd12.prod.outlook.com
- ([fe80::66fc:f8a2:1bfb:6de8]) by SA3PR12MB7901.namprd12.prod.outlook.com
- ([fe80::66fc:f8a2:1bfb:6de8%6]) with mapi id 15.20.8398.020; Tue, 4 Feb 2025
- 09:24:23 +0000
-Date: Tue, 4 Feb 2025 11:24:11 +0200
-From: Ido Schimmel <idosch@nvidia.com>
-To: linux@treblig.org
-Cc: petrm@nvidia.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] mlxsw: spectrum_router: Remove unused functions
-Message-ID: <Z6Hcu4RgM53fS0rr@shredder>
-References: <20250203190141.204951-1-linux@treblig.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203190141.204951-1-linux@treblig.org>
-X-ClientProxiedBy: FR2P281CA0039.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:92::10) To SA3PR12MB7901.namprd12.prod.outlook.com
- (2603:10b6:806:306::12)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hb5XsqL9"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3862c78536bso168581f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 01:24:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738661072; x=1739265872; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=kOdxREfmr3m4px8NFB1aHCxS9qChT2GU2XSMlmEQIQs=;
+        b=Hb5XsqL9do25fkbSzA1ajJT6gNWRPHGhpU0YYGCYIA2ekKCBppbwnwDHfKR3m4K9o2
+         361yAMZiclWcgtZJDCyoQDbYCUtXgOEYUxC+zIifum/TIgUvC8wMBmunEEbg2tC6oIvV
+         2DdbK85mi6z8UuVgmb3rldVCIS41ru14wjK744HUtVxbC/M/hh20DydgJ785lXP2wNRm
+         HAU1DPcdEsCdr21EmcVusx1/noncNVlyzSO/VzEt0JuAB7SXHvmPW77FA2ICaOqrjKFf
+         ZTeVhcEgDsc88FXOHFiMUpufgiZvKPjWUMZQebqHNNJupB/BxO9roeVJOTx92Ai/0o3o
+         hkPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738661072; x=1739265872;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kOdxREfmr3m4px8NFB1aHCxS9qChT2GU2XSMlmEQIQs=;
+        b=cdnRjgUAmpmCN7I7EZEv5oZQBzwPWajb5cQXtm5dYMoFwC8NCuqRLG3MoAZKRzdPnW
+         Rv3QnvPW6BDiWT/EhLuqTjCpnWmXQZL1ITOBxhPUerDKG0sFdV1m4bNxnKNNb6unHm8+
+         L2blJPn97CVqX/fRuLgsHzajVWB72r+Ex9W9X2EaQrS21b+4ZrpE5F59CAVqv172PLJN
+         6xm32Whqc6EicvEWpNmvgIXH8H99ak3jtY4VIN5DmGZ+SbY6guSKa2yB3dnxeedcNeTB
+         WVI9Ys8IEiXQLWq0nbOVxhFsOw0mra+n0kuMQ++3e1hKvhMQgfEMlNwM5N0fIw8V7AfM
+         0Yvg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+vaF6RoEq1uxmDrQGVCqXIYNCx2s9ETnVPqKlWcUjCcMow8C1wcNF6vG3sSFM5BCUS8iedEQxp+Xrdmg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzYPr6PwXeUgSy3oITu3X2Ozaq3gs0fDfw8j5fOBI1fZ2IEsNr
+	nIte/R0+Xc8wZ1lRw7LObVhS7AoRPfdSgTkhuTaRIEnGjnEscak67q43275pdYA=
+X-Gm-Gg: ASbGncs+CsWApFhNMbV4dncoPQuLWVM1eSwjHheVVcYK9iXJs3fU0Pd7DqXY4tiilds
+	pVlNvLtzlEgQZjy0RPRY3lEnNfN9MhPxJ6hm+Lp8RyAAqQ330hjFjdUP6yhjuRafrOydjrjWrcT
+	SvQCy+o7oYwpGYhEwid7rrvMFqzzFmy1qvBMuo8Y2X0B/nazOmQH2hLXkSNTl+tQHEXf3qDAqUA
+	qau2KsWIN8VlMs6mFlaUyKk1eWsw5kGOnpH0SxF4RnVImYqfNVXEegS0leri9uNBcekVbqm2QHG
+	sLRD9gxD4vxXaeVdy9EYTm/7w1psKOdpNHc=
+X-Google-Smtp-Source: AGHT+IEUVGP4e8dVkERX7f/wfDQJCgJ3+T5h5terey2co8faI0jzq1j1NM8hMwbKcC2UFZ5F1JDeQQ==
+X-Received: by 2002:a05:6000:18a6:b0:385:dc3b:da71 with SMTP id ffacd0b85a97d-38da4e6386dmr747012f8f.8.1738661071681;
+        Tue, 04 Feb 2025 01:24:31 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.144])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ecc80sm15480656f8f.16.2025.02.04.01.24.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 01:24:30 -0800 (PST)
+Message-ID: <ef1f91e4-aec4-41e8-b842-52d3f91e82bb@linaro.org>
+Date: Tue, 4 Feb 2025 10:24:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR12MB7901:EE_|MW4PR12MB8612:EE_
-X-MS-Office365-Filtering-Correlation-Id: b755a513-8363-40d0-8a0c-08dd44fdb617
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?oC6aR3QzcEDIuAG434/cIojE0neTYMb7cr1AIKgEZ8/MQq+Mgf8TLsNXEMAk?=
- =?us-ascii?Q?MqguFUW+/ucngGwX6OOelD2MABfkLgNKkHhGWWfujIP+tAN3zgRjxAYdonGb?=
- =?us-ascii?Q?qhM33FYU5HogfDFKKmiGi8uT1K9gm4voxhdnd65U7MVe0Wgrd5daKuh0+VZF?=
- =?us-ascii?Q?3B02YzUnrwvQZewcUVqlx0WfUGGdsRs4+Ka/tYvV3KLOchGB+HTtSO9GfvjM?=
- =?us-ascii?Q?qlxX1FqFsI2S5u0KLKtY6EFQ7qwQ0qvt7pI7U50zQKi638LgTTOM9e9d5Qlo?=
- =?us-ascii?Q?L4sySeJkVjIWiBOjeYHV1HABEupn1WxOWQIS2ifddLVo9ft2nsBSPUDwDc+j?=
- =?us-ascii?Q?tco0s6He9Xv1xSSSNU5F+zT+pR9UBUjchfbWNegN/fUJVfarpwF6SlPsUHdS?=
- =?us-ascii?Q?w7JQoRWcFAblmMA9AFBMXZrBh234ez7aotrTWDP20+kzwJ/BnW/yaCDlzywc?=
- =?us-ascii?Q?2ryrIMiTjHoC9fRZa1pSNXRFbqh6B9z+fd6gIe1FgCauq95Q6pn6qSE1F6HI?=
- =?us-ascii?Q?TfX0v8xzGahPPylh968vIq3EUC/HqEDoZ4bof0uG6RDnlD+5lY+P9muUdlsV?=
- =?us-ascii?Q?t8ntLHYV84a7wJdAZpClFqWGAO8z6p8Y6mI1Mnbn1DBymdSKv1pjKz10PI8A?=
- =?us-ascii?Q?JgSrKjl7Kmid1iY+y3MFIZi2FAPg5+VJK+luv9aENzsmkkU/kl3js/MG2Vdo?=
- =?us-ascii?Q?gqsDfkTQ/5NKJ7XBcPyDtCQ6lhZ/YDGFlfRS/wz6QTggSONnOavDLGWSDA2l?=
- =?us-ascii?Q?4AaPExprnh14Rh3tkalHePITTzAaLwwkIgNBEp7xlBi51OPUCJrU1Ii3mfqJ?=
- =?us-ascii?Q?2ZP8+0+V6mC7WJ+tHURcWSzxGOaA9Hy3e2hM7anuY2w95EUQs4E+cMFA/wtN?=
- =?us-ascii?Q?MlCvreKyprpD7wABUo+0yJBm74kjn3rDA0HNZFIzItrlzMUWfUR/7F6gTm0h?=
- =?us-ascii?Q?AwUzraPMqnL8e57JDP/oBOIu7WunguLyVdQz0Cj5sP8ou5dSbcVYtmrUXV8G?=
- =?us-ascii?Q?+fE5XXUpR99urgpDVhVQzhOpN8BOxeLS1Hen9YoEnv/NkDvwGk4/46m4f7Y+?=
- =?us-ascii?Q?UjXWJnh514UTJfe611tBJMtZs03lH2t4Pvdnn+lwMyZVrzfj9tUkBW+MqxVm?=
- =?us-ascii?Q?2ILHto4xIYU7vKe5TXCzrfs6+GZbC9SzUKrTdQkO5ukPtIarrjq1uXYNEunL?=
- =?us-ascii?Q?WtvPDa4pBxLQxabhIvD0IGvz07AhIeR0BOMTwHfT4yNg0l6WQypoSIbZZFOw?=
- =?us-ascii?Q?ayVEe9RCgiYs52qruQ2dTi8JNbAvDZ4uCuPZYPLQMOnK7tFMxNSga0VNfccR?=
- =?us-ascii?Q?rxMz8v6AJXVqEzmCpt2jk8ss4k6KSORsVw1TiHxq8M8xiuUh+DUoD1/1ehna?=
- =?us-ascii?Q?NVWbOXOMUadXwQ47iUh7TbhQvVZE?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR12MB7901.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Q4ymuDhcgdAuwdR6ucst4VJNU6r2AELjtuQZd99GHa4bGQ9q2IyOEMaZjlh2?=
- =?us-ascii?Q?hDtNoj3NAYW/Z6MRVgmSr5JKsPK8EIxFit4X4PIr4iEogQuqignpboiuxdtE?=
- =?us-ascii?Q?3bDwprffkdsnBB0ewMRMwLXtvPy2v0N+qHZCEKN2kH0Y++Su4NxKwGFWQTkI?=
- =?us-ascii?Q?KQbCbs8qJBSt8U+I78B8+pc+gfcijWGz/ob4y6Jar5WT4tlcoAJK9dy0t/6S?=
- =?us-ascii?Q?xOiMtKgmpEAP/ChKy+RVAXcpjniZoIP1GvmAvYfpr2ijoip+uh29hlIs/DiG?=
- =?us-ascii?Q?Bfi5YKl8+IxruIylgKPHk9+ksQO8gcFk6QB7h04iZJJ6kQtWvf1g5sqgWwVP?=
- =?us-ascii?Q?II5ymCdToyeVDgn9qVwrdUxWAIlrAsS4IccF8T+bivOFcSW06UnX26QmdRRQ?=
- =?us-ascii?Q?cfaiDCV7ArVXiRml4eNhKt7Dt1Tw7AVV130DDfD4eV0zpP1Z0gZROJz5Ui0Z?=
- =?us-ascii?Q?ebf3UrhhA/6xG2yzObiE92Q4GSWMtaKDDbsGmTr+r6JvCdPrGDENZP3iinn8?=
- =?us-ascii?Q?+SsCHwpsAOqrkg5rIOkvUXuA13yQk5T4056YHX0346HJsJKN67ZUw4n/K7+V?=
- =?us-ascii?Q?egCnd9iq6mvU1HUCsJbpI7Ay5xSrHzblqCTVxl5Lxv2IKg9bI5YfFwCvm3XC?=
- =?us-ascii?Q?rwA4SWc39UvL3REQknTF9TuAiZOAbVA5yi4nd+idEZRvFBroznBedp0hypuH?=
- =?us-ascii?Q?Iz1C4Y8WR/b3xtRMXh8H28/CB7W9a14Pg6h6jXYxkbmc0KkIHrwwgT2ldnHl?=
- =?us-ascii?Q?7EKDuu4933jYD9vugxud/f2wIP8bXMDryL1w8gueM6DlIHa9jyRzld2ozdKA?=
- =?us-ascii?Q?sjd/hX5QhYsWz77z7a5A2VCh60TJACUV2KuutO5MlEyzPaQGIE58ppv8FRz3?=
- =?us-ascii?Q?t6pRu3RaWcSBhMweMiFdqphnlcxSOKqnKFKVF7I74TT28I0LYOQPjii02/T4?=
- =?us-ascii?Q?TSxIbXlkSbIcCjOkouyvU9CU8ZMXLgXyu5UMoIed122rv4fZpBGbZkO+skSo?=
- =?us-ascii?Q?sm85WO7pZHKYd2YHzbURzOLI0r5wMNxGGx/IDre3doCRW3+eF5nv1hfGup4m?=
- =?us-ascii?Q?CgT9lWb7ARLyFZXxtKq/ySSvamrcKrWiYZItcEKdC2CxjS3e/lFRmGq1IaGH?=
- =?us-ascii?Q?/89HoJxDZW+BZjCTPyq5eX7BEH43/JogInYzDrMJiGKtCLvGRJLffOFgKie2?=
- =?us-ascii?Q?BzD+yQ/eIBWkQfohSAUMhcUUqu8y0mFzmWbiIn0Ks+Cz9QXlNXWzsCwVKn6U?=
- =?us-ascii?Q?ako1x7qrCgwJAwgAg0L+/UPaDhBuOxzrH58E2Up9zABf0Z1RWCRvDHrfEFtU?=
- =?us-ascii?Q?ODgNewybNcE950ILFiZ1MPe9jYbxXHENoEJoa5K07I9OoZhASM/DYmjTcoX2?=
- =?us-ascii?Q?ybvW2q28mcl0iOx1tIINsXKvrSEcs77m1jaaJR9R9drgqqUAISUT2evEi+bS?=
- =?us-ascii?Q?lSObA8+mIX0sR1AmjSBldYIHWHnFwzakio207/hepUlZfJwpbWA6awr3YeYQ?=
- =?us-ascii?Q?B38lamdGMavkQLzx6GaKzr5Njbvd+v2eU9QCqh92VFfXTYZivCNzjXJM3HJz?=
- =?us-ascii?Q?vEFTVT/kybGb2aJP7UU9MBY2KqQT7YZZHAqKE6RR?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b755a513-8363-40d0-8a0c-08dd44fdb617
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR12MB7901.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 09:24:23.0275
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: a0uoigQrpzX5ktnBUcgcMZQGcU/ehjlAPLf8ucs9GL4MhWGSM00bRq9la/1bBXJqQnPiPNiJjzwpTs7/wxk7GQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB8612
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] drm/msm/dsi/phy: Define PHY_CMN_CLK_CFG[01]
+ bitfields and simplify saving
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
+ <20250203-drm-msm-phy-pll-cfg-reg-v2-4-862b136c5d22@linaro.org>
+ <hhedgfdbqpbv7s6iegtoztmznqdqn7bdumik7dm5xtsfsj6uwp@3jz422fhchcn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <hhedgfdbqpbv7s6iegtoztmznqdqn7bdumik7dm5xtsfsj6uwp@3jz422fhchcn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 07:01:41PM +0000, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On 03/02/2025 18:58, Dmitry Baryshkov wrote:
+> On Mon, Feb 03, 2025 at 06:29:21PM +0100, Krzysztof Kozlowski wrote:
+>> Add bitfields for PHY_CMN_CLK_CFG0 and PHY_CMN_CLK_CFG1 registers to
+>> avoid hard-coding bit masks and shifts and make the code a bit more
+>> readable.  While touching the lines in dsi_7nm_pll_save_state()
+>> resulting cached->pix_clk_div assignment would be too big, so just
+>> combine pix_clk_div and bit_clk_div into one cached state to make
+>> everything simpler.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>
+>> ---
+>>
+>> Changes in v2:
+>> 1. New patch
+>> ---
+>>  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c          | 31 ++++++++++++----------
+>>  .../gpu/drm/msm/registers/display/dsi_phy_7nm.xml  | 12 +++++++--
+>>  2 files changed, 27 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+>> index 926fd8e3330b2cdfc69d1e0e5d3930abae77b7d8..b61e75a01e1b69f33548ff0adefc5c92980a15d7 100644
+>> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+>> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+>> @@ -67,8 +67,7 @@ struct dsi_pll_config {
+>>  
+>>  struct pll_7nm_cached_state {
+>>  	unsigned long vco_rate;
+>> -	u8 bit_clk_div;
+>> -	u8 pix_clk_div;
+>> +	u8 clk_div;
+>>  	u8 pll_out_div;
+>>  	u8 pll_mux;
+>>  };
+>> @@ -401,12 +400,12 @@ static void dsi_pll_cmn_clk_cfg1_update(struct dsi_pll_7nm *pll, u32 mask,
+>>  
+>>  static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
+>>  {
+>> -	dsi_pll_cmn_clk_cfg1_update(pll, BIT(5), 0);
+>> +	dsi_pll_cmn_clk_cfg1_update(pll, DSI_7nm_PHY_CMN_CLK_CFG1_CLK_EN, 0);
+>>  }
+>>  
+>>  static void dsi_pll_enable_global_clk(struct dsi_pll_7nm *pll)
+>>  {
+>> -	u32 cfg_1 = BIT(5) | BIT(4);
+>> +	u32 cfg_1 = DSI_7nm_PHY_CMN_CLK_CFG1_CLK_EN | DSI_7nm_PHY_CMN_CLK_CFG1_CLK_EN_SEL;
+>>  
+>>  	writel(0x04, pll->phy->base + REG_DSI_7nm_PHY_CMN_CTRL_3);
+>>  	dsi_pll_cmn_clk_cfg1_update(pll, cfg_1, cfg_1);
+>> @@ -572,15 +571,17 @@ static void dsi_7nm_pll_save_state(struct msm_dsi_phy *phy)
+>>  	cached->pll_out_div &= 0x3;
+>>  
+>>  	cmn_clk_cfg0 = readl(phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG0);
+>> -	cached->bit_clk_div = cmn_clk_cfg0 & 0xf;
+>> -	cached->pix_clk_div = (cmn_clk_cfg0 & 0xf0) >> 4;
+>> +	cached->clk_div = cmn_clk_cfg0 & (DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_3_0__MASK |
+>> +					  DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_7_4__MASK);
 > 
-> mlxsw_sp_ipip_lb_ul_vr_id() has been unused since 2020's
-> commit acde33bf7319 ("mlxsw: spectrum_router: Reduce
-> mlxsw_sp_ipip_fib_entry_op_gre4()")
-> 
-> mlxsw_sp_rif_exists() has been unused since 2023's
-> commit 49c3a615d382 ("mlxsw: spectrum_router: Replay MACVLANs when RIF is
-> made")
-> 
-> mlxsw_sp_rif_vid() has been unused since 2023's
-> commit a5b52692e693 ("mlxsw: spectrum_switchdev: Manage RIFs on PVID
-> change")
-> 
-> Remove them.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> Could you rather store these two fields separately by using FIELD_GET?
 
-Reviewed-by: Ido Schimmel <idosch@nvidia.com>
+So make the code again more complicated? OK.
 
-Thanks
+> 
+>>  
+>>  	cmn_clk_cfg1 = readl(phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+>> -	cached->pll_mux = cmn_clk_cfg1 & 0x3;
+>> +	cached->pll_mux = cmn_clk_cfg1 & DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL__MASK;
+> 
+> FIELD_GET
+> 
+>>  
+>>  	DBG("DSI PLL%d outdiv %x bit_clk_div %x pix_clk_div %x pll_mux %x",
+>> -	    pll_7nm->phy->id, cached->pll_out_div, cached->bit_clk_div,
+>> -	    cached->pix_clk_div, cached->pll_mux);
+>> +	    pll_7nm->phy->id, cached->pll_out_div,
+>> +	    cached->clk_div & DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_3_0__MASK,
+>> +	    cached->clk_div >> DSI_7nm_PHY_CMN_CLK_CFG0_DIV_CTRL_7_4__SHIFT,
+>> +	    cached->pll_mux);
+>>  }
+>>  
+>>  static int dsi_7nm_pll_restore_state(struct msm_dsi_phy *phy)
+>> @@ -595,9 +596,9 @@ static int dsi_7nm_pll_restore_state(struct msm_dsi_phy *phy)
+>>  	val |= cached->pll_out_div;
+>>  	writel(val, pll_7nm->phy->pll_base + REG_DSI_7nm_PHY_PLL_PLL_OUTDIV_RATE);
+>>  
+>> -	dsi_pll_cmn_clk_cfg0_write(pll_7nm,
+>> -				   cached->bit_clk_div | (cached->pix_clk_div << 4));
+>> -	dsi_pll_cmn_clk_cfg1_update(pll_7nm, 0x3, cached->pll_mux);
+>> +	dsi_pll_cmn_clk_cfg0_write(pll_7nm, cached->clk_div);
+>> +	dsi_pll_cmn_clk_cfg1_update(pll_7nm, DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL__MASK,
+>> +				    cached->pll_mux);
+>>  
+>>  	ret = dsi_pll_7nm_vco_set_rate(phy->vco_hw,
+>>  			pll_7nm->vco_current_rate,
+>> @@ -634,7 +635,8 @@ static int dsi_7nm_set_usecase(struct msm_dsi_phy *phy)
+>>  	}
+>>  
+>>  	/* set PLL src */
+>> -	dsi_pll_cmn_clk_cfg1_update(pll_7nm, GENMASK(3, 2), data << 2);
+>> +	dsi_pll_cmn_clk_cfg1_update(pll_7nm, DSI_7nm_PHY_CMN_CLK_CFG1_BITCLK_SEL__MASK,
+>> +				    data << DSI_7nm_PHY_CMN_CLK_CFG1_BITCLK_SEL__SHIFT);
+> 
+> use accessor function from the header.
+
+For which part? for last argument? It will be almost pointless, but sure.
+
+
+> 
+>>  
+>>  	return 0;
+>>  }
+>> @@ -737,7 +739,8 @@ static int pll_7nm_register(struct dsi_pll_7nm *pll_7nm, struct clk_hw **provide
+>>  		u32 data;
+>>  
+>>  		data = readl(pll_7nm->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+>> -		writel(data | 3, pll_7nm->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+>> +		writel(data | DSI_7nm_PHY_CMN_CLK_CFG1_DSICLK_SEL__MASK,
+>> +		       pll_7nm->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1);
+>>  
+>>  		phy_pll_out_dsi_parent = pll_post_out_div;
+>>  	} else {
+>> diff --git a/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml b/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
+>> index d54b72f924493b4bf0925c287366f7b1e18eb46b..d2c8c46bb04159da6e539bfe80a4b5dc9ffdf367 100644
+>> --- a/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
+>> +++ b/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
+>> @@ -9,8 +9,16 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+>>  	<reg32 offset="0x00004" name="REVISION_ID1"/>
+>>  	<reg32 offset="0x00008" name="REVISION_ID2"/>
+>>  	<reg32 offset="0x0000c" name="REVISION_ID3"/>
+>> -	<reg32 offset="0x00010" name="CLK_CFG0"/>
+>> -	<reg32 offset="0x00014" name="CLK_CFG1"/>
+>> +	<reg32 offset="0x00010" name="CLK_CFG0">
+>> +		<bitfield name="DIV_CTRL_3_0" low="0" high="3" type="uint"/>
+>> +		<bitfield name="DIV_CTRL_7_4" low="4" high="7" type="uint"/>
+> 
+> Are there any sensible names for these two regs? It looks ther are
+> not...
+
+These are the sensible names. That's how they are called in datasheet.
+
+Best regards,
+Krzysztof
