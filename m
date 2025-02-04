@@ -1,40 +1,40 @@
 Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7735D14A4F0;
-	Tue,  4 Feb 2025 11:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A70C20C03F;
+	Tue,  4 Feb 2025 11:44:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738669325; cv=none; b=YI24+HZ1oKWyvqokTqKgyLEHPojqOkfz9vxvN9ThdDrki1haOYHaKXQr8fqXL1HzZCezUQj9uzrqAJRNqbbMyVA3dru9jeqnJRLtlYLnkTzcGu+NjhvVrJHBt6Eso5PdwDmgJ/nPWiD7SUVxKposrz1D9l/EIrcjKZCn7B1Ioak=
+	t=1738669444; cv=none; b=LcBA3FIXkQEGLvSNvkebF1cW5guwdOTLEaXmegHL0GjZvmIQlVyn1UWO6yrm4ZB1xqzQMf+puyOJmKMOzINYnG+V/3Qd34UBd16sXV5zu94D6DqEGbkO2f7wv+s6uvxQmDoaS8ahBnpxmKDbV2odfrN9bx7aiv73ZOhenku4chY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738669325; c=relaxed/simple;
-	bh=YcqqO/hrKpo9hyJephw1EAUxvsRF8MKK/O43246BHlE=;
+	s=arc-20240116; t=1738669444; c=relaxed/simple;
+	bh=/F/9xibC0lRtfjQqqtMiCSlXX6j4n6Vdw/S7nmMVlaA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u72p+kGg3H1SjI6Bx8D7+MDQDk2d8XmLlcsjiha35rAQ4uSummWEaneOZsXMC56Jnb/dHrfzg/m0kT2O+u/l47aLDE6sNI3YGkSvnoiSTMzKdmzQBlNNJ6bdV5TKzn8BuwYJf8G8E6rt14zPbpfJr5y1NIekwDF2reY+ayQ4nTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=B3GZvqud; arc=none smtp.client-ip=212.63.210.85
+	 In-Reply-To:Content-Type; b=kTaTW5lefJjcshjPyBEJslkpZnQBc4dX+8/KkuzYbHRWXSK4GAkdpRVMuCe7MVZvqadK/VUu2oLLzp6q0OQ8/gjW08qVutAa3WnIrkhwnygtLmkl3DKRw/CkjlnirPU8lK3DDsAz7kKjLgKFDjdCqBJIyatKICqkxX+dzRjCFf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=XxCoVoGC; arc=none smtp.client-ip=212.63.210.85
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="B3GZvqud"
+	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="XxCoVoGC"
 Received: from [127.0.0.1] (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: lina@asahilina.net)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id 92E15431CA;
-	Tue,  4 Feb 2025 11:41:56 +0000 (UTC)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 274C8431CA;
+	Tue,  4 Feb 2025 11:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
-	s=default; t=1738669319;
-	bh=YcqqO/hrKpo9hyJephw1EAUxvsRF8MKK/O43246BHlE=;
+	s=default; t=1738669440;
+	bh=/F/9xibC0lRtfjQqqtMiCSlXX6j4n6Vdw/S7nmMVlaA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=B3GZvqudUEanyornP5hwIXCocoa99uQbmbRC7DxtDYIXKnaj9mYK6LmR+/Y5xu/ao
-	 c5RIuCcVSVMPhyTSoBNuaY34hzMOsRsHAoKSJJ9K7TA1vKaC6ArHKmvMPaVk6fJbBl
-	 CRVMgzK8Vbr1R5+5Q+9i4mfNEbovKiWZ4A716pxEIGdCuC4n6LQWFsSvnvadr/nWsX
-	 kdzbK1g+lftrNDR8knp6K/vku8vrkRdIthyZr7NXuL8ify7YwFHIHU0fNbYNshdmDc
-	 RQYtQ+1vbKzvFd2IvUvqukLZb1wi59lGBCPlp/ujfINu7WhUqzGVsvqz6ulg+a0XdB
-	 vkXA9Hq6NvmOQ==
-Message-ID: <82047858-480a-45e3-b826-3a46fbebe842@asahilina.net>
-Date: Tue, 4 Feb 2025 20:41:55 +0900
+	b=XxCoVoGC8Rb0Dpe/lvOUlgAlE4LvivGAMAazZeHLZWkg5irGrpVKJ/sKTJmIXpkiM
+	 ARYrTMYtea0lOb/VLDkjfjN82tR9TZhZrZBPSVaNlzEKleIPCkyj7nXCHCr7xxT7hx
+	 y0+lFcg4xVfcwmMDOzC8QBXwy3DYL/gvKiUBzF8TZOqXGlKYMtze1H4lPFSrUd6kJG
+	 SqR3tR/9Q5l4K0TGHbWey0KJes5tTrxMbE4UVSqmtpXE572tqSBTuoWT5e6JlUv41r
+	 f2BCi8QC/FvaIY4v2ooZDiMcjMV06UGLRazRVhFMC1u/8jiogEsc4Fx8p2/mUVfnXh
+	 fzSUoXdHyhajQ==
+Message-ID: <c30d12dd-4489-4f6a-b40f-4afa9e0c807f@asahilina.net>
+Date: Tue, 4 Feb 2025 20:43:57 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,173 +42,216 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] rust: page: Support borrowing `struct page` and
- physaddr conversion
-To: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>
+Subject: Re: [PATCH 5/6] rust: page: Add physical address conversion functions
+To: Alice Ryhl <aliceryhl@google.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
  Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
  =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
  Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Jann Horn <jannh@google.com>,
- Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, Wedson Almeida Filho
- <wedsonaf@gmail.com>, Valentin Obst <kernel@valentinobst.de>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
+ Jann Horn <jannh@google.com>, Matthew Wilcox <willy@infradead.org>,
+ Paolo Bonzini <pbonzini@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>,
+ Valentin Obst <kernel@valentinobst.de>,
  Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
  airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
  rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- asahi@lists.linux.dev, Oscar Salvador <osalvador@suse.de>,
- Muchun Song <muchun.song@linux.dev>
+ asahi@lists.linux.dev
 References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
- <Z6CTLB2NggwYafi9@phenom.ffwll.local>
- <41ca3445-80cd-43c1-8f9e-634c195c9187@asahilina.net>
- <37A0729B-A711-4D45-B9F0-328FDB9ADD28@nvidia.com>
- <0e19e1c3-293b-4740-93f3-2c410893288b@redhat.com>
+ <20250202-rust-page-v1-5-e3170d7fe55e@asahilina.net>
+ <CAH5fLgiRC3RHfF+2xH+7Ek+FkXDDDpZopqo-Q20VhkWhTk16Wg@mail.gmail.com>
 Content-Language: en-US
 From: Asahi Lina <lina@asahilina.net>
-In-Reply-To: <0e19e1c3-293b-4740-93f3-2c410893288b@redhat.com>
+In-Reply-To: <CAH5fLgiRC3RHfF+2xH+7Ek+FkXDDDpZopqo-Q20VhkWhTk16Wg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 2/4/25 7:26 PM, David Hildenbrand wrote:
-> On 03.02.25 22:05, Zi Yan wrote:
->> On 3 Feb 2025, at 9:32, Asahi Lina wrote:
+On 2/3/25 6:35 PM, Alice Ryhl wrote:
+> On Sun, Feb 2, 2025 at 2:06 PM Asahi Lina <lina@asahilina.net> wrote:
 >>
->>> On 2/3/25 6:58 PM, Simona Vetter wrote:
->>>> On Sun, Feb 02, 2025 at 10:05:42PM +0900, Asahi Lina wrote:
->>>>> This series refactors the existing Page wrapper to support borrowing
->>>>> `struct page` objects without ownership on the Rust side, and
->>>>> converting
->>>>> page references to/from physical memory addresses.
->>>>>
->>>>> The series overlaps with the earlier submission in [1] and follows a
->>>>> different approach, based on the discussion that happened there.
->>>>>
->>>>> The primary use case for this is implementing IOMMU-style page table
->>>>> management in Rust. This allows drivers for IOMMUs and MMU-containing
->>>>> SoC devices to be written in Rust (such as embedded GPUs). The
->>>>> intended
->>>>> logic is similar to how ARM SMMU page tables are managed in the
->>>>> drivers/iommu tree.
->>>>>
->>>>> First, introduce a concept of Owned<T> and an Ownable trait. These are
->>>>> similar to ARef<T> and AlwaysRefCounted, but are used for types which
->>>>> are not ref counted but rather have a single intended owner.
->>>>>
->>>>> Then, refactor the existing Page support to use the new mechanism.
->>>>> Pages
->>>>> returned from the page allocator are not intended to be ref counted by
->>>>> consumers (see previous discussion in [1]), so this keeps Rust's
->>>>> view of
->>>>> page ownership as a simple "owned or not". Of course, this is still
->>>>> composable as Arc<Owned<Page>> if Rust code needs to reference
->>>>> count its
->>>>> own Page allocations for whatever reason.
->>>>
->>>> I think there's a bit a potential mess here because the conversion to
->>>> folios isn't far enough yet that we can entirely ignore page
->>>> refcounts and
->>>> just use folio refcounts. But I guess we can deal with that oddity
->>>> if we
->>>> hit it (maybe folio conversion moves fast enough), since this only
->>>> really
->>>> starts to become relevant for hmm/svm gpu stuff.
->>>>
->>>> iow I think anticipating the future where struct page really doesn't
->>>> have
->>>> a refcount is the right move. Aside from that it's really not a
->>>> refcount
->>>> that works in the rust ARef sense, since struct page cannot
->>>> disappear for
->>>> system memory, and for dev_pagemap memory it's an entirely different
->>>> reference you need (and then there's a few more special cases).
->>>
->>> Right, as far as this abstraction is concerned, all that needs to hold
->>> is that:
->>>
->>> - alloc_pages() and __free_pages() work as intended, however that may
->>> be, to reserve and return one page (for now, though I think extending
->>> the Rust abstraction to handle higher-order folios is pretty easy, but
->>> that can happen later).
->>> - Whatever borrows pages knows what it's doing. In this case there's
->>> only support for borrowing pages by physaddr, and it's only going to be
->>> used in a driver for a platform without memory hot remove (so far) and
->>> only for pages which have known usage (in principle) and are either
->>> explicitly allocated or known pinned or reserved, so it's not a problem
->>> right now. Future abstractions that return borrowed pages can do their
->>> own locking/bookkeeping/whatever is necessary to keep it safe.
->>>
->>> I would like to hear how memory hot-remove is supposed to work though,
->>> to see if we should be doing something to make the abstraction safer
->>> (though it's still unsafe and always will be). Is there a chance a
->>> `struct page` could vanish out from under us under some conditions?
+>> Add methods to allow code using the Page type to obtain the physical
+>> address of a page, convert to and from an (owned) physical address, and
+>> borrow a Page from a physical address. Most of these operations are, as
+>> you might expect, unsafe.
 >>
->> Add DavidH and OscarS for memory hot-remove questions.
+>> These primitives are useful to implement page table structures in Rust,
+>> and to implement arbitrary physical memory access (as needed to walk
+>> arbitrary page tables and dereference through them). These mechanisms
+>> are, of course, fraught with danger, and are only expected to be used
+>> for core memory management code (in e.g. drivers with their own device
+>> page table implementations) and for debug features such as crash dumps
+>> of device memory.
 >>
->> IIUC, struct page could be freed if a chunk of memory is hot-removed.
-> 
-> Right, but only after there are no users anymore (IOW, memory was freed
-> back to the buddy). PFN walkers might still stumble over them, but I
-> would not expect (or recommend) rust to do that.
-
-The physaddr to page function does look up pages by pfn, but it's
-intended to be used by drivers that know what they're doing. There are
-two variants of the API, one that is completely unchecked (a fast path
-for cases where the driver definitely allocated these pages itself, for
-example just grabbing the `struct page` back from a decoded PTE it
-wrote), and one that has this check:
-
-pfn_valid(pfn) && page_is_ram(pfn)
-
-Which is intended as a safety net to allow drivers to look up
-firmware-reserved pages too, and fail gracefully if the kernel doesn't
-know about them (because they weren't declared in the
-bootloader/firmware memory map correctly) or doesn't have them mapped in
-the direct map (because they were declared no-map).
-
-Is there anything else that can reasonably be done here to make the API
-safer to call on an arbitrary pfn?
-
-If the answer is "no" then that's fine. It's still an unsafe function
-and we need to document in the safety section that it should only be
-used for memory that is either known to be allocated and pinned and will
-not be freed while the `struct page` is borrowed, or memory that is
-reserved and not owned by the buddy allocator, so in practice correct
-use would not be racy with memory hot-remove anyway.
-
-This is already the case for the drm/asahi use case, where the pfns
-looked up will only ever be one of:
-
-- GEM objects that are mapped to the GPU and whose physical pages are
-therefore pinned (and the VM is locked while this happens so the objects
-cannot become unpinned out from under the running code),
-- Raw pages allocated from the page allocator for use as GPU page tables,
-- System memory that is marked reserved by the firmware/bootloader,
-- (Potentially) invalid PFNs that aren't part of the System RAM region
-at all and don't have a struct page to begin with, which we check for,
-so the API returns an error. This would only happen if the bootloader
-didn't declare some used firmware ranges at all, so Linux doesn't know
-about them.
-
-> 
+>> Signed-off-by: Asahi Lina <lina@asahilina.net>
+>> ---
+>>  rust/helpers/page.c | 26 +++++++++++++++++++++
+>>  rust/kernel/page.rs | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 91 insertions(+)
 >>
->> Another case struct page can be freed is when hugetlb vmemmap
->> optimization
->> is used. Muchun (cc'd) is the maintainer of hugetlbfs.
+>> diff --git a/rust/helpers/page.c b/rust/helpers/page.c
+>> index b3f2b8fbf87fc9aa89cb1636736c52be16411301..1c3bd68818d77f7ce7806329b8f040a7d4205bb3 100644
+>> --- a/rust/helpers/page.c
+>> +++ b/rust/helpers/page.c
+>> @@ -1,5 +1,6 @@
+>>  // SPDX-License-Identifier: GPL-2.0
+>>
+>> +#include <linux/io.h>
+>>  #include <linux/gfp.h>
+>>  #include <linux/highmem.h>
+>>
+>> @@ -17,3 +18,28 @@ void rust_helper_kunmap_local(const void *addr)
+>>  {
+>>         kunmap_local(addr);
+>>  }
+>> +
+>> +struct page *rust_helper_phys_to_page(phys_addr_t phys)
+>> +{
+>> +       return phys_to_page(phys);
+>> +}
+>> +
+>> +phys_addr_t rust_helper_page_to_phys(struct page *page)
+>> +{
+>> +       return page_to_phys(page);
+>> +}
+>> +
+>> +unsigned long rust_helper_phys_to_pfn(phys_addr_t phys)
+>> +{
+>> +       return __phys_to_pfn(phys);
+>> +}
+>> +
+>> +struct page *rust_helper_pfn_to_page(unsigned long pfn)
+>> +{
+>> +       return pfn_to_page(pfn);
+>> +}
+>> +
+>> +bool rust_helper_pfn_valid(unsigned long pfn)
+>> +{
+>> +       return pfn_valid(pfn);
+>> +}
+>> diff --git a/rust/kernel/page.rs b/rust/kernel/page.rs
+>> index fe5f879f9d1a86083fd55c682fad9d52466f79a2..67cd7006fa63ab5aed4c4de2be639ed8e1fbc2ba 100644
+>> --- a/rust/kernel/page.rs
+>> +++ b/rust/kernel/page.rs
+>> @@ -3,6 +3,7 @@
+>>  //! Kernel page allocation and management.
+>>
+>>  use crate::{
+>> +    addr::*,
+>>      alloc::{AllocError, Flags},
+>>      bindings,
+>>      error::code::*,
+>> @@ -10,6 +11,7 @@
+>>      types::{Opaque, Ownable, Owned},
+>>      uaccess::UserSliceReader,
+>>  };
+>> +use core::mem::ManuallyDrop;
+>>  use core::ptr::{self, NonNull};
+>>
+>>  /// A bitwise shift for the page size.
+>> @@ -249,6 +251,69 @@ pub unsafe fn copy_from_user_slice_raw(
+>>              reader.read_raw(unsafe { core::slice::from_raw_parts_mut(dst.cast(), len) })
+>>          })
+>>      }
+>> +
+>> +    /// Returns the physical address of this page.
+>> +    pub fn phys(&self) -> PhysicalAddr {
+>> +        // SAFETY: `page` is valid due to the type invariants on `Page`.
+>> +        unsafe { bindings::page_to_phys(self.as_ptr()) }
+>> +    }
+>> +
+>> +    /// Converts a Rust-owned Page into its physical address.
+>> +    ///
+>> +    /// The caller is responsible for calling [`Page::from_phys()`] to avoid leaking memory.
+>> +    pub fn into_phys(this: Owned<Self>) -> PhysicalAddr {
+>> +        ManuallyDrop::new(this).phys()
+>> +    }
+>> +
+>> +    /// Converts a physical address to a Rust-owned Page.
+>> +    ///
+>> +    /// # Safety
+>> +    /// The caller must ensure that the physical address was previously returned by a call to
+>> +    /// [`Page::into_phys()`], and that the physical address is no longer used after this call,
+>> +    /// nor is [`Page::from_phys()`] called again on it.
+>> +    pub unsafe fn from_phys(phys: PhysicalAddr) -> Owned<Self> {
+>> +        // SAFETY: By the safety requirements, the physical address must be valid and
+>> +        // have come from `into_phys()`, so phys_to_page() cannot fail and
+>> +        // must return the original struct page pointer.
+>> +        unsafe { Owned::from_raw(NonNull::new_unchecked(bindings::phys_to_page(phys)).cast()) }
+>> +    }
+>> +
+>> +    /// Borrows a Page from a physical address, without taking over ownership.
+>> +    ///
+>> +    /// If the physical address does not have a `struct page` entry or is not
+>> +    /// part of a System RAM region, returns None.
+>> +    ///
+>> +    /// # Safety
+>> +    /// The caller must ensure that the physical address, if it is backed by a `struct page`,
+>> +    /// remains available for the duration of the borrowed lifetime.
+>> +    pub unsafe fn borrow_phys(phys: &PhysicalAddr) -> Option<&Self> {
+>> +        // SAFETY: This is always safe, as it is just arithmetic
+>> +        let pfn = unsafe { bindings::phys_to_pfn(*phys) };
+>> +        // SAFETY: This function is safe to call with any pfn
+>> +        if !unsafe { bindings::pfn_valid(pfn) && bindings::page_is_ram(pfn) != 0 } {
+>> +            None
+>> +        } else {
+>> +            // SAFETY: We have just checked that the pfn is valid above, so it must
+>> +            // have a corresponding struct page. By the safety requirements, we can
+>> +            // return a borrowed reference to it.
+>> +            Some(unsafe { &*(bindings::pfn_to_page(pfn) as *mut Self as *const Self) })
+>> +        }
+>> +    }
+>> +
+>> +    /// Borrows a Page from a physical address, without taking over ownership
+>> +    /// nor checking for validity.
+>> +    ///
+>> +    /// # Safety
+>> +    /// The caller must ensure that the physical address is backed by a `struct page` and
+>> +    /// corresponds to System RAM. This is true when the address was returned by
+>> +    /// [`Page::into_phys()`].
+>> +    pub unsafe fn borrow_phys_unchecked(phys: &PhysicalAddr) -> &Self {
 > 
-> Here, the "struct page" remains valid though; it can still be accessed,
-> although we disallow writes (which would be wrong).
+> Should this be
 > 
-> If you only allocate a page and free it later, there is no need to worry
-> about either on the rust side.
+> pub unsafe fn borrow_phys_unchecked<'a>(phys: PhysicalAddr) -> &'a Self
+> 
+> ? That's how the signature of these raw methods usually goes, and then
+> your safety requirements say that the requirements must hold for the
+> duration of 'a.
 
-This is what the safe API does. (Also the unsafe physaddr APIs if all
-you ever do is convert an allocated page to a physaddr and back, which
-is the only thing the GPU page table code does during normal use. The
-walking leaf PFNs story is only for GPU device coredumps when the
-firmware crashes.)
+The idea was to have *some* lifetime bound on an incoming variable
+instead of just being able to return any arbitrary lifetime, but I don't
+know if that's something worth doing / idiomatic in any way. Obviously
+we can't stop a caller from doing something wrong if they really want to.
+
+> 
+>> +        // SAFETY: This is always safe, as it is just arithmetic
+>> +        let pfn = unsafe { bindings::phys_to_pfn(*phys) };
+>> +        // SAFETY: The caller guarantees that the pfn is valid. By the safety
+>> +        // requirements, we can return a borrowed reference to it.
+>> +        unsafe { &*(bindings::pfn_to_page(pfn) as *mut Self as *const Self) }
+> 
+> Can this just be
+> 
+> &*bindings::pfn_to_page(pfn).cast()
+
+Yeah, I'll fix it for v2!
+
+> 
+> ?
+> 
+> Alice
+> 
+>> +    }
+>>  }
+>>
+>>  // SAFETY: `Owned<Page>` objects returned by Page::alloc_page() follow the requirements of
+>>
+>> --
+>> 2.47.1
+>>
+> 
 
 ~~ Lina
 
