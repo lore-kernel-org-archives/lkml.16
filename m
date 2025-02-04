@@ -1,124 +1,104 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D951714A1;
-	Tue,  4 Feb 2025 01:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7234204C20;
+	Tue,  4 Feb 2025 01:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738631813; cv=none; b=KwcWMXn0iM4XiQ7nxr54O0n1PHmIAAHcttp60VRBCM1blWcN8FdRvO6OF0pHQyqzQC9ZXWGxs8r0j9XJSH5QYDlJGIkGBEiSJS8KVBfdkZU+vHE3y1boVTiD//NzMILPs6qLami6nhwYQYDavB6duN0n+o1IrrYVTUDWBv4c1ks=
+	t=1738631814; cv=none; b=NGR5TAsYBb7450fbsJ/IlKP2XEah+xL8aiTNz4hyUWCKfZYw5ahfrmdJtci4j1VE5rC78sylRfqs+7m5dCI7E45j98IghkMVh0xXziRr4RtzAB5TBW8e/qkuBOBFdTe4a7IClWORTz/gvKsfOnTdaVN2vZQa1ovgx7eI+DMYw9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738631813; c=relaxed/simple;
-	bh=Uc+we0kUpfPptoALxUbHZfGNMMaHexLgRr5fS5f3cSc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Yy3FWt0pBYb8xLSe8P0OOYkp2HJJ1s5oQc42I4RXNhHG4ydhc515SbRliRvUL0sWNbllKu+Xle6W3enD87Mv+8FbECItIRp3Wtfb0dr5NV8l1TYNWtSnZw5BKkgmi5BjhgD/ed0j0KburpBS8t0+o/zOb7jQEpQc/s9RDhHT4I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=IicVKklm; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738631814; c=relaxed/simple;
+	bh=LMgaSDmx6EN1XI6CionK2vcw/4u08QZJ+v6t3LrXwAs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jwYsfxi0SRNHO3J6o0GFvehN5/KqTIfpynxiO5r7EMvm3umVkmOhuQUBcB36CB26c6s9jz2ZvD6ud1e2Nz3VVs9JC8Zo+ZseHXi7I9KrQwB8iK2nVhffRpqSaiPxSD9FqnSZQ0cs8k4XeaJL8Tq4GMVIUSK7UFr/OexBtfgvZb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ad0V1omh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IicVKklm"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5141GgLa3125053
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 19:16:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738631802;
-	bh=URxcR0RzyITLSQAx9pBtfn8faaRqXcLLXjvyi29ViWM=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=IicVKklmaq00ek5is6m0gh286c6yr0QZcM+6f8EiKXSDG958Wod4NkSExbiFfn3FN
-	 FKs5SPIXC27x3Nz5cQUgRHBjyyzaeeMBl/pXVPCrjwtY1A0DTZnrUT5/ciwbTC6SOB
-	 4EJM/uB5SACb6T74J4K/5tpwtBo//XZ8S4Khafsk=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5141Gg3J055074
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 3 Feb 2025 19:16:42 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
- Feb 2025 19:16:42 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 3 Feb 2025 19:16:42 -0600
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5141GfAR024451;
-	Mon, 3 Feb 2025 19:16:41 -0600
-From: Judith Mendez <jm@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>,
-        Hari Nagalla
-	<hnagalla@ti.com>
-Subject: [PATCH v3 3/9] arm64: dts: ti: k3-am62a-wakeup: Add R5F device node
-Date: Mon, 3 Feb 2025 19:16:35 -0600
-Message-ID: <20250204011641.1523561-4-jm@ti.com>
-X-Mailer: git-send-email 2.48.0
-In-Reply-To: <20250204011641.1523561-1-jm@ti.com>
-References: <20250204011641.1523561-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ad0V1omh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13489C4CEE0;
+	Tue,  4 Feb 2025 01:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738631814;
+	bh=LMgaSDmx6EN1XI6CionK2vcw/4u08QZJ+v6t3LrXwAs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ad0V1omhjFT0rJfHjodw2wuuAZEqw+pFIddvo7M1ruqefMuXrK1NZoRbfuzJtalrY
+	 sV56Nk/L1NhZK+Lfh/A5NVtCTMP7T7sfwdIUAAdg4DYY7maHw8EKfHfRuQbqH11bQF
+	 YZ9TIqhOfFCqecUMRiY0Npe4olNNkNduduIwqa+YRbde5eknzVp8s0EONKBVHCKO8Q
+	 3DLB+KVaaxfHJ248Tv90YW6vJ59kF4YKmtc0bkwfkWzrWZlIaei5icA37FL9Ok8PIv
+	 55Oma0XguEPkJXK8Sc13sLlyvAnNpRw6+qROg9SONsLdmKsCPoOof0pObQWHVJMsPO
+	 uc6s7RwteC59Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	rafael@kernel.org,
+	tony.luck@intel.com,
+	mario.limonciello@amd.com,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 4/4] ACPI: x86: Add skip i2c clients quirk for Vexia EDU ATLA 10 tablet 5V
+Date: Mon,  3 Feb 2025 20:16:42 -0500
+Message-Id: <20250204011643.2206417-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250204011643.2206417-1-sashal@kernel.org>
+References: <20250204011643.2206417-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.12
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Devarsh Thakkar <devarsht@ti.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-AM62A SoCs have a single R5F core in wakeup domain. This core is
-also used as a device manager for the SoC.
+[ Upstream commit 8f62ca9c338aae4f73e9ce0221c3d4668359ddd8 ]
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-Signed-off-by: Judith Mendez <jm@ti.com>
+The Vexia EDU ATLA 10 tablet comes in 2 different versions with
+significantly different mainboards. The only outward difference is that
+the charging barrel on one is marked 5V and the other is marked 9V.
+
+Both ship with Android 4.4 as factory OS and have the usual broken DSDT
+issues for x86 Android tablets.
+
+Add a quirk to skip ACPI I2C client enumeration for the 5V version to
+complement the existing quirk for the 9V version.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://patch.msgid.link/20250123132202.18209-1-hdegoede@redhat.com
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes since v2:
-- Fix whitespace issues
----
- arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi | 25 +++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/acpi/x86/utils.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-index b2c8f53517438..785b9f00033a4 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-@@ -103,6 +103,31 @@ wkup_rti0: watchdog@2b000000 {
- 		status = "reserved";
- 	};
- 
-+	wkup_r5fss0: r5fss@78000000 {
-+		compatible = "ti,am62-r5fss";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x78000000 0x00 0x78000000 0x8000>,
-+			 <0x78100000 0x00 0x78100000 0x8000>;
-+		power-domains = <&k3_pds 119 TI_SCI_PD_EXCLUSIVE>;
-+		status = "disabled";
-+
-+		wkup_r5fss0_core0: r5f@78000000 {
-+			compatible = "ti,am62-r5f";
-+			reg = <0x78000000 0x00008000>,
-+			      <0x78100000 0x00008000>;
-+			reg-names = "atcm", "btcm";
-+			ti,sci = <&dmsc>;
-+			ti,sci-dev-id = <121>;
-+			ti,sci-proc-ids = <0x01 0xff>;
-+			resets = <&k3_reset 121 1>;
-+			firmware-name = "am62a-wkup-r5f0_0-fw";
-+			ti,atcm-enable = <1>;
-+			ti,btcm-enable = <1>;
-+			ti,loczrama = <1>;
-+		};
-+	};
-+
- 	wkup_vtm0: temperature-sensor@b00000 {
- 		compatible = "ti,j7200-vtm";
- 		reg = <0x00 0xb00000 0x00 0x400>,
+diff --git a/drivers/acpi/x86/utils.c b/drivers/acpi/x86/utils.c
+index cb45ef5240dab..068c1612660bc 100644
+--- a/drivers/acpi/x86/utils.c
++++ b/drivers/acpi/x86/utils.c
+@@ -407,6 +407,19 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
+ 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
+ 					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
+ 	},
++	{
++		/* Vexia Edu Atla 10 tablet 5V version */
++		.matches = {
++			/* Having all 3 of these not set is somewhat unique */
++			DMI_MATCH(DMI_SYS_VENDOR, "To be filled by O.E.M."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "To be filled by O.E.M."),
++			DMI_MATCH(DMI_BOARD_NAME, "To be filled by O.E.M."),
++			/* Above strings are too generic, also match on BIOS date */
++			DMI_MATCH(DMI_BIOS_DATE, "05/14/2015"),
++		},
++		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
++					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
++	},
+ 	{
+ 		/* Vexia Edu Atla 10 tablet 9V version */
+ 		.matches = {
 -- 
-2.48.0
+2.39.5
 
