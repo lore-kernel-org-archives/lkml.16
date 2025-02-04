@@ -1,66 +1,80 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AFE2066D7
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 08:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DD870820;
+	Tue,  4 Feb 2025 08:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738656857; cv=none; b=eNLLWiQNvEP8cbgIwKYcaijgpsN921d9zMVPOGmd4ylRQLDWRI6lMKBHBBQZoy2DJNtmyRUXboTAU2VzoowNu/ZrySiQqA835ypZ0+uri7UTt6wh+0H3pl7FnxoFyWhR/V7+acS09COjYp2+ZaI0SD0zi52vubi6DXxanuDOscM=
+	t=1738656973; cv=none; b=HqzeZxj9FO9yJK49+DHpMbIbICsKfqlgn+4ErOEoImpjsl1tcScQOBTqref2JUfWWckNg2yyjSe31NBMXFDJb+mGZ/w4gX6xUKMSAdcqp+3tBDzwC2mgT82rWvhm6N9YeHer6yjYnaFiwEt+yy73Ww0WqsLGOVElaZ8RjroOwis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738656857; c=relaxed/simple;
-	bh=B38rBSSh08CHoCV0k2KcAyPTOBqx1I5X9BaZL3HUXJI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=WmQvdcNrJ52dGB/sAagmYkkmRKfaTt8kO3MXmKoCSMcG9iZ2Ok7GFNbIdC8n7HMemhWhWawegShXi6fKOAJIkRr1Zg9PkU3fK3HnDdoSUHC766/DUPQgcumnOz/XD3vsnWOHwPEMT9hWsKyGfj0lGAKO95zhm3YHX5AptnbELtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F8nyURpS; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738656973; c=relaxed/simple;
+	bh=FAzbSwMfAtFcjrh3dqgrm+irDmg9XIEV28cs2tiSJ3Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=SeoPC0apvUXB6GTtBIqnXLrUOzvoWj17W2F9VnGG1D86DVBkjZqRw2kznzYAa8DCbO/jmPmkkbVkozvDs83BKuj2Zh+hl+nsoPC8k1/0K0/ggwQp6LUh/qObFN5pVOJT1shIIqyYHt3R0jK4RCVp6z2LQxaup0G+pj9YCm4QmP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pYetfeQq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oGVWwNFi; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pYetfeQq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oGVWwNFi; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F8nyURpS"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-436249df846so35793005e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 00:14:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738656853; x=1739261653; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8sCR9UpdvPq54knP20h3bb4wqIzkXCrYqODJJrs8Hjo=;
-        b=F8nyURpSxkSDL4F2SnV2XfeHbxR/eag7Xn+gpDj4DnxsI5IQmCST1+cQX1bhLPNkCJ
-         Iuhx/BLw3sP8OEWFT04bl1Tw4U6HGbmhhP9MNnuw7Add88WP1zsDE0q5RDT2GRyFC4fd
-         2acCDuU9rOLPNRKN3MJGcx7I2zcHyKM6tPHuQwNEpAKUK7qJU27/8fMP6vzO1TtSdot0
-         SrwyICgdqvjat07+IrMfI6Uv7eJ37yf0eEVUMAenoRQY+UVX4sGM6Dh9v1kSMpDh4RNi
-         Ht3AypZG7o20cp1g5lF/3lijE32Oxd4S+3jVy7sQreG3HhnWatY8JzPvxajj5kf1pXYO
-         xSFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738656853; x=1739261653;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8sCR9UpdvPq54knP20h3bb4wqIzkXCrYqODJJrs8Hjo=;
-        b=I99j9F4e1nOlgDLWKloiaJciK3kGfjk0yXEQzr68MvZvy2B81y8Jvck/s4O1VRUJ0p
-         Ys8oULeDq+WurRAh2wvOuaNiLnh7vUWmT2x06XXNrdhNsUJlecDQk1oew16COujDV+2p
-         tvlRNe2Ii8lpB8W8c2TtasSfXn80gZ72zB3GNabqZEx6j4XWVdRD4TGUVVqh84X2VX3K
-         QGMh6vqjWyTvG4piVubErDW6oFeMKwwqY0ItNqJxD4gLXsGLFUmxQgXZtuMG7DQFWZN7
-         kfSErzApcKceqndBKGwt+ZIRu2drqD13goJHEhpcdi5fpbSZg6qzR4eBWvPzD8wuq/qQ
-         tg6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXvEWDgJ9plQkgC7Gm/UDFBJJOCI2+HUJhnxFCvyt5+PwS5bnQk3ga9SVfyaGMjTq3A5VsEV9vzTM1QLDc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYpp2BVXRRqWLp90NonLyZX+xf7NoNnwbFg76SmuIdZ7bo6jgc
-	+AfYDLEl1Gtu73vo+2d8XLhSGiC+e7FL86vARP2Xtbh1VTfTKH3jYac5VFmicyc=
-X-Gm-Gg: ASbGnctjp9f5L1QrJQvcmUDK0TNZdeBEKFyNpsNv8qkrUkATdpUY22APOE3LPz4+0jO
-	oQYOd59dvjuGSuXgIlA8IXcVmSvUOBDRi4O2aYO8ZKPhLE4TNXriFLSzBPYSE5vFIN5qlRG8EyY
-	7aooZajp+/kut14P9ah5PnRusdfhRlyqU5utThwh79jI93QR48wIMNIl0mdfZVTdOYCnT/xq8zV
-	N5Y1jPF5jq0pnVVUudxJPM95xki6xw1UlOkc04hX0B9xHQxsevdbzQqUdF7j649LGGXqMdvZ5Dy
-	INBUcNUNUilSVKX0qDr8WneVtj88nweDO+mVJYE1WCHmvwpKn/nAJylzRx9AsGiB11te
-X-Google-Smtp-Source: AGHT+IG3tRoGmZu1OmIgYWpqEIVgV5wfqw0l/woeaKBkcCKJ2qcs0i4efob+omaMPGS57HdE6nfnIA==
-X-Received: by 2002:a05:600c:3510:b0:434:f925:f5c9 with SMTP id 5b1f17b1804b1-438dc3af8c1mr200771315e9.6.1738656853012;
-        Tue, 04 Feb 2025 00:14:13 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:8db5:d196:bd48:5fbb? ([2a01:e0a:982:cbb0:8db5:d196:bd48:5fbb])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dac5a3e79sm900306f8f.63.2025.02.04.00.14.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 00:14:12 -0800 (PST)
-Message-ID: <3ecf58f4-38c0-4435-899a-400df62f5d51@linaro.org>
-Date: Tue, 4 Feb 2025 09:14:11 +0100
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pYetfeQq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oGVWwNFi";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pYetfeQq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oGVWwNFi"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 53FF0210FA;
+	Tue,  4 Feb 2025 08:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738656969; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=8ZkulmqIop4CNSTrofnSmlIpBgxoMbhTny076YqK1Js=;
+	b=pYetfeQqIw1bYtj/wwzUBc157TngUhDDP9/PTUb9iX0XmYtmwsjRd7csK3tZc+RGHRL7dn
+	LGDHtOLXAnFU3tTYvm+e19KiN6FUet0QCvznvBOuiuBG4FHhRxxO4oyRLR38C+TjSCMpZp
+	nkM3+gJ0aPTyEaHttp1+KpvGwYNbNgQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738656969;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=8ZkulmqIop4CNSTrofnSmlIpBgxoMbhTny076YqK1Js=;
+	b=oGVWwNFiqb97XsgPQWv8kCB+4ZUr366jrZ4CeTxkwcj704bAftaCXvmo+lzR4WEe6tkBTJ
+	JvBTegIWPGDMQ5BQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738656969; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=8ZkulmqIop4CNSTrofnSmlIpBgxoMbhTny076YqK1Js=;
+	b=pYetfeQqIw1bYtj/wwzUBc157TngUhDDP9/PTUb9iX0XmYtmwsjRd7csK3tZc+RGHRL7dn
+	LGDHtOLXAnFU3tTYvm+e19KiN6FUet0QCvznvBOuiuBG4FHhRxxO4oyRLR38C+TjSCMpZp
+	nkM3+gJ0aPTyEaHttp1+KpvGwYNbNgQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738656969;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=8ZkulmqIop4CNSTrofnSmlIpBgxoMbhTny076YqK1Js=;
+	b=oGVWwNFiqb97XsgPQWv8kCB+4ZUr366jrZ4CeTxkwcj704bAftaCXvmo+lzR4WEe6tkBTJ
+	JvBTegIWPGDMQ5BQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 94B4F1393E;
+	Tue,  4 Feb 2025 08:16:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hqYOI8jMoWepZwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 04 Feb 2025 08:16:08 +0000
+Message-ID: <b2b88242-e00c-4c6b-a6be-8d0dbb905569@suse.de>
+Date: Tue, 4 Feb 2025 09:16:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,124 +82,116 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] dt-bindings: mmc: move compatible property to its
- specific binding
-To: Dharma.B@microchip.com, robh@kernel.org, conor@kernel.org
-Cc: ulf.hansson@linaro.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- khilman@baylibre.com, jbrunet@baylibre.com, linux-mmc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
- martin.blumenstingl@googlemail.com
-References: <20241219-mmc-slot-v1-1-dfc747a3d3fb@microchip.com>
- <20241219-scenic-revision-17da9231d61a@spud>
- <91dfdd42-6ddb-490f-acda-41ce55782959@microchip.com>
- <CAFBinCCxZjuXL0duy3ePPDtL1oJS_GZiX3=djXpHR+-6gLkN_w@mail.gmail.com>
- <39be0bea-c207-4bcd-b464-ca93e91cec93@microchip.com>
- <CAFBinCAO0bpd7PXaVJWMby4Mqj1On5DaqNZua4V3gPUDms8=LA@mail.gmail.com>
- <779651f3-e5d4-4de8-878a-84653735e5cb@microchip.com>
- <f312c7ff-8d9b-4317-a75b-ce3d0f94a7ae@microchip.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <f312c7ff-8d9b-4317-a75b-ce3d0f94a7ae@microchip.com>
+Subject: Re: [PATCH 2/3] mm: provide mapping_wrprotect_page() function
+To: Christoph Hellwig <hch@infradead.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jaya Kumar <jayakumar.lkml@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, Kajtar Zsolt <soci@c64.rulez.org>,
+ Maira Canal <mcanal@igalia.com>
+References: <cover.1738347308.git.lorenzo.stoakes@oracle.com>
+ <c802c17cdba59e3455f3d7db07659d5da0ed6dc1.1738347308.git.lorenzo.stoakes@oracle.com>
+ <Z6DljlvHpjdFof42@phenom.ffwll.local> <Z6Gnat93skcoFZqn@infradead.org>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <Z6Gnat93skcoFZqn@infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[infradead.org,oracle.com,linux-foundation.org,gmail.com,ffwll.ch,gmx.de,vger.kernel.org,lists.freedesktop.org,kvack.org,redhat.com,c64.rulez.org,igalia.com];
+	TAGGED_RCPT(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi,
+Hi
 
-On 04/02/2025 05:24, Dharma.B@microchip.com wrote:
-> Rob / Conor,
-> 
-> On 20/01/25 10:00 am, Dharma B wrote:
->> Hi Rob/Conor,
->>
->> On 09/01/25 2:26 am, Martin Blumenstingl wrote:
->>> EXTERNAL EMAIL: Do not click links or open attachments unless you know
->>> the content is safe
->>>
->>> Hi Dharma,
->>>
->>> On Wed, Jan 8, 2025 at 4:11 AM <Dharma.B@microchip.com> wrote:
->>> [...]
->>>> "One issue is 'compatible' is required. Either that would have to be
->>>> dropped as required."
->>>>
->>>> Instead of just dropping it from "required:", I removed the property
->>>> itself and moved it to another binding.
->>>>
->>>> I will send a v2 by removing it from the required, will it be fine?
->>> For me this is fine.
->>>
->>> My understanding is that if we drop the compatible property completely
->>> then any compatible string will be allowed (for example: compatible =
->>> "random,name"). This is because mmc-slot.yaml inherits the properties
->>> from mmc-controller-common.yaml which itself has
->>> "additionalProperties: true".
->>> However, if we allow it but make it optional it means that there's
->>> only two valid states:
->>> - no compatible property (on the Atmel / Microchip SoCs)
->>> - a compatible property with the value "mmc-slot" (as used on Amlogic
->>> Meson and Cavium Thunder SoCs)
->>> - (anything else is considered invalid)
->>>
->>> Rob, Conor: can confirm this or correct me wherever I got something
->>> wrong.
->>> I hope that your feedback will help Dharma write a good patch
->>> description for v2.
->>
->> Shall I proceed with v2 by dropping the compatible from the required
->> property list?
-> 
-> I hope this email finds you well. Just following up on my previous
-> message from 20/01/25, as it seems to have achieved an impressive
-> feat—perfect stealth mode. Either my patch is so flawless that it left
-> everyone speechless, or it has been silently sacrificed to the inbox
-> gods. 😅
-> 
-> If there are any concerns, feedback, or a secret ritual I need to
-> perform to get a response, please do let me know. Would love to hear
-> your thoughts when time permits.
-> 
-> Looking forward to breaking the radio silence!
 
-Just send a v2 as RFC, so we can comment on it.
+Am 04.02.25 um 06:36 schrieb Christoph Hellwig:
+> Hi Simona,
+>
+>
+> On Mon, Feb 03, 2025 at 04:49:34PM +0100, Simona Vetter wrote:
+>> Could we go one step further and entirely drop the struct page? Similar to
+>> unmap_mapping_range for VM_SPECIAL mappings, except it only updates the
+>> write protection. The reason is that ideally we'd like fbdev defio to
+>> entirely get rid of any struct page usage, because with some dma_alloc()
+>> memory regions there's simply no struct page for them (it's a carveout).
+> Umm, for dma_alloc* where * is not _pages you never can get a page or
+> PFN form them.  They are block boxes and drivers must not attempt to
+> translated them into either a page or PFN or things will go wrong.
+> Only the kernel virtual address and dma_address may be used.
+>
+>> See e.g.  Sa498d4d06d6 ("drm/fbdev-dma: Only install deferred I/O if
+>> necessary") for some of the pain this has caused.
+> The commit hash is corrupted, I guess this is 5a498d4d06d6 as the
+> subject line matches.  And that commit (just like the code it is trying
+> to fix) is completely broken as it violates the above.
 
-Thanks,
-Neil
+As the author of these commits, I have no doubt that the code would 
+break on some systems. It works in practice for the current use cases 
+though. Is it possible to create something that tracks framebuffer 
+writes without requiring pages?
 
->>
->>>
->>>
->>> Best regards,
->>> Martin
->>>
->>
->>
-> 
-> 
+Best regards
+Thomas
+
+>
+>
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
