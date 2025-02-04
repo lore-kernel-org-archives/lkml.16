@@ -1,139 +1,153 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from smtp.smtpout.orange.fr (smtp-80.smtpout.orange.fr [80.12.242.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51BD206F16
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 20:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D3E19E83E;
+	Tue,  4 Feb 2025 20:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738702191; cv=none; b=lFo8pNDF2KPOIlBj6Y1QiHZV3unBSU+RtgfCNtqa1hjPvuZuNNKre1oekaHlXs6vFgC+BYrYzYBu8y0lFBquaO6v0G6uVnfRVpopW5GaB9oVdMW+gmOJrIScKDlLFaFNAAyfhj0ino/Y2QRp7nqWHto8ow0LE4ieiIuCWubLWso=
+	t=1738702261; cv=none; b=aQ4S78/9D8KZlWQNPLHYdfy9WMx97JSbj4rnBaRgogMiB/CTY9mriWgE1+Q4n6zsQjMTmkLcrzyoHiPtQWbf4GQyAReFcvokz0h7Gl7BMtEi/06Js7iUeHAA3wXiM22SzCzuUo/JPtqewJp2MWJccVXD1gKVAsqLRWaOt6WAj84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738702191; c=relaxed/simple;
-	bh=kYb8QeKwfReVJv6+NUbSIbrGBhLB5YTqXzeaokiOXnY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QFEPa450jR6yTa5CdeV+hyWX/HVEvKWbX35cGKRvf5X3mk/4HAIlY2s3mJCSlxCwaASOUzma/cjAuHsbBJmox4xNS/cnwkVsZq45pTy6+e9BhseX46fCDwpy3b6qBfk9E1t29XE5KJEHBIe7SlwjaikGpV13dkNAkNxkUkEpmKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=khiolRDb; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1738702261; c=relaxed/simple;
+	bh=U5vN9NaJf/Hh/3ZK/M/vl+ih1hJO4g9FzWxhvyjuyac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qIhdPdbdsv83l82MAWkuelAqzig/b7pHKqGP/65kmc5RyDoZf23CEmxGvBJD9jeMWB/qT1/2YP/YlSacJS9JGoGDVuUydpOax86avf+VB9k/A5r4AxdQj9ykYtMSv+vT2FXIzsNamgiFFgTjZXEucQWXVlyHpOY8RJtBQfeMR5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Qe4uvLXe; arc=none smtp.client-ip=80.12.242.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="khiolRDb"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-467a6781bc8so47336501cf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 12:49:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1738702188; x=1739306988; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VuMGfHPH8Rgkcs5TNo6U5Y3uMl+k/KNkpfdbRlCt8ps=;
-        b=khiolRDbMNMaot2/WmLdMq+REVBXBv9qEgvUdSKxHwBOsFi20H0MPcIFMcC8nlZ7zz
-         r1dfNsXAF0nK1A+BtltaHjYCcLC+PNhtFBH+csEI9naZ4ZPoQXOYeMx+JMHy6Rv8PtAB
-         gGnuw9w6Hkgoda92Eqs7UgklioMQMnMKs6GjO8BZYrBBZyUZEHEZ+SfdI0vAyuydsLGg
-         +Fj8FgpO8rO3Xr0Qh7sD9Bas8wBWjfp5Mo55VcfwT2lzqPrNjCHx8ikAFhWo0AerRoR7
-         eDqSD6C2XFS5OflB9lR6f0neKp5/VGR8lUYnyPqFLP/jQpDJaAUh5SRIteGpJ77CMy9x
-         C64A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738702188; x=1739306988;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VuMGfHPH8Rgkcs5TNo6U5Y3uMl+k/KNkpfdbRlCt8ps=;
-        b=NrDJGTbFkkJRawyY8oG0x9m7LY6qr4mYmfJbtkjT3gJa/Vvn6deznXcll2Qq9kTHiO
-         UtdK95/UP6TrQVWjDRm0xG7tb6VbHX4iTWWK15ML57HnE0ShJAY80SrV7p7XbS4byVCV
-         f5pHWgGjKKGnUjglctupnbQ1KRcTqt6RBEpndjnM998wbMnIoaam/TxIqGwzmKTb8Z/R
-         OsbqNlYJmswyizxHMeU8ZrxTfYY1LnTY336dIX3RQ3T8vtsmei+PeDF/H+h3x18PCW53
-         vJNxk8KL2DjCCEd0kvUPuvYggYJAFvXsH+KVjMsex7ffikwA2L1GqCEMISGSJlxM8vXc
-         1udw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmRBKN/pd189859STwk0u5zgZWiN1DJqca6ntim1W4r0be2wC314MOgP7G7Khi9xigJxINW+FLD8yrHd0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN/882Zl0qimNsPb2vvSwC/dvJ9Fb+H1DOafIvuDgoBUlV5o8e
-	JqunKu4IDlNp9AaMxhwu1oXm/YBVlG9oE6086zCNYx6d8mQY7WNOemNKjgJw0UQ=
-X-Gm-Gg: ASbGnct2T9V/UgynPIR5zWJgpNV4Yyyg8wb6uq0cNbmwBShAnyx7IEePm35eCn1GJ86
-	tyEZ5ElW2hEMjJh4AAefHziyT52I+6WRui9LFH7JzBg46ViP0Y56tBvFp9skVFJlJPU+7lZZMy6
-	Yu2cLOoYkdNMk6EqXypnf+93olDIcn7XP9GgeM3ihnBBt15IyGoydKrwRoV1ZaJPS6GWUipi5hd
-	bw5IQ5dPIyZ4+ZgArR59QUTfrc10J4XhDhcADZKU4iOe8bTMwJO17odKK4+f1+IHvRRDJv+AH6i
-	FHv8+cBJZ7VzHcQKXQZnJMsbg7L87KMV2nuP/8io/y9EbpqSZNqCOf60O+KTmv6C
-X-Google-Smtp-Source: AGHT+IFCoy9O2sWsL/DnH3NCL2vtPB/0RnkG362y0xiW+CjQk353JmqEMZQpoug4xTMKjQExIBheCg==
-X-Received: by 2002:a05:622a:1993:b0:466:886f:3773 with SMTP id d75a77b69052e-470281859damr1708191cf.1.1738702188666;
-        Tue, 04 Feb 2025 12:49:48 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf1728c8sm62847861cf.56.2025.02.04.12.49.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 12:49:48 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tfPrf-0000000CeMf-150d;
-	Tue, 04 Feb 2025 16:49:47 -0400
-Date: Tue, 4 Feb 2025 16:49:47 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: David Hildenbrand <david@redhat.com>
-Cc: Asahi Lina <lina@asahilina.net>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Jann Horn <jannh@google.com>, Matthew Wilcox <willy@infradead.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Valentin Obst <kernel@valentinobst.de>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	asahi@lists.linux.dev
-Subject: Re: [PATCH 0/6] rust: page: Support borrowing `struct page` and
- physaddr conversion
-Message-ID: <20250204204947.GM2296753@ziepe.ca>
-References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
- <Z6CTLB2NggwYafi9@phenom.ffwll.local>
- <1eaf66ba-b2d3-448f-938b-913f17ca98a4@redhat.com>
- <20250204183933.GJ2296753@ziepe.ca>
- <1d379007-97c3-4bb9-93da-1a828f955fc4@redhat.com>
- <20250204202656.GL2296753@ziepe.ca>
- <08ce9562-9ded-4d95-a495-b60f90d75490@redhat.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Qe4uvLXe"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id fPsbtpZU4inFifPsfthBqw; Tue, 04 Feb 2025 21:50:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1738702250;
+	bh=cEJrjrt2iVAFpYW/0YZX/gP7F3sDEkngN20jzc4pxzM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=Qe4uvLXe/cappcqsmC5mjcdHulH1WxgPsw5mlTZSD/zfbLsys0bzGC++t2M1c7mDx
+	 LuDFpqT1XZnALmaGfAeYLbc2W54DayF/x9SCy/yzHI/Tlos79eHLIUmM/JmVehzjrF
+	 JTex7vKvjBN9TvgRfp82uRVoZdb55iBZwJM80cxZFpVJsQ5+99oBYcN/yEqmvROpit
+	 bE0CrkRZ8EQtwAq8rirHrkrwnM0VvUMkItuSoJXCBx95vb2xFAfqO/+Mi/F80lLpcu
+	 SNTY7s5s3E5MG9booYpPPLSKEPy8Jcli/GoVhIDmoygRhbTw4Zweg+6LLeHp4f1u4D
+	 XplwbKpPx2H4w==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Tue, 04 Feb 2025 21:50:50 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <f9a35a4f-b774-4480-910a-cdcf926df41b@wanadoo.fr>
+Date: Tue, 4 Feb 2025 21:50:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08ce9562-9ded-4d95-a495-b60f90d75490@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mtd: Add check and kfree() for kcalloc()
+To: Jiri Slaby <jirislaby@kernel.org>,
+ Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Cc: gmpy.liaowx@gmail.com, kees@kernel.org, linux-kernel@vger.kernel.org,
+ linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com, richard@nod.at,
+ vigneshr@ti.com, stable@vger.kernel.org
+References: <30ad77af-4a7b-4a15-9c0b-b0c70d9e1643@wanadoo.fr>
+ <20250204023323.14213-1-jiashengjiangcool@gmail.com>
+ <e41d9378-e5e5-478d-bead-aa50a9f79d4d@wanadoo.fr>
+ <48ad8f05-a90b-499d-9e73-8e5ff032824a@kernel.org>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <48ad8f05-a90b-499d-9e73-8e5ff032824a@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 04, 2025 at 09:41:29PM +0100, David Hildenbrand wrote:
-> On 04.02.25 21:26, Jason Gunthorpe wrote:
-> > On Tue, Feb 04, 2025 at 09:05:47PM +0100, David Hildenbrand wrote:
-> > > Fully agreed, this is going into the right direction. Dumping what's mapped
-> > > is a different story. Maybe that dumping logic could simply be written in C
-> > > for the time being?
-> > 
-> > ?
-> > 
-> > Isn't dumping just a
-> >    decode pte -> phys_to_virt() -> for_each_u64(virt) -> printk?
-> > 
+Le 04/02/2025 à 07:36, Jiri Slaby a écrit :
+> On 04. 02. 25, 7:17, Christophe JAILLET wrote:
+>> Le 04/02/2025 à 03:33, Jiasheng Jiang a écrit :
+>>> Add a check for kcalloc() to ensure successful allocation.
+>>> Moreover, add kfree() in the error-handling path to prevent memory 
+>>> leaks.
+>>>
+>>> Fixes: 78c08247b9d3 ("mtd: Support kmsg dumper based on pstore/blk")
+>>> Cc: <stable@vger.kernel.org> # v5.10+
+>>> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+>>> ---
+>>> Changelog:
+>>>
+>>> v1 -> v2:
+>>>
+>>> 1. Remove redundant logging.
+>>> 2. Add kfree() in the error-handling path.
+>>> ---
+>>>   drivers/mtd/mtdpstore.c | 19 ++++++++++++++++++-
+>>>   1 file changed, 18 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
+>>> index 7ac8ac901306..2d8e330dd215 100644
+>>> --- a/drivers/mtd/mtdpstore.c
+>>> +++ b/drivers/mtd/mtdpstore.c
+>>> @@ -418,10 +418,17 @@ static void mtdpstore_notify_add(struct 
+>>> mtd_info *mtd)
+>>>       longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->kmsg_size));
+>>>       cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+>>> +    if (!cxt->rmmap)
+>>> +        goto end;
+>>
+>> Nitpick: Could be a direct return.
+>>
+>>> +
+>>>       cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+>>> +    if (!cxt->usedmap)
+>>> +        goto free_rmmap;
+>>>       longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
+>>>       cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+>>> +    if (!cxt->badmap)
+>>> +        goto free_usedmap;
+>>>       /* just support dmesg right now */
+>>>       cxt->dev.flags = PSTORE_FLAGS_DMESG;
+>>> @@ -435,10 +442,20 @@ static void mtdpstore_notify_add(struct 
+>>> mtd_info *mtd)
+>>>       if (ret) {
+>>>           dev_err(&mtd->dev, "mtd%d register to psblk failed\n",
+>>>                   mtd->index);
+>>> -        return;
+>>> +        goto free_badmap;
+>>>       }
+>>>       cxt->mtd = mtd;
+>>>       dev_info(&mtd->dev, "Attached to MTD device %d\n", mtd->index);
+>>> +    goto end;
+>>
+>> Mater of taste, but I think that having an explicit return here would 
+>> be clearer that a goto end;
 > 
-> IIUC, the problematic bit is that you might not have a directmap such that
-> phys_to_virt() would tell you the whole story.
+> Yes, drop the whole end.
+> 
+>>> +free_badmap:
+>>> +    kfree(cxt->badmap);
+>>> +free_usedmap:
+>>> +    kfree(cxt->usedmap);
+>>> +free_rmmap:
+>>> +    kfree(cxt->rmmap);
+>>
+>> I think that in all these paths, you should also have
+>>      cxt->XXXmap = NULL;
+>> after the kfree().
+>>
+>> otherwise when mtdpstore_notify_remove() is called, you could have a 
+>> double free.
+> 
+> Right, and this is already a problem for failing 
+> register_pstore_device() in _add() -- there is unconditional 
+> unregister_pstore_device() in _remove(). Should _remove() check cxt->mtd 
+> first?
 
-The phys_to_virt() I mean is on the page table pages themselves, not
-on a leaf.
+Not sure it is needed.
+IIUC, [1] would not match in this case, because [2] would not have been 
+executed. Agreed?
 
-All page table pages came from alloc_pages_node() and you'd do
-virt_to_phys() to stick them into a next-table PTE, then
-phys_to_virt() to bring them back:
+CJ
 
-  phys_to_virt(virt_to_phys(page_address(alloc_pages_node())))
 
-Effectively.
+[1]: https://elixir.bootlin.com/linux/v6.13/source/fs/pstore/blk.c#L169
+[2]: https://elixir.bootlin.com/linux/v6.13/source/fs/pstore/blk.c#L141
 
-The leaf pages could be anything and you should enver phys_to_virt
-those, this is what I mean by:
+> 
+> thanks,
 
-> > Or do you mean trying to decode the leaf entires into some struct page
-> > detail? Does a GPU need to do that? Agree that would be better as some
-> > C function to take in a KVA instead of a struct page and populate a
-> > string with details about that KVA from the struct page.
-
-Though I should have said phys_addr_t not KVA
-
-Jason
