@@ -1,140 +1,146 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663FC2163BD;
-	Tue,  4 Feb 2025 17:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145A9216609
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738691002; cv=none; b=QBycggCAuL7vexPSZVcNw8vwkzmhHOKlBugdieU453g8CgAPezqwlhgahF3VrFX8HV3SpJk47cX/B8QJLabSi+kbuq5UI394RJvEaKWvEgzAsyMzXGKdU3+qYIQ9ublFNKlWhfnTBI7S7fyqvTdMq3jlkCaX5Zi0eWWyZAa7ZRw=
+	t=1738691026; cv=none; b=CL+S5IAvK3xCnElDt7fQzNB7hn3DKxTCL3KNd4UMYtcd6109qpW0idqErVYvmYCpyyl4gbS00SQxsRNYMwFuSW+nzbIe8ffu1wO7HYoZTf4Enn7OxArKQTarNYiDn6ZUUqyamdkH8MeT9B/pY52y0E6YuORks+NzUYqkV1dc5nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738691002; c=relaxed/simple;
-	bh=aFuf0N4dfewFID13J8FiJNiZDmx7wnCMbmh79IX77VA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FoHuRCCycbiLaGq9JHBTTzILfpv8iN9wJISs4ILzKQMeOhkTJp/CLTzCESHyQloTFO2Z/1ohmx+z5kUn8FsLgfRd4hWDeWMq+P0CoZSXBoyWKgqGVQKXA7dPogSbit88RIBMjEaoygQLGTf7D3sbqHE2Rn7s+23Lvg4aYimw6nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jxeoFJIm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738691026; c=relaxed/simple;
+	bh=RI516KF8KlF5wuxKhvy14BxpgtxjsqHgb9vmRE+RH8o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tKN9q8wsbanhBs8UY2IKPEEYR6bKgg6taI2ks3ic43Ukp5NJOP64MhKUBR282Jfa/gjxRVUBPe8L0K2FespAjOMLbzEpBYWxNqK+gy5pWkM/SlEdQOxlh3DbdvLOGJDwYhnMfD+aJPGeQzR4A0kJtFW1pjlJjV6DbRYg5QCl52Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JgSiuWpb; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jxeoFJIm"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514GuY7A024441;
-	Tue, 4 Feb 2025 17:43:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	aV0ABCs36QB8J2BPqLl0w6BMjA2gNarXPJcJysONEd4=; b=jxeoFJImAC6PgVVJ
-	uE4u4ke1M4110yAK0C8vdJbzVDUoNAhkUxse7JylUm2FQGDXYP6KFMNcukuwaiNO
-	UDDkIh7bpVf4ZRiJXmbKL+louc9kgGrvnEaZAtd1uBMLPzZozphYJEF3Y/otisHQ
-	YGKRGFqst85TLipJ/u/9FjH5KOZTzFxIuVqDsPJ+vob21Tlv/hEBGydG+bsDcvpN
-	Uxlh/oadF+re/nj4gt2G/ghGYmBbyNympW9XMy3JMxSTCq6ib0PMeInXyMUVcS6C
-	3wEnYM7NUnMotAq2/UD+3QO6tESSlBoiRGouiPhiE5m7wXbXHYI/G0d/AovosiNp
-	2OraKg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44kpuy846v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 17:43:16 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 514HhFII007779
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Feb 2025 17:43:15 GMT
-Received: from [10.216.62.245] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Feb 2025
- 09:43:12 -0800
-Message-ID: <15d16afd-8e1a-479f-9573-8845d1408178@quicinc.com>
-Date: Tue, 4 Feb 2025 23:13:08 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JgSiuWpb"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-467abce2ef9so334661cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:43:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738691024; x=1739295824; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EmE2lFz8a65MIXFo9x5Yc1zrZ1Lc4zxxKH4CPUa2jU4=;
+        b=JgSiuWpb+YML86EJyQ2/R0EZyW8W5JETWLI3LrOJ51FIvCEAwwIly+HFiTpAgCePJA
+         vm6MXrMO2k0MWYXUSlPiUeULVXSXaWBKabT6P6wjtDNJyWj3UF1F/e8Svc4k47mA2Iea
+         72dGJmmXDbhk+9kBDG3FbVX68ayh5oCoUnIvdznsGVdcb0bHcZfgFjqMNwuTVWiraD+Y
+         E+L0xHWR8k/VC5+Ntv8XEWw1KkasaMOEKGWYWThxtAqzcQS8cofSTFW3bmb+UdE4aTmw
+         /Xtd2TRLIvikBUVr0qyfgqii6Wegi88qm8OrswFl+5LJWokLzp827YroXGaSlM6YaV3b
+         EhEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738691024; x=1739295824;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EmE2lFz8a65MIXFo9x5Yc1zrZ1Lc4zxxKH4CPUa2jU4=;
+        b=CYYRR/xjY5ypYDfo5KU/YYHKnSZe5FNispK6OTyynkcGVGFbrPtQV6dB0TZuKvCwgv
+         wqxjOPPB21JCd+wAD3KJF8ZB88LFp6OdCLcUcftIpiZ0yXj8rKvNwW/U57aS/190ZXYS
+         K4UplH4Bs+/XFj2lAB+VRnYXthhqtUWZGeJkp3tn9RzrGoUMXaYPcND2zG58ryEy8aUv
+         9iKZ0nvJ32fpqChoZHdbfBViKEfwTWEMqA+1/RnPOTE/+L7j214zpzTr2jeBwtfQadSX
+         X00NljKJb/LH//lrYZKB15mc1vkZmgrIZLxo9ESlMpjNozAta3mgOTgmIQS1hmj8B8ry
+         RB9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVTbl8v9BuS6dUX4LlYldD2ZRCDAXLKwMJrz+kMi5QDaDb6vGA0+IJZpmsyVNqBYRAqvyvP6VtCEzACeWs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT6ozW3ruoualy270onrHCwuvLQ9Di9DxmFUTY457O2q13rAu8
+	z7p/yXHASdwyP+H5v3q2+FSCdvKNaVNbeplV3xgDa8TeBlTE2fYpNSqVqlincwao14pfruIg3pz
+	DQTt4NR+/FHon28Pt+WA3uiAa+j7hekaC3HEj
+X-Gm-Gg: ASbGncubrg6BTfUs2sHokerCrYsIwzOixzBhWrx3YrLLF4Blgap21lMrLP+1Co5GM0m
+	LA5uB7+63Rd7h7FXT4RUbKWjQb9nkFEHNEBZcNKnZZyWZE1+aqSfz3lMy8HuxOmsNcoa+SipH70
+	5grq72zae50Q0X1DpiVCWxa4Id0aU=
+X-Google-Smtp-Source: AGHT+IEakkqdUEODQS4oUhl0P6nM6vpIAMS/AXypUyD79wEUNQXqWMLpkJCIqWEzIzpizWIXImCaCf1Qfn+0Gv6ysdI=
+X-Received: by 2002:a05:622a:4296:b0:466:9af1:5a35 with SMTP id
+ d75a77b69052e-4701901f667mr4483511cf.10.1738691023583; Tue, 04 Feb 2025
+ 09:43:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Add support to reconfigure PLL
-To: Johan Hovold <johan@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Ajit Pandey
-	<quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Jagadeesh Kona" <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250113-support-pll-reconfigure-v1-0-1fae6bc1062d@quicinc.com>
- <Z6HnOUfsSaKYyYfh@hovoldconsulting.com>
-Content-Language: en-US
-From: Taniya Das <quic_tdas@quicinc.com>
-In-Reply-To: <Z6HnOUfsSaKYyYfh@hovoldconsulting.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: GJUfTs1RZsG_wpLWe2FEwGJM6WGRkzdk
-X-Proofpoint-ORIG-GUID: GJUfTs1RZsG_wpLWe2FEwGJM6WGRkzdk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_08,2025-02-04_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 bulkscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- malwarescore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015
- phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502040135
+References: <cover.1738268370.git.lorenzo.stoakes@oracle.com>
+ <20250204-joggen-buddeln-29e5ca75abb7@brauner> <7a8a1719-466f-4e10-b1eb-9e9e1ef8ad52@lucifer.local>
+In-Reply-To: <7a8a1719-466f-4e10-b1eb-9e9e1ef8ad52@lucifer.local>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 4 Feb 2025 09:43:31 -0800
+X-Gm-Features: AWEUYZl7RlmyhEU99QQ-tyghSf0sZ-KKDjjpT9EgshNSpko_7zG64QXhfE_k9kk
+Message-ID: <CAJuCfpEUusRt_ss7RtxRPP9q_LRwi+Lw+SOq32EUA58s3JOx1A@mail.gmail.com>
+Subject: Re: [PATCH v7 0/6] introduce PIDFD_SELF* sentinels
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, pedro.falcato@gmail.com, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Oliver Sang <oliver.sang@intel.com>, 
+	John Hubbard <jhubbard@nvidia.com>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Koutny <mkoutny@suse.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Elliott Hughes <enh@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 4, 2025 at 2:01=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> On Tue, Feb 04, 2025 at 10:46:35AM +0100, Christian Brauner wrote:
+> > On Thu, 30 Jan 2025 20:40:25 +0000, Lorenzo Stoakes wrote:
+> > > If you wish to utilise a pidfd interface to refer to the current proc=
+ess or
+> > > thread it is rather cumbersome, requiring something like:
+> > >
+> > >     int pidfd =3D pidfd_open(getpid(), 0 or PIDFD_THREAD);
+> > >
+> > >     ...
+> > >
+> > > [...]
+> >
+> > Updated merge message. I've slightly rearranged pidfd_send_signal() so
+> > we don't have to call CLASS(fd, f)(pidfd) unconditionally anymore.
+>
+> Sounds good and thank you! Glad to get this in :)
+
+Sorry, a bit late to the party...
+
+We were discussing MADV_GUARD_INSTALL use with Android Bionic team and
+the possibility of caching pidfd_open() result for reuse when
+installing multiple guards, however doing that in libraries would pose
+issues as we can't predict the user behavior, which can fork() in
+between such calls. That would be an additional reason why having
+these sentinels is beneficial.
 
 
-
-On 2/4/2025 3:38 PM, Johan Hovold wrote:
-> On Mon, Jan 13, 2025 at 10:57:03PM +0530, Taniya Das wrote:
->> During boot-up, there is a possibility that the PLL configuration might
->> be missed even after invoking pll_configure() from the clock controller
->> probe. This is often due to the PLL being connected to rail or rails
->> that are in an OFF state and current clock controller also cannot vote
->> on multiple rails. As a result, the PLL may be enabled with suboptimal
->> settings, leading to functional issues.
->>
->> The PLL configuration, now part of clk_alpha_pll, can be reused to
->> reconfigure the PLL to a known good state before scaling for frequency.
->> The 'clk_alpha_pll_reconfigure()' can be updated to support more PLLs
->> in future.
-> 
-> This sounds like a hack. You already describe the underlying problem (and
-> indirectly its solution) in the first paragraph above, namely that the
-> video clock controller has not enabled the power domain needed to
-> configure the PLL.
-> 
-
-This is not a hack, but another alternative way to ensure the PLL is 
-configured to the right configuration before being used.
-
-> I believe support for clock controllers that need to enable multiple
-> power domains is on its way into 6.15:
-> 
-> 	https://lore.kernel.org/lkml/20250117-b4-linux-next-24-11-18-clock-multiple-power-domains-v10-0-13f2bb656dad@linaro.org/
-> 
-> Perhaps that's what you need to fix this properly.
-> 
-
-Yes, this is just to add a dependency on clock controller to put the 
-rail vote, but this series does not fully solve the clock controller's 
-PLL requirement problems.
-
->> The IRIS driver support added
->> https://lore.kernel.org/all/20241212-qcom-video-iris-v9-0-e8c2c6bd4041@quicinc.com/
->> observes the pll latch warning during boot up due to the dependency of
->> the PLL not in good state, thus add config support for SM8550 Video
->> clock controller PLLs.
-> 
->> Taniya Das (3):
->>        clk: qcom: clk-alpha-pll: Integrate PLL configuration into PLL structure
->>        clk: qcom: clk-alpha-pll: Add support to reconfigure PLL
->>        clk: qcom: videocc-sm8550: Update the pll config for Video PLLs
-> 
-> Johan
-
--- 
-Thanks & Regards,
-Taniya Das.
-
+>
+> >
+> > ---
+> >
+> > Applied to the vfs-6.15.pidfs branch of the vfs/vfs.git tree.
+> > Patches in the vfs-6.15.pidfs branch should appear in linux-next soon.
+> >
+> > Please report any outstanding bugs that were missed during review in a
+> > new review to the original patch series allowing us to drop it.
+> >
+> > It's encouraged to provide Acked-bys and Reviewed-bys even though the
+> > patch has now been applied. If possible patch trailers will be updated.
+> >
+> > Note that commit hashes shown below are subject to change due to rebase=
+,
+> > trailer updates or similar. If in doubt, please check the listed branch=
+.
+> >
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> > branch: vfs-6.15.pidfs
+> >
+> > [1/6] pidfd: add PIDFD_SELF* sentinels to refer to own thread/process
+> >       https://git.kernel.org/vfs/vfs/c/e6e4ed42f8d8
+> > [2/6] selftests/pidfd: add missing system header imcludes to pidfd test=
+s
+> >       https://git.kernel.org/vfs/vfs/c/c9f04f4a251d
+> > [3/6] tools: testing: separate out wait_for_pid() into helper header
+> >       https://git.kernel.org/vfs/vfs/c/fb67fe44116e
+> > [4/6] selftests: pidfd: add pidfd.h UAPI wrapper
+> >       https://git.kernel.org/vfs/vfs/c/ac331e56724d
+> > [5/6] selftests: pidfd: add tests for PIDFD_SELF_*
+> >       https://git.kernel.org/vfs/vfs/c/881a3515c191
+> > [6/6] selftests/mm: use PIDFD_SELF in guard pages test
+> >       https://git.kernel.org/vfs/vfs/c/b4703f056f42
