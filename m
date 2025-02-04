@@ -1,125 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EB718784A;
-	Tue,  4 Feb 2025 09:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59CF20766E;
+	Tue,  4 Feb 2025 09:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661506; cv=none; b=kvYOKGvId6BDAxj84Ua4xerwhWMhk60PdymVkl2X41y5kXw6edVw/UxB25qXNxRmBHBdJaTwEC3Nsy75x4UpPLtO2wdRT2idUN4jQk59zvvO7j54m6V+aDQOaFglyeFjxzbOgvz/xnXTgvcqNLNzpkbKMJZfPegpPaTYK6FTRh8=
+	t=1738661561; cv=none; b=LrMD7t0ao81sjUwUk/p7VnlrwoQBZJdi7XMH/GlmSSQbiJBtp3lYgKZZhyWdUQfsRC3cV3P9M77ASE9YrNbjbem/PoCLSvdy4AGJsIWFnXdUuAbUM14qL274cVH1+ruRinrKb4PnEtnKfUMWk28d0ONDcTkeDMUFjOALkMKsly0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661506; c=relaxed/simple;
-	bh=OfSjjEDlFSr4Tneahj5ga67WISKYtolfFhaQOy1EYi4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q8f0DHhvWDthCp5JCthvmdDAobVfR4ReSC5vV3syPJU7+LFbZyfVwQNaR1+7s3wN//FiUYDy0sdbV2V0KuM0eyrgL3R02c6z9n/pTJH8bJZ+arB5+c3a6eZoxj2e+Q6w/+BWJWdR4DQoheGvJaWLypGg5Q9GDBZSLsNngv/sZsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=naZ5rfyq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738661561; c=relaxed/simple;
+	bh=afC03Ee5hYfBovzmOOaQQ63aQs98FWYrDWq0Cfbx4RI=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cjUwwWNKgFoC1mN//WlcW0IE4nvxZXVAzK4XlSP2GQ8NuFBtkFJYb3yESBkul79sjGkpNSbft4wgmVxF5E1Yx/Q1PwyNI38qRiASB70zN/aPTNYN5Ai3mPW6sEVnNGv7KIYh+qFd9ORoxLa2qfTX0zIasr1Kik30Hgy4cC7p/5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gEA6NivY; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="naZ5rfyq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09319C4CEDF;
-	Tue,  4 Feb 2025 09:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738661506;
-	bh=OfSjjEDlFSr4Tneahj5ga67WISKYtolfFhaQOy1EYi4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=naZ5rfyq28gAWLr188rgx5miMbHlHkuCkziSEWNewm6RwitUzyD41N6Wu+BnEKt/b
-	 qv5pjxYxf4iH0kwOGcsuIVR87YhfWLEEKVE7vHLgTc1bl7k1dz4OwpInw9NlH60TEW
-	 xt0EbVp6YaA52S4IKYelN+aL62lbDM0W6oAEvxC1USqcsN4cOw3wUy2RPzoswA/GBv
-	 R7VxUSW0UXcVi3qnQH0gZzR8H+QCOYvUZeRqev7UmSTgRTs12MvbU4q/5EF/1VjUuf
-	 Ur9pSmUdxw4eFzlXF7F7alwicNJfiIAYt7h4+vCXfVROc7RbhzOK66cNrKQLw1kXfn
-	 zeYU6rN7gYNgg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tfFHZ-000000007wi-1X0q;
-	Tue, 04 Feb 2025 10:31:50 +0100
-Date: Tue, 4 Feb 2025 10:31:49 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Dikshita Agarwal <quic_dikshita@quicinc.com>,
-	quic_vgarodia@quicinc.com, mchehab@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, p.zabel@pengutronix.de, hverkuil@xs4all.nl,
-	sebastian.fricke@collabora.com, bryan.odonoghue@linaro.org,
-	neil.armstrong@linaro.org, nicolas@ndufresne.ca,
-	u.kleine-koenig@baylibre.com, stefan.schmidt@linaro.org,
-	lujianhua000@gmail.com, linux-arm-msm@vger.kernel.org,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, krzysztof.kozlowski@linaro.org
-Subject: Re: [RFC PATCH v10 1/2] media: iris: introduce helper module to
- select video driver
-Message-ID: <Z6HehbKL88LW1lxC@hovoldconsulting.com>
-References: <20250128080429.3911091-1-quic_dikshita@quicinc.com>
- <20250128080429.3911091-2-quic_dikshita@quicinc.com>
- <5070e1f1-914b-4654-88ef-3566e3eee9ca@kernel.org>
- <f1344e49-61b6-4115-ae88-55b4a3cfed28@quicinc.com>
- <Z6B822-6UTxQfX46@hovoldconsulting.com>
- <tqbm672pi223ipcw7btiemlb745weeeiy4gnazzeghozhq2emj@wppbkms6hir5>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gEA6NivY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738661560; x=1770197560;
+  h=message-id:subject:from:to:date:in-reply-to:references:
+   content-transfer-encoding:mime-version;
+  bh=afC03Ee5hYfBovzmOOaQQ63aQs98FWYrDWq0Cfbx4RI=;
+  b=gEA6NivYYSqql33BfJi+IqI5kvZ1lQrpEpzCtl4K3MI/GrEKM0rKBY2J
+   ycU1/Q8CrXasfmUzKFQrkpLW/WNT8CtZ/z9WWSNwuZxOOfeDOrC4a9ZIo
+   48PVzbzRVyk5Zb+ngVBz9Xu55zHzXi6gIUFNQMyuuuFsZXvffGri/kMif
+   QJzajLu63iiYMhQFLQhb5+AYe7Pnr7O07RU4rokrLtMcMm7a2yPMbv7+j
+   OO8e7A08sgFSLuxhg2szWFAinnAPRbG5VT9WX0azq1M2/mJoxsCr019jJ
+   rnaVxtMM0RLfGf1fCpkfuk51SQkxGto1gIiPSofkUdwkSb7aJIyUPDmXo
+   Q==;
+X-CSE-ConnectionGUID: 7x9uh/hHR/G7oQZeoau83Q==
+X-CSE-MsgGUID: QJ/uSoThSXSyNdEsC/gLRw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="43100957"
+X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
+   d="scan'208";a="43100957"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 01:32:39 -0800
+X-CSE-ConnectionGUID: zfYHGJSsSyC0q1C1d5OGAQ==
+X-CSE-MsgGUID: ByXkmf1TR56RDx03kwQdlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="110998417"
+Received: from lfiedoro-mobl.ger.corp.intel.com (HELO [10.245.246.144]) ([10.245.246.144])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 01:32:35 -0800
+Message-ID: <7b7a15fb1f59acc60393eb01cefddf4dc1f32c00.camel@linux.intel.com>
+Subject: Re: [RFC 1/5] mm/hmm: HMM API to enable P2P DMA for device private
+ pages
+From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>, Yonatan Maman <ymaman@nvidia.com>, 
+	kherbst@redhat.com, lyude@redhat.com, dakr@redhat.com, airlied@gmail.com, 
+	simona@ffwll.ch, leon@kernel.org, jglisse@redhat.com,
+ akpm@linux-foundation.org, 	GalShalom@nvidia.com,
+ dri-devel@lists.freedesktop.org, 	nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, 	linux-rdma@vger.kernel.org,
+ linux-mm@kvack.org, linux-tegra@vger.kernel.org
+Date: Tue, 04 Feb 2025 10:32:32 +0100
+In-Reply-To: <20250203150805.GC2296753@ziepe.ca>
+References: <20250128151610.GC1524382@ziepe.ca>
+	 <b78d32e13811ef1fa57b0535749c811f2afb4dcd.camel@linux.intel.com>
+	 <20250128172123.GD1524382@ziepe.ca> <Z5ovcnX2zVoqdomA@phenom.ffwll.local>
+	 <20250129134757.GA2120662@ziepe.ca> <Z5tZc0OQukfZEr3H@phenom.ffwll.local>
+	 <20250130132317.GG2120662@ziepe.ca> <Z5ukSNjvmQcXsZTm@phenom.ffwll.local>
+	 <20250130174217.GA2296753@ziepe.ca> <Z50BbuUQWIaDPRzK@phenom.ffwll.local>
+	 <20250203150805.GC2296753@ziepe.ca>
+Organization: Intel Sweden AB, Registration Number: 556189-6027
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tqbm672pi223ipcw7btiemlb745weeeiy4gnazzeghozhq2emj@wppbkms6hir5>
 
-On Mon, Feb 03, 2025 at 05:16:50PM +0200, Dmitry Baryshkov wrote:
-> On Mon, Feb 03, 2025 at 09:22:51AM +0100, Johan Hovold wrote:
-> > On Fri, Jan 31, 2025 at 10:44:28AM -0800, Abhinav Kumar wrote:
+On Mon, 2025-02-03 at 11:08 -0400, Jason Gunthorpe wrote:
+> On Fri, Jan 31, 2025 at 05:59:26PM +0100, Simona Vetter wrote:
+>=20
+> > So one aspect where I don't like the pgmap->owner approach much is
+> > that
+> > it's a big thing to get right, and it feels a bit to me that we
+> > don't yet
+> > know the right questions.
+>=20
+> Well, I would say it isn't really complete yet. No driver has yet
+> attempted to use a private interconnect with these scheme. Probably
+> it
+> needs more work.
+>=20
+> > A bit related is that we'll have to do some driver-specific
+> > migration
+> > after hmm_range_fault anyway for allocation policies. With coherent
+> > interconnect that'd be up to numactl, but for driver private it's
+> > all up
+> > to the driver. And once we have that, we can also migrate memory
+> > around
+> > that's misplaced for functional and not just performance reasons.
+>=20
+> Are you sure? This doesn't seem to what any hmm_range_fault() user
+> should be doing. hmm_range_fault() is to help mirror the page table
+> to a secondary, that is all. Migration policy shouldn't be part of
+> it,
+> just mirroring doesn't necessarily mean any access was performed, for
+> instance.
+>=20
+> And mirroring doesn't track any access done by non-faulting cases
+> either.
+>=20
+> > The plan I discussed with Thomas a while back at least for gpus was
+> > to
+> > have that as a drm_devpagemap library,=20
+>=20
+> I would not be happy to see this. Please improve pagemap directly if
+> you think you need more things.
 
-> > > Solution: If the user prefers iris driver and iris driver has not probed 
-> > > yet, and if venus tries to probe ahead of iris we keep -EDEFERing till 
-> > > iris probes and succeeds. Vice-versa when the preference is venus as well.
-> > 
-> > This sounds wrong too.
-> > 
-> > Look, first you guys need to explain *why* you want to have two drivers
-> > for the same hardware (not just to me, in the commit message and cover
-> > letter).
-> >
-> > That's something that really should never be the case and would need to
-> > be motivated properly.
-> 
-> I think it has been written several time (not sure about this commit):
-> to provide a way for a migration path _while_ people are working on Iris
-> features. Being able to A/B test Venus and Iris drivers and to report
-> possible regressions or lack of those on the common platforms supported
-> by those (sm8250 at this moment).
+These are mainly helpers to migrate and populate a range of cpu memory
+space (struct mm_struct) with GPU device_private memory, migrate to
+system on gpu memory shortage and implement the migrate_to_vram pagemap
+op, tied to gpu device memory allocations, so I don't think there is
+anything we should be exposing at the dev_pagemap level at this point?
 
-You don't need a module parameter for that.
+>=20
+> > which would have a common owner (or
+> > maybe per driver or so as Thomas suggested).=20
+>=20
+> Neither really match the expected design here. The owner should be
+> entirely based on reachability. Devices that cannot reach each other
+> directly should have different owners.
 
-And we're still waiting to hear the answers to all of Hans' questions. I
-still haven't seen anyone explaining why any of this is needed. You
-could have just continued letting Venus support 8250 so presumably there
-is some benefit in using Iris instead. Which? And is that potential
-benefit important enough to not just wait until Iris is up to par
-feature wise?
+Actually what I'm putting together is a small helper to allocate and
+assign an "owner" based on devices that are previously registered to a
+"registry". The caller has to indicate using a callback function for
+each struct device pair whether there is a fast interconnect available,
+and this is expected to be done at pagemap creation time, so I think
+this aligns with the above. Initially a "registry" (which is a list of
+device-owner pairs) will be driver-local, but could easily have a wider
+scope.
 
-I'm sure you have some answers, but you need to provide them as part of
-the series.
+This means we handle access control, unplug checks and similar at
+migration time, typically before hmm_range_fault(), and the role of
+hmm_range_fault() will be to over pfns whose backing memory is directly
+accessible to the device, else migrate to system.
 
-> > Second, if the reasons for keeping both drivers are deemed justifiable,
-> > you need to come up with mechanism for only binding one of them.
-> > 
-> > I already told you that module parameters is not the way to go here (and
-> > the msm drm driver's abuse of module parameters is not a good precedent
-> > here).
-> > 
-> > If this is a transitional thing (which it must be), then just add a
-> > Kconfig symbol to determine which driver should probe. That's good
-> > enough for evaluating whatever needs to be evaluated, and doesn't
-> > depend on adding anti-patterns like module parameters (and helper
-> > modules for them).
-> 
-> No, Kconfig complicates A/B testing. What you usually want to do is to
-> boot a kernel, then go over a bunch of files testing that they work with
-> both drivers. Kconfig implies booting abother kernel, etc.
+Device unplug would then be handled by refusing migrations to the
+device (gpu drivers would probably use drm_dev_enter()), and then evict
+all device memory after a drm_dev_unplug(). This of course relies on
+that eviction is more or less failsafe.
 
-No, I'm pretty sure you'd even want to reboot in between so as not to
-rely on state left behind by the other driver.
+/Thomas
 
-Unbinding and rebinding drivers is not part of any normal work flow
-expect possibly during development. And a developer can easily compare
-Venus and Iris for 8250 without a module parameter too.
+>=20
+> > But upfront speccing all this out doesn't seem like a good idea to,
+> > because I honestly don't know what we all need.
+>=20
+> This is why it is currently just void *owner=C2=A0 :)
 
-Johan
+Again, with the above I think we are good for now, but having
+experimented a lot with the callback, I'm still not convinced by the
+performance argument, for the following reasons.
+
+1) Existing users would never use the callback. They can still rely on
+the owner check, only if that fails we check for callback existence.
+2) By simply caching the result from the last checked dev_pagemap, most
+callback calls could typically be eliminated.
+3) As mentioned before, a callback call would typically always be
+followed by either migration to ram or a page-table update. Compared to
+these, the callback overhead would IMO be unnoticeable.
+4) pcie_p2p is already planning a dev_pagemap callback?
+=20
+/Thomas
+
+>=20
+> Jason
+
