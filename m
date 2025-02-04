@@ -1,184 +1,64 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F670217719
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D571DFEF;
+	Tue,  4 Feb 2025 13:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738676491; cv=none; b=UCpaABKLqVPKygJDQT+BL3vdFC9iFGbb75lvb7IMoG5C4OFtBLW/2swKhlerf2tjFvmTR/cOXxvsroG4RVQku9dA2QEaY2BDYyl24EmCNBGvJOW+wbXctoN9xbouIcxIzc+eO6mA24iI9+RISsbMgqgikS8b3fx0CJ6M0xJREHk=
+	t=1738676561; cv=none; b=YQN3iODGWCN1n00+acqM4DEetR+vMsBmqzsB/XSSZfdEN2F+IV8kim6soIAGJf+wIMNxI7JEZfIfShRHsSonH3qZjWsPIUNMUZSRK0xBgxiMG6lrbC5fuTJroooAnZc9WDKR+aczDcOemtP7g6ERQ12/VfQ9zcuOMC6yvnidV6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738676491; c=relaxed/simple;
-	bh=NGJQZl5LiBLwWWaAalzJ6rCZFMyv79XQSdV5ByM2sPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p8eLkBfADHtuY++s2hlbsmxEVvQ73SlFAB8hjAf5yewMhil3QCgV+QumG6FiYy8KmX6es6+Zt+B+PZrO46UiugVgJ97P7a9EmBmNxNZTUUrJ0VmWbCDXvc3/5s5csH8v7NWY96jXxQuQX1k8ujFWG5xr9v40jSIUPgioXd9mNck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=pEWGw+23; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1738676561; c=relaxed/simple;
+	bh=bLwezkiuYP2CwTv8x0MD7GzbrC2t1XbarOqGqwLxWgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SRIP2mGEAA8rELX2oK+P4fpT5p/L4jmphQ8yJH+tOiTVZBskQu3QnQkVY6JCo64x1vAWDAVrqPK/YPIWC354lBzsyydYzf4Q5XfXtz/73gpfebSvLqphC5VsyVVuKA6znlFFLg2YuHacXy5FrdE7yxualInn/XvjpoK2AZqPAM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WuNMGPOf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pEWGw+23"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id AA0CBCDB;
-	Tue,  4 Feb 2025 14:40:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1738676415;
-	bh=NGJQZl5LiBLwWWaAalzJ6rCZFMyv79XQSdV5ByM2sPs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pEWGw+23yZRN1osjhQSzfqx6uH+1X5V5eNzZPy4EmxJbD5gf1TwIob7EdvM3mnt8C
-	 j0P2m/3KOr68jcX+XTcG1cVzFKRusSrUDhRRQdscuSXVVHaBBzHInfdDAUTD2ljzH9
-	 m0mBQh5ouXqedp0JlRzY8eT/v0P27SAZUVzYTi08=
-Message-ID: <06853f74-b44b-419f-8795-88eaae9ac304@ideasonboard.com>
-Date: Tue, 4 Feb 2025 15:41:24 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WuNMGPOf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A92A0C4CEE4;
+	Tue,  4 Feb 2025 13:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738676560;
+	bh=bLwezkiuYP2CwTv8x0MD7GzbrC2t1XbarOqGqwLxWgw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WuNMGPOfaHBcp65L5Tajv6hcbQ7Dok/6KjxW+SMYwnJq18guvN2jek3fVN2W/D6h3
+	 EtIXvFmsBIShco3gcS16uA2hNMsidsEpZMWk6o0iXAPts3I2kLmEAS0eFa3RVR07IO
+	 pxJ665OVc3euGwGXT/wD2QfORHF7o0c5av1BfrYY=
+Date: Tue, 4 Feb 2025 14:42:36 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Andre Werner <andre.werner@systec-electronic.com>
+Cc: jirislaby@kernel.org, hvilleneuve@dimonoff.com, andy@kernel.org,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	lech.perczak@camlingroup.com, Maarten.Brock@sttls.nl
+Subject: Re: [PATCH v4] serial: sc16is7xx: Fix IRQ number check behavior
+Message-ID: <2025020422-reflected-huff-3334@gregkh>
+References: <20250121071819.1346672-1-andre.werner@systec-electronic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 12/13] drm/atomic-helper: Re-order bridge chain
- pre-enable and post-disable
-To: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Devarsh Thakkar <devarsht@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
- Udit Kumar <u-kumar1@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
- DRI Development List <dri-devel@lists.freedesktop.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-References: <20250126191551.741957-1-aradhya.bhatia@linux.dev>
- <20250126191551.741957-13-aradhya.bhatia@linux.dev>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250126191551.741957-13-aradhya.bhatia@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250121071819.1346672-1-andre.werner@systec-electronic.com>
 
-Hi,
+On Tue, Jan 21, 2025 at 08:18:19AM +0100, Andre Werner wrote:
+> The logical meaning of the previous version is wrong due to a typo.
+> 
+> If the IRQ equals 0, no interrupt pin is available and polling mode
+> shall be used.
+> 
+> Additionally, this fix adds a check for IRQ < 0 to increase robustness,
+> because documentation still says that negative IRQ values cannot be
+> absolutely ruled-out.
+> 
+> Fixes: 104c1b9dde9d859dd01bd2d ("serial: sc16is7xx: Add polling mode if no IRQ pin is available")
 
-On 26/01/2025 21:15, Aradhya Bhatia wrote:
-> Move the bridge pre_enable call before crtc enable, and the bridge
-> post_disable call after the crtc disable.
-> 
-> The sequence of enable after this patch will look like:
-> 
-> 	bridge[n]_pre_enable
-> 	...
-> 	bridge[1]_pre_enable
-> 
-> 	crtc_enable
-> 	encoder_enable
-> 
-> 	bridge[1]_enable
-> 	...
-> 	bridge[n]_enable
-> 
-> And, the disable sequence for the display pipeline will look like:
-> 
-> 	bridge[n]_disable
-> 	...
-> 	bridge[1]_disable
-> 
-> 	encoder_disable
-> 	crtc_disable
-> 
-> 	bridge[1]_post_disable
-> 	...
-> 	bridge[n]_post_disable
-> 
-> The definition of bridge pre_enable hook says that,
-> "The display pipe (i.e. clocks and timing signals) feeding this bridge
-> will not yet be running when this callback is called".
-> 
-> Since CRTC is also a source feeding the bridge, it should not be enabled
-> before the bridges in the pipeline are pre_enabled. Fix that by
-> re-ordering the sequence of bridge pre_enable and bridge post_disable.
-> 
-> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
-> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-> ---
->   drivers/gpu/drm/drm_atomic_helper.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index f5532e3646e1..d2f19df9f418 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -1298,9 +1298,9 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
->   {
->   	encoder_bridge_disable(dev, old_state);
->   
-> -	encoder_bridge_post_disable(dev, old_state);
-> -
->   	crtc_disable(dev, old_state);
-> +
-> +	encoder_bridge_post_disable(dev, old_state);
->   }
->   
->   /**
-> @@ -1635,10 +1635,10 @@ encoder_bridge_enable(struct drm_device *dev, struct drm_atomic_state *old_state
->   void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
->   					      struct drm_atomic_state *old_state)
->   {
-> -	crtc_enable(dev, old_state);
-> -
->   	encoder_bridge_pre_enable(dev, old_state);
->   
-> +	crtc_enable(dev, old_state);
-> +
->   	encoder_bridge_enable(dev, old_state);
->   
->   	drm_atomic_helper_commit_writebacks(dev, old_state);
+Nit, this should be:
+	Fixes: 104c1b9dde9d ("serial: sc16is7xx: Add polling mode if no IRQ pin is available")
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+I'll go fix up the fixes line...
 
-  Tomi
+thanks,
 
+greg k-h
