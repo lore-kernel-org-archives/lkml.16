@@ -1,68 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC0B2144BF;
-	Tue,  4 Feb 2025 15:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F4A2144BF
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738683907; cv=none; b=lEd3dz2qu+Aq5gk6yuW/e3rn0PGGfT8rKEdB3PSQW8mFLoATzbXPVUYvBUsKXuIkUX/Jt3Jzppt/Ny4GiZIE/h+ORBT/v7IMR82IaSm5jSz+jtfOMJ5Mmjjrn+DWSVq9Es+bNcvJKjzjw/kQAaeaD/0z2+/ARIw3QenDPeKVXiY=
+	t=1738683920; cv=none; b=N9Zre2j46MEN0R5jtRk5wmK0qC0fpK5VeLHQffvIXGIJ0KZQxDsZXhQLt8JNdC+FBDDCCE0g4hazglaBcyKkn9K7g7BXwZQzVOB5Q4GFY4qDF/vJZYZGzyMZfr9VjzYB6XV7Hx5+AOAE3P27o4Grg8Bymm1FkSsXh/aPQZUCyc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738683907; c=relaxed/simple;
-	bh=k59Pucx7IO1kZ1ZApcZ/pGjKHb3nO0inGP7xta2Ya7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jn6OwymwFT8tw1E6B1crYSKKiHVs3fnflhNhWYqdjra+kaKY4XKqzAZ3XKAZqZ4KrSon6KIJdCM5hx5ZMU4vxyka7yorE9LJxJPzy8WvBwyWFtzEK9yNCymyww8191p46riiuyXZ9mblfVT+gCsaXULxGuCO63PfTGOiv8Rqb54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2d3eqqW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738683920; c=relaxed/simple;
+	bh=8XL1TFyZuCNPAg+bKC152A7HHyrPwG8cSOFGVTefy9E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MEK+QAWmzgoJy3snpv3Rsp2RY8Hh4vgk87XZabJXoYCQthTRbvOeUCMe5PIAoBdNpe24zYWlhVYAW9TgQDOz/FgWb2CTivS9iEYtRRt5f2LSmjNWN7ZsP/bICkNn3hLlZRuGTlzkGJ06lL0O7aRLjRvBea6vbpHzcDORDJll0Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IkxMHlWE; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2d3eqqW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E1FC4CEDF;
-	Tue,  4 Feb 2025 15:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738683906;
-	bh=k59Pucx7IO1kZ1ZApcZ/pGjKHb3nO0inGP7xta2Ya7c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=S2d3eqqWOYSC/iQNunwQhq9/m1sZnqUv+85VH1M/dqITUzIHsdRlvGy5fz3/aBHNn
-	 WjGx5aHyXkw6L8iUb077zn7FhAK0urRIXEq/3jVuhLeAM7JKZDQshmOt7gizF/7r4a
-	 /sg8dz4yaGTWy5++yiZeqQw8aWvkrxYwPOYval12vvIY1EKGC2xQr3gXzvdPwtcrIF
-	 rv72rXYcFm43pXJMH1z2y7d067k33xCydXL8t37hsn5Mm9wlFo9rgJu8wMnqHo6IQZ
-	 /D5cTtzlBWlvrApwi3W3B2qe7Av6xosLjuR3D8s2SuO1Eqpax3Liz4Ag3MoO5dAAT0
-	 1Smypf/0ZpiTw==
-Date: Tue, 4 Feb 2025 07:45:04 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: "=?UTF-8?B?Q3PDs2vDoXMs?= Bence" <csokas.bence@prolan.hu>
-Cc: Laurent Badel <laurentbadel@eaton.com>, Andrew Lunn <andrew@lunn.ch>,
- <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, Ahmad Fatoum <a.fatoum@pengutronix.de>,
- Simon Horman <horms@kernel.org>, Michal Swiatkowski
- <michal.swiatkowski@linux.intel.com>, Jacob Keller
- <jacob.e.keller@intel.com>, Wei Fang <wei.fang@nxp.com>, Shenwei Wang
- <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH net v3] net: fec: Refactor MAC reset to function
-Message-ID: <20250204074504.523c794c@kernel.org>
-In-Reply-To: <20250204093756.253642-2-csokas.bence@prolan.hu>
-References: <20250122163935.213313-2-csokas.bence@prolan.hu>
-	<20250204093756.253642-2-csokas.bence@prolan.hu>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IkxMHlWE"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738683913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HV8F/QPONcXmwgU3Iqo9jmtTqj8w2A6vXUojkBDn4XI=;
+	b=IkxMHlWEOWz1bJJ4ijXGuhcWv92foF8HM/3nkXf+hNjSoQGa1geTG4kHuASkF6/j39T/Jl
+	p4dZnU8Bdw4BL8ie0B294nQzOUhbe3yNZ5cYzkxP2GBQ5lALZrGVlk09onMm9yAudmn6nN
+	5w0WLhfnLySrXyQB3ud+kUS0F6fLoL0=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc: mpic: Use str_enabled_disabled() helper function
+Date: Tue,  4 Feb 2025 16:44:23 +0100
+Message-ID: <20250204154424.4231-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 4 Feb 2025 10:37:54 +0100 Cs=C3=B3k=C3=A1s, Bence wrote:
-> For instance, as of now, `fec_stop()` does not check for
-> `FEC_QUIRK_NO_HARD_RESET`, meaning the MII/RMII mode is cleared on eg.
-> a PM power-down event; and `fec_restart()` missed the refactor renaming
-> the "magic" constant `1` to `FEC_ECR_RESET`.
+Remove hard-coded strings by using the str_enabled_disabled() helper
+function.
 
-Laurent responded to v1 saying this was intentional. Please give more
-details on how problem you're seeing and on what platforms. Otherwise
-this is not a fix but refactoring.
+Use pr_debug() instead of printk(KERN_DEBUG) to silence a checkpatch
+warning.
 
-Please don't post new versions in-reply-to, and add lore links to
-the previous version in the changelog.
---=20
-pw-bot: cr
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/powerpc/sysdev/mpic.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
+index d94cf36b0f65..25fc4ac91814 100644
+--- a/arch/powerpc/sysdev/mpic.c
++++ b/arch/powerpc/sysdev/mpic.c
+@@ -27,6 +27,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/pci.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+ #include <linux/syscore_ops.h>
+ #include <linux/ratelimit.h>
+ #include <linux/pgtable.h>
+@@ -474,9 +475,9 @@ static void __init mpic_scan_ht_msi(struct mpic *mpic, u8 __iomem *devbase,
+ 		addr = addr | ((u64)readl(base + HT_MSI_ADDR_HI) << 32);
+ 	}
+ 
+-	printk(KERN_DEBUG "mpic:   - HT:%02x.%x %s MSI mapping found @ 0x%llx\n",
+-		PCI_SLOT(devfn), PCI_FUNC(devfn),
+-		flags & HT_MSI_FLAGS_ENABLE ? "enabled" : "disabled", addr);
++	pr_debug("mpic:   - HT:%02x.%x %s MSI mapping found @ 0x%llx\n",
++		 PCI_SLOT(devfn), PCI_FUNC(devfn),
++		 str_enabled_disabled(flags & HT_MSI_FLAGS_ENABLE), addr);
+ 
+ 	if (!(flags & HT_MSI_FLAGS_ENABLE))
+ 		writeb(flags | HT_MSI_FLAGS_ENABLE, base + HT_MSI_FLAGS);
+-- 
+2.48.0
+
