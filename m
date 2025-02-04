@@ -1,162 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7DB13A265
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DA113A265
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 01:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738632508; cv=none; b=leDOKwLnKXR3WHNxPuICDH+B6TTVtH7XTRJjEKghlRw7hjTMQYkH2YrV1MQjXguCrYJJNhbjk6aeC2b1npfz7HceRnomwQDiryWyYUT/qdFRINFzQ6w3x01L02/5tk6T0dLw+jk6A9JLalggQVq13XBEi4dd+6nkt0jATs4ZT8A=
+	t=1738632513; cv=none; b=XPv3k1g/GqsL1dBOuOcGvLup/HGweRqvIWkpewbt7gpFfDSnvD/QuAWqLl2erBrpFlo1jXpWRxKQtnrJpnsPS0i0OFZDsJDwHHA4yjOPNV5oKw2aOHLYPMi8XPHZVkz7HBUGlsa2zLZ8A6eyr/BgfPTBjHUVW5Fo0M5ctZsW2FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738632508; c=relaxed/simple;
-	bh=psfIx+WTCVEKKF13dXpL3qIBLXlTnhiIzjy/QG/PPbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m2wODqBCQUA5EfkCrPNz5DTfd/WGX1hu6jEx/TucKG+CVkIav5kvJ4M3o2D4+vch7LdMTUg/mPb8gHjmSJj5k2rMADiZAnNPCQwdmXYYHyP0SmTYK76lc0UOWDbCoi6hc/Zxrt4Yr8WQ51Gsmf5grfOr4lR7156SG9Z9z9QvYeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2q6U+ED; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738632513; c=relaxed/simple;
+	bh=o/048RK8KbfvFNL35mW1RqTvxs6dxfeNWBz91bdQgTc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ng2lG4AVl/uwhMMK4gmaZhjXbnWlhdRMx/bdD43KqRpaf5QVXReFR4jKzTypw06l+bHNRXKrJctCaC9RXBEp5R7gNwJfamwoPi4/FmvcNJu4+ew7HmLX5AbIaqginIJMtOpSK1Bn2nXzoVRXw2Z+BcKzuOWq0XWDFJE4Y3mqQwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=zhh1q7JA; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2q6U+ED"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEE8EC4CEE5;
-	Tue,  4 Feb 2025 01:28:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738632507;
-	bh=psfIx+WTCVEKKF13dXpL3qIBLXlTnhiIzjy/QG/PPbE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l2q6U+EDVBgdqeZGC6BBkBbbb4BIlPKoVysiNE71bWWHUFJtQdOb/unPmkjGDyX9F
-	 47bI+3IhESjJBgQsMixqa29wKkql7R7fD5nYeGyoUaZGLsTcNy7xbDLpisapbaRR1S
-	 S0PyYLBC94gutTNWZOb3nLvaLfulMJoprhmdTErT5mjRlzVl2Xz7rVQkNazkBnh2n4
-	 g1AaQ5b1kNPCuwew8GVSqJ0SqKSFCX46JhHvqxgrM68TfbkUW2iuKUA2HrtpLkvfk4
-	 tNS3qVj6zMTfqLErznSC2wuJTJ28vkLHX7v7xdRXcmYZgkIO5L7x3WIjRBmHppei8d
-	 /Pn+7BPTw0Gjg==
-From: carlos.bilbao@kernel.org
-To: apw@canonical.com,
-	joe@perches.com,
-	dwaipayanray1@gmail.com,
-	lukas.bulwahn@gmail.com
-Cc: bilbao@vt.edu,
-	linux-kernel@vger.kernel.org,
-	Carlos Bilbao <carlos.bilbao@kernel.org>
-Subject: [PATCH 1/1] checkpatch: add --branch option to check commits in current branch
-Date: Mon,  3 Feb 2025 19:28:22 -0600
-Message-ID: <20250204012822.1379477-2-carlos.bilbao@kernel.org>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250204012822.1379477-1-carlos.bilbao@kernel.org>
-References: <20250204012822.1379477-1-carlos.bilbao@kernel.org>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="zhh1q7JA"
+Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
+	by cmsmtp with ESMTPS
+	id f3rPt1tkv1T3hf7jkt1h56; Tue, 04 Feb 2025 01:28:25 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id f7jjtfmCv9zAHf7jjtGalC; Tue, 04 Feb 2025 01:28:23 +0000
+X-Authority-Analysis: v=2.4 cv=HO3FFJtv c=1 sm=1 tr=0 ts=67a16d37
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=3GLQtCDrk5mhnYkuwPoHkA==:17
+ a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10 a=QyXUC8HyAAAA:8
+ a=VwQbUJbxAAAA:8 a=4kty7C-LuapIIgrfkgcA:9 a=QEXdDO2ut3YA:10
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=1bcZbq5etASTQ/kWDMfEYbte/eHZMRZ/ExU1etRZnzk=; b=zhh1q7JAv+tsaL5IvlC2FnHs7K
+	kKDgPR9JleRzhjGUg4Io4kM5UQwvl0yLZJPOqbfV0lJhGO8aIRNGJhYiXpHln6mxjAxq7Jx2nrS1A
+	m2KobqSFEOybht5GqDgQw6/hDBAsQnroSXdXYouwYMZbhe0g6xhAB5LCx76l8gWtEMFZ/KnCrDsFG
+	jxvrTPJ5mVoMzzyFF+pFyXHj/8jCauBVeAzrwYcGuF4A5FEopMVrnvHuokgpCqTG6ywloG7lHmfoW
+	XDRgtEURECDMzCQH8S6WtYpetBNLvpd9JtDBXBtW7SUlfzOU/jGfXvVW/f8rb81MlV9cvieKeNxEY
+	Xn6gbT2g==;
+Received: from [45.124.203.141] (port=55286 helo=[192.168.0.157])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1tf7jh-0027Ze-25;
+	Mon, 03 Feb 2025 19:28:22 -0600
+Message-ID: <82b97884-19a3-4948-8212-d0fd38669ee2@embeddedor.com>
+Date: Tue, 4 Feb 2025 11:58:02 +1030
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/7] gpio: 74x164: Annotate buffer with __counted_by()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
+ <20250203121843.3183991-4-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250203121843.3183991-4-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 45.124.203.141
+X-Source-L: No
+X-Exim-ID: 1tf7jh-0027Ze-25
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.157]) [45.124.203.141]:55286
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfGvuFHjGr/zhSRexww6/tJHn1+ZCIfLLzB0hpLWlniUvEkn+okJ94r0AJRQHsvk7eOCZy2O3qpUeyo1sp/U6K2bnql6rnWbIpnqRg+9aBAArsF353PLf
+ t+uPjuyg2D2WHEr9Gf+VA5/LXZ/OpFAev2QaRe/gX741YjkJCHGOkTPzU06ct9YDPNpvdDmk0Ye3cKiXB3zQKRvTd36zo8dBZ5F2lWdslcPG2cXUl3tKV4RK
 
-From: Carlos Bilbao <carlos.bilbao@kernel.org>
 
-Add a new option --branch in checkpatch.pl that checks all commits made
-in the current branch since it diverged from its upstream branch. If no
-explicit branch is found, it prompts the user to specify, defaulting to
-'master' otherwise.
 
-Signed-off-by: Carlos Bilbao <carlos.bilbao@kernel.org>
----
- scripts/checkpatch.pl | 68 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+On 03/02/25 22:47, Andy Shevchenko wrote:
+> Add the __counted_by() compiler attribute to the flexible array member
+> volumes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+> 
+> Use struct_size() instead of manually calculating the number of bytes to
+> allocate the private structure with a buffer.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index f7087dda9ac9..1f929fcf298d 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -73,6 +73,7 @@ my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANC
- # git output parsing needs US English output, so first set backtick child process LANGUAGE
- my $git_command ='export LANGUAGE=en_US.UTF-8; git';
- my $tabsize = 8;
-+my $branch;
- my ${CONFIG_} = "CONFIG_";
- 
- my %maybe_linker_symbol; # for externs in c exceptions, when seen in *vmlinux.lds.h
-@@ -142,6 +143,10 @@ Options:
-                              is a terminal ('auto'). Default is 'auto'.
-   --kconfig-prefix=WORD      use WORD as a prefix for Kconfig symbols (default
-                              ${CONFIG_})
-+  --branch                   This option checks all commits made in the
-+                             current branch since it diverged from its
-+                             parent branch. If no explicit upstream branch
-+                             is found, it will try with 'master'.
-   -h, --help, --version      display this help and exit
- 
- When FILE is - read standard input.
-@@ -329,10 +334,73 @@ GetOptions(
- 	'no-color'	=> \$color,	#keep old behaviors of -nocolor
- 	'nocolor'	=> \$color,	#keep old behaviors of -nocolor
- 	'kconfig-prefix=s'	=> \${CONFIG_},
-+	'branch'	=> \$branch,
- 	'h|help'	=> \$help,
- 	'version'	=> \$help
- ) or $help = 2;
- 
-+if ($branch) {
-+
-+	my $result = 0;
-+	$branch = `git rev-parse --abbrev-ref HEAD 2>/dev/null`;
-+
-+	my $upstream_branch = `git rev-parse --abbrev-ref --symbolic-full-name \@{u} 2>/dev/null`;
-+
-+	chomp($branch);
-+	chomp($upstream_branch);
-+
-+	if (!$upstream_branch) {
-+		print "No explicit upstream branch found in reflog, trying git branch -vv.\n";
-+		my @branches = `git branch -vv`;
-+
-+		foreach my $branch_info (@branches) {
-+			if ($branch_info =~ /\s*$branch\s+\S+\s+\[.*\]$/) {
-+				if ($branch_info =~ /\[([^\]]+)\]/) {
-+					$upstream_branch = $1;
-+					last;
-+				}
-+			}
-+		}
-+
-+		if (!$upstream_branch) {
-+			print "No upstream branch found. Would you like to specify one? [y/n] ";
-+			my $response = <STDIN>;
-+			chomp($response);
-+
-+			if (lc($response) eq 'n'){
-+				$upstream_branch = 'master';
-+			}
-+			else {
-+				print "Please enter: ";
-+				$upstream_branch = <STDIN>;
-+				chomp($upstream_branch);
-+			}
-+		}
-+	}
-+
-+	print "Using as upstream branch: $upstream_branch\n";
-+
-+	my @commits = `git rev-list $upstream_branch..$branch 2>/dev/null`;
-+
-+	if (!$commits[0]) {
-+		print "No commits found between $upstream_branch and $branch. Exiting.\n";
-+		exit(0);
-+	}
-+
-+	print "Checking " . scalar(@commits) . " commits...\n";
-+
-+	foreach my $commit (@commits) {
-+		chomp($commit);
-+		$result = system("perl $0 --git $commit @ARGV");
-+
-+		if ($result != 0) {
-+			exit($result);
-+		}
-+	}
-+
-+	exit($result);
-+}
-+
- if ($user_codespellfile) {
- 	# Use the user provided codespell file unconditionally
- 	$codespellfile = $user_codespellfile;
--- 
-2.43.5
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks!
+--
+Gustavo
+
+> ---
+>   drivers/gpio/gpio-74x164.c | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
+> index 70c662bbca7b..7844f8a58834 100644
+> --- a/drivers/gpio/gpio-74x164.c
+> +++ b/drivers/gpio/gpio-74x164.c
+> @@ -30,7 +30,7 @@ struct gen_74x164_chip {
+>   	 * register at the end of the transfer. So, to have a logical
+>   	 * numbering, store the bytes in reverse order.
+>   	 */
+> -	u8			buffer[];
+> +	u8			buffer[] __counted_by(registers);
+>   };
+>   
+>   static int __gen_74x164_write_config(struct gen_74x164_chip *chip)
+> @@ -97,6 +97,7 @@ static int gen_74x164_direction_output(struct gpio_chip *gc,
+>   
+>   static int gen_74x164_probe(struct spi_device *spi)
+>   {
+> +	struct device *dev = &spi->dev;
+>   	struct gen_74x164_chip *chip;
+>   	u32 nregs;
+>   	int ret;
+> @@ -116,10 +117,12 @@ static int gen_74x164_probe(struct spi_device *spi)
+>   		return -EINVAL;
+>   	}
+>   
+> -	chip = devm_kzalloc(&spi->dev, sizeof(*chip) + nregs, GFP_KERNEL);
+> +	chip = devm_kzalloc(dev, struct_size(chip, buffer, nregs), GFP_KERNEL);
+>   	if (!chip)
+>   		return -ENOMEM;
+>   
+> +	chip->registers = nregs;
+> +
+>   	chip->gpiod_oe = devm_gpiod_get_optional(&spi->dev, "enable",
+>   						 GPIOD_OUT_LOW);
+>   	if (IS_ERR(chip->gpiod_oe))
+> @@ -133,10 +136,7 @@ static int gen_74x164_probe(struct spi_device *spi)
+>   	chip->gpio_chip.set = gen_74x164_set_value;
+>   	chip->gpio_chip.set_multiple = gen_74x164_set_multiple;
+>   	chip->gpio_chip.base = -1;
+> -
+> -	chip->registers = nregs;
+>   	chip->gpio_chip.ngpio = GEN_74X164_NUMBER_GPIOS * chip->registers;
+> -
+>   	chip->gpio_chip.can_sleep = true;
+>   	chip->gpio_chip.parent = &spi->dev;
+>   	chip->gpio_chip.owner = THIS_MODULE;
 
