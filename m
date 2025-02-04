@@ -1,147 +1,302 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151C5213E81;
-	Tue,  4 Feb 2025 15:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738682899; cv=none; b=LQX50jB6+Kt6ZGMOkfDmVhTbngATHr5PvsJgfLsWd6fv/u3a0JcFFGs+IGikYU7XPnWCplmDcXVUMg92vDg7tn5oTKQNZ2SevSjYezKYpGyUa+C0hNWtuT4Oy/d0TzdOnDZreTr75gpjXHCYS9yfbZaelApyA4C7be8EeQjcOMM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738682899; c=relaxed/simple;
-	bh=+RTmhaHHaQGm4cIFZWnW7TQKI/e/CUSRnumlIk8Xc7M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CeKn6KtONSGYR/tJRPuETmltPFPyvfke1zdePNwIMUje5C12uHyHO2pTMjphr1hZMRtQ9A0sVQ52fivBOgvEz9+nK++JzbMn0V0bGq9jVAL+ZbFFBRT8e1cGBlta1H17IPv+FYd6qTr3encvWQg5osW+8V74rMxq6H+gmw6E/WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mjZJPmmE; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F2D1DFEF
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738682930; cv=fail; b=uty+7Af5zTNSQTz7oh5+N0NHKUD2hiyv4eWCm02daFbnvQWqKAzs5T1nldWMWz1Fbt6l5YwfODYvw2U1DtD11e5RZuqdKH3dX5wx8Ny+EyD0B2b2n92jfXyNpbIudVydJQ3e5/n4m3BBaMeKhhzLk9qWzBT9wcTkMh1hf6XpGyo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738682930; c=relaxed/simple;
+	bh=Y0DjDBWdJh5F8PXFaJOJe+fnLGOD5fgD2SetHonCdBo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=XL81qTSzUgk3TtrQ5rStnMW0uPDT67Ra85V9FIHpgQ4e/RUB9b1S/5IGR7Zyy57zvx6AESW8oRAEQ37Z6iMSW84Khd/GVBXqTGY+5Z5A59bpI2E6pSjzD7EzmUv/nehqcfSkq3bSElQYCUvi5rUAoGfAfP9MEcEUlggJx74Ebqw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UKIMM8wX; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjZJPmmE"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38da88e6db0so440851f8f.2;
-        Tue, 04 Feb 2025 07:28:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738682896; x=1739287696; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CJhPx/n140dbE5Ug5FtKmDwUapQIL+7iGwFgWil94QY=;
-        b=mjZJPmmEg17I3X2sItNy7ITedaTCpWNgiU+7sYjhWEL0m4vZ5raPZM4wTVEnOT9PRD
-         YTZ10dlU/K3ReS4ZNLH/9vu/KO6tH5ULQbVCff3zKb9JDYXZM/5mYwF81pvWLEX+EgkQ
-         +I7t6Hrb32cid5iS/gbMZYu2q3apNeFvrJWtPos/PrhJIqvIJmmZJWdQi/WbQfwLBdT+
-         yMwzFwYzIS7Lv3YnTtk+V2pPEqXsqoLvWQGRJ9d4HmoaNKCih8yx99MmqM4/LG/nWmyK
-         9hwaNhbe93ts+OkKpWNkkSvzpaFnFSUUZYUg4SXMupJoOE0tum6CG72Jbt/vv0megekO
-         BfaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738682896; x=1739287696;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CJhPx/n140dbE5Ug5FtKmDwUapQIL+7iGwFgWil94QY=;
-        b=iiFEnLZbQs1JLYEyFwTRt28v7hAyw6gUUxP3mkxydWQ2BlxY8LGix9ynoJZfc0r2WG
-         dkJcKucrng/DfUExTTYgIzYLEmeX5bgj8Lt7/ApkJZ3IDcHDQ3obeDRqVRWGfRq77s8p
-         oGJE0/eQDqKcQH1vO3FaFva8oXkNQfTFyXrBHH2mS7COvW56ya0gYSGKJ6YL8pjhqfij
-         TkN1BCuaicgxO7XSv6Ggg1BnlH3O2CxYoWInVw3vzgqUKRDb/WIy++/r+5sZv7vypTkU
-         e8ZpqAB0ABOrzcixPFFTX/Yhwkt77sNC2zzOOb7hpWSba3XV1J5fPAW1kFQ0yGioto+f
-         YUdw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDyNNrMynLJyGhaFrLd+IbtcSpCCqJcPVpXSVL6a3ciZIkQBeMKVHWrQ8Nvl+efGaCAZ43rwa54H2VpBalKg==@vger.kernel.org, AJvYcCWFiCml5nLfIQiiuCNryCmt/8f7sxbPkK7SlBw+tNxojdD2gBv+c4qn0yF/NbqtIunkIHeRk6OXH+uB/XVw@vger.kernel.org, AJvYcCXW57dCsCJR9OZbo9uG5XOFvLFLaZxMQLSIqz0Z9Nmhjz9MSkySkfU7xhAWRunfVMzcip4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbMBgdg13DC46sIEt90FRXfaI0YmKmrZACmAQRkWXAF+DTEofX
-	Bi0JGICXNhR21cpbwLErTu+7hVOUblY9Fzd8et4lVowkychtvkVZwpCrWXgunP7WQGcD2jxbMI1
-	ZFpwDScKqDd6uIsDlB7L04MoJWg0=
-X-Gm-Gg: ASbGncvHSljK6I87xQOBk39fgbjidmtuScBT+YBAICjM7Pj8eNswvvojyI6lhe3bUS4
-	toA1NUDV46gREM88lW9wnQmSp8VqFA1UiHCk5dEV8hYhdrCSEXzR3N54k0ptzRWVzs0PtvyPlVG
-	y654/7JHS6HTQn
-X-Google-Smtp-Source: AGHT+IFhUU0NGcAm74lqYKBjmVZFYxqKNWGzHqhC76jkheWflwBMBvUcfdp+145E+7L0HxVO/HGqB2zGjvC83k5JbeQ=
-X-Received: by 2002:a05:6000:1a8d:b0:386:36e7:f44f with SMTP id
- ffacd0b85a97d-38c519602famr21645102f8f.18.1738682896006; Tue, 04 Feb 2025
- 07:28:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UKIMM8wX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738682929; x=1770218929;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=Y0DjDBWdJh5F8PXFaJOJe+fnLGOD5fgD2SetHonCdBo=;
+  b=UKIMM8wXq0pT+WvK9hasqbQIeeQSWsqVC9fNotbcr1ERj11a3WIT5C19
+   aKodz1XdmiCzjxt60vayi6AASFDP8ZUlRUocoKjbNpbhansq94nxfirpB
+   nkeasy1+tKt7+kIArQu+W+v6iI7J3lL5nARHOpeWu90/5qn9V9WMhwssT
+   u7btodhD4Di0MNZekAgTkg6TUKGKuwZystFPDsne7RTGTiAU5OvIkTP31
+   MMhTxYA2In0NzJzGqaMFTyIk83UKs+Eezlzkln/cAAeyhq8vHq+DOo1sZ
+   Gh2XfWFRZYF3TZCixZOORJdjNQ8Q/zjmLkdYsTRDL5TQn30thx9Mm0LRW
+   g==;
+X-CSE-ConnectionGUID: SPRE93hXSh24RHaobeaICg==
+X-CSE-MsgGUID: xWB/pZuwSu2rurDE2UhtDw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56752662"
+X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
+   d="scan'208";a="56752662"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 07:28:48 -0800
+X-CSE-ConnectionGUID: wRaE2EQNTzqZ0u/Kt0yJdQ==
+X-CSE-MsgGUID: ZHvlyaIeR2OsBz0N2E5rWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
+   d="scan'208";a="110411766"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Feb 2025 07:28:48 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 4 Feb 2025 07:28:47 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Tue, 4 Feb 2025 07:28:47 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.40) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 4 Feb 2025 07:28:44 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sImCEunJgpjsxVgxV4ReqapUxYWUIQEbckEAlmMKKykHfCOAP5dP6jQUkSazsGcTS/2lub0I0o+iqafAH0V6Gg3LJVE70HHBwuatyIQeM+CniDcwyK7v8/K+TlvqWAHJ+kGtLAsZM2+fGFeVNUaBLaB9tsRYaSRBirwgd22Zt+5wjIV0U583AAzyVO4NSE9saprrSAkebHyLS0gXD0PpaW/owkE6wElCsg6v2dfHpy9HXDb5TsYW6W+ZSCr3ljZ3AamkYeGktStiG6MTtu00EDxRNLlVMjrxDIj/SLsrB0LuDhFzrwhg7YyfdJ26yev3RQZS2G88VoaPy+Vnk8UF8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1U/66YXQzTIsuxI/N0ToJPhsVAftxY8Rn7nuwbPcjYc=;
+ b=vHeKfJjCv5pqYievzbe6JAi5cuh2gsgQ+k20HoF7EDcJpsTF+c57blA5jDCSOPGr/y3diLDzvx7Rqng8atcINSkPjjlRvRRhkm3EukJn0k85DvjpvcVpE145Ja1hMjGLVQf6d0RWsabpwLO0g8NaSChbl5SXxj+4EpkniAkNPUWIK0s4JTa70PWlCxwbpA2oj0i6aJCTqe6H0Z04ve2/2foFEH0PzJEYuO7YWvUby4lxDsGwZHj0MQphtKmRGq9I34ZYWFjmzdYPILWwDUafbmVgnD1XnOTSZXGeArHwbkkjDFRW6ZoGNggQkRjAHrRycdLRVtl+P/kJ1moWM/hK+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by IA1PR11MB6516.namprd11.prod.outlook.com (2603:10b6:208:3a0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Tue, 4 Feb
+ 2025 15:28:10 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44%6]) with mapi id 15.20.8398.021; Tue, 4 Feb 2025
+ 15:28:10 +0000
+Date: Tue, 4 Feb 2025 09:28:05 -0600
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Maarten Lankhorst <dev@lankhorst.se>
+CC: <intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, David Lechner
+	<dlechner@baylibre.com>, Peter Zijlstra <peterz@infradead.org>, Will Deacon
+	<will@kernel.org>, Waiman Long <longman@redhat.com>, Boqun Feng
+	<boqun.feng@gmail.com>
+Subject: Re: [PATCH-resent-to-correct-ml 3/8] drm/xe: Add scoped guards for
+ xe_force_wake
+Message-ID: <smlsfjxrukptsnkhb4wkoeb6wd4ze7p77lkakzktun2qsa5c56@7bxye7oqmawc>
+References: <20250204132238.162608-1-dev@lankhorst.se>
+ <20250204132238.162608-4-dev@lankhorst.se>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250204132238.162608-4-dev@lankhorst.se>
+X-ClientProxiedBy: MW4PR03CA0207.namprd03.prod.outlook.com
+ (2603:10b6:303:b8::32) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250122131159eucas1p17693e311a9b7674288eb3c34014b6f2c@eucas1p1.samsung.com>
- <20250122-modules-error-injection-v1-0-910590a04fd5@samsung.com>
- <20250122-modules-error-injection-v1-2-910590a04fd5@samsung.com>
- <CAADnVQJ8tYSx-ujszq54m2XyecoJUgQZ6HQheTrohhfQS6Y9sQ@mail.gmail.com> <xsg3mrozb3zd7g3hqki7lvdkc4zbi6bs3oiif64kvnnldaai5a@3g7gnpcz5igh>
-In-Reply-To: <xsg3mrozb3zd7g3hqki7lvdkc4zbi6bs3oiif64kvnnldaai5a@3g7gnpcz5igh>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 4 Feb 2025 15:28:03 +0000
-X-Gm-Features: AWEUYZm7qusB4k_yByZ1Yov0CkD9oT2bxmzUNE_2hxazTeM6MjG1S9C9NSBjpNk
-Message-ID: <CAADnVQLto_Zt7q4vmTFXby0QH8QX7r5am5inLskC5sKqL=0gow@mail.gmail.com>
-Subject: Re: [PATCH 2/2] moderr: add module error injection tool
-To: Daniel Gomez <da.gomez@kernel.org>
-Cc: Daniel Gomez <da.gomez@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-modules@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	clang-built-linux <llvm@lists.linux.dev>, iovisor-dev <iovisor-dev@lists.iovisor.org>, 
-	gost.dev@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|IA1PR11MB6516:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5153e83-e5a6-453e-5052-08dd45308833
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?rEB0qb0V6+PZ82VvW1iY6aj2RVLSG5ozsSv5jI4axdf/nDN56Wz5Osa2ZNso?=
+ =?us-ascii?Q?726TO67e/zEbjbdxc1p0N5pvEVC/BaWwGZ+4RWOeEvJV3gqzWfeQ0Sle2H1d?=
+ =?us-ascii?Q?IdIgGHinNjStd2xa1dm8iXbaejFV82mXPLdlz6GIs5fxdPKLJfll0BDOp07G?=
+ =?us-ascii?Q?QxBRZ2FCYhJDdJJ0h1tmfUaHoi7bOCJ3vvTWzEnNwnTuueAGBq+9NbnvfV85?=
+ =?us-ascii?Q?Iq7R+Y9qhSeSajo883mN1crldSWF1drwXN4tOB9DrLCnKxC7t9+qK5vAGPP1?=
+ =?us-ascii?Q?6EShf0CrY0i9Jt3+k6fyyQtBxmBPyTMY5kn/aDZinPlPznH9CYDWPgOueCFM?=
+ =?us-ascii?Q?jjJOI/mrktOYZuCFNSJra3kIjTqIys384wfTQH7sGXypGJZODJqfy1QBPDs2?=
+ =?us-ascii?Q?MJmVDu40HKg8Z1NMcBtE+/qSMvhg4+M1kw6YpNjNo7Kt0DaYfv0zT0mLqNb7?=
+ =?us-ascii?Q?5KYGVLZGclVe/VRCLiLfJ0QnjV146t+UdAdsg5422mL5hdfCB0Gzk6h20Gwo?=
+ =?us-ascii?Q?gzr0aEqWZE/2jBVfBnvVgWUTU7mhZfBlxvmM0nVIHMQR+h/7q63TSsTj4DkD?=
+ =?us-ascii?Q?38TpG4kA8YqlLFsNIWYFzTnr+GSS6hzpvkTweeGoEWjkCHrOkm6INbUa7odJ?=
+ =?us-ascii?Q?GbgHdT3gJr7fuUKD11tw/ALfyFihJAKxC4ST+IegXXO0hvJWYvOiGBa5PorN?=
+ =?us-ascii?Q?D3roxQ54k5g3bvxIki/zVIZmj7fcNEbH9zVG3GjswdeiiAAMzLfi5Vz06P9h?=
+ =?us-ascii?Q?uqp9y1vDNA2neGRYxM4ehDWIYaOn2C33f4y3SbOZ9wP/FqwPIBbFZxAzAaOt?=
+ =?us-ascii?Q?K0FQrxOHuORjjGgQ8RAJ6qP6npOzJ9q32HApmsPpI/bXahGXLJdhTLpRJM24?=
+ =?us-ascii?Q?oT4dgxp03rWohnrTpHJ4+fA9v3dMFGsuIaofUATcaBAiLH74n1freHbiYR0l?=
+ =?us-ascii?Q?TwH6GtFV+VpdaJZ66tokT4FPdvGec0NNj+Zns0UUmiU3DSWLGHkVmkee3NR8?=
+ =?us-ascii?Q?mUMBxpx6TbKAyblNQ/oReulMrIMJmecb7yc0d5AjzTJmkYX7mCf90NqWKh6q?=
+ =?us-ascii?Q?CgVY+dzrNRThhqPhxpfGWFAwuLHF6DzTQf7UaF0x6wt7lRxSR0cS5seUJEdK?=
+ =?us-ascii?Q?mEiVrQBXjWR530RlSwZSOap54j8m7menmt3php1VonT8V1E6LMFPEjGzWmcw?=
+ =?us-ascii?Q?uR4yt1ZIqfmljD6XtcuC+0hIOm5sQgwCuDLxUDI1mrCrJYeJ6kby90uXfcX1?=
+ =?us-ascii?Q?T+N23lpIzYUcN9lyi1n5Eu6NRejl9s7OgxEug9Xsy8Ndom8AanKgQ+7Kw+1z?=
+ =?us-ascii?Q?ezxt0jwM5SanIk4OXI/Ekf8HsG7gKjGDhzbEGQ+pW63WGfBH3ZKNal6CiCJ1?=
+ =?us-ascii?Q?qZt+Pcb7lvW421o8NgeCHWTWr5OH?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jQ2+g/a8iMkVJx9IPbCM4RTmLr4+vT/JhCEPvND7L1+dCLVmAcDzulrfMSZT?=
+ =?us-ascii?Q?698Pyyn9rtA13FluJblV9lFg91Y+ZNODvxaz0v3oUEKlqkFnmQxXunqXnwXh?=
+ =?us-ascii?Q?y0YFZ7wu4HAE9cqZe0vC0z8B2niPfyPy6DwUKNVlCFGa6/9plwOF2/snU52w?=
+ =?us-ascii?Q?PX/xDLMcfcPzhQ97OjXvg7DqWrSE6Kx2wXOohoJazBc/XChvj69uhwO/Ymle?=
+ =?us-ascii?Q?BqMMA0v+74vvvyhfT3S5V6Fh36dMMk56STF9I3nC9qQvgePYcnhnW434V9+e?=
+ =?us-ascii?Q?KjOochRj8jiGdsuQW2sc2/m2Jw3ESGiCSR5a1n/LN2ivkxmbhBOIqM/m5GgV?=
+ =?us-ascii?Q?zM0HdMaiZ5sJwJGr8YE7krr6tFu45kVncHx7KmOsU5ZL5KrcbT2YfK4FuN2L?=
+ =?us-ascii?Q?XGXkKcgMA5kTQpIrx5e7+ZLiyi73eJ68BqXhsGfSVAHKavfGb8ZZVG9oK478?=
+ =?us-ascii?Q?+rUWKnKFl87Y5j/wVDaIS8Ns3OyA0faYN5HVUDnKyps0tVQBSmkYXld4GY/Q?=
+ =?us-ascii?Q?X+BUS8VlZ2uFgt+hscSG/PnqsWImu1Vu5MNDsDMcHKsB+zxzWFpzdZF1zNYa?=
+ =?us-ascii?Q?zncqWg5SACQHMSOQ17M6B+dYj6tqb0l2Do0t7PwibSvw9fQzAf4uWDvVVpTV?=
+ =?us-ascii?Q?V4gd1bh6IyUARj3TimNP20AcY5rDc0D2l2kHopR6g/1tTi/Yvc0pQZT9Hneh?=
+ =?us-ascii?Q?LNmA74HUSB20ybxmEJ+9hVOu0b050qRmok08CQKtf7FgrOJ45eAa2UCWwGOg?=
+ =?us-ascii?Q?8AX6/e4AcCx0Air5Op+3Pdi7J0XSPIqEjUoc3vxcE4CL5STmnl2DUYu5F6hv?=
+ =?us-ascii?Q?nis26xRE4aTK6V9EXyKdIxmAK3SCTVNs0ZVfK+G/W0YC2vXnkmFexcBn/UEt?=
+ =?us-ascii?Q?qt1jxGRzdZ0lm47xIwJ2WndNuBK+UWZJ/OBYKyw2p88SZuAurHB/a+VYuz2Y?=
+ =?us-ascii?Q?z6NWG/yH/PnmNk7jkMFvunvfk4GxsannnLnfp2Uya9547CkWYapcxUh0nv6D?=
+ =?us-ascii?Q?+HHDFHq3G0jItEuB9fcEahCyhX+y6jD0J1EQ1LPs9RqketKKhuQhKlY8vMfl?=
+ =?us-ascii?Q?xu80FKXY8WhqSPxyOkPFnz2Itd+wz6oh/KjEo+k8BcDVyuF+ChvhP6kordBb?=
+ =?us-ascii?Q?HwNA7HsPB/Cus+vKLLj2T3wJyEsoAkrfD2b3gNitj//RWxMdBU2ZnPCHgN7J?=
+ =?us-ascii?Q?CpGZnTJ2szWBXTAk/bMn+yuLKk14aiy/1us2FNYOadJF+z4G99//XHi/kR8y?=
+ =?us-ascii?Q?/gHHrQRwQtA6zP0oyl3GeoJdI8+VixJtKVGUcmFa9B5KD78r1MYc1VaFarGm?=
+ =?us-ascii?Q?p+geFC2CRqHeWLNzOHHItPUBpAgm1fAyEoGT0i8qL2tUb/M8saKJat5KjZ90?=
+ =?us-ascii?Q?XD7XuPh53RYHz7Vs3FPS44wec/wWVcGZ3ZbjAY2qfkvTg6PeCJIBu/zYHHC0?=
+ =?us-ascii?Q?YeJGPYHfGCItjtzs83I4fVWKrI1f5bNOJqFpqzCcBwnY+bUGceSFDKFVfu97?=
+ =?us-ascii?Q?2ROOJT/k6+E7dupKtJQ9sNyRI6RKfdp0c3zyPR9mtiDD/p/tzkEOt2YtzVvH?=
+ =?us-ascii?Q?IFVn72QnNPf1BS4ar5GuIEPcrb25TH/VSi4BMJiABiLHZGg9jHvFSv+21hn1?=
+ =?us-ascii?Q?tA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5153e83-e5a6-453e-5052-08dd45308833
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 15:28:10.4042
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +9XUMTStcmt1Q50Wu36QYkijSSPXQTbRKZvu7Zd5apsArsi1FmpjajsbDEWVV9mC6Mv3d/vfkRSw474tnsb68ey4zao3beWsheIN6C8Tf/8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6516
+X-OriginatorOrg: intel.com
 
-On Tue, Feb 4, 2025 at 1:30=E2=80=AFPM Daniel Gomez <da.gomez@kernel.org> w=
-rote:
+On Tue, Feb 04, 2025 at 02:22:32PM +0100, Maarten Lankhorst wrote:
+>Instead of finding bugs where we may or may not release force_wake, I've
+>decided to be inspired by the spinlock guards, and use the same ones to
+>do xe_force_wake handling.
 >
-> On Wed, Jan 22, 2025 at 09:02:19AM +0100, Alexei Starovoitov wrote:
-> > On Wed, Jan 22, 2025 at 5:12=E2=80=AFAM Daniel Gomez <da.gomez@samsung.=
-com> wrote:
-> > >
-> > > Add support for a module error injection tool. The tool
-> > > can inject errors in the annotated module kernel functions
-> > > such as complete_formation(), do_init_module() and
-> > > module_enable_rodata_after_init(). Module name and module function ar=
-e
-> > > required parameters to have control over the error injection.
-> > >
-> > > Example: Inject error -22 to module_enable_rodata_ro_after_init for
-> > > brd module:
-> > >
-> > > sudo moderr --modname=3Dbrd --modfunc=3Dmodule_enable_rodata_ro_after=
-_init \
-> > > --error=3D-22 --trace
-> > > Monitoring module error injection... Hit Ctrl-C to end.
-> > > MODULE     ERROR FUNCTION
-> > > brd        -22   module_enable_rodata_after_init()
-> > >
-> > > Kernel messages:
-> > > [   89.463690] brd: module loaded
-> > > [   89.463855] brd: module_enable_rodata_ro_after_init() returned -22=
-,
-> > > ro_after_init data might still be writable
-> > >
-> > > Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
-> > > ---
-> > >  tools/bpf/Makefile            |  13 ++-
-> > >  tools/bpf/moderr/.gitignore   |   2 +
-> > >  tools/bpf/moderr/Makefile     |  95 +++++++++++++++++
-> > >  tools/bpf/moderr/moderr.bpf.c | 127 +++++++++++++++++++++++
-> > >  tools/bpf/moderr/moderr.c     | 236 ++++++++++++++++++++++++++++++++=
-++++++++++
-> > >  tools/bpf/moderr/moderr.h     |  40 +++++++
-> > >  6 files changed, 510 insertions(+), 3 deletions(-)
-> >
-> > The tool looks useful, but we don't add tools to the kernel repo.
-> > It has to stay out of tree.
+>Examples are added as documentation in xe_force_wake.c
 >
-> Can you clarify what do you mean? There are other tools under tools/ and =
-tools/
-> bpf [1].
+>Signed-off-by: Maarten Lankhorst <dev@lankhorst.se>
+>---
+> drivers/gpu/drm/xe/xe_force_wake.c | 51 ++++++++++++++++++++++++++++++
+> drivers/gpu/drm/xe/xe_force_wake.h | 15 +++++++++
+> 2 files changed, 66 insertions(+)
 >
-> [1] https://lore.kernel.org/bpf/20200114184230.GA204154@krava/
+>diff --git a/drivers/gpu/drm/xe/xe_force_wake.c b/drivers/gpu/drm/xe/xe_force_wake.c
+>index 4f6784e5abf88..805c19f6de9e7 100644
+>--- a/drivers/gpu/drm/xe/xe_force_wake.c
+>+++ b/drivers/gpu/drm/xe/xe_force_wake.c
+>@@ -16,6 +16,57 @@
+>
+> #define XE_FORCE_WAKE_ACK_TIMEOUT_MS	50
+>
+>+/**
+>+ * DOC: Force wake handling
+>+ *
 
-As you noticed we added only one tool out of many and recently
-discussed removing it, since the value of keeping it in the tree
-is minimal.
+doc here should start explaining what is force wake, what it does, the
+flags to wake specific parts of the gpu.
 
-> I will anyway move the tool to the suggested location in the other thread=
-.
+>+ * Traditionally, the force wake handling has been done using the error prone
+>+ * set of calls:
 
-I don't think it's a good idea.
-Keep it outside. There is no reason for it to live in the tree.
+I'd start with the new/recommended way rather than to digress on
+non-recommended ways - this style doesn't age well in a few years.
+
+>+ *
+>+ * int func(struct xe_force_wake *fw)
+>+ * {
+>+ * 	unsigned int fw_ref = xe_force_wake_get(fw, XE_FORCEWAKE_ALL);
+>+ * 	if (!fw_ref)
+>+ * 		return -ETIMEDOUT;
+>+ *
+>+ * 	err = do_something();
+>+ *
+>+ * 	xe_force_wake_put(fw, fw_ref);
+>+ * 	return err;
+>+ * }
+>+ *
+>+ * A new, failure-safe approach is by using the scoped helpers,
+>+ * which changes the function to this:
+>+ *
+>+ * int func(struct xe_force_wake *fw)
+>+ * {
+>+ * 	scoped_cond_guard(xe_force_wake_get, return -ETIMEDOUT, fw, XE_FORCEWAKE_ALL) {
+>+ * 		return do_something();
+>+ * 	}
+>+ * }
+>+ *
+>+ * For completeness, the following options also work:
+>+ * void func(struct xe_force_wake *fw)
+>+ * {
+>+ * 	scoped_guard(xe_force_wake_get, fw, XE_FORCEWAKE_ALL) {
+>+ * 		do_something_only_if_fw_acquired();
+>+ * 	}
+>+ * }
+>+ *
+>+ * You can use xe_force_wake instead of force_wake_get, if the code
+>+ * must run but errors acquiring ignored:
+>+ * void func(struct xe_force_wake *fw)
+>+ * {
+>+ * 	scoped_guard(xe_force_wake, fw, XE_FORCEWAKE_ALL) {
+>+ * 		always_do_something_maybe_fw();
+>+ * 	}
+>+ *
+>+ * 	do_something_no_fw();
+>+ *
+>+ * 	guard(xe_force_wake)(fw, XE_FORCEWAKE_ALL);
+>+ * 	always_do_something_maybe_fw();
+>+ * }
+>+ */
+>+
+> static const char *str_wake_sleep(bool wake)
+> {
+> 	return wake ? "wake" : "sleep";
+>diff --git a/drivers/gpu/drm/xe/xe_force_wake.h b/drivers/gpu/drm/xe/xe_force_wake.h
+>index 0e3e84bfa51c3..0fb1baae0a3a3 100644
+>--- a/drivers/gpu/drm/xe/xe_force_wake.h
+>+++ b/drivers/gpu/drm/xe/xe_force_wake.h
+>@@ -9,6 +9,8 @@
+> #include "xe_assert.h"
+> #include "xe_force_wake_types.h"
+>
+>+#include <linux/cleanup.h>
+>+
+> struct xe_gt;
+>
+> void xe_force_wake_init_gt(struct xe_gt *gt,
+>@@ -61,4 +63,17 @@ xe_force_wake_ref_has_domain(unsigned int fw_ref, enum xe_force_wake_domains dom
+> 	return fw_ref & domain;
+> }
+>
+>+DEFINE_LOCK_GUARD_1(xe_force_wake, struct xe_force_wake,
+>+		    _T->fw_ref = xe_force_wake_get(_T->lock, domain),
+>+		    xe_force_wake_put(_T->lock, _T->fw_ref),
+>+		    unsigned int fw_ref, enum xe_force_wake_domains domain);
+>+
+>+DEFINE_LOCK_GUARD_1_COND(xe_force_wake, _get,
+>+			 _T->fw_ref = xe_force_wake_get_all(_T->lock, domain),
+>+			 enum xe_force_wake_domains domain);
+>+
+>+/* Only useful for guard xe_force_wake, guard xe_force_wake_get gets all or nothing */
+
+please add an usage example here is it's where people trying to use the
+interface will look at rather than the kernel-doc. But this seems not
+used
+
+>+#define xe_force_wake_scope_has_domain(domain) \
+>+	(xe_force_wake_ref_has_domain(scope.fw_ref, domain))
+
+extra paranthesis here?
+
+Lucas De Marchi
+
+>+
+> #endif
+>-- 
+>2.47.1
+>
