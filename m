@@ -1,98 +1,69 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F1B4685
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484C8218EB0
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738695740; cv=none; b=u8YYOM7NTgV1cQxf/QdjXVTp01xjWtGXAgo/sxboy/KA+XlT7vxUU85ZqMSaX6s4O/36XLyR5WkWrjr4xWDp3rzDo1igQ1FQhNVV/U5KVAdAvYlN5dquSn3UiXJkgbmKNhUbNLurJAUPj2qDk5bsggg3gea1aUsRSO3jFhCtCpk=
+	t=1738695743; cv=none; b=NnZZV1VbbL2TJjfULjPJa7ZdiJFHn0ZDVdYa11GKOg0qDD1LeDe9zerfJxvpqcnTIdl7ehmp+NWt4FoRCrEk5tsH3m1zuHcH13fGxWjX4yIOZkwaT47QZO11mPZUY3hZcX/A6DCoG5P7eCNSvFaq1c0tkN2xoBgf65JtAtwb0gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738695740; c=relaxed/simple;
-	bh=pih8dX1QkofNv/xwIBaSWsmVMzDcnJG9l/i1Ocrd0qE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rlMhGq6eYrRGI1Il7u+db0ydB5twuBrAt+NpGqMHFzGSfXtZacT84ba6FRIRQQDFQ4XTGW/YOOQpNSRyYxcLrflHHUnrmBWm6dUSVDqDRvyIDXuDAonBdcmMt2nfkPOlFqMdWwOn7IoJgo5oxHTDOX6S5/3bt5VFmhGnaxjNydI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wTeCCjxi; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738695743; c=relaxed/simple;
+	bh=RGzsvbD3M4DhQeMO6slsNWmgM9tDr8tP/sIIhDjQy5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JpNN4yTmI06Y3RUW5S/QT2+m+YSgcNJqY9geJeZUCgWsNbQho2/Gk1/D8Cc/jWYaE0e0m8y3g94w9fgVefh8wVh4IwrXtrtZWo5+VRczOmP9AzLYu7QRLXNRFXyHLkX2oEymiyy+CLq6Ygbr65sgE2aZcpK/vvtbtmjOxSxkvdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gqJYOi5c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wTeCCjxi"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so22955ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:02:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738695738; x=1739300538; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pih8dX1QkofNv/xwIBaSWsmVMzDcnJG9l/i1Ocrd0qE=;
-        b=wTeCCjxitXd2zKWQ6Hi40u/YT1nfRVtLvmVvLxqEytpsnT31ADTThBnU/H4DDaCl1x
-         QQrMVpEVr/oXzQOYjNFZCXou1f+M8/5yZCcEJi66KnLO7nWRjE1PFZxPcxNS94l9eKC2
-         Vm+gPjKRjmZSK0v+kQDjbXcYdlOgiZ5ZzR0gj+ylVDZN2XYQjXqDci1LC4NXK7THM47V
-         0eYbnDRnc/LPvA/eJPcODqo77PjRc3n8EnVLo6uI9ORUbHDLCs6/DmEfV/wcrmgQukEz
-         oqAidwfd3SzRdcPsW/gLNR0kaXaJKmrVc9wWLTeQOctNGMBKYY6S8FtMkI4LGVrOQ/nG
-         8Ieg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738695738; x=1739300538;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pih8dX1QkofNv/xwIBaSWsmVMzDcnJG9l/i1Ocrd0qE=;
-        b=N7NdIKIfTH5exsmE2XWXf/l911AcwAav7lqi9fXootNHxw+wh0T/o/80fj5yb9cmPK
-         rBXl4o/NYOWJMmirzMUFSOPU1vILr+Qj4dTe46pyIanUBFCyy1IRi61pH6dM1TUn2jp6
-         e9AJk58TU7EdDR4+60q2yj+kP0FlpUdTMF/yOVUJeOU9cM3/cm3U9K6zMAvNSnwfmw5g
-         ShvlajLlWsMmVonjtj54nU4fHrroRL3UpWOyJ7Q5KPjXqY+BNId/h/Rj3x4f5QIBjNXc
-         GG5EZr4vW1yLS++vHClV11YJQ+QDa/vqmQnxMO/qo8rZGFeZLh6GMsZNUAPIHPVRNfuW
-         6Fvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXD8LDEb6mo6a4HQ97jXHUYLcuNyCu5Vs7FQZ3e+E2PGblCzUACNgC6ThUMbgNh5bAMtAsE8dEjDYb7wJg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ+LymY031d96Sl4CDgi+ZTaXDV1W+ZFAPG6i0/SBCbwBoy3h6
-	HDXZJ5wtaNNzMY7NI0GwjBAPUFDgeeN1vf8PZky/wkQIpsHV/cxkHcr1zPmM5aKs3IQ3hkBstQ/
-	Vg8UzPBkr07tZNaDop0Y0Y4LBlyBPGL2EHRE3
-X-Gm-Gg: ASbGncuIX6zkoUtp+nGytOaAKB3u4lue+6RWNfzbLu/F/IqC0reJtNR9+yen4uNgwlq
-	OE33Arunx0BC7eCqARqqKZmyHXDhTW/TTv8Ij0dVIKyJ0B5pFOzrzfzCAE6J5vOAHM392rNXHZx
-	J74ftiV7+wulxuYoleQROayWM=
-X-Google-Smtp-Source: AGHT+IEmHznl7Ik9Amt2S7g3PVA1k3F+CkuI8zD5o1s+dAxpBVFkkmFeRjysvFVzVsPvmCTyCe22Q+d9Jdu7Cu59sAw=
-X-Received: by 2002:a05:6e02:1348:b0:3d0:bd4:e46e with SMTP id
- e9e14a558f8ab-3d03fc63026mr4230185ab.22.1738695737640; Tue, 04 Feb 2025
- 11:02:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gqJYOi5c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360E6C4CEE8;
+	Tue,  4 Feb 2025 19:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738695742;
+	bh=RGzsvbD3M4DhQeMO6slsNWmgM9tDr8tP/sIIhDjQy5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gqJYOi5ce+/OO4THSG7Gm15RidC3imbUoEbaVW6HtLShcr0SZ6K7E1uZFuwRneVr3
+	 B8XXU82CvGPyLTE4q9A8uUze7ukrBv8BIqThnNp2JYsl18ihF8fxSTTIZ4gvJvxbic
+	 1D4O4nI+ZdtL6wKIUnS7kDzrulVr9xmUGIF9nvJHccZTL2QdBrIuaAPL6qGcQzNDCa
+	 WlQGM/9oUDVyprUBi3qZTcFW07m7yFXLo1CH99uLqB6WDV2FWOuLsE9QRn0196shWJ
+	 0/tweEF9rfy9mzYTBpfqSFIQzKUcmLLgUQ9o+v0+r5f6Mj1SmqP2tjl60ZE7ZobK+C
+	 Pl9cUOb7k/Pkg==
+Date: Tue, 4 Feb 2025 20:02:19 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Dhruva Gole <d-gole@ti.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Chen Yu <yu.c.chen@intel.com>,
+	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH V2] kthread: Fix build warning variable 'ret' set but not
+ used
+Message-ID: <Z6JkO4ssN7Bwcgd6@pavilion.home>
+References: <20250204090838.214647-1-d-gole@ti.com>
+ <20250204160921.377178-1-d-gole@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203230150.106823-1-irogers@google.com> <22469f1ace8127423152c6085f390c80a9faee3c.camel@intel.com>
-In-Reply-To: <22469f1ace8127423152c6085f390c80a9faee3c.camel@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Feb 2025 11:02:06 -0800
-X-Gm-Features: AWEUYZliUmqeTijL8sAr7rN4aziPfFRWAaOeCitnUkTS0idWPst1Nk1hVcwKDrY
-Message-ID: <CAP-5=fW+4AmPj5gfxkPo1Anyqd+NwrRs1HOUwWEdwjBhONA3_Q@mail.gmail.com>
-Subject: Re: [PATCH v3 00/23] Intel vendor events and TMA 5.01 metrics
-To: "Falcon, Thomas" <thomas.falcon@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>, 
-	"Taylor, Perry" <perry.taylor@intel.com>
-Cc: "Baker, Edward" <edward.baker@intel.com>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
-	"mpetlan@redhat.com" <mpetlan@redhat.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, 
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "Alt, Samantha" <samantha.alt@intel.com>, 
-	"mark.rutland@arm.com" <mark.rutland@arm.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
-	"acme@kernel.org" <acme@kernel.org>, "afaerber@suse.de" <afaerber@suse.de>, 
-	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250204160921.377178-1-d-gole@ti.com>
 
-On Tue, Feb 4, 2025 at 10:44=E2=80=AFAM Falcon, Thomas <thomas.falcon@intel=
-.com> wrote:
-[snip]
-> Hi, still seeing some errors in the all metrics test on Alderlake, Kan
-> says that TSC is not a core pmu event:
+Hi Dhruva,
 
-Thanks Thomas,
+Le Tue, Feb 04, 2025 at 09:39:21PM +0530, Dhruva Gole a écrit :
+> Fix the following build time warning in kthread:
+> 
+>    kernel/kthread.c: In function 'kthread_affine_preferred':
+> >> kernel/kthread.c:861:13: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+>      861 |         int ret;
+>          |             ^~~
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202501301528.t0cZVbnq-lkp@intel.com/
+> Signed-off-by: Dhruva Gole <d-gole@ti.com>
 
-the tsc event is on the msr PMU and needs special handing in the
-conversion of the metrics. We've switched to a new source for the
-metrics hence encountering what should be teething problem. I'll add a
-fix in v4.
+Thanks for your patch but another similar fix was already pending. I have sent
+the pull request there:
 
-Ian
+https://lore.kernel.org/lkml/Z6JjZMdbDoAX_AVW@pavilion.home/T/#u
