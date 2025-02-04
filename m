@@ -1,65 +1,95 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C76E2040B5;
-	Tue,  4 Feb 2025 23:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E39321C190;
+	Tue,  4 Feb 2025 23:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738713290; cv=none; b=CDKgJsZR4JOV0WygSMbIh31sXSL2qmKO8o7+eC6Vh9lJ6rnt8epWfP33Fq+1jBt6IQ36d7kPQNt0n6S4nkrpamU2sJKtd3cpiQj35DE9FwGhyfbvdpD0CxxwRV8XyMKbfSvJyZns3ZI1NyrFjUVxq4cIAvBPi3esWyRkHJCMR+M=
+	t=1738713530; cv=none; b=PTb4F9xPsrZAwxvY+eTCuXcr5QuWwmPaVflTRX2tGE9cfJlEsSzpvdrNzI+hYotQXFbVKlds/QCI6O8hGm8bCuQltdjlnpIW2SsfcFYNGB0K8wBupwUGInKl9dt4Sdj66/Ip8GyXs8St7p/Rfrn8q0XIkiwJ5pGM8oREKzZjr0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738713290; c=relaxed/simple;
-	bh=9q5QUHP2SjP1V2NN0hgA/+eSdcvoeacn3Qllvvzb2ms=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=MAlGisr6RYjdApoYlZlfYbvQqen6KfcQgpMVbgrdOg1jn5wmFlRJs/p7oINTQXYFilMXPFWVNBxRd4tM6d1gk7GJY6mkts4ryVtJsAxoe40gd1T8+aP0ShZTjcQ7QZnIQRw6uCTNpBebF1w3myCq+lw93r+7tT/WR/II1WS0tAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=SpMfykSl; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1738713530; c=relaxed/simple;
+	bh=h1pBuPBtktSjNMu4TvOQ+L+yQZBLCy44jrXjx/GWXb4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s/rEqlHE4RW9flE8YxlX1qzRJFb+E/AK2rZiiby20xMicv2Bix2QeVdLezroOtjiYDlH6gkILctrFhMQkGEx87eRe287vk9vS10BNSOn14R3zXClYTcut4tprP0NNTXO3phbOFL2wy5wrQbJJvKHAaqW0lgI+kVJ5Z6zjfvMrLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=Xlu+gMlT; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="SpMfykSl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1738713285;
-	bh=6fywcASxWYAyXe88HcHEfSTs2+ci+gNxhmlmjs1+cpQ=;
-	h=From:To:In-Reply-To:References:Subject:Date;
-	b=SpMfykSluKgdk8YeirzJeNWJPS6WWBTrvit5wimmjLcvuMQdWaUsPh4ytqTNWoMOj
-	 3TIKvTfWx4ToxQe+CStSaV5W3cA2HKgwoWnTErraOKCRglgNaz9YF/bP6B85VU1UX3
-	 1Eh2/Yt5lGqp8aW5C/Q/a8JSS+hE5JMkMQtrA4g7AMp645tnHm5KgExy9sUd/V6svF
-	 R4u9YssW0MsdCMYQSA5GrX95gSQQfct4UFdEmc7ef+KscsF6uv31LXH0AbNfSF1UCd
-	 G9pEjBB4R2LOdPPtAQH2BfzWmUUZS2pijenEHUmrwCh7c2H/5g7hA5Cs2NV1Gzakqw
-	 KZDjolH9iCcMQ==
-Received: from [127.0.1.1] (ppp118-210-185-209.adl-adc-lon-bras34.tpg.internode.on.net [118.210.185.209])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 27CE77104E;
-	Wed,  5 Feb 2025 07:54:43 +0800 (AWST)
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250116090009.87338-1-krzysztof.kozlowski@linaro.org>
-References: <20250116090009.87338-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] ARM: dts: aspeed: Align GPIO hog name with bindings
-Message-Id: <173871328303.403310.37142305555247656.b4-ty@codeconstruct.com.au>
-Date: Wed, 05 Feb 2025 10:24:43 +1030
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="Xlu+gMlT"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1tfSoL-005sX9-5A; Wed, 05 Feb 2025 00:58:33 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
+	bh=Rb93MMJ9jrAXvrmiXFCfJpGm+j99GvvxBquzJPRoovE=; b=Xlu+gMlT3AX5XzY+BkrKS8QIfr
+	946QTIjd72Jt3evMzv5wMJHT1IBhZLJSWMFthKc1Vvs5jh1/YL3155+u+sMeyECO9VPsZO6NEmMdn
+	OtVfJQsu5oZxKA1bcv4WRF6h4M6h8v3dNVVWTgYbUilvMvss2FTiACakY/uO/wpH1Gg46k6zbuTt+
+	3Gdt42+2/lOC1AiKjohd1FWKwEtHVxsYNC0hWCYy0A03nuxyFIr4l0TZHaqzWkW26xk0hkNeFh7lt
+	QP8JCsLD20C4fzTk5jtjH7dzAu7Y8R94WqNWOJzAGjEsF5x0ePgIIQ79L1pMkHqAbDFzrNXt2p4iZ
+	ByRYmBOA==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1tfSoJ-0002IE-WD; Wed, 05 Feb 2025 00:58:32 +0100
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1tfSo2-009Y7j-C5; Wed, 05 Feb 2025 00:58:14 +0100
+Message-ID: <4732bd9f-e202-4895-9ba2-576b571c387a@rbox.co>
+Date: Wed, 5 Feb 2025 00:58:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [net?] general protection fault in add_wait_queue
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: syzbot <syzbot+9d55b199192a4be7d02c@syzkaller.appspotmail.com>,
+ davem@davemloft.net, edumazet@google.com, eperezma@redhat.com,
+ horms@kernel.org, jasowang@redhat.com, kuba@kernel.org, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mst@redhat.com, netdev@vger.kernel.org,
+ pabeni@redhat.com, stefanha@redhat.com, syzkaller-bugs@googlegroups.com,
+ virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com
+References: <67a09300.050a0220.d7c5a.008b.GAE@google.com>
+ <2483d8c1-961e-4a7f-9ce7-ffd21a380c70@rbox.co>
+ <6fonjxxkozzmv7huzavck5nsfivx3nsyyicthulg5aiyrmjpql@o7pexllumdxt>
+ <CAGxU2F7CgVHUuPPATBzXw20fR1Z+MVpsJvgRO=kMFV1nis49SQ@mail.gmail.com>
+Content-Language: pl-PL, en-GB
+From: Michal Luczaj <mhal@rbox.co>
+In-Reply-To: <CAGxU2F7CgVHUuPPATBzXw20fR1Z+MVpsJvgRO=kMFV1nis49SQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
 
-On Thu, 16 Jan 2025 10:00:09 +0100, Krzysztof Kozlowski wrote:
-> Bindings expect GPIO hog names to end with 'hog' suffix, so correct it
-> to fix dtbs_check warnings like:
+On 2/4/25 11:04, Stefano Garzarella wrote:
+> On Tue, 4 Feb 2025 at 10:59, Stefano Garzarella <sgarzare@redhat.com> wrote:
+>> On Tue, Feb 04, 2025 at 01:38:50AM +0100, Michal Luczaj wrote:
+>>> ...
+>>> I'm not sure this is the most elegant code (sock_orphan(sk) sets SOCK_DEAD
+>>> on a socket that is already SOCK_DEAD), but here it goes:
+>>> https://lore.kernel.org/netdev/20250204-vsock-linger-nullderef-v1-0-6eb1760fa93e@rbox.co/
+>>
+>> What about the fix proposed here:
+>> https://lore.kernel.org/lkml/20250203124959.114591-1-aha310510@gmail.com/
 > 
->   aspeed-bmc-lenovo-hr630.dtb: pin_gpio_b5: $nodename:0: 'pin_gpio_b5' does not match '^.+-hog(-[0-9]+)?$'
-> 
-> 
+> mmm, nope, that one will completely bypass the lingering, right?
 
-Thanks, I've applied this to be picked up through the BMC tree.
+Right. Besides that, it's a transport-specific approach, so all the other
+transports would need their .release() tweaked.
 
---
-Andrew Jeffery <andrew@codeconstruct.com.au>
+>>> One more note: man socket(7) says lingering also happens on shutdown().
+>>> Should vsock follow that?
+>>
+>> Good point, I think so.
+>> IMHO we should handle both of them in af_vsock.c if it's possible, but
+>> maybe we need a bit of refactoring.
+>>
+>> Anyway, net-next material, right?
+
+Yeah, I guess.
+
+Michal
 
