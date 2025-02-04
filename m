@@ -1,178 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8DC207A3D;
-	Tue,  4 Feb 2025 10:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5FD20B1E0;
+	Tue,  4 Feb 2025 10:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738666022; cv=none; b=sJ7cfwinNDes4rvkpDEy2Zm6hNpER36lrcmk/YajoKRrBw08VmZoaGZatySpXZ3W/mCEe+5fxMZtxn+ZveiKT7Za/NXvOVWoI9p2Qv1KjM10JIG5RMpYsUfFf64/i2sNIt75NdLP1EAR/sHqTlJmtZQuslSVGLf9mrCQ03GOvlo=
+	t=1738666110; cv=none; b=Wy//Gq3eApwHR2NMaO0vcBYXaD4ROBWUemfNulls3biF+7CDSGDun9M3rNdNDyqWmtEaQSWxPW9aRKKQf33tQWI+GYHFtFmCnkhm1UYyMhC5dk1+uFOb3t0QtFYjXbUdJMRgwkH4B/BBadfIVOWdCCCxwRk0iDY0UKsOu9nRuOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738666022; c=relaxed/simple;
-	bh=4GbbLb/+NUtmnylSuM6YAJhg6YidRVKmiMxnB7o4vB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hqWEVE5WwUee9zkmkcmKtFLr5d0h1/W5RNXFOPlbPUPYu6Uq76NpfF9zV0pYoxEKZj6jh0VpYIdfAdnNNKZElvS33mKxHOjDnV6MIPYTyFHdlhQrUCIdGLtDiBcu+SvSaoSrzOdoFw72BjZfz2c12iJsSgiLs9e7DVGGuoDKdn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QmYBp0tF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738666110; c=relaxed/simple;
+	bh=iIOyQqK2JUjh2rscZEMfvq/pbw9sd7AmroWd/zVeCuk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GMS4dCUAuMUVnWKqYLK57l+lYba4AnBnbmzOWN5dIIBsUtTj9/yYdxdO6JQ5gTLcwy/WeUgQpNBQ14dxSfDjrG+7eQwD+2bnOxeleK4jXPO5EhVj/hDvG+NLMPDd6tTkJm0Z9SgZdF1kpZ3e+lb+nzhAAGRXBDfHaQwwSvYnqN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsN6deVy; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QmYBp0tF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24B9DC4CEE2;
-	Tue,  4 Feb 2025 10:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738666022;
-	bh=4GbbLb/+NUtmnylSuM6YAJhg6YidRVKmiMxnB7o4vB8=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=QmYBp0tFVd64mpUc8p/e3RzQYaCO4oyNFtCwySE8IXuVm5fuUjy6mFu7n4H/rDs8p
-	 Tg8StmmkdUbOHDSYN1NnxMPbgGb+/bNzGfr4S8ImXuZqXOkF67O/5ao/m3rqZ/pROQ
-	 GPbQYQbqTo9WEutPFWIUuTWc9dcGAtrxX69S+j/z2iw31uBFddwA4C7VaLqq37QMrp
-	 1DJPt2Bz0SWDhlF/Y8g7USUL1yGmzi89nIg+fAg1QGbBW8gmCvS3V/g88m+WYG0Bsl
-	 b/QUyC8oMODCEcV6JKLNNsBpwWAQC01QGB3qkYW5LmiGW5eQ1uUvS0GLRXp+uvudDT
-	 DQQ3WM+IPXcrA==
-Message-ID: <d705e66d-8a5c-490b-b277-f29429c207dd@kernel.org>
-Date: Tue, 4 Feb 2025 11:46:57 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsN6deVy"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-866dc3cd96eso129414241.3;
+        Tue, 04 Feb 2025 02:48:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738666108; x=1739270908; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LC2vRRW/Kf2UPav9OdbBLlCMqBd9LT0RXpPkOPJfFNY=;
+        b=gsN6deVyM4PduuvSftJ9D1shD6bapEUP6SN7fAjYxVYcX15z4wvKcrXpkvNy40dZ8v
+         TYgpRYoUYFBnBH0M59Jqj+6OilxnLdiblP1R9eFdvUmXF8FVoDV3fpRz5Sez6Xps7wjI
+         7Az1aYgDpxy1cM0yXEh0UjtRCQ8lpIgmyGLA7zG9ZUOlozIZKQxSI3HxZ2f4ZDmUdN5s
+         k9jJygKIJTK0iild0POo+EB/4lg3g5Z5JI/5a7oJwTa2s4/vPTHYSzGyuLQrtEglbrGo
+         3FHtMQSipsDMzyADR2j79sYI8Bo6tvAL82uzVRa5kmRNY8udiuqxXYL8wqTLQo8k9Wot
+         xHbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738666108; x=1739270908;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LC2vRRW/Kf2UPav9OdbBLlCMqBd9LT0RXpPkOPJfFNY=;
+        b=cYnJU8EQ1PxQgizV6puAbiZEILUXhzbcy5lXOiiIZaBlCuBrixuPgOn0HoP0IqzXFM
+         ZM9fJ/sLZGADrysEJusWAlxzw/VRK9JgNo6UwnWFzO5xTXn3anBAsIfCu2Tey9OiZavy
+         1/TFglB+4eSuZXpUhb7ekQ9qb8ZNAyfiBA1ew3YM0HM+ebpE4Rq+lieNGmWJganN9WaS
+         iFIyrN97Pv/aQr5ZeCQi9knLKiCie7psyFj8itKtd/lUci2BJVowSZ/QALBH+ISCi9of
+         ikAwdjXX4MZCBa0+2SOdCseNSgmMwNLuQ0an5t8/yuKXHE3CfkROs5Xn9VdTEOP3huOx
+         QWog==
+X-Forwarded-Encrypted: i=1; AJvYcCUNBV46aWF0r2hUccaZd/dpIoe2DylFBSIM8B2gi+Ya0s/Ie+rQ6QuKBlikpbNCYlEhbZrsGcwmnoYOz9WMXiqRPsk=@vger.kernel.org, AJvYcCVT4YMs+LOcqlGWRoCSy83N8JpT6MsItZAaRfx0MqQJ95xv0hmeGuNHa9LOORf/6uZzP4j/FJaI+0s1TMsU@vger.kernel.org, AJvYcCWFSDDlu+DKheY36ErdMHtSuxQAg9+taMU98ifqs3WrWHx2yJ+/U5qS9/ONH2OY9aaj3YLP2ed+Us6k@vger.kernel.org, AJvYcCWc25LOgYVZHSQ5YoE2pY3lOPsYPCYjXu4l8Qdtuw2nxwXt2W59pw5Fslg1T3cxYWguJ/+yfMU+BAju@vger.kernel.org, AJvYcCXehd813UH7VwusDGC5KcHlvirPUN0TcE7sCcUZjNW/VvciDRWlMwNe8H11sghvNpWOHdNQuvPfwpRmW8jXXS8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOaTVoDTXITqgyuj3czoMdcDpzYq5mfgQZWf7PQL0lWGRDS5L8
+	nw3fhQ4Bo6riiRCbzVlTpXu1RJNBP7+NONFV63OBIJrKMgwV2QiO22e21k8UvUVfOI+Tkr4+pPZ
+	q9Cqk84w/1uPNXjmbOzGjfePBmFmCwtwuGsDxXg==
+X-Gm-Gg: ASbGncsrH8cza2vh/iX0hXNl/SliuLP6MMKqjStFkgTPlJe7uy52PR5iul08mVks9rB
+	0Z1iDfZke+2gFNpqfjBPTPk9PFB1dVg/5L2Bg93o1QKmc4DGdEQbCIeDkd80y2b7TEWa/psxM
+X-Google-Smtp-Source: AGHT+IHcocGGipmX2tlrKsnQTcJY6JRWYgrNpEAV/bSPbiniGDmvkDVtYdocUMr0YE++t2jaDjHLk1KBJqx3xSwtuiI=
+X-Received: by 2002:a05:6122:45a1:b0:50a:b728:5199 with SMTP id
+ 71dfb90a1353d-51e9e4fdb03mr20990003e0c.7.1738666107927; Tue, 04 Feb 2025
+ 02:48:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] media: dt-bindings: aspeed,video-engine: Convert to
- json schema
-To: Jammy Huang <jammy_huang@aspeedtech.com>, eajames@linux.ibm.com,
- mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
- linux-media@vger.kernel.org, openbmc@lists.ozlabs.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20250204085041.3724290-1-jammy_huang@aspeedtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250204085041.3724290-1-jammy_huang@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250113112349.801875-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TY3PR01MB11346D7617436A7779B6697B3861F2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <20250114200335.GA1626474-robh@kernel.org> <e74391e7-c7ab-422b-9dab-dbde9ce55204@roeck-us.net>
+In-Reply-To: <e74391e7-c7ab-422b-9dab-dbde9ce55204@roeck-us.net>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 4 Feb 2025 10:48:02 +0000
+X-Gm-Features: AWEUYZkjdRPGf4IpLF2l35NAVBIXPh_8XYPcTIQ85vWtHQ6cImY8aU7Ha3TVdr0
+Message-ID: <CA+V-a8vBi9Dmrm00N=xNNRPPi4TBk2ZBBkPEyC2YBDAa8gN4hA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] Add support to retrieve the bootstatus from
+ watchdog for RZ/V2H(P) SoC
+To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/02/2025 09:50, Jammy Huang wrote:
-> Convert aspeed-video.txt to yaml format.
-> Update aspeed-video.txt to aspeed,video-engine.yaml in MAINTAINER file.
-> 
-> NOTE: The following checkpatch warning is generated since we do include
-> the header in the example, but this is a false positive warning.
-> WARNING: DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.rst
+Hi Guenter and Rob,
 
-This does not belong to commit message, it's irrelevant. You can mention
-in the changelog, though, but IMO, that's really not important for this
-patch.
+On Tue, Jan 14, 2025 at 8:17=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> =
+wrote:
+>
+> On 1/14/25 12:03, Rob Herring wrote:
+> > On Mon, Jan 13, 2025 at 11:38:08AM +0000, Biju Das wrote:
+> >> Hi Prabhakar,
+> >>
+> >>> -----Original Message-----
+> >>> From: Prabhakar <prabhakar.csengg@gmail.com>
+> >>> Sent: 13 January 2025 11:24
+> >>> Subject: [PATCH v3 0/6] Add support to retrieve the bootstatus from w=
+atchdog for RZ/V2H(P) SoC
+> >>>
+> >>> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >>>
+> >>> Hi All,
+> >>>
+> >>> This patch series adds SYSCON support to retrieve boot status informa=
+tion for RZ/V2H(P) SoC.
+> >>> Summary of Changes,
+> >>>
+> >>>      Clock:
+> >>>          Add syscon compatible support to the CPG block in bindings a=
+nd
+> >>>          device trees.
+> >>>
+> >>>      Watchdog:
+> >>>          Document the renesas,r9a09g057-syscon-wdt-errorrst property.
+> >>>          Update the watchdog driver to fetch and report boot status v=
+ia
+> >>>          Error Reset Registers (CPG_ERROR_RSTm).
+> >>>
+> >>>      Device Tree:
+> >>>          Add the syscon property to CPG and WDT nodes in R9A09G057 an=
+d
+> >>>          R9A09G047 SoC DTSI.
+> >>>
+> >>> These changes enable the watchdog driver to identify boot sources lik=
+e Power-on Reset and Watchdog
+> >>> Reset, improving system diagnostics.
+> >>
+> >> This means that, we should assume U-boot/bootloader should not clear t=
+he WDT reset status bit.
+> >>
+> >> If they clear it, there should be a way to propagate it from u-boot/bo=
+otloader to linux,
+> >> otherwise, we get wrong bootstatus in linux.
+> >> But the clearing of watchdog status by one of the cases:
+> >>
+> >> 1) u-boot identify the boot source and clear the status bit
+> >> 2) u-boot identify the boot source and does not clear the status bit, =
+but linux clear it.
+> >> 3) u-boot does not touch WDT status bits, but linux clear it.
+> >
+> > Sounds like the same problem as this[1]. If that works for you, please
+> > comment there. Always better if there is more than 1 user for something
+> > "common".
+> >
+> > Rob
+> >
+> > [1]https://lore.kernel.org/devicetree-spec/48defa98-9718-4997-86cb-b171=
+187708a6@cherry.de/T/#u
+>
+> If this ends up being provided through /chosen, it should probably be sup=
+ported
+> in the watchdog core.
+>
+There wasn't any conclusion on the thread [0]. Can you please
+recommend how you want me to proceed on this series.
 
-> 
-> Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
-> ---
->  v2:
->   - Update commit subject
->   - Add NOTE for false positive warning
-> ---
+[0] https://lore.kernel.org/devicetree-spec/48defa98-9718-4997-86cb-b171187=
+708a6@cherry.de/T/#m2f1c7f5c8166522982cecf9351903ab06ca4f9ee
 
-...
-
-> +
-> +  memory-region:
-> +    maxItems: 1
-> +    description: |
-> +      Phandle to the reserved memory nodes to be associated with the
-> +      VE. VE will acquires memory space for 3 purposes:
-> +        1. JPEG header
-> +        2. Compressed result
-> +        3. Temporary transformed image data
-> +
-> +  aspeed,scu:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: |
-
-Do not need '|' unless you need to preserve formatting.
-
-> +      Specifies the scu node that is needed if video wants to capture
-> +      from sources other than Host VGA.
-> +
-> +  aspeed,gfx:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-
-None of these two properties were in original binding with
-*justification*. You must describe any changes done during conversion,
-otherwise you could add here whatever property you wish, right?
-
-> +    description: |
-> +      Specifies the Soc Display(gfx) node that needs to be queried to get
-> +      related information if video wants to use gfx as capture source.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/ast2600-clock.h>
-> +
-> +    video@1e700000 {
-
-Looks rather like: isp@
-
-> +      compatible = "aspeed,ast2600-video-engine";
-> +      reg = <0x1e700000 0x1000>;
-> +      clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
-> +               <&syscon ASPEED_CLK_GATE_ECLK>;
-> +      clock-names = "vclk", "eclk";
-> +      interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +      aspeed,scu = <&syscon>;
-> +      aspeed,gfx = <&gfx>;
-
-
-
-Best regards,
-Krzysztof
+Cheers,
+Prabhakar
