@@ -1,133 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C31720FA81;
-	Tue,  4 Feb 2025 14:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19412135CD;
+	Tue,  4 Feb 2025 14:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738679283; cv=none; b=DtnftwcDRO56C1h/NsfLeoXuPodeMzTzj/K9WS+Je967tNNtt3faxKa3SIHXn5yk5LVfv6DhzRjcb/dk0eVLwNa16SYjurKW4iDqtVEP7RuGnfcGn+FzTT1Emapo9nFsUMYMdeHHpaSVnvJTgjFST2pC/oryHfkmVyGQDYwVkGc=
+	t=1738679291; cv=none; b=LeJ5ph7vbQSvuZOgUJK2wInXQsfX/mpUVacp16ydVfjEgd4hV6BPBfCOJGe43Yd++WTK5LXjBzxTqd5d2ImeyHSKoygnumL/HsvKrAg3KG00TnfEF/kIer39C6yRaOk57mUvYJSpTuTs/SVkQYTeYI0EsyGwVJ8bIm2Jx96ZF3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738679283; c=relaxed/simple;
-	bh=W7l5hHgZSVuFn3MlA6YyHRtoNwMSFk/yKhVrN3b1Vqo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=j7wAK1PGapwakVOwRb80VIQ5bHzKq5GfXkUu28nfJXLHbpaw78DhcCuCSYWJkZV+fjQXkJVCZDMXZk1nFsfGRj5g0VrGTXJ5bgzLdlSNNJ9vG3va3+GOyYsuZ/PMbwfZWvbrbZr60HfGjU5EcW6HB00n93glhVOB9CtK81KTiVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RLincpun; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738679291; c=relaxed/simple;
+	bh=yk5WtGeAX0utttGwRTmJMREP9MkKnH5xe5K91AxJU7w=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=fflcaJ6ULTGiDM9XUeEYxKrfDFFkOijz9yurS1PqFLN3ju/9+w6/wdWt/1f7LI/raeHO/M8qpQ8OBGZPyODyWpie4kHt4KNAsF7jcesDekGv3GhaP8mSVOhZlPXRW8GernXKM+T9SrNu34T/6UYIW/m/O/C1rSafy36z8jq8at4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQEoA0zj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RLincpun"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738679282; x=1770215282;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=W7l5hHgZSVuFn3MlA6YyHRtoNwMSFk/yKhVrN3b1Vqo=;
-  b=RLincpunJWQlXmzBlUpeRbhKUBVDF+R+UWTpzNnjNDV4wZCzsQ369aFJ
-   MHO3nD1ll37rtgFOPBwUX+TgtwWPDbPZBfXBp5SZH9IC6FCy85XPX4BUd
-   fHBGjOp1swJZkNdt7xalCOfWLQqmIwp1VU5c0QxdM0OOUnF7dL3FLQqTO
-   v6kAgx+35psK6jO8eWkW9N+9eNVJNuO7ju5vswnK28M8T3BtGPbEccJdn
-   VP6mmCUp/E8jlNyoXd2LhziPqVMS8SoS0Kq+w4FoexL+I39GyR4DTtHeU
-   nTiH9C8oAPafj4Y2qpuSMBWwoF8TXqK2QPbYqxUuxEwIXPGiXHrky/giE
-   w==;
-X-CSE-ConnectionGUID: scGOjmL8RMqZ61FxHfPVbg==
-X-CSE-MsgGUID: nRHLXb1UTDGWVLvajGdurQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50598511"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="50598511"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 06:28:01 -0800
-X-CSE-ConnectionGUID: E2cYbvGPReufX8+HBWjUMw==
-X-CSE-MsgGUID: WAfN/7eEROWL4s2DeYGpDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="115642506"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.75])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 06:27:58 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 4 Feb 2025 16:27:54 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: james@equiv.tech, markpearson@lenovo.com, jorge.lopez2@hp.com, 
-    jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, corbet@lwn.net, 
-    linux-doc@vger.kernel.org
-Subject: Re: [PATCH 4/7] platform/x86: hp-bioscfg: Use wmi_instance_count()
-In-Reply-To: <cbea0f2a-a66f-4ed8-9b19-6010b188f69f@gmx.de>
-Message-ID: <b7375996-cf85-d1c3-fd29-585bb22a99c1@linux.intel.com>
-References: <20250203182322.384883-1-W_Armin@gmx.de> <20250203182322.384883-5-W_Armin@gmx.de> <a02aa367-2ce8-ba6d-adc7-b91552566142@linux.intel.com> <cbea0f2a-a66f-4ed8-9b19-6010b188f69f@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQEoA0zj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04DC5C4CEDF;
+	Tue,  4 Feb 2025 14:28:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738679291;
+	bh=yk5WtGeAX0utttGwRTmJMREP9MkKnH5xe5K91AxJU7w=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=vQEoA0zj11UGUt2d0hdvvz2e+PxZqlYrpiqJ/zANLF8sZ2eHVKUdGScjmm4i4g+Jj
+	 GGsaXWrIxj5oeBPHOKS2yrGLj8NEdwEw8Bo1CUM/PSWne902IXvqzueCRagxXssLcn
+	 IZjzrjiN0Ee86BCAVz2UYAd8TkNzIgMvIijAEYWbPBi3EbvV7+bOJV9o64WyihG6X1
+	 IFkPIIxMRPG5feqaTgN/JBWF1lv+SdNmdr1nxbll4nwJyE6DGs7j4WvhmqXz1CAabp
+	 B1Vj2wEvOmrFiHyy9MhtsL/gjCYPynIXBT9wS2djnxONWv17kz/Rg42pYuzKPr/vf7
+	 bEBGTg755xxNw==
+Date: Tue, 04 Feb 2025 08:28:09 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-937537166-1738679274=:1609"
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, 
+ Dimitri Fedrau <dima.fedrau@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+ Andrew Davis <afd@ti.com>, Andrew Lunn <andrew@lunn.ch>, 
+ linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, 
+ netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, 
+ devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>
+To: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+In-Reply-To: <20250204-dp83822-tx-swing-v3-1-9798e96500d9@liebherr.com>
+References: <20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com>
+ <20250204-dp83822-tx-swing-v3-1-9798e96500d9@liebherr.com>
+Message-Id: <173867928985.2681882.12579959912610885418.robh@kernel.org>
+Subject: Re: [PATCH net-next v3 1/3] dt-bindings: net: ethernet-phy: add
+ property tx-amplitude-100base-tx-percent
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-937537166-1738679274=:1609
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Tue, 04 Feb 2025 14:09:15 +0100, Dimitri Fedrau wrote:
+> Add property tx-amplitude-100base-tx-percent in the device tree bindings
+> for configuring the tx amplitude of 100BASE-TX PHYs. Modifying it can be
+> necessary to compensate losses on the PCB and connector, so the voltages
+> measured on the RJ45 pins are conforming.
+> 
+> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> ---
+>  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
 
-On Tue, 4 Feb 2025, Armin Wolf wrote:
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> Am 04.02.25 um 11:37 schrieb Ilpo J=C3=A4rvinen:
->=20
-> > On Mon, 3 Feb 2025, Armin Wolf wrote:
-> >=20
-> > > The WMI core already knows the instance count of a WMI guid.
-> > > Use this information instead of querying all possible instances
-> > > which is slow and might be unreliable.
-> > >=20
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > > ---
-> > >   drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 13 +++++--------
-> > >   1 file changed, 5 insertions(+), 8 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> > > b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> > > index 0b277b7e37dd..63c78b4d8258 100644
-> > > --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> > > +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> > > @@ -388,16 +388,13 @@ union acpi_object *hp_get_wmiobj_pointer(int
-> > > instance_id, const char *guid_strin
-> > >    */
-> > >   int hp_get_instance_count(const char *guid_string)
-> > >   {
-> > > -=09union acpi_object *wmi_obj =3D NULL;
-> > > -=09int i =3D 0;
-> > > +=09int ret;
-> > >=20
-> > > -=09do {
-> > > -=09=09kfree(wmi_obj);
-> > > -=09=09wmi_obj =3D hp_get_wmiobj_pointer(i, guid_string);
-> > > -=09=09i++;
-> > > -=09} while (wmi_obj);
-> > > +=09ret =3D wmi_instance_count(guid_string);
-> > > +=09if (ret < 0)
-> > > +=09=09return 0;
-> > >=20
-> > > -=09return i - 1;
-> > > +=09return ret;
-> > >   }
-> > Hi Armin,
-> >=20
-> > While it is the existing way of doing things, I don't like how the erro=
-r
-> > is not properly passed on here. And if the error handling is pushed
-> > upwards to the calling sites, then this entire function becomes useless
-> > and wmi_instance_count() could be used directly in the callers.
->
-> The thing is that for the hp-bioscfg driver, a missing WMI GUID is not an
-> error.
-> In this case 0 instances are available.
->=20
-> I would keep this function for now.
+yamllint warnings/errors:
 
-Okay, fine.
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/ethernet-phy.yaml: properties:tx-amplitude-100base-tx-percent: '$ref' should not be valid under {'const': '$ref'}
+	hint: Standard unit suffix properties don't need a type $ref
+	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
 
---=20
- i.
+doc reference errors (make refcheckdocs):
 
---8323328-937537166-1738679274=:1609--
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250204-dp83822-tx-swing-v3-1-9798e96500d9@liebherr.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
