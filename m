@@ -1,113 +1,95 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EEA207A19;
-	Tue,  4 Feb 2025 09:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25DF207A00
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661167; cv=none; b=O7BlSVUvruYoT2lM4yJV1r8RJH6HDwKfl4yCAVfdx2KZHAC1imVr/lxuwa5zFzVo+faObpRmMsLfVsKswyVScTr3X+BdMeXt0bP8DmDUFC2GKTEpOzEdOiVUavB59g3jwh5ioFbdJETVRirViXxLV3CANXUu10sjwPH33TSuC/g=
+	t=1738661250; cv=none; b=VALbHO63vkEV0hgvQb/RjQbm/h0QiX0q86ZsXdBbQ8wOJc6ys5i0tDK2OhEErq0lrIe4NHsiiy1NKrI5D4Lg3GOt5pb1ePyrI1s2oS88J0Y8f0lglPDdUSZmBOKgky8fKGi6aX1mhXUy9BfaakA2JFjYw6jo/ZOqug72dkIdB0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661167; c=relaxed/simple;
-	bh=331X12ABmtKtadCN0VISYt/VT6Fe3g4NktVCXvB5x0M=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=nXgR8cAGpWEjmSS4Hci3oqF6uCx6+NLYWNDaQF+mi6K23R5ZUSMUQJSmQHXWfrLXA7PabhVTFsCkeGDFhxnhWUDp1g6UgcpgjkdDxjgn08S6ukYktBB0fxeZ1nR87fiLUM8jZQJcuMzR5HLx0QS3JbcEKb6xiw6jsRzgIiAUbt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VtS+W+uJ; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738661250; c=relaxed/simple;
+	bh=JU3Lm+iYLfayKfGR+P1EVlzHSM9OleQsodwCVlE5320=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KMuJNTz0sDuz05K2/Xc+VYF4/XmZP5uXbmdqtqzorAH1Hw1TEjCIu5UGktE4RplyyNXAd0wTHBDtkHZT/mR54qyNuRxVmm25hbQalATWkBIOnJHWqazP0+hCl2cI5AD+OvtsIQGAHW4aEdbvy+nx3F9fQgCJLGTFpKMnwqLPbQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=J525MZqW; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VtS+W+uJ"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab39f84cbf1so988800766b.3;
-        Tue, 04 Feb 2025 01:26:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738661163; x=1739265963; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eZepQE8ATxhdhl2/9eNZi/ijc5MSv3CHMhMwgnFtZgo=;
-        b=VtS+W+uJWqncbjUiq8cBr55i3eAsZv/LoNU9mzOVhytbuxJlUSk6B1pf4KbTse7OGL
-         q5smVGfLvpTvq39FQRO41Dn9uoYRnnmwRumq7aDpwNGv5MhodN/90t5ZJOX/sY0BtMeL
-         LZdCcQz9QjNiX2zW8JLhGCRzPj3kyBPe74QEg+166AzyKuiCjnrif24yQm/jVCKlqlV0
-         7iDqMcgWBdvxgB9CGpfcQ8Q69LsbPvRw0j+VNPgDA9+jxD0jn9mRtxr9yGT9T/4ooJV9
-         zZcUolOyiRwpB3kDSjES8ZoKoifdvmHGyypfYWsxStaq3iajyahhZHcWncnNSEvipZxY
-         Hl1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738661163; x=1739265963;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eZepQE8ATxhdhl2/9eNZi/ijc5MSv3CHMhMwgnFtZgo=;
-        b=VRW5b+6o9iAU97Nvs9chPN3rVzroJI8Wzvw6fjFWOSj/ZPdjFlKtRhFUFDczpW2eQd
-         3iOS/dP7pss7G+h/qL1rJRYc1qHEvEmtMvLi+1JaMQ/047E2IhFHbrlFLkQ6NpqaYIJo
-         b81VnXScpQuV7SiOctCSVFVp+tPnFD+LbJoqz++iRqsbW3ieE+NZbgm9NkRfZwi8mOm0
-         spDO5dZ5MbFIBBak0KV0qQLP8WuLHW4ZWsrDL8D8RV4B6m0g0HV0To62oF+TzGog1HbP
-         /x5bFhfkAbQvw+5+l18iFvC8wJ0TFKIFO79R8UQDno3n+8LMBGxBfreSapRxmJOlfW3g
-         48Uw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmKfKOkRHLFWhQFg6c9bjojUSaJ+3XIDwac68I/hninJf29BcWwvWbREQxQqU8AW1tNrGpvot9bZCqGoU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1LgC96X65YMC62LR6a9mazEYbDIiiq5de8D/ZLlqnVvFRmZh9
-	9L4E/dFlbzmRt2das3iwZcc21CdBlWAYuXZXeCIwEGekTOUgi1J/
-X-Gm-Gg: ASbGnctySS4zYPt96ZgL2jam2TXoCmrMl+5Pi5834fr8WbgYv7+rwfR6+XTtw6R3zyl
-	V4T1oxvV4kTfie8PeFXezl2Duzjgjcq/vA7+B9PJDMS/bmdnhApbVPJFkzoHCHIrrlbntRw6hJG
-	OJj8PZVGTb+u7J5P5LlukZ0W0XOqIFvc76JDTyYlZgkQWrTqnqAntFx+pfwPK2e86aPXmFy7wRi
-	wjSj2W4SKbaXZlPkjXU7tJcNKNkAd10PO+4FR50oE0m5Ein+J6YOj/D0nNXj7plxj2TwweHIidl
-	YwUp6uKibAo4nzBU2fUj/MlAccy9JE8l93wGWX4evmv4YNs=
-X-Google-Smtp-Source: AGHT+IHea567Tc9kQT3q3eSxLmJX9qtB2Hl24o51Jk9ZOWjMhNbOukk4ehLZB3YlafJ7jFl6r5Y4Bw==
-X-Received: by 2002:a17:907:72c4:b0:aa6:5eae:7ed6 with SMTP id a640c23a62f3a-ab6cfce8dbbmr2576618066b.13.1738661163361;
-        Tue, 04 Feb 2025 01:26:03 -0800 (PST)
-Received: from [192.168.20.51] (54-240-197-238.amazon.com. [54.240.197.238])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab706ce9a53sm634409766b.72.2025.02.04.01.26.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 01:26:03 -0800 (PST)
-From: Paul Durrant <xadimgnik@gmail.com>
-X-Google-Original-From: Paul Durrant <paul@xen.org>
-Message-ID: <99ad4b92-7598-4ee3-92da-60efb87d08f1@xen.org>
-Date: Tue, 4 Feb 2025 09:26:01 +0000
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J525MZqW"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5149QlEW3192342
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Tue, 4 Feb 2025 03:26:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738661207;
+	bh=UmhLG8fj2RQNDb83VwTcmt6NK6fdTtqXuVcY3Pwy504=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=J525MZqWVtgMPiAybEYSXaTk7nnHSHeq/+Hme4xm0AvV78yXeKrNZ5tIq+b1cVMy3
+	 G95PvpqtQaqYGXzoU9DN3HLfqQRm5DOpFJSQZ9BJo3RKu/5l+A6SJjnOzePhJkrL5s
+	 93MHb3w2wQxgT/PKb8GdwYT9Og8x51NmN6hxPzCw=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5149QlIC085742;
+	Tue, 4 Feb 2025 03:26:47 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
+ Feb 2025 03:26:46 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 4 Feb 2025 03:26:46 -0600
+Received: from localhost (lcpd911.dhcp.ti.com [172.24.227.226])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5149Qj5V034419;
+	Tue, 4 Feb 2025 03:26:46 -0600
+Date: Tue, 4 Feb 2025 14:56:45 +0530
+From: Dhruva Gole <d-gole@ti.com>
+To: Vaishnav Achath <vaishnav.a@ti.com>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <quic_bjorande@quicinc.com>,
+        <geert+renesas@glider.be>, <krzysztof.kozlowski@linaro.org>,
+        <dmitry.baryshkov@linaro.org>, <arnd@arndb.de>,
+        <nfraprado@collabora.com>, <ebiggers@google.com>, <ardb@kernel.org>,
+        <nm@ti.com>, <vigneshr@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <nfrayer@baylibre.com>,
+        <glaroque@baylibre.com>, <tglx@linutronix.de>, <u-kumar1@ti.com>
+Subject: Re: [PATCH v2] arm64: defconfig: Enable TISCI Interrupt Router and
+ Aggregator
+Message-ID: <20250204092645.cnu4lnzac7n2dtwx@lcpd911>
+References: <20250203150801.2399555-1-vaishnav.a@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: paul@xen.org
-Subject: Re: [PATCH v2 05/11] KVM: x86/xen: Use guest's copy of pvclock when
- starting timer
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzbot+352e553a86e0d75f5120@syzkaller.appspotmail.com,
- Paul Durrant <pdurrant@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>,
- Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20250201013827.680235-1-seanjc@google.com>
- <20250201013827.680235-6-seanjc@google.com>
-Content-Language: en-US
-Organization: Xen Project
-In-Reply-To: <20250201013827.680235-6-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250203150801.2399555-1-vaishnav.a@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 01/02/2025 01:38, Sean Christopherson wrote:
-> Use the guest's copy of its pvclock when starting a Xen timer, as KVM's
-> reference copy may not be up-to-date, i.e. may yield a false positive of
-> sorts.  In the unlikely scenario that the guest is starting a Xen timer
-> and has used a Xen pvclock in the past, but has since but turned it "off",
-> then vcpu->arch.hv_clock may be stale, as KVM's reference copy is updated
-> if and only if at least one pvclock is enabled.
+On Feb 03, 2025 at 20:38:01 +0530, Vaishnav Achath wrote:
+> Enable TISCI Interrupt Router and Interrupt Aggregator drivers.
+> These IPs are found in all TI K3 SoCs like J721E, AM62X and is required
+> for core functionality like DMA, GPIO Interrupts which is necessary
+> during boot, thus make them built-in.
 > 
-> Furthermore, vcpu->arch.hv_clock is currently used by three different
-> pvclocks: kvmclock, Xen, and Xen compat.  While it's extremely unlikely a
-> guest would ever enable multiple pvclocks, effectively sharing KVM's
-> reference clock could yield very weird behavior.  Using the guest's active
-> Xen pvclock instead of KVM's reference will allow dropping KVM's
-> reference copy.
+> bloat-o-meter summary on vmlinux:
+> 	add/remove: 460/1 grow/shrink: 4/0 up/down: 162483/-8 (162475)
+> 	...
+> 	Total: Before=31615984, After=31778459, chg +0.51%
 > 
-> Fixes: 451a707813ae ("KVM: x86/xen: improve accuracy of Xen timers")
-> Cc: Paul Durrant <pdurrant@amazon.com>
-> Cc: David Woodhouse <dwmw@amazon.co.uk>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Fixes: 2d95ffaecbc2 ("irqchip/ti-sci-intr: Add module build support")
+> Fixes: b8b26ae398c4 ("irqchip/ti-sci-inta : Add module build support")
+> 
+> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
 > ---
->   arch/x86/kvm/xen.c | 65 ++++++++++++++++++++++++++++++++++++++++++----
->   1 file changed, 60 insertions(+), 5 deletions(-)
-> 
 
-Reviewed-by: Paul Durrant <paul@xen.org>
+Tested this for basic boot on TI K3 AM625-SK with next-20250204.
+Tested-by: Dhruva Gole <d-gole@ti.com>
+
+Also,
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+
+-- 
+Best regards,
+Dhruva Gole
+Texas Instruments Incorporated
