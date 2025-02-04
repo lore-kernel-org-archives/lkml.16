@@ -1,25 +1,77 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91DA319882B;
-	Tue,  4 Feb 2025 10:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738665027; cv=none; b=R7ba4LtOkwwB2FkPerSfHKCz1VzJy+USwUFcLliN7jCxBk8tchtUb59W/2QePzu/n85OsX4uPRsctuO3lDSMFYfZfddgVKHEbm8afXU8WhTBlW8Fp0CN9hcOz/eSo3Ejf3ewoHhvF4u9flT2ZMo3UZ8wXh4LXQzVCpLxHDzHCqw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738665027; c=relaxed/simple;
-	bh=Uiy1cWRwkSL3TX/57w+ZDHfYY4FEnaIsLYPVvlDtDwc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i1oJXnVNRtfREHgQZDKB9X6PTlv/y/72044o5NoKAGDCXYX+0In9v2Gfj9zTvzC2gcKn9d6p5Ey2C4kHzkTZq6Np3r5JpWPkAtOPgfnjEoJgI5QgBhVI51GPKpqQyzSaaQvt13NilNnQ/AMF2pT8mnAE1s5N260PzX3iPU25q7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACBAF11FB;
-	Tue,  4 Feb 2025 02:30:47 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 498CA3F63F;
-	Tue,  4 Feb 2025 02:30:22 -0800 (PST)
-Message-ID: <be73ba55-8dae-4102-ae2f-47a106dcbf92@arm.com>
-Date: Tue, 4 Feb 2025 10:30:20 +0000
+Received: from chocolate.ash.relay.mailchannels.net (chocolate.ash.relay.mailchannels.net [23.83.222.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B3C207DE5;
+	Tue,  4 Feb 2025 10:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.35
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738665076; cv=pass; b=uQgQwbOuZCyk/wFNIvqo4C6BvL/v7MgqNfDHlScOWbMGgVyLbNuNRVVwjXF7yFT+QFLXs/9bkVUMR5Gje/XLktvnq+r/b3IrSus9wE+DxSYsW/oLAXPfhWrGsyh3tf97dQt1VF64FYfcdGgVud12w3PhJnaF+D+p9p5Ecxncx3I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738665076; c=relaxed/simple;
+	bh=aHQkphcwenG14et1NLQ6GgobnEaek4IdQVsuk6RuE1Y=;
+	h=Message-ID:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Date; b=fPtQ0aW9A8AmKZgdt54fLZkyqk8yDjAJDarN6YsJiYA0BRNtftYidfuppSpa8Ak1QvQhuTHoTGERox6eEzrZC22reudKvntaxOLgA+s435lzF4/mnmvhtV+0krdhyZAw7J+wXajmvPWzau/lXw29aU4jz71rRUYpBLiNDLhwewg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=mkrRrEO0; arc=pass smtp.client-ip=23.83.222.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="mkrRrEO0"
+X-Sender-Id: hostingeremail|x-authuser|chester.a.unal@arinc9.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id BA19E7834FC;
+	Tue,  4 Feb 2025 09:15:16 +0000 (UTC)
+Received: from fr-int-smtpout9.hostinger.io (trex-3.trex.outbound.svc.cluster.local [100.119.13.85])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 2AB007834B4;
+	Tue,  4 Feb 2025 09:15:07 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738660516; a=rsa-sha256;
+	cv=none;
+	b=7YsnCF37Zpl/iZ75sKvsVV2E+WiBxSgx0k9VD+fhxgvshhlV577hcPLs7VpR6TanrwHQaG
+	tRk9gpivYmRcq7y3WJCwrNZAAzQaUj+sG860hTlffcg/kfJhTBvPHDnOc3iKzu4j0D4iPa
+	QENUYvpbQTChgWMMdHyYRBCMByMH+zfiyYPaPGsbQf1eoKSRYctnkYici+h6lfWbqyysEI
+	toCFvnjO1+rWoRtLXaEJdyi5mdYkVNNigUyNCXsjfzEr9XVUqGTWqrNAvd7YMsJLMcph+S
+	4TN5u4yHvhOFebljggmPfYTLr6yBwJmlb35R9e28NzpWqPljHcQ68R1HJk6LJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1738660516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=RaWO/kSRk7tPQ5rv92NyL8uzPM+neCel3leFvmNy4iA=;
+	b=gZJtcvrJdYHAlLI/IDUdN6ZtH4+dTcpF9wNR1yrG5Qx0YDx6IYB8jnYidRHEtLxxnse1ks
+	/aYSv5rKbz7auSKlYFY4OOctTVsQVfZ6q3TLpA1HhiYh1lRNTi0NvGuEVWHHQDtTT/xjvS
+	wqB5Owl+VNJNrp+grRRUtiZ/FDwpgx/yIbEyS5DcsgTGng7PIqE5lDoVsykzMw/ad48ELC
+	2MjwaQMr3iAy3amHAafc7a3iDdLUEhW0/Ad31FFTZDxSGMX17kpNTOCxYqdfAuONsOHTFy
+	eemNagodKCsueQnRtkEn006SY0CR/0s0teziH4Y1s0EtqGlMVI5GB4noAE/Z2Q==
+ARC-Authentication-Results: i=1;
+	rspamd-854f7f575d-2jbtq;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=chester.a.unal@arinc9.com
+X-Sender-Id: hostingeremail|x-authuser|chester.a.unal@arinc9.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|chester.a.unal@arinc9.com
+X-MailChannels-Auth-Id: hostingeremail
+X-Broad-Ski: 76fd89c70b0b489d_1738660516524_3124665043
+X-MC-Loop-Signature: 1738660516524:848083543
+X-MC-Ingress-Time: 1738660516524
+Received: from fr-int-smtpout9.hostinger.io (fr-int-smtpout9.hostinger.io
+ [89.116.146.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.119.13.85 (trex/7.0.2);
+	Tue, 04 Feb 2025 09:15:16 +0000
+Message-ID: <6e2c4db7-1325-473b-9999-2b1ada418119@arinc9.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com;
+	s=hostingermail-a; t=1738660505;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RaWO/kSRk7tPQ5rv92NyL8uzPM+neCel3leFvmNy4iA=;
+	b=mkrRrEO0Na0QYjX9WJgXoWOixUlaSxD6LBRo3nn+3929v+xK26TNEi2/vI6Hy1D8Zt9u0B
+	jdQ+I+qhzOs2L4QVSEeqYYd3PeUcgrmWL9VjX++YTgm3Fp4StTaZgouUsCaPGx90h7cJ7z
+	Wk0FGKbaHw7OhB85nswpbXEUB9VyE6KnrW38s+uB2hpizD0r/Qeq0m5ZVR8WtrgmICY/lw
+	iPMmv0FJ4UXBY1VodKtLZtTLTwuIrgn/UWZMcBGpogXFpgJGW+zU9c3ku+WUzYmmw//cNo
+	/1ULsP8JiOmXV/027TlN44gkAbq5gvSsiQ9cF/iG7DpQqkKczdGtMsQ5kQ+Nog==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,549 +79,397 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 08/38] ABI: sysfs-bus-coresight-*: fix kernelversion tags
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- Linux Doc Mailing List <linux-doc@vger.kernel.org>,
- Jonathan Corbet <corbet@lwn.net>,
+Subject: Re: [PATCH v2] USB: serial: option: add MeiG Smart SLM828
+To: Johan Hovold <johan@kernel.org>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <cover.1738020236.git.mchehab+huawei@kernel.org>
- <33c5ec07012f1c05e3fd1df26d0f7422249571b5.1738020236.git.mchehab+huawei@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dwayne Du Preez <dwayne.dupreez@xpedite-tech.com>,
+ Alexander Scholten <alexander.scholten@xpedite-tech.com>,
+ Zenon van Deventer <zenon@xpedite-tech.com>
+References: <20250124-for-johan-meig-slm828-v2-1-6b4cd3f6344f@arinc9.com>
 Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <33c5ec07012f1c05e3fd1df26d0f7422249571b5.1738020236.git.mchehab+huawei@kernel.org>
+From: "Chester A. Unal" <chester.a.unal@arinc9.com>
+In-Reply-To: <20250124-for-johan-meig-slm828-v2-1-6b4cd3f6344f@arinc9.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Date: Tue, 04 Feb 2025 09:15:02 +0000 (UTC)
+X-CM-Analysis: v=2.4 cv=PMNd+uqC c=1 sm=1 tr=0 ts=67a1da99 a=xK2r8zoKF9vSrBIo2YuqYg==:117 a=xK2r8zoKF9vSrBIo2YuqYg==:17 a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8 a=GvHEsTVZAAAA:8 a=_f8JpNa6bwX4ccdNp18A:9 a=QEXdDO2ut3YA:10 a=aajZ2D0djhd3YR65f-bR:22
+X-CM-Envelope: MS4xfJl9j181SPdF3rdTbprP1LqaZ7yWxVIZGzj+nsmZnSlLJTa3tqwkU+pPnLXHsfW8IH6lrpGTIiZFCPk1XKuxzXbS+xpMVIvng49Vy15M93X/obAfLceI qvdXhV+VOnS1NWtMo3YSkRhC1MuscT77aY0LqRDGWavmHHbycz1aMVMQHcaDQ0VZ7zzZBJSbrf4+cNtrEI7dAqKKTlxLDxMFYHPamNyqIOkkXyUc92iYGtbb AcANdtJhHei7fa/YjeGKxkvmuQjiDvK7gf/asOCxPIhAlGjUD9VLKFLa2aChSksvS6weGeWkE0Lvlm5cJ2RUAWn0QZI6p4aS0bY1eiZMX9UvDzI4tJgV1PpV l83C01bv6+h3jNlXMX72Wgp1IbiiLDtXQFJxf9XN1st/l+fSKaXAHh5pv9tTmVDkJi2piq9SYL0Hc0qREtr6cgE/y61B5UK/v+3gjOLgxl9vSBp5ilM=
+X-AuthUser: chester.a.unal@arinc9.com
 
-On 28/01/2025 00:05, Mauro Carvalho Chehab wrote:
-> Some kernelversion tags are missing colons. Add them to comply with
-> ABI description and produce right results when converted to html/pdf.
+Hello.
+
+A reminder for this patch to be applied.
+
+Chester A.
+
+On 24/01/2025 10:28, Chester A. Unal via B4 Relay wrote:
+> From: "Chester A. Unal" <chester.a.unal@arinc9.com>
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
+> MeiG Smart SLM828 is an LTE-A CAT6 modem with the mPCIe form factor. The
+> "Cls=ff(vend.) Sub=10 Prot=02" and "Cls=ff(vend.) Sub=10 Prot=03"
+> interfaces respond to AT commands. Add these interfaces.
+> 
+> The product ID the modem uses is shared across multiple modems. Therefore,
+> add comments to describe which interface is used for which modem.
+> 
+> T:  Bus=01 Lev=01 Prnt=05 Port=01 Cnt=01 Dev#=  6 Spd=480  MxCh= 0
+> D:  Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+> P:  Vendor=2dee ProdID=4d22 Rev=05.04
+> S:  Manufacturer=MEIG
+> S:  Product=LTE-A Module
+> S:  SerialNumber=4da7ec42
+> C:  #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
+> I:  If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=10 Prot=01 Driver=(none)
+> E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+> E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+> I:  If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=10 Prot=02 Driver=(none)
+> E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+> E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+> E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+> I:  If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=10 Prot=03 Driver=(none)
+> E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+> E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+> E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+> I:  If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=10 Prot=04 Driver=(none)
+> E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+> E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+> E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+> I:  If#= 4 Alt= 0 #EPs= 1 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+> E:  Ad=88(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
+> I:  If#= 5 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=10 Prot=05 Driver=qmi_wwan
+> E:  Ad=0f(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+> E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+> E:  Ad=8e(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+> 
+> Signed-off-by: Chester A. Unal <chester.a.unal@arinc9.com>
 > ---
->   .../testing/sysfs-bus-coresight-devices-cti   | 78 +++++++++----------
->   .../testing/sysfs-bus-coresight-devices-tpdm  | 52 ++++++-------
->   2 files changed, 65 insertions(+), 65 deletions(-)
+> $ lsusb -v
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti b/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
-> index bf2869c413e7..a97b70f588da 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
-> +++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
-> @@ -1,241 +1,241 @@
->   What:		/sys/bus/coresight/devices/<cti-name>/enable
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(RW) Enable/Disable the CTI hardware.
+> Bus 001 Device 006: ID 2dee:4d22 MEIG LTE-A Module
+> Negotiated speed: High Speed (480Mbps)
+> Device Descriptor:
+>    bLength                18
+>    bDescriptorType         1
+>    bcdUSB               2.10
+>    bDeviceClass            0 [unknown]
+>    bDeviceSubClass         0 [unknown]
+>    bDeviceProtocol         0
+>    bMaxPacketSize0        64
+>    idVendor           0x2dee MEIG
+>    idProduct          0x4d22 LTE-A Module
+>    bcdDevice            5.04
+>    iManufacturer           1 MEIG
+>    iProduct                2 LTE-A Module
+>    iSerial                 3 4da7ec42
+>    bNumConfigurations      1
+>    Configuration Descriptor:
+>      bLength                 9
+>      bDescriptorType         2
+>      wTotalLength       0x00e1
+>      bNumInterfaces          6
+>      bConfigurationValue     1
+>      iConfiguration          4 DIAG_MODEM_AT_NMEA_ADB_RMNET
+>      bmAttributes         0x80
+>        (Bus Powered)
+>      MaxPower              500mA
+>      Interface Descriptor:
+>        bLength                 9
+>        bDescriptorType         4
+>        bInterfaceNumber        0
+>        bAlternateSetting       0
+>        bNumEndpoints           2
+>        bInterfaceClass       255 Vendor Specific Class
+>        bInterfaceSubClass     16 [unknown]
+>        bInterfaceProtocol      1
+>        iInterface              0
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x01  EP 1 OUT
+>          bmAttributes            2
+>            Transfer Type            Bulk
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0200  1x 512 bytes
+>          bInterval               0
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x81  EP 1 IN
+>          bmAttributes            2
+>            Transfer Type            Bulk
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0200  1x 512 bytes
+>          bInterval               0
+>      Interface Descriptor:
+>        bLength                 9
+>        bDescriptorType         4
+>        bInterfaceNumber        1
+>        bAlternateSetting       0
+>        bNumEndpoints           3
+>        bInterfaceClass       255 Vendor Specific Class
+>        bInterfaceSubClass     16 [unknown]
+>        bInterfaceProtocol      2
+>        iInterface              0
+>        ** UNRECOGNIZED:  05 24 00 10 01
+>        ** UNRECOGNIZED:  05 24 01 00 00
+>        ** UNRECOGNIZED:  04 24 02 02
+>        ** UNRECOGNIZED:  05 24 06 00 00
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x83  EP 3 IN
+>          bmAttributes            3
+>            Transfer Type            Interrupt
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x000a  1x 10 bytes
+>          bInterval               9
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x82  EP 2 IN
+>          bmAttributes            2
+>            Transfer Type            Bulk
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0200  1x 512 bytes
+>          bInterval               0
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x02  EP 2 OUT
+>          bmAttributes            2
+>            Transfer Type            Bulk
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0200  1x 512 bytes
+>          bInterval               0
+>      Interface Descriptor:
+>        bLength                 9
+>        bDescriptorType         4
+>        bInterfaceNumber        2
+>        bAlternateSetting       0
+>        bNumEndpoints           3
+>        bInterfaceClass       255 Vendor Specific Class
+>        bInterfaceSubClass     16 [unknown]
+>        bInterfaceProtocol      3
+>        iInterface              0
+>        ** UNRECOGNIZED:  05 24 00 10 01
+>        ** UNRECOGNIZED:  05 24 01 00 00
+>        ** UNRECOGNIZED:  04 24 02 02
+>        ** UNRECOGNIZED:  05 24 06 00 00
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x85  EP 5 IN
+>          bmAttributes            3
+>            Transfer Type            Interrupt
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x000a  1x 10 bytes
+>          bInterval               9
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x84  EP 4 IN
+>          bmAttributes            2
+>            Transfer Type            Bulk
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0200  1x 512 bytes
+>          bInterval               0
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x03  EP 3 OUT
+>          bmAttributes            2
+>            Transfer Type            Bulk
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0200  1x 512 bytes
+>          bInterval               0
+>      Interface Descriptor:
+>        bLength                 9
+>        bDescriptorType         4
+>        bInterfaceNumber        3
+>        bAlternateSetting       0
+>        bNumEndpoints           3
+>        bInterfaceClass       255 Vendor Specific Class
+>        bInterfaceSubClass     16 [unknown]
+>        bInterfaceProtocol      4
+>        iInterface              0
+>        ** UNRECOGNIZED:  05 24 00 10 01
+>        ** UNRECOGNIZED:  05 24 01 00 00
+>        ** UNRECOGNIZED:  04 24 02 02
+>        ** UNRECOGNIZED:  05 24 06 00 00
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x87  EP 7 IN
+>          bmAttributes            3
+>            Transfer Type            Interrupt
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x000a  1x 10 bytes
+>          bInterval               9
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x86  EP 6 IN
+>          bmAttributes            2
+>            Transfer Type            Bulk
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0200  1x 512 bytes
+>          bInterval               0
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x04  EP 4 OUT
+>          bmAttributes            2
+>            Transfer Type            Bulk
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0200  1x 512 bytes
+>          bInterval               0
+>      Interface Descriptor:
+>        bLength                 9
+>        bDescriptorType         4
+>        bInterfaceNumber        4
+>        bAlternateSetting       0
+>        bNumEndpoints           1
+>        bInterfaceClass       255 Vendor Specific Class
+>        bInterfaceSubClass    255 Vendor Specific Subclass
+>        bInterfaceProtocol    255 Vendor Specific Protocol
+>        iInterface              6 GPS
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x88  EP 8 IN
+>          bmAttributes            3
+>            Transfer Type            Interrupt
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0040  1x 64 bytes
+>          bInterval               9
+>      Interface Descriptor:
+>        bLength                 9
+>        bDescriptorType         4
+>        bInterfaceNumber        5
+>        bAlternateSetting       0
+>        bNumEndpoints           3
+>        bInterfaceClass       255 Vendor Specific Class
+>        bInterfaceSubClass     16 [unknown]
+>        bInterfaceProtocol      5
+>        iInterface              7 RmNet
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x89  EP 9 IN
+>          bmAttributes            3
+>            Transfer Type            Interrupt
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0008  1x 8 bytes
+>          bInterval               9
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x8e  EP 14 IN
+>          bmAttributes            2
+>            Transfer Type            Bulk
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0200  1x 512 bytes
+>          bInterval               0
+>        Endpoint Descriptor:
+>          bLength                 7
+>          bDescriptorType         5
+>          bEndpointAddress     0x0f  EP 15 OUT
+>          bmAttributes            2
+>            Transfer Type            Bulk
+>            Synch Type               None
+>            Usage Type               Data
+>          wMaxPacketSize     0x0200  1x 512 bytes
+>          bInterval               0
+> Binary Object Store Descriptor:
+>    bLength                 5
+>    bDescriptorType        15
+>    wTotalLength       0x0016
+>    bNumDeviceCaps          2
+>    USB 2.0 Extension Device Capability:
+>      bLength                 7
+>      bDescriptorType        16
+>      bDevCapabilityType      2
+>      bmAttributes   0x0000211e
+>        BESL Link Power Management (LPM) Supported
+>      BESL value      256 us
+>      Deep BESL value     8192 us
+>    SuperSpeed USB Device Capability:
+>      bLength                10
+>      bDescriptorType        16
+>      bDevCapabilityType      3
+>      bmAttributes         0x00
+>      wSpeedsSupported   0x000f
+>        Device can operate at Low Speed (1Mbps)
+>        Device can operate at Full Speed (12Mbps)
+>        Device can operate at High Speed (480Mbps)
+>        Device can operate at SuperSpeed (5Gbps)
+>      bFunctionalitySupport   1
+>        Lowest fully-functional device speed is Full Speed (12Mbps)
+>      bU1DevExitLat           0 micro seconds
+>      bU2DevExitLat           0 micro seconds
+> Device Status:     0x0000
+>    (Bus Powered)
+> ---
+> Changes in v2:
+> - Add to the relevant comment that SLM828 is based on Qualcomm SDX12.
+> - Add to the comment for certain interface specification that SRM815
+>    uses that interface specificiation as well.
+> - Link to v1: https://lore.kernel.org/r/20250123-for-johan-meig-slm828-v1-1-6456996e94a5@arinc9.com
+> ---
+>   drivers/usb/serial/option.c | 14 +++++++++-----
+>   1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+> index 1e2ae0c6c41c79dd38f2c1d3a98e58ebf076050a..1f324ef877722be246523d2f8a25b8550dc9bb97 100644
+> --- a/drivers/usb/serial/option.c
+> +++ b/drivers/usb/serial/option.c
+> @@ -621,7 +621,9 @@ static void option_instat_callback(struct urb *urb);
 >   
->   What:		/sys/bus/coresight/devices/<cti-name>/powered
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) Indicate if the CTI hardware is powered.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/ctmid
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) Display the associated CTM ID
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/nr_trigger_cons
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) Number of devices connected to triggers on this CTI
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/name
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) Name of connected device <N>
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/in_signals
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) Input trigger signals from connected device <N>
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/in_types
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) Functional types for the input trigger signals
->   		from connected device <N>
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/out_signals
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) Output trigger signals to connected device <N>
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/out_types
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) Functional types for the output trigger signals
->   		to connected device <N>
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/inout_sel
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(RW) Select the index for inen and outen registers.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/inen
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(RW) Read or write the CTIINEN register selected by inout_sel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/outen
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(RW) Read or write the CTIOUTEN register selected by inout_sel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/gate
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(RW) Read or write CTIGATE register.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/asicctl
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(RW) Read or write ASICCTL register.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/intack
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Write the INTACK register.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/appset
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(RW) Set CTIAPPSET register to activate channel. Read back to
->   		determine current value of register.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/appclear
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Write APPCLEAR register to deactivate channel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/apppulse
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Write APPPULSE to pulse a channel active for one clock
->   		cycle.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/chinstatus
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) Read current status of channel inputs.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/choutstatus
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) read current status of channel outputs.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/triginstatus
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) read current status of input trigger signals
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/regs/trigoutstatus
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) read current status of output trigger signals.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/trigin_attach
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Attach a CTI input trigger to a CTM channel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/trigin_detach
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Detach a CTI input trigger from a CTM channel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_attach
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Attach a CTI output trigger to a CTM channel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_detach
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Detach a CTI output trigger from a CTM channel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_gate_enable
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(RW) Enable CTIGATE for single channel (Write) or list enabled
->   		channels through the gate (R).
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_gate_disable
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Disable CTIGATE for single channel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_set
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Activate a single channel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_clear
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Deactivate a single channel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_pulse
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Pulse a single channel - activate for a single clock cycle.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_filtered
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) List of output triggers filtered across all connections.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/trig_filter_enable
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(RW) Enable or disable trigger output signal filtering.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_inuse
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) show channels with at least one attached trigger signal.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_free
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) show channels with no attached trigger signals.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_sel
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(RW) Write channel number to select a channel to view, read to
->   		see selected channel number.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_in
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) Read to see input triggers connected to selected view
->   		channel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_out
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Read) Read to see output triggers connected to selected view
->   		channel.
->   
->   What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_reset
->   Date:		March 2020
-> -KernelVersion	5.7
-> +KernelVersion:	5.7
->   Contact:	Mike Leach or Mathieu Poirier
->   Description:	(Write) Clear all channel / trigger programming.
-> diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm
-> index bf710ea6e0ef..53cb454b60d0 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm
-> +++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm
-> @@ -1,6 +1,6 @@
->   What:		/sys/bus/coresight/devices/<tpdm-name>/integration_test
->   Date:		January 2023
-> -KernelVersion	6.2
-> +KernelVersion:	6.2
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(Write) Run integration test for tpdm. Integration test
-> @@ -14,7 +14,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/reset_dataset
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(Write) Reset the dataset of the tpdm.
-> @@ -24,7 +24,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_trig_type
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the trigger type of the DSB for tpdm.
-> @@ -35,7 +35,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_trig_ts
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the trigger timestamp of the DSB for tpdm.
-> @@ -46,7 +46,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_mode
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the programming mode of the DSB for tpdm.
-> @@ -60,7 +60,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_edge/ctrl_idx
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the index number of the edge detection for the DSB
-> @@ -69,7 +69,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_edge/ctrl_val
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		Write a data to control the edge detection corresponding to
-> @@ -85,7 +85,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_edge/ctrl_mask
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		Write a data to mask the edge detection corresponding to the index
-> @@ -97,21 +97,21 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_edge/edcr[0:15]
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		Read a set of the edge control value of the DSB in TPDM.
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_edge/edcmr[0:7]
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		Read a set of the edge control mask of the DSB in TPDM.
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_trig_patt/xpr[0:7]
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the value of the trigger pattern for the DSB
-> @@ -119,7 +119,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_trig_patt/xpmr[0:7]
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the mask of the trigger pattern for the DSB
-> @@ -127,21 +127,21 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_patt/tpr[0:7]
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the value of the pattern for the DSB subunit TPDM.
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_patt/tpmr[0:7]
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the mask of the pattern for the DSB subunit TPDM.
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_patt/enable_ts
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(Write) Set the pattern timestamp of DSB tpdm. Read
-> @@ -153,7 +153,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_patt/set_type
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(Write) Set the pattern type of DSB tpdm. Read
-> @@ -165,7 +165,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_msr/msr[0:31]
->   Date:		March 2023
-> -KernelVersion	6.7
-> +KernelVersion:	6.7
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the MSR(mux select register) for the DSB subunit
-> @@ -173,7 +173,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_mode
->   Date:		January 2024
-> -KernelVersion	6.9
-> +KernelVersion:	6.9
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:	(Write) Set the data collection mode of CMB tpdm. Continuous
->   		change creates CMB data set elements on every CMBCLK edge.
-> @@ -187,7 +187,7 @@ Description:	(Write) Set the data collection mode of CMB tpdm. Continuous
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_trig_patt/xpr[0:1]
->   Date:		January 2024
-> -KernelVersion	6.9
-> +KernelVersion:	6.9
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the value of the trigger pattern for the CMB
-> @@ -195,7 +195,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_trig_patt/xpmr[0:1]
->   Date:		January 2024
-> -KernelVersion	6.9
-> +KernelVersion:	6.9
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the mask of the trigger pattern for the CMB
-> @@ -203,21 +203,21 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_patt/tpr[0:1]
->   Date:		January 2024
-> -KernelVersion	6.9
-> +KernelVersion:	6.9
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the value of the pattern for the CMB subunit TPDM.
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/dsb_patt/tpmr[0:1]
->   Date:		January 2024
-> -KernelVersion	6.9
-> +KernelVersion:	6.9
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the mask of the pattern for the CMB subunit TPDM.
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_patt/enable_ts
->   Date:		January 2024
-> -KernelVersion	6.9
-> +KernelVersion:	6.9
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(Write) Set the pattern timestamp of CMB tpdm. Read
-> @@ -229,7 +229,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_trig_ts
->   Date:		January 2024
-> -KernelVersion	6.9
-> +KernelVersion:	6.9
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the trigger timestamp of the CMB for tpdm.
-> @@ -240,7 +240,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_ts_all
->   Date:		January 2024
-> -KernelVersion	6.9
-> +KernelVersion:	6.9
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Read or write the status of timestamp upon all interface.
-> @@ -252,7 +252,7 @@ Description:
->   
->   What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_msr/msr[0:31]
->   Date:		January 2024
-> -KernelVersion	6.9
-> +KernelVersion:	6.9
->   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
->   Description:
->   		(RW) Set/Get the MSR(mux select register) for the CMB subunit
+>   /* MeiG Smart Technology products */
+>   #define MEIGSMART_VENDOR_ID			0x2dee
+> -/* MeiG Smart SRM815/SRM825L based on Qualcomm 315 */
+> +/* MeiG Smart SLM828, SRM815, and SRM825L use the same product ID. SLM828 is
+> + * based on Qualcomm SDX12. SRM815 and SRM825L are based on Qualcomm 315.
+> + */
+>   #define MEIGSMART_PRODUCT_SRM825L		0x4d22
+>   /* MeiG Smart SLM320 based on UNISOC UIS8910 */
+>   #define MEIGSMART_PRODUCT_SLM320		0x4d41
+> @@ -2405,10 +2407,12 @@ static const struct usb_device_id option_ids[] = {
+>   	{ USB_DEVICE_AND_INTERFACE_INFO(UNISOC_VENDOR_ID, LUAT_PRODUCT_AIR720U, 0xff, 0, 0) },
+>   	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SLM320, 0xff, 0, 0) },
+>   	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SLM770A, 0xff, 0, 0) },
+> -	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0, 0) },
+> -	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0xff, 0x30) },
+> -	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0xff, 0x40) },
+> -	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0xff, 0x60) },
+> +	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0, 0) },	/* MeiG Smart SRM815 */
+> +	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0x10, 0x02) },	/* MeiG Smart SLM828 */
+> +	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0x10, 0x03) },	/* MeiG Smart SLM828 */
+> +	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0xff, 0x30) },	/* MeiG Smart SRM815 and SRM825L */
+> +	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0xff, 0x40) },	/* MeiG Smart SRM825L */
+> +	{ USB_DEVICE_AND_INTERFACE_INFO(MEIGSMART_VENDOR_ID, MEIGSMART_PRODUCT_SRM825L, 0xff, 0xff, 0x60) },	/* MeiG Smart SRM825L */
+>   	{ USB_DEVICE_INTERFACE_CLASS(0x1bbb, 0x0530, 0xff),			/* TCL IK512 MBIM */
+>   	  .driver_info = NCTRL(1) },
+>   	{ USB_DEVICE_INTERFACE_CLASS(0x1bbb, 0x0640, 0xff),			/* TCL IK512 ECM */
+> 
+> ---
+> base-commit: 5bc55a333a2f7316b58edc7573e8e893f7acb532
+> change-id: 20250123-for-johan-meig-slm828-cb38669db37c
+> 
+> Best regards,
 
