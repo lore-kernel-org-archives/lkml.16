@@ -1,235 +1,246 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DE821127D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3F721127D;
+	Tue,  4 Feb 2025 13:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738674321; cv=none; b=Lz692Z2leCTlbRxpYdxOrDUycRHZovR5vdvPTpa/pFfEnurmbDchGdoMGREOzbH60JIGS3uK3s5JSL0bGUCJ8R6zicMWMfwpjUGDzl7gBmT4IBppUYcjkO9Yrx7lSIXoZhQKGHu+4XiCtNKN03g2v/x8WxgnWV81KLx8zkwJVNg=
+	t=1738674363; cv=none; b=B/APSUvCfMTv6dE5XDS8xdkhVkbVlVDgTFXX5n9ChFLEVMi4+4syOTUNs5hbBTp346C4NmNj8bi/lUa2bkye7PXTcA2m5ucDUdxmAU3bFsVB+rFpvxKNDbcJJ77LWDWp5BfgElFTIY+zAQHvY5dIM+GxmwJ/Aqruykr1EsMojh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738674321; c=relaxed/simple;
-	bh=i+1q8Zzgvh2Mh3R1+FitBJPqR1dPHazu3ddiTGqitQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=htMEEYCVTRO2LDtNUxTsR2/2bHUCeb5kymvXP1iSt2d4UxbtiUCwV7Ly8Lk0xLt4lr1KVA2n5qIKq9m95+DctjMgqn+1TvUc6b6ZIStxw000ROUM0sIPZp9j8brlgoRegwwC350MJ2AfC+5vIF0r54hb2qobK7fuy3mWVBKhi7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=P4ElE6Np; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738674363; c=relaxed/simple;
+	bh=JtJpZ9JBg5RMa5R66H7G5tBoKD7wUf+pEfL69vJi/hk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZjB/SR3GCa+qVVTMMn1VupVsI2lJmgtOfh4q5QAQHKYwbjy0s11Lv3BS7Ahfm4hPqV6QZ8CEaJpaG/UaAXMXeSIBKECqHb/AArBV0nbFCkMV88gSxQnTUSTnyMfB01ydhkKKYHU0M9y3Qc1Gb19T+HhYO15VGPFCtCtohw3uN7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=JZj/AK23; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="P4ElE6Np"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab698eae2d9so1109227866b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 05:05:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738674317; x=1739279117; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3oOyfmyvxD2JRjb/GBBLy3vJNh6/Dw/oGTe4zC+nKbk=;
-        b=P4ElE6Np9zbljPbka/Z0X9bUA/VL9va5WQZt4+NqxyhO4U5D7f7MXQ2jy5sDvE82el
-         ym3EbSibw8A1jSj/QC3Ejxfew8A/7t7oDJIdcaQPqlw0YfrllrjadvpqvSfO+9TuO97H
-         obPsVwhcQg31L/YlG+vYr7aLBlMJzn7vQJzNdHu3PnIPDrNJmQzF7XdhKaiB6mHUpUup
-         KdZKyo/vN9/QDKh+jhQzBT9gABgMQ8JuZRh8CqnHXov+d8xWlgiBMJn1lOZL8lOFRJgv
-         xQ/KSY3LLmjJaIQ2HRSlbUteO15uB7U6zIhLnHwuHp4ZK7uAyfbw3zyTDmhHpoHtFQq+
-         SZ9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738674317; x=1739279117;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3oOyfmyvxD2JRjb/GBBLy3vJNh6/Dw/oGTe4zC+nKbk=;
-        b=K4zdJ93QplTyvZCxB2UHqHSZfmRV9Ewapt7vJnm9gkxStaNQ/GKBxCK6X+Pnc3hUEw
-         jVYDTM2zUvQl0JR7HZp20qkx017aJPfDhGaZIpQmGczE33ZrMKGJ7wPSEgaDoBUcnMtE
-         uNafqqTnq+Q45HM5UTiywjG8einXZxbpR4kdMUwUebj8peaMFwoS85kI1SBSzK/OkeT2
-         ITPjllYKOW8hVKTTv8AGXiQKZ2pDwEtbTyMKaKc4/iqxlmqHTfGBN8+fLopowWrZXQZb
-         rVdjEG4lRx6xV5nehd4jR7f6Awazfnwj/Z1J3cC+WDffeee/FsJT0O0T911De5WkrYCA
-         S/Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnNin09ky9j//Q5uRhk9TzqFYZlQD/SE9+W/ptRiVPG1K7YvARX0exYY72qxQPGtBddQ/C/yrzmDLGT+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsDQyWa7WpkMUbpyq9+Ivt3WwbYgMkWiVg2aj1pFDVt37blnXg
-	iYBs0xa9kK4cJAL9ltjwrkDQ6pvmsdqGuWeMESrQ+F+pBGggyVDuwpk3jNSOt9k=
-X-Gm-Gg: ASbGnctYBQ56wgUD98wRjipYZ8htpPcL1Z4qPX0+CqWzs0q+tyOMppno6ZJ1YC9MVA4
-	27Vlx+LzOlDzlyGmX5cYHwxtjuFGrtI/SQc2fbqeD5eJJ2sko4Db4Tb/ckCNe5XvhD94ktIvwgR
-	SEIoKHXNE0bgf+a6eMfajKs/CxWNP6tX9D3bexhNfPKAbPhkW7Ko5SV0fwe5/+xxYwWEDKfWD3j
-	wZlrj0Iwn+9yhGAfoLf/gUiRNiMHJz6K2RPoc1jEwDYW4PtzVOAL8a7X7h3G4iKSA9JbqkL+QEy
-	K6Fa5L7ZS6+6tgRj9Q==
-X-Google-Smtp-Source: AGHT+IGBl7i7nXlso9tbhlV1G/QjiiNegMs2sz3oHixQqd+gL/Zatt/iwtDjc84jpzxmYuC601DOjA==
-X-Received: by 2002:a17:906:6a24:b0:aa6:aa8e:c89c with SMTP id a640c23a62f3a-ab6cfda42fbmr3356237366b.39.1738674317098;
-        Tue, 04 Feb 2025 05:05:17 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ff269sm914164166b.118.2025.02.04.05.05.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 05:05:16 -0800 (PST)
-Date: Tue, 4 Feb 2025 14:05:15 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: Miroslav Benes <mbenes@suse.cz>, jpoimboe@kernel.org, jikos@kernel.org,
-	joe.lawrence@redhat.com, live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
-Message-ID: <Z6IQi4wpph0dnSD7@pathway.suse.cz>
-References: <20250127063526.76687-1-laoar.shao@gmail.com>
- <Z5eOIQ4tDJr8N4UR@pathway.suse.cz>
- <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
- <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz>
- <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="JZj/AK23"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: lina@asahilina.net)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 6F997431CA;
+	Tue,  4 Feb 2025 13:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
+	s=default; t=1738674353;
+	bh=JtJpZ9JBg5RMa5R66H7G5tBoKD7wUf+pEfL69vJi/hk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=JZj/AK230WWVFZSYwpKbzwfvAuQltV+/J9aH+mPhEfG2V6eoZ19CrmBzpbnnx7cIz
+	 Nt8sFsF1nzsfukcW6YJpzf3n7J9RmOMDpSTZl/0MYuZj2W/YU9rerq6RtlqFFP15aw
+	 KSbdvUlFRm61deoGjuGJKiBWrQ9HGZn4cLxt7JjcTHGqMNhVaY/A1kwnb8c6fPcCCY
+	 ZIl7J0xxp3VqMFE+88kFhhqYUh2OOq61iO8GUs8TYeDaMZOjCqOBYoe/jgKg/Trnqs
+	 Wi4/Jo5dK9LQurSj8ilZdDrqklw68cQ8y5qqQedCQNWGBlyBavq0R3gvUjiQSRF8iM
+	 F0vTel4kjjmsw==
+Message-ID: <1e9ae833-4293-4e48-83b2-c0af36cb3fdc@asahilina.net>
+Date: Tue, 4 Feb 2025 22:05:50 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] rust: page: Support borrowing `struct page` and
+ physaddr conversion
+To: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Jann Horn <jannh@google.com>,
+ Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, Wedson Almeida Filho
+ <wedsonaf@gmail.com>, Valentin Obst <kernel@valentinobst.de>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ asahi@lists.linux.dev, Oscar Salvador <osalvador@suse.de>,
+ Muchun Song <muchun.song@linux.dev>
+References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
+ <Z6CTLB2NggwYafi9@phenom.ffwll.local>
+ <41ca3445-80cd-43c1-8f9e-634c195c9187@asahilina.net>
+ <37A0729B-A711-4D45-B9F0-328FDB9ADD28@nvidia.com>
+ <0e19e1c3-293b-4740-93f3-2c410893288b@redhat.com>
+ <82047858-480a-45e3-b826-3a46fbebe842@asahilina.net>
+ <f1498b22-0bc1-489a-8c2c-35aa48c7fe7d@redhat.com>
+Content-Language: en-US
+From: Asahi Lina <lina@asahilina.net>
+In-Reply-To: <f1498b22-0bc1-489a-8c2c-35aa48c7fe7d@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
 
-On Mon 2025-02-03 17:44:52, Yafang Shao wrote:
-> On Fri, Jan 31, 2025 at 9:18 PM Miroslav Benes <mbenes@suse.cz> wrote:
-> >
-> > > >
-> > > >   + What exactly is meant by frequent replacements (busy loop?, once a minute?)
-> > >
-> > > The script:
-> > >
-> > > #!/bin/bash
-> > > while true; do
-> > >         yum install -y ./kernel-livepatch-6.1.12-0.x86_64.rpm
-> > >         ./apply_livepatch_61.sh # it will sleep 5s
-> > >         yum erase -y kernel-livepatch-6.1.12-0.x86_64
-> > >         yum install -y ./kernel-livepatch-6.1.6-0.x86_64.rpm
-> > >         ./apply_livepatch_61.sh  # it will sleep 5s
-> > > done
-> >
-> > A live patch application is a slowpath. It is expected not to run
-> > frequently (in a relative sense).
+
+
+On 2/4/25 8:59 PM, David Hildenbrand wrote:
+>>>> Add DavidH and OscarS for memory hot-remove questions.
+>>>>
+>>>> IIUC, struct page could be freed if a chunk of memory is hot-removed.
+>>>
+>>> Right, but only after there are no users anymore (IOW, memory was freed
+>>> back to the buddy). PFN walkers might still stumble over them, but I
+>>> would not expect (or recommend) rust to do that.
+>>
+>> The physaddr to page function does look up pages by pfn, but it's
+>> intended to be used by drivers that know what they're doing. There are
+>> two variants of the API, one that is completely unchecked (a fast path
+>> for cases where the driver definitely allocated these pages itself, for
+>> example just grabbing the `struct page` back from a decoded PTE it
+>> wrote), and one that has this check:
+>>
+>> pfn_valid(pfn) && page_is_ram(pfn)
+>>
+>> Which is intended as a safety net to allow drivers to look up
+>> firmware-reserved pages too, and fail gracefully if the kernel doesn't
+>> know about them (because they weren't declared in the
+>> bootloader/firmware memory map correctly) or doesn't have them mapped in
+>> the direct map (because they were declared no-map).
+>> > Is there anything else that can reasonably be done here to make the API
+>> safer to call on an arbitrary pfn?
 > 
-> The frequency isn’t the main concern here; _scalability_ is the key issue.
-> Running livepatches once per day (a relatively low frequency) across all of our
-> production servers (hundreds of thousands) isn’t feasible. Instead, we need to
-> periodically run tests on a subset of test servers.
-
-I am confused. The original problem was a system crash when
-livepatching do_exit() function, see
-https://lore.kernel.org/r/CALOAHbA9WHPjeZKUcUkwULagQjTMfqAdAg+akqPzbZ7Byc=qrw@mail.gmail.com
-
-The rcu watchdog warning was first mentioned in this patchset.
-Do you see rcu watchdog warning in production or just
-with this artificial test, please?
-
-
-> > If you stress it like this, it is quite
-> > expected that it will have an impact. Especially on a large busy system.
+> In PFN walkers we use pfn_to_online_page() to make sure that (1) the
+> memmap really exists; and (2) that it has meaning (e.g., was actually
+> initialized).
 > 
-> It seems you agree that the current atomic-replace process lacks scalability.
-> When deploying a livepatch across a large fleet of servers, it’s impossible to
-> ensure that the servers are idle, as their workloads are constantly varying and
-> are not deterministic.
+> It can still race with memory offlining, and it refuses ZONE_DEVICE
+> pages. For the latter, we have a different way to check validity. See
+> memory_failure() that first calls pfn_to_online_page() to then check
+> get_dev_pagemap().
 
-Do you see the scalability problem in production, please?
-And could you prove that it was caused by livepatching, please?
+I'll give it a shot with these functions. If they work for my use case,
+then it's good to have extra checks and I'll add them for v2. Thanks!
 
-
-> The challenges are very different when managing 1K servers versus 1M servers.
-> Similarly, the issues differ significantly between patching a single
-> function and
-> patching 100 functions, especially when some of those functions are critical.
-> That’s what scalability is all about.
 > 
-> Since we transitioned from the old livepatch mode to the new
-> atomic-replace mode,
-
-What do you mean with the old livepatch mode, please?
-
-Did you allow to install more livepatches in parallel?
-What was the motivation to switch to the atomic replace, please?
-
-> our SREs have consistently reported that one or more servers become
-> stalled during
-> the upgrade (replacement).
-
-What is SRE, please?
-Could you please show some log from a production system?
-
-
-> > > > > Other potential risks may also arise
-> > > > >   due to inconsistencies or race conditions during transitions.
-> > > >
-> > > > What inconsistencies and race conditions you have in mind, please?
-> > >
-> > > I have explained it at
-> > > https://lore.kernel.org/live-patching/Z5DHQG4geRsuIflc@pathway.suse.cz/T/#m5058583fa64d95ef7ac9525a6a8af8ca865bf354
-> > >
-> > >  klp_ftrace_handler
-> > >       if (unlikely(func->transition)) {
-> > >           WARN_ON_ONCE(patch_state == KLP_UNDEFINED);
-> > >   }
-> > >
-> > > Why is WARN_ON_ONCE() placed here? What issues have we encountered in the past
-> > > that led to the decision to add this warning?
-> >
-> > A safety measure for something which really should not happen.
+>>
+>> If the answer is "no" then that's fine. It's still an unsafe function
+>> and we need to document in the safety section that it should only be
+>> used for memory that is either known to be allocated and pinned and will
+>> not be freed while the `struct page` is borrowed, or memory that is
+>> reserved and not owned by the buddy allocator, so in practice correct
+>> use would not be racy with memory hot-remove anyway.
+>>
+>> This is already the case for the drm/asahi use case, where the pfns
+>> looked up will only ever be one of:
+>>
+>> - GEM objects that are mapped to the GPU and whose physical pages are
+>> therefore pinned (and the VM is locked while this happens so the objects
+>> cannot become unpinned out from under the running code),
 > 
-> Unfortunately, this issue occurs during my stress tests.
+> How exactly are these pages pinned/obtained?
 
-I am confused. Do you see the above WARN_ON_ONCE() during your
-stress test? Could you please provide a log?
+Under the hood it's shmem. For pinning, it winds up at
+`drm_gem_get_pages()`, which I think does a `shmem_read_folio_gfp()` on
+a mapping set as unevictable.
 
-> > > > The main advantage of the atomic replace is simplify the maintenance
-> > > > and debugging.
-> > >
-> > > Is it worth the high overhead on production servers?
-> >
-> > Yes, because the overhead once a live patch is applied is negligible.
+I'm not very familiar with the innards of that codepath, but it's
+definitely an invariant that GEM objects have to be pinned while they
+are mapped in GPU page tables (otherwise the GPU would end up accessing
+freed memory).
+
+Since the code that walks the PT to dump pages is part of the same PT
+object and takes a mutable reference, the Rust guarantees mean it's
+impossible for the PT to be concurrently mutated or anything like that.
+So if one of these objects *were* unpinned/freed somehow while the dump
+code is running, that would be a major bug somewhere else, since there
+would be dangling PTEs left over.
+
+In practice, there's a big lock around each PT/VM at a higher level of
+the driver, so any attempts to unmap/free any of those objects will be
+stuck waiting for the lock on the VM they are mapped into.
+
 > 
-> If you’re managing a large fleet of servers, this issue is far from negligible.
+>> - Raw pages allocated from the page allocator for use as GPU page tables,
 > 
-> >
-> > > Can you provide examples of companies that use atomic replacement at
-> > > scale in their production environments?
-> >
-> > At least SUSE uses it as a solution for its customers. No many problems
-> > have been reported since we started ~10 years ago.
+> That makes sense.
 > 
-> Perhaps we’re running different workloads.
-> Going back to the original purpose of livepatching: is it designed to address
-> security vulnerabilities, or to deploy new features?
+>> - System memory that is marked reserved by the firmware/bootloader,
+> 
+> E.g., in arch/x86/mm/ioremap.c:__ioremap_check_ram() we refuse anything
+> that has a valid memmap and is *not* marked as PageReserved, to prevent
+> remapping arbitrary *real* RAM.
+> 
+> Is that case here similar?
 
-We (SUSE) use livepatches only for fixing CVEs and serious bugs.
+I don't have an explicit check for that here but yes, the pages wind up
+marked PageReserved. This includes both no-map ranges and map ranges.
+The no-map ranges also have a valid struct page if within the declared
+RAM range but they would oops if we try to access the contents via
+direct map, so the page_is_ram() check is there to reject those (and
+MMIO and anything else that isn't normally mapped as RAM even if it
+winds up with a struct page).
 
+>> - (Potentially) invalid PFNs that aren't part of the System RAM region
+>> at all and don't have a struct page to begin with, which we check for,
+>> so the API returns an error. This would only happen if the bootloader
+>> didn't declare some used firmware ranges at all, so Linux doesn't know
+>> about them.
+>>
+>>>
+>>>>
+>>>> Another case struct page can be freed is when hugetlb vmemmap
+>>>> optimization
+>>>> is used. Muchun (cc'd) is the maintainer of hugetlbfs.
+>>>
+>>> Here, the "struct page" remains valid though; it can still be accessed,
+>>> although we disallow writes (which would be wrong).
+>>>
+>>> If you only allocate a page and free it later, there is no need to worry
+>>> about either on the rust side.
+>>
+>> This is what the safe API does. (Also the unsafe physaddr APIs if all
+>> you ever do is convert an allocated page to a physaddr and back, which
+>> is the only thing the GPU page table code does during normal use. The
+>> walking leaf PFNs story is only for GPU device coredumps when the
+>> firmware crashes.)
+> 
+> I would hope that we can lock down this interface as much as possible.
 
-> If it’s the latter, then there’s definitely a lot of room for improvement.
+Right, that's why the safe API never does any of the weird pfn->page
+stuff. Rust driver code has to use unsafe {} to access the raw pfn->page
+interface, which requires a // SAFETY comment explaining why what it's
+doing is safe, and then we need to document in the function signature
+what the safety requirements are so those comments can be reviewed.
 
-You might be right. I am just not sure whether the hybrid mode would
-be the right solution.
+> Ideally, we would never go from pfn->page, unless
+> 
+> (a) we remember somehow that we came from page->pfn. E.g., we allocated
+>     these pages or someone else provided us with these pages. The memmap
+>     cannot go away. I know it's hard.
 
-If you have problems with the atomic replace then you might stop using
-it completely and just install more livepatches in parallel.
+This is the common case for the page tables. 99% of the time this is
+what the driver will be doing, with a single exception (the root page
+table of the firmware/privileged VM is a system reserved memory region,
+and falls under (b). It's one single page globally in the system.).
 
+The driver actually uses the completely unchecked interface in this
+case, since it knows the pfns are definitely OK. I do a single check
+with the checked interface at probe time for that one special-case pfn
+so it can fail gracefully instead of oops if the DT config is
+unusable/wrong.
 
-My view:
+> (b) the pages are flagged as being special, similar to
+>     __ioremap_check_ram().
 
-More livepatches installed in parallel are more prone to
-inconsistencies. A good example is the thread about introducing
-stack order sysfs interface, see
-https://lore.kernel.org/all/AAD198C9-210E-4E31-8FD7-270C39A974A8@gmail.com/
+This only ever happens during firmware crash dumps (plus the one
+exception above).
 
-The atomic replace helps to keep the livepatched functions consistent.
+The missing (c) case is the kernel/firmware shared memory GEM objects
+during crash dumps. But I really need those to diagnose firmware
+crashes. Of course, I could dump them separately through other APIs in
+principle, but that would complicate the crashdump code quite a bit
+since I'd have to go through all the kernel GPU memory allocators and
+dig out all their backing GEM objects and copy the memory through their
+vmap (they are all vmapped, which is yet another reason in practice the
+pages are pinned) and merge it into the coredump file. I also wouldn't
+have easy direct access to the matching GPU PTEs if I do that (I store
+the PTE permission/caching bits in the coredump file, since those are
+actually kind of critical to diagnose exactly what happened, as caching
+issues are one major cause of firmware problems). Since I need the page
+table walker code to grab the firmware pages anyway, I hope I can avoid
+having to go through a completely different codepath for the kernel GEM
+objects...
 
-The hybrid model would allow to install more livepatches in parallel except
-that one livepatch could be replaced atomically. It would create even
-more scenarios than allowing all livepatches in parallel.
+~~ Lina
 
-What would be the rules, please?
-
-Which functionality will be livepatched by the atomic replace, please?
-
-Which functionality will be handled by the extra non-replaceable
-livepatches, please?
-
-How would you keep the livepatches consistent, please?
-
-How would you manage dependencies between livepatches, please?
-
-What is the advantage of the hybrid model over allowing
-all livepatches in parallel, please?
-
-Best Regards,
-Petr
