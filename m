@@ -1,189 +1,505 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88D132153EA;
-	Tue,  4 Feb 2025 16:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1620B86324;
+	Tue,  4 Feb 2025 16:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738687929; cv=none; b=daWZ87w85SRPyKUt6V/uUJVww4hmunlJ1kSYcfDxZIcWonKu34GwVal3QHiBS3KQkG1XrnWidbgWMYyewNgNxbzgmFIPq5Z/9PdH3b1r5AtZZ7B1pYPZP2O5qVaQkUNN5pTbhMLgUP3RWzhcFa02uxJIm397o8VskS01IlQA+FE=
+	t=1738687948; cv=none; b=oiZmeLURU68RhkbGsijiY+ALnFqL2buNfdCZUK8RYD9bhuIgYGPc4qXmDh+0Ne6MqHcR5Mvb88z55w7VWR3APAQVwIiWdwG+lEbhBqxy+gW3eXQvEO5Cdm+xmJwYZUtlENf8zO70CQZnUh1mCJfI90OQ4h+mUdVwpGyowDn1ZSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738687929; c=relaxed/simple;
-	bh=hNLYzuKlw/dfuhtTCG0vFtuuay/O5OFK6TxVKaAhhlk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ko1xCZiuEhP3OG5aEYw9xadUoJc1yL8ShTyayuCXN0OkkChKW8jnYCm03HXNzOTCh3JiF4rMNU1fObRm3nmN/AY/UhnGgvrBiazTPVgo526MO1SnrvYk3PwfgnDjZ7A052QcG+wfCMf0KXoGixMdO+7B5RTzNgZJqsrrrOJzVrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: EmbyQgIMS1OWmFrxMcY8RA==
-X-CSE-MsgGUID: uUEINQaUQh6nspVIzi5KhA==
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 05 Feb 2025 01:51:59 +0900
-Received: from [10.24.1.103] (unknown [10.24.1.103])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8856E403141A;
-	Wed,  5 Feb 2025 01:51:46 +0900 (JST)
-Message-ID: <44797c30-5211-4aed-b57e-4420204bd063@bp.renesas.com>
-Date: Tue, 4 Feb 2025 16:51:44 +0000
+	s=arc-20240116; t=1738687948; c=relaxed/simple;
+	bh=bmQpIzXM2BQbbfb4O0ebO9cw12Ob53P8fvvbR1G3MWs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jlSfhPI5Wwy48lWNIbbakU9QU20M8o1R0wyYUI98P6sNs1p01jIopufAUCXFfrDAn6iFMhPk6/zuBaIm2xF+6YKumWrbAIpdLAsKH+ihzyC21ulwDO02LAyjxFt+8B8XOAPEq34dICMRX2tJzJh5cdRJ+eUB8pTnkdEycmgo1qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=ZEHBxZNg; arc=none smtp.client-ip=217.92.40.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="ZEHBxZNg"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1115A1483A3A;
+	Tue,  4 Feb 2025 17:52:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
+	t=1738687934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CEdF0jhoG/B0a4ES0SlrhCki6yzDX3XnbYxVQbv/gYw=;
+	b=ZEHBxZNgpTtAP/BAslYrTS06RLxAvyDhs0dCf9GN6erkZZ9dQHg6+d6kU5ex744wF/yc5X
+	SJh5Yo1xYY27VhaoErIyQ2z07vTxX1/Af/KrpKPHEJ6RV/YgQ1iN993AL/WEb49qcCwm0A
+	xQRILYXXTPQqgNovN5ONpv7N1tMQEJ63TaGa62QOZTO/v69Vn4egISfgrMWjTWMXSp3G3J
+	CCeOTZb37IVDfcII9tvWygGgygkz3H57qIqFJHT7USyhQWfqaDL75mCE6dbQM7uQUzprHd
+	I7Do+R4/vzVnW26ht3Zgn2GePOrRFvoLkunlscaHapwznhEZopGU20P2xaY0LQ==
+From: Alexander Dahl <ada@thorsis.com>
+To: devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Peter Rosin <peda@axentia.se>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Microchip (AT91) SoC support),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ARM: dts: microchip: Move address/size-cells properties to SoC dtsi
+Date: Tue,  4 Feb 2025 17:52:04 +0100
+Message-Id: <20250204165205.2375940-1-ada@thorsis.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/14] serial: sh-sci: Fix a comment about SCIFA
-Content-Language: en-GB
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com>
- <20250129165122.2980-9-thierry.bultel.yh@bp.renesas.com>
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-In-Reply-To: <20250129165122.2980-9-thierry.bultel.yh@bp.renesas.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------qp1cyeHHKrUxFoPpCrWN1yoF"
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------qp1cyeHHKrUxFoPpCrWN1yoF
-Content-Type: multipart/mixed; boundary="------------SBvZUIQRD1DMsWDG9kDedHQr";
- protected-headers="v1"
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Message-ID: <44797c30-5211-4aed-b57e-4420204bd063@bp.renesas.com>
-Subject: Re: [PATCH 08/14] serial: sh-sci: Fix a comment about SCIFA
-References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com>
- <20250129165122.2980-9-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250129165122.2980-9-thierry.bultel.yh@bp.renesas.com>
+Avoids warnings with board dts files enabling ethernet-controller node
+together with phy child node(s).
 
---------------SBvZUIQRD1DMsWDG9kDedHQr
-Content-Type: multipart/mixed; boundary="------------0q93RxT83wXhIKv0S02DW5Zp"
+Signed-off-by: Alexander Dahl <ada@thorsis.com>
+---
+ arch/arm/boot/dts/microchip/at91-dvk_su60_somc.dtsi    | 4 ----
+ arch/arm/boot/dts/microchip/at91-sam9_l9260.dts        | 2 --
+ arch/arm/boot/dts/microchip/at91-sam9x60_curiosity.dts | 2 --
+ arch/arm/boot/dts/microchip/at91-sam9x60ek.dts         | 2 --
+ arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi    | 2 --
+ arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi  | 2 --
+ arch/arm/boot/dts/microchip/at91-sama5d2_ptc_ek.dts    | 2 --
+ arch/arm/boot/dts/microchip/at91-sama5d2_xplained.dts  | 2 --
+ arch/arm/boot/dts/microchip/at91-sama5d3_xplained.dts  | 4 ----
+ arch/arm/boot/dts/microchip/at91-sama7g5ek.dts         | 4 ----
+ arch/arm/boot/dts/microchip/at91-tse850-3.dts          | 3 ---
+ arch/arm/boot/dts/microchip/at91-vinco.dts             | 3 ---
+ arch/arm/boot/dts/microchip/at91rm9200.dtsi            | 2 ++
+ arch/arm/boot/dts/microchip/at91sam9260.dtsi           | 2 ++
+ arch/arm/boot/dts/microchip/at91sam9263.dtsi           | 2 ++
+ arch/arm/boot/dts/microchip/at91sam9g45.dtsi           | 2 ++
+ arch/arm/boot/dts/microchip/at91sam9x5_macb0.dtsi      | 2 ++
+ arch/arm/boot/dts/microchip/at91sam9x5_macb1.dtsi      | 2 ++
+ arch/arm/boot/dts/microchip/sam9x60.dtsi               | 4 ++++
+ arch/arm/boot/dts/microchip/sam9x7.dtsi                | 2 ++
+ arch/arm/boot/dts/microchip/sama5d2.dtsi               | 2 ++
+ arch/arm/boot/dts/microchip/sama5d3_emac.dtsi          | 2 ++
+ arch/arm/boot/dts/microchip/sama5d3_gmac.dtsi          | 2 ++
+ arch/arm/boot/dts/microchip/sama5d3xcm_cmp.dtsi        | 2 --
+ arch/arm/boot/dts/microchip/sama5d3xmb_cmp.dtsi        | 2 --
+ arch/arm/boot/dts/microchip/sama5d3xmb_emac.dtsi       | 2 --
+ arch/arm/boot/dts/microchip/sama5d3xmb_gmac.dtsi       | 2 --
+ arch/arm/boot/dts/microchip/sama7g5.dtsi               | 4 ++++
+ 28 files changed, 28 insertions(+), 40 deletions(-)
 
---------------0q93RxT83wXhIKv0S02DW5Zp
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+diff --git a/arch/arm/boot/dts/microchip/at91-dvk_su60_somc.dtsi b/arch/arm/boot/dts/microchip/at91-dvk_su60_somc.dtsi
+index 3542ad8a243ea..d72a97da900d2 100644
+--- a/arch/arm/boot/dts/microchip/at91-dvk_su60_somc.dtsi
++++ b/arch/arm/boot/dts/microchip/at91-dvk_su60_somc.dtsi
+@@ -110,8 +110,6 @@ &can1 {
+ };
+ 
+ &macb0 {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+ 	status = "okay";
+ 
+ 	ethernet-phy@7 {
+@@ -132,8 +130,6 @@ ethernet-phy@7 {
+ };
+ 
+ &macb1 {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+ 	status = "okay";
+ 
+ 	ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/microchip/at91-sam9_l9260.dts b/arch/arm/boot/dts/microchip/at91-sam9_l9260.dts
+index 2fb51b9aca2ae..f62d5c92021ae 100644
+--- a/arch/arm/boot/dts/microchip/at91-sam9_l9260.dts
++++ b/arch/arm/boot/dts/microchip/at91-sam9_l9260.dts
+@@ -63,8 +63,6 @@ slot@1 {
+ 			macb0: ethernet@fffc4000 {
+ 				pinctrl-0 = <&pinctrl_macb_rmii &pinctrl_macb_rmii_mii_alt>;
+ 				phy-mode = "mii";
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 				status = "okay";
+ 
+ 				ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/microchip/at91-sam9x60_curiosity.dts b/arch/arm/boot/dts/microchip/at91-sam9x60_curiosity.dts
+index b9ffd9e5faacc..9f26d9d25cab5 100644
+--- a/arch/arm/boot/dts/microchip/at91-sam9x60_curiosity.dts
++++ b/arch/arm/boot/dts/microchip/at91-sam9x60_curiosity.dts
+@@ -239,8 +239,6 @@ uart7: serial@200 {
+ 
+ &macb0 {
+ 	phy-mode = "rmii";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_macb0_rmii>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts b/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
+index cdc56b53299d1..65e01bad1c8d4 100644
+--- a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
++++ b/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
+@@ -311,8 +311,6 @@ &i2s {
+ 
+ &macb0 {
+ 	phy-mode = "rmii";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_macb0_rmii>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
+index 8ac85dac5a969..38f67290bc7a0 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
++++ b/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
+@@ -84,8 +84,6 @@ kernel@200000 {
+ 			macb0: ethernet@f8008000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_macb0_default>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 				phy-mode = "rmii";
+ 
+ 				ethernet-phy@7 {
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+index ef11606a82b31..dc6e21cd241bc 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
++++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+@@ -206,8 +206,6 @@ regulator-state-mem {
+ &macb0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_macb0_default>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+ 	phy-mode = "rmii";
+ 
+ 	ethernet-phy@0 {
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d2_ptc_ek.dts b/arch/arm/boot/dts/microchip/at91-sama5d2_ptc_ek.dts
+index e4ae60ef5f8a0..2e7aa0c3b87ee 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d2_ptc_ek.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama5d2_ptc_ek.dts
+@@ -139,8 +139,6 @@ spi0: spi@f8000000 {
+ 			macb0: ethernet@f8008000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_macb0_default &pinctrl_macb0_phy_irq>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 				phy-mode = "rmii";
+ 				status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/microchip/at91-sama5d2_xplained.dts
+index 4bab3f25b855a..839716f8ab646 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d2_xplained.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama5d2_xplained.dts
+@@ -147,8 +147,6 @@ flash@0 {
+ 			macb0: ethernet@f8008000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_macb0_default &pinctrl_macb0_phy_irq>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 				phy-mode = "rmii";
+ 				status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/microchip/at91-sama5d3_xplained.dts
+index 5662992cf213e..6b977f8b5852d 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d3_xplained.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama5d3_xplained.dts
+@@ -132,8 +132,6 @@ vddana_reg: LDO_REG2 {
+ 
+ 			macb0: ethernet@f0028000 {
+ 				phy-mode = "rgmii-rxid";
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 				status = "okay";
+ 
+ 				ethernet-phy@7 {
+@@ -201,8 +199,6 @@ i2c2: i2c@f801c000 {
+ 
+ 			macb1: ethernet@f802c000 {
+ 				phy-mode = "rmii";
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 				status = "okay";
+ 
+ 				ethernet-phy@1 {
+diff --git a/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts b/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
+index 0f5e6ad438dd9..e7f79dd733beb 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
+@@ -512,8 +512,6 @@ spi11: spi@400 {
+ };
+ 
+ &gmac0 {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_gmac0_default
+ 		     &pinctrl_gmac0_mdio_default
+@@ -532,8 +530,6 @@ ethernet-phy@7 {
+ };
+ 
+ &gmac1 {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_gmac1_default
+ 		     &pinctrl_gmac1_mdio_default
+diff --git a/arch/arm/boot/dts/microchip/at91-tse850-3.dts b/arch/arm/boot/dts/microchip/at91-tse850-3.dts
+index 9d58a3931207e..cc902925c6545 100644
+--- a/arch/arm/boot/dts/microchip/at91-tse850-3.dts
++++ b/arch/arm/boot/dts/microchip/at91-tse850-3.dts
+@@ -264,9 +264,6 @@ &macb1 {
+ 
+ 	phy-mode = "rmii";
+ 
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+ 	phy0: ethernet-phy@3 {
+ 		reg = <3>;
+ 
+diff --git a/arch/arm/boot/dts/microchip/at91-vinco.dts b/arch/arm/boot/dts/microchip/at91-vinco.dts
+index ecbdacf48708e..f2df2e9164a7c 100644
+--- a/arch/arm/boot/dts/microchip/at91-vinco.dts
++++ b/arch/arm/boot/dts/microchip/at91-vinco.dts
+@@ -129,9 +129,6 @@ timer@1 {
+ 			macb1: ethernet@fc028000 {
+ 				phy-mode = "rmii";
+ 				status = "okay";
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				status = "okay";
+ 
+ 				ethernet-phy@1 {
+ 					reg = <0x1>;
+diff --git a/arch/arm/boot/dts/microchip/at91rm9200.dtsi b/arch/arm/boot/dts/microchip/at91rm9200.dtsi
+index 02a838541dc35..cafb62f1d64da 100644
+--- a/arch/arm/boot/dts/microchip/at91rm9200.dtsi
++++ b/arch/arm/boot/dts/microchip/at91rm9200.dtsi
+@@ -219,6 +219,8 @@ macb0: ethernet@fffbc000 {
+ 				pinctrl-0 = <&pinctrl_macb_rmii>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 24>;
+ 				clock-names = "ether_clk";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/microchip/at91sam9260.dtsi b/arch/arm/boot/dts/microchip/at91sam9260.dtsi
+index 0038183e9a531..85cf1e8fa48ac 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9260.dtsi
+@@ -634,6 +634,8 @@ macb0: ethernet@fffc4000 {
+ 				pinctrl-0 = <&pinctrl_macb_rmii>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 21>, <&pmc PMC_TYPE_PERIPHERAL 21>;
+ 				clock-names = "hclk", "pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/microchip/at91sam9263.dtsi b/arch/arm/boot/dts/microchip/at91sam9263.dtsi
+index b95d4016ae9f6..267db664deedb 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9263.dtsi
+@@ -633,6 +633,8 @@ macb0: ethernet@fffbc000 {
+ 				pinctrl-0 = <&pinctrl_macb_rmii>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 21>, <&pmc PMC_TYPE_PERIPHERAL 21>;
+ 				clock-names = "hclk", "pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/microchip/at91sam9g45.dtsi b/arch/arm/boot/dts/microchip/at91sam9g45.dtsi
+index 157d306ef5c98..04e607951c299 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9g45.dtsi
+@@ -750,6 +750,8 @@ macb0: ethernet@fffbc000 {
+ 				pinctrl-0 = <&pinctrl_macb_rmii>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 25>, <&pmc PMC_TYPE_PERIPHERAL 25>;
+ 				clock-names = "hclk", "pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/microchip/at91sam9x5_macb0.dtsi b/arch/arm/boot/dts/microchip/at91sam9x5_macb0.dtsi
+index 222aa30f68603..31b0e29bc8ec3 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9x5_macb0.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9x5_macb0.dtsi
+@@ -50,6 +50,8 @@ macb0: ethernet@f802c000 {
+ 				pinctrl-0 = <&pinctrl_macb0_rmii>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 24>, <&pmc PMC_TYPE_PERIPHERAL 24>;
+ 				clock-names = "hclk", "pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/microchip/at91sam9x5_macb1.dtsi b/arch/arm/boot/dts/microchip/at91sam9x5_macb1.dtsi
+index 26bf9b5de9ee4..3ef5d4920b85a 100644
+--- a/arch/arm/boot/dts/microchip/at91sam9x5_macb1.dtsi
++++ b/arch/arm/boot/dts/microchip/at91sam9x5_macb1.dtsi
+@@ -38,6 +38,8 @@ macb1: ethernet@f8030000 {
+ 				pinctrl-0 = <&pinctrl_macb1_rmii>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 27>, <&pmc PMC_TYPE_PERIPHERAL 27>;
+ 				clock-names = "hclk", "pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/microchip/sam9x60.dtsi b/arch/arm/boot/dts/microchip/sam9x60.dtsi
+index b8b2c1ddf3f1e..dc2289685238f 100644
+--- a/arch/arm/boot/dts/microchip/sam9x60.dtsi
++++ b/arch/arm/boot/dts/microchip/sam9x60.dtsi
+@@ -1035,6 +1035,8 @@ macb0: ethernet@f802c000 {
+ 				interrupts = <24 IRQ_TYPE_LEVEL_HIGH 3>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 24>, <&pmc PMC_TYPE_PERIPHERAL 24>;
+ 				clock-names = "hclk", "pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -1044,6 +1046,8 @@ macb1: ethernet@f8030000 {
+ 				interrupts = <27 IRQ_TYPE_LEVEL_HIGH 3>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 27>, <&pmc PMC_TYPE_PERIPHERAL 27>;
+ 				clock-names = "hclk", "pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/microchip/sam9x7.dtsi b/arch/arm/boot/dts/microchip/sam9x7.dtsi
+index b217a908f5253..60d04c0a0b33f 100644
+--- a/arch/arm/boot/dts/microchip/sam9x7.dtsi
++++ b/arch/arm/boot/dts/microchip/sam9x7.dtsi
+@@ -971,6 +971,8 @@ gmac: ethernet@f802c000 {
+ 			clock-names = "hclk", "pclk", "tx_clk", "tsu_clk";
+ 			assigned-clocks = <&pmc PMC_TYPE_GCK 67>;
+ 			assigned-clock-rates = <266666666>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/microchip/sama5d2.dtsi b/arch/arm/boot/dts/microchip/sama5d2.dtsi
+index 3f99451aef832..204976294ce6e 100644
+--- a/arch/arm/boot/dts/microchip/sama5d2.dtsi
++++ b/arch/arm/boot/dts/microchip/sama5d2.dtsi
+@@ -387,6 +387,8 @@ macb0: ethernet@f8008000 {
+ 					     <67 IRQ_TYPE_LEVEL_HIGH 3>;        /* Queue 2 */
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 5>, <&pmc PMC_TYPE_PERIPHERAL 5>;
+ 				clock-names = "hclk", "pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/microchip/sama5d3_emac.dtsi b/arch/arm/boot/dts/microchip/sama5d3_emac.dtsi
+index 5d7ce13de8ccf..a202147e2dc3c 100644
+--- a/arch/arm/boot/dts/microchip/sama5d3_emac.dtsi
++++ b/arch/arm/boot/dts/microchip/sama5d3_emac.dtsi
+@@ -41,6 +41,8 @@ macb1: ethernet@f802c000 {
+ 				pinctrl-0 = <&pinctrl_macb1_rmii>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 35>, <&pmc PMC_TYPE_PERIPHERAL 35>;
+ 				clock-names = "hclk", "pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/microchip/sama5d3_gmac.dtsi b/arch/arm/boot/dts/microchip/sama5d3_gmac.dtsi
+index 884df7a54dbb6..28771a1ea2355 100644
+--- a/arch/arm/boot/dts/microchip/sama5d3_gmac.dtsi
++++ b/arch/arm/boot/dts/microchip/sama5d3_gmac.dtsi
+@@ -71,6 +71,8 @@ macb0: ethernet@f0028000 {
+ 				pinctrl-0 = <&pinctrl_macb0_data_rgmii &pinctrl_macb0_signal_rgmii>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 34>, <&pmc PMC_TYPE_PERIPHERAL 34>;
+ 				clock-names = "hclk", "pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				status = "disabled";
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/microchip/sama5d3xcm_cmp.dtsi b/arch/arm/boot/dts/microchip/sama5d3xcm_cmp.dtsi
+index 362806afef44f..54e130da1914f 100644
+--- a/arch/arm/boot/dts/microchip/sama5d3xcm_cmp.dtsi
++++ b/arch/arm/boot/dts/microchip/sama5d3xcm_cmp.dtsi
+@@ -46,8 +46,6 @@ timer@1 {
+ 
+ 			macb0: ethernet@f0028000 {
+ 				phy-mode = "rgmii";
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 
+ 				ethernet-phy@1 {
+ 					reg = <0x1>;
+diff --git a/arch/arm/boot/dts/microchip/sama5d3xmb_cmp.dtsi b/arch/arm/boot/dts/microchip/sama5d3xmb_cmp.dtsi
+index 5d9e97fecf834..6f9dd98a708f2 100644
+--- a/arch/arm/boot/dts/microchip/sama5d3xmb_cmp.dtsi
++++ b/arch/arm/boot/dts/microchip/sama5d3xmb_cmp.dtsi
+@@ -126,8 +126,6 @@ &pinctrl_adc0_ad4_sleep
+ 			macb1: ethernet@f802c000 {
+ 				phy-mode = "rmii";
+ 
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 				phy0: ethernet-phy@1 {
+ 					/*interrupt-parent = <&pioE>;*/
+ 					/*interrupts = <30 IRQ_TYPE_EDGE_FALLING>;*/
+diff --git a/arch/arm/boot/dts/microchip/sama5d3xmb_emac.dtsi b/arch/arm/boot/dts/microchip/sama5d3xmb_emac.dtsi
+index a5dd41cd9522d..16c3f2468fe09 100644
+--- a/arch/arm/boot/dts/microchip/sama5d3xmb_emac.dtsi
++++ b/arch/arm/boot/dts/microchip/sama5d3xmb_emac.dtsi
+@@ -12,8 +12,6 @@ apb {
+ 			macb1: ethernet@f802c000 {
+ 				phy-mode = "rmii";
+ 
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 				phy0: ethernet-phy@1 {
+ 					interrupt-parent = <&pioE>;
+ 					interrupts = <30 IRQ_TYPE_EDGE_FALLING>;
+diff --git a/arch/arm/boot/dts/microchip/sama5d3xmb_gmac.dtsi b/arch/arm/boot/dts/microchip/sama5d3xmb_gmac.dtsi
+index d750da38ff3cc..fef978f0e0ea3 100644
+--- a/arch/arm/boot/dts/microchip/sama5d3xmb_gmac.dtsi
++++ b/arch/arm/boot/dts/microchip/sama5d3xmb_gmac.dtsi
+@@ -11,8 +11,6 @@ ahb {
+ 		apb {
+ 			macb0: ethernet@f0028000 {
+ 				phy-mode = "rgmii";
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+ 
+ 				ethernet-phy@1 {
+ 					reg = <0x1>;
+diff --git a/arch/arm/boot/dts/microchip/sama7g5.dtsi b/arch/arm/boot/dts/microchip/sama7g5.dtsi
+index 17bcdcf0cf4a0..eac00084b4def 100644
+--- a/arch/arm/boot/dts/microchip/sama7g5.dtsi
++++ b/arch/arm/boot/dts/microchip/sama7g5.dtsi
+@@ -855,6 +855,8 @@ gmac0: ethernet@e2800000 {
+ 			clock-names = "pclk", "hclk", "tx_clk", "tsu_clk";
+ 			assigned-clocks = <&pmc PMC_TYPE_GCK 51>;
+ 			assigned-clock-rates = <125000000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -865,6 +867,8 @@ gmac1: ethernet@e2804000 {
+ 				     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&pmc PMC_TYPE_PERIPHERAL 52>, <&pmc PMC_TYPE_PERIPHERAL 52>;
+ 			clock-names = "pclk", "hclk";
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
+ 
 
-On 29/01/2025 16:37, Thierry Bultel wrote:
-> RZ/T1 has SCIFA, 'T' is not relevant.
->=20
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.39.5
 
-It'd be good to explain this better in the commit message, something like=
-:
-
-    The comment was correct when it was added, at that time RZ/T1 was
-    the only SoC in the RZ/T line. Since then, further SoCs have been
-    added with RZ/T names which do not use the same SCIFA register
-    layout and so the comment is now misleading.
-
-    So we update the comment to explicitly reference only RZ/T1 SoCs.
-
-> ---
->  drivers/tty/serial/sh-sci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-> index 924b803af440..5ba25a6a5432 100644
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-> @@ -291,7 +291,7 @@ static const struct sci_port_params sci_port_params=
-[SCIx_NR_REGTYPES] =3D {
->  	},
-> =20
->  	/*
-> -	 * The "SCIFA" that is in RZ/A2, RZ/G2L and RZ/T.
-> +	 * The "SCIFA" that is in RZ/A2, RZ/G2L and RZ/T1
-
-Please keep the full stop at the end of the sentence for consistency.
-
->  	 * It looks like a normal SCIF with FIFO data, but with a
->  	 * compressed address space. Also, the break out of interrupts
->  	 * are different: ERI/BRI, RXI, TXI, TEI, DRI.
-
-Thanks,
-
---=20
-Paul Barker
---------------0q93RxT83wXhIKv0S02DW5Zp
-Content-Type: application/pgp-keys; name="OpenPGP_0x27F4B3459F002257.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x27F4B3459F002257.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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3D
-=3DsIIN
------END PGP PUBLIC KEY BLOCK-----
-
---------------0q93RxT83wXhIKv0S02DW5Zp--
-
---------------SBvZUIQRD1DMsWDG9kDedHQr--
-
---------------qp1cyeHHKrUxFoPpCrWN1yoF
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQSiu8gv1Xr0fIw/aoLbaV4Vf/JGvQUCZ6JFoQUDAAAAAAAKCRDbaV4Vf/JGvVki
-AQCmHXY4SYGL4xbDDVm7RC645kF9/dAHCAh8K7ara2yMoQD/SRlUOcYC/AubiyMz685fqAmRP/Vz
-z9nGFPk/0qACLwc=
-=OzBB
------END PGP SIGNATURE-----
-
---------------qp1cyeHHKrUxFoPpCrWN1yoF--
