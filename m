@@ -1,70 +1,82 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D458D8632C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 05:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D0B8632C;
+	Tue,  4 Feb 2025 05:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738647305; cv=none; b=s1On7YZIrGO7JUnZ3u4Oz3X5wLwHdjAQxeQL1jcIhmghnhe6usxwn0dAUx/VgCCDczT2DgdUfuIcqlunhG1UF2FloHaWI5IUgyw1lJUI+EwjkG/8SlcythQ1B4vl7kTiWvNkoKjtW8Jh/cTfrLAMknqk9+JeA0YeRKDLLtcDNdY=
+	t=1738647408; cv=none; b=RbOKDjqpX8MCkqJaPXIian8gYPdAhlxf/v/Fa87h/1OBkao6IC2w7E0GAzgvhlkH2rI7OFGlVXhaC5/2epjNvm0mhAKI8Y+t6mhfMg+OFdD3bu9BVpmfgrQATKXbDq3g16aj/Tp6gufvYQuUlACiIfL3FTGAbM7qYtT/rY9rO54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738647305; c=relaxed/simple;
-	bh=SdBgo+jx18v3hbYD/0/9THCABXjEpWFwgaIW/Ci32Wk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=kmWrbWkza3SVnaAOYimpwJ1zuJp+uSJk2sjQDWgXSBD5+zWyMim0M37TeMF+MYob8Xmfi4BFxg5YltNmvm5ND56P7VUyc9GQBZUUt4qauhKnKUVkWFwb6Ej+9T2v8eg7vkZ9CtgENsKH/HBeyO/J1Sr45ATZkEwvF03ZKaqhSN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d00eac3de2so31299355ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 21:35:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738647303; x=1739252103;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kPr/sereKab1dBN4oQE4AkUFG5DOro0yG48RmemKvhg=;
-        b=FqdgLW2I+jpj9DJWPdETVmkfDVsWkuV2xBSFheNYsvK+ZUvFTQ7nJLafjePQnmmeFo
-         K8JMaUK8FzXQgryHGzcaW+Lwkwr+EJoVD6IEhZ5tVw77oSfenAPNszYS8G5lsk8sbf+5
-         h1K9dGieF/2/9H0Ssav/+UZejgxOu4dra5C7X2HXa1Z9xaoYceDYxQOSSG/pVgZDxu/L
-         BO1amEyiFn51IWvGX+WZtAGl27bs4JYOhrZoBY0GvHuvrlb5RfNT4nZmfPw8tHtvt1wU
-         v8e8xz+SyjKKECDyqBryrdFwrByUzmVhemvkKzMuCkC7Taff1zF+n2dntJHPe9Y8ym/H
-         DEyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYQn3I2ygCoKZXTuIILf0XIzkCEDKup2yT4cvAko6i+lWv9ZShfITAgdlYuKyJi1XiNcQ6BQJryBHPRiI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHAluLLVl4EbJHB6d85yoLjahmGX35CiLeXkEJzxNgDANU72cS
-	/O2GM7jvY+8D6XfTuSLowoJ+MV0an5Wac9mS93/pKe+ng2Q7KFipTh0hahF/fN9q7pCSSetH5E+
-	oWlz2/1lT+TdLTYViGTmbUuV4KTN/82XoMjGdKrM0eQPV00pES8QLQNs=
-X-Google-Smtp-Source: AGHT+IG6RXLXxU2HXRo3+h86xU1jL8XLYbNJboCrRPSf1Vw6d7zkVUPZeOOQg60YZBy7LgW+923qgs9Sy+AmNLf+pg0rOqoSt5OV
+	s=arc-20240116; t=1738647408; c=relaxed/simple;
+	bh=lsO9hrR/gFtCjhrxYLTAwuHqmreL/QpwD9+YEc97dAs=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XCRkmxfa7NMClWVeB9UwKX8Dt2DfnSqrJOaxKTSAeZCV3ueBniHNNVqOcyVjY2tag/SZieRAiDUsfxEGp8vPssFOQMC0RHilt9rRRJH8NgOHIiwKloSf+O1phxiz0qBQuK41gtFMbUl0xUkQ7LdAsIUyiBCgeKkXxDTRYw3QPk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AQUCW5op; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AQUCW5op"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=cTohvSTvwj+ZiQenntSx8kX9G9dSHidT+DOg/qXt65k=; b=AQUCW5opXz0A3Kwr5+UxwcoShn
+	+se4y7BgGVNMd5vk3a+LJjeglSR+HU6tqMfWBQM6G+0j/Ol7NzbDBguQhzHCqBrz+DujUhGY9jJwC
+	S2+Ky1IGkbsle1xPtswC823NAtxDxsQwAZfqYJUlPXo8gm+N5E+qDLG79Je6VvfjyA0bKTjCAmP/k
+	XqemcU+TeAuRZNGehwNon9n315HM0Mvvhm6l7jtVWwbSwMhkoQQOpsUM5l/mq9fJJEojYlLCzgy7+
+	sBBjeG+D6LDPUehEiBJxsM6SdKZay9N20kCXh+WlIQWvrxaUju1vEnBmmWbzQzuCZjFlvr/kttbOH
+	RwUhjWnQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfBc2-0000000HIAy-0zIU;
+	Tue, 04 Feb 2025 05:36:42 +0000
+Date: Mon, 3 Feb 2025 21:36:42 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jaya Kumar <jayakumar.lkml@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>,
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Matthew Wilcox <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	Kajtar Zsolt <soci@c64.rulez.org>, Maira Canal <mcanal@igalia.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH 2/3] mm: provide mapping_wrprotect_page() function
+Message-ID: <Z6Gnat93skcoFZqn@infradead.org>
+References: <cover.1738347308.git.lorenzo.stoakes@oracle.com>
+ <c802c17cdba59e3455f3d7db07659d5da0ed6dc1.1738347308.git.lorenzo.stoakes@oracle.com>
+ <Z6DljlvHpjdFof42@phenom.ffwll.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a29:b0:3d0:258e:4841 with SMTP id
- e9e14a558f8ab-3d0258e49f8mr109960805ab.21.1738647303003; Mon, 03 Feb 2025
- 21:35:03 -0800 (PST)
-Date: Mon, 03 Feb 2025 21:35:02 -0800
-In-Reply-To: <tencent_5BA7330C9E8B1B5B4B051B792515BADEBB08@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a1a706.050a0220.d7c5a.00af.GAE@google.com>
-Subject: Re: [syzbot] [udf?] general protection fault in d_splice_alias
-From: syzbot <syzbot+a9c0867e4d1dd0c7ab19@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6DljlvHpjdFof42@phenom.ffwll.local>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hello,
-
-syzbot tried to test the proposed patch but the build/boot failed:
-
-patch is already applied
+Hi Simona,
 
 
-Tested on:
+On Mon, Feb 03, 2025 at 04:49:34PM +0100, Simona Vetter wrote:
+> 
+> Could we go one step further and entirely drop the struct page? Similar to
+> unmap_mapping_range for VM_SPECIAL mappings, except it only updates the
+> write protection. The reason is that ideally we'd like fbdev defio to
+> entirely get rid of any struct page usage, because with some dma_alloc()
+> memory regions there's simply no struct page for them (it's a carveout).
 
-commit:         0de63bb7 Merge tag 'pull-fix' of git://git.kernel.org/..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d1a6d4df5fcc342f
-dashboard link: https://syzkaller.appspot.com/bug?extid=a9c0867e4d1dd0c7ab19
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=122bc3df980000
+Umm, for dma_alloc* where * is not _pages you never can get a page or
+PFN form them.  They are block boxes and drivers must not attempt to
+translated them into either a page or PFN or things will go wrong.
+Only the kernel virtual address and dma_address may be used.
+
+> See e.g.  Sa498d4d06d6 ("drm/fbdev-dma: Only install deferred I/O if
+> necessary") for some of the pain this has caused.
+
+The commit hash is corrupted, I guess this is 5a498d4d06d6 as the
+subject line matches.  And that commit (just like the code it is trying
+to fix) is completely broken as it violates the above.
 
