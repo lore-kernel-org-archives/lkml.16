@@ -1,200 +1,59 @@
-Received: from mail-lf1-f97.google.com (mail-lf1-f97.google.com [209.85.167.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4387321C17F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 21:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F7021ADC6;
+	Tue,  4 Feb 2025 21:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738705314; cv=none; b=uT1LK8l3FBOoORARofihWXfeT0Ks9AHqEeXCR0BNKgqd1Mqh+PFRF9eX6M0X8fFx+ElBMhatXnPWXc3O87L64/ht4Fk1xWNo61irSloZZzkVBhFGsXkYFnLhFRa/vWATj3xv50zddr4skHlXpJpl8RqA/E8x1g3ktTItKBJbYqI=
+	t=1738705414; cv=none; b=X8BFLevQcMfH2ACKhg+LVxyWXNy6QS34ZxXSkS9AAb2E30rW1CP4cHD2DoIVGof4bOXjQ2MCt6HqUq286h+zJ1koqjGmIN2zUJC9PgHQGalltBlCI8pRwctQ4YXmB2Wz7N5LC8am1R4PhS7V2EyZi7goLU4n0blRbyFNCNZpmCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738705314; c=relaxed/simple;
-	bh=SkkgRL+aWhhRmH4pjJumNwBZl/4orWE7TU6iXYsD5o0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j/YnDVKeeZvVbGfNkzwhOurPJLoIO1OizNSJ2k1uDWo13UM/rvbNkl0GqaLlPrbTHda2Meg3pGfkT9Xm+WH3BTj7vEtmp7eR4KNYY1tob6YCeX3IjBAsKzuC0uMQT6796zJ9WnRpXDwbPebW5rDsIjwNjaWPlKXtWk+hTOXUoco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=MgWeM643; arc=none smtp.client-ip=209.85.167.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1738705414; c=relaxed/simple;
+	bh=m8GYnkgYI7fcL9yp4e1ubi28RL805QQPehrMMx73558=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QsQNSYEglL94QHaxomTri7lng7uPCM5sr3uxhTxL193NwAlBTidWp6JeIi9aEkpXL6VbYr7WziwaX76d0+/su6XlLKvmHrJ8XN+wK/UnI8c7ONUMke3yPiAVhjj8fIlTQsU4dV4r3N1NnKLt3lixfxOsdWr9Z5rEAaFgkDQo1b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJS7xBab; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="MgWeM643"
-Received: by mail-lf1-f97.google.com with SMTP id 2adb3069b0e04-540218726d5so5964381e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 13:41:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1738705308; x=1739310108; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7YkZDn5aiP46G0YmGmDePlUKCzJbx9gAEyIeepD9Ze8=;
-        b=MgWeM6435d1eCDBJBaUGAog7dG8SftIWeb2+0FaTP/YPNyAFe9HB/KEPy2jYiuqAPj
-         eXoEaoqlHCHlVtVRHo2lyf7sLkUWl7dVcuSVMAVS4poQTZ6wPdeOwIYLwKxywXQNmpeF
-         GqwgQGwuaPmLM4XTz2d49LIIaVVpbDjrukBL92meKEm6ikk/7/ZH5PCJ9GaQn54m3+X0
-         ojseNaOlnLAoDa1CG+v07tZUWWvFodpNEuXIIgTg6g0rERVBGxljjKi7svF5zDuveYXr
-         09xti8ecVs0vnThXSHMDYC+fOyWViKKYeHCIxEcNYI8kFDSC57LOK2Z89Pnaxo5QjoCD
-         9VaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738705308; x=1739310108;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7YkZDn5aiP46G0YmGmDePlUKCzJbx9gAEyIeepD9Ze8=;
-        b=b3rTtaO4h15tw58othe7wjdxTWRe+I4Kt1OM1Sh8Y+e/5GE2LfLLlzjjJWDoKblKVe
-         12YLHu7GwychcKV0g1nk+B+95naW4cISYHguUdMwFUg2Dj9eTzP4lUNd2llyMGvcGINH
-         CPu/9JAFYtHMmBuqC8KblhA3F4xSGKInauy7krBPnj24zv2k3QsbBlnbOVvnnXc2rSIU
-         I3OiZwgzSzPgVZIK+XjtitwLdFg2InOpaiGsbv0STG1lkBJo77ECsYbKjVQmP161DYdv
-         n/KpM7HWQTglcwiwgF1rj+lWRlsBBUO20dGdwbGuynjOyaw1Gc3d2Fmm6ut9p257jAW1
-         Snyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWs347aWzB5U/H/bTL6cQF5qZq5aJdh0RXDCMDzWnNYMu18usXMq9X8QZ7D8Flp74N2nMdQpakMB897MoA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzO2xU5KZUq3xpEKzEwE7eXfIEeKEtGBZJU9PRkPY8wzO+aWk/
-	lMATIVXzDzuTpm2zDhktCNk/V8eh/4VgDOn+thZ3cc1OGU/9OjWHtyBxJ0u6cKI+pxEOpP/2dDy
-	8FA6Riz5gF2jcu5g6bKXQ1RWMpeflEoNO
-X-Gm-Gg: ASbGncvNn2YeK7A6/3mRh2fRfev6XxxDyQzDlhSaLFKXvlEKEJO0yqKoH8pq7Dxj2XQ
-	3jbn1iVOO/hv6aGlIFO3ETPH8lx4wsoZY/e2c3De40bBQg7KKoecwpa42+XPmAiSeuctalSSmqd
-	y/e/awnS49RlQvOKbXVbWl7RZtfpywdepMmPg78exQuChjTSk5tuh/FrrQmpqOqEnc7nzvuM1w0
-	3Ce2bBe+Q+CA4kuWshadJqOoQqWQaFO/NC1aLKGFuWHMn5gAdRhG3XVh3rbzNBQ5VRxOsMGUaJa
-	umDHEV0qOseN1POgVDFhLqFFdk2885VyhjUhX+Y=
-X-Google-Smtp-Source: AGHT+IFYytsAx7QnkQuNjUJtxyv3Dx96zeS9SwWEsuo4ceOYnCkESLc0Ls7mDKdivbKiWU1TQz2zgZ3ZQ6LP
-X-Received: by 2002:a05:6512:2245:b0:542:6f78:2ace with SMTP id 2adb3069b0e04-54405a68b4cmr81688e87.47.1738705307937;
-        Tue, 04 Feb 2025 13:41:47 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
-        by smtp-relay.gmail.com with ESMTPS id 2adb3069b0e04-543ebeb0459sm506587e87.89.2025.02.04.13.41.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 13:41:47 -0800 (PST)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 286A934063A;
-	Tue,  4 Feb 2025 14:41:46 -0700 (MST)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id 03F44E41434; Tue,  4 Feb 2025 14:41:46 -0700 (MST)
-From: Uday Shankar <ushankar@purestorage.com>
-Date: Tue, 04 Feb 2025 14:41:44 -0700
-Subject: [PATCH v2 1/2] net, treewide: define and use MAC_ADDR_LEN
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJS7xBab"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43FFC4CEDF;
+	Tue,  4 Feb 2025 21:43:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738705413;
+	bh=m8GYnkgYI7fcL9yp4e1ubi28RL805QQPehrMMx73558=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YJS7xBabGSYqT+e5Tz5JlbNObumGlum7hSL+mLqLgR3qw5HYW5Z3XkttuhJwfBh6J
+	 IhhRu5bZVyYXzD7T0xBTE84VDeRdDqI1Oz7a0BQ1wTuH59+UU4Xii9DtcGjyaj+5v4
+	 NybfB+xPcru05fSXKpX37BRu4mEQXdw8L8Ke/7HH7we34VNp6XsRj7Cz9cxJyqXSon
+	 Ao+O5DAHTk5fWHbhLz4yL4GGHxkhhWBH3kvNoIpgNt6vPEyAsAvvATl57jCmU4haZU
+	 YKTrTJUsxlbYWntqjW+fkcFsffjRdSIVFrh4iyVB/2CCV7dfU3slZr5/f2dHPcyfIw
+	 1GL89ahroikqg==
+Date: Tue, 4 Feb 2025 13:43:31 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Heiko Stuebner <heiko@sntech.de>, "Russell King
+ (Oracle)" <rmk+kernel@armlinux.org.uk>, Steven Price
+ <steven.price@arm.com>, Chen-Yu Tsai <wens@csie.org>, Kunihiko Hayashi
+ <hayashi.kunihiko@socionext.com>, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, stable@vger.kernel.org
+Subject: Re: [PATCH netdev] net: stmmac: dwmac-rk: Provide FIFO sizes for
+ DWMAC 1000
+Message-ID: <20250204134331.270d5c4e@kernel.org>
+In-Reply-To: <20250204161359.3335241-1-wens@kernel.org>
+References: <20250204161359.3335241-1-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-netconsole-v2-1-5ef5eb5f6056@purestorage.com>
-References: <20250204-netconsole-v2-0-5ef5eb5f6056@purestorage.com>
-In-Reply-To: <20250204-netconsole-v2-0-5ef5eb5f6056@purestorage.com>
-To: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
- Simon Horman <horms@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
- Johannes Berg <johannes@sipsolutions.net>, Jonathan Corbet <corbet@lwn.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-wireless@vger.kernel.org, linux-doc@vger.kernel.org, 
- Uday Shankar <ushankar@purestorage.com>
-X-Mailer: b4 0.14.2
 
-There are a few places in the tree which compute the length of the
-string representation of a MAC address as 3 * ETH_ALEN - 1. Define a
-constant for this and use it where relevant. No functionality changes
-are expected.
+On Wed,  5 Feb 2025 00:13:59 +0800 Chen-Yu Tsai wrote:
+> Since a fix for stmmac in general has already been sent [1] and a revert
+> was also proposed [2], I'll refrain from sending mine.
 
-Signed-off-by: Uday Shankar <ushankar@purestorage.com>
----
- drivers/net/netconsole.c           | 2 +-
- drivers/nvmem/brcm_nvram.c         | 2 +-
- drivers/nvmem/layouts/u-boot-env.c | 2 +-
- include/linux/if_ether.h           | 3 +++
- lib/net_utils.c                    | 4 +---
- net/mac80211/debugfs_sta.c         | 5 +++--
- 6 files changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
-index 86ab4a42769a49eebe5dd6f01dafafc6c86ec54f..78c143e65a3f337929f91f70b77e5bc88365eea7 100644
---- a/drivers/net/netconsole.c
-+++ b/drivers/net/netconsole.c
-@@ -675,7 +675,7 @@ static ssize_t remote_mac_store(struct config_item *item, const char *buf,
- 
- 	if (!mac_pton(buf, remote_mac))
- 		goto out_unlock;
--	if (buf[3 * ETH_ALEN - 1] && buf[3 * ETH_ALEN - 1] != '\n')
-+	if (buf[MAC_ADDR_LEN] && buf[MAC_ADDR_LEN] != '\n')
- 		goto out_unlock;
- 	memcpy(nt->np.remote_mac, remote_mac, ETH_ALEN);
- 
-diff --git a/drivers/nvmem/brcm_nvram.c b/drivers/nvmem/brcm_nvram.c
-index b810df727b446b1762a1851750f743e0de6e8788..43608e45c58aa96a505d82733de1b24ef8d18a1b 100644
---- a/drivers/nvmem/brcm_nvram.c
-+++ b/drivers/nvmem/brcm_nvram.c
-@@ -100,7 +100,7 @@ static int brcm_nvram_read_post_process_macaddr(void *context, const char *id, i
- {
- 	u8 mac[ETH_ALEN];
- 
--	if (bytes != 3 * ETH_ALEN - 1)
-+	if (bytes != MAC_ADDR_LEN)
- 		return -EINVAL;
- 
- 	if (!mac_pton(buf, mac))
-diff --git a/drivers/nvmem/layouts/u-boot-env.c b/drivers/nvmem/layouts/u-boot-env.c
-index 731e6f4f12b2bf28e4547d128954a095545ad461..4a6c0d0e6dc90a138bfbb402d401d41f59c021f8 100644
---- a/drivers/nvmem/layouts/u-boot-env.c
-+++ b/drivers/nvmem/layouts/u-boot-env.c
-@@ -37,7 +37,7 @@ static int u_boot_env_read_post_process_ethaddr(void *context, const char *id, i
- {
- 	u8 mac[ETH_ALEN];
- 
--	if (bytes != 3 * ETH_ALEN - 1)
-+	if (bytes != MAC_ADDR_LEN)
- 		return -EINVAL;
- 
- 	if (!mac_pton(buf, mac))
-diff --git a/include/linux/if_ether.h b/include/linux/if_ether.h
-index 8a9792a6427ad9cf58b50c79cbfe185615800dcb..afb2fdc0af653626034ae5e19309c8427272a828 100644
---- a/include/linux/if_ether.h
-+++ b/include/linux/if_ether.h
-@@ -19,6 +19,9 @@
- #include <linux/skbuff.h>
- #include <uapi/linux/if_ether.h>
- 
-+/* XX:XX:XX:XX:XX:XX */
-+#define MAC_ADDR_LEN (3 * ETH_ALEN - 1)
-+
- static inline struct ethhdr *eth_hdr(const struct sk_buff *skb)
- {
- 	return (struct ethhdr *)skb_mac_header(skb);
-diff --git a/lib/net_utils.c b/lib/net_utils.c
-index 42bb0473fb22f977409f7a6792bb1340f4e911c3..0aedd4854d85ba89dbf0e7451b3f6b197cfac1de 100644
---- a/lib/net_utils.c
-+++ b/lib/net_utils.c
-@@ -7,11 +7,9 @@
- 
- bool mac_pton(const char *s, u8 *mac)
- {
--	size_t maxlen = 3 * ETH_ALEN - 1;
- 	int i;
- 
--	/* XX:XX:XX:XX:XX:XX */
--	if (strnlen(s, maxlen) < maxlen)
-+	if (strnlen(s, MAC_ADDR_LEN) < MAC_ADDR_LEN)
- 		return false;
- 
- 	/* Don't dirty result unless string is valid MAC. */
-diff --git a/net/mac80211/debugfs_sta.c b/net/mac80211/debugfs_sta.c
-index a67a9d3160086ac492d77092a0c8a74d2384b28c..29f45382367e4f6cceb0e0b5f04db1c408da712e 100644
---- a/net/mac80211/debugfs_sta.c
-+++ b/net/mac80211/debugfs_sta.c
-@@ -457,11 +457,12 @@ static ssize_t link_sta_addr_read(struct file *file, char __user *userbuf,
- 				  size_t count, loff_t *ppos)
- {
- 	struct link_sta_info *link_sta = file->private_data;
--	u8 mac[3 * ETH_ALEN + 1];
-+	u8 mac[MAC_ADDR_LEN + 2];
- 
- 	snprintf(mac, sizeof(mac), "%pM\n", link_sta->pub->addr);
- 
--	return simple_read_from_buffer(userbuf, count, ppos, mac, 3 * ETH_ALEN);
-+	return simple_read_from_buffer(userbuf, count, ppos, mac,
-+				       MAC_ADDR_LEN + 1);
- }
- 
- LINK_STA_OPS(addr);
-
--- 
-2.34.1
-
+No, no, please do. You need to _submit_ the revert like a normal patch.
+With all the usual details in the commit message.
