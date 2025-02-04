@@ -1,161 +1,90 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD4C213E71
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EF5204F72;
+	Tue,  4 Feb 2025 19:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738697453; cv=none; b=nV5yZBYbW36655WQI1v0MaFqNczN4jYrbAUQrLCIfNZTMzCCGXaRRV8c/qycb090eSOTsIW93KLD7SwPzqM5tOg/sj0XhLTZxPQrXrfqeiS2hTOoUBQsMpFYPskMRz6KyMBFlPztL5D1lnNmYAhzkpH6RVVqPony2t7bKJsGHBk=
+	t=1738697459; cv=none; b=tQ1ZiGFxRfaa2nmnyOI9tuHXjm5RG8Qo/0O/A8pwT2CAFX3t6aFndTE0e2Q73Wmg1ArBj1OJXp6Bw4R3Xv//jGd7KqozJb7ku7MghMJlGbLwMQi9npszcJCq7helMkX49r5shlATGFSAChR3HfZkWX5KgJrgxUCnn1Z6itUy52w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738697453; c=relaxed/simple;
-	bh=reyF95bfUBAYffil9IVz3eSYyOLzt08HZXE9QNJTfns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WQp87hX6D6bZROPg/YovUaxF7nc3yHprGevVVRfWk3mK8jTqpmk7zWXQ+ZGHA7QDXmlpkpdgMWfWQatJwuF4ZMY1QeFnYDahiSddd0p7H4fOJm8YTkxzKWkv+CrFYlNN0tQwugZJfsjUgfxuLfxEsCjQfzmcL5otuWujOkjfbd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aUUwvac7; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738697459; c=relaxed/simple;
+	bh=xHGH4a/Ywo4+o/ZzmwaCuhzBpYplcQuCjUSy9UL7dtE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fAZQK+aQAkvjW+n2nz3gVWffdOxUjMHvAtuB0Uvnw56cD3zSMTRoDhzXU+3bxc8M6YDzJXa6qlL7aBzv4ZZFcN2ceFpgSZwDvc+IHpYGjtjBi3hvnbb8syaXk5zRsUEXTa0DX8rOU+NkSLSlpgOzFhG+rIlnbYN/qUA8Oj9bK84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QMpnY06C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aUUwvac7"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a814c54742so189315ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:30:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738697451; x=1739302251; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dj4H26EqpqfJa3dxflkvA+dNKXBACmjipnFJPH1DsZY=;
-        b=aUUwvac7owWb1HIFdOrk9wrCojnTNckgp3T3yLO8OMdfRQNwW6DaKzQdM2/njv+jSi
-         cWtq2clV63tCWoCvqJDjBm2w2A9S5R66jGWZYLfiDkpNRcNr2FHDIdOk+b17oXP4VWRx
-         lHqGoJOuN5AyXbOD6AbaGNigCSw6HmJztrfTuwCZd35+kKm6Wn/I1SjodOY/FMx0RjrR
-         EA4XR79sKDy9bfvA0Rs2Sb5zE4sHh+mK7KAkEjqPmiWa7wJQPOQegf2N0lPuk6d5fcQP
-         cTfEqv50cB2yoP+XUovtJzYXtDEv1A+MFVq9F/U2x1+xjAlY9fYqjHzsvUPmdiLoMBup
-         O6TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738697451; x=1739302251;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dj4H26EqpqfJa3dxflkvA+dNKXBACmjipnFJPH1DsZY=;
-        b=m1LSDyLu7LhqQpV6MuxlAwY2TW0Zm/sZNEo4OzrwlHAGud29jYnt3Zk3ToM6Y0SRqw
-         q5vT7tZC/Uu0zsphTvp3nhozxHlDiBU2tlSP3a4X+erQxyxXLKDQGC2ASgXs/p3WQcMx
-         3cSv2w3NCaCOZLNVi/4eGRtApmgWCyX4mUhVxwvQGP60910CdHsijwTnvyNSEDSGh/VX
-         RkGEDQjRDgjWt1Tf/m/0AZkRfKVZ2uCxkz5q6DvXOcAO+yt5xDnpFjR5n0mtC7kYETUU
-         9457Rtl0Piwf6vApIVbB+Zu/3KY+vnlSWijVLoHvSvLM7naski2BPmaxGKXxHeIpz3rT
-         5QEA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZCFuNkij/oFexYLNLb0Blbe9MMSO6rWHNFvCnhZbeZHV6O1Aig5TllpZkvvButvepQLcxMdumK/GPea0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUx7dpGoJVILJ5R+xCoo4lxzXDTABNDuwQEj9CaPbg8vYyWyaV
-	pHWnlOB3WnZYfrx9cF1pvyuaqscvLuYt45cUjQq77MoamyGigxFd2Vg9DjwwC4DkkJDdSwgzslL
-	vA8TDcXiL45+nUyo6zb4VhZ4uUwNqqG1ZrDPE
-X-Gm-Gg: ASbGncsdHPSzjPxpJ4nBPUtJUKi2IDyamPuQ7vb3ld48Zbazpt0lHnzeazFsvH+yABT
-	She6kJoqBXmg0I5aN01J6FFkSGpCnK2mURrZX5Bn4CYpL9eD1phLzMEkhvalMIAiXtI06rEIJGW
-	U/FuWXVWcSO18cIQfw7ndkNdo=
-X-Google-Smtp-Source: AGHT+IE8mPPweGD/XpLRwVh6HXIUhzMbEoHxkKV6IW0N3/GvKW/3kqA/gHoDCh3vemR2crcapQey99/lhfZZf4RzBOc=
-X-Received: by 2002:a05:6e02:3790:b0:3cf:a4e4:8f89 with SMTP id
- e9e14a558f8ab-3d03fbc5fd6mr3884605ab.4.1738697450707; Tue, 04 Feb 2025
- 11:30:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QMpnY06C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26EF8C4CEE2;
+	Tue,  4 Feb 2025 19:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738697458;
+	bh=xHGH4a/Ywo4+o/ZzmwaCuhzBpYplcQuCjUSy9UL7dtE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QMpnY06Cph7s50YtSLnzh0whrBYj3+19NY8J/lXEJ5PtGPfiAqMLpaMv8pnJTFb0P
+	 93oj+nkxIft/kgW92UACbNRdrZHHsuam2LDq3HHEy+Q2UlC5ngXXAjzLiTFmLRLuDx
+	 43mtYvjCbAu2z+dzJzeQcFMNir+YLla30E7ytuMnJqpXDT0D9O+o3rpdwm1QMEqK52
+	 eNZ4kpudcDR3Y8h8h8Uj61hw9nLJA6nXk92J694aOrDyitUUm8+Kp11wNoEbYE/LSG
+	 FEpgIxGpOVPrGgqzJZYNcv6igP9KVImNEoKuY1qzDC/Toh2oV82rNQisd0Q2ALOSm9
+	 gPhd3dYCEHM1A==
+Date: Tue, 4 Feb 2025 19:30:53 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Jammy Huang <jammy_huang@aspeedtech.com>
+Cc: eajames@linux.ibm.com, mchehab@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+	andrew@aj.id.au, linux-media@vger.kernel.org,
+	openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: media: convert aspeed-video.txt to dt-schema
+Message-ID: <20250204-from-catsup-132a4af05f49@spud>
+References: <20250204062822.3738037-1-jammy_huang@aspeedtech.com>
+ <20250204-acronym-unshaved-18b89a389091@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-2-namhyung@kernel.org>
- <CAP-5=fVJDi2UuhTYk5g-QaLqZC29tAprKWs_0PKNmd+y=iugjA@mail.gmail.com>
- <Z6GCde4XqCuEZlgz@google.com> <CAP-5=fVrFzxcLZG8DyYh2rbd3u4133V6hhrQFCHsq_QMVVW=9g@mail.gmail.com>
- <Z6JosmbJBmiRHBKK@google.com>
-In-Reply-To: <Z6JosmbJBmiRHBKK@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Feb 2025 11:30:39 -0800
-X-Gm-Features: AWEUYZk4s0UOeMvph36Z_mNa6fGMDDI7NG0jb-zIPxCg8YiaKMAHQHX4CtxQlDg
-Message-ID: <CAP-5=fXdF41qVwUnZ1XjPM9PuiDa8owYwK=3eRznPEnMKrVkdw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] perf trace: Allocate syscall stats only if summary
- is on
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Howard Chu <howardchu95@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="S4lsoQVavYeukAq/"
+Content-Disposition: inline
+In-Reply-To: <20250204-acronym-unshaved-18b89a389091@spud>
+
+
+--S4lsoQVavYeukAq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 4, 2025 at 11:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Tue, Feb 04, 2025 at 07:59:01AM -0800, Ian Rogers wrote:
-> > On Mon, Feb 3, 2025 at 6:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > >
-> > > On Sat, Feb 01, 2025 at 10:57:00PM -0800, Ian Rogers wrote:
-> > > > On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kern=
-el.org> wrote:
-> > > > >
-> > > > > The syscall stats are used only when summary is requested.  Let's=
- avoid
-> > > > > unnecessary operations.  Pass 'trace' pointer to check summary an=
-d give
-> > > > > output file together.
-> > > >
-> > > > I don't think this last sentence makes sense.
-> > >
-> > > Thanks for your review.  I'd say:  Pass 'trace' pointer instead of do=
-ing
-> > > 'summary' option and 'output' file pointer separately.
-> >
-> > This still doesn't make sense. There is lazier initialization:
-> > ```
-> > -               ttrace->syscall_stats =3D intlist__new(NULL);
-> > +               if (trace->summary)
-> > +                       ttrace->syscall_stats =3D intlist__new(NULL);
-> > ```
-> > and there are functions that take a FILE* but now we're going to use
-> > the one in trace instead:
->
-> Yep, those FILE* (fp) was from trace->output.
->
->
-> > ```
-> > @@ -1568,7 +1569,7 @@ static struct thread_trace *thread__trace(struct
-> > thread *thread, FILE *fp)
-> >
-> >         return ttrace;
-> >  fail:
-> > -       color_fprintf(fp, PERF_COLOR_RED,
-> > +       color_fprintf(trace->output, PERF_COLOR_RED,
-> >                       "WARNING: not enough memory, dropping samples!\n"=
-);
-> >         return NULL;
-> > ```
-> > So why does the one passed to trace still exist? Unfortunately names
-> > like "fp" and "output" are not intention revealing.
->
-> I think "fp" is a conventional name for file pointers (probably from
-> K&R?).
->
-> >
-> > Anyway, from the commit message and the code I don't understand what
-> > this change is trying to do.
->
-> I don't know where you didn't get it.  Apparently my English is not good
-> enough.  So this commit does two things.
->
-> 1. check trace->summary before allocating syscall_stats
-> 2. change signature of thread__trace from (thread, fp) to (thread,
->    trace) so that it can use trace->output (fp) and trace->summary.
->
-> I thought the change #2 is trivial enough to be in the same commit.  But
-> I can split that if you want.
+On Tue, Feb 04, 2025 at 07:30:03PM +0000, Conor Dooley wrote:
+> On Tue, Feb 04, 2025 at 02:28:22PM +0800, Jammy Huang wrote:
+> > +  aspeed,scu:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: |
+> > +      Specifies the scu node that is needed if video wants to capture
+> > +      from sources other than Host VGA.
+> > +
+> > +  aspeed,gfx:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: |
+> > +      Specifies the Soc Display(gfx) node that needs to be queried to =
+get
+> > +      related information if video wants to use gfx as capture source.
+>=20
+> These two phandle properties are new and not mentioned in your commit
+> message. Why have they been added?
 
-Ah, the diff was showing the function signature still taking fp which
-was confusing me. Looking above I see:
-```
--static struct thread_trace *thread__trace(struct thread *thread, FILE *fp)
-+static struct thread_trace *thread__trace(struct thread *thread,
-struct trace *trace)
-```
-Keeping the context in trace and not splitting the patch both make
-sense to me. It'd be nice to capture your more verbose description in
-the commit message.
+nvm, I see Krzysztof has already responded to the v2
 
-Thanks,
-Ian
+--S4lsoQVavYeukAq/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6Jq7QAKCRB4tDGHoIJi
+0u/dAP9W0ZzsPi1nGv0y3Mt5OGgJcbcIllWIJygiE1g/EgrSHAEA/s0hskJKMuu/
+a2utbby4wEBmS2pfmG8tdx84sTac9gY=
+=jK5r
+-----END PGP SIGNATURE-----
+
+--S4lsoQVavYeukAq/--
