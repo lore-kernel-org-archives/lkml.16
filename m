@@ -1,122 +1,176 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1800.securemx.jp [210.130.202.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA06200CB;
-	Tue,  4 Feb 2025 02:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB84179BD;
+	Tue,  4 Feb 2025 02:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738636708; cv=none; b=Zt5KVm974mPynKWAWZcU1cl0VeIY63oOTXpO/naw5OoMAqZ0gQ87l1dBHlb9BUVsLBzfZDTRld3pJiBq5r9Pau1y21/yfYnYYcMa/R9+NPEuIBZvg5iFyMt7XNT4Do88CA8VFkWFzCvHGKyaHB6/N8ryyYVhzs2yjQ399peXwXk=
+	t=1738636960; cv=none; b=SaJ6rH5Spy7WCNKkkFrFok6D2DLESMqPLcwKQZZXCBoQ4v/MRvhlYARpWUVM4MQ3Okj43ckmftqezgBU0fOYNP/VLVKu1WvdfaS8twhKp731I3U/+opD08936KVAeL8WSj37YdXoFg3ogtWeVe/Dn68fxGVUPDPTylC/6GAr3/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738636708; c=relaxed/simple;
-	bh=BfVd1Kr9aFB9e0q+IARJRTODnRHHsOmAQ5YFSacC2G0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=kg3lXr3yQk8JtF5Kd7plTDrfm3DaKUVgd9Hz1l0DUEsAq7dVbPI7FJikhukfUHqa/CyC7tAYe9r0SEHqqeit123op0l8S9lMajIysGWl878Xs21j2zFJiiy0sjz4HK0vPNv3SZPyT2g7NQ+FWwZHSFwdYb/UP33F+bulrWpbqkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=kazuhiro3.hayashi@toshiba.co.jp header.b=SWgqRXJ3; arc=none smtp.client-ip=210.130.202.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
+	s=arc-20240116; t=1738636960; c=relaxed/simple;
+	bh=192aj1QJsPyGtAMkRPhiiiupVd6SXNH3StPpurpmAIo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NJi73Rzdvu66y50e9NpMrLzAd8rUrT4wolPNTDZttygXpG+o2HgsD5gv38hhw2WkcjRS6usipVZMhLoO8lKiz9uASCRF3KNs84oQLKwSoB4QDf+1b5kCvPIpjQ3TQlUHnHa0p7yJb7aJpnTUNKbgRYv6Y0nDCV/rQysS2MhpAmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CUz7AUxy; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=kazuhiro3.hayashi@toshiba.co.jp header.b="SWgqRXJ3"
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1800) id 5140mQNI2258601; Tue, 4 Feb 2025 09:48:26 +0900
-DKIM-Signature: v=1;a=rsa-sha256;c=relaxed/simple;d=toshiba.co.jp;h=From:To:Cc
-	:Subject:Date:Message-Id:In-Reply-To:References;i=
-	kazuhiro3.hayashi@toshiba.co.jp;s=key2.smx;t=1738630063;x=1739839663;bh=BfVd1
-	Kr9aFB9e0q+IARJRTODnRHHsOmAQ5YFSacC2G0=;b=SWgqRXJ3uTOLrBAh28J+gSmKI0DAktFH0Pm
-	UdQ+pcOeM+4773MwLjE7ohwmlm4pP1dLb4e0uYDmEpWZw/QwLxZPeLSzh9qSjVrvBUtdJ0hw273wo
-	efYqULSohcGFolLxRofW6YHK+EDaUB3P6AcL5TOSrnGxDaZRtMQHvpP92+RyKh+AGgGS7WMj8f5r0
-	gBhEghoizKQcJ8Jf5mvHoi7TNPQamEj3wlpT5l5HUFACrps8YkmKxVNYgYyCkaSLfvKqzZRMvq10x
-	6X+Mmp9dMeCuYEMyLo5ClRE479he3tDxc+BYxjKDGvmjUopT8tSpkBcygkmCXSbfy8U0r4CwYd+Q=
-	=;
-Received: by mo-csw.securemx.jp (mx-mo-csw1800) id 5140lg8D1755166; Tue, 4 Feb 2025 09:47:42 +0900
-X-Iguazu-Qid: 2yAbAvUQLBamBJJ4Jf
-X-Iguazu-QSIG: v=2; s=0; t=1738630062; q=2yAbAvUQLBamBJJ4Jf; m=EYnyDhiFJwSiMT7AaAO/x4s1cYkkAhXV1xRMnXaGgyM=
-Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
-	by relay.securemx.jp (mx-mr1800) id 5140leal1589797
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 4 Feb 2025 09:47:40 +0900
-From: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>
-To: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-        cip-dev@lists.cip-project.org
-Cc: bigeasy@linutronix.de, tglx@linutronix.de, rostedt@goodmis.org,
-        linux-rt-users@vger.kernel.org, pavel@denx.de
-Subject: [PATCH 4.4 4.9 v1 1/2] init: Introduce system_scheduling flag for allocate_slab()
-Date: Tue,  4 Feb 2025 09:46:03 +0900
-X-TSB-HOP2: ON
-Message-Id: <1738629964-11977-2-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
-References: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CUz7AUxy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738636959; x=1770172959;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=192aj1QJsPyGtAMkRPhiiiupVd6SXNH3StPpurpmAIo=;
+  b=CUz7AUxyvo+hz+6dXm+UfXIJDV4141D5LUFGcCPvrV2JtdSwHzCfoqg2
+   3aipezKWVU8xhO2K9Q4Qcm5jHtMQ/BsGOrntygGt5GW9B1H8QKYDP0tQZ
+   kGEGG4rdmVrQK+H9tFBLMYoDJhVijjmSCpUPeWI1SxoORSNPOvp94/kD1
+   PxF9ZWc1npKJ84LIiSxI+J9Ft2i9DJ2DyhfjLN2UM+HGwoRwWzc11JhOq
+   B1tHr7OtCREEKTgoKwzAhvozXS9zltSxgt3o5FXBYFGZt5KL53tXXl8EY
+   v4Eu5CAnybWuIJgTkst4+V2CKO8TX/VC/uFjNuA8E/+Orb50FnI4y1hXc
+   Q==;
+X-CSE-ConnectionGUID: pmTCF2+cTOyHvAepcbTjhw==
+X-CSE-MsgGUID: x/zZL4pORVyPg4atGXm7Jw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50564140"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="50564140"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 18:42:37 -0800
+X-CSE-ConnectionGUID: k5pMJs/eS1KFJUS51BcEEw==
+X-CSE-MsgGUID: LsDoyXyXTwW06yE4uEzP3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
+   d="scan'208";a="111051867"
+Received: from mohdfai2-mobl.gar.corp.intel.com (HELO [10.247.89.75]) ([10.247.89.75])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 18:42:26 -0800
+Message-ID: <a374fa88-433e-4fc9-a63c-fa56f619abd0@linux.intel.com>
+Date: Tue, 4 Feb 2025 10:42:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-
-Between v4.14-rt and v5.10-rt, allocate_slab() is responsible for enabling
-IRQ before running the following SLAB allocation functions if
-    system_state >= SYSTEM_SCHEDULING
-However, SYSTEM_SCHEDULING is introduced[1] in the mainline v4.13 and
-it's not reasonable to backport all related changes into older RT kernels
-from functional compatibility and longer term maintenance perspectives.
-
-Thus, as an alternative (but non-mainline) way, introduce an extra flag
-"system_scheduling" which becomes true at the same point as
-    system_state = SYSTEM_SCHEDULING
-in the mainline, so that the existing system_states and users of them
-are not affected.
-
-allocate_slab() will use this flag for its IRQ control by the upcoming change.
-
-[1] https://lore.kernel.org/all/20170516184231.564888231@linutronix.de/
-
-Signed-off-by: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>
-Reviewed-by: Pavel Machek <pavel@denx.de>
----
- include/linux/kernel.h |  1 +
- init/main.c            | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
-
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index d68f639f7330..2a15e829aaec 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -490,6 +490,7 @@ extern enum system_states {
- 	SYSTEM_RESTART,
- 	SYSTEM_SUSPEND,
- } system_state;
-+extern bool system_scheduling;
- 
- #define TAINT_PROPRIETARY_MODULE	0
- #define TAINT_FORCED_MODULE		1
-diff --git a/init/main.c b/init/main.c
-index 9933fca3a5c8..4f382179b61e 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -110,6 +110,14 @@ bool early_boot_irqs_disabled __read_mostly;
- enum system_states system_state __read_mostly;
- EXPORT_SYMBOL(system_state);
- 
-+/*
-+ * This corresponds to system_state >= SYSTEM_SCHEDULING in the mainline.
-+ * On PREEMPT_RT kernels, slab allocator requires this state to check if
-+ * the allocation must be run with IRQ enabled or not.
-+ */
-+bool system_scheduling __read_mostly = false;
-+EXPORT_SYMBOL(system_scheduling);
-+
- /*
-  * Boot command-line arguments
-  */
-@@ -401,6 +409,10 @@ static noinline void __init_refok rest_init(void)
- 	rcu_read_lock();
- 	kthreadd_task = find_task_by_pid_ns(pid, &init_pid_ns);
- 	rcu_read_unlock();
-+
-+	/* Corresponds to system_state = SYSTEM_SCHEDULING in the mainline */
-+	system_scheduling = true;
-+
- 	complete(&kthreadd_done);
- 
- 	/*
--- 
-2.30.2
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v7 4/5] igc: Refactor empty packet insertion into
+ a reusable function
+To: Song Yoong Siang <yoong.siang.song@intel.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Willem de Bruijn <willemb@google.com>,
+ Florian Bezdeka <florian.bezdeka@siemens.com>,
+ Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Bjorn Topel <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+ Jonathan Lemon <jonathan.lemon@gmail.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, Joe Damato <jdamato@fastly.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>, Mina Almasry <almasrymina@google.com>,
+ Daniel Jurgens <danielj@nvidia.com>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Shuah Khan <shuah@kernel.org>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+ Bouska Zdenek <zdenek.bouska@siemens.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+ xdp-hints@xdp-project.net
+References: <20250204004907.789330-1-yoong.siang.song@intel.com>
+ <20250204004907.789330-5-yoong.siang.song@intel.com>
+Content-Language: en-US
+From: "Abdul Rahim, Faizal" <faizal.abdul.rahim@linux.intel.com>
+In-Reply-To: <20250204004907.789330-5-yoong.siang.song@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
+
+On 4/2/2025 8:49 am, Song Yoong Siang wrote:
+> Refactor the code for inserting an empty packet into a new function
+> igc_insert_empty_packet(). This change extracts the logic for inserting
+> an empty packet from igc_xmit_frame_ring() into a separate function,
+> allowing it to be reused in future implementations, such as the XDP
+> zero copy transmit function.
+> 
+> This patch introduces no functional changes.
+> 
+> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
+> ---
+>   drivers/net/ethernet/intel/igc/igc_main.c | 42 ++++++++++++-----------
+>   1 file changed, 22 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+> index 56a35d58e7a6..c3edd8bcf633 100644
+> --- a/drivers/net/ethernet/intel/igc/igc_main.c
+> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+> @@ -1566,6 +1566,26 @@ static bool igc_request_tx_tstamp(struct igc_adapter *adapter, struct sk_buff *s
+>   	return false;
+>   }
+>   
+> +static void igc_insert_empty_packet(struct igc_ring *tx_ring)
+> +{
+> +	struct igc_tx_buffer *empty_info;
+> +	struct sk_buff *empty;
+> +	void *data;
+> +
+> +	empty_info = &tx_ring->tx_buffer_info[tx_ring->next_to_use];
+> +	empty = alloc_skb(IGC_EMPTY_FRAME_SIZE, GFP_ATOMIC);
+> +	if (!empty)
+> +		return;
+> +
+> +	data = skb_put(empty, IGC_EMPTY_FRAME_SIZE);
+> +	memset(data, 0, IGC_EMPTY_FRAME_SIZE);
+> +
+> +	igc_tx_ctxtdesc(tx_ring, 0, false, 0, 0, 0);
+> +
+> +	if (igc_init_tx_empty_descriptor(tx_ring, empty, empty_info) < 0)
+> +		dev_kfree_skb_any(empty);
+> +}
+> +
+>   static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
+>   				       struct igc_ring *tx_ring)
+>   {
+> @@ -1603,26 +1623,8 @@ static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
+>   	skb->tstamp = ktime_set(0, 0);
+>   	launch_time = igc_tx_launchtime(tx_ring, txtime, &first_flag, &insert_empty);
+>   
+> -	if (insert_empty) {
+> -		struct igc_tx_buffer *empty_info;
+> -		struct sk_buff *empty;
+> -		void *data;
+> -
+> -		empty_info = &tx_ring->tx_buffer_info[tx_ring->next_to_use];
+> -		empty = alloc_skb(IGC_EMPTY_FRAME_SIZE, GFP_ATOMIC);
+> -		if (!empty)
+> -			goto done;
+> -
+> -		data = skb_put(empty, IGC_EMPTY_FRAME_SIZE);
+> -		memset(data, 0, IGC_EMPTY_FRAME_SIZE);
+> -
+> -		igc_tx_ctxtdesc(tx_ring, 0, false, 0, 0, 0);
+> -
+> -		if (igc_init_tx_empty_descriptor(tx_ring,
+> -						 empty,
+> -						 empty_info) < 0)
+> -			dev_kfree_skb_any(empty);
+> -	}
+> +	if (insert_empty)
+> +		igc_insert_empty_packet(tx_ring);
+>   
+>   done:
+>   	/* record the location of the first descriptor for this packet */
+
+Reviewed-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
