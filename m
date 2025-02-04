@@ -1,114 +1,275 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A68216E33
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD9F218AC8;
+	Tue,  4 Feb 2025 18:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738695367; cv=none; b=TnZBkbP0TR792lhUzqykLuEmmNRDS42vwHtreLS47tEVqKuWFoEDXC2ICQllVJ4T+fcnry7p3NMZHU0Yk+oZndBAoNksWZnkIs46rbKUQV+1KVP8wQUHn4E3H5jjOOAQ1znmBpRSaf2xDPfhmXjdvt6sEptBTu5SgosxfQJM5Bk=
+	t=1738695369; cv=none; b=Co0sYVOxKdUTofTOJrsEAotoraJ8vjG6ef1J22uyBDbeJGQusmCfGSuCMDgT6HPo5qYsjPw+MuW0BQv2vL8j81Bpk+sQEHE479LWNob3eOPWwvailHL4RNQlnJXFNhawm7ShOmo4ETOeSVvW1Hnduqk1L7JONYVETVVx3LHz/oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738695367; c=relaxed/simple;
-	bh=GItdYSHhLsRD6frKk30+cPPavuQmFRytKICqT/4dBJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RuHJbL2km5Z/uy+6v1ctDPUsGJqTryLmAjAJKWa1PIWuqGDWjIILePu1pYcoeZ1KV34rjRsHnSoYvalaw5TCGcSr4g6FQW359NtyfufUtoVQjFkol3yHwoMKi5Cr4TER70Q7lQladAG+AnaGUBBTJO8XrK6mgTAZ4IDRoYN3fTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=pEGapI32; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1738695369; c=relaxed/simple;
+	bh=QeGXJi76YbZL+qgEdYz8n6FtI5h0bhyXK/wQx2mueh0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pO0rPW11y5Jcy4eIK2AnZjwzjfSYuWbkws5WueGj43chkDxKgiiMoXceB6f86Azx4JP4eajnQcSL498PMik5YFR9wq+dgpBXvX8EpiCovGv8YTFPcWYc8/nlDhkWRjF95nEqD/37D97L2HytlRjfGaXquCs+dtu5vJETddDfoEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j9f3wKDu; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="pEGapI32"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f01fe1ce8so16858115ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 10:56:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9f3wKDu"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2161eb95317so105970235ad.1;
+        Tue, 04 Feb 2025 10:56:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1738695365; x=1739300165; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WZhLm5+B8p+dPLbM8Xqf7pqGS67mXBcSfruMqYfEfxc=;
-        b=pEGapI32ldwUa6zzXkGogK4pLQAp3XC1VxpEg8MN7g2AvBLVVHXZuodIg2Y9Cnlvwu
-         JlmhEumI+z5v97rDZmWVZPA6jv+vp9mLew5Ew+P0vngt+WEf7oOoJF/PIbbd6SduLjYY
-         vjtEp2+ij7lfvVEEHkfBBXUCar0aPw9cX1FXE=
+        d=gmail.com; s=20230601; t=1738695367; x=1739300167; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W2bGsWJVaiSr30++/0esPSuZbt+BULYNK6t+g3c3C64=;
+        b=j9f3wKDu/DS1tmrO05bl/mImaHgIgcPYL+NCocWCiDFd8S/O6RqRqeu/up8wqj6wK8
+         t9XQ/OLqmyEtt32U7C2gKBpr7FjywZn+GMPtmveB61z7kvDinfBNGPT6kTsChtNSbUD1
+         qpvWie17ENWjqvFDEAEn+4DepgAmsHZkC2u3QuB21RuhWV5FN+24luDoz0nDqeYbyIhM
+         bk/i/pST4O9Zav82SpIhMQSImUmH1i+yjjsGGcfMNUgVQhFNCxXkmyrS0T/Wv6lzVdwL
+         bavH6pIeueFGEA8T7YTAZspV+fhO18SUdzp4bcuwirPHJkcn60Z4UcFiV2dpjSbHgAsj
+         YIPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738695365; x=1739300165;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1738695367; x=1739300167;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WZhLm5+B8p+dPLbM8Xqf7pqGS67mXBcSfruMqYfEfxc=;
-        b=osx0EmCaB3rF2N44+PgF4FPCiXXQyAlj7PkboUp/w23WjLWnaIE8nv75a8WmaEKvxE
-         8+46Dtv3xrVx6ryU52KOnSSZ4QyAxv2cJbQ7W8obsMnWXJZ7aSQEHrRNY/t8OQw5Elt9
-         ZsYSpdtwFG5L3r69ittxx6Vt6JyVrg1fu+ut2oS1U7N0BlEMehDPMmf1oVUJxFPDFznO
-         97kQ0ojVTWlaQd9Ayi/oKBrqtGsQLGEa2ksAn9gnwiTkxRGPb9rk6CLrJqNZhdLOUpyu
-         UfxwO84YVaxdqjLZwc080SX4POQWMiadKRTe+AOBlm1u0blcASOkW2GuDQvMFvwH+q9Z
-         Kaxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVWsUEhKqkxwyU5vQbos/NuHEnQfOyUYNt33zmiAhP730UrVBZANRi234THTmC234u6oa2OiIp3asJF36g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRc0vWGk8hAbwMiaEWbhiDY1d/2Q507kZUhnsfjWclkbFhpgMZ
-	aeG6UUy2FelIcVcoqFwvzkwq9brKxTW+Cg00uzrgKCgK8hU4qNgfL+L1FBf2LuU=
-X-Gm-Gg: ASbGncvz/I9ybEBqcdMwuIvi8ig7H2Tvtjdhyp0eb3ULmkoSbjRZ+u36t79GCTMLcy4
-	2ZHkcgmX7jHvAMNjyXaowryXYx/ocFFpBpyTw1txxjieiEPJZMnrE6zpQzg3iigluK6ICvj01OZ
-	WhzsUbg5LI2DK/PBEGYLzzzkT76ww4vBawq6u/3sY7qzqZ0M9Z8VDw9IsBNrHLp+kKxJjCDsRqB
-	zCMisIPNzCr3kP8jM8vO1E+/wP53wURfsCPXKUpOoFzKuMfP8yjrxrGSLWSojjERy6SrTqtCQU6
-	sEI7IMWWYpzQ4DTEtlz8QliOXRQgC226g1rZu+fNub2FctbfnSszmZZFCw==
-X-Google-Smtp-Source: AGHT+IHRQbkrg8ehzCZ4MmSmlHeHzAi9H0bgLV5YFw6LCdJwLx6UaFWAQniEA6o5Lr5nHKy3/k48ZQ==
-X-Received: by 2002:a05:6a00:4648:b0:725:db34:6a7d with SMTP id d2e1a72fcca58-7303521c76dmr30461b3a.23.1738695364944;
-        Tue, 04 Feb 2025 10:56:04 -0800 (PST)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6a188b4sm10919199b3a.168.2025.02.04.10.56.03
+        bh=W2bGsWJVaiSr30++/0esPSuZbt+BULYNK6t+g3c3C64=;
+        b=NCuLzmWz2aCQ8coWsq3J6mjbw3I2mLkuAYKvXd7+nEyFuZKZfGGY2FcppaACyhHd9m
+         LsPSIsUWrbNslWHh79KRLEShrJID2fpS7tEA0VXKjqNWeMDnrS1kJDdLetx04noaTj4G
+         MaLHqfJrWGgK0pluiBLcmFmqja7XQwbgPQA2mjNqH+uWxRiRGY5sWWI1aRIe5W5tmOo7
+         sHtVHmkvFV4i1dkDgZdT47Nw4wr43CtwmYQO9Q7SiDjhnL1I25DwtpyqRjzpuFkBMj6m
+         bJ7gZs7WPXpfutQm/gtez+ArQ1SE4+cdDug3vVA43REJNusj6HygHN0rm21+lsKkBYBY
+         uc0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUwmu9/OlIlaRIQuvncKEQqnfylp+aObhRLAvICaRo+P2rMbf7iIQrqsPbB+bCxW7dy057B+x0F0VuIQho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB4fsMzL4OGNnvdPnFJa6ipEtGU220zQPRdI5vJMg4XUwAF+7C
+	y/nZhkjxk2OcmPTLWdxMttHXPmjkGwCP1ZO6ATVxZi45Mk87GKCbyky13yp1
+X-Gm-Gg: ASbGnct23yYRyETxdpt7ej57QGahl3S9DI+LXZhFPR6zewhqTgO9sXoIIjBn3MV56hv
+	JIwFVL0Y6TGz4BY4cvx6ilScglv0lFRzzfgXYPpWn0DTRe2PvQ/z49SOjnn4TPF+acPDpnBG6MR
+	54Z8Ro2w+LWBPgn9YAYJa3sjmZX57JojdeS+AUvxzY3fgHDniHrYvFkToBGxHKw5YFi1LIc6uqV
+	3kTLC1Mz081wxnzSEpuN7RND1XrZFBiejwU3QAjgPjesmJnUyXHJB71IWhYB56ucQ8TvsukEhYH
+	BUQzZhcyPC5mAxxtDNKdzMcqKtT67xmsoXM=
+X-Google-Smtp-Source: AGHT+IHekIIDU3hAEwReZxd5PGAerEWvLHH6zd7FCmqVXU2/ygzTXeimP1M5tLEfZhUoKO4wopLmqw==
+X-Received: by 2002:a17:903:2281:b0:21b:d2b6:ca7f with SMTP id d9443c01a7336-21dd7deefa0mr457027895ad.32.1738695366780;
+        Tue, 04 Feb 2025 10:56:06 -0800 (PST)
+Received: from localhost.localdomain ([177.10.12.41])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de330326dsm99284095ad.164.2025.02.04.10.56.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 10:56:04 -0800 (PST)
-Date: Tue, 4 Feb 2025 10:56:02 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org, kuba@kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-	Amritha Nambiar <amritha.nambiar@intel.com>,
-	Mina Almasry <almasrymina@google.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] netdev-genl: Elide napi_id when not present
-Message-ID: <Z6JiwvIvMSVaeM23@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-	kuba@kernel.org, "David S. Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-	Amritha Nambiar <amritha.nambiar@intel.com>,
-	Mina Almasry <almasrymina@google.com>,
-	open list <linux-kernel@vger.kernel.org>
-References: <20250203191714.155526-1-jdamato@fastly.com>
- <CANn89i+vf5=6f8kuZKCmP66P1LWGmAj06i+NhgqpFLVR8K5bEA@mail.gmail.com>
- <Z6JcR5IH8WzH1lP9@LQ3V64L9R2>
- <CANn89iJ=8inHbr+qQKifcX=m5=TfN8+MELDM_Ho8-mdA156UPw@mail.gmail.com>
+        Tue, 04 Feb 2025 10:56:06 -0800 (PST)
+From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+Subject: [PATCH] pwm: tiehrpwm: ensures that state.enabled is synchronized in .probe()
+Date: Tue,  4 Feb 2025 15:55:40 -0300
+Message-Id: <20250204185540.52233-1-rafael.v.volkmer@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANn89iJ=8inHbr+qQKifcX=m5=TfN8+MELDM_Ho8-mdA156UPw@mail.gmail.com>
 
-On Tue, Feb 04, 2025 at 07:53:51PM +0100, Eric Dumazet wrote:
-> On Tue, Feb 4, 2025 at 7:28 PM Joe Damato <jdamato@fastly.com> wrote:
-> >
-> > On Tue, Feb 04, 2025 at 06:41:34AM +0100, Eric Dumazet wrote:
-> > > On Mon, Feb 3, 2025 at 8:17 PM Joe Damato <jdamato@fastly.com> wrote:
+Fixes potential desynchronization of state.enabled in the .probe()
+method by suggesting proper handling of hardware state initialization.
+Adds considerations for implementing .get_hw_state() to check the
+current state of the module by checking physical registers.
 
-[...]
+Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
+---
+ drivers/pwm/pwm-tiehrpwm.c | 151 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 150 insertions(+), 1 deletion(-)
 
-> > >
-> > > Hi Joe
-> > >
-> > > This might be time to add helpers, we now have these checks about
-> > > MIN_NAPI_ID all around the places.
-> >
-> > I'm not sure what the right etiquette is; I was thinking of just
-> > taking the patch you proposed below and submitting it with you as
-> > the author with my Reviewed-by.
-> >
-> > Is that OK and if so, are you OK with the commit message?
-> 
-> Oh no worries, please grab the patch completely, I will add my usual
-> 'Reviewed-by' tag.
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index 0125e73b98df..5de213bc3ef5 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -91,6 +91,20 @@
+ #define AQCSFRC_CSFA_FRCHIGH	BIT(1)
+ #define AQCSFRC_CSFA_DISSWFRC	(BIT(1) | BIT(0))
+ 
++#define AQCTLA_CAU_MASK   (BIT(5) | BIT(4))
++#define AQCTLA_CAU_SHIFT  4
++#define AQCTLA_CAD_MASK   (BIT(9) | BIT(8))
++#define AQCTLA_CAD_SHIFT  8
++
++/* The ePWM hardware encodes compare actions with two bits each:
++ *   00 = Do nothing
++ *   01 = Clear
++ *   10 = Set
++ *   11 = Toggle
++ */
++#define AQ_CLEAR  1
++#define AQ_SET    2
++
+ #define NUM_PWM_CHANNEL		2	/* EHRPWM channels */
+ 
+ struct ehrpwm_context {
+@@ -353,6 +367,118 @@ static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	return 0;
+ }
+ 
++static bool ehrpwm_is_enabled(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++	bool ret;
++	u16 aqcsfrc_reg;
++	u8 csfa_bits;
++	u16 aqctla_reg;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	aqcsfrc_reg	= readw(pc->mmio_base + AQCSFRC);
++	csfa_bits	= (u8)(aqcsfrc_reg & AQCSFRC_CSFA_MASK);
++	
++	aqctla_reg	= readw(pc->mmio_base + AQCTLA);
++
++	ret = (csfa_bits != 0u)	 ? false :
++	      (aqctla_reg == 0u) ? false : true;
++
++	return ret;
++}
++
++static u64 ehrpwm_read_period(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++	u64 ret;
++	unsigned long tbclk_rate;
++	u16 tbprd_reg;
++	u64 period_cycles;
++	u64 period_ns;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	tbprd_reg = readw(pc->mmio_base + TBPRD);
++	tbclk_rate = clk_get_rate(pc->tbclk);
++	period_cycles = tbprd_reg + 1u;
++	
++	/* period_ns = (period_cycles * 1e9) / tblck_rate */
++	period_ns = DIV_ROUND_UP_ULL(period_cycles * NSEC_PER_SEC, tbclk_rate);
++	
++	ret = period_ns;
++	return ret;
++}
++
++static u64 ehrpwm_read_duty_cycle(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++	u64 ret;
++	u16 cmpa_reg;
++	u64 duty_cycles;
++	u64 duty_ns;
++	unsigned long tbclk_rate;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	cmpa_reg = readw(pc->mmio_base + CMPA);
++	tbclk_rate = clk_get_rate(pc->tbclk);
++	duty_cycles = cmpa_reg;
++	duty_ns = DIV_ROUND_UP_ULL(duty_cycles * NSEC_PER_SEC, tbclk_rate);
++	ret = duty_ns;
++
++	return ret;
++}
++
++static enum pwm_polarity ehrpwm_read_polarity(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++	enum pwm_polarity ret;
++	u16 aqctla_reg;
++	u8 cau_action;
++	u8 cad_action;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	aqctla_reg	= readw(pc->mmio_base + AQCTLA);
++	cau_action = (aqctla_reg & AQCTLA_CAU_MASK) >> AQCTLA_CAU_SHIFT;
++	cad_action = (aqctla_reg & AQCTLA_CAD_MASK) >> AQCTLA_CAD_SHIFT;
++	
++	if (cau_action == AQ_SET && cad_action == AQ_CLEAR) {
++		ret = PWM_POLARITY_NORMAL;
++	}
++	else if (cau_action == AQ_CLEAR && cad_action == AQ_SET) {
++		ret = PWM_POLARITY_INVERSED;
++	}
++
++	return ret;
++}
++
++static int ehrpwm_get_hw_state(struct pwm_chip *chip, struct pwm_device *pwm, 
++								struct pwm_state *state)
++{
++	int ret;
++
++	if(chip == NULL || pwm == NULL || state == NULL){
++		return -EINVAL;
++	}
++
++	state->enabled = ehrpwm_is_enabled(chip);
++	state->period = ehrpwm_read_period(chip);
++    state->duty_cycle = ehrpwm_read_duty_cycle(chip);
++    state->polarity = ehrpwm_read_polarity(chip);
++
++	return ret;
++}
++
+ static void ehrpwm_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
+@@ -449,8 +575,10 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct ehrpwm_pwm_chip *pc;
++	struct pwm_state state;
+ 	struct pwm_chip *chip;
+ 	struct clk *clk;
++	bool tbclk_enabled;
+ 	int ret;
+ 
+ 	chip = devm_pwmchip_alloc(&pdev->dev, NUM_PWM_CHANNEL, sizeof(*pc));
+@@ -501,10 +629,31 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, chip);
+ 	pm_runtime_enable(&pdev->dev);
+ 
++	ehrpwm_get_hw_state(chip, &chip->pwms[0], &state);
++	if(state.enabled == true) {
++		ret = clk_prepare_enable(pc->tbclk);
++		if (ret) {     
++			dev_err(&pdev->dev, "clk_prepare_enable() failed: %d\n", ret);
++			goto err_pwmchip_remove;
++		}
++            
++		tbclk_enabled = true;
++		ret = pm_runtime_get_sync(&pdev->dev);
++		if(ret < 0) {
++			dev_err(&pdev->dev, "pm_runtime_get_sync() failed: %d\n", ret);
++			clk_disable_unprepare(pc->tbclk);
++ 			goto err_pwmchip_remove;
++		}
++ 	}
++
+ 	return 0;
+ 
++err_pwmchip_remove:
++	pwmchip_remove(chip);
++
+ err_clk_unprepare:
+-	clk_unprepare(pc->tbclk);
++	if(tbclk_enabled)
++		clk_unprepare(pc->tbclk);
+ 
+ 	return ret;
+ }
+-- 
+2.25.1
 
-OK, will do. Thanks for the guidance.
