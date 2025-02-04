@@ -1,71 +1,71 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EED158524
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 06:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FA72040A8
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 06:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738652304; cv=none; b=EsCHJZXVKv6POgisr9fGHoZ/5/8xPrFXELq5wh+U3MiqXLdjChH2MpcdBwMj48IQqVZKvsqBCOOF6pFvPnWGpz/OJZvjcpdqDuZW60/LSyQXrOjMARD40XmTgni6WM1/cPWamCc8R4w5lyYw6fRTf/J56Sy4ECdcRO+HuUmZ1fY=
+	t=1738652308; cv=none; b=IbcJp8nRDFf8aOB4//RJhEuMUhXH4whRsci9Tr4rJxPrOrR2HO+ritWopjZ8dhqPz7dVrb4s6RuV+gunD5B3eXyD8u8n3gfvwiZRedPfqYAQESWpzm2xXHZJQzbsaS+TeRtZPY37w9lBVGpp40tEtFcxHB4f1gvbzmB5WpG2DxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738652304; c=relaxed/simple;
-	bh=dY3XMv6XCS+Kgh20TNrcg77Cnv/MOiEl1Kmxsu+FxzQ=;
+	s=arc-20240116; t=1738652308; c=relaxed/simple;
+	bh=b3lijSXyE6x9SgjhtgDsqZA2uYCgMh+ewY1B6W4ithw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HE0tQ1PUfLSW6Z79E/17nMtZdiyhR3UzS90jfAI1K1SYzXVkuhcG2yAWQ4zxv1DrxwAIgtzY9Yu6BZo8Z8JvqDBB6uH/Yn6yUDIc8WXj/UvsU+WKXa+yxhOp55uZGQ/UJvzUfnMbr5r4X2W/siVaq4DObWnR6v0TXMG3XOwKYIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f6Nc5LVb; arc=none smtp.client-ip=209.85.160.41
+	 MIME-Version; b=Vogt4LLEaeoBCh52VpmZB5BklhV0VVOiXSOq3/vOJPZ4YI1x6cVDF+Z3GwkwHZzGDBtzVBRSkBTNQMfl3JQIIQDDvSOiZRX2SQFhprqYSkCapqp8QMqgDOc2iW3GBPKECE8wmFpTJWBDvEOYUs+xuKx3F50NMKXYICj5jLr0EnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+8kkXMp; arc=none smtp.client-ip=209.85.167.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6Nc5LVb"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2a01bcd0143so3489120fac.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 22:58:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+8kkXMp"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3eba583fbe8so1257889b6e.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 22:58:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738652301; x=1739257101; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738652304; x=1739257104; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=q+gIbAsvAdDC8Lv0QOQf7RrQntEmNr+Q7vrClBGKTqs=;
-        b=f6Nc5LVbY/NLUM4NN0Pqqw58HiRnEYdJeHgG0tJQi/6/8jwM6aHdONmSPk9waoiKAA
-         FIRPtB7Hx7kQ3KPtpeL4KWd1jZ1315YS8dLtYcYNyAHYXbAtWE58zmtAw7OUPGtp9Hxk
-         XyFRPocTZt4Mk19baX9H4VficcFcqWFToPDXj1WTiUB19aU2OXbW5W/+aV0/RBX3qw7u
-         rTyjIRZTA5l83ZrtQljsceb1dRsHj2EMKXAW9IsttKf1NMxdqLC8GXVGFIuodwLnO4n/
-         F55jzXcFWN/hKyguqtCmbUuOPEz2TFZFAxuF/R9RmmOPW8MqOGlLw0tvaLo9PZEAtBSZ
-         UYQQ==
+        bh=r4762hkLrmSiaKdmQk784TxrThn/ycMKykakCzUArJk=;
+        b=Q+8kkXMpWVORmD3im+mvlUgTT+l/zUBm6sm+WLYsvLg5p7MjcFaA0xr82r9BLm5hrC
+         ldSbUyXkfbrh37cWn2QXFBCPc1N/vtKnGpJWiostO5AnfqaGTdILg4wIlO7mqr5Imfcx
+         RieqIB5okkURMO7QZQgbl51pmNTOZ/AELPmMBMprNaa++w+Oe3kIV6IJ7efIGYnJDZoL
+         Bo+u63cqvk6y1y/MtRssPbgWcFfnOthYwhg4Pa4vb5NxPrsV39WsFt+SpMWLOVboDzO2
+         qBS+weEVzdYV5xJjg0Mubm067EotDEYpnWh/WqtjlH9oUt97mL3jjbsXpKQCdVbIfPva
+         BpaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738652301; x=1739257101;
+        d=1e100.net; s=20230601; t=1738652304; x=1739257104;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q+gIbAsvAdDC8Lv0QOQf7RrQntEmNr+Q7vrClBGKTqs=;
-        b=YMKX6jnrTEcK9223C9d6AOVa9qpbaBpb/v7zEeu99syNj0aOHu0mkFQxFRovUHq/em
-         aEqAMCAHX12wV7lwoRxc/QqM7Vi3uA6LFTMFzyyLsBzzvAaMIvQtZlmABBLkxuBs8kvR
-         X+bsHdSX6ENFdiWWnliw5qAREiQyGIvR0/yQfHUXRNPWP4VuwaSspiMg5Gj8tmNXIoYT
-         W+FsR2Vo8EgR21oOLJzaZjdqe+7B09VdOjY32iJhax46wO5s9QdnBOqxs6HKU/HS5iOX
-         3a4wROBYBPtxHqQkLhoFxZDnklwMjcgJ2iKRHZOdDWibtM+fzzH2ojVzWtNjnmIvp/zr
-         vmng==
-X-Forwarded-Encrypted: i=1; AJvYcCXfEQFkkie8GyCg8aZn3Phtw6F00oUzRJAOodrRuyfmn+qJlOcrqfRZ16LI9FQSX+BrrTd3LpriK9OkPgg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwSs6JbHeJhGqMqaHciiVYS0RGxniUuUfIV7CSgjisodTemwN+
-	z3NI7jzKdkcTXQj/jR8GevD4pXrNm0GZn5S1ehZqlAheELdUNcnfDCI+Buv2bDA=
-X-Gm-Gg: ASbGnctO+l9RbOyvimcaY7/wzQ1x6Ftth/NKezBj/3RHZ8pHJMQHzrPBTfcFf7iAA2M
-	3vwbNkE5Ofe3cUH9gYIFaSAheagNJfqROt1Kxzo04UKWI/7GyxGITHl1RxIUiwkRkcrVm0dgWMx
-	hQhDwem9+4PROVI998EMnmTPHQYHbulaVwUGAqu/A9rC499Gk8nLvTabMphyW3CLRrL5bEjk+0P
-	2rPJ/U3faBp31fLv2fSOlGQEIOjYnWXDcbft1Sl2Fiuj099sOkFns971RZePz2jZ31ZAnmEc/lz
-	KOAGdU5VY7qVg4EyJuhGL+1xWFlLyb8Pyzqyj5N/+/mq50E+HWRB89V1SKGi/Cif0JrSThJJNtA
-	Y
-X-Google-Smtp-Source: AGHT+IHud1Lx/e9hjLylARcdg9YwgwsL26JFB4RSMGKgaYHKocJaJ769bcyXNbc2yJwuIYn75/h4mQ==
-X-Received: by 2002:a05:6871:20cb:b0:29e:526a:eeef with SMTP id 586e51a60fabf-2b32f3503e2mr15436661fac.34.1738652301328;
-        Mon, 03 Feb 2025 22:58:21 -0800 (PST)
+        bh=r4762hkLrmSiaKdmQk784TxrThn/ycMKykakCzUArJk=;
+        b=Yu/ySRMo7i+471DussfMsZwAouMA8vlbxkSgGyCVXdTabQrZOCKvycBnX6xE7eNOq0
+         Kc/0yRjJLoX323HA3WauVrPTtScUcOwJKMGP3WXnHnxq0UjMzbPHcAh4bY1aO6ie9Q6A
+         ZZGNtsUNgxTusnivhdLI2nrW0o32J/vK/ETPvW4Z2rs3HFyrAhJZRuVLcNhlqgViUKK3
+         EjBYFLHI+lnBfVt41BQueX3VNDpG10mymZH15wc61VhYhK6K7KDQZaOfADrlipn+2x/p
+         JOe+xJQcH7mv64V6S2R52fX5r9OBfbwQ9TMIJG9/YupQwS5XRZbjyUf2/aQyHzoVYNw7
+         1b+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVsMLZ1ePQiusbZw/X36pBb6jvq510aO4Ja9ZCeozPqWBbzsgDeTHgeKimjZnmxOJ0Tf2oRVZZA9w5Gl5M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpGV7uVi9ee49iOdUBwSm+OuoqxAeuoT9Kc9udnV0qW8i4VLJq
+	cgLYnI+K8YIn3wzxcd087krkHlGPch0RyQ9cSP8jFtt9yiT/oFkA
+X-Gm-Gg: ASbGnctbUAwuvF7TlFGYZ0tM4f1tVwbVGHVovk6LIT6augHOkufrQIlaKZb9xDA5dky
+	yMG8DBrFkL+1ujmiqEUxp7dMgzb4rHrTjmlkza2c2tZjKl6bHG5Zh4GnlUIJmtae1vOBjZeFOUM
+	Kh0F23zroDJMvbVPsWzuPd4wPeFXsetoCaF/t/eb5xuwsuMvPLEpc9XCh7O0Eof7rHryIJU6UCc
+	o3YdTDk1OKkQvRYV+kwgUm3ATdDjPX3U1lBfNszsyjFkParxFdXEXfnjis/Xn9UbV3dZ3fXdAfl
+	R9C0y5PHx161VdKoE68NGI3buePwc0zy8heP2Pd7v+QAlrnpwkM48FxktMgkDR+aWjCijTEnzY5
+	s
+X-Google-Smtp-Source: AGHT+IFx7DNMU57U7g4/HUYZJ5bg9VweGyCmrkUIq81hlCJJ3ZMs79YG8u1S5Pw8uhNvInKMoMkVdQ==
+X-Received: by 2002:a05:6808:4491:b0:3f0:8e41:a7a7 with SMTP id 5614622812f47-3f323820aa2mr18252090b6e.0.1738652303935;
+        Mon, 03 Feb 2025 22:58:23 -0800 (PST)
 Received: from DESKTOP-GL3U3CJ (162-207-94-177.lightspeed.irvnca.sbcglobal.net. [162.207.94.177])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b3565b5946sm3887340fac.31.2025.02.03.22.58.20
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc104b3c1dsm2984812eaf.8.2025.02.03.22.58.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 22:58:20 -0800 (PST)
+        Mon, 03 Feb 2025 22:58:23 -0800 (PST)
 From: Ian To <onlyian4981@gmail.com>
 To: gregkh@linuxfoundation.org
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Ian To <onlyian4981@gmail.com>
-Subject: [PATCH 1/4] staging: rtl8723bs: Add missing spaces
-Date: Mon,  3 Feb 2025 22:57:19 -0800
-Message-ID: <28655748fedb84aa4cfde307ec4d2020610b2047.1738651582.git.onlyian4981@gmail.com>
+Subject: [PATCH 2/4] staging: rtl8723bs: Split up long lines
+Date: Mon,  3 Feb 2025 22:57:20 -0800
+Message-ID: <d63d1cc70895976f4864740b82e40d0dbd6e6ccf.1738651582.git.onlyian4981@gmail.com>
 X-Mailer: git-send-email 2.45.3
 In-Reply-To: <cover.1738651582.git.onlyian4981@gmail.com>
 References: <cover.1738651582.git.onlyian4981@gmail.com>
@@ -77,184 +77,137 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add missing spaces to operators.
+Long lines were present and split up.
 
 Signed-off-by: Ian To <onlyian4981@gmail.com>
 ---
- .../staging/rtl8723bs/core/rtw_wlan_util.c    | 55 ++++++++++---------
- 1 file changed, 28 insertions(+), 27 deletions(-)
+ .../staging/rtl8723bs/core/rtw_wlan_util.c    | 38 ++++++++++++-------
+ 1 file changed, 24 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-index 73c70b016f00..f73bde9ee4d3 100644
+index f73bde9ee4d3..7929e93c23ac 100644
 --- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
 +++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-@@ -170,10 +170,10 @@ void get_rate_set(struct adapter *padapter, unsigned char *pbssrate, int *bssrat
- 
- void set_mcs_rate_by_mask(u8 *mcs_set, u32 mask)
- {
--	u8 mcs_rate_1r = (u8)(mask&0xff);
--	u8 mcs_rate_2r = (u8)((mask>>8)&0xff);
--	u8 mcs_rate_3r = (u8)((mask>>16)&0xff);
--	u8 mcs_rate_4r = (u8)((mask>>24)&0xff);
-+	u8 mcs_rate_1r = (u8)(mask & 0xff);
-+	u8 mcs_rate_2r = (u8)((mask >> 8) & 0xff);
-+	u8 mcs_rate_3r = (u8)((mask >> 16) & 0xff);
-+	u8 mcs_rate_4r = (u8)((mask >> 24) & 0xff);
- 
- 	mcs_set[0] &= mcs_rate_1r;
- 	mcs_set[1] &= mcs_rate_2r;
-@@ -267,21 +267,22 @@ inline void rtw_set_oper_ch(struct adapter *adapter, u8 ch)
- 		dvobj->on_oper_ch_time = jiffies;
- 
- #ifdef DBG_CH_SWITCH
--		cnt += scnprintf(msg+cnt, len-cnt, "switch to ch %3u", ch);
-+		cnt += scnprintf(msg + cnt, len - cnt, "switch to ch %3u", ch);
- 
- 		for (i = 0; i < dvobj->iface_nums; i++) {
- 			struct adapter *iface = dvobj->padapters[i];
- 
--			cnt += scnprintf(msg+cnt, len-cnt, " [%s:", ADPT_ARG(iface));
-+			cnt += scnprintf(msg + cnt, len - cnt, " [%s:", ADPT_ARG(iface));
- 			if (iface->mlmeextpriv.cur_channel == ch)
--				cnt += scnprintf(msg+cnt, len-cnt, "C");
-+				cnt += scnprintf(msg + cnt, len - cnt, "C");
- 			else
--				cnt += scnprintf(msg+cnt, len-cnt, "_");
--			if (iface->wdinfo.listen_channel == ch && !rtw_p2p_chk_state(&iface->wdinfo, P2P_STATE_NONE))
--				cnt += scnprintf(msg+cnt, len-cnt, "L");
-+				cnt += scnprintf(msg + cnt, len - cnt, "_");
-+			if (iface->wdinfo.listen_channel == ch &&
-+			    !rtw_p2p_chk_state(&iface->wdinfo, P2P_STATE_NONE))
-+				cnt += scnprintf(msg + cnt, len - cnt, "L");
- 			else
--				cnt += scnprintf(msg+cnt, len-cnt, "_");
--			cnt += scnprintf(msg+cnt, len-cnt, "]");
-+				cnt += scnprintf(msg + cnt, len - cnt, "_");
-+			cnt += scnprintf(msg + cnt, len - cnt, "]");
- 		}
- 
- #endif /* DBG_CH_SWITCH */
-@@ -431,7 +432,7 @@ void invalidate_cam_all(struct adapter *padapter)
- 
- 	spin_lock_bh(&cam_ctl->lock);
- 	cam_ctl->bitmap = 0;
--	memset(dvobj->cam_cache, 0, sizeof(struct cam_entry_cache)*TOTAL_CAM_ENTRY);
-+	memset(dvobj->cam_cache, 0, sizeof(struct cam_entry_cache) * TOTAL_CAM_ENTRY);
- 	spin_unlock_bh(&cam_ctl->lock);
+@@ -336,13 +336,13 @@ void r8723bs_select_channel(struct adapter *padapter, unsigned char channel)
+ 	mutex_unlock(&(adapter_to_dvobj(padapter)->setch_mutex));
  }
  
-@@ -522,7 +523,7 @@ static bool _rtw_camid_is_gk(struct adapter *adapter, u8 cam_id)
- 	if (!(cam_ctl->bitmap & BIT(cam_id)))
- 		goto exit;
+-void set_channel_bwmode(struct adapter *padapter, unsigned char channel, unsigned char channel_offset, unsigned short bwmode)
++void set_channel_bwmode(struct adapter *padapter, unsigned char channel,
++			unsigned char channel_offset, unsigned short bwmode)
+ {
+ 	u8 center_ch, chnl_offset80 = HAL_PRIME_CHNL_OFFSET_DONT_CARE;
  
--	ret = (dvobj->cam_cache[cam_id].ctrl&BIT6)?true:false;
-+	ret = (dvobj->cam_cache[cam_id].ctrl & BIT6) ? true : false;
+ 	center_ch = rtw_get_center_ch(channel, bwmode, channel_offset);
  
- exit:
- 	return ret;
-@@ -537,7 +538,7 @@ static s16 _rtw_camid_search(struct adapter *adapter, u8 *addr, s16 kid)
- 	for (i = 0; i < TOTAL_CAM_ENTRY; i++) {
- 		if (addr && memcmp(dvobj->cam_cache[i].mac, addr, ETH_ALEN))
- 			continue;
--		if (kid >= 0 && kid != (dvobj->cam_cache[i].ctrl&0x03))
-+		if (kid >= 0 && kid != (dvobj->cam_cache[i].ctrl & 0x03))
- 			continue;
+-
+ 	/* set Channel */
+ 	if (mutex_lock_interruptible(&(adapter_to_dvobj(padapter)->setch_mutex)))
+ 		return;
+@@ -352,7 +352,8 @@ void set_channel_bwmode(struct adapter *padapter, unsigned char channel, unsigne
+ 	rtw_set_oper_bw(padapter, bwmode);
+ 	rtw_set_oper_choffset(padapter, channel_offset);
  
- 		cam_id = i;
-@@ -585,7 +586,7 @@ s16 rtw_camid_alloc(struct adapter *adapter, struct sta_info *sta, u8 kid)
- 		cam_id = kid;
- 	} else {
- 		int i;
--		u8 *addr = sta?sta->hwaddr:NULL;
-+		u8 *addr = sta ? sta->hwaddr : NULL;
+-	rtw_hal_set_chnl_bw(padapter, center_ch, bwmode, channel_offset, chnl_offset80); /*  set center channel */
++	/* set center channel */
++	rtw_hal_set_chnl_bw(padapter, center_ch, bwmode, channel_offset, chnl_offset80);
  
- 		if (!sta) {
- 			if (!(mlmeinfo->state & WIFI_FW_ASSOC_SUCCESS)) {
-@@ -792,7 +793,7 @@ void WMMOnAssocRsp(struct adapter *padapter)
- 			switch (ACI) {
- 			case 0x0:
- 				rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_BE, (u8 *)(&acParm));
--				acm_mask |= (ACM ? BIT(1):0);
-+				acm_mask |= (ACM ? BIT(1) : 0);
- 				edca[XMIT_BE_QUEUE] = acParm;
- 				break;
+ 	mutex_unlock(&(adapter_to_dvobj(padapter)->setch_mutex));
+ }
+@@ -382,7 +383,8 @@ int is_client_associated_to_ap(struct adapter *padapter)
+ 	pmlmeext = &padapter->mlmeextpriv;
+ 	pmlmeinfo = &(pmlmeext->mlmext_info);
  
-@@ -804,13 +805,13 @@ void WMMOnAssocRsp(struct adapter *padapter)
+-	if ((pmlmeinfo->state & WIFI_FW_ASSOC_SUCCESS) && ((pmlmeinfo->state&0x03) == WIFI_FW_STATION_STATE))
++	if ((pmlmeinfo->state & WIFI_FW_ASSOC_SUCCESS) &&
++	    ((pmlmeinfo->state & 0x03) == WIFI_FW_STATION_STATE))
+ 		return true;
+ 	else
+ 		return _FAIL;
+@@ -393,7 +395,8 @@ int is_client_associated_to_ibss(struct adapter *padapter)
+ 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+ 	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
  
- 			case 0x2:
- 				rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VI, (u8 *)(&acParm));
--				acm_mask |= (ACM ? BIT(2):0);
-+				acm_mask |= (ACM ? BIT(2) : 0);
- 				edca[XMIT_VI_QUEUE] = acParm;
- 				break;
+-	if ((pmlmeinfo->state & WIFI_FW_ASSOC_SUCCESS) && ((pmlmeinfo->state&0x03) == WIFI_FW_ADHOC_STATE))
++	if ((pmlmeinfo->state & WIFI_FW_ASSOC_SUCCESS) &&
++	    ((pmlmeinfo->state & 0x03) == WIFI_FW_ADHOC_STATE))
+ 		return true;
+ 	else
+ 		return _FAIL;
+@@ -468,7 +471,8 @@ void _write_cam(struct adapter *padapter, u8 entry, u16 ctrl, u8 *mac, u8 *key)
+ void _clear_cam_entry(struct adapter *padapter, u8 entry)
+ {
+ 	unsigned char null_sta[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+-	unsigned char null_key[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
++	unsigned char null_key[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
  
- 			case 0x3:
- 				rtw_hal_set_hwreg(padapter, HW_VAR_AC_PARAM_VO, (u8 *)(&acParm));
--				acm_mask |= (ACM ? BIT(3):0);
-+				acm_mask |= (ACM ? BIT(3) : 0);
- 				edca[XMIT_VO_QUEUE] = acParm;
- 				break;
- 			}
-@@ -1175,7 +1176,7 @@ int rtw_check_bcn_info(struct adapter *Adapter, u8 *pframe, u32 packet_len)
- 		ht_info_infos_0 = 0;
+ 	_write_cam(padapter, entry, 0, null_sta, null_key);
+ }
+@@ -572,8 +576,8 @@ s16 rtw_camid_alloc(struct adapter *adapter, struct sta_info *sta, u8 kid)
+ 
+ 	mlmeinfo = &adapter->mlmeextpriv.mlmext_info;
+ 
+-	if ((((mlmeinfo->state&0x03) == WIFI_FW_AP_STATE) || ((mlmeinfo->state&0x03) == WIFI_FW_ADHOC_STATE))
+-		&& !sta) {
++	if ((((mlmeinfo->state & 0x03) == WIFI_FW_AP_STATE) ||
++	     ((mlmeinfo->state & 0x03) == WIFI_FW_ADHOC_STATE)) && !sta) {
+ 		/* AP/Ad-hoc mode group key: static alloction to default key by key ID */
+ 		if (kid > 3) {
+ 			netdev_dbg(adapter->pnetdev,
+@@ -1142,7 +1146,9 @@ int rtw_check_bcn_info(struct adapter *Adapter, u8 *pframe, u32 packet_len)
+ 	if (!bssid)
+ 		return true;
+ 
+-	if ((pmlmepriv->timeBcnInfoChkStart != 0) && (jiffies_to_msecs(jiffies - pmlmepriv->timeBcnInfoChkStart) > DISCONNECT_BY_CHK_BCN_FAIL_OBSERV_PERIOD_IN_MS)) {
++	if ((pmlmepriv->timeBcnInfoChkStart != 0) &&
++	    (jiffies_to_msecs(jiffies - pmlmepriv->timeBcnInfoChkStart) >
++	     DISCONNECT_BY_CHK_BCN_FAIL_OBSERV_PERIOD_IN_MS)) {
+ 		pmlmepriv->timeBcnInfoChkStart = 0;
+ 		pmlmepriv->NumOfBcnInfoChkFail = 0;
  	}
- 	if (ht_cap_info != cur_network->bcn_info.ht_cap_info ||
--	    ((ht_info_infos_0&0x03) != (cur_network->bcn_info.ht_info_infos_0&0x03))) {
-+	    ((ht_info_infos_0 & 0x03) != (cur_network->bcn_info.ht_info_infos_0 & 0x03))) {
- 		{
- 			/* bcn_info_update */
- 			cur_network->bcn_info.ht_cap_info = ht_cap_info;
-@@ -1243,12 +1244,12 @@ int rtw_check_bcn_info(struct adapter *Adapter, u8 *pframe, u32 packet_len)
- 		goto _mismatch;
+@@ -1214,7 +1220,7 @@ int rtw_check_bcn_info(struct adapter *Adapter, u8 *pframe, u32 packet_len)
+ 	bssid->ssid.ssid_length = ssid_len;
  
- 	if (encryp_protocol == ENCRYP_PROTOCOL_WPA || encryp_protocol == ENCRYP_PROTOCOL_WPA2) {
--		pbuf = rtw_get_wpa_ie(&bssid->ies[12], &wpa_ielen, bssid->ie_length-12);
-+		pbuf = rtw_get_wpa_ie(&bssid->ies[12], &wpa_ielen, bssid->ie_length - 12);
- 		if (pbuf && (wpa_ielen > 0)) {
- 			rtw_parse_wpa_ie(pbuf, wpa_ielen + 2, &group_cipher,
- 					 &pairwise_cipher, &is_8021x);
- 		} else {
--			pbuf = rtw_get_wpa2_ie(&bssid->ies[12], &wpa_ielen, bssid->ie_length-12);
-+			pbuf = rtw_get_wpa2_ie(&bssid->ies[12], &wpa_ielen, bssid->ie_length - 12);
+ 	if (memcmp(bssid->ssid.ssid, cur_network->network.ssid.ssid, 32) ||
+-			bssid->ssid.ssid_length != cur_network->network.ssid.ssid_length)
++	    bssid->ssid.ssid_length != cur_network->network.ssid.ssid_length)
+ 		if (bssid->ssid.ssid[0] != '\0' &&
+ 		    bssid->ssid.ssid_length != 0) /* not hidden ssid */
+ 			goto _mismatch;
+@@ -1275,8 +1281,10 @@ int rtw_check_bcn_info(struct adapter *Adapter, u8 *pframe, u32 packet_len)
  
- 			if (pbuf && (wpa_ielen > 0))
- 				rtw_parse_wpa2_ie(pbuf, wpa_ielen + 2, &group_cipher,
-@@ -1635,7 +1636,7 @@ void process_addba_req(struct adapter *padapter, u8 *paddba_req, u8 *addr)
+ 	pmlmepriv->NumOfBcnInfoChkFail++;
  
- 	if (psta) {
- 		param = le16_to_cpu(preq->BA_para_set);
--		tid = (param>>2)&0x0f;
-+		tid = (param >> 2) & 0x0f;
+-	if ((pmlmepriv->timeBcnInfoChkStart != 0) && (jiffies_to_msecs(jiffies - pmlmepriv->timeBcnInfoChkStart) <= DISCONNECT_BY_CHK_BCN_FAIL_OBSERV_PERIOD_IN_MS)
+-		&& (pmlmepriv->NumOfBcnInfoChkFail >= DISCONNECT_BY_CHK_BCN_FAIL_THRESHOLD)) {
++	if ((pmlmepriv->timeBcnInfoChkStart != 0) &&
++	    (jiffies_to_msecs(jiffies - pmlmepriv->timeBcnInfoChkStart) <=
++	     DISCONNECT_BY_CHK_BCN_FAIL_OBSERV_PERIOD_IN_MS) &&
++	    (pmlmepriv->NumOfBcnInfoChkFail >= DISCONNECT_BY_CHK_BCN_FAIL_THRESHOLD)) {
+ 		pmlmepriv->timeBcnInfoChkStart = 0;
+ 		pmlmepriv->NumOfBcnInfoChkFail = 0;
+ 		return _FAIL;
+@@ -1337,7 +1345,8 @@ unsigned int is_ap_in_tkip(struct adapter *padapter)
  
- 		preorder_ctrl = &psta->recvreorder_ctrl[tid];
+ 			switch (pIE->element_id) {
+ 			case WLAN_EID_VENDOR_SPECIFIC:
+-				if ((!memcmp(pIE->data, RTW_WPA_OUI, 4)) && (!memcmp((pIE->data + 12), WPA_TKIP_CIPHER, 4)))
++				if ((!memcmp(pIE->data, RTW_WPA_OUI, 4)) &&
++				    (!memcmp((pIE->data + 12), WPA_TKIP_CIPHER, 4)))
+ 					return true;
  
-@@ -1653,7 +1654,7 @@ void update_TSF(struct mlme_ext_priv *pmlmeext, u8 *pframe, uint len)
- 	pIE = pframe + sizeof(struct ieee80211_hdr_3addr);
- 	pbuf = (__le32 *)pIE;
+ 				break;
+@@ -1440,7 +1449,8 @@ unsigned char check_assoc_AP(u8 *pframe, uint len)
  
--	pmlmeext->TSFValue = le32_to_cpu(*(pbuf+1));
-+	pmlmeext->TSFValue = le32_to_cpu(*(pbuf + 1));
- 
- 	pmlmeext->TSFValue = pmlmeext->TSFValue << 32;
- 
-@@ -1679,14 +1680,14 @@ void adaptive_early_32k(struct mlme_ext_priv *pmlmeext, u8 *pframe, uint len)
- 	pIE = pframe + sizeof(struct ieee80211_hdr_3addr);
- 	pbuf = (__le32 *)pIE;
- 
--	tsf = le32_to_cpu(*(pbuf+1));
-+	tsf = le32_to_cpu(*(pbuf + 1));
- 	tsf = tsf << 32;
- 	tsf |= le32_to_cpu(*pbuf);
- 
- 	/* delay = (timestamp mod 1024*100)/1000 (unit: ms) */
- 	/* delay_ms = do_div(tsf, (pmlmeinfo->bcn_interval*1024))/1000; */
--	delay_ms = do_div(tsf, (pmlmeinfo->bcn_interval*1024));
--	delay_ms = delay_ms/1000;
-+	delay_ms = do_div(tsf, (pmlmeinfo->bcn_interval * 1024));
-+	delay_ms = delay_ms / 1000;
- 
- 	if (delay_ms >= 8)
- 		pmlmeext->bcn_delay_cnt[8]++;
+ 		switch (pIE->element_id) {
+ 		case WLAN_EID_VENDOR_SPECIFIC:
+-			if ((!memcmp(pIE->data, ARTHEROS_OUI1, 3)) || (!memcmp(pIE->data, ARTHEROS_OUI2, 3)))
++			if ((!memcmp(pIE->data, ARTHEROS_OUI1, 3)) ||
++			    (!memcmp(pIE->data, ARTHEROS_OUI2, 3)))
+ 				return HT_IOT_PEER_ATHEROS;
+ 			else if ((!memcmp(pIE->data, BROADCOM_OUI1, 3)) ||
+ 				 (!memcmp(pIE->data, BROADCOM_OUI2, 3)) ||
 -- 
 2.45.3
 
