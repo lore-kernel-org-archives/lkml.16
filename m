@@ -1,213 +1,107 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49503143C5D;
-	Tue,  4 Feb 2025 09:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2BD2066F3;
+	Tue,  4 Feb 2025 09:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738662606; cv=none; b=tSYUnKrJ/elcbgPTL/xk2mitRa6foAvv3IUO4+L8TwRxzBNA/1DPzKdZk+9tSoiPsYoYaA5QR+B5wYFdXWrM29CenWxBzpXsRw6V3J2eiO0AvSq0WH4O2rO9qiMMuNqgBtUcV3hCWfVNWTKq3EUA46B21ScaVMdjn1Y9aoNcc9I=
+	t=1738662638; cv=none; b=Abx+A2FUjZIUaGH6QpwJ2LcjrNp2HnNXJcqrKIsbJpt/NQS0sCCqS/fMMjie0tpxmCrUNcKRBHvH12XnN4v8AClFuLP5ZHQzxP6wI9srfuQJpPbHHX3IHwj+NDuwR2z9IraVvVAfI0r4t94wekdP+NWyqupmxVITsLrU3QjSW+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738662606; c=relaxed/simple;
-	bh=7qbynCn/gy/uw9OtIo6wbbN4xeODM0unKVxt43kSitw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XfZsUUyDwjiIaLoy8LLjgfRoK6JnVNW2eBzYF1+sGeCsDbbzyYh3K7UVRHJg6pP1bkouzbAidMOUaqg/7w1eJuRRprO5uqu6sBVJvfmsAaripqXWwFU7hVKkz7Skzk7USEfu5hfxBcTbbvXnv8lKgV4/P9TdXPQCYWuIhEujptk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4YnJ2k5807z9sRs;
-	Tue,  4 Feb 2025 10:28:46 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 0Voh3-2F0DYF; Tue,  4 Feb 2025 10:28:46 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4YnJ2T73yBz9sSR;
-	Tue,  4 Feb 2025 10:28:33 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id DA8228B765;
-	Tue,  4 Feb 2025 10:28:33 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id fUnL5h2Ji_JM; Tue,  4 Feb 2025 10:28:33 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 1461D8B763;
-	Tue,  4 Feb 2025 10:28:33 +0100 (CET)
-Message-ID: <d0227f33-7b3f-426e-b731-b9a1f17020ed@csgroup.eu>
-Date: Tue, 4 Feb 2025 10:28:32 +0100
+	s=arc-20240116; t=1738662638; c=relaxed/simple;
+	bh=jb8kMwJ98DjWaCHgudb7JkXH1w0Cj8Tj6R51vZ/JS1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=satM3R7HWBj73ozU/xebIA8ypIR+EfFajtKefMY0Qd5DUnKbm6WtWwi96lo4XjziieiLpM6N8Umtfj605e8jWxNOrFIm1zswDPMj5FIoxhJxVW63gP1F3mKp8qu6GW/cZQs5EK5uUD8WMOttI+fQTjPJ6t+/Rc6LyCK4I2JbWTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBzOkKB0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBzOkKB0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB9D6C4CEDF;
+	Tue,  4 Feb 2025 09:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738662638;
+	bh=jb8kMwJ98DjWaCHgudb7JkXH1w0Cj8Tj6R51vZ/JS1M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qBzOkKB0y4E6DYirbxs7d1/+MSesxUN6asKQjPs20sDGgtF0br7786l4TGnUdvHLz
+	 W0judOCyijvE5jTIstIMrDDw5jKpbY8S75tpdHZM8B8D9pyRIxhuVSfLAhzNfHYzEv
+	 YI0nPuGD/n/JBu6W89vQSc1Wd1KOVnzx+p9mwSu1U1hYJxIOryalfxgee0iywH31G8
+	 jgbwTRnbFlMPcsRvSSe9Th4Gz8TwWMDzKCHde9ZPqpKYZaHSp6Fm1UcKb095nLe3cU
+	 crO80UOzeuKKGbpHLEpM0NGskUUz6G54Y8y1zHm5DFk/nfjsJ+2pygbbORAST4Vz8s
+	 vMWnZ5HtqPxDw==
+From: Christian Brauner <brauner@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	pedro.falcato@gmail.com,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Oliver Sang <oliver.sang@intel.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Koutny <mkoutny@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH v7 0/6] introduce PIDFD_SELF* sentinels
+Date: Tue,  4 Feb 2025 10:46:35 +0100
+Message-ID: <20250204-joggen-buddeln-29e5ca75abb7@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <cover.1738268370.git.lorenzo.stoakes@oracle.com>
+References: <cover.1738268370.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v1 2/3] include: move
- lookup_or_create_module_kobject()/to_module* to module.h
-To: Shyam Saini <shyamsaini@linux.microsoft.com>,
- linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org
-Cc: code@tyhicks.com, linux@rasmusvillemoes.dk, mcgrof@kernel.org,
- frkaya@linux.microsoft.com, vijayb@linux.microsoft.com, petr.pavlu@suse.com,
- linux@weissschuh.net, samitolvanen@google.com, da.gomez@samsung.com,
- gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org
-References: <20250204052222.1611510-1-shyamsaini@linux.microsoft.com>
- <20250204052222.1611510-3-shyamsaini@linux.microsoft.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250204052222.1611510-3-shyamsaini@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1795; i=brauner@kernel.org; h=from:subject:message-id; bh=jb8kMwJ98DjWaCHgudb7JkXH1w0Cj8Tj6R51vZ/JS1M=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQvfPTgTD7L0pub5DJF0/Jkm1bfN599J+JSe+g99xMrf HIyLtUv7ihlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZhIVgYjw4fPN5iqNJV9OgsW svEXbPTITfBe7sAUZj2X8f5jmdCifwz/o9w3l/I+kFzBJnLz6KVvxzkSSuumWL9meHP5ZfeNjvN nuAE=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-
-
-Le 04/02/2025 à 06:22, Shyam Saini a écrit :
-> [Vous ne recevez pas souvent de courriers de shyamsaini@linux.microsoft.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
+On Thu, 30 Jan 2025 20:40:25 +0000, Lorenzo Stoakes wrote:
+> If you wish to utilise a pidfd interface to refer to the current process or
+> thread it is rather cumbersome, requiring something like:
 > 
-> Move the following to module.h to allow common usages:
->   - lookup_or_create_module_kobject()
->   - to_module_attr
->   - to_module_kobject
+> 	int pidfd = pidfd_open(getpid(), 0 or PIDFD_THREAD);
 > 
-> This makes lookup_or_create_module_kobject() as inline.
-
-Why an inline ? It looks quite big for an inline. Why not just make it 
-global ?
-
+> 	...
 > 
-> Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
-> ---
->   include/linux/module.h | 39 +++++++++++++++++++++++++++++++++++++++
->   kernel/params.c        | 39 ---------------------------------------
->   2 files changed, 39 insertions(+), 39 deletions(-)
-> 
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 12f8a7d4fc1c..ba5f5e6c3927 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -894,8 +894,47 @@ static inline void *module_writable_address(struct module *mod, void *loc)
->   #endif /* CONFIG_MODULES */
-> 
->   #ifdef CONFIG_SYSFS
-> +/* sysfs output in /sys/modules/XYZ/parameters/ */
-> +#define to_module_attr(n) container_of_const(n, struct module_attribute, attr)
-> +#define to_module_kobject(n) container_of(n, struct module_kobject, kobj)
->   extern struct kset *module_kset;
->   extern const struct kobj_type module_ktype;
-> +
-> +static inline struct module_kobject * __init lookup_or_create_module_kobject(const char *name)
-> +{
-> +       struct module_kobject *mk;
-> +       struct kobject *kobj;
-> +       int err;
-> +
-> +       kobj = kset_find_obj(module_kset, name);
-> +       if (kobj) {
-> +               mk = to_module_kobject(kobj);
+> [...]
 
-Would look cleaner without the else. Something like:
+Updated merge message. I've slightly rearranged pidfd_send_signal() so
+we don't have to call CLASS(fd, f)(pidfd) unconditionally anymore.
 
-	if (kobj)
-		return to_module_kobject(kobj);
+---
 
-	mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
-...
+Applied to the vfs-6.15.pidfs branch of the vfs/vfs.git tree.
+Patches in the vfs-6.15.pidfs branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-> +       } else {
-> +               mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
-> +               BUG_ON(!mk);
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Why a BUG_ON() ? Why not just return NULL and let the caller handle the 
-failure ?
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-> +
-> +               mk->mod = THIS_MODULE;
-> +               mk->kobj.kset = module_kset;
-> +               err = kobject_init_and_add(&mk->kobj, &module_ktype, NULL,
-> +                                          "%s", name);
-> +#ifdef CONFIG_MODULES
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.15.pidfs
 
-This #ifdef is not needed, module_uevent is declared at all time in 
-module.h, IS_ENABLED(CONFIG_MODULES) should be enough.
-
-> +               if (!err)
-> +                       err = sysfs_create_file(&mk->kobj, &module_uevent.attr);
-> +#endif
-> +               if (err) {
-> +                       kobject_put(&mk->kobj);
-> +                       pr_crit("Adding module '%s' to sysfs failed (%d), the system may be unstable.\n",
-> +                               name, err);
-> +                       return NULL;
-> +               }
-> +
-> +               /* So that we hold reference in both cases. */
-> +               kobject_get(&mk->kobj);
-> +       }
-> +
-> +       return mk;
-> +}
-> +
->   #endif /* CONFIG_SYSFS */
-> 
->   #define symbol_request(x) try_then_request_module(symbol_get(x), "symbol:" #x)
-> diff --git a/kernel/params.c b/kernel/params.c
-> index 4b43baaf7c83..3c0798b79f76 100644
-> --- a/kernel/params.c
-> +++ b/kernel/params.c
-> @@ -537,10 +537,6 @@ const struct kernel_param_ops param_ops_string = {
->   };
->   EXPORT_SYMBOL(param_ops_string);
-> 
-> -/* sysfs output in /sys/modules/XYZ/parameters/ */
-> -#define to_module_attr(n) container_of_const(n, struct module_attribute, attr)
-> -#define to_module_kobject(n) container_of(n, struct module_kobject, kobj)
-> -
->   struct param_attribute
->   {
->          struct module_attribute mattr;
-> @@ -763,41 +759,6 @@ void destroy_params(const struct kernel_param *params, unsigned num)
->                          params[i].ops->free(params[i].arg);
->   }
-> 
-> -static struct module_kobject * __init lookup_or_create_module_kobject(const char *name)
-> -{
-> -       struct module_kobject *mk;
-> -       struct kobject *kobj;
-> -       int err;
-> -
-> -       kobj = kset_find_obj(module_kset, name);
-> -       if (kobj) {
-> -               mk = to_module_kobject(kobj);
-> -       } else {
-> -               mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
-> -               BUG_ON(!mk);
-> -
-> -               mk->mod = THIS_MODULE;
-> -               mk->kobj.kset = module_kset;
-> -               err = kobject_init_and_add(&mk->kobj, &module_ktype, NULL,
-> -                                          "%s", name);
-> -#ifdef CONFIG_MODULES
-> -               if (!err)
-> -                       err = sysfs_create_file(&mk->kobj, &module_uevent.attr);
-> -#endif
-> -               if (err) {
-> -                       kobject_put(&mk->kobj);
-> -                       pr_crit("Adding module '%s' to sysfs failed (%d), the system may be unstable.\n",
-> -                               name, err);
-> -                       return NULL;
-> -               }
-> -
-> -               /* So that we hold reference in both cases. */
-> -               kobject_get(&mk->kobj);
-> -       }
-> -
-> -       return mk;
-> -}
-> -
->   static void __init kernel_add_sysfs_param(const char *name,
->                                            const struct kernel_param *kparam,
->                                            unsigned int name_skip)
-> --
-> 2.34.1
-> 
-> 
-
+[1/6] pidfd: add PIDFD_SELF* sentinels to refer to own thread/process
+      https://git.kernel.org/vfs/vfs/c/e6e4ed42f8d8
+[2/6] selftests/pidfd: add missing system header imcludes to pidfd tests
+      https://git.kernel.org/vfs/vfs/c/c9f04f4a251d
+[3/6] tools: testing: separate out wait_for_pid() into helper header
+      https://git.kernel.org/vfs/vfs/c/fb67fe44116e
+[4/6] selftests: pidfd: add pidfd.h UAPI wrapper
+      https://git.kernel.org/vfs/vfs/c/ac331e56724d
+[5/6] selftests: pidfd: add tests for PIDFD_SELF_*
+      https://git.kernel.org/vfs/vfs/c/881a3515c191
+[6/6] selftests/mm: use PIDFD_SELF in guard pages test
+      https://git.kernel.org/vfs/vfs/c/b4703f056f42
