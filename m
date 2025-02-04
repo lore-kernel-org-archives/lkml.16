@@ -1,374 +1,116 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37AF42063D9;
-	Tue,  4 Feb 2025 07:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57992063C5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 07:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738654520; cv=none; b=qItqrzjFwSFSAsJlwemgOaP+C4VnphF3ZCyxq8imbC94Z0lSdCKF8bl54mhACNfZonSVixgm6RVG1dQ4/aHIRAJ7JiIFllqrX8mZ2AmpBL/cJe5kbCF/fmolO/Kfxjsjp7OJaQ0PBT6iUIxetvnRJBGgN0OTbxzyAzrGjWWa8So=
+	t=1738654544; cv=none; b=ZhHTenWDtdnjdCQ4h6KjwF9RgXmmvahOi7grl/Vuo1LjaQRvIdRffsjaULrO2VCNE7dbL7vFoZORIMcOEC9pESe++0GERCM793sLy80DxGaqnfMJkdmku9641o8eP6UVWBjcW5QUEUjVCnSIl+TVH92vhSqQoZuRH3TqVB0hse0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738654520; c=relaxed/simple;
-	bh=NJFVByEsqDIs0tIZI9Kx7a7UBqt4tLzK4Hvnn4pLkXU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Laz1GDzJMvljm2KYDMCvDqnHUFWPkQqREz+w/j5e3+KWjlZrutkCcq4WWEJpxcEalgTouv9tvG0ONCEhv+VlIWaC0mYZGYejtLIQWsF/H9SKMvva4hXA454ffiecf7RZiWhQmbDvBMWvZYBetQQj4pivM4nwemhmbp+zw7dcoKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VrtTe12k; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1738654544; c=relaxed/simple;
+	bh=UVE6Ky0ozJFP73SEeYl+6tLR2vKwsp/lsx7Dhk3iQTA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hdbVEoQXb87gGXEvK8YPuFFnaFrEh7kuOB/zyQ/iBWoqCESeSWnin3RL300VuTVb0oQ5E4R51ZtximUSeibXvLBDSZBMx1uaipIiSx2F176haGvqHzDjcKOg8ZIGFyCPtGKeuw4swmOVygpGcXMfyUcNFbeJAgcGEYBGJ4EW/BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=elhIx59F; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VrtTe12k"
-Received: by mail.gandi.net (Postfix) with ESMTPA id D519544413;
-	Tue,  4 Feb 2025 07:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738654516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BDNBdquI1LOY2klmHVN/9o1smostCi+fz47ziwBefps=;
-	b=VrtTe12kISdoYSTy68J/yDQSOfVc5/pHXvUukcQ3dy2GQyUdSbPGv3KzSImjQK2WMJgOfu
-	yN4rTJjwTOJRtDsQShuffu96mJ/q6dl/VulFjS5r3EayI3IQQ4KlNLKgrgknxoI/VCRWsS
-	wzSDApDizsISm+Hzsrs9EQsfFOWI2AfkZJ+XkIZKHJDjwIS4kLnmL9qv+l+aBVB0F+0s2L
-	8pyy8rzXh1A00y6+YJOD5TPWuKNgPdHXltnkC8DX7/0zl7NAdC+/MUhUgiEFMnYgHBn+Lc
-	oO2vPjq6WOen9J0WXcft4Pwu7weKt60Hb59hK4Kw74oWHLZV6RQxlaRiqxMyjA==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lizhi Hou <lizhi.hou@amd.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v7 5/5] PCI: of: Create device-tree PCI host bridge node
-Date: Tue,  4 Feb 2025 08:35:00 +0100
-Message-ID: <20250204073501.278248-6-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250204073501.278248-1-herve.codina@bootlin.com>
-References: <20250204073501.278248-1-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="elhIx59F"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5145dZTB009074
+	for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2025 07:35:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	s+Q7fwg4Y/Yig7iso6EaoY+cwSC1kIR0eqU/1fGE7Wg=; b=elhIx59FZmqV71uF
+	qmxP2jQP5MKJxRMo3csLPIJmU4jL2lt0vwF5zG/WFYXJZ+rhwOsqfiNm1Gwtr08d
+	Ik8xMMp2wvoF/8J8BGdgyFL45duoWVE80uuVjXX2NT8Iqfdb5ClyRbeBCV3YyqKw
+	MQ6dpBZWoIbMj8Cdcs5CL9WhdTtDtHXVBg2RundF5MV9/iV4r70vL8ypm4usxBLX
+	0ALh1yXUIgIbjemLXwjSBHf+UqUCX0xwsicWUPq10JTF029mgjtjM99zHZw9IHIW
+	otfig6xd8Bw2wJAXXC0kZogFgR1kj2eDlaW2AtHTdF5ioIEOr6j3a0AD5dLGAufy
+	ZvE1NA==
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44kcxm877f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:35:39 +0000 (GMT)
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2f550d28f7dso9766967a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 23:35:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738654538; x=1739259338;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s+Q7fwg4Y/Yig7iso6EaoY+cwSC1kIR0eqU/1fGE7Wg=;
+        b=wqDAEpdjO0rzZNAaZqrEEn94epFtEL8dyZe2+8dvt7R7LA//Laq3jEhhSJ/9BKbLhD
+         c+5ZCjPblTREyKaY5IHetWc40IHrAbmSNAsv3pKec6IhjcDqAhBREgjTGx4a1fs7fxco
+         kGX218mExa+ThTBjgJGTxs/3201o/BZEu8XWvx7Oji/Ke/8Ay2j2bduj16j2tasaqrRa
+         HQhPb5wtIBBcFNh5p+6n1bOA0oWeyNFT7V3cuUf5aPsfHkYcWgiot5poSr+N/1fePtyh
+         w1hptCeDiMI89sXhr4ivLVAZyuWgul+3kk429Ip7fma5MGGhcVLzZuCqeZKC1BM0f30t
+         +KWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWV5afpH6Sip7E6kRLlm1QN0GMe74/cFILmOCdRQBsrFCfvPL0M3B6gGvcOt//bJL5+M4r77R4Y/rfJbdU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTXc3BEkMuJ1gIvZ+6jyttMiYKD1eT08HB3vIt/Bp01wPqD0yo
+	B6iKuG2Yfd7z3LFAkEIoj/dlmCr3Aw4pt1WwS88dtp7QjBGiGWlnO/wTuwqPW4KIDsekokQ8aYP
+	RDAURrtUKtajxh0aQiKYnJ4WcofEWI6KY2A3PabN2nNd/+NKhB1V4PGvKpCzPB5g=
+X-Gm-Gg: ASbGncsgGE0Y7XOq9cEyBJBO7RE6KguqWT5nbF60zHpb2dmoQB+pbiU4udmq3K8Pycq
+	YQE0RBsEaXurCRWY8Dm1yQmJ/zUAazH0KKq1oK90A64HstZ3JijTt8XnG883t1NgnYqC8A8aihs
+	khTYjKBY9LsiCL/ttm29M+SEerQ6SVaDLm7qbl7VtLk+XAM9+m/Pa3uvZAlBX+eckV8Ex2HsLD8
+	2DOnummYpq7w+eTsx5mdCJjPFzCoJSoY+Vl/UpKIEoMXyPm0I/nIaPy//hrp4nWCp3M/Gqpe1JK
+	meLoUnZSC9TfbYf0r2GX/BbqDY71kDqnUMt76U/YPaGjx3A=
+X-Received: by 2002:a17:90b:4c0e:b0:2ea:4578:46d8 with SMTP id 98e67ed59e1d1-2f83abd8358mr38267861a91.9.1738654537399;
+        Mon, 03 Feb 2025 23:35:37 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFC0QmdALcPNaB5gn6f3dvnGZUrUa/CC1CIXJWYwdx/zV2uoomKS2WhrQZZyEKUdXB6ADRMaw==
+X-Received: by 2002:a17:90b:4c0e:b0:2ea:4578:46d8 with SMTP id 98e67ed59e1d1-2f83abd8358mr38267750a91.9.1738654535578;
+        Mon, 03 Feb 2025 23:35:35 -0800 (PST)
+Received: from [10.152.204.0] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f03b76f67sm7507785ad.237.2025.02.03.23.35.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 23:35:35 -0800 (PST)
+Message-ID: <ed89aec9-99ba-7b17-d50d-93fae9436498@oss.qualcomm.com>
+Date: Tue, 4 Feb 2025 13:05:32 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleelvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehffeigfejueelueeuffelueefgfelhfejhfehieegudekteeiledttdfhffekffenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrn
- hgvlhdrohhrghdprhgtphhtthhopehsrghrrghvrghnrghksehgohhoghhlvgdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhiiihhihdrhhhouhesrghmugdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: herve.codina@bootlin.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 2/8] wifi: ath12k: introduce ath12k_generic_dbg()
+Content-Language: en-US
+To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
+        Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20250204-unlink_link_arvif_from_chanctx-v1-0-675bd4cea339@oss.qualcomm.com>
+ <20250204-unlink_link_arvif_from_chanctx-v1-2-675bd4cea339@oss.qualcomm.com>
+From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+In-Reply-To: <20250204-unlink_link_arvif_from_chanctx-v1-2-675bd4cea339@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: Y0sPS_6JGVm1bU3WRYqR9ZIVeOsnLc5n
+X-Proofpoint-ORIG-GUID: Y0sPS_6JGVm1bU3WRYqR9ZIVeOsnLc5n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_03,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 adultscore=0 malwarescore=0 clxscore=1011
+ suspectscore=0 mlxscore=0 phishscore=0 mlxlogscore=792 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502040060
 
-PCI devices device-tree nodes can be already created. This was
-introduced by commit 407d1a51921e ("PCI: Create device tree node for
-bridge").
 
-In order to have device-tree nodes related to PCI devices attached on
-their PCI root bus (the PCI bus handled by the PCI host bridge), a PCI
-root bus device-tree node is needed. This root bus node will be used as
-the parent node of the first level devices scanned on the bus. On
-device-tree based systems, this PCI root bus device tree node is set to
-the node of the related PCI host bridge. The PCI host bridge node is
-available in the device-tree used to describe the hardware passed at
-boot.
 
-On non device-tree based system (such as ACPI), a device-tree node for
-the PCI host bridge or for the root bus does not exist. Indeed, the PCI
-host bridge is not described in a device-tree used at boot simply
-because no device-tree are passed at boot.
+On 2/4/2025 9:53 AM, Aditya Kumar Singh wrote:
+> There might be instances where ath12k_dbg() is needed, but access to
+> struct ath12k_base (ab) is not readily available. To address this, add
+> support to print the debug message using printk() when ab is not present.
+> 
+> To avoid the need to explicitly pass NULL each time, introduce a new macro
+> ath12k_generic_dbg() which resolves to ath12k_dbg() with ab set to NULL.
+> 
+> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
+> 
+> Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 
-The device-tree PCI host bridge node creation needs to be done at
-runtime. This is done in the same way as for the creation of the PCI
-device nodes. I.e. node and properties are created based on computed
-information done by the PCI core. Also, as is done on device-tree based
-systems, this PCI host bridge node is used for the PCI root bus.
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/pci/of.c          | 104 +++++++++++++++++++++++++++++++++++++-
- drivers/pci/of_property.c | 102 +++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h         |   6 +++
- drivers/pci/probe.c       |   2 +
- drivers/pci/remove.c      |   2 +
- 5 files changed, 215 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index fb5e6da1ead0..c59429e909c0 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -731,7 +731,109 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
- out_free_name:
- 	kfree(name);
- }
--#endif
-+
-+void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge)
-+{
-+	struct device_node *np;
-+
-+	np = pci_bus_to_OF_node(bridge->bus);
-+	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
-+		return;
-+
-+	device_remove_of_node(&bridge->bus->dev);
-+	device_remove_of_node(&bridge->dev);
-+	of_changeset_revert(np->data);
-+	of_changeset_destroy(np->data);
-+	of_node_put(np);
-+}
-+
-+void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
-+{
-+	struct device_node *np = NULL;
-+	struct of_changeset *cset;
-+	const char *name;
-+	int ret;
-+
-+	/*
-+	 * If there is already a device-tree node linked to the PCI bus handled
-+	 * by this bridge (i.e. the PCI root bus), nothing to do.
-+	 */
-+	if (pci_bus_to_OF_node(bridge->bus))
-+		return;
-+
-+	/* The root bus has no node. Check that the host bridge has no node too */
-+	if (bridge->dev.of_node) {
-+		dev_err(&bridge->dev, "PCI host bridge of_node already set");
-+		return;
-+	}
-+
-+	/* Check if there is a DT root node to attach the created node */
-+	if (!of_root) {
-+		pr_err("of_root node is NULL, cannot create PCI host bridge node\n");
-+		return;
-+	}
-+
-+	name = kasprintf(GFP_KERNEL, "pci@%x,%x", pci_domain_nr(bridge->bus),
-+			 bridge->bus->number);
-+	if (!name)
-+		return;
-+
-+	cset = kmalloc(sizeof(*cset), GFP_KERNEL);
-+	if (!cset)
-+		goto out_free_name;
-+	of_changeset_init(cset);
-+
-+	np = of_changeset_create_node(cset, of_root, name);
-+	if (!np)
-+		goto out_destroy_cset;
-+
-+	ret = of_pci_add_host_bridge_properties(bridge, cset, np);
-+	if (ret)
-+		goto out_free_node;
-+
-+	/*
-+	 * This of_node will be added to an existing device. The of_node parent
-+	 * is the root OF node and so this node will be handled by the platform
-+	 * bus. Avoid any new device creation.
-+	 */
-+	of_node_set_flag(np, OF_POPULATED);
-+	np->fwnode.dev = &bridge->dev;
-+	fwnode_dev_initialized(&np->fwnode, true);
-+
-+	ret = of_changeset_apply(cset);
-+	if (ret)
-+		goto out_free_node;
-+
-+	np->data = cset;
-+
-+	/* Add the of_node to host bridge and the root bus */
-+	ret = device_add_of_node(&bridge->dev, np);
-+	if (ret)
-+		goto out_revert_cset;
-+
-+	ret = device_add_of_node(&bridge->bus->dev, np);
-+	if (ret)
-+		goto out_remove_bridge_dev_of_node;
-+
-+	kfree(name);
-+
-+	return;
-+
-+out_remove_bridge_dev_of_node:
-+	device_remove_of_node(&bridge->dev);
-+out_revert_cset:
-+	np->data = NULL;
-+	of_changeset_revert(cset);
-+out_free_node:
-+	of_node_put(np);
-+out_destroy_cset:
-+	of_changeset_destroy(cset);
-+	kfree(cset);
-+out_free_name:
-+	kfree(name);
-+}
-+
-+#endif /* CONFIG_PCI_DYNAMIC_OF_NODES */
- 
- /**
-  * of_pci_supply_present() - Check if the power supply is present for the PCI
-diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-index b17dcb04de18..e0069c9eb23f 100644
---- a/drivers/pci/of_property.c
-+++ b/drivers/pci/of_property.c
-@@ -394,3 +394,105 @@ int of_pci_add_properties(struct pci_dev *pdev, struct of_changeset *ocs,
- 
- 	return 0;
- }
-+
-+static bool of_pci_is_range_resource(const struct resource *res, u32 *flags)
-+{
-+	if (!(resource_type(res) & IORESOURCE_MEM) &&
-+	    !(resource_type(res) & IORESOURCE_MEM_64))
-+		return false;
-+
-+	if (of_pci_get_addr_flags(res, flags))
-+		return false;
-+
-+	return true;
-+}
-+
-+static int of_pci_host_bridge_prop_ranges(struct pci_host_bridge *bridge,
-+					  struct of_changeset *ocs,
-+					  struct device_node *np)
-+{
-+	struct resource_entry *window;
-+	unsigned int ranges_sz = 0;
-+	unsigned int n_range = 0;
-+	struct resource *res;
-+	int n_addr_cells;
-+	u32 *ranges;
-+	u64 val64;
-+	u32 flags;
-+	int ret;
-+
-+	n_addr_cells = of_n_addr_cells(np);
-+	if (n_addr_cells <= 0 || n_addr_cells > 2)
-+		return -EINVAL;
-+
-+	resource_list_for_each_entry(window, &bridge->windows) {
-+		res = window->res;
-+		if (!of_pci_is_range_resource(res, &flags))
-+			continue;
-+		n_range++;
-+	}
-+
-+	if (!n_range)
-+		return 0;
-+
-+	ranges = kcalloc(n_range,
-+			 (OF_PCI_ADDRESS_CELLS + OF_PCI_SIZE_CELLS +
-+			  n_addr_cells) * sizeof(*ranges),
-+			 GFP_KERNEL);
-+	if (!ranges)
-+		return -ENOMEM;
-+
-+	resource_list_for_each_entry(window, &bridge->windows) {
-+		res = window->res;
-+		if (!of_pci_is_range_resource(res, &flags))
-+			continue;
-+
-+		/* PCI bus address */
-+		val64 = res->start;
-+		of_pci_set_address(NULL, &ranges[ranges_sz], val64 - window->offset,
-+				   0, flags, false);
-+		ranges_sz += OF_PCI_ADDRESS_CELLS;
-+
-+		/* Host bus address */
-+		if (n_addr_cells == 2)
-+			ranges[ranges_sz++] = upper_32_bits(val64);
-+		ranges[ranges_sz++] = lower_32_bits(val64);
-+
-+		/* Size */
-+		val64 = resource_size(res);
-+		ranges[ranges_sz] = upper_32_bits(val64);
-+		ranges[ranges_sz + 1] = lower_32_bits(val64);
-+		ranges_sz += OF_PCI_SIZE_CELLS;
-+	}
-+
-+	ret = of_changeset_add_prop_u32_array(ocs, np, "ranges", ranges, ranges_sz);
-+	kfree(ranges);
-+	return ret;
-+}
-+
-+int of_pci_add_host_bridge_properties(struct pci_host_bridge *bridge,
-+				      struct of_changeset *ocs,
-+				      struct device_node *np)
-+{
-+	int ret;
-+
-+	ret = of_changeset_add_prop_string(ocs, np, "device_type", "pci");
-+	if (ret)
-+		return ret;
-+
-+	ret = of_changeset_add_prop_u32(ocs, np, "#address-cells",
-+					OF_PCI_ADDRESS_CELLS);
-+	if (ret)
-+		return ret;
-+
-+	ret = of_changeset_add_prop_u32(ocs, np, "#size-cells",
-+					OF_PCI_SIZE_CELLS);
-+	if (ret)
-+		return ret;
-+
-+	ret = of_pci_host_bridge_prop_ranges(bridge, ocs, np);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 01e51db8d285..f916d0f386a2 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -876,9 +876,15 @@ void of_pci_make_dev_node(struct pci_dev *pdev);
- void of_pci_remove_node(struct pci_dev *pdev);
- int of_pci_add_properties(struct pci_dev *pdev, struct of_changeset *ocs,
- 			  struct device_node *np);
-+void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge);
-+void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge);
-+int of_pci_add_host_bridge_properties(struct pci_host_bridge *bridge, struct of_changeset *ocs,
-+				      struct device_node *np);
- #else
- static inline void of_pci_make_dev_node(struct pci_dev *pdev) { }
- static inline void of_pci_remove_node(struct pci_dev *pdev) { }
-+static inline void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge) { }
-+static inline void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge) { }
- #endif
- 
- #ifdef CONFIG_PCIEAER
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b6536ed599c3..b74a12a0193a 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1094,6 +1094,8 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 		dev_info(&bus->dev, "root bus resource %pR%s\n", res, addr);
- 	}
- 
-+	of_pci_make_host_bridge_node(bridge);
-+
- 	down_write(&pci_bus_sem);
- 	list_add_tail(&bus->node, &pci_root_buses);
- 	up_write(&pci_bus_sem);
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index efc37fcb73e2..9f7df2b20183 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -163,6 +163,8 @@ void pci_stop_root_bus(struct pci_bus *bus)
- 					 &bus->devices, bus_list)
- 		pci_stop_bus_device(child);
- 
-+	of_pci_remove_host_bridge_node(host_bridge);
-+
- 	/* stop the host bridge */
- 	device_release_driver(&host_bridge->dev);
- }
--- 
-2.47.1
-
+Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
