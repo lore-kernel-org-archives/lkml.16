@@ -1,165 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D04913B29B;
-	Tue,  4 Feb 2025 06:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B51913212A;
+	Tue,  4 Feb 2025 06:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738650727; cv=none; b=FA7/g05wQ6HTm4r4Q/kpWw6uYRn2gbdZ9DlG9SNcZspwof/nwym0iV1a09p19EG5dzvs1lk1e/TSCp4JiZaIPVv7hrnerHoO+an/ZquIouXSZJ3QYRsRcnBemHVts+lMR+op40rJVpTKPt9pl72iQIg6cdu5kOq2f8U8NBlaas0=
+	t=1738650817; cv=none; b=h4gah7g3R1o9yNzZV6RSigvIjSnnJb211kfFSg9lek1RPBd/UBG9FRa/mOWVdXRsbkhM21dD1zrETPCrz+EgpB22CBR/zFHZAcNFaLjZmojmni8MI29oKgjn1oEHQbSxFIIMxoZU6ZD2uuOKuZ8qKDiAvTKvf4mm9vjNB8pnQ5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738650727; c=relaxed/simple;
-	bh=0tIXBDruVfmh73EZENZUCflgMLVdRl0gwnOofOd2CuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sGhGDYwFWT/6ITprKAiMbTCdKaKEMZjb3/scBabBAD6QqrKdmlEtUcLLWe+87eTaLVwH8j0P4YRml1+Wija5JKta3AblmlNZGT1zxxhKqLpaNScSCJxdy58Y4AZMwm7SpkuqF7bCDd+pMf3ErjorM4oGAniU+P1Gjp/z1WFlxio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6zskoaO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6zskoaO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8344C4CEDF;
-	Tue,  4 Feb 2025 06:32:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738650726;
-	bh=0tIXBDruVfmh73EZENZUCflgMLVdRl0gwnOofOd2CuE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e6zskoaO9xYfDgISpyEpntGf1/iqH7gsOmqupnPzI8tKSO8JUJCTkjnpcgyLKgBJv
-	 2lXx1cEAQ5jA3jsLOQBAXWFS7jfyk0DNJ2QtKvjlBYjfn3W88EqssRLkjBm3T5fvmb
-	 cmtabgn0TegOuW2RPNZhSp3OinRuFl8R4N4ZFnjllVM+9oPbmDB45daktrVibKI0XH
-	 m6/g2e7ZhuJLfNh+K1xgcoUieEOaCyavxyplSVw7j83dDoj4cDst79DlK/dtv+K3JH
-	 Ig3WjBaMUZuPDuBbh+7Md1HpE/zeYs5SMlveUCrJjMFA4Yhuvw8PTgEb/VWt/XYvKS
-	 Vg17KVxQXwikA==
-Message-ID: <73a5e3f3-3a39-4ca5-87a0-5f67c25281f0@kernel.org>
-Date: Tue, 4 Feb 2025 07:32:02 +0100
+	s=arc-20240116; t=1738650817; c=relaxed/simple;
+	bh=/1VpJwRra5YVIQm9DXCutd7Gjk2E248FS6IumKbXP/o=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VZfxQxdfG6XfXaB9AuryVVC1hjFW5HbdAsypikz0wcvLkfaePbI0mPTB06A32/HBIdOja2/umITBGdPMbPOFLm6xdxT2OAdX9qPi1nkhrObNxKwVgOUj5cH5U1VHMT8OCner5BaLvrOZgoCwSFPyCc/+O/bTZ8WMyeDI7NFQjPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Tue, 4 Feb
+ 2025 14:28:22 +0800
+Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Tue, 4 Feb 2025 14:28:22 +0800
+From: Jammy Huang <jammy_huang@aspeedtech.com>
+To: <eajames@linux.ibm.com>, <mchehab@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <joel@jms.id.au>,
+	<andrew@aj.id.au>, <linux-media@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dt-bindings: media: convert aspeed-video.txt to dt-schema
+Date: Tue, 4 Feb 2025 14:28:22 +0800
+Message-ID: <20250204062822.3738037-1-jammy_huang@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mtd: Add check and kfree() for kcalloc()
-To: Jiasheng Jiang <jiashengjiangcool@gmail.com>,
- christophe.jaillet@wanadoo.fr
-Cc: gmpy.liaowx@gmail.com, kees@kernel.org, linux-kernel@vger.kernel.org,
- linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com, richard@nod.at,
- vigneshr@ti.com, stable@vger.kernel.org
-References: <30ad77af-4a7b-4a15-9c0b-b0c70d9e1643@wanadoo.fr>
- <20250204023323.14213-1-jiashengjiangcool@gmail.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250204023323.14213-1-jiashengjiangcool@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 04. 02. 25, 3:33, Jiasheng Jiang wrote:
-> Add a check for kcalloc() to ensure successful allocation.
-> Moreover, add kfree() in the error-handling path to prevent memory leaks.
-> 
-> Fixes: 78c08247b9d3 ("mtd: Support kmsg dumper based on pstore/blk")
-> Cc: <stable@vger.kernel.org> # v5.10+
-> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-> ---
-> Changelog:
-> 
-> v1 -> v2:
-> 
-> 1. Remove redundant logging.
-> 2. Add kfree() in the error-handling path.
-> ---
->   drivers/mtd/mtdpstore.c | 19 ++++++++++++++++++-
->   1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
-> index 7ac8ac901306..2d8e330dd215 100644
-> --- a/drivers/mtd/mtdpstore.c
-> +++ b/drivers/mtd/mtdpstore.c
-> @@ -418,10 +418,17 @@ static void mtdpstore_notify_add(struct mtd_info *mtd)
->   
->   	longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->kmsg_size));
->   	cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-> +	if (!cxt->rmmap)
-> +		goto end;
-> +
->   	cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-> +	if (!cxt->usedmap)
-> +		goto free_rmmap;
->   
->   	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
->   	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-> +	if (!cxt->badmap)
-> +		goto free_usedmap;
+Convert aspeed-video.txt to yaml format.
+Update aspeed-video.txt to aspeed,video-engine.yaml in MAINTAINER file.
 
-Could you add a single 'if' for all of them here instead? And goto 
-single free.
+Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+---
+ .../bindings/media/aspeed,video-engine.yaml   | 84 +++++++++++++++++++
+ .../bindings/media/aspeed-video.txt           | 33 --------
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 85 insertions(+), 34 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+ delete mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
 
->   	/* just support dmesg right now */
->   	cxt->dev.flags = PSTORE_FLAGS_DMESG;
-> @@ -435,10 +442,20 @@ static void mtdpstore_notify_add(struct mtd_info *mtd)
->   	if (ret) {
->   		dev_err(&mtd->dev, "mtd%d register to psblk failed\n",
->   				mtd->index);
-> -		return;
-> +		goto free_badmap;
->   	}
->   	cxt->mtd = mtd;
->   	dev_info(&mtd->dev, "Attached to MTD device %d\n", mtd->index);
-> +	goto end;
-> +
+diff --git a/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml b/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+new file mode 100644
+index 000000000000..c66ae6b53cbb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/aspeed,video-engine.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ASPEED Video Engine
++
++maintainers:
++  - Eddie James <eajames@linux.ibm.com>
++
++description:
++  The Video Engine (VE) embedded in the ASPEED SOCs can be configured to
++  capture and compress video data from digital or analog sources.
++
++properties:
++  compatible:
++    enum:
++      - aspeed,ast2400-video-engine
++      - aspeed,ast2500-video-engine
++      - aspeed,ast2600-video-engine
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: vclk
++      - const: eclk
++
++  resets:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  memory-region:
++    maxItems: 1
++    description: |
++      Phandle to the reserved memory nodes to be associated with the
++      VE. VE will acquires memory space for 3 purposes:
++        1. JPEG header
++        2. Compressed result
++        3. Temporary transformed image data
++
++  aspeed,scu:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      Specifies the scu node that is needed if video wants to capture
++      from sources other than Host VGA.
++
++  aspeed,gfx:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      Specifies the Soc Display(gfx) node that needs to be queried to get
++      related information if video wants to use gfx as capture source.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/ast2600-clock.h>
++
++    video@1e700000 {
++      compatible = "aspeed,ast2600-video-engine";
++      reg = <0x1e700000 0x1000>;
++      clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
++               <&syscon ASPEED_CLK_GATE_ECLK>;
++      clock-names = "vclk", "eclk";
++      interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++      aspeed,scu = <&syscon>;
++      aspeed,gfx = <&gfx>;
++    };
+diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
+deleted file mode 100644
+index d2ca32512272..000000000000
+--- a/Documentation/devicetree/bindings/media/aspeed-video.txt
++++ /dev/null
+@@ -1,33 +0,0 @@
+-* Device tree bindings for Aspeed Video Engine
+-
+-The Video Engine (VE) embedded in the Aspeed AST2400/2500/2600 SOCs can
+-capture and compress video data from digital or analog sources.
+-
+-Required properties:
+- - compatible:		"aspeed,ast2400-video-engine" or
+-			"aspeed,ast2500-video-engine" or
+-			"aspeed,ast2600-video-engine"
+- - reg:			contains the offset and length of the VE memory region
+- - clocks:		clock specifiers for the syscon clocks associated with
+-			the VE (ordering must match the clock-names property)
+- - clock-names:		"vclk" and "eclk"
+- - resets:		reset specifier for the syscon reset associated with
+-			the VE
+- - interrupts:		the interrupt associated with the VE on this platform
+-
+-Optional properties:
+- - memory-region:
+-	phandle to a memory region to allocate from, as defined in
+-	Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+-
+-Example:
+-
+-video-engine@1e700000 {
+-    compatible = "aspeed,ast2500-video-engine";
+-    reg = <0x1e700000 0x20000>;
+-    clocks = <&syscon ASPEED_CLK_GATE_VCLK>, <&syscon ASPEED_CLK_GATE_ECLK>;
+-    clock-names = "vclk", "eclk";
+-    resets = <&syscon ASPEED_RESET_VIDEO>;
+-    interrupts = <7>;
+-    memory-region = <&video_engine_memory>;
+-};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 896a307fa065..7e59daa1e89d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3549,7 +3549,7 @@ M:	Eddie James <eajames@linux.ibm.com>
+ L:	linux-media@vger.kernel.org
+ L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/media/aspeed-video.txt
++F:	Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+ F:	drivers/media/platform/aspeed/
+ 
+ ASUS EC HARDWARE MONITOR DRIVER
 
-And:
-
-free:
-> +	kfree(cxt->badmap);
-> +	kfree(cxt->usedmap);
-> +	kfree(cxt->rmmap);
-
-And NULL them as Christophe suggests.
-
->   }
->   
->   static int mtdpstore_flush_removed_do(struct mtdpstore_context *cxt,
-
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
 -- 
-js
-suse labs
+2.25.1
 
