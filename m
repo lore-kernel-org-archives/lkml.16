@@ -1,148 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CFD1547D8;
-	Tue,  4 Feb 2025 17:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD6D1547D8;
+	Tue,  4 Feb 2025 17:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738689338; cv=none; b=b5dsS0qrlVFQrdW0yF5b+HA4a+wlq6SH/GfLWFoqRyXTDf4xDMYAbtxrouPrzt3Muc1j7+s2QN1Rdlj3hC4O4dMedSuV4mND4g7Lq/IuhAyGjmC/5FqhG/2YiCBTM4QF39kM+PksgWH2TtMQ4mb+ftxrCf0GBF1dyRpwPxL0XLQ=
+	t=1738689344; cv=none; b=W/PCpBc2G4claKHJW996d/1/tyleeAf/Tan44iFfjQIWIjbwh2mmdgKp9D+k1jgZRwW9/6NbjBvpmLDuPRCFJjx/NNIsvbKvvrHxkUZmnDDBQR6D4Cyk8A14eeab+YeuiCBrI6dRqe43tE5snml4Ezwn2Gc27myDrJmWDRE7bNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738689338; c=relaxed/simple;
-	bh=D4dDCeCtCvK0b+cHySHXx6/Bt2dV9Y0VXU7kJjskQHM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ulpSmvwSXL0rAebZQ3yciDxtbqpnw/DrYSZCWSsDB4qR9Po88KnMbFzdoDgt4s03VMWlmbCjyhMpDpohMA4+bQcYTURdwd0rpzW1zGYauxYxsPkZyOoo6BYJa7meE+vQzSHUQs07C1MNceS/ER1F3CO6+AGnyLb1KxY35RplQM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KsgkX9ml; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738689344; c=relaxed/simple;
+	bh=3utSJ411NngUd6k8m6seQSFeNuwpsSuyhkYl5TQtGws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZEafQAmTW2gLN0t2VDtqfQFbKSCg8NSjWBci5c7rqGxlYUOk3CKXA78IxGQKj2xipK6BnRXtmprDu4q2ZGFCyOLxWMI9KoFJ6svhIs+ncMQuKCV+Lf3h1koqfvRKQloS7KLj5yynPY2EMrgio57TFzANae394UTOiStbCX4i5TA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VaNh998B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KsgkX9ml"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738689336; x=1770225336;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=D4dDCeCtCvK0b+cHySHXx6/Bt2dV9Y0VXU7kJjskQHM=;
-  b=KsgkX9mlk0/lO6bHA+AcATpRS3pnsti2kE6LvY70vfAlME5GXu0wZ6y4
-   CGTb+BOmQ5LJqj6lDFEvfF8IIfls16Y9W8Ys+caLLl2FFA70oIrD3wQSh
-   Vo4AhezdGhzR0ItJCD86+L/ANRvHPz44lCIaxML8YVFK0DvpyJges+3tS
-   XLRhdF1FI/I4Tgg6KGiGqPYXbU4LyQD2XGp8chJwKoSWL77mRWWaNdb4h
-   6Uh9kuD59rsgjYds4Vrf8PCinPjEwStaxyog5CcA4a+ZK7XNf+XPUPQkt
-   pJZ9Ov5w3Oz5XD+EZ2vgHIv4N+5FVaTYuid4BJ9eYkj8OzvF+7CKZ3UDO
-   g==;
-X-CSE-ConnectionGUID: erkThfHLTnCZA2d2SgLzSQ==
-X-CSE-MsgGUID: VC2DI/wQSDqLRTQYOwLbEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="42067063"
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="42067063"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:15:35 -0800
-X-CSE-ConnectionGUID: VSrj3jrtQ+SRS7EtX16cDg==
-X-CSE-MsgGUID: xKCo2uCySw6hDVyux856ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="111235463"
-Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:15:34 -0800
-Date: Tue, 4 Feb 2025 09:15:34 -0800 (PST)
-From: matthew.gerlach@linux.intel.com
-To: Krzysztof Kozlowski <krzk@kernel.org>
-cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
-    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
-    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
-    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
-    peter.colberg@altera.com
-Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
-In-Reply-To: <2323e446-14fd-462e-9fd2-d707f7d3802d@kernel.org>
-Message-ID: <1f8885db-1346-ed9e-dc3a-3938def7f472@linux.intel.com>
-References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-4-matthew.gerlach@linux.intel.com> <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org> <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
- <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org> <7c802294-97f6-3e9-4028-686484a525c5@linux.intel.com> <dd51fdae-0e00-44a9-a5a0-e536ba60fd8c@kernel.org> <56486d91-5ca-d85-eca1-1ce2df25238@linux.intel.com> <2323e446-14fd-462e-9fd2-d707f7d3802d@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VaNh998B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A643DC4CEDF;
+	Tue,  4 Feb 2025 17:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738689343;
+	bh=3utSJ411NngUd6k8m6seQSFeNuwpsSuyhkYl5TQtGws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VaNh998BpgDbyWeyaak5lKi2kdVzVRXcmyGbLVpJonZ87KnMyAxu9w7aK8kUK/g8H
+	 dsI/kYKnyOU6CMOzEN12UKtsixiv2WbXa2d6GN90JSTqSvh5r2xRC2xhhl3ooSGPJJ
+	 nDc6Q+n3cLVPR7usEFuRERhz6fNLRTJNO2NV/WE/Hx7zxiXwrhLbwBCkh2dgKMfERB
+	 +RCjyYxK/TtU7e3GTJBN4FFnQ+xgFGbgZvRxrXiUbVo2yqxcv/X52jH3M5iEdLYtna
+	 fzIfrIbvPb5o9Rdg/kGlZvSi+jDjSrpDAsJqqgKntL5KIjNejF9YGDUalqeEZG8I8s
+	 2pykyrOE61Iyg==
+Date: Tue, 4 Feb 2025 17:15:38 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Frank Li <Frank.li@nxp.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Iuliana Prodan <iuliana.prodan@nxp.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH 1/9] ASoC: SOF: imx: introduce more common structures and
+ functions
+Message-ID: <fbb837ba-d4e4-4e34-8554-fbb878716289@sirena.org.uk>
+References: <20250203171808.4108-1-laurentiumihalcea111@gmail.com>
+ <20250203171808.4108-2-laurentiumihalcea111@gmail.com>
+ <Z6EeZ4lgKVHCee3e@lizhi-Precision-Tower-5810>
+ <db81aa4e-dc1f-4c6d-b58f-82883622b0dc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="+1RK/W50sxFm0I0k"
+Content-Disposition: inline
+In-Reply-To: <db81aa4e-dc1f-4c6d-b58f-82883622b0dc@gmail.com>
+X-Cookie: Spelling is a lossed art.
 
 
+--+1RK/W50sxFm0I0k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sun, 2 Feb 2025, Krzysztof Kozlowski wrote:
+On Tue, Feb 04, 2025 at 06:59:53PM +0200, Laurentiu Mihalcea wrote:
+> On 2/3/2025 9:52 PM, Frank Li wrote:
+> > On Mon, Feb 03, 2025 at 12:18:00PM -0500, Laurentiu Mihalcea wrote:
 
-> On 02/02/2025 19:49, matthew.gerlach@linux.intel.com wrote:
->>
->>
->> On Sun, 2 Feb 2025, Krzysztof Kozlowski wrote:
->>
->>> On 01/02/2025 20:12, matthew.gerlach@linux.intel.com wrote:
->>>>>
->>>>>> they are also referenced in the following:
->>>>>>      Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
->>>>>>      arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
->>>>>> I am not exactly sure where the right place is to define them, maybe
->>>>>> Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other
->>>>>> hand, no code references these names; so it might make sense to just
->>>>>> remove them.
->>>>>
->>>>> In general: nowhere, because simple bus does not have such properties.
->>>>> It's not about reg-names only - you cannot have reg. You just did not
->>>>> define here simple-bus.
->>>>
->>>> I understand. I will remove reg and reg-names.
->>>
->>> If you have there IO address space, then removal does not sound right,
->>> either. You just need to come with the bindings for this dedicated
->>> device, whatever this is. There is no description here, not much in
->>> commit msg, so I don't know what is the device you are adding. PCI has
->>> several bindings, so is this just host bridge?
->>
->> The device associated with two address ranges may be best described as a
->> simple-bus. It is a bus between the CPU and the directly connected FPGA in
->> the same package as the SOC. The design programmed into the FPGA
->> determines the device(s) connected to the bus. The hardware implementing
->
-> So it is part of FPGA?
+> >> +static void imx_handle_reply(struct imx_dsp_ipc *ipc)
+> >> +{
+> >> +	unsigned long flags;
+> >> +	struct snd_sof_dev *sdev = imx_dsp_get_data(ipc);
+> >> +
+> >> +	spin_lock_irqsave(&sdev->ipc_lock, flags);
+> >> +	snd_sof_ipc_process_reply(sdev, 0);
+> >> +	spin_unlock_irqrestore(&sdev->ipc_lock, flags);
+> > Are you sure have to use spin_lock?
 
-Technically, the PCIe Tiles are hard IP, but they are connected to the 
-processor through the FPGA.
+> not sure, this definition was taken from previous drivers. I'd say keep it for now
+> as removing it would require some more testing which will take some time.
 
->
->> this bus does have reset lines which allow for safely reprogramming the
->
-> Then it is not simple-bus. Simple-bus is our construct for simple
-> devices. You cannot have something a bit more complex and call it
-> simple-bus.
->
->> FPGA while the SOC is running, which implies appropriate bindings as you
->> suggest. Something like the following might make sense:
->>
->>  	aglx_hps_bridges: fpga-bus@80000000 {
->>  		compatible = "altr,agilex-hps-fpga-bridge", "simple-bus";
->
-> FPGA bridge maybe, but not simple-bus. It does not look like a simple
-> bus if you have here some resources.
+If it's just factoring out common code it does make sense to do the
+factoring out then incrementally change the locking as a separate change.
 
-FPGA bridge is a more accurate description of the actual hardware than 
-simple-bus. This bridge does have two address ranges to access the FPGA. 
-One address range is considered "light-weight" intended for register 
-accesses in the FPGA, while the other a full featured AXI interface 
-suitable DMA.
+--+1RK/W50sxFm0I0k
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
->>  		reg = <0x80000000 0x20200000>,
->>  		      <0xf9000000 0x00100000>;
->>  		reg-names = "axi_h2f", "axi_h2f_lw";
->>  		#address-cells = <0x2>;
->>  		#size-cells = <0x1>;
->>  		ranges = <0x00000000 0x00000000 0x80000000 0x00040000>,
->>  			 <0x00000000 0x10000000 0x90100000 0x0ff00000>,
->>  			 <0x00000000 0x20000000 0xa0000000 0x00200000>,
->>  			 <0x00000001 0x00010000 0xf9010000 0x00008000>,
->>  			 <0x00000001 0x00018000 0xf9018000 0x00000080>,
->>  			 <0x00000001 0x00018080 0xf9018080 0x00000010>;
->>  		reset = <&rst SOC2FPGA_RESET>, <&rst LWHPS2FPGA_RESET>;
-> Best regards,
-> Krzysztof
->
-Thanks for the feedback,
-Matthew Gerlach
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeiSzoACgkQJNaLcl1U
+h9BJWAf/UbrWOukEmUUeKubtRgSRUj4YCBANoW4tBEilmL6coROl4kWq25DGtWOv
+HtvaCU9g9HWskNS7qXD2SHsZMeD3u37VOGK3aRbndiK91nWzRl6I7fJuRO3IFobC
+/iyjJFInxxD8inhtkGeYH4aop/buuClugsMFnlFHFCq8bJonuxtQxNcHYXvg1DB9
+791k+XklGiJT0ERCIDAO3vNz22LKE9dFqMSgPDkTMUvZtg2jhYcLSKJZ7lF5Kt8y
+/rES3rjNnQa41vnYvUAvw+AZMMOime27hwyIZQkdn3pboIo/dhTJPBf+3Ang/052
+lC+2A/ohN2fwOR6bjzRatTvqvR+z6g==
+=gqnK
+-----END PGP SIGNATURE-----
+
+--+1RK/W50sxFm0I0k--
