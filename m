@@ -1,456 +1,348 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442792144C7;
-	Tue,  4 Feb 2025 15:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738682289; cv=fail; b=efjk4klYqXFsUGYZoLNf2Jf0ZLFjTfeyJVjciBhRAIUfS43to+lLm8Rr+lo+sobqiqxPEPujHVqqyvF5wQSmRB7z/qrNonDv3b55ajdaLnTbY30mpGOSS0GUWIBiW/CVjLwGWlcSEeogziLIOhEg4zcFtaZzV8jt5SnvaCD/8Nk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738682289; c=relaxed/simple;
-	bh=+8hiVop+aK5xBEGOhgg3WfnvWBzeQb8KUQ9uWzAuasE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=GWa9QU7rqoh9RHYiNgxpji+3954CudyndK3uO5LKJfVJRUtLfrpOdmJ73MPUcPc0nnzjl7diquuURWwUgb2E6zw2JlInxyr2oxLM/Ysv4yNvyRgveYHRaC+uu17NnshN7UM457xA/Uge7MuSJYnsGXaKV0AlrscAqY+Eru/GdzQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=frNT1Crs; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245E5213E8B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738682371; cv=none; b=urBw+2lc+s3T6pEvwXx0TB1VXT28aiW/461Lo89y9c+IFxAvm9oSDz3X8FQ5BlyMJlZEKm+SnAGfnDltJGJLGn1EnQM8WCXL+td+6EUDm7kmnQbaMMckuFUtht+B57wDPwoerA/IdoQFffFZBG7xperKEnIOPObNG4NcRPAUUck=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738682371; c=relaxed/simple;
+	bh=NbSqlF/6R91OVHOYruWqHeNzoGj0pygDRXAJ6C41ebk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AeJenrc3Rwl9IczVD4YD+ib4rA0FxWxKR8AXOS0BfIBjw8aY/rsnXb/57kBjFRpY9dQi81M9dg1JOhLJ+gJqHaHqgt9PPvYqVdKc6FBrOWlcUlg34OWZvOfB78WLPr5hVSjkvMC6GL8/3FEFTAgKgGWTh/A96XoOTUMTpH9leiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eW7ZgJ6B; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="frNT1Crs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738682288; x=1770218288;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=+8hiVop+aK5xBEGOhgg3WfnvWBzeQb8KUQ9uWzAuasE=;
-  b=frNT1CrsVBte2/WrFFm2ECMokn72u2b11EgnJuM2lfy1yyDUsPU2/eB9
-   vmBazVERfQxihxJzNpaE+16T0bzMRjdq821Y9bfYJkJ10JkhVBIRG1KfD
-   nVRRyt/YOdWsOV5GthAhuieADbeJSpLiPeBCVEgX+aUHM99qBC8E5YsaP
-   Oj7d6ZJrQWbLAygmaMBR+PLChGIEsrqQHAaiJ0j0vr5D8Tibb8JFklytV
-   PFB0+I3D+uZNR4CVSrfiVVqyQYxpyVy7xogQ//l/Zi+ww+kEAxwnvGALs
-   sw0jpsuPei7ZvwaYcRAsCdDr9rrTdwTmAoDKZeP8MdjLw6oZ9A1hlZMJa
-   Q==;
-X-CSE-ConnectionGUID: l4WQ3QB5Qfq2OVg9C84LBg==
-X-CSE-MsgGUID: rknsOporTsmS2Px+mHC4lA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39098557"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="39098557"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 07:18:07 -0800
-X-CSE-ConnectionGUID: rU/Fm7j/QpOVTIjrzvj9KA==
-X-CSE-MsgGUID: a7hJm1K9ShOU3DprXHggLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="110793793"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Feb 2025 07:18:04 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 4 Feb 2025 07:18:03 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Tue, 4 Feb 2025 07:18:03 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.175)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 4 Feb 2025 07:18:03 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hu4hb9e7hTs9Wj2vVECIXktF9GmGnohrbAU+IYdi4EP4V6OHPurnLKyLK0RPpkCGeQmg0vVzAROle77+RoDWfXbWUS/c2KzX3ouVGh8PgiF67+7B/gGW20XBzIMTSES0424rJ38dH+2KrELUSR7PcIU0jXWXYmqQRpgDUuUrHWuGfb3S+6EpHmyhPnBZqis4XiKUEZEImbT01NO4xBcqwg1aiG0mRqxZ6rKj9RORBHngHFxaqxjty8eIytxOzDF0tkxFx7KCI4d99hCtWxYi8bVKgV7yalJcZD0BWnbR+BuDXqg8SoKPoLNbcmsErAlGJg0lzOcpF7PolGNkBkm4oQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1Kk10XfuXCTrj3uLHAVBJpiCc9zLp1sSHNKOlXbZd1o=;
- b=TVXSRAzzGvl4KG8BAJYp7Df7ytIvOJi3mJ00vCJtGNXfhVmAfSUhgyF57IYR3a/PJL2i4i08p90+mB2Kj+8Fdyg6IBla1v8djU0r1jb7n339fFqD8+PShSbqiT8OVP7x1u+GRcx5Lw9Zbi6Im4kBSY0MujHT7lEK78MZsCe7KzBj0dCkcL+8wC2zSiUaMUL5NonvddgDcjC2LXOD3seBEzX3wmLQqAzNySkxf2AQLi5WER4ZurD4F45ob1mPXvIqc+EoEcN8E+n0rCDUXM4c19/2hBaEUs9dnMdNR46h7gOgTPSdHqpzPa9p92yd8W+vvN8iNvkXDQrw3Jl1f7DCsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com (2603:10b6:8:b3::19) by
- SA2PR11MB4889.namprd11.prod.outlook.com (2603:10b6:806:110::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.24; Tue, 4 Feb 2025 15:17:46 +0000
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca]) by DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca%5]) with mapi id 15.20.8398.021; Tue, 4 Feb 2025
- 15:17:46 +0000
-Date: Tue, 4 Feb 2025 16:17:34 +0100
-From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-To: "Song, Yoong Siang" <yoong.siang.song@intel.com>
-CC: "David S . Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Willem de Bruijn
-	<willemb@google.com>, "Bezdeka, Florian" <florian.bezdeka@siemens.com>,
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-	Bjorn Topel <bjorn@kernel.org>, "Karlsson, Magnus"
-	<magnus.karlsson@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer
-	<hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, "Damato, Joe"
-	<jdamato@fastly.com>, Stanislav Fomichev <sdf@fomichev.me>, Xuan Zhuo
-	<xuanzhuo@linux.alibaba.com>, Mina Almasry <almasrymina@google.com>, "Daniel
- Jurgens" <danielj@nvidia.com>, Andrii Nakryiko <andrii@kernel.org>, "Eduard
- Zingerman" <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, "Martin
- KaFai Lau" <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
-	<yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Hao Luo
-	<haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Shuah Khan
-	<shuah@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>, "Jose
- Abreu" <joabreu@synopsys.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	"Nguyen, Anthony L" <anthony.l.nguyen@intel.com>, "Kitszel, Przemyslaw"
-	<przemyslaw.kitszel@intel.com>, Faizal Rahim
-	<faizal.abdul.rahim@linux.intel.com>, Choong Yong Liang
-	<yong.liang.choong@linux.intel.com>, "Bouska, Zdenek"
-	<zdenek.bouska@siemens.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"linux-stm32@st-md-mailman.stormreply.com"
-	<linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "intel-wired-lan@lists.osuosl.org"
-	<intel-wired-lan@lists.osuosl.org>, "xdp-hints@xdp-project.net"
-	<xdp-hints@xdp-project.net>
-Subject: Re: [xdp-hints] [PATCH bpf-next v7 5/5] igc: Add launch time support
- to XDP ZC
-Message-ID: <Z6IvjrnVX2xSFHlh@boxer>
-References: <20250204004907.789330-1-yoong.siang.song@intel.com>
- <20250204004907.789330-6-yoong.siang.song@intel.com>
- <Z6HnaMQvgW+indqm@boxer>
- <PH0PR11MB5830422207B7D3BCB27DA04FD8F42@PH0PR11MB5830.namprd11.prod.outlook.com>
- <Z6IeNumqP1aNAphU@boxer>
- <PH0PR11MB58308B675B0B9B95AEEBF192D8F42@PH0PR11MB5830.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <PH0PR11MB58308B675B0B9B95AEEBF192D8F42@PH0PR11MB5830.namprd11.prod.outlook.com>
-X-ClientProxiedBy: DU2PR04CA0312.eurprd04.prod.outlook.com
- (2603:10a6:10:2b5::17) To DM4PR11MB6117.namprd11.prod.outlook.com
- (2603:10b6:8:b3::19)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eW7ZgJ6B"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-540218726d5so5558016e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:19:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738682367; x=1739287167; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ptWJ7zdNtWBMDj+P9H5d/yhoNBNJZeSvROVnxn8+Cy0=;
+        b=eW7ZgJ6BAdvmWHdhDY2kxifplNZx985Q8//FVAJulrtLi/v4ypJ69iaryJ/eiH5oox
+         Fnxh4aFXmOSK80+lmhndN+M9U4kw8tpktzQCqa++iLE/Vc2NwQSMUlORYUoY8nfHtE0s
+         2nny+0YiL9/uf03RSysovFhDFaVHB7cf/3D1Fs5h3Ss4zpvkODdpcUA5wqorBqsxSrKg
+         0YT5+8p71XamPtllwsHhbLLNPt+/VaswUukGj74BliTzkK9zwHry4fASyd+s5XMKJhLL
+         3WKZSz6TSDzKrOtnCPdhzVTmgdloiwJHn4xWdR6vT+NgYYdknaFyoexXWWjO98fLm2bO
+         m42Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738682367; x=1739287167;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ptWJ7zdNtWBMDj+P9H5d/yhoNBNJZeSvROVnxn8+Cy0=;
+        b=uk2yxa8cYYoQJET6ZP9ols4m/fFwAihgIv2dAfaOwjpl+mGojulrCjQ+ifmyGtKFaj
+         s2hNACsNU+eYuckNPYLsebgAksqBnn53n3joq6iVSkhLLZUpt8BvaW4+b4OsvQPbxOz7
+         yGxDdGsfoV6PD8Ju6LvWl7BPQY1JBI2fw5UmDu8DDW74Z8ufKCqgI1yeCHb90parfGNw
+         IO6TXV4exyLHmQ1dMKrhBso+JUa4DUkAoivEF1R+1TEvFDQmM1jcWLW8re9yMzOro4CL
+         WdjWdWTeSUYLbbLknszxpk3kSwTDZX5/gw3Ege3X0y18tCt3mOCyJrPbgNs/AKeVztHu
+         wrpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWlr0xmBl1ab+CX5zYeB5xE1mWLtEIGjY/hUt5f01ruQb9kMnkZmICOuiPAxiidPWuhEgGsPUosOtoKtk4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/m0IKn6Ec7qs0Q6HFrzJc6GihU06h6p5/IpX8MZsK3apKJZvB
+	gDyHMVAD3SrG7Pzj+djZJFnLgNWrecA0N9KQALVaezWK2DG5SW+Bfzzpfd70dx4=
+X-Gm-Gg: ASbGncu7Oh6g4zDkLAqOGmNV5YRsjRsF7X1a5y7khC9DHa5BtwCqD+sBf0kgZQPKYJY
+	Q4WWD8tXQa04XzYb+h+dcSk+Wv6krNecvaQpgs7q6iiX5KSJqiaQvBxIl6qFVDE7GACqUe52OsY
+	bai5QttindymlMIABC1uW+JENV710AiXoCoQEBVUrZ4O7zrbWKrRDV8/aiBe9pTGZYNMWH1nCmk
+	+yAJvIMbjXYB2M3ynj78XNAJlZaIQ8eDle9uhaoYpWYFZtcW2ddWfyWoa4/zXZl8RwBO4Hr+4tV
+	XxK9xjWWMREuapZuaDhrxDVo+R9D3QYzxPqjh9SfGYbWZpD9MwdEUzCmeqWoFXHaOTHRwiQ=
+X-Google-Smtp-Source: AGHT+IE2qVzH17AZUiAiSfRIP9fn/n6qJoeyUN6d/KnBt+D7ZA4ynyd5JH2BepJz0FL+EGOxxpTguA==
+X-Received: by 2002:a19:ee07:0:b0:540:206b:c355 with SMTP id 2adb3069b0e04-543e4beaca5mr6791855e87.19.1738682367068;
+        Tue, 04 Feb 2025 07:19:27 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebeb0b40sm1604056e87.112.2025.02.04.07.19.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 07:19:26 -0800 (PST)
+Date: Tue, 4 Feb 2025 17:19:24 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Wesley Cheng <quic_wcheng@quicinc.com>
+Cc: Melody Olvera <quic_molvera@quicinc.com>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>, 
+	Trilok Soni <quic_tsoni@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 7/7] arm64: dts: qcom: sm8750: Add USB support to SM8750
+ platforms
+Message-ID: <flwitkfqnrrz7kq7qwzxfjauxvysegpxhxtftofalfmgdde57t@cwtoj3s2676z>
+References: <20250113-sm8750_usb_master-v1-0-09afe1dc2524@quicinc.com>
+ <20250113-sm8750_usb_master-v1-7-09afe1dc2524@quicinc.com>
+ <lk26ltslmijj7tj2kst2wsvd6d2hyj3zjzcwavwl63evjhcgdh@ewqliiijispu>
+ <4a18ddb1-a7f4-41ae-b115-516b1710cbde@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB6117:EE_|SA2PR11MB4889:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6846995a-1978-4563-f1d3-08dd452f13ed
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?8bm+Znmf0tAKNwWmgFsa3ltb8SUZk9UmrO0HdJYhsRJF8i0Y6oSZXH7IdsEN?=
- =?us-ascii?Q?SDbYC3BxY0HrKB763suj3xuvSGd8dVai+0dCIy1fDBtYs63Wf37tzvP+49y5?=
- =?us-ascii?Q?Z226+91G02PlT99tlze4jJQQ7gMVD5tIaFOEZGl0KKxY7Kl5F3nDTXkq47Ul?=
- =?us-ascii?Q?H4NnBRULt++65wjpkYGgzB9vWdqsPaDESbSjCrIxV9m7FKb3o0+Smn2H4EQ6?=
- =?us-ascii?Q?27cN7WZ2ylEz9Z7S5zvAAOxvMhrl1IOLfd7gP9OaYNBYE1OQ49m4VmQ7a4YK?=
- =?us-ascii?Q?IB0edNFu3fAeMd57nleppcxbE5f2N1BI46fKDrtFGGYRvg6VcuBUQQgvX+Eo?=
- =?us-ascii?Q?k1hWIOboUjvy2Oh/3nf1NAWMEJoec6bXSu64x0lfaJSahapg6bZj4HPcgMkd?=
- =?us-ascii?Q?SgPy+wr8MZSRlp1qgCrhQ0WZoQBP4SXJxVXfmeyMdoX189/NWzt+C133oVSi?=
- =?us-ascii?Q?aU07r5L80JzcM/2MI1WzUuS8iPt1IAGi+oyc3ncjo1coui3sjIJoRnBIeESY?=
- =?us-ascii?Q?kIrvDqQ8q4DGX4FICGNVKpOBSvDced66eKqDbzncnYF5gSUG7PNefJlqqSCa?=
- =?us-ascii?Q?0gNKP0c3bFkyMAtiPDTL1dIXvOVZ1hCQoyLxD/WchmAUcORE7hlsMUJeiv2x?=
- =?us-ascii?Q?bwIe1ZAfJUYkSndX7GgLRvEnaCOqe7m/gGPr4uE9NLmAIStfMBmGNAEJkUX8?=
- =?us-ascii?Q?Bgfh+e1Ck9BEu9O0E5jKud9YiHUtTcYmArYcONPN+18RWc8JmX7aQZoWFKq6?=
- =?us-ascii?Q?8HH4ZP5zKdyTj2GgAIFw9lzv4JVo/0BHxj/0+KlmOHtXnWF8mTSy/gXlFfMG?=
- =?us-ascii?Q?gIOHSHzrqtVr8Z7C9XeCVlSGm3W060U4xpjtOToO3nF/plA3y3U9u6c2PAIM?=
- =?us-ascii?Q?lDfrhaa5dc/jze4dTeAlIwu/0m3pJd16PhUa4zIotf4ZICZJ17t/vRVkKKlR?=
- =?us-ascii?Q?b6Intyk5/8eFnxeEIXx0y6F8P1YWcE5jb/EWRwj/FaNIjq0vg61O2SN+sGkI?=
- =?us-ascii?Q?+CfgnVLVbN41ssJkNe/nKg3ZKHHa50QiiBbAM9rv6V3ZR2XqfZFW/fjtxA+V?=
- =?us-ascii?Q?t1XqtKTzK+i5BmEban0xGLCcpyBudL5qjxehrq99B4vzV1MbwiCiZZgiUtDt?=
- =?us-ascii?Q?+eSJOCMS4bsHN8iJbgKbdx8uqyizahDUEQiDb3YMfuNbKlJd/LdDk6e9tVX7?=
- =?us-ascii?Q?/R3/xyYjBdetckYg8KS/0MO/ln0GzWyayMAlhDDUMtIbuu3BrLNcL39KGTH8?=
- =?us-ascii?Q?lHPeCVcH1ekUoKZrMVckihLox1cmhfF5EVbjSkmQ58efjfl/kEFBHi153ks3?=
- =?us-ascii?Q?z1PSR61uhoEt4a8vfIPu/Dr8qqaPQsfczF8PgVaRrOH4BW7akjdjz55Bef3K?=
- =?us-ascii?Q?V4X4XuFlo07qLc8qBZuNltUD98Af?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6117.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5odHOVo+EnBKmMaQKUulTzhp5QOctk/MRP0lr3pcOC5DwmrOvzs3GD7clR87?=
- =?us-ascii?Q?LpENAXHCa57cSJMNejAWSaCQdbwTGg5g7bDBkIEtWUY5X2yMravLkwmPz2Mu?=
- =?us-ascii?Q?f9AIOf+J/DLputLApVJlG4ZkrQPr3e6pJYIa0IgCbShbZn0l1x4gLU2HTe93?=
- =?us-ascii?Q?bQ3Ma5AEtbKLnh+iSuFDhOmS33F9nSK9KZvuyvjCgMGajfa9LdlVaYyxCR5l?=
- =?us-ascii?Q?4M9F8mWV0Hogw8yjeEmSoBN6zU6noZ958QiZAn3/EReKqBsypxqPSqJVDfNS?=
- =?us-ascii?Q?pLEjlbm34wg9ltcqF6EwP6mwZr9yzNnjIWRNqjCsDPCjz1HPZjmCA5gtDXYr?=
- =?us-ascii?Q?CrLrVJlMu2+Ajm1MO2+Ql6CjCtrMFLSUEJ2xY9ECO60N61iNWka76gIk6Ora?=
- =?us-ascii?Q?kZYF58rMRDeS9UvrZ4XR8sAIToPsfcwL6jLj/RWr0V4FiS32Hm6DL8hApUoY?=
- =?us-ascii?Q?CbGNm1xXmBlyJEJJjQV3Kv5CXzJH0Liop1liDVirYHbDgEpw1P+Z4x2K0PpL?=
- =?us-ascii?Q?QOhE2AekBiGnI7gAAQKGIWCR81dBiuUevsH0yGNnUeiVWgfg7QxkStcEoYUM?=
- =?us-ascii?Q?QI6IOIisoRVnKMx6/UB43eZf6cPCPO7MoJUBw0XZ6q9gfKiSHivMAhK3c9Dp?=
- =?us-ascii?Q?naTJULeKd4wrgUP72i7077wtaAexu4NXmuBz0NfFc1ilkzDygsNsFDPY2AMU?=
- =?us-ascii?Q?goeIBtyYMo7BydhrJHspfzmP2cD0hribJqeszZHUJFkRzyh7MkbMufEZZSlD?=
- =?us-ascii?Q?ERXNndaUrm+IeNKYqGyOqk3npa7d57FgK8Z+t/WEDUKkdCwmHUz5MsrxXVB9?=
- =?us-ascii?Q?WxXleMUM9Ue36izDwvLupNoEUfldkYaAzgddsraMhLYOEqoXU6mYI7BxzjBP?=
- =?us-ascii?Q?v/jQ2z2RnddVFtc1pFQvYn0mmQcJryPXtfUIGOq7RYrhECckFYZy1UWRHDRa?=
- =?us-ascii?Q?uKE4hVfBl+bQ0ORx05Pw7zXMXEAEuD+54QIZnc0eCBW7acDOqoZaXZBfnmzK?=
- =?us-ascii?Q?8Q3W2BUrFiFgCZQeOu9RWtvXganV/uafp/ixm3eUPVCDNO9EJBNkFDLK2Sn1?=
- =?us-ascii?Q?TG80vk8lRQovs0JGS92LKX+iKLBOKOfeQnTdlntUExXtzRivpdj0D1P26BH9?=
- =?us-ascii?Q?ZDJ/50qWxUZctepfNsnQBF1Le+Q7HZrnkkOJ2Ml6Vxt+XXlHJbe8FR+q+Eo7?=
- =?us-ascii?Q?yVylFcQmSWqmMA73Szcw5eo2ud3Bpn5WaxykBdNc7w2V09qtL2p/5nUfg4JN?=
- =?us-ascii?Q?RXrEDh0feyNBLZzy8Z5/XSYXAot1WucrX+AHfW3NQpROXf5AwlUBf12LsbRm?=
- =?us-ascii?Q?anBnL62Ii01hDquQX4R6IKO52Plkw2PlAg9DYHU45udhz7CHzSQ+1UfjIx3l?=
- =?us-ascii?Q?xShdyT3/d5WB+D/wX8JoMhVdpzMpT8tDEK4anxbVAMvjnGuB5wFjjFPUqV4c?=
- =?us-ascii?Q?CwcYujEmMe9DMCHw66yIXcr9wNA8bJHaV0RsmACcZeBgaDtwzxzOx2jK6c4K?=
- =?us-ascii?Q?YiTzDWGX+BZw/ACEbgEfivBYysCOsW6CNdxDgKCSG3WE44DfAOcMdxwY7j2n?=
- =?us-ascii?Q?oa1DFiU+gi915NlcdTVRjXStxiLDNILQl91tslG/gnFgmIJ8CqqHxy213Ecu?=
- =?us-ascii?Q?xQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6846995a-1978-4563-f1d3-08dd452f13ed
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6117.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 15:17:45.9503
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 62y1oxQgQqYT48uZYXod2L8B6zV1P0Z+PtjFLn9lBQ3xmWNLJIky/oExDgS5Jxtad4MUVjxm17SkmoFQWwEgtKt9bmx0gn8qiu3vwxbrhu8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4889
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4a18ddb1-a7f4-41ae-b115-516b1710cbde@quicinc.com>
 
-On Tue, Feb 04, 2025 at 03:49:32PM +0100, Song, Yoong Siang wrote:
-> On Tuesday, February 4, 2025 10:04 PM, Fijalkowski, Maciej <maciej.fijalkowski@intel.com> wrote:
-> >On Tue, Feb 04, 2025 at 02:14:00PM +0100, Song, Yoong Siang wrote:
-> >> On Tuesday, February 4, 2025 6:10 PM, Fijalkowski, Maciej<maciej.fijalkowski@intel.com> wrote:
-> >> >On Tue, Feb 04, 2025 at 08:49:07AM +0800, Song Yoong Siang wrote:
-> >> >
-> >> >> Enable Launch Time Control (LTC) support for XDP zero copy via XDP Tx
-> >> >> metadata framework.
-> >> >>
-> >> >> This patch has been tested with tools/testing/selftests/bpf/xdp_hw_metadata
-> >> >> on Intel I225-LM Ethernet controller. Below are the test steps and result.
-> >> >>
-> >> >> Test 1: Send a single packet with the launch time set to 1 s in the future.
-> >> >>
-> >> >> Test steps:
-> >> >> 1. On the DUT, start the xdp_hw_metadata selftest application:
-> >> >>    $ sudo ./xdp_hw_metadata enp2s0 -l 1000000000 -L 1
-> >> >>
-> >> >> 2. On the Link Partner, send a UDP packet with VLAN priority 1 to port 9091
-> >> >>    of the DUT.
-> >> >>
-> >> >> Result:
-> >> >> When the launch time is set to 1 s in the future, the delta between the
-> >> >> launch time and the transmit hardware timestamp is 0.016 us, as shown in
-> >> >> printout of the xdp_hw_metadata application below.
-> >> >>   0x562ff5dc8880: rx_desc[4]->addr=84110 addr=84110 comp_addr=84110 EoP
-> >> >>   rx_hash: 0xE343384 with RSS type:0x1
-> >> >>   HW RX-time:   1734578015467548904 (sec:1734578015.4675)
-> >> >>                 delta to User RX-time sec:0.0002 (183.103 usec)
-> >> >>   XDP RX-time:   1734578015467651698 (sec:1734578015.4677)
-> >> >>                  delta to User RX-time sec:0.0001 (80.309 usec)
-> >> >>   No rx_vlan_tci or rx_vlan_proto, err=-95
-> >> >>   0x562ff5dc8880: ping-pong with csum=561c (want c7dd)
-> >> >>                   csum_start=34 csum_offset=6
-> >> >>   HW RX-time:   1734578015467548904 (sec:1734578015.4675)
-> >> >>                 delta to HW Launch-time sec:1.0000 (1000000.000 usec)
-> >> >>   0x562ff5dc8880: complete tx idx=4 addr=4018
-> >> >>   HW Launch-time:   1734578016467548904 (sec:1734578016.4675)
-> >> >>                     delta to HW TX-complete-time sec:0.0000 (0.016 usec)
-> >> >>   HW TX-complete-time:   1734578016467548920 (sec:1734578016.4675)
-> >> >>                          delta to User TX-complete-time sec:0.0000
-> >> >>                          (32.546 usec)
-> >> >>   XDP RX-time:   1734578015467651698 (sec:1734578015.4677)
-> >> >>                  delta to User TX-complete-time sec:0.9999
-> >> >>                  (999929.768 usec)
-> >> >>   HW RX-time:   1734578015467548904 (sec:1734578015.4675)
-> >> >>                 delta to HW TX-complete-time sec:1.0000 (1000000.016 usec)
-> >> >>   0x562ff5dc8880: complete rx idx=132 addr=84110
-> >> >>
-> >> >> Test 2: Send 1000 packets with a 10 ms interval and the launch time set to
-> >> >>         500 us in the future.
-> >> >>
-> >> >> Test steps:
-> >> >> 1. On the DUT, start the xdp_hw_metadata selftest application:
-> >> >>    $ sudo chrt -f 99 ./xdp_hw_metadata enp2s0 -l 500000 -L 1 > \
-> >> >>      /dev/shm/result.log
-> >> >>
-> >> >> 2. On the Link Partner, send 1000 UDP packets with a 10 ms interval and
-> >> >>    VLAN priority 1 to port 9091 of the DUT.
-> >> >>
-> >> >> Result:
-> >> >> When the launch time is set to 500 us in the future, the average delta
-> >> >> between the launch time and the transmit hardware timestamp is 0.016 us,
-> >> >> as shown in the analysis of /dev/shm/result.log below. The XDP launch time
-> >> >> works correctly in sending 1000 packets continuously.
-> >> >>   Min delta: 0.005 us
-> >> >>   Avr delta: 0.016 us
-> >> >>   Max delta: 0.031 us
-> >> >>   Total packets forwarded: 1000
-> >> >>
-> >> >> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
-> >> >> ---
-> >> >>  drivers/net/ethernet/intel/igc/igc_main.c | 42 +++++++++++++++++++++--
-> >> >>  1 file changed, 40 insertions(+), 2 deletions(-)
-> >> >>
-> >> >> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c
-> >> >b/drivers/net/ethernet/intel/igc/igc_main.c
-> >> >> index c3edd8bcf633..535d340c71c9 100644
-> >> >> --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> >> >> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> >> >> @@ -2951,9 +2951,33 @@ static u64 igc_xsk_fill_timestamp(void *_priv)
-> >> >>  	return *(u64 *)_priv;
-> >> >>  }
-> >> >>
-> >> >> +static void igc_xsk_request_launch_time(u64 launch_time, void *_priv)
-> >> >> +{
-> >> >> +	struct igc_metadata_request *meta_req = _priv;
-> >> >> +	struct igc_ring *tx_ring = meta_req->tx_ring;
-> >> >> +	__le32 launch_time_offset;
-> >> >> +	bool insert_empty = false;
-> >> >> +	bool first_flag = false;
-> >> >> +
-> >> >> +	if (!tx_ring->launchtime_enable)
-> >> >> +		return;
-> >> >> +
-> >> >> +	launch_time_offset = igc_tx_launchtime(tx_ring,
-> >> >> +					       ns_to_ktime(launch_time),
-> >> >> +					       &first_flag, &insert_empty);
-> >> >> +	if (insert_empty) {
-> >> >> +		igc_insert_empty_packet(tx_ring);
-> >> >> +		meta_req->tx_buffer =
-> >> >> +			&tx_ring->tx_buffer_info[tx_ring->next_to_use];
-> >> >
-> >> >in this case I think you currently are leaking the skbs and dma mappings
-> >> >that igc_init_empty_frame() did. you're going to mix
-> >> >IGC_TX_BUFFER_TYPE_XSK with IGC_TX_BUFFER_TYPE_SKB and the latter is not
-> >> >explicitly initialized. Even though IGC_TX_BUFFER_TYPE_SKB happens to be
-> >> >equal to 0, igc_tx_buffer::type is never cleared in the tx clean desc
-> >> >routine.
-> >> >
+On Mon, Feb 03, 2025 at 07:21:52PM -0800, Wesley Cheng wrote:
+> 
+> On 1/14/2025 2:38 AM, Dmitry Baryshkov wrote:
+> > On Mon, Jan 13, 2025 at 01:52:13PM -0800, Melody Olvera wrote:
+> >> From: Wesley Cheng <quic_wcheng@quicinc.com>
 > >>
-> >> Hi Fijalkowski Maciej,
+> >> Enable USB support on SM8750 MTP and QRD variants. SM8750 has a QMP combo
+> >> PHY for the SSUSB path, and a M31 eUSB2 PHY for the HSUSB path.
 > >>
-> >> Thanks for your inputs.
-> >>
-> >> Yes, you are right, IGC_TX_BUFFER_TYPE_SKB is mixed together with
-> >> IGC_TX_BUFFER_TYPE_XSK. Regarding the skb and dma map,
-> >> following code in igc_clean_tx_irq() will free the skb and unmap the dma,
-> >> Do these answer your concern on leaking?
-> >>
-> >> igc_main.c:3133:                case IGC_TX_BUFFER_TYPE_SKB:
-> >> igc_main.c-3134-                        napi_consume_skb(tx_buffer->skb, napi_budget);
-> >> igc_main.c-3135-                        igc_unmap_tx_buffer(tx_ring->dev, tx_buffer);
-> >> igc_main.c-3136-                        break;
-> >>
-> >> Regarding the igc_tx_buffer::type never cleared, I think the
-> >> important thing is making the igc_tx_buffer::next_to_watch NULL
-> >> to indicate no remaining packet. Since transmit function will
-> >> always set the igc_tx_buffer::type to a proper type,
+> >> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+> >> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> >> ---
+> >>  arch/arm64/boot/dts/qcom/sm8750-mtp.dts |  24 ++++++
+> >>  arch/arm64/boot/dts/qcom/sm8750-qrd.dts |  24 ++++++
+> >>  arch/arm64/boot/dts/qcom/sm8750.dtsi    | 134 ++++++++++++++++++++++++++++++++
+> > Separate SoC and board patches.
 > >
-> >igc_init_tx_empty_descriptor() does not set ::type, that was my point. So
-> >these empty descs might be treated as IGC_TX_BUFFER_TYPE_XSK, which is
-> >wrong and your qouted code above will never get called. You will then leak
-> >skb and dma map plus you will confuse XSK code due to xsk_frames miscount.
-> >
+> >>  3 files changed, 182 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/qcom/sm8750-mtp.dts b/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
+> >> index 9e3aacad7bdab6848e86f8e45e04907e1c752a07..059eccbbc3fb05fc8806e36d35dc469d44443a26 100644
+> >> --- a/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
+> >> +++ b/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
+> >> @@ -792,3 +792,27 @@ &tlmm {
+> >>  &uart7 {
+> >>  	status = "okay";
+> >>  };
+> >> +
+> >> +&usb_1 {
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >> +&usb_1_dwc3 {
+> >> +	dr_mode = "peripheral";
+> >> +};
+> >> +
+> >> +&usb_1_hsphy {
+> >> +	vdd-supply = <&vreg_l2d_0p88>;
+> >> +	vdda12-supply = <&vreg_l3g_1p2>;
+> >> +
+> >> +	phys = <&pmih0108_eusb2_repeater>;
+> >> +
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >> +&usb_dp_qmpphy {
+> >> +	vdda-phy-supply = <&vreg_l3g_1p2>;
+> >> +	vdda-pll-supply = <&vreg_l2d_0p88>;
+> >> +
+> >> +	status = "okay";
+> >> +};
+> >> diff --git a/arch/arm64/boot/dts/qcom/sm8750-qrd.dts b/arch/arm64/boot/dts/qcom/sm8750-qrd.dts
+> >> index f77efab0aef9bab751a947173bcdcc27df7295a8..01c0af643626917614fbd68cf8962ef947ca6548 100644
+> >> --- a/arch/arm64/boot/dts/qcom/sm8750-qrd.dts
+> >> +++ b/arch/arm64/boot/dts/qcom/sm8750-qrd.dts
+> >> @@ -790,3 +790,27 @@ &tlmm {
+> >>  &uart7 {
+> >>  	status = "okay";
+> >>  };
+> >> +
+> >> +&usb_1 {
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >> +&usb_1_dwc3 {
+> >> +	dr_mode = "peripheral";
+> >> +};
+> >> +
+> >> +&usb_1_hsphy {
+> >> +	vdd-supply = <&vreg_l2d_0p88>;
+> >> +	vdda12-supply = <&vreg_l3g_1p2>;
+> >> +
+> >> +	phys = <&pmih0108_eusb2_repeater>;
+> >> +
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >> +&usb_dp_qmpphy {
+> >> +	vdda-phy-supply = <&vreg_l3g_1p2>;
+> >> +	vdda-pll-supply = <&vreg_l2d_0p88>;
+> >> +
+> >> +	status = "okay";
+> >> +};
+> >> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> >> index 3bbd7d18598ee0a3a0d5130c03a3166e1fc14d82..54522fd3d0e11c3cff02beaf1d249fe654cacc0f 100644
+> >> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> >> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> >> @@ -10,6 +10,7 @@
+> >>  #include <dt-bindings/interconnect/qcom,icc.h>
+> >>  #include <dt-bindings/interconnect/qcom,sm8750-rpmh.h>
+> >>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >> +#include <dt-bindings/phy/phy-qcom-qmp.h>
+> >>  #include <dt-bindings/power/qcom,rpmhpd.h>
+> >>  #include <dt-bindings/power/qcom-rpmpd.h>
+> >>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> >> @@ -1966,6 +1967,139 @@ lpass_lpicx_noc: interconnect@7420000 {
+> >>  			#interconnect-cells = <2>;
+> >>  		};
+> >>  
+> >> +		usb_1_hsphy: phy@88e3000 {
+> >> +			compatible = "qcom,sm8750-m31-eusb2-phy";
+> >> +			reg = <0x0 0x88e3000 0x0 0x29c>;
+> >> +
+> >> +			clocks = <&tcsrcc TCSR_USB2_CLKREF_EN>;
+> >> +			clock-names = "ref";
+> >> +
+> >> +			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+> >> +
+> >> +			#phy-cells = <0>;
+> >> +
+> >> +			status = "disabled";
+> >> +		};
+> >> +
+> >> +		usb_dp_qmpphy: phy@88e8000 {
+> >> +			compatible = "qcom,sm8750-qmp-usb3-dp-phy";
+> >> +			reg = <0x0 0x088e8000 0x0 0x3000>;
+> >> +
+> >> +			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
+> >> +				 <&rpmhcc RPMH_CXO_CLK>,
+> >> +				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>,
+> >> +				 <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
+> >> +			clock-names = "aux",
+> >> +				      "ref",
+> >> +				      "com_aux",
+> >> +				      "usb3_pipe";
+> >> +
+> >> +			resets = <&gcc GCC_USB3_PHY_PRIM_BCR>,
+> >> +				 <&gcc GCC_USB3_DP_PHY_PRIM_BCR>;
+> >> +			reset-names = "phy",
+> >> +				      "common";
+> >> +
+> >> +			power-domains = <&gcc GCC_USB3_PHY_GDSC>;
+> >> +
+> >> +			#clock-cells = <1>;
+> >> +			#phy-cells = <1>;
+> > Missing orientation-switch and ports{} description.
 > 
-> Now I understand what you mean. Thanks for the explanation. I will add the
-> missing IGC_TX_BUFFER_TYPE_SKB initialization in igc_init_empty_frame(),
-> as below.
-> 
-> --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> @@ -1096,6 +1096,7 @@ static int igc_init_empty_frame(struct igc_ring *ring,
->                 return -ENOMEM;
->         }
-> 
-> +       buffer->type = IGC_TX_BUFFER_TYPE_SKB;
->         buffer->skb = skb;
->         buffer->protocol = 0;
->         buffer->bytecount = skb->len;
-> 
-> With above, IMHO, we no need to clear igc_tx_buffer::type,
-> Are you agree?
+> At least for this initial submission/series, we haven't yet defined the PMIC GLINK connections yet, so does it make sense to include these now?  Basically, even if we define that connection, since I'm not aware if the enablement of PMIC GLINK has been added, it would be nil, as it would be the one responsible for registering the type C port. 
 
-Yes, the contract should be that every routine that produces descriptors
-should be setting the ::type explicitly. Sorry for not being clear from
-beginning but I'm glad we're on the same page now.
+Note, I haven't said anything about PMIC GLINK. The QMP is still an
+orientation-switch, no matter if there is a PMIC GLINK, native TCPM
+implementation or any other external Type-C controller. Likewise the QMP
+still has 3 ports, one going to DP, one going to USB3 controller and the
+last one being empty.
 
-I'm afraid this single line should be send as a fix, though :< even
-without your patch set empty descs could be mixed IGC_TX_BUFFER_TYPE_XDP
-type.
+Also, please wrap your comments, it's hard to read them otherwise. The
+recommended width is 72-75 chars.
 
 > 
-> >> I think it is optional for us to clear it.
-> >> Is that make sense to you?
-> >>
-> >> >> +	}
-> >> >> +
-> >> >> +	igc_tx_ctxtdesc(tx_ring, launch_time_offset, first_flag, 0, 0, 0);
-> >> >> +}
-> >> >> +
-> >> >>  const struct xsk_tx_metadata_ops igc_xsk_tx_metadata_ops = {
-> >> >>  	.tmo_request_timestamp		= igc_xsk_request_timestamp,
-> >> >>  	.tmo_fill_timestamp		= igc_xsk_fill_timestamp,
-> >> >> +	.tmo_request_launch_time	= igc_xsk_request_launch_time,
-> >> >>  };
-> >> >>
-> >> >>  static void igc_xdp_xmit_zc(struct igc_ring *ring)
-> >> >> @@ -2976,7 +3000,13 @@ static void igc_xdp_xmit_zc(struct igc_ring *ring)
-> >> >>  	ntu = ring->next_to_use;
-> >> >>  	budget = igc_desc_unused(ring);
-> >> >>
-> >> >> -	while (xsk_tx_peek_desc(pool, &xdp_desc) && budget--) {
-> >> >> +	/* Packets with launch time require one data descriptor and one context
-> >> >> +	 * descriptor. When the launch time falls into the next Qbv cycle, we
-> >> >> +	 * may need to insert an empty packet, which requires two more
-> >> >> +	 * descriptors. Therefore, to be safe, we always ensure we have at least
-> >> >> +	 * 4 descriptors available.
-> >> >> +	 */
-> >> >> +	while (xsk_tx_peek_desc(pool, &xdp_desc) && budget >= 4) {
-> >> >>  		struct igc_metadata_request meta_req;
-> >> >>  		struct xsk_tx_metadata *meta = NULL;
-> >> >>  		struct igc_tx_buffer *bi;
-> >> >> @@ -3000,6 +3030,12 @@ static void igc_xdp_xmit_zc(struct igc_ring *ring)
-> >> >>  		xsk_tx_metadata_request(meta, &igc_xsk_tx_metadata_ops,
-> >> >>  					&meta_req);
-> >> >>
-> >> >> +		/* xsk_tx_metadata_request() may have updated next_to_use */
-> >> >> +		ntu = ring->next_to_use;
-> >> >> +
-> >> >> +		/* xsk_tx_metadata_request() may have updated Tx buffer info */
-> >> >> +		bi = meta_req.tx_buffer;
-> >> >> +
-> >> >>  		tx_desc = IGC_TX_DESC(ring, ntu);
-> >> >>  		tx_desc->read.cmd_type_len = cpu_to_le32(meta_req.cmd_type);
-> >> >>  		tx_desc->read.olinfo_status = cpu_to_le32(olinfo_status);
-> >> >> @@ -3017,9 +3053,11 @@ static void igc_xdp_xmit_zc(struct igc_ring *ring)
-> >> >>  		ntu++;
-> >> >>  		if (ntu == ring->count)
-> >> >>  			ntu = 0;
-> >> >> +
-> >> >> +		ring->next_to_use = ntu;
-> >> >> +		budget = igc_desc_unused(ring);
-> >> >
-> >> >why count the remaining space in loop? couldn't you decrement it
-> >> >accordingly to the count of descriptors you have produced? writing ntu
-> >> >back and forth between local var and ring struct performance-wise does not
-> >> >look fine.
-> >> >
-> >>
-> >> Yes, I can check the number of used descriptor in xsk_tx_metadata_request()
-> >> by introducing a new field named used_desc in struct igc_metadata_request,
-> >> and then decreases the budget with it.
-> >>
-> >> Do this way looked good to you?
+> >> +
+> >> +			status = "disabled";
+> >> +		};
+> >> +
+> >> +		usb_1: usb@a6f8800 {
+> >> +			compatible = "qcom,sm8750-dwc3", "qcom,dwc3";
+> >> +			reg = <0x0 0x0a6f8800 0x0 0x400>;
+> >> +			status = "disabled";
+> >> +			#address-cells = <2>;
+> >> +			#size-cells = <2>;
+> >> +			ranges;
+> >> +
+> >> +			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
+> >> +				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+> >> +				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
+> >> +				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>,
+> >> +				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+> >> +				 <&tcsrcc TCSR_USB3_CLKREF_EN>;
+> >> +			clock-names = "cfg_noc",
+> >> +				      "core",
+> >> +				      "iface",
+> >> +				      "sleep",
+> >> +				      "mock_utmi",
+> >> +				      "xo";
+> >> +
+> >> +			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+> >> +					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
+> >> +			assigned-clock-rates = <19200000>, <200000000>;
+> >> +
+> >> +			interrupts-extended = <&intc GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
+> >> +						  <&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+> >> +					      <&pdc 14 IRQ_TYPE_EDGE_BOTH>,
+> >> +					      <&pdc 15 IRQ_TYPE_EDGE_BOTH>,
+> >> +					      <&pdc 17 IRQ_TYPE_LEVEL_HIGH>;
+> >> +			interrupt-names = "pwr_event",
+> >> +					  "hs_phy_irq",
+> >> +					  "dp_hs_phy_irq",
+> >> +					  "dm_hs_phy_irq",
+> >> +					  "ss_phy_irq";
+> >> +
+> >> +			power-domains = <&gcc GCC_USB30_PRIM_GDSC>;
+> >> +			required-opps = <&rpmhpd_opp_nom>;
+> >> +
+> >> +			resets = <&gcc GCC_USB30_PRIM_BCR>;
+> >> +
+> >> +			interconnects = <&aggre1_noc MASTER_USB3_0 0 &mc_virt SLAVE_EBI1 0>,
+> >> +					<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_USB3_0 0>;
+> >> +			interconnect-names = "usb-ddr", "apps-usb";
+> >> +
+> >> +			usb_1_dwc3: usb@a600000 {
+> >> +				compatible = "snps,dwc3";
+> >> +				reg = <0x0 0x0a600000 0x0 0xe000>;
+> >> +
+> >> +				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+> >> +
+> >> +				iommus = <&apps_smmu 0x40 0x0>;
+> >> +
+> >> +				phys = <&usb_1_hsphy>, <&usb_dp_qmpphy QMP_USB43DP_USB3_PHY>;
+> >> +				phy-names = "usb2-phy", "usb3-phy";
+> >> +
+> >> +				snps,hird-threshold = /bits/ 8 <0x0>;
+> >> +				snps,usb2-gadget-lpm-disable;
+> >> +				snps,dis_u2_susphy_quirk;
+> >> +				snps,dis_enblslpm_quirk;
+> >> +				snps,dis-u1-entry-quirk;
+> >> +				snps,dis-u2-entry-quirk;
+> >> +				snps,is-utmi-l1-suspend;
+> >> +				snps,usb3_lpm_capable;
+> >> +				snps,usb2-lpm-disable;
+> >> +				snps,has-lpm-erratum;
+> >> +				tx-fifo-resize;
+> >> +
+> >> +				dr_mode = "peripheral";
+> > This goes to the board files.
 > >
-> >Yes this makes sense to me, thanks!
-> >
+> >> +
+> >> +				dma-coherent;
+> >> +
+> >> +				ports {
+> >> +					#address-cells = <1>;
+> >> +					#size-cells = <0>;
+> >> +
+> >> +					port@0 {
+> >> +						reg = <0>;
+> >> +
+> >> +						usb_1_dwc3_hs: endpoint {
+> >> +						};
+> >> +					};
+> >> +
+> >> +					port@1 {
+> >> +						reg = <1>;
+> >> +
+> >> +						usb_1_dwc3_ss: endpoint {
+> > QMP endpoint.
 > 
-> Thanks, I will rework and submit next version.
+> Same as above comment.
+
+It is independent of Type-C integration, so it should be linked to the
+QMP PHY.
+
 > 
-> >>
-> >> Thanks & Regards
-> >> Siang
-> >>
-> >> >>  	}
-> >> >>
-> >> >> -	ring->next_to_use = ntu;
-> >> >>  	if (tx_desc) {
-> >> >>  		igc_flush_tx_descriptors(ring);
-> >> >>  		xsk_tx_release(pool);
-> >> >> --
-> >> >> 2.34.1
-> >> >>
+> Thanks
 > 
-> Thanks & Regards
-> Siang
+> Wesley Cheng
 > 
+
+-- 
+With best wishes
+Dmitry
