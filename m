@@ -1,104 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7234204C20;
-	Tue,  4 Feb 2025 01:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FCA21148D;
+	Tue,  4 Feb 2025 01:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738631814; cv=none; b=NGR5TAsYBb7450fbsJ/IlKP2XEah+xL8aiTNz4hyUWCKfZYw5ahfrmdJtci4j1VE5rC78sylRfqs+7m5dCI7E45j98IghkMVh0xXziRr4RtzAB5TBW8e/qkuBOBFdTe4a7IClWORTz/gvKsfOnTdaVN2vZQa1ovgx7eI+DMYw9U=
+	t=1738631817; cv=none; b=jGCUj3JBejzklwKVHIHaFzZOlF9Iu2zvNumZsSUEaluOc1tkL5CXXJP2Sn+btBZFYsvniUZB/WcbVhTrzZ35A9v2OxoX37JaTbiOFeY6AwHnQiLhOPHSwari4hLHCThfKa9dj0csOn0YS3wkm/oybxqzdtMZhmVd6Dtc5vJinP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738631814; c=relaxed/simple;
-	bh=LMgaSDmx6EN1XI6CionK2vcw/4u08QZJ+v6t3LrXwAs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jwYsfxi0SRNHO3J6o0GFvehN5/KqTIfpynxiO5r7EMvm3umVkmOhuQUBcB36CB26c6s9jz2ZvD6ud1e2Nz3VVs9JC8Zo+ZseHXi7I9KrQwB8iK2nVhffRpqSaiPxSD9FqnSZQ0cs8k4XeaJL8Tq4GMVIUSK7UFr/OexBtfgvZb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ad0V1omh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738631817; c=relaxed/simple;
+	bh=Jnh0RyGPsjTpVZt7+I3TGs5QUZPoG+x4lc22qyE4etc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YW26JuZbaDdd6+83H2lCYSREmN5U33Dq6nMJRfgu2eB9wC4g77DYBDn/y2ZaAIMJ+TQdX/Z4YzLAntNBWRIwuEkVYCoy9kIPWb/TtUmBsNj18fJt6w7RtkQpkTouUnd3NwapfzLUpFK+WY0LPVRBVfTFOjkgHkwDSGGKbnGI480=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mzABe3SV; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ad0V1omh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13489C4CEE0;
-	Tue,  4 Feb 2025 01:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738631814;
-	bh=LMgaSDmx6EN1XI6CionK2vcw/4u08QZJ+v6t3LrXwAs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ad0V1omhjFT0rJfHjodw2wuuAZEqw+pFIddvo7M1ruqefMuXrK1NZoRbfuzJtalrY
-	 sV56Nk/L1NhZK+Lfh/A5NVtCTMP7T7sfwdIUAAdg4DYY7maHw8EKfHfRuQbqH11bQF
-	 YZ9TIqhOfFCqecUMRiY0Npe4olNNkNduduIwqa+YRbde5eknzVp8s0EONKBVHCKO8Q
-	 3DLB+KVaaxfHJ248Tv90YW6vJ59kF4YKmtc0bkwfkWzrWZlIaei5icA37FL9Ok8PIv
-	 55Oma0XguEPkJXK8Sc13sLlyvAnNpRw6+qROg9SONsLdmKsCPoOof0pObQWHVJMsPO
-	 uc6s7RwteC59Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	rafael@kernel.org,
-	tony.luck@intel.com,
-	mario.limonciello@amd.com,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 4/4] ACPI: x86: Add skip i2c clients quirk for Vexia EDU ATLA 10 tablet 5V
-Date: Mon,  3 Feb 2025 20:16:42 -0500
-Message-Id: <20250204011643.2206417-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250204011643.2206417-1-sashal@kernel.org>
-References: <20250204011643.2206417-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mzABe3SV"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5141Ggdm3060147
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Feb 2025 19:16:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738631802;
+	bh=UtmN5BgPEuTeBF7wx8w6yx8g90pk8aXcP/Lae2lHXGs=;
+	h=From:To:CC:Subject:Date;
+	b=mzABe3SVH1Xj6PsKMPRIx4DNX6UBKUTVn+nahEfO/05ZPoCYraqcQvjAZuzptphYB
+	 21xnDhwNs6bhXHecae1e6VSXMyafcPzBa8vfFVxRLw6CIPZpGbXDvqafq+gbHKXeu4
+	 YgIyWSBOsgl9ZB0/rc/rsFhT5wKxt4hLNYScHXHk=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5141GgxK127298
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 3 Feb 2025 19:16:42 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
+ Feb 2025 19:16:41 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 3 Feb 2025 19:16:41 -0600
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5141GfAO024451;
+	Mon, 3 Feb 2025 19:16:41 -0600
+From: Judith Mendez <jm@ti.com>
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>,
+        Hari Nagalla
+	<hnagalla@ti.com>
+Subject: [PATCH v3 0/9] Add R5F and C7xv device nodes
+Date: Mon, 3 Feb 2025 19:16:32 -0600
+Message-ID: <20250204011641.1523561-1-jm@ti.com>
+X-Mailer: git-send-email 2.48.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.12
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Hans de Goede <hdegoede@redhat.com>
+For am62x and am62ax devices, this patch series adds device nodes
+for the R5F subsystem and C7xv DSP subsystem found in their
+respective voltage domain, based on the device TRMs [0][1].
 
-[ Upstream commit 8f62ca9c338aae4f73e9ce0221c3d4668359ddd8 ]
+This patch series also includes patches for enabling IPC for am62x,
+am62ax, and am62px by reserving memory and binding the mailbox
+assignments for each remote core.
 
-The Vexia EDU ATLA 10 tablet comes in 2 different versions with
-significantly different mainboards. The only outward difference is that
-the charging barrel on one is marked 5V and the other is marked 9V.
+Also reserve main_rti4 and main_timer2 for the C7x DSP as per
+firmware requirements.
 
-Both ship with Android 4.4 as factory OS and have the usual broken DSDT
-issues for x86 Android tablets.
+Changes since v2:
+- Fix memory carvout sizes, remove leading zeros
+- Reorder memory carveouts according to memory location
+- Fix whitespace issues
+- Fix commit headers, capitalize IPC and R5F
 
-Add a quirk to skip ACPI I2C client enumeration for the 5V version to
-complement the existing quirk for the 9V version.
+Links
+v2: https://lore.kernel.org/linux-devicetree/20250131214611.3288742-1-jm@ti.com/
+v1: https://lore.kernel.org/linux-devicetree/20250127221631.3974583-1-jm@ti.com/
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://patch.msgid.link/20250123132202.18209-1-hdegoede@redhat.com
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/acpi/x86/utils.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/acpi/x86/utils.c b/drivers/acpi/x86/utils.c
-index cb45ef5240dab..068c1612660bc 100644
---- a/drivers/acpi/x86/utils.c
-+++ b/drivers/acpi/x86/utils.c
-@@ -407,6 +407,19 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
- 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
- 					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
- 	},
-+	{
-+		/* Vexia Edu Atla 10 tablet 5V version */
-+		.matches = {
-+			/* Having all 3 of these not set is somewhat unique */
-+			DMI_MATCH(DMI_SYS_VENDOR, "To be filled by O.E.M."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "To be filled by O.E.M."),
-+			DMI_MATCH(DMI_BOARD_NAME, "To be filled by O.E.M."),
-+			/* Above strings are too generic, also match on BIOS date */
-+			DMI_MATCH(DMI_BIOS_DATE, "05/14/2015"),
-+		},
-+		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
-+					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
-+	},
- 	{
- 		/* Vexia Edu Atla 10 tablet 9V version */
- 		.matches = {
+[0] https://www.ti.com/lit/pdf/spruj16
+[1] https://www.ti.com/lit/pdf/spruiv7
+
+Devarsh Thakkar (3):
+  arm64: dts: ti: k3-am62a-wakeup: Add R5F device node
+  arm64: dts: ti: k3-am62a7-sk: Enable IPC with remote processors
+  arm64: dts: ti: k3-am62p5-sk: Enable IPC with remote processors
+
+Hari Nagalla (5):
+  arm64: dts: ti: k3-am62-wakeup: Add wakeup R5F node
+  arm64: dts: ti: k3-am62a-mcu: Add R5F remote proc node
+  arm64: dts: ti: k3-am62x-sk-common: Enable IPC with remote processors
+  arm64: dts: ti: k3-am62a7-sk: Reserve main_timer2 for C7x DSP
+  arm64: dts: ti: k3-am62a7-sk: Reserve main_rti4 for C7x DSP
+
+Jai Luthra (1):
+  arm64: dts: ti: k3-am62a-main: Add C7xv device node
+
+ arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi    |  25 +++++
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi     |  12 +++
+ arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi      |  38 +++++++
+ arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi   |  25 +++++
+ arch/arm64/boot/dts/ti/k3-am62a7-sk.dts       | 100 ++++++++++++++++--
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       |  50 +++++++--
+ .../arm64/boot/dts/ti/k3-am62x-sk-common.dtsi |  32 +++++-
+ 7 files changed, 265 insertions(+), 17 deletions(-)
+
+
+base-commit: 5532b8a9ce0e80514e37a1e082824934663580a3
 -- 
-2.39.5
+2.48.0
 
