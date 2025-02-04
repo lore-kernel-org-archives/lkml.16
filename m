@@ -1,265 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F638214228;
-	Tue,  4 Feb 2025 15:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C0A213E94;
+	Tue,  4 Feb 2025 15:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738681400; cv=none; b=hb5ZhMJdU5PDZw1y8w0GCh8+jkCRj3mh+7r5aOUIblHV4yh4NIEKVraKUOxsT1unrJxN0VV0EyzI4byOGKvp3NqEqLAiTM4CxrgP4EGRqTF1m2D9pBfsLfn0pIQBdkXAfAuzQk7EXmZjyEv8t7XKNRnB4Bhp3xZSTssWpj226w4=
+	t=1738681442; cv=none; b=iZHyYxkAsMCxPd7oiC8QMwHV0g0VVxLexysat8xkSmg+ysHLEKkX9vBYBXTC+GSmPNpr/O7+anNcedGHusIGTp1l8C5NJdTKgS3FJxtvuAjk/jST5XlyJe+w9uxozJhMV6/IM5JzhQocC765dDNmAeyQ6aJdKmtAzF37cM3dv/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738681400; c=relaxed/simple;
-	bh=jhMkfQpqSwDaWVRZTXpkSW3tRYPATJt8Etvq7/EL84w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MR26aaajUUxPjluCYQcwh4mZAztBy8X5sLst6Mdg2HjoTEYR7wCZAWrs/VLGqBM5dbeFf1meRHVhHMlhNjjbMikDV7yRnvfV4y0AzGq/6F58uNw3otlQWw8RfRnxjT0veweJw7/hyAPVLaXYxzcTR4EA6k+zncJ3FyLg9j8DTMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iypti+lw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738681442; c=relaxed/simple;
+	bh=rjcA3VzBxn2A2yxzRm4Zfgq6CG6XVYbT9cdyQzhcIYQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=l2vEhIBmQboSV+S5COkaWz2u6oc242ZbY6gYJomS+PWMHnTskUGzotfz65f2N0UMJa2zfaCwV4uJQHVgpcXa6hjSPn0RwJK4GLHIhk3xGYwRy5aPgyqvcaHozgMrDTEPUlv7tJvz0cL+kbOFPzYtYQ2wZRxMNqTmGqEVdSOjQZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FR+RdYnj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iypti+lw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBA9BC4CEDF;
-	Tue,  4 Feb 2025 15:03:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FR+RdYnj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6C70C4CEDF;
+	Tue,  4 Feb 2025 15:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738681400;
-	bh=jhMkfQpqSwDaWVRZTXpkSW3tRYPATJt8Etvq7/EL84w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=iypti+lwnmJGe8LHCVj2kHAJjkxS7DXSiN4A2ID7vUhakywz1tTrVEXcXVZvBR0Js
-	 FlWc2eSQDUkdq6SlrDS8fyO+z2yPfJcnr3cwfz6mlfeDfTPDBcvaSojULHU1krEy+X
-	 nyiTe6vaCjVQY1SU+uMBI6FqUfugWljFA39mbnLgjk+ZB/ObaSdX2wDXHMfgRINSVn
-	 G+Qmu5qcL6x12bmDY+uiC2rE0EO+/duSQYaWi+uz7ppO/G2HsA6/+MAtlx/KbI7OLw
-	 6siIXPbyakzxQitDgdrJNdGc2uXneRlui7LS55M0LDLfSf68jo11n2YBibdLn+sNB3
-	 6St75/clRGSJA==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dcd9c38f66so37223a12.1;
-        Tue, 04 Feb 2025 07:03:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVg/O1enWfqDmJjA8HUtfjqpD2+5DiutfOo+CjJVsaDQ4IoJiCIjqDRGDtfN4f8+v8z1SDVv3b4r7o=@vger.kernel.org, AJvYcCW8nYJYJpUpoZi6NEJzzqdlaqIMArVACMkPh9HftYfJJiKh9L58rxZV3tbbZJGp8/k3NLo97ABhbyEeDClclCIObA==@vger.kernel.org, AJvYcCX1m63wz0IA+vPOZ+fBm2RuKFGiK9H4IeGXvi0y7pYsrMtDzBRSb/hwH86w/As08DBSbtC8zBaiVFlpmpMh@vger.kernel.org
-X-Gm-Message-State: AOJu0YylkBzWPcwKllxYKVHDpa8VB1YjYydCkuYMWIdn5I52Q3YgRRnn
-	c2b1+S4UZZ87WKIvTQrMWCfKjDnvTmbeyeLUDDkOOa3QmLBRoLY5eBKrzKYZKtFhyU5RJBQ9jtQ
-	n6X4EsOCWZe2grvtYOV3KlaN4Rg==
-X-Google-Smtp-Source: AGHT+IENEURzLRNiZi1exSUbRsfLQACupPN2TVRIQ63la/qLnFqLYYnSvU9uAnVqq7GIU4IdYJDUrq0U8XwnGxM/A+A=
-X-Received: by 2002:a05:6402:50d2:b0:5dc:742c:c8eb with SMTP id
- 4fb4d7f45d1cf-5dcc14df237mr4013233a12.12.1738681398413; Tue, 04 Feb 2025
- 07:03:18 -0800 (PST)
+	s=k20201202; t=1738681442;
+	bh=rjcA3VzBxn2A2yxzRm4Zfgq6CG6XVYbT9cdyQzhcIYQ=;
+	h=From:Date:Subject:To:Cc:From;
+	b=FR+RdYnjy/ltFMjXMJHCDJCOfq3c8ETV6OJNjT7LDo5MlnYa6sKzgJfzY4s1BZln5
+	 cGKGRekRBkkFPaRbnal6Hp/mgypPieieNvuTK8ArTMj0XnYru8YiOWdqojmVTR0ztF
+	 IXXQ9MY3haU0fD53yHd2/57s4/59JPOf+inSGDpdeuA7vZizbrR/hWfs2mZGd7cP7w
+	 VAEGIWqKYAWWg3oSQHoez8oOkav5mERkbRCgKDWcpJ2vtf3A6LXulDqylNZC4PlCEv
+	 /Kk0KuT1ZN7jhMspTywKiWHEkEnAkbp7mjhAK5FlXPQyPXGHt9d36m4kuAbqSs3rd1
+	 ONOSU1x9LhlFg==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Tue, 04 Feb 2025 10:04:00 -0500
+Subject: [PATCH] fuse: don't set file->private_data in
+ fuse_conn_waiting_read
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org>
- <20250202-arm-brbe-v19-v19-11-1c1300802385@kernel.org> <0415d354-0c44-4fff-b92b-b0f5c9c72b11@linaro.org>
- <CAL_JsqKTNDQn9omG3g=6Rb4Nwt6hG9Gw7-VXL_fjQeEQmmtJQg@mail.gmail.com> <630f630d-241e-45f5-b449-243147fb888b@linaro.org>
-In-Reply-To: <630f630d-241e-45f5-b449-243147fb888b@linaro.org>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 4 Feb 2025 09:03:07 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKY8MjD=iFf6MiT04WmCHYUxGtWG9JfX5-5fuG32F77qQ@mail.gmail.com>
-X-Gm-Features: AWEUYZn07afytmkExOLqg36iepnudH1LwZEnJA4-1WkAzEuXWTMcnL9fgzBMWAs
-Message-ID: <CAL_JsqKY8MjD=iFf6MiT04WmCHYUxGtWG9JfX5-5fuG32F77qQ@mail.gmail.com>
-Subject: Re: [PATCH v19 11/11] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-To: James Clark <james.clark@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	kvmarm@lists.linux.dev, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Anshuman Khandual <anshuman.khandual@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250204-fuse-fixes-v1-1-c1e1bed8cdb7@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAF8somcC/x2LQQqAIBAAvyJ7TlgtQfpKdChbay8WLkUg/j3pO
+ MxMAaHMJDCqApkeFj5TA9MpCMeSdtK8NQaL1qHFQcdbSEd+STT23tuALpjVQBuuTL9o/TTX+gE
+ 84tBpXAAAAA==
+X-Change-ID: 20250204-fuse-fixes-03882c05c1b1
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1205; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=rjcA3VzBxn2A2yxzRm4Zfgq6CG6XVYbT9cdyQzhcIYQ=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnoixhWUZV6Cz9D5JV/ljsh4Lsu/OWMf2MAWtf1
+ GmdZNn8JvyJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6IsYQAKCRAADmhBGVaC
+ FdM+EADRNeVwLQA993ZSTfROon65oIS8IZjDSy/ODQf1yxBRsV1gegn6i44z9NdMwZxhXFgndKV
+ 3B/QLGF9A8lBO2I07+J/BJruks4lnf0T07UlofT5Iu+q5DrorQvthkZq9H3RYgR0mAGMNBsh5W8
+ wOot13gpKY1cylbDCvLaP+AW1PK2XQEsMVhcD5x1W6KsudFnxiJt341r240VQx84wZWG6BNuQ2s
+ ZysMgLy+GOj7zYgY7q0hUUSsMKnbcxeT+7Y+uHeqeKxLNpIN1/7lKplMlGcM5OFbaqGsZcZleMB
+ S4yBIy/1TzyzKHpAavvFehywCVU32MAPTvLnvZQxjCdAiv2jHOs9Tb1sXN4TAP1WJrxUBjPQvjN
+ cM1tcvvPg/uX3ArJ4U0rs/EkBMxqhfyqCfaKZ3NOkWApJNU6DQX4g1i5JzSkKPXp+P+gLpj+j0T
+ UPAjn/dlLGRkQK/foTH9O7YnHmP7b06LK37fT650GHxCWkj6m4KOwTj6z4JUaLRBgI/YFVLhJbz
+ nKFXqyH2yT2k8obOH28PpcKHFfFEBLpIaTjcCwswqRP76Z6eBBPEHz8EWxs22QJbbQFCHB8JFcM
+ 9sjAi7xQK7WgNKGyjuo8XlQzyZWQfwr1UrToAvVWtfMTpoXxAzWqCmLu2nwVDQkGwR8nBq86O8o
+ Msv9L1hhK3Kf2ZA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Tue, Feb 4, 2025 at 6:03=E2=80=AFAM James Clark <james.clark@linaro.org>=
- wrote:
->
->
->
-> On 03/02/2025 5:58 pm, Rob Herring wrote:
-> > On Mon, Feb 3, 2025 at 10:53=E2=80=AFAM James Clark <james.clark@linaro=
-.org> wrote:
-> >>
-> >>
-> >>
-> >> On 03/02/2025 12:43 am, Rob Herring (Arm) wrote:
-> >>> From: Anshuman Khandual <anshuman.khandual@arm.com>
-> >>>
-> >>> The ARMv9.2 architecture introduces the optional Branch Record Buffer
-> >>> Extension (BRBE), which records information about branches as they ar=
-e
-> >>> executed into set of branch record registers. BRBE is similar to x86'=
-s
-> >>> Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
-> >>> (BHRB).
+I see no reason to set the private_data on the file to this value. Just
+grab the result of the atomic_read() and output it without setting
+private_data.
 
-[...]
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/fuse/control.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-> >>> +     /*
-> >>> +      * Require that the event filter and branch filter permissions =
-match.
-> >>> +      *
-> >>> +      * The event and branch permissions can only mismatch if the us=
-er set
-> >>> +      * at least one of the privilege branch filters in PERF_SAMPLE_=
-BRANCH_PLM_ALL.
-> >>> +      * Otherwise, the core will set the branch sample permissions i=
-n
-> >>> +      * perf_copy_attr().
-> >>> +      */
-> >>> +     if ((event->attr.exclude_user !=3D !(branch_type & PERF_SAMPLE_=
-BRANCH_USER)) ||
-> >>> +         (event->attr.exclude_kernel !=3D !(branch_type & PERF_SAMPL=
-E_BRANCH_KERNEL)) ||
-> >>
-> >> I don't think this one is right. By default perf_copy_attr() copies th=
-e
-> >> exclude_ settings into the branch settings so this works, but if the
-> >> user sets any _less_ permissive branch setting this fails. For example=
-:
-> >>
-> >>    # perf record -j any,u -- true
-> >>    Error:
-> >>    cycles:PH: PMU Hardware or event type doesn't support branch stack
-> >>    sampling.
-> >>
-> >> Here we want the default sampling permissions (exclude_kernel =3D=3D 0=
-,
-> >> exclude_user =3D=3D 0), but only user branch records, which doesn't ma=
-tch.
-> >> It should be allowed because it doesn't include anything that we're no=
-t
-> >> allowed to see.
-> >
-> > I know it is allowed(on x86), but why would we want that? If you do
-> > something even more restricted:
-> >
-> > perf record -e cycles:k -j any,u -- true
-> >
-> > That's allowed on x86 and gives you samples with user addresses. But
-> > all the events happened in the kernel. How does that make any sense?
-> >
-> > I suppose in your example, we could avoid attaching branch stack on
-> > samples from the kernel. However, given how my example works, I'm
-> > pretty sure that's not what x86 does.
-> >
-> > There's also combinations that are allowed, but record no samples.
-> > Though I think that was with guest events. I've gone with reject
-> > non-sense combinations as much as possible. We can easily remove those
-> > restrictions later if needed. Changing the behavior later (for the
-> > same configuration) wouldn't be good.
-> >
-> >
->
-> Rejecting ones that produce no samples is fair enough, but my example
-> does produce samples. To answer the question "why would we want that?",
-> nothing major, but there are a few small reasons:
->
->   * Perf includes both user and kernel by default, so the shortest
->     command to only gather user branches doesn't work (-j any,u)
->   * The test already checks for branch stack support like this, so old
->     Perf test versions don't work
+diff --git a/fs/fuse/control.c b/fs/fuse/control.c
+index 2a730d88cc3bdb50ea1f8a3185faad5f05fc6e74..17ef07cf0c38e44bd7eadb3450bd53a8acc5e885 100644
+--- a/fs/fuse/control.c
++++ b/fs/fuse/control.c
+@@ -49,18 +49,17 @@ static ssize_t fuse_conn_waiting_read(struct file *file, char __user *buf,
+ {
+ 	char tmp[32];
+ 	size_t size;
++	int value;
+ 
+ 	if (!*ppos) {
+-		long value;
+ 		struct fuse_conn *fc = fuse_ctl_file_conn_get(file);
+ 		if (!fc)
+ 			return 0;
+ 
+ 		value = atomic_read(&fc->num_waiting);
+-		file->private_data = (void *)value;
+ 		fuse_conn_put(fc);
+ 	}
+-	size = sprintf(tmp, "%ld\n", (long)file->private_data);
++	size = sprintf(tmp, "%d\n", value);
+ 	return simple_read_from_buffer(buf, len, ppos, tmp, size);
+ }
+ 
 
-I would be more concerned about this one except that *we* wrote that
-test. (I'm not sure why we wrote a new test rather than adapting
-record_lbr.sh...)
+---
+base-commit: 9afd7336f3acbe5678cca3b3bc5baefb51ce9564
+change-id: 20250204-fuse-fixes-03882c05c1b1
 
->   * You might only be optimising userspace, but still interested in the
->     proportion of time spent or particular place in the kernel
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-How do you see that? It looks completely misleading to me. 'perf
-report' seems to only list branch stack addresses in this case. There
-doesn't seem to be any matching of the event address to branch stack
-addresses.
-
->   * Consistency with existing implementations and for people porting
->     existing tools to Arm
->   * It doesn't cost anything to support it (I think we just
->     only check if exclude_* is set rather than !=3D)
->   * Permissions checks should be handled by the core code so that
->     they're consistent
->   * What's the point of separate branch filters anyway if they always
->     have to match the event filter?
-
-IDK, I wish someone could tell me. I don't see the usecase for them
-being mismatched.
-
-In any case, I don't care too much one way or the other what we do
-here. If everyone thinks we should relax this, then that's fine with
-me.
-
-> Some of these things could be fixed in Perf, but not in older versions.
-> Even if we can't think of a real use case now, it doesn't sound like the
-> driver should be so restrictive of an option that doesn't do any harm.
->
-> >> This also makes the Perf branch test skip because it uses
-> >> any,save_type,u to see if BRBE exists.
-> >
-> > Yes, I plan to update that if we keep this behavior.
-> >
-> >>> +         (!is_kernel_in_hyp_mode() &&
-> >>> +          (event->attr.exclude_hv !=3D !(branch_type & PERF_SAMPLE_B=
-RANCH_HV))))
-> >>> +             return false;
-> >>> +
-> >>> +     event->hw.branch_reg.config =3D branch_type_to_brbfcr(event->at=
-tr.branch_sample_type);
-> >>> +     event->hw.extra_reg.config =3D branch_type_to_brbcr(event->attr=
-.branch_sample_type);
-> >>> +
-> >>> +     return true;
-> >>> +}
-> >>> +
-> >> [...]
-> >>> +static const int brbe_type_to_perf_type_map[BRBINFx_EL1_TYPE_DEBUG_E=
-XIT + 1][2] =3D {
-> >>> +     [BRBINFx_EL1_TYPE_DIRECT_UNCOND] =3D { PERF_BR_UNCOND, 0 },
-> >>
-> >> Does the second field go into 'new_type'? They all seem to be zero so
-> >> I'm not sure why new_type isn't ignored instead of having it mapped.
-> >
-> > Well, left over from when all the Arm specific types were supported.
-> > So yeah, that can be simplified.
-> >
-> >>> +     [BRBINFx_EL1_TYPE_INDIRECT] =3D { PERF_BR_IND, 0 },
-> >>> +     [BRBINFx_EL1_TYPE_DIRECT_LINK] =3D { PERF_BR_CALL, 0 },
-> >>> +     [BRBINFx_EL1_TYPE_INDIRECT_LINK] =3D { PERF_BR_IND_CALL, 0 },
-> >>> +     [BRBINFx_EL1_TYPE_RET] =3D { PERF_BR_RET, 0 },
-> >>> +     [BRBINFx_EL1_TYPE_DIRECT_COND] =3D { PERF_BR_COND, 0 },
-> >>> +     [BRBINFx_EL1_TYPE_CALL] =3D { PERF_BR_CALL, 0 },
-> >>> +     [BRBINFx_EL1_TYPE_ERET] =3D { PERF_BR_ERET, 0 },
-> >>> +     [BRBINFx_EL1_TYPE_IRQ] =3D { PERF_BR_IRQ, 0 },
-> >>
-> >> How do ones that don't map to anything appear in Perf? For example
-> >> BRBINFx_EL1_TYPE_TRAP is missing, and the test that was attached to th=
-e
-> >> previous versions fails because it doesn't see the trap that jumps to
-> >> the kernel, but it does still see the ERET back to userspace:
-> >>
-> >>     [unknown]/trap_bench+0x20/-/-/-/0/ERET/-
-> >>
-> >> In older versions we'd also have BRBINFx_EL1_TYPE_TRAP mapping to
-> >> PERF_BR_SYSCALL so you could see it go into the kernel before the retu=
-rn:
-> >>
-> >>     trap_bench+0x1C/[unknown]/-/-/-/0/SYSCALL/-
-> >>     [unknown]/trap_bench+0x20/-/-/-/0/ERET/-
-> >
-> > My read of that was we should see a CALL in this case. Whether SVC
-> > generates a TRAP or CALL depends on HFGITR_EL2.SVC_EL0 (table D18-2).
-> > I assumed "SVC due to HFGITR_EL2.SVC_EL0" means when SVC_EL0 is set
-> > (and set has additional conditions). We have SVC_EL0 cleared, so that
-> > should be a CALL. Maybe the FVP has this wrong?
-> >
->
-> The test is doing this rather than a syscall:
->
->    asm("mrs %0, ID_AA64ISAR0_EL1" : "=3Dr" (val));   /* TRAP + ERET */
->
-> So I think trap is right. Whether that should be mapped to SYSCALL or
-> some other branch type I don't know, but the point is that it's missing n=
-ow.
-
-We aren't supporting any of the Arm specific traps/exceptions. One
-reason is for consistency with x86 like you just argued for. The only
-exception types supported are syscall and IRQ. Part of the issue is
-there is no userspace control over enabling all the extra Arm ones.
-There's no way to say enable all branches except debug, fault, etc.
-exceptions. If we want to support these, I think there should be user
-control over enabling them. But that can come later if there's any
-demand for them.
-
-Rob
