@@ -1,87 +1,78 @@
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A31207A14
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100EE207DF3;
+	Tue,  4 Feb 2025 09:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660629; cv=none; b=ER59T+7wociD4qyy90Qb8BszNGuRv0PDOXLi71KgLuTRCGEg9Ccr7UDw1QpJEwbT8/eDkQSow71zkbej/4p+wuoxHR7JetEF1WtEmlIF3usVpAhSjq/BhUlC8kqHBZb26+dv4HFdye5F3+IneXbOwREzko5jdM8ArORofbvDI8M=
+	t=1738660632; cv=none; b=cpgHMXWU6CVdfZlUnsCdqUgKmL7Xh6MaNQ4cSSyLqR3bdFbtCZ1dJNb+Up0uuT6E1fScLwLDhhhxUO8drwFxumdavu+cfMHT7eQpBLED4iBkUkx3wf98g5zqfoZkApRGfTr+yYQRAvWKfIP42PO21nf4TK/lgJT2/1b2mWUdADc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660629; c=relaxed/simple;
-	bh=KaaXi7jBeslj8uzUn1WZyt0PmaZYa9IShPOp11fzkf4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cOCk8buLeGwpiRaGE+WFTGl54SI4FjFN8oYfsBll11tjiTUOluhA9HrsjdiCSNu/+V//Wai4qSbDIRbFnXUj27P1TnBGaQaHre6qDveEa7w/If9VUNH9o5kSPkkm5Ltrhn9mchAjsU42Sxu23zkM475Ig9HdJyJYQxEj0USmEtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Tue, 4 Feb
- 2025 17:17:02 +0800
-Received: from mail.aspeedtech.com (192.168.10.10) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Tue, 4 Feb 2025 17:17:02 +0800
-From: Billy Tsai <billy_tsai@aspeedtech.com>
-To: <alexandre.belloni@bootlin.com>, <pgaj@cadence.com>,
-	<miquel.raynal@bootlin.com>, <conor.culhane@silvaco.com>,
-	<aniketmaurya@google.com>, <billy_tsai@aspeedtech.com>,
-	<Shyam-sundar.S-k@amd.com>, <jarkko.nikula@linux.intel.com>,
-	<wsa+renesas@sang-engineering.com>, <xiaopei01@kylinos.cn>,
-	<Guruvendra.Punugupati@amd.com>, <linux-i3c@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <BMC-SW@aspeedtech.com>
-Subject: [PATCH v2 2/2] i3c: mipi-i3c-hci: Use I2C DMA-safe api
-Date: Tue, 4 Feb 2025 17:17:02 +0800
-Message-ID: <20250204091702.4014466-2-billy_tsai@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250204091702.4014466-1-billy_tsai@aspeedtech.com>
-References: <20250204091702.4014466-1-billy_tsai@aspeedtech.com>
+	s=arc-20240116; t=1738660632; c=relaxed/simple;
+	bh=y9GGHVMrT+wr9M3JQKeJwZtW6ZJrbYAOXJSnkKp+/7g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bdWBZ3jdfsKSrvXNbbjoY3pyFxKBLAQ1Ap5Xn4xR3FTNwuZgyQn3AV14KgIl0lv6gN9iOcZEjV+jlLuQNDsJ4MXQvvqRnAPMocfc5DjhBuAz/aJSvYrNubAxsT/4kMQ6w0YBccZYaHgw6uF8zK55YO8d+gRJbNixUcJc6loBQlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JmN3oXND; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JmN3oXND"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7C70A433EE;
+	Tue,  4 Feb 2025 09:17:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738660628;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q2Pf++fNZ1y9QMLFR6ETO34MAg1FfYx4Pu5f8G7fuOM=;
+	b=JmN3oXNDLKbEPH2wPN7l6KyhmKxUJUkMe0agLNer0Od+ffjgyCjaBAQ5InH4bCM6hFNWFT
+	dVJdrad0rCVH53cEkcfrJGcNHAFYM5OKRAzhtrCaegXPMUS2Clq+d2rl5vedUhj9cVzOPz
+	oBY3CMu0sx00S5iZiaLW47YyDfKCGnr4iRBsaSM/hwS0LtMB95uTOUWCY7/oEyEtV1brgs
+	z8vukh291L6GcDbg7vn+LdU3LYLIhNApEcwTgEETh2mguj0QIPlbp1t/L1gzDVkSb+R/k7
+	dgUbsHm4FM4zekKsshDTKf2oQqRl5sB6kIbNU8B2FvMyojalRtHOTd1tTf87WA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Cc: christophe.jaillet@wanadoo.fr,  gmpy.liaowx@gmail.com,  kees@kernel.org,
+  linux-kernel@vger.kernel.org,  linux-mtd@lists.infradead.org,
+  richard@nod.at,  vigneshr@ti.com,  stable@vger.kernel.org
+Subject: Re: [PATCH v2] mtd: Add check and kfree() for kcalloc()
+In-Reply-To: <20250204023323.14213-1-jiashengjiangcool@gmail.com> (Jiasheng
+	Jiang's message of "Tue, 4 Feb 2025 02:33:23 +0000")
+References: <30ad77af-4a7b-4a15-9c0b-b0c70d9e1643@wanadoo.fr>
+	<20250204023323.14213-1-jiashengjiangcool@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 04 Feb 2025 10:17:07 +0100
+Message-ID: <87wme683xo.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddufecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepjhhirghshhgvnhhgjhhirghnghgtohholhesghhmrghilhdrtghomhdprhgtphhtthhopegthhhrihhsthhophhhvgdrjhgrihhllhgvthesfigrnhgrughoohdrfhhrpdhrtghpthhtohepghhmphihrdhlihgrohifgiesghhmrghilhdrtghomhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhin
+ hhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhm
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Use the i2c_get/put_dma_safe_msg_buf for I2C transfers instead of using
-the I3C-specific API.
+Hello,
 
-Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
----
- drivers/i3c/master/mipi-i3c-hci/core.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+> --- a/drivers/mtd/mtdpstore.c
+> +++ b/drivers/mtd/mtdpstore.c
+> @@ -418,10 +418,17 @@ static void mtdpstore_notify_add(struct mtd_info *m=
+td)
+>=20=20
+>  	longcnt =3D BITS_TO_LONGS(div_u64(mtd->size, info->kmsg_size));
+>  	cxt->rmmap =3D kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +	if (!cxt->rmmap)
+> +		goto end;
 
-diff --git a/drivers/i3c/master/mipi-i3c-hci/core.c b/drivers/i3c/master/mipi-i3c-hci/core.c
-index a408feac3e9e..4f3738beb0f2 100644
---- a/drivers/i3c/master/mipi-i3c-hci/core.c
-+++ b/drivers/i3c/master/mipi-i3c-hci/core.c
-@@ -382,14 +382,11 @@ static int i3c_hci_i2c_xfers(struct i2c_dev_desc *dev,
- 		return -ENOMEM;
- 
- 	for (i = 0; i < nxfers; i++) {
--		xfer[i].data = i2c_xfers[i].buf;
-+		xfer[i].data = i2c_get_dma_safe_msg_buf(&i2c_xfers[i], 1);
- 		xfer[i].data_len = i2c_xfers[i].len;
- 		xfer[i].rnw = i2c_xfers[i].flags & I2C_M_RD;
- 		hci->cmd->prep_i2c_xfer(hci, dev, &xfer[i]);
- 		xfer[i].cmd_desc[0] |= CMD_0_ROC;
--		ret = i3c_hci_alloc_safe_xfer_buf(hci, &xfer[i]);
--		if (ret)
--			goto out;
- 	}
- 	last = i - 1;
- 	xfer[last].cmd_desc[0] |= CMD_0_TOC;
-@@ -412,7 +409,8 @@ static int i3c_hci_i2c_xfers(struct i2c_dev_desc *dev,
- 
- out:
- 	for (i = 0; i < nxfers; i++)
--		i3c_hci_free_safe_xfer_buf(hci, &xfer[i]);
-+		i2c_put_dma_safe_msg_buf(xfer[i].data, &i2c_xfers[i],
-+					 ret ? false : true);
- 
- 	hci_free_xfer(xfer, nxfers);
- 	return ret;
--- 
-2.25.1
+We prefer to return immediately in this case.
 
+Also, any reasons not to use devm_kcalloc()? This would be the correct
+approach as of today as long as the lifetime of the device is known.
+
+Thanks,
+Miqu=C3=A8l
