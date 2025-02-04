@@ -1,133 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634034685;
-	Tue,  4 Feb 2025 00:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940BD171D2
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 00:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738628378; cv=none; b=Yb1JAf82JyclmedaMyTNAee1zn9miYxEbdZ0pI8Ogfbb13blU3awfwFk+XQkBGzIxWqHr1G4YDrlTz5hdE7ZOfxWK1lVh8IKOPnYwozDddKEsr1xPzTRQFn8VHG5vbnYMMoAG2KK8kIyY5GypdF6SuJ9QZZOIwoilRp7/TlbvzY=
+	t=1738628399; cv=none; b=VYS83oVdKCXUYa7fQ1po3RT8biP520my1xAkcGaNvhzPNyE9A0emEvUUxwhe2Be0jATlRdMEWDdPwgTmUoM4W+Tn+4mCA4/IXQuxSYUlK+1BFyb9msANPgU4qV5gmhCM2yfh4o7wWtenX8bX/bUCbxn35cXC34GdmzpjlCegAxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738628378; c=relaxed/simple;
-	bh=HtmJ68Du1OtG4cQ3+U33oObZAL0YpP1itzBptGRqH2Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PxxA+poNK/074CYe8wculJ5i+7OyUxSfcdTxRiETPVKtl2elJs2HBbl4IPudZjRbtCuvaUZb0gIq90YfNuiwVC3Auj8rxVn7xrqutHsLPrOLTemfcXRoKLpHYpqe+nA4Zf9KXr+A4Wef2qNu2/Z7H35vIqwXedToViApUdLAUHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cMpUs07r; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738628399; c=relaxed/simple;
+	bh=w+7nQhJ8V2Za9tjSacV+hWmFD0TVRwJZZr4hlwqDBQY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=kCdPmHdLFWvsUWGTUSuk4fl/7vpWnZHJlVs0cmm9+HSCCevA8H1PmGepHQWXLk2M5EMduFggEJGu28w5rlOC2ohDNmfT9d+QNC1K7EUL2W/3iIYxvalPcl8fDlF8gYJIuOl7fIQLq9TB2xv382mWVrKnS1dk6eoZX4d2RsoCP5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QXznbcOR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cMpUs07r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738628376; x=1770164376;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HtmJ68Du1OtG4cQ3+U33oObZAL0YpP1itzBptGRqH2Y=;
-  b=cMpUs07rBVbR6s3z+5KD67sPAp0tbl4S2WeAUfg/1P54PeYgs1jlNgQv
-   3hLtL3IfZb3BSZk7OrPZLHjU9+S25pOS/ppJTa8lu78EW2XqMLGmp3BDl
-   SaKx6EZdrlmXZH42dswO/OMvblrDV3AM28tg5+hsBOfgRKIIb1C547SQd
-   ZjRyxkXPt3vOJuelMmGwaOOrSuhR2LKyu1HOwICp1tsyg3GBurS9buAeL
-   IoGy39h5GA9eKxfenGx0tvAS4c7mPDGPR2ixlFtlSBU4r5z8Gab54/WSw
-   Jn8IUKFsOWd0zPChaa7FmsJH5iW9FCP82m9lUyrQh18exROwUpwhV29HM
-   w==;
-X-CSE-ConnectionGUID: gCLfThiIQGqJmhSYVJ6ADQ==
-X-CSE-MsgGUID: yxNJpS0pRESE6AOcw/CDQw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50553784"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="50553784"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 16:19:35 -0800
-X-CSE-ConnectionGUID: VjX/llIyRfy0Urs9iygLAA==
-X-CSE-MsgGUID: xPRiRAGiReurXvlNSDcUWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147635271"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.109.238]) ([10.125.109.238])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 16:19:35 -0800
-Message-ID: <08c212d4-cad2-430f-8c94-a87f48ff50b6@intel.com>
-Date: Mon, 3 Feb 2025 16:19:37 -0800
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QXznbcOR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A865DC4CEE0;
+	Tue,  4 Feb 2025 00:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1738628398;
+	bh=w+7nQhJ8V2Za9tjSacV+hWmFD0TVRwJZZr4hlwqDBQY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QXznbcORwAbGrrVlo2x0+VNGFnYXsk4uwGmrL7rKo0DrOsKqkbD13eUe8lo6pEWrC
+	 ubCdl5NsC34rfAj0Y7/LYG6Pbrr73btn2pFc8HiXEiEkU68h3bNQxBLE6ql6jxM5FF
+	 +2xURsoMG2jkGdmcbAb08EaILXVCwYq4gGjxcd3o=
+Date: Mon, 3 Feb 2025 16:19:58 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 01/17] zram: switch to non-atomic entry locking
+Message-Id: <20250203161958.b529e20fb7aa07645ed029eb@linux-foundation.org>
+In-Reply-To: <dj2k36obadhbxlvecsdhdyf7edkmtgocf55jkbiq5gbnpvkygt@mcwolkrhicvq>
+References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+	<20250131090658.3386285-2-senozhatsky@chromium.org>
+	<20250131145536.d7a0483331b0ebfde80a5754@linux-foundation.org>
+	<dj2k36obadhbxlvecsdhdyf7edkmtgocf55jkbiq5gbnpvkygt@mcwolkrhicvq>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 3/4] intel_idle: Provide the default enter_dead()
- handler
-To: Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- rafael.j.wysocki@intel.com, len.brown@intel.com,
- artem.bityutskiy@linux.intel.com, dave.hansen@linux.intel.com
-References: <20250110115953.6058-1-patryk.wlazlyn@linux.intel.com>
- <20250110115953.6058-4-patryk.wlazlyn@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250110115953.6058-4-patryk.wlazlyn@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 1/10/25 03:59, Patryk Wlazlyn wrote:
-> +static __cpuidle void intel_idle_enter_dead(struct cpuidle_device *dev,
-> +					    int index)
-> +{
-> +	struct cpuidle_driver *drv = cpuidle_get_cpu_driver(dev);
-> +	struct cpuidle_state *state = &drv->states[index];
-> +	unsigned long eax = flg2MWAIT(state->flags);
-> +
-> +	mwait_play_dead(eax);
-> +}
+On Mon, 3 Feb 2025 12:26:12 +0900 Sergey Senozhatsky <senozhatsky@chromium.org> wrote:
 
-The __cpuidle marks this as noinstr, but cpuidle_get_cpu_driver() is not
-noinstr, so the objtool complains:
+> On (25/01/31 14:55), Andrew Morton wrote:
+> > > +static void zram_slot_write_lock(struct zram *zram, u32 index)
+> > > +{
+> > > +	atomic_t *lock = &zram->table[index].lock;
+> > > +	int old = atomic_read(lock);
+> > > +
+> > > +	do {
+> > > +		if (old != ZRAM_ENTRY_UNLOCKED) {
+> > > +			cond_resched();
+> > > +			old = atomic_read(lock);
+> > > +			continue;
+> > > +		}
+> > > +	} while (!atomic_try_cmpxchg(lock, &old, ZRAM_ENTRY_WRLOCKED));
+> > > +}
+> > 
+> > I expect that if the calling userspace process has realtime policy (eg
+> > SCHED_FIFO) then the cond_resched() won't schedule SCHED_NORMAL tasks
+> > and this becomes a busy loop.  And if the machine is single-CPU, the
+> > loop is infinite.
+> 
+> So for that scenario to happen zram needs to see two writes() to the same
+> index (page) simultaneously?  Or read() and write() on the same index (page)
+> concurrently?
 
-vmlinux.o: warning: objtool: intel_idle_enter_dead+0x7: call to
-cpuidle_get_cpu_driver() leaves .noinstr.text section
+Well, my point is that in the contended case, this "lock" operation can
+get stuck forever.  If there are no contended cases, we don't need a
+lock!
 
-Patryk, can you fix this up, resync against 6.14-rc1 (there are some
-minor merge conflicts) and resubmit, please?
+And I don't see how disabling the feature if PREEMPT=y will avoid this
+situation.  cond_resched() won't schedule away from a realtime task to
+a non-realtime one - a policy which isn't related to preemption.
 
-I assume that it's OK to just make cpuidle_get_cpu_driver() __cpuidle
-too. It doesn't do much.
