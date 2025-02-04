@@ -1,77 +1,125 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083A42066F7
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 08:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8091213D8A4;
+	Tue,  4 Feb 2025 08:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738658659; cv=none; b=sJpRz/5kXkQC8U3ZCFz+/YmK8lM/yH2O1D5dd94KAh9wfRPPmMqKscZxtqSwt6q+j1153NpnHiQLIttUuRmtsz7MmzXWa7+LFbjFNz09z/v6CoM59QfQJOTu1F6GGIG+a3pMbgs1sgwBQ385lfHEIe1NonHrMNwJjhsxiWCk0RE=
+	t=1738658735; cv=none; b=ToIVBylwHOlSuR9GQjhJHf5qb4UroI5phPhUKr1edWjn5pjUweB1n+5osqWYh7rZNHYfw0fU5kD50InKbtMWw7C+DOFxQTFKnuRnGumdJa+obSU0PpogVuRMAQNcy0Gx+giWgDD5JxSl4suCYkz65DUteWNcq9t1dnsoOByQUNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738658659; c=relaxed/simple;
-	bh=b2pIQbRJjohjuTQV+woyjDEIYDftcYYChl8DWH4PtMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qSK+zMGeWGb6h/l507mLxXY2XnhiPxN+fl5flq+xWwloWQQISm/hl5mSw+XiSWV4Ldsd8u0nLkgDNQ8dBITGD8CrwxAlkMJzfqnJJjIwJK/dBZg7lEwiyoHjWNEXHR4zmsIEcqNo9RZx1GGkieipaq+c1a2GKQROEAghfVkiV0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A5FD6442E0;
-	Tue,  4 Feb 2025 08:44:14 +0000 (UTC)
-Message-ID: <916147db-94a5-46df-8a22-1d301059154c@ghiti.fr>
-Date: Tue, 4 Feb 2025 09:44:14 +0100
+	s=arc-20240116; t=1738658735; c=relaxed/simple;
+	bh=SPpXPUpwk/W57k2iVLstC4U5AtSCuka53j4S57VXJHE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Qm0c35+Upv1KMTDunArDtNoTOmOZTPRBS5W3tWTBrLa+RMGJQjgCa4sZ5iaNIXUGJNg+FTDzGePHGo9c4oH1IfZIWSjcOYpjhvvskXeQsSYrb0bAbA2tEnzRObN14agEsg0ON/PG+eHgR38cqbZDzyTCqwngSjMGEWo0Db7VeVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JLwTp8tv; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JLwTp8tv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738658734; x=1770194734;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=SPpXPUpwk/W57k2iVLstC4U5AtSCuka53j4S57VXJHE=;
+  b=JLwTp8tvYrSjmPn02qPDyUfeqkG3AHo5H3kaj9Y15oyvJWTsGUVV6ICz
+   JLy4Hb4mTL3B8hPHtHe2Cv5Z941cKoSoMFdO8R2nqFZ/IJv+80UK0jEal
+   44aWyrDwUlUrFjAmhU2aYKsE1lrbrQnxMHhV07VB46S8rRFS2Ftg9b6Mb
+   MlWEAFz0514JhXTSqar0CzorR1dsAovvTekzXQdPDkLhu7v1vN228EKYW
+   XIfLTnP1j9uUNy2232VwLyz/TvzLlbcTS+v25GUkbMAwGlm9oNTfjOr8Z
+   2AngqlPNY65kMjoY39AuX6EbJbY6mxQx5InsY9TSOKI4r+bS16T2iD5+G
+   w==;
+X-CSE-ConnectionGUID: fvVKYzzIQLWo67Vh2dXdPA==
+X-CSE-MsgGUID: /GD3MWSURGW4RwI3d5Nq6w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="42923798"
+X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
+   d="scan'208";a="42923798"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 00:45:33 -0800
+X-CSE-ConnectionGUID: nziqMhAiRK+uY5idikq9Qw==
+X-CSE-MsgGUID: HdCMd7riT1SMFbw/Ka/uGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="114576159"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.75])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 00:45:31 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 4 Feb 2025 10:45:27 +0200 (EET)
+To: Ma Ke <make24@iscas.ac.cn>
+cc: bhelgaas@google.com, rafael.j.wysocki@intel.com, yinghai@kernel.org, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    stable@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: fix reference leak in pci_alloc_child_bus()
+In-Reply-To: <20250202062357.872971-1-make24@iscas.ac.cn>
+Message-ID: <c34742e8-cc03-49a9-386e-afb4d14a68b1@linux.intel.com>
+References: <20250202062357.872971-1-make24@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv/futex: sign extend compare value in atomic cmpxchg
-Content-Language: en-US
-To: Andreas Schwab <schwab@suse.de>, linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-References: <mvmfrkv2vhz.fsf@suse.de>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <mvmfrkv2vhz.fsf@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddthecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnheptdfhleefjeegheevgeeljeellefgvefhkeeiffekueejteefvdevhfelvdeggeeinecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemledvgegumehfheefrgemsgegvdgrmeefrgelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemledvgegumehfheefrgemsgegvdgrmeefrgelgedphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemledvgegumehfheefrgemsgegvdgrmeefrgelgegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepfedprhgtphhtthhopehstghhfigrsgesshhushgvrdguvgdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrk
- hgvrhhnvghlrdhorhhg
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: multipart/mixed; boundary="8323328-1449886408-1738658727=:1609"
 
-Hi Andreas,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 03/02/2025 11:06, Andreas Schwab wrote:
-> Make sure the compare value in the lr/sc loop is sign extended to match
-> what lr.w does.  Fortunately, due to the compiler keeping the register
-> contents sign extended anyway the lack of the explicit extension didn't
-> result in wrong code so far, but this cannot be relied upon.
->
-> Fixes: b90edb33010b ("RISC-V: Add futex support.")
-> Signed-off-by: Andreas Schwab <schwab@suse.de>
+--8323328-1449886408-1738658727=:1609
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Sun, 2 Feb 2025, Ma Ke wrote:
+
+> When device_register(&child->dev) failed, we should call put_device()
+> to explicitly release child->dev.
+>=20
+> As comment of device_register() says, 'NOTE: _Never_ directly free
+> @dev after calling this function, even if it returned an error! Always
+> use put_device() to give up the reference initialized in this function
+> instead.'
+>=20
+> Found by code review.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: 4f535093cf8f ("PCI: Put pci_dev in device tree as early as possibl=
+e")
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 > ---
->   arch/riscv/include/asm/futex.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/include/asm/futex.h b/arch/riscv/include/asm/futex.h
-> index fc8130f995c1..6907c456ac8c 100644
-> --- a/arch/riscv/include/asm/futex.h
-> +++ b/arch/riscv/include/asm/futex.h
-> @@ -93,7 +93,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
->   		_ASM_EXTABLE_UACCESS_ERR(1b, 3b, %[r])	\
->   		_ASM_EXTABLE_UACCESS_ERR(2b, 3b, %[r])	\
->   	: [r] "+r" (ret), [v] "=&r" (val), [u] "+m" (*uaddr), [t] "=&r" (tmp)
-> -	: [ov] "Jr" (oldval), [nv] "Jr" (newval)
-> +	: [ov] "Jr" ((long)(int)oldval), [nv] "Jr" (newval)
->   	: "memory");
->   	__disable_user_access();
->   
+> Changes in v3:
+> - modified the description as suggestions.
+> Changes in v2:
+> - added the bug description about the comment of device_add();
+> - fixed the patch as suggestions;
+> - added Cc and Fixes table.
+> ---
+>  drivers/pci/probe.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 2e81ab0f5a25..51b78fcda4eb 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1174,7 +1174,10 @@ static struct pci_bus *pci_alloc_child_bus(struct =
+pci_bus *parent,
+>  add_dev:
+>  =09pci_set_bus_msi_domain(child);
+>  =09ret =3D device_register(&child->dev);
+> -=09WARN_ON(ret < 0);
+> +=09if (WARN_ON(ret < 0)) {
+> +=09=09put_device(&child->dev);
+> +=09=09return NULL;
+> +=09}
+> =20
+>  =09pcibios_add_bus(child);
 
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Unrelated to this fix, IMO that WARN_ON() is overkill and I'm skeptical=20
+that printing a stack trace on a failure in device_register() is helpful.
+IMO, a simple error print would suffice to tell something (unexpectedly)
+went wrong here.
 
-Thanks,
+--=20
+ i.
 
-Alex
-
+--8323328-1449886408-1738658727=:1609--
