@@ -1,155 +1,251 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1802.securemx.jp [210.130.202.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6927F13B284;
-	Tue,  4 Feb 2025 02:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C1486321;
+	Tue,  4 Feb 2025 02:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738636994; cv=none; b=QcDEIIaA9IFthaacpKifW+hBCez3aZyPoj7QyrP+x4vRznulCxq1gQkOvAJkEoM3ZL6iK8c3hzS46zM48EhAJ7iTTG0cBSbw7oAtbCYeeP3O9JsTGYAOeS4T3HiWPqeAlgwONgzjkjOJklmYPIMS9nr5LPrFA9Z7Pah1in9Vn3s=
+	t=1738637027; cv=none; b=lqzC1LYqEFAanDD4CAX5UwtuwovaEOjIjKvQ714RzF2UEPzIfzK9OWn5YBX+TAEHxrQVreOwo6Vd6xwVY/796DxmSrUvVIPwm4o6K5KsSXfEBUJhe+GEhZNDASUQ76QoNcZajocj80YG13/SZqquJnWCNTz8H8USuqnHMT6uXTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738636994; c=relaxed/simple;
-	bh=wN3B3cisTTe0Rmh9blYsF56rFSabR9viP+mQPQYdbgQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=qlAMqeOuDPycFNNvmcWlvazHMwNBTK9lCiPJPPnK39DfYNQuwTq50aHC8SeVrr/isFUK4NGhTiW7wG2SlJ+4asu7ZlYiPsNPgLLfULC7HuKxT7hB9gGmR2E1IaOAkf+NCvkHe4uKGa8pxxFvwRtiEtzcehCb+y4FDICw4ngklao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=kazuhiro3.hayashi@toshiba.co.jp header.b=m6D1Gfwt; arc=none smtp.client-ip=210.130.202.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
+	s=arc-20240116; t=1738637027; c=relaxed/simple;
+	bh=D/yelYXMu8Tmrswd3iQdp89T2paRJBLUtNsp9zw6A+I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GW0o3wIWymKerdhvgQnOgFcrWy9/da4Rtq07gBoM2zq/x1ax0z85AGDEqV0NlP3X5YX12szJlb4/1gdJ2DcFnlCZaLOYjuxwVK2HcMgw0lm/J0A3gT4ZG+a0Ky33W9KC70xta7SCsbJcFplaR5aoQe4MlxTWxZDwPQbA3jdYlME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R8SdpOd9; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=kazuhiro3.hayashi@toshiba.co.jp header.b="m6D1Gfwt"
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1802) id 5140mQed1757446; Tue, 4 Feb 2025 09:48:26 +0900
-DKIM-Signature: v=1;a=rsa-sha256;c=relaxed/simple;d=toshiba.co.jp;h=From:To:Cc
-	:Subject:Date:Message-Id:In-Reply-To:References;i=
-	kazuhiro3.hayashi@toshiba.co.jp;s=key2.smx;t=1738630062;x=1739839662;bh=wN3B3
-	cisTTe0Rmh9blYsF56rFSabR9viP+mQPQYdbgQ=;b=m6D1GfwtUnf+jcviTvifv6pEfQgD0PdwaMg
-	o4EoY7bNT99VxLIGwj2eex2/VuZbhDlOnNztFJtTQBfDz6O4JOKFRhbhzcX2r1VeckWOEVYetc8e+
-	liOUNPtPUUKFUPOAxdCjnwfElyA12MmDZ9ZfovbTO9flUxJNW/pM6cDXZ0/UfcTxEIj1dVoGFrOEu
-	xssmIVe6ZVcfIUi14VWcS0oyYRZJqVfz8EgLWFcJ+1GuPTx5CFQziweclv7uyEKm2NtiaOTrlmvLV
-	0KC6gtzSifW5F8zNX/dIJ+r1G7VYvT5dAODW30N+Nk53f2m7nmRt94xa2huQkRHVyHOdDUoucO3g=
-	=;
-Received: by mo-csw.securemx.jp (mx-mo-csw1802) id 5140lguQ194807; Tue, 4 Feb 2025 09:47:42 +0900
-X-Iguazu-Qid: 2yAbj3N9XV4ATWB8l1
-X-Iguazu-QSIG: v=2; s=0; t=1738630061; q=2yAbj3N9XV4ATWB8l1; m=zNsaNfsbzVYrSLDaBNYWD/cI34/bLiaHWFfhTeqNJ8M=
-Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
-	by relay.securemx.jp (mx-mr1802) id 5140lean1095764
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 4 Feb 2025 09:47:40 +0900
-From: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>
-To: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-        cip-dev@lists.cip-project.org
-Cc: bigeasy@linutronix.de, tglx@linutronix.de, rostedt@goodmis.org,
-        linux-rt-users@vger.kernel.org, pavel@denx.de
-Subject: [PATCH 4.4 4.9 v1 2/2] mm: slub: allocate_slab() enables IRQ right after scheduler starts
-Date: Tue,  4 Feb 2025 09:46:04 +0900
-X-TSB-HOP2: ON
-Message-Id: <1738629964-11977-3-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
-References: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R8SdpOd9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738637026; x=1770173026;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=D/yelYXMu8Tmrswd3iQdp89T2paRJBLUtNsp9zw6A+I=;
+  b=R8SdpOd9vQLsx6fgxG2iC2C32/aAaoV5CEYsGSE0i4EKCKBBkCuFY/Yk
+   mZBy27deHPtqzUImgORpgM3pJsd53/9VmVNlWSpBQAPTYvY23NTanbOUP
+   DXQbYSrrmRDuc/nI6GqErPBflE2ORAeqrQ48kJF2Cd8WUjsJP97xHrDq/
+   cQ/ySQ9wWHm49XueBYZ+HB6Yl2S6gF6YBDuYrtu6y84C/RqqtMMAnpcF/
+   VT2sG/1Q0hFwg6VPS4aqlpFYWgtx05tCUvrw9cpkOtFvOAYSyyo43Nojl
+   2AVwP+karK16iIEYupdSny3gKFJzwWK+TQyHBnVgaYGcUX2HG+BD6mNs5
+   A==;
+X-CSE-ConnectionGUID: wC2o1vPDSQm4zhcvM/xCbg==
+X-CSE-MsgGUID: k13NXhh/S+OAWmE9r4EAVg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39248897"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="39248897"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 18:43:45 -0800
+X-CSE-ConnectionGUID: eirV3W6ATT2+I2tIcic76g==
+X-CSE-MsgGUID: MlLHdLEVQYS5RAbSPTokFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
+   d="scan'208";a="115488420"
+Received: from mohdfai2-mobl.gar.corp.intel.com (HELO [10.247.89.75]) ([10.247.89.75])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 18:43:33 -0800
+Message-ID: <42fc5e78-ce8a-45fa-95dc-adf25d0d76d7@linux.intel.com>
+Date: Tue, 4 Feb 2025 10:43:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v7 5/5] igc: Add launch time support to XDP ZC
+To: Song Yoong Siang <yoong.siang.song@intel.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Willem de Bruijn <willemb@google.com>,
+ Florian Bezdeka <florian.bezdeka@siemens.com>,
+ Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Bjorn Topel <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+ Jonathan Lemon <jonathan.lemon@gmail.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, Joe Damato <jdamato@fastly.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>, Mina Almasry <almasrymina@google.com>,
+ Daniel Jurgens <danielj@nvidia.com>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Shuah Khan <shuah@kernel.org>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+ Bouska Zdenek <zdenek.bouska@siemens.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+ xdp-hints@xdp-project.net
+References: <20250204004907.789330-1-yoong.siang.song@intel.com>
+ <20250204004907.789330-6-yoong.siang.song@intel.com>
+Content-Language: en-US
+From: "Abdul Rahim, Faizal" <faizal.abdul.rahim@linux.intel.com>
+In-Reply-To: <20250204004907.789330-6-yoong.siang.song@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This patch resolves problem in 4.4 & 4.9 PREEMPT_RT kernels that
-the following WARNING happens repeatedly due to broken context
-caused by running slab allocation with IRQ disabled by mistake.
 
-WARNING: CPU: * PID: ** at */kernel/cpu.c:197 unpin_current_cpu+0x60/0x70()
 
-The system is almost unresponsive and the boot stalls once it occurs.
-This repeated WARNING only happens while kernel is booting
-(before reaches the userland) with a quite low reproducibility:
-Only one time in around 1,000 ~ 10,000 reboots.
+On 4/2/2025 8:49 am, Song Yoong Siang wrote:
+> Enable Launch Time Control (LTC) support for XDP zero copy via XDP Tx
+> metadata framework.
+> 
+> This patch has been tested with tools/testing/selftests/bpf/xdp_hw_metadata
+> on Intel I225-LM Ethernet controller. Below are the test steps and result.
+> 
+> Test 1: Send a single packet with the launch time set to 1 s in the future.
+> 
+> Test steps:
+> 1. On the DUT, start the xdp_hw_metadata selftest application:
+>     $ sudo ./xdp_hw_metadata enp2s0 -l 1000000000 -L 1
+> 
+> 2. On the Link Partner, send a UDP packet with VLAN priority 1 to port 9091
+>     of the DUT.
+> 
+> Result:
+> When the launch time is set to 1 s in the future, the delta between the
+> launch time and the transmit hardware timestamp is 0.016 us, as shown in
+> printout of the xdp_hw_metadata application below.
+>    0x562ff5dc8880: rx_desc[4]->addr=84110 addr=84110 comp_addr=84110 EoP
+>    rx_hash: 0xE343384 with RSS type:0x1
+>    HW RX-time:   1734578015467548904 (sec:1734578015.4675)
+>                  delta to User RX-time sec:0.0002 (183.103 usec)
+>    XDP RX-time:   1734578015467651698 (sec:1734578015.4677)
+>                   delta to User RX-time sec:0.0001 (80.309 usec)
+>    No rx_vlan_tci or rx_vlan_proto, err=-95
+>    0x562ff5dc8880: ping-pong with csum=561c (want c7dd)
+>                    csum_start=34 csum_offset=6
+>    HW RX-time:   1734578015467548904 (sec:1734578015.4675)
+>                  delta to HW Launch-time sec:1.0000 (1000000.000 usec)
+>    0x562ff5dc8880: complete tx idx=4 addr=4018
+>    HW Launch-time:   1734578016467548904 (sec:1734578016.4675)
+>                      delta to HW TX-complete-time sec:0.0000 (0.016 usec)
+>    HW TX-complete-time:   1734578016467548920 (sec:1734578016.4675)
+>                           delta to User TX-complete-time sec:0.0000
+>                           (32.546 usec)
+>    XDP RX-time:   1734578015467651698 (sec:1734578015.4677)
+>                   delta to User TX-complete-time sec:0.9999
+>                   (999929.768 usec)
+>    HW RX-time:   1734578015467548904 (sec:1734578015.4675)
+>                  delta to HW TX-complete-time sec:1.0000 (1000000.016 usec)
+>    0x562ff5dc8880: complete rx idx=132 addr=84110
+> 
+> Test 2: Send 1000 packets with a 10 ms interval and the launch time set to
+>          500 us in the future.
+> 
+> Test steps:
+> 1. On the DUT, start the xdp_hw_metadata selftest application:
+>     $ sudo chrt -f 99 ./xdp_hw_metadata enp2s0 -l 500000 -L 1 > \
+>       /dev/shm/result.log
+> 
+> 2. On the Link Partner, send 1000 UDP packets with a 10 ms interval and
+>     VLAN priority 1 to port 9091 of the DUT.
+> 
+> Result:
+> When the launch time is set to 500 us in the future, the average delta
+> between the launch time and the transmit hardware timestamp is 0.016 us,
+> as shown in the analysis of /dev/shm/result.log below. The XDP launch time
+> works correctly in sending 1000 packets continuously.
+>    Min delta: 0.005 us
+>    Avr delta: 0.016 us
+>    Max delta: 0.031 us
+>    Total packets forwarded: 1000
+> 
+> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
+> ---
+>   drivers/net/ethernet/intel/igc/igc_main.c | 42 +++++++++++++++++++++--
+>   1 file changed, 40 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+> index c3edd8bcf633..535d340c71c9 100644
+> --- a/drivers/net/ethernet/intel/igc/igc_main.c
+> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+> @@ -2951,9 +2951,33 @@ static u64 igc_xsk_fill_timestamp(void *_priv)
+>   	return *(u64 *)_priv;
+>   }
+>   
+> +static void igc_xsk_request_launch_time(u64 launch_time, void *_priv)
+> +{
+> +	struct igc_metadata_request *meta_req = _priv;
+> +	struct igc_ring *tx_ring = meta_req->tx_ring;
+> +	__le32 launch_time_offset;
+> +	bool insert_empty = false;
+> +	bool first_flag = false;
+> +
+> +	if (!tx_ring->launchtime_enable)
+> +		return;
+> +
+> +	launch_time_offset = igc_tx_launchtime(tx_ring,
+> +					       ns_to_ktime(launch_time),
+> +					       &first_flag, &insert_empty);
+> +	if (insert_empty) {
+> +		igc_insert_empty_packet(tx_ring);
+> +		meta_req->tx_buffer =
+> +			&tx_ring->tx_buffer_info[tx_ring->next_to_use];
+> +	}
+> +
+> +	igc_tx_ctxtdesc(tx_ring, launch_time_offset, first_flag, 0, 0, 0);
+> +}
+> +
+>   const struct xsk_tx_metadata_ops igc_xsk_tx_metadata_ops = {
+>   	.tmo_request_timestamp		= igc_xsk_request_timestamp,
+>   	.tmo_fill_timestamp		= igc_xsk_fill_timestamp,
+> +	.tmo_request_launch_time	= igc_xsk_request_launch_time,
+>   };
+>   
+>   static void igc_xdp_xmit_zc(struct igc_ring *ring)
+> @@ -2976,7 +3000,13 @@ static void igc_xdp_xmit_zc(struct igc_ring *ring)
+>   	ntu = ring->next_to_use;
+>   	budget = igc_desc_unused(ring);
+>   
+> -	while (xsk_tx_peek_desc(pool, &xdp_desc) && budget--) {
+> +	/* Packets with launch time require one data descriptor and one context
+> +	 * descriptor. When the launch time falls into the next Qbv cycle, we
+> +	 * may need to insert an empty packet, which requires two more
+> +	 * descriptors. Therefore, to be safe, we always ensure we have at least
+> +	 * 4 descriptors available.
+> +	 */
+> +	while (xsk_tx_peek_desc(pool, &xdp_desc) && budget >= 4) {
+>   		struct igc_metadata_request meta_req;
+>   		struct xsk_tx_metadata *meta = NULL;
+>   		struct igc_tx_buffer *bi;
+> @@ -3000,6 +3030,12 @@ static void igc_xdp_xmit_zc(struct igc_ring *ring)
+>   		xsk_tx_metadata_request(meta, &igc_xsk_tx_metadata_ops,
+>   					&meta_req);
+>   
+> +		/* xsk_tx_metadata_request() may have updated next_to_use */
+> +		ntu = ring->next_to_use;
+> +
+> +		/* xsk_tx_metadata_request() may have updated Tx buffer info */
+> +		bi = meta_req.tx_buffer;
+> +
+>   		tx_desc = IGC_TX_DESC(ring, ntu);
+>   		tx_desc->read.cmd_type_len = cpu_to_le32(meta_req.cmd_type);
+>   		tx_desc->read.olinfo_status = cpu_to_le32(olinfo_status);
+> @@ -3017,9 +3053,11 @@ static void igc_xdp_xmit_zc(struct igc_ring *ring)
+>   		ntu++;
+>   		if (ntu == ring->count)
+>   			ntu = 0;
+> +
+> +		ring->next_to_use = ntu;
+> +		budget = igc_desc_unused(ring);
+>   	}
+>   
+> -	ring->next_to_use = ntu;
+>   	if (tx_desc) {
+>   		igc_flush_tx_descriptors(ring);
+>   		xsk_tx_release(pool);
 
-[Problem details]
-
-On PREEMPT_RT kernels < v4.14-rt, after __slab_alloc() disables
-IRQ with local_irq_save(), allocate_slab() is responsible for
-re-enabling IRQ only under the specific conditions:
-
-(1) gfpflags_allow_blocking(flags) OR
-(2) system_state == SYSTEM_RUNNING
-
-The problem happens when (1) is false AND system_state == SYSTEM_BOOTING,
-caused by the following scenario:
-
-1. Some kernel codes invokes the allocator without __GFP_DIRECT_RECLAIM
-   bit (i.e. blocking not allowed) while SYSTEM_BOOTING
-2. allocate_slab() calls the following functions with IRQ disabled
-3. buffered_rmqueue() invokes local_[spin_]lock_irqsave(pa_lock) which
-   might call schedule() and enable IRQ, if it failed to get pa_lock
-4. The migrate_disable counter, which is not intended to be updated with
-   IRQs disabled, is accidentally updated after schedule() then
-   migrate_enable() raises WARN_ON_ONCE(p->migrate_disable <= 0)
-5. The unpin_current_cpu() WARNING is raised eventually because the
-   refcount counter is linked to the migrate_disable counter
-
-The behavior 2-5 above has been obsereved[1] using ftrace.
-The condition (2) above intends to make the memory allocator fully
-preemptible on PREEMPT_RT kernels[2], so the lock function in the
-step 3 above should work if SYSTEM_RUNNING but not if SYSTEM_BOOTING.
-
-[How this is resolved in newer RT kernels]
-
-A patch series in the mainline (v4.13) introduces SYSTEM_SCHEDULING[3].
-On top of this, v4.14-rt (6cec8467) changes the condition (2) above:
-
--	if (system_state == SYSTEM_RUNNING)
-+	if (system_state > SYSTEM_BOOTING)
-
-This avoids the problem by enabling IRQ after SYSTEM_SCHEULDING.
-Thus, the conditions that allocate_slab() enables IRQ are like:
-
-(2)system_state   v4.9-rt or before  v4.14-rt or later
-SYSTEM_BOOTING        (1)==true          (1)==true
-                          :                  :
-                          :                  v
-SYSTEM_SCHEDULING         : < Problem      Always
-                          v < occurs here    |
-SYSTEM_RUNNING          Always               |
-                          |                  |
-                          v                  v
-
-[How this patch works]
-
-An simple option would be to backport the series[3], which is possible
-and has been verified[4]. However, that series pulls functional
-changes like SYSTEM_SCHEDULING and adjustments for it,
-early might_sleep() and smp_processor_id() supports, etc.
-Therefore, this patch uses an extra (but not mainline) flag
-"system_scheduling" provided by the prior patch instead of
-introducing SYSTEM_SCHEDULING, then uses the same condition as
-newer RT kernels in allocate_slab().
-
-This patch also applies the fix in v5.4-rt (7adf5bc5) to care
-SYSTEM_SUSPEND in the condition check.
-
-[1] https://lore.kernel.org/all/TYCPR01MB11385E3CDF05544B63F7EF9C1E1622@TYCPR01MB11385.jpnprd01.prod.outlook.com/
-[2] https://docs.kernel.org/locking/locktypes.html#raw-spinlock-t-on-rt
-[3] https://lore.kernel.org/all/20170516184231.564888231@linutronix.de/T/
-[4] https://lore.kernel.org/all/TYCPR01MB1138579CA7612B568BB880652E1272@TYCPR01MB11385.jpnprd01.prod.outlook.com/
-
-Signed-off-by: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>
-Reviewed-by: Pavel Machek <pavel@denx.de>
----
- mm/slub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index fd23ff951395..6186a2586289 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1412,7 +1412,8 @@ static struct page *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
- 	if (gfpflags_allow_blocking(flags))
- 		enableirqs = true;
- #ifdef CONFIG_PREEMPT_RT_FULL
--	if (system_state == SYSTEM_RUNNING)
-+	/* SYSTEM_SCHEDULING <= system_state < SYSTEM_SUSPEND in the mainline */
-+	if (system_scheduling && system_state < SYSTEM_SUSPEND)
- 		enableirqs = true;
- #endif
- 	if (enableirqs)
--- 
-2.30.2
-
+Reviewed-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
 
