@@ -1,233 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F729214228;
-	Tue,  4 Feb 2025 15:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6B8433DE;
+	Tue,  4 Feb 2025 15:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738682233; cv=none; b=r4+O3Rn6cB5C83pIRWY88JRaGbpmydTPNJvubrEPRVVjqPNcKpUYxyerykfZouAYyfU/e6n3ASmeS0J7sfQxUGQaK5s7QBvDvmb30VoK7SD1D7ephMngSSNKgewRcZxACOZg/dlw5cpdiKeG42uSdLEZdxoC+lc/gQpQ5Vs89Mo=
+	t=1738682284; cv=none; b=B1nU/GXQjdFPgGMEKBIXWBZVYTPs/1a5o4HDUV5eemPsnE4uc9XrHfZFGsUDYH+CoM05YgifE/hmuonSNs8sYh+AXb0Ps4SHhdXWh+0wKKKeqZherOLuSd41AMFJXPzyCXEZ0jywCoR/OW4PfMaowyTy9V4gs5GwqP6w7UHIsDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738682233; c=relaxed/simple;
-	bh=8dxSqhdGv1jObMZqZKWAH4y86KPxvtCDFwx+3u4Cv+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ulCeKIW8KgeKqVkmQ7aUuDwLj9OGLir88g5oKvUP5KhVvjQ8zSIIfzqo9+Rf2Egi+TWr0Su9X9qgXDJPN0OQzL7DHHSUzLIRXZQwYSfcKq5SDk4H3AgsONdTkOhs4EJWlC6YVHrJ6dWjz7LlTPIPsJyIYP040F6NHd/bbyym8sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jrp2BY3T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738682284; c=relaxed/simple;
+	bh=F19h605MFAvaGFZKRxZNpLpKV3oES6t/2bBqSUwaF60=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=eBlb+0MzXfVs7UrN26hvBlDbbP9ODSMNHP1iRKs8SSixpVBBW8NbNurmwjXHFXgG4YtFFVmriQrUAp4v5HNQ1nsX5RTcBvf7WMlahMOBijSVypkXM1fU+9JhiBF0fKz51pgVCL/vKSjzFfGeS4uBKluGXQYkiu0Vy3oYwO/CjRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=M0xwYc4A; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jrp2BY3T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A249C4CEE4;
-	Tue,  4 Feb 2025 15:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738682232;
-	bh=8dxSqhdGv1jObMZqZKWAH4y86KPxvtCDFwx+3u4Cv+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jrp2BY3TKgFArcO5hLjXV0PcmsjE9bxD2UUFM45laY+uE2rE7AB0+DNR2Za2xVlZ3
-	 rwcuyuQvAGH9/jqGIVG/DuX5D0zLkQriSGV8A7sC0/VkIOBggBayWx/QoDGzqYplqL
-	 Vb+Xs9cBgwp0PX00nCz9+sgWQGOAS7Eu/GTbsmVdywEprqfRneN52q/D2aCuUY3RbV
-	 umYP+rU1XfrqAyvLA18q7LKsarzv0axEkrT40J0xInoBcyHzTVVYDDSDXXXZ8pDwfS
-	 L6reO5OTbdSip/WHYi8UObJZ/n1ChaK+1QGTDvDBJVUt5I+Gq476a8LJppwt13rYwo
-	 F0y/v94HTmQWQ==
-Date: Tue, 4 Feb 2025 16:17:10 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Marek Vasut <marex@denx.de>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Louis Chauvet <louis.chauvet@bootlin.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 3/3] drm: bridge: ti-sn65dsi83: Add error recovery
- mechanism
-Message-ID: <20250204-chocolate-lionfish-of-luck-10ebb8@houat>
-References: <20250108101907.410456-1-herve.codina@bootlin.com>
- <20250108101907.410456-4-herve.codina@bootlin.com>
- <20250114-juicy-authentic-mushroom-cfcdfb@houat>
- <20250114135456.5366eb2a@bootlin.com>
- <20250116-archetypal-bulldog-of-expression-fcc937@houat>
- <20250117091213.647bf0e6@bootlin.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="M0xwYc4A"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 96381404FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1738682270; bh=wVW8lBMIEEpdr0xbjPu2zI/effX4O8LeVMC5veSkfi8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=M0xwYc4AzH2N7+A+jv59tJS/lYaX4CncIBjdLa0vTEMgmmcSo40Pq4yzemaZ6IkUg
+	 GHfAkMgC0ExjTkFHjHwgh1S17aJ14V/MAdze0q4JhzzQ2TlgWvbsEaa47bVQ9l20lz
+	 PVy0jxTMuLb87dfi6GGc+ONahkP2zTuigCfx88XY6KQ5H4iUfC2AezbhrDZoTz7vys
+	 gfRTMuK4EBgeBlfoKgGDbtz67ypWm+0yKaddHwnQSr5WrrEY4tjWt/hlTJuG4BbI7Z
+	 T5D8g354eJdRwasTzRt0U0J9TQ/WAUjwhZi7ZM2tvCF54/BmegYCYILobXmNkyIVGh
+	 40VhpYcuHrLvg==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 96381404FA;
+	Tue,  4 Feb 2025 15:17:50 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Guenter Roeck <linux@roeck-us.net>, Purva Yeshi
+ <purvayeshi550@gmail.com>, jikos@kernel.org, bentiss@kernel.org,
+ jdelvare@suse.com
+Cc: skhan@linuxfoundation.org, linux-usb@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH] docs: Fix spelling and grammatical issues
+In-Reply-To: <1b32dfcb-5966-495a-ad48-903650888ee9@roeck-us.net>
+References: <20250204134806.28218-1-purvayeshi550@gmail.com>
+ <1b32dfcb-5966-495a-ad48-903650888ee9@roeck-us.net>
+Date: Tue, 04 Feb 2025 08:17:49 -0700
+Message-ID: <87jza5hh7m.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="5dgjstsqjg35osul"
-Content-Disposition: inline
-In-Reply-To: <20250117091213.647bf0e6@bootlin.com>
+Content-Type: text/plain
 
+Guenter Roeck <linux@roeck-us.net> writes:
 
---5dgjstsqjg35osul
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 3/3] drm: bridge: ti-sn65dsi83: Add error recovery
- mechanism
-MIME-Version: 1.0
+> On 2/4/25 05:48, Purva Yeshi wrote:
+>> Fix several spelling and grammatical errors across multiple
+>> documentation files.
+>> 
+>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>> ---
+>>   Documentation/hid/hiddev.rst                | 4 ++--
+>>   Documentation/hid/intel-ish-hid.rst         | 2 +-
+>>   Documentation/hid/uhid.rst                  | 2 +-
+>>   Documentation/hwmon/abituguru-datasheet.rst | 8 ++++----
+>>   Documentation/hwmon/abituguru.rst           | 2 +-
+>>   5 files changed, 9 insertions(+), 9 deletions(-)
+>> 
+>> diff --git a/Documentation/hid/hiddev.rst b/Documentation/hid/hiddev.rst
+>> index 9b82c7f896aa..073485f84793 100644
+>> --- a/Documentation/hid/hiddev.rst
+>> +++ b/Documentation/hid/hiddev.rst
+>> @@ -15,10 +15,10 @@ To support these disparate requirements, the Linux USB system provides
+>>   HID events to two separate interfaces:
+>>   * the input subsystem, which converts HID events into normal input
+>>   device interfaces (such as keyboard, mouse and joystick) and a
+>> -normalised event interface - see Documentation/input/input.rst
+>> +normalized event interface - see Documentation/input/input.rst
+>
+> Is US spelling now mandated in the Linux kernel ?
 
-Hi,
+No, from Documentation/doc-guide/contributing.rst:
 
-On Fri, Jan 17, 2025 at 09:12:13AM +0100, Herve Codina wrote:
-> Hi Maxime,
->=20
-> On Thu, 16 Jan 2025 09:38:45 +0100
-> Maxime Ripard <mripard@kernel.org> wrote:
->=20
-> > On Tue, Jan 14, 2025 at 01:54:56PM +0100, Herve Codina wrote:
-> > > Hi Maxime,
-> > >=20
-> > > On Tue, 14 Jan 2025 08:40:51 +0100
-> > > Maxime Ripard <mripard@kernel.org> wrote:
-> > >=20
-> > > ...
-> > >  =20
-> > > > > =20
-> > > > > +static int sn65dsi83_reset_pipe(struct sn65dsi83 *sn65dsi83)
-> > > > > +{
-> > > > > +	struct drm_atomic_state *state =3D ERR_PTR(-EINVAL);
-> > > > > +	struct drm_device *dev =3D sn65dsi83->bridge.dev;
-> > > > > +	struct drm_connector_state *connector_state;
-> > > > > +	struct drm_modeset_acquire_ctx ctx;
-> > > > > +	struct drm_connector *connector;
-> > > > > +	int err;
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * Reset active outputs of the related CRTC.
-> > > > > +	 *
-> > > > > +	 * This way, drm core will reconfigure each components in the C=
-RTC
-> > > > > +	 * outputs path. In our case, this will force the previous comp=
-onent to
-> > > > > +	 * go back in LP11 mode and so allow the reconfiguration of SN6=
-4DSI83
-> > > > > +	 * bridge.
-> > > > > +	 *
-> > > > > +	 * Keep the lock during the whole operation to be atomic.
-> > > > > +	 */
-> > > > > +
-> > > > > +	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, err);
-> > > > > +
-> > > > > +	state =3D drm_atomic_helper_duplicate_state(dev, &ctx);
-> > > > > +	if (IS_ERR(state)) {
-> > > > > +		err =3D PTR_ERR(state);
-> > > > > +		goto unlock;
-> > > > > +	}   =20
-> > > >=20
-> > > > No, you must not allocate a new state for this, you need to reuse t=
-he
-> > > > existing state. You'll find it in bridge->base.state->state. =20
-> > >=20
-> > > Thanks for pointing that. I didn't know about bridge->base.state->sta=
-te.
-> > >=20
-> > > I will use that if using the state is still relevant (see next commen=
-t).
-> > >  =20
-> > > >  =20
-> > > > > +	state->acquire_ctx =3D &ctx;
-> > > > > +
-> > > > > +	connector =3D drm_atomic_get_old_connector_for_encoder(state,
-> > > > > +							     sn65dsi83->bridge.encoder);
-> > > > > +	if (!connector) {
-> > > > > +		err =3D -EINVAL;
-> > > > > +		goto unlock;
-> > > > > +	}
-> > > > > +
-> > > > > +	connector_state =3D drm_atomic_get_connector_state(state, conne=
-ctor);
-> > > > > +	if (IS_ERR(connector_state)) {
-> > > > > +		err =3D PTR_ERR(connector_state);
-> > > > > +		goto unlock;
-> > > > > +	}
-> > > > > +
-> > > > > +	err =3D drm_atomic_helper_reset_pipe(connector_state->crtc, &ct=
-x);
-> > > > > +	if (err < 0)
-> > > > > +		goto unlock;   =20
-> > > >=20
-> > > > And you'll find the crtc in bridge->encoder->crtc. =20
-> > >=20
-> > > I am a bit confused. I looked at the drm_encoder structure [1] and th=
-e crtc
-> > > field available in this structure should not be used by atomic driver=
-s. They
-> > > should rely on &drm_connector_state.crtc. =20
-> >=20
-> > You're right, it's deprecated but used by most bridges anyway.
-> >=20
-> > I made a series of changes after reviewing your series to address some
-> > issues with the current bridge API, most notably
-> >=20
-> > https://lore.kernel.org/dri-devel/20250115-bridge-connector-v1-25-9a2fe=
-cd886a6@kernel.org/
->=20
-> Thanks for pointing that, indeed, it clarify many things!
->=20
-> >=20
-> > > In my case, I have the feeling that I should get the ctrc from the cu=
-rrent
-> > > state (i.e. bridge->base.state->state) using the sequence provided in=
- this
-> > > current patch:
-> > >   Retrieve the connector with drm_atomic_get_old_connector_for_encode=
-r() =20
-> >=20
-> > Retrieving the old connector makes no sense though. It's the connector
-> > that was formerly associated with your encoder. It might work, it might
-> > not, it's not what you're looking for.
-> >=20
-> > >   Retrieve the connector state with drm_atomic_get_connector_state() =
-=20
-> >=20
-> > drm_atomic_get_connector_state will allocate and pull the connector
-> > state into the drm_atomic_state, even if it wasn't part of it before, so
-> > it's not great. And you don't need it in the first place, you only need
-> > the current active CRTC.
->=20
-> Yes, I agree with that, I only need the active CRTC.
->=20
-> I tried to get the current atomic_state from:
->   1) bridge->base.state->state
->   2) drm_bridge_state->base.state
->=20
-> In both cases, it is NULL. Looking at Sima's reply in your series
-> explained that:
->   https://lore.kernel.org/dri-devel/Z4juJy7kKPbI2BDb@phenom.ffwll.local/
->=20
-> If I understood correctly those pointers are explicitly cleared.
->=20
-> So, with all of that, either:
->   a) I wait for your series to be applied in order to use your the crtc f=
-ield from
->      drm_bridge_state added by:
->        https://lore.kernel.org/dri-devel/20250115-bridge-connector-v1-25-=
-9a2fecd886a6@kernel.org/#t
->   b) I use the old school bridge->encoder->crtc for the moment
->=20
-> Do you mind if I use the bridge->encoder->crtc way for the next iteration=
- of
-> my series?
+> Both American and British English spellings are allowed within the
+> kernel documentation.  There is no need to fix one by replacing it with
+> the other.
 
-Yeah, it makes sense.
+Thanks,
 
-Still, it would be great if you could test my series on your setup and see =
-if it helps :)
-
-Maxime
-
---5dgjstsqjg35osul
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6IvdQAKCRAnX84Zoj2+
-dhSnAX49ruA8shYuYtyWizI8d6OWPbGVqN7EVpywtSHT76p7DCa5TJI8oaIOEcz7
-DNxOQPgBf1X+4gfZabxbdrPYmgIM/B74ee9rJtAd55RdX1jITrfwyFpUk5ca88vr
-wK9f74O2kw==
-=bmdb
------END PGP SIGNATURE-----
-
---5dgjstsqjg35osul--
+jon
