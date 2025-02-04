@@ -1,149 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BA72080D4
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7768F207A00;
+	Tue,  4 Feb 2025 09:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738663164; cv=none; b=DEtgtXlT8QZxVSnakowQYLwQlgZjWENRpgKpCPZR3qQ7jH8/miMBtFao3sMhCqIuikGh8oN0RQynxb6q+pBg3eH0GfG+qbzo1EaU+HT8zQCs5E9T5ktQ2/Pp3g6ujMC/lZ1GZEYOqtijaVWOexNRJSnxfKaplgzqpOuHoly+RcA=
+	t=1738663189; cv=none; b=U4twOU5ZRIBCRXzCs3LTyQzhLvNw/AfqiPV4D4JlgOrtnLeHCJ0iAZBRSDDNH/GrMObsAnxhikeKKla+moKKPgctA+BAzy6IatmrhfemtS0fBXC8DYk22/PlWAZMbIhUa4cQ5uFL6Mvyq255exVksz4yMl+u1UXaRTGWepPAJX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738663164; c=relaxed/simple;
-	bh=GHHnPYOL+gRUE/196eOq/gj7fZDZsKf1B63nUWSuP1g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hfwXIyHJ+hC2i7LdDH1jdz3i+wkO4BWIZZpLq8dj4vX4QXd5igXk9BQIdqW5BZE8WDrBYtzspIYbIYqp7jBb4PRUERGOlqAjOHDkd/iUxC4PYkJ7XZsw0pchzI9ZorqZJiYzsfkBWOJQiRmPPpLN8q6Lpk5FbYxtWP0sokT+vGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hefdWeL3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738663189; c=relaxed/simple;
+	bh=6K3zRmiuCUh3vM/8mpSY0RRXd5t6WO6/geN74RWeLQA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X7ZGZXJOnBQB62B2RRuFwJqMRA/AFU1gnFe8wVqbfZOW8wwzuumQRVkYTM4G1/mwTK0vLpBsZL92OsruszLGfl4b3gnr0uOx1hBBb3Zr416b4z3iwsUf3SabIIlU074P9plh+JEAXsENCKmRxi26sWWtSe7v5wXXfvMN5pzJ9rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mCNYBax9; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hefdWeL3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738663161;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8wGv2FsoKufVcLbYy1/87/ZPdb2v6fo4T2VRc/m1Duk=;
-	b=hefdWeL3EWD7nwa6+cS96ZK5loSQw6cBI+DaUHmbuuBYvAUoUAPp/ZgSPF87xSdYgv4c5r
-	m+1X06hpc56uGd6VThIQWwupbe69ow+d43qYNck01XYqqjYLNjRE9b/esiRPkLqfC7r8QF
-	WPqgmsHVd0ofQmPWtbsB7rQUOmRwCGc=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-269-voGVbSsJMyyJv45_rGrhvA-1; Tue, 04 Feb 2025 04:59:20 -0500
-X-MC-Unique: voGVbSsJMyyJv45_rGrhvA-1
-X-Mimecast-MFC-AGG-ID: voGVbSsJMyyJv45_rGrhvA
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-aaf921b8a85so635555066b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 01:59:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738663159; x=1739267959;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8wGv2FsoKufVcLbYy1/87/ZPdb2v6fo4T2VRc/m1Duk=;
-        b=jD/IPGR45xZWQyKljfHsZ9nwy/Fo7NLvpFri9o+E4fHX0Ks4cca/ceGOfKowHmQ+1x
-         HzKRhoJtBM3PDKwYHfPcUMqudW9dH0SW9R2syvc0IZXQo6xVvcSAchZ4Qf6DLt7fyWzs
-         z8FNZrU3QNzucKQrX3QdJDSTKhF+bOiYrFWcPYOoB9L60Sqqfc17d9f2hMF/7rdZHpDF
-         osr8egGisaNtpYAdCYYkAl/Zbto60GTF6p7Xaa7Ww68AggKYLQJOHQ//Nik8hAOtDrRZ
-         LVvWBRWaOVHRLFVP0H3Df769Ew+0kRCqHWfq2FbI8ueFEv8GWCuci5nqsqvbOP3FQGLI
-         nXbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXguUcO4ub2ZNTb+iHoy2LrhsbxyEhaSXp5jru7EJzNF6EgkltlkbGEc2z9ByYB7lsAd7jNhjZWBmWzGH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEcJx6ptFrblB80pESMEZgZsXuP+cRZI21QZgE91eQp2qmriEF
-	qeT9T2IR95rQk3O4nK6UglIctqM7ys57EUQ9nIE1m18FHEmlC3msuOwaoDDnepLnmqXiqt1UtZM
-	HzoIeNtDut0c37Vs2rnvwGLDPCd7iVVjLNJRTaUYuCAhI6yPGETCdlHg1GWrpHhlGBBr9B984Hd
-	V3mlLK5ymKB9PgZpzQ8s2VTMd7F1bDHzlnC1Cp
-X-Gm-Gg: ASbGncsTypr+WRLR7mWDt5wKM57dWF9IgLg22Q8iz8rAUk5AmvMfD9h9CKQGBm+I9Ls
-	GMEx7nEFUea69UuPkYKp39Xm/lxgZKU2/GzGfxBowwjr9eP0pu3LIFZAMnQo2NI7iduNYK+Mm15
-	KAMbF0t0AQkiioPcb/Iw==
-X-Received: by 2002:a17:907:6d26:b0:aac:4324:977e with SMTP id a640c23a62f3a-ab6cfd076admr3317238066b.27.1738663159093;
-        Tue, 04 Feb 2025 01:59:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHXtRcEnuU6oA06Z0ReFSRWzAHGLOtGcVBMkSs7QVLQN14Wwp3N7kI/IyVUADKD48QX2iJ3nCKN8Er+Pj17+XI=
-X-Received: by 2002:a17:907:6d26:b0:aac:4324:977e with SMTP id
- a640c23a62f3a-ab6cfd076admr3317235066b.27.1738663158657; Tue, 04 Feb 2025
- 01:59:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mCNYBax9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738663188; x=1770199188;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6K3zRmiuCUh3vM/8mpSY0RRXd5t6WO6/geN74RWeLQA=;
+  b=mCNYBax91cNvLBNdpjudZ0inVENpZelt/WRseCATByeo20car8qL7V5u
+   7FbNYL1Nv1ZrJdSvlAcO7lD9nEeysg9MkrzNZ5iNQZWIvANJYg/ZJGxLI
+   PPZtuekFYMt7v/0YmvIrHsFyg+4UuRadXoTML9RjCDsqY37CeaVCf0mKB
+   EzPdz5T8GEJlIZf9/EAeDSEL8cl29iLcN4hoeyAkU234Olgc7dsiq8P4t
+   t8hD0Sv+rFT3Hc0E7LkkXoh4jgcrsvEM6AsQ5oF10XuGbjExqVj1EHI9X
+   xrOSydVGHQGMrkbJa0yNTueN3Csyn94Xb7S5TTpL6Zg+uYDZUvwno02NM
+   Q==;
+X-CSE-ConnectionGUID: LmcxpkMLQ1+eknLSQiGYQg==
+X-CSE-MsgGUID: 9RCZiSqUSk6uwb4h2NNBZA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50602876"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="50602876"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 01:59:47 -0800
+X-CSE-ConnectionGUID: gOFg8UrETV+H7y9KNKfCWg==
+X-CSE-MsgGUID: U/q2CAQUS3KG26opVAsjHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="147759115"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 04 Feb 2025 01:59:44 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tfFiX-000sJD-1f;
+	Tue, 04 Feb 2025 09:59:41 +0000
+Date: Tue, 4 Feb 2025 17:59:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tobias Sperling via B4 Relay <devnull+tobias.sperling.softing.com@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tobias Sperling <tobias.sperling@softing.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] iio: adc: Add driver for ADS7128 / ADS7138
+Message-ID: <202502041729.kDDFNlnS-lkp@intel.com>
+References: <20250203-adc_ml-v2-2-8a597660c395@softing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130090517.201356-1-ryasuoka@redhat.com> <75cf3adc-400e-44a6-b653-bee1f0cb43ec@collabora.com>
-In-Reply-To: <75cf3adc-400e-44a6-b653-bee1f0cb43ec@collabora.com>
-From: Ryosuke Yasuoka <ryasuoka@redhat.com>
-Date: Tue, 4 Feb 2025 18:59:07 +0900
-X-Gm-Features: AWEUYZl1gCs8i_nghDi3JecpQ0sWd8PMYpAqhqfVffZeODkRQxTx-IAv0cYMK8k
-Message-ID: <CAHpthZo=R=Csru2P8NVY8YKaasb2RTyrMYni-=8ri4K=xd8abA@mail.gmail.com>
-Subject: Re: [PATCH v6] drm/virtio: Add drm_panic support
-To: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Cc: airlied@redhat.com, kraxel@redhat.com, gurchetansingh@chromium.org, 
-	olvaffe@gmail.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, daniel@ffwll.ch, jfalempe@redhat.com, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203-adc_ml-v2-2-8a597660c395@softing.com>
 
-Hi,
+Hi Tobias,
 
-On Mon, Feb 3, 2025 at 2:18=E2=80=AFAM Dmitry Osipenko
-<dmitry.osipenko@collabora.com> wrote:
->
-> Hi,
->
-> On 1/30/25 12:05, Ryosuke Yasuoka wrote:
-> ...
-> > +static int virtio_drm_get_scanout_buffer(struct drm_plane *plane,
-> > +                                      struct drm_scanout_buffer *sb)
-> > +{
-> > +     struct virtio_gpu_object *bo;
-> > +
-> > +     if (!plane->state || !plane->state->fb || !plane->state->visible)
-> > +             return -ENODEV;
-> > +
-> > +     bo =3D gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
-> > +     if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach)
-> > +             return -ENODEV;
-> > +
-> > +     /* try to vmap it if possible */
-> > +     if (!bo->base.vaddr) {
-> > +             int ret;
-> > +
-> > +             ret =3D drm_gem_shmem_vmap(&bo->base, &sb->map[0]);
->
-> drm_gem_shmem_vmap() requires BO resv to be locked, it also may invoke
-> drm_gem_shmem_get_pages() that sleeps. This function can't be used in
-> atomic context.
->
-> For the starter, let's reject !bo->base.vaddr BOs. Normally, shmem FB
-> BOs are always vmapped.
+kernel test robot noticed the following build warnings:
 
-OK. I'll reject !bo->base.vaddr BO in the next patch. I think this panic
-feature won't work when I call panic in GUI environment (I test in Gnome)
-without vmap(). It is OK as the first version but I think I should mention
-it somewhere. Where should I mention, in a commit message or in code like b=
-elow?
+[auto build test WARNING on 05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5]
 
-~~~
-static int virtio_drm_get_scanout_buffer(struct drm_plane *plane,
-struct drm_scanout_buffer *sb)
-{
-struct virtio_gpu_object *bo;
+url:    https://github.com/intel-lab-lkp/linux/commits/Tobias-Sperling-via-B4-Relay/dt-bindings-iio-adc-Introduce-ADS7138/20250204-003030
+base:   05dbaf8dd8bf537d4b4eb3115ab42a5fb40ff1f5
+patch link:    https://lore.kernel.org/r/20250203-adc_ml-v2-2-8a597660c395%40softing.com
+patch subject: [PATCH v2 2/2] iio: adc: Add driver for ADS7128 / ADS7138
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250204/202502041729.kDDFNlnS-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250204/202502041729.kDDFNlnS-lkp@intel.com/reproduce)
 
-if (!plane->state || !plane->state->fb || !plane->state->visible)
-return -ENODEV;
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502041729.kDDFNlnS-lkp@intel.com/
 
-bo =3D gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
+All warnings (new ones prefixed by >>):
 
-/* Only support mapped shmem bo */
-if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach || !bo->base.vadd=
-r)
-return -ENODEV;
-~~~
+>> drivers/iio/adc/ti-ads7138.c:706:12: warning: 'ads71x8_runtime_resume' defined but not used [-Wunused-function]
+     706 | static int ads71x8_runtime_resume(struct device *dev)
+         |            ^~~~~~~~~~~~~~~~~~~~~~
+>> drivers/iio/adc/ti-ads7138.c:698:12: warning: 'ads71x8_runtime_suspend' defined but not used [-Wunused-function]
+     698 | static int ads71x8_runtime_suspend(struct device *dev)
+         |            ^~~~~~~~~~~~~~~~~~~~~~~
 
-> --
-> Best regards,
-> Dmitry
->
 
-Thank you for your comment.
-Ryosuke
+vim +/ads71x8_runtime_resume +706 drivers/iio/adc/ti-ads7138.c
 
+   697	
+ > 698	static int ads71x8_runtime_suspend(struct device *dev)
+   699	{
+   700		struct iio_dev *indio_dev = dev_get_drvdata(dev);
+   701		struct ads71x8_data *data = iio_priv(indio_dev);
+   702	
+   703		return ads71x8_set_conv_mode(data, ADS71x8_MODE_MANUAL);
+   704	}
+   705	
+ > 706	static int ads71x8_runtime_resume(struct device *dev)
+   707	{
+   708		struct iio_dev *indio_dev = dev_get_drvdata(dev);
+   709		struct ads71x8_data *data = iio_priv(indio_dev);
+   710	
+   711		return ads71x8_set_conv_mode(data, ADS71x8_MODE_AUTO);
+   712	}
+   713	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
