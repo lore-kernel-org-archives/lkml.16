@@ -1,123 +1,118 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C71B219A80;
-	Tue,  4 Feb 2025 20:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995B3219A66
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 20:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738700662; cv=none; b=YviJBdOGYukaeMQ65ax8tyJBlOyYmk9LGypoUKnwzvQmdoz2lirsX7fRAzxgptLSI+dy1vbbBrFtH3No1QRbfgfbTUKlayKflr1j91AtJH5Dm+jxaq5+CSWt5l5EtnOYac+S/QqiQwQuCqkoaOnK4kpKv0+TVTmQvMMJC62il54=
+	t=1738700820; cv=none; b=VYxRqpfGlEx+FEwSDRJ2mB++upj8gtjKtXjwtHvg2hMCuxQgoI3eCD/ocO3E3BDcv1X+pWbWZA9Vlu449bWNwzUFeTJbQuGaVWLd9Oen7HzL+DHtxgTzOy/vWV4BZztv3mjGdPzdzEoZ2chkriJ7VYOKxfRojVXEgUw9IHdmAEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738700662; c=relaxed/simple;
-	bh=NgystBFVek4rgDALMPoy4tnJt9RIepRqklwo877v7FY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IZ3VqQ91n1bfPIZ4fxhq74Nyz+wjaST5WrgMXOTieCovD8/Ac+s1IeRgm8AfSHZ2fey9iIzj4GdV3TFQVUoVcrM+Vcns54s5aKQeTliJv2uArB8BG1ulFdao/BSVVFtLZ4mSUc07/QTt7lpU3WaQw2756o4nCqYY+bXOWutw0sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UmdQstuR; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738700820; c=relaxed/simple;
+	bh=4OVHg9lS9y7hgZNNmxGr15YLES80pi29+1rMKHfcSfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bVknUATvaxkvS7gvuQGWs+FcA5DD/TnK6pubwmdM0eK/YWZ2J5Ojt5cm1Vfzw1GtWgZkdn8zG14+awTGCAxFHDJBHVOLkXte5UGJq8XNeUPB0i0F9bTKCwbTWTevuhOFttmvxYw5JQzjy1Kqa1gy3MxcGuMeXKDi0FGen+T5zF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=g2p76Jfu; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmdQstuR"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2167141dfa1so2870595ad.1;
-        Tue, 04 Feb 2025 12:24:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="g2p76Jfu"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6d8e8445219so51261356d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 12:26:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738700660; x=1739305460; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GmYL3e8nYiPwvOrOQu/ZYZA6EzN4lzKoCHbW66QWa58=;
-        b=UmdQstuRddFDEE8RXmTRx7C99kHBLtnDRN9TZnittmd8+A6uxz0yzCdKzE3TkNMCk/
-         mXZi8Z5dEVjBin4h8X+oF51hPvCLbqGhZoYCoTrPBbcfAeVoLMavBWE9ajLJVgB/TBVa
-         ekciSuMt25Grwpo21TFpUzHC6SqU10XgvfjL1FqMu9DjAwrEq3AUcgvdpATyaFrBDA8X
-         iJc1/yYi3KlsC54xbTTDB2MUVs6GqcMGNcfqpKqpylbHZJFKrMY4WYiGe+TmrjwWzk7w
-         IKfWj/9qRsw3sQAIdJQlH63hIJ9CY9ZBTalWRryp/HhzJ54gECpEoa0b6XbbaBqLb+tq
-         hPmg==
+        d=ziepe.ca; s=google; t=1738700817; x=1739305617; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XKfHXyy6Lxo2g0AOAumrKv9sTaQK4qw2WswIObaTPeM=;
+        b=g2p76Jfu1UnbM/BBJBbfV6/1PDs+k/oPdt/5zx7a8b/Hear0c9e9IGiyrwk53NpfTj
+         Fwo/jnhIMO8lHl2gnZ0900jBbea2oYGPihmOFfx0nJR3C4NHxFn8v3bTYsRn4Rl9/hox
+         fdiZ6d+C8wkPaPTugeZHzDgND2txEoKGaeWYQ/EjZkgPBBG+LNG1c4tjVeEiRLb5BEUu
+         haoi6nsAv+w5rVvjq5eNfV6nA1sPTls7hKTGgtHxIYkzKOfmnLN+GOFhCwnzts6U0/5Q
+         +4R9yvhDZbeTJukZZikFIMdI0mWIIMJxbqbd4ZyzoNFGOGVCt5XzKdw7uwJqxfeJ0H86
+         Vq/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738700660; x=1739305460;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GmYL3e8nYiPwvOrOQu/ZYZA6EzN4lzKoCHbW66QWa58=;
-        b=kEU49gL3TIVEUoR6967DtrKz5u4MCpebbqTq7yNAIAnKGhBaS+2+7ZFBjcod5FIsuo
-         /aqcTh8l2werGIw759IwN43JlhF1NdyJlhA4JiRj9mun0ZEjXfj3VNKBceLp6bMh029Q
-         7+fAgNNaNyMVBf+DqpgIQfF2XzXJJQtS/YxQ96l2tC2Vh+Vf+FVrS1YvcOgU59lIEX1/
-         S7vDO/SBkFh5K4N1MEDH/VHnuiMKcTgs30Vupiq9MHw0iEN4ub67wKnTU+P4LghdVamH
-         uX6K/M6Ciuqx/BIqff1MzoUnLf0KNf+s/IhhQ0FFAqX+PQUg/SP9+gEKMRtMkR/1Y1fA
-         pRAA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIX72JWVmV0JokJFsi2lzhMw1BbggOB2bOAhHiNrf/mxD1w8a7uTFPSxHrkNTenfbYCkbxlLwTBhRASWQ=@vger.kernel.org, AJvYcCUe7ByaRn77I6bW/37D8G5h77rSHUzzHZfIAOFTcqQLn8UsoTuS6Ghv6VzlhDsrUrCOtAJNysChX6OKtjZJ@vger.kernel.org, AJvYcCVak2jS7284QI/q5tNL6PFfgex2wIBpUgwoil75yylutGddMKhQG6p5DA1e5dH5Dss3hIP1SwjKqAI=@vger.kernel.org, AJvYcCVi+WlZqfO0/yiU/CdITJRgAhyuknPyIFpP/i2g5RRuGzfpkVBAbSM5r5uCHD/sNuDL+4Y0UfOaHSrvu0E=@vger.kernel.org, AJvYcCXHyPoovCrzv22iy+OMxEGbjeaK8N0IfLLTHg0GcLqi09nmsF+AVHrRCIZHMNNe043cqCwdu7qJOBNf@vger.kernel.org
-X-Gm-Message-State: AOJu0YySfIgITkU7LncW8mnOOmFRFlmzPJ5G0kd9r7q+BWNbmgTVg3P0
-	97YSfHCgYr1BOiMrHBxWUU+T9XSa/3aljo4Nd5Nt7L2oZnICKQIv
-X-Gm-Gg: ASbGncs94Jen/i0t1yXxo1uP+gsk+ScsiCTbUPvyfni6Uvr7CmMUnZD2GcbpfBARQOD
-	UqkRlgiYy713nQBI3Ku+K2gG9mpmYsnXUtw7o2izR2Bmm9fFniay+2INLjYSoVm3Gd3RFABa0LL
-	oea8AU76AsmiOqB5/rZaiTvg45qq30q/ypWoK3w7b8dhHuP6Aj9hxLB+8qtv5qQoTiRml6nR+UI
-	uCLRelell/bK0yXpuRvQtQTL+3kMXnuQGhxyt8+bpEOKcYyeHxXacfjdro9QBP+p6IEaFNDfoXp
-	wTz8DQsehNmYJ6WT37RWrPEcVZB1XFbut1ZPgRSKH71ml74ZL3NJQ7ltFbTH4kUYNE8=
-X-Google-Smtp-Source: AGHT+IEyVcSQipBCNCsftZmHfqSpmk5D2wno+KimvTtSCQ1lngze1gSouuQw4tUMvdxO3FTOfFDU3Q==
-X-Received: by 2002:a17:902:da84:b0:216:3f6e:fabd with SMTP id d9443c01a7336-21f01c17563mr64580695ad.7.1738700660282;
-        Tue, 04 Feb 2025 12:24:20 -0800 (PST)
-Received: from ?IPV6:2409:40c0:1019:6a4a:444:3a1c:6970:6cad? ([2409:40c0:1019:6a4a:444:3a1c:6970:6cad])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f848acbd99sm11706439a91.46.2025.02.04.12.24.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 12:24:19 -0800 (PST)
-Message-ID: <ec91ca3b-d348-49b4-88b2-a3ce97ce2a2d@gmail.com>
-Date: Wed, 5 Feb 2025 01:54:11 +0530
+        d=1e100.net; s=20230601; t=1738700817; x=1739305617;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XKfHXyy6Lxo2g0AOAumrKv9sTaQK4qw2WswIObaTPeM=;
+        b=t9H1MEq2H3n2GdNjdZ5IvxkueYTOZjqG6QW4VA5cq4sbf9vyd53+XCtK0GFMYh+bit
+         SUYb/+cUOWy2uPNF3Itw0mc/ISOsRpweYGAsV/Ti6hHNN8i8CPyp606MF/CqXwP/IPAg
+         MS5WlWx1eB5u5tF4xI2cAboATy5Kor91hJ2mDLwwaEJYvtCd39OxxZpzOpnApEpsU8TK
+         dVacmYPLJ8LOemV8Hc+yRUsmtIbRBeejQ4+sb/r/gGpEb19JFxxxgn7p+j+5NdODmfY4
+         I4SDG8+oXrLuFmxLxHGuC9Y5cWcNCeGtRQhskjR1Dsj/DKpddXVp4foR7/FSeoUqfDab
+         RkyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWe5gesIFeCAEwn5EWANXd8budYozFq64UW8mxorTPRkGWJ7RMMx6l+EiVW8/1sUR4Gx/sdOD/7U3nUUaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxieI0KZSF1sVox6lXJP+OSbmWNxfVdDfSWvVGbXipgePr5+WwD
+	spMbT2aX0BvCXQnpWE0VTNZYJWadaSBx4kzsPgSoWMPKQbE4ttbfYBthxDnhorw=
+X-Gm-Gg: ASbGncs8rju8XcWXVjVhLeVHSwgGIBnMJ4tPfZR2oMuO108XfAYwoKpCPc2ml23DH54
+	C0fh8nEyncS0yaLignvjBh+Iyn620rXz4or5RvGN339hDLsQym6NcWE1/J+9E6zuvCXUKYn35vU
+	bRoFVf9lNXKoxelxge8vvVW1XXtDdCq/clezbOFTAMLVlWG4G2dKTMhY28Q3mloBDl9yJutBXr4
+	gZMNZ0RuRJ4AlpxnzHVhXF1+2G8zFfCM52igsgBnV//75MWdRj2VIdCdtGtamgXYkgXj+5I+atu
+	2BcpB0oXlM0HzdTh0+SaOSMgta+pbov9umzOCbrMq1jfNAeJKSUzC2xDPtOD9o51
+X-Google-Smtp-Source: AGHT+IEsHxW8JLcluvuP8S+KAnuCNS+p1UBsZQIkGSJDtHpddXcm+6eR6EfbSxlm/LewurR5/XZ3Xg==
+X-Received: by 2002:ad4:5c46:0:b0:6d8:af2d:2a44 with SMTP id 6a1803df08f44-6e42fc54742mr2065826d6.32.1738700817497;
+        Tue, 04 Feb 2025 12:26:57 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254922538sm65650296d6.84.2025.02.04.12.26.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 12:26:56 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tfPVY-0000000CYY9-1RWN;
+	Tue, 04 Feb 2025 16:26:56 -0400
+Date: Tue, 4 Feb 2025 16:26:56 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: David Hildenbrand <david@redhat.com>
+Cc: Asahi Lina <lina@asahilina.net>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Jann Horn <jannh@google.com>, Matthew Wilcox <willy@infradead.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Valentin Obst <kernel@valentinobst.de>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev
+Subject: Re: [PATCH 0/6] rust: page: Support borrowing `struct page` and
+ physaddr conversion
+Message-ID: <20250204202656.GL2296753@ziepe.ca>
+References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
+ <Z6CTLB2NggwYafi9@phenom.ffwll.local>
+ <1eaf66ba-b2d3-448f-938b-913f17ca98a4@redhat.com>
+ <20250204183933.GJ2296753@ziepe.ca>
+ <1d379007-97c3-4bb9-93da-1a828f955fc4@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: Fix spelling and grammatical issues
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: jikos@kernel.org, bentiss@kernel.org, corbet@lwn.net, jdelvare@suse.com,
- linux@roeck-us.net, skhan@linuxfoundation.org, linux-usb@vger.kernel.org,
- linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-References: <20250204134806.28218-1-purvayeshi550@gmail.com>
- <2025020411-ravine-stand-530a@gregkh>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <2025020411-ravine-stand-530a@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d379007-97c3-4bb9-93da-1a828f955fc4@redhat.com>
 
-On 04/02/25 19:37, Greg KH wrote:
-> On Tue, Feb 04, 2025 at 07:18:06PM +0530, Purva Yeshi wrote:
->> Fix several spelling and grammatical errors across multiple
->> documentation files.
->>
->> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> 
-> Hi,
-> 
-> This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-> a patch that has triggered this response.  He used to manually respond
-> to these common problems, but in order to save his sanity (he kept
-> writing the same thing over and over, yet to different people), I was
-> created.  Hopefully you will not take offence and will fix the problem
-> in your patch and resubmit it so that it can be accepted into the Linux
-> kernel tree.
-> 
-> You are receiving this message because of the following common error(s)
-> as indicated below:
-> 
-> - Your patch did many different things all at once, making it difficult
->    to review.  All Linux kernel patches need to only do one thing at a
->    time.  If you need to do multiple things (such as clean up all coding
->    style issues in a file/driver), do it in a sequence of patches, each
->    one doing only one thing.  This will make it easier to review the
->    patches to ensure that they are correct, and to help alleviate any
->    merge issues that larger patches can cause.
-> 
-> 
-> If you wish to discuss this problem further, or you have questions about
-> how to resolve this issue, please feel free to respond to this email and
-> Greg will reply once he has dug out from the pending patches received
-> from other developers.
-> 
-> thanks,
-> 
-> greg k-h's patch email bot
+On Tue, Feb 04, 2025 at 09:05:47PM +0100, David Hildenbrand wrote:
+> Fully agreed, this is going into the right direction. Dumping what's mapped
+> is a different story. Maybe that dumping logic could simply be written in C
+> for the time being?
 
-I understand and will split my patch into smaller, logically grouped 
-changes to make the review process easier. I will resend the patches 
-accordingly.
+?
+
+Isn't dumping just a
+  decode pte -> phys_to_virt() -> for_each_u64(virt) -> printk?
+
+If you can populate the page table in rust you have to be able to dump
+it, surely.
+
+Or do you mean trying to decode the leaf entires into some struct page
+detail? Does a GPU need to do that? Agree that would be better as some
+C function to take in a KVA instead of a struct page and populate a
+string with details about that KVA from the struct page.
+
+Jason
