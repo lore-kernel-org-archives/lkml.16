@@ -1,50 +1,66 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07E470820;
-	Tue,  4 Feb 2025 08:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AE570820
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 08:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738657183; cv=none; b=DLtUmA5yLwl3FQEtLcmTtQnv8MHu8kZAp1kN3wv6XseNhm6oX6CwSzAACScio6YmLvO+a9HJ9cOGPoTiiAyyz9prptpsPCpBp1RDwtk/ApOgyxCvri0W2OMKfu23Y8IA5e07zgNdktW4kUedan7SSgJbic1OERNgglXpYWX5+l4=
+	t=1738657193; cv=none; b=H97dGRz9S09oBGQoRqj1dbWcNGvMI6DPRG37P0Ezgyl5UCRbza6wxNy2dRd85ugRnHapdifriU5lCcVbgVw0+kD30qz7diAbtyDFu9olixsj48/GU/ZcFVNU8wLP2f9SD6sUb9SBCRGlpJGoH9PzYi4xxU0y5p60DdAZL1kABLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738657183; c=relaxed/simple;
-	bh=M7zxArYMTcwOuzQ+xChRUeaLiOYMmjjUGPm4Sq7Jg+4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ConAUl28bf0p4mOy0EF7o/snsy7adhheGlB4sq8c9Et4cL3cAu3S03HLdb32v5vFzItkMKSz4J2NitubJ4o0oKbl6eHDWnVrvvptUiN5jteu8kmVQuHSMjD+xdw+1UFKLPeYQwjnNnFJHBwntUIgc+OW0+g64ifiXA1aaHRGa7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=RSvmR7FK; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1738657193; c=relaxed/simple;
+	bh=QJoP5bpuVDnXG0hP+2j8Y5lK8cbNr/AX+eYxJkg7etc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=UC8DbJw4qM0x75Sl/a+qd7Csfn/szzeGxETBuWfUMziCPTB47dHIzsFAe+RL5iphZsCAPcyHhm/ucM7SSrhSGzck2LtH2WL0aSLAq0TMrkFCgFo2qcHAnCtlWlErNfw03fNIEQxcVSvMoXrDe0OdNobODBj+vOQiX2yWMmPzqUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EiaDss9f; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="RSvmR7FK"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5147Zm7c014899;
-	Tue, 4 Feb 2025 09:19:17 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	6MeYU+3uv6k6Cssp1ZC7j+z+Esroz7pYxNOescKL69w=; b=RSvmR7FKbjuUC1Sp
-	KXTrFERd3CP+4m2VHDVLi/JNNDDDPO1haj1NCaLI+m/iQPKFtUejsTz1sWEhbS33
-	wSz52AepKxrXsixvTiFyA+EbNa99/3H4lJ35CvNO4W6jOlrRIkpgD3DOjWCHpX+u
-	x3HBKTxMS59nU8pGDanxyaXEpu2yVxXvOnZPPoJc5tolrNioK1VHExbSlclVU8e/
-	bOzPyqdGiOwsvmkG1cWq09xRSC5qI1QVfFJQUb/enH4RRxxQVXYkUeTd0hZolhgw
-	5DwrBpKz0gwShPCnjWA7+yOVghtFHSOVQuTRbPPGi+xepe7jOcjYVfHV5qqO1zfx
-	94jKYQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44jn0fnfv0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 09:19:16 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4156840054;
-	Tue,  4 Feb 2025 09:17:56 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 33BA9278A68;
-	Tue,  4 Feb 2025 09:16:25 +0100 (CET)
-Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Feb
- 2025 09:16:24 +0100
-Message-ID: <5f5f66a7-92ff-4a5c-9ad5-d113814da0b0@foss.st.com>
-Date: Tue, 4 Feb 2025 09:16:23 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EiaDss9f"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38632b8ae71so4436149f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 00:19:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738657189; x=1739261989; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4VasOeDLqwO0DGgvAXrhPGy6KqMolkRSV5bMCtl5mMs=;
+        b=EiaDss9fc/PaCleByjP5Ua5orAqKoZEy4ycVEKG9fD6FLM3/Cet1hrWKFnf21EGNSx
+         CtSS2UIeRbXqEoeLjU+a5wGZpzHTV/dr8xVYE9hhUE9l70fiYsYqyMD5Qdf+pkc17NLZ
+         I4l0FmRARtt3SOhC3q07gmc4Cbzl9G+RYoFkgANKl9TDgjExumnGQ57JrEWT7WRdlaE0
+         QJ5GR7aWQh5wlo3HrPbr1CVpaeR8e2Ji4mKR3RzNZHSZZKiug/5tX2fwB6P0BVRhmJfx
+         yBjJKz3/T/6M9tj0AmP5g19jix2EQx1645JHCVJq0H26UsmV3owTRdlYJBpHZhA5eewv
+         LW/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738657189; x=1739261989;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4VasOeDLqwO0DGgvAXrhPGy6KqMolkRSV5bMCtl5mMs=;
+        b=uZLjtxCtSMKZjjnPwWaZxXvXGDpcPg8KHO+odKdw258GVvcW1+QNGwVHAGwt2ebEam
+         7DC6l2zRjiKo8YscAS1tbvTlQERoG7ydh8TjQyU1JH72f0Bbe0CXz6xjPPXG0GQ1SMkL
+         IvQNRJTCxgNtwWTMKWIiINRaJyy3sQF1++Txhvj/m/VtQuFOqESDwuyukddcIssx19S6
+         bMy4aehRDR8yymJ2Th7B3a9ub4CwcQedDQGNUbN4BAK+JcrOADKjXrYtlKpd68y4r/PG
+         xTtvfoiAoh5mBAiAojm501QSNzV9An8ccJHeKppjb0/tjoy5NRP214R9WLv5rmVo9W94
+         UyiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZCwA5uTY5oyBMscHOB30dpuYGLtzkPjjhdbsVG6TX2I6ZfOLojC4FZehezslj3LtJ9XJbHV37OhMmqnw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyZIoKRK5f7aOmn1pxouuUEr5SNq8ItKFffL/WP002vLt/eUuD
+	6p5y/apqHH1b989zkVkR7jGKkK86aG0R4+Le8q0yBbl/CG3Eypq2iR423GMp0xs=
+X-Gm-Gg: ASbGnctEcFzU1IzSCVrlh21ipW8bk8u7jRf2/q8N2cI5gScpetY6Q6k8Nby/2wsAIyi
+	/yJ6Y6W2mhHEuyAef5ECgPBuZPz/zG2xDF750v5SDmK+O+gWv+XoTZNcb6+TpqIgEJ7BSRfXAXf
+	aZ4wGoAlI9OYUAnD5TlElm39FCRnADesD+RLZhoXso9pg3HDUN9CSsyUYh0zu8giKa6eF+5jtiw
+	ZlIthYmNaOf7A/YRyTVztgrY4gBlNQPf0mMKH8QLycqRq5GV1tvhr8vTCdaCPLkaervadZykt2J
+	OXVrDfNiaYoDDRARAthGoTyf1Dm3jtkCrfaGBpMVq0TFOM+dm9J2KFmQxBCdcszitNne
+X-Google-Smtp-Source: AGHT+IFbnJg2PuT9i73jomtjcF87nuxMc6wmD76FQvWnGe8UxJCAypV81miJ7w4UhG+d0OffsaA56A==
+X-Received: by 2002:a05:6000:1f88:b0:385:e176:4420 with SMTP id ffacd0b85a97d-38c5194da70mr19435261f8f.10.1738657188754;
+        Tue, 04 Feb 2025 00:19:48 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:8db5:d196:bd48:5fbb? ([2a01:e0a:982:cbb0:8db5:d196:bd48:5fbb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cf364sm14910592f8f.88.2025.02.04.00.19.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 00:19:48 -0800 (PST)
+Message-ID: <842284b1-343f-4991-98f4-462f547ad2bc@linaro.org>
+Date: Tue, 4 Feb 2025 09:19:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,271 +68,137 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/9] dt-bindings: memory-controllers: Add STM32 Octo
- Memory Manager controller
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <christophe.kerello@foss.st.com>
-References: <20250128081731.2284457-1-patrice.chotard@foss.st.com>
- <20250128081731.2284457-4-patrice.chotard@foss.st.com>
- <20250129-hilarious-glittering-mustang-fb5471@krzk-bin>
- <3660580d-72eb-45ca-8240-55557e334e37@foss.st.com>
- <951e4d16-2bb2-44b1-99e7-dd28349f20aa@kernel.org>
- <02b947e3-dd5c-4ee8-bd65-5775923fe33f@foss.st.com>
- <899675e8-4c2e-4ff2-a6af-854e0ec29bb6@kernel.org>
- <6ed4fa56-e7ee-4b6b-951b-61a92be5c6c2@foss.st.com>
- <6a639549-f8c8-4e36-8cfe-839f247780bb@kernel.org>
- <9073411a-38aa-4f82-95f5-474b0c3efed7@foss.st.com>
- <59b38b53-44c6-40ba-9344-de6de89532f6@kernel.org>
-Content-Language: en-US
-From: Patrice CHOTARD <patrice.chotard@foss.st.com>
-In-Reply-To: <59b38b53-44c6-40ba-9344-de6de89532f6@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_04,2025-01-31_02,2024-11-22_01
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] ASoC: qcom: sc8280xp: enable primary mi2s
+To: Luca Weiss <luca.weiss@fairphone.com>,
+ Danila Tikhonov <danila@jiaxyga.com>
+Cc: srinivas.kandagatla@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+ perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux@mainlining.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20250203113857.34728-1-danila@jiaxyga.com>
+ <df4580ff-7b45-4485-9664-4cae731b7c53@linaro.org>
+ <bcb4585e-1426-444a-9112-6cd95a81f8bc@jiaxyga.com>
+ <D7J77FB0GLG2.1SDETF63DWW8Z@fairphone.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <D7J77FB0GLG2.1SDETF63DWW8Z@fairphone.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 2/4/25 08:50, Krzysztof Kozlowski wrote:
-> On 04/02/2025 08:29, Patrice CHOTARD wrote:
->>>>>>>>>> @@ -0,0 +1,190 @@
->>>>>>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>>>>>>> +%YAML 1.2
->>>>>>>>>> +---
->>>>>>>>>> +$id: http://devicetree.org/schemas/memory-controllers/st,stm32-omm.yaml#
->>>>>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>>>>>>> +
->>>>>>>>>> +title: STM32 Octo Memory Manager (OMM)
->>>>>>>>>> +
->>>>>>>>>> +maintainers:
->>>>>>>>>> +  - Patrice Chotard <patrice.chotard@foss.st.com>
->>>>>>>>>> +
->>>>>>>>>> +description: |
->>>>>>>>>> +  The STM32 Octo Memory Manager is a low-level interface that enables an
->>>>>>>>>> +  efficient OCTOSPI pin assignment with a full I/O matrix (before alternate
->>>>>>>>>> +  function map) and multiplex of single/dual/quad/octal 		SPI interfaces over
->>>>>>>>>> +  the same bus. It Supports up to:
->>>>>>>>>> +    - Two single/dual/quad/octal SPI interfaces
->>>>>>>>>> +    - Two ports for pin assignment
->>>>>>>>>> +
->>>>>>>>>> +properties:
->>>>>>>>>> +  compatible:
->>>>>>>>>> +    const: st,stm32mp25-omm
->>>>>>>>>> +
->>>>>>>>>> +  "#address-cells":
->>>>>>>>>> +    const: 2
->>>>>>>>>> +
->>>>>>>>>> +  "#size-cells":
->>>>>>>>>> +    const: 1
->>>>>>>>>> +
->>>>>>>>>> +  ranges:
->>>>>>>>>> +    description: |
->>>>>>>>>> +      Reflects the memory layout with four integer values per OSPI instance.
->>>>>>>>>> +      Format:
->>>>>>>>>> +      <chip-select> 0 <registers base address> <size>
->>>>>>>>>
->>>>>>>>> Do you always have two children? If so, this should have maxItems.
->>>>>>>>
->>>>>>>> No, we can have one child.
->>>>>>>
->>>>>>> For the same SoC? How? You put the spi@ in the soc, so I don't
->>>>>>> understand how one child is possible.
->>>>>>
->>>>>> Yes for the same SoC, in DTSI file, the both OCTOSPI child are declared 
->>>>>> but are disabled by default.
->>>>>
->>>>> But the child node is there anyway so are the ranges.
+On 04/02/2025 00:27, Luca Weiss wrote:
+> On Mon Feb 3, 2025 at 5:33 PM CET, Danila Tikhonov wrote:
+>> On 03/02/2025 17:23, neil.armstrong@linaro.org wrote:
+>>> On 03/02/2025 12:38, Danila Tikhonov wrote:
+>>>> When using primary mi2s on sc8280xp-compatible SoCs, the correct clock
+>>>> needs to get enabled to be able to use the mi2s interface.
 >>>>
->>>> if both child are disabled, omm-manager should be disabled as well, 
->>>> omm-manager alone makes no sense.
+>>>> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+>>>> ---
+>>>>    sound/soc/qcom/sc8280xp.c | 13 +++++++++++++
+>>>>    1 file changed, 13 insertions(+)
+>>>>
+>>>> diff --git a/sound/soc/qcom/sc8280xp.c b/sound/soc/qcom/sc8280xp.c
+>>>> index 311377317176..03687de1ebb0 100644
+>>>> --- a/sound/soc/qcom/sc8280xp.c
+>>>> +++ b/sound/soc/qcom/sc8280xp.c
+>>>> @@ -14,6 +14,8 @@
+>>>>    #include "common.h"
+>>>>    #include "sdw.h"
+>>>>    +#define MI2S_BCLK_RATE    1536000
+>>>> +
+>>>>    struct sc8280xp_snd_data {
+>>>>        bool stream_prepared[AFE_PORT_MAX];
+>>>>        struct snd_soc_card *card;
+>>>> @@ -25,13 +27,24 @@ struct sc8280xp_snd_data {
+>>>>      static int sc8280xp_snd_init(struct snd_soc_pcm_runtime *rtd)
+>>>>    {
+>>>> +    unsigned int codec_dai_fmt = SND_SOC_DAIFMT_BC_FC;
+>>>> +    unsigned int fmt = SND_SOC_DAIFMT_BP_FP;
+>>>>        struct sc8280xp_snd_data *data =
+>>>> snd_soc_card_get_drvdata(rtd->card);
+>>>> +    struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
+>>>>        struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+>>>>        struct snd_soc_card *card = rtd->card;
+>>>>        struct snd_soc_jack *dp_jack  = NULL;
+>>>>        int dp_pcm_id = 0;
+>>>>          switch (cpu_dai->id) {
+>>>> +    case PRIMARY_MI2S_RX:
+>>>> +        codec_dai_fmt |= SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_I2S;
+>>>> +        snd_soc_dai_set_sysclk(cpu_dai,
+>>>> +            Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT,
+>>>> +            MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
 >>>
+>>> How is this possible ? sc8280xp uses the q6prm clock driver, and
+>>> there's no
+>>> way this call sets the Q6PRM_LPASS_CLK_ID_PRI_MI2S_IBIT, or I totally
+>>> missed
+>>> something.
 >>>
->>> Yes, it is obvious, but how is this related?
->>
->> As described in the commit message, OMM manages the muxing of the 2 OSPI buses 
->> (its 2 child), that's the relation.
-> 
-> Again, nothing related to our discussion.
-> 
-> You claim you can have only one child and we do not talk about child
-> disabled status here. So show me the product which have second address
-> space removed from *the SoC*.
-> 
->>
->> Do you want i add this directly in yaml file ?
-> 
-> 
-> No, I want the answer when is it possible to have only one ranges. What
-> such DTSI would represent - what real world hardware.
-
-On our SoCs, there are always physically 2 OSPI instances, but one or two
-instance can be enabled in the DT.
-
-So we always have 2 ranges :
-
-  ranges:
-    description: |
-      Reflects the memory layout with four integer values per OSPI instance.
-      Format:
-      <chip-select> 0 <registers base address> <size>
-    minItems: 2
-    maxItems: 2
-
-Thanks 
-Patrice
-
-
-> 
->>
+>>> And prm is neither a dai nor has the set_sysclk callback.
 >>>
->>>>
->>>>>
->>>>>>
->>>>>> In the DTS board file, 0,1 or 2 OCTOSPI instance can be enabled depending of the board design.
->>>>>>
->>>>>> In our case, on stm32mp257f-ev1 board, one SPI-NOR is soldered on PCB, so only one OCTOSPI 
->>>>>> instance is needed and enabled.
->>>>>>
->>>>>> Internally we got validation boards with several memory devices connected to OCTOSPI1 and 
->>>>>> OCTOSPI2, in this case, both OCTOSPI instance are needed and enabled.
->>>>>
->>>>> I could imagine that you would not want to have unused reserved ranges,
->>>>> so that one indeed is flexible, I agree.
->>>>>
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>>>
->>>>>>>>>> +
->>>>>>>>>> +  reg:
->>>>>>>>>> +    items:
->>>>>>>>>> +      - description: OMM registers
->>>>>>>>>> +      - description: OMM memory map area
->>>>>>>>>> +
->>>>>>>>>> +  reg-names:
->>>>>>>>>> +    items:
->>>>>>>>>> +      - const: regs
->>>>>>>>>> +      - const: memory_map
->>>>>>>>>> +
->>>>>>>>>> +  memory-region:
->>>>>>>>>> +    description: Phandle to node describing memory-map region to used.
->>>>>>>>>> +    minItems: 1
->>>>>>>>>> +    maxItems: 2
->>>>>>>>>
->>>>>>>>> List the items with description instead with optional minItems. Why is
->>>>>>>>> this flexible in number of items?
->>>>>>>>
->>>>>>>> If only one child (OCTOSPI instance), only one memory-region is needed.
->>>>>>>
->>>>>>> Which is not possible... look at your DTSI.
->>>>>>
->>>>>> It's possible. if one OCTOSPI is used (the second one is kept disabled), only
->>>>>> one memory-region is needed.
->>>>>
->>>>> Ack.
->>>>>
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>> Another update, i will reintroduce "memory-region-names:" which was 
->>>>>>>> wrongly removed in V2, i have forgotten one particular case.
->>>>>>>>
->>>>>>>> We need memory-region-names in case only one OCTOSPI instance is 
->>>>>>>> used. If it's OCTOCPI2 and the whole memory-map region
->>>>>>>> is dedicated to OCTOSPI2 (OCTOSPI1 unmapped, OCTOSPI2 (256 Mbytes)
->>>>>>>>
->>>>>>>> We need to know to which OCTOSPI instance the memory region is associated
->>>>>>>> with, in order to check "st,syscfg-amcr" 's value which must be coherent 
->>>>>>>> with memory region declared.
->>>>>>>>
->>>>>>>> so i will add :
->>>>>>>>
->>>>>>>>   memory-region-names:
->>>>>>>>     description: |
->>>>>>>>       OCTOSPI instance's name to which memory region is associated
->>>>>>>>     items:
->>>>>>>>       - const: ospi1
->>>>>>>>       - const: ospi2
->>>>>>>>
->>>>>>>
->>>>>>> I don't think this matches what you are saying to us. Let's talk about
->>>>>>> the hardware which is directly represented by DTS/DTSI. You always have
->>>>>>> two instances.
->>>>>>>
->>>>>>>
->>>>>>
->>>>>> We have 2 instances, but both not always enabled.
->>>>>> In case only one is enabled, only one memory-region-names is needed.
->>>>>>
->>>>>> We must know to which OCTCOSPI the memory-region makes reference to, in order
->>>>>> to configure and/or check the memory region split configuration. That' swhy 
->>>>>> the memory-regions-names must specify if it's the OCTOSPI1 or OCTOSPI2 instance.
->>>>>
->>>>> Well, in that case two comments.
->>>>> 1. Above syntax does not allow you to skip one item. You would need:
->>>>> items:
->>>>>   enum: [ospi1, ospi2]
->>>>> minItems: 1
->>>>> maxItems: 2
->>>>>
->>>>
->>>> ok
->>>>
->>>>> 2. But this points to other problem. From the omm-manager node point of
->>>>> view, you should define all the resources regardless whether the child
->>>>> is enabled or not. You do not skip some part of 'reg' if child is
->>>>> missing. Do not skip interrupts, access controllers, clocks etc.
->>>>> If some resource is to be skipped, it means that it belongs to the
->>>>> child, not to the parent, IMO.
->>>>
->>>> I didn't get your point. 
->>>>
->>>> The resource declared in omm-manager's node pnly belongs to omm-manager
->>>> (reg/clocks/resets/access-controllers/st,syscfg-amcr/power-domains), regardless 
->>>> there are 1 or 2 children. None of them can be skipped.
+>>> Neil
 >>>
->>> That's not true, you skip ranges and memory region.
+>> Oh, thanks for the answer.
 >>
->> If i have correctly understood, you want a constraint on range and memory-regions properties ?
->> Is it what you expect ?
->>
->>   ranges:
->>     description: |
->>       Reflects the memory layout with four integer values per OSPI instance.
->>       Format:
->>       <chip-select> 0 <registers base address> <size>
->>     minItems: 1
->>     maxItems: 2
->>
->>   memory-region-names:
->>     description: |
->>       OCTOSPI instance's name to which memory region is associated
->>     items:
->>       enum: [ospi1, ospi2]
->>     minItems: 1
->>     maxItems: 2
->>
+>> This comes from qcm6490 compatibility. Actually it is needed for
+>> Nothing Phone (1) and Luca Weiss just suggested me to use
+>> qcom,qcm6490-idp-sndcard like do they do it for FP5. (SM7325 is the
+>> closest to QCM6490):
+>> https://github.com/sc7280-mainline/linux/pull/5#discussion_r1848984788
+>> Actually I also think it is a bit incorrect.
 > 
+> For reference, this is coming from this and following:
+> https://lore.kernel.org/linux-arm-msm/e8a24709-de96-4d09-ba00-1e084a656c68@kernel.org/
+
+Sure, but do you use sound/soc/qcom/sc8280xp.c ? it's designed for audioreach
+compatible audio architecture (post sm8250).
+
+sound/soc/qcom/sm8250.c has already support for PRIMARY_MI2S_RX via
+the Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT, and it compatible with the previous
+audio architecture (non audioreach).
+
+Neil
+
 > 
-> Best regards,
-> Krzysztof
+> Regards
+> Luca
+> 
+>>
+>> ---
+>> Regards,
+>> Danila
+>>>> +        snd_soc_dai_set_fmt(cpu_dai, fmt);
+>>>> +        snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
+>>>> +        break;
+>>>>        case WSA_CODEC_DMA_RX_0:
+>>>>        case WSA_CODEC_DMA_RX_1:
+>>>>            /*
+>>>
+> 
+
