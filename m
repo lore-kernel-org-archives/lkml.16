@@ -1,116 +1,110 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A4214AD2B;
-	Tue,  4 Feb 2025 22:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A109E219A8E
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 22:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738708738; cv=none; b=nNQKg1wYOxCkpCYUkduTlOHcOS73A/bgzZ0o6RXUsqxWUtDo7adVQgj+yC9kFn5npFFdJH0h74hoCf00nMqgmLJROmBWFjsCmCn7noeNKb4e56r9Q7N+ickyUPzwrQQcg6F5lKl+shf3MD0NmZSiZ2y3HIdudQtXtJB5CR/HKHw=
+	t=1738708760; cv=none; b=bA4+I7BcyZzLhmWZtDKET66Ke+gIhG1KzMr+ESnPd+QuHV3MC+6tJw01DD3nOXbdwH7q8GWeoKa+wRDqAAMlMFmj5fX8hFh349/VpOGEYSGymHKIXit/CqGRoExdSiqoZeNJyM0skCd9vh+i5kvXkKU7P6BWfcSc7e6Lcr6hCpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738708738; c=relaxed/simple;
-	bh=Td08mtUxL+Ct5HUnAge9bgEfYjkHpRDL3veq6FpQh1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=L5pq6lHh7ziccEiKStaUjWIWw1UoV1DonJsKcR0YwNtpY6zdCTBa609Hw9x+A9MErY4NioFrYJCRi2FjoZENGl0wI3258jXzMYj6AOlt2azTLyb+W0KlzhJhOCQlK8IL7Pt6iY3h6OncCNUhepZbtk3qaEVwHn37xdBRnJOfSDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=UOkicxD4; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1738708760; c=relaxed/simple;
+	bh=dDVOJ2j5AtwvawZr0lHF6QYx6xkJXIS2UKMP1pWaCGQ=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ft3wsv8LWwOclhTs6MIUuoosoE1fpLYNxOAyMhWSzf5nU7n98PNaT3IMel9Yz0fMWLwFGmWyuBetFyf4+XXWKTL/eczXhqTv6SVFPgNNpOQcgWnhO9O211zGRmNcuEztDCCGH6+0FsOTrpiX2cDZZaN8u2ZHnO+2m5JdfhqIXqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=MYw09Q5N; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UOkicxD4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1738708719;
-	bh=0sE/bFHwTZY0AsxoNR6LL6Ttp3qsG/luyeKJ7ONf/2I=;
-	h=Date:From:To:Cc:Subject:From;
-	b=UOkicxD4Nk+gMMSk0Sy0hXBBAJWeSxqR3qvUSYvmI6mb/ss9zDIfv0fPgW89pimfD
-	 Q0x9O12yYqvpYqqRCUtTOPgagRBy9uEkeCFsd+f+ZvaGd2I6QuryKVXZvPTFQ0yJMB
-	 rPOzyhlD+w2ZgwCMcl3YZmNxYTlTkvA3hWlS1+MNWzHSoxG+SSzxMnHB4uEZ8XPICH
-	 JsRm2lXxXGASgbaS2jK+2A08LjyeUYqMDOAe6F0yna5nUPh8C5eZgHOMn6ZuVcYfna
-	 UOBsslG+qvN62cptz5s2+vkZhtcrjuqNMKl78+SG44zYSm1iUjEVqCfOCGBLqfGhfl
-	 Gle/toQsPJi+g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="MYw09Q5N"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YndZ74tb6z4w2H;
-	Wed,  5 Feb 2025 09:38:39 +1100 (AEDT)
-Date: Wed, 5 Feb 2025 09:38:23 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the vfs-brauner tree with Linus' tree
-Message-ID: <20250205093823.4567f09f@canb.auug.org.au>
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A77D42C0612;
+	Wed,  5 Feb 2025 11:39:10 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1738708750;
+	bh=dDVOJ2j5AtwvawZr0lHF6QYx6xkJXIS2UKMP1pWaCGQ=;
+	h=From:To:CC:Subject:Date:From;
+	b=MYw09Q5N+oGQXmlp69OsstsLt8qkxsuaisglqU0GZKWmFw5nCIbVyyBVD8/gF1SHs
+	 FkN1qVh4Y1cLRDtRgl8h7jgqNfzZfhh+TCIluBJSx0MEmS8zezWE2tc9US4ChLdp78
+	 OEdi/MzeOhiKSBxsyxjbpDJXGYxGbTbuloXPMVxgnQxWPiWKQPc3ydb++9BGDsO/Wf
+	 LYoAuITNNuJJcWqEyRWkDwEIwm3thI24Am+dkgXrKNwrKymAPCqRmBd7nafHMJzBtf
+	 HbL2gSvRkxC32OKGwbOWAzrJlvbfpcAtXN0iD2xOhcopFcsh+cKrHoVdyDt6beBhNh
+	 EN9h/arj5Gbrg==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B67a2970e0000>; Wed, 05 Feb 2025 11:39:10 +1300
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 5 Feb 2025 11:39:10 +1300
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1544.014; Wed, 5 Feb 2025 11:39:10 +1300
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To: Krzysztof Kozlowski <krzk@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, "lee@kernel.org"
+	<lee@kernel.org>
+CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Sorting out the RTL9300 dt-bindings
+Thread-Topic: Sorting out the RTL9300 dt-bindings
+Thread-Index: AQHbd1Wb35JWhYQ4OEu8JThjbWekTw==
+Date: Tue, 4 Feb 2025 22:39:10 +0000
+Message-ID: <4e3c5d83-d215-4eff-bf02-6d420592df8f@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <88152B4E8AE41C4C8E17FFA379529E4F@alliedtelesis.co.nz>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JQEtaHT+hZ786TKACTAFjBI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=QNvLRRLL c=1 sm=1 tr=0 ts=67a2970e a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=VwQbUJbxAAAA:8 a=aHxjIiu6NN9s3de2LD0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 
---Sig_/JQEtaHT+hZ786TKACTAFjBI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Today's linux-next merge of the vfs-brauner tree got conflicts in:
-
-  fs/dcache.c
-  fs/erofs/zdata.c
-  fs/gfs2/quota.c
-  include/linux/lockref.h
-
-between commits:
-
-  4b193fa75eff ("lockref: remove lockref_put_not_zero")
-  6d2868d5b6fc ("lockref: use bool for false/true returns")
-  25d8060418b4 ("lockref: drop superfluous externs")
-  63440d1c6dd1 ("lockref: add a lockref_init helper")
-  8c32b87c4f88 ("dcache: use lockref_init for d_lockref")
-  6f86f1465b59 ("erofs: use lockref_init for pcl->lockref")
-  3e652eba244c ("gfs2: use lockref_init for qd_lockref")
-
-from Linus' tree (plus further commits affecting these same files in other
-trees) and commits:
-
-  74b5da771c89 ("lockref: remove lockref_put_not_zero")
-  57bd981b2db7 ("lockref: use bool for false/true returns")
-  80e2823cbe59 ("lockref: drop superfluous externs")
-  5f0c395edf59 ("lockref: add a lockref_init helper")
-  24706068b7b6 ("dcache: use lockref_init for d_lockref")
-  160a93170d53 ("erofs: use lockref_init for pcl->lockref")
-  0ef3858b15e3 ("gfs2: use lockref_init for qd_lockref")
-
-from the vfs-brauner tree.
-
-I fixed it up (these commits are just duplicates, so I used the former
-vresions of these files) and can carry the fix as necessary. This is now
-fixed as far as linux-next is concerned, but any non trivial conflicts
-should be mentioned to your upstream maintainer when your tree is
-submitted for merging.  You may also want to consider cooperating with
-the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-Please clean up the vfs-brauner tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/JQEtaHT+hZ786TKACTAFjBI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmeilt8ACgkQAVBC80lX
-0GwW0Qf/R4XPvt/edHqlnVrvZzEQlcVQO5awkI7X2vqriYJgEPww2Yg4NFJ4PQuy
-5ulZT8JnQY3gJByVGKQVP5IeGyy0DmqhVvNiMLQW53BCPS0FCCDuy6E1UQedCitZ
-/yPc3+iLiZqoIcLOq0LKNIV+BZjLU33NAke4VDkBgF6zEyxsv0s3x492qP0/Xwor
-nTXDIi6aQHHwekrQRztpMpUt4/koGlJYRqdiU6Msxkp4t/hIMI9kUOrX9yrtaHC6
-6hP548b0xJ59daoMrqNX4iuN6NktPPJXy4W9t6PDMnJn0a+eWnShBPk7yJihLXNW
-alKYNqM+JSdmaVPS33mnojhkLs9IRg==
-=MRL0
------END PGP SIGNATURE-----
-
---Sig_/JQEtaHT+hZ786TKACTAFjBI--
+SGksDQoNCkFzIEtyenlzenRvZiBwb2ludHMgb3V0IGluIFsxXSBJIHNlZW0gdG8gaGF2ZSBtYWRl
+IGEgYml0IG9mIGEgbWVzcyB3aXRoIA0KdGhlIG1mZCBiaW5kaW5nIGZvciB0aGUgUlRMOTMwMCBF
+dGhlcm5ldCBzd2l0Y2ggd2l0aCBpbnRlZ3JhdGVkIENQVS4gSSdtIA0Kc3Bpbm5pbmcgdXAgdGhp
+cyBlbWFpbCB0aHJlYWQgc2VwYXJhdGVseSBzbyBhcyBub3QgdG8gdW5uZWNlc3NhcmlseSBzcGFt
+IA0KdGhlIG5ldGRldiBmb2xrcyBhbmQgdG8gbWF5YmUgYXBwZWFzZSBnb29nbGUgc28gaXQgZG9l
+c24ndCBhdXRvbWF0aWNhbGx5IA0KZ2V0IGZsYWdnZWQgYXMganVuay4NCg0KRmlyc3Qgb2ZmIHNv
+cnJ5IGZvciBub3QgcHJvdmlkaW5nIGEgbW9yZSBjb21wbGV0ZSBiaW5kaW5nIGluaXRpYWxseSwg
+DQpLcnp5c3p0b2Ygc3VnZ2VzdGVkIGRvaW5nIHNvIGEgZmV3IHRpbWVzIGJ1dCBJIHdhcyBjb25j
+ZW50cmF0aW5nIG9uIA0KbGFuZGluZyB0aGUgZHJpdmVycy4NCg0KVGhlIFJUTDkzMDAgaGFzIHRo
+ZXNlIGJhc2ljIGJsb2NrczoNCi0gcnRsOTMwMA0KIMKgIHwtIGNwdUAwIC0gbWlwczM0a2MNCiDC
+oCB8LSBzb2NAMTgwMDAwMDANCiDCoMKgwqAgfC0gaW50Yw0KIMKgwqDCoCB8LSBzcGktbm9yDQog
+wqDCoMKgIHwtIHNwaS1uYW5kDQogwqDCoMKgIHwtIHRpbWVyDQogwqDCoMKgIHwtIGdwaW8NCiDC
+oMKgwqAgYC0gdWFydA0KIMKgIGAtIHN3aXRjaEAxYjAwMDAwMA0KIMKgIMKgwqAgfC0gZXRoZXJu
+ZXQtcG9ydHMNCiDCoMKgwqDCoCB8LSBtZGlvDQogwqDCoMKgwqAgfC0gaTJjDQogwqDCoMKgwqAg
+fC0gcmVzZXQNCiDCoMKgwqDCoCBgLSBsZWQvZ3Bpbw0KDQpUaGUgQ1BVL3NvYyBjYW4gYmUgZGlz
+YWJsZWQgYW5kIHRoZSBzd2l0Y2ggbWFuYWdlZCBieSBhbiBleHRlcm5hbCBDUFUgDQoocmVnaXN0
+ZXIgYWNjZXNzIG92ZXIgU1BJIEkgdGhpbmssIHRoZSBkb2NzIGFyZSBhIGJpdCB2YWd1ZSkuDQoN
+CkkgdGhpbmsgSSBwcm9iYWJseSBpbmZlcnJlZCB0b28gbXVjaCBmcm9tIG1mZC9tc2NjLG9jZWxv
+dC55YW1sIHdoZW4gSSANCmNyZWF0ZWQgbWZkL3JlYWx0ZWsscnRsOTMwMS1zd2l0Y2gueWFtbC4N
+Cg0KSSBzdGlsbCB0aGluayB0aGUgc3dpdGNoQDFiMDAwMDAwIG5lZWRzIHRvIGJlICJzeXNjb24i
+LCAic2ltcGxlLW1mZCIgYXMgDQp0aGF0J3MgaG93IHRoZSByZXNldCBhbmQgaTJjIGJsb2NrcyB3
+b3JrIGFuZCB0aGV5J3JlIHByZXR0eSBpbmRlcGVuZGVudCANCm9mIGV2ZXJ5dGhpbmcgZWxzZS4N
+Cg0KSSd2ZSBjdXJyZW50bHkgZGVzY3JpYmVkIHRoZSBtZGlvIGludGVyZmFjZSBhcyBhIGRldmlj
+ZSBvbiBhIHNpbXBsZSBidXMgDQphbHRob3VnaCBpdCBjb3VsZCBqdXN0IGJlIGhhbmRsZWQgYXMg
+YSBkZXNjZW5kYW50IG9mIHRoZSBzd2l0Y2ggYmxvY2sgDQp0aGF0IGEgZHJpdmVyIGxvb2tzIHVw
+IGFzIGEgY2hpbGQgbm9kZSAoSSd2ZSB0cmllZCB0byBrZWVwIHRoZSBtZGlvIA0KZHJpdmVyIGlu
+ZGVwZW5kZW50IGZvciBub3cgYnV0IHRoYXQncyBhbiBpbXBsZW1lbnRhdGlvbiBkZXRhaWwpLiBJ
+dCBkb2VzIA0KbmVlZCB0byByZWFjaCBvdXQgdG8gdGhlIGV0aGVybmV0LXBvcnRzIHRvIGZpZ3Vy
+ZSBvdXQgdGhlIG1hcHBpbmcgb2YgDQpwb3J0IHRvIHBoeSBzbyBpdCBpc24ndCBpbmRlcGVuZGVu
+dC4NCg0KSSBzZWUgYSBjb3VwbGUgb2YgcGF0aHMgZm9yd2FyZA0KLSBrZWVwIGFkZGluZyB0aGUg
+c3dpdGNoIHN0dWZmIHRvIHRoZSBtZmQvcmVhbHRlayxydGw5MzAxLXN3aXRjaC55YW1sDQotIG1v
+dmUgbWZkL3JlYWx0ZWsscnRsOTMwMS1zd2l0Y2gueWFtbCB0byBuZXQvcmVhbHRlayxydGw5MzAx
+LXN3aXRjaC55YW1sDQotIGtlZXAgbWZkL3JlYWx0ZWsscnRsOTMwMS1zd2l0Y2gueWFtbCB3aXRo
+IHRoZSBpMmMgYW5kIHJlYm9vdCBidXQgaGF2ZSANCmEgJHJlZiB0byBhIG5ldyBiaW5kaW5nIHVu
+ZGVyIG5ldC8gKG5vdCBzdXJlIHdoYXQgdGhhdCdkIGxvb2sgbGlrZSkuDQoNClRoZXJlJ3Mgb25s
+eSBvbmUgaW4tdHJlZSB1c2VyIG9mIHRoaXMgc28gSSBkb24ndCB0aGluayB3ZSBuZWVkIHRvIGJl
+IHRvbyANCmNvbmNlcm5lZCBhYm91dCBiYWNrd2FyZHMgY29tcGF0aWJpbGl0eS4gRG93bnN0cmVh
+bSBvcGVud3J0IGhhbmRsZXMgDQp0aGVzZSBkZXZpY2VzIHdheSBkaWZmZXJlbnRseSBhbHJlYWR5
+Lg0KDQpUaGFua3MsDQpDaHJpcw0KDQotLQ0KDQpbMV0gLSANCmh0dHBzOi8vbG9yZS5rZXJuZWwu
+b3JnL2xrbWwvMjAyNTAyMDQtZWNjZW50cmljLWRlZXItb2YtZmVsaWNpdHktMDJiN2VlQGtyemst
+YmluLw0K
