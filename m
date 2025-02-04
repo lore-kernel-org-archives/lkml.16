@@ -1,124 +1,135 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EB01D7985
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7D4AD2D;
+	Tue,  4 Feb 2025 16:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738684756; cv=none; b=RQ5khVhrtRkOXDZPLbWvUhFSi4SuJ3r2Dse2pXDt6Za4unxzby5psT1owMEsZcVy8V+cEnSmpU8kG0w5t8MRnkGmLs0sFByMazeVHRQT59T2obcDcOZ+cihL4Mz5TjJGph3sPk/FTl+CQ05VrRViLa1JJBLQPYgHBb47gRDHH44=
+	t=1738684827; cv=none; b=GSZPwBgbPAtUfmoEsUJbOSpnoYmNbN7XNY+ROScBsjmWAwXafdDFA9sjvUo54bxcGt7ENIxPBOJXzb72GGd34hG7BkIUU5ZMKRGwzzg1xotvvmDfldDB0JAYy62QMuEUdtyp/fSBHDQ9MBh+jLSf4y9j4cAa1Opj9SSTA78JW5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738684756; c=relaxed/simple;
-	bh=5i/Y8zvwma5m0qjxbZ1Fo7U5gAawdWdvzgbemBgeKNk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q/8+hL8exZN7K5uHnwN/v3OKKAZ51slbv/KCQTZTKNYH3ti5azolJ0IYP07PPi0TtrrqjFVRPzlfcs3uWiQnVFMr4r2rH6oD85rfdQHY+l2w0lAHoh6e+eqlVNejHps7CrIab00BZQmD1r4lDAkxwnvSr5boJBDukYWWxAWm+PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YWiqzRJr; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738684827; c=relaxed/simple;
+	bh=Y5jRzQ9prbbWhoH9ZFvlpRlFbPAwHmYS/b/imvrO3B0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dyXz199LETfooyj0NuXNLR16KfaAQtKt1PaLZWCWHe6g+HGVY8oml01PSE4+x0GOq/xi0EHYDBR8+Qq8fZ5IU6uVtKOXU0UHc2dQgYcL7cfnrRbngrb2XD71RHQ1L46+P/bziBMIHInYaTaCCgE5i0yMs5WA7VSUNxeRzpnJ2DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rgKJ1p4D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YWiqzRJr"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso118645ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:59:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738684753; x=1739289553; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C8roB2k/aXo76JhJB8t9pm/ESNWX82k0droQLLf7sA0=;
-        b=YWiqzRJrPa+le/18cMtxj73t3RhUUBQICmNIcXNjQ6+M1JErvlcjui3e5ZMD6WCIJC
-         udZetOHgjjOTW8BUmfXIs/DNZ/9+qMNXNji8g6ZTxW+DKqFaqXH5U0T4Nn64ViG3Kkw5
-         wDf5wwzHMAhAjfEKurCuoJ9k54C4uADF72RIwGPWMRmng9V7kd2FwoN3kuV4bmuECIbr
-         Y9ZFiPhnKRWubYmJRbDaTHIV8SeeQjp8oTK25vP+UWwwyYKNn+0pcRRj4YWq8vpFrEoK
-         myhN6XRQoFsUaoz17kjQD0EAQw1B/+sdF/IFtpmvMF83o4+xpNwKcYvJf0IpyPesbgyv
-         eFuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738684753; x=1739289553;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C8roB2k/aXo76JhJB8t9pm/ESNWX82k0droQLLf7sA0=;
-        b=kdhnMb0aVu/fO74fcpCfcoLZK6CFPVvdobbRmKTYOr3S0QeVsIIo+3Wl0syA0ReqFh
-         OGrOhxE16EkagIrycnMcpr3VrVEBwREsjhIdKs5RfQRIb4KmvFIHClpq+ozxo9+JdLUu
-         hvq+624yqKWlIrqfOMU/PQYsfmEJx0/cJN3v4K+cxdbzscg1gy7sqYICJiqp2z5/P2wx
-         W84yaOaV7RrwjQDilRD19CPrEvvW9J0+RSuAWAJXRHd8dfGWWbQgH2801/DP/4yJxMsB
-         wQl8exOrrEUvSTyCitFNHPFV3oSytwwcwv/PiHiIsOJgxUONeRODI0tfVxLEkvzXzx1t
-         uCJw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZy4M5oR/O04f4SBNj0jsqc8cvaZzAb8DaRimFL82ud+JEpHUuO0IZmNruGV8PvF051ARz49DQKbgG4og=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdGbDsWzDACcJVvwwiXJRdPbE3D52DVtOeuqLpqyXhM9UrdB3g
-	HGaTEu0SREHnqsFStWLzwE+v99zCxspJkR0hsdduQk1mBINDsX3Ni/tHeYTUUMQdz7mhCHmFuB6
-	i3gJdH1b99t2DgutBkbKB4AGNRVjtqk/bV51I
-X-Gm-Gg: ASbGncu713/DsjJprYv3pyGGHDzFgvyw+6bqu1hj0JPZsBLwCTi19WMp8QUwhwYNcdy
-	ytsM3KNrbiNxSU1P9Z+wLNnnGpV/xs6aL379p66aNMUN/MXKHyX2djVbxg7sGJnTwWB0+BOiaGf
-	3EZ4eYD1k1an4GpLGa6QsQi7M=
-X-Google-Smtp-Source: AGHT+IFn3oe3TOYlUvP1hm251ItKyjv+s3unlb/z1vl69ZziybSzR14r3BFMyL/cDl56jqIbUMQYbzxO5y9V9kTP4z0=
-X-Received: by 2002:a05:6e02:1a86:b0:3ce:79c5:56e0 with SMTP id
- e9e14a558f8ab-3d040f53289mr3523025ab.9.1738684753587; Tue, 04 Feb 2025
- 07:59:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rgKJ1p4D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E23F7C4CEE2;
+	Tue,  4 Feb 2025 16:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738684827;
+	bh=Y5jRzQ9prbbWhoH9ZFvlpRlFbPAwHmYS/b/imvrO3B0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rgKJ1p4DWdQ/7V/H0JpcZiu5V5bmcchaIxxsHltZ1YAHkqf3utApMvvupeXW2s6i0
+	 tAHjmyrudZoWoz8x3yV8iXKd6HIXH9E3bDOcnyV3rxRHsvdCF4DsrQfMPeIvTr1j8m
+	 7DcjVhhdEf3ZvFOCnxjLNpVRw2cJbmTj01n6cLGVTsMJ9vxI0DhQ5Yqm54tV61My9/
+	 YqJzUwRyF/tRmZRjy0mxo/MsgF1/WrZBPZFIg+A1hcPdjhmvt7gp1WMvyjloYhJx6J
+	 Tl0AWNfvZtsrRq9gq0DR1pph6Ml2bfRCOGH4NlNSU9SGL1O8KXWt1saVyzXDluFlID
+	 ureXtr+Aox9HA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tfLLj-000000000S9-0vQw;
+	Tue, 04 Feb 2025 17:00:31 +0100
+Date: Tue, 4 Feb 2025 17:00:31 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Dikshita Agarwal <quic_dikshita@quicinc.com>,
+	quic_vgarodia@quicinc.com, mchehab@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, p.zabel@pengutronix.de, hverkuil@xs4all.nl,
+	sebastian.fricke@collabora.com, bryan.odonoghue@linaro.org,
+	neil.armstrong@linaro.org, nicolas@ndufresne.ca,
+	u.kleine-koenig@baylibre.com, stefan.schmidt@linaro.org,
+	lujianhua000@gmail.com, linux-arm-msm@vger.kernel.org,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, krzysztof.kozlowski@linaro.org
+Subject: Re: [RFC PATCH v10 1/2] media: iris: introduce helper module to
+ select video driver
+Message-ID: <Z6I5nx2Wt3bbBmSI@hovoldconsulting.com>
+References: <20250128080429.3911091-1-quic_dikshita@quicinc.com>
+ <20250128080429.3911091-2-quic_dikshita@quicinc.com>
+ <5070e1f1-914b-4654-88ef-3566e3eee9ca@kernel.org>
+ <f1344e49-61b6-4115-ae88-55b4a3cfed28@quicinc.com>
+ <Z6B822-6UTxQfX46@hovoldconsulting.com>
+ <tqbm672pi223ipcw7btiemlb745weeeiy4gnazzeghozhq2emj@wppbkms6hir5>
+ <Z6HehbKL88LW1lxC@hovoldconsulting.com>
+ <hpcf7olw3ody7ns4ibdeoc5qrkmh3fgeqbhjd4eqwfuanevzoa@plenabtrjqi5>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-2-namhyung@kernel.org>
- <CAP-5=fVJDi2UuhTYk5g-QaLqZC29tAprKWs_0PKNmd+y=iugjA@mail.gmail.com> <Z6GCde4XqCuEZlgz@google.com>
-In-Reply-To: <Z6GCde4XqCuEZlgz@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Feb 2025 07:59:01 -0800
-X-Gm-Features: AWEUYZmurQeFx436MfzVGQG1Cg-n0O0xRTM7xFqFOWVQYWuKHdbwPWICSKvdmgI
-Message-ID: <CAP-5=fVrFzxcLZG8DyYh2rbd3u4133V6hhrQFCHsq_QMVVW=9g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] perf trace: Allocate syscall stats only if summary
- is on
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Howard Chu <howardchu95@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <hpcf7olw3ody7ns4ibdeoc5qrkmh3fgeqbhjd4eqwfuanevzoa@plenabtrjqi5>
 
-On Mon, Feb 3, 2025 at 6:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Sat, Feb 01, 2025 at 10:57:00PM -0800, Ian Rogers wrote:
-> > On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > The syscall stats are used only when summary is requested.  Let's avo=
-id
-> > > unnecessary operations.  Pass 'trace' pointer to check summary and gi=
-ve
-> > > output file together.
-> >
-> > I don't think this last sentence makes sense.
->
-> Thanks for your review.  I'd say:  Pass 'trace' pointer instead of doing
-> 'summary' option and 'output' file pointer separately.
+On Tue, Feb 04, 2025 at 04:55:58PM +0200, Dmitry Baryshkov wrote:
+> On Tue, Feb 04, 2025 at 10:31:49AM +0100, Johan Hovold wrote:
+> > On Mon, Feb 03, 2025 at 05:16:50PM +0200, Dmitry Baryshkov wrote:
+> > > On Mon, Feb 03, 2025 at 09:22:51AM +0100, Johan Hovold wrote:
+> > > > On Fri, Jan 31, 2025 at 10:44:28AM -0800, Abhinav Kumar wrote:
 
-This still doesn't make sense. There is lazier initialization:
-```
--               ttrace->syscall_stats =3D intlist__new(NULL);
-+               if (trace->summary)
-+                       ttrace->syscall_stats =3D intlist__new(NULL);
-```
-and there are functions that take a FILE* but now we're going to use
-the one in trace instead:
-```
-@@ -1568,7 +1569,7 @@ static struct thread_trace *thread__trace(struct
-thread *thread, FILE *fp)
+> > And we're still waiting to hear the answers to all of Hans' questions. I
+> > still haven't seen anyone explaining why any of this is needed. You
+> > could have just continued letting Venus support 8250 so presumably there
+> > is some benefit in using Iris instead. Which? And is that potential
+> > benefit important enough to not just wait until Iris is up to par
+> > feature wise?
+> 
+> Because that's exactly opposite of what Iris developers are trying to
+> do: SM8250 and SM8550 belong to two different generations of the FW
+> interface. By supporting both of them in the Iris driver the developers
+> can verify that the internal driver abstractions are good enough. It has
+> been discussed in one of the threads (or in telcos) related to the first
+> iterations of this driver. We definitely don't want to end up in Venus
+> situation, where the abstractions were added afterwards and in some
+> cases they are not the best ones.
 
-        return ttrace;
- fail:
--       color_fprintf(fp, PERF_COLOR_RED,
-+       color_fprintf(trace->output, PERF_COLOR_RED,
-                      "WARNING: not enough memory, dropping samples!\n");
-        return NULL;
-```
-So why does the one passed to trace still exist? Unfortunately names
-like "fp" and "output" are not intention revealing.
+Ok, but as I've said a number of times already, information like this
+needs to be included in the cover letter and commit message of what is
+posted to the list.
 
-Anyway, from the commit message and the code I don't understand what
-this change is trying to do.
+Maintainers and reviewers obviously have no idea what you discussed in
+some internal teleconference and can't be expected to remember or dig
+this out from some old email thread either.
 
-Thanks,
-Ian
+> The plan is to use sm8250 as a "bridge" between two drivers, verifying
+> that they are on par during development, then drop sm8250 from Venus
+> driver. Then move sc7280 support too, drop all HFD_VERSION_6XX support
+> from Venus, cleanup the remnants.
+
+Ok, but venus would still remain for some older hardware? It's just the
+"hfi gen1" ones that would move to the iris eventually?
+
+> I think most of that information should have been a part of the main
+> Iris series. If it is not, please comment there, so that those commit
+> messages can be updated.
+
+Unfortunately it was not, which I also pointed in my comments to the
+Iris series.
+
+> > I'm sure you have some answers, but you need to provide them as part of
+> > the series.
+
+> > Unbinding and rebinding drivers is not part of any normal work flow
+> > expect possibly during development. And a developer can easily compare
+> > Venus and Iris for 8250 without a module parameter too.
+> 
+> Yes, we are talking about development. And yes, modparam helps. If you'd
+> like to do two separate kernel builds, that's fine.
+
+Please just motivate why you think this is needed as part of the
+submission. And make sure that the implementation is sane (e.g. not some
+random probe defer indefinitely thing).
+
+Like I said, having two drivers for the same hardware is normally not
+something that is acceptable, and this would need to be a transitional
+thing as we both agree. One way to guarantee that is to not expose it to
+regular users until it is ready (e.g. a Kconfig hidden behind
+CONFIG_EXPERT or similar). Otherwise, I fear you'll end up supporting
+both forever (with at least one of them bitrotting behind that module
+parameter over time).
+
+Johan
