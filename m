@@ -1,168 +1,137 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DAF21B1A0
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 22:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8A621A449;
+	Tue,  4 Feb 2025 22:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738706510; cv=none; b=a96qyDP0gIVeNerZlOIhSNWhgM08UyGqlkeGGY4bgWnbUTxFN8UBTaoXY7oWEMfH0RuRvoqKDEDkArtW6PEakWYUIFAI1IPj35szqVCujEODfZoSBB+OLUjZWG63tWtMPQYez6XYZTlP7teiitzGetN7WnqbH3+yOUJ6C+zlSKg=
+	t=1738706518; cv=none; b=LVstRVTUIfYPbVeS91BSw9ypJhGJafZQPzEymDyT9KaXeNLlG66NL6t3XAwAdkB3lD9b8d28rixZz5yFgtzZLYMBF13PW56VViJq6SU9t3x6eWckMoBb42IuBQhYN3Wy2m33MXMSArey+/NCYFrvbzHgFrRZaQ987SBwLAc94fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738706510; c=relaxed/simple;
-	bh=R6NQemqcM3NqXPAQSUUfjhjmNUwVN2uMax3o5Jo/Xwo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UPD6mgwhB7d5NE9m76R93kxfWnfzv9Xa1BKhJRKx+YS5/hlNf6B06Lpkxev11Q7NF9OAvKoYehqNF8kdhy8LecARE6He3qFUXix+UEv36bm0g3a50PIIBnYfgeOeyQFNKcQ1JMwTEChP5nUbT3rEQJdjK6TFcehTE/vwwg9pPR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZD8zkp8y; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738706518; c=relaxed/simple;
+	bh=lbPHclbARFkQmvsu0zJqrdw8H+4xG9Vq8ZiG/BDW7Jo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=c2EcO/yKPn1u8zy4BaPeGI6CBXmKlDn4N/+yw+x60ymM2MHWDDtpuN1X7i6892W3AMc0A87UQDyxdqYSzNiXrmv7kdrs7eX/Tzp28ZJL7PdyoX+YLAGLS1dmXqL8eDYuv4235T/9k63k9rKOdPvgKgfJjWOFhEE6K0joJVME4Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SdO8o5t8; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZD8zkp8y"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43625c4a50dso42287655e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 14:01:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738706507; x=1739311307; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=RwIsfd/OtVZWLJT6WB9dwos5ZOiOppzZY+Mt6fv0DyY=;
-        b=ZD8zkp8yboDNf291SntDqNcm/65l24gXENUai+lZYP6TkeZ9LZ8Dvj2fVI+DlP8wVD
-         uTqPLffQfhxlShWguk0yp5qb0UtAXPZiMfvBg50kzx2AyiM9tJQ5nDsiOqQyqLa5JxlQ
-         N0Y7SfWEi9fsCrPrKR6DALuFCtr29gl+iNDPNzuSno8N1bXTuCKFa3ovg3qEPA2Q4V0Q
-         iI5P1tD+u3SJseDlgntHrplzbCh4Bs7a5vb+OEasZXoinIqVwIAzYKCcL5mGEdwh9J8p
-         jfwJwXtKKK2Ilg2pvV+3igy/Vdpc6aeOWq850L9WJZhsb9YE3TMi1etaspw/HbmsnyyQ
-         CTIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738706507; x=1739311307;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RwIsfd/OtVZWLJT6WB9dwos5ZOiOppzZY+Mt6fv0DyY=;
-        b=oA5LtICnYggKiJXNElWdYpX+EGsbmbm706GhLYbpin2X//7GpJZwD2Jd9tjzhgxQCm
-         27ip7gkpDA8i6W7tjF8jLKoVI84IjDGcJLN4f1OQAWQzv3tIJgGNBr1cf6fbtRQeUVCc
-         ul5wYj+4NqoWrvIT96nW33L9xAwzxCrfbqqXzrzB53lMX92CwiIVJ2iwjINE1qjGKkUo
-         9qgrDHXW2kzzCbXCTWoHjX+vDrYaKOh7fuwEWVlVYMhcbHcUPnRMX5GsVPzYoi724Pjs
-         +bx0Pc7OyMRUNMgziMohMdDt0YDjs0QyyZC+dRGnbSLF2LrIEJ/9X9LlsD0wR5cHjYCz
-         5VQA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+2zm80qjPtWyVMkz7naOGR/pjHRsAARsX+4kb8G/ZAnsDMdfyDwTqfSWzOeKd4v0LVq5aGTzWe7O9cGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqvaB2bZFCBAOAREjb1FJCL4BzgnWqyV4au29+j0amR1GSJlEi
-	FiIZS25H6hlKt85eJ1J1dfszzDd74TSRSSGvg+mZZgn/1B3eFTs0h4bgN6ggt58=
-X-Gm-Gg: ASbGncuvCUxKkxbshwMEkphRl2vygNmOxYf8JlpcCs9FTL8j9RwEa6iWkUbyHhjriqb
-	X97u1aqdN9tkZ5MzU9sstyULmvwSB9m6uw5NiQJwS9tcqNSL3rSJbuQKTtQfzRhsz91ZtY2Yo2/
-	CXGH7zpoYo6D4I7g0/+jLODQjP2gKucNhz2IPiADn7Y01cn1Vf2cp3zU8N0ln6BVKky+SkpYASe
-	63bzpC10Z63vgqkdSjxAad+jG7qiAIaMKKrDBj63NT/yLK5dd+O0EMz6QgNvqcf3bcrqOf60m6t
-	czFF6RRlK3LW
-X-Google-Smtp-Source: AGHT+IH2eC8QjzxubMrfwju/J92XZERQpRmtsPLz6Ay5DOV8VGM1F9TQnHss3+rgoHiESfKlqDj3WA==
-X-Received: by 2002:a05:600c:1d0f:b0:431:60ec:7a96 with SMTP id 5b1f17b1804b1-4390d56e5a6mr1234275e9.25.1738706506951;
-        Tue, 04 Feb 2025 14:01:46 -0800 (PST)
-Received: from [192.168.2.177] ([81.0.8.231])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec369sm16729579f8f.8.2025.02.04.14.01.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 14:01:46 -0800 (PST)
-Message-ID: <d2f87ea5-fe54-4334-ad68-9b169b2f3774@suse.com>
-Date: Tue, 4 Feb 2025 23:01:45 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SdO8o5t8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738706517; x=1770242517;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=lbPHclbARFkQmvsu0zJqrdw8H+4xG9Vq8ZiG/BDW7Jo=;
+  b=SdO8o5t8l25nWlUS7nRVK96gD06y5ImWdrlIRyj6biZZVYr2V8sVqGuL
+   Tn9Iomr8JyF3p3eZimWCMD10jwov8R20ndKXh7cdvyAPG0SDufnBFZtcn
+   Ycq8+jF2K8gWtTv8jK/wcxlRUEDsMdfaFNm0vROumUvkTWMaZzKAyua38
+   B2MDNmE3eD+iip6J+dwF7xNsNOZ+QX21Qyhrs/MQoTo2vn8F3CRxP9RKl
+   lhLjJETaIfqsBFbXhhesBfZwgBB8zWYrMoCeu8VOfT2qrfVYbASSyjlMj
+   hsIrFiugFuMFTFoysx2bML+DtydZrQJem8CBYOH8Ly18Fax5pZ+Pn5+ka
+   w==;
+X-CSE-ConnectionGUID: etr2uh17TgG7yOsIH2xKXQ==
+X-CSE-MsgGUID: ASXSxsQJR/a2AsWhJhjDLQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39517117"
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="39517117"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 14:01:55 -0800
+X-CSE-ConnectionGUID: NAx9oX9yRyOex+aeBj7lDg==
+X-CSE-MsgGUID: DNsEcHZsSNySIyoK+sYkqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="111263801"
+Received: from lfiedoro-mobl.ger.corp.intel.com (HELO [10.245.246.144]) ([10.245.246.144])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 14:01:28 -0800
+Message-ID: <60b7e29853cb33d45d10101e494c7ddbe6a5abd6.camel@linux.intel.com>
+Subject: Re: [RFC 1/5] mm/hmm: HMM API to enable P2P DMA for device private
+ pages
+From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com, lyude@redhat.com,
+ 	dakr@redhat.com, airlied@gmail.com, simona@ffwll.ch, leon@kernel.org, 
+	jglisse@redhat.com, akpm@linux-foundation.org, GalShalom@nvidia.com, 
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-mm@kvack.org, 	linux-tegra@vger.kernel.org
+Date: Tue, 04 Feb 2025 23:01:25 +0100
+In-Reply-To: <20250204191601.GK2296753@ziepe.ca>
+References: <20250129134757.GA2120662@ziepe.ca>
+	 <Z5tZc0OQukfZEr3H@phenom.ffwll.local> <20250130132317.GG2120662@ziepe.ca>
+	 <Z5ukSNjvmQcXsZTm@phenom.ffwll.local> <20250130174217.GA2296753@ziepe.ca>
+	 <Z50BbuUQWIaDPRzK@phenom.ffwll.local> <20250203150805.GC2296753@ziepe.ca>
+	 <7b7a15fb1f59acc60393eb01cefddf4dc1f32c00.camel@linux.intel.com>
+	 <20250204132615.GI2296753@ziepe.ca>
+	 <3e96aef8009be69858a69d3e49a2bd7fc7d06f5f.camel@linux.intel.com>
+	 <20250204191601.GK2296753@ziepe.ca>
+Organization: Intel Sweden AB, Registration Number: 556189-6027
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/3] arm64: dts: s32g399a-rdb3: Add INA231 sensor entry
- over I2C4
-To: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>,
- Chester Lin <chester62515@gmail.com>,
- Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
- linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- NXP S32 Linux <s32@nxp.com>, Christophe Lizzi <clizzi@redhat.com>,
- Alberto Ruiz <aruizrui@redhat.com>, Enric Balletbo <eballetb@redhat.com>
-References: <20250113110512.506007-1-ciprianmarian.costea@oss.nxp.com>
- <20250113110512.506007-4-ciprianmarian.costea@oss.nxp.com>
-Content-Language: en-US, ca-ES, es-ES
-From: Matthias Brugger <mbrugger@suse.com>
-Autocrypt: addr=mbrugger@suse.com; keydata=
- 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
- PVrr2NoUqi/bxI8fFQJD1jVj8K0=
-In-Reply-To: <20250113110512.506007-4-ciprianmarian.costea@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+
+On Tue, 2025-02-04 at 15:16 -0400, Jason Gunthorpe wrote:
+> On Tue, Feb 04, 2025 at 03:29:48PM +0100, Thomas Hellstr=C3=B6m wrote:
+> > On Tue, 2025-02-04 at 09:26 -0400, Jason Gunthorpe wrote:
+> > > On Tue, Feb 04, 2025 at 10:32:32AM +0100, Thomas Hellstr=C3=B6m wrote=
+:
+> > > >=20
+> > >=20
+> > > > 1) Existing users would never use the callback. They can still
+> > > > rely
+> > > > on
+> > > > the owner check, only if that fails we check for callback
+> > > > existence.
+> > > > 2) By simply caching the result from the last checked
+> > > > dev_pagemap,
+> > > > most
+> > > > callback calls could typically be eliminated.
+> > >=20
+> > > But then you are not in the locked region so your cache is racy
+> > > and
+> > > invalid.
+> >=20
+> > I'm not sure I follow? If a device private pfn handed back to the
+> > caller is dependent on dev_pagemap A having a fast interconnect to
+> > the
+> > client, then subsequent pfns in the same hmm_range_fault() call
+> > must be
+> > able to make the same assumption (pagemap A having a fast
+> > interconnect), else the whole result is invalid?
+>=20
+> But what is the receiver going to do with this device private page?
+> Relock it again and check again if it is actually OK? Yuk.
+
+I'm still lost as to what would be the possible race-condition that
+can't be handled in the usual way using mmu invalidations + notifier
+seqno bump? Is it the fast interconnect being taken down?
+
+/Thomas
 
 
-
-On 13/01/2025 12:05, Ciprian Costea wrote:
-> From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-> 
-> Add INA231 current sensor for S32G399A-RDB3 boards.
-> 
-> Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-
-Reviewed-by: Matthias Brugger <mbrugger@suse.com>
-
-> ---
->   arch/arm64/boot/dts/freescale/s32g399a-rdb3.dts | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/s32g399a-rdb3.dts b/arch/arm64/boot/dts/freescale/s32g399a-rdb3.dts
-> index 94f531be4017..802f543cae4a 100644
-> --- a/arch/arm64/boot/dts/freescale/s32g399a-rdb3.dts
-> +++ b/arch/arm64/boot/dts/freescale/s32g399a-rdb3.dts
-> @@ -40,6 +40,14 @@ &uart1 {
->   	status = "okay";
->   };
->   
-> +&i2c4 {
-> +	current-sensor@40 {
-> +		compatible = "ti,ina231";
-> +		reg = <0x40>;
-> +		shunt-resistor = <1000>;
-> +	};
-> +};
-> +
->   &usdhc0 {
->   	pinctrl-names = "default", "state_100mhz", "state_200mhz";
->   	pinctrl-0 = <&pinctrl_usdhc0>;
+>=20
+> > > > 3) As mentioned before, a callback call would typically always
+> > > > be
+> > > > followed by either migration to ram or a page-table update.
+> > > > Compared to
+> > > > these, the callback overhead would IMO be unnoticeable.
+> > >=20
+> > > Why? Surely the normal case should be a callback saying the
+> > > memory
+> > > can
+> > > be accessed?
+> >=20
+> > Sure, but at least on the xe driver, that means page-table
+> > repopulation
+> > since the hmm_range_fault() typically originated from a page-fault.
+>=20
+> Yes, I expect all hmm_range_fault()'s to be on page fault paths, and
+> we'd like it to be as fast as we can in the CPU present case..
+>=20
+> Jason
 
