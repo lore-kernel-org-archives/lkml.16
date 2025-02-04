@@ -1,156 +1,206 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119B12080D7
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DDE720AF9A;
+	Tue,  4 Feb 2025 10:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738666764; cv=none; b=FCHqMWN1SlaHhcu8IFzsV5DljU/UxZSFAxc3z48mdu+u1l6SbSdXZsYPUD7cLWXz41arz0B4Zry/h1/U9FmD6Bl9zSwAVtZTYFM8Fj32q/yxzQxoaMvGpapRyuICTLD+hTaaINcKlZcLGE0ExnWSNoF/01Qlha7trNMASLYMjks=
+	t=1738666792; cv=none; b=atsd6lt97jAVfwZPKquX460AzH/E6uGiKgvz2xROSvN4JNYkQV+JQWC9rGjhxDlyqo9PPs9c1MJphNfNtoeKihSnMvrc3V8KK4bCuO0devsoW1XHdG4HoDKxBKLDIQdxsboLxuYVXZ1l3X338YuBJwVWzO0SD8xwGXbhjxQn+1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738666764; c=relaxed/simple;
-	bh=KDUpqFH60In99EOYxcvh8+1IiNmgCdzqDbEQmebOkZo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F5BUpJKnAXEnE5zm/W4j7GB13ucb2HfrC8vCXjf8I+sKYB+DHVN9MDs7hasX6c/bkHBRQ8RCORhQc4HsYJQ/DwIIY+b/LrJ+vZ9zUnrXmO+ZYpoGzuJv24Q/+mbBd/4bp6rlnBcSb5FxXfV4larNFtQAHm/l8RFE7L1DuzPEf+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oliS+NTu; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738666792; c=relaxed/simple;
+	bh=JNsr/7RBe3vPFw81J3RBQjyvUzlCjE+Og1IZuVfbHNY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=OPxV15NqL9SuCcXyKBRbIlW/Vc0jjQlMmXZweFVKj4G8Q446Gr3jUMu8cZeJdUKFvoKrncRqS6FdTvRWYSpEFWhX0D57ubTWSjUYqt5zaEEAAKHJgOSKq4vvIGBfdOi4iwDerJAEaeNdfKbGVyD/HK0wbuGVTaNyO6tS/nuWrM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KGDs7jNm; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oliS+NTu"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5149BvdA006742
-	for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2025 10:59:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=Bbk6v/28CZWZB/e8V3KywwDq5m0DSq4iiyz
-	z/FZspds=; b=oliS+NTuxK6FfwG3/cxiqqd9Xm8pp5WBNBIMm6b3tuDEqRMyMPW
-	D9ygEJtnm+3iG9X2uovhNKbRwdP28AmJgnBMxoNZQrnN4x2vek9syfJB8EjaWa4Q
-	8v0NWTP+ycV737y57sNRq+TGw9Dnbu0eH0U1ZE69mpysPkX15K8QhX1Dp2EvgMwT
-	t9MdEV/nMzelUkdFhGGgMMTksW0a7RVMSG628DYMgx9CQx+3wI7DXowPJevJ9NEi
-	Lr1zA3rYZrKSpuPCdxRX7yOMkwB5CpgxT5tTwCrZ60VY00aw23YEtY1BqHRPJLLK
-	DZxFPEVLpQ4un+r3C/9QKWLmy+xVnnvI0wg==
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44kg1yr942-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 10:59:21 +0000 (GMT)
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2f9c02f54f2so1338189a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 02:59:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738666760; x=1739271560;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Bbk6v/28CZWZB/e8V3KywwDq5m0DSq4iiyzz/FZspds=;
-        b=NvD/mxRMWGRRo7REUVuhsOgeQcwIZfTpmLfr3oF3+iPRRLuzB1qGSzr6K6FkKh9gwC
-         D0ww8VtrUmPujnFDR1sS9FW9/RIgfOvcs5uhO2IAquDbMCcvlZn2rfSiBQJq0clyxBdS
-         M8xjJ7O5Ell2Z6+Oi8OYYJcRQMRFNV0bNFmITRy+ig2XR+2LKKnk4dLY5wUY3jF1wHAc
-         Rchd4IjazoIfTZObCaSQmbcMQC2gEKa7HG0nOJcQ285e3yNVLfpL1CzEu+QAO2bgi1uY
-         gN9jTGxV8cPsgSvORHIfFdGV5A4KlOgS4hPY3fDyZjFESS1TcUVnSpO1wTWbGeijPCix
-         mQVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVsNqM/XB76ZB8BgkXvWpJjx8U27pQ4ItIaqxbrwzJLi7yIJb6liWeLtvjljFCg61+3yTTXdTzfkumq4yQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb4WIqdsGdIK2tunS69urW9MgYMqcZkBYGjU8y9pCsAyj37kaS
-	IoSOnriyrttjwVG5hLCXc0XWsasGAwmL86Ppl5OJZB6qD2D8nm6FHe+K1e/A9aaU/E2lvYXj483
-	ztTd0CQGo5VPfKNEWewn9LxWd24pLrrIhKQW7IeX8pbD3PMy2GzeXaMrZOFImWI4=
-X-Gm-Gg: ASbGncuH11D7MLF8bfU8ckdMdZ0OqxiHeetYag+gKJ+W1g8zIITTtX7Ha7USPnbIC0d
-	ksn0VK5zDzimd6B1p3tzqRKVZlyfZqNl68+0ujvDd3tzqWUwclMJHsnBAeZINiOFFgMLYYKSiQZ
-	EjG1F+GhyGCaLLQB0f+iIBtJBl8Nb5iTF0V1NTusvYSD9S+qNOZog8eOizJ+LNEXJlDYIjXMkTD
-	dcbc0RTkbHRxTlHP06I2j2n5sSaVFDbg5tz1WRdV4e5H0QjhWtYZKj4YG4Dqcn6736C3KUWs889
-	OxS3qUbHz8YWhTixtuCW3JJmHTYQxNRyBg==
-X-Received: by 2002:a17:90b:2f44:b0:2ee:c91a:ad05 with SMTP id 98e67ed59e1d1-2f83abc3987mr34859252a91.3.1738666760456;
-        Tue, 04 Feb 2025 02:59:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFDFBGFgvL9ZTIMVPksGB4FYma4HsKeELqR3L2h5d2h1EDl6nl6eH11BUBbOegxde5u3k9NJQ==
-X-Received: by 2002:a17:90b:2f44:b0:2ee:c91a:ad05 with SMTP id 98e67ed59e1d1-2f83abc3987mr34859233a91.3.1738666760104;
-        Tue, 04 Feb 2025 02:59:20 -0800 (PST)
-Received: from hu-prashk-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f8489d65a2sm11930665a91.29.2025.02.04.02.59.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 02:59:19 -0800 (PST)
-From: Prashanth K <prashanth.k@oss.qualcomm.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prashanth K <prashanth.k@oss.qualcomm.com>, stable@vger.kernel.org
-Subject: [PATCH RFC] usb: gadget: Set self-powered based on MaxPower and bmAttributes
-Date: Tue,  4 Feb 2025 16:29:08 +0530
-Message-Id: <20250204105908.2255686-1-prashanth.k@oss.qualcomm.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KGDs7jNm"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 51FC642CCD;
+	Tue,  4 Feb 2025 10:59:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738666787;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1nrOiBu4WBrNhYnKgXb0/WmtNOK7mKrU0gfnoU2BLCs=;
+	b=KGDs7jNm5J9Ub3xYrY/kRAwo/dwfU5g5ueO4H2pMwubzqckuvPJf+gaH3EUliY7QVIMd8r
+	t5WdPsTFipFz+lOTbK1jRWA2mCM+BzZ70PwvFhO24HlURQJ8b2GAWGq0eYLuEvDzKBGffE
+	CjHb/8Ts5x9CJD/ggTsM+xYGZPQxgppUEsaJ9dBMEoMCqbvbGcvEEy5UoPr68MTuRB56Lz
+	A2UOnZyZzocAjD34Zn28FKdWcb3rAvOu0p5NwK5ikEmSwLb8XBQB9qN/U1nekpfVx4s2ip
+	7hHNHQv/n8i4RmLdXhIKd12KiaV7Mru3Y1pwrhwluO+bltN2eAeY7+6axPhmpQ==
+From: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
+Date: Tue, 04 Feb 2025 11:59:43 +0100
+Subject: [PATCH bpf-next] selftests/bpf: Remove with_addr.sh and
+ with_tunnels.sh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: TG0V3np65Ru0qvvZVcQIstT6dbxtuKIL
-X-Proofpoint-GUID: TG0V3np65Ru0qvvZVcQIstT6dbxtuKIL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_05,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 impostorscore=0 spamscore=0 mlxscore=0
- mlxlogscore=448 clxscore=1015 suspectscore=0 lowpriorityscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040087
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250204-with-v1-1-387a42118cd4@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAB/zoWcC/x3MQQqAIBBA0avErBNGJYquEi3UxpqNiUoF0t2Tl
+ g8+v0KmxJRh7iokujjzGRpk34E7TNhJ8NYMCtWAUqO4uRxCT5MdlfHOOoSWxkSen3+zgI1eBHo
+ KrO/7AUe4wwtgAAAA
+X-Change-ID: 20250130-with-388b72afcbc0
+To: Andrii Nakryiko <andrii@kernel.org>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Alexis Lothore <alexis.lothore@bootlin.com>, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpedfuegrshhtihgvnhcuvehurhhuthgthhgvthculdgvuefrhfcuhfhouhhnuggrthhiohhnmddfuceosggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjeegffejjeegtdeggeehheejvdejiefhjeetgffggeeitdelueduieehfefgffelnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrudegngdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehsughfsehfohhmihgthhgvvhdrmhgvpdhrtghpthhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrihhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrthhinhdrlhgruheslhhinhhugidruggvvhdprhgtphhtthhopegsphhfsehvghgvr
+ hdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopehmhihkohhlrghlsehfsgdrtghomhdprhgtphhtthhopeihohhnghhhohhnghdrshhonhhgsehlihhnuhigrdguvghv
+X-GND-Sasl: bastien.curutchet@bootlin.com
 
-Currently the USB gadget will be set as bus-powered based solely
-on whether its bMaxPower is greater than 100mA, but this may miss
-devices that may legitimately draw less than 100mA but still want
-to report as bus-powered. Similarly during suspend & resume, USB
-gadget is incorrectly marked as bus/self powered without checking
-the bmAttributes field. Fix these by configuring the USB gadget
-as self or bus powered based on bmAttributes, and explicitly set
-it as bus-powered if it draws more than 100mA.
+Those two scripts were used by test_flow_dissector.sh to setup/cleanup
+the network topology before/after the tests. test_flow_dissector.sh
+have been deleted by commit 63b37657c5fd ("selftests/bpf: remove
+test_flow_dissector.sh") so they aren't used anywhere now.
 
-Cc: stable@vger.kernel.org
-Fixes: 5e5caf4fa8d3 ("usb: gadget: composite: Inform controller driver of self-powered")
-Signed-off-by: Prashanth K <prashanth.k@oss.qualcomm.com>
+Remove the two unused scripts and their Makefile entries.
+
+Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
 ---
- drivers/usb/gadget/composite.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ tools/testing/selftests/bpf/Makefile        |  4 +--
+ tools/testing/selftests/bpf/with_addr.sh    | 54 -----------------------------
+ tools/testing/selftests/bpf/with_tunnels.sh | 36 -------------------
+ 3 files changed, 2 insertions(+), 92 deletions(-)
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index bdda8c74602d..1fb28bbf6c45 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -1050,10 +1050,11 @@ static int set_config(struct usb_composite_dev *cdev,
- 	else
- 		usb_gadget_set_remote_wakeup(gadget, 0);
- done:
--	if (power <= USB_SELF_POWER_VBUS_MAX_DRAW)
--		usb_gadget_set_selfpowered(gadget);
--	else
-+	if (power > USB_SELF_POWER_VBUS_MAX_DRAW ||
-+	    !(c->bmAttributes & USB_CONFIG_ATT_SELFPOWER))
- 		usb_gadget_clear_selfpowered(gadget);
-+	else
-+		usb_gadget_set_selfpowered(gadget);
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 6722080b2107a56c1500bab4d7b638f5bcde2a82..e9dfd96fa48c98a736c7b39356757b1b3680220a 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -117,8 +117,8 @@ TEST_PROGS := test_kmod.sh \
+ 	test_xsk.sh \
+ 	test_xdp_features.sh
  
- 	usb_gadget_vbus_draw(gadget, power);
- 	if (result >= 0 && cdev->delayed_status)
-@@ -2615,7 +2616,9 @@ void composite_suspend(struct usb_gadget *gadget)
+-TEST_PROGS_EXTENDED := with_addr.sh \
+-	with_tunnels.sh ima_setup.sh verify_sig_setup.sh \
++TEST_PROGS_EXTENDED := \
++	ima_setup.sh verify_sig_setup.sh \
+ 	test_xdp_vlan.sh test_bpftool.py
  
- 	cdev->suspended = 1;
- 
--	usb_gadget_set_selfpowered(gadget);
-+	if (cdev->config->bmAttributes & USB_CONFIG_ATT_SELFPOWER)
-+		usb_gadget_set_selfpowered(gadget);
-+
- 	usb_gadget_vbus_draw(gadget, 2);
- }
- 
-@@ -2649,8 +2652,11 @@ void composite_resume(struct usb_gadget *gadget)
- 		else
- 			maxpower = min(maxpower, 900U);
- 
--		if (maxpower > USB_SELF_POWER_VBUS_MAX_DRAW)
-+		if (maxpower > USB_SELF_POWER_VBUS_MAX_DRAW ||
-+		    !(cdev->config->bmAttributes & USB_CONFIG_ATT_SELFPOWER))
- 			usb_gadget_clear_selfpowered(gadget);
-+		else
-+			usb_gadget_set_selfpowered(gadget);
- 
- 		usb_gadget_vbus_draw(gadget, maxpower);
- 	} else {
+ TEST_KMODS := bpf_testmod.ko bpf_test_no_cfi.ko bpf_test_modorder_x.ko \
+diff --git a/tools/testing/selftests/bpf/with_addr.sh b/tools/testing/selftests/bpf/with_addr.sh
+deleted file mode 100755
+index ffcd3953f94cf2301f0e5158d141ccb48b2fb1c0..0000000000000000000000000000000000000000
+--- a/tools/testing/selftests/bpf/with_addr.sh
++++ /dev/null
+@@ -1,54 +0,0 @@
+-#!/bin/bash
+-# SPDX-License-Identifier: GPL-2.0
+-#
+-# add private ipv4 and ipv6 addresses to loopback
+-
+-readonly V6_INNER='100::a/128'
+-readonly V4_INNER='192.168.0.1/32'
+-
+-if getopts ":s" opt; then
+-  readonly SIT_DEV_NAME='sixtofourtest0'
+-  readonly V6_SIT='2::/64'
+-  readonly V4_SIT='172.17.0.1/32'
+-  shift
+-fi
+-
+-fail() {
+-  echo "error: $*" 1>&2
+-  exit 1
+-}
+-
+-setup() {
+-  ip -6 addr add "${V6_INNER}" dev lo || fail 'failed to setup v6 address'
+-  ip -4 addr add "${V4_INNER}" dev lo || fail 'failed to setup v4 address'
+-
+-  if [[ -n "${V6_SIT}" ]]; then
+-    ip link add "${SIT_DEV_NAME}" type sit remote any local any \
+-	    || fail 'failed to add sit'
+-    ip link set dev "${SIT_DEV_NAME}" up \
+-	    || fail 'failed to bring sit device up'
+-    ip -6 addr add "${V6_SIT}" dev "${SIT_DEV_NAME}" \
+-	    || fail 'failed to setup v6 SIT address'
+-    ip -4 addr add "${V4_SIT}" dev "${SIT_DEV_NAME}" \
+-	    || fail 'failed to setup v4 SIT address'
+-  fi
+-
+-  sleep 2	# avoid race causing bind to fail
+-}
+-
+-cleanup() {
+-  if [[ -n "${V6_SIT}" ]]; then
+-    ip -4 addr del "${V4_SIT}" dev "${SIT_DEV_NAME}"
+-    ip -6 addr del "${V6_SIT}" dev "${SIT_DEV_NAME}"
+-    ip link del "${SIT_DEV_NAME}"
+-  fi
+-
+-  ip -4 addr del "${V4_INNER}" dev lo
+-  ip -6 addr del "${V6_INNER}" dev lo
+-}
+-
+-trap cleanup EXIT
+-
+-setup
+-"$@"
+-exit "$?"
+diff --git a/tools/testing/selftests/bpf/with_tunnels.sh b/tools/testing/selftests/bpf/with_tunnels.sh
+deleted file mode 100755
+index e24949ed3a20813e34bd69bdd634b0f32b7a26e9..0000000000000000000000000000000000000000
+--- a/tools/testing/selftests/bpf/with_tunnels.sh
++++ /dev/null
+@@ -1,36 +0,0 @@
+-#!/bin/bash
+-# SPDX-License-Identifier: GPL-2.0
+-#
+-# setup tunnels for flow dissection test
+-
+-readonly SUFFIX="test_$(mktemp -u XXXX)"
+-CONFIG="remote 127.0.0.2 local 127.0.0.1 dev lo"
+-
+-setup() {
+-  ip link add "ipip_${SUFFIX}" type ipip ${CONFIG}
+-  ip link add "gre_${SUFFIX}" type gre ${CONFIG}
+-  ip link add "sit_${SUFFIX}" type sit ${CONFIG}
+-
+-  echo "tunnels before test:"
+-  ip tunnel show
+-
+-  ip link set "ipip_${SUFFIX}" up
+-  ip link set "gre_${SUFFIX}" up
+-  ip link set "sit_${SUFFIX}" up
+-}
+-
+-
+-cleanup() {
+-  ip tunnel del "ipip_${SUFFIX}"
+-  ip tunnel del "gre_${SUFFIX}"
+-  ip tunnel del "sit_${SUFFIX}"
+-
+-  echo "tunnels after test:"
+-  ip tunnel show
+-}
+-
+-trap cleanup EXIT
+-
+-setup
+-"$@"
+-exit "$?"
+
+---
+base-commit: ab4839cd3b4d65bffd574035a02568809c54a5b6
+change-id: 20250130-with-388b72afcbc0
+
+Best regards,
 -- 
-2.25.1
+Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
 
