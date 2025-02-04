@@ -1,124 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B3A219A93;
-	Tue,  4 Feb 2025 19:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B3516D4E6
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738696381; cv=none; b=l6J1aMHEX+tUIcw/9SEACaernLUP/wgASeQhaDXwPycdHG0pE4gS9Nv2kbim+/9MWYt7befW+K9T3GDUEYCwayoMAIvoEOvhxJ/SdgnMoJSJTXZB++bSOTR+LxNw6TSU287+FySqeoOFbLOsaURU14CrV6qoAbCc7QUrM9CfFEk=
+	t=1738696565; cv=none; b=j5XPulu0Ob5Y0luU69dQF/On610hJ8aS1xH/9Zz+X0h0ce+JpCgmoO5dlTj8rcA44qyBM+YOuE8bNEI5MAaIXC6jiAfQ0NMsqbhW2SWJ0Z69M/Iknhi8CGMjzUOgm1Ubqf6qhdmf4mdic2D3Dx6+MVvZTGpLcHwsb0UNmMcXe3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738696381; c=relaxed/simple;
-	bh=1THVtKrMcOwql2HvcgydagEphDPzJ/ij91ccjkdhQxM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZCHEiAxRwbS3KQS/hyFjiA/tNrr/4rdtORwUSdVRZc01Y7LQHsPFiFsZ/e46PmEyZ3VB7f8Iow9ex4nyrRBH+77YPrvhVNsMxUiPqfiuUqXN67mMllHsQjTT0m15DOij8IsZ6ryE0T7wgHZswVLV9e7yHsChzU2MReGsRJMNamc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LsnVG076; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738696565; c=relaxed/simple;
+	bh=DnItlRYKz5NSnazVyRKSxC1u7AkupexFhmFvWYVnt70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aNP4W0z9tOl+1J3V5AP/POveI5TLR1LUe1WKG5ORF5M5PC6nWgul3CoOCnSgKHo44zTcamSoFHkSzcWD2D1ucgn4L16rbEtW1Q4sKhiUOnmF04FvwRunmYuH0cs4Gs+XCZIEI7y5fv0L2o4Rl4SK6HlsaEtKuN2Z2S5BuWptZ18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=VV13Ud88; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LsnVG076"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4DB5C4CEDF;
-	Tue,  4 Feb 2025 19:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738696380;
-	bh=1THVtKrMcOwql2HvcgydagEphDPzJ/ij91ccjkdhQxM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LsnVG076SFA8DyQOoNJh6S+7jp2HGrUzzhq25tzLvttmFCifAPhICxz/Ce68fJf3t
-	 sy8Y0et71iNKTcD6X5lLtpD8kfcoRCvHE4mAYK+cfeat1MNtP2vRJGwedr3NlqH0up
-	 Ktvn6a5hNcBlN8+YWELPcmY0J2PhtaCEFb3XxVCFaPVmxtUTPgWGS4vfbRR+799xjj
-	 DRVcydwqq0R36qVRU9fPQov+IhddpxnQS3rqpetYtt/gwOAEqbdj5tKHpmozKeoaQ8
-	 2HLaIecvlrMrtOvccTfdqVD3qmYFoMCd5je1FvTHVF1UDQLhdEoZq57zet7KVJzRvu
-	 1kJwIJqO5TKrg==
-Message-ID: <aa674597-a4be-4305-b85b-0a0b4d05f231@kernel.org>
-Date: Tue, 4 Feb 2025 20:12:54 +0100
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="VV13Ud88"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7b6f1be1daeso569884585a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:16:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1738696563; x=1739301363; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RbSThg2+IgOzUPVYO+O03rGdKt6FNxSQQgDDlA3zKuo=;
+        b=VV13Ud88/a6ujOwmHv3p3i0jA+i42Sq+FdVg2G5tTjVoECcp5LzoJNFHeKqp4VTtBT
+         L6NWj5XBke0zfqU+ShCXAfYWe8iCKckF0eT51s1cFPTIqOy8+DEBmUjHLOsd98rgyqDM
+         iUi/oaiw4iGlRMbxjt1bXRKDKgtFovBVKiSyWwRdSBxe7fozuwwda1MGLVrpZsafLBbc
+         xyKjB8Jq3rli2rqxUZtvrtnCL5b2TtGEpckhFHPc3BhIOrxnoNFQC/DbTPwsMaqUQWQS
+         /0ER2z0ikptzv6IXcqft3LB20XjRzy3+aJYXjE1pdBowKTrL+VkV88H3/fcTyXes/POm
+         QT6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738696563; x=1739301363;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RbSThg2+IgOzUPVYO+O03rGdKt6FNxSQQgDDlA3zKuo=;
+        b=w6AzSho/xe5f4VW0t9278xYd99VH5ny2p77SlbW2IQ475blXtcLzvPSXJUsLZ5K/NO
+         NeAHK61T4Yk8hhLatsJYMBKMXY9PpzcbFswz4rEnTgaLNZiw88qDii0mFj8YgWA1d0EB
+         WHMBAwbGp8gag1TNFaghLqArk7jS3x+QDu/f+2DGhznyw4obfmP+k41wpdss511zz8Kk
+         YNjgCopUyKi4uNGaoULqE6vJQ9DithGcAXccd8aXwDkmZg4Hc2aa1b4/NSdXpuavlW3h
+         R0HmvdLhmxEHqVZ4bdrBop16v761h2e50QJQtdGO/3HbCUaKfrUbSyl/vm367HJkaSts
+         uNkg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9YWe2opHnJ09Y/+QTe47ImsNev1VeQe4dJtllxHcqUaXSbHLLDAxu9GzQAcht1myRmE6OiwDYTF9ciKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLnnbeppsgeAgpGXPSpHyFk4ZTTF1tYkvuRWjxUVF9iqdtvEPY
+	z2Cp3mumYw8Mu5n74n533QW4vasLK7Srx9vwjMUj+p/LFRVtLRA7WXgxQ9tZp20=
+X-Gm-Gg: ASbGncsBJU50WsEd9C0R7jGcq0k9SDQmjWsZD9CNv6uFjMTb6yzaMp8NSooDI1JGAlt
+	4Enxaqm//Vosen8LtXfgoQ+/0nFJ/cn2muq1nWO+inlUf4luaMsHN0cqeVpK/yUdZk1UW9zC99O
+	ze5oT3RsJyflgBSGY5cbqIdnwgrefGl7kS3fZKenUsC6lV66dEra37xQ7SD/90ZHtrkKe0+lPrm
+	WadJdLEFQh+kLSgwXQAW7SStP7pcHB9C7MDWoTuGsFbvUHgxn9JGSwXoQNU8qJ6j1poaSHdCbj1
+	Gc3T+VRIcdG+g3CYNxk4q/sFm+arezc2ZZ6ZeHdxCcBCfNJgL/IrhXVlVo/AFYvm
+X-Google-Smtp-Source: AGHT+IFDaDGZr7b/tFbMEfs7niyU8J8dtoT91Z8F6Kt1MP6P2VK98JCkXIPoyuzy/DdpTLj+ZRuWhQ==
+X-Received: by 2002:a05:620a:2710:b0:7b6:ebc6:181a with SMTP id af79cd13be357-7bffcd9997amr4139068785a.41.1738696563125;
+        Tue, 04 Feb 2025 11:16:03 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8d97c2sm670296085a.64.2025.02.04.11.16.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 11:16:01 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tfOOv-0000000CUOy-1LgY;
+	Tue, 04 Feb 2025 15:16:01 -0400
+Date: Tue, 4 Feb 2025 15:16:01 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
+Cc: Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com, lyude@redhat.com,
+	dakr@redhat.com, airlied@gmail.com, simona@ffwll.ch,
+	leon@kernel.org, jglisse@redhat.com, akpm@linux-foundation.org,
+	GalShalom@nvidia.com, dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-mm@kvack.org,
+	linux-tegra@vger.kernel.org
+Subject: Re: [RFC 1/5] mm/hmm: HMM API to enable P2P DMA for device private
+ pages
+Message-ID: <20250204191601.GK2296753@ziepe.ca>
+References: <20250129134757.GA2120662@ziepe.ca>
+ <Z5tZc0OQukfZEr3H@phenom.ffwll.local>
+ <20250130132317.GG2120662@ziepe.ca>
+ <Z5ukSNjvmQcXsZTm@phenom.ffwll.local>
+ <20250130174217.GA2296753@ziepe.ca>
+ <Z50BbuUQWIaDPRzK@phenom.ffwll.local>
+ <20250203150805.GC2296753@ziepe.ca>
+ <7b7a15fb1f59acc60393eb01cefddf4dc1f32c00.camel@linux.intel.com>
+ <20250204132615.GI2296753@ziepe.ca>
+ <3e96aef8009be69858a69d3e49a2bd7fc7d06f5f.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/5] arm64: dts: exynos: add initial devicetree support
- for exynos7870
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
- Kaustabh Chakraborty <kauschluss@disroot.org>, Rob Herring
- <robh@kernel.org>, Conor Dooley <conor@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>, Kees Cook <kees@kernel.org>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250204-exynos7870-v2-0-56313165ef0c@disroot.org>
- <20250204-exynos7870-v2-2-56313165ef0c@disroot.org>
- <00aa901b-5de9-4b72-a157-c54ad29df458@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <00aa901b-5de9-4b72-a157-c54ad29df458@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3e96aef8009be69858a69d3e49a2bd7fc7d06f5f.camel@linux.intel.com>
 
-On 04/02/2025 19:22, Ivaylo Ivanov wrote:
->> +
->> +#include <dt-bindings/clock/exynos7870.h>
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/soc/samsung,boot-mode.h>
->> +
->> +/ {
->> +	compatible = "samsung,exynos7870";
->> +	#address-cells = <2>;
->> +	#size-cells = <1>;
->> +
->> +	/* Samsung's bootloader (S-BOOT) checks for these DT properties */
->> +	model_info-hw_rev = <0>;
->> +	model_info-hw_rev_end = <255>;
->> +	model_info-chip = <7870>;
+On Tue, Feb 04, 2025 at 03:29:48PM +0100, Thomas Hellström wrote:
+> On Tue, 2025-02-04 at 09:26 -0400, Jason Gunthorpe wrote:
+> > On Tue, Feb 04, 2025 at 10:32:32AM +0100, Thomas Hellström wrote:
+> > > 
+> > 
+> > > 1) Existing users would never use the callback. They can still rely
+> > > on
+> > > the owner check, only if that fails we check for callback
+> > > existence.
+> > > 2) By simply caching the result from the last checked dev_pagemap,
+> > > most
+> > > callback calls could typically be eliminated.
+> > 
+> > But then you are not in the locked region so your cache is racy and
+> > invalid.
 > 
-> You could skip the properties with a shim bootloader like uniLoader. Up to
-> Krzysztof to decide if you should keep these.
+> I'm not sure I follow? If a device private pfn handed back to the
+> caller is dependent on dev_pagemap A having a fast interconnect to the
+> client, then subsequent pfns in the same hmm_range_fault() call must be
+> able to make the same assumption (pagemap A having a fast
+> interconnect), else the whole result is invalid?
 
+But what is the receiver going to do with this device private page?
+Relock it again and check again if it is actually OK? Yuk.
 
-There is a strict dtbs_check W=1 requirement (see MAINTAINERS file and
-maintainer profile), so I think this answers here :). Sorry, no exceptions.
+> > > 3) As mentioned before, a callback call would typically always be
+> > > followed by either migration to ram or a page-table update.
+> > > Compared to
+> > > these, the callback overhead would IMO be unnoticeable.
+> > 
+> > Why? Surely the normal case should be a callback saying the memory
+> > can
+> > be accessed?
+> 
+> Sure, but at least on the xe driver, that means page-table repopulation
+> since the hmm_range_fault() typically originated from a page-fault.
 
-Best regards,
-Krzysztof
+Yes, I expect all hmm_range_fault()'s to be on page fault paths, and
+we'd like it to be as fast as we can in the CPU present case..
+
+Jason
