@@ -1,214 +1,147 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD56E213E8B
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151C5213E81;
+	Tue,  4 Feb 2025 15:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738682583; cv=none; b=B8usltowCGwTpWYFZ9FbpwlqdsIknU2XyxiiVA7RGFGrgu3PNvSUG67RDHw0W32H6u07sIJTQXOzvs5I7PBj9zrWC+onUGpwvjDCcOVJxKDlvnM0rYRfQYosQ/6YWKaFxuL1fOnAZ9zhdeYETtXb3olMOyedHcOxZgn7Bj349Kw=
+	t=1738682899; cv=none; b=LQX50jB6+Kt6ZGMOkfDmVhTbngATHr5PvsJgfLsWd6fv/u3a0JcFFGs+IGikYU7XPnWCplmDcXVUMg92vDg7tn5oTKQNZ2SevSjYezKYpGyUa+C0hNWtuT4Oy/d0TzdOnDZreTr75gpjXHCYS9yfbZaelApyA4C7be8EeQjcOMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738682583; c=relaxed/simple;
-	bh=+QHEmhin9eq4MJnLF2NbF5F6nGIZ7V/TMIa16O5ywCA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TfDMpDaKv9R14NzZnnuDGptyXXCv5nLC6FxqZf4GXCmEW6BnGKD7YOE9l35HK2j/OBrT785ANOE8DPf+rOGiDM6Z4hxbtM83VXsRROx/stFVM05hUYdlN7XAKnDoWp8gT3svKnIQU1K85YjqBAW6mSeYVkXkTfDZHxmwlhAr9pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net; spf=none smtp.mailfrom=ursulin.net; dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b=m1Az6B7D; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ursulin.net
+	s=arc-20240116; t=1738682899; c=relaxed/simple;
+	bh=+RTmhaHHaQGm4cIFZWnW7TQKI/e/CUSRnumlIk8Xc7M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CeKn6KtONSGYR/tJRPuETmltPFPyvfke1zdePNwIMUje5C12uHyHO2pTMjphr1hZMRtQ9A0sVQ52fivBOgvEz9+nK++JzbMn0V0bGq9jVAL+ZbFFBRT8e1cGBlta1H17IPv+FYd6qTr3encvWQg5osW+8V74rMxq6H+gmw6E/WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mjZJPmmE; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b="m1Az6B7D"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4361f796586so67462525e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:23:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjZJPmmE"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38da88e6db0so440851f8f.2;
+        Tue, 04 Feb 2025 07:28:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ursulin-net.20230601.gappssmtp.com; s=20230601; t=1738682580; x=1739287380; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uHPzkNUrpAio+U5bG1xs4+WPUC/pQ8D7HaWPlsKB46g=;
-        b=m1Az6B7DrrYVvEF8GW2gZiuC9HzKj0MtZZt4c0aci/0vPqbP0luljzwy6MhaTHKxei
-         aV+Osl3+CFweUzlpsfrODTqQgs5fIgPtKq0k0/yevXfm+I320wPsU+UjFMIBWRNPLn7e
-         g2G1Y02Y4zKIy+0q0iZqKrCj/Q7ioumK0T0RwkT1MxO00r78xh2DJlPPFP2MYNkJJ/Sq
-         dV9H+RWqq3vCtBgOFOALvysQ1XCeHsIY/C+3UHcK8oKnaexaP8YXNK1HTi3SaWxYDW6F
-         YSA04R4Ho2ovGbvCcsrxgThW7Lykcu95Uwsde7uNbLpvz45+0Of/C3i+v7AB6AxeGu5F
-         3Igg==
+        d=gmail.com; s=20230601; t=1738682896; x=1739287696; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CJhPx/n140dbE5Ug5FtKmDwUapQIL+7iGwFgWil94QY=;
+        b=mjZJPmmEg17I3X2sItNy7ITedaTCpWNgiU+7sYjhWEL0m4vZ5raPZM4wTVEnOT9PRD
+         YTZ10dlU/K3ReS4ZNLH/9vu/KO6tH5ULQbVCff3zKb9JDYXZM/5mYwF81pvWLEX+EgkQ
+         +I7t6Hrb32cid5iS/gbMZYu2q3apNeFvrJWtPos/PrhJIqvIJmmZJWdQi/WbQfwLBdT+
+         yMwzFwYzIS7Lv3YnTtk+V2pPEqXsqoLvWQGRJ9d4HmoaNKCih8yx99MmqM4/LG/nWmyK
+         9hwaNhbe93ts+OkKpWNkkSvzpaFnFSUUZYUg4SXMupJoOE0tum6CG72Jbt/vv0megekO
+         BfaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738682580; x=1739287380;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uHPzkNUrpAio+U5bG1xs4+WPUC/pQ8D7HaWPlsKB46g=;
-        b=irzdLjk/4GG2QOuDOcMWNUHzikQRF0R3hKwnC70MVa6+T0pCKzH9btUFlWDzL66Smr
-         NurI3TLQYXszQreO0T1FPPuJ3x8otAbFNczmkhsrmcZ3RSJyjnDNKwsmekOAcBMBsgll
-         vTcEqSlPxcDTn7IsyZsbDDn8Dn49X52d1UaIU20nOfa/ybfCFn0v6ij2TBbAx0zKBG5d
-         476A6EOuOmgMa2s8qV0QlEvTfHs0JmJZm1IAMi/OeDhTY8gAlQv5XwoUMOcXPDeHJQHI
-         f6asjmkI4loDUibsh9P++EjdwdzCSNTFWkBXvOpyxErmKMxLMQEMExVmZ7mo7AkYxa03
-         nT6g==
-X-Forwarded-Encrypted: i=1; AJvYcCU2dJ6ZIljrdOwvSYTSZQru87atbucxVBjkHchRJpjsk/S3KLyP/D23n2gOKwB+kSADsXQt45LnVid2aGA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsW3acQYVXxLUZTfde7pvrUHEIvB4C2f6f5Cq9LROke7yj1ByW
-	gIeXqKE2fdrvYqp1ZXDYRSMB7azu6VQnih1Ez17ckxzwQzqhhfQdOiTAqgGe/V4=
-X-Gm-Gg: ASbGncudns1Ws/NguVlNm/PULPVhPaM+TeEIcrUXCyq0sSEtkvRsVNs5lqQrclNYmcS
-	0Nxy8iS1BuQyoIwoWAlTddaTY6OKZilSxs4oGkxT1CYvCQULdzqXqyEKXakFiHXwFXxboIp5FFg
-	rVHBgYWguy5AsHXIVy/CJRAFkh+Io00zAjklg0wmmr7hBzDBBeATjid4LduvzVOO4fC5Yr+S2Gl
-	vJyPjJEyZsj2ZhOMM8CmzrVH4NmPO+NzVebZ0QY5ci/Q82KmUcmU+1+5CLYJpWZt2LqtfXEKdEg
-	/C3DSjJU60kqwxpncVFOZl4UIopVbdE=
-X-Google-Smtp-Source: AGHT+IEntKLHr8j1sa+aY2Ls+kNA4qbxjue7cUKL+PfzPTcK+ezljDd4qdj5+6d5zwUZ+43zkQB0bw==
-X-Received: by 2002:a05:600c:3c82:b0:430:57e8:3c7e with SMTP id 5b1f17b1804b1-438dc4251f2mr231551085e9.28.1738682578837;
-        Tue, 04 Feb 2025 07:22:58 -0800 (PST)
-Received: from [192.168.0.101] ([90.241.98.187])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b5492sm16239592f8f.73.2025.02.04.07.22.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 07:22:58 -0800 (PST)
-Message-ID: <cc3444d8-a354-4332-93e7-0b1a70d3c4ac@ursulin.net>
-Date: Tue, 4 Feb 2025 15:22:57 +0000
+        d=1e100.net; s=20230601; t=1738682896; x=1739287696;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CJhPx/n140dbE5Ug5FtKmDwUapQIL+7iGwFgWil94QY=;
+        b=iiFEnLZbQs1JLYEyFwTRt28v7hAyw6gUUxP3mkxydWQ2BlxY8LGix9ynoJZfc0r2WG
+         dkJcKucrng/DfUExTTYgIzYLEmeX5bgj8Lt7/ApkJZ3IDcHDQ3obeDRqVRWGfRq77s8p
+         oGJE0/eQDqKcQH1vO3FaFva8oXkNQfTFyXrBHH2mS7COvW56ya0gYSGKJ6YL8pjhqfij
+         TkN1BCuaicgxO7XSv6Ggg1BnlH3O2CxYoWInVw3vzgqUKRDb/WIy++/r+5sZv7vypTkU
+         e8ZpqAB0ABOrzcixPFFTX/Yhwkt77sNC2zzOOb7hpWSba3XV1J5fPAW1kFQ0yGioto+f
+         YUdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDyNNrMynLJyGhaFrLd+IbtcSpCCqJcPVpXSVL6a3ciZIkQBeMKVHWrQ8Nvl+efGaCAZ43rwa54H2VpBalKg==@vger.kernel.org, AJvYcCWFiCml5nLfIQiiuCNryCmt/8f7sxbPkK7SlBw+tNxojdD2gBv+c4qn0yF/NbqtIunkIHeRk6OXH+uB/XVw@vger.kernel.org, AJvYcCXW57dCsCJR9OZbo9uG5XOFvLFLaZxMQLSIqz0Z9Nmhjz9MSkySkfU7xhAWRunfVMzcip4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbMBgdg13DC46sIEt90FRXfaI0YmKmrZACmAQRkWXAF+DTEofX
+	Bi0JGICXNhR21cpbwLErTu+7hVOUblY9Fzd8et4lVowkychtvkVZwpCrWXgunP7WQGcD2jxbMI1
+	ZFpwDScKqDd6uIsDlB7L04MoJWg0=
+X-Gm-Gg: ASbGncvHSljK6I87xQOBk39fgbjidmtuScBT+YBAICjM7Pj8eNswvvojyI6lhe3bUS4
+	toA1NUDV46gREM88lW9wnQmSp8VqFA1UiHCk5dEV8hYhdrCSEXzR3N54k0ptzRWVzs0PtvyPlVG
+	y654/7JHS6HTQn
+X-Google-Smtp-Source: AGHT+IFhUU0NGcAm74lqYKBjmVZFYxqKNWGzHqhC76jkheWflwBMBvUcfdp+145E+7L0HxVO/HGqB2zGjvC83k5JbeQ=
+X-Received: by 2002:a05:6000:1a8d:b0:386:36e7:f44f with SMTP id
+ ffacd0b85a97d-38c519602famr21645102f8f.18.1738682896006; Tue, 04 Feb 2025
+ 07:28:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/7] drm/sched: cleanup gpu_scheduler trace events
-To: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
- Luben Tuikov <ltuikov89@gmail.com>, Matthew Brost <matthew.brost@intel.com>,
- Danilo Krummrich <dakr@kernel.org>, Philipp Stanner <pstanner@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-References: <20250131110328.706695-1-pierre-eric.pelloux-prayer@amd.com>
- <20250131110328.706695-5-pierre-eric.pelloux-prayer@amd.com>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tursulin@ursulin.net>
-In-Reply-To: <20250131110328.706695-5-pierre-eric.pelloux-prayer@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CGME20250122131159eucas1p17693e311a9b7674288eb3c34014b6f2c@eucas1p1.samsung.com>
+ <20250122-modules-error-injection-v1-0-910590a04fd5@samsung.com>
+ <20250122-modules-error-injection-v1-2-910590a04fd5@samsung.com>
+ <CAADnVQJ8tYSx-ujszq54m2XyecoJUgQZ6HQheTrohhfQS6Y9sQ@mail.gmail.com> <xsg3mrozb3zd7g3hqki7lvdkc4zbi6bs3oiif64kvnnldaai5a@3g7gnpcz5igh>
+In-Reply-To: <xsg3mrozb3zd7g3hqki7lvdkc4zbi6bs3oiif64kvnnldaai5a@3g7gnpcz5igh>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 4 Feb 2025 15:28:03 +0000
+X-Gm-Features: AWEUYZm7qusB4k_yByZ1Yov0CkD9oT2bxmzUNE_2hxazTeM6MjG1S9C9NSBjpNk
+Message-ID: <CAADnVQLto_Zt7q4vmTFXby0QH8QX7r5am5inLskC5sKqL=0gow@mail.gmail.com>
+Subject: Re: [PATCH 2/2] moderr: add module error injection tool
+To: Daniel Gomez <da.gomez@kernel.org>
+Cc: Daniel Gomez <da.gomez@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-modules@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, iovisor-dev <iovisor-dev@lists.iovisor.org>, 
+	gost.dev@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Feb 4, 2025 at 1:30=E2=80=AFPM Daniel Gomez <da.gomez@kernel.org> w=
+rote:
+>
+> On Wed, Jan 22, 2025 at 09:02:19AM +0100, Alexei Starovoitov wrote:
+> > On Wed, Jan 22, 2025 at 5:12=E2=80=AFAM Daniel Gomez <da.gomez@samsung.=
+com> wrote:
+> > >
+> > > Add support for a module error injection tool. The tool
+> > > can inject errors in the annotated module kernel functions
+> > > such as complete_formation(), do_init_module() and
+> > > module_enable_rodata_after_init(). Module name and module function ar=
+e
+> > > required parameters to have control over the error injection.
+> > >
+> > > Example: Inject error -22 to module_enable_rodata_ro_after_init for
+> > > brd module:
+> > >
+> > > sudo moderr --modname=3Dbrd --modfunc=3Dmodule_enable_rodata_ro_after=
+_init \
+> > > --error=3D-22 --trace
+> > > Monitoring module error injection... Hit Ctrl-C to end.
+> > > MODULE     ERROR FUNCTION
+> > > brd        -22   module_enable_rodata_after_init()
+> > >
+> > > Kernel messages:
+> > > [   89.463690] brd: module loaded
+> > > [   89.463855] brd: module_enable_rodata_ro_after_init() returned -22=
+,
+> > > ro_after_init data might still be writable
+> > >
+> > > Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+> > > ---
+> > >  tools/bpf/Makefile            |  13 ++-
+> > >  tools/bpf/moderr/.gitignore   |   2 +
+> > >  tools/bpf/moderr/Makefile     |  95 +++++++++++++++++
+> > >  tools/bpf/moderr/moderr.bpf.c | 127 +++++++++++++++++++++++
+> > >  tools/bpf/moderr/moderr.c     | 236 ++++++++++++++++++++++++++++++++=
+++++++++++
+> > >  tools/bpf/moderr/moderr.h     |  40 +++++++
+> > >  6 files changed, 510 insertions(+), 3 deletions(-)
+> >
+> > The tool looks useful, but we don't add tools to the kernel repo.
+> > It has to stay out of tree.
+>
+> Can you clarify what do you mean? There are other tools under tools/ and =
+tools/
+> bpf [1].
+>
+> [1] https://lore.kernel.org/bpf/20200114184230.GA204154@krava/
 
-On 31/01/2025 11:03, Pierre-Eric Pelloux-Prayer wrote:
-> A fence uniquely identify a job, so this commits updates the places
-> where a kernel pointer was used as an identifier by:
-> 
->     "fence=%llu:%llu"
-> 
-> Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-> ---
->   .../gpu/drm/scheduler/gpu_scheduler_trace.h   | 41 +++++++++++--------
->   1 file changed, 23 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> index c4ec28540656..3cdd8d8f8021 100644
-> --- a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> +++ b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> @@ -36,28 +36,29 @@ DECLARE_EVENT_CLASS(drm_sched_job,
->   	    TP_PROTO(struct drm_sched_job *sched_job, struct drm_sched_entity *entity),
->   	    TP_ARGS(sched_job, entity),
->   	    TP_STRUCT__entry(
-> -			     __field(struct drm_sched_entity *, entity)
-> -			     __field(struct dma_fence *, fence)
-> -			     __string(name, sched_job->sched->name)
->   			     __field(uint64_t, id)
-> +			     __string(name, sched_job->sched->name)
->   			     __field(u32, job_count)
->   			     __field(int, hw_job_count)
->   			     __string(dev, dev_name(sched_job->sched->dev))
-> +			     __field(uint64_t, fence_context)
-> +			     __field(uint64_t, fence_seqno)
->   			     ),
->   
->   	    TP_fast_assign(
-> -			   __entry->entity = entity;
->   			   __entry->id = sched_job->id;
-> -			   __entry->fence = &sched_job->s_fence->finished;
->   			   __assign_str(name);
->   			   __entry->job_count = spsc_queue_count(&entity->job_queue);
->   			   __entry->hw_job_count = atomic_read(
->   				   &sched_job->sched->credit_count);
->   			   __assign_str(dev);
-> +			   __entry->fence_context = sched_job->s_fence->finished.context;
-> +			   __entry->fence_seqno = sched_job->s_fence->finished.seqno;
-> +
->   			   ),
-> -	    TP_printk("dev=%s, entity=%p, id=%llu, fence=%p, ring=%s, job count:%u, hw job count:%d",
-> -		      __get_str(dev), __entry->entity, __entry->id,
-> -		      __entry->fence, __get_str(name),
-> +	    TP_printk("dev=%s, id=%llu, fence=%llu:%llu, ring=%s, job count:%u, hw job count:%d",
-> +		      __get_str(dev), __entry->id,
-> +		      __entry->fence_context, __entry->fence_seqno, __get_str(name),
->   		      __entry->job_count, __entry->hw_job_count)
->   );
->   
-> @@ -75,37 +76,41 @@ TRACE_EVENT(drm_sched_process_job,
->   	    TP_PROTO(struct drm_sched_fence *fence),
->   	    TP_ARGS(fence),
->   	    TP_STRUCT__entry(
-> -		    __field(struct dma_fence *, fence)
-> +		    __field(uint64_t, fence_context)
-> +		    __field(uint64_t, fence_seqno)
->   		    ),
->   
->   	    TP_fast_assign(
-> -		    __entry->fence = &fence->finished;
-> +		    __entry->fence_context = fence->finished.context;
-> +		    __entry->fence_seqno = fence->finished.seqno;
->   		    ),
-> -	    TP_printk("fence=%p signaled", __entry->fence)
-> +	    TP_printk("fence=%llu:%llu signaled",
-> +		      __entry->fence_context, __entry->fence_seqno)
+As you noticed we added only one tool out of many and recently
+discussed removing it, since the value of keeping it in the tree
+is minimal.
 
-Any chance to rename this tracepoint while changing things around? For 
-me "process" is not intuitive to what stage it refers so maybe a set of 
-tracepoints like:
+> I will anyway move the tool to the suggested location in the other thread=
+.
 
-drm_sched_job_(wait_)dependenc(y|ies) - more on this in the next patch
-drm_sched_job_queue
-drm_sched_job_run
-drm_sched_job_done
-
-So the naming is standardised.
-
->   );
->   
->   TRACE_EVENT(drm_sched_job_wait_dep,
->   	    TP_PROTO(struct drm_sched_job *sched_job, struct dma_fence *fence),
->   	    TP_ARGS(sched_job, fence),
->   	    TP_STRUCT__entry(
-> -			     __string(name, sched_job->sched->name)
-> +			     __field(uint64_t, fence_context)
-> +			     __field(uint64_t, fence_seqno)
->   			     __field(uint64_t, id)
->   			     __field(struct dma_fence *, fence)
->   			     __field(uint64_t, ctx)
-> -			     __field(unsigned, seqno)
-> +			     __field(uint64_t, seqno)
->   			     ),
->   
->   	    TP_fast_assign(
-> -			   __assign_str(name);
-> +			   __entry->fence_context = sched_job->s_fence->finished.context;
-> +			   __entry->fence_seqno = sched_job->s_fence->finished.seqno;
->   			   __entry->id = sched_job->id;
->   			   __entry->fence = fence;
->   			   __entry->ctx = fence->context;
->   			   __entry->seqno = fence->seqno;
->   			   ),
-> -	    TP_printk("job ring=%s, id=%llu, depends fence=%p, context=%llu, seq=%u",
-> -		      __get_str(name), __entry->id,
-> -		      __entry->fence, __entry->ctx,
-> -		      __entry->seqno)
-> +	    TP_printk("fence=%llu:%llu, id=%llu, dependencies:{fence=%llu:%llu}",
-
-Will dependencies ever become a list here? Just wondering if plural and 
-curlies bring anything of value, or if it would be more readable as 
-"fence=%llu:%llu, id=%llu, dependency=%llu:%llu".
-
-Regards,
-
-Tvrtko
-
-> +		      __entry->fence_context, __entry->fence_seqno, __entry->id,
-> +		      __entry->ctx, __entry->seqno)
->   );
->   
->   #endif
+I don't think it's a good idea.
+Keep it outside. There is no reason for it to live in the tree.
