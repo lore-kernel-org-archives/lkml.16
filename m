@@ -1,231 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B233020125D;
-	Tue,  4 Feb 2025 10:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738665819; cv=fail; b=tndnm2u/Azm7UTn6ni32to/brctt4OZxi1mFjxxoCfcvttL6vsBtErYcJgPXjSkaG/3j8lUf0YW22Nij/+aUL0sY9SckuwOMparJBB0AB1armWxt8ciFnbKE4KyS4BTi6kGEMImfbrf4Jn6hD1IUs8Q+U9PN1QVsZ8Kvfi27+JU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738665819; c=relaxed/simple;
-	bh=W9/bbpxxOXaf576h7rqF2N+FXx0J10Q0miyLwzK0VCM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XJsBxQ2DsjbxvOwWvOqHBG8J6YfSqbUaj/1nIGb6lrx2MzkqiTi9B9dN6C4ACB1kto6MrYSM75YvWUT7eEjO07UnAYsOr9TvpnRnlUqGEkJsQcMiL4mT3JfauWSHf52mhze0MXuHhOPCXXSKpNn2g1kl6SA+bJX1ZTaRUlRFxL4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fFQgvHhG; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF38820ADEE;
+	Tue,  4 Feb 2025 10:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738665849; cv=none; b=KbFiVRsF+Ni5w8OhdK/ks157pyepu0cf3k20wARZzl1M7ueGYqtQ0TL49JnCpkeZeialdNbH9yTYc+/sV3nKh8+oNDJYwY1/95iD7xxIpmsQMZk0jgE8aCzwYPTlfsoJ+6ufjyYCKW2ylBRafmMB4OPb6oEL2U+ktJ4J4uoPZTg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738665849; c=relaxed/simple;
+	bh=FnlSQ301/+be7sD0TFrmBFg3fr5i6FZe2auLZGNlS0U=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=m3rID64yurslEkpWABLv6F5BKMCGlFi6ehh4IBBk1Mgu9wVoR+vZR2ZjXmijoYxpb06vXK8Z0Plk7N15jtIgfNNbVN5Xwoz+1MdqU3Gtd25agGPb+oPtO1Kdcpacjvt44QTPji6hSvMkrZix3MGZz7zWyFNfU79+hGrfZSsaZUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ah/bp4rS; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fFQgvHhG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738665818; x=1770201818;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=W9/bbpxxOXaf576h7rqF2N+FXx0J10Q0miyLwzK0VCM=;
-  b=fFQgvHhGkKrlkvPxnnUpk08GBnS01H5yAn7n9DrPHvZgNjBoXPo7jX0Z
-   9WrGGdn0eyXKloGRqaDs4/wg+NI+6/wPHlNZ0Rasu9opn5IouMGbUB7FT
-   sCeqovzqHSV5TcopBcOURH9wiZpIYlmPW6BUqqqZfbZue+AxONK4j45a+
-   HcF1DS8h8hLTgQDQjKqw70mfa+UufitnIOVwUw5gHRPpPbqxLyoS6XneY
-   M6lidb1Dp3wMWuRmo7uSUuIIJNJlcBf/k+RwNrstcVK342siz/IbiNd/+
-   YUGvJ8C96LDsxjqPJoBUtI7I6rI3V8n3gLmBspsg6ZAqsETXmFMrF5NMl
-   w==;
-X-CSE-ConnectionGUID: EH6wwfZUReaLgrugf9YR8Q==
-X-CSE-MsgGUID: WPfxO+CKSr2AuGOAlen3JA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="50181213"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="50181213"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 02:43:38 -0800
-X-CSE-ConnectionGUID: TlNT/kNVQLS3dIwRrwnkWQ==
-X-CSE-MsgGUID: edwSLEiTRCC1dNXCg628hQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="141445225"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Feb 2025 02:43:37 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 4 Feb 2025 02:43:36 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Tue, 4 Feb 2025 02:43:36 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.172)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 4 Feb 2025 02:43:36 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=T2Oty9Fichv3OIsyqhpyC6eqU9ouabwTaSm19+LcyFBMVq0rUxGFasfIZIcfFUNl+/zB5/gXk6RI4rwndBZOmjiuq3SiTgH1x7VL53ViTJPFafnCiMUQPog6/k2LPCtlRSr21QxJZxIgeFmSOTYgra3RMkiEeIzM3e6ulkU+XjMswSkjP/E/cW6mBbAKKJh+MYnPaotjd0+pxeZi6oIRadmZGpT64zVPtJ+k5lqRzP/EKZp3DLQBBGLk2Bx/9YhdbmAbIoCYrjj6mgqyNT8L2yNFh+9J15geibr1LYGss2IOBH0mvjrIQQXLKpq2WGpuJ2+F6obeJ8fGb82hDFlBUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W9/bbpxxOXaf576h7rqF2N+FXx0J10Q0miyLwzK0VCM=;
- b=IjJMxLSFnUQNabEdrglFpk9qgC7BLxVtIkYyGjhdQI+Nd9RWgOXDMwFDBvSERid5uw8zBjreqCfvQTllal9M+tMrYXfdmPWzN//VJ/5QQC/w75+5u4AqfiZmydV2aNwiMI7J8FmFdOD80c2zolMRAFQhjeOc9XtqfnZO47Q3UcIdem7PazKeVpW43nuaAr09MH1nrHTENDIgR6WDj70XoCP+Hq7QN2KIBdErgDVNA2teElbq0ea+FCQV6ewp+sbymkWjhQBvDk+Yk6/NtmIYOlLUutbylcdM8T8AgYVlmvI0WaSB+mKbCFwpPF9jecZH/56V+Lq6ZBY43bf2qT6K8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL3PR11MB6532.namprd11.prod.outlook.com (2603:10b6:208:38f::9)
- by SJ2PR11MB8469.namprd11.prod.outlook.com (2603:10b6:a03:57b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Tue, 4 Feb
- 2025 10:43:20 +0000
-Received: from BL3PR11MB6532.namprd11.prod.outlook.com
- ([fe80::2458:53b4:e821:c92f]) by BL3PR11MB6532.namprd11.prod.outlook.com
- ([fe80::2458:53b4:e821:c92f%4]) with mapi id 15.20.8398.021; Tue, 4 Feb 2025
- 10:43:20 +0000
-From: "Rabara, Niravkumar L" <niravkumar.l.rabara@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-CC: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
-	<vigneshr@ti.com>, "linux@treblig.org" <linux@treblig.org>, Shen Lichuan
-	<shenlichuan@vivo.com>, Jinjie Ruan <ruanjinjie@huawei.com>,
-	"u.kleine-koenig@baylibre.com" <u.kleine-koenig@baylibre.com>,
-	"linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2 1/3] mtd: rawnand: cadence: support deferred prob when
- DMA is not ready
-Thread-Topic: [PATCH v2 1/3] mtd: rawnand: cadence: support deferred prob when
- DMA is not ready
-Thread-Index: AQHbZ8ZOILCVzRcq3EiB9N8/dGJ/ZLMhBMtugAlQtQCAA0UcDoAA++LggADu3AKAB1OZ0IAAI5krgAAWHVA=
-Date: Tue, 4 Feb 2025 10:43:20 +0000
-Message-ID: <BL3PR11MB6532369D14375CC94AA2714BA2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
-References: <20250116032154.3976447-1-niravkumar.l.rabara@intel.com>
-	<20250116032154.3976447-2-niravkumar.l.rabara@intel.com>
-	<87plkgpk8k.fsf@bootlin.com>
-	<BL3PR11MB653276DFD3339ADAADC70CCFA2EE2@BL3PR11MB6532.namprd11.prod.outlook.com>
-	<874j1i0wfq.fsf@bootlin.com>
-	<BL3PR11MB65321B556C59C995DC05C70AA2E92@BL3PR11MB6532.namprd11.prod.outlook.com>
-	<87msf8z5uu.fsf@bootlin.com>
-	<BL3PR11MB6532451B44E7C5D82F5EC4AFA2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
- <87o6zi83se.fsf@bootlin.com>
-In-Reply-To: <87o6zi83se.fsf@bootlin.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL3PR11MB6532:EE_|SJ2PR11MB8469:EE_
-x-ms-office365-filtering-correlation-id: 0aa930e3-c54d-425c-3644-08dd4508bddb
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?SzRjN0dPVW1LQjh2YnVNQUhqdkNtR3grS1NlWjFYYnF0a25YUU1IaW84ZTR0?=
- =?utf-8?B?NHdiUy9NalAwbWUxcW9QSjNQYlJMNzIwM2t6UEZsS2hXMnM1OFgrVnpVS1c3?=
- =?utf-8?B?WktJYWVMTDhndUNuZjk5d0tNRG9QektiODRuTTIxVUJEUDFOaWxxUlNyNkgy?=
- =?utf-8?B?MCtPVDdMcnp6VWY3NGdyZTV0dzFzMXJ3ZEhIcTg1d2RkVHVsamUvSGsvTW96?=
- =?utf-8?B?T1RraHdIVFBtM0xuSS9GcFYzSFBsdFJXMEowTG5EYWxjWTg0VVlheXNzRGJU?=
- =?utf-8?B?Wk5kd3RySDh3MStnZGdIUXBQTXFucW9KaHFKWGtsN2NoZFd2ejhGUHlweGVh?=
- =?utf-8?B?bmoxMkQzdEJGRmR0cWRJT2dxcDEyNSt1SXUxbVU0azJ6WERGY2JSRWJYak9o?=
- =?utf-8?B?VEZEUlBMRzZhN0JuZ0ExaENrSlFpUjNYTlVlallydGlIZUFZRFZSUFNMUll4?=
- =?utf-8?B?U3A5c3NCaFN1RHIvbzIrN05zVkJ3VTZESUVoT2ZvRE9JbXFtdHFKbTNseXQz?=
- =?utf-8?B?cS8yc0QxNlRxZENWU0owRlZWRTFlckNqMXVYd2Z4V25lNmJrcTFSQWFzM2l6?=
- =?utf-8?B?QmxWdDczVmRYaGc1VDlYZVIyK3lQZExScUhtWDV3ZmZaYXJPYm8wak9CU2Vw?=
- =?utf-8?B?VHoxeFFDWEVCNjM0SVg5czU0TFRqc0ptMWEzbEZLZHRidS9iRFZMdjJRR2c2?=
- =?utf-8?B?VjhueTZleER5MGF4VGlQd3ZoSWNYZE43ZjlsT3ZnVlZISW0wN2NWOVUyTjBl?=
- =?utf-8?B?RWpGbUtBclFBY1dJQlNveE9kWlFvNVhRS1pQTzFpanZwcDY4M1hwVFlOV3JL?=
- =?utf-8?B?M3I5dmVkOTcxWi9oSGtEazlNNHdYdnFJd3hacE5yYkpXK3o5QmdNcmtZWGU0?=
- =?utf-8?B?eVhtdkxBcldUZWVsczBzang0b2loTW9TQzFwMFpEcnR3OEQxU3BNV0NHL1B6?=
- =?utf-8?B?UkFueTZsb3dZNG5XZzVZRVRadDRiMi8zN3F2eHVIT200TGxTbGxmR21nYVlW?=
- =?utf-8?B?T1dzV3NjWU1MUmg4MTRBakJLNzFXK1BEeitkVVpmSTllMHVhZjBqUE1tUlVt?=
- =?utf-8?B?UGNITG5VTDlTV0FtSnJZR2I0ZDFvVy9uT2dyRnRnOHlBNGMrem92cjIvL0pv?=
- =?utf-8?B?RVNmTzJ2QzlzUEhxSSszNmtXeTltK2dVRktsMlZEd1RWbndhbWFyNWxxRytK?=
- =?utf-8?B?WkR4b2FlZEtsZU9EeWsycU1xTDhFWXg0dTlvLzl2MUExWjNiOEVqcitlQzhy?=
- =?utf-8?B?RGR4ZzB3L3V3dGhPUDlXb2pKTWtMQm4yWm1rdUxubkpoM24yQkgxb0VDTWMy?=
- =?utf-8?B?UVQvS0t1Q25Dd2RkWVYwRFZvb1g3WE1KT2JOYkRycGpYTm8wT1p5S3BjWlZF?=
- =?utf-8?B?aC8veUtBaCtUSTFROHc2RnBPYVo3NEZJWWRiOGdJbFFtWlpxeFMvNjV0L1Ez?=
- =?utf-8?B?S3lqKzBDWmZ5WjJTMFdNaGRBdzhjbW90aURHY0Zyd0xnQkVaekxqWmJzOWs1?=
- =?utf-8?B?Nkg4RlRFZ0R1VmhtT3cyWmUrcWNNc3d5OUZhdGhtMXdhcVFVcXBoRGFPZEJz?=
- =?utf-8?B?cmoxbXMyTDNMT3RxNTRwanlCNzlqVG5OUFkvblo4WkRFUlp2dWFVVFFnalVn?=
- =?utf-8?B?di96elZjU05MUnJCc1E1by95VE04eFB6TUZwUjhUY09MQUl6eFhTRDdSdWRM?=
- =?utf-8?B?NnNCSkgxRVpITXRrMUhHZTRaWXFNL08rVVJLWlR1QWJmaFcyWC9VaExONWxW?=
- =?utf-8?B?WjR3eXZTcmhzUHk4ZmZaT0c2a25QT3VUOTRicVlIWUhjSitNaStFTzk2bS9a?=
- =?utf-8?B?U3d0MTducVU0MlBoSXM5eWprRU54TWJDakVQYXMySmRCak5jUWlwUzVPSHdK?=
- =?utf-8?Q?UqqkmSsuZjB8X?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR11MB6532.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?TmtyWHlPcnNZdmJYTkJ1eC8yRFAwMXkwUW8yblFGb0RDZm41akdrR0xwRE9k?=
- =?utf-8?B?ZFZkZUh5cndSRDlMWmhkVFpuSWY2OFVMNkdvZ2RvcVB2K0I3ZWVMYmR2ZjlY?=
- =?utf-8?B?YjhxYi9jWERoWWtxRE9HQUN3YWVyMVBkN0FPaVk1SC9aZEFoY1ZwMVU2OHRC?=
- =?utf-8?B?dGVWRHlIemV4MU9nQ2MxRUpBZ1hRSjdnRFN5Y2h5em03bUhMSVdvZmVzNVBV?=
- =?utf-8?B?b09RejlnWjU3MURsL3dHNHpCTzFtSGdiNVR2M2NmZFR3RE5CNTc3eVN2MSs0?=
- =?utf-8?B?L1BUSGhzSDVmOE10K3lVZzNneVJGa1NsRlpTU2tqQ0JCM2xOcEdmVmZXZ25H?=
- =?utf-8?B?dGs2T3ZFbWt0d0o5T1dGVHhUaWVUMGlVV0J4WHBOcGVrZkRFMHEya3A3M202?=
- =?utf-8?B?YzZ1K2J3aEJaTDVlNTBqVXFyMnVXTjZtaFhCbWkrSkRXM0lQZGxURWVwSVlB?=
- =?utf-8?B?dFNKbXR3bWJId1lnYmlId25aejk2MFBDeFE3VkJ5RlNPR2U1Ti9uaEN3THg3?=
- =?utf-8?B?bGl3UXpITWxOQnZiY2hjVUdCL3FUc04xdzJOSFhBNDMrL2wvSnUvbVYrN2tY?=
- =?utf-8?B?V3dpVDNKTEFLRWg5cmlNeE9RRmZvWFMxWEhxMk5iTWdnSmtyem1Cb2NscnNI?=
- =?utf-8?B?blBwOW5MejdaYUdjOXEveklWbzRmVnRuR2UyWmZ1NHMrSzEwOHF5Sy9Nb0xB?=
- =?utf-8?B?ZG03Q3I5MlRUZ3Uzd09YT0N2WUZIdHVsRTdTaEVpaUNUdTh0OE5XWGdxYjZi?=
- =?utf-8?B?WGh5N1VLa1BiV0pPT1FnSzJsWDdleURSSklERmozd3RTaFlLbFN2UkF4NUY0?=
- =?utf-8?B?bWxzdkNIUENxQWlkYVRJcjRKYk9GT3VMSTM1NU5KMWxxellta2RyRERKcmgr?=
- =?utf-8?B?U1p1OFdiWk1zbEhDY203OFJoaW54b01KSzFUTS9Oam9VZk9zZ3I1UW5GWWJZ?=
- =?utf-8?B?RGZzZmQ5cW1vdW8vbjlmSEJWRXNScFJwbGNZV3V6Rk96R0RyL0NWcVZabUxP?=
- =?utf-8?B?QlR2SkFsSENDS25Wa3hKOVhTZWowMVF5NGg2MUZ0K2F1bjFOOXk5Lzk5U2FU?=
- =?utf-8?B?UEVuWjRPRTcrRHVScHcwQU1nRk82QzVOZ3h5RmNkVjJxYVFSSStJV0IrMEh0?=
- =?utf-8?B?ek55RW9TOVJoUmFJcWY2d28rQjI1azZkZHR1dmlROEEyM3l2ZXVDODBvZlQ1?=
- =?utf-8?B?RFlxUGNGMnM4NzB2VkU4c0lSYnJyTFgybFNsSUZ2KzZtSGtaZTVSZFRFUDFp?=
- =?utf-8?B?K2VtNjk0dzBHZVF5ckZzcnVCbU1HY3g4aUc0MURGdDNSUEd6Q3lSWWFQTkt5?=
- =?utf-8?B?WFUxTjVuYkVaVXBhVXZhL2Z0cWhQSUpTTnRWYUJ2S1JPK3ZyYWloS05IcFRV?=
- =?utf-8?B?NjdEUFZrd3MxTlJKMk5sVEM4L1JpR1ZtQVRoT1FpNUxoWitydG1SaDloeldQ?=
- =?utf-8?B?aXZ6Z1lydzFaSWIyUkxkRWhOak1HcjUzcUlveUxhZWJnbzJkZmpMRStDQUZQ?=
- =?utf-8?B?aFlPdFBIQXRhcmpOVm5mVm9TTTZyMk9CaUZKVS92dlZBS1dQSDVyWDROZ29E?=
- =?utf-8?B?eHNCMHBDazF0UGQxa3llRXd0VCs1Qll6Vi9zZjdLQ00wQ05IWHRpOWJFYnU3?=
- =?utf-8?B?ZkY1bmZmYTBxa1djYzBnc0FmVmRNTW03YmZWM2JCaGVXZGZKUGJEcGNSTndN?=
- =?utf-8?B?MExyM1MwSHc0NmFxL1VPalpGTER5QXhYSGdHQXNIWWxNbVFySGlveFFNS1dY?=
- =?utf-8?B?b21FbTF5M2pSbXZDZk9sOTVVTEJJWkt4RzZzSnYwRmhZNC9aTFR3WWtIbzFR?=
- =?utf-8?B?TE9zQWpwRXQxbUp4NElkdUZ4OHBiU2dLaFVWZnVYTkVpUVpOTEg0cEN4MDR2?=
- =?utf-8?B?emtlT3NNT2J6Z1VZRWRJVXMra3lmeUtkM1oxK1lqRWZpSTR0ZWtHWllhb2hD?=
- =?utf-8?B?MElMc0JzbkQ5Z0NQU3dyeDVUQUx3R2tvdVBGRFA1ZER3MXFSZmNNK1lGUGxp?=
- =?utf-8?B?cXJhNEY1dVR4V00zbzlsOXVFSkZhR2NOOVNwOFhpZWxCUHJLY3hDVDZDdjBD?=
- =?utf-8?B?WmlpOUdmcFh3a0M2Z3k1L3p2a1o1dkVYNGFPN1pqYy8yemxJVTlaWHRrOHlk?=
- =?utf-8?B?cHVZZnIyUVlPU1JLY2Eybmp6RmcxMFo5b3NFemxWRWJMdy9aam5aNDVnTXVw?=
- =?utf-8?B?cWc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ah/bp4rS"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361b6f9faeso33202435e9.1;
+        Tue, 04 Feb 2025 02:44:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738665846; x=1739270646; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lMArTWxNFUp4PQzCQD8slqPHvp/31eRbyPGy6SkB2WA=;
+        b=Ah/bp4rSwp16VIdyt9FPsAODI1p7FIfEX39Ni3tABULuDYhnjrsGvKF4Je8t4YzzkF
+         z4tikf1lTDHlkZ18JkrZ2kzE2lB/RqEwdT6aUeLgkSVqFoCoEk81D4IOcVs5NgUR92yv
+         fXZFnqJDGJGbx6wdQEpjIyVBszgC3JWS47FbRiZvLdYdFNbf8lQnzwhy0mn0IkbSGKUf
+         MN8Ts2k/B1Tq4ri/Rl9R3W+JKCC8DfKjznQR2pJXIhjbuNZDbT1Pe8rBpXcGsWeaA36S
+         P6Mek6nXbrn3au+3fSm/te4+SPlIYIPNs5paxb3f73KjBb2HToWt1DSKfTkHAKtoUf9h
+         Nunw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738665846; x=1739270646;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lMArTWxNFUp4PQzCQD8slqPHvp/31eRbyPGy6SkB2WA=;
+        b=JX39Mv9AqqT8RjwK35DeOhg0JIuzS8JIVdURTYZf1LS+Bb2ZwkEdoaDuxwd8X8l/JZ
+         y4bI4s+MeLlJjJoTNoP9/q4HqbtSCiv8DIO8+cDo5UkIbH6VJxgsZY1LqiJeYtiynea7
+         eEvGdP5SyZplt9B8eANwecqldbSjCtjWCrZ03hNzFWFQaFcqMbGlB1oEOmZPPajCyUid
+         +wExdSbqmiHnoFfqpicognOsltuCVs3pNZ0WELpKzcobR9MRbZHqoWQrtovS3Ph90PZ/
+         GhKQQbfHtVxuWY8PsGBbAakBGmq1YSkgQDcvfHV1yz5c27Th15TOH7kNNPrNPGKkTjyu
+         /GUg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8f/hUcxb2PYG8wC3dTwPp7N37hlRZp/+QmLj2TiN5le92/7uXC2w4P58acogMZwdEWMcHd9d4MCg4FAw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg+FuFMyHAd9K4t/Q6l3ZzDjlUeMMPAcMiF/KB5C+xKUx8fI5l
+	l/VIhHs9sgxdgoQWvvVwO2HmTAfPE9UyD3qbnZ1oHK6UGbg8fMpM
+X-Gm-Gg: ASbGncuxipUFDtmaim0XDvn0noMJNhUKRF2L2J0pJ6mxvu+XxgenW0pRP5/EJnPfjB3
+	RbIX9kEIALCo9QxU9FlB5Sg5kdNFnS4+k6uRVZOLu3LN6kqil+O1lfcTuhehJhQgvLdUUUoZHUG
+	8IekLj9Wr7YxONvcG8rIxVV/e4m8f3cwbERqHaE7WYHaSKrH0n+/eRiP9wMWjKEkFmv6hWZ2xTa
+	JqYtzgPZIFWcNPai+F5EXa71smaQv5gjh9so/tZJiX6NQQBZ9Rz4AW/fMFWNG0YP5ze5NMyG1NJ
+	maSQzGYUv7OjggjKccMboJoYYSBetHSCjA==
+X-Google-Smtp-Source: AGHT+IHsN8HTcCwIdZM+oqcLS8cPH93vMIT74gEgvRL+nbc/qsns8TrvV+nm1LCTJCegyuOBJuh5tA==
+X-Received: by 2002:a05:600c:1f8e:b0:435:edb0:5d27 with SMTP id 5b1f17b1804b1-43905f743f5mr19708595e9.9.1738665845748;
+        Tue, 04 Feb 2025 02:44:05 -0800 (PST)
+Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2e3a6sm228450075e9.20.2025.02.04.02.44.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 02:44:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR11MB6532.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0aa930e3-c54d-425c-3644-08dd4508bddb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Feb 2025 10:43:20.3372
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: h3VTJP9mx2VJN+M2jy6F59EQicArq3AuPat1KNUdnoMQyUzJjnCFmtKzoChBipEc3Xwh+EYt3xUsQPvIj+K7fxTvOaWXeFRiocga2OagLOA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8469
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 04 Feb 2025 11:44:04 +0100
+Message-Id: <D7JLLQ79FP2Z.2Z7VYLSC52A2U@gmail.com>
+Cc: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/8] wifi: ath12k: handle change_vif_links() callback
+From: "Nicolas Escande" <nico.escande@gmail.com>
+To: "Aditya Kumar Singh" <aditya.kumar.singh@oss.qualcomm.com>, "Kalle Valo"
+ <kvalo@kernel.org>, "Jeff Johnson" <jjohnson@kernel.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250204-unlink_link_arvif_from_chanctx-v1-0-675bd4cea339@oss.qualcomm.com> <D7JKQ60C6EZA.24H639LLIG2U7@gmail.com> <076014d2-eaaa-44be-81fc-a8f1eb0c2ac9@oss.qualcomm.com>
+In-Reply-To: <076014d2-eaaa-44be-81fc-a8f1eb0c2ac9@oss.qualcomm.com>
 
-SGkgTWlxdWVsLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1pcXVl
-bCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+DQo+IFNlbnQ6IFR1ZXNkYXksIDQg
-RmVicnVhcnksIDIwMjUgNToyMCBQTQ0KPiBUbzogUmFiYXJhLCBOaXJhdmt1bWFyIEwgPG5pcmF2
-a3VtYXIubC5yYWJhcmFAaW50ZWwuY29tPg0KPiBDYzogUmljaGFyZCBXZWluYmVyZ2VyIDxyaWNo
-YXJkQG5vZC5hdD47IFZpZ25lc2ggUmFnaGF2ZW5kcmENCj4gPHZpZ25lc2hyQHRpLmNvbT47IGxp
-bnV4QHRyZWJsaWcub3JnOyBTaGVuIExpY2h1YW4gPHNoZW5saWNodWFuQHZpdm8uY29tPjsNCj4g
-SmluamllIFJ1YW4gPHJ1YW5qaW5qaWVAaHVhd2VpLmNvbT47IHUua2xlaW5lLWtvZW5pZ0BiYXls
-aWJyZS5jb207IGxpbnV4LQ0KPiBtdGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTog
-W1BBVENIIHYyIDEvM10gbXRkOiByYXduYW5kOiBjYWRlbmNlOiBzdXBwb3J0IGRlZmVycmVkIHBy
-b2Igd2hlbg0KPiBETUEgaXMgbm90IHJlYWR5DQo+IA0KPiBIZWxsbywNCj4gDQo+ID4gTXkgYXBv
-bG9naWVzIGZvciB0aGUgY29uZnVzaW9uLg0KPiA+IFNsYXZlIERNQSB0ZXJtaW5vbG9neSB1c2Vk
-IGluIGNhZGVuY2UgbmFuZCBjb250cm9sbGVyIGJpbmRpbmdzIGFuZA0KPiA+IGRyaXZlciBpcyBp
-bmRlZWQgY29uZnVzaW5nLg0KPiA+DQo+ID4gVG8gYW5zd2VyIHlvdXIgcXVlc3Rpb24gaXQgaXMs
-DQo+ID4gMSAtIEV4dGVybmFsIERNQSAoR2VuZXJpYyBETUEgY29udHJvbGxlcikuDQo+ID4NCj4g
-PiBOYW5kIGNvbnRyb2xsZXIgSVAgZG8gbm90IGhhdmUgZW1iZWRkZWQgRE1BIGNvbnRyb2xsZXIg
-KDIgLSBwZXJpcGhlcmFsDQo+IERNQSkuDQo+ID4NCj4gPiBGWVIsIGhvdyBleHRlcm5hbCBETUEg
-aXMgdXNlZC4NCj4gPiBodHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51eC92Ni4xMy4xL3Nv
-dXJjZS9kcml2ZXJzL210ZC9uYW5kL3Jhdy9jDQo+ID4gYWRlbmNlLW5hbmQtY29udHJvbGxlci5j
-I0wxOTYyDQo+IA0KPiBJbiB0aGlzIGNhc2Ugd2Ugc2hvdWxkIGhhdmUgYSBkbWFzIHByb3BlcnR5
-IChhbmQgcGVyaGFwcyBkbWEtbmFtZXMpLCBubz8NCj4gDQpObywgSSBiZWxpZXZlLg0KQ2FkZW5j
-ZSBOQU5EIGNvbnRyb2xsZXIgSVAgZG8gbm90IGhhdmUgZGVkaWNhdGVkIGhhbmRzaGFrZSBpbnRl
-cmZhY2UgdG8gY29ubmVjdA0Kd2l0aCBETUEgY29udHJvbGxlci4NCk15IHVuZGVyc3RhbmRpbmcg
-aXMgZG1hcyAoYW5kIGRtYS1uYW1lcykgYXJlIG9ubHkgdXNlZCBmb3IgdGhlIGRlZGljYXRlZCBo
-YW5kc2hha2UNCmludGVyZmFjZSBiZXR3ZWVuIHBlcmlwaGVyYWwgYW5kIHRoZSBETUEgY29udHJv
-bGxlci4NCg0KVGhhbmtzLA0KTmlyYXYNCg0K
+On Tue Feb 4, 2025 at 11:23 AM CET, Aditya Kumar Singh wrote:
+> On 2/4/25 15:32, Nicolas Escande wrote:
+>> Hello,
+>>=20
+>> When applying this series I am no longer able to start an AP on a DFS ch=
+annel.
+>> (I don't know specifically which patch though)
+>>=20
+>
+> Thanks for reporting this. I think non-DFS channel should be working=20
+> fine right?
+Right non DFS channels are ok, only DFS ones, and not from the get go but a=
+fter
+the initial CAC, when they switch to operational mode.
+>
+> Anyways, I'm able to repro the issue locally. Let me investigate further=
+=20
+> and come back.
+I'll happily test what you can throw at me.
+>
+>> After the initial CAC period I get the following kernel message:
+>> 	[   45.248441] ath12k_pci 0003:01:00.0: cannot install key for non-exis=
+tent peer 3a:07:16:d8:00:08
+>> And then hostapd goes in failed state:
+>> 	wlan0: interface state UNINITIALIZED->COUNTRY_UPDATE
+>> 	ACS: Automatic channel selection started, this may take a bit
+>> 	wlan0: interface state COUNTRY_UPDATE->ACS
+>> 	wlan0: ACS-STARTED
+>> 	wlan0: ACS-COMPLETED freq=3D5620 channel=3D124
+>> 	wlan0: interface state ACS->DFS
+>> 	wlan0: DFS-CAC-START freq=3D5620 chan=3D124 sec_chan=3D1, width=3D2, se=
+g0=3D114, seg1=3D0, cac_time=3D5s
+>> 	wlan0: DFS-CAC-COMPLETED success=3D1 freq=3D5620 ht_enabled=3D0 chan_of=
+fset=3D0 chan_width=3D5 cf1=3D5570 cf2=3D0 radar_detected=3D0
+>> 	wlan0: nl80211: kernel reports: key addition failed
+>> 	Interface initialization failed
+>> 	wlan0: interface state DFS->DISABLED
+>> 	wlan0: AP-DISABLED
+>>=20
+>> Maybe I missed something ? Is there another series this one depends upon=
+ that I
+>> should have applied before ?
+>
+> No known dependency as such.
+Good, as I have a few other series applied in my tree I was affraid it migh=
+t be
+something on my side.
