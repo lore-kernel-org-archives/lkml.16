@@ -1,188 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380A121767C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 21:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8105921770A;
+	Tue,  4 Feb 2025 21:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738703618; cv=none; b=bG5zJuIcKAQJBPHdHLVI/i+BVv2MIIPPEId0cC7mHcnSjKqxLJa3bLIRBta/3M2y6HhbmYAoGSH0cGvdqngM1oSeY219+qpn47AO16RvHSIpJ3rxoc6JLLi/d6o0Z4snhjSoDa9sMaTEt7cWtYkROk/XKAdAYPS5VJ+4rOZTaLc=
+	t=1738703924; cv=none; b=UO56IiaAXlBFncp0gc8zcOeTdJRcmEERQ3L+mzdesJGW8tJ2S3mZuz7fmOJfDHvQ1arX4zaULjViqWFZzWI0FIdqUeDhBCvW6cUWSlHT2dHqQjFIh+VBdQCxnvwQc8/essQs9DMAqBoSELlZCa+zUVPO5F3i8OBAx2jeYWCeoM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738703618; c=relaxed/simple;
-	bh=wgznThxFcEk3TRv8zC+YWP72BInPcJwLnyVtVuH6h3M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E+StSvGPNi3xwPG9q+WRFfXaQLyAz6x8DIz/6lNQERSP3S2tEMUNKvCfiimzlCGKhqgxtGOaqw6UQ8+IDRJ+pPLomeun9C/R40yxU21xaZlvjsiLMdfkRT23+qdxq+tmtEmMXP913obRwmi6vv3un1whBUVNKt9+3HBfmziQBfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QXlySsAy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738703924; c=relaxed/simple;
+	bh=VfsLJGZBTaWPp/7dFr8cYv5uWLkZRbn9Nqa4s7PZ7Kg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u19Q+JsbnGan42u+2l+Man1qvQTjSkz8JwOBFkeja1K8RLlIGkAa3PKH0OBJbZkghX5W0onvoAJIdB79/KI3iEEJ89LYybm5RfalxVgeN0BsQAK90HJkiwboJkOiGB0VYWy5fWPJB4iQ92RSWTdbnmLbUGjgApfY0OxRawScRYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=VShY9U8B; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QXlySsAy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738703614;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Rp5fYvpzjxUhO+asCrm+VjHu/niZwZ9xyrFGLn7LK14=;
-	b=QXlySsAy9rwxVH8rLM8wdwh8hPost8yIzB+BOW6vxsRlLptHZ4HqBVm1yNgUMeGWbegAqB
-	9fhhKete7jBNUA0Jepg/Jhum3yaCaU8B9J7ceu0L02vGGYwavrVlMvNzkVTB1/7KZ9lolO
-	7qsRK+UsI0O+zOP2rvR9OR2LuKmxhg8=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-232-Fp5HKAoWOwi7S6GDu3ztIA-1; Tue,
- 04 Feb 2025 16:13:32 -0500
-X-MC-Unique: Fp5HKAoWOwi7S6GDu3ztIA-1
-X-Mimecast-MFC-AGG-ID: Fp5HKAoWOwi7S6GDu3ztIA
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="VShY9U8B"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 869391956087;
-	Tue,  4 Feb 2025 21:13:30 +0000 (UTC)
-Received: from bgurney-thinkpadp1gen5.remote.csb (unknown [10.22.65.73])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0A86830001BE;
-	Tue,  4 Feb 2025 21:13:27 +0000 (UTC)
-From: Bryan Gurney <bgurney@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
-	kbusch@kernel.org,
-	hch@lst.de,
-	sagi@grimberg.me,
-	axboe@kernel.dk
-Cc: jmeneghi@redhat.com,
-	bmarzins@redhat.com,
-	Bryan Gurney <bgurney@redhat.com>
-Subject: [PATCH] nvme: remove multipath module parameter
-Date: Tue,  4 Feb 2025 16:11:58 -0500
-Message-ID: <20250204211158.43126-1-bgurney@redhat.com>
+	(Authenticated sender: lina@asahilina.net)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 157A243321;
+	Tue,  4 Feb 2025 21:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
+	s=default; t=1738703920;
+	bh=VfsLJGZBTaWPp/7dFr8cYv5uWLkZRbn9Nqa4s7PZ7Kg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=VShY9U8BYjAWJERpxnFG57enS9OV5Ua6HOQJ5bWQyzJU7y1o5BeNhoLQOjt4T6F31
+	 ySpglPhH0pMM5TF3j+sbo1H8CS9rRDUu/mv1wrZ65uhVbsY7fodlNTohTVj+0xDHF+
+	 GAAVq6q3RsTXn2Dgat1jrcQQJgllQEECzKcLAAiAItqgjpktGk6g9ap9R77JE2w0pc
+	 UDBTFE0O16E822vzc/vsO5AIhLvP52CuMShTOIJtVKK0O7uFPLNLDBPJG0bvhOEctB
+	 QDQOr34u0/12knjU93FSdp9aB3W47Pi2zeQWphvsFtNlZ1Qx7W3GcAaHWO2E//Q8mu
+	 FIrc0Ay7kO7sA==
+Message-ID: <f8d06a49-4154-42d2-99c9-f8d59d39ab9f@asahilina.net>
+Date: Wed, 5 Feb 2025 06:18:37 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] rust: page: Support borrowing `struct page` and
+ physaddr conversion
+To: David Hildenbrand <david@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Jann Horn <jannh@google.com>,
+ Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, Wedson Almeida Filho
+ <wedsonaf@gmail.com>, Valentin Obst <kernel@valentinobst.de>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ asahi@lists.linux.dev
+References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
+ <Z6CTLB2NggwYafi9@phenom.ffwll.local>
+ <1eaf66ba-b2d3-448f-938b-913f17ca98a4@redhat.com>
+ <20250204183933.GJ2296753@ziepe.ca>
+ <1d379007-97c3-4bb9-93da-1a828f955fc4@redhat.com>
+ <20250204202656.GL2296753@ziepe.ca>
+ <08ce9562-9ded-4d95-a495-b60f90d75490@redhat.com>
+ <c4c39ea5-3602-4b92-9ffd-af33e122538d@redhat.com>
+Content-Language: en-US
+From: Asahi Lina <lina@asahilina.net>
+In-Reply-To: <c4c39ea5-3602-4b92-9ffd-af33e122538d@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Since device-mapper multipath will no longer be operating on NVMe
-devices, there is no longer a need for the "multipath" parameter.
 
-Note that, when compiled with CONFIG_NVME_MULTIPATH off multi-path
-capable controllers and namespaces will continue to present multiple
-device entries - one for each controller/namespace discovered.  This
-could be confusing, as device-mapper multipath relies upon code in
-nvme/host/multipath.c, and running device-mapper multipath with a
-kernel compiled with CONFIG_NVME_MULTIPATH disabled is not supported.
 
-Closes: https://lore.kernel.org/linux-nvme/20241121220321.40616-1-bgurney@redhat.com/
+On 2/5/25 5:47 AM, David Hildenbrand wrote:
+> On 04.02.25 21:41, David Hildenbrand wrote:
+>> On 04.02.25 21:26, Jason Gunthorpe wrote:
+>>> On Tue, Feb 04, 2025 at 09:05:47PM +0100, David Hildenbrand wrote:
+>>>> Fully agreed, this is going into the right direction. Dumping what's
+>>>> mapped
+>>>> is a different story. Maybe that dumping logic could simply be
+>>>> written in C
+>>>> for the time being?
+>>>
+>>> ?
+>>>
+>>> Isn't dumping just a
+>>>     decode pte -> phys_to_virt() -> for_each_u64(virt) -> printk?
+>>>
+>>
+>> IIUC, the problematic bit is that you might not have a directmap such
+>> that phys_to_virt() would tell you the whole story.
+> 
+> ... but it's late and I am confused. For dumping the *page table* that
+> would not be required, only when dumping mapped page content (and at
+> this point I am not sure if that is a requirement).
+> 
+> So hopefully Asahi Lina can clarify what the issue was (if there is
+> any :) ).
 
-Tested-by: John Meneghini <jmeneghi@redhat.com>
-Reviewed-by: John Meneghini <jmeneghi@redhat.com>
+Yes, the crash dumper has to dump the mapped page content. In fact, I
+don't care about the page tables themselves other than PTE permission
+bits, and the page tables alone are not useful for debugging firmware
+crashes (and aren't even included in the dump verbatim, at least not the
+kernel-allocated ones). The goal of the crash dumper is to take a
+complete dump of firmware virtual memory address space (which includes
+the kinds of memory I mentioned in [1]). The output is an ELF format
+core dump with all memory that the GPU firmware can access, that the
+kernel was able to successfully dump (which should be everything except
+for MMIO if the bootloader/DT have the right reserved-memory setup).
 
-Signed-off-by: Bryan Gurney <bgurney@redhat.com>
----
- drivers/nvme/host/core.c      | 14 ++++----------
- drivers/nvme/host/multipath.c | 14 ++++++--------
- drivers/nvme/host/nvme.h      |  2 --
- 3 files changed, 10 insertions(+), 20 deletions(-)
+I *think* phys_to_virt should work just fine for *this* specific use
+case on this platform, but I'm not entirely sure. I still want to use
+the various pfn check functions before doing that, to exclude ranges
+that would definitely not work.
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 2bcd9f710cb6..b07cd482fbc1 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3809,14 +3809,6 @@ static int nvme_init_ns_head(struct nvme_ns *ns, struct nvme_ns_info *info)
- 					info->nsid);
- 			goto out_put_ns_head;
- 		}
--
--		if (!multipath) {
--			dev_warn(ctrl->device,
--				"Found shared namespace %d, but multipathing not supported.\n",
--				info->nsid);
--			dev_warn_once(ctrl->device,
--				"Support for shared namespaces without CONFIG_NVME_MULTIPATH is deprecated and will be removed in Linux 6.0.\n");
--		}
- 	}
- 
- 	list_add_tail_rcu(&ns->siblings, &head->list);
-@@ -3915,12 +3907,14 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, struct nvme_ns_info *info)
- 		sprintf(disk->disk_name, "nvme%dc%dn%d", ctrl->subsys->instance,
- 			ctrl->instance, ns->head->instance);
- 		disk->flags |= GENHD_FL_HIDDEN;
--	} else if (multipath) {
-+	} else {
-+#ifdef CONFIG_NVME_MULTIPATH
- 		sprintf(disk->disk_name, "nvme%dn%d", ctrl->subsys->instance,
- 			ns->head->instance);
--	} else {
-+#else
- 		sprintf(disk->disk_name, "nvme%dn%d", ctrl->instance,
- 			ns->head->instance);
-+#endif
- 	}
- 
- 	if (nvme_update_ns_info(ns, info))
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index a85d190942bd..28ab868182b2 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -9,11 +9,6 @@
- #include <trace/events/block.h>
- #include "nvme.h"
- 
--bool multipath = true;
--module_param(multipath, bool, 0444);
--MODULE_PARM_DESC(multipath,
--	"turn on native support for multiple controllers per subsystem");
--
- static const char *nvme_iopolicy_names[] = {
- 	[NVME_IOPOLICY_NUMA]	= "numa",
- 	[NVME_IOPOLICY_RR]	= "round-robin",
-@@ -632,9 +627,11 @@ int nvme_mpath_alloc_disk(struct nvme_ctrl *ctrl, struct nvme_ns_head *head)
- 	 * We also do this for private namespaces as the namespace sharing flag
- 	 * could change after a rescan.
- 	 */
-+#ifdef CONFIG_NVME_MULTIPATH
- 	if (!(ctrl->subsys->cmic & NVME_CTRL_CMIC_MULTI_CTRL) ||
--	    !nvme_is_unique_nsid(ctrl, head) || !multipath)
-+	    !nvme_is_unique_nsid(ctrl, head))
- 		return 0;
-+#endif
- 
- 	blk_set_stacking_limits(&lim);
- 	lim.dma_alignment = 3;
-@@ -1038,10 +1035,11 @@ int nvme_mpath_init_identify(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 	size_t ana_log_size;
- 	int error = 0;
- 
-+#ifdef CONFIG_NVME_MULTIPATH
- 	/* check if multipath is enabled and we have the capability */
--	if (!multipath || !ctrl->subsys ||
--	    !(ctrl->subsys->cmic & NVME_CTRL_CMIC_ANA))
-+	if (!ctrl->subsys || !(ctrl->subsys->cmic & NVME_CTRL_CMIC_ANA))
- 		return 0;
-+#endif
- 
- 	/* initialize this in the identify path to cover controller resets */
- 	atomic_set(&ctrl->nr_active, 0);
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 2c76afd00390..6dea04f05b59 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -972,7 +972,6 @@ static inline void nvme_trace_bio_complete(struct request *req)
- 		trace_block_bio_complete(ns->head->disk->queue, req->bio);
- }
- 
--extern bool multipath;
- extern struct device_attribute dev_attr_ana_grpid;
- extern struct device_attribute dev_attr_ana_state;
- extern struct device_attribute subsys_attr_iopolicy;
-@@ -982,7 +981,6 @@ static inline bool nvme_disk_is_ns_head(struct gendisk *disk)
- 	return disk->fops == &nvme_ns_head_ops;
- }
- #else
--#define multipath false
- static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
- {
- 	return false;
--- 
-2.47.0
+I don't really want to write any part of the driver in C, but whatever
+logic is required, I don't think there should be a good reason for that.
+We can export the C functions required to Rust code in some form, we
+just need to decide what form that should be. Worst case, Rust drivers
+can directly access C functions via the `bindings` crate, though that's
+something I want to avoid (even if there's only a very thin or trivial
+Rust abstraction layer, there should be *something* so at least we get
+Rust docs and the ability to make subtle improvements to the
+interface/types/etc).
+
+[1]
+https://lore.kernel.org/rust-for-linux/1e9ae833-4293-4e48-83b2-c0af36cb3fdc@asahilina.net/
+
+~~ Lina
 
