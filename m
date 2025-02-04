@@ -1,169 +1,254 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED1615666B;
-	Tue,  4 Feb 2025 01:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA7218C900;
+	Tue,  4 Feb 2025 01:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738631812; cv=none; b=I85Mcz0y/noDsBj1N4I9N4veVYJgy5q+841W1jaffZjxBvxaCHIUZl3z9KaLVLt3oIrMMsoH5Wk31rvG8kF7fXCYFic6CbULy3iTnVodDfLYvWlUW9uFU0NbE5u5uCKZbDoFsdmfPj/2Hqb6p31FByYHwOCpuzkxfs7z50pEVaQ=
+	t=1738631811; cv=none; b=lu56V33nYrSN5tXaUIHhzDYZoPUfj/wn4I1CnetC8acFD5vrbWxORZ9c9juhjcaTvUcGcJbWzshwcQaRlKh6/Kbhl6IReZsxQwKT3SY2J342qHJcrmGyTPsuhTIeOFOGpoHtZq7JDLSHMs3syp1+82qAFAEiOWi0uj40EapzwDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738631812; c=relaxed/simple;
-	bh=GVtDBamAYqqrYoisCGPtzd0oVLur569ABCmFuQfbPSs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e124fDoXl4eMb2bvta3raOnAh7JsvNiuVyscsk+ijtSMPCm7lXtkBsCQxWaULeKtyni9jHurZ5KoHctua9L4YWAa7pPMuUqbr6rC8SoFDBdn7bGRPBS7vgw4m38/fQdHJmUZZMmpt5sX+kv02vjpSX/ZfnKu8JvNRRDUwngQKM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Afgobyxz; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738631811; c=relaxed/simple;
+	bh=AZYnpZH02SrGHDneIoHNp5RsnbeIUYf5hZihOJgorME=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hCD1eC0ybyV+juGiXxIuuJ0dfced0fInn5KSRh5iRflxvno5OOwOqPM3W1xcRAYHYxnuevRZ/DJ8mVgElbcidTkbIgPCHYdjfTCazphBll7TlB0Wd3ZZvc3X04q8wTMuiNI47STq8Z/36IeDdOiatL7YOs+Tr3BtHIiz/SwNE0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCWAVLwl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Afgobyxz"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5141GgrW2302344
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Feb 2025 19:16:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738631802;
-	bh=6OuPb8eavdaZDZVRGErcGqjB169Xqanz6yv40s9FmPQ=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=AfgobyxzKubOrEz88smUX0TlnoF9z/f446HsX3GsL3RPltLijA7wCR07wCH8ch58I
-	 ql4qcsCjDW0ZVlfstpoKOyPHw8y2QaALt9DZhfDNkCAbJXHvFqKh4bsC3sjoYBco98
-	 tDnLi7k72oFwBReo+JIyBufiSXsTlIXPZWOOboKU=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5141Ggp3127307
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 3 Feb 2025 19:16:42 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
- Feb 2025 19:16:42 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 3 Feb 2025 19:16:42 -0600
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5141GfAU024451;
-	Mon, 3 Feb 2025 19:16:42 -0600
-From: Judith Mendez <jm@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>,
-        Hari Nagalla
-	<hnagalla@ti.com>
-Subject: [PATCH v3 6/9] arm64: dts: ti: k3-am62p5-sk: Enable IPC with remote processors
-Date: Mon, 3 Feb 2025 19:16:38 -0600
-Message-ID: <20250204011641.1523561-7-jm@ti.com>
-X-Mailer: git-send-email 2.48.0
-In-Reply-To: <20250204011641.1523561-1-jm@ti.com>
-References: <20250204011641.1523561-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCWAVLwl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E9FC4CEE7;
+	Tue,  4 Feb 2025 01:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738631811;
+	bh=AZYnpZH02SrGHDneIoHNp5RsnbeIUYf5hZihOJgorME=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jCWAVLwlMZXqUsVJiAfv5ymVEZ9BakmoUGJehKsWJlXSDS4pHJTdl6WdXdSajsJfE
+	 +0wLL/OJtLCZYe6yMWRvgBXPuHXMKkj/RrLHND9SyO49u9/R/zkY65Y0+ZHMltqT/4
+	 yRXQD97mS7dXCLrXfhrYaf2AouNz+z24B4Me2ddohCIpxGUMy6o4flz383Z01ioeCb
+	 T+6q8wXsHCwt90AtKvUL6GBoUAkuBfp7P+xyshrirdOo9WHRtI150gejObYcBYpMC2
+	 0H89venAXAWmCe3a2ZyzWFOXBTt6jLB+AZvNjeNATGYS379a2VRH7+eaODe0Adklfw
+	 U/qUI39QCjSRQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Koichiro Den <koichiro.den@canonical.com>,
+	kernel test robot <oliver.sang@intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	bamv2005@gmail.com,
+	shuah@kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 3/4] selftests: gpio: gpio-sim: Fix missing chip disablements
+Date: Mon,  3 Feb 2025 20:16:41 -0500
+Message-Id: <20250204011643.2206417-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250204011643.2206417-1-sashal@kernel.org>
+References: <20250204011643.2206417-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.12
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Devarsh Thakkar <devarsht@ti.com>
+From: Koichiro Den <koichiro.den@canonical.com>
 
-For each remote proc, reserve memory for IPC and bind the mailbox
-assignments. Two memory regions are reserved for each remote processor.
-The first region of 1MB of memory is used for Vring shared buffers
-and the second region is used as external memory to the remote processor
-for the resource table and for tracebuffer allocations.
+[ Upstream commit f8524ac33cd452aef5384504b3264db6039a455e ]
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-Signed-off-by: Judith Mendez <jm@ti.com>
+Since upstream commit 8bd76b3d3f3a ("gpio: sim: lock up configfs that an
+instantiated device depends on"), rmdir for an active virtual devices
+been prohibited.
+
+Update gpio-sim selftest to align with the change.
+
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202501221006.a1ca5dfa-lkp@intel.com
+Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+Link: https://lore.kernel.org/r/20250122043309.304621-1-koichiro.den@canonical.com
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes since v2:
-- Fix memory carvout sizes, remove leading zeros
-- Reorder memory carveouts according to memory location
-- Fix whitespace issues
-- Fix commit headers, capitalize IPC
----
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 50 ++++++++++++++++++++++---
- 1 file changed, 44 insertions(+), 6 deletions(-)
+ tools/testing/selftests/gpio/gpio-sim.sh | 31 +++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-index ad71d2f27f538..9609727d042d3 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-@@ -48,6 +48,30 @@ reserved-memory {
- 		#size-cells = <2>;
- 		ranges;
+diff --git a/tools/testing/selftests/gpio/gpio-sim.sh b/tools/testing/selftests/gpio/gpio-sim.sh
+index 6fb66a687f173..bbc29ed9c60a9 100755
+--- a/tools/testing/selftests/gpio/gpio-sim.sh
++++ b/tools/testing/selftests/gpio/gpio-sim.sh
+@@ -46,12 +46,6 @@ remove_chip() {
+ 	rmdir $CONFIGFS_DIR/$CHIP || fail "Unable to remove the chip"
+ }
  
-+		mcu_r5fss0_core0_dma_memory_region: mcu-r5fss-dma-memory-region@9b800000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9b800000 0x00 0x100000>;
-+			no-map;
-+		};
-+
-+		mcu_r5fss0_core0_memory_region: mcu-r5fss-memory-region@9b900000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9b900000 0x00 0xf00000>;
-+			no-map;
-+		};
-+
-+		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9c800000 0x00 0x100000>;
-+			no-map;
-+		};
-+
-+		wkup_r5fss0_core0_memory_region: r5f-memory@9c900000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9c900000 0x00 0x1e00000>;
-+			no-map;
-+		};
-+
- 		secure_tfa_ddr: tfa@9e780000 {
- 			reg = <0x00 0x9e780000 0x00 0x80000>;
- 			no-map;
-@@ -57,12 +81,6 @@ secure_ddr: optee@9e800000 {
- 			reg = <0x00 0x9e800000 0x00 0x01800000>; /* for OP-TEE */
- 			no-map;
- 		};
+-configfs_cleanup() {
+-	for CHIP in `ls $CONFIGFS_DIR/`; do
+-		remove_chip $CHIP
+-	done
+-}
 -
--		wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
--			compatible = "shared-dma-pool";
--			reg = <0x00 0x9c900000 0x00 0x01e00000>;
--			no-map;
--		};
- 	};
+ create_chip() {
+ 	local CHIP=$1
  
- 	vmain_pd: regulator-0 {
-@@ -638,6 +656,26 @@ mbox_mcu_r5_0: mbox-mcu-r5-0 {
- 	};
- };
+@@ -105,6 +99,13 @@ disable_chip() {
+ 	echo 0 > $CONFIGFS_DIR/$CHIP/live || fail "Unable to disable the chip"
+ }
  
-+&wkup_r5fss0 {
-+	status = "okay";
-+};
++configfs_cleanup() {
++	for CHIP in `ls $CONFIGFS_DIR/`; do
++		disable_chip $CHIP
++		remove_chip $CHIP
++	done
++}
 +
-+&wkup_r5fss0_core0 {
-+	mboxes = <&mailbox0_cluster0 &mbox_r5_0>;
-+	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
-+			<&wkup_r5fss0_core0_memory_region>;
-+};
-+
-+&mcu_r5fss0 {
-+	status = "okay";
-+};
-+
-+&mcu_r5fss0_core0 {
-+	mboxes = <&mailbox0_cluster1 &mbox_mcu_r5_0>;
-+	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
-+			<&mcu_r5fss0_core0_memory_region>;
-+};
-+
- &main_uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&main_uart0_pins_default>;
+ configfs_chip_name() {
+ 	local CHIP=$1
+ 	local BANK=$2
+@@ -181,6 +182,7 @@ create_chip chip
+ create_bank chip bank
+ enable_chip chip
+ test -n `cat $CONFIGFS_DIR/chip/bank/chip_name` || fail "chip_name doesn't work"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "1.2. chip_name returns 'none' if the chip is still pending"
+@@ -195,6 +197,7 @@ create_chip chip
+ create_bank chip bank
+ enable_chip chip
+ test -n `cat $CONFIGFS_DIR/chip/dev_name` || fail "dev_name doesn't work"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "2. Creating and configuring simulated chips"
+@@ -204,6 +207,7 @@ create_chip chip
+ create_bank chip bank
+ enable_chip chip
+ test "`get_chip_num_lines chip bank`" = "1" || fail "default number of lines is not 1"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "2.2. Number of lines can be specified"
+@@ -212,6 +216,7 @@ create_bank chip bank
+ set_num_lines chip bank 16
+ enable_chip chip
+ test "`get_chip_num_lines chip bank`" = "16" || fail "number of lines is not 16"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "2.3. Label can be set"
+@@ -220,6 +225,7 @@ create_bank chip bank
+ set_label chip bank foobar
+ enable_chip chip
+ test "`get_chip_label chip bank`" = "foobar" || fail "label is incorrect"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "2.4. Label can be left empty"
+@@ -227,6 +233,7 @@ create_chip chip
+ create_bank chip bank
+ enable_chip chip
+ test -z "`cat $CONFIGFS_DIR/chip/bank/label`" || fail "label is not empty"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "2.5. Line names can be configured"
+@@ -238,6 +245,7 @@ set_line_name chip bank 2 bar
+ enable_chip chip
+ test "`get_line_name chip bank 0`" = "foo" || fail "line name is incorrect"
+ test "`get_line_name chip bank 2`" = "bar" || fail "line name is incorrect"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "2.6. Line config can remain unused if offset is greater than number of lines"
+@@ -248,6 +256,7 @@ set_line_name chip bank 5 foobar
+ enable_chip chip
+ test "`get_line_name chip bank 0`" = "" || fail "line name is incorrect"
+ test "`get_line_name chip bank 1`" = "" || fail "line name is incorrect"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "2.7. Line configfs directory names are sanitized"
+@@ -267,6 +276,7 @@ for CHIP in $CHIPS; do
+ 	enable_chip $CHIP
+ done
+ for CHIP in $CHIPS; do
++  disable_chip $CHIP
+ 	remove_chip $CHIP
+ done
+ 
+@@ -278,6 +288,7 @@ echo foobar > $CONFIGFS_DIR/chip/bank/label 2> /dev/null && \
+ 	fail "Setting label of a live chip should fail"
+ echo 8 > $CONFIGFS_DIR/chip/bank/num_lines 2> /dev/null && \
+ 	fail "Setting number of lines of a live chip should fail"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "2.10. Can't create line items when chip is live"
+@@ -285,6 +296,7 @@ create_chip chip
+ create_bank chip bank
+ enable_chip chip
+ mkdir $CONFIGFS_DIR/chip/bank/line0 2> /dev/null && fail "Creating line item should fail"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "2.11. Probe errors are propagated to user-space"
+@@ -316,6 +328,7 @@ mkdir -p $CONFIGFS_DIR/chip/bank/line4/hog
+ enable_chip chip
+ $BASE_DIR/gpio-mockup-cdev -s 1 /dev/`configfs_chip_name chip bank` 4 2> /dev/null && \
+ 	fail "Setting the value of a hogged line shouldn't succeed"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "3. Controlling simulated chips"
+@@ -331,6 +344,7 @@ test "$?" = "1" || fail "pull set incorrectly"
+ sysfs_set_pull chip bank 0 pull-down
+ $BASE_DIR/gpio-mockup-cdev /dev/`configfs_chip_name chip bank` 1
+ test "$?" = "0" || fail "pull set incorrectly"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "3.2. Pull can be read from sysfs"
+@@ -344,6 +358,7 @@ SYSFS_PATH=/sys/devices/platform/$DEVNAME/$CHIPNAME/sim_gpio0/pull
+ test `cat $SYSFS_PATH` = "pull-down" || fail "reading the pull failed"
+ sysfs_set_pull chip bank 0 pull-up
+ test `cat $SYSFS_PATH` = "pull-up" || fail "reading the pull failed"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "3.3. Incorrect input in sysfs is rejected"
+@@ -355,6 +370,7 @@ DEVNAME=`configfs_dev_name chip`
+ CHIPNAME=`configfs_chip_name chip bank`
+ SYSFS_PATH="/sys/devices/platform/$DEVNAME/$CHIPNAME/sim_gpio0/pull"
+ echo foobar > $SYSFS_PATH 2> /dev/null && fail "invalid input not detected"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "3.4. Can't write to value"
+@@ -365,6 +381,7 @@ DEVNAME=`configfs_dev_name chip`
+ CHIPNAME=`configfs_chip_name chip bank`
+ SYSFS_PATH="/sys/devices/platform/$DEVNAME/$CHIPNAME/sim_gpio0/value"
+ echo 1 > $SYSFS_PATH 2> /dev/null && fail "writing to 'value' succeeded unexpectedly"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "4. Simulated GPIO chips are functional"
+@@ -382,6 +399,7 @@ $BASE_DIR/gpio-mockup-cdev -s 1 /dev/`configfs_chip_name chip bank` 0 &
+ sleep 0.1 # FIXME Any better way?
+ test `cat $SYSFS_PATH` = "1" || fail "incorrect value read from sysfs"
+ kill $!
++disable_chip chip
+ remove_chip chip
+ 
+ echo "4.2. Bias settings work correctly"
+@@ -394,6 +412,7 @@ CHIPNAME=`configfs_chip_name chip bank`
+ SYSFS_PATH="/sys/devices/platform/$DEVNAME/$CHIPNAME/sim_gpio0/value"
+ $BASE_DIR/gpio-mockup-cdev -b pull-up /dev/`configfs_chip_name chip bank` 0
+ test `cat $SYSFS_PATH` = "1" || fail "bias setting does not work"
++disable_chip chip
+ remove_chip chip
+ 
+ echo "GPIO $MODULE test PASS"
 -- 
-2.48.0
+2.39.5
 
