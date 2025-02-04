@@ -1,270 +1,314 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326DB18B494;
-	Tue,  4 Feb 2025 07:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738655343; cv=fail; b=tcjUeIULtuVO8GbthiHNy5rN9uSmdas083Nhyyeahwf+vHZsZNdsVZ2QW11M998GiyWMCCCrUef00VlM9Z54SpX2ugaVSZvPKFWMkomWmypDGZRq5dXOAWquIiWNLgXbkZh081y1k3KC32pdL5qMK7lXPrgLhbYTT5BQD/WjdvY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738655343; c=relaxed/simple;
-	bh=85VEgmnvLiqDPPyx3VW7PalKJysu34v4ogjhdhl8Bsk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JBc5dzPFe16tMBPC674bAk/lnQ6xRiAPT5ctUIIcBjMDouqB3E147xldOaC6b7oNjJ78HMeY232dWQ6yf5Sh8c5hvAt1rK9E1rAtJ+WmCRzdC4/VKmdDVLQKnp+u/ozgmkRtp1ZozrT42SA6pZOeluvIIcEi49HNsMJmnVs/gCA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SYID8OkX; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE0A202C43;
+	Tue,  4 Feb 2025 07:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738655434; cv=none; b=VnRJtJYaQzQuJUPD8LB/gfGlWg+w/EChjLKrhOFpbKnTh3+LtUekRqDTYJEYdnbA+4Z16FhNs8y5teAuKrOLPNziW5x0hlarR7JkU/TIo4C30R/1W8ZuD8v8nIpUtRgaoIkqK/D0DHYqJ0+8CuTkaWQ5waG4/ANkfmCkjrq7iuY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738655434; c=relaxed/simple;
+	bh=R/1/O873eQQkbQQnqhju0SNk6l75r8+Xhn7mIQhDkVY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J9+xb8A7q7O9oatGTuNyrgeu4Jb3RAvZn2053QeMZVk4DwurXxT2OHzhvTmWzKuvJrDxqgd8tstN939whPgJbs6LE6G4bTzpSd2G729b16v7xhPlY+9cWkDRa8XSvcb/jehV67I83IQiqjaIO4m/CC7xTXZxwS1SlaAz7dy4ZKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pPgMWRZ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SYID8OkX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738655341; x=1770191341;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=85VEgmnvLiqDPPyx3VW7PalKJysu34v4ogjhdhl8Bsk=;
-  b=SYID8OkXTJmHxAaVMpW/hhbGFN84KgC5loeYELWU0UabRDURFft8f/FK
-   u+4bktfajZ8gXcmldar3O41kLKMsovunuOI9lgCGjfs7C+sZes8zu4VRw
-   ehUuThvjbAQVIW240QzIvHOw/VXF3URc2oQ6bFSgdINrYw70G3KHf/BD8
-   s9ElvHqt1aMuQt4P24RdH7paFuXjVWX7RNyjVGnZy0pDsGaBNdz1wrr2n
-   pygzBcFkL+yehzYVgeYvHVNOOve4WFudEponZf4S4Fj6sYV34C7dxjAS6
-   Ew7sVhG3fXlhdeuPV1GIDhvbUwbhV83F+aF2Oiw+4XdCPt6HWvM0bgBX5
-   A==;
-X-CSE-ConnectionGUID: Nr2XlayqQa2BZcUAiydlSA==
-X-CSE-MsgGUID: OwlOiv4MQHulBZ81mLd+fA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50588512"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="50588512"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 23:49:00 -0800
-X-CSE-ConnectionGUID: mJ4rc7OtQUSpyADLf+Cdvw==
-X-CSE-MsgGUID: T66QE29VSVG7uUUZExn86A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="111103692"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Feb 2025 23:49:00 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 3 Feb 2025 23:48:59 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 3 Feb 2025 23:48:59 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.43) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 3 Feb 2025 23:48:59 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=as5da2e6We4MKTXOv6G9ijKqq2i5dXH6SQvjyDWIngyPNutoyQBIKYfeoxz7tII1hP0P/eX0UNE9wpIjrCb13s8YtAyx4pYR/u+L4HAMTw9OP5rhHGqc01PxxWXmjfrICb5fyBtYdH35Q8ruOJbrmzJjXXNRJJ2QOCapfvfhD0NddduaReVDN0kl0adPj8NM5JMuS/zfYuhO6ABQTIZighfGp6HGg3OSiDjM2PS48AB4V/30tg27RNKtEEDp9Tt+X22E6Pt4zCECwXA4xXKh77Fdl+Bl514LyPsdMuyV/xrna/jJ6JRa7RBHW7XgLpp6s/ztAtkf0e8DvdBdSNua5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=85VEgmnvLiqDPPyx3VW7PalKJysu34v4ogjhdhl8Bsk=;
- b=cyHT62kk27r7PZHy6iQ7F1P/XPf+PhmbBq5F53pKWIMrGYP9l0QrNEP/xmuhPsmjxm02gKagOeZ+Oh0VpXct/dMRXYG8Sz+OMe9CauEeWvh4YYSFWtWwyB4kdrE8Iou4Sds1rujeqUKVzOvZRcvOlwkmOKRxzmBYFmuIliB1USpgKWxrM1sOOEIkC7OXBxL4jJllMbdl6Q9A9iXrQAzLUfDMbfHK2hdFxirf1ATiUyWqJ/tFbuH54qkV5txefxArv2IZWNAXP3y1bY+NmhNSXCNsMpZiyTyT/ixMhjVKTXY7ytSCoeJWNi27U48vmeWnyZDmYBNtRYaSdPwHE0EwrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL3PR11MB6532.namprd11.prod.outlook.com (2603:10b6:208:38f::9)
- by SN7PR11MB8110.namprd11.prod.outlook.com (2603:10b6:806:2e1::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Tue, 4 Feb
- 2025 07:48:57 +0000
-Received: from BL3PR11MB6532.namprd11.prod.outlook.com
- ([fe80::2458:53b4:e821:c92f]) by BL3PR11MB6532.namprd11.prod.outlook.com
- ([fe80::2458:53b4:e821:c92f%4]) with mapi id 15.20.8398.021; Tue, 4 Feb 2025
- 07:48:57 +0000
-From: "Rabara, Niravkumar L" <niravkumar.l.rabara@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-CC: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
-	<vigneshr@ti.com>, "linux@treblig.org" <linux@treblig.org>, Shen Lichuan
-	<shenlichuan@vivo.com>, Jinjie Ruan <ruanjinjie@huawei.com>,
-	"u.kleine-koenig@baylibre.com" <u.kleine-koenig@baylibre.com>,
-	"linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2 1/3] mtd: rawnand: cadence: support deferred prob when
- DMA is not ready
-Thread-Topic: [PATCH v2 1/3] mtd: rawnand: cadence: support deferred prob when
- DMA is not ready
-Thread-Index: AQHbZ8ZOILCVzRcq3EiB9N8/dGJ/ZLMhBMtugAlQtQCAA0UcDoAA++LggADu3AKAB1OZ0A==
-Date: Tue, 4 Feb 2025 07:48:57 +0000
-Message-ID: <BL3PR11MB6532451B44E7C5D82F5EC4AFA2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
-References: <20250116032154.3976447-1-niravkumar.l.rabara@intel.com>
-	<20250116032154.3976447-2-niravkumar.l.rabara@intel.com>
-	<87plkgpk8k.fsf@bootlin.com>
-	<BL3PR11MB653276DFD3339ADAADC70CCFA2EE2@BL3PR11MB6532.namprd11.prod.outlook.com>
-	<874j1i0wfq.fsf@bootlin.com>
-	<BL3PR11MB65321B556C59C995DC05C70AA2E92@BL3PR11MB6532.namprd11.prod.outlook.com>
- <87msf8z5uu.fsf@bootlin.com>
-In-Reply-To: <87msf8z5uu.fsf@bootlin.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL3PR11MB6532:EE_|SN7PR11MB8110:EE_
-x-ms-office365-filtering-correlation-id: 234e5f45-58af-47f8-7893-08dd44f0613a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?c05HSHdKYjc2dTVIeVY0ZXY3WFdiN0pobFFkdmJKbHdlRlFMSlZZWEg1R1Ux?=
- =?utf-8?B?akZZODlnK2V1bmZWSmI0amJnbE96U1VkaGd1WWU3TGtkNDRpTUh0RHlJTkF2?=
- =?utf-8?B?NjZUMk1MSHRPclBpbG5pQWlSbU1sVXkrdXhYeE9OOWkzUlQwYXZ1Q252MDJ3?=
- =?utf-8?B?aTg3QkZzcWlheFFwL2MwUm5YcWRVbzhQNXBTSWZvS1F1dG5xYVdZRkwwVmU0?=
- =?utf-8?B?OEZEaS92ZjA0M3RmejhRL0JINjVnSjI3Rm00VVVBcmFCTkZJOGpUK3ZoeXJY?=
- =?utf-8?B?RFl1ankrMkVwUmIvM3Azc09BL0xXM3BSVk1QY2ZIamFvNkJlaGlmaVBiMUFX?=
- =?utf-8?B?RlJLQ01QQU9HdkI5a0c0ZGx2eXdRUHBTaHVZcm51SnB6dEJZNGF5cGM5elFk?=
- =?utf-8?B?bDhNeE1pMGJzRjdxMnZUcWdEeHNVZmhTN1NVS2hxWEI4dlcvRmlqZ2gyVGRq?=
- =?utf-8?B?amc3WUFzeEh5K1BPT3N0RXJmRS9seU9Xc1hZTkorRlBaOGtzcGdkMk5WMjdY?=
- =?utf-8?B?SEFOOUVGaDd3VkdIeUxjMFk3bnJiM3Z4cExIQ1pQRjNrTHd0clQrdXNacGU0?=
- =?utf-8?B?NndQWXdRblZQVU5aQ24zUThWbCtjbmxadlVaNEtMSkJoTjhvSFZWR2QxZ1A1?=
- =?utf-8?B?cEhIVTJ4ZVNrYTVvNC9rTEoyUGpISUF1V2k2OEd0Tmg2elF3ajRva2tuSEFp?=
- =?utf-8?B?OENETmJMTlhZcllvVVdvczdNUDNWSmlpTngwRmpldkZWTzdTd2V6YVRkemcz?=
- =?utf-8?B?QUJlYy8ycGhwWUpVRmYra0tTRjBwRDhqa2pHaVpZL2x6UHY2Unk5RlJ2UURt?=
- =?utf-8?B?RzdWRnVnVGdsWEZYYVRrMDFNTUhyaThFbnhXRFdjZWhnd25VdStnU25DNjVJ?=
- =?utf-8?B?NU9tUVdReXIwbUZ6eGQ4VC9hUUtjMk9uZzRIRkVDZTRnN3UxcVpyNzI5aVJ2?=
- =?utf-8?B?T0lhZVRHSzlFak0wb1dJeDhteHV1M3lPeHppdkFxOTdnVDcrVVE0UTVWQnhm?=
- =?utf-8?B?WTV5OG1NNXRPWlFHMFR0U2xIWG1iSTEwWEFrSTZYYTFpRHAybnl6TEs3Nnhw?=
- =?utf-8?B?M045ZmJZazBCRitnRTBrblJQQjY2OGowRTkrcUtIbGdMZm1FRmZpSXhVMGxm?=
- =?utf-8?B?MlR1aWxJODFDNnVuT3kvdndIZ21vRzBKcFhFWFFMb0RoclkrWTlDNTFabUE3?=
- =?utf-8?B?SndJWjNKUVBpN3FsS05RWU9lT3gzeXl0bHdqZ0I1b0Q2V3FCR2Fwc0ZjVTBL?=
- =?utf-8?B?Z2pYYTJoWXlXUVVGRHptZk9Vc2RnZ1RSbXFpbE9naUhYVFNQVkhsSUdwZUQ1?=
- =?utf-8?B?ZlVJUDVFU0hEQmdrMzZrcXJreXpUZWRFRmtZUjFWOUZQS1dMY3BtWnArYS9n?=
- =?utf-8?B?b2kyNExIRlNvVHJmRkZHNlN2TTErR3dleHNiZWdNZ3dPZUQrRlpkTFJvTjRS?=
- =?utf-8?B?bE01YTVNNTBVWEZ2MFJDOTB5cWVTVngxK1RTcjI2QXJzWUZSQk41eFBDakpz?=
- =?utf-8?B?T1k4NTVLaWhmekZkelo0emRqdldramo2WnJ2N2tub0QyQ0U2OS9IdDRNYnF0?=
- =?utf-8?B?bFllTURVcXhMMXZpcEF6MkJaVTdZMkVHY3Q1eXoyYlgwd1JUNkRYaVpjajJZ?=
- =?utf-8?B?aytGb004YjBrTXVVWmQrc1Y1cC93YmF1WUxMcDhzNnExd3lVZW9XS3dHT1dn?=
- =?utf-8?B?YS80UmxNQ0doM1FxRGx6Tkc5NWtIOUE1aHRoc2JlZEJ4Zy80WktlVnIwRWJU?=
- =?utf-8?B?OFZDdWJvUWxRSFI4eVhWellCK0F0aUliZGk1TlBKVFJYeFJiMWpJcnNZL1lB?=
- =?utf-8?B?b3U2aGppTFcwbkMwTjBmemRUekxQSVdDOTU2aEpabzRkVG9xTEJwN29MTGFC?=
- =?utf-8?Q?BuUsJdxCzDumb?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR11MB6532.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MUk4L2xNSCt3Sm13b01GeHMxNlhKWGJMRGx0ZlRsZW9FZGJKRThHSk9PbDlo?=
- =?utf-8?B?NXJDaEZiNzY2RllpTyt4bHdHNGZ4ZFl2cUMzZEFoTXY1MUdtUnRQZ01HamZl?=
- =?utf-8?B?WHJGTTZic0V4SHVaVTN2bmxhVEIyR09VMlZvSkV5b1VqZ1laL1BJV0FKaDRU?=
- =?utf-8?B?N1BZZkptWG8yK0FkZ0hFeVB3OWo4Nms4ZVhXZjhKMHNpd2F5T0psZ3JTZll6?=
- =?utf-8?B?dmFVWVJiMklES2VGN3dmUlpGM1JZSTdKaDRYekdzeDk0bWFmNkgrcW5vUnpi?=
- =?utf-8?B?blF1d1B4RlRCOWZXbTJwc0Y1K1liaCtOOTFjOXVZUWpNVy9xUWxRdW9mSDlW?=
- =?utf-8?B?L09Oc1ZhUjlSaFlrMlJobTBYamdYdHN2d2I1YytBR3hOaWVHdVRmU2xJZFVY?=
- =?utf-8?B?K1Yzc3F1RDd3SW03RUYvY0RnaGpta0lxS0xoNjM1emJpMlc3d0MxejN2OCt1?=
- =?utf-8?B?SFBwVTNFOTVrNWx1bmQ3dE1wNTFKSlF4b05yNy9rRVc2TUJrSDlCcjNwNzVJ?=
- =?utf-8?B?NjcvcWtvM1lFYVNhL0lHVEN3c3RGZjhlVzg0QXVxbEhaK2FhSnJxSm9TTVRu?=
- =?utf-8?B?YnNUS3kvdkdXQ2hZSnZCTGVwL05rVlM4Q2hxcERCZWYyYkhYcUVpSG13aSth?=
- =?utf-8?B?VWQvMVNibVB6TXRCNDlTR2dFanJlcklxWkpXL05yUUNIWU52T1E0SWNIQk96?=
- =?utf-8?B?Q3crQTRRY2pEODZDcXRtaTUyZ3RGTlB3bHlqdHFyTEU3K0EvK2prRHBhcUJP?=
- =?utf-8?B?eWVHZkxrM1I0U2FmcEIxRUFlMFowRDJkUUlJbXJSeTNXSmQxcjQ0SHZyV05V?=
- =?utf-8?B?bmxEditNY1J1Mmt4bk9XSG1IUnNVSkppRHhnTWEyTDhQMDlBVEpQRElpaC9a?=
- =?utf-8?B?ZGNIalV1KzY1bjBXRWV4dXBTVC9yU3FtNXFibUQ2TzZCWjVDOTNsc21WUjF5?=
- =?utf-8?B?NFhOMjI5OFVxRVJrSWF5eW56eGFPMCtqNUlScWdWQnAvUUNSMXdZeHVDMmZC?=
- =?utf-8?B?KytkUGpWTU5YS1JWcVVDNlYzOU9jUEtMMWhTbEdHK3h1cG8xb0Nabmc1YXlW?=
- =?utf-8?B?WjF1Mi8yZStJVFVhY3JIZ1I4b1pWSUxhRGFyZXZpeEhOaXJBcUpROWtJeGFP?=
- =?utf-8?B?eXA1Q2k2eE9ZTlFvNVVqTWthQ1hPYXdBUmdPNmtNZUFhcHh0bnlEZWo0cHVi?=
- =?utf-8?B?Y3Fka1Z1MkJUc3l4ODVId0FYOUpscU5LYWc5bEFVSHdoYllDQVFKYlkvaDY3?=
- =?utf-8?B?NDYzMlpSemZzSzh5SnVNWlRQcVhVRGUyS0NTY2gvaHZFY282Uy9mZkpjRXha?=
- =?utf-8?B?aWo3RER4aFJQTVJHMW9QNUxDOWdWQ2lEcEljcitBQzlWQmQ2UlVRUEQvQmph?=
- =?utf-8?B?eE40SWJoN0hacnowOENlMG5vMXZ5T2IvUzdYRHlWT2pmU2dJczluK09hZE51?=
- =?utf-8?B?MVY1UWY2ZUc5QTVyUVp3NGJRMERtdkRxZVBjVXArVHJhd1dSaTdGMy9zSmxW?=
- =?utf-8?B?dERYcWwxTU5OY2p1VnZNTCttMG55ZHRBNVJLS2NzNmw5ekFPNlJhQU8xUWRD?=
- =?utf-8?B?L0g0bWdnN3RLWHVsdzNjU1I1Z1kvUUJiRS8zdmlWV1psbFJuMXdYQjZzclF2?=
- =?utf-8?B?dVBwckpFaHdBZU5naDM4MGJ3OUlDZVRVdEpYODgvcXpLWFcwN1lFTVNUeUhy?=
- =?utf-8?B?akp2VmxVelFGdkh4cytXK3lZR1dLU1RzcXZXNzQ4MFZCWk9mM1VuOVYyWWR0?=
- =?utf-8?B?TGE1UWY5YjI2WW1rUjJwU2cwa3ljYit1Q1VBMEtrdFZ3Wk1CWExrOHZuTlgw?=
- =?utf-8?B?YWJTRVVqWVNpakhDUVkyN0w2bjdqL2gzaWpneDdYMXM0SUdFQ3FZdW90WHhj?=
- =?utf-8?B?b0NlNFhYUytQUVNIVnpjZFFmdkxtdUNQbExqWjN2a01Ga0twRjIwU0NBVkNp?=
- =?utf-8?B?L29laEpYQXJTRUtHeVErVGUyaUdSdDNCV280YVROSzhHSkwzNEpvd3V4Y0Y3?=
- =?utf-8?B?akdrMzUyRUtCcW1FeGJWMU9vZmhhSGU1R2dKMm93Z0NYT0h0V2pBaVYwb3pJ?=
- =?utf-8?B?cllGT1NRcER2WHd0VWJCK3NhbWU5OWYyYjJ0OXJKVXBKUmlhZGFWaEYyb05L?=
- =?utf-8?B?R2JDbENqS1hDYUJLVDRiSFRoRk1yZlkrc3JFcXBuVmxsWkI5RE5QdlhMeDdv?=
- =?utf-8?B?aGc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pPgMWRZ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7425C4CEDF;
+	Tue,  4 Feb 2025 07:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738655433;
+	bh=R/1/O873eQQkbQQnqhju0SNk6l75r8+Xhn7mIQhDkVY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pPgMWRZ5n96Mf1ZNnxQxIgtiy9dTpgz+4Z8SIuKQJ8l6GvyIyjkKkIuA6OJhjtjcP
+	 oX/K3cplNY0F5sm5ChN4PAWzvpS1DUtb1UiHFUIhq3InKlxsxyyfN++u+dZH6u9zuW
+	 oJ4RI13LFJg4/q6EeXGYMAlwTpxhhFi7at7GjwPQs1/gHEbdx/TDRxrSMiHfJF8rvR
+	 hshJLxyFM4bDd7vSpPkVdZ3Mzbrd1Ssun/2bOy1T3VRcEBmIavwuzYAs6gP5wZQmMN
+	 Bjns41Xnbv7KYkm1aua1PDsepmpkYabJAOP8bIgDQuhklevp1wL8db4HtZdkO/UNYQ
+	 pZmP1ob+axgIg==
+Message-ID: <59b38b53-44c6-40ba-9344-de6de89532f6@kernel.org>
+Date: Tue, 4 Feb 2025 08:50:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR11MB6532.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 234e5f45-58af-47f8-7893-08dd44f0613a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Feb 2025 07:48:57.0257
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0UPibBYWz0uyQAhz7S4LnLaa+j14t8iwCpDXqNbRZDzzC/kvvEJvprgDZaP6X0r8aTnB5p/DwuSqOvFs+KpGk4oYNCs9k+2DutS1Bhmblvg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8110
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/9] dt-bindings: memory-controllers: Add STM32 Octo
+ Memory Manager controller
+To: Patrice CHOTARD <patrice.chotard@foss.st.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ christophe.kerello@foss.st.com
+References: <20250128081731.2284457-1-patrice.chotard@foss.st.com>
+ <20250128081731.2284457-4-patrice.chotard@foss.st.com>
+ <20250129-hilarious-glittering-mustang-fb5471@krzk-bin>
+ <3660580d-72eb-45ca-8240-55557e334e37@foss.st.com>
+ <951e4d16-2bb2-44b1-99e7-dd28349f20aa@kernel.org>
+ <02b947e3-dd5c-4ee8-bd65-5775923fe33f@foss.st.com>
+ <899675e8-4c2e-4ff2-a6af-854e0ec29bb6@kernel.org>
+ <6ed4fa56-e7ee-4b6b-951b-61a92be5c6c2@foss.st.com>
+ <6a639549-f8c8-4e36-8cfe-839f247780bb@kernel.org>
+ <9073411a-38aa-4f82-95f5-474b0c3efed7@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <9073411a-38aa-4f82-95f5-474b0c3efed7@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SGkgTWlxdWVsLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1pcXVl
-bCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+DQo+IFNlbnQ6IFRodXJzZGF5LCAz
-MCBKYW51YXJ5LCAyMDI1IDExOjIwIFBNDQo+IFRvOiBSYWJhcmEsIE5pcmF2a3VtYXIgTCA8bmly
-YXZrdW1hci5sLnJhYmFyYUBpbnRlbC5jb20+DQo+IENjOiBSaWNoYXJkIFdlaW5iZXJnZXIgPHJp
-Y2hhcmRAbm9kLmF0PjsgVmlnbmVzaCBSYWdoYXZlbmRyYQ0KPiA8dmlnbmVzaHJAdGkuY29tPjsg
-bGludXhAdHJlYmxpZy5vcmc7IFNoZW4gTGljaHVhbg0KPiA8c2hlbmxpY2h1YW5Adml2by5jb20+
-OyBKaW5qaWUgUnVhbiA8cnVhbmppbmppZUBodWF3ZWkuY29tPjsgdS5rbGVpbmUtDQo+IGtvZW5p
-Z0BiYXlsaWJyZS5jb207IGxpbnV4LW10ZEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4g
-a2VybmVsQHZnZXIua2VybmVsLm9yZzsgc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIHYyIDEvM10gbXRkOiByYXduYW5kOiBjYWRlbmNlOiBzdXBwb3J0IGRlZmVy
-cmVkIHByb2INCj4gd2hlbiBETUEgaXMgbm90IHJlYWR5DQo+IA0KPiBIZWxsbywNCj4gDQo+ID4+
-ID4gRHJpdmVyIHdvcmtzIHdpdGhvdXQgZXh0ZXJuYWwgRE1BIGludGVyZmFjZSBpLmUuIGhhc19k
-bWE9MC4NCj4gPj4gPiBIb3dldmVyIGN1cnJlbnQgZHJpdmVyIGRvZXMgbm90IGhhdmUgYSBtZWNo
-YW5pc20gdG8gY29uZmlndXJlIGl0DQo+ID4+ID4gZnJvbSBkZXZpY2UgdHJlZS4NCj4gPj4NCj4g
-Pj4gV2hhdD8gV2h5IGFyZSB5b3UgcmVxdWVzdGluZyBhIERNQSBjaGFubmVsIGZyb20gYSBkbWFl
-bmdpbmUgaW4gdGhpcw0KPiBjYXNlPw0KPiA+Pg0KPiA+PiBQbGVhc2UgbWFrZSB0aGUgZGlzdGlu
-Y3Rpb24gYmV0d2VlbiB0aGUgT1MgaW1wbGVtZW50YXRpb24gKHRoZQ0KPiA+PiBkcml2ZXIpIGFu
-ZCB0aGUgRFQgYmluZGluZyB3aGljaCBkZXNjcmliZSB0aGUgSFcgYW5kIG9ubHkgdGhlIEhXLg0K
-PiA+Pg0KPiA+DQo+ID4gTGV0IG1lIGNsYXJpZnkgZnJvbSBiaW5kaW5ncyhodykgYW5kIGRyaXZl
-ciBwcm9zcGVjdGl2ZS4NCj4gPg0KPiA+IEJpbmRpbmdzIDotDQo+ID4gQ2FkZW5jZSBOQU5EIGNv
-bnRyb2xsZXIgSFcgaGFzIE1NSU8gcmVnaXN0ZXJzLCBzbyBjYWxsZWQgc2xhdmUgRE1BDQo+ID4g
-aW50ZXJmYWNlIGZvciBwYWdlIHByb2dyYW1taW5nIG9yIHBhZ2UgcmVhZC4NCj4gPiAgICAgICAg
-IHJlZyA9IDwweDEwYjgwMDAwIDB4MTAwMDA+LA0KPiA+ICAgICAgICAgICAgICAgPDB4MTA4NDAw
-MDAgMHgxMDAwMD47DQo+ID4gICAgICAgICByZWctbmFtZXMgPSAicmVnIiwgInNkbWEiOyAvLyBz
-ZG1hID0gIFNsYXZlIERNQSBkYXRhIHBvcnQNCj4gPiByZWdpc3RlciBzZXQNCj4gPg0KPiA+IEl0
-IGFwcGVhcnMgdGhhdCBkdCBiaW5kaW5ncyBoYXMgY2FwdHVyZWQgc2RtYSBpbnRlcmZhY2UgY29y
-cmVjdGx5Lg0KPiANCj4gU2xhdmUgRE1BIGlzIHZlcnkgY29uZnVzaW5nIGJlY2F1c2UgaW4gTGlu
-dXggd2UgbWFrZSB0aGUgZGlzdGluY3Rpb24NCj4gYmV0d2VlbjoNCj4gMS0gZXh0ZXJuYWwgRE1B
-IChnZW5lcmljIERNQSBjb250cm9sbGVyKSBkcml2ZW4NCj4gICAgdGhyb3VnaCB0aGUgZG1hZW5n
-aW5lIEFQSSwgdGhyb3VnaCB3aGljaCB3ZSBpbnRlcmFjdCB1c2luZyB0aGUgc28NCj4gICAgY2Fs
-bGVkIHNsYXZlIEFQSQ0KPiAyLSBwZXJpcGhlcmFsIERNQSAoRE1BIGNvbnRyb2xsZXIgZW1iZWRk
-ZWQgaW4gdGhlIE5BTkQgSVApIHdoZW4gdGhlcmUgaXMNCj4gICAgbm8gImV4dGVybmFsL2dlbmVy
-aWMiIGVuZ2luZS4gSW4gdGhpcyBjYXNlIHdlIGNvbnRyb2wgRE1BIHRyYW5zZmVycw0KPiAgICB1
-c2luZyB0aGUgcmVnaXN0ZXJzIG9mIHRoZSBOQU5EIGNvbnRyb2xsZXIgKG9yIGEgbmVhcmJ5IHJh
-bmdlLCBpbg0KPiAgICB0aGlzIGNhc2UpLCB0aGUgc2FtZSBkcml2ZXIgaGFuZGxlcyBib3RoIHRo
-ZSBOQU5EIGFuZCB0aGUgRE1BIHBhcnQuDQo+IA0KPiBZb3UgdXNlZCB0aGUgd29yZGluZyBTbGF2
-ZSBETUEgKCMxKSwgYnV0IGl0IGZlZWxzIGxpa2UgeW91IGFyZSB0YWxraW5nIGFib3V0DQo+IHRo
-ZSBvdGhlciAoIzIpLiBDYW4geW91IHBsZWFzZSBjb25maXJtIGluIHdoaWNoIGNhc2Ugd2UgYXJl
-Pw0KPg0KDQpNeSBhcG9sb2dpZXMgZm9yIHRoZSBjb25mdXNpb24uDQpTbGF2ZSBETUEgdGVybWlu
-b2xvZ3kgdXNlZCBpbiBjYWRlbmNlIG5hbmQgY29udHJvbGxlciBiaW5kaW5ncyBhbmQNCmRyaXZl
-ciBpcyBpbmRlZWQgY29uZnVzaW5nLiAgDQoNClRvIGFuc3dlciB5b3VyIHF1ZXN0aW9uIGl0IGlz
-LCANCjEgLSBFeHRlcm5hbCBETUEgKEdlbmVyaWMgRE1BIGNvbnRyb2xsZXIpLg0KDQpOYW5kIGNv
-bnRyb2xsZXIgSVAgZG8gbm90IGhhdmUgZW1iZWRkZWQgRE1BIGNvbnRyb2xsZXIgKDIgLSBwZXJp
-cGhlcmFsIERNQSkuIA0KDQpGWVIsIGhvdyBleHRlcm5hbCBETUEgaXMgdXNlZC4gDQpodHRwczov
-L2VsaXhpci5ib290bGluLmNvbS9saW51eC92Ni4xMy4xL3NvdXJjZS9kcml2ZXJzL210ZC9uYW5k
-L3Jhdy9jYWRlbmNlLW5hbmQtY29udHJvbGxlci5jI0wxOTYyDQoNCiANCj4gPiBMaW51eCBEcml2
-ZXI6LQ0KPiA+IERyaXZlciBjYW4gcmVhZCB0aGVzZSBzZG1hIHJlZ2lzdGVycyBkaXJlY3RseSBv
-ciBpdCBjYW4gdXNlIHRoZSBETUEuDQo+ID4gRXhpc3RpbmcgZHJpdmVyIGNvZGUgaGFzIGhhcmRj
-b2RlZCBoYXNfZG1hIHdpdGggYW4gYXNzdW1wdGlvbiB0aGF0IGFuDQo+ID4gZXh0ZXJuYWwgRE1B
-IGlzIGFsd2F5cyB1c2VkIGFuZCByZWxpZXMgb24gRE1BIEFQSSBmb3IgZGF0YSB0cmFuc2Zlci4N
-Cj4gDQo+IEkgYW0gc29ycnkgYnV0IERNQSBBUEkgZG9lcyBub3QgbWVhbiBtdWNoLiBUaGVyZSBh
-cmUgMyBBUElzOg0KPiAtIGRtYS1tYXBwaW5nLCBmb3IgdGhlIGJ1ZmZlcnMgYW5kIHRoZSBjb2hl
-cmVuY3kNCj4gLSBkbWFlbmdpbmUsIHVzZWQgaW4gY2FzZSAjMSBvbmx5LCB0byBkcml2ZSB0aGUg
-ZXh0ZXJuYWwgRE1BIGNvbnRyb2xsZXJzDQo+IC0gZG1hLWJ1ZiB0byBzaGFyZSBidWZmZXJzIGJl
-dHdlZW4gYXJlYXMgaW4gdGhlIGtlcm5lbCAob3V0IG9mIHNjb3BlKQ0KPiANCj4gPiBUaGFudCBp
-cyB3aHkgaXQgcmVxdWlyZXMgdG8gdXNlIERNQSBjaGFubmVsIGZyb20gZG1hZW5naW5lLg0KPiAN
-Cj4gSWYgSSB1bmRlcnN0YW5kIGl0IHJpZ2h0LCBubyA6LSkNCj4gDQo+IEVpdGhlciB5b3UgaGF2
-ZSBhbiBleHRlcm5hbCBETUEgY29udHJvbGxlciAoIzIpIG9yIGFuIGludGVybmFsIG9uZSAoIzEp
-IGJ1dCBpbg0KPiB0aGlzIHNlY29uZCBjYXNlIHRoZXJlIGlzIG5vIERNQSBjaGFubmVsIHJlcXVl
-c3Qgbm9yIGFueSBlbmdpbmUtcmVsYXRlZA0KPiBBUEkuIE9mIGNvdXJzZSB5b3UgbmVlZCB0byB1
-c2UgdGhlIGRtYS1tYXBwaW5nIEFQSSBmb3IgdGhlIGJ1ZmZlcnMuDQo+IA0KPiA+IEluIG15IHBy
-ZXZpb3VzIHJlcGx5LCBJIHRyaWVkIHRvIGRlc2NyaWJlIHRoaXMgZHJpdmVyIHNjZW5hcmlvIGJ1
-dCBtYXliZSBJDQo+IG1peGVkIHVwLg0KPiA+IGhhc19kbWE9MCwgaS5lLiBhY2Nlc3Npbmcgc2Rt
-YSByZWdpc3RlciB3aXRob3V0IHVzaW5nIGRtYWVuZ2luZSBpcw0KPiA+IGFsc28gd29ya2luZy4N
-Cj4gDQo+IEJ1dCBkbyB5b3UgaGF2ZSBhbiBleHRlcm5hbCBETUEgZW5naW5lIGluIHRoZSBlbmQ/
-IE9yIGlzIGl0IHNwZWNpZmljIHRvIHRoZQ0KPiBOQU5EIGNvbnRyb2xsZXI/DQo+IA0KDQpZZXMg
-SSBhbSB1c2luZyBleHRlcm5hbCBETUEgZW5naW5lLiANCg0KVGhhbmtzLA0KTmlyYXYNCg==
+On 04/02/2025 08:29, Patrice CHOTARD wrote:
+>>>>>>>>> @@ -0,0 +1,190 @@
+>>>>>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>>>>>>> +%YAML 1.2
+>>>>>>>>> +---
+>>>>>>>>> +$id: http://devicetree.org/schemas/memory-controllers/st,stm32-omm.yaml#
+>>>>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>>>>>> +
+>>>>>>>>> +title: STM32 Octo Memory Manager (OMM)
+>>>>>>>>> +
+>>>>>>>>> +maintainers:
+>>>>>>>>> +  - Patrice Chotard <patrice.chotard@foss.st.com>
+>>>>>>>>> +
+>>>>>>>>> +description: |
+>>>>>>>>> +  The STM32 Octo Memory Manager is a low-level interface that enables an
+>>>>>>>>> +  efficient OCTOSPI pin assignment with a full I/O matrix (before alternate
+>>>>>>>>> +  function map) and multiplex of single/dual/quad/octal 		SPI interfaces over
+>>>>>>>>> +  the same bus. It Supports up to:
+>>>>>>>>> +    - Two single/dual/quad/octal SPI interfaces
+>>>>>>>>> +    - Two ports for pin assignment
+>>>>>>>>> +
+>>>>>>>>> +properties:
+>>>>>>>>> +  compatible:
+>>>>>>>>> +    const: st,stm32mp25-omm
+>>>>>>>>> +
+>>>>>>>>> +  "#address-cells":
+>>>>>>>>> +    const: 2
+>>>>>>>>> +
+>>>>>>>>> +  "#size-cells":
+>>>>>>>>> +    const: 1
+>>>>>>>>> +
+>>>>>>>>> +  ranges:
+>>>>>>>>> +    description: |
+>>>>>>>>> +      Reflects the memory layout with four integer values per OSPI instance.
+>>>>>>>>> +      Format:
+>>>>>>>>> +      <chip-select> 0 <registers base address> <size>
+>>>>>>>>
+>>>>>>>> Do you always have two children? If so, this should have maxItems.
+>>>>>>>
+>>>>>>> No, we can have one child.
+>>>>>>
+>>>>>> For the same SoC? How? You put the spi@ in the soc, so I don't
+>>>>>> understand how one child is possible.
+>>>>>
+>>>>> Yes for the same SoC, in DTSI file, the both OCTOSPI child are declared 
+>>>>> but are disabled by default.
+>>>>
+>>>> But the child node is there anyway so are the ranges.
+>>>
+>>> if both child are disabled, omm-manager should be disabled as well, 
+>>> omm-manager alone makes no sense.
+>>
+>>
+>> Yes, it is obvious, but how is this related?
+> 
+> As described in the commit message, OMM manages the muxing of the 2 OSPI buses 
+> (its 2 child), that's the relation.
+
+Again, nothing related to our discussion.
+
+You claim you can have only one child and we do not talk about child
+disabled status here. So show me the product which have second address
+space removed from *the SoC*.
+
+> 
+> Do you want i add this directly in yaml file ?
+
+
+No, I want the answer when is it possible to have only one ranges. What
+such DTSI would represent - what real world hardware.
+
+> 
+>>
+>>>
+>>>>
+>>>>>
+>>>>> In the DTS board file, 0,1 or 2 OCTOSPI instance can be enabled depending of the board design.
+>>>>>
+>>>>> In our case, on stm32mp257f-ev1 board, one SPI-NOR is soldered on PCB, so only one OCTOSPI 
+>>>>> instance is needed and enabled.
+>>>>>
+>>>>> Internally we got validation boards with several memory devices connected to OCTOSPI1 and 
+>>>>> OCTOSPI2, in this case, both OCTOSPI instance are needed and enabled.
+>>>>
+>>>> I could imagine that you would not want to have unused reserved ranges,
+>>>> so that one indeed is flexible, I agree.
+>>>>
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>>>
+>>>>>>>>> +
+>>>>>>>>> +  reg:
+>>>>>>>>> +    items:
+>>>>>>>>> +      - description: OMM registers
+>>>>>>>>> +      - description: OMM memory map area
+>>>>>>>>> +
+>>>>>>>>> +  reg-names:
+>>>>>>>>> +    items:
+>>>>>>>>> +      - const: regs
+>>>>>>>>> +      - const: memory_map
+>>>>>>>>> +
+>>>>>>>>> +  memory-region:
+>>>>>>>>> +    description: Phandle to node describing memory-map region to used.
+>>>>>>>>> +    minItems: 1
+>>>>>>>>> +    maxItems: 2
+>>>>>>>>
+>>>>>>>> List the items with description instead with optional minItems. Why is
+>>>>>>>> this flexible in number of items?
+>>>>>>>
+>>>>>>> If only one child (OCTOSPI instance), only one memory-region is needed.
+>>>>>>
+>>>>>> Which is not possible... look at your DTSI.
+>>>>>
+>>>>> It's possible. if one OCTOSPI is used (the second one is kept disabled), only
+>>>>> one memory-region is needed.
+>>>>
+>>>> Ack.
+>>>>
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>> Another update, i will reintroduce "memory-region-names:" which was 
+>>>>>>> wrongly removed in V2, i have forgotten one particular case.
+>>>>>>>
+>>>>>>> We need memory-region-names in case only one OCTOSPI instance is 
+>>>>>>> used. If it's OCTOCPI2 and the whole memory-map region
+>>>>>>> is dedicated to OCTOSPI2 (OCTOSPI1 unmapped, OCTOSPI2 (256 Mbytes)
+>>>>>>>
+>>>>>>> We need to know to which OCTOSPI instance the memory region is associated
+>>>>>>> with, in order to check "st,syscfg-amcr" 's value which must be coherent 
+>>>>>>> with memory region declared.
+>>>>>>>
+>>>>>>> so i will add :
+>>>>>>>
+>>>>>>>   memory-region-names:
+>>>>>>>     description: |
+>>>>>>>       OCTOSPI instance's name to which memory region is associated
+>>>>>>>     items:
+>>>>>>>       - const: ospi1
+>>>>>>>       - const: ospi2
+>>>>>>>
+>>>>>>
+>>>>>> I don't think this matches what you are saying to us. Let's talk about
+>>>>>> the hardware which is directly represented by DTS/DTSI. You always have
+>>>>>> two instances.
+>>>>>>
+>>>>>>
+>>>>>
+>>>>> We have 2 instances, but both not always enabled.
+>>>>> In case only one is enabled, only one memory-region-names is needed.
+>>>>>
+>>>>> We must know to which OCTCOSPI the memory-region makes reference to, in order
+>>>>> to configure and/or check the memory region split configuration. That' swhy 
+>>>>> the memory-regions-names must specify if it's the OCTOSPI1 or OCTOSPI2 instance.
+>>>>
+>>>> Well, in that case two comments.
+>>>> 1. Above syntax does not allow you to skip one item. You would need:
+>>>> items:
+>>>>   enum: [ospi1, ospi2]
+>>>> minItems: 1
+>>>> maxItems: 2
+>>>>
+>>>
+>>> ok
+>>>
+>>>> 2. But this points to other problem. From the omm-manager node point of
+>>>> view, you should define all the resources regardless whether the child
+>>>> is enabled or not. You do not skip some part of 'reg' if child is
+>>>> missing. Do not skip interrupts, access controllers, clocks etc.
+>>>> If some resource is to be skipped, it means that it belongs to the
+>>>> child, not to the parent, IMO.
+>>>
+>>> I didn't get your point. 
+>>>
+>>> The resource declared in omm-manager's node pnly belongs to omm-manager
+>>> (reg/clocks/resets/access-controllers/st,syscfg-amcr/power-domains), regardless 
+>>> there are 1 or 2 children. None of them can be skipped.
+>>
+>> That's not true, you skip ranges and memory region.
+> 
+> If i have correctly understood, you want a constraint on range and memory-regions properties ?
+> Is it what you expect ?
+> 
+>   ranges:
+>     description: |
+>       Reflects the memory layout with four integer values per OSPI instance.
+>       Format:
+>       <chip-select> 0 <registers base address> <size>
+>     minItems: 1
+>     maxItems: 2
+> 
+>   memory-region-names:
+>     description: |
+>       OCTOSPI instance's name to which memory region is associated
+>     items:
+>       enum: [ospi1, ospi2]
+>     minItems: 1
+>     maxItems: 2
+> 
+
+
+Best regards,
+Krzysztof
