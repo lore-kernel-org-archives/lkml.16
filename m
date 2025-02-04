@@ -1,62 +1,36 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1910A25A655;
-	Tue,  4 Feb 2025 06:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D5720013D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 06:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738650019; cv=none; b=sg0kAT4CXv52Y8SxK1b7DeM9veRgY04Jy/PvTKWAnCHY/SkpB5Hxh4XryCXPFmBGP0e/qeX+wI1i+aiqia3Db+RbgRJGaB2Kk5S4t1cxcZ9Z66cYDv7F0n8UAEu4ax7ogJ2C9h3UwOkPzr0qJcS1B+FueJXSgPv1uAOdOHkDJdw=
+	t=1738650374; cv=none; b=tD8PN0MGbQXDTSKOh5TEL7I6KNoO/oeG8qaYM3MRp7YAXBjtsUFh6lRI9XUrYuyznN+SQKajlk2UJ6sR+/SQQw6tjwQsV5FRTVVymAU+g2FBwyY2bu5LaZV9uEjLw4RR7xnapXY6qvcsBtfhNUIx4Xtargdxar9dNvElY7dexvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738650019; c=relaxed/simple;
-	bh=HkcZscvvD3gCXyz29syjOg7HivyYRZkHBV9qK8IwClI=;
+	s=arc-20240116; t=1738650374; c=relaxed/simple;
+	bh=DLyHuE7sBiuH1plr2pK6VDDhcA0imwUEYWT9w5+hooQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qvJ32n5kH2bTIMBy/VGuLS1NAxJGWtqoHuKZeT4Uo4lcUG4ToS+QI75o4nSPtQuituBTHdxcpux4FhMZCRqiA71Jrhfdyjp5h/+do9z24VJb68YMXSVUY2Mq8m8K2AVVCuKJo029ar2cbklmakLefvW76wZga0xAs4VylHBLhow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YiwF+bc8; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YiwF+bc8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738650018; x=1770186018;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HkcZscvvD3gCXyz29syjOg7HivyYRZkHBV9qK8IwClI=;
-  b=YiwF+bc8fty90hNnOU6hfWGGwvj3vYZv1i3fbmoJZXLyWqNUOjbj6Nts
-   TW+14U2/nG6/y44NOlbszQ4FZX6ZCUAfaOlD4CHzDSUCG3tdrSe1+sYH0
-   dZtsnuRvyyqI3yT2RqrUuQhUh6pduj39WTRE4Y69ASHaQANQAJSU8fRoE
-   Rft8TRFYtNMo9bIzphPPrBiw5biqRiFz7koouftdJdQjgPp5CnhMoF7Iw
-   7FAlkdEJUPWA7YVUUr1PR/UsPry/hIT50IzvSP/T2pZMF/RKRZtc6vCie
-   XABj8UAgvSpqKqn9T9dupNF6C8CPjl+34RV1XYuS9+HREKejm5qwpwwZ1
-   w==;
-X-CSE-ConnectionGUID: ZiN7WtePTYawQRPoIPRvvA==
-X-CSE-MsgGUID: rGgwreD2Tc6aiY6Nk6uceA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50580252"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="50580252"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:20:16 -0800
-X-CSE-ConnectionGUID: bVraY+nvRnmI6DT4JpRhIg==
-X-CSE-MsgGUID: G5FdLvNeS8mBz2ueWN9oeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="110280685"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:20:14 -0800
-Date: Tue, 4 Feb 2025 07:16:41 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Igor Russkikh <irusskikh@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] net: atlantic: Avoid
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z6GwydOggtMRqYCY@mev-dev.igk.intel.com>
-References: <Z6F3KZVfnAZ2FoJm@kspp>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bFFomyQGlxAOZWkRadtmjBAxIqBWN8SXWB2oTnJ03NZUKUsXxgJk/AsjkWh4eD88oU60q/hoTU3XC0aN3mPJydnPNf7Wia62oCISyhiy6Z0o74R5ojNh6ai678tF2qJW+h7LyLbi4sru7Ry9uq/+x7m9JeIoBV7w5NsKqcuumuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 077F668AFE; Tue,  4 Feb 2025 07:26:06 +0100 (CET)
+Date: Tue, 4 Feb 2025 07:26:05 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Christoph Hellwig <hch@lst.de>, Bruno Gravato <bgravato@gmail.com>,
+	Stefan <linux-kernel@simg.de>, Keith Busch <kbusch@kernel.org>,
+	bugzilla-daemon@kernel.org, Adrian Huang <ahuang12@lenovo.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of
+ AsRock X600M-STX + Ryzen 8700G
+Message-ID: <20250204062605.GB29300@lst.de>
+References: <Z36UsE5dj6j5HhkX@kbusch-mbp> <20250109082849.GC20724@lst.de> <210e7b28-de05-44bc-9604-83a79ae131b0@leemhuis.info> <726275aa-a3c2-4dbd-9055-a14db93efa29@simg.de> <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com> <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info> <20250117080507.GA25953@lst.de> <f81bb87a-c181-4973-be05-f7df84133a46@leemhuis.info> <20250117095522.GA2391@lst.de> <266965cf-9cf9-4434-be42-458e92d7366d@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,44 +39,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6F3KZVfnAZ2FoJm@kspp>
+In-Reply-To: <266965cf-9cf9-4434-be42-458e92d7366d@leemhuis.info>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Feb 04, 2025 at 12:40:49PM +1030, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Remove unused flexible-array member `buf` and, with this, fix the following
-> warnings:
-> drivers/net/ethernet/aquantia/atlantic/aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/ethernet/aquantia/atlantic/hw_atl/../aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Suggested-by: Igor Russkikh <irusskikh@marvell.com>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v2:
->  - Remove unused flex-array member. (Igor)
-> 
-> v1:
->  - Link: https://lore.kernel.org/linux-hardening/ZrDwoVKH8d6TdVxn@cute/
-> 
->  drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
-> index f5901f8e3907..f6b990b7f5b4 100644
-> --- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
-> +++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
-> @@ -226,7 +226,6 @@ struct __packed offload_info {
->  	struct offload_port_info ports;
->  	struct offload_ka_info kas;
->  	struct offload_rr_info rrs;
-> -	u8 buf[];
->  };
+On Fri, Jan 17, 2025 at 11:30:47AM +0100, Thorsten Leemhuis wrote:
+> >> Side note: that "PCI-DMA: Using software bounce buffering for IO
+> >>>> (SWIOTLB)" message does show up on two other AMD machines I own as
+> >> well. One also has a Ryzen 8000, the other one a much older one.
 
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+The message will aways show with > 4G of memory.  It only implies swiotlb
+is initialized, not that any device actually uses it.
 
->  
->  struct __packed hw_atl_utils_fw_rpc {
-> -- 
-> 2.43.0
+> >> And BTW a few bits of the latest development in the bugzilla ticket
+> >> (https://bugzilla.kernel.org/show_bug.cgi?id=219609 ):
+> >>
+> >> * iommu=pt and amd_iommu=off seems to work around the problem (in
+> >> addition to disabling the iommu in the BIOS setup).
+
+iommu_pt calls iommu_set_default_passthrough, which sets
+iommu_def_domain_type to IOMMU_DOMAIN_IDENTITY.  I.e. the hardware
+IOMMu is left on, but treated as a 1:1 mapping by Linux.
+
+amd_iommu=off sets amd_iommu_disabled, which calls disable_iommus,
+which from a quick read disables the hardware IOMMU.
+
+In either case we'll end up using dma-direct instead of dma-iommu.
+
+> > 
+> > That suggests the problem is related to the dma-iommu code, and
+> > my strong suspect is the swiotlb bounce buffering for untrusted
+> > device.  If you feel adventurous, can you try building a kernel
+> > where dev_use_swiotlb() in drivers/iommu/dma-iommu.c is hacked
+> > to always return false?
 > 
+> Tried that, did not help: I still get corrupted data.
+
+.. which together with this implies that the problem only happens
+when using the dma-iommu code (with or without swiotlb buffering
+for unaligned / untrusted data), and does not happen with
+dma-direct.
+
+If we assume it also is related to the optimal dma size, which
+the original report suggests, the values for that might be
+interesting.  For dma-iommu this is:
+
+	PAGE_SIZE << (IOVA_RANGE_CACHE_MAX_SIZE - 1);
+
+where IOVA_RANGE_CACHE_MAX_SIZE is 6, i.e.
+
+	PAGE_SIZE << 5 or 131072 for x86_64.
+
+for dma-direct it falls back to dma_max_mapping_size, which is
+SIZE_MAX without swiotlb, or swiotlb_max_mapping_size, which
+is a bit complicate due to minimum alignment, but in this case
+should evaluate to: 258048, which is almost twice as big.
+
+And all this unfortunately leaves me really confused.  If someone is
+interested in playing around with at the risk of data corruption it would
+be interesting to hack hardcoded values into dma_opt_mapping_size, e.g.
+plug in the 131072 used by dma-iommu while using dma-direct with the
+above iommu disable options.
