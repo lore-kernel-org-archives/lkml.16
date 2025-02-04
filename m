@@ -1,139 +1,171 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DF321579C;
-	Tue,  4 Feb 2025 18:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC85121323A;
+	Tue,  4 Feb 2025 18:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738692463; cv=none; b=H/8PksBMc65VCms6zpur0RDIgHhYS3OYLD8Dggk8qmz46px1p6mk6Kp9GjJAAz72BMJKGuthU36hXdAcY0JklLEVtqNul3BgxIwT31yerYzTP/1YLFmkkL3DZ+7hE/RJuSvMoukEYIkOHqXsdeQSYCHbBNADqVdte5Skf8a9U6s=
+	t=1738692711; cv=none; b=ddBzC/tHmN88tcibKuHp5viIeO2SQaProZ44/2F9yC7DG9RQlRXRwqDiqsntzk4FJUEIUYyNw13TKlTGzazCJ5wfv4gf4rZ3s9HoENQ3Zy+lCVWTYjlopBT6Aucei0F7/3vDHx0qg8nMM8cvyej2RG43KomJB1uwET0TbLFzHL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738692463; c=relaxed/simple;
-	bh=uy2RAO0HREHk9jFjYXKnTRCWdGyyTgpHnGz4Tb6pK7A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tl8CFQ6Sci+jGNOb0MuXmDNl49dJ6rqKE2h4eajXrNDZl+4eJ7bNi0myVnaYg+1BQdqAE6WHCmRg5nuWWZPWIkPrkqCVw1m153uoTzMXwBLEEV4JKlXAjF/LxTvgfKiIwatDc95TjFDLfPMvsJ602Z04TK8WM6qta4RlQrMmDMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOXLsaKO; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738692711; c=relaxed/simple;
+	bh=KS3ZmcpIOz9v7pJkkCKbwjtA1JRgKahjeTsxL/WsKA8=;
+	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
+	 Content-Type:Subject; b=Hdi8kmrjBsj5V5NEdyiQQfOTIcShZKxc8dK08Sj9QNbyQxbx8MBaQDRXMCPqBHWTuchiaJYvpaw0+mrVLbLqme1aL4qFkYG4AdWqFF3u0rf700fMHW8y6zhHD/sAOuNFpQyyY8csqQmqJJtgLLeRxRQEufoH9mrdu/ZNujmFfxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=ZIcFteER; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOXLsaKO"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2161eb95317so105139995ad.1;
-        Tue, 04 Feb 2025 10:07:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738692461; x=1739297261; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pUWVYRjU/T6AKCeZ6ytji12eJGMYrefQ1/hONpq4u3U=;
-        b=WOXLsaKOmiIqKA3kYWZtpIirMMMYhliyvKivCXUBJkQW97xnCIrZdQEEmE2Nlyb8c9
-         hmVAweUtSEnJJrlIqnrFbZywZOjpkb1RePrpA20woOSHrm34qCOLod0jQ1SsAtfOUKod
-         /WZl87lRatIZQH+wQ+6JVGUrCMOElhGq0jqrZABaHWNDey/55CVeKqhxHz7FbinUA0Nx
-         hS/gDpjBoVVTrrRvtxYYT4wUWCV2shyBuvWJgMz6Hy1FqddQcfZpWXgsHYi1ZFSVG9rT
-         R2433z+7QvdnHQ5fhSivcx3SqgtOPc2H9UxU3YPxcPJCddmDU9Na6lZgC5rPkz2W8m5I
-         eugQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738692461; x=1739297261;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pUWVYRjU/T6AKCeZ6ytji12eJGMYrefQ1/hONpq4u3U=;
-        b=WMOSPcHt7KIwytVGkzQ+e/dcSjaKfEFejzvb0YXGDVXSQ7klH9PReyMwnyoCjLPGkf
-         dfsPo3pJs3RpYuMacufL7+z2/3oGEPL2IgKXKlpYeVrrj97Sbkp1pf/Q3A/Zhf9sIXih
-         7AfK4uk0p/Uhm+KeaepuNf6j7Cm2R8tr9UmeOA/irHnLWAqPBlo7HIKMMuXxzN/q0lia
-         VZYA6hdzoxt+N0+VY1WNuaDqPx7uWok3OOefvMpjYKNAgrWCHXRIVgd0ixGDUiUHgTlR
-         cacbNtlUKOc2u4HJsm5Ux8CSe/NTYoWHvnDRXvZn/bNJqRFppbwun2jXeMmjbRvKbVum
-         uIWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWe8PYdcf4AhjJRSnBgcPmi5MPDwrzFq4fWcr17G0O5YEVwQig4OF9xQ53xsm0WWwC8qZ9UXJfBzCNeO3s6@vger.kernel.org, AJvYcCWweAhiYqPIcgpUf9XWDEU6u61y1REsDMEypVIAZyItIhvAvP3DP2WaVufoF/wVdBlKKZ0HSf9g@vger.kernel.org, AJvYcCWzGNecm8MTDnLHOHq+URYZR497VhNMn9NjSa7uuWIGUeKANVdI2WNw9weIgIaZ63HV3Baq62ctTbvVF/CQfZz1@vger.kernel.org, AJvYcCXHibvhh9mqPMkPD3iKD/mSdTaqtZ7S1l9+pB+wwZ/DY3A0Zp1UjboRYfqREwZNqMw8MmfHC28Fw9PK@vger.kernel.org, AJvYcCXyPa7XMxBr3axUuvtaNmCgmLruFG+XmZWKlfS2wCe9yaEsF2WTpgiUQYUVTdltRfrm/+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkmbbS68YwDSoogsZckkjDP836WYfBhHsV2lOHH6QElJa/Gv1l
-	8QdAY899UP3uPywYzW+l1u5Va5c4tApsCJZIO+4KjsyIIsDOJB0=
-X-Gm-Gg: ASbGncvGkA3xkf6oZ7W7vIwLmAMFQa5GXKlDlFbRDVcgsoq1xS+s3Rb4Lmtt4q3IcV7
-	mvVIoKUqKCRDHtIGoZr0SOJNCcZaeShb8J3HD46cInEoZaw3QCjMArUtYqrqqAlZcTnLNVv/Yrn
-	jMC6KP7M8yO97fvg/6Lu18E2v/djRfint/vBZ7+DyLV0EgDMRLhSeM7XxWXrDGjvzaA4in9fXRu
-	+zBWgqWsrRwAP3LwUkVFN16R45APhhmWE5IlR2eXSbV0LbZm5AxkSxWEw1ttNqrrvg+b7hyAnsM
-	VQkCHCuvh59sH4w=
-X-Google-Smtp-Source: AGHT+IHqa3+XR4upxc7fln2BlqQH6Kpwtj8kZ27zpZtWrtWOX/qB2ZjoxFzkwLakAGYO1L0PhSn1Ew==
-X-Received: by 2002:a05:6a20:9f45:b0:1ea:ddd1:2fcf with SMTP id adf61e73a8af0-1ed7a462e94mr41721024637.4.1738692460711;
-        Tue, 04 Feb 2025 10:07:40 -0800 (PST)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-acec0a65716sm8720645a12.68.2025.02.04.10.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 10:07:40 -0800 (PST)
-Date: Tue, 4 Feb 2025 10:07:39 -0800
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	kvm@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Neal Cardwell <ncardwell@google.com>,
-	David Ahern <dsahern@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me,
-	asml.silence@gmail.com, dw@davidwei.uk,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Victor Nogueira <victor@mojatatu.com>,
-	Pedro Tammela <pctammela@mojatatu.com>,
-	Samiullah Khawaja <skhawaja@google.com>
-Subject: Re: [PATCH net-next v3 2/6] selftests: ncdevmem: Implement devmem
- TCP TX
-Message-ID: <Z6JXaz1AwMhN1wvL@mini-arch>
-References: <20250203223916.1064540-1-almasrymina@google.com>
- <20250203223916.1064540-3-almasrymina@google.com>
- <c8dd0458-b0a9-4342-a022-487e73542381@redhat.com>
- <CAHS8izOnrWdPPhVaCFT4f3Vz=YkHyJ5KgnAbuxfR5u-ffkbUxA@mail.gmail.com>
- <71336d4e-6a75-4166-9834-7de310df357e@redhat.com>
- <CAHS8izPFe-1tf9Xetc8Znj04x9rKXVchR3DaspRGPDRbSFQFgw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="ZIcFteER"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=YTF+w0WkN8/brmYU7JARPGRsoEigeKQVOQIogVMPd9c=; b=ZIcFteERixfmdRSY5Z4iDkGbg2
+	KtzSuoJglZUpDIdX9WUr+OzYgHzCDHvfzWmD5B2wbaZdQLL4hjxDiE2tZ0KiT/jVXeXMTxANKn3/x
+	d0Nx/pTfJ7ZrqlGTc+TxdYdfm+Nei9804mQ1esonpDXGRzTOVnZ082KASKqTdwP6LgKg=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:38586 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1tfN04-0007MX-Go; Tue, 04 Feb 2025 12:46:17 -0500
+Date: Tue, 4 Feb 2025 12:46:15 -0500
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: neil.armstrong@linaro.org
+Cc: Jagan Teki <jagan@edgeble.ai>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Linus Walleij <linus.walleij@linaro.org>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>, stable@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Message-Id: <20250204124615.4d7a308633a15fc17b2215cb@hugovil.com>
+In-Reply-To: <16bd6bc2-8f10-4b99-9903-6e9f0f8778d8@linaro.org>
+References: <20240927135306.857617-1-hugo@hugovil.com>
+	<f9b0cc53-00ae-4390-9ff9-1dac0c0804ba@linaro.org>
+	<20240930110537.dbbd51824c2bb68506e2f678@hugovil.com>
+	<16bd6bc2-8f10-4b99-9903-6e9f0f8778d8@linaro.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izPFe-1tf9Xetc8Znj04x9rKXVchR3DaspRGPDRbSFQFgw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -1.9 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH] drm: panel: jd9365da-h3: fix reset signal polarity
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-On 02/04, Mina Almasry wrote:
-> On Tue, Feb 4, 2025 at 9:56 AM Paolo Abeni <pabeni@redhat.com> wrote:
-> >
-> > On 2/4/25 6:35 PM, Mina Almasry wrote:
-> > > On Tue, Feb 4, 2025 at 4:29 AM Paolo Abeni <pabeni@redhat.com> wrote:
-> > >>>  .../selftests/drivers/net/hw/ncdevmem.c       | 300 +++++++++++++++++-
-> > >>>  1 file changed, 289 insertions(+), 11 deletions(-)
-> > >>
-> > >> Why devmem.py is not touched? AFAICS the test currently run ncdevmem
-> > >> only in server (rx) mode, so the tx path is not actually exercised ?!?
-> > >>
-> > >
-> > > Yeah, to be honest I have a collection of local bash scripts that
-> > > invoke ncdevmem in different ways for my testing, and I have docs on
-> > > top of ncdevmem.c of how to test; I don't use devmem.py. I was going
-> > > to look at adding test cases to devmem.py as a follow up, if it's OK
-> > > with you, and Stan offered as well on an earlier revision. If not no
-> > > problem, I can address in this series. The only issue is that I have
-> > > some legwork to enable devmem.py on my test setup/distro, but the meat
-> > > of the tests is already included and passing in this series (when
-> > > invoked manually).
-> >
-> > I think it would be better if you could include at least a very basic
-> > test-case for the TX path. More accurate coverage could be a follow-up.
-> >
+On Mon, 30 Sep 2024 18:24:44 +0200
+neil.armstrong@linaro.org wrote:
+
+> On 30/09/2024 17:05, Hugo Villeneuve wrote:
+> > On Mon, 30 Sep 2024 16:38:14 +0200
+> > Neil Armstrong <neil.armstrong@linaro.org> wrote:
+> > 
+> >> Hi,
+> >>
+> >> On 27/09/2024 15:53, Hugo Villeneuve wrote:
+> >>> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> >>>
+> >>> In jadard_prepare() a reset pulse is generated with the following
+> >>> statements (delays ommited for clarity):
+> >>>
+> >>>       gpiod_set_value(jadard->reset, 1); --> Deassert reset
+> >>>       gpiod_set_value(jadard->reset, 0); --> Assert reset for 10ms
+> >>>       gpiod_set_value(jadard->reset, 1); --> Deassert reset
+> >>>
+> >>> However, specifying second argument of "0" to gpiod_set_value() means to
+> >>> deassert the GPIO, and "1" means to assert it. If the reset signal is
+> >>> defined as GPIO_ACTIVE_LOW in the DTS, the above statements will
+> >>> incorrectly generate the reset pulse (inverted) and leave it asserted
+> >>> (LOW) at the end of jadard_prepare().
+> >>
+> >> Did you check the polarity in DTS of _all_ users of this driver ?
+> > 
+> > Hi Neil,
+> > I confirmed that no in-tree DTS is referencing this driver. I did a
+> > search of all the compatible strings defined in the
+> > "jadard,jd9365da-h3.yaml" file. I also did the same on Debian code
+> > search.
 > 
-> Thanks; will do.
+> 
+> OK then:
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-This is what I've been using to test tx-only and tx-rx modes (shared
-previously on the list as well):
-https://github.com/fomichev/linux/commit/df5ef094db57f6c49603e6be5730782e379dd237
+Hi Neil,
+it seems this patch was never applied/picked-up?
 
-Feel free to include in the v4.
+Hugo.
+
+
+> 
+> > 
+> > Hugo.
+> > 
+> > 
+> >>
+> >> Neil
+> >>
+> >>>
+> >>> Fix reset behavior by inverting gpiod_set_value() second argument
+> >>> in jadard_prepare(). Also modify second argument to devm_gpiod_get()
+> >>> in jadard_dsi_probe() to assert the reset when probing.
+> >>>
+> >>> Do not modify it in jadard_unprepare() as it is already properly
+> >>> asserted with "1", which seems to be the intended behavior.
+> >>>
+> >>> Fixes: 6b818c533dd8 ("drm: panel: Add Jadard JD9365DA-H3 DSI panel")
+> >>> Cc: <stable@vger.kernel.org>
+> >>> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> >>> ---
+> >>>    drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c | 8 ++++----
+> >>>    1 file changed, 4 insertions(+), 4 deletions(-)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c b/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+> >>> index 44897e5218a69..6fec99cf4d935 100644
+> >>> --- a/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+> >>> +++ b/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+> >>> @@ -110,13 +110,13 @@ static int jadard_prepare(struct drm_panel *panel)
+> >>>    	if (jadard->desc->lp11_to_reset_delay_ms)
+> >>>    		msleep(jadard->desc->lp11_to_reset_delay_ms);
+> >>>    
+> >>> -	gpiod_set_value(jadard->reset, 1);
+> >>> +	gpiod_set_value(jadard->reset, 0);
+> >>>    	msleep(5);
+> >>>    
+> >>> -	gpiod_set_value(jadard->reset, 0);
+> >>> +	gpiod_set_value(jadard->reset, 1);
+> >>>    	msleep(10);
+> >>>    
+> >>> -	gpiod_set_value(jadard->reset, 1);
+> >>> +	gpiod_set_value(jadard->reset, 0);
+> >>>    	msleep(130);
+> >>>    
+> >>>    	ret = jadard->desc->init(jadard);
+> >>> @@ -1131,7 +1131,7 @@ static int jadard_dsi_probe(struct mipi_dsi_device *dsi)
+> >>>    	dsi->format = desc->format;
+> >>>    	dsi->lanes = desc->lanes;
+> >>>    
+> >>> -	jadard->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> >>> +	jadard->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+> >>>    	if (IS_ERR(jadard->reset)) {
+> >>>    		DRM_DEV_ERROR(&dsi->dev, "failed to get our reset GPIO\n");
+> >>>    		return PTR_ERR(jadard->reset);
+> >>>
+> >>> base-commit: 18ba6034468e7949a9e2c2cf28e2e123b4fe7a50
+> >>
+> >>
+> > 
+> > 
+> 
+> 
+
+
+-- 
+Hugo Villeneuve
