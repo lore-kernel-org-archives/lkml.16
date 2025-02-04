@@ -1,51 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60AD8207669;
-	Tue,  4 Feb 2025 11:51:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F114207669;
+	Tue,  4 Feb 2025 11:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738669909; cv=none; b=Z1EAzoopjLvx14Ze9BBIA/A/ibIs4Rx2WqaCQXt0L4DZWv/5vKfh/zC11WObvNKz6E4Qbp4SL9ram75iyrdfEZy9BWNTktlCCnaFnj9HUzgHgg5EOAIMxwWFH7f9d0L6Yqf0y/ZYhUbFIaBKWfk/r0CdM8uvqTO88DHcHDcmEk0=
+	t=1738669963; cv=none; b=AdCEr5/uh2ZuDeRmscR3c3NvwzuuQ1i7qgVn7Gm/LPW3OxL6xLczHl5v4Sdq+X736u6xIhoiWw3a91Rapgm7etCsYfVYSwGA2kZ6/PPdfW7K2SlzsVXXxbVyUklkmPnVVSYY26cVJwdbp9Nz47353K8Gp4/Bw/0aPegRkcX5Yw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738669909; c=relaxed/simple;
-	bh=W0iAGFADeNbJCXhNLvY4b8BP7QreMpLTS/N4zSzKNB8=;
+	s=arc-20240116; t=1738669963; c=relaxed/simple;
+	bh=JWhj4wCRd0IuStyLtYDYHq7/gtP9rspFCDxGzuE8DpQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nyh94sqhR1zBppTVnyS304sJ9JK8St9WyELARSxEoHHnIedS6MFAw6ST80NfdLbZ0tqS2XJuoCWbRa0J0dAE6K+DZT5S4/+Jprydn0RE1ZGyMVZhFHp3S5n2JYBGuit/U12xBcOnj7vBnkP4pLsU80E1uy6nb/CE/w9ZjgqqTKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=guIg8Qnz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=M06TDBeR2ZOUDIQ35Ubxh4phDlB7+8AZE50aL9vlnX3IZFW3QVVF9ztKKFqTvrYxVOZxSMOiO06kkfh6bkqQxDZdhg4+qSS/S1PIgC4gzp5lQSZG+tYaIadydtnvPKEPfckAcHE4SaUlhdaLtjwuvDIttwN3vhoa/1sH8K2L3c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MphVSKi0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="guIg8Qnz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE383C4CEDF;
-	Tue,  4 Feb 2025 11:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738669908;
-	bh=W0iAGFADeNbJCXhNLvY4b8BP7QreMpLTS/N4zSzKNB8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=guIg8QnzzVOdHYbmqdQR7jlRzvw9kSDUqGBFrnji7JoPMjjC5+Qv2hroLBqWkYSoK
-	 4JTxunz5uu+gqmZABBcWAzxmEuWoEnQzGMrv6+mZCw8QGw4SdQKRhBtcuTvbpuaznJ
-	 BU93n8aPkzh72qmrkxtZygbJAe/o/tEHuE0xID5v+OEwxoK/8PqW4r67NbiQKSF25q
-	 KxncE8E2gQgjge9kwDXaImz5DCzFEJMM4wkgolgmJ3GVcP6L4xTMbSrsNeOL8PXQIl
-	 53kbjTQB3yMpCGphY295jixMTQz84rxXpDF83eB2QVJAXsZkxUAOlG2RL2cwcgSrvy
-	 NterCQtaASZnw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 5FC80CE028A; Tue,  4 Feb 2025 03:51:48 -0800 (PST)
-Date: Tue, 4 Feb 2025 03:51:48 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	rostedt@goodmis.org, Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
- core_initcall()
-Message-ID: <ff2ed5ba-52f4-4e82-ac0c-6e6a7013d86e@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
- <20250130185320.1651910-4-paulmck@kernel.org>
- <20250204102611.OVuHn9rS@linutronix.de>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MphVSKi0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 188BDC4CEE2;
+	Tue,  4 Feb 2025 11:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738669962;
+	bh=JWhj4wCRd0IuStyLtYDYHq7/gtP9rspFCDxGzuE8DpQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MphVSKi0/NLnJsdcVZmKOSWvIpsXKpmKsGSlzcYeqAXyZmoKMdqJjANPo37SXDVrx
+	 xIYF6L87U6KKQEtwUH+k4mIdEpAp4CbZISVCFpRSaw8X8Hqh4j+q0TQnGQX0QCH7Tz
+	 UYEokyvZS4bPwetQPNWD/yZniDW5Kkzga0P5iblY=
+Date: Tue, 4 Feb 2025 12:52:34 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Lyude Paul <lyude@redhat.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] driver core: add a faux bus for use when a simple
+ device/bus is needed
+Message-ID: <2025020435-earwig-zesty-87ea@gregkh>
+References: <2025020421-poster-moisture-534b@gregkh>
+ <2025020424-retrain-recharger-407c@gregkh>
+ <Z6H9g_bvvMf5pPyc@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,81 +53,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250204102611.OVuHn9rS@linutronix.de>
+In-Reply-To: <Z6H9g_bvvMf5pPyc@cassiopeiae>
 
-On Tue, Feb 04, 2025 at 11:26:11AM +0100, Sebastian Andrzej Siewior wrote:
-> On 2025-01-30 10:53:19 [-0800], Paul E. McKenney wrote:
-> > The timer and hrtimer softirq processing has moved to dedicated threads
-> > for kernels built with CONFIG_IRQ_FORCED_THREADING=y.  This results in
-> > timers not expiring until later in early boot, which in turn causes the
-> > RCU Tasks self-tests to hang in kernels built with CONFIG_PROVE_RCU=y,
-> > which further causes the entire kernel to hang.  One fix would be to
-> > make timers work during this time, but there are no known users of RCU
-> > Tasks grace periods during that time, so no justification for the added
-> > complexity.  Not yet, anyway.
+On Tue, Feb 04, 2025 at 12:44:03PM +0100, Danilo Krummrich wrote:
+> On Tue, Feb 04, 2025 at 12:09:13PM +0100, Greg Kroah-Hartman wrote:
+> > Many drivers abuse the platform driver/bus system as it provides a
+> > simple way to create and bind a device to a driver-specific set of
+> > probe/release functions.  Instead of doing that, and wasting all of the
+> > memory associated with a platform device, here is a "faux" bus that
+> > can be used instead.
 > > 
-> > This commit therefore moves the call to rcu_init_tasks_generic() from
-> > kernel_init_freeable() to a core_initcall().  This works because the
-> > timer and hrtimer kthreads are created at early_initcall() time.
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> >  v2: - renamed bus and root device to just "faux" thanks to Thomas
+> >      - removed the one-driver-per-device and now just have one driver
+> >        entirely thanks to Danilo
+> >      - kerneldoc fixups and additions and string handling bounds checks
+> >        hanks to Andy
+> >      - coding style fix thanks to Jonathan
+> >      - tested that the destroy path actually works
+> > 
+> >  drivers/base/Makefile       |   2 +-
+> >  drivers/base/base.h         |   1 +
+> >  drivers/base/faux.c         | 196 ++++++++++++++++++++++++++++++++++++
+> >  drivers/base/init.c         |   1 +
+> >  include/linux/device/faux.h |  31 ++++++
+> >  5 files changed, 230 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/base/faux.c
+> >  create mode 100644 include/linux/device/faux.h
 > 
-> Fixes: 49a17639508c3 ("softirq: Use a dedicated thread for timer wakeups on PREEMPT_RT.")
-> ?
+> I really like it, it's as simply as it can be.
+> 
+> Please find one nit below, otherwise
+> 
+> Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> 
+> > 
+> > +/**
+> > + * faux_device_destroy - destroy a faux device
+> > + * @faux_dev: faux device to destroy
+> > + *
+> > + * Unregister and free all memory associated with a faux device that was
+> > + * previously created with a call to faux_device_create().
+> 
+> Can we really claim that this frees all memory? Someone can still have a
+> reference to the underlying struct device, right?
 
-Quite possibly...  I freely confess that I was more focused on the fix
-than on the bug's origin.  Would you be willing to try this commit and
-its predecessor?
+That "someone" is the person that had the original device pointer passed
+to it, so if that person then calls faux_device_destroy(), yes, that
+should all be properly cleaned up.
 
-> I played with it and I can reproduce the issue with !RT + threadirqs but
-> not with RT (which implies threadirqs).
-> Is there anything in RT that avoids the problem?
+But even if it isn't, the device is destroyed and gone from sysfs, and
+whenever that final final put_device() is called, the memory will then
+be freed by the driver core itself.
 
-Not that I know of, but then again I did not try it.  To your point,
-I do need to make a -rt rcutorture scenario.  TREE03 has been intended to
-approximate this, and it uses the following Kconfig options:
+So all should be ok unless I'm missing something in some codepath here.
 
-------------------------------------------------------------------------
+> > + */
+> > +void faux_device_destroy(struct faux_device *faux_dev)
+> > +{
+> > +	struct device *dev = &faux_dev->dev;
+> > +
+> > +	if (IS_ERR_OR_NULL(faux_dev))
+> > +		return;
+> > +
+> > +	device_del(dev);
+> > +
+> > +	/* The final put_device() will clean up the driver we created for this device. */
+> > +	put_device(dev);
+> 
+> Same here, how do we know it's the final one? I also think the "clean up the
+> driver we created for this device" part isn't true any longer.
 
-CONFIG_SMP=y
-CONFIG_NR_CPUS=16
-CONFIG_PREEMPT_NONE=n
-CONFIG_PREEMPT_VOLUNTARY=n
-CONFIG_PREEMPT=y
-#CHECK#CONFIG_PREEMPT_RCU=y
-CONFIG_HZ_PERIODIC=y
-CONFIG_NO_HZ_IDLE=n
-CONFIG_NO_HZ_FULL=n
-CONFIG_RCU_TRACE=y
-CONFIG_HOTPLUG_CPU=y
-CONFIG_RCU_FANOUT=2
-CONFIG_RCU_FANOUT_LEAF=2
-CONFIG_RCU_NOCB_CPU=n
-CONFIG_DEBUG_LOCK_ALLOC=n
-CONFIG_RCU_BOOST=y
-CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
-CONFIG_RCU_EXPERT=y
+Oops, missed that comment, will go fix that.
 
-------------------------------------------------------------------------
+And same response as above, it should all be cleaned up as best as we
+can by now, any other external references is up to them be dropped by
+that owner.
 
-And the following kernel-boot parameters:
+thanks for the review,
 
-------------------------------------------------------------------------
-
-rcutorture.onoff_interval=200 rcutorture.onoff_holdoff=30
-rcutree.gp_preinit_delay=12
-rcutree.gp_init_delay=3
-rcutree.gp_cleanup_delay=3
-rcutree.kthread_prio=2
-threadirqs
-rcutree.use_softirq=0
-rcutorture.preempt_duration=10
-
-------------------------------------------------------------------------
-
-Some of these are for RCU's benefit, but what should I change to more
-closely approximate a typical real-time deployment?
-
-> Thank you for debugging and the patch. 
-
-And to you for digging into it!
-
-							Thanx, Paul
+greg k-h
