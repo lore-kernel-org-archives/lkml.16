@@ -1,70 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEC325A634;
-	Tue,  4 Feb 2025 02:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F3E137C37
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 03:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738637944; cv=none; b=iCi0FzKC878sD4eQvXuJl1FNBhIqHqgjyLspAnnQgSjfDacZ8QmvGKYn76Wf37HDdzogFY16SKsb+6c8i2kxWWBdhRBh7G2VfXT5AylQ6zu/S1BaetKNQn06JHhn5qddaUSCu7gh47KrIz/KsRykV+lunnzUR6FgOuYJ5/2yzSM=
+	t=1738638181; cv=none; b=Rub5D0LRob66vikAW3Gg61Wtb5s4HGp3IeEIJzphDBd3VkuXY1LjaLS8s/UU1tpS7KCxOd1xQKj2N6lyka+DKJTMdt0V0wlofsDddzlGGalED3K0QP46+jIH6QHGIDaRCxfbZTF4T8FMQOrFSQRB/3WgsBJmGy3pOOcIyaRmSgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738637944; c=relaxed/simple;
-	bh=RGRkVVJqlRNC7tv95ZEo+qB5qw19XQ9KEmwG3KdfDNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jT2RtXPFif0EeMiCcU9u8JGb09fZ3/ILvNxXZMNgFnxq/NeXC7nJ0M4i6IO7WwRcb1IT2vD3zwvJrNnXpOEfIYuMTZ3ZVNmL73LGIamAcGR2H4JoBhs7fpMyQcqsL7hZBj4JipVZ7q8G/YIQZHTESrwtid7+d10VuOHrOc87mlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sTmHzbrM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738638181; c=relaxed/simple;
+	bh=AljLlpBgRQjQAfgQN6eKucpPl/dPKCNkhE58V6Yjsck=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pU/WIA2iC3n3S19TI9M+pKAwezMQUsGHEjOwb5d0DWzUrpL4LhNCpTLvyayR1oWCOTd8Uh3+tKZLfvd3ynMAD8PZ/i/vCwZNp53wwIBpqD7oJDuK6TQLvgQGQAxyEbvdzXA9449crewGa0ELYE9sY4Ki1wOdUJMbWbAW7dzR/uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=uO754Zj5; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sTmHzbrM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DD87C4CEE0;
-	Tue,  4 Feb 2025 02:59:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738637943;
-	bh=RGRkVVJqlRNC7tv95ZEo+qB5qw19XQ9KEmwG3KdfDNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sTmHzbrMIAgTvKOl7tDCkDehPQAxarm6ybWiKRlbbp4o4S2+5of0uKCN1NTvBfiE9
-	 ShHVpKUu+uirVDFu34PidE939lZ8TRNRIpBuPRoei18qwdhvD8Gabc2muVkFW19WcM
-	 Pbg59q/bmIC4+Zh1XbUqBoqHK99K0+0QYj9sRFijfD57yX7tGDF3fHOKf7eGxbZvv5
-	 NELhcGS4vEVa5aGBxhyT3doXfchfXdgYLJFFQHWR0e/ORlDT9eRJHHDaQS/NeKpeMr
-	 EcN6g9KuQ/xeZFsXJyHJKGvZYfn4Vg93H8h/b1xUgga4GqCzumxU+K2JUWwpc4MkHl
-	 QCyji51re+axg==
-Date: Mon, 3 Feb 2025 18:59:01 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: Re: [PATCH v2 1/4] perf trace: Allocate syscall stats only if
- summary is on
-Message-ID: <Z6GCde4XqCuEZlgz@google.com>
-References: <20250130030525.1482498-1-namhyung@kernel.org>
- <20250130030525.1482498-2-namhyung@kernel.org>
- <CAP-5=fVJDi2UuhTYk5g-QaLqZC29tAprKWs_0PKNmd+y=iugjA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="uO754Zj5"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7B0762C022F;
+	Tue,  4 Feb 2025 16:02:55 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1738638175;
+	bh=HqWCWRRdDyMbbXsv5hMVrTkG8PiypX6mT+KFCWzynx4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uO754Zj5/KgoOr+unZAlS/Zag7tSGnMpzkRzLbVDd+pVSes1jVmMj6I5yw0Si9zf0
+	 DdJ2MmRR/UOJoPXc/pTb+oSo9qgNcwI49hbIPrlWZeIZf2D8Z6UrwKGGuqxLgaISnS
+	 lba8xS0UEyzg6ZK8w+A9fiI+gP1OqR+StE0WQYYZrBjNE9F4odScLdSuXp7V7gxusE
+	 CPyrOpwzjr2yKH7RoNvYUiyTGSI9draKQFNP+S0b9bmcfwNdp7CsmK409YrGJnuYMJ
+	 Bs9y9Pm1P6cm9Tf68LMfTcqCJirmT/nAWmvxYsFtOqzEQU0C8WZ+U0wX3/796HTYM1
+	 B1JqIjCuxAVDw==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B67a1835f0000>; Tue, 04 Feb 2025 16:02:55 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+	by pat.atlnz.lc (Postfix) with ESMTP id 46C0513EE36;
+	Tue,  4 Feb 2025 16:02:55 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+	id 412532804B6; Tue,  4 Feb 2025 16:02:55 +1300 (NZDT)
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: lee@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	tsbogend@alpha.franken.de,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk,
+	sander@svanheule.net,
+	daniel@makrotopia.org,
+	markus.stockhausen@gmx.de
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH net-next v6 0/6] RTL9300 MDIO driver
+Date: Tue,  4 Feb 2025 16:02:43 +1300
+Message-ID: <20250204030249.1965444-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVJDi2UuhTYk5g-QaLqZC29tAprKWs_0PKNmd+y=iugjA@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=QNvLRRLL c=1 sm=1 tr=0 ts=67a1835f a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=T2h4t0Lz3GQA:10 a=2fb9Dq4sOb5bA3HnAgEA:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-On Sat, Feb 01, 2025 at 10:57:00PM -0800, Ian Rogers wrote:
-> On Wed, Jan 29, 2025 at 7:05 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > The syscall stats are used only when summary is requested.  Let's avoid
-> > unnecessary operations.  Pass 'trace' pointer to check summary and give
-> > output file together.
-> 
-> I don't think this last sentence makes sense.
+This series adds a driver for the MDIO controller on the RTL9300 family
+of devices. The controller is a little unique in that we can't access the=
+ SMI
+interfaces directly. This means we need to use the hardware description f=
+rom
+the DTS to compute a mapping of switch port to mdio bus/address.
 
-Thanks for your review.  I'd say:  Pass 'trace' pointer instead of doing
-'summary' option and 'output' file pointer separately.
+Note that the dt-bindings: mfd patch is dependent on the dt-bindings: net=
+ patch.
 
-Thanks,
-Namhyung
+It looks as if we're off Google's naughty list. It's kind of hard to tell=
+.
+
+This iteration makes use of the ethernet-ports property to figure out the
+mapping from port to PHY which removes the need for any extar vendor spec=
+ific
+properties.
+
+I've sent this as net-next. The first 4 patches could probably come in vi=
+a
+net-next if the mfd maintainers are happy with that. Not sure about the m=
+ips
+ones. I've included them because the updated bindings will start complain=
+ing
+about missing properties on the one in-tree dts file.
+
+Chris Packham (6):
+  dt-bindings: mfd: Add switch to RTL9300
+  dt-bindings: net: Add Realtek MDIO controller
+  dt-bindings: mfd: Add MDIO interface to rtl9301-switch
+  net: mdio: Add RTL9300 MDIO driver
+  mips: dts: realtek: Add MDIO controller
+  mips: dts: cameo-rtl9302c: Add switch block
+
+ .../bindings/mfd/realtek,rtl9301-switch.yaml  |  47 +-
+ .../bindings/net/realtek,rtl9301-mdio.yaml    |  86 ++++
+ .../cameo-rtl9302c-2x-rtl8224-2xge.dts        |  96 ++++
+ arch/mips/boot/dts/realtek/rtl930x.dtsi       |  33 ++
+ drivers/net/mdio/Kconfig                      |   7 +
+ drivers/net/mdio/Makefile                     |   1 +
+ drivers/net/mdio/mdio-realtek-rtl9300.c       | 472 ++++++++++++++++++
+ 7 files changed, 741 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/net/realtek,rtl9301=
+-mdio.yaml
+ create mode 100644 drivers/net/mdio/mdio-realtek-rtl9300.c
+
+--=20
+2.48.1
 
