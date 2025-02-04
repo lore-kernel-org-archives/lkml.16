@@ -1,124 +1,126 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8314203710
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 20:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87457203710;
+	Tue,  4 Feb 2025 20:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738701093; cv=none; b=QFjDbsnKe8fIugVGEwUNYc57VMm9O1I4TPqdiBrGgdwN3XNXKOO5VXMo3e7FGCgwPUiZ5bSW3jdI9JgV8iECdHq7i+4m76Rn2coa9tRJ2nOPRIPIIXke22bxhBkvdEKtnNXIKlLaRcKxDBcdWKE7DOAkVihEyxxXB35GfKGhtPI=
+	t=1738701151; cv=none; b=mO920sVNhvy1PGwdz8dbh3EPjjX4rn3RGtu7dxEHS6IldE+vs8T/YRzegtCjFx9gRRs0oeqzVWPEI0sjc3rOpI8hrlvmZpND/sZNcWU5anur8M8eY5h9YN3YAUOKd22uQ4FaCwTk8J7uVf90PCaKwz/05qqgAqZGy7jX2wJXFy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738701093; c=relaxed/simple;
-	bh=xSeq+Rgde/bKmuvO32XTPgXpmSV5DtEQ08hyIbEzvr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WfHf9CXUN9I9etcxMGwFLU0XTaqENWVlxZ2mdbr/OBjd09RZ2CehCiRAeaApHBz439iZB96yKknsy9V9WryYrnO3g6bfI70UDwDbd0VcnM51r8dKTlHG65H1OjogbPHRRGGGiYRJxfX+C9n/sWJ3LBdX54pOj75gRl4l895pibU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=EPsNDNQS; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1738701151; c=relaxed/simple;
+	bh=vTfPONvK7ayFJ8eU+XqhCBrsr4nb8pYIh817466m6BU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rlcp/MKSWwLp052fcFWKbtRqT967Ep98Tv1ui3CaZiWaTj1lDc1TbrLK3ab/p2/b+O/pQGy20UoibPtwPFKCyL9T1eCPbAtab9GEgr+APCCQvQ2YVOCuX4Js1p9YG+iV5ll4mbOr89FyLukvkjhd67l4IyPb7GPJkUHIfUkcfZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IUzglQYo; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="EPsNDNQS"
-Received: from cwcc.thunk.org (pool-173-48-123-53.bstnma.fios.verizon.net [173.48.123.53])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 514KUxif000752
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Feb 2025 15:31:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1738701062; bh=4/0vnwTAY+3yDq4nuhuONLhdWsKfo0JI/NdVKfIt3iI=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=EPsNDNQSpXLZz8ui9ziG85f/tffGkISryc90YUNJwmpH5Gh0YL80QN+SDMcS8gqQT
-	 VmnhJPfB0qa+UAxBbV11oKWHa67+YrQ2a6eMQqjVavJ6Ahq66LzuTkHIZwZITEJYic
-	 NB/DP3LJRXWs0qxDnqf/jj/0fiQDb1OPRJ7Mzn8NtwQwERCGvatBnEmHEjFMUjyYTK
-	 ygzjFBc74cEXHq0G+6Vphqa7bYRFTkEw7mSChRzdQKJ4n+Gn9FRmwMCzfpnYH2ffrQ
-	 3ntPq6eScADZXWseBOgu0JELBBaOvRA7WsSbH2Q4ryDxVGbuBtOhSAuRKMu6ZRW+Fc
-	 CvpjZSo21uqwg==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 88EB115C013F; Tue, 04 Feb 2025 15:30:59 -0500 (EST)
-Date: Tue, 4 Feb 2025 15:30:59 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Kees Cook <kees@kernel.org>,
-        syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, brauner@kernel.org, gustavoars@kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
-Message-ID: <20250204203059.GA909029@mit.edu>
-References: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
- <CAGudoHHCXHA=7e8M=6jMVqbh8=keRBBF8yHvDm9PnyeN6Bb7Xw@mail.gmail.com>
- <202502040717.FCEFDB7E0@keescook>
- <CAGudoHFszbdKkPibU_ynbj_PSyHewxTxWT_-hR3=8GHa46ebaQ@mail.gmail.com>
- <CAGudoHHWsuVse-Ek3zOuOh-mBxaWRXYVr9W_Uef46K0_mxB0ZA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUzglQYo"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21f16af1f71so1767585ad.3;
+        Tue, 04 Feb 2025 12:32:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738701149; x=1739305949; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y2j8Dx8Ru7MD5MBVXKqE84EDUBcHnRqlEmlwGEtbluM=;
+        b=IUzglQYo19L8II8JvXlH+57xsrpk0dVnCKJSorqMCVA1PeODKg/46eb5c744+6nhA1
+         J5gxRxTZwOJwE4s0juRQYD61c7Vl8hrgg3CNzgYq67cvOd9954xasljdTRgcXE7sZ48/
+         mjwTIticEpvyGG1IYltEcSTH4vHqBjIrfd80jLU5V9SutI2UtL2FBssVxoXW6ka+LMe1
+         6E34hRDaCSXv7c5M4CM1F9/Sfo3/Ks+N4ZWxAgGULaBJfd2M/08NYNy86vRc+8J7udrN
+         VjxM4m9inGM81/Un9whLw9KV43PITFyYSi5uvSHJpMYDU4laww1jDFzacTb9ERvQIgtY
+         zKcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738701149; x=1739305949;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y2j8Dx8Ru7MD5MBVXKqE84EDUBcHnRqlEmlwGEtbluM=;
+        b=d3CY0Nn4thzzYbZf96RbGLq3XJmEjocSMLkDs10bmH9K52pByBcVeffM1XjhtasUcc
+         FzXga9WfeZqaZPsW7ExIcZk6ouGbpG09M1fYNdLO9+rC763v0r1BNvbgPWZL3Z7pSE5F
+         sv0wCy9u+f+KNlDilmJKWwVAgvmmM2IUpm0vMHlzFvw2s0gb1qb6YhgzmpjB8mgdauTo
+         qSO3sZOiolUjDz/eQcdQcO/N1w6n5G4PJQRODL5Je7tn8pPL6ktzaqZgmgY1jGGa4WR0
+         oN0Ll+5amjbl9Qq0WV5o/sNgWFBv7GkZgP9cJjWbhDDKTCG1PUnXbwGHB36pJgh3n28J
+         Ivnw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7VN/J6F5v9q6dFMd8iLT5IqVDROG1LOnF/TiBLX01ScVCa068euQs81m0gDWucHeu8G7aH2CwBn3O9Hho@vger.kernel.org, AJvYcCVPAG6Q1JNERHpeq0XdP05G58lL519rdZ24jOnkf5lZKdvG82d+b5ts+CiJbMgdA9ihYtHtQwu537jwz3g=@vger.kernel.org, AJvYcCVUx8rRVru8r2AzGgkBRzaAJOZRa9xRGJES1xoBZ1aBAXzO+bNd8AcYwOLd4dNL8VpFyvZZwAc1ze016oM=@vger.kernel.org, AJvYcCW/gR760sYDZnd+/ttgD3hHfomRd5MFSjcT4RGOLgIU7C64hNTs2QVDmfRSoaVMvyUjNEIOUccK0q7k@vger.kernel.org, AJvYcCX0uYtcQybKDfGEuqTEcKilsbaHfWtXIsmuwPR/10NXF8k7jE5p6wpctwxZSp+ekPwXLzgW28k2P+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws5aQsWUB+CIDc+vJQVNhlVCaCNsWEHbLO71j09A6OyMLhc0mN
+	bL1FupUttaMe1Wr1FTskWZfIWMk/SN+myJ3/qYUWXpY0fL3RLcDe
+X-Gm-Gg: ASbGnctYCrollEIaIH83J3+U7LXGwKsW/885+CwfiQd9FIQGfJmvvf5s4pxByjKkQ+w
+	l4TidqzsiP5c3P9uit6y7JWWVhNo6a/9B7W67g9kzz4d7I7qU4pKsrBQEAgEH5iJoCES6ZqHmYE
+	iTgaHC8D07BbFqfBVS99WLzUUrYJiF9O+0Oeoj7AmAjQtGNuSnEY76ZZEIhasQG4lpIijhIZphO
+	jR/hkfZnP2RFJy4djYY/HYt2rU6TJhK5qKpB+TBMBVLZtBY27lOy4bvKUi/EyhSZ8cWE4CamMZG
+	fK7oio0SUBbXZqtGhZYFLx/Rhjsjyp56FnjjIeW9x0lOra2KW2CBQ1cJpns++KcxOOU=
+X-Google-Smtp-Source: AGHT+IEjiDX0kn5b2vYy1w8dCcDsaqDLbkVuQUL5oIYnUP0j0/oJTX+mkT1rkJXjIaaXR4Hww1g28g==
+X-Received: by 2002:a05:6a21:8dc6:b0:1ea:e7e6:f94b with SMTP id adf61e73a8af0-1ede88b23aamr277303637.34.1738701148723;
+        Tue, 04 Feb 2025 12:32:28 -0800 (PST)
+Received: from ?IPV6:2409:40c0:1019:6a4a:444:3a1c:6970:6cad? ([2409:40c0:1019:6a4a:444:3a1c:6970:6cad])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acebddbb069sm10452223a12.14.2025.02.04.12.32.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 12:32:28 -0800 (PST)
+Message-ID: <d2271471-2601-41a2-aea3-b7de0ed78342@gmail.com>
+Date: Wed, 5 Feb 2025 02:02:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGudoHHWsuVse-Ek3zOuOh-mBxaWRXYVr9W_Uef46K0_mxB0ZA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs: Fix spelling and grammatical issues
+To: Jonathan Corbet <corbet@lwn.net>, Guenter Roeck <linux@roeck-us.net>,
+ jikos@kernel.org, bentiss@kernel.org, jdelvare@suse.com
+Cc: skhan@linuxfoundation.org, linux-usb@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+References: <20250204134806.28218-1-purvayeshi550@gmail.com>
+ <1b32dfcb-5966-495a-ad48-903650888ee9@roeck-us.net>
+ <87jza5hh7m.fsf@trenco.lwn.net>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <87jza5hh7m.fsf@trenco.lwn.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 04, 2025 at 05:49:48PM +0100, Mateusz Guzik wrote:
-> I'm going to restate: the original behavior can be restored by
-> replacing i_size usage with a strlen call. However, as is I have no
-> basis to think that the disparity between the two is legitimate. If an
-> ext4 person (Ted cc'ed) tells me the disparity can legally happen and
-> is the expected way, I'm going to patch it up no problem.
+On 04/02/25 20:47, Jonathan Corbet wrote:
+> Guenter Roeck <linux@roeck-us.net> writes:
+> 
+>> On 2/4/25 05:48, Purva Yeshi wrote:
+>>> Fix several spelling and grammatical errors across multiple
+>>> documentation files.
+>>>
+>>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>>> ---
+>>>    Documentation/hid/hiddev.rst                | 4 ++--
+>>>    Documentation/hid/intel-ish-hid.rst         | 2 +-
+>>>    Documentation/hid/uhid.rst                  | 2 +-
+>>>    Documentation/hwmon/abituguru-datasheet.rst | 8 ++++----
+>>>    Documentation/hwmon/abituguru.rst           | 2 +-
+>>>    5 files changed, 9 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/Documentation/hid/hiddev.rst b/Documentation/hid/hiddev.rst
+>>> index 9b82c7f896aa..073485f84793 100644
+>>> --- a/Documentation/hid/hiddev.rst
+>>> +++ b/Documentation/hid/hiddev.rst
+>>> @@ -15,10 +15,10 @@ To support these disparate requirements, the Linux USB system provides
+>>>    HID events to two separate interfaces:
+>>>    * the input subsystem, which converts HID events into normal input
+>>>    device interfaces (such as keyboard, mouse and joystick) and a
+>>> -normalised event interface - see Documentation/input/input.rst
+>>> +normalized event interface - see Documentation/input/input.rst
+>>
+>> Is US spelling now mandated in the Linux kernel ?
+> 
+> No, from Documentation/doc-guide/contributing.rst:
 
-There are two kinds of symlinks in ext4.  "Fast symlinks", where the
-symlink target can fit in i_block[].  And normal, sometimes called
-"slow" symlinks, where i_block[] contains a pointer to data block
-(either i_blocks[0] for a traditional inode, or the root of an extent
-tree that will fit in i_block[] if EXTENTS_FL is set).  In the case
-of a fast symlink, the maximum size of the file system is
-sizeof(i_block[])-1.  For a normal/slow symlink, the maximum size is
-super->s_blocksize.
+Thank you for the clarification. I'll leave the spelling changes as they 
+are.
 
-We determine whether a symlink is "fast" or not by checking whether
-i_size is less than sizeof(i_blocks[]).  In other words. if i_size
-less than 60 (and it's not an encrypted inode), it's a fast symlink
-and we set i_link to point to the i_block array.  From __ext4_iget()
-in fs/ext4/inode.c:
+> 
+>> Both American and British English spellings are allowed within the
+>> kernel documentation.  There is no need to fix one by replacing it with
+>> the other.
+> 
+> Thanks,
+> 
+> jon
 
-		if (IS_ENCRYPTED(inode)) {
-			inode->i_op = &ext4_encrypted_symlink_inode_operations;
-		} else if (ext4_inode_is_fast_symlink(inode)) {
-			inode->i_link = (char *)ei->i_data;
-			inode->i_op = &ext4_fast_symlink_inode_operations;
-			nd_terminate_link(ei->i_data, inode->i_size,
-				sizeof(ei->i_data) - 1);
-		} else {
-			inode->i_op = &ext4_symlink_inode_operations;
-		}
-
-
-The call to nd_terminate_link() guarantees that inode->i_link is
-NUL-terminated, although the on-disk formatshould have already been
-NUL-terminated when the symlink is set.
-
-Also note that there really is no point to caching inodes where
-inode->i_link is not a NUL pointer, since in those cases we never call
-file system's get_link() function; the VFS will just fetch it straight
-from i_link.  And in those cases, it's because it's a "fast symlink"
-(many file systems have this concept; not just ext[234]) and the
-symlink target was read in as part of the on-disk inode, and so there
-is no separate disk block read read the symlink.  And so if you are
-attempting to cache symlinks where inode->i_link is non-NULL, you're
-just wasting a small amount of memory, and wasting the CPU time to do
-the strcpy.
-
-It's also true that the vast majority of symlink targets are less than
-60 bytes, which is why I was surprised that your symlink caching was
-atually making a difference or many systems.  I guess if we have lots
-of unicode file names with characters like ❤ and ❤️ and symlinks to
-these files, you might have a bunch of slow symlinks.  But in the case
-where you have symlinks like:
-
-0 lrwxrwxrwx 1 root root 7 Dec 19  2020 /bin -> usr/bin/
-
-Symlink caching won't do any good.
-
-Cheers,
-
-						- Ted
