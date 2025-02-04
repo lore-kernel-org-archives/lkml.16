@@ -1,78 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B8515886C;
-	Tue,  4 Feb 2025 17:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A70721639D;
+	Tue,  4 Feb 2025 17:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738690431; cv=none; b=c49p0eDFCZkCkcrvbKCV3qLj5zJGfhr7WHOF6o8JMMTwAKQXmPD+9ns1NyIen77IBKF7kTCwFBiqeoMvbe+E9wK358TFjjBRhi4e0wDNE/+Z5duQ2UxvWeLqOB1hQvQp1MgRptcjg6G+R1g02Slj+/AFrizhH2NdJ9Nh2WaOQts=
+	t=1738690433; cv=none; b=tZriBwdiGKxe5R21Bt0N9OKu8PaymM+GqIMC5+kcXa6lRFCzBlz2V9Jy4Qv+3Dhq12bqKSq8GvhGzA8N7qKFFB5Z5RYcvirnI2ZReNnhLTrFUKGmHiBVK/ZseSx2jSFx8s8e6GpBQ40XN8IqVIMktwc7rgb3QXPaTVPC9A8bylI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738690431; c=relaxed/simple;
-	bh=z14qptEX8dgee2mKsf4iXeOQjjM4K3gXtY3Lw5bll2w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lvjfGFL9fJAa4A+81u6O2DQ01caanzC4qdR4Dl2Y/wDQVb9xsCADrnVqiRPiu3nYcwJYQnvPViVP/xgVi++LG84JqRNT6yjfOCtkKy8m1Yu/RkE87dTJDUefzIR1gbh0BFs3QOrJnYs5Teerp4L5usitYYr2OZP6zPVwmN0Mlrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6ltmn9m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738690433; c=relaxed/simple;
+	bh=Sjru/Y7F5aBZSj6PwM/+IWSv6HOM44HRrHG3/kZqfS8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ODXxxtGZQUaHUUPEV5gcFk+SscWIvPwJZiLIEkf15B+NlLnh0hKjuVGzdWDKzu+tA3mL2MHUUpbn03XjYPKIseMT4Mqmp1ND9glvj7pCw48LqL0+g87BOIgM52X8xseC7MAr+IKo9dhzsC/mvMNrsjgyQVHP0Yh6+SclZtH8scQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZIgIEta1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6ltmn9m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7127EC4CEE2;
-	Tue,  4 Feb 2025 17:33:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738690430;
-	bh=z14qptEX8dgee2mKsf4iXeOQjjM4K3gXtY3Lw5bll2w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=S6ltmn9mD12TyBOK6e/inimC3en6q8JPrwq1BIWPFnksOIVrhFMu/32lIDUyNpudC
-	 WSUNKrzwZ+UFLaP0qjgM3ZqDlBA565rHxPJRbXIP77eeCH9tv7zZCdruyTa+zlHVW7
-	 4OYCCKU3aLSpuJx2KTC+uA2sYVEKsorfTGXOQCaHJGyBMtcl0SeoH8+eMg+AUS7TcB
-	 s8pAjVpW4WONsw6+G/jNEEN9og3JRIHbj8goFTS+pTRjdj5QdZyuQfluehsw9iR7M0
-	 LbPp7vlHJYQ813odrBIxZ5ePtN9KOpyBb2e0DJQsFgJcchtD1+CbQI5b2OMr8Xpc/7
-	 AGE8HWThzbCnQ==
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5f31841c6f6so3393778eaf.0;
-        Tue, 04 Feb 2025 09:33:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUUG/7uu3m1PtbUqb/M1yUWxnDa0RBEHFk8vAcJ2hMXFs2nuGa+n6FAjXUBVNu8W6CBt5t1CNTzs3g=@vger.kernel.org, AJvYcCWGttsxx6cTSJr1MijuQGXUjlBOMVoJo2pn6iF9T0BcRqI3qFic1sewFKfrIWGl2dGCnzEZGHTDGf8=@vger.kernel.org, AJvYcCWK/Blw0PBtfU1Kjd8eR6aUWcNXtTEKAzlmbqqfCpvgoapyc88nfSbBGAJ4i+98L5jVKDeYIYswIeEbmHph@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6D3LDAHAjMji9nrfhUDOpzbm8XovEKJrW9f0LIpuQQh+fZkWs
-	ydYZZD9brtwwO6ZgGP7uXP87frZwzp13JCm3Y8kjyhhObEc7SxLBitkbbLAH2H5IZGj0/yBSEFH
-	5mUABFzKefYHzTnuabyJwDSNhPC0=
-X-Google-Smtp-Source: AGHT+IG5csJjUZrxcF85Flq+6ozCKXbmOHVoa7nqXwt27aesawndLFNH9vE2Yabj62rSM2ZPvlVM6wgAxlXcppqBEW0=
-X-Received: by 2002:a4a:e849:0:b0:5fa:7d7f:d035 with SMTP id
- 006d021491bc7-5fc00454302mr18411653eaf.6.1738690429734; Tue, 04 Feb 2025
- 09:33:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZIgIEta1"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5148WTsC010185;
+	Tue, 4 Feb 2025 17:33:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	d+UpcNhUWMnNNbsqJMX4+97AYxTxTfP8PufS942T7P0=; b=ZIgIEta1Ignza4bS
+	ToPwVX6VAZTS6aIL1woemob5/rv7W3rl2hRSTiBKPOCEM/8ZpOlGCVZAuI2eLcDO
+	/P/rYe/a+Sl/W2ANqwDupfcjg2uG4M72iERXkBRyxCT3QUxF4u7xyhmc+K/5m4Qn
+	SFHdHnuKB6PMRb14sfW1/Zu6WExj/b9gbNd7sU89Mbcxn7mEmjrdGT0T6ejbGPls
+	7Hlzi4XvMpVnYPbunuC2M9mKS0FwjtVg35WoRWvnI6hHMt7U2ZsXMTuUcDoS3PZr
+	ch2aWzyGm7dJEUnNFRMqd+30RL2CIxCifoCNVLnyqISQH3hc/p2wQgvL1/+XwwCP
+	qOTreg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44kffnhb5r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 17:33:49 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 514HXmKl001124
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 4 Feb 2025 17:33:48 GMT
+Received: from [10.216.62.245] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Feb 2025
+ 09:33:44 -0800
+Message-ID: <da980161-087b-4fd7-a1a9-56576b6dfff9@quicinc.com>
+Date: Tue, 4 Feb 2025 23:03:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250128141139.2033088-1-darcari@redhat.com> <e9188365425d2a4c0dfa7cfa2b17ad3d9fcf2735.camel@gmail.com>
- <afbe2137-398b-4053-93e7-2a03aeb32220@redhat.com> <CAJZ5v0hp8f3Xjb7bkDR_+RYfTE1ck=qop_QMZ3+z4w7T0VS66g@mail.gmail.com>
- <c3f03a5837e191c5371593ac0a0e3c56e4204567.camel@gmail.com>
-In-Reply-To: <c3f03a5837e191c5371593ac0a0e3c56e4204567.camel@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 4 Feb 2025 18:33:38 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gKsqrruwSBQLk_1cC8MMRyznzE-FbsqDyzs7xFMgZoQQ@mail.gmail.com>
-X-Gm-Features: AWEUYZmrxZF7V5xgxErnFyATEwm7y7dvecF7av1vNW1DRAlYgItJTQJYDco8paw
-Message-ID: <CAJZ5v0gKsqrruwSBQLk_1cC8MMRyznzE-FbsqDyzs7xFMgZoQQ@mail.gmail.com>
-Subject: Re: [PATCH] intel_idle: introduce 'use_acpi_cst' module parameter
-To: dedekind1@gmail.com
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, David Arcari <darcari@redhat.com>, linux-pm@vger.kernel.org, 
-	Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>, Prarit Bhargava <prarit@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] arm64: dts: qcom: qcs615: Add clock nodes for
+ multimedia clock
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250119-qcs615-mm-v2-dt-nodes-v2-0-c46ab4080989@quicinc.com>
+ <20250119-qcs615-mm-v2-dt-nodes-v2-1-c46ab4080989@quicinc.com>
+ <19a83d67-7e1a-495b-8dff-e1d2ba05b878@oss.qualcomm.com>
+Content-Language: en-US
+From: Taniya Das <quic_tdas@quicinc.com>
+In-Reply-To: <19a83d67-7e1a-495b-8dff-e1d2ba05b878@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: c4JAX9SwW01lt6SO9zeJVRQ6s4YQFfdn
+X-Proofpoint-ORIG-GUID: c4JAX9SwW01lt6SO9zeJVRQ6s4YQFfdn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_08,2025-02-04_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ malwarescore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 spamscore=0 phishscore=0 clxscore=1015 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502040135
 
-On Tue, Feb 4, 2025 at 5:30=E2=80=AFPM Artem Bityutskiy <dedekind1@gmail.co=
-m> wrote:
->
-> On Tue, 2025-02-04 at 16:21 +0100, Rafael J. Wysocki wrote:
-> > But it could be something like "prefer_acpi" as far as I'm concerned.
->
-> When I see "prefer_acpi", my intuition tells that it is just a preference=
-:
-> "prefer ACPI, but may be native too". But I understood that the patch is =
-about
-> "only ACPI and never native".
->
-> The reasons I suggested "no_native":
-> * Sort of consistent with "no_acpi"
-> * Suggests that native won't work.
 
-"no_native" would be fine by me too.
+
+On 2/3/2025 7:44 PM, Konrad Dybcio wrote:
+> On 19.01.2025 1:00 PM, Taniya Das wrote:
+>> Add support for video, camera, display and gpu clock controller nodes
+>> for QCS615 platform.
+>>
+>> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/qcs615.dtsi | 51 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 51 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>> index f4abfad474ea62dea13d05eb874530947e1e8d3e..9d537019437c5202c4d398eecd0ce2a991083175 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>> @@ -3,7 +3,11 @@
+>>    * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
+>>    */
+>>   
+>> +#include <dt-bindings/clock/qcom,qcs615-camcc.h>
+>> +#include <dt-bindings/clock/qcom,qcs615-dispcc.h>
+>>   #include <dt-bindings/clock/qcom,qcs615-gcc.h>
+>> +#include <dt-bindings/clock/qcom,qcs615-gpucc.h>
+>> +#include <dt-bindings/clock/qcom,qcs615-videocc.h>
+>>   #include <dt-bindings/clock/qcom,rpmh.h>
+>>   #include <dt-bindings/dma/qcom-gpi.h>
+>>   #include <dt-bindings/interconnect/qcom,icc.h>
+>> @@ -1418,6 +1422,18 @@ data-pins {
+>>   			};
+>>   		};
+>>   
+>> +		gpucc: clock-controller@5090000 {
+>> +			compatible = "qcom,qcs615-gpucc";
+>> +			reg = <0 0x05090000 0 0x9000>;
+>> +
+>> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
+>> +				 <&gcc GPLL0>;
+> 
+> This would normally be GCC_GPU_GPLL0_(DIV_)CLK_SRC, is this intentional?
+> 
+
+Yes, Konard, but on QCS615 GPLL0 is connected and not the GCC_GPU_GPLL0 
+sources.
+
+> Konrad
+
+-- 
+Thanks & Regards,
+Taniya Das.
+
