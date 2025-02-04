@@ -1,90 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEDF2147F7;
-	Tue,  4 Feb 2025 16:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130EF215170
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738685106; cv=none; b=mfljcpKbzDLMQdxtbgI4NQgVENTshTr4veAwVWH3+oq6DrBI2iQMxglXrupyqsFeVjmoqh86gQyNS4hm4wonegicFsDWDs7tWlQbdX4Bt6QTzBXwMC1Q4Pt4iFhJzQZ46sUSrHirjjDCiaJAE0MIAKb/omH18ls0f35TQC4YLi4=
+	t=1738685125; cv=none; b=iwCcXpir+6qiaKkjhe48Bgx3pkOeD1BIN588SM34G73afPuRGQJ1q5BvponqOvnxvT+GdlHyTHp8pmozAocxAjyzfuza6AwjBgFt2SihAWqIIruT/wQIKVaMq6qa10X+kH24YDgqsYokgiXnPf1FV+Bk3apTX1mB5NldA+JIndw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738685106; c=relaxed/simple;
-	bh=5Ftg2etPT379GFpPIDw35S1UtArOZ/VXVn3JYr30GVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kxTTktacSHraN5jHMvVICK6z/+rTpKsPl+XxLXkUS0vHbTkWv5mDncvzuwbbczgPyfLuc/sFXi2FTanSN91gaEsB7YDLlIVzeXy3/EdUl1uKvEZsWTkY9l1Xqar/S1FXFhdovNtHYBQJJuXanKcRGZRmQozx/0kbNCz0Dz2+eXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xemi6QOf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738685125; c=relaxed/simple;
+	bh=9S/Jsl9iZrO+/Bup4Wa899HOJVXQVIorM6lS3gKkxpg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mQgt3294QD8zz+2YsejapRPn8VtrnpaS096Eh3kDHl2yjCDdGJKQbnQqBsZ9WizLvE6NWx5SZusvvlNGAYzLSea0R7Fep65yM6kEn0fDgJ4tm3SdKxhjQ0WZD0WuCo2S/T0YjwIHORvmQtQofwrRYWS+si5pFy82DBJ+gTGgAyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yo29/5VJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xemi6QOf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE734C4CEDF;
-	Tue,  4 Feb 2025 16:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738685105;
-	bh=5Ftg2etPT379GFpPIDw35S1UtArOZ/VXVn3JYr30GVc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xemi6QOf74CkswMFfsUuXpPkrkXTR87Ogrpu4pWvsPmHb7aTiqB6C1GELwAVWwGGg
-	 6WDMDEEiq8z+QQZgUUaekdhP0qzuUKii3EUaA9QmD7IHXv6stAbjUtGpzbAY9p7Vwu
-	 izNpvuRe7mw3VtOpHDJshwBT/bZKziqGiTvddP0mqIs4LAX0JPygs8JiifHSLQEWKR
-	 9Agc8bYODKI3pJGBIyoEDg3i23hWnM+C5laeY99qtsFFvwsgXHkZkAuxLBokRlKVS0
-	 m7/2BJ9GtG9ufR4gA8Yr8XMFATvq3pe4r1VKqGTztWAt3za2GvO+PhlMriR8KLKTVU
-	 a8zpsSPL3wLDQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tfLQD-000000000Z8-3mGz;
-	Tue, 04 Feb 2025 17:05:09 +0100
-Date: Tue, 4 Feb 2025 17:05:09 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Dikshita Agarwal <quic_dikshita@quicinc.com>, mchehab@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, p.zabel@pengutronix.de,
-	hverkuil@xs4all.nl, sebastian.fricke@collabora.com,
-	bryan.odonoghue@linaro.org, neil.armstrong@linaro.org,
-	nicolas@ndufresne.ca, u.kleine-koenig@baylibre.com,
-	stefan.schmidt@linaro.org, lujianhua000@gmail.com,
-	linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	krzysztof.kozlowski@linaro.org
-Subject: Re: [RFC PATCH v10 1/2] media: iris: introduce helper module to
- select video driver
-Message-ID: <Z6I6tUa9W0jBbfqf@hovoldconsulting.com>
-References: <20250128080429.3911091-1-quic_dikshita@quicinc.com>
- <20250128080429.3911091-2-quic_dikshita@quicinc.com>
- <5070e1f1-914b-4654-88ef-3566e3eee9ca@kernel.org>
- <f1344e49-61b6-4115-ae88-55b4a3cfed28@quicinc.com>
- <Z6B822-6UTxQfX46@hovoldconsulting.com>
- <tqbm672pi223ipcw7btiemlb745weeeiy4gnazzeghozhq2emj@wppbkms6hir5>
- <Z6HehbKL88LW1lxC@hovoldconsulting.com>
- <812c4f61-724c-cee8-b7c9-a799ade0631c@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yo29/5VJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738685122;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9S/Jsl9iZrO+/Bup4Wa899HOJVXQVIorM6lS3gKkxpg=;
+	b=Yo29/5VJUkJFDOFkDIbzmnuqmDMuOMaL/iTU/GAuNGAUUlx0tQADPHmUqv780icGK8cDAT
+	MCus7k47XuF3VoKYMwEVJZcz0F0lmgFeBdMyo+rV0g3s60pyqqP6uchcblmiBGpZyzNoha
+	6q8oCgSB+0VkSgBtpECO4PcBi8Vy28U=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-658-uQOU2zDmOBmwONWaEYx9Ow-1; Tue, 04 Feb 2025 11:05:20 -0500
+X-MC-Unique: uQOU2zDmOBmwONWaEYx9Ow-1
+X-Mimecast-MFC-AGG-ID: uQOU2zDmOBmwONWaEYx9Ow
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4361a8fc3bdso29190675e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 08:05:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738685119; x=1739289919;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9S/Jsl9iZrO+/Bup4Wa899HOJVXQVIorM6lS3gKkxpg=;
+        b=hYAaPw9sCgp69UAtpN9U37xZuWTKisqhrSAWENIvVEgM4WDSVokp21VRePn8Q+R790
+         H77rC9uOFdZLRRIKa5OAfZ8DJuIE5kRpUi5xCbyxPi2xgYhuy6OPMSt35E/VOkPMfsoL
+         RxEP1XhuFsantWauT2o3DeaamwSMArPZo5x3sYxm8RN+c5rVOrfyBPAngrU7X2uA4DaK
+         el8MW/7Uzk3EW8CrXakfORzKR5/3Ot2fqGyhtIyWVFuuFW78g0csXYYlPbUOvNARcPIA
+         XBFU1erhvBTd6zrzPmMkUWKljF4X6fgSOo/osaWKjf27dSHfmnO32IoODyqg8fKm2Np0
+         32RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+8vz9O2OD6Kfgg/F3FIWwYpQIIJZI17dsZ3dfx/6yNTrVXgOWrrq0TW1WAIGNivVc/uHXTnG7bzKkZ4A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVlsCmyeUc9s116j4AZAgfIpYMcCDJjWZegxO6fVuEbqsNcWQz
+	xsCUSDZ989bg+jN11BByq8e28HZF7vqkJz1xpmvoUsJRT6qGS20cuSISS9rX9F5s9ACdNYIMljj
+	edv5Z2PdrhUslHeMoc1wrfchZu/0qq4wSVkOb/zrR/PPWdIWraUesSB+D/U5ramVI5ZnX8etTEQ
+	tWexfOqfsYASW4uIn1tEYoqgrmys5yk2YOfX4Q
+X-Gm-Gg: ASbGncvnwzTtBmlwCebP4KvKVX1aca+WkBDtClvo9zIdtDbS29z3z4wLNgcHOlBjsg9
+	knOyvIoSNlZy/LrHtheJX7Indzt99IuH1rG1onAfukbximjiVlwfOhYt2H0lP
+X-Received: by 2002:a05:6000:1869:b0:38d:af20:5f25 with SMTP id ffacd0b85a97d-38daf206192mr1976757f8f.29.1738685118860;
+        Tue, 04 Feb 2025 08:05:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEwaWzXVak280B85ArrjCFrUz02WwwEtsT242TiysJbuk+XtRUVzfEto4aIoAc0mUfIQAQs1mQgLIMWq94LkmM=
+X-Received: by 2002:a05:6000:1869:b0:38d:af20:5f25 with SMTP id
+ ffacd0b85a97d-38daf206192mr1976690f8f.29.1738685118379; Tue, 04 Feb 2025
+ 08:05:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <812c4f61-724c-cee8-b7c9-a799ade0631c@quicinc.com>
+References: <20250124163741.101568-1-pbonzini@redhat.com> <CAHk-=wg4Wm4x9GoUk6M8BhLsrhLj4+n8jA2Kg8XUQF=kxgNL9g@mail.gmail.com>
+ <20250126142034.GA28135@redhat.com> <CAHk-=wiOSyfW3sgccrfVtanZGUSnjFidSbaP3tg9wapydb-u6g@mail.gmail.com>
+ <20250126185354.GB28135@redhat.com> <CAHk-=wiA7wzJ9TLMbC6vfer+0F6S91XghxrdKGawO6uMQCfjtQ@mail.gmail.com>
+ <20250127140947.GA22160@redhat.com> <CABgObfaar9uOx7t6vR0pqk6gU-yNOHX3=R1UHY4mbVwRX_wPkA@mail.gmail.com>
+ <20250204-liehen-einmal-af13a3c66a61@brauner>
+In-Reply-To: <20250204-liehen-einmal-af13a3c66a61@brauner>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Tue, 4 Feb 2025 17:05:06 +0100
+X-Gm-Features: AWEUYZm64mwKLg6NjahAsD5Hi2sO80t05w3PJ4Q7RlO6xle2aHkFrCzoMQbba_M
+Message-ID: <CABgObfaBizrwP6mh82U20Y0h9OwYa6OFn7QBspcGKak2r+5kUw@mail.gmail.com>
+Subject: Re: [GIT PULL] KVM changes for Linux 6.14
+To: Christian Brauner <brauner@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 04, 2025 at 08:38:56PM +0530, Vikash Garodia wrote:
-> On 2/4/2025 3:01 PM, Johan Hovold wrote:
+On Tue, Feb 4, 2025 at 3:19=E2=80=AFPM Christian Brauner <brauner@kernel.or=
+g> wrote:
+>
+> On Mon, Jan 27, 2025 at 04:15:01PM +0100, Paolo Bonzini wrote:
+> > On Mon, Jan 27, 2025 at 3:10=E2=80=AFPM Oleg Nesterov <oleg@redhat.com>=
+ wrote:
+> > > On 01/26, Linus Torvalds wrote:
+> > > > On Sun, 26 Jan 2025 at 10:54, Oleg Nesterov <oleg@redhat.com> wrote=
+:
+> > > > >
+> > > > > I don't think we even need to detect the /proc/self/ or /proc/sel=
+f-thread/
+> > > > > case, next_tid() can just check same_thread_group,
+> > > >
+> > > > That was my thinking yes.
+> > > >
+> > > > If we exclude them from /proc/*/task entirely, I'd worry that it wo=
+uld
+> > > > hide it from some management tool and be used for nefarious purpose=
+s
+> > >
+> > > Agreed,
+> > >
+> > > > (even if they then show up elsewhere that the tool wouldn't look at=
+).
+> > >
+> > > Even if we move them from /proc/*/task to /proc ?
+> >
+> > Indeed---as long as they show up somewhere, it's not worse than it
+> > used to be. The reason why I'd prefer them to stay in /proc/*/task is
+> > that moving them away at least partly negates the benefits of the
+> > "workers are children of the starter" model. For example it
+> > complicates measuring their cost within the process that runs the VM.
+> > Maybe it's more of a romantic thing than a real practical issue,
+> > because in the real world resource accounting for VMs is done via
+> > cgroups. But unlike the lazy creation in KVM, which is overall pretty
+> > self-contained, I am afraid the ugliness in procfs would be much worse
+> > compared to the benefit, if there's a benefit at all.
+> >
+> > > Perhaps, I honestly do not know what will/can confuse userspace more.
+> >
+> > At the very least, marking workers as "Kthread: 1" makes sense and
+> > should not cause too much confusion. I wouldn't go beyond that unless
+> > we get more reports of similar issues, and I'm not even sure how
+> > common it is for userspace libraries to check for single-threadedness.
+>
+> Sorry, just saw this thread now.
+>
+> What if we did what Linus suggests and hide (odd) user workers from
+> /proc/<pid>/task/* but also added /proc/<pid>/workers/*. The latter
+> would only list the workers that got spawned by the kernel for that
+> particular task? This would acknowledge their somewhat special status
+> and allow userspace to still detect them as "Hey, I didn't actually
+> spawn those, they got shoved into my workload by the kernel for me.".
 
-> > And we're still waiting to hear the answers to all of Hans' questions. I
-> > still haven't seen anyone explaining why any of this is needed. You
-> > could have just continued letting Venus support 8250 so presumably there
-> > is some benefit in using Iris instead. Which? And is that potential
-> > benefit important enough to not just wait until Iris is up to par
-> > feature wise?
+Wouldn't the workers then disappear completely from ps, top or other
+tools that look at /proc/$PID/task? That seems a bit too underhanded
+towards userspace...
 
-> They are documented in this RFC [1] as comments, and would be added in v10 as we
-> conclude the ongoing discussion to handle 2 drivers during the transition phase.
+Paolo
 
-Ah, I forgot about the comment. Most of that should probably go in the
-cover letter and commit messages of v10 instead (and with a more
-condensed comment in the code), but it does indeed seem to provide some
-answers.
+> (Another (ugly) alternative would be to abuse prctl() and have workloads
+> opt-in to hiding user workers from /proc/<pid>/task/.)
 
-> [1]
-> https://patchwork.kernel.org/project/linux-media/patch/20250128080429.3911091-2-quic_dikshita@quicinc.com/
-
-Johan
