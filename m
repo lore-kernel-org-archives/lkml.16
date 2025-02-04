@@ -1,143 +1,130 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238E42135AC
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3020214200;
+	Tue,  4 Feb 2025 15:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738683333; cv=none; b=IKBeBUFIZ4mI7khf2mVv4OP6d5UeUXobyRmB2sNXHaRmtG9sDIH+basYKwIvcYV0ZGOVniF9JYCHAgiyqqdQOx3MW72RbG5fhB97o1gpseGbPw7lbI5dR5XUrVJqcftcP79+p3V08Ffnb1znVtfuNLDdFYLtr5Q7olgpN/RU13U=
+	t=1738683369; cv=none; b=RN7Cog5CfFX9IING+JK0/Q9Rm5o0OBgi5pIxfF2ygjBbIwXvkcQA+fZJJsgcoYLeIro44EjWwochjNapzaStkAmu80X5MVjMSO7jh92AXS3uKGPMTOZueLC4roxCdKNVRULs7C4M8X0nzGVIVDr6R+eJlZ9+2tM6Po1sEFxv1Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738683333; c=relaxed/simple;
-	bh=DVWVLiFZX3pBISObkfjiwN9Rg1VSfP0CMx9QbuGF9Gg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iRCXR94Yerab1eitunCD7zrtaxhV+ZzhOx287dg8BlUFFlzMQDw2jNWaI0n1IvvMV8m/WzkIb4AwPujVpGL39fnffbdRzoF3ws2bCftPJkJPOaDXBO/9TKqroO4K+iRNAXHQI7ypybmE5gwCT+VbRJIez021FGgSHzewcx45RVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FRHDnsg9; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738683369; c=relaxed/simple;
+	bh=DT5XMBCxc/60gBVQPmcpHiHtDNLvlyPRlrcGQUhuU/c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n+Jb7NwKC+NeftX/QhYsDgnN2YcgPrIZ9knDwZUsuZpiMfS7O62h8/as5AqXVGxsABcC6wGGCaIwiAomgxeJFQINcaDyJCMpNTjhlVC69rnFNlJZLjaYW5PhafVXB1xPq2jisAB5Y5nvGG06EfQfrkrrk0jI1EtRVZQ2sgdr9qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=azqw3Oa5; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FRHDnsg9"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3061f1e534bso58106241fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:35:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738683329; x=1739288129; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mo0faCQWMQesSAiWhpm/M42GsGQUGBhbD7joezmU+YI=;
-        b=FRHDnsg9MKBV4f9bynE26YGmNgIvZ0f99xhfh9dtV7M34uxUY6s5dQgdhi5V2KIriW
-         4LLi7HhwFXLEHy2F1X405q76BnQLcsBDv84BtlK8TrKZ3MlgCQ+8Tu2mFElMw2+XVRk6
-         b0TuWjzu2Z0AkjsyJkTUESv59kDksXGZOL4FfJhs1MvD/UY8a2leHUR13KBcEPiQeXte
-         Y8pDv4sf7wZFbUsbMgX92xKFZsiqHChchUr0V7f7ZphF2zj+eZd6mDWEA2sH02dc6rFD
-         FFD6sV9dJRMlEcxa9JcjwF6MGfCYikjWJSIAEdDue33Mu4THV5MSX8H/AAH99UrcBsdu
-         tgXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738683329; x=1739288129;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mo0faCQWMQesSAiWhpm/M42GsGQUGBhbD7joezmU+YI=;
-        b=eidbsrnrnOwrq2buzGQRrvKgOmlUNZzVnA3qhtah4iuSa2x4J9dCFLQphzOyoPJTkL
-         tTQfjUD8KWHH6z+NT2kGwGUjzLZ+8lxmwVlcg2Yu739XgMpHiOqUGT2mWYSd+pAeBG14
-         EKWtv5gHt0xsW6K0kLTsEWL8icE777v189gJ50XLAeZtvAwJ64U/JJAHM63S9Sow5Fra
-         sEsCHY9MaVBpg99IB8j3+ow6W6Rgvz3uEUrtM0CTkNJPc4W/bYWSR3ca/vTBkQDCVLY3
-         GNKXcYy0evZb183T7AS2naCqD+/q0XdIvQvkak4QmhFYUghx1vGA7wOngmOHRUP4IH9Q
-         TOkw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYJlWh18/oVKxJW2YMctqF6yXip8V1lSqBpR3NJ4ReUB84LZXYoczSzOEelv4lx348fAWqs/CyiJaszu4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yydg+95zl6lhkWApyayqIZSbAmi6CUiL9CCQ0IFBHnCUSSqDM8j
-	h9NUeKQXGgfLX3jKtabsIdA8LrUhyfWTBOxmjx0nYbKpYcdmfxqo9l8V5QSAaJU=
-X-Gm-Gg: ASbGncs2+MnQlVyHjT06tq7TRmC6blGETap4gQypUs46Nhil0gJ5jtEY+YTE/70cC2E
-	i1jTUyeJbJ1LwS3tbDY/r8xeq2srN+aHJ+ufPEC1UmQa7t9iizgSZsFjzfFmUG1VGq60uzegsBE
-	1IzqPFR1DNL4a+AROT1oogSFMc/ASo03UjacFtdJglk90VRa6cFohQDxVukvA3OMI6a4T1PBXtk
-	mqkvbSLcbACzsghWMpIsAJuHJHziuZb1CDfQPOpMkDmNkR0bCqSdnPTqrH15PWnhwImr9G0CrBA
-	yqcXr/B+iGU8DEuIvWm5g016JE/Zfews2ORBRsBrS4t73my+WWHckP00azuuvVxI5zaH/wQ=
-X-Google-Smtp-Source: AGHT+IGSOdu+12crB/KrJD62kGAd9vR+Tk3cUEAAA23UqBKca/FTqES0sbInnGw1I1bv8/42+SlQng==
-X-Received: by 2002:a2e:9fc5:0:b0:302:22e6:5f8 with SMTP id 38308e7fff4ca-30796878ee0mr112854481fa.22.1738683328930;
-        Tue, 04 Feb 2025 07:35:28 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307a33f7747sm18683361fa.76.2025.02.04.07.35.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 07:35:27 -0800 (PST)
-Date: Tue, 4 Feb 2025 17:35:26 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Dikshita Agarwal <quic_dikshita@quicinc.com>, 
-	Vikash Garodia <quic_vgarodia@quicinc.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Sebastian Fricke <sebastian.fricke@collabora.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Nicolas Dufresne <nicolas@ndufresne.ca>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, Jianhua Lu <lujianhua000@gmail.com>, 
-	Stefan Schmidt <stefan.schmidt@linaro.org>, linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH v9 27/28] media: iris: enable video driver probe of
- SM8250 SoC
-Message-ID: <uc2rve7hqf4mmvobinaxzf5qncglysfeg2lbxmxvxapsewhgxh@2ppf757u352g>
-References: <20241212-qcom-video-iris-v9-0-e8c2c6bd4041@quicinc.com>
- <20241212-qcom-video-iris-v9-27-e8c2c6bd4041@quicinc.com>
- <Z3_nCPk_g8znto4A@hovoldconsulting.com>
- <64f8bebd-35e1-c743-b212-e1a3292bade2@quicinc.com>
- <Z4EuiPEw8mvDQ2gv@hovoldconsulting.com>
- <24334fb8-4d83-eb06-aee3-dfe1f8e4937b@quicinc.com>
- <552972B8-1ACA-4243-A8E3-8F48DAF39C5C@linaro.org>
- <Z6CApNuSlPGvVL2k@hovoldconsulting.com>
- <fhqlt5xsz7yyrbnvhnovt66gzldjjbitpeznlvxztobdxmjnuw@d4avd5fq3muh>
- <Z6HjbXZsR9QmXxKy@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="azqw3Oa5"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514FXdmX032006;
+	Tue, 4 Feb 2025 15:35:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=zXfTgOKl+DjPA2fGZqnU5gjDzW6o4ycWla1wGPd4e
+	zU=; b=azqw3Oa5q8o1X/nBXtGEEsJNZdCTR9WQitfn0dD7G4qvSsRE+/Ef2LXQ9
+	czp+vcuR9TYje0sU+Z1Z47BoWr4telC69U6mBjaOl+MScv4I7MtwFTOJxDDAvNLj
+	BqRqxxTBag/vGXmBq/nvl3KRMp59hl2lObRizkHjhdwLuG0AlcggHqDeMOnXrbeG
+	uJnbmbxjYyscsGq71y1KvUdaDvYq+HFBaP22jU50Nh5mHQDrR7fisg2rZPw6jKlN
+	iw/xkGZYFJstDtNrZz/XF/MDtP1GUtFhybSibkp+7+zgfOGzw4eiSd8q1VaBD8S4
+	Yq83sJTBIYm4R1VMawQJLWwU7bQjQ==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44k9r0ucwx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 15:35:50 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 514CWJdI024492;
+	Tue, 4 Feb 2025 15:35:49 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxn466k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 15:35:49 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 514FZi6U45220110
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Feb 2025 15:35:44 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 553DE20170;
+	Tue,  4 Feb 2025 15:35:44 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 98FA52016D;
+	Tue,  4 Feb 2025 15:35:30 +0000 (GMT)
+Received: from vaibhav?linux.ibm.com (unknown [9.39.20.128])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Tue,  4 Feb 2025 15:35:30 +0000 (GMT)
+Received: by vaibhav@linux.ibm.com (sSMTP sendmail emulation); Tue, 04 Feb 2025 21:05:29 +0530
+From: Vaibhav Jain <vaibhav@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org, kvm-ppc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.ibm.com, hbathini@linux.ibm.com,
+        adubey@linux.ibm.com, gautam@linux.ibm.com
+Subject: [PATCH] powerpc/perf: Fix ref-counting on the PMU 'vpa_pmu'
+Date: Tue,  4 Feb 2025 21:05:26 +0530
+Message-ID: <20250204153527.125491-1-vaibhav@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6HjbXZsR9QmXxKy@hovoldconsulting.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: j8VMVzV3XjJOM6tez38eW0nLfH7Sx5HE
+X-Proofpoint-GUID: j8VMVzV3XjJOM6tez38eW0nLfH7Sx5HE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_07,2025-02-04_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 phishscore=0
+ clxscore=1015 adultscore=0 spamscore=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502040120
 
-On Tue, Feb 04, 2025 at 10:52:45AM +0100, Johan Hovold wrote:
-> On Mon, Feb 03, 2025 at 05:37:28PM +0200, Dmitry Baryshkov wrote:
-> > On Mon, Feb 03, 2025 at 09:39:00AM +0100, Johan Hovold wrote:
-> > > On Fri, Jan 10, 2025 at 08:01:21PM +0200, Dmitry Baryshkov wrote:
-> 
-> > > > Also as venus and iris drivers are not completely
-> > > > equivalent wrt supported platforms, distributions will have to select
-> > > > whether to disable support for older platforms or for new platforms:
-> > > > Kconfig dependency will make it impossible to enable support for both
-> > > > kinds.
-> > > 
-> > > You shouldn't have both enabled. The only reason for keeping support
-> > > for the same hardware in both drivers is that the iris support is
-> > > incomplete and considered experimental. No one should enable that except
-> > > for development and evaluation purposes until the driver is up to par.
-> > > And then you drop support from the old driver along with the config
-> > > option.
-> > 
-> > That's the plan. This modparam is a temporal thing for transition
-> > period. And yes, as a developers / platform enablers we want to be able
-> > to have a quick turnaround between drivers.
-> > 
-> > Please stop forcing your decisions on other people. The Linux kernel and
-> > its development process has always been about providing a possibility,
-> > not a policy.
-> 
-> That's just not true. The rule is to not have two drivers for the same
-> hardware (even if we very rarely have accepted some well-motivated
-> exceptions).
-> 
-> I understand that you may have an unorthodox view of this as you work on
-> the MSM DRM driver, but hiding incomplete and broken code behind module
-> parameters so that you can game the upstreaming process (e.g. like you
-> did for the eDP PSR feature) is simply not a model that anyone should
-> follow.
+Commit 176cda0619b6 ("powerpc/perf: Add perf interface to expose vpa
+counters") introduced 'vpa_pmu' to expose Book3s-HV nested APIv2 provided
+L1<->L2 context switch latency counters to L1 user-space via
+perf-events. However the newly introduced PMU named 'vpa_pmu' doesn't
+assign ownership of the PMU to the module 'vpa_pmu'. Consequently the
+module 'vpa_pmu' can be unloaded while one of the perf-events are still
+active, which can lead to kernel oops and panic of the form below on a
+Pseries-LPAR:
 
-Let me point you the aic7xxx story, we had, if my memory is correct,
-three drivers working with the same hardware at some point, during
-transition period.
+BUG: Kernel NULL pointer dereference on read at 0x00000058
+<snip>
+ NIP [c000000000506cb8] event_sched_out+0x40/0x258
+ LR [c00000000050e8a4] __perf_remove_from_context+0x7c/0x2b0
+ Call Trace:
+ [c00000025fc3fc30] [c00000025f8457a8] 0xc00000025f8457a8 (unreliable)
+ [c00000025fc3fc80] [fffffffffffffee0] 0xfffffffffffffee0
+ [c00000025fc3fcd0] [c000000000501e70] event_function+0xa8/0x120
+<snip>
+ Kernel panic - not syncing: Aiee, killing interrupt handler!
 
-Regarding eDP PSR. It wasn't my implementation, so that's not correct
-comparison. MDP5 -> DPU migration is mine and yes, it is implemented in
-this way as we can trigger CI jobs having a single kernel, as developers
-we can switch between MDP5 and DPU drivers in a quick way, etc.
+Fix this by adding the module ownership to 'vpa_pmu' so that the module
+'vpa_pmu' is ref-counted and prevented from being unloaded when perf-events
+are initialized.
 
+Fixes: 176cda0619b6 ("powerpc/perf: Add perf interface to expose vpa counters")
+Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+---
+ arch/powerpc/perf/vpa-pmu.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/powerpc/perf/vpa-pmu.c b/arch/powerpc/perf/vpa-pmu.c
+index 6a5bfd2a13b5..840733468959 100644
+--- a/arch/powerpc/perf/vpa-pmu.c
++++ b/arch/powerpc/perf/vpa-pmu.c
+@@ -156,6 +156,7 @@ static void vpa_pmu_del(struct perf_event *event, int flags)
+ }
+ 
+ static struct pmu vpa_pmu = {
++	.module		= THIS_MODULE,
+ 	.task_ctx_nr	= perf_sw_context,
+ 	.name		= "vpa_pmu",
+ 	.event_init	= vpa_pmu_event_init,
 -- 
-With best wishes
-Dmitry
+2.48.1
+
