@@ -1,359 +1,137 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-81.smtpout.orange.fr [80.12.242.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB1E204080;
-	Tue,  4 Feb 2025 06:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51D925A655;
+	Tue,  4 Feb 2025 06:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738649792; cv=none; b=qHp8yrCWAF1afNQEZmvAvvCyUFOuWSnlNTwKrkF93bg+amWr7PBr+UJEJKjQqFAiwF2ZAx+5ZhI6f4eUNCayVzuasNOfbGnbUcxVI6Nong+Ik+NUfXOcxU1pxL1LGjtot39jc9QHosphO3UnyUbg0kJPwnM5hJrO5jCOjhC+nEA=
+	t=1738649956; cv=none; b=N5A3vMnoJvQNLGmDl3WumpkR+8TlTfmTMqk7JNWp+ywmFwfcABZ66i7yTqTi7FdlrnLLcRNSLhRV4onDmz7FzxULUTCjQoPI7i79Wh3U/285Nzs+nhl94hT6EMhDTErGoylyQ7cQkLE/7oWwe+waZukU1FkGbJT0pz1fVqHMqPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738649792; c=relaxed/simple;
-	bh=JlZnz5V87gQBoau17wS25amGoSYTNniuasHZoqH9H28=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oTkFSfAS3fj03/gahUU4WdAu3zpIBZcZaftovBh/7Wb4pBgNIM+M3839Ql4XZGDSUcxrvSrUscW4L3slaO8RsYD2xNI2IPaBdL4RMHaX7noeq+t0PeMhMPkhgZNY47UCIlRiOJ8qaRDCqE1jA9DY1dnmMzczYCj8jag6ZtzXj1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vi5oLJ/m; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738649956; c=relaxed/simple;
+	bh=qVxz4qhhEqrScUAsJhIjKbHH5wmCbfE7VN3wRR73N34=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eup/wZwi/SeYbLnmsq9m0hLGvg/7l3vZKP8wHkbPpNq5c7ndkR7x33Cl3sIWmg88b+qKkfE4fdWROiZ3qYbm6llbj9+E6INM/yObHpWKFLZfwIxLX/NuwfeilDhTcLMLZ8HQKD0quDQ8em8IOkl8Iup7G4VcLGoHzHoAFST9gF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=KNyaa5VZ; arc=none smtp.client-ip=80.12.242.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vi5oLJ/m"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5146FvJp3098781
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Feb 2025 00:15:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738649757;
-	bh=g5d8aE1nDLHr7EeHiYmJyvXsAqsd0Ff1S8A44q8pBrM=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=vi5oLJ/mVraxsAFez5y8IpVzSOtfUYcMZn89na5EQIlXNGW/Wy7wnErBIXnnZ6MQu
-	 COrR+cI/6lOhbcmdm+7l3w12Wc7fadjfR21UwnCnV15WVsYlmDvBG57RVWGk3Eq7/r
-	 IyO6r1b61/5L1fRc9rM6bt/Rp4qeTmNrbKoB4JEg=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5146FvvR113134
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Feb 2025 00:15:57 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
- Feb 2025 00:15:56 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 4 Feb 2025 00:15:56 -0600
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5146FtKo075258;
-	Tue, 4 Feb 2025 00:15:56 -0600
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
-        <airlied@gmail.com>, <maarten.lankhorst@linux.intel.com>,
-        <mripard@kernel.org>, <tzimmermann@suse.de>,
-        <dri-devel@lists.freedesktop.org>, <simona@ffwll.ch>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
-        <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
-        <h-shenoy@ti.com>, <devarsht@ti.com>
-Subject: [PATCH v2 2/2] drm/tidss: Add support for AM62L display subsystem
-Date: Tue, 4 Feb 2025 11:45:52 +0530
-Message-ID: <20250204061552.3720261-3-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20250204061552.3720261-1-devarsht@ti.com>
-References: <20250204061552.3720261-1-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="KNyaa5VZ"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id fCFwtHY03MBalfCFztJres; Tue, 04 Feb 2025 07:18:01 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1738649881;
+	bh=2rigdcBP5Blbnm80a1gcLyNHTyPctzTAtz4Al0/l+0I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=KNyaa5VZKs96XELNAwL6YcnuQVGssubBs5PudTymcgJmoHVH6zkCHtJe4PexTDKKH
+	 S0mRkXiSHI5Nmtpcnyq88a0dul6gZUTZ6AGuqm624HCxGd0HGCnrAKt7cK25GTPuGT
+	 Cf/DW4V2nRwe71lDMW64vPy4BLe4Vd/ZOsXkB4LRe3ffwveFlXT1q8REyb4wa3RIr/
+	 fhno6I0wmKBoWv6dJKHI5Z8MI356w2u/ZGHM6hP9phxxeEpfJDuU9R6U4cj4Ilr3X+
+	 oWz6aJtA+i6KL4XE1nrPJydfrGx00oGAlpqXKuAwVgVoGsB72IWK5mTc7eWSObccCC
+	 hayXja0UbhPUA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Tue, 04 Feb 2025 07:18:01 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <e41d9378-e5e5-478d-bead-aa50a9f79d4d@wanadoo.fr>
+Date: Tue, 4 Feb 2025 07:17:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mtd: Add check and kfree() for kcalloc()
+To: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Cc: gmpy.liaowx@gmail.com, kees@kernel.org, linux-kernel@vger.kernel.org,
+ linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com, richard@nod.at,
+ vigneshr@ti.com, stable@vger.kernel.org
+References: <30ad77af-4a7b-4a15-9c0b-b0c70d9e1643@wanadoo.fr>
+ <20250204023323.14213-1-jiashengjiangcool@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250204023323.14213-1-jiashengjiangcool@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Enable display for AM62L DSS [1] which supports only a single display
-pipeline using a single overlay manager, single video port and a single
-video lite pipeline which does not support scaling.
+Le 04/02/2025 à 03:33, Jiasheng Jiang a écrit :
+> Add a check for kcalloc() to ensure successful allocation.
+> Moreover, add kfree() in the error-handling path to prevent memory leaks.
+> 
+> Fixes: 78c08247b9d3 ("mtd: Support kmsg dumper based on pstore/blk")
+> Cc: <stable@vger.kernel.org> # v5.10+
+> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+> ---
+> Changelog:
+> 
+> v1 -> v2:
+> 
+> 1. Remove redundant logging.
+> 2. Add kfree() in the error-handling path.
+> ---
+>   drivers/mtd/mtdpstore.c | 19 ++++++++++++++++++-
+>   1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
+> index 7ac8ac901306..2d8e330dd215 100644
+> --- a/drivers/mtd/mtdpstore.c
+> +++ b/drivers/mtd/mtdpstore.c
+> @@ -418,10 +418,17 @@ static void mtdpstore_notify_add(struct mtd_info *mtd)
+>   
+>   	longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->kmsg_size));
+>   	cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +	if (!cxt->rmmap)
+> +		goto end;
 
-The output of video port is routed to SoC boundary via DPI interface and
-the DPI signals from the video port are also routed to DSI Tx controller
-present within the SoC.
+Nitpick: Could be a direct return.
 
-Use separate register space for AM62L since the DISPC_VID* regions for the
-first and only video lite pipeline start from a different offset than other
-existing K3 SoCs.
+> +
+>   	cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +	if (!cxt->usedmap)
+> +		goto free_rmmap;
+>   
+>   	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
+>   	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +	if (!cxt->badmap)
+> +		goto free_usedmap;
+>   
+>   	/* just support dmesg right now */
+>   	cxt->dev.flags = PSTORE_FLAGS_DMESG;
+> @@ -435,10 +442,20 @@ static void mtdpstore_notify_add(struct mtd_info *mtd)
+>   	if (ret) {
+>   		dev_err(&mtd->dev, "mtd%d register to psblk failed\n",
+>   				mtd->index);
+> -		return;
+> +		goto free_badmap;
+>   	}
+>   	cxt->mtd = mtd;
+>   	dev_info(&mtd->dev, "Attached to MTD device %d\n", mtd->index);
+> +	goto end;
 
-Use separate helper functions for enabling/disabling video pipeline
-interrupts and reading/clearing video pipeline interrupts since AM62L has a
-different start bit position for controlling these interrupts in context of
-first and only video lite pipeline compared to other existing K3 SoCs.
+Mater of taste, but I think that having an explicit return here would be 
+clearer that a goto end;
 
-Also use separate function to set overlay attributes for AM62L as
-input channel value needs to be mandatorily set as 1 for the first
-and only video lite pipeline for this SoC.
+> +
+> +free_badmap:
+> +	kfree(cxt->badmap);
+> +free_usedmap:
+> +	kfree(cxt->usedmap);
+> +free_rmmap:
+> +	kfree(cxt->rmmap);
 
-[1]: Section 11.7 (Display Subsystem and Peripherals)
-Link : https://www.ti.com/lit/pdf/sprujb4
+I think that in all these paths, you should also have
+	cxt->XXXmap = NULL;
+after the kfree().
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
----
-V2:
-- Add separate common reg space for AM62L
-- Add separate irq enable/disable/read/clear helpers for AM62L
-- Use separate helper function for setting overlay attributes
-- Drop Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-  due to additional changes made in V2.
-- Rangediff:
-  https://gist.github.com/devarsht/11d47f25ca9fea6976e6284330ddf443
+otherwise when mtdpstore_notify_remove() is called, you could have a 
+double free.
 
- drivers/gpu/drm/tidss/tidss_dispc.c | 140 ++++++++++++++++++++++++++++
- drivers/gpu/drm/tidss/tidss_dispc.h |   2 +
- drivers/gpu/drm/tidss/tidss_drv.c   |   1 +
- 3 files changed, 143 insertions(+)
+CJ
 
-diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
-index cacb5f3d8085..7a1f70f0e9cc 100644
---- a/drivers/gpu/drm/tidss/tidss_dispc.c
-+++ b/drivers/gpu/drm/tidss/tidss_dispc.c
-@@ -136,6 +136,29 @@ static const u16 tidss_am65x_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
- 	[DISPC_SECURE_DISABLE_OFF] =		0xac,
- };
- 
-+static const u16 tidss_am62l_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
-+	[DSS_REVISION_OFF] =			0x4,
-+	[DSS_SYSCONFIG_OFF] =			0x8,
-+	[DSS_SYSSTATUS_OFF] =			0x20,
-+	[DISPC_IRQ_EOI_OFF] =			0x24,
-+	[DISPC_IRQSTATUS_RAW_OFF] =		0x28,
-+	[DISPC_IRQSTATUS_OFF] =			0x2c,
-+	[DISPC_IRQENABLE_SET_OFF] =		0x30,
-+	[DISPC_IRQENABLE_CLR_OFF] =		0x40,
-+	[DISPC_VID_IRQENABLE_OFF] =		0x48,
-+	[DISPC_VID_IRQSTATUS_OFF] =		0x5c,
-+	[DISPC_VP_IRQENABLE_OFF] =		0x70,
-+	[DISPC_VP_IRQSTATUS_OFF] =		0x7c,
-+
-+	[DISPC_GLOBAL_MFLAG_ATTRIBUTE_OFF] =	0x90,
-+	[DISPC_GLOBAL_OUTPUT_ENABLE_OFF] =	0x94,
-+	[DSS_CBA_CFG_OFF] =			0x9c,
-+	[DISPC_DBG_CONTROL_OFF] =		0xa0,
-+	[DISPC_DBG_STATUS_OFF] =		0xa4,
-+	[DISPC_CLKGATING_DISABLE_OFF] =		0xa8,
-+	[DISPC_SECURE_DISABLE_OFF] =		0xac,
-+};
-+
- const struct dispc_features dispc_am65x_feats = {
- 	.max_pclk_khz = {
- 		[DISPC_VP_DPI] = 165000,
-@@ -376,6 +399,35 @@ const struct dispc_features dispc_am62a7_feats = {
- 	.vid_order = { 1, 0 },
- };
- 
-+const struct dispc_features dispc_am62l_feats = {
-+	.max_pclk_khz = {
-+		[DISPC_VP_DPI] = 165000,
-+	},
-+
-+	.subrev = DISPC_AM62L,
-+
-+	.common = "common",
-+	.common_regs = tidss_am62l_common_regs,
-+
-+	.num_vps = 1,
-+	.vp_name = { "vp1" },
-+	.ovr_name = { "ovr1" },
-+	.vpclk_name =  { "vp1" },
-+	.vp_bus_type = { DISPC_VP_DPI },
-+
-+	.vp_feat = { .color = {
-+			.has_ctm = true,
-+			.gamma_size = 256,
-+			.gamma_type = TIDSS_GAMMA_8BIT,
-+		},
-+	},
-+
-+	.num_planes = 1,
-+	.vid_name = { "vidl1" },
-+	.vid_lite = { true },
-+	.vid_order = { 0 },
-+};
-+
- static const u16 *dispc_common_regmap;
- 
- struct dss_vp_data {
-@@ -800,6 +852,40 @@ void dispc_k3_clear_irqstatus(struct dispc_device *dispc, dispc_irq_t clearmask)
- 	dispc_read(dispc, DISPC_IRQSTATUS);
- }
- 
-+static
-+void dispc_am62l_clear_irqstatus(struct dispc_device *dispc, dispc_irq_t clearmask)
-+{
-+	u32 top_clear = 0;
-+
-+	if (clearmask & DSS_IRQ_VP_MASK(0)) {
-+		dispc_k3_vp_write_irqstatus(dispc, 0, clearmask);
-+		top_clear |= BIT(0);
-+	}
-+
-+	if (clearmask & DSS_IRQ_PLANE_MASK(0)) {
-+		dispc_k3_vid_write_irqstatus(dispc, 0, clearmask);
-+		top_clear |= BIT(5);
-+	}
-+
-+	dispc_write(dispc, DISPC_IRQSTATUS, top_clear);
-+
-+	/* Flush posted writes */
-+	dispc_read(dispc, DISPC_IRQSTATUS);
-+}
-+
-+static
-+dispc_irq_t dispc_am62l_read_and_clear_irqstatus(struct dispc_device *dispc)
-+{
-+	dispc_irq_t status = 0;
-+
-+	status |= dispc_k3_vp_read_irqstatus(dispc, 0);
-+	status |= dispc_k3_vid_read_irqstatus(dispc, 0);
-+
-+	dispc_am62l_clear_irqstatus(dispc, status);
-+
-+	return status;
-+}
-+
- static
- dispc_irq_t dispc_k3_read_and_clear_irqstatus(struct dispc_device *dispc)
- {
-@@ -831,6 +917,39 @@ static dispc_irq_t dispc_k3_read_irqenable(struct dispc_device *dispc)
- 	return enable;
- }
- 
-+static void dispc_am62l_set_irqenable(struct dispc_device *dispc,
-+				      dispc_irq_t mask)
-+{
-+	u32 main_enable = 0, main_disable = 0;
-+	dispc_irq_t old_mask;
-+
-+	old_mask = dispc_k3_read_irqenable(dispc);
-+
-+	/* clear the irqstatus for newly enabled irqs */
-+	dispc_am62l_clear_irqstatus(dispc, (old_mask ^ mask) & mask);
-+
-+	dispc_k3_vp_set_irqenable(dispc, 0, mask);
-+	if (mask & DSS_IRQ_VP_MASK(0))
-+		main_enable |= BIT(0);		/* VP IRQ */
-+	else
-+		main_disable |= BIT(0);		/* VP IRQ */
-+
-+	dispc_k3_vid_set_irqenable(dispc, 0, mask);
-+	if (mask & DSS_IRQ_PLANE_MASK(0))
-+		main_enable |= BIT(5);	/* VIDL IRQ */
-+	else
-+		main_disable |= BIT(5);	/* VIDL IRQ */
-+
-+	if (main_enable)
-+		dispc_write(dispc, DISPC_IRQENABLE_SET, main_enable);
-+
-+	if (main_disable)
-+		dispc_write(dispc, DISPC_IRQENABLE_CLR, main_disable);
-+
-+	/* Flush posted writes */
-+	dispc_read(dispc, DISPC_IRQENABLE_SET);
-+}
-+
- static void dispc_k3_set_irqenable(struct dispc_device *dispc,
- 				   dispc_irq_t mask)
- {
-@@ -879,6 +998,8 @@ dispc_irq_t dispc_read_and_clear_irqstatus(struct dispc_device *dispc)
- 		return dispc_k2g_read_and_clear_irqstatus(dispc);
- 	case DISPC_AM625:
- 	case DISPC_AM62A7:
-+	case DISPC_AM62L:
-+		return dispc_am62l_read_and_clear_irqstatus(dispc);
- 	case DISPC_AM65X:
- 	case DISPC_J721E:
- 		return dispc_k3_read_and_clear_irqstatus(dispc);
-@@ -896,6 +1017,9 @@ void dispc_set_irqenable(struct dispc_device *dispc, dispc_irq_t mask)
- 		break;
- 	case DISPC_AM625:
- 	case DISPC_AM62A7:
-+	case DISPC_AM62L:
-+		dispc_am62l_set_irqenable(dispc, mask);
-+		break;
- 	case DISPC_AM65X:
- 	case DISPC_J721E:
- 		dispc_k3_set_irqenable(dispc, mask);
-@@ -1354,6 +1478,17 @@ static void dispc_k2g_ovr_set_plane(struct dispc_device *dispc,
- 			x | (y << 16));
- }
- 
-+static void dispc_am62l_ovr_set_plane(struct dispc_device *dispc,
-+				      u32 x, u32 y)
-+{
-+	OVR_REG_FLD_MOD(dispc, 0, DISPC_OVR_ATTRIBUTES(0),
-+			1, 4, 1);
-+	OVR_REG_FLD_MOD(dispc, 0, DISPC_OVR_ATTRIBUTES(0),
-+			x, 17, 6);
-+	OVR_REG_FLD_MOD(dispc, 0, DISPC_OVR_ATTRIBUTES(0),
-+			y, 30, 19);
-+}
-+
- static void dispc_am65x_ovr_set_plane(struct dispc_device *dispc,
- 				      u32 hw_plane, u32 hw_videoport,
- 				      u32 x, u32 y, u32 layer)
-@@ -1388,6 +1523,9 @@ void dispc_ovr_set_plane(struct dispc_device *dispc, u32 hw_plane,
- 		break;
- 	case DISPC_AM625:
- 	case DISPC_AM62A7:
-+	case DISPC_AM62L:
-+		dispc_am62l_ovr_set_plane(dispc, x, y);
-+		break;
- 	case DISPC_AM65X:
- 		dispc_am65x_ovr_set_plane(dispc, hw_plane, hw_videoport,
- 					  x, y, layer);
-@@ -2308,6 +2446,7 @@ static void dispc_plane_init(struct dispc_device *dispc)
- 		break;
- 	case DISPC_AM625:
- 	case DISPC_AM62A7:
-+	case DISPC_AM62L:
- 	case DISPC_AM65X:
- 	case DISPC_J721E:
- 		dispc_k3_plane_init(dispc);
-@@ -2416,6 +2555,7 @@ static void dispc_vp_write_gamma_table(struct dispc_device *dispc,
- 		break;
- 	case DISPC_AM625:
- 	case DISPC_AM62A7:
-+	case DISPC_AM62L:
- 	case DISPC_AM65X:
- 		dispc_am65x_vp_write_gamma_table(dispc, hw_videoport);
- 		break;
-diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
-index 086327d51a90..275de8d02b75 100644
---- a/drivers/gpu/drm/tidss/tidss_dispc.h
-+++ b/drivers/gpu/drm/tidss/tidss_dispc.h
-@@ -62,6 +62,7 @@ enum dispc_dss_subrevision {
- 	DISPC_K2G,
- 	DISPC_AM625,
- 	DISPC_AM62A7,
-+	DISPC_AM62L,
- 	DISPC_AM65X,
- 	DISPC_J721E,
- };
-@@ -91,6 +92,7 @@ struct dispc_features {
- extern const struct dispc_features dispc_k2g_feats;
- extern const struct dispc_features dispc_am625_feats;
- extern const struct dispc_features dispc_am62a7_feats;
-+extern const struct dispc_features dispc_am62l_feats;
- extern const struct dispc_features dispc_am65x_feats;
- extern const struct dispc_features dispc_j721e_feats;
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_drv.c b/drivers/gpu/drm/tidss/tidss_drv.c
-index d4652e8cc28c..f2a4f659f574 100644
---- a/drivers/gpu/drm/tidss/tidss_drv.c
-+++ b/drivers/gpu/drm/tidss/tidss_drv.c
-@@ -242,6 +242,7 @@ static const struct of_device_id tidss_of_table[] = {
- 	{ .compatible = "ti,k2g-dss", .data = &dispc_k2g_feats, },
- 	{ .compatible = "ti,am625-dss", .data = &dispc_am625_feats, },
- 	{ .compatible = "ti,am62a7-dss", .data = &dispc_am62a7_feats, },
-+	{ .compatible = "ti,am62l-dss", .data = &dispc_am62l_feats, },
- 	{ .compatible = "ti,am65x-dss", .data = &dispc_am65x_feats, },
- 	{ .compatible = "ti,j721e-dss", .data = &dispc_j721e_feats, },
- 	{ }
--- 
-2.39.1
+> +end:
+> +	return;
+>   }
+>   
+>   static int mtdpstore_flush_removed_do(struct mtdpstore_context *cxt,
 
