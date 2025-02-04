@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C61213E97
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A78218858
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:00:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738681253; cv=none; b=F+wktS4LuPhBFzQa85v/pftSnB9UDhegsLzfCxKvzlSWWFcJXEHx63VjdkwRR3udqSc9E+IUMXDFJGVdbHv2Jz3Rf7XZII2reli2l2Ejcg42VmzHOHH8VuIjztwGLm8sKp9ncmbNQcdnKwLRS9cPHOa2meQwJ6/VPa8wQqwkVlc=
+	t=1738681256; cv=none; b=V6oELe26G6td7tmB8rHZqO9sgd5KZ+mfu3VWXi5vZIsWzDjJZWzXaAvtV1nk0Zto0Y620yxQhuthUOh+63klhVCDR4j6Xhu1D/8P2IKICovLp8Tv1sR0cn9bVKAXn6NzMLZ73wkxioDGz9OhseR+BIEZf9lNYE3LWR3T/A87QE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738681253; c=relaxed/simple;
-	bh=n/1Y+rGpdCI9fCQFL15rH+D9O2fm8ABxL6EYMwh5oxQ=;
+	s=arc-20240116; t=1738681256; c=relaxed/simple;
+	bh=dVVSqhEjCDXw9391XwgMOugJcxOfDSIJu4GCSZhaJlw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oLrxtqteDiHXz1HvnuPt8jPvfD/tttAOnLpEkEcU+/TUQykgRjDOO/EuU/HtytkMBiCpd4RI+1aTtDMgim6A9YYXf4r0I4Ybm3khAwETuq2Bhl8diQzBVD/mt0KgRHJ/rCBYrd8skY9HAjJ/+qaLDKHZ+bSC35G/OZ0eoZbbeEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LhGgPgoK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hSYEbxjdw+dGQ2vXH1+PN6oXBlsj+boobhW7iJpAtkOa1hiHm1fV7m7i4yp97yXbU+pRLVpJZJTpS4Qv6vcgkDLmfoe4bkLEh4wCoXuHyiFVrLS47motFFd1IVXl07gnuI2R+RDlhL4Y2i9QXsOS4tiBAi1d6J5LpKqN3Mvq4j8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XGGfdIge; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhGgPgoK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C494CC4CEDF;
-	Tue,  4 Feb 2025 15:00:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XGGfdIge"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FFD7C4CEDF;
+	Tue,  4 Feb 2025 15:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738681253;
-	bh=n/1Y+rGpdCI9fCQFL15rH+D9O2fm8ABxL6EYMwh5oxQ=;
+	s=k20201202; t=1738681256;
+	bh=dVVSqhEjCDXw9391XwgMOugJcxOfDSIJu4GCSZhaJlw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=LhGgPgoKPR3calcrUhEEBrReXWlufPXUGorgdQAH++xYYsyMhwvTvAjMNdfJjgfXB
-	 ZV4gDee12QxWwmFCCMRfNXvaRmSyggnD1UuO57cay/6j2rv1kEjdw12jgKaBln7bvt
-	 UfLEcYRHMlo4vdgutAl1VT9EfRj7z/+2cdy6wV2teOT+CCZV86Qmu5fYAuR61yCDsm
-	 pSwqvPHxfGwmVut32GZuo9fjLzZ1j1jQp0PtQnLB20kB/s8YZn8Urz266J/o0oPMza
-	 5X3nvzozXK/9UEh2lsKOFogttpTYH8g2uSagxoWRo+QOeUi+2PIKi+u42IE7pqzSQ/
-	 BtBjeQiwfM8zg==
+	b=XGGfdIgeVBmK7L97DIYzeAYAD2C/o039YVVw7KVVLu6L/rUl8biZMC24IKITEF/3s
+	 dP0x4RiImXyDhKSOk+PhGJxySk4139Uc22eb9BXXnzdR1He+m751rR5HvPRSjgZrNZ
+	 Tbc5J30d365acn77aCMDvl9OSENohfvOuf3wI+6ibKkK6shXit6+mrhEMwgRe3TTjM
+	 oHMNQoyR6Y/I/g/u61mPqWWFUkxSuvRNf87gGQKN++25ckfJ+bUHZYvB736KA6Zr0y
+	 LIasEpNYEzPebdH7gR3sG0f7NuSSWz3m1L/BJUcE9bIrePQUwoczqZV4IGfUuSu4/X
+	 Vi257FVV0TsBg==
 From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 04 Feb 2025 15:57:58 +0100
-Subject: [PATCH v2 30/35] drm/bridge: Provide pointers to the connector and
- crtc in bridge state
+Date: Tue, 04 Feb 2025 15:57:59 +0100
+Subject: [PATCH v2 31/35] drm/bridge: Make encoder pointer deprecated
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-bridge-connector-v2-30-35dd6c834e08@kernel.org>
+Message-Id: <20250204-bridge-connector-v2-31-35dd6c834e08@kernel.org>
 References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
 In-Reply-To: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -51,107 +50,52 @@ To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  Maxime Ripard <mripard@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3321; i=mripard@kernel.org;
- h=from:subject:message-id; bh=n/1Y+rGpdCI9fCQFL15rH+D9O2fm8ABxL6EYMwh5oxQ=;
- b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOmLtL7ZRjwWkXxwV9O1zv/LKQsZpuPLerwKfrimG3Jtv
- Jl4/PPHjqksDMKcDLJiiixPZMJOL29fXOVgv/IHzBxWJpAhDFycAjCROW6MDR9VlCZuMtReW9a0
- cMX19bmTxFgvFcZttLOY4CLA8cP4wLZNRctm2XDrKN1v4l2eM9FzCWPDgyNiXMF9y5eFH6ucn55
- w+tGrG54P1ZLzRH/f+6H++d/zG18W95zlvBydI5Ry5fVMnTV7AQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1482; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=dVVSqhEjCDXw9391XwgMOugJcxOfDSIJu4GCSZhaJlw=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOmLtL4Z9qixbHkppHsp3LTxdWfkwt3GCkmx3tOX5+/Ni
+ TtwbVtHx1QWBmFOBlkxRZYnMmGnl7cvrnKwX/kDZg4rE8gQBi5OAZjI6WDGhk991191q2b+zWwN
+ /cN828XmuGxW8/u9k7cUmn9e5DqD4+m89/2XtzrvWufRHTN5ze9ngowNrydfP8qt+Yc71aSsov/
+ 5xmfb+/i9/28Oa3vC4ajmbbHpX6PnXLvmYO+9k3bmhn34b94EAA==
 X-Developer-Key: i=mripard@kernel.org; a=openpgp;
  fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-Now that connectors are no longer necessarily created by the bridges
-drivers themselves but might be created by drm_bridge_connector, it's
-pretty hard for bridge drivers to retrieve pointers to the connector and
-CRTC they are attached to.
+Other entities (drm_connector.crtc, drm_encoder.crtc, etc.) have
+pointer to other currently bound entities. They are all considered
+relevant only for non-atomic drivers, and generally perceived as
+deprecated in favour of the equivalent pointers in the atomic states.
 
-Indeed, the only way to retrieve the CRTC is to follow the drm_bridge
-encoder field, and then the drm_encoder crtc field, both of them being
-deprecated.
-
-And for the connector, since we can have multiple connectors attached to
-a CRTC, we don't really have a reliable way to get it.
-
-Let's provide both pointers in the drm_bridge_state structure so we
-don't have to follow deprecated, non-atomic, pointers, and be more
-consistent with the other KMS entities.
+It used to be useful because we didn't have alternatives, but now that
+we do, let's make sure it's done for drm_bridge.encoder too.
 
 Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/gpu/drm/drm_atomic_state_helper.c |  5 +++++
- drivers/gpu/drm/drm_bridge.c              |  5 +++++
- include/drm/drm_atomic.h                  | 14 ++++++++++++++
- 3 files changed, 24 insertions(+)
+ include/drm/drm_bridge.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_atomic_state_helper.c b/drivers/gpu/drm/drm_atomic_state_helper.c
-index 519228eb109533d2596e899a57b571fa0995824f..66661dca077215b78dffca7bc1712f56d35e3918 100644
---- a/drivers/gpu/drm/drm_atomic_state_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_state_helper.c
-@@ -777,10 +777,15 @@ EXPORT_SYMBOL(drm_atomic_helper_bridge_duplicate_state);
-  * that don't subclass the bridge state.
-  */
- void drm_atomic_helper_bridge_destroy_state(struct drm_bridge *bridge,
- 					    struct drm_bridge_state *state)
- {
-+	if (state->connector) {
-+		drm_connector_put(state->connector);
-+		state->connector = NULL;
-+	}
+diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+index 7a3664770c3ab8634a69e953b37a30ac467139b3..80ca28af4c56449ffa760c198c3016b456f1f346 100644
+--- a/include/drm/drm_bridge.h
++++ b/include/drm/drm_bridge.h
+@@ -822,12 +822,18 @@ enum drm_bridge_ops {
+ struct drm_bridge {
+ 	/** @base: inherit from &drm_private_object */
+ 	struct drm_private_obj base;
+ 	/** @dev: DRM device this bridge belongs to */
+ 	struct drm_device *dev;
+-	/** @encoder: encoder to which this bridge is connected */
 +
- 	kfree(state);
- }
- EXPORT_SYMBOL(drm_atomic_helper_bridge_destroy_state);
- 
- /**
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index ad91a0ac375a9c8cf82834354ec7f654a59a7292..fcff08c7d609477b7cadabc109f0b543a6b9b506 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -803,10 +803,15 @@ static int drm_atomic_bridge_check(struct drm_bridge *bridge,
- 		bridge_state = drm_atomic_get_new_bridge_state(crtc_state->state,
- 							       bridge);
- 		if (WARN_ON(!bridge_state))
- 			return -EINVAL;
- 
-+		bridge_state->crtc = crtc_state->crtc;
-+
-+		drm_connector_get(conn_state->connector);
-+		bridge_state->connector = conn_state->connector;
-+
- 		if (bridge->funcs->atomic_check) {
- 			ret = bridge->funcs->atomic_check(bridge, bridge_state,
- 							  crtc_state, conn_state);
- 			if (ret)
- 				return ret;
-diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
-index 7af43062e5ca8c30b3fd600a34543e79137ab3ea..12f3676b85454e81de74c6b5eec700a355d42836 100644
---- a/include/drm/drm_atomic.h
-+++ b/include/drm/drm_atomic.h
-@@ -1197,10 +1197,24 @@ struct drm_bridge_state {
- 	/**
- 	 * @bridge: the bridge this state refers to
- 	 */
- 	struct drm_bridge *bridge;
- 
-+	/**
-+	 * @crtc: CRTC the bridge is connected to, NULL if disabled.
++	/** @encoder:
 +	 *
-+	 * Do not change this directly.
++	 * encoder to which this bridge is connected. Only meaningful
++	 * for non-atomic drivers. Deprecated.
 +	 */
-+	struct drm_crtc *crtc;
+ 	struct drm_encoder *encoder;
 +
-+	/**
-+	 * @connector: The connector the bridge is connected to, NULL if disabled.
-+	 *
-+	 * Do not change this directly.
-+	 */
-+	struct drm_connector *connector;
-+
- 	/**
- 	 * @input_bus_cfg: input bus configuration
- 	 */
- 	struct drm_bus_cfg input_bus_cfg;
- 
+ 	/** @chain_node: used to form a bridge chain */
+ 	struct list_head chain_node;
+ 	/** @of_node: device node pointer to the bridge */
+ 	struct device_node *of_node;
+ 	/** @list: to keep track of all added bridges */
 
 -- 
 2.48.0
