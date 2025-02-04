@@ -1,112 +1,146 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D210B20A5E0;
-	Tue,  4 Feb 2025 14:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190532135D0
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738678894; cv=none; b=FyAeQV0HyAVwXD976yKQXyA3sdu/rZearvw/xAx+4eep35pKFfMmS9GbJBkYjzCXbKx7rh++i+K9zIBtFhUrviw8VUMhIfPmfFigsp7YE8nXhFSxJ6PqD4zj3LCWtF4p/X3LiA2KDgJXcXaKc8+Y2soFZDTuamo6btjZIYfVq3w=
+	t=1738678898; cv=none; b=o286jVjUL9MejTmdbpwKhut1Z8h/q177fmNBUKtCYRCnTkxOAJKgdaLMvxw2oPrpmS+GMWE0bMZ2R6i2Q71Gdkc9vSZ7DRhipmJ4EZAGV0KAxKCMvWs0E3HjpIJmSlA4XZS6ryTKNBrZCe8SCqISmA+BWqtP5d5duZox+8PWqh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738678894; c=relaxed/simple;
-	bh=7EgsdMfcV4vGiFh2AIIrSMa7Tc+fni+9VTKuHb3Yf6Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KTyqUSf7Hnz8YjyNhyNcrtohedfd/QsQlf6SsOBUNP+HmwfiTIsnRm6EdWRlmafIF8e8UK87XuJdScvPod9YPNXDiLATa2gkrnwbdozKYU7ilPYkAxGhkWZ8FdsUxCcqrXHJ1WigdjDNkR6TX7+u8hp9bFhuJOdAyxvPWOwMvo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hwghfkMC; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738678898; c=relaxed/simple;
+	bh=qrLP6bmdU9xwPaBA6pBFlO1yWZtxxW7+36Jh9jIgM/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tratK9EyrhlWXqKjlcKkwVoM3oWOoK+vdcYjejVW3zPju0XMJJB2/d1Lf1yet1s4Hk1o9unpAqftnaxifAQMynFkfxomjoBnSXJ9ctvhzamROZHv5chUzT4TKV++BP+IcwOXQ/E/4p9EAQMfw0/P1vkDJ2UesQkjVg+0+cy05XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qXpl54v0; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwghfkMC"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5dc82e38c10so8662690a12.3;
-        Tue, 04 Feb 2025 06:21:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qXpl54v0"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-540201cfedbso5125872e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 06:21:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738678891; x=1739283691; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UAU/khvkEkGYKaXJqu6wZlGFDq0YwEFuATwA43lhkgc=;
-        b=hwghfkMCAL5yeBhW+iGBnxuPXn3PxGpte/4r/QHE8sFHAdifTxm4zA8AkSHFZsgkit
-         TQ3Xz4M6Y6Ej2vu0ZQdV1qQBmMYhRFmXue0D9viyRnFg4GQHnqjCXDJqyjbdp7DlbEBB
-         4QjgXP4QmB8TKSxsws/+6YG8TWvQu2oDPHervZsDtrdl30h5wtobE6vzOrocM6wNq5FD
-         2C2/v1rXOqPMHzE2H0rpWp91FfKhgSucKA+dtzzjcWZ7+PejbmoKiq81VSInyQvvb4y+
-         ijnu7WaVBV90t1A5WVcd6Tt/kJwB1lR2iRdeDNCelvIKpJN+IS6LSKeHWKSxkRspsJL/
-         +8zA==
+        d=linaro.org; s=google; t=1738678894; x=1739283694; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oi6tUx0/wzqbQ52cHEyBiqvPWzAr8efFA58lEXMvq7s=;
+        b=qXpl54v0wKalJVw6co3OcgPVe83gOp9rOx4ZJHg1S2IOKweYw8PurGqbaTnnzYu9y4
+         F5+Zs7urnRGOF1DG6YgvjzDg/Q7Yp6+8fM3yWy/xNTbtTWXVbNbVAHOupmVqnl4oliLV
+         1E+fEDfUGdKZT5UK9A2UvOXp9JVLbNDgw6NnTqqp0InZ+U3QO0t4A6hiFXe6UmJw1QAd
+         mqTvAz5J/7C2IPvy9dVj4bRDomKmYTue8hrOrjFr5T4ZjBQnzXqdMosOxuOD7qFnQ5Hk
+         IcQ5aNrlawR4s3iM06OrqlmdZQTblOV4LH2mOLFpRr5SZfTBgj/l4jDhbuMIZRafhEG6
+         3QNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738678891; x=1739283691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UAU/khvkEkGYKaXJqu6wZlGFDq0YwEFuATwA43lhkgc=;
-        b=YC/gKYrU4XSyQyWq0tVGUXsZMj7gQUP2JHTXChlqPdFzBR+BKZ53ZqFIxDax3Dy/3O
-         /N+SqnFtaz2i3KTdxSzMB1sBbyIgf6YnESOJO/rrh4xn80mC0HBpHYL2urpbbJlCpLU7
-         GoDFeEMV7tujlT4BJbwdrVr8iChV9REJx1XcGEh9I5B8xnl/EujGCD+L09/JRMLbaTgU
-         HutPw73SKn3u/GYpocSrRE6L33IDr17fgF+qSL4xy8I02gOImF3aUxwqLzN2ezm0tsEe
-         6UwmyAdpxDmIsdaQicO3OewNuwzyhNid8l6F+ZjPpeGgsFRGm4ja57cs0zOkd3COwBCh
-         U5zg==
-X-Forwarded-Encrypted: i=1; AJvYcCUAikUP1V1OUjDDiQ/mfbUYZMTHoqTyrfXNC2W8N/AB/DGUJGTg6jjZlDZt9YB9IVdK605cZSbQmEz8Odi1@vger.kernel.org, AJvYcCWOIu3yOF1wPIcTAm7jquX6VQssfIc6MoXAlfZXkunpt6SaWbhZ1idxgrDq7orE0PEejsLwoCTZcq0dS46O@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyq2VZVFNGvWP+Ljs74LeuNE2zOrZ25mk1X2Vh0g2ni10KF5eXE
-	vxhXyXRXS+O+mtuw2879cT3pgpp571lUGoOlUzKwpG8SZ3QlcStBvPqWXTDfyMFNojsKbyck1d9
-	vzHC1nUCOHpewkuJjm9tvVVVjlv4=
-X-Gm-Gg: ASbGncv+DkwsDGHmNqsO6dywKT53clY8j299Ci0CcS5pgMs9n5L40omdPT9l+j94eqf
-	dZhU84YSB6v0+7HKu8YRw7rG/w5Ajq/9iKRK6X7Ne8xLr/dLstVOW/YB4kY/RtWiPJk80nYs=
-X-Google-Smtp-Source: AGHT+IF/q4bBj5aa34lolX+UIcNU6oAzlIn30lY0mEpxYV+FyDTBW9ScKS/kS7GxR8XFIVRlVvzxCLD6oSJeM0K6+ko=
-X-Received: by 2002:a05:6402:50ca:b0:5d0:b2c8:8d04 with SMTP id
- 4fb4d7f45d1cf-5dc5efcab34mr28459251a12.18.1738678890823; Tue, 04 Feb 2025
- 06:21:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738678894; x=1739283694;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oi6tUx0/wzqbQ52cHEyBiqvPWzAr8efFA58lEXMvq7s=;
+        b=mr2wsYGuhv9H3I9JJUwUn3XpR57wb0/x6JZ8rKocdTeUXd4HvOCoSA0706CcQuD49T
+         hpOFnqKyp5sbziOUHDTKOCNHlljceZCgr1pyo+oyQ7RbfGfCpCXCePfoUAN4RICP9C7S
+         WzR1Ta/0zwx1NypOzbAXFwf7NRq6qiroXoN8NWXl5VALwCrQpm/j8POr4014QJDCuYIL
+         4YbN4Td1lWPDIUzdccJGN+78Kni9A9R3QGNYV0R2TRwPd5daeMo5EkpFYFNUFFCjaPSX
+         f7lyaMIZfetEdlYHe/PE16ez9OPL6VNiAIP8Ro7cXDpexqiLPk98UBKIMttHkTc7JKo0
+         /ZUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVE97SZ8gNAagSCxjOytSZV0QGPQVIZfFECLawUlga6JzyYhPUQrmkfYo+P2IPexjItFtrao2umG44eQfo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGtO7WxrY3WxfnzkobWDtLx7JwBCrrXLxViNQBE8DKVt3DEl/L
+	Jir8NGPd8HN1lDVKZN1m23KpDxxWXSjrTa0hOLvnXViS3DBWmNf+btiGBqdvCl4=
+X-Gm-Gg: ASbGncuYg727J0jrxdUYQChFX26CVqXPFNOOyc2oPo4jA5Tlh7mWw7lop0hCjdXOo+q
+	miWfOKwzL5SzOn3q7iyUrwAmzV55AOQ1dE17nDoaTMtl8o7MVJvXC/d0tpLTSYpxBXL7XYrMXCr
+	u8mFUiMeXP+z3ozMmDnaMGBlITbV5LgiNQFt+OljacyvI4T/jdUuJJRKy+R7hQK/WE3DPx8jctr
+	qaFChQJmZO6PPk2gQwTaTddo/IbPhvbrBYa+jULm+1Z+fH4S8A+E5OWQY0h0Z+8ugCP1K8z8MUs
+	SRckcg0jWXExIIgMuUIFQTBLlSUuM7u62HNWGC9MaACDVB5dDb7ors48axI5PgJNSqCLsEc=
+X-Google-Smtp-Source: AGHT+IFDRGI5VR5BcuN5nJ+zBTmiyxgvK65Wc13eLI6fmz9GDOmgId9YE/M2/7VVyU75pRkBKWfVAg==
+X-Received: by 2002:ac2:4f8c:0:b0:53e:350a:729e with SMTP id 2adb3069b0e04-543e4c32e43mr6798589e87.35.1738678894011;
+        Tue, 04 Feb 2025 06:21:34 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebebeb3esm1601521e87.220.2025.02.04.06.21.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 06:21:33 -0800 (PST)
+Date: Tue, 4 Feb 2025 16:21:31 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG0 updated
+ from driver side
+Message-ID: <r3dur3sonbmpmchj4pmbeefe77iyfldnqgfztggxqh67mrjskv@sryo52xo2zml>
+References: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
+ <20250203-drm-msm-phy-pll-cfg-reg-v2-1-862b136c5d22@linaro.org>
+ <le5kxzhm3b2whxoo3eblkelryc7ak2yezugqti2sxw7m244dzc@nyuhhs53jdup>
+ <cc63872f-3ad5-479e-bfff-8d62478e446e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204132153.GA20921@redhat.com>
-In-Reply-To: <20250204132153.GA20921@redhat.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Tue, 4 Feb 2025 15:21:18 +0100
-X-Gm-Features: AWEUYZnDtRxpWTYT0cLGOMzQH7fJ1XMKm8b2Z-vEOKAfQVCWgWCRY1RdUttezkk
-Message-ID: <CAGudoHGptAB1C+vKpfoYo+S9tU2Ow2LWbQeyHKwBpzy9Xh_b=w@mail.gmail.com>
-Subject: Re: [PATCH] pipe: don't update {a,c,m}time for anonymous pipes
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	David Howells <dhowells@redhat.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, 
-	Oliver Sang <oliver.sang@intel.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc63872f-3ad5-479e-bfff-8d62478e446e@linaro.org>
 
-On Tue, Feb 4, 2025 at 2:22=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wrot=
-e:
-> These numbers are visible in fstat() but hopefully nobody uses this
-> information and file_accessed/file_update_time are not that cheap.
+On Tue, Feb 04, 2025 at 10:20:51AM +0100, Krzysztof Kozlowski wrote:
+> On 03/02/2025 18:42, Dmitry Baryshkov wrote:
+> > On Mon, Feb 03, 2025 at 06:29:18PM +0100, Krzysztof Kozlowski wrote:
+> >> PHY_CMN_CLK_CFG0 register is updated by the PHY driver and by two
+> >> divider clocks from Common Clock Framework:
+> >> devm_clk_hw_register_divider_parent_hw().  Concurrent access by the
+> >> clocks side is protected with spinlock, however driver's side in
+> >> restoring state is not.  Restoring state is called from
+> >> msm_dsi_phy_enable(), so there could be a path leading to concurrent and
+> >> conflicting updates with clock framework.
+> >>
+> >> Add missing lock usage on the PHY driver side, encapsulated in its own
+> >> function so the code will be still readable.
+> >>
+> >> Fixes: 1ef7c99d145c ("drm/msm/dsi: add support for 7nm DSI PHY/PLL")
+> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >> ---
+> >>  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 13 +++++++++++--
+> >>  1 file changed, 11 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+> >> index 031446c87daec0af3f81df324158311f5a80014e..c164f845653816291ad96c863257f75462ef58e7 100644
+> >> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+> >> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+> >> @@ -372,6 +372,15 @@ static void dsi_pll_enable_pll_bias(struct dsi_pll_7nm *pll)
+> >>  	ndelay(250);
+> >>  }
+> >>  
+> >> +static void dsi_pll_cmn_clk_cfg0_write(struct dsi_pll_7nm *pll, u32 val)
+> >> +{
+> >> +	unsigned long flags;
+> >> +
+> >> +	spin_lock_irqsave(&pll->postdiv_lock, flags);
+> >> +	writel(val, pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG0);
+> >> +	spin_unlock_irqrestore(&pll->postdiv_lock, flags);
+> >> +}
+> >> +
+> >>  static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
+> >>  {
+> >>  	u32 data;
+> >> @@ -574,8 +583,8 @@ static int dsi_7nm_pll_restore_state(struct msm_dsi_phy *phy)
+> >>  	val |= cached->pll_out_div;
+> >>  	writel(val, pll_7nm->phy->pll_base + REG_DSI_7nm_PHY_PLL_PLL_OUTDIV_RATE);
+> >>  
+> >> -	writel(cached->bit_clk_div | (cached->pix_clk_div << 4),
+> >> -	       phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG0);
+> >> +	dsi_pll_cmn_clk_cfg0_write(pll_7nm,
+> >> +				   cached->bit_clk_div | (cached->pix_clk_div << 4));
+> > 
+> > Ideally this would be FIELD_PREP or a special function generated for you
+> > in the header.
+> 
+> There is no header. That's patch #1 and I do not see how changing this
+> to FIELDPREP is anyhow related to the actual problem being solved here.
 
-I'll note majority of the problem most likely stems from
-mnt_get_write_access rolling with:
-        preempt_disable();
-        mnt_inc_writers(mnt);
-        /*
-         * The store to mnt_inc_writers must be visible before we pass
-         * MNT_WRITE_HOLD loop below, so that the slowpath can see our
-         * incremented count after it has set MNT_WRITE_HOLD.
-         */
-        smp_mb();
+Ack, this just moves the code.
 
-Unfortunately as is the MNT_WRITE_HOLD thing gets set under a
-spinlock, so it may be this will be hard to rework in the same vein in
-which percpu rwsems are operating, but perhaps someone(tm) may take an
-honest shot?
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Would be of benefit everywhere and possibly obsolete this patch.
 
-> +       if (ret > 0 && !is_pipe_inode(file_inode(filp))) {
-
-Total nit in case there is a v2:
-
-ret is typically > 0 and most of the time this is going to be an
-anonymous pipe, so I would swap these conditions around.
-
-A not nit is that "is_pipe_inode" is imo misleading -- a named pipe
-inode is also a pipe inode. How about "is_anon_pipe"?
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
+-- 
+With best wishes
+Dmitry
