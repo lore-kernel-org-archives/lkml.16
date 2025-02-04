@@ -1,101 +1,98 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A0F2040BE;
-	Tue,  4 Feb 2025 19:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F1B4685
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738695673; cv=none; b=sPOk/sIx2nqCI+rGFVZVYUOUY3TQgN0sDapI7Q62LckiO61Fq2N9vV+/KrCWHVyfkKNy0/r7TM0YBZTE69NOgc0NDqLncP0rsY4m9zW6CtHU2EoO5NjwZn5rj+j0qH9JWgsIGJRol0NPbIfpPfHXtlj6UOjrEmsjZoCoA4tQ/+w=
+	t=1738695740; cv=none; b=u8YYOM7NTgV1cQxf/QdjXVTp01xjWtGXAgo/sxboy/KA+XlT7vxUU85ZqMSaX6s4O/36XLyR5WkWrjr4xWDp3rzDo1igQ1FQhNVV/U5KVAdAvYlN5dquSn3UiXJkgbmKNhUbNLurJAUPj2qDk5bsggg3gea1aUsRSO3jFhCtCpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738695673; c=relaxed/simple;
-	bh=L7vBV1JPoj8vYtTWSak3lwHAxIiQQEbX51Hefc8OtzA=;
-	h=From:To:Cc:Date:Message-Id:MIME-Version:Subject; b=e5KDec1/rMuc0KP9lf+G9yuiuYHITPmACF/uf5xepSHf48cy2QURodCKoMhDBjBghYPGqOXjOI5Tl/ttz7JjovTCKnbEALGUgIb82leb8/aGf3VgCyugo1NyH47N9Z3pwWBxYzQzGRmGgI98G8viSIVx1nMUQrZLi+2mZ5RZbRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=hWJOZL20; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+	s=arc-20240116; t=1738695740; c=relaxed/simple;
+	bh=pih8dX1QkofNv/xwIBaSWsmVMzDcnJG9l/i1Ocrd0qE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rlMhGq6eYrRGI1Il7u+db0ydB5twuBrAt+NpGqMHFzGSfXtZacT84ba6FRIRQQDFQ4XTGW/YOOQpNSRyYxcLrflHHUnrmBWm6dUSVDqDRvyIDXuDAonBdcmMt2nfkPOlFqMdWwOn7IoJgo5oxHTDOX6S5/3bt5VFmhGnaxjNydI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wTeCCjxi; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="hWJOZL20"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
-	:From:subject:date:message-id:reply-to;
-	bh=mielJIRelVHU6ChF+oGw8yNzaNbjHGCOHmtP7wdOr6k=; b=hWJOZL20ZfLye+e+9n2TU/DpU9
-	ea0oUFdebGacU61HA662BCJwMqleM+OhG/c6IS7x4u8MypTaemNgqmDWYzRKKyP8422/mPQG7Pt5a
-	6QeglHa2aWUwOlOnOTsfvVTtoJG/2gxCFDT3G/iZ80Gy4pbLWrP2vhflV6yqvlD8M7Y4=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:33036 helo=pettiford.lan)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1tfOAQ-000145-Gv; Tue, 04 Feb 2025 14:01:05 -0500
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Alistair Francis <alistair@alistair23.me>,
-	Maxime Ripard <mripard@kernel.org>,
-	=?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Cc: hugo@hugovil.com,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	stable@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Date: Tue,  4 Feb 2025 14:01:00 -0500
-Message-Id: <20250204190100.2210863-1-hugo@hugovil.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wTeCCjxi"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d04e5bd797so22955ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:02:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738695738; x=1739300538; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pih8dX1QkofNv/xwIBaSWsmVMzDcnJG9l/i1Ocrd0qE=;
+        b=wTeCCjxitXd2zKWQ6Hi40u/YT1nfRVtLvmVvLxqEytpsnT31ADTThBnU/H4DDaCl1x
+         QQrMVpEVr/oXzQOYjNFZCXou1f+M8/5yZCcEJi66KnLO7nWRjE1PFZxPcxNS94l9eKC2
+         Vm+gPjKRjmZSK0v+kQDjbXcYdlOgiZ5ZzR0gj+ylVDZN2XYQjXqDci1LC4NXK7THM47V
+         0eYbnDRnc/LPvA/eJPcODqo77PjRc3n8EnVLo6uI9ORUbHDLCs6/DmEfV/wcrmgQukEz
+         oqAidwfd3SzRdcPsW/gLNR0kaXaJKmrVc9wWLTeQOctNGMBKYY6S8FtMkI4LGVrOQ/nG
+         8Ieg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738695738; x=1739300538;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pih8dX1QkofNv/xwIBaSWsmVMzDcnJG9l/i1Ocrd0qE=;
+        b=N7NdIKIfTH5exsmE2XWXf/l911AcwAav7lqi9fXootNHxw+wh0T/o/80fj5yb9cmPK
+         rBXl4o/NYOWJMmirzMUFSOPU1vILr+Qj4dTe46pyIanUBFCyy1IRi61pH6dM1TUn2jp6
+         e9AJk58TU7EdDR4+60q2yj+kP0FlpUdTMF/yOVUJeOU9cM3/cm3U9K6zMAvNSnwfmw5g
+         ShvlajLlWsMmVonjtj54nU4fHrroRL3UpWOyJ7Q5KPjXqY+BNId/h/Rj3x4f5QIBjNXc
+         GG5EZr4vW1yLS++vHClV11YJQ+QDa/vqmQnxMO/qo8rZGFeZLh6GMsZNUAPIHPVRNfuW
+         6Fvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXD8LDEb6mo6a4HQ97jXHUYLcuNyCu5Vs7FQZ3e+E2PGblCzUACNgC6ThUMbgNh5bAMtAsE8dEjDYb7wJg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ+LymY031d96Sl4CDgi+ZTaXDV1W+ZFAPG6i0/SBCbwBoy3h6
+	HDXZJ5wtaNNzMY7NI0GwjBAPUFDgeeN1vf8PZky/wkQIpsHV/cxkHcr1zPmM5aKs3IQ3hkBstQ/
+	Vg8UzPBkr07tZNaDop0Y0Y4LBlyBPGL2EHRE3
+X-Gm-Gg: ASbGncuIX6zkoUtp+nGytOaAKB3u4lue+6RWNfzbLu/F/IqC0reJtNR9+yen4uNgwlq
+	OE33Arunx0BC7eCqARqqKZmyHXDhTW/TTv8Ij0dVIKyJ0B5pFOzrzfzCAE6J5vOAHM392rNXHZx
+	J74ftiV7+wulxuYoleQROayWM=
+X-Google-Smtp-Source: AGHT+IEmHznl7Ik9Amt2S7g3PVA1k3F+CkuI8zD5o1s+dAxpBVFkkmFeRjysvFVzVsPvmCTyCe22Q+d9Jdu7Cu59sAw=
+X-Received: by 2002:a05:6e02:1348:b0:3d0:bd4:e46e with SMTP id
+ e9e14a558f8ab-3d03fc63026mr4230185ab.22.1738695737640; Tue, 04 Feb 2025
+ 11:02:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-Subject: [PATCH] Input: cyttsp5 - ensure minimum reset pulse width
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+References: <20250203230150.106823-1-irogers@google.com> <22469f1ace8127423152c6085f390c80a9faee3c.camel@intel.com>
+In-Reply-To: <22469f1ace8127423152c6085f390c80a9faee3c.camel@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Feb 2025 11:02:06 -0800
+X-Gm-Features: AWEUYZliUmqeTijL8sAr7rN4aziPfFRWAaOeCitnUkTS0idWPst1Nk1hVcwKDrY
+Message-ID: <CAP-5=fW+4AmPj5gfxkPo1Anyqd+NwrRs1HOUwWEdwjBhONA3_Q@mail.gmail.com>
+Subject: Re: [PATCH v3 00/23] Intel vendor events and TMA 5.01 metrics
+To: "Falcon, Thomas" <thomas.falcon@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>, 
+	"Taylor, Perry" <perry.taylor@intel.com>
+Cc: "Baker, Edward" <edward.baker@intel.com>, 
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"mpetlan@redhat.com" <mpetlan@redhat.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, 
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "Alt, Samantha" <samantha.alt@intel.com>, 
+	"mark.rutland@arm.com" <mark.rutland@arm.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
+	"acme@kernel.org" <acme@kernel.org>, "afaerber@suse.de" <afaerber@suse.de>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On Tue, Feb 4, 2025 at 10:44=E2=80=AFAM Falcon, Thomas <thomas.falcon@intel=
+.com> wrote:
+[snip]
+> Hi, still seeing some errors in the all metrics test on Alderlake, Kan
+> says that TSC is not a core pmu event:
 
-The current reset pulse width is measured to be 5us on a
-Renesas RZ/G2L SOM. The manufacturer's minimum reset pulse width is
-specified as 10us.
+Thanks Thomas,
 
-Extend reset pulse width to make sure it is long enough on all platforms.
+the tsc event is on the msr PMU and needs special handing in the
+conversion of the metrics. We've switched to a new source for the
+metrics hence encountering what should be teething problem. I'll add a
+fix in v4.
 
-Also reword confusing comments about reset pin assertion.
-
-Fixes: 5b0c03e24a06 ("Input: Add driver for Cypress Generation 5 touchscreen")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
----
- drivers/input/touchscreen/cyttsp5.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/input/touchscreen/cyttsp5.c b/drivers/input/touchscreen/cyttsp5.c
-index eafe5a9b8964..bb09e84d0e92 100644
---- a/drivers/input/touchscreen/cyttsp5.c
-+++ b/drivers/input/touchscreen/cyttsp5.c
-@@ -870,13 +870,16 @@ static int cyttsp5_probe(struct device *dev, struct regmap *regmap, int irq,
- 	ts->input->phys = ts->phys;
- 	input_set_drvdata(ts->input, ts);
- 
--	/* Reset the gpio to be in a reset state */
-+	/* Assert gpio to be in a reset state */
- 	ts->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
- 	if (IS_ERR(ts->reset_gpio)) {
- 		error = PTR_ERR(ts->reset_gpio);
- 		dev_err(dev, "Failed to request reset gpio, error %d\n", error);
- 		return error;
- 	}
-+
-+	fsleep(1000); /* Ensure long-enough reset pulse (minimum 10us). */
-+
- 	gpiod_set_value_cansleep(ts->reset_gpio, 0);
- 
- 	/* Need a delay to have device up */
-
-base-commit: 0de63bb7d91975e73338300a57c54b93d3cc151c
--- 
-2.39.5
-
+Ian
