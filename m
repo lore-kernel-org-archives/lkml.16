@@ -1,202 +1,227 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2085.outbound.protection.outlook.com [40.107.212.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7542063E1
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 07:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738655911; cv=none; b=Kj9rZMiOtRs8pgF93bs1ZJExupkvgmGkbV/0Sl17SAOSd+fxsQUXmLo0zAphrnqAImkvkNLR8tsVQKhTSP5KqNRgE6Fgjfy44yFMhiyhjCzF5YBxJHESuZjr3LeldF98P3v/q8zzAXFh1DeKWs8ev9XFc8eLm648rUosBhgQuak=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738655911; c=relaxed/simple;
-	bh=WpVGtnVFRTc6n58BBzvAawZURCR8NYw/GenB/8vqGss=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ryNFWBK5ovhWT1w1TjFIZWTw0875Ou6NsFgRh3V78t/HVe5TQH6eiPGA5xo+gATacnsOSaULCIBz6VTHWH61lAuPcyXozSC+2Y3OxSk41T2uvjYykNDGpb/nt/p1tptVuSns1Q2ekWyx0Mq/jk8nCt8ZwxBNKBy3sZftidHcwDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WyvJJIUx; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14299205E3B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 07:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738655960; cv=fail; b=pdhl8mnhyX5ciBfYM2g1fQWlgPuAJrfCdnNRH1U2PGFCJSRBTxOfBu6+Mws86es7fkSaOs4PqAr304hA31pb7gljoOylGsqQsxdb7b3rBgw5smLbjOEV0q5sLaDIQcKb7huu6UrGA6nc9n59Kh8iHrHhHvQu3WCW0MvqUIWdSzE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738655960; c=relaxed/simple;
+	bh=G68ZtSvckY32vEbhkDbe7r2ldWbHRIuIxeqjKjtvU8o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=H9t8QlZIKqE6FO2sSQTuzwGcnN6+jnC26KC4mh1QP57bYA28WYmRcuRWGx9L3EAEs+UQ8hG0suw7nmrfzCh1qO7TbVArUtZxYFGbCoRYTjrKD5iBgyO7ntrrYqP4k7TUFp0yqm0K8S8zxuUOQEA2m1P1TDwSsrxJ4YQJMYc1CZg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kAm0HRrr; arc=fail smtp.client-ip=40.107.212.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WyvJJIUx"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-467a6ecaa54so40241161cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 23:58:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738655908; x=1739260708; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XiXrPR2xXfkTqljxu4z94L8Ip1ipN2GMIvZnYSax9qw=;
-        b=WyvJJIUxEs85gs97lkrBmSZqmNLZqhHimqjjxo5Mp0yMynnvowdKkUWgooFQ1rcg9j
-         nImORSvkE6X4rI7YHCAF/Sh1hTMhTxdrtAvGb4tk932aH980qAzyy9sF/Lk14+ryT86F
-         v4lHlwZmQ/Y/TA4fvdWSPl3m8CLXuaFJDlrPRqjMcykXvhvRe3asjLCgElfBlobQuJGy
-         6smvRzLu/cn8FxRGZm89WUI66663REP65jYPFKmYiEeZC8mGiW0qJpYoUkcbQosYbmHr
-         leDgU/eADVoSX2rw9Q057DcsB1dqy9ZBhpsbJYkGXiQgq42oPWIZR3IZ9jkanVpj9C1p
-         2qCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738655908; x=1739260708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XiXrPR2xXfkTqljxu4z94L8Ip1ipN2GMIvZnYSax9qw=;
-        b=UYDU37/xI9wpt6CHX6mtYD6ziBRFPv1AQrZxYlFke5Prxqgn0z2qjjsRRIuFjSqyQd
-         0GYXYJOGwGeEZJprzVSRibNCj23b2XIRXFvlxeVVEqI53h4HvbuaTT9Q+PcsRd9Agm4m
-         tHmktNle8MAHKgASxK2C9LVV/utIkpXoCTS+Kk9AQL4xszbO4CUZBSQBZal/d3cvNc2/
-         0gi1goQA/dOOetWl24LNgMeiRh8jBMM59RGeUgsalZIo0xaViTtV0YS879EzjNA7+ipS
-         oWyCmE3abGBUG96+jxGXmXlxgtclnMMlFpK7aXcLlVshF7JZ0hqexSNOA053jzfgNgaN
-         frXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWA2PQ3eQ8atbwODib6wPA+A1wy7TEaD6x0ZWOhnaiWEdU6G8F/yBVZnPcAyZCe1uzIHEjaJYz4P4asp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6VVkBVAJXpl1dovDzNkcydGSfUqZWo6u4JGAxir9k/AXp4jcG
-	3qx5KsgdsiR6VMyk+G2mDmJ41E7sbK/A9ebRfvKL3KKPx9NZ/PwZPp5qI7IKuVmnQLLsVJyhr7X
-	AHU9xOcFdBZaTCuWXOwR1uJfkgjf0fyZNjY0F
-X-Gm-Gg: ASbGncv6u/SiqJT6bQ6gcURem8UnhwB/ZNtJWLo6tQb6e6AozaQ6P4aIJjFnihT7yrq
-	J92IceIkxET7F8Oq8BS/pSq2mtgyrb2b12QChOptrDNkdvwJexrI/Q0+awcYbnvbagW/9WGhr4w
-	==
-X-Google-Smtp-Source: AGHT+IHTIrAFs1xD38iTkLdSv6lbaUX6t3r909DZtF/mbm0wm+xk5lPFTbiwArxzHDHXRHsu2726slyElOb9NmzU9jA=
-X-Received: by 2002:ac8:5713:0:b0:466:886f:3774 with SMTP id
- d75a77b69052e-46fd09e28f1mr306933821cf.8.1738655907978; Mon, 03 Feb 2025
- 23:58:27 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kAm0HRrr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jgNN7kMMjG6OLSBKmLQhtRm4EtpKtcMZ8jkcQj1kq5eoOvH1KVGOfG6mT+u9TZ4vI0tipyoNSeFJ9pCMvb1RYQGsDWdM+YcBn2tLbL72BF1txSo51sQfxTa25baT7nGD5K2wvNIRdJcAu2hrqK+JwcCiXIGeRHnKtqhwzyunyu+bdNSlNd08N6D9N0p5avKWbPE4aa4cL9S96brd9crgaF5uLTFpw6si0LfRx+uI78k7g6z+LIutNVs24cDIMeVddCDUDGbEiI5YJQWxe54XrvcrhdunJ/cAI/3qClgC+unMj4SvlKTU90NbKDy+CkK4SK/pbEszIM4SC/1KG6DmJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WY+mdfwH95O3p9c7W7/fzWF3hH3iTl2gw68rIfGxY6A=;
+ b=Li9VRpW+njfCzyJUbgZkSBt2L657tc0YfFVO+Lb2EQrA2xZP4WWASQwu3Tb2n/jCNeGUO0VlRQPakaQftnsUJEnxs/KSiUg/GlnHxliUyPBnK8UkoCBH/6gAXNb67m5rng3Ec2MRcwbwcNxGrsm4pDZjv13CQTAe9Z5NzHoabV/BOknqx+Aca71JcgF+48Ms/GZekbJZ4L0doD4ZZrtYyF+SKn6ZcpubhQUFGcVW8Wj6qrDeZnIfVfgrQtVFib6UjGn0iDVRGETHkPWsOxyGNifjlkcXalmVKkDhFHdFlZQJI6mT/3GJFgcqwaBbGGWqaMOnnDCCHQDagJTlRFOxpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WY+mdfwH95O3p9c7W7/fzWF3hH3iTl2gw68rIfGxY6A=;
+ b=kAm0HRrrOIhuhxdhb8cu/4F34m1zkK5UlVkkmHw+WwBzRfMuBCHJ0BxdNj5va0ST9UGO1MgffL++J9SlJKsc+Ip5GZFRz+piCUBu3NrpyGpK/Zqk05LFPPparjT+mO6UkOfCCzcECY3U2F2OHqfPlnfbO3Xvpmhtyq/TEP40u/s=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by DS0PR12MB8270.namprd12.prod.outlook.com (2603:10b6:8:fe::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Tue, 4 Feb
+ 2025 07:59:14 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8398.021; Tue, 4 Feb 2025
+ 07:59:14 +0000
+Message-ID: <bea1a3a0-c6d4-4941-9dd9-73f0756ef17b@amd.com>
+Date: Tue, 4 Feb 2025 08:59:08 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/ttm: use ttm_resource_unevictable() to replace
+ pin_count and swapped
+To: Zhaoyu Liu <liuzhaoyu.zackary@bytedance.com>, ray.huang@amd.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250126093256.GA688734@bytedance>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20250126093256.GA688734@bytedance>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR5P281CA0042.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f3::15) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250107042202.2554063-1-suleiman@google.com> <20250107042202.2554063-2-suleiman@google.com>
- <Z4gtb-Z2GpbEkAsQ@google.com> <CABCjUKDU4b5QodgT=tSgrV-fb_qnksmSxhMK3gNrUGsT9xeitg@mail.gmail.com>
- <Z4qK4B6taSoZTJMp@google.com> <CABCjUKDDDhXx8mSRKHCa34JjSX1nfM5WMG-UrPu9fjei6gkUJA@mail.gmail.com>
- <Z5AB-6bLRNLle27G@google.com>
-In-Reply-To: <Z5AB-6bLRNLle27G@google.com>
-From: Suleiman Souhlal <suleiman@google.com>
-Date: Tue, 4 Feb 2025 16:58:16 +0900
-X-Gm-Features: AWEUYZm23hx-Dkt13hsxp221MHOD76k5IiH6BRUJp63z5aATuOuh9Zi36Ky2saY
-Message-ID: <CABCjUKB-4kvAg5U0D2O2aiTgfHnYx5qBTBEJJsK7edZY5g5eTQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] kvm: Introduce kvm_total_suspend_ns().
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Chao Gao <chao.gao@intel.com>, 
-	David Woodhouse <dwmw2@infradead.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ssouhlal@freebsd.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DS0PR12MB8270:EE_
+X-MS-Office365-Filtering-Correlation-Id: 35e1d743-7035-4156-d4d7-08dd44f1d0e3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S3JJRkxhaWpKQnJwaHltNjNhZU9VOGVMWXNRSkxpZzR1WjZYM2tjaTdkd2tw?=
+ =?utf-8?B?YnI2MU42b3FnaXhTMmFJMkFuc3ZuclY2bTBXUk1vVXJYMzNLbi90SFhJSjlo?=
+ =?utf-8?B?OVIyRU5HdDZicGdsdm94Y1J4cTRVeThrTGZ2U0pRazE4b1VYeEZ3N0FPOGxB?=
+ =?utf-8?B?b1l6T3RMbWdsSndJb0M1Tk9lc1RoNm15TXVadndNMDRtaHViVUtmTjVYTExz?=
+ =?utf-8?B?cUtsckdBY2JCcGIzanJNZmZPcURkZ1NkUUhFTnlPQmpGQW11MjkybXgvN0VY?=
+ =?utf-8?B?VmcrODdoWmRTNUJnVzdLRTIwMkgyUUtlbk52cEZ2dkVjZlJIbEc5L0NzdnBi?=
+ =?utf-8?B?d2xuRW1zRkRGWnpEcGh6Wld4aFBEUUxWQmZTcjVmUElvd2pGWjNYUU5EeGRN?=
+ =?utf-8?B?Mk5GaGw0Y3Jxc3BubUNNbnMxU1VpL3hqaGZDbVdQMzgwWmo4UFJDNXpaN0Uy?=
+ =?utf-8?B?d0lXc3ZrYnZhaUdNMlQyOGkrWWw1ZElLUSsvdDZzT1NJWE5CSGQwZjNlV09R?=
+ =?utf-8?B?TEQyRDcwY0R6OVFJR0d6dVZ2bTJEU1JDam40VUlHKzFDaTZuYjlwcnlJb3A3?=
+ =?utf-8?B?Wk9ldlBvZmNZNGJ6U29abkpQazlqNVV4Zm1KRWtmVlBZVmJmRXdDU1gwSFRK?=
+ =?utf-8?B?WGpKbVovcjIxQVFpRnp0ekY2cFE3UlRJQ0hhd2RXcVk0ZW1xb0NoK1o2aGsz?=
+ =?utf-8?B?R2ZRc3ljQTRLMGVmMmN5S2U0SzRUSFNmQnNoajl3QTFEcUx6U0VlcWxtMFh4?=
+ =?utf-8?B?emNZMTRsQlQyamc3NGlka2d4b3dVMjdTNHlreExRdTYyYzRveHNVT2FsVmwv?=
+ =?utf-8?B?K0hOUmtJUW1MdTYzTzRDYXhrVFFsYjloR1VxZ0lyeldWV2Y1L2FLSmdjU2ND?=
+ =?utf-8?B?SkRLUU5NN09zNjNEVm1sZ1ZUUWVPVGw5Ukc1ZVBxZ3JUeCtBK0lBcGUwZ1FR?=
+ =?utf-8?B?azI3dlovb0tuNk9Ia1Z4cnpGM2JQT0NVR1NzVlN2ZW5pVnl0d3NpMmFyNUp2?=
+ =?utf-8?B?VWFTcFg2b1JMT2txN0hiQ0M2R0QveHdpZUk2eWxtYXBTR3l1dUkxQ1VmU3pD?=
+ =?utf-8?B?TXpXUFpRQjNTcXMzSFdiYlFzd3BabnV4TmdjVkNjUmNnaUtFM1BlbW5CT1N5?=
+ =?utf-8?B?VldVaTg2Y0dlZkh6UXAwQlRseUhRTHhQeERnRjJPUldJNnV0cmdRb3l3WGhm?=
+ =?utf-8?B?b2ZLWWVYbGl2UlFMei9TT0FQZC9GODZPMEpHTzFOZjh0VDhGNEhlaHQvU2x4?=
+ =?utf-8?B?cUhNd3p5enpFeTZyRldISGowZFROSHJIS1lzRitISzEyTFpTT1BJdFVvUGIw?=
+ =?utf-8?B?T2NOL210NHBlOUpJTlV6QkZtWUljQ1pZZ1pXYmV2YVBqaHA1SFVvQmY1ekw5?=
+ =?utf-8?B?ZG1JeGZtM2xYbXpObGpjMGpLRm15OUpCTVFvMENWVklqeERGRzBMbEg1UEVw?=
+ =?utf-8?B?SU05Q2lKWDNONDBodGdFdlUrdmdjSHZucURvTGNlRzFQdnBZTWdaUW5nQkFC?=
+ =?utf-8?B?cGh4cDg4ajFpQ05ld0JwNEpjbEtnMWFaMzg0blhBUktYYlhvN1h4eTlWb2U0?=
+ =?utf-8?B?VGFvQ24yVDVIaTVJcGp2clRjc3RCdFEwTFFUSTJndUxlaHo2MkVPa21sOXJR?=
+ =?utf-8?B?b0lRYnFZcnBaYS9JTlZ5d2JPd3M5SFhYNkZTSzJwVk4rY09vblU1UHhHaTJG?=
+ =?utf-8?B?WE9jRDZhQ0x4N0xWUlpwVEh2UVVRTCtnNFA3bWFXQ2VoUXZKRzl6SWd2aUEy?=
+ =?utf-8?B?bFd0bWxINDBuN1hWVWhPZUpoOEZoa2pxNVRvN2dGY1YwTTNjY1R2dUZBeWll?=
+ =?utf-8?B?TGZMclFqMEh1S2N6RXNlUmkwRWNZN3pQV2J0aXdDMlFnNWhrR0VIWjBWNmg3?=
+ =?utf-8?Q?HkkM1F+JwXj69?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?V0RlTzZONncyOW9QQVVvTkxMSThwWjZNUGJ2d1Q5VWN6QmdYWTBVckZYcnh6?=
+ =?utf-8?B?UmpQNkt2d1o2bVlHMk9jUG5HN0xKc3N2MEp0VndPWTRBNkJzSzZUaDYrNCs2?=
+ =?utf-8?B?aFRiUHJ3S29zZWU3NnB1VjBET29vMWpoYUNyTG5GRXFZSEY2bGU1dU81cTJK?=
+ =?utf-8?B?dC9lYnVwYWZEWVYySW80TnY0amR6YjdoWHM2bk95UzFlQS8ramovQnYrb2xN?=
+ =?utf-8?B?bnlIM2NjWFJTM3dqZ2NhZEdtaDhXUFBrV09nQWp1Q0NNSEU0azE4WXJwV2NF?=
+ =?utf-8?B?amZmZ1hYVXpxcURvVGZCNDZSMmV2RWZJT0lwVGthUWtaNGZodnN1cUpCbTNV?=
+ =?utf-8?B?MkhLYnJqdFQ5WmdpTkdEMXprWHpxZEE2Rit6OTN0OWVwRFF1ZlJId1NqK3l3?=
+ =?utf-8?B?VGlBUXVKQWNTMnVSVk43dlkyVU5yTjFOZzRmTVM2dWZ6Q2REaFg2MzFldDJw?=
+ =?utf-8?B?UVV2WTZIMk44VlJyMHNZeC9aT3d6Szd5d0FySFgyNE1GRHdPK1EzdHJkdk16?=
+ =?utf-8?B?d2U2b1pWT3Y0QlhLczRFaDRFL2FEZ21RTjNiTmpxMFBvVzRHRHJuSlhrTkto?=
+ =?utf-8?B?azRGOWpla0VXQitldUtQL0drcmt0b0dXT1RHbi9LWTFHejJQS2JXOERrdzF1?=
+ =?utf-8?B?K2NWeitSRTY5Qm9oV0FLaU1MT2prWFp5a0pEUThpeC9iNHIxVm5xSTl6NnVy?=
+ =?utf-8?B?L0NpbW82dGg0TFFaTGZKd1ZkeDlzdjBZK0JBZStDdnFyQ3g5bXdieEdWNllX?=
+ =?utf-8?B?OFFLK2JyUisxQUZtYnVKUDdNc2IvWForUVQyN3ppWUlia284bURRVlpkUldm?=
+ =?utf-8?B?OWo4L2VNT3c4MmNTcThVd3pleTlaajdhM2xDUDdhZ0lkUDJLSTFnaDhmb2tU?=
+ =?utf-8?B?bU1YbTlzekJtSFF3TXIrUHZFY1RPcjNuMU1oaWN3THhrUkpiSjNiK1dDTlQv?=
+ =?utf-8?B?K3pXUlpTQk40KzhMUk9YZmgvalRwK3pab3djN0dKWnEvbDc2UWJueVR1eVFE?=
+ =?utf-8?B?NXlMeWxYVXBnOGNySmFsS2F5RWQxY3A2aEcwaVY3Z29yVzBhQ2RxOEQxQit6?=
+ =?utf-8?B?dThkK3hmZk1GL0NFaWZFa1hrVE5CNGZXbWZwN0x6b2JlTENRZWNrNnB4T2FL?=
+ =?utf-8?B?RWxhTXNDL2xOOTg0ZHRmazhzT2VFYmxSeG5QWUMwcGthUWMwaGpNc3pycGhS?=
+ =?utf-8?B?b1BCejVWWForT3RkWkRDRURlU3IvS0FtcWZSVnV3OUF2ZHBnWGhOdUlEQW5F?=
+ =?utf-8?B?ZWRYL3VpcFNKbG1sV0YyeTlaM0JVbzNvRWlVZXo1bDRWK0VoNHZXZHdMNXNv?=
+ =?utf-8?B?NDN6Q1k1TURnbUx1Z09FUDRWa1NPWkdBa3JuS3lFdExOcnZWYmJBTGp0Y2Q2?=
+ =?utf-8?B?UDM2dG82U1pmQXo0aHpieUFjVkZoMmdxeWhJaysyeGtQRUZiS2phcG9tajhq?=
+ =?utf-8?B?UUIwNmwxcGFMaFEveGxqb3VqZXVkcFUwMW05enE3bDdrMEVoY0lZcklhK0Z0?=
+ =?utf-8?B?WTdCTVJ1Q204MFQyMEJQTXFIL1BDZDFOQ3k0ZzRIVFcrYVY0YVFocTlUWTZI?=
+ =?utf-8?B?NDVDS0o0OXFIWlJTbHRyOG5QZ0UzdGZXaXNzZTN4TU5qUEF3TlFmZlJMZE5w?=
+ =?utf-8?B?YzZrQkFJQXhaVDBWMGZRRkVYS0hzMXZ3anFrK2xocmRSbEY2WjUzWEFqOTAv?=
+ =?utf-8?B?NnNORVk1dHA4cU50S3NrTmJjZ0pRb2M4OUtaeEcxNzJBcEppN21NTW9udzJI?=
+ =?utf-8?B?c01waFJNVHpMNVZvUXhUdVU2WXFmZC9reTNRbkZXamk1NkJzckdKVXVmckIz?=
+ =?utf-8?B?ZWpIYWpTcjBtcXJlWHVXRm9sTEM2ZXQxSnp1ZkFDZ2Q4dUdTSU9xTXdTVkZv?=
+ =?utf-8?B?QkZ3QXlrQUJNdEFUcU0yRW9Qa3MydmhpSnJEeTRPbmhmOTUyOTJmS0ZEaEtY?=
+ =?utf-8?B?Tk4wVjE2YmJNR3p1MG9CckcxLy9IVzN4ZkZSWFc5ZDVGRjZjblY3aFVXWkRG?=
+ =?utf-8?B?UXJzVkI4bUsydVIyY0xEUVJzaTR3WUgwSGNveDdxeC9oWnNyUzBzUk9PeTRn?=
+ =?utf-8?B?TUxRbHpGR2NHZWJtQUhhNUhYOVpmdTNPbkpzM3hYTEVYRnBvcUVmV3grKzcr?=
+ =?utf-8?Q?YKxFt11krpbRhkB2JoDu+D7AF?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35e1d743-7035-4156-d4d7-08dd44f1d0e3
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 07:59:14.0584
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Q9Y+fjFoxeGPC+o9/NOwZp285IQtCDMjKPWqKHfFYCwBzW5VBVczQ9LzBFExly5J
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8270
 
-On Wed, Jan 22, 2025 at 5:22=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
+Am 26.01.25 um 10:32 schrieb Zhaoyu Liu:
+> TTM always uses pin_count and ttm_resource_is_swapped() together to
+> determine whether a BO is unevictable.
+> Now use ttm_resource_unevictable() to replace them.
 >
-> On Tue, Jan 21, 2025, Suleiman Souhlal wrote:
-> > On Sat, Jan 18, 2025 at 1:52=E2=80=AFAM Sean Christopherson <seanjc@goo=
-gle.com> wrote:
-> > > In short, AFAICT the issues you are observing are mostly a problem wi=
-th kvmclock.
-> > > Or maybe it's the other way around and effectively freezing guest TSC=
- is super
-> > > problematic and fundamentally flawed.
-> > >
-> > > Regardless of which one is "broken", unconditionally accounting suspe=
-nd time to
-> > > steal_time will do the wrong thing when sched_clock=3Dtsc.  To furthe=
-r muddy the
-> > > waters, current Linux-as-a-guest on modern hardware will likely use c=
-locksource=3Dtsc,
-> > > but sched_clock=3Dkvmclock.  In that scenario, guest time doesn't adv=
-anced, but
-> > > guest scheduler time does.  Ugh.
-> > >
-> > > That particular wart can be avoided by having the guest use TSC for s=
-ched_clock[*],
-> > > e.g. so that at least the behavior of time is consistent.
-> > >
-> > > Hmm, if freezing guest time across suspend is indeed problematic, one=
- thought
-> > > would be to put the onus on the VMM/user to not advertise a "nonstop =
-TSC" if the
-> > > host may be suspending.  The Linux-as-a-guest would prefer kvmclock o=
-ver TSC for
-> > > both clocksource and sched_clock.
-> > >
-> > > [*] https://lore.kernel.org/all/Z4gqlbumOFPF_rxd@google.com
-> >
-> > I see what you're saying. Thanks for explaining.
-> >
-> > To complicate things further there are also different kinds of
-> > suspends. From what I've seen "shallow" (and/or "suspend-to-idle")
-> > suspends don't stop the CPU, at least on our machines, so the host TSC
-> > keeps ticking. On "deep" suspends, on the other hand, the TSC might go
-> > backwards.
->
-> Yeah, only S3 and lower will power down the CPU.  All bets are off if the=
- CPU
-> doesn't have a nonstop TSC, but that's not at all unique to suspend, e.g.=
- it's a
-> problem if the CPU goes idle, and so I think it's safe to only worry abou=
-t CPUs
-> with nonstop TSC.
->
-> > But I suppose if the guest uses kvmclock the behavior should be the
-> > same in either case.
-> >
-> > At least for our use case we would definitely want guest *wall* time
-> > to keep advancing, so we would still want to use kvmclock.
-> >
-> > Would accounting the suspend duration in steal time be acceptable if
-> > it was conditional on the guest using kvmclock?
-> > We would need a way for the host to be notified that the guest is
-> > indeed using it,
->
-> And not just using kvmclock, but specifically using for sched_clock.  E.g=
-. the
-> current behavior for most Linux guests on modern hardware is that they'll=
- use TSC
-> for clocksource, but kvmclock for sched_clock and wall clock.
->
-> > possibly by adding a new MSR to be written to in
-> > kvm_cs_enable().
->
-> I don't think that's a good way forward.  I expect kvmclock to be largely
-> deprecated (guest side) in favor of raw TSC (with hardware-provided scale=
-+offset),
-> at which point tying this to kvmclock puts us back at square one.
->
-> Given that s2idle and standby don't reset host TSC, I think the right way=
- to
-> handle this conundrum is to address the flaw that's noted in the "backwar=
-ds TSC"
-> logic, and adjust guest TSC to be fully up-to-date in the S3 (or lower) c=
-ase.
->
->          * ......................................  Unfortunately, we can'=
-t
->          * bring the TSCs fully up to date with real time, as we aren't y=
-et far
->          * enough into CPU bringup that we know how much real time has ac=
-tually
->          * elapsed; our helper function, ktime_get_boottime_ns() will be =
-using boot
->          * variables that haven't been updated yet.
->
-> I have no idea why commit 0dd6a6edb012 ("KVM: Dont mark TSC unstable due =
-to S4
-> suspend") hooked kvm_arch_enable_virtualization_cpu() instead of implemen=
-ting a
-> PM notifier, but I don't see anything that suggests it was deliberate, i.=
-e. that
-> KVm *needs* to effectively snapshot guest TSC when onlining CPUs.
->
-> If that wart is fixed, then both kvmclock and TSC will account host suspe=
-nd time,
-> and KVM can safely account the suspend time into steal time regardless of=
- which
-> clock(s) the guest is using.
+> Signed-off-by: Zhaoyu Liu <liuzhaoyu.zackary@bytedance.com>
 
-I tried your suggestion of moving this to a PM notifier and I found
-that it's possible for VCPUs to run after resume but before the PM
-notifier has been called, because the resume notifiers get called
-after tasks are unfrozen. Unfortunately that means that if we were to
-do that, guest TSCs could go backwards.
+Reviewed-by: Christian König <christian.koenig@amd.com>
 
-However, I think it should be possible to keep the existing backwards
-guest TSC prevention code but also use a notifier that further adjusts
-the guest TSCs to advance time on suspends where the TSC did go
-backwards. This would make both s2idle and deep suspends behave the
-same way.
+I will pick this up for drm-misc-next.
 
--- Suleiman
+> ---
+>   drivers/gpu/drm/ttm/ttm_resource.c | 15 ++++++++++-----
+>   1 file changed, 10 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/ttm/ttm_resource.c b/drivers/gpu/drm/ttm/ttm_resource.c
+> index cc29bbf3eabb..a8f9f7ed6c6e 100644
+> --- a/drivers/gpu/drm/ttm/ttm_resource.c
+> +++ b/drivers/gpu/drm/ttm/ttm_resource.c
+> @@ -252,11 +252,16 @@ static bool ttm_resource_is_swapped(struct ttm_resource *res, struct ttm_buffer_
+>   	return ttm_tt_is_swapped(bo->ttm);
+>   }
+>   
+> +static bool ttm_resource_unevictable(struct ttm_resource *res, struct ttm_buffer_object *bo)
+> +{
+> +	return bo->pin_count || ttm_resource_is_swapped(res, bo);
+> +}
+> +
+>   /* Add the resource to a bulk move if the BO is configured for it */
+>   void ttm_resource_add_bulk_move(struct ttm_resource *res,
+>   				struct ttm_buffer_object *bo)
+>   {
+> -	if (bo->bulk_move && !bo->pin_count && !ttm_resource_is_swapped(res, bo))
+> +	if (bo->bulk_move && !ttm_resource_unevictable(res, bo))
+>   		ttm_lru_bulk_move_add(bo->bulk_move, res);
+>   }
+>   
+> @@ -264,7 +269,7 @@ void ttm_resource_add_bulk_move(struct ttm_resource *res,
+>   void ttm_resource_del_bulk_move(struct ttm_resource *res,
+>   				struct ttm_buffer_object *bo)
+>   {
+> -	if (bo->bulk_move && !bo->pin_count && !ttm_resource_is_swapped(res, bo))
+> +	if (bo->bulk_move && !ttm_resource_unevictable(res, bo))
+>   		ttm_lru_bulk_move_del(bo->bulk_move, res);
+>   }
+>   
+> @@ -276,10 +281,10 @@ void ttm_resource_move_to_lru_tail(struct ttm_resource *res)
+>   
+>   	lockdep_assert_held(&bo->bdev->lru_lock);
+>   
+> -	if (bo->pin_count || ttm_resource_is_swapped(res, bo)) {
+> +	if (ttm_resource_unevictable(res, bo)) {
+>   		list_move_tail(&res->lru.link, &bdev->unevictable);
+>   
+> -	} else	if (bo->bulk_move) {
+> +	} else if (bo->bulk_move) {
+>   		struct ttm_lru_bulk_move_pos *pos =
+>   			ttm_lru_bulk_move_pos(bo->bulk_move, res);
+>   
+> @@ -318,7 +323,7 @@ void ttm_resource_init(struct ttm_buffer_object *bo,
+>   
+>   	man = ttm_manager_type(bo->bdev, place->mem_type);
+>   	spin_lock(&bo->bdev->lru_lock);
+> -	if (bo->pin_count || ttm_resource_is_swapped(res, bo))
+> +	if (ttm_resource_unevictable(res, bo))
+>   		list_add_tail(&res->lru.link, &bo->bdev->unevictable);
+>   	else
+>   		list_add_tail(&res->lru.link, &man->lru[bo->priority]);
+
