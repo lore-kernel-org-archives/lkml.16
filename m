@@ -1,162 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49AF2165F4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112A42163AF;
 	Tue,  4 Feb 2025 17:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738690613; cv=none; b=R4qwmHRSlbjGDeq33JDQamYokpvycGO/irhqSoIeK3sbPt3nJDK7/Q3ehHAvjw2HnqIOxZjimQQfWGwdvhF3AlLJME4gkaWJXqSyYReHCEdHKZtvCx7ZmfUOVhCy2vKgQZ5ES/NyY16n4eplzaY1pDZ9+TU3qg6dj/CzpYOAtNU=
+	t=1738690613; cv=none; b=nYwPN0rkF+86mlH+92CWhG6Q+p3NkG+APRDbpLQ2GsuyXeIU/S2LeHTIDUb3kgBq/3x9QIrSspEyzwsewXRNph0tp+DLhieUysFY64gHEJKDrQKMIMN0YE75BXdwLbUUVe8elniPKkrCF/vGf3l9uIr3e4qwQfovjSt0rpB96Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738690613; c=relaxed/simple;
-	bh=EUgvSoD6ZXvZMdQY8EXK092WIVXF++/3+F17U+GxOWU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CMuAB3lv3r3A7etTG7NFCKeO+cQEnMC0s/qAu7RUahnANh505NaYFHGKjQ7FjWxQKsuLbsKNIr3EzzbRJLW+jonW47Ny5aXN1jb4bAZ7a71D7vpRDNGIPTmcn2V9YB/lG86DyfAzv/akBff/rp0OoSFspk+yJMNgzgvbygnX0vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jN/G8y/b; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=pIXT1Hs1aUtzZe3Mmj8B+f4h66p4s3gODDX3GQGG9jk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YjfRffhlrm+/jTZdJsT5vWcxIP3e6AiXlSEPGsGvcXzEMJ6xqMtE0r0LMELcAQRDcGz39psmVwHJ/aEbNIgP9w/7rmQV+K8pLMH9fGbcajKt/TrUApkNl44y6874GWCY6Hi2XF5Aj9R8GXqigkC3fqRZx4TUqLMr/1AXXOyrfE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JqeLuFId; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jN/G8y/b"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JqeLuFId"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1738690612; x=1770226612;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=EUgvSoD6ZXvZMdQY8EXK092WIVXF++/3+F17U+GxOWU=;
-  b=jN/G8y/byn5XTgdkIACw6XW7C1VohBQMyPrFtalPd9T9ZlGzT/yUb7TN
-   3E46uSHOlZxq0AEg8aAQjd6g4ctgIlSVqm9PmU1MAoDYUds6RlFKhgyc6
-   Ow/TlbC4p61EYVro48hfLmZKMbf3yurlo/FW/zNYno/IKe1TWp2j7Yq+E
-   kLXbd6jOgTOK1Y134xkVQga8EM5TnW088inVReoH9F3DehcD5yeH+XXfA
-   XqAvK0ilUcadBDq/DU2AzZG0dKG15CYtsV4stA7EVpG7KNbBoHUPfFS0d
-   x0AgB/Resr/q0BoQt8CYyhP4KP+AvWgeVyMbUvz1e6ZiKOC9CiulCtOo0
-   g==;
-X-CSE-ConnectionGUID: yQMj6mn5T9GPqqzzU9jkaQ==
-X-CSE-MsgGUID: gpAF3kYNRJ2ZJgmKgl0Pbw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38930994"
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pIXT1Hs1aUtzZe3Mmj8B+f4h66p4s3gODDX3GQGG9jk=;
+  b=JqeLuFIdWOkz9cJWnwzAp6+wUvF8Ptcxk8v0yd4nzz4In2Ema1YQudwX
+   AXJd71UoeRHkdGhY1kIl7XGUFj9q5GMoJNGUazp1NkofHJ3wPE6kzsoE7
+   zIf0CN9pedv4Ph/pY1ObEE/f/ShikONKandcqjZGz15VoXndfQ14k+Juq
+   V31QHYT2Pl8gy7L+fJ4AI7m3eKVJaIcvoL1AMZofyh75rTF4lB3wiPjQ2
+   6ylztqTtmREcCkRdvRqGNyKJycsf+UczP8ZIiHSktHxEdJFzUIjCvVR2l
+   Xm+dGKtkKaP80FbOTgycoG9P03+cnxbpwP7z9qdUMFenJv20XeE9+Aj19
+   Q==;
+X-CSE-ConnectionGUID: yeIKk6AZSz+hacf7Lj7qHA==
+X-CSE-MsgGUID: sIYvCpe4QVmlRDRTgJ2HTA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="64583761"
 X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="38930994"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:36:51 -0800
-X-CSE-ConnectionGUID: P6du7V6VScafjuMIXvnbWA==
-X-CSE-MsgGUID: W7s9nIAMS+GBPujRL+zY2g==
+   d="scan'208";a="64583761"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:36:51 -0800
+X-CSE-ConnectionGUID: wCA9AbmgQMu5wOszPK0wRg==
+X-CSE-MsgGUID: fMhha4lFQUKbtEVcr0PRXQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147866889"
-Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.244.61])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:36:39 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: luto@kernel.org,
-	xin@zytor.com,
-	kirill.shutemov@linux.intel.com,
-	palmer@dabbelt.com,
-	tj@kernel.org,
-	andreyknvl@gmail.com,
-	brgerst@gmail.com,
-	ardb@kernel.org,
-	dave.hansen@linux.intel.com,
-	jgross@suse.com,
-	will@kernel.org,
-	akpm@linux-foundation.org,
-	arnd@arndb.de,
-	corbet@lwn.net,
-	maciej.wieczor-retman@intel.com,
-	dvyukov@google.com,
-	richard.weiyang@gmail.com,
-	ytcoode@gmail.com,
-	tglx@linutronix.de,
-	hpa@zytor.com,
-	seanjc@google.com,
-	paul.walmsley@sifive.com,
-	aou@eecs.berkeley.edu,
-	justinstitt@google.com,
-	jason.andryuk@amd.com,
-	glider@google.com,
-	ubizjak@gmail.com,
-	jannh@google.com,
-	bhe@redhat.com,
-	vincenzo.frascino@arm.com,
-	rafael.j.wysocki@intel.com,
-	ndesaulniers@google.com,
-	mingo@redhat.com,
-	catalin.marinas@arm.com,
-	junichi.nomura@nec.com,
-	nathan@kernel.org,
-	ryabinin.a.a@gmail.com,
-	dennis@kernel.org,
-	bp@alien8.de,
-	kevinloughlin@google.com,
-	morbo@google.com,
-	dan.j.williams@intel.com,
-	julian.stecklina@cyberus-technology.de,
-	peterz@infradead.org,
-	cl@linux.com,
-	kees@kernel.org
-Cc: kasan-dev@googlegroups.com,
-	x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	llvm@lists.linux.dev,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 11/15] x86: LAM initialization
-Date: Tue,  4 Feb 2025 18:33:52 +0100
-Message-ID: <01104816cdd0d430ac843847a8056d07b8770be0.1738686764.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
-References: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="110494598"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:36:45 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tfMqn-00000008DQ7-3FFR;
+	Tue, 04 Feb 2025 19:36:41 +0200
+Date: Tue, 4 Feb 2025 19:36:41 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 12/17] ACPI: property: Add support for nargs_prop
+ in acpi_fwnode_get_reference_args()
+Message-ID: <Z6JQKQnBeB2Z9XQY@smile.fi.intel.com>
+References: <20250203084906.681418-1-apatel@ventanamicro.com>
+ <20250203084906.681418-13-apatel@ventanamicro.com>
+ <Z6CPvteWv89Xo70j@smile.fi.intel.com>
+ <20250203105840.GH3713119@black.fi.intel.com>
+ <Z6C1cg3cqik8ZxvU@sunil-laptop>
+ <20250203123658.GI3713119@black.fi.intel.com>
+ <Z6DJ9kmNx4JoqRg-@sunil-laptop>
+ <Z6DVDicVEgmSyGcT@smile.fi.intel.com>
+ <Z6DVn8u-2EwMaMR4@smile.fi.intel.com>
+ <Z6JHG-nqFWDv-jpE@sunil-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6JHG-nqFWDv-jpE@sunil-laptop>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-To make use of KASAN's tag based mode on x86 Linear Address Masking
-(LAM) needs to be enabled. To do that the 28th bit in CR4 needs to be
-set.
+On Tue, Feb 04, 2025 at 10:28:03PM +0530, Sunil V L wrote:
+> On Mon, Feb 03, 2025 at 04:41:35PM +0200, Andy Shevchenko wrote:
+> > > Ah, interesting. The original change that introduces this 3e3119d3088f ("device
+> > > property: Introduce fwnode_property_get_reference_args") hadn't been reviewed
+> > > by Mika or me, that's probably why we are not familiar with.
+> > > 
+> > > Since interface is already established, I would recommend to fix
+> > > this as proposed, i.e. with a new API. This is the way to match
+> > > how OF seems to be doing.
+> > 
+> > For the reference see implementation of of_fwnode_get_reference_args()
+> > 
+> > 	if (nargs_prop)
+> > 		ret = of_parse_phandle_with_args(to_of_node(fwnode), prop,
+> > 						 nargs_prop, index, &of_args);
+> > 	else
+> > 		ret = of_parse_phandle_with_fixed_args(to_of_node(fwnode), prop,
+> > 						       nargs, index, &of_args);
+> > 
+> > 
+> Thanks!. I can do similar. But the change in
+> __acpi_node_get_property_reference() will be still required since that
+> is the place where the actual decoding of AML object is done. That would
+> be similar to __of_parse_phandle_with_args() as well. Hope that is fine.
 
-Set the bit in early memory initialization.
+You don't need that. Split the core part to local static helper that
+takes whatever it needs, but being not visible to anyone outside
+drivers/acpi/property.c. And build the current helper and new visible one
+on the basis of this split. For better reviewing and maintaining you can
+split this approach to two patches: 1) preparatory by splitting a new
+local helper; 2) the introduction of a new API.
 
-When launching secondary CPUs the LAM bit gets lost. To avoid this it
-needs to get added in a mask in head_64.S. The bit mask permits some
-bits of CR4 to pass from the primary CPU to the secondary CPUs without
-being cleared.
 
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
- arch/x86/kernel/head_64.S | 3 +++
- arch/x86/mm/init.c        | 3 +++
- 2 files changed, 6 insertions(+)
-
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 16752b8dfa89..7cdafcedbc70 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -199,6 +199,9 @@ SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
- 	 *  there will be no global TLB entries after the execution."
- 	 */
- 	movl	$(X86_CR4_PAE | X86_CR4_LA57), %edx
-+#ifdef CONFIG_ADDRESS_MASKING
-+	orl	$X86_CR4_LAM_SUP, %edx
-+#endif
- #ifdef CONFIG_X86_MCE
- 	/*
- 	 * Preserve CR4.MCE if the kernel will enable #MC support.
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index eb503f53c319..4dc3679fedd1 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -756,6 +756,9 @@ void __init init_mem_mapping(void)
- 	probe_page_size_mask();
- 	setup_pcid();
- 
-+	if (boot_cpu_has(X86_FEATURE_LAM) && IS_ENABLED(CONFIG_KASAN_SW_TAGS))
-+		cr4_set_bits_and_update_boot(X86_CR4_LAM_SUP);
-+
- #ifdef CONFIG_X86_64
- 	end = max_pfn << PAGE_SHIFT;
- #else
 -- 
-2.47.1
+With Best Regards,
+Andy Shevchenko
+
 
