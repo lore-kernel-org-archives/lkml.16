@@ -1,142 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0873586321
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 02:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D232E86321;
+	Tue,  4 Feb 2025 02:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738634414; cv=none; b=E/A/MyBGGdvvmw3cveoFK3+mNH8PWEpqShxEjkvH3yUIfa6/8k+aWAbqaOcwQFdOZrA5c3yg4la5ApvCxLIvmfKWF/c2TgrwYXYRC/HeysBm8RxrdP40ThmPU7Xgu0xA5T3sGQQsUmHIdgB9AsegMW4uvht3tkb2plh8laen+2M=
+	t=1738634426; cv=none; b=eo7sT2EMhL/kqYgkiNMec6k8nYf+jAhQ4SsHyEalN/giJhc/CqkGFWYEkKSOQa2m6y26D2/K+V0fVZP2y/iwdxiWDnBVk4uowVvT0so1DJSG90vslxEYNScql07MFZpAF7NQj+NdGuXQlTnwRjiCNLo5hcGB0xyMzQgUyQzwppg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738634414; c=relaxed/simple;
-	bh=LcUOXjH8eIbcE3PKBSEu/PpFrNnBo1CT9+chUuHKUB8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GdP4vxKsAOfm+FQ58spF2iJqLeouwM9+8QChG9ZHoKBXw9xU+HUr5WbLcNVB9HG3R57q9qQUI3u6ObUPqENOvyg/n1WSJLBos4ANlRVo7W6xOX/QIn/Uiq+mBNackHu7CvxarmZwZ29NImDFcfZWK0WaY7Wwtqx2zv+0ZYBKCHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wb/tz8x+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738634426; c=relaxed/simple;
+	bh=/D3KeD0qSO6wrt7VgS4VH3NDiPTTikYRNjSzZ/ufXvo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pk734woSDPxWlxzhCUWLfkFblcJ7hJoCF13qKcmD9BxtAOr2eT8ceCSH3YRJnCuFSdxRGhqa9L5CpF+tyd3Qh5utCsv17LT0XjNWr1VIanXab94f4UKMpyDEbbAn1lYwXUYxjiApE6tsz0pMzoLztiPNDsujizT7Jh/gi8z/Y6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teGua/Q1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wb/tz8x+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738634411;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0LGY+6/g3x0XBxaXTlefV2q5SDTNkHreDKjZyKb49XA=;
-	b=Wb/tz8x+yHAngp8qzKpyYzDlO83vJw1j5naIgiZ174X1PZj97yrj1EV6v4mXto5yucSg6s
-	bAqgsBzoqJ9jiGHupR78pIc+3QXfum4GhAviftth5qTGBPY3JM1+JfGDXCwT1yoUsiuNNO
-	p8+W0L7JCsR7iuymbVrh6uuQS5Hvc5A=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-643-3KXDQAQnNr2J_4rHsjUlwg-1; Mon, 03 Feb 2025 21:00:10 -0500
-X-MC-Unique: 3KXDQAQnNr2J_4rHsjUlwg-1
-X-Mimecast-MFC-AGG-ID: 3KXDQAQnNr2J_4rHsjUlwg
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6d8e6046f0fso78948356d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 18:00:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738634410; x=1739239210;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0LGY+6/g3x0XBxaXTlefV2q5SDTNkHreDKjZyKb49XA=;
-        b=RpIW7mGldDmID22MMVmJAr1H1W9UrfD2Iw4X8yVzjmbUmcGzTXXi07UrttpD9a/oPL
-         Utc5FpsjcZyDjWaejPKjs8d1dZ2o06Vf57yJwOu9iSAeY6ox4NjaMeO2KTnTyNM3kmWw
-         K89JZXLL5M2vET6YVS5OZwPq5hPMBmiJ42Zg9tL0ar3BeAfZUze3WV7BzkYSpZ/C5lSo
-         zLXWt8X7fXJOM+Kxm7Puyq2V4pniWk+8i+yMPKtbjFqkDrQfbARkMxg2nc3nTyp2sBSM
-         8qUCa6Y08FuFRHsCVt38I7wGF4MuK2uG/ZGJmahwCtHp0gBftAg7IxEAkfcg2G3A98FE
-         0udg==
-X-Forwarded-Encrypted: i=1; AJvYcCXBzQnbItBWh5Njp0wU1CN3CnRz4IoGQ5nWOG6T15jyLVCfNt5sgJ2hXKGd7TFe4GhUSbHpg7hB8TGZ/pc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSQ433EnW1+nU7oCc6OL57Kb4/8aDMfUwFYnSZP00vVeZlATKV
-	u4Z96SRH2AoCKR9/bLruRWh1E8+qlnrAzUTvm7J9TnAtUXCpz8DbJgLNSx3LNnaHWv92twt48WH
-	uUgVPTg5NfaLVNSwtHX0PbdETgQaJm2fW7oxZRkBCjk5qlJyZMFezGZ289AMqug==
-X-Gm-Gg: ASbGnct2va4QHJWoHWIkq9aaYGu9xa3QlEnhjLiThc7f2otAjQ4rrNVorViLOBuCFd3
-	1hr/L7AZjyvJ5NncoJ3n+KzWLGFmVoJ+XiYDfbaqMAG3ZEVrGzA2DmFYmOPyLPWPeiDPdI/utAL
-	ozQO5s7fdB/FddsdVyljJi+GZeJcx1zXU3fvaDDqg7zlu98MZrHVlP0AwPQ/E+ZtZftFwe/IF6n
-	xuqFysGkuVdE+Pgz8SQ2I5NcowXNWZdAHVMok9itWiigvjguGwrxDhVbWvos/hrUzazRzozWALm
-	D7q6
-X-Received: by 2002:a0c:aa10:0:b0:6e2:4b52:ee21 with SMTP id 6a1803df08f44-6e24b52ef3amr229229196d6.9.1738634408541;
-        Mon, 03 Feb 2025 18:00:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHCeGl8IrpYydYNSTiAGp5mqvo57QRPgrWXedi9jJu3JucaqYaIT8IzzEz1g678fg0vmKpFjg==
-X-Received: by 2002:a0c:aa10:0:b0:6e2:4b52:ee21 with SMTP id 6a1803df08f44-6e24b52ef3amr229228146d6.9.1738634406610;
-        Mon, 03 Feb 2025 18:00:06 -0800 (PST)
-Received: from starship ([2607:fea8:fc01:8d8d:6adb:55ff:feaa:b156])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e25495e831sm57070446d6.123.2025.02.03.18.00.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 18:00:06 -0800 (PST)
-Message-ID: <30fc469b5b2ec5e2d6703979a0d09ad0a9df29e1.camel@redhat.com>
-Subject: Re: [PATCH 2/3] KVM: x86: Remove use of apicv_update_lock when
- toggling guest debug state
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: "Naveen N Rao (AMD)" <naveen@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>,  Suravee Suthikulpanit
- <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>
-Date: Mon, 03 Feb 2025 21:00:05 -0500
-In-Reply-To: <dc6cf3403e29c0296926e3bd8f0d4e87b67f4600.1738595289.git.naveen@kernel.org>
-References: <cover.1738595289.git.naveen@kernel.org>
-	 <dc6cf3403e29c0296926e3bd8f0d4e87b67f4600.1738595289.git.naveen@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teGua/Q1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3E16EC4CEE0;
+	Tue,  4 Feb 2025 02:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738634426;
+	bh=/D3KeD0qSO6wrt7VgS4VH3NDiPTTikYRNjSzZ/ufXvo=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=teGua/Q1I7mjzL/15fGF13S37/IVV+2eRCE0VepC2yOj7CB1qy49G8ZnsdLazmysi
+	 t03nMLwGs8i5f7mw1jEpzJ0QA+9Qum2qAqDBgF52862tBpUZY+Wpv0BljQcx3NrXHl
+	 FT0+8ypaONV/LPT3sm9I+c7D2m4WWFkeuIWuF1EZcwAeGTnKU4UiJosOQAoYmhmhSY
+	 Iwx+AFkwkY+gjEVNCQBWfi3qcmHpcaOYtsBJLurmD5QmEInnxHJviHu9mENRFfr3F3
+	 OTE4qQjohw9K57bvQnWp6rZIWprZbp7KIFXLCyk/jlU04H4MqKxzaMhogqAFH0Dw9g
+	 UUUykGgZxSqCw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3207CC02192;
+	Tue,  4 Feb 2025 02:00:26 +0000 (UTC)
+From: Levi Zim via B4 Relay <devnull+rsworktech.outlook.com@kernel.org>
+Date: Tue, 04 Feb 2025 10:00:21 +0800
+Subject: [PATCH bpf-next] bpf: Add comment about helper freeze
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250204-bpf-helper-freeze-v1-1-46efd9ff20dc@outlook.com>
+X-B4-Tracking: v=1; b=H4sIALR0oWcC/x2MwQqDMBAFf0X27EKMbaH+ingw9m1dKGnYiIjiv
+ 5v2ODAzB2WYIlNXHWRYNes3FmjqiqZ5jG+wvgqTd/7uvLtxSMIzPgnGYsAOnqSFC/4p4dFS6ZJ
+ BdPs/e/rpEdtCw3lendXnF20AAAA=
+X-Change-ID: 20250204-bpf-helper-freeze-cf3e0b29fb63
+To: Andrii Nakryiko <andrii@kernel.org>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Levi Zim <rsworktech@outlook.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1621;
+ i=rsworktech@outlook.com; s=k2025; h=from:subject:message-id;
+ bh=6MxVW0yx3y2sc56aoIwnnQLxARMxNt5S7Q5kXG2Yyow=;
+ b=owEBbQKS/ZANAwAIAW87mNQvxsnYAcsmYgBnoXS33Zgy50y0RZLE0DRtBqoIrdiBvqGAqn6se
+ uVAuspSn+GJAjMEAAEIAB0WIQQolnD5HDY18KF0JEVvO5jUL8bJ2AUCZ6F0twAKCRBvO5jUL8bJ
+ 2KKwD/9EfjUuh1T541jPAYhMsPRyKAt2Hp/LKLLvN/+Ge4oP0zL7ZQUPyj/Rsu2vplfW0aLUUhx
+ FQwikTq7LebKenRXqf8neZPlp0Rg+TytBV8WUd9fkH+pHeOekYBqmULHHn15OMueZPcOWNalpni
+ bn+Zh4ZxegELJJKom3FhC49gtt6/seoYT41RPXw1xQrdmkcECZ5/lVAnUT82JAez6/TbL322Sqi
+ IOsOWh8g+YnTYU2ThbnBkzqagxTeP3Q7P5GUpO15SlBZSk1iZaqYx5rllnoMXuDyIenDcwlWmRJ
+ gUklsX3twS7OgzSksUuceaeoNVR17BRiQq60+l1RK3wyP3nfuhQgAGu/q2uNhtnBnoLsDJEyxMk
+ O9qgD1F8YxRkkvxP84C0zbsAZb6L9F0k3OdyHZw5edYasp40dwzWsy/Pp0tFL6NiEWQSirb2Zu1
+ jvTfWacUkEBgbjrbgnuB/OEGu42Hl2dXYewTZRas9dZVXxQK7JIi8maI2uw2iqyJGwZ0NeSw8lL
+ HgYBDoq5W5mo9wt7sed+pe53qVoNaCxlpZRsn3WFY0EbKsuZPkydB8w95dYPY9pIKRzNgW7P4lm
+ Eo2BGfZrV+9JAiGg1IoQcfiPESOOLAouSpO6G6/kL5IeGHZJF3yFiXmlMrvN/TJAdEg++kOE4Sv
+ yfsbeYQg1Qzjnkw==
+X-Developer-Key: i=rsworktech@outlook.com; a=openpgp;
+ fpr=17AADD6726DDC58B8EE5881757670CCFA42CCF0A
+X-Endpoint-Received: by B4 Relay for rsworktech@outlook.com/k2025 with
+ auth_id=336
+X-Original-From: Levi Zim <rsworktech@outlook.com>
+Reply-To: rsworktech@outlook.com
 
-On Mon, 2025-02-03 at 22:33 +0530, Naveen N Rao (AMD) wrote:
-> apicv_update_lock is not required when querying the state of guest
-> debug in all the vcpus. Remove usage of the same, and switch to
-> kvm_set_or_clear_apicv_inhibit() helper to simplify the code.
+From: Levi Zim <rsworktech@outlook.com>
 
-It might be worth to mention that the reason why the lock is not needed,
-is because kvm_vcpu_ioctl from which this function is called takes 'vcpu->mutex'
-and thus concurrent execution of this function is not really possible.
+Put a comment after the bpf helper list in uapi bpf.h to prevent people
+from trying to add new helpers there and direct them to kfuncs.
 
-Besides this:
+Link: https://lore.kernel.org/bpf/CAEf4BzZvQF+QQ=oip4vdz5A=9bd+OmN-CXk5YARYieaipK9s+A@mail.gmail.com/
+Link: https://lore.kernel.org/bpf/20221231004213.h5fx3loccbs5hyzu@macbook-pro-6.dhcp.thefacebook.com/
+Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Levi Zim <rsworktech@outlook.com>
+---
+Put a comment after the bpf helper list in uapi bpf.h to prevent people
+from trying to add new helpers there and direct them to kfuncs.
+---
+ include/uapi/linux/bpf.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 2acf9b33637174bd16b1d12ccc6410c5f55a7ea9..fff6cdb8d11a2c211a6205ae2937b2bdf593cd42 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -6019,7 +6019,10 @@ union bpf_attr {
+ 	FN(user_ringbuf_drain, 209, ##ctx)		\
+ 	FN(cgrp_storage_get, 210, ##ctx)		\
+ 	FN(cgrp_storage_delete, 211, ##ctx)		\
+-	/* */
++	/* This helper list is effectively frozen. If you are trying to	\
++	 * add a new helper, you should add a kfunc instead which has	\
++	 * less stability guarantees. See Documentation/bpf/kfuncs.rst	\
++	 */
+ 
+ /* backwards-compatibility macros for users of __BPF_FUNC_MAPPER that don't
+  * know or care about integer value that is now passed as second argument
+
+---
+base-commit: 03f3aa4a6b664270d502c7fb44c634cbe250261e
+change-id: 20250204-bpf-helper-freeze-cf3e0b29fb63
 
 Best regards,
-	Maxim Levitsky
-
-> 
-> Signed-off-by: Naveen N Rao (AMD) <naveen@kernel.org>
-> ---
->  arch/x86/kvm/x86.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index b2d9a16fd4d3..11235e91ae90 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -12038,19 +12038,14 @@ static void kvm_arch_vcpu_guestdbg_update_apicv_inhibit(struct kvm *kvm)
->  	struct kvm_vcpu *vcpu;
->  	unsigned long i;
->  
-> -	if (!enable_apicv)
-> -		return;
-> -
-> -	down_write(&kvm->arch.apicv_update_lock);
-> -
->  	kvm_for_each_vcpu(i, vcpu, kvm) {
->  		if (vcpu->guest_debug & KVM_GUESTDBG_BLOCKIRQ) {
->  			set = true;
->  			break;
->  		}
->  	}
-> -	__kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_BLOCKIRQ, set);
-> -	up_write(&kvm->arch.apicv_update_lock);
-> +
-> +	kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_BLOCKIRQ, set);
->  }
->  
->  int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
-
-
+-- 
+Levi Zim <rsworktech@outlook.com>
 
 
