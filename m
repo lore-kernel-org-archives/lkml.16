@@ -1,100 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8490021579C;
-	Tue,  4 Feb 2025 18:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CB5216387
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738692213; cv=none; b=E90bM4V9joSPPs0bGwK9v3dBdjXmmZNHn9eVX4xcCyyOrHwg43RR8rWfdcSIY+P8Ywamgd3haIlmqF5oLvnt1o+W50/86xs8oCsDI7Z5cI6P2Od9BXMtcCywEXGUsxyi/D0NRSJa0q5cE0WsTSCE8tMkjzCkSnjcbWWTZQRu8t0=
+	t=1738692229; cv=none; b=OJA12eB/Tyj0ekvNJpBWvZovHMl5kUw80OZsiA1+x2/+d/Wh80WgCiZq1V+aX/YJ7q9RYVfLq1ghs3Q2qtls26Nz51LaXrdRPulOGBGMhlwVSxvEVYCEEytrUFKFobO/lZHUCsFAezQcGkYEYGMdbRyqqcvBJh+jD8lDILaJ7jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738692213; c=relaxed/simple;
-	bh=LMxgtUXdm16/XY03BlQFhqU/FE+rDQod7akBLrqxDds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WGor8yJydBNlEsnXFITnvIh+ejSGxxXZ6aYTEn6pp8TzyiT1uRbviP+tfym5LXhPCHCKTF2P+eznjTDeb2dy23EQ4f62INkBKWyGU6ywo/uYvPQoeY7Io4gMFz0t1rKX962vL8SQZMprBDvoDCj6IxSBuCTV9NYYDbFm8l0GY8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SD1NBB6E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738692229; c=relaxed/simple;
+	bh=Oj0oNLn2yL6+fmX5W290/5q7EprAS3GBOQgkRODPBVA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZkGqzc5UT4uGodHZZlKSKIWPvs1NKUw0Z/n1r1EpquYfbRtVxWiZ7IMD0ADv3KOu+4qCYNzstapof93DXq8G9DFuxRfPLQtDGTtKffnDThsYFaDb8CSP8kKbBrhu7eTDvWx4pxQQyJ3/2+fGWc7C+P6K/oQndzngcTtOfrMZUjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DQ+KyDtk; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SD1NBB6E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6045DC4CEDF;
-	Tue,  4 Feb 2025 18:03:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738692212;
-	bh=LMxgtUXdm16/XY03BlQFhqU/FE+rDQod7akBLrqxDds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SD1NBB6El+2WQI6SxIrFiUvpUtTbtcjV/fWXlZqOf7mSLb2AXrriTqDjJghs2Z5Z6
-	 YJn67Jvat4w2CwrIJlNNTpJmxLc0Onu1EVPaTReT9dRUmiZ4dZBE5lXsf9FX2ReowP
-	 P+ck8G1A9/RrFGG7oUMS3tUh6h4PE+oDv3KnvTCk=
-Date: Tue, 4 Feb 2025 19:03:30 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Stephane Eranian <eranian@google.com>,
-	Vince Weaver <vincent.weaver@maine.edu>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
- location
-Message-ID: <2025020444-savage-latrine-0c31@gregkh>
-References: <2025020304-chip-trench-4e56@gregkh>
- <87pljyyx68.fsf@ubik.fi.intel.com>
- <2025020426-spool-refreeze-2870@gregkh>
- <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com>
- <2025020408-apron-fled-d29e@gregkh>
- <6edcf7f8-d496-524e-2250-49284dfb55e4@maine.edu>
- <2025020447-gyration-wireless-f7da@gregkh>
- <CAP-5=fWT5J0svFsA-jqvE4P=NnTdrsKPF9x6JHkUEDp-vBd_1w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DQ+KyDtk"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21625b4f978so174945ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 10:03:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738692226; x=1739297026; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hnKb/NxDzwUPz79zbu5N/Xfg9BKIOLMoGS4rXOX07CA=;
+        b=DQ+KyDtkBwZJAhWhAuyRLkhaKlrlprdaumqBBWGb5rYVhJ5zvZFsaw/09i/unlQsJl
+         xQLhazeBVf25SD1PzF4JRfqc5hlzo/54HzTFVPi9gC8BqAb31DxwAFOnxATSJS3oMvbF
+         zwv3Yj39GxnYFh+df101DZeOowd1QWFO2N6CrK8APpNvTfLNIZ8Aoi06R/TH1hmUi2A6
+         lwxA5FRbJaOOHnssKA94tlAuQSBF580Hhp9999NpYT+qgp/vaMOJYOcehm13j7b1EGKR
+         NARGB9W50n9tnEn4s2gQwgafvsvgcuO5wMJEpE24jofmeBT+2YMEVX6EBaXWZvCure5M
+         B/oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738692226; x=1739297026;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hnKb/NxDzwUPz79zbu5N/Xfg9BKIOLMoGS4rXOX07CA=;
+        b=Egkw9e4iqaq0ZblalQBKes8fhzefhunon711yvUKKKveBxT+hq4FG+AcK9SkUA5VbS
+         NbewEWIxZg/E+Ruv41bVtMbvgpDdnvu+7hJKET1evC4vgJsRBvJ0MmWtAjjg/Io6ATuF
+         HMasvAROmGg/85iwA+sGPvmlAuzBuH4hPU8pd84/Eg6GLKHNGTZQGtt65Kg9/Xw/tOhX
+         OjBlIWalIVImCiJsYlFMVNCac/a3C+d0CQtz35e1AhOedwgzq09/FPx/+FstId/O7izB
+         fBqslf14tlhRJn603EsTvHxBGEWfRiFM6ni3mLS0NdgxEKXh51tTWagBSKDpPp+6OipW
+         Gtng==
+X-Forwarded-Encrypted: i=1; AJvYcCWINhA/diBigQh2VJFSpajSzyMNcpG1XnElXeiNflPRnW21wN/LY6BgxD4nB2FoxgSQiwvNQFmERhYNIIk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywn6MrZz+DCyPK48wyYyQCVwDvtzIG+Qk8Z1g3y8+TIZxJ9EWTk
+	6s0zffSafse2gHumlZJT+m3fkJMclzis5ndf3K50hbXoPz7Okzm7WEgSa/6CNcVvxctSTiuZTjl
+	BRAPso+E12UG05jRun1TxgCtCu3zkGYJymdIY
+X-Gm-Gg: ASbGncsENlrMOnYTwXXCfQZnlyOywH020n55hjI1AL8HhH1/fh02Gv/k3sU/Zdaj7g9
+	dyTSBI/u1leNLifPNQng8lq/esy2MMQbM7txW9pVqWcj/sz1aRROupGJ4Q4F9DB4mgywV077h
+X-Google-Smtp-Source: AGHT+IFGO0WVuOzQMwTOIUL2zNV30YHnBBx/izI8+SQNwu12kEXS3uYQZz8FhcRE8mSTIdjM5HAUSbAmJ4VB9XKoqDo=
+X-Received: by 2002:a17:902:bc8a:b0:215:44af:313b with SMTP id
+ d9443c01a7336-21f000c1a2bmr3663845ad.0.1738692225592; Tue, 04 Feb 2025
+ 10:03:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWT5J0svFsA-jqvE4P=NnTdrsKPF9x6JHkUEDp-vBd_1w@mail.gmail.com>
+References: <20250203223916.1064540-1-almasrymina@google.com>
+ <20250203223916.1064540-3-almasrymina@google.com> <c8dd0458-b0a9-4342-a022-487e73542381@redhat.com>
+ <CAHS8izOnrWdPPhVaCFT4f3Vz=YkHyJ5KgnAbuxfR5u-ffkbUxA@mail.gmail.com> <71336d4e-6a75-4166-9834-7de310df357e@redhat.com>
+In-Reply-To: <71336d4e-6a75-4166-9834-7de310df357e@redhat.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 4 Feb 2025 10:03:33 -0800
+X-Gm-Features: AWEUYZmiESSMokFwGB0BJqHNhJeqNgHpu960zdUgGcxEH4CFZhDgvoFYnYH4I-E
+Message-ID: <CAHS8izPFe-1tf9Xetc8Znj04x9rKXVchR3DaspRGPDRbSFQFgw@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 2/6] selftests: ncdevmem: Implement devmem TCP TX
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski <kuba@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	Neal Cardwell <ncardwell@google.com>, David Ahern <dsahern@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
+	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 04, 2025 at 09:49:55AM -0800, Ian Rogers wrote:
-> On Tue, Feb 4, 2025 at 9:12 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
+On Tue, Feb 4, 2025 at 9:56=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wrot=
+e:
+>
+> On 2/4/25 6:35 PM, Mina Almasry wrote:
+> > On Tue, Feb 4, 2025 at 4:29=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> =
+wrote:
+> >>>  .../selftests/drivers/net/hw/ncdevmem.c       | 300 ++++++++++++++++=
++-
+> >>>  1 file changed, 289 insertions(+), 11 deletions(-)
+> >>
+> >> Why devmem.py is not touched? AFAICS the test currently run ncdevmem
+> >> only in server (rx) mode, so the tx path is not actually exercised ?!?
+> >>
 > >
-> > On Tue, Feb 04, 2025 at 11:41:38AM -0500, Vince Weaver wrote:
-> > > On Tue, 4 Feb 2025, Greg Kroah-Hartman wrote:
-> > >
-> > > >
-> > > > It seems that the majority of the perf code IS looking in the correct
-> > > > place, just mem-events.c seemed wrong.
-> > >
-> > > I hate to tell you, but other places in userspace are depending on the
-> > > current setup.  libpfm4, used by PAPI, is looking directly in /sys/devices
-> > > for pmus and will break with the changes you are planning.
-> >
-> > Then that too needs to be fixed, sorry.  Again, devices can, and will,
-> > move around in /sys/devices/ you can never hard-code any paths there.
-> > Any userspace code must ALWAYS be able to handle that, that's a sysfs
-> > requirement.
-> >
-> > And do you have a link to the source for that code?  Good news is that
-> > if the code is fixed in userspace, it will work for any kernel (old or
-> > new).
-> 
-> +Stephane Eranian
-> 
-> I see use of /sys/devices in at least:
-> https://sourceforge.net/p/perfmon2/libpfm4/ci/master/tree/lib/pfmlib_perf_event_pmu.c
-> I imagine it isn't a big job to clean it up.
+> > Yeah, to be honest I have a collection of local bash scripts that
+> > invoke ncdevmem in different ways for my testing, and I have docs on
+> > top of ncdevmem.c of how to test; I don't use devmem.py. I was going
+> > to look at adding test cases to devmem.py as a follow up, if it's OK
+> > with you, and Stan offered as well on an earlier revision. If not no
+> > problem, I can address in this series. The only issue is that I have
+> > some legwork to enable devmem.py on my test setup/distro, but the meat
+> > of the tests is already included and passing in this series (when
+> > invoked manually).
+>
+> I think it would be better if you could include at least a very basic
+> test-case for the TX path. More accurate coverage could be a follow-up.
+>
 
-Nope, all that has to happen is this line:
-	snprintf(buf, PATH_MAX, "/sys/devices/%s/events/%s", e->pmu ? e->pmu : "cpu", e->name);
-be changed to:
-	snprintf(buf, PATH_MAX, "/sys/bus/event_source/devices/%s/events/%s", e->pmu ? e->pmu : "cpu", e->name);
+Thanks; will do.
 
-
-thanks,
-
-greg k-h
+--=20
+Thanks,
+Mina
