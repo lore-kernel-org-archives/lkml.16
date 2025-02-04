@@ -1,311 +1,116 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E1586358;
-	Tue,  4 Feb 2025 08:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A67313B284
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 08:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738657321; cv=none; b=YxwHw/Y9KJuLljgClxXbyECBD8Owaz670c23p0KWoG0qmotf0hBeXUMTZjocUipjv5CXUzRZIe7UXLIYLtHTGWUc9rkPuse6kf8Iyu3dw8fs75FVv6zg5dgdI8OSZFKY0BMnVh2CNYJGyJZE/cfwwb/njjc/d0xZ4iXSqha5Zho=
+	t=1738657348; cv=none; b=jHk529ipEK6oVDLTl/nKvJIJpx6L7VgpFOUO37aU/1uF35k4eDlETrae6MMtwFRZ0bwQh/gyztsZ+WeBfErkbptV7zRTQMRqH/nqIbilPkxpvqwKVNCKg+c0pWZLLdxlMr6dkvbtfhN7b85BuXVF/uuvIoVduGBevyKcNeu6+Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738657321; c=relaxed/simple;
-	bh=FH96e2LpJe4cIHwd6J777iowm+apN3cWJUtIT4EW60c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lfUj99MnYplHZgaRWDq3Rjx9ak4Dlwf+xPcneqcN4mHbmBiyzkOw5vGI1BVzcPLVVpGhJjyHUZATOtrhYR+2ZATruVruV8xunXOghNEpaNYdMM3m+UJ6xmRmq9KwdjxmiA+SZOjcCiNxStS7nrUKt9/itwvxGTgS6mSpmBRXa+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GAhTKsst; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=92Wabo0H; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GAhTKsst; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=92Wabo0H; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1738657348; c=relaxed/simple;
+	bh=+pDnJIsZzMoJu/KlX0witVz381rBhqyriIHKc03SRi0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OFO3Sk/sUgEbdSlbOvsY6qzqKv64KdrbRncfnk9T/KTcNZY8ula/eJ94rmGotT5O9jerkmx5vpvtQsQNb4LWd2tH4dEpHbdDV1Uu1D4Xmlajno01PW6e0Q5NdTlmR7dou5c/QwcSXAc5dQtEmAHDE/rMUuDwKxP1JbNSs9vot5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Flufws2T; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9bVplinw; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GAhTKsst";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="92Wabo0H";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GAhTKsst";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="92Wabo0H"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3782021102;
-	Tue,  4 Feb 2025 08:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738657316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Flufws2T";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9bVplinw"
+Date: Tue, 4 Feb 2025 09:22:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738657345;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=hZMrLILD1GBUFP/QjeIiEwC8yowC0yvAkHoIC6AkTkk=;
-	b=GAhTKsst7OWgqD6NRAK9h4Ka6wjBMRAVuPk/fGwJw4aLGtKQwuvDpTcWIyi6OVpZK+umJD
-	sRh4luTDqmbGedWHKGvErMN/DyLX2O3wFj/QjOHYVxUQayLhh6vtXysybpvwYZXNf5CfLs
-	eA0PAoY6PsRjHbF3DRdZFxI+s0VsbWM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738657316;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DnKDCU1FUD2pmjVQdxzJZnfkfi9EpwFgK55JyMARIzA=;
+	b=Flufws2Tc9X0nPhdWeTbARtFtpmLKyJhRjTdAqJ6fPfEhNQTEABuzNj2b9h/wqxgpygsJQ
+	BvQ9McEJAT79GteclYmajpufEIKfY1l+WTmpF6XBquIURUICO84ga34gXaSr0Zkw3PhTOW
+	4GPHQCDySVG9PXZ8kZSoJyzwXGy5oLvEW0ZcyQysrrpKuZVddyvoUndbakAOx47HtGtexn
+	ukV+CKsl+dm88D3aMK6Vlbqi8PZB0kpT7qo0jQ2zW4SjSkmiB6Dy+KkMUTqBlPFOJuw7KZ
+	Fi6/V1EPJ5cM8naXbIr5Ajs2/HOm23m3YllPtnqCmiVmfc78hgnKQhQrnf/W/A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738657345;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=hZMrLILD1GBUFP/QjeIiEwC8yowC0yvAkHoIC6AkTkk=;
-	b=92Wabo0HMklRtEzpmbCNKve+Z7s+rTwgfVxKZTEbcR3fF9FQuF7dz2fwUrMTOtSxSyKvak
-	WJZ/qqoHzWeqBrCA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738657316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=hZMrLILD1GBUFP/QjeIiEwC8yowC0yvAkHoIC6AkTkk=;
-	b=GAhTKsst7OWgqD6NRAK9h4Ka6wjBMRAVuPk/fGwJw4aLGtKQwuvDpTcWIyi6OVpZK+umJD
-	sRh4luTDqmbGedWHKGvErMN/DyLX2O3wFj/QjOHYVxUQayLhh6vtXysybpvwYZXNf5CfLs
-	eA0PAoY6PsRjHbF3DRdZFxI+s0VsbWM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738657316;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=hZMrLILD1GBUFP/QjeIiEwC8yowC0yvAkHoIC6AkTkk=;
-	b=92Wabo0HMklRtEzpmbCNKve+Z7s+rTwgfVxKZTEbcR3fF9FQuF7dz2fwUrMTOtSxSyKvak
-	WJZ/qqoHzWeqBrCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D64CC13795;
-	Tue,  4 Feb 2025 08:21:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id q0/2MiPOoWeXaQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 04 Feb 2025 08:21:55 +0000
-Message-ID: <d800c5a5-b751-4f74-aee4-8dda1536dd85@suse.de>
-Date: Tue, 4 Feb 2025 09:21:55 +0100
+	 in-reply-to:in-reply-to:references:references;
+	bh=DnKDCU1FUD2pmjVQdxzJZnfkfi9EpwFgK55JyMARIzA=;
+	b=9bVplinw5uTckiBFUaa4zx9QSnLzFLQniSAa/sUY9kv2nk/w7pKzIIqBRVZtU6jJb9dp9Q
+	qw/sYFSz9uG4XPBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Ben Segall <bsegall@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Will Deacon <will@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v3 5/9] powerpc: Use preempt_model_str().
+Message-ID: <20250204082223.6iNyq_KR@linutronix.de>
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-6-bigeasy@linutronix.de>
+ <65c6f60d-bb52-48bd-a02c-87ffd2a915d4@csgroup.eu>
+ <20250203160103.9DikC9FJ@linutronix.de>
+ <51999b8e-61c0-48b7-b744-c83d39e7f311@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] fb_defio: do not use deprecated page->mapping, index
- fields
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Jaya Kumar <jayakumar.lkml@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
- David Hildenbrand <david@redhat.com>, Kajtar Zsolt <soci@c64.rulez.org>,
- Maira Canal <mcanal@igalia.com>
-References: <cover.1738347308.git.lorenzo.stoakes@oracle.com>
- <3542c5bb74d2487cf45d1d02ee5e73a05c4d279a.1738347308.git.lorenzo.stoakes@oracle.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <3542c5bb74d2487cf45d1d02ee5e73a05c4d279a.1738347308.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,ffwll.ch,gmx.de,vger.kernel.org,lists.freedesktop.org,kvack.org,infradead.org,redhat.com,c64.rulez.org,igalia.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <51999b8e-61c0-48b7-b744-c83d39e7f311@csgroup.eu>
 
-Hi
+Use preempt_model_str() instead of manually conducting the preemption
+model. Use pr_emerg() instead of printk() to pass a loglevel.
 
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Naveen N Rao <naveen@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+v2=E2=80=A6v3:
+  - Use printk() instead of pr_emerg() to remain consistent with the
+    other invocations in terms of printing context.
 
-Am 31.01.25 um 19:28 schrieb Lorenzo Stoakes:
-> With the introduction of mapping_wrprotect_page() there is no need to use
-> folio_mkclean() in order to write-protect mappings of frame buffer pages,
-> and therefore no need to inappropriately set kernel-allocated page->index,
-> mapping fields to permit this operation.
->
-> Instead, store the pointer to the page cache object for the mapped driver
-> in the fb_deferred_io object, and use the already stored page offset from
-> the pageref object to look up mappings in order to write-protect them.
->
-> This is justified, as for the page objects to store a mapping pointer at
-> the point of assignment of pages, they must all reference the same
-> underlying address_space object. Since the life time of the pagerefs is
-> also the lifetime of the fb_deferred_io object, storing the pointer here
-> makes snese.
->
-> This eliminates the need for all of the logic around setting and
-> maintaining page->index,mapping which we remove.
->
-> This eliminates the use of folio_mkclean() entirely but otherwise should
-> have no functional change.
->
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Tested-by: Kajtar Zsolt <soci@c64.rulez.org>
-> ---
->   drivers/video/fbdev/core/fb_defio.c | 38 +++++++++--------------------
->   include/linux/fb.h                  |  1 +
->   2 files changed, 12 insertions(+), 27 deletions(-)
->
-> diff --git a/drivers/video/fbdev/core/fb_defio.c b/drivers/video/fbdev/core/fb_defio.c
-> index 65363df8e81b..b9bab27a8c0f 100644
-> --- a/drivers/video/fbdev/core/fb_defio.c
-> +++ b/drivers/video/fbdev/core/fb_defio.c
-> @@ -69,14 +69,6 @@ static struct fb_deferred_io_pageref *fb_deferred_io_pageref_lookup(struct fb_in
->   	return pageref;
->   }
->   
-> -static void fb_deferred_io_pageref_clear(struct fb_deferred_io_pageref *pageref)
-> -{
-> -	struct page *page = pageref->page;
-> -
-> -	if (page)
-> -		page->mapping = NULL;
-> -}
-> -
->   static struct fb_deferred_io_pageref *fb_deferred_io_pageref_get(struct fb_info *info,
->   								 unsigned long offset,
->   								 struct page *page)
-> @@ -140,13 +132,10 @@ static vm_fault_t fb_deferred_io_fault(struct vm_fault *vmf)
->   	if (!page)
->   		return VM_FAULT_SIGBUS;
->   
-> -	if (vmf->vma->vm_file)
-> -		page->mapping = vmf->vma->vm_file->f_mapping;
-> -	else
-> +	if (!vmf->vma->vm_file)
->   		printk(KERN_ERR "no mapping available\n");
+ arch/powerpc/kernel/traps.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-fb_err() here.
-
->   
-> -	BUG_ON(!page->mapping);
-> -	page->index = vmf->pgoff; /* for folio_mkclean() */
-> +	BUG_ON(!info->fbdefio->mapping);
->   
->   	vmf->page = page;
->   	return 0;
-> @@ -194,9 +183,9 @@ static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, unsigned long
->   
->   	/*
->   	 * We want the page to remain locked from ->page_mkwrite until
-> -	 * the PTE is marked dirty to avoid folio_mkclean() being called
-> -	 * before the PTE is updated, which would leave the page ignored
-> -	 * by defio.
-> +	 * the PTE is marked dirty to avoid mapping_wrprotect_page()
-> +	 * being called before the PTE is updated, which would leave
-> +	 * the page ignored by defio.
->   	 * Do this by locking the page here and informing the caller
->   	 * about it with VM_FAULT_LOCKED.
->   	 */
-> @@ -274,14 +263,13 @@ static void fb_deferred_io_work(struct work_struct *work)
->   	struct fb_deferred_io_pageref *pageref, *next;
->   	struct fb_deferred_io *fbdefio = info->fbdefio;
->   
-> -	/* here we mkclean the pages, then do all deferred IO */
-> +	/* here we wrprotect the page's mappings, then do all deferred IO. */
->   	mutex_lock(&fbdefio->lock);
->   	list_for_each_entry(pageref, &fbdefio->pagereflist, list) {
-> -		struct folio *folio = page_folio(pageref->page);
-> +		struct page *page = pageref->page;
-> +		pgoff_t pgoff = pageref->offset >> PAGE_SHIFT;
->   
-> -		folio_lock(folio);
-> -		folio_mkclean(folio);
-> -		folio_unlock(folio);
-> +		mapping_wrprotect_page(fbdefio->mapping, pgoff, 1, page);
->   	}
->   
->   	/* driver's callback with pagereflist */
-> @@ -337,6 +325,7 @@ void fb_deferred_io_open(struct fb_info *info,
->   {
->   	struct fb_deferred_io *fbdefio = info->fbdefio;
->   
-> +	fbdefio->mapping = file->f_mapping;
-
-Does this still work if more than one program opens the file?
-
-Best regard
-Thomas
-
->   	file->f_mapping->a_ops = &fb_deferred_io_aops;
->   	fbdefio->open_count++;
->   }
-> @@ -344,13 +333,7 @@ EXPORT_SYMBOL_GPL(fb_deferred_io_open);
->   
->   static void fb_deferred_io_lastclose(struct fb_info *info)
->   {
-> -	unsigned long i;
-> -
->   	flush_delayed_work(&info->deferred_work);
-> -
-> -	/* clear out the mapping that we setup */
-> -	for (i = 0; i < info->npagerefs; ++i)
-> -		fb_deferred_io_pageref_clear(&info->pagerefs[i]);
->   }
->   
->   void fb_deferred_io_release(struct fb_info *info)
-> @@ -370,5 +353,6 @@ void fb_deferred_io_cleanup(struct fb_info *info)
->   
->   	kvfree(info->pagerefs);
->   	mutex_destroy(&fbdefio->lock);
-> +	fbdefio->mapping = NULL;
->   }
->   EXPORT_SYMBOL_GPL(fb_deferred_io_cleanup);
-> diff --git a/include/linux/fb.h b/include/linux/fb.h
-> index 5ba187e08cf7..cd653862ab99 100644
-> --- a/include/linux/fb.h
-> +++ b/include/linux/fb.h
-> @@ -225,6 +225,7 @@ struct fb_deferred_io {
->   	int open_count; /* number of opened files; protected by fb_info lock */
->   	struct mutex lock; /* mutex that protects the pageref list */
->   	struct list_head pagereflist; /* list of pagerefs for touched pages */
-> +	struct address_space *mapping; /* page cache object for fb device */
->   	/* callback */
->   	struct page *(*get_page)(struct fb_info *info, unsigned long offset);
->   	void (*deferred_io)(struct fb_info *info, struct list_head *pagelist);
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+index edf5cabe5dfdb..d6d77d92b3358 100644
+--- a/arch/powerpc/kernel/traps.c
++++ b/arch/powerpc/kernel/traps.c
+@@ -263,10 +263,10 @@ static int __die(const char *str, struct pt_regs *reg=
+s, long err)
+ {
+ 	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
+=20
+-	printk("%s PAGE_SIZE=3D%luK%s%s%s%s%s%s %s\n",
++	printk("%s PAGE_SIZE=3D%luK%s %s %s%s%s%s %s\n",
+ 	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
+ 	       PAGE_SIZE / 1024, get_mmu_str(),
+-	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
++	       preempt_model_str(),
+ 	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
+ 	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=3D" __stringify(NR_CPUS)) : "",
+ 	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
+--=20
+2.47.2
 
