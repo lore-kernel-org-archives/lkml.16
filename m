@@ -1,107 +1,141 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011C120371A
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609C020371A;
+	Tue,  4 Feb 2025 09:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660138; cv=none; b=FkF8Iw1TyuoWLHjiM1NPTnw1bZTniTDkzvRLzWW+XHj0seoj7dJZxx8+DBvSAurh5dtNaAJZeNEn0AwQJTMoSlBYWrQymFNErr20uNcu5hQK/oRR9BUXItA7OG+gqMWuSourDUxyZDQQfYY2OOHoq0vDSnMM9QFqCE9n3RcRGQs=
+	t=1738660191; cv=none; b=cqDh90sLKcFBbzq5MJFT0Uh8bNZiwoWexrAFQyLHWmIKaJu3lvovhDk/vxp13bu8mCsCiWJzXxiOiPLKs97anDq9MK0vHl7DpHO/D9EHJdP5xBo/Kom/3RcDTFJB9kr004fiQe6K7Taamn7gc3i8VxwRDVx/Pmm9V4zExZxEYqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660138; c=relaxed/simple;
-	bh=oIj6NHk2o0Z10kFlfyxGInc7NT6TaaGNjgFU0ut9cGk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q/vpzxaXYO3aK87TKlTRgKGKhIbZdeS4QOdZVqNDwVAh5gVioMqxtX9O+yzDnl1TiaUlTEaHOa7GOQq/uu2fENxRWBlvUE2sf1GyFYKwTSZmW+7rOMR00bx+mhktgDV/k7Q2k0XNSQIaIViOSFCXdTet+0yACFKntlyqymMmqhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=UuiJUAez; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738660191; c=relaxed/simple;
+	bh=ldm5rA90FbHZ9erUip5pRsh/zyKUrvNrnX2gFJ3ZMkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y3lHMGBlb144YgqCnoRRDGtpoKx/GYQnbj9kB3aGeWFGVTnxv5/Iyun+h6UOoRsfj9m3vcf7IqOHLhq+DFQ1bPAxvYE+1GWQMyN61edZkaV42zBNyblNYBj4Meb4vfRTM2r8NdMEeNMSKuXqWb4vvwLkL9t9Y8rxFkQRGBTbrrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=v04ZZrjn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iL6UT1eR; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UuiJUAez"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51498gXQ2366333
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Feb 2025 03:08:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738660122;
-	bh=0r6hnJHVnupxbe0MROYw/A0MDe0+S6djnJt+Tt5nO9Y=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=UuiJUAezxZg9/Is35F9i0DscLmiPrOUNJ9UM9AsCtvXbi7Fbi9rxvyrpC8TC8ZdeT
-	 DllT7f2+9XUrIDezNIqpA1pHUH81/3Dz7NDMCC3omwy8/44BL1unClCKvuJrqsOFAK
-	 l0OutkhL1BHoM6e1qmzXoaRijY3rJ9eIzQRoQI+g=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51498gLJ003205
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Feb 2025 03:08:42 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
- Feb 2025 03:08:41 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 4 Feb 2025 03:08:42 -0600
-Received: from lcpd911.dhcp.ti.com (lcpd911.dhcp.ti.com [172.24.227.226])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51498cbU011268;
-	Tue, 4 Feb 2025 03:08:39 -0600
-From: Dhruva Gole <d-gole@ti.com>
-To: Frederic Weisbecker <frederic@kernel.org>,
-        Andrew Morton
-	<akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-CC: Chen Yu <yu.c.chen@intel.com>, <linux-kernel@vger.kernel.org>,
-        Kees Cook
-	<kees@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
-        Dhruva Gole
-	<d-gole@ti.com>
-Subject: [PATCH] kthread: Fix build warning variable 'ret' set but not used
-Date: Tue, 4 Feb 2025 14:38:38 +0530
-Message-ID: <20250204090838.214647-1-d-gole@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <202501301528.t0cZVbnq-lkp@intel.com>
-References: <202501301528.t0cZVbnq-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="v04ZZrjn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iL6UT1eR"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 0DBF925401CB;
+	Tue,  4 Feb 2025 04:09:48 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Tue, 04 Feb 2025 04:09:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1738660187; x=1738746587; bh=XZj/3L15Zh
+	JDphoA3SD15pg6OoRb/NWpiUa3moUl3Kk=; b=v04ZZrjn6Rsnl3ivfR0PYx5B+C
+	gpbvoThDhWkSv7mWI4Qe3TUN8ssc28EyYdL+ifX4MZSD5Gs0peKpK3yQdKuGROEb
+	0Bi5Ig6rNGdSQlnlgcYntc5QiI8ytm/6r93T0CN5E217Jl48lFhJVyp6LcghNo3b
+	giSZAqPHCKLc7fkGUntA2oUtVs2FHS2B6QdOyVFKEozlktzB6tDGHnjjdok92JCv
+	AxOnKivyXShDdxSrq+kw/p/PCd+XqJEgob/THNe3I5NCZT4HwsqWMKsKWwkIW9rH
+	z9UhoVwIDI4R0PHwuinY4+PTbZ/XQNXjSR0rmeBtEptgouryQ+FFV/BNs9QQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1738660187; x=1738746587; bh=XZj/3L15ZhJDphoA3SD15pg6OoRb/NWpiUa
+	3moUl3Kk=; b=iL6UT1eRtA6auWC4tjEYI8noQCnKTjjLY0uPUS7cR6tHo2pjz6M
+	PkqdDFgUJZoA3lihEfCHK3O9XTjva8gYwNN9ZjiPniCDEsgZY173aGVz/nCrGoBM
+	2cWgS7yseOnFVkga09WWVe5S3FEBqnaKGdrUIxxZJ85bdEs/osTd7wugk/fjA48k
+	1ek6RTH3O8+EMyJJvSQ7oQP+GgnZkP7sJ0AYMK36MSt0/qF1UWj9it9OtM6emljc
+	sR7CmPRmC+oPic+6SKVu6cO6i5QneAcH65j/jjT6pzLktaZLGL0pzNAT751NiNyl
+	AKwxxnaikGB3ZK68y6KJuV/VN5DMLhwakcw==
+X-ME-Sender: <xms:WtmhZ9R5MyIwoZwvApJeK57TfqWIu3LtAsA_hV7Y_QREWpDMtkKdGQ>
+    <xme:WtmhZ2xzxT5mltaU-rQJyejNwBP3Q7XaDfg4MwPN4PLuFb9JZw5AKcEQpGfgD6kPa
+    ss4zjZ9eFS9pqtiSg>
+X-ME-Received: <xmr:WtmhZy2FtSa1mIhqIzvNxOuzM8Z8n6Tgf-vYwZb7mIyRf7xpVq3PbEA3H3LXuCxnzHJ-K8e_rSKnb5v4cW72en-pd8pyOzosJh5FuFZsD_vLsA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdduvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculd
+    ejtddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtvdenucfhrhhomhep
+    ffgrnhhivghlucgiuhcuoegugihusegugihuuhhurdighiiiqeenucggtffrrghtthgvrh
+    hnpedvfeekteduudefieegtdehfeffkeeuudekheduffduffffgfegiedttefgvdfhvden
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihuse
+    gugihuuhhurdighiiipdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopegurg
+    hnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopegrnhgurhhiiheskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhgpdhrtghpth
+    htohepjhhohhhnrdhfrghsthgrsggvnhgusehgmhgrihhlrdgtohhmpdhrtghpthhtohep
+    mhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepshhonhhgsehkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopeihohhnghhhohhnghdrshhonhhgsehlihhnuhig
+    rdguvghvpdhrtghpthhtohepkhhpshhinhhghheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:WtmhZ1COT6EQKOwe7Qx_EhE8EiVX6Bnl1_1a3U4esBQKyqeZYbnfQQ>
+    <xmx:WtmhZ2g8v_ZwQjCM0sgrBoXIuWYSxG88aL0oL5j67kj9Zu4uFoGVxQ>
+    <xmx:WtmhZ5rEeEDMai9nuyyD8O6hpdDwiYkr0lD3ep1Zi3AmZDSFQCvqLA>
+    <xmx:WtmhZxijozAM17brIJdC8fsZ9aNN5kLa2gCnK5G93iEe8EnpzWOXdw>
+    <xmx:W9mhZ9QGjDdp-h2YE4RS0Nl2rHfHd6LEfKADF_ar-EbyhjjQryXYgSEK>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 4 Feb 2025 04:09:45 -0500 (EST)
+Date: Tue, 4 Feb 2025 02:09:43 -0700
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: Eduard Zingerman <eddyz87@gmail.com>
+Cc: daniel@iogearbox.net, andrii@kernel.org, ast@kernel.org, 
+	john.fastabend@gmail.com, martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev, 
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, mhartmay@linux.ibm.com, 
+	iii@linux.ibm.com
+Subject: Re: [PATCH bpf-next 1/3] bpf: verifier: Do not extract constant map
+ keys for irrelevant maps
+Message-ID: <3kzwzsfyghdogwv2jghmkamzierq64l6zgozo3urja5fenzcqg@7yplvj3x3oqp>
+References: <cover.1738439839.git.dxu@dxuuu.xyz>
+ <ebbf8edf871a6543425b75bb659400221bd28275.1738439839.git.dxu@dxuuu.xyz>
+ <084abedc8ec36ffe77f97531c0bcebc291547415.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <084abedc8ec36ffe77f97531c0bcebc291547415.camel@gmail.com>
 
-Fix the following build time warning in kthread:
+On Mon, Feb 03, 2025 at 10:45:35AM -0800, Eduard Zingerman wrote:
+> On Sat, 2025-02-01 at 12:58 -0700, Daniel Xu wrote:
+> > Previously, we were trying to extract constant map keys for all
+> > bpf_map_lookup_elem(), regardless of map type. This is an issue if the
+> > map has a u64 key and the value is very high, as it can be interpreted
+> > as a negative signed value. This in turn is treated as an error value by
+> > check_func_arg() which causes a valid program to be incorrectly
+> > rejected.
+> > 
+> > Fix by only extracting constant map keys for relevant maps. See next
+> > commit for an example via selftest.
+> > 
+> > Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+> > Reported-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> > Tested-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+> > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> 
+> Acked-by: Eduard Zingerman <eddyz87@gmail.com>
+> 
+> Nit:
+>   would be good if commit message said something along the lines:
+>   ... the fix works because nullness elision is only allowed for
+>       {PERCPU_}ARRAY maps, and keys for these are within u32 range ...
 
-   kernel/kthread.c: In function 'kthread_affine_preferred':
->> kernel/kthread.c:861:13: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-     861 |         int ret;
-         |             ^~~
+Ack. I can respin if necessary. Otherwise, here's the edited commit msg:
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202501301528.t0cZVbnq-lkp@intel.com/
-Signed-off-by: Dhruva Gole <d-gole@ti.com>
----
- kernel/kthread.c | 2 --
- 1 file changed, 2 deletions(-)
+    bpf: verifier: Do not extract constant map keys for irrelevant maps
 
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 4005b13ebd7f..f730b1413d13 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -859,7 +859,6 @@ int kthread_affine_preferred(struct task_struct *p, const struct cpumask *mask)
- 	struct kthread *kthread = to_kthread(p);
- 	cpumask_var_t affinity;
- 	unsigned long flags;
--	int ret;
- 
- 	if (!wait_task_inactive(p, TASK_UNINTERRUPTIBLE) || kthread->started) {
- 		WARN_ON(1);
-@@ -873,7 +872,6 @@ int kthread_affine_preferred(struct task_struct *p, const struct cpumask *mask)
- 
- 	kthread->preferred_affinity = kzalloc(sizeof(struct cpumask), GFP_KERNEL);
- 	if (!kthread->preferred_affinity) {
--		ret = -ENOMEM;
- 		goto out;
- 	}
- 
--- 
-2.34.1
+    Previously, we were trying to extract constant map keys for all
+    bpf_map_lookup_elem(), regardless of map type. This is an issue if the
+    map has a u64 key and the value is very high, as it can be interpreted
+    as a negative signed value. This in turn is treated as an error value by
+    check_func_arg() which causes a valid program to be incorrectly
+    rejected.
 
+    Fix by only extracting constant map keys for relevant maps. This fix
+    works because nullness elision is only allowed for {PERCPU_}ARRAY maps,
+    and keys for these are within u32 range. See next commit for an example
+    via selftest.
+
+    Acked-by: Eduard Zingerman <eddyz87@gmail.com>
+    Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+    Reported-by: Ilya Leoshkevich <iii@linux.ibm.com>
+    Tested-by: Marc Hartmayer <mhartmay@linux.ibm.com>
