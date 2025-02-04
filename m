@@ -1,182 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41D620DD64;
-	Tue,  4 Feb 2025 11:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043ED20A5F1;
+	Tue,  4 Feb 2025 11:11:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738667396; cv=none; b=c36goRrvyGXOFxls13KCf5mODA0f91J0V0YK15UtgKwLkg5wyMF4ZV+JI1mp+/M1GI+9Aj71O/CqYiBPJQniyOrTiKYFhBBDlj+iyCgE6YuwmgK8IIMdJnvJvpiOW0llOxjZS9DCdTLiHHLHLvEO9+HtsIgqcyAiuHD+zLKghEM=
+	t=1738667481; cv=none; b=r2m6HllsixbUJsPKYJGRfutJMALiM+oETwJiE8frstqPXGi4HZtV9Q8ZaVmZuL0YwUvs3o7GRea6dCo23RsTW4fqyI6NfXYyExdG+eyE5gb+bUWzFJd2JmvwTiUGnIexMxp9PKGSTYFVAltSDx7RvP+0E1aBxcdYqYLqUIBpIlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738667396; c=relaxed/simple;
-	bh=ntgkV69b2fyGJypAfUMTQ4pQJEyhemVKS7tW1bGczT0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gR7Dekz/uT4/ahfu9TOCzaXPKK3lZjBlcR7QRXxMUPFqHoUbCBpmmDqOMwWvFphXcdaCAvSHN8fBuRdv6Vfj/XU/zsjgftJ4oagcao8vxEPGdQn9EvSGy+YnDabq32kNaX6+y//lfT+O8psbH1wplvqa33HGw2lZD7Nngesea0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=m5OpiXnJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738667481; c=relaxed/simple;
+	bh=XHLDsuppodMrQgvlQLOZUGGOw1L92Mch8WClq/KsVU8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=l7Rt2nf70lAAz2C+E91VuE0aTmr8V2zsu2hwDwrfJ9KngNhpRprgvDt1R6fNIaJc8zpLYviAPIkcMMw64s/tK8O2qhEW0Vn6CQwucUPyHTz1a7mK8NMYLT6EH9IJY9RmcOQ9z24JjUYUSz+i3gzdM6CUwbD7zKkebIBZD6F4Brc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZLIsUfKy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="m5OpiXnJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6BD0C4CEE4;
-	Tue,  4 Feb 2025 11:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738667395;
-	bh=ntgkV69b2fyGJypAfUMTQ4pQJEyhemVKS7tW1bGczT0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m5OpiXnJL/VJ7CuaMpqzR1NQBzX6td9VU/aPCBR7oSkz6XW9uknmvfpyLyTsMTdRz
-	 6qYahXaiBgKY0NDtUPaw5KAX5Ec5l+HzNy1n7a2EkEAKIFsk5eTA+HdNRhgeJ3+VVB
-	 OYqQ5CpQQrmCMsVgy/571Gmx0gHW4y+hhEzY2Zew=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Lyude Paul <lyude@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH v2 5/5] wifi: cfg80211: move away from using a fake platform device
-Date: Tue,  4 Feb 2025 12:09:17 +0100
-Message-ID: <2025020425-esquire-tucking-7521@gregkh>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <2025020421-poster-moisture-534b@gregkh>
-References: <2025020421-poster-moisture-534b@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZLIsUfKy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A352AC4CEDF;
+	Tue,  4 Feb 2025 11:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738667480;
+	bh=XHLDsuppodMrQgvlQLOZUGGOw1L92Mch8WClq/KsVU8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ZLIsUfKyNHFmDVXpTyzhpdfQe949xYNgrhil0BlADJghGAPJ1JabA5AZdfcxLVjWY
+	 JkDI1dUIrb1/le98kQHSPV92JWuR+ZPn5iJR71KpRwt/oMQz0pmWgVdyApm3x2LSwY
+	 IBcG028pTfLi8RAVA0dfP2K7JMKPXhSAnWx74PP2nbe12zfBwqtz+cKgwQXEe0doRs
+	 eYYHn8CnN+4iWUkn4cssl4qiiTUDbyVwt0oI+Sk5+1d8E9vOpkP6vTpJp4+IMWDc3E
+	 y4CgELeNuKGHcR+S7bPDHcQDjPxn8KCMdYR++YSqWvnf6h/FqRowI7VSBjoCgmG5sO
+	 CGaYcL/kF8Ntg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Jens Korinth via B4 Relay" <devnull+jens.korinth.tuta.io@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Trevor Gross" <tmgross@umich.edu>,  <jens.korinth@tuta.io>,
+  <rust-for-linux@vger.kernel.org>,  "FUJITA Tomonori"
+ <fujita.tomonori@gmail.com>,  "Dirk Behme" <dirk.behme@gmail.com>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/3] rust: Add `OnceLite` for executing code once
+In-Reply-To: <20241126-pr_once_macros-v4-1-410b8ca9643e@tuta.io> (Jens Korinth
+	via's message of "Tue, 26 Nov 2024 17:40:57 +0100")
+References: <20241126-pr_once_macros-v4-0-410b8ca9643e@tuta.io>
+	<poAqTzhtd43yGVAADApFHiRjactbLh1qhuAIUpJ-jTauxXWy6eowgNJfFfAk87AtrQJqPImRPPNjTabZhtG4Xw==@protonmail.internalid>
+	<20241126-pr_once_macros-v4-1-410b8ca9643e@tuta.io>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 04 Feb 2025 12:11:04 +0100
+Message-ID: <87ldumj77b.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4009; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=ntgkV69b2fyGJypAfUMTQ4pQJEyhemVKS7tW1bGczT0=; b=owGbwMvMwCRo6H6F97bub03G02pJDOkLv6buK9h3oSJQduHZKc+Yck6ZbHR/xC1Y/u5H+PZ3/ z45+rxT7ohlYRBkYpAVU2T5so3n6P6KQ4pehranYeawMoEMYeDiFICJbPBgmMNxcvnN43x/N+2e K+fqFxBwYuPX06wMc6Usl2yeHdLgK7642eT1U32fZAn+aQA=
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Downloading firmware needs a device to hang off of, and so a platform
-device seemed like the simplest way to do this.  Now that we have a faux
-device interface, use that instead as this "regulatory device" is not
-anything resembling a platform device at all.
+"Jens Korinth via B4 Relay" <devnull+jens.korinth.tuta.io@kernel.org> writes:
 
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- v2: new example patch in this series
+> From: Jens Korinth <jens.korinth@tuta.io>
+>
+> Similar to `Once` in Rust's standard library, but with the same
+> non-blocking behavior as the kernel's `DO_ONCE_LITE` macro. Abstraction
+> allows easy replacement of the underlying sync mechanisms, see
+>
+> https://lore.kernel.org/rust-for-linux/20241109-pr_once_macros-v3-0-6beb24e0cac8@tuta.io/.
+>
+> Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+> Signed-off-by: Jens Korinth <jens.korinth@tuta.io>
 
- net/wireless/reg.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+Thanks for the patch!
 
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index 2dd0533e7660..e7a7179eb14d 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -53,7 +53,7 @@
- #include <linux/list.h>
- #include <linux/ctype.h>
- #include <linux/nl80211.h>
--#include <linux/platform_device.h>
-+#include <linux/device/faux.h>
- #include <linux/verification.h>
- #include <linux/moduleparam.h>
- #include <linux/firmware.h>
-@@ -105,7 +105,7 @@ static struct regulatory_request __rcu *last_request =
- 	(void __force __rcu *)&core_request_world;
- 
- /* To trigger userspace events and load firmware */
--static struct platform_device *reg_pdev;
-+static struct faux_device *reg_fdev;
- 
- /*
-  * Central wireless core regulatory domains, we only need two,
-@@ -582,7 +582,7 @@ static int call_crda(const char *alpha2)
- 	else
- 		pr_debug("Calling CRDA to update world regulatory domain\n");
- 
--	ret = kobject_uevent_env(&reg_pdev->dev.kobj, KOBJ_CHANGE, env);
-+	ret = kobject_uevent_env(&reg_fdev->dev.kobj, KOBJ_CHANGE, env);
- 	if (ret)
- 		return ret;
- 
-@@ -778,7 +778,7 @@ static bool regdb_has_valid_signature(const u8 *data, unsigned int size)
- 	const struct firmware *sig;
- 	bool result;
- 
--	if (request_firmware(&sig, "regulatory.db.p7s", &reg_pdev->dev))
-+	if (request_firmware(&sig, "regulatory.db.p7s", &reg_fdev->dev))
- 		return false;
- 
- 	result = verify_pkcs7_signature(data, size, sig->data, sig->size,
-@@ -1060,7 +1060,7 @@ static int query_regdb_file(const char *alpha2)
- 		return -ENOMEM;
- 
- 	err = request_firmware_nowait(THIS_MODULE, true, "regulatory.db",
--				      &reg_pdev->dev, GFP_KERNEL,
-+				      &reg_fdev->dev, GFP_KERNEL,
- 				      (void *)alpha2, regdb_fw_cb);
- 	if (err)
- 		kfree(alpha2);
-@@ -1076,7 +1076,7 @@ int reg_reload_regdb(void)
- 	const struct ieee80211_regdomain *current_regdomain;
- 	struct regulatory_request *request;
- 
--	err = request_firmware(&fw, "regulatory.db", &reg_pdev->dev);
-+	err = request_firmware(&fw, "regulatory.db", &reg_fdev->dev);
- 	if (err)
- 		return err;
- 
-@@ -4297,12 +4297,12 @@ static int __init regulatory_init_db(void)
- 	 * in that case, don't try to do any further work here as
- 	 * it's doomed to lead to crashes.
- 	 */
--	if (IS_ERR_OR_NULL(reg_pdev))
-+	if (!reg_fdev)
- 		return -EINVAL;
- 
- 	err = load_builtin_regdb_keys();
- 	if (err) {
--		platform_device_unregister(reg_pdev);
-+		faux_device_destroy(reg_fdev);
- 		return err;
- 	}
- 
-@@ -4310,7 +4310,7 @@ static int __init regulatory_init_db(void)
- 	err = regulatory_hint_core(cfg80211_world_regdom->alpha2);
- 	if (err) {
- 		if (err == -ENOMEM) {
--			platform_device_unregister(reg_pdev);
-+			faux_device_destroy(reg_fdev);
- 			return err;
- 		}
- 		/*
-@@ -4339,9 +4339,9 @@ late_initcall(regulatory_init_db);
- 
- int __init regulatory_init(void)
- {
--	reg_pdev = platform_device_register_simple("regulatory", 0, NULL, 0);
--	if (IS_ERR(reg_pdev))
--		return PTR_ERR(reg_pdev);
-+	reg_fdev = faux_device_create("regulatory", NULL);
-+	if (!reg_fdev)
-+		return -ENODEV;
- 
- 	rcu_assign_pointer(cfg80211_regdomain, cfg80211_world_regdom);
- 
-@@ -4369,9 +4369,9 @@ void regulatory_exit(void)
- 	reset_regdomains(true, NULL);
- 	rtnl_unlock();
- 
--	dev_set_uevent_suppress(&reg_pdev->dev, true);
-+	dev_set_uevent_suppress(&reg_fdev->dev, true);
- 
--	platform_device_unregister(reg_pdev);
-+	faux_device_destroy(reg_fdev);
- 
- 	list_for_each_entry_safe(reg_beacon, btmp, &reg_pending_beacons, list) {
- 		list_del(&reg_beacon->list);
--- 
-2.48.1
+I was using the series for `pr_warn_once!` elsewhere, and clippy gave me
+this suggestion:
+
+  CLIPPY L rust/kernel.o
+error: you should consider adding a `Default` implementation for `OnceLite`
+  --> /home/aeh/src/linux-rust/module-params/rust/kernel/once_lite.rs:52:5
+   |
+52 | /     pub const fn new() -> Self {
+53 | |         Self(AtomicBool::new(false), AtomicBool::new(false))
+54 | |     }
+   | |_____^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#new_without_default
+   = note: `-D clippy::new-without-default` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::new_without_default)]`
+help: try adding this
+   |
+49 + impl Default for OnceLite {
+50 +     fn default() -> Self {
+51 +         Self::new()
+52 +     }
+53 + }
+   |
+
+
+
+Best regards,
+Andreas Hindborg
+
+
 
