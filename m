@@ -1,55 +1,55 @@
-Received: from mail-vk1-f202.google.com (mail-vk1-f202.google.com [209.85.221.202])
+Received: from mail-vs1-f74.google.com (mail-vs1-f74.google.com [209.85.217.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55C770825
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 00:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677A87082D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 00:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738629660; cv=none; b=T91HCgNMDaaKmn8VRkC0/GDNR0kBST62RvHW9ti0Hpjfc6phfDTGaRMD7VU9QuqgMaYVLc4WbsEhujdDdPpSYmPt4HKwuPlJcyuHpsYaN3Cu5VisYZ05GypJOseAa904S4JERWV2EN6QOTKEQ4G9TpL7Knc2TmsZPXmVkZ1ACyE=
+	t=1738629662; cv=none; b=E2vo0kguF6RfJJ4NuKRYr/eN1xiy7+pzXxcH//n5sqH3J29tNOXjeQ3cH6+qWzbd1KqbCf9cgJwzHScQWy0rCkUFuGnxHBcasY2LP5i7+Xnx+Z5L4FC1IbQUj9Uyu59V5cPH3apbvzlXxHBj+BcNH37Ml7T+/FhaRsqGg+TZ0YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738629660; c=relaxed/simple;
-	bh=d6Z0Qr4CTc08P9WkJMHZwVj8gKSLjMo2tlv6iVU7it0=;
+	s=arc-20240116; t=1738629662; c=relaxed/simple;
+	bh=laK1gDLMFvyUOb7SAvftZWPYqAgaPTCfy3IryJLdS2o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=r9LW8P8ZSMauVcI98OsY5jMwxDyU8f/o4jNQw+qQr2jDKA2YLDntEGxck/VvTHZpNNw2v3ZWuXbgu3jcBzmYDVd96AKIoJ5y5+Nt39XoPgsEl+fwUGTwQ/7cXSoJkyxuSLWQbbTB6nbbjzi6vJi7DMBBge65qhcC1mVdg/oM8Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DTg5c4IK; arc=none smtp.client-ip=209.85.221.202
+	 To:Cc:Content-Type; b=QRRmlkHmHJwgr8bqOkxHFjNxgwMqqF9OhIWpqqxmoO1ZCzHJHBvuK8rh9MsrHc/2IQcXxz1Zzk/HM+QtcSfZs+DqKDM3/68ihOKbVgJ7gf/f6Tq9YXat8Fk6ZkFeyVpzgHvwQWXx3l4MrtxP1JCNTBYzw6v537z7KmvuuXbRoc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oK/dptWb; arc=none smtp.client-ip=209.85.217.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DTg5c4IK"
-Received: by mail-vk1-f202.google.com with SMTP id 71dfb90a1353d-51604d32337so1006754e0c.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 16:40:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oK/dptWb"
+Received: by mail-vs1-f74.google.com with SMTP id ada2fe7eead31-4b053191e52so466922137.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 16:41:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738629657; x=1739234457; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738629659; x=1739234459; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z8EVTlPHi7Mb2Te93qLO1p412b+GgWZ4HCCPa7QLCB4=;
-        b=DTg5c4IK4uqeuKtprc8dCv/TZ7A4uurNkQMARBgJxO+sjnAeHiw8rFBELPn6xJP5uC
-         xgJfetwG8KkHjqgLqiwIKmMJria6QEul1ClGwcQ3fPKRFbqo8xIfN8WUK5NkGLGBpmXd
-         9IVxv/pkg0IeWlG9S5kp04FDegDFP4FlD9eebRcu7p+uSU8x6THomfAV9aVzDT08bWJ1
-         6xsOo0TDwPuqVx3NRUNjKXgR8ObT1AGkb9Wdp7Xxp7U1JMJVZQW5Pq/qiWCxB/m53djr
-         2TFRspj9z/Pw23JuoJZDv3s5Oav9LvjH46cxLrHPJut+nKDZ0qSt48U5VyTbres1KwFE
-         3CtQ==
+        bh=UClTVLduxzV//E3HpIXY8T1q8+8Xs6EHUNjdjil8pCk=;
+        b=oK/dptWb3NxpzG3CGLqtB8xIjYbYX+ekgAPHYpotDE8cKKviHiklqTSxcHcJT+lhWn
+         s4SgDu2vB9EaRKwSZ/OWCB62lwaA1fExkAKbU4J65oiuDp23nM08+YMyGXjcFg9x+3EC
+         INkUAhStVpd8Ulrax51Wr35FoG5qxoX5CODKn4/FpzttpJCdmssqCyu+YT3xyW2ob9Ez
+         lsTT3lwmeOQOd1ncRRRmnOgdX1DkX5CeIcZPXRcMCqCq/AFH+5R0RWjuaZp0N1KpNQZX
+         ePPQq51V0B2ENKMI5o8EQMwJir0g4Uq5DIvgyZuwem7H1+j0sXP2JJ3c18R79PsK6OUB
+         ujqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738629657; x=1739234457;
+        d=1e100.net; s=20230601; t=1738629659; x=1739234459;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z8EVTlPHi7Mb2Te93qLO1p412b+GgWZ4HCCPa7QLCB4=;
-        b=uhoHTu1YviyZ/+pvNZCfgSRAqCvWvK1WEYRlTzdTHTBrc92IUNES86XVK+6Lg4b9pA
-         rxhkBOMx56jL9FcT2JSkm6lf5mX4DeQqYCIm20DUBVx367CNFDik78S4c9Gkfr3yBXod
-         NMTXnbnvHMsqX+BzeMGYVe2Pa+z0oVn0Ckn7CXbRfr8RK86wBLHSCTA31nsBoe0Mh3J3
-         yHATKlE2TpWSo5G1ski+Wd52w7K1U+svU6gmuECe2h9vTUpK+Q6P4ULlzSB0YocHFW9R
-         6mJH+93fcg8WElLQeQosPRilCkeFVxCvRvUv2V/EQNzpmg6akVZ835ycRs620exzoFTI
-         Hm1g==
-X-Forwarded-Encrypted: i=1; AJvYcCU/8EDSHE56AxWnqRuc9BK0iAkwEv4J3LPTOcOAo9hyxmpFxo1ddbsCg/mzvRF050QPx9lZdViBC4bXDVY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ/BrMQMVcnxeKU+Pb8PoVAK3P9/rLZyiytsmdyO1WAfwTZlaO
-	WKRMmcs3dJxnsQzqCmDobCjp6V5gHKUH1nz5ue31mGplFqdLcAxEVQPH550z4GLqO1g+wg+GnFm
-	3/YA47Ud2xbPhJc/HbQ==
-X-Google-Smtp-Source: AGHT+IGHq940BRezUkVwlNOCiT1XgwqRxT3qyHCt+hNVEw0Fg5bWPvg40CR+xh2gIgoPsc7fxthizhVN+hgnsK9w
-X-Received: from vsbid8.prod.google.com ([2002:a05:6102:4bc8:b0:4af:ed99:8589])
+        bh=UClTVLduxzV//E3HpIXY8T1q8+8Xs6EHUNjdjil8pCk=;
+        b=KS5+SRWcT/rxa/R0qIDR0b+GqqoLKtKGGg31hRbXVf68zfe5+3YHwsohPFQrIFRjwc
+         OoSjPUE1V0OVvIH3BlkqhBHpEFnLd5agCD/o521VwcLP2JBNF43CY8hdsSeYd9bAGGyy
+         OB9mNvlQz3FOHzmsVmAcMIJxNY27o2qnH3hhh1hxG/jrjXK+n3O1KAIYfvZ8oSSVarTC
+         02Jp7nGUnups/mwlBQ/yoFCLlZ1HnCFwb/SWN5EUOXCCiXIv++eKqBG0q5NxiERFfErQ
+         1i1BBhhFBYPiUD2gWc2Co0tMdaJDi+RF4o3AiTqOg6tjuopsTJj3MTHypU9r4/nCkNvr
+         eiEw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1hAiR1u0bK87zcCA/3LiaplG1bvvAUyyVd56AkJuK6HIjjEUJPJEuP2IhXlYkz4vvnEmWHrut5eNX4AE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA2/QhYR+z2Zucj3XmMVL+l8ujTpFMzT34nVEbdh9WSnpCsmGM
+	ureM2Julbc/foEHcG0hvrkmETJWy1LypzSKjGGbT0DkAnpnFobJ2xx0mgoyP2sIMdxhmLlCfre/
+	EPks7rVF/6k59hOKkoA==
+X-Google-Smtp-Source: AGHT+IFoYCI+/fk9XlW4Og9OojNpJjeFqCn4vcpYW8e9yXKsurANBIx2UF+cPzuP7f1QaF+j3i3290eON/+qh+LD
+X-Received: from vsbij9.prod.google.com ([2002:a05:6102:5e89:b0:4af:ac82:5669])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6102:c0f:b0:4af:c519:4e86 with SMTP id ada2fe7eead31-4b9a4ec4902mr18110648137.1.1738629657558;
- Mon, 03 Feb 2025 16:40:57 -0800 (PST)
-Date: Tue,  4 Feb 2025 00:40:30 +0000
+ 2002:a05:6102:54a0:b0:4b2:5c0a:9aff with SMTP id ada2fe7eead31-4b9a4ec8e82mr19199359137.3.1738629659286;
+ Mon, 03 Feb 2025 16:40:59 -0800 (PST)
+Date: Tue,  4 Feb 2025 00:40:32 +0000
 In-Reply-To: <20250204004038.1680123-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250204004038.1680123-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
-Message-ID: <20250204004038.1680123-4-jthoughton@google.com>
-Subject: [PATCH v9 03/11] KVM: x86/mmu: Factor out spte atomic bit clearing routine
+Message-ID: <20250204004038.1680123-6-jthoughton@google.com>
+Subject: [PATCH v9 05/11] KVM: x86/mmu: Rename spte_has_volatile_bits() to spte_needs_atomic_write()
 From: James Houghton <jthoughton@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
@@ -70,48 +70,113 @@ Cc: David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-This new function, tdp_mmu_clear_spte_bits_atomic(), will be used in a
-follow-up patch to enable lockless Accessed bit clearing.
+spte_has_volatile_bits() is now a misnomer, as the an SPTE can have its
+Accessed bit set or cleared without the mmu_lock held, but the state of
+the Accessed bit is not checked in spte_has_volatile_bits().
+Even if a caller uses spte_needs_atomic_write(), Accessed bit
+information may still be lost, but that is already tolerated, as the TLB
+is not invalidated after the Accessed bit is cleared.
 
 Signed-off-by: James Houghton <jthoughton@google.com>
-Acked-by: Yu Zhao <yuzhao@google.com>
 ---
- arch/x86/kvm/mmu/tdp_iter.h | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ Documentation/virt/kvm/locking.rst | 4 ++--
+ arch/x86/kvm/mmu/mmu.c             | 4 ++--
+ arch/x86/kvm/mmu/spte.c            | 9 +++++----
+ arch/x86/kvm/mmu/spte.h            | 2 +-
+ arch/x86/kvm/mmu/tdp_iter.h        | 2 +-
+ 5 files changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/tdp_iter.h b/arch/x86/kvm/mmu/tdp_iter.h
-index 047b78333653..9135b035fa40 100644
---- a/arch/x86/kvm/mmu/tdp_iter.h
-+++ b/arch/x86/kvm/mmu/tdp_iter.h
-@@ -25,6 +25,13 @@ static inline u64 kvm_tdp_mmu_write_spte_atomic(tdp_ptep_t sptep, u64 new_spte)
- 	return xchg(rcu_dereference(sptep), new_spte);
+diff --git a/Documentation/virt/kvm/locking.rst b/Documentation/virt/kvm/locking.rst
+index c56d5f26c750..4720053c70a3 100644
+--- a/Documentation/virt/kvm/locking.rst
++++ b/Documentation/virt/kvm/locking.rst
+@@ -196,7 +196,7 @@ writable between reading spte and updating spte. Like below case:
+ The Dirty bit is lost in this case.
+ 
+ In order to avoid this kind of issue, we always treat the spte as "volatile"
+-if it can be updated out of mmu-lock [see spte_has_volatile_bits()]; it means
++if it can be updated out of mmu-lock [see spte_needs_atomic_write()]; it means
+ the spte is always atomically updated in this case.
+ 
+ 3) flush tlbs due to spte updated
+@@ -212,7 +212,7 @@ function to update spte (present -> present).
+ 
+ Since the spte is "volatile" if it can be updated out of mmu-lock, we always
+ atomically update the spte and the race caused by fast page fault can be avoided.
+-See the comments in spte_has_volatile_bits() and mmu_spte_update().
++See the comments in spte_needs_atomic_write() and mmu_spte_update().
+ 
+ Lockless Access Tracking:
+ 
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 7779b49f386d..1fa0f47eb6a5 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -501,7 +501,7 @@ static bool mmu_spte_update(u64 *sptep, u64 new_spte)
+ 		return false;
+ 	}
+ 
+-	if (!spte_has_volatile_bits(old_spte))
++	if (!spte_needs_atomic_write(old_spte))
+ 		__update_clear_spte_fast(sptep, new_spte);
+ 	else
+ 		old_spte = __update_clear_spte_slow(sptep, new_spte);
+@@ -524,7 +524,7 @@ static u64 mmu_spte_clear_track_bits(struct kvm *kvm, u64 *sptep)
+ 	int level = sptep_to_sp(sptep)->role.level;
+ 
+ 	if (!is_shadow_present_pte(old_spte) ||
+-	    !spte_has_volatile_bits(old_spte))
++	    !spte_needs_atomic_write(old_spte))
+ 		__update_clear_spte_fast(sptep, SHADOW_NONPRESENT_VALUE);
+ 	else
+ 		old_spte = __update_clear_spte_slow(sptep, SHADOW_NONPRESENT_VALUE);
+diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
+index e984b440c0f0..ae2017cc1239 100644
+--- a/arch/x86/kvm/mmu/spte.c
++++ b/arch/x86/kvm/mmu/spte.c
+@@ -129,11 +129,12 @@ static bool kvm_is_mmio_pfn(kvm_pfn_t pfn)
  }
  
-+static inline u64 tdp_mmu_clear_spte_bits_atomic(tdp_ptep_t sptep, u64 mask)
-+{
-+	atomic64_t *sptep_atomic = (atomic64_t *)rcu_dereference(sptep);
-+
-+	return (u64)atomic64_fetch_and(~mask, sptep_atomic);
-+}
-+
- static inline void __kvm_tdp_mmu_write_spte(tdp_ptep_t sptep, u64 new_spte)
+ /*
+- * Returns true if the SPTE has bits that may be set without holding mmu_lock.
+- * The caller is responsible for checking if the SPTE is shadow-present, and
+- * for determining whether or not the caller cares about non-leaf SPTEs.
++ * Returns true if the SPTE has bits other than the Accessed bit that may be
++ * changed without holding mmu_lock. The caller is responsible for checking if
++ * the SPTE is shadow-present, and for determining whether or not the caller
++ * cares about non-leaf SPTEs.
+  */
+-bool spte_has_volatile_bits(u64 spte)
++bool spte_needs_atomic_write(u64 spte)
  {
- 	KVM_MMU_WARN_ON(is_ept_ve_possible(new_spte));
-@@ -63,12 +70,8 @@ static inline u64 kvm_tdp_mmu_write_spte(tdp_ptep_t sptep, u64 old_spte,
- static inline u64 tdp_mmu_clear_spte_bits(tdp_ptep_t sptep, u64 old_spte,
- 					  u64 mask, int level)
- {
--	atomic64_t *sptep_atomic;
--
--	if (kvm_tdp_mmu_spte_need_atomic_write(old_spte, level)) {
--		sptep_atomic = (atomic64_t *)rcu_dereference(sptep);
--		return (u64)atomic64_fetch_and(~mask, sptep_atomic);
--	}
-+	if (kvm_tdp_mmu_spte_need_atomic_write(old_spte, level))
-+		return tdp_mmu_clear_spte_bits_atomic(sptep, mask);
+ 	if (!is_writable_pte(spte) && is_mmu_writable_spte(spte))
+ 		return true;
+diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
+index 59746854c0af..4c290ae9a02a 100644
+--- a/arch/x86/kvm/mmu/spte.h
++++ b/arch/x86/kvm/mmu/spte.h
+@@ -519,7 +519,7 @@ static inline u64 get_mmio_spte_generation(u64 spte)
+ 	return gen;
+ }
  
- 	__kvm_tdp_mmu_write_spte(sptep, old_spte & ~mask);
- 	return old_spte;
+-bool spte_has_volatile_bits(u64 spte);
++bool spte_needs_atomic_write(u64 spte);
+ 
+ bool make_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
+ 	       const struct kvm_memory_slot *slot,
+diff --git a/arch/x86/kvm/mmu/tdp_iter.h b/arch/x86/kvm/mmu/tdp_iter.h
+index 05e9d678aac9..b54123163efc 100644
+--- a/arch/x86/kvm/mmu/tdp_iter.h
++++ b/arch/x86/kvm/mmu/tdp_iter.h
+@@ -55,7 +55,7 @@ static inline bool kvm_tdp_mmu_spte_need_atomic_write(u64 old_spte, int level)
+ {
+ 	return is_shadow_present_pte(old_spte) &&
+ 	       is_last_spte(old_spte, level) &&
+-	       spte_has_volatile_bits(old_spte);
++	       spte_needs_atomic_write(old_spte);
+ }
+ 
+ static inline u64 kvm_tdp_mmu_write_spte(tdp_ptep_t sptep, u64 old_spte,
 -- 
 2.48.1.362.g079036d154-goog
 
