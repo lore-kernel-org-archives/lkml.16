@@ -1,138 +1,83 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FCA208992;
-	Tue,  4 Feb 2025 10:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE5D1FFC7F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738663375; cv=none; b=M9/F5lVfgGTOIXisngUG1oBPimSztczVHNXUZ6zgOwkLo9cW+tFRwFRe4Dz6WIGBOcy93CLddiEpPw7L2I0pYTnkxEVcSxQzGIrMBufG4kANSGrqItBQ9gP1BxA6Umgnu4IdhWsw8hWLnbioUeTU3Qw8JcBg6DfDq7aE1RDJlaE=
+	t=1738663439; cv=none; b=jfU7R5fxjmMMjpNI4YNXhB8Gw6EXDKMoR7FdwPBCIEOfaYYfbrhK4RUQahOqyJMfotLXry/qE9xeURhfajLVJIW0ms2p+nUfeYQE8Y2S4T8gwuQy6bKsG3YtIY6DQJSNFqqLZ94BfOr85dP7oAURQXJ61PVqBbfjfHcjnEzpq1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738663375; c=relaxed/simple;
-	bh=NVe+5Vj5wT+jv8MRUuBhLO5f0ZuuCoMo+ewbhxjx8dc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=gxa4WaasFqBiUecP4XqWnUtHuZSN9Ijc0dPLh3dw03WOxO2LQlCfXpJKzLsX4aSc1RgvU4rxiJTIozHm/A5s/Xd55pszyan6CQCT8OBZi4SZYFTZE5s4eBjM+nG36+majOj5Lpd0vZI9hX3ra33XBpsqqQrSiiHmtcUN4SFpdxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hd/E9e+w; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738663439; c=relaxed/simple;
+	bh=6DuDzct7+xvboH6MUpN03RHBdW7vfqUR9j5SJqIWudQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AG+aebybEGTYwjMlbCOKZWo3tnoy8U8kzDbf4jnY1tORHSdjSnmndrw/rXNa6vw4ckEMY0bQRFvjI9XzvcwmuBmFaq19eeS8Tz1+l57KvO+IGb/NZg6aeHGiC3Jeo75NfWlUgCf9tLNKKJdUg6I7fjrxWBpk1KTx4xq51LZwvnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=CNJhFilq; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hd/E9e+w"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38daf1f5091so132523f8f.1;
-        Tue, 04 Feb 2025 02:02:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738663372; x=1739268172; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=phievftbMhEJWOjF57oTUK/kdR4f6x3/eDPPiCF/bJU=;
-        b=hd/E9e+wHHRte0VdAXsvSl0WFtiv7dIzPpjPUlkpXs/x/2FRtQlliztplO7rnLEek+
-         z/uD5o/HZEH3htylh7vYjXOpxyaocnkE99UXGrbVcX9sewa81phKhhxhDKI/5OIII+8R
-         5yCtBhrKSRQv1zZERSlMU63F10Zp7NByZXH0vyg0lP49hcdfO6m4wKyD3ACCSCTK04nj
-         EwEVHFo+Vf0OV98F0FNexU5epQ2O7mzL1q6zut7SCxmZ68jaS6/xI5RcbGNAA8/a8k6P
-         vrFaFgFG1f/bliEirVBxGaDGCM2f90vyRe2Gu7czUL9E0mlRF535lPsCMSRR69kx5lHm
-         FLeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738663372; x=1739268172;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=phievftbMhEJWOjF57oTUK/kdR4f6x3/eDPPiCF/bJU=;
-        b=ak6vsPM8F9yobKlwL8+LSNrm4w8hXTYYqRpNm04J2QTFKjXwB7Tq+FoyrFVUZaMNIG
-         MPuyfJ7wn+WWnqUlYVq3ukPrxdzz8s3SskgSX14YG35k98lZDGxT1l7kiC0iwQ4wtCGG
-         HCurVxdrTClU7jNLb1tdI74x+pWixvBBS/kZbq80v6eFeS7qugEbaYnkSuL26kgoa3yd
-         6bJgtHSsuSJrDHhswzAzI9FPU4Bn7mLGf+9DDqnZLNIC526zECkJXuSPtzXGLuTVxm0S
-         vyV0p5aMUyegwRHlANy0mWIP5plLcVnQpexus+tA0XItnziI4JBCB1CJCKO4ziFelvpQ
-         IXFw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6g/VpI5BBhOoa+2v0iQOI9YsJI1hh+f+oHkYWZp7GcFoRg3cGwpoDgn+2s6QvaY/pQvSbzM5f9AJnodg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIBYyN+r31cPMevKzSUzJCP3xAvCzIRePTgshTG4w3t23XiBvb
-	2Z8cOPtpTxsUmK9OqeMpCz6MuSMCcSNqMgBSlgpDpyRBHZ8pzNu3
-X-Gm-Gg: ASbGnctoOQw7W6ziizzcJgeF6VX8Lyb/zyJUcbT6cMGHiwIu1BSSEtNTx5uzHQK+nvp
-	OyTe4/8qDpm5oC/NJ//SvcHzUc/+yjw0AcRIxR79bWnrrBumxLshzjtHvpdZmVK3jYbAm+v46yV
-	DYOlFOaJryjsOEW4TuRIlZPmNhrdI61nQtHLOERR8HgZ96aQU0+/jD5YqFLFBzB5MCmGe9hLYWJ
-	1yNlbZQSStrDrs/bNbQmkb8+N9BuZXzE/JUapOrzKUL+2uaYZKrJGnQdkUxUpLzjFrbFqaPvFJt
-	nF+6d1e1z+AvDTZfXiFY2erqyYRxeyq9FQ==
-X-Google-Smtp-Source: AGHT+IE17SiHozWKj+Os0pE2Y/1zwACLsOViGQPHYeNCGvgkHtVrDitOn4GliYkHWXRDJzqG8U9sig==
-X-Received: by 2002:a5d:4d47:0:b0:38b:f44b:8663 with SMTP id ffacd0b85a97d-38c520bb322mr15854536f8f.55.1738663371922;
-        Tue, 04 Feb 2025 02:02:51 -0800 (PST)
-Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c11fadbsm15039077f8f.44.2025.02.04.02.02.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 02:02:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="CNJhFilq"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5146q2C1015513
+	for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2025 04:03:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=Gt8xOJ0mSQyNSK2wtr
+	N/+vbeIDt+sHV55EHYEd/6i64=; b=CNJhFilqq6gLFRj6j3rLL4B+u1tkghCueP
+	ypWsMd5uNMtFRQG1ZcN5/9Z50SmYy8hIXGOSv7N/xiwdeRs5M3ruJ/wOwcOU49Qj
+	DZyHkUxpw6vVk34xeHoMZEVxcgQbxQri/pCtIs804v23gFmQg7UbYbGVlJ6K/YPU
+	f0Wsbd7Inx9XNAwuNpGWtXZTggFE6I4hZNprxA15+NRTspIejGq3xnBLhLbKmHW2
+	A0oIk+6qM1Ey91+OsByWHn5LgMeT2iCOq917y/+6v0a1w82pwFLBHF4Rbv0+P5gN
+	AHXMLebiUiApd8K0eLCR3DGqGbzSI/VlVB4qc+XiQZeIadkvmBJg==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 44hhw52qdv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 04:03:50 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 4 Feb
+ 2025 10:03:48 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Tue, 4 Feb 2025 10:03:48 +0000
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id D644182026C;
+	Tue,  4 Feb 2025 10:03:47 +0000 (UTC)
+Date: Tue, 4 Feb 2025 10:03:46 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Fred Treven <ftreven@opensource.cirrus.com>
+CC: Simon Trimmer <simont@opensource.cirrus.com>,
+        Richard Fitzgerald
+	<rf@opensource.cirrus.com>,
+        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/7] firmware: cs_dsp: Fix error checking in wseq_write()
+Message-ID: <Z6HmAvLwpwmmXd3U@opensource.cirrus.com>
+References: <20250131195639.1784933-1-ftreven@opensource.cirrus.com>
+ <20250131195639.1784933-2-ftreven@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 04 Feb 2025 11:02:50 +0100
-Message-Id: <D7JKQ60C6EZA.24H639LLIG2U7@gmail.com>
-Cc: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/8] wifi: ath12k: handle change_vif_links() callback
-From: "Nicolas Escande" <nico.escande@gmail.com>
-To: "Aditya Kumar Singh" <aditya.kumar.singh@oss.qualcomm.com>, "Kalle Valo"
- <kvalo@kernel.org>, "Jeff Johnson" <jjohnson@kernel.org>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250204-unlink_link_arvif_from_chanctx-v1-0-675bd4cea339@oss.qualcomm.com>
-In-Reply-To: <20250204-unlink_link_arvif_from_chanctx-v1-0-675bd4cea339@oss.qualcomm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250131195639.1784933-2-ftreven@opensource.cirrus.com>
+X-Proofpoint-ORIG-GUID: C2PUhipE51wMDh-VmaFDQdO2-rJ0VWsA
+X-Authority-Analysis: v=2.4 cv=W/3CVQWk c=1 sm=1 tr=0 ts=67a1e606 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=kj9zAlcOel0A:10 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=GMewpXodn5kSIrv_U3UA:9 a=CjuIK1q_8ugA:10 a=zgiPjhLxNE0A:10
+ a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-GUID: C2PUhipE51wMDh-VmaFDQdO2-rJ0VWsA
+X-Proofpoint-Spam-Reason: safe
 
-On Tue Feb 4, 2025 at 5:23 AM CET, Aditya Kumar Singh wrote:
-> Currently, links in an interface are allocated during channel assignment
-> via assign_vif_chanctx(). Conversely, links are deleted during channel
-> unassignment via unassign_vif_chanctx(). However, deleting links during
-> channel unassignment does not comply with mac80211 link handling.
-> Therefore, this process should be managed within change_vif_links().
->
-> This series aims to add support to handle links in change_vif_links()
-> callback.
->
-> Patches 1-2 are making debug infra to work without device info.
->
-> Patches 3-8 are the ones changing the code to handle as mentioned above.
->
-> NOTE:
-> * A new ath12k-check warning comes which probably needs to be added to
-> ignore list
->
-> drivers/net/wireless/ath/ath12k/debug.c:69: Prefer [subsystem eg: netdev]=
-_dbg([subsystem]dev, ... then dev_dbg(dev, ... then pr_debug(...  to printk=
-(KERN_DEBUG ...
->
-> This is because, since device info is not known can not use netdev_ or de=
-v_
-> dbg family. pr_debug() is an option but that will require DYNAMIC_DEBUG
-> and then ath12k needs to be probed with dyndbg=3D+p which we don't want i=
-n
-> ath. Hence, only option left is to use printk() directly.
->
-Hello,
+On Fri, Jan 31, 2025 at 01:56:32PM -0600, Fred Treven wrote:
+> cs_dsp_coeff_write_ctrl() may return a non-zero value (1)
+> upon success. Change error checking in the write sequencer
+> code such that it checks for negative errnos rather than
+> any non-zero value when using this function.
+> 
+> Signed-off-by: Fred Treven <ftreven@opensource.cirrus.com>
+> ---
 
-When applying this series I am no longer able to start an AP on a DFS chann=
-el.
-(I don't know specifically which patch though)
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-After the initial CAC period I get the following kernel message:
-	[   45.248441] ath12k_pci 0003:01:00.0: cannot install key for non-existen=
-t peer 3a:07:16:d8:00:08
-And then hostapd goes in failed state:
-	wlan0: interface state UNINITIALIZED->COUNTRY_UPDATE
-	ACS: Automatic channel selection started, this may take a bit
-	wlan0: interface state COUNTRY_UPDATE->ACS
-	wlan0: ACS-STARTED
-	wlan0: ACS-COMPLETED freq=3D5620 channel=3D124
-	wlan0: interface state ACS->DFS
-	wlan0: DFS-CAC-START freq=3D5620 chan=3D124 sec_chan=3D1, width=3D2, seg0=
-=3D114, seg1=3D0, cac_time=3D5s
-	wlan0: DFS-CAC-COMPLETED success=3D1 freq=3D5620 ht_enabled=3D0 chan_offse=
-t=3D0 chan_width=3D5 cf1=3D5570 cf2=3D0 radar_detected=3D0
-	wlan0: nl80211: kernel reports: key addition failed
-	Interface initialization failed
-	wlan0: interface state DFS->DISABLED
-	wlan0: AP-DISABLED
-
-Maybe I missed something ? Is there another series this one depends upon th=
-at I
-should have applied before ?
-
-Thanks
+Thanks,
+Charles
