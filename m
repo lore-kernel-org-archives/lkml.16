@@ -1,118 +1,118 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995B3219A66
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 20:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC858219A8C;
+	Tue,  4 Feb 2025 20:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738700820; cv=none; b=VYxRqpfGlEx+FEwSDRJ2mB++upj8gtjKtXjwtHvg2hMCuxQgoI3eCD/ocO3E3BDcv1X+pWbWZA9Vlu449bWNwzUFeTJbQuGaVWLd9Oen7HzL+DHtxgTzOy/vWV4BZztv3mjGdPzdzEoZ2chkriJ7VYOKxfRojVXEgUw9IHdmAEI=
+	t=1738700845; cv=none; b=MqmfK+WQp+h1wyTSz78bELeKJilAN9uWrX4HQwN7IeNskezOVnCXnZzXTh51+y8gzoEALlfAejblA6I0eOeW1qGbFc5vrxoVDkJR6oNqdODwp2TiUcUGhA8ku5E3sAXUNMoJE8qfN2wrCQsezl4IpD/vx2y03RKMKUX52f2MroU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738700820; c=relaxed/simple;
-	bh=4OVHg9lS9y7hgZNNmxGr15YLES80pi29+1rMKHfcSfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bVknUATvaxkvS7gvuQGWs+FcA5DD/TnK6pubwmdM0eK/YWZ2J5Ojt5cm1Vfzw1GtWgZkdn8zG14+awTGCAxFHDJBHVOLkXte5UGJq8XNeUPB0i0F9bTKCwbTWTevuhOFttmvxYw5JQzjy1Kqa1gy3MxcGuMeXKDi0FGen+T5zF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=g2p76Jfu; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1738700845; c=relaxed/simple;
+	bh=WFSPDAIUqS5pZVqijiOyWktfMK8r6uga5eMdoFxZ5+c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V7eX86cHPRBrBRoR/MDk/dUcuHZnaWaBO8/41nt54JbvYOKF/IFHucUMxqQQzHCWiIM96f0vRoxl/+ify7Ypi9JB2xW0tzYIpSnN+Lsj+jqM3B2GWjrllGmdmZtyj5+MsfdH4WVJrPD+hEmFafL3gtHEvt53S0CRJzc6+HVrH1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nQ784Eoc; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="g2p76Jfu"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6d8e8445219so51261356d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 12:26:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQ784Eoc"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f9b9c0088fso276508a91.0;
+        Tue, 04 Feb 2025 12:27:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1738700817; x=1739305617; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XKfHXyy6Lxo2g0AOAumrKv9sTaQK4qw2WswIObaTPeM=;
-        b=g2p76Jfu1UnbM/BBJBbfV6/1PDs+k/oPdt/5zx7a8b/Hear0c9e9IGiyrwk53NpfTj
-         Fwo/jnhIMO8lHl2gnZ0900jBbea2oYGPihmOFfx0nJR3C4NHxFn8v3bTYsRn4Rl9/hox
-         fdiZ6d+C8wkPaPTugeZHzDgND2txEoKGaeWYQ/EjZkgPBBG+LNG1c4tjVeEiRLb5BEUu
-         haoi6nsAv+w5rVvjq5eNfV6nA1sPTls7hKTGgtHxIYkzKOfmnLN+GOFhCwnzts6U0/5Q
-         +4R9yvhDZbeTJukZZikFIMdI0mWIIMJxbqbd4ZyzoNFGOGVCt5XzKdw7uwJqxfeJ0H86
-         Vq/A==
+        d=gmail.com; s=20230601; t=1738700843; x=1739305643; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Gv6JiYtlN8kPSpQe7ceWePhqFvcJDCE6EdPDAPJIwCc=;
+        b=nQ784EocnUo3aY7w0iudAeoCPBcyNsLgGFTXwbHIx5IeYZf3o9X2j3NP0S49x9eK39
+         UrvbHH7DGQIawS6ZYonV9JmgxrOHS+3oW5qEheR9Hf7Pl4LyzhwRkoDI6/dYjjo+3tCP
+         3fiumLIBsI7M1c/oCdSfmirkff//UVIbNAEdDdNrmKY9sYmqIDAr9GuBlzlysnedTgQj
+         exPJbghmBOZO+PmrHehfaci/e3oA3161EzQ87uE7u5d+s5xYHhuPCZkfvb4lhbOUjeZy
+         brPdvXb6dCiMD2KwlIh7a5+Oyd/sR/hz2ENKWuAx4u1FZH2T5WUkQzvoz/etzr9jN0n4
+         5Mhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738700817; x=1739305617;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XKfHXyy6Lxo2g0AOAumrKv9sTaQK4qw2WswIObaTPeM=;
-        b=t9H1MEq2H3n2GdNjdZ5IvxkueYTOZjqG6QW4VA5cq4sbf9vyd53+XCtK0GFMYh+bit
-         SUYb/+cUOWy2uPNF3Itw0mc/ISOsRpweYGAsV/Ti6hHNN8i8CPyp606MF/CqXwP/IPAg
-         MS5WlWx1eB5u5tF4xI2cAboATy5Kor91hJ2mDLwwaEJYvtCd39OxxZpzOpnApEpsU8TK
-         dVacmYPLJ8LOemV8Hc+yRUsmtIbRBeejQ4+sb/r/gGpEb19JFxxxgn7p+j+5NdODmfY4
-         I4SDG8+oXrLuFmxLxHGuC9Y5cWcNCeGtRQhskjR1Dsj/DKpddXVp4foR7/FSeoUqfDab
-         RkyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWe5gesIFeCAEwn5EWANXd8budYozFq64UW8mxorTPRkGWJ7RMMx6l+EiVW8/1sUR4Gx/sdOD/7U3nUUaQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxieI0KZSF1sVox6lXJP+OSbmWNxfVdDfSWvVGbXipgePr5+WwD
-	spMbT2aX0BvCXQnpWE0VTNZYJWadaSBx4kzsPgSoWMPKQbE4ttbfYBthxDnhorw=
-X-Gm-Gg: ASbGncs8rju8XcWXVjVhLeVHSwgGIBnMJ4tPfZR2oMuO108XfAYwoKpCPc2ml23DH54
-	C0fh8nEyncS0yaLignvjBh+Iyn620rXz4or5RvGN339hDLsQym6NcWE1/J+9E6zuvCXUKYn35vU
-	bRoFVf9lNXKoxelxge8vvVW1XXtDdCq/clezbOFTAMLVlWG4G2dKTMhY28Q3mloBDl9yJutBXr4
-	gZMNZ0RuRJ4AlpxnzHVhXF1+2G8zFfCM52igsgBnV//75MWdRj2VIdCdtGtamgXYkgXj+5I+atu
-	2BcpB0oXlM0HzdTh0+SaOSMgta+pbov9umzOCbrMq1jfNAeJKSUzC2xDPtOD9o51
-X-Google-Smtp-Source: AGHT+IEsHxW8JLcluvuP8S+KAnuCNS+p1UBsZQIkGSJDtHpddXcm+6eR6EfbSxlm/LewurR5/XZ3Xg==
-X-Received: by 2002:ad4:5c46:0:b0:6d8:af2d:2a44 with SMTP id 6a1803df08f44-6e42fc54742mr2065826d6.32.1738700817497;
-        Tue, 04 Feb 2025 12:26:57 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254922538sm65650296d6.84.2025.02.04.12.26.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 12:26:56 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tfPVY-0000000CYY9-1RWN;
-	Tue, 04 Feb 2025 16:26:56 -0400
-Date: Tue, 4 Feb 2025 16:26:56 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: David Hildenbrand <david@redhat.com>
-Cc: Asahi Lina <lina@asahilina.net>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Jann Horn <jannh@google.com>, Matthew Wilcox <willy@infradead.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Valentin Obst <kernel@valentinobst.de>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	asahi@lists.linux.dev
-Subject: Re: [PATCH 0/6] rust: page: Support borrowing `struct page` and
- physaddr conversion
-Message-ID: <20250204202656.GL2296753@ziepe.ca>
-References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
- <Z6CTLB2NggwYafi9@phenom.ffwll.local>
- <1eaf66ba-b2d3-448f-938b-913f17ca98a4@redhat.com>
- <20250204183933.GJ2296753@ziepe.ca>
- <1d379007-97c3-4bb9-93da-1a828f955fc4@redhat.com>
+        d=1e100.net; s=20230601; t=1738700843; x=1739305643;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gv6JiYtlN8kPSpQe7ceWePhqFvcJDCE6EdPDAPJIwCc=;
+        b=CMZrjYKtDvUUf/F/eZhUi5/FxuAFrZaUspXVV1IDIHXaZQb0TkvbqKas7RXFyXmX0x
+         NxHTUNkQ1BCWmK0oFKx9428U4qH0KhLfrojdTbG21tGYAf3l9OJijinbQT0eLTl3Jaf7
+         AUKAiFq8onNspdpov0yKc2md6Bv/5nthaZpm8jzbQEYtyNb3fM/h4qs/ij9ppNPhPjV9
+         ZroI654z9hiWIYHciv3P+Cj1tICvJlln6oGhrcOLl/HJQoOACEQuRQ7gQ/Mi4+HW7vYH
+         tXwVQOFdO2pqRv0wSIEbXW8X0s8S2kLDjBrya0DEmnVn4SHOx8f/cMoO08LaO1R0PCo0
+         8h/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU6cGpEROAr8c6+2pTYTC9EaL1yDbFTcGrJiGmF+g5ui7JL05pS8HoyhwU8Lukv4bmzWlWcsTj9rH5q/R8=@vger.kernel.org, AJvYcCUIyeZAwkTFJE0WK5w6xQazblqBh6k+N2+sZXVr2/Effo0jXxU1p16IIeXUso1BUNxuLrKWOWyKN+fy9/bA@vger.kernel.org, AJvYcCWpIkBuEifl5l4N9XMfjMW2q5vJ1IwFKrPIF6M/c8bR+DcBn3JZhywbj01kNPpkmRBkYpUoPMoerCOLbSE=@vger.kernel.org, AJvYcCX1q41tpUfKqgv20knZeB/s/VBpkYjdMcZ8IyKFfscIWZ88Wfw2zbFKmsBuEa9v4MyMpbXH7+MsN4o=@vger.kernel.org, AJvYcCXC/GWsb42Gm+q8tDkGCxUas6xuQrpLbc3n9GOpcDTjnrdZdjCDpUZxLXOBH1445erK/exqzLowbGx+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHi+/NiiQlunwKG/ltHEesE0wLtQQ2iVc6o0nNNNFsAqHkpafM
+	HZp7Oylgq9vv8GxUenJAg8FuSazDiZYTWAaxu+VaP3uo4hu/ZZum
+X-Gm-Gg: ASbGnctVoq2RS3UKTXgtDCBvq6znK6xH3swzNWAG8r7jwonjHyqads+eEjE49H6EvgZ
+	1PFBOX6FkHOjrMTajVeFr3D/IFm5y61Ts7Tl/qm14GeTnA5yKaV1esXfrxK+xOnU33LB3C2vCFV
+	qU7ds6GbuEEAoMbuYOyqMURibTOLeduAY6+VP74vlgxwgP8nealGcon975vUNM7r/uV56v5jl8k
+	jTdOyK0onXCuQio86Dwz5QDsJx89/OhGEOp081GoUS7U7YnlbgX70Kt+0qVL2wIkOyCurK4U8ue
+	XST3kQdt9zkXeHtXMfzZ//ny1K8vlbqREsws8Bo/R83uRlHWFT1EMTZ6q4SfWktGhGw=
+X-Google-Smtp-Source: AGHT+IE/LiNt4CD0Wt99K/4gS/5c/Id9sEeiaRaIir6gHMcBT4NgaW1uF3HWqKgHWrAKbkzMcThx2A==
+X-Received: by 2002:a17:90b:53ce:b0:2f5:5bc6:a78d with SMTP id 98e67ed59e1d1-2f9ba1f71c3mr6958077a91.3.1738700842816;
+        Tue, 04 Feb 2025 12:27:22 -0800 (PST)
+Received: from ?IPV6:2409:40c0:1019:6a4a:444:3a1c:6970:6cad? ([2409:40c0:1019:6a4a:444:3a1c:6970:6cad])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de3320256sm100738405ad.244.2025.02.04.12.27.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 12:27:22 -0800 (PST)
+Message-ID: <e961ef03-b4bf-4f7b-8a6c-2fd61bb2d8f6@gmail.com>
+Date: Wed, 5 Feb 2025 01:57:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d379007-97c3-4bb9-93da-1a828f955fc4@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs: Fix spelling and grammatical issues
+To: Guenter Roeck <linux@roeck-us.net>, jikos@kernel.org, bentiss@kernel.org,
+ corbet@lwn.net, jdelvare@suse.com
+Cc: skhan@linuxfoundation.org, linux-usb@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+References: <20250204134806.28218-1-purvayeshi550@gmail.com>
+ <1b32dfcb-5966-495a-ad48-903650888ee9@roeck-us.net>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <1b32dfcb-5966-495a-ad48-903650888ee9@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 04, 2025 at 09:05:47PM +0100, David Hildenbrand wrote:
-> Fully agreed, this is going into the right direction. Dumping what's mapped
-> is a different story. Maybe that dumping logic could simply be written in C
-> for the time being?
+On 04/02/25 20:09, Guenter Roeck wrote:
+> On 2/4/25 05:48, Purva Yeshi wrote:
+>> Fix several spelling and grammatical errors across multiple
+>> documentation files.
+>>
+>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>> ---
+>>   Documentation/hid/hiddev.rst                | 4 ++--
+>>   Documentation/hid/intel-ish-hid.rst         | 2 +-
+>>   Documentation/hid/uhid.rst                  | 2 +-
+>>   Documentation/hwmon/abituguru-datasheet.rst | 8 ++++----
+>>   Documentation/hwmon/abituguru.rst           | 2 +-
+>>   5 files changed, 9 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/Documentation/hid/hiddev.rst b/Documentation/hid/hiddev.rst
+>> index 9b82c7f896aa..073485f84793 100644
+>> --- a/Documentation/hid/hiddev.rst
+>> +++ b/Documentation/hid/hiddev.rst
+>> @@ -15,10 +15,10 @@ To support these disparate requirements, the Linux 
+>> USB system provides
+>>   HID events to two separate interfaces:
+>>   * the input subsystem, which converts HID events into normal input
+>>   device interfaces (such as keyboard, mouse and joystick) and a
+>> -normalised event interface - see Documentation/input/input.rst
+>> +normalized event interface - see Documentation/input/input.rst
+> 
+> Is US spelling now mandated in the Linux kernel ?
+> 
+> Either case, this should be  multiple patches, at least one per subsystem
+> or even better one per driver.
+> 
+> Guenter
+> 
 
-?
-
-Isn't dumping just a
-  decode pte -> phys_to_virt() -> for_each_u64(virt) -> printk?
-
-If you can populate the page table in rust you have to be able to dump
-it, surely.
-
-Or do you mean trying to decode the leaf entires into some struct page
-detail? Does a GPU need to do that? Agree that would be better as some
-C function to take in a KVA instead of a struct page and populate a
-string with details about that KVA from the struct page.
-
-Jason
+Thank you for the feedback. I'll split the changes per driver and resend 
+them as separate patches.
