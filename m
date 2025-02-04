@@ -1,75 +1,75 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B489D215F7C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:05:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E00D21639A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:05:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738688727; cv=none; b=YmKegkGhh1ZsWoyVT1FLw10uH8Ml8BhtfUqd7QeMlOCTaSwAN+ytpY+EJDtLsulsGi0hrfTts25GPKkt3pnGMgZDaidRgUVGuF2Gysh9Bcp5QXnd7W2/jeqbGEgqKRPkUmD6UCWjPF1+75PzLbNhwF5QnJNfhK8HAt8gnIyNQBA=
+	t=1738688728; cv=none; b=JL+bfGD2Xl4JTeAQYYUfo6nNeyHsOve8I4dofF5DN7dRt4ae4qY7R1843v8f47pCzQKr28PKB8f6AMLIkNzwea6A1EV1F6k7RatlvUGLTAIDn2DJMllyIAV6JFQhKzE8/JECswe7QRSMckTcwKo8AkUkc/0N/CN5g6Oe/IOaDm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738688727; c=relaxed/simple;
-	bh=2zaqtMLmaEiFWQIT21mk66I0QwlyJgIFFDVjO5lJIGE=;
+	s=arc-20240116; t=1738688728; c=relaxed/simple;
+	bh=dM4Q91rzLBnr4OE5cBXEjGA2EQ/BqqgE9G/59+YtMoY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jWK70w+UckktH4/imK2jn2lfd/N8MK4X7Yk6F62KAuM4e240172T/s1AT/p2DK4pQwJwXa1JFdRzVKKR04353nbuGQlwfj6GNxeRT1UnHR5+6JWVoBsS2BJX+vdsh+To+r3z5Riraqa9bADliJ0gG9JpImCpnwxgJ0NdXF+riUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=molv57UD; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=BiCAowx3RK7YS/GnBHPuzdhKuRNahQLei3wqA0SA9uPjVy/Cx0Oobog+zO0OpIAu2jA+5H3vqMY5+Vsf1/+22E0ujZTbTMu8v+WVzU3RgQLx8rWT5KfTtyd+ZFZgRt8EByEYp52eiMif9wo4fADG9zxYjGZ8jj9TyfTumxRxIKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RUKL34PU; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="molv57UD"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RUKL34PU"
 Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514EWWLU016940
-	for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2025 17:05:25 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514EWYci016950
+	for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2025 17:05:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hBnMagGnfmOlAsemSbgdCgpnsrubY8Yw3Y2FnZmojeU=; b=molv57UDlDd9WkLo
-	8+qC7qFNNgf0wJw6FWgrscoHiGd7NMQM0zYffu+zBU91gM+o+FKpl1/rgRTQkG7J
-	7dN5ghgdKcp90NFnsx/LjT/xigoGt2nY8isNfzEcLdg4nnx++RpNLzMnCINKOI6O
-	rOPxij9vONyloAgdaT8CtwKmyt1rt2U0RLdEDsYhZaWMcV5kifbpTPYB4wiprEEn
-	CiMPfSHJTTgvbcbz7q2iUH9LDkHbsTUVnuTkvv8TadS5s+XT+AN7HfRoYbkajz1q
-	vUbr+9Hy1+4/I9hHLvzvSK3/AS9WZDgslcDtFjSFepQy8TAQ1G2YrRugJpYslZsU
-	tlf/LQ==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44kmre0ck8-1
+	yQTyuAWmUFPgAQKIR4TL14IlRB58wBIAJ8OSjdQfdm4=; b=RUKL34PUZSk4/Avq
+	Ki8be12eYAOTP6ZCwht519p5q4Dm/Kg/GV7q9izxwXxg6SKfmRcdDETcO7zRrw1Q
+	uEOCsfrO+HKexurJYBDfNZENiyF0gDd48XhqvMSg9lVROdRDHHs6ynvOeTBnsCUq
+	1rtrbNUxzELOPItn7vhzJ7jJxscPtS06PQt5LrULMuKjPymQEX/zzECQQ4bgnfD5
+	h2k8MimYLk9biKi6gf4K9EQuLCbs5SAB/o4qYaFHXXIB5+RVI0QrEOMjHzF9G4NM
+	xY5pAlVgQKHP0cLa4mj059MyNWHJkEIuNb2bBA146CMoO+8xTHZRcctPRIWsTLKs
+	WAhWMA==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44kmre0cke-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 17:05:25 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ef6ef9ba3fso11260335a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:05:24 -0800 (PST)
+	for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 17:05:26 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2efc3292021so16516241a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:05:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738688724; x=1739293524;
+        d=1e100.net; s=20230601; t=1738688726; x=1739293526;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hBnMagGnfmOlAsemSbgdCgpnsrubY8Yw3Y2FnZmojeU=;
-        b=ExOi6THiCgMaE8kLb/18W3W6PqxuGqxOT620ER35VXVyg/cZfwRTDUoNN9OOGe+iwc
-         AArjbCLgBsVi34O5JmkPFC6l5HA38xBKYUXpS0hXKQV7uhFQc9NxLFSoC8i37W9K1F06
-         TPMbidJuza9RELZbRxIT7HuyGdct3H3XVHm87llYX0aDa9uvSPoyzaFiaPVujZB1Gsx2
-         0JtZLoG4n93CSGE5FIJPT3BNzYP893UYm/1rGiuBW8c+8FtmoJUp0z52C+SxhaTYdsbK
-         2ZOamukq1OfMiHAMWHKRstYR2JFLGaCUM6OBSLZyFG2ruaJ5f6ihus5ewrZSEvxsyvRP
-         Cjpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQb3sjGrU2VGmRBd9Umwf+/h/PrGVcWbZ1RdkkA3LBc+jT+i8vGzk+Lgq2U5Gpgg7y7d0eYX8eEXXkHMI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvAoyuxQecI2wMBtZ5w2NTqkvIH1gshwvh1nY5xfAQG71603NL
-	IJ25K21oBWWs7tGRGT20Ni5QKfYS6qP+48bAzftB9x2C2efNHiOsQ8wPo6D9HcRaJUDbos+GuuH
-	FvnpoaI/UvFVllOieIbDsCdqFf5BR5J6QAYR6V0uPoTHOB5Lp9CjjlojQ2npRv71JCdIw8dM=
-X-Gm-Gg: ASbGncvVjRTzwu0BIZADKDhwmVtt9hyUQQJ8oE4oJga523aogBCaiF5kT6wMYnoBP8B
-	yHaMGfybER06mrJwswXD9GfZiCsNxveAQ+WAqu1rQFxn5206oqEYqSxy3waMM3OlAUiNpcRT++f
-	0Sg0igu16bCgyM1IWJ9Fkxd0nthzM4qMuB+794H07jrWJl22m88vs7EIeXN5Y7Mier0UGt4vhJu
-	Om/gattkvDN+B1CEC1LDUuXXfUymu6dIvSiXdpLWDq7fJZDbS6DxOAbnnQ5B00chutLfbsGIYJx
-	FC9WwyGaAftwNLryhV6pFYPbXQ9YYKS5hFOOOAc4yw43LmVAZDxSL7Wr55evN99iTuSugLKKZoN
-	WH30sBqY2p1/AmKhkCKTKyj4QPlLLCQ==
-X-Received: by 2002:a05:6a00:b4b:b0:729:1b8f:9645 with SMTP id d2e1a72fcca58-72fd0c7f7camr40884088b3a.24.1738688722381;
-        Tue, 04 Feb 2025 09:05:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG/o0PDFYKduJ/WFg5MTpCskunjYwzsD7hxpDVDXG2wzp3GnoR6788Fy5nXVsJL9b4i/RBxvg==
-X-Received: by 2002:a05:6a00:b4b:b0:729:1b8f:9645 with SMTP id d2e1a72fcca58-72fd0c7f7camr40883896b3a.24.1738688720498;
-        Tue, 04 Feb 2025 09:05:20 -0800 (PST)
+        bh=yQTyuAWmUFPgAQKIR4TL14IlRB58wBIAJ8OSjdQfdm4=;
+        b=P7RK/IHfZ1j9ld3i7b5Jvy8p0dQnOlh61MAee9c8SXonPMz8GDFr7j8u51+xETOwp4
+         504/bnAb2H0YDHPrP8vrenlHHprfyEv+W+LHskKf8ESrjG9tuyAsj83B3SAPtPIYTfIg
+         19cYTBdAUGGG/SWJBwElUOJczVn118cT25AgYhTxFN6qE8e9OzmcYR0jQKFc9LbSAyX2
+         L0AYZcBUrWqQIAHOr+sa5adqK4XlQD+2MkQDyHLxFarlaLIeefkO/ambV4Zrqt9W92T7
+         QU4Q+4tKjHqCbhTXbtuki3X4z1uGxo2c94yyscJlUJuEL+9fF7RiFPJFRRRQ6dxDtlFV
+         PsPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWigg2Xs8Vb5mrj+gsgDyQ3OwIDba1nzLR66Ftg7bE3slmnqEngmWU0Gven7UcD41oIOQpGj9B8PR6F62U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz7GZDlqfuVREdACJ6D6Tj5Rs9VELDhf10HeBp/mIKTufEe5+d
+	USrq74oD4pTEVMXgA8ES7Ow2cwfAoG0hsyCNCadBAJt/NaxiQQc+VBMlw2LJ+E6nFIKHJvJRLRu
+	peF/WGKRuJOJbWFLLS3ZEkM6qLLA1JjsWvqS5SAAZPzd1GvK6NZrdwVRSdXaux1A=
+X-Gm-Gg: ASbGncvPFgRuBUnvg2BNkBGPoNkMBp/b81XH2vX3kMIAtXUFGJKuq6k9aE1puZcV34u
+	51vB+FflOO78cwuY7VJvRQe8d2ZW9DAnkFm6j9yOZ1P6+f0BlTIUjyLdhrKhjJ/kDJM5mPToknr
+	oLTiQJpWd7jUqXIMPmQA61iR7SaBNlBTr0BEe9N2etk7B8kWkQA7bwGYIsMBlCxXzMdeuweJG90
+	u1PEz/TOPyqWve9nrN6asrlm14WTWYSqMfkZoz/mY8oPP/H8J844czZVBwfpUAmET/4P7ge3wkJ
+	R/uZwzIXuaaDPaVG8t6E0DODy6R9H6hnr2cO5tnpQWKz2KuN/Hxf3wTw3h7rXm4v4PhVQrJIanX
+	t7aQ7eisN8gS/HZL03NZsfA0PVpqFAA==
+X-Received: by 2002:a05:6a00:928d:b0:727:3b77:4174 with SMTP id d2e1a72fcca58-72fd0c7f7bfmr40485140b3a.23.1738688725894;
+        Tue, 04 Feb 2025 09:05:25 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEWwMmLGyTw18js8RIrutWNTN4NIewNUcg9CwPYOFLN7vXFURF6WhyJs710xW0ZmzHIAw3JFQ==
+X-Received: by 2002:a05:6a00:928d:b0:727:3b77:4174 with SMTP id d2e1a72fcca58-72fd0c7f7bfmr40485107b3a.23.1738688725498;
+        Tue, 04 Feb 2025 09:05:25 -0800 (PST)
 Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69cddbbsm10772788b3a.125.2025.02.04.09.05.18
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69cddbbsm10772788b3a.125.2025.02.04.09.05.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 09:05:20 -0800 (PST)
+        Tue, 04 Feb 2025 09:05:25 -0800 (PST)
 From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-Date: Tue, 04 Feb 2025 22:35:07 +0530
-Subject: [PATCH v2 1/8] wifi: ath12k: eliminate redundant debug mask check
- in ath12k_dbg()
+Date: Tue, 04 Feb 2025 22:35:09 +0530
+Subject: [PATCH v2 3/8] wifi: ath12k: remove redundant vif settings during
+ link interface creation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,7 +78,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-unlink_link_arvif_from_chanctx-v2-1-764fb5973c1a@oss.qualcomm.com>
+Message-Id: <20250204-unlink_link_arvif_from_chanctx-v2-3-764fb5973c1a@oss.qualcomm.com>
 References: <20250204-unlink_link_arvif_from_chanctx-v2-0-764fb5973c1a@oss.qualcomm.com>
 In-Reply-To: <20250204-unlink_link_arvif_from_chanctx-v2-0-764fb5973c1a@oss.qualcomm.com>
 To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
@@ -87,8 +87,8 @@ Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
         Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
         Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: h8S4H9GPLN0tnSKyVSGtLBwM0RHYrotM
-X-Proofpoint-GUID: h8S4H9GPLN0tnSKyVSGtLBwM0RHYrotM
+X-Proofpoint-ORIG-GUID: C3PAyNTpzqI_878Ay8PoXYZlBzhKPx_S
+X-Proofpoint-GUID: C3PAyNTpzqI_878Ay8PoXYZlBzhKPx_S
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-04_08,2025-02-04_01,2024-11-22_01
@@ -98,65 +98,37 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowprio
  clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2501170000 definitions=main-2502040132
 
-The current implementation includes a debug mask check both in the macro
-expansion and in the function __ath12k_dbg(), which is unnecessary.
-
-Simplify the code by removing the redundant check from the helper function
-__ath12k_dbg().
-
-While at this, rename the first argument in macro from ar to ab since the
-first argument name in the function __ath12k_dbg() is ab.
+Currently, vif level settings are done in ath12k_mac_assign_link_vif() as
+well as in ath12k_mac_op_add_interface(). Since it is vif level settings,
+doing this on per link does not make sense and it contributes to redundant
+code. Get rid of this redundant code from ath12k_mac_assign_link_vif().
 
 Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
 
 Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
 Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 ---
- drivers/net/wireless/ath/ath12k/debug.c | 5 ++---
- drivers/net/wireless/ath/ath12k/debug.h | 4 ++--
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/wireless/ath/ath12k/mac.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath12k/debug.c b/drivers/net/wireless/ath/ath12k/debug.c
-index ff6eaeafa092cd12e572430ed0f1c7aa21b78377..fd9796b5ad3b9feea5c7e78e8a88d361049e08df 100644
---- a/drivers/net/wireless/ath/ath12k/debug.c
-+++ b/drivers/net/wireless/ath/ath12k/debug.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: BSD-3-Clause-Clear
- /*
-  * Copyright (c) 2018-2021 The Linux Foundation. All rights reserved.
-- * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2021-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
+diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
+index 16e6f2fae943d3fa6a46ab1ba6780c9070418279..7defc2b20fb61dcaec06d0e332c48a1b6cd2f5d6 100644
+--- a/drivers/net/wireless/ath/ath12k/mac.c
++++ b/drivers/net/wireless/ath/ath12k/mac.c
+@@ -4022,13 +4022,6 @@ static struct ath12k_link_vif *ath12k_mac_assign_link_vif(struct ath12k_hw *ah,
+ 		       sizeof(arvif->bitrate_mask.control[i].vht_mcs));
+ 	}
  
- #include <linux/vmalloc.h>
-@@ -63,8 +63,7 @@ void __ath12k_dbg(struct ath12k_base *ab, enum ath12k_debug_mask mask,
- 	vaf.fmt = fmt;
- 	vaf.va = &args;
- 
--	if (ath12k_debug_mask & mask)
--		dev_printk(KERN_DEBUG, ab->dev, "%pV", &vaf);
-+	dev_printk(KERN_DEBUG, ab->dev, "%pV", &vaf);
- 
- 	/* TODO: trace log */
- 
-diff --git a/drivers/net/wireless/ath/ath12k/debug.h b/drivers/net/wireless/ath/ath12k/debug.h
-index 0aa7c8ccb14ccb9de28a78ca3d2b2a7bf6e481c1..ba0e4da3bb761a49fb81e3efcb61557df8ad1942 100644
---- a/drivers/net/wireless/ath/ath12k/debug.h
-+++ b/drivers/net/wireless/ath/ath12k/debug.h
-@@ -62,11 +62,11 @@ static inline void ath12k_dbg_dump(struct ath12k_base *ab,
- }
- #endif /* CONFIG_ATH12K_DEBUG */
- 
--#define ath12k_dbg(ar, dbg_mask, fmt, ...)			\
-+#define ath12k_dbg(ab, dbg_mask, fmt, ...)			\
- do {								\
- 	typeof(dbg_mask) mask = (dbg_mask);			\
- 	if (ath12k_debug_mask & mask)				\
--		__ath12k_dbg(ar, mask, fmt, ##__VA_ARGS__);	\
-+		__ath12k_dbg(ab, mask, fmt, ##__VA_ARGS__);	\
- } while (0)
- 
- #endif /* _ATH12K_DEBUG_H_ */
+-	/* Allocate Default Queue now and reassign during actual vdev create */
+-	vif->cab_queue = ATH12K_HW_DEFAULT_QUEUE;
+-	for (i = 0; i < ARRAY_SIZE(vif->hw_queue); i++)
+-		vif->hw_queue[i] = ATH12K_HW_DEFAULT_QUEUE;
+-
+-	vif->driver_flags |= IEEE80211_VIF_SUPPORTS_UAPSD;
+-
+ 	rcu_assign_pointer(ahvif->link[arvif->link_id], arvif);
+ 	ahvif->links_map |= BIT(link_id);
+ 	synchronize_rcu();
 
 -- 
 2.34.1
