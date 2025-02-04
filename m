@@ -1,87 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184774A00;
-	Tue,  4 Feb 2025 23:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8AE21CFFF
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 23:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738712065; cv=none; b=g+SGmO8IduCCCblZpfLaRNHtq3oBtK3T6SRzl5Z0SSgnPthhJbq2figSUPzXNs6muWuBrkl/uhw9CE5qAOw9zpvAA1Ut8u1x2FlVSSKOo0SKDGSeEQsXOgjnXZxepa2Jjs+Xw/bbzGa7yJJ7PQzQmVzcTd+S77W7imbaknWWp9c=
+	t=1738712074; cv=none; b=TLqUfN3/Il+Ydl5QdexMF/P/5Q7JXGZ/4yxT/vCmYiihriGAkmQeAHnxVZjqXlKiu/nL5L5q0n59So22CeXxLIvzOKXqUX90Cj1gVxQXkoIWbNrksBdTBM7tdxCaAht2ynlxtwL8vR9U2xJG/A7HTBMfKwDwVAYWbiIMZx9KKcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738712065; c=relaxed/simple;
-	bh=qNaI7mNVAo+bdKqZapwX6kc95OmNBA7rEBpHbdHOK7g=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=mdHO71tcWZ6vaZ228G7FD6oziuk2fEpbmWg8wm0JzIZkcSGjq2CsJfUCvueyxaeqyaW8IGeGpEtKOcgb70v+RRPc5yuE8CV6OV2Eo/nC9EMaM6ZqLpsELBd15NfoIZ0eeo2Zza78CpWnzqS40QRuc+Usu6OA2gc7qRVDDBFE6oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Modprg3I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738712074; c=relaxed/simple;
+	bh=ZyVExCqzB2iyA3bGQRpDduhuvKS4WRQAEUDFtlqCUyc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YzV79EDYxN6wT20+S0R2eOkgotV47NN42LiPo5GmeH7ATgPFuCZKD31QIbfyFhHpT9Ecuof/MODU61FCdH35TDs008Q/Kheoux0pbyglK6dF26rTIym3rJj14Y/dORGMlnd+MA978lHBMqWU51AsyhXizrRh9FXVaRls+avB198=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=DBuTUrKv; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Modprg3I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43AA6C4CEDF;
-	Tue,  4 Feb 2025 23:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738712064;
-	bh=qNaI7mNVAo+bdKqZapwX6kc95OmNBA7rEBpHbdHOK7g=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Modprg3I1Pt9JxZwG9n+ZL6HnMhQjCmgAf/ZQ1Sz/6Qdl5vxSrc+trOzbXxQXRbI7
-	 igjNpulSW6a87KMhsCsnTPq1gz+7S9FLj558NH2P3sZF+A1ob3gZrx7HjoVVQgQgWc
-	 UXfRV7VKdfVLa2NFeprP4JviIKHmGHwoo5Gu9ocDiMgA/rdG0Mb79EUMBb6R4EDUxk
-	 l4il7djUEVYE8o52djqbpJhkwo7yWmG3agRSjBnjT5BPAiAqSXNzXk82gcTOcDmPEo
-	 +S+QMHz2KW71aDkCL7P6Vk4kG5Y0bPCLfPUh9tg1L37vQ7+d0ag6ltMnM0pJ3QZEZM
-	 PozE63dz4OqCQ==
-Date: Tue, 04 Feb 2025 17:34:23 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="DBuTUrKv"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 4CE08240029
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 00:34:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738712071; bh=ZyVExCqzB2iyA3bGQRpDduhuvKS4WRQAEUDFtlqCUyc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=DBuTUrKvwBPCFb3wwTF27nUmKACldPAcQK56BYzilnfVJPf906YaloXYiMrBH0c8c
+	 vIuQx+YGYTxutPEplefcxq8yPY37zyFAgpbLU6vWf/V/09gaXv9jpMdG1O9VTiAqZf
+	 y3RU6mPPwJm03hw0li/MOC9HLNHPTIthKkPNCuvplIYQqPzLkejWIoUDMNA6fb0GEz
+	 MXx7QT9XTpACA6ETCFVSYuQe4WroRMb+BIlsBRIPjO+EN0pliE531twvejZqcI+Nlt
+	 GgJWtXw4wqJWoCOpmvC72HFB+3ku/yRvl2HD/J/3mKxYeJYNYBMkjmgGhoKwtjXWMV
+	 Fi8SRj0C0Cjow==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YnfpX3DL2z6tyt;
+	Wed,  5 Feb 2025 00:34:28 +0100 (CET)
+Date: Tue,  4 Feb 2025 23:34:28 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Frank Li <Frank.li@nxp.com>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 6/9] dt-bindings: pci: Add fsl,mpc83xx-pcie bindings
+Message-ID: <Z6KkBEaGTkSyWiE_@probook>
+References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
+ <20250126-ppcyaml-v1-6-50649f51c3dd@posteo.net>
+ <Z5qx3jAFE81Ni2cJ@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Liam Girdwood <lgirdwood@gmail.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
- broonie@kernel.org, linux-hwmon@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Jean Delvare <jdelvare@suse.com>
-To: Naresh Solanki <naresh.solanki@9elements.com>
-In-Reply-To: <20250204180306.2755444-1-naresh.solanki@9elements.com>
-References: <20250204180306.2755444-1-naresh.solanki@9elements.com>
-Message-Id: <173871195460.3830123.16015645611283640170.robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: hwmon: ir38060: Move & update dt
- binding
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z5qx3jAFE81Ni2cJ@lizhi-Precision-Tower-5810>
 
-
-On Tue, 04 Feb 2025 23:33:03 +0530, Naresh Solanki wrote:
-> Move dt binding under hwmon/pmbus & align accordingly.
+On Wed, Jan 29, 2025 at 05:55:26PM -0500, Frank Li wrote:
+> On Sun, Jan 26, 2025 at 07:59:01PM +0100, J. Neuschäfer wrote:
+> > Supplement Documentation/devicetree/bindings/pci/fsl,pci.txt with a more
+> > formal binding in YAML format.
+> >
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > ---
+> >  .../devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml   | 83 ++++++++++++++++++++++
+> >  1 file changed, 83 insertions(+)
+[...]
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +
+> > +    pci1: pcie@e0009000 {
 > 
-> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
-> ---
->  .../hwmon/pmbus/infineon,ir38060.yaml         | 61 +++++++++++++++++++
->  .../bindings/regulator/infineon,ir38060.yaml  | 45 --------------
->  2 files changed, 61 insertions(+), 45 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml
-> 
+> needn't label here
+
+Will change.
 
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for 20250204180306.2755444-1-naresh.solanki@9elements.com:
-
-arch/arm/boot/dts/aspeed/aspeed-bmc-vegman-n110.dtb: /ahb/apb/display@1e6e6000: failed to match any schema with compatible: ['aspeed,ast2500-gfx', 'syscon']
-arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-rainier-1s4u.dtb: /ahb/apb/fsi@1e79b000/cfam@0,0/hub@3400/cfam@2,0/i2c@1800: failed to match any schema with compatible: ['ibm,fsi-i2c-master']
-
-
-
-
-
+Thanks,
+J. Neuschäfer
