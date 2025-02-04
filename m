@@ -1,403 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD8F20550A
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FCA208992;
+	Tue,  4 Feb 2025 10:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738663367; cv=none; b=CnQqBKoqqlXB4wTbEbcBnSAvQiQRMm0wNOMfQbLLup0Jf9fRwgE/OLkdMcNNCQb7dEf8DTd++2pCWMWFJ2Ki6ld69uadDhkGC0IoO5UDQGwnfTaUKp2uVcCkl+vjbz5jyQxT4vPcxSoP9z7w7g6MQ9USx0s5sLvItJyXKE80S9Y=
+	t=1738663375; cv=none; b=M9/F5lVfgGTOIXisngUG1oBPimSztczVHNXUZ6zgOwkLo9cW+tFRwFRe4Dz6WIGBOcy93CLddiEpPw7L2I0pYTnkxEVcSxQzGIrMBufG4kANSGrqItBQ9gP1BxA6Umgnu4IdhWsw8hWLnbioUeTU3Qw8JcBg6DfDq7aE1RDJlaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738663367; c=relaxed/simple;
-	bh=ORcA/dZLw7DnBKXeGx1hmd27oaC6P86TDQuDRqbpLhs=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=RCi804CzcDjU9u1gBGBixcZh/pLioUHBq3G/zRtHdq5doujuPgNLfPOZC9/iEqesT+THr5qxAawQpP2KpofRdfokG7+c4oIQhRx0d2IC55UUne9bHPKod/rWJ8YxfGHy9Yp+60VgKHfdzw5npazcn9yMS+umTF+6JAOAeYG3s5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DnrpCVjL; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738663375; c=relaxed/simple;
+	bh=NVe+5Vj5wT+jv8MRUuBhLO5f0ZuuCoMo+ewbhxjx8dc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=gxa4WaasFqBiUecP4XqWnUtHuZSN9Ijc0dPLh3dw03WOxO2LQlCfXpJKzLsX4aSc1RgvU4rxiJTIozHm/A5s/Xd55pszyan6CQCT8OBZi4SZYFTZE5s4eBjM+nG36+majOj5Lpd0vZI9hX3ra33XBpsqqQrSiiHmtcUN4SFpdxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hd/E9e+w; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DnrpCVjL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738663366; x=1770199366;
-  h=date:from:to:cc:subject:message-id;
-  bh=ORcA/dZLw7DnBKXeGx1hmd27oaC6P86TDQuDRqbpLhs=;
-  b=DnrpCVjLElh+OEmWlAucR47c/IM9odx0s52QNz2ivarutOaftTFXbLlE
-   jpVuflr1x04fLaPaWE/o7YhanxtBbMpQAD5RaMaYoX2c0saOY/iGyBnM7
-   QpwVkf+pCCmXJVrAZyW6gKNvUAHJxz+fvdsjsvY6WkrSL5FIROIgr/fSm
-   SVdxP29e/TnBnOUusFYW72lQ9pWi00TskEHuw1LzGTugod4hO82BNHuMK
-   +ZSL5d/gpf0f6NlJZiuNdEmVBm30TXJBlWvQ7Ec9qpcKcrSUh+tq3JHhQ
-   YmlJBrO4j9dDA2gZMB33AC02Qxc/fb272tGVGfRZw2SpLFqDEYNocu/wD
-   A==;
-X-CSE-ConnectionGUID: zaNCQiQsRe2BSK+FIMS0Jg==
-X-CSE-MsgGUID: hpJ7tNe4RfGzXeDvoBY0Nw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39213923"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="39213923"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 02:02:46 -0800
-X-CSE-ConnectionGUID: IKx8QWvtTNm9Ez/ok9kZUw==
-X-CSE-MsgGUID: LbibERreRhWWAbTsPEopcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="115549356"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 04 Feb 2025 02:02:44 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tfFlR-000sJL-2I;
-	Tue, 04 Feb 2025 10:02:41 +0000
-Date: Tue, 04 Feb 2025 18:02:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20250124] BUILD REGRESSION
- a9dd733f3e47c0bfd2b723af4432146a30168a0c
-Message-ID: <202502041856.BEATIQCK-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hd/E9e+w"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38daf1f5091so132523f8f.1;
+        Tue, 04 Feb 2025 02:02:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738663372; x=1739268172; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=phievftbMhEJWOjF57oTUK/kdR4f6x3/eDPPiCF/bJU=;
+        b=hd/E9e+wHHRte0VdAXsvSl0WFtiv7dIzPpjPUlkpXs/x/2FRtQlliztplO7rnLEek+
+         z/uD5o/HZEH3htylh7vYjXOpxyaocnkE99UXGrbVcX9sewa81phKhhxhDKI/5OIII+8R
+         5yCtBhrKSRQv1zZERSlMU63F10Zp7NByZXH0vyg0lP49hcdfO6m4wKyD3ACCSCTK04nj
+         EwEVHFo+Vf0OV98F0FNexU5epQ2O7mzL1q6zut7SCxmZ68jaS6/xI5RcbGNAA8/a8k6P
+         vrFaFgFG1f/bliEirVBxGaDGCM2f90vyRe2Gu7czUL9E0mlRF535lPsCMSRR69kx5lHm
+         FLeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738663372; x=1739268172;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=phievftbMhEJWOjF57oTUK/kdR4f6x3/eDPPiCF/bJU=;
+        b=ak6vsPM8F9yobKlwL8+LSNrm4w8hXTYYqRpNm04J2QTFKjXwB7Tq+FoyrFVUZaMNIG
+         MPuyfJ7wn+WWnqUlYVq3ukPrxdzz8s3SskgSX14YG35k98lZDGxT1l7kiC0iwQ4wtCGG
+         HCurVxdrTClU7jNLb1tdI74x+pWixvBBS/kZbq80v6eFeS7qugEbaYnkSuL26kgoa3yd
+         6bJgtHSsuSJrDHhswzAzI9FPU4Bn7mLGf+9DDqnZLNIC526zECkJXuSPtzXGLuTVxm0S
+         vyV0p5aMUyegwRHlANy0mWIP5plLcVnQpexus+tA0XItnziI4JBCB1CJCKO4ziFelvpQ
+         IXFw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6g/VpI5BBhOoa+2v0iQOI9YsJI1hh+f+oHkYWZp7GcFoRg3cGwpoDgn+2s6QvaY/pQvSbzM5f9AJnodg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIBYyN+r31cPMevKzSUzJCP3xAvCzIRePTgshTG4w3t23XiBvb
+	2Z8cOPtpTxsUmK9OqeMpCz6MuSMCcSNqMgBSlgpDpyRBHZ8pzNu3
+X-Gm-Gg: ASbGnctoOQw7W6ziizzcJgeF6VX8Lyb/zyJUcbT6cMGHiwIu1BSSEtNTx5uzHQK+nvp
+	OyTe4/8qDpm5oC/NJ//SvcHzUc/+yjw0AcRIxR79bWnrrBumxLshzjtHvpdZmVK3jYbAm+v46yV
+	DYOlFOaJryjsOEW4TuRIlZPmNhrdI61nQtHLOERR8HgZ96aQU0+/jD5YqFLFBzB5MCmGe9hLYWJ
+	1yNlbZQSStrDrs/bNbQmkb8+N9BuZXzE/JUapOrzKUL+2uaYZKrJGnQdkUxUpLzjFrbFqaPvFJt
+	nF+6d1e1z+AvDTZfXiFY2erqyYRxeyq9FQ==
+X-Google-Smtp-Source: AGHT+IE17SiHozWKj+Os0pE2Y/1zwACLsOViGQPHYeNCGvgkHtVrDitOn4GliYkHWXRDJzqG8U9sig==
+X-Received: by 2002:a5d:4d47:0:b0:38b:f44b:8663 with SMTP id ffacd0b85a97d-38c520bb322mr15854536f8f.55.1738663371922;
+        Tue, 04 Feb 2025 02:02:51 -0800 (PST)
+Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c11fadbsm15039077f8f.44.2025.02.04.02.02.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 02:02:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 04 Feb 2025 11:02:50 +0100
+Message-Id: <D7JKQ60C6EZA.24H639LLIG2U7@gmail.com>
+Cc: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/8] wifi: ath12k: handle change_vif_links() callback
+From: "Nicolas Escande" <nico.escande@gmail.com>
+To: "Aditya Kumar Singh" <aditya.kumar.singh@oss.qualcomm.com>, "Kalle Valo"
+ <kvalo@kernel.org>, "Jeff Johnson" <jjohnson@kernel.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250204-unlink_link_arvif_from_chanctx-v1-0-675bd4cea339@oss.qualcomm.com>
+In-Reply-To: <20250204-unlink_link_arvif_from_chanctx-v1-0-675bd4cea339@oss.qualcomm.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250124
-branch HEAD: a9dd733f3e47c0bfd2b723af4432146a30168a0c  net: atlantic: Avoid -Wflex-array-member-not-at-end warnings
+On Tue Feb 4, 2025 at 5:23 AM CET, Aditya Kumar Singh wrote:
+> Currently, links in an interface are allocated during channel assignment
+> via assign_vif_chanctx(). Conversely, links are deleted during channel
+> unassignment via unassign_vif_chanctx(). However, deleting links during
+> channel unassignment does not comply with mac80211 link handling.
+> Therefore, this process should be managed within change_vif_links().
+>
+> This series aims to add support to handle links in change_vif_links()
+> callback.
+>
+> Patches 1-2 are making debug infra to work without device info.
+>
+> Patches 3-8 are the ones changing the code to handle as mentioned above.
+>
+> NOTE:
+> * A new ath12k-check warning comes which probably needs to be added to
+> ignore list
+>
+> drivers/net/wireless/ath/ath12k/debug.c:69: Prefer [subsystem eg: netdev]=
+_dbg([subsystem]dev, ... then dev_dbg(dev, ... then pr_debug(...  to printk=
+(KERN_DEBUG ...
+>
+> This is because, since device info is not known can not use netdev_ or de=
+v_
+> dbg family. pr_debug() is an option but that will require DYNAMIC_DEBUG
+> and then ath12k needs to be probed with dyndbg=3D+p which we don't want i=
+n
+> ath. Hence, only option left is to use printk() directly.
+>
+Hello,
 
-Error/Warning ids grouped by kconfigs:
+When applying this series I am no longer able to start an AP on a DFS chann=
+el.
+(I don't know specifically which patch though)
 
-recent_errors
-|-- alpha-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- alpha-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- alpha-defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- arc-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- arc-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- arc-randconfig-001-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- arc-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- arm-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- arm-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- arm-nhk8815_defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- arm-randconfig-001-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- arm-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- arm-randconfig-003-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- arm-randconfig-004-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- arm64-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- arm64-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- arm64-randconfig-003-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- arm64-randconfig-004-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- csky-randconfig-001-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- csky-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- hexagon-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- hexagon-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- hexagon-randconfig-001-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- hexagon-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- i386-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- i386-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- i386-buildonly-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- i386-buildonly-randconfig-003-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- i386-buildonly-randconfig-004-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- i386-buildonly-randconfig-005-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- i386-buildonly-randconfig-006-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- i386-defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- i386-randconfig-141-20250204
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- loongarch-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- loongarch-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- m68k-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- m68k-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- m68k-hp300_defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- m68k-multi_defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- microblaze-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- mips-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- mips-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- mips-omega2p_defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- nios2-randconfig-001-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- nios2-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- openrisc-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- openrisc-defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- parisc-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- parisc-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- parisc-defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- parisc-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- powerpc-adder875_defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- powerpc-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- powerpc-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- powerpc-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- powerpc-randconfig-003-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- powerpc-sequoia_defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- powerpc64-randconfig-001-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- powerpc64-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- powerpc64-randconfig-003-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- riscv-allmodconfig
-|   |-- drivers-net-wireless-intel-iwlwifi-mvm-d3.c:error:call-to-__compiletime_assert_NNN-declared-with-error-attribute:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_CCMP
-|   |-- drivers-net-wireless-intel-iwlwifi-mvm-d3.c:error:call-to-__compiletime_assert_NNN-declared-with-error-attribute:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_GCMP_256
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- riscv-allyesconfig
-|   |-- drivers-net-wireless-intel-iwlwifi-mvm-d3.c:error:call-to-__compiletime_assert_NNN-declared-with-error-attribute:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_CCMP
-|   |-- drivers-net-wireless-intel-iwlwifi-mvm-d3.c:error:call-to-__compiletime_assert_NNN-declared-with-error-attribute:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_GCMP_256
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- riscv-defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- riscv-randconfig-001-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- riscv-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- s390-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- s390-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- s390-defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- s390-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- s390-zfcpdump_defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- sh-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- sh-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- sh-defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- sh-r7785rp_defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- sh-randconfig-001-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- sparc-allmodconfig
-|   |-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_CCMP
-|   |-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_GCMP_256
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- sparc-allyesconfig
-|   |-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_CCMP
-|   |-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:BUILD_BUG_ON-failed:conf-keylen-WLAN_KEY_LEN_GCMP_256
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- sparc64-defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- sparc64-randconfig-001-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- sparc64-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- um-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- um-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- um-defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- um-i386_defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- um-randconfig-001-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- um-x86_64_defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- x86_64-allmodconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- x86_64-allyesconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- x86_64-buildonly-randconfig-001-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- x86_64-buildonly-randconfig-002-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- x86_64-buildonly-randconfig-003-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- x86_64-buildonly-randconfig-004-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-(-struct-bpf_prog_array-and-struct-bpf_prog_array_hdr-)
-|-- x86_64-buildonly-randconfig-005-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- x86_64-buildonly-randconfig-006-20250203
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-|-- x86_64-defconfig
-|   `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
-`-- xtensa-randconfig-001-20250203
-    `-- kernel-bpf-core.c:warning:comparison-of-distinct-pointer-types-lacks-a-cast
+After the initial CAC period I get the following kernel message:
+	[   45.248441] ath12k_pci 0003:01:00.0: cannot install key for non-existen=
+t peer 3a:07:16:d8:00:08
+And then hostapd goes in failed state:
+	wlan0: interface state UNINITIALIZED->COUNTRY_UPDATE
+	ACS: Automatic channel selection started, this may take a bit
+	wlan0: interface state COUNTRY_UPDATE->ACS
+	wlan0: ACS-STARTED
+	wlan0: ACS-COMPLETED freq=3D5620 channel=3D124
+	wlan0: interface state ACS->DFS
+	wlan0: DFS-CAC-START freq=3D5620 chan=3D124 sec_chan=3D1, width=3D2, seg0=
+=3D114, seg1=3D0, cac_time=3D5s
+	wlan0: DFS-CAC-COMPLETED success=3D1 freq=3D5620 ht_enabled=3D0 chan_offse=
+t=3D0 chan_width=3D5 cf1=3D5570 cf2=3D0 radar_detected=3D0
+	wlan0: nl80211: kernel reports: key addition failed
+	Interface initialization failed
+	wlan0: interface state DFS->DISABLED
+	wlan0: AP-DISABLED
 
-elapsed time: 1405m
+Maybe I missed something ? Is there another series this one depends upon th=
+at I
+should have applied before ?
 
-configs tested: 125
-configs skipped: 4
-
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250203    gcc-13.2.0
-arc                   randconfig-002-20250203    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                   milbeaut_m10v_defconfig    clang-21
-arm                         nhk8815_defconfig    clang-21
-arm                   randconfig-001-20250203    clang-18
-arm                   randconfig-002-20250203    gcc-14.2.0
-arm                   randconfig-003-20250203    clang-18
-arm                   randconfig-004-20250203    gcc-14.2.0
-arm                         vf610m4_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250203    gcc-14.2.0
-arm64                 randconfig-002-20250203    gcc-14.2.0
-arm64                 randconfig-003-20250203    gcc-14.2.0
-arm64                 randconfig-004-20250203    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250203    gcc-14.2.0
-csky                  randconfig-002-20250203    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250203    clang-21
-hexagon               randconfig-002-20250203    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250203    gcc-12
-i386        buildonly-randconfig-002-20250203    gcc-12
-i386        buildonly-randconfig-003-20250203    clang-19
-i386        buildonly-randconfig-004-20250203    gcc-12
-i386        buildonly-randconfig-005-20250203    clang-19
-i386        buildonly-randconfig-006-20250203    gcc-12
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250203    gcc-14.2.0
-loongarch             randconfig-002-20250203    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                          hp300_defconfig    gcc-14.2.0
-m68k                          multi_defconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                        omega2p_defconfig    clang-16
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250203    gcc-14.2.0
-nios2                 randconfig-002-20250203    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250203    gcc-14.2.0
-parisc                randconfig-002-20250203    gcc-14.2.0
-powerpc                    adder875_defconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc               randconfig-001-20250203    clang-21
-powerpc               randconfig-002-20250203    clang-16
-powerpc               randconfig-003-20250203    gcc-14.2.0
-powerpc                     sequoia_defconfig    clang-17
-powerpc64             randconfig-001-20250203    gcc-14.2.0
-powerpc64             randconfig-002-20250203    clang-18
-powerpc64             randconfig-003-20250203    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                               defconfig    clang-19
-riscv                 randconfig-001-20250203    clang-16
-riscv                 randconfig-002-20250203    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250203    clang-19
-s390                  randconfig-002-20250203    clang-21
-s390                       zfcpdump_defconfig    clang-19
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                          r7785rp_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250203    gcc-14.2.0
-sh                    randconfig-002-20250203    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250203    gcc-14.2.0
-sparc                 randconfig-002-20250203    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250203    gcc-14.2.0
-sparc64               randconfig-002-20250203    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250203    gcc-12
-um                    randconfig-002-20250203    clang-18
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250203    clang-19
-x86_64      buildonly-randconfig-002-20250203    gcc-12
-x86_64      buildonly-randconfig-003-20250203    gcc-12
-x86_64      buildonly-randconfig-004-20250203    clang-19
-x86_64      buildonly-randconfig-005-20250203    gcc-12
-x86_64      buildonly-randconfig-006-20250203    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                           alldefconfig    gcc-14.2.0
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250203    gcc-14.2.0
-xtensa                randconfig-002-20250203    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks
