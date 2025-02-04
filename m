@@ -1,33 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A131754B;
-	Tue,  4 Feb 2025 07:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A451754B;
+	Tue,  4 Feb 2025 07:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738654260; cv=none; b=cVRXMDA5vAF5qO7IxZcokoTpiopOhA2ML8Yl39bO3vvBMCUNujKehiX9cTp9mfdaaEtReFrifpnCJPu752a8fZAnl8mQoeXLRda0cuiWfjYQ5Lj+4TqUF5vG1d4nq0LkvEeWmCJe3S5Of8BU9sc8uLrHkwM/YAsNgrPv0mBlLps=
+	t=1738654412; cv=none; b=knGnGEDCLCj/T4q14ke0QgjVSWlNY843yajJZgso93Pk8+NNCh4fCm/qCqOj7QI3fT8QF6tStJekn10KjRsKltVkw5t6wZwEe468FbEkd+w02sCEGJQ8/G2n74OicBr2KyLicIPe3pJzIH3FfLq3zjMBsM7XbhZuyTaE4AsC2+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738654260; c=relaxed/simple;
-	bh=zt/aEx8/bioARNiNbp5LpN9aIVl9Rt/uc9g3v77CCh4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QnN7u/v8C+7aZ/h0LmCNC5y6Mn8bcXoLXBf3DNLyOx9TQZqapebQk85cxSgQbmAJh5nuUvSbiTB2THk4pLz+qJaQ+/Si42KRuttUfLBSThN7Wl+yO6N5fHfKM86lMefl/oaXZtrwNc/un6MlILOQZNVZEoozEHHljpsUg6ck+5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qXHSZdeG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738654412; c=relaxed/simple;
+	bh=KqQNTguRXGM3DPJTgpTj4k28aUGNH1q7NYOFESPcec4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XLSiCy10aEXVTieVaE5A4P7OvzC2h95u8f7wBNvL8iPcooTtoHIIT3TCXZ0RNHRYz1QDjM7Gw+TSzmI9//uQKauGXcGNfSvukblI8gY+x9+pCTX6ewNFrJTRp3fbrgl7m+VLwYWd9CLKNJgFdOpp6lQvjdM6BBDw4gxmYbVTr8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=jlX6wFII; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qXHSZdeG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7DC5C4CEDF;
-	Tue,  4 Feb 2025 07:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738654260;
-	bh=zt/aEx8/bioARNiNbp5LpN9aIVl9Rt/uc9g3v77CCh4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qXHSZdeGAuhXmkWNnncngOKkMXoikSKlAkcwz+VD+YxUXBGnZq6/7EGTyfWE/Fj3T
-	 K5ROdqwhQCyNxiP3AmrL3pRx9CsCDN8gGJy+7ojS0aSqH0sKPAvuU28ZJOtJy9lKVm
-	 mvo8QDYUwvAKdnehl2sitHZkeoRB7TtQTCQI8shfi2BNrQIULbIUT4DVTBNS4TJRZF
-	 AgE7qCXm9ZC/erAw4dXstMOaAyDS+QUS4F4IGT94DZTB93adr3QL+UPwTnYfRqY03M
-	 B5YkzZ7tahHvonwuVsRAsa3aIEoeqSJL8++5WKwjJ3yJIHz3dNAnZOTVd6RqYjk0sB
-	 oLPdj2mnerJsg==
-Message-ID: <f2ed9fe6-a42f-4631-ac80-3ec39156aaab@kernel.org>
-Date: Tue, 4 Feb 2025 08:30:54 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="jlX6wFII"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5147Pq9g023359;
+	Tue, 4 Feb 2025 08:32:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	ayrgWfVjcWQXv9my/XME+x74kxMbqnbfoWa2qB4A7Rk=; b=jlX6wFII/Z0bp4vi
+	oyXid84QFlXTmsGF0omWA31DA2Yv+SptP0ZwORC6QEBIh9scCfJwzIbhxl6atABs
+	6T83iHgsdpeosP55g+bcQjkiOKXHapAtswtLvoyynx/2nKJhJgKWYkTd3dbJ5/7w
+	1LgfGoiL3GNN+CGKLjyssfA79YEnQJj7Kq9Tlo+Iz39NA8Eiv1K0misBbRdQkOaP
+	42y0LVzVs1m75xfOqehQEweKE92XS+Td1lLi3hpr4G3FdYd+oBZstnrE88o0VCnZ
+	vmcgOhlbZGt3rxBBlLJYCqw+uuTAYKhnOPhgHoXfwNaXgaxFY5YEVbRMjpi7dJQv
+	eMhHyA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44jw1tubau-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 08:32:49 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A058B40055;
+	Tue,  4 Feb 2025 08:31:26 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6BFBD2EB03B;
+	Tue,  4 Feb 2025 08:29:59 +0100 (CET)
+Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Feb
+ 2025 08:29:58 +0100
+Message-ID: <9073411a-38aa-4f82-95f5-474b0c3efed7@foss.st.com>
+Date: Tue, 4 Feb 2025 08:29:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,91 +52,322 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/13] dt-bindings: net: wireless: describe the ath12k
- AHB module
-To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Cc: ath12k@lists.infradead.org, linux-wireless@vger.kernel.org,
- Kalle Valo <kvalo@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250130043508.1885026-1-quic_rajkbhag@quicinc.com>
- <20250130043508.1885026-2-quic_rajkbhag@quicinc.com>
- <20250130-cunning-quail-of-opportunity-76d0ad@krzk-bin>
- <724a4822-469a-45bb-bfb1-c02b54e971a3@quicinc.com>
- <aaabcc7a-8234-4753-a8d1-ab36afdafa2e@kernel.org>
- <345519bb-ba1c-4bcc-a03c-5557f8f40035@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 3/9] dt-bindings: memory-controllers: Add STM32 Octo
+ Memory Manager controller
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, <linux-spi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <christophe.kerello@foss.st.com>
+References: <20250128081731.2284457-1-patrice.chotard@foss.st.com>
+ <20250128081731.2284457-4-patrice.chotard@foss.st.com>
+ <20250129-hilarious-glittering-mustang-fb5471@krzk-bin>
+ <3660580d-72eb-45ca-8240-55557e334e37@foss.st.com>
+ <951e4d16-2bb2-44b1-99e7-dd28349f20aa@kernel.org>
+ <02b947e3-dd5c-4ee8-bd65-5775923fe33f@foss.st.com>
+ <899675e8-4c2e-4ff2-a6af-854e0ec29bb6@kernel.org>
+ <6ed4fa56-e7ee-4b6b-951b-61a92be5c6c2@foss.st.com>
+ <6a639549-f8c8-4e36-8cfe-839f247780bb@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <345519bb-ba1c-4bcc-a03c-5557f8f40035@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+From: Patrice CHOTARD <patrice.chotard@foss.st.com>
+In-Reply-To: <6a639549-f8c8-4e36-8cfe-839f247780bb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_03,2025-01-31_02,2024-11-22_01
 
-On 04/02/2025 06:57, Raj Kumar Bhagat wrote:
-> 
-> The calibration board data for different variant are packed into firmware binary 'board-2.bin'.
-> Thus, board-2.bin can contain multiple board data for various variants. Ath12k driver selects
-> the correct board data based on the variant. The "qcom,ath12k-calibration-variant" is used
-> as one of the parameter to select the correct board data from board-2.bin.
-> 
->> 3. How is it supposed to work in practice - you have one board, but
->> might have different SoCs inside? Which calibration data would you use
->> in such case?
+
+
+On 2/3/25 12:40, Krzysztof Kozlowski wrote:
+> On 03/02/2025 11:46, Patrice CHOTARD wrote:
 >>
+>>
+>> On 1/30/25 16:09, Krzysztof Kozlowski wrote:
+>>> On 30/01/2025 14:32, Patrice CHOTARD wrote:
+>>>>
+>>>>
+>>>> On 1/30/25 13:12, Krzysztof Kozlowski wrote:
+>>>>> On 30/01/2025 09:57, Patrice CHOTARD wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 1/29/25 08:52, Krzysztof Kozlowski wrote:
+>>>>>>> On Tue, Jan 28, 2025 at 09:17:25AM +0100, patrice.chotard@foss.st.com wrote:
+>>>>>>>> From: Patrice Chotard <patrice.chotard@foss.st.com>
+>>>>>>>>
+>>>>>>>> Add bindings for STM32 Octo Memory Manager (OMM) controller.
+>>>>>>>>
+>>>>>>>> OMM manages:
+>>>>>>>>   - the muxing between 2 OSPI busses and 2 output ports.
+>>>>>>>>     There are 4 possible muxing configurations:
+>>>>>>>>       - direct mode (no multiplexing): OSPI1 output is on port 1 and OSPI2
+>>>>>>>>         output is on port 2
+>>>>>>>>       - OSPI1 and OSPI2 are multiplexed over the same output port 1
+>>>>>>>>       - swapped mode (no multiplexing), OSPI1 output is on port 2,
+>>>>>>>>         OSPI2 output is on port 1
+>>>>>>>>       - OSPI1 and OSPI2 are multiplexed over the same output port 2
+>>>>>>>>   - the split of the memory area shared between the 2 OSPI instances.
+>>>>>>>>   - chip select selection override.
+>>>>>>>>   - the time between 2 transactions in multiplexed mode.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+>>>>>>>> ---
+>>>>>>>>  .../memory-controllers/st,stm32-omm.yaml      | 190 ++++++++++++++++++
+>>>>>>>>  1 file changed, 190 insertions(+)
+>>>>>>>>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
+>>>>>>>>
+>>>>>>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml b/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
+>>>>>>>> new file mode 100644
+>>>>>>>> index 000000000000..7e0b150e0005
+>>>>>>>> --- /dev/null
+>>>>>>>> +++ b/Documentation/devicetree/bindings/memory-controllers/st,stm32-omm.yaml
+>>>>>>>
+>>>>>>>
+>>>>>>> Filename as compatible, so st,stm32mp25-omm.yaml
+>>>>>>>
+>>>>>>> You already received this comment.
+>>>>>>
+>>>>>> Sorry, i missed this update
+>>>>>>
+>>>>>>>
+>>>>>>>> @@ -0,0 +1,190 @@
+>>>>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>>>>>> +%YAML 1.2
+>>>>>>>> +---
+>>>>>>>> +$id: http://devicetree.org/schemas/memory-controllers/st,stm32-omm.yaml#
+>>>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>>>>> +
+>>>>>>>> +title: STM32 Octo Memory Manager (OMM)
+>>>>>>>> +
+>>>>>>>> +maintainers:
+>>>>>>>> +  - Patrice Chotard <patrice.chotard@foss.st.com>
+>>>>>>>> +
+>>>>>>>> +description: |
+>>>>>>>> +  The STM32 Octo Memory Manager is a low-level interface that enables an
+>>>>>>>> +  efficient OCTOSPI pin assignment with a full I/O matrix (before alternate
+>>>>>>>> +  function map) and multiplex of single/dual/quad/octal 		SPI interfaces over
+>>>>>>>> +  the same bus. It Supports up to:
+>>>>>>>> +    - Two single/dual/quad/octal SPI interfaces
+>>>>>>>> +    - Two ports for pin assignment
+>>>>>>>> +
+>>>>>>>> +properties:
+>>>>>>>> +  compatible:
+>>>>>>>> +    const: st,stm32mp25-omm
+>>>>>>>> +
+>>>>>>>> +  "#address-cells":
+>>>>>>>> +    const: 2
+>>>>>>>> +
+>>>>>>>> +  "#size-cells":
+>>>>>>>> +    const: 1
+>>>>>>>> +
+>>>>>>>> +  ranges:
+>>>>>>>> +    description: |
+>>>>>>>> +      Reflects the memory layout with four integer values per OSPI instance.
+>>>>>>>> +      Format:
+>>>>>>>> +      <chip-select> 0 <registers base address> <size>
+>>>>>>>
+>>>>>>> Do you always have two children? If so, this should have maxItems.
+>>>>>>
+>>>>>> No, we can have one child.
+>>>>>
+>>>>> For the same SoC? How? You put the spi@ in the soc, so I don't
+>>>>> understand how one child is possible.
+>>>>
+>>>> Yes for the same SoC, in DTSI file, the both OCTOSPI child are declared 
+>>>> but are disabled by default.
+>>>
+>>> But the child node is there anyway so are the ranges.
+>>
+>> if both child are disabled, omm-manager should be disabled as well, 
+>> omm-manager alone makes no sense.
 > 
-> The SoC in the following statement 'you have one board, but might have different SoCs inside'
-> , I am assuming SoC to be WiFi controller/component.
 > 
-> Consider, if we have two WiFi (qcom,ipq5332-wifi) controller with different FEM in IPQ5332 board.
-> Then in the DTS we have two wifi node. Each wifi node in DTS will have different value for
-> 'qcom,ath12k-calibration-variant'. With the help of this property driver will be able to
-> download the correct calibration board data from board-2.bin.
+> Yes, it is obvious, but how is this related?
+
+As described in the commit message, OMM manages the muxing of the 2 OSPI buses 
+(its 2 child), that's the relation.
+
+Do you want i add this directly in yaml file ?
+
+> 
+>>
+>>>
+>>>>
+>>>> In the DTS board file, 0,1 or 2 OCTOSPI instance can be enabled depending of the board design.
+>>>>
+>>>> In our case, on stm32mp257f-ev1 board, one SPI-NOR is soldered on PCB, so only one OCTOSPI 
+>>>> instance is needed and enabled.
+>>>>
+>>>> Internally we got validation boards with several memory devices connected to OCTOSPI1 and 
+>>>> OCTOSPI2, in this case, both OCTOSPI instance are needed and enabled.
+>>>
+>>> I could imagine that you would not want to have unused reserved ranges,
+>>> so that one indeed is flexible, I agree.
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>>> +
+>>>>>>>> +  reg:
+>>>>>>>> +    items:
+>>>>>>>> +      - description: OMM registers
+>>>>>>>> +      - description: OMM memory map area
+>>>>>>>> +
+>>>>>>>> +  reg-names:
+>>>>>>>> +    items:
+>>>>>>>> +      - const: regs
+>>>>>>>> +      - const: memory_map
+>>>>>>>> +
+>>>>>>>> +  memory-region:
+>>>>>>>> +    description: Phandle to node describing memory-map region to used.
+>>>>>>>> +    minItems: 1
+>>>>>>>> +    maxItems: 2
+>>>>>>>
+>>>>>>> List the items with description instead with optional minItems. Why is
+>>>>>>> this flexible in number of items?
+>>>>>>
+>>>>>> If only one child (OCTOSPI instance), only one memory-region is needed.
+>>>>>
+>>>>> Which is not possible... look at your DTSI.
+>>>>
+>>>> It's possible. if one OCTOSPI is used (the second one is kept disabled), only
+>>>> one memory-region is needed.
+>>>
+>>> Ack.
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Another update, i will reintroduce "memory-region-names:" which was 
+>>>>>> wrongly removed in V2, i have forgotten one particular case.
+>>>>>>
+>>>>>> We need memory-region-names in case only one OCTOSPI instance is 
+>>>>>> used. If it's OCTOCPI2 and the whole memory-map region
+>>>>>> is dedicated to OCTOSPI2 (OCTOSPI1 unmapped, OCTOSPI2 (256 Mbytes)
+>>>>>>
+>>>>>> We need to know to which OCTOSPI instance the memory region is associated
+>>>>>> with, in order to check "st,syscfg-amcr" 's value which must be coherent 
+>>>>>> with memory region declared.
+>>>>>>
+>>>>>> so i will add :
+>>>>>>
+>>>>>>   memory-region-names:
+>>>>>>     description: |
+>>>>>>       OCTOSPI instance's name to which memory region is associated
+>>>>>>     items:
+>>>>>>       - const: ospi1
+>>>>>>       - const: ospi2
+>>>>>>
+>>>>>
+>>>>> I don't think this matches what you are saying to us. Let's talk about
+>>>>> the hardware which is directly represented by DTS/DTSI. You always have
+>>>>> two instances.
+>>>>>
+>>>>>
+>>>>
+>>>> We have 2 instances, but both not always enabled.
+>>>> In case only one is enabled, only one memory-region-names is needed.
+>>>>
+>>>> We must know to which OCTCOSPI the memory-region makes reference to, in order
+>>>> to configure and/or check the memory region split configuration. That' swhy 
+>>>> the memory-regions-names must specify if it's the OCTOSPI1 or OCTOSPI2 instance.
+>>>
+>>> Well, in that case two comments.
+>>> 1. Above syntax does not allow you to skip one item. You would need:
+>>> items:
+>>>   enum: [ospi1, ospi2]
+>>> minItems: 1
+>>> maxItems: 2
+>>>
+>>
+>> ok
+>>
+>>> 2. But this points to other problem. From the omm-manager node point of
+>>> view, you should define all the resources regardless whether the child
+>>> is enabled or not. You do not skip some part of 'reg' if child is
+>>> missing. Do not skip interrupts, access controllers, clocks etc.
+>>> If some resource is to be skipped, it means that it belongs to the
+>>> child, not to the parent, IMO.
+>>
+>> I didn't get your point. 
+>>
+>> The resource declared in omm-manager's node pnly belongs to omm-manager
+>> (reg/clocks/resets/access-controllers/st,syscfg-amcr/power-domains), regardless 
+>> there are 1 or 2 children. None of them can be skipped.
+> 
+> That's not true, you skip ranges and memory region.
+
+If i have correctly understood, you want a constraint on range and memory-regions properties ?
+Is it what you expect ?
+
+  ranges:
+    description: |
+      Reflects the memory layout with four integer values per OSPI instance.
+      Format:
+      <chip-select> 0 <registers base address> <size>
+    minItems: 1
+    maxItems: 2
+
+  memory-region-names:
+    description: |
+      OCTOSPI instance's name to which memory region is associated
+    items:
+      enum: [ospi1, ospi2]
+    minItems: 1
+    maxItems: 2
 
 
-Indeed, that makes sense. Thanks for explanation.
+Thanks
+Patrice
 
-Best regards,
-Krzysztof
+
+> 
+>>
+>> If omm-manager has no child enabled, omm-manager must be disabled as well in DT.
+> 
+> That's not what we talk about. We do not talk about enabled or disabled.
+> We talk about being there in the first place.
+> 
+>>
+>>> Therefore memory-region looks like child's property.
+>>>
+>>> Imagine different case: runtime loaded overlay. In your setup, you probe
+>>> omm-manager with one memory-region and one child. Then someone loads
+>>> overlay enabling the second child, second SPI.
+>>>
+>>> That's of course imaginary case, but shows the concept how the parent
+>>> would work.
+>>>
+>>> It's the same with other buses in the kernel. You can load overlay with
+>>> any new child and the parent should not get new properties.
+>>>
+>>
+>> In case of runtime loaded overlay, if a second child is added with an associated 
+>> memory-region, omm-manager must be unbind/bind to :
+>>   _ check the added child's access rights.
+>>   _ take into account the added child's memory-region configuration (to set 
+>>     the syscfg-amcr register accordingly) 
+> 
+> That's driver part, we talk about bindings and DTS.
+> 
+> 
+> 
+> Best regards,
+> Krzysztof
