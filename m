@@ -1,121 +1,101 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DE520D4ED;
-	Tue,  4 Feb 2025 12:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C403185E4A;
+	Tue,  4 Feb 2025 12:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738671812; cv=none; b=XVl59rIAyzZkR4kVOuMKRXv71IhogvXHblBTvUof1V9fwxL1L3Q+eMAe0j++H3T0fT+BZYQHloGWt965AeIQCW9Uu66yyes/2+Uh7ye0nRNSkD1gjnIBVHgab+v0VViCEAGiDN4pFAgLyujRN4dZlqCd1PLppvPpjs6mmqH7S2o=
+	t=1738671906; cv=none; b=Het9nKuW/VxztZpFuXAr8fvvJYI5Mcc9smmqf8zhCwKvAfoPWbwlSlu0cJw5z0eNs1PAuzaecByXzwWkMdwj1rsHbu3Hd85PW/BSP0rNeQQFdOfmLIlzk6PMGJCoIGks37IMyCoEQhwSHg+1vnhpzrYxmqcoE5p4iHLhJcXxUfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738671812; c=relaxed/simple;
-	bh=1AwBVmhsE6RjZNivDIyJD1c+DOs2FE3JauK+zQhNYbo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AT9Ekr9HvhfLGS+Huh8lG1BSkBDp9CtVlRpK1KLdUx54gQmleTpPHNGhfPam9+dKacTWo6NJDwlUrCMZ7hwpjuBYq7MDIAuL5SjEK/Q6A8xp8X4VBoWt/VDy2t7KX71V/NuzOhXa4ZylkphM4DDQMbKqWLT1wo+MigBlHD4YTdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SMfrjbyT; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738671906; c=relaxed/simple;
+	bh=nxM4s2+q4jMZZl9mmJo4b5VSqkcMlsVNTuzIDh7bq9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=afA9eEd64vwzodX3Sp+PlI25yZPM8RdguItVvwj9HRaBMYacQBy6/GFX0/ULUi7RBkwkQfTYxp78okKeUugbi7dlBpnI1kEqN3EeAm0XK8tdb5DUJRVOYnNcbIdaPoBh3zj42fp/1z3603wiYmmbdi8fWGvmjIjl49DyKScXx3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ks/IsdNh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMfrjbyT"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dca451f922so4278083a12.2;
-        Tue, 04 Feb 2025 04:23:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738671808; x=1739276608; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:reply-to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6JW6nXgkGnw+4YwH5C7jTt8bg63lJJkPHEUKmMZ4igM=;
-        b=SMfrjbyTaSjqHQfUz05REEJqyzfebMUuJ2gBJY1bRwd+GoLkJ4R+v8Mtreh42rL6nh
-         sspbQREbKTCBUB9gMC888r1/gAgNTeWKsgSbJMLSak8H7hUeCIxi+w3+JQnMz/CAP3gw
-         mGhd9/+CvfX8pKvpa0vrFgZc1f/4c7Qaiigw2GqGVN98eEw6tq8M4Zz/1aSakjMXe52B
-         81zUqtITQMGgCzGwk4eKDxFe745jefT7caTygfOodrehEuXZ53b6hebQu1l7FDJ6xrDh
-         Jy8TppNItJzZ+Y3g8HxMRlhtUppCZhYrZYmm3UFFrYeppUCLyRU5FogrYLGVWneEdoml
-         Ru2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738671808; x=1739276608;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:reply-to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6JW6nXgkGnw+4YwH5C7jTt8bg63lJJkPHEUKmMZ4igM=;
-        b=TRz10F3xdmqF391kMdLWD8KtdDMYkJ0ZkIhyAs1aD3zL3Dbd8k848nstgOwhn1LBve
-         It2AN6yNXFetcD7UtNQHGIAPyA9WTCrD3SqcXulqaaghZ/3cTUyQnw6XE8q7KgLg4TyW
-         +f31/MYBR3iH1P1vVxr/z+3PKyXTrXnbp88qnVgyUpJ2PddmrmWDTONCzgm2nv6nVBwM
-         ax0x4dSRii2jEl9zj1Mmb2L3uQyrZXhelnN/NxLbTLONhf0vnE4undRtVNokSWAaFjUq
-         lUVLR8ak1KAfsDIVMgDuMtpLa9Eni85LBq8sHTYbyWKen8uYB1oJeBrbfZvBi27MhLKm
-         +n0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUBeJst4E9ofKJd6OaqBZE49+f86LAQ97+yQeQMZ1T1i6gtXRQzjwFKNopFZrZgzP2Esiu7zjMGZe8=@vger.kernel.org, AJvYcCUxIhP7iCy3PY51m3flRg3Z9Njjp7fUNovq1CXPCWCFEbqnC5zKgv01RB6TqF2gYznU+cTztgORPaL7FaFQ@vger.kernel.org, AJvYcCWSkOCX92GL8dvYzZaAAqxvRWg2ZqSEVaW+rLL2xid5Y4WY/WqcSAjtPneMEZ0aP4a5NVUC4x1NRao=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxAKdfqSvA5/+GYTeKqe/7//zecsE6p/1co6nzIfw602vY20GO
-	Q36Zp/XCSeIzntkHrvnjy5AXLkob3sWgB93Hj7pMjm2ckQ0DqtSs
-X-Gm-Gg: ASbGncsJr86XRmCfYUJMwMywazOGDNHhXinMEaO3//BQTuIzHuGJ8LV/+B2Y6qFnc6I
-	IvxSr29BxmVODLqCbffddrWpnNiFidu6b9PoYieN0s0NaBjvvKCbU5iw4M1zKrYJYPtvytkAygW
-	WRYLEuHNRxfwkLE5lal8nQ7grYYdIMpujihWP7C32XRqialDcmNs706m2hFaSOTudzxfiqN3gLN
-	QRDMTrzYiTf0jrFwV0I7XzWChTg6L0dB3ZRvEnDsASfsadbKLseiqtPR+30TqiFHLqX3mL5ItA0
-	Cvwn9Op8IwE6HYQOgDqYHHyHX0HMT3V0pkieUtflHN1QMA==
-X-Google-Smtp-Source: AGHT+IErkO44neLieHc6hwPzIGiBDdT4ITuB44WevvVWTsjc7SP/HSFfpELM4neDw/ug1OjRMfoI5Q==
-X-Received: by 2002:a05:6402:e96:b0:5dc:7464:2228 with SMTP id 4fb4d7f45d1cf-5dc7464261cmr21034232a12.2.1738671808162;
-        Tue, 04 Feb 2025 04:23:28 -0800 (PST)
-Received: from abityuts-desk1.ger.corp.intel.com ([134.191.196.181])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc723e4ceasm9184143a12.21.2025.02.04.04.23.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 04:23:27 -0800 (PST)
-Message-ID: <e9188365425d2a4c0dfa7cfa2b17ad3d9fcf2735.camel@gmail.com>
-Subject: Re: [PATCH] intel_idle: introduce 'use_acpi_cst' module parameter
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Reply-To: dedekind1@gmail.com
-To: David Arcari <darcari@redhat.com>, linux-pm@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>, Jacob Pan
- <jacob.jun.pan@linux.intel.com>,  Len Brown <lenb@kernel.org>, Prarit
- Bhargava <prarit@redhat.com>, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Tue, 04 Feb 2025 14:23:24 +0200
-In-Reply-To: <20250128141139.2033088-1-darcari@redhat.com>
-References: <20250128141139.2033088-1-darcari@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ks/IsdNh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2491C4CEE2;
+	Tue,  4 Feb 2025 12:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738671905;
+	bh=nxM4s2+q4jMZZl9mmJo4b5VSqkcMlsVNTuzIDh7bq9k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ks/IsdNh5Qkr6K3WXKSZIcSbXY6wUP5hDJ2befaqkWNrPe2XwEUZCFrZc6rgK9Gyh
+	 zU23yHkNgIA+ZmgQ4GIUyRtO+v4OSacd9aH+20AWDsGE2ANT2rqqeEgHz8mx83/pbU
+	 vN2q69DIDF1Vu7LQHyykA1RhLOmYlrgysh6HinQVNGD3tzpyLVZJczVAb0Vi7Wmp4y
+	 9FGhHKr4x1D6amsB0Tk/MFD9byksGe2z1y1YvsFMOP8mDSl9maPPwBgjbAqvxAu/ix
+	 MPzuAaAkKjK3e+cHZhsF6L6Z+1I2cp4XCJf/MfScHqwDlf0jpP3yHezz2dWobBn4zY
+	 LqxVsMTd8BszQ==
+Date: Tue, 4 Feb 2025 12:25:00 +0000
+From: Will Deacon <will@kernel.org>
+To: Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] arm64: Kconfig: Remove selecting replaced
+ HAVE_FUNCTION_GRAPH_RETVAL
+Message-ID: <20250204122459.GB1063@willie-the-truck>
+References: <20250117125522.99071-1-lukas.bulwahn@redhat.com>
+ <20250204113614.GD893@willie-the-truck>
+ <CAOc5a3O-8wrQq3oNJC+H9ncFt0yxcm4O+QSgPk4QckF6Ak5pGg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOc5a3O-8wrQq3oNJC+H9ncFt0yxcm4O+QSgPk4QckF6Ak5pGg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi David,
+On Tue, Feb 04, 2025 at 12:44:25PM +0100, Lukas Bulwahn wrote:
+> On Tue, Feb 4, 2025 at 12:36 PM Will Deacon <will@kernel.org> wrote:
+> >
+> > On Fri, Jan 17, 2025 at 07:55:22AM -0500, Lukas Bulwahn wrote:
+> > > From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> > >
+> > > Commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with ftrace_regs")
+> > > replaces the config HAVE_FUNCTION_GRAPH_RETVAL with the config
+> > > HAVE_FUNCTION_GRAPH_FREGS, and it replaces all the select commands in the
+> > > various architecture Kconfig files. In the arm64 architecture, the commit
+> > > adds the 'select HAVE_FUNCTION_GRAPH_FREGS', but misses to remove the
+> > > 'select HAVE_FUNCTION_GRAPH_RETVAL', i.e., the select on the replaced
+> > > config.
+> > >
+> > > Remove selecting the replaced config. No functional change, just cleanup.
+> > >
+> > > Fixes: a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with ftrace_regs")
+> > > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> > > ---
+> > >  arch/arm64/Kconfig | 1 -
+> > >  1 file changed, 1 deletion(-)
+> >
+> > Hmm. There are still a couple of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL guards
+> > kicking around:
+> >
+> > include/linux/ftrace.h:#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+> > kernel/trace/fgraph.c:#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+> >
+> > so it's not clear we can just remove the option from arm64 without
+> > breaking ftrace_return_to_handler(). What am I missing?
+> >
+> 
+> Will,
+> 
+> I believe you are looking at a tree, which did not include commit
+> a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with ftrace_regs") yet.
 
-On Tue, 2025-01-28 at 09:11 -0500, David Arcari wrote:
+Argh, sorry, you're completely right! I'd forgotten to fast-forward my
+fixes branch to -rc1 before looking at this.
 
-> +The ``use_acpi_cst`` module parameter (recognized by ``intel_idle`` if t=
-he
-> +kernel has been configured with ACPI support) can be set to make the dri=
-ver
-> +ignore the per cpu idle states in lieu of ACPI idle states. ``use_acpi_c=
-st``
-> +has no effect if ``no_acpi`` is set).
+In which case, thank you for the patch :)
 
-With this change, there will be three parameters:
-
-* no_acpi
-* use_acpi
-* use_acpi_cst
-
-I would like to make the naming as intuitive as possible. We do not rename =
-the
-first 2, but for the 3rd one, I think "force_acpi" would be a better name. =
-Or
-perhaps "no_native"?
-
-* no_acpi - Do not use ACPI at all. Only native mode is available, no ACPI =
-mode.
-* use_acpi - No-op in ACPI mode, consult ACPI tables for C-states on/off
-  status in native mode.
-* force_acpi (or no_native?) - Work only in ACPI mode, no native mode avail=
-able
-  (ignore all custom tables).
-
-Additionally, I think we should enhance the documentation for 'no_acpi' and
-'use_acpi' while we're at it. Otherwise, it is hard to distinguish between =
-these
-three options. Would you consider another patch that improves the documenta=
-tion
-for 'no_acpi' and 'use_acpi', and then adds the third parameter?
-
-Thanks, Artem!
+Will
