@@ -1,163 +1,223 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFFF2139D1
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAFB17588;
+	Tue,  4 Feb 2025 14:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738680610; cv=none; b=HAqt2gFi72P1POxaKck1fln20YwNr/f+LWbsxjmxNbmZ472+M210/Zhd1MWGsnHoDO/86WdCExC9UTVFy72xG3T0OO4tGmjulsRmYJ23IAPlBBcmbMxuBnejt+aJEsRb6EV4sQji8Ik1DkH5FqLnMCwSlOZQPmCMBJWqu8A8stA=
+	t=1738680633; cv=none; b=G5Oo3qKtvN/o4k7A0GEzarrVrd9iGRHEPNlqOPQL6jeawCHq8QEInIKJM9jFlU+8IoOF0LWd7+Ltvi0y9AdUO5trXRG+oZKTVUkt4HmxYpxb4PjX7jQ9yw75Vxwbx1VkN9Yh/pJInURYBC5Bm71s6pBSz5kK5QHGOx7ZOyHkXHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738680610; c=relaxed/simple;
-	bh=nOJm7PkBZEPpoXCGHLNHbKJW+/E6GyUBJzqj9K7/pbo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uf3tsJnpcI8r81ktc9osdWOVPDFhlLj/3ojNtNbylrDgPwGeNLQ+Wqq7ame4iqDNrW5r/m0mPYQCLMZkmeYuJLNIyuSjSE0GmHNyIcxwCRXs6o7KAe+dorPgmKBPT0Gy519ek4imOYv+9kozqnOmY/AlMPDSdIh2fbeSXCg4qY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=iT6/WjdJ; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1738680633; c=relaxed/simple;
+	bh=PVDI10kSspSbKiqiR3cWmHfQUFuV+mJrrZh7MaBhxPQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HaeGwt4VViNoiCne2pg04rDcRb50yd72ymkLIx6Ft6Dmp/AJtRHGQGAmIBT/lvONNSfLEZKUKridPqc7yOGzz/+xYxWfnJhrViw7RmKFku1+w0dz5XoTzylZV1aTfV5nVPml+occ2aWN2WWbZvOpELXWx/VPKSR8UbZ7sdmCRjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LijbyhrZ; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="iT6/WjdJ"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30613802a59so62637741fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 06:50:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LijbyhrZ"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7b6f1be1daeso540025385a.0;
+        Tue, 04 Feb 2025 06:50:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1738680606; x=1739285406; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738680630; x=1739285430; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a6qovICTGPEEjhTN07umz778RBWf4L4gwOU9re+tr4g=;
-        b=iT6/WjdJKZWw/qje1pycQ8ERYfbhFV4j7PLvswR0+Ol8b+i0XL87+ydstYY/+UHD4P
-         bJXJdHiVRMAGcCqldlNrxhMvu7CYPKuLlH+/TVHqQW2KZyxKgKLkjDrBcrp3qbGSTSxT
-         1rj+6fIr+Z4Xr56N/eJB/Z4DRey6Tq3okx412uLv7lAbnvJcgOId8BLjfsGxwjmp6GW5
-         d2OJ+K4h5enHabBSKFoSuExJZjfQtd6QgJpJhO7puJqx4lSPbDO9BrnM92/tiNbQH5Tj
-         wgExkIie9IYQHOulDFW9gbMKKV2vf+cGmQBxL40KyeFB0vCeN99zMvwh4Q4GgrP/NvzP
-         MCmQ==
+        bh=O93zUfmkQJ5yLGKvDRcJEjXroIe8dkmS2F1TSj1aIr0=;
+        b=LijbyhrZIYehiyRV7W8mOw/BEkCTWTMqz24w7kc02Spa6l3GTSTaBggc4NJmMIlfBe
+         DbVXBfiltSSqoOmGGlhy5f1pNOCOhuQPgjNGTnmMC/iomcOjUrJQXs+rieOcnSK0znCO
+         5l48tQ9OWIlSKo/BfiTsZe51SBf/Bvz9pdybKWd1d9BMXt/QJSNwo6d/mmFurCStKsqz
+         4+kn/zRot5LuKoOOXpZ9T0yDUrINQOBxkZhiBXGHxPsW7AE9GBAQYWUYBdrqvd12Xq+t
+         dhVN9H5OvmZNKvGAoOnOkzkqbMumkheTkuctB+R3YEA/lXPcyktMr52V7ZhpoaA4P6pO
+         Ci0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738680606; x=1739285406;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1738680630; x=1739285430;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a6qovICTGPEEjhTN07umz778RBWf4L4gwOU9re+tr4g=;
-        b=nd2raz1psW84nV1onJJagiy8UgejLl1RZ6Owc7m3rrKdUBShk7oHNk+fUd5eQYVgHC
-         7P7Hmkd/KOe2cGKcb/LrKqD7uBvLhPhTr14RavNhAAAUC2CWPW7zWvmPrGsuAbgx/FOH
-         lPr5T92EK1SZf/GShTedB7s74UH+U5ZHKHGQAM0UfJwsokDf94rKrj/A155AnG1A8xrC
-         Ar8qtGI5L9AlUqxqq97/g5lvPCtYJOMDk+ix9I49Zby1HSfu/MTpsWKZxRRDFBeeRuqj
-         nCOCb3WFtoogZwyEAaBmqqADn2hoDtEAO7J9KNVnvhkxqvoYN/51RlNMwOPB5GPsnCCk
-         IX6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVM0Ilel+GkvmY/TQXs+YzhP8lFLqFzatnvyRzQPjM8OliEI9Jqx5dFMJd9nFRghyP/3weqEEqgwFcAlh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzx77gFHOFQWyUQMtFuDiS+rpNHsFMg7rKE9gA4+XISFF69i1Hm
-	sqF+Zk8mtlE3GbI0aykyZAEzE0NEPdSsHQkhXTq849t2mMvbXSzzf3LqtAlN20vi7ETadcNso6U
-	dDdbGZ/NGLyMlhXr9S0YBx2C2+FEitUIGwuxXjQ==
-X-Gm-Gg: ASbGnctMHwgvObajdtsvNduo2tV+/3peRdwJZO+2sFiDUIWvAZ0qobKE3at9/PbqlCr
-	ev8b8U7FzHQW0HPHIDPdjEBnUX9kYGi1bClweT+v6PPjU/ZCwyzCHHoIcHxD3M+8+zsrciCT/sQ
-	==
-X-Google-Smtp-Source: AGHT+IHDEbsYQipfejXqFohjxLWs79QcoPD2kP+1yrW9qYk9n/SN/qyoP+wLyuKonmtT1FmQCmqnzeGwlD2OFASKWU0=
-X-Received: by 2002:a05:651c:2115:b0:302:3a28:76cf with SMTP id
- 38308e7fff4ca-307968e725emr115509751fa.25.1738680606043; Tue, 04 Feb 2025
- 06:50:06 -0800 (PST)
+        bh=O93zUfmkQJ5yLGKvDRcJEjXroIe8dkmS2F1TSj1aIr0=;
+        b=CWGrc7+i2Lm9XBg/jKXYQoC1rG5hX5qujHhNGl5q14UP82K7gINPKmjrqM92Yjh7uh
+         12vkUOA3GBbS2y+Cv+Lh9D+JSFkaBN0mzATSwms8dyJr7p6P8JJzcZ/yBIxhSYCbDoFe
+         aQl6nRBAUFVGQZ5FlyXi91mUxbbUl4/dQeMOOuh7sFUrFzt50qX1x/XE5JeTj7VfH/Su
+         qnUlINMZs1jzvu/cbdPQvFJrzxmHOLBPJDFPMHvNw5XSXPbtGzVd4m6sZfmwTc0l5mRV
+         KXe05LYdE2vrLtUl1pdtsma42Yj50lF3ptTGsT5ubyq27LM/1YZI+xsbqXMxrNsVymTe
+         +mXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTABvZ6IDtg85imLHOrPzu9hx1ferPUYq+0IgEbeMOCp6peiYfxlWJWEy0uhAOVsuMmdVHXnCbNWLF0SU=@vger.kernel.org, AJvYcCWH4xLXPKZZPtF3Cbmh3SbsWmW8CH9qXsbjnGgR08AV7u4N8rNfHBU0KuDdBiz1JEPTOROYXuOTaYtxJyki7fI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+sv6CRHWo3elw3klPerjYljp/Lk6RZE+pzjfOYFxaovGFx7Uc
+	70PFtI2NpQYHewvqyAq5bcNsSaI0W1J/UAB45qu5zs+Qffu5TZXZ
+X-Gm-Gg: ASbGncvGUCJkCnlqjr5RUIDuPuJ06mSvD7eCrIFlAQ1EJNaHarkHUi+LKkORmzETO/t
+	6OX3o8N/vHcrwDWTHlMi73qNbKBMQbLjp3TbMpqm4r/uEJWIOPNjEnLAj+67ZopllCwSuQtl9JS
+	2biOImnURADNiAzSS1JAWaphC6+UtbaTqQ4AnTEBLPTNC9KqgACf6e+9alQHyA1GVYutDr+Puqc
+	l78fTUNRTaOVVtPnoFRaaMGd3F2qyZwDNMioovMqP/T11nEe/GJnDXmYN22DNJAlLAdzyAghuiB
+	iWFZ4gJ6fzrILZpyAJQMiINiFT51jCeMe9Ty12+tuVpy8EzOnAD2OeBdWT9s00LQHLLQSO97+vI
+	qjj654g==
+X-Google-Smtp-Source: AGHT+IH0tfWWAkUUISaVsW7R9y0WycKwDyOEfJRx4RoIqxcqcAbwE9Cp+b3y3nIulRFvqaZhMXeL8Q==
+X-Received: by 2002:a05:6214:2305:b0:6dc:d101:2bb2 with SMTP id 6a1803df08f44-6e243a86cd0mr372471186d6.0.1738680630220;
+        Tue, 04 Feb 2025 06:50:30 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e2548196ffsm62572346d6.44.2025.02.04.06.50.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 06:50:29 -0800 (PST)
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfauth.phl.internal (Postfix) with ESMTP id EA5CF1200068;
+	Tue,  4 Feb 2025 09:50:28 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Tue, 04 Feb 2025 09:50:28 -0500
+X-ME-Sender: <xms:NCmiZ7BaXbSavOjU4Nn1_N-AyNHAAdOU4uEomT1DDbEYlbArrMU0dw>
+    <xme:NCmiZxjZby0UjbmwsFTVBgfeMvxC0NutCutLbtam7psCcN_YS46aHGpNrskYscJ2n
+    oaB5JOBOmcRmNfVpQ>
+X-ME-Received: <xmr:NCmiZ2lXK7-eofJMRYN5D7a0pbJpEmcy8Cfdd33D73bJMZ_kA8mqZuRNHA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdektdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
+    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
+    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
+    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedvfedpmhho
+    uggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhgrsegrshgrhhhilhhinhgrrdhnvg
+    htpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghl
+    vgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrh
+    ihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghi
+    lhdrtghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvg
+    dprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhroh
+    hsshesuhhmihgthhdrvgguuh
+X-ME-Proxy: <xmx:NCmiZ9z5qz1n5fm3agtBtZCTy6bzQYcxUw-R3aMLwK8QDODXxt9zdw>
+    <xmx:NCmiZwTPyB9mI1Jgy7P5G0FEDVWaYa3QS-fO-i5zVUx0DJmSzsx-Ew>
+    <xmx:NCmiZwZZFMOdWFPGGnX1-WUQtro0fi2Xp7J2XtrAAVjK_IKv9_GuVg>
+    <xmx:NCmiZxTdyg8CcUym1qvO-hPjzOg9BhIcZS5kzV2xQCPvp52NSbVZEw>
+    <xmx:NCmiZ2DmICtOZUqHTnCejbMw4BgPVUSqjDKyo3QR7wFn_9ME9sTSdfrY>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 4 Feb 2025 09:50:28 -0500 (EST)
+Date: Tue, 4 Feb 2025 06:50:27 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Asahi Lina <lina@asahilina.net>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Jann Horn <jannh@google.com>, Matthew Wilcox <willy@infradead.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Valentin Obst <kernel@valentinobst.de>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev
+Subject: Re: [PATCH 4/6] rust: addr: Add a module to declare core address
+ types
+Message-ID: <Z6IpM1zuR7-iThua@Mac.home>
+References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
+ <20250202-rust-page-v1-4-e3170d7fe55e@asahilina.net>
+ <Z6Da4XV5hcTfBiNH@tardis.local>
+ <8f098064-d2d5-4a02-8306-0a3d31557bab@asahilina.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204075405.824721-1-apatel@ventanamicro.com>
- <20250204075405.824721-11-apatel@ventanamicro.com> <87o6zinl5o.ffs@tglx>
-In-Reply-To: <87o6zinl5o.ffs@tglx>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Tue, 4 Feb 2025 20:19:53 +0530
-X-Gm-Features: AWEUYZnsP5bIEqfYtAEgSHeeevhnHrIfy83h-jtA8at0gwbWoWLEsA0X1oOoSQI
-Message-ID: <CAK9=C2VgOnSVBRPh+bJBQnGreVYcUh6HWVg1MEzDtfYsuT0s-g@mail.gmail.com>
-Subject: Re: [PATCH v3 10/10] irqchip/riscv-imsic: Use IRQCHIP_MOVE_DEFERRED
- flag for PCI devices
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Atish Patra <atishp@atishpatra.org>, 
-	Andrew Jones <ajones@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Anup Patel <anup@brainfault.org>, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f098064-d2d5-4a02-8306-0a3d31557bab@asahilina.net>
 
-On Tue, Feb 4, 2025 at 2:26=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de>=
- wrote:
->
-> On Tue, Feb 04 2025 at 13:24, Anup Patel wrote:
-> > Devices (such as PCI) which have non-atomic MSI update should
-> > migrate irq in the interrupt-context so use IRQCHIP_MOVE_DEFERRED
-> > flag for corresponding irqchips.
-> >
-> > The use of IRQCHIP_MOVE_DEFERRED further simplifies IMSIC vector
-> > movement as follows:
-> >
-> > 1) No need to handle the intermediate state seen by devices with
-> >    non-atomic MSI update because imsic_irq_set_affinity() is called
-> >    in the interrupt-context with interrupt masked.
-> > 2) No need to check temporary vector when completing vector movement
-> >    on the old CPU in __imsic_local_sync().
-> > 3) No need to call imsic_local_sync_all() from imsic_handle_irq()
->
-> I have no idea how you came to that delusion.
->
-> IRQCHIP_MOVE_DEFERRED is part of the mechanism to handle this insanity
-> correctly. It does not prevent the device from observing and actually
-> using the intermediate state. All it does is to ensure that the kernel
-> can observe this case and act on it.
->
-> The fact that the kernel executes the interrupt handler on the original
-> target CPU does not prevent the device from firing another interrupt.
-> PCI/MSI interrupts are strictly edge. i.e. fire and forget.
->
-> IRQCHIP_MOVE_DEFERRED solely ensures that the racy affinity update in
-> the PCI device happens in the context of the original target CPU, which
-> is required to handle all possible cases correctly.
->
-> Let's assume the interrupt is affine to CPU0, vector A and a move to
-> CPU1, vector B is pending. So we have three possible scenarios:
->
-> CPU0                            Device
-> interrupt
->                                 1) Raises interrupt on CPU0, vector A
->   ...
->
->     write_msg()
->         write_address(CPU1)
->                                 2) Raises interrupt on CPU1, vector A
->         write_data(vector B)
->                                 3) Raises interrupt on CPU1, vector B
->
-> #1 is handled correctly because the interrupt is retriggered on CPU0,
->    vector A, which still has the interrupt associated (it's cleaned up
->    _after_ the first interrupt arrives on CPU1, vector B).
->
-> #2 cannot be handled because CPU1, vector A is either not in use or
->    associated to a completely unrelated interrupt, which means if that
->    happens the interrupt is lost and the device might become stale.
->
-> #3 is handled correctly for obvious reasons.
->
-> The only way to handle #2 properly is to do the intermediate update to
-> CPU0, vector B and checking for a pending interrupt on that. The
-> important role IRQCHIP_MOVE_DEFERRED plays here is that it guarantees
-> that the update happens on CPU0 (original target). Which in turn is
-> required to observe that CPU0, vector B has been raised.
->
-> The same could be achieved by executing that intermediate transition on
-> CPU0 with interrupts disabled by affining the calling context (thread)
-> to CPU0 or by issuing an IPI on CPU0 and doing it in that context. I
-> looked into that, but that has it's own pile of issues. So at the end
-> moving it in the context of the interrupt on the original CPU/vector
-> turned out to be the simplest way to achieve it.
+On Tue, Feb 04, 2025 at 08:50:17PM +0900, Asahi Lina wrote:
+> 
+> 
+> On 2/4/25 12:04 AM, Boqun Feng wrote:
+> > On Sun, Feb 02, 2025 at 10:05:46PM +0900, Asahi Lina wrote:
+> >> Encapsulates the core physical/DMA address types, so they can be used by
+> >> Rust abstractions.
+> >>
+> >> Signed-off-by: Asahi Lina <lina@asahilina.net>
+> >> ---
+> >>  rust/kernel/addr.rs | 15 +++++++++++++++
+> >>  rust/kernel/lib.rs  |  1 +
+> >>  2 files changed, 16 insertions(+)
+> >>
+> >> diff --git a/rust/kernel/addr.rs b/rust/kernel/addr.rs
+> >> new file mode 100644
+> >> index 0000000000000000000000000000000000000000..06aff10a0332355597060c5518d7fd6e114cf630
+> >> --- /dev/null
+> >> +++ b/rust/kernel/addr.rs
+> >> @@ -0,0 +1,15 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +
+> >> +//! Kernel core address types.
+> >> +
+> >> +use bindings;
+> >> +use core::ffi;
+> > 
+> > I think we should use crate::ffi here. See:
+> > 
+> > 	d072acda4862 "rust: use custom FFI integer types"
+> > 
+> >> +
+> >> +/// A physical memory address (which may be wider than the CPU pointer size)
+> >> +pub type PhysicalAddr = bindings::phys_addr_t;
+> >> +/// A DMA memory address (which may be narrower than `PhysicalAddr` on some systems)
+> >> +pub type DmaAddr = bindings::dma_addr_t;
+> >> +/// A physical resource size, typically the same width as `PhysicalAddr`
+> >> +pub type ResourceSize = bindings::resource_size_t;
+> >> +/// A raw page frame number, not to be confused with the C `pfn_t` which also encodes flags.
+> >> +pub type Pfn = ffi::c_ulong;
+> >> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> >> index e1065a7551a39e68d6379031d80d4be336e652a3..eb1a80ba8ff83ab2d1b3b1d11fed4fb704c7a4f5 100644
+> >> --- a/rust/kernel/lib.rs
+> >> +++ b/rust/kernel/lib.rs
+> >> @@ -29,6 +29,7 @@
+> >>  
+> >>  pub use ffi;
+> >>  
+> >> +pub mod addr;
+> > 
+> > I want to share my worry on this `pub mod` list in kernel/lib.rs may get
+> > too long ;-)
+> > 
+> > I was about to suggest putting `addr` and `page` into `mm` after Alice's
+> > patchset merged, however, seems that `mm` mod only cover userspace
+> > memory management (which is not my impression of what "mm" in kernel
+> > development), thoughts? Alice, do you think we should extend `mm` mod to
+> > contain all memory management mods?
+> 
+> I think in kernel-speak "mm" is usually userspace memory management and
+> kernel page allocation and memory management, but doesn't include device
+> stuff (I/O ranges, DMA, etc.) or the low-level concepts of memory in an
+> architecture. The types I declare here are more relevant to device/arch
+> code, so I don't think they really belong under "mm", it's more general
+> (mm deals with them and so do other parts of the kernel code).
+> 
 
-I got confused because IRQCHIP_MOVE_DEFERRED updates affinity
-with the interrupt masked which I interpreted as masked at the device
-level. Also, PCI MSI mask/unmask is an optional feature of PCI devices
-which I totally missed.
+Make sense.
 
-I will keep the intermediate transition in the next revision. Thanks for
-the clarification.
+> On the other hand, I think page.rs itself would fit under mm, since it
+> deals with the kernel mm's idea of pages and their allocation.
+> 
+
+Agreed. Probably some follow-up work after Alice's mm work merged.
 
 Regards,
-Anup
+Boqun
+
+> > 
+> > Regards,
+> > Boqun
+> > 
+> >>  pub mod alloc;
+> >>  #[cfg(CONFIG_BLOCK)]
+> >>  pub mod block;
+> >>
+> >> -- 
+> >> 2.47.1
+> >>
+> > 
+> 
+> ~~ Lina
+> 
