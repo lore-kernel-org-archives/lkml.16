@@ -1,38 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A0C2163AB;
-	Tue,  4 Feb 2025 13:09:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224B820D4FD;
+	Tue,  4 Feb 2025 13:10:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738674569; cv=none; b=qLzGo/i3MQ4iUoECD41ow4D3riAeqhXYJyw71or7hdV6vscyIqFbhlT+DaQyICOaq5UZg0aB5qHmCxWqQZ13btL7LOm59fp7tLYKj1BtAYhUagWHxcAMrvuOieqFq9Oix8ZObPCVOh7xz4lonE9nF3YtDYESlmq/98+UF5NiNRM=
+	t=1738674638; cv=none; b=raZynTiuzjmMpIafX4VWzxsLwrW9iTPf5PHwwJEfSzG/5cLLaen0to41rOoHSa8wUKhh4iTuMjFAOcKoSBXi3cbHStWfYwLmNVLy2SAj1g+mypVNK9kJdWy3XhNBlqO1IDqsD87K51MQecfoKZJpFtHfhUwQlv7hJoBQXihbgbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738674569; c=relaxed/simple;
-	bh=KLae2ThirBF8TRBJ/rCd9Z9cMdAlcIVZqzjerutX23o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qViqdKw4klCZS/6HUdHkHYQxVjC60Pz0BQ/MCax+igTE9/Utl2mwctnPMb3NU9ywCH5v3z+cuE8Fp0OFfrqkeFWFi94+eMxFrC+19BbchUq2oSebxj9BnBSUCXnMbu924TVuJXxaSp0751Fl0K+JBE6wrm3EzwMvYFJjcv3TpUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CLLWCeQ0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738674638; c=relaxed/simple;
+	bh=9tzbQloTVlXYoOuUK3F9IbenJ6Yspq92dEOK7eX4dns=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=px8cu0lUwBSpZ9B54Kp0CyEXBbgcU40vfNCYbJ3S+fZYy4GsPayQUgO4eyXL1oFVheACBNdA4+/q+0nNDEKXv4nQaz+qGB++LzLL0aiKVtISFoCIsJ/e56xjlZNwOD+UjoBQ0FRkS2QYwDfHU9v4Cn0DV28z4FCLu8FPZUWa70M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nizkzqTS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CLLWCeQ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5EF20C4CEE2;
-	Tue,  4 Feb 2025 13:09:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nizkzqTS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EEB1EC4CEDF;
+	Tue,  4 Feb 2025 13:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738674569;
-	bh=KLae2ThirBF8TRBJ/rCd9Z9cMdAlcIVZqzjerutX23o=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=CLLWCeQ0pXUgkM75LPYOq087THiJWiKylgDZwxNJ4aa4Idzlicxy3OIkr0OKp0ue4
-	 KXdRRg/L3l78g3Ogq+r8SLYR8scTK0lNDJlUuVg1FVcMkVAxehHX8lpXnokjTK9W4v
-	 /b2QY0Y0AhY8FWqmLE5ldbV1fu2l6ZKr+x0CL3XJdU19JAEUJ3JQoA644pJvDadm4o
-	 FrtNplz5wLhG6ru4MFzhcl2BlE3+3FjfCrSvRmLpXEnSl6fkGasvR+KC08V+3E5ICO
-	 G0InZld2TYL+yM+Fq86uIs1Wkis6U07DH1Mc7FCU4pODnmjK3x3ZgxZCJAcRw6Z1me
-	 l2h0ZzeCsSzaQ==
+	s=k20201202; t=1738674638;
+	bh=9tzbQloTVlXYoOuUK3F9IbenJ6Yspq92dEOK7eX4dns=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=nizkzqTS/pFplMdkLUoPjHF+flnTkjvUdzdqhqRjN4XV8Z8WmQRxhla8JfTOFkmgi
+	 8qG7jyYpsB/14lwVZxE6xr655R3PbcbtGU+I0ZAbPN7oZXiUGCxpSucJthNPgojWLB
+	 ZxR++DUP0MwaVXgxbie+Chn6DA+yn1h1sfCyxl+9NUdpnMD7sshefrc9IuqATaxSiC
+	 Flr2ym6kRrQke6HVaP9B9j6zYgCo7ZMxXQz0p+hslmA8/cqXk3N9DmDiy5w4ZQs0q0
+	 7eWeUgr9aOhoFniZ0ZoJljG5GHzR65We8mah1+JqIFL/pbiMf3FmTfdwC5DD8SFdAq
+	 WWLJIUS9Yendg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B266C02198;
-	Tue,  4 Feb 2025 13:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E188EC02194;
+	Tue,  4 Feb 2025 13:10:37 +0000 (UTC)
 From: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
-Date: Tue, 04 Feb 2025 14:09:16 +0100
-Subject: [PATCH net-next v3 2/3] net: phy: Add helper for getting tx
- amplitude gain
+Date: Tue, 04 Feb 2025 14:10:31 +0100
+Subject: [PATCH] power: supply: max1720x: add health property
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,26 +39,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-dp83822-tx-swing-v3-2-9798e96500d9@liebherr.com>
-References: <20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com>
-In-Reply-To: <20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, 
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Dimitri Fedrau <dimitri.fedrau@liebherr.com>, 
- Dimitri Fedrau <dima.fedrau@gmail.com>
+Message-Id: <20250204-max1720x_health-v1-1-97ebbe4a0bc5@liebherr.com>
+X-B4-Tracking: v=1; b=H4sIAMYRomcC/x3MTQqAIBBA4avErBPGqQi6SkSIjjnQHxohRHdPW
+ n6L9x5IHIUTDNUDkW9JcuwFuq7ABrMvrMQVAyF1qKlRm8m6J8xzYLNeQVlkx9g69E5Dqc7IXvJ
+ /HKf3/QA3iZM9YQAAAA==
+X-Change-ID: 20250123-max1720x_health-c0ede04d0fd1
+To: Sebastian Reichel <sre@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dimitri Fedrau <dima.fedrau@gmail.com>, 
+ Thomas Antoine <t.antoine@uclouvain.be>, 
+ Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738674559; l=3497;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738674636; l=3559;
  i=dimitri.fedrau@liebherr.com; s=20241202; h=from:subject:message-id;
- bh=0ZejZPUcrUp9FjaaOS61NLofdR8KGQDK6c94FOz0qR0=;
- b=tyWeKjO7KKimMTL+LAdI0N09QHgYnuWEkOX2aE2dbGXfu5J63N5wuibIEmYaz6N1JPEikXRrX
- 7s3XXNYOo9NB1dDB+GXebLO7yhFmYAFldpRyxJv7QUxhfJKc409cxcT
+ bh=Rx3BHuxKX4jLbGUvrYB+xiYMQ7GjWqSEoUzSJP/Ox1M=;
+ b=CqOtEfgiE0TlDmKQuBp3RVGzDnF09JPYrytSuOQ8jNEGb9Q3bnwTzWrRHrqHfVVMVYyyCFhuT
+ 2+jHsfk+HenCaUF4xZu9RJikiQry9OHje7gJEnTrVhaCNO5E4XJFiqX
 X-Developer-Key: i=dimitri.fedrau@liebherr.com; a=ed25519;
  pk=rT653x09JSQvotxIqQl4/XiI4AOiBZrdOGvxDUbb5m8=
 X-Endpoint-Received: by B4 Relay for dimitri.fedrau@liebherr.com/20241202
@@ -70,91 +64,101 @@ Reply-To: dimitri.fedrau@liebherr.com
 
 From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
-Add helper which returns the tx amplitude gain defined in device tree.
-Modifying it can be necessary to compensate losses on the PCB and
-connector, so the voltages measured on the RJ45 pins are conforming.
+Add health property, which checks that temperature, voltage and current are
+within limits for the battery. Limits can be programmed in non-volatile
+memory.
 
 Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 ---
- drivers/net/phy/phy_device.c | 20 ++++++++++++++++----
- include/linux/phy.h          |  3 +++
- 2 files changed, 19 insertions(+), 4 deletions(-)
+ drivers/power/supply/max1720x_battery.c | 47 +++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 46713d27412b76077d2e51e29b8d84f4f8f0a86d..c42e3e22eba6f7508cefa3568ccb4629cedce6b2 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -3096,7 +3096,7 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause)
- EXPORT_SYMBOL(phy_get_pause);
+diff --git a/drivers/power/supply/max1720x_battery.c b/drivers/power/supply/max1720x_battery.c
+index 11580e414713b7f42354a8bf4e4ef7bee6e33f36..810edda327683761f16ce0d0affc1e0affd90f90 100644
+--- a/drivers/power/supply/max1720x_battery.c
++++ b/drivers/power/supply/max1720x_battery.c
+@@ -29,6 +29,11 @@
+ /* ModelGauge m5 */
+ #define MAX172XX_STATUS			0x00	/* Status */
+ #define MAX172XX_STATUS_BAT_ABSENT	BIT(3)	/* Battery absent */
++#define MAX172XX_STATUS_IMX		BIT(6)	/* Maximum Current Alert Threshold Exceeded */
++#define MAX172XX_STATUS_VMN		BIT(8)	/* Minimum Voltage Alert Threshold Exceeded */
++#define MAX172XX_STATUS_TMN		BIT(9)	/* Minimum Temperature Alert Threshold Exceeded */
++#define MAX172XX_STATUS_VMX		BIT(12)	/* Maximum Voltage Alert Threshold Exceeded */
++#define MAX172XX_STATUS_TMX		BIT(13)	/* Maximum Temperature Alert Threshold Exceeded */
+ #define MAX172XX_REPCAP			0x05	/* Average capacity */
+ #define MAX172XX_REPSOC			0x06	/* Percentage of charge */
+ #define MAX172XX_TEMP			0x08	/* Temperature */
+@@ -250,6 +255,7 @@ static const struct nvmem_cell_info max1720x_nvmem_cells[] = {
+ };
  
- #if IS_ENABLED(CONFIG_OF_MDIO)
--static int phy_get_int_delay_property(struct device *dev, const char *name)
-+static int phy_get_u32_property(struct device *dev, const char *name)
- {
- 	s32 int_delay;
- 	int ret;
-@@ -3108,7 +3108,7 @@ static int phy_get_int_delay_property(struct device *dev, const char *name)
- 	return int_delay;
+ static const enum power_supply_property max1720x_battery_props[] = {
++	POWER_SUPPLY_PROP_HEALTH,
+ 	POWER_SUPPLY_PROP_PRESENT,
+ 	POWER_SUPPLY_PROP_CAPACITY,
+ 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+@@ -314,6 +320,43 @@ static int max172xx_current_to_voltage(unsigned int reg)
+ 	return val * 156252;
  }
- #else
--static int phy_get_int_delay_property(struct device *dev, const char *name)
-+static int phy_get_u32_property(struct device *dev, const char *name)
- {
- 	return -EINVAL;
- }
-@@ -3137,7 +3137,7 @@ s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
- 	int i;
  
- 	if (is_rx) {
--		delay = phy_get_int_delay_property(dev, "rx-internal-delay-ps");
-+		delay = phy_get_u32_property(dev, "rx-internal-delay-ps");
- 		if (delay < 0 && size == 0) {
- 			if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
- 			    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
-@@ -3147,7 +3147,7 @@ s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
- 		}
- 
- 	} else {
--		delay = phy_get_int_delay_property(dev, "tx-internal-delay-ps");
-+		delay = phy_get_u32_property(dev, "tx-internal-delay-ps");
- 		if (delay < 0 && size == 0) {
- 			if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
- 			    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-@@ -3193,6 +3193,18 @@ s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
- }
- EXPORT_SYMBOL(phy_get_internal_delay);
- 
-+s32 phy_get_tx_amplitude_gain(struct phy_device *phydev, struct device *dev,
-+			      enum ethtool_link_mode_bit_indices linkmode)
++static int max172xx_battery_health(struct max1720x_device_info *info,
++				   unsigned int *health)
 +{
-+	switch (linkmode) {
-+	case ETHTOOL_LINK_MODE_100baseT_Full_BIT:
-+		return phy_get_u32_property(dev, "tx-amplitude-100base-tx-percent");
-+	default:
-+		return -EINVAL;
++	unsigned int status;
++	int ret;
++
++	ret = regmap_read(info->regmap, MAX172XX_STATUS, &status);
++	if (ret < 0)
++		return ret;
++
++	if (status & MAX172XX_STATUS_VMN)
++		*health = POWER_SUPPLY_HEALTH_DEAD;
++	else if (status & MAX172XX_STATUS_VMX)
++		*health = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
++	else if (status & MAX172XX_STATUS_TMN)
++		*health = POWER_SUPPLY_HEALTH_COLD;
++	else if (status & MAX172XX_STATUS_TMX)
++		*health = POWER_SUPPLY_HEALTH_OVERHEAT;
++	else if (status & MAX172XX_STATUS_IMX)
++		*health = POWER_SUPPLY_HEALTH_OVERCURRENT;
++	else
++		*health = POWER_SUPPLY_HEALTH_GOOD;
++
++	/* Clear events which are not self-clearing to detect next events */
++	if (status > 0 && status != MAX172XX_STATUS_IMX) {
++		ret = regmap_set_bits(info->regmap, MAX172XX_STATUS,
++				      MAX172XX_STATUS_VMN |
++				      MAX172XX_STATUS_VMX |
++				      MAX172XX_STATUS_TMN |
++				      MAX172XX_STATUS_TMX);
++		if (ret < 0)
++			return ret;
 +	}
++
++	return 0;
 +}
-+EXPORT_SYMBOL(phy_get_tx_amplitude_gain);
 +
- static int phy_led_set_brightness(struct led_classdev *led_cdev,
- 				  enum led_brightness value)
- {
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 19f076a71f9462cd37588a5da240a1d54df0fe0f..abdd768b7acece3db9ffb0f9de7d20cf86e72bc7 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -2114,6 +2114,9 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause);
- s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
- 			   const int *delay_values, int size, bool is_rx);
+ static int max1720x_battery_get_property(struct power_supply *psy,
+ 					 enum power_supply_property psp,
+ 					 union power_supply_propval *val)
+@@ -323,6 +366,10 @@ static int max1720x_battery_get_property(struct power_supply *psy,
+ 	int ret = 0;
  
-+s32 phy_get_tx_amplitude_gain(struct phy_device *phydev, struct device *dev,
-+			      enum ethtool_link_mode_bit_indices linkmode);
-+
- void phy_resolve_pause(unsigned long *local_adv, unsigned long *partner_adv,
- 		       bool *tx_pause, bool *rx_pause);
- 
+ 	switch (psp) {
++	case POWER_SUPPLY_PROP_HEALTH:
++		ret = max172xx_battery_health(info, &reg_val);
++		val->intval = reg_val;
++		break;
+ 	case POWER_SUPPLY_PROP_PRESENT:
+ 		/*
+ 		 * POWER_SUPPLY_PROP_PRESENT will always readable via
 
+---
+base-commit: b4a95b8fd3e67c1222c76bdd1078d43c9a11d132
+change-id: 20250123-max1720x_health-c0ede04d0fd1
+
+Best regards,
 -- 
-2.39.5
+Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
 
