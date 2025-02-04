@@ -1,127 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F39F17F7;
-	Tue,  4 Feb 2025 14:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0B92D057;
+	Tue,  4 Feb 2025 14:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738679397; cv=none; b=E+SgYFjBM6N0C/Zo3Pq93FoZqVIQjrrGZ1720E+dQXOgmkCJ7f+LGandT7CW8XdgY/loarh8y/t6f0uGT1rzy7c+SJ0wmnvcdOw0jQ2iRjlDW9RS/SWhUx4oRLFgPy7mkdK4vr942rU5IKuW4moGuqrXZx2wqxL4terxHCVyJ5g=
+	t=1738679546; cv=none; b=LPkPy9rcz7YFW14TdqhdhR9MWD3luS9nuErujFZb3DkwtbnjSGlzgtanzD/IZ4hdQ4tjTUv5vfTNi4OS9kzqSA6lCA15TTHWhDgr+Bl8QEtbQiYD9kzziodYyDjN2TF/huJ6E6y8H9PG3mdHhPggl/DPDAN0GGPfNCYsVED8ynE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738679397; c=relaxed/simple;
-	bh=lAbL/0l6KMc7nqVP2DUrdeWeqlThU/+Tdw9u/t7yoPg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=liz0GVRv+0j13MiPJbw8N9GGp8jUY01THLZ4OTYlmT/eyir71EKRkJ3qaTHncLwR+rgMx71Bp8qBEoO2K4OJKA/ny+mFI1bmma0iSv2nw0c2ECoxlj1huhWJS/L4kFy7Xj9iZec0a+wj3iGezGrSnmA0iX/Yr0Qofo2u0m5UgMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FhMByyFo; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738679546; c=relaxed/simple;
+	bh=Euhfoq6TLskk749URRaDQVtHzdaHQ0kVMWrkuF1TOiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pWOWQvLf3XG4+zP9u527HYONtAc+vfpUHDY68Hh8QcjF6sEa+bnPmoFn1JxddVWETyGeIKbha5ppbAaMu3sH5C/zd4sAPhDPbDARnj6NkhIwzzcrt/17zNHow2P3yDleKlWZoJTWYeoArVtmuITAliP4UK3FzGMyLTh7M/1B+dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MStt8VdE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FhMByyFo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738679396; x=1770215396;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=lAbL/0l6KMc7nqVP2DUrdeWeqlThU/+Tdw9u/t7yoPg=;
-  b=FhMByyFoSk9DbXgpZOSNi9qW4kWdPsrmb19WIfKOLkGYQJczJguYvwbW
-   6mS/cAR/oj8XRHk6rOvwsvVfLIUfxqZ+hVcE9By1MsDQ9ahMeOtoHiWri
-   zgiIkigH00SfQdwM/p/zhH7OuFLzYJ/zI6kmRM+oXKMFwWjPg7YKxTn6r
-   jYzO5kD3WvK36byvXa7jOMYqJGfjU2yxiUKEtIaDDjib3pijawtHeIU51
-   yi2ZuVMdK3vVw7bhyPbJvCOtV9MnIUuotX8lSX2K8KRMEwvwJ5H8jZrdW
-   boQWfzix1WZtdASnQfjQoJQpi2QH0zsO/lquxE32UK6xicVkNNGk/tt04
-   g==;
-X-CSE-ConnectionGUID: VE2auqLKTIC9LmDVaD/lCQ==
-X-CSE-MsgGUID: VWQ7zcA1S+yjfEAR3/TxAQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39238441"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="39238441"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 06:29:55 -0800
-X-CSE-ConnectionGUID: RN6d+SumTOSsCLPg3AdQww==
-X-CSE-MsgGUID: kC63yfL0SO+G5fseY8Womg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147807634"
-Received: from lfiedoro-mobl.ger.corp.intel.com (HELO [10.245.246.144]) ([10.245.246.144])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 06:29:51 -0800
-Message-ID: <3e96aef8009be69858a69d3e49a2bd7fc7d06f5f.camel@linux.intel.com>
-Subject: Re: [RFC 1/5] mm/hmm: HMM API to enable P2P DMA for device private
- pages
-From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com, lyude@redhat.com,
- 	dakr@redhat.com, airlied@gmail.com, simona@ffwll.ch, leon@kernel.org, 
-	jglisse@redhat.com, akpm@linux-foundation.org, GalShalom@nvidia.com, 
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-mm@kvack.org, 	linux-tegra@vger.kernel.org
-Date: Tue, 04 Feb 2025 15:29:48 +0100
-In-Reply-To: <20250204132615.GI2296753@ziepe.ca>
-References: <20250128172123.GD1524382@ziepe.ca>
-	 <Z5ovcnX2zVoqdomA@phenom.ffwll.local> <20250129134757.GA2120662@ziepe.ca>
-	 <Z5tZc0OQukfZEr3H@phenom.ffwll.local> <20250130132317.GG2120662@ziepe.ca>
-	 <Z5ukSNjvmQcXsZTm@phenom.ffwll.local> <20250130174217.GA2296753@ziepe.ca>
-	 <Z50BbuUQWIaDPRzK@phenom.ffwll.local> <20250203150805.GC2296753@ziepe.ca>
-	 <7b7a15fb1f59acc60393eb01cefddf4dc1f32c00.camel@linux.intel.com>
-	 <20250204132615.GI2296753@ziepe.ca>
-Organization: Intel Sweden AB, Registration Number: 556189-6027
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MStt8VdE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB569C4CEDF;
+	Tue,  4 Feb 2025 14:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738679545;
+	bh=Euhfoq6TLskk749URRaDQVtHzdaHQ0kVMWrkuF1TOiE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MStt8VdEbhnU3lJQFNILR4VHWyYCuJCm/CRHQGsd39ojT6M3neKzZAU5x+6waMIpX
+	 ecqofxDZdaGWtspwyR78ggfxGeB2pxuRDTdGXjahJYO4XHLEmn2+2ZL5p5XPAIeW9r
+	 //plznm4yIY6evAtoLr/RPWdE75UACnXobpuSNXWNICLTuiuCQLilPGJjDG5LMam9d
+	 PQU1Ec/3jmiZxhzml730YJ6RjktXP1Wl+6/xqwMbOcQVYVR6fZGstE9Fc4kWjduehs
+	 9MgOpBvSk4fsfEYag1G8/7I6mVmz+qPEoAuMTVbYM8UZLoUU7StbrNeJZbT++siohr
+	 60L14ebr+U70w==
+Date: Tue, 4 Feb 2025 14:32:19 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: uJap072421@linux.dev, Quentin Perret <qperret@google.com>,
+	Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Fuad Tabba <tabba@google.com>,
+	Vincent Donnefort <vdonnefort@google.com>,
+	Sebastian Ene <sebastianene@google.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 09/18] KVM: arm64: Introduce __pkvm_vcpu_{load,put}()
+Message-ID: <5b73e1ac-a48d-4064-a095-26cd9662f0c1@sirena.org.uk>
+References: <20241218194059.3670226-1-qperret@google.com>
+ <20241218194059.3670226-10-qperret@google.com>
+ <5ca7588c-7bf2-4352-8661-e4a56a9cd9aa@sirena.org.uk>
+ <Z6FO04PZtY8fsJhq@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hZGwqvAiR40zlt9m"
+Content-Disposition: inline
+In-Reply-To: <Z6FO04PZtY8fsJhq@linux.dev>
+X-Cookie: Spelling is a lossed art.
 
-On Tue, 2025-02-04 at 09:26 -0400, Jason Gunthorpe wrote:
-> On Tue, Feb 04, 2025 at 10:32:32AM +0100, Thomas Hellstr=C3=B6m wrote:
+
+--hZGwqvAiR40zlt9m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Feb 03, 2025 at 03:19:03PM -0800, Oliver Upton wrote:
+> On Mon, Feb 03, 2025 at 07:50:44PM +0000, Mark Brown wrote:
+
+> > Current mainline crashes when running the arch_timer_edge_cases selftest
+> > in pKVM mode on a LibreTech Le Potato board, with a bisection pointing
+> > at this change.  The system dies like this:
 > >=20
->=20
-> > 1) Existing users would never use the callback. They can still rely
-> > on
-> > the owner check, only if that fails we check for callback
-> > existence.
-> > 2) By simply caching the result from the last checked dev_pagemap,
-> > most
-> > callback calls could typically be eliminated.
->=20
-> But then you are not in the locked region so your cache is racy and
-> invalid.
+> > # selftests: kvm: arch_timer_edge_cases
+> > [  130.599140] kvm [4518]: nVHE hyp panic at: [<ffff800081102b58>] __kv=
+m_nvhe___vgic_v3_restore_vmcr_aprs+0x8/0x84!
 
-I'm not sure I follow? If a device private pfn handed back to the
-caller is dependent on dev_pagemap A having a fast interconnect to the
-client, then subsequent pfns in the same hmm_range_fault() call must be
-able to make the same assumption (pagemap A having a fast
-interconnect), else the whole result is invalid?
+> Thanks, fix posted here [*], although as a consequence this machine will
+> stop running KVM in protected mode (which was never meant to work in the
+> first place).
 
->=20
-> > 3) As mentioned before, a callback call would typically always be
-> > followed by either migration to ram or a page-table update.
-> > Compared to
-> > these, the callback overhead would IMO be unnoticeable.
->=20
-> Why? Surely the normal case should be a callback saying the memory
-> can
-> be accessed?
+Yeah, I wasn't clear if this was something that was intended to work or
+not - it's all in a constant state of flux.
 
-Sure, but at least on the xe driver, that means page-table repopulation
-since the hmm_range_fault() typically originated from a page-fault.
+--hZGwqvAiR40zlt9m
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
->=20
-> > 4) pcie_p2p is already planning a dev_pagemap callback?
->=20
-> Yes, but it is not a racy validation callback, and it already is
-> creating a complicated lifecycle problem inside the exporting the
-> driver.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeiJPMACgkQJNaLcl1U
+h9BDAAf+JAMcfN7yntUjtlLw50z/v5lCegG7EiTtVEvT8kwLbYGS7ld2HEzfNFiK
+rTlpfALF2b81GimdH35TTPRl1FFgPygwCt4j8N1GcXiFif47Q1a3TRwNjb+wJUH1
+Dm/iTV7HxZk7fPqefyEGirTNt6e4f2hkso3/XHVRCsn3BKhPYU2OAUj0CFqzrrd2
+SdGFMZJnRe8QewuZ3g4EpCg9UvuZXjG8Af7u4WrYw+DAceX8dC+Eajct50FX9p5l
+fDoUDAacSMXph9h8tu/dHxpKLNym8nExy1zpuUXu2U4Ckzr4x37HgyqZ1AZOYrij
+hH1WYyL88f6C8+HLlWIotC0pRHV8Nw==
+=H6/6
+-----END PGP SIGNATURE-----
 
-Yeah, I bet there are various reasons against a callback. I just don't
-see the performance argument being a main concern.=20
-
->=20
-> Jason
-
-/Thomas
-
-
+--hZGwqvAiR40zlt9m--
