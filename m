@@ -1,98 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4275B2036FB;
-	Tue,  4 Feb 2025 10:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CEF20AF69
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738666474; cv=none; b=CXzICiekfHSlMKWJgbp3M9SwAbAfI4XMmiSG5O5Zx0OSJFCeGOsAcVFePyzQIcs7nmcRBJhTlhliXWkLe5MQo+HDQIDBn7g26jaYZOq+TEh1Wd1lRr009lOenwuv4lV5nqTTOgqLVb9uleB+4F7uXjcDGP/viKj5MVWqOwQn7VU=
+	t=1738666564; cv=none; b=Rywm2/oQ6YpEH3831K8BEJeO9aSXkWTjZmveK9COQC3+C+Ntl/t07Zk+gCjsF6NZiY1L7r8Zqm2Nx6rXElf8sRabhgTbsymqwdcjeusJV1IjmIqiXWCHHHZlUSpa8qeSHWAqkHiB3g7JntUeLXr9HT+4jpjeCKqhhKlgroW4L6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738666474; c=relaxed/simple;
-	bh=RLy6iT86rLgM2HHshpWz9dck2WLGdq20ROafdpvjNxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lByriLz4UsGlo1Elr9COv2kzDiG52gas/yPA7BjcZUytqfXCOnwk8tI3JF22l7A/jNmJ50oRU7yoqQYMDYHtn66fh/x+9l/4ASohv9MG2Hw02x7yUCgxeUnW3LynDSLFN8NW60N7gnNfa+bZzD+8i6dO37Qd2jJlFXJtv3htXXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imxOsI0j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738666564; c=relaxed/simple;
+	bh=4beXukFVHQs5nCd6JCJWPrisRK6PKYiJfHKwE1xknk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=njw7we060gZQZAFoUApksz8RfF5WTEDUsWVUstmB8VddpT53W0Pqq4pF9PxF2TQkG5F0ar/U7tcOZMqRkVaPwrucBLvLIAnlMPYNyn8k+oj4Q3es/jgGZL2RwjfvAshDSXFb7JwdgmPxL/OsJLasMw148e1h/VsUS/es6SNcznk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J45efOV2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imxOsI0j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73F11C4CEE2;
-	Tue,  4 Feb 2025 10:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738666474;
-	bh=RLy6iT86rLgM2HHshpWz9dck2WLGdq20ROafdpvjNxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=imxOsI0jZ71fu5RPYLS1M1/a/BSTzG5nCUwuNZvi4UyDIoCayGYyxHil8oUqJ0FPh
-	 nHYpFQghdBGf6UDDYXGWORxtJ6F3M1JwfhIuUfUN3XPmkeBYR2EKc1VyFXGBtE9xLc
-	 76KklyaZ31bwvbvLtWMO6bFzK4XIYm1wKlD6Ju/h2P/hCRNESTk+tqeV6XOVeyrIyR
-	 8yKbIdRHi2fdKDcTIzdugIMGEzOb/bdUQN91VFxvI+kuwRmA/ksp8JtBbK5Lbrb83E
-	 x+z+W4ZXBWN9TdoWjJE9MhZijIVqwaHg2qJekloaYThjLV29GjpNIeeMjOMISw11n4
-	 nazuBhyJXaWmA==
-Date: Tue, 4 Feb 2025 10:54:29 +0000
-From: Simon Horman <horms@kernel.org>
-To: Jacob Moroni <mail@jakemoroni.com>
-Cc: Igor Russkikh <irusskikh@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Pavel Belous <Pavel.Belous@aquantia.com>,
-	Alexander Loktionov <Alexander.Loktionov@aquantia.com>,
-	Dmitrii Tarakanov <Dmitrii.Tarakanov@aquantia.com>,
-	David VomLehn <vomlehn@texas.net>,
-	Dmitry Bezrukov <Dmitry.Bezrukov@aquantia.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] net: atlantic: fix warning during hot unplug
-Message-ID: <20250204105429.GP234677@kernel.org>
-References: <20250203100236.GB234677@kernel.org>
- <20250203143604.24930-3-mail@jakemoroni.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J45efOV2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738666562;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4beXukFVHQs5nCd6JCJWPrisRK6PKYiJfHKwE1xknk4=;
+	b=J45efOV2yB10gJHZmgAX/gyK39kiWyyT/lh6zJxLCxx41GfpkVdMGd7SF57WD3FkilFRRt
+	UvIk3KWLlh9MDn4lEum8uVHDz5YKufeNI4kUTE0UH2eNRuc3541GgzngnhOCtIvEQJ5MV5
+	YbOV4JvKqLILngWoiQr8/rt4rZENWtg=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-170-iyCdmSUbNOCtMSU_4pYNaA-1; Tue, 04 Feb 2025 05:56:00 -0500
+X-MC-Unique: iyCdmSUbNOCtMSU_4pYNaA-1
+X-Mimecast-MFC-AGG-ID: iyCdmSUbNOCtMSU_4pYNaA
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-438e180821aso28289765e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 02:56:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738666559; x=1739271359;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4beXukFVHQs5nCd6JCJWPrisRK6PKYiJfHKwE1xknk4=;
+        b=jat6Bw8kHdHDgP33kdQm5XdVo3kHOsH1ZGKXqLhq4nr+tjRmF3WPB6NwDx7V3WlYVa
+         8VlYQe2m3LSE2uftswpwsYmTbXKyo2mjDVZYtBu4lz2t1WUCXvVTFAdtOLZlMHX/A/oH
+         vl5HrGmsa7kw3Nl54TdMBsryoagV24XobUa/gco7sYy46wtcBAXtdvaZTCU0TmTI9kwW
+         BaXW65oI1/0VLrvTSDSTAdEGUM61072nWAR5B517Djn5L4VCCAuoV5ZqqFkV4vEMogmu
+         ZWdfy4yCoDTV+5/fg+yy2MlYi2xnjdlOsoVvTpAJnjcdo5OSeFNgPnCFxQ0eZuqwpUtL
+         ydKA==
+X-Gm-Message-State: AOJu0Ywir6Hn8KuJFePJe9P7oQb6pvbrgeZtjmGSymWPXEXAcLV3VTIf
+	m8+gv6MB4yUiuNCHsWdpPxev3qw1lfFHA6fFgUP1FPzmruzkqgaufeNrFvRwb9BR88wqF0oqFfE
+	52yP3LCVoGiPeqiJ/cCNdhNjCL8Wy4nxFgnztu+gMTsD5NqHR+C3sOGORjwvMhg==
+X-Gm-Gg: ASbGncuRHEglOzJ+4UhwqQCnATdiOWaNUH235VNd12kHrjKgomD8Ngoz5KVXg9v06tg
+	s3CO6l2kARF6ylOw3DVoSs2p7o/UNmCeSh9hiB52M2sATnodD/zOMaW+fdxDKo6C0l9mWPYez+P
+	WY2aLMLSBH3vLcoMHXO+HfJ89IKv3JFoL7uNDoLHE0Kgrondbp7/UcECdGXm/XMZw7QibDf1Dtr
+	LGFNUoHxr4R1k5eT9qcmjajDXZejJGy/ajenlxxEC/99ZhviAdj/Ty5hrZdanjofNYnV6gvWT69
+	th4YTqEwXpFHZUASkFEXTfrYYrHAYk1CQtU=
+X-Received: by 2002:a05:600c:a04:b0:436:e3ea:4447 with SMTP id 5b1f17b1804b1-438dc436a08mr231815215e9.30.1738666558936;
+        Tue, 04 Feb 2025 02:55:58 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEPKWXjdX96lQCIbHeahFyYNkKOqGVKxcOxbbsF5GMJwC3hZR+QmB4vaH/E0IBr/11HWe+7+Q==
+X-Received: by 2002:a05:600c:a04:b0:436:e3ea:4447 with SMTP id 5b1f17b1804b1-438dc436a08mr231815125e9.30.1738666558603;
+        Tue, 04 Feb 2025 02:55:58 -0800 (PST)
+Received: from [192.168.88.253] (146-241-41-201.dyn.eolo.it. [146.241.41.201])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc26cefsm220335895e9.13.2025.02.04.02.55.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 02:55:58 -0800 (PST)
+Message-ID: <835481c6-0ac1-47a7-84b2-fa5a135186c2@redhat.com>
+Date: Tue, 4 Feb 2025 11:55:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203143604.24930-3-mail@jakemoroni.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 02/10] net: pktgen: enable 'param=value'
+ parsing
+To: Peter Seiderer <ps.report@gmx.net>, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Artem Chernyshev <artem.chernyshev@red-soft.ru>
+References: <20250203170201.1661703-1-ps.report@gmx.net>
+ <20250203170201.1661703-3-ps.report@gmx.net>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250203170201.1661703-3-ps.report@gmx.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 09:36:05AM -0500, Jacob Moroni wrote:
-> Firmware deinitialization performs MMIO accesses which are not
-> necessary if the device has already been removed. In some cases,
-> these accesses happen via readx_poll_timeout_atomic which ends up
-> timing out, resulting in a warning at hw_atl2_utils_fw.c:112:
-> 
-> [  104.595913] Call Trace:
-> [  104.595915]  <TASK>
-> [  104.595918]  ? show_regs+0x6c/0x80
-> [  104.595923]  ? __warn+0x8d/0x150
-> [  104.595925]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-> [  104.595934]  ? report_bug+0x182/0x1b0
-> [  104.595938]  ? handle_bug+0x6e/0xb0
-> [  104.595940]  ? exc_invalid_op+0x18/0x80
-> [  104.595942]  ? asm_exc_invalid_op+0x1b/0x20
-> [  104.595944]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-> [  104.595952]  ? aq_a2_fw_deinit+0xcf/0xe0 [atlantic]
-> [  104.595959]  aq_nic_deinit.part.0+0xbd/0xf0 [atlantic]
-> [  104.595964]  aq_nic_deinit+0x17/0x30 [atlantic]
-> [  104.595970]  aq_ndev_close+0x2b/0x40 [atlantic]
-> [  104.595975]  __dev_close_many+0xad/0x160
-> [  104.595978]  dev_close_many+0x99/0x170
-> [  104.595979]  unregister_netdevice_many_notify+0x18b/0xb20
-> [  104.595981]  ? __call_rcu_common+0xcd/0x700
-> [  104.595984]  unregister_netdevice_queue+0xc6/0x110
-> [  104.595986]  unregister_netdev+0x1c/0x30
-> [  104.595988]  aq_pci_remove+0xb1/0xc0 [atlantic]
-> 
-> Fix this by skipping firmware deinitialization altogether if the
-> PCI device is no longer present.
-> 
-> Tested with an AQC113 attached via Thunderbolt by performing
-> repeated unplug cycles while traffic was running via iperf.
-> 
-> Fixes: 97bde5c4f909 ("net: ethernet: aquantia: Support for NIC-specific code")
-> Signed-off-by: Jacob Moroni <mail@jakemoroni.com>
-> Reviewed-by: Igor Russkikh <irusskikh@marvell.com>
+On 2/3/25 6:01 PM, Peter Seiderer wrote:
+> Enable additional to 'parm value' the 'param=value' parsing
 
-Thanks for addressing my review of v1.
+It could be language bias on my side, by I find the above statement hard
+to parse. Could you please rephrase it?
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+IMHO something alike:
+
+"""
+Enable more flexible parameters syntax, allowing "param=value" in
+addition to the already supported "param value" pattern.
+"""
+
+Thanks,
+
+Paolo
 
