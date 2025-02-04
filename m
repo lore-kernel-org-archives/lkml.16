@@ -1,75 +1,37 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A8B217661
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA6B215F63;
+	Tue,  4 Feb 2025 17:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738688741; cv=none; b=RibYZtHExA7XGUObw7NgqD/YeNxeZ7mmlZ5WSsJV3gAj8nmZTG19dsfJYfECidXa1PNCgRieZSdeltQZh74L3VaopdFwlCMGgxeLoAxWueBjDU/CANcr3BoTi0FTBDMogkrOLN+vhseCkwfBrLsTX3PakOBFa17Bls3Xyowly7I=
+	t=1738688796; cv=none; b=mZ1AqiiZbAxxHrhp6OkmhqmOqPjUhHAHByfK+98+7pavWeQkVh4XJHJzF4W2GWoR5Rh7b4Miq3TXHQJbpmC4dlIHl61ePMJ9KYwlTxQApQVcYYuHoySUjn+hyo3dSe0XDIYERzVlGIGHWIhDzuyiNzRYC38xDXSiLZ/Ox8kezps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738688741; c=relaxed/simple;
-	bh=H5SVcCEw7SFD7kxR7pbqt98rEJ5prStjaWsC3qTVMRM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bx8GCJPchhGXBVso6eGr7gAXPGfURczoAlMO0PUSJ2eeMwAAoenxlDvpi63PZHmbWFEZk/5kiUbMTJLvfFTPdDU3PmDuc26P4ai0p6jhEGUBcU0mSBo6kozEK+/S2WvcpycKptGqfkcWIGuW8sJXEPe6yJENfctDjQaU+TC0zfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dkYdlNYE; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738688796; c=relaxed/simple;
+	bh=Uo9TYmOBakXgSrIjdDYnFgF/JoUanhVHs9m3aE5b49c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sVvgcMtBXar7l6Oa7EZemmrkx35rgaE1lG0oA2MGg794uPnN7VuPNXYxHCO701AoKivLkw31Pp2M0UwwQJUh9SOs02ER4tJZvAGCKuFnWGFWxGpbYEJIfZ36nBHomCdMD8EBZr9ravW2xmyW0HoHQifFKpAJtjW/1nrUlRESa4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dum4bEeD; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dkYdlNYE"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514Guq1X024772
-	for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2025 17:05:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	TXWRaM1cylEvYyBQLAOCl/odoq1V8DJ3wyrrRKU9QRw=; b=dkYdlNYEiN5KUGH8
-	nn3b2mWakSBWRkQGi8OsChdx5fTRnnpQOP5sXKul9A/haO5l6+GZY2LVzvvCyXHl
-	Wq5TyitWmDIsEgmTRqZtmUCLcGXHnlRWwVa7SrwWcFHYSzT2jiuHLyjQYyLknSbi
-	/19EJcHDmkgYULs2WbAfznNo1Csxp18Tf4B5jI8pv2SXL8U3F+EGnKops7p2qrLK
-	NAfDsuQSgxXF82Y00U3pHNzQaT8oFl9NFL7j/tF2H/rwQ27Csyr/78kJ0/wk8AbM
-	r4CBqUdp+p7XRJw8iXVHd3i2JKwZgwnTzmIE0WBPvKmovhmuzXXbg3WM1T3GROc3
-	0wDGog==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44kpuy80wb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 17:05:39 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-21f022fc6a3so22443415ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:05:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738688738; x=1739293538;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TXWRaM1cylEvYyBQLAOCl/odoq1V8DJ3wyrrRKU9QRw=;
-        b=KYmoJNPXKJi54BuMoZp1K2uMmGx15rNtPKWaiCqIHfeSV/K/Yp6L3As8Z9T6/i1JLn
-         xP6IJoblU4j7ipzRrbjo3pALHmMBoV/8eyTcMfCfy1Tsf+xToO2mhK7sVTk/jsfM1Kwr
-         lxAaIf2PprNGUljwL6CT/ZnOsbouZbLIIhMtxxGUsrDW3u92n5Lkm54G4UzTtc7vTyCu
-         bn96n2HG7dA54k164fjyJ+Ei/g1fQN6cHsRalvWoE4k+jm57PXIF91n9iVVXolHffw2A
-         m7gBdQezwBH6sceoYwFzEcLZq0OTgy9In8ezVN3v4QiUPO1e5jN1Ln4qmcOC+xfZLEIc
-         IJzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBTFPbkm/SZzwvQrwJC50DOjsGL+Uqp+mbr/yTpLKSIl0ssZ5LAxtctuC6G4wpYyK5Sy6kdGy2aJY+5fE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXyrU8RXa7o1OhwSDAFeXvBEvSHiZvbZJ/P6XJlhgXwMHLADlC
-	Mfev5Y2VP4LuHMyBi4aPEosVU5jjGCJrAK+FUliyc3HeGuuDLBsDVuJZXzTVyea45Kp3/BsJbGx
-	YayrNNbHjIHg4cgUrhWLB+BAEpiLywF2tZGvO6g+GdZoTXWfSNLN6q1h/F+xAiMMy18zXqbo=
-X-Gm-Gg: ASbGncvu/Wc9FSnE8WBRzYk1jhPATtN4cDZpIwZA1aFp2Idt8jdseaSGRPfJ7Exd+8X
-	F6HXiKdpsRi1A4RaKxWP+OwDnpP7pFvWJ3QhJTud5wVrURx5wvQAm6ekNGXOkPI5vTdVl+aUP86
-	fo2mF7w6AF0Bm1CTcOpCje1Ek0BmltqRD8BcHgEHjwuz0D4P90bKAm6FHvCmK1o1m6vDo60L1FA
-	SAHIjYB5X4WcpHMKoHwTO1d257IdhvQunL6OQhTEuactQMv6z5JiOkOa6lUkI0aYonXNb5Mx/LF
-	JwBkqJlC2tDqLJfGWTeUEZO0LSr/5/uNIMo/Dgh+uL1OcebO//In8xlZ20c4khCk9Ze7sjEY23p
-	CCm0NSdNn64pHxSFsFBupHmlB557uYw==
-X-Received: by 2002:a05:6a21:918b:b0:1e0:d5be:bf75 with SMTP id adf61e73a8af0-1edd772d3a5mr6632214637.17.1738688738106;
-        Tue, 04 Feb 2025 09:05:38 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEFOZCGllE9vRCHjbzgU7t9YEmIsU4+LL2GFRur7KyGfweOuCHEm8rmV9rRR5FRsq2tNOAJrA==
-X-Received: by 2002:a05:6a21:918b:b0:1e0:d5be:bf75 with SMTP id adf61e73a8af0-1edd772d3a5mr6632167637.17.1738688737725;
-        Tue, 04 Feb 2025 09:05:37 -0800 (PST)
-Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69cddbbsm10772788b3a.125.2025.02.04.09.05.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 09:05:37 -0800 (PST)
-From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-Date: Tue, 04 Feb 2025 22:35:14 +0530
-Subject: [PATCH v2 8/8] wifi: ath12k: handle link removal in
- change_vif_links()
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dum4bEeD"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 990C3204A5;
+	Tue,  4 Feb 2025 17:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738688791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NbKWrUj5DH+ipE3128VhtvBM8i5MKd4ENodVzB9EN24=;
+	b=dum4bEeDpEMj4m3terDwTCx+AenVPo1F+TBThIxMUFSFsE7dSELNu4ktbs7cewXUAU/Z3v
+	nY3iMawBw+co19WbUMa0wbqHnMc88umRGzGOLk4VGYHBV9CSGz7pk4jnj65fZzTA63Vve5
+	mEPpt1zdfLqL6aSPk49FRKobJVPVm29umiTSbgPNul1kp3ubz50XSviOXHGAxdPH+ErT+V
+	N7W6Fi1s3GssZ+2UpweINnpmfch5rxlZOEzchA6LfdFk7kQv1prYLA6sxgSSZkIxYS84Is
+	fEqCB8WoxPFsHzbSYcRGEHiCzks4Fx9Uc1iIEf6/uOHOyAt6BPcsmku4YnvUnw==
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Subject: [PATCH v17 0/7] drm/vkms: Add support for YUV and DRM_FORMAT_R*
+Date: Tue, 04 Feb 2025 18:06:11 +0100
+Message-Id: <20250204-yuv-v17-0-9c623880d0ac@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,82 +40,124 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-unlink_link_arvif_from_chanctx-v2-8-764fb5973c1a@oss.qualcomm.com>
-References: <20250204-unlink_link_arvif_from_chanctx-v2-0-764fb5973c1a@oss.qualcomm.com>
-In-Reply-To: <20250204-unlink_link_arvif_from_chanctx-v2-0-764fb5973c1a@oss.qualcomm.com>
-To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
-Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: Typ-HR1UO7UScvW3CYwHqRodVyqRAdMb
-X-Proofpoint-ORIG-GUID: Typ-HR1UO7UScvW3CYwHqRodVyqRAdMb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_08,2025-02-04_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 bulkscore=0 mlxlogscore=848 spamscore=0 mlxscore=0
- malwarescore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015
- phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502040132
+X-B4-Tracking: v=1; b=H4sIAANJomcC/23T23KbMBAG4FfxcF3aXR1WUq76Hplc6FgzY0MKt
+ ieZTN49i8GFFO6MvB8r9Gs/qiH3TR6qp8NH1edbMzRdyw9ofhyqePTtn1w3iRcqAUKBAKzfr7c
+ apTTJQXLaUMWVwQ+5Dr1v45Fr2+vpxIuvfS7N2/3dzy/8fGyGS9e/31vdcFz9/tIb1lDL6KWhI
+ gxJ8Tt03eXUtD9jdx673Ks10lRtuToWm6hYUhLyt+qx302segg5KcHKewpZWGFCMFsl12ruJVm
+ VQiQKOKdS2Cq1KAlqUoqV4VY+2uyMk1ulVwrnHWpWmRBiSCCLFltFi1LgJkWsUsaojbAlGdgqs
+ yj96GXGE7eQXSk5atjp5RZlQUzKsQLrDRCRy0hbhbBm8xaRVY3eREMKicrO2ePqWjgJsxvvhQr
+ oBYVYotvrt0SNAGZ2Y9aAEX3yxN9nd9wSNiLa2Y1p+wgpKRRO7yWAauXEfCyo7slRsjIJmyDuu
+ CVwFPJx7e+J8x5DkCBs3vu+f5FrQPFwY+aesDjt+Vb+Ny8vn9MI9vnvlaf6Ms3hNKn8/7m5PB1
+ Sf67PzRB/PX7UbX67MP38AvJzkSoYBAAA
+X-Change-ID: 20240201-yuv-1337d90d9576
+To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
+ Melissa Wen <melissa.srw@gmail.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>, 
+ Haneen Mohammed <hamohammed.sa@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, rdunlap@infradead.org, 
+ arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>, 
+ pekka.paalanen@haloniitty.fi, Simona Vetter <simona@ffwll.ch>, 
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
+ thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
+ nicolejadeyee@google.com, linux-doc@vger.kernel.org, 
+ Louis Chauvet <louis.chauvet@bootlin.com>, 
+ Pekka Paalanen <pekka.paalanen@collabora.com>, 
+ =?utf-8?q?Jos=C3=A9_Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2765;
+ i=louis.chauvet@bootlin.com; h=from:subject:message-id;
+ bh=Uo9TYmOBakXgSrIjdDYnFgF/JoUanhVHs9m3aE5b49c=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBnokkOHGUwUKXa03uhXBeHaYFH9DONYajB82mp9
+ MyMHfVKwbyJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZ6JJDgAKCRAgrS7GWxAs
+ 4gluD/9PIcTe5DDO8UtoSpy2EsiyXYXON0qHT4cT8tEukVeLzIJDwzkErhpHwgDsXbzzdwF8tp2
+ NGku79iBcBFCaWRMqTAVx742IxZTLv+yiSg9cAmld4RxohnyXMc+D/sqNV1Rq2bvPiN4Ko+t4Qe
+ sA1c+NaX7HUdvRjjfWqzMtccywxa5O1Kuh7FHb8d05yk0cPPCdzUP03yVRIyk/LJHfgwGsYLbet
+ n4oeWJYCk8bsRt/HZZXUz3NBFYoX/8p7PkNjWr3R/ZFDIOGaipdKhM/bHroB5BMySGj9nKmhnip
+ 53W+wqhSs5e7PzYs2RYoU6POD+Ep7F+80IGxW+XqT6NKZA0chrHdN3XwqXDcdlRFRi7gg14GxaW
+ keF3g2b0HqMMsz+ppDNDiDnME72v4Kx1GEAGVok+uKXlJGga7eFyFKyOH7vEaTG7Ho9Thm4BLZB
+ D7KWmQ7H4jCA7S4XOU2sSJ9h3lcAcSZ5c0WVM79xZEm92nXS4LRk94VD5WdNlpvTzd84l3EqdMl
+ hUv/PkpYb3ghz2hq9OFDrrbt04oOb59JXPwDieQNJSUMpKRnnEBG4u6C+dT9RhyTPVNuqu+QHHp
+ 53/13MZBZQv3z/rZg74A7Fo/rfA9wrglLBCz4BgmMP6IoY76kUhup8icyuZzYW66HDBeyovV1gY
+ p/O/Lkh0grCPEyg==
+X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
+ fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddtkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjeeludffieekfeekjedvjeffffeuveefieeghfeihfdugeekhfejjeevhfdvfeejnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgdujedvrddukedrtddrudgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdeipdhrtghpthhtoheprhhoughrihhgohhsihhquhgvihhrrghmvghlohesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepnhhitgholhgvjhgruggvhigvvgesghhoohhglhgvrdgtohhmpdhrtghpthhto
+ hepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtohepphgvkhhkrgdrphgrrghlrghnvghnsegtohhllhgrsghorhgrrdgtohhm
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Currently, the link interface is deleted during channel unassignment, which
-does not align with mac80211 link handling. Therefore, add changes to only
-perform vdev stop during channel unassignment. The actual vdev deletion
-will occur in change_vif_links().
+This patchset is extracted from [1]. The goal is to introduce the YUV
+support, thanks to Arthur's work.
 
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
+- PATCH 1: Add the support of YUV formats
+- PATCH 2: Add some drm properties to expose more YUV features
+- PATCH 3: Cleanup the todo
+- PATCH 4..6: Add some kunit tests
+- PATCH 7: Add the support of DRM_FORMAT_R1/2/4/8
 
-Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+[1]: https://lore.kernel.org/r/20241007-yuv-v12-0-01c1ada6fec8@bootlin.com
+
+Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/net/wireless/ath/ath12k/mac.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+Changes in v17:
+- Rebased on drm-msic-next
+- Updated comment in kunit test
+- Updated test count in kunit test
+- Link to v16: https://lore.kernel.org/r/20250121-yuv-v16-0-a61f95a99432@bootlin.com
 
-diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
-index 9ac2f883cd5cc3ee5950fabdf6b89e5330171468..682ea0fc9a857a97000f1e683eb145f36ef0dd17 100644
---- a/drivers/net/wireless/ath/ath12k/mac.c
-+++ b/drivers/net/wireless/ath/ath12k/mac.c
-@@ -3601,6 +3601,7 @@ ath12k_mac_op_change_vif_links(struct ieee80211_hw *hw,
- 			       struct ieee80211_bss_conf *ol[IEEE80211_MLD_MAX_NUM_LINKS])
- {
- 	struct ath12k_vif *ahvif = ath12k_vif_to_ahvif(vif);
-+	unsigned long to_remove = old_links & ~new_links;
- 	unsigned long to_add = ~old_links & new_links;
- 	struct ath12k_hw *ah = ath12k_hw_to_ah(hw);
- 	struct ath12k_link_vif *arvif;
-@@ -3625,6 +3626,21 @@ ath12k_mac_op_change_vif_links(struct ieee80211_hw *hw,
- 			return -EINVAL;
- 	}
- 
-+	for_each_set_bit(link_id, &to_remove, IEEE80211_MLD_MAX_NUM_LINKS) {
-+		arvif = wiphy_dereference(hw->wiphy, ahvif->link[link_id]);
-+		if (WARN_ON(!arvif))
-+			return -EINVAL;
-+
-+		if (!arvif->is_created)
-+			continue;
-+
-+		if (WARN_ON(!arvif->ar))
-+			return -EINVAL;
-+
-+		ath12k_mac_remove_link_interface(hw, arvif);
-+		ath12k_mac_unassign_link_vif(arvif);
-+	}
-+
- 	return 0;
- }
- 
-@@ -9438,9 +9454,6 @@ ath12k_mac_op_unassign_vif_chanctx(struct ieee80211_hw *hw,
- 	if (ahvif->vdev_type != WMI_VDEV_TYPE_MONITOR &&
- 	    ar->num_started_vdevs == 1 && ar->monitor_vdev_created)
- 		ath12k_mac_monitor_stop(ar);
--
--	ath12k_mac_remove_link_interface(hw, arvif);
--	ath12k_mac_unassign_link_vif(arvif);
- }
- 
- static int
+Changes in v16:
+- Rebased on drm-misc-next
+- Updated comment and changed fail thresholds. 
+- Link to v15: https://lore.kernel.org/r/20241231-yuv-v15-0-eda6bb3028e6@bootlin.com
 
+Changes in v15:
+- Export drm_get_color_encoding_name only for kunit tests
+- Link to v14: https://lore.kernel.org/r/20241122-yuv-v14-0-e66d83d28d0c@bootlin.com
+
+Changes in v14:
+- Rebased on drm-misc-next
+- Link to v13: https://lore.kernel.org/r/20241118-yuv-v13-0-ac0dd4129552@bootlin.com
+
+Changes since previous series:
+ - Fix build test as modules issue: https://lore.kernel.org/all/202410110407.EHvadSaF-lkp@intel.com/
+ - Export required symbols in DRM core to use them in kunit
+ - Update the kunit comments according to Maxime's feedback
+ - Link to original series: https://lore.kernel.org/r/20241007-yuv-v12-0-01c1ada6fec8@bootlin.com
+
+---
+Arthur Grillo (5):
+      drm/vkms: Add YUV support
+      drm/vkms: Add range and encoding properties to the plane
+      drm/vkms: Drop YUV formats TODO
+      drm/vkms: Create KUnit tests for YUV conversions
+      drm/vkms: Add how to run the Kunit tests
+
+Louis Chauvet (2):
+      drm: Export symbols to use in tests
+      drm/vkms: Add support for DRM_FORMAT_R*
+
+ Documentation/gpu/vkms.rst                    |  15 +-
+ drivers/gpu/drm/drm_color_mgmt.c              |   3 +
+ drivers/gpu/drm/vkms/Kconfig                  |  15 +
+ drivers/gpu/drm/vkms/Makefile                 |   1 +
+ drivers/gpu/drm/vkms/tests/.kunitconfig       |   4 +
+ drivers/gpu/drm/vkms/tests/Makefile           |   3 +
+ drivers/gpu/drm/vkms/tests/vkms_format_test.c | 271 +++++++++++++++
+ drivers/gpu/drm/vkms/vkms_drv.h               |  18 +
+ drivers/gpu/drm/vkms/vkms_formats.c           | 467 +++++++++++++++++++++++++-
+ drivers/gpu/drm/vkms/vkms_formats.h           |   9 +
+ drivers/gpu/drm/vkms/vkms_plane.c             |  29 +-
+ 11 files changed, 831 insertions(+), 4 deletions(-)
+---
+base-commit: 8cca475b8085e551b3eebf4f2164e56c800402e0
+change-id: 20240201-yuv-1337d90d9576
+
+Best regards,
 -- 
-2.34.1
+Louis Chauvet <louis.chauvet@bootlin.com>
 
