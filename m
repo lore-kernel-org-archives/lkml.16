@@ -1,273 +1,178 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2722278F3B
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 10:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8DC207A3D;
+	Tue,  4 Feb 2025 10:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738665966; cv=none; b=fao669eKzeCTZ1njyzXEuHuXUfWUAMNwBD0fs2eB3LzRmnAxKbD0SydX9VA6PDnYqg3aiTcRKAxqHmkDcLHhtUxbEQ+zRYbQikAck2MCYgat+Byc03oxY/ROjXw+IjP2Xox2Gj69JZbtB2uD4W6ugYtQjd4bSFvIjQTmrJnO7NM=
+	t=1738666022; cv=none; b=sJ7cfwinNDes4rvkpDEy2Zm6hNpER36lrcmk/YajoKRrBw08VmZoaGZatySpXZ3W/mCEe+5fxMZtxn+ZveiKT7Za/NXvOVWoI9p2Qv1KjM10JIG5RMpYsUfFf64/i2sNIt75NdLP1EAR/sHqTlJmtZQuslSVGLf9mrCQ03GOvlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738665966; c=relaxed/simple;
-	bh=SAKZdCpF6VWRRRVgXzqc0IBfTpqzPm6KgOgVIbkAD1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tjJmAf2SuEtuzhR8Xr0nvtpBvPheuOuSAXRLhnJoscL7HKKrnwIp+NvNanHMH4Nv9SyWe3+LE4JjrnvX2jd1KH08W2NZcMjvNOu85/qlR4nqkp+S2MBJjS39cLNf/8Qc+649TAE+PdnT2ePUkuFFWMfHZh9aeUhjubutRhTDQQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=PmhAfLTD; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1738666022; c=relaxed/simple;
+	bh=4GbbLb/+NUtmnylSuM6YAJhg6YidRVKmiMxnB7o4vB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hqWEVE5WwUee9zkmkcmKtFLr5d0h1/W5RNXFOPlbPUPYu6Uq76NpfF9zV0pYoxEKZj6jh0VpYIdfAdnNNKZElvS33mKxHOjDnV6MIPYTyFHdlhQrUCIdGLtDiBcu+SvSaoSrzOdoFw72BjZfz2c12iJsSgiLs9e7DVGGuoDKdn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QmYBp0tF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="PmhAfLTD"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38632b8ae71so4559795f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 02:46:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1738665960; x=1739270760; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NTqSzT/TXDWQqYRy4tctsFxrDEke2AKGwuYUOQfB5/U=;
-        b=PmhAfLTDGx4n0LsiW83PPSloRy1STsMcDoRAIacNvmo98RAvif90vN281CAS5GRLDq
-         wbic6VW+2rjv+NoMCCEcRKPOBHMu0JpO+RVye+3Vm0tb4wR2U87hps6uGuM3fYMakIs5
-         QnWT9EN/3vtA0CLoaX2zkpUp1gTQ2vCg3JBzc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738665960; x=1739270760;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NTqSzT/TXDWQqYRy4tctsFxrDEke2AKGwuYUOQfB5/U=;
-        b=YzuM+1Riw/+BFjfg0CXM9C5eX2cnE1/pmAtvpEqBhAmEGyYeUxI0OCmVSIuWcFz18T
-         DscROCCz4yLTz8uASyVV9oQC7fDnYhSpVjck3F99VtDHuQxzS2NT/yTwylsWY6YuD8yD
-         NJb33zItoy8DGO8hVy5mEoeIkTqT6fdW+5IFyiWqI9z3je8gdHzyGwHgm5X9V7gNa2Hk
-         vDaJHW4u1gWGn8M+O7BcVnNpxX54lYpg3AMj6w5cWNymUZpwAFvcRTFZTfRCoGRIpb1e
-         bPPWg3/vd1s+opIzIkKJDsYybZVbQQMsQWjYB/ppR5ypS12LDk+kOb0bLc6kseWcPUVr
-         3qrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGUY6CtBxW1Y9T6gydIYAXVGugX0Zc5S5bVQONdV5ixMWWgo+d3U0e/8TWYne97fhSOA+20v/B4rpowLc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMRQkIxQJxYOxku5Y59xizeAfneab6Dfxvb0izhQfAWjhyAf8L
-	8G98wzxK1W5VyJ0+YM6yl1D9J19CS/+rPxm2uLsNuL8UbmxaERRmBUfeGvZHov61jFmpbpFvXhg
-	E
-X-Gm-Gg: ASbGncuZ+h/YO2pMXsNotqThA+rZSKkZM6AQIK+DaKLyBEGjIr6Nx+yUAav4V4BKN4v
-	aFjYMANk3RwgdfBdBtZRG05kkFe6pwgRwtnY9SNroS6UPA9Nz0oAk0wVzD6PsYS1W15y1SVObB2
-	AMBaR3A73ig65gWSocrPiZPahsLhUi+yIAHRKR9HUogbWF3M35iE1lEFCaFJePk1RywYjOIl8OW
-	PIQzIE8acpd5Rhyx2XXJIpXXQIhBkHN7lmfSn022w7SMnQdPtMmKUEe8vbQ/w72AA5kVU2TLRpu
-	NDRzsHTUGjIOmY3+W2JbyYgSTfg=
-X-Google-Smtp-Source: AGHT+IGWhHTEnUp8RUiWMKHvCVuyT8/rXL2ynOFabY336YUpw5mRZI1i4GZUr3SXSEIaoymXJPH+Tw==
-X-Received: by 2002:a05:6000:1faa:b0:385:fa3d:1988 with SMTP id ffacd0b85a97d-38c5194ca8emr22392899f8f.8.1738665960211;
-        Tue, 04 Feb 2025 02:46:00 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc13139sm220098775e9.3.2025.02.04.02.45.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 02:45:59 -0800 (PST)
-Date: Tue, 4 Feb 2025 11:45:57 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: "Huang, Honglei1" <Honglei1.Huang@amd.com>
-Cc: Demi Marie Obenour <demiobenour@gmail.com>,
-	Huang Rui <ray.huang@amd.com>,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
-	dri-devel@lists.freedesktop.org, David Airlie <airlied@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Gurchetan Singh <gurchetansingh@chromium.org>,
-	Chia-I Wu <olvaffe@gmail.com>,
-	Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Lingshan Zhu <Lingshan.Zhu@amd.com>
-Subject: Re: [RFC PATCH 3/3] drm/virtio: implement blob userptr resource
- object
-Message-ID: <Z6Hv5esGqHWU2TVe@phenom.ffwll.local>
-Mail-Followup-To: "Huang, Honglei1" <Honglei1.Huang@amd.com>,
-	Demi Marie Obenour <demiobenour@gmail.com>,
-	Huang Rui <ray.huang@amd.com>,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
-	dri-devel@lists.freedesktop.org, David Airlie <airlied@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Gurchetan Singh <gurchetansingh@chromium.org>,
-	Chia-I Wu <olvaffe@gmail.com>,
-	Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Lingshan Zhu <Lingshan.Zhu@amd.com>
-References: <20241220100409.4007346-1-honglei1.huang@amd.com>
- <20241220100409.4007346-3-honglei1.huang@amd.com>
- <Z2WO2udH2zAEr6ln@phenom.ffwll.local>
- <2fb36b50-4de2-4060-a4b7-54d221db8647@gmail.com>
- <40485636-7ea3-4e34-b4bb-1ccaaadd4e47@amd.com>
- <62aeac90-1ba6-4e22-9465-fee95973a6bf@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QmYBp0tF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24B9DC4CEE2;
+	Tue,  4 Feb 2025 10:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738666022;
+	bh=4GbbLb/+NUtmnylSuM6YAJhg6YidRVKmiMxnB7o4vB8=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=QmYBp0tFVd64mpUc8p/e3RzQYaCO4oyNFtCwySE8IXuVm5fuUjy6mFu7n4H/rDs8p
+	 Tg8StmmkdUbOHDSYN1NnxMPbgGb+/bNzGfr4S8ImXuZqXOkF67O/5ao/m3rqZ/pROQ
+	 GPbQYQbqTo9WEutPFWIUuTWc9dcGAtrxX69S+j/z2iw31uBFddwA4C7VaLqq37QMrp
+	 1DJPt2Bz0SWDhlF/Y8g7USUL1yGmzi89nIg+fAg1QGbBW8gmCvS3V/g88m+WYG0Bsl
+	 b/QUyC8oMODCEcV6JKLNNsBpwWAQC01QGB3qkYW5LmiGW5eQ1uUvS0GLRXp+uvudDT
+	 DQQ3WM+IPXcrA==
+Message-ID: <d705e66d-8a5c-490b-b277-f29429c207dd@kernel.org>
+Date: Tue, 4 Feb 2025 11:46:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62aeac90-1ba6-4e22-9465-fee95973a6bf@amd.com>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] media: dt-bindings: aspeed,video-engine: Convert to
+ json schema
+To: Jammy Huang <jammy_huang@aspeedtech.com>, eajames@linux.ibm.com,
+ mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
+ linux-media@vger.kernel.org, openbmc@lists.ozlabs.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20250204085041.3724290-1-jammy_huang@aspeedtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250204085041.3724290-1-jammy_huang@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 20, 2025 at 05:54:10PM +0800, Huang, Honglei1 wrote:
-> On 2024/12/27 10:02, Huang, Honglei1 wrote:
-> > On 2024/12/22 9:59, Demi Marie Obenour wrote:
-> > > On 12/20/24 10:35 AM, Simona Vetter wrote:
-> > > > On Fri, Dec 20, 2024 at 06:04:09PM +0800, Honglei Huang wrote:
-> > > > > From: Honglei Huang<Honglei1.Huang@amd.com>
-> > > > > 
-> > > > > A virtio-gpu userptr is based on HMM notifier.
-> > > > > Used for let host access guest userspace memory and
-> > > > > notice the change of userspace memory.
-> > > > > This series patches are in very beginning state,
-> > > > > User space are pinned currently to ensure the host
-> > > > > device memory operations are correct.
-> > > > > The free and unmap operations for userspace can be
-> > > > > handled by MMU notifier this is a simple and basice
-> > > > > SVM feature for this series patches.
-> > > > > The physical PFNS update operations is splited into
-> > > > > two OPs in here. The evicted memories won't be used
-> > > > > anymore but remap into host again to achieve same
-> > > > > effect with hmm_rang_fault.
-> > > > So in my opinion there are two ways to implement userptr that make sense:
-> > > > 
-> > > > - pinned userptr with pin_user_pages(FOLL_LONGTERM). there is not mmu
-> > > >    notifier
-> > > > 
-> > > > - unpinnned userptr where you entirely rely on userptr and do not hold any
-> > > >    page references or page pins at all, for full SVM integration. This
-> > > >    should use hmm_range_fault ideally, since that's the version that
-> > > >    doesn't ever grab any page reference pins.
-> > > > 
-> > > > All the in-between variants are imo really bad hacks, whether they hold a
-> > > > page reference or a temporary page pin (which seems to be what you're
-> > > > doing here). In much older kernels there was some justification for them,
-> > > > because strange stuff happened over fork(), but with FOLL_LONGTERM this is
-> > > > now all sorted out. So there's really only fully pinned, or true svm left
-> > > > as clean design choices imo.
-> > > > 
-> > > > With that background, why does pin_user_pages(FOLL_LONGTERM) not work for
-> > > > you?
-> > > +1 on using FOLL_LONGTERM.  Fully dynamic memory management has a huge cost
-> > > in complexity that pinning everything avoids.  Furthermore, this avoids the
-> > > host having to take action in response to guest memory reclaim requests.
-> > > This avoids additional complexity (and thus attack surface) on the host side.
-> > > Furthermore, since this is for ROCm and not for graphics, I am less concerned
-> > > about supporting systems that require swappable GPU VRAM.
-
-I kinda ignored this one, because from my point of view it's all clear.
-But I guess better to elaborate some more.
-
-> > Hi Sima and Demi, I totally agree the flag FOLL_LONGTERM is needed, I
-> > will add it in next version. And for the first pin variants
-> > implementation, the MMU notifier is also needed I think.
-> > Cause the userptr feature in UMD generally used like this: the
-> > registering of userptr
-> > always is explicitly invoked by user code like
-> > "registerMemoryToGPU(userptrAddr, ...)",
-> > but for the userptr release/free, there is no explicit API for it, at
-> > least in hsakmt/KFD stack.
-> > User just need call system call "free(userptrAddr)", thenkernel driver
-> > will release the userptr
-> > by MMU notifier callback.Virtio-GPU has no other way to know if user has
-> > been free the userptr
-> > except for MMU notifior.And in UMD theres is no way to get the free()
-> > operation is invoked by user.
-> > the only way is use MMU notifierin virtio-GPU driver and free the
-> > corresponding data in host
-> > by some virtio CMDs as far as I can see.
-
-Yes that's what I meant that you need real svm/hmm here. You cannot fake
-the amdkfd/hsakmt model with pin_user_pages, it fundamentally falls apart.
-One case is overcommit, where userspace malloc() a huge amount of virtual
-address space, registers it with the gpu, but only uses fairly little of
-it. If you pin that all, you run out of memory or at least thrash
-performance.
-
-For the hsa/kfd model, you must use hmm+mmu_notifier, or you're breaking
-the uapi contract.
-
-> > And for the second way that is use hmm_range_fault, there is a
-> > predictable issues as far as I can see, at least in hsakmt/KFD stack.
-> > That is the memory may migrate when GPU/device is working. In bare
-> > metal, when memory is migrating KFD driver will pause the compute work
-> > of the device in mmap_wirte_lock then use hmm_range_fault to remap the
-> > migrated/evicted memories to GPU then restore the compute work of device
-> > to ensure the correction of the data. But in virtio-GPU driver the
-> > migration happen in guest kernel, the evict mmu notifier callback
-> > happens in guest, a virtio CMD can be used for notify host but as lack
-> > of mmap_write_lock protection in host kernel, host will hold invalid
-> > data for a short period of time, this may lead to some issues. And it is
-> > hard to fix as far as I can see.
-
-I forgot the exact details, but when I looked amdkfd was taking too big
-locks in the migration paths, which results in deadlocks. Those were
-worked around by taking even bigger locks, the mmap_write_lock. But that's
-a design issue with amdkfd, not something fundamental.
-
-hmm only needs the mmu_notifier callbacks to work, meaning either context
-preemption and restarting, or tlb invalidation and gpu page fault
-handling. Those you can forward between guest and host with no issues, and
-with hw support like pasid/ats in iommu this already happens.
-
-Note that the drm_gpusvm library that's under discussion for xe had the
-same issue in version 1 of relying on mmap_write_lock to paper over design
-issues. But the recent versions should be fixed. Would be really good to
-look at all that. And then probably do a full redo of the svm support for
-amd in amdgpu.ko using all these new helper libraries, because my personal
-take is that fixing amdkfd is probably more work than just writing new
-clean code.
-
-> > Finally I will extract some APIs into helper according to your request,
-> > and I will refactor the whole userptr
-> > implementation, use some callbacks in page getting path, let the pin
-> > method and hmm_range_fault can be choiced
-> > in this series patches.
-> > 
-> > Regards,
-> > Honglei
+On 04/02/2025 09:50, Jammy Huang wrote:
+> Convert aspeed-video.txt to yaml format.
+> Update aspeed-video.txt to aspeed,video-engine.yaml in MAINTAINER file.
 > 
-> Hi Sima,
-> 
-> I modified the code, remove all the MMU nitifior and use pin_user_pages_fast
-> only. Under this implementation userptr fully
-> managed by UMD. We did a performance test, it decreased by 30% in
-> OpenCL stack in Geekbench6 benmark.
-> We use AMD V2000 for test:
-> use MMU notifior + pin_user_pages:
-> near 13000 score: https://browser.geekbench.com/v6/compute/3257793
-> 
-> use pin_user_pages only:
-> near 10000 socre: https://browser.geekbench.com/v6/compute/3496228
-> 
-> The code is under clean up, I will send out later.
+> NOTE: The following checkpatch warning is generated since we do include
+> the header in the example, but this is a false positive warning.
+> WARNING: DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.rst
 
-pin_user_pages is fundamentally broken for the hsa memory model, no amount
-of benchmarking different flavors of it against each another will change
-that.
-
-> And I found a another thing, it seems like in intel i915 userptr
-> implementation, the pin_user_pages is also used in MMU notifior.
-> Code path is: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/i915/gem/i915_gem_userptr.c?h=v6.13#:~:text=ret%20%3D%20pin_user_pages_fast(obj%2D%3Euserptr.ptr%20%2B%20pinned%20*%20PAGE_SIZE%2C
-
-Yeah i915-gem isn't great code and shouldn't be used as example for
-anything. This is Dave&me asked Xe developers to create a lot of the
-infrastructure in drm libraries, to make sure we have a solid design here
-and not what i915-gem did.
-
-Also note that i915-gem userptr is for buffer based userptr, like for
-VK_KHR_external_memory if I remember correctly. This is not the hsa memory
-model at all.
-> 
-> Patch set: https://lore.kernel.org/all/159353552439.22701.14005121342739071590@emeril.freedesktop.org/T/
-> https://patchwork.kernel.org/project/intel-gfx/patch/20210323155059.628690-17-maarten.lankhorst@linux.intel.com/#24064663
-> 
-> And I didn't find the hmm_range_fault code path, maybe I missed it?
-
-i915-gem never supported the svm/hsa memory model in upstream, so yeah
-it's not there. For drm/xe see the work from Matt Brost that's currently
-under discussion on dri-devel for what it should all look like.
-
-Cheers, Sima
+This does not belong to commit message, it's irrelevant. You can mention
+in the changelog, though, but IMO, that's really not important for this
+patch.
 
 > 
-> Regards,
-> Honglei
-> 
+> Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+> ---
+>  v2:
+>   - Update commit subject
+>   - Add NOTE for false positive warning
+> ---
 
--- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+...
+
+> +
+> +  memory-region:
+> +    maxItems: 1
+> +    description: |
+> +      Phandle to the reserved memory nodes to be associated with the
+> +      VE. VE will acquires memory space for 3 purposes:
+> +        1. JPEG header
+> +        2. Compressed result
+> +        3. Temporary transformed image data
+> +
+> +  aspeed,scu:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +      Specifies the scu node that is needed if video wants to capture
+> +      from sources other than Host VGA.
+> +
+> +  aspeed,gfx:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+
+None of these two properties were in original binding with
+*justification*. You must describe any changes done during conversion,
+otherwise you could add here whatever property you wish, right?
+
+> +    description: |
+> +      Specifies the Soc Display(gfx) node that needs to be queried to get
+> +      related information if video wants to use gfx as capture source.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/ast2600-clock.h>
+> +
+> +    video@1e700000 {
+
+Looks rather like: isp@
+
+> +      compatible = "aspeed,ast2600-video-engine";
+> +      reg = <0x1e700000 0x1000>;
+> +      clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
+> +               <&syscon ASPEED_CLK_GATE_ECLK>;
+> +      clock-names = "vclk", "eclk";
+> +      interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +      aspeed,scu = <&syscon>;
+> +      aspeed,gfx = <&gfx>;
+
+
+
+Best regards,
+Krzysztof
