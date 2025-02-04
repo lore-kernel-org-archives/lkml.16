@@ -1,15 +1,16 @@
 Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDED520371A
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:17:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A31207A14
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:17:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660627; cv=none; b=RP+RLicQj01LBAyuijnB01EYAeJF3MvIHD4yYMJKKQLPJRNyC9PwAWE0qGhvuh037hWhSYTSZhmrP+IHjZRKYopnAjBHF9WflPSenEM15sPm93qNHXM9P2h7J0n0UJt7u/HdwWHVXLP9owIU3SvsstD3qT2Fn2+An+CSs/alO1k=
+	t=1738660629; cv=none; b=ER59T+7wociD4qyy90Qb8BszNGuRv0PDOXLi71KgLuTRCGEg9Ccr7UDw1QpJEwbT8/eDkQSow71zkbej/4p+wuoxHR7JetEF1WtEmlIF3usVpAhSjq/BhUlC8kqHBZb26+dv4HFdye5F3+IneXbOwREzko5jdM8ArORofbvDI8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660627; c=relaxed/simple;
-	bh=BAyQM8yTu34BvR4X/1EfMyzdhNCFZA53yLIxmZ2iCm0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lsb1hmK9j0xsU+eWF4f0xvPSS5Xgc2n5pxy8okuhWP9FfHpPQNeHPWkQCY99zTAmSPleRGgFuxE00fERMviQk2IlT4JqhhbRzg+PqwPr+IEeJHQpmRUSmEtNmHHN4ZPYBl0tuRp8z8pmWpz89GSWeTqhg2OgDi4qM4SqdrbcpiY=
+	s=arc-20240116; t=1738660629; c=relaxed/simple;
+	bh=KaaXi7jBeslj8uzUn1WZyt0PmaZYa9IShPOp11fzkf4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cOCk8buLeGwpiRaGE+WFTGl54SI4FjFN8oYfsBll11tjiTUOluhA9HrsjdiCSNu/+V//Wai4qSbDIRbFnXUj27P1TnBGaQaHre6qDveEa7w/If9VUNH9o5kSPkkm5Ltrhn9mchAjsU42Sxu23zkM475Ig9HdJyJYQxEj0USmEtM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
@@ -28,10 +29,12 @@ To: <alexandre.belloni@bootlin.com>, <pgaj@cadence.com>,
 	<wsa+renesas@sang-engineering.com>, <xiaopei01@kylinos.cn>,
 	<Guruvendra.Punugupati@amd.com>, <linux-i3c@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>, <BMC-SW@aspeedtech.com>
-Subject: [PATCH v2 1/2] i3c: Remove the const qualifier from i2c_msg pointer in i2c_xfers API
-Date: Tue, 4 Feb 2025 17:17:01 +0800
-Message-ID: <20250204091702.4014466-1-billy_tsai@aspeedtech.com>
+Subject: [PATCH v2 2/2] i3c: mipi-i3c-hci: Use I2C DMA-safe api
+Date: Tue, 4 Feb 2025 17:17:02 +0800
+Message-ID: <20250204091702.4014466-2-billy_tsai@aspeedtech.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250204091702.4014466-1-billy_tsai@aspeedtech.com>
+References: <20250204091702.4014466-1-billy_tsai@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,88 +44,44 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-The change is necessary to enable the use of the
-`i2c_get_dma_safe_msg_buf()` API, which requires a non-const
-`struct i2c_msg *` to operate. The `i2c_get_dma_safe_msg_buf()` function
-ensures safe handling of I2C messages when using DMA, making it essential
-for scenarios where DMA transfers are involved. By removing the `const`
-qualifier, this patch allows drivers to prepare and manage DMA-safe
-buffers directly.
+Use the i2c_get/put_dma_safe_msg_buf for I2C transfers instead of using
+the I3C-specific API.
 
 Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 ---
- drivers/i3c/master/dw-i3c-master.c     | 2 +-
- drivers/i3c/master/i3c-master-cdns.c   | 2 +-
- drivers/i3c/master/mipi-i3c-hci/core.c | 2 +-
- drivers/i3c/master/svc-i3c-master.c    | 2 +-
- include/linux/i3c/master.h             | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/i3c/master/mipi-i3c-hci/core.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
-index d09ea5b6467c..54c7d86997d5 100644
---- a/drivers/i3c/master/dw-i3c-master.c
-+++ b/drivers/i3c/master/dw-i3c-master.c
-@@ -1079,7 +1079,7 @@ static void dw_i3c_master_detach_i3c_dev(struct i3c_dev_desc *dev)
- }
- 
- static int dw_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
--				   const struct i2c_msg *i2c_xfers,
-+				   struct i2c_msg *i2c_xfers,
- 				   int i2c_nxfers)
- {
- 	struct dw_i3c_i2c_dev_data *data = i2c_dev_get_master_data(dev);
-diff --git a/drivers/i3c/master/i3c-master-cdns.c b/drivers/i3c/master/i3c-master-cdns.c
-index 8d69a34986d9..c9e4c129454c 100644
---- a/drivers/i3c/master/i3c-master-cdns.c
-+++ b/drivers/i3c/master/i3c-master-cdns.c
-@@ -813,7 +813,7 @@ static int cdns_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
- }
- 
- static int cdns_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
--				     const struct i2c_msg *xfers, int nxfers)
-+				     struct i2c_msg *xfers, int nxfers)
- {
- 	struct i3c_master_controller *m = i2c_dev_get_master(dev);
- 	struct cdns_i3c_master *master = to_cdns_i3c_master(m);
 diff --git a/drivers/i3c/master/mipi-i3c-hci/core.c b/drivers/i3c/master/mipi-i3c-hci/core.c
-index e6e482a259b4..a408feac3e9e 100644
+index a408feac3e9e..4f3738beb0f2 100644
 --- a/drivers/i3c/master/mipi-i3c-hci/core.c
 +++ b/drivers/i3c/master/mipi-i3c-hci/core.c
-@@ -367,7 +367,7 @@ static int i3c_hci_priv_xfers(struct i3c_dev_desc *dev,
- }
+@@ -382,14 +382,11 @@ static int i3c_hci_i2c_xfers(struct i2c_dev_desc *dev,
+ 		return -ENOMEM;
  
- static int i3c_hci_i2c_xfers(struct i2c_dev_desc *dev,
--			     const struct i2c_msg *i2c_xfers, int nxfers)
-+			     struct i2c_msg *i2c_xfers, int nxfers)
- {
- 	struct i3c_master_controller *m = i2c_dev_get_master(dev);
- 	struct i3c_hci *hci = to_i3c_hci(m);
-diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
-index c1ee3828e7ee..24bd701b5de0 100644
---- a/drivers/i3c/master/svc-i3c-master.c
-+++ b/drivers/i3c/master/svc-i3c-master.c
-@@ -1584,7 +1584,7 @@ static int svc_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
- }
+ 	for (i = 0; i < nxfers; i++) {
+-		xfer[i].data = i2c_xfers[i].buf;
++		xfer[i].data = i2c_get_dma_safe_msg_buf(&i2c_xfers[i], 1);
+ 		xfer[i].data_len = i2c_xfers[i].len;
+ 		xfer[i].rnw = i2c_xfers[i].flags & I2C_M_RD;
+ 		hci->cmd->prep_i2c_xfer(hci, dev, &xfer[i]);
+ 		xfer[i].cmd_desc[0] |= CMD_0_ROC;
+-		ret = i3c_hci_alloc_safe_xfer_buf(hci, &xfer[i]);
+-		if (ret)
+-			goto out;
+ 	}
+ 	last = i - 1;
+ 	xfer[last].cmd_desc[0] |= CMD_0_TOC;
+@@ -412,7 +409,8 @@ static int i3c_hci_i2c_xfers(struct i2c_dev_desc *dev,
  
- static int svc_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
--				    const struct i2c_msg *xfers,
-+				    struct i2c_msg *xfers,
- 				    int nxfers)
- {
- 	struct i3c_master_controller *m = i2c_dev_get_master(dev);
-diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
-index 12d532b012c5..c67922ece617 100644
---- a/include/linux/i3c/master.h
-+++ b/include/linux/i3c/master.h
-@@ -475,7 +475,7 @@ struct i3c_master_controller_ops {
- 	int (*attach_i2c_dev)(struct i2c_dev_desc *dev);
- 	void (*detach_i2c_dev)(struct i2c_dev_desc *dev);
- 	int (*i2c_xfers)(struct i2c_dev_desc *dev,
--			 const struct i2c_msg *xfers, int nxfers);
-+			 struct i2c_msg *xfers, int nxfers);
- 	int (*request_ibi)(struct i3c_dev_desc *dev,
- 			   const struct i3c_ibi_setup *req);
- 	void (*free_ibi)(struct i3c_dev_desc *dev);
+ out:
+ 	for (i = 0; i < nxfers; i++)
+-		i3c_hci_free_safe_xfer_buf(hci, &xfer[i]);
++		i2c_put_dma_safe_msg_buf(xfer[i].data, &i2c_xfers[i],
++					 ret ? false : true);
+ 
+ 	hci_free_xfer(xfer, nxfers);
+ 	return ret;
 -- 
 2.25.1
 
