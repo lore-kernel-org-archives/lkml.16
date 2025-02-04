@@ -1,103 +1,161 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A56E20468D;
-	Tue,  4 Feb 2025 19:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD4C213E71
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738697448; cv=none; b=HiclbeTeKN36e4iGIrnrj8L8EBzf6G0mmufY8/wrgd+VanGFpu5BByRvkFEqLrAtdEEGhG/ZW/SjXYxlrRrj+GeqsVEQM9yjTpnntmICUfYmDa4ZvFMzZM08FHc6KwAQ/Qhi1ucCUJigZsJpnqBiFclBOhjI6LA03VOB55tHJd4=
+	t=1738697453; cv=none; b=nV5yZBYbW36655WQI1v0MaFqNczN4jYrbAUQrLCIfNZTMzCCGXaRRV8c/qycb090eSOTsIW93KLD7SwPzqM5tOg/sj0XhLTZxPQrXrfqeiS2hTOoUBQsMpFYPskMRz6KyMBFlPztL5D1lnNmYAhzkpH6RVVqPony2t7bKJsGHBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738697448; c=relaxed/simple;
-	bh=QRi/T5xfMEOZk3oIGOMAugQt4TWXy+5skoF80xv/d+g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r1pOHSfjREJe+W65TKXCh6aOgpNH3sCTU4oQgkpH+VzTp8swti4YOzfiRYelZuUgEI11X9WuvcdijVFn5NQ36zgC4GYtJUHD/vKmKq//m+NwK2iTaJx7qvTqfVpYtqXzXTIESUYJhtm+C8IKeMgDCJ8JklWt2gTBhgkrXX7VukY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TyapDHwZ; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738697453; c=relaxed/simple;
+	bh=reyF95bfUBAYffil9IVz3eSYyOLzt08HZXE9QNJTfns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WQp87hX6D6bZROPg/YovUaxF7nc3yHprGevVVRfWk3mK8jTqpmk7zWXQ+ZGHA7QDXmlpkpdgMWfWQatJwuF4ZMY1QeFnYDahiSddd0p7H4fOJm8YTkxzKWkv+CrFYlNN0tQwugZJfsjUgfxuLfxEsCjQfzmcL5otuWujOkjfbd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aUUwvac7; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TyapDHwZ"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21619108a6bso101414205ad.3;
-        Tue, 04 Feb 2025 11:30:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aUUwvac7"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a814c54742so189315ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:30:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738697446; x=1739302246; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9p7f/7S8Mq/vOCUyI7c0pQCu7LoiHChjA9JxK06JEGU=;
-        b=TyapDHwZIrEEsynsRcm5IRZNwIKOoee0xsV0aI/UboNhlPEgBWyDK/LCZAAxSHuR0/
-         s4aixfmjCkwPbK5zaqTrDsdU6JdMoKUk84l8QQvdSuVB2e2x1aCitYlzH15a+SbaIgpa
-         a4JDbKsx/ybQjy3X6UqKPDMDI1keh57+tPcsqDeF6DkIee8EMlTuRMYmTepFw4Tkykan
-         hyZ6GsspHAR3bknuNNNjcP9miCdWGKrUNIxttzAQHfMxtlnvv05k1hm5DwGb10Oh9dRb
-         NHYA3Q9J9h24UWJ8e4CiNQbNW+qRFiFGlzdgSZojIpadqo8J2OJz3CHuJcatN0bhIutg
-         W4dA==
+        d=google.com; s=20230601; t=1738697451; x=1739302251; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dj4H26EqpqfJa3dxflkvA+dNKXBACmjipnFJPH1DsZY=;
+        b=aUUwvac7owWb1HIFdOrk9wrCojnTNckgp3T3yLO8OMdfRQNwW6DaKzQdM2/njv+jSi
+         cWtq2clV63tCWoCvqJDjBm2w2A9S5R66jGWZYLfiDkpNRcNr2FHDIdOk+b17oXP4VWRx
+         lHqGoJOuN5AyXbOD6AbaGNigCSw6HmJztrfTuwCZd35+kKm6Wn/I1SjodOY/FMx0RjrR
+         EA4XR79sKDy9bfvA0Rs2Sb5zE4sHh+mK7KAkEjqPmiWa7wJQPOQegf2N0lPuk6d5fcQP
+         cTfEqv50cB2yoP+XUovtJzYXtDEv1A+MFVq9F/U2x1+xjAlY9fYqjHzsvUPmdiLoMBup
+         O6TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738697446; x=1739302246;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9p7f/7S8Mq/vOCUyI7c0pQCu7LoiHChjA9JxK06JEGU=;
-        b=S+muev3fMd6mMOQPhWcbM12iMUlja/0iPILwsCjl44olObfM4jHDZJFaMy0xa1Enk8
-         vbmBwc+FFCAypEBTrMdNcPBzQUtJeSfmLpdv5YxtBjHwcb1vqCInRHUT6MJ1lGizeDCo
-         6HB2v7S3Ow41EQWA3YTDK/W+o4f6VWYQ9qjmKUHRmKS3tzkBp9GY6RXhyZnW9OVskTQT
-         biaP0w4ZVDs7mJSEdN/eo99JT/0CDQhBf5IAd8F7bk9YrFnRZCgKm9uq7XJKHumRiX8c
-         8nvRMwIuDdOAI4jumC4i/+9qn9tPIJ/1555EnXwejwoncjVAp2vIBMuWIxax6FpakJlI
-         yy0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUHCJ3AVTPjtIA0uAA2qwt1ldGFHiqG7E1ihaYzIo9mteno1f9qD5pSJss7yKz7V8opCC9iANDn@vger.kernel.org, AJvYcCUXK90/9FKoQ68eeKaJ1lnqEKBVjujAPmveA+0qKu3i9XHRthzR2BUb8IJnu80PXCta3JuaoxnOuc3HqaCB@vger.kernel.org, AJvYcCWcC6oZH8zlbgcl9rBmepqbpmqL/WAHbLY0piJ1EgiUI8RzYI8g7iqiWgTB3/dFpBSh3KtStCCGHqXRqoT+RTQz@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG7sQJMil4ylMbti+V8kERrFhbtxiJvUmVGPToMngjFfGPYzyc
-	uUlfyYgUt4oXgmEFJ1Uy0i/f9z/U2PKhHsZWgtzvAJvQ72QNEDJd
-X-Gm-Gg: ASbGncvntJA3zRWOskahB+8ofdeDT0SWeqpITbdMr3/3Wy+Hvar4ifVhMBx9w/Y5Gmc
-	1szUCkbJZ7bwiojD5uufhfpUFIM6A0Nik1fKMRXx5GReG2r+eqA+29zWp5wwD7NcQ1FhLMCuHVY
-	+VicAKrVzeVN3PKime8STpAkHJNpyx0jU59UAwLtBQVZYs0c/ZazY5UkSxz1bixMy0aMq6KFyL4
-	qEFHU25Y/Hs8GyDZ/a8IhWBKAD4287/Enh9wTS+j3TQ+Yrr/MlbhvCE+wTGOn9PedfXKlAFNMev
-	mye/NztmWdSUZuZ+nb2r3Kg=
-X-Google-Smtp-Source: AGHT+IFss3YQDvyBHuUGLZCmsbSK26AFc7G2J2uzLww7fhdhbsF/F7HDhh5qLRL5YNkla4HR2XlTTQ==
-X-Received: by 2002:a17:902:f78b:b0:215:a97a:c6bb with SMTP id d9443c01a7336-21f17e27225mr737675ad.12.1738697446330;
-        Tue, 04 Feb 2025 11:30:46 -0800 (PST)
-Received: from linuxmint.. ([14.139.69.34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f5c72sm100994395ad.66.2025.02.04.11.30.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 11:30:45 -0800 (PST)
-From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-To: tj@kernel.org
-Cc: Bharadwaj Raju <bharadwaj.raju777@gmail.com>,
-	hannes@cmpxchg.org,
-	mkoutny@suse.com,
-	shuah@kernel.org,
-	skhan@linuxfoundation.org,
-	cgroups@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH] selftests/cgroup: use bash in test_cpuset_v1_hp.sh
-Date: Wed,  5 Feb 2025 00:59:53 +0530
-Message-ID: <20250204192956.50589-1-bharadwaj.raju777@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1738697451; x=1739302251;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dj4H26EqpqfJa3dxflkvA+dNKXBACmjipnFJPH1DsZY=;
+        b=m1LSDyLu7LhqQpV6MuxlAwY2TW0Zm/sZNEo4OzrwlHAGud29jYnt3Zk3ToM6Y0SRqw
+         q5vT7tZC/Uu0zsphTvp3nhozxHlDiBU2tlSP3a4X+erQxyxXLKDQGC2ASgXs/p3WQcMx
+         3cSv2w3NCaCOZLNVi/4eGRtApmgWCyX4mUhVxwvQGP60910CdHsijwTnvyNSEDSGh/VX
+         RkGEDQjRDgjWt1Tf/m/0AZkRfKVZ2uCxkz5q6DvXOcAO+yt5xDnpFjR5n0mtC7kYETUU
+         9457Rtl0Piwf6vApIVbB+Zu/3KY+vnlSWijVLoHvSvLM7naski2BPmaxGKXxHeIpz3rT
+         5QEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZCFuNkij/oFexYLNLb0Blbe9MMSO6rWHNFvCnhZbeZHV6O1Aig5TllpZkvvButvepQLcxMdumK/GPea0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUx7dpGoJVILJ5R+xCoo4lxzXDTABNDuwQEj9CaPbg8vYyWyaV
+	pHWnlOB3WnZYfrx9cF1pvyuaqscvLuYt45cUjQq77MoamyGigxFd2Vg9DjwwC4DkkJDdSwgzslL
+	vA8TDcXiL45+nUyo6zb4VhZ4uUwNqqG1ZrDPE
+X-Gm-Gg: ASbGncsdHPSzjPxpJ4nBPUtJUKi2IDyamPuQ7vb3ld48Zbazpt0lHnzeazFsvH+yABT
+	She6kJoqBXmg0I5aN01J6FFkSGpCnK2mURrZX5Bn4CYpL9eD1phLzMEkhvalMIAiXtI06rEIJGW
+	U/FuWXVWcSO18cIQfw7ndkNdo=
+X-Google-Smtp-Source: AGHT+IE8mPPweGD/XpLRwVh6HXIUhzMbEoHxkKV6IW0N3/GvKW/3kqA/gHoDCh3vemR2crcapQey99/lhfZZf4RzBOc=
+X-Received: by 2002:a05:6e02:3790:b0:3cf:a4e4:8f89 with SMTP id
+ e9e14a558f8ab-3d03fbc5fd6mr3884605ab.4.1738697450707; Tue, 04 Feb 2025
+ 11:30:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-2-namhyung@kernel.org>
+ <CAP-5=fVJDi2UuhTYk5g-QaLqZC29tAprKWs_0PKNmd+y=iugjA@mail.gmail.com>
+ <Z6GCde4XqCuEZlgz@google.com> <CAP-5=fVrFzxcLZG8DyYh2rbd3u4133V6hhrQFCHsq_QMVVW=9g@mail.gmail.com>
+ <Z6JosmbJBmiRHBKK@google.com>
+In-Reply-To: <Z6JosmbJBmiRHBKK@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Feb 2025 11:30:39 -0800
+X-Gm-Features: AWEUYZk4s0UOeMvph36Z_mNa6fGMDDI7NG0jb-zIPxCg8YiaKMAHQHX4CtxQlDg
+Message-ID: <CAP-5=fXdF41qVwUnZ1XjPM9PuiDa8owYwK=3eRznPEnMKrVkdw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] perf trace: Allocate syscall stats only if summary
+ is on
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Howard Chu <howardchu95@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The script uses non-POSIX features like `[[` for conditionals and hence
-does not work when run with a POSIX /bin/sh.
+On Tue, Feb 4, 2025 at 11:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Tue, Feb 04, 2025 at 07:59:01AM -0800, Ian Rogers wrote:
+> > On Mon, Feb 3, 2025 at 6:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > >
+> > > On Sat, Feb 01, 2025 at 10:57:00PM -0800, Ian Rogers wrote:
+> > > > On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > >
+> > > > > The syscall stats are used only when summary is requested.  Let's=
+ avoid
+> > > > > unnecessary operations.  Pass 'trace' pointer to check summary an=
+d give
+> > > > > output file together.
+> > > >
+> > > > I don't think this last sentence makes sense.
+> > >
+> > > Thanks for your review.  I'd say:  Pass 'trace' pointer instead of do=
+ing
+> > > 'summary' option and 'output' file pointer separately.
+> >
+> > This still doesn't make sense. There is lazier initialization:
+> > ```
+> > -               ttrace->syscall_stats =3D intlist__new(NULL);
+> > +               if (trace->summary)
+> > +                       ttrace->syscall_stats =3D intlist__new(NULL);
+> > ```
+> > and there are functions that take a FILE* but now we're going to use
+> > the one in trace instead:
+>
+> Yep, those FILE* (fp) was from trace->output.
+>
+>
+> > ```
+> > @@ -1568,7 +1569,7 @@ static struct thread_trace *thread__trace(struct
+> > thread *thread, FILE *fp)
+> >
+> >         return ttrace;
+> >  fail:
+> > -       color_fprintf(fp, PERF_COLOR_RED,
+> > +       color_fprintf(trace->output, PERF_COLOR_RED,
+> >                       "WARNING: not enough memory, dropping samples!\n"=
+);
+> >         return NULL;
+> > ```
+> > So why does the one passed to trace still exist? Unfortunately names
+> > like "fp" and "output" are not intention revealing.
+>
+> I think "fp" is a conventional name for file pointers (probably from
+> K&R?).
+>
+> >
+> > Anyway, from the commit message and the code I don't understand what
+> > this change is trying to do.
+>
+> I don't know where you didn't get it.  Apparently my English is not good
+> enough.  So this commit does two things.
+>
+> 1. check trace->summary before allocating syscall_stats
+> 2. change signature of thread__trace from (thread, fp) to (thread,
+>    trace) so that it can use trace->output (fp) and trace->summary.
+>
+> I thought the change #2 is trivial enough to be in the same commit.  But
+> I can split that if you want.
 
-Change the shebang to /bin/bash instead, like the other tests in cgroup.
+Ah, the diff was showing the function signature still taking fp which
+was confusing me. Looking above I see:
+```
+-static struct thread_trace *thread__trace(struct thread *thread, FILE *fp)
++static struct thread_trace *thread__trace(struct thread *thread,
+struct trace *trace)
+```
+Keeping the context in trace and not splitting the patch both make
+sense to me. It'd be nice to capture your more verbose description in
+the commit message.
 
-Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
----
- tools/testing/selftests/cgroup/test_cpuset_v1_hp.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/cgroup/test_cpuset_v1_hp.sh b/tools/testing/selftests/cgroup/test_cpuset_v1_hp.sh
-index 3f45512fb512..7406c24be1ac 100755
---- a/tools/testing/selftests/cgroup/test_cpuset_v1_hp.sh
-+++ b/tools/testing/selftests/cgroup/test_cpuset_v1_hp.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- #
- # Test the special cpuset v1 hotplug case where a cpuset become empty of
--- 
-2.43.0
-
+Thanks,
+Ian
