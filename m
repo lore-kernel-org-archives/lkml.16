@@ -1,123 +1,156 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DC820969D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 11:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3EB78F33
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 11:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738667563; cv=none; b=HSZurPz5kgU1kyTK6bWNkUAlOkcnEEpnP2DfeYfAL/m1CRnvS53LKlN+xKLPwsq+NL57yETT9ZrXuxSk9KAvOsKjr6AQoC3Vi0AaE4p9sXXN2l90yXp6AGj0DOBMEP+/3ITHbuvGQHB+mbeeEXo83oKLs6OgW87j80fK0IW6zGI=
+	t=1738667748; cv=none; b=UyD0ivDeUN40Ltvrcr//OZMbi5dhyWC6WYAzuEjKxaZ9dBXz8XKQehlnje8mNxMtWrq8BJJjvs26btivTVUe37yPPJ6R3qURVO2SQPknP7XF4FiAyVwKUd0yToiiraYTZIrRF00fZOXa0v2wqPsEym9V35nLvC6OPKgcyQi+8AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738667563; c=relaxed/simple;
-	bh=1/713bN1D8cUTwz4gjzXDUB0uMBKEzC0B4M22LuuSzg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rv0m6XG/sBICmtckZVrE01g10RYXtGtPJJj0L3bLLe5sWDbVOIXCHXO6e9fig6zwOb+HmTPastkWUArf3NG8CBoyYOyL+XUeokwhpsWF+LukhH5+Sq12wZbtKT4l0vu3XTkK8piBx/nDnkkPkAd3OhBk+Im8tV+iXuEUBed/7EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dkz8gvMY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738667748; c=relaxed/simple;
+	bh=f/dJVHZaoNM4Tcl0bBtr9zQW1v91cU0Px9ZAW/4Q6OY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XkLDhsTltno0FM4wRGMyM1Xh1vaNmZW81YODkzGZcyAC6nRil+7j7KT/bZ7bUVUfPvrHcoxX22DNRrBZtKgBaL5XePGbyZXqmXGMPbO5C0h97Rim733mOPRBjJ+mq/qJetUDtwfMRjJLbbpN1ZKz73jzhGM9zaEC9r4hdZ0HIIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=OfNMwVSw; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dkz8gvMY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738667558;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xQ3PkXkywNKtr2C3RWWqSpKemWRzvU4xaOraOKwYJnE=;
-	b=dkz8gvMYXb5y4ZKwUFKi8AxaMqFM6U3AVtHm2Rwt2HNZ4LNVRUQGkAIKfpA3ac8e49vqiX
-	Zc9zAa+LcuT2KmgG6V/m5qVVl9NHiKtMw4JCdtF99FHr9uE77/75++FCGgZWrb0bi3i3B5
-	fA3bn+VP5ZndMRQsrDYqHaEOnI+k35g=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-263-SkoELSlePrGy1Xw8KXiyxw-1; Tue, 04 Feb 2025 06:12:35 -0500
-X-MC-Unique: SkoELSlePrGy1Xw8KXiyxw-1
-X-Mimecast-MFC-AGG-ID: SkoELSlePrGy1Xw8KXiyxw
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3862b364578so3027076f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 03:12:35 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="OfNMwVSw"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436345cc17bso40326445e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 03:15:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1738667745; x=1739272545; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s2SfD4Gn61MFQawkBcj2q/218D2jiOKMHITzYwMlqEs=;
+        b=OfNMwVSw+CiVwb+PLwJgGY4lqzhPwLOSGVpEoEM34ZyWNoe0ovexrDbneC7WHI8rZ6
+         s6/0d+Qyd3m1A70sISDvTTwkU7+qErcg3b2PmfI7u3u//ZKhNTxLhOlXpTGlyk01IsWB
+         2eMNfJhF5JozKGqgN/nSBtSbiMiRaUItIk+7g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738667554; x=1739272354;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1738667745; x=1739272545;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xQ3PkXkywNKtr2C3RWWqSpKemWRzvU4xaOraOKwYJnE=;
-        b=sdwbWxsRow/umeInpMPqlzWVF3hg8Lxa6Ig/K/8SOAnuzFqGIYqyiUMWegE7RcQUP4
-         /zkuqbUNHOgr3EGqt1Be7f5ltABEUwpId6+8MvXZolCxySCIJXtiEn5dKYtJIRqKO6+2
-         s9mSTMvNjkxBjVTaO9M5ClMXjdW3lWxFBiOMrXbzUNrKKIe+TQew690Kf+Y/wr7yhEn2
-         aPzG25jWf4WJI4NA419yVo8hsw2ICXO2eUsucr4GYWqY2PBVjPAqpiJIRz3Ih6XRoVAj
-         sZuInuCDLuK8G14oRJ8gTyVdXrK5cn40H2JYNIYVo2zFMdfopukIyksqWFebGO3AWIlJ
-         cleQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXycMEKvginYzV29MDBArFNS7HYIfZ1WnSsjF85WM/+ZjYbCqXe6vYIHse6nHrwVhvUIKgEN22iRR89/wQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhRERR/wI1te326hYsumNo4xCegwKDPJtFde09bGIk+89Q1Og4
-	DzBra6OQTx5Razy8LD3mTf01Utfj0r1WS6EuQUpP9NQjYIG3DUvIgGGHQ5sGWwTVJ0/+OKtiu/4
-	Y4bDXmqFjVIyjN7EhBrKzfG17pWuFGg2kf0e7L4xTMEvCsceVAV3egbS3l6haQg==
-X-Gm-Gg: ASbGncuWq/bl5CpF9kVXILzs/ztv84zf2Wl04mSKYAZYPK8B32hS9JTZJb8oX+klWAj
-	wCeQL/rwK51p0/hpxv+J55aK7HzFA9I6PusrfywAk2NlMtqoGhLCwzj/+GENXKKPO/79U0/wjWc
-	GcsRcC91opc/fvK4XoxT8ioTxwxB7estQxY9CoGJXZ6OFO+2Lv2DOKDdoD+q3KbdQaFqYVYCfm/
-	PZjDglrcIOAVpCH5PjULtW3dgkIostH6VEr3CtWc0W0aPT4PMCepP/0rvH1OPe1eIw20bjKyNrN
-	AnyJ0sEjlonG4f6OTCiyN9VwcXEC+tEXmXU=
-X-Received: by 2002:a05:6000:1a86:b0:386:4244:15c7 with SMTP id ffacd0b85a97d-38da540575dmr1951801f8f.25.1738667554422;
-        Tue, 04 Feb 2025 03:12:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFrrGo+monwgvf+7AuszM0f9IWAHfFpNFGC8MBZ2jHxt8uvQhWqSNJyq2P9OQGfeWLNK/iSZg==
-X-Received: by 2002:a05:6000:1a86:b0:386:4244:15c7 with SMTP id ffacd0b85a97d-38da540575dmr1951780f8f.25.1738667554036;
-        Tue, 04 Feb 2025 03:12:34 -0800 (PST)
-Received: from [192.168.88.253] (146-241-41-201.dyn.eolo.it. [146.241.41.201])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38db085ab80sm411156f8f.26.2025.02.04.03.12.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 03:12:33 -0800 (PST)
-Message-ID: <716751b5-6907-4fbb-bb07-0223f5761299@redhat.com>
-Date: Tue, 4 Feb 2025 12:12:32 +0100
+        bh=s2SfD4Gn61MFQawkBcj2q/218D2jiOKMHITzYwMlqEs=;
+        b=CyjBuVyfVBJH8Yj5xRoosP7UOhpBNfkexaI3MhynC79XItk18zFxo8375+/ZeNDEQn
+         gzlnufPJW1vkjvo7aVTsAYaOj7J1kmX0ugkKCsdB+g+8ID+N5A/uNOljDErM0/i54TAG
+         Ut8+6fuiQdxH201DrncJgJnwMAv0TCGU+F60i8yZ58tzmYAn5DwqNYxIJJvSBc0/cMoJ
+         3yWQxxLz38hy/Q22ulXS4tmOyKaNjUcqagI6Lpk6oQw42n1OeasLIFap02Es+x4G+ykB
+         4JvCAS4s12RmNnb3emWHwxgUm6HKnS5TDw1svMxni0wCMQ7NgrKrp7sxqLgi0e/7mXIw
+         Os/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVG7G4uJVRqWPZvloOBUyXIe3C/+SJEtsvPctazu313gxDpNpS9fG1ZjK70qHbWdioTDYtOqcBWgyl/BEM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywvu2Kgqa7S/3xmdAPaHBL8g1pDSEZEPZic71UoY0WcVty4xWDb
+	V5TrhbdfKHDif2zBSjufSFFTDpGsgeQTNJNvqySHgwproh/OAED5vhbGSK6a5js=
+X-Gm-Gg: ASbGncuS+hABHVZB+mhfATfc/uYZjmtAVWAEoIn5z4mcvMeZlbEI5WJijS//JiH33No
+	+aIzRyatugFm9diRK9rk/wQZ69IZl43qLIUWiWMw++HBWZq4YancTfWpZNuUseXwD6X8kjjrgl4
+	TZHrNwvbv228WZK2n0UNyAA/XzBvLUg5t2nIHJ13C2nJJDiWan5hpSHoXnFemDYTRvIqQj4A1xO
+	5ZIbra0HXu73E8aGVwAtU/fkQZvBvlGOizv0XFsDo5a54i5qT+8hgU8AkFatinFLvQ4zNwIAu58
+	JTB0FXGVuYa3sYgav35COt3rNtw=
+X-Google-Smtp-Source: AGHT+IEhi3bvOg4+34PKysGfB6hzTPcUQgampsEPyThrWoRpNZx+SHoGK/R2iUfFL+AtOAeSuipPlA==
+X-Received: by 2002:a5d:5f82:0:b0:385:f060:b7fc with SMTP id ffacd0b85a97d-38c51960052mr23268766f8f.25.1738667744860;
+        Tue, 04 Feb 2025 03:15:44 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e245efbcsm183097995e9.33.2025.02.04.03.15.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 03:15:44 -0800 (PST)
+Date: Tue, 4 Feb 2025 12:15:42 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] drm/tests: hdmi: Remove redundant assignments
+Message-ID: <Z6H23pkOfcQb8-PP@phenom.ffwll.local>
+Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250129-test-kunit-v2-0-fe59c43805d5@kernel.org>
+ <20250129-test-kunit-v2-2-fe59c43805d5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 2/2] rxrpc: Fix the rxrpc_connection attend queue
- handling
-To: David Howells <dhowells@redhat.com>, netdev@vger.kernel.org
-Cc: Marc Dionne <marc.dionne@auristor.com>, Jakub Kicinski <kuba@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
- Simon Horman <horms@kernel.org>
-References: <20250203110307.7265-1-dhowells@redhat.com>
- <20250203110307.7265-3-dhowells@redhat.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250203110307.7265-3-dhowells@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250129-test-kunit-v2-2-fe59c43805d5@kernel.org>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
-On 2/3/25 12:03 PM, David Howells wrote:
-> The rxrpc_connection attend queue is never used because conn::attend_link
-> is never initialised and so is always NULL'd out and thus always appears to
-> be busy.  This requires the following fix:
+On Wed, Jan 29, 2025 at 03:21:54PM +0100, Maxime Ripard wrote:
+> Some tests have the drm pointer assigned multiple times to the same
+> value. Drop the redundant assignments.
 > 
->  (1) Fix this the attend queue problem by initialising conn::attend_link.
-> 
-> And, consequently, two further fixes for things masked by the above bug:
-> 
->  (2) Fix rxrpc_input_conn_event() to handle being invoked with a NULL
->      sk_buff pointer - something that can now happen with the above change.
-> 
->  (3) Fix the RXRPC_SKB_MARK_SERVICE_CONN_SECURED message to carry a pointer
->      to the connection and a ref on it.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Marc Dionne <marc.dionne@auristor.com>
-> cc: Jakub Kicinski <kuba@kernel.org>
-> cc: "David S. Miller" <davem@davemloft.net>
-> cc: Eric Dumazet <edumazet@google.com>
-> cc: Paolo Abeni <pabeni@redhat.com>
-> cc: Simon Horman <horms@kernel.org>
-> cc: linux-afs@lists.infradead.org
-> cc: netdev@vger.kernel.org
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
 
-A couple of minor nits: I think this deserves a 'Fixes' tag, and
-possibly split into separate patches to address the reported problems
-individually.
+Reviewed-by: Simona Vetter <simona.vetter@ffwll.ch>
 
-Thanks,
+> ---
+>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> index e814b538c46c4d342604436beca64ac0bdb31526..32e0477deb45c1481a7d23bb6e6a74de52845d1c 100644
+> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> @@ -479,11 +479,10 @@ static void drm_test_check_broadcast_rgb_auto_cea_mode_vic_1(struct kunit *test)
+>  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
+>  
+>  	mode = drm_kunit_display_mode_from_cea_vic(test, drm, 1);
+>  	KUNIT_ASSERT_NOT_NULL(test, mode);
+>  
+> -	drm = &priv->drm;
+>  	crtc = priv->crtc;
+>  	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
+>  	KUNIT_ASSERT_EQ(test, ret, 0);
+>  
+>  	state = drm_kunit_helper_atomic_state_alloc(test, drm, ctx);
+> @@ -593,11 +592,10 @@ static void drm_test_check_broadcast_rgb_full_cea_mode_vic_1(struct kunit *test)
+>  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
+>  
+>  	mode = drm_kunit_display_mode_from_cea_vic(test, drm, 1);
+>  	KUNIT_ASSERT_NOT_NULL(test, mode);
+>  
+> -	drm = &priv->drm;
+>  	crtc = priv->crtc;
+>  	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
+>  	KUNIT_ASSERT_EQ(test, ret, 0);
+>  
+>  	state = drm_kunit_helper_atomic_state_alloc(test, drm, ctx);
+> @@ -709,11 +707,10 @@ static void drm_test_check_broadcast_rgb_limited_cea_mode_vic_1(struct kunit *te
+>  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
+>  
+>  	mode = drm_kunit_display_mode_from_cea_vic(test, drm, 1);
+>  	KUNIT_ASSERT_NOT_NULL(test, mode);
+>  
+> -	drm = &priv->drm;
+>  	crtc = priv->crtc;
+>  	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
+>  	KUNIT_ASSERT_EQ(test, ret, 0);
+>  
+>  	state = drm_kunit_helper_atomic_state_alloc(test, drm, ctx);
+> @@ -1311,11 +1308,10 @@ static void drm_test_check_output_bpc_format_vic_1(struct kunit *test)
+>  	 * Thus, we have to calculate the rate by hand.
+>  	 */
+>  	rate = mode->clock * 1500;
+>  	KUNIT_ASSERT_LT(test, rate, info->max_tmds_clock * 1000);
+>  
+> -	drm = &priv->drm;
+>  	crtc = priv->crtc;
+>  	ret = light_up_connector(test, drm, crtc, conn, mode, ctx);
+>  	KUNIT_EXPECT_EQ(test, ret, 0);
+>  
+>  	conn_state = conn->state;
+> 
+> -- 
+> 2.47.1
+> 
 
-Paolo
-
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
