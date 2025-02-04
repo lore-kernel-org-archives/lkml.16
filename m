@@ -1,200 +1,137 @@
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B51913212A;
-	Tue,  4 Feb 2025 06:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FF61DDC23
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 06:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738650817; cv=none; b=h4gah7g3R1o9yNzZV6RSigvIjSnnJb211kfFSg9lek1RPBd/UBG9FRa/mOWVdXRsbkhM21dD1zrETPCrz+EgpB22CBR/zFHZAcNFaLjZmojmni8MI29oKgjn1oEHQbSxFIIMxoZU6ZD2uuOKuZ8qKDiAvTKvf4mm9vjNB8pnQ5k=
+	t=1738650931; cv=none; b=miotaNmUpFSKexywv6wDQOnfK1Sxt4RFo+V//0XwK48ndRUdLYyCzaj3NLBT0cJJSAxr9BZygHAEmSJo7+SZocgx5/TkpaHjFfkmb/ig/MYB8pReQjnFyfX+mLgF5Egx9+qGiMFjvi4exDewYaGDFLS7s4OqDCWNnMkfWjOisAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738650817; c=relaxed/simple;
-	bh=/1VpJwRra5YVIQm9DXCutd7Gjk2E248FS6IumKbXP/o=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VZfxQxdfG6XfXaB9AuryVVC1hjFW5HbdAsypikz0wcvLkfaePbI0mPTB06A32/HBIdOja2/umITBGdPMbPOFLm6xdxT2OAdX9qPi1nkhrObNxKwVgOUj5cH5U1VHMT8OCner5BaLvrOZgoCwSFPyCc/+O/bTZ8WMyeDI7NFQjPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Tue, 4 Feb
- 2025 14:28:22 +0800
-Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Tue, 4 Feb 2025 14:28:22 +0800
-From: Jammy Huang <jammy_huang@aspeedtech.com>
-To: <eajames@linux.ibm.com>, <mchehab@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <joel@jms.id.au>,
-	<andrew@aj.id.au>, <linux-media@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dt-bindings: media: convert aspeed-video.txt to dt-schema
-Date: Tue, 4 Feb 2025 14:28:22 +0800
-Message-ID: <20250204062822.3738037-1-jammy_huang@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1738650931; c=relaxed/simple;
+	bh=L4IPFLUZXPgCzGDRwvYzbZVZH31xHwtQ3BWg+rkmdck=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SeCdNZ8lb9EfhMsU8f7Ja4gstt+WNgRn21ehPxnB2TOF58MX72veDuHnUc62BFkSEdJK2qVW/080ZN2whseosMbaXlEte2jGWQlre6Z6uiiZBrEP1PY2VleuYdQN9zYFpjxnu7wGlHv0M2Q0v5cjM35ENDWeQPhkA5PKJdNZ0Ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=TyGt/mYd; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="TyGt/mYd"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f9b91dff71so903656a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 22:35:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738650928; x=1739255728; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NMHiHPDNCUJ48N5qcuZlI6iRMY6kpg7JJf8A3gbeaKQ=;
+        b=TyGt/mYdwBkYF02/SBxoWhiPVXjlUnmcaU9iZ+l1BHQ9uuYAwHlsX78BzEAGQGOA/z
+         KCeQS3lg3Io8+F2q3UB4TtvSbd3IFaS9hIgkVeiDBW6ShZRc1+NJT4EVj90/sX+QqgMl
+         5mvLwLMZ20fR5UB7ouvnnUM6jTcXPihjUAAo0xdUJAJkSRaxEULp0jdOSg7tma+SdyJE
+         SG75ZXJhW5mjJM2/0I6Z+kc3xdqNf+SOZknTI7fvjQUL9Ka9VkhPxu9pGbCYQP3awEf0
+         2yIE2xvKyLwb1+F3wLWAydbfvhmF1pRsMWoDKo6j2vynBtHP05WQ9x2vD4j4NxeN+ReW
+         Sm+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738650928; x=1739255728;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NMHiHPDNCUJ48N5qcuZlI6iRMY6kpg7JJf8A3gbeaKQ=;
+        b=Lsb6zgoT+S3F7zW+RnUI8neiEs3X8zlEe6sMv+8LGvRY3mFVJKwqvhwYbH3x1DGjQ8
+         dUGOcX9vAO0LFrOQNtmpsQx4gbWhtn4XsouGDWfFPOZt2eCCgKJYOrVCVjjJNV9gr0fz
+         HTxiy76+czvmdnSS5MIyd5CsLlFcGDOlcVTOfGOvGBOgM9d/hjEPbRF8mkhYsIrvHP6e
+         cmLaQRFJ45WyEwXBtpvmf2kK+iV6UasYMiNj/C5iZmNh8Pb37Rg33b2fPo6TWqu+s1uQ
+         qBfFy6mr1qsb8C2qR4a8qCoa/0MXn2VukO9ajLYHKG/MI1/oFDc9vHMOZomUwmPbLHfP
+         0pDA==
+X-Forwarded-Encrypted: i=1; AJvYcCXkaittuKh+H8u4fT2UsgwVfa7a43aHB6d90966Msg0dcRVGud+YCDfSNUW9kXztWP/v4zVDUJ/1Qa7Vjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoA9GVBe0lNLA2XZiPMSjxsiAHvCKNG4jOCkAnuuI7jNxzQwxB
+	Q2Ou48xpcWgZCyOtvyyXa9nFgu+s/cXtRCJ9YjPkFw3eWBeS0vSu9+J2vjXzVB6+Hal1IkqNfCA
+	Ms2mi46DreFcuBhqRbwSat8Sji0f3CnFs4Emohw==
+X-Gm-Gg: ASbGncvhGci2Rvl0EJfKSjsH2fRZUCqjH3ntm03Ml/GavOrytr2h16j0a+kMGF1Dl4h
+	zTyAzrDrGG2EguxQ9gR7cAx/iR7KKkL3XrLwPTdmyxTUNdHQTtmCexFxGOq0YnXuD3ycXi7vSLS
+	M=
+X-Google-Smtp-Source: AGHT+IFG/yEpW4K/pBHBk3/3BqLXGkFedpykl/V/VPy5N/H80JyAnUu1lUWvkGlaAAzc1oYTPiZqDlNAWdxjP6mgSAs=
+X-Received: by 2002:a05:6a00:2d8e:b0:725:cfa3:bc76 with SMTP id
+ d2e1a72fcca58-72fd0bce05cmr36986225b3a.4.1738650928448; Mon, 03 Feb 2025
+ 22:35:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20250127-counter_delegation-v3-0-64894d7e16d5@rivosinc.com>
+ <20250127-counter_delegation-v3-9-64894d7e16d5@rivosinc.com> <20250128-jubilance-mosaic-e3a81199aec8@spud>
+In-Reply-To: <20250128-jubilance-mosaic-e3a81199aec8@spud>
+From: Atish Kumar Patra <atishp@rivosinc.com>
+Date: Mon, 3 Feb 2025 22:35:18 -0800
+X-Gm-Features: AWEUYZmuaq61PKoOBoJPiVshD43YM3UyPResBSMNdOEGC5qC9mJGFE-MKtc9ZW4
+Message-ID: <CAHBxVyFVYwQ=aiB+RBrQNMQiu4K4uzPgyz8Tn=dUjeN8KKd=sw@mail.gmail.com>
+Subject: Re: [PATCH v3 09/21] RISC-V: Add Smcntrpmf extension parsing
+To: Conor Dooley <conor@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert aspeed-video.txt to yaml format.
-Update aspeed-video.txt to aspeed,video-engine.yaml in MAINTAINER file.
+On Tue, Jan 28, 2025 at 10:11=E2=80=AFAM Conor Dooley <conor@kernel.org> wr=
+ote:
+>
+> On Mon, Jan 27, 2025 at 08:59:50PM -0800, Atish Patra wrote:
+> > Smcntrpmf extension allows M-mode to enable privilege mode filtering
+> > for cycle/instret counters. However, the cyclecfg/instretcfg CSRs are
+> > only available only in Ssccfg only Smcntrpmf is present.
+> >
+> > That's why, kernel needs to detect presence of Smcntrpmf extension and
+> > enable privilege mode filtering for cycle/instret counters.
+> >
+> > Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> > ---
+> >  arch/riscv/include/asm/hwcap.h | 1 +
+> >  arch/riscv/kernel/cpufeature.c | 1 +
+> >  2 files changed, 2 insertions(+)
+> >
+> > diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hw=
+cap.h
+> > index 2f5ef1dee7ac..42b34e2f80e8 100644
+> > --- a/arch/riscv/include/asm/hwcap.h
+> > +++ b/arch/riscv/include/asm/hwcap.h
+> > @@ -104,6 +104,7 @@
+> >  #define RISCV_ISA_EXT_SMCSRIND               95
+> >  #define RISCV_ISA_EXT_SSCCFG            96
+> >  #define RISCV_ISA_EXT_SMCDELEG          97
+> > +#define RISCV_ISA_EXT_SMCNTRPMF         98
+> >
+> >  #define RISCV_ISA_EXT_XLINUXENVCFG   127
+> >
+> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeat=
+ure.c
+> > index b584aa2d5bc3..ec068c9130e5 100644
+> > --- a/arch/riscv/kernel/cpufeature.c
+> > +++ b/arch/riscv/kernel/cpufeature.c
+> > @@ -394,6 +394,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =3D=
+ {
+> >       __RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
+> >       __RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinux=
+envcfg_exts),
+> >       __RISCV_ISA_EXT_DATA(smstateen, RISCV_ISA_EXT_SMSTATEEN),
+> > +     __RISCV_ISA_EXT_DATA(smcntrpmf, RISCV_ISA_EXT_SMCNTRPMF),
+> >       __RISCV_ISA_EXT_DATA(smcsrind, RISCV_ISA_EXT_SMCSRIND),
+>
+> Isn't the order here wrong?
+>  * 3. Standard supervisor-level extensions (starting with 'S') must be li=
+sted
+>  *    after standard unprivileged extensions.  If multiple supervisor-lev=
+el
+>  *    extensions are listed, they must be ordered alphabetically.
 
-Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
----
- .../bindings/media/aspeed,video-engine.yaml   | 84 +++++++++++++++++++
- .../bindings/media/aspeed-video.txt           | 33 --------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 85 insertions(+), 34 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
- delete mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
-
-diff --git a/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml b/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
-new file mode 100644
-index 000000000000..c66ae6b53cbb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
-@@ -0,0 +1,84 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/aspeed,video-engine.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ASPEED Video Engine
-+
-+maintainers:
-+  - Eddie James <eajames@linux.ibm.com>
-+
-+description:
-+  The Video Engine (VE) embedded in the ASPEED SOCs can be configured to
-+  capture and compress video data from digital or analog sources.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - aspeed,ast2400-video-engine
-+      - aspeed,ast2500-video-engine
-+      - aspeed,ast2600-video-engine
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: vclk
-+      - const: eclk
-+
-+  resets:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  memory-region:
-+    maxItems: 1
-+    description: |
-+      Phandle to the reserved memory nodes to be associated with the
-+      VE. VE will acquires memory space for 3 purposes:
-+        1. JPEG header
-+        2. Compressed result
-+        3. Temporary transformed image data
-+
-+  aspeed,scu:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: |
-+      Specifies the scu node that is needed if video wants to capture
-+      from sources other than Host VGA.
-+
-+  aspeed,gfx:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: |
-+      Specifies the Soc Display(gfx) node that needs to be queried to get
-+      related information if video wants to use gfx as capture source.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/ast2600-clock.h>
-+
-+    video@1e700000 {
-+      compatible = "aspeed,ast2600-video-engine";
-+      reg = <0x1e700000 0x1000>;
-+      clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
-+               <&syscon ASPEED_CLK_GATE_ECLK>;
-+      clock-names = "vclk", "eclk";
-+      interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+      aspeed,scu = <&syscon>;
-+      aspeed,gfx = <&gfx>;
-+    };
-diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
-deleted file mode 100644
-index d2ca32512272..000000000000
---- a/Documentation/devicetree/bindings/media/aspeed-video.txt
-+++ /dev/null
-@@ -1,33 +0,0 @@
--* Device tree bindings for Aspeed Video Engine
--
--The Video Engine (VE) embedded in the Aspeed AST2400/2500/2600 SOCs can
--capture and compress video data from digital or analog sources.
--
--Required properties:
-- - compatible:		"aspeed,ast2400-video-engine" or
--			"aspeed,ast2500-video-engine" or
--			"aspeed,ast2600-video-engine"
-- - reg:			contains the offset and length of the VE memory region
-- - clocks:		clock specifiers for the syscon clocks associated with
--			the VE (ordering must match the clock-names property)
-- - clock-names:		"vclk" and "eclk"
-- - resets:		reset specifier for the syscon reset associated with
--			the VE
-- - interrupts:		the interrupt associated with the VE on this platform
--
--Optional properties:
-- - memory-region:
--	phandle to a memory region to allocate from, as defined in
--	Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
--
--Example:
--
--video-engine@1e700000 {
--    compatible = "aspeed,ast2500-video-engine";
--    reg = <0x1e700000 0x20000>;
--    clocks = <&syscon ASPEED_CLK_GATE_VCLK>, <&syscon ASPEED_CLK_GATE_ECLK>;
--    clock-names = "vclk", "eclk";
--    resets = <&syscon ASPEED_RESET_VIDEO>;
--    interrupts = <7>;
--    memory-region = <&video_engine_memory>;
--};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa065..7e59daa1e89d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3549,7 +3549,7 @@ M:	Eddie James <eajames@linux.ibm.com>
- L:	linux-media@vger.kernel.org
- L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
- S:	Maintained
--F:	Documentation/devicetree/bindings/media/aspeed-video.txt
-+F:	Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
- F:	drivers/media/platform/aspeed/
- 
- ASUS EC HARDWARE MONITOR DRIVER
-
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
--- 
-2.25.1
-
+Yeah. Fixed it. Thanks for catching.
