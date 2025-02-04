@@ -1,89 +1,187 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C323207A14;
-	Tue,  4 Feb 2025 09:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8B0205E26
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660828; cv=none; b=iIHsPe618EmQABQCr66bJP8TNuNeJT65VBA3V4aEBGNcyPlQcZOFqTPjlgkIN36+zVGnYVT4c3Hw8W+GNvJ2gEwhl5fV41+GqmBEthnApXy53LZlfF5t0ecotTLsu4uC+QPKhydbYxolgJdeUAVaEoISs5+gEY1ZOV1oQFBXx20=
+	t=1738660858; cv=none; b=fVHEWRTMUbrYCXIQNh6vzykKLf31IJ5o8b7Jhmwfk9vFpVsjzwwpUgezn0kTPE9tWBga+iBNmmJtYxmVgU0NcAWxZxx/eL+mUhvsvCCyLmQDPuQT2fYi8i4NbaKVFTuR3D2jGHsUYp/WrEoczzaj/lt/vnQZxlaMeHdcH1aZZK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660828; c=relaxed/simple;
-	bh=rauOalsmd53sQxTxWW+uFzWBgqNaCYhWVzouMA54tTg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PTs3GNmmTDKxZkSlQYy4JJUXk/2bQ2K8QVk4MIySdmYyykcPso7UrH1yYTBgk68sq+OyGq+6bauTEN+tmH2k2AZsl1Llv936tEuScuviGG3zKPKr9J6+qL5Lgdk+grTb6foHXKzKdqNgT0ArgRQMfF8ACQRy5E6R+xCXf/jsfaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lJ41Dndb; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1738660858; c=relaxed/simple;
+	bh=O4eOmjAQzwHhI5lzYn3JiCBN1g+XRupIaxZdgM+ZxXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uisUAdTeKfhKk6vGZ9fNtLBdhHsCAW4f9WEW6eKxbmdXRdVbnEvbQV4iIJGGQgnszbmkmIp+EK5oLyA1mvLm+xBj4HhXbYX4HZ0brJ5svcoA7/aK8cSDmb9dvu4GxfcypFzP8Y3joQ4txjLqKfG3PKxIvl5b3lkJyVqWMap79WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eILPqPrK; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lJ41Dndb"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DF3AD42CCD;
-	Tue,  4 Feb 2025 09:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738660819;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rauOalsmd53sQxTxWW+uFzWBgqNaCYhWVzouMA54tTg=;
-	b=lJ41DndbhSwaKVTS9QcQq8lKiruEm45BV3yrs1ZR0Y8qpvjzNkhgbENBF2P6XUUkkW/4Yl
-	maveDONaBpvr4ypfy7kXlHClI+PaLdSNM0l9JmzGwRi3AWiUV0wx/3WYUMI9j/NUdhyFo0
-	LuFxREbXDl8OwRqQ7hhJxA6QmaUL2qD6DzCV21eYDb4qWFEU0BwPPKpUZ1FXD1vu3cAB5C
-	CRPDqWXhrRXauyMPNBAZ1L5JeK3w1iF7IJlt76ZpRxQIxw0O/SeB9FoBn8VgjUe+nAhbgT
-	7OfGPfHBusjszCYT60w2yb0UqQQU5IDbge2GZFKeYi8heAXMok9axBXUK7GjfA==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: "Rabara, Niravkumar L" <niravkumar.l.rabara@intel.com>
-Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  "linux@treblig.org" <linux@treblig.org>,  Shen Lichuan
- <shenlichuan@vivo.com>,  Jinjie Ruan <ruanjinjie@huawei.com>,
-  "u.kleine-koenig@baylibre.com" <u.kleine-koenig@baylibre.com>,
-  "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-  "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] mtd: rawnand: cadence: support deferred prob
- when DMA is not ready
-In-Reply-To: <BL3PR11MB6532451B44E7C5D82F5EC4AFA2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
-	(Niravkumar L. Rabara's message of "Tue, 4 Feb 2025 07:48:57 +0000")
-References: <20250116032154.3976447-1-niravkumar.l.rabara@intel.com>
-	<20250116032154.3976447-2-niravkumar.l.rabara@intel.com>
-	<87plkgpk8k.fsf@bootlin.com>
-	<BL3PR11MB653276DFD3339ADAADC70CCFA2EE2@BL3PR11MB6532.namprd11.prod.outlook.com>
-	<874j1i0wfq.fsf@bootlin.com>
-	<BL3PR11MB65321B556C59C995DC05C70AA2E92@BL3PR11MB6532.namprd11.prod.outlook.com>
-	<87msf8z5uu.fsf@bootlin.com>
-	<BL3PR11MB6532451B44E7C5D82F5EC4AFA2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 04 Feb 2025 10:20:17 +0100
-Message-ID: <87o6zi83se.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eILPqPrK"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43637977fa4so6782905e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 01:20:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738660854; x=1739265654; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=pjOn8HlqiUp9imgeIwX/Vs1stgG6CCtQrFtgz5ne2w0=;
+        b=eILPqPrKTu3/3B9A5GJZCW7+b6rUZbPenWyF4qezHses2ydmBgdbf3l0UyvPVeRkiB
+         Cab/0qkpbLCB2X5VHta3rI9YF7wtofG0lVtWnOmwmqsggPRhbs2Cgk+MZs96U64OB5Hx
+         P7u07ChjvNHr6m53wMBzUVNwwFiLWUQfLjJUCrvZzUndnsNJUAnsA6xM1gTVzvyw1BxO
+         L31IUtLxs0Zu35CdBW2T12bz2p5ThUueRx1w6f8XYfiOfeaouyRifonSUXVVOpbNhixF
+         jaqefgdn9Q5/5qmqTRpgyAaL8mNuLQBpj+Nbb47Has1HwPKLS88T5HS7NMpflPep5bvA
+         iWYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738660854; x=1739265654;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pjOn8HlqiUp9imgeIwX/Vs1stgG6CCtQrFtgz5ne2w0=;
+        b=sfBNwcQRIoiYN+HJdN0qLji6B4utWTNuJOEEAb2SShz8vNB3F79vEZwbJQ0KiUoJo7
+         rT0R7+IciQZt9OQ1UE+UJfNWCHvmkRtTcKDKMov15kX0m9WOVqAGCePlu74wKylK2yFA
+         S1LDTn2PT22JfitGKqtJXRDsUbv0PLhbjRTBCAB3EJC+yeBVipfxL/ot3I44lYYJZLn3
+         tVoaCDWcLXsjSwjB5jXi6wqajMH8oP5Kyx+DzKY+8QVeKywUX+546QKrd9ycJwtDKlzr
+         kmWsl4IIiJX0DEXOJWlBqv3zJdkr53ICaXILlkDsGIxRTYs0dL5LMLV8PYn2HC+UHLxs
+         HPMA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1thxKLR82oGZTbuatDL3alBz6REZ9wj2NUDhiDip/LxjmgaYnAhQkms029pB0olagawLEn3gh7Ro42/A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXrGC2ef5Gm5v3HQauzrR71gGErt7SJS9o39dGqGC9ufLP9dA9
+	bC+mnGnScl4iqxTyx+n9Ku4JF2Os6wPvaC2GOsQ67SiCwnbaq/j3WtdeHHpH55s=
+X-Gm-Gg: ASbGncv44KHQZnasqyCu3yGmb1VMZ0n4XF7Dvm8QnZvV5/znIMpfMdSnjIsN+Y8PCUF
+	TH4pbaG+Dv9MDZ/di4fyVP7ento4Oi5TwGBOWP+wf2jdaWPsRaF13RndfVmLFfax0PPAWlt7KXM
+	0zU0f5U9J96Yp2di4TkIcAyXG9tY992cWxGH8o6yIYMKo9MR8IakNs3ZY3htBcS/8Bh3lRPhJtS
+	nhSvyO2RBef8E3n9WtTllRgtWAhff6elXw56ab0fA5OvaK5Mi76amqKskzbOcZJ0FK4bEDa27Ic
+	54EfIsW1OU4+9lH6kCQzaoxSGpDrwDe18BA=
+X-Google-Smtp-Source: AGHT+IFloUpSZQql46Cok/SCgcqCNh/GvapYs4i6t5zqyN7Opagv1IM4g04vLOIGgxfILq4uWlvkXw==
+X-Received: by 2002:a05:600c:3ba6:b0:434:a339:ec67 with SMTP id 5b1f17b1804b1-43905ac256fmr8627075e9.3.1738660853880;
+        Tue, 04 Feb 2025 01:20:53 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.144])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23d42c7sm187223825e9.3.2025.02.04.01.20.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 01:20:53 -0800 (PST)
+Message-ID: <cc63872f-3ad5-479e-bfff-8d62478e446e@linaro.org>
+Date: Tue, 4 Feb 2025 10:20:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddufecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepteehkeelvddvheehtdefkedtjeeutedthfegudekgeefleetkeettdekiefftdeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepnhhirhgrvhhkuhhmrghrrdhlrdhrrggsrghrrgesihhnthgvlhdrtghomhdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhinhhugiesthhrvggslhhighdrohhrghdprhgtphhtthhopehshhgvnhhlihgthhhurghnsehvihhvo
- hdrtghomhdprhgtphhtthhopehruhgrnhhjihhnjhhivgeshhhurgifvghirdgtohhmpdhrtghpthhtohepuhdrkhhlvghinhgvqdhkohgvnhhighessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
-X-GND-Sasl: miquel.raynal@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG0 updated
+ from driver side
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
+ <20250203-drm-msm-phy-pll-cfg-reg-v2-1-862b136c5d22@linaro.org>
+ <le5kxzhm3b2whxoo3eblkelryc7ak2yezugqti2sxw7m244dzc@nyuhhs53jdup>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
+ m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
+ XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
+ mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
+ v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
+ cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
+ rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
+ qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
+ aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
+ gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
+ dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
+ oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
+ 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
+ Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
+ qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
+ /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
+ qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
+ EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
+ KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
+ fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <le5kxzhm3b2whxoo3eblkelryc7ak2yezugqti2sxw7m244dzc@nyuhhs53jdup>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 03/02/2025 18:42, Dmitry Baryshkov wrote:
+> On Mon, Feb 03, 2025 at 06:29:18PM +0100, Krzysztof Kozlowski wrote:
+>> PHY_CMN_CLK_CFG0 register is updated by the PHY driver and by two
+>> divider clocks from Common Clock Framework:
+>> devm_clk_hw_register_divider_parent_hw().  Concurrent access by the
+>> clocks side is protected with spinlock, however driver's side in
+>> restoring state is not.  Restoring state is called from
+>> msm_dsi_phy_enable(), so there could be a path leading to concurrent and
+>> conflicting updates with clock framework.
+>>
+>> Add missing lock usage on the PHY driver side, encapsulated in its own
+>> function so the code will be still readable.
+>>
+>> Fixes: 1ef7c99d145c ("drm/msm/dsi: add support for 7nm DSI PHY/PLL")
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
+>>  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 13 +++++++++++--
+>>  1 file changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+>> index 031446c87daec0af3f81df324158311f5a80014e..c164f845653816291ad96c863257f75462ef58e7 100644
+>> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+>> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+>> @@ -372,6 +372,15 @@ static void dsi_pll_enable_pll_bias(struct dsi_pll_7nm *pll)
+>>  	ndelay(250);
+>>  }
+>>  
+>> +static void dsi_pll_cmn_clk_cfg0_write(struct dsi_pll_7nm *pll, u32 val)
+>> +{
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&pll->postdiv_lock, flags);
+>> +	writel(val, pll->phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG0);
+>> +	spin_unlock_irqrestore(&pll->postdiv_lock, flags);
+>> +}
+>> +
+>>  static void dsi_pll_disable_global_clk(struct dsi_pll_7nm *pll)
+>>  {
+>>  	u32 data;
+>> @@ -574,8 +583,8 @@ static int dsi_7nm_pll_restore_state(struct msm_dsi_phy *phy)
+>>  	val |= cached->pll_out_div;
+>>  	writel(val, pll_7nm->phy->pll_base + REG_DSI_7nm_PHY_PLL_PLL_OUTDIV_RATE);
+>>  
+>> -	writel(cached->bit_clk_div | (cached->pix_clk_div << 4),
+>> -	       phy_base + REG_DSI_7nm_PHY_CMN_CLK_CFG0);
+>> +	dsi_pll_cmn_clk_cfg0_write(pll_7nm,
+>> +				   cached->bit_clk_div | (cached->pix_clk_div << 4));
+> 
+> Ideally this would be FIELD_PREP or a special function generated for you
+> in the header.
 
-> My apologies for the confusion.
-> Slave DMA terminology used in cadence nand controller bindings and
-> driver is indeed confusing.=20=20
->
-> To answer your question it is,=20
-> 1 - External DMA (Generic DMA controller).
->
-> Nand controller IP do not have embedded DMA controller (2 - peripheral DM=
-A).=20
->
-> FYR, how external DMA is used.=20
-> https://elixir.bootlin.com/linux/v6.13.1/source/drivers/mtd/nand/raw/cade=
-nce-nand-controller.c#L1962
+There is no header. That's patch #1 and I do not see how changing this
+to FIELDPREP is anyhow related to the actual problem being solved here.
 
-In this case we should have a dmas property (and perhaps dma-names), no?
-
-Miqu=C3=A8l
+Best regards,
+Krzysztof
