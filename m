@@ -1,79 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28422045A8;
-	Tue,  4 Feb 2025 19:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD8B20370B;
+	Tue,  4 Feb 2025 19:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738698411; cv=none; b=KIQcTUWZChOZzsN5l6KVYSZzlkhRVSTHzKXnzDz7EODrhj8FisypJuLL3TrbUEbuQnEjws66dDC8ivUbjzUtU+flMvUHP2oLFMmhe1rK6bUlxV3Xc52iGbqqz3B8MAI+PwEnq19UCga5FnLLSG6ZhxyRqsSW8v5u9Pvi4E2YogA=
+	t=1738698425; cv=none; b=MvZ3lJ0g+txgndv5EDJsgnJZ0f9QNHWt9G2OkGRyxBPuZeX6YpqRTbj7M/8O5AL4wixwdjXBis4re2FBQXgu37uuHRKxPkA/nWIdI+GU1O7Lrs4BFv885+2lVHOQY/HcZpcWSFsU3V/sOY3WoEVu8YyBzWlkPOJKEVk+7VGvF6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738698411; c=relaxed/simple;
-	bh=sXid/J3qZBjcfg0RqWr6jcSgu94Ix6LoKEM0fp/erdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U+5Pp9QRsV6RHK9UaYqXOTDnNKRINm9/qR/wwUIs8Yy9MYNsJoM0o9Ya3Eey0g++oGLg55N2+fP296xO9nOj7M8/GPo1Axq8KM8tCCiuZMiWYdBPHY0dLr5Mo+AhP7flK+lzSIUEXk9Cr4pRQrVwP7R9FLaaUcX6IvGUrjS6GVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsyMArj6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738698425; c=relaxed/simple;
+	bh=HoUT6LeQGZhQlYzF3JQ5jjZVjEl9IHiJOmwH5EKCMGU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QWDZs7+ttXdbHVUgHdPILi85cHYWcQdGUZ+cwJn7EV1UufAXVa7NxZo6aDOXlM9ZUq18zmoE+wTg2qzFODXsu/rfCpP/SS4uTgZ0/9iBG+eU5DWRCXdeD/072ksbMgIAIOZhv5+dFEqFPO9ggBpMlw4C5Eyk06qT0qujY4zI/Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nC3vRE15; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsyMArj6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70E93C4CEDF;
-	Tue,  4 Feb 2025 19:46:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738698410;
-	bh=sXid/J3qZBjcfg0RqWr6jcSgu94Ix6LoKEM0fp/erdM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tsyMArj6/mMtWVOZ+WTeXl/rPdQ5XfqnLAOcXNWyq/x9qInfLVkp5d/KXb6m9Mtga
-	 orTf8cnsncBRRgvqWgMnR0KNbaHhwtekirlq8yzlgHMI/ZP24zeZr2y4jNtOORn+GO
-	 MyHRxjwF5mONk7whytUs5wWMTEcKI/iigg51Ba5qymaQfZgrlLGfkuOJB4WjXXBOGu
-	 Q0v+D06LKTebZO0WojTuUD4H/XgLcms8/7id0kHFy4cnvdFZd/yyTz4avadyCmg0jR
-	 1QTnWzLsdHN8dHbPNkmkR7e3d8oLwEwWopPpyqePdZyPYZlgtNN9Mpe5D1FKq9LJ4k
-	 IW9alerFZ4yIw==
-Date: Tue, 4 Feb 2025 19:46:46 +0000
-From: Conor Dooley <conor@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Robert Marko <robert.marko@sartura.hr>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] marvell: DT root compatible fixes
-Message-ID: <20250204-headfirst-evergreen-ec92900ee782@spud>
-References: <20250131-dt-marvell-fixes-v1-0-55f9f6acd4b1@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nC3vRE15"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab7483b9bf7so248076466b.3;
+        Tue, 04 Feb 2025 11:47:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738698421; x=1739303221; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yOviihCd4OWzkU4ZWy+QayOXt7VAoSjwQrUlx7gxEjI=;
+        b=nC3vRE15qmDqX4F1wQKgcd68wVxoC81+IKigZbNCajRrLA3tdET+Fs3IrQTY+eGe55
+         g4o2HPUv5nza4pLCopN6iU76rLZzZhmi3b/JUAFE23G8KYf19om66eQOkd78HT0Zl2AI
+         ycqKSC4l0xCbF72hGb0CRRgEuBZ2LiFxJQiZDAJAZCkbHIIQJpjxei3Cdezx6uL7YSs2
+         K22kaiodprYkkS3qJyn07aKl8+a36N9SxhzVgu9+DTSXNDA6b0LZLt76iEPEPCYEh7oR
+         T1Kfr9rlfMWnjsEfatpEEmh+8zxjDHF9TZSmuVbLQyP1gQdOFJvyzOLRueCQDKgHEeOV
+         urig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738698421; x=1739303221;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yOviihCd4OWzkU4ZWy+QayOXt7VAoSjwQrUlx7gxEjI=;
+        b=iDopOMn3OIcOdfGbaK36uRltLWzI/DZ6Cx5FdegfO75MB0hLk6IxG/YmjUhnTAQtjg
+         GEbTVgScqDXmtpZZDq0P7gtr4ZZn2oqaN9+Hq3cYctCLFnBucMIuNipOs7c6rbIkmQHe
+         kkQ9LmBhKkgq2vMZNOnwgVAQDld2OSZVuNo58PbiG18P+bPexoOaTWYjrCgb9s+cpUnA
+         tcWboQRitoZEYv3jjaAqjMeZst/3etz1vgekO0f2I6Wl58CUEJ+y8e7aNA7DGrwwwrbD
+         zRqKA4ZeViA390C3hOSmITBqnBlk2UzqKaIykCeZ+tt+8SXS2ro/Y5T+JppAvAAL7Zy4
+         M6sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYDbVwKA9QgUhZFIM9D9KQxOokA2L1BTkrzZI0H9wRGRLSennRH5bNbIGgdtXzIjpn2II3gWmEuXjzelI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZiHds4KC5fE8wWKey12UUHP5KoESjLEUDaMB4QxV9YEYJlJ2D
+	OkZ1wl0ZQodOpJEiEHJSCaZnVQzzwQgFLSsmS2b9fbeNOGE7wolU
+X-Gm-Gg: ASbGnct0Xld9hHGpkxVD+OmNRpAKFkoEiBue5HVmbKBOoezf+6BV+Lt+Ns1ZHEQIh8F
+	3oqU8DaJcBVKj9cY+whNFUS4btaVDQMxCyp2kJbNfcE7vV03n7xqusN8gdqPDXedTP87H6ReFZq
+	ay7sTvwhRsmKM8v99DxgwIsJMv/6TtGn6pfa8aZ4+ffOuo37f0ArdmGeZwDMrLN6ktFf8cOJh/D
+	plu1a1o10OqjPBN8sFw3uzJdAriNosgg9CqGLvdEcK2ezLosuxAxDH+TS/vGSHYkMjupy/Rz6Aj
+	oY1NXwqK/SjouxqA2dyIE7n0rFdFXu/61P1khLeU+KgBNHbeDY4gew82sCeWecM0mMLApRyCmlh
+	WhcLTBbNGnbssz8TSXL+tN7syPjXRsMjL
+X-Google-Smtp-Source: AGHT+IHeWXuSOX8ugXi7KX2sQvDZA51J6pn9rqEUJAKyCLo9RjU0qJQZ+hTlul88ONSzO+JY3LViIg==
+X-Received: by 2002:a17:907:2cc5:b0:aa6:9eac:4b8e with SMTP id a640c23a62f3a-ab6cfdbf7e2mr3456200366b.41.1738698421177;
+        Tue, 04 Feb 2025 11:47:01 -0800 (PST)
+Received: from corebook.localdomain (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc8838d5a1sm7644954a12.42.2025.02.04.11.46.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 11:47:00 -0800 (PST)
+From: Eric Woudstra <ericwouds@gmail.com>
+To: Felix Fietkau <nbd@nbd.name>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"Frank Wunderlich" <frank-w@public-files.de>,
+	Daniel Golle <daniel@makrotopia.org>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Eric Woudstra <ericwouds@gmail.com>
+Subject: [PATCH v2 net-next] net: ethernet: mtk_ppe_offload: Allow QinQ
+Date: Tue,  4 Feb 2025 20:46:24 +0100
+Message-ID: <20250204194624.46560-1-ericwouds@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="x5UnwaTJWdRGDlJX"
-Content-Disposition: inline
-In-Reply-To: <20250131-dt-marvell-fixes-v1-0-55f9f6acd4b1@kernel.org>
+Content-Transfer-Encoding: 8bit
 
+mtk_foe_entry_set_vlan() in mtk_ppe.c already seems to support
+double vlan tagging, but mtk_flow_offload_replace() in
+mtk_ppe_offload.c only allows for 1 vlan tag, optionally in
+combination with pppoe and dsa tags.
 
---x5UnwaTJWdRGDlJX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch adds QinQ support to mtk_flow_offload_replace().
 
-On Fri, Jan 31, 2025 at 03:08:24PM -0600, Rob Herring (Arm) wrote:
-> This series adds some missing root node compatibles and fixes some=20
-> errors in dts files for the root node compatibles.
->=20
-> Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
+Only PPPoE-in-Q (as before) and Q-in-Q are allowed. A combination
+of PPPoE and Q-in-Q is not allowed.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
+---
 
---x5UnwaTJWdRGDlJX
-Content-Type: application/pgp-signature; name="signature.asc"
+Since the RFC v1 did not recieve any comments, I'm sending v2 as PATCH
+unchanged.
 
------BEGIN PGP SIGNATURE-----
+Tested on the BPI-R3(mini), on non-dsa-ports and dsa-ports.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6JupgAKCRB4tDGHoIJi
-0s1SAP983MbztBx9JW7mBOtkH1RQR6fb//Ogubt4WA6KjWQuJgD+PsBZmZQOqJHm
-IKTDZ/R+p+gKllClHDwNHhRp81SUBgA=
-=tCWb
------END PGP SIGNATURE-----
+ .../net/ethernet/mediatek/mtk_ppe_offload.c   | 21 +++++++++++--------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
---x5UnwaTJWdRGDlJX--
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
+index f20bb390df3a..c19789883a9d 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
++++ b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
+@@ -34,8 +34,10 @@ struct mtk_flow_data {
+ 	u16 vlan_in;
+ 
+ 	struct {
+-		u16 id;
+-		__be16 proto;
++		struct {
++			u16 id;
++			__be16 proto;
++		} vlans[2];
+ 		u8 num;
+ 	} vlan;
+ 	struct {
+@@ -349,18 +351,19 @@ mtk_flow_offload_replace(struct mtk_eth *eth, struct flow_cls_offload *f,
+ 		case FLOW_ACTION_CSUM:
+ 			break;
+ 		case FLOW_ACTION_VLAN_PUSH:
+-			if (data.vlan.num == 1 ||
++			if (data.vlan.num + data.pppoe.num == 2 ||
+ 			    act->vlan.proto != htons(ETH_P_8021Q))
+ 				return -EOPNOTSUPP;
+ 
+-			data.vlan.id = act->vlan.vid;
+-			data.vlan.proto = act->vlan.proto;
++			data.vlan.vlans[data.vlan.num].id = act->vlan.vid;
++			data.vlan.vlans[data.vlan.num].proto = act->vlan.proto;
+ 			data.vlan.num++;
+ 			break;
+ 		case FLOW_ACTION_VLAN_POP:
+ 			break;
+ 		case FLOW_ACTION_PPPOE_PUSH:
+-			if (data.pppoe.num == 1)
++			if (data.pppoe.num == 1 ||
++			    data.vlan.num == 2)
+ 				return -EOPNOTSUPP;
+ 
+ 			data.pppoe.sid = act->pppoe.sid;
+@@ -450,11 +453,11 @@ mtk_flow_offload_replace(struct mtk_eth *eth, struct flow_cls_offload *f,
+ 	if (offload_type == MTK_PPE_PKT_TYPE_BRIDGE)
+ 		foe.bridge.vlan = data.vlan_in;
+ 
+-	if (data.vlan.num == 1) {
+-		if (data.vlan.proto != htons(ETH_P_8021Q))
++	for (i = 0; i < data.vlan.num; i++) {
++		if (data.vlan.vlans[i].proto != htons(ETH_P_8021Q))
+ 			return -EOPNOTSUPP;
+ 
+-		mtk_foe_entry_set_vlan(eth, &foe, data.vlan.id);
++		mtk_foe_entry_set_vlan(eth, &foe, data.vlan.vlans[i].id);
+ 	}
+ 	if (data.pppoe.num == 1)
+ 		mtk_foe_entry_set_pppoe(eth, &foe, data.pppoe.sid);
+-- 
+2.47.1
+
