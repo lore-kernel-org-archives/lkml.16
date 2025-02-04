@@ -1,82 +1,83 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from lichtman.org (lichtman.org [149.28.33.109])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D0B8632C;
-	Tue,  4 Feb 2025 05:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FC41E7C3A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 05:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.33.109
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738647408; cv=none; b=RbOKDjqpX8MCkqJaPXIian8gYPdAhlxf/v/Fa87h/1OBkao6IC2w7E0GAzgvhlkH2rI7OFGlVXhaC5/2epjNvm0mhAKI8Y+t6mhfMg+OFdD3bu9BVpmfgrQATKXbDq3g16aj/Tp6gufvYQuUlACiIfL3FTGAbM7qYtT/rY9rO54=
+	t=1738647637; cv=none; b=IdO2Tzk30Cgwyn87uDiRC/a2M3cj5Ml+KQ2nBY7rWmD9TyGzHj1mFUKHRui9IJ43NWCBQLFf/1KBAcrRnsfMEksJ3XC55+21EGYqwRylFiGsCS6oVhqXB7VLaFz/wT8m9+9qnc7zE1szLSYLe+FVyJEL0GPP7fOvrFYnyA3GE+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738647408; c=relaxed/simple;
-	bh=lsO9hrR/gFtCjhrxYLTAwuHqmreL/QpwD9+YEc97dAs=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XCRkmxfa7NMClWVeB9UwKX8Dt2DfnSqrJOaxKTSAeZCV3ueBniHNNVqOcyVjY2tag/SZieRAiDUsfxEGp8vPssFOQMC0RHilt9rRRJH8NgOHIiwKloSf+O1phxiz0qBQuK41gtFMbUl0xUkQ7LdAsIUyiBCgeKkXxDTRYw3QPk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AQUCW5op; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1738647637; c=relaxed/simple;
+	bh=eXMmCbjk+TZAkqST/eM8CQgbJKjPzI/+9lxacBXwtqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LPKjbNOsoFHwGKiyKwTH74SGgZn0ElSeHY8p1FncvqAURZSEaNcowMxsKl5ql5RMk//iyz7b+zVnShyOm1OkNJ0x5f7nTziJKN9Yb5pEZ9alTGXGqg+M5IEF2DTNWdPBqSURssMnSsyKgIEsr89GHREVZsPaHmuvebGBUIi5IIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org; spf=pass smtp.mailfrom=lichtman.org; dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b=TwBVoUxg; arc=none smtp.client-ip=149.28.33.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtman.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AQUCW5op"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=cTohvSTvwj+ZiQenntSx8kX9G9dSHidT+DOg/qXt65k=; b=AQUCW5opXz0A3Kwr5+UxwcoShn
-	+se4y7BgGVNMd5vk3a+LJjeglSR+HU6tqMfWBQM6G+0j/Ol7NzbDBguQhzHCqBrz+DujUhGY9jJwC
-	S2+Ky1IGkbsle1xPtswC823NAtxDxsQwAZfqYJUlPXo8gm+N5E+qDLG79Je6VvfjyA0bKTjCAmP/k
-	XqemcU+TeAuRZNGehwNon9n315HM0Mvvhm6l7jtVWwbSwMhkoQQOpsUM5l/mq9fJJEojYlLCzgy7+
-	sBBjeG+D6LDPUehEiBJxsM6SdKZay9N20kCXh+WlIQWvrxaUju1vEnBmmWbzQzuCZjFlvr/kttbOH
-	RwUhjWnQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfBc2-0000000HIAy-0zIU;
-	Tue, 04 Feb 2025 05:36:42 +0000
-Date: Mon, 3 Feb 2025 21:36:42 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jaya Kumar <jayakumar.lkml@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>,
-	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Matthew Wilcox <willy@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	Kajtar Zsolt <soci@c64.rulez.org>, Maira Canal <mcanal@igalia.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH 2/3] mm: provide mapping_wrprotect_page() function
-Message-ID: <Z6Gnat93skcoFZqn@infradead.org>
-References: <cover.1738347308.git.lorenzo.stoakes@oracle.com>
- <c802c17cdba59e3455f3d7db07659d5da0ed6dc1.1738347308.git.lorenzo.stoakes@oracle.com>
- <Z6DljlvHpjdFof42@phenom.ffwll.local>
+	dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b="TwBVoUxg"
+Received: by lichtman.org (Postfix, from userid 1000)
+	id 968121771E3; Tue,  4 Feb 2025 05:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=lichtman.org; s=mail;
+	t=1738647634; bh=eXMmCbjk+TZAkqST/eM8CQgbJKjPzI/+9lxacBXwtqA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TwBVoUxgehBsa7zF74Si1ZV+9J8aoPV7tZEVD2ZiJtdHTExADhkUzDNGpWJQFZNFg
+	 1QBypvclKUEKN7oeQjcEjnx8G2Ro15VoPqu/pvb52bDvjEXysmPlC4IO8rPySjbZL3
+	 yLYk6R7VvlVnItoTBjhJ5+Dy3xRItYCyvOHIDY8H/ilVrxdg0pEfr2Aya/JPaOkd7H
+	 mFr4skulEUMBN9z/9oqcwo+tK3wUE10NNXO9yiesegW6piY+RV6LOyNK+KzvJpByR+
+	 7Xf0e6s9zcAicTeZgftXP6J3lmi4MhsZhP8T452fxY6v875IUVBDEJcqBhErKjUXHv
+	 2Vgpw3NC35Mfw==
+Date: Tue, 4 Feb 2025 05:40:34 +0000
+From: Nir Lichtman <nir@lichtman.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: jason.wessel@windriver.com, danielt@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kdb: remove usage of static environment buffer
+Message-ID: <20250204054034.GA1219827@lichtman.org>
+References: <20250203202028.GA1215122@lichtman.org>
+ <CAD=FV=WoS+WZ-OX5FnAUuab8re0ovrN9jEm4uADo1XmP5DAGQQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z6DljlvHpjdFof42@phenom.ffwll.local>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=WoS+WZ-OX5FnAUuab8re0ovrN9jEm4uADo1XmP5DAGQQ@mail.gmail.com>
 
-Hi Simona,
-
-
-On Mon, Feb 03, 2025 at 04:49:34PM +0100, Simona Vetter wrote:
+On Mon, Feb 03, 2025 at 01:13:31PM -0800, Doug Anderson wrote:
+> Hi,
 > 
-> Could we go one step further and entirely drop the struct page? Similar to
-> unmap_mapping_range for VM_SPECIAL mappings, except it only updates the
-> write protection. The reason is that ideally we'd like fbdev defio to
-> entirely get rid of any struct page usage, because with some dma_alloc()
-> memory regions there's simply no struct page for them (it's a carveout).
+> On Mon, Feb 3, 2025 at 12:20 PM Nir Lichtman <nir@lichtman.org> wrote:
+> >
+> > @@ -348,9 +315,12 @@ static int kdb_setenv(const char *var, const char *val)
+> >
+[..]
+> > +               kdb_printf("Could not allocate space for the env var: %s\n",
+> > +                               var);
+> 
+> You don't need the printout. kmalloc is already very shouty if memory
+> allocations fail.
+> 
+> 
+> > +               return KDB_KMALLOCFAILED;
+[..]
+> > +                       kfree(__env[i]);
+> 
+> I haven't tested it, but shouldn't the above be kfree_const() instead
+> of kfree()? Otherwise won't you be trying to kfree() the initial
+> strings? ...or am I missing something?
 
-Umm, for dma_alloc* where * is not _pages you never can get a page or
-PFN form them.  They are block boxes and drivers must not attempt to
-translated them into either a page or PFN or things will go wrong.
-Only the kernel virtual address and dma_address may be used.
+Hi Doug,
 
-> See e.g.  Sa498d4d06d6 ("drm/fbdev-dma: Only install deferred I/O if
-> necessary") for some of the pain this has caused.
+Thanks for the review, you're right, my bad, I'll fix to use kfree_const.
 
-The commit hash is corrupted, I guess this is 5a498d4d06d6 as the
-subject line matches.  And that commit (just like the code it is trying
-to fix) is completely broken as it violates the above.
+Sending shortly a v2 with the fixes.
 
+Nir
+
+> 
+> 
+> -Doug
