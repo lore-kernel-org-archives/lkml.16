@@ -1,217 +1,158 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01672214816;
-	Tue,  4 Feb 2025 15:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8F2214236
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738683257; cv=none; b=Cpd91aQbmh/HPpwC9EnhbNaS7utQOPtVIRph1W3MNkRMEAGmOCPJ2MoohbnVmkQZ1+3VXmsZTaLpIfOny6gpt7lKebxceFto6AGtSfBBhLtuwWW2QQWcUsJkXDClqn+Nb0YbgZH8NI/r1G0HjLFHPbZCnkLExp2z67x8waobMfg=
+	t=1738683268; cv=none; b=J55hT7Y0N9KGkoOE2goUMX1mYvl/tqMfnDpkbs6186NAgBouzJG8M3hciHvhwnhGpvaxjaleUxiusFczxyTQpNk4I2jD2Vr7bQ8Pb94kds0n8aDBc+avIP1iI4geVyg2+nR9oy+r94dOkaQyqQcXVa7vF73pd5Lc2eKK9RhgT6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738683257; c=relaxed/simple;
-	bh=Ho+PpshaG4ELxYJOm1BEWRJ8pP4HYIl22A1rMlkpEjY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pTTNWBKoHtTdFs4Gn4GrfZ23fJg1RKkIbRVX4J5Rr/WsYeaFbhVqM1Vr4I3oNdQVTi0iTHODYFBTHhiDtJY6qPyAn/S/MYqZyml2Nti8J5LPZo/KzXryCaKhotZJfT7o+LJWV/i4JZi+6OR/bOn0g6+N+Sf03bG80dciUfMJ/cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=T6MDTz4M; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="T6MDTz4M"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A96244419C;
-	Tue,  4 Feb 2025 15:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738683246;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8/Em9LoxwWwGP0448VxgAWFBmtV9u0pV8rupxRXtPSE=;
-	b=T6MDTz4MPGrdJ+ue3X6+YFfE9yra7WdG/e7UqeiS4aATqegni/6rka468bka1bpl3koatb
-	t6gMYqSMts6r5/XmlGf63NKYRCqToM1+AyVlmSxOPG7rgJjE8/kDm6D06GlsRSqbU8pZY5
-	jB+gXKHn4G0axdamk6uUb3oTzSUczQAoXSR2Gay+DtNJU646zBHQODG1yiAqsAdZFX+q6K
-	Xo/kHyIajvdufJQbickn6Crm9wJNknmoi69KK3oDgNkRACqytVkoPrutegIZOJQXqMeDrv
-	KLsH5+464ugBxTN5NbKI/9T/PesOlgi26EpNNodmxkm5VPk11i6Sezvx0f4AaA==
-Date: Tue, 4 Feb 2025 16:34:04 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Marek Vasut
- <marex@denx.de>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Louis Chauvet
- <louis.chauvet@bootlin.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 3/3] drm: bridge: ti-sn65dsi83: Add error recovery
- mechanism
-Message-ID: <20250204163404.0a6b6526@bootlin.com>
-In-Reply-To: <20250204-chocolate-lionfish-of-luck-10ebb8@houat>
-References: <20250108101907.410456-1-herve.codina@bootlin.com>
-	<20250108101907.410456-4-herve.codina@bootlin.com>
-	<20250114-juicy-authentic-mushroom-cfcdfb@houat>
-	<20250114135456.5366eb2a@bootlin.com>
-	<20250116-archetypal-bulldog-of-expression-fcc937@houat>
-	<20250117091213.647bf0e6@bootlin.com>
-	<20250204-chocolate-lionfish-of-luck-10ebb8@houat>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1738683268; c=relaxed/simple;
+	bh=rUNmJfFjrvjH0k8NaLQl/mzIysHOcbVxpQtX9E26t70=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=G5EuZ4nsgD1FUpf4tUMk1vpi0o6wTjFtunH4UIzFIoJweM0rYllECfVSJ3Mmdiieo+iFrnu69GFZCCS8e4VseR627UEdJ21Ayy8AXLk9LqPVRjCoHhE1J1ucrMq1x0NL8Qxzls4ALlzupvs0KC71eozgsEmztocUJyvLeKD9mK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3cfb3c4fc77so38513065ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 07:34:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738683266; x=1739288066;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K+9elCslkuUd43cJRucxkW8XJc/qzTw0sB9huIEM9CA=;
+        b=P/ZLnhE/zQokoYD42zn5zd6RnidoCqweXFtlcRNk42laeBmIs69J5jxVHLAEE4YOGh
+         hNHT2mBslogZQ+ZR5hlCYwXIWnMqE0obFj0pY6H0gSfZYkHoxUgJ3mb/B5lsbQRuuvhR
+         cLGhQzSw8bqRkj5q+HNSgBYmrOzigmyefChRekm21HARKkiBDJf5lue/qgB9ub7u6Q3o
+         86LePygZIhv7jKtU0bWEdzvz4vfHXd3h9h/qoLyooJ9K62Fk5Fh8gr7z1CZck443riZk
+         QnkMSgr+3xH4tAXr959FReeCeLBVQ5LiPbm/zanyvEWIPsHj0lAGOvnpK7lVcT7eAvM8
+         +8AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzoKx9N/55SS/mtTGn7Zo1yaIpqUva3rSe8N+XntB/1/GmwIxlna2FnI/g1IFZnPDvb7TG0St3P7B8wyU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz/CPMY9sn/SnufJ4MGFeNIwxUcCf5J/zjOClfjCPbedSZEd6T
+	zwbTTHmwLxKH2tKfxrhAaSEOfv03fU6D3H+Ai7DUuJjIO5WLJoz445vK0VXSFPUqI3Lx+h0DGg7
+	7ZOwvgRojFqOQzoIRjG3mGWRVAm7NLc7FHdoc6Y7BHf5xCvxVNcRdcCY=
+X-Google-Smtp-Source: AGHT+IEY7EbFaoqgFMrAA3vftkEMeUpyS4C2dT07tOVvAFLSzcLdkmO+Y4df5yNNiK321yhOCXJ3bpXwBMwtBI5hm+Hd9wS+GI7m
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeklecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetieeutefffffffeevgefgudejvdeggfefudefueektdehjeegtefgtddvgfegtdenucffohhmrghinheptghrthgtrdihohhupdhkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhnghesl
- hhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnfgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepjhgvrhhnvghjrdhskhhrrggsvggtsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+X-Received: by 2002:a92:d782:0:b0:3d0:ba6:1b4b with SMTP id
+ e9e14a558f8ab-3d03f508636mr29042795ab.7.1738683265949; Tue, 04 Feb 2025
+ 07:34:25 -0800 (PST)
+Date: Tue, 04 Feb 2025 07:34:25 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a23381.050a0220.d7c5a.00bb.GAE@google.com>
+Subject: [syzbot] [net?] [bcachefs?] general protection fault in __alloc_skb
+From: syzbot <syzbot+095590432e94610ef0e5@syzkaller.appspotmail.com>
+To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kent.overstreet@linux.dev, kuba@kernel.org, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 4 Feb 2025 16:17:10 +0100
-Maxime Ripard <mripard@kernel.org> wrote:
+Hello,
 
-> Hi,
-> 
-> On Fri, Jan 17, 2025 at 09:12:13AM +0100, Herve Codina wrote:
-> > Hi Maxime,
-> > 
-> > On Thu, 16 Jan 2025 09:38:45 +0100
-> > Maxime Ripard <mripard@kernel.org> wrote:
-> >   
-> > > On Tue, Jan 14, 2025 at 01:54:56PM +0100, Herve Codina wrote:  
-> > > > Hi Maxime,
-> > > > 
-> > > > On Tue, 14 Jan 2025 08:40:51 +0100
-> > > > Maxime Ripard <mripard@kernel.org> wrote:
-> > > > 
-> > > > ...
-> > > >     
-> > > > > >  
-> > > > > > +static int sn65dsi83_reset_pipe(struct sn65dsi83 *sn65dsi83)
-> > > > > > +{
-> > > > > > +	struct drm_atomic_state *state = ERR_PTR(-EINVAL);
-> > > > > > +	struct drm_device *dev = sn65dsi83->bridge.dev;
-> > > > > > +	struct drm_connector_state *connector_state;
-> > > > > > +	struct drm_modeset_acquire_ctx ctx;
-> > > > > > +	struct drm_connector *connector;
-> > > > > > +	int err;
-> > > > > > +
-> > > > > > +	/*
-> > > > > > +	 * Reset active outputs of the related CRTC.
-> > > > > > +	 *
-> > > > > > +	 * This way, drm core will reconfigure each components in the CRTC
-> > > > > > +	 * outputs path. In our case, this will force the previous component to
-> > > > > > +	 * go back in LP11 mode and so allow the reconfiguration of SN64DSI83
-> > > > > > +	 * bridge.
-> > > > > > +	 *
-> > > > > > +	 * Keep the lock during the whole operation to be atomic.
-> > > > > > +	 */
-> > > > > > +
-> > > > > > +	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, err);
-> > > > > > +
-> > > > > > +	state = drm_atomic_helper_duplicate_state(dev, &ctx);
-> > > > > > +	if (IS_ERR(state)) {
-> > > > > > +		err = PTR_ERR(state);
-> > > > > > +		goto unlock;
-> > > > > > +	}      
-> > > > > 
-> > > > > No, you must not allocate a new state for this, you need to reuse the
-> > > > > existing state. You'll find it in bridge->base.state->state.    
-> > > > 
-> > > > Thanks for pointing that. I didn't know about bridge->base.state->state.
-> > > > 
-> > > > I will use that if using the state is still relevant (see next comment).
-> > > >     
-> > > > >     
-> > > > > > +	state->acquire_ctx = &ctx;
-> > > > > > +
-> > > > > > +	connector = drm_atomic_get_old_connector_for_encoder(state,
-> > > > > > +							     sn65dsi83->bridge.encoder);
-> > > > > > +	if (!connector) {
-> > > > > > +		err = -EINVAL;
-> > > > > > +		goto unlock;
-> > > > > > +	}
-> > > > > > +
-> > > > > > +	connector_state = drm_atomic_get_connector_state(state, connector);
-> > > > > > +	if (IS_ERR(connector_state)) {
-> > > > > > +		err = PTR_ERR(connector_state);
-> > > > > > +		goto unlock;
-> > > > > > +	}
-> > > > > > +
-> > > > > > +	err = drm_atomic_helper_reset_pipe(connector_state->crtc, &ctx);
-> > > > > > +	if (err < 0)
-> > > > > > +		goto unlock;      
-> > > > > 
-> > > > > And you'll find the crtc in bridge->encoder->crtc.    
-> > > > 
-> > > > I am a bit confused. I looked at the drm_encoder structure [1] and the crtc
-> > > > field available in this structure should not be used by atomic drivers. They
-> > > > should rely on &drm_connector_state.crtc.    
-> > > 
-> > > You're right, it's deprecated but used by most bridges anyway.
-> > > 
-> > > I made a series of changes after reviewing your series to address some
-> > > issues with the current bridge API, most notably
-> > > 
-> > > https://lore.kernel.org/dri-devel/20250115-bridge-connector-v1-25-9a2fecd886a6@kernel.org/  
-> > 
-> > Thanks for pointing that, indeed, it clarify many things!
-> >   
-> > >   
-> > > > In my case, I have the feeling that I should get the ctrc from the current
-> > > > state (i.e. bridge->base.state->state) using the sequence provided in this
-> > > > current patch:
-> > > >   Retrieve the connector with drm_atomic_get_old_connector_for_encoder()    
-> > > 
-> > > Retrieving the old connector makes no sense though. It's the connector
-> > > that was formerly associated with your encoder. It might work, it might
-> > > not, it's not what you're looking for.
-> > >   
-> > > >   Retrieve the connector state with drm_atomic_get_connector_state()    
-> > > 
-> > > drm_atomic_get_connector_state will allocate and pull the connector
-> > > state into the drm_atomic_state, even if it wasn't part of it before, so
-> > > it's not great. And you don't need it in the first place, you only need
-> > > the current active CRTC.  
-> > 
-> > Yes, I agree with that, I only need the active CRTC.
-> > 
-> > I tried to get the current atomic_state from:
-> >   1) bridge->base.state->state
-> >   2) drm_bridge_state->base.state
-> > 
-> > In both cases, it is NULL. Looking at Sima's reply in your series
-> > explained that:
-> >   https://lore.kernel.org/dri-devel/Z4juJy7kKPbI2BDb@phenom.ffwll.local/
-> > 
-> > If I understood correctly those pointers are explicitly cleared.
-> > 
-> > So, with all of that, either:
-> >   a) I wait for your series to be applied in order to use your the crtc field from
-> >      drm_bridge_state added by:
-> >        https://lore.kernel.org/dri-devel/20250115-bridge-connector-v1-25-9a2fecd886a6@kernel.org/#t
-> >   b) I use the old school bridge->encoder->crtc for the moment
-> > 
-> > Do you mind if I use the bridge->encoder->crtc way for the next iteration of
-> > my series?  
-> 
-> Yeah, it makes sense.
+syzbot found the following issue on:
 
-I already send a wrong v4 (sorry) and a correct v5 with modifications in
-this way :)
+HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16f4dddf980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
+dashboard link: https://syzkaller.appspot.com/bug?extid=095590432e94610ef0e5
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17974518580000
 
-> 
-> Still, it would be great if you could test my series on your setup and see if it helps :)
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-69e858e0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a53b888c1f3f/vmlinux-69e858e0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6b5e17edafc0/bzImage-69e858e0.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/f903aea5a6cc/mount_0.gz
 
-Of course, I can test updated version of your series.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+095590432e94610ef0e5@syzkaller.appspotmail.com
 
-I already try to get the current atomic_state exactly the same way as you do
-in your series and the pointer is NULL in my case.
+Oops: general protection fault, probably for non-canonical address 0x76a030f00000485: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 1077 Comm: kworker/u4:10 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: events_unbound nsim_dev_trap_report_work
+RIP: 0010:get_freepointer mm/slub.c:504 [inline]
+RIP: 0010:get_freepointer_safe mm/slub.c:532 [inline]
+RIP: 0010:__slab_alloc_node mm/slub.c:3993 [inline]
+RIP: 0010:slab_alloc_node mm/slub.c:4152 [inline]
+RIP: 0010:kmem_cache_alloc_node_noprof+0xec/0x380 mm/slub.c:4216
+Code: 0f 84 8a 01 00 00 41 83 f8 ff 74 1a 48 8b 03 48 83 f8 ff 0f 84 8f 02 00 00 48 c1 e8 3a 41 39 c0 0f 85 6a 01 00 00 41 8b 46 28 <4a> 8b 1c 28 49 8d 4c 24 08 49 8b 36 4c 89 e8 4c 89 e2 65 48 0f c7
+RSP: 0018:ffffc900026ef908 EFLAGS: 00010246
+RAX: 0000000000000078 RBX: ffffea0000f49540 RCX: 0000000000046a30
+RDX: 0000000000000000 RSI: 00000000000000f0 RDI: ffffffff8ea52d00
+RBP: 00000000ffffffff R08: 00000000ffffffff R09: fffff520004ddf38
+R10: dffffc0000000000 R11: fffff520004ddf38 R12: 00000000000d7b48
+R13: 076a030f0000040d R14: ffff88801b7a18c0 R15: 0000000000000820
+FS:  0000000000000000(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4588978ab8 CR3: 0000000059eac000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __alloc_skb+0x1c3/0x440 net/core/skbuff.c:668
+ alloc_skb include/linux/skbuff.h:1331 [inline]
+ nsim_dev_trap_skb_build drivers/net/netdevsim/dev.c:748 [inline]
+ nsim_dev_trap_report drivers/net/netdevsim/dev.c:805 [inline]
+ nsim_dev_trap_report_work+0x261/0xb50 drivers/net/netdevsim/dev.c:851
+ process_one_work kernel/workqueue.c:3236 [inline]
+ process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Modules linked in:
+----------------
+Code disassembly (best guess):
+   0:	0f 84 8a 01 00 00    	je     0x190
+   6:	41 83 f8 ff          	cmp    $0xffffffff,%r8d
+   a:	74 1a                	je     0x26
+   c:	48 8b 03             	mov    (%rbx),%rax
+   f:	48 83 f8 ff          	cmp    $0xffffffffffffffff,%rax
+  13:	0f 84 8f 02 00 00    	je     0x2a8
+  19:	48 c1 e8 3a          	shr    $0x3a,%rax
+  1d:	41 39 c0             	cmp    %eax,%r8d
+  20:	0f 85 6a 01 00 00    	jne    0x190
+  26:	41 8b 46 28          	mov    0x28(%r14),%eax
+* 2a:	4a 8b 1c 28          	mov    (%rax,%r13,1),%rbx <-- trapping instruction
+  2e:	49 8d 4c 24 08       	lea    0x8(%r12),%rcx
+  33:	49 8b 36             	mov    (%r14),%rsi
+  36:	4c 89 e8             	mov    %r13,%rax
+  39:	4c 89 e2             	mov    %r12,%rdx
+  3c:	65                   	gs
+  3d:	48                   	rex.W
+  3e:	0f                   	.byte 0xf
+  3f:	c7                   	.byte 0xc7
 
-Best regards,
-Hervé
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
