@@ -1,33 +1,33 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AA92135BF
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F9B216387
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738676431; cv=none; b=Td6BFeNSYLNj9gKf4NxfAvyx0C5/zwuHpz+Na9eFO2ed/9FoiehyOBc0t8LNe1k1HZvBQMy6mHV3cUieKQot5JrfNGh4ejJ7b8MR5NCP4UDC0CIQi9nPqf1qHfkbjJ9iEt77bx+3k3SZdvPmhvLpoWfvNYsQk2XqYZ8pNPtjFrk=
+	t=1738676446; cv=none; b=OoI/H3JKNRCickWoekO0mYFRs1H2Q1xZiO/HIH9pMcl333fmamiiYs6FdSYRv9anBV97Ta/dK0OoWOMMCHakqy2xDLO4tUs0kiKwRnOahfek+x9ho+WVDNkKu8KYRNrbMAF8vcpJJrnN1yfYY0pfDXzKNxW5RmmUuXpatYiEKd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738676431; c=relaxed/simple;
-	bh=Dfco977LMstsETZuLNiqOmx6nRiIeqqaVkskQBLa+yQ=;
+	s=arc-20240116; t=1738676446; c=relaxed/simple;
+	bh=2g45caf19R559opr5zfeuZzgBir3rNVRdz0p4IMU934=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Iv5DkKREc1oHn+gZFvC6cKIm3NsiFHCHXLE6GjHG3azbgOZI2/M3PdJqFe8vLkrPyAyU5fprwpkyMRAdjO37OEbVq2zwUV34j/S6i+db7AprioWUjKgxi4dOb9j2HGneNwqsMqkVWS/xPgpU77bUbD4ppjukOh2ida4wZV2EDjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=to+2Jrbd; arc=none smtp.client-ip=213.167.242.64
+	 In-Reply-To:Content-Type; b=npmX1VM1T+4AmRxhYmDFzWMY+2j1q2ShI1DWHYVIFRfWJ6wljhRIAFEskUdpourZO5fClMYT2vPNr17xG7NF28dyVG3xmkX9iNytStasFpvffj3U/TwXMkNq/oqNR2bbwqPuTWciLgLQau0FHq30fuGlY7aG1ldAAqsDnvXyCR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=A3HMiMKf; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="to+2Jrbd"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="A3HMiMKf"
 Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4E6B5CDB;
-	Tue,  4 Feb 2025 14:39:14 +0100 (CET)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 67535CDB;
+	Tue,  4 Feb 2025 14:39:30 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1738676355;
-	bh=Dfco977LMstsETZuLNiqOmx6nRiIeqqaVkskQBLa+yQ=;
+	s=mail; t=1738676371;
+	bh=2g45caf19R559opr5zfeuZzgBir3rNVRdz0p4IMU934=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=to+2Jrbd30qwK3OkUi2VKxDy73Txt/ogBeJi5jgaypNUlW+Q9eHk29k+SIiqjAEv9
-	 oalVS1osHN/14Nye1eWNnxDRQPfpkY2tGIYzi4zKb6z2+GMsW5tSSvrWCrE7dz4J+q
-	 TylNeY33mQO5tS9K/a1+PLGb5oJtZPbbxeW3d0Y0=
-Message-ID: <6301d07a-fc17-4b39-b8fe-b833aaae72ec@ideasonboard.com>
-Date: Tue, 4 Feb 2025 15:40:23 +0200
+	b=A3HMiMKfZZPDUTETBSCOVJZRTqxj7RWfCy3eNe87K9I7mqHdGakdx5eBpiVPOjkaa
+	 Bd4KZsZaGBVyZTNwBYvMRR7VmnAffhUVYCQgqWARHnL7lghBHpknNnYLD/Lhk6Niwa
+	 2dtA+07OHdBMk/jglEH4EeNglBRnjKKkiy8633uk=
+Message-ID: <7ed45555-6005-4ec9-b4cb-08ff109e8246@ideasonboard.com>
+Date: Tue, 4 Feb 2025 15:40:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 10/13] drm/atomic-helper: Refactor crtc &
- encoder-bridge op loops into separate functions
+Subject: Re: [PATCH v8 11/13] drm/atomic-helper: Separate out bridge
+ pre_enable/post_disable from enable/disable
 To: Aradhya Bhatia <aradhya.bhatia@linux.dev>
 Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
  Devarsh Thakkar <devarsht@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
@@ -52,7 +52,7 @@ Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
  David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
 References: <20250126191551.741957-1-aradhya.bhatia@linux.dev>
- <20250126191551.741957-11-aradhya.bhatia@linux.dev>
+ <20250126191551.741957-12-aradhya.bhatia@linux.dev>
 Content-Language: en-US
 From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
@@ -98,42 +98,42 @@ Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
  ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
  yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
  3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
-In-Reply-To: <20250126191551.741957-11-aradhya.bhatia@linux.dev>
+In-Reply-To: <20250126191551.741957-12-aradhya.bhatia@linux.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
 On 26/01/2025 21:15, Aradhya Bhatia wrote:
-> From: Aradhya Bhatia <a-bhatia1@ti.com>
+> The encoder-bridge ops occur by looping over the new connector states of
+> the display pipelines. The enable sequence runs as follows -
 > 
-> The way any singular display pipeline, in need of a modeset, gets
-> enabled is as follows -
+> 	- pre_enable(bridge),
+> 	- enable(encoder),
+> 	- enable(bridge),
 > 
-> 	crtc enable
-> 	(all) bridge pre-enable
-> 	encoder enable
-> 	(all) bridge enable
+> while the disable sequnce runs as follows -
 > 
-> - and the disable sequence is exactly the reverse of this.
+> 	- disable(bridge),
+> 	- disable(encoder),
+> 	- post_disable(bridge).
 > 
-> The crtc operations occur by looping over the old and new crtc states,
-> while the encoder and bridge operations occur together, by looping over
-> the connector states of the display pipelines.
+> Separate out the pre_enable(bridge), and the post_disable(bridge)
+> operations into separate functions each.
 > 
-> Refactor these operations - crtc enable/disable, and encoder & bridge
-> (pre/post) enable/disable - into separate functions each, to make way
-> for the re-ordering of the enable/disable sequences.
+> This patch keeps the sequence same for any singular disaplay pipe, but
+> changes the sequence across multiple display pipelines.
 > 
-> This patch doesn't alter the sequence of crtc/encoder/bridge operations
-> in any way, but helps to cleanly pave the way for the next two patches,
-> by maintaining logical bisectability.
+> This patch is meant to be an interim patch, to cleanly pave the way for
+> the sequence re-ordering patch, and maintain bisectability in the
+> process.
 > 
-> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
 > Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
 > ---
->   drivers/gpu/drm/drm_atomic_helper.c | 69 ++++++++++++++++++++---------
->   1 file changed, 49 insertions(+), 20 deletions(-)
+>   drivers/gpu/drm/drm_atomic_helper.c | 92 +++++++++++++++++++++++++++--
+>   1 file changed, 88 insertions(+), 4 deletions(-)
+
+With the issue Jayesh pointed out fixed:
 
 Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
