@@ -1,153 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C01201009;
-	Tue,  4 Feb 2025 09:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2280C205E26;
+	Tue,  4 Feb 2025 09:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660746; cv=none; b=eO/BgkVtwYLcUrQk4/InyV8MxrM0lZhIN9rtoCvTeXWNeR6eTyW9MRbIoe7hPcoY4V0ZZRm3igYgA3t28tIrNH5RqgR23/Kh4Jv+5yLNOZDNOp6PNFkb0vCGqjzv1SKdduGVc05u+7sGUHAXA93sYwYKKsLE1RpS6+EO4Bkpvxg=
+	t=1738660803; cv=none; b=BoOyrQHv1OrXX8vA1TdfGLuUXxJKl3dYEIg54ZsryFMtBcgDHfN7zIthqZM9uoyGlPRa5kMAgTxOIwpeId7DTp7s8iWQaEBVTXZ905totezrlBiaxJWHa9GqermsIDQVLrsVGb69hPxEXJ3On5gHH/bWx4su6NIvmZRt1jDxwZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660746; c=relaxed/simple;
-	bh=M/0MbWgQomgFkFf342WyucRNwqt3ktrigkPZJGV8u7o=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=d6I93VPR9eIiF4IdivKeCp39dpFTyjZ1ir+aTYDNnLR6F8YMKvIxJFEMJ0qOXqG19/TLvDlfl8fThBGf8kGhysE/l3iACa3bLZ8pdjmizNgbgxHknbX+gO1lQW4Ryrbmxkc/kh/7+9vwrr0KdKyG487NlNGHk1hLgh7lzhrB2Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcUPcgM1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738660803; c=relaxed/simple;
+	bh=SVDDG3SoH5jvl3YPhLa/GjlbC4VVi5RFTjffna0TPdQ=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Ji8wNNNQa8H87aQ496Vu/dh3xbYSGZmBgS/BiUoa3WpkJ8qHTVNkdCGAtw+W6kCKZ22g2J5gGbI6fRB48Lc32nvne98l1y9xyDslpgp5ZN0EzcBinHf6fYYfNWifckTMAP9aIlPp/lmULFCX+UoagqwpGzSsaZtO3i/ZeT8stqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cZrKfSLG; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcUPcgM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E636C4CEDF;
-	Tue,  4 Feb 2025 09:19:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738660745;
-	bh=M/0MbWgQomgFkFf342WyucRNwqt3ktrigkPZJGV8u7o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XcUPcgM1wVGnKVUq9O/4FVPT+8Sf6nQPqbwAf4eoq19Hn39pfgdTS0Sb1xY6GBOsH
-	 BsimP4qt+MEnu+W6Oiu+QYuQsHNsHzS/nPvSKdZQ7dlmdptaBjwV2uqnf3nHERjINI
-	 diw9fFcmkdjmGRFOpK4H3AfhBokTyuBnCddS7dus0fAsNZ2rj1jAwZdwIAyrVTtwkY
-	 wUPnYcrHa7cDUtWNgEy2UIi223mwYPDDboTSuv1Vm+6IscNnJN2XGi3xXhkZj2PpOP
-	 ejPndcE4nr6vLGwKsoIui9Djyce3qkNb7NWFtKa8SFltsYlmYpZey0eRdIK1OFS0+P
-	 v9thTAzkgqsDw==
-Date: Tue, 4 Feb 2025 18:19:02 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Gabriel de Perthuis <g2p.code@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Alexei
- Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Alan Maguire
- <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
- linux-arch@vger.kernel.org, kernel test robot <lkp@intel.com>, Florent
- Revest <revest@chromium.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>
-Subject: Re: [PATCH v22 19/20] ftrace: Add ftrace_get_symaddr to convert
- fentry_ip to symaddr
-Message-Id: <20250204181902.dd6e02416ff5eeec3ea47a79@kernel.org>
-In-Reply-To: <a87f98bf-45b1-4ef5-aa77-02f7e61203f4@gmail.com>
-References: <173518987627.391279.3307342580035322889.stgit@devnote2>
-	<173519011487.391279.5450806886342723151.stgit@devnote2>
-	<a87f98bf-45b1-4ef5-aa77-02f7e61203f4@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cZrKfSLG"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dca451f922so3949587a12.2;
+        Tue, 04 Feb 2025 01:20:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738660800; x=1739265600; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N/dQwnwJeVpC/wcrli/EX5K6+901Md4XabfvKhD3sb8=;
+        b=cZrKfSLGTB9uq/usfCMRWdCwvL0zJDW/85Pb/0hM4BWdf+zJOh79UeoWC1pD1TtzXJ
+         Pz8LSagQyexsjkabD39q+ZAxKeXfR2Nw7QKWKl/ij6molZQOY12TeOXEHQsgTpaQKVGy
+         XSW9Ygk63yGGi9F+5t4FS64KCLrLtsJsrBNxaEqQ3cnYCe48lZisKeDsFf0fl51NK1FT
+         hfvRdqWsL2u4ZRQoJC6BpzHKvM0RDz1eaJna5iFyMSxn5VoFc0mDsmRmTaNTglSrmjAe
+         LUmNkZySV+rYrc44Qh3Syo04P4pbevD69GylVEYCiDYPd4KO1vdGL33jby84tAmYZQV3
+         EN1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738660800; x=1739265600;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N/dQwnwJeVpC/wcrli/EX5K6+901Md4XabfvKhD3sb8=;
+        b=QieyWAi47tsCayQ6jjvlwDqThChfFF/SUdJdJ7Ti0zpg8Y6XTkiSkWOc9J/MfmnPGM
+         1NOhubpdYJn7DdIF/exH9Ka1L10lvj9cJoOABuPBVHHtvrWU56n2fJrS4HCl6Larampx
+         pjUhWWRpdGTBDEFA38utUKcvplcrx37jx31VAKOwRZnWHuPzz3pjtYGHNrDflUVMCevM
+         LHO53PAUAeHFColn2EaN3xq8Q6kZZH2AGaoS5+R/lU2nfNzwyfUwbm9caUFBWM1jwNbs
+         u7kMPzBizc1Dw2KPny1cFqoF42LtrK+v/dw48Zfz5K+FTmF7qOnMxMzzixN6TBKHUB5c
+         iuHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUglrdpwuRmRG6BN3OTE3HoI30aNTjMExMHBjV2yLxWvRqoL/idz1lar/OTh5RiOHsuSiucFiUmtm5uwtE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl/rfqLmAWvimA8lDUwUiSA7C/kRaA6yhYXiurmesDsY18y+vo
+	bGixtpE2Blnx40+6cCS/ITeyu9rsQSpu56CIuBSxrLmxQv95zx6d
+X-Gm-Gg: ASbGncv5ZiFDUd9g0GVbs1VP8wPHLyKrTAnxwz8bE0N+UB5gJgBlOK0OoHyhHcZEmGY
+	h3RtCkknLIb9Oubtd6lDy+ZJWWqctxvx9CuWJvkZ7h/L3o47O3E4gPkEu6MH6qXzqW/Xd+NKJMZ
+	+JrBkV1e69QpIlTU72E8yW8OFsTBvjLSKP2JI+t/d9II+Ydgl72Yy5Xfxr+6bvAKXngIhj9M2p+
+	mWlzBA/Yh0se5/lIgQ5koamH9ytV09SJG0UouOCkL2+LHq6mA/CjtxPvsnh6GK8ePp0J29dI9x2
+	HEx5zH1yW0GzCUeGzfdm5T4Id/qyhs1y8c51Wezlmv8eGyM=
+X-Google-Smtp-Source: AGHT+IF6McnbQh6wFqQPXvb9uNHh9QHuoOtiZLei8IsNNZp+7cCLLk3SZmZx7mzv3d0IIQfqMl399A==
+X-Received: by 2002:a17:907:9726:b0:aa6:b473:8500 with SMTP id a640c23a62f3a-ab6cfda4249mr2785776666b.42.1738660799938;
+        Tue, 04 Feb 2025 01:19:59 -0800 (PST)
+Received: from [192.168.20.51] (54-240-197-238.amazon.com. [54.240.197.238])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47cf9desm904470966b.55.2025.02.04.01.19.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 01:19:59 -0800 (PST)
+From: Paul Durrant <xadimgnik@gmail.com>
+X-Google-Original-From: Paul Durrant <paul@xen.org>
+Message-ID: <acc56a9b-2313-43f8-8acf-9ec39a8538e8@xen.org>
+Date: Tue, 4 Feb 2025 09:19:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Reply-To: paul@xen.org
+Subject: Re: [PATCH v2 04/11] KVM: x86: Process "guest stopped request" once
+ per guest time update
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzbot+352e553a86e0d75f5120@syzkaller.appspotmail.com,
+ Paul Durrant <pdurrant@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20250201013827.680235-1-seanjc@google.com>
+ <20250201013827.680235-5-seanjc@google.com>
+Content-Language: en-US
+Organization: Xen Project
+In-Reply-To: <20250201013827.680235-5-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 3 Feb 2025 22:33:48 +0100
-Gabriel de Perthuis <g2p.code@gmail.com> wrote:
-
-> Hello,
+On 01/02/2025 01:38, Sean Christopherson wrote:
+> Handle "guest stopped" requests once per guest time update in preparation
+> of restoring KVM's historical behavior of setting PVCLOCK_GUEST_STOPPED
+> for kvmclock and only kvmclock.  For now, simply move the code to minimize
+> the probability of an unintentional change in functionally.
 > 
-> I got errors building Linux 6.14-rc1 that were solved by reverting this 
-> patch and the one after (19/20 and 20/20).
+> Note, in practice, all clocks are guaranteed to see the request (or not)
+> even though each PV clock processes the request individual, as KVM holds
+> vcpu->mutex (blocks KVM_KVMCLOCK_CTRL) and it should be impossible for
+> KVM's suspend notifier to run while KVM is handling requests.  And because
+> the helper updates the reference flags, all subsequent PV clock updates
+> will pick up PVCLOCK_GUEST_STOPPED.
 > 
-> Errors look like:
+> Note #2, once PVCLOCK_GUEST_STOPPED is restricted to kvmclock, the
+> horrific #ifdef will go away.
 > 
-> In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
->                   from <stdin>:3:
-> ./arch/x86/include/asm/ftrace.h: In function 'arch_ftrace_get_symaddr':
-> ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of 
-> function 'get_kernel_nofault' [-Wimplicit-function-declaration]
->     46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip 
-> - ENDBR_INSN_SIZE)))
->        | ^~~~~~~~~~~~~~~~~~
+
+:-)
+
+> Cc: Paul Durrant <pdurrant@amazon.com>
+> Cc: David Woodhouse <dwmw@amazon.co.uk>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/x86.c | 17 ++++++++++++-----
+>   1 file changed, 12 insertions(+), 5 deletions(-)
 > 
-> Will send .config on request if needed.
 
-
-Thanks for the report!
-
--------<arch/x86/include/asm/asm-prototypes.h>
-/* SPDX-License-Identifier: GPL-2.0 */
-#include <asm/ftrace.h>
-#include <linux/uaccess.h>
------
-
-Ah, that's why... get_kernel_nofault() is defined in linux/uaccess.h.
-I also found that is_endbr() is in asm/ibt.h.
-
-Can you try this?
-
-Thank you,
-
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index f9cb4d07df58..d24d7c71253f 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -16,24 +16,9 @@
- # include <asm/ibt.h>
- /* Add offset for endbr64 if IBT enabled */
- # define FTRACE_MCOUNT_MAX_OFFSET	ENDBR_INSN_SIZE
--#endif
--
--#ifdef CONFIG_DYNAMIC_FTRACE
--#define ARCH_SUPPORTS_FTRACE_OPS 1
--#endif
--
--#ifndef __ASSEMBLY__
--extern void __fentry__(void);
--
--static inline unsigned long ftrace_call_adjust(unsigned long addr)
--{
--	/*
--	 * addr is the address of the mcount call instruction.
--	 * recordmcount does the necessary offset calculation.
--	 */
--	return addr;
--}
- 
-+#include <linux/uaccess.h>
-+/* This only supports fentry based ftrace. */
- static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
- {
- #ifdef CONFIG_X86_KERNEL_IBT
-@@ -55,6 +40,24 @@ static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
- }
- #define ftrace_get_symaddr(fentry_ip)	arch_ftrace_get_symaddr(fentry_ip)
- 
-+#endif
-+
-+#ifdef CONFIG_DYNAMIC_FTRACE
-+#define ARCH_SUPPORTS_FTRACE_OPS 1
-+#endif
-+
-+#ifndef __ASSEMBLY__
-+extern void __fentry__(void);
-+
-+static inline unsigned long ftrace_call_adjust(unsigned long addr)
-+{
-+	/*
-+	 * addr is the address of the mcount call instruction.
-+	 * recordmcount does the necessary offset calculation.
-+	 */
-+	return addr;
-+}
-+
- #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
- 
- #include <linux/ftrace_regs.h>
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Paul Durrant <paul@xen.org>
