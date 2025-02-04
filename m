@@ -1,126 +1,171 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF38820ADEE;
-	Tue,  4 Feb 2025 10:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010C95CDF1;
+	Tue,  4 Feb 2025 10:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738665849; cv=none; b=KbFiVRsF+Ni5w8OhdK/ks157pyepu0cf3k20wARZzl1M7ueGYqtQ0TL49JnCpkeZeialdNbH9yTYc+/sV3nKh8+oNDJYwY1/95iD7xxIpmsQMZk0jgE8aCzwYPTlfsoJ+6ufjyYCKW2ylBRafmMB4OPb6oEL2U+ktJ4J4uoPZTg=
+	t=1738665886; cv=none; b=N2imcNEDu2rXrub0Wc13an7XROuyd42gLLTsKH/ejwN8I6rPD5uC9nibg0+ZOLpUwou5bLtdfqMG1xzmw7gpvnPtq0mMiLzuK2+P3OX6Htt/+r3NntGwcZ207UN8F8fR3WdNzrWv0uIIBp1ChzzYjByuOn7lENDuqQSCSBJT7Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738665849; c=relaxed/simple;
-	bh=FnlSQ301/+be7sD0TFrmBFg3fr5i6FZe2auLZGNlS0U=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=m3rID64yurslEkpWABLv6F5BKMCGlFi6ehh4IBBk1Mgu9wVoR+vZR2ZjXmijoYxpb06vXK8Z0Plk7N15jtIgfNNbVN5Xwoz+1MdqU3Gtd25agGPb+oPtO1Kdcpacjvt44QTPji6hSvMkrZix3MGZz7zWyFNfU79+hGrfZSsaZUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ah/bp4rS; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738665886; c=relaxed/simple;
+	bh=0i+/QpodIh9z8Ty+0nLpk/UyqlVHoGX8Wr8NdBoMgjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMfQonteWyppzGA/XlLB//Gw2wXs5gMKU1UjdcUcoOuUQln0FbmzWFNSt6GVsDlNxbfO6Q/06VYTaC8zxDrt03t0S7Hr0PKvVIVD0VOPeB6sWQcBAgNY9ETWjTmsBiytbdszxSzvvlD/KAb5DD6wg1rWl3mJqBSFAkE32X7TqbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=S5xUWRQX; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ah/bp4rS"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361b6f9faeso33202435e9.1;
-        Tue, 04 Feb 2025 02:44:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738665846; x=1739270646; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lMArTWxNFUp4PQzCQD8slqPHvp/31eRbyPGy6SkB2WA=;
-        b=Ah/bp4rSwp16VIdyt9FPsAODI1p7FIfEX39Ni3tABULuDYhnjrsGvKF4Je8t4YzzkF
-         z4tikf1lTDHlkZ18JkrZ2kzE2lB/RqEwdT6aUeLgkSVqFoCoEk81D4IOcVs5NgUR92yv
-         fXZFnqJDGJGbx6wdQEpjIyVBszgC3JWS47FbRiZvLdYdFNbf8lQnzwhy0mn0IkbSGKUf
-         MN8Ts2k/B1Tq4ri/Rl9R3W+JKCC8DfKjznQR2pJXIhjbuNZDbT1Pe8rBpXcGsWeaA36S
-         P6Mek6nXbrn3au+3fSm/te4+SPlIYIPNs5paxb3f73KjBb2HToWt1DSKfTkHAKtoUf9h
-         Nunw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738665846; x=1739270646;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lMArTWxNFUp4PQzCQD8slqPHvp/31eRbyPGy6SkB2WA=;
-        b=JX39Mv9AqqT8RjwK35DeOhg0JIuzS8JIVdURTYZf1LS+Bb2ZwkEdoaDuxwd8X8l/JZ
-         y4bI4s+MeLlJjJoTNoP9/q4HqbtSCiv8DIO8+cDo5UkIbH6VJxgsZY1LqiJeYtiynea7
-         eEvGdP5SyZplt9B8eANwecqldbSjCtjWCrZ03hNzFWFQaFcqMbGlB1oEOmZPPajCyUid
-         +wExdSbqmiHnoFfqpicognOsltuCVs3pNZ0WELpKzcobR9MRbZHqoWQrtovS3Ph90PZ/
-         GhKQQbfHtVxuWY8PsGBbAakBGmq1YSkgQDcvfHV1yz5c27Th15TOH7kNNPrNPGKkTjyu
-         /GUg==
-X-Forwarded-Encrypted: i=1; AJvYcCV8f/hUcxb2PYG8wC3dTwPp7N37hlRZp/+QmLj2TiN5le92/7uXC2w4P58acogMZwdEWMcHd9d4MCg4FAw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyg+FuFMyHAd9K4t/Q6l3ZzDjlUeMMPAcMiF/KB5C+xKUx8fI5l
-	l/VIhHs9sgxdgoQWvvVwO2HmTAfPE9UyD3qbnZ1oHK6UGbg8fMpM
-X-Gm-Gg: ASbGncuxipUFDtmaim0XDvn0noMJNhUKRF2L2J0pJ6mxvu+XxgenW0pRP5/EJnPfjB3
-	RbIX9kEIALCo9QxU9FlB5Sg5kdNFnS4+k6uRVZOLu3LN6kqil+O1lfcTuhehJhQgvLdUUUoZHUG
-	8IekLj9Wr7YxONvcG8rIxVV/e4m8f3cwbERqHaE7WYHaSKrH0n+/eRiP9wMWjKEkFmv6hWZ2xTa
-	JqYtzgPZIFWcNPai+F5EXa71smaQv5gjh9so/tZJiX6NQQBZ9Rz4AW/fMFWNG0YP5ze5NMyG1NJ
-	maSQzGYUv7OjggjKccMboJoYYSBetHSCjA==
-X-Google-Smtp-Source: AGHT+IHsN8HTcCwIdZM+oqcLS8cPH93vMIT74gEgvRL+nbc/qsns8TrvV+nm1LCTJCegyuOBJuh5tA==
-X-Received: by 2002:a05:600c:1f8e:b0:435:edb0:5d27 with SMTP id 5b1f17b1804b1-43905f743f5mr19708595e9.9.1738665845748;
-        Tue, 04 Feb 2025 02:44:05 -0800 (PST)
-Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2e3a6sm228450075e9.20.2025.02.04.02.44.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 02:44:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="S5xUWRQX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1738665881;
+	bh=0i+/QpodIh9z8Ty+0nLpk/UyqlVHoGX8Wr8NdBoMgjg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S5xUWRQXN71lENpIrHVtnAvrNCS4VqMu5RWX9xffByEjCxIoI7SHHHb9ayZYwcQPL
+	 bVBt1+DINDqOhR1miaQs9sWEMGI6OJ6eqJA5BIWz6Fv8tgudBBYDYL+LPtkjImZCay
+	 sIA6/QDGC+e3quoDTIqMliqQf5/eszvcaW8NDPrA=
+Date: Tue, 4 Feb 2025 11:44:41 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>, Mark Brown <broonie@kernel.org>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mairacanal@riseup.net>, Robin Murphy <robin.murphy@arm.com>, 
+	Simona Vetter <simona.vetter@ffwll.ch>, Zijun Hu <quic_zijuhu@quicinc.com>, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 1/3] driver core: add a faux bus for use when a simple
+ device/bus is needed
+Message-ID: <21fb6681-c214-4841-9cc6-45da3f965066@t-8ch.de>
+References: <2025020324-thermal-quilt-1bae@gregkh>
+ <2025020326-backer-vendetta-7094@gregkh>
+ <127f992b-1c53-49e1-8939-65b1d086fac5@t-8ch.de>
+ <2025020430-polyester-unwind-5f9e@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 04 Feb 2025 11:44:04 +0100
-Message-Id: <D7JLLQ79FP2Z.2Z7VYLSC52A2U@gmail.com>
-Cc: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/8] wifi: ath12k: handle change_vif_links() callback
-From: "Nicolas Escande" <nico.escande@gmail.com>
-To: "Aditya Kumar Singh" <aditya.kumar.singh@oss.qualcomm.com>, "Kalle Valo"
- <kvalo@kernel.org>, "Jeff Johnson" <jjohnson@kernel.org>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250204-unlink_link_arvif_from_chanctx-v1-0-675bd4cea339@oss.qualcomm.com> <D7JKQ60C6EZA.24H639LLIG2U7@gmail.com> <076014d2-eaaa-44be-81fc-a8f1eb0c2ac9@oss.qualcomm.com>
-In-Reply-To: <076014d2-eaaa-44be-81fc-a8f1eb0c2ac9@oss.qualcomm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2025020430-polyester-unwind-5f9e@gregkh>
 
-On Tue Feb 4, 2025 at 11:23 AM CET, Aditya Kumar Singh wrote:
-> On 2/4/25 15:32, Nicolas Escande wrote:
->> Hello,
->>=20
->> When applying this series I am no longer able to start an AP on a DFS ch=
-annel.
->> (I don't know specifically which patch though)
->>=20
->
-> Thanks for reporting this. I think non-DFS channel should be working=20
-> fine right?
-Right non DFS channels are ok, only DFS ones, and not from the get go but a=
-fter
-the initial CAC, when they switch to operational mode.
->
-> Anyways, I'm able to repro the issue locally. Let me investigate further=
-=20
-> and come back.
-I'll happily test what you can throw at me.
->
->> After the initial CAC period I get the following kernel message:
->> 	[   45.248441] ath12k_pci 0003:01:00.0: cannot install key for non-exis=
-tent peer 3a:07:16:d8:00:08
->> And then hostapd goes in failed state:
->> 	wlan0: interface state UNINITIALIZED->COUNTRY_UPDATE
->> 	ACS: Automatic channel selection started, this may take a bit
->> 	wlan0: interface state COUNTRY_UPDATE->ACS
->> 	wlan0: ACS-STARTED
->> 	wlan0: ACS-COMPLETED freq=3D5620 channel=3D124
->> 	wlan0: interface state ACS->DFS
->> 	wlan0: DFS-CAC-START freq=3D5620 chan=3D124 sec_chan=3D1, width=3D2, se=
-g0=3D114, seg1=3D0, cac_time=3D5s
->> 	wlan0: DFS-CAC-COMPLETED success=3D1 freq=3D5620 ht_enabled=3D0 chan_of=
-fset=3D0 chan_width=3D5 cf1=3D5570 cf2=3D0 radar_detected=3D0
->> 	wlan0: nl80211: kernel reports: key addition failed
->> 	Interface initialization failed
->> 	wlan0: interface state DFS->DISABLED
->> 	wlan0: AP-DISABLED
->>=20
->> Maybe I missed something ? Is there another series this one depends upon=
- that I
->> should have applied before ?
->
-> No known dependency as such.
-Good, as I have a few other series applied in my tree I was affraid it migh=
-t be
-something on my side.
+On 2025-02-04 11:20:43+0100, Greg Kroah-Hartman wrote:
+> On Tue, Feb 04, 2025 at 11:08:11AM +0100, Thomas Weißschuh wrote:
+> > On 2025-02-03 15:25:17+0100, Greg Kroah-Hartman wrote:
+> > > +static void faux_remove(struct device *dev)
+> > > +{
+> > > +	struct faux_object *faux_obj = to_faux_object(dev);
+> > > +	struct faux_device *faux_dev = &faux_obj->faux_dev;
+> > > +	const struct faux_driver_ops *faux_ops = faux_obj->faux_ops;
+> > > +
+> > > +	if (faux_ops && faux_ops->remove)
+> > > +		faux_ops->remove(faux_dev);
+> > > +}
+> > > +
+> > > +static const struct bus_type faux_bus_type = {
+> > > +	.name		= "faux_bus",
+> > 
+> > Is the _bus suffix intentional?
+> 
+> It was intentional.
+> 
+> > Other busses don't have it.
+> 
+> True.  Naming is hard.  I guess /sys/bus/faux/ makes sense, I will go
+> rename it.
+> 
+> But for the "root" device, does /sys/devices/faux_bus/ make sense, or
+> should it be /sys/devices/faux/ as well?  I'm now leaning toward the
+> latter...
+
+I'm leaning slightly towards the former.
+But my naming skills are beyond limited.
+
+> > > +	.match		= faux_match,
+> > > +	.probe		= faux_probe,
+> > > +	.remove		= faux_remove,
+> > > +};
+> > > +
+> > > +static void faux_device_release(struct device *dev)
+> > > +{
+> > > +	struct faux_object *faux_obj = to_faux_object(dev);
+> > > +	struct device_driver *drv = &faux_obj->driver;
+> > > +
+> > > +	/*
+> > > +	 * Now that the device is going away, it has been unbound from the
+> > > +	 * driver we created for it, so it is safe to unregister the driver from
+> > > +	 * the system.
+> > > +	 */
+> > > +	driver_unregister(drv);
+> > > +
+> > > +	kfree(faux_obj);
+> > > +}
+> > > +
+> > > +/**
+> > > + * __faux_device_create - create and register a faux device and driver
+> > > + * @name: name of the device and driver we are adding
+> > > + * @faux_ops: struct faux_driver_ops that the new device will call back into, can be NULL
+> > > + * @owner: module owner of the device/driver
+> > > + *
+> > > + * Create a new faux device and driver, both with the same name, and register
+> > > + * them in the driver core properly.  The probe() callback of @faux_ops will be
+> > > + * called with the new device that is created for the caller to do something
+> > > + * with.
+> > > + */
+> > > +struct faux_device *__faux_device_create(const char *name,
+> > > +					       struct faux_driver_ops *faux_ops,
+> > 
+> > const
+> > 
+> > > +					       struct module *owner)
+> > 
+> > What about attributes?
+> 
+> What in-kernel user of this wants an attribute for such a device?
+
+It was mostly a guess.
+However drivers/video/fbdev/gbefb.c seems to be an example.
+
+> And again, if we find one, we can make a faux_device_create_groups()
+> call that takes a pointer to an attribute group structure if it's really
+> needed.
+
+Fair enough.
+
+> > > +{
+> > > +	struct device_driver *drv;
+> > > +	struct device *dev;
+> > > +	struct faux_object *faux_obj;
+> > > +	struct faux_device *faux_dev;
+> > > +	int ret;
+> > > +
+> > > +	faux_obj = kzalloc(sizeof(*faux_obj) + strlen(name) + 1, GFP_KERNEL);
+> > > +	if (!faux_obj)
+> > > +		return NULL;
+> > > +
+> > > +	/* Save off the name of the object into local memory */
+> > > +	strcpy(faux_obj->name, name);
+> > > +
+> > > +	/* Initialize the driver portion and register it with the driver core */
+> > > +	faux_obj->faux_ops = faux_ops;
+> > > +	drv = &faux_obj->driver;
+> > > +
+> > > +	drv->owner = owner;
+> > > +	drv->name = faux_obj->name;
+> > 
+> > Assuming most names are constant, this would be better with kstrdup_const().
+> > Which is also used by dev_set_name() under the hood.
+> 
+> I've now removed the additional driver, but note that this is just a
+> pointer assignment, which is fine to do here as the lifespan of
+> faux_obj->name outlived the driver structure's lifespan.
+
+It outlives it because there is extra space allocated for it in faux_obj.
+With kstrdup_const() that space would not be needed.
+In the end it shouldn't really matter one way or another.
+
+
+Thomas
