@@ -1,177 +1,148 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2087.outbound.protection.outlook.com [40.107.237.87])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AF020C494
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738689230; cv=fail; b=PPhI9odxZdTbVVK5VAaucODM6vW+yUAir6um6A/y0sQbGu30ZzTq6GYFuXflDSw2uaR53YHbK7Ky7kgyb/1DlLnBf60NrOksNN0vo/UyAgzzAWq0lH429CgYveciRSDak5xhdlzAszpLG7/9LAm5nh3bmjH7D1R91qNDDtmwEmA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738689230; c=relaxed/simple;
-	bh=Y9CJeJSxRItquIvTr1kUEUvTWJZYnrjKuCd0siVHgeo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=bL8ljZ2sJjSiSZGIBIA4okg1MgyucaZkKUDtvVtG0KAeX3qHRxTvVsOqC1ouqRwpYQRWOpA2rwa75hCVeFbRG9t384D+sP0yzvUUkn/Fe+jPmhYT/tC9m/41rwEPv7LGdSyE0IdyVQqKgqhc1Noo/soMenuZgRhQVlRjQYJveQ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZJZ313wv; arc=fail smtp.client-ip=40.107.237.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CFD1547D8;
+	Tue,  4 Feb 2025 17:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738689338; cv=none; b=b5dsS0qrlVFQrdW0yF5b+HA4a+wlq6SH/GfLWFoqRyXTDf4xDMYAbtxrouPrzt3Muc1j7+s2QN1Rdlj3hC4O4dMedSuV4mND4g7Lq/IuhAyGjmC/5FqhG/2YiCBTM4QF39kM+PksgWH2TtMQ4mb+ftxrCf0GBF1dyRpwPxL0XLQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738689338; c=relaxed/simple;
+	bh=D4dDCeCtCvK0b+cHySHXx6/Bt2dV9Y0VXU7kJjskQHM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ulpSmvwSXL0rAebZQ3yciDxtbqpnw/DrYSZCWSsDB4qR9Po88KnMbFzdoDgt4s03VMWlmbCjyhMpDpohMA4+bQcYTURdwd0rpzW1zGYauxYxsPkZyOoo6BYJa7meE+vQzSHUQs07C1MNceS/ER1F3CO6+AGnyLb1KxY35RplQM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KsgkX9ml; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZJZ313wv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n15LJdR05k/gbDs8GRiWAqLxbKw3Whty03w6jk7IZhbB2tbEDcSgXJnc5rG3RvS75tDfwHQ6hSi4tc7qmE1V4if/PAkufE6QqdXhY+J1wQACqI61wC8yYQLE4k7inpszBGp1Nb6g9vfDtUJpff+0Bom4c9XjdVVTbhlBf5a+Jtmxpd2H4VAtc8Wm5IhSenVlm17Vj5A54N+4P0DB94pqDeekO1FUjfPUTnIYNAOoMcAysCwgdOC08L4LGkVTzDslJcmd8itzHWWvtXbglYSzEyjp30kIzeuET+StB+HRsUHazxxQg95C7M0hKGGW1MjwYehFk2Y9fE79y7tSgRMWEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=irR5rNA3tCmCdTPDtPHKDH+VxshxuRJkkYS3eNdav+M=;
- b=g3fM8ljod5O8sEhksy0FjS/Mvxvsaj0LN7F1cZyiOxNzaTwhFj53/6niQVZD0hlVm0rlUXGKZGnFzRJjSjY/xu9Q6yJ8VkZr0rXxo+F1Uoby2S8ul5vhzpwLV58JM4h7fxKXzkAnMNt1BZePtIko9c/Fc2Wz8TUwnImNL+oOufSTq+FFXmmgiCbdkYEUX6+GlvEkeHPeqTuxlw9So9JQaw9KknkikaUq2WuldrXnR78Q+bO76o8/VXpTn/k6NpTd00xCFOtN2FUrfjSvxzafHTuj1CCG2LKeWtMrFhRNi8HgsGX0A3RALclLI5dA/m9t041znewzk3ExYmFGj3HTlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=irR5rNA3tCmCdTPDtPHKDH+VxshxuRJkkYS3eNdav+M=;
- b=ZJZ313wvMnwOC7k3/nf6bq47W+SVEwgec02CLFJ63kagGMcNt8QwFGjnjv7tZkfl+f4afTHx9FQiDBqEe1rat5vYLtYywUIQevYosI4yQkVNd7Dt2lmwCHIzeKRq4iPdhYd3A+oMYGYrxiEfnfalTiKogfTA9yH+Rxiw0FJcbyk=
-Received: from PH7PR02CA0010.namprd02.prod.outlook.com (2603:10b6:510:33d::29)
- by BY5PR12MB4100.namprd12.prod.outlook.com (2603:10b6:a03:200::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Tue, 4 Feb
- 2025 17:13:45 +0000
-Received: from CY4PEPF0000E9DB.namprd05.prod.outlook.com
- (2603:10b6:510:33d:cafe::6e) by PH7PR02CA0010.outlook.office365.com
- (2603:10b6:510:33d::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.24 via Frontend Transport; Tue,
- 4 Feb 2025 17:13:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9DB.mail.protection.outlook.com (10.167.241.74) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Tue, 4 Feb 2025 17:13:44 +0000
-Received: from [127.0.1.1] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Feb
- 2025 11:13:41 -0600
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-Date: Tue, 4 Feb 2025 17:13:16 +0000
-Subject: [PATCH] linux/bits.h: Squash unsigned comparison warning for
- GENMASK
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KsgkX9ml"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738689336; x=1770225336;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=D4dDCeCtCvK0b+cHySHXx6/Bt2dV9Y0VXU7kJjskQHM=;
+  b=KsgkX9mlk0/lO6bHA+AcATpRS3pnsti2kE6LvY70vfAlME5GXu0wZ6y4
+   CGTb+BOmQ5LJqj6lDFEvfF8IIfls16Y9W8Ys+caLLl2FFA70oIrD3wQSh
+   Vo4AhezdGhzR0ItJCD86+L/ANRvHPz44lCIaxML8YVFK0DvpyJges+3tS
+   XLRhdF1FI/I4Tgg6KGiGqPYXbU4LyQD2XGp8chJwKoSWL77mRWWaNdb4h
+   6Uh9kuD59rsgjYds4Vrf8PCinPjEwStaxyog5CcA4a+ZK7XNf+XPUPQkt
+   pJZ9Ov5w3Oz5XD+EZ2vgHIv4N+5FVaTYuid4BJ9eYkj8OzvF+7CKZ3UDO
+   g==;
+X-CSE-ConnectionGUID: erkThfHLTnCZA2d2SgLzSQ==
+X-CSE-MsgGUID: VC2DI/wQSDqLRTQYOwLbEQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="42067063"
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="42067063"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:15:35 -0800
+X-CSE-ConnectionGUID: VSrj3jrtQ+SRS7EtX16cDg==
+X-CSE-MsgGUID: xKCo2uCySw6hDVyux856ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="111235463"
+Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:15:34 -0800
+Date: Tue, 4 Feb 2025 09:15:34 -0800 (PST)
+From: matthew.gerlach@linux.intel.com
+To: Krzysztof Kozlowski <krzk@kernel.org>
+cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
+    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
+    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
+    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
+    peter.colberg@altera.com
+Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
+In-Reply-To: <2323e446-14fd-462e-9fd2-d707f7d3802d@kernel.org>
+Message-ID: <1f8885db-1346-ed9e-dc3a-3938def7f472@linux.intel.com>
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com> <20250127173550.1222427-4-matthew.gerlach@linux.intel.com> <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org> <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
+ <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org> <7c802294-97f6-3e9-4028-686484a525c5@linux.intel.com> <dd51fdae-0e00-44a9-a5a0-e536ba60fd8c@kernel.org> <56486d91-5ca-d85-eca1-1ce2df25238@linux.intel.com> <2323e446-14fd-462e-9fd2-d707f7d3802d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20250204-fix-genmask-warn-v1-1-626de7a30090@amd.com>
-X-B4-Tracking: v=1; b=H4sIAKtKomcC/x3MQQrCQAyF4auUrA2Ow2hbryIu0pq2QRslERVK7
- 250+cN73wLOJuxwrBYwfonLXSN2mwr6iXRklEs05JT3KaeCg3xwZJ3Jr/gmUyxNS4fSpLpuB4j
- bwzg2f/J0ju7IGTsj7acfNJPoTZS3ITzZYF2/jBIGE4QAAAA=
-X-Change-ID: 20250204-fix-genmask-warn-489a6480779f
-To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>
-CC: <linux-kernel@vger.kernel.org>, Yazen Ghannam <yazen.ghannam@amd.com>
-X-Mailer: b4 0.15-dev-e27d6
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DB:EE_|BY5PR12MB4100:EE_
-X-MS-Office365-Filtering-Correlation-Id: d323e9e6-af0a-44e4-bda5-08dd453f4814
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZFEwN0htVzBHV0hCZXJTcko2dmtzMWVYYXA2SzVPNzZvMFFUUFB2N3pUU0J4?=
- =?utf-8?B?ZWRGNFZQL1dNRkxPeVZUL1l3anJaRkxQRVlPRWxIUjVYMC9yQmVDN0Z1bHBG?=
- =?utf-8?B?TU5pVzBjOG5VTWVWZEpjc09IMkh2ekRnMHNFeVBiekNaVzFjTEpMVzBha3Jn?=
- =?utf-8?B?UnRoano2RVNVM2tLLzVjRk1JeklneGo3UjZhZnhnVjdldTB2dWFPWTVrRWhQ?=
- =?utf-8?B?YWQyVWNvbDd3QmFmTnJQWjNOWUpkSXJEWTROekRlbjRNSDB1OVpreGNNWXZZ?=
- =?utf-8?B?WGs0aFQzelJUUzBaUllKcUV3RnN5dCt1MVB6OG5WSDBKeVdTeWlPSC9penJU?=
- =?utf-8?B?S3VkL0dDRzBXWmJkejRHMmN0OHlVM0NLN3RoTDIyeFlJQ0JPakd0dFAyRjJF?=
- =?utf-8?B?TlY3cVNweXBtZXF1MUNkeURCeFJEUjdrOVpSamtOUXhkclFJZTBFRElQVGZ3?=
- =?utf-8?B?dFlmU1FEbHRnQ09mT3JxczBNeVdjSzBjWlNsVDF1OUxGUStYTFFJR2VSby9J?=
- =?utf-8?B?RU85dHBZQThMRW9nRnFidFR6Vzk0dlEvQnlsTlJaWUMzaDFjUFdEU3lINndX?=
- =?utf-8?B?cW01dXA0RDVoUDVwQWY5WlZjVXY5b3IwL3lKR0hrdEo2SURUN3pvMXpjTTJQ?=
- =?utf-8?B?YzZNa1VwaU5aR09BQkpKSTkwT21IbnBQL3czSURpUTljcHBuM0FpV3NwOHNB?=
- =?utf-8?B?NTQ2TEY0aFBubE1LZkw3cVA0SExxWXdaOTRNNEpTZ1Z3WVA5RGloYmZaT2tB?=
- =?utf-8?B?eHF4bHJQRmVtNmF4bWFHS1BPUzg1ZWhkM0ZBNm9YeWFWcFlUMjV5aGszODVX?=
- =?utf-8?B?M05wS25oRFVhU3FqNUNiZjJyNjlNUGRrN1FlL005cnlqTXl3N1dJU3BDYkNS?=
- =?utf-8?B?allzN1NCLzZxc0pKRmsxR01zL2hidk81VW16dHBRSkhkUVVyMHhaRVFyM3hS?=
- =?utf-8?B?NFhBZzMxR00wVDcyYjhIM2ZQK1hWRFUzK0lrUDBVZDN4dnNqKyt3WUhhZURC?=
- =?utf-8?B?RWd1ZzBTU1huQTBzT2g3SG5UeFViV3NNLzQ4cG91SHFNSDh3Mm1hd3BYcTkx?=
- =?utf-8?B?Vmt6bHZ2T2RPR3NFZ1BCRkpDYnBzL29CbTh0SXJrN2lDdHJQRE9ieWhIVCtv?=
- =?utf-8?B?azk5cmNkU053SGZodmVLMncvTGN6MVNzQi9vZzg0RjNCMjVSaEk5Y1pEdVAw?=
- =?utf-8?B?N1h0ZSs5VXowL3ZxbnMraW9YWGg4WE9nTnpsd25PV1paSlp6dFdvcWFoV1dm?=
- =?utf-8?B?eSt2WEVhTkR3OGMrOWR1V29ycDBBU1VVcG1oN1NvMTRNaHFJTXJYTE5pYWdP?=
- =?utf-8?B?c0FEL21oMFVaM2l1RnlOQ3pYUWRmUGFteXh5REJPT3lVbmF3Y1NUZkVNQ1hX?=
- =?utf-8?B?c2FMS3doaEZvdllwNjhBbmg5R0E5dERiMVoraU14RFhySDNyVnpKNnZGOTFT?=
- =?utf-8?B?Yi9PQ1NCU2ZnbHVtL2xhQlRYZTdWbGwwaUlhdW1nRE9XQkdBVmJOcGhST2tW?=
- =?utf-8?B?UlVQd0xtWDI1REdtN2RETGh4MThaeUVBeEJyZnZWaWYrWmtoV3NxQ2I0L2Ro?=
- =?utf-8?B?TXFoOU04RlRjOW5abmt1Q210V1R5UFU2NW5LNmFjNjM3VGxibnlvaHh5SHl3?=
- =?utf-8?B?ZmpxV2xhTTRPejBZTG1QRDlvd1Y3R1UwNjZvMVgyV3MwUTlObHllOWxoVjdk?=
- =?utf-8?B?T2RYQjhJdUszZ01CaUlJbzR1ZnZ0NTFVM3ZiZVIvMm5YTlpYTE9MR1IveGp2?=
- =?utf-8?B?QUJ0VU1UWnh3WDNkMkNIbFpyYjU3a1E5ZEhGNGRxZWorVVdmMWtLbWVxcXd3?=
- =?utf-8?B?cnNld0NQcUpINmJOcVV2QVhGYWtTdTZmUXhMcVIyRmZKS3pzTzdDQVRmb1F4?=
- =?utf-8?B?Q1NKMEY3SG1LTGNxNGtmZTVNaEsxRnd2YmhCZGF0ZHJMUVM4OUhUQ3c3aWtZ?=
- =?utf-8?B?d0lvSlRHSzlvSTZuNXQyZS9hYnRWWjBEWDQ0dnNoay9LMnd5ZGpRNmhJaS90?=
- =?utf-8?Q?ULgWhjVKuEytNSyNMbplI41cxV029c=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 17:13:44.9334
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d323e9e6-af0a-44e4-bda5-08dd453f4814
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9DB.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4100
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Cast inputs to 'long' to avoid the following 'type-limits' warning:
-  warning: comparison of unsigned expression in ‘< 0’ is always false
 
-The 'long' type can hold +/- 2G which far exceeds valid inputs for the
-GENMASK helpers (current max use is 128 bits).
 
-Idea is similar to implementation in __is_nonneg().
+On Sun, 2 Feb 2025, Krzysztof Kozlowski wrote:
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
-Note to maintainers:
-I found some previous discussions on this topic in the mailing list
-archives. The upstream code has changed a bit since then, and this
-proposed solution seems fairly simple when based on the latest code.
+> On 02/02/2025 19:49, matthew.gerlach@linux.intel.com wrote:
+>>
+>>
+>> On Sun, 2 Feb 2025, Krzysztof Kozlowski wrote:
+>>
+>>> On 01/02/2025 20:12, matthew.gerlach@linux.intel.com wrote:
+>>>>>
+>>>>>> they are also referenced in the following:
+>>>>>>      Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
+>>>>>>      arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
+>>>>>> I am not exactly sure where the right place is to define them, maybe
+>>>>>> Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other
+>>>>>> hand, no code references these names; so it might make sense to just
+>>>>>> remove them.
+>>>>>
+>>>>> In general: nowhere, because simple bus does not have such properties.
+>>>>> It's not about reg-names only - you cannot have reg. You just did not
+>>>>> define here simple-bus.
+>>>>
+>>>> I understand. I will remove reg and reg-names.
+>>>
+>>> If you have there IO address space, then removal does not sound right,
+>>> either. You just need to come with the bindings for this dedicated
+>>> device, whatever this is. There is no description here, not much in
+>>> commit msg, so I don't know what is the device you are adding. PCI has
+>>> several bindings, so is this just host bridge?
+>>
+>> The device associated with two address ranges may be best described as a
+>> simple-bus. It is a bus between the CPU and the directly connected FPGA in
+>> the same package as the SOC. The design programmed into the FPGA
+>> determines the device(s) connected to the bus. The hardware implementing
+>
+> So it is part of FPGA?
 
-I figured I'd look at something outside my normal focus areas. I
-apologize for the noise if this solution is too naive or incomplete.
+Technically, the PCIe Tiles are hard IP, but they are connected to the 
+processor through the FPGA.
 
-Thanks!
----
- include/linux/bits.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>> this bus does have reset lines which allow for safely reprogramming the
+>
+> Then it is not simple-bus. Simple-bus is our construct for simple
+> devices. You cannot have something a bit more complex and call it
+> simple-bus.
+>
+>> FPGA while the SOC is running, which implies appropriate bindings as you
+>> suggest. Something like the following might make sense:
+>>
+>>  	aglx_hps_bridges: fpga-bus@80000000 {
+>>  		compatible = "altr,agilex-hps-fpga-bridge", "simple-bus";
+>
+> FPGA bridge maybe, but not simple-bus. It does not look like a simple
+> bus if you have here some resources.
 
-diff --git a/include/linux/bits.h b/include/linux/bits.h
-index 61a75d3f294b..318346f2a5a6 100644
---- a/include/linux/bits.h
-+++ b/include/linux/bits.h
-@@ -21,7 +21,7 @@
- #if !defined(__ASSEMBLY__)
- #include <linux/build_bug.h>
- #include <linux/compiler.h>
--#define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
-+#define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((long)(l) > (long)(h)))
- #else
- /*
-  * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+FPGA bridge is a more accurate description of the actual hardware than 
+simple-bus. This bridge does have two address ranges to access the FPGA. 
+One address range is considered "light-weight" intended for register 
+accesses in the FPGA, while the other a full featured AXI interface 
+suitable DMA.
 
----
-base-commit: 0de63bb7d91975e73338300a57c54b93d3cc151c
-change-id: 20250204-fix-genmask-warn-489a6480779f
-
+>
+>>  		reg = <0x80000000 0x20200000>,
+>>  		      <0xf9000000 0x00100000>;
+>>  		reg-names = "axi_h2f", "axi_h2f_lw";
+>>  		#address-cells = <0x2>;
+>>  		#size-cells = <0x1>;
+>>  		ranges = <0x00000000 0x00000000 0x80000000 0x00040000>,
+>>  			 <0x00000000 0x10000000 0x90100000 0x0ff00000>,
+>>  			 <0x00000000 0x20000000 0xa0000000 0x00200000>,
+>>  			 <0x00000001 0x00010000 0xf9010000 0x00008000>,
+>>  			 <0x00000001 0x00018000 0xf9018000 0x00000080>,
+>>  			 <0x00000001 0x00018080 0xf9018080 0x00000010>;
+>>  		reset = <&rst SOC2FPGA_RESET>, <&rst LWHPS2FPGA_RESET>;
+> Best regards,
+> Krzysztof
+>
+Thanks for the feedback,
+Matthew Gerlach
