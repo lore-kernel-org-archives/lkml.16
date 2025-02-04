@@ -1,171 +1,132 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2088.outbound.protection.outlook.com [40.107.237.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1C22153FB;
-	Tue,  4 Feb 2025 16:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738688049; cv=fail; b=lrju1dU+8S3FAOUM3OjcDXBhRTlfvfsAktMZoOmUKr+qIRkuvcnikMNHXUs3LZmL+YV/EYpvorKb3izdCL05oLt6ePwK6kWlvjZsKIIHpOP6U+9p4kOav/EkPyUjQSVU4Vz4uD1Tx+9v62XemLRCjiDRV0D6Y3Wwnl4VrllVB94=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738688049; c=relaxed/simple;
-	bh=6zi0WrJsPt5edkImngTxkdNPlsHiixkPmYB7ncfcQz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=pveWKIyb9F6RvcElRYjNE5UYgz8JD4Vbjuy7mRVDuMns15G8SQtrNzuznqRxl4MQvZaDdx4vCqmqmiMpMykKpOjzRW0zNqD9uHB8XEtlhvSas79+koQbpj7O0LriKI0unamMZjpErNT7Ce6xoVY1AN1dlR24EB9wR13DpG/TGt8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rnGT/v6L; arc=fail smtp.client-ip=40.107.237.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86181215776;
+	Tue,  4 Feb 2025 16:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738688063; cv=none; b=bI+nuWy0eZGYRyKGOxSgXvbwEugjqLlHruKj30Jed2s7jIcE6K5ORVT1bjQaSK4f2VgII+ciJ8WQyPlLRsjwYKbFvFd67STTFImyX1p8unesm4ei2Nv+P1rhcR7cEdcUfIDZeAOa+5AeRtbHcrhuCdMITADw2n5UKqZj6KnaQmw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738688063; c=relaxed/simple;
+	bh=dvbGjmFPIipFOAHao5it2MHqCCB+34eacpcE+gOPX6A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QlFIqynpt4BGkPQ8hcJtmDqpckNmqXN5tI5I50tJV6zTicy8zVN9f6sYzmyL+W0JKaG/vEyc0u+X7UD2K5TGKAEYI4hUrOkdxF2CO9ITEogKiPDwCKaHkfm913nMGvdSZpZo8QYZI7B3ShYt1ygAzZQiPl82lCStIvhR746FYpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UvuBcvkl; arc=none smtp.client-ip=209.85.167.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rnGT/v6L"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=twyj3VoapgheswjJ+HvQXDiiNZyMqDbLtWD7xBpMyj+alB9i/EAaDO47TdxDi+FUWWFSJg8cbIXjbjDXIkPU5liFPcf2mRnielw4QJFtbGWB4E0S0lCWbycwwhig0ayT+ihfMO4n48D3mXD929Wf74sungeBTsj8U3HqPB7J708se2wWKJRWFCg9K1/SDM8EbLJGdXRVJRAPmtP02EaAr35+6slA3c2vyx9qrSmcbXPmjHvB+hGfSi4DLSA7ngWifK8Wpz9DP1p/VA491dx5ZmJKfL5ThvGOv8auyE9f66c5IBELLCFXJPD0toa/JUw2BGt4BNALFfVWMxtfSCK4EA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9TLmlzks+jA5Y5h6PLw7LR5C0MBj72ztqulI/RjBAp8=;
- b=yULnpEjjJ/dwgraq3l+RF8KasJ3l2uWm3PnAJUbs8RifGlCSBKGYpY7MMIm3LeuypQwxkX4dVoxtt6nJsfVDoZ3d8qh6kaNxTcoSobFytdhAUDBs3ZL0YXs+qP0cxPCRSIymtFd9SGn0vbIabhfKV5fOOaTJap6EcSGMgU7aZHPMZ67JzCrP4EIblVFxpLWMIofMmxi4KhWjJyxub6YolJUZdkH0qI5CYuHFjHEsyxAPmPRhfm/gBXqGlZpfKwlks3TEJJlS1kl49FKMS4f87+KI0Ad6bhsXgFI66xJq5G70hZRFfQlSZCpjBteSjvkpWpwQ8C5cAcocgU3GnmIn/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9TLmlzks+jA5Y5h6PLw7LR5C0MBj72ztqulI/RjBAp8=;
- b=rnGT/v6LJ8yI1DQffWYBOZiweIUF43/CiEetar5zgYMY6p4K/rlpF8Ocd2SBatSeveRcRt5ubknFlh/sSjaiNFI4mxjbXqwWMkKFZfwQvazRZJVGWhngy0APHW0PrS4MkRDQEnt4IdJ8vZHhT9v+jBTdDo0sTXyQBFIcc6Yc6YI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- CY5PR12MB6084.namprd12.prod.outlook.com (2603:10b6:930:28::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.24; Tue, 4 Feb 2025 16:54:03 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%5]) with mapi id 15.20.8398.020; Tue, 4 Feb 2025
- 16:54:02 +0000
-Date: Tue, 4 Feb 2025 11:53:57 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] EDAC: Simplify return statement in dct_ecc_enabled()
-Message-ID: <20250204165357.GA277200@yaz-khff2.amd.com>
-References: <20250201130953.1377-2-thorsten.blum@linux.dev>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250201130953.1377-2-thorsten.blum@linux.dev>
-X-ClientProxiedBy: MN2PR08CA0027.namprd08.prod.outlook.com
- (2603:10b6:208:239::32) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvuBcvkl"
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3eb8bdcac2eso1319389b6e.0;
+        Tue, 04 Feb 2025 08:54:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738688060; x=1739292860; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ufxqeTPbh5jVi4KeE739Ux/m/0UeBoN+5T7+ZjE4za4=;
+        b=UvuBcvkl9pWpREAdGJFo+EOFxg70yaRag7S0x+Txq+jwq+5bpnW16FbI+L95B/9d30
+         K9XrDHhzDte0He+kLJVmmeSFLVa4x5rAzBiEI+Rjutc1rPukfLXWucAy3ju7LZI4Pk20
+         ObXuX9Utvllaqcma4rQ/CHko+/sTBiODL7ubTfyx++6JKEM89eEiXd/gsB3lpOiFM0SC
+         yNYjj43zOnEe3WekuaTA/3T5mZtI4CAeysTA7SNuiXpRn+6dwkNJYdCqGOvK8dLxkf1n
+         XsYnzxIWlcjx5fgOJhhT0GFA5hQ3AwP9Y88tWfeR8vQXEkKyo7Iap4WRUw3qyOX75omY
+         lzXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738688060; x=1739292860;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ufxqeTPbh5jVi4KeE739Ux/m/0UeBoN+5T7+ZjE4za4=;
+        b=bqj98DAgsJ24WwCIl9amyGO7N8I7Wj9dFLG2vlRnwh5Vx1LlhbrCZBE5rKtbJ7LtDJ
+         ChRflcxUZfTccV2Qq3kQlfnvQ/6gesDDRnnkXDLO343YHrjTaBRvWrA1AwG3Us8DXGNv
+         1TQT4k/2QReCVHiGIWw4fRDYiQfe8nvPdXpRoMohmNnsomd6foyTAQTghiseyasmpnW4
+         YvGR+o2O1m1a288bLH+3KCUJ7Kj1UMyn9s5vHh39aBBvjGgRIpWhnRX5jfnzUrd1iCl6
+         Htw2CmaNXWEhZDGpKRPaavVyjZxHJUl0e6rR3288fwfXIHTrgVFjmLabe4bG5A+9dB0K
+         5VGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUn9UiZbyT81dY1SeY2dOkfV5+5tnYGf5jMrE8LXkjBdktAxs7z/U3TDynB5aADODppD6N7OLiGa9IKZh+lU+c=@vger.kernel.org, AJvYcCUqzTqdtXZEXMlnGKeKSDYC5OUsBlmFoM2HfXywq+QpbrzRkqcXNOaXdk6eVt8R+PoH8/Hu+TRM8hx1BVI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylSEDlUVK765WcfX7acZrl+mI9ycxZtdxrCGJh7aLP2z1/RFqr
+	yyvWaisL4sYeR9xAarEBM1qM+BUKIeShbOjl76s6FN4fYTf8eLN/+T6ABO8afJLIAwtjzia6Yj0
+	oVwasII893WRU2tWL72BixJgw734=
+X-Gm-Gg: ASbGncvwBc8uw0ZNU2V+ImiyoyIGZiDZAnt6p7MySEGg9QDhG44F6UaBah7ttScu6S9
+	HYbcDGwBsZLt9frueNpK9V6jUQntXMevhbJG10EBEccf8Dw8aB/u8RR1DJ+5EzyLKMKkWU7EilQ
+	==
+X-Google-Smtp-Source: AGHT+IF7EnaFEJFCSlyCLr+nn83vnKdF6Emxb8uA3hFJPTocYeG615mU6+dytSHRjTRpgNZMbqe79WfG5L4cwrXkxj4=
+X-Received: by 2002:a05:6808:1b99:b0:3eb:6044:5a85 with SMTP id
+ 5614622812f47-3f323a76658mr18482915b6e.20.1738688060469; Tue, 04 Feb 2025
+ 08:54:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|CY5PR12MB6084:EE_
-X-MS-Office365-Filtering-Correlation-Id: 37ceb6bf-5f60-4d80-0c20-08dd453c8738
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?R9gq+F50QzvUqOLlStZeFzd783j7KapOQcy+gyU+/8WITOfv3mzZIgFCWaHp?=
- =?us-ascii?Q?UMiZYPGiqywTM6O/TKofodyLT6cppuF2SZbrlQ2OSFI4TzifboiWK5Zs5ehc?=
- =?us-ascii?Q?nGT52kFJtFDtG5ezGnXXvapdhQW6/+wE5x22T+tYxfBbqzZ0gGQxjFLwB1i8?=
- =?us-ascii?Q?DJ0Wi2SRaz23zxYV6xzD5VpQ18VymOdGCHxXZQkhZbrqulcFjFfZVVZmgTxb?=
- =?us-ascii?Q?LMyy/89ndnDVizfazNJ3VngBR4DjDZAlYNgHMeMJo2vD/Qk0OteCLnRvWinu?=
- =?us-ascii?Q?j6eye94iZdZMQkFIRS4hbHoJId7x7LU5QtCeMaJQphUD5HBt/GbDb0FC9vAI?=
- =?us-ascii?Q?VvaPQXPGu4ZQIzSCBZTIiaUoDIQpW7UV5G3BJ7G9QKo1K97OeDn3PTCxEaYc?=
- =?us-ascii?Q?LYFoFueVVz7Y8WdJqDmhMkK6vOiAtPnxwUkyzpRmnmOS7Ewmuap7CwlYYRf9?=
- =?us-ascii?Q?lNp9rD2Z+0XLZhBgPUfZZPvmY2zKgJptWUUAR0SAa8vMtZWe9aMkLuW1fFFI?=
- =?us-ascii?Q?WalEZiXA7K3kpfEZl7RKo7Su1vMH6ds/kXvBMbaaO95GaSAiflU7e6ZD/AuN?=
- =?us-ascii?Q?l76tiCGubgcsmVPu6+CnsNS5wgwVAl64GOyXmoTQF5m+IEfkWdZ6PHETgXz8?=
- =?us-ascii?Q?l6CleiW7J/LSFgf0qRn6/SF5i7c5OPfPcwRfv7749/LpDAaS20bd7S/+Yr7w?=
- =?us-ascii?Q?iGFLdUqtnmt16bqLgUtjURB7zhR/n4o3MpRYWhst4Dw1iZzrWt9RHfLq8dhW?=
- =?us-ascii?Q?2N44LH7slkm+yZGdgMPx5tN4xi3S8/vdXawuXgbuYuEatRDwJLW9mqatDORh?=
- =?us-ascii?Q?S4P9JP5qnvFB+Kat9WQRDo2Jn5cO0ESpD42raZy1k1DzQPsB97U8h1pi5vra?=
- =?us-ascii?Q?lEMcjiTMTtxDgB8qBuOKAhUqPjXZNQIWVE42RCm/AY8gnk5INTs+6k4Q+TjO?=
- =?us-ascii?Q?zgLYhkzS+HI9XuS/aWYdOjI6BWg2oQQuc8XwXxjbI7UMD5IjAqDuj13OBNml?=
- =?us-ascii?Q?U8qqvrFz2qNf8zp0F/dFRdwkyqPRASo61n1OiYj5Xcsijeh60UsGeEjCJHay?=
- =?us-ascii?Q?5f2WrnQUGAiJ9amyg+hecDjixBu5xaY7Z7iH1QsQ4gEzmkS7KAFNoCy4NtjK?=
- =?us-ascii?Q?r2fmj+v1PKgU+9QC3OOlk2jStaZl/l/khJRplGWA+ZwNFY8vgU/WCbGkCVre?=
- =?us-ascii?Q?ZsC68seG1kASSxjZnf5Id+Nv+aJE3pqvOcgtTbtfRcESg53d94iFYTKQlfxH?=
- =?us-ascii?Q?74yaT9XvY50gfejZrG8iecjXNIdBOLCtvVkGhVhu14vYSF1bLuib4zF8q201?=
- =?us-ascii?Q?Kr8yzUjgRHQW21laMyKgQGjAgW7kptVg95T+KO0ypSMNg4Yb60obW16ZU1iX?=
- =?us-ascii?Q?bCZG4321vWh4AOfLb2SsaZ7mt7VC?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Z1lRPnGwqncvtso1MnJYWNfyyHNDx1bfu/WVBAzJEEdN7V64O4N23ZiyzfyG?=
- =?us-ascii?Q?t85SSrONaWH8LNSSBrDA7Q9yBuT97ohj2RtmYXkzz75hiw+Y1bCHSQGmhtqj?=
- =?us-ascii?Q?Ewp+otjCIrAZQD0YoEZGCRY4Hyad6U6DeEXShnqJFHY0PQU+P5lrABSPcT0A?=
- =?us-ascii?Q?ikwklHQvaFGrvqElwhAe1ff2TcpLU8c9Grh+NmdmGSDfHYzU2/I78GlExMAx?=
- =?us-ascii?Q?ANwnK4pz/VQU+/ZaBqw8URbGiLaXQVLyB1wLDPoNGWDMPzrI6lErDjmp2fmi?=
- =?us-ascii?Q?BBZWHJHiaS2opd1ZCrRBnw/fQOVcbUAOqu4hLzqjA15DPwAEj/ZMgTbZXRYX?=
- =?us-ascii?Q?rAOPXU8VElzeFB1C2QQ/qlbyx6V2uF9iBPL/Xb7BSCvcLWXNqf84ebiyn0M9?=
- =?us-ascii?Q?eJod+qosif1kCfN3Y2cjeyWT09aLGsJ87in1Bqm2DMwRr/6H26nM7L/iO4Uu?=
- =?us-ascii?Q?FwdMSjywNKZccFxvkpo2t/Jf2VDkG2xNN3NyiG0/EzZCx2zQ72NY2qDZeoUK?=
- =?us-ascii?Q?rCKxroCp/WUiPrMDLhRuOj1ha4M5tIcikzek/+enXs3tdmk7oBJB/BxT3Yec?=
- =?us-ascii?Q?hPTS+cmgozjIK4qfw47pEvCniS4hdi7QTVF/oAMimo/3Hr2MviNdanI5TwQf?=
- =?us-ascii?Q?hJu8CkB8yYHa90eyUVk30he3ndVQoMDyGJqygXHUVuM5sbw0V1MWbSO/4eBN?=
- =?us-ascii?Q?qhII7WU7uT1157BgcuXGWRHVFacHb6M96eOosZUJKGLhdCdJGx+MTg0hkfoH?=
- =?us-ascii?Q?x9xEa4cNY1VlGupW04f8iyf7zFrfHW19iAV3f30AxXFy/E9X8W9Dg/Wj8s9z?=
- =?us-ascii?Q?+h+U8CaK4adaOp3uRh2thnWRBBHuVN9azufNLJQwwRo2jzZJoNPzUXmjZpa0?=
- =?us-ascii?Q?0m/z+vN6dnllke02bTEOprZo7sl4ydVvLt5xfvv6CzZagNbLQ6+i6pw8gYUD?=
- =?us-ascii?Q?KYzpmFFywimUgomxAqZ8hTKME+Djcf38Shr838DGTqqk6J7sD7Zkrnqp/RJK?=
- =?us-ascii?Q?na+bQNGaTzWPZEXh6HtgduW2fm3XgcWV5Ke3h1i8uyt7GNXgQMD6aPLjmC+4?=
- =?us-ascii?Q?bscSUfKm/ESjoPlo3eUpPys2El+iThBW10MPhZzsDrRy7DwDhns0jhXK237f?=
- =?us-ascii?Q?WkY80wbmDkXcfffFyBj9noeEMqOnbcDqwfYiqIiYp+lgm1nh0KABWU5rmrfw?=
- =?us-ascii?Q?/z5oeFtbBCaiLIkKwBwd8SGm3tOxmEWhuvIig2O2Fmmc5Sp57bEjem/KAswS?=
- =?us-ascii?Q?wDd3wXta52V6aTzdEXMz8yNMHALAlNOAb/bHVGlGpdSoUMw2UmZJxnw7UUKw?=
- =?us-ascii?Q?drhJmfa29XkBNSJGhsIvNXqeVDq/jEB9/IXNoXa0n8ooFJ4mkf/wSl0SqfoK?=
- =?us-ascii?Q?PLtWIhf6YTFdwqGaCj1SoJxG/RvP1fsZfMelds8tillXJBfvT6/PniL5fpOr?=
- =?us-ascii?Q?5ZO4z3CupATuru7t4BM5OJ3hFqtkQbPluQxT5kKzv+gUH6z0r5El4W9o6/kA?=
- =?us-ascii?Q?N6NJcd2+8/jqifCm65mDxyj2D52kBNBB4CJOTv9iDwuvLsmBwcVS7E1c3/sf?=
- =?us-ascii?Q?/+0ID6ROIBXbC14+kGw4iRcUnBha0VIIvVKPXewD?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37ceb6bf-5f60-4d80-0c20-08dd453c8738
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 16:54:02.8077
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1klAmWzMHw3AQ08sL4CfXcsdch4ydT/zJbgGGBaCh5/vHdgNyKjlCmMtqRChVyl84MMNoFqMgDz4XoJ4j7VRdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6084
+References: <20250108122825.136021-1-abdiel.janulgue@gmail.com> <20250108122825.136021-3-abdiel.janulgue@gmail.com>
+In-Reply-To: <20250108122825.136021-3-abdiel.janulgue@gmail.com>
+From: Thomas Hampton <thomas.j.hampton@gmail.com>
+Date: Tue, 4 Feb 2025 10:54:09 -0600
+X-Gm-Features: AWEUYZmrSMVxm_k1uivRyBQVGcUir-2h4LgjAJyf97InNoJiKzYSKb_gYdAF1GQ
+Message-ID: <CAEmX-ZUbPqNUBj2-xAf=5uGE_GWAQQ79akADZCDxNsmx7Lf9VQ@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com, 
+	aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Valentin Obst <kernel@valentinobst.de>, open list <linux-kernel@vger.kernel.org>, 
+	Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com, 
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Feb 01, 2025 at 02:09:54PM +0100, Thorsten Blum wrote:
-> Simplify the return statement to improve the code's readability.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  drivers/edac/amd64_edac.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-> index 8414ceb43e4a..1f106b4fafdf 100644
-> --- a/drivers/edac/amd64_edac.c
-> +++ b/drivers/edac/amd64_edac.c
-> @@ -3355,10 +3355,7 @@ static bool dct_ecc_enabled(struct amd64_pvt *pvt)
->  
->  	edac_dbg(3, "Node %d: DRAM ECC %s.\n", nid, (ecc_en ? "enabled" : "disabled"));
->  
-> -	if (!ecc_en || !nb_mce_en)
-> -		return false;
-> -	else
-> -		return true;
-> +	return ecc_en && nb_mce_en;
->  }
->  
->  static bool umc_ecc_enabled(struct amd64_pvt *pvt)
-> -- 
+On 1/8/2025 6:27 AM, Abdiel Janulgue wrote:
 
-Looks good to me.
+> +    /// Returns the base address, dma handle, attributes and the size of the allocated region.
+> +    /// The caller takes ownership of the returned resources, i.e., will have the responsibility
+> +    /// in calling `bindings::dma_free_attrs`.
+> +    pub fn into_parts(self) -> (*mut T, bindings::dma_addr_t, usize, usize) {
+> +        let size = self.count * core::mem::size_of::<T>();
+> +        let ret = (
+> +            self.cpu_addr,
+> +            self.dma_handle,
+> +            self.dma_attrs.as_raw(),
+> +            size,
+> +        );
+> +        // Drop the device's reference count associated with this object. This is needed as no
+> +        // destructor will be called on this object once this function returns.
+> +        // SAFETY: the device pointer is still valid as of this point due to the type invariants
+> +        // on `CoherentAllocation`.
+> +        unsafe { bindings::put_device(self.dev.as_raw()) }
+> +        core::mem::forget(self);
+> +        ret
+> +    }
 
-Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Would it be feasible and prudent to avoid exposing `pub fn
+into_parts`, `pub fn first_ptr`, `pub fn first_ptr_mut`?
 
-Thanks,
-Yazen
+It seems like some sort of functional access method might be better
+for keeping future Rust code maintainable and Rusty.
+
+For example, making client code from:
+
+> {
+>    let ctrl_id = unsafe { &*(id.first_ptr() as *const NvmeIdCtrl) };
+>    number_of_namespaces = ctrl_id.nn.into();
+>    mdts = ctrl_id.mdts;
+> }
+
+Into something like,
+pub fn expose(self, op: F)
+  where F: Fn(*const T) {
+    op(self.cpu_addr);
+}
+
+let number_of_namespaces;
+let mdts;
+id.expose(|data| {
+let ctrl_id = &*(data as *const NvmeIdCtrl);
+    number_of_namespaces = ctrl_id.nn.into();
+    mdts = ctrl_id.mdts;
+});
+
+And to avoid code docs like:
+
+> /// The caller <...> will have the responsibility in calling `bindings::dma_free_attrs`.
