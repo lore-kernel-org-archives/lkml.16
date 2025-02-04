@@ -1,90 +1,102 @@
-Received: from rs227.mailgun.us (rs227.mailgun.us [209.61.151.227])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBC3204C24
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 00:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.61.151.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4AA205E30
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 00:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738629681; cv=none; b=KZqs6HK0sjWgfXsAupo345dAaklwgXmpaIEJV/8KqKTNMgzpJrMidH/iKE3aAKic4j1tR8GC640+FCBDbqKFaYhwBBj/tEzDJ0Bdh8mmNUdzDK+e8T5XTwpRZxEfJyprGw0CN+EJNQXUKD3+gnNWOYge8EgnzlpHRb/CT1QJH18=
+	t=1738629685; cv=none; b=LaptYlA4GwdfFvvw9ibqHM/fPesaXbR+Sbv1miBedQdm+eesBrM6VpI+M/JhcUTHU3REiHbbFQOh4mnggCs1u0ZCbZgdPGkTqPLYYfCZT45Of6PmFzWe4hJ2piw9bCdw/yPEcnNMISGpa8JxutYpkh0FGGX2q4PvnSU4Bva2bHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738629681; c=relaxed/simple;
-	bh=6Ljhb/l5cuzFKG1hXUzN2XVip9+IRIDVeEsVro7oKzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qjLgPBqf2G7LQH2LCHDQkuMxoegQd6kBs0FbhMb6gHyuyLweeCjamBaQdmg2ahsOcD3IZ8uH75GendY0tWoiVFx103SFU/3yNwWmfwY5RrjHbg/gh9VWMpESjp0AptcweMoEqYpeqHzSeypz3r/8lwG+sZQA7U4PCTvTjYFw+zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=equiv.tech; spf=pass smtp.mailfrom=equiv.tech; dkim=pass (2048-bit key) header.d=equiv.tech header.i=@equiv.tech header.b=hRUcsxdy; arc=none smtp.client-ip=209.61.151.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=equiv.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=equiv.tech
+	s=arc-20240116; t=1738629685; c=relaxed/simple;
+	bh=sKcFJXJTh7oTyqsaZX/BZ3E/a1+/rxVAjCiwpUZmKLg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HoqOn156I8j4c5HBBnj/gUdzu1WID9aRJoPLXuvnqGGaCHa5BfQmx3Od1gpg6LMw+d7mHccnNy8qx2/ComzEFOFLyJedArP0dwx0Afq3bBD9/GqFnBLggKkbFsh8KzPrFfLkahwElMk7o2JFMJ47nq3XWRgOzmlTeD6uMb6R9TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QvqAkjbw; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=equiv.tech header.i=@equiv.tech header.b="hRUcsxdy"
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=equiv.tech; q=dns/txt; s=mx; t=1738629678; x=1738636878;
- h=In-Reply-To: Content-Type: MIME-Version: References: Message-ID: Subject: Subject: Cc: To: To: From: From: Date: Sender: Sender;
- bh=ggcwfyqRfyHYBb0dqYboatBmMxLglcl8RWmU//+wvXM=;
- b=hRUcsxdyU9UHIbEJkjIeToFgmMskMLJTjVOPSXsyWYCmHN+uQv4/m9kkwCs6wmvu0ZrTWoLXJpdJ1iBZF+NzIwAQAi77AwQf8Pg00SrSkSNLTR4e7xeN53WVf/i4wC3UqPvKLQtMX9PyxOJLuLSG2KZ63Gi+ZGNFwNE0i421OfGkuIhwFtxoQfm7kKDRt7zemsbVOWGoujEPjxAJI3u6gCWx6cvGPgSRqzVnNr5z6TwPD9SjiCKYWW1XbqlyEQ86S6m7Ssolc03vNp9DK7c7T6UKwHmOgppgTdvh+UQi3FOZxPWbzA48/7QDb+mtDgLyKMRhvrOgHmyWfFtQvHGsJQ==
-X-Mailgun-Sending-Ip: 209.61.151.227
-X-Mailgun-Sending-Ip-Pool-Name: 
-X-Mailgun-Sending-Ip-Pool: 
-X-Mailgun-Sid: WyI4ZWI3MiIsImxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmciLCI5M2Q1YWIiXQ==
-Received: from mail.equiv.tech (equiv.tech [142.93.28.83]) by 09e3f01714c1 with SMTP id
- 67a1622e14383b735a52af42 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Feb 2025 00:41:18 GMT
-Sender: james@equiv.tech
-Date: Mon, 3 Feb 2025 16:41:17 -0800
-From: James Seo <james@equiv.tech>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: markpearson@lenovo.com, jorge.lopez2@hp.com, jdelvare@suse.com,
-	linux@roeck-us.net, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-	corbet@lwn.net, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 1/7] hwmon: (hp-wmi-sensors) Use the WMI bus API when
- accessing sensors
-Message-ID: <Z6FiLeldpQXvnO6B@equiv.tech>
-References: <20250203182322.384883-1-W_Armin@gmx.de>
- <20250203182322.384883-2-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QvqAkjbw"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a7dfcd40fcso18625ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 16:41:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738629683; x=1739234483; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5mNEpv7gTbB0335b8JJb/srcBCNEtj77NuFnLzwPBSE=;
+        b=QvqAkjbweU5QAmZncXpU2LDrHVSNYT3vMBKPUUF1EWJP/SOmYuAzZSBoOr1Gj/UYAk
+         oxjH3tZaTO3QY9XQdpqIxvWmzLDP6e6pSCHjWVxXCsS6dNFS7YQffY7fbusMWJ0HIROx
+         9k3hWjcm7yXoW3zReblrVvwepBAUGpaE8oPooOfHvYlRaFIOL3u8jNgQbFrV1yHtW2MZ
+         miywLhc4RAWXiG52dOhDL9f5FnEe0Zf05ctL23ifuwK5RgupV6vgwvHcPNpivSxUW8a7
+         FfLPpWTKCxlCHtSBZakjUU/QtzYQp980hUeJKSUYHk84KU6jHoYj0vb9AKhUfc6gum8B
+         ILQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738629683; x=1739234483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5mNEpv7gTbB0335b8JJb/srcBCNEtj77NuFnLzwPBSE=;
+        b=Cn98oZ0/nBGp9hDBwYhwZawndfudDYQFdlSBfy4PPtN6m5E0qeRYB6XmTOPYNT1yvH
+         XUNg/C3aM7LgkDgkQbYGJJp0gu68o033rUjEdsGbipEFIePzqwQPStMw96nFeaz/cs+V
+         DUY0FDxUTJGedBKdFvwq2FYETMmf9Fj0WIP+C9wS2c1/oOzOAGz8dhpa9WtIWDAzNZGu
+         AZ+ro0vnTTg9iOCBua2FvOQQD658tRJ5IrS0jdJMIokrTIfFtQScoE1WXQvAzmP/YvxR
+         8ZyJRtcurLqAu25H4WPpjmHcXOB9itqp9wAGfZRfSPYB53zfzmwNj+2wP9hmt3sFudmf
+         0g6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXA3xl40Wd4+jJ6m7jK0+8zdi41yGZ0pFmuWvbnXvKUxqnMYpW1MuT0Mqb1O4EV/yYMaLJDy5Qsy7RoXNY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWtckrdIfNAWbCa7H1kb/k5NNAZG9l2PfQhDi75de1oYzvx2Ph
+	5n1A+dIRq8gmQttAM7/tLt2V7VeTgxuzdeJ1lq6yF0HAuI6T+aurNPBiSr3HMAFlyg0zORY3JrT
+	7mScOkILgItWzQRYDAjtqnVs2Bn8zYzfe05is
+X-Gm-Gg: ASbGncvkg51n9H/rJ0XQejHCr5D+nl1sU7xGpzOWIz05jEGpC9z8gRy0dmun9xJZ/8z
+	VBZPZZpaOqONQBQGCNIJZ+cDc0kG/XlacfZemPixOi27sIzKk1KPLU1FMcDHhD3V95RR8UgwRBQ
+	==
+X-Google-Smtp-Source: AGHT+IFTmsdSrUWZNxyWfmEinctbi+w595ub39Ewf18wox3LV+/XzMdJuttm056+xxql2GVcCqEWSyo+2i00MgHicOg=
+X-Received: by 2002:a05:6e02:1c82:b0:3cf:a4e4:8f85 with SMTP id
+ e9e14a558f8ab-3d040f52f90mr736155ab.7.1738629683115; Mon, 03 Feb 2025
+ 16:41:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250203182322.384883-2-W_Armin@gmx.de>
+References: <CAP-5=fVYMK6tnKH0QU_RPUaogpsDmhmXn+=4P1uXg-moX2QMDw@mail.gmail.com>
+ <Z4WNT_UX9eMD_txf@google.com> <CAP-5=fXxMmn31iep6tdvaUGzZccR+_D1L4RbjaNiRdEau2NZ9g@mail.gmail.com>
+ <CAP-5=fXdq2oSgTnNJJydAnBdSg5WeaPy6zjaink5+bsyXLoPiw@mail.gmail.com>
+ <Z4f3fDXemAMpBNMS@google.com> <CAP-5=fWS8AzSo=vxcCFUaYMMth7FNMPNbCXjYOGApQ0AitqA2Q@mail.gmail.com>
+ <Z5qjwRG5jX9zAGtf@google.com> <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
+ <Z51RxQslsfSrW2ub@google.com> <CAP-5=fWzzWqNAgmrDHav63Z+HMnSP0RZJ3Q7PQpuzP7Tf_HP7g@mail.gmail.com>
+ <Z6FcHJFYGc7HzSna@google.com>
+In-Reply-To: <Z6FcHJFYGc7HzSna@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 3 Feb 2025 16:41:11 -0800
+X-Gm-Features: AWEUYZlTHqNw7TM6SlCsxIdmp-h0z8pnRnASzLfQef6fDEaFbRsdhgx5tvrKk7g
+Message-ID: <CAP-5=fW9f2mxuTV2FGCdhKm7M9g8v6VsLJJXTPTLRr5tUv9rOA@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Atish Kumar Patra <atishp@rivosinc.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2025 at 07:23:16PM +0100, Armin Wolf wrote:
-> Since the driver already binds to HP_WMI_NUMERIC_SENSOR_GUID, using
-> wmidev_block_query() allows for faster sensor access.
-> 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/hwmon/hp-wmi-sensors.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sensors.c
-> index d6bdad26feb1..03c684ba83bd 100644
-> --- a/drivers/hwmon/hp-wmi-sensors.c
-> +++ b/drivers/hwmon/hp-wmi-sensors.c
-> @@ -1197,7 +1197,7 @@ static int hp_wmi_update_info(struct hp_wmi_sensors *state,
->  	if (time_after(jiffies, info->last_updated + HZ)) {
->  		mutex_lock(&state->lock);
-> 
-> -		wobj = hp_wmi_get_wobj(HP_WMI_NUMERIC_SENSOR_GUID, instance);
-> +		wobj = wmidev_block_query(state->wdev, instance);
->  		if (!wobj) {
->  			ret = -EIO;
->  			goto out_unlock;
-> @@ -1745,7 +1745,7 @@ static int init_numeric_sensors(struct hp_wmi_sensors *state,
->  		return -ENOMEM;
-> 
->  	for (i = 0, info = info_arr; i < icount; i++, info++) {
-> -		wobj = hp_wmi_get_wobj(HP_WMI_NUMERIC_SENSOR_GUID, i);
-> +		wobj = wmidev_block_query(state->wdev, i);
->  		if (!wobj)
->  			return -EIO;
-> 
-> --
-> 2.39.5
->
-Works on a HP Z420.
+On Mon, Feb 3, 2025 at 4:15=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+[snip]
+> Yep, I agree it's confusing.  So my opinion is to use legacy encoding
+> and no default wildcard. :)
 
-Reviewed-by: James Seo <james@equiv.tech>
+Making it so that all non-legacy, non-core PMU events require a PMU is
+a breaking change and a regression for all users, command line event
+name suggesting, any tool built off of perf, and so on. Breaking all
+perf users and requiring all perf metrics be rewritten is well..
+something..
+
+Ian
