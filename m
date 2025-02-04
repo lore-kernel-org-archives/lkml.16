@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A592045A8;
-	Tue,  4 Feb 2025 06:03:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F68205E0B;
+	Tue,  4 Feb 2025 06:03:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738649003; cv=none; b=RjxBOQ7y0btq2cvCnPhE257gFjKE3DITqPQFOt1sOuLU/Jm0inXDJYiYlDeyEyKgXk7zVe90eqROXBA/BHw7QFbvntX49XXJqprvkBpcChBBwi+NnFPoOUHghpb7LsOmsIJdrpbtA+wG0jxNJ7wPOtDzSdtK6kCaJoQ/oujSa2o=
+	t=1738649004; cv=none; b=Ov4tfQGcPMBpl7UhcJqAk5lx8DZGFlPsmOEHW4rD66aoSCunjt7kAXcod1Itc0QhljIzhBBnqDXVII0f91hpGKfsjkNOPUdmseaA6fDCc4AuVpVKiWp25Sz8KhDch9KakTE9sv2/jnAEC47c7XF4/Lx9tZtjQ3QV4knp37QfqkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738649003; c=relaxed/simple;
-	bh=Xuv/0u7szKfAAbXGFj6qZLAPpxoWh217briSJhoKzjs=;
+	s=arc-20240116; t=1738649004; c=relaxed/simple;
+	bh=S9oV8VPjoc9zz9574R5uYjcrBYnqmmVeoE+IqO+4MHE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sSGmDP3k170CbxawZj4QBBssOLfCVVHx+7/R9QNNfsOdPltwzfYAWned4DuK+gLZI0cpTewX4H374DHeetw2fNwFozir28BZ6MHdzubK8Dhzo7nSwe+m1XendrJlLABKfcXoNEbDQEkeVBtz/oe26SdnRiZdotlzDx8UuNIuZjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTDmU6Hd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pXV9+swkvBclxLxLHZiZtO7wsz2pRkMIAMuaQ9GrZ7fuK9tteQ1Z1kTYor37bWvkPXoi6cfUAzEA/FZGiCb9cEQeIl1iducWnGuXicnQgdrA8oujMSKVG2DnutP2mpuXgfI29R3FpwuggGlKf9mFpXglvcjp2NYiBeMpImHvqGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jx3LMcqn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTDmU6Hd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BEA6C4CEE5;
-	Tue,  4 Feb 2025 06:03:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jx3LMcqn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4998C4CEE3;
+	Tue,  4 Feb 2025 06:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738649002;
-	bh=Xuv/0u7szKfAAbXGFj6qZLAPpxoWh217briSJhoKzjs=;
+	s=k20201202; t=1738649004;
+	bh=S9oV8VPjoc9zz9574R5uYjcrBYnqmmVeoE+IqO+4MHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CTDmU6HdMBeeOYeZseIrd2OMZjf9OkSaJeXXel8Lo0loCCDfi8q4hTGDSTH7fo1un
-	 2FUnZ3Y/7hcaQcHmB5zznR7VTF4Nkx3qsWmbAqcuN69ynl4T3MoIjzEIlIEaYwPWgT
-	 FVWVoJxih57aw3a4kdPQjf3oI5208xNf9JbaxvJ49yiJ+/Qz8q4Ej3LJudgPQ3CvUY
-	 97YK7ef27SdBJjzciTJJ4I7zA7Emt3d/WRrK3+FTfNe3VaKyyVoa16WYS2cUUqEUgP
-	 zkqEregjQd3g5hb/wfQtjKbN/x01VQmn0OVGdU7EjdEfOvMDFq6CkEfc9+itCO0sg/
-	 S5jqx6rooeAbw==
+	b=Jx3LMcqnjRJqziYG/K4MvpLOLuuWlcXYpLckaE3WpEzYtzs/u4qVwUSZkYGLSNKUY
+	 XFhay7V+/IOnBDLi9858mEd06fEf/tZEzZzL5zGgGbFcAobW3dA6A2mOUGZ8FtxXLF
+	 ZzlveSalUWyzTWyWooc6i1Oc7ZdXXdvyaox8FfilyQuq0kh544M397d9L+fNOikRo7
+	 p7aCaJy0IANfVN2j2n71K4sCHWMj8Yjd6VTgHHoxCJ0+foL8p7zUhksGIRGRc86ssi
+	 Fmybf/3qTjfUmwFKyuwL1h7vjBczaaJjDVTYYB6kYbkLfu3vwOeh9f5amGjysBSqzJ
+	 qCKVkHtaH/aNA==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-block@vger.kernel.org,
 	Jens Axboe <axboe@kernel.dk>,
@@ -39,10 +39,11 @@ Cc: linux-fscrypt@vger.kernel.org,
 	Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konradybcio@kernel.org>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH v11 3/7] blk-crypto: add ioctls to create and prepare hardware-wrapped keys
-Date: Mon,  3 Feb 2025 22:00:37 -0800
-Message-ID: <20250204060041.409950-4-ebiggers@kernel.org>
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v11 6/7] soc: qcom: ice: add HWKM support to the ICE driver
+Date: Mon,  3 Feb 2025 22:00:40 -0800
+Message-ID: <20250204060041.409950-7-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250204060041.409950-1-ebiggers@kernel.org>
 References: <20250204060041.409950-1-ebiggers@kernel.org>
@@ -54,577 +55,545 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Eric Biggers <ebiggers@google.com>
+From: Gaurav Kashyap <quic_gaurkash@quicinc.com>
 
-Until this point, the kernel can use hardware-wrapped keys to do
-encryption if userspace provides one -- specifically a key in
-ephemerally-wrapped form.  However, no generic way has been provided for
-userspace to get such a key in the first place.
+Qualcomm's Inline Crypto Engine (ICE) version 3.2 and later includes a
+key management hardware block called the Hardware Key Manager (HWKM).
+Add support for HWKM to the ICE driver.  HWKM provides hardware-wrapped
+key support where the ICE (storage) keys are not exposed to software and
+instead are protected in hardware.  Later patches will wire up this
+feature to ufs-qcom and sdhci-msm using the support added in this patch.
 
-Getting such a key is a two-step process.  First, the key needs to be
-imported from a raw key or generated by the hardware, producing a key in
-long-term wrapped form.  This happens once in the whole lifetime of the
-key.  Second, the long-term wrapped key needs to be converted into
-ephemerally-wrapped form.  This happens each time the key is "unlocked".
+HWKM and legacy mode are currently mutually exclusive.  The selection of
+which mode to use has to be made before the storage driver(s) registers
+any inline encryption capable disk(s) with the block layer (i.e.,
+generally at boot time) so that the appropriate crypto capabilities can
+be advertised to upper layers.  Therefore, make the ICE driver select
+HWKM mode when the all of the following are true:
 
-In Android, these operations are supported in a generic way through
-KeyMint, a userspace abstraction layer.  However, that method is
-Android-specific and can't be used on other Linux systems, may rely on
-proprietary libraries, and also misleads people into supporting KeyMint
-features like rollback resistance that make sense for other KeyMint keys
-but don't make sense for hardware-wrapped inline encryption keys.
+- The new module parameter qcom_ice.use_wrapped_keys=1 is specified.
+- HWKM is present and is at least v2, i.e. ICE is v3.2.1 or later.
+- The SCM calls needed to fully use HWKM are supported by TrustZone.
 
-Therefore, this patch provides a generic kernel interface for these
-operations by introducing new block device ioctls:
-
-- BLKCRYPTOIMPORTKEY: convert a raw key to long-term wrapped form.
-
-- BLKCRYPTOGENERATEKEY: have the hardware generate a new key, then
-  return it in long-term wrapped form.
-
-- BLKCRYPTOPREPAREKEY: convert a key from long-term wrapped form to
-  ephemerally-wrapped form.
-
-These ioctls are implemented using new operations in blk_crypto_ll_ops.
-
+Signed-off-by: Gaurav Kashyap <quic_gaurkash@quicinc.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+[EB: merged related patches; fixed the module parameter to work
+     correctly; dropped unnecessary support for HWKM v1; fixed error
+     handling; improved log messages, comments, and commit message;
+     fixed naming; merged enable and init functions; and other cleanups]
+Co-developed-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- Documentation/block/inline-encryption.rst     |  36 +++++
- .../userspace-api/ioctl/ioctl-number.rst      |   2 +
- block/blk-crypto-internal.h                   |   9 ++
- block/blk-crypto-profile.c                    |  55 +++++++
- block/blk-crypto.c                            | 143 ++++++++++++++++++
- block/ioctl.c                                 |   5 +
- include/linux/blk-crypto-profile.h            |  53 +++++++
- include/linux/blk-crypto.h                    |   1 +
- include/uapi/linux/blk-crypto.h               |  44 ++++++
- include/uapi/linux/fs.h                       |   6 +-
- 10 files changed, 350 insertions(+), 4 deletions(-)
- create mode 100644 include/uapi/linux/blk-crypto.h
+ drivers/mmc/host/sdhci-msm.c |   5 +
+ drivers/soc/qcom/ice.c       | 326 +++++++++++++++++++++++++++++++++--
+ drivers/ufs/host/ufs-qcom.c  |   5 +
+ include/soc/qcom/ice.h       |  12 ++
+ 4 files changed, 338 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/block/inline-encryption.rst b/Documentation/block/inline-encryption.rst
-index f03bd5b090d89..6380e6ab492b0 100644
---- a/Documentation/block/inline-encryption.rst
-+++ b/Documentation/block/inline-encryption.rst
-@@ -490,10 +490,46 @@ when hardware support is available.  This works in the following way:
-   keys being passed to these methods.
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index 2c926f566d053..2772e34490cc5 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -1880,10 +1880,15 @@ static int sdhci_msm_ice_init(struct sdhci_msm_host *msm_host,
+ 	}
  
- blk-crypto-fallback doesn't support hardware-wrapped keys.  Therefore,
- hardware-wrapped keys can only be used with actual inline encryption hardware.
+ 	if (IS_ERR_OR_NULL(ice))
+ 		return PTR_ERR_OR_ZERO(ice);
  
-+All the above deals with hardware-wrapped keys in ephemerally-wrapped form only.
-+To get such keys in the first place, new block device ioctls have been added to
-+provide a generic interface to creating and preparing such keys:
-+
-+- ``BLKCRYPTOIMPORTKEY`` converts a raw key to long-term wrapped form.  It takes
-+  in a pointer to a ``struct blk_crypto_import_key_arg``.  The caller must set
-+  ``raw_key_ptr`` and ``raw_key_size`` to the pointer and size (in bytes) of the
-+  raw key to import.  On success, ``BLKCRYPTOIMPORTKEY`` returns 0 and writes
-+  the resulting long-term wrapped key blob to the buffer pointed to by
-+  ``lt_key_ptr``, which is of maximum size ``lt_key_size``.  It also updates
-+  ``lt_key_size`` to be the actual size of the key.  On failure, it returns -1
-+  and sets errno.  An errno of ``EOPNOTSUPP`` indicates that the block device
-+  does not support hardware-wrapped keys.  An errno of ``EOVERFLOW`` indicates
-+  that the output buffer did not have enough space for the key blob.
-+
-+- ``BLKCRYPTOGENERATEKEY`` is like ``BLKCRYPTOIMPORTKEY``, but it has the
-+  hardware generate the key instead of importing one.  It takes in a pointer to
-+  a ``struct blk_crypto_generate_key_arg``.
-+
-+- ``BLKCRYPTOPREPAREKEY`` converts a key from long-term wrapped form to
-+  ephemerally-wrapped form.  It takes in a pointer to a ``struct
-+  blk_crypto_prepare_key_arg``.  The caller must set ``lt_key_ptr`` and
-+  ``lt_key_size`` to the pointer and size (in bytes) of the long-term wrapped
-+  key blob to convert.  On success, ``BLKCRYPTOPREPAREKEY`` returns 0 and writes
-+  the resulting ephemerally-wrapped key blob to the buffer pointed to by
-+  ``eph_key_ptr``, which is of maximum size ``eph_key_size``.  It also updates
-+  ``eph_key_size`` to be the actual size of the key.  On failure, it returns -1
-+  and sets errno.  Errno values of ``EOPNOTSUPP`` and ``EOVERFLOW`` mean the
-+  same as they do for ``BLKCRYPTOIMPORTKEY``.  An errno of ``EBADMSG`` indicates
-+  that the long-term wrapped key is invalid.
-+
-+Userspace needs to use either ``BLKCRYPTOIMPORTKEY`` or ``BLKCRYPTOGENERATEKEY``
-+once to create a key, and then ``BLKCRYPTOPREPAREKEY`` each time the key is
-+unlocked and added to the kernel.  Note that these ioctls have no relevance for
-+raw keys; they are only for hardware-wrapped keys.
-+
- Testability
- -----------
- 
- Both the hardware KDF and the inline encryption itself are well-defined
- algorithms that don't depend on any secrets other than the unwrapped key.
-diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-index 6d1465315df32..d448c010d307a 100644
---- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-+++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-@@ -83,10 +83,12 @@ Code  Seq#    Include File                                           Comments
- 0x10  00-0F  drivers/char/s390/vmcp.h
- 0x10  10-1F  arch/s390/include/uapi/sclp_ctl.h
- 0x10  20-2F  arch/s390/include/uapi/asm/hypfs.h
- 0x12  all    linux/fs.h                                              BLK* ioctls
-              linux/blkpg.h
-+             linux/blkzoned.h
-+             linux/blk-crypto.h
- 0x15  all    linux/fs.h                                              FS_IOC_* ioctls
- 0x1b  all                                                            InfiniBand Subsystem
-                                                                      <http://infiniband.sourceforge.net/>
- 0x20  all    drivers/cdrom/cm206.h
- 0x22  all    scsi/sg.h
-diff --git a/block/blk-crypto-internal.h b/block/blk-crypto-internal.h
-index 1893df9a8f06c..ccf6dff6ff6be 100644
---- a/block/blk-crypto-internal.h
-+++ b/block/blk-crypto-internal.h
-@@ -81,10 +81,13 @@ int __blk_crypto_evict_key(struct blk_crypto_profile *profile,
- 			   const struct blk_crypto_key *key);
- 
- bool __blk_crypto_cfg_supported(struct blk_crypto_profile *profile,
- 				const struct blk_crypto_config *cfg);
- 
-+int blk_crypto_ioctl(struct block_device *bdev, unsigned int cmd,
-+		     void __user *argp);
-+
- #else /* CONFIG_BLK_INLINE_ENCRYPTION */
- 
- static inline int blk_crypto_sysfs_register(struct gendisk *disk)
- {
- 	return 0;
-@@ -128,10 +131,16 @@ static inline bool blk_crypto_rq_is_encrypted(struct request *rq)
- static inline bool blk_crypto_rq_has_keyslot(struct request *rq)
- {
- 	return false;
- }
- 
-+static inline int blk_crypto_ioctl(struct block_device *bdev, unsigned int cmd,
-+				   void __user *argp)
-+{
-+	return -ENOTTY;
-+}
-+
- #endif /* CONFIG_BLK_INLINE_ENCRYPTION */
- 
- void __bio_crypt_advance(struct bio *bio, unsigned int bytes);
- static inline void bio_crypt_advance(struct bio *bio, unsigned int bytes)
- {
-diff --git a/block/blk-crypto-profile.c b/block/blk-crypto-profile.c
-index a990d9026c837..94a155912bf1c 100644
---- a/block/blk-crypto-profile.c
-+++ b/block/blk-crypto-profile.c
-@@ -500,10 +500,65 @@ int blk_crypto_derive_sw_secret(struct block_device *bdev,
- 					       sw_secret);
- 	blk_crypto_hw_exit(profile);
- 	return err;
- }
- 
-+int blk_crypto_import_key(struct blk_crypto_profile *profile,
-+			  const u8 *raw_key, size_t raw_key_size,
-+			  u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
-+{
-+	int ret;
-+
-+	if (!profile)
-+		return -EOPNOTSUPP;
-+	if (!(profile->key_types_supported & BLK_CRYPTO_KEY_TYPE_HW_WRAPPED))
-+		return -EOPNOTSUPP;
-+	if (!profile->ll_ops.import_key)
-+		return -EOPNOTSUPP;
-+	blk_crypto_hw_enter(profile);
-+	ret = profile->ll_ops.import_key(profile, raw_key, raw_key_size,
-+					 lt_key);
-+	blk_crypto_hw_exit(profile);
-+	return ret;
-+}
-+
-+int blk_crypto_generate_key(struct blk_crypto_profile *profile,
-+			    u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
-+{
-+	int ret;
-+
-+	if (!profile)
-+		return -EOPNOTSUPP;
-+	if (!(profile->key_types_supported & BLK_CRYPTO_KEY_TYPE_HW_WRAPPED))
-+		return -EOPNOTSUPP;
-+	if (!profile->ll_ops.generate_key)
-+		return -EOPNOTSUPP;
-+	blk_crypto_hw_enter(profile);
-+	ret = profile->ll_ops.generate_key(profile, lt_key);
-+	blk_crypto_hw_exit(profile);
-+	return ret;
-+}
-+
-+int blk_crypto_prepare_key(struct blk_crypto_profile *profile,
-+			   const u8 *lt_key, size_t lt_key_size,
-+			   u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
-+{
-+	int ret;
-+
-+	if (!profile)
-+		return -EOPNOTSUPP;
-+	if (!(profile->key_types_supported & BLK_CRYPTO_KEY_TYPE_HW_WRAPPED))
-+		return -EOPNOTSUPP;
-+	if (!profile->ll_ops.prepare_key)
-+		return -EOPNOTSUPP;
-+	blk_crypto_hw_enter(profile);
-+	ret = profile->ll_ops.prepare_key(profile, lt_key, lt_key_size,
-+					  eph_key);
-+	blk_crypto_hw_exit(profile);
-+	return ret;
-+}
-+
- /**
-  * blk_crypto_intersect_capabilities() - restrict supported crypto capabilities
-  *					 by child device
-  * @parent: the crypto profile for the parent device
-  * @child: the crypto profile for the child device, or NULL
-diff --git a/block/blk-crypto.c b/block/blk-crypto.c
-index 72975a980fbca..4b1ad84d1b5ab 100644
---- a/block/blk-crypto.c
-+++ b/block/blk-crypto.c
-@@ -467,5 +467,148 @@ void blk_crypto_evict_key(struct block_device *bdev,
- 	 */
- 	if (err)
- 		pr_warn_ratelimited("%pg: error %d evicting key\n", bdev, err);
- }
- EXPORT_SYMBOL_GPL(blk_crypto_evict_key);
-+
-+static int blk_crypto_ioctl_import_key(struct blk_crypto_profile *profile,
-+				       void __user *argp)
-+{
-+	struct blk_crypto_import_key_arg arg;
-+	u8 raw_key[BLK_CRYPTO_MAX_RAW_KEY_SIZE];
-+	u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE];
-+	int ret;
-+
-+	if (copy_from_user(&arg, argp, sizeof(arg)))
-+		return -EFAULT;
-+
-+	if (memchr_inv(arg.reserved, 0, sizeof(arg.reserved)))
-+		return -EINVAL;
-+
-+	if (arg.raw_key_size < 16 || arg.raw_key_size > sizeof(raw_key))
-+		return -EINVAL;
-+
-+	if (copy_from_user(raw_key, u64_to_user_ptr(arg.raw_key_ptr),
-+			   arg.raw_key_size)) {
-+		ret = -EFAULT;
-+		goto out;
++	if (qcom_ice_get_supported_key_type(ice) != BLK_CRYPTO_KEY_TYPE_RAW) {
++		dev_warn(dev, "Wrapped keys not supported. Disabling inline encryption support.\n");
++		return 0;
 +	}
-+	ret = blk_crypto_import_key(profile, raw_key, arg.raw_key_size, lt_key);
-+	if (ret < 0)
-+		goto out;
-+	if (ret > arg.lt_key_size) {
-+		ret = -EOVERFLOW;
-+		goto out;
-+	}
-+	arg.lt_key_size = ret;
-+	if (copy_to_user(u64_to_user_ptr(arg.lt_key_ptr), lt_key,
-+			 arg.lt_key_size) ||
-+	    copy_to_user(argp, &arg, sizeof(arg))) {
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+	ret = 0;
 +
-+out:
-+	memzero_explicit(raw_key, sizeof(raw_key));
-+	memzero_explicit(lt_key, sizeof(lt_key));
-+	return ret;
-+}
-+
-+static int blk_crypto_ioctl_generate_key(struct blk_crypto_profile *profile,
-+					 void __user *argp)
-+{
-+	struct blk_crypto_generate_key_arg arg;
-+	u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE];
-+	int ret;
-+
-+	if (copy_from_user(&arg, argp, sizeof(arg)))
-+		return -EFAULT;
-+
-+	if (memchr_inv(arg.reserved, 0, sizeof(arg.reserved)))
-+		return -EINVAL;
-+
-+	ret = blk_crypto_generate_key(profile, lt_key);
-+	if (ret < 0)
-+		goto out;
-+	if (ret > arg.lt_key_size) {
-+		ret = -EOVERFLOW;
-+		goto out;
-+	}
-+	arg.lt_key_size = ret;
-+	if (copy_to_user(u64_to_user_ptr(arg.lt_key_ptr), lt_key,
-+			 arg.lt_key_size) ||
-+	    copy_to_user(argp, &arg, sizeof(arg))) {
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+	ret = 0;
-+
-+out:
-+	memzero_explicit(lt_key, sizeof(lt_key));
-+	return ret;
-+}
-+
-+static int blk_crypto_ioctl_prepare_key(struct blk_crypto_profile *profile,
-+					void __user *argp)
-+{
-+	struct blk_crypto_prepare_key_arg arg;
-+	u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE];
-+	u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE];
-+	int ret;
-+
-+	if (copy_from_user(&arg, argp, sizeof(arg)))
-+		return -EFAULT;
-+
-+	if (memchr_inv(arg.reserved, 0, sizeof(arg.reserved)))
-+		return -EINVAL;
-+
-+	if (arg.lt_key_size > sizeof(lt_key))
-+		return -EINVAL;
-+
-+	if (copy_from_user(lt_key, u64_to_user_ptr(arg.lt_key_ptr),
-+			   arg.lt_key_size)) {
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+	ret = blk_crypto_prepare_key(profile, lt_key, arg.lt_key_size, eph_key);
-+	if (ret < 0)
-+		goto out;
-+	if (ret > arg.eph_key_size) {
-+		ret = -EOVERFLOW;
-+		goto out;
-+	}
-+	arg.eph_key_size = ret;
-+	if (copy_to_user(u64_to_user_ptr(arg.eph_key_ptr), eph_key,
-+			 arg.eph_key_size) ||
-+	    copy_to_user(argp, &arg, sizeof(arg))) {
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+	ret = 0;
-+
-+out:
-+	memzero_explicit(lt_key, sizeof(lt_key));
-+	memzero_explicit(eph_key, sizeof(eph_key));
-+	return ret;
-+}
-+
-+int blk_crypto_ioctl(struct block_device *bdev, unsigned int cmd,
-+		     void __user *argp)
-+{
-+	struct blk_crypto_profile *profile =
-+		bdev_get_queue(bdev)->crypto_profile;
-+
-+	if (!profile)
-+		return -EOPNOTSUPP;
-+
-+	switch (cmd) {
-+	case BLKCRYPTOIMPORTKEY:
-+		return blk_crypto_ioctl_import_key(profile, argp);
-+	case BLKCRYPTOGENERATEKEY:
-+		return blk_crypto_ioctl_generate_key(profile, argp);
-+	case BLKCRYPTOPREPAREKEY:
-+		return blk_crypto_ioctl_prepare_key(profile, argp);
-+	default:
-+		return -ENOTTY;
-+	}
-+}
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 6554b728bae6a..faa40f383e273 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -13,10 +13,11 @@
- #include <linux/uaccess.h>
- #include <linux/pagemap.h>
- #include <linux/io_uring/cmd.h>
- #include <uapi/linux/blkdev.h>
- #include "blk.h"
-+#include "blk-crypto-internal.h"
+ 	msm_host->ice = ice;
  
- static int blkpg_do_ioctl(struct block_device *bdev,
- 			  struct blkpg_partition __user *upart, int op)
- {
- 	struct gendisk *disk = bdev->bd_disk;
-@@ -618,10 +619,14 @@ static int blkdev_common_ioctl(struct block_device *bdev, blk_mode_t mode,
- 				mode | BLK_OPEN_STRICT_SCAN);
- 	case BLKTRACESTART:
- 	case BLKTRACESTOP:
- 	case BLKTRACETEARDOWN:
- 		return blk_trace_ioctl(bdev, cmd, argp);
-+	case BLKCRYPTOIMPORTKEY:
-+	case BLKCRYPTOGENERATEKEY:
-+	case BLKCRYPTOPREPAREKEY:
-+		return blk_crypto_ioctl(bdev, cmd, argp);
- 	case IOC_PR_REGISTER:
- 		return blkdev_pr_register(bdev, mode, argp);
- 	case IOC_PR_RESERVE:
- 		return blkdev_pr_reserve(bdev, mode, argp);
- 	case IOC_PR_RELEASE:
-diff --git a/include/linux/blk-crypto-profile.h b/include/linux/blk-crypto-profile.h
-index 7764b4f7b45b9..4f39e9cd75766 100644
---- a/include/linux/blk-crypto-profile.h
-+++ b/include/linux/blk-crypto-profile.h
-@@ -69,10 +69,52 @@ struct blk_crypto_ll_ops {
- 	 * -errno code on other errors.
- 	 */
- 	int (*derive_sw_secret)(struct blk_crypto_profile *profile,
- 				const u8 *eph_key, size_t eph_key_size,
- 				u8 sw_secret[BLK_CRYPTO_SW_SECRET_SIZE]);
+ 	/* Initialize the blk_crypto_profile */
+ 
+ 	caps.reg_val = cpu_to_le32(cqhci_readl(cq_host, CQHCI_CCAP));
+diff --git a/drivers/soc/qcom/ice.c b/drivers/soc/qcom/ice.c
+index 78780fd508f0b..ba94a32554c70 100644
+--- a/drivers/soc/qcom/ice.c
++++ b/drivers/soc/qcom/ice.c
+@@ -18,36 +18,86 @@
+ 
+ #include <linux/firmware/qcom/qcom_scm.h>
+ 
+ #include <soc/qcom/ice.h>
+ 
+-#define AES_256_XTS_KEY_SIZE			64
++#define AES_256_XTS_KEY_SIZE			64   /* for raw keys only */
++#define QCOM_ICE_HWKM_WRAPPED_KEY_SIZE		100  /* assuming HWKM v2 */
+ 
+ /* QCOM ICE registers */
 +
-+	/**
-+	 * @import_key: Create a hardware-wrapped key by importing a raw key.
-+	 *
-+	 * This only needs to be implemented if BLK_CRYPTO_KEY_TYPE_HW_WRAPPED
-+	 * is supported.
-+	 *
-+	 * On success, must write the new key in long-term wrapped form to
-+	 * @lt_key and return its size in bytes.  On failure, must return a
-+	 * -errno value.
-+	 */
-+	int (*import_key)(struct blk_crypto_profile *profile,
-+			  const u8 *raw_key, size_t raw_key_size,
-+			  u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
++#define QCOM_ICE_REG_CONTROL			0x0000
++#define QCOM_ICE_LEGACY_MODE_ENABLED		BIT(0)
 +
-+	/**
-+	 * @generate_key: Generate a hardware-wrapped key.
-+	 *
-+	 * This only needs to be implemented if BLK_CRYPTO_KEY_TYPE_HW_WRAPPED
-+	 * is supported.
-+	 *
-+	 * On success, must write the new key in long-term wrapped form to
-+	 * @lt_key and return its size in bytes.  On failure, must return a
-+	 * -errno value.
-+	 */
-+	int (*generate_key)(struct blk_crypto_profile *profile,
-+			    u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
+ #define QCOM_ICE_REG_VERSION			0x0008
 +
-+	/**
-+	 * @prepare_key: Prepare a hardware-wrapped key to be used.
-+	 *
-+	 * Prepare a hardware-wrapped key to be used by converting it from
-+	 * long-term wrapped form to ephemerally-wrapped form.  This only needs
-+	 * to be implemented if BLK_CRYPTO_KEY_TYPE_HW_WRAPPED is supported.
-+	 *
-+	 * On success, must write the key in ephemerally-wrapped form to
-+	 * @eph_key and return its size in bytes.  On failure, must return
-+	 * -EBADMSG if the key is invalid, or another -errno on other error.
-+	 */
-+	int (*prepare_key)(struct blk_crypto_profile *profile,
-+			   const u8 *lt_key, size_t lt_key_size,
-+			   u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
+ #define QCOM_ICE_REG_FUSE_SETTING		0x0010
++#define QCOM_ICE_FUSE_SETTING_MASK		BIT(0)
++#define QCOM_ICE_FORCE_HW_KEY0_SETTING_MASK	BIT(1)
++#define QCOM_ICE_FORCE_HW_KEY1_SETTING_MASK	BIT(2)
++
+ #define QCOM_ICE_REG_BIST_STATUS		0x0070
++#define QCOM_ICE_BIST_STATUS_MASK		GENMASK(31, 28)
++
+ #define QCOM_ICE_REG_ADVANCED_CONTROL		0x1000
+ 
+-/* BIST ("built-in self-test") status flags */
+-#define QCOM_ICE_BIST_STATUS_MASK		GENMASK(31, 28)
++#define QCOM_ICE_REG_CRYPTOCFG_BASE		0x4040
++#define QCOM_ICE_REG_CRYPTOCFG_SIZE		0x80
++#define QCOM_ICE_REG_CRYPTOCFG(slot) (QCOM_ICE_REG_CRYPTOCFG_BASE + \
++				      QCOM_ICE_REG_CRYPTOCFG_SIZE * (slot))
++union crypto_cfg {
++	__le32 regval;
++	struct {
++		u8 dusize;
++		u8 capidx;
++		u8 reserved;
++#define QCOM_ICE_HWKM_CFG_ENABLE_VAL		BIT(7)
++		u8 cfge;
++	};
++};
++
++/* QCOM ICE HWKM (Hardware Key Manager) registers */
++
++#define HWKM_OFFSET				0x8000
++
++#define QCOM_ICE_REG_HWKM_TZ_KM_CTL		(HWKM_OFFSET + 0x1000)
++#define QCOM_ICE_HWKM_DISABLE_CRC_CHECKS_VAL	(BIT(1) | BIT(2))
+ 
+-#define QCOM_ICE_FUSE_SETTING_MASK		0x1
+-#define QCOM_ICE_FORCE_HW_KEY0_SETTING_MASK	0x2
+-#define QCOM_ICE_FORCE_HW_KEY1_SETTING_MASK	0x4
++#define QCOM_ICE_REG_HWKM_TZ_KM_STATUS		(HWKM_OFFSET + 0x1004)
++#define QCOM_ICE_HWKM_KT_CLEAR_DONE		BIT(0)
++#define QCOM_ICE_HWKM_BOOT_CMD_LIST0_DONE	BIT(1)
++#define QCOM_ICE_HWKM_BOOT_CMD_LIST1_DONE	BIT(2)
++#define QCOM_ICE_HWKM_CRYPTO_BIST_DONE_V2	BIT(7)
++#define QCOM_ICE_HWKM_BIST_DONE_V2		BIT(9)
++
++#define QCOM_ICE_REG_HWKM_BANK0_BANKN_IRQ_STATUS (HWKM_OFFSET + 0x2008)
++#define QCOM_ICE_HWKM_RSP_FIFO_CLEAR_VAL	BIT(3)
++
++#define QCOM_ICE_REG_HWKM_BANK0_BBAC_0		(HWKM_OFFSET + 0x5000)
++#define QCOM_ICE_REG_HWKM_BANK0_BBAC_1		(HWKM_OFFSET + 0x5004)
++#define QCOM_ICE_REG_HWKM_BANK0_BBAC_2		(HWKM_OFFSET + 0x5008)
++#define QCOM_ICE_REG_HWKM_BANK0_BBAC_3		(HWKM_OFFSET + 0x500C)
++#define QCOM_ICE_REG_HWKM_BANK0_BBAC_4		(HWKM_OFFSET + 0x5010)
+ 
+ #define qcom_ice_writel(engine, val, reg)	\
+ 	writel((val), (engine)->base + (reg))
+ 
+ #define qcom_ice_readl(engine, reg)	\
+ 	readl((engine)->base + (reg))
+ 
++static bool qcom_ice_use_wrapped_keys;
++module_param_named(use_wrapped_keys, qcom_ice_use_wrapped_keys, bool, 0660);
++MODULE_PARM_DESC(use_wrapped_keys,
++		 "Support wrapped keys instead of raw keys, if available on the platform");
++
+ struct qcom_ice {
+ 	struct device *dev;
+ 	void __iomem *base;
+ 
+ 	struct clk *core_clk;
++	bool use_hwkm;
++	bool hwkm_init_complete;
  };
  
- /**
-  * struct blk_crypto_profile - inline encryption profile for a device
-  *
-@@ -161,10 +203,21 @@ unsigned int blk_crypto_keyslot_index(struct blk_crypto_keyslot *slot);
+ static bool qcom_ice_check_supported(struct qcom_ice *ice)
+ {
+ 	u32 regval = qcom_ice_readl(ice, QCOM_ICE_REG_VERSION);
+@@ -73,10 +123,39 @@ static bool qcom_ice_check_supported(struct qcom_ice *ice)
+ 		      QCOM_ICE_FORCE_HW_KEY1_SETTING_MASK)) {
+ 		dev_warn(dev, "Fuses are blown; ICE is unusable!\n");
+ 		return false;
+ 	}
  
- void blk_crypto_reprogram_all_keys(struct blk_crypto_profile *profile);
++	/*
++	 * Check for HWKM support and decide whether to use it or not.  ICE
++	 * v3.2.1 and later have HWKM v2.  ICE v3.2.0 has HWKM v1.  Earlier ICE
++	 * versions don't have HWKM at all.  However, for HWKM to be fully
++	 * usable by Linux, the TrustZone software also needs to support certain
++	 * SCM calls including the ones to generate and prepare keys.  That
++	 * effectively makes the earliest supported SoC be SM8650, which has
++	 * HWKM v2.  Therefore, this driver doesn't include support for HWKM v1,
++	 * and it checks for the SCM call support before it decides to use HWKM.
++	 *
++	 * Also, since HWKM and legacy mode are mutually exclusive, and
++	 * ICE-capable storage driver(s) need to know early on whether to
++	 * advertise support for raw keys or wrapped keys, HWKM cannot be used
++	 * unconditionally.  A module parameter is used to opt into using it.
++	 */
++	if ((major >= 4 ||
++	     (major == 3 && (minor >= 3 || (minor == 2 && step >= 1)))) &&
++	    qcom_scm_has_wrapped_key_support()) {
++		if (qcom_ice_use_wrapped_keys) {
++			dev_info(dev, "Using HWKM. Supporting wrapped keys only.\n");
++			ice->use_hwkm = true;
++		} else {
++			dev_info(dev, "Not using HWKM. Supporting raw keys only.\n");
++		}
++	} else if (qcom_ice_use_wrapped_keys) {
++		dev_warn(dev, "A supported HWKM is not present. Ignoring qcom_ice.use_wrapped_keys=1.\n");
++	} else {
++		dev_info(dev, "A supported HWKM is not present. Supporting raw keys only.\n");
++	}
+ 	return true;
+ }
  
- void blk_crypto_profile_destroy(struct blk_crypto_profile *profile);
+ static void qcom_ice_low_power_mode_enable(struct qcom_ice *ice)
+ {
+@@ -120,21 +199,75 @@ static int qcom_ice_wait_bist_status(struct qcom_ice *ice)
+ 	int err;
  
-+int blk_crypto_import_key(struct blk_crypto_profile *profile,
-+			  const u8 *raw_key, size_t raw_key_size,
-+			  u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
-+
-+int blk_crypto_generate_key(struct blk_crypto_profile *profile,
-+			    u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
-+
-+int blk_crypto_prepare_key(struct blk_crypto_profile *profile,
-+			   const u8 *lt_key, size_t lt_key_size,
-+			   u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
-+
- void blk_crypto_intersect_capabilities(struct blk_crypto_profile *parent,
- 				       const struct blk_crypto_profile *child);
+ 	err = readl_poll_timeout(ice->base + QCOM_ICE_REG_BIST_STATUS,
+ 				 regval, !(regval & QCOM_ICE_BIST_STATUS_MASK),
+ 				 50, 5000);
+-	if (err)
++	if (err) {
+ 		dev_err(ice->dev, "Timed out waiting for ICE self-test to complete\n");
++		return err;
++	}
  
- bool blk_crypto_has_capabilities(const struct blk_crypto_profile *target,
- 				 const struct blk_crypto_profile *reference);
-diff --git a/include/linux/blk-crypto.h b/include/linux/blk-crypto.h
-index 81f932b3ea376..58b0c5254a678 100644
---- a/include/linux/blk-crypto.h
-+++ b/include/linux/blk-crypto.h
-@@ -6,10 +6,11 @@
- #ifndef __LINUX_BLK_CRYPTO_H
- #define __LINUX_BLK_CRYPTO_H
+-	return err;
++	if (ice->use_hwkm &&
++	    qcom_ice_readl(ice, QCOM_ICE_REG_HWKM_TZ_KM_STATUS) !=
++	    (QCOM_ICE_HWKM_KT_CLEAR_DONE |
++	     QCOM_ICE_HWKM_BOOT_CMD_LIST0_DONE |
++	     QCOM_ICE_HWKM_BOOT_CMD_LIST1_DONE |
++	     QCOM_ICE_HWKM_CRYPTO_BIST_DONE_V2 |
++	     QCOM_ICE_HWKM_BIST_DONE_V2)) {
++		dev_err(ice->dev, "HWKM self-test error!\n");
++		/*
++		 * Too late to revoke use_hwkm here, as it was already
++		 * propagated up the stack into the crypto capabilities.
++		 */
++	}
++	return 0;
++}
++
++static void qcom_ice_hwkm_init(struct qcom_ice *ice)
++{
++	u32 regval;
++
++	if (!ice->use_hwkm)
++		return;
++
++	BUILD_BUG_ON(QCOM_ICE_HWKM_WRAPPED_KEY_SIZE >
++		     BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE);
++	/*
++	 * When ICE is in HWKM mode, it only supports wrapped keys.
++	 * When ICE is in legacy mode, it only supports raw keys.
++	 *
++	 * Put ICE in HWKM mode.  ICE defaults to legacy mode.
++	 */
++	regval = qcom_ice_readl(ice, QCOM_ICE_REG_CONTROL);
++	regval &= ~QCOM_ICE_LEGACY_MODE_ENABLED;
++	qcom_ice_writel(ice, regval, QCOM_ICE_REG_CONTROL);
++
++	/* Disable CRC checks.  This HWKM feature is not used. */
++	qcom_ice_writel(ice, QCOM_ICE_HWKM_DISABLE_CRC_CHECKS_VAL,
++			QCOM_ICE_REG_HWKM_TZ_KM_CTL);
++
++	/*
++	 * Allow the HWKM slave to read and write the keyslots in the ICE HWKM
++	 * slave.  Without this, TrustZone cannot program keys into ICE.
++	 */
++	qcom_ice_writel(ice, GENMASK(31, 0), QCOM_ICE_REG_HWKM_BANK0_BBAC_0);
++	qcom_ice_writel(ice, GENMASK(31, 0), QCOM_ICE_REG_HWKM_BANK0_BBAC_1);
++	qcom_ice_writel(ice, GENMASK(31, 0), QCOM_ICE_REG_HWKM_BANK0_BBAC_2);
++	qcom_ice_writel(ice, GENMASK(31, 0), QCOM_ICE_REG_HWKM_BANK0_BBAC_3);
++	qcom_ice_writel(ice, GENMASK(31, 0), QCOM_ICE_REG_HWKM_BANK0_BBAC_4);
++
++	/* Clear the HWKM response FIFO. */
++	qcom_ice_writel(ice, QCOM_ICE_HWKM_RSP_FIFO_CLEAR_VAL,
++			QCOM_ICE_REG_HWKM_BANK0_BANKN_IRQ_STATUS);
++	ice->hwkm_init_complete = true;
+ }
  
- #include <linux/minmax.h>
- #include <linux/types.h>
-+#include <uapi/linux/blk-crypto.h>
+ int qcom_ice_enable(struct qcom_ice *ice)
+ {
+ 	qcom_ice_low_power_mode_enable(ice);
+ 	qcom_ice_optimization_enable(ice);
+-
++	qcom_ice_hwkm_init(ice);
+ 	return qcom_ice_wait_bist_status(ice);
+ }
+ EXPORT_SYMBOL_GPL(qcom_ice_enable);
  
- enum blk_crypto_mode_num {
- 	BLK_ENCRYPTION_MODE_INVALID,
- 	BLK_ENCRYPTION_MODE_AES_256_XTS,
- 	BLK_ENCRYPTION_MODE_AES_128_CBC_ESSIV,
-diff --git a/include/uapi/linux/blk-crypto.h b/include/uapi/linux/blk-crypto.h
-new file mode 100644
-index 0000000000000..97302c6eb6afe
---- /dev/null
-+++ b/include/uapi/linux/blk-crypto.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _UAPI_LINUX_BLK_CRYPTO_H
-+#define _UAPI_LINUX_BLK_CRYPTO_H
+ int qcom_ice_resume(struct qcom_ice *ice)
+@@ -146,23 +279,67 @@ int qcom_ice_resume(struct qcom_ice *ice)
+ 	if (err) {
+ 		dev_err(dev, "failed to enable core clock (%d)\n",
+ 			err);
+ 		return err;
+ 	}
+-
++	qcom_ice_hwkm_init(ice);
+ 	return qcom_ice_wait_bist_status(ice);
+ }
+ EXPORT_SYMBOL_GPL(qcom_ice_resume);
+ 
+ int qcom_ice_suspend(struct qcom_ice *ice)
+ {
+ 	clk_disable_unprepare(ice->core_clk);
++	ice->hwkm_init_complete = false;
+ 
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(qcom_ice_suspend);
+ 
++static unsigned int translate_hwkm_slot(struct qcom_ice *ice, unsigned int slot)
++{
++	return slot * 2;
++}
 +
-+#include <linux/ioctl.h>
-+#include <linux/types.h>
++static int qcom_ice_program_wrapped_key(struct qcom_ice *ice, unsigned int slot,
++					const struct blk_crypto_key *bkey)
++{
++	struct device *dev = ice->dev;
++	union crypto_cfg cfg = {
++		.dusize = bkey->crypto_cfg.data_unit_size / 512,
++		.capidx = QCOM_SCM_ICE_CIPHER_AES_256_XTS,
++		.cfge = QCOM_ICE_HWKM_CFG_ENABLE_VAL,
++	};
++	int err;
 +
-+struct blk_crypto_import_key_arg {
-+	/* Raw key (input) */
-+	__u64 raw_key_ptr;
-+	__u64 raw_key_size;
-+	/* Long-term wrapped key blob (output) */
-+	__u64 lt_key_ptr;
-+	__u64 lt_key_size;
-+	__u64 reserved[4];
-+};
++	if (!ice->use_hwkm) {
++		dev_err_ratelimited(dev, "Got wrapped key when not using HWKM\n");
++		return -EINVAL;
++	}
++	if (!ice->hwkm_init_complete) {
++		dev_err_ratelimited(dev, "HWKM not yet initialized\n");
++		return -EINVAL;
++	}
 +
-+struct blk_crypto_generate_key_arg {
-+	/* Long-term wrapped key blob (output) */
-+	__u64 lt_key_ptr;
-+	__u64 lt_key_size;
-+	__u64 reserved[4];
-+};
++	/* Clear CFGE before programming the key. */
++	qcom_ice_writel(ice, 0x0, QCOM_ICE_REG_CRYPTOCFG(slot));
 +
-+struct blk_crypto_prepare_key_arg {
-+	/* Long-term wrapped key blob (input) */
-+	__u64 lt_key_ptr;
-+	__u64 lt_key_size;
-+	/* Ephemerally-wrapped key blob (output) */
-+	__u64 eph_key_ptr;
-+	__u64 eph_key_size;
-+	__u64 reserved[4];
-+};
++	/* Call into TrustZone to program the wrapped key using HWKM. */
++	err = qcom_scm_ice_set_key(translate_hwkm_slot(ice, slot), bkey->bytes,
++				   bkey->size, cfg.capidx, cfg.dusize);
++	if (err) {
++		dev_err_ratelimited(dev,
++				    "qcom_scm_ice_set_key failed; err=%d, slot=%u\n",
++				    err, slot);
++		return err;
++	}
 +
-+/*
-+ * These ioctls share the block device ioctl space; see uapi/linux/fs.h.
-+ * 140-141 are reserved for future blk-crypto ioctls; any more than that would
-+ * require an additional allocation from the block device ioctl space.
++	/* Set CFGE after programming the key. */
++	qcom_ice_writel(ice, cfg.regval, QCOM_ICE_REG_CRYPTOCFG(slot));
++	return 0;
++}
++
+ int qcom_ice_program_key(struct qcom_ice *ice, unsigned int slot,
+ 			 const struct blk_crypto_key *blk_key)
+ {
+ 	struct device *dev = ice->dev;
+ 	union {
+@@ -178,10 +355,18 @@ int qcom_ice_program_key(struct qcom_ice *ice, unsigned int slot,
+ 		dev_err_ratelimited(dev, "Unsupported crypto mode: %d\n",
+ 				    blk_key->crypto_cfg.crypto_mode);
+ 		return -EINVAL;
+ 	}
+ 
++	if (blk_key->crypto_cfg.key_type == BLK_CRYPTO_KEY_TYPE_HW_WRAPPED)
++		return qcom_ice_program_wrapped_key(ice, slot, blk_key);
++
++	if (ice->use_hwkm) {
++		dev_err_ratelimited(dev, "Got raw key when using HWKM\n");
++		return -EINVAL;
++	}
++
+ 	if (blk_key->size != AES_256_XTS_KEY_SIZE) {
+ 		dev_err_ratelimited(dev, "Incorrect key size\n");
+ 		return -EINVAL;
+ 	}
+ 	memcpy(key.bytes, blk_key->bytes, AES_256_XTS_KEY_SIZE);
+@@ -200,14 +385,135 @@ int qcom_ice_program_key(struct qcom_ice *ice, unsigned int slot,
+ }
+ EXPORT_SYMBOL_GPL(qcom_ice_program_key);
+ 
+ int qcom_ice_evict_key(struct qcom_ice *ice, int slot)
+ {
++	if (ice->hwkm_init_complete)
++		slot = translate_hwkm_slot(ice, slot);
+ 	return qcom_scm_ice_invalidate_key(slot);
+ }
+ EXPORT_SYMBOL_GPL(qcom_ice_evict_key);
+ 
++/**
++ * qcom_ice_get_supported_key_type() - Get the supported key type
++ * @ice: ICE driver data
++ *
++ * Return: the blk-crypto key type that the ICE driver is configured to use.
++ * This is the key type that ICE-capable storage drivers should advertise as
++ * supported in the crypto capabilities of any disks they register.
 + */
-+#define BLKCRYPTOIMPORTKEY _IOWR(0x12, 137, struct blk_crypto_import_key_arg)
-+#define BLKCRYPTOGENERATEKEY _IOWR(0x12, 138, struct blk_crypto_generate_key_arg)
-+#define BLKCRYPTOPREPAREKEY _IOWR(0x12, 139, struct blk_crypto_prepare_key_arg)
++enum blk_crypto_key_type qcom_ice_get_supported_key_type(struct qcom_ice *ice)
++{
++	if (ice->use_hwkm)
++		return BLK_CRYPTO_KEY_TYPE_HW_WRAPPED;
++	return BLK_CRYPTO_KEY_TYPE_RAW;
++}
++EXPORT_SYMBOL_GPL(qcom_ice_get_supported_key_type);
 +
-+#endif /* _UAPI_LINUX_BLK_CRYPTO_H */
-diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
-index 2bbe00cf12482..e762e1af650c4 100644
---- a/include/uapi/linux/fs.h
-+++ b/include/uapi/linux/fs.h
-@@ -210,14 +210,12 @@ struct fsxattr {
- #define BLKDISCARDZEROES _IO(0x12,124)
- #define BLKSECDISCARD _IO(0x12,125)
- #define BLKROTATIONAL _IO(0x12,126)
- #define BLKZEROOUT _IO(0x12,127)
- #define BLKGETDISKSEQ _IOR(0x12,128,__u64)
--/*
-- * A jump here: 130-136 are reserved for zoned block devices
-- * (see uapi/linux/blkzoned.h)
-- */
-+/* 130-136 are used by zoned block device ioctls (uapi/linux/blkzoned.h) */
-+/* 137-141 are used by blk-crypto ioctls (uapi/linux/blk-crypto.h) */
++/**
++ * qcom_ice_derive_sw_secret() - Derive software secret from wrapped key
++ * @ice: ICE driver data
++ * @eph_key: an ephemerally-wrapped key
++ * @eph_key_size: size of @eph_key in bytes
++ * @sw_secret: output buffer for the software secret
++ *
++ * Use HWKM to derive the "software secret" from a hardware-wrapped key that is
++ * given in ephemerally-wrapped form.
++ *
++ * Return: 0 on success; -EBADMSG if the given ephemerally-wrapped key is
++ *	   invalid; or another -errno value.
++ */
++int qcom_ice_derive_sw_secret(struct qcom_ice *ice,
++			      const u8 *eph_key, size_t eph_key_size,
++			      u8 sw_secret[BLK_CRYPTO_SW_SECRET_SIZE])
++{
++	int err = qcom_scm_derive_sw_secret(eph_key, eph_key_size,
++					    sw_secret,
++					    BLK_CRYPTO_SW_SECRET_SIZE);
++	if (err == -EIO || err == -EINVAL)
++		err = -EBADMSG; /* probably invalid key */
++	return err;
++}
++EXPORT_SYMBOL_GPL(qcom_ice_derive_sw_secret);
++
++/**
++ * qcom_ice_generate_key() - Generate a wrapped key for inline encryption
++ * @ice: ICE driver data
++ * @lt_key: output buffer for the long-term wrapped key
++ *
++ * Use HWKM to generate a new key and return it as a long-term wrapped key.
++ *
++ * Return: the size of the resulting wrapped key on success; -errno on failure.
++ */
++int qcom_ice_generate_key(struct qcom_ice *ice,
++			  u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
++{
++	int err;
++
++	err = qcom_scm_generate_ice_key(lt_key, QCOM_ICE_HWKM_WRAPPED_KEY_SIZE);
++	if (err)
++		return err;
++
++	return QCOM_ICE_HWKM_WRAPPED_KEY_SIZE;
++}
++EXPORT_SYMBOL_GPL(qcom_ice_generate_key);
++
++/**
++ * qcom_ice_prepare_key() - Prepare a wrapped key for inline encryption
++ * @ice: ICE driver data
++ * @lt_key: a long-term wrapped key
++ * @lt_key_size: size of @lt_key in bytes
++ * @eph_key: output buffer for the ephemerally-wrapped key
++ *
++ * Use HWKM to re-wrap a long-term wrapped key with the per-boot ephemeral key.
++ *
++ * Return: the size of the resulting wrapped key on success; -EBADMSG if the
++ *	   given long-term wrapped key is invalid; or another -errno value.
++ */
++int qcom_ice_prepare_key(struct qcom_ice *ice,
++			 const u8 *lt_key, size_t lt_key_size,
++			 u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
++{
++	int err;
++
++	err = qcom_scm_prepare_ice_key(lt_key, lt_key_size,
++				       eph_key, QCOM_ICE_HWKM_WRAPPED_KEY_SIZE);
++	if (err == -EIO || err == -EINVAL)
++		err = -EBADMSG; /* probably invalid key */
++	if (err)
++		return err;
++
++	return QCOM_ICE_HWKM_WRAPPED_KEY_SIZE;
++}
++EXPORT_SYMBOL_GPL(qcom_ice_prepare_key);
++
++/**
++ * qcom_ice_import_key() - Import a raw key for inline encryption
++ * @ice: ICE driver data
++ * @raw_key: the raw key to import
++ * @raw_key_size: size of @raw_key in bytes
++ * @lt_key: output buffer for the long-term wrapped key
++ *
++ * Use HWKM to import a raw key and return it as a long-term wrapped key.
++ *
++ * Return: the size of the resulting wrapped key on success; -errno on failure.
++ */
++int qcom_ice_import_key(struct qcom_ice *ice,
++			const u8 *raw_key, size_t raw_key_size,
++			u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
++{
++	int err;
++
++	err = qcom_scm_import_ice_key(raw_key, raw_key_size,
++				      lt_key, QCOM_ICE_HWKM_WRAPPED_KEY_SIZE);
++	if (err)
++		return err;
++
++	return QCOM_ICE_HWKM_WRAPPED_KEY_SIZE;
++}
++EXPORT_SYMBOL_GPL(qcom_ice_import_key);
++
+ static struct qcom_ice *qcom_ice_create(struct device *dev,
+ 					void __iomem *base)
+ {
+ 	struct qcom_ice *engine;
  
- #define BMAP_IOCTL 1		/* obsolete - kept for compatibility */
- #define FIBMAP	   _IO(0x00,1)	/* bmap access */
- #define FIGETBSZ   _IO(0x00,2)	/* get the block size used for bmap */
- #define FIFREEZE	_IOWR('X', 119, int)	/* Freeze */
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index 9330022e98eec..f34527fb02fb2 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -132,10 +132,15 @@ static int ufs_qcom_ice_init(struct ufs_qcom_host *host)
+ 	}
+ 
+ 	if (IS_ERR_OR_NULL(ice))
+ 		return PTR_ERR_OR_ZERO(ice);
+ 
++	if (qcom_ice_get_supported_key_type(ice) != BLK_CRYPTO_KEY_TYPE_RAW) {
++		dev_warn(dev, "Wrapped keys not supported. Disabling inline encryption support.\n");
++		return 0;
++	}
++
+ 	host->ice = ice;
+ 
+ 	/* Initialize the blk_crypto_profile */
+ 
+ 	caps.reg_val = cpu_to_le32(ufshcd_readl(hba, REG_UFS_CCAP));
+diff --git a/include/soc/qcom/ice.h b/include/soc/qcom/ice.h
+index 4cecc7f088b4b..c0e32afd7fb81 100644
+--- a/include/soc/qcom/ice.h
++++ b/include/soc/qcom/ice.h
+@@ -15,7 +15,19 @@ int qcom_ice_enable(struct qcom_ice *ice);
+ int qcom_ice_resume(struct qcom_ice *ice);
+ int qcom_ice_suspend(struct qcom_ice *ice);
+ int qcom_ice_program_key(struct qcom_ice *ice, unsigned int slot,
+ 			 const struct blk_crypto_key *blk_key);
+ int qcom_ice_evict_key(struct qcom_ice *ice, int slot);
++enum blk_crypto_key_type qcom_ice_get_supported_key_type(struct qcom_ice *ice);
++int qcom_ice_derive_sw_secret(struct qcom_ice *ice,
++			      const u8 *eph_key, size_t eph_key_size,
++			      u8 sw_secret[BLK_CRYPTO_SW_SECRET_SIZE]);
++int qcom_ice_generate_key(struct qcom_ice *ice,
++			  u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
++int qcom_ice_prepare_key(struct qcom_ice *ice,
++			 const u8 *lt_key, size_t lt_key_size,
++			 u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
++int qcom_ice_import_key(struct qcom_ice *ice,
++			const u8 *raw_key, size_t raw_key_size,
++			u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
+ struct qcom_ice *of_qcom_ice_get(struct device *dev);
+ #endif /* __QCOM_ICE_H__ */
 -- 
 2.48.1
 
