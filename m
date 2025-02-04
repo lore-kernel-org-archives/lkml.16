@@ -1,107 +1,167 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0DD206F17;
-	Tue,  4 Feb 2025 09:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF95207A00;
+	Tue,  4 Feb 2025 09:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661327; cv=none; b=p2IAtESzm2QDn8C8YtsXc6oLvJfiX7N/9bop9A7VwxVMF7nzeR+y8OaFB/RfnmlXMMpbzSOFJN27BmLNpm4/ZvlaioyzSrh9SC6S925Et3HcRux0k02zIXcp1P8yDA56vt1Xiv3cPviBXETMm2mjQxJkF08I8xcYhnifj6IBjrM=
+	t=1738661364; cv=none; b=EDTIGa906qsm+wAnKz+0IiXX06UiIRoJEHsWucU2vMPy+DOHT2Mb3JBEaAyJljb80esWY6ZbkyTWWfFUgsy6cJnrD1xf6SOMZH45uLh5CTBciLz61i1RgIppsjES4ZPJy6c5z+SHey/dtaPvIGvBb4pWiTiN0SPdIrfw+i/yzYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661327; c=relaxed/simple;
-	bh=VnS31rylgHiREySqv8HKPVWOHC16dcRlvpLngN8T+54=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=h7ojvxKOG+IqmH32GidrQht2VY1vNeKGd5hafQXsZw8n6i28AOfkCITkmas/Rh/zUuTxS/wjV5bqUuARNshhjCg1gNnWNZsQWmeASgDhMW3RbZyRvwFXdtzbU826LtnpHM6S6kxnup5kWod0B9a+UVb4t1I5268AH9ckkSi2rVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V5b3DVGS; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738661364; c=relaxed/simple;
+	bh=eMSZR184pNyYKO7OZQpI/SBXyNlp7dxGDDy8hNjjVA4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Lag7cWzeEa2aMcLh4vvpAl+B11ya4r94ihximVbj0wB5l2GFfI4O6CuxjFrQAn2Tvf5y5QBJl22qpe41KmaXaUtMZiULRirHQU+gVS0nh1sbYVib+ZsHFQbaL7rq7bEMHSPF2D9q5DN9dfVxXhRabeiRk2b8QaZJNUJaKoihZ+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ontwalZR; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5b3DVGS"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ab70043cd05so826101766b.0;
-        Tue, 04 Feb 2025 01:28:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738661324; x=1739266124; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XTwc9Th5siWMiTD7kn0j7u1V80IUDrClcubkNNtYRvo=;
-        b=V5b3DVGSV3Fh56CUfpEPRj1AxXVlkF2xgH5pvMEN6WNdrNh+/WiF4iOCSrA1cIr1fw
-         dm/UFN+DbE9ETtOe5goxb5TW6Jg3ayq+SYNo0w39yk0JJlfvaWMmulKN+nAonCrQno0+
-         DHC7CvpRxDeGRIFexKJfQPVfv37h1EVNsK6xj2FIuTOYegU5vfAA+MDwqMH1qnLa1F94
-         hgBvPUwQ7/LVpN8SehYJhLEB0It0CaXoE5y2mLr+WqBsG0php5mMPcCwU3OhITJUSfep
-         tw86DmfA7WWe/OSpmzu3YhEKQ0nup0XkwdF+Ze+Qn8ALrjN3DuN1VgI+PxTXEv8s8O1M
-         7AOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738661324; x=1739266124;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XTwc9Th5siWMiTD7kn0j7u1V80IUDrClcubkNNtYRvo=;
-        b=AMpIhahALvRqWCQ/96tyqwSkNRNA/+8WqPznHW1A9D7iQXMtMr1HH72vUJg+ID8+XA
-         eGGn8dtqG0PbiFeWOz7PSBjxdc73dPtc1g+9Gciv1q8UCzSJTAmgU9s1kAZC3zuQmwBN
-         23mCTZzybJ4evbPWBJOioMpTZt6SH4CI/NDvpGVBIigxhOwEdWt1cXZFL8GO7t+CWSm+
-         RZdfEBdbhVx30Fdqz5llm4XwUkV191/P5U3ukywX4H6Uk2RkBJso2EA73A6bLQr+Z3N7
-         4Ee+NgGOGuylKTEYfERa/S+zUXcIsRLLPExQtzjBmtlJOsgAuB3FwRY7jVEUZx26Tl1q
-         oDcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsOs+BVPj4AUuPvznyhBhcziuCQtYehX2zFM61MfLCA0l6sNemNY2Q70fzYu35KEYoT/IQ251B+BJ8NL0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPX6RJKCs9tFR9QXejBiSio1QdjtOsMMUwuAibbNVid6u5aAyp
-	ajruJDSgXwThHwVI8k7cl0GPERYXKVCQTFho386o1wNl4bL+QUDkEZF3v9Vxi5M=
-X-Gm-Gg: ASbGnctGz0Xvtt/aVUHqPZ5TjD1VZEczQh2FNlroT97Hl5d9qZIxfWD9TmfDqoyykJ1
-	/EaR7T30Oc1dHSIC6Ori0A08i2Q7Zze3Iw9XUz/kYyZlQlbbhYemDjpSq+mEps83kVVQ1n7yPnL
-	FG13w1TzIGfcgy6Dj48gxMdCaoxalSDS39Y8OC9kdYuxNxks7UOedVHW2V7kTMPlVa4qN/vLhSa
-	JJkHqeGahD5uz1MUOWNLNjEoiL8c6fFqCN1Neghw0a7p3dS8G8AtGs2xRJ1RrNmrTGqOtw5jPCL
-	/NS+CvnjxyyywuRvFVCrv8iXYvXcPFMtGVF+ZgLW/8cqcnQ=
-X-Google-Smtp-Source: AGHT+IFLBtYophIm6tAO2aFSfswyWwr/aSH+r86kCltIEVfR3E92Fg2lpP+VlbBSyBgC7qImjOtqeA==
-X-Received: by 2002:a17:907:940f:b0:ab7:1012:3ccb with SMTP id a640c23a62f3a-ab710123dd0mr1177789666b.14.1738661323862;
-        Tue, 04 Feb 2025 01:28:43 -0800 (PST)
-Received: from [192.168.20.51] (54-240-197-238.amazon.com. [54.240.197.238])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e49ffd42sm903597866b.95.2025.02.04.01.28.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 01:28:43 -0800 (PST)
-From: Paul Durrant <xadimgnik@gmail.com>
-X-Google-Original-From: Paul Durrant <paul@xen.org>
-Message-ID: <e82ad865-8c04-404a-94e4-d9d7e5c10717@xen.org>
-Date: Tue, 4 Feb 2025 09:28:42 +0000
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ontwalZR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 665AA433C9;
+	Tue,  4 Feb 2025 09:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738661359;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VV8/JHm8kIK/rlo3rcbyj1LmcZAByFGrKx7EJ2T+XlA=;
+	b=ontwalZRkhxk+02Z9CEucuzMfxcvDDXM09d24+a+16xeyxUM7oMb5yYjNNYXHzmIAfLeyc
+	hV9z9Fk9/fOyoMAfR4Xiu4VFBesSrTEptv0+CY1+ghtXvPEYL5UjpU461lZLeedwsYKp0m
+	zCqQuBabfo+ryJidFG4thK+SUwmkVw430mmh+DtZCQAolcH2Olxb++YcGos9nIcY+mdCE+
+	aSZKrWFSlR6L35z7yMvU8c9AQTqH/MimM4kY2Id2sIrocl7yRxwqpEwSfkprG16qbXteO/
+	thMD4YZf5v5m4nSpBh9NHVzl6wgoUcO5yfFcoY3hY8OiMAN3OPMXBla98hKImQ==
+From: Romain Gantois <romain.gantois@bootlin.com>
+Subject: [PATCH v7 0/9] misc: Support TI FPC202 dual-port controller
+Date: Tue, 04 Feb 2025 10:29:11 +0100
+Message-Id: <20250204-fpc202-v7-0-78b4b8a35cf1@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: paul@xen.org
-Subject: Re: [PATCH v2 06/11] KVM: x86: Don't bleed PVCLOCK_GUEST_STOPPED
- across PV clocks
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzbot+352e553a86e0d75f5120@syzkaller.appspotmail.com,
- Paul Durrant <pdurrant@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>,
- Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20250201013827.680235-1-seanjc@google.com>
- <20250201013827.680235-7-seanjc@google.com>
-Content-Language: en-US
-Organization: Xen Project
-In-Reply-To: <20250201013827.680235-7-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOjdoWcC/2XQzW7DIAwH8FepOI8JjIGw095j6oHPFWkLVVJFq
+ 6q8+5xObTLlZiN+f2xubMxDzSN7O9zYkKc61tZTY18OLJ58/5l5TdQzEIBSSMvLOVLNTRHBKke
+ 17RhdPg+51J970MeR+lMdL2243nMnuZz+RUjRPSImyQUvGSEa14Xo4D20dvmq/Wts32wJmWAD5
+ QqBoEXMWKQDD2kP1QaCfkJFUGHuTIhBB232EFcISjwhLi8aGcDZROPaPdQPqMV2R03Qo3I+OOe
+ S9ntoNlCuoxqCCa1X2NEfa/UfzvP8C3pbyVC7AQAA
+X-Change-ID: 20241017-fpc202-6f0b739c2078
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
+ Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Romain Gantois <romain.gantois@bootlin.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdduhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpeftohhmrghinhcuifgrnhhtohhishcuoehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeeggeegheffueefieevffefleeuieegveejhfeiudelkeegleelgeduveefkeeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddufegnpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggvrhgvkhdrkhhivghrnhgrnhesrghmugdrtghomhdprhgtphhtt
+ hhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepughrrghgrghnrdgtvhgvthhitgesrghmugdrtghomhdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On 01/02/2025 01:38, Sean Christopherson wrote:
-> When updating a specific PV clock, make a full copy of KVM's reference
-> copy/cache so that PVCLOCK_GUEST_STOPPED doesn't bleed across clocks.
-> E.g. in the unlikely scenario the guest has enabled both kvmclock and Xen
-> PV clock, a dangling GUEST_STOPPED in kvmclock would bleed into Xen PV
-> clock.
-> 
-> Using a local copy of the pvclock structure also sets the stage for
-> eliminating the per-vCPU copy/cache (only the TSC frequency information
-> actually "needs" to be cached/persisted).
-> 
-> Fixes: aa096aa0a05f ("KVM: x86/xen: setup pvclock updates")
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/kvm/x86.c | 13 ++++++++-----
->   1 file changed, 8 insertions(+), 5 deletions(-)
-> 
+Hello everyone,
 
-Reviewed-by: Paul Durrant <paul@xen.org>
+This is version seven of my series which adds support for the TI FPC202
+dual-port controller. This is an unusual kind of device which is used as a
+low-speed signal aggregator for various types of SFP-like hardware ports.
+
+The FPC202 exposes an I2C, or SPI (not supported in this series) control
+interface, which can be used to access two downstream I2C busses, along
+with a set of low-speed GPIO signals for each port. It also has I2C address
+translation (ATR) features, which allow multiple I2C devices with the same
+address (e.g. SFP EEPROMs at address 0x50) to be accessed from the upstream
+control interface on different addresses.
+
+I've chosen to add this driver to the misc subsystem, as it doesn't
+strictly belong in either the i2c or gpio sybsystem, and as far as I know
+it is the first device of its kind to be added to the kernel.
+
+Along with the FPC202 driver itself, this series also adds support for
+dynamic address translation to the i2c-atr module. This allows I2C address
+translators to update their translation table on-the-fly when they receive
+transactions to unmapped clients. This feature is needed by the FPC202
+driver to access up to three logical I2C devices per-port, given that the
+FPC202 address translation table only has two address slots.
+
+Best Regards,
+
+Romain
+
+Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
+---
+Changes in v7:
+- Removed a superfluous log message
+- Link to v6: https://lore.kernel.org/r/20250115-fpc202-v6-0-d47a34820753@bootlin.com
+
+Changes in v6:
+- Replaced spaces with tabs in misc Makefile
+- Link to v5: https://lore.kernel.org/r/20250108-fpc202-v5-0-a439ab999d5a@bootlin.com
+
+Changes in v5:
+- Used mutex guards in ub960 and fpc202 drivers
+- Changed wording of some i2c-atr logs
+- Link to v4: https://lore.kernel.org/r/20241230-fpc202-v4-0-761b297dc697@bootlin.com
+
+Changes in v4:
+- Fixed unbalanced refcounting in FPC202 port probing path
+- Fixed KASAN bug by setting alias_pool "shared" flag properly
+- Dropped requirement for both FPC202 ports to be described in the DT
+- Enabled dynamic translation by default, dropped support for non dynamic translation
+- Used aliased_addrs list instead of insufficient bitmap in ub960 driver
+- Added i2c_atr_destroy_c2a() function matching i2c_atr_create_c2a()
+- Fixed list corruption bug in dynamic address translation
+- Indented Kconfig entry with tabs instead of spaces
+- Link to v3: https://lore.kernel.org/r/20241125-fpc202-v3-0-34e86bcb5b56@bootlin.com
+
+Changes in v3:
+- Described the "reg" property of downstream ports in the FPC202 bindings
+- Link to v2: https://lore.kernel.org/r/20241118-fpc202-v2-0-744e4f192a2d@bootlin.com
+
+Changes in v2:
+- Renamed port nodes to match i2c adapter bindings.
+- Declared atr ops struct as static const.
+- Free downstream ports during FPC202 removal.
+- Link to v1: https://lore.kernel.org/r/20241108-fpc202-v1-0-fe42c698bc92@bootlin.com
+
+---
+Romain Gantois (9):
+      dt-bindings: misc: Describe TI FPC202 dual port controller
+      media: i2c: ds90ub960: Replace aliased clients list with address list
+      media: i2c: ds90ub960: Protect alias_use_mask with a mutex
+      i2c: use client addresses directly in ATR interface
+      i2c: move ATR alias pool to a separate struct
+      i2c: rename field 'alias_list' of struct i2c_atr_chan to 'alias_pairs'
+      i2c: support per-channel ATR alias pools
+      i2c: Support dynamic address translation
+      misc: add FPC202 dual port controller driver
+
+ .../devicetree/bindings/misc/ti,fpc202.yaml        |  94 ++++
+ MAINTAINERS                                        |   7 +
+ drivers/i2c/i2c-atr.c                              | 483 ++++++++++++++-------
+ drivers/media/i2c/ds90ub913.c                      |   9 +-
+ drivers/media/i2c/ds90ub953.c                      |   9 +-
+ drivers/media/i2c/ds90ub960.c                      |  49 ++-
+ drivers/misc/Kconfig                               |  11 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/ti_fpc202.c                           | 438 +++++++++++++++++++
+ include/linux/i2c-atr.h                            |  54 ++-
+ 10 files changed, 964 insertions(+), 191 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20241017-fpc202-6f0b739c2078
+
+Best regards,
+-- 
+Romain Gantois <romain.gantois@bootlin.com>
+
