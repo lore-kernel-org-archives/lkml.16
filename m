@@ -1,144 +1,122 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mo-csw-fb.securemx.jp (mo-csw-fb1800.securemx.jp [210.130.202.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A4078F5B
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 02:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA06200CB;
+	Tue,  4 Feb 2025 02:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738636656; cv=none; b=sh3ejOUMkWRAM5m+QLlQjWrswCoDmDtUEW7EduyhUSHORbjZ5hXeUKrXwLjFKCppTcIA3DqgKBFDDkUtcxNJzUCgdWjHGBgl3DGxSDRYmAVc6db4tLnbz8dk8lJwNeTDb02LtSveQzmnqlPlCLbs2VShbXqb8a2tKjrrN6iwPco=
+	t=1738636708; cv=none; b=Zt5KVm974mPynKWAWZcU1cl0VeIY63oOTXpO/naw5OoMAqZ0gQ87l1dBHlb9BUVsLBzfZDTRld3pJiBq5r9Pau1y21/yfYnYYcMa/R9+NPEuIBZvg5iFyMt7XNT4Do88CA8VFkWFzCvHGKyaHB6/N8ryyYVhzs2yjQ399peXwXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738636656; c=relaxed/simple;
-	bh=3akqeYOfR2u/dqg9hAp/ZLnPmLqoRwizhwaVgPamvfU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZwUnZsH3hFXVQNunvxKRyO2/BqQz3NbGROLyZy6PzPapyJOBFMWM0m+HmE63WFni0QyEYHXuy0FT8NW3p/YkmVrRuA/hp8QFdhfkmM2sLXczgJRE+UU0RI8BSWG8oqDIrGRHyNGHM7rjb50mv7vsAlB0bWBWj4D9cXlAmSI9VJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PIvqBJv9; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738636708; c=relaxed/simple;
+	bh=BfVd1Kr9aFB9e0q+IARJRTODnRHHsOmAQ5YFSacC2G0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=kg3lXr3yQk8JtF5Kd7plTDrfm3DaKUVgd9Hz1l0DUEsAq7dVbPI7FJikhukfUHqa/CyC7tAYe9r0SEHqqeit123op0l8S9lMajIysGWl878Xs21j2zFJiiy0sjz4HK0vPNv3SZPyT2g7NQ+FWwZHSFwdYb/UP33F+bulrWpbqkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=kazuhiro3.hayashi@toshiba.co.jp header.b=SWgqRXJ3; arc=none smtp.client-ip=210.130.202.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIvqBJv9"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-467a37a2a53so59903741cf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 18:37:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738636654; x=1739241454; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WFTT1x9qPUOcycVAyXc65sG+TUIzEOUVU4ygZcgKGVI=;
-        b=PIvqBJv9FzXp3SKbMcbjP/Zpx+swJfIPDQfw4/oqvhOVvhuTK/spiXbd2DSqCR0hHo
-         NWq/teDuYX+Ib+7bRIk3FobKMeml1leBexUQ0d0zASyJFPH/AXE9ugjT1qQrvRkqicBv
-         oiuYrg/v4qxeH3eU6Ldb9P1c1ltSmSZM/tWppoojwdrIYYnFCESlZx8DDPbkI6kRMwVg
-         JX8554+bvUl5BBJFMHJLemmBIM/mNPCqNADWyFvFMzdpy4TdkC+JKegMz/PN8h6uiCpg
-         BKg4ukmn2eKmwaGlM9at3X/gYH1M812J+RtpT9IuLPiv++o61Pi26EB9QEZV1UwwMpNt
-         hPMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738636654; x=1739241454;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WFTT1x9qPUOcycVAyXc65sG+TUIzEOUVU4ygZcgKGVI=;
-        b=hiJDbvc5+03rt2ssSlCLCMX4i/OOv+6HldKLySL1Ssvb/EnMgobnm9akF/+AOmNeiU
-         CEflzUtkVZjYyI/k+6TW5P8RT7wb7edR6qQo/8ZNVGvxIWqutMLNZBTxXeBRAhzsn72A
-         QjWF/eYxeIwGpycy6zgtVYDKWlktsu/we6wDPlha61ulq68BR8YAn6Pca7yISsQtSl9H
-         BBcmtfVZniprpWG3vGSez5n8PWPFketntZ2XpocEWA0dJpCqZ3rndvnxYXcOI5SFEf3M
-         jCvIn4Z2DkhaMbG53ENeV6RaJThbfPyb0rW/JwvPMYHkxN5rXRg7lI8Otr9lYuiV56Bq
-         58Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8ja5stCyxGER9fCv2592nyY4BHQXwELRnksj/7YeH+7EAUNcwr8tmveXGB1TdqmR9iljf/aCt8Lvqjb8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoX2O0QQlfs7Lo0Ld9C9yk3/CREeP/hcJZZ00Bj/bWvddHqMNM
-	GcJew3B/ngTcIHFBdX/9BrBInbSN7bt1eRNEIX0dlMg67CmmqsBh3iBOziJ30V3KEkFG7J8LTOO
-	Ib9J19KZeaEeYH3C+Unq7NsHIwaQ=
-X-Gm-Gg: ASbGncshXkBmkdqg74y20cSvwyK6VMDekKkncApgkmoA8PqfwdhpxbdghwCnWnMoaHg
-	X4EyV8eLSqLBUSyk3rSXtXgcphBfM+3bTmVwkBNvDTk+Lv8Dmnqa9fmIpa/KfIIE33QKd5YY5
-X-Google-Smtp-Source: AGHT+IEqyV1oLh7+tRRmVcNhrW2tv9h9wmB5y5P1fx3eysiSgNvA+mtv7mTxUoVPWeywWQmF2n6glRQpG7mEOqz/dgE=
-X-Received: by 2002:a05:622a:59ca:b0:46c:870f:f621 with SMTP id
- d75a77b69052e-46fd0ace15amr337077271cf.26.1738636654140; Mon, 03 Feb 2025
- 18:37:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=kazuhiro3.hayashi@toshiba.co.jp header.b="SWgqRXJ3"
+Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1800) id 5140mQNI2258601; Tue, 4 Feb 2025 09:48:26 +0900
+DKIM-Signature: v=1;a=rsa-sha256;c=relaxed/simple;d=toshiba.co.jp;h=From:To:Cc
+	:Subject:Date:Message-Id:In-Reply-To:References;i=
+	kazuhiro3.hayashi@toshiba.co.jp;s=key2.smx;t=1738630063;x=1739839663;bh=BfVd1
+	Kr9aFB9e0q+IARJRTODnRHHsOmAQ5YFSacC2G0=;b=SWgqRXJ3uTOLrBAh28J+gSmKI0DAktFH0Pm
+	UdQ+pcOeM+4773MwLjE7ohwmlm4pP1dLb4e0uYDmEpWZw/QwLxZPeLSzh9qSjVrvBUtdJ0hw273wo
+	efYqULSohcGFolLxRofW6YHK+EDaUB3P6AcL5TOSrnGxDaZRtMQHvpP92+RyKh+AGgGS7WMj8f5r0
+	gBhEghoizKQcJ8Jf5mvHoi7TNPQamEj3wlpT5l5HUFACrps8YkmKxVNYgYyCkaSLfvKqzZRMvq10x
+	6X+Mmp9dMeCuYEMyLo5ClRE479he3tDxc+BYxjKDGvmjUopT8tSpkBcygkmCXSbfy8U0r4CwYd+Q=
+	=;
+Received: by mo-csw.securemx.jp (mx-mo-csw1800) id 5140lg8D1755166; Tue, 4 Feb 2025 09:47:42 +0900
+X-Iguazu-Qid: 2yAbAvUQLBamBJJ4Jf
+X-Iguazu-QSIG: v=2; s=0; t=1738630062; q=2yAbAvUQLBamBJJ4Jf; m=EYnyDhiFJwSiMT7AaAO/x4s1cYkkAhXV1xRMnXaGgyM=
+Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
+	by relay.securemx.jp (mx-mr1800) id 5140leal1589797
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 4 Feb 2025 09:47:40 +0900
+From: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>
+To: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+        cip-dev@lists.cip-project.org
+Cc: bigeasy@linutronix.de, tglx@linutronix.de, rostedt@goodmis.org,
+        linux-rt-users@vger.kernel.org, pavel@denx.de
+Subject: [PATCH 4.4 4.9 v1 1/2] init: Introduce system_scheduling flag for allocate_slab()
+Date: Tue,  4 Feb 2025 09:46:03 +0900
+X-TSB-HOP2: ON
+Message-Id: <1738629964-11977-2-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+References: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250202205456.40790-1-jiashengjiangcool@gmail.com>
- <87tt9bxwc0.fsf@bootlin.com> <30ad77af-4a7b-4a15-9c0b-b0c70d9e1643@wanadoo.fr>
-In-Reply-To: <30ad77af-4a7b-4a15-9c0b-b0c70d9e1643@wanadoo.fr>
-From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Date: Mon, 3 Feb 2025 21:37:23 -0500
-X-Gm-Features: AWEUYZnxZ-pA-NrdUSrYdnNNkeDv2I90-xB7KJXZnxTPiDBkaK5AQdw7WyDUgr8
-Message-ID: <CANeGvZUBPFUs+T_h-LDVxvVPHogerw0=n14=F-tdCmqwkeAQJQ@mail.gmail.com>
-Subject: Re: [PATCH] mtd: Add check for kcalloc()
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, richard@nod.at, vigneshr@ti.com, 
-	gmpy.liaowx@gmail.com, kees@kernel.org, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Christophe,
+Between v4.14-rt and v5.10-rt, allocate_slab() is responsible for enabling
+IRQ before running the following SLAB allocation functions if
+    system_state >= SYSTEM_SCHEDULING
+However, SYSTEM_SCHEDULING is introduced[1] in the mainline v4.13 and
+it's not reasonable to backport all related changes into older RT kernels
+from functional compatibility and longer term maintenance perspectives.
 
-On Mon, Feb 3, 2025 at 1:04=E2=80=AFPM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
->
-> Le 03/02/2025 =C3=A0 09:32, Miquel Raynal a =C3=A9crit :
-> > On 02/02/2025 at 20:54:56 GMT, Jiasheng Jiang <jiashengjiangcool@gmail.=
-com> wrote:
-> >
-> >> Add a check for kcalloc() and print an error message if it fails.
-> >
-> > Checking, yes, but logging, no. IIRC the core does it already if requir=
-ed.
-> >
-> >> Fixes: 78c08247b9d3 ("mtd: Support kmsg dumper based on pstore/blk")
-> >
-> > Cc: stable is missing
-> >
-> >> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-> >> ---
-> >>   drivers/mtd/mtdpstore.c | 5 +++++
-> >>   1 file changed, 5 insertions(+)
-> >>
-> >> diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
-> >> index 7ac8ac901306..368997155c07 100644
-> >> --- a/drivers/mtd/mtdpstore.c
-> >> +++ b/drivers/mtd/mtdpstore.c
-> >> @@ -423,6 +423,11 @@ static void mtdpstore_notify_add(struct mtd_info =
-*mtd)
-> >>      longcnt =3D BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
-> >>      cxt->badmap =3D kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-> >>
-> >> +    if (!cxt->rmmap || !cxt->usedmap || !cxt->badmap) {
-> >> +            dev_err(&mtd->dev, "failed to allocate memory for map\n")=
-;
-> >> +            return;
-> >> +    }
-> >> +
-> >>      /* just support dmesg right now */
-> >>      cxt->dev.flags =3D PSTORE_FLAGS_DMESG;
-> >>      cxt->dev.zone.read =3D mtdpstore_read;
-> >
-> > What if register_pstore_device() fails? Your only partially fixing the
-> > problem if you don't handle the free()s there as well.
->
-> ... and if an allocation fails above, then some kfree() also needs to be
-> called.
->
+Thus, as an alternative (but non-mainline) way, introduce an extra flag
+"system_scheduling" which becomes true at the same point as
+    system_state = SYSTEM_SCHEDULING
+in the mainline, so that the existing system_states and users of them
+are not affected.
 
-Thanks, I have add kfree() to deal with each allocation in my v2.
+allocate_slab() will use this flag for its IRQ control by the upcoming change.
 
-> And, unrelated to your patch, these kcalloc()/kfree() could be some
-> bitmap_zalloc()/bitmap_free(). (but i'm not sure it really worth the effo=
-rt)
+[1] https://lore.kernel.org/all/20170516184231.564888231@linutronix.de/
 
-I think it works well currently, so it may not be necessary to do the
-replacements.
+Signed-off-by: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>
+Reviewed-by: Pavel Machek <pavel@denx.de>
+---
+ include/linux/kernel.h |  1 +
+ init/main.c            | 12 ++++++++++++
+ 2 files changed, 13 insertions(+)
 
->
-> CJ
->
-> >
-> > Thanks,
-> > Miqu=C3=A8l
-> >
-> >
->
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index d68f639f7330..2a15e829aaec 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -490,6 +490,7 @@ extern enum system_states {
+ 	SYSTEM_RESTART,
+ 	SYSTEM_SUSPEND,
+ } system_state;
++extern bool system_scheduling;
+ 
+ #define TAINT_PROPRIETARY_MODULE	0
+ #define TAINT_FORCED_MODULE		1
+diff --git a/init/main.c b/init/main.c
+index 9933fca3a5c8..4f382179b61e 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -110,6 +110,14 @@ bool early_boot_irqs_disabled __read_mostly;
+ enum system_states system_state __read_mostly;
+ EXPORT_SYMBOL(system_state);
+ 
++/*
++ * This corresponds to system_state >= SYSTEM_SCHEDULING in the mainline.
++ * On PREEMPT_RT kernels, slab allocator requires this state to check if
++ * the allocation must be run with IRQ enabled or not.
++ */
++bool system_scheduling __read_mostly = false;
++EXPORT_SYMBOL(system_scheduling);
++
+ /*
+  * Boot command-line arguments
+  */
+@@ -401,6 +409,10 @@ static noinline void __init_refok rest_init(void)
+ 	rcu_read_lock();
+ 	kthreadd_task = find_task_by_pid_ns(pid, &init_pid_ns);
+ 	rcu_read_unlock();
++
++	/* Corresponds to system_state = SYSTEM_SCHEDULING in the mainline */
++	system_scheduling = true;
++
+ 	complete(&kthreadd_done);
+ 
+ 	/*
+-- 
+2.30.2
 
--Jiasheng
+
