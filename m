@@ -1,100 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E9D1537C3;
-	Tue,  4 Feb 2025 17:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192241537C3;
+	Tue,  4 Feb 2025 17:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738691113; cv=none; b=az1kZBl/UUTodrO1BLhclDoh/OnEvTdj4GFrtpvfqlq6r8IH0j4zoqV5QkgwFKjPF41hJowd/9Uh+85DVrSHe7jQfmBYxbkKkUWlIAHHqKSd6EaDw7+4z7uOmjUolPdetUxpj4RhlnOCrg/Yi1PumjyPLnTW5j1ClvDzw+WyfXY=
+	t=1738691120; cv=none; b=gr3gMx0am509tCyznY+74EMsNMoOpvsXvu5ywAYrw18u10vXJXAqc/Vh+iJHXeLIBKJ8iiQk7As8kGMvxtjZZ2uzhMYIZ4BJ/RcdLYvXbJPVzB8oQczcLKkiTZ2oqIrcTRDvcVbqlSE+qLp2N+nfEsyojmNpgYZB7Pyfsl68e6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738691113; c=relaxed/simple;
-	bh=1fpGWk6mcJocAb/EGYVT3NiN/ozuxcKfoYEQ/m8hVfU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OKKIM4kkF4FpvYQhtR28w/uYSaprVCS7ISgnocNUAd4FVhtf85KxYHX05qH0UWl181/grCbX1qP9IjoPboefizm8hAe3Tb40e6I3rLVKg7F4AhVn7GLt01NqTr3i7kwL5YoRxm//MOMFr26nyH+89DddRoe69S5gK4l405Mytgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aub9vdNR; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738691120; c=relaxed/simple;
+	bh=x2IO+Pjykxnr/uC9RswsA7Eu+lOp2iUnyfap62xp7zE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lwERmFT0w7LZqVaMMXXYZxT8lWT7SLHHqrP75VuUS/yl5EDUgB+fcjPdwisXtUqvdGcxREzPAiwOgYcq8NpkT9ZTcMUlapb3fDl9tfur256CDvspf7x2obuyN5dGapSmZPlVJ32eluTsMAztCLkA292UCxEH8FF5AXtojQZawsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIAOpewg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aub9vdNR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738691112; x=1770227112;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1fpGWk6mcJocAb/EGYVT3NiN/ozuxcKfoYEQ/m8hVfU=;
-  b=aub9vdNRH25mX7rxkgdoJC+FtNbhwmbpXcKf5I5K8ncqwJltqwkKx1P9
-   91SD3pnyMw8QD70Q1j/AN+rYnGkwR0T/Ed6WjSo55Lzhx1UBE1neVazr3
-   C+1N4/yr2mmFa+wR9S1ldv1VNCZSB9BwZoekdN1nmU2k6o9CCLQ2TNBJi
-   tN+QWtlCCQt95/itYnQCnoEk8wtyevOiti6GSNi+/SCOuYKuLyEpB4UHT
-   1/jQ7C1qxJvTLcGDS7stDFI4r5mK7tJmWGEXtNElQ/boG+3eQXtWuwcye
-   +R0k1yHOsdEs7NJUSSKJ3n34GogggjebsRiQIoNz4BKQTGYofHCye0bbf
-   g==;
-X-CSE-ConnectionGUID: ENaLIiOTTtWBE5nTqgY7PQ==
-X-CSE-MsgGUID: nT+/b6hlTp2APu4HXMtHEw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56656273"
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="56656273"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:45:11 -0800
-X-CSE-ConnectionGUID: MV74HgZMSmu9/X1xXcp4IQ==
-X-CSE-MsgGUID: 9ieNoHT7TsKGKxBMxnGQlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="141526270"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 04 Feb 2025 09:45:09 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id A96A5353; Tue, 04 Feb 2025 19:45:07 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Mark Lord <mlord@pobox.com>
-Subject: [PATCH v1 1/1] spi: pxa2xx: Fix regression when toggling chip select on LPSS devices
-Date: Tue,  4 Feb 2025 19:45:06 +0200
-Message-ID: <20250204174506.149978-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIAOpewg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B712C4CEDF;
+	Tue,  4 Feb 2025 17:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738691119;
+	bh=x2IO+Pjykxnr/uC9RswsA7Eu+lOp2iUnyfap62xp7zE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YIAOpewgcNpAtB0sfW6L77Clwe9GlmQymUFSkBcZAOTbXKnQdDAWvEd8q7Pct5P/K
+	 W4eo5yIF6xRWDk1YqCZNG32SaW1Lvv7L2i/XMTnHw8GWSKmbKf6ymRsRswXgSIPnQI
+	 M12gsKNdTGUgxZ9lk921i5D8LZfsVmmNy/+0HQSKXySp0kcShDvgd9TKxcf+22oGye
+	 N4hhZqKT6N4PZEYnCVwa8h0lZcKMWgaa4y4cy8fbY6Ufln77RzG179qgKXkV/sjj18
+	 c4Zc/fp/2GrCejbnuLERAjMnqdhefgqOj2iFG3Oz6aTRQ1JqxnXOd9nPln0twy0gN4
+	 nD+Y8ffnBXB7A==
+From: Kees Cook <kees@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] stackinit: Keep selftest union size small on m68k
+Date: Tue,  4 Feb 2025 09:45:13 -0800
+Message-Id: <20250204174509.work.711-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1242; i=kees@kernel.org; h=from:subject:message-id; bh=x2IO+Pjykxnr/uC9RswsA7Eu+lOp2iUnyfap62xp7zE=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmLgjQXvN6W2hJ0X+bnYcG48sR2i6gqvTXd2SnReacyF h44FSHSUcrCIMbFICumyBJk5x7n4vG2Pdx9riLMHFYmkCEMXJwCMJEdCgz/M1Jv1GXk/ctVPHVM NvOk0XPnSKYfXDd3qfz6Mu+/9/zSL4wMT85vP8+/cGGWTMjf5iI+ieIdUoH5IcYC33g7WivMejo 5AQ==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-From: Mark Lord <mlord@pobox.com>
+The stack frame on m68k is very sensitive to the size of what needs to
+be stored. Like done for long string testing, reduce the size of the
+large trailing struct in the union initialization testing.
 
-The commit 78b435c9044a ("spi: pxa2xx: Introduce __lpss_ssp_update_priv()
-helper") broke speaker output on my ASUS UX5304MA laptop. The problem is
-in inverted value that got written in the private register.
-
-Simple bug, simple fix.
-
-Fixes: 78b435c9044a ("spi: pxa2xx: Introduce __lpss_ssp_update_priv() helper")
-Signed-off-by: Mark Lord <mlord@pobox.com>
-Tested-by: Mark Lord <mlord@pobox.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Closes: https://lore.kernel.org/all/CAMuHMdXW8VbtOAixO7w+aDOG70aZtZ50j1Ybcr8B3eYnRUcrcA@mail.gmail.com
+Fixes: e71a29db79da ("stackinit: Add union initialization to selftests")
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/stackinit_kunit.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 5f9cac41baff..06711a62fa3d 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -399,7 +399,7 @@ static void lpss_ssp_cs_control(struct spi_device *spi, bool enable)
- 		lpss_ssp_select_cs(spi, config);
+diff --git a/lib/stackinit_kunit.c b/lib/stackinit_kunit.c
+index fbe910c9c825..967b345a98fd 100644
+--- a/lib/stackinit_kunit.c
++++ b/lib/stackinit_kunit.c
+@@ -75,8 +75,10 @@ static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
+  */
+ #ifdef CONFIG_M68K
+ #define FILL_SIZE_STRING		8
++#define FILL_SIZE_ARRAY			2
+ #else
+ #define FILL_SIZE_STRING		16
++#define FILL_SIZE_ARRAY			8
+ #endif
  
- 	mask = LPSS_CS_CONTROL_CS_HIGH;
--	__lpss_ssp_update_priv(drv_data, config->reg_cs_ctrl, mask, enable ? mask : 0);
-+	__lpss_ssp_update_priv(drv_data, config->reg_cs_ctrl, mask, enable ? 0 : mask);
- 	if (config->cs_clk_stays_gated) {
- 		/*
- 		 * Changing CS alone when dynamic clock gating is on won't
+ #define INIT_CLONE_SCALAR		/**/
+@@ -345,7 +347,7 @@ union test_small_start {
+ 	short three;
+ 	unsigned long four;
+ 	struct big_struct {
+-		unsigned long array[8];
++		unsigned long array[FILL_SIZE_ARRAY];
+ 	} big;
+ };
+ 
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.34.1
 
