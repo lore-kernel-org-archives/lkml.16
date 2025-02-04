@@ -1,121 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0247A212FAD;
-	Tue,  4 Feb 2025 12:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A39720CCFB;
+	Tue,  4 Feb 2025 12:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738670712; cv=none; b=Px0eI83m0VzqLtbFTXmmEgZqU7LLCUPQZ1Qrl/zCypKUJ4m3UEu4EA7ajtQ3RPo9KvYBScsbQqjRIlqzKXC0dSnVKn/sv1bztud9C+byBC1E4QUj/E024gXjxRGUwnnwbQcJxFE26FJVk8lRgTL48x9eD85tfa2qTkCdFYvegrY=
+	t=1738670747; cv=none; b=djSv0q8s/Z0k3zFvb01B6i9bV6y6J8dxCxgM1vW50V7E4UVe8F2Yl5M8oXpWQiemkNgxxfx2WQ4H4HWlNYMBnyG89v+jr+OaXHuIZFLipBrUsnE+aYod0SL6kFZ2PXXji/aNWJj8sQzg6+8Tf38ICxzp52UY1ZCGd6mhQdtjiMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738670712; c=relaxed/simple;
-	bh=Uy+G3QIpmMlPaJnwyniXgpOszKcDbT4GdwTwy3kc5ko=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qQPgZbnvsGEQ/gA+pNHdYsXg/z17ncCEkgQz1xAnX0C6VfKORdjZTgoCqUbxKlyONfHtBiCAglpvK1MCS1U7BB2MWI+osCNaiv42EOD3Ju/I6UhHqPANn0+8q9i3/ih7Oc1Punlr6Tx+TgeUuhY+NGnOggbQN8LKz0vXsknnki4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f7u/zWKT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738670747; c=relaxed/simple;
+	bh=xi4sBUQvDSLZfwfFDQG/hOsrvWDhJfv7KlrwKAUi3XA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LXVzrKti/Uht+5+8V9DEKrjLoytHWFqBNNwQO80jWVsTrFhW1j7pZLqdbmCQVOBK/Lo7SkksvG0W8ySV3pCAZFTg+JKSVREICZBvdBUm5BGL5MLqqTsIqWznnYokslrzDZoe/0gek7I5g73z3NSE+/03xnVIjQArFQbo5SkrnTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fkKc9eVU; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7u/zWKT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85853C4CEE2;
-	Tue,  4 Feb 2025 12:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738670711;
-	bh=Uy+G3QIpmMlPaJnwyniXgpOszKcDbT4GdwTwy3kc5ko=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=f7u/zWKTv2wYsO4h4cbZ/BM8fffCwISDxHkPkYIBgh+wVbprp6Te1RBOlTB4QW/CK
-	 vuSV2Tv2d6B8dvd6k2MuO4nyv/gkqxROBKSijthHc0raFV0ckxBatrVxShWIgwjZuz
-	 g0Yq/srMyodBAJrjlrbSB/t6bK7Y0AlyRgDk6vh1hQqcV7an4ydVHfcqSiAw95lDOt
-	 TJ/hxVLbbGJyWyNKHtDrQkx9EVsxcAWyIsAzezXE7yCwyW3AToFUJfLO82Gy2ZTMIe
-	 57B23iPv2zpWT+sJHYFti7w6KoF92xY2HlNH4CNHup01OhuZ0KLGIsLNWruGVVKO3m
-	 YDzHExQMyLkbg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 04 Feb 2025 13:02:10 +0100
-Subject: [PATCH v5 3/5] rust: str: implement `strip_prefix` for `BStr`
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fkKc9eVU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738670745; x=1770206745;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xi4sBUQvDSLZfwfFDQG/hOsrvWDhJfv7KlrwKAUi3XA=;
+  b=fkKc9eVUEoAwBbobLXUMESW4Vk1NUijT855Lbl4knWoKDW7K6BkOc+/Z
+   i0f3iRZTEowko7ibXTxbP+4HkWjzMatOFMcHcmwksth8ou+K5hSnmKi0A
+   D/IJxuSrYD1g8hACi2/g2TbRbi48J/usWVZ3Y5dDj7QpesVzm9sJKVFZG
+   cvFKCFO63Gbh1+kSPR5NL7a5OYauYD7oLmbPzRqj0JjVqe1FmXwy3hMZc
+   7IWkXN2myI0uNQKTIfgA0V5C2J1ZEIz1T+jtSxF6Q/Mwe/4V/ke5yFoxW
+   XIvTbyduQc0/bJ0CmatvkWrXYYql+VJ6LLMmb4fG+cM7fIQOnqRNM/GEQ
+   g==;
+X-CSE-ConnectionGUID: htBkYZmSRpiyMbCuO+mLnA==
+X-CSE-MsgGUID: 1Ymso1AURpu07AR/8dUBIA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="38424788"
+X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
+   d="scan'208";a="38424788"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 04:05:44 -0800
+X-CSE-ConnectionGUID: 9Xc4lbrtTCKZ/HZJSQpMnQ==
+X-CSE-MsgGUID: v+LQwvfBRMO6e7lCadO8Ww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="147783203"
+Received: from irvmail002.ir.intel.com ([10.43.11.120])
+  by orviesa001.jf.intel.com with ESMTP; 04 Feb 2025 04:05:41 -0800
+Received: from lincoln.igk.intel.com (lincoln.igk.intel.com [10.102.21.235])
+	by irvmail002.ir.intel.com (Postfix) with ESMTP id 22A3932CA9;
+	Tue,  4 Feb 2025 12:05:40 +0000 (GMT)
+From: Larysa Zaremba <larysa.zaremba@intel.com>
+To: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	intel-wired-lan@lists.osuosl.org
+Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
+Subject: [PATCH iwl-next v2 0/6] ice: LLDP support for VFs
+Date: Tue,  4 Feb 2025 12:50:50 +0100
+Message-ID: <20250204115111.1652453-1-larysa.zaremba@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-module-params-v3-v5-3-bf5ec2041625@kernel.org>
-References: <20250204-module-params-v3-v5-0-bf5ec2041625@kernel.org>
-In-Reply-To: <20250204-module-params-v3-v5-0-bf5ec2041625@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
- Luis Chamberlain <mcgrof@kernel.org>
-Cc: Trevor Gross <tmgross@umich.edu>, 
- Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
- Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
- Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
- Greg KH <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org, 
- Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1637; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=Uy+G3QIpmMlPaJnwyniXgpOszKcDbT4GdwTwy3kc5ko=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnogHYEzdjU6TcJv+L0vohcUEnACY4iii9YnslJ
- UsmC0XNsT2JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ6IB2AAKCRDhuBo+eShj
- dyUtEAC3NcHKUIuleDVPDoaDJl+J67nBVY5Z+jHNrCUCI4If+fOoreP/q9nXtbFP3EQF6rcujmG
- Y7zId8rOb8JLQBqFn6ga4H79ESsxMYh26+Itvnk/FQh2PvcxKTDItCO/nnrBSo5CCncepLvK2dS
- ahxJgmqjwcTF4Bn5pHCbF+2/nIVJppAJ7XJgEchIMJUp+VCI12C3CF3n/jnNAY6lwYyMhoP4gbT
- ZyrmVL/rox3jGO0DkVcDw8wCeyAQAWQx7ZGEJVQ+FuYRflvWyjOAUcYBBvnBP1pwuVqccW5ksig
- CPuFU2lNbyDSpzwolAZzEnKBOawShLX9cL6/gt++8ITEavRs3OJS9NOeRA0pSANV7it00yClThQ
- fVkEucMRD8m9YCoT9T3Mb32LVQuqrnBdPTf1J1WHuRPoOwTitck+yF/fcfLFNTBfHqu1JCXzrRQ
- 1WZnHMmoePu1isAheRhs50tfWAsriv8pyxtWFgBEObtEuJEZuc6BHSOwQT0dEbuMY/iiwvwov29
- udn/q9ZSxPXL78ou6g+z+2IIW3ryPJogBqn2Q4hYOGxvIMjgcfnU6cH6WlpSyLkydjlG9mPm+Ux
- TY9LK11qIkqraPMDus5SHezGzPwgr12iRRNOzoqELcKDkw6Z51+T2ooKOmgz0TNagPm6gaM9MUw
- 9WY/RW/2KT8cEEw==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Transfer-Encoding: 8bit
 
-Implement `strip_prefix` for `BStr` by deferring to `slice::strip_prefix`
-on the underlying `&[u8]`.
+Allow to:
+* receive LLDP packets on a VF in legacy mode
+* receive LLDP packets on a VF in switchdev mode
+* transmit LLDP from a VF in switchdev mode
 
-Reviewed-by: Gary Guo <gary@garyguo.net>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
+Many VSIs can receive LLDP packets, but only one VSI
+per port can transmit LLDP, therefore LLDP TX from VF
+requires adding an egress drop rule to the PF, this is
+implemented in these series too.
 
-It is also possible to get this method by implementing
-`core::slice::SlicePattern` for `BStr`. `SlicePattern` is unstable, so this
-seems more reasonable.
----
- rust/kernel/str.rs | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+There are no patches that explicitly address LLDP RX in
+switchdev mode, because it just works after adding support
+in legacy mode.
 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 1eb945bed77d6592216cf30678fcca70d4c0b3b3..80601206961e5b2d682af5f7028434bba1604272 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -31,6 +31,22 @@ pub const fn from_bytes(bytes: &[u8]) -> &Self {
-         // SAFETY: `BStr` is transparent to `[u8]`.
-         unsafe { &*(bytes as *const [u8] as *const BStr) }
-     }
-+
-+    /// Strip a prefix from `self`. Delegates to [`slice::strip_prefix`].
-+    ///
-+    /// # Example
-+    /// ```
-+    /// use kernel::b_str;
-+    /// assert_eq!(Some(b_str!("bar")), b_str!("foobar").strip_prefix(b_str!("foo")));
-+    /// assert_eq!(None, b_str!("foobar").strip_prefix(b_str!("bar")));
-+    /// assert_eq!(Some(b_str!("foobar")), b_str!("foobar").strip_prefix(b_str!("")));
-+    /// assert_eq!(Some(b_str!("")), b_str!("foobar").strip_prefix(b_str!("foobar")));
-+    /// ```
-+    pub fn strip_prefix(&self, pattern: &Self) -> Option<&BStr> {
-+        self.deref()
-+            .strip_prefix(pattern.deref())
-+            .map(Self::from_bytes)
-+    }
- }
- 
- impl fmt::Display for BStr {
+Usage
+
+To receive LLDP packets on VF in legacy mode:
+On host:
+ip link set dev <pf_ifname> vf <n> trust on
+On VM:
+service lldpd restart
+
+To receive LLDP packets on VF in switchdev mode (host config):
+tc qdisc add dev <pf_ifname> clsact
+tc filter add dev <pf_ifname> protocol lldp ingress \\
+   flower skip_sw action mirred egress mirror dev <repr_ifname>
+
+To transmit LLDP packets from VF (host config):
+tc qdisc add dev <pf_ifname> clsact
+tc qdisc add dev <repr_ifname> clsact
+tc filter add dev <pf_ifname> egress protocol lldp \\
+   flower skip_sw action drop
+tc filter add dev <repr_ifname> ingress protocol lldp \\
+   flower skip_sw action mirred egress redirect dev <pf_ifname>
+
+For all abovementioned functionalities to work, private flag
+fw-lldp-agent must be off.
+
+v1->v2:
+* get rid of sysfs control
+* require switchdev for VF LLDP Tx
+* in legacy mode, for VF LLDP Rx rely on configured MAC addresses
+
+Larysa Zaremba (4):
+  ice: do not add LLDP-specific filter if not necessary
+  ice: remove headers argument from ice_tc_count_lkups
+  ice: support egress drop rules on PF
+  ice: enable LLDP TX for VFs through tc
+
+Mateusz Pacuszka (2):
+  ice: fix check for existing switch rule
+  ice: receive LLDP on trusted VFs
+
+ drivers/net/ethernet/intel/ice/ice.h          |   1 +
+ drivers/net/ethernet/intel/ice/ice_common.c   |  10 +-
+ drivers/net/ethernet/intel/ice/ice_common.h   |   3 +-
+ drivers/net/ethernet/intel/ice/ice_dcb_lib.c  |   2 +-
+ drivers/net/ethernet/intel/ice/ice_eswitch.c  |   6 +
+ drivers/net/ethernet/intel/ice/ice_ethtool.c  |   2 +-
+ drivers/net/ethernet/intel/ice/ice_lib.c      |  71 ++++-
+ drivers/net/ethernet/intel/ice/ice_lib.h      |   3 +-
+ drivers/net/ethernet/intel/ice/ice_main.c     |  56 +++-
+ drivers/net/ethernet/intel/ice/ice_repr.c     |  10 +-
+ drivers/net/ethernet/intel/ice/ice_sriov.c    |   4 +
+ drivers/net/ethernet/intel/ice/ice_switch.c   |   4 +-
+ drivers/net/ethernet/intel/ice/ice_tc_lib.c   | 243 ++++++++++++++++--
+ drivers/net/ethernet/intel/ice/ice_tc_lib.h   |   4 +-
+ drivers/net/ethernet/intel/ice/ice_txrx.c     |  17 +-
+ drivers/net/ethernet/intel/ice/ice_vf_lib.c   |  26 ++
+ drivers/net/ethernet/intel/ice/ice_vf_lib.h   |  12 +
+ drivers/net/ethernet/intel/ice/ice_virtchnl.c |  48 +++-
+ 18 files changed, 449 insertions(+), 73 deletions(-)
 
 -- 
-2.47.0
-
+2.43.0
 
