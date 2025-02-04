@@ -1,277 +1,328 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA6F2054E1;
-	Tue,  4 Feb 2025 21:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2611FAC5C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 21:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738704752; cv=none; b=fycYKctmbzxh3SzjugPofX5QoUZC6ChSJo+zJ6ZRbhTzI93dHMIhcH+xpdAHqB16RYbkpVu/a8RH0Rmy3/X7NmFIZLCyXTxUMiGzcpIa37LyuVdHh5qPz2xwxINcFcQd22gLmcQLCzlQ/a0gK6hQT9YMT9l5mvXVYQZjXrReZtU=
+	t=1738704790; cv=none; b=Bmt6EdpsaoBYzhY5MhwpQif2aNhki4v8avrMmOGGWuhH3H4YsOW6ngC76IQVweacZWRSuSTzgnL/bhlcm/QRMqii9ENSi61BE7phW86bzqh6a9NtlVa71WNcmTtjzklIudwAFzhB1H7xZDQ6ZW36GuqDxDdtn0yhm58QVFLm6yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738704752; c=relaxed/simple;
-	bh=C3dbbEAFevjdVfANzRZoMw2PT7z4oSO3rdifCBeUHxU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u851yoTDpeQdiD8fsGNIpQheXoKupovCWh2JU3IOiJgXoTNQNyTQ9nFZpEvxBrcUptGjxyZBmvcPvWaWmUWnEGoMC+lFEQNMYsqWYZ24oS18mORNM6XukbCskk2XbE/eD0YRUlglSD/WN/qz6rGfnmkSEzvoGJKnRyS6u+prKcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DvmBdeam; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738704790; c=relaxed/simple;
+	bh=97uvUvAwDiZSjbHdRsUBgWolCGjxu769abvwv6nEt84=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=p8HHDbOrDFZJ7Mr7TbiQZpMpYKE572VL+dal372MVRIUvMFfZqIR5D52o7l3EkoRvaIaSgQPCTQB40ofs9Z9jQzQhhu5CFAqqsPXdh2AHbOIczuZmS53eE25fkkQu5UTu6jNehxWMkjt/p7FDH7KYNvEL/cNzJQhBTM6Iuds61k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wVTKxV0E; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DvmBdeam"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD17DC4CEDF;
-	Tue,  4 Feb 2025 21:32:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738704752;
-	bh=C3dbbEAFevjdVfANzRZoMw2PT7z4oSO3rdifCBeUHxU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DvmBdeam2/YQrcuzF/h3tF/UzcMLi2fM6diaW3B7QY5MNcRhZJf9JyS6en3X+7nOH
-	 j22ul35RJWX/Au7Q3AwAUAfUooXLNo/rXDKIeR0TND+TVXG8d+NdEJFwE42jBkeVhi
-	 61vA9zyFGuwnxXeXxFIoPlDEw6sl+TCPWQ7Itv1lg+06VtzyHCwSySplGs5TZLUGpl
-	 AWnC7Cr6DX1kPbK3ItYIRI2jPSIN/rNOMk+r3/q1MiNcGJ6nysPrvXXH4EDjZbnlw4
-	 xlaQ1Tb6XCRbsX7OTGhb8VKk1FNEjU1hdtFck6+Iv1VDMpvRTvEyD/p0SkOybZMsLK
-	 iRg9NYtEkRumg==
-Received: by pali.im (Postfix)
-	id 6F561758; Tue,  4 Feb 2025 22:32:19 +0100 (CET)
-Date: Tue, 4 Feb 2025 22:32:19 +0100
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	ronnie sahlberg <ronniesahlberg@gmail.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steve French <sfrench@samba.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Immutable vs read-only for Windows compatibility
-Message-ID: <20250204213219.2evhakeg4riahv6u@pali>
-References: <20250114215350.gkc2e2kcovj43hk7@pali>
- <CAN05THSXjmVtvYdFLB67kKOwGN5jsAiihtX57G=HT7fBb62yEw@mail.gmail.com>
- <20250114235547.ncqaqcslerandjwf@pali>
- <20250114235925.GC3561231@frogsfrogsfrogs>
- <CAOQ4uxjj3XUNh6p3LLp_4YCJQ+cQHu7dj8uM3gCiU61L3CQRpA@mail.gmail.com>
- <20250117173900.GN3557553@frogsfrogsfrogs>
- <CAOQ4uxhh1LDz5zXzqFENPhJ9k851AL3E7Xc2d7pSVVYX4Fu9Jw@mail.gmail.com>
- <20250117185947.ylums2dhmo3j6hol@pali>
- <20250202152343.ahy4hnzbfuzreirz@pali>
- <CAOQ4uxgjbHTyQ53u=abWhyQ81ATL4cqSeWKDfOjz-EaR0NGmug@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wVTKxV0E"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e5b23bf2c03so555711276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 13:33:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738704787; x=1739309587; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VVcOkVaG9QL3cZNBDLp9ZZb84N3SM39rEZW+CGcmzIY=;
+        b=wVTKxV0EKQU2CqF+2BN7pj/0KPSEvBlysmKF9EfXiHk3DSbIvD9vjDPyZmHyBtXJIu
+         giSOaRRUXPIjw5nh7WZhoeRl0I3MpoHKkIwG7IYKlNf/9ivS8cG7dMI59tx1KT+JO6iY
+         uPK7IytQocqOvJPTA2wQDhSAB6ykq1Q+okzbaS83lQpinCqceR77+GCWx00IaajhRwiB
+         L97R9II5zy+redGQIlxZL/JeVzzz6Xf+Dh0mHtlw7Pv1tBpCx8Qlc3aa8YrQfojr426s
+         Rpc8oRr59PYVeRz2vsWXPVSzwnhnakcWjLP11j4QSnliOUl4tKNsZW6U0APdZXxIN+uI
+         Q41w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738704787; x=1739309587;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VVcOkVaG9QL3cZNBDLp9ZZb84N3SM39rEZW+CGcmzIY=;
+        b=D+4wpkIe/i9TeF59tU+LbaOAn1sy6HJnVd4gu48fZYdnFQxx8WnbCTumBZQnPQ82NC
+         oelxjj1Lpl6VGbU1ynAroUZcnzd4exOfdxABTYMnoeOpVPg9GbxHjqTljw7ohm7GPzqs
+         iJt0PYw0njTumDIUxI+WgjYn40fzHPPOW8Uprl8TJu4z+ZUrYqBXyH4P6lZbxIWQthCX
+         MUnI7niymjpsRaERHb3qfAoeh5gxKuU2WopiIoTkM6ZKMBLRrkIYYlX9vlgU7OJMxBPC
+         yoCdu/SwDOmplHGnanui8UH1pogPQRs1AmehKvFmgADT3GS17eTQVuWO0PY4378BF3JP
+         BSKA==
+X-Forwarded-Encrypted: i=1; AJvYcCXk4AUVQ25R5dKlyCEOMLcEGpxcJCvR3zgJO0h7fqT7BiwVb/wLHPvFsDhB31hcYcfr1iobh3989BjioQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCDOh1fImPvyu1pLl5Z9dFRVharw8TOzULfvMuKkzZ/kTpgrrK
+	JUIcZjrnvOy/mMRPIIADwInu2V6ApEp06WQDvyRFrZ2crbV4Z0Lqz240y2JXqq9qxswAk6r3Gvy
+	5vG83bg==
+X-Google-Smtp-Source: AGHT+IErJJgN5BluoTQtf2stmRvROn0nM5+4uiJEfaVptiFTOWi4QpFmIkvpwnWda6HOFykQYxDDmolWRd7c
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:7368:836:b122:bba])
+ (user=irogers job=sendgmr) by 2002:a05:6902:2c04:b0:e5b:16b1:4941 with SMTP
+ id 3f1490d57ef6-e5b25bf061fmr1874276.5.1738704787186; Tue, 04 Feb 2025
+ 13:33:07 -0800 (PST)
+Date: Tue,  4 Feb 2025 13:32:35 -0800
+Message-Id: <20250204213259.127939-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxgjbHTyQ53u=abWhyQ81ATL4cqSeWKDfOjz-EaR0NGmug@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Subject: [PATCH v4 00/23] Intel vendor events and TMA 5.01 metrics
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Monday 03 February 2025 22:59:46 Amir Goldstein wrote:
-> On Sun, Feb 2, 2025 at 4:23 PM Pali Rohár <pali@kernel.org> wrote:
-> >
-> > On Friday 17 January 2025 19:59:47 Pali Rohár wrote:
-> > > On Friday 17 January 2025 19:46:30 Amir Goldstein wrote:
-> > > > > > Looking at the FILE_ATTRIBUTE_* flags defined in SMB protocol
-> > > > > >  (fs/smb/common/smb2pdu.h) I wonder how many of them will be
-> > > > > > needed for applications beyond the obvious ones that were listed.
-> > > > >
-> > > > > Well they only asked for seven of them. ;)
-> > > > >
-> > > > > I chatted with Ted about this yesterday, and ... some of the attributes
-> > > > > (like read only) imply that you'd want the linux server to enforce no
-> > > > > writing to the file; some like archive seem a little superfluous since
-> > > > > on linux you can compare cmtime from the backup against what's in the
-> > > > > file now; and still others (like hidden/system) might just be some dorky
-> > > > > thing that could be hidden in some xattr because a unix filesystem won't
-> > > > > care.
-> > > > >
-> > > > > And then there are other attrs like "integrity stream" where someone
-> > > > > with more experience with windows would have to tell me if fsverity
-> > > > > provides sufficient behaviors or not.
-> > > > >
-> > > > > But maybe we should start by plumbing one of those bits in?  I guess the
-> > > > > gross part is that implies an ondisk inode format change or (gross)
-> > > > > xattr lookups in the open path.
-> > > > >
-> > > >
-> > > > I may be wrong, but I think there is a confusion in this thread.
-> > > > I don't think that Pali was looking for filesystems to implement
-> > > > storing those attributes. I read his email as a request to standardize
-> > > > a user API to get/set those attributes for the filesystems that
-> > > > already support them and possibly for vfs to enforce some of them
-> > > > (e.g. READONLY) in generic code.
-> > >
-> > > Yes, you understood it correctly. I was asking for standardizing API how
-> > > to get/set these attributes from userspace. And Chuck wrote that would
-> > > like to have also standardized it for kernel consumers like nfsd or
-> > > ksmbd. Which makes sense.
-> > >
-> > > > Nevertheless, I understand the confusion because I know there
-> > > > is also demand for storing those attributes by file servers in a
-> > > > standard way and for vfs to respect those attributes on the host.
-> > >
-> > > Userspace fileserver, like Samba, would just use that standardized
-> > > userspace API for get/set attributes. And in-kernel fileservers like
-> > > nfsd or ksmbd would like to use that API too.
-> > >
-> > > And there were some proposals how filesystems without native
-> > > support for these attributes could store and preserve these attributes.
-> > > So this can be a confusion in this email thread discussion.
-> >
-> > So to recap, for set-API there are possible options:
-> >
-> > 1) extending FS_IOC_FSSETXATTR / FS_IOC_SETFLAGS for each individual bit
-> >
-> > 2) creating one new xattr in system namespace which will contain all bit
-> >    flags in one structure
-> >
-> > 3) creating new xattr in system namespace for each individual flag
-> >
-> > Disadvantages for option 1) is that "cp -a" or "rsync -a" does not
-> > preserve them. If in option 2) or 3) those xattrs would be visible in
-> > listxattr() call then this can be advantage, as all flags are properly
-> > preserved when doing "archive" backup.
-> >
-> > Do you have any preference which of those options should be used?
-> >
-> 
-> Darrick said in this thread twice:
-> statx/FS_IOC_FSGETXATTR to retrieve and FS_IOC_FSSETXATTR to set.
-> (NOT FS_IOC_SETFLAGS)
-> and I wrote that I agree with him.
-> 
-> I suggest that you let go of the cp -a out-of-the-box requirement.
-> It is not going to pass muster - maybe for a specific filesystem but
-> as a filesystem agnostic feature, unless you change cp tool.
+Update the Intel vendor events to the latest.
+Update the metrics to TMA 5.01.
+Add Arrowlake and Clearwaterforest support.
+Add metrics for LNL and GNR.
+Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
 
-Ok. I was not sure that this is the decided way. So we are going to
-take this direction. I hope that cp and rsync tools would accept
-changes/patches in future for ability to copy these flags too.
+The perf json was generated using the script:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+with the generated json being in:
+https://github.com/intel/perfmon/tree/main/scripts/perf
 
-> >
-> > And how many bit flags are needed? I have done some investigation. Lets
-> > start with table which describes all 32 possible bit flags which are
-> > used by Windows system and also by filesystems FAT / exFAT / NTFS / ReFS
-> > and also by SMB over network:
-> >
-> > bit / attrib.exe flag / SDK constant / description
-> >
-> >  0 - R - FILE_ATTRIBUTE_READONLY              - writing to file or deleting it is disallowed
-> >  1 - H - FILE_ATTRIBUTE_HIDDEN                - inode is hidden
-> >  2 - S - FILE_ATTRIBUTE_SYSTEM                - inode is part of operating system
-> >  3 -   - FILE_ATTRIBUTE_VOLUME                - inode is the disk volume label entry
-> >  4 -   - FILE_ATTRIBUTE_DIRECTORY             - inode is directory
-> >  5 - A - FILE_ATTRIBUTE_ARCHIVE               - inode was not archived yet (when set)
-> >  6 -   - FILE_ATTRIBUTE_DEVICE                - inode represents  in-memory device (e.g. C:\), flag not stored on filesystem
-> >  7 -   - FILE_ATTRIBUTE_NORMAL                - no other flag is set (value 0 means to not change flags, bit 7 means to clear all flags)
-> >  8 -   - FILE_ATTRIBUTE_TEMPORARY             - inode data do not have to be flushed to disk
-> >  9 -   - FILE_ATTRIBUTE_SPARSE_FILE           - file is sparse with holes
-> > 10 -   - FILE_ATTRIBUTE_REPARSE_POINT         - inode has attached reparse point (symlink is also reparse point)
-> > 11 -   - FILE_ATTRIBUTE_COMPRESSED            - file is compressed, for directories it means that newly created inodes would have this flag set
-> > 12 - O - FILE_ATTRIBUTE_OFFLINE               - HSM - inode is used by HSM
-> > 13 - I - FILE_ATTRIBUTE_NOT_CONTENT_INDEXED   - inode will not be indexed by content indexing service
-> > 14 -   - FILE_ATTRIBUTE_ENCRYPTED             - file is encrypted, for directories it means that newly created inodes would have this flag set
-> > 15 - V - FILE_ATTRIBUTE_INTEGRITY_STREAM      - fs does checksumming of data and metadata when reading inode, read-only
-> > 16 -   - FILE_ATTRIBUTE_VIRTUAL               - inode is in %LocalAppData%\VirtualStore, flag not stored on filesystem
-> > 17 - X - FILE_ATTRIBUTE_NO_SCRUB_DATA         - do not use scrubber (proactive background data integrity scanner) on this file, for directories it means that newly created inodes would have this flag set
-> > 18 -   - FILE_ATTRIBUTE_EA                    - inode has xattrs, (not in readdir output, shares same bit with FILE_ATTRIBUTE_RECALL_ON_OPEN)
-> > 18 -   - FILE_ATTRIBUTE_RECALL_ON_OPEN        - HSM - inode is not stored locally (only in readdir output, shares same bit with FILE_ATTRIBUTE_EA)
-> > 19 - P - FILE_ATTRIBUTE_PINNED                - HSM - inode data content must be always stored on locally
-> > 20 - U - FILE_ATTRIBUTE_UNPINNED              - HSM - inode data content can be removed from local storage
-> > 21 -   -                                      - reserved
-> > 22 -   - FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS - HSM - inode data content is not stored locally
-> > 23 -   -                                      - reserved
-> > 24 -   -                                      - reserved
-> > 25 -   -                                      - reserved
-> > 26 -   -                                      - reserved
-> > 27 -   -                                      - reserved
-> > 28 -   -                                      - reserved
-> > 29 - B - FILE_ATTRIBUTE_STRICTLY_SEQUENTIAL   - SMR Blob, unknown meaning, read-only
-> > 30 -   -                                      - reserved
-> > 31 -   -                                      - reserved
-> >
-> 
-> I suspect that we need to reserve expansion for more than 7 bits if we
-> design a proper API.
-> The fsx_xflags field is already too crowded for adding so many flags
-> We can use the padding at the end of fsxattr to add __u32 fsx_dosattrib
-> or fsx_dosflags field.
-> 
-> > (HSM means Hierarchical Storage Management software, which uses reparse
-> > points to make some remote file/folder available on the local
-> > filesystem, for example OneDrive or DropBox)
-> >
-> 
-> I am quite interested in supporting those HSM flags for fanotify.
+Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
+<caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com> and
+Weilin Wang <weilin.wang@intel.com> for helping get this patch series
+together.
 
-Ok. I heard that more people are interesting in these flags, so seems
-that this is some area which is missing on Linux.
+v4: Fix TSC events on hybrid mistakenly specifying the core PMU
+    inhibiting the use of the msr PMU.
+v3: Fixes for hybrid metrics that were missing PMU. Update to the
+    latest events.
+v2: Fix hybrid and Co-authored-by tag issues reported by
+    Arnaldo. Updates to Lunarlake and Meteorlake events. Addition of
+    Clearwaterforest.
 
-> > From above list only following bit flags are suitable for modification
-> > over some Linux API:
-> > - FILE_ATTRIBUTE_READONLY
-> > - FILE_ATTRIBUTE_HIDDEN
-> > - FILE_ATTRIBUTE_SYSTEM
-> > - FILE_ATTRIBUTE_ARCHIVE
-> > - FILE_ATTRIBUTE_TEMPORARY
-> > - FILE_ATTRIBUTE_COMPRESSED
-> > - FILE_ATTRIBUTE_OFFLINE
-> > - FILE_ATTRIBUTE_NOT_CONTENT_INDEXED
-> > - FILE_ATTRIBUTE_ENCRYPTED
-> > - FILE_ATTRIBUTE_NO_SCRUB_DATA
-> > - FILE_ATTRIBUTE_PINNED
-> > - FILE_ATTRIBUTE_UNPINNED
-> >
-> > And if I'm looking correctly the FILE_ATTRIBUTE_COMPRESSED can be
-> > already mapped to Linux FS_COMPR_FL / STATX_ATTR_COMPRESSED, which has
-> > same meaning. Also FILE_ATTRIBUTE_ENCRYPTED can be mapped to
-> > FS_ENCRYPT_FL / STATX_ATTR_ENCRYPTED. Note that these two flags cannot
-> > be set over WinAPI or SMB directly and it is required to use special
-> > WinAPI or SMB ioctl.
-> >
-> 
-> There is a standard way to map from fileattr::flags
-> to fileattr::fsx_xflags, so that you could set/get COMPR,ENCRYPT using
-> FS_IOC_FS[GS]ETXATTR ioctl.
-> see fileattr_fill_flags/fileattr_fill_xflags.
-> but I think that xfs_fileattr_set() will need to have a supported xflags mask
-> check if you start adding xflags that xfs does not currently support and
-> other filesystems do support.
+Ian Rogers (23):
+  perf vendor events: Update Alderlake events/metrics
+  perf vendor events: Update AlderlakeN events/metrics
+  perf vendor events: Add Arrowlake events/metrics
+  perf vendor events: Update Broadwell events/metrics
+  perf vendor events: Update BroadwellDE events/metrics
+  perf vendor events: Update BroadwellX events/metrics
+  perf vendor events: Update CascadelakeX events/metrics
+  perf vendor events: Add Clearwaterforest events
+  perf vendor events: Update EmeraldRapids events/metrics
+  perf vendor events: Update GrandRidge events/metrics
+  perf vendor events: Update/add Graniterapids events/metrics
+  perf vendor events: Update Haswell events/metrics
+  perf vendor events: Update HaswellX events/metrics
+  perf vendor events: Update Icelake events/metrics
+  perf vendor events: Update IcelakeX events/metrics
+  perf vendor events: Update/add Lunarlake events/metrics
+  perf vendor events: Update Meteorlake events/metrics
+  perf vendor events: Update Rocketlake events/metrics
+  perf vendor events: Update Sapphirerapids events/metrics
+  perf vendor events: Update Sierraforest events/metrics
+  perf vendor events: Update Skylake metrics
+  perf vendor events: Update SkylakeX events/metrics
+  perf vendor events: Update Tigerlake events/metrics
 
-Ok. I will try to play with it.
+ .../arch/x86/alderlake/adl-metrics.json       | 3377 +++++++++---
+ .../pmu-events/arch/x86/alderlake/cache.json  |  292 +-
+ .../arch/x86/alderlake/floating-point.json    |   19 +-
+ .../arch/x86/alderlake/frontend.json          |   19 -
+ .../pmu-events/arch/x86/alderlake/memory.json |   32 +-
+ .../arch/x86/alderlake/metricgroups.json      |   10 +-
+ .../pmu-events/arch/x86/alderlake/other.json  |   92 +-
+ .../arch/x86/alderlake/pipeline.json          |  127 +-
+ .../arch/x86/alderlake/virtual-memory.json    |   33 +
+ .../arch/x86/alderlaken/adln-metrics.json     |   83 +-
+ .../pmu-events/arch/x86/alderlaken/cache.json |  227 +-
+ .../arch/x86/alderlaken/floating-point.json   |   17 +-
+ .../arch/x86/alderlaken/memory.json           |   20 +
+ .../pmu-events/arch/x86/alderlaken/other.json |   81 +-
+ .../arch/x86/alderlaken/pipeline.json         |   97 +-
+ .../arch/x86/alderlaken/virtual-memory.json   |   30 +
+ .../arch/x86/arrowlake/arl-metrics.json       | 4597 ++++++++++++++++
+ .../pmu-events/arch/x86/arrowlake/cache.json  | 1491 ++++++
+ .../arch/x86/arrowlake/floating-point.json    |  532 ++
+ .../arch/x86/arrowlake/frontend.json          |  609 +++
+ .../pmu-events/arch/x86/arrowlake/memory.json |  387 ++
+ .../arch/x86/arrowlake/metricgroups.json      |  150 +
+ .../pmu-events/arch/x86/arrowlake/other.json  |  279 +
+ .../arch/x86/arrowlake/pipeline.json          | 2308 +++++++++
+ .../arch/x86/arrowlake/uncore-cache.json      |   20 +
+ .../x86/arrowlake/uncore-interconnect.json    |   47 +
+ .../arch/x86/arrowlake/uncore-memory.json     |  160 +
+ .../{haswell => arrowlake}/uncore-other.json  |    0
+ .../arch/x86/arrowlake/virtual-memory.json    |  522 ++
+ .../arch/x86/broadwell/bdw-metrics.json       |  312 +-
+ .../pmu-events/arch/x86/broadwell/cache.json  |   10 +-
+ .../arch/x86/broadwell/frontend.json          |    4 +-
+ .../pmu-events/arch/x86/broadwell/memory.json |    8 +-
+ .../arch/x86/broadwell/metricgroups.json      |    5 +
+ .../arch/x86/broadwell/pipeline.json          |   10 +-
+ .../arch/x86/broadwellde/bdwde-metrics.json   |  256 +-
+ .../arch/x86/broadwellde/cache.json           |   10 +-
+ .../arch/x86/broadwellde/frontend.json        |    4 +-
+ .../arch/x86/broadwellde/memory.json          |    6 +-
+ .../arch/x86/broadwellde/metricgroups.json    |    5 +
+ .../arch/x86/broadwellde/pipeline.json        |   10 +-
+ .../arch/x86/broadwellde/uncore-cache.json    |   28 +-
+ .../x86/broadwellde/uncore-interconnect.json  |   16 +-
+ .../arch/x86/broadwellx/bdx-metrics.json      |  344 +-
+ .../pmu-events/arch/x86/broadwellx/cache.json |   10 +-
+ .../arch/x86/broadwellx/frontend.json         |    4 +-
+ .../arch/x86/broadwellx/memory.json           |    6 +-
+ .../arch/x86/broadwellx/metricgroups.json     |    5 +
+ .../arch/x86/broadwellx/pipeline.json         |   10 +-
+ .../arch/x86/broadwellx/uncore-cache.json     |   28 +-
+ .../x86/broadwellx/uncore-interconnect.json   |   36 +-
+ .../arch/x86/broadwellx/uncore-memory.json    |    1 +
+ .../arch/x86/cascadelakex/clx-metrics.json    |  767 +--
+ .../arch/x86/cascadelakex/metricgroups.json   |    9 +-
+ .../arch/x86/cascadelakex/uncore-cache.json   |   60 +-
+ .../x86/cascadelakex/uncore-interconnect.json |   11 -
+ .../arch/x86/clearwaterforest/cache.json      |  144 +
+ .../arch/x86/clearwaterforest/counter.json    |    7 +
+ .../arch/x86/clearwaterforest/frontend.json   |   18 +
+ .../arch/x86/clearwaterforest/memory.json     |   22 +
+ .../arch/x86/clearwaterforest/other.json      |   22 +
+ .../arch/x86/clearwaterforest/pipeline.json   |  113 +
+ .../x86/clearwaterforest/virtual-memory.json  |   29 +
+ .../arch/x86/emeraldrapids/cache.json         |   28 +-
+ .../arch/x86/emeraldrapids/emr-metrics.json   | 1036 ++--
+ .../arch/x86/emeraldrapids/frontend.json      |   19 -
+ .../arch/x86/emeraldrapids/memory.json        |   15 +-
+ .../arch/x86/emeraldrapids/metricgroups.json  |   10 +-
+ .../arch/x86/emeraldrapids/pipeline.json      |   23 -
+ .../arch/x86/emeraldrapids/uncore-io.json     |  218 +-
+ .../arch/x86/grandridge/grr-metrics.json      |  284 +-
+ .../arch/x86/grandridge/pipeline.json         |    3 +-
+ .../arch/x86/grandridge/uncore-cache.json     |    4 +-
+ .../x86/grandridge/uncore-interconnect.json   |   60 +
+ .../arch/x86/grandridge/uncore-io.json        |  214 +-
+ .../arch/x86/grandridge/uncore-memory.json    |    2 +-
+ .../arch/x86/graniterapids/cache.json         |  130 +-
+ .../arch/x86/graniterapids/counter.json       |   24 +-
+ .../arch/x86/graniterapids/frontend.json      |   24 +-
+ .../arch/x86/graniterapids/gnr-metrics.json   | 2313 +++++++++
+ .../arch/x86/graniterapids/memory.json        |  121 +-
+ .../arch/x86/graniterapids/metricgroups.json  |  145 +
+ .../arch/x86/graniterapids/other.json         |  109 +
+ .../arch/x86/graniterapids/pipeline.json      |   40 +-
+ .../arch/x86/graniterapids/uncore-cache.json  |   48 +-
+ .../arch/x86/graniterapids/uncore-cxl.json    |    2 -
+ .../graniterapids/uncore-interconnect.json    |   87 +
+ .../arch/x86/graniterapids/uncore-io.json     |  280 +-
+ .../arch/x86/graniterapids/uncore-memory.json |  122 +-
+ .../arch/x86/graniterapids/uncore-power.json  |   98 +
+ .../arch/x86/haswell/hsw-metrics.json         |  260 +-
+ .../pmu-events/arch/x86/haswell/memory.json   |    2 +-
+ .../arch/x86/haswell/metricgroups.json        |    5 +
+ .../arch/x86/haswellx/hsx-metrics.json        |  296 +-
+ .../arch/x86/haswellx/metricgroups.json       |    5 +
+ .../arch/x86/haswellx/uncore-cache.json       |   28 +-
+ .../x86/haswellx/uncore-interconnect.json     |   38 +-
+ .../pmu-events/arch/x86/icelake/cache.json    |   34 +-
+ .../pmu-events/arch/x86/icelake/frontend.json |   17 -
+ .../arch/x86/icelake/icl-metrics.json         |  849 +--
+ .../pmu-events/arch/x86/icelake/memory.json   |   13 +-
+ .../arch/x86/icelake/metricgroups.json        |   10 +-
+ .../pmu-events/arch/x86/icelake/pipeline.json |   30 +-
+ .../arch/x86/icelake/uncore-interconnect.json |   76 -
+ .../arch/x86/icelake/uncore-other.json        |    2 +-
+ .../arch/x86/icelake/virtual-memory.json      |   18 +
+ .../pmu-events/arch/x86/icelakex/cache.json   |   41 +-
+ .../arch/x86/icelakex/frontend.json           |   17 -
+ .../arch/x86/icelakex/icx-metrics.json        |  852 +--
+ .../pmu-events/arch/x86/icelakex/memory.json  |   13 +-
+ .../arch/x86/icelakex/metricgroups.json       |   10 +-
+ .../arch/x86/icelakex/pipeline.json           |   30 +-
+ .../pmu-events/arch/x86/lunarlake/cache.json  | 1352 ++++-
+ .../arch/x86/lunarlake/floating-point.json    |  484 ++
+ .../arch/x86/lunarlake/frontend.json          |  654 ++-
+ .../arch/x86/lunarlake/lnl-metrics.json       | 4611 +++++++++++++++++
+ .../pmu-events/arch/x86/lunarlake/memory.json |  262 +-
+ .../arch/x86/lunarlake/metricgroups.json      |  150 +
+ .../pmu-events/arch/x86/lunarlake/other.json  |  496 +-
+ .../arch/x86/lunarlake/pipeline.json          | 2105 +++++++-
+ .../arch/x86/lunarlake/uncore-memory.json     |   36 +
+ .../arch/x86/lunarlake/virtual-memory.json    |  428 ++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   42 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json |  109 +-
+ .../arch/x86/meteorlake/frontend.json         |   30 +-
+ .../arch/x86/meteorlake/memory.json           |   22 +-
+ .../arch/x86/meteorlake/metricgroups.json     |   10 +-
+ .../arch/x86/meteorlake/mtl-metrics.json      | 3552 ++++++++++---
+ .../pmu-events/arch/x86/meteorlake/other.json |   54 +
+ .../arch/x86/meteorlake/pipeline.json         |   89 +-
+ .../pmu-events/arch/x86/rocketlake/cache.json |   34 +-
+ .../arch/x86/rocketlake/frontend.json         |   17 -
+ .../arch/x86/rocketlake/memory.json           |   13 +-
+ .../arch/x86/rocketlake/metricgroups.json     |   10 +-
+ .../arch/x86/rocketlake/pipeline.json         |   30 +-
+ .../arch/x86/rocketlake/rkl-metrics.json      |  849 +--
+ .../x86/rocketlake/uncore-interconnect.json   |   10 -
+ .../arch/x86/rocketlake/uncore-other.json     |    2 +-
+ .../arch/x86/rocketlake/virtual-memory.json   |   18 +
+ .../arch/x86/sapphirerapids/cache.json        |   30 +-
+ .../arch/x86/sapphirerapids/frontend.json     |   19 -
+ .../arch/x86/sapphirerapids/memory.json       |   15 +-
+ .../arch/x86/sapphirerapids/metricgroups.json |   10 +-
+ .../arch/x86/sapphirerapids/pipeline.json     |   23 -
+ .../arch/x86/sapphirerapids/spr-metrics.json  |  968 ++--
+ .../arch/x86/sapphirerapids/uncore-io.json    |  138 +-
+ .../arch/x86/sierraforest/cache.json          |  130 +-
+ .../arch/x86/sierraforest/counter.json        |   24 +-
+ .../arch/x86/sierraforest/frontend.json       |    8 +
+ .../arch/x86/sierraforest/other.json          |   20 +
+ .../arch/x86/sierraforest/pipeline.json       |   46 +-
+ .../arch/x86/sierraforest/srf-metrics.json    |  308 +-
+ .../arch/x86/sierraforest/uncore-cache.json   |   61 +-
+ .../arch/x86/sierraforest/uncore-cxl.json     |    2 -
+ .../x86/sierraforest/uncore-interconnect.json |   87 +
+ .../arch/x86/sierraforest/uncore-io.json      |  280 +-
+ .../arch/x86/sierraforest/uncore-memory.json  |  122 +-
+ .../arch/x86/sierraforest/uncore-power.json   |   98 +
+ .../arch/x86/skylake/metricgroups.json        |    9 +-
+ .../arch/x86/skylake/skl-metrics.json         |  684 ++-
+ .../arch/x86/skylakex/metricgroups.json       |    9 +-
+ .../arch/x86/skylakex/skx-metrics.json        |  740 +--
+ .../arch/x86/skylakex/uncore-cache.json       |   60 +-
+ .../x86/skylakex/uncore-interconnect.json     |   11 -
+ .../pmu-events/arch/x86/tigerlake/cache.json  |   45 +-
+ .../arch/x86/tigerlake/frontend.json          |   17 -
+ .../pmu-events/arch/x86/tigerlake/memory.json |   13 +-
+ .../arch/x86/tigerlake/metricgroups.json      |   10 +-
+ .../arch/x86/tigerlake/pipeline.json          |   30 +-
+ .../arch/x86/tigerlake/tgl-metrics.json       |  745 +--
+ .../x86/tigerlake/uncore-interconnect.json    |    4 +-
+ .../arch/x86/tigerlake/uncore-other.json      |    2 +-
+ .../arch/x86/tigerlake/virtual-memory.json    |   18 +
+ 173 files changed, 38474 insertions(+), 7874 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/arl-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/uncore-memory.json
+ rename tools/perf/pmu-events/arch/x86/{haswell => arrowlake}/uncore-other.json (100%)
+ create mode 100644 tools/perf/pmu-events/arch/x86/arrowlake/virtual-memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/counter.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/virtual-memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/gnr-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/lnl-metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/uncore-memory.json
 
-> > So totally are needed 10 new bit flags. And for future there are 9
-> > reserved bits which could be introduced by MS in future.
-> >
-> > Additionally there are get-only attributes which can be useful for statx
-> > purposes (for example exported by cifs.ko SMB client):
-> > - FILE_ATTRIBUTE_REPARSE_POINT
-> > - FILE_ATTRIBUTE_INTEGRITY_STREAM
-> > - FILE_ATTRIBUTE_RECALL_ON_OPEN
-> > - FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS
-> > - FILE_ATTRIBUTE_STRICTLY_SEQUENTIAL
-> >
-> > From the above list of flags suitable for modification, following bit
-> > flags have no meaning for kernel and it is up to userspace how will use
-> > them. What is needed from kernel and/or filesystem driver is to preserve
-> > those bit flags.
-> > - FILE_ATTRIBUTE_HIDDEN
-> > - FILE_ATTRIBUTE_SYSTEM
-> > - FILE_ATTRIBUTE_ARCHIVE
-> > - FILE_ATTRIBUTE_NOT_CONTENT_INDEXED
-> >
-> > Following are bit flags which kernel / VFS / fsdriver would have to
-> > handle specially, to provide enforcement or correct behavior of them:
-> > - FILE_ATTRIBUTE_READONLY - enforce that data modification or unlink is disallowed when set
-> > - FILE_ATTRIBUTE_COMPRESSED - enforce compression on filesystem when set
-> > - FILE_ATTRIBUTE_ENCRYPTED - enforce encryption on filesystem when set
-> >
-> > Then there are HSM flags which for local filesystem would need some
-> > cooperation with userspace synchronization software. For network
-> > filesystems (SMB / NFS4) they need nothing special, just properly
-> > propagating them over network:
-> > - FILE_ATTRIBUTE_OFFLINE
-> > - FILE_ATTRIBUTE_PINNED
-> > - FILE_ATTRIBUTE_UNPINNED
-> >
-> > About following 2 flags, I'm not sure if the kernel / VFS / fs driver
-> > has to do something or it can just store bits to fs:
-> > - FILE_ATTRIBUTE_TEMPORARY
-> > - FILE_ATTRIBUTE_NO_SCRUB_DATA
+-- 
+2.48.1.362.g079036d154-goog
+
