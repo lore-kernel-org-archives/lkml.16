@@ -1,66 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mblankhorst.nl (lankhorst.se [141.105.120.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F3F2F46;
-	Tue,  4 Feb 2025 13:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E886C2116FD
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.105.120.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738674981; cv=none; b=bRYvoO8yzszFNWecl1gyIU78+qOlXbxRomW7HZHMmUnKZp6l6GJy2oPcJVCkx5M+I+UEqlfb9W38Hbo9g54LkXN3etFgwJA+yh/mWZbJ7z6b8rJQKBzU/kQ9qF6q/kC2pcUviM2ArpQvl0Vi+7Tzk6G9OMRWcGSfsp1hTdIAe38=
+	t=1738675311; cv=none; b=PGLOlX/33svzFW0dWucLugMu6bNC3sZj5rwl/TLvgX0ahxtWjjNxC5rxYZK2rteLQl5IpLhZ0c65GrVp+Dg5LAQREHHbnv71qjMmo9Y0CsVwMi01BMRvSJNBa3fVBUNxXDnEJUu9wosu9LKhgfMfSqtULKKwePrW9BSpO4ixGL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738674981; c=relaxed/simple;
-	bh=9BVtUC2dRYqRRAzPmjV+IpydnNfRfTZ+iwtUkO71hos=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DUAnmbW+qkIqjw0ZilwWO/b3DjkfA7iPXE7kmEraZ6aIfQMepxRDVfxv4dufYDfG17SSpEQ3ADnyPGGVfXydZ/QOHQWP4HxNL5pDyRGv7xRY7gG/wZOXz9pOhdCaVPznJCfCH1xn4lYTeXb5KdhDoOYxpIJUWklmNdv8O+Mn5TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE861C4CEDF;
-	Tue,  4 Feb 2025 13:16:17 +0000 (UTC)
-Date: Tue, 4 Feb 2025 08:16:53 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
- boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com,
- andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, Vineeth
- Pillai <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo
- Molnar <mingo@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Clark Williams
- <clark.williams@gmail.com>, bigeasy@linutronix.de, daniel.wagner@suse.com,
- joseph.salisbury@oracle.com, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250204081653.18dfe905@gandalf.local.home>
-In-Reply-To: <20250204075100.3fcbfda8@gandalf.local.home>
-References: <20250131225837.972218232@goodmis.org>
-	<20250131225942.365475324@goodmis.org>
-	<20250201115906.GB8256@noisy.programming.kicks-ass.net>
-	<F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
-	<20250201181129.GA34937@noisy.programming.kicks-ass.net>
-	<20250201180617.491ce087@batman.local.home>
-	<20250203084306.GC505@noisy.programming.kicks-ass.net>
-	<20250203114537.6a30c7c0@gandalf.local.home>
-	<20250204091613.GQ7145@noisy.programming.kicks-ass.net>
-	<20250204075100.3fcbfda8@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738675311; c=relaxed/simple;
+	bh=OGL5Pl5O2Qewji1ZgFysi5+ZTrlwu+X/F65eQj20hsE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PM19lChRXcEbbHEUB7oAeo/TMP2FNYmc4DO2IG7TIgeAZMDFliFs22lTwABjmEMigscc69EgTH3lT440b0sF00Zxmp1avv2d6H1tFenafQoZt3Rsvi+RnvAhavdGxqpQYOi/tZacUGnprv25K/SAjGCVk5PYid2y/Syv7Mb6k+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se; spf=none smtp.mailfrom=mblankhorst.nl; arc=none smtp.client-ip=141.105.120.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mblankhorst.nl
+From: Maarten Lankhorst <dev@lankhorst.se>
+To: intel-xe@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <dev@lankhorst.se>,
+	Ingo Molnar <mingo@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH-resent-to-correct-ml 0/8] drm/xe: Convert xe_force_wake calls to guard helpers.
+Date: Tue,  4 Feb 2025 14:22:29 +0100
+Message-ID: <20250204132238.162608-1-dev@lankhorst.se>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 4 Feb 2025 07:51:00 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Ignore my previous series please, it should have been sent to intel-xe, was sent to intel-gfx.
 
-> > I'm so confused, WTF do you then need the lazy crap?
+Instead of all this repetition of
 
-IOW, the "lazy crap" was created to solve this very issue. The holding of
-sleeping spin locks interrupted by a scheduler tick. I'm just giving user
-space the same feature that we gave the kernel in PREEMPT_RT.
+{
+	unsigned fw_ref;
 
--- Steve
+	fw_ref = xe_force_wake_get(fw, domain);
+	if (!xe_force_wake_ref_has_domain(..))
+		return -ETIMEDOUT;
+
+	...
+
+out:
+	xe_force_wake_put(fw_ref);
+	return ret;
+}
+
+I thought I would look at how to replace it with the guard helpers.
+It is easy, but it required some minor fixes to make DEFINE_LOCK_GUARD_1
+work with extra init arguments.
+
+So I changed the function signature slightly to make the first optional argument
+a struct member (current behavior), and any additional argument goes to the init
+call.
+
+This replaces the previous code with
+{
+	scoped_cond_guard(xe_force_wake_get, return -ETIMEDOUT, fw, domain) {
+		....
+
+		return ret;
+	}
+}
+
+I' ve thought also of playing with this:
+{
+	CLASS(xe_force_wake_get, fw_ref)(fw, domain);
+	if (!fw_ref.lock))
+		return -ETIMEDOUT;
+
+	...
+	return ret;
+}
+
+I'm just fearing that the scoped_cond_guard makes it imposssible to get this
+wrong, while in the second example it's not clear that it can fail, and that
+you have to check.
+
+Let me know what you think!
+Feedback welcome for the header change as well, should probably go into the locking tree..
+
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+
+Maarten Lankhorst (8):
+  header/cleanup.h: Add _init_args to DEFINE_LOCK_GUARD_1(_COND)
+  drm/xe/gt: Unify xe_hw_fence_irq_finish() calls.
+  drm/xe: Add scoped guards for xe_force_wake
+  drm/xe: Add xe_force_wake_get_all
+  drm/xe/coredump: Use guard helpers for xe_force_wake.
+  drm/xe/gsc: Use guard helper for xe_gsc_print_info.
+  drm/xe/vram: Use xe_force_wake guard helper
+  drm/xe/gt: Convert to xe_force_wake guard helpers
+
+ drivers/gpu/drm/xe/xe_devcoredump.c |  36 ++---
+ drivers/gpu/drm/xe/xe_force_wake.c  | 161 ++++++++++++++----
+ drivers/gpu/drm/xe/xe_force_wake.h  |  17 ++
+ drivers/gpu/drm/xe/xe_gsc.c         |  22 +--
+ drivers/gpu/drm/xe/xe_gt.c          | 243 ++++++++++------------------
+ drivers/gpu/drm/xe/xe_vram.c        |  45 +++---
+ include/linux/cleanup.h             |  30 ++--
+ 7 files changed, 293 insertions(+), 261 deletions(-)
+
+-- 
+2.47.1
+
