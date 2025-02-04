@@ -1,478 +1,234 @@
-Received: from mblankhorst.nl (lankhorst.se [141.105.120.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857FB20D4F7
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.105.120.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747F5214229
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738673341; cv=none; b=K1BSt9nMpmfjyF6ObKR76XOV/85S6V+0fw2j9phoC3G7Yg2LWIIFnPxgHWyqpxOUu0toDqzd6M7DVnpW3XO3O7brWnaerx81sqkogOUtmBtoi99JOmBt6pYtGjbMdH5td+9ym0FZwhwa0Zh/e7agOHkZvOssF+wCqi6iQj+yZOk=
+	t=1738673345; cv=none; b=Rca2IzZQNsDe7TogRm1wtAJH0banW3Q0VxqPVdvXaSQlGYCM0exdh6FCw1YXIHFoPqEQ7BTZHtILaUGMaRFVVDXyBK1usBkV5GhrfE4TzLwtXivzfa7D6fZEuOov8+Kd7DuT8NNV6UWTOi4CakE65htjHI7SPaU7klqfgDgxYo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738673341; c=relaxed/simple;
-	bh=g/FLQZ2IZsKfe3SQKPlerlwe4H9WG7oN+26lrg21qmk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bsSojz5ScomqLJCsO0CWwgOkc/mCol/zFePtPFSKrOkajYi+uQWPFIp+MuDeKvux/nVMHRYBeDVHuUxwWXO/8gTxOHldN8dtSHp9/d23pDIcyyco+j3BTzcWQkNbdEsZv7F0ZsUcVnIdjkvsJ/Xp/sPK+/ItTTod6H6iD3thSyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se; spf=none smtp.mailfrom=mblankhorst.nl; arc=none smtp.client-ip=141.105.120.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mblankhorst.nl
-From: Maarten Lankhorst <dev@lankhorst.se>
-To: intel-gfx@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Maarten Lankhorst <dev@lankhorst.se>,
-	Ingo Molnar <mingo@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>
-Subject: [PATCH 8/8] drm/xe/gt: Convert to xe_force_wake guard helpers
-Date: Tue,  4 Feb 2025 13:49:09 +0100
-Message-ID: <20250204124909.158315-9-dev@lankhorst.se>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250204124909.158315-1-dev@lankhorst.se>
-References: <20250204124909.158315-1-dev@lankhorst.se>
+	s=arc-20240116; t=1738673345; c=relaxed/simple;
+	bh=mzLFYGyzehDRkrpL2rCtNf203OLWIuVzWWcEfWVQNGI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZT6urW+EDCEY1/7W4nqTwgwZY/GHupYWtjvuxENUu7iLczJdgTuJWRpMZQPHqBexp1Q4rwnXz1vi/fAzd5/jT/UOCbiwbwXT8l3dr9D3195NnCNHyXzQh00TCx1UdbntSSrUgHXya7ulm5i1AhHZ7CauMjglo7oAk2IMV30JOzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=o6AJPwqt; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="o6AJPwqt"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5439a6179a7so5752989e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 04:49:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738673340; x=1739278140; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EqRA2SBT+SjnAkRh9pVs7Dxhd7dSiZIUx9jsLOe7RZ8=;
+        b=o6AJPwqteEQcW/loahGvT6wLEGSoAVLbpW1Wt7altjg7XJLOwVyu6NsdAcTE9H4R55
+         O9Mj5jk/Gn0YL1dXPhLx7kvnBkcN9rAK31pQ8+t8EuTJhCVaWsoW8I3xJDbtCXSowxeT
+         I2VIV4VDoDtoR1w5YihjN9R8VFl1YDzXJ16Pp5cHeNTUMmmRtPkC0j7tdeXkxQ5zKJnI
+         SVKZivJ9Fx5fyzPXlt8Hy2GUvrLvUSs4d8pOxNwT2XaHPkAH410ucJgBVou2n0exa42d
+         Jjnb0Pq3nl2jgxujoyWn3fMTaJYwjTsnqeDf8hAqJDdQttAs7ui2GBv1RJp02CNTXAmC
+         hscA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738673340; x=1739278140;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EqRA2SBT+SjnAkRh9pVs7Dxhd7dSiZIUx9jsLOe7RZ8=;
+        b=GTUvAzFemMktG+jIbsmuulGYbAisCDCAyfCGxcu8ZPGcr/oLIRL32ZXLoZZpfdPKrl
+         frZRXmzC9PMAQWZOPqCqydoyukOSEKWG7EFqggllmgoTRfdlfH8UItUICPU2m3XRX3r4
+         ygKCRdwC0ANWs0XFRyjX35oQWA1iSB65mooNi8Bky2Zod0l1ImuiPnt2RoOiX1x4mETz
+         q0sVRYS8EN5hN9KHggQSg/gD+AZSI4QS0HDXhoQubBkY+/PP4czu5E70JddcTCXG99Hj
+         lNdB220oNzoT6iG0c1wjtHi404S5i5puYht4SKTARRj4zyEcYetkYex/57alaMPXJ9Oj
+         c9Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCWXDZ3O1ea1O7MV9SDDAQ1FSToEg/fGtfDkX+etqvdT/sj21WlPOZA7RsgZHaD3VJol55bmkcuw1h6GQM4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqrhaFn8Gy6PIPsim/A27efuVdGNNYPTNbP2fJ9UucYgZXqEtV
+	8UfHGniFkoXZieCb2HRCgep57fyMjzgMCtvDKciKuRhzHENqcnEc/q5t0NAsTqn3NCbnfXl77i5
+	Jf8Gm5E/U8VRCG/7rP8AORk3Blc9pUI3QR4Tnxw==
+X-Gm-Gg: ASbGnctxc8ysX3Jk6DIfVV/FQ0LBkl7MK1qbNqIJtbA0j6xkiMydu8PBXCncQ58RTL0
+	++s4qF5KKjFnpKc3wPLzRoSTogqtrg0r+MVuo2elI+e44g+Dg0KdZnZjjVLDgSKPCNqZLdfEKD6
+	REfO+bhzj0MTJpN1V8A4Qgm3hZLHF7
+X-Google-Smtp-Source: AGHT+IFLvExsKG5QWwsqrKqyeOtjHht69G0JC//9fyUYqfAKhgSgDDacyrIGnw0QokpTapXDqPo3VyQdLX5556N9RGI=
+X-Received: by 2002:a05:6512:3da4:b0:542:223c:30f5 with SMTP id
+ 2adb3069b0e04-543ffb489a8mr1265662e87.24.1738673340179; Tue, 04 Feb 2025
+ 04:49:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250203031213.399914-1-koichiro.den@canonical.com> <20250203031213.399914-3-koichiro.den@canonical.com>
+In-Reply-To: <20250203031213.399914-3-koichiro.den@canonical.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 4 Feb 2025 13:48:49 +0100
+X-Gm-Features: AWEUYZkM5jQaBKP5J2U5AWw7Z9Gvy52Ww6wrmmyt2rxzTmv_Mxr367RTSyTf7d4
+Message-ID: <CAMRc=MfcooZXBqVpbQ0ak+8LGsPDzwKSN3Zfb0eZDx1Bx4duzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] gpio: aggregator: introduce basic configfs interface
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Maarten Lankhorst <dev@lankhorst.se>
----
- drivers/gpu/drm/xe/xe_gt.c | 216 +++++++++++++------------------------
- 1 file changed, 74 insertions(+), 142 deletions(-)
+On Mon, Feb 3, 2025 at 4:12=E2=80=AFAM Koichiro Den <koichiro.den@canonical=
+.com> wrote:
+>
+> The existing sysfs 'new_device' interface has several limitations:
+> * No way to determine when GPIO aggregator creation is complete.
+> * No way to retrieve errors when creating a GPIO aggregator.
+> * No way to trace a GPIO line of an aggregator back to its
+>   corresponding physical device.
+> * The 'new_device' echo does not indicate which virtual gpiochip<N>
+>   was created.
+> * No way to assign names to GPIO lines exported through an aggregator.
+>
+> Introduce the new configfs interface for gpio-aggregator to address
+> these limitations. It provides a more streamlined, modern, and
+> extensible configuration method. For backward compatibility, the
+> 'new_device' interface and its behaviour is retained for now.
+>
+> This commit implements minimal functionalities:
+>
+>   /config/gpio-aggregator/<name-of-your-choice>/
+>   /config/gpio-aggregator/<name-of-your-choice>/live
+>   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/
+>   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/key
+>   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/offset
+>
+> Basic setup flow is:
+> 1. Create a directory for a GPIO aggregator.
+> 2. Create subdirectories for each line you want to instantiate.
+> 3. In each line directory, configure the key and offset.
+>    The key/offset semantics are as follows:
+>    * If offset is >=3D 0:
+>      - key specifies the name of the chip this GPIO belongs to
+>      - offset specifies the line offset within that chip.
+>    * If offset is <0:
+>      - key needs to specify the GPIO line name.
+> 4. Return to the aggregator's root directory and write '1' to the live
+>    attribute.
+>
+> For example, the command in the existing kernel doc:
+>
+>   echo 'e6052000.gpio 19 e6050000.gpio 20-21' > new_device
+>
+> is equivalent to:
+>
+>   mkdir /sys/kernel/config/gpio-aggregator/<custom-name>
+>   # Change <custom-name> to name of your choice (e.g. "aggr0")
+>   cd /sys/kernel/config/gpio-aggregator/<custom-name>
+>   mkdir line0 line1 line2  # Only "line<Y>" naming allowed.
+>   echo e6052000.gpio > line0/key
+>   echo 19            > line0/offset
+>   echo e6050000.gpio > line1/key
+>   echo 20            > line1/offset
+>   echo e6050000.gpio > line2/key
+>   echo 21            > line2/offset
+>   echo 1             > live
+>
+> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+> ---
+>  drivers/gpio/gpio-aggregator.c | 549 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 548 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregato=
+r.c
+> index 570cd1ff8cc2..c63cf3067ce7 100644
+> --- a/drivers/gpio/gpio-aggregator.c
+> +++ b/drivers/gpio/gpio-aggregator.c
+> @@ -9,10 +9,14 @@
+>
+>  #include <linux/bitmap.h>
+>  #include <linux/bitops.h>
+> +#include <linux/completion.h>
+> +#include <linux/configfs.h>
+>  #include <linux/ctype.h>
+>  #include <linux/delay.h>
+>  #include <linux/idr.h>
+>  #include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/lockdep.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> @@ -34,11 +38,39 @@
+>   */
+>
+>  struct gpio_aggregator {
+> +       struct config_group group;
+>         struct gpiod_lookup_table *lookups;
+>         struct platform_device *pdev;
+> +       struct mutex lock;
+> +       int id;
+> +
+> +       /* Synchronize with probe */
+> +       struct notifier_block bus_notifier;
+> +       struct completion probe_completion;
+> +       bool driver_bound;
+> +
+> +       /* List of gpio_aggregator_line. Always added in order */
+> +       struct list_head list_head;
+> +
+>         char args[];
+>  };
+>
+> +struct gpio_aggregator_line {
+> +       struct config_group group;
+> +       struct gpio_aggregator *parent;
+> +       struct list_head entry;
+> +
+> +       /* Line index within the aggregator device */
+> +       int idx;
+> +
+> +       /* GPIO chip label or line name */
+> +       char *key;
+> +       /* Can be negative to indicate lookup by line name */
+> +       int offset;
+> +
+> +       enum gpio_lookup_flags flags;
+> +};
+> +
+>  static DEFINE_MUTEX(gpio_aggregator_lock);     /* protects idr */
+>  static DEFINE_IDR(gpio_aggregator_idr);
+>
+> @@ -61,6 +93,97 @@ static int aggr_add_gpio(struct gpio_aggregator *aggr,=
+ const char *key,
+>         return 0;
+>  }
+>
+> +static int aggr_notifier_call(struct notifier_block *nb, unsigned long a=
+ction,
+> +                             void *data)
+> +{
+> +       struct gpio_aggregator *aggr;
+> +       struct device *dev =3D data;
+> +
+> +       aggr =3D container_of(nb, struct gpio_aggregator, bus_notifier);
+> +       if (!device_match_name(dev, aggr->lookups->dev_id))
+> +               return NOTIFY_DONE;
+> +
+> +       switch (action) {
+> +       case BUS_NOTIFY_BOUND_DRIVER:
+> +               aggr->driver_bound =3D true;
+> +               break;
+> +       case BUS_NOTIFY_DRIVER_NOT_BOUND:
+> +               aggr->driver_bound =3D false;
+> +               break;
+> +       default:
+> +               return NOTIFY_DONE;
+> +       }
+> +
+> +       complete(&aggr->probe_completion);
+> +       return NOTIFY_OK;
+> +}
 
-diff --git a/drivers/gpu/drm/xe/xe_gt.c b/drivers/gpu/drm/xe/xe_gt.c
-index 943bab94119fa..c71041087a735 100644
---- a/drivers/gpu/drm/xe/xe_gt.c
-+++ b/drivers/gpu/drm/xe/xe_gt.c
-@@ -98,29 +98,24 @@ void xe_gt_sanitize(struct xe_gt *gt)
- 
- static void xe_gt_enable_host_l2_vram(struct xe_gt *gt)
- {
--	unsigned int fw_ref;
- 	u32 reg;
- 
- 	if (!XE_WA(gt, 16023588340))
- 		return;
- 
--	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FW_GT);
--	if (!fw_ref)
--		return;
-+	scoped_guard(xe_force_wake_get, gt_to_fw(gt), XE_FW_GT) {
-+		if (!xe_gt_is_media_type(gt)) {
-+			reg = xe_gt_mcr_unicast_read_any(gt, XE2_GAMREQSTRM_CTRL);
-+			reg |= CG_DIS_CNTLBUS;
-+			xe_gt_mcr_multicast_write(gt, XE2_GAMREQSTRM_CTRL, reg);
-+		}
- 
--	if (!xe_gt_is_media_type(gt)) {
--		reg = xe_gt_mcr_unicast_read_any(gt, XE2_GAMREQSTRM_CTRL);
--		reg |= CG_DIS_CNTLBUS;
--		xe_gt_mcr_multicast_write(gt, XE2_GAMREQSTRM_CTRL, reg);
-+		xe_gt_mcr_multicast_write(gt, XEHPC_L3CLOS_MASK(3), 0x3);
- 	}
--
--	xe_gt_mcr_multicast_write(gt, XEHPC_L3CLOS_MASK(3), 0x3);
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
- }
- 
- static void xe_gt_disable_host_l2_vram(struct xe_gt *gt)
- {
--	unsigned int fw_ref;
- 	u32 reg;
- 
- 	if (!XE_WA(gt, 16023588340))
-@@ -129,15 +124,11 @@ static void xe_gt_disable_host_l2_vram(struct xe_gt *gt)
- 	if (xe_gt_is_media_type(gt))
- 		return;
- 
--	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FW_GT);
--	if (!fw_ref)
--		return;
--
--	reg = xe_gt_mcr_unicast_read_any(gt, XE2_GAMREQSTRM_CTRL);
--	reg &= ~CG_DIS_CNTLBUS;
--	xe_gt_mcr_multicast_write(gt, XE2_GAMREQSTRM_CTRL, reg);
--
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
-+	scoped_guard(xe_force_wake_get, gt_to_fw(gt), XE_FW_GT) {
-+		reg = xe_gt_mcr_unicast_read_any(gt, XE2_GAMREQSTRM_CTRL);
-+		reg &= ~CG_DIS_CNTLBUS;
-+		xe_gt_mcr_multicast_write(gt, XE2_GAMREQSTRM_CTRL, reg);
-+	}
- }
- 
- /**
-@@ -407,17 +398,12 @@ static void dump_pat_on_error(struct xe_gt *gt)
- 
- static int gt_fw_domain_init(struct xe_gt *gt)
- {
--	unsigned int fw_ref;
- 	int err;
- 
--	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FW_GT);
--	if (!fw_ref)
--		return -ETIMEDOUT;
--
- 	if (!xe_gt_is_media_type(gt)) {
- 		err = xe_ggtt_init(gt_to_tile(gt)->mem.ggtt);
- 		if (err)
--			goto err_force_wake;
-+			goto err_pat;
- 		if (IS_SRIOV_PF(gt_to_xe(gt)))
- 			xe_lmtt_init(&gt_to_tile(gt)->sriov.pf.lmtt);
- 	}
-@@ -430,63 +416,53 @@ static int gt_fw_domain_init(struct xe_gt *gt)
- 
- 	err = xe_hw_engines_init_early(gt);
- 	if (err)
--		goto err_force_wake;
-+		goto err_pat;
- 
- 	err = xe_hw_engine_class_sysfs_init(gt);
- 	if (err)
--		goto err_force_wake;
-+		goto err_pat;
- 
- 	/* Initialize CCS mode sysfs after early initialization of HW engines */
- 	err = xe_gt_ccs_mode_sysfs_init(gt);
- 	if (err)
--		goto err_force_wake;
-+		goto err_pat;
- 
- 	/*
- 	 * Stash hardware-reported version.  Since this register does not exist
- 	 * on pre-MTL platforms, reading it there will (correctly) return 0.
- 	 */
- 	gt->info.gmdid = xe_mmio_read32(&gt->mmio, GMD_ID);
--
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
- 	return 0;
- 
--err_force_wake:
-+err_pat:
- 	dump_pat_on_error(gt);
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
- 
- 	return err;
- }
- 
- static int all_fw_domain_init(struct xe_gt *gt)
- {
--	unsigned int fw_ref;
- 	int err;
- 
--	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
--	if (!xe_force_wake_ref_has_domain(fw_ref, XE_FORCEWAKE_ALL)) {
--		err = -ETIMEDOUT;
--		goto err_force_wake;
--	}
--
- 	xe_gt_mcr_set_implicit_defaults(gt);
- 	xe_reg_sr_apply_mmio(&gt->reg_sr, gt);
- 
- 	err = xe_gt_clock_init(gt);
- 	if (err)
--		goto err_force_wake;
-+		return err;
- 
- 	xe_mocs_init(gt);
- 	err = xe_execlist_init(gt);
- 	if (err)
--		goto err_force_wake;
-+		return err;
- 
- 	err = xe_hw_engines_init(gt);
- 	if (err)
--		goto err_force_wake;
-+		return err;
- 
- 	err = xe_uc_init_post_hwconfig(&gt->uc);
- 	if (err)
--		goto err_force_wake;
-+		return err;
- 
- 	if (!xe_gt_is_media_type(gt)) {
- 		/*
-@@ -497,10 +473,8 @@ static int all_fw_domain_init(struct xe_gt *gt)
- 
- 			gt->usm.bb_pool = xe_sa_bo_manager_init(gt_to_tile(gt),
- 								IS_DGFX(xe) ? SZ_1M : SZ_512K, 16);
--			if (IS_ERR(gt->usm.bb_pool)) {
--				err = PTR_ERR(gt->usm.bb_pool);
--				goto err_force_wake;
--			}
-+			if (IS_ERR(gt->usm.bb_pool))
-+				return PTR_ERR(gt->usm.bb_pool);
- 		}
- 	}
- 
-@@ -508,15 +482,13 @@ static int all_fw_domain_init(struct xe_gt *gt)
- 		struct xe_tile *tile = gt_to_tile(gt);
- 
- 		tile->migrate = xe_migrate_init(tile);
--		if (IS_ERR(tile->migrate)) {
--			err = PTR_ERR(tile->migrate);
--			goto err_force_wake;
--		}
-+		if (IS_ERR(tile->migrate))
-+			return PTR_ERR(tile->migrate);
- 	}
- 
- 	err = xe_uc_init_hw(&gt->uc);
- 	if (err)
--		goto err_force_wake;
-+		return err;
- 
- 	/* Configure default CCS mode of 1 engine with all resources */
- 	if (xe_gt_ccs_mode_enabled(gt)) {
-@@ -532,14 +504,7 @@ static int all_fw_domain_init(struct xe_gt *gt)
- 		xe_gt_sriov_pf_init_hw(gt);
- 	}
- 
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
--
- 	return 0;
--
--err_force_wake:
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
--
--	return err;
- }
- 
- /*
-@@ -548,31 +513,25 @@ static int all_fw_domain_init(struct xe_gt *gt)
-  */
- int xe_gt_init_hwconfig(struct xe_gt *gt)
- {
--	unsigned int fw_ref;
- 	int err;
- 
--	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FW_GT);
--	if (!fw_ref)
--		return -ETIMEDOUT;
--
--	xe_gt_mcr_init_early(gt);
--	xe_pat_init(gt);
--
--	err = xe_uc_init(&gt->uc);
--	if (err)
--		goto out_fw;
-+	scoped_cond_guard(xe_force_wake_get, return -ETIMEDOUT, gt_to_fw(gt), XE_FW_GT) {
-+		xe_gt_mcr_init_early(gt);
-+		xe_pat_init(gt);
- 
--	err = xe_uc_init_hwconfig(&gt->uc);
--	if (err)
--		goto out_fw;
-+		err = xe_uc_init(&gt->uc);
-+		if (err)
-+			return err;
- 
--	xe_gt_topology_init(gt);
--	xe_gt_mcr_init(gt);
--	xe_gt_enable_host_l2_vram(gt);
-+		err = xe_uc_init_hwconfig(&gt->uc);
-+		if (err)
-+			return err;
- 
--out_fw:
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
--	return err;
-+		xe_gt_topology_init(gt);
-+		xe_gt_mcr_init(gt);
-+		xe_gt_enable_host_l2_vram(gt);
-+	}
-+	return 0;
- }
- 
- int xe_gt_init(struct xe_gt *gt)
-@@ -597,7 +556,8 @@ int xe_gt_init(struct xe_gt *gt)
- 	if (err)
- 		goto err;
- 
--	err = gt_fw_domain_init(gt);
-+	scoped_cond_guard(xe_force_wake_get, err = -ETIMEDOUT, gt_to_fw(gt), XE_FW_GT)
-+		err = gt_fw_domain_init(gt);
- 	if (err)
- 		goto err;
- 
-@@ -611,7 +571,8 @@ int xe_gt_init(struct xe_gt *gt)
- 
- 	xe_force_wake_init_engines(gt, gt_to_fw(gt));
- 
--	err = all_fw_domain_init(gt);
-+	scoped_cond_guard(xe_force_wake_get, err = -ETIMEDOUT, gt_to_fw(gt), XE_FORCEWAKE_ALL)
-+		err = all_fw_domain_init(gt);
- 	if (err)
- 		goto err;
- 
-@@ -767,7 +728,6 @@ static int do_gt_restart(struct xe_gt *gt)
- 
- static int gt_reset(struct xe_gt *gt)
- {
--	unsigned int fw_ref;
- 	int err;
- 
- 	if (xe_device_wedged(gt_to_xe(gt)))
-@@ -788,29 +748,24 @@ static int gt_reset(struct xe_gt *gt)
- 
- 	xe_gt_sanitize(gt);
- 
--	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
--	if (!xe_force_wake_ref_has_domain(fw_ref, XE_FORCEWAKE_ALL)) {
--		err = -ETIMEDOUT;
--		goto err_out;
--	}
--
--	xe_uc_gucrc_disable(&gt->uc);
--	xe_uc_stop_prepare(&gt->uc);
--	xe_gt_pagefault_reset(gt);
-+	scoped_cond_guard(xe_force_wake_get, err = -ETIMEDOUT; goto err_out, gt_to_fw(gt), XE_FORCEWAKE_ALL) {
-+		xe_uc_gucrc_disable(&gt->uc);
-+		xe_uc_stop_prepare(&gt->uc);
-+		xe_gt_pagefault_reset(gt);
- 
--	xe_uc_stop(&gt->uc);
-+		xe_uc_stop(&gt->uc);
- 
--	xe_gt_tlb_invalidation_reset(gt);
-+		xe_gt_tlb_invalidation_reset(gt);
- 
--	err = do_gt_reset(gt);
--	if (err)
--		goto err_out;
-+		err = do_gt_reset(gt);
-+		if (err)
-+			goto err_out;
- 
--	err = do_gt_restart(gt);
--	if (err)
--		goto err_out;
-+		err = do_gt_restart(gt);
-+		if (err)
-+			goto err_out;
-+	}
- 
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
- 	xe_pm_runtime_put(gt_to_xe(gt));
- 
- 	xe_gt_info(gt, "reset done\n");
-@@ -818,7 +773,6 @@ static int gt_reset(struct xe_gt *gt)
- 	return 0;
- 
- err_out:
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
- 	XE_WARN_ON(xe_uc_start(&gt->uc));
- err_fail:
- 	xe_gt_err(gt, "reset failed (%pe)\n", ERR_PTR(err));
-@@ -850,44 +804,32 @@ void xe_gt_reset_async(struct xe_gt *gt)
- 
- void xe_gt_suspend_prepare(struct xe_gt *gt)
- {
--	unsigned int fw_ref;
--
--	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
-+	guard(xe_force_wake)(gt_to_fw(gt), XE_FORCEWAKE_ALL);
- 
- 	xe_uc_stop_prepare(&gt->uc);
--
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
- }
- 
- int xe_gt_suspend(struct xe_gt *gt)
- {
--	unsigned int fw_ref;
--	int err;
-+	int err = -ETIMEDOUT;
- 
- 	xe_gt_dbg(gt, "suspending\n");
- 	xe_gt_sanitize(gt);
- 
--	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
--	if (!xe_force_wake_ref_has_domain(fw_ref, XE_FORCEWAKE_ALL))
--		goto err_msg;
--
--	err = xe_uc_suspend(&gt->uc);
--	if (err)
--		goto err_force_wake;
--
--	xe_gt_idle_disable_pg(gt);
-+	scoped_cond_guard(xe_force_wake_get, goto err_msg, gt_to_fw(gt), XE_FORCEWAKE_ALL) {
-+		err = xe_uc_suspend(&gt->uc);
-+		if (err)
-+			goto err_msg;
- 
--	xe_gt_disable_host_l2_vram(gt);
-+		xe_gt_idle_disable_pg(gt);
- 
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
-+		xe_gt_disable_host_l2_vram(gt);
-+	}
- 	xe_gt_dbg(gt, "suspended\n");
- 
- 	return 0;
- 
- err_msg:
--	err = -ETIMEDOUT;
--err_force_wake:
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
- 	xe_gt_err(gt, "suspend failed (%pe)\n", ERR_PTR(err));
- 
- 	return err;
-@@ -895,11 +837,8 @@ int xe_gt_suspend(struct xe_gt *gt)
- 
- void xe_gt_shutdown(struct xe_gt *gt)
- {
--	unsigned int fw_ref;
--
--	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
-+	guard(xe_force_wake)(gt_to_fw(gt), XE_FORCEWAKE_ALL);
- 	do_gt_reset(gt);
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
- }
- 
- /**
-@@ -924,29 +863,22 @@ int xe_gt_sanitize_freq(struct xe_gt *gt)
- 
- int xe_gt_resume(struct xe_gt *gt)
- {
--	unsigned int fw_ref;
--	int err;
-+	int err = -ETIMEDOUT;
- 
- 	xe_gt_dbg(gt, "resuming\n");
--	fw_ref = xe_force_wake_get(gt_to_fw(gt), XE_FORCEWAKE_ALL);
--	if (!xe_force_wake_ref_has_domain(fw_ref, XE_FORCEWAKE_ALL))
--		goto err_msg;
--
--	err = do_gt_restart(gt);
--	if (err)
--		goto err_force_wake;
-+	scoped_cond_guard(xe_force_wake_get, goto err_msg, gt_to_fw(gt), XE_FORCEWAKE_ALL) {
-+		err = do_gt_restart(gt);
-+		if (err)
-+			goto err_msg;
- 
--	xe_gt_idle_enable_pg(gt);
-+		xe_gt_idle_enable_pg(gt);
-+	}
- 
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
- 	xe_gt_dbg(gt, "resumed\n");
- 
- 	return 0;
- 
- err_msg:
--	err = -ETIMEDOUT;
--err_force_wake:
--	xe_force_wake_put(gt_to_fw(gt), fw_ref);
- 	xe_gt_err(gt, "resume failed (%pe)\n", ERR_PTR(err));
- 
- 	return err;
--- 
-2.47.1
+Suggestion: this is the third time we're seeing this mechanism being
+used (after gpio-sim and gpio-virtuser). Maybe it's time to try and
+abstract it as much of the code is shared?
 
+The rest looks good to me.
+
+Bart
