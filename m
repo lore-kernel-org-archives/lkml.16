@@ -1,167 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308D62C181
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92D520D4F2;
+	Tue,  4 Feb 2025 16:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738686960; cv=none; b=KqohDYKtXjDGBDVbTkPYWKDTqDaCRCdsVxj0/mkJAVCAQTY0sjaVeGzLt7SZRQedl8ICflSokknbQI0Mv9/HHKU9dsgfJgxU0BWqa+P7yxmqpRYkvw59HjvAapQVA1WNytwe6N+IMTpDLMKyQToReFWSAjMGDamsBzh/GnbpUak=
+	t=1738687085; cv=none; b=CrCJHCjt+xnXO/uNLlVxHva7uMIa3V2Cyg6+Etm14yO2TOwrhusTA92SzpCjlqenXydqPMPzImhbdW0Y2NKU64rA2Gb1JYjA8gnTc7vIaXK3vZ+LceKbgIMieJxwA5LOtNuoxjVTnBXZNTk0EOmSJ+YZIISUbB1jJ0TjblUZF8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738686960; c=relaxed/simple;
-	bh=7CgPMXkcmTQwZC7Sq+5XWWHTKmvnegp5GafTPvlt4zg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dndfYK3UQzS4ZWH/WoO3helClollCsUMMRElECDtdcJnxWhbKEBaw5VcdQk2/lhTNnYxbrOTYMrQ1jxrnCUq3cjSjvOMooDM+8Uhjq8ilQrt+IVkgjF8g1Za0t/ezTcsUnBY0L4VEsXc6hijOjyN23j2zN/B+EA41yqtxE85kts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OPnvlnjF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738687085; c=relaxed/simple;
+	bh=iZxr5kI6Nt+9ll2rFIZkKqtFcDCd2+fWpG0a1BXS/s0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jqQq8rSom2FZaQ/YkOhutMkmx/cdEzQ+XVR5lVye6+SPsjTfMBmKCga8UsSRK123xRDDuVek5R/Eub4w32QSPFUqatF37k7PAjApPM3IM8Z6NhzsiZi94Cykkrz87Yh9OVrK3cc2n5hfpMFsZKoe8j9AHY8HQ1EGJz+y/LxHaL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=J/Dpc3Tx; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OPnvlnjF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738686957;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tv4SLy7xcZIYPDODYnmCnAdVpNXRbqYFjtcplZRerHI=;
-	b=OPnvlnjFFlIORzoOoth0wnVkHvJcNyUU0/R6QdVPg/fJIRBxLBKuvhHpuUIq9rwpk2ZlS0
-	UukQhQI0xsCkxpK8Mr6+ywQ0X3oAAGjrhgqXBer/mX5WpfFPoMtbyBJO+0e5qQCOZeTC7U
-	r5dATHPVUrXAtim6T10Jora624HhGJs=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-227-0_mnrfUlNmaBW2Fd8g08Ag-1; Tue,
- 04 Feb 2025 11:35:54 -0500
-X-MC-Unique: 0_mnrfUlNmaBW2Fd8g08Ag-1
-X-Mimecast-MFC-AGG-ID: 0_mnrfUlNmaBW2Fd8g08Ag
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6F8B91801F17;
-	Tue,  4 Feb 2025 16:35:53 +0000 (UTC)
-Received: from pauld.westford.csb (unknown [10.22.81.117])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2612F19560A7;
-	Tue,  4 Feb 2025 16:35:51 +0000 (UTC)
-Date: Tue, 4 Feb 2025 11:35:49 -0500
-From: Phil Auld <pauld@redhat.com>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Carlos O'Donell <codonell@redhat.com>
-Subject: Re: [PATCH v2] man/man7/sched.7: Mention autogroup disabled behavior
-Message-ID: <20250204163549.GA176386@pauld.westford.csb>
-References: <20250116143747.2366152-1-pauld@redhat.com>
- <hmvmnl52rvv2cln5d6ggheqjvzshlmdkc3fevbrc2sjwwdmteg@6egcrtlhywi7>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="J/Dpc3Tx"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514E1rpR006925;
+	Tue, 4 Feb 2025 11:37:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=f+IaR5QmLrnWJQXIuJGyLQlZrh8
+	FtyTOpN7BpgX7PM8=; b=J/Dpc3TxexqZLJJE7BDjgPpnsAVcHMpUY1prckYemMP
+	zUKhFOEYmOm0G6g5j28fNxaMafK33mq1Jf647n6jSqgNd9I7EYuATrIR4S8CSSYb
+	DpR0eMqwJLkWLzvZXb1pasE1hhpqfP+ZFZSfRc4ZKlR0MeeKJN5nwDvryEGIGvYk
+	BvNLcLVM8lI0ZVZYXl9ZBrL8Rscd7IkJb0P7qqNnQmk53PXpN6ldoXWhJirvJXTF
+	u/C45fS4Fu2UlZBR9auDR0nxjJtF9Ovj+javIg9AH9+ImQQJY2yacAI/G3pfBk5u
+	6mBhTRI5M/VvNal2iCAaQW/rZEZWmOQjMoGMXDlSqqw==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44kma3gnsd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Feb 2025 11:37:43 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 514GbgGL047803
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 4 Feb 2025 11:37:42 -0500
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Tue, 4 Feb 2025 11:37:42 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Tue, 4 Feb 2025 11:37:42 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Tue, 4 Feb 2025 11:37:42 -0500
+Received: from desktop-robi.ad.analog.com ([10.48.65.85])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 514GbMFF009577;
+	Tue, 4 Feb 2025 11:37:24 -0500
+From: Robert Budai <robert.budai@analog.com>
+To: Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich
+	<Michael.Hennerich@analog.com>,
+        Alexandru Ardelean
+	<alexandru.ardelean@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "Rob
+ Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Nuno Sa <nuno.sa@analog.com>,
+        "Ramona
+ Gradinariu" <ramona.gradinariu@analog.com>,
+        David Lechner
+	<dlechner@baylibre.com>,
+        Marcelo Schmitt <marcelo.schmitt@analog.com>,
+        "Trevor Gamblin" <tgamblin@baylibre.com>,
+        Paul Cercueil
+	<paul@crapouillou.net>,
+        Antoniu Miclaus <antoniu.miclaus@analog.com>,
+        Robert
+ Budai <robert.budai@analog.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>
+Subject: [PATCH v6 0/6] 	Add support for ADIS16550
+Date: Tue, 4 Feb 2025 16:36:04 +0200
+Message-ID: <20250204143612.85939-1-robert.budai@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <hmvmnl52rvv2cln5d6ggheqjvzshlmdkc3fevbrc2sjwwdmteg@6egcrtlhywi7>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=Df7tqutW c=1 sm=1 tr=0 ts=67a24257 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=f1vxr5TaGUlwJKkhg4gA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: qBxa-k-AL21U-T9CvPeP75Kg5xXf35HO
+X-Proofpoint-ORIG-GUID: qBxa-k-AL21U-T9CvPeP75Kg5xXf35HO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_08,2025-02-04_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ spamscore=0 impostorscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0
+ bulkscore=0 priorityscore=1501 mlxscore=0 clxscore=1011 suspectscore=0
+ classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502040127
 
-On Sun, Feb 02, 2025 at 02:02:21PM +0100 Alejandro Colomar wrote:
-> Hi Phil,
-> 
-> On Thu, Jan 16, 2025 at 02:37:47PM +0000, Phil Auld wrote:
-> > The autogroup feature can be contolled at runtime when
-> > built into the kernel. Disabling it in this case still
-> > creates autogroups and still shows the autogroup membership
-> > for the task in /proc.  The scheduler code will just not
-> > use the the autogroup task group.  This can be confusing
-> > to users. Add a sentence to this effect to sched.7 to
-> > point this out.
-> > 
-> > The kernel code shows how this is used. The
-> > sched_autogroup_enabled toggle is only used in one place.
-> > 
-> > kernel/sched/autogroup.h:
-> > 
-> > static inline struct task_group *
-> > autogroup_task_group(struct task_struct *p, struct task_group *tg)
-> > {
-> >         extern unsigned int sysctl_sched_autogroup_enabled;
-> >         int enabled = READ_ONCE(sysctl_sched_autogroup_enabled);
-> > 
-> >         if (enabled && task_wants_autogroup(p, tg))
-> >                 return p->signal->autogroup->tg;
-> > 
-> >         return tg;
-> > }
-> > 
-> > task_wants_autogroup() is in kernel/sched/autogroup.c:
-> > 
-> > bool task_wants_autogroup(struct task_struct *p, struct task_group *tg)
-> > {
-> >         if (tg != &root_task_group)
-> >                 return false;
-> >     ...
-> > 
-> >         return true;
-> > }
-> > 
-> > One can see that any group set other than root also bypasses the use of
-> > the autogroup.
-> > 
-> > All of the machinery around the creation of the autogroup is not
-> > effected by the toggle.
-> > 
-> > From userspace:
-> > 0
-> > /autogroup-112 nice 0
-> > 
-> > Note, systemd based system these days is not really using autogroups at all
-> > anyway because any task in a non-root cgroup bypasses the autogroup as
-> > well.
-> > 
-> > Signed-off-by: Phil Auld <pauld@redhat.com>
-> > Cc: Alejandro Colomar <alx@kernel.org>
-> > Cc: <linux-man@vger.kernel.org>
-> 
-> Thanks!  I've applied the patch.
-> <https://www.alejandro-colomar.es/src/alx/linux/man-pages/man-pages.git/commit/?h=contrib&id=ca69daf45f94fda061f796efcc4f24ca76d8e380>
-> 
-> 
-> Have a lovely day!
+*** BLURB HERE ***
 
-Thanks!
+Robert Budai (6):
+  iio: imu: adis: Add custom ops struct
+  iio: imu: adis: Add reset to custom ops
+  iio: imu: adis: Add DIAG_STAT register
+  dt-bindings: iio: Add adis16550 bindings
+  iio: imu: adis16550: add adis16550 support
+  docs: iio: add documentation for adis16550 driver
 
-You too :)
-
-
-Cheers,
-Phil
-
-
-> Alex
-> 
-> > ---
-> >  man/man7/sched.7 | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/man/man7/sched.7 b/man/man7/sched.7
-> > index 71f098e48..f0a708cd7 100644
-> > --- a/man/man7/sched.7
-> > +++ b/man/man7/sched.7
-> > @@ -724,6 +724,8 @@ in the group terminates.
-> >  .P
-> >  When autogrouping is enabled, all of the members of an autogroup
-> >  are placed in the same kernel scheduler "task group".
-> > +When disabled the group creation happens as above, and autogroup membership
-> > +is still visible in /proc, but the autogroups are not used.
-> >  The CFS scheduler employs an algorithm that equalizes the
-> >  distribution of CPU cycles across task groups.
-> >  The benefits of this for interactive desktop performance
-> > -- 
-> > 2.47.1
-> > 
-> > 
-> 
-> -- 
-> <https://www.alejandro-colomar.es/>
-
-
+ .../bindings/iio/imu/adi,adis16550.yaml       |   83 ++
+ Documentation/iio/adis16550.rst               |  376 ++++++
+ Documentation/iio/index.rst                   |    1 +
+ MAINTAINERS                                   |    9 +
+ drivers/iio/imu/Kconfig                       |   13 +
+ drivers/iio/imu/Makefile                      |    1 +
+ drivers/iio/imu/adis.c                        |   36 +-
+ drivers/iio/imu/adis16550.c                   | 1156 +++++++++++++++++
+ include/linux/iio/imu/adis.h                  |   34 +-
+ 9 files changed, 1696 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
+ create mode 100644 Documentation/iio/adis16550.rst
+ create mode 100644 drivers/iio/imu/adis16550.c
 
 -- 
+2.39.5
 
