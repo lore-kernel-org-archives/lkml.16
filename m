@@ -1,67 +1,71 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAC25CDF1;
-	Tue,  4 Feb 2025 11:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B29720C476
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 11:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738669596; cv=none; b=C2n/wkZOpibi4tCyqh6GeFrjzXntBV6OZR4Um6YPh0UotxDxowtdfGZzxnxC4TPzOxWiWKXOeWE6AsnX1DjjgbWBIj6cnbwJZtqKsCl7ML9STEUFMW+n6EGMSrXxKFucI+AZF9K8oTz9OwJGtPRM6zqwBrN3X3T0sZWlBaOL8/s=
+	t=1738669614; cv=none; b=OShkgRGPF4RwtLp0PEY0adMbD8GTfIvANr79DPi9ng25PHq5d2AR7jLO7lN6HDrm+RB8Z/aXIZ0GEwNhh+zE7P4Av7jogUH2QdQ+rklkdNA9JD/DAp70+k9Cb3YzhaSeg07X7Jy0vYjmirVcTyjKz6q6uAycoSH02nOny+9OOR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738669596; c=relaxed/simple;
-	bh=xLOU8a08rHJUOj0tVOcrZH3clFkmrBhh7AUb9i9ZhA8=;
+	s=arc-20240116; t=1738669614; c=relaxed/simple;
+	bh=kyCBzsEvksiy34XuPM2mafO6HCLpkjdC6BbFlcWVjDE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tWmLc8DXxeZnCL0ScQi87x+eQKqUIKEUi8sNzcNUpzKFfJaTHf1gtKGrgz+tALvAMdr51qsACEntiprpcJ4ZVRxhyP1FSeAVuLBX79ZE9LZj7Ws8UlXsjtAyq6dNira5x3pcO4oXYZE1salrT1OGoYKUs2bxYo0TdfRCtYE5JZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SNCbNeYb; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=aScHDOON9cg73uDTItxn8p4LpzItMzHK3PvClu/2nTD3J7Jop/cvE+MafwVHHH0QZzPZA/HHC5ir4Ak4EwFzLvnyPSHoMsa4MMLwgSLoxFweqn/ybym0e9PZn6+tAMoOJG+HyF/xX8Ju6z+1EZnXwALyZhhjYcD8rk7z+p/BW+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=byN8Mrkl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SNCbNeYb"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5143SEWH018231;
-	Tue, 4 Feb 2025 10:14:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Idrynv
-	jVwlKjx48J0Gstw5ntaCO7hXDwAHh6RgERaGw=; b=SNCbNeYb+aMI9mDHT5NSka
-	IQKNNz+ygSk11chKsfonnLQlMJzhwdZ0kFPZWoPIgwmyd6FpHTg4NvHeJzRnODUl
-	LwSftsrZ+hTMiCs9nfeWNqO2/ZzP9qDqct3LRy+JgaTR6boxlz6Qmp3gNVGBiHQw
-	W07jbrjBIps3q0zpR7ZLPrPoG07Po5xHCL67x9DWh7Jb9FEXqObEjTIfKHL5Ov8D
-	ejUymbxWv/1MBwojSxZ5GeXS3l5Q/tAh0zkXc53pL/Lanlk8yFMKCPB0PDCEK7xZ
-	bl/jWteTASwYrzzkdtq3MPJpRYKsFcIu1TUWHZbA5V5w9aSqifvSNE8gbT5eEWYg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44k0mtc95c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 10:14:09 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 514A3bse021956;
-	Tue, 4 Feb 2025 10:14:08 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44k0mtc95b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 10:14:08 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5148j8Gq024492;
-	Tue, 4 Feb 2025 10:14:08 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxn2yb3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 10:14:08 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 514AE4NY41091450
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Feb 2025 10:14:04 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 51F9C200B2;
-	Tue,  4 Feb 2025 10:14:04 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B0786200BE;
-	Tue,  4 Feb 2025 10:14:02 +0000 (GMT)
-Received: from [9.171.76.170] (unknown [9.171.76.170])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Feb 2025 10:14:02 +0000 (GMT)
-Message-ID: <0d4bbaba-d05e-48d5-b248-6d915f8d4e18@linux.ibm.com>
-Date: Tue, 4 Feb 2025 11:14:02 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="byN8Mrkl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738669611;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mvcDdg7/SVFIqVUEmdXIURYWbEP0dIzrDz3mI0Bb3bY=;
+	b=byN8MrklrhZioY4o0X7MZfiSP9LJqgmzwrsW3TR6fjiU07hVunfag+GQgrawubXGpqZvSo
+	9uATrD4dfYJEP2Vv+bPnnXwmlYAq8BbtowDgr+2g9NkBiTTMto5BNPtnMuM63OJbtNSieF
+	iAvZfUGXcCx2Y7g7xF4KGr/aZqf9Fac=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-49-zT3PDZp0NeaqHjbGmzchpw-1; Tue, 04 Feb 2025 06:46:50 -0500
+X-MC-Unique: zT3PDZp0NeaqHjbGmzchpw-1
+X-Mimecast-MFC-AGG-ID: zT3PDZp0NeaqHjbGmzchpw
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43624b08181so26770015e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 03:46:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738669609; x=1739274409;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mvcDdg7/SVFIqVUEmdXIURYWbEP0dIzrDz3mI0Bb3bY=;
+        b=gKabnxSQE1nEQEzrThq4mGtZvZOS4rq4e+NR+0qZzE22ArnSXyjORmgWMVLDLoVRJD
+         r6vJfVAghSqI+4GqxrcnHvFMFUsNHE3WrtrZ/JFweH5jqos9jeyz4wBc45LSByfAvjRb
+         XWEt3ICBh5/AqpV/tUykf4gy+Kdm6tGSIRvtqeuTkL+uULuc2ZJgq7Rs5+mQ316KyKD8
+         TAJnTDF2ffGNshnrYTQCcg4ovoWcmMibhee/m9WyrzWMUiQuyGj7G+dpD2pdXyi0dUYM
+         pB39FBbPpgF9gj+IB5Uh6SBFgXqWzCZU6vl6G0tZbT/atBC6pNdYPNLdRiK3HFgIRqpr
+         o89g==
+X-Forwarded-Encrypted: i=1; AJvYcCU2B8//hp+KURAVXK+3nTIpa7GEklB0UogEOweh9JsYdfR1AURkJsnA4ZC3VxENseTKIR7wl7a656WL5LQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxoeKdX/U/Q5KddjB17GTPhopgqsTsboQzN1jHnj2v3BjPPvAp
+	2Mo1HZWSDZiomMZNDr0ulfovN0H6Ci5Lsqx7P+XyFiSCxh4G/xzalBhuiXX4cVV/1gcc5GqR0UH
+	y1vRd2JkfOw39zz7uEHvfXmiJoRKjwmIECtvDeyPO3XIqNa4M6CpxtEYMTQT5Rw==
+X-Gm-Gg: ASbGncvtMRENCmn6f4VPorTOZj6qM6/UlXuC9p+W8kmH2sBkg2vdSOXuupjCHLkEOMa
+	w2jwRVNToXSIHqd1/EINQNBJmQ6myoul2/lp+Viy9ATQZ+W34pr/bOdwiYRYjYRN3csDj7XdEXy
+	8sBfKpiF+4OXzpxvy6H/tbcVP010ezu1eqgDpjQp2hupkRirLdfxny2SwJxxRZhLIzf1/80ImTY
+	1OB/o523A4inokObAdmH0+zlOWAMMhdyLpgClsW3sXrLh9nihJOD8qgk2hIbGUW8vF1+UoRpO3n
+	IXELfgSAG4leVw91apJBypCpS4B0YsXJoTd6JAaAEdenBUc=
+X-Received: by 2002:a05:600c:348c:b0:434:9e17:190c with SMTP id 5b1f17b1804b1-43905f2bdb0mr20470695e9.0.1738669608755;
+        Tue, 04 Feb 2025 03:46:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHeum0PL2xaCZP/ssYUTuxdWNYIr0Cy4p2cLeswu3gbbZgIeYWyXJW1jokFJSibPL23F+FfPA==
+X-Received: by 2002:a05:600c:348c:b0:434:9e17:190c with SMTP id 5b1f17b1804b1-43905f2bdb0mr20470475e9.0.1738669608398;
+        Tue, 04 Feb 2025 03:46:48 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec886sm15402597f8f.1.2025.02.04.03.46.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 03:46:47 -0800 (PST)
+Message-ID: <7cee3c9e-515e-41de-a15c-04c7591e83eb@redhat.com>
+Date: Tue, 4 Feb 2025 12:46:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,92 +73,130 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] KVM: selftests: Fix spelling mistake "initally" ->
- "initially"
-To: Colin Ian King <colin.i.king@gmail.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250204084855.289493-1-colin.i.king@gmail.com>
+Subject: Re: [PATCH] virtio: Remove virtio devices on device_shutdown()
 Content-Language: en-US
-From: Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; keydata=
- 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
-In-Reply-To: <20250204084855.289493-1-colin.i.king@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Zhenzhong Duan <zhenzhong.duan@intel.com>, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Hongyu Ning <hongyu.ning@linux.intel.com>
+References: <20240808075141.3433253-1-kirill.shutemov@linux.intel.com>
+ <cc7312ca-2745-48a5-a5ac-9ee1d1c4bee0@redhat.com>
+ <20250203094700-mutt-send-email-mst@kernel.org>
+From: Eric Auger <eauger@redhat.com>
+In-Reply-To: <20250203094700-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: em9XsPtbBNG-41cqUInX7h-bp2XNK59M
-X-Proofpoint-GUID: jBPwFMkCVtRvGZ9dwh-DSfg7odbrUG2j
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_04,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- mlxlogscore=764 malwarescore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
- clxscore=1011 priorityscore=1501 adultscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502040080
 
-On 2/4/25 9:48 AM, Colin Ian King wrote:
-> There is a spelling mistake in a literal string. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
->   tools/testing/selftests/kvm/s390/cmma_test.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/s390/cmma_test.c b/tools/testing/selftests/kvm/s390/cmma_test.c
-> index e32dd59703a0..7fbbe8b912b6 100644
-> --- a/tools/testing/selftests/kvm/s390/cmma_test.c
-> +++ b/tools/testing/selftests/kvm/s390/cmma_test.c
-> @@ -651,7 +651,7 @@ struct testdef {
->   } testlist[] = {
->   	{ "migration mode and dirty tracking", test_migration_mode },
->   	{ "GET_CMMA_BITS: basic calls", test_get_cmma_basic },
-> -	{ "GET_CMMA_BITS: all pages are dirty initally", test_get_inital_dirty },
-> +	{ "GET_CMMA_BITS: all pages are dirty initially", test_get_inital_dirty },
+Hi,
 
-Do me a favor and send a v2 that also fixes the function name.
+On 2/3/25 3:48 PM, Michael S. Tsirkin wrote:
+> On Fri, Jan 31, 2025 at 10:53:15AM +0100, Eric Auger wrote:
+>> Hi Kirill, Michael
+>>
+>> On 8/8/24 9:51 AM, Kirill A. Shutemov wrote:
+>>> Hongyu reported a hang on kexec in a VM. QEMU reported invalid memory
+>>> accesses during the hang.
+>>>
+>>> 	Invalid read at addr 0x102877002, size 2, region '(null)', reason: rejected
+>>> 	Invalid write at addr 0x102877A44, size 2, region '(null)', reason: rejected
+>>> 	...
+>>>
+>>> It was traced down to virtio-console. Kexec works fine if virtio-console
+>>> is not in use.
+>>>
+>>> Looks like virtio-console continues to write to the MMIO even after
+>>> underlying virtio-pci device is removed.
+>>>
+>>> The problem can be mitigated by removing all virtio devices on virtio
+>>> bus shutdown.
+>>>
+>>> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>>> Reported-by: Hongyu Ning <hongyu.ning@linux.intel.com>
+>>
+>> Gentle ping on that patch that seems to have fallen though the cracks.
+>>
+>> I think this fix is really needed. I have another test case with a
+>> rebooting guest exposed with virtio-net (backed by vhost-net) and
+>> viommu. Since there is currently no shutdown for the virtio-net, on
+>> reboot, the IOMMU is disabled through the native_machine_shutdown()/
+>> x86_platform.iommu_shutdown() while the virtio-net is still alive.
+>>
+>> Normally device_shutdown() should call virtio-net shutdown before the
+>> IOMMU tear down and we wouldn't see any spurious transactions after
+>> iommu shutdown.
+>>
+>> With that fix, the above test case is fixed and I do not see spurious
+>> vhost IOTLB miss spurious requests.
+>>
+>> For more details, see qemu thread ([PATCH] hw/virtio/vhost: Disable
+>> IOTLB callbacks when IOMMU gets disabled,
+>> https://lore.kernel.org/all/20250120173339.865681-1-eric.auger@redhat.com/)
+>>
+>>
+>> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+>> Tested-by: Eric Auger <eric.auger@redhat.com>
+>>
+>> Thanks
+>>
+>> Eric
+>>
+>>> ---
+>>>  drivers/virtio/virtio.c | 10 ++++++++++
+>>>  1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+>>> index a9b93e99c23a..6c2f908eb22c 100644
+>>> --- a/drivers/virtio/virtio.c
+>>> +++ b/drivers/virtio/virtio.c
+>>> @@ -356,6 +356,15 @@ static void virtio_dev_remove(struct device *_d)
+>>>  	of_node_put(dev->dev.of_node);
+>>>  }
+>>>  
+>>> +static void virtio_dev_shutdown(struct device *_d)
+>>> +{
+>>> +	struct virtio_device *dev = dev_to_virtio(_d);
+>>> +	struct virtio_driver *drv = drv_to_virtio(dev->dev.driver);
+>>> +
+>>> +	if (drv && drv->remove)
+>>> +		drv->remove(dev);
+> 
+> 
+> I am concerned that full remove is a heavyweight operation.
+> Do not want to slow down reboots even more.
+> How about just doing a reset, instead?
+
+I tested with
+
+static void virtio_dev_shutdown(struct device *_d)
+{
+        struct virtio_device *dev = dev_to_virtio(_d);
+
+        virtio_reset_device(dev);
+}
+
+
+and it fixes my issue.
+
+Kirill, would that fix you issue too?
+
+Thanks
+
+Eric
+> 
+>>> +}
+>>> +
+>>>  static const struct bus_type virtio_bus = {
+>>>  	.name  = "virtio",
+>>>  	.match = virtio_dev_match,
+>>> @@ -363,6 +372,7 @@ static const struct bus_type virtio_bus = {
+>>>  	.uevent = virtio_uevent,
+>>>  	.probe = virtio_dev_probe,
+>>>  	.remove = virtio_dev_remove,
+>>> +	.shutdown = virtio_dev_shutdown,
+>>>  };
+>>>  
+>>>  int __register_virtio_driver(struct virtio_driver *driver, struct module *owner)
+> 
+
