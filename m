@@ -1,184 +1,249 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3E721C190
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 23:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494822040B5;
+	Tue,  4 Feb 2025 23:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738713016; cv=none; b=FYu0RRoiMxEW1nP+z3cmT+/XznjkBfdnBnA/YWkovLs/4L8tFuI7Cs47QpYlJxZvnj+c07mpvK3y3SjARJ4cZQeNTHOCAgOGjho+OVKtnCap9Zjm6iwvcNrv8+mjcMo/FbbA77r5Jq29oUkHimgSc1liBAWPrLvcNGw73uoUwhY=
+	t=1738713144; cv=none; b=L+DhrpvYlc+6TOQWanR9w2ppGYhMzmMzhs+1hzzuP2JOB5Ks+ffyQuwFeIQnDmg7BWLPZg7iUPEHpqffeklJXzWoIwBl31Jb1ki02/9dj9rvGRTtYpFRwgT/vuS8BRWs+6j82ga3ffyCzA2Ih4WXI9mw38ysdjB6AfEgXrDWkVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738713016; c=relaxed/simple;
-	bh=QjEre/G3BLqcrCF5wreFajQVoRGv9unmtvDg4S23UQU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=byON8coDmOjLMSB/T7n9gdVJDBo/VGawps+Tj1V9rfF670dDrYsmo85cpF7zgNltKfILlGLB6Kzj7VSBm2JzNAdBhpx6IcNW48V1YYrpf8bIaTJHjOVEoqkVXdnEWU9R6JISbKsNsO6srAFym2MOfKwxRanFdQbRKzULxLLFemY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com; spf=pass smtp.mailfrom=jrtc27.com; dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b=UzXYeZj5; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jrtc27.com
+	s=arc-20240116; t=1738713144; c=relaxed/simple;
+	bh=ROpZn/Glj3yfoqCyFJh/gnULbk/Up0rRVs9QMr9jX1k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=O2YtR0wWWQV5sL5TJQSLazQdeRmWZKtgjlH/SlTNXH8oPgY0VxS9d93M1YYhWFfOdaeyzPsDT89ezWDEwA4uZs/1sBQ1z89zfhD4HLGImJIx3hm3pIFt+29tAEymtpCdhbbIzxJI6T2HL8RxS13r5PMYNX10MzIOvoKSO4jcSTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xn/nUtW4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="UzXYeZj5"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38632b8ae71so5167111f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 15:50:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jrtc27.com; s=gmail.jrtc27.user; t=1738713013; x=1739317813; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QjEre/G3BLqcrCF5wreFajQVoRGv9unmtvDg4S23UQU=;
-        b=UzXYeZj5U/eRryQtpDYt8HO9BC2qZgSpK3+EH7ziAkBkDRko2n0qZRbrvRkW1WETbA
-         D9SpKWBZXNF7wZdYVbnxuN7rVLZVXxCLcUwcCNPFFrFlbYK5ksd9+/4/64iqwdQItr33
-         H16GfhLBdyy6YoeCTJWZYcPyFGHR4PKt28r9U8v0cEjbPQjgX6i2P2aOr3QemPW2Z5tC
-         QuFv2QZ6By9hKNTPy3ecELe/LQavKPEFBx6l1sNJUbXr091H0POuBL8+mEO6blli4x0X
-         Kr+FEo82n5PwfeRFAkbrbWvgpVF2+WZOI+BNTopwZ1SrS2BB6ZMOFmEXPJA4fjE2KP2G
-         1tpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738713013; x=1739317813;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QjEre/G3BLqcrCF5wreFajQVoRGv9unmtvDg4S23UQU=;
-        b=U+IW5G6A1ih8agJObAtRCxd+5kE8xc/OiORkV0cwjBg+zNzCU5M9lsX71wCsbrG8W8
-         1KjZAUk2ubJGIX6fPr/ENsp9noofUH7DbTM2fZyPhtzrATcXtseissh9xtw7481Vmv+z
-         CWeHdpIb4YH82Kf954FFzoBIz8F8a0sNdslkKydoPZ8jrax9JJMjVZ+DC1Ql6O2PTMcn
-         ysd3dMu7oY0q8VPy/N9Om1kAT7NhrH9+AanPuP9K7a5uabKb0UUftXYpK7XtEq5eBjNX
-         VPXlVWRCcyIROMCqQCCSkaK99ok/84aSPF5JRNO0JP9Cqsx9VTXe3+ImHYXWApKkfQsw
-         2q0A==
-X-Forwarded-Encrypted: i=1; AJvYcCV4t6XoZKeL+afnpADRoRpdVErT/uuezR+1HB5dCypOdeGc9qxq7U8eaJViKiP3RpSwNrWoYy5Lp17RWxc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuDxzB4oOZK1WGYYil0BSNg3VmlonZ6XY4P7RltkUm1ZpUoLsZ
-	C/rv7K/waYr4l+FzMJWjY04RFaKLqIEEojMeD7ghQ77jDiCnaY88llUuU+7MmU0=
-X-Gm-Gg: ASbGncu7KXAWagmWetjhFGlK9KE1/g6yP5F3WI1zNmGY5aZnHF7JxsGw9Ik730FXpBD
-	tL/W+F68pwCkEP9MhlD2i1lFFBI1MYdGqa/CwjKb/0qL0mKoM9Vmqabuo0rroBPbIdI/vWEG12n
-	Q/xs5S/nPeRmVgtoO2mYfFrrjdFh95EbKbYMpzaW+7veGX5AamwyDC4FKNkvrB/eSpb0tTlWMHa
-	3vnQ+zY+Ig2sI+wI4XjgA8SRNYPJf6Qy0HYar+HG6vLtnzVYoyb4vPrVEjg/uwRPk0sZmKImXiM
-	vXq4dn6BePA6V7S2nGsLD2W1Tph+
-X-Google-Smtp-Source: AGHT+IEypTIpZh6mfBdWNl0Yo6S1z/L0NXKr61jortReoHSuVGBqrXhoBHP93m2FnFAjaJ4GCP4WRQ==
-X-Received: by 2002:a5d:5f56:0:b0:385:df43:2179 with SMTP id ffacd0b85a97d-38db48bccf9mr352139f8f.17.1738713011907;
-        Tue, 04 Feb 2025 15:50:11 -0800 (PST)
-Received: from smtpclient.apple ([131.111.5.201])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1cee41sm16885326f8f.81.2025.02.04.15.50.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Feb 2025 15:50:10 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xn/nUtW4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43319C4CEDF;
+	Tue,  4 Feb 2025 23:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738713143;
+	bh=ROpZn/Glj3yfoqCyFJh/gnULbk/Up0rRVs9QMr9jX1k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Xn/nUtW4YnYf0O9ekBHYPrABh3Fc4gzqKipFxv0Ju2g36Abp1xaVEl3JEvMcNv0sJ
+	 WUqNkAglYNp682uWrpzK1hmdQ4D9jXwozsc8igqsq2W3qJFZ1xShezYbkFsfeP1Ll/
+	 ezu8tLOoPQYcnb0bqcO6U6DujUkB1brek4z5/7gC4zCPEWTkqI3LQ9tm58HPImBAWg
+	 ABK+PEBnHYBQhb2XWmC1uPm8IywRMomVGrnfkgLMzL9feX35PnKXlmNI7IaCH6Xtn/
+	 PZswfvfUv/m1tTBJLRPuQW6+PVngksGeLPRHAntPDGuca7wDJ1mnPtWvzSMLTsZ1g1
+	 zAZi8oy7tqupA==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: Weinan Liu <wnliu@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Indu Bhagat
+ <indu.bhagat@oracle.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev, "Will
+ Deacon" <will@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org, joe.lawrence@redhat.com,
+ linux-arm-kernel@lists.infradead.org, Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
+In-Reply-To: <mb61pzfj169yq.fsf@kernel.org>
+References: <20250127213310.2496133-1-wnliu@google.com>
+ <mb61pzfj169yq.fsf@kernel.org>
+Date: Tue, 04 Feb 2025 23:52:07 +0000
+Message-ID: <mb61pwme55kuw.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH 00/15] kasan: x86: arm64: risc-v: KASAN tag-based mode for
- x86
-From: Jessica Clarke <jrtc27@jrtc27.com>
-In-Reply-To: <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org>
-Date: Tue, 4 Feb 2025 23:36:23 +0000
-Cc: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
- luto@kernel.org,
- xin@zytor.com,
- kirill.shutemov@linux.intel.com,
- palmer@dabbelt.com,
- tj@kernel.org,
- andreyknvl@gmail.com,
- brgerst@gmail.com,
- ardb@kernel.org,
- dave.hansen@linux.intel.com,
- jgross@suse.com,
- will@kernel.org,
- akpm@linux-foundation.org,
- arnd@arndb.de,
- corbet@lwn.net,
- dvyukov@google.com,
- richard.weiyang@gmail.com,
- ytcoode@gmail.com,
- tglx@linutronix.de,
- hpa@zytor.com,
- seanjc@google.com,
- paul.walmsley@sifive.com,
- aou@eecs.berkeley.edu,
- justinstitt@google.com,
- jason.andryuk@amd.com,
- glider@google.com,
- ubizjak@gmail.com,
- jannh@google.com,
- bhe@redhat.com,
- vincenzo.frascino@arm.com,
- rafael.j.wysocki@intel.com,
- ndesaulniers@google.com,
- mingo@redhat.com,
- catalin.marinas@arm.com,
- junichi.nomura@nec.com,
- nathan@kernel.org,
- ryabinin.a.a@gmail.com,
- dennis@kernel.org,
- bp@alien8.de,
- kevinloughlin@google.com,
- morbo@google.com,
- dan.j.williams@intel.com,
- julian.stecklina@cyberus-technology.de,
- peterz@infradead.org,
- kees@kernel.org,
- kasan-dev@googlegroups.com,
- x86@kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- linux-mm@kvack.org,
- llvm@lists.linux.dev,
- linux-doc@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F974BA79-80D8-4414-9DFD-1EEF9395143C@jrtc27.com>
-References: <cover.1738686764.git.maciej.wieczor-retman@intel.com>
- <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org>
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-On 4 Feb 2025, at 18:58, Christoph Lameter (Ampere) <cl@gentwo.org> =
-wrote:
-> ARM64 supports MTE which is hardware support for tagging 16 byte =
-granules
-> and verification of tags in pointers all in hardware and on some =
-platforms
-> with *no* performance penalty since the tag is stored in the ECC areas =
-of
-> DRAM and verified at the same time as the ECC.
->=20
-> Could we get support for that? This would allow us to enable tag =
-checking
-> in production systems without performance penalty and no memory =
-overhead.
+--=-=-=
+Content-Type: text/plain
 
-It=E2=80=99s not =E2=80=9Cno performance penalty=E2=80=9D, there is a =
-cost to tracking the MTE
-tags for checking. In asynchronous (or asymmetric) mode that=E2=80=99s =
-not too
-bad, but in synchronous mode there is a significant overhead even with
-ECC. Normally on a store, once you=E2=80=99ve translated it and have the =
-data,
-you can buffer it up and defer the actual write until some time later.
-If you hit in the L1 cache then that will probably be quite soon, but
-if you miss then you have to wait for the data to come back from lower
-levels of the hierarchy, potentially all the way out to DRAM. Or if you
-have a write-around cache then you just send it out to the next level
-when it=E2=80=99s ready. But now, if you have synchronous MTE, you =
-cannot
-retire your store instruction until you know what the tag for the
-location you=E2=80=99re storing to is; effectively you have to wait =
-until you
-can do the full cache lookup, and potentially miss, until it can
-retire. This puts pressure on the various microarchitectural structures
-that track instructions as they get executed, as instructions are now
-in flight for longer. Yes, it may well be that it is quicker for the
-memory controller to get the tags from ECC bits than via some other
-means, but you=E2=80=99re already paying many many cycles at that point, =
-with
-the relevant store being stuck unable to retire (and thus every
-instruction after it in the instruction stream) that whole time, and no
-write allocate or write around schemes can help you, because you
-fundamentally have to wait for the tags to be read before you know if
-the instruction is going to trap.
+Puranjay Mohan <puranjay@kernel.org> writes:
 
-Now, you can choose to not use synchronous mode due to that overhead,
-but that=E2=80=99s nuance that isn=E2=80=99t considered by your reply =
-here and has some
-consequences.
+> Weinan Liu <wnliu@google.com> writes:
+>
+>> This patchset implements a generic kernel sframe-based [1] unwinder.
+>> The main goal is to support reliable stacktraces on arm64.
+>>
+>> On x86 orc unwinder provides reliable stacktraces. But arm64 misses the
+>> required support from objtool: it cannot generate orc unwind tables for
+>> arm64.
+>>
+>> Currently, there's already a sframe unwinder proposed for userspace: [2].
+>> Since the sframe unwind table algorithm is similar, these two proposal
+>> could integrate common functionality in the future.
+>>
+>> There are some incomplete features or challenges:
+>>   - The unwinder doesn't yet work with kernel modules. The `start_addr` of
+>>     FRE from kernel modules doesn't appear correct, preventing us from
+>>     unwinding functions from kernel modules.
+>>   - Currently, only GCC supports sframe.
+>>
+>> Ref:
+>> [1]: https://sourceware.org/binutils/docs/sframe-spec.html
+>> [2]: https://lore.kernel.org/lkml/cover.1730150953.git.jpoimboe@kernel.org/
+>>
+>
+> Hi Weinan,
+> Thanks for working on this.
+>
+> I tested this set on my setup and faced some issues, here are the
+> details:
+>
+> Here is my setup [on AWS c6gd.16xlarge instance]:
+> -------------------------------------------------
+>
+> [root@ip-172-31-32-86 linux-upstream]# uname -a
+> Linux ip-172-31-32-86.ec2.internal 6.14.0-rc1+ #1 SMP Tue Feb  4 14:15:55 UTC 2025 aarch64 aarch64 aarch64 GNU/Linux
+>
+> [root@ip-172-31-32-86 linux-upstream]# git log --oneline
+> e9a702365 (HEAD -> master) arm64: Enable livepatch for ARM64
+> 5dedc956e arm64: Define TIF_PATCH_PENDING for livepatch
+> ba563b31a unwind: arm64: add reliable stacktrace support for arm64
+> d807d392d unwind: arm64: Add sframe unwinder on arm64
+> 7872f050b unwind: Implement generic sframe unwinder library
+> 03d2ad003 unwind: add sframe v2 header
+> 5e95cc051 arm64: entry: add unwind info for various kernel entries
+> faff6cbc3 unwind: build kernel with sframe info
+> 0de63bb7d (origin/master, origin/HEAD) Merge tag 'pull-fix' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs
+> 902e09c8a fix braino in "9p: fix ->rename_sem exclusion"
+> f286757b6 Merge tag 'timers-urgent-2025-02-03' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> a360f3ffd (grafted) Merge tag 'irq-urgent-2025-02-03' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> bb2784d9a (grafted) jiffies: Cast to unsigned long in secs_to_jiffies() conversion
+> 30d61efe1 (grafted) 9p: fix ->rename_sem exclusion
+>
+> [root@ip-172-31-32-86 linux-upstream]# grep SFRAME .config
+> CONFIG_AS_HAS_SFRAME_SUPPORT=y
+> CONFIG_SFRAME_UNWIND_TABLE=y
+> CONFIG_SFRAME_UNWINDER=y
+> [root@ip-172-31-32-86 linux-upstream]# grep LIVEPATCH .config
+> CONFIG_HAVE_LIVEPATCH=y
+> CONFIG_LIVEPATCH=y
+> CONFIG_SAMPLE_LIVEPATCH=m
+>
+> [root@ip-172-31-32-86 linux-upstream]# as --version
+> GNU assembler version 2.41-50.al2023.0.2
+> Copyright (C) 2023 Free Software Foundation, Inc.
+> This program is free software; you may redistribute it under the terms of
+> the GNU General Public License version 3 or later.
+> This program has absolutely no warranty.
+> This assembler was configured for a target of `aarch64-amazon-linux'.
+>
+> [root@ip-172-31-32-86 linux-upstream]# gcc --version
+> gcc (GCC) 11.4.1 20230605 (Red Hat 11.4.1-2)
+> Copyright (C) 2021 Free Software Foundation, Inc.
+> This is free software; see the source for copying conditions.  There is NO
+> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+>
+> Loading the livepatch-sameple module:
+> -------------------------------------
+>
+> [root@ip-172-31-32-86 linux-upstream]# kpatch load /lib/modules/6.14.0-rc1+/kernel/samples/livepatch/livepatch-sample.ko
+> loading patch module: /lib/modules/6.14.0-rc1+/kernel/samples/livepatch/livepatch-sample.ko
+> waiting (up to 15 seconds) for patch transition to complete...
+> patch transition has stalled!
+> <4>kpatch: Livepatch process signaling is performed automatically on your system.
+> <4>kpatch: Skipping manual process signaling.
+> waiting (up to 60 seconds) for patch transition to complete...
+>
+> Stalled processes:
+> 340 kdevtmpfs
+> stack:
+> [<0>] devtmpfs_work_loop+0x2cc/0x2d8
+> [<0>] devtmpfsd+0x4c/0x58
+> [<0>] kthread+0xf0/0x100
+> [<0>] ret_from_fork+0x10/0x20
+> module livepatch_sample did not complete its transition, unloading...
+> disabling patch module: livepatch_sample
+> waiting (up to 15 seconds) for patch transition to complete...
+> transition complete (3 seconds)
+> unloading patch module: livepatch_sample
+> <4>kpatch: error: failed to load module livepatch_sample (transition stalled)
 
-Jess
+After some debugging this is what I found:
 
+devtmpfsd() calls devtmpfs_work_loop() which is marked '__noreturn' and has an
+infinite loop. The compiler puts the `bl` to devtmpfs_work_loop() as the the
+last instruction in devtmpfsd() and therefore on entry to devtmpfs_work_loop(),
+LR points to an instruction beyond devtmpfsd() and this consfuses the unwinder.
+
+ffff800080d9a070 <devtmpfsd>:
+ffff800080d9a070:       d503201f        nop
+ffff800080d9a074:       d503201f        nop
+ffff800080d9a078:       d503233f        paciasp
+ffff800080d9a07c:       a9be7bfd        stp     x29, x30, [sp, #-32]!
+ffff800080d9a080:       910003fd        mov     x29, sp
+ffff800080d9a084:       f9000bf3        str     x19, [sp, #16]
+ffff800080d9a088:       943378e8        bl      ffff800081a78428 <devtmpfs_setup>
+ffff800080d9a08c:       90006ca1        adrp    x1, ffff800081b2e000 <unique_processor_ids+0x3758>
+ffff800080d9a090:       2a0003f3        mov     w19, w0
+ffff800080d9a094:       912de021        add     x1, x1, #0xb78
+ffff800080d9a098:       91002020        add     x0, x1, #0x8
+ffff800080d9a09c:       97cd2a43        bl      ffff8000800e49a8 <complete>
+ffff800080d9a0a0:       340000d3        cbz     w19, ffff800080d9a0b8 <devtmpfsd+0x48>
+ffff800080d9a0a4:       2a1303e0        mov     w0, w19
+ffff800080d9a0a8:       f9400bf3        ldr     x19, [sp, #16]
+ffff800080d9a0ac:       a8c27bfd        ldp     x29, x30, [sp], #32
+ffff800080d9a0b0:       d50323bf        autiasp
+ffff800080d9a0b4:       d65f03c0        ret
+ffff800080d9a0b8:       97f06526        bl      ffff8000809b3550 <devtmpfs_work_loop>
+ffff800080d9a0bc:       00000000        udf     #0
+ffff800080d9a0c0:       d503201f        nop
+ffff800080d9a0c4:       d503201f        nop
+
+find_fde() got pc=0xffff800080d9a0bc which is not in [sfde_func_start_address, sfde_func_size)
+
+output for readelf --sframe for devtmpfsd()
+
+func idx [51825]: pc = 0xffff800080d9a070, size = 76 bytes
+    STARTPC           CFA       FP        RA
+    ffff800080d9a070  sp+0      u         u
+    ffff800080d9a07c  sp+0      u         u[s]
+    ffff800080d9a080  sp+32     c-32      c-24[s]
+    ffff800080d9a0b0  sp+0      u         u[s]
+    ffff800080d9a0b4  sp+0      u         u
+    ffff800080d9a0b8  sp+32     c-32      c-24[s]
+
+The unwinder and all the related infra is assuming that the return address
+will be part of a valid function which is not the case here.
+
+I am not sure which component needs to be fixed here, but the following
+patch(which is a hack) fixes the issue by considering the return address as
+part of the function descriptor entry.
+
+-- 8< --
+
+diff --git a/kernel/sframe_lookup.c b/kernel/sframe_lookup.c
+index 846f1da95..28bec5064 100644
+--- a/kernel/sframe_lookup.c
++++ b/kernel/sframe_lookup.c
+@@ -82,7 +82,7 @@ static struct sframe_fde *find_fde(const struct sframe_table *tbl, unsigned long
+        if (f >= tbl->sfhdr_p->num_fdes || f < 0)
+                return NULL;
+        fdep = tbl->fde_p + f;
+-       if (ip < fdep->start_addr || ip >= fdep->start_addr + fdep->size)
++       if (ip < fdep->start_addr || ip > fdep->start_addr + fdep->size)
+                return NULL;
+
+        return fdep;
+@@ -106,7 +106,7 @@ static int find_fre(const struct sframe_table *tbl, unsigned long pc,
+        else
+                ip_off = (int32_t)(pc - (unsigned long)tbl->sfhdr_p) - fdep->start_addr;
+
+-       if (ip_off < 0 || ip_off >= fdep->size)
++       if (ip_off < 0 || ip_off > fdep->size)
+                return -EINVAL;
+
+        /*
+
+-- >8 --
+
+Thanks,
+Puranjay
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iIoEARYKADIWIQQ3wHGvVs/5bdl78BKwwPkjG3B2nQUCZ6KoKBQccHVyYW5qYXlA
+a2VybmVsLm9yZwAKCRCwwPkjG3B2naM9AQCVxRhYApBFPGDg+i1uDN2Me6J88sm7
+IVmaCz4kXrfSmAEAtLYreAOVjjJwmmOIjV6ipufys5E4bjZOBmZZ4bsajgI=
+=FjuV
+-----END PGP SIGNATURE-----
+--=-=-=--
