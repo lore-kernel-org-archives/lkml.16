@@ -1,96 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8795814A0B5;
-	Tue,  4 Feb 2025 17:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55B218A6D4;
+	Tue,  4 Feb 2025 17:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738691293; cv=none; b=PlJ7L6qusZiqvXiVWY0wJb3iqHoBtFgssdEu7dK42KIl0GTtOX+zQsdKvQ2jB2Pd5yn37tdoB3yVRuMvutYaCtLu3Ww+ErBy2pdTIwzjUjVWEKdcVMWl6Yhzquym/0OPXewFJH0oi7X7D2f+X1goSqq3N5fDSLdO8106GiAwLv4=
+	t=1738691322; cv=none; b=iwKX7Jf2UwZQFi5ICsRHF2Am8byqZzwSo//F6Qr4XdFsHgN6mGMkUG4EAbImq7kq1NERBQkCrXUWKc7R/WRBM9ubctZ+BeoiQmgK08iRO0hL2dL6/8bT+AO81okRYVH+6OnsJqlevXomhy1hn6LETL/wUC0ORdMGLTYdvNcfdWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738691293; c=relaxed/simple;
-	bh=GrtYPHIRxK6ejmdmBjYfylNuez1nnTdyjrxoZB41C18=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K3GWLsqWxf6Uhd0RrRUpr6gLGPKmAHlaXUXFlxVUWWFFp8aUYMiGuQ5xVg+DrpYGoxzypPcKac/JvBqaEfMmp4LQ9XlJR8aFEOuHhgEj2Hkmr8PyJ11ASCpvgCxkH7g4C0b0Z1jKIVd6tzdFBGRRgA5QLkzbrLl2Q1UwSb6v8CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nTlFMg3F; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738691322; c=relaxed/simple;
+	bh=2xAbvKVQOlgEgoQp8Nlu07gLHIrizjhQuSzWv5pzWew=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=icT7k88kw/9a+JKiPl10GQ8wllTiqrawEIacUaNFD4f5Pe67dt+TWAvY7TRUb3kNAUgy0PVps8mwa2CdCkztMnHOScjS8tVCWH6iApZGoFjZX84/3pDLnJQOvSmNsrpaoM2+EtralpHoFTDx7xVHriql8YRClMNk/TlJZxF+ryg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGZXhgdw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nTlFMg3F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738691291; x=1770227291;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=GrtYPHIRxK6ejmdmBjYfylNuez1nnTdyjrxoZB41C18=;
-  b=nTlFMg3FZ5v/9uMO9ofjWqn3/Gib9lvIiEhGIPqcd2eLbPt7f4GQgQYs
-   sVZNY+PtUQmwH8uUmTsznExZLjDol0am7vzEFiWZkLfX8AsTLtPFEFblC
-   jOKcKT2dNhM+TgQFTf3V9SO8M0LjuJFo+FnZ3ZClL9Wz7Q+hpc2a3t33R
-   SfvJTWUWdOxGHClg+QR/gD1mwy/v5hcPqoyMgMLWnSga4xisuApPU7lTI
-   CyrPQtarRtVxpBiAXlnWaq23CVcZYXusrj/+8vwFnuSbmhle0pq8VnRvh
-   Z0hsGlSwqHvrHTUoM2CMjMBV1wAyAGHuMKvEm7fvMQzJfQl8B/wE/NAEx
-   Q==;
-X-CSE-ConnectionGUID: kSXgKCdJRFCkErm0mGmPaw==
-X-CSE-MsgGUID: XNa+4gKUSZCABx8QwujlQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56656462"
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="56656462"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:48:11 -0800
-X-CSE-ConnectionGUID: gO76lXoCR02m+tI1+VeYww==
-X-CSE-MsgGUID: oUrDKHvRQsmJ//eVPC7Vnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="141526712"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 09:48:10 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tfN1r-00000008DdG-0pqA;
-	Tue, 04 Feb 2025 19:48:07 +0200
-Date: Tue, 4 Feb 2025 19:48:06 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Patrick Rudolph <patrick.rudolph@9elements.com>
-Subject: Re: [PATCH v2 00/14] pinctrl: cy8c95x0: Bugfixes and cleanups
-Message-ID: <Z6JS1pLWIAdIYRTv@smile.fi.intel.com>
-References: <20250203131506.3318201-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdYPAa3NYDz4_ch9NG_bno8QfO7g9QTHfDB--XrDRd2NXA@mail.gmail.com>
- <Z6DToVmi7L7iR07T@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGZXhgdw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B7EBC4CEDF;
+	Tue,  4 Feb 2025 17:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738691322;
+	bh=2xAbvKVQOlgEgoQp8Nlu07gLHIrizjhQuSzWv5pzWew=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IGZXhgdwvzRU7HNj/+7l710B6du1I+vFwB/8dD37mg5vrSfKmzKQNkA/cEJhrsIu/
+	 0mmNuJCpS+zPkIgJ1Jn5P+/ZulGLzAAEJaqo59WiI/IdriCBJpbNBs2kTaGdY39To7
+	 JB8RJsqKQ+TaWfY8gViQWpBN8z0wiV8vwJ3hdbjdNZ8TZJHbqeTY3McBDb3LjTorQB
+	 BSpjfmeekrJMb2uEc8uM+X0VO2kVimWI2TATGqB5DWE5gFPdH0VU1oavHih+z3KTMd
+	 4Q47F65CkeMDNRoI6WYzhl625RjuKrcwdb0vSzshlao3CiXPh7C1tk9gmlK8yGOYlZ
+	 ybT8diKmglrpw==
+From: Kees Cook <kees@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] stackinit: Fix comment for test_small_end
+Date: Tue,  4 Feb 2025 09:48:35 -0800
+Message-Id: <173869131286.3463318.2294590080826557416.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <3f8faa2d7d0d6b36571093ab0fb1fd5157abd7bb.1738593178.git.geert+renesas@glider.be>
+References: <3f8faa2d7d0d6b36571093ab0fb1fd5157abd7bb.1738593178.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z6DToVmi7L7iR07T@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Feb 03, 2025 at 04:33:05PM +0200, Andy Shevchenko wrote:
-> On Mon, Feb 03, 2025 at 02:35:46PM +0100, Linus Walleij wrote:
-> > On Mon, Feb 3, 2025 at 2:15 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > 
-> > > This a set of the bugfixes and cleanups I have collected so far while
-> > > testing the driver on Intel Galileo Gen 1 last year.
-> > >
-> > > Patches 1-2 are kinda important fixes, patch 3 is half-half, it helps
-> > > a lot when debugging, patch 4 is semantically a fix, but can wait.
-> > > The rest is number of refactoring and cleaning up changes.
-> > 
-> > I applied patches 1-4 for fixes since we are early in the rc cycle.
+On Mon, 03 Feb 2025 15:34:07 +0100, Geert Uytterhoeven wrote:
+> In union test_small_end, the small members are three and four.
 > 
-> Hmm... But I do not see the first patch from v1 to be applied. I was under
-> impression that you have it somewhere in your local trees and now it seems
-> disappeared. Can you check on your side what happens?
+> 
 
-Okay, now it's there. So far, so good.
+Applied to for-next/hardening, thanks!
+
+[1/1] stackinit: Fix comment for test_small_end
+      https://git.kernel.org/kees/c/28d00b3e5953
+
+Take care,
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Kees Cook
 
