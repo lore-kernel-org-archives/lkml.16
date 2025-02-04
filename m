@@ -1,94 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C1225A659;
-	Tue,  4 Feb 2025 15:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6D225A659
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738683251; cv=none; b=GiCGiHl+OMOo7feNKXwq0swink+vLs6bs59t35x3MnUAHUncCT/gQL30YJ3SIrQdwFO8HlMvUUpjmISSmFUHn/sK2ocJZ5B2BumfYWAVxqIMAhhZZ4C4DLLpTxZUiDV4Iiyz3KlSCEjiUGUV6DHoTA0A+X22ut7M6kdKhMnSfxQ=
+	t=1738683257; cv=none; b=c08bJpJVKCrE7WSrUgq7OPzOPeHGpnh/KHAgT5WbKL16VnKHa+klmNFtmCjVGaSgXr0nu502o0c+RE4B/sdG7FSJTGejdPzs1L7vGuHbsQTGwZyN0SPIAHDiTAV1h8L5QHhZYczehDR1F6cK/XnN4F3glaq+5dHul6+6d6QnqXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738683251; c=relaxed/simple;
-	bh=g/LfxlZKU/4g2zJNhw2PMNpPolCTDb+zhoBv0YRah7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KojdD+bCKENpt0Q1+TBN+PyS1Tp6eBuGRERvHL9KkpsvZBmA2wSIctMfqMxpn89KdJ3G/ysaqmFn2wmnDaL7chWzXBR6KaVyN4LxOf0fxkY9Q0JE4t+E0N3+gpah8UV+seYdDgsSH9Lnv7/46u5Lbkj+rpq4mM4KdMDUz/AJP38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cGwolwsH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738683257; c=relaxed/simple;
+	bh=VLMW/rKngckff43zklXzalVdgigJaUPwsmm6BS8phrg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=da22hEsS4vGo4c8sPjmNoMSjoJhXAy8w/7Lnd5l7K6+93j+5ZG6sm45aMZO9IXnvJzxXNLv94Bx1sV8RgMu5LzZR1MgZfZlla2aQW5bZo7VEngI6vz3ehkqMEuGYxV66uSMyrNAzYyOGpVBDTyaM2mMQ/SNHvUpgkXUz2whAc9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X9y7nCc9; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cGwolwsH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE002C4CEE2;
-	Tue,  4 Feb 2025 15:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738683251;
-	bh=g/LfxlZKU/4g2zJNhw2PMNpPolCTDb+zhoBv0YRah7Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cGwolwsH4LA0TmfO+SdNxmBPT7szfYCrb/u9Gt6fIHPFGpopvj4/Opr582ozGvnmN
-	 a1w14SsdJwMmrJMq6GN9AQnFqPFnbMiILgvW3qe2RrSl0jbkzRaDCtfC3RLU506Yv1
-	 0ZcF/PwqrFzNlfrcAV8+wpykwlb691EY+ix7YbyDqfsRQSkMh6Gt9646qD9rGpzhdI
-	 lMk6Z71TzSPHQyNrOpoGOqUf1NK4Vd7ukn4f/nSCWPndwXg8fX4xxzsVon9w1BGYRc
-	 QkGvRQBt/JoMdp6hQwsFH60vh+jyUqoXmWOgXIqnGE+g/yCDwgctNLd23x8QNcl/AS
-	 Y+ZTGofZQG5rw==
-Date: Tue, 4 Feb 2025 09:34:09 -0600
-From: Rob Herring <robh@kernel.org>
-To: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dimitri Fedrau <dima.fedrau@gmail.com>
-Subject: Re: [PATCH net-next v3 1/3] dt-bindings: net: ethernet-phy: add
- property tx-amplitude-100base-tx-percent
-Message-ID: <20250204153409.GA2771999-robh@kernel.org>
-References: <20250204-dp83822-tx-swing-v3-0-9798e96500d9@liebherr.com>
- <20250204-dp83822-tx-swing-v3-1-9798e96500d9@liebherr.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X9y7nCc9"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738683243;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AV7Kl1dUZpnbGIRCqNtPeYJtm97lNu4F+MxRiMNeYbU=;
+	b=X9y7nCc9gJsgHVRO4dFndjl7mdvYtq/C1SAuHY/mGQE8LmEcBq0Yy0cZC2M3yI4XuK8Rz7
+	9wvpDvxVrw1/QD/N5U3uITI7JS5emPExHU+qoXId1DjI1fEd+OKqp3ystzvvdVmheXBbgr
+	aTyaz/RMXW10L7ybAviw0gkaioevx+A=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: amd: acp: Use str_low_high() helper function
+Date: Tue,  4 Feb 2025 16:33:32 +0100
+Message-ID: <20250204153333.3045-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204-dp83822-tx-swing-v3-1-9798e96500d9@liebherr.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Feb 04, 2025 at 02:09:15PM +0100, Dimitri Fedrau wrote:
-> Add property tx-amplitude-100base-tx-percent in the device tree bindings
-> for configuring the tx amplitude of 100BASE-TX PHYs. Modifying it can be
-> necessary to compensate losses on the PCB and connector, so the voltages
-> measured on the RJ45 pins are conforming.
-> 
-> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> ---
->  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> index 2c71454ae8e362e7032e44712949e12da6826070..04f42961035f273990fdf4368ad1352397fc3774 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> @@ -232,6 +232,13 @@ properties:
->        PHY's that have configurable TX internal delays. If this property is
->        present then the PHY applies the TX delay.
->  
-> +  tx-amplitude-100base-tx-percent:
-> +    description: |
+Remove hard-coded strings by using the str_low_high() helper function.
 
-Don't need '|' if no formatting to preserve.
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ sound/soc/amd/acp/acp3x-es83xx/acp3x-es83xx.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> +      Transmit amplitude gain applied for 100BASE-TX. When omitted, the PHYs
-> +      default will be left as is.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 100
-> +
->    leds:
->      type: object
->  
-> 
-> -- 
-> 2.39.5
-> 
+diff --git a/sound/soc/amd/acp/acp3x-es83xx/acp3x-es83xx.c b/sound/soc/amd/acp/acp3x-es83xx/acp3x-es83xx.c
+index 2b0aa270a3e9..eb5d4a5baef2 100644
+--- a/sound/soc/amd/acp/acp3x-es83xx/acp3x-es83xx.c
++++ b/sound/soc/amd/acp/acp3x-es83xx/acp3x-es83xx.c
+@@ -19,6 +19,7 @@
+ #include <linux/io.h>
+ #include <linux/acpi.h>
+ #include <linux/dmi.h>
++#include <linux/string_choices.h>
+ #include "../acp-mach.h"
+ #include "acp3x-es83xx.h"
+ 
+@@ -241,9 +242,9 @@ static int acp3x_es83xx_configure_gpios(struct acp3x_es83xx_private *priv)
+ 
+ 	dev_info(priv->codec_dev, "speaker gpio %d active %s, headphone gpio %d active %s\n",
+ 		 priv->enable_spk_gpio.crs_entry_index,
+-		 priv->enable_spk_gpio.active_low ? "low" : "high",
++		 str_low_high(priv->enable_spk_gpio.active_low),
+ 		 priv->enable_hp_gpio.crs_entry_index,
+-		 priv->enable_hp_gpio.active_low ? "low" : "high");
++		 str_low_high(priv->enable_hp_gpio.active_low));
+ 	return 0;
+ }
+ 
+-- 
+2.48.1
+
