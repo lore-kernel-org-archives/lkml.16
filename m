@@ -1,173 +1,124 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4472520A5DA;
-	Tue,  4 Feb 2025 20:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8314203710
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 20:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738700886; cv=none; b=era8CuNKvhapK+NXnEgsEMKE4zIsvj08iCzJiTaYklCGZWZn+i/Ubc7JG8e6H1Dpzps1Z2zpkgnLviZRmvIBIcNXISuzZLHrgzUR36e+vbwCkB5PiQzzVZLd06kR5coHo5Z4tlA9a18YqcN264NIZMzXIpOrzptZSK7cL4AzoRM=
+	t=1738701093; cv=none; b=QFjDbsnKe8fIugVGEwUNYc57VMm9O1I4TPqdiBrGgdwN3XNXKOO5VXMo3e7FGCgwPUiZ5bSW3jdI9JgV8iECdHq7i+4m76Rn2coa9tRJ2nOPRIPIIXke22bxhBkvdEKtnNXIKlLaRcKxDBcdWKE7DOAkVihEyxxXB35GfKGhtPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738700886; c=relaxed/simple;
-	bh=IoRJFhKv/dqAt17nC9B0LKW2UsEDq8Ti3lmnPQiWALY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GIVySLSON8YfBXDgvV8I6Shf9JuQDDhwoqqlGvwAKty9ATlm1kbizSzD/R8rDkU3ZyPPD5nNChU196KzJ142yL9rkUpnnHIXMJIWg4Byz94ZWUCHuk9ld4CkqWLfWwBTFhsuwxseiqYFDeWVfdJwRPyNkNtIjj7l8JYHnARCapQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=b3Cx44XE; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738701093; c=relaxed/simple;
+	bh=xSeq+Rgde/bKmuvO32XTPgXpmSV5DtEQ08hyIbEzvr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WfHf9CXUN9I9etcxMGwFLU0XTaqENWVlxZ2mdbr/OBjd09RZ2CehCiRAeaApHBz439iZB96yKknsy9V9WryYrnO3g6bfI70UDwDbd0VcnM51r8dKTlHG65H1OjogbPHRRGGGiYRJxfX+C9n/sWJ3LBdX54pOj75gRl4l895pibU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=EPsNDNQS; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="b3Cx44XE"
-Received: from [10.17.64.67] (unknown [131.107.1.195])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 754F92054926;
-	Tue,  4 Feb 2025 12:28:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 754F92054926
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738700884;
-	bh=1bt0mVnS0Ir83ngsAvEIbbvQSkHpMuK7XU2Id29OusI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b3Cx44XESQ7Fszl7nZpg8NVa77+6TTN/umnmM13Eo4MLXInKqDEjmJ0fXIz4B7EB1
-	 cp6HHrvsS3AW/32LDzhiqR9RpE3O9e2k9zk6lHZ0vwuQ6vM/IirIBgcsjO6RQH18D4
-	 2qH6muvI6TW5Bci2oOnOUSPTnGkdO5JQb6VIi1s8=
-Message-ID: <aeef2ca5-2538-4487-a501-7eb2925d198b@linux.microsoft.com>
-Date: Tue, 4 Feb 2025 12:28:03 -0800
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="EPsNDNQS"
+Received: from cwcc.thunk.org (pool-173-48-123-53.bstnma.fios.verizon.net [173.48.123.53])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 514KUxif000752
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 4 Feb 2025 15:31:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1738701062; bh=4/0vnwTAY+3yDq4nuhuONLhdWsKfo0JI/NdVKfIt3iI=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=EPsNDNQSpXLZz8ui9ziG85f/tffGkISryc90YUNJwmpH5Gh0YL80QN+SDMcS8gqQT
+	 VmnhJPfB0qa+UAxBbV11oKWHa67+YrQ2a6eMQqjVavJ6Ahq66LzuTkHIZwZITEJYic
+	 NB/DP3LJRXWs0qxDnqf/jj/0fiQDb1OPRJ7Mzn8NtwQwERCGvatBnEmHEjFMUjyYTK
+	 ygzjFBc74cEXHq0G+6Vphqa7bYRFTkEw7mSChRzdQKJ4n+Gn9FRmwMCzfpnYH2ffrQ
+	 3ntPq6eScADZXWseBOgu0JELBBaOvRA7WsSbH2Q4ryDxVGbuBtOhSAuRKMu6ZRW+Fc
+	 CvpjZSo21uqwg==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id 88EB115C013F; Tue, 04 Feb 2025 15:30:59 -0500 (EST)
+Date: Tue, 4 Feb 2025 15:30:59 -0500
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Kees Cook <kees@kernel.org>,
+        syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, brauner@kernel.org, gustavoars@kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
+Message-ID: <20250204203059.GA909029@mit.edu>
+References: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
+ <CAGudoHHCXHA=7e8M=6jMVqbh8=keRBBF8yHvDm9PnyeN6Bb7Xw@mail.gmail.com>
+ <202502040717.FCEFDB7E0@keescook>
+ <CAGudoHFszbdKkPibU_ynbj_PSyHewxTxWT_-hR3=8GHa46ebaQ@mail.gmail.com>
+ <CAGudoHHWsuVse-Ek3zOuOh-mBxaWRXYVr9W_Uef46K0_mxB0ZA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/7] ima: kexec: skip IMA segment validation after
- kexec soft reboot
-To: Stefan Berger <stefanb@linux.ibm.com>, zohar@linux.ibm.com,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
- James.Bottomley@HansenPartnership.com
-References: <20250203232033.64123-1-chenste@linux.microsoft.com>
- <20250203232033.64123-4-chenste@linux.microsoft.com>
- <00eeeb8b-cc28-42af-873f-3478cd22fb6e@linux.ibm.com>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <00eeeb8b-cc28-42af-873f-3478cd22fb6e@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGudoHHWsuVse-Ek3zOuOh-mBxaWRXYVr9W_Uef46K0_mxB0ZA@mail.gmail.com>
 
-On 2/4/2025 11:39 AM, Stefan Berger wrote:
-> On 2/3/25 6:20 PM, steven chen wrote:
->> kexec_calculate_store_digests() calculates and stores the digest of the
->> segment at kexec_file_load syscall where the IMA segment is also
->> allocated.  With this series, the IMA segment will be updated with the
->> measurement log at kexec excute stage when soft reboot is initiated.
->
-> s/excute/execute
->
->> Therefore, it may fail digest verification in verify_sha256_digest()
->> after kexec soft reboot into the new kernel. Therefore, the digest
->> calculation/verification of the IMA segment needs to be skipped.
->>
->> Skip IMA segment from calculating and storing digest in function
->
-> Skip the calculation and storing of the digest of the IMA segment in 
-> kexec_calculate_store_digests() so that ...
->
->
->> kexec_calculate_store_digests() so that it is not added to the
->> 'purgatory_sha_regions'.
->>
->> Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
->> no change is needed in verify_sha256_digest() in this context.
->>
->> With this change, the IMA segment is not included in the digest
->> calculation, storage, and verification.
->>
->> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> > --->   include/linux/kexec.h              |  3 +++
->>   kernel/kexec_file.c                | 23 +++++++++++++++++++++++
->>   security/integrity/ima/ima_kexec.c |  3 +++
->>   3 files changed, 29 insertions(+)
->>
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index f8413ea5c8c8..f3246e881ac8 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -362,6 +362,9 @@ struct kimage {
->>         phys_addr_t ima_buffer_addr;
->>       size_t ima_buffer_size;
->> +
->> +    unsigned long ima_segment_index;
->> +    bool is_ima_segment_index_set;
->>   #endif
->>         /* Core ELF header buffer */
->> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->> index 3eedb8c226ad..a3370a0dce20 100644
->> --- a/kernel/kexec_file.c
->> +++ b/kernel/kexec_file.c
->> @@ -38,6 +38,22 @@ void set_kexec_sig_enforced(void)
->>   }
->>   #endif
->>   +#ifdef CONFIG_IMA_KEXEC
->> +static bool check_ima_segment_index(struct kimage *image, int i)
->> +{
->> +    if (image->is_ima_segment_index_set &&
->> +            i == image->ima_segment_index)
->
-> The 'i =' should be indented under 'image->'.
->
-> With these nits fixed:
->
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
->
->> +        return true;
->> +    else
->> +        return false;
->> +}
->> +#else
->> +static bool check_ima_segment_index(struct kimage *image, int i)
->> +{
->> +    return false;
->> +}
->> +#endif
->> +
->>   static int kexec_calculate_store_digests(struct kimage *image);
->>     /* Maximum size in bytes for kernel/initrd files. */
->> @@ -764,6 +780,13 @@ static int kexec_calculate_store_digests(struct 
->> kimage *image)
->>           if (ksegment->kbuf == pi->purgatory_buf)
->>               continue;
->>   +        /*
->> +         * Skip the segment if ima_segment_index is set and matches
->> +         * the current index
->> +         */
->> +        if (check_ima_segment_index(image, i))
->> +            continue;
->> +
->>           ret = crypto_shash_update(desc, ksegment->kbuf,
->>                         ksegment->bufsz);
->>           if (ret)
->> diff --git a/security/integrity/ima/ima_kexec.c 
->> b/security/integrity/ima/ima_kexec.c
->> index b60a902460e2..283860d20521 100644
->> --- a/security/integrity/ima/ima_kexec.c
->> +++ b/security/integrity/ima/ima_kexec.c
->> @@ -162,6 +162,7 @@ void ima_add_kexec_buffer(struct kimage *image)
->>       kbuf.buffer = kexec_buffer;
->>       kbuf.bufsz = kexec_buffer_size;
->>       kbuf.memsz = kexec_segment_size;
->> +    image->is_ima_segment_index_set = false;
->>       ret = kexec_add_buffer(&kbuf);
->>       if (ret) {
->>           pr_err("Error passing over kexec measurement buffer.\n");
->> @@ -172,6 +173,8 @@ void ima_add_kexec_buffer(struct kimage *image)
->>       image->ima_buffer_addr = kbuf.mem;
->>       image->ima_buffer_size = kexec_segment_size;
->>       image->ima_buffer = kexec_buffer;
->> +    image->ima_segment_index = image->nr_segments - 1;
->> +    image->is_ima_segment_index_set = true;
->>         /*
->>        * kexec owns kexec_buffer after kexec_add_buffer() is called
+On Tue, Feb 04, 2025 at 05:49:48PM +0100, Mateusz Guzik wrote:
+> I'm going to restate: the original behavior can be restored by
+> replacing i_size usage with a strlen call. However, as is I have no
+> basis to think that the disparity between the two is legitimate. If an
+> ext4 person (Ted cc'ed) tells me the disparity can legally happen and
+> is the expected way, I'm going to patch it up no problem.
 
-Hi Stefan, I will update in next release. Thanks!
+There are two kinds of symlinks in ext4.  "Fast symlinks", where the
+symlink target can fit in i_block[].  And normal, sometimes called
+"slow" symlinks, where i_block[] contains a pointer to data block
+(either i_blocks[0] for a traditional inode, or the root of an extent
+tree that will fit in i_block[] if EXTENTS_FL is set).  In the case
+of a fast symlink, the maximum size of the file system is
+sizeof(i_block[])-1.  For a normal/slow symlink, the maximum size is
+super->s_blocksize.
 
+We determine whether a symlink is "fast" or not by checking whether
+i_size is less than sizeof(i_blocks[]).  In other words. if i_size
+less than 60 (and it's not an encrypted inode), it's a fast symlink
+and we set i_link to point to the i_block array.  From __ext4_iget()
+in fs/ext4/inode.c:
+
+		if (IS_ENCRYPTED(inode)) {
+			inode->i_op = &ext4_encrypted_symlink_inode_operations;
+		} else if (ext4_inode_is_fast_symlink(inode)) {
+			inode->i_link = (char *)ei->i_data;
+			inode->i_op = &ext4_fast_symlink_inode_operations;
+			nd_terminate_link(ei->i_data, inode->i_size,
+				sizeof(ei->i_data) - 1);
+		} else {
+			inode->i_op = &ext4_symlink_inode_operations;
+		}
+
+
+The call to nd_terminate_link() guarantees that inode->i_link is
+NUL-terminated, although the on-disk formatshould have already been
+NUL-terminated when the symlink is set.
+
+Also note that there really is no point to caching inodes where
+inode->i_link is not a NUL pointer, since in those cases we never call
+file system's get_link() function; the VFS will just fetch it straight
+from i_link.  And in those cases, it's because it's a "fast symlink"
+(many file systems have this concept; not just ext[234]) and the
+symlink target was read in as part of the on-disk inode, and so there
+is no separate disk block read read the symlink.  And so if you are
+attempting to cache symlinks where inode->i_link is non-NULL, you're
+just wasting a small amount of memory, and wasting the CPU time to do
+the strcpy.
+
+It's also true that the vast majority of symlink targets are less than
+60 bytes, which is why I was surprised that your symlink caching was
+atually making a difference or many systems.  I guess if we have lots
+of unicode file names with characters like ❤ and ❤️ and symlinks to
+these files, you might have a bunch of slow symlinks.  But in the case
+where you have symlinks like:
+
+0 lrwxrwxrwx 1 root root 7 Dec 19  2020 /bin -> usr/bin/
+
+Symlink caching won't do any good.
+
+Cheers,
+
+						- Ted
