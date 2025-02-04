@@ -1,200 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDAB21422A;
-	Tue,  4 Feb 2025 15:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69F3213E69
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738684485; cv=none; b=P5S7Sq5ZMZlxLDzZ2YSnyMait1GYIRD60T/T5X/R3F0NpYv1F0v2HnG6k7tV8nGcXQmEZSlPo9rDkSf9S4/peIFczB0/k2WMdVHeCvBq+XJ85bq/i93vIQTz6rT5fNcw7jcWeKZZEb6Z2kMzLgqTmaLYFcIkx1DkOEz6ve7LuVM=
+	t=1738684534; cv=none; b=QaGld1NCnKpsLg8+HcTq68KoUJ8CwTabpd6K+1JreKBrBs+dKGjDb8aT9iArRd0bBukaL5FPRtZ9yS7W1MuFqUTd9fAPYm544sPQXYT429FrUNxlWMWszUTG2Vy6+VHbmVVN9mf2YTaMSoNl0uYnLBX81Qn6xvy4SX8hdfHdMt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738684485; c=relaxed/simple;
-	bh=8qlqVQxK47MfXuz/IlMtI71awf0Ys/kb2XmTpoJdOdo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KatUeVZuDRGaiqpi1scyteqJDbg4MLtdF/vlOfWNQm9DUG75+MCewTAN05QgZldTkA0x4NGrh//Ym1u91csEyNzskMQKsdiNvWzt7IZa2dlBFGhanyvUXv8X6Yj0ttleXI0Gbl4JFDB1ntg7satfQy3VFD8AY72gcyceUXPmzY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fQlEng11; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738684534; c=relaxed/simple;
+	bh=l5ETErzgYEYP4uKaysgCjkIfKyA9pl0H4zoi5fXg/UE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wv/zK9oDd3L7M4c20xu/frjEl68QuR3FjlHLNZcLI9jAauYVTAzdVLhjYw/Z8vAMa5A387PoZDFkIUX5L2/MG63zmK9VbF1Vsel1ocUhn/lOO/hobbvOtDcDboDIH7fBwMsMYKYzqSoy6x4QwksYK4jccdOYLKJjn+KnCPr5yX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jFytUpzv; arc=none smtp.client-ip=91.218.175.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fQlEng11"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738684483; x=1770220483;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=8qlqVQxK47MfXuz/IlMtI71awf0Ys/kb2XmTpoJdOdo=;
-  b=fQlEng117QykcwGDOf9H83SDYv/RZRT/G0C/6Cri5kANxbut94jNP0nu
-   s664oakwU2rYNJNha7XHrGASV/Jimoe30PksN5SfJgo+mLKXkPa7gellN
-   SOPax2M3voOXSu9dq4NEIKWSHzN4D3Z2EMKsNLwJyVkzG4eJALrp6VlfW
-   MldfysraWiV0bmNNjwLZUpRpaNKqMXSL+zu4FLCm7xE/OtTGHiABJqpEg
-   zn+pE5S4QShPUmXFPqIuvQ7kTGv7zrvq0EOG2UP5x40IwNwySTH5T6DyN
-   g/v8tTYEFRg0ggvkDqqE/5UM2WBnIdn+Aj4YKnr/6oaH+pfLSg1/3U6qy
-   w==;
-X-CSE-ConnectionGUID: VaBYEXT6QpOWaq6v+/sUew==
-X-CSE-MsgGUID: iEJCzG2AQhCGLWWNRHxC8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50211143"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="50211143"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 07:54:42 -0800
-X-CSE-ConnectionGUID: 6zwWWK+4RduVnwixzY+yxA==
-X-CSE-MsgGUID: K3ArKRGWRoaFSmTTIvDfkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="115621647"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.75])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 07:54:40 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 4 Feb 2025 17:54:36 +0200 (EET)
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>, 
-    Linux PCI <linux-pci@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-    "Thorsten Leemhuis (regressions address)" <regressions@leemhuis.info>, 
-    Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [Regression in 6.14-rc1] System suspend/resume broken by PCI
- commit 1db806ec06b7c
-In-Reply-To: <CAJZ5v0j157A=v6S8X4+QXRrmUfk2uN5DkRJ5RXd4e4o3hVucqg@mail.gmail.com>
-Message-ID: <f903a3fb-5f5a-0bc9-92cf-34d151d234dc@linux.intel.com>
-References: <CAJZ5v0iKmynOQ5vKSQbg1J_FmavwZE-nRONovOZ0mpMVauheWg@mail.gmail.com> <CAJZ5v0i=yBSFW82E=s=mx7ztVzmnoUwbxkDRnYyDztAWK9VcsQ@mail.gmail.com> <9aa469fd-da5b-70fc-147e-dd4a50cf5af6@linux.intel.com>
- <CAJZ5v0j157A=v6S8X4+QXRrmUfk2uN5DkRJ5RXd4e4o3hVucqg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jFytUpzv"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738684530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tjDbFbRwm3HhAGF25M09T2irsMdw4QN9fdCTcQJrGfg=;
+	b=jFytUpzvpraiJUWcauYL0330V0OrfayU9MHwu2SjTm6Mk+mnewiAlRiZoqAfnX332Fj1wz
+	uZLUzQcAD8Jyi5ebHpkCQNgeazqurdJLFrabyQEJTeO/W2xIwm7GOijrAqIMqdw+GWFTmi
+	6XeX71NrqGxsGeragjZ2M7LiP+COxbY=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Russell King <linux@armlinux.org.uk>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] arm/pgtable: Remove duplicate included header file
+Date: Tue,  4 Feb 2025 16:55:12 +0100
+Message-ID: <20250204155514.4486-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1985544570-1738684476=:10958"
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The header file asm-generic/pgtable-nopud.h is included whether
+CONFIG_MMU is defined or not.
 
---8323328-1985544570-1738684476=:10958
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Include it only once before the #ifndef/#else/#endif preprocessor
+directives and remove the following make includecheck warning:
 
-On Tue, 4 Feb 2025, Rafael J. Wysocki wrote:
+  asm-generic/pgtable-nopud.h is included more than once
 
-> Hi Ilpo,
->=20
-> On Tue, Feb 4, 2025 at 8:48=E2=80=AFAM Ilpo J=C3=A4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> >
-> > On Mon, 3 Feb 2025, Rafael J. Wysocki wrote:
-> >
-> > > On Mon, Feb 3, 2025 at 9:12=E2=80=AFPM Rafael J. Wysocki <rafael@kern=
-el.org> wrote:
-> > > >
-> > > > Hi,
-> >
-> > Hi Rafael,
-> >
-> > > > The following commit:
-> > > >
-> > > > commit 1db806ec06b7c6e08e8af57088da067963ddf117
-> > > > Author: Jian-Hong Pan <jhp@endlessos.org>
-> > > > Date:   Fri Nov 15 15:22:02 2024 +0800
-> > > >
-> > > >    PCI/ASPM: Save parent L1SS config in pci_save_aspm_l1ss_state()
-> > > >
-> > > >    After 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability f=
-or
-> > > >    suspend/resume"), pci_save_aspm_l1ss_state(dev) saves the L1SS s=
-tate for
-> > > >    "dev", and pci_restore_aspm_l1ss_state(dev) restores the state f=
-or both
-> > > >    "dev" and its parent.
-> > > >
-> > > >    The problem is that unless pci_save_state() has been used in som=
-e other
-> > > >    path and has already saved the parent L1SS state, we will restor=
-e junk to
-> > > >    the parent, which means the L1 Substates likely won't work corre=
-ctly.
-> > > >
-> > > >    Save the L1SS config for both the device and its parent in
-> > > >    pci_save_aspm_l1ss_state().  When restoring, we need both becaus=
-e L1SS must
-> > > >    be enabled at the parent (the Downstream Port) before being enab=
-led at the
-> > > >    child (the Upstream Port).
-> > > >
-> > > >    Link: https://lore.kernel.org/r/20241115072200.37509-3-jhp@endle=
-ssos.org
-> > > >    Fixes: 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability =
-for
-> > > > suspend/resume")
-> > > >    Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
-> > > >    Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > > >    Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
-> > > >    [bhelgaas: parallel save/restore structure, simplify commit log,=
- patch at
-> > > >    https://lore.kernel.org/r/20241212230340.GA3267194@bhelgaas]
-> > > >    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > >    Tested-by: Jian-Hong Pan <jhp@endlessos.org> # Asus B1400CEAE
-> > > >
-> > > > broke system suspend/resume on my Dell XPS13 9360.  It doesn't even
-> > > > pass suspend/resume testing after "echo devices > /sys/power/pm_tes=
-t".
-> > > >
-> > > > It looks like PCIe links are all down during resume after the above
-> > > > commit, but it is rather hard to collect any data in that state.
-> > > >
-> > > > Reverting the above commit on top of 6.14-rc1 makes things work aga=
-in,
-> > > > no problem.
-> > > >
-> > > > I'm unsure what exactly the problem is ATM, but I'm going to check =
-a
-> > > > couple of theories.
-> > >
-> > > The attached change makes it work again, FWIW, but moving the
-> > > parent->l1ss check alone below the pdev l1ss saving doesn't help.
-> > >
-> > > So it is either the parent check against NULL or the
-> > > pcie_downstream_port(pdev) one that breaks it.  I guess the former,
-> > > but I'll test it tomorrow.
-> >
-> > Neither of those is the root cause
->=20
-> Well, not quite.
->=20
-> > but it's bit hard to see from the code
-> > itself because the parent->saved_state check your test patch also remov=
-ed
->=20
-> My patch hasn't removed that check.
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/arm/include/asm/pgtable.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Ah, I'm sorry, I read too quickly and assumed the first checks were just=20
-moved to where the parent->state_saved check is, replacing it.
+diff --git a/arch/arm/include/asm/pgtable.h b/arch/arm/include/asm/pgtable.h
+index be91e376df79..6b986ef6042f 100644
+--- a/arch/arm/include/asm/pgtable.h
++++ b/arch/arm/include/asm/pgtable.h
+@@ -19,14 +19,13 @@ extern struct page *empty_zero_page;
+ #define ZERO_PAGE(vaddr)	(empty_zero_page)
+ #endif
+ 
+-#ifndef CONFIG_MMU
+-
+ #include <asm-generic/pgtable-nopud.h>
++
++#ifndef CONFIG_MMU
+ #include <asm/pgtable-nommu.h>
+ 
+ #else
+ 
+-#include <asm-generic/pgtable-nopud.h>
+ #include <asm/page.h>
+ #include <asm/pgtable-hwdef.h>
+ 
+-- 
+2.48.1
 
-> Besides, suspend/resume works on my system without commit
-> 1db806ec06b7c6e0 and the parent->saved_state only affects the parent,
-> so it clearly cannot be the culprit here.
->=20
-> > looks very logical on a glance (but that's the problematic line).
-> >
-> > The fix is already here with the explanation:
-> >
-> > https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen@l=
-inux.intel.com/T/#u
->=20
-> So it turns out that the minimum fux that works here is what I posted.
-> That is, the upfront pcie_downstream_port(pdev) check needs to be
-> dropped and the !parent check needs to be moved after saving the
-> pdev's state.
->=20
-> IOW, it looks like on this platform, it is necessary to save the l1ss
-> state for a Root Port.
-
-The restore side, though, does also contains that pcie_downstream_port()=20
-so nothing would be restored.
-
-Could a downstream component attempt to restore L1SS config while never=20
-having called the save beforehand? In such case your patch would make some=
-=20
-meaningful difference which could explain the outcome.
-
---=20
- i.
-
---8323328-1985544570-1738684476=:10958--
