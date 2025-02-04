@@ -1,132 +1,179 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E032185BE;
-	Tue,  4 Feb 2025 15:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC58D2153D0
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738681257; cv=none; b=OcwlhRgl+MgicFF1twGGFRaJLO9o7kOPUbLnuO7+GoCnDE99ML6seo4lZQrDdgkfbLmo9jkpT2OKQHEacFZTERwuPjsq8lQjkbz2+98nFjqOkxK86MFEKcUb3cFOGsTPOM31Ne+TAWiEWlgcuVR1qOQ+YoUKAVVcPWYw9Yj5qVM=
+	t=1738681266; cv=none; b=bLHWD45Bjvc5mXZYZ9ucfpweo08JEH1PLa+tS0zAMw9ryNDSWIJ/pVMDgj1EEeriOj7YTP4ILejiv7q6tlolYllOfv2U+9fMBvEBy7VHnp3cV3RP0Rogk8E3SCb6FpmfPw6vQIwg/5lp3Q9U1CxpR8TdAIN+dweL5bA4X/cDnBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738681257; c=relaxed/simple;
-	bh=JrMQtwWvw++t0m1aaUBMCJYoi19hZMjIR3xe0cCFBTw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r40aLupiVgFDO6mI+PVE4w24ssheS9dNUe0ceppRR1/7qeeuGXGhLbxwwPLAWDsgvbsJ1sTD2v4mCn8+yo6woyMwZcCD4b8/HN/bs7UTMuWR8ZLRuttXP5xnCqUWoXu3pZoS2ox6DTpR8hehJtPml/scXbkTR9hCCYArmeIo2f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=amLJcHNq; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1738681266; c=relaxed/simple;
+	bh=XsATqehSxT14h3iQa2L30ZHfTqaEjdNX7CyPGmzHEzs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KoKzhQHG0qmUPRctqNRFmBtO1DcfZpPzh7DzsuRgy1nrqcAOGzJLLU81TbDv1H0N5lLqBcfgRBg04QTwbKSZCHyx1jP0AtCv5X2iFKbp2AIz94kkE2IOsvZBR+gH2JLFBHA9awvGFJoeT/WJPaMHEGKOUVH2EtZGNmy+t7faiYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bIlmLORU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="amLJcHNq"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514E1rwB006936;
-	Tue, 4 Feb 2025 10:00:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=1mdmadFdDewtQKg+KQxOp0uE4Sl
-	xF2battpRFh536JM=; b=amLJcHNq8At3g5e9m3vSe5OxNGuSe6dHGhl+IRf7UHn
-	ZnKueHHGUp2ZPBXHV01V6Qmt9SHd5rYj9TP5GOLgoIZ53tn+n2xiIR12OuTGTv0c
-	J/ah1zrbBm0DV/rd9fyvRCnsnTFTyYvgiw2LUgpPBoAW5dVbt0NOUlAJ9O2AWkYX
-	to665ck3Pa63+fHQ0NWBAH8RVFvrqiU7wSbRy9VNX3rUpitcrgRwfdi/NYYZ9hRb
-	Y8we61VtA+27yHVw9zJawU0/0A9IZ5fjyrqwoavYvgWMR968cnX880IQd9Y07KmX
-	sDdlscffFc4NV+fOgngPPbhuEqZ0AnPzb8GLeVz5u2Q==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44kma3g86q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 10:00:39 -0500 (EST)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 514F0bL0020790
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Feb 2025 10:00:37 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 4 Feb 2025
- 10:00:37 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Tue, 4 Feb 2025 10:00:37 -0500
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 514F0IIM005231;
-	Tue, 4 Feb 2025 10:00:20 -0500
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <cosmin.tanislav@analog.com>, <jic23@kernel.org>, <lars@metafoo.de>,
-        <marcelo.schmitt@analog.com>, <dlechner@baylibre.com>,
-        <granquet@baylibre.com>, <u.kleine-koenig@baylibre.com>,
-        <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v4 0/3] Re-add filter_type/filter_mode
-Date: Tue, 4 Feb 2025 12:00:16 -0300
-Message-ID: <cover.1738680728.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bIlmLORU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95E73C4CEDF;
+	Tue,  4 Feb 2025 15:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738681266;
+	bh=XsATqehSxT14h3iQa2L30ZHfTqaEjdNX7CyPGmzHEzs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=bIlmLORUwaeMOVQhhbErP0ke/QdEhKLBtMCIMo5186PkYyNoEF97UkRJyLRbBK5Xe
+	 Xyich/GGPGYr8HOz2ok3DbFM5QjmVDmRHAGabxfuCEhrpqaLYjBGt8MgM3r4z+IU5d
+	 /U14aSahejux5cIxjhr+exGX27Kaxsvuo4G7wNDxin8UCsXAOUBpdjd61JUvsZPRAH
+	 ewcAUQuvWCxiPUWMxsXgHnpA4PUxL2tQgdjqP+CkKItDuWjeYLK9r2KHm0PzjTnAA/
+	 eOl2vi/tuQcgQOnBlFsjfLzekSYAYgMvD8kbD6sdkw5TaGA4ekLL8jjWxfkDLLOLmr
+	 Iir1fP36Qw1PA==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Tue, 04 Feb 2025 15:58:00 +0100
+Subject: [PATCH v2 32/35] drm/bridge: cdns-csi: Switch to atomic helpers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=Df7tqutW c=1 sm=1 tr=0 ts=67a22b97 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=T2h4t0Lz3GQA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=oVIT7rmBcKe9iQlKvSsA:9 a=oVHKYsEdi7-vN-J5QA_j:22
-X-Proofpoint-GUID: Awj4fV68aTCQO9pKeZ_qdd9cpbDzoV6L
-X-Proofpoint-ORIG-GUID: Awj4fV68aTCQO9pKeZ_qdd9cpbDzoV6L
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_07,2025-02-04_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- spamscore=0 impostorscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 suspectscore=0
- classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040117
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250204-bridge-connector-v2-32-35dd6c834e08@kernel.org>
+References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
+In-Reply-To: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4591; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=XsATqehSxT14h3iQa2L30ZHfTqaEjdNX7CyPGmzHEzs=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOmLtL4/Etzbb+jny//sy0zX7Q9TuNn6edMsluTtFrK+3
+ lnTcPVqx1QWBmFOBlkxRZYnMmGnl7cvrnKwX/kDZg4rE8gQBi5OAZhI4CHG+gymt+JJq/TeMui+
+ 037vt/J7qnzCoh7rnLIrc8R3n75kOMfWpEMy2ixM9lG/1KOu3VvNGRvef7l19XYSU+Oxlvsm7zf
+ 5eUk+W91YU3dXIf71ZlEjPvZLzK9npDtrxZ7ZeFK4i2/FlFkA
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-Better document sysfs ABI for ADC digital filter configuration.
-Also update ad4130 driver to support the standardized IIO ABI for digital filter
-configuration.
+The Cadence DSI driver follows the drm_encoder->crtc pointer that is
+deprecated and shouldn't be used by atomic drivers.
 
-Change log v3 -> v4
-- Renamed in_voltage-voltage_filter_mode_available to
-  in_voltage-voltage_filter_type_available instead of just removing the mode
-  variant from sysfs-bus-iio.
-- Added comment about backwards compatibility near ad4130 filter attribute
-  declarations.
-- Reordered patches so attributes are documented before use.
-- Minor re-word of in_voltage-voltage_filter_mode_available text in
-  sysfs-bus-iio-adc-ad4130 to make it more generic.
-- Picked up review tags.
+This was due to the fact that we did't have any other alternative to
+retrieve the CRTC pointer. Fortunately, the crtc pointer is now provided
+in the bridge state, so we can move to atomic callbacks and drop that
+deprecated pointer usage.
 
-Change log v2 -> v3
-- Added in_voltageY-voltageZ_filter_type to main IIO ADI doc too.
-- Added filter_type attributes to ad4130 driver so it also supports the
-  standardized ABI for digital filter configuration.
-- No longer dropping AD4130 specific filter_type_available options from sysfs-bus-iio.
-- Re-add sysfs-bus-iio-adc-ad4130 just mentioning the ABI at sysfs-bus-iio instead
-  of repeating the doc.
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 27 +++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-Change log v1 -> v2
-- Split into 3 patches.
-- Re-added sysfs-bus-iio-adc-ad4130 to keep filter_mode separate from filter_type.
-- Removed in_voltage-voltage_filter_mode_available from sysfs-bus-iio.
-- Added deprecation notes in sysfs-bus-iio-adc-ad4130 asking to use filter_type
-  for new drivers and referencing sysfs-bus-iio.
-- Improved commit message with explanation about use of filter type attributes.
-- Dropped AD4130 specific filter_type_available options from sysfs-bus-iio.
+diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+index 8f54c034ac4f3e82c38607a0e52d4745654b571f..c856e7843f83b363340443dec1deb26c9ae1b912 100644
+--- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
++++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+@@ -654,11 +654,12 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
+ 		return MODE_BAD;
+ 
+ 	return MODE_OK;
+ }
+ 
+-static void cdns_dsi_bridge_disable(struct drm_bridge *bridge)
++static void cdns_dsi_bridge_atomic_disable(struct drm_bridge *bridge,
++					   struct drm_atomic_state *state)
+ {
+ 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+ 	struct cdns_dsi *dsi = input_to_dsi(input);
+ 	u32 val;
+ 
+@@ -674,11 +675,12 @@ static void cdns_dsi_bridge_disable(struct drm_bridge *bridge)
+ 		dsi->platform_ops->disable(dsi);
+ 
+ 	pm_runtime_put(dsi->base.dev);
+ }
+ 
+-static void cdns_dsi_bridge_post_disable(struct drm_bridge *bridge)
++static void cdns_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
++						struct drm_atomic_state *state)
+ {
+ 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+ 	struct cdns_dsi *dsi = input_to_dsi(input);
+ 
+ 	pm_runtime_put(dsi->base.dev);
+@@ -751,15 +753,17 @@ static void cdns_dsi_init_link(struct cdns_dsi *dsi)
+ 	writel(val, dsi->regs + MCTL_MAIN_EN);
+ 
+ 	dsi->link_initialized = true;
+ }
+ 
+-static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
++static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
++					  struct drm_atomic_state *state)
+ {
+ 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+ 	struct cdns_dsi *dsi = input_to_dsi(input);
+ 	struct cdns_dsi_output *output = &dsi->output;
++	struct drm_bridge_state *bridge_state;
+ 	struct drm_display_mode *mode;
+ 	struct phy_configure_opts_mipi_dphy *phy_cfg = &output->phy_opts.mipi_dphy;
+ 	unsigned long tx_byte_period;
+ 	struct cdns_dsi_cfg dsi_cfg;
+ 	u32 tmp, reg_wakeup, div;
+@@ -769,11 +773,12 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
+ 		return;
+ 
+ 	if (dsi->platform_ops && dsi->platform_ops->enable)
+ 		dsi->platform_ops->enable(dsi);
+ 
+-	mode = &bridge->encoder->crtc->state->adjusted_mode;
++	bridge_state = drm_atomic_get_new_bridge_state(state, bridge);
++	mode = &bridge_state->crtc->state->adjusted_mode;
+ 	nlanes = output->dev->lanes;
+ 
+ 	WARN_ON_ONCE(cdns_dsi_check_conf(dsi, mode, &dsi_cfg, false));
+ 
+ 	cdns_dsi_hs_init(dsi);
+@@ -891,11 +896,12 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
+ 
+ 	tmp = readl(dsi->regs + MCTL_MAIN_EN) | IF_EN(input->id);
+ 	writel(tmp, dsi->regs + MCTL_MAIN_EN);
+ }
+ 
+-static void cdns_dsi_bridge_pre_enable(struct drm_bridge *bridge)
++static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
++					      struct drm_atomic_state *state)
+ {
+ 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+ 	struct cdns_dsi *dsi = input_to_dsi(input);
+ 
+ 	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
+@@ -906,14 +912,17 @@ static void cdns_dsi_bridge_pre_enable(struct drm_bridge *bridge)
+ }
+ 
+ static const struct drm_bridge_funcs cdns_dsi_bridge_funcs = {
+ 	.attach = cdns_dsi_bridge_attach,
+ 	.mode_valid = cdns_dsi_bridge_mode_valid,
+-	.disable = cdns_dsi_bridge_disable,
+-	.pre_enable = cdns_dsi_bridge_pre_enable,
+-	.enable = cdns_dsi_bridge_enable,
+-	.post_disable = cdns_dsi_bridge_post_disable,
++	.atomic_disable = cdns_dsi_bridge_atomic_disable,
++	.atomic_pre_enable = cdns_dsi_bridge_atomic_pre_enable,
++	.atomic_enable = cdns_dsi_bridge_atomic_enable,
++	.atomic_post_disable = cdns_dsi_bridge_atomic_post_disable,
++	.atomic_reset = drm_atomic_helper_bridge_reset,
++	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+ };
+ 
+ static int cdns_dsi_attach(struct mipi_dsi_host *host,
+ 			   struct mipi_dsi_device *dev)
+ {
 
-Link to v1: https://lore.kernel.org/linux-iio/b2132bd3ca1d64cdd8d5afab1f1f33c574718b50.1732901318.git.marcelo.schmitt@analog.com/
-Link to v2: https://lore.kernel.org/linux-iio/cover.1736261047.git.marcelo.schmitt@analog.com/
-Link to v3: https://lore.kernel.org/linux-iio/cover.1738608986.git.marcelo.schmitt@analog.com/
-
-
-Marcelo Schmitt (3):
-  Documentation: ABI: IIO: Add filter_type documentation
-  Documentation: ABI: IIO: Re-add sysfs-bus-iio-adc-ad4130
-  iio: adc: ad4130: Add filter_type attributes
-
- Documentation/ABI/testing/sysfs-bus-iio       | 10 +++++++++-
- .../ABI/testing/sysfs-bus-iio-adc-ad4130      | 20 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- drivers/iio/adc/ad4130.c                      |  7 +++++++
- 4 files changed, 37 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-ad4130
-
-
-base-commit: 9b75dd1b7d6b98699a104c6b1eec0c8817e5fd4b
 -- 
-2.47.2
+2.48.0
 
