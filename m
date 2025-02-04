@@ -1,87 +1,93 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8E913635E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 00:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD8B25A62E;
+	Tue,  4 Feb 2025 00:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738630029; cv=none; b=oxj7qFNLByy0NsS95ghx+7C7SLbgk1kMF6NjNjXMRcP9WEZUWGuxy4xRh11ifypQtqXHVm5aoPpWwKAyWQq2npVHyP7u6lJBMnd+oZDhJZsRqgEJYCyht958Bwq2JI55Yubi2d2HGarG7MuxY+dkG+RbbDBoNrN0CrRgDeSCdRQ=
+	t=1738630055; cv=none; b=GbAmVvSNlt4XGEpBRClCh1ILMowroFjqmkMbiDSMIsUYzGC+/er34e+gIHMZf9AT/43rP5I5UNp92VzJhUhV3iu+TAbnJNF1KfuQwOmY5cwfQtb6JN2VDw3MZSAxLNJJE48zLz+vNh3TBXn2dl/k/auZ3daxHnDPjEbRTavMl+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738630029; c=relaxed/simple;
-	bh=YnWbh7h5l4+9/p4QGCOmAkkiwzNcXmS3BINFyzpB5ww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fzsEf74iA2HFqXSSuKO+Owq357fhtmkQxO796n3Cfbtb4kcs8XiAR/bj28/v73mAjUowV1rC27FFysUnil/f4+lIeuDCilNA5C9bbJ78TFXOnSO/MdtwDP6WzUcEwSKOEEH6I6jz7LBMt8HlUak+xrXUwluk0zcRPUo7ERnpfh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HfbB7FW6; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738630055; c=relaxed/simple;
+	bh=jmDmBKgdg+tglC1hAuRd+I3gUe9Geez71dH7vuTJP8o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=VcrthwBv4nY1VEt8LgB6Xxbo7ynoa3arUOB3dBaNYBFct8OjSDnszt6cWtvd5yL3S7xq/61hfktd3j0kbs/Ia3N91bCx3LHALt3S563Jfoj/0iNgcU1pG386WpB7m8cPDbuh6PQbV/8U+4sAXiOa12U/xvNNdHZmtuJ7zxFhobg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=i9J0TpPL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HfbB7FW6"
-Date: Mon, 3 Feb 2025 16:46:52 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738630020;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8DsDNf12aNGhGMAP9HmQLoKNK17L8iA6wkGRGPP11ic=;
-	b=HfbB7FW6N3oL+2xH0NdMVOVOm8cUGA4nyyOJn0f/3HU6nnid9Nmpl2OV/xc5Rq6A7ysCQo
-	ElnDCsBg4rxDdSFWwZaRP/emC9vPcAcP8ElAMaK2Qmn79X15egvu7M2kFxyhaEk9QGi5/d
-	PE7y/XHbScxWB5vInR7fnCWPpGI++iY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, vbabka@suse.cz, 
-	rostedt@goodmis.org, peterz@infradead.org, yuzhao@google.com, minchan@google.com, 
-	souravpanda@google.com, pasha.tatashin@soleen.com, 00107082@163.com, 
-	quic_zhenhuah@quicinc.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] alloc_tag: uninline code gated by
- mem_alloc_profiling_key in page allocator
-Message-ID: <uz6j7wba2gk2wfn6foxs7v3wqdi5kwqnbolcdp3g7kzkw53a56@t7cyo3nyp2oa>
-References: <20250201231803.2661189-1-surenb@google.com>
- <20250201231803.2661189-3-surenb@google.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="i9J0TpPL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD2BC4CEE4;
+	Tue,  4 Feb 2025 00:47:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1738630054;
+	bh=jmDmBKgdg+tglC1hAuRd+I3gUe9Geez71dH7vuTJP8o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=i9J0TpPLqfCwqIhS4yhFauZVhJ4TuUZuMbvB3R02l6ePYKSpNO1W0zS6x3mHYYi7g
+	 7Fg5HQqTWVm1ZBZwjcKxlLwfFwz/bbtYtagxrbQdIz3DeRqWX1PETn+wfCt+vq4vMi
+	 /d3R4Mq9rATcGZhoTRTxbAC8v4fPS31ZNgZU2mvM=
+Date: Mon, 3 Feb 2025 16:47:33 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Kairui Song <ryncsn@gmail.com>, "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, "Jason A. Donenfeld"
+ <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, Chengming Zhou
+ <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter
+ <dan.carpenter@linaro.org>, David Airlie <airlied@gmail.com>, David
+ Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, Jani Nikula
+ <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, Joonas
+ Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik
+ <josef@toxicpanda.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Miklos Szeredi
+ <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, Oscar Salvador
+ <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, Rodrigo Vivi
+ <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, Steven Rostedt
+ <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, Vlastimil
+ Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, Yu Zhao
+ <yuzhao@google.com>, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 06/11] mm/vmscan: Use PG_dropbehind instead of
+ PG_reclaim
+Message-Id: <20250203164733.f806902a6e5c91523c9e00fc@linux-foundation.org>
+In-Reply-To: <42h65xowqe36eymr6pcomo7wzpe26kzwvyzg44hftqqczc5n6y@w2z5wvdrvktm>
+References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
+	<20250130100050.1868208-7-kirill.shutemov@linux.intel.com>
+	<CAMgjq7AWZg0Y7+v3_Z8-YVUXrANB29mCDSyzF39dtAM_TQ0aKw@mail.gmail.com>
+	<42h65xowqe36eymr6pcomo7wzpe26kzwvyzg44hftqqczc5n6y@w2z5wvdrvktm>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250201231803.2661189-3-surenb@google.com>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 01, 2025 at 03:18:02PM -0800, Suren Baghdasaryan wrote:
-> When a sizable code section is protected by a disabled static key, that
-> code gets into the instruction cache even though it's not executed and
-> consumes the cache, increasing cache misses. This can be remedied by
-> moving such code into a separate uninlined function.
-> On a Pixel6 phone, page allocation profiling overhead measured with
-> CONFIG_MEM_ALLOC_PROFILING=y and profiling disabled is:
-> 
->              baseline             modified
-> Big core     4.93%                1.53%
-> Medium core  4.39%                1.41%
-> Little core  1.02%                0.36%
-> 
-> This improvement comes at the expense of the configuration when profiling
-> gets enabled, since there is now an additional function call. The overhead
-> from this additional call on Pixel6 is:
-> 
-> Big core     0.24%
-> Middle core  0.63%
-> Little core  1.1%
-> 
-> However this is negligible when compared with the overall overhead of the
-> memory allocation profiling when it is enabled.
-> On x86 this patch does not make noticeable difference because the overhead
-> with mem_alloc_profiling_key disabled is much lower (under 1%) to start
-> with, so any improvement is less visible and hard to distinguish from the
-> noise. The overhead from additional call when profiling is enabled is also
-> within noise levels.
-> 
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+On Mon, 3 Feb 2025 10:39:58 +0200 "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
 
-Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+> > diff --git a/mm/filemap.c b/mm/filemap.c
+> > index 4fe551037bf7..98493443d120 100644
+> > --- a/mm/filemap.c
+> > +++ b/mm/filemap.c
+> > @@ -1605,8 +1605,9 @@ static void folio_end_reclaim_write(struct folio *folio)
+> >          * invalidation in that case.
+> >          */
+> >         if (in_task() && folio_trylock(folio)) {
+> > -               if (folio->mapping)
+> > -                       folio_unmap_invalidate(folio->mapping, folio, 0);
+> > +               struct address_space *mapping = folio_mapping(folio);
+> > +               if (mapping)
+> > +                       folio_unmap_invalidate(mapping, folio, 0);
+> >                 folio_unlock(folio);
+> >         }
+> >  }
+> 
+> Once you do this, folio_unmap_invalidate() will never succeed for
+> swapcache as folio->mapping != mapping check will always be true and it
+> will fail with -EBUSY.
+> 
+> I guess we need to do something similar to what __remove_mapping() does
+> for swapcache folios.
 
-One question: Is there any plan to enable MEM_ALLOC_PROFILING by default
-in future?
-
+Thanks, I'll drop the v3 series from mm.git.
