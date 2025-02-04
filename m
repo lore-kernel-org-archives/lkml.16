@@ -1,113 +1,169 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB171F949;
-	Tue,  4 Feb 2025 00:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64596FC3;
+	Tue,  4 Feb 2025 00:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738630311; cv=none; b=eQS8hk7cEbLggELj+rvNk3aPsA59SLAGgqpjb07YTzYXuD4d89JwepdxQMXIEAJDRtEz6MrSX2pXz1fD7ImfrNk1dnpiN0fqFl/45Xzw0oxiKvlwbk8ITxFlpY/ytLR09VJFoSNgnt7py6aQkIicP33mzVyjds5P8Wuxqvabe+0=
+	t=1738630380; cv=none; b=mZ2dOewEQeFP1wM4ayLr8jihROTh+QzGEnScFf3l4gKkezCnSNaS20PXx6y8qCELnY8YMtROgNAMg+RLC1DlKHj54316l5uUAfSvrETnZ3ZdLHi++oeHklKI0ZWM0nnXbiu9WKDpFPXHIdh3BvxC/6dNKjxSrOU4DMo9s/w0EaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738630311; c=relaxed/simple;
-	bh=BIJ69qUIj/Wtm6K3VCMeO/FzXMFe4y3y0AyW6zn6KOM=;
+	s=arc-20240116; t=1738630380; c=relaxed/simple;
+	bh=ZYsusg0jHvhq8Rgnx8CGSBpV/AYmn1ZOZIXDZrnVXqk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cuiDE+xL+QNghugS/P8khHA81aILXW5NGH0rpV7KWBOcR0iCPiQpqK+BlI41H9kpFkT0cUnrtqrENIyVx/60jyt3ylx5iT/EJqXYom31kXznO5kQMia+TuSRJUnFQDLrDSMQjO5XWT2zLmhBy6xWXDWiKIKej/CMazA/1Tjm0ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TZuhpXxQ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:MIME-Version; b=MBzGAyWZOSU6i7hZ8pKq6vF1ZEDmpYOSb6Y1sMhUNm1Ng83gDqrIXco89bTofJffGr6AdiUAWahuNnZJG4y468I8hWizarxxX9ZGlW4jpg1Nt4yXt7cVpDFdC/lV7K9z8N1fUnbM+MbDBFdAmJ29OlClfgtUpl+T3MjpBxQPf2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G/H6hl5W; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TZuhpXxQ"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5140SKfo013315;
-	Tue, 4 Feb 2025 00:50:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=zURu7c
-	RFYgaTclhMaPWE8ZTD4BaYAbPfUWCvWujBMx4=; b=TZuhpXxQ4KEwH3Su09kvXc
-	PLKWnRRhwdy2VtSdqX55iLwzJOCLI9qMi0uDgdTrguvHcgJg4PBeExabxe/1hP63
-	zUwaNq4aXbxFO90g6uXYg3tLiW2jupxLW8AGB3qyDmNkjfcwDPQh4B9erJ3n0XZS
-	Qich9hVfHkIr2h68SbWD9aY6nDNwKFRnZnKiXbSWGo61kd8mRFvV3w/mDMj+UaeG
-	ATEl8xdcYOVILY/+UC1nPtTt1y//dh9CGnQXwKduYVndQl7CJRnWdaWQZroBYzT6
-	QERuawbOhFkP+8zrlZjdmhLGOjlIC+9M6F1LEgr+D34Agf1//ZYnBXEW62IHqozw
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44jqm7d7a7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 00:50:25 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 513Kgkms021477;
-	Tue, 4 Feb 2025 00:50:24 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j0n18py8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 00:50:24 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5140oOxJ29819460
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Feb 2025 00:50:24 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 61FE958062;
-	Tue,  4 Feb 2025 00:50:24 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 75EAB5805E;
-	Tue,  4 Feb 2025 00:50:23 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.18.96])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Feb 2025 00:50:23 +0000 (GMT)
-Message-ID: <8091ed0d942806e16f995e8444da29df7843df62.camel@linux.ibm.com>
-Subject: Re: [PATCH v7 0/7] ima: kexec: measure events between kexec load
- and excute
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com
-Date: Mon, 03 Feb 2025 19:50:23 -0500
-In-Reply-To: <eb2d3b5f-7aca-42c8-9b34-8ca07b8bc060@linux.microsoft.com>
-References: <20250203184558.61367-1-chenste@linux.microsoft.com>
-	 <eb2d3b5f-7aca-42c8-9b34-8ca07b8bc060@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/H6hl5W"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-216426b0865so86758705ad.0;
+        Mon, 03 Feb 2025 16:52:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738630378; x=1739235178; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yIVwnmw3+Uqu/f1OwaIZM60ey1qrW+y4C63LWJ9AWxE=;
+        b=G/H6hl5W8PshBDMiPLAiGhQ28ZOo4zgWaNwCy9rohjMX0pJiEuAt9hLFG0r7YPSv9h
+         LzFcx4zLopIk3D+GBS8LjMx1Y5I9XLxsw6L+xFS2vSUqV3fmiMl6TeP+7P+UE59LJ+Tm
+         ehbrxy1bz+8IDeWRmOTZNhryjXugvqg3KaF9CaoEpPwcdvBu3mplRJzi/OLOd/iQLbSH
+         Eo3DAeEf4PK1otVcZYJPkZTxAUpI2zpnx9LcRNPmXgFPTdkYLfMLt37I3iyslHkEDqd0
+         jIVnvh9/VAk+tIp9NRmJa/vXmNUhjmmsUlhJItq97bqTjUFKDaHbEKMta5Tr76PhYNe8
+         TtCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738630378; x=1739235178;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yIVwnmw3+Uqu/f1OwaIZM60ey1qrW+y4C63LWJ9AWxE=;
+        b=EcmUyj0Dr9q+sjN5xB77ynUHqv2/qE3ubB3/UYZ9uoZIvjuTa3Xt1OknARFJoff61b
+         X9VBwB9KF1cphZWUx7zp/6c/shpYd3kGObqVz7JBbX/5SyKrI2VnRYadQ9BFP7MoM5yO
+         dR5aLRwdZ2U/E5KxExzE9VtLEE3HUJukoXQPEXy9kXOL1WYgzFEIwqhqL1EoctfpnJHv
+         0Y6EfnDcKPo/iRqWgwcmnMij/8a+rIlG43AsjEdsRg9d0o9GdgD/sYIxjULKgcMGeBH1
+         fCJl3D4eoZ9DwTdQEZIwYmMBAUBo6GJBZ0FjxeI9s3/w4ZcAqvO6o6OQmq1obklOArpG
+         vkZg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9FkZMz+GLqoBAuX9xoC3u+G5YQRqjZLUOCBGVxmxXEmAEINE++g1oxwacUOUNubgLUD9rrAguwMhQd/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPXikl74bcMsj7w5N3aEd6+ktSpzMN75wVVyRfawyixTPtFQjZ
+	mD7gUwiBbvT3r+iWbO6XnIA9WW2qK/HArRirWQ2yZQNb7Snf4/gJ
+X-Gm-Gg: ASbGnctbJVGHsDEawLN1ofqJg27iNEYS6VXF9/s35O/FyxPYUEONtg55O9owwQsYPZ4
+	20IQzNLETnYpkJm/usX/lKrqUyDMHs+LmIMiG4WnHW6MlStNhvysaOV9iIdW1alNxDcaqGitX+Y
+	qSySTxdTrEEwEOO6q/rh9fsNzxXyYIyuKEQL+JBv2bxgLKRUpIYsUj157CsGzAIrXSzRMjhgd/x
+	5A0xrxC5RyeI0sNxpzVBGwXxcoHeQNsR9Rkx6rzytn2gaNNhalLR3eMUdz2cgTzhj7GL2jgLCLR
+	xRgl4M0M6Luq
+X-Google-Smtp-Source: AGHT+IFFrOOp9tSCjr6GLI3eesNOiZDZvaAY/wNz+1FZqhhHxSr5HGXiX3u1YhbOfgi7hgk0EZO6Fw==
+X-Received: by 2002:a05:6a20:9f45:b0:1ea:ddd1:2fcf with SMTP id adf61e73a8af0-1ed7a462e94mr37266584637.4.1738630377942;
+        Mon, 03 Feb 2025 16:52:57 -0800 (PST)
+Received: from [192.168.0.235] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69ccea1sm9117958b3a.122.2025.02.03.16.52.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 16:52:57 -0800 (PST)
+Message-ID: <dead664fa11ac274db00b509931c533883dd4fdf.camel@gmail.com>
+Subject: Re: [PATCH bpf-next v1 7/8] selftests/bpf: Add selftests for
+ load-acquire and store-release instructions
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Peilin Ye <yepeilin@google.com>
+Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bpf@ietf.org,
+  Xu Kuohai <xukuohai@huaweicloud.com>, David Vernet <void@manifault.com>,
+ Alexei Starovoitov	 <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko	 <andrii@kernel.org>, Martin KaFai
+ Lau <martin.lau@linux.dev>, Song Liu	 <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, John Fastabend	 <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev	 <sdf@fomichev.me>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,  Jonathan Corbet	
+ <corbet@lwn.net>, "Paul E. McKenney" <paulmck@kernel.org>, Puranjay Mohan	
+ <puranjay@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon	 <will@kernel.org>, Quentin Monnet <qmo@kernel.org>, Mykola Lysenko	
+ <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, Josh Don
+ <joshdon@google.com>,  Barret Rhoden <brho@google.com>, Neel Natu
+ <neelnatu@google.com>, Benjamin Segall <bsegall@google.com>, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 03 Feb 2025 16:52:52 -0800
+In-Reply-To: <Z6Ffquq8IORjCqrI@google.com>
+References: <cover.1737763916.git.yepeilin@google.com>
+	 <3f2de7c6e5d2def7bdfb091347c1dacea0915974.1737763916.git.yepeilin@google.com>
+	 <131a817f7f2749e78e527a251ca7971588cf62f8.camel@gmail.com>
+	 <Z6Ffquq8IORjCqrI@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 8KgdoFyypmOzWMISKdhZ-rl885ZAvrsb
-X-Proofpoint-ORIG-GUID: 8KgdoFyypmOzWMISKdhZ-rl885ZAvrsb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_10,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
- lowpriorityscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 impostorscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502040002
 
-On Mon, 2025-02-03 at 15:25 -0800, steven chen wrote:
-> Hi all,
+On Tue, 2025-02-04 at 00:30 +0000, Peilin Ye wrote:
+> Hi Eduard,
 >=20
-> The below is the correct version for review.
+> One more question (for my understanding):
 >=20
-> [PATCH v7 0/7] ima: kexec: measure events between kexec load and excute=
-=20
-> <
-> https://lore.kernel.org/linux-integrity/20250203232033.64123-1-chenste@li=
-nux.microso
-> ft.com/T/#t>
+> On Tue, Jan 28, 2025 at 05:06:03PM -0800, Eduard Zingerman wrote:
+> > On Sat, 2025-01-25 at 02:19 +0000, Peilin Ye wrote:
+> > > --- a/tools/testing/selftests/bpf/progs/arena_atomics.c
+> > > +++ b/tools/testing/selftests/bpf/progs/arena_atomics.c
+> > [...]
+> >=20
+> > > +SEC("raw_tp/sys_enter")
+> > > +int load_acquire(const void *ctx)
+> > > +{
+> > > +	if (pid !=3D (bpf_get_current_pid_tgid() >> 32))
+> > > +		return 0;
+> >=20
+> > Nit: This check is not needed, since bpf_prog_test_run_opts() is used
+> >      to run the tests.
 >=20
-> Please ignore the this version because patch 5 is missing.
+> Could you explain a bit more why it's not needed?
 >=20
-> I am really sorry to have troubled you.
+> I read commit 0f4feacc9155 ("selftests/bpf: Adding pid filtering for
+> atomics test") which added those 'pid' checks to atomics/ tests.  The
+> commit message [1] says the purpose was to "make atomics test able to
+> run in parallel with other tests", which I couldn't understand.
+>=20
+> How using bpf_prog_test_run_opts() makes those 'pid' checks unnecessary?
+>=20
+> [1] https://lore.kernel.org/bpf/20211006185619.364369-11-fallentree@fb.co=
+m/#r
 
-Thanks, Steven.  I was able to apply the patch set to v6.13.  For some reas=
-on, b4
-downloads a duplicate 4/7 patch.
 
-Mimi
+Hi Peilin,
+
+The entry point for the test looks as follows:
+
+    void test_arena_atomics(void)
+    {
+    	...
+    	skel =3D arena_atomics__open();
+    	if (!ASSERT_OK_PTR(skel, "arena atomics skeleton open"))
+    		return;
+   =20
+    	if (skel->data->skip_tests) { ... }
+    	err =3D arena_atomics__load(skel);
+    	if (!ASSERT_OK(err, "arena atomics skeleton load"))
+    		return;
+    	skel->bss->pid =3D getpid();
+   =20
+    	if (test__start_subtest("add"))
+    		test_add(skel);
+            ...
+   =20
+    cleanup:
+    	arena_atomics__destroy(skel);
+    }
+
+Note arena_atomics__{open,load} calls but absence of the
+arena_atomics__attach call. W/o arena_atomics__attach call the
+programs would not be hooked to the designated extension points,
+e.g. "raw_tp/sys_enter".
+
+The bpf_prog_test_run_opts() invokes BPF_PROG_TEST_RUN command of the
+bpf system call, which does not attach the program either,
+but executes jitted code directly with fake context.
+(See bpf_prog_ops->test_run callback (method?) and
+ bpf_prog_test_run_raw_tp()).
+
+Same happens in prog{,_tests}/arena.c: no attachment happens after
+commit [2]. Commit [1] is unnecessary after [2].
+
+[2] commit 04fcb5f9a104 ("selftests/bpf: Migrate from bpf_prog_test_run")
+
