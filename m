@@ -1,257 +1,156 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B9D21322E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABA32135D8
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738680093; cv=none; b=avUuCwm8I/H1m5d6cfDSZqvd/cjvp1PLSQ685pC9qoLNVkCLGQLBAnwfyghl74Qclw13pQXrA84y96fSExWD1PxllI7OI/mBshT9G1aLvGX5A6NhiJmMHAQFu5qtKYc6BPjNhUydx5E8NnxRBxCmJT/YSvOriiI8+BP3p3H7vVs=
+	t=1738680109; cv=none; b=c8MTuS+lhLPsh03su6RyYnQEPCIUKWot/9CNSyQ9XiboHVY/Byl9dm6WJvrNGuZ/ngLsYKC6Vb0I1PVlOENpJus0WPAkdlGSA/A8AxworUcmvyGfrNNJj5CAVmZAiETB3Og7YjplxtWn2u/9PLa7iQhp9jp19nRJonpHmjTvwxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738680093; c=relaxed/simple;
-	bh=BMGDwiLbAtv1kulz/bui98aV53RmfjV3bOyK6fXGhzA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rMKadUHc6CSMEu72zc/iEJ5r67l3lekrr45obwFCLgCgHFPHw8vahFjZXs0g187XHb6aiSluOM1NXaZ2NEppxC5JvzRnTB5qGnUjwATND06OCf5IEuf0djgbWoSxXooa4Gs8jJkUhawz8pxVSPlUZPYLFbjzEiYb5ydTP7nhP1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=OwxXabYZ; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1738680109; c=relaxed/simple;
+	bh=ZOltCrwlKRi5Vioy1yls9srdUkkAMZ031oSIm6snxmA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cYUQgLFNJDaCH9iXpBq3z3hnlCuv1o95pPcNY+M0eAFfiLdsQYmY0clTU4emYMKt/LRrJYDqorHFSlWEsLLVZgKgSg5RZJRiy33DSQFqyOb4u5kGCowGv8/yeqT0FVCBUnCMPChs0oOozVu+8IqOoZvA06uuvbNjeuNU85c+xoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YJc9J5vX; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="OwxXabYZ"
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D10153F181
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 14:41:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738680080;
-	bh=EJaIOF0N/QTq/TdxcqovwMBZGpip11h7EW5dSH9cOBw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=OwxXabYZQG1XJfoBJPDaNlAGHNCDaWfKYNlW3v3eq9MUOtLOZG+z831pG920o9ZBE
-	 XXAO2BWH3/zrkzdAdTB5Yj0ORlMWY2Z3HKXQFIFjtWtl93ilhjX2OKui1EH81Bl9W9
-	 r9Tfd1/i0QeRI2f/ety8loKnMHHM4dWLObbNFWDZjJjVJR16UlpRhYtCzBcV4F+F7a
-	 JmzrDJnA0+v5YFvbO3FYEsG8Sm9rBKbO9ij+yRa93bLwATdqpldiM7v1S1MUBGiR1R
-	 NmugNWpVZlUnAfiCrSCbAGpdmSeMWB0p/XxnGkhB72kiKdFNMqNOJRg1IALhX3NXC5
-	 9q+dAbF7I8p1g==
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-21f03af09e9so15324165ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 06:41:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YJc9J5vX"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5db689a87cbso11294512a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 06:41:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738680104; x=1739284904; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aUTYzoysUHn/B5DnDNoUBQM+pTbRPbNintFI7UBBYFc=;
+        b=YJc9J5vXDYaF6WPYLwUrAc53tT1xoI+xdDmgptamJZBOxav4CPi9vXyDwN4mqd+pgF
+         vTZu0MEtmH7lYMEwMeSARYnBe6AZZUHg9q65U5ueX8caT3FGmODkS1drjFjFpdUvmqal
+         Ee5X0qgoe5wZyltJFtHzS0zBlsjEY2r0RkLUz8Q51X8BP0P6SPciedcaRbQKnWG9jzr+
+         Y8N8HyzFWh+VNGTUQKETV7gcSifs0bJ0z197Pio/2ik4uh/93/uE2rnIy9Eyn9QtZ4yy
+         XU49e1C7Yp7x31Yzlis651nDLyhdIMiUKxEeA32IVFFIK8uc5Dn9xNfkhQPDswE5AM44
+         raMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738680079; x=1739284879;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EJaIOF0N/QTq/TdxcqovwMBZGpip11h7EW5dSH9cOBw=;
-        b=Zo8iu85MOLklkTAZIRedbZBMeenFGqehFmtqrn5AqwdC6smvUBM4ag88teb99U2vuN
-         k/D7hBEGWB9z3dMUdlwBQdu5OSaxSo2lawvPl2tiqVVwFM8ASPHGMaDcgxt9bJwAZUj6
-         Cx5OaA999n80esN80TfSLnKCvKr/UJ96o/yjOk2TaLGGQxlr4NDYj67eeUVOC7JK8Cvp
-         8tN+h6stkHxHGMHme39j66u49HK0EFwxrloRX/z1MybaR7LqltON+uVWoSIiazmO4fq6
-         bj9V8uQ00rCt4BHr/wFmGpIz0jK2uL7PsaQCOqJovaKH24O4CRlzhqi8CQ8iHaMX52S3
-         ZTAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxJW8Np4RiK+TYkve4Hz6HAvR0fKjFYCrlNqf7xGgDapl7hbASPfe6k0XHW0qFMyZ88uhZ5oVhsmLEskk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTMHvaNtgnf0hwBUxqCUmWrq5ylaV8z3I/zEpXKAvsFXn3Cdcu
-	B3VlLU9C+3ZtEpKWdFDz1bxOuqDxuARH+Tz1yUGKDBRw96iGK34M2YJkG2CHiSgJi/jSa0GCIBO
-	WtUJGyyqohRZAbnPTWC4WNZXiqEPp83Qbl9Wy7qr6WgLqwKF2Mg08sSV44j7E4ZEIpP+74NBkH+
-	zX8A==
-X-Gm-Gg: ASbGncuBv3KLis7EBDE4SYYkLk1KdxULs3gvgpFkz52EpOXu30xahiDnprPF78BVx5V
-	d1TiscMTIWJNXhXl+8evWlneVxaCdmj8Nv2uYnm5eKadixXah12CuK3vfVEe+sAeYjVoiVbryvu
-	cS9+2BmsRnVeKzm2ssZhB3QzPqkOi4kCDW6XLzdG1Uj5tBKX6CWpq7Tjkg7BSpnMVUmrQRiUH5S
-	D5R21DAAuytxGsEQMl6RnJaheqng726dDakUWBE3FUsxacVDcMAJe+OCfknWVEUrwQvnfF8bEIR
-	8l3OqFQ=
-X-Received: by 2002:a05:6a00:b4b:b0:729:1b8f:9645 with SMTP id d2e1a72fcca58-72fd0c7f7camr40080315b3a.24.1738680079405;
-        Tue, 04 Feb 2025 06:41:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFTIaNuKXb8Us1Vm3hkqF8NHqRSpyv0Xat8x2G6U4q91htnnEiYhrYyDf53JedhLPqXUEsj5w==
-X-Received: by 2002:a05:6a00:b4b:b0:729:1b8f:9645 with SMTP id d2e1a72fcca58-72fd0c7f7camr40080286b3a.24.1738680079022;
-        Tue, 04 Feb 2025 06:41:19 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:45f0:d4ba:baba:a275])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe6a1cb70sm10335865b3a.180.2025.02.04.06.41.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 06:41:18 -0800 (PST)
-Date: Tue, 4 Feb 2025 23:41:16 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] gpio: aggregator: introduce basic configfs
- interface
-Message-ID: <lkqxpfu3uzh4p4as3msv322qwlm6frv3iujifs6f3t2fjl4sep@3hsp6gzdieik>
-References: <20250203031213.399914-1-koichiro.den@canonical.com>
- <20250203031213.399914-3-koichiro.den@canonical.com>
- <CAMRc=MfcooZXBqVpbQ0ak+8LGsPDzwKSN3Zfb0eZDx1Bx4duzQ@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1738680104; x=1739284904;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aUTYzoysUHn/B5DnDNoUBQM+pTbRPbNintFI7UBBYFc=;
+        b=V+q9X8zfRRy8ArcE3UfzSRJ+q6mQ5uzeYTlDJVfoSTFGhMFvTbAlDNngKwVASrMKPK
+         UgK8CwiSoZGfAKTu1yUmthp03Fyi6/Uvi06Dr4YhguBxSbDzFeFVTk1TK77XmKaJijdo
+         gBqq9aDl0H53TY8IzlUNut/yxnYisyw+qq8Bl60fI47MrZUeL52f+AB9WO4J2s5i+gi6
+         FYbdWSSnhZjLhof5Zhery/XIRWdtn9xTrVEvAInkcgRLOeYiJCuQ3QVDxhm/yitlTVSA
+         iK8NPMFnVS8FEKWxR09JrU7OdimreM5+ZWMcpAnZdivGQarDvmDVES65kVTHLJJexmAc
+         j3iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTpXUzphuGoqFNPAZwgPEaaMpgbN6dQG/+xdXT0TTm1DYAmxdTSLohKm+JqIS9fIqabRl0vFjM3KzxzLE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDqOFnBnaRymO/a/3/75gdGMzJXK7W6trgclyz8SFMwcB0uAru
+	UE8qPDe+pypDKqk4htq0P1KDOiWgJ/O4eq4ulIeGj/bWsPudk4d0R5h4b/wEpnKvm+3DHxUONLI
+	S//Uhy605lSihzHY7yn20WQeZ0ELerC3Wi7Tn
+X-Gm-Gg: ASbGnctJnmlKqKrj6bllG1oW7L/7HDAdjlGiyEhko8U2syhZ2lX+GO8d1otmXywtCmM
+	53PifGsnTuiO06G8nE5HZ2Kl+auiEJLW1mQzlndMLbGvCEeEHdDoh1rcGKDOetUwWztQrnA==
+X-Google-Smtp-Source: AGHT+IFdTSbfOgIGSfbKrBRiCzWFQxamnmRADI3W81hHAqW8HyUgT4lUIjGULwW1dENFd9LKs+JXE8OHQsbb2D/bdTQ=
+X-Received: by 2002:a05:6402:5191:b0:5dc:cd96:49fe with SMTP id
+ 4fb4d7f45d1cf-5dccd964bd2mr2224365a12.21.1738680104302; Tue, 04 Feb 2025
+ 06:41:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfcooZXBqVpbQ0ak+8LGsPDzwKSN3Zfb0eZDx1Bx4duzQ@mail.gmail.com>
+References: <SY8P300MB0421E0013C0EBD2AA46BA709A1F42@SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM>
+ <b25b21b2-c999-4f21-9ad0-30113b4c655d@wanadoo.fr>
+In-Reply-To: <b25b21b2-c999-4f21-9ad0-30113b4c655d@wanadoo.fr>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 4 Feb 2025 15:41:33 +0100
+X-Gm-Features: AWEUYZnBlQ_eJ24CjL9TvNq15WN6n1fPhKiehmRNfwdUf7L5SJOMC4s_sJ-MK_M
+Message-ID: <CANn89iKVKx8CMz_H65U+HzsY=ef8k=8T6a9dpQ7nHHv0+Cxwfw@mail.gmail.com>
+Subject: Re: general protection fault in devlink_info_serial_number_put
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: YAN KANG <kangyan91@outlook.com>, Jiri Pirko <jiri@resnulli.us>, 
+	Jakub Kicinski <kuba@kernel.org>, "syzkaller@googlegroups.com" <syzkaller@googlegroups.com>, 
+	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	netdev@vger.kernel.org, 
+	"linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 04, 2025 at 01:48:49PM GMT, Bartosz Golaszewski wrote:
-> On Mon, Feb 3, 2025 at 4:12 AM Koichiro Den <koichiro.den@canonical.com> wrote:
+On Tue, Feb 4, 2025 at 3:09=E2=80=AFPM Vincent Mailhol
+<mailhol.vincent@wanadoo.fr> wrote:
+>
+> +To: Jiri Pirko
+> +To: Jakub Kicinski
+> +CC: David S. Miller
+> +CC: Eric Dumazet
+> +CC: Paolo Abeni
+> +CC: Simon Horman
+> +CC: netdev@vger.kernel.org
+>
+> On 04/02/2025 at 16:44, YAN KANG wrote:
+> > Dear developers and maintainers,
 > >
-> > The existing sysfs 'new_device' interface has several limitations:
-> > * No way to determine when GPIO aggregator creation is complete.
-> > * No way to retrieve errors when creating a GPIO aggregator.
-> > * No way to trace a GPIO line of an aggregator back to its
-> >   corresponding physical device.
-> > * The 'new_device' echo does not indicate which virtual gpiochip<N>
-> >   was created.
-> > * No way to assign names to GPIO lines exported through an aggregator.
+> > I found a new kernel  NULL-Pointer-Dereference bug titiled "general pro=
+tection fault in devlink_info_serial_number_put" while using modified syzka=
+ller fuzzing tool. I Itested it on the latest Linux upstream version (6.13.=
+0-rc7)related to ETAS ES58X CAN/USB DRIVER, and it was able to be triggered=
+.
 > >
-> > Introduce the new configfs interface for gpio-aggregator to address
-> > these limitations. It provides a more streamlined, modern, and
-> > extensible configuration method. For backward compatibility, the
-> > 'new_device' interface and its behaviour is retained for now.
+> > The bug info is:
 > >
-> > This commit implements minimal functionalities:
+> > kernel revision: v6.13-rc7
+> > OOPS message: general protection fault in devlink_info_serial_number_pu=
+t
+> > reproducer:YES
 > >
-> >   /config/gpio-aggregator/<name-of-your-choice>/
-> >   /config/gpio-aggregator/<name-of-your-choice>/live
-> >   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/
-> >   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/key
-> >   /config/gpio-aggregator/<name-of-your-choice>/<lineY>/offset
+> > After preliminary analysis,  The root casue may be :
+> > in the function:  es58x_devlink_info_get drivers/net/can/usb/etas_es58x=
+/es58x_devlink.c
+> > es58x_dev->udev->serial   =3D=3D NULL ,but no check for it.
 > >
-> > Basic setup flow is:
-> > 1. Create a directory for a GPIO aggregator.
-> > 2. Create subdirectories for each line you want to instantiate.
-> > 3. In each line directory, configure the key and offset.
-> >    The key/offset semantics are as follows:
-> >    * If offset is >= 0:
-> >      - key specifies the name of the chip this GPIO belongs to
-> >      - offset specifies the line offset within that chip.
-> >    * If offset is <0:
-> >      - key needs to specify the GPIO line name.
-> > 4. Return to the aggregator's root directory and write '1' to the live
-> >    attribute.
+> >  devlink_info_serial_number_put(req, es58x_dev->udev->serial) triggers =
+NPD .
 > >
-> > For example, the command in the existing kernel doc:
-> >
-> >   echo 'e6052000.gpio 19 e6050000.gpio 20-21' > new_device
-> >
-> > is equivalent to:
-> >
-> >   mkdir /sys/kernel/config/gpio-aggregator/<custom-name>
-> >   # Change <custom-name> to name of your choice (e.g. "aggr0")
-> >   cd /sys/kernel/config/gpio-aggregator/<custom-name>
-> >   mkdir line0 line1 line2  # Only "line<Y>" naming allowed.
-> >   echo e6052000.gpio > line0/key
-> >   echo 19            > line0/offset
-> >   echo e6050000.gpio > line1/key
-> >   echo 20            > line1/offset
-> >   echo e6050000.gpio > line2/key
-> >   echo 21            > line2/offset
-> >   echo 1             > live
-> >
-> > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> > ---
-> >  drivers/gpio/gpio-aggregator.c | 549 ++++++++++++++++++++++++++++++++-
-> >  1 file changed, 548 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-> > index 570cd1ff8cc2..c63cf3067ce7 100644
-> > --- a/drivers/gpio/gpio-aggregator.c
-> > +++ b/drivers/gpio/gpio-aggregator.c
-> > @@ -9,10 +9,14 @@
-> >
-> >  #include <linux/bitmap.h>
-> >  #include <linux/bitops.h>
-> > +#include <linux/completion.h>
-> > +#include <linux/configfs.h>
-> >  #include <linux/ctype.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/idr.h>
-> >  #include <linux/kernel.h>
-> > +#include <linux/list.h>
-> > +#include <linux/lockdep.h>
-> >  #include <linux/mod_devicetable.h>
-> >  #include <linux/module.h>
-> >  #include <linux/mutex.h>
-> > @@ -34,11 +38,39 @@
-> >   */
-> >
-> >  struct gpio_aggregator {
-> > +       struct config_group group;
-> >         struct gpiod_lookup_table *lookups;
-> >         struct platform_device *pdev;
-> > +       struct mutex lock;
-> > +       int id;
-> > +
-> > +       /* Synchronize with probe */
-> > +       struct notifier_block bus_notifier;
-> > +       struct completion probe_completion;
-> > +       bool driver_bound;
-> > +
-> > +       /* List of gpio_aggregator_line. Always added in order */
-> > +       struct list_head list_head;
-> > +
-> >         char args[];
-> >  };
-> >
-> > +struct gpio_aggregator_line {
-> > +       struct config_group group;
-> > +       struct gpio_aggregator *parent;
-> > +       struct list_head entry;
-> > +
-> > +       /* Line index within the aggregator device */
-> > +       int idx;
-> > +
-> > +       /* GPIO chip label or line name */
-> > +       char *key;
-> > +       /* Can be negative to indicate lookup by line name */
-> > +       int offset;
-> > +
-> > +       enum gpio_lookup_flags flags;
-> > +};
-> > +
-> >  static DEFINE_MUTEX(gpio_aggregator_lock);     /* protects idr */
-> >  static DEFINE_IDR(gpio_aggregator_idr);
-> >
-> > @@ -61,6 +93,97 @@ static int aggr_add_gpio(struct gpio_aggregator *aggr, const char *key,
-> >         return 0;
-> >  }
-> >
-> > +static int aggr_notifier_call(struct notifier_block *nb, unsigned long action,
-> > +                             void *data)
-> > +{
-> > +       struct gpio_aggregator *aggr;
-> > +       struct device *dev = data;
-> > +
-> > +       aggr = container_of(nb, struct gpio_aggregator, bus_notifier);
-> > +       if (!device_match_name(dev, aggr->lookups->dev_id))
-> > +               return NOTIFY_DONE;
-> > +
-> > +       switch (action) {
-> > +       case BUS_NOTIFY_BOUND_DRIVER:
-> > +               aggr->driver_bound = true;
-> > +               break;
-> > +       case BUS_NOTIFY_DRIVER_NOT_BOUND:
-> > +               aggr->driver_bound = false;
-> > +               break;
-> > +       default:
-> > +               return NOTIFY_DONE;
-> > +       }
-> > +
-> > +       complete(&aggr->probe_completion);
-> > +       return NOTIFY_OK;
-> > +}
-> 
-> Suggestion: this is the third time we're seeing this mechanism being
-> used (after gpio-sim and gpio-virtuser). Maybe it's time to try and
-> abstract it as much of the code is shared?
+> > Fix suggestion: Check es58x_dev->udev->serial before deference pointer.
+>
+> Thanks for the report. I acknowledge the issue: the serial number of a
+> USB device may be NULL and I forget to check this condition.
+>
+> @netdev and devlink maintainers
+>
+> I can of course fix this locally, but this that this kind of issue looks
+> like some nasty pitfall to me. So, I was wondering if it wouldn't be
+> safer to add the NULL check in the framework instead of in the device.
+> The netlink is not part of the hot path, so a NULL check should not have
+> performance impacts.
+>
+> I am thinking of:
+>
+> diff --git a/include/net/netlink.h b/include/net/netlink.h
+> index e015ffbed819..eaee9a1aa91f 100644
+> --- a/include/net/netlink.h
+> +++ b/include/net/netlink.h
+> @@ -1617,6 +1617,8 @@ static inline int nla_put_sint(struct sk_buff
+> *skb, int attrtype, s64 value)
+>  static inline int nla_put_string(struct sk_buff *skb, int attrtype,
+>                                  const char *str)
+>  {
+> +       if (!str)
+> +               return 0;
+>         return nla_put(skb, attrtype, strlen(str) + 1, str);
+>  }
+>
+> Of course, it is also possible to do the check in
+> devlink_info_serial_number_put().
+>
+> What do you think?
 
-That makes sense. I would add gpiolib-vgpio.[ch] and add an opaque
-* struct vgpio_common
-and two api functions as our first step:
-* vgpio_init(get_devname_cb) # bus notifier calls the cb to get devname
-* vgpio_register_pdev_sync(pdevinfo) # return -ENXIO when probe fails
-What do you think?
+Please fix the caller.
 
-Thanks,
-Koichiro
+nla_put_string() is not supposed to be called with a NULL str.
 
-> 
-> The rest looks good to me.
-> 
-> Bart
+Next time, we will have someone adding a test about a NULL skb.
+
+Adding such tests could hide real bugs.
+
+Thank you.
