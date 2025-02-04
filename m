@@ -1,102 +1,128 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E35225A634;
-	Tue,  4 Feb 2025 09:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDED520371A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660602; cv=none; b=SqzN4LxKeKRtZ1Y3kx/TEhz3OUlBGtjl25SzWReTvJ5ajvdsuXpjPDBEg8pZNEGo8mFFnlyh/vbWsQHJZlUPlxxyhwNPHKiTMOw5Rpnfqxek59a7O7PjwhpWGzEnoJOU59MjqCpgXUumLlh0b3nuZdrJTQaEX1BDkhVW65rUYII=
+	t=1738660627; cv=none; b=RP+RLicQj01LBAyuijnB01EYAeJF3MvIHD4yYMJKKQLPJRNyC9PwAWE0qGhvuh037hWhSYTSZhmrP+IHjZRKYopnAjBHF9WflPSenEM15sPm93qNHXM9P2h7J0n0UJt7u/HdwWHVXLP9owIU3SvsstD3qT2Fn2+An+CSs/alO1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660602; c=relaxed/simple;
-	bh=Cyj86Xfk9KWNzVaA2X1/8q1w+RnezCPqu3yiMSnaY34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WGJk/Cm0J1Ns3TvrAI/S5i1PDb8huKWNo1Y6wk84Fw/4b+nnYEkgZFU6xupLZW4qCZRVPa1gum0WiaEX3KhH1C7sDSdNtr0iH2GgQYnl+VaVguXRDtwmP8i3Wqk6Hg1Y/fKR0v7jmeLfGh8Iywx13jy3/8XINDA9OeAVpUDJjqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kYYe3Dmf; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kYYe3Dmf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=t0DEtC3PKgp7BXTIfritcGnBk8Mae1xwU2+pF395sTM=; b=kYYe3Dmf/GzcBPUe5bN2ze2o1H
-	IJXz23hzmqCYF90ZGKaTFcThAXuBST2ypBR0yvblo4QjGqjh6NOh/ekMgEEHgAAbhmOiX/Syzyeaa
-	uIPrNMkx9jNQm00okElA+0qedocki1HCEoWsrpXh2kKnA00tUyj7HIx+PpSX9cZwUHINVWhSoHkCD
-	+vXo9mw5ldAtwfyCCtvwD5fQ4yREdYleWwWmJDTUSd1/9d5pHGjDqsWAYbtXCguIyVGqf3bN3FsEc
-	XL/ASyxYN/HrFPoiFcTJ93l9PdYPVwDuLTFrRBUE87lx1Vi28FbCH2+ZVtGCa3OUrdETjC5eUBOOU
-	TqhmJNWg==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfF2U-00000002SwU-0bJl;
-	Tue, 04 Feb 2025 09:16:14 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1915F300599; Tue,  4 Feb 2025 10:16:13 +0100 (CET)
-Date: Tue, 4 Feb 2025 10:16:13 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-	x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
-	bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com, jgross@suse.com, andrew.cooper3@citrix.com,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Vineeth Pillai <vineethrp@google.com>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
-	daniel.wagner@suse.com, joseph.salisbury@oracle.com,
-	broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250204091613.GQ7145@noisy.programming.kicks-ass.net>
-References: <20250131225837.972218232@goodmis.org>
- <20250131225942.365475324@goodmis.org>
- <20250201115906.GB8256@noisy.programming.kicks-ass.net>
- <F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
- <20250201181129.GA34937@noisy.programming.kicks-ass.net>
- <20250201180617.491ce087@batman.local.home>
- <20250203084306.GC505@noisy.programming.kicks-ass.net>
- <20250203114537.6a30c7c0@gandalf.local.home>
+	s=arc-20240116; t=1738660627; c=relaxed/simple;
+	bh=BAyQM8yTu34BvR4X/1EfMyzdhNCFZA53yLIxmZ2iCm0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lsb1hmK9j0xsU+eWF4f0xvPSS5Xgc2n5pxy8okuhWP9FfHpPQNeHPWkQCY99zTAmSPleRGgFuxE00fERMviQk2IlT4JqhhbRzg+PqwPr+IEeJHQpmRUSmEtNmHHN4ZPYBl0tuRp8z8pmWpz89GSWeTqhg2OgDi4qM4SqdrbcpiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Tue, 4 Feb
+ 2025 17:17:02 +0800
+Received: from mail.aspeedtech.com (192.168.10.10) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Tue, 4 Feb 2025 17:17:02 +0800
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+To: <alexandre.belloni@bootlin.com>, <pgaj@cadence.com>,
+	<miquel.raynal@bootlin.com>, <conor.culhane@silvaco.com>,
+	<aniketmaurya@google.com>, <billy_tsai@aspeedtech.com>,
+	<Shyam-sundar.S-k@amd.com>, <jarkko.nikula@linux.intel.com>,
+	<wsa+renesas@sang-engineering.com>, <xiaopei01@kylinos.cn>,
+	<Guruvendra.Punugupati@amd.com>, <linux-i3c@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <BMC-SW@aspeedtech.com>
+Subject: [PATCH v2 1/2] i3c: Remove the const qualifier from i2c_msg pointer in i2c_xfers API
+Date: Tue, 4 Feb 2025 17:17:01 +0800
+Message-ID: <20250204091702.4014466-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203114537.6a30c7c0@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Mon, Feb 03, 2025 at 11:45:37AM -0500, Steven Rostedt wrote:
+The change is necessary to enable the use of the
+`i2c_get_dma_safe_msg_buf()` API, which requires a non-const
+`struct i2c_msg *` to operate. The `i2c_get_dma_safe_msg_buf()` function
+ensures safe handling of I2C messages when using DMA, making it essential
+for scenarios where DMA transfers are involved. By removing the `const`
+qualifier, this patch allows drivers to prepare and manage DMA-safe
+buffers directly.
 
-> > Lazy only applies to fair (and whatever bpf things end up using
-> > resched_curr_lazy()).
-> 
-> Is that a problem? User spin locks for RT tasks are very dangerous. If an
-> RT task preempts the owner that is of lower priority, it can cause a
-> deadlock (if the two tasks are pinned to the same CPU). Which BTW,
-> Sebastion mentioned in the Stable RT meeting that glibc supplies a
-> pthread_spin_lock() and doesn't have in the man page anything about this
-> possible scenario.
+Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+---
+ drivers/i3c/master/dw-i3c-master.c     | 2 +-
+ drivers/i3c/master/i3c-master-cdns.c   | 2 +-
+ drivers/i3c/master/mipi-i3c-hci/core.c | 2 +-
+ drivers/i3c/master/svc-i3c-master.c    | 2 +-
+ include/linux/i3c/master.h             | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-Yeah, we've known that for at least a decade if not longer. That's not
-new. Traditionally glibc people haven't been very RT minded -- the whole
-condvar thing comes to mind as well.
+diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
+index d09ea5b6467c..54c7d86997d5 100644
+--- a/drivers/i3c/master/dw-i3c-master.c
++++ b/drivers/i3c/master/dw-i3c-master.c
+@@ -1079,7 +1079,7 @@ static void dw_i3c_master_detach_i3c_dev(struct i3c_dev_desc *dev)
+ }
+ 
+ static int dw_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
+-				   const struct i2c_msg *i2c_xfers,
++				   struct i2c_msg *i2c_xfers,
+ 				   int i2c_nxfers)
+ {
+ 	struct dw_i3c_i2c_dev_data *data = i2c_dev_get_master_data(dev);
+diff --git a/drivers/i3c/master/i3c-master-cdns.c b/drivers/i3c/master/i3c-master-cdns.c
+index 8d69a34986d9..c9e4c129454c 100644
+--- a/drivers/i3c/master/i3c-master-cdns.c
++++ b/drivers/i3c/master/i3c-master-cdns.c
+@@ -813,7 +813,7 @@ static int cdns_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
+ }
+ 
+ static int cdns_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
+-				     const struct i2c_msg *xfers, int nxfers)
++				     struct i2c_msg *xfers, int nxfers)
+ {
+ 	struct i3c_master_controller *m = i2c_dev_get_master(dev);
+ 	struct cdns_i3c_master *master = to_cdns_i3c_master(m);
+diff --git a/drivers/i3c/master/mipi-i3c-hci/core.c b/drivers/i3c/master/mipi-i3c-hci/core.c
+index e6e482a259b4..a408feac3e9e 100644
+--- a/drivers/i3c/master/mipi-i3c-hci/core.c
++++ b/drivers/i3c/master/mipi-i3c-hci/core.c
+@@ -367,7 +367,7 @@ static int i3c_hci_priv_xfers(struct i3c_dev_desc *dev,
+ }
+ 
+ static int i3c_hci_i2c_xfers(struct i2c_dev_desc *dev,
+-			     const struct i2c_msg *i2c_xfers, int nxfers)
++			     struct i2c_msg *i2c_xfers, int nxfers)
+ {
+ 	struct i3c_master_controller *m = i2c_dev_get_master(dev);
+ 	struct i3c_hci *hci = to_i3c_hci(m);
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index c1ee3828e7ee..24bd701b5de0 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -1584,7 +1584,7 @@ static int svc_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
+ }
+ 
+ static int svc_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
+-				    const struct i2c_msg *xfers,
++				    struct i2c_msg *xfers,
+ 				    int nxfers)
+ {
+ 	struct i3c_master_controller *m = i2c_dev_get_master(dev);
+diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+index 12d532b012c5..c67922ece617 100644
+--- a/include/linux/i3c/master.h
++++ b/include/linux/i3c/master.h
+@@ -475,7 +475,7 @@ struct i3c_master_controller_ops {
+ 	int (*attach_i2c_dev)(struct i2c_dev_desc *dev);
+ 	void (*detach_i2c_dev)(struct i2c_dev_desc *dev);
+ 	int (*i2c_xfers)(struct i2c_dev_desc *dev,
+-			 const struct i2c_msg *xfers, int nxfers);
++			 struct i2c_msg *xfers, int nxfers);
+ 	int (*request_ibi)(struct i3c_dev_desc *dev,
+ 			   const struct i3c_ibi_setup *req);
+ 	void (*free_ibi)(struct i3c_dev_desc *dev);
+-- 
+2.25.1
 
-And yes, you can still use the whole 'delay preemption' hint for RT
-tasks just fine. Spinlocks isn't the only thing. It can be used to make
-any RSEQ section more likely to succeed.
-
-
-> Patch 2 changes that to do what you wrote the last time. It has a max wait
-> time of 50us.
-
-I'm so confused, WTF do you then need the lazy crap?
-
-You're making things needlessly complicated again.
