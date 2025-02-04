@@ -1,53 +1,59 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8346207DEA
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33F219C54B;
+	Tue,  4 Feb 2025 09:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661651; cv=none; b=efRSaK46ehaYgb6K564oR2Mq2UNTYtXfb33tODvM0Y0EJi7fXBsyH4UxMYcYMZ9KI5oI6v91YKUN9lhac6exQPrLSw4G4njfZZeDLmYMCzSrWqyjHTNJbwMCdH+HtBiOaymyAOAyddnloJVx3285uac8+OY208Fu/PSYjyvuH/o=
+	t=1738661698; cv=none; b=e/rphNM0ePRZ3JXGOe4A9oDGEUUmcFu3VEwTqN0XPKLz380uSWyjXBvbgIhk8EE07VuquLEuM3AnIl3+sr53b6BaAenDP+Zn/o/aXIRFYQjt3Msv5vtw12ONi+/rrZjRDOCJ5CCnOxSS/Q9nByhlenXabi6wLnHrQPtvKp/KPXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661651; c=relaxed/simple;
-	bh=MCyAbV4y5NLnd55sJGM62e5OITZ5LpHrseaLk09/0P4=;
+	s=arc-20240116; t=1738661698; c=relaxed/simple;
+	bh=Eb1OMUA8ttEG9jHLyuxnDuERqXFDShNqpNHEICU9Ejw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sxIRgPidKk1p629PBBP49dC9jJvgDkA98mX7pJSiwthUPYV4C2hzozavIs6oNFGbs5TAR7+Lwzq+wHHuwTKrl+q3BZbNP+aPppvxhEMaKbrufqEbQkoUtr3GN6M3Gla2V1D6S+YXxyjnHLNPTL8j8UnTFhuptLetvswrywfjK+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Qf9e7Yn6; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=pHEvaLlDEhtl4pdDMKOPwpGFFFKKrGwgynit2859p34DDVTsEc590f/D67dCG7fIBqmstjI1JUAUvBePLXhjlWOg2px0FqibiSzmklm88xsb1Cl35Y+rvOYkO5gsqfZLu/JfqIg5Dz54IG7/QFhyIXCNKwWxY4aFWX72qFo9DwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNAfueIy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qf9e7Yn6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=OxCHpWd+zIyfsGnvl5RE71IMkGdJ+lhAIa/m0GzPnTU=; b=Qf9e7Yn6DX6+9Hnmb3IHS0cBD3
-	eq8zkEArs1yeaVflJ+uB3//lJ1NrJKM8CT4fgDwqy+C+D9URLY6RCcpLMC+L83hy0V2Fi25n+AERs
-	tzVgwtY/Zxk4N3IguHFqxdlpdrUk5iJJV3IuUhpu0+349ERlTtVR1eQFDpznwaFoG8gEMot7QyBW+
-	EeLq051m9v7U5rV0COy9rCq76E3yRg61D7/WVSbhfdk1uv/4MX6UCWEVKsIqn7A5Jdf8SwJTp2khw
-	kDEyTmdFRSXDutHRQ8vMGmxbijzKR/W8eiJiXtXs9YctGQ6szZDHWOOKhPmpHIMSooljcYM9UB0nH
-	8qyIS26Q==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfFJj-00000002UN3-1uly;
-	Tue, 04 Feb 2025 09:34:03 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CA84E300599; Tue,  4 Feb 2025 10:34:02 +0100 (CET)
-Date: Tue, 4 Feb 2025 10:34:02 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v8 06/15] futex: Move private hashing into its own
- function.
-Message-ID: <20250204093402.GR7145@noisy.programming.kicks-ass.net>
-References: <20250203135935.440018-1-bigeasy@linutronix.de>
- <20250203135935.440018-7-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNAfueIy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2775EC4CEDF;
+	Tue,  4 Feb 2025 09:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738661698;
+	bh=Eb1OMUA8ttEG9jHLyuxnDuERqXFDShNqpNHEICU9Ejw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gNAfueIyFJNDNirRHzflngZwgZxbrLv5GJlB13TY5T2q5fGh/F8p5m0UB7CN45Oc7
+	 ZByttBN0ZmNZaSy9IGtdn+C77vLIit9VZ2OXDF2NMZEd6q6RoTQ2V8fumb/Ed7ULOd
+	 zOXoTgWEgouphAoS62e1OXGlL5/sBO4reu9HJSFcGur220o3Cg5k6pxMbJJZFM4q7z
+	 t/B471b650nwBlFoti8+dJZcmqq9j/JGJblB52cMYHhcFF926m0SfcXmqqXTDBS+wQ
+	 Bz4PuBIoWWjQSOB9Og+wQjI8HcSQYBFZ+IXDj1smXSSrqL6mdGt3rfk52GOBc8O8Gz
+	 5e1w+g/BRYQuQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tfFKg-0000000080X-13t0;
+	Tue, 04 Feb 2025 10:35:02 +0100
+Date: Tue, 4 Feb 2025 10:35:02 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dikshita Agarwal <quic_dikshita@quicinc.com>,
+	quic_vgarodia@quicinc.com, mchehab@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, p.zabel@pengutronix.de, hverkuil@xs4all.nl,
+	sebastian.fricke@collabora.com, bryan.odonoghue@linaro.org,
+	neil.armstrong@linaro.org, nicolas@ndufresne.ca,
+	u.kleine-koenig@baylibre.com, stefan.schmidt@linaro.org,
+	lujianhua000@gmail.com, linux-arm-msm@vger.kernel.org,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, krzysztof.kozlowski@linaro.org
+Subject: Re: [RFC PATCH v10 1/2] media: iris: introduce helper module to
+ select video driver
+Message-ID: <Z6HfRiqTQqb6sJVS@hovoldconsulting.com>
+References: <20250128080429.3911091-1-quic_dikshita@quicinc.com>
+ <20250128080429.3911091-2-quic_dikshita@quicinc.com>
+ <5070e1f1-914b-4654-88ef-3566e3eee9ca@kernel.org>
+ <f1344e49-61b6-4115-ae88-55b4a3cfed28@quicinc.com>
+ <Z6B822-6UTxQfX46@hovoldconsulting.com>
+ <tqbm672pi223ipcw7btiemlb745weeeiy4gnazzeghozhq2emj@wppbkms6hir5>
+ <0708dbf1-5914-4372-9df2-5cf590fd7bd6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,100 +62,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250203135935.440018-7-bigeasy@linutronix.de>
+In-Reply-To: <0708dbf1-5914-4372-9df2-5cf590fd7bd6@kernel.org>
 
-On Mon, Feb 03, 2025 at 02:59:26PM +0100, Sebastian Andrzej Siewior wrote:
-> The hashing of the private is slightly different and will be needed
-> again while moving a futex_q entry to a different hash bucket after the
-> resize.
+On Mon, Feb 03, 2025 at 05:34:20PM +0100, Krzysztof Kozlowski wrote:
+> On 03/02/2025 16:16, Dmitry Baryshkov wrote:
+> > On Mon, Feb 03, 2025 at 09:22:51AM +0100, Johan Hovold wrote:
+> >> On Fri, Jan 31, 2025 at 10:44:28AM -0800, Abhinav Kumar wrote:
+> >>> On 1/29/2025 2:44 AM, Krzysztof Kozlowski wrote:
+> >>>> On 28/01/2025 09:04, Dikshita Agarwal wrote:
+
+> >>>>> @@ -196,6 +196,9 @@ static int iris_probe(struct platform_device *pdev)
+> >>>>>   	u64 dma_mask;
+> >>>>>   	int ret;
+> >>>>>   
+> >>>>> +	if (!video_drv_should_bind(&pdev->dev, true))
+> >>>>> +		return -ENODEV;
+> >>>>
+> >>>> Wouldn't it mark the probe as failed and cause dmesg regressions?
+> >>
+> >> No, this is perfectly fine. Probe can return -ENODEV and driver core
+> >> will continue with any further matches.
+
+> >>> 2) with current approach, one of the probes (either venus or iris) will 
+> >>> certainly fail as video_drv_should_bind() will fail for one of them. 
+> >>> This can be considered as a regression and should not happen.
+> >>
+> >> How can that be a regression? One driver must fail to probe (see above).
+> > 
+> > I also don't think that it's a regression. I think Krzysztof was
+> > concerned about the 'failed to bind' messages in dmesg.
 > 
-> Move the private hashing into its own function.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  kernel/futex/core.c | 21 ++++++++++++++-------
->  1 file changed, 14 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-> index f608cd6ccc032..fdfc3402278a1 100644
-> --- a/kernel/futex/core.c
-> +++ b/kernel/futex/core.c
-> @@ -117,6 +117,18 @@ static inline bool futex_key_is_private(union futex_key *key)
->  	return !(key->both.offset & (FUT_OFF_INODE | FUT_OFF_MMSHARED));
->  }
->  
-> +static struct futex_hash_bucket *futex_hash_private(union futex_key *key,
-> +						    struct futex_hash_bucket *fhb,
-> +						    u32 hash_mask)
-> +{
-> +	u32 hash;
-> +
-> +	hash = jhash2((void *)&key->private.address,
-> +		      sizeof(key->private.address) / 4,
-> +		      key->both.offset);
-> +	return &fhb[hash & hash_mask];
-> +}
-> +
->  /**
->   * futex_hash - Return the hash bucket in the global or local hash
->   * @key:	Pointer to the futex key for which the hash is calculated
-> @@ -131,14 +143,9 @@ struct futex_hash_bucket *futex_hash(union futex_key *key)
->  	u32 hash;
->  
->  	fhb = current->mm->futex_hash_bucket;
-> -	if (fhb && futex_key_is_private(key)) {
-> -		u32 hash_mask = current->mm->futex_hash_mask;
-> +	if (fhb && futex_key_is_private(key))
-> +		return futex_hash_private(key, fhb, current->mm->futex_hash_mask);
->  
-> -		hash = jhash2((void *)&key->private.address,
-> -			      sizeof(key->private.address) / 4,
-> -			      key->both.offset);
-> -		return &fhb[hash & hash_mask];
-> -	}
->  	hash = jhash2((u32 *)key,
->  		      offsetof(typeof(*key), both.offset) / 4,
->  		      key->both.offset);
+> I never used word "regression" alone. I said "dmesg regression", which
+> means you have error in logs or any system facility which provides you
+> self-information about device probe history. I don't remember if -ENODEV
+> leads to any printks, so maybe I am wrong here, but regardless normal
+> and expected operation of a driver should never result in -ERRNO, except
+> deferred probe of course.
 
-Humph, this is a lot of back and forth. Maybe just do it right once?
+A probe function returning -ENODEV is not an error and is used to signal
+that the driver should not bind to the device it has just probed. So
+that part is perfectly fine here as I mentioned above.
 
-Anyway, perhaps write it like:
-
-static struct futex_hash_bucket *futex_hash_private(union futex_key *key)
-{
-	struct mm_struct *mm;
-	u32 hash;
-
-	if (!futex_key_is_private(key))
-		return NULL;
-
-	mm = key->private.mm;
-	if (!mm->futex_hash_bucket)
-		return NULL;
-
-	/*
-	 * Since key->private.mm is the same for all keys in this hash
-	 * table, it does not contribute anything, and skipping it
-	 * allows jhash2() to take a shorter/faster path.
-	 */
-	hash = jhash2((void *)&key->private.address,
-		      sizeof(key->private.address) / 4,
-		      key->both.offset);
-
-	return mm->futex_hash_bucket[hash & mm->futex_hash_mask];
-}
-
-struct futex_hash_bucket *futex_hash(union futex_key *key)
-{
-	struct futex_hash_bucket *fhb;
-	u32 hash;
-
-	fhb = futex_hash_private(key);
-	if (fhb)
-		return fhb;
-
-	hash = jhash2((u32 *)key, offsetof(typeof(*key), both.offset) / 4,
-		      key->both.offset);
-	
-	return &futex_queues[hash & (futex_hashsize - 1)];
-}
+Johan
