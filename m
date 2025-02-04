@@ -1,104 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03F62054EE;
-	Tue,  4 Feb 2025 20:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556E9218E8B;
+	Tue,  4 Feb 2025 20:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738700575; cv=none; b=dNcIR4X5oLf6vnU+ICFKaQejmswEXHGNdvPPa1PVgQ7VglQFHDA8aC6ktJb9b+yxhV/5PbDXf7qE5aH0DExWZJTCCtWYKYwU4hbZP3QxxAGv4S/IWV2hNLZTCHDM05isxjLBqZk2W/cfMLPmMpniptzdTknCSuvpkmmJ4dtU4Sk=
+	t=1738700661; cv=none; b=SxrC4d+XfBcYWmi0zA6qfgyNKc52NI/vPIIeJD5lswuB2sdcBBp9O8JZMBfeqsUvjoUQtp0dRxbe63s3tmGn++zfamtZ2DS9mSJnL81EQ7om1wlsEPMtnKYLV/RX3i4bH1URRPKaaHrZi7m7IsFAvzhJMSfegSdkwmhl6ppDqFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738700575; c=relaxed/simple;
-	bh=6pDWVXlpf3owYG4nrbk030+L2zdJkaTJsYmKtyvi0n4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gmBSF+q+3sDwWF2EZEa340mAuT5/EKiVrxLpcB1GDaVkGlXF12WaB4xUXYjFEyHCWhp9JdtxoOKVF/qqzJ759s114K3DCgxPWz4D+jpGrow3K3qdMb723lyoHBwo+JDf2t9VOP3cMvvV0Me/wmkwauZ3Na36H2iZ01W90U0ze5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yq+gDRdi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738700661; c=relaxed/simple;
+	bh=75Sg6DJ0wuEgO5Nk9sCKBkm6E1RJzb3mKvvXTGVIBz4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sTQcAv26t9gkx9WRx9Kx2BB+Q3VWQS9Z0I//HY1G6k1+5LGWKcLZV+GpxBbekOrnXEzTzv9nx7g9pWz5bjEIPpXFeGPlZX1eKcn9JxlLxN08vu3Z52eiDfe2VHFrefF2N6FzI3J7LzSNQxH2cErc3UHu8ZeUArPbeuhwAZOmlI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=mWAnCFiB; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yq+gDRdi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 389BFC4CEDF;
-	Tue,  4 Feb 2025 20:22:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738700574;
-	bh=6pDWVXlpf3owYG4nrbk030+L2zdJkaTJsYmKtyvi0n4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Yq+gDRdiTyzt9y1UrRVJCl9AMSHhq+EeWtbqaNyyv87Brzx20mnbJVtedBcGECjs6
-	 RYwPbtlz7e/2scXrVBAeTJhyxtQli4uoMAu5issTexgpU9EzQ5yuRbBUE5i6VgEXMO
-	 MnixCSxbZo8VjT7bT7wze2jBxNmyxIkiQhKUKepIr0YUqWjo1+W+eveD26tD2xzWB8
-	 d4oeLmOSWw47G3LlKsGY1XYCpfL3YPIltf5rWS+PnuUv7Qr7Nq9kNdadsWEmI0EkFy
-	 af67y+/BVd0lo0w2Bv/HK83xniM859HUbzjstLXVDHN8XsGmGobKIKQAwcbgDyx2HB
-	 YyQkpB3BrgiMA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id CA170CE028A; Tue,  4 Feb 2025 12:22:53 -0800 (PST)
-Date: Tue, 4 Feb 2025 12:22:53 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Joel Fernandes <joel@joelfernandes.org>
-Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
-Subject: Re: [PATCH] rcu: Merge rcu_seq_done_exact() logic into rcu_seq_done()
-Message-ID: <999751de-b891-424d-a7b5-80bfa98793ff@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <ecce7241-4238-4d86-8e4c-5080937129ce@paulmck-laptop>
- <15D1150A-9B7B-4EB7-91C6-2D881D6F48DA@joelfernandes.org>
- <861f1dc3-bfc0-4a81-9b78-c8e9995db4cd@paulmck-laptop>
- <CAEXW_YQ4W=upWV_x1woSgq-DJPFXmBjH2pVmUnBVb_n_UKrw7A@mail.gmail.com>
- <ec293223-2a33-4d2f-b3ca-c011c3d987f3@paulmck-laptop>
- <CAEXW_YQXgZANSjo835VfHMqY=z8gaSWQ2bgaWtVd4-3KX0hX8w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="mWAnCFiB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1738700647; x=1739305447; i=markus.elfring@web.de;
+	bh=75Sg6DJ0wuEgO5Nk9sCKBkm6E1RJzb3mKvvXTGVIBz4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=mWAnCFiBTGBHF0D8y22X/ofl161UVgRE/LZ4UAbz6KH++7JYgdAOxQiXpGChxE71
+	 lTwc8apfhCZwGln7iXyX0wplZ3h9fo66V8uSM3Amk6Yl+8LCTGV7ZRQxy/fLrJ0Mi
+	 VaDPQhPEbDn4bA3+RWVOdwdQOyxfvE3X0SAqdpGilsakkXZmE97ZAy6PCThXiz73E
+	 oM5oPZp1m+St5d7xzecWbF9D6GTySqTDXhzF4uLJkQVlaooq67k9YQ/JInpZGcRbi
+	 Yp/mBJlEL1bw5migda02nTksvwAXtTJz1Xq80N0G+A4g9pRY4JaDD0nx18p4xglq5
+	 26KWq19O7RbJM3cusw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.16]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N6JxT-1tLuXO1vbd-010G2q; Tue, 04
+ Feb 2025 21:24:07 +0100
+Message-ID: <a3b1ecdf-0bf0-4053-8bbf-ecaff4e8cb62@web.de>
+Date: Tue, 4 Feb 2025 21:24:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEXW_YQXgZANSjo835VfHMqY=z8gaSWQ2bgaWtVd4-3KX0hX8w@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [cocci] [v2 1/3] coccinelle: misc: secs_to_jiffies: Patch
+ expressions too
+To: Easwar Hariharan <eahariha@linux.microsoft.com>, cocci@inria.fr,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Dongsheng Yang <dongsheng.yang@easystack.cn>,
+ Ilya Dryomov <idryomov@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+ Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>,
+ Ricardo Ribalda <ribalda@chromium.org>, Xiubo Li <xiubli@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ ceph-devel@vger.kernel.org, linux-block@vger.kernel.org
+References: <20250203-converge-secs-to-jiffies-part-two-v2-0-d7058a01fd0e@linux.microsoft.com>
+ <20250203-converge-secs-to-jiffies-part-two-v2-1-d7058a01fd0e@linux.microsoft.com>
+ <49533960-e437-4042-951a-0221164bfa3d@web.de>
+ <974a03d2-3f3f-4be2-9dba-ece6dca8015e@linux.microsoft.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <974a03d2-3f3f-4be2-9dba-ece6dca8015e@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:bHRRDUYNgzL2w5T+cBWnQvEzsyVC5tGhQ42pj//Hbr4WJXbt5Tx
+ NmigUqbqJgStPgfqohv2o83whcM6RPacemDly0/uhpszNzDSw3IAGU2IJTNaWvTkb7j2QJo
+ JxDWv833ZoIP8YHiW6/lT+xid70cxmorwByZZo2wrpkzHlXD5CJM6tPQN3DfzRA7YNRkajF
+ qIjSyG47cUu91WN+pwj3g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Ygu3d3nBFok=;Vgbi7VkznJIFuieA/BcpmXLJjxL
+ ZFgf31MXADDmjwCBZKeq0yl1JBII2u3U2u8Vx8+pbqSy0KklvYP9lcAdklAoqsqwVjtL+JBoV
+ +SASzap27bZKSMQsdsr17b/oxdCJhaFdKju02RLOqomK1EDDvoQqx09WuT40V1qGN31AoUjIf
+ +ixzbHmKcndbO0Cy34Ij1VrICdux9x+1dWJrBTl8YC61yydkhNHEPgrTV4Yr9IL14OQXhIVlN
+ AiwSIdSSdRCtjti1ydmx6G6frq9leAF14IgXBS4D/n03fON+72pfBM2fFQiLGPVXkwJZOvacX
+ 4e5g7DEFmy+KkO624irI+m1lJ4UhrT72Wongw6ntrbKbfDFwWSWvTYJIx/uQMOyw3+r2DRmZG
+ dXwD0b4DbgR3xtpU8fClMj5auwcw+z0XusU0nrMII48inU5+WJ+0v1dYo5yHFq1ISwNL3z5yy
+ HaTsFQ+EO3b6vJ9BkLmXHj+YidJHL4NeIU2mRaeBmjXtYFboite/t7iDVp/G5hgIy2h/K+gy6
+ 7oWBApvDevTxWTDOI7tS3tr1c+wQ77uSinvuZAdkL2YtwBLGsrcTsM9J7w5uVm9h/9PI8/Cyl
+ 2ma8d7e/lHRIWIqlzvQqmtpZO4nUjjyDRimvv0gCM2QP78zGVg6AnlMK7z1RW/x9r0Y6uFqKN
+ kR6geHrfz53EsXgzuOZZgeBwnkU3dFmV8M6CAgPPGhGVdJoFu41sqhbR+2d18AKYVcU8XEDUL
+ UnTsN46NB9io18/A0+lcQCPlU92MoBgxz/+GU5n2beuXX/BH9Z3SZukI9y/uowH0fEbby8rTP
+ 5M9rfmSjiWSnLHPKDXjCl4rq+8hfa0g24Ncp+NdvY6AfkiRSI0BBiyNJH/C/Jxtn0xJxRQTk9
+ joL/em4JNuJM6UHv/LUZj1AMJGObMg5WZCbf/SCnu51nl2l9KAMvlE3fmbcwh3UlwspxjFgnf
+ PMWmzNcyIp0HwWZSAWJklv39m+6iIm0PTWTErE6UdKntbCxOMDGUKyoAaEmE2P5jsYYGGpxaT
+ lHIj40GfUwp2MnRbGyr+BJhd5jksqq9ai3ZNmpk6mHRiE99M+FSyJj0YtSaL8tgIWq4D8s50t
+ dUZW1+ancQnbHj9uHdSGdexcqttgE0q1QGWlXqMmHqikYNdtHILvdaDhAAprPlMQ9MzZ5wDga
+ y8OKxkI+12l48PRYLPfVXq9CP8FXicrc5GLs6DggMrK+yWaWRi29kgxLsu24e5K63NQlJvXsY
+ iUsjmMiH0ES7wdQj5ylD501ectD1omCsyr1fj6JMBUZpCQmDKOOtDLH+S9GA9P4gZr8j65hmz
+ EQGlolNigaM6VSGebRHE5FjOOKDkn6PlIlXVo9A85Wcn31BVr1x7LZpbNYplTMD4u5x
 
-On Tue, Feb 04, 2025 at 10:44:45AM -0500, Joel Fernandes wrote:
-> On Thu, Jan 30, 2025 at 12:56 AM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > By "where we were initially", one might reasonably guess that you meant
-> > that the initial value and the target are one and the same.  But I suspect
-> > that you are thinking of a third value, the value of the underlying
-> > grace-period sequence number at the time of the call to rcu_seq_snap().
-> > But you might be thinking of something else entirely.
-> >
-> > > Now we move rcu_seq_done_exact. It has the exact same behavior except
-> > > that instead of ULONG_MAX/2, the above situations are shrunk to about
-> > > 10 counts from the target. So if target is 28, then the initial
-> > > sequence should have been at least 18 to avoid false-positive, but
-> > > again it is possible and I certain see in the code that it cannot be
-> > > used this way.. (at least so far).. So all we are left with is the
-> > > false-negative band of ~2.5 GPs..
-> >
-> > Here, I have the same questions.  As you no doubt guessed.
-> >
-> > > About "what are the consequences of failing to get this right".  I
-> > > believe false-positive is unacceptable unless it is maybe debug code -
-> > > that can break functionality in code, too short GPs and all that.
-> > > However false-negative is OK as long as the usecase can retry later
-> > > and can afford to wait. Did I get that much correct?
-> >
-> > Maybe?
-> >
-> > Please look at this on a per-use-case basis.
-> 
-> Sure. FWIW, I started a world-editable document here. I am planning to
-> work on this a bit more before our meeting this week. If others
-> knowledgeable like Frederic and others could make edits/comments,
-> that'd be welcomed. But I basically summarized this whole thread here:
-> https://docs.google.com/document/d/1sFNuGH4U6DFCE8sunbdWMjFhJhb1aG4goOJAnS6c6gQ/edit?usp=sharing
-> 
-> My thought is (AFAICS), this patch is still valid and
-> rcu_seq_done_exact is a potentially better replacement to
-> rcu_seq_done. But famous last words...
+>> How do you imagine that the shown SmPL code fits ever to patch reviews?
+>
+> By the simple fact of accomplishing the same result despite differences =
+in
+> code style, as explicitly called out in the changelog.
+Do any other contributors care more for the mentioned software development=
+ concerns?
 
-Let's start with the use case where the sequence number is being used
-by rcu_barrier().  What happens?
+How do you think about helping to improve affected implementation details?
 
-							Thanx, Paul
+Regards,
+Markus
