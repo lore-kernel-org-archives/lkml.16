@@ -1,37 +1,37 @@
 Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B788C1FF60F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 05:21:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE9E2010F5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 05:21:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738646490; cv=none; b=oz0Qon7+oK6Z1PuB70q5aVtbM0YVAGPpma2joWN8eDfFB5v9oUhCgCEcMtbqdbGMs7JY1jhdiehSzreWGGEF2xiuoTr56nvfb7dfS2uu8k7br1YJL0D7fJlwXymy0R3mQpCnH6YVg4Vo++eEGlqvOHPaqhvAKF0/8MxCO5mfdrc=
+	t=1738646492; cv=none; b=jWk8BumLzCFL6on1lEcGuN6k3sgkMeaSSh6+0BAm7hqIiZX3MrIWC8V3ZH+qLg+l8LKksHD8glWFbRcia7aZVHyv4yEWuO6NYkhu05e7pT3eZFDBapWJVEnrpDyD3ytqlEo6yHdNhLbCCCZcfEqtAncmdYxtUoCzVB8as5sM874=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738646490; c=relaxed/simple;
-	bh=RWQPikr6/2PFn7rXegDVoYHcUAAeX35+X8ko8U0Kyqo=;
+	s=arc-20240116; t=1738646492; c=relaxed/simple;
+	bh=0zO4mzU89XZcHygErnqGdtfH4bgG1UUoHnYwzYtDlhY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d7Dz/BUp6aVWIpaMH6MHPrZFapPDBgJiMSwivcS2wKlqQnPUq3qRXuhpnyX5G1pChh2rxqqJ0B553+L5+HYSaqpvKbDV75PgkinIKPQ/ROqv/9qALvsYsQOJEsEffq0Pz01T9fi6be6sZeJKrmnWZHd3AZsohBPDiwrMsAzG1DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=HrFpcLrr; arc=none smtp.client-ip=178.60.130.6
+	 MIME-Version; b=KjaSbeiuw1Rl5btcz8VYIHZhd62qRntcRn1HYHAg7KVNs/cnpb7hZR7cY0tmEV61/lFGltRKGz5uGd6LONsd4DyECpMY4mvhex4pOfwfY8c4P2CODjUOb+HvwA0mijDVE/syjXkI93MwiEeYudEZWcgaLd4LgQmQo0ys0+Upbxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=bDav7Xkj; arc=none smtp.client-ip=178.60.130.6
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="HrFpcLrr"
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="bDav7Xkj"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
 	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=+xfAgz/xADnGtdCmEKkYbmb7MoEwI80n8XgCfoENi64=; b=HrFpcLrrQ/1U2EdolLh80pB682
-	kwNZxjiob/n4E4DAOHggldfBeOxAlmJCyCbUyd8vFEL80Z7nTkwcVWSbbT3tPD4a9cD14Lq3K2fRC
-	hwNWZm7hwmJinYqjCvLj6YfefAbR4GmRwmx3bnwcJLx/ZpYVmj4i5BAbSw9S2L7A8qV42gE/zb/i3
-	LdADx+vH1vrHOyhoIqsZfnXm4Y8YcsUH4XKgrl7pLPPL2qWqACJWNq4LZCYYTCo3EjK6mlCM80COT
-	dCidEDM92+qypCwieNDwbPoeVTM8rjhv7HmwR4SX/Po/RwxQQx3d5GpFrGn5L3BlNj0r88ecXzNhI
-	qZtk99iw==;
+	bh=XWUZUB7dEkdjPX3TEON8I8RpFQFPW1DHkKvNFPFf/hI=; b=bDav7XkjjeqveKDFb8+9rp3ldP
+	QJofScKy/hvfu/Eah6cM85Dv/R/8mMXCTgUJfGD/IwtmwxquChC0y4y+deoDZc8dmAKzqdzspFlmJ
+	quqwWCPKnWLNVLlhSOgMef4PCB+Z1U43y5qjkUANnGL4FLKfnBKtDskl2Yf/0LnWxq8tKItpzim4K
+	gPZFEBw7CarflOfa2eQ1hdU5BLQKT0m7NSnEntpXUzCbDYHdgq+EMzr3TvtUlAo5SfZRFZh2UUUpk
+	7+thFfhm34cYSFrBPg+spfLFMkBW9aKBcfz1nEn92tMvIRXojg1EYRUw024L+60S1g3L5ozIzl9cW
+	/PGqjTrA==;
 Received: from [58.29.143.236] (helo=localhost)
 	by fanzine2.igalia.com with utf8esmtpsa 
 	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tfBN5-003J1r-61; Tue, 04 Feb 2025 06:21:21 +0100
+	id 1tfBN9-003J23-UG; Tue, 04 Feb 2025 06:21:26 +0100
 From: Changwoo Min <changwoo@igalia.com>
 To: tj@kernel.org,
 	void@manifault.com,
@@ -39,9 +39,9 @@ To: tj@kernel.org,
 Cc: kernel-dev@igalia.com,
 	linux-kernel@vger.kernel.org,
 	Changwoo Min <changwoo@igalia.com>
-Subject: [PATCH v4 3/7] sched_ext: Add an event, SCX_EV_BYPASS_DISPATCH
-Date: Tue,  4 Feb 2025 14:20:53 +0900
-Message-ID: <20250204052057.67776-4-changwoo@igalia.com>
+Subject: [PATCH v4 4/7] sched_ext: Add an event, SCX_EV_BYPASS_DURATION
+Date: Tue,  4 Feb 2025 14:20:54 +0900
+Message-ID: <20250204052057.67776-5-changwoo@igalia.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250204052057.67776-1-changwoo@igalia.com>
 References: <20250204052057.67776-1-changwoo@igalia.com>
@@ -53,19 +53,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a core event, SCX_EV_BYPASS_DISPATCH, which represents how many
-tasks have been dispatched in the bypass mode.
-
-__scx_add_event() is used since the caller holds an rq lock or
-p->pi_lock, so the preemption has already been disabled.
+Add a core event, SCX_EV_BYPASS_DURATION, which represents the
+total duration of bypass modes in nanoseconds.
 
 Signed-off-by: Changwoo Min <changwoo@igalia.com>
 ---
- kernel/sched/ext.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ kernel/sched/ext.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 377c2e99cf4f..0ed2db44ae33 100644
+index 0ed2db44ae33..8a9a30895381 100644
 --- a/kernel/sched/ext.c
 +++ b/kernel/sched/ext.c
 @@ -1468,6 +1468,11 @@ struct scx_event_stats {
@@ -73,70 +70,54 @@ index 377c2e99cf4f..0ed2db44ae33 100644
  	u64		SCX_EV_ENQ_SKIP_EXITING;
  
 +	/*
-+	 * The number of tasks dispatched in the bypassing mode.
++	 * The total duration of bypass modes in nanoseconds.
 +	 */
-+	u64		SCX_EV_BYPASS_DISPATCH;
++	u64		SCX_EV_BYPASS_DURATION;
 +
  	/*
- 	 * The number of times the bypassing mode has been activated.
+ 	 * The number of tasks dispatched in the bypassing mode.
  	 */
-@@ -2071,8 +2076,10 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
- 	if (!scx_rq_online(rq))
- 		goto local;
- 
--	if (scx_rq_bypassing(rq))
-+	if (scx_rq_bypassing(rq)) {
-+		__scx_add_event(SCX_EV_BYPASS_DISPATCH, 1);
- 		goto global;
-+	}
- 
- 	if (p->scx.ddsp_dsq_id != SCX_DSQ_INVALID)
- 		goto direct;
-@@ -3253,6 +3260,8 @@ bool scx_prio_less(const struct task_struct *a, const struct task_struct *b,
- 
- static int select_task_rq_scx(struct task_struct *p, int prev_cpu, int wake_flags)
+@@ -4408,6 +4413,8 @@ static void scx_clear_softlockup(void)
+ static void scx_ops_bypass(bool bypass)
  {
-+	bool rq_bypass;
+ 	static DEFINE_RAW_SPINLOCK(bypass_lock);
++	static unsigned long bypass_timestamp;
 +
- 	/*
- 	 * sched_exec() calls with %WF_EXEC when @p is about to exec(2) as it
- 	 * can be a good migration opportunity with low cache and memory
-@@ -3266,7 +3275,8 @@ static int select_task_rq_scx(struct task_struct *p, int prev_cpu, int wake_flag
- 	if (unlikely(wake_flags & WF_EXEC))
- 		return prev_cpu;
+ 	int cpu;
+ 	unsigned long flags;
  
--	if (SCX_HAS_OP(select_cpu) && !scx_rq_bypassing(task_rq(p))) {
-+	rq_bypass = scx_rq_bypassing(task_rq(p));
-+	if (SCX_HAS_OP(select_cpu) && !rq_bypass) {
- 		s32 cpu;
- 		struct task_struct **ddsp_taskp;
- 
-@@ -3292,6 +3302,9 @@ static int select_task_rq_scx(struct task_struct *p, int prev_cpu, int wake_flag
- 			p->scx.slice = SCX_SLICE_DFL;
- 			p->scx.ddsp_dsq_id = SCX_DSQ_LOCAL;
- 		}
-+
-+		if (rq_bypass)
-+			__scx_add_event(SCX_EV_BYPASS_DISPATCH, 1);
- 		return cpu;
+@@ -4417,12 +4424,15 @@ static void scx_ops_bypass(bool bypass)
+ 		WARN_ON_ONCE(scx_ops_bypass_depth <= 0);
+ 		if (scx_ops_bypass_depth != 1)
+ 			goto unlock;
++		bypass_timestamp = ktime_get_ns();
+ 		scx_add_event(SCX_EV_BYPASS_ACTIVATE, 1);
+ 	} else {
+ 		scx_ops_bypass_depth--;
+ 		WARN_ON_ONCE(scx_ops_bypass_depth < 0);
+ 		if (scx_ops_bypass_depth != 0)
+ 			goto unlock;
++		scx_add_event(SCX_EV_BYPASS_DURATION,
++			      ktime_get_ns() - bypass_timestamp);
  	}
- }
-@@ -5000,6 +5013,7 @@ static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
+ 
+ 	atomic_inc(&scx_ops_breather_depth);
+@@ -5013,6 +5023,7 @@ static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
  	scx_dump_event(s, &events, SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE);
  	scx_dump_event(s, &events, SCX_EV_DISPATCH_KEEP_LAST);
  	scx_dump_event(s, &events, SCX_EV_ENQ_SKIP_EXITING);
-+	scx_dump_event(s, &events, SCX_EV_BYPASS_DISPATCH);
++	scx_dump_event(s, &events, SCX_EV_BYPASS_DURATION);
+ 	scx_dump_event(s, &events, SCX_EV_BYPASS_DISPATCH);
  	scx_dump_event(s, &events, SCX_EV_BYPASS_ACTIVATE);
  
- 	if (seq_buf_has_overflowed(&s) && dump_len >= sizeof(trunc_marker))
-@@ -7138,6 +7152,7 @@ __bpf_kfunc void scx_bpf_events(struct scx_event_stats *events,
+@@ -7152,6 +7163,7 @@ __bpf_kfunc void scx_bpf_events(struct scx_event_stats *events,
  		scx_agg_event(&e_sys, e_cpu, SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE);
  		scx_agg_event(&e_sys, e_cpu, SCX_EV_DISPATCH_KEEP_LAST);
  		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SKIP_EXITING);
-+		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_DISPATCH);
++		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_DURATION);
+ 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_DISPATCH);
  		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_ACTIVATE);
  	}
- 
 -- 
 2.48.1
 
