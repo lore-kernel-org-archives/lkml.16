@@ -1,64 +1,70 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186981A76DA;
-	Tue,  4 Feb 2025 05:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D458D8632C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 05:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738646964; cv=none; b=M5ycH1fcTxstV1BHaeYGSBgsB1C6KmDBDggqMyD3EArLOYmLEUcbVxHJLE9eapGy8Cmi3rmEtxzT/GJtGDbBzJpPyr9i0X3glcndBnpz4XLKnk/6uGAhHlu43t2q/bWVh4zx8t0JfmnnglUwlMa9o2MYkgPk8Z3sTHC4BXoyL6Q=
+	t=1738647305; cv=none; b=s1On7YZIrGO7JUnZ3u4Oz3X5wLwHdjAQxeQL1jcIhmghnhe6usxwn0dAUx/VgCCDczT2DgdUfuIcqlunhG1UF2FloHaWI5IUgyw1lJUI+EwjkG/8SlcythQ1B4vl7kTiWvNkoKjtW8Jh/cTfrLAMknqk9+JeA0YeRKDLLtcDNdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738646964; c=relaxed/simple;
-	bh=JSVZJky8YAb/dm+iJ2XrDIiSy8BRxQHy5geH9yi46bU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IgNvLDDwprBpPcInWPbIUYis5Tg0Kd75WWOTJUhh/tJapavWdHTfjRkmeLYbbV2jSPU8R1p3bbpVxPWhOLNfDLnsWLA90xhMb8B3ZVyD8wGbHEyxV2EWQwMFNgMwdtL+KULof2sXStMZ2x7kHxBAyue9W1bGmaSuiTiK5Vqz8ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id DDEF768AFE; Tue,  4 Feb 2025 06:29:16 +0100 (CET)
-Date: Tue, 4 Feb 2025 06:29:16 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	daniel.almeida@collabora.com, aliceryhl@google.com,
-	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
-Message-ID: <20250204052916.GA28741@lst.de>
-References: <Z36X_ZnCmBQBMoZ6@pollux> <20250109080812.GA20431@lst.de> <Z3-NqwAG_96yq8VD@pollux> <20250110083955.GA5395@lst.de> <Z4D5a5NYrAbNxUL6@pollux> <Z4kG5AcVeQKegLnb@pollux> <20250128092334.GA28548@lst.de> <Z5qeoqRZKjiR1YAD@pollux> <20250131075751.GA16720@lst.de> <c3a56770-d483-409a-8586-610ce6a718e7@gmail.com>
+	s=arc-20240116; t=1738647305; c=relaxed/simple;
+	bh=SdBgo+jx18v3hbYD/0/9THCABXjEpWFwgaIW/Ci32Wk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=kmWrbWkza3SVnaAOYimpwJ1zuJp+uSJk2sjQDWgXSBD5+zWyMim0M37TeMF+MYob8Xmfi4BFxg5YltNmvm5ND56P7VUyc9GQBZUUt4qauhKnKUVkWFwb6Ej+9T2v8eg7vkZ9CtgENsKH/HBeyO/J1Sr45ATZkEwvF03ZKaqhSN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d00eac3de2so31299355ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 21:35:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738647303; x=1739252103;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kPr/sereKab1dBN4oQE4AkUFG5DOro0yG48RmemKvhg=;
+        b=FqdgLW2I+jpj9DJWPdETVmkfDVsWkuV2xBSFheNYsvK+ZUvFTQ7nJLafjePQnmmeFo
+         K8JMaUK8FzXQgryHGzcaW+Lwkwr+EJoVD6IEhZ5tVw77oSfenAPNszYS8G5lsk8sbf+5
+         h1K9dGieF/2/9H0Ssav/+UZejgxOu4dra5C7X2HXa1Z9xaoYceDYxQOSSG/pVgZDxu/L
+         BO1amEyiFn51IWvGX+WZtAGl27bs4JYOhrZoBY0GvHuvrlb5RfNT4nZmfPw8tHtvt1wU
+         v8e8xz+SyjKKECDyqBryrdFwrByUzmVhemvkKzMuCkC7Taff1zF+n2dntJHPe9Y8ym/H
+         DEyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYQn3I2ygCoKZXTuIILf0XIzkCEDKup2yT4cvAko6i+lWv9ZShfITAgdlYuKyJi1XiNcQ6BQJryBHPRiI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHAluLLVl4EbJHB6d85yoLjahmGX35CiLeXkEJzxNgDANU72cS
+	/O2GM7jvY+8D6XfTuSLowoJ+MV0an5Wac9mS93/pKe+ng2Q7KFipTh0hahF/fN9q7pCSSetH5E+
+	oWlz2/1lT+TdLTYViGTmbUuV4KTN/82XoMjGdKrM0eQPV00pES8QLQNs=
+X-Google-Smtp-Source: AGHT+IG6RXLXxU2HXRo3+h86xU1jL8XLYbNJboCrRPSf1Vw6d7zkVUPZeOOQg60YZBy7LgW+923qgs9Sy+AmNLf+pg0rOqoSt5OV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c3a56770-d483-409a-8586-610ce6a718e7@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Received: by 2002:a05:6e02:1a29:b0:3d0:258e:4841 with SMTP id
+ e9e14a558f8ab-3d0258e49f8mr109960805ab.21.1738647303003; Mon, 03 Feb 2025
+ 21:35:03 -0800 (PST)
+Date: Mon, 03 Feb 2025 21:35:02 -0800
+In-Reply-To: <tencent_5BA7330C9E8B1B5B4B051B792515BADEBB08@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a1a706.050a0220.d7c5a.00af.GAE@google.com>
+Subject: Re: [syzbot] [udf?] general protection fault in d_splice_alias
+From: syzbot <syzbot+a9c0867e4d1dd0c7ab19@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 03, 2025 at 10:17:22AM +0200, Abdiel Janulgue wrote:
-> I do acknowledge your reservations about the possible maintenance burden 
-> due to the introduction of a rust (or another language) consumer of the 
-> dma-api. But I was hoping that we could arrive at some sort of common 
-> ground?
+Hello,
 
-The common ground is that I have absolutely no interest in helping
-to spread a multi-language code base.  I absolutely support using
-Rust in new codebase, but I do not at all in Linux.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Thank you for your understanding!
+patch is already applied
+
+
+Tested on:
+
+commit:         0de63bb7 Merge tag 'pull-fix' of git://git.kernel.org/..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d1a6d4df5fcc342f
+dashboard link: https://syzkaller.appspot.com/bug?extid=a9c0867e4d1dd0c7ab19
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=122bc3df980000
 
