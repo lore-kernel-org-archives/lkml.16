@@ -1,75 +1,92 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F282153DC;
-	Tue,  4 Feb 2025 16:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35DE2153E4
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738687235; cv=none; b=BSEL8XSYdDhJ9AxIBRyA/j32nhYhV2S/n2Yp/CDDHV++qn+FiaVrnR4jqgVlnbZE6qQeiO1rVyWd1VONBjFxB+j/2oujejJwR3D90GsNg2BbVXd1LAznLc9tmqnELNmZUBcIad3HDRy8gd3qyGegJSa4auj1uSItCqaJyukeAZo=
+	t=1738687303; cv=none; b=ZXXjaaQu2PwJJ3IgmKQwg9F6Qu8mfkFIoXW+k0KowXLaDBuTBqjUTAC/1KHmIRnTfh9ZyLNmspkSWbUtI8MdVpfchdENzvXXsz1a4HeJvVblpF29hh7uhYYUpGPwf/PyQtWI+5kjWJrfgCzUPxITtb4vB2MJrpNPJkh8GOtUyI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738687235; c=relaxed/simple;
-	bh=yBVTtCAVbrag4UCw1n71e8nX3giOSwswsmnLhEI005I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Tun/Qt2slP5Fjr928eOyhIVnbzseTGl70ku3MVMfEXLzyCVJiJl/mBYAzezfLjQykMap9mwjjdb8U3f5iHXobTxwmcE7qAWTTWeo1BKEhfLV5zGGUP+9xgZKGdyUPGqUvQUpygGbQ0nbv2CnvYqk44geYMJ5vBS2w9Bxa2H1DIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=W3pksF1E; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1738687303; c=relaxed/simple;
+	bh=KmbuQodd8gdeNbqKPNLZW0QJqWSD6SMs5dgCQkjfjSE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=J3UrIntlMoItr7lLg+ypnm/UIxZkBXzR1g4/GxFQBwzUvyBzpbHkSxAEUY/eMZyShGLXFfKvm7eaa87MgYLxtI6TsyVokM7VYAVJhW+kKQ1Zj3R+g96sXs6OHWgfwZe70v2m30Awibk1fQ5iy4+Gstl1RFk2YMaJ5sWOVi7W5Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=ZyOD8byj; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="W3pksF1E"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net B1928404FA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1738687231; bh=814JZKK0hHBQeEM7ynRHTA8BlgLw+Dyd79Aln/7ewUU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=W3pksF1EcN5Szp+iub+wkmSIWsTRlMfHxsB0/DWCvV/Kpvwc+jGNttpuvEYpZTmEP
-	 pXG+vh8sAebbdr3QmEe+Ltcw4aHRNN7QeODUlY1+P35FS/o4SwXkjQTCDhZMmWvljy
-	 iIHzGUZn1NAXR2QXTkd9Hp5H+N8hU/SyqIDxg1oWvRBSl/oID1TYyoSb83u34wa4zZ
-	 Kc/I0NqjqcX6OpmjrTi2SEe6eHbDJzkRUq2RaxvjbBYnPjpaEJ7CCMvDUbmtRm4rBJ
-	 US5pS/1ye8bKmnNzmsRl4IE8zvCLh8Mz8juEyBx3quTcMMYGCpvbkXCL6oV4lecTal
-	 dQxH3vMgtSUig==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id B1928404FA;
-	Tue,  4 Feb 2025 16:40:31 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: I Hsin Cheng <richard120310@gmail.com>, skhan@linuxfoundation.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, I Hsin Cheng
- <richard120310@gmail.com>
-Subject: Re: [PATCH] mm: pgtable: Fix grammar error
-In-Reply-To: <20250204093326.206007-1-richard120310@gmail.com>
-References: <20250204093326.206007-1-richard120310@gmail.com>
-Date: Tue, 04 Feb 2025 09:40:30 -0700
-Message-ID: <877c65hddt.fsf@trenco.lwn.net>
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="ZyOD8byj"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-46e28597955so52160641cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 08:41:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1738687300; x=1739292100; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=52Wdx1BmdnQgYoMxdnPqrdFSJsd5zNLPV/6lG8XSTk8=;
+        b=ZyOD8byjj6qfFXjGy2yENHxXSbUsfgD12SNVLgMUmmWbvO4nnB39kc1iQR3F+fKaQU
+         18gymkxtK4wjob2OwXq7bXQSL3nBR7grMB3iJmjYCtaY1AbPGwvcFlhhOvTMRF/A1IcJ
+         czwcsGNMQ2IzLk7IoZ/eHCrZMOpfDV1YLPSVo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738687300; x=1739292100;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=52Wdx1BmdnQgYoMxdnPqrdFSJsd5zNLPV/6lG8XSTk8=;
+        b=njr8D5Q0QBZfmJOzSmx1BBGEDT7Xyu0PWzshTAXDoqS54QxDZD4ftuApGBLPoZJ7cQ
+         ng+2XeLIpEdGMuYYoONly3250Ps1Am1LRHmNTKfdM1q+gyvSBswxF3/bH4u7E3xcUABt
+         kw0jyN/L4juqH87o1Dxdg+2vTIVFzfyHr2rVOYvT3DbiTggE0Rw9iH009gj7f0/irv3j
+         PGjb5ShkPDQkwfIAmGbiesa2lHnZikft1f0MaC2ve3z/p1y7LjZ0drnvC5ozzGjLDZ5b
+         VjuMNtAZSpR1EngBbfNP3xeJG0lFvXv62qfHx/XT7YPVWW98oCa0MgDpUPcJmrsyqoMV
+         fTxg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPCWUJXqDHcyf8/hFWom1j47MW/rLNhhV3xFuvp4loeYJ8vH4hZdNhChZ20JFdFYDC4bR3Lq38mWw9n4I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnIMeKJXcMSF2Jw9/1NDhjea3sZq4AcgtbDZuoFQBV6NstJLFR
+	4VFHo8Y0QLODpb5X2E3+7+fVueU64oSlaS8ZNKbIn3aSBQC2wRPQILdtG3pJ0g==
+X-Gm-Gg: ASbGnctPrYD0SeW94r14CJQL7YFNEGve1jkeGN6HHeX6Rcz51s+0+WRu1lZv5FsT/qA
+	wwTZoWj7EkyxMks6ALcBbkyouw4QrNiBVs7pi1bVIbLD1aa8l8LRbYSbFFlepAXFpN0jPcFHDkm
+	OCH3qqvGOL2+eNsvh+y/b14V7uBLvINY2H9/aEwzQPO6dPlaT4QaXAUv6MunepbfEawBh1xGSnT
+	aKwGC6cb1TVcPjOaOhfcb6iXIWIbyVuSOXTSEl8tQaAIVGLJSPeFyBL0XKjv3/v8IgXVNaGH+nU
+	BSXJyfwZHVmYJtTyMYLg48plDi228b/VBE8dBw==
+X-Google-Smtp-Source: AGHT+IHfp/3fqPtIKWPO/WOMcL7EqM8NzX6aIAw0wddWU+eeThQX93zsyLCt4Vbb/kcMnKFcCRw82w==
+X-Received: by 2002:ac8:5d12:0:b0:46c:8380:4392 with SMTP id d75a77b69052e-46fd0a96272mr370145551cf.20.1738687300627;
+        Tue, 04 Feb 2025 08:41:40 -0800 (PST)
+Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46fdf0e3089sm62240381cf.46.2025.02.04.08.41.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 08:41:39 -0800 (PST)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Tue, 4 Feb 2025 11:41:38 -0500 (EST)
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: "Liang, Kan" <kan.liang@linux.intel.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
+ location
+In-Reply-To: <2025020408-apron-fled-d29e@gregkh>
+Message-ID: <6edcf7f8-d496-524e-2250-49284dfb55e4@maine.edu>
+References: <2025020304-chip-trench-4e56@gregkh> <87pljyyx68.fsf@ubik.fi.intel.com> <2025020426-spool-refreeze-2870@gregkh> <d689243f-9b25-40db-98b6-e032a6b27c62@linux.intel.com> <2025020408-apron-fled-d29e@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 
-I Hsin Cheng <richard120310@gmail.com> writes:
+On Tue, 4 Feb 2025, Greg Kroah-Hartman wrote:
 
-> Fix "due high contention" to "due to high contention".
->
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> ---
->  Documentation/mm/split_page_table_lock.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/mm/split_page_table_lock.rst b/Documentation/mm/split_page_table_lock.rst
-> index e4f6972eb..ced47a23e 100644
-> --- a/Documentation/mm/split_page_table_lock.rst
-> +++ b/Documentation/mm/split_page_table_lock.rst
-> @@ -4,7 +4,7 @@ Split page table lock
->  
->  Originally, mm->page_table_lock spinlock protected all page tables of the
->  mm_struct. But this approach leads to poor page fault scalability of
-> -multi-threaded applications due high contention on the lock. To improve
-> +multi-threaded applications due to high contention on the lock. To improve
->  scalability, split page table lock was introduced.
+> 
+> It seems that the majority of the perf code IS looking in the correct
+> place, just mem-events.c seemed wrong.
 
-Applied, thanks.
+I hate to tell you, but other places in userspace are depending on the 
+current setup.  libpfm4, used by PAPI, is looking directly in /sys/devices 
+for pmus and will break with the changes you are planning.
 
-jon
+Vince Weaver
+vincent.weaver@maine.edu
+
