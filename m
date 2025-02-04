@@ -1,108 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C0A213E94;
-	Tue,  4 Feb 2025 15:04:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C7E2C190;
+	Tue,  4 Feb 2025 15:05:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738681442; cv=none; b=iZHyYxkAsMCxPd7oiC8QMwHV0g0VVxLexysat8xkSmg+ysHLEKkX9vBYBXTC+GSmPNpr/O7+anNcedGHusIGTp1l8C5NJdTKgS3FJxtvuAjk/jST5XlyJe+w9uxozJhMV6/IM5JzhQocC765dDNmAeyQ6aJdKmtAzF37cM3dv/w=
+	t=1738681523; cv=none; b=UMjTSFFNXfQecgNM/O86cft5qC8UmW9oVMC8+ei5BlAt0I69u2uwJgGm0RyAHJ3y6lFTEBkDJt8MsecXMBeMiqpq/6+2NWPCJnerPwgdHBFDzQjT+YMMO6WDrOA4HzItsWu4/8V59bQk8dc1N4qvdmN2+Xo6Saduogpe5+nHWEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738681442; c=relaxed/simple;
-	bh=rjcA3VzBxn2A2yxzRm4Zfgq6CG6XVYbT9cdyQzhcIYQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=l2vEhIBmQboSV+S5COkaWz2u6oc242ZbY6gYJomS+PWMHnTskUGzotfz65f2N0UMJa2zfaCwV4uJQHVgpcXa6hjSPn0RwJK4GLHIhk3xGYwRy5aPgyqvcaHozgMrDTEPUlv7tJvz0cL+kbOFPzYtYQ2wZRxMNqTmGqEVdSOjQZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FR+RdYnj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FR+RdYnj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6C70C4CEDF;
-	Tue,  4 Feb 2025 15:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738681442;
-	bh=rjcA3VzBxn2A2yxzRm4Zfgq6CG6XVYbT9cdyQzhcIYQ=;
-	h=From:Date:Subject:To:Cc:From;
-	b=FR+RdYnjy/ltFMjXMJHCDJCOfq3c8ETV6OJNjT7LDo5MlnYa6sKzgJfzY4s1BZln5
-	 cGKGRekRBkkFPaRbnal6Hp/mgypPieieNvuTK8ArTMj0XnYru8YiOWdqojmVTR0ztF
-	 IXXQ9MY3haU0fD53yHd2/57s4/59JPOf+inSGDpdeuA7vZizbrR/hWfs2mZGd7cP7w
-	 VAEGIWqKYAWWg3oSQHoez8oOkav5mERkbRCgKDWcpJ2vtf3A6LXulDqylNZC4PlCEv
-	 /Kk0KuT1ZN7jhMspTywKiWHEkEnAkbp7mjhAK5FlXPQyPXGHt9d36m4kuAbqSs3rd1
-	 ONOSU1x9LhlFg==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 04 Feb 2025 10:04:00 -0500
-Subject: [PATCH] fuse: don't set file->private_data in
- fuse_conn_waiting_read
+	s=arc-20240116; t=1738681523; c=relaxed/simple;
+	bh=CkLgufEZxLECrlEuNLBib4Qq/TDvgfRXBAGJyc/cS4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SAyaUrPb19RGmogAUrzkTjPYUDXrpZEJGMAKzbRc0uVkSh5fMopTkUqbpcPdzo+v38Em3LlatqNHklxcBFQPvl33ynD89apiyfjbfIv168vdTht09gOUUp+qeZ/CoLXDOL+OroD3o/qZPl5FtRhpY4eh0DjRjPABRMxnDBDiEi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6121C4CEDF;
+	Tue,  4 Feb 2025 15:05:18 +0000 (UTC)
+Date: Tue, 4 Feb 2025 10:05:55 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
+ Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+ x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
+ jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
+ boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com,
+ andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, Vineeth
+ Pillai <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo
+ Molnar <mingo@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Clark Williams
+ <clark.williams@gmail.com>, bigeasy@linutronix.de, daniel.wagner@suse.com,
+ joseph.salisbury@oracle.com, broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250204100555.1a641b9b@gandalf.local.home>
+In-Reply-To: <20250204081653.18dfe905@gandalf.local.home>
+References: <20250131225837.972218232@goodmis.org>
+	<20250131225942.365475324@goodmis.org>
+	<20250201115906.GB8256@noisy.programming.kicks-ass.net>
+	<F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
+	<20250201181129.GA34937@noisy.programming.kicks-ass.net>
+	<20250201180617.491ce087@batman.local.home>
+	<20250203084306.GC505@noisy.programming.kicks-ass.net>
+	<20250203114537.6a30c7c0@gandalf.local.home>
+	<20250204091613.GQ7145@noisy.programming.kicks-ass.net>
+	<20250204075100.3fcbfda8@gandalf.local.home>
+	<20250204081653.18dfe905@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-fuse-fixes-v1-1-c1e1bed8cdb7@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAF8somcC/x2LQQqAIBAAvyJ7TlgtQfpKdChbay8WLkUg/j3pO
- MxMAaHMJDCqApkeFj5TA9MpCMeSdtK8NQaL1qHFQcdbSEd+STT23tuALpjVQBuuTL9o/TTX+gE
- 84tBpXAAAAA==
-X-Change-ID: 20250204-fuse-fixes-03882c05c1b1
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1205; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=rjcA3VzBxn2A2yxzRm4Zfgq6CG6XVYbT9cdyQzhcIYQ=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnoixhWUZV6Cz9D5JV/ljsh4Lsu/OWMf2MAWtf1
- GmdZNn8JvyJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6IsYQAKCRAADmhBGVaC
- FdM+EADRNeVwLQA993ZSTfROon65oIS8IZjDSy/ODQf1yxBRsV1gegn6i44z9NdMwZxhXFgndKV
- 3B/QLGF9A8lBO2I07+J/BJruks4lnf0T07UlofT5Iu+q5DrorQvthkZq9H3RYgR0mAGMNBsh5W8
- wOot13gpKY1cylbDCvLaP+AW1PK2XQEsMVhcD5x1W6KsudFnxiJt341r240VQx84wZWG6BNuQ2s
- ZysMgLy+GOj7zYgY7q0hUUSsMKnbcxeT+7Y+uHeqeKxLNpIN1/7lKplMlGcM5OFbaqGsZcZleMB
- S4yBIy/1TzyzKHpAavvFehywCVU32MAPTvLnvZQxjCdAiv2jHOs9Tb1sXN4TAP1WJrxUBjPQvjN
- cM1tcvvPg/uX3ArJ4U0rs/EkBMxqhfyqCfaKZ3NOkWApJNU6DQX4g1i5JzSkKPXp+P+gLpj+j0T
- UPAjn/dlLGRkQK/foTH9O7YnHmP7b06LK37fT650GHxCWkj6m4KOwTj6z4JUaLRBgI/YFVLhJbz
- nKFXqyH2yT2k8obOH28PpcKHFfFEBLpIaTjcCwswqRP76Z6eBBPEHz8EWxs22QJbbQFCHB8JFcM
- 9sjAi7xQK7WgNKGyjuo8XlQzyZWQfwr1UrToAvVWtfMTpoXxAzWqCmLu2nwVDQkGwR8nBq86O8o
- Msv9L1hhK3Kf2ZA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-I see no reason to set the private_data on the file to this value. Just
-grab the result of the atomic_read() and output it without setting
-private_data.
+n Tue, 4 Feb 2025 08:16:53 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/fuse/control.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> On Tue, 4 Feb 2025 07:51:00 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > > I'm so confused, WTF do you then need the lazy crap?  
+> 
+> IOW, the "lazy crap" was created to solve this very issue. The holding of
+> sleeping spin locks interrupted by a scheduler tick. I'm just giving user
+> space the same feature that we gave the kernel in PREEMPT_RT.
+> 
 
-diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-index 2a730d88cc3bdb50ea1f8a3185faad5f05fc6e74..17ef07cf0c38e44bd7eadb3450bd53a8acc5e885 100644
---- a/fs/fuse/control.c
-+++ b/fs/fuse/control.c
-@@ -49,18 +49,17 @@ static ssize_t fuse_conn_waiting_read(struct file *file, char __user *buf,
- {
- 	char tmp[32];
- 	size_t size;
-+	int value;
- 
- 	if (!*ppos) {
--		long value;
- 		struct fuse_conn *fc = fuse_ctl_file_conn_get(file);
- 		if (!fc)
- 			return 0;
- 
- 		value = atomic_read(&fc->num_waiting);
--		file->private_data = (void *)value;
- 		fuse_conn_put(fc);
- 	}
--	size = sprintf(tmp, "%ld\n", (long)file->private_data);
-+	size = sprintf(tmp, "%d\n", value);
- 	return simple_read_from_buffer(buf, len, ppos, tmp, size);
- }
- 
+Also, I believe it is best to follow the current preemption method and
+that's what the NEED_RESCHED_LAZY gives us.
 
----
-base-commit: 9afd7336f3acbe5678cca3b3bc5baefb51ce9564
-change-id: 20250204-fuse-fixes-03882c05c1b1
+Let's say you have a low priority program, maybe even malicious, that goes
+into a loop of calling a system call that can run for almost a millisecond
+without sleeping.
 
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+In PREEMPT_NONE, this low priority program can cause RT tasks a latency of
+a millisecond because if an RT task wakes up as the program just enters the
+system call, it will have to wait for it to exit that system call for it to
+run, which might be close to that millisecond.
 
+For PREEMPT_VOLUNTARY, it will only preempt tasks until it hits a
+might_sleep(), or cond_resched() (but so would PREEMPT_NONE on the
+cond_resched(), but we want to get rid of those).
+
+For PREEMPT_FULL, the program shouldn't affect any other task because its
+system call will simply be preempted.
+
+Now let's look at this new feature. It allows a task to ask for some
+extended time to get out of a critical section if possible.
+
+If we decide in the future that we remove PREEMPT_NONE and
+PREEMPT_VOLUNTARY with a dynamic type like:
+
+TYPE       |    Sched Tick  |  RT Wakeup  |   Enter user space |
+===========+================+=============+====================+
+None       |    Set LAZY    |   Set LAZY  |     schedule       |
+-----------+----------------+-------------+--------------------+
+Voluntary? |    Set LAZY    |   schedule  |     schedule       |
+-----------+----------------+-------------+--------------------+
+Full       |    schedule    |   schedule  |     schedule       |
+-----------+----------------+-------------+--------------------+
+
+(The "Enter user space" is when a NEED_RESCHED is set)
+
+Where in NONE, the LAZY flag is set for both the sched tick and the RT
+wakeup and it doesn't schedule until it hits user space.
+
+In "Voluntary", the LAZY flag is set only for sched tick on SCHED_OTHER
+tasks, but RT tasks will get to be scheduled immediately (depending on
+preempt_disable of course).
+
+With "Full" it will schedule whenever it can.
+
+With that task that calls that long system call, which method type above is
+in place determines the latency of other tasks.
+
+Now, if we add this feature, I want it to behave the same as a long system
+call. Where it would only extend the time if a long system call would
+extend the time, as that means it wouldn't modify the typical behavior of
+the system for other tasks, but it would help in the performance for the
+task that is requesting this feature.
+
+With this feature:
+
+TYPE       |    Sched Tick  |  RT Wakeup  |   Enter user space    |
+===========+================+=============+=======================+
+None       |    Set LAZY    |   Set LAZY  |     schedule if !LAZY |
+-----------+----------------+-------------+-----------------------+
+Voluntary? |    Set LAZY    |   schedule  |     schedule if !LAZY |
+-----------+----------------+-------------+-----------------------+
+Full       |    schedule    |   schedule  |     schedule          |
+-----------+----------------+-------------+-----------------------+
+
+Thus, in NONE, it would likely get to extend its time just like if it
+called a long system call. This can include even making RT tasks wait a
+little longer, just like they would wait on a system call.
+
+In "Voluntary", it would only get its timeslice extended if it was another
+SCHED_OTHER task that is to be scheduled. But if an RT task would wake up,
+it would schedule immediately regardless if a extended time slice was
+requested or not.
+
+In "Full", it probably makes sense to simply disable this feature (the
+program would see that it is disabled when it registers the rseq), as it
+would never get its time slice extended, as a system call would be
+preempted immediately if it was interrupted.
+
+So back to your question about why I'm tying this to the "lazy crap", is
+because I want the behavior of other tasks to not change due to one task
+asking for an extended time slice.
+
+-- Steve
