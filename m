@@ -1,66 +1,119 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mblankhorst.nl (lankhorst.se [141.105.120.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3BC20CCC3;
-	Tue,  4 Feb 2025 12:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3063220F074
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.105.120.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738673275; cv=none; b=gcHzfSvrDZid7SV9aCqq4sakQBoMKt1tWusI7uHpDoTvP+CcrtwuXJQbrEt2IF9IOZE0X6t5gplBmTJPA7PxNRcusVIAEalbu1YnRQL74MbueWmxGoMl5ZdVyW06uqBipGXv0CdVFR+r2Pf3aonn8/CX46leWStUyjOAoqilPvY=
+	t=1738673332; cv=none; b=BMqmJO2Q5oLD+zPFSM4lsiswKWfLGSzjZx9Q63+BUM7nIPhPjkfSlFFT1sy97wSCRE1Ww7MoXTXc7AnN87KIhFY6AMnojUSUsra36BgLLEUkhU9c3kfx8aZtN9v+FIg+98LWzUDJRTx2JFC8InSwRisY2sd3PMvB/RDBOA1NxlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738673275; c=relaxed/simple;
-	bh=+QuDPT6W5XirZNeR7SQ8jLXs2KGMTqlByEnYqxNXRuU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G5dk/pydmJkOMqbAwO/6nqN0k+gUak2u17L6joPJrTQcLlHuwnPLdoVW2ML+AVEW22Owsit8+wUHYCSxiX9PAeKGWmxEQLFWiOOVt9KmVTuGDTLfDeBnbV4i4fFDBxaBHkBCzqZUBj/EMSwewCW/Lpgi9to3rZ43GwZV/X/uTcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YnNPR28nFz6L4xl;
-	Tue,  4 Feb 2025 20:45:15 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 658BC140A71;
-	Tue,  4 Feb 2025 20:47:50 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Feb
- 2025 13:47:49 +0100
-Date: Tue, 4 Feb 2025 12:47:48 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>, Alexander
- Lobakin <aleksander.lobakin@intel.com>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>, "Mark
- Brown" <broonie@kernel.org>, =?ISO-8859-1?Q?Ma=EDra?= Canal
-	<mairacanal@riseup.net>, Robin Murphy <robin.murphy@arm.com>, Simona Vetter
-	<simona.vetter@ffwll.ch>, Zijun Hu <quic_zijuhu@quicinc.com>,
-	<linux-usb@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v2 2/5] regulator: dummy: convert to use the faux bus
-Message-ID: <20250204124748.000072b6@huawei.com>
-In-Reply-To: <2025020424-shuffle-facedown-973f@gregkh>
-References: <2025020421-poster-moisture-534b@gregkh>
-	<2025020424-shuffle-facedown-973f@gregkh>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738673332; c=relaxed/simple;
+	bh=4xL/mGmEdKri6EjjlhjH5p2ebNEKbItXamDkQYFeJe4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KuL+yEvbbv1j3/p0Pv0yQobvBa57Gj8Mmz79DmD6P6ValrtME1IspaykFCoUwMgUFWf6BxQXDBUdIbkusXxKwRfGqwSIn9iTYnAhDq5bP0xuV2D/JxbZORcO9cWmWoJLgZRLp6Fph4tomQFZMAYVD7inzAbeVnQEkjaRAPwiabY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se; spf=none smtp.mailfrom=mblankhorst.nl; arc=none smtp.client-ip=141.105.120.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lankhorst.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mblankhorst.nl
+From: Maarten Lankhorst <dev@lankhorst.se>
+To: intel-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <dev@lankhorst.se>,
+	Ingo Molnar <mingo@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH 5/8] drm/xe/coredump: Use guard helpers for xe_force_wake.
+Date: Tue,  4 Feb 2025 13:49:06 +0100
+Message-ID: <20250204124909.158315-6-dev@lankhorst.se>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250204124909.158315-1-dev@lankhorst.se>
+References: <20250204124909.158315-1-dev@lankhorst.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Tue,  4 Feb 2025 12:09:14 +0100
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+---
+ drivers/gpu/drm/xe/xe_devcoredump.c | 36 ++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 19 deletions(-)
 
-> The dummy regulator driver does not need to create a platform device, it
-> only did so because it was simple to do.  Change it over to use the
-> faux bus instead as this is NOT a real platform device, and it makes
-> the code even smaller than before.
-> 
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Looks good.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+diff --git a/drivers/gpu/drm/xe/xe_devcoredump.c b/drivers/gpu/drm/xe/xe_devcoredump.c
+index 39fe485d20858..afe229fba8a9c 100644
+--- a/drivers/gpu/drm/xe/xe_devcoredump.c
++++ b/drivers/gpu/drm/xe/xe_devcoredump.c
+@@ -233,7 +233,6 @@ static void xe_devcoredump_deferred_snap_work(struct work_struct *work)
+ 	struct xe_devcoredump_snapshot *ss = container_of(work, typeof(*ss), work);
+ 	struct xe_devcoredump *coredump = container_of(ss, typeof(*coredump), snapshot);
+ 	struct xe_device *xe = coredump_to_xe(coredump);
+-	unsigned int fw_ref;
+ 
+ 	/*
+ 	 * NB: Despite passing a GFP_ flags parameter here, more allocations are done
+@@ -247,12 +246,13 @@ static void xe_devcoredump_deferred_snap_work(struct work_struct *work)
+ 	xe_pm_runtime_get(xe);
+ 
+ 	/* keep going if fw fails as we still want to save the memory and SW data */
+-	fw_ref = xe_force_wake_get(gt_to_fw(ss->gt), XE_FORCEWAKE_ALL);
+-	if (!xe_force_wake_ref_has_domain(fw_ref, XE_FORCEWAKE_ALL))
+-		xe_gt_info(ss->gt, "failed to get forcewake for coredump capture\n");
+-	xe_vm_snapshot_capture_delayed(ss->vm);
+-	xe_guc_exec_queue_snapshot_capture_delayed(ss->ge);
+-	xe_force_wake_put(gt_to_fw(ss->gt), fw_ref);
++	scoped_guard(xe_force_wake, gt_to_fw(ss->gt), XE_FORCEWAKE_ALL) {
++		if (!xe_force_wake_scope_has_domain(XE_FORCEWAKE_ALL))
++			xe_gt_info(ss->gt, "failed to get forcewake for coredump capture\n");
++
++		xe_vm_snapshot_capture_delayed(ss->vm);
++		xe_guc_exec_queue_snapshot_capture_delayed(ss->ge);
++	}
+ 
+ 	xe_pm_runtime_put(xe);
+ 
+@@ -277,7 +277,6 @@ static void devcoredump_snapshot(struct xe_devcoredump *coredump,
+ 	u32 width_mask = (0x1 << q->width) - 1;
+ 	const char *process_name = "no process";
+ 
+-	unsigned int fw_ref;
+ 	bool cookie;
+ 	int i;
+ 
+@@ -305,20 +304,19 @@ static void devcoredump_snapshot(struct xe_devcoredump *coredump,
+ 	}
+ 
+ 	/* keep going if fw fails as we still want to save the memory and SW data */
+-	fw_ref = xe_force_wake_get(gt_to_fw(q->gt), XE_FORCEWAKE_ALL);
+-
+-	ss->guc.log = xe_guc_log_snapshot_capture(&guc->log, true);
+-	ss->guc.ct = xe_guc_ct_snapshot_capture(&guc->ct);
+-	ss->ge = xe_guc_exec_queue_snapshot_capture(q);
+-	if (job)
+-		ss->job = xe_sched_job_snapshot_capture(job);
+-	ss->vm = xe_vm_snapshot_capture(q->vm);
+-
+-	xe_engine_snapshot_capture_for_queue(q);
++	scoped_guard(xe_force_wake, gt_to_fw(ss->gt), XE_FORCEWAKE_ALL) {
++		ss->guc.log = xe_guc_log_snapshot_capture(&guc->log, true);
++		ss->guc.ct = xe_guc_ct_snapshot_capture(&guc->ct);
++		ss->ge = xe_guc_exec_queue_snapshot_capture(q);
++		if (job)
++			ss->job = xe_sched_job_snapshot_capture(job);
++		ss->vm = xe_vm_snapshot_capture(q->vm);
++
++		xe_engine_snapshot_capture_for_queue(q);
++	}
+ 
+ 	queue_work(system_unbound_wq, &ss->work);
+ 
+-	xe_force_wake_put(gt_to_fw(q->gt), fw_ref);
+ 	dma_fence_end_signalling(cookie);
+ }
+ 
+-- 
+2.47.1
+
