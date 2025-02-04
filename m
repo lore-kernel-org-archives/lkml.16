@@ -1,181 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A56520CCE1
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 12:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E5C20CCE1;
+	Tue,  4 Feb 2025 12:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738673714; cv=none; b=dQwMM36/wCLURepDXmA0wnLirBZTW3XCqN+ZFb9/H4EV7SXahPyGWZWaioO7w5JHhaStmGEYxGR5at+U5P8/RcnJ//s9xzgVR9c3vUX2KL6Ezj3H9w79W8FIcsjSsKijN2z2YsJo+zXdb+y5kQdLuKx39JtmgLv2pt4zPBNoxdo=
+	t=1738673758; cv=none; b=OvVpfYiDQV+9M0oCW4V6ILLq8KbcL/1wH/x214EtHFIceo+9VV512n70+d5qZKIfesSRz7SXcgj7uaWpPEDZVoJq9LSkWQOCrf+U05WB3wnMIEzIibkYov+Pf3nuFReIEREkEJg7K9GQrD8RCjs3TQTIYJsEBnflV3Xuaj5kJOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738673714; c=relaxed/simple;
-	bh=zGL9epENRNO7rvIHohYlhRMg7cx1KKq80o7dktun6zo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QnR52HHaY5A201BoN32EVGRg6eIbgQerj+yvYaXaG+NDNAKsSyxi6ZuADCduEsOPD7xgiitdFd2HnYOnrLdm7fffKnOLGZhOZEZ9JW1x0Bk+sd5db44TJjXOH1ULj7rEJe6j0pqjMV54e5u3BgWEq2QIchSisuGUXgqry/emig4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gQBBbAwG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738673758; c=relaxed/simple;
+	bh=79+RV3wfyZJvCYZPLtCDhJ7ch5O4tDc5RyLCB6Sl5uE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pdSIUTyHZLUcNL8giEhHVT7C2QGvZGgGDny7BgrECWoAeXAOpXNifEnuO5FOstS+aGkXNMmE8G7R71tKbK++u3ujCs/YvtIXpyfXowpbo5jZrgimJ86jC4ZBeZ/pfAf4vBMnij0KwGtEnGVvzhX9cZhq4A9IJdLIh/brKgr10NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=no85a8d3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gQBBbAwG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738673711;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=twPDg30fIiJNLDt2SiVRKkvqJ/64dc+oeH98LcXpjks=;
-	b=gQBBbAwGK3Lrsik53QJyxNdghbg2qd0FnEv4Hc/NKVxC6zGCoTMc/aHJghETMFJenA7kCk
-	GSwLku7xc+8fKKKZESb3teec9WPtvqCTSO+CaI3fv5PVRd/7RUhn0P8KZnjcUIqAFEuFks
-	xy6v2syZSk9rdaXDlDbeqrciXbDDmvE=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-491-gtpbzuZROFaLpmvAFXER1w-1; Tue, 04 Feb 2025 07:55:10 -0500
-X-MC-Unique: gtpbzuZROFaLpmvAFXER1w-1
-X-Mimecast-MFC-AGG-ID: gtpbzuZROFaLpmvAFXER1w
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6d88d56beb7so51607116d6.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 04:55:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738673709; x=1739278509;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:reply-to:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=twPDg30fIiJNLDt2SiVRKkvqJ/64dc+oeH98LcXpjks=;
-        b=cju6BefBzVBSAjDT9d4kn6HKIkQ5plpsQo7IpbtQOEcBhqYZIX36+op/iZrTw/M5Sc
-         m0BgWPxOkk51cJn9xUMuvoOIT6HqTYgbjVrDOa+7KQsdcvgM6BawAR290Yxd+OAOnceE
-         YKjRy/97tn22/1N8u1jN2ZcqaquKwGvXObLmzOOWJH5eko6QcscEw8WDNK0o1YMfeSsC
-         +ai33mL+OkIY2RVVniptA8Ktj+MMJopPlr+rm2rZzTZf+Ui3wKmzLIwbZ1FevpcSOa/V
-         PTNLCBbUkIzufHSLXszCYtBtecOpdreA0hu+AYXaR9uJOiacdeGS7AOH1K9LfDNptz3Z
-         M9Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjGU8p2QAkPzL6QHQuIiP+iFYS7ZONZq/QBOAowXfBYBGMeNLtmSDB9AvCt/ozlXi+A5YEb188Svg4XKw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyU1HDiicO3YopXOCoI8/v1E0/JrEWOjYDg8uD5pkmL7I7gzkc/
-	QEqDDsDpCOt1U1zptjpdththiAWjKmOB7Di/GKy7a74GQnx98hSSgeBXMgh79ioWIGu1lgRiI58
-	iiP/etjcgRJhOk4psYB5s9AYRdPWoAqoQKMhMizj2ycT9f4t2JWPQ6QcknGtwSQ==
-X-Gm-Gg: ASbGncupnrvhMDFMJqqia5Fh3WNVmOJ6Vqni8mu8p6sAfpioQOc9ftr1tetQ90x6iTl
-	Z+1IsmZ9PynVYjfU8UlLDkcp7ZVsTDeYkJmG9U8MA4GdC5GIW8ACxIWmT93Dy689dGP36eK6QzL
-	BaykzJLXR3+OnL62UvVu+NhQynmTy9krDFqvzhgGr99sokB3o+Z3E47/BNsxUyhE5rMPnKPFRWF
-	yDYJekR/kS16HHFMffGCd4JR2WYgiSNvzD5UcS85m7l0EyXCh9QyxQ9OgrNSPl9aphmoaqUpwnp
-	q0PExzcNMACmu2kA3iaoWUPGNeZ0pdNVbqtJbL5Zr3ZN1KpBDzOZ
-X-Received: by 2002:a05:6214:1c0b:b0:6d9:2e46:dc35 with SMTP id 6a1803df08f44-6e243bf84c3mr422214746d6.25.1738673709632;
-        Tue, 04 Feb 2025 04:55:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF1a38N2TZdISEECvq/s7iOToAmmfm3GmVQAMYB+u0Kmi1Pw+6Ta7PfZF01eEC876vzaXAEXA==
-X-Received: by 2002:a05:6214:1c0b:b0:6d9:2e46:dc35 with SMTP id 6a1803df08f44-6e243bf84c3mr422214216d6.25.1738673709310;
-        Tue, 04 Feb 2025 04:55:09 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254814029sm61998046d6.29.2025.02.04.04.55.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 04:55:08 -0800 (PST)
-Message-ID: <cb087202-3a64-428c-bba2-196a3612e5ff@redhat.com>
-Date: Tue, 4 Feb 2025 13:55:01 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="no85a8d3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AAEBC4CEDF;
+	Tue,  4 Feb 2025 12:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738673757;
+	bh=79+RV3wfyZJvCYZPLtCDhJ7ch5O4tDc5RyLCB6Sl5uE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=no85a8d3ZgHd1rJTADs/tMTTpMjKlhzUTcqCMjSjx0Uj4KnYiSCvt9UkEVAsO6qt1
+	 ope9AG6O0xeLeYU7BaLeMtnpC9BUaoCq3vqeHUZcknNjhJ6aquoP0YaaDfq/WEnSBd
+	 oWa50VnC6LRQapalaMR9qEpPwjoDj9iNEUW+Smfs=
+Date: Tue, 4 Feb 2025 13:55:54 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Lyude Paul <lyude@redhat.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] driver core: add a faux bus for use when a simple
+ device/bus is needed
+Message-ID: <2025020458-overpass-pebbly-f4b9@gregkh>
+References: <2025020421-poster-moisture-534b@gregkh>
+ <2025020424-retrain-recharger-407c@gregkh>
+ <Z6H9g_bvvMf5pPyc@cassiopeiae>
+ <2025020435-earwig-zesty-87ea@gregkh>
+ <Z6ICPc3A5Cy1dgw_@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: eric.auger@redhat.com
-Subject: Re: [PATCH RFCv2 00/13] iommu: Add MSI mapping support with nested
- SMMU
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
- Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "kevin.tian@intel.com" <kevin.tian@intel.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>, "maz@kernel.org"
- <maz@kernel.org>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
- "joro@8bytes.org" <joro@8bytes.org>, "shuah@kernel.org" <shuah@kernel.org>,
- "reinette.chatre@intel.com" <reinette.chatre@intel.com>,
- "yebin (H)" <yebin10@huawei.com>,
- "apatel@ventanamicro.com" <apatel@ventanamicro.com>,
- "shivamurthy.shastri@linutronix.de" <shivamurthy.shastri@linutronix.de>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "anna-maria@linutronix.de" <anna-maria@linutronix.de>,
- "yury.norov@gmail.com" <yury.norov@gmail.com>,
- "nipun.gupta@amd.com" <nipun.gupta@amd.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
- "patches@lists.linux.dev" <patches@lists.linux.dev>,
- "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
- "mdf@kernel.org" <mdf@kernel.org>, "mshavit@google.com"
- <mshavit@google.com>, "smostafa@google.com" <smostafa@google.com>,
- "ddutile@redhat.com" <ddutile@redhat.com>
-References: <cover.1736550979.git.nicolinc@nvidia.com>
- <4946ea266bdc4b1e8796dee1b228bd8f@huawei.com>
- <20250123132432.GJ5556@nvidia.com>
- <de6b9dc1-dedd-4a3d-9db7-cb4b8e281697@redhat.com>
- <20250129150454.GH5556@nvidia.com>
- <8e4c21b5-3b79-4f0b-b920-59b825c2fb81@redhat.com>
- <20250129201307.GJ5556@nvidia.com>
-From: Eric Auger <eric.auger@redhat.com>
-In-Reply-To: <20250129201307.GJ5556@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6ICPc3A5Cy1dgw_@cassiopeiae>
 
-Hi Jason,
+On Tue, Feb 04, 2025 at 01:04:13PM +0100, Danilo Krummrich wrote:
+> On Tue, Feb 04, 2025 at 12:52:34PM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Feb 04, 2025 at 12:44:03PM +0100, Danilo Krummrich wrote:
+> > > On Tue, Feb 04, 2025 at 12:09:13PM +0100, Greg Kroah-Hartman wrote:
+> > > > Many drivers abuse the platform driver/bus system as it provides a
+> > > > simple way to create and bind a device to a driver-specific set of
+> > > > probe/release functions.  Instead of doing that, and wasting all of the
+> > > > memory associated with a platform device, here is a "faux" bus that
+> > > > can be used instead.
+> > > > 
+> > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > ---
+> > > >  v2: - renamed bus and root device to just "faux" thanks to Thomas
+> > > >      - removed the one-driver-per-device and now just have one driver
+> > > >        entirely thanks to Danilo
+> > > >      - kerneldoc fixups and additions and string handling bounds checks
+> > > >        hanks to Andy
+> > > >      - coding style fix thanks to Jonathan
+> > > >      - tested that the destroy path actually works
+> > > > 
+> > > >  drivers/base/Makefile       |   2 +-
+> > > >  drivers/base/base.h         |   1 +
+> > > >  drivers/base/faux.c         | 196 ++++++++++++++++++++++++++++++++++++
+> > > >  drivers/base/init.c         |   1 +
+> > > >  include/linux/device/faux.h |  31 ++++++
+> > > >  5 files changed, 230 insertions(+), 1 deletion(-)
+> > > >  create mode 100644 drivers/base/faux.c
+> > > >  create mode 100644 include/linux/device/faux.h
+> > > 
+> > > I really like it, it's as simply as it can be.
+> > > 
+> > > Please find one nit below, otherwise
+> > > 
+> > > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> > > 
+> > > > 
+> > > > +/**
+> > > > + * faux_device_destroy - destroy a faux device
+> > > > + * @faux_dev: faux device to destroy
+> > > > + *
+> > > > + * Unregister and free all memory associated with a faux device that was
+> > > > + * previously created with a call to faux_device_create().
+> > > 
+> > > Can we really claim that this frees all memory? Someone can still have a
+> > > reference to the underlying struct device, right?
+> > 
+> > That "someone" is the person that had the original device pointer passed
+> > to it, so if that person then calls faux_device_destroy(), yes, that
+> > should all be properly cleaned up.
+> > 
+> > But even if it isn't, the device is destroyed and gone from sysfs, and
+> > whenever that final final put_device() is called, the memory will then
+> > be freed by the driver core itself.
+> 
+> Oh indeed, the code here is perfectly fine. I just wanted to say that calling
+> faux_device_destroy() is not a guarantee that "all memory associated with a
+> faux device" is actually freed, as the kernel-doc comment above says (or at
+> least implies).
+> 
+> So, the concern only was that the comment could be confusing, as in "How can
+> faux_device_destroy() free the memory, if I still have a separate reference to
+> this thing?" (which it clearly would not).
 
+Documentation is hard :)
 
-On 1/29/25 9:13 PM, Jason Gunthorpe wrote:
-> On Wed, Jan 29, 2025 at 06:46:20PM +0100, Eric Auger wrote:
->>>>> This missing peice is cleaning up the ITS mapping to allow for
->>>>> multiple ITS pages. I've imagined that kvm would someone give iommufd
->>>>> a FD that holds the specific ITS pages instead of the
->>>>> IOMMU_OPTION_SW_MSI_START/SIZE flow.
->>>> That's what I don't get: at the moment you only pass the gIOVA. With
->>>> technique 2, how can you build the nested mapping, ie.
->>>>
->>>>          S1           S2
->>>> gIOVA    ->    gDB    ->    hDB
->>>>
->>>> without passing the full gIOVA/gDB S1 mapping to the host?
->>> The nested S2 mapping is already setup before the VM boots:
->>>
->>>  - The VMM puts the ITS page (hDB) into the S2 at a fixed address (gDB)
->> Ah OK. Your gDB has nothing to do with the actual S1 guest gDB,
->> right?
-> I'm not totally sure what you mean by gDB? The above diagram suggests
-> it is the ITS page address in the S2? Ie the guest physical address of
-> the ITS.
-Yes this is what I meant, ie. the guest ITS doorbell GPA
->
-> Within the VM, when it goes to call iommu_dma_prepare_msi(), it will
-> provide the gDB adress as the phys_addr_t msi_addr.
->
-> This happens because the GIC driver will have been informed of the ITS
-> page at the gDB address, and it will use
-> iommu_dma_prepare_msi(). Exactly the same as bare metal.
+Can you think of some wording here that would explain this better?
+Something like "after you call this, you can't touch the pointer you
+passed into here" is what I'm going for.
 
-understood this is the standard MSI binding scheme.
->
->> It is computed in iommufd_sw_msi_get_map() from the sw_msi_start pool.
->> Is that correct?
-> Yes, for a single ITS page it will reliably be put at sw_msi_start.
-> Since the VMM can provide sw_msi_start through the OPTION, the VMM can
-> place the ITS page where it wants and then program the ACPI to tell
-> the VM to call iommu_dma_prepare_msi(). (don't use this flow, it
-> doesn't work for multi ITS, for testing only)
-OK so you need to set host sw_msi_start to the guest doorbell GPA which
-is currently set, in qemu, at
-GITS_TRANSLATER 0x08080000 + 0x10000
+I guess the documentation for device_destroy() would work here as well,
+which says:
 
-In my original integration, I passed pairs of S1 gIOVA/gDB used by the
-guest and this gDB was directly reused for mapping hDB.
+	 * This call unregisters and cleans up a device that was created with a
+	 * call to device_create().
 
-I think I get it now.
+Would that be better?
 
-Eric
->
->> https://lore.kernel.org/all/20210411111228.14386-9-eric.auger@redhat.com/
->> I was passing both the gIOVA and the "true" gDB Eric
-> If I understand this right, it still had the hypervisor dynamically
-> setting up the S2, here it is pre-set and static?
->
-> Jason
->
+thanks,
 
+greg k-h
