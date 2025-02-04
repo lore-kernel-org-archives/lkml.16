@@ -1,107 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2BD2066F3;
-	Tue,  4 Feb 2025 09:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B45143C5D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738662638; cv=none; b=Abx+A2FUjZIUaGH6QpwJ2LcjrNp2HnNXJcqrKIsbJpt/NQS0sCCqS/fMMjie0tpxmCrUNcKRBHvH12XnN4v8AClFuLP5ZHQzxP6wI9srfuQJpPbHHX3IHwj+NDuwR2z9IraVvVAfI0r4t94wekdP+NWyqupmxVITsLrU3QjSW+s=
+	t=1738662639; cv=none; b=I/PFkpzh2Dli0th/s9NZJjh5bbDzeosu/HD/FgOzo2xf5JPt5OZt8M/8ZPk+HND/NOIu8vBx7uNcoFiEulnicndkifLYC89QVcmVlp3Y+ycFVUUo2qLPdTYL2GwHD1/TUnGPfEVhfCgigMcafl7/Cu7kD5oHbRNUlaB0a7MxAHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738662638; c=relaxed/simple;
-	bh=jb8kMwJ98DjWaCHgudb7JkXH1w0Cj8Tj6R51vZ/JS1M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=satM3R7HWBj73ozU/xebIA8ypIR+EfFajtKefMY0Qd5DUnKbm6WtWwi96lo4XjziieiLpM6N8Umtfj605e8jWxNOrFIm1zswDPMj5FIoxhJxVW63gP1F3mKp8qu6GW/cZQs5EK5uUD8WMOttI+fQTjPJ6t+/Rc6LyCK4I2JbWTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBzOkKB0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738662639; c=relaxed/simple;
+	bh=sFKhMsokAOxkqQ+lyfqOtMnWWCSgFyyB9tfGsKKlFDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uH+kyXpC7yw3Bqlhg7oz/uTaw7olgENHC+06ZNrQtzW1TNUMYyOguMIqPCGQ1Eqb579A7OroNYhwy/nas4CW7UUzEXvH/4flHz2FahKVxJ89cwxfl0IdPNEXOPH5VyNzrTwXSGJwenMiOYt0KgRrMJmtQZd7lSbYsg2cb05G4YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Vr0PzjdO; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBzOkKB0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB9D6C4CEDF;
-	Tue,  4 Feb 2025 09:50:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738662638;
-	bh=jb8kMwJ98DjWaCHgudb7JkXH1w0Cj8Tj6R51vZ/JS1M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qBzOkKB0y4E6DYirbxs7d1/+MSesxUN6asKQjPs20sDGgtF0br7786l4TGnUdvHLz
-	 W0judOCyijvE5jTIstIMrDDw5jKpbY8S75tpdHZM8B8D9pyRIxhuVSfLAhzNfHYzEv
-	 YI0nPuGD/n/JBu6W89vQSc1Wd1KOVnzx+p9mwSu1U1hYJxIOryalfxgee0iywH31G8
-	 jgbwTRnbFlMPcsRvSSe9Th4Gz8TwWMDzKCHde9ZPqpKYZaHSp6Fm1UcKb095nLe3cU
-	 crO80UOzeuKKGbpHLEpM0NGskUUz6G54Y8y1zHm5DFk/nfjsJ+2pygbbORAST4Vz8s
-	 vMWnZ5HtqPxDw==
-From: Christian Brauner <brauner@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	pedro.falcato@gmail.com,
-	linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Oliver Sang <oliver.sang@intel.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Koutny <mkoutny@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH v7 0/6] introduce PIDFD_SELF* sentinels
-Date: Tue,  4 Feb 2025 10:46:35 +0100
-Message-ID: <20250204-joggen-buddeln-29e5ca75abb7@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <cover.1738268370.git.lorenzo.stoakes@oracle.com>
-References: <cover.1738268370.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Vr0PzjdO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1738662634;
+	bh=sFKhMsokAOxkqQ+lyfqOtMnWWCSgFyyB9tfGsKKlFDU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vr0PzjdOemk9h0ggU7S03NdeZp5h3qkAhXRzIWYtvd0YzxKTz/Tul5nAbYQcEzkpg
+	 QsfkAl8U+UHSlyp9EMo7LcV3uslYTffCEaO2Jm5Evqr7IrwRnYGFX1g2W+/qf/qjjx
+	 bGNl9uHBtjjoOb8DeEzliMPlizscj0N4C/emw51o=
+Date: Tue, 4 Feb 2025 10:50:34 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Billy Tsai <billy_tsai@aspeedtech.com>
+Cc: alexandre.belloni@bootlin.com, pgaj@cadence.com, 
+	miquel.raynal@bootlin.com, conor.culhane@silvaco.com, aniketmaurya@google.com, 
+	Shyam-sundar.S-k@amd.com, jarkko.nikula@linux.intel.com, wsa+renesas@sang-engineering.com, 
+	xiaopei01@kylinos.cn, Guruvendra.Punugupati@amd.com, linux-i3c@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com
+Subject: Re: [PATCH v2 1/2] i3c: Remove the const qualifier from i2c_msg
+ pointer in i2c_xfers API
+Message-ID: <f9f730b6-4620-49dd-9700-ee18f777045f@t-8ch.de>
+References: <20250204091702.4014466-1-billy_tsai@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1795; i=brauner@kernel.org; h=from:subject:message-id; bh=jb8kMwJ98DjWaCHgudb7JkXH1w0Cj8Tj6R51vZ/JS1M=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQvfPTgTD7L0pub5DJF0/Jkm1bfN599J+JSe+g99xMrf HIyLtUv7ihlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZhIVgYjw4fPN5iqNJV9OgsW svEXbPTITfBe7sAUZj2X8f5jmdCifwz/o9w3l/I+kFzBJnLz6KVvxzkSSuumWL9meHP5ZfeNjvN nuAE=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204091702.4014466-1-billy_tsai@aspeedtech.com>
 
-On Thu, 30 Jan 2025 20:40:25 +0000, Lorenzo Stoakes wrote:
-> If you wish to utilise a pidfd interface to refer to the current process or
-> thread it is rather cumbersome, requiring something like:
-> 
-> 	int pidfd = pidfd_open(getpid(), 0 or PIDFD_THREAD);
-> 
-> 	...
-> 
-> [...]
+Hi Billy,
 
-Updated merge message. I've slightly rearranged pidfd_send_signal() so
-we don't have to call CLASS(fd, f)(pidfd) unconditionally anymore.
+On 2025-02-04 17:17:01+0800, Billy Tsai wrote:
+> The change is necessary to enable the use of the
+> `i2c_get_dma_safe_msg_buf()` API, which requires a non-const
+> `struct i2c_msg *` to operate. The `i2c_get_dma_safe_msg_buf()` function
+> ensures safe handling of I2C messages when using DMA, making it essential
+> for scenarios where DMA transfers are involved. By removing the `const`
+> qualifier, this patch allows drivers to prepare and manage DMA-safe
+> buffers directly.
 
----
+This is missing a changelog to v1 of the series.
 
-Applied to the vfs-6.15.pidfs branch of the vfs/vfs.git tree.
-Patches in the vfs-6.15.pidfs branch should appear in linux-next soon.
+Also I asked before why it is not possible to change the signature of
+i2c_get_dma_safe_msg_buf() to accept 'const struct i2c_msg *' [0].
+That looks like the nicer solution to me.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  drivers/i3c/master/dw-i3c-master.c     | 2 +-
+>  drivers/i3c/master/i3c-master-cdns.c   | 2 +-
+>  drivers/i3c/master/mipi-i3c-hci/core.c | 2 +-
+>  drivers/i3c/master/svc-i3c-master.c    | 2 +-
+>  include/linux/i3c/master.h             | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+<snip>
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.15.pidfs
-
-[1/6] pidfd: add PIDFD_SELF* sentinels to refer to own thread/process
-      https://git.kernel.org/vfs/vfs/c/e6e4ed42f8d8
-[2/6] selftests/pidfd: add missing system header imcludes to pidfd tests
-      https://git.kernel.org/vfs/vfs/c/c9f04f4a251d
-[3/6] tools: testing: separate out wait_for_pid() into helper header
-      https://git.kernel.org/vfs/vfs/c/fb67fe44116e
-[4/6] selftests: pidfd: add pidfd.h UAPI wrapper
-      https://git.kernel.org/vfs/vfs/c/ac331e56724d
-[5/6] selftests: pidfd: add tests for PIDFD_SELF_*
-      https://git.kernel.org/vfs/vfs/c/881a3515c191
-[6/6] selftests/mm: use PIDFD_SELF in guard pages test
-      https://git.kernel.org/vfs/vfs/c/b4703f056f42
+[0] https://lore.kernel.org/lkml/23854752-435e-432e-ba21-caf690c0cecc@t-8ch.de/
