@@ -1,185 +1,132 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E4E213E90;
-	Tue,  4 Feb 2025 15:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738683395; cv=none; b=dO+opSIwvtpMgELelbxM36VAYNGjYvmGlvsKJDk0R7EPOHixQBoUHTV449acoZQ7k8rGOR2rXnSRHhRnbaJPSA+JEKgAI2rG4wJCsgy4fS6f3nEejqAXbDY0WHTEqk/8vjSc5zHMcoBcloeABaf9xAcfqNgk5oZ3jsLSDwriSec=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738683395; c=relaxed/simple;
-	bh=Hperjmt2vFY8V7jP1srdf54/2dxyzRb2naI2WZdG0o0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/TXascUsorUQaUxBjN8TiEmVlOihYC0cTHUqtRGAA5iL0RbJMUXTCg+Cr6x2Sm9EvM+tNd9B+E44NPAxFRy9C5X43rMzfOAA6SgtwpLvGOGrnTEoL7mgtYwIeqRMPHIpmRUWXeACthBS61im4TlRfuFSelbhOyXZWayxa7VXTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NoN5abod; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130B3213E7D;
+	Tue,  4 Feb 2025 15:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738683434; cv=pass; b=t2cIcSW2eJj3JJCobzErMqG493qppqPywgD5MQ+eNvNE5ueg01B5txFbMF7UCJvNBx2p6Z+1V+yF10bg30awlVTFGKs92lPNt3/bzIJHNG7s4PPqVuaKLRlLbpnelOPmDdpmGazG8Ia5IwZsMJ1uSc+5fyFTb3lUOevoCMdqG1w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738683434; c=relaxed/simple;
+	bh=u+FxAfqeRNPTPn8oDj5OPMxq0lbgjmJKpSWFq0ZSTdY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PrckZJWOjMAjfBjdtCPAQSFsC1Z88tUorx19j4I+j6ZIGk4Ga7WqTOzaP39ja2ka3/zvmb0r4efd97MrfRBaYHmsultrNpyGT9lk6ZRl93gm/Wty+TP0pqW4EpVV/OvNRLPItDtTkCJPg4X0g0eS9uogl0dKxHYdle1csbi99Zg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=gXYZ3Mpe; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NoN5abod"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-436341f575fso67788525e9.1;
-        Tue, 04 Feb 2025 07:36:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738683392; x=1739288192; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6yfhdfuu6Jne04lXzCONZTO6jud9pXKpEXOoexC1v38=;
-        b=NoN5abodXK5oGSB06E2pHmJ4GgJf12Voc7uNbEydOMrZvOwwq2fhnyWtJsdKm9Hywm
-         tVlW3aWmJsLr3AvfTyq6rcxGYgXsi7/kpa5zD3+JOxPc4stgMb5QFU5bvxbgcLkI1GFz
-         UOyHsn6NJkR26FlC8Dx7PXhK4Vt0d2s39GZPlcGOJUD5Juf/hCmWZ7se+1nWidItAWNV
-         6xfUYpEGdVG3YMB1WcTqpYX3QhacTCsiTLf+GMaRYENQDAcpxqX+vawgmtsom/53YHPK
-         NC70yJvKlEWL905eB1ZscggewSVd68g+Q7B+hy2SpHl2wMD+RItkXWTdd8ZHdzvcD8JO
-         4HbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738683392; x=1739288192;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6yfhdfuu6Jne04lXzCONZTO6jud9pXKpEXOoexC1v38=;
-        b=lAZ8T97mbvMqOAH0065+KN8cWc474KsFMhIu/zsifw3Z6884f0auK2KGe+JTUJ8kLY
-         arH7d62yPFMeTq61nRRCpbEplxC9+pYseqIGAGapnpowrB2a6mXJaN8ogoF7Stg8NnbF
-         xiDdkBsc26b3LA3P2qeKMPipB7sEYF4QSsBGL4ac+zD2EhCbT1E1rs/IrXwnFC8aulix
-         D0kcwT2Sr+PP7IWa3Qj3CUYvRrw9K9dUdjx8mnIFXy8rZvbQogd8BWtGjs5t6HBDKwPC
-         U/eSSRSYyIcCyiNJlXIkdG7TzwjOBR9pbSv/0KzH0KTVXoeRqBA6vLCUFAILQZbME5Dt
-         QLvA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1BPhwuhXn1dOHkw/YWPfrY1/p/ceAS4G0413BCRijhNupSJ2Kc/+G9rcD73gWG5HCcQCsEpyonzYaRhMT@vger.kernel.org, AJvYcCVGMMmQ8pyhJ3cCzPu3DLtPC/X6shg7/jgHXC6fN4KwkszZCwqAAOGn6+DNE2m8MBBHsWR2ge5Y@vger.kernel.org, AJvYcCWohQ+CMrcgjEnLqbqKX47aRkTDPHun7pMKdSxM7vuRz8GPGt9/cDNSI8kxG69jamxqiq5EAyMpepU=@vger.kernel.org, AJvYcCX9YL2x8vWk4eJSO4px2A6oWjNlQcEM/4PCWPr15TmWm7JA6mlDwUkFac4B3bluuzcLUG+Ex0W3yuQjQfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygyMlMehbRzz6j0VobC/IeQNKrOn1ZDwLMHUn80a4TLDs+9Lky
-	+tac5dyZyKzxClCAS6peVg4ZY3yA6Gd5SFbZhZk7NCiNaqFxYZcB
-X-Gm-Gg: ASbGnctiJhertZ72ChBOrGF7iZJ/4AVmMpmJB8tyPcoazkrjmSTzEXpNzK2RzXUNvaA
-	kjp4I72YS/Bly4wO97m7439R2icwg/eMXIZkPqkHKKFNfqUBrodcMnYL86mX07uX8VtgVSTuHCW
-	51a+7Yz4YN8Xj4sY2UezBBWVSIeMnkxeXR5iohW/wtYoEEE27jUw73tPJsAbPdoi5jthxPPDBXt
-	RaJxukAAsI+3LA7G5Xyx99lQdFt66glWRltaU15AyPxrJelvaU7V9zNqeB1aaggFM3HfolZuLcI
-	Ephp+kTDCczRp/qctulSCWXamUiJU+YNjf/IT9uC0XzMWbzaZV4Cw94xD5cE4fbP56K+QRRqmqX
-	O3A==
-X-Google-Smtp-Source: AGHT+IHHb0F37JA4DghmanO5lvxkHhYtOLWV4Qig4WpmdgfCxNk95q0DUf0KBslAz5XhKw7iztyrNg==
-X-Received: by 2002:a7b:c5d7:0:b0:431:542d:2599 with SMTP id 5b1f17b1804b1-438e07cd500mr214704025e9.22.1738683390301;
-        Tue, 04 Feb 2025 07:36:30 -0800 (PST)
-Received: from orome (p200300e41f281900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1900:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e244ef41sm198097785e9.32.2025.02.04.07.36.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 07:36:29 -0800 (PST)
-Date: Tue, 4 Feb 2025 16:36:27 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Mohan Kumar D <mkumard@nvidia.com>
-Cc: vkoul@kernel.org, jonathanh@nvidia.com, dmaengine@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v3 1/2] dmaengine: tegra210-adma: Fix build error due to
- 64-by-32 division
-Message-ID: <dsxaisxdpsxecyna527cifixyurmkgo3cfaiheau5jjdl5qysp@64qquncxdmof>
-References: <20250116162033.3922252-1-mkumard@nvidia.com>
- <20250116162033.3922252-2-mkumard@nvidia.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="gXYZ3Mpe"
+ARC-Seal: i=1; a=rsa-sha256; t=1738683398; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Zyt/HjfG+yTFPFCoPjfzW+BlsfazEKApAez9eCk9iAoCMH0V/cS0xCY8WIMTYLcxgMKGvLpggch4OyfN4fqjwOblENL6C3HxzrIPOYHkeXkSvZHixYq9cVdfSf7JBE3eNr8eu123yMP/TZIJX2H6MMW1tU9eGdxbUPlLyuDjnqo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738683398; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=kVZIBsJ2ukDO0m/xIz1rl1s2choG2uPMysZ4azq+d4A=; 
+	b=Uzat8tJIuh0xrX25VHIn7B3SkrnZdjLyzJnNK5WGPu5FfdMZbe8IuqgodWZMpf+HKkqFp/vdGvchMPXatBSx/S95I+9EpGp7FMO55s8DidoeQ5QqkVXt5P0kZjHHrk/b7QtW6aMlf1Gb05zXeG6sVn5tzq74k0xpY+1Kaox1qMY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738683398;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=kVZIBsJ2ukDO0m/xIz1rl1s2choG2uPMysZ4azq+d4A=;
+	b=gXYZ3MpeQTLxffZoid6o4agzOgQjiHL2ZDn+6EGgU2VkvVoDZGwcKtRzs5osCPEe
+	ef4oaLK/Qwm0IzDdxWdX1JcqbfBj/kf+P8Fmfl3KgRdO5ITfFRWB/9+dTqPcHyFzZb8
+	VK6SfnnbiBM6WI2yST8UYG1O/TQ55Uwb/ChKbWrI=
+Received: by mx.zohomail.com with SMTPS id 1738683395390506.65916958717594;
+	Tue, 4 Feb 2025 07:36:35 -0800 (PST)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Tue, 04 Feb 2025 16:35:48 +0100
+Subject: [PATCH v2 3/7] hwrng: rockchip: store dev pointer in driver struct
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="thw54jjy27rwk2q7"
-Content-Disposition: inline
-In-Reply-To: <20250116162033.3922252-2-mkumard@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250204-rk3588-trng-submission-v2-3-608172b6fd91@collabora.com>
+References: <20250204-rk3588-trng-submission-v2-0-608172b6fd91@collabora.com>
+In-Reply-To: <20250204-rk3588-trng-submission-v2-0-608172b6fd91@collabora.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Olivia Mackall <olivia@selenic.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Daniel Golle <daniel@makrotopia.org>, Aurelien Jarno <aurelien@aurel32.net>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ kernel@collabora.com, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
+The rockchip rng driver does a dance to store the dev pointer in the
+hwrng's unsigned long "priv" member. However, since the struct hwrng
+member of rk_rng is not a pointer, we can use container_of to get the
+struct rk_rng instance from just the struct hwrng*, which means we don't
+have to subvert what little there is in C of a type system and can
+instead store a pointer to the device struct in the rk_rng itself.
 
---thw54jjy27rwk2q7
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/2] dmaengine: tegra210-adma: Fix build error due to
- 64-by-32 division
-MIME-Version: 1.0
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+ drivers/char/hw_random/rockchip-rng.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-On Thu, Jan 16, 2025 at 09:50:32PM +0530, Mohan Kumar D wrote:
-> Kernel test robot reported the build errors on 32-bit platforms due to
-> plain 64-by-32 division. Following build erros were reported.
->=20
->    "ERROR: modpost: "__udivdi3" [drivers/dma/tegra210-adma.ko] undefined!
->     ld: drivers/dma/tegra210-adma.o: in function `tegra_adma_probe':
->     tegra210-adma.c:(.text+0x12cf): undefined reference to `__udivdi3'"
->=20
-> This can be fixed by using lower_32_bits() for the adma address space as
-> the offset is constrained to the lower 32 bits
->=20
-> Fixes: 68811c928f88 ("dmaengine: tegra210-adma: Support channel page")
-> Cc: stable@vger.kernel.org
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202412250204.GCQhdKe3-lkp@i=
-ntel.com/
-> Signed-off-by: Mohan Kumar D <mkumard@nvidia.com>
-> ---
->  drivers/dma/tegra210-adma.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-> index 6896da8ac7ef..258220c9cb50 100644
-> --- a/drivers/dma/tegra210-adma.c
-> +++ b/drivers/dma/tegra210-adma.c
-> @@ -887,7 +887,8 @@ static int tegra_adma_probe(struct platform_device *p=
-dev)
->  	const struct tegra_adma_chip_data *cdata;
->  	struct tegra_adma *tdma;
->  	struct resource *res_page, *res_base;
-> -	int ret, i, page_no;
-> +	unsigned int page_no, page_offset;
-> +	int ret, i;
-> =20
->  	cdata =3D of_device_get_match_data(&pdev->dev);
->  	if (!cdata) {
-> @@ -914,9 +915,16 @@ static int tegra_adma_probe(struct platform_device *=
-pdev)
-> =20
->  		res_base =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "globa=
-l");
->  		if (res_base) {
-> -			page_no =3D (res_page->start - res_base->start) / cdata->ch_base_offs=
-et;
-> -			if (page_no <=3D 0)
-> +			if (WARN_ON(lower_32_bits(res_page->start) <=3D
-> +						lower_32_bits(res_base->start)))
+diff --git a/drivers/char/hw_random/rockchip-rng.c b/drivers/char/hw_random/rockchip-rng.c
+index 289b385bbf05e3c828b6e26feb2453db62f6b2a2..b1b510087e5862b3b2ed97cefbf10620bcf9b020 100644
+--- a/drivers/char/hw_random/rockchip-rng.c
++++ b/drivers/char/hw_random/rockchip-rng.c
+@@ -54,6 +54,7 @@ struct rk_rng {
+ 	void __iomem *base;
+ 	int clk_num;
+ 	struct clk_bulk_data *clk_bulks;
++	struct device *dev;
+ };
+ 
+ /* The mask in the upper 16 bits determines the bits that are updated */
+@@ -70,8 +71,7 @@ static int rk_rng_init(struct hwrng *rng)
+ 	/* start clocks */
+ 	ret = clk_bulk_prepare_enable(rk_rng->clk_num, rk_rng->clk_bulks);
+ 	if (ret < 0) {
+-		dev_err((struct device *) rk_rng->rng.priv,
+-			"Failed to enable clks %d\n", ret);
++		dev_err(rk_rng->dev, "Failed to enable clocks: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+@@ -105,7 +105,7 @@ static int rk_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+ 	u32 reg;
+ 	int ret = 0;
+ 
+-	ret = pm_runtime_resume_and_get((struct device *) rk_rng->rng.priv);
++	ret = pm_runtime_resume_and_get(rk_rng->dev);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -122,8 +122,8 @@ static int rk_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+ 	/* Read random data stored in the registers */
+ 	memcpy_fromio(buf, rk_rng->base + TRNG_RNG_DOUT, to_read);
+ out:
+-	pm_runtime_mark_last_busy((struct device *) rk_rng->rng.priv);
+-	pm_runtime_put_sync_autosuspend((struct device *) rk_rng->rng.priv);
++	pm_runtime_mark_last_busy(rk_rng->dev);
++	pm_runtime_put_sync_autosuspend(rk_rng->dev);
+ 
+ 	return (ret < 0) ? ret : to_read;
+ }
+@@ -164,7 +164,7 @@ static int rk_rng_probe(struct platform_device *pdev)
+ 		rk_rng->rng.cleanup = rk_rng_cleanup;
+ 	}
+ 	rk_rng->rng.read = rk_rng_read;
+-	rk_rng->rng.priv = (unsigned long) dev;
++	rk_rng->dev = dev;
+ 	rk_rng->rng.quality = 900;
+ 
+ 	pm_runtime_set_autosuspend_delay(dev, RK_RNG_AUTOSUSPEND_DELAY);
 
-Don't we technically also want to check that
+-- 
+2.48.1
 
-	res_page->start <=3D res_base->start
-
-because otherwise people might put in something that's completely out of
-range? I guess maybe you could argue that the DT is then just broken,
-but since we're checking anyway, might as well check for all corner
-cases.
-
-Thierry
-
-> +				return -EINVAL;
-> +
-> +			page_offset =3D lower_32_bits(res_page->start) -
-> +						lower_32_bits(res_base->start);
-> +			page_no =3D page_offset / cdata->ch_base_offset;
-> +			if (page_no =3D=3D 0)
->  				return -EINVAL;
-> +
->  			tdma->ch_page_no =3D page_no - 1;
->  			tdma->base_addr =3D devm_ioremap_resource(&pdev->dev, res_base);
->  			if (IS_ERR(tdma->base_addr))
-> --=20
-> 2.25.1
->=20
-
---thw54jjy27rwk2q7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmeiM/gACgkQ3SOs138+
-s6EAhQ//UuOqtMwn4ZLx9RPtnBdcZn+Wg7pQsAmcr0XD4jHnYolpSfqmsPV2zTtP
-O75WWbyRmVKnbptotIqINN1iya+U68KFYMP6sdkc+jZMj7q/SwU4oAgWpw1p3aZx
-FlPRGJ4z4OkdbJZLJm97yslvtSLs4s1e+xKtryimq012yUkJ87hzxNMZgHx8z5Cn
-SM4DSHZ9KN9+IBzRBU2hQffcMk25xeCIb6mH/+TbOQTJff+TqUc0X3G/EXgGUHF3
-B0ZzfcbtMFKH6jqWBX9kvr0KKgNkgk8SqYlURIUdt5kFiQwWT/SXqh+pxodLqHfk
-1lc295BrT6bt9siTMEUll1n8DHvuvgaUoSTKqTGjZD29tolMRgXde/O3ssSGMIvO
-phTTHef2IKT2rHC0zobsPYosyqgKvvdzq+dtUCDqQ4eF3qBaomt1eZL1YKiWH/Ai
-lP4C19IZ+nsnk4Xk0Da9M948ZkSdIdm/fKaK6WZOPphC73y4k6YG/FQ3uBcMe1DI
-qed0GwrIWD9GQcTOq/uIzQV2RJ/tCGh2HoJ3MUVFV2hK9YAQnq7hyM3n3mjNEOw5
-Wh//M1hJIP13WnItRKmjMNUoHGiC3DxNEl5F6ie20k8ppjPsT04Rc9/kwGQfMJJr
-7CRdc1wVurPd7nN2uTmaNtWzohKSOLHRhbFUE3XOZsjF0a9WdqQ=
-=kX0N
------END PGP SIGNATURE-----
-
---thw54jjy27rwk2q7--
