@@ -1,449 +1,246 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF28A78F4A;
-	Tue,  4 Feb 2025 18:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12FD21766E
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:23:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738693335; cv=none; b=t2uVRcaDkrLW2SGZfWBaNfVxiK7wjgkCPO55H1IUGFIA2tNu6rL/Oa6X5Hu21F2r8h5okq2f3evkeRhFAQbw5tyVL0y7OsyDDNPdV7hPYFt/L4R/0+j5g6/GmVR+CLHjScHkqQRgg5dVqWT9lFiTGfWWwyzB75inLZz5FO2qX2s=
+	t=1738693383; cv=none; b=s16Vh2OoI4JhvEjURnigTyy2j7Mf28u0MoTWWfAXqUOQkIvCGwOANuusghNtHUQxJttDPGYDzjp7rGWOhgMLzPU0V2hiuBq9mnEZQhZ7/zdMlA0SMVlfB3emYPmkgX0iTu14h7oa0+MPr0uIwKUKyvd8t3+cv479m3ZdPLwGZJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738693335; c=relaxed/simple;
-	bh=2x1NwtHWAOEEICZyjoxoW/wEa4Gwmje6nQ9gTEczNFM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z8IWt+U0fKD+5Xa3WwGnb94W+isOTFbim58q/BAu+Fnc2v6fd0+BIUJHHUR7eqt0FPgfmnh178Kf7W9amddUUFhWqj8zUL1HrqjeCxJjBWD5MQZ39iDTYFgerJ30JHEBEtYD0rKwYJtAGl1X1qJg6y6fN4ij/t3TAkRqw/rsgCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BfPSMemV; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738693383; c=relaxed/simple;
+	bh=wovIoxaB1GBhtTR1K6ERxfvU9SdF2qRsGfpDTFxhmrg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=R2RpOPYEs2YRdu+QpzQ5E38K/5uIU5wnSguApMN+mj0Xtv2+wZ/yw/aiVT8x20m7KbHuMEu41PWe8M9Qck61IwD09M/2T3cmc9DmZAMUN2UScW3UKRDXHYf/9L1lhNfjkH6ETehVKm0CFqjo4e25AZj2KGtgP+4tANS6nbJBWUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=CsaThUYn; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BfPSMemV"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5d3e6274015so10151226a12.0;
-        Tue, 04 Feb 2025 10:22:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="CsaThUYn"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6d88cb85987so517836d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 10:23:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738693332; x=1739298132; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uQ5++agd0QoEY64Wz7u8d59Bv8ZNS8ggDIsozpgsnM8=;
-        b=BfPSMemVl+PyVcgUDULcQQahPmJPCJBDszNqUvZ9IzTrRz5ITl7H3M3tD3cvD7sgAk
-         SGdjQLVwnL5atirmfLA45nkD4lHuCCWWjrBswqA3IJNnnpgfWJ/BB6rMLNPbCGpy6mfY
-         pi/J0Zl/oflSHcS0SL4/Sw05NIWtHvuqURTrV6b96K0AoUX8qABqlK2do+Kege/4/Pqn
-         8XmYUfTMfkOzfwnMrhAAz/O9D5++zv2c1nop7xlgi2bq9WTzNmG65kf7vYFS43lexVM4
-         FvT4thzxpTKSfyPn8DRUSOaX/g+hZj+QjVD7IfEKn7I6DcNj4p1M2V+z/iHQEUhC3r00
-         1MXQ==
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1738693380; x=1739298180; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Tac0SuyxfkJEVndSE8YT8kHaqPS7Ds82fJ/2JoeM9mo=;
+        b=CsaThUYn2HBvFRVT2O3/SwiWG9cDXUIdyASrw7wOBFyOIu4tLC5GNAGFSpohtbCvEk
+         ziFAbIv2Npjs6aP+7gugorwfl9lgYDiGQXcCq7t0vmNqYk1h/JKdmovlq5sIlNVTJwpA
+         gNWxFRXvN0jgzhDP4F+WUQUlh9V4cG5wJE+5luU8mxwHIlrGNHko8au0MlMtz/owrLmQ
+         H7gxBFCpRYX0viZtWycFL/7S0O5j/pk67omhpJfsDqE0UX957kxDlHE4+UvDXvQ3LbIf
+         dTnrf7m9mnFQiUj9osKFhAlFsZ9Zo6N2tYc4J4GyLGNzCvEdiRnyC3lRj4kTcmED85nO
+         2sSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738693332; x=1739298132;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uQ5++agd0QoEY64Wz7u8d59Bv8ZNS8ggDIsozpgsnM8=;
-        b=oXRtuNzBYLjK2KRkfOY0eb9IZFUR9iJonubYPa8UfiME66ACmBMu5+qNYZfHnMyJHU
-         h/UVqb08Zn4x8sXM6WT3Y8iUzibhCRIicCd2r7/VTCvlupVMJ5DBjoyD2GhTc8Fr2LDJ
-         14T/C6aWoZtImmhYHbhei0p9FlZTQXCh2QYFKWB/lveShWNj5sqzQfsVjBNEj08HnAN1
-         +3GQsteVOM8kOuE7o4x+RnHaCD3gbAHfWIzk+VScFZgzR0G9iMEYSvPQpH2/DaJ1JSzX
-         3pes5wi2fVqUyJ7I7s8J+3qEXJgH5DxcHYxtPb8f9EqrKgc3t7rJg+pV+R2lCgXGxu+S
-         xKFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHIASAciPVgu+YqXNFIKcHZPGWRWpNIJbZKmG/lb7FsAuBUeopJGz6xZqFW3ny8OQeJfD57uoRYCg6qdD/p7gU@vger.kernel.org, AJvYcCULVXup5dLR5jYEZpWea5Hsj6sY7jOYI93Db6llsjPSX6oXeY0MLbagOdy/SJvo/72PBCqBxfaqpLML@vger.kernel.org, AJvYcCWrUgWR/XzzlO1dnNZ0LnkZ+QKk128nqDw1moe09H9gJopBTk0ZPQkJ1Fsuo54tNWyIYocMtLqREL2hTta/@vger.kernel.org, AJvYcCXpr2nsXEsUlw87x5Pxr14YsCzt2YwUmlxzJ+eO6KaeVDX3d1ZsbBOkAav11cg6ubYOpwFMTVhWET/fKgQCZAqdIE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcXdasgu21kiiUQiCmCnmHPRCUra5m9uaXtAYy7BlJnJCkCCrQ
-	lccjBkaEbo6WFWdUbjy8NGPyGO7AMjjrNToaX22ViLJe2nVNmf7D
-X-Gm-Gg: ASbGncuypZk37TCjd1W25ZISioyN0+6qm/ct67ldS5wxUKsAnMcM7I4prV45lqpFT39
-	sH1Tx6gt7cmOkjj8zpmCVSSsk0F+zLJ/OIKckUgAA+oFizf+0JFt24R1+RW2z+KqbV9GZNP9VID
-	JqiaCUXoQRqaiQP5YLB0sH2cVXRkfPz4artPmfkuo++jaXtXFDLFWUDqDsTgRJ+vJhcIJjAqVDe
-	7EPSzZcXPEygQxN7SD82vIZmncnZgC5VuomJcRunEewQMEsUKsOg2ogbUJa6kPXK5zMtbqlrGId
-	yAA4A2xm0Ym5YTDJqyVjOfAnbvw++d2rZ+yOMSACbui0jXvZ3Ipwe8fyBnTNiF+u2srmVw==
-X-Google-Smtp-Source: AGHT+IEQ4DMWF7roCrp5EJD85FGwjsBCdu+Kca8lx2Hj1i97FM9pySSYNrsTVSCzOrQrFS6BR/FM0Q==
-X-Received: by 2002:a17:906:9c8c:b0:ab3:3bab:c533 with SMTP id a640c23a62f3a-ab6cfcc2e94mr2804249166b.21.1738693331664;
-        Tue, 04 Feb 2025 10:22:11 -0800 (PST)
-Received: from [192.168.1.105] (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e4a2f90asm954865966b.129.2025.02.04.10.22.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 10:22:11 -0800 (PST)
-Message-ID: <00aa901b-5de9-4b72-a157-c54ad29df458@gmail.com>
-Date: Tue, 4 Feb 2025 20:22:09 +0200
+        d=1e100.net; s=20230601; t=1738693380; x=1739298180;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Tac0SuyxfkJEVndSE8YT8kHaqPS7Ds82fJ/2JoeM9mo=;
+        b=XbUA3SDMV1cF0Mk9jRKbkfmwpcgPVgMrwj1jh9LLHZPjlOWmYP0uslZfoIPAlhpGNq
+         ei1Yvfv4tBmXNCe4+Yym0vxrfwnz/FGtxQACluLmhCHM6wXg8CTeIicNHiK0H29ds7I+
+         ubUB+aPGG5uoLuSe9NEEj260SXMQFs84IUR5yyOGMPymADtxL7gn1U+MZLwHwGGyDAkV
+         sLBYrgwyU7cp4LzQIVTrCZG/1s4mTfPbWmTQTEQ44qV1UwEunYkvAXW8cxiZqfCm7ikM
+         4K3AwwG/yaNvXoruzrW+TtsDp6psnirxFIRsWRVWuyYhXYTzId3HlAcsLisZ6LlzjKxP
+         n+GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVlkDx3+ekcep4kq7XwsQFbbZX1B7hslO96es8Chsibwvnj+Wpum5uIQ0xsje1Pou1w43ub0rIPnFp3Bk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDDr104hbIQXctHQtB8+aEjaeNyCi4n8Nqd+f3RKtj/pGfl2D7
+	Kqo6GerwEolLYBjNCopGt2vyX+bq4tHuuVYk0BSmjxAQDzm4B8nbT9W6/8/kch4=
+X-Gm-Gg: ASbGncsIqaEuVCqCq9OkTkx/NPPtNEfrZLuwOaa4QwLuBbru9PZtG1QCrruLjXs2vjA
+	jfPUFzaP4IabBt+Q0JkwrA/7+IM0xCx6C4hFM6EgP7PEmCqm+tZ5DgvbRHg2moSRA2Z3uO0aqTL
+	Kkhohj+k4S44D9P9BTjLdwbPbkEh2RQ+DGoLpx18p2n7BWCfR4gVOlJ6SRQT/7lRws20obVsnTb
+	tPdBD/TWa4I3paCfLIMsnqwSuXOm0+LweN8pIyV62CARjRXdCL2i7xCGExZyvigD/G4mg6jJktO
+	dkVU0oEopY3+PHMI
+X-Google-Smtp-Source: AGHT+IE/f1kxzWTc19HByUy9ODx9TdMIUe4LBdJWBN0eGiPy3I/9968X4R31P6i56Rq3iDSVWjRNWA==
+X-Received: by 2002:ad4:5ecb:0:b0:6e2:3761:71b0 with SMTP id 6a1803df08f44-6e420f3b728mr78300806d6.5.1738693380393;
+        Tue, 04 Feb 2025 10:23:00 -0800 (PST)
+Received: from nicolas-tpx395.localdomain ([2606:6d00:11:e976::7a9])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e423ca0476sm9418096d6.124.2025.02.04.10.22.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 10:23:00 -0800 (PST)
+Message-ID: <c856a7059171bcc6afd6d829c6c025882855778b.camel@ndufresne.ca>
+Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali
+ CSF GPUs
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Florent Tomasin <florent.tomasin@arm.com>, Maxime Ripard
+	 <mripard@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Boris
+ Brezillon	 <boris.brezillon@collabora.com>, Steven Price
+ <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>,  Sumit Semwal <sumit.semwal@linaro.org>, Benjamin
+ Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey	
+ <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
+ Mercier"	 <tjmercier@google.com>, Christian =?ISO-8859-1?Q?K=F6nig?=	
+ <christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong
+ Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linaro-mm-sig@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, nd@arm.com, Akash Goel
+ <akash.goel@arm.com>
+Date: Tue, 04 Feb 2025 13:22:58 -0500
+In-Reply-To: <1f436caa-1c27-4bbd-9b43-a94dad0d89d0@arm.com>
+References: <cover.1738228114.git.florent.tomasin@arm.com>
+	 <3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
+	 <1a73c3acee34a86010ecd25d76958bca4f16d164.camel@ndufresne.ca>
+	 <ppznh3xnfuqrozhrc7juyi3enxc4v3meu4wadkwwzecj7oxex7@moln2fiibbxo>
+	 <9d0e381758c0e83882b57102fb09c5d3a36fbf57.camel@ndufresne.ca>
+	 <1f436caa-1c27-4bbd-9b43-a94dad0d89d0@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/5] arm64: dts: exynos: add initial devicetree support
- for exynos7870
-Content-Language: en-US
-To: Kaustabh Chakraborty <kauschluss@disroot.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- Conor Dooley <conor@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250204-exynos7870-v2-0-56313165ef0c@disroot.org>
- <20250204-exynos7870-v2-2-56313165ef0c@disroot.org>
-From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-In-Reply-To: <20250204-exynos7870-v2-2-56313165ef0c@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 2/3/25 22:46, Kaustabh Chakraborty wrote:
-> Exynos7870 is an arm64 SoC manufactured by Samsung and announced in
-> 2016. It is present in multiple mid-range Samsung phones and tablets.
->
-> Add basic devicetree support for the SoC, which includes CMUs, pin
-> controllers, I2C, UART, DW-MMC, and USB-DRD.
->
-> Co-developed-by: Sergey Lisov <sleirsgoevy@gmail.com>
-> Signed-off-by: Sergey Lisov <sleirsgoevy@gmail.com>
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
->  arch/arm64/boot/dts/exynos/exynos7870-pinctrl.dtsi | 1035 ++++++++++++++++++++
->  arch/arm64/boot/dts/exynos/exynos7870.dtsi         |  722 ++++++++++++++
->  2 files changed, 1757 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7870-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos7870-pinctrl.dtsi
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..28ff409c4fdc5f766d92617ea2df7be2112c28d1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos/exynos7870-pinctrl.dtsi
-> @@ -0,0 +1,1035 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Samsung Exynos7870 SoC pin-mux and pin-config device tree source
-> + *
-> + * Copyright (c) 2015 Samsung Electronics Co., Ltd.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include "exynos-pinctrl.h"
-> +
-> +&pinctrl0 {
+Le lundi 03 f=C3=A9vrier 2025 =C3=A0 16:43 +0000, Florent Tomasin a =C3=A9c=
+rit=C2=A0:
+> Hi Maxime, Nicolas
+>=20
+> On 30/01/2025 17:47, Nicolas Dufresne wrote:
+> > Le jeudi 30 janvier 2025 =C3=A0 17:38 +0100, Maxime Ripard a =C3=A9crit=
+=C2=A0:
+> > > Hi Nicolas,
+> > >=20
+> > > On Thu, Jan 30, 2025 at 10:59:56AM -0500, Nicolas Dufresne wrote:
+> > > > Le jeudi 30 janvier 2025 =C3=A0 14:46 +0100, Maxime Ripard a =C3=A9=
+crit=C2=A0:
+> > > > > Hi,
+> > > > >=20
+> > > > > I started to review it, but it's probably best to discuss it here=
+.
+> > > > >=20
+> > > > > On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin wrote:
+> > > > > > Hi,
+> > > > > >=20
+> > > > > > This is a patch series covering the support for protected mode =
+execution in
+> > > > > > Mali Panthor CSF kernel driver.
+> > > > > >=20
+> > > > > > The Mali CSF GPUs come with the support for protected mode exec=
+ution at the
+> > > > > > HW level. This feature requires two main changes in the kernel =
+driver:
+> > > > > >=20
+> > > > > > 1) Configure the GPU with a protected buffer. The system must p=
+rovide a DMA
+> > > > > >    heap from which the driver can allocate a protected buffer.
+> > > > > >    It can be a carved-out memory or dynamically allocated prote=
+cted memory region.
+> > > > > >    Some system includes a trusted FW which is in charge of the =
+protected memory.
+> > > > > >    Since this problem is integration specific, the Mali Panthor=
+ CSF kernel
+> > > > > >    driver must import the protected memory from a device specif=
+ic exporter.
+> > > > >=20
+> > > > > Why do you need a heap for it in the first place? My understandin=
+g of
+> > > > > your series is that you have a carved out memory region somewhere=
+, and
+> > > > > you want to allocate from that carved out memory region your buff=
+ers.
+> > > > >=20
+> > > > > How is that any different from using a reserved-memory region, ad=
+ding
+> > > > > the reserved-memory property to the GPU device and doing all your
+> > > > > allocation through the usual dma_alloc_* API?
+> > > >=20
+> > > > How do you then multiplex this region so it can be shared between
+> > > > GPU/Camera/Display/Codec drivers and also userspace ?
+> > >=20
+> > > You could point all the devices to the same reserved memory region, a=
+nd
+> > > they would all allocate from there, including for their userspace-fac=
+ing
+> > > allocations.
+> >=20
+> > I get that using memory region is somewhat more of an HW description, a=
+nd
+> > aligned with what a DT is supposed to describe. One of the challenge is=
+ that
+> > Mediatek heap proposal endup calling into their TEE, meaning knowing th=
+e region
+> > is not that useful. You actually need the TEE APP guid and its IPC prot=
+ocol. If
+> > we can dell drivers to use a head instead, we can abstract that SoC spe=
+cific
+> > complexity. I believe each allocated addressed has to be mapped to a zo=
+ne, and
+> > that can only be done in the secure application. I can imagine similar =
+needs
+> > when the protection is done using some sort of a VM / hypervisor.
+> >=20
+> > Nicolas
+> >=20
+>=20
+> The idea in this design is to abstract the heap management from the
+> Panthor kernel driver (which consumes a DMA buffer from it).
+>=20
+> In a system, an integrator would have implemented a secure heap driver,
+> and could be based on TEE or a carved-out memory with restricted access,
+> or else. This heap driver would be responsible of implementing the
+> logic to: allocate, free, refcount, etc.
+>=20
+> The heap would be retrieved by the Panthor kernel driver in order to
+> allocate protected memory to load the FW and allow the GPU to enter/exit
+> protected mode. This memory would not belong to a user space process.
+> The driver allocates it at the time of loading the FW and initialization
+> of the GPU HW. This is a device globally owned protected memory.
 
-I haven't had enough time to look deeper, but these are my 2 cents:
+This use case also applies well for codec. The Mediatek SCP firmware needs =
+to be
+loaded with a restricted memory too, its a very similar scenario, plus Medi=
+atek
+chips often include a Mali. On top of that, V4L2 codecs (in general) do nee=
+d to
+allocate internal scratch buffer for the IP to write to for things like mot=
+ion
+vectors, reconstruction frames, entropy statistics, etc. The IP will only b=
+e
+able to write if the memory is restricted.
 
+Nicolas
 
-Can you label them according to their block name rather than numbers?
-For example, pinctrl_abox (make sure to keep them alphabetically sorted
-as well).
-
-> +	etc0: etc0-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	etc1: etc1-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpa0: gpa0-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	gpa1: gpa1-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	gpa2: gpa2-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpq0: gpq0-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	uart2_bus: uart2-bus-pins {
-> +		samsung,pins = "gpa1-1", "gpa1-0";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart2_sleep: uart2-sleep-pins {
-> +		samsung,pins = "gpa1-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
-> +	};
-> +
-> +	bt_btwake: bt-btwake-pins {
-> +		samsung,pins = "gpa1-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
-> +		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	bt_hostwake: bt-hostwake-pins {
-
-Sort these alphabetically, so you have:
-all a-z-gpio-bank, after which all a-z-pin.
-
-In this case bt_* can be first after all gpio bank nodes.
-
-> +		samsung,pins = "gpa1-6";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
-> +		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_INPUT>;
-> +		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	gnss_sensor_irq: gnss-sensor-irq-pins {
-> +		samsung,pins = "gpa2-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_6>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-> +	};
-> +
-> +	gnss_sensor_i2c: gnss-sensor-i2c-pins {
-> +		samsung,pins = "gpa2-5", "gpa2-4";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_6>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-...
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	hs_i2c0_bus: hs-i2c0-bus-pins {
-
-s/hs_i2c/hsi2c/g
-
-> +		samsung,pins = "gpm0-1", "gpm0-0";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-> +	};
-...
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7870.dtsi b/arch/arm64/boot/dts/exynos/exynos7870.dtsi
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..11129e37fc86ebaee01684ed6841c932dd6cbc8a
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos/exynos7870.dtsi
-> @@ -0,0 +1,722 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Samsung Exynos7870 SoC device tree source
-> + *
-> + * Copyright (c) 2015 Samsung Electronics Co., Ltd.
-> + */
-> +
-> +#include <dt-bindings/clock/exynos7870.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/soc/samsung,boot-mode.h>
-> +
-> +/ {
-> +	compatible = "samsung,exynos7870";
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +
-> +	/* Samsung's bootloader (S-BOOT) checks for these DT properties */
-> +	model_info-hw_rev = <0>;
-> +	model_info-hw_rev_end = <255>;
-> +	model_info-chip = <7870>;
-
-You could skip the properties with a shim bootloader like uniLoader. Up to
-Krzysztof to decide if you should keep these.
-
-> +
-
-...
-
-> +	};
-> +
-> +	oscclk: oscclk {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +
-> +		clock-frequency = <26000000>;
-
-Frequency must be defined in the board device tree.
-
-> +	};
-> +
-> +	timer {
-
-S is before T, so this goes after soc {}
-
-> +		compatible = "arm,armv8-timer";
-> +		/* Hypervisor Virtual Timer interrupt is not wired to GIC */
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-> +
-> +		/* Samsung's bootloader (S-BOOT) doesn't set CNTFRQ_EL0 */
-> +		clock-frequency = <26000000>;
-> +	};
-> +
-> +	gic: interrupt-controller@104e0000 {
-> +		compatible = "arm,cortex-a15-gic";
-> +		reg = <0x0 0x104e1000 0x1000>,
-
-So it should be @104e1000 and not @104e0000
-
-> +		      <0x0 0x104e2000 0x1000>,
-> +		      <0x0 0x104e4000 0x2000>,
-> +		      <0x0 0x104e6000 0x2000>;
-> +		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-> +		interrupt-controller;
-> +		#address-cells = <0>;
-> +		#interrupt-cells = <3>;
-> +	};
-> +
-> +	soc: soc@0 {
-> +		compatible = "simple-bus";
-> +		ranges = <0x0 0x0 0x0 0x20000000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		chipid@10100000 {
-> +			compatible = "samsung,exynos7870-chipid",
-> +				     "samsung,exynos4210-chipid";
-> +			reg = <0x10100000 0x100>;
-> +		};
-> +
-> +		pmu_system_controller: system-controller@10480000 {
-> +			compatible = "samsung,exynos7870-pmu",
-> +				     "samsung,exynos7-pmu", "syscon";
-> +			reg = <0x10480000 0x10000>;
-> +			#clock-cells = <1>;
-> +
-> +			clock-names = "clkout8",
-> +				      "clkout9",
-
-Could fit more than one per line.
-
-> +				      "clkout10",
-> +				      "clkout11",
-> +				      "clkout12";
-> +			clocks = <&oscclk>,
-> +				 <&oscclk>,
-> +				 <&oscclk>,
-> +				 <&oscclk>,
-> +				 <&oscclk>;
-> +
-> +			reboot-mode {
-> +				compatible = "syscon-reboot-mode";
-> +				offset = <0x080c>;
-> +				mode-bootloader = <EXYNOS7870_BOOT_BOOTLOADER>;
-> +				mode-download = <EXYNOS7870_BOOT_DOWNLOAD>;
-> +				mode-recovery = <EXYNOS7870_BOOT_RECOVERY>;
-> +			};
-> +		};
-> +
-> +		cmu_mif: clock-controller@10460000 {
-
-Sort all of these by address.
-
-> +			compatible = "samsung,exynos7870-cmu-mif";
-> +			reg = <0x10460000 0x1000>;
-> +			#clock-cells = <1>;
-> +
-> +			clock-names = "oscclk";
-> +			clocks = <&oscclk>;
-> +		};
-> +
-> +		cmu_dispaud: clock-controller@148d0000 {
-> +			compatible = "samsung,exynos7870-cmu-dispaud";
-> +			reg = <0x148d0000 0x1000>;
-> +			#clock-cells = <1>;
-> +
-> +			clock-names = "oscclk",
-> +				      "gout_mif_cmu_dispaud_bus",
-
-bus
-
-> +				      "gout_mif_cmu_dispaud_decon_eclk",
-
-decon_eclk
-
-> +				      "gout_mif_cmu_dispaud_decon_vclk";
-
-decon_vclk
-
-Clock names here shouldn't be long. You'll still describe them in the
-clock YAML either way. Check other SoCs like 8895, autov920, 990.
-
-> +			clocks = <&oscclk>,
-> +				 <&cmu_mif CLK_GOUT_MIF_CMU_DISPAUD_BUS>,
-> +				 <&cmu_mif CLK_GOUT_MIF_CMU_DISPAUD_DECON_ECLK>,
-> +				 <&cmu_mif CLK_GOUT_MIF_CMU_DISPAUD_DECON_VCLK>;
-> +		};
-> +
-
-...
-
-> +
-> +		i2c1: i2c@13880000 {
-> +			compatible = "samsung,exynos7870-i2c",
-> +				     "samsung,s3c2440-i2c";
-> +			reg = <0x13880000 0x100>;
-> +			interrupts = <GIC_SPI 429 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-
-Status always comes last. Make sure to sort all properties as per the DT
-Coding Style [1].
-
-[1] https://docs.kernel.org/devicetree/bindings/dts-coding-style.html
-
-> +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2c1_bus>;
-> +
-> +			clock-names = "i2c";
-> +			clocks = <&cmu_peri CLK_GOUT_PERI_I2C1_PCLK>;
-> +		};
-
-...
-
-> +		};
-> +	};
-> +};
-> +
-> +#include "exynos7870-pinctrl.dtsi"
-> +#include "arm/samsung/exynos-syscon-restart.dtsi"
-
-Didn't this already include a reboot node?
-
-Best regards,
-Ivaylo
-
->
+>=20
+> When I came across this patch series:
+> -
+> https://lore.kernel.org/lkml/20230911023038.30649-1-yong.wu@mediatek.com/=
+#t
+> I found it could help abstract the interface between the secure heap and
+> the integration of protected memory in Panthor.
+>=20
+> A kernel driver would have to find the heap: `dma_heap_find()`, then
+> request allocation of a DMA buffer from it. The heap driver would deal
+> with the specifities of the protected memory on the system.
+>=20
+> > >=20
+> > > > Also, how the secure memory is allocted / obtained is a process tha=
+t
+> > > > can vary a lot between SoC, so implementation details assumption
+> > > > should not be coded in the driver.
+> > >=20
+> > > But yeah, we agree there, it's also the point I was trying to make :)
+> > >=20
+> > > Maxime
+> >=20
+>=20
+> Agree with your point, the Panthor kernel driver may not be aware of the
+> heap management logic. As an alternative to the DMA heap API used here,
+> I also tried to expose the heap by passing the phandle of a "heap"
+> device to Panthor. The reference to the DMA heap was stored as a private
+> data of the heap device as a new type: `struct dma_heap_import_info`,
+> similar to the existing type: `struct dma_heap_export_info`.
+> This made me think it could be problematic, as the private data type
+> would have to be cast before accessing it from the importer driver. I
+> worried about a mis-use of the types with this approach.
+>=20
+> Regards,
+> Florent
 
