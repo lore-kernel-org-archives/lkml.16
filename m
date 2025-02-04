@@ -1,169 +1,292 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64596FC3;
-	Tue,  4 Feb 2025 00:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49979BA53
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 00:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738630380; cv=none; b=mZ2dOewEQeFP1wM4ayLr8jihROTh+QzGEnScFf3l4gKkezCnSNaS20PXx6y8qCELnY8YMtROgNAMg+RLC1DlKHj54316l5uUAfSvrETnZ3ZdLHi++oeHklKI0ZWM0nnXbiu9WKDpFPXHIdh3BvxC/6dNKjxSrOU4DMo9s/w0EaQ=
+	t=1738630435; cv=none; b=ASRg8/u5ukweP5Ee6mW/H/3spfYHPxdv/3VXkQcbJyAF2EBuj1OLOPBoX0jzYGnIshcDByFkmfFHImhhaRz5Tqoow2U0RA5+Ir6BLG1wN/m8KnLF3y6S7iBB+eX3Cf0/8CJxCruVp8BlzB40YFJFLBnk89VMcRAT9KipTxnRyLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738630380; c=relaxed/simple;
-	bh=ZYsusg0jHvhq8Rgnx8CGSBpV/AYmn1ZOZIXDZrnVXqk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MBzGAyWZOSU6i7hZ8pKq6vF1ZEDmpYOSb6Y1sMhUNm1Ng83gDqrIXco89bTofJffGr6AdiUAWahuNnZJG4y468I8hWizarxxX9ZGlW4jpg1Nt4yXt7cVpDFdC/lV7K9z8N1fUnbM+MbDBFdAmJ29OlClfgtUpl+T3MjpBxQPf2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G/H6hl5W; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738630435; c=relaxed/simple;
+	bh=kUWJ2yg5TUpwk2k09vZoefUSzFfdfRLXTdtA77V4IC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H9BaeS5avOJAV5shcwA5ou1GWJIHdRa0XS2vRpWPeOPC9CtMrwHgUryNJ8KwQFECJRnX7UbaP62EyfsQj6toO96lJwohs6Fpy34sg0qaw/FzMKZNSR3X1em11/f9vLSd8QOhS6wd5rSixWF0atm7IlgI4FapgmdOMr4PQCLEra8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hz3q7+za; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/H6hl5W"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-216426b0865so86758705ad.0;
-        Mon, 03 Feb 2025 16:52:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hz3q7+za"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-540215984f0so5553825e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2025 16:53:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738630378; x=1739235178; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yIVwnmw3+Uqu/f1OwaIZM60ey1qrW+y4C63LWJ9AWxE=;
-        b=G/H6hl5W8PshBDMiPLAiGhQ28ZOo4zgWaNwCy9rohjMX0pJiEuAt9hLFG0r7YPSv9h
-         LzFcx4zLopIk3D+GBS8LjMx1Y5I9XLxsw6L+xFS2vSUqV3fmiMl6TeP+7P+UE59LJ+Tm
-         ehbrxy1bz+8IDeWRmOTZNhryjXugvqg3KaF9CaoEpPwcdvBu3mplRJzi/OLOd/iQLbSH
-         Eo3DAeEf4PK1otVcZYJPkZTxAUpI2zpnx9LcRNPmXgFPTdkYLfMLt37I3iyslHkEDqd0
-         jIVnvh9/VAk+tIp9NRmJa/vXmNUhjmmsUlhJItq97bqTjUFKDaHbEKMta5Tr76PhYNe8
-         TtCw==
+        d=linaro.org; s=google; t=1738630431; x=1739235231; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=n6vuKBBYDtQlrKgG61Z1x3H3QFhGAszRb9TzwuI7sqo=;
+        b=Hz3q7+zaLLX3kpDCddDgRLEUX52YKjTtoRs0kD8usUpgDDwtKGEiorThsSsCgcNeDH
+         ENcZASV5CdHz4uqa5Nh/XPzkWD8xFsNh0xAV36SEmNzIeqFVGSaLucnsAPwf8SpgGYQn
+         zkCD7rM2AlQUnDM8BOSKLqRyRewF52ibbRS2YfIQduwC3TljAeNoJU7NWVWpcHBJS17R
+         jnTyabEbbF3I+g+TV9+dGmE5rJgLJIRm8hmoIxX1oTuYDTEnZCDNCJh29vkVuX67eSzJ
+         K98WysNPCfCRraRWYgZYbq/qpT+L1zI08t5unYGCkaiY9BKOAkY6fnHRWJ37nFrUQ2DE
+         QgOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738630378; x=1739235178;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yIVwnmw3+Uqu/f1OwaIZM60ey1qrW+y4C63LWJ9AWxE=;
-        b=EcmUyj0Dr9q+sjN5xB77ynUHqv2/qE3ubB3/UYZ9uoZIvjuTa3Xt1OknARFJoff61b
-         X9VBwB9KF1cphZWUx7zp/6c/shpYd3kGObqVz7JBbX/5SyKrI2VnRYadQ9BFP7MoM5yO
-         dR5aLRwdZ2U/E5KxExzE9VtLEE3HUJukoXQPEXy9kXOL1WYgzFEIwqhqL1EoctfpnJHv
-         0Y6EfnDcKPo/iRqWgwcmnMij/8a+rIlG43AsjEdsRg9d0o9GdgD/sYIxjULKgcMGeBH1
-         fCJl3D4eoZ9DwTdQEZIwYmMBAUBo6GJBZ0FjxeI9s3/w4ZcAqvO6o6OQmq1obklOArpG
-         vkZg==
-X-Forwarded-Encrypted: i=1; AJvYcCW9FkZMz+GLqoBAuX9xoC3u+G5YQRqjZLUOCBGVxmxXEmAEINE++g1oxwacUOUNubgLUD9rrAguwMhQd/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPXikl74bcMsj7w5N3aEd6+ktSpzMN75wVVyRfawyixTPtFQjZ
-	mD7gUwiBbvT3r+iWbO6XnIA9WW2qK/HArRirWQ2yZQNb7Snf4/gJ
-X-Gm-Gg: ASbGnctbJVGHsDEawLN1ofqJg27iNEYS6VXF9/s35O/FyxPYUEONtg55O9owwQsYPZ4
-	20IQzNLETnYpkJm/usX/lKrqUyDMHs+LmIMiG4WnHW6MlStNhvysaOV9iIdW1alNxDcaqGitX+Y
-	qSySTxdTrEEwEOO6q/rh9fsNzxXyYIyuKEQL+JBv2bxgLKRUpIYsUj157CsGzAIrXSzRMjhgd/x
-	5A0xrxC5RyeI0sNxpzVBGwXxcoHeQNsR9Rkx6rzytn2gaNNhalLR3eMUdz2cgTzhj7GL2jgLCLR
-	xRgl4M0M6Luq
-X-Google-Smtp-Source: AGHT+IFFrOOp9tSCjr6GLI3eesNOiZDZvaAY/wNz+1FZqhhHxSr5HGXiX3u1YhbOfgi7hgk0EZO6Fw==
-X-Received: by 2002:a05:6a20:9f45:b0:1ea:ddd1:2fcf with SMTP id adf61e73a8af0-1ed7a462e94mr37266584637.4.1738630377942;
-        Mon, 03 Feb 2025 16:52:57 -0800 (PST)
-Received: from [192.168.0.235] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69ccea1sm9117958b3a.122.2025.02.03.16.52.56
+        d=1e100.net; s=20230601; t=1738630431; x=1739235231;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n6vuKBBYDtQlrKgG61Z1x3H3QFhGAszRb9TzwuI7sqo=;
+        b=fUeVxm0mXqGrQholPgCO9paR6MdlshJ+JeI7rN+f/Y3hB1VpyIZKOvYU0UFP6r8mIH
+         jtCThVSsrpG9aUV9H6lg7cr+48r5dPFeDEBBhnR8nluFxpwxlKIxyKfjsDUeSl5rpYw1
+         XmynqkWx418eLo5PbmqfI+uWT1zlvVCkowcgAhB6Sci7v7/fWOaeuvgM/+I4A4NUaFZr
+         y0R08r/HuSMg7f9tcrTXGBZL1oNnEtaZqgGeBpdfjlBVvtFNoKatvZbpA+YaThaWsq9Q
+         4afxDI0bHuthRyIBuAiCvkBQ6ZoqjwK6/7IGiyBJMxC8ex3fsEbi85wFZhOGOF34Kxz1
+         SXIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJyk7uUGcGeWRzR8flQJvDv3VUTalAJejZ1TR0DLL95koskUMtNvzEOLpGCwa0t/o0RJaGktcYjH46tMM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykvHpdbZOFPTPyVbTyaQm5x8EqOKD7UfERjV7yHNpqwTIXw0Zc
+	mZ3qy2Wi7r0MflsnuKgYm5+JX6J+vJrJeawFVmFwr8JraepN6Uq63njx2e8D+f8=
+X-Gm-Gg: ASbGncuPIKKdjY8iAJ7/9Pc87kYT/IFRKcaZp/lrYri40k9EjKLXgFstPOWLW5q/eqA
+	FTm9tH/biD1Ic6DkRzZTP21zz80qU7nW/tHmRdvXsVs74dw5iune7eD6gcxLcwHGTNTdf7Fmtlc
+	dxsd9smWBBeuz7HD6bFlSqs2nEL5AEkvkMvod4Kl48DgNEAPrJxMGDLEYOYemlv/dlENXngOgVj
+	iaMbnwzRnS7Z69M+qnFRhIPyjIuE0Qg0FVbn4jgxCqPx2Ap24VmkTt6Ki1omr/6dfnVyjOBOMzr
+	9AWwYvTyysrhLixjGxSlLWLN63AWejVXAipl7FWlTuzVymyUCJ2f4HOmdieuFfqwAmoo9bE=
+X-Google-Smtp-Source: AGHT+IFIPKJEQNA5tK1YiM+VNhZ5WPU2MCgZV77JwlTQH8IKAw7+yQkyR1eqXdmPkWOKHrIkKOF0rg==
+X-Received: by 2002:a05:6512:e85:b0:542:97b9:89e8 with SMTP id 2adb3069b0e04-543e4c00dccmr7600330e87.23.1738630431219;
+        Mon, 03 Feb 2025 16:53:51 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebeb7f20sm1432933e87.164.2025.02.03.16.53.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 16:52:57 -0800 (PST)
-Message-ID: <dead664fa11ac274db00b509931c533883dd4fdf.camel@gmail.com>
-Subject: Re: [PATCH bpf-next v1 7/8] selftests/bpf: Add selftests for
- load-acquire and store-release instructions
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Peilin Ye <yepeilin@google.com>
-Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bpf@ietf.org,
-  Xu Kuohai <xukuohai@huaweicloud.com>, David Vernet <void@manifault.com>,
- Alexei Starovoitov	 <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko	 <andrii@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Song Liu	 <song@kernel.org>, Yonghong Song
- <yonghong.song@linux.dev>, John Fastabend	 <john.fastabend@gmail.com>, KP
- Singh <kpsingh@kernel.org>, Stanislav Fomichev	 <sdf@fomichev.me>, Hao Luo
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,  Jonathan Corbet	
- <corbet@lwn.net>, "Paul E. McKenney" <paulmck@kernel.org>, Puranjay Mohan	
- <puranjay@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon	 <will@kernel.org>, Quentin Monnet <qmo@kernel.org>, Mykola Lysenko	
- <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, Josh Don
- <joshdon@google.com>,  Barret Rhoden <brho@google.com>, Neel Natu
- <neelnatu@google.com>, Benjamin Segall <bsegall@google.com>, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 03 Feb 2025 16:52:52 -0800
-In-Reply-To: <Z6Ffquq8IORjCqrI@google.com>
-References: <cover.1737763916.git.yepeilin@google.com>
-	 <3f2de7c6e5d2def7bdfb091347c1dacea0915974.1737763916.git.yepeilin@google.com>
-	 <131a817f7f2749e78e527a251ca7971588cf62f8.camel@gmail.com>
-	 <Z6Ffquq8IORjCqrI@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+        Mon, 03 Feb 2025 16:53:50 -0800 (PST)
+Date: Tue, 4 Feb 2025 02:53:48 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: rafael@beims.me
+Cc: Adrien Grassein <adrien.grassein@gmail.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Joao Paulo Goncalves <joao.goncalves@toradex.com>, Rafael Beims <rafael.beims@toradex.com>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] drm/bridge: lt8912b: Add support for audio
+Message-ID: <jqvns5poyixrbg7ql6txyqltyi5shi45a2npier4f5lgsnjkas@5ljhotjsk2y7>
+References: <20250203192401.244651-1-rafael@beims.me>
+ <20250203192401.244651-3-rafael@beims.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250203192401.244651-3-rafael@beims.me>
 
-On Tue, 2025-02-04 at 00:30 +0000, Peilin Ye wrote:
-> Hi Eduard,
->=20
-> One more question (for my understanding):
->=20
-> On Tue, Jan 28, 2025 at 05:06:03PM -0800, Eduard Zingerman wrote:
-> > On Sat, 2025-01-25 at 02:19 +0000, Peilin Ye wrote:
-> > > --- a/tools/testing/selftests/bpf/progs/arena_atomics.c
-> > > +++ b/tools/testing/selftests/bpf/progs/arena_atomics.c
-> > [...]
-> >=20
-> > > +SEC("raw_tp/sys_enter")
-> > > +int load_acquire(const void *ctx)
-> > > +{
-> > > +	if (pid !=3D (bpf_get_current_pid_tgid() >> 32))
-> > > +		return 0;
-> >=20
-> > Nit: This check is not needed, since bpf_prog_test_run_opts() is used
-> >      to run the tests.
->=20
-> Could you explain a bit more why it's not needed?
->=20
-> I read commit 0f4feacc9155 ("selftests/bpf: Adding pid filtering for
-> atomics test") which added those 'pid' checks to atomics/ tests.  The
-> commit message [1] says the purpose was to "make atomics test able to
-> run in parallel with other tests", which I couldn't understand.
->=20
-> How using bpf_prog_test_run_opts() makes those 'pid' checks unnecessary?
->=20
-> [1] https://lore.kernel.org/bpf/20211006185619.364369-11-fallentree@fb.co=
-m/#r
+On Mon, Feb 03, 2025 at 04:23:56PM -0300, rafael@beims.me wrote:
+> From: Rafael Beims <rafael.beims@toradex.com>
+> 
+> Add support for HDMI codec with audio coming from the I2S input.
+> Support 48kHz and 96kHz sample rate, with 16 bits word size.
+> 
+> Co-developed-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
+> Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
+> Signed-off-by: Rafael Beims <rafael.beims@toradex.com>
 
+Please turn the bridge to support DRM_BRIDGE_OP_HDMI and then use
+drm_hdmi_audio_helper features to provide audio support. Your
+implementations misses ELD, plugged callback, etc.
 
-Hi Peilin,
+> ---
+>  drivers/gpu/drm/bridge/Kconfig           |   1 +
+>  drivers/gpu/drm/bridge/lontium-lt8912b.c | 107 ++++++++++++++++++++++-
+>  2 files changed, 107 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 6b4664d91faa..489ce1041203 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -117,6 +117,7 @@ config DRM_ITE_IT6505
+>  
+>  config DRM_LONTIUM_LT8912B
+>  	tristate "Lontium LT8912B DSI/HDMI bridge"
+> +	select SND_SOC_HDMI_CODEC if SND_SOC
+>  	depends on OF
+>  	select DRM_PANEL_BRIDGE
+>  	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/bridge/lontium-lt8912b.c b/drivers/gpu/drm/bridge/lontium-lt8912b.c
+> index 52da204f5740..2100b41e5f61 100644
+> --- a/drivers/gpu/drm/bridge/lontium-lt8912b.c
+> +++ b/drivers/gpu/drm/bridge/lontium-lt8912b.c
+> @@ -8,6 +8,8 @@
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/media-bus-format.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  
+>  #include <drm/drm_probe_helper.h>
+> @@ -16,6 +18,8 @@
+>  #include <drm/drm_mipi_dsi.h>
+>  #include <drm/drm_of.h>
+>  
+> +#include <sound/hdmi-codec.h>
+> +
+>  #include <video/videomode.h>
+>  
+>  #define I2C_MAIN 0
+> @@ -24,7 +28,10 @@
+>  #define I2C_CEC_DSI 1
+>  #define I2C_ADDR_CEC_DSI 0x49
+>  
+> -#define I2C_MAX_IDX 2
+> +#define I2C_AUDIO 2
+> +#define I2C_ADDR_AUDIO 0x4a
+> +
+> +#define I2C_MAX_IDX 3
+>  
+>  struct lt8912 {
+>  	struct device *dev;
+> @@ -38,6 +45,7 @@ struct lt8912 {
+>  	struct drm_bridge *hdmi_port;
+>  
+>  	struct mipi_dsi_device *dsi;
+> +	struct platform_device *audio_pdev;
+>  
+>  	struct gpio_desc *gp_reset;
+>  
+> @@ -226,6 +234,7 @@ static int lt8912_init_i2c(struct lt8912 *lt, struct i2c_client *client)
+>  	struct i2c_board_info info[] = {
+>  		{ I2C_BOARD_INFO("lt8912p0", I2C_ADDR_MAIN), },
+>  		{ I2C_BOARD_INFO("lt8912p1", I2C_ADDR_CEC_DSI), },
+> +		{ I2C_BOARD_INFO("lt8912p2", I2C_ADDR_AUDIO), },
+>  	};
+>  
+>  	if (!lt)
+> @@ -754,6 +763,97 @@ static int lt8912_put_dt(struct lt8912 *lt)
+>  	return 0;
+>  }
+>  
+> +static int lt8912_hdmi_hw_params(struct device *dev, void *data,
+> +				 struct hdmi_codec_daifmt *fmt,
+> +				 struct hdmi_codec_params *hparms)
+> +{
+> +	struct lt8912 *lt = data;
+> +	unsigned int audio_params = 0x08; /* 16 bit word size */
+> +
+> +	if (hparms->sample_width != 16)
+> +		return -EINVAL;
+> +
+> +	if (hparms->sample_rate == 48000)
+> +		audio_params |= 0x20;
+> +	else if (hparms->sample_rate == 96000)
+> +		audio_params |= 0xa0;
+> +	else
+> +		return -EINVAL;
+> +
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x0f, audio_params);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x35, 0x00);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x36, 0x18);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x37, 0x00);
+> +
+> +	return 0;
+> +}
+> +
+> +static int lt8912_audio_startup(struct device *dev, void *data)
+> +{
+> +	struct lt8912 *lt = data;
+> +
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x34, 0xe2);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x3c, 0x60);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x07, 0xf0);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x06, 0x08);
+> +
+> +	return 0;
+> +}
+> +
+> +static void lt8912_audio_shutdown(struct device *dev, void *data)
+> +{
+> +	struct lt8912 *lt = data;
+> +
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x06, 0x00);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x07, 0x00);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x34, 0x52);
+> +	regmap_write(lt->regmap[I2C_AUDIO], 0x3c, 0x40);
+> +}
+> +
+> +static int lt8912_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
+> +				      struct device_node *endpoint)
+> +{
+> +	struct of_endpoint of_ep;
+> +	int ret;
+> +
+> +	ret = of_graph_parse_endpoint(endpoint, &of_ep);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (of_ep.port != 2)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct hdmi_codec_ops lt8912_codec_ops = {
+> +	.hw_params = lt8912_hdmi_hw_params,
+> +	.audio_shutdown = lt8912_audio_shutdown,
+> +	.audio_startup = lt8912_audio_startup,
+> +	.get_dai_id = lt8912_hdmi_i2s_get_dai_id,
+> +};
+> +
+> +static int lt8912_audio_init(struct device *dev, struct lt8912 *lt)
+> +{
+> +	struct hdmi_codec_pdata codec_data = {
+> +		.ops = &lt8912_codec_ops,
+> +		.max_i2s_channels = 2,
+> +		.i2s = 1,
+> +		.data = lt,
+> +	};
+> +
+> +	lt->audio_pdev = platform_device_register_data(dev, HDMI_CODEC_DRV_NAME,
+> +						       PLATFORM_DEVID_AUTO,
+> +						       &codec_data, sizeof(codec_data));
+> +
+> +	return PTR_ERR_OR_ZERO(lt->audio_pdev);
+> +}
+> +
+> +static void lt8912_audio_exit(struct lt8912 *lt)
+> +{
+> +	platform_device_unregister(lt->audio_pdev);
+> +}
+> +
+>  static int lt8912_probe(struct i2c_client *client)
+>  {
+>  	static struct lt8912 *lt;
+> @@ -788,6 +888,10 @@ static int lt8912_probe(struct i2c_client *client)
+>  	if (ret)
+>  		goto err_attach;
+>  
+> +	ret = lt8912_audio_init(dev, lt);
+> +	if (ret)
+> +		goto err_attach;
+> +
+>  	return 0;
+>  
+>  err_attach:
+> @@ -803,6 +907,7 @@ static void lt8912_remove(struct i2c_client *client)
+>  {
+>  	struct lt8912 *lt = i2c_get_clientdata(client);
+>  
+> +	lt8912_audio_exit(lt);
+>  	drm_bridge_remove(&lt->bridge);
+>  	lt8912_free_i2c(lt);
+>  	lt8912_put_dt(lt);
+> -- 
+> 2.47.2
+> 
 
-The entry point for the test looks as follows:
-
-    void test_arena_atomics(void)
-    {
-    	...
-    	skel =3D arena_atomics__open();
-    	if (!ASSERT_OK_PTR(skel, "arena atomics skeleton open"))
-    		return;
-   =20
-    	if (skel->data->skip_tests) { ... }
-    	err =3D arena_atomics__load(skel);
-    	if (!ASSERT_OK(err, "arena atomics skeleton load"))
-    		return;
-    	skel->bss->pid =3D getpid();
-   =20
-    	if (test__start_subtest("add"))
-    		test_add(skel);
-            ...
-   =20
-    cleanup:
-    	arena_atomics__destroy(skel);
-    }
-
-Note arena_atomics__{open,load} calls but absence of the
-arena_atomics__attach call. W/o arena_atomics__attach call the
-programs would not be hooked to the designated extension points,
-e.g. "raw_tp/sys_enter".
-
-The bpf_prog_test_run_opts() invokes BPF_PROG_TEST_RUN command of the
-bpf system call, which does not attach the program either,
-but executes jitted code directly with fake context.
-(See bpf_prog_ops->test_run callback (method?) and
- bpf_prog_test_run_raw_tp()).
-
-Same happens in prog{,_tests}/arena.c: no attachment happens after
-commit [2]. Commit [1] is unnecessary after [2].
-
-[2] commit 04fcb5f9a104 ("selftests/bpf: Migrate from bpf_prog_test_run")
-
+-- 
+With best wishes
+Dmitry
