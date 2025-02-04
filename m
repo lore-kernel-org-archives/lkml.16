@@ -1,153 +1,117 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F2528399
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D86213E65;
+	Tue,  4 Feb 2025 13:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738675579; cv=none; b=kXTirWREcznyI6nXIFSXTsmJYZqQe/4FFb0/O61RsRjo9ZdhrdzUnUU6JJPuPMp9dVb2efvKMaHNMSqjBRzVUYQwjoi2eDv0NVLU4uyIUeAeVc8ZRNngdI+3458bpUEswGw4EnM8juU1bdbjv4GRFh3OvesV8asrrwMi/b/lZV0=
+	t=1738675582; cv=none; b=PkJT9eFn4Za80C5I4Ux5lqXnTZIzg/+H8WD7oeKN81FxQPid4Y5d5syVyo2xJw+Nk6YvCQnzq+HfA8pC2Xu38PVHIp6K1+pcKISnEwZdPXRYAIIxsiaG8TE16manCg7nQHUSrrvRTuHxmxjlA+crxciVkOScxOP7YVflx4SBhgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738675579; c=relaxed/simple;
-	bh=5LJTr/ZPjO5d8ubgU1RzCLXSrJ44hRaRLu0S3BgGeDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TClJvdOFLCDPa3IPFCccCnccPKmYJ2b560FzdZlssNxyuUdML3CW5AG7/3l5v5r8PLhKLRsb2Acl3I4DY62ybbSREqydLCQE0PXIXMR/dy1rHYIrjbSJQKvCEidny3y4B0DiTnRK2fd1AW+LRprzaih2qskztBfGpPUri7Urvo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=NaPPhZE3; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1738675582; c=relaxed/simple;
+	bh=D1W0lSW3hhznEl89GtNTmJa3DXeoKQUNCxnqOJtkDsM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cfrqQQDJ262etJVYD5fNfp+CkwKc4zdTbpxW42kj6NdWuSR9auVFfm2NGvjPW3iemmrKxABhZdk964GmDc2w+j5c5U6CUafHrhxPsngJnpEyL3OBvHlUSnu7mMaoa2JeRqSKm9Jfb4dZLKfaoXFhM9GtG9Zk+TM1rn8dEZjP8Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hSGM2nJP; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="NaPPhZE3"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6e4295b72b5so4754416d6.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 05:26:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSGM2nJP"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-219f8263ae0so103259295ad.0;
+        Tue, 04 Feb 2025 05:26:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1738675576; x=1739280376; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AVp4b+FFVRvgHW7eQGwrIGJ0Ud3zrEOqDnH6Jl7Uugg=;
-        b=NaPPhZE3CR5s9YAau5oCW85w4ZnzGzRJJYvNSPHq+D+poKU3NkVLjNV9IuHNfFVSYv
-         GARUU654zsS/5Ev/yuqvRtjdpV2hg0b1yUKgVhBwTF51BtBqhPGp9q1ys/uznybAl37D
-         T/qYjN/MWMXWBEhwjOoao4LL0U2CjPzXofJpp9GaA/jFsgd8MSwcDF9BtQ8FRonvOOTe
-         kVM0JckIIgwIn8EI8iRFD1HPd75Wk3YbpO1CVra/5E2MIMy07tKdSZcmf45aZUESlVFy
-         7XBgDeC8PYunWBERCnJzR23UXlu016zH71icMfWAL9H5jWnAqG40TixtU1oHpikuFkSa
-         t7Hg==
+        d=gmail.com; s=20230601; t=1738675580; x=1739280380; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MSyTlNCiPQbh+bsbPywvd7QCckbJTtwgD1uOlxbsISQ=;
+        b=hSGM2nJPmbpUsXkY5IJkZzQyfQOzkym/x5vX94mXQPPi2y/wjrsvVNazd35iZUb9kg
+         drjQJk8KuZClDABdQ4Rf8lDR42tT23j4xqoHgQE2oC196oUg2TD5drPp7Uv08pVOPSfm
+         lNqtxZAzXSUO3CLgFVsZQsPr8mIZu43ph8vMctu5Eopy+HtWJURFm0ZI3Q3JMGkOVLdS
+         Yxf/0S8nSrZ4gtWRHUWbnXhuPqyy+haI/6w3NvzyO5AGLbAyh4/GBMAr1Mag50aCMJmx
+         a+9PUwh0NVdTdsF8m8hCqIZ9tzoShY3dR7WEbrIBKoFIjbaDLuConslIJpPmRmhqi8j5
+         MXVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738675576; x=1739280376;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1738675580; x=1739280380;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AVp4b+FFVRvgHW7eQGwrIGJ0Ud3zrEOqDnH6Jl7Uugg=;
-        b=m4A8yx8MCRaTl7gZ/Fax3mLYeZvum8vWDFgx2GnQ1ps/QISYCdZcHgBhoAsqTJ0rCx
-         nUZwGfY6d5KyAm2vRUx59VR0RHIfFfWCyWwKPjBwfJY6gLFRNYsT0Y3r+IoTz7B8wVB8
-         SLXxv0bYnvihwAwt2Dyo9cLeToIad1uxvvwO5qB5Qgm/DEc8TymzCmVlR7HhrLqm6a2c
-         kxfyfoPp1ulVdr3srN9qTnr0++VKonQSVzQEAREa7MpH3X9i3isGkUWdwC6K7NoFvKFr
-         NuXMzYJ85WvEckvnNCHiwPu6L6GrR4o1xjXRtmH0xgXZ58RTPOcP1RMSvSOvZp+Bybvg
-         095w==
-X-Forwarded-Encrypted: i=1; AJvYcCVxKQ1mZoCT7cbdBXqnKl5XmI51ymUFi8Qr5bdHD3JyaZudrYgBjOz13n58GeWfbm0QKAnhfLdSOo+Pzjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1JPHrQkoYUWjEPwCQM5HOHQIl2SgUfLEUWZOe8NyjNC3y6hOX
-	YN4tpWpM/evcVDsVftKZIOPJHzlKaeF69xom9oSg9rTTclfMSQEVKW8fW+sZu4w=
-X-Gm-Gg: ASbGncv6U/jlzTP1A1aH3XYRiqI8Eq7JrJo+myE1VvaYvDKfl+9wOEXTqIKMIqWAyLb
-	fDhlssZysLrm3+NJXck6imfGO289Azsi09Ra/Ud7rWC6+PWOd1A3fRPbfCBAHohVZTIfXUtM2KC
-	4sCnVc02yZmv7tnQLXV2CaKw9MGbfnTHxqT/qLpxd8AxVY+Qi5gKsvEXob8gNGyq0xIpZvgurGH
-	+wDlEJ90v2VIhtIopftTNNtFxAW42G0Oc4XjlPjWA7iyNUVx345IgfBLZxBWwPC29dSvnlwTort
-	HDh1hlSYkQDMfNIMHxb6BtTNS5sdCI/R/KZbVJsHWIR5F4EOewcjNc2mSwbC6ZGO
-X-Google-Smtp-Source: AGHT+IHlCOKBY+zoBFq/ioLTJPh7bDGQBSV2BY/QCHd0dQL9OkhFoX4vLeuIVKLlvifCm+9qEIE5+w==
-X-Received: by 2002:a05:6214:5d87:b0:6d8:a5da:3aba with SMTP id 6a1803df08f44-6e243c3b07amr371097016d6.20.1738675576494;
-        Tue, 04 Feb 2025 05:26:16 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254814d1esm61954386d6.38.2025.02.04.05.26.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 05:26:15 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tfIwR-0000000BRNQ-1pE0;
-	Tue, 04 Feb 2025 09:26:15 -0400
-Date: Tue, 4 Feb 2025 09:26:15 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
-Cc: Yonatan Maman <ymaman@nvidia.com>, kherbst@redhat.com, lyude@redhat.com,
-	dakr@redhat.com, airlied@gmail.com, simona@ffwll.ch,
-	leon@kernel.org, jglisse@redhat.com, akpm@linux-foundation.org,
-	GalShalom@nvidia.com, dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-mm@kvack.org,
-	linux-tegra@vger.kernel.org
-Subject: Re: [RFC 1/5] mm/hmm: HMM API to enable P2P DMA for device private
- pages
-Message-ID: <20250204132615.GI2296753@ziepe.ca>
-References: <20250128172123.GD1524382@ziepe.ca>
- <Z5ovcnX2zVoqdomA@phenom.ffwll.local>
- <20250129134757.GA2120662@ziepe.ca>
- <Z5tZc0OQukfZEr3H@phenom.ffwll.local>
- <20250130132317.GG2120662@ziepe.ca>
- <Z5ukSNjvmQcXsZTm@phenom.ffwll.local>
- <20250130174217.GA2296753@ziepe.ca>
- <Z50BbuUQWIaDPRzK@phenom.ffwll.local>
- <20250203150805.GC2296753@ziepe.ca>
- <7b7a15fb1f59acc60393eb01cefddf4dc1f32c00.camel@linux.intel.com>
+        bh=MSyTlNCiPQbh+bsbPywvd7QCckbJTtwgD1uOlxbsISQ=;
+        b=uwxUlehs9iY04flUC1Qz6vdT/ul8TnhifLM2WGsn4R8Bja1Os/qE4LBmTvpXWIOzx4
+         fXHAPV+WvOQJFQohG36SSvqJYkf3ZV/lddPdzhcIfLbA7eR/5qWzxC/hKDLKsXV1cP4O
+         3tAfSXoPXO2XDtm9Sz68IXiL9ujhtXsdcqVUShex5Yem18HwZzqtyJkUbgE2sewruTuf
+         HKsLgmTjWEP/u6ifuMX0BcrlXxVGeG/AeehOjBTi70LaI386JIWrDx6Tl+OZaMy6Waej
+         tUEi7kdZrNNqMZcDXcCHa+8zQwCq8gR3QpWXwS/uOKxlyQ5USsT5JJZuNJ5+v2OyEZ2D
+         YK/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWGfGCx5TQNeKBE2+NhJgRsJVUQpswk6jicJ+xbAmFKN1DEfj+ASrgCr3sa6KlS56zswrF7nkhsz/OmR73D@vger.kernel.org, AJvYcCWTyo48r+SacFwv6/5clFWn8P8A80KR945oWR155SV1y9JtHAL81LzPzDnz9lND4EsGDmnyt9G9xqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU+TUAoz5ufZabrcwkgY3JqyQhQTEr7/S6ObmCQduCdY+xtFCK
+	LLAZPF2nAkbT5TzJ438jKLuCjdZqLgj5Xj/RnkPACc6FCrFyBs7C
+X-Gm-Gg: ASbGnctr2Z9Q5/9grUpnCJKKq0YbZuPK84/37LDw1iePPXx+eT3+wMDeoPqiGiEKNMa
+	U98pUPoB17DdyoEVBRxoShEu7XyhNEKC9RXPv/1MvIAkK5sW+L8WkBPB+hS+nZXHygSsguabRVn
+	VtNAD/2O4gvgBcI3YaBHeRCocXSvvNlvNO1SI3gwiE3ECqp9ViF7s/7xfSXg/d2aVn8XMUsp3QG
+	eKgg3Ls6ehXtp5kIIxZp9i6+zVb6H6sp/bU2y6Zj+iSntwmHVZcScfKRQKceO6Gbixyb3KLn0sh
+	A5p7Hg7EEN3ZRhndsdoCgLbRzCxowQF2U2Nv06+ZQ0c3jODQ1xoUwzTOIzR6Vw==
+X-Google-Smtp-Source: AGHT+IFHEFE2r/dCdycRGjz42sPrvgEfxh6qVWzazr2Uqj2El6VyShPNSy9RSy0+dCTl2r2K4mg5cA==
+X-Received: by 2002:a05:6a00:1411:b0:725:9f02:489a with SMTP id d2e1a72fcca58-72fd0c5ee8cmr36415854b3a.17.1738675580047;
+        Tue, 04 Feb 2025 05:26:20 -0800 (PST)
+Received: from ?IPV6:2409:40c0:1019:6a4a:7b6:abc:27dd:e5f? ([2409:40c0:1019:6a4a:7b6:abc:27dd:e5f])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe631bf13sm10446186b3a.32.2025.02.04.05.26.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 05:26:19 -0800 (PST)
+Message-ID: <719aa4cf-15d2-4e4b-8f40-cb6f5958120e@gmail.com>
+Date: Tue, 4 Feb 2025 18:56:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7b7a15fb1f59acc60393eb01cefddf4dc1f32c00.camel@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs: Move "debugging" section to the top in index.rst
+To: corbet@lwn.net
+Cc: skhan@linuxfoundation.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250203195323.13012-1-purvayeshi550@gmail.com>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <20250203195323.13012-1-purvayeshi550@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 04, 2025 at 10:32:32AM +0100, Thomas Hellström wrote:
-> > I would not be happy to see this. Please improve pagemap directly if
-> > you think you need more things.
+On 04/02/25 01:23, Purva Yeshi wrote:
+> Move the "debugging" entry to the top in Documentation/trace/index.rst.
+> Turn index.rst into a good starting point for people wanting to learn
+> about tracing. Make it the first document users see, as it serves as a
+> tracing tutorial
 > 
-> These are mainly helpers to migrate and populate a range of cpu memory
-> space (struct mm_struct) with GPU device_private memory, migrate to
-> system on gpu memory shortage and implement the migrate_to_vram pagemap
-> op, tied to gpu device memory allocations, so I don't think there is
-> anything we should be exposing at the dev_pagemap level at this point?
-
-Maybe that belongs in mm/hmm then?
-
-> > Neither really match the expected design here. The owner should be
-> > entirely based on reachability. Devices that cannot reach each other
-> > directly should have different owners.
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> ---
+>   Documentation/trace/index.rst | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Actually what I'm putting together is a small helper to allocate and
-> assign an "owner" based on devices that are previously registered to a
-> "registry". The caller has to indicate using a callback function for
-> each struct device pair whether there is a fast interconnect available,
-> and this is expected to be done at pagemap creation time, so I think
-> this aligns with the above. Initially a "registry" (which is a list of
-> device-owner pairs) will be driver-local, but could easily have a wider
-> scope.
+> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+> index 2c991dc96ace..f3d235c8438b 100644
+> --- a/Documentation/trace/index.rst
+> +++ b/Documentation/trace/index.rst
+> @@ -5,6 +5,7 @@ Linux Tracing Technologies
+>   .. toctree::
+>      :maxdepth: 2
+>   
+> +   debugging
+>      ftrace-design
+>      tracepoint-analysis
+>      ftrace
+> @@ -24,7 +25,6 @@ Linux Tracing Technologies
+>      histogram
+>      histogram-design
+>      boottime-trace
+> -   debugging
+>      hwlat_detector
+>      osnoise-tracer
+>      timerlat-tracer
 
-Yeah, that seems like a workable idea
+Apologies for not including all the relevant recipients in this patch 
+submission. I forgot to run the get_maintainer.pl script, but now I am 
+sending the patch again to the correct recipients.
 
-> This means we handle access control, unplug checks and similar at
-> migration time, typically before hmm_range_fault(), and the role of
-> hmm_range_fault() will be to over pfns whose backing memory is directly
-> accessible to the device, else migrate to system.
-
-Yes, that sound right
-
-> 1) Existing users would never use the callback. They can still rely on
-> the owner check, only if that fails we check for callback existence.
-> 2) By simply caching the result from the last checked dev_pagemap, most
-> callback calls could typically be eliminated.
-
-But then you are not in the locked region so your cache is racy and
-invalid.
-
-> 3) As mentioned before, a callback call would typically always be
-> followed by either migration to ram or a page-table update. Compared to
-> these, the callback overhead would IMO be unnoticeable.
-
-Why? Surely the normal case should be a callback saying the memory can
-be accessed?
-
-> 4) pcie_p2p is already planning a dev_pagemap callback?
-
-Yes, but it is not a racy validation callback, and it already is
-creating a complicated lifecycle problem inside the exporting the
-driver.
-
-Jason
+Best Regards,
+Purva Yeshi
