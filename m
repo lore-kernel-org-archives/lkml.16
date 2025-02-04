@@ -1,125 +1,84 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086D8212FA6
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 15:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CC4214228;
+	Tue,  4 Feb 2025 15:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738682223; cv=none; b=OMY/UBQouYi2iu6nnmYSbxlSRujBnrIribC6KRMBxaXj8ovr8QSqKgGNL6Ufw1y55X2vN8CPi57oNvKuV+/52efb5gMr6LQ2T3qEhN7Pui/6HoISwAcvhAfPw2WLATAg/fz74J9zmPsPvrsIl79gfCEde6fkomuAFJYDjgRIlak=
+	t=1738682230; cv=none; b=fTDi1guWNxTQT2zgw0Y0v+aOBUjtsciQ8XrvZcKxQKFwH07dBk2DgcQxiiVC5xMroduPJjMSp4I9NTbNEGY5AWKawj6uXH7n7O+AB3exK9gPTGSBbvk+BSbJ7CQckqln0xJG7Do0CnE54KIK7NqbLwpWRq983K5VI8opkqo6li0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738682223; c=relaxed/simple;
-	bh=xcNmWcNq3dlNbmcU4hF8FoUi16HAHXirv5VZScmYguU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Q4YoQhSRbXG7vHgozsAw3TnkuBxigBBU0aEOkLnUdqnTWlPydjTqviqczBXkW0yuuC6CGNtST62F0Lsj57D45A3y6HvNVxGzCq90/VPWCmXws1BkUOHpFFQnxqsbX9BMl2ZRWYRS3b6WrZ1L4llO/yM/HsyhH3aFQROCnaeYEj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EhS1BkWy; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738682230; c=relaxed/simple;
+	bh=HZST+I4clllEpnFcdIeNwwO8hJlljh75MXFwylPNzZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s8+L0z5odBp7fT/inIkvspKlapgl2DmcbHWgHAcKHgjDDcuoDWO/kbx1nnI+m3qNkKSReshZ57BdlMo6WgILZieFcvObmtO2+k2D7caYMRIsA/YJY1OSJWdjH00+6hGha3dJFvxCDuZ7D0JVPo/eL4pisj03P0eN9AWb2bEeuUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iNGyp3pk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xOlqyZ0t; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EhS1BkWy"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514BYSNb010392;
-	Tue, 4 Feb 2025 15:16:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5r8czkbzYXVx26WYhM2Xu+E+zNDeBL7QBFVsOOc/Ex4=; b=EhS1BkWyoLO4trrb
-	FeiQ9/svnWtDp1/cQateO6DSLxoXjq8RPmzNVGiBTMbJgrBoOvIou3LkKJfG43yL
-	wPhwTHXa3nsKFY/vu2y9f4cd0hsSXQ4bN/tDIdnbbISTlcotyUxuFCanwA9EDmMi
-	Lusm7LzHjBdMerk1Xz4S6fnESfmnYRDgegTdudYORkIX3RDzPS3L7IhpNujjkaY0
-	hTctsUk45ifAtfaTlAxWDTPJciWaz0lf1Llwl8/82/b2KICBorR/AY/Y44pkrY6/
-	QCaTo1+lIDnnxb5ny2dhJY5fb5K9vij/D8xpS6J+EKufrSqMXgx8chC2b5ZvJGi1
-	y843Ag==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44kj4yggxv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 15:16:36 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 514FGZrH010144
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Feb 2025 15:16:35 GMT
-Received: from [10.216.45.46] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Feb 2025
- 07:16:30 -0800
-Message-ID: <3ff01e2c-fd48-40cd-b130-a515925418fb@quicinc.com>
-Date: Tue, 4 Feb 2025 20:46:26 +0530
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iNGyp3pk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xOlqyZ0t"
+Date: Tue, 4 Feb 2025 16:17:03 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738682226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OQ90/s5/L5n9DHA8Znts0YftmEUY0HwKZk1j+bODf+U=;
+	b=iNGyp3pkdzS/NdDnIfv/2kHoQsIwsK/6cvGhLBmekh0rOLGid+hiMYK30XQzZJ3GLp1TlC
+	zqw7VYVUBdrsQkmh5Pcw6SgDSEwVXeKhAGTJZPxPLc5dDnGwgADsz7Aw1HVTbKqUvl89/F
+	D6gF5ToIBidSVEgrYUVI25nuI93Qkew0lR9+4QjZkgE9mve6TwicWHwrxtnosz2GKGIS3B
+	tDJPS+qU28RahEj4TROuwcP0WruIMjL1c7cj5A2wZeSSArA/eatOhGONI2+NSXS4LJwBtO
+	8+tg7qTgzsSIMvTMPVtp+kM4sR1gX3eFQdHpfC6Ly3FTixZv5A7m8v1KNUInNw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738682226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OQ90/s5/L5n9DHA8Znts0YftmEUY0HwKZk1j+bODf+U=;
+	b=xOlqyZ0tj1IUFVmgc2T1w6Y1lzwHQbeSc+tGzONxP4+KvOkGHHhxd5F59LIvckwrhGJ/Dd
+	Uj5g3C4Qzdjth7Dg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Kees Cook <kees@kernel.org>
+Cc: Eric Biederman <ebiederm@xmission.com>, Shuah Khan <shuah@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 04/16] elf, uapi: Add definitions for VER_FLG_BASE and
+ VER_FLG_WEAK
+Message-ID: <20250204161210-b788ff6b-9c77-4a9c-8ab8-8b727b0b2003@linutronix.de>
+References: <20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de>
+ <20250203-parse_vdso-nolibc-v1-4-9cb6268d77be@linutronix.de>
+ <202502040708.6E9CF77@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] i3c: mipi-i3c-hci: Use I2C DMA-safe api
-To: Billy Tsai <billy_tsai@aspeedtech.com>, <alexandre.belloni@bootlin.com>,
-        <pgaj@cadence.com>, <miquel.raynal@bootlin.com>,
-        <conor.culhane@silvaco.com>, <aniketmaurya@google.com>,
-        <Shyam-sundar.S-k@amd.com>, <jarkko.nikula@linux.intel.com>,
-        <wsa+renesas@sang-engineering.com>, <xiaopei01@kylinos.cn>,
-        <Guruvendra.Punugupati@amd.com>, <linux-i3c@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <BMC-SW@aspeedtech.com>
-References: <20250204091702.4014466-1-billy_tsai@aspeedtech.com>
- <20250204091702.4014466-2-billy_tsai@aspeedtech.com>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <20250204091702.4014466-2-billy_tsai@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: z3AUbk5MKVla8EDbImzn-_JZx5NOdDAg
-X-Proofpoint-GUID: z3AUbk5MKVla8EDbImzn-_JZx5NOdDAg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-04_07,2025-02-04_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 mlxscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 lowpriorityscore=0 impostorscore=0 phishscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040119
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202502040708.6E9CF77@keescook>
 
-Looks good to me !
-
-On 2/4/2025 2:47 PM, Billy Tsai wrote:
-> Use the i2c_get/put_dma_safe_msg_buf for I2C transfers instead of using
-> the I3C-specific API.
+On Tue, Feb 04, 2025 at 07:10:00AM -0800, Kees Cook wrote:
+> On Mon, Feb 03, 2025 at 10:05:05AM +0100, Thomas Weißschuh wrote:
+> > The definitions are used by tools/testing/selftests/vDSO/parse_vdso.c.
+> > To be able to build the vDSO selftests without a libc dependency,
+> > add the definitions to the kernels own UAPI headers.
 > 
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-Acked-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-> ---
->   drivers/i3c/master/mipi-i3c-hci/core.c | 8 +++-----
->   1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/i3c/master/mipi-i3c-hci/core.c b/drivers/i3c/master/mipi-i3c-hci/core.c
-> index a408feac3e9e..4f3738beb0f2 100644
-> --- a/drivers/i3c/master/mipi-i3c-hci/core.c
-> +++ b/drivers/i3c/master/mipi-i3c-hci/core.c
-> @@ -382,14 +382,11 @@ static int i3c_hci_i2c_xfers(struct i2c_dev_desc *dev,
->   		return -ENOMEM;
->   
->   	for (i = 0; i < nxfers; i++) {
-> -		xfer[i].data = i2c_xfers[i].buf;
-> +		xfer[i].data = i2c_get_dma_safe_msg_buf(&i2c_xfers[i], 1);
->   		xfer[i].data_len = i2c_xfers[i].len;
->   		xfer[i].rnw = i2c_xfers[i].flags & I2C_M_RD;
->   		hci->cmd->prep_i2c_xfer(hci, dev, &xfer[i]);
->   		xfer[i].cmd_desc[0] |= CMD_0_ROC;
-> -		ret = i3c_hci_alloc_safe_xfer_buf(hci, &xfer[i]);
-> -		if (ret)
-> -			goto out;
->   	}
->   	last = i - 1;
->   	xfer[last].cmd_desc[0] |= CMD_0_TOC;
-> @@ -412,7 +409,8 @@ static int i3c_hci_i2c_xfers(struct i2c_dev_desc *dev,
->   
->   out:
->   	for (i = 0; i < nxfers; i++)
-> -		i3c_hci_free_safe_xfer_buf(hci, &xfer[i]);
-> +		i2c_put_dma_safe_msg_buf(xfer[i].data, &i2c_xfers[i],
-> +					 ret ? false : true);
->   
->   	hci_free_xfer(xfer, nxfers);
->   	return ret;
+> For all the UAPI changes, where are the defines "normally" found? i.e.
+> how does adding these to UAPI not break something that already has them?
+> Or have these never been defined before? I'm confused about how removing
+> the libc dependency exposes the lack of these defines. Are they defined
+> in a non-exported libc header somewhere?
 
+They are normally defined directly in libc <elf.h>, which does not use
+UAPI headers. Libc elf.h and Linux UAPI elf.h can not be used at the
+same time because they define the same symbols.
+In theory some user of UAPI elf.h could have defined these new symbols
+on their own without ifdef guards. However UAPI elf.h is regularly
+updated with new symbols.
