@@ -1,96 +1,122 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29338635E;
-	Tue,  4 Feb 2025 08:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B668635E;
+	Tue,  4 Feb 2025 08:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738656355; cv=none; b=t1uA3DPrO2JF2hO2/ILskS2AdOxKMIePO4upoQN8sgwWrFSJ385SoKe/LR44OnqGeWqa3AM/AltKA1PoQm9PNcKFAso7ffmK4xAirE08jVyNNG+7JRRHOH5uU8mYqTZA/c33Ezli3ZQ4nv8ZmlPV7oCKeuaF7JV8bT9XgXpxXUQ=
+	t=1738656458; cv=none; b=uMdy7FsbdfJDlkjTCTcdZ5uWiMux3KJzI9A4sz+joMV9gGvi3NOPfa17htao1tiyAG81zQIECC3HHCYKWxbTYZMaVr0astCfkvXm/Hl6mlebogySWimyODk2EGO/FSS7IUoU2wIGTS6aPZyNFS3CJPuXez+daVeERRzFmH7Fifw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738656355; c=relaxed/simple;
-	bh=5uNyUoJPtzpMgfLNyDpqgtKdgGl0kwhLW4I57KsMsao=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tsO85YR+wVPY2GirzMzJuRiq8qaXC4zvVM3tVFth6iCWTPF68ZanFsOY88KEAmaX01pmUZn8sgh59Bo1be3XuJtQfr8A8dMl9zKAQnER9hHst3AhfP/5afrWx8/SgPMKlNxoCdyct3MJdQq7gOEeCgV7+eBdn/pITp4pKctsUqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=wgm1NVc9; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1738656458; c=relaxed/simple;
+	bh=r9TLmA9/WZWk+LmP47qvtpsschxzMwnvqbIcWOhTw8c=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=G0PnfKt+f9Hlvf1eeJi66HdzIM3BzF+40CQw0xW3t3AAZjGJuK2zREzqjZfEMBZMgyOpWqdM8M6WtZENX4iP39fOTzKuiStO6bYq7h88kKTWATx8bz6h3arT5zAypaYUCWffN5ZB8HeEr8ljT/DrRYqMqVQs3AQvK7+x1E5EegI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eK0C6BFX; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="wgm1NVc9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738656308; x=1739261108; i=markus.elfring@web.de;
-	bh=5uNyUoJPtzpMgfLNyDpqgtKdgGl0kwhLW4I57KsMsao=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=wgm1NVc9kfYvhzuWZh2VlSL9zGAMSA+EVSF2mOHVHO+wtzeyG0emlGxfs8XCY5Ec
-	 TeEPzkGLfbDrWyCwjUH0rx0bLCrm+NQ7UL95NjlJ/NXOGK6EEwx31MXAE83XQYGCn
-	 M8huuMU3qqb6U3w1P77aExJzPuqkd4MGIbAFjvmpYHmYkOpH5YOjRVom4tZeVo5Vc
-	 z6/pCijitt/nIsYHq1PALM1OvCiM9aEVCgximpc0PKHbkTSibgvWSYTwRtUXvqpM4
-	 VP1T2LP6qI0u9Q5/6g35wxfOP1qiDgg1W+Kr5XlcSqFpqAX+tLrNaZGgeLe3CXLbv
-	 xUWmEVxzMPlQQ9T10A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.16]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MPKB5-1u4Bzy3hz3-00JTFK; Tue, 04
- Feb 2025 09:05:07 +0100
-Message-ID: <444d6d33-d916-467b-aea8-25c61977713a@web.de>
-Date: Tue, 4 Feb 2025 09:05:05 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eK0C6BFX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738656457; x=1770192457;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=r9TLmA9/WZWk+LmP47qvtpsschxzMwnvqbIcWOhTw8c=;
+  b=eK0C6BFXZsoKB13UCXqiPqiYuzKJYbkx1PRK6Xp4WaIazwHX4CQKVR8B
+   Rg3lJ9fPryEFa1Mz66fzUUwwA5sIbShewJShalX6Wq0PIYpcSpCpm/ybx
+   uwq7R5UyMZ4GNhJUZwEsFtvMmkgOZ0Cqzmc1IS+so+u4PplyjtWND1U5n
+   +YJGXHHPU6xGsjI+fr9gWfIXkO/npG5W5c2+lBfTvk+V3mxUosOoqApWK
+   FlzTOwWVbbbHekicjRQ8J1OtuD7taHAtCUzfBp/RmeciRcK8y6Z4hnWC7
+   CTqib3F4Hb3VSHtDcMUfeMOHIYyFB2LmH7BP7OemneAZSL5X+n/g+VTL/
+   Q==;
+X-CSE-ConnectionGUID: bIO9y8mWSlar5kf9QNKS9A==
+X-CSE-MsgGUID: 0P3F3HRnTvmPV2USwKRCGQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="26772113"
+X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
+   d="scan'208";a="26772113"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 00:07:36 -0800
+X-CSE-ConnectionGUID: Gpv2k4NMTwav5AbLDhiOKg==
+X-CSE-MsgGUID: AxWs5vyBR/S2yAQqnxR43Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115141667"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.75])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 00:07:32 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 4 Feb 2025 10:07:29 +0200 (EET)
+To: Jithu Joseph <jithu.joseph@intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, tony.luck@intel.com, 
+    ashok.raj.linux@gmail.com, anisse@astier.eu
+Subject: Re: [PATCH] platform/x86/intel/ifs: Update documentation with image
+ download path
+In-Reply-To: <20250131205315.1585663-1-jithu.joseph@intel.com>
+Message-ID: <50ba78dc-f60d-63de-80fd-ef9b1fc68c72@linux.intel.com>
+References: <20250131205315.1585663-1-jithu.joseph@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3?] scsi: qedf: Replace kmalloc_array() with kcalloc()
-To: Jiasheng Jiang <jiashengjiangcool@gmail.com>, linux-scsi@vger.kernel.org
-Cc: GR-QLogic-Storage-Upstream@marvell.com,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- Javed Hasan <jhasan@marvell.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Saurav Kashyap <skashyap@marvell.com>, LKML <linux-kernel@vger.kernel.org>,
- Arun Easi <arun.easi@cavium.com>, Bart Van Assche <bvanassche@acm.org>,
- Manish Rangankar <manish.rangankar@cavium.com>,
- Nilesh Javali <nilesh.javali@cavium.com>
-References: <d5d13945-da84-4886-bdc7-9a3ac182b2be@web.de>
- <20250202213239.49065-1-jiashengjiangcool@gmail.com>
- <6221018a-873d-4fd5-bfaa-5c83d09ea2ac@web.de>
- <CANeGvZX5gcYj+Wjp+t=GLtOePHBjMNmVxiPsk2nruqsbiRaqVQ@mail.gmail.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <CANeGvZX5gcYj+Wjp+t=GLtOePHBjMNmVxiPsk2nruqsbiRaqVQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:uaTnEDMk6fvUlP6vWWCn1n1zkmgJ8+CHseWqYQG9V9GKcslrRG6
- 5GwZ4at6HuyqUhLjDoVcerolP4rIKtaDYH+TVZQOhkqnQ6M/zwmJleNf4/pzdWYma6Ijpre
- IAhN92ITrbUXOupmBnrmvDkZ1reukTqN0rFFECcLiEAxllzibiZLx6jMGaNch3bFScdMt8k
- pk9ZRNk+rFpANQ33qlACg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Pm3W28ysthw=;rEZcCXoXD7Hkevtr5fWlUKKVppd
- zuRs1AD8LCzm/2Jd5sQdCHbxBlaqCdk6v2TDV1GOB4A/LfvbAwbmD3ovizdvtlIIXWDhZpyPr
- V3iw1VOCoB+f527txZYehcCwQnOcufIUfP4hghkxeQudOG8+gFIGCVzPfmXDGL17sx9JivA79
- XapLZ8whN+P8hU6M+eRkxXbbBrSkX5y09IDORSm6O97FnjxFnyJuEyVyBIgfRCbiLfyUpYFZe
- 7EZPFLQvTlgd1OdOiLRcj229yAuxTMeMjebR1S/iUmPBQM8cgUCC0zCX1+Oj9qSkVESXkQN5H
- FmKmZmf3Gs7U1TSsm5FiTLS9SUXxlied1mg5aoc7WMW4oTyq8lkXPUShmUmseUMP0qyiENiYd
- B3aTNwK8ooof9TYO+fPj8C3EfLgNQ488N8ZuJJSgTX7jouCAnGrOrzUA1Rrqjt7ZyXtFWtUmn
- uk4C2trDGapZLihGcxJNTl8fB2kj+I6FYaMr2KakCCaOq/hou+EaRD8lrGViRJT2FN5iED+ec
- jtXUcNJZpbL1133X8+U6XkqYsJA472xVvg0b4vjrrD1bug/7iUOpzhTb1bIME466QjIQwDZuq
- c3zFdMP2xrj9pK9O9ZqOAqp2vfRDX2jFuNcM4k7V6SIB5bPZcBfApjCzfG1ZzB860KPmJPVf2
- x5NRIkpc1LigwO5bmtSpe6AymB21WbiHGzWrRF2GqAm3/EXha8sDgrGQI8BNjCRWYLl3pD9ko
- Vp3uP6li0jeI/V9t8ULC48NqB2Tig1B/zFikWm09Mu++MXIGXGJDxNWQiM+3025TusE8j9i7R
- IcIOZn2VcJ2z1M3fQdxuuSazrzjDU7ITROUTvATaWr1da44GYG3dCKMNFwh+1YBsu/MG5gdn0
- 1F4O6RtyEiFXDBg2tGVnSMrebpIsiSJ1+ZyTyh9qCmus1KzOtnZNwP5jGwmwcGKXp8lMoaUYZ
- lq2bGSF5pGiwKKbcz6Q/co6lHofkiMsNUOjPEgodeN6OY3HtIuYq0IX+csIQIYZs3LMIkU5CM
- 4qFev/Zv6Bkw/+oujRXgHBeyvbacIke6+g2qWUvNAeZXMsN3Icmfr7FpxU5lGRjjYvBHfsqJK
- KlbkEivI1Rq62QO4cE56gUyOibeRsdq2lPYMHHi3fqifEalxMIrLx7VyXgltj85d6WhpUSCvk
- 6OyVXcUVf9VGk3MZc5gP7cJ13xtoP1T8ivHModB8h0t1be6ySF0QsEYqdZDH9hBy9LxWxu8Pu
- McKfAhOLEb1xhv5bDKQDZ/THS126XKIcK2j6wlf7WHf/F6PLON55HA8OcW25vN9pe8pGEswEN
- ZgkMKc+53jqMcVnoD81fbZ+QVuJoUaWwhedrrKrTK/ZlY4ry1lujVQK2Q3a/ozc34x0
+Content-Type: text/plain; charset=US-ASCII
 
-> Thanks, I have submitted a v3 and added the changelog.
-Are you going to improve your version management?
-Would a small patch series have been helpful to avoid any confusion here?
+On Fri, 31 Jan 2025, Jithu Joseph wrote:
 
-Regards,
-Markus
+> The documentation previously listed the path to download In Field Scan
+> (IFS) test images as "TBD".
+> 
+> Update the documentation to include the correct image download location.
+> Also move the download link to the appropriate section within the doc.
+> 
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+
+I've applied this patch into the fixes branch with Anisse added as
+Reported-by.
+
+Thanks Anisse for raising this issue and Jithu for getting the gears 
+moving to provide an useful resolution.
+
+> ---
+>  drivers/platform/x86/intel/ifs/ifs.h | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+> index 5c3c0dfa1bf8..41fc21e7ef14 100644
+> --- a/drivers/platform/x86/intel/ifs/ifs.h
+> +++ b/drivers/platform/x86/intel/ifs/ifs.h
+> @@ -23,12 +23,14 @@
+>   * IFS Image
+>   * ---------
+>   *
+> - * Intel provides a firmware file containing the scan tests via
+> - * github [#f1]_.  Similar to microcode there is a separate file for each
+> + * Intel provides firmware files containing the scan tests via the webpage [#f1]_.
+> + * Look under "In-Field Scan Test Images Download" section towards the
+> + * end of the page. Similar to microcode there are separate files for each
+>   * family-model-stepping. IFS Images are not applicable for some test types.
+>   * Wherever applicable the sysfs directory would provide a "current_batch" file
+>   * (see below) for loading the image.
+>   *
+> + * .. [#f1] https://intel.com/InFieldScan
+>   *
+>   * IFS Image Loading
+>   * -----------------
+> @@ -125,9 +127,6 @@
+>   * 2) Hardware allows for some number of cores to be tested in parallel.
+>   * The driver does not make use of this, it only tests one core at a time.
+>   *
+> - * .. [#f1] https://github.com/intel/TBD
+> - *
+> - *
+>   * Structural Based Functional Test at Field (SBAF):
+>   * -------------------------------------------------
+>   *
+> 
+> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+> 
+
+-- 
+ i.
+
