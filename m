@@ -1,112 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59005219A9D;
-	Tue,  4 Feb 2025 21:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB54821A446
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 21:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738703357; cv=none; b=qbK9h8dlfZEiGz+0NtSVbBcBdgsdt4IaomRkrDlb0Ycqa321gjbcSY1zw+0Fw144BdcNdo9RfF5WL1+tzGY6n/wem9cSt4thRxSKJ11qjc/5UmZvRenosu9uuPiYEGLprmPC5lLhK3EeFhjyoLDRs6kot2fOAk9SgVKPVSpPNes=
+	t=1738703367; cv=none; b=MiF8fgrmMkXR447MFh3FVGyQ8qTeEjxoLRnhnvZdFTH6NTmWrnvnCxu4XpsLWGr6/B0NtGHMM1hKo51nwgc0RFod9Al2CZOTYexkAtAvfHmLHAPXtMELIciuGnq6yuz53Z+bH67MiJ2X1fAlxqw0t1d2CpSHVTdqdLqP81wiDXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738703357; c=relaxed/simple;
-	bh=WN310kV2jADJRcPMhCfFUsQ36Rf7aXB/v87njf9xJkg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UBsLJYzZXlHDZDoMq5jpr1K8IVTnzHN9bZ+wcn+hjZgc0Coa08KpW6PCRql+96fu00nuE886YQiZ7X4UcIvIblxPQHZmr05Bj/EPLy72KljRht2+fZw0yI3T3WoY/7XMkCMNFOKp+qIPgxG7E23Z7j8PVP5KUmtqnNKwNHQIhHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QUFwFsoe; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738703367; c=relaxed/simple;
+	bh=8JkrkZVOFCHaDqjin9PXTeQJWqvM07LcTV+TIYQ+Qi4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QBKj+7qCWBuzX2QWFslGJ41hC1oOycOc3IWvWV+khhyesOI9bTcMFPMF8irSY2KdVVuWKZzV+yE2K98ped9NprUrk8sXXnCTVVdXH4vXM9ICG26TzGtUcYaOBU299aAtz4dRJ6n0nvsyvBijEyKjz92A7sQvuSalia4D5ktimp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=h27OHlHW; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QUFwFsoe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738703356; x=1770239356;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=WN310kV2jADJRcPMhCfFUsQ36Rf7aXB/v87njf9xJkg=;
-  b=QUFwFsoeFSFn2wUJxVeeBlhrtGVol8pu2Mgb9Db/f1t5VQBVwRWCgsaF
-   ssb66eUYX7f61I484d5MWocSXYtpFPYrAKG4ci8Az5qY400lomGtgWH1u
-   kTx5/9ndRn4SSurbG7vdrfQTFMhyNtuemwRLegLOlhEMgWpVXFqQhwQMO
-   3+kzd7y3i9QhgudTv8NMEqOa4vgixtyjHrsw5Bk0zzQW11jcMCz4UXCZ5
-   RWKAmFctIAsEuVQkedMULhQsy4fYqhWBdjbrNvx9jvTo15p4QcSyjq+AY
-   jXVJLl94ivzvR9lPZYDcpQzIeThf6+uICaT/xqsrcRCRWebkaDodR5VI7
-   A==;
-X-CSE-ConnectionGUID: /2XXNbqXS7eTrT90IifWNA==
-X-CSE-MsgGUID: 3lW4QkiNTrCjpRM7sV7g7Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43170427"
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="43170427"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 13:09:13 -0800
-X-CSE-ConnectionGUID: /SsNr1C3TguOMFe+DLAx+A==
-X-CSE-MsgGUID: mELU3NwzRwOj0NTyxPHEVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
-   d="scan'208";a="110480812"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 13:09:13 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 7202720B5713;
-	Tue,  4 Feb 2025 13:09:11 -0800 (PST)
-Message-ID: <f3b71bfb-4e04-48a2-b606-bac81cd3f50e@linux.intel.com>
-Date: Tue, 4 Feb 2025 16:09:09 -0500
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="h27OHlHW"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4361f664af5so69990375e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 13:09:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1738703364; x=1739308164; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hU4QrAbDQR1o2bnoBznVmRjsUjgFoPERHNCe0D3R9dg=;
+        b=h27OHlHW5fNN3Od2Zrb//yjj0qxlJtqZyfW8O0wgJ949DhuNA2d72vsouaqlLTTHrS
+         K1GRk2awzoYzbc18t8v6xpyGusQ8c0z9WCVMOp9kIkwPphzD0og9klmyPGe/BQWw4VoE
+         KRvVGVVZj9iOSQobUwwG7yJUuIHktYQK25nxw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738703364; x=1739308164;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hU4QrAbDQR1o2bnoBznVmRjsUjgFoPERHNCe0D3R9dg=;
+        b=U+ef/uOxh/l01PSKJNriFiaubYJ5gI89kx3EVsDh4KMrKGWtcPDv33kXC0xJbdiVX9
+         1Pb0BrL6iaGhVTTfix7JI+zTT6h6AmNsXs2+o0hbjxzHSSiXyUOSjZvmODlu0tsTkxua
+         sxm1q2OzvDrcIwtxUTblBu54/uD3m76CKaQ/Hle9d02jSb4zSlr1Ik6FasYGwT/Y61Tk
+         xfdPUAMWaXQPslAVcZibVUecvefYOxT7ec0CXM3Nd4IHNqpU4oQ3Dl1pLuTwDZUCzfXV
+         JA6dDH3MY/4WIHG7tfrb0J2dMBqvjAlePC+FadnMPIO0UC4h2BC6N70qXQaRL0uM46II
+         bk3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWO3TFXzFbsxFmzCqOmiWdC4H8y3CI5MGM3tUIEivAVI4KNCYiPl7jfNF2g1C3I0B2XXgTMCJAmRSlaH2Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTKG4SRLKSEGklkyYESpGdpUhlutszqHfIMeJHvSIy3YP1vWNg
+	bPCTzlHx4gpoWs+FbCo1JtcccS9TgcTqwGPi9a6YvpEnGb6xDeQDmbLQnWmKHKROEk+Ohnc5/GS
+	wrpKxFA+WvbIfcL5xlBpTz2frhgm866js17z1AQ==
+X-Gm-Gg: ASbGncs5Iy7HmsFr8L2EyAQ0uywH82cDtSLWmyx0y+2hVzB6EnHDEcoh7OimVTFYi7L
+	ucNHKWCHcDWfyDudM6gnZSM822PzYTAwzDKC5N61bwMpzln1pfnqHD53lB2EE3CqPSA/cnIHw
+X-Google-Smtp-Source: AGHT+IG1wU/phrvdmWOZ6gg4Qkaj9tiLGHlTlII39K2KsIGA/7PJCQGdfM9Y7R/VJVyH/LBFDX1pLGfA1F+6yTJrKno=
+X-Received: by 2002:a05:600c:5492:b0:434:ff25:19a0 with SMTP id
+ 5b1f17b1804b1-4390d5697b4mr753735e9.21.1738703363904; Tue, 04 Feb 2025
+ 13:09:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V10 4/4] perf/x86/intel: Support PEBS counters
- snapshotting
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, ak@linux.intel.com, eranian@google.com,
- dapeng1.mi@linux.intel.com
-References: <20250121152303.3128733-1-kan.liang@linux.intel.com>
- <20250121152303.3128733-4-kan.liang@linux.intel.com>
- <20250127155107.GI16742@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250127155107.GI16742@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250131220432.17717-1-dakr@kernel.org> <20250203202410.GA3936980@joelbox2>
+ <Z6Jgf-cVt_AlM6Qd@cassiopeiae>
+In-Reply-To: <Z6Jgf-cVt_AlM6Qd@cassiopeiae>
+From: Joel Fernandes <joel@joelfernandes.org>
+Date: Tue, 4 Feb 2025 16:09:13 -0500
+X-Gm-Features: AWEUYZmCOUkLm9MpjL2MDd5EZQ1gMNJEykz-KDiUu51t6tTmXr73ZDfIU09FM3Q
+Message-ID: <CAEXW_YQQey_QweH+favrXPhrEkVwyqCXRG+UBn-oG6wb+n4+gA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpu: nova-core: add initial driver stub
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: airlied@gmail.com, simona@ffwll.ch, corbet@lwn.net, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	ajanulgu@redhat.com, lyude@redhat.com, pstanner@redhat.com, zhiw@nvidia.com, 
+	cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	rust-for-linux@vger.kernel.org, joelagnelf@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+On Tue, Feb 4, 2025 at 1:46=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
+rote:
+>
+> On Mon, Feb 03, 2025 at 03:24:10PM -0500, Joel Fernandes wrote:
+> > Hi Danilo,
+> >
+> > On Fri, Jan 31, 2025 at 11:04:24PM +0100, Danilo Krummrich wrote:
+> > > +#[pin_data]
+> > > +pub(crate) struct NovaCore {
+> > > +    #[pin]
+> > > +    pub(crate) gpu: Gpu,
+> > > +}
+> >
+> > I am curious what is the need for pinning here in the patch in its curr=
+ent
+> > form, is it for future-proofing?
+>
+> Yes, it is.
+>
+> It's not always needed, but since I know that further down the road we'll=
+ need
+> at least a few mutexes, it seemed reasonable to already consider it.
 
-On 2025-01-27 10:51 a.m., Peter Zijlstra wrote:
-> On Tue, Jan 21, 2025 at 07:23:03AM -0800, kan.liang@linux.intel.com wrote:
-> 
->> @@ -471,6 +477,15 @@ struct pebs_xmm {
->>  
->>  #define IBS_CPUID_FEATURES		0x8000001b
->>  
->> +struct pebs_cntr_header {
->> +	u32 cntr;
->> +	u32 fixed;
->> +	u32 metrics;
->> +	u32 reserved;
->> +};
->> +
->> +#define INTEL_CNTR_METRICS		0x3
-> 
-> I've moved this up a little, so that all the adaptive pebs crud is
-> together.
-> 
-> Other than that, I've picked up these patches and will merge the lot
-> past -rc1.
-> 
+It seems reasonable to me as well, I would probably also add a code
+comment there about what is expected to be unmovable in the future
+(Just in case any code readers don't raise the same question I was
+raising).
 
-We found a bug when testing with some non-precise events in freq mode.
-I've submitted a patch to fix it.
-https://lore.kernel.org/lkml/20250204210514.4089680-1-kan.liang@linux.intel.com/
+The source of the confusion for a reader could be the documentation
+expecting a #[pin].
 
-Could you please fold it into the patch ("perf/x86/intel: Support PEBS
-counters snapshotting")?
-
-Sorry for any inconvenience.
-
-Thanks,
-Kan
+ - Joel
