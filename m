@@ -1,199 +1,185 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from minute.unseen.parts (minute.unseen.parts [139.162.151.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1501FF7C3
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 22:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBE914AD2B;
+	Tue,  4 Feb 2025 22:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.162.151.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738708222; cv=none; b=Tot5+Gb2Ml6TRGkl157vRofsHV5m/iqqzxbJX/tRaayofWgT4Im9ZtDL//5+llFaEGl26kIl6TjTVpnsdSOSyt7g64C3vhiryr3ybcxDS11jRqGwC8BhDIWbhVV+pHTmVTk65THyhPS+Jw5QcF/Bj7aesE+pmr+3uP0HKRtwVvQ=
+	t=1738708547; cv=none; b=sN2ox9ifI1BHAXWhig/6p9+1vUXFWdVDkr3bPCWgIfBcfmCr/EFUI8msTtcQk/mOF9f/GSq6ouoY4QZph3y6XBjXp6Lic8myaTrGW+sTSGijn+dVcf1+1/J3cqhk/wkF5OHSFeUv2N7PsUq4G08Q3dja6s5BhFPk+BMBBER1Kcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738708222; c=relaxed/simple;
-	bh=0yuraX5ABUdiSOZbZSGb+9nDxk8cxDL4hzfcbvO/mLM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=umzQHeTZHObfj6GRPbJVUYZOoZanDUzrapZTm9v2w5Pu/ql/6TBAuCKvlby0o6h923IIiQh3EtQ+GtY9qcRrDx2tDC2b9UqZB7ntxV+ejXkAOUHRnB9yAgJcCBmDYuyoT/+pbNsXWtuqITjp0iEFqr15J1ifXQ/AfPaO5CdIS9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d05063cc0fso665975ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 14:30:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738708220; x=1739313020;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ns36zhmEd8OWtoV79SVotwphVvopr7HCjwhmtCKqZRs=;
-        b=qwGsda5AyYY6fzoQ/KJYa177PEjJ/RwvzfI+XNzQDKZQKMf7vtE3U4esx36mU4b/+5
-         10fBXgEPXCq+o4JTMZOaP71e1ZIajeZRN/wMdLTc1wv4KDfQNoh0KNaEXrRoKIj0mpV5
-         t+Lmm9CeOKTjgjeBm56RsZA42IcNcKR1qdl3B1wX8/lP1VmUPqQyVrFuJIeg8rBNsc5g
-         m9hQfrmsfIAGuIsqTTfXbx9otoxUcH2X9BnOTm1dpT4oUaT6D3JYTtnyBF0IfOI3c4h5
-         zPayxmtj2zNlTTCmHZAlmbvNPNovQWKB3FnrWTJ9r+RfHS+9snEjJ8Rmt2wabpLTRBRb
-         0PHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyByA3ZaoqckeV36eqONpd93FYCOqMand50xb1N+cBAJue2vTMon2yqyPdvdudDaNjUYHRGxDKb9weE7Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj0Gly75GVD5wjM+7MiUgyghxm6ZXab6h/CyTzjNMF5E+IE/+y
-	De4NzKrOXE1873bHh2Cfj5kgD7tLVkU4cU6vCzqsnCJYToFflfNplm5Eyjme7HtRL6L2I/nc3Fd
-	x36m7pqGONtPfn6ZzLG2mckv3qUOybAvrazxFqQN3M6gEVuL7ezXta+c=
-X-Google-Smtp-Source: AGHT+IHSzmhD9qvdw5y293zv7MTfkt0hfgtnq7BAQeCJ4sLxR7yBycvaAVtMAVltiVwaHX5uBXTU+Jfa7lmf3TcsKIjS8GHBH3k6
+	s=arc-20240116; t=1738708547; c=relaxed/simple;
+	bh=Tbu+XRno/u/g1c/g++qeRZlFVrqJuvN/hVBnJ0xt64k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=aL2VuNYi4MNjLBO7QZOy+rXc+fQ8lhaBobAN7rdiMNxLLenmYsSvJMYP6wIIybyiQhD5VRjjHN0K2mJg9CYgvy6cZuS0eSQCZVgG8Wq5RkgfXXF//3uimX+fN8y6IUUBN3N9ibQWXL/1EpmRIcrFx9sF7M/Xl9eFNq1cVnNnDWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unseen.parts; spf=pass smtp.mailfrom=unseen.parts; dkim=pass (2048-bit key) header.d=unseen.parts header.i=@unseen.parts header.b=GuLlVvIp; arc=none smtp.client-ip=139.162.151.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unseen.parts
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unseen.parts
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=unseen.parts header.i=@unseen.parts header.b="GuLlVvIp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=unseen.parts; s=sig; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=eu0uinCL9OMvaWq1Gs/7fRYGHoqa6F3Rj2exh5B37II=; b=GuLlVvIpQdKIiSi/2g1IZRavf+
+	XkzWIQOFkDhIaFBcpUw8amudSkCgyOXW29+LYHSpVvswk/aKwbzNT7HFfDJ9c4kLCUTDtqQec7Pbz
+	ursqosVy9YBrj+OF7lM4JZ2QgdZTfmj8ZSWap8HsCMNvfylNczh/vV7sG6bGKqU+lBGePfPX1NGpJ
+	wzuqpbKQ48RGGnfrye7LBGvEVStssDtHPOSkOs1vnZ09qYs93n73ZybmR3PPM2qpeK01e/ZiQB8CF
+	cglSS6qr0QYdx4teAIu0ReZTwViSpyT4I5R0SkcOq3ME2+n1yqmHWa7EYME/pJyh4tNGtCbjr4BN3
+	ZUPNwhTg==;
+Received: from ink by minute.unseen.parts with local (Exim 4.96)
+	(envelope-from <ink@unseen.parts>)
+	id 1tfRVs-0001cT-1p;
+	Tue, 04 Feb 2025 23:35:24 +0100
+From: Ivan Kokshaysky <ink@unseen.parts>
+To: Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v3 3/3] alpha: align stack for page fault and user unaligned trap handlers
+Date: Tue,  4 Feb 2025 23:35:24 +0100
+Message-Id: <20250204223524.6207-4-ink@unseen.parts>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250204223524.6207-1-ink@unseen.parts>
+References: <20250204223524.6207-1-ink@unseen.parts>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1528:b0:3d0:47ad:dc86 with SMTP id
- e9e14a558f8ab-3d047addd19mr25558025ab.10.1738708219926; Tue, 04 Feb 2025
- 14:30:19 -0800 (PST)
-Date: Tue, 04 Feb 2025 14:30:19 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a294fb.050a0220.50516.0002.GAE@google.com>
-Subject: [syzbot] [batman?] [bcachefs?] BUG: unable to handle kernel paging
- request in __run_timer_base
-From: syzbot <syzbot+ab2fd19057fa822e71c6@syzkaller.appspotmail.com>
-To: a@unstable.cc, antonio@mandelbit.com, b.a.t.m.a.n@lists.open-mesh.org, 
-	davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kent.overstreet@linux.dev, kuba@kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, marek.lindner@mailbox.org, 
-	mareklindner@neomailbox.ch, netdev@vger.kernel.org, pabeni@redhat.com, 
-	sven@narfation.org, sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+do_page_fault() and do_entUna() are special because they use
+non-standard stack frame layout. Fix them manually.
 
-syzbot found the following issue on:
-
-HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1714c518580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
-dashboard link: https://syzkaller.appspot.com/bug?extid=ab2fd19057fa822e71c6
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=144ff6b0580000
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-69e858e0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a53b888c1f3f/vmlinux-69e858e0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6b5e17edafc0/bzImage-69e858e0.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/d96853f65a99/mount_6.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ab2fd19057fa822e71c6@syzkaller.appspotmail.com
-
-kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
-BUG: unable to handle page fault for address: ffff8880465c3da0
-#PF: supervisor instruction fetch in kernel mode
-#PF: error_code(0x0011) - permissions violation
-PGD 1aa01067 P4D 1aa01067 PUD 1aa04067 PMD 80000000464001e3 
-Oops: Oops: 0011 [#1] PREEMPT SMP KASAN NOPTI
-CPU: 0 UID: 0 PID: 3089 Comm: kworker/u4:10 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: bat_events batadv_nc_worker
-RIP: 0010:0xffff8880465c3da0
-Code: 00 00 00 00 00 00 00 00 00 00 01 03 06 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 a8 3e 5c 46 80 88 ff ff <08> 3e 5c 46 80 88 ff ff b8 6f 54 59 80 88 ff ff 5b 15 00 00 f3 02
-RSP: 0018:ffffc90000007b98 EFLAGS: 00010246
-RAX: ffffffff81ac83d1 RBX: 0000000000000001 RCX: ffff88803b080000
-RDX: 0000000000000100 RSI: ffffffff8c608040 RDI: ffff888059546f28
-RBP: ffffc90000007c90 R08: ffffffff81ac83be R09: 1ffffffff203680e
-R10: dffffc0000000000 R11: ffff8880465c3da0 R12: 1ffff92000000f78
-R13: ffff888059546f28 R14: 0000000000000001 R15: 0000000000000100
-FS:  0000000000000000(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff8880465c3da0 CR3: 0000000054b64000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- expire_timers kernel/time/timer.c:1840 [inline]
- __run_timers kernel/time/timer.c:2414 [inline]
- __run_timer_base+0x66a/0x8e0 kernel/time/timer.c:2426
- run_timer_base kernel/time/timer.c:2435 [inline]
- run_timer_softirq+0xb7/0x170 kernel/time/timer.c:2445
- handle_softirqs+0x2d4/0x9b0 kernel/softirq.c:561
- __do_softirq kernel/softirq.c:595 [inline]
- invoke_softirq kernel/softirq.c:435 [inline]
- __irq_exit_rcu+0xf7/0x220 kernel/softirq.c:662
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:678
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
- sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1049
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:lock_acquire+0x264/0x550 kernel/locking/lockdep.c:5855
-Code: 2b 00 74 08 4c 89 f7 e8 8a 2b 8b 00 f6 44 24 61 02 0f 85 85 01 00 00 41 f7 c7 00 02 00 00 74 01 fb 48 c7 44 24 40 0e 36 e0 45 <4b> c7 44 25 00 00 00 00 00 43 c7 44 25 09 00 00 00 00 43 c7 44 25
-RSP: 0018:ffffc9000db47940 EFLAGS: 00000206
-RAX: 0000000000000001 RBX: 1ffff92001b68f34 RCX: ffff88803b080ae8
-RDX: dffffc0000000000 RSI: ffffffff8c0ab8e0 RDI: ffffffff8c608060
-RBP: ffffc9000db47aa0 R08: ffffffff942f6847 R09: 1ffffffff285ed08
-R10: dffffc0000000000 R11: fffffbfff285ed09 R12: 1ffff92001b68f30
-R13: dffffc0000000000 R14: ffffc9000db479a0 R15: 0000000000000246
- rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- rcu_read_lock include/linux/rcupdate.h:849 [inline]
- batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:408 [inline]
- batadv_nc_worker+0xec/0x610 net/batman-adv/network-coding.c:719
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
- worker_thread+0x870/0xd30 kernel/workqueue.c:3398
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Modules linked in:
-CR2: ffff8880465c3da0
----[ end trace 0000000000000000 ]---
-RIP: 0010:0xffff8880465c3da0
-Code: 00 00 00 00 00 00 00 00 00 00 01 03 06 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 a8 3e 5c 46 80 88 ff ff <08> 3e 5c 46 80 88 ff ff b8 6f 54 59 80 88 ff ff 5b 15 00 00 f3 02
-RSP: 0018:ffffc90000007b98 EFLAGS: 00010246
-RAX: ffffffff81ac83d1 RBX: 0000000000000001 RCX: ffff88803b080000
-RDX: 0000000000000100 RSI: ffffffff8c608040 RDI: ffff888059546f28
-RBP: ffffc90000007c90 R08: ffffffff81ac83be R09: 1ffffffff203680e
-R10: dffffc0000000000 R11: ffff8880465c3da0 R12: 1ffff92000000f78
-R13: ffff888059546f28 R14: 0000000000000001 R15: 0000000000000100
-FS:  0000000000000000(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff8880465c3da0 CR3: 0000000054b64000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	2b 00                	sub    (%rax),%eax
-   2:	74 08                	je     0xc
-   4:	4c 89 f7             	mov    %r14,%rdi
-   7:	e8 8a 2b 8b 00       	call   0x8b2b96
-   c:	f6 44 24 61 02       	testb  $0x2,0x61(%rsp)
-  11:	0f 85 85 01 00 00    	jne    0x19c
-  17:	41 f7 c7 00 02 00 00 	test   $0x200,%r15d
-  1e:	74 01                	je     0x21
-  20:	fb                   	sti
-  21:	48 c7 44 24 40 0e 36 	movq   $0x45e0360e,0x40(%rsp)
-  28:	e0 45
-* 2a:	4b c7 44 25 00 00 00 	movq   $0x0,0x0(%r13,%r12,1) <-- trapping instruction
-  31:	00 00
-  33:	43 c7 44 25 09 00 00 	movl   $0x0,0x9(%r13,%r12,1)
-  3a:	00 00
-  3c:	43                   	rex.XB
-  3d:	c7                   	.byte 0xc7
-  3e:	44                   	rex.R
-  3f:	25                   	.byte 0x25
-
-
+Cc: stable@vger.kernel.org
+Reviewed-by: Maciej W. Rozycki <macro@orcam.me.uk>
+Tested-by: Magnus Lindholm <linmag7@gmail.com>
+Suggested-by: Maciej W. Rozycki <macro@orcam.me.uk>
+Signed-off-by: Ivan Kokshaysky <ink@unseen.parts>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/alpha/kernel/entry.S | 20 ++++++++++----------
+ arch/alpha/kernel/traps.c |  2 +-
+ arch/alpha/mm/fault.c     |  4 ++--
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/arch/alpha/kernel/entry.S b/arch/alpha/kernel/entry.S
+index 6fb38365539d..f4d41b4538c2 100644
+--- a/arch/alpha/kernel/entry.S
++++ b/arch/alpha/kernel/entry.S
+@@ -194,8 +194,8 @@ CFI_END_OSF_FRAME entArith
+ CFI_START_OSF_FRAME entMM
+ 	SAVE_ALL
+ /* save $9 - $15 so the inline exception code can manipulate them.  */
+-	subq	$sp, 56, $sp
+-	.cfi_adjust_cfa_offset	56
++	subq	$sp, 64, $sp
++	.cfi_adjust_cfa_offset	64
+ 	stq	$9, 0($sp)
+ 	stq	$10, 8($sp)
+ 	stq	$11, 16($sp)
+@@ -210,7 +210,7 @@ CFI_START_OSF_FRAME entMM
+ 	.cfi_rel_offset	$13, 32
+ 	.cfi_rel_offset	$14, 40
+ 	.cfi_rel_offset	$15, 48
+-	addq	$sp, 56, $19
++	addq	$sp, 64, $19
+ /* handle the fault */
+ 	lda	$8, 0x3fff
+ 	bic	$sp, $8, $8
+@@ -223,7 +223,7 @@ CFI_START_OSF_FRAME entMM
+ 	ldq	$13, 32($sp)
+ 	ldq	$14, 40($sp)
+ 	ldq	$15, 48($sp)
+-	addq	$sp, 56, $sp
++	addq	$sp, 64, $sp
+ 	.cfi_restore	$9
+ 	.cfi_restore	$10
+ 	.cfi_restore	$11
+@@ -231,7 +231,7 @@ CFI_START_OSF_FRAME entMM
+ 	.cfi_restore	$13
+ 	.cfi_restore	$14
+ 	.cfi_restore	$15
+-	.cfi_adjust_cfa_offset	-56
++	.cfi_adjust_cfa_offset	-64
+ /* finish up the syscall as normal.  */
+ 	br	ret_from_sys_call
+ CFI_END_OSF_FRAME entMM
+@@ -378,8 +378,8 @@ entUnaUser:
+ 	.cfi_restore	$0
+ 	.cfi_adjust_cfa_offset	-256
+ 	SAVE_ALL		/* setup normal kernel stack */
+-	lda	$sp, -56($sp)
+-	.cfi_adjust_cfa_offset	56
++	lda	$sp, -64($sp)
++	.cfi_adjust_cfa_offset	64
+ 	stq	$9, 0($sp)
+ 	stq	$10, 8($sp)
+ 	stq	$11, 16($sp)
+@@ -395,7 +395,7 @@ entUnaUser:
+ 	.cfi_rel_offset	$14, 40
+ 	.cfi_rel_offset	$15, 48
+ 	lda	$8, 0x3fff
+-	addq	$sp, 56, $19
++	addq	$sp, 64, $19
+ 	bic	$sp, $8, $8
+ 	jsr	$26, do_entUnaUser
+ 	ldq	$9, 0($sp)
+@@ -405,7 +405,7 @@ entUnaUser:
+ 	ldq	$13, 32($sp)
+ 	ldq	$14, 40($sp)
+ 	ldq	$15, 48($sp)
+-	lda	$sp, 56($sp)
++	lda	$sp, 64($sp)
+ 	.cfi_restore	$9
+ 	.cfi_restore	$10
+ 	.cfi_restore	$11
+@@ -413,7 +413,7 @@ entUnaUser:
+ 	.cfi_restore	$13
+ 	.cfi_restore	$14
+ 	.cfi_restore	$15
+-	.cfi_adjust_cfa_offset	-56
++	.cfi_adjust_cfa_offset	-64
+ 	br	ret_from_sys_call
+ CFI_END_OSF_FRAME entUna
+ 
+diff --git a/arch/alpha/kernel/traps.c b/arch/alpha/kernel/traps.c
+index a9a38c80c4a7..7004397937cf 100644
+--- a/arch/alpha/kernel/traps.c
++++ b/arch/alpha/kernel/traps.c
+@@ -649,7 +649,7 @@ s_reg_to_mem (unsigned long s_reg)
+ static int unauser_reg_offsets[32] = {
+ 	R(r0), R(r1), R(r2), R(r3), R(r4), R(r5), R(r6), R(r7), R(r8),
+ 	/* r9 ... r15 are stored in front of regs.  */
+-	-56, -48, -40, -32, -24, -16, -8,
++	-64, -56, -48, -40, -32, -24, -16,	/* padding at -8 */
+ 	R(r16), R(r17), R(r18),
+ 	R(r19), R(r20), R(r21), R(r22), R(r23), R(r24), R(r25), R(r26),
+ 	R(r27), R(r28), R(gp),
+diff --git a/arch/alpha/mm/fault.c b/arch/alpha/mm/fault.c
+index 8c9850437e67..a9816bbc9f34 100644
+--- a/arch/alpha/mm/fault.c
++++ b/arch/alpha/mm/fault.c
+@@ -78,8 +78,8 @@ __load_new_mm_context(struct mm_struct *next_mm)
+ 
+ /* Macro for exception fixup code to access integer registers.  */
+ #define dpf_reg(r)							\
+-	(((unsigned long *)regs)[(r) <= 8 ? (r) : (r) <= 15 ? (r)-16 :	\
+-				 (r) <= 18 ? (r)+10 : (r)-10])
++	(((unsigned long *)regs)[(r) <= 8 ? (r) : (r) <= 15 ? (r)-17 :	\
++				 (r) <= 18 ? (r)+11 : (r)-10])
+ 
+ asmlinkage void
+ do_page_fault(unsigned long address, unsigned long mmcsr,
+-- 
+2.47.2
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
