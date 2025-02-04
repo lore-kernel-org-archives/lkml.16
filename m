@@ -1,155 +1,86 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F773205E23
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 23:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5037B4A00
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 23:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738711871; cv=none; b=f2MhbeNhH14xdrA5Ou9gk7/fxON0QjVmjX8/Z1jyc0FMFOYBfo+2kEdXFVDFZX3FUSTpUcMyYCNs67SBj+qSuPvrVP4sxv73QxgSArRu2JNyNoy0AdQjtDc1u4eQuy7yEK8y2KGa3abxOaCxMlwxg4/zqNUxdtndiZKNjJ37RoY=
+	t=1738711892; cv=none; b=CvOv8LY8Gskob5APxF7Ezgwa9GqpxACrBC3mq65TIQEIApKASJZF/pRKmkPWVu7kUjQ76bIjTP+xRQAxtRmL/Jj0M2AkxH2hP3Gt1+sJ0UXyw1CmqecCNlbQn5mmww10TsVvONRKr0veVqcIUUhTOJP9yXW0T2hG/mYAjkiPOWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738711871; c=relaxed/simple;
-	bh=dJP28q5tsQaLJ5Y1dJlvwdNzH08V5OcPLoDVQOBCze0=;
+	s=arc-20240116; t=1738711892; c=relaxed/simple;
+	bh=ssdWvG/AFYhoAwSEBluCH0CKbVRI0INkog1PqwbG+i4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lmo7/JHhPZcsjZDlRj46pMGhTbNLmlUcF2cV+xEU9xnS7APoRqAbqdC6RrHP/+5dEfJu7NtVew0zGwjxiDaaaW8dUBweCy9EcLAleJ1T522rj8ajTjd98Bfc4LJ9GcuCYsoWG7XDffbEewztig5G5JXc5X2jdqUJNcnYLFuxhZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=JeH//egA; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=camP8i2EL3DxWOtFyR2T1fgJ8KlOgmFmzMB+Rjo+qGy8wRj//OrmuWmpabs24Fyvhjfi774ZnX+lAHAy9quoeFIckBCzrLbBgK5jno2PMayg5lYi1nIQPdOR3ua+VD7MM3I2irmgcN70LSlkOFdc6Ckb8DsRQjtMmWHAH821hY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AiIaix8t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="JeH//egA"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 48EEB240101
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 00:31:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1738711866; bh=dJP28q5tsQaLJ5Y1dJlvwdNzH08V5OcPLoDVQOBCze0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=JeH//egAxdP/noC5RoCMUR3PiFz8ld6VUlVtNLxdHdQ8SVa0TA1wMdmTUh+Elqwc2
-	 YF4XtdkaZoixuZJffID+g8XfpiuAhFGAU7d6unfcWOvhDIoZStaY3pjDbYkJXsBBKy
-	 GosPqLrzztYl9ylpxFQK5ubT8pb5IttYHtOCXzS7TOSo/aiD+ceeNzAz4fMPciOouH
-	 FYWhMleejDIQaZg53HWg6BONww1nKdZ6C3q8JgXjy+kHpRXkh0MdXLAhUC9Qtce/Kx
-	 owEjoat9URBVHI6oDP9H4/fZSkfolngK6wRJ9x1TiXd1iPPQehe7ccX3oWIGO+a7NG
-	 4D+DKLWIasuWw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YnfkX6mVsz6tvZ;
-	Wed,  5 Feb 2025 00:31:00 +0100 (CET)
-Date: Tue,  4 Feb 2025 23:31:00 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Rob Herring <robh@kernel.org>
-Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
-	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 6/9] dt-bindings: pci: Add fsl,mpc83xx-pcie bindings
-Message-ID: <Z6KjNC2tM29h1Z2M@probook>
-References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <20250126-ppcyaml-v1-6-50649f51c3dd@posteo.net>
- <20250127045004.GE3106458-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AiIaix8t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A61B5C4CEDF;
+	Tue,  4 Feb 2025 23:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738711891;
+	bh=ssdWvG/AFYhoAwSEBluCH0CKbVRI0INkog1PqwbG+i4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AiIaix8t8Cs2XQhzKukHWqmac/PV1nQ+M+uHgcuGGziuzfxpfi88nl5mW94Uv15SM
+	 d6hNcd6gdHQBKTdrtBR4nSJfeE6x4Elyv1cCnM6ixDRB1vbK7m1+djL4LJWTKFUohI
+	 ZesZcMuwGq34NkFI9kb9Jb2jpQmeu+qXyQx6S50yzsaywA8pkwQrZOXseIJClYg+CZ
+	 dYnJCjQCttN04ZkY1l2jE0U/jNC2b2ZvRp1uHDBb3qkdU8vdHhnxgTgdFqvOgpXrZr
+	 ZLWOf0qlj9l47qXe7FXWDstBlWcQti+iRY2Aa8PUb2XHEcfZ8Zs3g4HOg524ILKxkf
+	 fQjSOwGSnNlgA==
+Date: Tue, 4 Feb 2025 23:31:28 +0000
+From: Conor Dooley <conor@kernel.org>
+To: daniel.lezcano@linaro.org, tglx@linutronix.de,
+	linux-kernel@vger.kernel.org, etienne.buira@free.fr
+Cc: florian.fainelli@broadcom.com
+Subject: Re: Kconfig condition on BCM2835_TIMER (and others)
+Message-ID: <20250204-papaya-grudge-2b7dd5c73917@spud>
+References: <Z6C5BegftEGzwkN_@Z926fQmE5jqhFMgp6>
+ <Z6C6FQxsyX_D4jhY@Z926fQmE5jqhFMgp6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="s1c1F3TJ/4o5Hn8p"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250127045004.GE3106458-robh@kernel.org>
-
-On Sun, Jan 26, 2025 at 10:50:04PM -0600, Rob Herring wrote:
-> On Sun, Jan 26, 2025 at 07:59:01PM +0100, J. Neuschäfer wrote:
-> > Supplement Documentation/devicetree/bindings/pci/fsl,pci.txt with a more
-> > formal binding in YAML format.
-> > 
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > ---
-[...]
-> > +title: Freescale MPC83xx PCI/PCI-X/PCIe controllers
-> > +
-> > +description: |
-> > +  Binding for the PCI/PCI-X/PCIe host bridges on MPC8xxx SoCs.
-> > +  See also: Documentation/devicetree/bindings/pci/fsl,pci.txt
-> 
-> Can you move that information here.
-
-Will do.
-
-> 
-> > +
-> > +maintainers:
-> > +  - J. Neuschäfer <j.neuschaefer@gmx.net>
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/pci/pci-host-bridge.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - fsl,mpc8308-pcie
-> > +              - fsl,mpc8315-pcie
-> > +              - fsl,mpc8377-pcie
-> > +              - fsl,mpc8378-pcie
-> > +          - const: fsl,mpc8314-pcie
-> > +      - const: fsl,mpc8314-pcie
-> > +      - items:
-> > +          - const: fsl,mpc8360-pci
-> > +          - const: fsl,mpc8349-pci
-> > +      - const: fsl,mpc8349-pci
-> > +      - items:
-> > +          - const: fsl,mpc8540-pcix
-> > +          - const: fsl,mpc8540-pci
-> > +      - const: fsl,mpc8540-pci
-> > +      - items:
-> > +          - const: fsl,mpc8540-pcix
-> > +          - const: fsl,mpc8540-pci
-> > +      - const: fsl,mpc8548-pcie
-> > +      - const: fsl,mpc8548-pcie
-> > +      - const: fsl,mpc8641-pcie
-> 
-> Move all the single 'const' to 1 enum entry.
-
-Will do
-
-> > +
-> > +  reg:
-> > +    minItems: 1
-> > +    items:
-> > +      - description: internal registers
-> > +      - description: config space access registers
-> > +
-> > +  clock-frequency:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> Don't need a type for this.
-
-Will change.
+In-Reply-To: <Z6C6FQxsyX_D4jhY@Z926fQmE5jqhFMgp6>
 
 
-Thanks,
-J. Neuschäfer
+--s1c1F3TJ/4o5Hn8p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Feb 03, 2025 at 01:44:05PM +0100, Etienne Buira wrote:
+> Resend with corrected email address.
+>=20
+> On Mon, Feb 03, 2025 at 01:39:33PM +0100, Etienne Buira wrote:
+> > Hi all,
+> >=20
+> > I want to build a kernel for Raspberry pi 4B, which, according to the
+> > dtb, has a bc2835-system-timer. This device is handled by
+> > drivers/clocksource/bcm2835_timer.c, which is built depending on
+> > CONFIG_BCM2835_TIMER.
+> >=20
+> > However, the config option is guarded by "if COMPILE_TEST" condition.
+> >=20
+> > Shouldn't that condition be ARM64 || COMPILE_TEST (ie be selectable on
+> > arm64 builds)?
+
+Perhaps, but I'd wonder why arm64 and arm32 are being treated differently.
+Florian, why's there no select on arm64 when the BCM2835 family option
+is enabled?
+
+--s1c1F3TJ/4o5Hn8p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6KjUAAKCRB4tDGHoIJi
+0n+wAP9d8CPONamCjleKLa2drLg1k0RhSEtpTHLWu02j6++5sQD/TENpiWhPgYYi
+eu3ikgQrCIqHsgXk+SaLdg6iTlMAfAw=
+=sbh4
+-----END PGP SIGNATURE-----
+
+--s1c1F3TJ/4o5Hn8p--
