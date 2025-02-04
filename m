@@ -1,151 +1,129 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380E22144CA
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA01216384
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738690817; cv=none; b=gYi9owkNl08EDks7Z951wNYwkQgxl3iLiuxiryE62yubExUrh8nCYEj2ElLrvz3g1EBfwASeoZfVbsffH6NBAKkutOw6yxKi7XotsKjCfWfqUvUZ8oFk2s+PLe1O3rrMk8taOgaWb/zXqquVGkPPMt4UQVoeSNE/BsD0uu/jnNA=
+	t=1738690988; cv=none; b=pb6dmVE1dJvjcUv7wEXnR/cUtgjGUKUgdsP+eTohKXkTXKckW2RorksLZ1cD+V++f3kPXYHdL7a/T+mmRqdvUJU+7ZAO7z24JG7LUzQjB2DcOPpFx1rzSrnGCuMxLx5KqPTntHmrP/V06G01S5zG7V6tcgDN84MaFHxSu52A9Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738690817; c=relaxed/simple;
-	bh=QpHyE9p91zurcepTIwYUtQMiEe5sgWOkIP/OjYpEd2Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R7CVFGm7rBOtoTjpRngG68YbsFXym+4UUqgiMfAPhmvnDItTQ8nrqWXmLbZDF1V9bfxvWIUC8bPHuyGrulKNxVbJklJWvL4Z378TRwCdrHa3VHvbXm60R6n+BnWdtWqaPZULHmlDiXnQnp9wwiIH+A390BVgq4UFIcqWqglBSvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=kmfyWLrj; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1738690988; c=relaxed/simple;
+	bh=rkAC509swjdUrkNv3XMK82thHEYdK072zzRZ/sqDei8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u1vU7QUv61fIsAcASm0bAUbIAPCQP7OXKEeTaFLb+jRQpd3DceMRYIw3JAuXekW9zmUam0pOnliVFf/b6lwpna23QPmIi/rmTIJbqC67pm8od+V40sCOpz5PTi8woa/UQCFCgoZgXHJ6fCZMViQbUiYUxD2DFRooicF5iu07Xj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zw2dmD+o; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="kmfyWLrj"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-71e1d7130a5so2710485a34.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:40:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zw2dmD+o"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43690d4605dso40889215e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:43:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738690813; x=1739295613; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4yNpm3oxBxQoK8aYrbHM1Sjc+SJkp488Q51eRV/v/s8=;
-        b=kmfyWLrjG0oSHQi3GWjSvdnebF5va/JG+gSM3PdTMRKkZPqxER/G5CGIE3GZQQ1DcE
-         U58mqMF0iK+hXHXHIuK4WWY/BG9mEDlRoCDQe5yzMSdBcKboMWIusNbEoX2MskUVhvjj
-         bOKnVwMwrZ9yFJQMYewirAUsUUVRmwIKbRhJqHPCw1puUpVkxsgwqa/zCpbwa2xlpn0W
-         qK4FnvSj5gFJ37Qyr2uvlONWG1+70nbAlYylkpzWw+R5u7INvy4KxI7DEDSVBX5oS1ZB
-         gzX+Qwq5Xs50xPmli9dHaHUlCgSBUT33h+ehot5FzgwIS1OGXJ9vLiULLcpZx2tCzUJ7
-         UgZA==
+        d=gmail.com; s=20230601; t=1738690985; x=1739295785; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qmoBY2HKoC8vppS4FEhNVLtw+QQRzfa2YhjsykY8oaQ=;
+        b=Zw2dmD+ozFSsyjYLo6xZnsyhS+KeYOfbhivA2Bs37iL2vKtci6LtKlpHJjhh3kHl/W
+         15kcspNhsJm7HA38UJJfE67rHQLPqbP4QK0AavtxlaNViJl4kU0e51avpvosiZhNkbVE
+         OzTjSwW9rntG7oXcWLWhnaZIz7GYI9aHp5tVWPWVhwaIeUR/YYLTRbUJ00YyNJEmiB5Q
+         mokvnMQpo5H85pbRkdL6s4fxktNbtsq69TWkCYMK6NAwG7sUAruiWGbuHlVdgLCwQjeV
+         x6Xu5k/37EFhy8flO/WFjjOom5NB8KEqcuvnaob82VTiO0U8nSZMepOhia2vhZb2RZV2
+         nZUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738690813; x=1739295613;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4yNpm3oxBxQoK8aYrbHM1Sjc+SJkp488Q51eRV/v/s8=;
-        b=Iw78ng5Lr0fFMlTEp8WLdbxlbFpo4Bhf1Ud7PNx+plkkKj+GGpqYdBmIqbGid5Y3HU
-         GKdV5CpYaemfavzpSoGw/QhhN8jt1FNRCfXGGLcLGfela49LMa1AjvyluxhOFUdFYhQW
-         Hi0BT900+dKg4RGeGM4itot9ujYWqmbWZvy/4EHfCtPGZVJFzlxtPTAinzEJIT8jvd07
-         m6t9QMMMLa9hA9jUo3wX3pTcXoz1HQ4+Ke4tklhK6HzL0QwsbhAHcTwS3goJYN1LkL4T
-         L4jkE8iQC5Xkc3ZQ3NlFABF54I3ulCZX/x1dSdpmnGlefK6ofsYDdDm1JC7MKYQCRmDW
-         j3Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCX/M76QOXn3WGmCqweWFfybrmv5ZYdJbGh4/wioy5MwDMDyN40FB0w3wFFZ21SbUmMQGyAlUZtto1EwYQM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxktetuFMpHak1bSyNne3yahWkHjCEzSO1QZBKHY+Q8TP3qvYyb
-	tYajCpVtnDgYk4hBoQYT3FS89O5L6C59dFfSC+w1kNUn9kZNkUeHh4xGoHyuXJM=
-X-Gm-Gg: ASbGnctab8g5oTCNQHExhnG7yn8V6uhByWl6o1cmAm4CyT4+AQ1cjpAEn8+ewftOXJA
-	CQeAcuiys/7iH2JpfF8SjSfAu03kK2RlKNegG1JjUM5muV2niuSVWcdPh8h9XjeGJ9ylR4Ntsc5
-	fum74dkdvjzwi5FaWYQyMgnA2guJCGWW0dr3hyuUn9FbtrPKVeTy9L3QzBEsKLc0afwRQiT0bZb
-	7ozpgn3FLPhDYy85whPR930z7o/WNZPLs2kqRKFody5QqovNBSQYFAE8LKlVzYaAj2hKsonS7Mr
-	qDINsYIupYD0S8x+eu1rAjiRROxMar+tuPbTFZcHiC91gYOmbpZw
-X-Google-Smtp-Source: AGHT+IHMhe2zw6EhaL7q6kTxgWmbctXCIhVeGH/cEyX92tLO3USqYme0owv4+lKlSehxaf+Qho0gDg==
-X-Received: by 2002:a05:6830:dca:b0:71d:f8bd:4be4 with SMTP id 46e09a7af769-726568db701mr16382704a34.19.1738690813188;
-        Tue, 04 Feb 2025 09:40:13 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726617eb165sm3408870a34.38.2025.02.04.09.40.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 09:40:12 -0800 (PST)
-Message-ID: <e4befaab-9622-40d3-bd4c-e12111df45e7@baylibre.com>
-Date: Tue, 4 Feb 2025 11:40:11 -0600
+        d=1e100.net; s=20230601; t=1738690985; x=1739295785;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qmoBY2HKoC8vppS4FEhNVLtw+QQRzfa2YhjsykY8oaQ=;
+        b=lylFLwgvzEBg62v/lZMaBvBa07vK8pSJBSTLzMMyPdjsIktTH4R33v2Z3Ud4He6p67
+         48Xx5GM4TmpsbYWIJW5upmS+AUu/JSWcuBtof7AkC0XRrJpl5NIrHrJhjHsJo34ProUM
+         fAvl3TlXe7+PO90xJMpr+0lIM3VjIKbMVF9GFBPTSQ8fbV1PI+E5eRp3chzqQMdyvVqE
+         8cLf944AyH6CoKLmAQs9t9f8zcYWIqb8z7v1i8BMqOtHz6izfX0/RjYIBttICBbCLOTP
+         vR68BPNWZDMLUOC80HnhvofhlnPaeMBuCe6Obp7XT6zwhNkP6cfhj4XCvEsY6KHRcUTD
+         U3Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpmptABRbTcd8xJNtC32LcM3j/4O5RPViZsfkqExokYEZsuCCgndy4ZcaylgbjqoZcqKDI7xlHEqhTqC4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+xfZvH+YuVtgVqVd1beqg6AWA7EqxxL5sLj0XuoIRe7Gs6B1a
+	FhDZe9PyxKs021A7vwYphpS93X7bmAky04fOKntvpxCrWtg2TDQr
+X-Gm-Gg: ASbGncuHMYOZPOJQ+xuqnr4yjHosUqhUCPSiLWBHc2v24SoWAv180gQEqyYUVxsaB0K
+	vfmNgFXL49YbVIpGZm+hNiVtLVMUyr1stP3Iwnxe0V9lLL8EDPtsSE1RTLFFW+AectI9EMt+VZl
+	Qo9g1LjGR5RDI8glPiRIqpGimTyhe2qHafFa/g7hQ4zbHUqTBKVB9dybzjKSz5WN429XorTuwns
+	yHnYHhBeFBRJLIqDhDiVw8t5+1rv0vuSTgwJdDtqQj44hHpXFIjg3TPzNK3BSCw4153Tj6ZzsyA
+	3sl9/WII15QW7y7O0cDzZ0cpilpDav8Dy7gyG3rDUaeRA+xpLac=
+X-Google-Smtp-Source: AGHT+IFReAXb4J/9mpQDDwFtQHAYn2WpKdyKw/glZFHckPLTAlF3J3XnGcDutFRQHyXG8M+u34vd5A==
+X-Received: by 2002:a05:6000:186f:b0:385:f19f:5a8f with SMTP id ffacd0b85a97d-38c5194b92fmr19556504f8f.4.1738690984888;
+        Tue, 04 Feb 2025 09:43:04 -0800 (PST)
+Received: from localhost.localdomain (82-64-73-52.subs.proxad.net. [82.64.73.52])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c102ac9sm16164380f8f.29.2025.02.04.09.43.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 09:43:04 -0800 (PST)
+From: Dave Penkler <dpenkler@gmail.com>
+To: gregkh@linuxfoundation.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Dave Penkler <dpenkler@gmail.com>
+Subject: [PATCH] staging: gpib: Remove dependencies on !X86_PAE
+Date: Tue,  4 Feb 2025 18:42:54 +0100
+Message-ID: <20250204174254.16576-1-dpenkler@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH-resent-to-correct-ml 0/8] drm/xe: Convert xe_force_wake
- calls to guard helpers.
-To: Maarten Lankhorst <dev@lankhorst.se>, intel-xe@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
- Boqun Feng <boqun.feng@gmail.com>
-References: <20250204132238.162608-1-dev@lankhorst.se>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250204132238.162608-1-dev@lankhorst.se>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/4/25 7:22 AM, Maarten Lankhorst wrote:
-> Ignore my previous series please, it should have been sent to intel-xe, was sent to intel-gfx.
-> 
-> Instead of all this repetition of
-> 
-> {
-> 	unsigned fw_ref;
-> 
-> 	fw_ref = xe_force_wake_get(fw, domain);
-> 	if (!xe_force_wake_ref_has_domain(..))
-> 		return -ETIMEDOUT;
-> 
-> 	...
-> 
-> out:
-> 	xe_force_wake_put(fw_ref);
-> 	return ret;
-> }
-> 
-> I thought I would look at how to replace it with the guard helpers.
-> It is easy, but it required some minor fixes to make DEFINE_LOCK_GUARD_1
-> work with extra init arguments.
-> 
-> So I changed the function signature slightly to make the first optional argument
-> a struct member (current behavior), and any additional argument goes to the init
-> call.
-> 
-> This replaces the previous code with
-> {
-> 	scoped_cond_guard(xe_force_wake_get, return -ETIMEDOUT, fw, domain) {
-> 		....
-> 
-> 		return ret;
-> 	}
-> }
-> 
-> I' ve thought also of playing with this:
-> {
-> 	CLASS(xe_force_wake_get, fw_ref)(fw, domain);
-> 	if (!fw_ref.lock))
-> 		return -ETIMEDOUT;
-> 
-> 	...
-> 	return ret;
-> }
-> 
-> I'm just fearing that the scoped_cond_guard makes it imposssible to get this
-> wrong, while in the second example it's not clear that it can fail, and that
-> you have to check.
-> 
-> Let me know what you think!
-> Feedback welcome for the header change as well, should probably go into the locking tree..
-> 
-When I tried to make a similar improvement, Linus said to please stop trying
-with the conditional guard stuff [1]. So my advice is don't do it.
+The dependecies on !X86_PAE were introduced to fix an i386
+build issue due to drivers casting resource_type_t to void *
+commit 48e8a8160dba ("staging: gpib: Fix i386 build issue")
 
-Just replace the:
+Subsequently
+commit baf8855c9160 ("staging: gpib: fix address space mixup")
+properly resolved these issues by fixing the code in the
+drivers.
 
-> 	...
-> 
-> out:
+Delete the lines "depends on !X86_PAE"
 
-with a helper function if you want to get rid of the gotos.
+Signed-off-by: Dave Penkler <dpenkler@gmail.com>
+---
+ drivers/staging/gpib/Kconfig | 4 ----
+ 1 file changed, 4 deletions(-)
 
-That is what we are doing in the iio subsystem [2][3].
+diff --git a/drivers/staging/gpib/Kconfig b/drivers/staging/gpib/Kconfig
+index 2bf11df122e2..aa01538d5beb 100644
+--- a/drivers/staging/gpib/Kconfig
++++ b/drivers/staging/gpib/Kconfig
+@@ -50,7 +50,6 @@ config GPIB_CEC_PCI
+ 	tristate "CEC PCI board"
+ 	depends on PCI
+ 	depends on HAS_IOPORT
+-	depends on !X86_PAE
+ 	select GPIB_COMMON
+ 	select GPIB_NEC7210
+ 	help
+@@ -64,7 +63,6 @@ config GPIB_NI_PCI_ISA
+ 	tristate "NI PCI/ISA compatible boards"
+ 	depends on ISA_BUS || PCI || PCMCIA
+ 	depends on HAS_IOPORT
+-	depends on !X86_PAE
+ 	depends on PCMCIA || !PCMCIA
+ 	depends on HAS_IOPORT_MAP
+ 	select GPIB_COMMON
+@@ -90,7 +88,6 @@ config GPIB_CB7210
+        tristate "Measurement Computing compatible boards"
+ 	depends on HAS_IOPORT
+ 	depends on ISA_BUS || PCI || PCMCIA
+-	depends on !X86_PAE
+ 	depends on PCMCIA || !PCMCIA
+        select GPIB_COMMON
+ 	select GPIB_NEC7210
+@@ -181,7 +178,6 @@ config GPIB_INES
+ 	depends on PCI || ISA_BUS || PCMCIA
+ 	depends on PCMCIA || !PCMCIA
+ 	depends on HAS_IOPORT
+-	depends on !X86_PAE
+        select GPIB_COMMON
+        select GPIB_NEC7210
+        help
+-- 
+2.48.1
 
-[1]: https://lore.kernel.org/all/CAHk-=whn07tnDosPfn+UcAtWHBcLg=KqA16SHVv0GV4t8P1fHw@mail.gmail.com/
-[2]: https://lore.kernel.org/all/20250105172613.1204781-1-jic23@kernel.org/
-[3]: https://lore.kernel.org/all/20250202210045.1a9e85d7@jic23-huawei/
