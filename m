@@ -1,355 +1,149 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2048.outbound.protection.outlook.com [40.107.20.48])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DF0207A00;
-	Tue,  4 Feb 2025 09:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738663161; cv=fail; b=F3QNt1UyfYzKA+grzPnsCHpQSqkWcGY4Dx/Vncrc0erRFzRyA1XxaAQjTEN1XRq0Vvzjw1X191lXQEqgR/C/wf9ZZ0RzwxGyoa+FkowlZyBS/XX7RfJ7jDRX+j/j9Wtv3KSOZhTdTJ7Qi0wnbSl0s+pLQazBE8EHAplIR1VhhxI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738663161; c=relaxed/simple;
-	bh=n9zV6MNOMwdR+WUozF49Kkt+/9ElWaSQfmU/cmcqd1s=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mxDvnWr8xm2ZMDg8hXfYecO4wlUO/MwuBudks3gcfWCMdDRG73FsJYkFSe3948kYtv+lBhozOaimHTbfhyYo1Y7HyZwpM+f61UCnsnJbl3U3coaY21YFF6hsR+8nKXzYNk1BhbeyDZ409F66x0RlEJ6DX58ubUJhempnMjA8aCM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=iGCkCDVL; arc=fail smtp.client-ip=40.107.20.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BA72080D4
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 09:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738663164; cv=none; b=DEtgtXlT8QZxVSnakowQYLwQlgZjWENRpgKpCPZR3qQ7jH8/miMBtFao3sMhCqIuikGh8oN0RQynxb6q+pBg3eH0GfG+qbzo1EaU+HT8zQCs5E9T5ktQ2/Pp3g6ujMC/lZ1GZEYOqtijaVWOexNRJSnxfKaplgzqpOuHoly+RcA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738663164; c=relaxed/simple;
+	bh=GHHnPYOL+gRUE/196eOq/gj7fZDZsKf1B63nUWSuP1g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hfwXIyHJ+hC2i7LdDH1jdz3i+wkO4BWIZZpLq8dj4vX4QXd5igXk9BQIdqW5BZE8WDrBYtzspIYbIYqp7jBb4PRUERGOlqAjOHDkd/iUxC4PYkJ7XZsw0pchzI9ZorqZJiYzsfkBWOJQiRmPPpLN8q6Lpk5FbYxtWP0sokT+vGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hefdWeL3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="iGCkCDVL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Yc/hsvWe3YTr1bzcgKl8tAav61DtMPugN6SAmLWCvfvbNG5sbUisaxBWpTbPLPe/YGGw0TfYnriA7DkK+OrqDWSZwcDYbc4nTh2ExnERP7ln41YTE5lSKaypNVauT87OCNwW+H3T+P5E4WSNDg/eieEg6uIB7FEywZFZmp+cqYgnepxjYCJ9VLonhezRySuA5Io5XaNkV1NfXEm7Vp97fgHK/fUjnIBesJLqgfu4ybthGa/ssFYz9dCsbcB95WwLbCIUltE+QKKkXFoUPLm/LTkfaX/9Xz2SJ6y/PYpz6NmaTKu4l7WpaRhshz4MrkYKb/mQk7TWrMJz4FHMfnorZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0Dqo1UvCttRQtJ7cXeeAtV3YaRpdarXCIxZrEakjJ6s=;
- b=UqJr4IVPRyVVcpFGPwPAR0kTu58IKUwrRCOP65h62HZXuUrAbiH1g7OSd6sLwkp3V4ZdEO1bkLtA7ax7rPIs8gZd32YaeWMFpxdYrvA3dtjbig2IQyKuEmZ+aIX7+0+zyyC5+sxAcvNKzSZilMgjMqC696ePaqWD1paojhsnkd3i1f2N2NjjrTrro+GdR/BHN7/h+PDxlLaSI9aSwxgkbv0SRb9gqIO/Tp/SSNoCbGyH05uvtBATJpn3V2EQ0n5L6Tpp1c1BzXHlGv4TIwDE1aZmRFaf/T8jiReFFNQB4GUGhfX5UumRM2wTy7VifQUNVPY/zMycGLfAtsthWFyHeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Dqo1UvCttRQtJ7cXeeAtV3YaRpdarXCIxZrEakjJ6s=;
- b=iGCkCDVLlYL43ZX5QOlVCzAmUW0bvahwJHcSy5nh29meNerPdBmf5DFDAc9NvkLyd5AhPJKspkDcU6KfBUMYeYZBB63UBOCsKJj2K0tHhvVA91ekKKs4BkBMzbY0aGKmT26n5LHQWlcA4P6xCwXmU9jiL/oBFcA9FYeJO+Wnr8s=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by PA4PR04MB9294.eurprd04.prod.outlook.com (2603:10a6:102:2a5::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.26; Tue, 4 Feb
- 2025 09:59:14 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a%3]) with mapi id 15.20.8398.021; Tue, 4 Feb 2025
- 09:59:14 +0000
-Message-ID: <db29945e-565a-490f-8a8c-387ecd47a198@cherry.de>
-Date: Tue, 4 Feb 2025 10:59:12 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/3] drm/bridge: synopsys: Add audio support for
- dw-hdmi-qp
-To: Detlev Casanova <detlev.casanova@collabora.com>,
- linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Alexey Charkov <alchark@gmail.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Dragan Simic <dsimic@manjaro.org>, Jianfeng Liu <liujianfeng1994@gmail.com>,
- Niklas Cassel <cassel@kernel.org>, FUKAUMI Naoki <naoki@radxa.com>,
- Kever Yang <kever.yang@rock-chips.com>, Johan Jonker <jbx6244@gmail.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Algea Cao <algea.cao@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>,
- Sugar Zhang <sugar.zhang@rock-chips.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- dri-devel@lists.freedesktop.org, kernel@collabora.com
-References: <20250203171925.126309-1-detlev.casanova@collabora.com>
- <20250203171925.126309-2-detlev.casanova@collabora.com>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20250203171925.126309-2-detlev.casanova@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0037.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:92::6) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hefdWeL3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738663161;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8wGv2FsoKufVcLbYy1/87/ZPdb2v6fo4T2VRc/m1Duk=;
+	b=hefdWeL3EWD7nwa6+cS96ZK5loSQw6cBI+DaUHmbuuBYvAUoUAPp/ZgSPF87xSdYgv4c5r
+	m+1X06hpc56uGd6VThIQWwupbe69ow+d43qYNck01XYqqjYLNjRE9b/esiRPkLqfC7r8QF
+	WPqgmsHVd0ofQmPWtbsB7rQUOmRwCGc=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-269-voGVbSsJMyyJv45_rGrhvA-1; Tue, 04 Feb 2025 04:59:20 -0500
+X-MC-Unique: voGVbSsJMyyJv45_rGrhvA-1
+X-Mimecast-MFC-AGG-ID: voGVbSsJMyyJv45_rGrhvA
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-aaf921b8a85so635555066b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 01:59:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738663159; x=1739267959;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8wGv2FsoKufVcLbYy1/87/ZPdb2v6fo4T2VRc/m1Duk=;
+        b=jD/IPGR45xZWQyKljfHsZ9nwy/Fo7NLvpFri9o+E4fHX0Ks4cca/ceGOfKowHmQ+1x
+         HzKRhoJtBM3PDKwYHfPcUMqudW9dH0SW9R2syvc0IZXQo6xVvcSAchZ4Qf6DLt7fyWzs
+         z8FNZrU3QNzucKQrX3QdJDSTKhF+bOiYrFWcPYOoB9L60Sqqfc17d9f2hMF/7rdZHpDF
+         osr8egGisaNtpYAdCYYkAl/Zbto60GTF6p7Xaa7Ww68AggKYLQJOHQ//Nik8hAOtDrRZ
+         LVvWBRWaOVHRLFVP0H3Df769Ew+0kRCqHWfq2FbI8ueFEv8GWCuci5nqsqvbOP3FQGLI
+         nXbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXguUcO4ub2ZNTb+iHoy2LrhsbxyEhaSXp5jru7EJzNF6EgkltlkbGEc2z9ByYB7lsAd7jNhjZWBmWzGH8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEcJx6ptFrblB80pESMEZgZsXuP+cRZI21QZgE91eQp2qmriEF
+	qeT9T2IR95rQk3O4nK6UglIctqM7ys57EUQ9nIE1m18FHEmlC3msuOwaoDDnepLnmqXiqt1UtZM
+	HzoIeNtDut0c37Vs2rnvwGLDPCd7iVVjLNJRTaUYuCAhI6yPGETCdlHg1GWrpHhlGBBr9B984Hd
+	V3mlLK5ymKB9PgZpzQ8s2VTMd7F1bDHzlnC1Cp
+X-Gm-Gg: ASbGncsTypr+WRLR7mWDt5wKM57dWF9IgLg22Q8iz8rAUk5AmvMfD9h9CKQGBm+I9Ls
+	GMEx7nEFUea69UuPkYKp39Xm/lxgZKU2/GzGfxBowwjr9eP0pu3LIFZAMnQo2NI7iduNYK+Mm15
+	KAMbF0t0AQkiioPcb/Iw==
+X-Received: by 2002:a17:907:6d26:b0:aac:4324:977e with SMTP id a640c23a62f3a-ab6cfd076admr3317238066b.27.1738663159093;
+        Tue, 04 Feb 2025 01:59:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHXtRcEnuU6oA06Z0ReFSRWzAHGLOtGcVBMkSs7QVLQN14Wwp3N7kI/IyVUADKD48QX2iJ3nCKN8Er+Pj17+XI=
+X-Received: by 2002:a17:907:6d26:b0:aac:4324:977e with SMTP id
+ a640c23a62f3a-ab6cfd076admr3317235066b.27.1738663158657; Tue, 04 Feb 2025
+ 01:59:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|PA4PR04MB9294:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b8fd139-9783-40da-c9e7-08dd45029494
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dUQ5dFo3MXdoWDRTaG1hVCt6WTlpeWJQQ0ZLV3hKRlpMMDZTYXNTYzU5NG90?=
- =?utf-8?B?YzhWUmNvR0ZOdUpCS1B4aXh6QTNnME1JR2NKMlcwS1dNVDFodVdvc2paMm5I?=
- =?utf-8?B?UHE1dXhlVTViVTdhUU1GUUJpTkVDUU14NDNoUGx0Sm5XL1U5U0JFUGVnTGY1?=
- =?utf-8?B?WkxoY05kQVJoQWUvdDlVK0Y1WmFWWnBlZVNham5zT0xVakU0NnY4Wjl3OU9o?=
- =?utf-8?B?cFRQQXZKVmRIMy9MTGwrQjIrOTRSK1c5M2JYUWNGR1k3Vms5cVBiTVh3LzBk?=
- =?utf-8?B?SS9wN1BTMVBmUnJMUUVyeDFQbkVmU1BuRUNBYXRCdERFazZqdUduTlFFc0tT?=
- =?utf-8?B?bm9POFlKbVRwRFl5VW5OMStldDFqck1hN1g2NzZuaExNNm11bWpQUjdhWXky?=
- =?utf-8?B?eW1nQ3prdXBBRUJDeUV2RzR1ZWJZSUMxVVRDZ0s4VkNWWU8yMXJQMy9Hd1VE?=
- =?utf-8?B?dkVreG1BbERVZm1MaWRpUG0vSGIxNnNabk1mZXJhQ1krVEJmcnZTc0dwOGlu?=
- =?utf-8?B?aW53OWJXWjcxak5qYVI3cFBrL3FrZGd5RzluZHZhVHQwSkZzRkgwTml5d2tF?=
- =?utf-8?B?dHVySGVmL1lmVVlDUlYwL2ExeWZXMWwyVDJZdXFEUHRRa2V2WURsYTlTVGdN?=
- =?utf-8?B?enZ0RXpWWUE2bXczOE5nSHJhbmUyTS9ORC8zc2c5SmlvK1hjSVE1dlZuR0dR?=
- =?utf-8?B?bHQxb25KU0F2SkpkQW9xTnZENENwWE55c2t3cGZJNXRqZFdMN1N4SnhBaFNO?=
- =?utf-8?B?OWFadTlJT2FaQWJOclB0dWpYaFk2b2dxYllrUjlUcFVJOEZiNEgrSDhpZG1z?=
- =?utf-8?B?aCszVUdScFY4Uk05Y0pPQ3lEZ09GeVZwM0xMeGpGcHlYNnVxM3crUmRQUWsy?=
- =?utf-8?B?WWVrb2VxeGNqbTVKd1BkMFN0NmNUZ09qZFJlQWVmTGRFMzVGWURRQXVQVjd3?=
- =?utf-8?B?dXpwUXN4cVE1YzkwazAzM1ZueGdLS3BTY0pQSWEza0pIdTUzNURYTmZKbzhu?=
- =?utf-8?B?TFc5cUVSYWxuVnhGM3VhczhFMkgwRmFMNmh1aElka0k3TE1WOEoyNDIzenBU?=
- =?utf-8?B?MlM0VjA5eDQyR0lxWHhxUytlbmdyMHJTSjRpM0ZLY1FlZWEvYVNwOG1LTndI?=
- =?utf-8?B?b2VQT2V5YUJORExZVktoUXh6YU5XbFltZU41eDRlanNQSHVybmJnU3RweUJG?=
- =?utf-8?B?cXd6VHVJYTBkM1pZWDBqVDljeHhubW9wZ3JPL3NrUm5zVFpoc2hsdGp0aGky?=
- =?utf-8?B?RFh1NXJHcFZFODBvZVRRSmNHZ0JaU05pY2hoOWkwVlZoOU4vM0g2RDVZMWZH?=
- =?utf-8?B?azhDdEZSSkhrSjVNNWRJK3ZOeXhzeTIzTmxzS21FSitwWllCcXBndVA5NXNT?=
- =?utf-8?B?SXJQYjVZTmxwbUxYd1g2MjJyYUE1Y1RkOTVCM0s3K01ISXo5V0ZIMGlHdVoy?=
- =?utf-8?B?MTRadUQ3d245MGF6SjQ5cGQ1WjJYR0NhbWlhWVJVd1A4ZVY3dmZwUUc0eU91?=
- =?utf-8?B?Rk55N3lZRGUzVGF0WmdMY1ExY2EwYnhiaFFaMDBNaS8vYnZOK1Q0QjQ0MTlO?=
- =?utf-8?B?dCszd0JEZEVYZG5FeElKN0ZnQXZSU2xJU1pIZFlseVZJd3pEVmRMVG1raFpN?=
- =?utf-8?B?OGJRK0t5T3VoRnVVK0R2ZHdlQkJKb1BUU0ZLRnhpNUJDamUyZ0tQVUxoSXVC?=
- =?utf-8?B?V0JoKy9rNTViSHNSTnlaZ1ZXUEZLNlJxYm1hcVc1V1diTEsra1NqMVc2amx5?=
- =?utf-8?B?cXhPWnpvY1EyenNCRExidHd3enVLMzJJOE5lSDdVODJkSHFOSEI2dXBFek4v?=
- =?utf-8?B?R3pubFUvb3pqV1hKTEJtZkdic3ByY1BHTEplbmQyT0Q2aDJ1bERYMUZNODQr?=
- =?utf-8?Q?it8MbHLTecgbd?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VHlPN1A2TWs5YTdXelBONXlyZkdJeDR3ZG5NY3ZRbFFVQmg3M3AzWFpLenpP?=
- =?utf-8?B?SlAwTytXVU9RY1VsLzl1T2t5emZNbCtzVWdIbG1DK2FmZFd6eFpXSC95Zndh?=
- =?utf-8?B?ZGJyQytZOXdlTHdsU1BsUlhZaVRvNTVaL1ZpVzF4Zk1PNmV2UUcrYnNucmVp?=
- =?utf-8?B?bVU4V3ZZZ2dURG9salNXY2EvSkRWTGlmQjY3QVZwbmYrcW9wR1JhVXZXdlRU?=
- =?utf-8?B?V3J4R3A5VVFRRVlmWU1CQk1DQTZ1aitUYUZlbERaN3RRKzVyT1NZcjZkVVJo?=
- =?utf-8?B?VDZsaE9HRmJjSlBnM05ZcXkvYlNJSVQzcHhVQU1VOHFhaksrcWRwbXpsSitC?=
- =?utf-8?B?Z3A2UUN1U0l3bXJBRVB0eUlXMDdYMU5QeUVrVWtUbUFxekFBaS8zcFNwNFln?=
- =?utf-8?B?TU0wVm15K3ZvRWROdkh3bWhIdDhHSU1veWRCcldkTzRtSVA4cmx2bDZJUFBv?=
- =?utf-8?B?SVp5ZlFaTzBrM1ZIQ3FET0dqc1drdEJvczdvbjNwTUVLYnpseFFYcmtZTjJm?=
- =?utf-8?B?cGc5bk9WYUp4aGtuRXdBQ1JoLzhaVDloRW13UTVFUkpvYURoem1mSE5ZNjBh?=
- =?utf-8?B?VGVsSjF2WTJjbldQcGY1dXZDa0tsaUFNVUwyRDl2SjdpM3pRd1AwV0NCYXBx?=
- =?utf-8?B?bFpEbnFVbW05RVc0YnpMWnR3WnhQVWpUeGo3WkJ3Z1BLWERPOU0xVDRCOHdn?=
- =?utf-8?B?c0lNakNXcDkwWUhCOFVlQXh6ZVZ5VmZVaUZSSENpQnFNVzZkb1pDcEJlSE9u?=
- =?utf-8?B?RnkzNnFnN2thbUVhNnA5cWFaVUJlWThueVZxZW5vdGZ2Qjl1N0pDcXBCeG9j?=
- =?utf-8?B?bkMxNXhhKzV6UVJhakh6c0drUTM1TThmZ3F4YUV1eXFMMmwxcEQ0QnUzMXpR?=
- =?utf-8?B?T0ZwMDVickhmdEpyaWc5Wk1BbjlXMDVjRE1XaG9zdXFnWGxNZHhHQ0RLU05k?=
- =?utf-8?B?emdtamNFZ05yNjZOVlBld0ZsRHM2K0hqQzBNL3ZuZ3RvTDFheXNoRktucVhz?=
- =?utf-8?B?QU1neXNpZkkvUGx0QkNoMWVxVmdZUUZaUS93dTUrUnlDVlA2VXNLVFMzc0o5?=
- =?utf-8?B?cUx5U25VQWNlSTNtTzZqdjBUV05oTjYvMXFPY3JHTUVwTDFZdC9uR2xySUtR?=
- =?utf-8?B?MmhwSXdYaUt5MElKT3Y5S0hrRk1sUTBVd1lqeEJZUlRJQURWVFE4RWNpc01Y?=
- =?utf-8?B?MUducGdzbk41MWF5MUlncWhwc3JiVUQ2N1BvOE5yMmNEQ0VSMjEwQm9RYWNM?=
- =?utf-8?B?bUliUWRtdHJXcnREcjdtTUpSOVZxNytqNUJza3pXTndyQXovRTBoa1ZDeWxl?=
- =?utf-8?B?MVBrcTZTb0RCajdsVXhhbDQrKzFUOWxvdWpwN0lWeGYxRWJSang5USttQjUx?=
- =?utf-8?B?U3ZDQm85STgyd3M4NmdqZDhCeVVaWjgvTHdvQXRhZmJybUFRdlRydEpnUWdP?=
- =?utf-8?B?WTIwbTlxM040L3pXczV0Wk5pVDRmQU5kYW9iTnRpV1VDdndObjNrdUlkV1N6?=
- =?utf-8?B?bmY2RkJPMktIa2tGaGR2NDBOYlVHa1NQYnVSQ2YzaFp5bTJGWDhMUU9jeXVR?=
- =?utf-8?B?UURlMFVudk9LSk1YajVWOFhmcDN6NDdNSGhyc0NxcGRNS0p4ZVFCZkE3NWlT?=
- =?utf-8?B?RldrR0NrMjNOa1RFZTc0NCtXZk1rcnZXZHhTUG03dHlwVDM3ZG5UM2h4L3NF?=
- =?utf-8?B?emJDQnRaaDRtalJ1cThZaTZTZnY2Vk1pejIwc1FBTEUvN3JsWVd6anZwa1pE?=
- =?utf-8?B?N1M4U0tULzJmSEd5aWNxK0tuS2MxL3RoTkNoZXVvT2I4eWFLZGZIZmRWd1Z6?=
- =?utf-8?B?N3VWalBwYllBcG9Xd0diK2JXc2RPVHhkbGZsRDdyNi9sbU5GTFcvT2oxRW0v?=
- =?utf-8?B?OVdiWThRMGx4SHE4cW5TMWRCM0YrVFJjL1pvc3lrb1pDWFVocVlEZ2FOc3kz?=
- =?utf-8?B?RW42TkR2OUdDNW0xQTZtMjh4RnFmN3RNZGxZdG43UzZFMnpsek5mMHE2Wk5Q?=
- =?utf-8?B?ZUs0ODBlbng1SEJQVXljSkZnd01yT0JjS3dDUm9MK2ZUNXAzbmNteVRWZlNv?=
- =?utf-8?B?NHMzWUw5K2J5UzZ5dGhVb3JCSUN0UVYwL3VUT3dBb1RiUmRxTUxXeFArNVgv?=
- =?utf-8?B?ODdqeXFlTVpNM2oxMmwrZEwvbElQUVJLYnRXNkJKQ3JyQVNNMmo0SGVUZGdm?=
- =?utf-8?B?VEE9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b8fd139-9783-40da-c9e7-08dd45029494
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 09:59:14.3096
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DdtemN/hh9+/3cwjig9FEbhnsQHATmMX8Z21aSnEhE2Xp81DaselHj1EtcazZfD+mngMJuJT1Icdna02XRxg44o4gJf3xLGpZqbOHsGP8cQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9294
+References: <20250130090517.201356-1-ryasuoka@redhat.com> <75cf3adc-400e-44a6-b653-bee1f0cb43ec@collabora.com>
+In-Reply-To: <75cf3adc-400e-44a6-b653-bee1f0cb43ec@collabora.com>
+From: Ryosuke Yasuoka <ryasuoka@redhat.com>
+Date: Tue, 4 Feb 2025 18:59:07 +0900
+X-Gm-Features: AWEUYZl1gCs8i_nghDi3JecpQ0sWd8PMYpAqhqfVffZeODkRQxTx-IAv0cYMK8k
+Message-ID: <CAHpthZo=R=Csru2P8NVY8YKaasb2RTyrMYni-=8ri4K=xd8abA@mail.gmail.com>
+Subject: Re: [PATCH v6] drm/virtio: Add drm_panic support
+To: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Cc: airlied@redhat.com, kraxel@redhat.com, gurchetansingh@chromium.org, 
+	olvaffe@gmail.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+	tzimmermann@suse.de, daniel@ffwll.ch, jfalempe@redhat.com, 
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Detlev,
+Hi,
 
-Just some drive-by comment inline.
+On Mon, Feb 3, 2025 at 2:18=E2=80=AFAM Dmitry Osipenko
+<dmitry.osipenko@collabora.com> wrote:
+>
+> Hi,
+>
+> On 1/30/25 12:05, Ryosuke Yasuoka wrote:
+> ...
+> > +static int virtio_drm_get_scanout_buffer(struct drm_plane *plane,
+> > +                                      struct drm_scanout_buffer *sb)
+> > +{
+> > +     struct virtio_gpu_object *bo;
+> > +
+> > +     if (!plane->state || !plane->state->fb || !plane->state->visible)
+> > +             return -ENODEV;
+> > +
+> > +     bo =3D gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
+> > +     if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach)
+> > +             return -ENODEV;
+> > +
+> > +     /* try to vmap it if possible */
+> > +     if (!bo->base.vaddr) {
+> > +             int ret;
+> > +
+> > +             ret =3D drm_gem_shmem_vmap(&bo->base, &sb->map[0]);
+>
+> drm_gem_shmem_vmap() requires BO resv to be locked, it also may invoke
+> drm_gem_shmem_get_pages() that sleeps. This function can't be used in
+> atomic context.
+>
+> For the starter, let's reject !bo->base.vaddr BOs. Normally, shmem FB
+> BOs are always vmapped.
 
-On 2/3/25 6:16 PM, Detlev Casanova wrote:
-> From: Sugar Zhang <sugar.zhang@rock-chips.com>
-> 
-> Register the dw-hdmi-qp bridge driver as an HDMI audio codec.
-> 
-> The register values computation functions (for n) are based on the
-> downstream driver, as well as the register writing functions.
-> 
-> The driver uses the generic HDMI Codec framework in order to implement
-> the HDMI audio support.
-> 
-> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Tested-by: Quentin Schulz <quentin.schulz@cherry.de>
-> Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
-> ---
->   drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c | 497 +++++++++++++++++++
->   1 file changed, 497 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c
-> index b281cabfe992e..ea5d8599cb56a 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c
-[...]
-> +static int dw_hdmi_qp_match_tmds_n_table(struct dw_hdmi_qp *hdmi,
-> +				   unsigned long pixel_clk,
-> +				   unsigned long freq)
-> +{
-> +	const struct dw_hdmi_audio_tmds_n *tmds_n = NULL;
-> +	int i;
-> +
-> +	for (i = 0; common_tmds_n_table[i].tmds != 0; i++) {
-> +		if (pixel_clk == common_tmds_n_table[i].tmds) {
-> +			tmds_n = &common_tmds_n_table[i];
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (tmds_n == NULL)
-> +		return -ENOENT;
-> +
-> +	switch (freq) {
-> +	case 32000:
-> +		return tmds_n->n_32k;
-> +	case 44100:
-> +	case 88200:
-> +	case 176400:
-> +		return (freq / 44100) * tmds_n->n_44k1;
-> +	case 48000:
-> +	case 96000:
-> +	case 192000:
-> +		return (freq / 48000) * tmds_n->n_48k;
-> +	default:
-> +		return -ENOENT;
-> +	}
-> +}
-> +
-> +static u64 dw_hdmi_qp_audio_math_diff(unsigned int freq, unsigned int n,
-> +				unsigned int pixel_clk)
-> +{
-> +	u64 final, diff;
-> +	u64 cts;
-> +
-> +	final = (u64)pixel_clk * n;
-> +
-> +	cts = final;
-> +	do_div(cts, 128 * freq);
-> +
-> +	diff = final - (u64)cts * (128 * freq);
-> +
-> +	return diff;
+OK. I'll reject !bo->base.vaddr BO in the next patch. I think this panic
+feature won't work when I call panic in GUI environment (I test in Gnome)
+without vmap(). It is OK as the first version but I think I should mention
+it somewhere. Where should I mention, in a commit message or in code like b=
+elow?
 
-I believe
+~~~
+static int virtio_drm_get_scanout_buffer(struct drm_plane *plane,
+struct drm_scanout_buffer *sb)
+{
+struct virtio_gpu_object *bo;
 
-final = (u64)pixel_clk * n;
-do_div(cts, 128 * freq);
-diff = final - (u64)cts * (128 * freq);
+if (!plane->state || !plane->state->fb || !plane->state->visible)
+return -ENODEV;
 
-is just an elaborate way of doing
+bo =3D gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
 
-((u64)pixel_clk * n) % (128 * freq)
+/* Only support mapped shmem bo */
+if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach || !bo->base.vadd=
+r)
+return -ENODEV;
+~~~
 
-? If that's the case, then I believe do_div(a, b) actually already 
-returns the remainder of a by b.
+> --
+> Best regards,
+> Dmitry
+>
 
-If that's the case, isn't that function simply:
+Thank you for your comment.
+Ryosuke
 
-return do_div(mul_u32_u32(pixel_clk, n), mul_u32_u32(freq, 128))
-
-?
-
-We could probably replace mul_u32_u32(freq, 128) with freq * 128 
-considering that dw_hdmi_qp_match_tmds_n_table expects freq to be < 
-192000, so we won't get an overflow with that.
-
-mul_u32_u32(pixel_clk, n) does the u32*u32->u64 without a temporary C 
-variable.
-
-[...]
-
-> +static void dw_hdmi_qp_set_audio_interface(struct dw_hdmi_qp *hdmi,
-> +					   struct hdmi_codec_daifmt *fmt,
-> +					   struct hdmi_codec_params *hparms)
-> +{
-> +	u32 conf0 = 0;
-> +
-> +	/* Reset the audio data path of the AVP */
-> +	dw_hdmi_qp_write(hdmi, AVP_DATAPATH_PACKET_AUDIO_SWINIT_P, GLOBAL_SWRESET_REQUEST);
-> +
-> +	/* Disable AUDS, ACR, AUDI */
-> +	dw_hdmi_qp_mod(hdmi, 0,
-> +		  PKTSCHED_ACR_TX_EN | PKTSCHED_AUDS_TX_EN | PKTSCHED_AUDI_TX_EN,
-> +		  PKTSCHED_PKT_EN);
-> +
-> +	/* Clear the audio FIFO */
-> +	dw_hdmi_qp_write(hdmi, AUDIO_FIFO_CLR_P, AUDIO_INTERFACE_CONTROL0);
-> +
-> +	/* Select I2S interface as the audio source */
-> +	dw_hdmi_qp_mod(hdmi, AUD_IF_I2S, AUD_IF_SEL_MSK, AUDIO_INTERFACE_CONFIG0);
-> +
-> +	/* Enable the active i2s lanes */
-> +	switch (hparms->channels) {
-> +	case 7 ... 8:
-> +		conf0 |= I2S_LINES_EN(3);
-> +		fallthrough;
-> +	case 5 ... 6:
-> +		conf0 |= I2S_LINES_EN(2);
-> +		fallthrough;
-> +	case 3 ... 4:
-> +		conf0 |= I2S_LINES_EN(1);
-> +		fallthrough;
-> +	default:
-> +		conf0 |= I2S_LINES_EN(0);
-> +		break;
-> +	}
-> +
-> +	dw_hdmi_qp_mod(hdmi, conf0, I2S_LINES_EN_MSK, AUDIO_INTERFACE_CONFIG0);
-> +
-> +	/*
-> +	 * Enable bpcuv generated internally for L-PCM, or received
-> +	 * from stream for NLPCM/HBR.
-> +	 */
-> +	switch (fmt->bit_fmt) {
-> +	case SNDRV_PCM_FORMAT_IEC958_SUBFRAME_LE:
-> +		conf0 = (hparms->channels == 8) ? AUD_HBR : AUD_ASP;
-> +		conf0 |= I2S_BPCUV_RCV_EN;
-> +		break;
-> +	default:
-> +		conf0 = AUD_ASP | I2S_BPCUV_RCV_DIS;
-> +		break;
-> +	}
-> +
-> +	dw_hdmi_qp_mod(hdmi, conf0, I2S_BPCUV_RCV_MSK | AUD_FORMAT_MSK,
-> +		  AUDIO_INTERFACE_CONFIG0);
-> +
-> +	/* Enable audio FIFO auto clear when overflow */
-> +	dw_hdmi_qp_mod(hdmi, AUD_FIFO_INIT_ON_OVF_EN, AUD_FIFO_INIT_ON_OVF_MSK,
-> +		  AUDIO_INTERFACE_CONFIG0);
-
-This is all very I2S-centric while the HDMI controllers on RK3588 do 
-have the ability (according to the TRM) to use S/PDIF instead of I2S. I 
-assume the driver should be able to know which format to use based on
-simple-audio-card,format property? Is that correct? Then current support 
-which doesn't even check for I2S would be fine and not conflict with a 
-later commit which would add support for S/PDIF? (Essentially asking if 
-we need another DT property for the HDMI controller node or elsewhere to 
-specify which mode to run in instead of expecting it to always be I2S).
-
-Cheers,
-Quentin
