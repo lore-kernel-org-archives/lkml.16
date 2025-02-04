@@ -1,195 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FCD35961
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 16:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAB32C181;
+	Tue,  4 Feb 2025 16:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738686640; cv=none; b=otLPFK2g+gH4Uw1yL+Z7lwKCz4+53WuJA7ir1eMWVQgqy+1/9P9yK2hBk9K1CD/sp5sB5gv4WJ0VSr/IjLy2xcPMq2jonFHmESImYNgyGKWIcRo1ZQGXFAo/MByowTVGymsp6KTnM53r6opK6ESZENIH8iP/Y2E4vXTqq801+5M=
+	t=1738686648; cv=none; b=OYb3xU0EuUY9dIouBWQSrllhQlqtkz7oUpjboeV6YpZIxGElUT9Fj//GDaqGr/zlCz6Cv6diEHV/cxjzCZyO7LZ74P/IW9jvvkyyI0pgid8U+2OKkP7Lbb6pZyIdwzCfd5guYgTj2WcjRcX+q3V8GMRJtuqbUcgaoJq9U/guOrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738686640; c=relaxed/simple;
-	bh=PkwZmtUC3B140391/0DBQB0PbujszBKzTRZVGrCKXN4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FrK0P3lUNr9e4M3ZENl53dKYSvgmlMmRJkVVea4cAVTu7n/rKGcpeZhGUqUAL0TqrDe/38nMM756PR5065BWhQAQU60CCZTTaZ2+R+rSh5EBag6z+QKFgrvCwc+0vojDpZHG9Bbmi3Hex11/pgb2oUNg3u3CiVlo7ntVYMOkjt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AqVB35kg; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738686648; c=relaxed/simple;
+	bh=opT0EkNK045NqLULfxBak/mtFGh/D/EUUcxWawHwc08=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ryy3+dkkMcfsbRUxbUZt55XGwEemt71hodLBqyq+henmFQBTNXaUp4c/FLZHyKTr0wah2mSwWJcX8lqOo3N28b2wY6QrYDojMyviXoNPZo1sqIBflMvOTQAjqFPwjvjdMIiS8fbd6JrlgH6sQVkL54UJZKJWIRRh3Kpiv+iBlV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bAm8wG9D; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AqVB35kg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738686638; x=1770222638;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PkwZmtUC3B140391/0DBQB0PbujszBKzTRZVGrCKXN4=;
-  b=AqVB35kgqARwT09tC1G1Ox33DX2TpNDp8yUktxfGr4B5XpqUcM6UJ7iG
-   vfqFn6z29IWMF8RUkZRcJnToujsuEjETFqL9TWjukIn2FTc3VOfNqzHFc
-   uBzF1TFqKim5t+/tdtW/P4/6llZ/tOYCBep6GfXaW+QTUZc4BXCo45dK8
-   ZQcu3EReol2tU/qU9scO48hCpEKPOCnQ924u6aQcg5Rpu7UayHQC63wIM
-   7UZF560T4CQZblW+zM+x8H/ij6MzJfTbjzxyt5TbnYz9tpgT3yngA1ofe
-   fq16LYHVWLd0R0aPIcEwiU1Spef5x9yp4c0Hfu705lAgXkuz1bh17/o9Y
-   g==;
-X-CSE-ConnectionGUID: d7zt9tJUTbKius3JdrKIbA==
-X-CSE-MsgGUID: bIgJwX48QXaOPNiX5Z2XmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="61696070"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="61696070"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 08:30:37 -0800
-X-CSE-ConnectionGUID: 5hE16gUPSIS5fAxF0O7Nlw==
-X-CSE-MsgGUID: jglkcohLRWKUEnKdW4aabg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="110520737"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by fmviesa007.fm.intel.com with ESMTP; 04 Feb 2025 08:30:34 -0800
-Received: from [10.246.16.98] (mwajdecz-MOBL.ger.corp.intel.com [10.246.16.98])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id 2AEAF32EA2;
-	Tue,  4 Feb 2025 16:30:33 +0000 (GMT)
-Message-ID: <2ced99ce-fd3e-4966-b093-c193b6c8b400@intel.com>
-Date: Tue, 4 Feb 2025 17:30:32 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bAm8wG9D"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab7430e27b2so300153666b.3;
+        Tue, 04 Feb 2025 08:30:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738686644; x=1739291444; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:reply-to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=opT0EkNK045NqLULfxBak/mtFGh/D/EUUcxWawHwc08=;
+        b=bAm8wG9DctJrbfa/3W5srXK7dIJWb2HLbk+eb0BffYNnXSBBqgD+B9Q3MVQU6dJo4p
+         N4j4B+uYh7Qhuo3H0/1hRHqPlyeROEc0wrVNkmx9JrHO+ztsdckCeStiyLLHBNtKa/XV
+         s3kcRgrSdVbnvUwrF0eohr3cb3U88HNtZplARuOfaVOHdJgoDliRVMIbQyKG1pXDZdEt
+         u4vxeuKtbsev3rleHveMnqv1SbekWIc23FpB0QdNZ/CjBO2SzsVYCWQF2EJOMYGiCWKZ
+         mzY2ZLUw8seI7na+QYo4St2uP30jzeBYt+uMY2//kWJCOmQs5DH9AWPsz1K9ZaI6mU+r
+         lSuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738686644; x=1739291444;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:reply-to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=opT0EkNK045NqLULfxBak/mtFGh/D/EUUcxWawHwc08=;
+        b=RDoZhXWrLst4a7LQ1rrP0JdGH5hNAawavmTUBDE0sMxNaKBJxM2k/gELe2ga3O5A5X
+         U5XN/on+mU68fma9vFNBXFPzJxYYn+ls8e09UYezLd03QExccxOadqPRwRuEljPTko9j
+         rIqMgdVE6aok7LmVtMC3CzJLz6VSMnP6d74WD73uoFWhGhrkPpB46N4AUI3p254XHkHv
+         i01XZ+LeIMT4zcH6xcEDtqzxYIpMpyoa9VGgSTr5aSVoE1qd+vaGfq+y2gK1PRispmlu
+         XF8B1ityKjhIpSaUEcwTrh7K+C7EJqJVrD9uXnI3lQJlWNYBYP10169gdE1xMIKUcMjn
+         +LOA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwgwtP2Jshpmj711pqT4NtZz13dv9f2/tviCaTaO0xPEk33Jmqe72KAvulrbd5gMZdz7fn3/O4QFo=@vger.kernel.org, AJvYcCWxq0Kf902YN8ctdyBBBLVCkW1sibBM6jQbpvDkNutsihhZNLKlsvo91fHgAeiUhunnjUV7iPnBqPksEgiH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOMBMaQCBzlcaE2hVxEhdYLsBRBhjQncAVKkq0AdagO8/e5LIl
+	AXVk4FdKOnZY0ygIqn8jQ9O+8VMXZtQfCgk+P03f0537NF9/OZbd
+X-Gm-Gg: ASbGncvyYlXj07iKRpTkGy4k0qbdYXoHvLRES/h4cLP5OxoZC0ErsgN8gidcXofpuUj
+	MtibQVKRSUChwIsbn+VWC4o/spFwnT7vz7cRbn/d4wLCBoQfXN4UsU5xmIcO0Slab3tsweCgSyU
+	QA9LHbdFqyU4dMmcxneCK6NQOdpfaeyqFX/dzOLf9lnDcTOgkoDRXPM96qTHgBhgp4a3tzcM1ik
+	BKFi47xuD3lgcWhvjDOsRa2i2VB4VMYIFUa6LBomdaIPgCCWd3JsIjC/YGvdFYdcT7cyVD7TJuO
+	UWfCiDTXImLkTXtVs20WP2MBjXgblNhJZLEH0IusZmGDOQ==
+X-Google-Smtp-Source: AGHT+IH61lE3K2Fe9bMptU65qQ5bSKC+NWM5L/H3ek6n1KHXY/vGtfhDxAqTVSPrx61q1nj+NCzpxg==
+X-Received: by 2002:a17:907:3d8d:b0:ab6:ef33:402 with SMTP id a640c23a62f3a-ab6ef330424mr2468214666b.18.1738686644242;
+        Tue, 04 Feb 2025 08:30:44 -0800 (PST)
+Received: from abityuts-desk1.ger.corp.intel.com ([134.191.196.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6ff1bdbadsm762747266b.62.2025.02.04.08.30.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 08:30:43 -0800 (PST)
+Message-ID: <c3f03a5837e191c5371593ac0a0e3c56e4204567.camel@gmail.com>
+Subject: Re: [PATCH] intel_idle: introduce 'use_acpi_cst' module parameter
+From: Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To: "Rafael J. Wysocki" <rafael@kernel.org>, David Arcari
+ <darcari@redhat.com>
+Cc: linux-pm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Len Brown
+	 <lenb@kernel.org>, Prarit Bhargava <prarit@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 04 Feb 2025 18:30:41 +0200
+In-Reply-To: <CAJZ5v0hp8f3Xjb7bkDR_+RYfTE1ck=qop_QMZ3+z4w7T0VS66g@mail.gmail.com>
+References: <20250128141139.2033088-1-darcari@redhat.com>
+	 <e9188365425d2a4c0dfa7cfa2b17ad3d9fcf2735.camel@gmail.com>
+	 <afbe2137-398b-4053-93e7-2a03aeb32220@redhat.com>
+	 <CAJZ5v0hp8f3Xjb7bkDR_+RYfTE1ck=qop_QMZ3+z4w7T0VS66g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH-resent-to-correct-ml 3/8] drm/xe: Add scoped guards for
- xe_force_wake
-To: Maarten Lankhorst <dev@lankhorst.se>, intel-xe@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Ingo Molnar <mingo@kernel.org>, David Lechner <dlechner@baylibre.com>,
- Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>,
- Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>
-References: <20250204132238.162608-1-dev@lankhorst.se>
- <20250204132238.162608-4-dev@lankhorst.se>
-Content-Language: en-US
-From: Michal Wajdeczko <michal.wajdeczko@intel.com>
-In-Reply-To: <20250204132238.162608-4-dev@lankhorst.se>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Maarten,
+On Tue, 2025-02-04 at 16:21 +0100, Rafael J. Wysocki wrote:
+> But it could be something like "prefer_acpi" as far as I'm concerned.
 
-On 04.02.2025 14:22, Maarten Lankhorst wrote:
-> Instead of finding bugs where we may or may not release force_wake, I've
-> decided to be inspired by the spinlock guards, and use the same ones to
-> do xe_force_wake handling.
+When I see "prefer_acpi", my intuition tells that it is just a preference:
+"prefer ACPI, but may be native too". But I understood that the patch is ab=
+out
+"only ACPI and never native".
 
-You may want to take a look at [1], which was based on [2], that
-introduce fw guard class (and it was already acked and reviewed).
-Merging was postponed only due to a request to prepare larger series
-that would convert all existing usages to the new model.
+The reasons I suggested "no_native":
+* Sort of consistent with "no_acpi"
+* Suggests that native won't work.
 
-And similar guard approach for our RPM was proposed in [3]
-
-Michal
-
-[1] https://patchwork.freedesktop.org/series/141516/
-[2] https://patchwork.freedesktop.org/series/134958/
-[3] https://patchwork.freedesktop.org/series/134955/
-
-> 
-> Examples are added as documentation in xe_force_wake.c
-> 
-> Signed-off-by: Maarten Lankhorst <dev@lankhorst.se>
-> ---
->  drivers/gpu/drm/xe/xe_force_wake.c | 51 ++++++++++++++++++++++++++++++
->  drivers/gpu/drm/xe/xe_force_wake.h | 15 +++++++++
->  2 files changed, 66 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/xe/xe_force_wake.c b/drivers/gpu/drm/xe/xe_force_wake.c
-> index 4f6784e5abf88..805c19f6de9e7 100644
-> --- a/drivers/gpu/drm/xe/xe_force_wake.c
-> +++ b/drivers/gpu/drm/xe/xe_force_wake.c
-> @@ -16,6 +16,57 @@
->  
->  #define XE_FORCE_WAKE_ACK_TIMEOUT_MS	50
->  
-> +/**
-> + * DOC: Force wake handling
-> + *
-> + * Traditionally, the force wake handling has been done using the error prone
-> + * set of calls:
-> + *
-> + * int func(struct xe_force_wake *fw)
-> + * {
-> + * 	unsigned int fw_ref = xe_force_wake_get(fw, XE_FORCEWAKE_ALL);
-> + * 	if (!fw_ref)
-> + * 		return -ETIMEDOUT;
-> + *
-> + * 	err = do_something();
-> + *
-> + * 	xe_force_wake_put(fw, fw_ref);
-> + * 	return err;
-> + * }
-> + *
-> + * A new, failure-safe approach is by using the scoped helpers,
-> + * which changes the function to this:
-> + *
-> + * int func(struct xe_force_wake *fw)
-> + * {
-> + * 	scoped_cond_guard(xe_force_wake_get, return -ETIMEDOUT, fw, XE_FORCEWAKE_ALL) {
-> + * 		return do_something();
-> + * 	}
-> + * }
-> + *
-> + * For completeness, the following options also work:
-> + * void func(struct xe_force_wake *fw)
-> + * {
-> + * 	scoped_guard(xe_force_wake_get, fw, XE_FORCEWAKE_ALL) {
-> + * 		do_something_only_if_fw_acquired();
-> + * 	}
-> + * }
-> + *
-> + * You can use xe_force_wake instead of force_wake_get, if the code
-> + * must run but errors acquiring ignored:
-> + * void func(struct xe_force_wake *fw)
-> + * {
-> + * 	scoped_guard(xe_force_wake, fw, XE_FORCEWAKE_ALL) {
-> + * 		always_do_something_maybe_fw();
-> + * 	}
-> + *
-> + * 	do_something_no_fw();
-> + *
-> + * 	guard(xe_force_wake)(fw, XE_FORCEWAKE_ALL);
-> + * 	always_do_something_maybe_fw();
-> + * }
-> + */
-> +
->  static const char *str_wake_sleep(bool wake)
->  {
->  	return wake ? "wake" : "sleep";
-> diff --git a/drivers/gpu/drm/xe/xe_force_wake.h b/drivers/gpu/drm/xe/xe_force_wake.h
-> index 0e3e84bfa51c3..0fb1baae0a3a3 100644
-> --- a/drivers/gpu/drm/xe/xe_force_wake.h
-> +++ b/drivers/gpu/drm/xe/xe_force_wake.h
-> @@ -9,6 +9,8 @@
->  #include "xe_assert.h"
->  #include "xe_force_wake_types.h"
->  
-> +#include <linux/cleanup.h>
-> +
->  struct xe_gt;
->  
->  void xe_force_wake_init_gt(struct xe_gt *gt,
-> @@ -61,4 +63,17 @@ xe_force_wake_ref_has_domain(unsigned int fw_ref, enum xe_force_wake_domains dom
->  	return fw_ref & domain;
->  }
->  
-> +DEFINE_LOCK_GUARD_1(xe_force_wake, struct xe_force_wake,
-> +		    _T->fw_ref = xe_force_wake_get(_T->lock, domain),
-> +		    xe_force_wake_put(_T->lock, _T->fw_ref),
-> +		    unsigned int fw_ref, enum xe_force_wake_domains domain);
-> +
-> +DEFINE_LOCK_GUARD_1_COND(xe_force_wake, _get,
-> +			 _T->fw_ref = xe_force_wake_get_all(_T->lock, domain),
-> +			 enum xe_force_wake_domains domain);
-> +
-> +/* Only useful for guard xe_force_wake, guard xe_force_wake_get gets all or nothing */
-> +#define xe_force_wake_scope_has_domain(domain) \
-> +	(xe_force_wake_ref_has_domain(scope.fw_ref, domain))
-> +
->  #endif
-
+Thanks.
