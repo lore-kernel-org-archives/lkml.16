@@ -1,229 +1,154 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A03215F74;
-	Tue,  4 Feb 2025 17:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3993175A5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 17:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738688609; cv=none; b=acitZETcvqsxRahjcb4K79jX3ih+LoFF1TcQiA98ml5xc/u1m6DvmOCQtcRWtUpUJ5AR7sSSnm5/ME6qZN2MhswD/ZDjyMQkjhSg2Y71gVXQ/qOJ96DdadE6ORzUwO/uud0fShsxz8JGm3aS7CDSRphF4F5jP8l576AoqjofSRc=
+	t=1738688723; cv=none; b=KOVAFC7gLYGSPqxOsdMq1JXsBYDkO/po9L3Aa0QDSq8etpPqP9T6m5AM7a+Rp+Sb4LX1Dejmm0+C5qoKyvM64O937kk1ao8FCxOaCyFVrn46XNllwVxcZAEjZ98SQy4HJslP5Maqd7npK7UVLTrYiarVp+/6+bdWWl6ZMRTZHXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738688609; c=relaxed/simple;
-	bh=E8RF/l5fhDegnIKTjohFkCM7t7+gGetyChqnwBJ62gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YbkJ7z/WnnSsVEhJSAeKsiTQNAL8Ui7HpAkgSZrjIw3SHse5pExzzccECZmGqP/uleMRmYXs8WJlLPNr3w5AN5MncGP+8Y8wnrNNiVLwH0jR1zwrJfmSB+IEFLm+Vx7xg7EZTeXkPZkc5MmdyzP46SU2yw7mkQzwQeXiWiXzeY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hxekTmU8; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738688723; c=relaxed/simple;
+	bh=JBOD6fiobxs4q41gPKaifDLaESDFdozFHZlmiIleJsQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iFS3OEIWhRYd3heJ2Zd49UZ+Lk8xw+OeqfArzxomhtaexbTabnwvU+FWNZnHK57BjfgUBKk4OP0yrHZl0vvWnZlWbr9F+RRFOoFPQL7usM+EU5YC8j3mSrDP3p0qu1hxztsy0sdSqf3uZCLTs5NyPAXA0sS91gNIqTerUiUiRag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Q58w1E2d; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxekTmU8"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4363ae65100so69257545e9.0;
-        Tue, 04 Feb 2025 09:03:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738688606; x=1739293406; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RJlXgOl2VRAjUJ8u35f0etlEcwGJNxslv3jGkMjZZIs=;
-        b=hxekTmU8f8Ydm4+S3COp8MWFbJimitty9nS42T8uVLqAdL6zAcRhXTcpzyoeSUMwLf
-         BGkyI7lnq96y1Sy243loyWRZJloUOaa7Eg7cN3eTwheB9+M7GBZsJmrBfJDStVwc7H2H
-         X1wvQXuqmJa3z8DoxGKwxJBIXT9nTMlfvUlvOuvVFMbFHv98fs4XVYkMutpD+3ZTtKMF
-         TKEVBgYFWxkAZnP3abvy6C1E3AlVA/oipV6EyDh7buLyE7q5Z50bn4W/rnczs18SHiO1
-         /KlClr6/HhmXzbKl/8wK1/Uy2UA/Lp6QURFkA2kFgbZEQC6ASIRUSvfZr0B8IppF39ZE
-         0Utw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Q58w1E2d"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514E1VHw032200
+	for <linux-kernel@vger.kernel.org>; Tue, 4 Feb 2025 17:05:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=BT7DXHGHa0zEjrmQrPCEWv
+	JNmClmGtUduvzIInTQO7M=; b=Q58w1E2dpFUbKgrhcah0e2V/ckonktGv/4SdHY
+	2eF8YWtf77wFXutIPocpQFyxSFOfkaO8cu88KBMcrNy836aYI4mmyfMbKxK3nLNk
+	UkT+Y1+e6+CGprJ89j6qM9Izza1owiq+7HOhPl8DSSKdlhL0zem93vv1Bls7Ukl5
+	VXHarVMr8VsTwnWjEyflirOK4Iza5HmPIRbzQhlsLH344FP9UJF0McYbCOQ7Cow/
+	YEMHri0CFcMJSxiIKLNFEt2upDaVrUkveo9o1KzoPpsQUqS1jW4LLbcj7En0Imt9
+	rt6TB92l89+ePVEwZg00NPNARrxl0IfMd0RNmzHrRX4MpTyg==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44km9wgf7a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 17:05:19 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2ef7fbd99a6so10727804a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 09:05:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738688606; x=1739293406;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RJlXgOl2VRAjUJ8u35f0etlEcwGJNxslv3jGkMjZZIs=;
-        b=Dw0+lFpDWCCFO2EEsshaAga6rsDsEufyhaTwo+U+etUcH5xbSjuEV6PS1o5E/vkvA3
-         941wEq4wTmzvjxiWE2eFGbVt6VFGxjjPwLks2Y/J/WyJO78/fY9SHavKpM2ezD7iY6QG
-         CgYpYeaO2s+mYi0dJ0Mh2p6JjMz5svyDwDV3WvJCXGBQsyn13DyFZkdBV8BJnro7DjQx
-         UPlKz73M9L6Dtwf2t16/kmavGoiUSHcoQg+nAM/1HwEO0WHvTBaWAbpgd8Y/p5YFA3xY
-         0sOb1vs/IByIIn/aB0QGBEuhj0o8AzQgBG1j5bEgMF5g1Z+Af9C03FfHO81ufNv4DZ+X
-         G3Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhLgOrHa4zzVnfT5kt94lovajHEWqFJcRC0KVhw2Sbw+IvdFgswT6+P/d9iV4RSmeQ5KMirmshNxb7x70=@vger.kernel.org, AJvYcCW+EkAios3VaC6w4MZyxBfHy5fLktRNpo2UUliHBekWfIb69n64r/fLaOqkCLlamS2q/Hje+kTkLC0=@vger.kernel.org, AJvYcCWNXUksUsVkxnSizG2j1a21Xb2jkTKrlwBSepNYqQ9vfuVtFNQdm7KZlUkTvkdltkxdMAik83cYBCj0ylmj@vger.kernel.org, AJvYcCXLYFUY1yhL73+KtI1vkP1YjYLwV6xiQmqjpQpw0jQ7d+/vTyjBwZJfepYkaC7f1LPDJF6fc3l9@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGevsDRrdoXtFXDfkfytqwU8UCvkZVzuTKovBhU1Rxu3H9f4uA
-	V5lsyndhOSIAqmamnhgJMMGRhzIIWg5ieuZ3vUZRHazu/t6oiEVk
-X-Gm-Gg: ASbGncugTiNdxdeusLyC8M/up58zhHZK1OnBj7aw8wXnSV6/lGR4+4U/WsDC8r0hmPy
-	P30DKaLXlnWp2J2Qm/2cnkoy78RQSkyPFomiXwG5n7Zmjig6rouiCz3evo1POXiH1Zpc/M4LCJR
-	RsMi0fCsU+ViC+y471tlB2s7qe9UJECP1qTMhbC+4Gudt7xg6IPoBDjcUjOjOScQnEEF/JTWcWI
-	4PBEEw+PX4EBduQ2KIy/GR/C4YOLGD4x937xx/uvqUzUsFB9Yb+wWjP9Q8eZ9X0zOsrIXlYBKuo
-	eED0hL2Wqk/Qw8du5qOBOC8FnB3N2rPLOgJGC5dy/yyO/eSFR56ofU2ukqleGwK4QAqJsQOBUU7
-	lhA==
-X-Google-Smtp-Source: AGHT+IFuYLVNYZ98Q10JnMDLiyK6TyIQLXJ2SpGRGUPbmSrXDHm0ww9KWQ7sxRxXVNELVQNtb8I39w==
-X-Received: by 2002:a05:600c:4713:b0:434:a852:ba77 with SMTP id 5b1f17b1804b1-438dc3cadf9mr278808005e9.15.1738688605335;
-        Tue, 04 Feb 2025 09:03:25 -0800 (PST)
-Received: from orome (p200300e41f281900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1900:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23de880sm194577805e9.12.2025.02.04.09.03.23
+        d=1e100.net; s=20230601; t=1738688719; x=1739293519;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BT7DXHGHa0zEjrmQrPCEWvJNmClmGtUduvzIInTQO7M=;
+        b=V9oLFqdcIt6WrJYOJRwd4kvBuNmIzhVVOZnFzvU0dIoDO2PS1RHBXHYrCM6gS5n0PH
+         4CHPob3KIUFatM2EDswiJN1+FeqLy52p/vuqnQDEcVRtqLcJU7L17V0Fzhox0Yhm1iSB
+         re/vJyJufbYV8vTI5y6smx/iUhgbrVdmi8yM6zKwP8y5TEVNaTS3+WbUls4Toh/6ZCcR
+         z71WAn1Kx+tKnQTq7g8An7lfWA82pDQ1K7ln9hM8WROeR94/Wswz2xI9WlRh3K7wYnJo
+         mmcBMSNMLBgIgR8ItGv5bw9kbjczO/oNAs9UfR5jQkSjSFOJPNxq+A/BQvjV0SDoCaL0
+         LssQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOAmqBZ4Iq2sfIRJD4s6hW5LjmY+CTwV9nbVOqgwL04KQ4p3bv4lcZYpz1vFPJ/7omPFDSG5JZ7hdgq20=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYTpK2tTbCVo8CHmCbGdp7kJwM5V2JA3EQmTfzwbMn9zbsIoVR
+	bJAanljFr53ZKYo9/12zp2a2C6BslbGe8kbN8q4JpXL5seHeWZzRobbXzZDmpAIvvnZvg1jP9wu
+	WP2u97nPieLVp+whUQyrWERr3gjXrRSOM9F2f5OnJAKUIwtUHsuBEo4fOduXBUxw=
+X-Gm-Gg: ASbGncvlWqDKX2CFUu+OgU9OGzbhkXohCoW7/1x9Ve/8sWGpvmbpGi93paUgZ+OA6Si
+	4Q06Gv5j5gECUEGwI/2kD/+uNvpiFpcsbnyDi+criejCPYvCRxiauoCo4rgFodpy7octys8P7Ga
+	DAuZ7OE0e8Gnv1czXbJ9Y4oa/XMm0dP21O9+UdEmyrYsDpHgCU59zeSOsGLgv5D8oK0wY03n8hY
+	K3kgM7eDl/XO6KqEqVESuhUqTqSXzyFlFNuaPtFutUQmJcIDc6473EQPlLxLMgphqj/AXVUA2u2
+	TuG0aA7R5SU51sGfmL5VDYpaV79jl3vv1atUL2vycZ9DTuC60C9E6zdHkGOWUUMninHSZZ7kSAB
+	KvrbT9FEZ1MTDDEf4YrgQJifn5+mD6w==
+X-Received: by 2002:a05:6a00:1411:b0:727:3fd5:b530 with SMTP id d2e1a72fcca58-72fd0c60405mr34524841b3a.15.1738688718696;
+        Tue, 04 Feb 2025 09:05:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGycQOxaUw26jx2t1l1m1gaa7VJ8kN4iUr7ydQDkLeDLysG/ehAID5o72Qqi2wmqGDsOu70Gg==
+X-Received: by 2002:a05:6a00:1411:b0:727:3fd5:b530 with SMTP id d2e1a72fcca58-72fd0c60405mr34524791b3a.15.1738688718037;
+        Tue, 04 Feb 2025 09:05:18 -0800 (PST)
+Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69cddbbsm10772788b3a.125.2025.02.04.09.05.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 09:03:24 -0800 (PST)
-Date: Tue, 4 Feb 2025 18:03:22 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Mohan Kumar D <mkumard@nvidia.com>
-Cc: vkoul@kernel.org, jonathanh@nvidia.com, dmaengine@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v3 1/2] dmaengine: tegra210-adma: Fix build error due to
- 64-by-32 division
-Message-ID: <52n364alceto6tgitbnjbfgtrk2lpe5ipztxi4abnuikjwgnvk@i6irrkj6fqbb>
-References: <20250116162033.3922252-1-mkumard@nvidia.com>
- <20250116162033.3922252-2-mkumard@nvidia.com>
- <dsxaisxdpsxecyna527cifixyurmkgo3cfaiheau5jjdl5qysp@64qquncxdmof>
- <84382200-e793-4e9a-b25a-8dc43e7a8bd0@nvidia.com>
+        Tue, 04 Feb 2025 09:05:17 -0800 (PST)
+From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Subject: [PATCH v2 0/8] wifi: ath12k: handle change_vif_links() callback
+Date: Tue, 04 Feb 2025 22:35:06 +0530
+Message-Id: <20250204-unlink_link_arvif_from_chanctx-v2-0-764fb5973c1a@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vyjr3c2wmimjx3vo"
-Content-Disposition: inline
-In-Reply-To: <84382200-e793-4e9a-b25a-8dc43e7a8bd0@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMJIomcC/43OTWrDMBAF4KsEresgjTz+ySr3KMXI41EjGtuNZ
+ JuU4LtXdglpocXdCN4gvvduIrB3HMRhdxOeJxdc38UATztBJ9O9cuKamAVISBUomYzd2XVv1fo
+ YPzlbWd+31fKZhmuiFSosCQ1lWkTk3bN117Xg+eUre76MsWd4HE8uDL3/WEdMarne+9RW36QSm
+ dRlSbVFMKzoGHFyHe2pb5cBEUIJMv0XlOVYNymx0bo89iHsL6M5R6hdtWXqBN/nwaYKUc3rBog
+ aRrT8Y94K6juIUkG+CeoI2szKBo21dWb+mJk+VJB6U02jioUE1jYvuMh/Ued5/gQExm0LLgIAA
+ A==
+X-Change-ID: 20241210-unlink_link_arvif_from_chanctx-315159c5ac63
+To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
+        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-ORIG-GUID: e3LYJXann4Qkxwq9BJj0uXhmoJFyq5hd
+X-Proofpoint-GUID: e3LYJXann4Qkxwq9BJj0uXhmoJFyq5hd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_08,2025-02-04_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 phishscore=0 impostorscore=0
+ malwarescore=0 adultscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999
+ spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502040132
 
+Currently, links in an interface are allocated during channel assignment
+via assign_vif_chanctx(). Conversely, links are deleted during channel
+unassignment via unassign_vif_chanctx(). However, deleting links during
+channel unassignment does not comply with mac80211 link handling.
+Therefore, this process should be managed within change_vif_links().
 
---vyjr3c2wmimjx3vo
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/2] dmaengine: tegra210-adma: Fix build error due to
- 64-by-32 division
-MIME-Version: 1.0
+This series aims to add support to handle links in change_vif_links()
+callback.
 
-On Tue, Feb 04, 2025 at 10:13:09PM +0530, Mohan Kumar D wrote:
->=20
-> On 04-02-2025 21:06, Thierry Reding wrote:
-> > On Thu, Jan 16, 2025 at 09:50:32PM +0530, Mohan Kumar D wrote:
-> > > Kernel test robot reported the build errors on 32-bit platforms due to
-> > > plain 64-by-32 division. Following build erros were reported.
-> > >=20
-> > >     "ERROR: modpost: "__udivdi3" [drivers/dma/tegra210-adma.ko] undef=
-ined!
-> > >      ld: drivers/dma/tegra210-adma.o: in function `tegra_adma_probe':
-> > >      tegra210-adma.c:(.text+0x12cf): undefined reference to `__udivdi=
-3'"
-> > >=20
-> > > This can be fixed by using lower_32_bits() for the adma address space=
- as
-> > > the offset is constrained to the lower 32 bits
-> > >=20
-> > > Fixes: 68811c928f88 ("dmaengine: tegra210-adma: Support channel page")
-> > > Cc: stable@vger.kernel.org
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Closes: https://lore.kernel.org/oe-kbuild-all/202412250204.GCQhdKe3-l=
-kp@intel.com/
-> > > Signed-off-by: Mohan Kumar D <mkumard@nvidia.com>
-> > > ---
-> > >   drivers/dma/tegra210-adma.c | 14 +++++++++++---
-> > >   1 file changed, 11 insertions(+), 3 deletions(-)
-> > >=20
-> > > diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-> > > index 6896da8ac7ef..258220c9cb50 100644
-> > > --- a/drivers/dma/tegra210-adma.c
-> > > +++ b/drivers/dma/tegra210-adma.c
-> > > @@ -887,7 +887,8 @@ static int tegra_adma_probe(struct platform_devic=
-e *pdev)
-> > >   	const struct tegra_adma_chip_data *cdata;
-> > >   	struct tegra_adma *tdma;
-> > >   	struct resource *res_page, *res_base;
-> > > -	int ret, i, page_no;
-> > > +	unsigned int page_no, page_offset;
-> > > +	int ret, i;
-> > >   	cdata =3D of_device_get_match_data(&pdev->dev);
-> > >   	if (!cdata) {
-> > > @@ -914,9 +915,16 @@ static int tegra_adma_probe(struct platform_devi=
-ce *pdev)
-> > >   		res_base =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "=
-global");
-> > >   		if (res_base) {
-> > > -			page_no =3D (res_page->start - res_base->start) / cdata->ch_base_=
-offset;
-> > > -			if (page_no <=3D 0)
-> > > +			if (WARN_ON(lower_32_bits(res_page->start) <=3D
-> > > +						lower_32_bits(res_base->start)))
-> > Don't we technically also want to check that
-> >=20
-> > 	res_page->start <=3D res_base->start
-> >=20
-> > because otherwise people might put in something that's completely out of
-> > range? I guess maybe you could argue that the DT is then just broken,
-> > but since we're checking anyway, might as well check for all corner
-> > cases.
-> >=20
-> > Thierry
-> ADMA Address range for all Tegra chip falls within 32bit range. Do you th=
-ink
-> still we need to have this extra check which seems like redundant for now.
+Patches 1-2 are making debug infra to work without device info.
 
-No, you're right. If this is all within the lower 32 bit range, this
-should be plenty enough. It might be worth to make it a bit more
-explicit and store these values in variables and add a comment as to
-why we only need the 32 bits. That would also make the code a bit
-easier to read by making the lines shorter.
+Patches 3-8 are the ones changing the code to handle as mentioned above.
 
-	// memory regions are guaranteed to be within the lower 4 GiB
-	u32 base =3D lower_32_bits(res_base->start);
-	u32 page =3D lower_32_bits(res_page->start);
+NOTE:
+* A new ath12k-check warning comes which probably needs to be added to
+ignore list
 
-	if (WARN_ON(page <=3D base))
-		...
+drivers/net/wireless/ath/ath12k/debug.c:69: Prefer [subsystem eg: netdev]_dbg([subsystem]dev, ... then dev_dbg(dev, ... then pr_debug(...  to printk(KERN_DEBUG ...
 
-etc.
+This is because, since device info is not known can not use netdev_ or dev_
+dbg family. pr_debug() is an option but that will require DYNAMIC_DEBUG
+and then ath12k needs to be probed with dyndbg=+p which we don't want in
+ath. Hence, only option left is to use printk() directly.
 
-Hm... on the other hand. Do we know that it's always going to stay that
-way? What if we ever get a chip that has a very different address map?
+---
+Changes in v2:
+- No changes in patches 1-5, 7.
+- Relocated ath12k_mac_remove_link_interface() as well in patch 6.
+- Properly handled peer create and peer delete symmetry in patch 8. This
+  unsymmetry was the root cause of the DFS channel bring up as reported
+  with v1.
+- Link to v1: https://lore.kernel.org/r/20250204-unlink_link_arvif_from_chanctx-v1-0-675bd4cea339@oss.qualcomm.com
 
-Maybe we can do a combination of Arnd's patch and this. In conjunction
-with your second patch here, this could become something along these
-lines:
+---
+Aditya Kumar Singh (8):
+      wifi: ath12k: eliminate redundant debug mask check in ath12k_dbg()
+      wifi: ath12k: introduce ath12k_generic_dbg()
+      wifi: ath12k: remove redundant vif settings during link interface creation
+      wifi: ath12k: remove redundant logic for initializing arvif
+      wifi: ath12k: use arvif instead of link_conf in ath12k_mac_set_key()
+      wifi: ath12k: relocate a few functions in mac.c
+      wifi: ath12k: allocate new links in change_vif_links()
+      wifi: ath12k: handle link removal in change_vif_links()
 
-	u64 offset, page;
+ drivers/net/wireless/ath/ath12k/debug.c |   6 +-
+ drivers/net/wireless/ath/ath12k/debug.h |   7 +-
+ drivers/net/wireless/ath/ath12k/mac.c   | 302 ++++++++++++++++++--------------
+ 3 files changed, 180 insertions(+), 135 deletions(-)
+---
+base-commit: 48a62436540224f57013c27519dd2aa3ddd714c9
+change-id: 20241210-unlink_link_arvif_from_chanctx-315159c5ac63
 
-	if (WARN_ON(res_page->start <=3D res_base->start))
-		return -EINVAL;
-
-	offset =3D res_page->start - res_base->start;
-	page =3D div_u64(offset, cdata->ch_base_offset);
-
-	if (WARN_ON(page =3D=3D 0 || page > cdata->max_page))
-		return -EINVAL;
-
-Thierry
-
-> >=20
-> > > +				return -EINVAL;
-> > > +
-> > > +			page_offset =3D lower_32_bits(res_page->start) -
-> > > +						lower_32_bits(res_base->start);
-> > > +			page_no =3D page_offset / cdata->ch_base_offset;
-> > > +			if (page_no =3D=3D 0)
-> > >   				return -EINVAL;
-> > > +
-> > >   			tdma->ch_page_no =3D page_no - 1;
-> > >   			tdma->base_addr =3D devm_ioremap_resource(&pdev->dev, res_base);
-> > >   			if (IS_ERR(tdma->base_addr))
-> > > --=20
-> > > 2.25.1
-> > >=20
-
---vyjr3c2wmimjx3vo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmeiSFYACgkQ3SOs138+
-s6FXgg/+OgEAmRJyuiiCJEuxPu0JoocxmNbYfeIKN366eLTOIlbJkC52bDvBos7J
-0P6ROn5X35GRY9LGhDDBPS9W0j8ylF35pGvZh2KtmI3gY2n0K1QyFsR5e4kgP64W
-RcjAQUmC+kfvCD1vvUekxMJfvxeJISpE3hYlL+kySqprjrVnWIAWq05f8rBdSADo
-Sb0Giit5nfrdnvlhSy4FpJ60UutakcWtooeQz55cyKGer//chdexMsJ7Rc7Gph+z
-oxKMOKIreEnSfYilIOcJweKlrVWPSss6SaM8k3zDm8kPgfkOxspDRvqORDAAUJMk
-jYNX5yUKuwn1yEj2YhsHcpCW3HOamYaspoMxsGDE3auTBfDzo3ELSFrvBnCPY93N
-79MVZwEUh5NFCiYZ7l7pY0ggAYRLuqtOFoGtoTTJ+OiL0SjrbxWuyHXNKjG32Pjx
-l/r8O6/aTE90zTL4EJk6MPhk32U2XfmdBS1+ai5N81cd5uv9xsRTNzGgZfYpUWmy
-aY0x95uigpzUGUqQ8ZJn6VWOnibzcLGDHrFhleZJWoyyqdUfdQfgw6SqnM84l0ft
-BhRw97sBiRRJNFgv0qkMKEMSscSxThLRWXCVL0BUX6OaOeSfk8z0YLCP7k+tnFax
-1mc3QWw+3i6F42o4sbE7pilbSzLksEJIrsjIoU0kBeUYgA+zyZ4=
-=12cW
------END PGP SIGNATURE-----
-
---vyjr3c2wmimjx3vo--
