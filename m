@@ -1,410 +1,401 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C09486358;
-	Tue,  4 Feb 2025 08:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6972C2066E5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 08:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738657531; cv=none; b=sghkfkCUufzFPpQZNx89XP87ajRWzkSpk2I6Y5jCEwVKPnN5BioQzPgHgkDYaCOWcd2XgImUWvah9RHj1ZmXh57xdz1qrw0BGt4JuIt08wBHzAleCF6C5RcVBptlSoskxTpOHmB6qKOkEEMzCDWWtmqj2vwv+cuPrUY3gnKEOXI=
+	t=1738657550; cv=none; b=bKi4s/4dEUoMosZ3+PfFlC+DZhso6pHdYh9X+egh3vPer6Gvu9jyCzUwD6yDvHsWDHOb/HJF7WbEq2SOc4CyhGl0ltNPRVlkbtCYDe9JSK9B9liIGSqz1zETSxrsTof7Iw9rNHIpn12AEoNVeqDXhRKAq4ZZUWHgIDBbY+jbr5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738657531; c=relaxed/simple;
-	bh=tA7E1mVpIymY3Lc0nR1S/UyBaq3G0W3boEmT/JwVfMw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nuHv9LT0QJw6in/Jw05PwZSbwt2NV/WqyYZsfnNOReUkvKcx+jZdzJdWFFK5ve+d6eGfeA2B0D+dfd6P75+7OL0NpKn5IT3G5SQg+Oxlc/EougehyvVE+yxd7z9zh2vQs0ghXrFR8czRQJujpn34aoYnoPJN85O1q7dIQzBZoz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aHIBxyeb; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738657550; c=relaxed/simple;
+	bh=tJqlIVFoV2fmSJXs4lRTdbKZh55uWKwbP0bRYFL/fz0=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=diO25fuDKp5OqEzXgm8WBDfr+9W0WmuBxLu8QqfR7U2wjnQIpkWl+iFst3aPElqRbRj74RHxLFdKWNbB/zb9az1fCPzSIQ4YtVWf8vi6L6VNWdcOb2C2ma5QJjdSxa+vy1Gtd4hJ32eiHBvlkcsQRjYYr4ZX+nJhtRT5eDt3Sbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=em9L8v7+; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aHIBxyeb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738657530; x=1770193530;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=tA7E1mVpIymY3Lc0nR1S/UyBaq3G0W3boEmT/JwVfMw=;
-  b=aHIBxyebZiASxG3TVpkU8Yk4NWohMfATC2xcsj49urEFq2DAxGCblvNo
-   4H88LuJVGz/idqdDB0U7Mn/n5F2sQXh6VZ9j55qL4/aEitmKSuceTQX6U
-   +AMZboMG+eEHLQ06SXFrb6p35Ond+E0mm41fyJnRAjX6xNPr/hPQrIAiC
-   YZ19imNJYS7bPZ25TvldUbvYEB+YJjihHRb4EaGHImdQvXvHgF2aPeC7B
-   3b05tqgN5Uvz/Nl5WIElsNCUnqKcXWZI45LSgetEz1r1AyYWTUTIBfafn
-   KN/ikHKfQ79unMxqXrAcDQmdP3kzE4+1kd4jaQsqil5kHYzHsKANMGg/P
-   Q==;
-X-CSE-ConnectionGUID: /PY/6JHVQUirnZbJPCsuOw==
-X-CSE-MsgGUID: fHT1Jff8Rd6fg3/COIAHFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="64524799"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="64524799"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 00:25:29 -0800
-X-CSE-ConnectionGUID: LTlwhQG9RVqR9pLXW0mgtw==
-X-CSE-MsgGUID: x3roqXnEQH+JzJtGCuS/0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="115543375"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.75])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 00:25:16 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 4 Feb 2025 10:25:12 +0200 (EET)
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>, 
-    Jose Abreu <Jose.Abreu@synopsys.com>, 
-    David E Box <david.e.box@linux.intel.com>, 
-    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    "H . Peter Anvin" <hpa@zytor.com>, 
-    Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
-    David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-    "David S . Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    Paolo Abeni <pabeni@redhat.com>, 
-    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-    Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-    Jiawen Wu <jiawenwu@trustnetic.com>, 
-    Mengyuan Lou <mengyuanlou@net-swift.com>, 
-    Heiner Kallweit <hkallweit1@gmail.com>, 
-    Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, 
-    Richard Cochran <richardcochran@gmail.com>, 
-    Andrew Halaney <ahalaney@redhat.com>, 
-    Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, 
-    linux-stm32@st-md-mailman.stormreply.com, 
-    linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v6 4/7] stmmac: intel: configure SerDes according
- to the interface mode
-In-Reply-To: <20250204061020.1199124-5-yong.liang.choong@linux.intel.com>
-Message-ID: <71b15c65-4790-50e0-fa96-dbc42c90079f@linux.intel.com>
-References: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com> <20250204061020.1199124-5-yong.liang.choong@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="em9L8v7+"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-385df53e559so3807734f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 00:25:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738657546; x=1739262346; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5X3KlExed7jQYj3Zt5TttzYieEc006daRenyOTS/L5Y=;
+        b=em9L8v7+VZhBnHw11Ns84qCLTTtriFr+uQOBZd/M85dGGf5rAE+ixP+Hq3qmJrh4XM
+         N/otQGB0OV/brM739HlYjRUvH+kjhC59e74TvfnX77ie/BKJ0TzR9fvv3LqD0OqRxZXL
+         stHXfAk3JaBOzNQWYN7+ry+0WfEBBHw02noHDy6WagIesU0CezT2V3HffEIv9WNfnvme
+         +7rP1OsxC3oYvC4S+FO0wIcFvY7MXaipUDFOV9Ya8CVSZmwvlKGS5/1PdKv8subEclUF
+         Nw73tqa6V6AMqxJ+3sfOCXKBa/fOCksqGTspVKp1HNDV6jyXcGC2Yq47Lqcex5EWWolD
+         afwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738657546; x=1739262346;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5X3KlExed7jQYj3Zt5TttzYieEc006daRenyOTS/L5Y=;
+        b=o4ZiAID7k181tNL2pmacJws3SfmvMMIPPmoFTAHaTpKdt9HwxvEK57Ev5Etilp6aVd
+         CkAeFm8TxKF2LLDh3XRr0xen0stq0BhkytSqr/fP+emu6iDrvv4RDbVRPa7picUlqtmv
+         vzmNSnGc8YxU5kSix99XmP1tdcHR3akTErOMMCCmWeotmdlnFhxghZtulNBNvWDsDjT9
+         Q2U7bwkaPAMFdRHMkOGBE2sXWlg0aWqf3EHWRrBCk1MGDUOB14vDBMyg1VblQ+4v7YnR
+         wrzGDdfwNGDl1rNzizOXrtZpDacGVwoGyqmlViiLQ3LIcFVQRV/CRgEjBICUQgOjd78M
+         NSEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWIZElmFmklK5UUgMs8d5Q12OBYb8PPHNA5Q1NUot7jkrDREOw/lYdFL5HSouCdCP9Q7o9ByCUu61ZLCvs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP/7PWiyyP67sFYvvaB8GE76rBdm3yt0p4Lr/JrKL0XtUXO2zu
+	Ai39LDww85mLU1B2svMzIP8tYftmXxKzbFXHLrWImLZBkT0e6CuZrZMu0leSr9I=
+X-Gm-Gg: ASbGncu7OybHpf5SlI0S6iFFfyRNoqTyBMi7n7YgH7WWTfgCqA6folWlL+pNnUp1ihj
+	z27KUpZ3pj4n07TlhCPImgDy0t/VSTgGluVDdOL6ub4mEQ7CxZ5VDmeuM0S7yGhuQGakKB0uYh9
+	pajLQEcQ+qhRTTemuO+qyu6yUxwi90g6Et2FmH44gW3D6in69LSiKG8Gxhv45EerN5efhq9kVXC
+	XdoIFqHjHFwCjo7QFHIhNCvp26jCFf+Yp4QOx1UO4H0Yp1MGJu+odXfdx7BsBoPW8RMZNGxdF01
+	qLVQ6Xz4s+QFg21ucXAj7WHw0dEfik7isjcKbRsQoS7homTQORFCWPAcK+i4l0OGsjI5
+X-Google-Smtp-Source: AGHT+IEIn8TASNoC+AhVC8v4SiDFZgSEGmJVO4sTfGESmM38PP44cwLUEcx9uF/Ii7X5V5Fw8E4L2g==
+X-Received: by 2002:a5d:6d82:0:b0:38c:5c9a:eaca with SMTP id ffacd0b85a97d-38c5c9aee4fmr14987906f8f.3.1738657545487;
+        Tue, 04 Feb 2025 00:25:45 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:8db5:d196:bd48:5fbb? ([2a01:e0a:982:cbb0:8db5:d196:bd48:5fbb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b51e1sm15058267f8f.77.2025.02.04.00.25.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 00:25:45 -0800 (PST)
+Message-ID: <69cb8423-c3c8-4c29-91f2-42e6ad41597b@linaro.org>
+Date: Tue, 4 Feb 2025 09:25:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 2/2] Input: goodix_berlin - Add support for Berlin-A
+ series
+To: Jens Reidel <adrian@travitia.xyz>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bastien Nocera <hadess@hadess.net>,
+ Hans de Goede <hdegoede@redhat.com>
+Cc: Luca Weiss <luca.weiss@fairphone.com>, linux-input@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ phone-devel@vger.kernel.org, linux@mainlining.org,
+ ~postmarketos/upstreaming@lists.sr.ht
+References: <20250203174309.21574-1-adrian@travitia.xyz>
+ <20250203174309.21574-3-adrian@travitia.xyz>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250203174309.21574-3-adrian@travitia.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 4 Feb 2025, Choong Yong Liang wrote:
+Hi,
 
-> Intel platform will configure the SerDes through PMC api based on the
-
-API
-
-> provided interface mode.
+On 03/02/2025 18:43, Jens Reidel wrote:
+> The current implementation of the goodix_berlin driver lacks support for
+> revisions A and B of the Berlin IC. This change adds support for the
+> gt9897 IC, which is a Berlin-A revision part.
 > 
-> This patch adds several new functions below:-
-> - intel_tsn_lane_is_available(): This new function reads FIA lane
->   ownership registers and common lane registers through IPC commands
->   to know which lane the mGbE port is assigned to.
-> - intel_config_serdes(): To configure the SerDes based on the assigned
->   lane and latest interface mode, it sends IPC command to the PMC through
->   PMC driver/API. The PMC acts as a proxy for R/W on behalf of the driver.
-> - intel_set_reg_access(): Set the register access to the available TSN
->   interface.
+> The differences between revision D and A are rather minor, a handful of
+> address changes and a slightly larger read buffer. They were taken from
+> the driver published by Goodix, which does a few more things that don't
+> appear to be necessary for the touchscreen to work properly.
 > 
-> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+> Signed-off-by: Jens Reidel <adrian@travitia.xyz>
 > ---
->  drivers/net/ethernet/stmicro/stmmac/Kconfig   |   2 +
->  .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 107 +++++++++++++++++-
->  .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  75 ++++++++++++
->  include/linux/stmmac.h                        |   3 +
->  4 files changed, 185 insertions(+), 2 deletions(-)
+>   drivers/input/touchscreen/goodix_berlin.h     |  9 ++++
+>   .../input/touchscreen/goodix_berlin_core.c    | 27 +++++++++---
+>   drivers/input/touchscreen/goodix_berlin_i2c.c |  6 ++-
+>   drivers/input/touchscreen/goodix_berlin_spi.c | 44 +++++++++++++++----
+>   4 files changed, 72 insertions(+), 14 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> index 4cc85a36a1ab..25154b915b02 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> @@ -307,6 +307,8 @@ config DWMAC_INTEL
->  	default X86
->  	depends on X86 && STMMAC_ETH && PCI
->  	depends on COMMON_CLK
-> +	depends on ACPI
-> +	select INTEL_PMC_IPC
->  	help
->  	  This selects the Intel platform specific bus support for the
->  	  stmmac driver. This driver is used for Intel Quark/EHL/TGL.
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-> index 48acba5eb178..347dd75bcdcd 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-> @@ -5,6 +5,7 @@
->  #include <linux/clk-provider.h>
->  #include <linux/pci.h>
->  #include <linux/dmi.h>
-> +#include <linux/platform_data/x86/intel_pmc_ipc.h>
->  #include "dwmac-intel.h"
->  #include "dwmac4.h"
->  #include "stmmac.h"
-> @@ -14,6 +15,9 @@ struct intel_priv_data {
->  	int mdio_adhoc_addr;	/* mdio address for serdes & etc */
->  	unsigned long crossts_adj;
->  	bool is_pse;
-> +	const int *tsn_lane_registers;
-> +	int max_tsn_lane_registers;
-> +	int pid_modphy;
->  };
->  
->  /* This struct is used to associate PCI Function of MAC controller on a board,
-> @@ -93,7 +97,7 @@ static int intel_serdes_powerup(struct net_device *ndev, void *priv_data)
->  	data &= ~SERDES_RATE_MASK;
->  	data &= ~SERDES_PCLK_MASK;
->  
-> -	if (priv->plat->max_speed == 2500)
-> +	if (priv->plat->phy_interface == PHY_INTERFACE_MODE_2500BASEX)
->  		data |= SERDES_RATE_PCIE_GEN2 << SERDES_RATE_PCIE_SHIFT |
->  			SERDES_PCLK_37p5MHZ << SERDES_PCLK_SHIFT;
->  	else
-> @@ -415,6 +419,103 @@ static void intel_mgbe_pse_crossts_adj(struct intel_priv_data *intel_priv,
->  	}
->  }
->  
-> +static bool intel_tsn_lane_is_available(struct net_device *ndev,
-> +					struct intel_priv_data *intel_priv)
-> +{
-> +	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	struct pmc_ipc_cmd tmp = {0};
-> +	u32 rbuf[4] = {0};
-> +	int ret, i, j;
+> diff --git a/drivers/input/touchscreen/goodix_berlin.h b/drivers/input/touchscreen/goodix_berlin.h
+> index 38b6f9ddbdef..a5232e58c166 100644
+> --- a/drivers/input/touchscreen/goodix_berlin.h
+> +++ b/drivers/input/touchscreen/goodix_berlin.h
+> @@ -12,6 +12,15 @@
+>   
+>   #include <linux/pm.h>
+>   
+> +enum goodix_berlin_ic_type {
+> +	IC_TYPE_BERLIN_A,
+> +	IC_TYPE_BERLIN_D,
+> +};
 > +
-> +	if (priv->plat->serdes_powerup) {
+> +struct goodix_berlin_ic_data {
+> +	enum goodix_berlin_ic_type ic_type;
+> +};
+> +
+>   struct device;
+>   struct input_id;
+>   struct regmap;
+> diff --git a/drivers/input/touchscreen/goodix_berlin_core.c b/drivers/input/touchscreen/goodix_berlin_core.c
+> index 3fc03cf0ca23..b892ab901d64 100644
+> --- a/drivers/input/touchscreen/goodix_berlin_core.c
+> +++ b/drivers/input/touchscreen/goodix_berlin_core.c
+> @@ -12,7 +12,7 @@
+>    * to the previous generations.
+>    *
+>    * Currently the driver only handles Multitouch events with already
+> - * programmed firmware and "config" for "Revision D" Berlin IC.
+> + * programmed firmware and "config" for "Revision A/D" Berlin IC.
+>    *
+>    * Support is missing for:
+>    * - ESD Management
+> @@ -20,7 +20,7 @@
+>    * - "Config" update/flashing
+>    * - Stylus Events
+>    * - Gesture Events
+> - * - Support for older revisions (A & B)
+> + * - Support for revision B
+>    */
+>   
+>   #include <linux/bitfield.h>
+> @@ -28,6 +28,7 @@
+>   #include <linux/input.h>
+>   #include <linux/input/mt.h>
+>   #include <linux/input/touchscreen.h>
+> +#include <linux/of.h>
+>   #include <linux/regmap.h>
+>   #include <linux/regulator/consumer.h>
+>   #include <linux/sizes.h>
+> @@ -54,9 +55,11 @@
+>   #define GOODIX_BERLIN_DEV_CONFIRM_VAL		0xAA
+>   #define GOODIX_BERLIN_BOOTOPTION_ADDR		0x10000
+>   #define GOODIX_BERLIN_FW_VERSION_INFO_ADDR	0x10014
+> +#define GOODIX_BERLIN_FW_VERSION_INFO_ADDR_A	0x1000C
+>   
+>   #define GOODIX_BERLIN_IC_INFO_MAX_LEN		SZ_1K
+>   #define GOODIX_BERLIN_IC_INFO_ADDR		0x10070
+> +#define GOODIX_BERLIN_IC_INFO_ADDR_A		0x10068
+>   
+>   #define GOODIX_BERLIN_CHECKSUM_SIZE		sizeof(u16)
+>   
+> @@ -297,9 +300,16 @@ static void goodix_berlin_power_off(struct goodix_berlin_core *cd)
+>   
+>   static int goodix_berlin_read_version(struct goodix_berlin_core *cd)
+>   {
+> +	const struct goodix_berlin_ic_data *ic_data = of_device_get_match_data(cd->dev);
+> +	int fw_version_info_addr;
+>   	int error;
+>   
+> -	error = regmap_raw_read(cd->regmap, GOODIX_BERLIN_FW_VERSION_INFO_ADDR,
+> +	if (ic_data->ic_type == IC_TYPE_BERLIN_A)
+> +		fw_version_info_addr = GOODIX_BERLIN_FW_VERSION_INFO_ADDR_A;
+> +	else
+> +		fw_version_info_addr = GOODIX_BERLIN_FW_VERSION_INFO_ADDR;
+> +
+> +	error = regmap_raw_read(cd->regmap, fw_version_info_addr,
+>   				&cd->fw_version, sizeof(cd->fw_version));
+>   	if (error) {
+>   		dev_err(cd->dev, "error reading fw version, %d\n", error);
+> @@ -358,16 +368,23 @@ static int goodix_berlin_parse_ic_info(struct goodix_berlin_core *cd,
+>   
+>   static int goodix_berlin_get_ic_info(struct goodix_berlin_core *cd)
+>   {
+> +	const struct goodix_berlin_ic_data *ic_data = of_device_get_match_data(cd->dev);
+>   	u8 *afe_data __free(kfree) = NULL;
+>   	__le16 length_raw;
+>   	u16 length;
+> +	int ic_info_addr;
+>   	int error;
+>   
+> +	if (ic_data->ic_type == IC_TYPE_BERLIN_A)
+> +		ic_info_addr = GOODIX_BERLIN_IC_INFO_ADDR_A;
+> +	else
+> +		ic_info_addr = GOODIX_BERLIN_IC_INFO_ADDR;
+> +
+>   	afe_data = kzalloc(GOODIX_BERLIN_IC_INFO_MAX_LEN, GFP_KERNEL);
+>   	if (!afe_data)
+>   		return -ENOMEM;
+>   
+> -	error = regmap_raw_read(cd->regmap, GOODIX_BERLIN_IC_INFO_ADDR,
+> +	error = regmap_raw_read(cd->regmap, ic_info_addr,
+>   				&length_raw, sizeof(length_raw));
+>   	if (error) {
+>   		dev_err(cd->dev, "failed get ic info length, %d\n", error);
+> @@ -380,7 +397,7 @@ static int goodix_berlin_get_ic_info(struct goodix_berlin_core *cd)
+>   		return -EINVAL;
+>   	}
+>   
+> -	error = regmap_raw_read(cd->regmap, GOODIX_BERLIN_IC_INFO_ADDR,
+> +	error = regmap_raw_read(cd->regmap, ic_info_addr,
+>   				afe_data, length);
+>   	if (error) {
+>   		dev_err(cd->dev, "failed get ic info data, %d\n", error);
+> diff --git a/drivers/input/touchscreen/goodix_berlin_i2c.c b/drivers/input/touchscreen/goodix_berlin_i2c.c
+> index ad7a60d94338..b3fd063b4242 100644
+> --- a/drivers/input/touchscreen/goodix_berlin_i2c.c
+> +++ b/drivers/input/touchscreen/goodix_berlin_i2c.c
+> @@ -53,8 +53,12 @@ static const struct i2c_device_id goodix_berlin_i2c_id[] = {
+>   
+>   MODULE_DEVICE_TABLE(i2c, goodix_berlin_i2c_id);
+>   
+> +static const struct goodix_berlin_ic_data gt9916_data = {
+> +	.ic_type = IC_TYPE_BERLIN_D,
+> +};
+> +
+>   static const struct of_device_id goodix_berlin_i2c_of_match[] = {
+> -	{ .compatible = "goodix,gt9916", },
+> +	{ .compatible = "goodix,gt9916", .data = &gt9916_data },
 
-The logic could be reversed + return immediately to reduce the indentation
-of the block below.
+Please also update the i2c_device_id table with the driver_data and use i2c_get_match_data().
 
-> +		tmp.cmd = IPC_SOC_REGISTER_ACCESS;
-> +		tmp.sub_cmd = IPC_SOC_SUB_CMD_READ;
-> +
-> +		for (i = 0; i < 5; i++) {
-
-Name the magic 5 with a define?
-
-> +			tmp.wbuf[0] = R_PCH_FIA_15_PCR_LOS1_REG_BASE + i;
-> +
-> +			ret = intel_pmc_ipc(&tmp, rbuf);
-> +			if (ret < 0) {
-> +				netdev_info(priv->dev,
-> +					    "Failed to read from PMC.\n");
-> +				return false;
-> +			}
-> +
-> +			for (j = 0; j <= intel_priv->max_tsn_lane_registers; j++)
-> +				if ((rbuf[0] >>
-> +				    (4 * (intel_priv->tsn_lane_registers[j] % 8)) &
-> +				     B_PCH_FIA_PCR_L0O) == 0xB)
-> +					return true;
-> +		}
-> +	}
-> +	return false;
-> +}
-> +
-> +static int intel_set_reg_access(const struct pmc_serdes_regs *regs, int max_regs)
-> +{
-> +	int ret = 0, i;
-> +
-> +	for (i = 0; i < max_regs; i++) {
-> +		struct pmc_ipc_cmd tmp = {0};
-> +		u32 buf[4] = {0};
-
-If you just want to have them initialized, it's enough to use {}, no dummy 
-0 is necessary.
-
-> +
-> +		tmp.cmd = IPC_SOC_REGISTER_ACCESS;
-> +		tmp.sub_cmd = IPC_SOC_SUB_CMD_WRITE;
-> +		tmp.wbuf[0] = (u32)regs[i].index;
-> +		tmp.wbuf[1] = regs[i].val;
-> +
-> +		ret = intel_pmc_ipc(&tmp, buf);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int intel_config_serdes(struct net_device *ndev,
-> +			       void *intel_data,
-> +			       phy_interface_t interface)
-> +{
-> +	struct intel_priv_data *intel_priv = intel_data;
-> +	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	int ret = 0;
-> +
-> +	if (!intel_tsn_lane_is_available(ndev, intel_priv)) {
-> +		netdev_info(priv->dev,
-> +			    "No TSN lane available to set the registers.\n");
-> +		goto pmc_read_error;
-> +	}
-> +
-> +	if (intel_priv->pid_modphy == PID_MODPHY1) {
-> +		if (interface == PHY_INTERFACE_MODE_2500BASEX) {
-> +			ret = intel_set_reg_access(pid_modphy1_2p5g_regs,
-> +						   ARRAY_SIZE(pid_modphy1_2p5g_regs));
-> +		} else {
-> +			ret = intel_set_reg_access(pid_modphy1_1g_regs,
-> +						   ARRAY_SIZE(pid_modphy1_1g_regs));
-> +		}
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(of, goodix_berlin_i2c_of_match);
+> diff --git a/drivers/input/touchscreen/goodix_berlin_spi.c b/drivers/input/touchscreen/goodix_berlin_spi.c
+> index 0662e87b8692..f48f11a76b6d 100644
+> --- a/drivers/input/touchscreen/goodix_berlin_spi.c
+> +++ b/drivers/input/touchscreen/goodix_berlin_spi.c
+> @@ -10,6 +10,7 @@
+>   #include <linux/unaligned.h>
+>   #include <linux/kernel.h>
+>   #include <linux/module.h>
+> +#include <linux/of.h>
+>   #include <linux/regmap.h>
+>   #include <linux/spi/spi.h>
+>   #include <linux/input.h>
+> @@ -19,9 +20,13 @@
+>   #define GOODIX_BERLIN_SPI_TRANS_PREFIX_LEN	1
+>   #define GOODIX_BERLIN_REGISTER_WIDTH		4
+>   #define GOODIX_BERLIN_SPI_READ_DUMMY_LEN	3
+> +#define GOODIX_BERLIN_SPI_READ_DUMMY_LEN_A	4
+>   #define GOODIX_BERLIN_SPI_READ_PREFIX_LEN	(GOODIX_BERLIN_SPI_TRANS_PREFIX_LEN + \
+>   						 GOODIX_BERLIN_REGISTER_WIDTH + \
+>   						 GOODIX_BERLIN_SPI_READ_DUMMY_LEN)
+> +#define GOODIX_BERLIN_SPI_READ_PREFIX_LEN_A	(GOODIX_BERLIN_SPI_TRANS_PREFIX_LEN + \
+> +						 GOODIX_BERLIN_REGISTER_WIDTH + \
+> +						 GOODIX_BERLIN_SPI_READ_DUMMY_LEN_A)
+>   #define GOODIX_BERLIN_SPI_WRITE_PREFIX_LEN	(GOODIX_BERLIN_SPI_TRANS_PREFIX_LEN + \
+>   						 GOODIX_BERLIN_REGISTER_WIDTH)
+>   
+> @@ -33,32 +38,41 @@ static int goodix_berlin_spi_read(void *context, const void *reg_buf,
+>   				  size_t val_size)
+>   {
+>   	struct spi_device *spi = context;
+> +	const struct goodix_berlin_ic_data *ic_data = of_device_get_match_data(&spi->dev);
+>   	struct spi_transfer xfers;
+>   	struct spi_message spi_msg;
+>   	const u32 *reg = reg_buf; /* reg is stored as native u32 at start of buffer */
+> +	ssize_t read_prefix_len, read_dummy_len;
+>   	int error;
+>   
+> +	if (ic_data->ic_type == IC_TYPE_BERLIN_A) {
+> +		read_prefix_len = GOODIX_BERLIN_SPI_READ_PREFIX_LEN_A;
+> +		read_dummy_len = GOODIX_BERLIN_SPI_READ_DUMMY_LEN_A;
 > +	} else {
-> +		if (interface == PHY_INTERFACE_MODE_2500BASEX) {
-> +			ret = intel_set_reg_access(pid_modphy3_2p5g_regs,
-> +						   ARRAY_SIZE(pid_modphy3_2p5g_regs));
-> +		} else {
-> +			ret = intel_set_reg_access(pid_modphy3_1g_regs,
-> +						   ARRAY_SIZE(pid_modphy3_1g_regs));
-> +		}
+> +		read_prefix_len = GOODIX_BERLIN_SPI_READ_PREFIX_LEN;
+> +		read_dummy_len = GOODIX_BERLIN_SPI_READ_DUMMY_LEN;
 > +	}
+> +
+>   	if (reg_size != GOODIX_BERLIN_REGISTER_WIDTH)
+>   		return -EINVAL;
+>   
+>   	u8 *buf __free(kfree) =
+> -		kzalloc(GOODIX_BERLIN_SPI_READ_PREFIX_LEN + val_size,
+> -			GFP_KERNEL);
+> +		kzalloc(read_prefix_len + val_size, GFP_KERNEL);
+>   	if (!buf)
+>   		return -ENOMEM;
+>   
+>   	spi_message_init(&spi_msg);
+>   	memset(&xfers, 0, sizeof(xfers));
+>   
+> -	/* buffer format: 0xF1 + addr(4bytes) + dummy(3bytes) + data */
+> +	/* buffer format: 0xF1 + addr(4bytes) + dummy(3/4bytes) + data */
+>   	buf[0] = GOODIX_BERLIN_SPI_READ_FLAG;
+>   	put_unaligned_be32(*reg, buf + GOODIX_BERLIN_SPI_TRANS_PREFIX_LEN);
+>   	memset(buf + GOODIX_BERLIN_SPI_TRANS_PREFIX_LEN + GOODIX_BERLIN_REGISTER_WIDTH,
+> -	       0xff, GOODIX_BERLIN_SPI_READ_DUMMY_LEN);
+> +	       0xff, read_dummy_len);
+>   
+>   	xfers.tx_buf = buf;
+>   	xfers.rx_buf = buf;
+> -	xfers.len = GOODIX_BERLIN_SPI_READ_PREFIX_LEN + val_size;
+> +	xfers.len = read_prefix_len + val_size;
+>   	xfers.cs_change = 0;
+>   	spi_message_add_tail(&xfers, &spi_msg);
+>   
+> @@ -68,7 +82,7 @@ static int goodix_berlin_spi_read(void *context, const void *reg_buf,
+>   		return error;
+>   	}
+>   
+> -	memcpy(val_buf, buf + GOODIX_BERLIN_SPI_READ_PREFIX_LEN, val_size);
+> +	memcpy(val_buf, buf + read_prefix_len, val_size);
+>   	return error;
+>   }
+>   
+> @@ -123,6 +137,7 @@ static const struct input_id goodix_berlin_spi_input_id = {
+>   
+>   static int goodix_berlin_spi_probe(struct spi_device *spi)
+>   {
+> +	const struct goodix_berlin_ic_data *ic_data = of_device_get_match_data(&spi->dev);
+>   	struct regmap_config regmap_config;
+>   	struct regmap *regmap;
+>   	size_t max_size;
+> @@ -137,7 +152,10 @@ static int goodix_berlin_spi_probe(struct spi_device *spi)
+>   	max_size = spi_max_transfer_size(spi);
+>   
+>   	regmap_config = goodix_berlin_spi_regmap_conf;
+> -	regmap_config.max_raw_read = max_size - GOODIX_BERLIN_SPI_READ_PREFIX_LEN;
+> +	if (ic_data->ic_type == IC_TYPE_BERLIN_A)
+> +		regmap_config.max_raw_read = max_size - GOODIX_BERLIN_SPI_READ_PREFIX_LEN_A;
+> +	else
+> +		regmap_config.max_raw_read = max_size - GOODIX_BERLIN_SPI_READ_PREFIX_LEN;
+>   	regmap_config.max_raw_write = max_size - GOODIX_BERLIN_SPI_WRITE_PREFIX_LEN;
+>   
+>   	regmap = devm_regmap_init(&spi->dev, NULL, spi, &regmap_config);
+> @@ -153,13 +171,23 @@ static int goodix_berlin_spi_probe(struct spi_device *spi)
+>   }
+>   
+>   static const struct spi_device_id goodix_berlin_spi_ids[] = {
+> +	{ "gt9897" },
+>   	{ "gt9916" },
 
-This looks somewhat ugly. Perhaps it would be better if you make the call 
-on main level of the function and use local variables to hold the regs 
-array and its number of elements until then.
+You may also pass driver_data here aswell and use spi_get_device_match_data() instead.
 
-It would be even better if you could just store the pointer and # of 
-elements into some platform info structure so that it wouldn't need to be 
-calculated on the fly here (but I don't know this driver well enough to 
-know if that's viable/easy to do).
-
-> +	priv->plat->phy_interface = interface;
-> +
-> +	if (ret < 0)
-> +		goto pmc_read_error;
-> +
-> +pmc_read_error:
-> +	intel_serdes_powerdown(ndev, intel_priv);
-> +	intel_serdes_powerup(ndev, intel_priv);
-> +
-> +	return ret;
-> +}
-> +
->  static void common_default_data(struct plat_stmmacenet_data *plat)
->  {
->  	plat->clk_csr = 2;	/* clk_csr_i = 20-35MHz & MDC = clk_csr_i/16 */
-> @@ -650,7 +751,7 @@ static int ehl_sgmii_data(struct pci_dev *pdev,
->  	plat->speed_mode_2500 = intel_speed_mode_2500;
->  	plat->serdes_powerup = intel_serdes_powerup;
->  	plat->serdes_powerdown = intel_serdes_powerdown;
-> -
-> +	plat->config_serdes = intel_config_serdes;
->  	plat->clk_ptp_rate = 204800000;
->  
->  	return ehl_common_data(pdev, plat);
-> @@ -709,6 +810,7 @@ static int ehl_pse0_sgmii1g_data(struct pci_dev *pdev,
->  	plat->speed_mode_2500 = intel_speed_mode_2500;
->  	plat->serdes_powerup = intel_serdes_powerup;
->  	plat->serdes_powerdown = intel_serdes_powerdown;
-> +	plat->config_serdes = intel_config_serdes;
->  	return ehl_pse0_common_data(pdev, plat);
->  }
->  
-> @@ -750,6 +852,7 @@ static int ehl_pse1_sgmii1g_data(struct pci_dev *pdev,
->  	plat->speed_mode_2500 = intel_speed_mode_2500;
->  	plat->serdes_powerup = intel_serdes_powerup;
->  	plat->serdes_powerdown = intel_serdes_powerdown;
-> +	plat->config_serdes = intel_config_serdes;
->  	return ehl_pse1_common_data(pdev, plat);
->  }
->  
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-> index 0a37987478c1..79c35ba969ea 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-> @@ -50,4 +50,79 @@
->  #define PCH_PTP_CLK_FREQ_19_2MHZ	(GMAC_GPO0)
->  #define PCH_PTP_CLK_FREQ_200MHZ		(0)
->  
-> +#define	PID_MODPHY1 0xAA
-> +#define	PID_MODPHY3 0xA8
-> +
-> +#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
-> +struct pmc_serdes_regs {
-> +	u8 index;
-> +	u32 val;
+>   	{ },
+>   };
+>   MODULE_DEVICE_TABLE(spi, goodix_berlin_spi_ids);
+>   
+> +static const struct goodix_berlin_ic_data gt9897_data = {
+> +	.ic_type = IC_TYPE_BERLIN_A,
 > +};
 > +
-> +/* Modphy Register index */
-> +#define R_PCH_FIA_15_PCR_LOS1_REG_BASE			8
-> +#define R_PCH_FIA_15_PCR_LOS2_REG_BASE			9
-> +#define R_PCH_FIA_15_PCR_LOS3_REG_BASE			10
-> +#define R_PCH_FIA_15_PCR_LOS4_REG_BASE			11
-> +#define R_PCH_FIA_15_PCR_LOS5_REG_BASE			12
-> +#define B_PCH_FIA_PCR_L0O				GENMASK(3, 0)
-> +#define PID_MODPHY1_B_MODPHY_PCR_LCPLL_DWORD0		13
-> +#define PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD2		14
-> +#define PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD7		15
-> +#define PID_MODPHY1_N_MODPHY_PCR_LPPLL_DWORD10		16
-> +#define PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30	17
-> +#define PID_MODPHY3_B_MODPHY_PCR_LCPLL_DWORD0		18
-> +#define PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD2		19
-> +#define PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD7		20
-> +#define PID_MODPHY3_N_MODPHY_PCR_LPPLL_DWORD10		21
-> +#define PID_MODPHY3_N_MODPHY_PCR_CMN_ANA_DWORD30	22
-> +
-> +#define B_MODPHY_PCR_LCPLL_DWORD0_1G		0x46AAAA41
-> +#define N_MODPHY_PCR_LCPLL_DWORD2_1G		0x00000139
-> +#define N_MODPHY_PCR_LCPLL_DWORD7_1G		0x002A0003
-> +#define N_MODPHY_PCR_LPPLL_DWORD10_1G		0x00170008
-> +#define N_MODPHY_PCR_CMN_ANA_DWORD30_1G		0x0000D4AC
-> +#define B_MODPHY_PCR_LCPLL_DWORD0_2P5G		0x58555551
-> +#define N_MODPHY_PCR_LCPLL_DWORD2_2P5G		0x0000012D
-> +#define N_MODPHY_PCR_LCPLL_DWORD7_2P5G		0x001F0003
-> +#define N_MODPHY_PCR_LPPLL_DWORD10_2P5G		0x00170008
-> +#define N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G	0x8200ACAC
-> +
-> +static const struct pmc_serdes_regs pid_modphy3_1g_regs[] = {
-> +	{ PID_MODPHY3_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_1G },
-> +	{}
+> +static const struct goodix_berlin_ic_data gt9916_data = {
+> +	.ic_type = IC_TYPE_BERLIN_D,
 > +};
 > +
-> +static const struct pmc_serdes_regs pid_modphy3_2p5g_regs[] = {
-> +	{ PID_MODPHY3_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G },
-> +	{}
-> +};
-> +
-> +static const struct pmc_serdes_regs pid_modphy1_1g_regs[] = {
-> +	{ PID_MODPHY1_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_1G },
-> +	{}
-> +};
-> +
-> +static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
-> +	{ PID_MODPHY1_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G },
-> +	{}
-> +};
-
-Why are these arrays in a header and not in the C file that uses them???
-
-> +#endif /* CONFIG_INTEL_PMC_IPC */
-> +
->  #endif /* __DWMAC_INTEL_H__ */
-> diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-> index c9878a612e53..dcfa5f423d1c 100644
-> --- a/include/linux/stmmac.h
-> +++ b/include/linux/stmmac.h
-> @@ -236,6 +236,9 @@ struct plat_stmmacenet_data {
->  	int (*serdes_powerup)(struct net_device *ndev, void *priv);
->  	void (*serdes_powerdown)(struct net_device *ndev, void *priv);
->  	void (*speed_mode_2500)(struct net_device *ndev, void *priv);
-> +	int (*config_serdes)(struct net_device *ndev,
-> +			     void *priv,
-> +			     phy_interface_t interface);
->  	void (*ptp_clk_freq_config)(struct stmmac_priv *priv);
->  	int (*init)(struct platform_device *pdev, void *priv);
->  	void (*exit)(struct platform_device *pdev, void *priv);
-> 
-
--- 
- i.
+>   static const struct of_device_id goodix_berlin_spi_of_match[] = {
+> -	{ .compatible = "goodix,gt9916", },
+> +	{ .compatible = "goodix,gt9897", .data = &gt9897_data },
+> +	{ .compatible = "goodix,gt9916", .data = &gt9916_data },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(of, goodix_berlin_spi_of_match);
 
