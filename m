@@ -1,103 +1,234 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4EB16D4E6;
-	Tue,  4 Feb 2025 19:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0E7204F8B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 19:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738696657; cv=none; b=T1eik8OMGFYOgZt4k52gBj3Qk/aO1GzB8Kpp7GLAhc+i0NCceTMNLiSPlLldWR4FbG77+hw26T8N2TWtsziJx8anA/bq4BMKKMT9zEMZpZisKQUXqOm+p4T2vPSs3oYp8Be+snSXpQnyQ1wdNVDyk6Jpy0JenTtAMVVc8dUDxVs=
+	t=1738696674; cv=none; b=RSTr96UBTU+6W8730q3CQa3zwrfZXbhvTDvf1PNWAzBzH5cBT6x8ABhHXV1PvOdKV5ImZYvyv0zA8kBKMXArriVrz8PuRoDqDDtVmGjitLXyzJFmt+q6w06Z9KURBJshnoZKuaQ06wrAAI5pBiBybwSyFedH0sN4IsOW6kVGLx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738696657; c=relaxed/simple;
-	bh=+YuyIAfOCIL25rF8RErTwQhW66DgEpQZOPKE4cAxT0w=;
+	s=arc-20240116; t=1738696674; c=relaxed/simple;
+	bh=i18llDbp3q6y0/w+gTxZyxhvyOXPpj+iA3QfM/7JUT4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m18IXDUALFFfLftEuUHUeZtsz+1HtwTGTcXSKzohlsQlohwbbsBP7ZBdJf54JgeHdnwhbQ4CSgUC2ChJojt5CVJMltiGKASEVMTToDqFCZxnq91QQqNmPzIF3fPBQOkiEWYXuTKVBV8nlAo/CkRXBYNpuhhlgD8drUopzLAg7Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhwOSXoE; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=nyAixJXe9bezCC5enhJVJ7FmRZxv+QFuLkIdrGO7apmVXf16pPrgcqZlz7PoOMxmjtao9RhdFOjuJtfxceFetg7SQBbf3/AJT4tq+zbXI4CrtJ47OzFO0nozhvdod6Vx+vC8pKTTNhOMch6NAo1m9umAu/sxw6GaeIpk7MBGO68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XhvGioqw; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhwOSXoE"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3072f8dc069so57579241fa.3;
-        Tue, 04 Feb 2025 11:17:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XhvGioqw"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d04b70fe79so61585ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 11:17:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738696653; x=1739301453; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738696671; x=1739301471; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+YuyIAfOCIL25rF8RErTwQhW66DgEpQZOPKE4cAxT0w=;
-        b=dhwOSXoEwMf8KyRzNpzgq9zye9qtavFuGYGz4SCQYLWYRx/C5EodZmddHEfRDMhkpe
-         2qcz1YaANI2vMlTu1C+aiJxu5qJANmiAN8eolRPiVJ4e46zTcuOH7tb81H3IreHg3OcQ
-         Xxdb+x+fouCtHm1pKs3dx9XPE+CXNmdLV+3F1M5iSI4mrmfAp1JvZqXLGhQLL6PGCRRZ
-         YHNI5ciR8HUQ1PMrH1GK9oWgNZYn8oThy4cySZcaWM3PSoNigze2mcjrDJEmJnHHLL9G
-         zkk0y3RkpDF35eHxemb44f3YEgKH7xwyueIaztSt3e14ZVo1hFk7O4qSetSa/r4oVZdr
-         xq/A==
+        bh=i18llDbp3q6y0/w+gTxZyxhvyOXPpj+iA3QfM/7JUT4=;
+        b=XhvGioqw8wbDDdZiYjaZFR3Tc7r7sRfCJ7EEoWcmnSeLPrnjl2je5GBz9I90Kv+VMP
+         ur5gvU7Wyy6JvmZCY1gPYFaR8KyEaxcdbQy+hxYyxs1UcpXMQNfPMMCrBlho+rJ7WaIN
+         xn+PLhsNNKNbmv1sR7kgl/5iieqAvE4cRJNbGx+aQs9mhy4x5Lf573L9P2+Xf5Gzf4ko
+         agQnrcUEwOTxdEBIpS25Ke9fMp5byC7vqRNQGCtnMM8DBrRaEKlEIO9K7ChJ5ZquFr6l
+         BKQWYimGqX4d2elyP4qo0D091ESyd3Z45OMyW9FnCK2ciQo9y4e6wd4ruTI0k+it8FXK
+         19oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738696653; x=1739301453;
+        d=1e100.net; s=20230601; t=1738696671; x=1739301471;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+YuyIAfOCIL25rF8RErTwQhW66DgEpQZOPKE4cAxT0w=;
-        b=HyGBSdhQTOzXaA+6BHvl/z9QJUOpeny1Y0N1dCKKY8KOIkDOEHixGfDXbcHCVplMv3
-         invWrobXtaa0Jiw7nIB9n0e8MlwaC7pilQOoBO+5wx1zFpmTLrt6tJmPkcd6zLh2VdcC
-         WNork2ggv3aTU8XSGvutkK17bLndLn6Ze2L25kJWfaHjYcBdLvY1XaDzUjGU8DNrjzfg
-         LckWxfcZpKmmIc8JfzBeZEK9jlXO/wPg8kxX6TZ2A5mhbldsrShuY2ILK9S+z6I9MF4c
-         Ot3nW51wtbxZ97QqjNvx1Jp5cz/Ln1P3MdBwhoalrpOt0hkbKsmxod3RTxoCSDKqB62Z
-         DcGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUryqjG7VF4huLYPn3kHM4jLDIP5VnUjU51oFhQ/Cr+3T01HRCy1Zr0vEslha8AQpWxxShwvIRpY0znq2yEfAJ2@vger.kernel.org, AJvYcCVMrfoFboljzMyxVL/b4oc6qmxVN250P7CutoF9rim2z5hMmwF9Li/saIs1yOjVaUNXsCXTEKlsnP7RY3s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbdojbF5l072JhbpJi9OmLcQRXuINTgsRjhBfyLbiMFZ1pcap7
-	FwA+0apyf8/uPwJWzAQPUbfRSUpD7YflpgxBK6cbbacVmexqmxo0CzdSlMOZhphaZZ8BONq2iHc
-	4ZRnK8OmWgwWKU0hwGXjFuhvDWGQ=
-X-Gm-Gg: ASbGncuBw4fy6VQsQ1B3pgAT+QZlUXZVdWthDl2LjmRH8RTJ9peatq9YIBuM6rQvWDm
-	l9dNmslGJHWu4k57NiXda3b2v3juEV5cBP011s8YJNTV0IL3n9y1U3fIYBGq8cUqBIbo78KjnxG
-	uzbmFVu6VAT2Ey
-X-Google-Smtp-Source: AGHT+IGgZMFxdnVFdeC0qRI8h8kUiXMb+CtkwPpSfu8pu32enK99NQABDDlyItOPo8rgjg/mZpyZcMBZwkzY33WRmHk=
-X-Received: by 2002:a2e:b892:0:b0:2ff:cc65:68aa with SMTP id
- 38308e7fff4ca-307cf39e57dmr526841fa.31.1738696653269; Tue, 04 Feb 2025
- 11:17:33 -0800 (PST)
+        bh=i18llDbp3q6y0/w+gTxZyxhvyOXPpj+iA3QfM/7JUT4=;
+        b=sZQAlz1AA8m3orl2Cib4V90qXy14VgZHuS8viJ4XitfjEDh5eqpegEO81eD8AEOG+S
+         jB9Xc3YfKKxPONbU5YuyGKKB8S9XQP98T1EwWFEsY2+Qrm91yuZcHi906o8opl+XY4gQ
+         OscdSuU/0X8ch/X/GrS7q9qAd+O30KVYGKGvtqxHDKII8L7JL4moPYYjP0+1HNJ/9/HT
+         vpUvwR79ugyIxUzSk26x5IPVPzUYuTkDutks1vjJtoWC/b/uGu1fJLzDK1LmcKAVmHoa
+         xETRNMQUjfEui49mXYlMNa8SxEU445hjzelgZfnV4amYaaxQkYulGC/2Xsw3EwDJ0vFB
+         xVjg==
+X-Forwarded-Encrypted: i=1; AJvYcCUbYqqVCR/XRuzwOfqqtpFu5c9YQCXng34FhX7jQgk0kDECJurXdKZAEC03VLW/UIlSNyfy3zY95RfhHwU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyK0plBLWvcDL1t0DXUZp46MQEwq0s3AAZGsGJSodrKs8HHsSaE
+	zFhspsLcdXdtIGYX2PFOl16aKzaX4gf4E/BclZ7gSWvNg8GFjR8qfSdljs5hJPElfJdo/a5/HQ8
+	zgWsEuHAnXgRcozEgxDrerYsrJ7LDo+j40Ui0
+X-Gm-Gg: ASbGnctD/s7ChFZYGWKETU1gNIxZOddi1FVf7C/g1uxE8OCqU173/ZC5Zy4FyMIN3mt
+	T9eExOi85AfXqimcl6P3+NRF+q5b7ZV202uJqsOvGp4nhtE/4RtsUxR5BueIvX8EOBaPidNjGKp
+	LY/6ZrazSxgK9byVb7dxruFU8=
+X-Google-Smtp-Source: AGHT+IFolYWpFTnQsRdsrwOlOifUaBgvwudGG5wYq6BOxOFUog2J180QiONTDBpKLqE0BXd+LTekoBGthx3cwhLK2l0=
+X-Received: by 2002:a05:6e02:1b03:b0:3d0:a9b:bf4b with SMTP id
+ e9e14a558f8ab-3d03fbc124emr4771915ab.12.1738696671064; Tue, 04 Feb 2025
+ 11:17:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203-scanf-kunit-convert-v2-1-277a618d804e@gmail.com>
- <Z6HSFvvgxFVGDQeI@pathway.suse.cz> <CAJ-ks9mfmM-SzkEiJsKL56jSuyXzLrKd4XHgRnp63C9AYcDoAA@mail.gmail.com>
- <Z6IFPAuCz0_vDdB4@pathway.suse.cz>
-In-Reply-To: <Z6IFPAuCz0_vDdB4@pathway.suse.cz>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 4 Feb 2025 14:16:57 -0500
-X-Gm-Features: AWEUYZl59AjKFP9VutQZYuwBYdW29fYOvq_8TbKx0d06XVaLnBsEOaCAGTeeBBI
-Message-ID: <CAJ-ks9n6fFhmF+VruGNKjmoWh0hMHGS7xoEuceVMvZoJFb7avg@mail.gmail.com>
-Subject: Re: [PATCH v2] scanf: convert self-test to KUnit
-To: Petr Mladek <pmladek@suse.com>
-Cc: David Gow <davidgow@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20250201071455.718247-1-irogers@google.com> <Z6EStkn-YZ8zaO7u@ghost>
+ <CAP-5=fXRz_8CKNz4Fr-=0yhKbf_QE2ND+PPykSAO5p8wcUz7xA@mail.gmail.com>
+ <Z6EVwaOVYaKtaK1j@ghost> <CAP-5=fX1hCNWWmGJPKYxj93S=zM1-eRucqzb4WW5fB_sZBCRLg@mail.gmail.com>
+ <Z6Eh1QLuqTbUKLCc@ghost> <CAP-5=fXZr8L4Z=Lb28QDZF8cbv2eJJEHSb0H9zcqSOB9cn5-9g@mail.gmail.com>
+ <Z6FLDHz6V5L-HGR7@ghost> <CAP-5=fVk6N=FVXsJ9xRJZhYSh2sbmUkEPr5HqRd-pR7mbGts+w@mail.gmail.com>
+ <Z6Jk_UN9i69QGqUj@ghost>
+In-Reply-To: <Z6Jk_UN9i69QGqUj@ghost>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Feb 2025 11:17:39 -0800
+X-Gm-Features: AWEUYZlVFnxotEtPCBotMGFHsGHFGTZrWjMIjpLeZvUSs1sflhNc56tRZVilEN8
+Message-ID: <CAP-5=fVXAt3jbiTTBNwNVqWMmAc=9U_XatgC_o854kyUGjkg0Q@mail.gmail.com>
+Subject: Re: [PATCH v1 0/7] perf: Support multiple system call tables in the build
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>, 
+	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 4, 2025 at 7:17=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
-:
+On Tue, Feb 4, 2025 at 11:05=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
+om> wrote:
 >
-> On Tue 2025-02-04 05:27:23, Tamir Duberstein wrote:
-> > Oops, meant to address this in the last reply.
-> >
-> > On Tue, Feb 4, 2025 at 3:39=E2=80=AFAM Petr Mladek <pmladek@suse.com> w=
-rote:
+> On Mon, Feb 03, 2025 at 05:58:29PM -0800, Ian Rogers wrote:
+> > On Mon, Feb 3, 2025 at 3:02=E2=80=AFPM Charlie Jenkins <charlie@rivosin=
+c.com> wrote:
+> > > On Mon, Feb 03, 2025 at 12:54:59PM -0800, Ian Rogers wrote:
+> > [snip]
+> > > > I think it makes sense in the kernel, as the built binary doesn't h=
+ave
+> > > > cross-platform concerns. This is probably also the reason why the p=
+erf
+> > > > tool has an arch directory. Let me know what you think is the right
+> > > > direction for the perf tool syscall table code.
 > > >
-> > > Should this go via the printk tree, please?
-> > > Or is David going to take it via the kunit tree?
+> > > I am hesitant about moving all of the arch-specific syscall generatio=
+n
+> > > flags into a single file.
 > >
-> > Going via printk would be my preference.
+> > In these changes I had a single file to build up a mapping from ELF
+> > machine to syscall table in an array and I wanted to keep the logic to
+> > build the array alongside the logic to build up the components of the
+> > array - so the ifdefs were visually the same. As the scope is a single
+> > file and the variables are static, this can give useful C compiler
+> > "unused definition" warnings. You can trick the linker to give similar
+> > warnings at the scope of a file, so this isn't a deal breaker.
+> >
+> > > There is currently a really clean separation
+> > > between the architectures and it's possible to generate all of the
+> > > syscall tables for all of the architecutures based on the paths to th=
+e
+> > > syscall table.
+> >
+> > This doesn't happen currently as the build of the arch directory is to
+> > add in $(SRCARCH) only. So
+> > tools/perf/arch/arm64/entry/syscalls/Makefile.syscalls will only be
+> > included into the build if SRCARCH=3D=3Darm64. As I've said I'm against
+> > the idea of the arch directory as it nearly always causes cross
+> > platform problems - not an issue in a Linux kernel build. We recently
+> > eliminated dwarf-regs for this reason (and hopefully fixing up cross
+> > platform disassembly issues as a consequence):
+> > https://lore.kernel.org/all/20241108234606.429459-1-irogers@google.com/
+> > We could have the syscall table logic not under arch and generate
+> > multiple files, but we'd be adding extra logic to pull things apart to
+> > then pull things back together again, which feels like unnecessary
+> > complexity.
+> >
+> > It seems in your changes the Kbuild and Makefile.syscalls are running
+> > in the arch directory - this feels like a lot of peculiar and
+> > separated build logic for just iterating over a bunch of arch
+> > directory names and calling a shell function on them - albeit with
+> > some arch specific parameters. There's also an extra C helper
+> > executable in your code.
 >
-> I am fine with it. I assume that you are going to send v3 with
-> the updated Makefile. Well, let's wait a bit for more potential
-> feedback.
+> Yes, I can understand why you be opposed to that and I don't have a good
+> counterargument.
 >
-> Best Regards,
-> Petr
+> > I kind of like that I get a single header
+> > that is the same across all architectures and with no more build
+> > system requirements than to support ifdefs - in fact the ifdefs are
+> > just there to keep the code size down there is a #define to make them
+> > all have no effect. I hear your "clean separation" but I also think
+> > separation across files can make things harder to read, state is in >1
+> > place. I've tried to cleanly separate within the script.
+> >
+> > I do think there is some tech debt in both changes. My:
+> > ```
+> > #if defined(ALL_SYSCALLTBL) || defined(__riscv)
+> > #if __BITS_PER_LONG !=3D 64
+> > EOF
+> > build_tables "$tools_dir/scripts/syscall.tbl" "$outfile"
+> > common,32,riscv,memfd_secret EM_RISCV
+> > echo "#else" >> "$outfile"
+> > build_tables "$tools_dir/scripts/syscall.tbl" "$outfile"
+> > common,64,riscv,rlimit,memfd_secret EM_RISC
+> > V
+> > cat >> "$outfile" <<EOF
+> > #endif //__BITS_PER_LONG !=3D 64
+> > ```
+> > means the perf binary word size determines the syscall table support.
+> > This is because the e_machine in the ELF header isn't unique in these
+> > two cases and having both tables would have no effect. You've moved
+> > this into the env arch name handling, but I think having >1 way to
+> > encode a binary type is suboptimal. There are some ELF flag ABI bits
+> > that resolve disassembler things on csky, so perhaps a resolution is
+> > to pass ELF flags along with the machine type. I'm not clear in your
+> > change how "32_riscv" is generated to solve the same problem. Imo,
+> > it'd kind of be nice not to introduce notions like "64_arm64" as we
+> > seem to be always mapping/normalizing/... these different notions and
+> > they feel inherently brittle.
+>
+> Maybe it is brittle? It could be mapped to e_machine, but that just
+> might not be reasonable to work into the method from my patch.
+>
+> >
+> > > What causes the arch directory to be a pain for Bazel? I
+> > > guess I am mostly confused why it makes sense to change the kernel
+> > > Makefiles in order to accomidate a rewrite of the build system in Baz=
+el
+> > > that isn't planned to be used upstream.
+> >
+> > It's just software and so the issues are resolvable, ie I don't think
+> > bazel should be determining what happens upstream - it motivates me to
+> > some extent. For the bazel build I need to match the Makefile behavior
+> > with bits of script called genrule, the scope and quantity of these
+> > increase with the arch directory model, extra executables to have in
+> > the build etc. I also imagine cross platform stuff will add
+> > complexity, like mapping blaze's notions of machine type to those
+> > introduced in your change. It is all a lot of stuff and I think what's
+> > in these changes keeps things about as simple as they can be. It'd be
+> > nice to integrate the best features of both changes and I think some
+> > of the e_machine stuff here can be added onto your change to get the
+> > i386/x86-64 case to work. I'm not sold on the complexity of the build
+> > in your changes though, multiple files, Kbuild and Makefile.syscalls,
+> > the arch directory not optionally being built, helper executables.
+> > Ultimately it is the same shell logic in both changes, and your
+> > previous work laid out all the ground work for this (I'm very grateful
+> > for it :-) ).
+>
+> Thanks for elaborating on this! I do wish we had more of this
+> conversation on the original patch so we could have molded the original
+> patch closer to what this one is doing. I know you did mention you would
+> like to get rid of the arch directory as feedback on that patch but I
+> hadn't realized that this was the direction you were hoping to take
+> this. It does seem like the changes you have made in this patch will
+> lead to a something that is more robust and simpler to maintain, so we
+> can move forward with reviewing this patch and stop reviewing the one I
+> wrote.
 
-I'll send v3 today - I'm adding an extra patch that breaks some tests
-down into proper cases for better output.
+Thanks and sorry for work done that may not land - the maintainers may
+prefer the approach in your patch and my opinions matter little to
+them. If it is any consolation I wrote an entire Rust symbol demangler
+[1] that I don't expect to land :-) I also appreciate that you've been
+cleaning up the tools build infrastructure along with your changes,
+something there isn't enough of.
+
+Thanks,
+Ian
+
+[1] https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.com=
+/
