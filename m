@@ -1,87 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B479C25A635
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 05:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED06B25A624
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 05:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738646420; cv=none; b=RStvpJjYGv1d4U/5vkKTsnjD2F1yaIrwyDNLSbBLQjX7GMmrNoCnj/0T5C34Ke+xPJY9U5kavAYOooavkBMcdqFPswOy8JX8WBb20fgM4RVvLIzzmb1KYSFD1bSEi8zgUBLs2DtUQwjLNKDmymqEKLsysQShw5hEmrmZbtCf6j4=
+	t=1738646482; cv=none; b=WDb/VlbAJVxsyOrP1R85J6wTndHol9x3ZfOScS6Ow2BgUroTSvK9/g/2+6ot6tgTdWdHN5jA1ISbFzOys2cn3bccygr/3ofa+hMS+xagVF9u7BSrb7b5VuWZKzjwZW5q9TXoez2ODyfkyihuxfr1xhzgRsHqiessKFit3koFeHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738646420; c=relaxed/simple;
-	bh=Omwe6LnT3uBQt67RB6V+zKSmwy98tmKpwDO4Vm43r7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=szvziSDGVo1Afgr5WocWq+JBVNiuMPCvLgQjXoTNaDTAjX2/JVg/ZIZlwQIJ7/+X69iQYy/fEej1lH58bA1WpRebrzomJdJjRVjb9Qmr2G0aBMbfBkrYFM0+iYeEv8KDqXhi6yDvkqHfLqPBAeN4vmLoFHfZ9jAG6jd1MQofptE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LfwLTHWx; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738646482; c=relaxed/simple;
+	bh=f3pv/3r9Cg7VkFnFC8LwFtyxxt5z6DKW3Kzn97iL+FU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tCgjYGp1gHbxBTo/+vWyNI/SudugdfDnaZdFFYvHmCrrZ24OAxWXljfNfeSqSMXMeH1NbEuO7KMEqXwBYCimcaUCJDBLTJ+H1LE1YEAtum9mtIbSlbkT+go2BByAuq7J/Yfcm/xR4kfMesJRGx0KNh9nhf2Bw7OObVvsurAolGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=eQ+LlOS+; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LfwLTHWx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738646418; x=1770182418;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Omwe6LnT3uBQt67RB6V+zKSmwy98tmKpwDO4Vm43r7w=;
-  b=LfwLTHWxdXBBI9rkfX1Gum4tXUXgSP3kaj8I/CtwVaOVVUCoj/bk0TL8
-   aiwtrw+2o8sh3b7vige/BDaOzwcVbrP+Y5vEBrjuhIwyzGskJS3ID/LcS
-   WsjumLHgYVtfrVPZVJd0YK1kVuFHqQ1scvqqJmJQJMkvF/UaaIvcx7lbm
-   SZ7D9vUNt4p7oAFyKZ4Cy5TDgGJbUkQylY8uicYgmT6d3efws0abRNpw2
-   KgTVTqfkK2mNBFH4L+lOFI8RwIpd7VwPsmZG5E0/+BK6ad9skBALaFtQ1
-   PlMU/s0CZA/d2Jc9ujE08DGWTMZgNXOgoJZaaGB4/F400kNPOahwcZu2y
-   w==;
-X-CSE-ConnectionGUID: X6kqYo2QRHiV5BMW9z6QGQ==
-X-CSE-MsgGUID: U1Arzoi2T8iOMV6gIlEVZw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="50152223"
-X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
-   d="scan'208";a="50152223"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 21:20:17 -0800
-X-CSE-ConnectionGUID: UXSw7QxNSL+GMuka1kAmjg==
-X-CSE-MsgGUID: ZHR3/1V9Rsme0lCORDZVWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
-   d="scan'208";a="110457934"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 03 Feb 2025 21:20:16 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tfBM5-000s15-19;
-	Tue, 04 Feb 2025 05:20:13 +0000
-Date: Tue, 4 Feb 2025 13:19:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-	Vasant Hegde <vasant.hegde@amd.com>
-Subject: vmlinux.o: warning: objtool:
- amd_iommu_domain_alloc_paging_flags+0x2c3: unreachable instruction
-Message-ID: <202502041311.kWm3wyBl-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="eQ+LlOS+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=nDM6LskktHhvtPiqfzPE1aj2TKOmBHHpMjPChI15y6I=; b=eQ+LlOS+y2YNlY0vM4y2nOqGjF
+	vmMg7h2hW3RuBnA1KYwL2Mse5sbEMiHBqaUOMrwC1Fm8HA3OX7NUoZKzeM7ehB7xk/y1U9U4WJ3dS
+	bd3ANWE9MIlAIQLH2lLGZQjmyGLXom46rB5IJyk9C9AhUVIEw02ZR5XRxbp5xL0kWLDynlHCfgETo
+	2BUZk6Xm3JN9a3HwP/f48VBOfIx3kGjf1LAUuTQLR/Z5Cf+gZe8slkWDk94GTkwoVXv5G/Gs+jFUW
+	nrXEXSN6lOJU9l0HEO2vWpJlSVb/BsYv1ozTAfsWX17FBvYnoUQZsX0K3kqKJ3DyUqIFJDrilalsq
+	hkymfQyQ==;
+Received: from [58.29.143.236] (helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tfBMs-003J1R-Dj; Tue, 04 Feb 2025 06:21:08 +0100
+From: Changwoo Min <changwoo@igalia.com>
+To: tj@kernel.org,
+	void@manifault.com,
+	arighi@nvidia.com
+Cc: kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org,
+	Changwoo Min <changwoo@igalia.com>
+Subject: [PATCH v4 0/7] sched_ext: Implement core event counters
+Date: Tue,  4 Feb 2025 14:20:50 +0900
+Message-ID: <20250204052057.67776-1-changwoo@igalia.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   0de63bb7d91975e73338300a57c54b93d3cc151c
-commit: 082f1bcae8d1b5f76e92e369091176b8d61120ec iommu/amd: Fully decode all combinations of alloc_paging_flags
-date:   3 weeks ago
-config: x86_64-randconfig-075-20250203 (https://download.01.org/0day-ci/archive/20250204/202502041311.kWm3wyBl-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250204/202502041311.kWm3wyBl-lkp@intel.com/reproduce)
+The sched_ext core often has to override the BPF scheduler decisions,
+and some events could be interesting but not easily visible.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502041311.kWm3wyBl-lkp@intel.com/
+This patchset aims to address such a problem in the following manner:
+  - Introduce an infrastructure to collect such events in a scalable and
+    extensible way and to expose the collected events to the BPF scheduler
+    in a compatible way.
+  - Define seven events to be collected.
+  - Modify scx schedulers to demonstrate the usage of the new BPF APIs.
 
-All warnings (new ones prefixed by >>):
+ChangeLog: v3 -> v4
+  - Do not include the already applied patches (1-4) from the patchset.
+  - Add a missing scx_agg_event() for SCX_EV_ENQ_SKIP_EXITINGk.
+  - Move SCX_EV_BYPASS_DISPATCH loggig to select_task_rq_scx() and
+    do_enqueue_task().
+  - Move scx_bypass_timestamp inside the scx_ops_bypass function
+    (renamed to bypass_timestamp).
 
-   vmlinux.o: warning: objtool: ep_poll_callback+0x458: unreachable instruction
->> vmlinux.o: warning: objtool: amd_iommu_domain_alloc_paging_flags+0x2c3: unreachable instruction
+ChangeLog: v2 -> v3
+  - Rename scx_bpf_event_stats() to scx_bpf_events().
+  - Add a prefix SCX_EV_ to all event names.
+  - Change the implementation SCX_EV_SELECT_CPU_FALLBACK such that
+    record the selected cpu (p->scx.selected_cpu) in
+    select_task_rq_scx() and compare it in enqueue_task_scx() to
+    reliably count events.
+  - Change the implementation of SCX_EV_BYPASS_DISPATCH such that log
+    the event where the condition is initially detected.
+  - Modify scx_qmap to print the core event counter every second.
+  - Remove unnecessary white space in patch 6.
+
+ChangeLog: v1 -> v2
+  - Rename scx_event_stat and scx_bpf_event_stat() to scx_event_stats and
+    scx_bpf_event_stats().
+  - Rename event names following the convention of $COMPONENT_$EVENT.
+  - Rename event_stats to event_stats_cpu.
+  - Drop the enum scx_event_kind and related macros.
+  - Revise scx_add_event() to use this_cpu_add().
+  - Add __scx_add_event() to use __this_cpu_add().
+  - Move the event counter resetting code to the loading of a BPF scheduler.
+  - The bypass-related event is further categorized into three events:
+    BYPASS_ACTIVATE, BYPASS_DISPATCH, and BYPASS_DURATION.
+  - Revise SELECT_CPU_FALLBACK to capture the case of the chosen CPU is not
+    allowed.
+  - Move is_cpu_allowed() from core.c to sched.h to use in the
+    SELECT_CPU_FALLBACK code.
+
+Changwoo Min (7):
+  sched_ext: Add an event, SCX_EV_ENQ_SKIP_EXITING
+  sched_ext: Add an event, SCX_EV_BYPASS_ACTIVATE
+  sched_ext: Add an event, SCX_EV_BYPASS_DISPATCH
+  sched_ext: Add an event, SCX_EV_BYPASS_DURATION
+  sched_ext: Add scx_bpf_events() and scx_read_event() for BPF
+    schedulers
+  sched_ext: Print core event count in scx_central scheduler
+  sched_ext: Print core event count in scx_qmap scheduler
+
+ kernel/sched/ext.c                       | 51 ++++++++++++++++++++++--
+ tools/sched_ext/include/scx/common.bpf.h |  4 ++
+ tools/sched_ext/scx_central.bpf.c        | 21 ++++++++++
+ tools/sched_ext/scx_qmap.bpf.c           | 19 +++++++++
+ 4 files changed, 92 insertions(+), 3 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
