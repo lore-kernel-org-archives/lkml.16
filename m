@@ -1,108 +1,112 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5B421A43A;
-	Tue,  4 Feb 2025 21:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59005219A9D;
+	Tue,  4 Feb 2025 21:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738703310; cv=none; b=s1WnDih1jtHOPE9Ou9B2cwWN/wL0jCB9TbjEySETL/YP1zeA3sr3/wEMqtgDsW2bfokwf/6s2Ghv7uCyyvuOzRLuBQmgBEuq3+hxX4z0YMe694YS4ClTj6e2/wmrgL8wP3Ubdev4jTMQlHvC1+GUBGBAUhRjNGCv8AkIlvNPwMo=
+	t=1738703357; cv=none; b=qbK9h8dlfZEiGz+0NtSVbBcBdgsdt4IaomRkrDlb0Ycqa321gjbcSY1zw+0Fw144BdcNdo9RfF5WL1+tzGY6n/wem9cSt4thRxSKJ11qjc/5UmZvRenosu9uuPiYEGLprmPC5lLhK3EeFhjyoLDRs6kot2fOAk9SgVKPVSpPNes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738703310; c=relaxed/simple;
-	bh=gVu0/OU66wDhI5WrK8fkD90mnoCdFZJ9acV8nvKiCb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dj6Dr+BRVaUwZTA10YJ47eG50UPMTCrotXqNKC0BllefaNDUR3qM7P3nyZCGRbJs2XIqvB4A7b6ZtlWe/rA8kZgYGjU+RIsQnh3AWf+2pD4ZMMjHnLCek+HenlWSuHqlOVEkFFUlm5dekWbmhm4vOiudqpoxjoFCjQEZ42jk6ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Dv5z6qVW; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1738703357; c=relaxed/simple;
+	bh=WN310kV2jADJRcPMhCfFUsQ36Rf7aXB/v87njf9xJkg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UBsLJYzZXlHDZDoMq5jpr1K8IVTnzHN9bZ+wcn+hjZgc0Coa08KpW6PCRql+96fu00nuE886YQiZ7X4UcIvIblxPQHZmr05Bj/EPLy72KljRht2+fZw0yI3T3WoY/7XMkCMNFOKp+qIPgxG7E23Z7j8PVP5KUmtqnNKwNHQIhHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QUFwFsoe; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Dv5z6qVW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1738703304;
-	bh=gVu0/OU66wDhI5WrK8fkD90mnoCdFZJ9acV8nvKiCb4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dv5z6qVWmdkOOVUdpgXz2bBitwe7aZ6Dbdw+NLqejMNeubS3o0VPxrQ8Vz+x/wLD3
-	 zCW9adnlaVmp3ar2Z17uZfGjDiZT+03rsIRvutaKn7KjiMwQTAJS8dHgrDXsIyN8WM
-	 WtfKcyPvXDWxaLXLfpyK2MV/XNzqUIAcT2626hns=
-Date: Tue, 4 Feb 2025 22:08:23 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Christian Heusel <christian@heusel.eu>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Arnd Bergmann <arnd@arndb.de>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Fabian =?utf-8?Q?Gr=C3=BCnbichler?= <f.gruenbichler@proxmox.com>, 
-	Arnout Engelen <arnout@bzzt.net>, Mattia Rizzolo <mattia@mapreri.org>, 
-	kpcyrd <kpcyrd@archlinux.org>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] module: Introduce hash-based integrity checking
-Message-ID: <1686ea9d-ad36-4a2d-9427-70cd74e64300@t-8ch.de>
-References: <20250120-module-hashes-v2-0-ba1184e27b7f@weissschuh.net>
- <62c93d58-2e27-4304-a6ad-36aa932f18ac@heusel.eu>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QUFwFsoe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738703356; x=1770239356;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WN310kV2jADJRcPMhCfFUsQ36Rf7aXB/v87njf9xJkg=;
+  b=QUFwFsoeFSFn2wUJxVeeBlhrtGVol8pu2Mgb9Db/f1t5VQBVwRWCgsaF
+   ssb66eUYX7f61I484d5MWocSXYtpFPYrAKG4ci8Az5qY400lomGtgWH1u
+   kTx5/9ndRn4SSurbG7vdrfQTFMhyNtuemwRLegLOlhEMgWpVXFqQhwQMO
+   3+kzd7y3i9QhgudTv8NMEqOa4vgixtyjHrsw5Bk0zzQW11jcMCz4UXCZ5
+   RWKAmFctIAsEuVQkedMULhQsy4fYqhWBdjbrNvx9jvTo15p4QcSyjq+AY
+   jXVJLl94ivzvR9lPZYDcpQzIeThf6+uICaT/xqsrcRCRWebkaDodR5VI7
+   A==;
+X-CSE-ConnectionGUID: /2XXNbqXS7eTrT90IifWNA==
+X-CSE-MsgGUID: 3lW4QkiNTrCjpRM7sV7g7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43170427"
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="43170427"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 13:09:13 -0800
+X-CSE-ConnectionGUID: /SsNr1C3TguOMFe+DLAx+A==
+X-CSE-MsgGUID: mELU3NwzRwOj0NTyxPHEVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,259,1732608000"; 
+   d="scan'208";a="110480812"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 13:09:13 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 7202720B5713;
+	Tue,  4 Feb 2025 13:09:11 -0800 (PST)
+Message-ID: <f3b71bfb-4e04-48a2-b606-bac81cd3f50e@linux.intel.com>
+Date: Tue, 4 Feb 2025 16:09:09 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <62c93d58-2e27-4304-a6ad-36aa932f18ac@heusel.eu>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V10 4/4] perf/x86/intel: Support PEBS counters
+ snapshotting
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, ak@linux.intel.com, eranian@google.com,
+ dapeng1.mi@linux.intel.com
+References: <20250121152303.3128733-1-kan.liang@linux.intel.com>
+ <20250121152303.3128733-4-kan.liang@linux.intel.com>
+ <20250127155107.GI16742@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250127155107.GI16742@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-02-03 14:14:41+0100, Christian Heusel wrote:
-> Hey Thomas,
+Hi Peter,
+
+On 2025-01-27 10:51 a.m., Peter Zijlstra wrote:
+> On Tue, Jan 21, 2025 at 07:23:03AM -0800, kan.liang@linux.intel.com wrote:
 > 
-> On 25/01/20 06:44PM, Thomas Weißschuh wrote:
-> > Thomas Weißschuh (6):
-> >       kbuild: add stamp file for vmlinux BTF data
-> >       module: Make module loading policy usable without MODULE_SIG
-> >       module: Move integrity checks into dedicated function
-> >       module: Move lockdown check into generic module loader
-> >       lockdown: Make the relationship to MODULE_SIG a dependency
-> >       module: Introduce hash-based integrity checking
+>> @@ -471,6 +477,15 @@ struct pebs_xmm {
+>>  
+>>  #define IBS_CPUID_FEATURES		0x8000001b
+>>  
+>> +struct pebs_cntr_header {
+>> +	u32 cntr;
+>> +	u32 fixed;
+>> +	u32 metrics;
+>> +	u32 reserved;
+>> +};
+>> +
+>> +#define INTEL_CNTR_METRICS		0x3
 > 
-> thanks for working on this!
+> I've moved this up a little, so that all the adaptive pebs crud is
+> together.
 > 
-> I had a look at this patch series together with kpcyrd over the weekend
-> and we were able to verify that this indeed allows one to get a
-> reproducible kernel image with the toolchain on Arch Linux (if the patch
-> you mentioned in your cover letter is also applied), which is of course
-> great news! :)
-
-Great!
-FYI the BTF patch shouldn't be necessary anymore with pahole 1.29.
-
-> We also found a major issues with it, as adding it on top of the v6.13
-> kernel and setting the needed config options while removing modules
-> signatures made the kernel unable to load any module while also not
-> printing any error for the failure, therefore resulting in an early boot
-> failure on my machine.
+> Other than that, I've picked up these patches and will merge the lot
+> past -rc1.
 > 
-> Do you have any clue what could be going wrong here or what we could
-> investigate? I have pushed my build config into [this repository][0] and
-> also uploaded a prebuilt version (signed with my packager key)
-> [here][1] (you can therefore just install it via "sudo pacman -U
-> <link>").
 
-I would guess the issue is the usage of INSTALL_MOD_STRIP.
+We found a bug when testing with some non-precise events in freq mode.
+I've submitted a patch to fix it.
+https://lore.kernel.org/lkml/20250204210514.4089680-1-kan.liang@linux.intel.com/
 
-What are the contents of .tmp_module_hashes.c ?
-Do they match the hashes from the build directory and package?
-You can also enable CONFIG_MODULE_DEBUG and '#define DEBUG' in
-kernel/module/hashes.c
+Could you please fold it into the patch ("perf/x86/intel: Support PEBS
+counters snapshotting")?
 
-> Happy to test more stuff, feel free to CC me on any further revision /
-> thread on this!
+Sorry for any inconvenience.
 
-Will do!
-
-> Cheers,
-> Christian
-> 
-> [0]: https://gitlab.archlinux.org/gromit/linux-mainline-repro-test
-> [1]: https://pkgbuild.com/~gromit/linux-bisection-kernels/linux-mainline-6.13-1.2-x86_64.pkg.tar.zst
-
-
+Thanks,
+Kan
