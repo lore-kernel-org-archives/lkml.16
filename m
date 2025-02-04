@@ -1,165 +1,99 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75ECC20C02C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Feb 2025 13:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BD0207A3E;
+	Tue,  4 Feb 2025 13:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738676612; cv=none; b=o2KLXNcdxHUtUQe7xlsE61MQq9lXMJ0Z2MkEEHaWaURpLz8545xbGcy39xdmeIEq7y+DNxDHHNg0ZzE5R1Z5CWAWtHDBptNywAiAeA3McmZfM28TlfhFFHJN15MNrOXNKVNkWeqFpvT+94mCnzp+StMnT6YoZteDTMZ4M3qyM6M=
+	t=1738676677; cv=none; b=ar8qZyygToRhTR6gUCb3sqjyh6lS4HmtweGlYVSAgsuQjEIhuan5J5/nfP/pN8kWcl+BuCxqE4VceDuv1Idc7eI4XR3cdnD/c8BisInE4U1a057lKhinLmgEchcrZdj+lgRlcU5Mk8EyUHGE4/V1tThroz8Ri1qV3sckg0EcSWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738676612; c=relaxed/simple;
-	bh=SgIoKwcZO83D0H1DH1airYR6aVHH761lIgQkOi1H3rY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rItTux4MgLO360sJyJV6AbL6sYA6sfKwbj7sX3pDyfAaqExEfdVfsUFe04CchkRvKBCEcT/qvqqAV0pHsqon1JLZKO7YXTF7gEUU8Tbb/GjNkcMNv6TMF31+zToodl4YuhBPfyC3Aq2pQzke7CdYGvLkrgz1PZP9wSl/JGPEsAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FqxrU7MJ; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1738676677; c=relaxed/simple;
+	bh=JOPhvE57e7Yl0yCqgzNDBhGaDnxSGMQdZUcisBNJLZo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iZD1q2qQdliHpmuqpuTtRf3TpKShNzFSYammRsDFpshZ3BCEETdqRjlemDHnpZoOxMzbpgLxwf9KosEG5TM0ZqHkCxaBCSXORi4TU7/KBrS9KvmLxHTwe2Pa894tZKYMNzlPc2+in8T0h3/Wf4T751v2e5KlBPtEA4PkLfy7MAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EWdy6HYk; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FqxrU7MJ"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4361f371908so40314385e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 05:43:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWdy6HYk"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2165cb60719so101167675ad.0;
+        Tue, 04 Feb 2025 05:44:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738676609; x=1739281409; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MtQg1sWtwKSQAU12JMSyBjbXP2TUHrUrABd3N9c0DwU=;
-        b=FqxrU7MJDhpQ0kvRSPXVHzhAkzSh4YKvx056RbX0yovYuN5ZKVZJ7l4CV6UYtunMGQ
-         cQXpWlPhUPImNMGJYY2f49Au+y9+XlIqlp5AVooFJno51o+SaHCRrncNkb4c67+z8Uw8
-         8L8+50lP/5hdjf9bgmNmTFycnAxFU0DCG3BSI69wx0YmA6GsuXjrVu2aURPoKbsed98v
-         gphLCT1Yq5t7B0EoaVZxBnsYk7+Ug+KwoanCjIxVBcUq/8Pt1/dG7ACIfJ913I2Sp9LJ
-         gXNupzU6lo4JBlMlxoQ6EmfeZGY1jiLGxB7Qg9cgI2zehkLiXMGBLA+jUXpKVfPSJUbw
-         7wcw==
+        d=gmail.com; s=20230601; t=1738676675; x=1739281475; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=23I1dv2MsxhtsNHlLyu9LlFvff8gGRJb6rjKW5yM4Yg=;
+        b=EWdy6HYk9tdijdThZvRafRblUQWBlsPs5umlLHZW2LMjcimp4QFc92VNLvhwgeUkWm
+         FHmRFvkLsmfbNRmFEQm/D6mlxuG3vNSfwbYI3Lv5DmaWgpp7O8Yfodf/2HJyhzarT1zR
+         0fg5XstHbqslnqm+ry94dqu1TRCHdfVIcWW8PJAisJWJrkms75WZKqD0HERkd7z7Q31C
+         0cPHaOh8HE65jj6Yn6SIFWLUJSz8tz+dF0jynwBv9hdQPXepcDTIdvSTdSUs0hL5tIKM
+         W2Tz6v5n6mM+eKyT87g/qHlbIlfb3stoO8KvSs+XrDqRsfTRFM9BRoM2bYc+eIEx+li5
+         xe0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738676609; x=1739281409;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MtQg1sWtwKSQAU12JMSyBjbXP2TUHrUrABd3N9c0DwU=;
-        b=MXJGw2d4LH8WTNdx3DInPPO74GMumdV2lAn++rmhprxLxZoUK/Il9AYAxsmeAZlBFS
-         b82bVQwScElNYgNbJYP1Tdzzqh7hndwsDobiXjPwCDuoJ/13nxBQWBujo0pnFrlOad6G
-         70K4P273S0gvnbVrxjikhjHvYzCpv/E/qI6fOMsGCwYmDP7rKADtOhe6na+bJNBx7gPf
-         kyhz4d570g295oJZH7Rrdjjm6bUJpUslSUm9/56WyZ7ypKdlaheMmMCR2gu7MA2CQlDO
-         Tsz7N6EHW9cgD8s3VfkQXy4JbpHPQkSvOsTt3D1Id+vT//2FetexMGuygRlw+dLuuWM6
-         dyXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyF6SmODNobQqKLVotrL1MTWBleAI7o+aTtIRuoZre15FTVkDZNJHCLtuLfSYND6I7v7O9Qpgw2glKewk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZghnv4v0DjqkIFH1IKOST2YpZqpivXneMChXfF6nGotCVMaGx
-	MToUlTki2OqzacW3wzQTGDpSUkhkb42ovD4WEhZ5Y17kOFEn1k7BY7J8z40uz2UuNdnpPZfrYS7
-	WClMhGQ0YLXPE/w==
-X-Google-Smtp-Source: AGHT+IGAQNTQ/HRjFqlJxD13mjiLL9qmpzklJ62h8rjWfkdUvqJO8WMyMLc2bexZNoP8PXBeYp42ZC0jFX2qsZg=
-X-Received: from wmbfl22.prod.google.com ([2002:a05:600c:b96:b0:434:a2c3:d51b])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:470c:b0:434:fddf:5bfa with SMTP id 5b1f17b1804b1-438dc3bb395mr227045875e9.2.1738676608768;
- Tue, 04 Feb 2025 05:43:28 -0800 (PST)
-Date: Tue, 04 Feb 2025 13:43:25 +0000
+        d=1e100.net; s=20230601; t=1738676675; x=1739281475;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=23I1dv2MsxhtsNHlLyu9LlFvff8gGRJb6rjKW5yM4Yg=;
+        b=CdoibWSinDvhutelt1HZootSsRTtguyjfWkkzoW62sVajgW5w8YvJcFSzNFuttEAN8
+         Af576AOUMyBloSNVkbUBaUtAVEqLoCe180jbZnxaajiaR9aOWf5tLvourmF9EesjpQFb
+         9MgYG85m4aFgjj+IVtTH+1etbOtzDTV37IcfUW8NQ4Au/u+IPYfcWI4jzuoQxbjhiZ8k
+         x5ZvKISbsdi8Eq1Cpvk3DhX3m5hpf4aCJIFfIgwEENeMYAMMOpog27oCA4fkbypvWYt4
+         He+FXxtcQhGCuG64OykJDuXnhGzcP9PF7pj00GZoOC9JyL3WKxt15eQBgIAt2wGzEmOL
+         agLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVEXBWprRafhTbs6Xcqh8IX59Lh4ovldNfo6bDluqhcG3gQDfDYv7A1iKdegI6JGCMXpxjbCl+Ysybo@vger.kernel.org, AJvYcCVlXGobcQ3nA64ch+jz7GXEFbSvLAUXYpAPyTjSTwpCAW7ahmkSto1cF/fYIi/XaqGeuIojjWPuxkrTnz8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOE0eywHiywnIgJT9rc/DgeRWAEx395x4b24L69L9z/ZAbzn0i
+	J5q6sE6an+Tl92Py39NbWlRvbJUE4L29hOpvqi5Lv+Otc8tBAhdE
+X-Gm-Gg: ASbGncvv8K9MuN/CV+Zc8v8FTFomgA0M7JhD89Ke5oCT4PfrTgqLcZwxJQTVRAdJdui
+	vdyNNcV06WKofcbErpRF8dcuBk7MVSurda5oHO8vBDegFkHhkOvCVX8X0OYhhxUDPbzwvs50doP
+	IsMLoeJikJ1sFYyLaP5FALLxlh2ni+62HOxwNKespH4vG21dyMTBBv880O+CmskRhvOgBoPDRxx
+	6MEuqOwAnWdiW6YA8XfYsJIGSIOwt1FoAu7QKvEUB8bFOlN6/Ka84okGH1n6oVt2sKBoB789uND
+	UGyu0+OGGEn2P3MqecrDaZ3YTB53HRikyzDpTqlwq43UMA==
+X-Google-Smtp-Source: AGHT+IFBSWUg1WBW83zal2OBls6l2oHtdpa4iQb72f5RQr4pvIeounzaotmL9WxtSQ590KDb+731XA==
+X-Received: by 2002:a17:903:166d:b0:215:6489:cfb8 with SMTP id d9443c01a7336-21dd7c4c2aamr441284945ad.10.1738676673307;
+        Tue, 04 Feb 2025 05:44:33 -0800 (PST)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:40c0:1019:6a4a:7b6:abc:27dd:e5f])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f07651559sm12248165ad.56.2025.02.04.05.44.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 05:44:32 -0800 (PST)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: Thinh.Nguyen@synopsys.com
+Cc: skhan@linuxfoundation.org,
+	gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH] usb: dwc3: Fix kernel-doc warning for sg member in
+Date: Tue,  4 Feb 2025 19:14:23 +0530
+Message-Id: <20250204134423.28051-1-purvayeshi550@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAH0ZomcC/3WMQQ7CIBBFr9LMWgxQadSV9zBdIAx0Ei3NYIjac
- Hexezc/eT95b4WMTJjh3K3AWChTmhvoXQdusnNEQb4xaKmNVL0ULs2+WBaBET8ogkZrbr08HqS BJi2MgV5b8Do2nig/E7+3flG/92+qKKGEPSlvhqGNNJeYUrzj3qUHjLXWL3AArietAAAA
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3388; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=SgIoKwcZO83D0H1DH1airYR6aVHH761lIgQkOi1H3rY=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnohl+xh0SniBplYn2XOoZ+MDC9xdsph612fysW
- 01tMPwTQY2JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ6IZfgAKCRAEWL7uWMY5
- RirlD/wMbv1NW7IMb2YtaDqpbFSIK6JubKo5HI7cc8ZynyIBXXxZC6GA2YQzB0lpKoKqYYkuBnS
- oGz3JKDWf+Toti5JFD1F5InKYqB9+ibQbIhfdnAwsH0Co/KrmeIih2A4hzRCHGSLG3EvSWjIlBY
- d3AaIu4/Ea/p786fnUbrilEpAEU+axZnWyM0c0p6PejcKpcQBJ9/vd4z8ExBEn6leNVLMgMfb39
- v6VSUmsfoWyXGfsdhHLET84A+fRk/iltvtSS6xcJpUMfPGd2EwuKP4vTM9N5fXgrpe5caGAqhFq
- WwM2YM4/BkQFKvEsauEd6b9ozAyqLb6w+5sUZoqAuMO1HVogsldt9zFrDI+yAVFJ6TCBpN5XVuh
- W4t32aw8V6BBTs4H/9NBGNMaoaRReUUwSdqxTc0IoeNz2VDysvLOIGd3pCfJxSblLbd2DsLsyEr
- a7wA7zJHVsDHhladEJU4O8X+uyZOv+ntK2ZD8AO6Z+hlhGJr3PZvifWRj30TlaYSUSZ3zT9I1JR
- B6kTQwYZiBu/sFvaLJs08tcSy0b/WMTJZd2WoI7znRx2lwB/qIrWgnZTMxx7edTkE4Pww9t6UD8
- 3MBEzFyjjBAXshRuqIXzStheAt2/YFH6iViROlSitc2n77A1SQqjUxdhLME1/XcARq2sarZNBQP QwIOJkvcDqIhWqQ==
-X-Mailer: b4 0.13.0
-Message-ID: <20250204-condvar-freeze-v2-1-804483096260@google.com>
-Subject: [PATCH v2] rust: sync: add wait_interruptible_freezable
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
-	Waiman Long <longman@redhat.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Binder allows you to freeze a process where some of its threads are
-blocked on the Binder driver. To make this work, we need to pass
-TASK_FREEZABLE when going to sleep in the appropriate places. Thus, add
-a new method wait_interruptible_freezable for the condition variable so
-that sleeps where this is supported can be marked as such.
+Added description for the 'sg' member in struct dwc3_request to 
+resolve the kerneldoc warning when running 'make htmldocs'.
 
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 ---
-Changes in v2:
-- Document that you must not hold locks when you call the method.
-- Link to v1: https://lore.kernel.org/r/20250130-condvar-freeze-v1-1-a91d5661d505@google.com
----
- rust/kernel/sync/condvar.rs | 23 ++++++++++++++++++++++-
- rust/kernel/task.rs         |  2 ++
- 2 files changed, 24 insertions(+), 1 deletion(-)
+ drivers/usb/dwc3/core.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/rust/kernel/sync/condvar.rs b/rust/kernel/sync/condvar.rs
-index 7df565038d7d..1859e011e322 100644
---- a/rust/kernel/sync/condvar.rs
-+++ b/rust/kernel/sync/condvar.rs
-@@ -11,7 +11,9 @@
-     init::PinInit,
-     pin_init,
-     str::CStr,
--    task::{MAX_SCHEDULE_TIMEOUT, TASK_INTERRUPTIBLE, TASK_NORMAL, TASK_UNINTERRUPTIBLE},
-+    task::{
-+        MAX_SCHEDULE_TIMEOUT, TASK_FREEZABLE, TASK_INTERRUPTIBLE, TASK_NORMAL, TASK_UNINTERRUPTIBLE,
-+    },
-     time::Jiffies,
-     types::Opaque,
- };
-@@ -159,6 +161,25 @@ pub fn wait_interruptible<T: ?Sized, B: Backend>(&self, guard: &mut Guard<'_, T,
-         crate::current!().signal_pending()
-     }
- 
-+    /// Releases the lock and waits for a notification in interruptible and freezable mode.
-+    ///
-+    /// The process is allowed to be frozen during this sleep. You must not hold any locks while
-+    /// this operation is ongoing, and there is a lockdep assertion for this. Freezing a task that
-+    /// holds a lock can trivially deadlock vs another task that needs that lock to complete before
-+    /// it too can hit freezable.
-+    #[must_use = "wait returns if a signal is pending, so the caller must check the return value"]
-+    pub fn wait_interruptible_freezable<T: ?Sized, B: Backend>(
-+        &self,
-+        guard: &mut Guard<'_, T, B>,
-+    ) -> bool {
-+        self.wait_internal(
-+            TASK_INTERRUPTIBLE | TASK_FREEZABLE,
-+            guard,
-+            MAX_SCHEDULE_TIMEOUT,
-+        );
-+        crate::current!().signal_pending()
-+    }
-+
-     /// Releases the lock and waits for a notification in interruptible mode.
-     ///
-     /// Atomically releases the given lock (whose ownership is proven by the guard) and puts the
-diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-index 07bc22a7645c..ea43a3b8d9c5 100644
---- a/rust/kernel/task.rs
-+++ b/rust/kernel/task.rs
-@@ -23,6 +23,8 @@
- pub const TASK_INTERRUPTIBLE: c_int = bindings::TASK_INTERRUPTIBLE as c_int;
- /// Bitmask for tasks that are sleeping in an uninterruptible state.
- pub const TASK_UNINTERRUPTIBLE: c_int = bindings::TASK_UNINTERRUPTIBLE as c_int;
-+/// Bitmask for tasks that are sleeping in a freezable state.
-+pub const TASK_FREEZABLE: c_int = bindings::TASK_FREEZABLE as c_int;
- /// Convenience constant for waking up tasks regardless of whether they are in interruptible or
- /// uninterruptible sleep.
- pub const TASK_NORMAL: c_uint = bindings::TASK_NORMAL as c_uint;
-
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250130-condvar-freeze-f2ea5b308405
-
-Best regards,
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index f11570c8ffd0..5e4daec322b7 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -942,6 +942,7 @@ struct dwc3_hwparams {
+  * @request: struct usb_request to be transferred
+  * @list: a list_head used for request queueing
+  * @dep: struct dwc3_ep owning this request
++ * @sg: pointer to the scatter-gather list
+  * @start_sg: pointer to the sg which should be queued next
+  * @num_pending_sgs: counter to pending sgs
+  * @remaining: amount of data remaining
 -- 
-Alice Ryhl <aliceryhl@google.com>
+2.34.1
 
