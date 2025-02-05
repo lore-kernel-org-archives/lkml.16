@@ -1,302 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1D621765E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 07:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C9C2288FA
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 07:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738742328; cv=none; b=HcUrNPlWyEgN5T8WBrkWlQwh0Gl5UOTGPtoP7zc85WfVhaYAcIzhbvYFgmua7Eh3mn3bRE46WgA+5arjls1PM6gwupO/0ShRbidszy8084AfZwStHqMifYF2D3/y25JqtvdGE0E0RBfVjGGDg80Te0CaZRxuyIA8e9++nccy2B4=
+	t=1738742331; cv=none; b=acSVBcMWbj8LSHoEw5CXjrpBsBm4+7ycJFi7qV4xkm53cCcfx8X2FqZCiZgP4n8CubASvT6Oo/Gj9jyM6+zzVnwkxe3uDY3WJlB4tPA9/9mtacpy60uUfoNJbs0DUx9qkmW/HVyhzwv1pgW6FWVC2PnPLRW3uhbXzJMaheH5O9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738742328; c=relaxed/simple;
-	bh=ZopVieWijvzU+oBhZmofMrmf5ru4Ukq9wJt2t291gJA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ju62K5cu9TWpurRBLL3Kd5g1lBsihaY318bnTKQTdRQkZPGcfeB7w9ndnmyk07rSFHIyHUQBZzBtr9zFxjN26ClDXcBL4zR7acNXs/fECE5qRPnm9f7NCIEmmXkeSsnPYZ46wx9dBXXeg9LujawfQLb03cAkItn6bC05ybpiuTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uEbwFEGs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738742331; c=relaxed/simple;
+	bh=za10ppFd3LMvTI5u30Aw/yO25iB9zNqVPTJoLSVJ4jc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g2m2RHlDkj66Vk6rPPCuM3d0pZplJuMkfFOiCuuA1KzsXr0RoyVaWbYL9OyUFZTxtERJm9yCFKpYiUZID+lB0DVa9QlovRAiFMCZV4u3ocarMkLWwsaCinC/dI0UwHD9cVYQBN6FJmkG3SLijPOocc7TorYodyF9yN56w0MIpeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FtE5zw13; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uEbwFEGs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3852AC4CED1;
-	Wed,  5 Feb 2025 07:58:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738742328;
-	bh=ZopVieWijvzU+oBhZmofMrmf5ru4Ukq9wJt2t291gJA=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=uEbwFEGsnvSLt6o1BOI/cwp2ZC5tEc/H2yJyATLIvXq/nQQzCxEkLlmnZlU1HHM+g
-	 qEY05IxJSikItCnu2u/uV+oPhN8Y/CofpaqCjmdBdVLLyZSMDP37d8ohCLDCkSn8dw
-	 Y9tmZMnRVHEZlcA+/szHIV7fIb5PHK3WjzJbWgoSoDf8/WT8daUD08Cdpqi0Y5EY/K
-	 pbxGkpMxULQnif2ohYwotYASO0B9d0Feo635FYz5gSAG1HLkMamsoBr8Ri2eUE9VW1
-	 vb36eFND0/eOteJ3Gcz1sVyImwFJiCs4Bk8pZcm5RnWOGZ4Tog5U/LV7EzStlvBDZv
-	 K76x8B+OXuIxA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22023C02192;
-	Wed,  5 Feb 2025 07:58:48 +0000 (UTC)
-From: Chuan Liu via B4 Relay <devnull+chuan.liu.amlogic.com@kernel.org>
-Date: Wed, 05 Feb 2025 15:58:43 +0800
-Subject: [PATCH v2] soc: amlogic: clk-measure: Optimize the memory size of
- clk-measure
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FtE5zw13"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738742330; x=1770278330;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=za10ppFd3LMvTI5u30Aw/yO25iB9zNqVPTJoLSVJ4jc=;
+  b=FtE5zw13u6QCEpc+Tbx5vHqm3mOX6xqWZ5Zkfigy/h0GPAUEDAACCbbj
+   flasLaCeAffWNEDV0oxgKXG6ZiG9b8uX6+FkEJyCG8nfwyDTGy70Tb1+a
+   iNjpzYJUKy4p7ouphRlZD8BRasUL4RripCL+o7j7ZlxLk/2sBYSPAdSpr
+   bdH8lWWmAZE21VD+OgrpmfISK85DsMtY1SvxcD6oRq1iHIz9UGcLTrXiF
+   qhcRDWp5JfbwPnGZEnFKrZXSpV8xVoWREmJOcJnG8/Be60b8BOfLP07Pf
+   dm5Izbshig2QDsaq7Osw33lWD0bfsglb94NWtVfCCzXZxwB3ADWYFTAyr
+   Q==;
+X-CSE-ConnectionGUID: Xc3m33qKSrC9SslyY1geRA==
+X-CSE-MsgGUID: kztjIaNERUmDYjN2jM05oQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="42132410"
+X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
+   d="scan'208";a="42132410"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 23:58:49 -0800
+X-CSE-ConnectionGUID: P2fXbVH6SImWEgxX+dMuIQ==
+X-CSE-MsgGUID: nD9HonyLTpCorB9blfQ5LA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="110679021"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 23:58:47 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tfaJ3-00000008Q1e-0qFK;
+	Wed, 05 Feb 2025 09:58:45 +0200
+Date: Wed, 5 Feb 2025 09:58:44 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] MAINTAINERS: Add pin control and GPIO to the
+ Intel MID record
+Message-ID: <Z6MaNI2SiWLKyE2k@smile.fi.intel.com>
+References: <20250204170100.48263-1-andriy.shevchenko@linux.intel.com>
+ <Z6JQTdXEDWPaupZp@smile.fi.intel.com>
+ <20250205054006.GP3713119@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250205-optimize_memory_size_of_clk_measure-v2-1-4f546053495d@amlogic.com>
-X-B4-Tracking: v=1; b=H4sIADIao2cC/5WNWw6CMBREt0LutzVteYlf7sMQ0tRbuJFS0iJRS
- fduYQf+zZlk5mwQ0BMGuGYbeFwpkJsSyFMGelBTj4weiUFyWXIhc+bmhSx9sbNonf90Yc/OdHp
- 8pkqFl0dmGl1wvIiybgpIT7NHQ+/Dcm8TDxSWtD2kq9jb//5XwQTjlVKV4sKYvL4pO7qe9Fk7C
- 22M8QfWd3ks2AAAAA==
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Chuan Liu <chuan.liu@amlogic.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738742326; l=7454;
- i=chuan.liu@amlogic.com; s=20240902; h=from:subject:message-id;
- bh=CmPH3b1j74K558ccUEKEAgqGmyZRPF8SYGNr1A0i6CM=;
- b=JJUxo3NfEYFOoJCIwiriJ83d+KNiGzq1jcQ7AAQRhodrDHrguh/T49K5lXqMIA6/MlHve3lFP
- s4xSfhbuf4ZBFeBNFKMh3Jf1wUXoMOCsh0Qa2hN9H1/mhH7nO53BjKH
-X-Developer-Key: i=chuan.liu@amlogic.com; a=ed25519;
- pk=fnKDB+81SoWGKW2GJNFkKy/ULvsDmJZRGBE7pR5Xcpo=
-X-Endpoint-Received: by B4 Relay for chuan.liu@amlogic.com/20240902 with
- auth_id=203
-X-Original-From: Chuan Liu <chuan.liu@amlogic.com>
-Reply-To: chuan.liu@amlogic.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205054006.GP3713119@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Chuan Liu <chuan.liu@amlogic.com>
+On Wed, Feb 05, 2025 at 07:40:06AM +0200, Mika Westerberg wrote:
+> On Tue, Feb 04, 2025 at 07:37:17PM +0200, Andy Shevchenko wrote:
+> > On Tue, Feb 04, 2025 at 07:01:00PM +0200, Andy Shevchenko wrote:
+> > > Intel MID record is not listed all related files. Add to there
+> > > pin control and GPIO drivers along with HSU (High Speed UART)
+> > > and HSU DMA.
+> > 
+> > Mika, JFYI, it's supposed to go via Intel pin control tree.
+> 
+> Got it :)
+> 
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Drop "CLK_MSR_MAX" and replace it with adding a member "msr_count" in
-the structure to specify the count of msr_id.
+Pushed to my review and testing queue, thanks!
 
-Mark the table of msr_id as const.
-
-Signed-off-by: Chuan Liu <chuan.liu@amlogic.com>
----
-The number of msr_ids for each chip is inconsistent. Defining a
-fixed-size array for each chip to store msr_ids would waste memory.
----
-Changes in v2:
-- Discard the global variable and restore the "priv" member in the
-"struct meson_msr_id".
-- Mark msr_id_table as const.
-- Link to v1: https://lore.kernel.org/r/20250123-optimize_memory_size_of_clk_measure-v1-1-06aa6a01ff37@amlogic.com
----
- drivers/soc/amlogic/meson-clk-measure.c | 86 ++++++++++++++++++++++++---------
- 1 file changed, 62 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-index a6453ffeb753..39638d6a593c 100644
---- a/drivers/soc/amlogic/meson-clk-measure.c
-+++ b/drivers/soc/amlogic/meson-clk-measure.c
-@@ -33,23 +33,26 @@ static DEFINE_MUTEX(measure_lock);
- #define DIV_STEP		32
- #define DIV_MAX			640
- 
--#define CLK_MSR_MAX		128
--
- struct meson_msr_id {
- 	struct meson_msr *priv;
- 	unsigned int id;
- 	const char *name;
- };
- 
-+struct meson_msr_data {
-+	struct meson_msr_id *msr_table;
-+	unsigned int msr_count;
-+};
-+
- struct meson_msr {
- 	struct regmap *regmap;
--	struct meson_msr_id msr_table[CLK_MSR_MAX];
-+	struct meson_msr_data data;
- };
- 
- #define CLK_MSR_ID(__id, __name) \
- 	[__id] = {.id = __id, .name = __name,}
- 
--static struct meson_msr_id clk_msr_m8[CLK_MSR_MAX] = {
-+static const struct meson_msr_id clk_msr_m8[] = {
- 	CLK_MSR_ID(0, "ring_osc_out_ee0"),
- 	CLK_MSR_ID(1, "ring_osc_out_ee1"),
- 	CLK_MSR_ID(2, "ring_osc_out_ee2"),
-@@ -98,7 +101,7 @@ static struct meson_msr_id clk_msr_m8[CLK_MSR_MAX] = {
- 	CLK_MSR_ID(63, "mipi_csi_cfg"),
- };
- 
--static struct meson_msr_id clk_msr_gx[CLK_MSR_MAX] = {
-+static const struct meson_msr_id clk_msr_gx[] = {
- 	CLK_MSR_ID(0, "ring_osc_out_ee_0"),
- 	CLK_MSR_ID(1, "ring_osc_out_ee_1"),
- 	CLK_MSR_ID(2, "ring_osc_out_ee_2"),
-@@ -168,7 +171,7 @@ static struct meson_msr_id clk_msr_gx[CLK_MSR_MAX] = {
- 	CLK_MSR_ID(82, "ge2d"),
- };
- 
--static struct meson_msr_id clk_msr_axg[CLK_MSR_MAX] = {
-+static const struct meson_msr_id clk_msr_axg[] = {
- 	CLK_MSR_ID(0, "ring_osc_out_ee_0"),
- 	CLK_MSR_ID(1, "ring_osc_out_ee_1"),
- 	CLK_MSR_ID(2, "ring_osc_out_ee_2"),
-@@ -242,7 +245,7 @@ static struct meson_msr_id clk_msr_axg[CLK_MSR_MAX] = {
- 	CLK_MSR_ID(109, "audio_locker_in"),
- };
- 
--static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
-+static const struct meson_msr_id clk_msr_g12a[] = {
- 	CLK_MSR_ID(0, "ring_osc_out_ee_0"),
- 	CLK_MSR_ID(1, "ring_osc_out_ee_1"),
- 	CLK_MSR_ID(2, "ring_osc_out_ee_2"),
-@@ -358,7 +361,7 @@ static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
- 	CLK_MSR_ID(122, "audio_pdm_dclk"),
- };
- 
--static struct meson_msr_id clk_msr_sm1[CLK_MSR_MAX] = {
-+static const struct meson_msr_id clk_msr_sm1[] = {
- 	CLK_MSR_ID(0, "ring_osc_out_ee_0"),
- 	CLK_MSR_ID(1, "ring_osc_out_ee_1"),
- 	CLK_MSR_ID(2, "ring_osc_out_ee_2"),
-@@ -489,7 +492,7 @@ static struct meson_msr_id clk_msr_sm1[CLK_MSR_MAX] = {
- };
- 
- static int meson_measure_id(struct meson_msr_id *clk_msr_id,
--			       unsigned int duration)
-+			    unsigned int duration)
- {
- 	struct meson_msr *priv = clk_msr_id->priv;
- 	unsigned int val;
-@@ -573,13 +576,14 @@ DEFINE_SHOW_ATTRIBUTE(clk_msr);
- static int clk_msr_summary_show(struct seq_file *s, void *data)
- {
- 	struct meson_msr_id *msr_table = s->private;
-+	unsigned int msr_count = msr_table->priv->data.msr_count;
- 	unsigned int precision = 0;
- 	int val, i;
- 
- 	seq_puts(s, "  clock                     rate    precision\n");
- 	seq_puts(s, "---------------------------------------------\n");
- 
--	for (i = 0 ; i < CLK_MSR_MAX ; ++i) {
-+	for (i = 0 ; i < msr_count ; ++i) {
- 		if (!msr_table[i].name)
- 			continue;
- 
-@@ -604,7 +608,7 @@ static const struct regmap_config meson_clk_msr_regmap_config = {
- 
- static int meson_msr_probe(struct platform_device *pdev)
- {
--	const struct meson_msr_id *match_data;
-+	const struct meson_msr_data *match_data;
- 	struct meson_msr *priv;
- 	struct dentry *root, *clks;
- 	void __iomem *base;
-@@ -621,7 +625,16 @@ static int meson_msr_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	memcpy(priv->msr_table, match_data, sizeof(priv->msr_table));
-+	priv->data.msr_table = devm_kcalloc(&pdev->dev,
-+					    match_data->msr_count,
-+					    sizeof(struct meson_msr_id),
-+					    GFP_KERNEL);
-+	if (!priv->data.msr_table)
-+		return -ENOMEM;
-+
-+	memcpy(priv->data.msr_table, match_data->msr_table,
-+	       match_data->msr_count * sizeof(struct meson_msr_id));
-+	priv->data.msr_count = match_data->msr_count;
- 
- 	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
-@@ -636,45 +649,70 @@ static int meson_msr_probe(struct platform_device *pdev)
- 	clks = debugfs_create_dir("clks", root);
- 
- 	debugfs_create_file("measure_summary", 0444, root,
--			    priv->msr_table, &clk_msr_summary_fops);
-+			    priv->data.msr_table, &clk_msr_summary_fops);
- 
--	for (i = 0 ; i < CLK_MSR_MAX ; ++i) {
--		if (!priv->msr_table[i].name)
-+	for (i = 0 ; i < priv->data.msr_count ; ++i) {
-+		if (!priv->data.msr_table[i].name)
- 			continue;
- 
--		priv->msr_table[i].priv = priv;
-+		priv->data.msr_table[i].priv = priv;
- 
--		debugfs_create_file(priv->msr_table[i].name, 0444, clks,
--				    &priv->msr_table[i], &clk_msr_fops);
-+		debugfs_create_file(priv->data.msr_table[i].name, 0444, clks,
-+				    &priv->data.msr_table[i], &clk_msr_fops);
- 	}
- 
- 	return 0;
- }
- 
-+static const struct meson_msr_data clk_msr_gx_data = {
-+	.msr_table = (void *)clk_msr_gx,
-+	.msr_count = ARRAY_SIZE(clk_msr_gx),
-+};
-+
-+static const struct meson_msr_data clk_msr_m8_data = {
-+	.msr_table = (void *)clk_msr_m8,
-+	.msr_count = ARRAY_SIZE(clk_msr_m8),
-+};
-+
-+static const struct meson_msr_data clk_msr_axg_data = {
-+	.msr_table = (void *)clk_msr_axg,
-+	.msr_count = ARRAY_SIZE(clk_msr_axg),
-+};
-+
-+static const struct meson_msr_data clk_msr_g12a_data = {
-+	.msr_table = (void *)clk_msr_g12a,
-+	.msr_count = ARRAY_SIZE(clk_msr_g12a),
-+};
-+
-+static const struct meson_msr_data clk_msr_sm1_data = {
-+	.msr_table = (void *)clk_msr_sm1,
-+	.msr_count = ARRAY_SIZE(clk_msr_sm1),
-+};
-+
- static const struct of_device_id meson_msr_match_table[] = {
- 	{
- 		.compatible = "amlogic,meson-gx-clk-measure",
--		.data = (void *)clk_msr_gx,
-+		.data = &clk_msr_gx_data,
- 	},
- 	{
- 		.compatible = "amlogic,meson8-clk-measure",
--		.data = (void *)clk_msr_m8,
-+		.data = &clk_msr_m8_data,
- 	},
- 	{
- 		.compatible = "amlogic,meson8b-clk-measure",
--		.data = (void *)clk_msr_m8,
-+		.data = &clk_msr_m8_data,
- 	},
- 	{
- 		.compatible = "amlogic,meson-axg-clk-measure",
--		.data = (void *)clk_msr_axg,
-+		.data = &clk_msr_axg_data,
- 	},
- 	{
- 		.compatible = "amlogic,meson-g12a-clk-measure",
--		.data = (void *)clk_msr_g12a,
-+		.data = &clk_msr_g12a_data,
- 	},
- 	{
- 		.compatible = "amlogic,meson-sm1-clk-measure",
--		.data = (void *)clk_msr_sm1,
-+		.data = &clk_msr_sm1_data,
- 	},
- 	{ /* sentinel */ }
- };
-
----
-base-commit: 1e1fd26ed4ca05cc1f0e5857918da4dd54967f7d
-change-id: 20250123-optimize_memory_size_of_clk_measure-f9c40e815794
-
-Best regards,
 -- 
-Chuan Liu <chuan.liu@amlogic.com>
+With Best Regards,
+Andy Shevchenko
 
 
