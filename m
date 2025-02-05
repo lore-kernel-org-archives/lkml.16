@@ -1,240 +1,230 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D122D1779AE
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B891FCFDA;
+	Wed,  5 Feb 2025 18:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738779589; cv=none; b=u1eDyQoubQXkUgUBIrRP5UV7Bh73X/BwmzI2kilc/YwChpXTsBD3UMkvxHrE295u+Rq1oSk+D1hUYxeFQ56+iUnht6Y8oL1mNMEGbD2YWadGkw5qDvY76F8yEbzNl3ovuUdf873UF+KYoqNaedE7RlG9Nm2mHQOlJI/ghoKAEVY=
+	t=1738779679; cv=none; b=RFfeMNE2uUyys9Yeq2Tp7P/Twky0oxLk10C+3EPA7qKKXqGLvgb4qmMa8+sBRCCrwSVIU5WEzf33P/XYlaslpCuEH5J67sCadUO4342iah52Dg5CPF8R2KwoF08mtqUw82d9mGoRuCrzfqRqotTzP61QxixRz74KDHjFZxifXj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738779589; c=relaxed/simple;
-	bh=Y9cbveh2CwhVYwoFhmCN0UCeLgvgUnCU7TI71FPNIi0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ATmvPzht8LBvEr7gEeoDTCD2XKBK2YPyXcTWRXZi4cXNgyUrgyCmAHCORF5mykmLtwpdBb0Z1tYGZQd7sFVwRCNIveVR8jfTI5Q+PKsBs8czRhWo+BqsRcF9Cl2f0VMwEJQAkZpysHBTNcMd8LJTSf3CEVcmv6y/vJYT3Nl6FrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JriIhorM; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738779679; c=relaxed/simple;
+	bh=ZLBcxDR6xyrd7FW9e2RhDQ/iUci0Sz/wb6g01nZtAPk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i95tUVXyKwkq+teMkJH3sX3y9hFaMOaAypYe0e/nrT/CFk94hJTWpu+4GU+8MopTnzWf+Np7wqEEKomxF6CUc6Axcf8dHJYhsfxdGKCmK/vFBhztBMclf1j2iIt75ViXGfUtOq143DhsILCj5JZIeQNjN5LsY18uaz3GO5ljEok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kD3EEmwQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Z03S6KP+; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nA0RWJMm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6VZ2snRf; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JriIhorM"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-71e36b27b53so65900a34.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:19:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738779586; x=1739384386; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DYD314+kCrbyuPLEovXv8C/gyv8YrwaHmGXW6MFdMgQ=;
-        b=JriIhorMzBoE8KnKupnIP982bFi10iXqcO46sHLhaylKOPOo8iBxGo/27laZaoI/vZ
-         W4293dZMvJi3VwiqjFSdTgcVHHwg+NOGXD+vq/XC3NwHRsrSONcC/7xHla4pUdpKFmeO
-         AnxvtXkBdPYfJIYFvssGz1KrMrJG7a9uzBLYCFUxrRH+/tmY0w4hK+kodsz/3O1+oPWW
-         PNEMRUykRCeao2YNSYtdnKqFGCFDBGO6QDiLaBpo008Q+cr9bkTtRczx7+gCA3IrUK+s
-         CPINyAovI2oKE7s26tQYq0PzAfXGlyMElzq8h31BYypnd2wjzZR0lu51xjLMmF278fsr
-         y3yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738779586; x=1739384386;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DYD314+kCrbyuPLEovXv8C/gyv8YrwaHmGXW6MFdMgQ=;
-        b=saJ6bX/GHZNJg6rWN1C6xnWLrb7bwL449Ssbl3b4gZBkZ+R4REwUeSzOwKvi0cdHQf
-         gwwPyfYyX+080FGOuHIyMpI0viMxuFJMb9ZA1zCMQoZAmn+tj8lpLbGEQykA7wtZm+Y5
-         eRUDtxXJydOgrvRt3sI2OMP8anEjia4f/Fcw4IBjWjt3xh1B26bAKNFfb700CP3d2Ihv
-         fUAs0mPMhtNe7Npv/u8d74AYT2YaB4vhJNzyjV+K4REUUy7Vq7AOBLzKc/HfUkYqQChO
-         l8QSNN+8tUxuL92i1Ysy4aTE9ByyHGKOwJMjsWxJuKOwaOcHMafxolVxlzHuAqp2lgFk
-         spIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVXtRIbNy5Gx3sN1DeDJvLyUMWLFkhqSuf89MouAevF6icgPwhqWl7y9SFNW9Zas887VivFSt7u4h9HEps=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk38lio7/KIMw2SN4KW8OXQqCHJTrlr935mk/tzSshLHUZL8zh
-	tZLT6fINrnsZaYkSKdNSsuzb4bT0zFltMMqGgP9i7o92AIjVMPRBFXwQaJtGfCdFTxkqMB76TFo
-	hd/3ol6vzf91OHIGR/7RrtEoCGjbWqLZjznCQ
-X-Gm-Gg: ASbGncvPtM2ZkE+Y3us9vCwDu10fu+u/EMibfjNwzNL2kJNj7FveuQcxz7uq117THIw
-	CP8x5jSfSz4rqwQ2Vsh+hU92X6URg2PYyrN6P2fGTLPR3bk13kbwUzDRB7OXwhinFDzEvQtu53y
-	3mLMrGSAL8SUMsQCpnbw8+RqUk1zUzeA==
-X-Google-Smtp-Source: AGHT+IGuWZdwDyLPOPSuzL97lJDl1x5nZAEdalBO0y1kiEQKuLwR5fdEC2+CwMSeq2b9Rl/wMIZG79qj6WwSZi2Yqko=
-X-Received: by 2002:a05:6830:4702:b0:71e:5a:f4f4 with SMTP id
- 46e09a7af769-726a42882bcmr2685173a34.25.1738779585726; Wed, 05 Feb 2025
- 10:19:45 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kD3EEmwQ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Z03S6KP+";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nA0RWJMm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6VZ2snRf"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6C4B21F387;
+	Wed,  5 Feb 2025 18:21:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738779674; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tIrv/Wrb80+l6c/3vehs+Bk6XWMbyIWde03DtyPmJqw=;
+	b=kD3EEmwQwxPuGzQjygMxrJaAajc87zFKNPuVtRkU7fa0ounHZU4SoI8XxlgekJAJPYC8Qd
+	hyP+ShXPSmYRJSQTHe9j6aiMBQ+Se/gN8sOqCpGwesgVT0KEfwXTB/2AP0gyO5dY5yn3t4
+	ecZn8yUnLn1YKsVhYk3L+TjpGVcsVuw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738779674;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tIrv/Wrb80+l6c/3vehs+Bk6XWMbyIWde03DtyPmJqw=;
+	b=Z03S6KP++17a2vK3p6y+9tIp0MrNmyKPeCHzsjHGqckoRWZB/rOIpMm8fo3W0oaw5DN07d
+	k66LSUxFpYPWn4BA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=nA0RWJMm;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=6VZ2snRf
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738779673; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tIrv/Wrb80+l6c/3vehs+Bk6XWMbyIWde03DtyPmJqw=;
+	b=nA0RWJMmRaY0oBVNBAFvzndEB3wmsbwawT2KKEBPs94dabIDyffrN5D4py9e6Q6yhuT2rD
+	uRRHCXjgFgCqtoh0BeP2bCqb5B42iPOKdKDw+T6EnwsUcaOYK101c+hC4GxZvNCwjowCmK
+	s6d0a2VG8X4YwQYt7JmEY+4Clu7Fi6Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738779673;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tIrv/Wrb80+l6c/3vehs+Bk6XWMbyIWde03DtyPmJqw=;
+	b=6VZ2snRfcvxuq6bWkNzrzkBTTBs+cAxRJ1s39lmGVRp5KDrbBfHMLDJMF7ydOWoqEgM6J/
+	DlBmjbRr03EdEZCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4F0BE13694;
+	Wed,  5 Feb 2025 18:21:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jZT/Ehmso2eLVwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 05 Feb 2025 18:21:13 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 9C983A28E9; Wed,  5 Feb 2025 19:21:04 +0100 (CET)
+Date: Wed, 5 Feb 2025 19:21:04 +0100
+From: Jan Kara <jack@suse.cz>
+To: syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>
+Cc: akpm@linux-foundation.org, brauner@kernel.org, gustavoars@kernel.org, 
+	kees@kernel.org, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, mjguzik@gmail.com, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
+Message-ID: <r7aylhww6ssce4uk4drib5c7awf6kcdgo5rzorbi3mve723hu6@6p7ij7t44ejq>
+References: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202035100.31235-1-badhri@google.com> <20250202-purring-ambitious-axolotl-4c6ff4@krzk-bin>
- <CAPTae5+j9N=RBpfHVE-As+dz7HzrxXAH1enWrmSdFzu6DuaTBA@mail.gmail.com> <80172550-a3d7-4d56-927c-ff63debc79f8@kernel.org>
-In-Reply-To: <80172550-a3d7-4d56-927c-ff63debc79f8@kernel.org>
-From: Badhri Jagan Sridharan <badhri@google.com>
-Date: Wed, 5 Feb 2025 10:19:09 -0800
-X-Gm-Features: AWEUYZnQ_MjYKPi3GzKBCYvuUST4PyFu-pF3hOKR55xFpZgNJeJuOBnJiMENe7c
-Message-ID: <CAPTae5+xF0B64AhT5fjMU9tcW8cT9smO5eUD=Wpsiw2CKAhDAQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: usb: snps,dwc3: Add property for imod
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
-	felipe.balbi@linux.intel.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, johnyoun@synopsys.com, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jameswei@google.com, 
-	stable@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 5, 2025 at 5:50=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On 05/02/2025 10:07, Badhri Jagan Sridharan wrote:
-> > .
-> >
-> > On Sun, Feb 2, 2025 at 6:11=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel=
-.org> wrote:
-> >>
-> >> On Sun, Feb 02, 2025 at 03:50:59AM +0000, Badhri Jagan Sridharan wrote=
-:
-> >>> This change adds `snps,device-mode-intrpt-mod-interval`
-> >>
-> >> Thank you for your patch. There is something to discuss/improve.
-> >
-> > Hi Krzysztof,
-> >
-> > Thanks for taking the time to review ! Happy to address them.
-> >
-> >>
-> >>> which allows enabling interrupt moderation through
-> >>> snps,dwc3 node.
-> >>>
-> >>> `snps,device-mode-intrpt-mod-interval`specifies the
-> >>> minimum inter-interrupt interval in 250ns increments
-> >>> during device mode operation. A value of 0 disables
-> >>> the interrupt throttling logic and interrupts are
-> >>> generated immediately if event count becomes non-zero.
-> >>> Otherwise, the interrupt is signaled when all of the
-> >>> following conditons are met which are, EVNT_HANDLER_BUSY
-> >>> is 0, event count is non-zero and at least 250ns increments
-> >>> of this value has elapsed since the last time interrupt
-> >>> was de-asserted.
-> >>
-> >> Please wrap commit message according to Linux coding style / submissio=
-n
-> >> process (neither too early nor over the limit):
-> >> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process=
-/submitting-patches.rst#L597
-> >
-> > Ack! will do in V2 of this patch.
-> >
-> >>
-> >>>
-> >>> Cc: stable@kernel.org
-> >>> Fixes: cf40b86b6ef6 ("usb: dwc3: Implement interrupt moderation")
-> >>
-> >> I don't understand what are you fixing here.  Above commit does not
-> >> introduce that property.
-> >
-> > Although the above commit does not add this property, it has
-> > implemented the entire feature except for the property so thought
-> > sending this with "Fixes:" while CCing  stable@ will allow the
-> > backport.  I am interested in having this patch in older kernel
->
-> Not implementing DT bindings is not a bug. Otherwise provide any sort of
-> proof that this was not intentional.
+Content-Type: multipart/mixed; boundary="rbk7j4upftqdugse"
+Content-Disposition: inline
+In-Reply-To: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
+X-Rspamd-Queue-Id: 6C4B21F387
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain,text/x-patch];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+,1:+,2:+];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,vger.kernel.org,kvack.org,gmail.com,googlegroups.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TAGGED_RCPT(0.00)[48a99e426f29859818c0];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	HAS_ATTACHMENT(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	SUBJECT_HAS_QUESTION(0.00)[]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -1.51
+X-Spam-Flag: NO
 
 
+--rbk7j4upftqdugse
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
-> I can easily provide you proof why this was intentional: negative review
-> maintainers.
->
->
-> > versions as well where imod support has been added. Wondering what
-> > would be the right way to achieve this. Eager to know your thoughts !
->
-> So again, downstream and forks... NAK, you cannot push things to stable
-> just because you want them backported by Greg.
->
-> This is not acceptable.
+On Tue 04-02-25 01:46:28, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
+> git tree:       upstream
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1258aeb0580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
+> dashboard link: https://syzkaller.appspot.com/bug?extid=48a99e426f29859818c0
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15825724580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1658aeb0580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/ea84ac864e92/disk-69b8923f.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/6a465997b4e0/vmlinux-69b8923f.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/d72b67b2bd15/bzImage-69b8923f.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/7c2919610764/mount_0.gz
+> 
+> The issue was bisected to:
+> 
+> commit bae80473f7b0b25772619e7692019b1549d4a82c
+> Author: Mateusz Guzik <mjguzik@gmail.com>
+> Date:   Wed Nov 20 11:20:35 2024 +0000
+> 
+>     ext4: use inode_set_cached_link()
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1248c3df980000
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=1148c3df980000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1648c3df980000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
+> Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
 
-Hi Krzysztof,
+Please check attached patch:
 
-I totally agree that this is not a bug but the intention here is to
-not call it a bug but rather to land this in older versions of the
-kernel as well which I wasn't sure how to do and I was perceiving
-"Fixes:" while CCing  stable@ as a way to do that.
-I will drop "Fixes:" and the CC to  stable@.  Came across the following
-https://docs.kernel.org/process/backporting.html#submitting-backports-to-st=
-able.I
-will follow this and explicitly submit backports. Let me know if that
-isn't reasonable
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
->
-> >
-> >>
-> >>
-> >>> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> >>> ---
-> >>>  .../devicetree/bindings/usb/snps,dwc3-common.yaml   | 13 +++++++++++=
-++
-> >>>  1 file changed, 13 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3-common.y=
-aml b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> >>> index c956053fd036..3957f1dac3c4 100644
-> >>> --- a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> >>> +++ b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> >>> @@ -375,6 +375,19 @@ properties:
-> >>>      items:
-> >>>        enum: [1, 4, 8, 16, 32, 64, 128, 256]
-> >>>
-> >>> +  snps,device-mode-intrpt-mod-interval:
-> >>> +    description:
-> >>> +      Specifies the minimum inter-interrupt interval in 250ns increm=
-ents
-> >>
-> >> Then use proper property unit suffix.
-> >
-> > Ack ! changing to snps,device-mode-intrpt-mod-interval-ns in V2.
-> >
-> >>
-> >>> +      during device mode operation. A value of 0 disables the interr=
-upt
-> >>> +      throttling logic and interrupts are generated immediately if e=
-vent
-> >>> +      count becomes non-zero. Otherwise, the interrupt is signaled w=
-hen
-> >>> +      all of the following conditons are met which are, EVNT_HANDLER=
-_BUSY
-> >>> +      is 0, event count is non-zero and at least 250ns increments of=
- this
-> >>> +      value has elapsed since the last time interrupt was de-asserte=
-d.
-> >>
-> >> Why is this property of a board? Why different boards would wait
-> >> different amount of time?
-> >
-> > Interrupt moderation allows batch processing of events reported by the
-> > controller.
-> > A very low value of snps,device-mode-intrpt-mod-interval-ns implies
-> > that the controller will interrupt more often to make the host
-> > processor process a smaller set of events Vs a larger value will wake
-> > up the host processor at longer intervals to process events (likely
-> > more). So depending what the board is designed for this can be tuned
-> > to achieve the needed outcome.
->
-> I do not see dependency on the board. Host has the same CPU always, so
-> it processes with the same speed.
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
- By "host processor", I am referring to the CPU which is scheduling
-the TRBs and responding to the events reported by the Synopsys DWC3
-controller. In a nutshell, the CPU which is driving the  Synopsys DWC3
-controller. The Synopsys DWC3 controller could be paired with any CPU
-configuration and therefore is "Host has the same CPU always" a fair
-assumption to be made ?
+--rbk7j4upftqdugse
+Content-Type: text/x-patch; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-ext4-Verify-fast-symlink-length.patch"
 
-As a reference,
-https://lore.kernel.org/linux-arm-kernel/9cb2e5fc-1bec-c19c-c04e-fe56e5c1bc=
-16@codeaurora.org/T/#m392cc1fe604499984c61ac07dacc840616194efe
-is the first patch which introduces IMOD as board specific property
-for XHCI based controllers.
+From df00b84402fb67d94a9eb6b86633092983cb388c Mon Sep 17 00:00:00 2001
+From: Jan Kara <jack@suse.cz>
+Date: Wed, 5 Feb 2025 19:02:35 +0100
+Subject: [PATCH] ext4: Verify fast symlink length
 
-Thanks,
-Badhri
+Verify fast symlink length stored in inode->i_size matches the string
+stored in the inode to avoid surprises from corrupted filesystems.
 
->
->
-> Best regards,
-> Krzysztof
+Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
+Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
+Suggested-by: "Darrick J. Wong" <djwong@kernel.org>
+Signed-off-by: Jan Kara <jack@suse.cz>
+---
+ fs/ext4/inode.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 7c54ae5fcbd4..fbda5a67f7f9 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5007,8 +5007,16 @@ struct inode *__ext4_iget(struct super_block *sb, unsigned long ino,
+ 			inode->i_op = &ext4_encrypted_symlink_inode_operations;
+ 		} else if (ext4_inode_is_fast_symlink(inode)) {
+ 			inode->i_op = &ext4_fast_symlink_inode_operations;
+-			nd_terminate_link(ei->i_data, inode->i_size,
+-				sizeof(ei->i_data) - 1);
++			if (inode->i_size == 0 ||
++			    inode->i_size >= EXT4_N_BLOCKS * 4 ||
++			    strnlen((char *)ei->i_data, inode->i_size + 1) !=
++								inode->i_size) {
++				ext4_error_inode(inode, function, line, 0,
++					"invalid fast symlink length %llu",
++					 (unsigned long long)inode->i_size);
++				ret = -EFSCORRUPTED;
++				goto bad_inode;
++			}
+ 			inode_set_cached_link(inode, (char *)ei->i_data,
+ 					      inode->i_size);
+ 		} else {
+-- 
+2.43.0
+
+
+--rbk7j4upftqdugse--
