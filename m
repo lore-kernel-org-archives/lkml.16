@@ -1,85 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141E022B8D0;
-	Wed,  5 Feb 2025 12:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19ED218AC4;
+	Wed,  5 Feb 2025 12:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738757571; cv=none; b=Uy77gCd+Z85S3JZUazXZhMnShRPscufSdfWocuAHJ8RRiHWDZdDSFVYoe9lTKv1psXYR1829wwzOe9QhAtVm52yqWlZ7Hj3zb62x/GnlPPOLKHoB9hUpv95ZkOsWOteCmvJrGjyaPb1y9xc+gim0vNP3gKSjmJLOGT7cP/k4hQI=
+	t=1738757628; cv=none; b=o6bh31y2jXcWHqPOqwmoKr6ZXFbB2seByqNw71QWBxs7mA5meTJF+LOk4RDQYa9xqWfhLBAwXszSlSz4mS2/nTivlFFDhZFGRCf3syZWtpPpjoPfhW4XqqRZ/AqQ1E7A5+oblBHfajUo2wFd1Qvg6GgZIo9uw+t/aoosIv4XTlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738757571; c=relaxed/simple;
-	bh=zEhI8pKRp7Rru8p9R1drtIFnel3SBMPqhlIHthqnADo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rwXXrmUSygA0bd0qoyhbr6E1qFNhgEkPIzR06pB8r0VrZAY4xVkPUr7ppl/y7w7yL6m/gg6aYaiAuaLS566cQspPwOVa/MzWEut47hFU/dt8gFQUveQkrLwmwIJHB9lhEjy+Bbroe+kHUVca0o/gRyu2jg8LAUpnYUc9QmtE63s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y6iZxNrx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738757628; c=relaxed/simple;
+	bh=Z79+chHQqx4OtIJNShxIC+ZnIf3vo4Kti4bGWnyvkYY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=my4XbK8uyFkhc/P/mNDXMAEL7T7VQ/dLLqfWKX42WFjQWsbvX11YiUCgJAfX9W81H0aCzI795BSTNmJSrt6wRbb9aNh/+t0L+eA4ekq8Bd0wyRDfNeMb/SPgk9XZRyEMHY+89EVK+zmAZBXlO0yOYv1BTMT1IqXUo5I6HmSm4Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dkqm8/Xz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y6iZxNrx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B5FC4CEE2;
-	Wed,  5 Feb 2025 12:12:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dkqm8/Xz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F8BC4CED1;
+	Wed,  5 Feb 2025 12:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738757570;
-	bh=zEhI8pKRp7Rru8p9R1drtIFnel3SBMPqhlIHthqnADo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y6iZxNrxPOpkDDL1NfflO7qDnxYFPAEYYN4LxbNO/XZ53Dm/pGTlLXbNLaMdv3O00
-	 C6L139b0cTHQ6LWucqp7opAfaHrDoy+LEtq4FpwYAffZxvMIuP8T79/f1xGlxr9bDA
-	 pMcSGIXoCQkZNRRsUzRRJ6mLBuyYZGOp8ExfKCQODLyKRS3ctZFReCsOCgQ+oK06ya
-	 Oc1ySGL3KWW7N1fiRMC3qovzN1bmoNd3yQZTHE8bCR6f7hobnLELkpKrA9Ka04+wHV
-	 d/QSgZ3Y4NYfouE/U/04rq5wjT686f8OD7OeIyngkfpXkudmZm7DGSbBqdfv4YZqeT
-	 NvA2YmnvvOVPA==
-From: Christian Brauner <brauner@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] vfs: sanity check the length passed to inode_set_cached_link()
-Date: Wed,  5 Feb 2025 13:11:57 +0100
-Message-ID: <20250205-fangen-bibliothek-5cc2d9fc4460@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250204213207.337980-1-mjguzik@gmail.com>
-References: <20250204213207.337980-1-mjguzik@gmail.com>
+	s=k20201202; t=1738757628;
+	bh=Z79+chHQqx4OtIJNShxIC+ZnIf3vo4Kti4bGWnyvkYY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Dkqm8/XzYhU63+YbnX5WGXgcWAYs7eu9KLl+dNdBLLGVJFkk5I86pvFCelatQI33v
+	 efDu8GvWLOZV1vpmVhggebyWacQP/83jWtTh0TyAPa/I8sWlplYNxHPJ8op8S9sUU/
+	 mPd1FOWrW9LPg6+SF0TAtJ5vW0AyWwnG+M9c8w8dhDu3vkdlAghzcHvURemRtvtkdc
+	 GvNHKKCCkSLPg4jLfFXNJoLpWxjX/WI8GZotYqTehP6bR4DW6t2Mdp5q4fM1LrILm5
+	 zFCnHvy6RvXh8pxEZEK8avk67eD+fWFWtUXkLZpfvTUw6petFAEXsq2LkdQg2HS7+X
+	 KnnHRITtoevrQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Eric Biggers <ebiggers@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Keith Busch <kbusch@kernel.org>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: testmgr - drop unused static const arrays
+Date: Wed,  5 Feb 2025 13:13:15 +0100
+Message-Id: <20250205121342.344475-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1254; i=brauner@kernel.org; h=from:subject:message-id; bh=zEhI8pKRp7Rru8p9R1drtIFnel3SBMPqhlIHthqnADo=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQvDt39dMmm7Ud3KCRWqcWyurgq20YsD5sp//++wc+wB 4qV695f7ChlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjIrb8M/4uUnKfYil01Cmp9 fDRcXu9wygLDF8dzy4ynz01XjQycdIWRofvXYtHlK36/TnjOKTclKmvnjoe3v9VpPZcv4o/7qPd vKgsA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-On Tue, 04 Feb 2025 22:32:07 +0100, Mateusz Guzik wrote:
-> This costs a strlen() call when instatianating a symlink.
-> 
-> Preferably it would be hidden behind VFS_WARN_ON (or compatible), but
-> there is no such facility at the moment. With the facility in place the
-> call can be patched out in production kernels.
-> 
-> In the meantime, since the cost is being paid unconditionally, use the
-> result to a fixup the bad caller.
-> 
-> [...]
+From: Arnd Bergmann <arnd@arndb.de>
 
-Seems ok if ugly.
+The ones[] and zeroes[] definitions were previously used by the
+rocksoft tests that are now gone. With extra warnings enabled,
+gcc now complains about these:
 
+crypto/testmgr.h:6021:17: error: 'ones' defined but not used [-Werror=unused-const-variable=]
+ 6021 | static const u8 ones[4096] = { [0 ... 4095] = 0xff };
+      |                 ^~~~
+crypto/testmgr.h:6020:17: error: 'zeroes' defined but not used [-Werror=unused-const-variable=]
+ 6020 | static const u8 zeroes[4096] = { [0 ... 4095] = 0 };
+      |                 ^~~~~~
+
+Drop them as well.
+
+Fixes: dad9cb81bc30 ("crypto: crc64-rocksoft - remove from crypto API")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
+ crypto/testmgr.h | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+diff --git a/crypto/testmgr.h b/crypto/testmgr.h
+index 4ab05046b734..61c7ae731052 100644
+--- a/crypto/testmgr.h
++++ b/crypto/testmgr.h
+@@ -6017,9 +6017,6 @@ static const struct hash_testvec rmd160_tv_template[] = {
+ 	}
+ };
+ 
+-static const u8 zeroes[4096] = { [0 ... 4095] = 0 };
+-static const u8 ones[4096] = { [0 ... 4095] = 0xff };
+-
+ static const struct hash_testvec crct10dif_tv_template[] = {
+ 	{
+ 		.plaintext	= "abc",
+-- 
+2.39.5
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
-
-[1/1] vfs: sanity check the length passed to inode_set_cached_link()
-      https://git.kernel.org/vfs/vfs/c/c1c84bb08cc7
