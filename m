@@ -1,145 +1,122 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782AB2139CB
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 03:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F86213257;
+	Wed,  5 Feb 2025 03:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738726284; cv=none; b=PPndXuN7Xf5IBtqw+38/AVsVcuKIg+nPsTLl9PjGhOiYv/9lQr/DthqaXpz42igk/ixk1ECXQ2KDWvXJA3Xcji9bWhYfUlysgWsNkIdn7rOjOJJ6UjVtqq5Ij5p5JkC94Jm21lziOajvvvG1F4/CG7BbLPtbVA7Cpq7b+3V06ao=
+	t=1738726292; cv=none; b=Vh0oIynsaj7WPdm45ggSRP/h6RJ2m7GBy0+Rnq6+GAvyzFE6tC9HSKAbehunev0qcfjO5QCH7xYhBPyk6Izuu4/dWjBa48Qy/23JTTQTN4XScwwwtjWu8ld7zpXjNzpZy4eDsFHk3JjLLZQwqHjvt65vQqb3w6/a1VFPmc2DGNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738726284; c=relaxed/simple;
-	bh=JR+q5Qv76dY6OLc41/QVNXz1kJpQ6WF/SbfNQ4IqPRE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZBjVQR1RbStKYivckjE1ZdQwkPFC3wosyJAIugNUZubYzgwJDtv8eIDKlAu6zQMutgMzHyv7NgmIeim0KijPbjavkI2ZI06LwueoXv0x65fMefttmgkriVmImEMDGb2sbO6d+rfsy5sfRC/AAbKMlE2+PYLhlN6SU7ockMGfX9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-849d26dd331so35834039f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 19:31:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738726281; x=1739331081;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FUaZXeNIm79Z2ts+NvxXvJZCLbvnILiJrvFpnwMCDtQ=;
-        b=tG1QSXci8/hTU8Af5YqbSVMnjo3eAb6v7WERj0o5l+Qu/6RQFYwCKdkcLlyWIo/icI
-         15BXeVud+rszEi9g+DVzgR1G/vM4O9Hr6+Gtk7AF+aH+eEQ1J5q8NcPFFaVmDi5dat6W
-         W5/+pHZ1KHaJQr54axcZ2vKRMGY1oY2j3QMr8lXNOQ7L+IdC19A3m5czwt543Mj5626Y
-         YROW0OW4q2DGQkhFnwVIsFXh21UzkFja/CljECHlI1GoMCYFtio2hEOGQhR9XMM9FZhu
-         Dj2mTTkGzqTeCSGXuQst8iBXU19QyAmU5ih6jSqzay+lE+dMRui6brFvZ0xIG1QkbGn+
-         utHg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbIzg5mpBOmoEOemyqkrRG6At1JZznvy+c8Fy5owZl/bwRjv0XDThU4+hUJcL04LxYqNf9gocekbfRsp8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdYi9Vu6XHWxcBPhejDAtqss4r3MX3C4A/592OcpjZAezygyj6
-	MxiPGvI1+qPys4Cv+rcwFAGhgIs8PF8yLFbW1AuaYvwn6msZr2qRFU7HCvVSKRWc2Iy5AbKr22v
-	pj30uwujNiZzWULuwNTOhATXcc34dQ06gkyxkpu36wbnWlSYXoAGIMuI=
-X-Google-Smtp-Source: AGHT+IEDMuvTYQ6Ma+IkSkNx2gcP+l0xyxdbN9YLST/XdwXIHLQN7Miiy3s8vG5Tk2qSX9iofJUzgahb6Eh8LTrgbzNSEEU7chIq
+	s=arc-20240116; t=1738726292; c=relaxed/simple;
+	bh=urAiWcI+unnf4eqWdfgetoTmXP/X1whvl5UXZGvQbhA=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=OKn21AzERAfc6gj4pEPDiXI6LSSrLIyQF0qbgoqgIJkjEXLy+cZNrbUHO7MttvYPBllJFxSStAoTD6gf8rvbyMYNsr4oKlF1RcnTzfUWNYUi22ooVaJe5k59PvSSfZWe2sDZyv1UWSz7YVv8RywrxHih2wT2ADnqMEyjS4sOG9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Ynlhh5HGSz20nLm;
+	Wed,  5 Feb 2025 11:14:44 +0800 (CST)
+Received: from kwepemk100010.china.huawei.com (unknown [7.202.194.58])
+	by mail.maildlp.com (Postfix) with ESMTPS id B70AA1401F2;
+	Wed,  5 Feb 2025 11:14:16 +0800 (CST)
+Received: from kwepemk100005.china.huawei.com (7.202.194.53) by
+ kwepemk100010.china.huawei.com (7.202.194.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 5 Feb 2025 11:14:16 +0800
+Received: from kwepemk100005.china.huawei.com ([7.202.194.53]) by
+ kwepemk100005.china.huawei.com ([7.202.194.53]) with mapi id 15.02.1544.011;
+ Wed, 5 Feb 2025 11:14:13 +0800
+From: "liuchao (CR)" <liuchao173@huawei.com>
+To: "linux@roeck-us.net" <linux@roeck-us.net>
+CC: caihe <caihe@huawei.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org"
+	<linux-watchdog@vger.kernel.org>, lixiaokeng <lixiaokeng@huawei.com>,
+	"wim@linux-watchdog.org" <wim@linux-watchdog.org>
+Subject: Re: [PATCH] watchdog: only print critical log when the watchdog fails
+ to be stopped
+Thread-Topic: Re: [PATCH] watchdog: only print critical log when the watchdog
+ fails to be stopped
+Thread-Index: Adt3eoD6Tk0WevgDTROHhRBW5boicg==
+Date: Wed, 5 Feb 2025 03:14:13 +0000
+Message-ID: <a59651b1a53c4362b0416a3252d9c750@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:4a03:0:b0:3a9:cde3:2ecc with SMTP id
- e9e14a558f8ab-3d03f508538mr46122455ab.6.1738726281565; Tue, 04 Feb 2025
- 19:31:21 -0800 (PST)
-Date: Tue, 04 Feb 2025 19:31:21 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a2db89.050a0220.50516.0008.GAE@google.com>
-Subject: [syzbot] [btrfs?] WARNING in __btrfs_update_delayed_inode (2)
-From: syzbot <syzbot+9864f9d3c5c14e151341@syzkaller.appspotmail.com>
-To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+On 2/3/2025 18:35, Guenter Roeck wrote:
+> On 2/4/25 18:02, liuchao (CR) wrote:
+> > On 1/27/2025 22:30, Guenter Roeck wrote:
+> >> On 1/27/25 01:35, liuchao (CR) wrote:
+> >>> On 1/26/25 21:10, Guenter Roeck wrote:
+> >>>> On 1/26/25 00:38, Liu Chao wrote:
+> >>>>> Every time the user echoes 0 > /dev/watchdog0, meaningless
+> >>>>> critical log is printed.
+> >>>>>
+> >>>>
+> >>>> It is not meaningless, and it will still be displayed after this
+> >>>> change, making the change pointless.
+> >>>
+> >>> The change is not pointless. For example, the softdog driver does
+> >>> not invoke watchdog_stop or print logs in the watchdog_release.
+> >>>
+> >>
+> >> It seems to me that is a problem in the softdog driver.
+> >>
+> >> The change is actually worse than I initially thought.
+> >> The message is _supposed_ to be displayed if watchdog_stop() is not
+> >> called while the watchdog is running (i.e., if err =3D=3D -EBUSY).
+> >> Otherwise it would not be displayed for real hardware watchdogs which
+> >> are not stopped because they were running and watchdog_stop() is not
+> >> called because WDIOF_MAGICCLOSE is set in the driver and the magic
+> >> release byte was not written.
+> >>
+> >> Specifically, the softdog driver has WDIOF_MAGICCLOSE set. It is not
+> >> supposed to be unloadable (or unloaded) while the watchdog is running.
+> >
+> > When echo to /dev/watchdog0, The watchdog_open, watchdog_write, and
+> > watchdog_release functions are invoked in sequence. Do you mean the
+> > softdog driver should not call watchdog_release?
+> >
+> > After the user opens /dev/watchdog0, the user feeds the watchdog
+> > through ioctl WDIOC_KEEPALIVE and never closes. Is this the correct usa=
+ge?
+> >
+>=20
+> I tried softdog. It works as advertised. Yes, "echo 0 > watchdog0" trigge=
+rs the
+> message.
+> "sudo modprobe -r softdog" then fails with
+>=20
+> 	modprobe: FATAL: Module softdog is in use.
+>=20
+> and, as expected, one minute later (or whatever the timeout is set to) th=
+e
+> system reboots.
+>=20
+> There is nothing wrong with the message. The softdog _does_ refuse to be
+> unloaded while running, and it _does_ reboot the system after the timeout
+> expired. This is all perfectly as expected. The log is not meaningless. I=
+nstead, it
+> tells the user that the system will reboot after the watchdog expired. Wh=
+ich it
+> does.
 
-syzbot found the following issue on:
+User creates a process and echoes every time to ensure that the system is
+normal, the process can be executed properly. Otherwise, the system reboots=
+.
+So the critical message keeps printing.
 
-HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15c695f8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
-dashboard link: https://syzkaller.appspot.com/bug?extid=9864f9d3c5c14e151341
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Is it reasonable to change it to info level?
 
-Unfortunately, I don't have any reproducer for this issue yet.
+>=20
+> Guenter
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-69e858e0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a53b888c1f3f/vmlinux-69e858e0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6b5e17edafc0/bzImage-69e858e0.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9864f9d3c5c14e151341@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-BTRFS: Transaction aborted (error -28)
-WARNING: CPU: 0 PID: 5348 at fs/btrfs/delayed-inode.c:1090 __btrfs_update_delayed_inode+0xa02/0xbe0 fs/btrfs/delayed-inode.c:1090
-Modules linked in:
-CPU: 0 UID: 0 PID: 5348 Comm: syz.0.0 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:__btrfs_update_delayed_inode+0xa02/0xbe0 fs/btrfs/delayed-inode.c:1090
-Code: 8c 49 89 dd 44 89 ea e8 ac ac 32 fd e9 db fe ff ff e8 42 61 ca fd 90 48 c7 c7 a0 75 4d 8c 49 89 dd 44 89 ee e8 9f 19 8b fd 90 <0f> 0b 90 90 e9 b9 fe ff ff 44 89 e9 80 e1 07 80 c1 03 38 c1 0f 8c
-RSP: 0018:ffffc900019e6580 EFLAGS: 00010246
-RAX: 54c9bccbc803ae00 RBX: 00000000ffffffe4 RCX: ffff888000764880
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: ffffc900019e66b0 R08: ffffffff818027c2 R09: 1ffff11003f8519a
-R10: dffffc0000000000 R11: ffffed1003f8519b R12: 1ffff1100a618b59
-R13: 00000000ffffffe4 R14: ffff8880530c5ac8 R15: 0000000000000000
-FS:  00007f65596856c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7c6cc174a8 CR3: 0000000052c5e000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- btrfs_update_delayed_inode fs/btrfs/delayed-inode.c:1108 [inline]
- __btrfs_commit_inode_delayed_items+0x2318/0x24a0 fs/btrfs/delayed-inode.c:1131
- __btrfs_run_delayed_items+0x20e/0x4b0 fs/btrfs/delayed-inode.c:1165
- btrfs_commit_transaction+0x89a/0x3760 fs/btrfs/transaction.c:2310
- btrfs_sync_file+0xdd7/0x11e0 fs/btrfs/file.c:1735
- generic_write_sync include/linux/fs.h:2958 [inline]
- btrfs_do_write_iter+0x5fc/0x7b0 fs/btrfs/file.c:1386
- __kernel_write_iter+0x433/0x950 fs/read_write.c:612
- __kernel_write+0x120/0x180 fs/read_write.c:632
- __dump_emit+0x237/0x360 fs/coredump.c:807
- elf_core_dump+0x31f4/0x4790 fs/binfmt_elf.c:2081
- do_coredump+0x244f/0x2f00 fs/coredump.c:758
- get_signal+0x140b/0x1750 kernel/signal.c:3021
- arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- irqentry_exit_to_user_mode+0x7e/0x250 kernel/entry/common.c:231
- exc_page_fault+0x590/0x8b0 arch/x86/mm/fault.c:1542
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0033:0x7f655878cdb1
-Code: 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 48 3d 01 f0 ff ff 73 01 <c3> 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f
-RSP: 002b:ffffffffffffffe0 EFLAGS: 00010217
-RAX: 0000000000000000 RBX: 00007f65589a6080 RCX: 00007f655878cda9
-RDX: 0000000000000000 RSI: ffffffffffffffe0 RDI: 0000000004008011
-RBP: 00007f655880e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f65589a6080 R15: 00007ffe6a01d078
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
