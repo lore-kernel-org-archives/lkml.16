@@ -1,337 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677831946AA;
-	Wed,  5 Feb 2025 16:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7D41D8E07
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771853; cv=none; b=cRtRUaWg4/3JAff7WgWG9x8GV3KNin4HV8mmEWSbRP1ggYJcoV5LmyxknTGIzNh0ExycRScxMQ7mFPG9RbO70yze3xZvGjUjgNtGeTk7EcF9qOqNqmwO+/MDviMmGfT6L1vfWuJpYVYwbvepXEqTUG4t0LVDxZ3AYI1D3HLT75E=
+	t=1738771864; cv=none; b=DCL1WLsSHl0PzaCPyDCcGh9T6GPxFYJYG53e+S/OrLIA9UI0R8c0wUcsYSWREb8CCSFW4qHMwvnVWIsu+ur9uzJAlsk6hr/+zH7+K91tL7xDGVVPp6G0c8u6kmkKiEQvSWqZ2yxDRMfJKFaOwXJLX3DNFpqRhVw1qi78W5PbqWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771853; c=relaxed/simple;
-	bh=ImZ/l/99sI+3iifnDXr8jZw00Dl/R1qh0lxcrzFqNhs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VMC2ardjD573FVoqFLKMKIrwcrFIUQUBIjY7GVWtNHxxg/zHdMpo6uBX6MErgCf3IZLsPdayhqyM84QnKqE0k5JyopeUM4mi3TlM50e5t6+vI8DaurmSlYE4wOge36SgQWN3ss4hWGJP6lkNRKSyoZBb7fJQlqIqgtVVvDS6Jhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kdrczVAz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738771864; c=relaxed/simple;
+	bh=zGOTGbjFfgVATXurZclzZ9z9K3oGBKGvyHPvS3OsEQ8=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=BUtAqLHZsjfao+T0/o80OubLp8ZAHibcQMD9EYvloZ2fNeWwKnZ1/1ICJmU8ObVaMycAeadVJ5HPXPnNafHb3a1TOARK6lhoVYcUWD9J2NW4mgA9bQ4ZEdPc2r40BgCMeOUKkugrUxXxYtleNXsVAQvTYVBLjuJw5vZUs8PWp9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Vr33Q83R; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kdrczVAz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82B45C4CED1;
-	Wed,  5 Feb 2025 16:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738771852;
-	bh=ImZ/l/99sI+3iifnDXr8jZw00Dl/R1qh0lxcrzFqNhs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kdrczVAzsDMnZeoCyMdOwHLTKriaztL8DjPls05K+qiB5YPdMGzwPaO6msSBpIJ4U
-	 nKmGvZbaX1wFVQsJfUp0I6YxlRIKY5cpVq/GNY4bqQJkQPq/w12Qlw+ZQi8lRHDr8G
-	 BOBBWcQIM+ObyoHy0MWjeddIVnRc2s/IxfGUtDsFu6y+IfYGLGHrMO3Q61dL259w9V
-	 zdeGwMB+sZf2+WeVcByhiNVWHgsqUAhNdZvpXsxsFDj3PA2y2032sLLETBOCzXX68S
-	 HdaYG50ATuGzWDMTNTizMEII+fyQSFRxWzIw5ks2Vex92iohJzyNrjPRZCpBL2UfEc
-	 soi79DcKy0NCQ==
-Date: Wed, 5 Feb 2025 17:10:44 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Zhi Wang <zhiw@nvidia.com>
-Cc: airlied@gmail.com, simona@ffwll.ch, corbet@lwn.net,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, ajanulgu@redhat.com, lyude@redhat.com,
-	pstanner@redhat.com, cjia@nvidia.com, jhubbard@nvidia.com,
-	bskeggs@nvidia.com, acurrid@nvidia.com, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] gpu: nova-core: add initial documentation
-Message-ID: <Z6ONhNOAtfWsKIRg@cassiopeiae>
-References: <20250204190400.2550-1-dakr@kernel.org>
- <20250204190400.2550-2-dakr@kernel.org>
- <20250205155646.00003c2f@nvidia.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Vr33Q83R"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250205161055epoutp011ab214ccbdd378b4eb80569e46086a9b~hW8o2w-xF1617016170epoutp01W
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:10:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250205161055epoutp011ab214ccbdd378b4eb80569e46086a9b~hW8o2w-xF1617016170epoutp01W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1738771855;
+	bh=QW9J/rjwU+o+SqKpPsPh38JFBxMAa0k1ReyEkkZt/Pc=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=Vr33Q83ReaUYcKmzBa3H3q49/ONTz5UJN51Eu/svtZM8koRnPXVOTGMiM8awVkzga
+	 FX1xfrF8tkqaLsemvcqLYWaur7l9cJqQbilIvQAmHEpJDKC8MECejNvH4jyD4Uofv6
+	 3qkZYwZR5AlovX3iEvihLjFlHjdsH7szva7CW1ic=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250205161054epcas5p462e3a79ddb2c59bb8791bdddc74eb01f~hW8oZ_f9o1659716597epcas5p41;
+	Wed,  5 Feb 2025 16:10:54 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Yp4wD6QgGz4x9Pp; Wed,  5 Feb
+	2025 16:10:52 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	9E.CF.20052.C8D83A76; Thu,  6 Feb 2025 01:10:52 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250205161051epcas5p26dda7521e6fe32f18d6ef155802573b7~hW8lbmFSm1244212442epcas5p2U;
+	Wed,  5 Feb 2025 16:10:51 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250205161051epsmtrp10c1cde19bc06d6d10c26eece77d38c94~hW8lav6Ud2899028990epsmtrp1A;
+	Wed,  5 Feb 2025 16:10:51 +0000 (GMT)
+X-AuditID: b6c32a49-3d20270000004e54-6c-67a38d8c4619
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	34.FE.18729.B8D83A76; Thu,  6 Feb 2025 01:10:51 +0900 (KST)
+Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250205161049epsmtip29462bda9337d6f4970716ff4d4d8fe2c~hW8j4dd_a1519415194epsmtip2Y;
+	Wed,  5 Feb 2025 16:10:49 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, "'Sudeep Holla'"
+	<sudeep.holla@arm.com>
+Cc: "'Devang Tailor'" <dev.tailor@samsung.com>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <faraz.ata@samsung.com>
+In-Reply-To: <6d4d93a5-9a03-4cc3-9ef4-ab64562560f3@kernel.org>
+Subject: RE: [PATCH v2] arm64: dts: add cpu cache information to
+ ExynosAuto-v920
+Date: Wed, 5 Feb 2025 21:40:48 +0530
+Message-ID: <090d01db77e8$8687db10$93979130$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250205155646.00003c2f@nvidia.com>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJnCMNmj1amGSmPwLixER7WDeLbQALDHLFMAzsAx8ICGgWRGwKIqjkLscy4HXA=
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHJsWRmVeSWpSXmKPExsWy7bCmum5P7+J0g6ufjCzW7D3HZHFvxzJ2
+	i/lHzrFaXLuxkN3i5ax7bBbnz29gt9j0+BqrxeVdc9gsZpzfx2Txf88Odovlp3awOHB7rJm3
+	htFj06pONo/NS+o9+rasYvT4vEkugDUq2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ
+	0sJcSSEvMTfVVsnFJ0DXLTMH6DIlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToFJ
+	gV5xYm5xaV66Xl5qiZWhgYGRKVBhQnbGrenrmAq+8FTc36bUwLiXq4uRk0NCwERiY/931i5G
+	Lg4hgd2MEpveH2SGcD4xSmzYco8FwvnGKPF6ylZWmJZliz5CVe1llHi8vwPKeckosXHCZUaQ
+	KjYBXYkdi9vYQGwRgQiJW98mMoIUMQvMYJLYvfwCC0iCU8BOYsmUvWBjhQWCJBZMPcIOYrMI
+	qEgcar4AZvMKWEpsOj0fyhaUODnzCVgvs4C2xLKFr5khTlKQ+Pl0GSvEMj+Jhxt2skLUiEu8
+	PAoykwuoZguHxKsrd9kgGlwk3k/+wAhhC0u8Or6FHcKWknjZ3wZlV0us3zCPBcLuYJRo3F4D
+	YdtL7Hx0EyjOAbRAU2L9Ln2IXXwSvb+fMIGEJQR4JTrahCCqVSWa312FmiItMbG7GxqKHhLv
+	r81inMCoOAvJZ7OQfDYLyQezEJYtYGRZxSiZWlCcm55abFpgmJdaDo/w5PzcTYzghKvluYPx
+	7oMPeocYmTgYDzFKcDArifCe3r4gXYg3JbGyKrUoP76oNCe1+BCjKTC4JzJLiSbnA1N+Xkm8
+	oYmlgYmZmZmJpbGZoZI4b/POlnQhgfTEktTs1NSC1CKYPiYOTqkGpoRPPRNf30i7863kxt6j
+	e5jj37xxqm6S7fZdpvHMso3nRZ2V8iwtX/dpR65JV56TONH3vdKISX3R4iKjfcn+m389Pbh3
+	q6buHZfrD9kYVI+zG6+OPnZddq/J3uornxtcNa89cvxxyUDn94oXK4QLrdJkDv5oeLS2ns1v
+	0bSPHg8+v5S8dLx4ig3ft4Z5x9fMvRM7UzPjqvFUxd9sG9dpnNvq6GGcLuwn/FWTNXrB5CyW
+	r9YqpyY9zLUPr5/c9X2povnWdKfLsl29T05yTd8Ws3D5iZ9vl1j1tuS3ckYYmpq+jxHZIH23
+	13/nOj+1AraIDyrTLX6VLucyWLlw3Uvp3ZZ+MfuZHkx+qGWjadZ3ZroSS3FGoqEWc1FxIgDd
+	4f+zQQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsWy7bCSvG537+J0g5VrpC3W7D3HZHFvxzJ2
+	i/lHzrFaXLuxkN3i5ax7bBbnz29gt9j0+BqrxeVdc9gsZpzfx2Txf88Odovlp3awOHB7rJm3
+	htFj06pONo/NS+o9+rasYvT4vEkugDWKyyYlNSezLLVI3y6BK2PX3mXsBSd4Kn59PMfSwDiR
+	q4uRk0NCwERi2aKPzF2MXBxCArsZJX6vWc4EkZCWuL5xAjuELSyx8t9zdoii54wS/99fYANJ
+	sAnoSuxY3AZmiwhESBw+Mp8FpIhZYBGTxKal11khOjqYJG7/2Qw2llPATmLJlL1ACQ4OYYEA
+	iQN7pEHCLAIqEoeaL4Bt4xWwlNh0ej6ULShxcuYTFhCbWUBbovdhKyOMvWzha2aI6xQkfj5d
+	xgpxhJ/Eww07WSFqxCVeHj3CPoFReBaSUbOQjJqFZNQsJC0LGFlWMUqmFhTnpucWGxYY5qWW
+	6xUn5haX5qXrJefnbmIEx52W5g7G7as+6B1iZOJgPMQowcGsJMJ7evuCdCHelMTKqtSi/Pii
+	0pzU4kOM0hwsSuK84i96U4QE0hNLUrNTUwtSi2CyTBycUg1Mu591zj50Jf/e8j/Zb/4nLX4o
+	URKkFVq2Ov3LnZDZExXO/mI00ahjsFF7Ilr/O2jh3Ac3THeaRfqc1k17sdb+Qz1PZxpz/FW2
+	sv8Z5x27uKftd1ucevPdt8bZxQJXL/jox69XWS6ZoHj8wX4FhX7tnJVPzvqb/3O3e73wUiTX
+	V2WBVyd2P1+l4/P7RHeu2vOc2kDJzRtlr8Welzr3ZvbLc57/uJKnLzku8/ZR1s0dTXY7qwtb
+	1kXzH+CyCxX83Hryzxqvv+ZfrXjs+6W3HjptVcQXcV/veNZebdG75+axPmd6te/rFJeYrF93
+	mNIq05vlpQTvVohOX2a46OTnX8IOza+SGVff3+Q8JbydqfJBlhJLcUaioRZzUXEiAMu9VZIq
+	AwAA
+X-CMS-MailID: 20250205161051epcas5p26dda7521e6fe32f18d6ef155802573b7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250108054224epcas5p399f3d734f8d9f82e5ae75d183d1a5344
+References: <CGME20250108054224epcas5p399f3d734f8d9f82e5ae75d183d1a5344@epcas5p3.samsung.com>
+	<20250108055012.1938530-1-dev.tailor@samsung.com>
+	<006401db73d6$2af35fb0$80da1f10$@samsung.com> <Z5zPpz6WAbPJX701@bogus>
+	<6d4d93a5-9a03-4cc3-9ef4-ab64562560f3@kernel.org>
 
-On Wed, Feb 05, 2025 at 03:56:46PM +0200, Zhi Wang wrote:
-> On Tue,  4 Feb 2025 20:03:12 +0100
-> Danilo Krummrich <dakr@kernel.org> wrote:
-> 
-> > +
-> > +Generic register abstraction
-> > +----------------------------
-> > +
-> > +Work out how register constants and structures can be automatically generated
-> > +through generalized macros.
-> > +
-> > +Example:
-> > +
-> > +.. code-block:: rust
-> > +
-> > +	register!(BOOT0, 0x0, u32, pci::Bar<SIZE>, Fields [
-> > +	   MINOR_REVISION(3:0, RO),
-> > +	   MAJOR_REVISION(7:4, RO),
-> > +	   REVISION(7:0, RO), // Virtual register combining major and minor rev.
-> > +	])
-> > +
-> 
-> I think it is better not to tie this to pci::Bar and its operations. It
-> would be better to have a intermediate container as the macro param. The
-> container holds the register region vaddr pointer, size, read/write traits.
+Hi Krzysztof
 
-I think for this particular example we want to tie it to the pci::Bar on way or
-the other.
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk=40kernel.org>
+> Sent: Wednesday, February 5, 2025 9:22 PM
+> To: Sudeep Holla <sudeep.holla=40arm.com>; Alim Akhtar
+> <alim.akhtar=40samsung.com>
+> Cc: 'Devang Tailor' <dev.tailor=40samsung.com>; robh=40kernel.org;
+> krzk+dt=40kernel.org; conor+dt=40kernel.org; devicetree=40vger.kernel.org=
+;
+> linux-arm-kernel=40lists.infradead.org; linux-samsung-soc=40vger.kernel.o=
+rg;
+> linux-kernel=40vger.kernel.org; faraz.ata=40samsung.com
+> Subject: Re: =5BPATCH v2=5D arm64: dts: add cpu cache information to
+> ExynosAuto-v920
+>=20
+> On 31/01/2025 14:27, Sudeep Holla wrote:
+> >>>
+> >> =5Bsnip=5D
+> >>  > +		l3_cache_cl0: l3-cache0 =7B
+> >> You can add one node for cl0 and cl1, say =22l3_cache_cl0_cl1=22 and
+> >> Remove the specific node for CL1, because both are same.
+> >>
+> >
+> > What do you mean by =22both are same=22 ?
+> > Do you mean both have exact same properties but are physically
+> > different caches ? OR Do you mean it is just one shared cache ?
+> >
+> > If former, we still need distinct node to get the cacheinfo about
+> > shareability correct. If this is about avoiding duplication of errors,
+> > you can probably define some macro and avoid it, but we need 2 nodes
+> > in the devicetree.
+> >
+> > If latter, you suggestion is correct.
+>=20
+> No answers here, so I drop this patch from my queue.
+>=20
+It took sometime to get the confirmation internally (because of new year ho=
+liday)
+Just replied to Sudeep. It will be great if you can consider this patch for=
+ this cycle.=20
+Thanks=21
 
-But yes, the idea would be that any `dyn Io` works.
+> Best regards,
+> Krzysztof
 
-> The macro expands it from there, thus, we can also use this on firmware
-> memory structures, e.g. GSP WPR2 info.
-> 
-> Probably we are looking for a even more generic solution/type for deferring
-> a structure in the vaddr and generating the the accessing methods
-> accordingly. It might also be useful later in GSP message queue
-> manipulation, ELF header extraction, page table manipulation? (to avoid
-> ambitious unsafe statements in the rust driver)
-
-I think it's hard to predict to what extend we can (or want to) generalize this.
-But I think those are good thoughts that should be considered working on this.
-
-If you come up with a few lines to broaden the scope, I'm happy to add them to
-this section.
-
-> 
-> > +This could expand to something like:
-> > +
-> > +.. code-block:: rust
-> > +
-> > +	const BOOT0_OFFSET: usize = 0x00000000;
-> > +	const BOOT0_MINOR_REVISION_SHIFT: u8 = 0;
-> > +	const BOOT0_MINOR_REVISION_MASK: u32 = 0x0000000f;
-> > +	const BOOT0_MAJOR_REVISION_SHIFT: u8 = 4;
-> > +	const BOOT0_MAJOR_REVISION_MASK: u32 = 0x000000f0;
-> > +	const BOOT0_REVISION_SHIFT: u8 = BOOT0_MINOR_REVISION_SHIFT;
-> > +	const BOOT0_REVISION_MASK: u32 = BOOT0_MINOR_REVISION_MASK | BOOT0_MAJOR_REVISION_MASK;
-> > +
-> > +	struct Boot0(u32);
-> > +
-> > +	impl Boot0 {
-> > +	   #[inline]
-> > +	   fn read(bar: &RevocableGuard<'_, pci::Bar<SIZE>>) -> Self {
-> > +	      Self(bar.readl(BOOT0_OFFSET))
-> > +	   }
-> > +
-> > +	   #[inline]
-> > +	   fn minor_revision(&self) -> u32 {
-> > +	      (self.0 & BOOT0_MINOR_REVISION_MASK) >> BOOT0_MINOR_REVISION_SHIFT
-> > +	   }
-> > +
-> > +	   #[inline]
-> > +	   fn major_revision(&self) -> u32 {
-> > +	      (self.0 & BOOT0_MAJOR_REVISION_MASK) >> BOOT0_MAJOR_REVISION_SHIFT
-> > +	   }
-> > +
-> > +	   #[inline]
-> > +	   fn revision(&self) -> u32 {
-> > +	      (self.0 & BOOT0_REVISION_MASK) >> BOOT0_REVISION_SHIFT
-> > +	   }
-> > +	}
-> > +
-> > +Usage:
-> > +
-> > +.. code-block:: rust
-> > +
-> > +	let bar = bar.try_access().ok_or(ENXIO)?;
-> > +
-> > +	let boot0 = Boot0::read(&bar);
-> > +	pr_info!("Revision: {}\n", boot0.revision());
-> > +
-> > +| Complexity: Advanced
-> > +
-> > +Delay / Sleep abstractions
-> > +--------------------------
-> 
-> ...
-> 
-> > +
-> > +VRAM memory allocator
-> > +---------------------
-> > +
-> > +Investigate options for a VRAM memory allocator.
-> > +
-> > +Some possible options:
-> > +  - Rust abstractions for
-> > +    - RB tree (interval tree) / drm_mm
-> > +    - maple_tree
-> > +  - native Rust collections
-> > +
-> > +| Complexity: Advanced
-> > +
-> 
-> I am leaning towards having the abstractions at a high level APIs, e.g.
-> wrapping drm_mm and possibly the rust side can choose the backend type of
-> drm_mm if it really needs a different type of data structure other
-> than default supported by drm_mm. If we need more type of data structures,
-> we can extend drm_mm in C side. That can save us some efforts.
-
-I think we have to work out the advantages and disadvantages and see if there
-are any opportunities for synergies.
-
-For instance, in case we end up with separate VMM management in nova-core and
-nova-drm, there might be synergies for the other options.
-
-> 
-> > +Instance Memory
-> > +---------------
-> > +
-> > +Implement support for instmem (bar2) used to store page tables.
-> > +
-> > +| Complexity: Intermediate
-> > +| Contact: Dave Airlie
-> > +
-> > +GPU System Processor (GSP)
-> > +==========================
-> 
-> ...
-> 
-> > +
-> > +External APIs
-> > +=============
-> > +
-> > +nova-core base API
-> > +------------------
-> > +
-> > +Work out the common pieces of the API to connect 2nd level drivers, i.e. vGPU
-> > +manager and nova-drm.
-> > +
-> > +| Complexity: Advanced
-> > +
-> > +vGPU manager API
-> > +----------------
-> > +
-> > +Work out the API parts required by the vGPU manager, which are not covered by
-> > +the base API.
-> > +
-> > +| Complexity: Advanced
-> > +
-> > +nova-core C API
-> > +---------------
-> > +
-> > +Implement a C wrapper for the APIs required by the vGPU manager driver.
-> > +
-> > +| Complexity: Intermediate
-> 
-> Thanks for calling this out.
-> 
-> I believe the "vGPU manager API" is not a standalone task, as many of the
-> required APIs will intersect with other components in nova-core.
-> 
-> As one of nova-core’s users, vGPU represents the simplest use case to get
-> started with, offering significant value to both nova-core and its users
-> in the near term.
-> 
-> I was thinking that if we could align with the folks on making vGPU +
-> nova-core our initial short-term goal, it would be beneficial for
-> nova-drm's development, since the APIs required for nova-drm are a
-> superset of those needed for vGPU.
-
-I think it is common understanding to have nova-core + vGPU as a first
-milestone.
-
-However, I think that we should also put some effort into the nova-drm side of
-things to not miss out on potential design contraints on both ends, nova-core
-<-> nova-drm as well as nova-drm <-> DRM core, since there are also other
-upcoming Rust DRM drivers.
-
-> 
-> It would be valuable for us to be involved in key areas related to vGPU,
-> including:
-> 
-> - Task review
-> - Design discussions
-> - Unit testing
-
-I'm a bit confused about who specifically is meant with "we", "the folks" and
-"us" in your statements above.
-
-But of course everyone is welcome to be involved into the aspects mentioned
-above and the project in general. :-)
-
-> 
-> Additionally, we are working on a vGPU requirements document that will
-> outline the complete API needs for vGPU beyond those already covered in
-> the RFC patches. Hope that will be published soon.
-
-I think this will be very useful for nova project!
-
-> 
-> > +
-> > +Testing
-> > +=======
-> > +
-> > +CI pipeline
-> > +-----------
-> > +
-> > +Investigate option for continuous integration testing.
-> > +
-> > +This can go from as simple as running KUnit tests over running (graphics) CTS to
-> > +booting up (multiple) guest VMs to test VFIO use-cases.
-> > +
-> > +It might also be worth to consider the introduction of a new test suite directly
-> > +sitting on top of the uAPI for more targeted testing and debugging. There may be
-> > +options for collaboration / shared code with the Mesa project.
-> > +
-> > +| Complexity: Advanced
-> > diff --git a/Documentation/gpu/nova/guidelines.rst b/Documentation/gpu/nova/guidelines.rst
-> > new file mode 100644
-> > index 000000000000..28a959f51c2c
-> > --- /dev/null
-> > +++ b/Documentation/gpu/nova/guidelines.rst
-> > @@ -0,0 +1,73 @@
-> > +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +
-> 
-> I think this will develop into a maintainer handbook in the future which
-> reflects maintainer's requirements, thoughts, tips...maybe we can make it
-> explicit? I think it is rules of book that we agree to follow.
-> 
-> A similar one can be found here.
-> https://lore.kernel.org/kvm/20230411171651.1067966-1-seanjc@google.com/
-
-Yes, that's the idea. Is there anything additional you'd like to see added for
-this initial commit?
-
-> 
-> > +==========
-> > +Guidelines
-> > +==========
-> > +
-> > +This document describes the general project guidelines that apply to nova-core
-> > +and nova-drm.
-> > +
-> > +Language
-> > +========
-> > +
-> > +The Nova project uses the Rust programming language. In this context, the
-> > +following rules apply.
-> > +
-> > +- Unless technically necessary otherwise (e.g. uAPI), any driver code is written
-> > +  in Rust.
-> > +
-> > +- Direct FFI calls to C kernel APIs must be avoided; instead C kernel APIs
-> > +  should be accessed through shared Rust abstractions.
-> > +
-> > +- Unless technically necessary, unsafe Rust code must be avoided. In case of
-> > +  technical necessity, unsafe code should be isolated in a separate component
-> > +  providing a safe API for other driver code to use.
-> 
-> Also need to comment why the unsafe is the last possible approach to go.
-> the last thing we want to see is "unsafe" flying here and there in a rust
-> driver. :)
-
-You mean adding an explanation as for why to avoid "unsafe"? I thought it's
-probably rather obvious.
-
-But I'm also fine adding an explanation, suggestions?
