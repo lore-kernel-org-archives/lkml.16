@@ -1,84 +1,69 @@
-Received: from mail.netcube.li (mail.netcube.li [173.249.15.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A991F8908;
-	Wed,  5 Feb 2025 17:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.15.149
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530381FC0ED;
+	Wed,  5 Feb 2025 17:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738777772; cv=none; b=M2kCrbJ1lnAm1HSOKf2ZDbnxNkcz8LeFL6FjYDsjzv9nESB4kEElRlzCFw3g0XSyy1FjzfN+fXw4Bw8QeRH6GHvfgyZ6VLA5lGVlQpE5JYGxERuJCkIqNwEjIEqDUZN5BCYcOxltzx4AHKrkbtyzZi9/YPijDjCIHWEadRSlBQg=
+	t=1738777822; cv=none; b=TiEkrFtif7QP57Ol5QAizNpX/OX5eaA60IWjs+j2rYEipL6A0Tt/mjcQ1cN99hO2PSawzUdvWQge0UIIBOBtGLwyVPrXwylwdBlNb8wP4OxZvo3MY1/hajxng2Pi+i64PsjOKRuxgNxF44Pheqv/VJCt+ntGOYcYEBgtJ9CrQ+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738777772; c=relaxed/simple;
-	bh=InoRUYkTbcYQ+vP4+GqLM2Ee+VA2ASPW5As7qkgLHFY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tO1yiM19z6SakNccys5xuF2/qsdNGBeSTGGMwB0JvhHPbPYc2xG0vAAG56nxdKr/WJLSiqo1ORW0+gIPr8xd902sJKlk3tiM2YRV2l5QKuG3q2otsYBe19y798ZUNfWpQaixT8ssqVZETiquqt5SVHNMy8fQwjgNCZzlPu1vNm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li; spf=pass smtp.mailfrom=netcube.li; dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b=agCBS0jx; arc=none smtp.client-ip=173.249.15.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netcube.li
+	s=arc-20240116; t=1738777822; c=relaxed/simple;
+	bh=abN9KipNnaEw5cUvmYhbDmtzvc9hKPinaUEoZCnA0UY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b7aNq/lN10mKkb9XflPUVXaJp/EW2hZQlfL3B+fVKke27vBTyo0F8KLRFpeVQ8jNhAHrhXCi0dXMdwjbYu680VoVLA1fTQEraG4afLP+UibAZvvddYrlA+YBSqjJiH33YA6de/KYZz+phtH4NIERqqKFnf03ih6m0VTnkZEHe8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HrtU79ev; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b="agCBS0jx"
-dkim-signature: v=1; a=rsa-sha256; d=netcube.li; s=s1;
-	c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Transfer-Encoding:In-Reply-To:References;
-	bh=w+M8tkGYZnAzssMSrKjwe9AXXmu2ZiWoPOQS5vB+XAE=;
-	b=agCBS0jxLuluaV9hV9+j/lZ5sepVlXOxWxc62MKyH/X+4BnenSfYoA7uu/SDZzhhSqbhptJJ5nNLnEReIxjuOiDMHw8DjkfZesFgRkf94usIFTHjVYo0ulNoWFCRJ9YR5oEBFTF3I67+G05hIui7XsEzHnIa8U0iQq2TAaTo1BE=
-Received: from lukas-hpz440workstation.lan.sk100508.local (cm70-231.liwest.at [212.241.70.231])
-	by mail.netcube.li with ESMTPSA
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256)
-	; Wed, 5 Feb 2025 17:48:09 +0100
-From: Lukas Schmid <lukas.schmid@netcube.li>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Ripard <mripard@kernel.org>
-Cc: Lukas Schmid <lukas.schmid@netcube.li>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v9 2/4] dt-bindings: arm: sunxi: Add NetCube Systems Kumquat board
-Date: Wed,  5 Feb 2025 17:47:11 +0100
-Message-Id: <20250205164716.2509650-3-lukas.schmid@netcube.li>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250205164716.2509650-1-lukas.schmid@netcube.li>
-References: <20250205164716.2509650-1-lukas.schmid@netcube.li>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HrtU79ev"
+Received: from [192.168.2.246] (bras-base-toroon4332w-grc-32-142-114-216-132.dsl.bell.ca [142.114.216.132])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 08B45203719A;
+	Wed,  5 Feb 2025 09:50:19 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 08B45203719A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738777820;
+	bh=/QdguPZCzgq21lnkBKomUMawlFCJW7ToZuaOaJesVug=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HrtU79ev3S6VNI+UDLf9dMlKMVFtAFwBX6Kz/ljPAMBJWWoN4oGWPym4ZZCDlXub/
+	 stHL5KYAFfNfcHWK45Ue1u5Pr1ThnA4bXOVv2qyIB+IffDaF3mBVLtCw5SG+2flK2Q
+	 wKXThpc02bjtdZURzbMA/sRqrciCjoVpKz2I0480=
+Message-ID: <ccd67fd2-268a-4e83-9491-e401fa57229c@linux.microsoft.com>
+Date: Wed, 5 Feb 2025 12:50:19 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: A path forward to cleaning up dying cgroups?
+To: linux-mm@kvack.org
+Cc: Roman Gushchin <roman.gushchin@linux.dev>,
+ Johannes Weiner <hannes@cmpxchg.org>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+ =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Michal Hocko <mhocko@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Allen Pais <apais@linux.microsoft.com>, Yosry Ahmed <yosryahmed@google.com>
+References: <Z6OkXXYDorPrBvEQ@hm-sls2>
+Content-Language: en-US
+From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+In-Reply-To: <Z6OkXXYDorPrBvEQ@hm-sls2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The NetCube Systems Kumquat is an Embedded Controller based on the
-Allwinner V3s SoC. It is intended for Smart Home or Industrial automation
-without the need for a traditional PLC
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
 
-Signed-off-by: Lukas Schmid <lukas.schmid@netcube.li>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-index 046536d02706..f536cdd2c1a6 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -589,6 +589,11 @@ properties:
-           - const: emlid,neutis-n5h3
-           - const: allwinner,sun8i-h3
- 
-+      - description: NetCube Systems Kumquat
-+        items:
-+          - const: netcube,kumquat
-+          - const: allwinner,sun8i-v3s
-+
-       - description: NextThing Co. CHIP
-         items:
-           - const: nextthing,chip
--- 
-2.39.5
-
+On 2/5/25 12:48, Hamza Mahfooz wrote:
+> I was just curious as to what the status of the issue described in [1]
+> is. It appears that the last time someone took a stab at it was in [2].
+> 
+> Though it seems like there has been relative silence regarding it since
+> then. So, has there been any discussion regarding the issue since then
+> and does anyone know if there is consensus on how we should go about
+> resolving this issue within the kernel?
+> 
+> BR,
+> Hamza
+> 
+> [1] https://lwn.net/Articles/895431/
+> [2] https://lore.kernel.org/r/20220621125658.64935-1-songmuchun@bytedance.com/
 
