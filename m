@@ -1,183 +1,166 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD1617F7
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 16:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09AC18A6BA;
+	Wed,  5 Feb 2025 16:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738773461; cv=none; b=EYv/TJgVB9U+7eGMMykg8Dn//V3+Hi0i8JnTJsVOYQ0stgPLzH/sG/vfp92Q5+5XXuTRph3JCgU3fwEUOqdkcjRFgdHBGH6XMkZ0KsYVdci9h8JNm/gt1iT1pMaWf3kzD6/FAu15GN6DaTT8wrmjA8fFPnjZZCVjchvVErBAW1A=
+	t=1738773604; cv=none; b=sE/9Bv2l+/DYoABFQ4e5UEhNE7MK1eGRc+HWlo2ao+CSGzLLBAETtJn3lN0/sJxofGy2DARSZrrrpc7+KN1MLGI0c8hoSrBfvE2YX17BCxMILPSbWyO3s7oxdOFtu1w0+ktsVtY9Yab5O1XNwVYTQgFNlbgPJtVGtwe8Hly0QpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738773461; c=relaxed/simple;
-	bh=bNOKKT3WRUFpo997Z7H68M12mHyAmILfILAUEsy9ij0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YJpOuo+Z54dytRnFPJlW5GejYwvQ6ZIQcsJ6MlLaK3EeAGTZMmGcJfteI0knt25JDpPxR57KwsIREsgD6kADwbirW2N0IYTX1kj29LcYKf4lqrKbUJX6KmEsCWBI3t+bfp2jGvYIy+J8r41fZpEp2hzt14f9fkqlLAE40Mzerro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=POE/gZ16; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738773604; c=relaxed/simple;
+	bh=MW6+C14jG5Esc0YVeTcbxaytpn8rmcNZfT7WdMxypH0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FWV3hSludjnqUw+SG3fw04G1uB0UsUqTVYX+21gTOTskq3YUdu35BDLaVBVHXEkxsXZHiO1Jm3/MZOC0mQT0yC+mF4S8ukZsXKsgLSrpY1JrCpMhwNn5AS7WnVQr4ECM4iW6/OkO7eXp62TvZNfIvUjNdM/CRCSNaCb5K/TsDF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PbvcBD9P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="POE/gZ16"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30795988ebeso66596591fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 08:37:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738773457; x=1739378257; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EbY010afVshRghMlHcUYQ8NTia1RObj5hv00paiAnnQ=;
-        b=POE/gZ16Dl7nULE+3keNUFIK4gqGLrcUsCndy30Q7R1u0UYD9YMY22Wn47LHamillI
-         u81g4zCCh3QfVF5KjYtK9sWn3NlZlzUINAsFknkNFmRvvyyC8ARFWGI/DgQgbKmDLKIm
-         YV1q+/VT5ivgalmQRRuln+HySfGxEb1k+byXJTzXtGnZN9Tc/9wKc4zplw1Xmd4xUOvA
-         I9hbcalurvENK+KCWwXClyUfp5ERdX+30Ga8sk/I0Em6Ezm17FJjsQhS1V9x09/xb/nY
-         No/i2a2ub4ue0W3Mcva9pvSC7UJ8OcCuq2zA2yZqjNwJu19sBU1bBcd9BW8HiIC/b4uE
-         RX1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738773457; x=1739378257;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EbY010afVshRghMlHcUYQ8NTia1RObj5hv00paiAnnQ=;
-        b=lv7v/3ya9AJ5jF4GiG6nqvOQbQ3yhDQaoi9IfvL5i1UnKKBbZoqbGDMndJYLvRkRj2
-         8h18WYaz2Htl52cIxQbHAybF95TiNppCDGa7t+SHH6JaG9dhXVCgws+ENsJAt2crmfEK
-         oaZH4+ZTOdFXLeUHrjiF3MhT2U2ovvir+qH54h8TNtrC8SMsN88j8i50Ldi8ujTU91na
-         A97KzYYAUqTsSMeY/UqqvaBxJ0mVUachH6NOe3aaQxOdOYgYi3Q+akBRVFHsTIELxDMw
-         r1TnKH9cQq6TgrCPinbYi1VQFR7hxpGilMb2TnHgypl1W+XrfWk2nLNLwfil0TLgfbT+
-         CRMg==
-X-Forwarded-Encrypted: i=1; AJvYcCWo98oDG2LdwmW6fJu0KZFnK48WcwuqdaFh9kW9LzSaGfwivES+rFYzfv8R18KzTO1z7XdTL4oij/S3IKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHSdqQoKlvBJmwfWVBMPWR2KFxGsaYdjBUE8g7UprqaY45Cqrc
-	slL2NcWcTEggTSPmv/T0GUunxw7u6N1WBfVMlWkZji3KsRqnD3gOn6SPExX14PwnFgLTULhf60s
-	TG8DM4vqfvhIk0VG18TmImylWz65Cu97rnZ9g
-X-Gm-Gg: ASbGncsnGAEJOMDlSBFFyM3rAt+McCxsQS0iH4bVgnitysaQSIqrs9ia19yQq4R4Ip9
-	VelC1zrUTDG94uPynAQtfRxdW3yrbbN6FfKQMvo8KxXQX2ep74DJrF2Vd/uitxwb04af7gf+L/Z
-	lzg1q501/DdkxVFbzOvDlfG/gwgwJftw==
-X-Google-Smtp-Source: AGHT+IEwhssSLHhx+8xA0LWdJKTUGZXB7UQVaXIcA/NB1uo9ZKR8cqCyoVOEZrxsyEMXURqGJvb3Nr64tVloU1V03Ck=
-X-Received: by 2002:a05:651c:1509:b0:300:de99:fcc7 with SMTP id
- 38308e7fff4ca-307cf38f82bmr11465811fa.36.1738773457268; Wed, 05 Feb 2025
- 08:37:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PbvcBD9P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8713C4CED1;
+	Wed,  5 Feb 2025 16:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738773603;
+	bh=MW6+C14jG5Esc0YVeTcbxaytpn8rmcNZfT7WdMxypH0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PbvcBD9Pf48kjdmaunVfRm5HfKlG94YQkySYFmcKEhQpOV8dCfiq95QnAkj9au0Fn
+	 qCfVZYKf/+eMX18ZVyLZO76EaNqPNah3h528mNHT2F+rdGXDJZS8Af5hkSC4C7GKVY
+	 sB+0eIWiot4fXMhgWYAhlHq5rrh3tHqowXBvBislvgq99/FtqstgQtfATnrZ4HCs+o
+	 nZd9/vC1IP/LdePUmr25n/DfoURISrwDg4u7AZzvS5ryahUDsrDZFjskBhPz3d0Z8f
+	 n5znAHDlLKTZiA/q5Xj0JMaToeCmvdgTR620uvPOqs5rzUO3SFIQSWghvvbAJN3IXQ
+	 DdgVNuKto18Lw==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Joe Perches <joe@perches.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	linux-doc@vger.kernel.org,
+	workflows@vger.kernel.org
+Subject: [PATCH] kbuild: remove EXTRA_*FLAGS support
+Date: Thu,  6 Feb 2025 01:39:38 +0900
+Message-ID: <20250205163939.3464137-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738592865.git.dvyukov@google.com> <Z6GVqh6detN8rbKV@google.com>
-In-Reply-To: <Z6GVqh6detN8rbKV@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Wed, 5 Feb 2025 17:37:25 +0100
-X-Gm-Features: AWEUYZnYgNhKxAA5Zc3OF0HwBu6xcsaCXjrS52JZa-WiWVLFliw9F5rJQ5RIjA4
-Message-ID: <CACT4Y+b9B6=ijtGfrtwQFq44ceiRTmv53pC9iqgNsbeg=cFr4Q@mail.gmail.com>
-Subject: Re: [PATCH v4 0/8] perf report: Add latency and parallelism profiling
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, acme@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 4 Feb 2025 at 05:21, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hello,
->
-> On Mon, Feb 03, 2025 at 03:30:35PM +0100, Dmitry Vyukov wrote:
-> > There are two notions of time: wall-clock time and CPU time.
-> > For a single-threaded program, or a program running on a single-core
-> > machine, these notions are the same. However, for a multi-threaded/
-> > multi-process program running on a multi-core machine, these notions are
-> > significantly different. Each second of wall-clock time we have
-> > number-of-cores seconds of CPU time.
-> >
-> > Currently perf only allows to profile CPU time. Perf (and all other
-> > existing profilers to the be best of my knowledge) does not allow to
-> > profile wall-clock time.
-> >
-> > Optimizing CPU overhead is useful to improve 'throughput', while
-> > optimizing wall-clock overhead is useful to improve 'latency'.
-> > These profiles are complementary and are not interchangeable.
-> > Examples of where latency profile is needed:
-> >  - optimzing build latency
-> >  - optimizing server request latency
-> >  - optimizing ML training/inference latency
-> >  - optimizing running time of any command line program
-> >
-> > CPU profile is useless for these use cases at best (if a user understands
-> > the difference), or misleading at worst (if a user tries to use a wrong
-> > profile for a job).
-> >
-> > This series add latency and parallelization profiling.
-> > See the added documentation and flags descriptions for details.
-> >
-> > Brief outline of the implementation:
-> >  - add context switch collection during record
-> >  - calculate number of threads running on CPUs (parallelism level)
-> >    during report
-> >  - divide each sample weight by the parallelism level
-> > This effectively models that we were taking 1 sample per unit of
-> > wall-clock time.
-> >
-> > We still default to the CPU profile, so it's up to users to learn
-> > about the second profiling mode and use it when appropriate.
-> >
-> > Changes in v4:
-> >  - added "Shrink struct hist_entry size" commit
-> >  - rebased to perf-tools-next HEAD
-> >
-> > Changes in v3:
-> >  - rebase and split into patches
-> >  - rename 'wallclock' to 'latency' everywhere
-> >  - don't enable latency profiling by default,
-> >    instead add record/report --latency flag
-> >
-> > Dmitry Vyukov (8):
-> >   perf report: Add machine parallelism
-> >   perf report: Add parallelism sort key
-> >   perf report: Switch filtered from u8 to u16
-> >   perf report: Add parallelism filter
-> >   perf report: Add latency output field
-> >   perf report: Add --latency flag
-> >   perf report: Add latency and parallelism profiling documentation
-> >   perf hist: Shrink struct hist_entry size
->
-> I found that stdio output is broken that latency is too high.  TUI is fine.
->
->   $ ./perf report --latency -s dso --stdio
->   ...
->   #
->   #  Latency  Overhead  Shared Object
->   # ........  ........  ....................
->   #
->      57669.15%    57.67%  [kernel.kallsyms]
->      42330.85%    42.33%  ld-linux-x86-64.so.2
+Commit f77bf01425b1 ("kbuild: introduce ccflags-y, asflags-y and
+ldflags-y") deprecated these in 2007. The migration should have been
+completed by now.
 
-Fixed in v5.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-> Thanks,
-> Namhyung
->
-> >
-> >  .../callchain-overhead-calculation.txt        |  5 +-
-> >  .../cpu-and-latency-overheads.txt             | 85 ++++++++++++++++++
-> >  tools/perf/Documentation/perf-report.txt      | 49 ++++++----
-> >  tools/perf/Documentation/tips.txt             |  3 +
-> >  tools/perf/builtin-record.c                   | 20 +++++
-> >  tools/perf/builtin-report.c                   | 39 ++++++++
-> >  tools/perf/ui/browsers/hists.c                | 27 +++---
-> >  tools/perf/ui/hist.c                          | 64 +++++++++----
-> >  tools/perf/util/addr_location.c               |  1 +
-> >  tools/perf/util/addr_location.h               |  7 +-
-> >  tools/perf/util/event.c                       | 11 +++
-> >  tools/perf/util/events_stats.h                |  2 +
-> >  tools/perf/util/hist.c                        | 90 +++++++++++++++----
-> >  tools/perf/util/hist.h                        | 32 +++++--
-> >  tools/perf/util/machine.c                     |  7 ++
-> >  tools/perf/util/machine.h                     |  6 ++
-> >  tools/perf/util/sample.h                      |  2 +-
-> >  tools/perf/util/session.c                     | 12 +++
-> >  tools/perf/util/session.h                     |  1 +
-> >  tools/perf/util/sort.c                        | 69 ++++++++++++--
-> >  tools/perf/util/sort.h                        |  3 +-
-> >  tools/perf/util/symbol.c                      | 34 +++++++
-> >  tools/perf/util/symbol_conf.h                 |  8 +-
-> >  23 files changed, 502 insertions(+), 75 deletions(-)
-> >  create mode 100644 tools/perf/Documentation/cpu-and-latency-overheads.txt
-> >
-> >
-> > base-commit: 8ce0d2da14d3fb62844dd0e95982c194326b1a5f
-> > --
-> > 2.48.1.362.g079036d154-goog
-> >
+ Documentation/dev-tools/checkpatch.rst | 18 ------------------
+ Documentation/kbuild/makefiles.rst     |  3 ---
+ scripts/Makefile.build                 |  4 ----
+ scripts/Makefile.lib                   |  5 -----
+ scripts/checkpatch.pl                  | 14 --------------
+ 5 files changed, 44 deletions(-)
+
+diff --git a/Documentation/dev-tools/checkpatch.rst b/Documentation/dev-tools/checkpatch.rst
+index abb3ff682076..76bd0ddb0041 100644
+--- a/Documentation/dev-tools/checkpatch.rst
++++ b/Documentation/dev-tools/checkpatch.rst
+@@ -342,24 +342,6 @@ API usage
+ 
+     See: https://www.kernel.org/doc/html/latest/RCU/whatisRCU.html#full-list-of-rcu-apis
+ 
+-  **DEPRECATED_VARIABLE**
+-    EXTRA_{A,C,CPP,LD}FLAGS are deprecated and should be replaced by the new
+-    flags added via commit f77bf01425b1 ("kbuild: introduce ccflags-y,
+-    asflags-y and ldflags-y").
+-
+-    The following conversion scheme maybe used::
+-
+-      EXTRA_AFLAGS    ->  asflags-y
+-      EXTRA_CFLAGS    ->  ccflags-y
+-      EXTRA_CPPFLAGS  ->  cppflags-y
+-      EXTRA_LDFLAGS   ->  ldflags-y
+-
+-    See:
+-
+-      1. https://lore.kernel.org/lkml/20070930191054.GA15876@uranus.ravnborg.org/
+-      2. https://lore.kernel.org/lkml/1313384834-24433-12-git-send-email-lacombar@gmail.com/
+-      3. https://www.kernel.org/doc/html/latest/kbuild/makefiles.html#compilation-flags
+-
+   **DEVICE_ATTR_FUNCTIONS**
+     The function names used in DEVICE_ATTR is unusual.
+     Typically, the store and show functions are used with <attr>_store and
+diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+index d36519f194dc..25e04e47faff 100644
+--- a/Documentation/kbuild/makefiles.rst
++++ b/Documentation/kbuild/makefiles.rst
+@@ -318,9 +318,6 @@ ccflags-y, asflags-y and ldflags-y
+   These three flags apply only to the kbuild makefile in which they
+   are assigned. They are used for all the normal cc, as and ld
+   invocations happening during a recursive build.
+-  Note: Flags with the same behaviour were previously named:
+-  EXTRA_CFLAGS, EXTRA_AFLAGS and EXTRA_LDFLAGS.
+-  They are still supported but their usage is deprecated.
+ 
+   ccflags-y specifies options for compiling with $(CC).
+ 
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 993708d11874..a59650ba140b 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -20,10 +20,6 @@ always-m :=
+ targets :=
+ subdir-y :=
+ subdir-m :=
+-EXTRA_AFLAGS   :=
+-EXTRA_CFLAGS   :=
+-EXTRA_CPPFLAGS :=
+-EXTRA_LDFLAGS  :=
+ asflags-y  :=
+ ccflags-y  :=
+ rustflags-y :=
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index ad55ef201aac..20d77bfd0d72 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -1,9 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+-# Backward compatibility
+-asflags-y  += $(EXTRA_AFLAGS)
+-ccflags-y  += $(EXTRA_CFLAGS)
+-cppflags-y += $(EXTRA_CPPFLAGS)
+-ldflags-y  += $(EXTRA_LDFLAGS)
+ 
+ # flags that take effect in current and sub directories
+ KBUILD_AFLAGS += $(subdir-asflags-y)
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 7b28ad331742..8f70bedc18be 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3689,20 +3689,6 @@ sub process {
+ 			}
+ 		}
+ 
+-		if (($realfile =~ /Makefile.*/ || $realfile =~ /Kbuild.*/) &&
+-		    ($line =~ /\+(EXTRA_[A-Z]+FLAGS).*/)) {
+-			my $flag = $1;
+-			my $replacement = {
+-				'EXTRA_AFLAGS' =>   'asflags-y',
+-				'EXTRA_CFLAGS' =>   'ccflags-y',
+-				'EXTRA_CPPFLAGS' => 'cppflags-y',
+-				'EXTRA_LDFLAGS' =>  'ldflags-y',
+-			};
+-
+-			WARN("DEPRECATED_VARIABLE",
+-			     "Use of $flag is deprecated, please use \`$replacement->{$flag} instead.\n" . $herecurr) if ($replacement->{$flag});
+-		}
+-
+ # check for DT compatible documentation
+ 		if (defined $root &&
+ 			(($realfile =~ /\.dtsi?$/ && $line =~ /^\+\s*compatible\s*=\s*\"/) ||
+-- 
+2.43.0
+
