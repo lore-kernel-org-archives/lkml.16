@@ -1,116 +1,82 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1C8189BB3
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992451885BE
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738781130; cv=none; b=oHV9RNJtJKVlCfWY+l7MeearoErktpaiuzWPqwTJ34zAm+CAc6cXafW1Dcko68k0VoNLVLhb2ZIbQF7Vo3SdJHiR9qxsuBH9AXO96L1gF4udPHUIl+/UzOso8OxGaV67OZM9GvNkjAA0ka10PjSbfqimOadBbse3Xk1HFB101U8=
+	t=1738781200; cv=none; b=k9d7J/r/8QuMS18R7fQJ17vq5HIhbEMIAFQvhjOSKx/IRrJq7Yz+x5j+PGENGCSdN/K+3HrZByhQZhKRciOhMk7pIN0YAn8u3JgV9r1VIghRDZY6vc3Ku76poQ7aNZvvgNpM5jz+ahknY5rsb9wAMdAaZnBoadeAk0XZOmyX3SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738781130; c=relaxed/simple;
-	bh=mx7W3Eh4QvKtUBLSiT/4VmvO1/iLZDwSr+NLnQ+cD9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=LkIFD9Fz7Bip4dRL220cLxI7n0okpGsg6+46oqmD2/o1dE1Dz8sbHp4nV6r4ajNcw7YLTlY/PEzXQHn1OGv0IrJvUe0KpbPC3HhCjV/b0pcA567TuAmsYcFAlo98NYn4cXJbMpRFRw1NZ9Keqf9aEA4WPVacZokN60g8vegSttk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=WQx+5U/N; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1738781200; c=relaxed/simple;
+	bh=T8gMU+/K/kbLdkGaqF6WLCgq2VbFATFRi22ywpXb88M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PA3n/Lm4Fy7VXTDRp2VS4LgbBmIHZjtohE5hixCSHpH7xTuO3Uuh3/JdMUA8rCavY/uMLBaPOHPp2wcSAOBcSYKJqwrqLzpmIc0YSMeDh+yPm5igSTBahkd0UqPOhLTdCQTKssYzJ+wGJNKVWGEd3wkk5PUsAbEI24bcYnL53l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LDMufWY0; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="WQx+5U/N"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d03ac846a7so137565ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:45:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738781126; x=1739385926; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=s4PsJJZ4IZmY21NLAFj3oN3i3BEG9tWiG+e1PKPQRmE=;
-        b=WQx+5U/Nyto2z+Fy5jnU5WmqMs0hTSBeF1KZtMS4SVMOE+1inbX/h/qe9amGmIm9Xq
-         7kcS9MeduSDK8hE6r8rKQCya0jjoLw4/7UdEQmD1MT35glSS653hHJO9WnQFw8Qioqj3
-         J9aCb2ajy3D8Ifv0VX+yobwdSI1gVuETm+17hQEbcF53gA6sRYKVwroMpv+7Jh+BXNmS
-         T4X1qHqsZU8W04fK8Xe7zEs9kb5kWWa0J+jYXdOmEj0Ed/s2Jgp0wn2BDg0uZ+z+RVD+
-         pNW4wp/KQr1kEjIpnADn/Qd44/Gm38aaOjyADxtw6ur+x615vpmAR3QB3q7jp79jgXbm
-         9oDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738781126; x=1739385926;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s4PsJJZ4IZmY21NLAFj3oN3i3BEG9tWiG+e1PKPQRmE=;
-        b=MMA1taMO7KzTF53Wwg7N/fj+a4bLXic1cvqKYwLyXJw2K01/Xqbk+uTIc4Dif2fA6Y
-         kBN1oo+CsOyE0p53/TnHFdgnSEHTOHtmnQDG4eRw+SYhZNrWkg6TtEGUHU88OIHbrgUk
-         7G6sUUvEd3cLuzKpKQOCXpK1xjuSYwbcoksf4EGVD/8eJfXVdw0LrxnLU8d/cYN9SkiL
-         f2XJNWWFZ7OgpItubmBBxhYAVfDQMF5XHye71JaZxWLIe5dqPH8Av8GOFiHYDZdGYoNf
-         VIVqBNDSLv3HdXgm+HFY0Tf20+77Yh7faHWWMEMhwPcv86HOYvHFBLt2TU5HAHQtKC6q
-         Fp4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXzt3Q6YO45QteyJN/1CQ+dlsyOoAOKS9gZ6U21/LtFgSTlI2ESncpVcNuzjRXjiUjMZc7HRqdiT1J6ams=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZgn8vlhca89cunefizM1pzvBIPqKmRuHw3SlLBYngiEYUKFcU
-	tC9OD7zempY9mZz9ylVxYpuYQU8IM1lDgNKykvCEMTIpM3DX25HCeCoqvQL7Wpw=
-X-Gm-Gg: ASbGnctmVEgQrxbMiaEt8cBVnZIG7igikW3Lvx5mfMbiyJBUzT6niObQeGh2PzoVFZ+
-	puK/VIMWPsU3xtsNYmoCsIwitgJqf4uFe+kBVIDGHT+YzIMSXJO4ma187wKVbQv5gdiAxoCEOde
-	7hmVoF+4aES1GR9hf012qvNKnlTCzUwUE+iZ0G0RLjMLQz6Q7cTsLf1Zo9wNaZvmohNxOeyK4hi
-	sqKwy7TBrVzLa7zBjTr9ycw2U84U3N4CiQ6hxJ6fTSppkCEHmXWCfSQ5pRRXXENagh9YGL9o/VX
-	mb2tzr6Cvoc=
-X-Google-Smtp-Source: AGHT+IEv4D0EXesOy2KXf6peR78fA+ZoVihX6c9sA5VRODgg/4D76XYo58u681gXGutwixDhi4Hz2Q==
-X-Received: by 2002:a05:6e02:2688:b0:3d0:2b88:116c with SMTP id e9e14a558f8ab-3d04f45aff3mr35526325ab.10.1738781126462;
-        Wed, 05 Feb 2025 10:45:26 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ec745b4ffcsm3359682173.47.2025.02.05.10.45.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 10:45:25 -0800 (PST)
-Message-ID: <35d4b9be-3d08-4eaa-8750-7b34ec6e6064@kernel.dk>
-Date: Wed, 5 Feb 2025 11:45:24 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LDMufWY0"
+Date: Wed, 5 Feb 2025 10:46:18 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738781186;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3B9HQgB2lIvdMoF93udk/hVUhWsuTPXwL/Y7LyVovXo=;
+	b=LDMufWY0oZe5avAFVRX64ZYoQyVuQVUR2X6Wdfc81YHSt0wFIuqtPi9ncq36PayNjrTtKE
+	DgmwR1AtGgEtZR0ZKSVqiB8OoYCEPfIxIqcv1967BzVGcWFFPldHbrPaJ0cRyY/MiTKM/B
+	bT8OX7JwOnHt33s3irUY8nZabDq9wYs=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>, linux-mm@kvack.org, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>, 
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Michal Hocko <mhocko@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Allen Pais <apais@linux.microsoft.com>, 
+	Yosry Ahmed <yosryahmed@google.com>
+Subject: Re: A path forward to cleaning up dying cgroups?
+Message-ID: <7nqk5crpp7wi65745uiqgpvlomy3cyg3oaimaoz4fg2h4mf7jp@zclymjsovknp>
+References: <Z6OkXXYDorPrBvEQ@hm-sls2>
+ <ccd67fd2-268a-4e83-9491-e401fa57229c@linux.microsoft.com>
+ <20250205180842.GC1183495@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/12] io_uring: Use helper function
- hrtimer_update_function()
-To: Nam Cao <namcao@linutronix.de>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-References: <cover.1738746927.git.namcao@linutronix.de>
- <9b33f490fb1d207d3918ef5e116dc3412ae35c1e.1738746927.git.namcao@linutronix.de>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <9b33f490fb1d207d3918ef5e116dc3412ae35c1e.1738746927.git.namcao@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205180842.GC1183495@cmpxchg.org>
+X-Migadu-Flow: FLOW_OUT
 
-On 2/5/25 3:55 AM, Nam Cao wrote:
-> The field 'function' of struct hrtimer should not be changed directly, as
-> the write is lockless and a concurrent timer expiry might end up using the
-> wrong function pointer.
+On Wed, Feb 05, 2025 at 01:08:42PM -0500, Johannes Weiner wrote:
+> On Wed, Feb 05, 2025 at 12:50:19PM -0500, Hamza Mahfooz wrote:
+> > Cc: Shakeel Butt <shakeel.butt@linux.dev>
+> > 
+> > On 2/5/25 12:48, Hamza Mahfooz wrote:
+> > > I was just curious as to what the status of the issue described in [1]
+> > > is. It appears that the last time someone took a stab at it was in [2].
 > 
-> Switch to use hrtimer_update_function() which also performs runtime checks
-> that it is safe to modify the callback.
+> If memory serves, the sticking point was whether pages should indeed
+> be reparented on cgroup death, or whether they could be moved
+> arbitrarily to other cgroups that are still using them.
 > 
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> ---
->  io_uring/io_uring.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> It's a bit unfortunate, because the reparenting patches were tested
+> and reviewed, and the arbitrary recharging was just an idea that
+> ttbomk nobody seriously followed up on afterwards.
 > 
-> diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-> index ceacf6230e34..936f8b4106cf 100644
-> --- a/io_uring/io_uring.c
-> +++ b/io_uring/io_uring.c
-> @@ -2421,7 +2421,7 @@ static enum hrtimer_restart io_cqring_min_timer_wakeup(struct hrtimer *timer)
->  			goto out_wake;
->  	}
->  
-> -	iowq->t.function = io_cqring_timer_wakeup;
-> +	hrtimer_update_function(&iowq->t, io_cqring_timer_wakeup);
->  	hrtimer_set_expires(timer, iowq->timeout);
->  	return HRTIMER_RESTART;
->  out_wake:
+> We also recently removed the charge moving code from cgroup1, along
+> with the subtle page access/locking/accounting rules it imposed on the
+> rest of the MM. I'm doubtful there is much appetite in either camp for
+> bringing this back.
+> 
+> So I would still love to see Muchun's patches merged. They fix a
+> seemingly universally experienced operational issue in memcg, and we
+> shouldn't hold it up unless somebody actually posts alternative code.
+> 
+> Thoughts?
 
-The timer is known expired here, it's inside the callback. Is this
-really necessary or useful?
-
--- 
-Jens Axboe
-
+I think the recharging (or whatever the alternative) can be a followup
+to this. I agree this is a good change.
