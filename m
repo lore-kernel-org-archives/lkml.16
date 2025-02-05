@@ -1,137 +1,211 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5802770B
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 06:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738736905; cv=none; b=ZexNx98XHBAmS6ihR2FkZRYSyxui+0+QbjykV2u2637vZafnflFJhEy3j/Ssc2TlqgYm4Rfj6ttY6C0DNjgNneyWlp15k6NjRINPLCdbjskxVd4brFU6ui1pNYRrtLz1uwqLw3qFLOQ7L+wyBjL2z6Gp7lwU0qSeXPZN+Fa/aKc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738736905; c=relaxed/simple;
-	bh=vSbqnzR1xyzYtpWvblXks7qeEBgSteFAYaGNumpJIiE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kng0JS70x5ob2dk/2LNJCCmRBVkm+k2Iu36PgrUB7yOyAxKnsl/mFF8paxkzy+NoNyXNaBHM1B/ENeHQ13rW+Lxw2TtPbpIBX0AYb3hWdnybAQmWBwV0McwIW0OfNWsrWgifmRWDoouDfLVVA/seI84kcg4ZhgbbWj+1/xcaRBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-844e9b88efeso1089574239f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Feb 2025 22:28:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738736902; x=1739341702;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/mSQCkeHuwhZt0xgZfQYnAAlUtXuw/pecT5TvaMXbg0=;
-        b=JiH2lKUPrkOo/o/WKDiaSf+n6JSBdQfX9wfrm3BhF0zGaq0dXgWD3ebwKufq6KiCCh
-         bJO1r7kgV6XPIMxJf2C2c1/z1oQnGxgb1bQ5C+nayPPV60crY5UCajgaByUMPQTfkuW7
-         4iA5jwJ9nqQWBGbLozCg7bVItHpHLQEotvtuIfQzncPS7i0sqH4LOxL3ugf0KDp+sQC3
-         8TUmkXTu3nUr4NpyqgtD2IslOUf0VUn0WE4EwTyphB+4xcrtcKRY8ocfLa7aPRXl5pUe
-         XmSkM8oiW8KkiITVgUw8vE9g4wJc2X3ZPloL6VoY+gfycvmzt9fNBdTWvaQOTQl2wcHx
-         IxRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXuka/FR/yqGOzp80umfAVudGrltoeH/xQqxbJrQdO61mdOJ9z1aOL1vEsWVo0wi5hi7UBs8WhdzBfSUoI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF/bpGAMZss/bdTMCFuc2iXygbCyzZAGO1JdmoRAK9wSB9lz/Y
-	pnvtPRjUYrNVkYYbOosUYx6zA4zSgYb+6eWBISUo8Qr2fmYhkmqjwHP/xyu2jITST+hTXnZ5QEZ
-	rFmxjaKi1i7hE24CtY9wyI7nsroer9GUlHZwrAsSq87uU59Kw4qidFtA=
-X-Google-Smtp-Source: AGHT+IGoH6/x7eWSgJnwDXYdv0fUIqvMnn1baO6rbOPbWHLkjPGjquabYqCgR/KUHPGoY7Lj51yJCLAf+YB2msqdEdwBilzQ+ThQ
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B6425A650;
+	Wed,  5 Feb 2025 06:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738737123; cv=fail; b=tOCLXs9ztwRv8LUScbYVoHAoSRXMGNOPH4UhPhHT/48bhprLZtJDruAnqydtEZxWedKI0bRTeYF/uq61h5VxLlsbXv/AX8tSkD+6XITtxJGaimORD7iroRnPwQ6DzWFmr5+Ek4ZMLX1qI6Bb1jPphE41EJxa3NcO8G/jUacny/8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738737123; c=relaxed/simple;
+	bh=NmsCT2aKucIvXAKefjG3xa0ufciCiHJW/iOCwAXzEKE=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=U2O6cLAwhyoVUJw3bsrAIYA4MS+s5+MxZUofvG3BuqKynDGPWWU6oFwZpugMHoYuDC2mD4EG9QMqxIfDWcFeTVunyIyFuV6++znSY+fEW0AZ4QpWbGUjezJWU8HvYPA+UglmGJTlcV6kteQO4oHrAPCAxMPeIXR5gLe30PibCR0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=crf67mjx; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="crf67mjx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738737121; x=1770273121;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=NmsCT2aKucIvXAKefjG3xa0ufciCiHJW/iOCwAXzEKE=;
+  b=crf67mjx2jl4AoMpNoJvO2/obNfWe4nwVUpZvCs11qZCvmkggggSm9Gt
+   TWDPZkVQH+KLieOP8ijamd03zq1azSe/V6YsfjG8DM+xWovddxJ0az45w
+   xxTUNXb80/RE95krSeJy7tx3b2K1QyQOBFJPdvT5RERYxMEAX9oqUNaHj
+   uBI64GJT6VuGeat/+KKoty+3iILkSejpYehwssczlEaey6lJDyJ3zU+qW
+   iZvU7/AO3seTYupy6BrJzrUJWl3Wf/SMCtkIhWvTwXPbyQzQ8h9uukiDl
+   KGgT0zSPA54Ao/7oDZu8EIWxWGJfUBPx31pQWNaa+CZyoJRZ8+tRvj08G
+   A==;
+X-CSE-ConnectionGUID: NSbSODf/T/GrqaFTbEe+wA==
+X-CSE-MsgGUID: RPcmSSt1QuSLyJoT+CNM+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="49541961"
+X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
+   d="scan'208";a="49541961"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 22:32:00 -0800
+X-CSE-ConnectionGUID: epJUCoKfSMqEEZ+kwYL/Iw==
+X-CSE-MsgGUID: hWn20vtVSA2gnM8nk7Bjiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="148026211"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Feb 2025 22:32:01 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 4 Feb 2025 22:32:00 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Tue, 4 Feb 2025 22:32:00 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.173)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 4 Feb 2025 22:31:59 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=unGntLWVf9FPPci3gXuPnEEvUH4h4xP6TlUq1hDYXh/Z30SOm1G+ZVfRFW6tdkZmuNKj1cYPHFE1tJLHFZCtmQi3pffWpQc6P7q+2Wmgy3Jo6KIgaH+pwBv0Q2+/X3mKcYraNObmMLBFYf/7gkkPUciM1D8/ZpE1eDlaqhMJ8kBSDl8Fhmw/chA3BM+LeIyYvWDcQcCZHCn1l5s1pnBtaSTNpAD/6delIAHobAkxB54y2aZhsupTzf3KsBPHH9Hi9EEbqdLs0rNBmHSMba44cVEG44OgA4O2kSPduuKdqD6Nthzi/aeEcOvJaCgTECJt3wbXwYKVEl7AO4GH228idg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FB80qyN1xNbE0QO7V7C17sMQnSzFvC5NnvcrOIlt254=;
+ b=y8j9LlC/ClBjTY9pYnVjtQF99VOQ+ad7cdwQDV3JhCPB1grSG80SFM164oBOGvh+vks50+hCX2C0vl7lurI4yDVtF09pIOBME2EAHqLwG6ev1Gp7oMiK/P376RnTkmsCC893deUdx/ZkoUaQs/ahR6eKfdae4YjHQeAvEDdJPgb2NcfP/IH4XHWAW+FeC01SlEjSbqSD4drTcL7vS28qt/T9P1YSLJuH7qw1HLIkBQTUuFK+vHB0Rb2cRulL98gltWBnnDk5c9tQ1yg4szkKpzdiWjmTkir/6h5WghAa+PREX8rqiuJ1Eyl3pfkh+QeRpl5TtbK7xCu8h+aIdUCQDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BN0PR11MB5758.namprd11.prod.outlook.com (2603:10b6:408:166::18)
+ by CY8PR11MB7059.namprd11.prod.outlook.com (2603:10b6:930:51::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Wed, 5 Feb
+ 2025 06:31:30 +0000
+Received: from BN0PR11MB5758.namprd11.prod.outlook.com
+ ([fe80::5183:feab:8a06:b19f]) by BN0PR11MB5758.namprd11.prod.outlook.com
+ ([fe80::5183:feab:8a06:b19f%5]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
+ 06:31:29 +0000
+Message-ID: <b6157185-9c9e-49f2-9e4d-03ad6e26f898@intel.com>
+Date: Tue, 4 Feb 2025 22:31:26 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/intel/ifs: Update documentation with image
+ download path
+To: Anisse Astier <anisse@astier.eu>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+	<platform-driver-x86@vger.kernel.org>, <tony.luck@intel.com>,
+	<ashok.raj.linux@gmail.com>
+References: <20250131205315.1585663-1-jithu.joseph@intel.com>
+ <50ba78dc-f60d-63de-80fd-ef9b1fc68c72@linux.intel.com>
+ <2ab4c849-dfc2-4427-b6df-2f2c070e7933@intel.com>
+ <f33148f4-f9f2-4b7c-81df-346b750eb2dc@app.fastmail.com>
+Content-Language: en-US
+From: "Joseph, Jithu" <jithu.joseph@intel.com>
+In-Reply-To: <f33148f4-f9f2-4b7c-81df-346b750eb2dc@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY1P220CA0011.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:59d::11) To BN0PR11MB5758.namprd11.prod.outlook.com
+ (2603:10b6:408:166::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1989:b0:3cf:c745:4fa8 with SMTP id
- e9e14a558f8ab-3d04f961873mr19890895ab.18.1738736902526; Tue, 04 Feb 2025
- 22:28:22 -0800 (PST)
-Date: Tue, 04 Feb 2025 22:28:22 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a30506.050a0220.50516.0010.GAE@google.com>
-Subject: [syzbot] [ntfs3?] kernel panic: stack is corrupted in ni_enum_attr_ex
-From: syzbot <syzbot+fe33beb8c5dba41e050b@syzkaller.appspotmail.com>
-To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
-	ntfs3@lists.linux.dev, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR11MB5758:EE_|CY8PR11MB7059:EE_
+X-MS-Office365-Filtering-Correlation-Id: 94b050f2-607f-425e-76af-08dd45aeb980
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?VU1TSVNlRU9uZUNPdkZYQThzWldIYUNucDlqZVkzTC9qTWs4RFR2UkVsRG9m?=
+ =?utf-8?B?ZThQSFVwWmJWYk15bXE5a1BUR240aVBJQU1aMG5BSldMVTR4RU1pMFM0Mmo2?=
+ =?utf-8?B?T09DRnV6azMvUkFOeVVOMmdpc3JidXpjSDhvQVk2YkxxY2lkM1Q4WmtFdk5S?=
+ =?utf-8?B?ZklKZnREZUVuRjVCYlFyUU95dDFnODg3MkVLMm10ZkJkU29lTVVYNnZMcHBY?=
+ =?utf-8?B?aS9ObEl2RnE2UEIvN29YMFVLR3dFQzZ2aXB1NzZBL1l0SzZyNy9CUEMzTXNZ?=
+ =?utf-8?B?OGdsZVVxZUFSNVo3RFdESFNoM3laSjVXeUduYUVHVUo0c241RlVxNzhaYVVm?=
+ =?utf-8?B?NGZJWVF6NFJPODUyK3BYQU1EVGF1S1ZheWlFK2VSQWpzNC9tN1IwR3pPRjU2?=
+ =?utf-8?B?dTZpdEt3Rm5qT0lyM3hGUlFOWUJUSjd1WGZlNUwzU2hxZU5FTTZCM25JSXFW?=
+ =?utf-8?B?VW9Kai9XRnRlKzAvaTYxS0xKUlNMUWlncE1Ba2xRZGVoZGV0Zzlqb3IveHZZ?=
+ =?utf-8?B?dFVwWjR6Zy9oenQ0WU9qaytlYW5raUoxQitYWTFaTXNHbDJPeExwNkZubzVQ?=
+ =?utf-8?B?Mm9mQXJkNGgySHA0c0VHZy8yVUY0UnhBZjQydHh1QnNWM2ZhN051ekRqUzN1?=
+ =?utf-8?B?QXhRSm9rSVdzSGJyekJ1MUtLbmYxT1RJRHgrZW9BZXByMkgrV081a3JYMVFu?=
+ =?utf-8?B?LyswREJCbEhKa0Y1V1hjRmZVVS9SbE5KQzAvNHphMXZTNk04Z1pFbHNxd1Vr?=
+ =?utf-8?B?U2xVTTFPQ3lsSWlWbFlPVS9SVG5TRUlBdE9iU2gzbnlrZXgrSVh0UGw3RU1P?=
+ =?utf-8?B?MVhUU29sV1ZEOUNLbUNCbCtiRXVpV3ppR0NFemJGWkt4TjVLaUdLbldTc2t4?=
+ =?utf-8?B?UjRrRXRnN1R5aThtc2oyaDNtS2Vod1RFN1NyTDhNOEt4Lzc1dDhVQWRPT3Bs?=
+ =?utf-8?B?c2s2MitRUk5RbGdpN2pVYkp6Y2J0R28wMlNKZmZTcHBUSllOdE5ENkhSd29w?=
+ =?utf-8?B?cG9xQkd3akRQV3ExSzBqUWV5dUN5WktoL2s3b29jN0pwcW5LSkFZSHhJV1h3?=
+ =?utf-8?B?ZWt3WVo5QTQ0QXpOaVZ0c0h2VkkxUTkwcTBqTkJpL3N0Q0ZkR0g5WE5uOWZn?=
+ =?utf-8?B?QlVtK1lLZHI4cmc4OURob0hVbE4yN2xCK1dtK3FjRHUyOE5HSGN2SkJOQ2Y0?=
+ =?utf-8?B?RkhuUFIwQXdnL29MVXNUeVN4a3RHY1JXejZXQ2NtY1NaWktmQTduM25XODho?=
+ =?utf-8?B?eHE3OExlK0tudm90RzhFQ01yNHdqeW1yNkhiWHQ3NGZmSGFkbThTbDI3ZE5k?=
+ =?utf-8?B?M3Y1SDlRK1FQR1B4Ym1VdFh2WE1DLzFBK245OW1ic0lBbVVwaUxUTXVuUWZr?=
+ =?utf-8?B?NkZhTzNBaktUWmRLQVFzUC9yQlBBOVFLM0wrenVZMmFQdUwvZmIzbW5reXlv?=
+ =?utf-8?B?dXV5ZFFGZzNUWEZaNnpsaWRqSmU3QnZrdEdhN2pidkU0WG1MYWlhL25PSXFm?=
+ =?utf-8?B?cDE0R1ZMY0FHaVZDZ3NwZlZnWWdCQmNQOXRKOTlkUW8xMVRkVDNKWkxobDJM?=
+ =?utf-8?B?dHNzTjlMYTJhUEJNRUNTaDhtRkRzU0kyOGQ4MXpZRG9hWjl3SEt2a09SUUx0?=
+ =?utf-8?B?SEFJTjh0cVpwNDJwc2dEVWQvQTFzTWhtenZqVksrNTg1OEZMWlhGQ3hnQTI4?=
+ =?utf-8?B?SVc0NHhnRkJzR3FMMVM0K0xDbDROazJTaVNva2dqZWVYSW0wdWN0OTg4NjRP?=
+ =?utf-8?B?TjRhUW42eGwvNkpqbnZXRTdTVGJUeStpK1NIZFhYdENVbFU3QXk3ZWhNNVo2?=
+ =?utf-8?B?YlFUcmZEd0twMW1yQnZsQT09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR11MB5758.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UXZrVU9Gb0ZkbWZPT29zbXRBck1EMWM4WER5em9kZ3gwam9FU3A0b0tZMHgx?=
+ =?utf-8?B?cFhscWxUQUpWR0plRE9aZERsbUxsWGdHcmU2N25tWkVFYmRjWkpYTERnNFZq?=
+ =?utf-8?B?Tm14bVIrcnJ0TytQeDhpa2RiOHhMdDlZYlhtNU9OV0RDRU5pdWtIOEl4Wisz?=
+ =?utf-8?B?L3ZEVkVqQ2ZBTmlQY1hTREllMC84ZnZ0T2tsazdvbnVpQlRJMVlramUvUUM4?=
+ =?utf-8?B?TldsbnUwaW1TNlluaUlBNFFLaTZqcmwwOU8zdjUySUJBMHBXRzMzZFMxUlJK?=
+ =?utf-8?B?QnVuaFl0a0dvT3pEdXdhL0lta005U1hmY243MTlBOS94NVltZUtDYmJTMm9j?=
+ =?utf-8?B?QXNjMU1pNHBXNjZqUVZnS3hqYUM5OVpKMlNwZExZdDMrNjNKWE5NV0xCNmpq?=
+ =?utf-8?B?TWE1OXZFZHkwbkJCV3V4b1I1cHAvNVVWcHBjWlBiVVVKT240MXJyV3IzUUZ6?=
+ =?utf-8?B?N0dzVmp4MS9TWlV5TVBHZlA1RXJZanRIUUplNHB6S2JWSk9aWW56VkZndTNy?=
+ =?utf-8?B?OHVWWWthVytrbUh1K0trYisxTUllMDJDazl2MHp2UWVHY1RmdFhjSnFicHlZ?=
+ =?utf-8?B?b1d3WElEenhXRU9tWE5Id2xRVnRUNGMzVS9KNEFPYm9hNW5NMGNFVzlUa2hW?=
+ =?utf-8?B?SS9NOE12SDRsbkg4N2lVT29SbnRWQ3hncklXY2VNZlZvWlZlWjNIOThlZkd0?=
+ =?utf-8?B?b0d1YTc0NHZmRDFsTTJuU0dxcEFCdUY0S2ZYQkZlMlZORnRnZTF1VElBNUdK?=
+ =?utf-8?B?dUIyY09pZWU0bU1SeVJkQ1l4b1dXMGNsVXo3UWZ5b3lldXo1WE03dXZDSmhJ?=
+ =?utf-8?B?cEtpY2gyUGVId29TcDRqVlRtbGFNYXVWZmVHbDBmOU9jS0ZRajBuWCtSTFpT?=
+ =?utf-8?B?RWdUaHcxNFNwQjI3a0dUWVJEYXFoMStjOVZtdzBKUnVFbyt1T3Nmd0l0eEdN?=
+ =?utf-8?B?ZEJpRXh5VTV2YUw5UFlNaWl5d0JNQk1MampjWlJCemg5YkJhc1NQNW9rdkFN?=
+ =?utf-8?B?S2dYcVVueXhOd04wdG9OaVM0WUZBSDRiNmtWMkhueDFBZHI1eGxIbUxLY1or?=
+ =?utf-8?B?ZVFvb0t0dWRicmZCazMrL3BZMUtRNmp0bnhGbXpyRzZicnRMTFB2ckQ4c0dP?=
+ =?utf-8?B?WXNwVDdVc2FybFdMTEZXTGc0ZnQ0T0UvWHNSSDhpdWRtc2pPb1dNczJVUHcw?=
+ =?utf-8?B?N1h3Qmd4a283TWsxdFN6VlBwZ0hsUFE2bndraFJGZy8vOTRrM3ZPaUF5eUpG?=
+ =?utf-8?B?VGIvUWdlcmx4bmk2eUl5TjFNRml2NkFjMnRnNFVaOXk2SlJuekNWcDNxQk5h?=
+ =?utf-8?B?L1lDWkZSbm9reG9yVktGcXdhV2lmVDVwRFR3ZVgzclpaOWhPSmRtSkNoNXJU?=
+ =?utf-8?B?OFFPeFdxK01ONU1NY29VWFZlSktxRzR1UFRPbFBKWnBxeGNrVlBCanVDSUpH?=
+ =?utf-8?B?L04vcDRqS3hHUGNqSzVyMWd5SnlXT1dOTXhTUytiNklTTTBFS0VmV0sySlI4?=
+ =?utf-8?B?NGFYb3JUZmtxNnl2T3FWSDZGY0ltVGhmbnZ1ODdybzlxZXBtbEZDZDE4a1JC?=
+ =?utf-8?B?OVRBSUQxRlduWVlpWWs1TTZlaDJVV1ozSGpldlM3aEE5UWFYM05GQ3V4dk5T?=
+ =?utf-8?B?QWpodjBPa1VtcXg3Nk5ONFVLd2hjWC9mUFdSYkFEaG4ycVZwYjVNRldnTVJK?=
+ =?utf-8?B?bnhHYWpSL3FkeE04bHFmUk0yeVNKN2wxbEdDWU94WVNibGN5ZGtadEpuS2Nq?=
+ =?utf-8?B?aU0xK0E4S0dVUVVuYjRyTGVUN2V5WjZOcExPU2wxTlkwUzlpR2hkcHYzcWoz?=
+ =?utf-8?B?K0JGSzg3V2V2Q1J3enVEMVhzOW9WRllYM051cS82STUxbE94czQ3dzB3VVY4?=
+ =?utf-8?B?eG5oaU1BaWZKUzBMVmNVaThsMkFrQnlJN2MvdmZvTXJheGJPSDBINnlTaWk1?=
+ =?utf-8?B?Zll1WFNIQURkZVRJUmUvZ3lzUFJ5eWpUMjRqajUvd3FLZTBQTUQzSldiL0Za?=
+ =?utf-8?B?NUFmZFZ0TFBGUGtHTHdpUHF5dWV4QnJva0FScVRUeGIrbDVWQnlEMkZRcDdM?=
+ =?utf-8?B?VnIxL1U2SGlSM20xc2c3ZjYxZE1qUHZ3NkQ5bGIzM29WRmtPd0JUVWsraVY4?=
+ =?utf-8?B?dlg5cGRYQ3JyTUZGeWE2UUExUnE2cVl2WmZtYlBvaG1HZDVVd3puTjVyd3pn?=
+ =?utf-8?B?a2c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94b050f2-607f-425e-76af-08dd45aeb980
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR11MB5758.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 06:31:29.6927
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aIPMaqfmbWuXi4UyY/LOfHUfB76w92OU1NBfDzbsCDC9vukxxV7S3kWHphesm3aoUpgOMb3d+9AJn5yIBsQlxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7059
+X-OriginatorOrg: intel.com
 
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13ca4b24580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
-dashboard link: https://syzkaller.appspot.com/bug?extid=fe33beb8c5dba41e050b
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ac3ddf980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14f595f8580000
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-69e858e0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a53b888c1f3f/vmlinux-69e858e0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6b5e17edafc0/bzImage-69e858e0.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/57d4f876a7f0/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+fe33beb8c5dba41e050b@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 0 to 4096
-ntfs3(loop0): Different NTFS sector size (1024) and media sector size (512).
-ntfs3(loop0): ino=a, mi_enum_attr
-ntfs3(loop0): Mark volume as dirty due to NTFS errors
-Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: ni_enum_attr_ex+0x445/0x450
-CPU: 0 UID: 0 PID: 5634 Comm: syz-executor427 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- panic+0x349/0x880 kernel/panic.c:354
- __stack_chk_fail+0x15/0x20 kernel/panic.c:836
- ni_enum_attr_ex+0x445/0x450
- ntfs_read_mft fs/ntfs3/inode.c:123 [inline]
- ntfs_iget5+0x23f7/0x3800 fs/ntfs3/inode.c:540
- ntfs_fill_super+0x3e8e/0x4730 fs/ntfs3/super.c:1477
- get_tree_bdev_flags+0x48c/0x5c0 fs/super.c:1636
- vfs_get_tree+0x90/0x2b0 fs/super.c:1814
- do_new_mount+0x2be/0xb40 fs/namespace.c:3560
- do_mount fs/namespace.c:3900 [inline]
- __do_sys_mount fs/namespace.c:4111 [inline]
- __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4088
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f258c7a00ea
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffc3d396c38 EFLAGS: 00000286 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007ffc3d396c50 RCX: 00007f258c7a00ea
-RDX: 000000002001f800 RSI: 000000002001f840 RDI: 00007ffc3d396c50
-RBP: 0000000000000004 R08: 00007ffc3d396c90 R09: 000000000001f815
-R10: 0000000000000000 R11: 0000000000000286 R12: 0000000000000000
-R13: 00007ffc3d396c90 R14: 0000000000000003 R15: 0000000000200000
- </TASK>
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 2/4/2025 9:50 PM, Anisse Astier wrote:
+> 
+> Thanks for the update, and the Reported-by tag.
+> 
+> Does this patch mean you got confirmation that the scan tests firmware images will stay restricted to Intel customers with an NDA?
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On the contrary, Intel is making the images publicly available. 
+A new section has been added towards the end of the page[1], allowing anyone to download the images without requiring an NDA.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Jithu
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+[1] https://intel.com/InFieldScan
 
-If you want to undo deduplication, reply with:
-#syz undup
