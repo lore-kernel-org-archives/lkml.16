@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04E13192D97
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:10:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80B4F19750B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:10:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738768243; cv=none; b=O5nnLh5j/yejzXt81Q7SvrDjFiuHJH1lfEdO97QmDQNQO4agsXJgt2vJfwcPYDLIqRqyoQvKpGi8GVsD3BHifGoLUwTWq+b+JhHnjOynkDixuZG/1QdRNBEGwSZV7AGA3e1JiN7Yag6lc82DxZec2/hh8j8oTMGH8Pf9DXT6VqI=
+	t=1738768246; cv=none; b=RwRnhfZ7LbNKQ1U6D5kEWXAOQCc+f1z7rFvKIfHjgHT8WCKdkbAl4eIK7270ejF5OGcg9uo7uBcm2p64atHUgt7y8GnDGqipeltJEsgUuL6OP4Dxq2hriPkmfLeZfJMCV8qrE8HRbRkhg3ViuDHpEJafGNpAXvG1Uv2z/ho6ibg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738768243; c=relaxed/simple;
-	bh=hq3KIoaraouIbFieN8wCFefIKAKmlTqavX0k7E5xqOM=;
+	s=arc-20240116; t=1738768246; c=relaxed/simple;
+	bh=McSbjwKMv9JKAGvIDAcnu9DXXhsQsmXiIj4w4eA55x0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TJwxobgzoq1POnImk21qu9sgUJh+8qlgMoB53nblROWjmTsWhwhtHi/C3OMoLQ53gtJ2FtJbCb0z1eFCJeWyMxnZRlNrtxrr/fe4z5a+GOHcsE6J2hcJLYNa8b6bOWxIzuVxu55r6I1YOvaeWN6DTk4Pj4BgKt8CZRzosP6vWBw=
+	 MIME-Version; b=KjKjNmd4TyVfvuOBftsnkLId+N99prHkQA7/T3jyQLJxjW2T02v8D/+dfGfuqGVyKYZBCeO0amGGbHnsfe5+sz46cbJcounQe4DtEwFttLCRq0JN2d2rIEUi0KljKO3Il6R6IGVuoHoPoOIa2sskAnxSfziIKxkIS8515oBORL4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F04381063;
-	Wed,  5 Feb 2025 07:11:04 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE7D41063;
+	Wed,  5 Feb 2025 07:11:07 -0800 (PST)
 Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D46F73F5A1;
-	Wed,  5 Feb 2025 07:10:38 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A24303F5A1;
+	Wed,  5 Feb 2025 07:10:41 -0800 (PST)
 From: Ryan Roberts <ryan.roberts@arm.com>
 To: Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
@@ -37,9 +37,9 @@ Cc: Ryan Roberts <ryan.roberts@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 05/16] mm/page_table_check: Batch-check pmds/puds just like ptes
-Date: Wed,  5 Feb 2025 15:09:45 +0000
-Message-ID: <20250205151003.88959-6-ryan.roberts@arm.com>
+Subject: [PATCH v1 06/16] arm64/mm: Refactor __set_ptes() and __ptep_get_and_clear()
+Date: Wed,  5 Feb 2025 15:09:46 +0000
+Message-ID: <20250205151003.88959-7-ryan.roberts@arm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250205151003.88959-1-ryan.roberts@arm.com>
 References: <20250205151003.88959-1-ryan.roberts@arm.com>
@@ -51,153 +51,185 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert page_table_check_p[mu]d_set(...) to
-page_table_check_p[mu]ds_set(..., nr) to allow checking a contiguous set
-of pmds/puds in single batch. We retain page_table_check_p[mu]d_set(...)
-as macros that call new batch functions with nr=1 for compatibility.
+Refactor __set_ptes(), set_pmd_at() and set_pud_at() so that they are
+all a thin wrapper around a generic ___set_ptes(), which takes pgsize
+parameter. This cleans up the code to remove the confusing
+__set_pte_at() (which was only ever used for pmd/pud) and will allow us
+to perform future barrier optimizations in a single place. Additionally,
+it will permit the huge_pte API to efficiently batch-set pgtable entries
+and take advantage of the future barrier optimizations.
 
-arm64 is about to reorganise its pte/pmd/pud helpers to reuse more code
-and to allow the implementation for huge_pte to more efficiently set
-ptes/pmds/puds in batches. We need these batch-helpers to make the
-refactoring possible.
+___set_ptes() calls the correct page_table_check_*_set() function based
+on the pgsize. This means that huge_ptes be able to get proper coverage
+regardless of their size, once it's plumbed into huge_pte. Currently the
+huge_pte API always uses the pte API which assumes an entry only covers
+a single page.
+
+While we are at it, refactor __ptep_get_and_clear() and
+pmdp_huge_get_and_clear() to use a common ___ptep_get_and_clear() which
+also takes a pgsize parameter. This will provide the huge_pte API the
+means to clear ptes corresponding with the way they were set.
 
 Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 ---
- include/linux/page_table_check.h | 30 +++++++++++++++++-----------
- mm/page_table_check.c            | 34 +++++++++++++++++++-------------
- 2 files changed, 38 insertions(+), 26 deletions(-)
+ arch/arm64/include/asm/pgtable.h | 108 +++++++++++++++++++------------
+ 1 file changed, 67 insertions(+), 41 deletions(-)
 
-diff --git a/include/linux/page_table_check.h b/include/linux/page_table_check.h
-index 6722941c7cb8..289620d4aad3 100644
---- a/include/linux/page_table_check.h
-+++ b/include/linux/page_table_check.h
-@@ -19,8 +19,10 @@ void __page_table_check_pmd_clear(struct mm_struct *mm, pmd_t pmd);
- void __page_table_check_pud_clear(struct mm_struct *mm, pud_t pud);
- void __page_table_check_ptes_set(struct mm_struct *mm, pte_t *ptep, pte_t pte,
- 		unsigned int nr);
--void __page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp, pmd_t pmd);
--void __page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp, pud_t pud);
-+void __page_table_check_pmds_set(struct mm_struct *mm, pmd_t *pmdp, pmd_t pmd,
-+		unsigned int nr);
-+void __page_table_check_puds_set(struct mm_struct *mm, pud_t *pudp, pud_t pud,
-+		unsigned int nr);
- void __page_table_check_pte_clear_range(struct mm_struct *mm,
- 					unsigned long addr,
- 					pmd_t pmd);
-@@ -74,22 +76,22 @@ static inline void page_table_check_ptes_set(struct mm_struct *mm,
- 	__page_table_check_ptes_set(mm, ptep, pte, nr);
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 0b2a2ad1b9e8..3b55d9a15f05 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -420,23 +420,6 @@ static inline pte_t pte_advance_pfn(pte_t pte, unsigned long nr)
+ 	return pfn_pte(pte_pfn(pte) + nr, pte_pgprot(pte));
  }
  
--static inline void page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp,
--					    pmd_t pmd)
-+static inline void page_table_check_pmds_set(struct mm_struct *mm,
-+		pmd_t *pmdp, pmd_t pmd, unsigned int nr)
- {
- 	if (static_branch_likely(&page_table_check_disabled))
- 		return;
- 
--	__page_table_check_pmd_set(mm, pmdp, pmd);
-+	__page_table_check_pmds_set(mm, pmdp, pmd, nr);
- }
- 
--static inline void page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp,
--					    pud_t pud)
-+static inline void page_table_check_puds_set(struct mm_struct *mm,
-+		pud_t *pudp, pud_t pud, unsigned int nr)
- {
- 	if (static_branch_likely(&page_table_check_disabled))
- 		return;
- 
--	__page_table_check_pud_set(mm, pudp, pud);
-+	__page_table_check_puds_set(mm, pudp, pud, nr);
- }
- 
- static inline void page_table_check_pte_clear_range(struct mm_struct *mm,
-@@ -129,13 +131,13 @@ static inline void page_table_check_ptes_set(struct mm_struct *mm,
- {
- }
- 
--static inline void page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp,
--					    pmd_t pmd)
-+static inline void page_table_check_pmds_set(struct mm_struct *mm,
-+		pmd_t *pmdp, pmd_t pmd, unsigned int nr)
- {
- }
- 
--static inline void page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp,
--					    pud_t pud)
-+static inline void page_table_check_puds_set(struct mm_struct *mm,
-+		pud_t *pudp, pud_t pud, unsigned int nr)
- {
- }
- 
-@@ -146,4 +148,8 @@ static inline void page_table_check_pte_clear_range(struct mm_struct *mm,
- }
- 
- #endif /* CONFIG_PAGE_TABLE_CHECK */
-+
-+#define page_table_check_pmd_set(mm, pmdp, pmd)	page_table_check_pmds_set(mm, pmdp, pmd, 1)
-+#define page_table_check_pud_set(mm, pudp, pud)	page_table_check_puds_set(mm, pudp, pud, 1)
-+
- #endif /* __LINUX_PAGE_TABLE_CHECK_H */
-diff --git a/mm/page_table_check.c b/mm/page_table_check.c
-index 509c6ef8de40..dae4a7d776b3 100644
---- a/mm/page_table_check.c
-+++ b/mm/page_table_check.c
-@@ -234,33 +234,39 @@ static inline void page_table_check_pmd_flags(pmd_t pmd)
- 		WARN_ON_ONCE(swap_cached_writable(pmd_to_swp_entry(pmd)));
- }
- 
--void __page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp, pmd_t pmd)
-+void __page_table_check_pmds_set(struct mm_struct *mm, pmd_t *pmdp, pmd_t pmd,
-+		unsigned int nr)
- {
-+	unsigned int i;
-+	unsigned long stride = PMD_SIZE >> PAGE_SHIFT;
-+
- 	if (&init_mm == mm)
- 		return;
- 
- 	page_table_check_pmd_flags(pmd);
- 
--	__page_table_check_pmd_clear(mm, *pmdp);
--	if (pmd_user_accessible_page(pmd)) {
--		page_table_check_set(pmd_pfn(pmd), PMD_SIZE >> PAGE_SHIFT,
--				     pmd_write(pmd));
+-static inline void __set_ptes(struct mm_struct *mm,
+-			      unsigned long __always_unused addr,
+-			      pte_t *ptep, pte_t pte, unsigned int nr)
+-{
+-	page_table_check_ptes_set(mm, ptep, pte, nr);
+-	__sync_cache_and_tags(pte, nr);
+-
+-	for (;;) {
+-		__check_safe_pte_update(mm, ptep, pte);
+-		__set_pte(ptep, pte);
+-		if (--nr == 0)
+-			break;
+-		ptep++;
+-		pte = pte_advance_pfn(pte, 1);
 -	}
-+	for (i = 0; i < nr; i++)
-+		__page_table_check_pmd_clear(mm, *(pmdp + i));
-+	if (pmd_user_accessible_page(pmd))
-+		page_table_check_set(pmd_pfn(pmd), stride * nr, pmd_write(pmd));
+-}
+-
+ /*
+  * Hugetlb definitions.
+  */
+@@ -641,30 +624,59 @@ static inline pgprot_t pud_pgprot(pud_t pud)
+ 	return __pgprot(pud_val(pfn_pud(pfn, __pgprot(0))) ^ pud_val(pud));
  }
--EXPORT_SYMBOL(__page_table_check_pmd_set);
-+EXPORT_SYMBOL(__page_table_check_pmds_set);
  
--void __page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp, pud_t pud)
-+void __page_table_check_puds_set(struct mm_struct *mm, pud_t *pudp, pud_t pud,
-+		unsigned int nr)
+-static inline void __set_pte_at(struct mm_struct *mm,
+-				unsigned long __always_unused addr,
+-				pte_t *ptep, pte_t pte, unsigned int nr)
++static inline void ___set_ptes(struct mm_struct *mm, pte_t *ptep, pte_t pte,
++			       unsigned int nr, unsigned long pgsize)
  {
-+	unsigned int i;
-+	unsigned long stride = PUD_SIZE >> PAGE_SHIFT;
+-	__sync_cache_and_tags(pte, nr);
+-	__check_safe_pte_update(mm, ptep, pte);
+-	__set_pte(ptep, pte);
++	unsigned long stride = pgsize >> PAGE_SHIFT;
 +
- 	if (&init_mm == mm)
- 		return;
- 
--	__page_table_check_pud_clear(mm, *pudp);
--	if (pud_user_accessible_page(pud)) {
--		page_table_check_set(pud_pfn(pud), PUD_SIZE >> PAGE_SHIFT,
--				     pud_write(pud));
--	}
-+	for (i = 0; i < nr; i++)
-+		__page_table_check_pud_clear(mm, *(pudp + i));
-+	if (pud_user_accessible_page(pud))
-+		page_table_check_set(pud_pfn(pud), stride * nr, pud_write(pud));
++	switch (pgsize) {
++	case PAGE_SIZE:
++		page_table_check_ptes_set(mm, ptep, pte, nr);
++		break;
++	case PMD_SIZE:
++		page_table_check_pmds_set(mm, (pmd_t *)ptep, pte_pmd(pte), nr);
++		break;
++	case PUD_SIZE:
++		page_table_check_puds_set(mm, (pud_t *)ptep, pte_pud(pte), nr);
++		break;
++	default:
++		VM_WARN_ON(1);
++	}
++
++	__sync_cache_and_tags(pte, nr * stride);
++
++	for (;;) {
++		__check_safe_pte_update(mm, ptep, pte);
++		__set_pte(ptep, pte);
++		if (--nr == 0)
++			break;
++		ptep++;
++		pte = pte_advance_pfn(pte, stride);
++	}
  }
--EXPORT_SYMBOL(__page_table_check_pud_set);
-+EXPORT_SYMBOL(__page_table_check_puds_set);
  
- void __page_table_check_pte_clear_range(struct mm_struct *mm,
- 					unsigned long addr,
+-static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+-			      pmd_t *pmdp, pmd_t pmd)
++static inline void __set_ptes(struct mm_struct *mm,
++			      unsigned long __always_unused addr,
++			      pte_t *ptep, pte_t pte, unsigned int nr)
+ {
+-	page_table_check_pmd_set(mm, pmdp, pmd);
+-	return __set_pte_at(mm, addr, (pte_t *)pmdp, pmd_pte(pmd),
+-						PMD_SIZE >> PAGE_SHIFT);
++	___set_ptes(mm, ptep, pte, nr, PAGE_SIZE);
+ }
+ 
+-static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
+-			      pud_t *pudp, pud_t pud)
++static inline void __set_pmds(struct mm_struct *mm,
++			      unsigned long __always_unused addr,
++			      pmd_t *pmdp, pmd_t pmd, unsigned int nr)
++{
++	___set_ptes(mm, (pte_t *)pmdp, pmd_pte(pmd), nr, PMD_SIZE);
++}
++#define set_pmd_at(mm, addr, pmdp, pmd) __set_pmds(mm, addr, pmdp, pmd, 1)
++
++static inline void __set_puds(struct mm_struct *mm,
++			      unsigned long __always_unused addr,
++			      pud_t *pudp, pud_t pud, unsigned int nr)
+ {
+-	page_table_check_pud_set(mm, pudp, pud);
+-	return __set_pte_at(mm, addr, (pte_t *)pudp, pud_pte(pud),
+-						PUD_SIZE >> PAGE_SHIFT);
++	___set_ptes(mm, (pte_t *)pudp, pud_pte(pud), nr, PUD_SIZE);
+ }
++#define set_pud_at(mm, addr, pudp, pud) __set_puds(mm, addr, pudp, pud, 1)
+ 
+ #define __p4d_to_phys(p4d)	__pte_to_phys(p4d_pte(p4d))
+ #define __phys_to_p4d_val(phys)	__phys_to_pte_val(phys)
+@@ -1276,16 +1288,34 @@ static inline int pmdp_test_and_clear_young(struct vm_area_struct *vma,
+ }
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE || CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG */
+ 
+-static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
+-				       unsigned long address, pte_t *ptep)
++static inline pte_t ___ptep_get_and_clear(struct mm_struct *mm, pte_t *ptep,
++				       unsigned long pgsize)
+ {
+ 	pte_t pte = __pte(xchg_relaxed(&pte_val(*ptep), 0));
+ 
+-	page_table_check_pte_clear(mm, pte);
++	switch (pgsize) {
++	case PAGE_SIZE:
++		page_table_check_pte_clear(mm, pte);
++		break;
++	case PMD_SIZE:
++		page_table_check_pmd_clear(mm, pte_pmd(pte));
++		break;
++	case PUD_SIZE:
++		page_table_check_pud_clear(mm, pte_pud(pte));
++		break;
++	default:
++		VM_WARN_ON(1);
++	}
+ 
+ 	return pte;
+ }
+ 
++static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
++				       unsigned long address, pte_t *ptep)
++{
++	return ___ptep_get_and_clear(mm, ptep, PAGE_SIZE);
++}
++
+ static inline void __clear_full_ptes(struct mm_struct *mm, unsigned long addr,
+ 				pte_t *ptep, unsigned int nr, int full)
+ {
+@@ -1322,11 +1352,7 @@ static inline pte_t __get_and_clear_full_ptes(struct mm_struct *mm,
+ static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
+ 					    unsigned long address, pmd_t *pmdp)
+ {
+-	pmd_t pmd = __pmd(xchg_relaxed(&pmd_val(*pmdp), 0));
+-
+-	page_table_check_pmd_clear(mm, pmd);
+-
+-	return pmd;
++	return pte_pmd(___ptep_get_and_clear(mm, (pte_t *)pmdp, PMD_SIZE));
+ }
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
 -- 
 2.43.0
 
