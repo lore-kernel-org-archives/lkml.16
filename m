@@ -1,74 +1,143 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA22A1FF7D2
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D3CA1FECD5
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738781585; cv=none; b=HZw+xewCZAyfRWTQ2pi6r6WKcG31eNR/azxbHi1WFv1DhIakjL0DtvYGFbxvKyYDioaO3FkgNv2KQBq81hDgYKm937sfvGZYSAn81xxLDerl5482vItPgSKD57E8uFF/Ochht4XOufzeqI9jc+s6LENzdgkpJnj34MkUs6oylqE=
+	t=1738781610; cv=none; b=WmsG69zhYKjxHV4TiZnR9rx/Jhcugi+3+LKxVeCGYi8iYk+RLc3u5uHeXyjZk811SAQvK1IpJGDBfCRxYRBE9GS9dd4KT6++NtAEpcUJZcdhQQjJjIuOcPSMpL/UQLelZduEgXxGHXSCN9SsTQPwnL3Lscrl3I6AYcZhg+c838s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738781585; c=relaxed/simple;
-	bh=tARMrWWTRtWys8PMKiHPgERjW0g1foV2+Wk2DGBu0Eo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=M38me/mv/02VW6TUJcFOmReYWOI+Hx6Sr/W/q7HnlpYxX1F6JWIMX2K0JnUgpK72MeKdJxB7xhyEY7H9l7+o/zwQ9MQLLLLQlx91hgymUAlo8ICjTU1oiHke9gy7xSXZXIm07VxhJPiW2WSFP32YGJO1GxFch876Vb6a8RRTSyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ce8cdf1898so495695ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:53:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738781583; x=1739386383;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qDYV7j+0Ng3pBdeYSpKXURozsltAjUJSfrXA0FKOfCI=;
-        b=dSt7VVU5HD66dKCjWSKevpg9AKjF9d6it428E7IHlajzyVXxr0C0WdEZU31pvGH2FU
-         CUvoUcarPuP5A1E8tJi3jvsDqPgrBlGqIIsh9cw76C29dAlWEsutKnUMTRspaJWl02wv
-         fkgV+fmtNFZxsiZWChuGvQVy/8zjdGoVC8lyeBs9L2Icqi2ud6cAt+plUglEgRsA5Qey
-         9tZ+iVOfEyYyL2NupostoH4yNaa6zqSrgj26n2YgxmOhLTcsBjyQPcMiQYozZoeXnIMn
-         q7L8RROrWEAcrbwDQ+nkTXxmBg+ilnER7cM63JtkrQth2uNiMC/JeW7KI0FmcvcQp7DU
-         xLEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXj07YhRswYJ5PqN+kKKFTDZA5gzLfRorQcDbQMTD/t7yNHqSTxulSfeze8b88Y+5q07Gs34mpKAwTuUiI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylKr6P+YydPgmcRsYIxg14FUZodjHtOaVl+a5N5+mw4+K4dS4Y
-	mib9s00jTURST5l9/3aTloTroJ2JzF4/7fzdVAmSMllw5L8duecRXvw8R04iO0wTd1idifcJrxw
-	bM9gJkTImc8EDUcNdFdv1e91D5+oGdTa5BlnGWNxuIukmY/fRD8aGhKI=
-X-Google-Smtp-Source: AGHT+IEhJWeKOTmZ9PeHLjWCvfpb95n3CovTNjj5uKj5kahddtxpg7508wvgYjmxvMuvxjeEDXYHbYA+oqxj3rTamLCovc/dIMjw
+	s=arc-20240116; t=1738781610; c=relaxed/simple;
+	bh=YI+XXeFpYm0aYXJj/XaJuizksSALY8idolNJiTmoPbw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t3rSYXgTeiAJsH68HUwCmFnogAOKGpXOMa7iw8T3eYCOHV0iU7pXeitKoD2nPB5qNPtrKtId1mLvQNotYEYfsAcd5A5gk5jgaXLF93uRfatneJ2BPClVzNEqQwBYEsLTXhZ7bPpQWI7dHgo5mTEGYo+/GB15W7URkPJhg3l+idE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0B501063;
+	Wed,  5 Feb 2025 10:53:50 -0800 (PST)
+Received: from [10.57.35.21] (unknown [10.57.35.21])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D82B3F5A1;
+	Wed,  5 Feb 2025 10:53:25 -0800 (PST)
+Message-ID: <ce6d471a-a863-45ca-8a35-66dbbabe47c1@arm.com>
+Date: Wed, 5 Feb 2025 18:53:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:218f:b0:3d0:2a04:1ce2 with SMTP id
- e9e14a558f8ab-3d04f917778mr32567125ab.16.1738781583104; Wed, 05 Feb 2025
- 10:53:03 -0800 (PST)
-Date: Wed, 05 Feb 2025 10:53:03 -0800
-In-Reply-To: <r7aylhww6ssce4uk4drib5c7awf6kcdgo5rzorbi3mve723hu6@6p7ij7t44ejq>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a3b38f.050a0220.19061f.05ea.GAE@google.com>
-Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
-From: syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, brauner@kernel.org, gustavoars@kernel.org, 
-	jack@suse.cz, kees@kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mjguzik@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: iommu: flood of ahci 0000:e6:00.0: AMD-Vi: Event logged
+ [IO_PAGE_FAULT domain=0x0055 address=0xa14a4000 flags=0x0070]
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Vasant Hegde <vasant.hegde@amd.com>
+References: <Z6CGzUSV7llweytQ@Red>
+ <42a8ca6f-a881-4b4c-9ddb-bf3f2bc6f539@arm.com> <Z6NpZcbE6fiIkSGh@Red>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <Z6NpZcbE6fiIkSGh@Red>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On 2025-02-05 1:36 pm, Corentin Labbe wrote:
+> Le Mon, Feb 03, 2025 at 01:01:45PM +0000, Robin Murphy a écrit :
+>> On 2025-02-03 9:05 am, Corentin Labbe wrote:
+>>> Hello
+>>>
+>>> I have a supermicro server which is flooded of kernel message:
+>>> ahci 0000:e6:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0055 address=0xa14a4000 flags=0x0070]
+>>>
+>>> The server works perfectly anyway.
+>>> It happens with official ubuntu kernel vmlinuz-6.8.0-51-generic.
+>>> I tried also a custom 6.12.6, same problem.
+>>>
+>>> I tried to update bios, no change.
+>>> I tried iommu=soft, no change.
+>>>
+>>> I dont know what to do next.
+>>>
+>>> Regards
+>>>
+>>
+>>> IOMMU group 83 e6:00.0 SATA controller [0106]: Marvell Technology Group Ltd. 88SE9230 PCIe 2.0 x2 4-port SATA 6 Gb/s RAID Controller [1b4b:9230] (rev 11)
+>>
+>> Wow, a Marvell SATA controller doing something other than the usual
+>> phantom function quirk, that's a nice change :D
+>>
+>> I'd guess that firmware has left it running for something like legacy
+>> IDE emulation (if that's still a thing?) or its own soft-RAID driver,
+>> but neglected to declare an IVMD entry to described the reserved memory
+>> region(s) it's using for that. A smoking gun would be if 0xa14a4000
+>> matches some firmware-reserved PA in the system memory map. In that
+>> case, if you're lucky you might have some firmware/BIOS option to
+>> disable fancy behaviour and leave it in plain AHCI mode. Otherwise,
+>> booting with "iommu.passthrough=1" (or the even bigger hammer of
+>> "amd_iommu=off") should at least allow you to ignore the issue.
+>>
+> 
+> Hello
+> 
+> Thanks for your help
+> 
+> There was no AHCI option in the BIOS (appart hotplug enable).
+> 
+> Adding iommu.passthrough=1 lead to absence of thoses messages.
+> 
+> Unfortunatly, my example is not correct, the address is mostly random:
+> dmesg |grep IO_PAGE_FAULT | grep -o 'address=0x[0-9a-f]*' | sort | uniq -c | wc -l
+> 9297
+> 
+> dmesg |grep IO_PAGE_FAULT | grep -o 'address=0x[0-9a-f]*' | sort | uniq -c | head
+>        2 address=0x1101f000
+>        2 address=0x1101f004
+>        3 address=0x1102f000
+>        1 address=0x1102f004
+>        2 address=0x1102f008
+>        2 address=0x1102f010
+>        2 address=0x11043000
+>        2 address=0x11043004
+>        1 address=0x11047000
+>        1 address=0x11047004
+> 
+> dmesg |grep IO_PAGE_FAULT | grep -o 'address=0x[0-9a-f]*' | sort | uniq -c | tail
+>        2 address=0xfffffffffe751004
+>        2 address=0xfffffffffe7e6000
+>        2 address=0xfffffffffe7e6004
+>        4 address=0xfffffffffe823000
+>        3 address=0xfffffffffe823004
+>        2 address=0xfffffffffe830000
+>        2 address=0xfffffffffe830004
+>        3 address=0xfffffffffe833000
+>        1 address=0xfffffffffe833004
+>        1 address=0xfffffffffe833008
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+OK, these look like iommu-dma addresses, and the fact that they're up 
+into the full 64-bit space implies that the 32-bit ones are most likely 
+also kernel DMA burning through the whole 32-bit IOVA space rather than 
+inadvertent physical address (and possibly the SATA driver is leaking 
+DMA mappings as it keeps getting errors and retrying?). Indeed it seems 
+the firmware stuff probably was a red herring.
 
-Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
-Tested-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
+I guess that then points to a question of whether it's maybe just the 
+SATA driver going wonky and trying to make the device write to a 
+DMA_TO_DEVICE mapping, or something going awry at the IOMMU to divert 
+the device accesses to a different address space from the one iommu-dma 
+believes it's using...
 
-Tested on:
+> But the domain/flags are always the same
+> 
+> Full dmesg (without IOMMU messages) https://uk01.z.antigena.com/l/VspdfbZQLwA2gZviRaGoPfE2bAxamMd9VFWOj4n78OuhpCoBo5HcXgWgXfTVvyxW1R3W9GTx4RbHm1MGyqBINkuTrnW31h9eTfLTUvXfcYh-IaTwmSc5kZo_-iU9-qQLbKsIjA9LNxyfbAA2AKGOSws6K4vuOrR6i-DL5DiQW1gHCrhhBMgE0Y7RK2m9
+> 
+> The server is doing qemu GPU passthough via VFIO.
+> I believe (aka I need to re-verify) that message start whatever qemu starts or not.
 
-commit:         92514ef2 Merge tag 'for-6.14-rc1-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1770beb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=207eb10d2de1b054
-dashboard link: https://syzkaller.appspot.com/bug?extid=48a99e426f29859818c0
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=16dde318580000
+Oh, it's certainly not impossible that that getting VFIO involved may 
+tickle some bug or misconfiguration wherein the wrong device ends up 
+inadvertently attached to the wrong domain. I don't know the ins and 
+outs of debugging with the AMD driver, though, so I think this is the 
+point where I have to leave this one to Vasant :)
 
-Note: testing is done by a robot and is best-effort only.
+Thanks,
+Robin.
