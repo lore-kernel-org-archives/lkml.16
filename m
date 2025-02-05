@@ -1,181 +1,155 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8190B1FE47E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 20:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D450213E6F;
+	Wed,  5 Feb 2025 20:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738787673; cv=none; b=hjkG9xlsIbPDPkhm0Ocgl5mx+OYYi1qimYtUG+YpFClafKqe6q7ZnLfawd+MbM9YE9+8Cpjl1ftsm/231DQfV5oZ23/Gt4NpCsiNe3Yg/qfMlo1P05Kn38Ms0vWvLqcZDN14MCcx0MuXCO/kApgllrtHU6uyKYAXeLOp++UqhDM=
+	t=1738787806; cv=none; b=QgC0G4h0rup1WY7cIg1pWd6nHYOFNDfgWFLZ9atchnPgyqf20SsM73MxGt/x3cnjSRRN57GULrb6OEfPJCOSjQWWLMnOLHOGbURpt0yd2tual2rozAD/2grTHm4I8DSRFTyR9wPJ+5B46s/1OXQU4ITH+4ufLB3XqOzPIgyfr88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738787673; c=relaxed/simple;
-	bh=GgtyRAX9vdMCndp5ia0g8tlw540Vkh9c2/URB1MpVTg=;
+	s=arc-20240116; t=1738787806; c=relaxed/simple;
+	bh=iuXh0TwQYZ/oRfuf6C74IO87n76azj0vyRXdJEtUi7k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=BjIacXJzMNgNQMCgGd6UPqL569Vu+akKdA+qhoyUHwaBuqsfySclpXOWx9VXdNk/OKAww4fAKAG3KrJKr/ZBo12hibONk5GRLHXJ1q58BUyfqU/ZgJtzKk62a3B2j12tjFxqaSp66CAKXJZ1i5AgrBVgFosJ/Tu/VIj7smo1vfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kaJ4vOCU; arc=none smtp.client-ip=209.85.208.47
+	 To:Content-Type; b=kTts1PQ/kiSamYNj1fa3wdfPhMSFfiT+UuFEI4335EuW9Wgl8xHPC07E4zM0/R3GD6hCAkZhVMTe3FNXhAXetrH6daAgEFOcwFVsaDO/2aQaS/LnpsUdgQEJbVa+1LFnGIDptw/A6SdKY8cmi/3MiAvuw2ARWhkdy5a5NG+D+vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=izA7tnhi; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaJ4vOCU"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5dca4521b95so491555a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 12:34:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izA7tnhi"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaeef97ff02so40141066b.1;
+        Wed, 05 Feb 2025 12:36:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738787670; x=1739392470; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6OMz7JDebVsaDEFB8And8TQUKXqKBE8TARUzFCBMADY=;
-        b=kaJ4vOCUA7iLwuIfd7J3wYDvlDHyH77PHbQNQux39FkDu8NXdO9P4oCAn4Ns0cP94b
-         rSXflFfS3KzURJWFg/N8aW7N8GP0ykERfvcv+8s2R2L700bBnb6K+fAMQLJm4VxXKi74
-         sgWr/xc/jK/YhNg1u8eSw7KlVEah/NoDYh/unOMw74lUstKoE7UDn5PLoF/Y9d5BUork
-         nc1ibg9dBznkF/Ssc2/d2Ht1nhXFG3QctmswUGrE/qRT0iaGngsMzJXb7tZ8jA988zEU
-         8IkxTEF5zMnWhfd4kQ3wfFb5thNajYWS6NEdL0bfRy/xhV1iUooddUZegm+goH33sMIg
-         3pPQ==
+        d=gmail.com; s=20230601; t=1738787801; x=1739392601; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7LaIHhUhM3MiwbNj642cr48xuyOAOk/UPtx3aLDwDwM=;
+        b=izA7tnhimNgVNimCRHsTZ2XQV0iTD6f6dIOmLP5bZ64mlQXweUG83WSPVVINUGfkzP
+         AAt8G6SrxaimFegyBvHOgIAt2wt2L5Ht8ttROVRRZhgH3nGC9JP2MsdkAdvFvFvwMOQy
+         vhFq5eReP9HpR92cSTsAMTtfcUcBb23/z4u0qA2AnK3uE/fYyrkS/UuEAGvJx2qarTk4
+         9b1BdjaS4ISvg0/m4T/tHRDISF4PvogKHtvYWFNTrdWgFxSDy45HGwc1FqrwUPdH+oBQ
+         yy8dk/6nVIzqEBXSAa6D/mtfKOvPan8mkFDez/k9b9AhPIjlv0l7fLtyVGru6J2zYUHm
+         34Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738787670; x=1739392470;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6OMz7JDebVsaDEFB8And8TQUKXqKBE8TARUzFCBMADY=;
-        b=TpIRks1VFIdZZMYqHulW6SbqA7u0eR0DT5WZYa4BIKVziyH9PtRXbpOovmt4toAVOB
-         QQsB0Bjm6cIVuF0rOPo4h2iK6BJMQMvqnUkRAsfaqsiWWpG4GR6K95go+QNbLGfyMuk+
-         maG1MErhPSeW/zNvhllx+XSES4PpaaRZFXIRs5E2vzohXdxI564bFZTcpoZp4rMyH6MB
-         mOXlzM3AqiaBJl/b37OZILn9shyBztSSr2BFHTwbY0trCR+KVMkzxb9OQRqGczMBZGJ8
-         U5P5xLYDRrywfKaq0PaB2h189UXXmdrAfL4HxnLGl2DOp1WWj5KcOkrPcrp9fY5j1ACO
-         ptbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfnrKJGNi1lwsLTdc2xdzFvh4w6HTZi1XDcChR6QOFVSRDBY5MNf/E2Oq5rEuzv/h/+YlreIuOF533bn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMVGPHjtwuMqZRD0AMOyrKSK5mXcLEAlPD0CYU4HAOTp2g9Q2+
-	iZAWFK+90g6Elru8+zAkH3G3Y/u2uw6v3HYuhQMk9KbB1pozCx7tfifUcBaNzyQt8S0ewTm++k1
-	8KI0NU0tJrUbfExVyb/v4S/qwZUc=
-X-Gm-Gg: ASbGnct/zImLZdpr69s/nznTCvAPmaIkBv04OX3hpAZy579rkJK9aKCssUpvcl9zif4
-	7XdqKJpBkQLvFsCsqJ7wHEJa/37el9NNwpQZ7CNxOcad2IavsX3lwXkRZ/ZxI79ocZdcc8+4=
-X-Google-Smtp-Source: AGHT+IFwmUdMIWWKf38XVdsaxQLtbeeO1zD+lKAcNS7molklTDJuLyO8/LrFcBnfgs38/0v3rBafeSC7o4eyEZzzbPQ=
-X-Received: by 2002:a05:6402:845:b0:5d3:e766:6143 with SMTP id
- 4fb4d7f45d1cf-5dcdb77fba0mr5108263a12.30.1738787669759; Wed, 05 Feb 2025
- 12:34:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738787801; x=1739392601;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7LaIHhUhM3MiwbNj642cr48xuyOAOk/UPtx3aLDwDwM=;
+        b=PUY8vw+MZqlyJ5s0ELWgsUAmc2eonv8Lo9PQt+ieaxsBmD9FcJDKTKvYFu5wIE1iBX
+         1+8aM7BD0XxgmC3VcxyMRNpN/Ork6e7D62cfIyMASksD8pbW2A+GusuiVb5mjFf6igJ7
+         qyW9IL3uOKd+c2WV5ctecqx0jQYxpgxPNHPkZRu08vMLYMZXV35cvv/hqgA96aWfE2eJ
+         jikippUeoU1B3fiPGyPp5ORuvn32I01g2e2GTcVDm9yg9bkCDb5Hk0/iWICUFruUoLJ4
+         NS6zeMpQomo5ekjLJTuIn7RtT99hjQreKUTiT1xPJjiUiKbFbGJ0+5QahAUCPIzu4wj5
+         wg1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUFwkuflP3PaWZy7qQWSJIiVok77aBukvYU8Np+USg4gt7rv79B+GB1bv+MKCH9tXIEhrZcslkNh+qyQPM=@vger.kernel.org, AJvYcCXA985v65Eca1aOp4KTVGQiHmOtLyk0J6RqXoU1yNkpWtJYxjaWznvprHgcS49Zsq5tFf5TF6dYY/4l5jWqK2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk+hUXuzbqZyT0rWzM5m9b5ZTGEiR932DsNTz7cMwyMMOXej/z
+	4iW89zW68XvACGxgEpCsVkTyGN+Ic4lTYmmC5r6khje/xhew+M24k7SRrJcR7JFpsV145AyMKKq
+	TRqFTC2KgCttHMid+2PDxiQc5VZfnLA==
+X-Gm-Gg: ASbGncsLPQJo99EjQg/lU9fK6nFSgEeKcdp3DfSVpwRcqhCMQHyGn+HB/hSxsWQ+fKA
+	SneQhWVel8E7JRtk+4GCG6jWGH5lUxo8+cBOfSUYLuXbd1CIWrIFxERb/vgiWjOTrLvWByA4=
+X-Google-Smtp-Source: AGHT+IGCNARq/S6flKBk1hsdDpgzC0mJGccw8CN73wZw3M31xCCPOI69qccB2KG7dZGEukQGOPb+n7mn03YtMGHd1pw=
+X-Received: by 2002:a17:906:f593:b0:aaf:c27e:12e8 with SMTP id
+ a640c23a62f3a-ab75e35dbc2mr567563366b.37.1738787801129; Wed, 05 Feb 2025
+ 12:36:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205193221.402150-1-mjguzik@gmail.com> <20250205193221.402150-4-mjguzik@gmail.com>
- <wzbq4zk7uln5pzjkho4olu3hku2xv2taxymv3ien437tjxivlm@sz5kxj5oohsq>
-In-Reply-To: <wzbq4zk7uln5pzjkho4olu3hku2xv2taxymv3ien437tjxivlm@sz5kxj5oohsq>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Wed, 5 Feb 2025 21:34:18 +0100
-X-Gm-Features: AWEUYZl6IU4tuGZOtiYDvVaB9yI0LX9EP_anNTFZMZfOekz1ZBbVGZRdcXKdTGk
-Message-ID: <CAGudoHGPAQYwVUEYgxMYZ808=wAO3RteLsqNgG21pvE8Gfs_eQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] pid: sprinkle tasklist_lock asserts
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Mateusz Guzik <mjguzik@gmail.com>, ebiederm@xmission.com, 
-	oleg@redhat.com, brauner@kernel.org, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <Z4D5a5NYrAbNxUL6@pollux> <Z4kG5AcVeQKegLnb@pollux>
+ <20250128092334.GA28548@lst.de> <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
+ <20250130154646.GA2298732@nvidia.com> <2025013030-gummy-cosmic-7927@gregkh>
+ <20250130172437.GN5556@nvidia.com> <2025013148-reversal-pessimism-1515@gregkh>
+ <20250131135421.GO5556@nvidia.com> <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
+ <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
+In-Reply-To: <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
+From: Dave Airlie <airlied@gmail.com>
+Date: Thu, 6 Feb 2025 06:36:28 +1000
+X-Gm-Features: AWEUYZl4PgDWEAOqJs8geanKYzm8-RmxJs8QL-ZQeTHW_IM3hse2lK_-6T3WYCA
+Message-ID: <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com>
+Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
+ coherent allocator abstraction.)
+To: Hector Martin <marcan@marcan.st>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Greg KH <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	phasta@kernel.org, Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>, 
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com, 
+	aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>, 
+	open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	airlied@redhat.com, "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>, 
+	DRI Development <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 5, 2025 at 9:27=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracle=
-.com> wrote:
+On Thu, 6 Feb 2025 at 04:52, Simona Vetter <simona.vetter@ffwll.ch> wrote:
 >
-> * Mateusz Guzik <mjguzik@gmail.com> [250205 14:33]:
+> On Tue, Feb 04, 2025 at 03:46:14AM +0900, Hector Martin wrote:
+> > Adding Linus
+> >
+> > My 2c: If Linus doesn't pipe up with an authoritative answer to this
+> > thread, Miguel and the other Rust folks should just merge this series
+> > once it is reviewed and ready, ignoring Christoph's overt attempt at
+> > sabotaging the project. If Linus pulls it, what Christoph says doesn't
+> > matter. If Linus doesn't pull it, the R4L project is essentially dead
+> > until either Linus or Christoph make a move. Everything else is beating
+> > around the bush.
+> >
+> > Rust folks: Please don't waste your time and mental cycles on drama like
+> > this. It's not worth your time. Either Linus likes it, or he doesn't.
+> > Everything else is distractions orchestrated by a subset of saboteur
+> > maintainers who are trying to demoralize you until you give up, because
+> > they know they're going to be on the losing side of history sooner or
+> > later. No amount of sabotage from old entrenched maintainers is going to
+> > stop the world from moving forward towards memory-safe languages.
+> >
+> > FWIW, in my opinion, the "cancer" comment from Christoph would be enough
+> > to qualify for Code-of-Conduct action, but I doubt anything of the sort
+> > will happen.
 >
-> If a patch is worth doing, it's worth explaining.  I'm surprised you
-> didn't add a comment after the last revision missed a comment on patch
-> 2/6.  This is literally in the submitting patches document [1].
+> Yeah no.
 >
-> I don't mean to delay this series, but I do want to know why things are
-> done when I'm hunting through git logs.  Having a change log isn't
-> optional, and now you know that Andrews script won't fix this problem
-> [2].
+> https://chaos.social/@sima/113942119012147959
 >
-> I see you are upset by this considering the terse and lack of
-> punctuation in patch 2, but please try to understand these comments
-> serve a purpose in maintaining the code years later.
+> This was about you, because typing a proper answer takes a bit longer. It
+> was also about your toots on fedi, like this:
+>
+> https://social.treehouse.systems/@marcan/113941468353031993
+>
+> And "haha it's only a joke" does not work with your public profile and following.
+>
+> I do understand the frustration and temptation to just burn it all to the
+> ground, head the call of the sirens, or maybe for me more pick up goat
+> farming in the Swiss Alps. But you can't have it both and expect to also
+> be part of and contribute to the same community. And personally I don't
+> appreciate getting drenched in gasoline while I'm trying to quench flames
+> on the ground.
+>
+> And this isn't the first time or the second, by now it's a pretty clear
+> pattern over some years. And with the first I could explain why you react
+> like that and you had my full understanding, but eventually that runs a
+> bit thin as an excuse.  Now I'm left with the unlikely explanation that
+> you just like thundering in as the cavalry, fashionably late, maximally
+> destructive, because it entertains the masses on fedi or reddit or
+> wherever. I have no idea what you're trying to achieve here, I really
+> don't get it, but I am for sure fed up dealing with the fallout.
 >
 
-I'm not upset.
+To back up Sima here, we don't need grandstanding, brigading, playing
+to the crowd, streamer drama creation or any of that in discussions
+around this.
 
-For this specific case I don't know what can be written in the body
-given the really self-explanatory nature of the change, other than to
-spell it out(?).
+The r4l team and drm maintainer team have this sort of thing in hand,
+it's not like we don't understand the community of the Linux kernel,
+and having this first reaction to blow shit up and dramatise it just
+isn't helpful.
 
-Does this work for you:
-The routines need to be called with the tasklist_lock, the asserts
-validate at runtime that this holds.
+Being toxic on the right side of an argument is still toxic, please
+try and be better, and maybe take a step back and consider is what you
+are posting going to help the discussion or just adding pointless
+drama to it.
 
-I also git log a lot and like to know what's up, to that end I
-appreciate *short* commit messages so that I know there is nothing
-more to the patch than meets the eye. In particular if there is
-nothing of value to add in the body, I appreciate if there is none.
-
-But that's me, I'm not going to insist one way or the other.
-
-> [1]. https://www.kernel.org/doc/html/v6.12/process/submitting-patches.htm=
-l#describe-your-changes
-> [2]. https://lore.kernel.org/all/20250203175128.80319b42c9739f0d420080a4@=
-linux-foundation.org/
->
-> > Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-> > Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-> > ---
-> >  kernel/pid.c | 15 ++++++++++++---
-> >  1 file changed, 12 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/pid.c b/kernel/pid.c
-> > index 924084713be8..2ae872f689a7 100644
-> > --- a/kernel/pid.c
-> > +++ b/kernel/pid.c
-> > @@ -339,17 +339,23 @@ static struct pid **task_pid_ptr(struct task_stru=
-ct *task, enum pid_type type)
-> >   */
-> >  void attach_pid(struct task_struct *task, enum pid_type type)
-> >  {
-> > -     struct pid *pid =3D *task_pid_ptr(task, type);
-> > +     struct pid *pid;
-> > +
-> > +     lockdep_assert_held_write(&tasklist_lock);
-> > +
-> > +     pid =3D *task_pid_ptr(task, type);
-> >       hlist_add_head_rcu(&task->pid_links[type], &pid->tasks[type]);
-> >  }
-> >
-> >  static void __change_pid(struct task_struct *task, enum pid_type type,
-> >                       struct pid *new)
-> >  {
-> > -     struct pid **pid_ptr =3D task_pid_ptr(task, type);
-> > -     struct pid *pid;
-> > +     struct pid **pid_ptr, *pid;
-> >       int tmp;
-> >
-> > +     lockdep_assert_held_write(&tasklist_lock);
-> > +
-> > +     pid_ptr =3D task_pid_ptr(task, type);
-> >       pid =3D *pid_ptr;
-> >
-> >       hlist_del_rcu(&task->pid_links[type]);
-> > @@ -386,6 +392,8 @@ void exchange_tids(struct task_struct *left, struct=
- task_struct *right)
-> >       struct hlist_head *head1 =3D &pid1->tasks[PIDTYPE_PID];
-> >       struct hlist_head *head2 =3D &pid2->tasks[PIDTYPE_PID];
-> >
-> > +     lockdep_assert_held_write(&tasklist_lock);
-> > +
-> >       /* Swap the single entry tid lists */
-> >       hlists_swap_heads_rcu(head1, head2);
-> >
-> > @@ -403,6 +411,7 @@ void transfer_pid(struct task_struct *old, struct t=
-ask_struct *new,
-> >                          enum pid_type type)
-> >  {
-> >       WARN_ON_ONCE(type =3D=3D PIDTYPE_PID);
-> > +     lockdep_assert_held_write(&tasklist_lock);
-> >       hlist_replace_rcu(&old->pid_links[type], &new->pid_links[type]);
-> >  }
-> >
-> > --
-> > 2.43.0
-> >
-> >
-
-
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Dave.
