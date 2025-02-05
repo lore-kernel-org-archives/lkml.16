@@ -1,137 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECD41519AA;
-	Wed,  5 Feb 2025 14:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A671519A4
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 14:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738765016; cv=none; b=uyag+i/9di7vCTIoiRwQike9VHcPnfI2oSkxdrIDUANw1V/xFfMEjei560iAHeIY9Qtl/gbLnjv/fX5tWPOeBTmG2GVzl/cNM2ncfeQaBNXkTWud53/ZIfwz/uJ2CXn8NXsBk/KmqR6R4pUCd1YQeirLDELDSnJQ292I5nxK8i8=
+	t=1738765041; cv=none; b=kVa+f5+RVN07HXY5M0P//reqORxwDdHK5Gg+dIDrmZg9+gjZth4PRMNFreYr2D8dYTDoV7pHPzsOjiCm1gTYYxWum8ZduDd9hvtIOqSFgt6IivSgYd9DljXk8ifFwj3eGxHc3OK/8prWKRhtqyxLzL+G6JO8BbmbczJCPvkNlY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738765016; c=relaxed/simple;
-	bh=2EDzGvHQ4zrixDw5nuzSjFz5tDSyraGclhp64b6kaC0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GK8dO6uSfWj3IFJe05HOqMPoYYDC6C+hGfx/RfyRW0c9VklsjfIcDcem85O6/JGZvztSpg5WpceVkP3MaERbetNn3omhif4F8wKhCcPdt++hDAB1FfcXnUyRwKHaS0uBpbdmr0arI9wyI6AEFD+72J5ufG0Xn9DrSeKIrypNvpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X/noekgx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738765041; c=relaxed/simple;
+	bh=lUrrMogt8i1esa6CXtvJBZWmC6rSM6DJVUX2mQhZ73U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pc5TjA5X6Iz8HsziAqzPGZZ6ahyHWa5gU4tMfONZq6Z2cASPzVQL4tT2qbZpS8jqZdZHPyPW1CRDYKZZ0BuzVaFNmlwpBSPmYgUgMTN8GWl2/04RtYGp1KYo/SN1g5PoGePiF9H9wmhqgieQ51DS6LWnT4uAhKXGnDh10BsAiFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=i1mNhH51; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X/noekgx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95224C4CED6;
-	Wed,  5 Feb 2025 14:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738765016;
-	bh=2EDzGvHQ4zrixDw5nuzSjFz5tDSyraGclhp64b6kaC0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X/noekgxOfJedSNLpn0/KfoU8y/T6UOMN8dtfzxnQMMOo6ShM+xXS829fOW15MtB1
-	 a/EO/t0lZWPIFNrN8v0x2Q3KrQT+nKkNj+3oQTjoX+NBJ0FjHvqL6KUeJM8hAk62p7
-	 5/ji73JDvRAfhkj9qYVbaT6QfQxXP7X9HGLjCXg/EnH55bS80QBDXm4kVHO2eXnpqg
-	 UqMTwjkTJi94fcjpJxhcSvGIaFlnkWP8DE7KYk8S3smbiO27q5y+Y2cPp6VTAL3GLs
-	 cKOWFF2UOZWuybDQVY9AOSQpN6LGjvSzrT15SPqsfF8GNdbt/AUfZez0sEdVzgnHKC
-	 7mxZKDb20F0cQ==
-Message-ID: <870df4b8-fa96-47c1-b82a-5db52a5f0788@kernel.org>
-Date: Wed, 5 Feb 2025 15:16:48 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i1mNhH51"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Yacrfr+qgYECGhPMAq6+rkNVgjaProQvP0wgFeX9IaE=; b=i1mNhH51YMwBWjQoafvZFZhuU8
+	3craX5Ylu69GraNMYs0XIUU2h1biMnl5vOAQzMUHAuEehov/6VA0BEodBmYpTagAnjO6bK0n4dR0M
+	xVGcRMwWLL/9TXBJ/kLL5lfPiYN6Eh8dCrDMokeCoAVXtBLKopAZtkMaFEgl1vz+P+peh8Ax5uTG0
+	j76ASy6BsA5OY/NaOZD7hzLmfj76WVF/gPET+OaUPRp8FuKxkxUmson+FyZGENa2AH6lBev5sH763
+	KEf3Jwy+ApVAh2D5w07CH7xNgR8tGY+BLhjh3GFiE8Dl8I7cY+ynW81hNfQTEp384oxVxkJsCkMo4
+	YDlhDzJw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfgD7-0000000Geye-3eUD;
+	Wed, 05 Feb 2025 14:17:02 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 45E3330050D; Wed,  5 Feb 2025 14:00:46 +0100 (CET)
+Date: Wed, 5 Feb 2025 14:00:46 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de,
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com,
+	mhklinux@outlook.com, andrew.cooper3@citrix.com,
+	Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v8 03/12] x86/mm: consolidate full flush threshold
+ decision
+Message-ID: <20250205130046.GB31462@noisy.programming.kicks-ass.net>
+References: <20250205014033.3626204-1-riel@surriel.com>
+ <20250205014033.3626204-4-riel@surriel.com>
+ <20250205122007.GH14028@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: dma: at_xdmac: document dma-channels
- property
-To: Dharma.B@microchip.com
-Cc: Ludovic.Desroches@microchip.com, vkoul@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, Nicolas.Ferre@microchip.com,
- alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
- Charan.Pedumuru@microchip.com, linux-arm-kernel@lists.infradead.org,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, Tony.Han@microchip.com,
- Cristian.Birsan@microchip.com
-References: <20250205-mchp-dma-v1-0-124b639d5afe@microchip.com>
- <20250205-mchp-dma-v1-2-124b639d5afe@microchip.com>
- <20250205-dynamic-scorpion-of-climate-9e7b7b@krzk-bin>
- <74ac11e8-2285-436b-9186-4793cb2b7239@microchip.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <74ac11e8-2285-436b-9186-4793cb2b7239@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205122007.GH14028@noisy.programming.kicks-ass.net>
 
-On 05/02/2025 14:58, Dharma.B@microchip.com wrote:
-> Hi Krzysztof,
+On Wed, Feb 05, 2025 at 01:20:07PM +0100, Peter Zijlstra wrote:
+> On Tue, Feb 04, 2025 at 08:39:52PM -0500, Rik van Riel wrote:
 > 
-> On 05/02/25 5:10 pm, Krzysztof Kozlowski wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>
->> On Wed, Feb 05, 2025 at 11:17:03AM +0530, Dharma Balasubiramani wrote:
->>> Add document for the property "dma-channels" for XDMA controller.
->>
->> I don't understand why. You are duplicating dma schema.
-
-Here-----------------------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
->>
->> The same as with other patch - your commit msg is redundant. You say
->> what we see the diff but you never explain why you are doing these
->> changes. And in both cases this is really non-obvious.
->>
->> Apply this feedback to all future contributions - say why you are doing
->> changes instead of repeating what subject and diff are already saying.
+> > diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+> > index 6cf881a942bb..02e1f5c5bca3 100644
+> > --- a/arch/x86/mm/tlb.c
+> > +++ b/arch/x86/mm/tlb.c
+> > @@ -1000,8 +1000,13 @@ static struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
+> >  	BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
+> >  #endif
+> >  
+> > -	info->start		= start;
+> > -	info->end		= end;
+> > +	/*
+> > +	 * Round the start and end addresses to the page size specified
+> > +	 * by the stride shift. This ensures partial pages at the end of
+> > +	 * a range get fully invalidated.
+> > +	 */
+> > +	info->start		= round_down(start, 1 << stride_shift);
+> > +	info->end		= round_up(end, 1 << stride_shift);
+> >  	info->mm		= mm;
+> >  	info->stride_shift	= stride_shift;
+> >  	info->freed_tables	= freed_tables;
 > 
-> Thanks for your feedback, do you want me to include the description of 
-> dma-channels from the diff in the commit message?
-> 
-> The reason for this change is:
-> "This property is required when the channel count cannot be read from 
-> the XDMAC_GTYPE register (which occurs when accessing from the 
-> non-secure world on certain devices)."
-> 
-> Isn't this already clear from the description in the diff?
+> Rather than doing this; should we not fix whatever dodgy users are
+> feeding us non-page-aligned addresses for invalidation?
 
-
-OK, so this describes why you need this. It does not solve why do you
-need this patch. Do you see any warnings?
-
-Best regards,
-Krzysztof
+That is, I feel this is worthy of WARN_ONCE at the very least.
