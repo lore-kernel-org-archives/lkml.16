@@ -1,63 +1,46 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C55B18B467
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 15:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C5E18FDDB;
+	Wed,  5 Feb 2025 15:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738769628; cv=none; b=VfbTgnPULItKWZH5hdeKHBnybvznXFLY3LSOY97oqpt3duR9ZjgZ3VwwWnosZVr5j1ZLSVPxfN0LRTX/Wzm1Y7Sph+C5fzTFNN7fOfwpPes8tDzUnHrfeoc6ioK8Cm4V82Zz8v0OiU8UdqNhmOGIf2UOJMS8ZCYqcZqpgD6ZnV4=
+	t=1738769643; cv=none; b=gGkTkPFxFAPauSlr25qa1QbJh7GYIokaoWviG62W3XixcD5dRbg7tnlvF0QHrsJ+obQiB2e2y3w+z/woy+KhAywLkAAxN2U8DfUhNFDim5GKSRM/xSjrZ4WKhl0JdBsSEFqkd/+CWdbyOgqFeRNf4w7DcRVZ/3oF/QZ0wF6/C4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738769628; c=relaxed/simple;
-	bh=AWa/PF1zQB2/dPaRc8Ti9/FbYVqS3cCyv6Jdx9Col40=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=dRhXG0/Dy4oVwl1HiwDVl0HFPbeR9++r3H90EOLjn/xK9Ze+fOTkgJMXaM0fpmcwUfW0trZ0R0j00MYoDt8cGgB6bMDA+kMy8YxqU1WMWK9bKSDzzPxNvIN5F5fr7abtAANMNcozj75mZim/dJruPnGR2StRorG1x/bWZjiSmOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iWb5e3Ej; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738769643; c=relaxed/simple;
+	bh=M12Nqqv9nkqPky8w1t3lEr6Xd/aFGaPNlTvqIAysKiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m6Bj0fS/LW69yQZKs4Xh0eF6+WVE1BptvLaITEvpWnOE89yAjHHSpilNrlKCnmWjn8HXh5n4HA+z/7PABl7wjRZSj5z4Jc5jt4A42q3Js9c/tU9LzwSLMNKU/oe3N3BYQabeaiAxucg0fCsoC7ZfE2VzqQf0DySJhX8FFBdumm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TsTkM56M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iWb5e3Ej"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738769624;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=i03PoXttS1I4daOyY6s1DIOLnM2DqIsRXTcb7XjoQ0o=;
-	b=iWb5e3Ejc1krxmAOr5oBb0rXQXGTPl1FkOixymqzJxyPJ5kiqRhCLHUgmgRqmE1iRAHzUj
-	XR0v/45Tg//KF6UtV/t9RdYgXnHM5wXERgbOXXTTTpUBMlZrq6LSsJj9ZmOIqjq/PhitfA
-	c+5+BVb2S8518NGcA3vH9JD5BMm3fCY=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-266-V_ZdS8JXMAuA32eweckj_g-1; Wed,
- 05 Feb 2025 10:33:39 -0500
-X-MC-Unique: V_ZdS8JXMAuA32eweckj_g-1
-X-Mimecast-MFC-AGG-ID: V_ZdS8JXMAuA32eweckj_g
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 071991800341;
-	Wed,  5 Feb 2025 15:33:36 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.10])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5CF86195608D;
-	Wed,  5 Feb 2025 15:33:30 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  5 Feb 2025 16:33:09 +0100 (CET)
-Date: Wed, 5 Feb 2025 16:33:02 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Howells <dhowells@redhat.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
-	Oliver Sang <oliver.sang@intel.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TsTkM56M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7215EC4CED1;
+	Wed,  5 Feb 2025 15:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738769642;
+	bh=M12Nqqv9nkqPky8w1t3lEr6Xd/aFGaPNlTvqIAysKiQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TsTkM56MzvAwlMNLqN5RGgL1umJ8Kwj9usCi05sMoobKyE4pZjxQYheCebJKRPGuS
+	 wZuBmVp/8RwUiYiWfDRUsAiObHbI0IW5BuxHnpnZdKQtcoiUG+cYtvqBwoeTPC7yrT
+	 YyXdQzG4mCEF/RVAvV7Q18WBSwQdGzQ7VtI5CCDuPBrRnPHcIJ/dyU/iupnbywDh+i
+	 qJ/41lzqivR9S8HayGVyjn9sTPOBjTKTShNSSg8qiTC/5wILnNVL/WUKS098nbw/Lz
+	 42FanaAmSztg5P8RQsukHse/j1UkApmjiU784UW0QPofxuMxY+4HxU75dzAmfCCsh8
+	 NkH6brsmJDjBA==
+Date: Wed, 5 Feb 2025 07:34:00 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Lukas Wunner <lukas@wunner.de>, Ard Biesheuvel <ardb@kernel.org>,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Keith Busch <kbusch@kernel.org>, linux-crypto@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] pipe: don't update {a,c,m}time for anonymous pipes
-Message-ID: <20250205153302.GA2216@redhat.com>
+Subject: Re: [PATCH] crypto: testmgr - drop unused static const arrays
+Message-ID: <20250205153400.GA1474@sol.localdomain>
+References: <20250205121342.344475-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,18 +49,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20250205121342.344475-1-arnd@kernel.org>
 
-Not sure this makes sense, but after 1/2 we can also split fifo_open()
-and pipe_poll() to factor out the wait_for_partner/wake_up_partner logic.
+On Wed, Feb 05, 2025 at 01:13:15PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The ones[] and zeroes[] definitions were previously used by the
+> rocksoft tests that are now gone. With extra warnings enabled,
+> gcc now complains about these:
+> 
+> crypto/testmgr.h:6021:17: error: 'ones' defined but not used [-Werror=unused-const-variable=]
+>  6021 | static const u8 ones[4096] = { [0 ... 4095] = 0xff };
+>       |                 ^~~~
+> crypto/testmgr.h:6020:17: error: 'zeroes' defined but not used [-Werror=unused-const-variable=]
+>  6020 | static const u8 zeroes[4096] = { [0 ... 4095] = 0 };
+>       |                 ^~~~~~
+> 
+> Drop them as well.
+> 
+> Fixes: dad9cb81bc30 ("crypto: crc64-rocksoft - remove from crypto API")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  crypto/testmgr.h | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
 
-Link to v1: https://lore.kernel.org/all/20250204132153.GA20921@redhat.com/
+Thanks!  You must have tested today's linux-next.  The fixed commit is from one
+of the patches of the series
+https://lore.kernel.org/r/20250204195456.GA1385@sol.localdomain which I applied
+to the crc tree yesterday.  I've folded in this fix, so it should be fixed in
+tomorrow's linux-next.
 
-Oleg.
----
+Would be nice if these warnings were just on by default.
 
- fs/internal.h |  1 +
- fs/pipe.c     | 60 ++++++++++++++++++++++++++++++++++++++++++++---------------
- 2 files changed, 46 insertions(+), 15 deletions(-)
-
+- Eric
