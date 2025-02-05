@@ -1,157 +1,154 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B97B22CBF3;
-	Wed,  5 Feb 2025 10:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA8722F163;
+	Wed,  5 Feb 2025 10:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752607; cv=none; b=T4mKCubgLra5ZPqwnJg1k85+1Zucg4bmeeT8QV/pafPuRY37oC9jwm+DPTZWLq77Ynatn0iDPnysJy9nWvv3cx9gPrt6snrQ4gfay/JEwc505617xf85/qQwzWYOUBbg26fARJYZbgk2agqwIgkios9e6u2N7Yq56WlXukNhHzw=
+	t=1738752630; cv=none; b=dv1N615UPcP7G+HblRYQuxoS3JbPwLZlAI/ixz37zokjda1JEw85xxzAQw4O9TYeMzjmSslILew5sGpNnsVvYylYTvOyIjQinXYIBbA7fG7bz4srRdm1z+ctrMLheiAjHnwoxX8fegwnCFpwsrv+YNUTKkLtJFhKaujm1L9B6+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738752607; c=relaxed/simple;
-	bh=in+9r1+ZwwgpczNqt0GEjPoTTCLm/g7wMs5PxZLd5GY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uivMh33So5qRpgi9gGo4D2zleTryb+IafqIvuuFfKq+Q0JyXtaIgHj3JM4CendwcvZm91j98ysogQcyMAGzQyxN6qwFESy7QonW8dCL6eCEl6tcjdDAsW4kzFfc5isEHIOtXlL2CSPHNgPfmibELip81IUzb3JkY5qLuQYQpj0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=OM7D9kN/; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1738752630; c=relaxed/simple;
+	bh=GAaQoyH6dy87JYZUhbjPz6gyv2TYG+23a7uNbP8s9Ik=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CRz9n18PUK1eTojHAIh3HIsvrHD89VFXrPtfH3awzhCIJcjAspN/pFpCuqr0SL4qjKWB3rB3VXaoxkBQyQi3uHo8euyJJ8mPJCQ0fXLr1Zi3MheEErTUi+gx6M/Ora1D8LS3gwa7LgvaUrLPoTwCvB8GoFPHAs4g9ptgIMDxnuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lTZ/NSfY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="OM7D9kN/"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id A2A45A0530;
-	Wed,  5 Feb 2025 11:50:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=SDare0wXthcUSCxt8tJM
-	hXyNRKnHO97BD3ndLeOmDBI=; b=OM7D9kN/qdhvVKfFyRJIY7EmIiYKzs5biVhP
-	SYV12ZKf8A4UtWWnswMGsznVS+CQBPHxIRhewTGcXK8mhHG6OXTKX1/kvkVk+XQc
-	mX5aZd2TQGnB5YFahlKb5/hUevWts/95fdAim5TAiQVHurym71JkR0bE8WvIkWjE
-	0NUIiBZECxHwT6iCbeXeDb1aMmwY5au9rfSZTHfe6JO5jN0AfZuOpWVL/f1E+71o
-	656E7X4y06qx9PexxX4e1xR1rjP5q42VM0I+hYMHjuWXb4neA9+QhwL1VDDGLmVF
-	CQkB1aewiXM39KNJyrT250wC7DAln3HGhklq7fwbA1ZdDNNg68byIqtDKTxy1kAL
-	iRTQs/nWds0fATuIJVHJxSepyhSQgrUf/ZnXX1WUoJ/ALNa+hpz+t7TN+Etiiz4/
-	pAHKQiBG8bvTCkCYbvxbdO3q2p4n5MVRpp3q2yRE4n9cdfg36dEGYieizSgmsoTd
-	hG4hV4XPM1LajeRt4rX5hKfT+Jhigek/NbBofCSkQN9pwNHsm0hEnlJo8B3rkajh
-	MUI+Z4EgwDyOQX1rdQHuaPJkkvNvYvdqFQrKnKyMv2A9E1Uj+OiJ4uJq6fPIbXlW
-	WU3WK5PUa5b5zep4GitPl6jF7sfLcNSz8NwxX0jgXxbYScYtcekYwt381Wn3BY54
-	yPyfLmI=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Kamel
- Bouhara" <kamel.bouhara@bootlin.com>, William Breathitt Gray <wbg@kernel.org>
-Subject: [PATCH v3 2/2] counter: microchip-tcb-capture: Add capture extensions for registers RA-RC
-Date: Wed, 5 Feb 2025 11:49:54 +0100
-Message-ID: <20250205104957.95236-3-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250205104957.95236-1-csokas.bence@prolan.hu>
-References: <20250205104957.95236-1-csokas.bence@prolan.hu>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lTZ/NSfY"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5157Fqqd009879;
+	Wed, 5 Feb 2025 10:49:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=yV+6qkgECPgWR+utpQPN2P2B
+	yvpRL9hXJCZEqEup5Oo=; b=lTZ/NSfYhOQuFdRwxhrSwxLFb7Y+cSUcv+tccBJt
+	vZN+xZKwUOAOU2uoCE6n80d+SoWXVpCPXCRv4eJ16smyD8y4pDwqzByfd6i0jbUe
+	UA3rWJr6OkVzdeg9ivJzF97Vj1mPWiUXggpGNMZFeFojdKQeWL+g+eURclrLzyRr
+	wlGKdYkErD2VVbqYPidtvbEo6X3PUaz8b2AMYcgnideeokrbpus8d6u8otDpl4uV
+	t3ZUS/EZqSzwoBtn6O3a71uGedqwhgteILb7vKkY9DoNSasqnmQ0dK03nJHAOum+
+	62aVzeMFBpE6F258uvDWymMpOZjrAQ956RJEq0To5GqvNg==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44m3esgfwa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 10:49:57 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 515Ant15000760
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Feb 2025 10:49:55 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 5 Feb 2025 02:49:39 -0800
+Date: Wed, 5 Feb 2025 16:19:46 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <p.zabel@pengutronix.de>, <dmitry.baryshkov@linaro.org>,
+        <quic_nsekar@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        Praveenkumar I <quic_ipkumar@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v9 6/7] arm64: dts: qcom: ipq5332: Add PCIe related nodes
+Message-ID: <Z6NCSo98YRgG666Q@hu-varada-blr.qualcomm.com>
+References: <20250128062708.573662-1-quic_varada@quicinc.com>
+ <20250128062708.573662-7-quic_varada@quicinc.com>
+ <cc1c34f0-0737-469d-a826-2df7f29f6cf3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1738752602;VERSION=7985;MC=3452472733;ID=233959;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29ACD94852667264
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cc1c34f0-0737-469d-a826-2df7f29f6cf3@kernel.org>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: LqkeP6FXi5Jc7zuveJvZcqUkz1DwPpMb
+X-Proofpoint-ORIG-GUID: LqkeP6FXi5Jc7zuveJvZcqUkz1DwPpMb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_04,2025-02-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
+ suspectscore=0 priorityscore=1501 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050086
 
-TCB hardware is capable of capturing the timer value to registers RA and
-RB. On top, it is capable of triggering on compare against a third
-register, RC. Add these registers as extensions.
+On Mon, Feb 03, 2025 at 05:30:32PM +0100, Krzysztof Kozlowski wrote:
+> On 28/01/2025 07:27, Varadarajan Narayanan wrote:
+> >
+> > @@ -479,6 +519,230 @@ frame@b128000 {
+> >  				status = "disabled";
+> >  			};
+> >  		};
+> > +
+> > +		pcie1: pcie@18000000 {
+> > +			compatible = "qcom,pcie-ipq5332", "qcom,pcie-ipq9574";
+> > +			reg = <0x00088000 0x3000>,
+>
+> So as Konrad pointed out now, this was never tested. It's not we who
+> should run tests for you. It's you.
 
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
+This was tested and it did not flag an error since it is having the order
+specified in the bindings. qcom,pcie.yaml has 4 reg specifications. Two of
+them have 'dbi' as the first register space and two of them have 'parf' as
+the first register space. Looks like the constraints with 'dbi' as the
+first entry will match with pcie@xxx and the ones with 'parf' won't match.
 
-Notes:
-    Changes in v2:
-    * Add IRQs
-    Changes in v3:
-    * Move IRQs to previous patch
+Since IPQ5332 follows the constraints specified for sdx55 which has 'parf'
+as the first entry it is not able to match with pcie@xxx value.
 
- drivers/counter/microchip-tcb-capture.c | 58 +++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+The initial version that was posted has the first 'reg' entry matching with
+pcie@xxx (please see [1]), since it used the ipq9574 reg constraints. Based
+on the feedback received [2], had to add 'mhi' area also. Since adding
+'mhi' to ipq9574 would result in duplication of the sdx55 reg constraints,
+ipq5332 followed sdx55's constraints resulting in the reg entries getting
+reordered and the first reg entry vs pcie@xxx mismatch happened.
 
-diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
-index fef4bb69b486..1445ac512c52 100644
---- a/drivers/counter/microchip-tcb-capture.c
-+++ b/drivers/counter/microchip-tcb-capture.c
-@@ -253,6 +253,62 @@ static int mchp_tc_count_read(struct counter_device *counter,
- 	return 0;
- }
- 
-+static int mchp_tc_count_cap_read(struct counter_device *counter,
-+				  struct counter_count *count, size_t idx, u64 *val)
-+{
-+	struct mchp_tc_data *const priv = counter_priv(counter);
-+	u32 cnt;
-+
-+	switch (idx) {
-+	case 0:
-+		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RA), &cnt);
-+		break;
-+	case 1:
-+		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RB), &cnt);
-+		break;
-+	case 2:
-+		regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RC), &cnt);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	*val = cnt;
-+
-+	return 0;
-+}
-+
-+static int mchp_tc_count_cap_write(struct counter_device *counter,
-+				   struct counter_count *count, size_t idx, u64 val)
-+{
-+	struct mchp_tc_data *const priv = counter_priv(counter);
-+
-+	if (val > U32_MAX)
-+		return -ERANGE;
-+
-+	switch (idx) {
-+	case 0:
-+		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RA), val);
-+		break;
-+	case 1:
-+		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RB), val);
-+		break;
-+	case 2:
-+		regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RC), val);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_COUNTER_ARRAY_CAPTURE(mchp_tc_cnt_cap_array, 3);
-+
-+static struct counter_comp mchp_tc_count_ext[] = {
-+	COUNTER_COMP_ARRAY_CAPTURE(mchp_tc_count_cap_read, mchp_tc_count_cap_write,
-+				   mchp_tc_cnt_cap_array),
-+};
-+
- static struct counter_count mchp_tc_counts[] = {
- 	{
- 		.id = 0,
-@@ -261,6 +317,8 @@ static struct counter_count mchp_tc_counts[] = {
- 		.num_functions = ARRAY_SIZE(mchp_tc_count_functions),
- 		.synapses = mchp_tc_count_synapses,
- 		.num_synapses = ARRAY_SIZE(mchp_tc_count_synapses),
-+		.ext = mchp_tc_count_ext,
-+		.num_ext = ARRAY_SIZE(mchp_tc_count_ext),
- 	},
- };
- 
--- 
-2.48.1
+To resolve this, shall I reorder the sdx55 reg bindings (and the affected
+DTS arch/arm/boot/dts/qcom/qcom-sdx55.dtsi). Please let me know.
 
+1 - https://lore.kernel.org/linux-arm-msm/20241204113329.3195627-6-quic_varada@quicinc.com/
+2 - https://lore.kernel.org/linux-arm-msm/6fe09de4-c94c-495d-92a4-aa902d2519ef@oss.qualcomm.com/
 
+> It does not look like you tested the DTS against bindings. Please run
+> `make dtbs_check W=1` (see
+> Documentation/devicetree/bindings/writing-schema.rst or
+> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+> for instructions).
+> Maybe you need to update your dtschema and yamllint. Don't rely on
+> distro packages for dtschema and be sure you are using the latest
+> released dtschema.
+
+I run the following tests before posting the patches and go through the
+output to see if the nodes I added/changed have any errors or if other dtbs
+have been impacted by my bindings changes.
+
+	export ARCH=arm64
+	export W=1
+	export DT_CHECKER_FLAGS='-v -m'
+	export DT_SCHEMA_FILES=qcom
+	export CHECK_DTBS=y
+
+	pip3 install dtschema --upgrade
+
+	make -j 16 dt_binding_check
+
+	make -j 16 dtbs_check
+
+	$ pip show dtschema | grep Version
+	Version: 2024.11
+
+Please let me know if I should add anything else to ensure my setup is up
+to speed.
+
+Thanks
+Varada
