@@ -1,111 +1,148 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923171DE4D3;
-	Wed,  5 Feb 2025 21:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7781DE4D3
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Feb 2025 21:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738791922; cv=none; b=N6G+yb4UpJ44ulz1m5VBUTcxHI+/zb7QVXGHyvU9JcgELfGYTRqvwrw6sYh+d/Tcy68Zc4xjAXqWEIukMES0pGrFyC2ER0ZjoWIA4rsLvir8Krqdvc7l/EmeVOiUHlo/VGHduQDU7vOHecrVmZuQMbtYmVzBX6snxo9BGIKgOXE=
+	t=1738791959; cv=none; b=HtiokXF4uqy4nB7mzuva9eHkA4KJv4OxGIcgmxVgRBv6M/WLRqX7feIu7WnJZEYjyd5hJA0P1Be+jDyenfcVQ84KJQa36ZfIsX6nGLwOT9ENpoGoT1Wt/gju42BPmckVG6rBTtE/R4aK1R58vYzCJ/pqNzP/yONitZe06WI/eQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738791922; c=relaxed/simple;
-	bh=HrrpasWyuwG+NC15Cx/xnTL7cEj/zBNpmMcgmzhxV0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type; b=Y8+sNwW4d17Y4FC9w6EcFrRgqh4WmrNsY5+yd9PG107ohFHO5iQ6junV/aSoHO9MC1YDyWq0HDJ137IMZcBV9Chfj5aLBJMQPYGB/0NV9lhRrfLLhYM7JsWSjlWX1bBRVMeaRV5IfVJWGzIyMzw2J9Zm2httJqaYpZ0N3AOwym0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MUOMPBFy; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738791959; c=relaxed/simple;
+	bh=xkLq+hxeEBmjLtqlUevon4jVLT+q6Prhm3C8w3aOJjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=No1UWxq09BQQ9CF01Kdyx75czGIWeuaidzw/smexS7cRrh3SvVF6bSofF6O2M4EHjGa0jQHRCMTENoQjrMPQ+Xf45UO7oMgG9tSXRz4qav4VTkPCPwClPHcc7qCB4hE8mAFhjp9LlqdZ9Ccze771tspEBQ6QxTMhDVC3GLPCSZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TLYS/ZeR; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUOMPBFy"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ab69bba49e2so40217666b.2;
-        Wed, 05 Feb 2025 13:45:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738791919; x=1739396719; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:in-reply-to:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=83ozoj5c/jHHLPQR0gxR8lx/Hi0ZcnYkDPH3CyJmhHM=;
-        b=MUOMPBFyH9XUe86TTuYdo9/9mgomOSa3/lDK903fYb81QOncYbibZiQ9DmLLgVsAXJ
-         kXu2+YJRJI6vdyzfP43wXqWh4qq0HfVjp1UIUehycO0YWURCECHVXEIaY7Q2wmINyRu1
-         rNb5dW0XWZ442nRyiixVU86K6lAJrNYrqDgLsucQNuBHXkjRpnIlybr7kqHKsrAfdafm
-         Q5AoIob21WUMbw6S6JRoM64r6lr6FKWwRRHNEIdWtztMAJG5YELO4DqYbVLyi2h7AcE5
-         KU60M5hFb8PNUYy3FSbJg6ye308Beg/rBaOqhYUfpgxLfFDJDoDKIxGBhLRcchrYxkxQ
-         Brzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738791919; x=1739396719;
-        h=content-transfer-encoding:mime-version:in-reply-to:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=83ozoj5c/jHHLPQR0gxR8lx/Hi0ZcnYkDPH3CyJmhHM=;
-        b=VMiP5DCy22DRZ3VqXGT4wcVJcc0YCOfQMMXQ13XPD8xcXRyHuFns46i4vExTEp/fBH
-         ZLzbdsLdEBDeWKQYUsHzjT7kOU0caMkjPTlKvbo+rlzt8v7ezLaFOI7CeHs3h93REJEH
-         RhJqSkxweQ60ADVyq1i9L3xwnLJFwkIt5x+OWwCBgF+9VJ76LZbU5+U3yQwI79TuuXvP
-         AE3ptnetuMsvgsNLN2a8iIUt2yXZ6+WAGL3/i6tK1AZXVRjw/TDQHUaclxOQbeY+N6dn
-         PP7nCfL+X6ITEw0at2IshY3ia3WWe8q/tAR3qBlCM+yP3YU6Pdi0gEuw/bOyhpSNYB6j
-         DDlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBjq4EgDdyHPVHQXgwy9/QrR4Yx1w7lQpnogXCDr4wkcZ6u9VPnQjh1j6PvleNZkkSuackWfzr@vger.kernel.org, AJvYcCWpo+H/RbdrxoiTdjl8XywHqHDc0CYhoc3+kvYm6Tfnapmv+q7MYjHUGoTVweTFAkL+fhr3ijHOTj1v@vger.kernel.org, AJvYcCX/bQiHQCn3sEERsJWhHgs1/bpiPDWm4fbonmOKIFrnQnFfzHQGwnegj8OcTpEzL2bL9W8EtwNAwELMAqk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6+P0bD9s0i+9H+uAP3I9YS98hcv1NMXMD2HM9j4i61d5zpmP/
-	atj6bgO6BNSLsSWfREf4p0ypO6N1esqnsvogh3rhh7M2Ly7ul8Dw
-X-Gm-Gg: ASbGncutqk1bkTxL4SA/nCCeNM/u8bP1d0m4ajVIwH7zsRUcfob/wJqUxtOdgd83xlK
-	qFRzP5e+cKykMxH1DcKRcg7ZwvoI7RiAW0wylRtPpyFhjiB6I6MSVK7NCcxvuYWlhU0KAzIfTUe
-	+kU6WjYNct1iU6o9CtQ42+x+Iw/H20iXfjCfZf6yE2QY+CE5nnhSl6XLrhZndpdOHO5e6ed4GJ4
-	RVagEaK7MKlFG9onsc1fR1YOS/jFj5dpfJnGOpZj53eXJSV9GFd3ur5z7kL9ZxQruXPkAssvL4R
-	4tjynyeJIKCbT/Fb3/qT6YftB2gYQH0b
-X-Google-Smtp-Source: AGHT+IEPoIk30WWfA4BXz8wbNZOuVKWR++S/AotVQ2B18Pc/DY7ndJq6yoG435vz61ChOqXemub6rQ==
-X-Received: by 2002:a05:6402:13c8:b0:5dc:80ba:dda1 with SMTP id 4fb4d7f45d1cf-5dcdb711b67mr9092208a12.9.1738791918514;
-        Wed, 05 Feb 2025 13:45:18 -0800 (PST)
-Received: from foxbook (adtt137.neoplus.adsl.tpnet.pl. [79.185.231.137])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dce49b0661sm875416a12.25.2025.02.05.13.45.15
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Wed, 05 Feb 2025 13:45:17 -0800 (PST)
-Date: Wed, 5 Feb 2025 22:45:11 +0100
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: ki.chiang65@gmail.com
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, mathias.nyman@intel.com, stable@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] xhci: Correctly handle last TRB of isoc TD on
- Etron xHCI host
-Message-ID: <20250205224511.00e52a44@foxbook>
-In-Reply-To: <20250205053750.28251-2-ki.chiang65@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TLYS/ZeR"
+Date: Wed, 5 Feb 2025 21:45:45 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738791949;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UcD82YHfFlnLbOGCKlGp519IT43cQW3uzid6ew7JUk4=;
+	b=TLYS/ZeRw9mupYyFbz7Mk2Avr51nX4IZXt6dZu22u5/pIsqTB85PdH7/FUoyDCiSbgXMWR
+	mVw5rZUmCn6g19f6hIRWeNfwIkCcFsBCZokd/8aJoJPdDJ2fXwPIX1cYA4dVNkufxr/Kw/
+	CfjO0kxnerCBSyE2icYQbGKSv3bgdYc=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 09/13] KVM: nSVM: Handle nested TLB flush requests
+ through TLB_CONTROL
+Message-ID: <Z6PcCUh73yVZPlUq@google.com>
+References: <20250205182402.2147495-1-yosry.ahmed@linux.dev>
+ <20250205182402.2147495-10-yosry.ahmed@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205182402.2147495-10-yosry.ahmed@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
->  	case COMP_STOPPED:
-> +		/* Think of it as the final event if TD had an error */
-> +		if (td->error_mid_td)
-> +			td->error_mid_td = false;
->  		sum_trbs_for_length = true;
->  		break;
+On Wed, Feb 05, 2025 at 06:23:58PM +0000, Yosry Ahmed wrote:
+> Handle L1's requests to flush L2's TLB through the TLB_CONTROL field of
+> VMCB12. This is currently redundant because a full flush is executed on
+> every nested transition, but is a step towards removing that.
+> 
+> TLB_CONTROL_FLUSH_ALL_ASID flushes all ASIDs from L1's perspective,
+> including its own, so do a guest TLB flush on both transitions. Never
+> propagate TLB_CONTROL_FLUSH_ALL_ASID from the guest to the actual VMCB,
+> as this gives the guest the power to flush the entire physical TLB
+> (including translations for the host and other VMs).
+> 
+> For other cases, the TLB flush is only done when entering L2. The nested
+> NPT MMU is also sync'd because TLB_CONTROL also flushes NPT
+> guest-physical mappings.
+> 
+> All TLB_CONTROL values can be handled by KVM regardless of FLUSHBYASID
+> support on the underlying CPU, so keep advertising FLUSHBYASID to the
+> guest unconditionally.
+> 
+> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> ---
+>  arch/x86/kvm/svm/nested.c | 42 ++++++++++++++++++++++++++++++++-------
+>  arch/x86/kvm/svm/svm.c    |  6 +++---
+>  2 files changed, 38 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index 0735177b95a1d..e2c59eb2907e8 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -484,19 +484,36 @@ static void nested_save_pending_event_to_vmcb12(struct vcpu_svm *svm,
+>  
+>  static void nested_svm_entry_tlb_flush(struct kvm_vcpu *vcpu)
+>  {
+> +	struct vcpu_svm *svm = to_svm(vcpu);
+> +
+>  	/* Handle pending Hyper-V TLB flush requests */
+>  	kvm_hv_nested_transtion_tlb_flush(vcpu, npt_enabled);
+>  
+> +	/*
+> +	 * If L1 requested a TLB flush for L2, flush L2's TLB on nested entry
+> +	 * and sync the nested NPT MMU, as TLB_CONTROL also flushes NPT
+> +	 * guest-physical mappings. We technically only need to flush guest_mode
+> +	 * page tables.
+> +	 *
+> +	 * KVM_REQ_TLB_FLUSH_GUEST will flush L2's ASID even if the underlying
+> +	 * CPU does not support FLUSHBYASID (by assigning a new ASID), so we
+> +	 * can handle all TLB_CONTROL values from L1 regardless.
+> +	 *
+> +	 * Note that TLB_CONTROL_FLUSH_ASID_LOCAL is handled exactly like
+> +	 * TLB_CONTROL_FLUSH_ASID. We can technically flush less TLB entries,
+> +	 * but this would require significantly more complexity.
+> +	 */
+> +	if (svm->nested.ctl.tlb_ctl != TLB_CONTROL_DO_NOTHING) {
+> +		if (nested_npt_enabled(svm))
+> +			kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
+> +		kvm_make_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu);
+> +	}
+> +
+>  	/*
+>  	 * TODO: optimize unconditional TLB flush/MMU sync.  A partial list of
+>  	 * things to fix before this can be conditional:
+>  	 *
+> -	 *  - Honor L1's request to flush an ASID on nested VMRUN
+> -	 *  - Sync nested NPT MMU on VMRUN that flushes L2's ASID[*]
+>  	 *  - Don't crush a pending TLB flush in vmcb02 on nested VMRUN
+> -	 *
+> -	 * [*] Unlike nested EPT, SVM's ASID management can invalidate nested
+> -	 *     NPT guest-physical mappings on VMRUN.
+>  	 */
+>  	kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
+>  	kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+> @@ -504,9 +521,18 @@ static void nested_svm_entry_tlb_flush(struct kvm_vcpu *vcpu)
+>  
+>  static void nested_svm_exit_tlb_flush(struct kvm_vcpu *vcpu)
+>  {
+> +	struct vcpu_svm *svm = to_svm(vcpu);
+> +
+>  	/* Handle pending Hyper-V TLB flush requests */
+>  	kvm_hv_nested_transtion_tlb_flush(vcpu, npt_enabled);
+>  
+> +	/*
+> +	 * If L1 had requested a full TLB flush when entering L2, also flush its
+> +	 * TLB entries when exiting back to L1.
+> +	 */
+> +	if (svm->nested.ctl.tlb_ctl == TLB_CONTROL_FLUSH_ALL_ASID)
+> +		kvm_make_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu);
+> +
+>  	/* See nested_svm_entry_tlb_flush() */
+>  	kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
+>  	kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+> @@ -825,7 +851,8 @@ int enter_svm_guest_mode(struct kvm_vcpu *vcpu, u64 vmcb12_gpa,
+>  	nested_svm_copy_common_state(svm->vmcb01.ptr, svm->nested.vmcb02.ptr);
+>  
+>  	svm_switch_vmcb(svm, &svm->nested.vmcb02);
+> -	nested_vmcb02_prepare_control(svm, vmcb12->save.rip, vmcb12->save.cs.base);
+> +	nested_vmcb02_prepare_control(svm, vmcb12->save.rip,
+> +				      vmcb12->save.cs.base);
 
-What was the reason for this part?
-
-As written it is going to cause problems, the driver will forget about
-earlier errors if the endpoint is stopped and resumed on the same TD.
-
-
-I think that the whole patch could be much simpler, like:
-
-case X_ERROR:
-	frame->status = X;
-	td->error_mid_td = true;
-	break;
-case Y_ERROR:
-	frame->status = Y;
-	td->error_mid_td = true;
-	break;
-
-and then
-
-if (error_mid_td && (ep_trb != td->end_trb || ETRON && SUPERSPEED)) {
-	// error mid TD, wait for final event
-}
-
-finish_td()
-
-
-Regards,
-Michal
+These unrelated changes were unintentional, please ignore them.
